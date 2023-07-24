@@ -2,72 +2,150 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9985775DE05
-	for <lists+dmaengine@lfdr.de>; Sat, 22 Jul 2023 20:08:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7755375EC31
+	for <lists+dmaengine@lfdr.de>; Mon, 24 Jul 2023 09:09:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229710AbjGVSIR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 22 Jul 2023 14:08:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43556 "EHLO
+        id S229663AbjGXHJU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 24 Jul 2023 03:09:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229752AbjGVSIQ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 22 Jul 2023 14:08:16 -0400
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D14652D45
-        for <dmaengine@vger.kernel.org>; Sat, 22 Jul 2023 11:08:10 -0700 (PDT)
-Received: by mail-ej1-x634.google.com with SMTP id a640c23a62f3a-98df3dea907so465785266b.3
-        for <dmaengine@vger.kernel.org>; Sat, 22 Jul 2023 11:08:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690049289; x=1690654089;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=XwQ9KTk0AvNg4YEGpLO6Mzd1tQ0NGTk2GH4qBYSzWYc=;
-        b=CJDyVkqHNb3HtbkQ5Lf/+57dSKj94z9wFVHEQ4J81+7UiUAxlu47rNC38ta/OcaYnk
-         2Xdv5xIuDOVyvBhCEMgDr8UAzKrvUJCSBv6cpUrgpea74RGmQ0MnukXuitEodR9yjy2w
-         /dnJq8kgu6iCS1lNGjhG5AqMEbRb2Nc0QRe7KE3YE9Ahunhct3pn8P/WgWe1KEARtCo+
-         y6kwD2eTUMDA9eG2rLFFLwe9SPn/bDHpKcwrZhTpx9c91RteTq4Dio+lbrcBscjwFq3/
-         4gVQdQuBkSb+2Tk0GndEYfPwDyyh1kHsLsvjqaKb5DPRAun/gjgE98IB3er/pJMGE4ii
-         TeGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690049289; x=1690654089;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XwQ9KTk0AvNg4YEGpLO6Mzd1tQ0NGTk2GH4qBYSzWYc=;
-        b=DZwZ3MOMIWH38DOvG0VyHxRPCgQQfM7Acx9a8au6S6kZ6VvhT39gqUvNFSvmj3p39Q
-         IAyHXMT1oRESQ24rAHfXbW1ab37G/4WQUz71SO6tnQuBP0PZJgyBmdzl6xFgOw5KWi1v
-         xoditJ0deZYevXBe6JwHvrRDReZXrbadI1oqt/ST2rO9VkFJEbMlY+lv+m8N2a012D3P
-         FxXYNhNXW308VlYY4zv9XKAAOhip/IP0iZs9j1Y1DGM/fyQpXy0a61s0joLwaJ0kXoSV
-         RoLnqWHiOM8Wa/mlc9zuWWQ/eHuxSfEgnX5fvuDHlNG2r/Evf68hfm+cPscF2bfeXPlT
-         Vlzw==
-X-Gm-Message-State: ABy/qLZ2YRVJQ+vMFbtItYToOzHJRAuvhnsOm6HYPnPvJdRBcamhDsGg
-        3dMRKdKfrIud2JU4L+GKz30kLJ08Z1kvXkg88nQ=
-X-Google-Smtp-Source: APBJJlE7rlGInlok1k+1KeCbD24At6gAE+ANQdGxY3y76tiQFbUBao3muPGl3DlQ5h1nlt56J4YfPhfYld5FacMUAok=
-X-Received: by 2002:a17:907:78d5:b0:98d:e605:2bce with SMTP id
- kv21-20020a17090778d500b0098de6052bcemr4931479ejc.46.1690049289026; Sat, 22
- Jul 2023 11:08:09 -0700 (PDT)
+        with ESMTP id S229468AbjGXHJT (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 24 Jul 2023 03:09:19 -0400
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::221])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B22C6138;
+        Mon, 24 Jul 2023 00:09:14 -0700 (PDT)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 6C2E524000E;
+        Mon, 24 Jul 2023 07:09:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1690182552;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0OTdgWQ6Vo/4tl1ZM7En0YdjITPLKGIP2IIxkkPFJRM=;
+        b=iC5ZIY44VFrCSUNoeMIdYmOyqSrlrW7N4tyY+Hq53oXBVph3jCQ5ij8fsDynsYh6NybKfF
+        47iBUwR964ggu52YB13yaU1E18wok2aDQAXdbpXfZnCVzqeybMcvNBEm04M8MJv49vz912
+        60p20TKBhztddQMV6EZbSo0vTLzFb3Ok+FWErn92iDiDFjDyPmqRh1JKdYw5xT3hwpwVlV
+        u4k2GthKUnBFuRNrRP/XoPSerupU1HIaiVySzO/QpWk35FaiLI3dwdIhQ2brWGTyOPPUCM
+        8E3/Ier83smwYkYCv/LsZ20OWFpB5I2g8A5epoX659Pa/Omr3Rckh60nqnZ+5A==
+Date:   Mon, 24 Jul 2023 09:09:02 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Andy Shevchenko <andy@kernel.org>
+Cc:     nikita.shubin@maquefel.me,
+        Hartley Sweeten <hsweeten@visionengravers.com>,
+        Lennert Buytenhek <kernel@wantstofly.org>,
+        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Lukasz Majewski <lukma@denx.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sebastian Reichel <sre@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>, Mark Brown <broonie@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Sergey Shtylyov <s.shtylyov@omp.ru>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        soc@kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Michael Peters <mpeters@embeddedts.com>,
+        Kris Bahnsen <kris@embeddedts.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org,
+        netdev@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-ide@vger.kernel.org,
+        linux-input@vger.kernel.org, alsa-devel@alsa-project.org
+Subject: Re: [PATCH v3 24/42] mtd: nand: add support for ts72xx
+Message-ID: <20230724090902.679ea56d@xps-13>
+In-Reply-To: <ZLqx+Osn3gcHjUph@smile.fi.intel.com>
+References: <20230605-ep93xx-v3-0-3d63a5f1103e@maquefel.me>
+        <20230605-ep93xx-v3-24-3d63a5f1103e@maquefel.me>
+        <ZLqx+Osn3gcHjUph@smile.fi.intel.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Received: by 2002:a17:907:2cc3:b0:986:545c:2dc8 with HTTP; Sat, 22 Jul 2023
- 11:08:08 -0700 (PDT)
-Reply-To: mrsvl06@gmail.com
-From:   Veronica Lee <msv.willy00@gmail.com>
-Date:   Sat, 22 Jul 2023 20:08:08 +0200
-Message-ID: <CAL7S737DtLLCzHpLGTQhY5T=uYoMQ+5JmKaZZVw9K6JV6XmY3A@mail.gmail.com>
-Subject: re
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-X-Spam-Status: No, score=4.8 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ****
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: miquel.raynal@bootlin.com
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-16nXnNeV150g15nXp9eZ16jXmSwg15DXoNeZINek15XXoNeUINeQ15zXmdeaINec157XmdeT16Ig
-16nXkdeo16bXldeg15kg15zXl9ec15XXpyDXkNeZ16rXmiDXkNecINeq15TXodehINec15TXqdeZ
-15Eg15zXpNeo15jXmdedDQo=
+Hi Andy,
+
+> > +static int ts72xx_nand_attach_chip(struct nand_chip *chip)
+> > +{
+> > +	switch (chip->ecc.engine_type) {
+> > +	case NAND_ECC_ENGINE_TYPE_SOFT:
+> > +		if (chip->ecc.algo =3D=3D NAND_ECC_ALGO_UNKNOWN)
+> > +			chip->ecc.algo =3D NAND_ECC_ALGO_HAMMING;
+> > +		break;
+> > +	case NAND_ECC_ENGINE_TYPE_ON_HOST:
+> > +		return -EINVAL;
+> > +	default: =20
+>=20
+> > +		break; =20
+>=20
+> Here it will return 0, is it a problem?
+
+Seems ok, there are two other situations: on-die ECC engine and no ECC
+engine, both do not require any specific handling on the controller
+side.
+
+>=20
+> > +	}
+> > +
+> > +	return 0;
+> > +} =20
+>=20
+> ...
+>=20
+> > +static void ts72xx_nand_remove(struct platform_device *pdev)
+> > +{
+> > +	struct ts72xx_nand_data *data =3D platform_get_drvdata(pdev);
+> > +	struct nand_chip *chip =3D &data->chip;
+> > +	int ret;
+> > +
+> > +	ret =3D mtd_device_unregister(nand_to_mtd(chip)); =20
+>=20
+> > +	WARN_ON(ret); =20
+>=20
+> Why?!  Is it like this in other MTD drivers?
+
+Yes, we did not yet change the internal machinery to return void, and
+we don't want people to think getting errors there is normal.
+
+> > +	nand_cleanup(chip);
+> > +} =20
+>=20
+
+Thanks,
+Miqu=C3=A8l

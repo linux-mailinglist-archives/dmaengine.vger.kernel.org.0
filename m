@@ -2,170 +2,170 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AB9C076035A
-	for <lists+dmaengine@lfdr.de>; Tue, 25 Jul 2023 01:54:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EAF10761AF7
+	for <lists+dmaengine@lfdr.de>; Tue, 25 Jul 2023 16:08:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229705AbjGXXya (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 24 Jul 2023 19:54:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48584 "EHLO
+        id S232282AbjGYOIu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 25 Jul 2023 10:08:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229452AbjGXXy3 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 24 Jul 2023 19:54:29 -0400
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52EDAE8;
-        Mon, 24 Jul 2023 16:54:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1690242868; x=1721778868;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=v/6lAKHL49fQltPlR8tQgQxQDCqbVSR7w7GcDejnyhI=;
-  b=FKtLP6RE2k0hZMe/imCDy0i4SaEEew26x3dH3aujHgRYOb5RIXtcVNG+
-   wiul/3F4W3qKd/hVq+/Ik8jz1b9PJQx/CRYdSc/76d2zhGXEEAdvop5P4
-   bm7I8xae4dj4R81s4xqPrxyUJX2Zkcifp8SJjeHnjRnVFcdz3+hntpnI1
-   stIHoCJFSJ6rR8mlMMa0HnAoqOGiguEF4KvhJja5oGsqx2lkXCpkl3bZh
-   2pYT+6BJ838uwSLB4oYC+VNpuvBfuRTW8TNJElMpHcubq9aP7x6LvXg2b
-   QoY6+mKUPF/lS7+0kot1PbLXzMj2C/6LpJKt/+GtsEGv+PzT04/A6xMOG
-   g==;
-X-IronPort-AV: E=Sophos;i="6.01,229,1684825200"; 
-   d="scan'208";a="224932833"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 24 Jul 2023 16:54:27 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Mon, 24 Jul 2023 16:54:27 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21 via Frontend Transport; Mon, 24 Jul 2023 16:54:27 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=e+bBCl/YgSGPi4FFu5vuWYGbaZ/hdNMD8sCoGXHwLH9aKrGG46i/BcL4wzUviJ+rTKI+a4GV6mcSf6TTf4raE6GqkWnGZzEOISrscfOsbibvO6eMc/m3UXYkRZR4yvGPv6dVPt1n7IO0kxm/ePSNuimb/wL8m3+15Q0sU4ONO8TFU3c5DPpfoR8b+ha2bG2zQj5hArk4zRXiwd2D6KMwMx6A4EXt0TV2ibnBQuzAXAUfESlDCEGkNsAtTO7JbNAEA1zatrqgv25HEMlLub4MXnsBvbYrHJVYWNEzNX+MdgkB0rW/1x4ZTrsby06to1c4ASvdUvtYJcKhSAa2bwx4Zg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=v/6lAKHL49fQltPlR8tQgQxQDCqbVSR7w7GcDejnyhI=;
- b=d1Epp/BAtKm4p72AEMp1f2eK8K441RIDIy74V+LDV7WXRLYuaaHtb4i3OI75asqS1n3hwF+WlORMf3LrXbYAwstcxQ3SDntx8bgm5ZrpYe21RCFi3Eqbwln5HDKQaQD8VeZHzObL0DNTg5pNOjXfEMKt0pB5StngYbE5o4Yjk5niQDVE+NPOMm6eKB3SYwWgZQAk+fMLkeH5dP5rRPW/EVkUbWqVFeRYb2Ifrk0OtMCpTcSyIg5Z+pcmK7upObVU/cYIevgzTvvxv/LIG1TSFNjdgmaMtorvH8NZrmi9H9ybBI6T/SvUpixWQeGR8PBSOKtzV7ciGadAdD4P5vwqnA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=v/6lAKHL49fQltPlR8tQgQxQDCqbVSR7w7GcDejnyhI=;
- b=LdyoKX/KCRGB7pTmjYljRUe4ljWeyrN0y4IqfBXV3hH3tt4q/I4Fb4zx6GwsN95tt2NA5XkGVr0WP3QrG6/XkQlePAWsBIZK7TdfEIPyeBpwsuwDeih88OvPHdIP96DkNF39EJSVUugFr6Q+ZBqiUCbp8dhMAk21g0k9sT0Z+sw=
-Received: from CO6PR11MB5618.namprd11.prod.outlook.com (2603:10b6:303:13f::24)
- by SA0PR11MB4525.namprd11.prod.outlook.com (2603:10b6:806:9d::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6609.33; Mon, 24 Jul
- 2023 23:54:25 +0000
-Received: from CO6PR11MB5618.namprd11.prod.outlook.com
- ([fe80::a386:9a15:9c19:3aff]) by CO6PR11MB5618.namprd11.prod.outlook.com
- ([fe80::a386:9a15:9c19:3aff%3]) with mapi id 15.20.6609.032; Mon, 24 Jul 2023
- 23:54:25 +0000
-From:   <Kelvin.Cao@microchip.com>
-To:     <hch@infradead.org>
-CC:     <dmaengine@vger.kernel.org>, <vkoul@kernel.org>,
-        <George.Ge@microchip.com>, <linux-kernel@vger.kernel.org>,
-        <logang@deltatee.com>, <christophe.jaillet@wanadoo.fr>
-Subject: Re: [PATCH v5 1/1] dmaengine: switchtec-dma: Introduce Switchtec DMA
- engine PCI driver
-Thread-Topic: [PATCH v5 1/1] dmaengine: switchtec-dma: Introduce Switchtec DMA
- engine PCI driver
-Thread-Index: AQHZibSHx5SO3XCpNUCUzf4fdZr/3a9hdPaAgAg5gwCAX9cGAIAAe2+A
-Date:   Mon, 24 Jul 2023 23:54:25 +0000
-Message-ID: <5b87e9dfd0221c9eea976648ebae420c910746fe.camel@microchip.com>
-References: <20230518165920.897620-1-kelvin.cao@microchip.com>
-         <20230518165920.897620-2-kelvin.cao@microchip.com>
-         <ZGdb8c2JfPTRexJT@matsya>
-         <0f04479bc1d0005f80caa984b83743653620555d.camel@microchip.com>
-         <ZL6npI5YmWJOXB3d@infradead.org>
-In-Reply-To: <ZL6npI5YmWJOXB3d@infradead.org>
-Accept-Language: en-US, zh-CN
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.44.4-0ubuntu1 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microchip.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CO6PR11MB5618:EE_|SA0PR11MB4525:EE_
-x-ms-office365-filtering-correlation-id: 8aef0431-66df-456a-3128-08db8ca14f41
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: lfFhZm3GijvyAks6KMd85jhe5r1WHzgx/EYG1RhuWgg7DkZJkSW39itT/moF5WGlCNENPagaDlYChBg6pqV6Jjz2HOwz8FKXPjsEaobTpBQyxvgpL/wuxvrF2jeHW3ODE/KSPrdicOqLq2GOjUXSsUZn3g+qfnirWt+59HK+Ac89tZpBQZ2OyLyy6fagicIXQyYXz2VuQGJ2j02rz5/OdZO8f6l8t+2p+gnbiboZyVGCsgSCUtFgF6ZYznuh3VRvWNWe55yF5jIno/0lXOWcSeAwfIkRokqJOWFuODY6p2kzRwYZSGxozuCBTrUNK3OOtstazN5Bkf9QGTaYp2FIzIHbOCdNAXZFdk8bB4ie1PLSp2PlZHIXH1XzbZ+3THt1i9ihcOA5dCUf+ffMqBNWxgFETrDWJ+HcsIn5czi1BfWKWIl+mhASIUR5FrfhqbzTzT62n1JLZuQzVcBctOhrAbzaYl50ye16A/XYDJryaOI02yVbzpuydmUazw3wwglpAjclUMEOQdyHHRNW5dVCkNnOo9sVVUzNCopT+c4EtKlg+5j5bdAVNIMD7RnGiobn63wH5I+XZda2a3bm6nOrR2eGvXJGQlICOUQahB6Td7RSclKkcPChxixIvGryKVx9
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR11MB5618.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(366004)(136003)(396003)(376002)(39860400002)(346002)(451199021)(2616005)(26005)(186003)(71200400001)(6506007)(83380400001)(64756008)(66446008)(66476007)(66556008)(66946007)(316002)(76116006)(6916009)(4326008)(41300700001)(8936002)(6486002)(6512007)(8676002)(5660300002)(2906002)(4744005)(54906003)(478600001)(38100700002)(122000001)(86362001)(36756003)(38070700005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?SGdHby8zQ0FPekQrV3hrZUFwSEpJYWFWRnFDc0w0dW1XYlNSaW9vdlEyUU5x?=
- =?utf-8?B?TkdYczZXMWp5WW5UUVU5N3ZxZTJoZDgxVkptZDkvY2xCQXRRUmo2MkNhcjBv?=
- =?utf-8?B?VXJaUmFndkpyWTBEZTR1bE1iYk9mSGhzWEVSRW1RYjk4bFhKMFcwOVJ1MTdR?=
- =?utf-8?B?V1l3SmtCeFZFUmFYY0NRMlY2Q0dFMzdpcUR3VlpFN29FZ2pRWjROdzJOS29F?=
- =?utf-8?B?NXAxMXlVbXFEeVF6Q0VaelJYRHBGQUkrSzM0SmlJYnVSRlZRVEtaNkNsYVI1?=
- =?utf-8?B?YjlLMkVMbFBEY3h4UWJQNmNLeXFvQTF4UExGTURKWXRYa284RExob2lXRG51?=
- =?utf-8?B?bEliUmxEaUtFK2FQektaSlFaa0FtZkQ0RjNCNWhXeDFSZUkwMk12VlZEUFZz?=
- =?utf-8?B?UDFQQ3Y2NUhTU2xmVG1LNHZnT2gxRUsxazhwTHhKZi93RmxQTzhndGYrbWZu?=
- =?utf-8?B?amJPMUZ4dlhaWDVYUGlBRnV3NjNiYnk2MW5Sa1dBV2Z4RmFwQW9nMTFSOC9O?=
- =?utf-8?B?QUdydUxPVThFdy9FdUQwWXRER3lhTWY0ampMOTJGT3YyQkxHUCszVHl5NWIv?=
- =?utf-8?B?OGhFK3RIdTZzWVBOMFl6TE91WVdvNlZDOEhKa1p4NDdDaWJlSHM0dU5zRXR6?=
- =?utf-8?B?eXB0NDVWVUhQSEo3SWtQNUpxQWJtWC9jTzRicjBkTWRVUnFlaUJyZytmN3pH?=
- =?utf-8?B?MnBJRTVHZ2JIL1RjYmxWWWIrMytIVklNKzkyRnFWMlBxMHFnOWc3TFpDb2d3?=
- =?utf-8?B?V0NCR2NQOW9HdTVUR0RCZVVhdjVHU0NvUTFjaHdlVkpHenAyYjRKTkxNbGlL?=
- =?utf-8?B?cnhlcjBENUVVdFQ3NGZQcThzQ1I5aW94bmpuMFdoTVJYVTlFN3JhU1VmVlMy?=
- =?utf-8?B?UkRETU1nUmM4bTRZUDQyYzZrRkhVQ1JNY1JhZlpMQ0lPaGRyMWFkVzRyMk1h?=
- =?utf-8?B?TjBIdnM5UHVoWHFCY29VZG5Ca3RzNFNOMVdOQ2llOXYzQ2JBVVZGR0o0Zmlm?=
- =?utf-8?B?amR1UTA4MzBMY2QvN2duVDVzWmMzelRrUk1Ed1dZSmQ2TEE2L2drVVQ3VGR2?=
- =?utf-8?B?UlVYNnNKOCtQalRxS0FlUG1tWnpUUy9ZZmNLaDNBQzUvN2lZT1FrL3owOFdG?=
- =?utf-8?B?bURsb1RjVTduLzQ1bWxpVjZVM3lFV1ZsWTF5U0cwMzZaaVZSVFlUY2N0V2FY?=
- =?utf-8?B?YnBjZ01qK21TUWFwSkJGQ2s5QXR1aFowdWE4QzRKZzM3N0xuWVh2ODVjdE1H?=
- =?utf-8?B?UjJxOGFoaDdaSmtvdm9BNnZJemc4QXE1QUM2ZmdPbWRNUURkSEdITmxxUDRX?=
- =?utf-8?B?QSszQnlLSVh2N3FCeXpRZjZRMEdtL0VDUDZDZ2NZai8rSHg3L0VwaWNSWUZm?=
- =?utf-8?B?c2wxbmZVRzlJWm52Q1dOM1ZzL0Y0UE41eTZya3c2OHB3QVdQQ0xZVitNSlda?=
- =?utf-8?B?c1NYVU9VNlFEcVVmWXU1K1FlNmdYZzQ4VHJJNXRIdEwyRU5ycmtkS0RGd2U2?=
- =?utf-8?B?aGtuZ29sNEE1bmFWNUNLUWlXcUxyWDM2eTJZWC9ETU5OV0Q0NXZDeklrQ2gw?=
- =?utf-8?B?aFI5M2ZoNzh6bFVOUE83ZWE1VktIajQ1WnU3SFZ5TFJpYmdrNVV5M2R3aTZu?=
- =?utf-8?B?TzBHSURTcHBLdERib0xlTkRQbVRRbXAxZkxidzBIeEp6aDFNU0tIL0pwa3cz?=
- =?utf-8?B?bWdyZGQzWHB2T1JnbW42MlFWQTE3K2ZObkRRcm84N2F1VUpwZmVNSVkrdXhJ?=
- =?utf-8?B?UGRoME1nSWJsNms1WWw0OExkTzVoVXE3VlBEc1hwb0NWek1xa2dQNlplSVha?=
- =?utf-8?B?VDN1VXBReEQ5dndadHU3bjlsNW9pRTVMYjRWWWpybG9zWExQcDJMYUZ2Ukk1?=
- =?utf-8?B?L1ZDMkVPUkx2YTNzL05kMU04WUpMaHVJbjFLQzV6NFcxWTdscFIweGMzZTNW?=
- =?utf-8?B?WGs4OU9JMmhRTXUrQW9WazJPazYzdVhlSE1ZV3lTUURnUG5wZEhvcjIzaEdZ?=
- =?utf-8?B?NWZEZmdZS2lPbDdOcXFOWXpMVUpPZmhKNXRzbjM5MUs3RzdkU0d2WW10WWl6?=
- =?utf-8?B?c2JUUnEvRWN0Z1c4cFhyZDZVRWRHdy93eWVuV2lKNjBXZlByMnorMVAreTNY?=
- =?utf-8?B?M3ZQZGoydDlBNVFIanU1dXBUQ2N4ZTBiSmcwOHk1azYxcjBIM1B3TVVMUS9H?=
- =?utf-8?B?cXc9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E33695334AC82D44A80C6C271C4B72C7@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        with ESMTP id S232298AbjGYOIs (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 25 Jul 2023 10:08:48 -0400
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF82D1FD7;
+        Tue, 25 Jul 2023 07:08:46 -0700 (PDT)
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36PDXDMu010531;
+        Tue, 25 Jul 2023 16:08:01 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=message-id : date :
+ mime-version : subject : from : to : cc : references : in-reply-to :
+ content-type : content-transfer-encoding; s=selector1;
+ bh=aKox1fifr/MD7CscnSNaYClzgh1MKEowYV/1CFbHY8Q=;
+ b=4sFWeFLREgJioc9H+rODp72hj3AVdLAeXn//m7QoqBPjLcHM3h6ErPmn4WA399Y/aITY
+ Es+zEl+7c1OuNWP/mY/sYFUWBgIrS0ZnwoA5voqLfap1MOnNtJ/zdQsJH70zP6mKb4It
+ up4nrSg6m/QvGFbwtP1STGuEVZLJ00BGoK2EjvjlEjCcZJFyhQQwWBxUeAAPCbeV4q3h
+ 6aBJcowFMNfbDdrNiVfgGpJZ6jk6/MU4C0knjVH4EQXo3oCJXoEvofraY3JZmoYetI5I
+ ZcYWT0tL9hA+ODD+fHxyfM0nlDUmDa3FOMio5gfyLhC4I0CiM1Tbi4NIEhA6R3rIQpjx iw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3s2bkbhv00-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Jul 2023 16:08:01 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B9F8E100048;
+        Tue, 25 Jul 2023 16:07:56 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5ACB4241EF6;
+        Tue, 25 Jul 2023 16:07:56 +0200 (CEST)
+Received: from [10.201.21.121] (10.201.21.121) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Tue, 25 Jul
+ 2023 16:07:54 +0200
+Message-ID: <1faa5511-a341-9c17-5e2a-974f8139d1d6@foss.st.com>
+Date:   Tue, 25 Jul 2023 16:07:49 +0200
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CO6PR11MB5618.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8aef0431-66df-456a-3128-08db8ca14f41
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jul 2023 23:54:25.0126
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: sKZU3obfXWfLvtMskFtvVujHiRmTOqkEbPZAJN0RCND+S8UJSHPswveap6X+5ZDaq41dDpGDt/OsHvoNzdaGtfUtLJ8Ho5r+nScrxFtEgHE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR11MB4525
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH 07/10] arm64: dts: st: add RIFSC as a domain controller
+ for STM32MP25x boards
+Content-Language: en-US
+From:   Gatien CHEVALLIER <gatien.chevallier@foss.st.com>
+To:     Alexandre TORGUE <alexandre.torgue@foss.st.com>,
+        <Oleksii_Moisieiev@epam.com>, <gregkh@linuxfoundation.org>,
+        <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>, <vkoul@kernel.org>, <jic23@kernel.org>,
+        <olivier.moysan@foss.st.com>, <arnaud.pouliquen@foss.st.com>,
+        <mchehab@kernel.org>, <fabrice.gasnier@foss.st.com>,
+        <andi.shyti@kernel.org>, <ulf.hansson@linaro.org>,
+        <edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
+        <hugues.fruchet@foss.st.com>, <lee@kernel.org>, <will@kernel.org>,
+        <catalin.marinas@arm.com>, <arnd@kernel.org>,
+        <richardcochran@gmail.com>
+CC:     <linux-crypto@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-i2c@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        <alsa-devel@alsa-project.org>, <linux-media@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-phy@lists.infradead.org>, <linux-serial@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, <linux-usb@vger.kernel.org>
+References: <20230705172759.1610753-1-gatien.chevallier@foss.st.com>
+ <20230705172759.1610753-8-gatien.chevallier@foss.st.com>
+ <61d93738-4ffd-411d-d32c-912c14eea56d@foss.st.com>
+ <997780a9-1cbc-46a2-2743-7fd493682278@foss.st.com>
+In-Reply-To: <997780a9-1cbc-46a2-2743-7fd493682278@foss.st.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.201.21.121]
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-25_08,2023-07-25_01,2023-05-22_02
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-T24gTW9uLCAyMDIzLTA3LTI0IGF0IDA5OjMyIC0wNzAwLCBDaHJpc3RvcGggSGVsbHdpZyB3cm90
-ZToNCj4gRVhURVJOQUwgRU1BSUw6IERvIG5vdCBjbGljayBsaW5rcyBvciBvcGVuIGF0dGFjaG1l
-bnRzIHVubGVzcyB5b3UNCj4ga25vdyB0aGUgY29udGVudCBpcyBzYWZlDQo+IA0KPiBLZWx2aW4s
-IGNhbiB5b3UgcmVzZW5kIGFuIHVwZGF0ZWQgdmVyc2lvbiBzbyB0aGF0IHdlIGNhbiBmaW5hbGx5
-DQo+IGdldCB0aGUgZHJpdmVyIG1lcmdlZCBmb3IgNi42Pw0KPiANCg0KQ2hyaXN0b3BoLCBJIHdh
-cyB3YWl0aW5nIGZvciBWaW5vZCdzIGNvbW1lbnQgb24gdGhlIGxhc3QgcmV2aWV3LiBBbmQNCml0
-J3MgYmVlbiBhIHdoaWxlLiBTbyB5ZXMsIEknbGwgcmVzZW5kIHRoZSB1cGRhdGVkIHZlcnNpb24g
-YW5kIG1heWJlDQppdCdzIGFub3RoZXIgd2F5IHRvIHJlc3VtZSB0aGUgcmV2aWV3Lg0K
+Hi Alex,
+
+On 7/6/23 11:30, Gatien CHEVALLIER wrote:
+> Hi Alex,
+> 
+> On 7/6/23 11:25, Alexandre TORGUE wrote:
+>> Hi Gatien
+>>
+>> On 7/5/23 19:27, Gatien Chevallier wrote:
+>>> RIFSC is a firewall controller. Change its compatible so that is matches
+>>> the documentation and reference RIFSC as a feature-domain-controller.
+>>>
+>>> Signed-off-by: Gatien Chevallier <gatien.chevallier@foss.st.com>
+>>> ---
+>>>   arch/arm64/boot/dts/st/stm32mp251.dtsi | 5 ++++-
+>>>   1 file changed, 4 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi 
+>>> b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+>>> index 5268a4321841..62101084cab8 100644
+>>> --- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
+>>> +++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+>>> @@ -106,17 +106,20 @@ soc@0 {
+>>>           ranges = <0x0 0x0 0x0 0x80000000>;
+>>>           rifsc: rifsc-bus@42080000 {
+>>> -            compatible = "simple-bus";
+>>> +            compatible = "st,stm32mp25-rifsc";
+>>
+>> You could keep "simple-bus" compatible (in second position). In case 
+>> of the RIFSC is not probed, the platform will be able to boot. If you 
+>> agree you can use the same for ETZPC.
+>>
+>> Cheers
+>> Alex
+> 
+> Sure, good point.
+> 
+> I'll change that in V2
+> 
+> Best regards,
+> Gatien
+
+Actually, it would be a bad idea to keep "simple-bus" as a compatible.
+
+Practical example:
+1) Firewall controller forbids a device probe by marking the device's
+node as populated (OF_POPULATED flag).
+2) The simple-bus, which is simple, populates all the devices
+from the device tree data, overriding what the firewall bus has done.
+3)=>Forbidden device's driver will be probed.
+
+I think it's best to keep one compatible. If someone wants these drivers
+as external modules, then it'll be best to handle this differently.
+I'll resubmit with a single compatible for V2, please do not
+hesitate to comment on the V2 if you're not okay with this.
+
+Best regards,
+Gatien
+
+>>
+>>>               reg = <0x42080000 0x1000>;
+>>>               #address-cells = <1>;
+>>>               #size-cells = <1>;
+>>>               ranges;
+>>> +            feature-domain-controller;
+>>> +            #feature-domain-cells = <1>;
+>>>               usart2: serial@400e0000 {
+>>>                   compatible = "st,stm32h7-uart";
+>>>                   reg = <0x400e0000 0x400>;
+>>>                   interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>;
+>>>                   clocks = <&ck_flexgen_08>;
+>>> +                feature-domains = <&rifsc 32>;
+>>>                   status = "disabled";
+>>>               };
+>>>           };
+>>

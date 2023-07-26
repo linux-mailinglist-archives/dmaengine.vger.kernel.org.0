@@ -2,122 +2,93 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 18B927635E8
-	for <lists+dmaengine@lfdr.de>; Wed, 26 Jul 2023 14:13:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 80365763C4F
+	for <lists+dmaengine@lfdr.de>; Wed, 26 Jul 2023 18:22:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233468AbjGZMNH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 26 Jul 2023 08:13:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59128 "EHLO
+        id S232431AbjGZQWM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 26 Jul 2023 12:22:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233804AbjGZMNA (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 26 Jul 2023 08:13:00 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3B0D1739;
-        Wed, 26 Jul 2023 05:12:59 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2CC1A61ACC;
-        Wed, 26 Jul 2023 12:12:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73356C433C8;
-        Wed, 26 Jul 2023 12:12:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690373578;
-        bh=Ke8AONnAOWupVgvu9a1rrtccA5xWjVMePJQxM8Ht3Kc=;
-        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-        b=gYrqFr8wvj2MJmmwmwf8M6I8rekTV9+bxmW2rqLD55Qm7Z/X+3fqo2oPfopkxdlCi
-         n241AQBCMxM7eFrih3i3Sbv5AKj0bq28ozziIAExFd7E/RXMMNS1aKn+yJARtnBmU4
-         FfN14X79faCpLGre6x+vnvwoxjIsG/L/ooLw+V13rcjVx7tIPmq/1O2zG9aawBpzTf
-         uhcvPI4MEqZ0fNFaHRBAISQWggi8tN88wV4MzFoUqwVN0pOsQ3BgyiTak4/MrtL+0t
-         6GpQd+/9rUTZVGi45edSMIe9j4qSBoulHPW7gK71wysfs2CSJoMHtELswVidt7IBP2
-         x+DypAIC/tqTg==
-Received: (nullmailer pid 1182938 invoked by uid 1000);
-        Wed, 26 Jul 2023 12:12:54 -0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        with ESMTP id S229603AbjGZQWL (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 26 Jul 2023 12:22:11 -0400
+X-Greylist: delayed 1489 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 26 Jul 2023 09:22:09 PDT
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59FFF1BDA
+        for <dmaengine@vger.kernel.org>; Wed, 26 Jul 2023 09:22:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
+        MIME-Version:Date:Message-ID:content-disposition;
+        bh=4QVwg/3buKSKa87Kcb2VqaMkmqvy97Dgt5k/CEvT8aQ=; b=heBCf9Bwkfy9wEwW2XMdjOiYW5
+        zLEwoiA+XKTBS9uzuU2MaAA/esjk7A5WciR4XIjg20XBNfvqswFXaY8N+KiFjo1TW6XdQDwSEWvGl
+        1ZC70U/NnmlNfFql1lJ92MS1Fjae6kjsIG8V01ayjngNsvoljymDw39ZBXuPTDLg/OYD3J7INrQ5p
+        lGoI48P+v7yQbUCa2jKAwbWBedwKXXly6pslTWyCAZayqtBthXYaKxlOjJ/GtJ4cmNf6C6il3mRVD
+        B+2TRn0lysrZP8Em/dpRF08Ik7INqpgJ7FCvsuSfbuJG+BuKj/FczJq7AD/LLq8Y2WohlEFJ3/kbc
+        Sx9i2jTw==;
+Received: from d75-158-34-12.abhsia.telus.net ([75.158.34.12] helo=[192.168.11.155])
+        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <logang@deltatee.com>)
+        id 1qOgt3-00B3w0-6K; Wed, 26 Jul 2023 09:57:18 -0600
+Message-ID: <9378e69f-2bd4-9d8d-c736-b8799f6ebecc@deltatee.com>
+Date:   Wed, 26 Jul 2023 09:57:16 -0600
 MIME-Version: 1.0
-From:   Rob Herring <robh@kernel.org>
-To:     Gatien Chevallier <gatien.chevallier@foss.st.com>
-Cc:     linux-mmc@vger.kernel.org, gregkh@linuxfoundation.org,
-        lee@kernel.org, catalin.marinas@arm.com, jic23@kernel.org,
-        hugues.fruchet@foss.st.com, richardcochran@gmail.com,
-        will@kernel.org, arnd@kernel.org, davem@davemloft.net,
-        Oleksii Moisieiev <oleksii_moisieiev@epam.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Oleksii_Moisieiev@epam.com, linux-phy@lists.infradead.org,
-        linux-crypto@vger.kernel.org, kuba@kernel.org,
-        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org,
-        vkoul@kernel.org, linux-arm-kernel@lists.infradead.org,
-        edumazet@google.com, devicetree@vger.kernel.org,
-        linux-iio@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        herbert@gondor.apana.org.au, linux-i2c@vger.kernel.org,
-        alexandre.torgue@foss.st.com, mchehab@kernel.org,
-        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        ulf.hansson@linaro.org, netdev@vger.kernel.org,
-        andi.shyti@kernel.org, olivier.moysan@foss.st.com,
-        linux-serial@vger.kernel.org, pabeni@redhat.com,
-        arnaud.pouliquen@foss.st.com, dmaengine@vger.kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, linux-media@vger.kernel.org,
-        conor+dt@kernel.org, fabrice.gasnier@foss.st.com
-In-Reply-To: <20230726083810.232100-2-gatien.chevallier@foss.st.com>
-References: <20230726083810.232100-1-gatien.chevallier@foss.st.com>
- <20230726083810.232100-2-gatien.chevallier@foss.st.com>
-Message-Id: <169037357425.1182922.8121576517266921442.robh@kernel.org>
-Subject: Re: [IGNORE][PATCH v3 01/11] dt-bindings: Document common device
- controller bindings
-Date:   Wed, 26 Jul 2023 06:12:54 -0600
-X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,DKIM_INVALID,
-        DKIM_SIGNED,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Content-Language: en-US
+To:     Chengfeng Ye <dg573847474@gmail.com>, vkoul@kernel.org
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230726104827.60382-1-dg573847474@gmail.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+In-Reply-To: <20230726104827.60382-1-dg573847474@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 75.158.34.12
+X-SA-Exim-Rcpt-To: dg573847474@gmail.com, vkoul@kernel.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: logang@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
+Subject: Re: [PATCH] dmaengine: plx_dma: Fix potential deadlock on
+ &plxdev->ring_lock
+X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 
-On Wed, 26 Jul 2023 10:38:00 +0200, Gatien Chevallier wrote:
-> From: Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>
+
+On 2023-07-26 04:48, Chengfeng Ye wrote:
+> As plx_dma_process_desc() is invoked by both tasklet plx_dma_desc_task()
+> under softirq context and plx_dma_tx_status() callback that executed under
+> process context, the lock aquicision of &plxdev->ring_lock inside
+> plx_dma_process_desc() should disable irq otherwise deadlock could happen
+> if the irq preempts the execution of process context code while the lock
+> is held in process context on the same CPU.
 > 
-> Introducing of the common device controller bindings for the controller
-> provider and consumer devices. Those bindings are intended to allow
-> divided system on chip into muliple domains, that can be used to
-> configure hardware permissions.
+> Possible deadlock scenario:
+> plx_dma_tx_status()
+>     -> plx_dma_process_desc()
+>     -> spin_lock(&plxdev->ring_lock)
+>         <tasklet softirq>
+>         -> plx_dma_desc_task()
+>         -> plx_dma_process_desc()
+>         -> spin_lock(&plxdev->ring_lock) (deadlock here)
 > 
-> Signed-off-by: Oleksii Moisieiev <oleksii_moisieiev@epam.com>
-> ---
->  .../feature-domain-controller.yaml            | 84 +++++++++++++++++++
->  1 file changed, 84 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/feature-controllers/feature-domain-controller.yaml
+> This flaw was found by an experimental static analysis tool I am developing
+> for irq-related deadlock.
 > 
+> The tentative patch fixes the potential deadlock by spin_lock_irqsave() in
+> plx_dma_process_desc() to disable irq while lock is held.
+> 
+> Signed-off-by: Chengfeng Ye <dg573847474@gmail.com>
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+Makes sense. Thanks!
 
-yamllint warnings/errors:
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/feature-controllers/feature-domain-controller.yaml: title: 'Generic Domain Controller bindings' should not be valid under {'pattern': '([Bb]inding| [Ss]chema)'}
-	hint: Everything is a binding/schema, no need to say it. Describe what hardware the binding is for.
-	from schema $id: http://devicetree.org/meta-schemas/core.yaml#
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20230726083810.232100-2-gatien.chevallier@foss.st.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+Logan

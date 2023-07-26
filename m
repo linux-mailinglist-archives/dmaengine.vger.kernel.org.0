@@ -2,151 +2,124 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BD2F7630DB
-	for <lists+dmaengine@lfdr.de>; Wed, 26 Jul 2023 11:05:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 627D6763136
+	for <lists+dmaengine@lfdr.de>; Wed, 26 Jul 2023 11:08:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233378AbjGZJFB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 26 Jul 2023 05:05:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59320 "EHLO
+        id S230399AbjGZJIQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 26 Jul 2023 05:08:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232236AbjGZJEj (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 26 Jul 2023 05:04:39 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F1E9DB;
-        Wed, 26 Jul 2023 02:02:27 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-668704a5b5bso5992599b3a.0;
-        Wed, 26 Jul 2023 02:02:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690362147; x=1690966947;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xEZHGYX9dSDjbkw+aqvi35n/7qtSj+sTI/JiA4c39II=;
-        b=n2HBSdB02c7mJmWrF/S0v8noxz6ai5qOYg2YO642G1SLlkfcrbgTlkYvG2upmvKNGT
-         ld2kQlhwfstGKK/QkwBbmAE4ifJR94v9IzQDz2hLu+dMDAUxAeaAi9SFbyigst74nn+C
-         mKRD2aYgGQA6qRA15V2uN+zXcwu5pvNUkoV2IQz+G/GnKyCijWfdl5eX0ZmoI3Hn/21T
-         wPoFZx87qRJJaf+9RFVdGTthHvA0Z7xRo4Qg41lXWXg2Yejc5O0gO8d1NhxchTqzYL6S
-         95+I3xnnmNBPpcKZnMECO5FU/mWJRAOcpY+r3+bqzTikR/J4ksE4yAKoX/56FEIl1jvg
-         OHwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690362147; x=1690966947;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xEZHGYX9dSDjbkw+aqvi35n/7qtSj+sTI/JiA4c39II=;
-        b=iwvU9i9XXk7ABenCy5gymG+GMEXL2svopVmceCwE3MY0hWSRRIuvJnj8gXQjEiOgvE
-         FXGBn6MpREPVFLwxsBST+HRo84n+pGfTyNcYCRlbbfq6DoCTIZUSBUJIfSWRdRTBFzM0
-         +lyclILaiiYPqzK4iC/qPi3qd2lEGCUqvljlIYxuTtl0UwpoxLtXO95tIQatyv4AglAv
-         r5oQInswpIYvs0ZbrN5TdI9aY94DPvrGqIKKUlvK13IXKbq/nulnNDuerNXJhXBR6fTW
-         vSYWDHb5VedgM6UxVw1fmBdvI1rE+pf3DEnzSRoV+rokwKeV+4TWiouoCwWh3GOVuCPF
-         qp9w==
-X-Gm-Message-State: ABy/qLas7sdIPxEHi5BVUtMgA9A5tSIqTtki7C2q8R6aQUIfbt1HHBjv
-        KdfJvTxi8LgEzM60KqYbM9c=
-X-Google-Smtp-Source: APBJJlHcS8YQs4kPk6Qj6ozIXE01IrlQGjLIravDLzQ2u3g9XT8qrNNNQrMWtDCAt4tXP9vRA9YjCg==
-X-Received: by 2002:a05:6a00:2e11:b0:67b:8602:aa1e with SMTP id fc17-20020a056a002e1100b0067b8602aa1emr1809504pfb.28.1690362146676;
-        Wed, 26 Jul 2023 02:02:26 -0700 (PDT)
-Received: from 377044c6c369.cse.ust.hk (191host097.mobilenet.cse.ust.hk. [143.89.191.97])
-        by smtp.gmail.com with ESMTPSA id m26-20020aa78a1a000000b0067f2413bf6dsm10967454pfa.106.2023.07.26.02.02.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jul 2023 02:02:26 -0700 (PDT)
-From:   Chengfeng Ye <dg573847474@gmail.com>
-To:     vkoul@kernel.org, sugaya.taichi@socionext.com,
-        orito.takao@socionext.com, len.baker@gmx.com,
-        aswinder.singh@linaro.org
-Cc:     dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Chengfeng Ye <dg573847474@gmail.com>
-Subject: [PATCH] dmaengine: milbeaut-hdmac: Fix potential deadlock on &mc->vc.lock
-Date:   Wed, 26 Jul 2023 09:02:04 +0000
-Message-Id: <20230726090204.1458-1-dg573847474@gmail.com>
-X-Mailer: git-send-email 2.17.1
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S232257AbjGZJHL (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 26 Jul 2023 05:07:11 -0400
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E080188;
+        Wed, 26 Jul 2023 02:04:42 -0700 (PDT)
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36Q8fK2J008196;
+        Wed, 26 Jul 2023 11:04:20 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=selector1;
+ bh=mHlSDUHrC46OTsxrd1MgTw0c0UTb8rmL5Uuj7fDW+n0=;
+ b=zO3V27RgKExY/q85tnvfYLxhy2slSf7Knw1gPHQf1WoyeM7uiF8GSo1HznFiPyivKlq4
+ L6CKD1U051jxT89xFuqjU/17wMDs9euvT7E9nzje/VEkTvWeYLOCZ6cGOXYOCNFYYfFZ
+ 5/xEUkV7rFy/XBYdkTEq6JpgOFqOWREZgROdss/Mt2JSe0VWdZSCuM2agejgclldDvuF
+ bCBjlpm6D7UbVjE5CUgrTIKrckaEo9oaPGeIbr9rw5b8vbc4Yi80Jy/IuujGL9AEBH4E
+ 29bz4VSinulO+vTqLeac2u1LjXFK0Jqfr53vxDsceG483W5WzuNtgT2Co+XpVgDPakkq ww== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3s306u876r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 26 Jul 2023 11:04:20 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8659710002A;
+        Wed, 26 Jul 2023 11:04:19 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7C2052115FC;
+        Wed, 26 Jul 2023 11:04:19 +0200 (CEST)
+Received: from [10.201.21.121] (10.201.21.121) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Wed, 26 Jul
+ 2023 11:04:17 +0200
+Message-ID: <5458d1d3-6c4c-738c-6dec-8b7ff78a5431@foss.st.com>
+Date:   Wed, 26 Jul 2023 11:04:16 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [IGNORE][PATCH v3 01/11] dt-bindings: Document common device
+ controller bindings
+Content-Language: en-US
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     <Oleksii_Moisieiev@epam.com>, <herbert@gondor.apana.org.au>,
+        <davem@davemloft.net>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <alexandre.torgue@foss.st.com>, <vkoul@kernel.org>,
+        <jic23@kernel.org>, <olivier.moysan@foss.st.com>,
+        <arnaud.pouliquen@foss.st.com>, <mchehab@kernel.org>,
+        <fabrice.gasnier@foss.st.com>, <andi.shyti@kernel.org>,
+        <ulf.hansson@linaro.org>, <edumazet@google.com>, <kuba@kernel.org>,
+        <pabeni@redhat.com>, <hugues.fruchet@foss.st.com>,
+        <lee@kernel.org>, <will@kernel.org>, <catalin.marinas@arm.com>,
+        <arnd@kernel.org>, <richardcochran@gmail.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        <linux-crypto@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-i2c@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        <alsa-devel@alsa-project.org>, <linux-media@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-phy@lists.infradead.org>, <linux-serial@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, <linux-usb@vger.kernel.org>
+References: <20230726083810.232100-1-gatien.chevallier@foss.st.com>
+ <20230726083810.232100-2-gatien.chevallier@foss.st.com>
+ <2023072605-removed-pacemaker-faff@gregkh>
+From:   Gatien CHEVALLIER <gatien.chevallier@foss.st.com>
+In-Reply-To: <2023072605-removed-pacemaker-faff@gregkh>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.201.21.121]
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-26_03,2023-07-25_01,2023-05-22_02
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-As &mc->vc.lock is acquired by milbeaut_hdmac_interrupt() under irq
-context, other acquisition of the same lock under process context should
-disable irq, otherwise deadlock could happen if the irq preempts the
-execution of process context code while the lock is held in process context
-on the same CPU.
+Hello Greg,
 
-milbeaut_hdmac_chan_config(), milbeaut_hdmac_chan_resume() and
-milbeaut_hdmac_chan_pause() are such callback functions not disable irq by
-default.
+On 7/26/23 10:48, Greg KH wrote:
+> On Wed, Jul 26, 2023 at 10:38:00AM +0200, Gatien Chevallier wrote:
+>> From: Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>
+>>
+>> Introducing of the common device controller bindings for the controller
+>> provider and consumer devices. Those bindings are intended to allow
+>> divided system on chip into muliple domains, that can be used to
+>> configure hardware permissions.
+>>
+>> Signed-off-by: Oleksii Moisieiev <oleksii_moisieiev@epam.com>
+>> ---
+>>   .../feature-domain-controller.yaml            | 84 +++++++++++++++++++
+>>   1 file changed, 84 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/feature-controllers/feature-domain-controller.yaml
+> 
+> What is the [IGNORE] prefix for?
+> 
 
-Possible deadlock scenario:
-milbeaut_hdmac_chan_config()
-    -> spin_lock(&mc->vc.lock)
-        <hard interruption>
-        -> milbeaut_hdmac_interrupt()
-        -> spin_lock(&mc->vc.lock); (deadlock here)
+I put this prefix to specify that the review for this patch should
+not be done on this thread.
 
-This flaw was found by an experimental static analysis tool I am developing
-for irq-related deadlock.
+It is still under review on the thread linked in the cover-letter.
 
-The tentative patch fixes the potential deadlock by spin_lock_irqsave() in
-the three callback functions to disable irq while lock is held.
+This series aims to provide a use-case for this binding so its scope
+can be better defined.
 
-Signed-off-by: Chengfeng Ye <dg573847474@gmail.com>
----
- drivers/dma/milbeaut-hdmac.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/dma/milbeaut-hdmac.c b/drivers/dma/milbeaut-hdmac.c
-index 1b0a95892627..6151c830ff6e 100644
---- a/drivers/dma/milbeaut-hdmac.c
-+++ b/drivers/dma/milbeaut-hdmac.c
-@@ -214,10 +214,11 @@ milbeaut_hdmac_chan_config(struct dma_chan *chan, struct dma_slave_config *cfg)
- {
- 	struct virt_dma_chan *vc = to_virt_chan(chan);
- 	struct milbeaut_hdmac_chan *mc = to_milbeaut_hdmac_chan(vc);
-+	unsigned long flags;
- 
--	spin_lock(&mc->vc.lock);
-+	spin_lock_irqsave(&mc->vc.lock, flags);
- 	mc->cfg = *cfg;
--	spin_unlock(&mc->vc.lock);
-+	spin_unlock_irqrestore(&mc->vc.lock, flags);
- 
- 	return 0;
- }
-@@ -226,13 +227,14 @@ static int milbeaut_hdmac_chan_pause(struct dma_chan *chan)
- {
- 	struct virt_dma_chan *vc = to_virt_chan(chan);
- 	struct milbeaut_hdmac_chan *mc = to_milbeaut_hdmac_chan(vc);
-+	unsigned long flags;
- 	u32 val;
- 
--	spin_lock(&mc->vc.lock);
-+	spin_lock_irqsave(&mc->vc.lock, flags);
- 	val = readl_relaxed(mc->reg_ch_base + MLB_HDMAC_DMACA);
- 	val |= MLB_HDMAC_PB;
- 	writel_relaxed(val, mc->reg_ch_base + MLB_HDMAC_DMACA);
--	spin_unlock(&mc->vc.lock);
-+	spin_unlock_irqrestore(&mc->vc.lock, flags);
- 
- 	return 0;
- }
-@@ -241,13 +243,14 @@ static int milbeaut_hdmac_chan_resume(struct dma_chan *chan)
- {
- 	struct virt_dma_chan *vc = to_virt_chan(chan);
- 	struct milbeaut_hdmac_chan *mc = to_milbeaut_hdmac_chan(vc);
-+	unsigned long flags;
- 	u32 val;
- 
--	spin_lock(&mc->vc.lock);
-+	spin_lock_irqsave(&mc->vc.lock, flags);
- 	val = readl_relaxed(mc->reg_ch_base + MLB_HDMAC_DMACA);
- 	val &= ~MLB_HDMAC_PB;
- 	writel_relaxed(val, mc->reg_ch_base + MLB_HDMAC_DMACA);
--	spin_unlock(&mc->vc.lock);
-+	spin_unlock_irqrestore(&mc->vc.lock, flags);
- 
- 	return 0;
- }
--- 
-2.17.1
-
+Best regards,
+Gatien

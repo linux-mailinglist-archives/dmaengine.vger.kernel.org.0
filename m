@@ -2,59 +2,60 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DA71763468
-	for <lists+dmaengine@lfdr.de>; Wed, 26 Jul 2023 12:59:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA02C7634A4
+	for <lists+dmaengine@lfdr.de>; Wed, 26 Jul 2023 13:17:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234040AbjGZK7K (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 26 Jul 2023 06:59:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43558 "EHLO
+        id S232491AbjGZLR1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 26 Jul 2023 07:17:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234053AbjGZK7F (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 26 Jul 2023 06:59:05 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45675212D;
-        Wed, 26 Jul 2023 03:59:03 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id ffacd0b85a97d-31768ce2e81so2077080f8f.1;
-        Wed, 26 Jul 2023 03:59:03 -0700 (PDT)
+        with ESMTP id S232458AbjGZLRR (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 26 Jul 2023 07:17:17 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5ED3271C;
+        Wed, 26 Jul 2023 04:17:05 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-1b89cfb4571so52378915ad.3;
+        Wed, 26 Jul 2023 04:17:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690369142; x=1690973942;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=S+nKQ3sirP3HDfMdOhfcrJ3FXH/RL38AgDUVvGDTOt4=;
-        b=M7VA46+nGi21oCzVEYji66II0o3eN2zeqAMEdq/AfgudqPphOeAi18h8PoAdofQlRY
-         Z2m6jG4PxKMJEEwpB/Ph7yPwFscmkqJcFt5Otm/6VJbjIbjlNGOwYRMoQlufpDLjij2w
-         bMiDsbDh68EccUMmaYp6EUGj5l7Y601KKSI0lpwxogu0NGxoKa3ak1o+cv0RLlOcTRWW
-         7FXt9ADVN+7OhVsmoRFFbNN1legBOtRaYPQ4baC4WoTJJj9Px2lW26InLosSGmm62F+t
-         0mps4n6853tZ54r1mrItLEs4hndELqKCxzUL6WWkwGRmtZkevB+pt/e0DuMSk6FXkY6w
-         KXvA==
+        d=gmail.com; s=20221208; t=1690370225; x=1690975025;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3SELQNWCM0Vfw3jXEg+B1K9VTFsk/ohvBXYAV3q7aEg=;
+        b=VFoAMxMovxl0is1nUMBnCSNE9X5PgOjqbXMiaQ0q6vw1eawI5Rw9c/TaEYx+CtgVNq
+         eLbLeqdNQO4MbKLFqZp0306yByHdqsMGdgDZW9BfBayclUurcDjgTmykcml0NwwOzKiJ
+         4BNytXk7PUC38VPUsj0sFBPZV9/rY1oXSRPf++d6eDudmWuKilJ6XGLh0FUwbrv/LH3Y
+         xrtdkSMVt3/6BOk+QYapRvSKc4+A8m/fYDk/9kKshfu8pZsz+a96OSZsPEz7tNpeQBje
+         HU0lae0F5wnYcq40IM92aFGy4XnUv1qINNiQQdmWIwQuVTPJvG/7t5fwiC0NKVuZfDrz
+         wn+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690369142; x=1690973942;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=S+nKQ3sirP3HDfMdOhfcrJ3FXH/RL38AgDUVvGDTOt4=;
-        b=HEHeMiB5TdTEsHKEh8DiiRzDC8bEdNO7Uywv/+trh0Jb/0cr9uVjVSQC+Xkzn+4Eyn
-         /fo88Ln36ic4ushJeQKGv/SlR0g1GbYUialeIRqAqXMw6zeaTudpUpPe49lWn1SD1p49
-         hYlKilkCmcaVNlO+FQp6ceqEveh+n+AZmilZYRwzC4bvBDSfauMPbXBWg5K8oJGfEPQz
-         clHYlTFXTe6Lxxvp9QFxGLZ1Te+IaaO8ca7mtOq5gTZmn6T0SOUQlzXhJgfZMYoG1rZa
-         FWKji7mIwPGkDNjw0NHT1qLgGooW/IAOU5LDklQCVof6PFHyGb0a3jvJEAuZZD7BJzCV
-         OiTQ==
-X-Gm-Message-State: ABy/qLalXTeMB3QmzA0mzBhBdmPmNdNCfZusC0Mg1mCDek0zdpeVY0MP
-        2Mi06oyzgMcXiWCbEl6R+rxRgrCxBv5sYEFpzWmGG6wC2gicsQ==
-X-Google-Smtp-Source: APBJJlGHt3PHSFAkS/QojrLgrSkfDRMoxrFjYxhdrv3UE2/+E6kZ0JHy69jUBnSMOjrKGDuVznxb2E8Flymgo2Izh1Y=
-X-Received: by 2002:adf:dc8c:0:b0:313:ee73:cc9a with SMTP id
- r12-20020adfdc8c000000b00313ee73cc9amr1164733wrj.70.1690369141464; Wed, 26
- Jul 2023 03:59:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230726104827.60382-1-dg573847474@gmail.com>
-In-Reply-To: <20230726104827.60382-1-dg573847474@gmail.com>
+        d=1e100.net; s=20221208; t=1690370225; x=1690975025;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3SELQNWCM0Vfw3jXEg+B1K9VTFsk/ohvBXYAV3q7aEg=;
+        b=Lpghc9GJt6ikddCT0Hfj5GNgt1zqyPRVBKiM17YXH96QuO99wkYcGnemrKMNYkOZSi
+         UXYIRxyXnwHl92gsVDocj6+EDTF7TN656qPccXnufGEbMTR7MaBC9FyVR7qLhLcq/Mtq
+         jCx0NBujUX9x31ZdsqpR+esRbZem0N6htXKKZK1MMNr1MLAB1pYPobGBLmzUHTw4cSpe
+         R9H/XP9xAm9uGpX1NTvtIbRAWzdVtOzoQJ/WJcXnGSZhsUXzQwozChk2D21s6o9XxAR/
+         tBXCxarxaPxg9kdENOYcvgc+QrnyLwvEVr3qBpmKy6B4KEZJnQvN+7LfvKSvMsayZuXv
+         wwrg==
+X-Gm-Message-State: ABy/qLZ7wl748FgR7+3AOAbEi0H+eaPpwTdQ3jErixQgiCho8B+pqyVQ
+        zJtGzuWueobuEPBmR6cZWuM=
+X-Google-Smtp-Source: APBJJlF2L3aSjYORABVQ8C/l87u3iEkhcgxf2vRMJtoFdMU6Mk6qPtz6/QuCfCqr8mrP5N9mgwdiXg==
+X-Received: by 2002:a17:903:2308:b0:1b8:400a:48f2 with SMTP id d8-20020a170903230800b001b8400a48f2mr2189158plh.62.1690370225095;
+        Wed, 26 Jul 2023 04:17:05 -0700 (PDT)
+Received: from 377044c6c369.cse.ust.hk (191host097.mobilenet.cse.ust.hk. [143.89.191.97])
+        by smtp.gmail.com with ESMTPSA id jh11-20020a170903328b00b001bb3beb2bc6sm5676141plb.65.2023.07.26.04.17.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Jul 2023 04:17:04 -0700 (PDT)
 From:   Chengfeng Ye <dg573847474@gmail.com>
-Date:   Wed, 26 Jul 2023 18:58:50 +0800
-Message-ID: <CAAo+4rXG8ZLxD1+g_319XJf0e_p2jZZ1COzUCjo00HLfbv0C8g@mail.gmail.com>
-Subject: Re: [PATCH] dmaengine: plx_dma: Fix potential deadlock on &plxdev->ring_lock
-To:     logang@deltatee.com, vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+To:     vkoul@kernel.org, rsahu@apm.com, lho@apm.com, allen.lkml@gmail.com,
+        romain.perier@gmail.com, dan.j.williams@intel.com
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chengfeng Ye <dg573847474@gmail.com>
+Subject: [PATCH] dmaengine: xgene: Fix potential deadlock on &chan->lock
+Date:   Wed, 26 Jul 2023 11:16:30 +0000
+Message-Id: <20230726111630.25670-1-dg573847474@gmail.com>
+X-Mailer: git-send-email 2.17.1
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
         FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
@@ -65,4 +66,61 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Fixes: 1d05a0bdb420 ("dmaengine: plx_dma: Move spin_lock_bh() to spin_lock() ")
+As xgene_dma_cleanup_descriptors() is invoked by both tasklet
+xgene_dma_tasklet_cb() under softirq context and
+xgene_dma_free_chan_resources() callback that executed under process
+context, the lock aquicision of &chan->lock inside
+xgene_dma_cleanup_descriptors() should disable irq otherwise deadlock
+could happen if the tasklet softirq preempts the execution of process
+context code while the lock is held in process context on the same CPU.
+
+Possible deadlock scenario:
+xgene_dma_free_chan_resources()
+    -> xgene_dma_cleanup_descriptors()
+    -> spin_lock(&chan->lock)
+        <tasklet softirq>
+        -> xgene_dma_tasklet_cb()
+        -> xgene_dma_cleanup_descriptors()
+        -> spin_lock(&chan->lock) (deadlock here)
+
+This flaw was found by an experimental static analysis tool I am developing
+for irq-related deadlock.
+
+The tentative patch fixes the potential deadlock by spin_lock_irqsave() in
+plx_dma_process_desc() to disable irq while lock is held.
+
+Signed-off-by: Chengfeng Ye <dg573847474@gmail.com>
+---
+ drivers/dma/xgene-dma.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/dma/xgene-dma.c b/drivers/dma/xgene-dma.c
+index 3589b4ef50b8..e766511badcf 100644
+--- a/drivers/dma/xgene-dma.c
++++ b/drivers/dma/xgene-dma.c
+@@ -689,11 +689,12 @@ static void xgene_dma_cleanup_descriptors(struct xgene_dma_chan *chan)
+ 	struct xgene_dma_desc_sw *desc_sw, *_desc_sw;
+ 	struct xgene_dma_desc_hw *desc_hw;
+ 	struct list_head ld_completed;
++	unsigned long flags;
+ 	u8 status;
+ 
+ 	INIT_LIST_HEAD(&ld_completed);
+ 
+-	spin_lock(&chan->lock);
++	spin_lock_irqsave(&chan->lock, flags);
+ 
+ 	/* Clean already completed and acked descriptors */
+ 	xgene_dma_clean_completed_descriptor(chan);
+@@ -762,7 +763,7 @@ static void xgene_dma_cleanup_descriptors(struct xgene_dma_chan *chan)
+ 	 */
+ 	xgene_chan_xfer_ld_pending(chan);
+ 
+-	spin_unlock(&chan->lock);
++	spin_unlock_irqrestore(&chan->lock, flags);
+ 
+ 	/* Run the callback for each descriptor, in order */
+ 	list_for_each_entry_safe(desc_sw, _desc_sw, &ld_completed, node) {
+-- 
+2.17.1
+

@@ -2,134 +2,126 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 28269762124
-	for <lists+dmaengine@lfdr.de>; Tue, 25 Jul 2023 20:16:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C08CC762A7F
+	for <lists+dmaengine@lfdr.de>; Wed, 26 Jul 2023 06:58:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230259AbjGYSQY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 25 Jul 2023 14:16:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33524 "EHLO
+        id S230103AbjGZE6g (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 26 Jul 2023 00:58:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230464AbjGYSQW (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 25 Jul 2023 14:16:22 -0400
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77958E9;
-        Tue, 25 Jul 2023 11:16:20 -0700 (PDT)
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36PDW7hH010621;
-        Tue, 25 Jul 2023 18:43:56 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=selector1;
- bh=MqeCBr2iwB1ylpsZybUxjhY2AMLlO6u0i1cPCCrgpvE=;
- b=FcPygnpCmMRI4rYBfElPZ87KsqmzW5pFp7vAN9QNFeuHFaL2YEADnymUZrxcsZH+LuF/
- Zh2VGnjH6LPaiwLFPWgKnH9nEE/C2l6SvZ0s0l54VOrcgS6V9pPa5DfsE3auCVlfpBZ4
- KmvNUYN40YMUDrIg9Z1MdijvkMdnKGw+fJDkDyFbDh8GgDbZwABkKwr5ZDYhJjTc36KS
- g0x9vNXFxARKJNywnoSoZQWZWHGvLf/W6k21N0AInd1zoMTodVOfQVh/6g971RhU3NRI
- SXpJCegoMFVbE+qnqwDjPuZpO4VjOrm4aOck+kFu6V58OOIPFHVMaGF4OgpoeFvhV3fm uw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3s2bkbjqrb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Jul 2023 18:43:56 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1D06210002A;
-        Tue, 25 Jul 2023 18:43:56 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0F5FA27FAB5;
-        Tue, 25 Jul 2023 18:43:56 +0200 (CEST)
-Received: from localhost (10.201.21.121) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Tue, 25 Jul
- 2023 18:43:55 +0200
-From:   Gatien Chevallier <gatien.chevallier@foss.st.com>
-To:     <Oleksii_Moisieiev@epam.com>, <gregkh@linuxfoundation.org>,
-        <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>, <alexandre.torgue@foss.st.com>,
-        <vkoul@kernel.org>, <jic23@kernel.org>,
-        <olivier.moysan@foss.st.com>, <arnaud.pouliquen@foss.st.com>,
-        <mchehab@kernel.org>, <fabrice.gasnier@foss.st.com>,
-        <andi.shyti@kernel.org>, <ulf.hansson@linaro.org>,
-        <edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
-        <hugues.fruchet@foss.st.com>, <lee@kernel.org>, <will@kernel.org>,
-        <catalin.marinas@arm.com>, <arnd@kernel.org>,
-        <richardcochran@gmail.com>, Frank Rowand <frowand.list@gmail.com>
-CC:     <linux-crypto@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-i2c@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        <alsa-devel@alsa-project.org>, <linux-media@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-phy@lists.infradead.org>, <linux-serial@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        Gatien Chevallier <gatien.chevallier@foss.st.com>
-Subject: [PATCH v2 08/11] arm64: dts: st: add RIFSC as a domain controller for STM32MP25x boards
-Date:   Tue, 25 Jul 2023 18:41:01 +0200
-Message-ID: <20230725164104.273965-9-gatien.chevallier@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230725164104.273965-1-gatien.chevallier@foss.st.com>
-References: <20230725164104.273965-1-gatien.chevallier@foss.st.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.201.21.121]
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-25_08,2023-07-25_01,2023-05-22_02
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        with ESMTP id S229573AbjGZE6e (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 26 Jul 2023 00:58:34 -0400
+Received: from mail-qt1-x82b.google.com (mail-qt1-x82b.google.com [IPv6:2607:f8b0:4864:20::82b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93F141BD1;
+        Tue, 25 Jul 2023 21:58:33 -0700 (PDT)
+Received: by mail-qt1-x82b.google.com with SMTP id d75a77b69052e-4039f0d140eso52276761cf.1;
+        Tue, 25 Jul 2023 21:58:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690347512; x=1690952312;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=M087Fgq0E4MMh1I/cPVwdFNlx/VQvGhOV2RTHu7YaBU=;
+        b=pU6R0/U1qgBajf5acm5GN3CJoiqNmkCUunPRrSGqoTE9hdz6stnmgrcZ7JA5Q49a5E
+         JtueY3tREN64bfuHdFaLJvjc6PucraeYC5Pj64fBpE/O3yTtBGP51jYxrObvHk8nPyS9
+         MLUEvtEnie2H2jcItTbIC2kKyFJZHnqfPz9+FGixCqXnl5EKyRCXc4c2Uc0WCtXg6kdB
+         iRVaDZwLbSBZMYvXupizNn9YWKiaY0mOczUqCZ+MU7wo4xu3a5oQXxlcplwMYGQ25qH5
+         DGgRyMZY0OKhvvRASDw5vLneZep6G0g2FdoRwsQVnepiKa8iJs9dMMi/1gQjdnARd1m4
+         ng3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690347512; x=1690952312;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=M087Fgq0E4MMh1I/cPVwdFNlx/VQvGhOV2RTHu7YaBU=;
+        b=LD7w1saLov8u5pjp2WL4JHDDvPBkD3uvJ3IUv8PgnmWBkn4ABY+eXsUczt5QjfoxMG
+         WnHP4++AJJ5bj2gFTmkDUDjcSvD10KbbktI37QqOOdKYAvzsaYZF/hdE1nox6kQM93Tm
+         47jyJkEfqsj7kLyQddlbSTLgE3kA/rxJut+dgyiFdB8IZHyKM5od/BJ2sXUwhkyiqTEU
+         a7+iyJnf/6pRyv1Yb9lNKdebtnqcRn2tTpgI9U9LirEQB8dIDuKiJr/ovxf18AmtdgAx
+         pPErbBgwpuhXUjds0S/Ct3XDvCY/ijpnL6xZe9plZOizU69ymZuO++JwzCuN+dKJXZa4
+         LeZw==
+X-Gm-Message-State: ABy/qLax/rJsBWHOeyTZ6aO4rf/Wv1mKtF2ULVquXrmYMcYioi3e4mT1
+        HhtvtJWYdqmer6M0eaTzWzQ=
+X-Google-Smtp-Source: APBJJlGf5vu0wnTC/f1RfEHETiSiriuSo6u0D6X8YQ+PtqkJ4DC2xNEIzE+uILGV6Y37eISxkfemmQ==
+X-Received: by 2002:a05:622a:211:b0:403:f659:d716 with SMTP id b17-20020a05622a021100b00403f659d716mr1349217qtx.63.1690347512666;
+        Tue, 25 Jul 2023 21:58:32 -0700 (PDT)
+Received: from 377044c6c369.cse.ust.hk (191host097.mobilenet.cse.ust.hk. [143.89.191.97])
+        by smtp.gmail.com with ESMTPSA id p6-20020a170902eac600b001bb739e220esm9229001pld.230.2023.07.25.21.58.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Jul 2023 21:58:32 -0700 (PDT)
+From:   Chengfeng Ye <dg573847474@gmail.com>
+To:     shuge@allwinnertech.com, maxime.ripard@free-electrons.com,
+        vkoul@kernel.org, wens@csie.org, jernej.skrabec@gmail.com,
+        samuel@sholland.org, p.zabel@pengutronix.de
+Cc:     dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+        Chengfeng Ye <dg573847474@gmail.com>
+Subject: [PATCH] dmaengine: sun6i: Fix potential deadlock on &sdev->lock
+Date:   Wed, 26 Jul 2023 04:58:26 +0000
+Message-Id: <20230726045826.49554-1-dg573847474@gmail.com>
+X-Mailer: git-send-email 2.17.1
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-RIFSC is a firewall controller. Change its compatible so that is matches
-the documentation and reference RIFSC as a feature-domain-controller.
+As &sdev->lock is acquired by tasklet sun6i_dma_tasklet() executed under
+softirq context, other acquisition of the same lock under process context
+should disable irq, otherwise deadlock could happen if the soft irq preempt
+the execution while the lock is held in process context on the same CPU.
 
-Signed-off-by: Gatien Chevallier <gatien.chevallier@foss.st.com>
+sun6i_dma_terminate_all() and sun6i_dma_pause() callbacks acquire the same
+lock without disabling irq inside the function.
+
+Possible deadlock scenario:
+sun6i_dma_pause()
+    -> spin_lock(&sdev->lock);
+        <tasklet softirq interruption>
+        -> sun6i_dma_tasklet()
+        -> spin_lock_irq(&sdev->lock) (deadlock here)
+
+This flaw was found by an experimental static analysis tool I am developing
+for irq-related deadlock.
+
+The tentative patch fixes the potential deadlock by spin_lock_bh() to
+disable softirq.
+
+Signed-off-by: Chengfeng Ye <dg573847474@gmail.com>
 ---
+ drivers/dma/sun6i-dma.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Changes in V2:
-	- Fix rifsc node name
-	- Move the "ranges" property under the
-	  "feature-domains" one
-
- arch/arm64/boot/dts/st/stm32mp251.dtsi | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
-index 5268a4321841..cb084381e4cd 100644
---- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
-+++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
-@@ -105,11 +105,13 @@ soc@0 {
- 		interrupt-parent = <&intc>;
- 		ranges = <0x0 0x0 0x0 0x80000000>;
+diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
+index ebfd29888b2f..8bad6ce62ea8 100644
+--- a/drivers/dma/sun6i-dma.c
++++ b/drivers/dma/sun6i-dma.c
+@@ -873,9 +873,9 @@ static int sun6i_dma_pause(struct dma_chan *chan)
+ 		writel(DMA_CHAN_PAUSE_PAUSE,
+ 		       pchan->base + DMA_CHAN_PAUSE);
+ 	} else {
+-		spin_lock(&sdev->lock);
++		spin_lock_bh(&sdev->lock);
+ 		list_del_init(&vchan->node);
+-		spin_unlock(&sdev->lock);
++		spin_unlock_bh(&sdev->lock);
+ 	}
  
--		rifsc: rifsc-bus@42080000 {
--			compatible = "simple-bus";
-+		rifsc: bus@42080000 {
-+			compatible = "st,stm32mp25-rifsc";
- 			reg = <0x42080000 0x1000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-+			feature-domain-controller;
-+			#feature-domain-cells = <1>;
- 			ranges;
+ 	return 0;
+@@ -914,9 +914,9 @@ static int sun6i_dma_terminate_all(struct dma_chan *chan)
+ 	unsigned long flags;
+ 	LIST_HEAD(head);
  
- 			usart2: serial@400e0000 {
-@@ -117,6 +119,7 @@ usart2: serial@400e0000 {
- 				reg = <0x400e0000 0x400>;
- 				interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&ck_flexgen_08>;
-+				feature-domains = <&rifsc 32>;
- 				status = "disabled";
- 			};
- 		};
+-	spin_lock(&sdev->lock);
++	spin_lock_bh(&sdev->lock);
+ 	list_del_init(&vchan->node);
+-	spin_unlock(&sdev->lock);
++	spin_unlock_bh(&sdev->lock);
+ 
+ 	spin_lock_irqsave(&vchan->vc.lock, flags);
+ 
 -- 
-2.35.3
+2.17.1
 

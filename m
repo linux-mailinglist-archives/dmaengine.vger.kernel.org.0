@@ -2,96 +2,98 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 38E1C7681ED
-	for <lists+dmaengine@lfdr.de>; Sat, 29 Jul 2023 22:59:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 928B576894D
+	for <lists+dmaengine@lfdr.de>; Mon, 31 Jul 2023 01:50:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229529AbjG2U7E (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 29 Jul 2023 16:59:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35134 "EHLO
+        id S229478AbjG3Xum (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 30 Jul 2023 19:50:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229469AbjG2U7D (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 29 Jul 2023 16:59:03 -0400
-Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24B3D2D7D
-        for <dmaengine@vger.kernel.org>; Sat, 29 Jul 2023 13:59:02 -0700 (PDT)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailout.nyi.internal (Postfix) with ESMTP id BFB235C0053;
-        Sat, 29 Jul 2023 16:58:58 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Sat, 29 Jul 2023 16:58:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-type:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm2; t=1690664338; x=1690750738; bh=ZZ
-        1/TaxPYHX5JNgudz3merjNpfNfrr3gBTbRmLM/4CY=; b=bNRTNgu4KYksz/PCk6
-        kCn2Id+oUWGs3PCNQdVu8Hb7QG1LPP/E0SoyO+CbU0mKYVo7CYyuiLr6ZJhbdeqL
-        qwjulTc0sPtIUBp85UlyOm0xnNZ/uEm1xNeYzh1yJVKbNQZuwREQfmDCBqX8CEb1
-        7zP18LzFJm+1gM5SE2aNZYewpdYzVPe1BNcUzSHmQxM6V31y2kmMGjFrHx34zFWW
-        euRg9QfNew0fHgaRgiiL0Dxc96eecmlMoGEbwd1JikPbkafo6AlGvIwFu1aJnew8
-        Uqo/79Xd2GQ74mDuG4wf4DDqRitJxtsQ+H5ybeMrcT12H7FHFGQU4Grzd7GmFV0a
-        qOqQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; t=1690664338; x=1690750738; bh=ZZ1/TaxPYHX5J
-        Ngudz3merjNpfNfrr3gBTbRmLM/4CY=; b=S/Zv8/FlGt+COzUcd1D6B4hHVw0mb
-        tWxIGW/thFyPQspLriiu8wBQT2//xA0acQQPRduym/XsBo83h35anwkEl7G2t7Cd
-        fbpP0GK1t14+mBIgQ4bmJjzlM0Hqo4k12P3R1vsj+iswVFyy8FG5deuKvyHpoMQ3
-        7ZljfQJGDmm0lOES7+ABbqSPg911s60//mEBzH0RrIUtot/j15YUCbgmFomlhwQF
-        c+VUtyfgEoUjLpZm1j/QSxBl72ilnqfvBZcMZg1d4gyWC0Gho8ivxk/JH30GvAhH
-        t94M+E4aaQlDZG6DGYpUDN0rWuyVMmGquNyEu77YxwYVBggNbi1ZSKrgg==
-X-ME-Sender: <xms:kn3FZB1uG9GreiQ4jWqzYdB2_1C9ROAPk39OD8ShyqSEMeAXF9ssFQ>
-    <xme:kn3FZIEMTp5Ibz8amhUi-FmRKdNpignnSiWhA31ybBtG7v1I-Tfrxcwu4lvF_JIE2
-    dwIBZ6nIoKgjaOQYEA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrieekgdduhedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:kn3FZB6Rw-LDHIfA1LO88Y4X-joUr6fPD-PsRXMUF9shr6-GWQW7uA>
-    <xmx:kn3FZO0pMVK2sLAPV7c6l8uU3sbi7xcKz-qKAOeDQ8sv2Xxal8afiA>
-    <xmx:kn3FZEGMWZMalz97x3JJ0-hFDnV_8qMkY4Izy1XmvUjx2Bj-hbCgXw>
-    <xmx:kn3FZOOl-H7VG0rnTDY3g6XHJims83GvZClsFeJk54l9v8cTc8nOUA>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 2C8DFB60089; Sat, 29 Jul 2023 16:58:58 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-592-ga9d4a09b4b-fm-defalarms-20230725.001-ga9d4a09b
-Mime-Version: 1.0
-Message-Id: <b58a175f-eb66-4991-b4b2-86b768c5b401@app.fastmail.com>
-In-Reply-To: <20230729192945.1217206-1-festevam@gmail.com>
-References: <20230729192945.1217206-1-festevam@gmail.com>
-Date:   Sat, 29 Jul 2023 22:58:36 +0200
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "Fabio Estevam" <festevam@gmail.com>,
-        "Vinod Koul" <vkoul@kernel.org>
-Cc:     dmaengine@vger.kernel.org, "Fabio Estevam" <festevam@denx.de>
-Subject: Re: [PATCH] dmaengine: ipu: Remove the driver
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        with ESMTP id S229459AbjG3Xul (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 30 Jul 2023 19:50:41 -0400
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8634210C0;
+        Sun, 30 Jul 2023 16:50:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
+        MIME-Version:Date:Message-ID:content-disposition;
+        bh=FVsm7XR5gyD3MmGf40bx/+LP6XG63Sd/Pb98sroNX+0=; b=Pwizs9VhPURkngamp5j03F2HZb
+        wDmxLfwou6NxEh4deJei7d1+l+mIoNhPDLeCGbdd/asUvPAoVTeF1ESYx+3WhOxFY0yAzaVbtJ3Pp
+        P1kVY/PCF7uSpLEfBuCWXXywYnqfxWweu+xO7z69+/fa5sPD2/xLyL2Pnuw3ZMMSn3u4TuSSXhuJ9
+        5iUNlJpx/kuUw6UcTGpZTtKDnx3ZYDo5kFGwEbPGu3Ixu1E5gH4AfAJx2S0b4sdZAX+czi4mQWyL4
+        KP99IfaRg6xrO9RT/d2Qz+ssfo+9CP/JlzPkmrCBKCZifNILYE97hgoaA5hAw1d4zN02kfKg4U3jO
+        YNm0HAjw==;
+Received: from s0106a84e3fe8c3f3.cg.shawcable.net ([24.64.144.200] helo=[192.168.0.10])
+        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <logang@deltatee.com>)
+        id 1qQGBF-00F0SV-Ve; Sun, 30 Jul 2023 17:50:34 -0600
+Message-ID: <ff871e8d-c5b0-99ed-0a44-385d70c503c2@deltatee.com>
+Date:   Sun, 30 Jul 2023 17:50:32 -0600
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.1
+To:     Chengfeng Ye <dg573847474@gmail.com>, vkoul@kernel.org
+Cc:     yuyunbo519@gmail.com, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, christophe.jaillet@wanadoo.fr
+References: <20230729175952.4068-1-dg573847474@gmail.com>
+Content-Language: en-CA
+From:   Logan Gunthorpe <logang@deltatee.com>
+In-Reply-To: <20230729175952.4068-1-dg573847474@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 24.64.144.200
+X-SA-Exim-Rcpt-To: dg573847474@gmail.com, vkoul@kernel.org, yuyunbo519@gmail.com, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, christophe.jaillet@wanadoo.fr
+X-SA-Exim-Mail-From: logang@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
+Subject: Re: [PATCH v2] dmaengine: plx_dma: Fix potential deadlock on
+ &plxdev->ring_lock
+X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Sat, Jul 29, 2023, at 21:29, Fabio Estevam wrote:
-> From: Fabio Estevam <festevam@denx.de>
->
-> The i.MX3 IPU driver does not support devicetree and i.MX has been converted
-> to a DT-only platform since kernel 5.10.
->
-> As there is no user for this driver anymore, just remove it.
->
-> Signed-off-by: Fabio Estevam <festevam@denx.de>
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+
+On 7/29/23 11:59, Chengfeng Ye wrote:
+> As plx_dma_process_desc() is invoked by both tasklet plx_dma_desc_task()
+> under softirq context and plx_dma_tx_status() callback that executed under
+> process context, the lock aquicision of &plxdev->ring_lock inside
+> plx_dma_process_desc() should disable irq otherwise deadlock could happen
+> if the irq preempts the execution of process context code while the lock
+> is held in process context on the same CPU.
+> 
+> Possible deadlock scenario:
+> plx_dma_tx_status()
+>     -> plx_dma_process_desc()
+>     -> spin_lock(&plxdev->ring_lock)
+>         <tasklet softirq>
+>         -> plx_dma_desc_task()
+>         -> plx_dma_process_desc()
+>         -> spin_lock(&plxdev->ring_lock) (deadlock here)
+> 
+> This flaw was found by an experimental static analysis tool I am developing
+> for irq-related deadlock.
+> 
+> The lock was changed from spin_lock_bh() to spin_lock() by a previous patch
+> for performance concern but unintentionally brought this potential deadlock
+> problem.
+> 
+> This patch reverts back to spin_lock_bh() to fix the deadlock problem.
+> 
+> Fixes: 1d05a0bdb420 ("dmaengine: plx_dma: Move spin_lock_bh() to spin_lock()")
+> Signed-off-by: Chengfeng Ye <dg573847474@gmail.com>
+> 
+
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+
+Thanks!
+
+Logan

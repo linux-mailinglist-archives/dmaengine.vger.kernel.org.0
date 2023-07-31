@@ -2,1801 +2,426 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 345DC769F29
-	for <lists+dmaengine@lfdr.de>; Mon, 31 Jul 2023 19:16:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 91EE576A2A3
+	for <lists+dmaengine@lfdr.de>; Mon, 31 Jul 2023 23:29:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229437AbjGaRQF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 31 Jul 2023 13:16:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41366 "EHLO
+        id S229881AbjGaV3r (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 31 Jul 2023 17:29:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233193AbjGaRPT (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 31 Jul 2023 13:15:19 -0400
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2040.outbound.protection.outlook.com [40.107.92.40])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE41F10DD;
-        Mon, 31 Jul 2023 10:12:47 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nXHFnOS1QbKM2utOZvquePvcIf1+h6xWEnD1XeY4H7kVfxRFRjXwZVdT+W/4Tbjn2Q9QA4b3gA6xHvTABDEYmR4JY1zZkJ8nf5jfYURHpKMMMzeO7/UQ8kyTPYpTYe5Co2FS1eMN0B+zdsDst5X9hnyzRMXY2kS9ctJ+Y5e9blwkkpGtfaqDx02kQPuzK9MIgil9qYv0MxiRzk5RHFabFlBhPK4M4rVpGFtxNlA/MujmPzfmeuZu6JO8V3w5pxk8qoad7GNOvnjZfE9dicQvAuotb88xyt0ooiLJlXai5MEt4qWgBQLQ+nszWHWaSqwS3Ze6aapKwtFPuV2HZik+Ww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lMNBGOHtK+7/CgZzKaCvJsWJ9R/rlL73V898JJgX8Ag=;
- b=NN6ZvmPpOQSfYgYq9vn5zqBQuw4qN5okKslFMhXIzZiqV+GClZ7UoO5VU9EisdggdKN0JX3J6XHT89D4lU0jcEYOWvremoz24SA5Xm7ui1cK8P48SY6Rr6f9UhmwpJAYygYav/nrZhCOJD2d+Qw+IXv9YBzvsnKaTKae+DJtU9Nxdi2UjoQCAmywknCnjIhKqMV2gEbBUPF6csD3Vtjikq0ZlrIP7DDhKMT/qN7cP9wpNDNUycN0x21Vt94Zv6TuReyVlCNu4Z+s0+tL0tA4q8umqZh0J0393jEQPoosYF7T9ol5ghlKeRLsEwy0Y1qPZnH8IEE1uGvzCyYcKqD8Bw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lMNBGOHtK+7/CgZzKaCvJsWJ9R/rlL73V898JJgX8Ag=;
- b=Ibio6oGUksfjOuO4ZaqvG2TNvr5hatbNfwU5ntCBwtMc/ZUIgsi5k/WcSNSpRuX0SFF+tBQapuk6MqdnXSwgYZdWKxFH+fdOzdoS2eZfT9BWU5hnNuZsrvZYgNl2bF+U4pXZC4pBA217O7V3cDMnne6AAZRJaUuplnfDqxWXP9c=
-Received: from BN0PR04CA0164.namprd04.prod.outlook.com (2603:10b6:408:eb::19)
- by MW4PR12MB7311.namprd12.prod.outlook.com (2603:10b6:303:227::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6631.42; Mon, 31 Jul
- 2023 17:12:43 +0000
-Received: from BN8NAM11FT050.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:eb:cafe::cc) by BN0PR04CA0164.outlook.office365.com
- (2603:10b6:408:eb::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6631.44 via Frontend
- Transport; Mon, 31 Jul 2023 17:12:43 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- BN8NAM11FT050.mail.protection.outlook.com (10.13.177.5) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6631.44 via Frontend Transport; Mon, 31 Jul 2023 17:12:42 +0000
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 31 Jul
- 2023 12:12:42 -0500
-Received: from xsjlizhih40.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.27 via Frontend
- Transport; Mon, 31 Jul 2023 12:12:41 -0500
-From:   Lizhi Hou <lizhi.hou@amd.com>
-To:     <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Nishad Saraf <nishads@amd.com>, <nishad.saraf@amd.com>,
-        <sonal.santan@amd.com>, <max.zhen@amd.com>,
-        Lizhi Hou <lizhi.hou@amd.com>
-Subject: [PATCH V3 1/1] dmaengine: amd: qdma: Add AMD QDMA driver
-Date:   Mon, 31 Jul 2023 10:12:15 -0700
-Message-ID: <1690823535-22524-2-git-send-email-lizhi.hou@amd.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1690823535-22524-1-git-send-email-lizhi.hou@amd.com>
-References: <1690823535-22524-1-git-send-email-lizhi.hou@amd.com>
+        with ESMTP id S229437AbjGaV3q (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 31 Jul 2023 17:29:46 -0400
+Received: from mgamail.intel.com (unknown [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C84F5126;
+        Mon, 31 Jul 2023 14:29:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1690838984; x=1722374984;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=vlD3ghSYdOlduES8CW22KqvYGGsE1X0XcCEYgz6LHlI=;
+  b=b5UqgHaShI+kg2NdJuwNRlsM/+ZBjOv6hS59BRCGgBSacb+Qj39I2m7f
+   JAhQZf96CJFnaeK6yndCRykNfjbp66cv6RNyiPEyoWkcyeW5x10+Fjphp
+   7BZM+GmJ0dbXOwaPCf3B4PH1+zcd+zggNrKWfCTvpvZCtjZICX6eNQtNs
+   5I2wkOlw8sTt3qjr+Ul2aobdt6MTUodR1yXQ4NJxwelQzljbm7LZwirpt
+   lEK8lDKaQDeqi2aQib/rDrdVnNZP6uje83DZSSzti970LQihaqWa7OQrK
+   o04uKdB34Ova1HP0SVvBvo5qDMtF7HC66FDYw4JW+GCnYP0eAKKE6Zs9H
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10788"; a="349425710"
+X-IronPort-AV: E=Sophos;i="6.01,245,1684825200"; 
+   d="scan'208";a="349425710"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2023 14:29:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10788"; a="728428360"
+X-IronPort-AV: E=Sophos;i="6.01,245,1684825200"; 
+   d="scan'208";a="728428360"
+Received: from sgimmeke-mobl.amr.corp.intel.com (HELO tzanussi-mobl1.intel.com) ([10.212.91.213])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2023 14:29:41 -0700
+From:   Tom Zanussi <tom.zanussi@linux.intel.com>
+To:     herbert@gondor.apana.org.au, davem@davemloft.net,
+        fenghua.yu@intel.com, vkoul@kernel.org
+Cc:     dave.jiang@intel.com, tony.luck@intel.com,
+        wajdi.k.feghali@intel.com, james.guilford@intel.com,
+        kanchana.p.sridhar@intel.com, vinodh.gopal@intel.com,
+        giovanni.cabiddu@intel.com, linux-kernel@vger.kernel.org,
+        linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org
+Subject: [PATCH v8 00/14] crypto: Add Intel Analytics Accelerator (IAA) crypto compression driver
+Date:   Mon, 31 Jul 2023 16:29:25 -0500
+Message-Id: <20230731212939.1391453-1-tom.zanussi@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8NAM11FT050:EE_|MW4PR12MB7311:EE_
-X-MS-Office365-Filtering-Correlation-Id: 352bdaa7-bd5c-406f-8eb6-08db91e95a3b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: yfq2CgPLdL0lLQ2SWALYYVBPgTi/1SLem46m6o9mYoYeeb2nnieuLZaEz17lOYdcSbcc/U4JmktT8lxdwhwzPRRlHAy2v2+u6nSVj3EOPB/ne+3JT/pHhE0zV5RmSQPYZomsptqxPKXJwpNdy9tdDhdCTrN7Ocd15+DG6iF/B/AJv4g+X0ddWbSB6xaaLOnWUsJPE/9aKI2lOReg5VrBQO4VaOndl/P9CLU0+/AWEmfckb89HQsNJU1aGdYj75KlgOXIy4rsJv6gcLmo1HYPLdtqcHHIAIlEy3TEAlabSfeWkIMa2zOBJrOQa+T+nK5Z80qn0PjcYVkQ+gfNhbBCVc6eBUtxZypPdQ8s0ddyRazwU8ZlMX6DI96I5xGkLxhXKhjpoTMLMFZzjt5EojOEOrgz08Ii8b91EXz44dPbOn8mOVZS3qWuNr2zCnPQgbavoxOz2XqeFWneqWz51rpRV6DBnLq6D1SsQUe+5ovXY+sertGlUoXecTasoZKWUGkmayX9ENcvwwUbwFoSMcfXUBgAxdaRbXqaSDWHRYUCoIMYrx7r7le9lm6c/ZP9aGKqAa99WwFK0trMKL7ljf0ZO6+T0WBe+JF3J5oqTq8YoH6mZ6fS/y5d9dtfTaPpmO8NTqjsaeNWzy9nbeSqLMyeRQCxSaJyLad5+7TJW4cmo9A0asMQz9vbdl0tMHjkOpnVpy8Pzpf4sD9ihX6oBiesBvn8lDTXD25BIEunyOlYxzRGosPkX3t4i7UjCCVezY29/qlA6KF8QEk3GaUUmeY0eJIf9d8j2suYU21dN87etCBJUq3D3fPY6MRkNZk55mk0td3UcIEmBrel0AhaPVmT2ZHFdSuaaL24vh48RPlG1KQ=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(396003)(136003)(376002)(39860400002)(346002)(451199021)(82310400008)(46966006)(40470700004)(36840700001)(86362001)(8676002)(8936002)(316002)(4326008)(5660300002)(54906003)(356005)(41300700001)(81166007)(70206006)(70586007)(82740400003)(110136005)(478600001)(30864003)(2906002)(6666004)(36756003)(47076005)(36860700001)(44832011)(966005)(26005)(83380400001)(426003)(336012)(186003)(40460700003)(40480700001)(2616005)(36900700001)(579004);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jul 2023 17:12:42.9848
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 352bdaa7-bd5c-406f-8eb6-08db91e95a3b
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT050.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7311
-X-Spam-Status: No, score=0.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Nishad Saraf <nishads@amd.com>
+Hi, this is v8 of the IAA crypto driver, incorporating feedback from
+v7.
 
-Adds driver to enable PCIe board which uses AMD QDMA (the Queue-based
-Direct Memory Access) subsystem. For example, Xilinx Alveo V70 AI
-Accelerator devices.
-    https://www.xilinx.com/applications/data-center/v70.html
+v8 changes:
 
-The primary mechanism to transfer data using the QDMA is for the QDMA
-engine to operate on instructions (descriptors) provided by the host
-operating system. Using the descriptors, the QDMA can move data in both
-the Host to Card (H2C) direction, or the Card to Host (C2H) direction.
-The QDMA provides a per-queue basis option whether DMA traffic goes
-to an AXI4 memory map (MM) interface or to an AXI4-Stream interface.
+  - Rebased to current cryptodev tree.
 
-The hardware detail is provided by
-    https://docs.xilinx.com/r/en-US/pg302-qdma
+  - Added generic-deflate software fallback for decompression
+    in cases where there's a hardware failure that would
+    otherwise prevent the data being recovered.
+  
+  - Changed the driver_name code to use strim().
 
-Implements dmaengine APIs to support MM DMA transfers.
-- probe the available DMA channels
-- use dma_slave_map for channel lookup
-- use virtual channel to manage dmaengine tx descriptors
-- implement device_prep_slave_sg callback to handle host scatter gather
-  list
-- implement descriptor metadata operations to set device address for DMA
-  transfer
+  - Changed the null-destination cases to use sgl_alloc_order() rather
+    than sgl_alloc().
 
-Signed-off-by: Nishad Saraf <nishads@amd.com>
-Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
----
- MAINTAINERS                            |    9 +
- drivers/dma/Kconfig                    |   13 +
- drivers/dma/Makefile                   |    1 +
- drivers/dma/amd/Makefile               |    8 +
- drivers/dma/amd/qdma-comm-regs.c       |   66 ++
- drivers/dma/amd/qdma.c                 | 1189 ++++++++++++++++++++++++
- drivers/dma/amd/qdma.h                 |  269 ++++++
- include/linux/platform_data/amd_qdma.h |   36 +
- 8 files changed, 1591 insertions(+)
- create mode 100644 drivers/dma/amd/Makefile
- create mode 100644 drivers/dma/amd/qdma-comm-regs.c
- create mode 100644 drivers/dma/amd/qdma.c
- create mode 100644 drivers/dma/amd/qdma.h
- create mode 100644 include/linux/platform_data/amd_qdma.h
+  - Added more Reviewed-by tags.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 53b7ca804465..a15c03738188 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1037,6 +1037,15 @@ L:	dmaengine@vger.kernel.org
- S:	Maintained
- F:	drivers/dma/ptdma/
+
+v7 changes:
+
+  - Rebased to current cryptodev tree.
+
+  - Removed 'canned' compression mode (deflate-iaa-canned) and fixed
+    up dependencies in other patches and Documentation.
+  
+  - Removed op_block checks.
+
+  - Removed a stray debugging #ifdef.
+
+  - Changed sysfs-driver-dma-idxd driver_name version to 6.6.0.
+
+
+v6 changes:
+
+  - Rebased to current cryptodev tree.
+
+  - Changed code to create/register separate algorithms for each
+    compression mode - one for 'fixed' (deflate-iaa) and one for
+    'canned' (deflate-iaa-canned).
+  
+  - Got rid of 'compression_mode' attribute and all the compression
+    mode code that deals with 'active' compression modes, since
+    there's no longer a single active compression mode.
+
+  - Use crypto_ctx to allow common compress/decompress code to
+    distinguish between the different compression modes.  Also use it
+    to capture settings such as verify_compress, use_irq, etc.  In
+    addition to being cleaner, this will allow for easier performance
+    comparisons using different modes/settings.
+
+  - Update Documentation and comments to reflect the changes.
+
+  - Fixed a bug found by Rex Zhang in decompress_header() which
+    unmapped src2 rather than src as it should have.  Thanks, Rex!
+
+
+v5 changes:
+
+  - Rebased to current cryptodev tree.
+
+  - Changed sysfs-driver-dma-idxd driver_name version to 6.5.0.
+
+  - Renamed wq private accessor functions to idxd_wq_set/get_private().
+
+v4 changes:
+
+  - Added and used DRIVER_NAME_SIZE for wq driver_name.
+
+  - Changed all spaces to tabs in CRYPTO_DEV_IAA_CRYPTO_STATS config
+    menu.
+
+  - Removed the private_data void * from wq and replaced with
+    wq_confdev() instead, as suggested by Dave Jiang.
+
+  - Added  more Reviewed-by tags.
+
+v3 changes:
+
+  - Reworked the code to only allow the registered crypto alg to be
+    unregistered by removing the module.  Also added an iaa_wq_get()
+    and iaa_wq_put() to take/give up a reference to the work queue
+    while there are compresses/decompresses in flight.  This is
+    synchronized with the wq remove function, so that the
+    iaa_wq/iaa_devices can't go away beneath active operations.  This
+    was tested by removing/disabling the iaa wqs/devices while
+    operations were in flight.
+
+  - Simplified the rebalance code and removed cpu_to_iaa() function
+    since it was overly complicated and wasn't actually working as
+    advertised.
+
+  - As a result of reworking the above code, fixed several bugs such
+    as possibly unregistering an unregistered crypto alg, a memory
+    leak where iaa_wqs weren't being freed, and making sure the
+    compression schemes were registered before registering the driver.
+
+  - Added set_/idxd_wq_private() accessors for wq private data.
+
+  - Added missing XPORT_SYMBOL_NS_GPL() to [PATCH 04/15] dmaengine:
+    idxd: Export descriptor management functions
+
+  - Added Dave's Reviewed-by: tags from v2.
+
+  - Updated Documentation and commit messages to reflect the changes
+    above.
+  
+  - Rebased to to cryptodev tree, since that has the earlier changes
+    that moved the intel drivers to crypto/intel.
+
+v2 changes:
+
+  - Removed legacy interface and all related code; merged async
+    interface into main deflate patch.
+
+  - Added support for the null destination case.  Thanks to Giovanni
+    Cabiddu for making me aware of this as well as the selftests for
+    it.
+
+  - Had to do some rearrangement of the code in order to pass all the
+    selftests.  Also added a testcase for 'canned'.
+
+  - Moved the iaa crypto driver to drivers/crypto/intel, and moved all
+    the other intel drivers there as well (which will be posted as a
+    separate series immediately following this one).
+
+  - Added an iaa crypto section to MAINTAINERS.
+
+  - Updated the documenation and commit messages to reflect the removal
+    of the legacy interface.
+
+  - Changed kernel version from 6.3.0 to 6.4.0 in patch 01/15 (wq
+    driver name support)
+
+v1:
+
+This series adds Linux crypto algorithm support for Intel® In-memory
+Analytics Accelerator (Intel IAA) [1] hardware compression and
+decompression, which is available on Sapphire Rapids systems.
+
+The IAA crypto support is implemented as an IDXD sub-driver.  The IDXD
+driver already present in the kernel provides discovery and management
+of the IAA devices on a system, as well as all the functionality
+needed to manage, submit, and wait for completion of work executed on
+them.  The first 7 patches (patches starting with dmaengine:) add
+small bits of underlying IDXD plumbing needed to allow external
+sub-drivers to take advantage of this support and claim ownership of
+specific IAA devices and workqueues.
+
+The remaining patches add the main support for this feature via the
+crypto API, making it transparently accessible to kernel features that
+can make use of it such as zswap and zram (patches starting with
+crypto – iaa:).
+
+These include both sync/async support for the deflate algorithm
+implemented by the IAA hardware, as well as an additional option for
+driver statistics and Documentation.
+
+Patch 8 ('[PATCH 08/15] crypto: iaa - Add IAA Compression Accelerator
+Documentation') describes the IAA crypto driver in detail; the
+following is just a high-level synopsis meant to aid the following
+discussion.
+
+The IAA hardware is fairly complex and generally requires a
+knowledgeable administrator with sufficiently detailed understanding
+of the hardware to set it up before it can be used.  As mentioned in
+the Documentation, this typically requires using a special tool called
+accel-config to enumerate and configure IAA workqueues, engines, etc,
+although this can also be done using only sysfs files.
+
+The operation of the driver mirrors this requirement and only allows
+the hardware to be accessed via the crypto layer once the hardware has
+been configured and bound to the the IAA crypto driver.  As an IDXD
+sub-driver, the IAA crypto driver essentially takes ownership of the
+hardware until it is given up explicitly by the administrator.  This
+occurs automatically when the administrator enables the first IAA
+workqueue or disables the last one; the iaa_crypto (sync and async)
+algorithms are registered when the first workqueue is enabled, and
+deregistered when the last one is disabled.
+
+The normal sequence of operations would normally be: 
+
+  < configure the hardware using accel-config or sysfs > 
+
+  < configure the iaa crypto driver (see below) > 
+
+  < configure the subsystem e.g. zswap/zram to use the iaa_crypto algo >  
+
+  < run the workload > 
+
+There are a small number of iaa_crypto driver attributes that the
+administrator can configure, and which also need to be configured
+before the algorithm is enabled:
+
+compression_mode: 
+
+  The IAA crypto driver supports an extensible interface supporting
+  any number of different compression modes that can be tailored to
+  specific types of workloads.  These are implemented as tables and
+  given arbitrary names describing their intent.
+
+  There are currently only 2 compression modes, “canned” and “fixed”.
+  In order to set a compression mode, echo the mode’s name to the
+  compression_mode driver attribute:
  
-+AMD QDMA DRIVER
-+M:	Nishad Saraf <nishads@amd.com>
-+M:	Lizhi Hou <lizhi.hou@amd.com>
-+L:	dmaengine@vger.kernel.org
-+S:	Supported
-+F:	drivers/dma/amd/qdma.c
-+F:	drivers/dma/amd/qdma.h
-+F:	include/linux/platform_data/amd_qdma.h
-+
- AMD SEATTLE DEVICE TREE SUPPORT
- M:	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
- M:	Tom Lendacky <thomas.lendacky@amd.com>
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index 644c188d6a11..3646fe1ab347 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -85,6 +85,19 @@ config AMCC_PPC440SPE_ADMA
- 	help
- 	  Enable support for the AMCC PPC440SPe RAID engines.
- 
-+config AMD_QDMA
-+	tristate "AMD Queue-based DMA"
-+	depends on HAS_IOMEM
-+	select DMA_ENGINE
-+	select DMA_VIRTUAL_CHANNELS
-+	select REGMAP_MMIO
-+	help
-+	  Enable support for the AMD Queue-based DMA subsystem. The primary
-+	  mechanism to transfer data using the QDMA is for the QDMA engine to
-+	  operate on instructions (descriptors) provided by the host operating
-+	  system. Using the descriptors, the QDMA can move data in both the Host
-+	  to Card (H2C) direction, or the Card to Host (C2H) direction.
-+
- config APPLE_ADMAC
- 	tristate "Apple ADMAC support"
- 	depends on ARCH_APPLE || COMPILE_TEST
-diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
-index a4fd1ce29510..75988d364ef4 100644
---- a/drivers/dma/Makefile
-+++ b/drivers/dma/Makefile
-@@ -82,6 +82,7 @@ obj-$(CONFIG_ST_FDMA) += st_fdma.o
- obj-$(CONFIG_FSL_DPAA2_QDMA) += fsl-dpaa2-qdma/
- obj-$(CONFIG_INTEL_LDMA) += lgm/
- 
-+obj-y += amd/
- obj-y += mediatek/
- obj-y += qcom/
- obj-y += ti/
-diff --git a/drivers/dma/amd/Makefile b/drivers/dma/amd/Makefile
-new file mode 100644
-index 000000000000..ba53971d2714
---- /dev/null
-+++ b/drivers/dma/amd/Makefile
-@@ -0,0 +1,8 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Copyright (C) 2023, Advanced Micro Devices, Inc.
-+#
-+
-+obj-$(CONFIG_AMD_QDMA)			+= amd-qdma.o
-+
-+amd-qdma-$(CONFIG_AMD_QDMA)		:= qdma.o qdma-comm-regs.o
-diff --git a/drivers/dma/amd/qdma-comm-regs.c b/drivers/dma/amd/qdma-comm-regs.c
-new file mode 100644
-index 000000000000..59d66b2fec54
---- /dev/null
-+++ b/drivers/dma/amd/qdma-comm-regs.c
-@@ -0,0 +1,66 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * DMA header for AMD CPM5 Queue-based DMA Subsystem variant
-+ *
-+ * Copyright (C) 2023, Advanced Micro Devices, Inc.
-+ */
-+
-+#ifndef __QDMA_REGS_DEF_H
-+#define __QDMA_REGS_DEF_H
-+
-+#include "qdma.h"
-+
-+const struct qdma_reg qdma_regos_default[QDMA_REGO_MAX] = {
-+	[QDMA_REGO_CTXT_DATA] = QDMA_REGO(0x804, 8),
-+	[QDMA_REGO_CTXT_CMD] = QDMA_REGO(0x844, 1),
-+	[QDMA_REGO_CTXT_MASK] = QDMA_REGO(0x824, 8),
-+	[QDMA_REGO_MM_H2C_CTRL] = QDMA_REGO(0x1004, 1),
-+	[QDMA_REGO_MM_C2H_CTRL] = QDMA_REGO(0x1204, 1),
-+	[QDMA_REGO_QUEUE_COUNT] = QDMA_REGO(0x120, 1),
-+	[QDMA_REGO_RING_SIZE] = QDMA_REGO(0x204, 1),
-+	[QDMA_REGO_H2C_PIDX] = QDMA_REGO(0x18004, 1),
-+	[QDMA_REGO_C2H_PIDX] = QDMA_REGO(0x18008, 1),
-+	[QDMA_REGO_INTR_CIDX] = QDMA_REGO(0x18000, 1),
-+	[QDMA_REGO_FUNC_ID] = QDMA_REGO(0x12c, 1),
-+	[QDMA_REGO_ERR_INT] = QDMA_REGO(0xb04, 1),
-+	[QDMA_REGO_ERR_STAT] = QDMA_REGO(0x248, 1),
-+};
-+
-+const struct qdma_reg_field qdma_regfs_default[QDMA_REGF_MAX] = {
-+	/* QDMA_REGO_CTXT_DATA fields */
-+	[QDMA_REGF_IRQ_ENABLE] = QDMA_REGF(53, 53),
-+	[QDMA_REGF_WBK_ENABLE] = QDMA_REGF(52, 52),
-+	[QDMA_REGF_WBI_CHECK] = QDMA_REGF(34, 34),
-+	[QDMA_REGF_IRQ_ARM] = QDMA_REGF(16, 16),
-+	[QDMA_REGF_IRQ_VEC] = QDMA_REGF(138, 128),
-+	[QDMA_REGF_IRQ_AGG] = QDMA_REGF(139, 139),
-+	[QDMA_REGF_WBI_INTVL_ENABLE] = QDMA_REGF(35, 35),
-+	[QDMA_REGF_MRKR_DISABLE] = QDMA_REGF(62, 62),
-+	[QDMA_REGF_QUEUE_ENABLE] = QDMA_REGF(32, 32),
-+	[QDMA_REGF_QUEUE_MODE] = QDMA_REGF(63, 63),
-+	[QDMA_REGF_DESC_BASE] = QDMA_REGF(127, 64),
-+	[QDMA_REGF_DESC_SIZE] = QDMA_REGF(49, 48),
-+	[QDMA_REGF_RING_ID] = QDMA_REGF(47, 44),
-+	[QDMA_REGF_QUEUE_BASE] = QDMA_REGF(11, 0),
-+	[QDMA_REGF_QUEUE_MAX] = QDMA_REGF(44, 32),
-+	[QDMA_REGF_FUNCTION_ID] = QDMA_REGF(24, 17),
-+	[QDMA_REGF_INTR_AGG_BASE] = QDMA_REGF(66, 15),
-+	[QDMA_REGF_INTR_VECTOR] = QDMA_REGF(11, 1),
-+	[QDMA_REGF_INTR_SIZE] = QDMA_REGF(69, 67),
-+	[QDMA_REGF_INTR_VALID] = QDMA_REGF(0, 0),
-+	[QDMA_REGF_INTR_COLOR] = QDMA_REGF(14, 14),
-+	[QDMA_REGF_INTR_FUNCTION_ID] = QDMA_REGF(125, 114),
-+	/* QDMA_REGO_CTXT_CMD fields */
-+	[QDMA_REGF_CMD_INDX] = QDMA_REGF(19, 7),
-+	[QDMA_REGF_CMD_CMD] = QDMA_REGF(6, 5),
-+	[QDMA_REGF_CMD_TYPE] = QDMA_REGF(4, 1),
-+	[QDMA_REGF_CMD_BUSY] = QDMA_REGF(0, 0),
-+	/* QDMA_REGO_QUEUE_COUNT fields */
-+	[QDMA_REGF_QUEUE_COUNT] = QDMA_REGF(11, 0),
-+	/* QDMA_REGO_ERR_INT fields */
-+	[QDMA_REGF_ERR_INT_FUNC] = QDMA_REGF(11, 0),
-+	[QDMA_REGF_ERR_INT_VEC] = QDMA_REGF(22, 12),
-+	[QDMA_REGF_ERR_INT_ARM] = QDMA_REGF(24, 24),
-+};
-+
-+#endif	/* __QDMA_CPM5_H */
-diff --git a/drivers/dma/amd/qdma.c b/drivers/dma/amd/qdma.c
-new file mode 100644
-index 000000000000..b65214341551
---- /dev/null
-+++ b/drivers/dma/amd/qdma.c
-@@ -0,0 +1,1189 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * DMA driver for AMD Queue-based DMA Subsystem
-+ *
-+ * Copyright (C) 2023, Advanced Micro Devices, Inc.
-+ */
-+#include <linux/bitfield.h>
-+#include <linux/bitops.h>
-+#include <linux/dmaengine.h>
-+#include <linux/module.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/dma-map-ops.h>
-+#include <linux/platform_device.h>
-+#include <linux/platform_data/amd_qdma.h>
-+#include <linux/regmap.h>
-+
-+#include "../virt-dma.h"
-+#include "qdma.h"
-+
-+#define CHAN_STR(q)		(((q)->dir == DMA_MEM_TO_DEV) ? "H2C" : "C2H")
-+#define QDMA_REG_OFF(d, r)	((d)->roffs[r].off)
-+
-+/* MMIO regmap config for all QDMA registers */
-+static const struct regmap_config qdma_regmap_config = {
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.reg_stride = 4,
-+};
-+
-+static inline struct qdma_queue *to_qdma_queue(struct dma_chan *chan)
-+{
-+	return container_of(chan, struct qdma_queue, vchan.chan);
-+}
-+
-+static inline struct qdma_mm_vdesc *to_qdma_vdesc(struct virt_dma_desc *vdesc)
-+{
-+	return container_of(vdesc, struct qdma_mm_vdesc, vdesc);
-+}
-+
-+static inline u32 qdma_get_intr_ring_idx(struct qdma_device *qdev)
-+{
-+	u32 idx;
-+
-+	idx = qdev->qintr_rings[qdev->qintr_ring_idx++].ridx;
-+	qdev->qintr_ring_idx %= qdev->qintr_ring_num;
-+
-+	return idx;
-+}
-+
-+static u64 qdma_get_field(const struct qdma_device *qdev, const u32 *data,
-+			  enum qdma_reg_fields field)
-+{
-+	const struct qdma_reg_field *f = &qdev->rfields[field];
-+	u16 low_pos, hi_pos, low_bit, hi_bit;
-+	u64 value = 0, mask;
-+
-+	low_pos = f->lsb / BITS_PER_TYPE(*data);
-+	hi_pos = f->msb / BITS_PER_TYPE(*data);
-+
-+	if (low_pos == hi_pos) {
-+		low_bit = f->lsb % BITS_PER_TYPE(*data);
-+		hi_bit = f->msb % BITS_PER_TYPE(*data);
-+		mask = GENMASK(hi_bit, low_bit);
-+		value = (data[low_pos] & mask) >> low_bit;
-+	} else if (hi_pos == low_pos + 1) {
-+		low_bit = f->lsb % BITS_PER_TYPE(*data);
-+		hi_bit = low_bit + (f->msb - f->lsb);
-+		value = ((u64)data[hi_pos] << BITS_PER_TYPE(*data)) |
-+			data[low_pos];
-+		mask = GENMASK_ULL(hi_bit, low_bit);
-+		value = (value & mask) >> low_bit;
-+	} else {
-+		hi_bit = f->msb % BITS_PER_TYPE(*data);
-+		mask = GENMASK(hi_bit, 0);
-+		value = data[hi_pos] & mask;
-+		low_bit = f->msb - f->lsb - hi_bit;
-+		value <<= low_bit;
-+		low_bit -= 32;
-+		value |= (u64)data[hi_pos - 1] << low_bit;
-+		mask = GENMASK(31, 32 - low_bit);
-+		value |= (data[hi_pos - 2] & mask) >> low_bit;
-+	}
-+
-+	return value;
-+}
-+
-+static void qdma_set_field(const struct qdma_device *qdev, u32 *data,
-+			   enum qdma_reg_fields field, u64 value)
-+{
-+	const struct qdma_reg_field *f = &qdev->rfields[field];
-+	u16 low_pos, hi_pos, low_bit;
-+
-+	low_pos = f->lsb / BITS_PER_TYPE(*data);
-+	hi_pos = f->msb / BITS_PER_TYPE(*data);
-+	low_bit = f->lsb % BITS_PER_TYPE(*data);
-+
-+	data[low_pos++] |= value << low_bit;
-+	if (low_pos <= hi_pos)
-+		data[low_pos++] |= (u32)(value >> (32 - low_bit));
-+	if (low_pos <= hi_pos)
-+		data[low_pos] |= (u32)(value >> (64 - low_bit));
-+}
-+
-+static inline int qdma_reg_write(const struct qdma_device *qdev,
-+				 const u32 *data, enum qdma_regs reg)
-+{
-+	const struct qdma_reg *r = &qdev->roffs[reg];
-+	int ret;
-+
-+	if (r->count > 1)
-+		ret = regmap_bulk_write(qdev->regmap, r->off, data, r->count);
-+	else
-+		ret = regmap_write(qdev->regmap, r->off, *data);
-+
-+	return ret;
-+}
-+
-+static inline int qdma_reg_read(const struct qdma_device *qdev, u32 *data,
-+				enum qdma_regs reg)
-+{
-+	const struct qdma_reg *r = &qdev->roffs[reg];
-+	int ret;
-+
-+	if (r->count > 1)
-+		ret = regmap_bulk_read(qdev->regmap, r->off, data, r->count);
-+	else
-+		ret = regmap_read(qdev->regmap, r->off, data);
-+
-+	return ret;
-+}
-+
-+static int qdma_context_cmd_execute(const struct qdma_device *qdev,
-+				    enum qdma_ctxt_type type,
-+				    enum qdma_ctxt_cmd cmd, u16 index)
-+{
-+	u32 value = 0;
-+	int ret;
-+
-+	qdma_set_field(qdev, &value, QDMA_REGF_CMD_INDX, index);
-+	qdma_set_field(qdev, &value, QDMA_REGF_CMD_CMD, cmd);
-+	qdma_set_field(qdev, &value, QDMA_REGF_CMD_TYPE, type);
-+
-+	ret = qdma_reg_write(qdev, &value, QDMA_REGO_CTXT_CMD);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_read_poll_timeout(qdev->regmap,
-+				       QDMA_REG_OFF(qdev, QDMA_REGO_CTXT_CMD),
-+				       value,
-+				       !qdma_get_field(qdev, &value,
-+						       QDMA_REGF_CMD_BUSY),
-+				       QDMA_POLL_INTRVL_US,
-+				       QDMA_POLL_TIMEOUT_US);
-+	if (ret) {
-+		qdma_err(qdev, "Context command execution timed out");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int qdma_context_write_data(const struct qdma_device *qdev,
-+				   const u32 *data)
-+{
-+	u32 mask[QDMA_CTXT_REGMAP_LEN];
-+	int ret;
-+
-+	memset(mask, ~0, sizeof(mask));
-+
-+	ret = qdma_reg_write(qdev, mask, QDMA_REGO_CTXT_MASK);
-+	if (ret)
-+		return ret;
-+
-+	ret = qdma_reg_write(qdev, data, QDMA_REGO_CTXT_DATA);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static void qdma_prep_sw_desc_context(const struct qdma_device *qdev,
-+				      const struct qdma_ctxt_sw_desc *ctxt,
-+				      u32 *data)
-+{
-+	memset(data, 0, QDMA_CTXT_REGMAP_LEN * sizeof(*data));
-+	qdma_set_field(qdev, data, QDMA_REGF_DESC_BASE, ctxt->desc_base);
-+	qdma_set_field(qdev, data, QDMA_REGF_IRQ_VEC, ctxt->vec);
-+	qdma_set_field(qdev, data, QDMA_REGF_FUNCTION_ID, qdev->fid);
-+
-+	qdma_set_field(qdev, data, QDMA_REGF_DESC_SIZE, QDMA_DESC_SIZE_32B);
-+	qdma_set_field(qdev, data, QDMA_REGF_RING_ID, QDMA_DEFAULT_RING_ID);
-+	qdma_set_field(qdev, data, QDMA_REGF_QUEUE_MODE, QDMA_QUEUE_OP_MM);
-+	qdma_set_field(qdev, data, QDMA_REGF_IRQ_ENABLE, 1);
-+	qdma_set_field(qdev, data, QDMA_REGF_WBK_ENABLE, 1);
-+	qdma_set_field(qdev, data, QDMA_REGF_WBI_CHECK, 1);
-+	qdma_set_field(qdev, data, QDMA_REGF_IRQ_ARM, 1);
-+	qdma_set_field(qdev, data, QDMA_REGF_IRQ_AGG, 1);
-+	qdma_set_field(qdev, data, QDMA_REGF_WBI_INTVL_ENABLE, 1);
-+	qdma_set_field(qdev, data, QDMA_REGF_QUEUE_ENABLE, 1);
-+	qdma_set_field(qdev, data, QDMA_REGF_MRKR_DISABLE, 1);
-+}
-+
-+static void qdma_prep_intr_context(const struct qdma_device *qdev,
-+				   const struct qdma_ctxt_intr *ctxt,
-+				   u32 *data)
-+{
-+	memset(data, 0, QDMA_CTXT_REGMAP_LEN * sizeof(*data));
-+	qdma_set_field(qdev, data, QDMA_REGF_INTR_AGG_BASE, ctxt->agg_base);
-+	qdma_set_field(qdev, data, QDMA_REGF_INTR_VECTOR, ctxt->vec);
-+	qdma_set_field(qdev, data, QDMA_REGF_INTR_SIZE, ctxt->size);
-+	qdma_set_field(qdev, data, QDMA_REGF_INTR_VALID, ctxt->valid);
-+	qdma_set_field(qdev, data, QDMA_REGF_INTR_COLOR, ctxt->color);
-+	qdma_set_field(qdev, data, QDMA_REGF_INTR_FUNCTION_ID, qdev->fid);
-+}
-+
-+static void qdma_prep_fmap_context(const struct qdma_device *qdev,
-+				   const struct qdma_ctxt_fmap *ctxt,
-+				   u32 *data)
-+{
-+	memset(data, 0, QDMA_CTXT_REGMAP_LEN * sizeof(*data));
-+	qdma_set_field(qdev, data, QDMA_REGF_QUEUE_BASE, ctxt->qbase);
-+	qdma_set_field(qdev, data, QDMA_REGF_QUEUE_MAX, ctxt->qmax);
-+}
-+
-+/*
-+ * Program the indirect context register space
-+ *
-+ * Once the queue is enabled, context is dynamically updated by hardware. Any
-+ * modification of the context through this API when the queue is enabled can
-+ * result in unexpected behavior. Reading the context when the queue is enabled
-+ * is not recommended as it can result in reduced performance.
-+ */
-+static int qdma_prog_context(struct qdma_device *qdev, enum qdma_ctxt_type type,
-+			     enum qdma_ctxt_cmd cmd, u16 index, u32 *ctxt)
-+{
-+	int ret;
-+
-+	mutex_lock(&qdev->ctxt_lock);
-+	if (cmd == QDMA_CTXT_WRITE) {
-+		ret = qdma_context_write_data(qdev, ctxt);
-+		if (ret)
-+			goto failed;
-+	}
-+
-+	ret = qdma_context_cmd_execute(qdev, type, cmd, index);
-+	if (ret)
-+		goto failed;
-+
-+	if (cmd == QDMA_CTXT_READ) {
-+		ret = qdma_reg_read(qdev, ctxt, QDMA_REGO_CTXT_DATA);
-+		if (ret)
-+			goto failed;
-+	}
-+
-+failed:
-+	mutex_unlock(&qdev->ctxt_lock);
-+
-+	return ret;
-+}
-+
-+static int qdma_check_queue_status(struct qdma_device *qdev,
-+				   enum dma_transfer_direction dir, u16 qid)
-+{
-+	u32 status, data[QDMA_CTXT_REGMAP_LEN] = {0};
-+	enum qdma_ctxt_type type;
-+	int ret;
-+
-+	if (dir == DMA_MEM_TO_DEV)
-+		type = QDMA_CTXT_DESC_SW_H2C;
-+	else
-+		type = QDMA_CTXT_DESC_SW_C2H;
-+
-+	ret = qdma_prog_context(qdev, type, QDMA_CTXT_READ, qid, data);
-+	if (ret)
-+		return ret;
-+
-+	status = qdma_get_field(qdev, data, QDMA_REGF_QUEUE_ENABLE);
-+	if (status) {
-+		qdma_err(qdev, "queue %d already in use", qid);
-+		return -EBUSY;
-+	}
-+
-+	return 0;
-+}
-+
-+static int qdma_clear_queue_context(const struct qdma_queue *queue)
-+{
-+	enum qdma_ctxt_type h2c_types[] = { QDMA_CTXT_DESC_SW_H2C,
-+					    QDMA_CTXT_DESC_HW_H2C,
-+					    QDMA_CTXT_DESC_CR_H2C,
-+					    QDMA_CTXT_PFTCH, };
-+	enum qdma_ctxt_type c2h_types[] = { QDMA_CTXT_DESC_SW_C2H,
-+					    QDMA_CTXT_DESC_HW_C2H,
-+					    QDMA_CTXT_DESC_CR_C2H,
-+					    QDMA_CTXT_PFTCH, };
-+	struct qdma_device *qdev = queue->qdev;
-+	enum qdma_ctxt_type *type;
-+	int ret, num, i;
-+
-+	if (queue->dir == DMA_MEM_TO_DEV) {
-+		type = h2c_types;
-+		num = ARRAY_SIZE(h2c_types);
-+	} else {
-+		type = c2h_types;
-+		num = ARRAY_SIZE(c2h_types);
-+	}
-+	for (i = 0; i < num; i++) {
-+		ret = qdma_prog_context(qdev, type[i], QDMA_CTXT_CLEAR,
-+					queue->qid, NULL);
-+		if (ret) {
-+			qdma_err(qdev, "Failed to clear ctxt %d", type[i]);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int qdma_setup_fmap_context(struct qdma_device *qdev)
-+{
-+	u32 ctxt[QDMA_CTXT_REGMAP_LEN];
-+	struct qdma_ctxt_fmap fmap;
-+	int ret;
-+
-+	ret = qdma_prog_context(qdev, QDMA_CTXT_FMAP, QDMA_CTXT_CLEAR,
-+				qdev->fid, NULL);
-+	if (ret) {
-+		qdma_err(qdev, "Failed clearing context");
-+		return ret;
-+	}
-+
-+	fmap.qbase = 0;
-+	fmap.qmax = qdev->chan_num * 2;
-+	qdma_prep_fmap_context(qdev, &fmap, ctxt);
-+	ret = qdma_prog_context(qdev, QDMA_CTXT_FMAP, QDMA_CTXT_WRITE,
-+				qdev->fid, ctxt);
-+	if (ret)
-+		qdma_err(qdev, "Failed setup fmap, ret %d", ret);
-+
-+	return ret;
-+}
-+
-+static int qdma_setup_queue_context(struct qdma_device *qdev,
-+				    const struct qdma_ctxt_sw_desc *sw_desc,
-+				    enum dma_transfer_direction dir, u16 qid)
-+{
-+	u32 ctxt[QDMA_CTXT_REGMAP_LEN];
-+	enum qdma_ctxt_type type;
-+	int ret;
-+
-+	if (dir == DMA_MEM_TO_DEV)
-+		type = QDMA_CTXT_DESC_SW_H2C;
-+	else
-+		type = QDMA_CTXT_DESC_SW_C2H;
-+
-+	qdma_prep_sw_desc_context(qdev, sw_desc, ctxt);
-+	/* Setup SW descriptor context */
-+	ret = qdma_prog_context(qdev, type, QDMA_CTXT_WRITE, qid, ctxt);
-+	if (ret)
-+		qdma_err(qdev, "Failed setup SW desc ctxt for queue: %d", qid);
-+
-+	return ret;
-+}
-+
-+/*
-+ * Enable or disable memory-mapped DMA engines
-+ * 1: enable, 0: disable
-+ */
-+static int qdma_sgdma_control(struct qdma_device *qdev, u32 ctrl)
-+{
-+	int ret;
-+
-+	ret = qdma_reg_write(qdev, &ctrl, QDMA_REGO_MM_H2C_CTRL);
-+	ret |= qdma_reg_write(qdev, &ctrl, QDMA_REGO_MM_C2H_CTRL);
-+
-+	return ret;
-+}
-+
-+static int qdma_get_hw_info(struct qdma_device *qdev)
-+{
-+	struct qdma_platdata *pdata = dev_get_platdata(&qdev->pdev->dev);
-+	u32 value = 0;
-+	int ret;
-+
-+	ret = qdma_reg_read(qdev, &value, QDMA_REGO_QUEUE_COUNT);
-+	if (ret)
-+		return ret;
-+
-+	value = qdma_get_field(qdev, &value, QDMA_REGF_QUEUE_COUNT) + 1;
-+	if (pdata->max_mm_channels * 2 > value) {
-+		qdma_err(qdev, "not enough hw queues %d", value);
-+		return -EINVAL;
-+	}
-+	qdev->chan_num = pdata->max_mm_channels;
-+
-+	ret = qdma_reg_read(qdev, &qdev->fid, QDMA_REGO_FUNC_ID);
-+	if (ret)
-+		return ret;
-+
-+	qdma_info(qdev, "max channel %d, function id %d",
-+		  qdev->chan_num, qdev->fid);
-+
-+	return 0;
-+}
-+
-+static inline int qdma_update_pidx(const struct qdma_queue *queue, u16 pidx)
-+{
-+	struct qdma_device *qdev = queue->qdev;
-+
-+	return regmap_write(qdev->regmap, queue->pidx_reg,
-+			    pidx | QDMA_QUEUE_ARM_BIT);
-+}
-+
-+static inline int qdma_update_cidx(const struct qdma_queue *queue,
-+				   u16 ridx, u16 cidx)
-+{
-+	struct qdma_device *qdev = queue->qdev;
-+
-+	return regmap_write(qdev->regmap, queue->cidx_reg,
-+			    ((u32)ridx << 16) | cidx);
-+}
-+
-+/**
-+ * qdma_free_vdesc - Free descriptor
-+ * @vdesc: Virtual DMA descriptor
-+ */
-+static void qdma_free_vdesc(struct virt_dma_desc *vdesc)
-+{
-+	struct qdma_mm_vdesc *vd = to_qdma_vdesc(vdesc);
-+
-+	kfree(vd);
-+}
-+
-+static int qdma_alloc_queues(struct qdma_device *qdev,
-+			     enum dma_transfer_direction dir)
-+{
-+	struct qdma_queue *q, **queues;
-+	u32 i, pidx_base;
-+	int ret;
-+
-+	if (dir == DMA_MEM_TO_DEV) {
-+		queues = &qdev->h2c_queues;
-+		pidx_base = QDMA_REG_OFF(qdev, QDMA_REGO_H2C_PIDX);
-+	} else {
-+		queues = &qdev->c2h_queues;
-+		pidx_base = QDMA_REG_OFF(qdev, QDMA_REGO_C2H_PIDX);
-+	}
-+
-+	*queues = devm_kcalloc(&qdev->pdev->dev, qdev->chan_num, sizeof(*q),
-+			       GFP_KERNEL);
-+	if (!*queues)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < qdev->chan_num; i++) {
-+		ret = qdma_check_queue_status(qdev, dir, i);
-+		if (ret)
-+			return ret;
-+
-+		q = &(*queues)[i];
-+		q->ring_size = QDMA_DEFAULT_RING_SIZE;
-+		q->idx_mask = q->ring_size - 2;
-+		q->qdev = qdev;
-+		q->dir = dir;
-+		q->qid = i;
-+		q->pidx_reg = pidx_base + i * QDMA_DMAP_REG_STRIDE;
-+		q->cidx_reg = QDMA_REG_OFF(qdev, QDMA_REGO_INTR_CIDX) +
-+				i * QDMA_DMAP_REG_STRIDE;
-+		q->vchan.desc_free = qdma_free_vdesc;
-+		vchan_init(&q->vchan, &qdev->dma_dev);
-+	}
-+
-+	return 0;
-+}
-+
-+static int qdma_device_verify(struct qdma_device *qdev)
-+{
-+	u32 value;
-+	int ret;
-+
-+	ret = regmap_read(qdev->regmap, QDMA_IDENTIFIER_REGOFF, &value);
-+	if (ret)
-+		return ret;
-+
-+	value = FIELD_GET(QDMA_IDENTIFIER_MASK, value);
-+	if (value != QDMA_IDENTIFIER) {
-+		qdma_err(qdev, "Invalid identifier");
-+		return -ENODEV;
-+	}
-+	qdev->rfields = qdma_regfs_default;
-+	qdev->roffs = qdma_regos_default;
-+
-+	return 0;
-+}
-+
-+static int qdma_device_setup(struct qdma_device *qdev)
-+{
-+	struct device *dev = &qdev->pdev->dev;
-+	u32 ring_sz = QDMA_DEFAULT_RING_SIZE;
-+	int ret = 0;
-+
-+	while (dev && get_dma_ops(dev))
-+		dev = dev->parent;
-+	if (!dev) {
-+		qdma_err(qdev, "dma device not found");
-+		return -EINVAL;
-+	}
-+	set_dma_ops(&qdev->pdev->dev, get_dma_ops(dev));
-+
-+	ret = qdma_setup_fmap_context(qdev);
-+	if (ret) {
-+		qdma_err(qdev, "Failed setup fmap context");
-+		return ret;
-+	}
-+
-+	/* Setup global ring buffer size at QDMA_DEFAULT_RING_ID index */
-+	ret = qdma_reg_write(qdev, &ring_sz, QDMA_REGO_RING_SIZE);
-+	if (ret) {
-+		qdma_err(qdev, "Failed to setup ring %d of size %ld",
-+			 QDMA_DEFAULT_RING_ID, QDMA_DEFAULT_RING_SIZE);
-+		return ret;
-+	}
-+
-+	/* Enable memory-mapped DMA engine in both directions */
-+	ret = qdma_sgdma_control(qdev, 1);
-+	if (ret) {
-+		qdma_err(qdev, "Failed to SGDMA with error %d", ret);
-+		return ret;
-+	}
-+
-+	ret = qdma_alloc_queues(qdev, DMA_MEM_TO_DEV);
-+	if (ret) {
-+		qdma_err(qdev, "Failed to alloc H2C queues, ret %d", ret);
-+		return ret;
-+	}
-+
-+	ret = qdma_alloc_queues(qdev, DMA_DEV_TO_MEM);
-+	if (ret) {
-+		qdma_err(qdev, "Failed to alloc C2H queues, ret %d", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * qdma_free_queue_resources() - Free queue resources
-+ * @chan: DMA channel
-+ */
-+static void qdma_free_queue_resources(struct dma_chan *chan)
-+{
-+	struct qdma_queue *queue = to_qdma_queue(chan);
-+	struct qdma_device *qdev = queue->qdev;
-+	struct device *dev = qdev->dma_dev.dev;
-+
-+	qdma_clear_queue_context(queue);
-+	vchan_free_chan_resources(&queue->vchan);
-+	dma_free_coherent(dev, queue->ring_size * QDMA_MM_DESC_SIZE,
-+			  queue->desc_base, queue->dma_desc_base);
-+}
-+
-+/**
-+ * qdma_alloc_queue_resources() - Allocate queue resources
-+ * @chan: DMA channel
-+ */
-+static int qdma_alloc_queue_resources(struct dma_chan *chan)
-+{
-+	struct qdma_queue *queue = to_qdma_queue(chan);
-+	struct qdma_device *qdev = queue->qdev;
-+	struct qdma_ctxt_sw_desc desc;
-+	size_t size;
-+	int ret;
-+
-+	ret = qdma_clear_queue_context(queue);
-+	if (ret)
-+		return ret;
-+
-+	size = queue->ring_size * QDMA_MM_DESC_SIZE;
-+	queue->desc_base = dma_alloc_coherent(qdev->dma_dev.dev, size,
-+					      &queue->dma_desc_base,
-+					      GFP_KERNEL);
-+	if (!queue->desc_base) {
-+		qdma_err(qdev, "Failed to allocate descriptor ring");
-+		return -ENOMEM;
-+	}
-+
-+	/* Setup SW descriptor queue context for DMA memory map */
-+	desc.vec = qdma_get_intr_ring_idx(qdev);
-+	desc.desc_base = queue->dma_desc_base;
-+	ret = qdma_setup_queue_context(qdev, &desc, queue->dir, queue->qid);
-+	if (ret) {
-+		qdma_err(qdev, "Failed to setup SW desc ctxt for %s",
-+			 chan->name);
-+		dma_free_coherent(qdev->dma_dev.dev, size, queue->desc_base,
-+				  queue->dma_desc_base);
-+		return ret;
-+	}
-+
-+	queue->pidx = 0;
-+	queue->cidx = 0;
-+
-+	return 0;
-+}
-+
-+static bool qdma_filter_fn(struct dma_chan *chan, void *param)
-+{
-+	struct qdma_queue *queue = to_qdma_queue(chan);
-+	struct qdma_queue_info *info = param;
-+
-+	return info->dir == queue->dir;
-+}
-+
-+static int qdma_xfer_start(struct qdma_queue *queue)
-+{
-+	struct qdma_device *qdev = queue->qdev;
-+	int ret;
-+
-+	if (!vchan_next_desc(&queue->vchan))
-+		return 0;
-+
-+	qdma_dbg(qdev, "Tnx kickoff with P: %d for %s%d",
-+		 queue->issued_vdesc->pidx, CHAN_STR(queue), queue->qid);
-+
-+	ret = qdma_update_pidx(queue, queue->issued_vdesc->pidx);
-+	if (ret) {
-+		qdma_err(qdev, "Failed to update PIDX to %d for %s queue: %d",
-+			 queue->pidx, CHAN_STR(queue), queue->qid);
-+	}
-+
-+	return ret;
-+}
-+
-+static void qdma_issue_pending(struct dma_chan *chan)
-+{
-+	struct qdma_queue *queue = to_qdma_queue(chan);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&queue->vchan.lock, flags);
-+	if (vchan_issue_pending(&queue->vchan)) {
-+		if (queue->submitted_vdesc) {
-+			queue->issued_vdesc = queue->submitted_vdesc;
-+			queue->submitted_vdesc = NULL;
-+		}
-+		qdma_xfer_start(queue);
-+	}
-+
-+	spin_unlock_irqrestore(&queue->vchan.lock, flags);
-+}
-+
-+static struct qdma_mm_desc *qdma_get_desc(struct qdma_queue *q)
-+{
-+	struct qdma_mm_desc *desc;
-+
-+	if (((q->pidx + 1) & q->idx_mask) == q->cidx)
-+		return NULL;
-+
-+	desc = q->desc_base + q->pidx;
-+	q->pidx = (q->pidx + 1) & q->idx_mask;
-+
-+	return desc;
-+}
-+
-+static int qdma_hw_enqueue(struct qdma_queue *q, struct qdma_mm_vdesc *vdesc)
-+{
-+	struct qdma_mm_desc *desc;
-+	struct scatterlist *sg;
-+	u64 addr, *src, *dst;
-+	u32 rest, len;
-+	int ret = 0;
-+	u32 i;
-+
-+	if (!vdesc->sg_len)
-+		return 0;
-+
-+	if (q->dir == DMA_MEM_TO_DEV) {
-+		dst = &vdesc->dev_addr;
-+		src = &addr;
-+	} else {
-+		dst = &addr;
-+		src = &vdesc->dev_addr;
-+	}
-+
-+	for_each_sg(vdesc->sgl, sg, vdesc->sg_len, i) {
-+		addr = sg_dma_address(sg) + vdesc->sg_off;
-+		rest = sg_dma_len(sg) - vdesc->sg_off;
-+		while (rest) {
-+			len = min_t(u32, rest, QDMA_MM_DESC_MAX_LEN);
-+			desc = qdma_get_desc(q);
-+			if (!desc) {
-+				ret = -EBUSY;
-+				goto out;
-+			}
-+
-+			desc->src_addr = cpu_to_le64(*src);
-+			desc->dst_addr = cpu_to_le64(*dst);
-+			desc->len = cpu_to_le32(len);
-+
-+			vdesc->dev_addr += len;
-+			vdesc->sg_off += len;
-+			vdesc->pending_descs++;
-+			addr += len;
-+			rest -= len;
-+		}
-+		vdesc->sg_off = 0;
-+	}
-+out:
-+	vdesc->sg_len -= i;
-+	vdesc->pidx = q->pidx;
-+	return ret;
-+}
-+
-+static void qdma_fill_pending_vdesc(struct qdma_queue *q)
-+{
-+	struct virt_dma_chan *vc = &q->vchan;
-+	struct qdma_mm_vdesc *vdesc;
-+	struct virt_dma_desc *vd;
-+	int ret;
-+
-+	if (!list_empty(&vc->desc_issued)) {
-+		vd = &q->issued_vdesc->vdesc;
-+		list_for_each_entry_from(vd, &vc->desc_issued, node) {
-+			vdesc = to_qdma_vdesc(vd);
-+			ret = qdma_hw_enqueue(q, vdesc);
-+			if (ret) {
-+				q->issued_vdesc = vdesc;
-+				return;
-+			}
-+		}
-+		q->issued_vdesc = vdesc;
-+	}
-+
-+	if (list_empty(&vc->desc_submitted))
-+		return;
-+
-+	if (q->submitted_vdesc)
-+		vd = &q->submitted_vdesc->vdesc;
-+	else
-+		vd = list_first_entry(&vc->desc_submitted, typeof(*vd), node);
-+
-+	list_for_each_entry_from(vd, &vc->desc_submitted, node) {
-+		vdesc = to_qdma_vdesc(vd);
-+		ret = qdma_hw_enqueue(q, vdesc);
-+		if (ret)
-+			break;
-+	}
-+	q->submitted_vdesc = vdesc;
-+}
-+
-+static dma_cookie_t qdma_tx_submit(struct dma_async_tx_descriptor *tx)
-+{
-+	struct virt_dma_chan *vc = to_virt_chan(tx->chan);
-+	struct qdma_queue *q = to_qdma_queue(&vc->chan);
-+	struct virt_dma_desc *vd;
-+	unsigned long flags;
-+	dma_cookie_t cookie;
-+
-+	vd = container_of(tx, struct virt_dma_desc, tx);
-+	spin_lock_irqsave(&vc->lock, flags);
-+	cookie = dma_cookie_assign(tx);
-+
-+	list_move_tail(&vd->node, &vc->desc_submitted);
-+	qdma_fill_pending_vdesc(q);
-+	spin_unlock_irqrestore(&vc->lock, flags);
-+
-+	return cookie;
-+}
-+
-+static void *qdma_get_metadata_ptr(struct dma_async_tx_descriptor *tx,
-+				   size_t *payload_len, size_t *max_len)
-+{
-+	struct qdma_mm_vdesc *vdesc;
-+
-+	vdesc = container_of(tx, typeof(*vdesc), vdesc.tx);
-+	if (payload_len)
-+		*payload_len = sizeof(vdesc->dev_addr);
-+	if (max_len)
-+		*max_len = *payload_len;
-+
-+	return &vdesc->dev_addr;
-+}
-+
-+static int qdma_set_metadata_len(struct dma_async_tx_descriptor *tx,
-+				 size_t payload_len)
-+{
-+	struct qdma_mm_vdesc *vdesc;
-+
-+	vdesc = container_of(tx, typeof(*vdesc), vdesc.tx);
-+	if (payload_len != sizeof(vdesc->dev_addr))
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static struct dma_descriptor_metadata_ops metadata_ops = {
-+	.get_ptr = qdma_get_metadata_ptr,
-+	.set_len = qdma_set_metadata_len,
-+};
-+
-+static struct dma_async_tx_descriptor *
-+qdma_prep_device_sg(struct dma_chan *chan, struct scatterlist *sgl,
-+		    unsigned int sg_len, enum dma_transfer_direction dir,
-+		    unsigned long flags, void *context)
-+{
-+	struct qdma_queue *q = to_qdma_queue(chan);
-+	struct dma_async_tx_descriptor *tx;
-+	struct qdma_mm_vdesc *vdesc;
-+
-+	vdesc = kzalloc(sizeof(*vdesc), GFP_NOWAIT);
-+	if (!vdesc)
-+		return NULL;
-+	vdesc->sgl = sgl;
-+	vdesc->sg_len = sg_len;
-+
-+	tx = vchan_tx_prep(&q->vchan, &vdesc->vdesc, flags);
-+	tx->tx_submit = qdma_tx_submit;
-+	tx->metadata_ops = &metadata_ops;
-+
-+	return tx;
-+}
-+
-+static int qdma_arm_err_intr(const struct qdma_device *qdev)
-+{
-+	u32 value = 0;
-+
-+	qdma_set_field(qdev, &value, QDMA_REGF_ERR_INT_FUNC, qdev->fid);
-+	qdma_set_field(qdev, &value, QDMA_REGF_ERR_INT_VEC, qdev->err_irq_idx);
-+	qdma_set_field(qdev, &value, QDMA_REGF_ERR_INT_ARM, 1);
-+
-+	return qdma_reg_write(qdev, &value, QDMA_REGO_ERR_INT);
-+}
-+
-+static irqreturn_t qdma_error_isr(int irq, void *data)
-+{
-+	struct qdma_device *qdev = data;
-+	u32 err_stat = 0;
-+	int ret;
-+
-+	ret = qdma_reg_read(qdev, &err_stat, QDMA_REGO_ERR_STAT);
-+	if (ret) {
-+		qdma_err(qdev, "read error state failed, ret %d", ret);
-+		goto out;
-+	}
-+
-+	qdma_err(qdev, "global error %d", err_stat);
-+	ret = qdma_reg_write(qdev, &err_stat, QDMA_REGO_ERR_STAT);
-+	if (ret)
-+		qdma_err(qdev, "clear error state failed, ret %d", ret);
-+
-+out:
-+	qdma_arm_err_intr(qdev);
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t qdma_queue_isr(int irq, void *data)
-+{
-+	struct qdma_intr_ring *intr = data;
-+	struct qdma_queue *q = NULL;
-+	struct qdma_device *qdev;
-+	u32 index, comp_desc;
-+	u64 intr_ent;
-+	u8 color;
-+	int ret;
-+	u16 qid;
-+
-+	qdev = intr->qdev;
-+	index = intr->cidx;
-+	while (1) {
-+		struct virt_dma_desc *vd;
-+		struct qdma_mm_vdesc *vdesc;
-+		unsigned long flags;
-+		u32 cidx;
-+
-+		intr_ent = le64_to_cpu(intr->base[index]);
-+		color = FIELD_GET(QDMA_INTR_MASK_COLOR, intr_ent);
-+		if (color != intr->color)
-+			break;
-+
-+		qid = FIELD_GET(QDMA_INTR_MASK_QID, intr_ent);
-+		if (FIELD_GET(QDMA_INTR_MASK_TYPE, intr_ent))
-+			q = qdev->c2h_queues;
-+		else
-+			q = qdev->h2c_queues;
-+		q += qid;
-+
-+		cidx = FIELD_GET(QDMA_INTR_MASK_CIDX, intr_ent);
-+
-+		spin_lock_irqsave(&q->vchan.lock, flags);
-+		comp_desc = (cidx - q->cidx) & q->idx_mask;
-+
-+		vd = vchan_next_desc(&q->vchan);
-+		if (!vd)
-+			goto skip;
-+
-+		vdesc = to_qdma_vdesc(vd);
-+		while (comp_desc > vdesc->pending_descs) {
-+			list_del(&vd->node);
-+			vchan_cookie_complete(vd);
-+			comp_desc -= vdesc->pending_descs;
-+			vd = vchan_next_desc(&q->vchan);
-+			vdesc = to_qdma_vdesc(vd);
-+		}
-+		vdesc->pending_descs -= comp_desc;
-+		if (!vdesc->pending_descs && QDMA_VDESC_QUEUED(vdesc)) {
-+			list_del(&vd->node);
-+			vchan_cookie_complete(vd);
-+		}
-+		q->cidx = cidx;
-+
-+		qdma_fill_pending_vdesc(q);
-+		qdma_xfer_start(q);
-+
-+skip:
-+		spin_unlock_irqrestore(&q->vchan.lock, flags);
-+
-+		/*
-+		 * Wrap the index value and flip the expected color value if
-+		 * interrupt aggregation PIDX has wrapped around.
-+		 */
-+		index++;
-+		index &= QDMA_INTR_RING_IDX_MASK;
-+		if (!index)
-+			intr->color = !intr->color;
-+	}
-+
-+	/*
-+	 * Update the software interrupt aggregation ring CIDX if a valid entry
-+	 * was found.
-+	 */
-+	if (q) {
-+		qdma_dbg(qdev, "update intr ring%d %d", intr->ridx, index);
-+
-+		/*
-+		 * Record the last read index of status descriptor from the
-+		 * interrupt aggregation ring.
-+		 */
-+		intr->cidx = index;
-+
-+		ret = qdma_update_cidx(q, intr->ridx, index);
-+		if (ret) {
-+			qdma_err(qdev, "Failed to update IRQ CIDX");
-+			return IRQ_NONE;
-+		}
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int qdma_init_error_irq(struct qdma_device *qdev)
-+{
-+	struct device *dev = &qdev->pdev->dev;
-+	int ret;
-+	u32 vec;
-+
-+	vec = qdev->queue_irq_start - 1;
-+
-+	ret = devm_request_threaded_irq(dev, vec, NULL, qdma_error_isr,
-+					IRQF_ONESHOT, "amd-qdma-error", qdev);
-+	if (ret) {
-+		qdma_err(qdev, "Failed to request error IRQ vector: %d", vec);
-+		return ret;
-+	}
-+
-+	ret = qdma_arm_err_intr(qdev);
-+	if (ret)
-+		qdma_err(qdev, "Failed to arm err interrupt, ret %d", ret);
-+
-+	return ret;
-+}
-+
-+static void qdma_free_qintr_rings(struct qdma_device *qdev)
-+{
-+	int i;
-+
-+	for (i = 0; i < qdev->qintr_ring_num; i++) {
-+		if (!qdev->qintr_rings[i].base)
-+			continue;
-+
-+		dma_free_coherent(&qdev->pdev->dev, QDMA_INTR_RING_SIZE,
-+				  qdev->qintr_rings[i].base,
-+				  qdev->qintr_rings[i].dev_base);
-+	}
-+}
-+
-+static int qdma_alloc_qintr_rings(struct qdma_device *qdev)
-+{
-+	u32 ctxt[QDMA_CTXT_REGMAP_LEN];
-+	struct device *dev = &qdev->pdev->dev;
-+	struct qdma_intr_ring *ring;
-+	struct qdma_ctxt_intr intr_ctxt;
-+	u32 vector;
-+	int ret, i;
-+
-+	qdev->qintr_ring_num = qdev->queue_irq_num;
-+	qdev->qintr_rings = devm_kcalloc(dev, qdev->qintr_ring_num,
-+					 sizeof(*qdev->qintr_rings),
-+					 GFP_KERNEL);
-+	if (!qdev->qintr_rings)
-+		return -ENOMEM;
-+
-+	vector = qdev->queue_irq_start;
-+	for (i = 0; i < qdev->qintr_ring_num; i++, vector++) {
-+		ring = &qdev->qintr_rings[i];
-+		ring->qdev = qdev;
-+		ring->msix_id = qdev->err_irq_idx + i + 1;
-+		ring->ridx = i;
-+		ring->color = 1;
-+		ring->base = dma_alloc_coherent(dev, QDMA_INTR_RING_SIZE,
-+						&ring->dev_base,
-+						GFP_KERNEL);
-+		if (!ring->base) {
-+			qdma_err(qdev, "Failed to alloc intr ring %d", i);
-+			ret = -ENOMEM;
-+			goto failed;
-+		}
-+		intr_ctxt.agg_base = QDMA_INTR_RING_BASE(ring->dev_base);
-+		intr_ctxt.size = (QDMA_INTR_RING_SIZE - 1) / 4096;
-+		intr_ctxt.vec = ring->msix_id;
-+		intr_ctxt.valid = true;
-+		intr_ctxt.color = true;
-+		ret = qdma_prog_context(qdev, QDMA_CTXT_INTR_COAL,
-+					QDMA_CTXT_CLEAR, ring->ridx, NULL);
-+		if (ret) {
-+			qdma_err(qdev, "Failed clear intr ctx, ret %d", ret);
-+			goto failed;
-+		}
-+
-+		qdma_prep_intr_context(qdev, &intr_ctxt, ctxt);
-+		ret = qdma_prog_context(qdev, QDMA_CTXT_INTR_COAL,
-+					QDMA_CTXT_WRITE, ring->ridx, ctxt);
-+		if (ret) {
-+			qdma_err(qdev, "Failed setup intr ctx, ret %d", ret);
-+			goto failed;
-+		}
-+
-+		ret = devm_request_threaded_irq(dev, vector, NULL,
-+						qdma_queue_isr, IRQF_ONESHOT,
-+						"amd-qdma-queue", ring);
-+		if (ret) {
-+			qdma_err(qdev, "Failed to request irq %d", vector);
-+			goto failed;
-+		}
-+	}
-+
-+	return 0;
-+
-+failed:
-+	qdma_free_qintr_rings(qdev);
-+	return ret;
-+}
-+
-+static int qdma_intr_init(struct qdma_device *qdev)
-+{
-+	int ret;
-+
-+	ret = qdma_init_error_irq(qdev);
-+	if (ret) {
-+		qdma_err(qdev, "Failed to init error IRQs, ret %d", ret);
-+		return ret;
-+	}
-+
-+	ret = qdma_alloc_qintr_rings(qdev);
-+	if (ret) {
-+		qdma_err(qdev, "Failed to init queue IRQs, ret %d", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int amd_qdma_remove(struct platform_device *pdev)
-+{
-+	struct qdma_device *qdev = platform_get_drvdata(pdev);
-+
-+	qdma_sgdma_control(qdev, 0);
-+
-+	if (qdev->status & QDMA_DEV_STATUS_REG_DMA)
-+		dma_async_device_unregister(&qdev->dma_dev);
-+
-+	if (qdev->status & QDMA_DEV_STATUS_INTR_INIT)
-+		qdma_free_qintr_rings(qdev);
-+
-+	mutex_destroy(&qdev->ctxt_lock);
-+
-+	return 0;
-+}
-+
-+static int amd_qdma_probe(struct platform_device *pdev)
-+{
-+	struct qdma_platdata *pdata = dev_get_platdata(&pdev->dev);
-+	struct qdma_device *qdev;
-+	struct resource *res;
-+	void __iomem *regs;
-+	int ret;
-+
-+	qdev = devm_kzalloc(&pdev->dev, sizeof(*qdev), GFP_KERNEL);
-+	if (!qdev)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, qdev);
-+	qdev->pdev = pdev;
-+	mutex_init(&qdev->ctxt_lock);
-+
-+	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-+	if (!res) {
-+		qdma_err(qdev, "Failed to get IRQ resource");
-+		ret = -ENODEV;
-+		goto failed;
-+	}
-+	qdev->err_irq_idx = pdata->irq_index;
-+	qdev->queue_irq_start = res->start + 1;
-+	qdev->queue_irq_num = res->end - res->start;
-+
-+	regs = devm_platform_get_and_ioremap_resource(pdev, 0, NULL);
-+	if (IS_ERR(regs)) {
-+		ret = PTR_ERR(regs);
-+		qdma_err(qdev, "Failed to map IO resource, err %d", ret);
-+		goto failed;
-+	}
-+
-+	qdev->regmap = devm_regmap_init_mmio(&pdev->dev, regs,
-+					     &qdma_regmap_config);
-+	if (IS_ERR(qdev->regmap)) {
-+		ret = PTR_ERR(qdev->regmap);
-+		qdma_err(qdev, "Regmap init failed, err %d", ret);
-+		goto failed;
-+	}
-+
-+	ret = qdma_device_verify(qdev);
-+	if (ret)
-+		goto failed;
-+
-+	ret = qdma_get_hw_info(qdev);
-+	if (ret)
-+		goto failed;
-+
-+	INIT_LIST_HEAD(&qdev->dma_dev.channels);
-+
-+	ret = qdma_device_setup(qdev);
-+	if (ret)
-+		goto failed;
-+
-+	ret = qdma_intr_init(qdev);
-+	if (ret) {
-+		qdma_err(qdev, "Failed to initialize IRQs %d", ret);
-+		return ret;
-+	}
-+	qdev->status |= QDMA_DEV_STATUS_INTR_INIT;
-+
-+	dma_cap_set(DMA_SLAVE, qdev->dma_dev.cap_mask);
-+	dma_cap_set(DMA_PRIVATE, qdev->dma_dev.cap_mask);
-+
-+	qdev->dma_dev.dev = &pdev->dev;
-+	qdev->dma_dev.filter.map = pdata->device_map;
-+	qdev->dma_dev.filter.mapcnt = qdev->chan_num * 2;
-+	qdev->dma_dev.filter.fn = qdma_filter_fn;
-+	qdev->dma_dev.desc_metadata_modes = DESC_METADATA_ENGINE;
-+	qdev->dma_dev.device_alloc_chan_resources = qdma_alloc_queue_resources;
-+	qdev->dma_dev.device_free_chan_resources = qdma_free_queue_resources;
-+	qdev->dma_dev.device_prep_slave_sg = qdma_prep_device_sg;
-+	qdev->dma_dev.device_issue_pending = qdma_issue_pending;
-+	qdev->dma_dev.device_tx_status = dma_cookie_status;
-+	qdev->dma_dev.directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
-+
-+	ret = dma_async_device_register(&qdev->dma_dev);
-+	if (ret) {
-+		qdma_err(qdev, "Failed to register AMD QDMA: %d", ret);
-+		goto failed;
-+	}
-+	qdev->status |= QDMA_DEV_STATUS_REG_DMA;
-+
-+	return 0;
-+failed:
-+	qdma_err(qdev, "Failed to probe AMD QDMA driver");
-+	amd_qdma_remove(pdev);
-+	return ret;
-+}
-+
-+static struct platform_driver amd_qdma_driver = {
-+	.driver		= {
-+		.name = "amd-qdma",
-+	},
-+	.probe		= amd_qdma_probe,
-+	.remove		= amd_qdma_remove,
-+};
-+
-+module_platform_driver(amd_qdma_driver);
-+
-+MODULE_DESCRIPTION("AMD QDMA driver");
-+MODULE_AUTHOR("XRT Team <runtimeca39d@amd.com>");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/dma/amd/qdma.h b/drivers/dma/amd/qdma.h
-new file mode 100644
-index 000000000000..b4a0e23d3d79
---- /dev/null
-+++ b/drivers/dma/amd/qdma.h
-@@ -0,0 +1,269 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/*
-+ * DMA header for AMD Queue-based DMA Subsystem
-+ *
-+ * Copyright (C) 2023, Advanced Micro Devices, Inc.
-+ */
-+
-+#ifndef __QDMA_H
-+#define __QDMA_H
-+
-+#include <linux/bitfield.h>
-+#include <linux/dmaengine.h>
-+#include <linux/kernel.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+#include "../virt-dma.h"
-+
-+#define DISABLE					0
-+#define ENABLE					1
-+
-+#define QDMA_MIN_IRQ				3
-+#define QDMA_INTR_NAME_MAX_LEN			30
-+#define QDMA_INTR_PREFIX			"amd-qdma"
-+
-+#define QDMA_DEV_STATUS_REG_DMA			BIT(0)
-+#define QDMA_DEV_STATUS_INTR_INIT		BIT(1)
-+
-+#define QDMA_IDENTIFIER				0x1FD3
-+#define QDMA_DEFAULT_RING_SIZE			(BIT(10) + 1)
-+#define QDMA_DEFAULT_RING_ID			0
-+#define QDMA_POLL_INTRVL_US			10		/* 10us */
-+#define QDMA_POLL_TIMEOUT_US			(500 * 1000)	/* 500ms */
-+#define QDMA_DMAP_REG_STRIDE			16
-+#define QDMA_CTXT_REGMAP_LEN			8		/* 8 regs */
-+#define QDMA_MM_DESC_SIZE			32		/* Bytes */
-+#define QDMA_MM_DESC_LEN_BITS			28
-+#define QDMA_MM_DESC_MAX_LEN			(BIT(QDMA_MM_DESC_LEN_BITS) - 1)
-+#define QDMA_MIN_DMA_ALLOC_SIZE			4096
-+#define QDMA_INTR_RING_SIZE			BIT(13)
-+#define QDMA_INTR_RING_IDX_MASK			GENMASK(9, 0)
-+#define QDMA_INTR_RING_BASE(_addr)		((_addr) >> 12)
-+
-+#define QDMA_IDENTIFIER_REGOFF			0x0
-+#define QDMA_IDENTIFIER_MASK			GENMASK(31, 16)
-+#define QDMA_QUEUE_ARM_BIT			BIT(16)
-+
-+#define qdma_err(qdev, fmt, args...)					\
-+	dev_err(&(qdev)->pdev->dev, fmt, ##args)
-+
-+#define qdma_dbg(qdev, fmt, args...)					\
-+	dev_dbg(&(qdev)->pdev->dev, fmt, ##args)
-+
-+#define qdma_info(qdev, fmt, args...)					\
-+	dev_info(&(qdev)->pdev->dev, fmt, ##args)
-+
-+enum qdma_reg_fields {
-+	QDMA_REGF_IRQ_ENABLE,
-+	QDMA_REGF_WBK_ENABLE,
-+	QDMA_REGF_WBI_CHECK,
-+	QDMA_REGF_IRQ_ARM,
-+	QDMA_REGF_IRQ_VEC,
-+	QDMA_REGF_IRQ_AGG,
-+	QDMA_REGF_WBI_INTVL_ENABLE,
-+	QDMA_REGF_MRKR_DISABLE,
-+	QDMA_REGF_QUEUE_ENABLE,
-+	QDMA_REGF_QUEUE_MODE,
-+	QDMA_REGF_DESC_BASE,
-+	QDMA_REGF_DESC_SIZE,
-+	QDMA_REGF_RING_ID,
-+	QDMA_REGF_CMD_INDX,
-+	QDMA_REGF_CMD_CMD,
-+	QDMA_REGF_CMD_TYPE,
-+	QDMA_REGF_CMD_BUSY,
-+	QDMA_REGF_QUEUE_COUNT,
-+	QDMA_REGF_QUEUE_MAX,
-+	QDMA_REGF_QUEUE_BASE,
-+	QDMA_REGF_FUNCTION_ID,
-+	QDMA_REGF_INTR_AGG_BASE,
-+	QDMA_REGF_INTR_VECTOR,
-+	QDMA_REGF_INTR_SIZE,
-+	QDMA_REGF_INTR_VALID,
-+	QDMA_REGF_INTR_COLOR,
-+	QDMA_REGF_INTR_FUNCTION_ID,
-+	QDMA_REGF_ERR_INT_FUNC,
-+	QDMA_REGF_ERR_INT_VEC,
-+	QDMA_REGF_ERR_INT_ARM,
-+	QDMA_REGF_MAX
-+};
-+
-+enum qdma_regs {
-+	QDMA_REGO_CTXT_DATA,
-+	QDMA_REGO_CTXT_CMD,
-+	QDMA_REGO_CTXT_MASK,
-+	QDMA_REGO_MM_H2C_CTRL,
-+	QDMA_REGO_MM_C2H_CTRL,
-+	QDMA_REGO_QUEUE_COUNT,
-+	QDMA_REGO_RING_SIZE,
-+	QDMA_REGO_H2C_PIDX,
-+	QDMA_REGO_C2H_PIDX,
-+	QDMA_REGO_INTR_CIDX,
-+	QDMA_REGO_FUNC_ID,
-+	QDMA_REGO_ERR_INT,
-+	QDMA_REGO_ERR_STAT,
-+	QDMA_REGO_MAX
-+};
-+
-+struct qdma_reg_field {
-+	u16 lsb; /* Least significant bit of field */
-+	u16 msb; /* Most significant bit of field */
-+};
-+
-+struct qdma_reg {
-+	u32 off;
-+	u32 count;
-+};
-+
-+#define QDMA_REGF(_msb, _lsb) {						\
-+	.lsb = (_lsb),							\
-+	.msb = (_msb),							\
-+}
-+
-+#define QDMA_REGO(_off, _count) {					\
-+	.off = (_off),							\
-+	.count = (_count),						\
-+}
-+
-+enum qdma_desc_size {
-+	QDMA_DESC_SIZE_8B,
-+	QDMA_DESC_SIZE_16B,
-+	QDMA_DESC_SIZE_32B,
-+	QDMA_DESC_SIZE_64B,
-+};
-+
-+enum qdma_queue_op_mode {
-+	QDMA_QUEUE_OP_STREAM,
-+	QDMA_QUEUE_OP_MM,
-+};
-+
-+enum qdma_ctxt_type {
-+	QDMA_CTXT_DESC_SW_C2H,
-+	QDMA_CTXT_DESC_SW_H2C,
-+	QDMA_CTXT_DESC_HW_C2H,
-+	QDMA_CTXT_DESC_HW_H2C,
-+	QDMA_CTXT_DESC_CR_C2H,
-+	QDMA_CTXT_DESC_CR_H2C,
-+	QDMA_CTXT_WRB,
-+	QDMA_CTXT_PFTCH,
-+	QDMA_CTXT_INTR_COAL,
-+	QDMA_CTXT_RSVD,
-+	QDMA_CTXT_HOST_PROFILE,
-+	QDMA_CTXT_TIMER,
-+	QDMA_CTXT_FMAP,
-+	QDMA_CTXT_FNC_STS,
-+};
-+
-+enum qdma_ctxt_cmd {
-+	QDMA_CTXT_CLEAR,
-+	QDMA_CTXT_WRITE,
-+	QDMA_CTXT_READ,
-+	QDMA_CTXT_INVALIDATE,
-+	QDMA_CTXT_MAX
-+};
-+
-+struct qdma_ctxt_sw_desc {
-+	u64				desc_base;
-+	u16				vec;
-+};
-+
-+struct qdma_ctxt_intr {
-+	u64				agg_base;
-+	u16				vec;
-+	u32				size;
-+	bool				valid;
-+	bool				color;
-+};
-+
-+struct qdma_ctxt_fmap {
-+	u16				qbase;
-+	u16				qmax;
-+};
-+
-+struct qdma_device;
-+
-+struct qdma_mm_desc {
-+	__le64			src_addr;
-+	__le32			len;
-+	__le32			reserved1;
-+	__le64			dst_addr;
-+	__le64			reserved2;
-+} __packed;
-+
-+struct qdma_mm_vdesc {
-+	struct virt_dma_desc		vdesc;
-+	struct qdma_queue		*queue;
-+	struct scatterlist		*sgl;
-+	u64				sg_off;
-+	u32				sg_len;
-+	u64				dev_addr;
-+	u32				pidx;
-+	u32				pending_descs;
-+};
-+
-+#define QDMA_VDESC_QUEUED(vdesc)	(!(vdesc)->sg_len)
-+
-+struct qdma_queue {
-+	struct qdma_device		*qdev;
-+	struct virt_dma_chan		vchan;
-+	enum dma_transfer_direction	dir;
-+	struct dma_slave_config		cfg;
-+	struct qdma_mm_desc		*desc_base;
-+	struct qdma_mm_vdesc		*submitted_vdesc;
-+	struct qdma_mm_vdesc		*issued_vdesc;
-+	dma_addr_t			dma_desc_base;
-+	u32				pidx_reg;
-+	u32				cidx_reg;
-+	u32				ring_size;
-+	u32				idx_mask;
-+	u16				qid;
-+	u32				pidx;
-+	u32				cidx;
-+};
-+
-+struct qdma_intr_ring {
-+	struct qdma_device		*qdev;
-+	__le64				*base;
-+	dma_addr_t			dev_base;
-+	char				msix_name[QDMA_INTR_NAME_MAX_LEN];
-+	u32				msix_vector;
-+	u16				msix_id;
-+	u32				ring_size;
-+	u16				ridx;
-+	u16				cidx;
-+	u8				color;
-+};
-+
-+#define QDMA_INTR_MASK_PIDX		GENMASK_ULL(15, 0)
-+#define QDMA_INTR_MASK_CIDX		GENMASK_ULL(31, 16)
-+#define QDMA_INTR_MASK_DESC_COLOR	GENMASK_ULL(32, 32)
-+#define QDMA_INTR_MASK_STATE		GENMASK_ULL(34, 33)
-+#define QDMA_INTR_MASK_ERROR		GENMASK_ULL(36, 35)
-+#define QDMA_INTR_MASK_TYPE		GENMASK_ULL(38, 38)
-+#define QDMA_INTR_MASK_QID		GENMASK_ULL(62, 39)
-+#define QDMA_INTR_MASK_COLOR		GENMASK_ULL(63, 63)
-+
-+struct qdma_device {
-+	struct platform_device		*pdev;
-+	struct dma_device		dma_dev;
-+	struct regmap			*regmap;
-+	struct mutex			ctxt_lock; /* protect ctxt registers */
-+	const struct qdma_reg_field	*rfields;
-+	const struct qdma_reg		*roffs;
-+	struct qdma_queue		*h2c_queues;
-+	struct qdma_queue		*c2h_queues;
-+	struct qdma_intr_ring		*qintr_rings;
-+	u32				qintr_ring_num;
-+	u32				qintr_ring_idx;
-+	u32				chan_num;
-+	u32				queue_irq_start;
-+	u32				queue_irq_num;
-+	u32				err_irq_idx;
-+	u32				fid;
-+	u32				status;
-+};
-+
-+extern const struct qdma_reg qdma_regos_default[QDMA_REGO_MAX];
-+extern const struct qdma_reg_field qdma_regfs_default[QDMA_REGF_MAX];
-+
-+#endif	/* __QDMA_H */
-diff --git a/include/linux/platform_data/amd_qdma.h b/include/linux/platform_data/amd_qdma.h
-new file mode 100644
-index 000000000000..59fa0c174f70
---- /dev/null
-+++ b/include/linux/platform_data/amd_qdma.h
-@@ -0,0 +1,36 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/*
-+ * Copyright (C) 2023, Advanced Micro Devices, Inc.
-+ */
-+
-+#ifndef _PLATDATA_AMD_QDMA_H
-+#define _PLATDATA_AMD_QDMA_H
-+
-+#include <linux/dmaengine.h>
-+
-+/**
-+ * struct qdma_queue_info - DMA queue information. This information is used to
-+ *			    match queue when DMA channel is requested
-+ * @dir: Channel transfer direction
-+ */
-+struct qdma_queue_info {
-+	enum dma_transfer_direction dir;
-+};
-+
-+#define QDMA_FILTER_PARAM(qinfo)	((void *)(qinfo))
-+
-+struct dma_slave_map;
-+
-+/**
-+ * struct qdma_platdata - Platform specific data for QDMA engine
-+ * @max_mm_channels: Maximum number of MM DMA channels in each direction
-+ * @device_map: DMA slave map
-+ * @irq_index: The index of first IRQ
-+ */
-+struct qdma_platdata {
-+	u32			max_mm_channels;
-+	u32			irq_index;
-+	struct dma_slave_map	*device_map;
-+};
-+
-+#endif /* _PLATDATA_AMD_QDMA_H */
+    echo "canned" > /sys/bus/dsa/drivers/crypto/compression_mode
+
+There are a few other available iaa_crypto driver attributes (see
+Documentation for details) but the main one we want to consider in
+detail for now is the ‘sync_mode’ attribute.
+
+The ‘sync_mode’ attribute has 3 possible settings: ‘sync’, ‘async’,
+and ‘async_irq’.
+
+The context for these different modes is that although the iaa_crypto
+driver implements the asynchronous crypto interface, the async
+interface is currently only used in a synchronous way by facilities
+like zswap that make use of it.
+
+This is fine for software compress/decompress algorithms, since
+there’s no real benefit in being able to use a truly asynchronous
+interface with them.  This isn’t the case, though, for hardware
+compress/decompress engines such as IAA, where truly asynchronous
+behavior is beneficial if not completely necessary to make optimal use
+of the hardware.
+
+The IAA crypto driver ‘sync_mode’ support should allow facilities such
+as zswap to ‘support async (de)compression in some way [2]’ once
+they are modified to actually make use of it.
+
+When the ‘async_irq’ sync_mode is specified, the driver sets the bits
+in the IAA work descriptor to generate an irq when the work completes.
+So for every compression or decompression, the IAA acomp_alg
+implementations called by crypto_acomp_compress/decompress() simply
+set up the descriptor, turn on the 'request irq' bit and return
+immediately with -EINPROGRESS.  When the work completes, the irq fires
+and the IDXD driver’s irq thread for that irq invokes the callback the
+iaa_crypto module registered with IDXD.  When the irq thread gets
+scheduled, it wakes up the caller, which could be for instance zswap,
+waiting synchronously via crypto_wait_req().
+
+Using the simple madvise test program in '[PATCH 08/15] crypto: iaa -
+Add IAA Compression Accelerator Documentation' along with a set of
+pages from the spec17 benchmark and tracepoint instrumentation
+measuring the time taken between the start and end of each compress
+and decompress, this case, async_irq, takes on average 6,847 ns for
+compression and 5,840 ns for decompression. (See Table 1 below for a
+summary of all the tests.)
+
+When sync_mode is set to ‘sync’, the interrupt bit is not set and the
+work descriptor is submitted in the same way it was for the previous
+case.  In this case the call doesn’t return but rather loops around
+waiting in the iaa_crypto driver’s check_completion() function which
+continually checks the descriptor’s completion bit until it finds it
+set to ‘completed’.  It then returns to the caller, again for example
+zswap waiting in crypto_wait_req().  From the standpoint of zswap,
+this case is exactly the same as the previous case, the difference
+seen only in the crypto layer and the iaa_crypto driver internally;
+from its standpoint they’re both synchronous calls.  There is however
+a large performance difference: an average of 3,177 ns for compress
+and 2,235 ns for decompress.
+
+The final sync_mode is ‘async’.  In this case also the interrupt bit
+is not set and the work descriptor is submitted, returning immediately
+to the caller with -EINPROGRESS.  Because there’s no interrupt set to
+notify anyone when the work completes, the caller needs to somehow
+check for work completion.  Because core code like zswap can’t do this
+directly by for example calling iaa_crypto’s check_completion(), there
+would need to be some changes made to code like zswap and the crypto
+layer in order to take advantage of this mode.  As such, there are no
+numbers to share for this mode.
+
+Finally, just a quick discussion of the remaining numbers in Table 1,
+those comparing the iaa_crypto sync and async irq cases to software
+deflate.  Software deflate took average of 108,978 ns for compress and
+14,485 ns for decompress.
+
+As can be seen from Table 1, the numbers using the iaa_crypto driver
+for deflate as compared to software are so much better that merging it
+would seem to make sense on its own merits.  The 'async' sync_mode
+described above, however, offers the possibility of even greater gains
+to be had against higher-performing algorithms such as lzo, via
+parallelization, once the calling facilities are modified to take
+advantage of it.  Follow-up patchsets to this one will demonstrate
+concretely how that might be accomplished.
+
+Thanks, 
+
+Tom  
+
+
+  Table 1. Zswap latency and compression numbers (in ns): 
+
+  Algorithm                    compress      decompress
+  ----------------------------------------------------------
+  iaa sync			3,177		2,235
+  iaa async irq   		6,847		5,840
+  software deflate	      108,978	       14,485
+
+[1] https://cdrdv2.intel.com/v1/dl/getContent/721858
+
+[2] https://lore.kernel.org/lkml/20201107065332.26992-1-song.bao.hua@hisilicon.com/
+
+
+Dave Jiang (2):
+  dmaengine: idxd: add wq driver name support for accel-config user tool
+  dmaengine: idxd: add external module driver support for dsa_bus_type
+
+Tom Zanussi (12):
+  dmaengine: idxd: Export drv_enable/disable and related functions
+  dmaengine: idxd: Export descriptor management functions
+  dmaengine: idxd: Export wq resource management functions
+  dmaengine: idxd: Add wq private data accessors
+  dmaengine: idxd: add callback support for iaa crypto
+  crypto: iaa - Add IAA Compression Accelerator Documentation
+  crypto: iaa - Add Intel IAA Compression Accelerator crypto driver core
+  crypto: iaa - Add per-cpu workqueue table with rebalancing
+  crypto: iaa - Add compression mode management along with fixed mode
+  crypto: iaa - Add support for deflate-iaa compression algorithm
+  crypto: iaa - Add irq support for the crypto async interface
+  crypto: iaa - Add IAA Compression Accelerator stats
+
+ .../ABI/stable/sysfs-driver-dma-idxd          |    6 +
+ .../driver-api/crypto/iaa/iaa-crypto.rst      |  645 +++++
+ Documentation/driver-api/crypto/iaa/index.rst |   20 +
+ Documentation/driver-api/crypto/index.rst     |   20 +
+ Documentation/driver-api/index.rst            |    1 +
+ MAINTAINERS                                   |    7 +
+ crypto/testmgr.c                              |   10 +
+ drivers/crypto/intel/Kconfig                  |    1 +
+ drivers/crypto/intel/Makefile                 |    1 +
+ drivers/crypto/intel/iaa/Kconfig              |   19 +
+ drivers/crypto/intel/iaa/Makefile             |   12 +
+ drivers/crypto/intel/iaa/iaa_crypto.h         |  182 ++
+ .../crypto/intel/iaa/iaa_crypto_comp_fixed.c  |   92 +
+ drivers/crypto/intel/iaa/iaa_crypto_main.c    | 2142 +++++++++++++++++
+ drivers/crypto/intel/iaa/iaa_crypto_stats.c   |  281 +++
+ drivers/crypto/intel/iaa/iaa_crypto_stats.h   |   60 +
+ drivers/dma/idxd/bus.c                        |    6 +
+ drivers/dma/idxd/cdev.c                       |    7 +
+ drivers/dma/idxd/device.c                     |    9 +-
+ drivers/dma/idxd/dma.c                        |    9 +-
+ drivers/dma/idxd/idxd.h                       |   84 +-
+ drivers/dma/idxd/irq.c                        |   12 +-
+ drivers/dma/idxd/submit.c                     |    9 +-
+ drivers/dma/idxd/sysfs.c                      |   34 +
+ include/uapi/linux/idxd.h                     |    1 +
+ 25 files changed, 3650 insertions(+), 20 deletions(-)
+ create mode 100644 Documentation/driver-api/crypto/iaa/iaa-crypto.rst
+ create mode 100644 Documentation/driver-api/crypto/iaa/index.rst
+ create mode 100644 Documentation/driver-api/crypto/index.rst
+ create mode 100644 drivers/crypto/intel/iaa/Kconfig
+ create mode 100644 drivers/crypto/intel/iaa/Makefile
+ create mode 100644 drivers/crypto/intel/iaa/iaa_crypto.h
+ create mode 100644 drivers/crypto/intel/iaa/iaa_crypto_comp_fixed.c
+ create mode 100644 drivers/crypto/intel/iaa/iaa_crypto_main.c
+ create mode 100644 drivers/crypto/intel/iaa/iaa_crypto_stats.c
+ create mode 100644 drivers/crypto/intel/iaa/iaa_crypto_stats.h
+
 -- 
 2.34.1
 

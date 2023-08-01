@@ -2,45 +2,49 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9892576BCD4
-	for <lists+dmaengine@lfdr.de>; Tue,  1 Aug 2023 20:45:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D308F76BCD7
+	for <lists+dmaengine@lfdr.de>; Tue,  1 Aug 2023 20:45:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231781AbjHASpo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 1 Aug 2023 14:45:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56734 "EHLO
+        id S231909AbjHASpx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 1 Aug 2023 14:45:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231778AbjHASpj (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 1 Aug 2023 14:45:39 -0400
+        with ESMTP id S231906AbjHASpn (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 1 Aug 2023 14:45:43 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D6FC272E;
-        Tue,  1 Aug 2023 11:45:27 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AACF2D65;
+        Tue,  1 Aug 2023 11:45:31 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id F047C61690;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 08C9F61693;
+        Tue,  1 Aug 2023 18:45:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11CE5C433C8;
         Tue,  1 Aug 2023 18:45:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 172FDC433C8;
-        Tue,  1 Aug 2023 18:45:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690915526;
-        bh=cVb1t9CI5wJTQOk9tSq/YPn/7jPUhs3rsQ0fZi/enYs=;
-        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-        b=Fkj62Yvi0Q4bJWWdZH21593B18WyipmOzp7+6DcBbTc5KxKTgm4sRiHmhJ3sjW3m1
-         00G8gAKSxImQhFR5VBOEkE/LOxlL7pkVBKWW/gdp0JMdxQkGnJVQNDNRVwnc9oWq5x
-         wZ8zBBgbgv4fe3LLPYvCE+tlnaRAQB+FPczB70Y4DsKP01Kk7SOGJl/NjGrlSNpa+U
-         1JFv85CdEyeWv23NHhfweR6PiaMCJchq/fANg5KXAjDVRqYaQVO1IwtZUyTCc103Z+
-         efoCkvKHSkrYQllc8FvcRP0eAPVeBBWSoTTaw/b8L1pmVoR7Z0KvuqDr/K+K8cpMgk
-         vV7GtmlFdviMA==
+        s=k20201202; t=1690915530;
+        bh=Nhz5Wii0uGhKg7orUacxhEHYXiOEvQZsqyKjQ5bqZ+8=;
+        h=From:To:In-Reply-To:References:Subject:Date:From;
+        b=XJBHPBnIFyluzxfIBYOs/kaWKNTJTo/gG1PT8AXIezN97zH5dqDWvtc/EHXgxsfPr
+         ZS8Ly1OQOpn47gSLVxH16MS3hR0t1BoPK1ZwXKIanicsdGawbEaTorIgHwpSbbaIzR
+         gFYFW1RRoY1qVTt8l05SwWcOP9uSH58gB3Vn3odtvdXPkJ06KVq6zRz+aNJK3Vjq/h
+         tRZbHRgmQVuvAi4WgAKDv6hEWt+Koev7uiRL2uBe1HsM0Vf6XKORFKi/MlaP6h7wdx
+         n1NR93yUmsNgjs1plpwfrp6sG5BI7bCp19H+0i7K+//86hUDAYUC8sCKlL5VHLbSWY
+         EqG63Fn5BmebQ==
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        dmaengine@vger.kernel.org
-In-Reply-To: <36fa11d95b448b5f3f1677da41fe35b9e2751427.1690041500.git.christophe.jaillet@wanadoo.fr>
-References: <36fa11d95b448b5f3f1677da41fe35b9e2751427.1690041500.git.christophe.jaillet@wanadoo.fr>
-Subject: Re: [PATCH] dmaengine: ep93xx: Use struct_size()
-Message-Id: <169091552472.69468.13201647310116428325.b4-ty@kernel.org>
-Date:   Wed, 02 Aug 2023 00:15:24 +0530
+To:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, nicolas.ferre@microchip.com,
+        alexandre.belloni@bootlin.com, claudiu.beznea@microchip.com,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Varshini Rajendran <varshini.rajendran@microchip.com>
+In-Reply-To: <20230728102451.265869-1-varshini.rajendran@microchip.com>
+References: <20230728102451.265869-1-varshini.rajendran@microchip.com>
+Subject: Re: (subset) [PATCH v3 12/50] dt-bindings: dmaengine: at_xdmac:
+ add compatible with microchip,sam9x7
+Message-Id: <169091552668.69468.5352269983442085159.b4-ty@kernel.org>
+Date:   Wed, 02 Aug 2023 00:15:26 +0530
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
@@ -56,18 +60,15 @@ List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 
-On Sat, 22 Jul 2023 17:58:40 +0200, Christophe JAILLET wrote:
-> Use struct_size() instead of hand-writing it, when allocating a structure
-> with a flex array.
-> 
-> This is less verbose, more robust and more informative.
+On Fri, 28 Jul 2023 15:54:51 +0530, Varshini Rajendran wrote:
+> Add compatible for sam9x7.
 > 
 > 
 
 Applied, thanks!
 
-[1/1] dmaengine: ep93xx: Use struct_size()
-      commit: 926a4b17e9366583142c57e074d8a9e52cadc755
+[12/50] dt-bindings: dmaengine: at_xdmac: add compatible with microchip,sam9x7
+        commit: 0f264ab788ed9a39aabb36c0b35e5821b94bcdc8
 
 Best regards,
 -- 

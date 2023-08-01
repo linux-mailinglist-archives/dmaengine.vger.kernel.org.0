@@ -2,47 +2,87 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 03EFF76BCC9
-	for <lists+dmaengine@lfdr.de>; Tue,  1 Aug 2023 20:45:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 81F0376BCCE
+	for <lists+dmaengine@lfdr.de>; Tue,  1 Aug 2023 20:45:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229550AbjHASpW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 1 Aug 2023 14:45:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56438 "EHLO
+        id S231801AbjHASpl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 1 Aug 2023 14:45:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229520AbjHASpU (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 1 Aug 2023 14:45:20 -0400
+        with ESMTP id S231749AbjHASph (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 1 Aug 2023 14:45:37 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15DEE2683;
-        Tue,  1 Aug 2023 11:45:09 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B4532702;
+        Tue,  1 Aug 2023 11:45:25 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0FBE361680;
-        Tue,  1 Aug 2023 18:45:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19130C433C9;
-        Tue,  1 Aug 2023 18:45:06 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 13DE561680;
+        Tue,  1 Aug 2023 18:45:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E760C433C7;
+        Tue,  1 Aug 2023 18:45:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690915508;
-        bh=dfqg0pIWUMMAdJehGVs1TLzTNY1ZG4A/VuMAO+Wuz+g=;
+        s=k20201202; t=1690915524;
+        bh=6ecqCthtX5y6DW+x8fFvSPeJvMEWUDYrHhQnKo4fw2g=;
         h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-        b=TuiFbB+nDIndAT/R+VESSBliJYqBnWrElB7j7By6aLv8BOMUd+c3aD780M2YpZkzm
-         HvM10TwX/mqrsptRufl8MNIZw1QK0DOQKpgjsqWetZepWEkx24K6G40U2vBAzdTCf8
-         0fVpZS7GR+N7nCcGhd5+1nuEdDszlgdqtb2LmawRZ02U5GwEq/+yuV9qICXgogZZH5
-         8Fu3/thBbErnlKKCTFQ7seKgtbEXtlSwSFPr4y3YMsw0VSxoYkErLwlgxgkvSMJgE6
-         Ww6M3EreQ6Cf/eTte3tldZWpS4O2uw00fAhUXSYzMvAHlk9qgsTamrXQ5oAie1yHU/
-         i7ujG88sj5D1g==
+        b=MCgeSAtxkn/Cm+2KX+Cy2ya7BIdT7/jl+ViyqC9GLpRguZ1quqlduJY201e9YY+Gl
+         tPuWVXKidBwoQEQOGw9dB+OvKt+xnFrB0j54IxicMem/IXJTfyVWG62tXO8z1Oidqn
+         2NOA3Pu3s2NQonYg8bgH4gYg1I3ajHJTZ18017Ae5m9Oa4tGlZ1fXI3lCOlefo7d8y
+         ThVJ77i4Sa8SZrf7DUrw4H3M9A25o0ZXrQMqesV5j/lH8f2SyyTLSeFXCYClgzdAqC
+         onCUY8LhZGFKLCVVvkTKYf+Ki+4WGuZFHhFEKqNomiwiYDAlugFGuYkdZfhNjJFDS6
+         h8ARfo4bV8Srw==
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Dave Jiang <dave.jiang@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>
-Cc:     dmaengine@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-In-Reply-To: <20230712174436.3435088-1-fenghua.yu@intel.com>
-References: <20230712174436.3435088-1-fenghua.yu@intel.com>
-Subject: Re: [PATCH 1/2] dmaengine: idxd: Simplify WQ attribute visibility
- checks
-Message-Id: <169091550668.69468.6039812012184401839.b4-ty@kernel.org>
-Date:   Wed, 02 Aug 2023 00:15:06 +0530
+To:     Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Tudor Ambarus <tudor.ambarus@linaro.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Li Yang <leoyang.li@nxp.com>, Zhang Wei <zw@zh-kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        =?utf-8?q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Sinan Kaya <okaya@kernel.org>, Andy Gross <agross@ker>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+        Michal Simek <michal.simek@amd.com>,
+        Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, asahi@lists.linux.dev,
+        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-mediatek@lists.infradead.org,
+        linux-actions@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org
+In-Reply-To: <20230718143138.1066177-1-robh@kernel.org>
+References: <20230718143138.1066177-1-robh@kernel.org>
+Subject: Re: [PATCH v2] dmaengine: Explicitly include correct DT includes
+Message-Id: <169091550886.69468.9371544048617721749.b4-ty@kernel.org>
+Date:   Wed, 02 Aug 2023 00:15:08 +0530
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
@@ -58,19 +98,22 @@ List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 
-On Wed, 12 Jul 2023 10:44:35 -0700, Fenghua Yu wrote:
-> The functions that check if WQ attributes are invisible are almost
-> duplicate. Define a helper to simplify these functions and future
-> WQ attribute visibility checks as well.
+On Tue, 18 Jul 2023 08:31:35 -0600, Rob Herring wrote:
+> The DT of_device.h and of_platform.h date back to the separate
+> of_platform_bus_type before it as merged into the regular platform bus.
+> As part of that merge prepping Arm DT support 13 years ago, they
+> "temporarily" include each other. They also include platform_device.h
+> and of.h. As a result, there's a pretty much random mix of those include
+> files used throughout the tree. In order to detangle these headers and
+> replace the implicit includes with struct declarations, users need to
+> explicitly include the correct includes.
 > 
-> 
+> [...]
 
 Applied, thanks!
 
-[1/2] dmaengine: idxd: Simplify WQ attribute visibility checks
-      commit: 97b1185fe54c8ce94104e3c7fa4ee0bbedd85920
-[2/2] dmaengine: idxd: Expose ATS disable knob only when WQ ATS is supported
-      commit: 62b41b656666d2d35890124df5ef0881fe6d6769
+[1/1] dmaengine: Explicitly include correct DT includes
+      commit: 897500c7ea91702966adb9b412fa39400b4edee6
 
 Best regards,
 -- 

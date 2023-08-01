@@ -2,47 +2,49 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D66C676BCC3
-	for <lists+dmaengine@lfdr.de>; Tue,  1 Aug 2023 20:44:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B331276BCC6
+	for <lists+dmaengine@lfdr.de>; Tue,  1 Aug 2023 20:45:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231697AbjHASoy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 1 Aug 2023 14:44:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55774 "EHLO
+        id S231719AbjHASo7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 1 Aug 2023 14:44:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231639AbjHASov (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 1 Aug 2023 14:44:51 -0400
+        with ESMTP id S231733AbjHASo4 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 1 Aug 2023 14:44:56 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7B172683;
-        Tue,  1 Aug 2023 11:44:50 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C31EBDB
+        for <dmaengine@vger.kernel.org>; Tue,  1 Aug 2023 11:44:54 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5CA4C61691;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 393F761692
+        for <dmaengine@vger.kernel.org>; Tue,  1 Aug 2023 18:44:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F427C433C8;
         Tue,  1 Aug 2023 18:44:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F1E8C433C9;
-        Tue,  1 Aug 2023 18:44:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690915489;
-        bh=eOKT8d8fvSNrmOp3l/vWmIN4pVtwSVEs/dKcmyAocgU=;
+        s=k20201202; t=1690915493;
+        bh=ZE2C3ERcygPehSiuu6qdBiIiLhuAGM/Kx+/GdYRziQw=;
         h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-        b=MywX7MO9iMOfE0EwZChLxOBPOOYpT1DJUXdRi9JOEN6/B9Rto/noJZ7KYXxawmNWm
-         fB/ylmY4B55bZV8QMBc/LX1BAjiPWDCOZoXaleiichmVehKYeMqw60y8BGyEHQooOu
-         VNG5sZVVZJA/PgfRWxeM7d5bgUAeuKEK+LLPvh76uG8C6NRDWz+dZ/L+L2KNu+Kw88
-         NCyNu7CQ+cO/fVf+HvENO7YBOtXZ4YkxakF5aKaSd0IewpJ8eJDCzdKLIAqnAEefZb
-         NwzP6xt2C3cflRH+9yaH2sEfTQzBa/XLnH3MzHiqDWClyzRNXw95IyHj32kfn6f+ae
-         gNSEgObZb6Vnw==
+        b=ZCC8bE7QuFl7q9x4BSskyQrHuJh6x2bAiztKD72khJJ7DxfW6tfjiWYkvz665llWr
+         2+LQcv3sOvsLxm/H01K1LvQXXvJDXhnZ/QfgSwCY49xTTML4FAUD6FoSWj3WyoqatI
+         G/EdSGjetb2WfelxnCsumQcOuz7uCBRDq/gZJFsdWXemJsTAzWu8bummjrtvqLvbV+
+         7IxAxcl37Vt3qB9z91XiUTBHQBtJ8Cba/970XT5qg76Sg3RbVhhsFSVv9ChEuFQxjJ
+         qbwVi1GBI7QKWIhwcKrH0Ih9J2dx8z2mR++epWMyVzCF370AKTn9Tv1QbNuXaH6FUs
+         smov0beJoULpg==
 From:   Vinod Koul <vkoul@kernel.org>
-To:     afaerber@suse.de, mani@kernel.org,
-        Zhang Jianhua <chris.zjh@huawei.com>
-Cc:     dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-actions@lists.infradead.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20230722153244.2086949-1-chris.zjh@huawei.com>
-References: <20230722153244.2086949-1-chris.zjh@huawei.com>
-Subject: Re: [PATCH -next] dmaengine: owl-dma: Modify mismatched function
- name
-Message-Id: <169091548725.69326.17741814180569996226.b4-ty@kernel.org>
-Date:   Wed, 02 Aug 2023 00:14:47 +0530
+To:     Lizhi Hou <lizhi.hou@amd.com>, Brian Xu <brian.xu@amd.com>,
+        Raj Kumar Rampelli <raj.kumar.rampelli@amd.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Michal Simek <michal.simek@amd.com>, Max Zhen <max.zhen@amd.com>,
+        Sonal Santan <sonal.santan@amd.com>, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+In-Reply-To: <20230731101442.792514-1-miquel.raynal@bootlin.com>
+References: <20230731101442.792514-1-miquel.raynal@bootlin.com>
+Subject: Re: (subset) [PATCH 0/4] dmaengine: xdma: Cyclic transfers support
+Message-Id: <169091549012.69326.11492636667033832683.b4-ty@kernel.org>
+Date:   Wed, 02 Aug 2023 00:14:50 +0530
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
@@ -58,17 +60,22 @@ List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 
-On Sat, 22 Jul 2023 15:32:44 +0000, Zhang Jianhua wrote:
-> No functional modification involved.
+On Mon, 31 Jul 2023 12:14:38 +0200, Miquel Raynal wrote:
+> Following the introduction of scatter-gather support of Xilinx's XDMA IP
+> in the Linux kernel, here is a small series adding cyclic transfers.
 > 
-> drivers/dma/owl-dma.c:208: warning: expecting prototype for struct owl_dma_pchan. Prototype was for struct owl_dma_vchan instead HDRTEST usr/include/sound/asequencer.h
+> The first patch is a real bug fix which triggered in my case, the second
+> just fixes a typo, the third one is a preparation patch to ease the
+> review of the fourth one which actually adds cyclic transfers support.
 > 
-> 
+> [...]
 
 Applied, thanks!
 
-[1/1] dmaengine: owl-dma: Modify mismatched function name
-      commit: b4b349f73efae39b6646d82cc1ee081b85645f7b
+[1/4] dmaengine: xilinx: xdma: Fix interrupt vector setting
+      commit: d27a7028ba7214963eae3e3c266070a4a9f5725e
+[2/4] dmaengine: xilinx: xdma: Fix typo
+      commit: c3633b42923dae5c23a7fadaca6f10f8448b8fec
 
 Best regards,
 -- 

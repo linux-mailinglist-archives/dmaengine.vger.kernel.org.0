@@ -2,56 +2,54 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 947F276E6FA
-	for <lists+dmaengine@lfdr.de>; Thu,  3 Aug 2023 13:34:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE14176E70A
+	for <lists+dmaengine@lfdr.de>; Thu,  3 Aug 2023 13:36:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229832AbjHCLed (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 3 Aug 2023 07:34:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35538 "EHLO
+        id S235521AbjHCLgo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 3 Aug 2023 07:36:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234239AbjHCLec (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 3 Aug 2023 07:34:32 -0400
+        with ESMTP id S235336AbjHCLgk (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 3 Aug 2023 07:36:40 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FAA1272A;
-        Thu,  3 Aug 2023 04:34:28 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EDDB26B6;
+        Thu,  3 Aug 2023 04:36:36 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CD38A61D4C;
-        Thu,  3 Aug 2023 11:34:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 744D9C433C7;
-        Thu,  3 Aug 2023 11:34:26 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1EA1C61D50;
+        Thu,  3 Aug 2023 11:36:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE80CC433C7;
+        Thu,  3 Aug 2023 11:36:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691062467;
-        bh=BkBCAVO6hJF4fOYI49LffKk6yX883oqjF0w8sTjILWc=;
+        s=k20201202; t=1691062595;
+        bh=UjTnzA1uyWax5cLoTVXHxVc24fwORm5eBxW+i5hCwfM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PCN4VOz3vZBLDraC13sTD64yaF6fph11RxQKvykMl4hCLeo/Mp2kdRAiZpOEW6ZJt
-         J4yjrfMabuFRB3KQoiVcRr16WjNMUeKHSwU4FLnZKXlLW0GaqecUIb5A+4RrorDIj9
-         01z9y4b+Q3EtGsQ40QacmNiqyNppnNNkW6augIuTjLAqvLDDECY17WYR20sdLSKOmq
-         ts7l3E/hFl6cd3KIULc0UrO26H8ilbCBpVJf2ntUJx5BAYfNMDiHvx/+9clYABGBAr
-         K3E6tdhOWqQMkJCElhHOMXMkpTra8qDHfvk7H6ibRO6HsGcq5MUD0Now1l1YP3GbTb
-         c4N8uTN4J8Kyg==
-Date:   Thu, 3 Aug 2023 17:04:22 +0530
+        b=HZp4FdI5y8YwZwC80GQ37MfdIDxageDzY+c+c7KuikUI9ea28ok8f7BEphllYWal8
+         IJ9RH+AhoU+XxgiCmvp9pd9wyXmmIfr5sD08AVlyUCO4zuES5RHfstemqVyH8cTgvi
+         6ZA+1Fy/1QPJCjsiDBtjQ+qKrhyMexkeBfwH2KJgP5TpkjBuQRTu3I1I/qYdpMEUr9
+         d5n3yc05Aj6v1Ryw0w6glCLvU5r6WLahywP+SiWVcQxIYOtVsz/Xm1AfudEyblYqzO
+         db6qWMTJTUVHsJ2geQ6pDvmgF6dKnVJWnXxo7WiVITUAdwuAj5loO352XUS2J97FwP
+         XbecLwfXnOO0A==
+Date:   Thu, 3 Aug 2023 17:06:31 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Martin =?utf-8?Q?Povi=C5=A1er?= <povik+lin@cutebit.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, asahi@lists.linux.dev,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] dmaengine: apple-sio: Add Apple SIO driver
-Message-ID: <ZMuQvhIg0AHH2e7V@matsya>
-References: <20230712133806.4450-1-povik+lin@cutebit.org>
- <20230712133806.4450-3-povik+lin@cutebit.org>
- <ZMlLjg9UBi3QO/qV@matsya>
- <7D43A9F3-892C-4E74-9618-DB37360B7641@cutebit.org>
- <38B71067-7D67-41B7-BF49-87511BAA06CF@cutebit.org>
+To:     Tom Zanussi <tom.zanussi@linux.intel.com>
+Cc:     herbert@gondor.apana.org.au, davem@davemloft.net,
+        fenghua.yu@intel.com, dave.jiang@intel.com, tony.luck@intel.com,
+        wajdi.k.feghali@intel.com, james.guilford@intel.com,
+        kanchana.p.sridhar@intel.com, vinodh.gopal@intel.com,
+        giovanni.cabiddu@intel.com, linux-kernel@vger.kernel.org,
+        linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org
+Subject: Re: [PATCH v8 01/14] dmaengine: idxd: add wq driver name support for
+ accel-config user tool
+Message-ID: <ZMuRP/LhSxa/Hf4x@matsya>
+References: <20230731212939.1391453-1-tom.zanussi@linux.intel.com>
+ <20230731212939.1391453-2-tom.zanussi@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <38B71067-7D67-41B7-BF49-87511BAA06CF@cutebit.org>
+In-Reply-To: <20230731212939.1391453-2-tom.zanussi@linux.intel.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -62,52 +60,16 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 03-08-23, 10:32, Martin Povišer wrote:
-
-> >>> +static int sio_alloc_tag(struct sio_data *sio)
-> >>> +{
-> >>> +	struct sio_tagdata *tags = &sio->tags;
-> >>> +	int tag, i;
-> >>> +
-> >>> +	/*
-> >>> +	 * Because tag number 0 is special, the usable tag range
-> >>> +	 * is 1...(SIO_NTAGS - 1). So, to pick the next usable tag,
-> >>> +	 * we do modulo (SIO_NTAGS - 1) *then* plus one.
-> >>> +	 */
-> >>> +
-> >>> +#define SIO_USABLE_TAGS (SIO_NTAGS - 1)
-> >>> +	tag = (READ_ONCE(tags->last_tag) % SIO_USABLE_TAGS) + 1;
-> >>> +
-> >>> +	for (i = 0; i < SIO_USABLE_TAGS; i++) {
-> >>> +		if (!test_and_set_bit(tag, &tags->allocated))
-> >>> +			break;
-> >>> +
-> >>> +		tag = (tag % SIO_USABLE_TAGS) + 1;
-> >>> +	}
-> >>> +
-> >>> +	WRITE_ONCE(tags->last_tag, tag);
-> >>> +
-> >>> +	if (i < SIO_USABLE_TAGS)
-> >>> +		return tag;
-> >>> +	else
-> >>> +		return -EBUSY;
-> >>> +#undef SIO_USABLE_TAGS
-> >>> +}
-> >> 
-> >> can you use kernel mechanisms like ida to alloc and free the tags...
-> > 
-> > I can look into that.
+On 31-07-23, 16:29, Tom Zanussi wrote:
+> From: Dave Jiang <dave.jiang@intel.com>
 > 
-> Documentation says IDA is deprecated in favour of Xarray, both look
-> like they serve to associate a pointer with an ID. I think neither
-> structure beats a simple bitfield and a static array for the per-tag
-> data. Agree?
+> With the possibility of multiple wq drivers that can be bound to the wq,
+> the user config tool accel-config needs a way to know which wq driver to
+> bind to the wq. Introduce per wq driver_name sysfs attribute where the user
+> can indicate the driver to be bound to the wq. This allows accel-config to
+> just bind to the driver using wq->driver_name.
 
-yeah xarray am not too sure. I would still go with ida, we will see when
-it is relly removed.
-
-If you need a bitfield why not use bitmap apis.
-I dont like drivers implementing the basic logic which kernel provides
+Acked-by: Vinod Koul <vkoul@kernel.org>
 
 -- 
 ~Vinod

@@ -2,76 +2,148 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C221B76DF0A
-	for <lists+dmaengine@lfdr.de>; Thu,  3 Aug 2023 05:33:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 977DA76E337
+	for <lists+dmaengine@lfdr.de>; Thu,  3 Aug 2023 10:35:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230143AbjHCDdO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 2 Aug 2023 23:33:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54296 "EHLO
+        id S233192AbjHCIfw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 3 Aug 2023 04:35:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232316AbjHCDdI (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 2 Aug 2023 23:33:08 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 762FE26B2
-        for <dmaengine@vger.kernel.org>; Wed,  2 Aug 2023 20:33:07 -0700 (PDT)
-Received: from kwepemi500012.china.huawei.com (unknown [172.30.72.53])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4RGZ8g1jN9zNmNZ;
-        Thu,  3 Aug 2023 11:29:39 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by kwepemi500012.china.huawei.com
- (7.221.188.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 3 Aug
- 2023 11:33:04 +0800
-From:   Li Zetao <lizetao1@huawei.com>
-To:     <lizhi.hou@amd.com>, <brian.xu@amd.com>,
-        <raj.kumar.rampelli@amd.com>, <vkoul@kernel.org>,
-        <michal.simek@amd.com>
-CC:     <lizetao1@huawei.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH -next] dmaengine: xilinx: xdma: Use resource_size() in xdma_probe()
-Date:   Thu, 3 Aug 2023 11:32:35 +0800
-Message-ID: <20230803033235.3049137-1-lizetao1@huawei.com>
-X-Mailer: git-send-email 2.34.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.90.53.73]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemi500012.china.huawei.com (7.221.188.12)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S234608AbjHCIff (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 3 Aug 2023 04:35:35 -0400
+Received: from hutie.ust.cz (hutie.ust.cz [IPv6:2a03:3b40:fe:f0::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF75544B8;
+        Thu,  3 Aug 2023 01:32:31 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cutebit.org; s=mail;
+        t=1691051547; bh=I8UUkfnxct2qea8lWvMBTo7oncRQH0XhAYf9TPDGgYI=;
+        h=Subject:From:In-Reply-To:Date:Cc:References:To;
+        b=Z85MqlFGF/LBBt4moBDmsSdf7NH8QQQ2wwDAld9L3Cpb19uA2fYHtkhVEdrClATcp
+         XL2IgVo0Wf7Sn1TibSIFk3wEFfByuUDi6Lkz18oi2r7XoFgmo7LSYJ8zkyviC/Bjwj
+         EW585564lKGaIx7pLytd/gYu9RnvO+EcqcTHIJi0=
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.1\))
+Subject: Re: [PATCH 2/2] dmaengine: apple-sio: Add Apple SIO driver
+From:   =?utf-8?Q?Martin_Povi=C5=A1er?= <povik+lin@cutebit.org>
+In-Reply-To: <7D43A9F3-892C-4E74-9618-DB37360B7641@cutebit.org>
+Date:   Thu, 3 Aug 2023 10:32:25 +0200
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, asahi@lists.linux.dev,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <38B71067-7D67-41B7-BF49-87511BAA06CF@cutebit.org>
+References: <20230712133806.4450-1-povik+lin@cutebit.org>
+ <20230712133806.4450-3-povik+lin@cutebit.org> <ZMlLjg9UBi3QO/qV@matsya>
+ <7D43A9F3-892C-4E74-9618-DB37360B7641@cutebit.org>
+To:     Vinod Koul <vkoul@kernel.org>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-There is a warning reported by coccinelle:
 
-./drivers/dma/xilinx/xdma.c:888:22-25: ERROR:
-	Missing resource_size with   res
+> On 1. 8. 2023, at 23:55, Martin Povi=C5=A1er <povik+lin@cutebit.org> =
+wrote:
+>=20
+> Hi Vinod!
+>=20
+>> On 1. 8. 2023, at 20:14, Vinod Koul <vkoul@kernel.org> wrote:
+>>=20
+>> On 12-07-23, 15:38, Martin Povi=C5=A1er wrote:
+>>=20
+>>> +struct sio_chan {
+>>> +	unsigned int no;
+>>> +	struct sio_data *host;
+>>> +	struct dma_chan chan;
+>>> +	struct tasklet_struct tasklet;
+>>> +	struct work_struct terminate_wq;
+>>> +
+>>> +	spinlock_t lock;
+>>> +	struct sio_tx *current_tx;
+>>> +	/*
+>>> +	 * 'tx_cookie' is used for distinguishing between transactions =
+from
+>>> +	 * within tag ack/nack callbacks. Without it, we would have no =
+way
+>>> +	 * of knowing if the current transaction is the one the callback =
+handler
+>>> +	 * was installed for.
+>>=20
+>> not sure what you mean by here.. I dont see why you would need to =
+store
+>> cookie here, care to explain?
+>=20
+> I could have clarified this is not meant to be the dmaengine cookie, =
+just
+> a driver-level cookie to address a race between
+>=20
+> 	a dmaengine user calling terminate_all to terminate a running
+> 	cyclic transaction, then issuing a new one
+>=20
+> on one hand, and
+>=20
+> 	the coprocessor acking the issuing of one of the coprocessor
+> 	transactions that correspond to the first dmaengine transaction
+>=20
+> on the other hand. With the cookie the driver should not get confused
+> about which dmaengine transaction the ACK belongs to, since if =
+`current_tx`
+> changed in the meantime the cookie won=E2=80=99t match.
+>=20
+> But now that I look at it... huh, I never increment that `tx_cookie` =
+field!
+> I don=E2=80=99t know if I have considered using the dmaengine cookie =
+to the same
+> effect. Maybe we can do that, I see how that would be much desirable.
 
-Use resource_size() on resource object instead of explicit computation.
+Indeed nothing is stopping us from matching on the dmaengine cookie to
+address the race, so I will be dropping this `tx_cookie` field in v2.
 
-Signed-off-by: Li Zetao <lizetao1@huawei.com>
----
- drivers/dma/xilinx/xdma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>>> +static int sio_alloc_tag(struct sio_data *sio)
+>>> +{
+>>> +	struct sio_tagdata *tags =3D &sio->tags;
+>>> +	int tag, i;
+>>> +
+>>> +	/*
+>>> +	 * Because tag number 0 is special, the usable tag range
+>>> +	 * is 1...(SIO_NTAGS - 1). So, to pick the next usable tag,
+>>> +	 * we do modulo (SIO_NTAGS - 1) *then* plus one.
+>>> +	 */
+>>> +
+>>> +#define SIO_USABLE_TAGS (SIO_NTAGS - 1)
+>>> +	tag =3D (READ_ONCE(tags->last_tag) % SIO_USABLE_TAGS) + 1;
+>>> +
+>>> +	for (i =3D 0; i < SIO_USABLE_TAGS; i++) {
+>>> +		if (!test_and_set_bit(tag, &tags->allocated))
+>>> +			break;
+>>> +
+>>> +		tag =3D (tag % SIO_USABLE_TAGS) + 1;
+>>> +	}
+>>> +
+>>> +	WRITE_ONCE(tags->last_tag, tag);
+>>> +
+>>> +	if (i < SIO_USABLE_TAGS)
+>>> +		return tag;
+>>> +	else
+>>> +		return -EBUSY;
+>>> +#undef SIO_USABLE_TAGS
+>>> +}
+>>=20
+>> can you use kernel mechanisms like ida to alloc and free the tags...
+>=20
+> I can look into that.
 
-diff --git a/drivers/dma/xilinx/xdma.c b/drivers/dma/xilinx/xdma.c
-index e0bfd129d563..da5410dddfbf 100644
---- a/drivers/dma/xilinx/xdma.c
-+++ b/drivers/dma/xilinx/xdma.c
-@@ -885,7 +885,7 @@ static int xdma_probe(struct platform_device *pdev)
- 		goto failed;
- 	}
- 	xdev->irq_start = res->start;
--	xdev->irq_num = res->end - res->start + 1;
-+	xdev->irq_num = resource_size(res);
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	if (!res) {
--- 
-2.34.1
+Documentation says IDA is deprecated in favour of Xarray, both look
+like they serve to associate a pointer with an ID. I think neither
+structure beats a simple bitfield and a static array for the per-tag
+data. Agree?
+
+Martin
 

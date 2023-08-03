@@ -2,98 +2,94 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 65CD376E3EB
-	for <lists+dmaengine@lfdr.de>; Thu,  3 Aug 2023 11:05:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA21476E6C3
+	for <lists+dmaengine@lfdr.de>; Thu,  3 Aug 2023 13:25:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234940AbjHCJE7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 3 Aug 2023 05:04:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47580 "EHLO
+        id S235533AbjHCLZu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 3 Aug 2023 07:25:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234942AbjHCJE6 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 3 Aug 2023 05:04:58 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2B4AE53
-        for <dmaengine@vger.kernel.org>; Thu,  3 Aug 2023 02:04:55 -0700 (PDT)
-Received: from kwepemi500008.china.huawei.com (unknown [172.30.72.53])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RGjW26xfLztRpn;
-        Thu,  3 Aug 2023 17:01:02 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by kwepemi500008.china.huawei.com
- (7.221.188.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 3 Aug
- 2023 17:04:25 +0800
-From:   Ruan Jinjie <ruanjinjie@huawei.com>
-To:     <dmaengine@vger.kernel.org>, Vinod Koul <vkoul@kernel.org>
-CC:     <ruanjinjie@huawei.com>
-Subject: [PATCH -next] dmaengine: Do not check for 0 return after calling platform_get_irq()
-Date:   Thu, 3 Aug 2023 17:03:48 +0800
-Message-ID: <20230803090348.158083-1-ruanjinjie@huawei.com>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S234686AbjHCLZu (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 3 Aug 2023 07:25:50 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 873B21981;
+        Thu,  3 Aug 2023 04:25:49 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1BF1061D4D;
+        Thu,  3 Aug 2023 11:25:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95E9FC433C8;
+        Thu,  3 Aug 2023 11:25:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691061948;
+        bh=42OIzEptMa6drEW3K5eEpD6aaOKTvmXN6uoP8zn4eZI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NqQfanK4cMycgyR2C5Aq5UnEX+S5/Uaatl0T69ek29TbeBGXIA7G8+eYXjTzEfXZJ
+         AVOgSl7KyBLvZis0Zel0nBncPP8gaNpTodnmQ2YIJ8XLyCrtAFiwY87qSObX0HRq97
+         tBeeMJHtBbDIhXolfqFYTyiH9sVE0oK4vdzFLPBLpXCfdcR8Eia8dsz6RsCJIAh/YB
+         Fclfh7kG9uuBlu61uwIPS/ZNGtlSz+wCjlr9P17qgqse7OyJLrdPO4eAu9dicipc34
+         YbTKdCiM+Pig0cCx/z6ojtNXphlH8GAv0Uan4qIJpX84nRTouM54Z9vcZcK1KNsahV
+         zxr3o3MDv20tw==
+Date:   Thu, 3 Aug 2023 16:55:43 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Martin =?utf-8?Q?Povi=C5=A1er?= <povik+lin@cutebit.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, asahi@lists.linux.dev,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] dmaengine: apple-sio: Add Apple SIO driver
+Message-ID: <ZMuOt2THchrNDjDH@matsya>
+References: <20230712133806.4450-1-povik+lin@cutebit.org>
+ <20230712133806.4450-3-povik+lin@cutebit.org>
+ <ZMlLjg9UBi3QO/qV@matsya>
+ <7D43A9F3-892C-4E74-9618-DB37360B7641@cutebit.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.90.53.73]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemi500008.china.huawei.com (7.221.188.139)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7D43A9F3-892C-4E74-9618-DB37360B7641@cutebit.org>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-It is not possible for platform_get_irq() to return 0. Use the
-return value from platform_get_irq().
+On 01-08-23, 23:55, Martin Povišer wrote:
 
-Signed-off-by: Ruan Jinjie <ruanjinjie@huawei.com>
----
- drivers/dma/sa11x0-dma.c | 4 ++--
- drivers/dma/xgene-dma.c  | 8 ++++----
- 2 files changed, 6 insertions(+), 6 deletions(-)
+> > can you use virt_dma_chan, that should simplify list handling etc
+> 
+> I looked into that when I wrote the sister driver apple-admac.c, I don’t
+> remember anymore why I decided against it, and I don’t think it came up
+> during review. Now that this driver is done, I hope we can take it as is.
+> 
+> There’s some benefit from the drivers having a similar structure, I sent
+> one or two fixes to apple-admac for things I found out because I was
+> writing this other driver.
 
-diff --git a/drivers/dma/sa11x0-dma.c b/drivers/dma/sa11x0-dma.c
-index a29c13cae716..53c7975f8aea 100644
---- a/drivers/dma/sa11x0-dma.c
-+++ b/drivers/dma/sa11x0-dma.c
-@@ -873,8 +873,8 @@ static int sa11x0_dma_request_irq(struct platform_device *pdev, int nr,
- {
- 	int irq = platform_get_irq(pdev, nr);
- 
--	if (irq <= 0)
--		return -ENXIO;
-+	if (irq < 0)
-+		return irq;
- 
- 	return request_irq(irq, sa11x0_dma_irq, 0, dev_name(&pdev->dev), data);
- }
-diff --git a/drivers/dma/xgene-dma.c b/drivers/dma/xgene-dma.c
-index bb4ff8c86733..a22a7cb2bb2c 100644
---- a/drivers/dma/xgene-dma.c
-+++ b/drivers/dma/xgene-dma.c
-@@ -1680,16 +1680,16 @@ static int xgene_dma_get_resources(struct platform_device *pdev,
- 
- 	/* Get DMA error interrupt */
- 	irq = platform_get_irq(pdev, 0);
--	if (irq <= 0)
--		return -ENXIO;
-+	if (irq < 0)
-+		return irq;
- 
- 	pdma->err_irq = irq;
- 
- 	/* Get DMA Rx ring descriptor interrupts for all DMA channels */
- 	for (i = 1; i <= XGENE_DMA_MAX_CHANNEL; i++) {
- 		irq = platform_get_irq(pdev, i);
--		if (irq <= 0)
--			return -ENXIO;
-+		if (irq < 0)
-+			return irq;
- 
- 		pdma->chan[i - 1].rx_irq = irq;
- 	}
+And this would be a chance to covert the other one and get rid of list
+handling code in that driver as well
+
+> 
+> >> +};
+> >> +
+> >> +#define SIO_NTAGS		16
+> >> +
+> >> +typedef void (*sio_ack_callback)(struct sio_chan *, void *, bool);
+> > 
+> > any reason not to use dmaengine callbacks?
+> 
+> Not sure what dmaengine callback you mean here. This callback means
+> the coprocessor acked a tag, not sure how we can fit something dmaengine
+> onto it.
+
+Okay lets understand, how is this one used
+
 -- 
-2.34.1
-
+~Vinod

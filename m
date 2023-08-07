@@ -2,66 +2,38 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 60BD7771CA6
-	for <lists+dmaengine@lfdr.de>; Mon,  7 Aug 2023 10:55:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D7259772975
+	for <lists+dmaengine@lfdr.de>; Mon,  7 Aug 2023 17:40:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229627AbjHGIyv (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 7 Aug 2023 04:54:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40240 "EHLO
+        id S229749AbjHGPk0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 7 Aug 2023 11:40:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231346AbjHGIyg (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 7 Aug 2023 04:54:36 -0400
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B0A8172D;
-        Mon,  7 Aug 2023 01:54:34 -0700 (PDT)
-Received: by mail-ed1-x52e.google.com with SMTP id 4fb4d7f45d1cf-5230a22cfd1so5566005a12.1;
-        Mon, 07 Aug 2023 01:54:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691398473; x=1692003273;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=XKC5pozmNbi7bRXDlqmnN9fGngspiSZKCCOkhVp+rsg=;
-        b=XxHQ/9lo76FtrGWDCOBAx/6x9lgdMCI9lHF7JOW+A52xiK7gPxym0xUakREdraq1s5
-         Lw5JK/Rr+GLP5ij4IAGE0Aiv+84tGQ1PyMiYy43kSsgDWbWjmSHGnstYvJ0MFWmJ0pTu
-         VP5rtQP4zcZ3zSWY2xPzjcPYYE+u4VKjg1YafZLtDG+q3jlysaznaU7bZKftHUl4PzZB
-         FGzDGjZnSUiDYi8tjemvSyt3rwzYAfAiPMNEaN0AOV2/Bizu7LRDqqTzGIbpN/KGEfq4
-         2SNMi37WPpvOakljmBhHGsExCTL0cVA4hPBDm79hVqsktUjInBM0CY8tCTRjMOsTpJRr
-         vwRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691398473; x=1692003273;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XKC5pozmNbi7bRXDlqmnN9fGngspiSZKCCOkhVp+rsg=;
-        b=M/oA9+yaxMn5LAs1vpyZ3Mf9v2Jssc/qoHZAWQ8iQgu7e3k6ysz1bPpLq666/umYFn
-         ESEEOM5NyO/5Q5XXTqsyevKYWCY6FBuQtFOvd7JzkKRArFMoBpkk59vwhIBgFGtIrq4k
-         ZzYgi/YA2NEskEjxK0YkN+sthfsHSULA18gHtZFYlbqq0fw6tZUT2o+jU6Q0qh67NiJp
-         3gnCiqhyaunR4EyHgw1Hu9oEk3wskYUjz3/dvz7RSouQpQogW4m6ceNXEplnjmLcLZf7
-         fRrwwyQN3niWxrwAeSjB69Aqrc34os3fK0FlI/KPnZeY67bPcl9ARC7dRWLRIOYvjEn/
-         Bo5w==
-X-Gm-Message-State: AOJu0YyIgxZn7iXvZyMocXqT1r7+ObLodhstHFxoh5l1ttQHbdKgz9TS
-        V27/dtwa/yEtVI5LCJ6BvhSNDtSZvK3huyCzbP0=
-X-Google-Smtp-Source: AGHT+IEjFCFKrTRpAtdiqwrFe/ziaRlFKyptgXp1jm78OQ2pEN6f4xjVsBjGOSBwnGYslaul0NHKrC939QlLUwFfB0M=
-X-Received: by 2002:aa7:d7c7:0:b0:523:2df6:395e with SMTP id
- e7-20020aa7d7c7000000b005232df6395emr3319157eds.31.1691398472945; Mon, 07 Aug
- 2023 01:54:32 -0700 (PDT)
+        with ESMTP id S229621AbjHGPkZ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 7 Aug 2023 11:40:25 -0400
+Received: from mail11.truemail.it (mail11.truemail.it [IPv6:2001:4b7e:0:8::81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28BA4A6;
+        Mon,  7 Aug 2023 08:40:23 -0700 (PDT)
+Received: from francesco-nb.int.toradex.com (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+        by mail11.truemail.it (Postfix) with ESMTPA id 892FD20676;
+        Mon,  7 Aug 2023 17:40:17 +0200 (CEST)
+Date:   Mon, 7 Aug 2023 17:40:13 +0200
+From:   Francesco Dolcini <francesco@dolcini.it>
+To:     Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] dmaengine: ti: k3-udma: Avoid false error msg on chan
+ teardown
+Message-ID: <ZNEQXVYDstabJCVc@francesco-nb.int.toradex.com>
+References: <20220215044112.161634-1-vigneshr@ti.com>
 MIME-Version: 1.0
-References: <20230807051907.2713-1-kaiwei.liu@unisoc.com>
-In-Reply-To: <20230807051907.2713-1-kaiwei.liu@unisoc.com>
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-Date:   Mon, 7 Aug 2023 16:53:55 +0800
-Message-ID: <CAAfSe-vDVCUK_OGkiwsvOJcrtvr-TVu6aLYvdoYHxjGu11n0-g@mail.gmail.com>
-Subject: Re: [PATCH 1/5] dma: delect redundant parameter for dma driver function
-To:     Kaiwei Liu <kaiwei.liu@unisoc.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kaiwei liu <liukaiwei086@gmail.com>,
-        Wenming Wu <wenming.wu@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220215044112.161634-1-vigneshr@ti.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,43 +41,35 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, 7 Aug 2023 at 13:19, Kaiwei Liu <kaiwei.liu@unisoc.com> wrote:
->
-> The parameter *sdesc in function sprd_dma_check_trans_done is not
-> used, so here delect redundant parameter.
+Hello Vignesh,
+reviving this old email, since it seems that it raised a valid issue
+that is still not resolved.
 
-Please fix the typo, also in the subject.
+On Tue, Feb 15, 2022 at 10:11:12AM +0530, Vignesh Raghavendra wrote:
+> In cyclic mode, there is no additional descriptor pushed to collect
+> outstanding data on channel teardown. Therefore no need to wait for this
+> descriptor to come back.
+> 
+> Without this terminating aplay cmd outputs false error msg like:
+> [  116.402800] ti-bcdma 485c0100.dma-controller: chan1 teardown timeout!
+I am experiencing a similar issue on Toradex Verdin AM62:
 
->
-> Signed-off-by: Kaiwei Liu <kaiwei.liu@unisoc.com>
-> ---
->  drivers/dma/sprd-dma.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
-> index 2b639adb48ba..20c3cb1ef2f5 100644
-> --- a/drivers/dma/sprd-dma.c
-> +++ b/drivers/dma/sprd-dma.c
-> @@ -572,8 +572,7 @@ static void sprd_dma_stop(struct sprd_dma_chn *schan)
->         schan->cur_desc = NULL;
->  }
->
-> -static bool sprd_dma_check_trans_done(struct sprd_dma_desc *sdesc,
-> -                                     enum sprd_dma_int_type int_type,
-> +static bool sprd_dma_check_trans_done(enum sprd_dma_int_type int_type,
->                                       enum sprd_dma_req_mode req_mode)
->  {
->         if (int_type == SPRD_DMA_NO_INT)
-> @@ -619,8 +618,7 @@ static irqreturn_t dma_irq_handle(int irq, void *dev_id)
->                         vchan_cyclic_callback(&sdesc->vd);
->                 } else {
->                         /* Check if the dma request descriptor is done. */
-> -                       trans_done = sprd_dma_check_trans_done(sdesc, int_type,
-> -                                                              req_type);
-> +                       trans_done = sprd_dma_check_trans_done(int_type, req_type);
->                         if (trans_done == true) {
->                                 vchan_cookie_complete(&sdesc->vd);
->                                 schan->cur_desc = NULL;
-> --
-> 2.17.1
->
+```
+kern  :warn  : [   40.196661] ti-udma 485c0100.dma-controller: chan2 teardown timeout!
+kern  :warn  : [   41.077013] kauditd_printk_skb: 14 callbacks suppressed
+kern  :warn  : [   46.404672] ti-udma 485c0100.dma-controller: chan2 teardown timeout!
+kern  :warn  : [   50.852643] ti-udma 485c0100.dma-controller: chan1 teardown timeout!
+kern  :warn  : [   56.932709] ti-udma 485c0100.dma-controller: chan1 teardown timeout!
+kern  :warn  : [   64.516797] ti-udma 485c0100.dma-controller: chan1 teardown timeout!
+kern  :warn  : [   70.404724] ti-udma 485c0100.dma-controller: chan1 teardown timeout!
+kern  :warn  : [   71.588933] ti-udma 485c0100.dma-controller: chan2 teardown timeout!
+kern  :warn  : [   75.908818] ti-udma 485c0100.dma-controller: chan1 teardown timeout!
+kern  :warn  : [   77.064761] ti-udma 485c0100.dma-controller: chan2 teardown timeout!
+```
+
+I would say just the same, since this happens everytime aplay terminates.
+
+Any idea to progress on this?
+
+Francesco
+

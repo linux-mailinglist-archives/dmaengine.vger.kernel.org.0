@@ -2,60 +2,60 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7864C77A67E
-	for <lists+dmaengine@lfdr.de>; Sun, 13 Aug 2023 15:22:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F2E977B181
+	for <lists+dmaengine@lfdr.de>; Mon, 14 Aug 2023 08:23:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230496AbjHMNWI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 13 Aug 2023 09:22:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51666 "EHLO
+        id S233831AbjHNGXL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 14 Aug 2023 02:23:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229441AbjHMNWH (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 13 Aug 2023 09:22:07 -0400
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 405EB1710;
-        Sun, 13 Aug 2023 06:22:10 -0700 (PDT)
-Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-687ca37628eso3383615b3a.1;
-        Sun, 13 Aug 2023 06:22:10 -0700 (PDT)
+        with ESMTP id S233763AbjHNGWw (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 14 Aug 2023 02:22:52 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A258E6D;
+        Sun, 13 Aug 2023 23:22:52 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-1bd9b4f8e0eso22144315ad.1;
+        Sun, 13 Aug 2023 23:22:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691932930; x=1692537730;
+        d=gmail.com; s=20221208; t=1691994172; x=1692598972;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=rlAU7V+DE92fJK3cHH1A9FDJdGr7RffOpPtSmRFtDOA=;
-        b=ofNTcR3bb3mvxTKI8DCM7SH4HItpLkos7Td4MnrUAyjxsmAwli7lDq7uTy5s95Zh4p
-         SvBAxVDbRQQuEWdWPKs65HJRzcXXWPrB9321MW38gvU7y1D4t9MGk6ZFBmPy/6+gP+EW
-         rRbb+kxp5m+w++H8F5grAM/Fyyj2AJu0uZGywyjDtmEO9fH5nGc2+sZPHunbU/CKPkxO
-         dUAzObiaAhozGgnBOQZ26H5hmx/lTQukBA5Jx1Hx7inNJtTAQORwrmy5mhqIeq4/khjX
-         31P7A3d8uDPVuCouEtWvW0Y/tIaWfLeNUk/vSM6yrl7k9TUfhCX++ZAan3tS+dwEcWhL
-         +Hkg==
+        bh=rbPoi4ehPomih+rqf88RiO5h1U0eqpVIVYqKIjGhfGk=;
+        b=KhDw23MPuanlxAjuOO9NR13Z2WYuW3raUWEz4gIyh50I7S9W6COU84lhou/islhuWG
+         JSx1EdP5rUQ3HOxdGBLpqirzE99ZgMAYgbX8x8oGoqV1ji/NhTp+mhJtiY0l75uA+ey1
+         l+P6LErd6YseDOnBrum+aHGJFn4hM9kHv45mTXp3WTfX+2/JiV7xri8y+AJ7eMBl7tcB
+         15lOshmWIrGSCgi7f2W0zY0Sl64bW/DTBmkHWfdOjDfBlDmqHTUdINaKD9xw6BOuVO+e
+         F4VqOvUd2DK5uPI8wczYxmc31wK+Zx3nY33dGPlzuX2WsQOBUHqolD3hyjNnJegTQFcR
+         SLUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691932930; x=1692537730;
+        d=1e100.net; s=20221208; t=1691994172; x=1692598972;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=rlAU7V+DE92fJK3cHH1A9FDJdGr7RffOpPtSmRFtDOA=;
-        b=jBrXSJO1kWx51APPT6KnJs8gRHG5CPUm7rHKuHMTJxFtEoMkB1GCmHM1iKlWVWxXcp
-         j/UCHPLvIVYq5Q+wKGAPmPNbKnEddb1Fr1h/Z2WZbwXkbZrOlaQgjYRGH+MqlgO7fUOM
-         x9IVuTQS2+ZpSrjmKdOGtrnhiko2hcgycixgo/pBmPw4j7dj2ENwTLsg0VoUhb7sX21T
-         jvqhrruzRV9sN2YCynACqKZ1ju7riqDrGGHrg6pa35vcVIutDrvAfKRrq9WjalU3Kdzo
-         huWsrB1Zh5TVhYLqjhAkmetb6l7uVLytwTc0DVtfDU1RZ7GRJTtd79CZee/lGkHNiEhn
-         jzDA==
-X-Gm-Message-State: AOJu0YzcIp+KJVaILJ79I5eRVFM2HBN5Ybz287geaMrftg3TvG707Btv
-        V7gXlRRjbdZwViJMdw3mYW4=
-X-Google-Smtp-Source: AGHT+IHdYotXitNOi15TdfxNA3enRhYX4Vvgdv/GuDs9z6Ks2Qh1fh2iimVWPqCSEnJmIf8liIZ/aw==
-X-Received: by 2002:a05:6a00:ad3:b0:687:20d6:fade with SMTP id c19-20020a056a000ad300b0068720d6fademr10219995pfl.20.1691932929613;
-        Sun, 13 Aug 2023 06:22:09 -0700 (PDT)
-Received: from localhost.localdomain ([2409:40c2:1022:f538:d00a:1992:423:e24e])
-        by smtp.gmail.com with ESMTPSA id j8-20020aa78008000000b00682868714fdsm6419824pfi.95.2023.08.13.06.22.06
+        bh=rbPoi4ehPomih+rqf88RiO5h1U0eqpVIVYqKIjGhfGk=;
+        b=AYVttxnexOvPDbZsNdfOMA3oKg/pDizIlS3tEsbLClQGw2+gpGlv1S/hjanGZZHkJp
+         PmtGGolVgQCCCCJhCRLYw7VVnNpoQOJlrk+1RWzqBMe0Jgp42hypxnFinj7NCLrVIDUR
+         C8k/PmP9hBRYZ8SBD5aOilAY3CYHmydaXlPwg0CAdfPvRL0QauKDhFRKZaBVMGFsY7gT
+         nB/U+K88UTBrlIJ7wvIZGGNs+V1CcTONu8mWggIgcBg+VoHpnLoj67bTcgQv5NoZPiV3
+         VO7IXuH8dp86OUDpyNezEwkRnt1/TsK86/YQQ5qaxJXYz2/VdySivMp8RUCmJlsNwnjp
+         PzPg==
+X-Gm-Message-State: AOJu0Ywjj/VZVxVP6YL1DCEKpecxK9RKhxVBaQpICSGB0qSASUxEHz76
+        S8WcwTygK3SA8iO7Q9z5uWk=
+X-Google-Smtp-Source: AGHT+IF+hhw4+dNlT2tD/DxR4eF682l4n3CUzSyipbEn7gbo8Ubv6r7h5vVViuR8MLR8LniVrE9L/w==
+X-Received: by 2002:a17:902:e550:b0:1bb:809d:ae72 with SMTP id n16-20020a170902e55000b001bb809dae72mr8763076plf.33.1691994171421;
+        Sun, 13 Aug 2023 23:22:51 -0700 (PDT)
+Received: from localhost.localdomain ([2409:40c2:103c:3fe4:b95c:5882:bac7:2668])
+        by smtp.gmail.com with ESMTPSA id f2-20020a170902ab8200b001b9da42cd7dsm8434571plr.279.2023.08.13.23.22.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Aug 2023 06:22:09 -0700 (PDT)
+        Sun, 13 Aug 2023 23:22:50 -0700 (PDT)
 From:   coolrrsh@gmail.com
-To:     fenghua.yu@intel.com, dave.jiang@intel.com, vkoul@kernel.org,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     vkoul@kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
         Rajeshwar R Shinde <coolrrsh@gmail.com>
-Subject: [PATCH] dma: device: Remove redundant code
-Date:   Sun, 13 Aug 2023 18:52:03 +0530
-Message-Id: <20230813132203.139580-1-coolrrsh@gmail.com>
+Subject: [PATCH] dma: dmatest: Use div64_s64
+Date:   Mon, 14 Aug 2023 11:52:46 +0530
+Message-Id: <20230814062246.4636-1-coolrrsh@gmail.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -71,32 +71,40 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 From: Rajeshwar R Shinde <coolrrsh@gmail.com>
 
-dma_alloc_coherent function already zeroes the array 'addr'.
-So, memset function call is not needed. 
+In the function do_div, the dividend is evaluated multiple times
+so it can cause side effects. Therefore replace it with div64_s64.
 
 This fixes warning such as:
-drivers/dma/idxd/device.c:783:8-26:
-WARNING: dma_alloc_coherent used in addr already zeroes out memory,
-so memset is not needed.
+drivers/dma/dmatest.c:496:1-7:
+WARNING: do_div() does a 64-by-32 division,
+please consider using div64_s64 instead.
 
 Signed-off-by: Rajeshwar R Shinde <coolrrsh@gmail.com>
 ---
- drivers/dma/idxd/device.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/dma/dmatest.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-index 5abbcc61c528..7c74bc60f582 100644
---- a/drivers/dma/idxd/device.c
-+++ b/drivers/dma/idxd/device.c
-@@ -786,8 +786,6 @@ static int idxd_device_evl_setup(struct idxd_device *idxd)
- 		goto err_alloc;
- 	}
+diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
+index ffe621695e47..07042f239db8 100644
+--- a/drivers/dma/dmatest.c
++++ b/drivers/dma/dmatest.c
+@@ -9,6 +9,7 @@
  
--	memset(addr, 0, size);
--
- 	spin_lock(&evl->lock);
- 	evl->log = addr;
- 	evl->dma = dma_addr;
+ #include <linux/err.h>
+ #include <linux/delay.h>
++#include <linux/math64.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/dmaengine.h>
+ #include <linux/freezer.h>
+@@ -493,7 +494,7 @@ static unsigned long long dmatest_persec(s64 runtime, unsigned int val)
+ 
+ 	per_sec *= val;
+ 	per_sec = INT_TO_FIXPT(per_sec);
+-	do_div(per_sec, runtime);
++	per_sec=div64_s64(per_sec, runtime);
+ 
+ 	return per_sec;
+ }
 -- 
 2.25.1
 

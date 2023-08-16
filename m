@@ -2,94 +2,76 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 45F7E77E4E0
-	for <lists+dmaengine@lfdr.de>; Wed, 16 Aug 2023 17:17:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 95F4277E539
+	for <lists+dmaengine@lfdr.de>; Wed, 16 Aug 2023 17:35:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244903AbjHPPRT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 16 Aug 2023 11:17:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33012 "EHLO
+        id S1344187AbjHPPei (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 16 Aug 2023 11:34:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344011AbjHPPQt (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 16 Aug 2023 11:16:49 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C310F1987;
-        Wed, 16 Aug 2023 08:16:47 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 60BFC653FD;
-        Wed, 16 Aug 2023 15:16:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4148CC433C7;
-        Wed, 16 Aug 2023 15:16:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1692199006;
-        bh=RiV/mx1g8NJ0W8pjhCev/3TqAoyjGUb/fK24JyWQPos=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EzPojsfhCVGG/gnE90Br9t3myMafCDPAPrFtXkOLf75DZ0h41Hq9C+Sb4OVhS3ed7
-         kNxptuMTLF4vw5ip+5ijKl+NIYEWLPUch1bpYeFiHYp/DNt8alM7rSksXLzAZM0EH3
-         POzoHvgwGxV+Xwjex2TzX1+36rOKdrEAWK1fS40A=
-Date:   Wed, 16 Aug 2023 17:16:43 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     coolrrsh@gmail.com
-Cc:     vkoul@kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH] dma: dmatest: Use div64_s64
-Message-ID: <2023081654-dormitory-vocally-02f7@gregkh>
-References: <20230816060400.3325-1-coolrrsh@gmail.com>
+        with ESMTP id S1344195AbjHPPeK (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 16 Aug 2023 11:34:10 -0400
+Received: from mail-oi1-x22a.google.com (mail-oi1-x22a.google.com [IPv6:2607:f8b0:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AEF22684;
+        Wed, 16 Aug 2023 08:34:09 -0700 (PDT)
+Received: by mail-oi1-x22a.google.com with SMTP id 5614622812f47-3a78604f47fso6014888b6e.1;
+        Wed, 16 Aug 2023 08:34:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1692200048; x=1692804848;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=4TkNANhtHbtqYGfBmLZRBPK0Abo3GHVgirRIa+czo1k=;
+        b=e4rVRp8xgJnyhnds7vKKjUOIGOSKVVGagDHgDR1062mWo3f21GCy0iozZ++Pe+fp4B
+         6W0+emTInHrvqIyt3mU4n/I0z2CbTclF2Jff+8N/DbcOAYzSOnsv3lnSI4J6thXcqv9N
+         eTvzeH9a9daC1TFcl9po0gwZxyAs730vtOL/0PwzkLDdrA2rlICYmn/LBFW8B2OjxS+O
+         ptFoG9jph5zJD9aZgPYjn5cpyb8BnIFS5/tuAxIzLe+4RUTQvDjO6HWLQgj+4BT/rQxa
+         MyKBEV9+3ovLxU//ZqiKi+DKZMyag6EpVwvjOVEWXO3qvkw0Nd4RK3WerPlMF+ZJxpX1
+         I6yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692200048; x=1692804848;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4TkNANhtHbtqYGfBmLZRBPK0Abo3GHVgirRIa+czo1k=;
+        b=YYSdf17lmMOIDwDcGG1GJsf/5HoND6E5gwdbcVxumlJB8ib4KAhouwQBHOAGN9AlgO
+         1tF0S8N39648IxePGy2OtV1XhjeXYwCpVZsXslf3sv63RutJwn4zUTtC/E77Ca1D8cA5
+         kF+8fl4427CieFCj9m+cTmH2vC8Wp1KtRXFiKhvS1fxK4RD9tgQldp5A7RARo5i3WL1X
+         YQNfKV9QSWnOMr3m7+dC2kR5RnuPRcGnzO6s8rlV5isXaHkWfcZwhH5PR5gFoZJ51koy
+         Y6fJM/eZOwD6YnuXJMVdvS67kUKA21RiyzLTF1tNPViYYbbBYBcX11/Fb8disCTUm5Aj
+         ABrQ==
+X-Gm-Message-State: AOJu0YwMCy4VOWfEq+u8/vn86cUUS8fLUtnrOnOMsgCDWDuA8sJIYOun
+        4MfehZma4zbFvrtRxmg6BGv2r0h9GUKzgZ4uM7s=
+X-Google-Smtp-Source: AGHT+IGGHXjBNOJZjKnW619OI9LDGrzkyKqDZosfIWjCj0+HvEAxbfwlb6KrkvOK8+wZ2XAoLSKVzTBXASETjQbT4gg=
+X-Received: by 2002:a05:6358:4411:b0:13a:4120:ce2e with SMTP id
+ z17-20020a056358441100b0013a4120ce2emr2774580rwc.20.1692200048264; Wed, 16
+ Aug 2023 08:34:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230816060400.3325-1-coolrrsh@gmail.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+References: <20230726090628.1784-1-dg573847474@gmail.com>
+In-Reply-To: <20230726090628.1784-1-dg573847474@gmail.com>
+From:   Chengfeng Ye <dg573847474@gmail.com>
+Date:   Wed, 16 Aug 2023 23:33:56 +0800
+Message-ID: <CAAo+4rX7n7bLC6Omsg6Yeo9EfeVibwbDKyc7B30h10PdoyR1dA@mail.gmail.com>
+Subject: Re: [PATCH RESEND] dmaengine: milbeaut-hdmac: Fix potential deadlock
+ on &mc->vc.lock
+To:     vkoul@kernel.org, sugaya.taichi@socionext.com,
+        orito.takao@socionext.com, len.baker@gmx.com,
+        jaswinder.singh@linaro.org
+Cc:     dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, Aug 16, 2023 at 11:34:00AM +0530, coolrrsh@gmail.com wrote:
-> From: Rajeshwar R Shinde <coolrrsh@gmail.com>
-> 
-> In the function do_div, the dividend is evaluated multiple times
-> so it can cause side effects. Therefore replace it with div64_s64.
-> 
-> This fixes warning such as:
-> drivers/dma/dmatest.c:496:1-7:
-> WARNING: do_div() does a 64-by-32 division,
-> please consider using div64_s64 instead.
-> 
-> Signed-off-by: Rajeshwar R Shinde <coolrrsh@gmail.com>
-> ---
->  drivers/dma/dmatest.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
-> index ffe621695e47..07042f239db8 100644
-> --- a/drivers/dma/dmatest.c
-> +++ b/drivers/dma/dmatest.c
-> @@ -9,6 +9,7 @@
->  
->  #include <linux/err.h>
->  #include <linux/delay.h>
-> +#include <linux/math64.h>
->  #include <linux/dma-mapping.h>
->  #include <linux/dmaengine.h>
->  #include <linux/freezer.h>
-> @@ -493,7 +494,7 @@ static unsigned long long dmatest_persec(s64 runtime, unsigned int val)
->  
->  	per_sec *= val;
->  	per_sec = INT_TO_FIXPT(per_sec);
-> -	do_div(per_sec, runtime);
-> +	per_sec=div64_s64(per_sec, runtime);
+Hi maintainers,
 
-Please always run checkpatch.pl on your changes before submitting them
-for others to review.
+May I ask if anyone would like to review the patch?
 
-thanks,
-
-greg k-h
+Thanks,
+Chengfeng

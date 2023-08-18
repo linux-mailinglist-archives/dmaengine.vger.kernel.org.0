@@ -2,25 +2,25 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B8577804CD
-	for <lists+dmaengine@lfdr.de>; Fri, 18 Aug 2023 05:38:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 26D0078047F
+	for <lists+dmaengine@lfdr.de>; Fri, 18 Aug 2023 05:28:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347725AbjHRDiO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 17 Aug 2023 23:38:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44426 "EHLO
+        id S235602AbjHRD1u (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 17 Aug 2023 23:27:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357792AbjHRDiE (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 17 Aug 2023 23:38:04 -0400
-Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58D3B2708;
-        Thu, 17 Aug 2023 20:38:00 -0700 (PDT)
-Received: from eig-obgw-5010a.ext.cloudfilter.net ([10.0.29.199])
+        with ESMTP id S1357606AbjHRD12 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 17 Aug 2023 23:27:28 -0400
+Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 394153A95;
+        Thu, 17 Aug 2023 20:27:22 -0700 (PDT)
+Received: from eig-obgw-5006a.ext.cloudfilter.net ([10.0.29.179])
         by cmsmtp with ESMTP
-        id WmuKqjqwDyYOwWqJDq2IjB; Fri, 18 Aug 2023 03:37:59 +0000
+        id WcMGqbqmREoVsWq8vqImxy; Fri, 18 Aug 2023 03:27:21 +0000
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with ESMTPS
-        id WqJCqlTvr2eFNWqJCq489j; Fri, 18 Aug 2023 03:37:59 +0000
-X-Authority-Analysis: v=2.4 cv=VvAwvs6n c=1 sm=1 tr=0 ts=64dee797
+        id Wq8uq9iYVHSofWq8uq2vsX; Fri, 18 Aug 2023 03:27:21 +0000
+X-Authority-Analysis: v=2.4 cv=HbEH8wI8 c=1 sm=1 tr=0 ts=64dee519
  a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
  a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
  a=IkcTkHD0fZMA:10 a=UttIx32zK-AA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
@@ -33,25 +33,25 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=L0n5YvsnOREjDavEqwIfonPDHlgYaxvqnu5lUobWG1I=; b=tHeYKVrHUJemYIG8wkzYXKKQeK
-        LZOQuy5Q2Aff6Q0LjCX7wAbdA0NELdQ2ug9kERJ3nmfLByHcAGYZ0H2urNlpeuYcVRKN+RibDxB2L
-        CpKt9CwfXsU4hSApJ1dxGON3kuCzv/Atk0Kzu6WTS8nb66oEO/YJNsWoLseZQHoWFdNAyKGwgfyuc
-        6HQ4lOh4wHIem2qOg1qaLoRzhbAhQ1ywyJoYdBBe/2ATUMXpz+FHrqdhMffnxRMcUiagT7FChjDLc
-        m6ZcIUlk06BerGP4CPuLEn6BP5kURY0Ljf11xvLMVXxkmGzXUKGVvXBY20R60Fjw/SwRsoM3MQayW
-        2ug8swMA==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:48526 helo=[192.168.15.8])
+        bh=XbHhoaMV1A5PFRjmbPAVWbKEqbP19+yPSsLA0Z9QwNQ=; b=wPrYo/FoqPKaYfGL2zf96uXJeD
+        18FoakBijHKvCCo3zew1dfLaIjkuW2o30kWz7/h2sRbH3RwMTbgolAtsfDQIzSjLxObRXOT5UzRjX
+        vCuiW+QQESjAhHsqxKBlw69nW+jU7FfBaMX/5XZFbyg7NIaapSlfQLvpPIMyx/vi5wKtO8PQpITcH
+        zc4u3e4hqQx7OmnzJaXL7vOSG+/R4AOoRTmYjJAR1H8IIlPdVVb/x9sRglj6ceUlieZmeDRlkuuzb
+        itrGcpna0kW51LuudgGi8H1s72NJDWCJIFFz/HX21wOlSnwidan16EzrjUBnz4Y8jqaeTFJjVVIPl
+        VftOMYFQ==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:60186 helo=[192.168.15.8])
         by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         (Exim 4.96)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1qWp00-001BF6-0L;
-        Thu, 17 Aug 2023 21:14:04 -0500
-Message-ID: <681fd5fa-3a0d-676b-44b0-0aab66f21dd7@embeddedor.com>
-Date:   Thu, 17 Aug 2023 20:15:02 -0600
+        id 1qWp0B-001BiV-3A;
+        Thu, 17 Aug 2023 21:14:16 -0500
+Message-ID: <669608a3-407a-91b6-7bdc-92a0f5670d5f@embeddedor.com>
+Date:   Thu, 17 Aug 2023 20:15:14 -0600
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH 15/21] dmaengine: tegra: Annotate struct tegra_dma_desc
- with __counted_by
+Subject: Re: [PATCH 16/21] dmaengine: tegra210-adma: Annotate struct
+ tegra_adma with __counted_by
 Content-Language: en-US
 To:     Kees Cook <keescook@chromium.org>, Vinod Koul <vkoul@kernel.org>
 Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
@@ -90,9 +90,9 @@ Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
         linux-stm32@st-md-mailman.stormreply.com, llvm@lists.linux.dev,
         linux-hardening@vger.kernel.org
 References: <20230817235428.never.111-kees@kernel.org>
- <20230817235859.49846-15-keescook@chromium.org>
+ <20230817235859.49846-16-keescook@chromium.org>
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20230817235859.49846-15-keescook@chromium.org>
+In-Reply-To: <20230817235859.49846-16-keescook@chromium.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
@@ -103,24 +103,24 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 187.162.21.192
 X-Source-L: No
-X-Exim-ID: 1qWp00-001BF6-0L
+X-Exim-ID: 1qWp0B-001BiV-3A
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:48526
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:60186
 X-Source-Auth: gustavo@embeddedor.com
 X-Email-Count: 0
 X-Org:  HG=hgshared;ORG=hostgator;
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfJNG9md9klS3TOspPzHh0mLpMoyDUM4wWKM5OCx3HOh+pB0fr7eqAUk2hmZQTd8htZvH6ooUR+/ypeGb1jicbbcP8tx0r0zNYlGCgZPmaHU/OzeKuX2s
- BkQ9KtyohacXA7+qDWoNVYI0YYXG2fqR627/Y3a2CaH3Zu4Qk4okFca5FHdQEYskAmeitGvPU7tVmV31PseqhHFB7VHch3i0Qgz1+W3dQzezdsM1w91uRy6T
- h3ifmNDHi2sA/DCipr1ZKOiaVCsaKlMU0uz9zhuLmoCq+hOVfJ5y83w9AftOXwkYnvvS18woEQA2+GzK1US80C+VdjRMLcq6LNN9va4TUobZC0sEoXtujnqQ
- Vp938fi7tlu6DwZKyualp1B9D64Y3g7OaKc4EPxC4k5jjNCMknM=
-X-Spam-Status: No, score=-6.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+X-CMAE-Envelope: MS4xfFdjoXwM408vQGwTbfbWTH4ppkxidj/uIXVt9P0r5kTMnKiyfFEhzxt7KcqMDjibO8f2l2ovJXVHDDR8K3s6YYk0lpDOYTZq0M/kVfOnNMvajYpvqfAG
+ B9N2eoqCtZltJKvUynzZOtjF9FQQQGtW3tIZyONCN+uf3gWG+eMrdd5pjKNjw5Ml4G2ETObrdG3JP9xGzfCZOWreaB4HF1m4NLsHjMDhOjOojT8AVvd1+cec
+ Ir95t/v5ZsnytMuhMo0MYt2cqWa7DFGw7uH4XkWTVoZ94wFzDfLb4xhoM5DlK1arh+rNnS1IVWc5Qs6W2XXbKCzgzNrR/iX8PBEfiB4gGkjk8qx4PqeQxBiQ
+ Q2aM8gqJ9spXl1c8XizwSaxhejJPvty2Afp9riVCtu514RjAAnc=
+X-Spam-Status: No, score=-6.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -136,7 +136,7 @@ On 8/17/23 17:58, Kees Cook wrote:
 > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
 > 
-> As found with Coccinelle[1], add __counted_by for struct tegra_dma_desc.
+> As found with Coccinelle[1], add __counted_by for struct tegra_adma.
 > 
 > [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 > 
@@ -155,19 +155,19 @@ Thanks
 Gustavo
 
 > ---
->   drivers/dma/tegra186-gpc-dma.c | 2 +-
+>   drivers/dma/tegra210-adma.c | 2 +-
 >   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/dma/tegra186-gpc-dma.c b/drivers/dma/tegra186-gpc-dma.c
-> index 33b101001100..5e3d5f5d1e20 100644
-> --- a/drivers/dma/tegra186-gpc-dma.c
-> +++ b/drivers/dma/tegra186-gpc-dma.c
-> @@ -221,7 +221,7 @@ struct tegra_dma_desc {
->   	unsigned int sg_count;
->   	struct virt_dma_desc vd;
->   	struct tegra_dma_channel *tdc;
-> -	struct tegra_dma_sg_req sg_req[];
-> +	struct tegra_dma_sg_req sg_req[] __counted_by(sg_count);
+> diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
+> index e557bada1510..cea33912a4c9 100644
+> --- a/drivers/dma/tegra210-adma.c
+> +++ b/drivers/dma/tegra210-adma.c
+> @@ -162,7 +162,7 @@ struct tegra_adma {
+>   	const struct tegra_adma_chip_data *cdata;
+>   
+>   	/* Last member of the structure */
+> -	struct tegra_adma_chan		channels[];
+> +	struct tegra_adma_chan		channels[] __counted_by(nr_channels);
 >   };
 >   
->   /*
+>   static inline void tdma_write(struct tegra_adma *tdma, u32 reg, u32 val)

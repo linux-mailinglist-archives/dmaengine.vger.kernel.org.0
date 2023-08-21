@@ -2,187 +2,221 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B71BA782C1D
-	for <lists+dmaengine@lfdr.de>; Mon, 21 Aug 2023 16:40:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC853782E0E
+	for <lists+dmaengine@lfdr.de>; Mon, 21 Aug 2023 18:16:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235778AbjHUOkS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 21 Aug 2023 10:40:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43960 "EHLO
+        id S233397AbjHUQQl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 21 Aug 2023 12:16:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232388AbjHUOkS (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 21 Aug 2023 10:40:18 -0400
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2047.outbound.protection.outlook.com [40.107.93.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8004BE2;
-        Mon, 21 Aug 2023 07:40:16 -0700 (PDT)
+        with ESMTP id S235930AbjHUQQk (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 21 Aug 2023 12:16:40 -0400
+Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2078.outbound.protection.outlook.com [40.107.247.78])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7BFEDB;
+        Mon, 21 Aug 2023 09:16:38 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FqR6XiXmV3BY+EpAHE8FCJlP0IzPGUnzEgI3sRlDQ48JlHkLFIIidlwWGtRQqQe86U3g7bZ39mdRoNoFx6FXx/0vL7lW8/Um9hIcB2wXycbjV1M7BM5/kKhcSKXu4U/jqXwUO8TKP3eZnKEThhhhHyftAQkAOiY9arTCkV+qMPFbnHREuNvcL7PVEAJSnZswJB8yFHCN9ccn6XsR9RgLbdrvWwHlinh70Kt2rL/EbC9m1iyTU9o5diZKIqURLGu48dWdXV5R6zV8gM5yD9QVBlHM8YJ5HV7BeHig5zRvQEHzqHpeFOBB9aa7f+QK6JfZ5IcTDZc4iy4HapBghUYKXA==
+ b=E+g+YLCpjVd3C2XCEkfzo8HRZbLx8EiolOMtBsPscimygijL6D6yO+Y34up7j00wS5oL0eBg3App3cM2LaRUhH/8K4WhheJhEIAh+D6VyqKIUMehAjAYGmbVrtfg0uYTlaYjSx/xmGfGbHXXUMA7ngD7G16TUx1bgG5S58lRZQYCyTGABy0yxEtXVICWON1XqTyqKaQh+GGU5eSDa8ynWo26RDvGHQrtyT54r2I3UBYMET0bQ6dkwgtAf7COC/lUsvMzPImlr6y0Cd1BSs0M11qqlul0aYU8Xfc7CpmgwR8G1G5vUl06TuqE3ITGQPcG03se1x30oAOjDwglwOXhjw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AzIiINzI5HMFB8guwkBjReqCogCcqivAGWLLHsp41XI=;
- b=V7+uhSO4S/tgaOdBpRlR8QaCVW6Q/vGFdLzGxswSh7Zj0peAsB9S2R955RgD20AhfEYsyOriE/KrHmwLQvjdgwXmSy6yaxqJ4KqFm3vPRyHbNzr9iR7NOZPROnl4ltZDQs35WBQaY14xLa1PuvNMKwdQgdT6YLkngb5TvZW1RlVoFwGRtOMs9VvaLOKwUnor2WBpInmzmwAmwLBK70mf6ZGxr7e3usflS7/hruaKaXxIhxTiN7wcgeGrimSaKd8ZoYdK/k1mxEBAs6gYiB8VvYzBC6kFKHOgAD4E36Rz25I+SE5LMUP+4FEfQAgVFP1ceki6YFb7M5DssjJLX6hFWA==
+ bh=mYpai8k9wksvkSPCkBhGaaPPsM7bHfFSzkZ37c9QiGg=;
+ b=a2PojJUt6Gcif1+svzRaXplW4dS8iMr2Ma2l2uZWLgu+UzyuGriKx6j9Xk2wMvxLjJ5rzIo2BcAxCZfTEKyO1jiM6n80gubZvMTgfLAMylnsrU9EIbTA5UOx3IqHUJApkGc4Vj04PG8U7x1TWbhTo2jnBaenQ4QtbwI0Kd1dXEwMdw6fVi0BDEsahc3m71yfJlffQu8mOdyEpCJLEorzy6K4X3USsJtDu6UjlVPdHSqB8/UhjPu3zo1g3ELu5ZX3mMWyc8GaJHINBYTcavufsmqz/fvyJhxsPW/lSi86hBVWa7f6xZsOvn0At7RFu2IIdU58nfeJ/tY59k7yO7VlHg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AzIiINzI5HMFB8guwkBjReqCogCcqivAGWLLHsp41XI=;
- b=FHvQ9kpc8vEvW2BvvKhfwntoMIxoNLb8zILA/7hJEdAID1mYcT6+fHovqN53MTYTldpPW4vwmTRjIWLHN7iifH2qj939AJuMoyFNk48e4X4RCo+zL3uOLDzWxI96iUpPqlthaPB22XMYHm0P5n9Hke56jt+QuVk8DVwCzBX6HwdQHwbfzgmJpKHgVj0B5DGnwQqwBSz+eV1xbkDwpNAwHZ+MgzlOmCDhSZckVGZ0ixw6KiE6btbyGWRfNdJdRsDBEdE6uxeICZXumh/IjXkFgrWZo7I13+zTXx21ukOOjV9U2IRlucAIcSbt+ZdFmsNyvgmOn6jgowM+R46vucF8Tw==
+ bh=mYpai8k9wksvkSPCkBhGaaPPsM7bHfFSzkZ37c9QiGg=;
+ b=Udbruv50q9MF79sWZWZsOf8nQlBX2PpGAl1z8kSVXD+g/pvUOSKxKmG9AezMfHiuAM+LcNBW7jDLqDZhvBsPatO2lNA2xZMhD2EA1nf+xuj+YobjNiiH5y32to8Kwd3K2ReJ130wy/VAz+p5KOHpub/cCyjFYfJeLxE1VBT/pJ0=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
- by LV8PR12MB9081.namprd12.prod.outlook.com (2603:10b6:408:188::12) with
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
+ by DB9PR04MB8464.eurprd04.prod.outlook.com (2603:10a6:10:2c1::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.24; Mon, 21 Aug
- 2023 14:40:14 +0000
-Received: from LV2PR12MB5869.namprd12.prod.outlook.com
- ([fe80::5111:16e8:5afe:1da1]) by LV2PR12MB5869.namprd12.prod.outlook.com
- ([fe80::5111:16e8:5afe:1da1%6]) with mapi id 15.20.6699.020; Mon, 21 Aug 2023
- 14:40:14 +0000
-Date:   Mon, 21 Aug 2023 11:40:12 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Andy Gross <agross@kernel.org>,
-        David Airlie <airlied@gmail.com>, alsa-devel@alsa-project.org,
-        Bjorn Andersson <andersson@kernel.org>,
-        Andrzej Hajda <andrzej.hajda@intel.com>,
-        ath10k@lists.infradead.org, ath11k@lists.infradead.org,
-        Mark Brown <broonie@kernel.org>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>, devicetree@vger.kernel.org,
-        dmaengine@vger.kernel.org,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        dri-devel@lists.freedesktop.org, Emma Anholt <emma@anholt.net>,
-        etnaviv@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        Frank Rowand <frowand.list@gmail.com>, iommu@lists.linux.dev,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Kalle Valo <kvalo@kernel.org>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org,
-        linux-wireless@vger.kernel.org,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sinan Kaya <okaya@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Jeff Johnson <quic_jjohnson@quicinc.com>,
-        Vikash Garodia <quic_vgarodia@quicinc.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Samuel Holland <samuel@sholland.org>,
-        Sean Paul <sean@poorly.run>,
-        Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Takashi Iwai <tiwai@suse.com>, Vinod Koul <vkoul@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Will Deacon <will@kernel.org>,
-        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Chen-Yu Tsai <wenst@chromium.org>
-Subject: Re: [PATCH] iommu: Remove the device_lock_assert() from
- __iommu_probe_device()
-Message-ID: <ZON3TNmYXqdfovRm@nvidia.com>
-References: <0-v1-98d20e768c66+7-of_dma_lock_jgg@nvidia.com>
- <78114fd6-9b83-92ba-418f-6cc7bda9df9b@arm.com>
- <ZONdwclGOBaxxqtq@nvidia.com>
- <ZON2gRogBhjmpNIl@8bytes.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZON2gRogBhjmpNIl@8bytes.org>
-X-ClientProxiedBy: MN2PR15CA0063.namprd15.prod.outlook.com
- (2603:10b6:208:237::32) To LV2PR12MB5869.namprd12.prod.outlook.com
- (2603:10b6:408:176::16)
+ 2023 16:16:36 +0000
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::a680:2943:82d1:6aa8]) by AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::a680:2943:82d1:6aa8%3]) with mapi id 15.20.6699.022; Mon, 21 Aug 2023
+ 16:16:36 +0000
+From:   Frank Li <Frank.Li@nxp.com>
+To:     frank.li@nxp.com, vkoul@kernel.org
+Cc:     devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        imx@lists.linux.dev, joy.zou@nxp.com,
+        krzysztof.kozlowski+dt@linaro.org, linux-kernel@vger.kernel.org,
+        peng.fan@nxp.com, robh+dt@kernel.org, shenwei.wang@nxp.com
+Subject: [PATCH v11 00/12] dmaengine: edma: add freescale edma v3 support
+Date:   Mon, 21 Aug 2023 12:16:05 -0400
+Message-Id: <20230821161617.2142561-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BYAPR05CA0053.namprd05.prod.outlook.com
+ (2603:10b6:a03:74::30) To AM6PR04MB4838.eurprd04.prod.outlook.com
+ (2603:10a6:20b:4::16)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|LV8PR12MB9081:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8b2e8db9-ab10-42f4-6559-08dba2548788
+X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|DB9PR04MB8464:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6b6a217f-e9d0-4aaa-5eec-08dba261fdf9
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: HgyALB5deKd/E/UO6KXUDvzjKRMQlrG78YiPcGWRQIR0zeK/GP01IumM+XAWhoGsqAiHJKfXjx2YLxCf85VKcu8mszZQ4H00gNIKZQv5JDnCy7P2Xe/gLdK9r4M+3br2cCvFXE8zTJiuHZ0fEeGfg7i1oAJozpSDzHeUjipuMJInQIVgcs6RkUy52jp6fFiFaPVT1emrSkEPrdYlfhnAlQ0MgrmbDMouk1P7cMRg81pxkrb1udes+/IpSNrVp88Tk/qeU1sok1oxLuD456tBpYB3v/S982HUJJs1VQ7uk9H7AwI8NQ0RFzs6YfGj/OskXXE4MtKd3RNxXmxh/1wiWt9ubxxSFOByqzzM6CB5EZxFsNPqrQCbk/fbXdiD58sRANf7D2JW402N2135nVA3RJaSlCJw+OV1oGJtsZE77rZkvORS49F35ZciUeX75EUUNAu9MvE5ZN+oNUJsCW2IYlvkJKAOyN7OzLRmTzsVaOFDHAsukIlgEtlo9jFGDreLcAeW0oSnsVCL2B+0U5yThPFq6skAmw2J7o+2huVOj1Ycku+4V2JTT+BxR+qEcE8a
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(366004)(39860400002)(376002)(136003)(396003)(451199024)(186009)(1800799009)(2906002)(4744005)(7416002)(7366002)(7406005)(38100700002)(6506007)(6486002)(83380400001)(5660300002)(26005)(86362001)(8676002)(2616005)(8936002)(4326008)(316002)(66946007)(6512007)(54906003)(6916009)(66556008)(66476007)(478600001)(36756003)(41300700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: TT8K5p6fRizMXLVXBtj6By2vsz4xt7Cf65NjqU5QOOq+Lt3wrrmHDN89zSkOZViAiYo2103tn6YuvcYWMT9k9lEc3PWL31BK4KyF4nFf+fXdXr5WcRKRTNUDpHm6FuqOFitGSDoEUSB9SOFROEA9L8eKZNuZ7otRLkMtA1nq2Ktf+QMKXG+UT9PNePY6HVh8tJOUP9i232wf0LklWsfP6qP4J4C4i/lJCVzIHrHH/lIsTUZOtS4pAYaSkxDvpRu75UGl9t+Nbd+ovb/RTomi2IFsyhlsYKDgl/atGDB3eA59pc7Vw8uTZx9Uo0aPecBYrLoFoVOQ7Ko6jc6jRT62UO/XvFuSuFNA/+1+urUilNnPQ72OYc3n6k5m8QW5rgSxqIZ257EheYE0ycrvVVp18h8e/DhYjiXQfaO7CC4mOpOYYZGng2bzLmOKnD+GdQkGrtO+goImEm8YO/vkEFMDQYwdxo5PyqphTuCt3TadY7+hknHulwhB6dcAB7K9Wc5qmIuaU6d9mnukr3xkNzkd1KGzBPh79K9/0IcfJpwb32JerYmbZmkW3Jo7wxmhGi5yhT7dc1Uw3hYlpehKn2uubZXu2d4NjBUe655R/+zLDH+DcwsQJ83BSUIJ+rcwvxe9
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(39860400002)(346002)(396003)(136003)(376002)(451199024)(1800799009)(186009)(2906002)(52116002)(38350700002)(38100700002)(6486002)(6506007)(83380400001)(5660300002)(26005)(86362001)(8676002)(2616005)(8936002)(4326008)(316002)(6512007)(66946007)(66556008)(66476007)(478600001)(6666004)(36756003)(41300700001)(1076003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?0VcySalc7lJMstEA0d6FSbcTBLowbQm6euasl/pSclCA7m6WS0/F5E1n2+Mq?=
- =?us-ascii?Q?QAVmIAZMcaEmARZsKz9Y2fhB0WMaHf0IuQd+FGvfchH0s0kZrlIqSrx+EURX?=
- =?us-ascii?Q?yDs+mGIQ0Cm3TQtTXLTu1rZ4DuJkssC23wiwFRIjLuxvddyaV6Ri74Nj7jjL?=
- =?us-ascii?Q?EVWJo/g1aP2zRsz/259c60JeRQ3S/kFvc2sKJW2zO2W63fVxGXk3E7IexJ+3?=
- =?us-ascii?Q?dFCsMXFJrBTeXSi+12KbOu9vb5YiR7Sp4ff5PnY3ynVEAU6/nCddVpSoTu0a?=
- =?us-ascii?Q?SHbujYSHFwFGNJ7f2iAhQsDnMFK+M9xUjD7C+k2apiSffpmIi2Sa3CZKl1kb?=
- =?us-ascii?Q?w7whXrvkFCxrC3UxhdY8MRRbw+rwIOOlBgArC0bBxmWvFAF/UF3qh+CaatkK?=
- =?us-ascii?Q?eglMlygQqM6Rg4FXJPioEFYZzsNpSRZXG/F/oO28Du6JphlKrDZNTeLQv3n0?=
- =?us-ascii?Q?6h6nu2LgrPPyXkxYP/FMm6NoLLhabk4vmH/ZABQLd5OOaQ4IkVIS64mcXKmO?=
- =?us-ascii?Q?PB8KOGbnYa294AtpyvaIRAJUQzSXfJt2PXVHrXKaCwRA0Lzar631GDO1TJx3?=
- =?us-ascii?Q?m+6JJXU910a2eBg2ZZu+Rikw66TkSGGcRenR36aOf0w19xe4ueAcUFM6jDPH?=
- =?us-ascii?Q?qBwr/UbNuN0fehBhdOTI0XHHzeIbS4Gwh6vE6gTnknYgbWzZZ2+LMau5gmc/?=
- =?us-ascii?Q?GZdW/Gm0id/Z4gKl+eXPyPzCDGABzQGgJWj4twLpxSI3qKJeT6kaLGXwVRPs?=
- =?us-ascii?Q?Hn3NqI1yfHxk9JBaC6qNZoJppTfYU7tkohfvzojL1Xpxs3Kxms48useG19DV?=
- =?us-ascii?Q?HQNDqMzI8p63usrTNwo01J5z5LiyRypJ+dCIQg/T/ttxVNvkKpJa/g+CjFUu?=
- =?us-ascii?Q?7vlXB0SR9lP3nOuNQyDRElPoi1ROZBGcO0TZ/CVZsjoB72EFKlaQc7JqndvF?=
- =?us-ascii?Q?fuaPbrVUUsBKfVUXZ7KHHA2Xr4Dxdt7KaAcrJXWtG4ydTcR5GymtASVVh/BY?=
- =?us-ascii?Q?NzpyLJzCKPAXq3fTOEzM+pgwJHBChArLmwzvZ2/yTlQX+/jMmCFHfSTZg0W7?=
- =?us-ascii?Q?DHAOtfzWv9vUsp2D8NP3aKEhcD+txaTNu76Fr/w/jkTqBwc4Lz7PAIAVVX+u?=
- =?us-ascii?Q?NRVpFF/0z/NYnTAB4tJq07r9EnoHy7kVsh+HJmLPxXITZ0y71ti8f17GzrsO?=
- =?us-ascii?Q?qAjMT90xSKfi7ZzJ3cGkjwVINppqjsJqAgzzPduVLvBQp9ADXr6m0vqKcFnY?=
- =?us-ascii?Q?oCd6elPqK5A8YE98gLuqHg70asPvKu/yWmrWVP3pq59r4fbwN14coD9F8h7n?=
- =?us-ascii?Q?sV+XuLhePprbsv0Cudx0HXp5TtK3hHp2hO1BZQkhdGkYjiYr35p7tdsMcVm6?=
- =?us-ascii?Q?/vmb7fQyexrcUKLCwsqlkpRIu3Gtop8pgdbVo41nLwRUSYZPlgxVWN/VIS60?=
- =?us-ascii?Q?7L3cfHHFfIvlV3rPERQnuYJRJ9GHerFkreGENWXuBasq0Mtmc3GB4A5GtRz+?=
- =?us-ascii?Q?CoX0jgNLpeq+j0Az0gQUJ7kr9ZrUyyNSIEm0sT6lS44fc41KRCWRkycKAo8+?=
- =?us-ascii?Q?tuo7itCAqshuDIpL/f43Z+ysvRvU3hSSFC6QTop+?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8b2e8db9-ab10-42f4-6559-08dba2548788
-X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5869.namprd12.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?vIShwcOVLTip22AyPwUUDQpfwsZZSAqgftIyWLFQ+/iKyMGv72dBTL0xx+BI?=
+ =?us-ascii?Q?wUVywNPUQVWdLgPCT6zv8wBeUMTLkM3KwoueE1II7FTikBRbi4pmAx+SiVrs?=
+ =?us-ascii?Q?jefk0ZWsPwdDma3BeroijrwUq6UtmOH27zHXHHDxD42OHXkjuu1LnPXM9IXB?=
+ =?us-ascii?Q?ZJk/wEGqli0sTrjEMbSzpEZVqeXRD7lpTU+8jIWwPHv8ElS4VKrZ0XrX7HYB?=
+ =?us-ascii?Q?dmWvIM2o+6DNwPvOCxnZ6+DXEtX5HrvUxLqrjz/kS6lJa1UT36wA6zmxM92j?=
+ =?us-ascii?Q?ViXF/5akWAbqUXHCms352yAQxGU7kJ1oe5AmAEnAvDtIS27nwu9Lz6aisI1o?=
+ =?us-ascii?Q?a0+0u19y7iwEwmW3JYa0tLcPOk3z+b6z1Z6kykCwuibH6c83afRQYqVuSVJr?=
+ =?us-ascii?Q?0cCsuzgl4Cr8jttcW6+v79/r4WWxW150/O2kmJz2j1C5lv6xITqsxlla/JsW?=
+ =?us-ascii?Q?M8OOavMzKChm0usedRWZQ6owURAvthxfJ1Va5DoL5iF9RrM7s6ZiFx1Hc2jY?=
+ =?us-ascii?Q?gX8zLM5jsw8RgrlEpcuSsjyTcGFg4gB5VoblIyWQJf2EQKx9ngF8EgdmHbTB?=
+ =?us-ascii?Q?dZ+oLqVupz786vjQhOnuAzQ1xPwUn7D/T+yAtYzIq6GqK1JR/pQBIvOmVg6n?=
+ =?us-ascii?Q?FW/htoi/e5tHo/2WqzbVnSujpmaTPFwTcBICQstj/kNs4CIrOFk9itQOkKHX?=
+ =?us-ascii?Q?CJXn1r1X+LtTxH+EEPGcOAVki/NF1tm4v0nJXzFPlD2FrDYQgTWK7WQMSHus?=
+ =?us-ascii?Q?s1pEoDXmlPHwt1lM+2kDTPaLbQZ3SXpaDLby/5OxVEcPo0lvRMoiXUXksgW5?=
+ =?us-ascii?Q?BfZaozkQmR4zugPgUTZE2LseHcWR16ypXxnbPvJYDNwT1czbsoCh0cmxRMPL?=
+ =?us-ascii?Q?WSHD0yokAjDrjWzstN6oSBy6Ncb8Gg+x5DtP1XaVIocyjMnk3MgChmObIP+B?=
+ =?us-ascii?Q?pCg9oisZBTgMFOIywYUXmxDLTV9Qpd9XGnblrx1jDq0J7CfCyUubY7ixoB5h?=
+ =?us-ascii?Q?VuepVfOjizDEauNFeJSP6Ipgskknj2aQyoOB9DrF8AL7DMIXz+nCWFdlWlhn?=
+ =?us-ascii?Q?ETpS88QNcRL3p1bAPEJik7iwsnyoM+vFIKbrSndDnQBKuKZNnUuGZsfdYDye?=
+ =?us-ascii?Q?RoId/YY3QrawVFlZ2iOmrgizE0bVRX0cqmGvQZeSEBC5HkCFIHce5O8uYtGs?=
+ =?us-ascii?Q?qTNK0WwQtulh5hW6Ye5JJY6w9NojuzCKB2hw4JrMH3W67vPTv05MD2zzaKo/?=
+ =?us-ascii?Q?LR/Lz/6MKdsDkD9wLLDamM1b3LDkNgF7Ng14FisJHwMyGjPM8qdtJtd/JJHL?=
+ =?us-ascii?Q?DsueGdr0feC6QBRBB/x5Ecs/7JVYg8FI+1GvDw3AlbGHJFVp2YFJBuEAHdWV?=
+ =?us-ascii?Q?y1XZf9lpBqv10ZX0mFVGrWx4J/rBEi43Qw2uIBL6eFGSEkf7mcuLbJkJu55E?=
+ =?us-ascii?Q?fL7+eKDymKSW8PWOMAZVFhTqEegDG7ItQ7K8r+qpF5ZWafZa/GbLMV04Prmq?=
+ =?us-ascii?Q?HAodSWe05by2RzgEXG6L9goUXLPWV38sWOeGAI870oA9arfrx5NiBVa+lLxR?=
+ =?us-ascii?Q?Dy1ApzhjIfjkyyJzJZE=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6b6a217f-e9d0-4aaa-5eec-08dba261fdf9
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2023 14:40:14.1021
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2023 16:16:36.1619
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SeRmv+15vdiFqIY3c/XgLKw7ymAk1g5vcsz0l6Q6HutXT7nd1PNbo9kmUtsI6u8L
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9081
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-        autolearn=no autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-UserPrincipalName: KyuCV0u4iSFKm04VFQd6cE9/4z/+D+AIPcLNZ3T535p6g9lgPGPSmENelGphvUW6rpog+TRrBW4T+uFnaRYmsA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB8464
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, Aug 21, 2023 at 04:36:49PM +0200, Joerg Roedel wrote:
-> On Mon, Aug 21, 2023 at 09:51:13AM -0300, Jason Gunthorpe wrote:
-> > So now that Joerg has dropped it - what is your big idea to make the
-> > locking actually work right?
-> 
-> I am not opposed to the general idea.
+This patch series introduces support for the eDMA version 3 from
+Freescale. The eDMA v3 brings alterations in the register layout,
+particularly, the separation of channel control registers into
+different channels. The Transfer Control Descriptor (TCD) layout,
+however, remains identical with only the offset being changed.
 
-Well, I think Robin is opposed to the device_lock, and I don't know
-what his view of the alternative is.
+The first 11 patches aim at tidying up the existing Freescale
+eDMA code and laying the groundwork for the integration of eDMA v3
+support.
 
-> When putting it into the tree I wasn't aware how many users still
-> need to be adapted to properly work with this.
+Patch 1-11:
+These patches primarily focus on cleaning up and refactoring the existing
+fsl_edma driver code. This is to accommodate the upcoming changes and new
+features introduced with the eDMA v3.
 
-It is surprising to me too!
+Patch 12:
+This patch introduces support for eDMA v3. In addition, this patch has
+been designed with an eye towards future upgradability, specifically for
+transitioning to eDMA v5. The latter involves a significant upgrade
+where the TCD address would need to support 64 bits.
 
-> We can do another try once the issues have been sorted out and you have
-> agreed with Robin on a workable way forward.
+Patch 13:
+This patch focuses on the device tree bindings and their modifications
+to properly handle and integrate the changes brought about by eDMA v3
 
-I will repost just the group part of that series after rc1, as they've
-been in -next for a while now they should be still good. It is a nice
-cleanup that doesn't leak out.
+Change from v10 to v11
+- rebase to latest dmaengine/next and fix build error cause by commit
+33a0b73
 
-Thanks,
-Jason
+Change from v9 to v10
+- use HAS_IOMEM
+- move dt-bind before enable v3
+- remove a unused code
+- drop patch3 clean up fsl_edma_irq_exit()
+
+Change from v8 to v9
+- add dmaengine: fsl-edma: fix build error when arch is s390
+  fix kernel test robot build issue
+
+Change from v7 to v8
+-dt-bind: add missed part
+
+clock-names:
+> items:
+>   - const: dma
+>
+> clocks:
+>   maxItems: 1
+
+Change from v6 to v7
+-dt-bind: remove "else" branch.
+
+Change from v5 to v6
+- dt-bind: rework it by fixed top level constraint.
+
+Change from v4 to v5
+- dt-bind, add example for imx93 to trigger make dt_binding_check to
+generate the yaml error. fixed dt_binding_check error.
+  keep compatible string ordered alphabetically.
+
+Change from v3 to v4.
+- use dma-channel-mask instead of fsl,channel-mask
+- don't use dmamux after v3. only use flags to distinguish the IP
+difference
+- fixed 8qm and imx93 have not CH_MUX register. Previous can work
+because dmamux is 0.
+
+Change from v2 to v3
+- dt-binding: add interrupt-names
+- dt-binding: add minItems
+- dt-binding: add missed property: fsl,channel-mask
+- rework patch 4, removed edma_version to avoid confuse with hardware
+IP version.
+
+Change from v1 to v2
+- fixed issue found by make DT_CHECKER_FLAGS=-m dt_binding_check
+- fixed warning found by kernel test robot
+
+Frank Li (12):
+  dmaengine: fsl-edma: fix build error when arch is s390
+  dmaengine: fsl-edma: clean up EXPORT_SYMBOL_GPL in fsl-edma-common.c
+  dmaengine: fsl-edma: transition from bool fields to bitmask flags in
+    drvdata
+  dmaengine: fsl-edma: Remove enum edma_version
+  dmaengine: fsl-edma: move common IRQ handler to common.c
+  dmaengine: fsl-edma: simply ATTR_DSIZE and ATTR_SSIZE by using ffs()
+  dmaengine: fsl-edma: refactor using devm_clk_get_enabled
+  dmaengine: fsl-edma: move clearing of register interrupt into
+    setup_irq function
+  dmaengine: fsl-edma: refactor chan_name setup and safety
+  dmaengine: fsl-edma: move tcd into struct fsl_dma_chan
+  dt-bindings: fsl-dma: fsl-edma: add edma3 compatible string
+  dmaengine: fsl-edma: integrate v3 support
+
+ .../devicetree/bindings/dma/fsl,edma.yaml     | 106 +++++-
+ drivers/dma/Kconfig                           |   1 +
+ drivers/dma/Makefile                          |   6 +-
+ drivers/dma/fsl-edma-common.c                 | 307 ++++++++++++------
+ drivers/dma/fsl-edma-common.h                 | 127 ++++++--
+ drivers/dma/{fsl-edma.c => fsl-edma-main.c}   | 306 +++++++++++++----
+ drivers/dma/{mcf-edma.c => mcf-edma-main.c}   |  36 +-
+ 7 files changed, 676 insertions(+), 213 deletions(-)
+ rename drivers/dma/{fsl-edma.c => fsl-edma-main.c} (63%)
+ rename drivers/dma/{mcf-edma.c => mcf-edma-main.c} (90%)
+
+-- 
+2.34.1
+

@@ -2,54 +2,49 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CC52E782A07
-	for <lists+dmaengine@lfdr.de>; Mon, 21 Aug 2023 15:11:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 04C1F782ADF
+	for <lists+dmaengine@lfdr.de>; Mon, 21 Aug 2023 15:51:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235244AbjHUNLL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 21 Aug 2023 09:11:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51858 "EHLO
+        id S235480AbjHUNv6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 21 Aug 2023 09:51:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230407AbjHUNLL (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 21 Aug 2023 09:11:11 -0400
+        with ESMTP id S235506AbjHUNv6 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 21 Aug 2023 09:51:58 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E7E6F1;
-        Mon, 21 Aug 2023 06:11:07 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1111F4;
+        Mon, 21 Aug 2023 06:51:51 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3D5FB635AA;
-        Mon, 21 Aug 2023 13:11:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31450C433C7;
-        Mon, 21 Aug 2023 13:11:05 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6622763683;
+        Mon, 21 Aug 2023 13:51:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65268C433C7;
+        Mon, 21 Aug 2023 13:51:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692623466;
-        bh=JcjSJgA+kO+taEl9CzPKO96+/wFQLCjavvmjUHsUWLg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=awcZpnDQVa2PYKJPh2PJorDEGm6oOnoIYe89mjzw9u+3d77IUqHrdYEzUxEJQQ3pq
-         xJPpuvWjpwtUETu97+4Ivae+vQqRmizbCFm5YtsxJUFvxNWWJWpgWVRltv3z8uEcQo
-         vW+GWreYMtFHpeuu/uvS19xK3d2kuX59N8vv+oMmCGQJFWeZbQVMJCgUThwqljRV0u
-         jxWpFwH6OUxtp4bIJgv067H8uC/WECo+I3Vnvn5EnfVJ6x8krPi60HX8wACgM5FNil
-         c7v5MSvcBLK4XedmzWgNa7ehgGotjM+nmzB7pKLPg/RONSqUun+7Gm1Lap8KQmH0Td
-         8rW3GUsyamumA==
-Date:   Mon, 21 Aug 2023 18:41:02 +0530
+        s=k20201202; t=1692625910;
+        bh=Hbyy/W/jZVSIZxz8hNREGg+bVQgyuozT2jp1B0cXH+Y=;
+        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+        b=eFiw57LmaUvaM6Bt8/edvk6BDN/rgzxkOC5o3Fmj04MgsZnI9TZe2KXNAszc4C60q
+         sobTAbSUEHhEQquw9MyFewxooGaaKZrT+DZCQSPgefUEO9NfzZGpT/jJ9Ddq6Hw+Zd
+         mYsmKTV4wDw1PetF4N5XaVMTBMa7ykBv4/bPl2UmXO3ibFsEdLk7djrhRhgKfHp4hj
+         dijpHxGzBy56PfiwI1kxXstswgXfPt3ukv9mF7B/nVur/8oW0ZjlTanVtN/hxpa8g5
+         cfNKN2vDHvLFhgxdgjAh2S0tfJPwEzZQETsGN0dMAceVXKVOb32lqQSUD2xtjcIslW
+         J3k9AGTOCVFjw==
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, michal.simek@amd.com, davem@davemloft.net,
-        edumazet@google.com, pabeni@redhat.com, linux@armlinux.org.uk,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, git@amd.com
-Subject: Re: [PATCH net-next v5 00/10] net: axienet: Introduce dmaengine
-Message-ID: <ZONiZq/qCqhfViqM@matsya>
-References: <1691387509-2113129-1-git-send-email-radhey.shyam.pandey@amd.com>
- <20230808155315.2e68b95c@kernel.org>
+To:     fenghua.yu@intel.com, dave.jiang@intel.com,
+        Yue Haibing <yuehaibing@huawei.com>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20230817114135.50264-1-yuehaibing@huawei.com>
+References: <20230817114135.50264-1-yuehaibing@huawei.com>
+Subject: Re: [PATCH v3] dmaengine: idxd: Remove unused declarations
+Message-Id: <169262590904.224153.1527521964317716805.b4-ty@kernel.org>
+Date:   Mon, 21 Aug 2023 19:21:49 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230808155315.2e68b95c@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.3
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -60,30 +55,25 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 08-08-23, 15:53, Jakub Kicinski wrote:
-> On Mon, 7 Aug 2023 11:21:39 +0530 Radhey Shyam Pandey wrote:
-> > The axiethernet driver can use the dmaengine framework to communicate
-> > with the xilinx DMAengine driver(AXIDMA, MCDMA). The inspiration behind
-> > this dmaengine adoption is to reuse the in-kernel xilinx dma engine
-> > driver[1] and remove redundant dma programming sequence[2] from the
-> > ethernet driver. This simplifies the ethernet driver and also makes
-> > it generic to be hooked to any complaint dma IP i.e AXIDMA, MCDMA
-> > without any modification.
-> > 
-> > The dmaengine framework was extended for metadata API support during
-> > the axidma RFC[3] discussion. However, it still needs further
-> > enhancements to make it well suited for ethernet usecases.
-> > 
-> > Comments, suggestions, thoughts to implement remaining functional
-> > features are very welcome!
+
+On Thu, 17 Aug 2023 19:41:35 +0800, Yue Haibing wrote:
+> Commit c05257b5600b ("dmanegine: idxd: open code the dsa_drv registration")
+> removed idxd_{un}register_driver() definitions but not the declarations.
+> Commit 034b3290ba25 ("dmaengine: idxd: create idxd_device sub-driver")
+> declared idxd_{un}register_idxd_drv() but never implemented it.
+> Commit 8f47d1a5e545 ("dmaengine: idxd: connect idxd to dmaengine
+> subsystem") declared idxd_parse_completion_status() but never implemented
+> it.
 > 
-> Vinod, any preference on how this gets merged?
-> Since we're already at -rc5 if the dmaengine parts look good to you 
-> taking those in for 6.6 and delaying the networking bits until 6.7
-> could be on the table? Possibly?
+> [...]
 
-Yep, I am picking the dmaengine bits
+Applied, thanks!
 
+[1/1] dmaengine: idxd: Remove unused declarations
+      commit: 3c935af7a8e5db7f59d65fad86add19fe558bb29
 
+Best regards,
 -- 
 ~Vinod
+
+

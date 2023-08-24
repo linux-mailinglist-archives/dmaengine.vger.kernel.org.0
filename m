@@ -2,140 +2,101 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 450C87878E0
-	for <lists+dmaengine@lfdr.de>; Thu, 24 Aug 2023 21:44:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 33C9A7879CD
+	for <lists+dmaengine@lfdr.de>; Thu, 24 Aug 2023 23:02:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239399AbjHXTn3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 24 Aug 2023 15:43:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56164 "EHLO
+        id S239133AbjHXVB6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 24 Aug 2023 17:01:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243354AbjHXTn3 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 24 Aug 2023 15:43:29 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 922C81BE6;
-        Thu, 24 Aug 2023 12:43:27 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 30E6366D2B;
-        Thu, 24 Aug 2023 19:43:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB530C433C9;
-        Thu, 24 Aug 2023 19:43:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692906206;
-        bh=0V2DSkVF87pI/l8v/Q3/4st7Qd2divrO5JtOEUuR1Zs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kln5o0EWNpFYkWPILpgi8TiN+RwGpO9oc4tKWGXWziTKlUBBVBRqeCDZ5Lp/a4AQf
-         e0jDF8sqCe7ykXO+S1IZDZgSNIMtK6wr0/45qV8JwVlP8F0utJYHJj9V2SCW7QU8Yq
-         mT6zPx16BFvf+OqXW0G/fI/WRsOURjMM7tlzsKkjgODrFL5I1oEbMJXD0idAJ5TtuQ
-         wDceFtvy9mrWcNlCfawX89WfqzV5wXgmo9YHlmzORx9Bir2FdYDMcOWmXl7tNqzXhR
-         UEuY/cS2ZAU1iUZvw+9OvfYjMQE3TZVBJN/arCnbNxhvCBUOOoNmySursb3jXA0qLL
-         6Ot+PCY8KPJgw==
-Received: (nullmailer pid 1347243 invoked by uid 1000);
-        Thu, 24 Aug 2023 19:43:24 -0000
-Date:   Thu, 24 Aug 2023 14:43:24 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Guo Mengqi <guomengqi3@huawei.com>
-Cc:     vkoul@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, xuqiang36@huawei.com,
-        chenweilong@huawei.com
-Subject: Re: [PATCH v3 2/2] dt-bindings: dma: hisi: Add bindings for Hisi
- Ascend sdma
-Message-ID: <20230824194324.GA1342234-robh@kernel.org>
-References: <20230824040007.1476-1-guomengqi3@huawei.com>
- <20230824040007.1476-3-guomengqi3@huawei.com>
+        with ESMTP id S231290AbjHXVB1 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 24 Aug 2023 17:01:27 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D87719BF;
+        Thu, 24 Aug 2023 14:01:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+        Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+        bh=Fl4eLz5lzAqdsfi+t5jmV/ItDNikXzAC07w0ACaPhec=; b=GPHn5098lZiSjTzuo3IGsOnJNk
+        qP73ttw0VHgGqMzH/iIiNBWV+fcJuQPZH8dPNTH5XtAVh81T480f6FuXpviXDeibvvf2UZns0RZx9
+        sDNPS1KjlXrZdxhkluzYLuUzhPUCZJFAiJA0iAROcD0JTfGWi9+ejji9Elr1a7IDnfqwQF9BlKVGx
+        7Aned0DSUddatLZ53TBpwtaH+FaO9PCZsRnckMiYdNwv9yohkH+gPiDieFCol1jT8pSxeHTFm8N5B
+        IN0NURRkb7LuBfrWH3sY/aX/3aZuOh9J49Um9ZflAREyXb9tpyW4Y4zK22JZ5JjAlorIlaLykoVYQ
+        vpkm+lpg==;
+Received: from [2601:1c2:980:9ec0::2764]
+        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1qZHSG-003n2q-0r;
+        Thu, 24 Aug 2023 21:01:24 +0000
+Message-ID: <b1c5ba0d-748f-ae2e-4a5f-e1e853161d16@infradead.org>
+Date:   Thu, 24 Aug 2023 14:01:20 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230824040007.1476-3-guomengqi3@huawei.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [PATCH v3 1/1] MAINTAINERS: Add entries for NXP(Freescale) eDMA
+ drivers
+Content-Language: en-US
+To:     Frank Li <Frank.Li@nxp.com>
+Cc:     dmaengine@vger.kernel.org, imx@lists.linux.dev, joy.zou@nxp.com,
+        linux-kernel@vger.kernel.org, peng.fan@nxp.com,
+        shenwei.wang@nxp.com, vkoul@kernel.org
+References: <20230824145834.2825847-1-Frank.Li@nxp.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20230824145834.2825847-1-Frank.Li@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SORTED_RECIPS,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, Aug 24, 2023 at 12:00:07PM +0800, Guo Mengqi wrote:
-> Add device-tree binding documentation for the Hisi Ascend sdma
-> controller.
+
+
+On 8/24/23 07:58, Frank Li wrote:
+> Add the MAINTAINERS entries for NXP(Freescale) eDMA drivers
 > 
-> Signed-off-by: Guo Mengqi <guomengqi3@huawei.com>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+
+Thanks for fixing. :)
+
 > ---
->  .../bindings/dma/hisi,ascend-sdma.yaml        | 75 +++++++++++++++++++
->  1 file changed, 75 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/hisi,ascend-sdma.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/dma/hisi,ascend-sdma.yaml b/Documentation/devicetree/bindings/dma/hisi,ascend-sdma.yaml
-> new file mode 100644
-> index 000000000000..87b6132c1b4b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/hisi,ascend-sdma.yaml
-> @@ -0,0 +1,75 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/hisi,ascend-sdma.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> Notes:
+>     Change from v2 to v3
+>     - Again, fixed order
+>     
+>     Change from v1 to v2
+>     - alphabetical order
+> 
+>  MAINTAINERS | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 23eafda02056..c1c7a9ae244f 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -8236,6 +8236,14 @@ F:	Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt
+>  F:	drivers/spi/spi-fsl-dspi.c
+>  F:	include/linux/spi/spi-fsl-dspi.h
+>  
+> +FREESCALE eDMA DRIVER
+> +M:	Frank Li <Frank.Li@nxp.com>
+> +L:	imx@lists.linux.dev
+> +L:	dmaengine@vger.kernel.org
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/dma/fsl,edma.yaml
+> +F:	drivers/dma/fsl-edma*.*
 > +
-> +title: HISI Ascend System DMA (SDMA) controller
-> +
-> +description: |
-> +  The Ascend SDMA controller is used for transferring data
-> +  in system memory. It utilizes IOMMU SVA feature and accepts
-> +  virtual address from user process.
-> +
-> +maintainers:
-> +  - Guo Mengqi <guomengqi3@huawei.com>
-> +
-> +allOf:
-> +  - $ref: dma-controller.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - hisilicon,ascend310-sdma
-> +      - hisilicon,ascend910-sdma
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  '#dma-cells':
-> +    const: 1
-> +    description:
-> +      Clients specify a single cell with channel number.
-> +
-> +  hisilicon,ascend-sdma-channel-map:
-> +    description: |
-> +      bitmap, each bit stands for a channel that is allowed to
-> +      use by this system. Maximum 64 bits.
-> +    $ref: /schemas/types.yaml#/definitions/uint64
+>  FREESCALE ENETC ETHERNET DRIVERS
+>  M:	Claudiu Manoil <claudiu.manoil@nxp.com>
+>  M:	Vladimir Oltean <vladimir.oltean@nxp.com>
 
-Sounds like the common property dma-channel-mask. Use that.
-
-> +
-> +  iommus:
-> +    maxItems: 1
-> +
-> +  pasid-num-bits:
-
-Needs a vendor prefix.
-
-> +    description: |
-> +      sdma utilizes iommu sva feature to transfer user space data.
-
-Isn't shared VA mostly a s/w concept?
-
-> +      It acts as a basic dma controller if not bound to user space.
-
-I don't understand what this means.
-
-> +    const: 0x10
-
-If only 1 value is allowed, what is the point of this property.
-
-Rob
+-- 
+~Randy

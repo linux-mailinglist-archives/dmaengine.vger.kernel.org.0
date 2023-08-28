@@ -2,35 +2,38 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 35E5778B5CA
-	for <lists+dmaengine@lfdr.de>; Mon, 28 Aug 2023 19:01:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC9DF78B5C9
+	for <lists+dmaengine@lfdr.de>; Mon, 28 Aug 2023 19:01:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231392AbjH1RBD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 28 Aug 2023 13:01:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34336 "EHLO
+        id S232764AbjH1RBB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 28 Aug 2023 13:01:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232724AbjH1RAb (ORCPT
+        with ESMTP id S232725AbjH1RAb (ORCPT
         <rfc822;dmaengine@vger.kernel.org>); Mon, 28 Aug 2023 13:00:31 -0400
 Received: from hutie.ust.cz (hutie.ust.cz [IPv6:2a03:3b40:fe:f0::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1172211D;
-        Mon, 28 Aug 2023 10:00:20 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64C81AC;
+        Mon, 28 Aug 2023 10:00:19 -0700 (PDT)
 From:   =?UTF-8?q?Martin=20Povi=C5=A1er?= <povik+lin@cutebit.org>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cutebit.org; s=mail;
-        t=1693242016; bh=2a0YyIYnFhba8kmovt7IQO7yRT9lM892IESkc2yJdAs=;
-        h=From:To:Cc:Subject:Date;
-        b=O+VXi8yO5/F905z4PcFqW0PFJdF5Fb7MFUQltAuXYWEnJ5j3M9CMxdyH05MPNbjNu
-         7qaH6f4gexkBp5SuYR5LM+BHdPi7ZoC5jpJt4dxX0scX9s7SUWipjDsFAoLFiR3lNQ
-         yw5Urj3+ReJf5gV6St2/REEMuAMnv7n+/1i3N1J8=
+        t=1693242017; bh=WechP6q8K5T0IYjDZDXT+ltodAKJ4iHlXIyKTYpv1qs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=poxjIxKMerGH8BxR7UauZN+AqNEf+YLya1J38BBd+y0tWbZL1FSMAjxgiZQWq48pJ
+         U8VJW5W9pgt9aFB4Pqp37q6cDXyMg9gCb3MsEb7UHv6eMUFuo2KC+Gc5Ntn834bQpx
+         yTIgZ+FM+l/8va99cJwPZktCCAU/cwLDW1vecDPw=
 To:     =?UTF-8?q?Martin=20Povi=C5=A1er?= <povik+lin@cutebit.org>,
         Vinod Koul <vkoul@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Conor Dooley <conor+dt@kernel.org>
 Cc:     asahi@lists.linux.dev, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/2] Apple SIO driver
-Date:   Mon, 28 Aug 2023 19:00:11 +0200
-Message-Id: <20230828170013.75820-1-povik+lin@cutebit.org>
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v2 1/2] dt-bindings: dma: apple,sio: Add schema
+Date:   Mon, 28 Aug 2023 19:00:12 +0200
+Message-Id: <20230828170013.75820-2-povik+lin@cutebit.org>
+In-Reply-To: <20230828170013.75820-1-povik+lin@cutebit.org>
+References: <20230828170013.75820-1-povik+lin@cutebit.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -43,49 +46,136 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi all,
+Describe the SIO coprocessor which serves as pretend DMA controller on
+recent Apple platforms.
 
-see attached a driver for the SIO coprocessor found on recent Apple
-SoCs. This coprocessor provides general DMA services, it can feed
-many peripherals but so far it seems it will only be useful for
-audio output over HDMI/DisplayPort. So the driver here only supports
-the DMA_CYCLIC mode of transactions with the focus being on audio.
-There's a downstream prototype ALSA driver the DMA driver is being
-tested against.
-
-Some of the boilerplate code in implementing the dmaengine interface
-was lifted from apple-admac.c. Among other things these two drivers
-have in common that they implement the DMA_CYCLIC regime on top of
-hardware/coprocessor layer supporting linear transactions only.
-
-The binding schema saw two RFC rounds before and has a reviewed-by
-from Rob.
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Martin Povišer <povik+lin@cutebit.org>
+---
+This patch saw RFC rounds not counted in the series being v2.
 https://lore.kernel.org/asahi/167693643966.613996.10372170526471864080.robh@kernel.org
 
-Best regards,
-Martin
-
---
-
-Changes since v1:
-https://lore.kernel.org/asahi/20230712133806.4450-1-povik+lin@cutebit.org/T/#t
- - move to using virt-dma
- - drop redundant cookie field from `sio_tx`
- - use DECLARE_BITMAP for `allocated` in sio_tagdata
-
-Martin Povišer (2):
-  dt-bindings: dma: apple,sio: Add schema
-  dmaengine: apple-sio: Add Apple SIO driver
-
- .../devicetree/bindings/dma/apple,sio.yaml    | 111 +++
- MAINTAINERS                                   |   2 +
- drivers/dma/Kconfig                           |  11 +
- drivers/dma/Makefile                          |   1 +
- drivers/dma/apple-sio.c                       | 868 ++++++++++++++++++
- 5 files changed, 993 insertions(+)
+ .../devicetree/bindings/dma/apple,sio.yaml    | 111 ++++++++++++++++++
+ 1 file changed, 111 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/dma/apple,sio.yaml
- create mode 100644 drivers/dma/apple-sio.c
 
+diff --git a/Documentation/devicetree/bindings/dma/apple,sio.yaml b/Documentation/devicetree/bindings/dma/apple,sio.yaml
+new file mode 100644
+index 000000000000..0e3780ad9dd7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/apple,sio.yaml
+@@ -0,0 +1,111 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/apple,sio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Apple SIO Coprocessor
++
++description:
++  SIO is a coprocessor on Apple M1 and later chips (and maybe also on earlier
++  chips). Its role is to offload SPI, UART and DisplayPort audio transfers,
++  being a pretend DMA controller.
++
++maintainers:
++  - Martin Povišer <povik+lin@cutebit.org>
++
++allOf:
++  - $ref: dma-controller.yaml#
++
++properties:
++  compatible:
++    items:
++      - enum:
++          - apple,t6000-sio
++          - apple,t8103-sio
++      - const: apple,sio
++
++  reg:
++    maxItems: 1
++
++  '#dma-cells':
++    const: 1
++    description:
++      DMA clients specify a single cell that corresponds to the RTKit endpoint
++      number used for arranging the transfers in question
++
++  dma-channels:
++    maximum: 128
++
++  mboxes:
++    maxItems: 1
++
++  iommus:
++    maxItems: 1
++
++  power-domains:
++    maxItems: 1
++
++  memory-region:
++    minItems: 2
++    maxItems: 8
++    description:
++      A number of references to reserved memory regions among which are the DATA/TEXT
++      sections of coprocessor executable firmware and also auxiliary firmware data
++      describing the available DMA-enabled peripherals
++
++  apple,sio-firmware-params:
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    description: |
++      Parameters in the form of opaque key/value pairs that are to be sent to the SIO
++      coprocesssor once it boots. These parameters can point into the reserved memory
++      regions (in device address space).
++
++      Note that unlike Apple's firmware, we treat the parameters, and the data they
++      refer to, as opaque. Apple embed short data blobs into their SIO devicetree node
++      that describe the DMA-enabled peripherals (presumably with defined semantics).
++      Their driver processes those blobs and sets up data structure in mapped device
++      memory, then references this memory in the parameters sent to the SIO. At the
++      level of description we are opting for in this binding, we assume the job of
++      constructing those data structures has been done in advance, leaving behind an
++      opaque list of key/value parameter pairs to be sent by a prospective driver.
++
++      This approach is chosen for two reasons:
++
++       - It means we don't need to try to understand the semantics of Apple's blobs
++         as long as we know the transformation we need to do from Apple's devicetree
++         data to SIO data (which can be shoved away into a loader). It also means the
++         semantics of Apple's blobs (or of something to replace them) need not be part
++         of the binding and be kept up with Apple's firmware changes in the future.
++
++       - It leaves less work for the driver attaching on this binding. Instead the work
++         is done upfront in the loader which can be better suited for keeping up with
++         Apple's firmware changes.
++
++required:
++  - compatible
++  - reg
++  - '#dma-cells'
++  - dma-channels
++  - mboxes
++  - iommus
++  - power-domains
++
++additionalProperties: false
++
++examples:
++  - |
++    sio: dma-controller@36400000 {
++      compatible = "apple,t8103-sio", "apple,sio";
++      reg = <0x36400000 0x8000>;
++      dma-channels = <128>;
++      #dma-cells = <1>;
++      mboxes = <&sio_mbox>;
++      iommus = <&sio_dart 0>;
++      power-domains = <&ps_sio_cpu>;
++      memory-region = <&sio_text>, <&sio_data>,
++                      <&sio_auxdata1>, <&sio_auxdata2>; /* Filled by loader */
++      apple,sio-firmware-params = <0xb 0x10>, <0xc 0x1b80>, <0xf 0x14>,
++                                  <0x10 0x1e000>, <0x30d 0x34>, <0x30e 0x4000>,
++                                  <0x1a 0x38>, <0x1b 0x50>; /* Filled by loader */
++    };
 -- 
 2.38.3
 

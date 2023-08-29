@@ -2,64 +2,55 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DD9C678BD27
-	for <lists+dmaengine@lfdr.de>; Tue, 29 Aug 2023 05:11:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B14B78C313
+	for <lists+dmaengine@lfdr.de>; Tue, 29 Aug 2023 13:06:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229841AbjH2DLO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 28 Aug 2023 23:11:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57740 "EHLO
+        id S231919AbjH2LGM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 29 Aug 2023 07:06:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230171AbjH2DKn (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 28 Aug 2023 23:10:43 -0400
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50F9F10A;
-        Mon, 28 Aug 2023 20:10:40 -0700 (PDT)
-Received: by mail-wm1-x332.google.com with SMTP id 5b1f17b1804b1-4018af103bcso24052875e9.1;
-        Mon, 28 Aug 2023 20:10:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693278639; x=1693883439;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=TgphdfUBF3LdAvxv+4KzRsN29QVS1gJqr6ggp2mmHf4=;
-        b=Q2/lWx6eq46sY8mfk0fP8NjCxxHd8VJOUP4eYOOgc7qk5+BzI47mQQb0M26TpxvKNF
-         9Z6C4aU/UhLof0kRZkNqk7YaNYm54XCClvil18J3KT4r5jUNxiCMOHFEPV7h/6DDAIEy
-         l+feihK6BoLURS7zQnbdPmHJtRNg3ROjEOAQIS4qwBUfiZYPrNUpukITayM8ODkXyEhx
-         oxFwKVA7hqwCjLW6K17vaubfr9Gw/2yWvAKu5TvdgiNYXnd0pzUKq08iE8l/z129/cna
-         GNcVn4A6ks0tcxf2sSndxldVRNR/WMiHDhz2d2Kh7AEG/C3fjw7PbwmG2G4LEosEPjaG
-         C1pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693278639; x=1693883439;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TgphdfUBF3LdAvxv+4KzRsN29QVS1gJqr6ggp2mmHf4=;
-        b=NKeUjseT8kvTm7FQ+wHRk9rw3QO5FYNHZrEqJ56uBANvFjqa2h67xpiD+fcwbFFyhD
-         b5sO1wxGyjZA2h5pj+gV9/ohc3PJU1l6/6TXIR2bXONuPdxrhYAqL8irfhPD3aoQYHWX
-         fpfY6GOUkguEovAh+RrPG5ubuSm1iL2CjkDIqqGWR5hF0lwNnFSKdNC+T8sLweBNubXh
-         7mjady4FKquV4P7bfjPjWtgnPfV2SYmYV4HMIN3BXozD9WmCRLH57o+Sn1/nErWdue9Y
-         Z2temnfc1GcjYSz39WazHLM3GtmCE/EJjnp+Vt635+EnBQa0xLLpGryZEnZUsqeyUkgO
-         OkmA==
-X-Gm-Message-State: AOJu0YyDlzcfJ/E1AuhM4wpVlD3/D+qxa1hIYPZKfa3Hvz+HyxiK+J9D
-        MDeeroeUA8qywLqJ47WJk8S9t3Y+QX0tcjf69FAd27DIXqvQYA==
-X-Google-Smtp-Source: AGHT+IETXAyJHdTg3ZySNUHHNNIlX4RgH0L8934TiJruS7KPhhpbJJTkklsUXsuyxps37GNXfo88flNzpQ4Ucv3Ij/8=
-X-Received: by 2002:a7b:c448:0:b0:401:b307:7ba8 with SMTP id
- l8-20020a7bc448000000b00401b3077ba8mr817859wmi.13.1693278638495; Mon, 28 Aug
- 2023 20:10:38 -0700 (PDT)
+        with ESMTP id S235319AbjH2LFt (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 29 Aug 2023 07:05:49 -0400
+Received: from mx13lb.world4you.com (mx13lb.world4you.com [81.19.149.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF424C3;
+        Tue, 29 Aug 2023 04:05:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sw-optimization.com; s=dkim11; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=AVKM9TQcJHZjLSeImIKY0Cx/V5t5iQPA+TrX7lfEi8w=; b=v1XJxS/sy4RB3zhamrj60YsFoF
+        SPKYrpYHzsOFA91V71dLb5Yi+mvtzfoMjSMqUAJgBgB6kVdzu97abbi+88veDmFLXL35o74OApSB5
+        BkVhk9UixRRimbA2CKQ1ff2KUVvJYOVLPH91hMvsrjgmm57e98r5Z0AMrbYKM38fi+Ek=;
+Received: from [195.192.57.194] (helo=[192.168.0.20])
+        by mx13lb.world4you.com with esmtpa (Exim 4.96)
+        (envelope-from <eas@sw-optimization.com>)
+        id 1qawXW-0004OW-1Z;
+        Tue, 29 Aug 2023 13:05:42 +0200
+Message-ID: <b3be5738-8c40-bb82-296f-aa401d1fc1df@sw-optimization.com>
+Date:   Tue, 29 Aug 2023 13:05:41 +0200
 MIME-Version: 1.0
-References: <20230729175952.4068-1-dg573847474@gmail.com> <3545b782-756a-3d2a-d192-8b224a783c13@sw-optimization.com>
-In-Reply-To: <3545b782-756a-3d2a-d192-8b224a783c13@sw-optimization.com>
-From:   Chengfeng Ye <dg573847474@gmail.com>
-Date:   Tue, 29 Aug 2023 11:10:27 +0800
-Message-ID: <CAAo+4rWW67VSpdwo_dstqAb-FiKeoK3YmaNgiX7vXBerqEWBkA@mail.gmail.com>
-Subject: Re: [PATCH v2] dmaengine: plx_dma: Fix potential deadlock on &plxdev->ring_lock
-To:     Eric Schwarz <eas@sw-optimization.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [PATCH v2] dmaengine: plx_dma: Fix potential deadlock on
+ &plxdev->ring_lock
+Content-Language: de-DE
+To:     Chengfeng Ye <dg573847474@gmail.com>
 Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
         christophe.jaillet@wanadoo.fr, vkoul@kernel.org,
         logang@deltatee.com
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+References: <20230729175952.4068-1-dg573847474@gmail.com>
+ <3545b782-756a-3d2a-d192-8b224a783c13@sw-optimization.com>
+ <CAAo+4rWW67VSpdwo_dstqAb-FiKeoK3YmaNgiX7vXBerqEWBkA@mail.gmail.com>
+From:   Eric Schwarz <eas@sw-optimization.com>
+In-Reply-To: <CAAo+4rWW67VSpdwo_dstqAb-FiKeoK3YmaNgiX7vXBerqEWBkA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AV-Do-Run: Yes
+X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -67,29 +58,53 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Eric,
+Hello Chengfeng,
 
-Thank you for your interest in it.
+Am 29.08.2023 um 05:10 schrieb Chengfeng Ye:
+> Hi Eric,
+> 
+> Thank you for your interest in it.
 
-For a dynamic detection solution, then the answer is yes.
-Lockdep, which should be enabled by CONFIG_DEBUG_SPINLOCK,
-has the ability to detect such deadlocks. But the problem is that the detection
-requires input and exact thread interleaving to trigger the bug, otherwise
-the bugs would be buried and cannot be detected.
+Thanks for getting back to me.
 
-For static analysis, I think the answer is no. Smatch, like other
-static deadlock detection algorithms in CBMC[1] and Infer[2], should be
-designed to reason thread interaction but not interrupts, which requires
-new algorithms that I am working on.
+> For a dynamic detection solution, then the answer is yes.
+> Lockdep, which should be enabled by CONFIG_DEBUG_SPINLOCK,
+> has the ability to detect such deadlocks. But the problem is that the detection
+> requires input and exact thread interleaving to trigger the bug, otherwise
+> the bugs would be buried and cannot be detected.
+> 
+> For static analysis, I think the answer is no. Smatch, like other
+> static deadlock detection algorithms in CBMC[1] and Infer[2], should be
+> designed to reason thread interaction but not interrupts, which requires
+> new algorithms that I am working on.
 
-Besides, may I ask a question that I have sent some patches[3][4] weeks
-ago, but have not yet got a reply. Would reviewers check the patches
-later or should I ping them again?
+Will you publish your work later on e.g. on github?
+Actually maybe it would even make sense to integrate your work into 
+scripts/checkpatch.pl of the Linux kernel (or the like).
+Basically if a patch to be committed fails locking it should not be 
+committed anyway.
+IMHO the quality standard one could expect from the code should always 
+be the same. So adding it to a mandatory check procedure (script which 
+must be executed before committing patches) and/or to "0-DAY CI Kernel 
+Test Service" [5] would definitely be worth a thought.
 
-[1] http://www.cprover.org/deadlock-detection/
-[2] https://github.com/facebook/infer
-[3] https://lore.kernel.org/lkml/20230726062313.77121-1-dg573847474@gmail.com/
-[4] https://lore.kernel.org/lkml/20230726051727.64088-1-dg573847474@gmail.com/
+> Besides, may I ask a question that I have sent some patches[3][4] weeks
+> ago, but have not yet got a reply. Would reviewers check the patches
+> later or should I ping them again?
 
-Thanks,
-Chengfeng
+You never have a guarantee who will when review your patch on the 
+mailing list. It is kind of best effort based system mainly of volunteers.
+Just give people a bit of time since it is currently also holiday time.
+You may ping the maintainer of the subsystem when some time has passed 
+since he is responsible for the patches to be administered.
+BTW, I think you already pinged indirectly w/ your e-mail.
+
+> [1] http://www.cprover.org/deadlock-detection/
+> [2] https://github.com/facebook/infer
+> [3] https://lore.kernel.org/lkml/20230726062313.77121-1-dg573847474@gmail.com/
+> [4] https://lore.kernel.org/lkml/20230726051727.64088-1-dg573847474@gmail.com/
+
+[5] https://github.com/intel/lkp-tests/wiki
+
+Cheers
+Eric

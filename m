@@ -2,94 +2,156 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A6D1378DC33
-	for <lists+dmaengine@lfdr.de>; Wed, 30 Aug 2023 20:48:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C11478DC40
+	for <lists+dmaengine@lfdr.de>; Wed, 30 Aug 2023 20:48:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242672AbjH3Snx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 30 Aug 2023 14:43:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33752 "EHLO
+        id S239863AbjH3SoH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 30 Aug 2023 14:44:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242273AbjH3HrT (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 30 Aug 2023 03:47:19 -0400
-X-Greylist: delayed 614 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 30 Aug 2023 00:47:15 PDT
-Received: from mail.corebizinsight.com (mail.corebizinsight.com [217.61.112.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4877ECD8
-        for <dmaengine@vger.kernel.org>; Wed, 30 Aug 2023 00:47:15 -0700 (PDT)
-Received: by mail.corebizinsight.com (Postfix, from userid 1002)
-        id B169C82D55; Wed, 30 Aug 2023 09:36:25 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=corebizinsight.com;
-        s=mail; t=1693381005;
-        bh=CEmchsDu5Oe+RNHCZSBmKSgMOuy1xnO2dydqkEjt3Qs=;
-        h=Date:From:To:Subject:From;
-        b=26VjXODVw3HpTlfeOU3dw70S/fe2H+f6oFdM6Pn06jAfSd0O58iyurS/KYpHN6x1r
-         v/BFiNrUuJQmMy7OXfKOT7w1M6T0kHWRkzJwC6G7ql9Nuf2QLaobQcpWVqmMnfTXH8
-         ub1PcAQncm5GcGtnIU5YBjYiLRkkL/a1M4cKokG4jr76AvAdDs+1RQtRZUhJYF3LYC
-         5umHDjaTMPD1y6UO4GapxHz9nRRBGwM7XoPzd6YyuX8wNjA9VETeGphCbGfvs9Oyp1
-         qf+HlguRwTERIfxp9bkgnVC2PoNsg6n0VtpeH85oDbygFIWc8UoJ6O9LTKetigmDi9
-         E6zCj5NY57vCA==
-Received: by mail.corebizinsight.com for <dmaengine@vger.kernel.org>; Wed, 30 Aug 2023 07:36:06 GMT
-Message-ID: <20230830084500-0.1.h.1a7x.0.c3ft6j5hv9@corebizinsight.com>
-Date:   Wed, 30 Aug 2023 07:36:06 GMT
-From:   "Jakub Kovarik" <jakub.kovarik@corebizinsight.com>
-To:     <dmaengine@vger.kernel.org>
-Subject: =?UTF-8?Q?Pros=C3=ADm_kontaktujte?=
-X-Mailer: mail.corebizinsight.com
+        with ESMTP id S242772AbjH3Jd6 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 30 Aug 2023 05:33:58 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2015EBE;
+        Wed, 30 Aug 2023 02:33:55 -0700 (PDT)
+Received: from kwepemm600013.china.huawei.com (unknown [172.30.72.54])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RbJwY2FvqzrS4S;
+        Wed, 30 Aug 2023 17:32:13 +0800 (CST)
+Received: from [10.174.178.156] (10.174.178.156) by
+ kwepemm600013.china.huawei.com (7.193.23.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Wed, 30 Aug 2023 17:33:51 +0800
+Message-ID: <6906870e-cafa-9a5e-f981-38561576455c@huawei.com>
+Date:   Wed, 30 Aug 2023 17:33:50 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: Yes, score=6.5 required=5.0 tests=BAYES_20,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FROM_FMBLA_NEWDOM28,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS,
-        URIBL_CSS_A,URIBL_DBL_SPAM autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Report: *  2.5 URIBL_DBL_SPAM Contains a spam URL listed in the Spamhaus DBL
-        *      blocklist
-        *      [URIs: corebizinsight.com]
-        *  3.3 RCVD_IN_SBL_CSS RBL: Received via a relay in Spamhaus SBL-CSS
-        *      [217.61.112.124 listed in zen.spamhaus.org]
-        *  0.0 RCVD_IN_DNSWL_BLOCKED RBL: ADMINISTRATOR NOTICE: The query to
-        *      DNSWL was blocked.  See
-        *      http://wiki.apache.org/spamassassin/DnsBlocklists#dnsbl-block
-        *      for more information.
-        *      [217.61.112.124 listed in list.dnswl.org]
-        * -0.0 BAYES_20 BODY: Bayes spam probability is 5 to 20%
-        *      [score: 0.1755]
-        *  0.1 URIBL_CSS_A Contains URL's A record listed in the Spamhaus CSS
-        *      blocklist
-        *      [URIs: corebizinsight.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        *  0.8 FROM_FMBLA_NEWDOM28 From domain was registered in last 14-28
-        *      days
-X-Spam-Level: ******
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.2
+Subject: Re: [PATCH v3 2/2] dt-bindings: dma: hisi: Add bindings for Hisi
+ Ascend sdma
+To:     Rob Herring <robh@kernel.org>
+CC:     <vkoul@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>, <dmaengine@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <xuqiang36@huawei.com>,
+        <chenweilong@huawei.com>
+References: <20230824040007.1476-1-guomengqi3@huawei.com>
+ <20230824040007.1476-3-guomengqi3@huawei.com>
+ <20230824194324.GA1342234-robh@kernel.org>
+From:   "guomengqi (A)" <guomengqi3@huawei.com>
+In-Reply-To: <20230824194324.GA1342234-robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.178.156]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemm600013.china.huawei.com (7.193.23.68)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Dobr=C3=A9 r=C3=A1no,
 
-Je mo=C5=BEn=C3=A9 s v=C3=A1mi nav=C3=A1zat spolupr=C3=A1ci?
+在 2023/8/25 3:43, Rob Herring 写道:
+> On Thu, Aug 24, 2023 at 12:00:07PM +0800, Guo Mengqi wrote:
+>> Add device-tree binding documentation for the Hisi Ascend sdma
+>> controller.
+>>
+>> Signed-off-by: Guo Mengqi <guomengqi3@huawei.com>
+>> ---
+>>   .../bindings/dma/hisi,ascend-sdma.yaml        | 75 +++++++++++++++++++
+>>   1 file changed, 75 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/dma/hisi,ascend-sdma.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/dma/hisi,ascend-sdma.yaml b/Documentation/devicetree/bindings/dma/hisi,ascend-sdma.yaml
+>> new file mode 100644
+>> index 000000000000..87b6132c1b4b
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/dma/hisi,ascend-sdma.yaml
+>> @@ -0,0 +1,75 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/dma/hisi,ascend-sdma.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: HISI Ascend System DMA (SDMA) controller
+>> +
+>> +description: |
+>> +  The Ascend SDMA controller is used for transferring data
+>> +  in system memory. It utilizes IOMMU SVA feature and accepts
+>> +  virtual address from user process.
+>> +
+>> +maintainers:
+>> +  - Guo Mengqi <guomengqi3@huawei.com>
+>> +
+>> +allOf:
+>> +  - $ref: dma-controller.yaml#
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - hisilicon,ascend310-sdma
+>> +      - hisilicon,ascend910-sdma
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  '#dma-cells':
+>> +    const: 1
+>> +    description:
+>> +      Clients specify a single cell with channel number.
+>> +
+>> +  hisilicon,ascend-sdma-channel-map:
+>> +    description: |
+>> +      bitmap, each bit stands for a channel that is allowed to
+>> +      use by this system. Maximum 64 bits.
+>> +    $ref: /schemas/types.yaml#/definitions/uint64
+> Sounds like the common property dma-channel-mask. Use that.
+It does seem to be the one I'm looking for. Will use it in next patch.
+>> +
+>> +  iommus:
+>> +    maxItems: 1
+>> +
+>> +  pasid-num-bits:
+> Needs a vendor prefix.
+This can be found in iommu optional properties. Although nobody use it 
+for now.
+>> +    description: |
+>> +      sdma utilizes iommu sva feature to transfer user space data.
+> Isn't shared VA mostly a s/w concept?
 
-R=C3=A1d si promluv=C3=ADm s osobou zab=C3=BDvaj=C3=ADc=C3=AD se prodejn=C3=
-=AD =C4=8Dinnost=C3=AD.
+Well, sdma controller has built-in mechanism to support shared VA 
+translation.
 
-Pom=C3=A1h=C3=A1me efektivn=C4=9B z=C3=ADsk=C3=A1vat nov=C3=A9 z=C3=A1kaz=
-n=C3=ADky.
+I add this to explain purpose of property.
 
-Nevahejte me kontaktovat.
+>> +      It acts as a basic dma controller if not bound to user space.
+> I don't understand what this means.
 
-V p=C5=99=C3=ADpad=C4=9B z=C3=A1jmu V=C3=A1s bude kontaktovat n=C3=A1=C5=A1=
- anglicky mluv=C3=ADc=C3=AD z=C3=A1stupce.
+By "basic" I mean iommu bypass mode, which is supported in hardware design.
+
+So if the transfer is all in physical address, it seems quite... basic?
 
 
-Pozdravy
-Jakub Kovarik
+However, shared VA is main usage scenario. Driver only implements shared 
+VA. So I guess I can remove this line.
+
+>> +    const: 0x10
+> If only 1 value is allowed, what is the point of this property.
+
+It seems that the property should be declared here, to tell iommu it 
+supports PASID (see 2e981b9468e670b76bd1048fa939ad1f9653bd79 mainline).
+
+I think it could be adjust to other values. I will check out if there is 
+a specific range.
+
+> Rob
+> .
+
+Best regards,
+
+Guo Mengqi
+

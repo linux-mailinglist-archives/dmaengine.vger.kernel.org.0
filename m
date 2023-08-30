@@ -2,156 +2,118 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C11478DC40
-	for <lists+dmaengine@lfdr.de>; Wed, 30 Aug 2023 20:48:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9089C78DC35
+	for <lists+dmaengine@lfdr.de>; Wed, 30 Aug 2023 20:48:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239863AbjH3SoH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 30 Aug 2023 14:44:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42270 "EHLO
+        id S242692AbjH3SoA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 30 Aug 2023 14:44:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242772AbjH3Jd6 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 30 Aug 2023 05:33:58 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2015EBE;
-        Wed, 30 Aug 2023 02:33:55 -0700 (PDT)
-Received: from kwepemm600013.china.huawei.com (unknown [172.30.72.54])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RbJwY2FvqzrS4S;
-        Wed, 30 Aug 2023 17:32:13 +0800 (CST)
-Received: from [10.174.178.156] (10.174.178.156) by
- kwepemm600013.china.huawei.com (7.193.23.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Wed, 30 Aug 2023 17:33:51 +0800
-Message-ID: <6906870e-cafa-9a5e-f981-38561576455c@huawei.com>
-Date:   Wed, 30 Aug 2023 17:33:50 +0800
+        with ESMTP id S244239AbjH3Msv (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 30 Aug 2023 08:48:51 -0400
+Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 918E8194
+        for <dmaengine@vger.kernel.org>; Wed, 30 Aug 2023 05:48:48 -0700 (PDT)
+Received: by mail-lj1-x22b.google.com with SMTP id 38308e7fff4ca-2b9338e4695so83920951fa.2
+        for <dmaengine@vger.kernel.org>; Wed, 30 Aug 2023 05:48:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1693399727; x=1694004527; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bY6Ts8AN6wULo96E7oKoB6J6G/OTH3Af15URc3xEMoA=;
+        b=n2lmKWfbLfegfvS/Q/G/o9QfsyqNfh1syxUX6fyIpwQmXtIJ7ZNjRslMcqtnJEegYh
+         17Q0enxRpgTphYeHKw9nPhg0baqnDzXHgbnbwHjGU1x4qciUOm8vmaEIImzR9Mg5Dgk+
+         z4XVmWs+hW1QoKyDzulsWBmELYcvKQIRWxIwNvtljrQo1r3bHPQ+JgBXSQ8toX35REnu
+         AJtjFE5zxAUlQ4ds595W4mRJjJ1qR3xBSTTdX2bzL+vrSjNoETnsZqnDg9RGACbAbVZV
+         zK0BCbX3VEmrg8svPDZkhnHfqwNPaOqC+5DeHpilZ6uOZQtAjnPUmZn6aGAxlDqTujdX
+         8WfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693399727; x=1694004527;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bY6Ts8AN6wULo96E7oKoB6J6G/OTH3Af15URc3xEMoA=;
+        b=AIQMTk0Hehm9oq9OV0FotIujAAxDdNfWENBI+Z9XkwAmRRH6LSGw13uTMWdqSypn2/
+         Rd6InSS7OPpl7Qg0PdsJ+Qst6sPUADM4eBqtWqBEf9Rdx4AhG/7R/CuoUe3b35oHVKrr
+         JdAMCqnH4mJkPZFL7X890wG0H+PTtZ4i9B4pZz8ngPmBkURh68dGzOKM/9yOukW3gJJs
+         gtlWrJ6eh9Yuoj5RgpNOEFBKbcCFehvyzuIFzNpAEbcNG7lrOC2Widphs7a6eK373psx
+         BYzq0IN/x63qHVQGOGEuw0YLXBaqCoIRRe8KMBJPUV5EX/145llylWS6eLZBCEj2/XSm
+         yqsg==
+X-Gm-Message-State: AOJu0YxTE8IrPuzi2SJzgZ0ThkIn8uv4ib2kutXRVRXfxlz3csDOK7kb
+        AxB9TCuQJEXVE98AV4yT1qrcbQ==
+X-Google-Smtp-Source: AGHT+IG+D0lOo9lrJZs4kvBiHpFPiLDgGrGIGGnT3fYaPcIYMUuKqyNtN8gSy6DepAKYbhlKShZt0w==
+X-Received: by 2002:a2e:968c:0:b0:2b6:eb68:fe76 with SMTP id q12-20020a2e968c000000b002b6eb68fe76mr1943138lji.25.1693399726751;
+        Wed, 30 Aug 2023 05:48:46 -0700 (PDT)
+Received: from [192.168.1.101] (abyl195.neoplus.adsl.tpnet.pl. [83.9.31.195])
+        by smtp.gmail.com with ESMTPSA id y23-20020a2e7d17000000b002b94b355527sm2602662ljc.32.2023.08.30.05.48.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Aug 2023 05:48:46 -0700 (PDT)
+From:   Konrad Dybcio <konrad.dybcio@linaro.org>
+Subject: [PATCH 0/7] 8550 dma coherent and more
+Date:   Wed, 30 Aug 2023 14:48:39 +0200
+Message-Id: <20230830-topic-8550_dmac2-v1-0-49bb25239fb1@linaro.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.2
-Subject: Re: [PATCH v3 2/2] dt-bindings: dma: hisi: Add bindings for Hisi
- Ascend sdma
-To:     Rob Herring <robh@kernel.org>
-CC:     <vkoul@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>, <dmaengine@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <xuqiang36@huawei.com>,
-        <chenweilong@huawei.com>
-References: <20230824040007.1476-1-guomengqi3@huawei.com>
- <20230824040007.1476-3-guomengqi3@huawei.com>
- <20230824194324.GA1342234-robh@kernel.org>
-From:   "guomengqi (A)" <guomengqi3@huawei.com>
-In-Reply-To: <20230824194324.GA1342234-robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.178.156]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemm600013.china.huawei.com (7.193.23.68)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAKc672QC/x2NWwqDMBAAryL73YU0QRu9SpGSx1oXNEqiRRDv7
+ tLPGRjmhEKZqUBXnZDpx4WXJPB8VBBGl76EHIVBK22UNQq3ZeWAtq7VJ84uaHy1tomNNbH1A0j
+ mXSH02aUwSpj2aRK5Zhr4+H/e/XXdobsSEXcAAAA=
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Abel Vesa <abel.vesa@linaro.org>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Sai Prakash Ranjan <quic_saipraka@quicinc.com>,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     Marijn Suijten <marijn.suijten@somainline.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        Konrad Dybcio <konrad.dybcio@linaro.org>
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1693399725; l=1120;
+ i=konrad.dybcio@linaro.org; s=20230215; h=from:subject:message-id;
+ bh=Q2YXK69Spz2pE0ISEYTPLsY9leUsqULG9hqpcmUi0EI=;
+ b=irxyzxwv56ierVsx6/JI+hChLN2S3zTCLQiO+0kIHxLCtxbluCGgOzIBHGnQshC4bjv2vvMWG
+ pIDYsYCpaTzBNE/aq7n33CfICvNyoFIMVO2T0AfwYLFzfMAM9DKFj05
+X-Developer-Key: i=konrad.dybcio@linaro.org; a=ed25519;
+ pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Qualcomm made some under-the-hood changes and made more peripherals
+capable of coherent transfers with SM8550.
 
-在 2023/8/25 3:43, Rob Herring 写道:
-> On Thu, Aug 24, 2023 at 12:00:07PM +0800, Guo Mengqi wrote:
->> Add device-tree binding documentation for the Hisi Ascend sdma
->> controller.
->>
->> Signed-off-by: Guo Mengqi <guomengqi3@huawei.com>
->> ---
->>   .../bindings/dma/hisi,ascend-sdma.yaml        | 75 +++++++++++++++++++
->>   1 file changed, 75 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/dma/hisi,ascend-sdma.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/dma/hisi,ascend-sdma.yaml b/Documentation/devicetree/bindings/dma/hisi,ascend-sdma.yaml
->> new file mode 100644
->> index 000000000000..87b6132c1b4b
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/dma/hisi,ascend-sdma.yaml
->> @@ -0,0 +1,75 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/dma/hisi,ascend-sdma.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: HISI Ascend System DMA (SDMA) controller
->> +
->> +description: |
->> +  The Ascend SDMA controller is used for transferring data
->> +  in system memory. It utilizes IOMMU SVA feature and accepts
->> +  virtual address from user process.
->> +
->> +maintainers:
->> +  - Guo Mengqi <guomengqi3@huawei.com>
->> +
->> +allOf:
->> +  - $ref: dma-controller.yaml#
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - hisilicon,ascend310-sdma
->> +      - hisilicon,ascend910-sdma
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  '#dma-cells':
->> +    const: 1
->> +    description:
->> +      Clients specify a single cell with channel number.
->> +
->> +  hisilicon,ascend-sdma-channel-map:
->> +    description: |
->> +      bitmap, each bit stands for a channel that is allowed to
->> +      use by this system. Maximum 64 bits.
->> +    $ref: /schemas/types.yaml#/definitions/uint64
-> Sounds like the common property dma-channel-mask. Use that.
-It does seem to be the one I'm looking for. Will use it in next patch.
->> +
->> +  iommus:
->> +    maxItems: 1
->> +
->> +  pasid-num-bits:
-> Needs a vendor prefix.
-This can be found in iommu optional properties. Although nobody use it 
-for now.
->> +    description: |
->> +      sdma utilizes iommu sva feature to transfer user space data.
-> Isn't shared VA mostly a s/w concept?
+This series marks them as such and brings fixups to usb and psci-cpuidle.
 
-Well, sdma controller has built-in mechanism to support shared VA 
-translation.
+Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+---
+Konrad Dybcio (7):
+      dt-bindings: dmaengine: qcom: gpi: Allow dma-coherent
+      dt-bindings: qcom: geni-se: Allow dma-coherent
+      arm64: dts: qcom: sm8550: Fix up CPU idle states
+      arm64: dts: qcom: sm8550: Mark QUPs and GPI dma-coherent
+      arm64: dts: qcom: sm8550: Mark APPS SMMU as dma-coherent
+      arm64: dts: qcom: sm8550: Add missing DWC3 quirks
+      arm64: dts: qcom: sm8550: Mark DWC3 as dma-coherent
 
-I add this to explain purpose of property.
-
->> +      It acts as a basic dma controller if not bound to user space.
-> I don't understand what this means.
-
-By "basic" I mean iommu bypass mode, which is supported in hardware design.
-
-So if the transfer is all in physical address, it seems quite... basic?
-
-
-However, shared VA is main usage scenario. Driver only implements shared 
-VA. So I guess I can remove this line.
-
->> +    const: 0x10
-> If only 1 value is allowed, what is the point of this property.
-
-It seems that the property should be declared here, to tell iommu it 
-supports PASID (see 2e981b9468e670b76bd1048fa939ad1f9653bd79 mainline).
-
-I think it could be adjust to other values. I will check out if there is 
-a specific range.
-
-> Rob
-> .
+ .../devicetree/bindings/dma/qcom,gpi.yaml          |  2 +
+ .../devicetree/bindings/soc/qcom/qcom,geni-se.yaml |  2 +
+ arch/arm64/boot/dts/qcom/sm8550.dtsi               | 52 ++++++++++++++++------
+ 3 files changed, 42 insertions(+), 14 deletions(-)
+---
+base-commit: 56585460cc2ec44fc5d66924f0a116f57080f0dc
+change-id: 20230830-topic-8550_dmac2-7986d683d9bf
 
 Best regards,
-
-Guo Mengqi
+-- 
+Konrad Dybcio <konrad.dybcio@linaro.org>
 

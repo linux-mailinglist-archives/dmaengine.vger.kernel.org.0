@@ -2,62 +2,62 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9089C78DC35
-	for <lists+dmaengine@lfdr.de>; Wed, 30 Aug 2023 20:48:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D61378DC3A
+	for <lists+dmaengine@lfdr.de>; Wed, 30 Aug 2023 20:48:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242692AbjH3SoA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 30 Aug 2023 14:44:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55574 "EHLO
+        id S239498AbjH3SoE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 30 Aug 2023 14:44:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244239AbjH3Msv (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 30 Aug 2023 08:48:51 -0400
-Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 918E8194
-        for <dmaengine@vger.kernel.org>; Wed, 30 Aug 2023 05:48:48 -0700 (PDT)
-Received: by mail-lj1-x22b.google.com with SMTP id 38308e7fff4ca-2b9338e4695so83920951fa.2
-        for <dmaengine@vger.kernel.org>; Wed, 30 Aug 2023 05:48:48 -0700 (PDT)
+        with ESMTP id S244244AbjH3Msx (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 30 Aug 2023 08:48:53 -0400
+Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB860193
+        for <dmaengine@vger.kernel.org>; Wed, 30 Aug 2023 05:48:49 -0700 (PDT)
+Received: by mail-lj1-x233.google.com with SMTP id 38308e7fff4ca-2bccda76fb1so84714381fa.2
+        for <dmaengine@vger.kernel.org>; Wed, 30 Aug 2023 05:48:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1693399727; x=1694004527; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bY6Ts8AN6wULo96E7oKoB6J6G/OTH3Af15URc3xEMoA=;
-        b=n2lmKWfbLfegfvS/Q/G/o9QfsyqNfh1syxUX6fyIpwQmXtIJ7ZNjRslMcqtnJEegYh
-         17Q0enxRpgTphYeHKw9nPhg0baqnDzXHgbnbwHjGU1x4qciUOm8vmaEIImzR9Mg5Dgk+
-         z4XVmWs+hW1QoKyDzulsWBmELYcvKQIRWxIwNvtljrQo1r3bHPQ+JgBXSQ8toX35REnu
-         AJtjFE5zxAUlQ4ds595W4mRJjJ1qR3xBSTTdX2bzL+vrSjNoETnsZqnDg9RGACbAbVZV
-         zK0BCbX3VEmrg8svPDZkhnHfqwNPaOqC+5DeHpilZ6uOZQtAjnPUmZn6aGAxlDqTujdX
-         8WfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693399727; x=1694004527;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1693399728; x=1694004528; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=bY6Ts8AN6wULo96E7oKoB6J6G/OTH3Af15URc3xEMoA=;
-        b=AIQMTk0Hehm9oq9OV0FotIujAAxDdNfWENBI+Z9XkwAmRRH6LSGw13uTMWdqSypn2/
-         Rd6InSS7OPpl7Qg0PdsJ+Qst6sPUADM4eBqtWqBEf9Rdx4AhG/7R/CuoUe3b35oHVKrr
-         JdAMCqnH4mJkPZFL7X890wG0H+PTtZ4i9B4pZz8ngPmBkURh68dGzOKM/9yOukW3gJJs
-         gtlWrJ6eh9Yuoj5RgpNOEFBKbcCFehvyzuIFzNpAEbcNG7lrOC2Widphs7a6eK373psx
-         BYzq0IN/x63qHVQGOGEuw0YLXBaqCoIRRe8KMBJPUV5EX/145llylWS6eLZBCEj2/XSm
-         yqsg==
-X-Gm-Message-State: AOJu0YxTE8IrPuzi2SJzgZ0ThkIn8uv4ib2kutXRVRXfxlz3csDOK7kb
-        AxB9TCuQJEXVE98AV4yT1qrcbQ==
-X-Google-Smtp-Source: AGHT+IG+D0lOo9lrJZs4kvBiHpFPiLDgGrGIGGnT3fYaPcIYMUuKqyNtN8gSy6DepAKYbhlKShZt0w==
-X-Received: by 2002:a2e:968c:0:b0:2b6:eb68:fe76 with SMTP id q12-20020a2e968c000000b002b6eb68fe76mr1943138lji.25.1693399726751;
-        Wed, 30 Aug 2023 05:48:46 -0700 (PDT)
+        bh=46NZOkI5BuMzdTRi8W6TrVh0RTD9MbZglmlN/4mby7Y=;
+        b=abPP9HHShBhjNK8sUzkOYUsYHjsCT13M1zKvqUKetcyuNTBcrcvLUtPJuF14EL27fm
+         83ABM4OW4dD2m17w1EZCIev4xpFVC7Val9zHTpfaoQjLnK6jUGzbwlVaUMojs8C0XpMY
+         ISOOvDkFvFTjEG54p9iCEBMTpzNDGD/CSJ+Oxlg0qj+shLMoCKn/6RH9AQ0v0hWXelp4
+         /BiraqAWUZzNs6LobKcVDGdDgTaHiIUSKXf91dXrrWnn/M+lHX5RZoIhr9+x+Bevn9xx
+         UAu4IA0yI95Q34icDPYfZuYVhiaptTz52yx06IUsH3M7m9AkWHqvN/UOCgR1igzrHWMS
+         aHZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693399728; x=1694004528;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=46NZOkI5BuMzdTRi8W6TrVh0RTD9MbZglmlN/4mby7Y=;
+        b=OeGOfVWuQTTUep1Y8vB6LmWVnUk3zfy9yHQLPGA4uafPJtx1tBmE2b27ME1e/wHyMR
+         h8sqho7HU4hSFAx9t0AR1qJGOzkGDQa9tgrQbbiFx81U/c3UZrwTd4vMwTSXApbpzNw8
+         hNflpAxUuqoTcifBTk8NEKzF0z+Ik3gCb57OUKTSJtg5/9WTwmsgwdxk97OAj72KEu6y
+         YlckwfXPn6d3R76bcPvhDFcCYcDx1z9efDIfg7A9r1hJYpCSjp1a5yQMpKlSowALOn82
+         /pBUQDBoZu+TuuOXiaS/EW638L1pfLbRDbC4rCrRnFgOcSAWc2bmu2lCN6DRkWvcRpot
+         Nriw==
+X-Gm-Message-State: AOJu0YyHgfqbRrSgcJvi+xldVTCWRl19xdIFrKDCU45zSO1dYFAJofBb
+        5JT1Jyh18NbYibt0CDV6nprPpg==
+X-Google-Smtp-Source: AGHT+IGeZgRvhsin/FQ80IOmYROmiVye+4fyrQAm709GoFrpp7RnOsXC22ixiUzE9LzBSbgKztM9kg==
+X-Received: by 2002:a2e:90cc:0:b0:2bc:c557:84a0 with SMTP id o12-20020a2e90cc000000b002bcc55784a0mr1932296ljg.30.1693399728015;
+        Wed, 30 Aug 2023 05:48:48 -0700 (PDT)
 Received: from [192.168.1.101] (abyl195.neoplus.adsl.tpnet.pl. [83.9.31.195])
-        by smtp.gmail.com with ESMTPSA id y23-20020a2e7d17000000b002b94b355527sm2602662ljc.32.2023.08.30.05.48.45
+        by smtp.gmail.com with ESMTPSA id y23-20020a2e7d17000000b002b94b355527sm2602662ljc.32.2023.08.30.05.48.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Aug 2023 05:48:46 -0700 (PDT)
+        Wed, 30 Aug 2023 05:48:47 -0700 (PDT)
 From:   Konrad Dybcio <konrad.dybcio@linaro.org>
-Subject: [PATCH 0/7] 8550 dma coherent and more
-Date:   Wed, 30 Aug 2023 14:48:39 +0200
-Message-Id: <20230830-topic-8550_dmac2-v1-0-49bb25239fb1@linaro.org>
+Date:   Wed, 30 Aug 2023 14:48:40 +0200
+Subject: [PATCH 1/7] dt-bindings: dmaengine: qcom: gpi: Allow dma-coherent
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAKc672QC/x2NWwqDMBAAryL73YU0QRu9SpGSx1oXNEqiRRDv7
- tLPGRjmhEKZqUBXnZDpx4WXJPB8VBBGl76EHIVBK22UNQq3ZeWAtq7VJ84uaHy1tomNNbH1A0j
- mXSH02aUwSpj2aRK5Zhr4+H/e/XXdobsSEXcAAAA=
+Message-Id: <20230830-topic-8550_dmac2-v1-1-49bb25239fb1@linaro.org>
+References: <20230830-topic-8550_dmac2-v1-0-49bb25239fb1@linaro.org>
+In-Reply-To: <20230830-topic-8550_dmac2-v1-0-49bb25239fb1@linaro.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <andersson@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -72,15 +72,15 @@ Cc:     Marijn Suijten <marijn.suijten@somainline.org>,
         linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
         Konrad Dybcio <konrad.dybcio@linaro.org>
 X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1693399725; l=1120;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1693399725; l=679;
  i=konrad.dybcio@linaro.org; s=20230215; h=from:subject:message-id;
- bh=Q2YXK69Spz2pE0ISEYTPLsY9leUsqULG9hqpcmUi0EI=;
- b=irxyzxwv56ierVsx6/JI+hChLN2S3zTCLQiO+0kIHxLCtxbluCGgOzIBHGnQshC4bjv2vvMWG
- pIDYsYCpaTzBNE/aq7n33CfICvNyoFIMVO2T0AfwYLFzfMAM9DKFj05
+ bh=rBp7umC00prE1h9KeC6phot+nBob9JGazDIEIaR2e/s=;
+ b=nfSFempdzypvUleIIJYKjSfu9Aj1ZsC97rjUbOUeNK4sS4tQmgjtR5iimkq2+dV68/4Jlqp0U
+ q2vRVQ0F9lpAgcHMzTQe8AYxoctpsSaUYK6oiq3g4xWlBROUfQC38AW
 X-Developer-Key: i=konrad.dybcio@linaro.org; a=ed25519;
  pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -89,31 +89,28 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Qualcomm made some under-the-hood changes and made more peripherals
-capable of coherent transfers with SM8550.
-
-This series marks them as such and brings fixups to usb and psci-cpuidle.
+On SM8550, the GPI DMA controller is coherent with the CPU.
+Allow specifying that.
 
 Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 ---
-Konrad Dybcio (7):
-      dt-bindings: dmaengine: qcom: gpi: Allow dma-coherent
-      dt-bindings: qcom: geni-se: Allow dma-coherent
-      arm64: dts: qcom: sm8550: Fix up CPU idle states
-      arm64: dts: qcom: sm8550: Mark QUPs and GPI dma-coherent
-      arm64: dts: qcom: sm8550: Mark APPS SMMU as dma-coherent
-      arm64: dts: qcom: sm8550: Add missing DWC3 quirks
-      arm64: dts: qcom: sm8550: Mark DWC3 as dma-coherent
+ Documentation/devicetree/bindings/dma/qcom,gpi.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
- .../devicetree/bindings/dma/qcom,gpi.yaml          |  2 +
- .../devicetree/bindings/soc/qcom/qcom,geni-se.yaml |  2 +
- arch/arm64/boot/dts/qcom/sm8550.dtsi               | 52 ++++++++++++++++------
- 3 files changed, 42 insertions(+), 14 deletions(-)
----
-base-commit: 56585460cc2ec44fc5d66924f0a116f57080f0dc
-change-id: 20230830-topic-8550_dmac2-7986d683d9bf
+diff --git a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
+index f61145c91b6d..88d0de3d1b46 100644
+--- a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
++++ b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
+@@ -69,6 +69,8 @@ properties:
+   dma-channel-mask:
+     maxItems: 1
+ 
++  dma-coherent: true
++
+ required:
+   - compatible
+   - reg
 
-Best regards,
 -- 
-Konrad Dybcio <konrad.dybcio@linaro.org>
+2.42.0
 

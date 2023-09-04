@@ -2,127 +2,1023 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A056479016C
-	for <lists+dmaengine@lfdr.de>; Fri,  1 Sep 2023 19:27:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A7FFA7910F4
+	for <lists+dmaengine@lfdr.de>; Mon,  4 Sep 2023 07:39:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350374AbjIAR1e (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 1 Sep 2023 13:27:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50176 "EHLO
+        id S241009AbjIDFjq convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+dmaengine@lfdr.de>); Mon, 4 Sep 2023 01:39:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232448AbjIAR1c (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 1 Sep 2023 13:27:32 -0400
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 076011B2
-        for <dmaengine@vger.kernel.org>; Fri,  1 Sep 2023 10:27:29 -0700 (PDT)
-Received: by mail-ej1-x629.google.com with SMTP id a640c23a62f3a-99cdb0fd093so284809366b.1
-        for <dmaengine@vger.kernel.org>; Fri, 01 Sep 2023 10:27:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1693589247; x=1694194047; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ss+qLANCDr/E1E/sALCGcAu2OPaPDRXb4/ydOTBXzBQ=;
-        b=be1P/Setc7BYeSbX+uxLFsvKKJNY0V/zheELmkmFNL24uxotZMEMlPBlixUir1YTvg
-         CMhAtsaqX17lKeob3uIEIdnvaWCvte58c1PBWS0mF5bdMn1iokwX2fvaLq3Mx3RgAX1b
-         clhRIF9wRtslIctRiUlnuVROCU2rLfal2VU2MwQHHyIZaoVWKgQlrXvkVtOjy7EUXU18
-         jIg6/j4Hgqy7rb2xUbAqr4wxGtGie/pTlBBPLGVp77v9vHqpD1Wx0KLoLaB6nd5HXK2Q
-         1h2lTbU71ScMrCgHlFZXH7Dw9dnVu1KhHe78ZryopMSMWy6nsCwjxVH/nZmpZ3NQof9r
-         vmvw==
+        with ESMTP id S232830AbjIDFjp (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 4 Sep 2023 01:39:45 -0400
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73C3CB6;
+        Sun,  3 Sep 2023 22:39:40 -0700 (PDT)
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-52a0856b4fdso1307735a12.1;
+        Sun, 03 Sep 2023 22:39:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693589247; x=1694194047;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ss+qLANCDr/E1E/sALCGcAu2OPaPDRXb4/ydOTBXzBQ=;
-        b=l7DelKQ5qGO8tVtISQpnhb1r15PRGAzcD/iluzYaFeakxZrLHlyYw2+MZVlfbrOuCW
-         uepHNkmqQU4ToolKqu66S/IBZ4ZsWogYsSUMea4QLz0AxJ/SVxREVnMgHAnsfhF000F0
-         /GQc4gLeIo8y6crTra5oHmE3d2023D6XUfSxx1y22/lfljdQMzVHykp89tMhjUmiCbu4
-         D6WWNJgptyfaC9HIlzXuImfFrNBEBEBKjcavZMcCyP5FmQ0QhCZLdNk1cOdPI9daXITA
-         KF1ZxSReWls60l/TIbo6BOPEFYsE5g1BrR+0CkjYMoUb2JC63dpvEAp3PuZdlYqy0Rcu
-         X9vA==
-X-Gm-Message-State: AOJu0YxJqr4ld4VFVl3PS6UDeZNUKF9y+CZG14+ZzBgjcEVhPr0tjfha
-        pqaEMpjxEFngSn71AHfONxbXMA==
-X-Google-Smtp-Source: AGHT+IFcGVffPeSk/gYy/neXvresZTi7Jf5x67zGvWyJZLah1F7/YCdkWQjFSzedTTHx9Sne0C2e9g==
-X-Received: by 2002:a17:906:8a70:b0:9a1:c00e:60cd with SMTP id hy16-20020a1709068a7000b009a1c00e60cdmr2312887ejc.15.1693589247510;
-        Fri, 01 Sep 2023 10:27:27 -0700 (PDT)
-Received: from linaro.org ([84.232.191.193])
-        by smtp.gmail.com with ESMTPSA id p20-20020a170906229400b0099bd1a78ef5sm2208075eja.74.2023.09.01.10.27.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Sep 2023 10:27:26 -0700 (PDT)
-Date:   Fri, 1 Sep 2023 20:27:25 +0300
-From:   Abel Vesa <abel.vesa@linaro.org>
-To:     Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Sai Prakash Ranjan <quic_saipraka@quicinc.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: Re: [PATCH 6/7] arm64: dts: qcom: sm8550: Add missing DWC3 quirks
-Message-ID: <ZPIe/W7Bbm9Lv2Zp@linaro.org>
-References: <20230830-topic-8550_dmac2-v1-0-49bb25239fb1@linaro.org>
- <20230830-topic-8550_dmac2-v1-6-49bb25239fb1@linaro.org>
+        d=1e100.net; s=20221208; t=1693805979; x=1694410779;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8QR4nA0JyqPQMjFdDb7AK/DSafXKdyLEiucd44/P+RY=;
+        b=bBhN+tb1qJHGMo6pi/P4nFPs7GU4omJb4iPxI/QycGxVllFQOwKXvhukcXi5DlcZTq
+         pthaZA1Q3SQwW9SDjTuRX0TKdmaafn7I3XuxHqhZpeklRwXKOpOqrpnahRmgWWEPxa/p
+         L5jg2geftpvxuxxV8kGcArcZkTylXFiiS7u7l66E43DEHDEj5NXxyJ+D7OMdX0KjjD0y
+         LgPkQy31Ugi3LVsI23sXEZ2msyWz8A4HU//WMyWJnEk1P2ET0KuL/Y8pHFhJjzuHkco+
+         PNWIgjGXhf6kPPGbRmRAEPzLisxaJOSMtDFuJ0ye1iRKX2JVR+0l9Qwq/8d51JMpaG7n
+         gTNg==
+X-Gm-Message-State: AOJu0YxfwIbEOahZepK8mdnppsFz+yXOiq+xLQX7lSaPkXCDMqhMvgUP
+        7mFGnSR8a/yIIzNN+E9O9MEtXj4xDg+lzg==
+X-Google-Smtp-Source: AGHT+IGWQoBHRuNMj7bMxMXtnzfC/+byxGtsUDvwPOLHBAEXTf23Qyo5OwergxH0U41sx2L9Jg2dow==
+X-Received: by 2002:a17:907:7793:b0:9a3:b0c9:81fe with SMTP id ky19-20020a170907779300b009a3b0c981femr6120769ejc.57.1693805978302;
+        Sun, 03 Sep 2023 22:39:38 -0700 (PDT)
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com. [209.85.208.52])
+        by smtp.gmail.com with ESMTPSA id j20-20020a17090686d400b00992ca779f42sm5630711ejy.97.2023.09.03.22.39.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 03 Sep 2023 22:39:37 -0700 (PDT)
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-52a0856b4fdso1307722a12.1;
+        Sun, 03 Sep 2023 22:39:37 -0700 (PDT)
+X-Received: by 2002:aa7:da17:0:b0:522:560d:d691 with SMTP id
+ r23-20020aa7da17000000b00522560dd691mr6257518eds.25.1693805977325; Sun, 03
+ Sep 2023 22:39:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230830-topic-8550_dmac2-v1-6-49bb25239fb1@linaro.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20230828170013.75820-1-povik+lin@cutebit.org> <20230828170013.75820-3-povik+lin@cutebit.org>
+In-Reply-To: <20230828170013.75820-3-povik+lin@cutebit.org>
+From:   Neal Gompa <neal@gompa.dev>
+Date:   Mon, 4 Sep 2023 01:39:00 -0400
+X-Gmail-Original-Message-ID: <CAEg-Je-4R45kKzj7qUUqJJ6r4s6GS-NyVVFrBBgT134wjJ5CRw@mail.gmail.com>
+Message-ID: <CAEg-Je-4R45kKzj7qUUqJJ6r4s6GS-NyVVFrBBgT134wjJ5CRw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] dmaengine: apple-sio: Add Apple SIO driver
+To:     =?UTF-8?Q?Martin_Povi=C5=A1er?= <povik+lin@cutebit.org>
+Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, asahi@lists.linux.dev,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 23-08-30 14:48:45, Konrad Dybcio wrote:
-> As expected, Qualcomm DWC3 implementation come with a sizable number
-> of quirks. Make sure to account for all of them.
-> 
-> Fixes: 7f7e5c1b037f ("arm64: dts: qcom: sm8550: Add USB PHYs and controller nodes")
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+On Mon, Aug 28, 2023 at 1:00 PM Martin Povišer <povik+lin@cutebit.org> wrote:
+>
+> Add a dmaengine driver for the Apple SIO coprocessor found on Apple
+> SoCs where it provides DMA services. Have the driver support cyclic
+> transactions so that ALSA drivers can rely on it in audio output to
+> HDMI and DisplayPort.
+>
+> Signed-off-by: Martin Povišer <povik+lin@cutebit.org>
 > ---
+>  MAINTAINERS             |   2 +
+>  drivers/dma/Kconfig     |  11 +
+>  drivers/dma/Makefile    |   1 +
+>  drivers/dma/apple-sio.c | 868 ++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 882 insertions(+)
+>  create mode 100644 drivers/dma/apple-sio.c
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 3be1bdfe8ecc..e65cf3d535ef 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1865,7 +1865,9 @@ M:        Martin Povišer <povik+lin@cutebit.org>
+>  L:     asahi@lists.linux.dev
+>  L:     alsa-devel@alsa-project.org (moderated for non-subscribers)
+>  S:     Maintained
+> +F:     Documentation/devicetree/bindings/dma/apple,sio.yaml
+>  F:     Documentation/devicetree/bindings/sound/apple,*
+> +F:     drivers/dma/apple-sio.c
+>  F:     sound/soc/apple/*
+>  F:     sound/soc/codecs/cs42l83-i2c.c
+>
+> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+> index f52d36e713f3..6e385dee2d3d 100644
+> --- a/drivers/dma/Kconfig
+> +++ b/drivers/dma/Kconfig
+> @@ -89,10 +89,21 @@ config APPLE_ADMAC
+>         tristate "Apple ADMAC support"
+>         depends on ARCH_APPLE || COMPILE_TEST
+>         select DMA_ENGINE
+> +       select DMA_VIRTUAL_CHANNELS
+>         default ARCH_APPLE
+>         help
+>           Enable support for Audio DMA Controller found on Apple Silicon SoCs.
+>
+> +config APPLE_SIO
+> +       tristate "Apple SIO support"
+> +       depends on ARCH_APPLE || COMPILE_TEST
+> +       depends on APPLE_RTKIT
+> +       select DMA_ENGINE
+> +       default ARCH_APPLE
+> +       help
+> +         Enable support for the SIO coprocessor found on Apple Silicon SoCs
+> +         where it provides DMA services.
+> +
+>  config AT_HDMAC
+>         tristate "Atmel AHB DMA support"
+>         depends on ARCH_AT91
+> diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
+> index 83553a97a010..787583ff2d45 100644
+> --- a/drivers/dma/Makefile
+> +++ b/drivers/dma/Makefile
+> @@ -18,6 +18,7 @@ obj-$(CONFIG_AMBA_PL08X) += amba-pl08x.o
+>  obj-$(CONFIG_AMCC_PPC440SPE_ADMA) += ppc4xx/
+>  obj-$(CONFIG_AMD_PTDMA) += ptdma/
+>  obj-$(CONFIG_APPLE_ADMAC) += apple-admac.o
+> +obj-$(CONFIG_APPLE_SIO) += apple-sio.o
+>  obj-$(CONFIG_AT_HDMAC) += at_hdmac.o
+>  obj-$(CONFIG_AT_XDMAC) += at_xdmac.o
+>  obj-$(CONFIG_AXI_DMAC) += dma-axi-dmac.o
+> diff --git a/drivers/dma/apple-sio.c b/drivers/dma/apple-sio.c
+> new file mode 100644
+> index 000000000000..e15deeded4dc
+> --- /dev/null
+> +++ b/drivers/dma/apple-sio.c
+> @@ -0,0 +1,868 @@
+> +// SPDX-License-Identifier: GPL-2.0-only OR MIT
+> +/*
+> + * Driver for SIO coprocessor on t8103 (M1) and other Apple SoCs
+> + *
+> + * Copyright (C) The Asahi Linux Contributors
+> + */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/bits.h>
+> +#include <linux/completion.h>
+> +#include <linux/device.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/init.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_dma.h>
+> +#include <linux/soc/apple/rtkit.h>
+> +
+> +#include "dmaengine.h"
+> +#include "virt-dma.h"
+> +
+> +#define NCHANNELS_MAX  0x80
+> +
+> +#define REG_CPU_CONTROL        0x44
+> +#define CPU_CONTROL_RUN BIT(4)
+> +
+> +#define SIOMSG_DATA    GENMASK(63, 32)
+> +#define SIOMSG_TYPE    GENMASK(23, 16)
+> +#define SIOMSG_PARAM   GENMASK(31, 24)
+> +#define SIOMSG_TAG     GENMASK(13, 8)
+> +#define SIOMSG_EP      GENMASK(7, 0)
+> +
+> +#define EP_SIO         0x20
+> +
+> +#define MSG_START      0x2
+> +#define MSG_SETUP      0x3
+> +#define MSG_CONFIGURE  0x5
+> +#define MSG_ISSUE      0x6
+> +#define MSG_TERMINATE  0x8
+> +#define MSG_ACK                0x65
+> +#define MSG_NACK       0x66
+> +#define MSG_STARTED    0x67
+> +#define MSG_REPORT     0x68
+> +
+> +#define SIO_CALL_TIMEOUT_MS    100
+> +#define SIO_SHMEM_SIZE         0x1000
+> +#define SIO_NO_DESC_SLOTS      64
+> +
+> +/*
+> + * There are two kinds of 'transaction descriptors' in play here.
+> + *
+> + * There's the struct sio_tx, and the struct dma_async_tx_descriptor embedded
+> + * inside, which jointly represent a transaction to the dmaengine subsystem.
+> + * At this time we only support those transactions to be cyclic.
+> + *
+> + * Then there are the coprocessor descriptors, which is what the coprocessor
+> + * knows and understands. These don't seem to have a cyclic regime, so we can't
+> + * map the dmaengine transaction on an exact coprocessor counterpart. Instead
+> + * we continually queue up many coprocessor descriptors to implement a cyclic
+> + * transaction.
+> + *
+> + * The number below is the maximum of how far ahead (how many) coprocessor
+> + * descriptors we should be queuing up, per channel, for a cyclic transaction.
+> + * Basically it's a made-up number.
+> + */
+> +#define SIO_MAX_NINFLIGHT      4
+> +
+> +struct sio_coproc_desc {
+> +       u32 pad1;
+> +       u32 flag;
+> +       u64 unk;
+> +       u64 iova;
+> +       u64 size;
+> +       u64 pad2;
+> +       u64 pad3;
+> +} __packed;
+> +static_assert(sizeof(struct sio_coproc_desc) == 48);
+> +
+> +struct sio_shmem_chan_config {
+> +       u32 datashape;
+> +       u32 timeout;
+> +       u32 fifo;
+> +       u32 threshold;
+> +       u32 limit;
+> +} __packed;
+> +
+> +struct sio_data;
+> +struct sio_tx;
+> +
+> +struct sio_chan {
+> +       unsigned int no;
+> +       struct sio_data *host;
+> +       struct virt_dma_chan vc;
+> +       struct work_struct terminate_wq;
+> +
+> +       struct sio_tx *current_tx;
+> +};
+> +
+> +#define SIO_NTAGS              16
+> +
+> +typedef void (*sio_ack_callback)(struct sio_chan *, void *, bool);
+> +
+> +struct sio_data {
+> +       void __iomem *base;
+> +       struct dma_device dma;
+> +       struct device *dev;
+> +       struct apple_rtkit *rtk;
+> +       void *shmem;
+> +       struct sio_coproc_desc *shmem_desc_base;
+> +       unsigned long *desc_allocated;
+> +
+> +       struct sio_tagdata {
+> +               DECLARE_BITMAP(allocated, SIO_NTAGS);
+> +               int last_tag;
+> +
+> +               struct completion completions[SIO_NTAGS];
+> +               bool atomic[SIO_NTAGS];
+> +               bool acked[SIO_NTAGS];
+> +
+> +               sio_ack_callback ack_callback[SIO_NTAGS];
+> +               void *cookie[SIO_NTAGS];
+> +       } tags;
+> +
+> +       int nchannels;
+> +       struct sio_chan channels[];
+> +};
+> +
+> +struct sio_tx {
+> +       struct virt_dma_desc vd;
+> +       struct completion done;
+> +
+> +       bool terminated;
+> +       size_t period_len;
+> +       int nperiods;
+> +       int ninflight;
+> +       int next;
+> +
+> +       struct sio_coproc_desc *siodesc[];
+> +};
+> +
+> +static int sio_send_siomsg(struct sio_data *sio, u64 msg);
+> +static int sio_send_siomsg_atomic(struct sio_data *sio, u64 msg,
+> +                                 sio_ack_callback ack_callback,
+> +                                 void *cookie);
+> +static int sio_call(struct sio_data *sio, u64 msg);
+> +
+> +static struct sio_chan *to_sio_chan(struct dma_chan *chan)
+> +{
+> +       return container_of(chan, struct sio_chan, vc.chan);
+> +}
+> +
+> +static struct sio_tx *to_sio_tx(struct dma_async_tx_descriptor *tx)
+> +{
+> +       return container_of(tx, struct sio_tx, vd.tx);
+> +}
+> +
+> +static int sio_alloc_tag(struct sio_data *sio)
+> +{
+> +       struct sio_tagdata *tags = &sio->tags;
+> +       int tag, i;
+> +
+> +       /*
+> +        * Because tag number 0 is special, the usable tag range
+> +        * is 1...(SIO_NTAGS - 1). So, to pick the next usable tag,
+> +        * we do modulo (SIO_NTAGS - 1) *then* plus one.
+> +        */
+> +
+> +#define SIO_USABLE_TAGS (SIO_NTAGS - 1)
+> +       tag = (READ_ONCE(tags->last_tag) % SIO_USABLE_TAGS) + 1;
+> +
+> +       for (i = 0; i < SIO_USABLE_TAGS; i++) {
+> +               if (!test_and_set_bit(tag, tags->allocated))
+> +                       break;
+> +
+> +               tag = (tag % SIO_USABLE_TAGS) + 1;
+> +       }
+> +
+> +       WRITE_ONCE(tags->last_tag, tag);
+> +
+> +       if (i < SIO_USABLE_TAGS)
+> +               return tag;
+> +       else
+> +               return -EBUSY;
+> +#undef SIO_USABLE_TAGS
+> +}
+> +
+> +static void sio_free_tag(struct sio_data *sio, int tag)
+> +{
+> +       struct sio_tagdata *tags = &sio->tags;
+> +
+> +       if (WARN_ON(tag >= SIO_NTAGS))
+> +               return;
+> +
+> +       tags->atomic[tag] = false;
+> +       tags->ack_callback[tag] = NULL;
+> +
+> +       WARN_ON(!test_and_clear_bit(tag, tags->allocated));
+> +}
+> +
+> +static void sio_set_tag_atomic(struct sio_data *sio, int tag,
+> +                              sio_ack_callback ack_callback,
+> +                              void *cookie)
+> +{
+> +       struct sio_tagdata *tags = &sio->tags;
+> +
+> +       tags->atomic[tag] = true;
+> +       tags->ack_callback[tag] = ack_callback;
+> +       tags->cookie[tag] = cookie;
+> +}
+> +
+> +static struct sio_coproc_desc *sio_alloc_desc(struct sio_data *sio)
+> +{
+> +       int i;
+> +
+> +       for (i = 0; i < SIO_NO_DESC_SLOTS; i++)
+> +               if (!test_and_set_bit(i, sio->desc_allocated))
+> +                       return sio->shmem_desc_base + i;
+> +
+> +       return NULL;
+> +}
+> +
+> +static void sio_free_desc(struct sio_data *sio, struct sio_coproc_desc *desc)
+> +{
+> +       clear_bit(desc - sio->shmem_desc_base, sio->desc_allocated);
+> +}
+> +
+> +static int sio_coproc_desc_slot(struct sio_data *sio, struct sio_coproc_desc *desc)
+> +{
+> +       return (desc - sio->shmem_desc_base) * 4;
+> +}
+> +
+> +static enum dma_transfer_direction sio_chan_direction(int channo)
+> +{
+> +       /* Channel directions are fixed based on channel number */
+> +       return (channo & 1) ? DMA_DEV_TO_MEM : DMA_MEM_TO_DEV;
+> +}
+> +
+> +static void sio_tx_free(struct virt_dma_desc *vd)
+> +{
+> +       struct sio_data *sio = to_sio_chan(vd->tx.chan)->host;
+> +       struct sio_tx *siotx = to_sio_tx(&vd->tx);
+> +       int i;
+> +
+> +       for (i = 0; i < siotx->nperiods; i++)
+> +               if (siotx->siodesc[i])
+> +                       sio_free_desc(sio, siotx->siodesc[i]);
+> +       kfree(siotx);
+> +}
+> +
+> +static struct dma_async_tx_descriptor *sio_prep_dma_cyclic(
+> +               struct dma_chan *chan, dma_addr_t buf_addr, size_t buf_len,
+> +               size_t period_len, enum dma_transfer_direction direction,
+> +               unsigned long flags)
+> +{
+> +       struct sio_chan *siochan = to_sio_chan(chan);
+> +       struct sio_tx *siotx = NULL;
+> +       int i, nperiods = buf_len / period_len;
+> +
+> +       if (direction != sio_chan_direction(siochan->no))
+> +               return NULL;
+> +
+> +       siotx = kzalloc(struct_size(siotx, siodesc, nperiods), GFP_NOWAIT);
+> +       if (!siotx)
+> +               return NULL;
+> +
+> +       init_completion(&siotx->done);
+> +       siotx->period_len = period_len;
+> +       siotx->nperiods = nperiods;
+> +
+> +       for (i = 0; i < nperiods; i++) {
+> +               struct sio_coproc_desc *d;
+> +
+> +               siotx->siodesc[i] = d = sio_alloc_desc(siochan->host);
+> +               if (!d) {
+> +                       sio_tx_free(&siotx->vd);
+> +                       return NULL;
+> +               }
+> +
+> +               d->flag = 1; // not sure what's up with this
+> +               d->iova = buf_addr + period_len * i;
+> +               d->size = period_len;
+> +       }
+> +       dma_wmb();
+> +
+> +       return vchan_tx_prep(&siochan->vc, &siotx->vd, flags);
+> +}
+> +
+> +static enum dma_status sio_tx_status(struct dma_chan *chan, dma_cookie_t cookie,
+> +                                    struct dma_tx_state *txstate)
+> +{
+> +       struct sio_chan *siochan = to_sio_chan(chan);
+> +       struct virt_dma_desc *vd;
+> +       struct sio_tx *siotx;
+> +       enum dma_status ret;
+> +       unsigned long flags;
+> +       int periods_residue;
+> +       size_t residue;
+> +
+> +       ret = dma_cookie_status(chan, cookie, txstate);
+> +       if (ret == DMA_COMPLETE || !txstate)
+> +               return ret;
+> +
+> +       spin_lock_irqsave(&siochan->vc.lock, flags);
+> +       siotx = siochan->current_tx;
+> +
+> +       if (siotx && siotx->vd.tx.cookie == cookie) {
+> +               ret = DMA_IN_PROGRESS;
+> +               periods_residue = siotx->next - siotx->ninflight;
+> +               while (periods_residue < 0)
+> +                       periods_residue += siotx->nperiods;
+> +               residue = (siotx->nperiods - periods_residue) * siotx->period_len;
+> +       } else {
+> +               ret = DMA_IN_PROGRESS;
+> +               residue = 0;
+> +               vd = vchan_find_desc(&siochan->vc, cookie);
+> +               if (vd) {
+> +                       siotx = to_sio_tx(&vd->tx);
+> +                       residue = siotx->period_len * siotx->nperiods;
+> +               }
+> +       }
+> +       spin_unlock_irqrestore(&siochan->vc.lock, flags);
+> +       dma_set_residue(txstate, residue);
+> +
+> +       return ret;
+> +}
+> +
+> +static bool sio_fill_in_locked(struct sio_chan *siochan);
+> +
+> +static void sio_handle_issue_ack(struct sio_chan *siochan, void *cookie, bool ok)
+> +{
+> +       unsigned long flags;
+> +       dma_cookie_t tx_cookie = (unsigned long) cookie;
+> +       struct sio_tx *tx;
+> +
+> +       if (!ok) {
+> +               dev_err(siochan->host->dev, "nacked issue on chan %d\n", siochan->no);
+> +               return;
+> +       }
+> +
+> +       spin_lock_irqsave(&siochan->vc.lock, flags);
+> +       if (!siochan->current_tx || tx_cookie != siochan->current_tx->vd.tx.cookie ||
+> +                       siochan->current_tx->terminated)
+> +               goto out;
+> +
+> +       tx = siochan->current_tx;
+> +       tx->next = (tx->next + 1) % tx->nperiods;
+> +       tx->ninflight++;
+> +       sio_fill_in_locked(siochan);
+> +
+> +out:
+> +       spin_unlock_irqrestore(&siochan->vc.lock, flags);
+> +}
+> +
+> +static bool sio_fill_in_locked(struct sio_chan *siochan)
+> +{
+> +       struct sio_data *sio = siochan->host;
+> +       struct sio_tx *tx = siochan->current_tx;
+> +       struct sio_coproc_desc *d = tx->siodesc[tx->next];
+> +       int ret;
+> +
+> +       if (tx->ninflight >= SIO_MAX_NINFLIGHT || tx->terminated)
+> +               return false;
+> +
+> +       static_assert(sizeof(dma_cookie_t) <= sizeof(void *));
+> +       ret = sio_send_siomsg_atomic(sio, FIELD_PREP(SIOMSG_EP, siochan->no) |
+> +                                    FIELD_PREP(SIOMSG_TYPE, MSG_ISSUE) |
+> +                                    FIELD_PREP(SIOMSG_DATA, sio_coproc_desc_slot(sio, d)),
+> +                                    sio_handle_issue_ack, (void *) (uintptr_t) tx->vd.tx.cookie);
+> +       if (ret < 0)
+> +               dev_err_ratelimited(sio->dev, "can't issue on chan %d ninflight %d: %d\n",
+> +                                   siochan->no, tx->ninflight, ret);
+> +       return true;
+> +}
+> +
+> +static void sio_update_current_tx_locked(struct sio_chan *siochan)
+> +{
+> +       struct virt_dma_desc *vd = vchan_next_desc(&siochan->vc);
+> +
+> +       if (vd && !siochan->current_tx) {
+> +               list_del(&vd->node);
+> +               siochan->current_tx = to_sio_tx(&vd->tx);
+> +               sio_fill_in_locked(siochan);
+> +       }
+> +}
+> +
+> +static void sio_issue_pending(struct dma_chan *chan)
+> +{
+> +       struct sio_chan *siochan = to_sio_chan(chan);
+> +       unsigned long flags;
+> +
+> +       spin_lock_irqsave(&siochan->vc.lock, flags);
+> +       vchan_issue_pending(&siochan->vc);
+> +       sio_update_current_tx_locked(siochan);
+> +       spin_unlock_irqrestore(&siochan->vc.lock, flags);
+> +}
+> +
+> +static int sio_terminate_all(struct dma_chan *chan)
+> +{
+> +       struct sio_chan *siochan = to_sio_chan(chan);
+> +       unsigned long flags;
+> +       LIST_HEAD(to_free);
+> +
+> +       spin_lock_irqsave(&siochan->vc.lock, flags);
+> +       if (siochan->current_tx && !siochan->current_tx->terminated) {
+> +               dma_cookie_complete(&siochan->current_tx->vd.tx);
+> +               siochan->current_tx->terminated = true;
+> +               schedule_work(&siochan->terminate_wq);
+> +       }
+> +       vchan_get_all_descriptors(&siochan->vc, &to_free);
+> +       spin_unlock_irqrestore(&siochan->vc.lock, flags);
+> +
+> +       vchan_dma_desc_free_list(&siochan->vc, &to_free);
+> +
+> +       return 0;
+> +}
+> +
+> +static void sio_terminate_work(struct work_struct *wq)
+> +{
+> +       struct sio_chan *siochan = container_of(wq, struct sio_chan, terminate_wq);
+> +       struct sio_tx *tx;
+> +       unsigned long flags;
+> +       int ret;
+> +
+> +       spin_lock_irqsave(&siochan->vc.lock, flags);
+> +       tx = siochan->current_tx;
+> +       spin_unlock_irqrestore(&siochan->vc.lock, flags);
+> +
+> +       if (WARN_ON(!tx))
+> +               return;
+> +
+> +       ret = sio_call(siochan->host, FIELD_PREP(SIOMSG_EP, siochan->no) |
+> +                                     FIELD_PREP(SIOMSG_TYPE, MSG_TERMINATE));
+> +       if (ret < 0)
+> +               dev_err(siochan->host->dev, "terminate call on chan %d failed: %d\n",
+> +                       siochan->no, ret);
+> +
+> +       ret = wait_for_completion_timeout(&tx->done, msecs_to_jiffies(500));
+> +       if (!ret)
+> +               dev_err(siochan->host->dev, "terminate descriptor wait timed out\n");
+> +
+> +       tasklet_kill(&siochan->vc.task);
+> +
+> +       spin_lock_irqsave(&siochan->vc.lock, flags);
+> +       WARN_ON(siochan->current_tx != tx);
+> +       siochan->current_tx = NULL;
+> +       sio_update_current_tx_locked(siochan);
+> +       spin_unlock_irqrestore(&siochan->vc.lock, flags);
+> +
+> +       sio_tx_free(&tx->vd);
+> +}
+> +
+> +static void sio_synchronize(struct dma_chan *chan)
+> +{
+> +       struct sio_chan *siochan = to_sio_chan(chan);
+> +
+> +       flush_work(&siochan->terminate_wq);
+> +}
+> +
+> +static void sio_free_chan_resources(struct dma_chan *chan)
+> +{
+> +       sio_terminate_all(chan);
+> +       sio_synchronize(chan);
+> +       vchan_free_chan_resources(&to_sio_chan(chan)->vc);
+> +}
+> +
+> +static struct dma_chan *sio_dma_of_xlate(struct of_phandle_args *dma_spec,
+> +                                        struct of_dma *ofdma)
+> +{
+> +       struct sio_data *sio = (struct sio_data *) ofdma->of_dma_data;
+> +       unsigned int index = dma_spec->args[0];
+> +
+> +       if (dma_spec->args_count != 1 || index >= sio->nchannels)
+> +               return ERR_PTR(-EINVAL);
+> +
+> +       return dma_get_slave_channel(&sio->channels[index].vc.chan);
+> +}
+> +
+> +static void sio_rtk_crashed(void *cookie)
+> +{
+> +       struct sio_data *sio = cookie;
+> +
+> +       dev_err(sio->dev, "SIO down (crashed)");
+> +}
+> +
+> +static void sio_process_report(struct sio_chan *siochan)
+> +{
+> +       unsigned long flags;
+> +
+> +       spin_lock_irqsave(&siochan->vc.lock, flags);
+> +       if (siochan->current_tx) {
+> +               struct sio_tx *tx = siochan->current_tx;
+> +
+> +               if (tx->ninflight)
+> +                       tx->ninflight--;
+> +               vchan_cyclic_callback(&tx->vd);
+> +               if (!sio_fill_in_locked(siochan) && !tx->ninflight)
+> +                       complete(&tx->done);
+> +       }
+> +       spin_unlock_irqrestore(&siochan->vc.lock, flags);
+> +}
+> +
+> +static void sio_recv_msg(void *cookie, u8 ep, u64 msg)
+> +{
+> +       struct sio_data *sio = cookie;
+> +       struct sio_tagdata *tags = &sio->tags;
+> +       u32 data;
+> +       u8 param, type, tag, sioep;
+> +
+> +       if (ep != EP_SIO)
+> +               goto unknown;
+> +
+> +       data  = FIELD_GET(SIOMSG_DATA, msg);
+> +       param = FIELD_GET(SIOMSG_PARAM, msg);
+> +       type  = FIELD_GET(SIOMSG_TYPE, msg);
+> +       tag   = FIELD_GET(SIOMSG_TAG, msg);
+> +       sioep = FIELD_GET(SIOMSG_EP, msg);
+> +
+> +       switch (type) {
+> +       case MSG_STARTED:
+> +               dev_info(sio->dev, "SIO protocol v%u\n", data);
+> +               type = MSG_ACK; /* Pretend this is an ACK */
+> +               fallthrough;
+> +       case MSG_ACK:
+> +       case MSG_NACK:
+> +               if (WARN_ON(tag >= SIO_NTAGS))
+> +                       break;
+> +
+> +               if (tags->atomic[tag]) {
+> +                       sio_ack_callback callback = tags->ack_callback[tag];
+> +
+> +                       if (callback && !WARN_ON(sioep >= sio->nchannels))
+> +                               callback(&sio->channels[sioep],
+> +                                        tags->cookie[tag], type == MSG_ACK);
+> +                       if (type == MSG_NACK)
+> +                               dev_err(sio->dev, "got a NACK on channel %d\n", sioep);
+> +                       sio_free_tag(sio, tag);
+> +               } else {
+> +                       tags->acked[tag] = (type == MSG_ACK);
+> +                       complete(&tags->completions[tag]);
+> +               }
+> +               break;
+> +
+> +       case MSG_REPORT:
+> +               if (WARN_ON(sioep >= sio->nchannels))
+> +                       break;
+> +
+> +               sio_process_report(&sio->channels[sioep]);
+> +               break;
+> +
+> +       default:
+> +               goto unknown;
+> +       }
+> +       return;
+> +
+> +unknown:
+> +       dev_warn(sio->dev, "received unknown message: ep %x data %016llx\n",
+> +                ep, msg);
+> +}
+> +
+> +static int _sio_send_siomsg(struct sio_data *sio, u64 msg, bool atomic,
+> +                           sio_ack_callback ack_callback, void *cookie)
+> +{
+> +       int tag, ret;
+> +
+> +       tag = sio_alloc_tag(sio);
+> +       if (tag < 0)
+> +               return tag;
+> +
+> +       if (atomic)
+> +               sio_set_tag_atomic(sio, tag, ack_callback, cookie);
+> +       else
+> +               reinit_completion(&sio->tags.completions[tag]);
+> +
+> +       msg &= ~SIOMSG_TAG;
+> +       msg |= FIELD_PREP(SIOMSG_TAG, tag);
+> +       ret = apple_rtkit_send_message(sio->rtk, EP_SIO, msg, NULL,
+> +                                      atomic);
+> +       if (ret < 0) {
+> +               sio_free_tag(sio, tag);
+> +               return ret;
+> +       }
+> +
+> +       return tag;
+> +}
+> +
+> +static int sio_send_siomsg(struct sio_data *sio, u64 msg)
+> +{
+> +       return _sio_send_siomsg(sio, msg, false, NULL, NULL);
+> +}
+> +
+> +static int sio_send_siomsg_atomic(struct sio_data *sio, u64 msg,
+> +                                 sio_ack_callback ack_callback,
+> +                                 void *cookie)
+> +{
+> +       return _sio_send_siomsg(sio, msg, true, ack_callback, cookie);
+> +}
+> +
+> +static int sio_call(struct sio_data *sio, u64 msg)
+> +{
+> +       int tag, ret;
+> +
+> +       tag = sio_send_siomsg(sio, msg);
+> +       if (tag < 0)
+> +               return tag;
+> +
+> +       ret = wait_for_completion_timeout(&sio->tags.completions[tag],
+> +                                         msecs_to_jiffies(SIO_CALL_TIMEOUT_MS));
+> +       if (!ret) {
+> +               dev_warn(sio->dev, "call %8x timed out\n", msg);
+> +               sio_free_tag(sio, tag);
+> +               return -ETIME;
+> +       }
+> +
+> +       ret = sio->tags.acked[tag];
+> +       sio_free_tag(sio, tag);
+> +
+> +       return ret;
+> +}
+> +
+> +static const struct apple_rtkit_ops sio_rtkit_ops = {
+> +       .crashed = sio_rtk_crashed,
+> +       .recv_message = sio_recv_msg,
+> +};
+> +
+> +static int sio_device_config(struct dma_chan *chan,
+> +                            struct dma_slave_config *config)
+> +{
+> +       struct sio_chan *siochan = to_sio_chan(chan);
+> +       struct sio_data *sio = siochan->host;
+> +       bool is_tx = sio_chan_direction(siochan->no) == DMA_MEM_TO_DEV;
+> +       struct sio_shmem_chan_config *cfg = sio->shmem;
+> +       int ret;
+> +
+> +       switch (is_tx ? config->dst_addr_width : config->src_addr_width) {
+> +       case DMA_SLAVE_BUSWIDTH_1_BYTE:
+> +               cfg->datashape = 0;
+> +               break;
+> +       case DMA_SLAVE_BUSWIDTH_2_BYTES:
+> +               cfg->datashape = 1;
+> +               break;
+> +       case DMA_SLAVE_BUSWIDTH_4_BYTES:
+> +               cfg->datashape = 2;
+> +               break;
+> +       default:
+> +               return -EINVAL;
+> +       }
+> +
+> +       cfg->fifo = 0x800;
+> +       cfg->limit = 0x800;
+> +       cfg->threshold = 0x800;
+> +       dma_wmb();
+> +
+> +       ret = sio_call(sio, FIELD_PREP(SIOMSG_TYPE, MSG_CONFIGURE) |
+> +                           FIELD_PREP(SIOMSG_EP, siochan->no));
+> +
+> +       if (ret == 1)
+> +               ret = 0;
+> +       else if (ret == 0)
+> +               ret = -EINVAL;
+> +       return ret;
+> +}
+> +
+> +static int sio_alloc_shmem(struct sio_data *sio)
+> +{
+> +       dma_addr_t iova;
+> +       int err;
+> +
+> +       sio->shmem = dma_alloc_coherent(sio->dev, SIO_SHMEM_SIZE,
+> +                                       &iova, GFP_KERNEL);
+> +       if (!sio->shmem)
+> +               return -ENOMEM;
+> +
+> +       sio->shmem_desc_base = (struct sio_coproc_desc *) (sio->shmem + 56);
+> +       sio->desc_allocated = devm_kzalloc(sio->dev, SIO_NO_DESC_SLOTS / 32,
+> +                                          GFP_KERNEL);
+> +       if (!sio->desc_allocated)
+> +               return -ENOMEM;
+> +
+> +       err = sio_call(sio, FIELD_PREP(SIOMSG_TYPE, MSG_SETUP) |
+> +                           FIELD_PREP(SIOMSG_PARAM, 1) |
+> +                           FIELD_PREP(SIOMSG_DATA, iova >> 12));
+> +       if (err != 1) {
+> +               if (err == 0)
+> +                       err = -EINVAL;
+> +               return err;
+> +       }
+> +
+> +       err = sio_call(sio, FIELD_PREP(SIOMSG_TYPE, MSG_SETUP) |
+> +                           FIELD_PREP(SIOMSG_PARAM, 2) |
+> +                           FIELD_PREP(SIOMSG_DATA, SIO_SHMEM_SIZE));
+> +       if (err != 1) {
+> +               if (err == 0)
+> +                       err = -EINVAL;
+> +               return err;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int sio_send_dt_params(struct sio_data *sio)
+> +{
+> +       struct device_node *np = sio->dev->of_node;
+> +       const char *propname = "apple,sio-firmware-params";
+> +       int nparams, err, i;
+> +
+> +       nparams = of_property_count_u32_elems(np, propname);
+> +       if (nparams < 0) {
+> +               err = nparams;
+> +               goto badprop;
+> +       }
+> +
+> +       for (i = 0; i < nparams / 2; i++) {
+> +               u32 key, val;
+> +
+> +               err = of_property_read_u32_index(np, propname, 2 * i, &key);
+> +               if (err)
+> +                       goto badprop;
+> +               err = of_property_read_u32_index(np, propname, 2 * i + 1, &val);
+> +               if (err)
+> +                       goto badprop;
+> +
+> +               err = sio_call(sio, FIELD_PREP(SIOMSG_TYPE, MSG_SETUP) |
+> +                                   FIELD_PREP(SIOMSG_PARAM, key & 0xff) |
+> +                                   FIELD_PREP(SIOMSG_EP, key >> 8) |
+> +                                   FIELD_PREP(SIOMSG_DATA, val));
+> +               if (err < 1) {
+> +                       if (err == 0)
+> +                               err = -ENXIO;
+> +                       return dev_err_probe(sio->dev, err, "sending SIO parameter %#x value %#x\n",
+> +                                            key, val);
+> +               }
+> +       }
+> +
+> +       return 0;
+> +
+> +badprop:
+> +       return dev_err_probe(sio->dev, err, "failed to read '%s'\n", propname);
+> +}
+> +
+> +static int sio_probe(struct platform_device *pdev)
+> +{
+> +       struct device_node *np = pdev->dev.of_node;
+> +       struct sio_data *sio;
+> +       struct dma_device *dma;
+> +       int nchannels;
+> +       int err, i;
+> +
+> +       err = of_property_read_u32(np, "dma-channels", &nchannels);
+> +       if (err || nchannels > NCHANNELS_MAX)
+> +               return dev_err_probe(&pdev->dev, -EINVAL,
+> +                                    "missing or invalid dma-channels property\n");
+> +
+> +       sio = devm_kzalloc(&pdev->dev, struct_size(sio, channels, nchannels), GFP_KERNEL);
+> +       if (!sio)
+> +               return -ENOMEM;
+> +
+> +       platform_set_drvdata(pdev, sio);
+> +       sio->dev = &pdev->dev;
+> +       sio->nchannels = nchannels;
+> +
+> +       sio->base = devm_platform_ioremap_resource(pdev, 0);
+> +       if (IS_ERR(sio->base))
+> +               return PTR_ERR(sio->base);
+> +
+> +       sio->rtk = devm_apple_rtkit_init(&pdev->dev, sio, NULL, 0, &sio_rtkit_ops);
+> +       if (IS_ERR(sio->rtk))
+> +               return dev_err_probe(&pdev->dev, PTR_ERR(sio->rtk),
+> +                                    "couldn't initialize rtkit\n");
+> +       for (i = 1; i < SIO_NTAGS; i++)
+> +               init_completion(&sio->tags.completions[i]);
+> +
+> +       dma = &sio->dma;
+> +       dma_cap_set(DMA_PRIVATE, dma->cap_mask);
+> +       dma_cap_set(DMA_CYCLIC, dma->cap_mask);
+> +
+> +       dma->dev = &pdev->dev;
+> +       dma->device_free_chan_resources = sio_free_chan_resources;
+> +       dma->device_tx_status = sio_tx_status;
+> +       dma->device_issue_pending = sio_issue_pending;
+> +       dma->device_terminate_all = sio_terminate_all;
+> +       dma->device_synchronize = sio_synchronize;
+> +       dma->device_prep_dma_cyclic = sio_prep_dma_cyclic;
+> +       dma->device_config = sio_device_config;
+> +
+> +       dma->directions = BIT(DMA_MEM_TO_DEV);
+> +       dma->residue_granularity = DMA_RESIDUE_GRANULARITY_SEGMENT;
+> +       dma->dst_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
+> +                              BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
+> +                              BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
+> +
+> +       INIT_LIST_HEAD(&dma->channels);
+> +       for (i = 0; i < nchannels; i++) {
+> +               struct sio_chan *siochan = &sio->channels[i];
+> +
+> +               siochan->host = sio;
+> +               siochan->no = i;
+> +               siochan->vc.desc_free = sio_tx_free;
+> +               INIT_WORK(&siochan->terminate_wq, sio_terminate_work);
+> +               vchan_init(&siochan->vc, dma);
+> +       }
+> +
+> +       writel(CPU_CONTROL_RUN, sio->base + REG_CPU_CONTROL);
+> +
+> +       err = apple_rtkit_boot(sio->rtk);
+> +       if (err)
+> +               return dev_err_probe(&pdev->dev, err, "SIO did not boot\n");
+> +
+> +       err = apple_rtkit_start_ep(sio->rtk, EP_SIO);
+> +       if (err)
+> +               return dev_err_probe(&pdev->dev, err, "starting SIO endpoint\n");
+> +
+> +       err = sio_call(sio, FIELD_PREP(SIOMSG_TYPE, MSG_START));
+> +       if (err < 1) {
+> +               if (err == 0)
+> +                       err = -ENXIO;
+> +               return dev_err_probe(&pdev->dev, err, "starting SIO service\n");
+> +       }
+> +
+> +       err = sio_send_dt_params(sio);
+> +       if (err < 0)
+> +               return dev_err_probe(&pdev->dev, err, "failed to send boot-up parameters\n");
+> +
+> +       err = sio_alloc_shmem(sio);
+> +       if (err < 0)
+> +               return err;
+> +
+> +       err = dma_async_device_register(&sio->dma);
+> +       if (err)
+> +               return dev_err_probe(&pdev->dev, err, "failed to register DMA device\n");
+> +
+> +       err = of_dma_controller_register(pdev->dev.of_node, sio_dma_of_xlate, sio);
+> +       if (err) {
+> +               dma_async_device_unregister(&sio->dma);
+> +               return dev_err_probe(&pdev->dev, err, "failed to register with OF\n");
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int sio_remove(struct platform_device *pdev)
+> +{
+> +       struct sio_data *sio = platform_get_drvdata(pdev);
+> +
+> +       of_dma_controller_free(pdev->dev.of_node);
+> +       dma_async_device_unregister(&sio->dma);
+> +       return 0;
+> +}
+> +
+> +static const struct of_device_id sio_of_match[] = {
+> +       { .compatible = "apple,sio", },
+> +       { }
+> +};
+> +MODULE_DEVICE_TABLE(of, sio_of_match);
+> +
+> +static struct platform_driver apple_sio_driver = {
+> +       .driver = {
+> +               .name = "apple-sio",
+> +               .of_match_table = sio_of_match,
+> +       },
+> +       .probe = sio_probe,
+> +       .remove = sio_remove,
+> +};
+> +module_platform_driver(apple_sio_driver);
+> +
+> +MODULE_AUTHOR("Martin Povišer <povik+lin@cutebit.org>");
+> +MODULE_DESCRIPTION("Driver for SIO coprocessor on Apple SoCs");
+> +MODULE_LICENSE("Dual MIT/GPL");
+> --
+> 2.38.3
+>
+>
 
-That is a lot of quirks I missed :D.
+The code looks reasonably okay to me, so...
 
-Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
+Acked-by: Neal Gompa <neal@gompa.dev>
 
->  arch/arm64/boot/dts/qcom/sm8550.dtsi | 14 +++++++++++---
->  1 file changed, 11 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sm8550.dtsi b/arch/arm64/boot/dts/qcom/sm8550.dtsi
-> index 944b4b8c95f5..8ee61c9383ec 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8550.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sm8550.dtsi
-> @@ -2930,12 +2930,20 @@ usb_1_dwc3: usb@a600000 {
->  				reg = <0x0 0x0a600000 0x0 0xcd00>;
->  				interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
->  				iommus = <&apps_smmu 0x40 0x0>;
-> -				snps,dis_u2_susphy_quirk;
-> -				snps,dis_enblslpm_quirk;
-> -				snps,usb3_lpm_capable;
->  				phys = <&usb_1_hsphy>,
->  				       <&usb_dp_qmpphy QMP_USB43DP_USB3_PHY>;
->  				phy-names = "usb2-phy", "usb3-phy";
-> +				snps,hird-threshold = /bits/ 8 <0x0>;
-> +				snps,usb2-gadget-lpm-disable;
-> +				snps,dis_u2_susphy_quirk;
-> +				snps,dis_enblslpm_quirk;
-> +				snps,dis-u1-entry-quirk;
-> +				snps,dis-u2-entry-quirk;
-> +				snps,is-utmi-l1-suspend;
-> +				snps,usb3_lpm_capable;
-> +				snps,usb2-lpm-disable;
-> +				snps,has-lpm-erratum;
-> +				tx-fifo-resize;
->  
->  				ports {
->  					#address-cells = <1>;
-> 
-> -- 
-> 2.42.0
-> 
+
+-- 
+真実はいつも一つ！/ Always, there's only one truth!

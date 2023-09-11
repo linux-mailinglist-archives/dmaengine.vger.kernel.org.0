@@ -2,259 +2,110 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D2BD07990DB
-	for <lists+dmaengine@lfdr.de>; Fri,  8 Sep 2023 22:10:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 047CA79AFAD
+	for <lists+dmaengine@lfdr.de>; Tue, 12 Sep 2023 01:47:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236446AbjIHUKx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 8 Sep 2023 16:10:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43246 "EHLO
+        id S238686AbjIKWmq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 11 Sep 2023 18:42:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232528AbjIHUKu (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 8 Sep 2023 16:10:50 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AE978E;
-        Fri,  8 Sep 2023 13:10:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694203844; x=1725739844;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=cyNIqzHzFbt3kTtjv0BnfNWVtOBRC0rRScqzT/ho4ig=;
-  b=aqbbxHZpvZ71vrU2ZB9BE+NS5mfxUQqpTo4arsMbZ07YXO45bWvotxqA
-   FItUZakz0YunwknsolsH0G4+mafvbh8j4EYh/gBKC/McaHqJe9Be4yRj/
-   Ny/sezSB8igsdO656wkrguZgnMPChD6dtiB3KovkygjoI4J88aZ8LG4PW
-   u4/b16iwE2WUvbHsw6vsPIOgg00yy3N/06dTSNRHMWy+g3cSeSBdPBBU/
-   TWLahQtkH/Spr9tI2K1DrV+tmk4Om0FXa1yBDMnahv4hr2YqmfiwIWLUI
-   LDX+TjI/4NeNS9sNlcAnIu+zHsh97T5WW6g/Mqzi1yj7Xkn1mdlQWUyWA
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10827"; a="408716854"
-X-IronPort-AV: E=Sophos;i="6.02,237,1688454000"; 
-   d="scan'208";a="408716854"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2023 13:10:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10827"; a="812678393"
-X-IronPort-AV: E=Sophos;i="6.02,237,1688454000"; 
-   d="scan'208";a="812678393"
-Received: from fyu1.sc.intel.com ([172.25.103.126])
-  by fmsmga004.fm.intel.com with ESMTP; 08 Sep 2023 13:10:44 -0700
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     "Vinod Koul" <vkoul@kernel.org>,
-        "Dave Jiang" <dave.jiang@intel.com>
-Cc:     dmaengine@vger.kernel.org,
-        "linux-kernel" <linux-kernel@vger.kernel.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH] dmaengine: idxd: add wq driver name support for accel-config user tool
-Date:   Fri,  8 Sep 2023 13:10:45 -0700
-Message-Id: <20230908201045.4115614-1-fenghua.yu@intel.com>
-X-Mailer: git-send-email 2.37.1
+        with ESMTP id S239808AbjIKO3S (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 11 Sep 2023 10:29:18 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FA6FCF0;
+        Mon, 11 Sep 2023 07:29:14 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAFACC433C8;
+        Mon, 11 Sep 2023 14:29:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1694442554;
+        bh=NG2OMJlLIEzuif2bXihYX6XXVjHUq6yXGHPm68ta060=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=wJFYyI2b+8/157iL1i7xq4AXBNpYk5riqqQPxEKojs5uYl4FyJM1v/2NcL0z3RSV1
+         q0v/8rjz+SGChcDiowsjqR60qXOEDoQPLCv2M1NN6VJce+FIqL+pnXtVrBcosMqelu
+         1LpEbJEMtLMqSaIlDr5VEE5m7xD5jWtXUN6q4Isg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     stable@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        patches@lists.linux.dev, kernel test robot <lkp@intel.com>,
+        Baoquan He <bhe@redhat.com>, Vinod Koul <vkoul@kernel.org>,
+        dmaengine@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.4 058/737] idmaengine: make FSL_EDMA and INTEL_IDMA64 depends on HAS_IOMEM
+Date:   Mon, 11 Sep 2023 15:38:37 +0200
+Message-ID: <20230911134652.114314083@linuxfoundation.org>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20230911134650.286315610@linuxfoundation.org>
+References: <20230911134650.286315610@linuxfoundation.org>
+User-Agent: quilt/0.67
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Dave Jiang <dave.jiang@intel.com>
+6.4-stable review patch.  If anyone has any objections, please let me know.
 
-With the possibility of multiple wq drivers that can be bound to the wq,
-the user config tool accel-config needs a way to know which wq driver to
-bind to the wq. Introduce per wq driver_name sysfs attribute where the user
-can indicate the driver to be bound to the wq. This allows accel-config to
-just bind to the driver using wq->driver_name.
+------------------
 
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
-Reviewed-by: Fenghua Yu <fenghua.yu@intel.com>
-Acked-by: Vinod Koul <vkoul@kernel.org>
+From: Baoquan He <bhe@redhat.com>
+
+[ Upstream commit b1e213a9e31c20206f111ec664afcf31cbfe0dbb ]
+
+On s390 systems (aka mainframes), it has classic channel devices for
+networking and permanent storage that are currently even more common
+than PCI devices. Hence it could have a fully functional s390 kernel
+with CONFIG_PCI=n, then the relevant iomem mapping functions
+[including ioremap(), devm_ioremap(), etc.] are not available.
+
+Here let FSL_EDMA and INTEL_IDMA64 depend on HAS_IOMEM so that it
+won't be built to cause below compiling error if PCI is unset.
+
+--------
+ERROR: modpost: "devm_platform_ioremap_resource" [drivers/dma/fsl-edma.ko] undefined!
+ERROR: modpost: "devm_platform_ioremap_resource" [drivers/dma/idma64.ko] undefined!
+--------
+
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202306211329.ticOJCSv-lkp@intel.com/
+Signed-off-by: Baoquan He <bhe@redhat.com>
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: dmaengine@vger.kernel.org
+Link: https://lore.kernel.org/r/20230707135852.24292-2-bhe@redhat.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
+ drivers/dma/Kconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Hi, Vinod,
-
-This patch is part of IAA crypto patch series:
-https://lore.kernel.org/all/20230731212939.1391453-2-tom.zanussi@linux.intel.com/
-I'm sending this patch indepentantly here because:
-1. the IAA crypto patch series is unlikely to be merged into 6.7
-2. this patch is useful by itself in a few other places
-3. this patch doesn't depend on the IAA crypto patch set and can
-   be used and applied cleanly by itself
-4. this patch has only dmaengine code
-
-So it would be good to merge this patch into 6.7 first. An updated
-IAA crypto patch set will be submitted later after 6.7 time frame
-and merged in a later kernel version.
-
- .../ABI/stable/sysfs-driver-dma-idxd          |  6 ++++
- drivers/dma/idxd/cdev.c                       |  7 ++++
- drivers/dma/idxd/dma.c                        |  6 ++++
- drivers/dma/idxd/idxd.h                       |  9 +++++
- drivers/dma/idxd/sysfs.c                      | 34 +++++++++++++++++++
- include/uapi/linux/idxd.h                     |  1 +
- 6 files changed, 63 insertions(+)
-
-diff --git a/Documentation/ABI/stable/sysfs-driver-dma-idxd b/Documentation/ABI/stable/sysfs-driver-dma-idxd
-index 825e619250bf..982e9f3b80e2 100644
---- a/Documentation/ABI/stable/sysfs-driver-dma-idxd
-+++ b/Documentation/ABI/stable/sysfs-driver-dma-idxd
-@@ -270,6 +270,12 @@ Description:	Shows the operation capability bits displayed in bitmap format
- 		correlates to the operations allowed. It's visible only
- 		on platforms that support the capability.
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index f5f422f9b8507..b6221b4432fd3 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -211,6 +211,7 @@ config FSL_DMA
+ config FSL_EDMA
+ 	tristate "Freescale eDMA engine support"
+ 	depends on OF
++	depends on HAS_IOMEM
+ 	select DMA_ENGINE
+ 	select DMA_VIRTUAL_CHANNELS
+ 	help
+@@ -280,6 +281,7 @@ config IMX_SDMA
  
-+What:		/sys/bus/dsa/devices/wq<m>.<n>/driver_name
-+Date:		Sept 8, 2023
-+KernelVersion:	6.7.0
-+Contact:	dmaengine@vger.kernel.org
-+Description:	Name of driver to be bounded to the wq.
-+
- What:           /sys/bus/dsa/devices/engine<m>.<n>/group_id
- Date:           Oct 25, 2019
- KernelVersion:  5.6.0
-diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
-index d32deb9b4e3d..0423655f5a88 100644
---- a/drivers/dma/idxd/cdev.c
-+++ b/drivers/dma/idxd/cdev.c
-@@ -509,6 +509,7 @@ void idxd_wq_del_cdev(struct idxd_wq *wq)
- 
- static int idxd_user_drv_probe(struct idxd_dev *idxd_dev)
- {
-+	struct device *dev = &idxd_dev->conf_dev;
- 	struct idxd_wq *wq = idxd_dev_to_wq(idxd_dev);
- 	struct idxd_device *idxd = wq->idxd;
- 	int rc;
-@@ -536,6 +537,12 @@ static int idxd_user_drv_probe(struct idxd_dev *idxd_dev)
- 
- 	mutex_lock(&wq->wq_lock);
- 
-+	if (!idxd_wq_driver_name_match(wq, dev)) {
-+		idxd->cmd_status = IDXD_SCMD_WQ_NO_DRV_NAME;
-+		rc = -ENODEV;
-+		goto wq_err;
-+	}
-+
- 	wq->wq = create_workqueue(dev_name(wq_confdev(wq)));
- 	if (!wq->wq) {
- 		rc = -ENOMEM;
-diff --git a/drivers/dma/idxd/dma.c b/drivers/dma/idxd/dma.c
-index 07623fb0f52f..47a01893cfdb 100644
---- a/drivers/dma/idxd/dma.c
-+++ b/drivers/dma/idxd/dma.c
-@@ -306,6 +306,12 @@ static int idxd_dmaengine_drv_probe(struct idxd_dev *idxd_dev)
- 		return -ENXIO;
- 
- 	mutex_lock(&wq->wq_lock);
-+	if (!idxd_wq_driver_name_match(wq, dev)) {
-+		idxd->cmd_status = IDXD_SCMD_WQ_NO_DRV_NAME;
-+		rc = -ENODEV;
-+		goto err;
-+	}
-+
- 	wq->type = IDXD_WQT_KERNEL;
- 
- 	rc = drv_enable_wq(wq);
-diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index e269ca1f4862..1e89c80a07fc 100644
---- a/drivers/dma/idxd/idxd.h
-+++ b/drivers/dma/idxd/idxd.h
-@@ -159,6 +159,8 @@ struct idxd_cdev {
- 	int minor;
- };
- 
-+#define DRIVER_NAME_SIZE		128
-+
- #define IDXD_ALLOCATED_BATCH_SIZE	128U
- #define WQ_NAME_SIZE   1024
- #define WQ_TYPE_SIZE   10
-@@ -227,6 +229,8 @@ struct idxd_wq {
- 	/* Lock to protect upasid_xa access. */
- 	struct mutex uc_lock;
- 	struct xarray upasid_xa;
-+
-+	char driver_name[DRIVER_NAME_SIZE + 1];
- };
- 
- struct idxd_engine {
-@@ -646,6 +650,11 @@ static inline void idxd_wqcfg_set_max_batch_shift(int idxd_type, union wqcfg *wq
- 		wqcfg->max_batch_shift = max_batch_shift;
- }
- 
-+static inline int idxd_wq_driver_name_match(struct idxd_wq *wq, struct device *dev)
-+{
-+	return (strncmp(wq->driver_name, dev->driver->name, strlen(dev->driver->name)) == 0);
-+}
-+
- int __must_check __idxd_driver_register(struct idxd_device_driver *idxd_drv,
- 					struct module *module, const char *mod_name);
- #define idxd_driver_register(driver) \
-diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
-index 7caba90d85b3..523ae0dff7d4 100644
---- a/drivers/dma/idxd/sysfs.c
-+++ b/drivers/dma/idxd/sysfs.c
-@@ -1259,6 +1259,39 @@ static ssize_t wq_op_config_store(struct device *dev, struct device_attribute *a
- static struct device_attribute dev_attr_wq_op_config =
- 		__ATTR(op_config, 0644, wq_op_config_show, wq_op_config_store);
- 
-+static ssize_t wq_driver_name_show(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	struct idxd_wq *wq = confdev_to_wq(dev);
-+
-+	return sysfs_emit(buf, "%s\n", wq->driver_name);
-+}
-+
-+static ssize_t wq_driver_name_store(struct device *dev, struct device_attribute *attr,
-+				    const char *buf, size_t count)
-+{
-+	struct idxd_wq *wq = confdev_to_wq(dev);
-+	char *input, *pos;
-+
-+	if (wq->state != IDXD_WQ_DISABLED)
-+		return -EPERM;
-+
-+	if (strlen(buf) > DRIVER_NAME_SIZE || strlen(buf) == 0)
-+		return -EINVAL;
-+
-+	input = kstrndup(buf, count, GFP_KERNEL);
-+	if (!input)
-+		return -ENOMEM;
-+
-+	pos = strim(input);
-+	memset(wq->driver_name, 0, DRIVER_NAME_SIZE + 1);
-+	sprintf(wq->driver_name, "%s", pos);
-+	kfree(input);
-+	return count;
-+}
-+
-+static struct device_attribute dev_attr_wq_driver_name =
-+		__ATTR(driver_name, 0644, wq_driver_name_show, wq_driver_name_store);
-+
- static struct attribute *idxd_wq_attributes[] = {
- 	&dev_attr_wq_clients.attr,
- 	&dev_attr_wq_state.attr,
-@@ -1278,6 +1311,7 @@ static struct attribute *idxd_wq_attributes[] = {
- 	&dev_attr_wq_occupancy.attr,
- 	&dev_attr_wq_enqcmds_retries.attr,
- 	&dev_attr_wq_op_config.attr,
-+	&dev_attr_wq_driver_name.attr,
- 	NULL,
- };
- 
-diff --git a/include/uapi/linux/idxd.h b/include/uapi/linux/idxd.h
-index 606b52e88ce3..3d1987e1bb2d 100644
---- a/include/uapi/linux/idxd.h
-+++ b/include/uapi/linux/idxd.h
-@@ -31,6 +31,7 @@ enum idxd_scmd_stat {
- 	IDXD_SCMD_WQ_IRQ_ERR = 0x80100000,
- 	IDXD_SCMD_WQ_USER_NO_IOMMU = 0x80110000,
- 	IDXD_SCMD_DEV_EVL_ERR = 0x80120000,
-+	IDXD_SCMD_WQ_NO_DRV_NAME = 0x80200000,
- };
- 
- #define IDXD_SCMD_SOFTERR_MASK	0x80000000
+ config INTEL_IDMA64
+ 	tristate "Intel integrated DMA 64-bit support"
++	depends on HAS_IOMEM
+ 	select DMA_ENGINE
+ 	select DMA_VIRTUAL_CHANNELS
+ 	help
 -- 
-2.37.1
+2.40.1
+
+
 

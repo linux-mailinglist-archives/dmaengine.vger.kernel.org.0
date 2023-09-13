@@ -2,353 +2,216 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BD5C779E478
-	for <lists+dmaengine@lfdr.de>; Wed, 13 Sep 2023 12:02:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9A3F79E493
+	for <lists+dmaengine@lfdr.de>; Wed, 13 Sep 2023 12:08:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235188AbjIMKCq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 13 Sep 2023 06:02:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59858 "EHLO
+        id S239570AbjIMKIa (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 13 Sep 2023 06:08:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231757AbjIMKCp (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 13 Sep 2023 06:02:45 -0400
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7508119A9
-        for <dmaengine@vger.kernel.org>; Wed, 13 Sep 2023 03:02:41 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id a640c23a62f3a-9aa0495f9cfso165401166b.1
-        for <dmaengine@vger.kernel.org>; Wed, 13 Sep 2023 03:02:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1694599360; x=1695204160; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=k7fgvd0GgWLe3rd9ZnbjAr4k2YHcBis4i4DpoXfLvsU=;
-        b=bLHCzzY627IM2105BCP1MJmXViDo+oSMasPGU0Zd4WmhAG7eSV3r09tIq1xl3KIvsk
-         Oho95xvxHzhlpCpHUfbgVQctbewu24WF8APxfJH1fCwgt0ThATau9ALQRpznzDtqcT8j
-         ZtFq+mQ378hCa0tCUTeDOVFPWtjPFZtK9JTajF+ZunXcRjP5voaLggols7rCR7RZyx/w
-         j2ogAu7BgvonVNe/ZBfleD/DMfg/7NAhtJzDDpuSCwASQgRrYi943P/4h+xKhmpX4fxJ
-         maZxEjxj4by9C4gScgN2PIbK2PXYPYnk6T3Et2huNfVS2+40BZoyBu4zuwcxac/hTrdV
-         P1mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694599360; x=1695204160;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=k7fgvd0GgWLe3rd9ZnbjAr4k2YHcBis4i4DpoXfLvsU=;
-        b=XexWrUaKEHE+Tm64WtWABszlSMKnGw2fnJ8hRLgkzwu29CVrMv3cGNWrw0PS7lT+w4
-         Bz/8jgY599OeXHakM5Xr6R307lqMuvgP5frigP+QkAqZTaeT3mRZIoDJtpVJD+9WXt2d
-         14dvXw4U6x4OyO1RO33hg0IrA8mU1+oeVZ47EY654fFGNYKLNGUxcCBWTqt625ZP4UbP
-         PrU2GO7EkLpcxqr2mMNo8WaUiDosqEEA5mzZkMm366WlDCyEJU78GhIdhUVW2UZdHnof
-         IwRDLmOLZr3/Thx+6YIdkMH/3ebmQYpeMMUxk/lVWtdNia9A95dWcSSn4RulL2DQ2qj/
-         AquA==
-X-Gm-Message-State: AOJu0Yz7D373J4AJFtKZzuM/m4YvdaTp30faOme0x4KR9YbBJpw47d/P
-        H6PAbF+u99CQFjhePRw7A06tuZj2gi4UsHFeZZc=
-X-Google-Smtp-Source: AGHT+IGL5AGZjuJsWQnGYR+Uq1reOUXrWx2BXcplDJspWfko33+t7eicw9/39ECbx90mgMTquejV6A==
-X-Received: by 2002:a17:906:1d5:b0:9ad:8641:e91b with SMTP id 21-20020a17090601d500b009ad8641e91bmr5661812ejj.11.1694599359841;
-        Wed, 13 Sep 2023 03:02:39 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.214.188])
-        by smtp.gmail.com with ESMTPSA id ox3-20020a170907100300b0098dfec235ccsm8144684ejb.47.2023.09.13.03.02.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Sep 2023 03:02:39 -0700 (PDT)
-Message-ID: <60f566f3-7d4a-f074-8f80-e97a19a76d75@linaro.org>
-Date:   Wed, 13 Sep 2023 12:02:37 +0200
+        with ESMTP id S239565AbjIMKI0 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 13 Sep 2023 06:08:26 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9336619B4
+        for <dmaengine@vger.kernel.org>; Wed, 13 Sep 2023 03:08:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694599702; x=1726135702;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=uwDr3IKLlAqEBaHrnAQsnwV8YabWsCAnONEq1+Cb1Bc=;
+  b=M2XOlnh81lekHwAGYx/bsP+li72MdOmcOZFlJbsa0/jP6/efxYRM5g9K
+   Ed8aLWfyyWMcn6tuMXDMg3KmE//iZZUdAaFkmbDmjuPSp94gm3udQxnP9
+   E/i0S4XqGHjFmxs+khVnXWn3Ez7hF0jwbIQRW+Vzu5WQDd7c55fgdEbaj
+   tQqaqgWrLqCfbmZEUxng+rLcOQrh0Q/ahiRmT6cgAepV78fS3TezhtgjX
+   L8YioN1MD47hEWz5YqTKo4QehiA717q0jsTl5Ji5wtQdmr1AV+c2QDAfY
+   U/DM+S0Jo7psI4yNx9oqezUz7lyHv05QvqriAKP6D3DRsdLCSoFEJy41s
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10831"; a="378530409"
+X-IronPort-AV: E=Sophos;i="6.02,142,1688454000"; 
+   d="scan'208";a="378530409"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 03:08:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10831"; a="834253253"
+X-IronPort-AV: E=Sophos;i="6.02,142,1688454000"; 
+   d="scan'208";a="834253253"
+Received: from lkp-server02.sh.intel.com (HELO cf13c67269a2) ([10.239.97.151])
+  by FMSMGA003.fm.intel.com with ESMTP; 13 Sep 2023 03:08:20 -0700
+Received: from kbuild by cf13c67269a2 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qgMnC-0000N9-1p;
+        Wed, 13 Sep 2023 10:08:18 +0000
+Date:   Wed, 13 Sep 2023 18:07:37 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Tan En De <ende.tan@starfivetech.com>, dmaengine@vger.kernel.org
+Cc:     oe-kbuild-all@lists.linux.dev, Eugeniy.Paltsev@synopsys.com,
+        vkoul@kernel.org, Tan En De <ende.tan@starfivetech.com>
+Subject: Re: [1/1] dmaengine: dw-axi-dmac: Support src_maxburst and
+ dst_maxburst
+Message-ID: <202309131749.P3k6i6Fz-lkp@intel.com>
+References: <20230913083249.1244-1-ende.tan@starfivetech.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.0
-Subject: Re: [PATCH v4 1/2] dmaengine: Add HiSilicon Ascend SDMA engine
- support
-To:     Guo Mengqi <guomengqi3@huawei.com>, vkoul@kernel.org,
-        dmaengine@vger.kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        devicetree@vger.kernel.org
-Cc:     xuqiang36@huawei.com, chenweilong@huawei.com
-References: <20230913082825.3180-1-guomengqi3@huawei.com>
- <20230913082825.3180-2-guomengqi3@huawei.com>
-Content-Language: en-US
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230913082825.3180-2-guomengqi3@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230913083249.1244-1-ende.tan@starfivetech.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 13/09/2023 10:28, Guo Mengqi wrote:
-> This patch adds a driver for HiSilicon Ascend SDMA engine.
-> 
-> The DMA controller can do transfers between device and memory
-> or memory to memory. Currently, the controller only support
-> single copy. Drives can pass a substreamid to the DMA engine,
-> which will enable transfers in user-space addresses.
-> 
-> Signed-off-by: Guo Mengqi <guomengqi3@huawei.com>
-> ---
->  drivers/dma/Kconfig            |   9 +
->  drivers/dma/Makefile           |   1 +
->  drivers/dma/hisi-ascend-sdma.c | 810 +++++++++++++++++++++++++++++++++
->  3 files changed, 820 insertions(+)
->  create mode 100644 drivers/dma/hisi-ascend-sdma.c
-> 
-> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-> index 4ccae1a3b884..afc2b648dcd2 100644
-> --- a/drivers/dma/Kconfig
-> +++ b/drivers/dma/Kconfig
-> @@ -244,6 +244,15 @@ config FSL_RAID
->  	  the capability to offload memcpy, xor and pq computation
->  	  for raid5/6.
->  
-> +config HISI_ASCEND_SDMA
-> +	tristate "HiSilicon Ascend SDMA Engine support"
-> +	depends on ARCH_HISI && ARM64
+Hi Tan,
 
-Missing compile testing.
+kernel test robot noticed the following build warnings:
 
-> +/*
-> + * struct ascend_sdma_chip_data - Ascend chip specific data
-> + * @channel_iomem_size: Size of channel register space
-> + */
-> +struct ascend_sdma_chip_data {
-> +	unsigned int channel_iomem_size;
-> +};
-> +
-> +void set_sdma_channel_info(struct dma_chan *c, int pasid);
+[auto build test WARNING on vkoul-dmaengine/next]
+[also build test WARNING on linus/master v6.6-rc1 next-20230913]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Why is this needed? There is no usage before definition.
+url:    https://github.com/intel-lab-lkp/linux/commits/Tan-En-De/dmaengine-dw-axi-dmac-Support-src_maxburst-and-dst_maxburst/20230913-163406
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git next
+patch link:    https://lore.kernel.org/r/20230913083249.1244-1-ende.tan%40starfivetech.com
+patch subject: [1/1] dmaengine: dw-axi-dmac: Support src_maxburst and dst_maxburst
+config: m68k-allyesconfig (https://download.01.org/0day-ci/archive/20230913/202309131749.P3k6i6Fz-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230913/202309131749.P3k6i6Fz-lkp@intel.com/reproduce)
 
-> +
-> +static u32 sdma_queue_count(u32 head, u32 tail, u32 len)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202309131749.P3k6i6Fz-lkp@intel.com/
 
-Do not declare functions before data structures. You need to properly
-organize this code.
+All warnings (new ones prefixed by >>):
 
-> +{
-> +	return (tail - head) & (len - 1);
-> +}
-> +
-> +static int iommu_enabled;
-
-No static (file-scope) variables. Drop.
-
-> +
-> +struct sdma_sq_entry {
-> +	u32 opcode          : 8;
-> +	u32 ie              : 1;
-> +	u32 sssv            : 1;
-> +	u32 dssv            : 1;
-> +	u32 sns             : 1;
-> +	u32 dns             : 1;
-> +	u32 qos             : 4;
-> +	u32 sro             : 1;
-> +	u32 dro             : 1;
-> +	u32 partid          : 4;
-> +	u32 mpamns          : 1;
-> +	u32 reserved0       : 8;
-> +	u32 src_streamid    : 16;
-> +	u32 src_substreamid : 16;
-> +	u32 dst_streamid    : 16;
-> +	u32 dst_substreamid : 16;
-> +	u32 length;
-> +	union {
-> +		u64 src_addr;
-> +		struct {
-> +			u32 src_addr_l;
-> +			u32 src_addr_h;
-> +		};
-> +	};
-> +	union {
-> +		u64 dst_addr;
-> +		struct {
-> +			u32 dst_addr_l;
-> +			u32 dst_addr_h;
-> +		};
-> +	};
-> +};
-> +
-> +struct sdma_cq_entry {
-> +	u32 reserved1;
-> +	u32 reserved2;
-> +	u32 sqhd      : 16;
-> +	u32 reserved3 : 16;
-> +	u32 reserved4 : 16;
-> +	u32 vld       : 1;
-> +	u32 status    : 15;
-> +};
-> +
-> +/*
-> + * struct sdma_desc - sdma descriptor to manage transfer requests.
-> + */
-> +struct sdma_desc {
-> +	int pasid;
-> +	struct virt_dma_desc vd;
-> +	struct sdma_sq_entry entry;
-> +};
-> +
-> +/*
-> + * struct sdma_chan - sdma channel information
-> + */
-> +struct sdma_chan {
-> +	u16			idx;
-> +	u16			cq_vld;
-> +
-> +	u16			sq_head;
-> +	u16			sq_tail;
-> +	u16			cq_head;
-> +	u16			cq_tail;
-> +
-> +	/* must be page-aligned and continuous physical memory */
-> +	struct sdma_sq_entry	*sq_base;
-> +	struct sdma_cq_entry	*cq_base;
-> +
-> +	/* used for discrete copy, pre-alloc the buffer, reserved for now */
-> +	unsigned long		*src_addr;
-> +	unsigned long		*dst_addr;
-> +	unsigned long		*len;
-> +
-> +	void __iomem *io_base;
-> +
-> +	int id;
-> +	struct virt_dma_chan vc;
-> +	struct sdma_dev *sdev;
-> +
-> +	struct sdma_desc *desc;
-> +	char *name;
-> +	int pasid;
-> +};
-> +
-> +#define SDMA_DEVICE_NAME_LENGTH_MAX 20
-> +/*
-> + * struct sdma_dev - sdma controller information
-> + */
-> +struct sdma_dev {
-> +	struct	dma_device dma_dev;
-> +	struct	device	*dev;
-> +	void __iomem *io_base;
-> +
-> +	u16		idx;
-> +	u16		nr_channel;
-
-Indentation is a mess.
-
-> +	DECLARE_BITMAP(channel_map, SDMA_MAX_CHANNEL_NUM);
-> +	u32		streamid;
-> +
-> +	const struct ascend_sdma_chip_data *cdata;
-> +
-> +	char	name[SDMA_DEVICE_NAME_LENGTH_MAX];
-> +	struct	sdma_chan *channels;
-> +};
-> +
-> +static inline struct sdma_chan *to_sdma_chan(struct dma_chan *c)
-> +{
-> +	return container_of(c, struct sdma_chan, vc.chan);
-> +}
-> +
-> +static inline struct sdma_desc *to_sdma_desc(struct virt_dma_desc *vd)
-> +{
-> +	return container_of(vd, struct sdma_desc, vd);
-> +}
-> +
-> +/* sdma supports sva transfer via iommu.
-> + * client must first set the pasid.
-> + */
-> +void set_sdma_channel_info(struct dma_chan *c, int pasid)
-
-This is not used.
-
-> +{
-> +	struct sdma_chan *sc = to_sdma_chan(c);
-> +
-> +	sc->pasid = pasid;
-> +}
-> +EXPORT_SYMBOL_GPL(set_sdma_channel_info);
-
-No, you cannot export unused stuff. Drop entire function.
-
-> +
-> +struct sdma_hardware_info {
-> +	unsigned long	channel_map;
-> +	u64		base_addr; /* physical address */
-> +};
-> +
-> +static int of_sdma_collect_info(struct platform_device *pdev, struct sdma_hardware_info *info)
-
-This should be next to probe, not in totally different place.
-
-> +{
-> +	int ret;
-> +	u32 chan_mask[2] = {0};
-> +	struct resource res;
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *np = pdev->dev.of_node;
-> +
-> +	ret = of_property_read_variable_u32_array(np, "dma-channel-mask",
-> +			chan_mask, 1, 2);
-> +	if (ret < 0) {
-> +		dev_err(dev, "get dma channel mask from dtb failed, %d\n", ret);
-> +		return ret;
-> +	}
-> +	bitmap_from_arr32(&info->channel_map, chan_mask, SDMA_MAX_CHANNEL_NUM);
-> +
-> +	ret = of_address_to_resource(np, 0, &res);
-> +	if (ret < 0) {
-> +		dev_err(dev, "get io_base info from dtb failed, %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	info->base_addr = res.start;
-> +	if (resource_size(&res) != SDMA_IOMEM_SIZE)
-> +		dev_warn(dev, "reg size %#llx check failed, use %#x\n",
-> +				resource_size(&res), SDMA_IOMEM_SIZE);
-> +
-> +	return 0;
-> +}
-> +
-> +static int sdma_channel_alloc_sq_cq(struct sdma_chan *sc)
-> +{
-> +	unsigned long *buf;
-> +	struct device *dev = sc->sdev->dev;
-> +
-> +	sc->sq_base = (struct sdma_sq_entry *)__get_free_pages(GFP_KERNEL | __GFP_ZERO,
-> +			get_order(SDMA_SQ_SIZE));
-> +	if (!sc->sq_base) {
-> +		dev_err(dev, "channel%d: alloc sq_memory failed\n", sc->idx);
-
-Why do you print errors on memory allocation failures?
-
-> +		return -ENOMEM;
-> +	}
-> +
-> +	sc->cq_base = (struct sdma_cq_entry *)__get_free_pages(GFP_KERNEL | __GFP_ZERO,
-> +			get_order(SDMA_CQ_SIZE));
-> +	if (!sc->cq_base) {
-> +		dev_err(dev, "channel%d: alloc cq_memory failed\n", sc->idx);
+   drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c: In function 'dma_chan_prep_dma_memcpy':
+>> drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c:955:32: warning: returning 'int' from a function with return type 'struct dma_async_tx_descriptor *' makes pointer from integer without a cast [-Wint-conversion]
+     955 |                         return -EINVAL;
+         |                                ^
+   drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c:962:32: warning: returning 'int' from a function with return type 'struct dma_async_tx_descriptor *' makes pointer from integer without a cast [-Wint-conversion]
+     962 |                         return -EINVAL;
+         |                                ^
 
 
-Same question.
+vim +955 drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
 
-> +		free_pages((unsigned long)sc->sq_base, get_order(SDMA_SQ_SIZE));
-> +		return -ENOMEM;
-> +	}
-> +
-> +	buf = vmalloc(sizeof(unsigned long) * SDMA_SQ_LENGTH * 3);
-> +	if (!buf) {
-> +		dev_err(dev, "channel%d: alloc user_buf failed\n", sc->idx);
+   884	
+   885	static struct dma_async_tx_descriptor *
+   886	dma_chan_prep_dma_memcpy(struct dma_chan *dchan, dma_addr_t dst_adr,
+   887				 dma_addr_t src_adr, size_t len, unsigned long flags)
+   888	{
+   889		struct axi_dma_chan *chan = dchan_to_axi_dma_chan(dchan);
+   890		size_t block_ts, max_block_ts, xfer_len;
+   891		struct axi_dma_hw_desc *hw_desc = NULL;
+   892		struct axi_dma_desc *desc = NULL;
+   893		u32 xfer_width, reg, num, src_burst_trans_len, dst_burst_trans_len;
+   894		u64 llp = 0;
+   895		u8 lms = 0; /* Select AXI0 master for LLI fetching */
+   896	
+   897		dev_dbg(chan2dev(chan), "%s: memcpy: src: %pad dst: %pad length: %zd flags: %#lx",
+   898			axi_chan_name(chan), &src_adr, &dst_adr, len, flags);
+   899	
+   900		max_block_ts = chan->chip->dw->hdata->block_size[chan->id];
+   901		xfer_width = axi_chan_get_xfer_width(chan, src_adr, dst_adr, len);
+   902		num = DIV_ROUND_UP(len, max_block_ts << xfer_width);
+   903		desc = axi_desc_alloc(num);
+   904		if (unlikely(!desc))
+   905			goto err_desc_get;
+   906	
+   907		desc->chan = chan;
+   908		num = 0;
+   909		desc->length = 0;
+   910		while (len) {
+   911			xfer_len = len;
+   912	
+   913			hw_desc = &desc->hw_desc[num];
+   914			/*
+   915			 * Take care for the alignment.
+   916			 * Actually source and destination widths can be different, but
+   917			 * make them same to be simpler.
+   918			 */
+   919			xfer_width = axi_chan_get_xfer_width(chan, src_adr, dst_adr, xfer_len);
+   920	
+   921			/*
+   922			 * block_ts indicates the total number of data of width
+   923			 * to be transferred in a DMA block transfer.
+   924			 * BLOCK_TS register should be set to block_ts - 1
+   925			 */
+   926			block_ts = xfer_len >> xfer_width;
+   927			if (block_ts > max_block_ts) {
+   928				block_ts = max_block_ts;
+   929				xfer_len = max_block_ts << xfer_width;
+   930			}
+   931	
+   932			hw_desc->lli = axi_desc_get(chan, &hw_desc->llp);
+   933			if (unlikely(!hw_desc->lli))
+   934				goto err_desc_get;
+   935	
+   936			write_desc_sar(hw_desc, src_adr);
+   937			write_desc_dar(hw_desc, dst_adr);
+   938			hw_desc->lli->block_ts_lo = cpu_to_le32(block_ts - 1);
+   939	
+   940			reg = CH_CTL_H_LLI_VALID;
+   941			if (chan->chip->dw->hdata->restrict_axi_burst_len) {
+   942				u32 burst_len = chan->chip->dw->hdata->axi_rw_burst_len;
+   943	
+   944				reg |= (CH_CTL_H_ARLEN_EN |
+   945					burst_len << CH_CTL_H_ARLEN_POS |
+   946					CH_CTL_H_AWLEN_EN |
+   947					burst_len << CH_CTL_H_AWLEN_POS);
+   948			}
+   949			hw_desc->lli->ctl_hi = cpu_to_le32(reg);
+   950	
+   951			dst_burst_trans_len = chan->config.dst_maxburst ?
+   952						__ffs(chan->config.dst_maxburst) - 1 :
+   953						DWAXIDMAC_BURST_TRANS_LEN_4;
+   954			if (dst_burst_trans_len > DWAXIDMAC_BURST_TRANS_LEN_MAX)
+ > 955				return -EINVAL;
+   956			reg |= dst_burst_trans_len << CH_CTL_L_DST_MSIZE_POS;
+   957	
+   958			src_burst_trans_len = chan->config.src_maxburst ?
+   959						__ffs(chan->config.src_maxburst) - 1 :
+   960						DWAXIDMAC_BURST_TRANS_LEN_4;
+   961			if (src_burst_trans_len > DWAXIDMAC_BURST_TRANS_LEN_MAX)
+   962				return -EINVAL;
+   963			reg |= src_burst_trans_len << CH_CTL_L_SRC_MSIZE_POS;
+   964	
+   965			reg = (xfer_width << CH_CTL_L_DST_WIDTH_POS |
+   966			       xfer_width << CH_CTL_L_SRC_WIDTH_POS |
+   967			       DWAXIDMAC_CH_CTL_L_INC << CH_CTL_L_DST_INC_POS |
+   968			       DWAXIDMAC_CH_CTL_L_INC << CH_CTL_L_SRC_INC_POS);
+   969			hw_desc->lli->ctl_lo = cpu_to_le32(reg);
+   970	
+   971			set_desc_src_master(hw_desc);
+   972			set_desc_dest_master(hw_desc, desc);
+   973	
+   974			hw_desc->len = xfer_len;
+   975			desc->length += hw_desc->len;
+   976			/* update the length and addresses for the next loop cycle */
+   977			len -= xfer_len;
+   978			dst_adr += xfer_len;
+   979			src_adr += xfer_len;
+   980			num++;
+   981		}
+   982	
+   983		/* Set end-of-link to the last link descriptor of list */
+   984		set_desc_last(&desc->hw_desc[num - 1]);
+   985		/* Managed transfer list */
+   986		do {
+   987			hw_desc = &desc->hw_desc[--num];
+   988			write_desc_llp(hw_desc, llp | lms);
+   989			llp = hw_desc->llp;
+   990		} while (num);
+   991	
+   992		return vchan_tx_prep(&chan->vc, &desc->vd, flags);
+   993	
+   994	err_desc_get:
+   995		if (desc)
+   996			axi_desc_put(desc);
+   997		return NULL;
+   998	}
+   999	
 
-Same question.
-
-
-> +		free_pages((unsigned long)sc->sq_base, get_order(SDMA_SQ_SIZE));
-> +		free_pages((unsigned long)sc->cq_base, get_order(SDMA_CQ_SIZE));
-> +		return -ENOMEM;
-> +	}
-> +	sc->src_addr = buf;
-> +	sc->dst_addr = buf + SDMA_SQ_LENGTH;
-> +	sc->len      = buf + SDMA_SQ_LENGTH * 2;
-> +
-> +	return 0;
-> +}
-> +
-
-
-Best regards,
-Krzysztof
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki

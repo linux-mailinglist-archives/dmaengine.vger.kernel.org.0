@@ -2,57 +2,55 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 798727A1844
-	for <lists+dmaengine@lfdr.de>; Fri, 15 Sep 2023 10:13:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E92387A183D
+	for <lists+dmaengine@lfdr.de>; Fri, 15 Sep 2023 10:13:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233129AbjIOINC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 15 Sep 2023 04:13:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57036 "EHLO
+        id S233134AbjIOIND (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 15 Sep 2023 04:13:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233000AbjIOIMn (ORCPT
+        with ESMTP id S233002AbjIOIMn (ORCPT
         <rfc822;dmaengine@vger.kernel.org>); Fri, 15 Sep 2023 04:12:43 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EA42270B;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 082062711;
         Fri, 15 Sep 2023 01:12:13 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7B723C116B2;
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 874F4C116B3;
         Fri, 15 Sep 2023 08:12:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1694765529;
-        bh=oGB5mmj066e796PNEy2kGnJIR5NsQ47GaGZNF2b49IY=;
+        bh=6qsgM2uEAwDAVyStrZf0vFvVAKhlmLgdNk8LwmcxXos=;
         h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-        b=m1cxzMWAkI0iefdnqIUUun5kdfydZwGEYzXyvH8FaC3dFEY3XNWGsXJ6P5pYgZDim
-         yeQzgpqT+h8/CqVKFmw5UAqQ96F3OXUDs6lOl5IcmZrx3AF+ZsErv4Ao9oIj9wXhKD
-         GcMQ1JebE/YZM+WKjdEiVJV70Gm0Ly0GP2OHnQO4xKnSwLzqrUQV8X1zgTgaGnAAxH
-         PFD2ebBHTO3iYIus2vFeDZGiT/JHsc3XjzB5JvZZqlhVMR7NDKe23eTGAMGp10nP/g
-         3/+p1R4b5AZ1hoPrpT+KrDwMsRwMVWgo4AMz775SYmNQWiZfkUO18YiMkmih86G13j
-         RoV/kbKKyvNSw==
+        b=XzI9PebV2vwsyTrsuBNSEG/an5KiLBCrwlHtSsTi1QoNnIPWl7mQ/LQvU41J0YS70
+         nul0Dy3/TsEZA/z0aWS8vQYkvTpAuKe1SW3wPHqymbWNcu+adHoh9hOUvwOaQGnwku
+         zEPXN/M3Kceqr5SeJhDJfG39Q3QyXLKyzxSIWUq/Q8ynss2A5nxYlbD4ViLtdv8Lb9
+         lO0Kd9SbcQd1Phd9mRDF1feTqXkjfHOMHCC7n8esN2qTMCXOlkWxQxdhP2YbulrpoD
+         iqhsx1RmkrvvcAKl1rPpMcK/2QdaqTcvHhUz7D7H7LTkOvD8dPG1Ra+dUAPfHN+sVV
+         wYhM+PHiDGFFQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.lore.kernel.org (Postfix) with ESMTP id 6A7FFEE643F;
+        by smtp.lore.kernel.org (Postfix) with ESMTP id 7533FEE643D;
         Fri, 15 Sep 2023 08:12:09 +0000 (UTC)
 From:   Nikita Shubin via B4 Relay 
         <devnull+nikita.shubin.maquefel.me@kernel.org>
-Date:   Fri, 15 Sep 2023 11:11:05 +0300
-Subject: [PATCH v4 23/42] dt-bindings: dma: Add Cirrus EP93xx
+Date:   Fri, 15 Sep 2023 11:11:06 +0300
+Subject: [PATCH v4 24/42] dma: cirrus: add DT support for Cirrus EP93xx
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230915-ep93xx-v4-23-a1d779dcec10@maquefel.me>
+Message-Id: <20230915-ep93xx-v4-24-a1d779dcec10@maquefel.me>
 References: <20230915-ep93xx-v4-0-a1d779dcec10@maquefel.me>
 In-Reply-To: <20230915-ep93xx-v4-0-a1d779dcec10@maquefel.me>
-To:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
+To:     Vinod Koul <vkoul@kernel.org>,
         Nikita Shubin <nikita.shubin@maquefel.me>,
         Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
         Alexander Sverdlin <alexander.sverdlin@gmail.com>
 X-Mailer: b4 0.13-dev-e3e53
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1694765525; l=8728;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1694765525; l=6791;
  i=nikita.shubin@maquefel.me; s=20230718; h=from:subject:message-id;
- bh=ikbItjDUGCitdThpEQWLEuTYpqlVGNdH+yORw6iXxkY=; =?utf-8?q?b=3DSIeQvkPrpSxQ?=
- =?utf-8?q?PcQ2Xrasiz5txOWckdAPHTId6ld3TXLhFG4LG2NBq2iQEtpCm1oDpnDyXq9eRY58?=
- Clx/HzMiDj/PXWWnSWEO7mb884msUGpssT0cK1EMdqND7VXZW9E2
+ bh=eWT2FHqBjlneGyZWtImR6ct6eTi96pIsWsege5+PLLA=; =?utf-8?q?b=3DDVn0ZTnO3fxn?=
+ =?utf-8?q?eXb1zmhnfd4XZohMBi/9c5daUkA+nZMYvhzcdz9UTHziA5LKDUuAVLlF7G++K50c?=
+ NItQCwftCgi6hOTsMfesOLqkd7JyLykF83UiJvaCxmIFgSaP9gcC
 X-Developer-Key: i=nikita.shubin@maquefel.me; a=ed25519;
  pk=vqf5YIUJ7BJv3EJFaNNxWZgGuMgDH6rwufTLflwU9ac=
 X-Endpoint-Received: by B4 Relay for nikita.shubin@maquefel.me/20230718 with auth_id=65
@@ -70,282 +68,230 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 From: Nikita Shubin <nikita.shubin@maquefel.me>
 
-Add YAML bindings for ep93xx SoC DMA.
+- drop subsys_initcall code
+- add OF ID match table with data
+- add of_probe for device tree
 
+Co-developed-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
 Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
 ---
- .../bindings/dma/cirrus,ep9301-dma-m2m.yaml        |  69 ++++++++++++
- .../bindings/dma/cirrus,ep9301-dma-m2p.yaml        | 121 +++++++++++++++++++++
- include/dt-bindings/dma/cirrus,ep93xx-dma.h        |  26 +++++
- include/linux/platform_data/dma-ep93xx.h           |  21 +---
- 4 files changed, 217 insertions(+), 20 deletions(-)
+ drivers/dma/ep93xx_dma.c                 | 125 +++++++++++++++++++++++++++----
+ include/linux/platform_data/dma-ep93xx.h |   4 +
+ 2 files changed, 116 insertions(+), 13 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/dma/cirrus,ep9301-dma-m2m.yaml b/Documentation/devicetree/bindings/dma/cirrus,ep9301-dma-m2m.yaml
-new file mode 100644
-index 000000000000..80a4352bf8aa
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/cirrus,ep9301-dma-m2m.yaml
-@@ -0,0 +1,69 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dma/cirrus,ep9301-dma-m2m.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/dma/ep93xx_dma.c b/drivers/dma/ep93xx_dma.c
+index 5338a94f1a69..4ec928ffcd52 100644
+--- a/drivers/dma/ep93xx_dma.c
++++ b/drivers/dma/ep93xx_dma.c
+@@ -20,6 +20,7 @@
+ #include <linux/dmaengine.h>
+ #include <linux/module.h>
+ #include <linux/mod_devicetable.h>
++#include <linux/overflow.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ 
+@@ -104,6 +105,11 @@
+ #define DMA_MAX_CHAN_BYTES		0xffff
+ #define DMA_MAX_CHAN_DESCRIPTORS	32
+ 
++enum ep93xx_dma_type {
++	M2P_DMA,
++	M2M_DMA,
++};
 +
-+title: Cirrus Logick ep93xx SoC DMA controller
+ struct ep93xx_dma_engine;
+ static int ep93xx_dma_slave_config_write(struct dma_chan *chan,
+ 					 enum dma_transfer_direction dir,
+@@ -216,6 +222,11 @@ struct ep93xx_dma_engine {
+ 	struct ep93xx_dma_chan	channels[];
+ };
+ 
++struct ep93xx_edma_data {
++	u32	id;
++	size_t	num_channels;
++};
 +
-+maintainers:
-+  - Alexander Sverdlin <alexander.sverdlin@gmail.com>
-+  - Nikita Shubin <nikita.shubin@maquefel.me>
+ static inline struct device *chan2dev(struct ep93xx_dma_chan *edmac)
+ {
+ 	return &edmac->chan.dev->device;
+@@ -1315,22 +1326,78 @@ static void ep93xx_dma_issue_pending(struct dma_chan *chan)
+ 	ep93xx_dma_advance_work(to_ep93xx_dma_chan(chan));
+ }
+ 
+-static int __init ep93xx_dma_probe(struct platform_device *pdev)
++static struct ep93xx_dma_engine *ep93xx_dma_of_probe(struct platform_device *pdev)
+ {
+-	struct ep93xx_dma_platform_data *pdata = dev_get_platdata(&pdev->dev);
++	struct device_node *np = pdev->dev.of_node;
++	const struct ep93xx_edma_data *data;
+ 	struct ep93xx_dma_engine *edma;
+ 	struct dma_device *dma_dev;
+-	size_t edma_size;
+-	int ret, i;
++	int i;
 +
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: cirrus,ep9301-dma-m2m
-+      - items:
-+          - enum:
-+              - cirrus,ep9302-dma-m2m
-+              - cirrus,ep9307-dma-m2m
-+              - cirrus,ep9312-dma-m2m
-+              - cirrus,ep9315-dma-m2m
-+          - const: cirrus,ep9301-dma-m2m
++	data = device_get_match_data(&pdev->dev);
++	if (!data)
++		return ERR_PTR(dev_err_probe(&pdev->dev, -ENODEV, "No device match found\n"));
+ 
+-	edma_size = pdata->num_channels * sizeof(struct ep93xx_dma_chan);
+-	edma = kzalloc(sizeof(*edma) + edma_size, GFP_KERNEL);
++	edma = devm_kzalloc(&pdev->dev,
++			    struct_size(edma, channels, data->num_channels),
++			    GFP_KERNEL);
+ 	if (!edma)
+-		return -ENOMEM;
++		return ERR_PTR(-ENOMEM);
+ 
++	edma->m2m = data->id;
++	edma->num_channels = data->num_channels;
+ 	dma_dev = &edma->dma_dev;
 +
-+  reg:
-+    items:
-+      - description: m2m0 channel registers
-+      - description: m2m1 channel registers
++	INIT_LIST_HEAD(&dma_dev->channels);
++	for (i = 0; i < edma->num_channels; i++) {
++		struct ep93xx_dma_chan *edmac = &edma->channels[i];
 +
-+  clocks:
-+    items:
-+      - description: m2m0 channel gate clock
-+      - description: m2m1 channel gate clock
++		edmac->chan.device = dma_dev;
++		edmac->regs = devm_platform_ioremap_resource(pdev, i);
++		if (IS_ERR(edmac->regs))
++			return edmac->regs;
 +
-+  clock-names:
-+    items:
-+      - const: m2m0
-+      - const: m2m1
++		edmac->irq = fwnode_irq_get(dev_fwnode(&pdev->dev), i);
++		if (edmac->irq < 0)
++			return ERR_PTR(edmac->irq);
 +
-+  interrupts:
-+    items:
-+      - description: m2m0 channel interrupt
-+      - description: m2m1 channel interrupt
++		edmac->edma = edma;
 +
-+  '#dma-cells': true
++		edmac->clk = of_clk_get(np, i);
++		if (IS_ERR(edmac->clk)) {
++			dev_warn(&pdev->dev, "failed to get clock\n");
++			continue;
++		}
 +
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - interrupts
++		spin_lock_init(&edmac->lock);
++		INIT_LIST_HEAD(&edmac->active);
++		INIT_LIST_HEAD(&edmac->queue);
++		INIT_LIST_HEAD(&edmac->free_list);
++		tasklet_setup(&edmac->tasklet, ep93xx_dma_tasklet);
 +
-+additionalProperties: false
++		list_add_tail(&edmac->chan.device_node,
++			      &dma_dev->channels);
++	}
 +
-+examples:
-+  - |
-+    #include <dt-bindings/clock/cirrus,ep9301-clk.h>
-+    dma-controller@80000100 {
-+        compatible = "cirrus,ep9301-dma-m2m";
-+        reg = <0x80000100 0x0040>,
-+              <0x80000140 0x0040>;
-+        clocks = <&eclk EP93XX_CLK_M2M0>,
-+                 <&eclk EP93XX_CLK_M2M1>;
-+        clock-names = "m2m0", "m2m1";
-+        interrupt-parent = <&vic0>;
-+        interrupts = <17>, <18>;
-+        #dma-cells = <1>;
-+    };
-diff --git a/Documentation/devicetree/bindings/dma/cirrus,ep9301-dma-m2p.yaml b/Documentation/devicetree/bindings/dma/cirrus,ep9301-dma-m2p.yaml
-new file mode 100644
-index 000000000000..0236cc37233e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/cirrus,ep9301-dma-m2p.yaml
-@@ -0,0 +1,121 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dma/cirrus,ep9301-dma-m2p.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++	return edma;
++}
 +
-+title: Cirrus Logick ep93xx SoC M2P DMA controller
++static struct ep93xx_dma_engine *ep93xx_init_from_pdata(struct platform_device *pdev)
++{
++	struct ep93xx_dma_platform_data *pdata = dev_get_platdata(&pdev->dev);
++	struct ep93xx_dma_engine *edma;
++	struct dma_device *dma_dev;
++	int i;
 +
-+maintainers:
-+  - Alexander Sverdlin <alexander.sverdlin@gmail.com>
-+  - Nikita Shubin <nikita.shubin@maquefel.me>
++	edma = devm_kzalloc(&pdev->dev,
++			    struct_size(edma, channels, pdata->num_channels),
++			    GFP_KERNEL);
++	if (!edma)
++		return ERR_PTR(-ENOMEM);
 +
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: cirrus,ep9301-dma-m2p
-+      - items:
-+          - enum:
-+              - cirrus,ep9302-dma-m2p
-+              - cirrus,ep9307-dma-m2p
-+              - cirrus,ep9312-dma-m2p
-+              - cirrus,ep9315-dma-m2p
-+          - const: cirrus,ep9301-dma-m2p
+ 	edma->m2m = platform_get_device_id(pdev)->driver_data;
+ 	edma->num_channels = pdata->num_channels;
++	dma_dev = &edma->dma_dev;
+ 
+ 	INIT_LIST_HEAD(&dma_dev->channels);
+ 	for (i = 0; i < pdata->num_channels; i++) {
+@@ -1359,6 +1426,24 @@ static int __init ep93xx_dma_probe(struct platform_device *pdev)
+ 			      &dma_dev->channels);
+ 	}
+ 
++	return edma;
++}
 +
-+  reg:
-+    items:
-+      - description: m2p0 channel registers
-+      - description: m2p1 channel registers
-+      - description: m2p2 channel registers
-+      - description: m2p3 channel registers
-+      - description: m2p4 channel registers
-+      - description: m2p5 channel registers
-+      - description: m2p6 channel registers
-+      - description: m2p7 channel registers
-+      - description: m2p8 channel registers
-+      - description: m2p9 channel registers
++static int ep93xx_dma_probe(struct platform_device *pdev)
++{
++	struct ep93xx_dma_engine *edma;
++	struct dma_device *dma_dev;
++	int ret, i;
 +
-+  clocks:
-+    items:
-+      - description: m2p0 channel gate clock
-+      - description: m2p1 channel gate clock
-+      - description: m2p2 channel gate clock
-+      - description: m2p3 channel gate clock
-+      - description: m2p4 channel gate clock
-+      - description: m2p5 channel gate clock
-+      - description: m2p6 channel gate clock
-+      - description: m2p7 channel gate clock
-+      - description: m2p8 channel gate clock
-+      - description: m2p9 channel gate clock
++	if (platform_get_device_id(pdev))
++		edma = ep93xx_init_from_pdata(pdev);
++	else
++		edma = ep93xx_dma_of_probe(pdev);
++	if (!edma)
++		return PTR_ERR(edma);
 +
-+  clock-names:
-+    items:
-+      - const: m2p0
-+      - const: m2p1
-+      - const: m2p2
-+      - const: m2p3
-+      - const: m2p4
-+      - const: m2p5
-+      - const: m2p6
-+      - const: m2p7
-+      - const: m2p8
-+      - const: m2p9
++	dma_dev = &edma->dma_dev;
 +
-+  interrupts:
-+    items:
-+      - description: m2p0 channel interrupt
-+      - description: m2p1 channel interrupt
-+      - description: m2p2 channel interrupt
-+      - description: m2p3 channel interrupt
-+      - description: m2p4 channel interrupt
-+      - description: m2p5 channel interrupt
-+      - description: m2p6 channel interrupt
-+      - description: m2p7 channel interrupt
-+      - description: m2p8 channel interrupt
-+      - description: m2p9 channel interrupt
+ 	dma_cap_zero(dma_dev->cap_mask);
+ 	dma_cap_set(DMA_SLAVE, dma_dev->cap_mask);
+ 	dma_cap_set(DMA_CYCLIC, dma_dev->cap_mask);
+@@ -1410,6 +1495,23 @@ static int __init ep93xx_dma_probe(struct platform_device *pdev)
+ 	return ret;
+ }
+ 
++static const struct ep93xx_edma_data edma_m2p = {
++	.id = M2P_DMA,
++	.num_channels = 10,
++};
 +
-+  '#dma-cells': true
++static const struct ep93xx_edma_data edma_m2m = {
++	.id = M2M_DMA,
++	.num_channels = 2,
++};
 +
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - interrupts
++static const struct of_device_id ep93xx_dma_of_ids[] = {
++	{ .compatible = "cirrus,ep9301-dma-m2p", .data = &edma_m2p },
++	{ .compatible = "cirrus,ep9301-dma-m2m", .data = &edma_m2m },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, ep93xx_dma_of_ids);
 +
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/cirrus,ep9301-clk.h>
-+    dma-controller@80000000 {
-+        compatible = "cirrus,ep9301-dma-m2p";
-+        reg = <0x80000000 0x0040>,
-+              <0x80000040 0x0040>,
-+              <0x80000080 0x0040>,
-+              <0x800000c0 0x0040>,
-+              <0x80000240 0x0040>,
-+              <0x80000200 0x0040>,
-+              <0x800002c0 0x0040>,
-+              <0x80000280 0x0040>,
-+              <0x80000340 0x0040>,
-+              <0x80000300 0x0040>;
-+        clocks = <&eclk EP93XX_CLK_M2P0>,
-+                 <&eclk EP93XX_CLK_M2P1>,
-+                 <&eclk EP93XX_CLK_M2P2>,
-+                 <&eclk EP93XX_CLK_M2P3>,
-+                 <&eclk EP93XX_CLK_M2P4>,
-+                 <&eclk EP93XX_CLK_M2P5>,
-+                 <&eclk EP93XX_CLK_M2P6>,
-+                 <&eclk EP93XX_CLK_M2P7>,
-+                 <&eclk EP93XX_CLK_M2P8>,
-+                 <&eclk EP93XX_CLK_M2P9>;
-+        clock-names = "m2p0", "m2p1",
-+                      "m2p2", "m2p3",
-+                      "m2p4", "m2p5",
-+                      "m2p6", "m2p7",
-+                      "m2p8", "m2p9";
-+        interrupt-parent = <&vic0>;
-+        interrupts = <7>, <8>, <9>, <10>, <11>, <12>, <13>, <14>, <15>, <16>;
-+        #dma-cells = <1>;
-+    };
-diff --git a/include/dt-bindings/dma/cirrus,ep93xx-dma.h b/include/dt-bindings/dma/cirrus,ep93xx-dma.h
-new file mode 100644
-index 000000000000..21c7324eb27e
---- /dev/null
-+++ b/include/dt-bindings/dma/cirrus,ep93xx-dma.h
-@@ -0,0 +1,26 @@
-+/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
-+#ifndef DT_BINDINGS_CIRRUS_EP93XX_DMA_H
-+#define DT_BINDINGS_CIRRUS_EP93XX_DMA_H
-+
-+/*
-+ * M2P channels.
-+ *
-+ * Note that these values are also directly used for setting the PPALLOC
-+ * register.
-+ */
-+#define EP93XX_DMA_I2S1         0
-+#define EP93XX_DMA_I2S2         1
-+#define EP93XX_DMA_AAC1         2
-+#define EP93XX_DMA_AAC2         3
-+#define EP93XX_DMA_AAC3         4
-+#define EP93XX_DMA_I2S3         5
-+#define EP93XX_DMA_UART1        6
-+#define EP93XX_DMA_UART2        7
-+#define EP93XX_DMA_UART3        8
-+#define EP93XX_DMA_IRDA         9
-+/* M2M channels */
-+#define EP93XX_DMA_SSP          10
-+#define EP93XX_DMA_IDE          11
-+
-+#endif /* DT_BINDINGS_CIRRUS_EP93XX_DMA_H */
-+
+ static const struct platform_device_id ep93xx_dma_driver_ids[] = {
+ 	{ "ep93xx-dma-m2p", 0 },
+ 	{ "ep93xx-dma-m2m", 1 },
+@@ -1419,15 +1521,12 @@ static const struct platform_device_id ep93xx_dma_driver_ids[] = {
+ static struct platform_driver ep93xx_dma_driver = {
+ 	.driver		= {
+ 		.name	= "ep93xx-dma",
++		.of_match_table = ep93xx_dma_of_ids,
+ 	},
+ 	.id_table	= ep93xx_dma_driver_ids,
++	.probe		= ep93xx_dma_probe,
+ };
+ 
+-static int __init ep93xx_dma_module_init(void)
+-{
+-	return platform_driver_probe(&ep93xx_dma_driver, ep93xx_dma_probe);
+-}
+-subsys_initcall(ep93xx_dma_module_init);
+-
++module_platform_driver(ep93xx_dma_driver);
+ MODULE_AUTHOR("Mika Westerberg <mika.westerberg@iki.fi>");
+ MODULE_DESCRIPTION("EP93xx DMA driver");
 diff --git a/include/linux/platform_data/dma-ep93xx.h b/include/linux/platform_data/dma-ep93xx.h
-index eb9805bb3fe8..54b41d1468ef 100644
+index 54b41d1468ef..91af4a368338 100644
 --- a/include/linux/platform_data/dma-ep93xx.h
 +++ b/include/linux/platform_data/dma-ep93xx.h
-@@ -5,26 +5,7 @@
+@@ -5,6 +5,7 @@
  #include <linux/types.h>
  #include <linux/dmaengine.h>
  #include <linux/dma-mapping.h>
--
--/*
-- * M2P channels.
-- *
-- * Note that these values are also directly used for setting the PPALLOC
-- * register.
-- */
--#define EP93XX_DMA_I2S1		0
--#define EP93XX_DMA_I2S2		1
--#define EP93XX_DMA_AAC1		2
--#define EP93XX_DMA_AAC2		3
--#define EP93XX_DMA_AAC3		4
--#define EP93XX_DMA_I2S3		5
--#define EP93XX_DMA_UART1	6
--#define EP93XX_DMA_UART2	7
--#define EP93XX_DMA_UART3	8
--#define EP93XX_DMA_IRDA		9
--/* M2M channels */
--#define EP93XX_DMA_SSP		10
--#define EP93XX_DMA_IDE		11
-+#include <dt-bindings/dma/cirrus,ep93xx-dma.h>
++#include <linux/property.h>
+ #include <dt-bindings/dma/cirrus,ep93xx-dma.h>
  
  /**
-  * struct ep93xx_dma_data - configuration data for the EP93xx dmaengine
+@@ -51,6 +52,9 @@ struct ep93xx_dma_platform_data {
+ 
+ static inline bool ep93xx_dma_chan_is_m2p(struct dma_chan *chan)
+ {
++	if (device_is_compatible(chan->device->dev, "cirrus,ep9301-dma-m2p"))
++		return true;
++
+ 	return !strcmp(dev_name(chan->device->dev), "ep93xx-dma-m2p");
+ }
+ 
 
 -- 
 2.39.2

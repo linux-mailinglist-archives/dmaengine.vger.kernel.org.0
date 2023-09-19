@@ -2,47 +2,46 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E84617A652C
-	for <lists+dmaengine@lfdr.de>; Tue, 19 Sep 2023 15:32:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4197F7A651A
+	for <lists+dmaengine@lfdr.de>; Tue, 19 Sep 2023 15:32:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232427AbjISNct (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 19 Sep 2023 09:32:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55076 "EHLO
+        id S232396AbjISNcl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 19 Sep 2023 09:32:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232431AbjISNci (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 19 Sep 2023 09:32:38 -0400
+        with ESMTP id S232409AbjISNcf (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 19 Sep 2023 09:32:35 -0400
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2602131
-        for <dmaengine@vger.kernel.org>; Tue, 19 Sep 2023 06:32:31 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0A76123
+        for <dmaengine@vger.kernel.org>; Tue, 19 Sep 2023 06:32:28 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qiapx-0005By-QP; Tue, 19 Sep 2023 15:32:21 +0200
+        id 1qiapx-0005DK-Mg; Tue, 19 Sep 2023 15:32:21 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qiapw-007T5J-6t; Tue, 19 Sep 2023 15:32:20 +0200
+        id 1qiapw-007T5O-GB; Tue, 19 Sep 2023 15:32:20 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qiapv-0030gG-Ts; Tue, 19 Sep 2023 15:32:19 +0200
+        id 1qiapw-0030gJ-3c; Tue, 19 Sep 2023 15:32:20 +0200
 From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
 To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        dmaengine@vger.kernel.org, kernel@pengutronix.de
-Subject: [PATCH 43/59] dma: sprd-dma: Convert to platform remove callback returning void
-Date:   Tue, 19 Sep 2023 15:31:51 +0200
-Message-Id: <20230919133207.1400430-44-u.kleine-koenig@pengutronix.de>
+Cc:     Patrice Chotard <patrice.chotard@foss.st.com>,
+        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
+        kernel@pengutronix.de
+Subject: [PATCH 44/59] dma: st_fdma: Convert to platform remove callback returning void
+Date:   Tue, 19 Sep 2023 15:31:52 +0200
+Message-Id: <20230919133207.1400430-45-u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230919133207.1400430-1-u.kleine-koenig@pengutronix.de>
 References: <20230919133207.1400430-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1851; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=VLMqnrQaM3pkJaqRiSQLo7cg0ca3HbzYkbAo4PQVlDQ=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlCaHg3S+Rw27tH6Pj6Dc5pFdAooXxoZvV241Sp tAfoJK/zvSJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZQmh4AAKCRCPgPtYfRL+ TnqGCACIJW+tQCF6Qi9DDVdY1dFZ2M37nEbodFDOK5/unVtJtM96xAaSUQIAHD4QGkGv853mhcA Rww87H5XtTcbRSWx2bVPV5kajS7JAYSaA6WfVW6AARbuBG61chXwnFA1r+u7tMYEyCOF2mRY0CJ XfnZX4+HZ5MEaUqF8Rx0ht4lbFnfrXVbH8jKVOKMR5BausYLnEBu3H7qjuXkJAgOzKkfZ4tGpXN 6zVlnux5d/CP47zFxhm2AGIRENXtN1njv26mNKWulB25DCgjt2isxg9bzEhkv7iAzsT3lhH08/o iaKewsWJ84ezGaVFxK1IcXTEyrrVUpl5ig/jL2QiIm/6TnRU
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1770; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=mLxlKUjXeKKBwDxG0klsa06EXs5EvAdx6DPXjRAOFo8=; b=owGbwMvMwMXY3/A7olbonx/jabUkhlTOhQ+3XBPzVvMp9a/6r2U14bZXaPbxlIRfYU+v10RNr WJ/Wx3VyWjMwsDIxSArpshi37gm06pKLrJz7b/LMINYmUCmMHBxCsBELk7jYJgqk1IfuFynLUG4 htXt3gqV4OUv9ym8WjB3S/OT68JzI3ONP3y6nRqzw4Sd25Tv7Le9kS5vr5SqPItVKZ7Am9/8JDd r7t3oq5osktamxw6mPs25b69+aFnARO0fEuJs/4+pPAhx6/kTe6iuaIL9le06Vj55u/Xi56/37/ dJm7bg/P18yS0H3VQk1jXa/bMo9A1VWxpvoqlaNi2xon4m/97ixh3cNjOs7sU4l6V5vloU84Z9Y uTe2X4+E/gFPxlt/9vNobDurd+zGXcZVXXmnDQ3uN32cklWgmL96uo1zAxnJgjk3ZdVL5n1SCY1 OJFBszy18C772aLMuhY96XkLOK+/7LrKvThf0epG/cv/AA==
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -72,39 +71,39 @@ callback to the void returning variant.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/dma/sprd-dma.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/dma/st_fdma.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
-index 168aa0bd73a0..97e3dedb6c12 100644
---- a/drivers/dma/sprd-dma.c
-+++ b/drivers/dma/sprd-dma.c
-@@ -1232,7 +1232,7 @@ static int sprd_dma_probe(struct platform_device *pdev)
+diff --git a/drivers/dma/st_fdma.c b/drivers/dma/st_fdma.c
+index d95c421877fb..145bd0f2496e 100644
+--- a/drivers/dma/st_fdma.c
++++ b/drivers/dma/st_fdma.c
+@@ -849,15 +849,13 @@ static int st_fdma_probe(struct platform_device *pdev)
  	return ret;
  }
  
--static int sprd_dma_remove(struct platform_device *pdev)
-+static void sprd_dma_remove(struct platform_device *pdev)
+-static int st_fdma_remove(struct platform_device *pdev)
++static void st_fdma_remove(struct platform_device *pdev)
  {
- 	struct sprd_dma_dev *sdev = platform_get_drvdata(pdev);
- 	struct sprd_dma_chn *c, *cn;
-@@ -1255,7 +1255,6 @@ static int sprd_dma_remove(struct platform_device *pdev)
+ 	struct st_fdma_dev *fdev = platform_get_drvdata(pdev);
  
- 	pm_runtime_put_noidle(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
+ 	devm_free_irq(&pdev->dev, fdev->irq, fdev);
+ 	st_slim_rproc_put(fdev->slim_rproc);
+ 	of_dma_controller_free(pdev->dev.of_node);
+-
 -	return 0;
  }
  
- static const struct of_device_id sprd_dma_match[] = {
-@@ -1292,7 +1291,7 @@ static const struct dev_pm_ops sprd_dma_pm_ops = {
+ static struct platform_driver st_fdma_platform_driver = {
+@@ -866,7 +864,7 @@ static struct platform_driver st_fdma_platform_driver = {
+ 		.of_match_table = st_fdma_match,
+ 	},
+ 	.probe = st_fdma_probe,
+-	.remove = st_fdma_remove,
++	.remove_new = st_fdma_remove,
+ };
+ module_platform_driver(st_fdma_platform_driver);
  
- static struct platform_driver sprd_dma_driver = {
- 	.probe = sprd_dma_probe,
--	.remove = sprd_dma_remove,
-+	.remove_new = sprd_dma_remove,
- 	.driver = {
- 		.name = "sprd-dma",
- 		.of_match_table = sprd_dma_match,
 -- 
 2.40.1
 

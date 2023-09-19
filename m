@@ -2,44 +2,50 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CDEF17A64F0
-	for <lists+dmaengine@lfdr.de>; Tue, 19 Sep 2023 15:32:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9DC907A64FC
+	for <lists+dmaengine@lfdr.de>; Tue, 19 Sep 2023 15:32:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231960AbjISNcU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 19 Sep 2023 09:32:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49008 "EHLO
+        id S232367AbjISNc2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 19 Sep 2023 09:32:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232347AbjISNcT (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 19 Sep 2023 09:32:19 -0400
+        with ESMTP id S232380AbjISNcY (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 19 Sep 2023 09:32:24 -0400
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91DF8EC
-        for <dmaengine@vger.kernel.org>; Tue, 19 Sep 2023 06:32:13 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E208C122
+        for <dmaengine@vger.kernel.org>; Tue, 19 Sep 2023 06:32:17 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qiapo-0004al-1o; Tue, 19 Sep 2023 15:32:12 +0200
+        id 1qiapp-0004cj-Gq; Tue, 19 Sep 2023 15:32:13 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qiapn-007T2w-K2; Tue, 19 Sep 2023 15:32:11 +0200
+        id 1qiapn-007T2z-RG; Tue, 19 Sep 2023 15:32:11 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qiapn-0030dn-A1; Tue, 19 Sep 2023 15:32:11 +0200
+        id 1qiapn-0030dr-HE; Tue, 19 Sep 2023 15:32:11 +0200
 From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
 To:     Vinod Koul <vkoul@kernel.org>
-Cc:     dmaengine@vger.kernel.org, kernel@pengutronix.de
-Subject: [PATCH 05/59] dma: bcm-sba-raid: Convert to platform remove callback returning void
-Date:   Tue, 19 Sep 2023 15:31:13 +0200
-Message-Id: <20230919133207.1400430-6-u.kleine-koenig@pengutronix.de>
+Cc:     Florian Fainelli <florian.fainelli@broadcom.com>,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        dmaengine@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
+Subject: [PATCH 06/59] dma: bcm2835-dma: Convert to platform remove callback returning void
+Date:   Tue, 19 Sep 2023 15:31:14 +0200
+Message-Id: <20230919133207.1400430-7-u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230919133207.1400430-1-u.kleine-koenig@pengutronix.de>
 References: <20230919133207.1400430-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1790; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=A02aCJhftn/IWOTeTpjgUNkzoNIffng9aDifeYyoi7k=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlCaGzllh66NmdjAkSVxEqhWIelUZsp6kuHc6dh rxFfZT6sxuJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZQmhswAKCRCPgPtYfRL+ TtvcB/9xDmhT5SuZPR4ZLwP6iayCtu3KE33yyAGIxE9qhVXx0kTba0cMiPSN/Nhz/bkH9JkPgzB oD6wjCDjvwmMlGxDSdBbx+682hxtF16U6KspxCLgZqtBLipT4wiMuDGnzpdOfFZyIbVuGEMJsnb eWOZiAESxNfaqJDhArAiFQyOTyxJP0nJhRpmsPgIIjwLw6noLCLym8JRhVdhMPHqWPUIn63fYWr 7MFFakhEz7BIxsj+EvD0tGbpdpLz6nS84fw5iEz62GI99ZpyeQ3zf9Nc+Hlrs7uRnmvbpKYXnOg T67zz0D4TSYxT7JV62+7CL26siCo4Yr2OxOSHq7gpVPJnTRL
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1665; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=4k20QsNbWrgBeaCXZrLrt7KARFXxwozszE9LgnxhIaQ=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlCaG0hdzcw3DIm2QlhWlA1IzMMfFAr9NM9T9aB Yz/OExIiA+JATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZQmhtAAKCRCPgPtYfRL+ ToWYB/9HmrM6dlw0qAvWMCblKNhkYH5qMME6/xAXVQopaV7LJbwobtK9kWJkKpq2qIgPWJGmZSM W6YpTkPYN6eST3GodfEX/KnNbqYHG/P+GdSEE2SeQHEuoGZmbCfVQ6FfNcypUkv7kAPLzPg7Ali JAStmfjX8J333Ig62Be8IquQIQnTTLMIF6QrZU/f8GxMlr46nR8J7GTl9m7aVfVKGIvauQDnrpN C3qr9Xjcx6qpaGMz/uYcTLHYdzbpxH+xlRslCQz6q9FtBy3T266j2sQH+SIO3tmzRGN9mwrnCfr aFdz8GRm2s2NdXuGiBWRUkrG4WRh/O5+75KIjLAPgpIBetg2
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -69,40 +75,35 @@ callback to the void returning variant.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/dma/bcm-sba-raid.c | 6 ++----
+ drivers/dma/bcm2835-dma.c | 6 ++----
  1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/dma/bcm-sba-raid.c b/drivers/dma/bcm-sba-raid.c
-index 94ea35330eb5..fbaacb4c19b2 100644
---- a/drivers/dma/bcm-sba-raid.c
-+++ b/drivers/dma/bcm-sba-raid.c
-@@ -1734,7 +1734,7 @@ static int sba_probe(struct platform_device *pdev)
- 	return ret;
+diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
+index 0807fb9eb262..9d74fe97452e 100644
+--- a/drivers/dma/bcm2835-dma.c
++++ b/drivers/dma/bcm2835-dma.c
+@@ -1019,19 +1019,17 @@ static int bcm2835_dma_probe(struct platform_device *pdev)
+ 	return rc;
  }
  
--static int sba_remove(struct platform_device *pdev)
-+static void sba_remove(struct platform_device *pdev)
+-static int bcm2835_dma_remove(struct platform_device *pdev)
++static void bcm2835_dma_remove(struct platform_device *pdev)
  {
- 	struct sba_device *sba = platform_get_drvdata(pdev);
+ 	struct bcm2835_dmadev *od = platform_get_drvdata(pdev);
  
-@@ -1745,8 +1745,6 @@ static int sba_remove(struct platform_device *pdev)
- 	sba_freeup_channel_resources(sba);
- 
- 	mbox_free_channel(sba->mchan);
+ 	dma_async_device_unregister(&od->ddev);
+ 	bcm2835_dma_free(od);
 -
 -	return 0;
  }
  
- static const struct of_device_id sba_of_match[] = {
-@@ -1758,7 +1756,7 @@ MODULE_DEVICE_TABLE(of, sba_of_match);
- 
- static struct platform_driver sba_driver = {
- 	.probe = sba_probe,
--	.remove = sba_remove,
-+	.remove_new = sba_remove,
+ static struct platform_driver bcm2835_dma_driver = {
+ 	.probe	= bcm2835_dma_probe,
+-	.remove	= bcm2835_dma_remove,
++	.remove_new = bcm2835_dma_remove,
  	.driver = {
- 		.name = "bcm-sba-raid",
- 		.of_match_table = sba_of_match,
+ 		.name = "bcm2835-dma",
+ 		.of_match_table = of_match_ptr(bcm2835_dma_of_match),
 -- 
 2.40.1
 

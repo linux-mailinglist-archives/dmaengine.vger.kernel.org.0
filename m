@@ -2,31 +2,31 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 655B77A652B
+	by mail.lfdr.de (Postfix) with ESMTP id 110087A652A
 	for <lists+dmaengine@lfdr.de>; Tue, 19 Sep 2023 15:32:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232426AbjISNct (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 19 Sep 2023 09:32:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55064 "EHLO
+        id S232286AbjISNcs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 19 Sep 2023 09:32:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232427AbjISNcj (ORCPT
+        with ESMTP id S232426AbjISNcj (ORCPT
         <rfc822;dmaengine@vger.kernel.org>); Tue, 19 Sep 2023 09:32:39 -0400
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 838FF132
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FACA12C
         for <dmaengine@vger.kernel.org>; Tue, 19 Sep 2023 06:32:32 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qiapz-0005FI-HG; Tue, 19 Sep 2023 15:32:23 +0200
+        id 1qiapz-0005H3-TO; Tue, 19 Sep 2023 15:32:23 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qiapx-007T5Z-Ek; Tue, 19 Sep 2023 15:32:21 +0200
+        id 1qiapx-007T5g-Nj; Tue, 19 Sep 2023 15:32:21 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qiapx-0030gW-5J; Tue, 19 Sep 2023 15:32:21 +0200
+        id 1qiapx-0030ga-BN; Tue, 19 Sep 2023 15:32:21 +0200
 From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
 To:     Vinod Koul <vkoul@kernel.org>
@@ -35,15 +35,15 @@ Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
         Thierry Reding <thierry.reding@gmail.com>,
         dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
         kernel@pengutronix.de
-Subject: [PATCH 47/59] dma: tegra186-gpc-dma: Convert to platform remove callback returning void
-Date:   Tue, 19 Sep 2023 15:31:55 +0200
-Message-Id: <20230919133207.1400430-48-u.kleine-koenig@pengutronix.de>
+Subject: [PATCH 48/59] dma: tegra20-apb-dma: Convert to platform remove callback returning void
+Date:   Tue, 19 Sep 2023 15:31:56 +0200
+Message-Id: <20230919133207.1400430-49-u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230919133207.1400430-1-u.kleine-koenig@pengutronix.de>
 References: <20230919133207.1400430-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1790; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=iHs4HlU8wdvJhxErQlTdc9ftb0/Pep+KtGw3IGGHh/0=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlCaHlSic1zq2Y2fiV9uSKVBoR8akw1xLuq3gVB Ps1amKPa+2JATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZQmh5QAKCRCPgPtYfRL+ Tgu1CACIza9DIwjqTGbElojU4hUCj/puU1Aq47DSEOsjutLY1QTYl4pet1JOMkqnG38LiYLgY2Z MQvcHCMV5vU/5LNteyjsRT6khNkeqmcFJmH06NLvHEcEQZxqYGxy8R4jiMCmI7aowJU3FpHzV6N Jr00jeYGItOweyNjOATxpeh29Qsr+ihp7l1QMb7MrNCtla+2I35HMULplIN9q0gC6Nh3cOFwcla mAPwRcrq4D1FQmNVQQs7ckFY194V1Sw/cqZpikJ5Cx8I3KcEcHRL6bG2gA6qyJcf3OrwOwhi+sn o5ZuUUTslqwJw0/arFgpSI9Y7qsg0Tu3fSuU8cWYxEEZNbiH
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1895; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=p0YNfNQ6rouQIshDwy8m+PHxQVDwpmwbI3Nov3/BeKg=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlCaHmPBHdEjzWGISv2of5x1I1zzP3z3ZxeIr9d VobHEa/ZveJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZQmh5gAKCRCPgPtYfRL+ TiexB/wN8AWTLCtkpJhI4/E5XP7DAQZay6Uj2FoPcfiY4HPZXfooQ8tf2bOEj28C55B1Q5rf8R+ NKqhZ+8eWlaLzIPo52WhuJg2g0P7r1tvUNwQV2zIi66mV6Ix6KdW/yRjvn6vFHVb7leg/H2vc35 7PPBXJk0LtP3dMGMxPhL1pND0zO+dv0m6cDVGPXoJG61ygMFSwltlX7xBejuT+35dgdCbtHbi5J iDJmpqKKf0pcPkChfOA+eEMYTB1cUcdl1xbxbUqWU/smyI27EL3l4cWGVarMTiT7mETGMuC95y8 IoRDYtYblRChC5+uR1Rfxtfu1OM1l1GdYG8haATzrBjKhI7+
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -73,15 +73,15 @@ callback to the void returning variant.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/dma/tegra186-gpc-dma.c | 6 ++----
+ drivers/dma/tegra20-apb-dma.c | 6 ++----
  1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/dma/tegra186-gpc-dma.c b/drivers/dma/tegra186-gpc-dma.c
-index 33b101001100..868c18cc72b1 100644
---- a/drivers/dma/tegra186-gpc-dma.c
-+++ b/drivers/dma/tegra186-gpc-dma.c
-@@ -1473,14 +1473,12 @@ static int tegra_dma_probe(struct platform_device *pdev)
- 	return 0;
+diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+index 063022f9df76..ac69778827f2 100644
+--- a/drivers/dma/tegra20-apb-dma.c
++++ b/drivers/dma/tegra20-apb-dma.c
+@@ -1581,7 +1581,7 @@ static int tegra_dma_probe(struct platform_device *pdev)
+ 	return ret;
  }
  
 -static int tegra_dma_remove(struct platform_device *pdev)
@@ -89,14 +89,16 @@ index 33b101001100..868c18cc72b1 100644
  {
  	struct tegra_dma *tdma = platform_get_drvdata(pdev);
  
- 	of_dma_controller_free(pdev->dev.of_node);
+@@ -1589,8 +1589,6 @@ static int tegra_dma_remove(struct platform_device *pdev)
  	dma_async_device_unregister(&tdma->dma_dev);
+ 	pm_runtime_disable(&pdev->dev);
+ 	clk_unprepare(tdma->dma_clk);
 -
 -	return 0;
  }
  
- static int __maybe_unused tegra_dma_pm_suspend(struct device *dev)
-@@ -1533,7 +1531,7 @@ static struct platform_driver tegra_dma_driver = {
+ static int __maybe_unused tegra_dma_runtime_suspend(struct device *dev)
+@@ -1677,7 +1675,7 @@ static struct platform_driver tegra_dmac_driver = {
  		.of_match_table = tegra_dma_of_match,
  	},
  	.probe		= tegra_dma_probe,
@@ -104,7 +106,7 @@ index 33b101001100..868c18cc72b1 100644
 +	.remove_new	= tegra_dma_remove,
  };
  
- module_platform_driver(tegra_dma_driver);
+ module_platform_driver(tegra_dmac_driver);
 -- 
 2.40.1
 

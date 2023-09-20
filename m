@@ -2,74 +2,72 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A6AA07A8AEC
-	for <lists+dmaengine@lfdr.de>; Wed, 20 Sep 2023 19:55:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F4A87A8B51
+	for <lists+dmaengine@lfdr.de>; Wed, 20 Sep 2023 20:13:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229581AbjITRzS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 20 Sep 2023 13:55:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36874 "EHLO
+        id S229674AbjITSNR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 20 Sep 2023 14:13:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229526AbjITRzR (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 20 Sep 2023 13:55:17 -0400
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B38AD7
-        for <dmaengine@vger.kernel.org>; Wed, 20 Sep 2023 10:55:11 -0700 (PDT)
-Received: by mail-lf1-x133.google.com with SMTP id 2adb3069b0e04-503f39d3236so268393e87.0
-        for <dmaengine@vger.kernel.org>; Wed, 20 Sep 2023 10:55:11 -0700 (PDT)
+        with ESMTP id S229699AbjITSNP (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 20 Sep 2023 14:13:15 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9F9AC6
+        for <dmaengine@vger.kernel.org>; Wed, 20 Sep 2023 11:13:09 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id a640c23a62f3a-9ada2e6e75fso3527466b.2
+        for <dmaengine@vger.kernel.org>; Wed, 20 Sep 2023 11:13:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695232509; x=1695837309; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9BwLNGi1b5LgRRhdnNgQMVamNH66BILKFFpEBt14Cs0=;
-        b=E1pKztDqfU5PyLwSYjovAYBUcxWSDR+wBzZdbwZoHcnYNLD+2EuImohFBclZI+FOBO
-         u4UpV4mIGJbKaGCZxWmHx8xgO9COc7K+b2xEm6WbQ7NqPDGtaY5aJVGoDEXS1efBaSrD
-         lgN5C1m9qyYLhg6MQIvMkDFiQyzJFZdCgzaEGkVHrn5lhVofpct361E1IZ9dG3t+t6Zs
-         23xU3EYON2jF87VyjcfOX7qSJkA7SC99LYxDyVBMXd+Nx5VMohfRcNB04knTQp45HukK
-         0KKtyxD1UTp3BAiq4fjKfO2JLmF4Q9mMGqBKIkEbUEc7JofeV4/PWwZN+6fG03zdRH1W
-         MtKA==
+        d=gmail.com; s=20230601; t=1695233588; x=1695838388; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Eebm0bZ8oIw7YLEe3SWSGOgHuxHYKcqJneb0xHoiFbw=;
+        b=OuzBHtkk6CArUWPd8+xXlagGjWfgIAYGJ/P3nC89+/g4nJFrZtwR2OQoRyvyfwyRsh
+         oPwNgRj6WlB4/zmFXCobolQycLBvlUt6+QXLPmWRX8duv1XoyKNE3d8+LJs5pjklJI9M
+         waFc8e2wkZRuItvMb1k6zl7CufJNKSFcxZV92tN0eNCozP6yy+JmXtlmdr0F2rIjGpov
+         T/Sif159i07sXb8kahY9+Zn20aBGCas9Z0J+xBh8LI9taj408ODOKfUT2Bg3M1QO+9Xf
+         I6P2fM8Rab1ryPc2Cvwhat6lZ4or3hiJqRAitJUiUSXSVqEk2JbP8i+r+7UB+5adn/7v
+         1++g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695232509; x=1695837309;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1695233588; x=1695838388;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9BwLNGi1b5LgRRhdnNgQMVamNH66BILKFFpEBt14Cs0=;
-        b=GDdX5ciFDiU0K/+JhUAVtrysj0q1UvyA21AEqlviGn++yLT0mxH3tk/g3pg9M1PlRW
-         KYHrG+P5Sed88k1qryXqYtvWiCmWYfro0IrSv5NlXTXwGj77JfIfrEUWhEIsgEbw6FqN
-         FeeSDmgapvhM1FAkEIcjXCOpCv4tvRFRq+IeZZQTxAsCAI9yZpwjFd1+3MhDeNfb7b6I
-         2eofel0gWDE2jJ9xbXFoKDoAw7v7JKqZo+QQ1xAgGQuAbRw59QPypWba4gTmsGCaR1X+
-         PYA0sJrzj9oL6yPL5+yqg2IW822j7L2fXibz0GSDRgmFewmXXtMwfknBP3PCg+6T5pLS
-         oJPQ==
-X-Gm-Message-State: AOJu0YzkiRC7AuUbnFrJpBoW7PJ/PobGPKyLcifJRa0GhO66La30OWFG
-        +YJzovhPeQiAfPf8NmpCa/8=
-X-Google-Smtp-Source: AGHT+IGTIiAnimfngaqjhaaJ0Uoeoa26zUF6G6uqsC4ZyOV1n0+IW6KUT5sHy4I4FMI2vp9ZbqOidg==
-X-Received: by 2002:a05:6512:3586:b0:503:3278:3225 with SMTP id m6-20020a056512358600b0050332783225mr2722747lfr.63.1695232509143;
-        Wed, 20 Sep 2023 10:55:09 -0700 (PDT)
-Received: from [10.0.0.42] (host-85-29-92-32.kaisa-laajakaista.fi. [85.29.92.32])
-        by smtp.gmail.com with ESMTPSA id o10-20020ac2494a000000b0050234d02e64sm1315334lfi.15.2023.09.20.10.55.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 Sep 2023 10:55:08 -0700 (PDT)
-Message-ID: <48459e11-9aff-49fe-bb7e-879d75dcccbe@gmail.com>
-Date:   Wed, 20 Sep 2023 20:55:09 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 50/59] dma: ti: cppi41: Convert to platform remove
- callback returning void
-Content-Language: en-US
-To:     =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     Tudor Ambarus <tudor.ambarus@linaro.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        bh=Eebm0bZ8oIw7YLEe3SWSGOgHuxHYKcqJneb0xHoiFbw=;
+        b=jwXpoCqBxExrZF/OCrmLdUpgmgUGUTAbdE2xTKklutq99uRsBfVUggAn/lmG0qxn2B
+         wXCysdNBBxiHk0VneRwKVsoXCvUdlIYxaHIoYr0ed+DMe91ZvVeIZp+5fP6ldGW/b2XQ
+         tzUtG4P1m4pM2UKxUCsB/nR/E5qhXV2f+ZIBXg+efUVTUBSQlusdITNw/iACwy4o+ljr
+         OWhYe5sgjBiIWDKR7C0dF59EkOWf/Qo/T0kaBeaVF4UWFmCCXbteH9FR1zGC7MtB4ORZ
+         rOzJoLDFPV3jZ6YTH/1nhwYnlDSPkOFB0hurppuyWKvxtXD6dMin9ATFnPCNTaKdU2YD
+         mI9w==
+X-Gm-Message-State: AOJu0Yx2WlhFeZoiiSb2FBJEQTYsOt4st0vP61R7Z9WEm7FDbsI26UOO
+        ZZ1nIfJk4U1PJRcxJJCmv5U=
+X-Google-Smtp-Source: AGHT+IFmUoTGoZLbonvpotWJoCY+mvgELA7UGLMrgARAQyS1PPaVkHtctkkqhpmmGKcfFMo3UHKogg==
+X-Received: by 2002:a17:907:272a:b0:9a1:c502:b7d2 with SMTP id d10-20020a170907272a00b009a1c502b7d2mr2510961ejl.67.1695233587988;
+        Wed, 20 Sep 2023 11:13:07 -0700 (PDT)
+Received: from freebase (190-2-133-229.hosted-by-worldstream.net. [190.2.133.229])
+        by smtp.gmail.com with ESMTPSA id z15-20020a170906240f00b0099bd1ce18fesm9848205eja.10.2023.09.20.11.13.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Sep 2023 11:13:07 -0700 (PDT)
+Date:   Wed, 20 Sep 2023 20:13:05 +0200
+From:   Olivier Dautricourt <olivierdautricourt@gmail.com>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Vinod Koul <vkoul@kernel.org>, Stefan Roese <sr@denx.de>,
         dmaengine@vger.kernel.org, kernel@pengutronix.de
+Subject: Re: [PATCH 01/59] dma: altera-msgdma: Convert to platform remove
+ callback returning void
+Message-ID: <ZQs2MQPhgGU3qrRw@freebase>
 References: <20230919133207.1400430-1-u.kleine-koenig@pengutronix.de>
- <20230919133207.1400430-51-u.kleine-koenig@pengutronix.de>
-From:   =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
-In-Reply-To: <20230919133207.1400430-51-u.kleine-koenig@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8
+ <20230919133207.1400430-2-u.kleine-koenig@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230919133207.1400430-2-u.kleine-koenig@pengutronix.de>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -77,9 +75,7 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-
-
-On 9/19/23 16:31, Uwe Kleine-König wrote:
+On Tue, Sep 19, 2023 at 03:31:09PM +0200, Uwe Kleine-K�nig wrote:
 > The .remove() callback for a platform driver returns an int which makes
 > many driver authors wrongly assume it's possible to do error handling by
 > returning an error code. However the value returned is ignored (apart
@@ -92,43 +88,46 @@ On 9/19/23 16:31, Uwe Kleine-König wrote:
 > Trivially convert this driver from always returning zero in the remove
 > callback to the void returning variant.
 
-Reviewed-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+Acked-by: Olivier Dautricourt <olivierdautricourt@gmail.com>
 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Thanks
+
+> Signed-off-by: Uwe Kleine-K�nig <u.kleine-koenig@pengutronix.de>
 > ---
->  drivers/dma/ti/cppi41.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
+>  drivers/dma/altera-msgdma.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/dma/ti/cppi41.c b/drivers/dma/ti/cppi41.c
-> index c3555cfb0681..7e0b06b5dff0 100644
-> --- a/drivers/dma/ti/cppi41.c
-> +++ b/drivers/dma/ti/cppi41.c
-> @@ -1156,7 +1156,7 @@ static int cppi41_dma_probe(struct platform_device *pdev)
->  	return ret;
->  }
->  
-> -static int cppi41_dma_remove(struct platform_device *pdev)
-> +static void cppi41_dma_remove(struct platform_device *pdev)
+> diff --git a/drivers/dma/altera-msgdma.c b/drivers/dma/altera-msgdma.c
+> index 4153c2edb049..a8e3615235b8 100644
+> --- a/drivers/dma/altera-msgdma.c
+> +++ b/drivers/dma/altera-msgdma.c
+> @@ -923,7 +923,7 @@ static int msgdma_probe(struct platform_device *pdev)
+>   *
+>   * Return: Always '0'
+>   */
+> -static int msgdma_remove(struct platform_device *pdev)
+> +static void msgdma_remove(struct platform_device *pdev)
 >  {
->  	struct cppi41_dd *cdd = platform_get_drvdata(pdev);
->  	int error;
-> @@ -1173,7 +1173,6 @@ static int cppi41_dma_remove(struct platform_device *pdev)
->  	pm_runtime_dont_use_autosuspend(&pdev->dev);
->  	pm_runtime_put_sync(&pdev->dev);
->  	pm_runtime_disable(&pdev->dev);
+>  	struct msgdma_device *mdev = platform_get_drvdata(pdev);
+>  
+> @@ -933,8 +933,6 @@ static int msgdma_remove(struct platform_device *pdev)
+>  	msgdma_dev_remove(mdev);
+>  
+>  	dev_notice(&pdev->dev, "Altera mSGDMA driver removed\n");
+> -
 > -	return 0;
 >  }
 >  
->  static int __maybe_unused cppi41_suspend(struct device *dev)
-> @@ -1244,7 +1243,7 @@ static const struct dev_pm_ops cppi41_pm_ops = {
+>  #ifdef CONFIG_OF
+> @@ -952,7 +950,7 @@ static struct platform_driver msgdma_driver = {
+>  		.of_match_table = of_match_ptr(msgdma_match),
+>  	},
+>  	.probe = msgdma_probe,
+> -	.remove = msgdma_remove,
+> +	.remove_new = msgdma_remove,
+>  };
 >  
->  static struct platform_driver cpp41_dma_driver = {
->  	.probe  = cppi41_dma_probe,
-> -	.remove = cppi41_dma_remove,
-> +	.remove_new = cppi41_dma_remove,
->  	.driver = {
->  		.name = "cppi41-dma-engine",
->  		.pm = &cppi41_pm_ops,
-
--- 
-Péter
+>  module_platform_driver(msgdma_driver);
+> -- 
+> 2.40.1
+> 

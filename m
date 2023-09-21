@@ -2,322 +2,201 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DC0F17A8EAA
-	for <lists+dmaengine@lfdr.de>; Wed, 20 Sep 2023 23:45:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B97467A96F9
+	for <lists+dmaengine@lfdr.de>; Thu, 21 Sep 2023 19:11:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229472AbjITVpU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 20 Sep 2023 17:45:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38964 "EHLO
+        id S230009AbjIURK4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 21 Sep 2023 13:10:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229451AbjITVpU (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 20 Sep 2023 17:45:20 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBABCA3;
-        Wed, 20 Sep 2023 14:45:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695246313; x=1726782313;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Mae0R828eRcYBJfhPsWcpEqbpL5UEVSwKtsrdnvQcTU=;
-  b=O5DMdbQXrpMGJJ6CMQzt26vmPpA/e6XjIjY+RACHymtN6EosLO3px/JU
-   Kn5gOFV5tDIYmSvV5g6ZyvvEAzl9uvtJ+X9c8S0365nOTJPFQDxTdMv2a
-   Q/GTOLpJWmKpJLCVvc68v4FnXTYDo4xXmqHixJ7KixKZh436U5KqfiPht
-   feF8Jl28Q1O5FE+sBG2vXY5eG/dZtV10ECExaEz51GkNjNWFBlh2ENBco
-   sMc/0luqEyYZX/SisS08E/xq5Cerf7ouxB+7GPXrozGnuYdYrjv/qmEu1
-   MLiQeHDDNT+4VnCM/zV2ycHyIJarXqRCZxwR8hHJghSQ/RM1tQJBxIrwL
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10839"; a="365409905"
-X-IronPort-AV: E=Sophos;i="6.03,162,1694761200"; 
-   d="scan'208";a="365409905"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2023 14:45:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10839"; a="776166984"
-X-IronPort-AV: E=Sophos;i="6.03,162,1694761200"; 
-   d="scan'208";a="776166984"
-Received: from lkp-server02.sh.intel.com (HELO 9ef86b2655e5) ([10.239.97.151])
-  by orsmga008.jf.intel.com with ESMTP; 20 Sep 2023 14:45:09 -0700
-Received: from kbuild by 9ef86b2655e5 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qj50M-0009B8-2l;
-        Wed, 20 Sep 2023 21:45:06 +0000
-Date:   Thu, 21 Sep 2023 05:45:02 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Frank Li <Frank.Li@nxp.com>, vkoul@kernel.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        imx@lists.linux.dev
-Cc:     oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH v2 1/2] dmaengine: fsl-emda: add debugfs support
-Message-ID: <202309210500.owiirl4c-lkp@intel.com>
-References: <20230919151430.2919042-2-Frank.Li@nxp.com>
+        with ESMTP id S231129AbjIURKF (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 21 Sep 2023 13:10:05 -0400
+Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on20626.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe16::626])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A94783CC;
+        Thu, 21 Sep 2023 10:05:29 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CDfZqgTf5uvGQRiju/dqUv5kK3V1hAI5WEwr3DuTwtSfzQz40TRygNNtQr6qZ6/vW0dcHX8VSwZdBi0wevFrgJq7a2EU74Ijq73z3FNCGeGcXrsdhrWmY/kn/Si55Ylpl/qXHA27gnO6csoZkoGRC4b0+UN4MqgvccuYIkZTITx3AxWVah6jNwLaTmTzu0gsVzwVW3gd56Jthgqbw3QZcYFKm/NBgrY5dkT/2HFQ3N7ml6WO0je0tPv9rcCRKUVzvSwQ83QNBnR75Bhy3jQyU83TFjXoRD+jDkbg4CGMbQRqJTz7QeGrFFvwp+ZZuLtnfQlCCJH2IziFz29P6C6acg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vaUZu6RoCaK924oC9s1V2U56FctBox4uAc4yWbnZiMs=;
+ b=Slh01OdX3Q3IG0v7WvAHws2kUmRK9PMQZutP2+wy2VyMVlVN1ly1er1Bxp2OzHpfrGUydFKdpQ/HIxjz42Fpq3lCvyDrX8eEjf182o0Y/F/MOdKkRFZHYiqyoBOMOEqBNYMp2P1u1TEzDrXpErJUOUqn0MMs2y5SXqMGxF9emBCQFuzg0uX+8aGiNIaJFuFHxjdJDCAALnAeB1YDyAukPQnWlXPMq6LH1jxgdeCGzrm3oCWbXiWbAt13KeTxtsJYjTnAX4B9M51aJJ36c/vcNtT3w4184mAaiu52Caqm/zfz5KwHvuR3DSs6ee2mWXb8OeOhjusB9fn0s2mHEP6OHw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vaUZu6RoCaK924oC9s1V2U56FctBox4uAc4yWbnZiMs=;
+ b=XiuWV5OzNJSXwF+/+Y+t8bqLQJQJ3w7erVQPlUt2sMKCsFky6UN0dQZ6S9K3fjXTVAUkCTpxlFvUHQPMPFfY7QVTV5BwxRvHulOaZA9iG9IMp12NR+fZZRllQTwbBbpNFZkE0LQYvCGSY+P8TwqTMCEk2le3ZRKHOc4rX08i1zg=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
+ by AS8PR04MB8277.eurprd04.prod.outlook.com (2603:10a6:20b:3fc::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6813.20; Thu, 21 Sep
+ 2023 14:47:09 +0000
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::1774:e25f:f99:aca2]) by AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::1774:e25f:f99:aca2%4]) with mapi id 15.20.6792.026; Thu, 21 Sep 2023
+ 14:47:09 +0000
+From:   Frank Li <Frank.Li@nxp.com>
+To:     vkoul@kernel.org, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, imx@lists.linux.dev
+Subject: [PATCH v2 1/1] dmaengine: fsl-dma: fix DMA error when enabling sg if 'DONE' bit is set
+Date:   Thu, 21 Sep 2023 10:46:52 -0400
+Message-Id: <20230921144652.3259813-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR03CA0152.namprd03.prod.outlook.com
+ (2603:10b6:a03:338::7) To AM6PR04MB4838.eurprd04.prod.outlook.com
+ (2603:10a6:20b:4::16)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230919151430.2919042-2-Frank.Li@nxp.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-        lindbergh.monkeyblade.net
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|AS8PR04MB8277:EE_
+X-MS-Office365-Filtering-Correlation-Id: 23a9be95-2fc4-4e84-2d02-08dbbab1a212
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Ercy3hJlOb5UpsHz3LlC7O9DVwY84Ek18VgnuR06e7oxxiiHgnKsr80AGhh+iJXeIzVGqr1P9FNYj8tDkG1AbC1a9SEq9XHPMT+BbyKQnDUOLAyz0ijvwFHFtGDfwHwWb/DmBupSH+oRQBqcl1833i68XvN81KHR6NMy8PYgom1KhA+ePHeBSH+blDAQCkQNvkFFd6PAyfpASnvwh7sYtm5Dpjvos6YgcGKGi2n6C1O97TuZa3L9GtgAdjaDB64Qw9LW3GTMUAjuvsZXw/wUjvRMNSz32q0h5RgwavhDmY/a7SEEU8w5OI7FPD62Xic8MWBT3voVpgkgoDx6zQdd2jeJZMZ/sI0CeOEScVE2RTkoNGo80SqW15f6Rli2rLYXgPoXW2dbSQeIMKIpm0MmIoKqcB39miQWfFyRXzwff0uw+FK7w2oIH2lvddiQnZdCMXrBLAgFqz8crGWQGMkaZMSlaQObi7pgXm54PSRPxIxDBExyvZvLtQtu/0nSfTLTEzDiVbG92YPsleldLXFpb9l+xPHOlvKguQ9zerxMHSO2+agVgZ0zzQTIloHqlYEqtutS+z3oGoA8EK9duL4DYlMMdcIqkLch1QpPGh66hmsPiVHdDfJLz6VA3nT2v66B
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(39860400002)(366004)(346002)(136003)(376002)(186009)(451199024)(1800799009)(41300700001)(86362001)(38350700002)(38100700002)(6512007)(6506007)(6486002)(6666004)(52116002)(2616005)(83380400001)(26005)(1076003)(36756003)(316002)(66946007)(66556008)(66476007)(2906002)(478600001)(8936002)(8676002)(5660300002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?johnAey/jEJtsC68x8EGckrEJAZhX1TJWz3lc41HaCOD2NBWRShgwwlBRKAq?=
+ =?us-ascii?Q?1iGMCtfqem3yhSlXb7sRGuyN2xThH85ImhB0M3LrYZEZ4r64kknt7yiNNh8E?=
+ =?us-ascii?Q?cAsOOjl+m2pvvmxotCMPyzqRC7vnGMH0wBm1OYt8jiJkVgh/XhRUMO2anO9X?=
+ =?us-ascii?Q?g3rx2UoQnUSfCjGkZMYdq32FIj/tqFLBJDPMFfYKv6AHwuLlC6A3R5HngpSu?=
+ =?us-ascii?Q?qJ1EJM0f4oi7WY5rY+JIAQetmdGZchu5JSQag2LhHEM/NWkm6KbU4fGexdBr?=
+ =?us-ascii?Q?bm84OaKWsoXFRlFBl33EY6Dt19dVBqegRs7u2g2cz9Mqf/U/sb247aiZKqyA?=
+ =?us-ascii?Q?tMoDYiQfAbsAz0Fwm7ABJiAE03ipz3phMIli9lYpmEUed6VtAAvtp6/4WwtS?=
+ =?us-ascii?Q?PJUgC0CTAqGiQlzLiUIA2OGznipqOQFO0K4JA/qU24PxEXZLCo8Lpr03mxv2?=
+ =?us-ascii?Q?93u5vdog9Kf13Z4eSVhbXWweUdOYOyp/k/5NuTcFt2712zRJ+Q8XVOw6GQBy?=
+ =?us-ascii?Q?Rvcybo6zGNBUC/kFAkpQWt8pynhpPQjuAFdKofXsZ+B95kt2uvbpCbL2aAZE?=
+ =?us-ascii?Q?MueeQv3AFfb11E2HxwbNbJzUZq5RNsCzoDCKkHxPJAwncfkjvRzDTgEm6CEO?=
+ =?us-ascii?Q?d04UZMfLePV6NDbxVPevS7HsWjM9jZGQz6I4yrfT01ybv9CQNKM/YMBEyMru?=
+ =?us-ascii?Q?RXQ13VqjA+3KqLpJ78SJbB/R4Q2UdQEOCAXnUpP6sF4v+7mGdz5GN52ys+Y8?=
+ =?us-ascii?Q?Tp7u2IQInkMv9Azi55UnoGyyuGov1FBEly+qP6al5nK1ryYd4gkX9u4w02Mq?=
+ =?us-ascii?Q?qY15lXJfc3fsmJMM0z+7SFhMn/W5QKeQLjupfYHUGMPCkPe3+QjzPWdiQixF?=
+ =?us-ascii?Q?lp0OfxRNXRx33wzq5hKPgwx0RyZJ/4mN8BLFI0/yZz+DUSzIaiJnAxJXUJuy?=
+ =?us-ascii?Q?Z60rNasofQjcJpSqzIXKudcZV1HLrHbdSw6ihAfgLpqvZKVb5GQYikuzCSk/?=
+ =?us-ascii?Q?ET4/o2Xq0G8y4oWrJUw+gHOaaWztgOIhTsJLlIz5S+juy0jeLTXj2iCVWx3e?=
+ =?us-ascii?Q?56MRtNMuM3/b/uHQtBefVJgkV2bn95ITQk1gEgTVU0GN6t78D4x1WyjFAwYx?=
+ =?us-ascii?Q?Jr/4pouHLswI5Eqlctfu9M+cgD0acTCVjFGXHn/kCgqtJvXjkS1dM+wCeIMG?=
+ =?us-ascii?Q?1j4eCg4S1/tGU4494VtKJe/I8Tr5/ZhQIFBMhYKc8f0o8bb8M8IHtm3tM29x?=
+ =?us-ascii?Q?ET6axyGS7LHLNgAtBSh7Hwjm5Hzs9X/f2y5EV68EElQb7h4Z/jO2QQ/QC3+7?=
+ =?us-ascii?Q?ORh5iVrbLdIiXsZINoLLJJN4lmvVduvcs11Nj9eJpnfRNTfoQEm2mhQzyXON?=
+ =?us-ascii?Q?utoCi1vn+15+SnnH0DXdpL0FW30VuybYFDwJcZwz63/cSYObT5ZpGZ+IAuBR?=
+ =?us-ascii?Q?2/TSgHa9QtqNgbsDat1NCW4ADV0Nk+Fx/TgKMHqumm4GxKgiicIAu1FGFaaD?=
+ =?us-ascii?Q?bSWy2sgBnv7Co4d2mf4tlgxdJxB13lOCiRgGxN1HDg7rPHMZe5/CtCrf0Hjs?=
+ =?us-ascii?Q?4C7ZKqQ/fN+pvGe8Ihsl4Csd7qqUoOYWK55XK6/8?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 23a9be95-2fc4-4e84-2d02-08dbbab1a212
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Sep 2023 14:47:09.6599
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7Cqs1jmQhpAe8RujmnGRQLTVyZJSkf/aUgPM6Pm4eRmMAvXewMYogTKLqLb2mn++OuUazWS0NRytEnK6FKQ18Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8277
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Frank,
+In eDMAv3, clearing 'DONE' bit (bit 30) of CHn_CSR is required when
+enabling scatter-gather (SG). eDMAv4 does not require this change.
 
-kernel test robot noticed the following build errors:
+Cc: <stable@vger.kernel.org>
+Fixes: 72f5801a4e2b ("dmaengine: fsl-edma: integrate v3 support")
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
 
-[auto build test ERROR on vkoul-dmaengine/next]
-[also build test ERROR on linus/master v6.6-rc2 next-20230920]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Notes:
+    Change from v1 to v2
+    - Fixed sparse warning
+    
+    sparse warnings: (new ones prefixed by >>)
+    >> drivers/dma/fsl-edma-common.c:463:21: sparse: sparse: restricted __le16 degrades to integer
+       drivers/dma/fsl-edma-common.c:465:21: sparse: sparse: restricted __le16 degrades to integer
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Frank-Li/dmaengine-fsl-emda-add-debugfs-support/20230920-010257
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git next
-patch link:    https://lore.kernel.org/r/20230919151430.2919042-2-Frank.Li%40nxp.com
-patch subject: [PATCH v2 1/2] dmaengine: fsl-emda: add debugfs support
-config: arm-imxrt_defconfig (https://download.01.org/0day-ci/archive/20230921/202309210500.owiirl4c-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 11.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230921/202309210500.owiirl4c-lkp@intel.com/reproduce)
+ drivers/dma/fsl-edma-common.c | 15 ++++++++++++++-
+ drivers/dma/fsl-edma-common.h | 14 +++++++++++++-
+ drivers/dma/fsl-edma-main.c   |  2 +-
+ 3 files changed, 28 insertions(+), 3 deletions(-)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202309210500.owiirl4c-lkp@intel.com/
-
-All error/warnings (new ones prefixed by >>):
-
-   In file included from drivers/dma/fsl-edma-main.c:24:
->> drivers/dma/fsl-edma-common.h:342:47: warning: 'struct dw_edma' declared inside parameter list will not be visible outside of this definition or declaration
-     342 | static inline void fsl_edma_debugfs_on(struct dw_edma *edma)
-         |                                               ^~~~~~~
-   drivers/dma/fsl-edma-main.c: In function 'fsl_edma_probe':
->> drivers/dma/fsl-edma-main.c:615:29: error: passing argument 1 of 'fsl_edma_debugfs_on' from incompatible pointer type [-Werror=incompatible-pointer-types]
-     615 |         fsl_edma_debugfs_on(fsl_edma);
-         |                             ^~~~~~~~
-         |                             |
-         |                             struct fsl_edma_engine *
-   In file included from drivers/dma/fsl-edma-main.c:24:
-   drivers/dma/fsl-edma-common.h:342:56: note: expected 'struct dw_edma *' but argument is of type 'struct fsl_edma_engine *'
-     342 | static inline void fsl_edma_debugfs_on(struct dw_edma *edma)
-         |                                        ~~~~~~~~~~~~~~~~^~~~
-   cc1: some warnings being treated as errors
---
-   In file included from drivers/dma/fsl-edma-common.c:13:
->> drivers/dma/fsl-edma-common.h:342:47: warning: 'struct dw_edma' declared inside parameter list will not be visible outside of this definition or declaration
-     342 | static inline void fsl_edma_debugfs_on(struct dw_edma *edma)
-         |                                               ^~~~~~~
-
-
-vim +/fsl_edma_debugfs_on +615 drivers/dma/fsl-edma-main.c
-
-   416	
-   417	static int fsl_edma_probe(struct platform_device *pdev)
-   418	{
-   419		const struct of_device_id *of_id =
-   420				of_match_device(fsl_edma_dt_ids, &pdev->dev);
-   421		struct device_node *np = pdev->dev.of_node;
-   422		struct fsl_edma_engine *fsl_edma;
-   423		const struct fsl_edma_drvdata *drvdata = NULL;
-   424		u32 chan_mask[2] = {0, 0};
-   425		struct edma_regs *regs;
-   426		int chans;
-   427		int ret, i;
-   428	
-   429		if (of_id)
-   430			drvdata = of_id->data;
-   431		if (!drvdata) {
-   432			dev_err(&pdev->dev, "unable to find driver data\n");
-   433			return -EINVAL;
-   434		}
-   435	
-   436		ret = of_property_read_u32(np, "dma-channels", &chans);
-   437		if (ret) {
-   438			dev_err(&pdev->dev, "Can't get dma-channels.\n");
-   439			return ret;
-   440		}
-   441	
-   442		fsl_edma = devm_kzalloc(&pdev->dev, struct_size(fsl_edma, chans, chans),
-   443					GFP_KERNEL);
-   444		if (!fsl_edma)
-   445			return -ENOMEM;
-   446	
-   447		fsl_edma->drvdata = drvdata;
-   448		fsl_edma->n_chans = chans;
-   449		mutex_init(&fsl_edma->fsl_edma_mutex);
-   450	
-   451		fsl_edma->membase = devm_platform_ioremap_resource(pdev, 0);
-   452		if (IS_ERR(fsl_edma->membase))
-   453			return PTR_ERR(fsl_edma->membase);
-   454	
-   455		if (!(drvdata->flags & FSL_EDMA_DRV_SPLIT_REG)) {
-   456			fsl_edma_setup_regs(fsl_edma);
-   457			regs = &fsl_edma->regs;
-   458		}
-   459	
-   460		if (drvdata->flags & FSL_EDMA_DRV_HAS_DMACLK) {
-   461			fsl_edma->dmaclk = devm_clk_get_enabled(&pdev->dev, "dma");
-   462			if (IS_ERR(fsl_edma->dmaclk)) {
-   463				dev_err(&pdev->dev, "Missing DMA block clock.\n");
-   464				return PTR_ERR(fsl_edma->dmaclk);
-   465			}
-   466		}
-   467	
-   468		if (drvdata->flags & FSL_EDMA_DRV_HAS_CHCLK) {
-   469			fsl_edma->chclk = devm_clk_get_enabled(&pdev->dev, "mp");
-   470			if (IS_ERR(fsl_edma->chclk)) {
-   471				dev_err(&pdev->dev, "Missing MP block clock.\n");
-   472				return PTR_ERR(fsl_edma->chclk);
-   473			}
-   474		}
-   475	
-   476		ret = of_property_read_variable_u32_array(np, "dma-channel-mask", chan_mask, 1, 2);
-   477	
-   478		if (ret > 0) {
-   479			fsl_edma->chan_masked = chan_mask[1];
-   480			fsl_edma->chan_masked <<= 32;
-   481			fsl_edma->chan_masked |= chan_mask[0];
-   482		}
-   483	
-   484		for (i = 0; i < fsl_edma->drvdata->dmamuxs; i++) {
-   485			char clkname[32];
-   486	
-   487			/* eDMAv3 mux register move to TCD area if ch_mux exist */
-   488			if (drvdata->flags & FSL_EDMA_DRV_SPLIT_REG)
-   489				break;
-   490	
-   491			fsl_edma->muxbase[i] = devm_platform_ioremap_resource(pdev,
-   492									      1 + i);
-   493			if (IS_ERR(fsl_edma->muxbase[i])) {
-   494				/* on error: disable all previously enabled clks */
-   495				fsl_disable_clocks(fsl_edma, i);
-   496				return PTR_ERR(fsl_edma->muxbase[i]);
-   497			}
-   498	
-   499			sprintf(clkname, "dmamux%d", i);
-   500			fsl_edma->muxclk[i] = devm_clk_get_enabled(&pdev->dev, clkname);
-   501			if (IS_ERR(fsl_edma->muxclk[i])) {
-   502				dev_err(&pdev->dev, "Missing DMAMUX block clock.\n");
-   503				/* on error: disable all previously enabled clks */
-   504				return PTR_ERR(fsl_edma->muxclk[i]);
-   505			}
-   506		}
-   507	
-   508		fsl_edma->big_endian = of_property_read_bool(np, "big-endian");
-   509	
-   510		if (drvdata->flags & FSL_EDMA_DRV_HAS_PD) {
-   511			ret = fsl_edma3_attach_pd(pdev, fsl_edma);
-   512			if (ret)
-   513				return ret;
-   514		}
-   515	
-   516		INIT_LIST_HEAD(&fsl_edma->dma_dev.channels);
-   517		for (i = 0; i < fsl_edma->n_chans; i++) {
-   518			struct fsl_edma_chan *fsl_chan = &fsl_edma->chans[i];
-   519			int len;
-   520	
-   521			if (fsl_edma->chan_masked & BIT(i))
-   522				continue;
-   523	
-   524			snprintf(fsl_chan->chan_name, sizeof(fsl_chan->chan_name), "%s-CH%02d",
-   525								   dev_name(&pdev->dev), i);
-   526	
-   527			fsl_chan->edma = fsl_edma;
-   528			fsl_chan->pm_state = RUNNING;
-   529			fsl_chan->slave_id = 0;
-   530			fsl_chan->idle = true;
-   531			fsl_chan->dma_dir = DMA_NONE;
-   532			fsl_chan->vchan.desc_free = fsl_edma_free_desc;
-   533	
-   534			len = (drvdata->flags & FSL_EDMA_DRV_SPLIT_REG) ?
-   535					offsetof(struct fsl_edma3_ch_reg, tcd) : 0;
-   536			fsl_chan->tcd = fsl_edma->membase
-   537					+ i * drvdata->chreg_space_sz + drvdata->chreg_off + len;
-   538	
-   539			fsl_chan->pdev = pdev;
-   540			vchan_init(&fsl_chan->vchan, &fsl_edma->dma_dev);
-   541	
-   542			edma_write_tcdreg(fsl_chan, 0, csr);
-   543			fsl_edma_chan_mux(fsl_chan, 0, false);
-   544		}
-   545	
-   546		ret = fsl_edma->drvdata->setup_irq(pdev, fsl_edma);
-   547		if (ret)
-   548			return ret;
-   549	
-   550		dma_cap_set(DMA_PRIVATE, fsl_edma->dma_dev.cap_mask);
-   551		dma_cap_set(DMA_SLAVE, fsl_edma->dma_dev.cap_mask);
-   552		dma_cap_set(DMA_CYCLIC, fsl_edma->dma_dev.cap_mask);
-   553		dma_cap_set(DMA_MEMCPY, fsl_edma->dma_dev.cap_mask);
-   554	
-   555		fsl_edma->dma_dev.dev = &pdev->dev;
-   556		fsl_edma->dma_dev.device_alloc_chan_resources
-   557			= fsl_edma_alloc_chan_resources;
-   558		fsl_edma->dma_dev.device_free_chan_resources
-   559			= fsl_edma_free_chan_resources;
-   560		fsl_edma->dma_dev.device_tx_status = fsl_edma_tx_status;
-   561		fsl_edma->dma_dev.device_prep_slave_sg = fsl_edma_prep_slave_sg;
-   562		fsl_edma->dma_dev.device_prep_dma_cyclic = fsl_edma_prep_dma_cyclic;
-   563		fsl_edma->dma_dev.device_prep_dma_memcpy = fsl_edma_prep_memcpy;
-   564		fsl_edma->dma_dev.device_config = fsl_edma_slave_config;
-   565		fsl_edma->dma_dev.device_pause = fsl_edma_pause;
-   566		fsl_edma->dma_dev.device_resume = fsl_edma_resume;
-   567		fsl_edma->dma_dev.device_terminate_all = fsl_edma_terminate_all;
-   568		fsl_edma->dma_dev.device_synchronize = fsl_edma_synchronize;
-   569		fsl_edma->dma_dev.device_issue_pending = fsl_edma_issue_pending;
-   570	
-   571		fsl_edma->dma_dev.src_addr_widths = FSL_EDMA_BUSWIDTHS;
-   572		fsl_edma->dma_dev.dst_addr_widths = FSL_EDMA_BUSWIDTHS;
-   573	
-   574		if (drvdata->flags & FSL_EDMA_DRV_BUS_8BYTE) {
-   575			fsl_edma->dma_dev.src_addr_widths |= BIT(DMA_SLAVE_BUSWIDTH_8_BYTES);
-   576			fsl_edma->dma_dev.dst_addr_widths |= BIT(DMA_SLAVE_BUSWIDTH_8_BYTES);
-   577		}
-   578	
-   579		fsl_edma->dma_dev.directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
-   580		if (drvdata->flags & FSL_EDMA_DRV_DEV_TO_DEV)
-   581			fsl_edma->dma_dev.directions |= BIT(DMA_DEV_TO_DEV);
-   582	
-   583		fsl_edma->dma_dev.copy_align = drvdata->flags & FSL_EDMA_DRV_ALIGN_64BYTE ?
-   584						DMAENGINE_ALIGN_64_BYTES :
-   585						DMAENGINE_ALIGN_32_BYTES;
-   586	
-   587		/* Per worst case 'nbytes = 1' take CITER as the max_seg_size */
-   588		dma_set_max_seg_size(fsl_edma->dma_dev.dev, 0x3fff);
-   589	
-   590		fsl_edma->dma_dev.residue_granularity = DMA_RESIDUE_GRANULARITY_SEGMENT;
-   591	
-   592		platform_set_drvdata(pdev, fsl_edma);
-   593	
-   594		ret = dma_async_device_register(&fsl_edma->dma_dev);
-   595		if (ret) {
-   596			dev_err(&pdev->dev,
-   597				"Can't register Freescale eDMA engine. (%d)\n", ret);
-   598			return ret;
-   599		}
-   600	
-   601		ret = of_dma_controller_register(np,
-   602				drvdata->flags & FSL_EDMA_DRV_SPLIT_REG ? fsl_edma3_xlate : fsl_edma_xlate,
-   603				fsl_edma);
-   604		if (ret) {
-   605			dev_err(&pdev->dev,
-   606				"Can't register Freescale eDMA of_dma. (%d)\n", ret);
-   607			dma_async_device_unregister(&fsl_edma->dma_dev);
-   608			return ret;
-   609		}
-   610	
-   611		/* enable round robin arbitration */
-   612		if (!(drvdata->flags & FSL_EDMA_DRV_SPLIT_REG))
-   613			edma_writel(fsl_edma, EDMA_CR_ERGA | EDMA_CR_ERCA, regs->cr);
-   614	
- > 615		fsl_edma_debugfs_on(fsl_edma);
-   616	
-   617		return 0;
-   618	}
-   619	
-
+diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
+index 70e24e76d73b6..598e72be54097 100644
+--- a/drivers/dma/fsl-edma-common.c
++++ b/drivers/dma/fsl-edma-common.c
+@@ -454,12 +454,25 @@ static void fsl_edma_set_tcd_regs(struct fsl_edma_chan *fsl_chan,
+ 
+ 	edma_write_tcdreg(fsl_chan, tcd->dlast_sga, dlast_sga);
+ 
++	csr = le16_to_cpu(tcd->csr);
++
+ 	if (fsl_chan->is_sw) {
+-		csr = le16_to_cpu(tcd->csr);
+ 		csr |= EDMA_TCD_CSR_START;
+ 		tcd->csr = cpu_to_le16(csr);
+ 	}
+ 
++	/*
++	 * Must clear CHn_CSR[DONE] bit before enable TCDn_CSR[ESG] at EDMAv3
++	 * eDMAv4 have not such requirement.
++	 * Change MLINK need clear CHn_CSR[DONE] for both eDMAv3 and eDMAv4.
++	 */
++	if (((fsl_edma_drvflags(fsl_chan) & FSL_EDMA_DRV_CLEAR_DONE_E_SG) &&
++		(csr & EDMA_TCD_CSR_E_SG)) ||
++	    ((fsl_edma_drvflags(fsl_chan) & FSL_EDMA_DRV_CLEAR_DONE_E_LINK) &&
++		(csr & EDMA_TCD_CSR_E_LINK)))
++		edma_writel_chreg(fsl_chan, edma_readl_chreg(fsl_chan, ch_csr), ch_csr);
++
++
+ 	edma_write_tcdreg(fsl_chan, tcd->csr, csr);
+ }
+ 
+diff --git a/drivers/dma/fsl-edma-common.h b/drivers/dma/fsl-edma-common.h
+index 453c997d0119a..fc0bdf6d16a96 100644
+--- a/drivers/dma/fsl-edma-common.h
++++ b/drivers/dma/fsl-edma-common.h
+@@ -183,11 +183,23 @@ struct fsl_edma_desc {
+ #define FSL_EDMA_DRV_BUS_8BYTE		BIT(10)
+ #define FSL_EDMA_DRV_DEV_TO_DEV		BIT(11)
+ #define FSL_EDMA_DRV_ALIGN_64BYTE	BIT(12)
++/* Need clean CHn_CSR DONE before enable TCD's ESG */
++#define FSL_EDMA_DRV_CLEAR_DONE_E_SG	BIT(13)
++/* Need clean CHn_CSR DONE before enable TCD's MAJORELINK */
++#define FSL_EDMA_DRV_CLEAR_DONE_E_LINK	BIT(14)
+ 
+ #define FSL_EDMA_DRV_EDMA3	(FSL_EDMA_DRV_SPLIT_REG |	\
+ 				 FSL_EDMA_DRV_BUS_8BYTE |	\
+ 				 FSL_EDMA_DRV_DEV_TO_DEV |	\
+-				 FSL_EDMA_DRV_ALIGN_64BYTE)
++				 FSL_EDMA_DRV_ALIGN_64BYTE |	\
++				 FSL_EDMA_DRV_CLEAR_DONE_E_SG |	\
++				 FSL_EDMA_DRV_CLEAR_DONE_E_LINK)
++
++#define FSL_EDMA_DRV_EDMA4	(FSL_EDMA_DRV_SPLIT_REG |	\
++				 FSL_EDMA_DRV_BUS_8BYTE |	\
++				 FSL_EDMA_DRV_DEV_TO_DEV |	\
++				 FSL_EDMA_DRV_ALIGN_64BYTE |	\
++				 FSL_EDMA_DRV_CLEAR_DONE_E_LINK)
+ 
+ struct fsl_edma_drvdata {
+ 	u32			dmamuxs; /* only used before v3 */
+diff --git a/drivers/dma/fsl-edma-main.c b/drivers/dma/fsl-edma-main.c
+index 2c20460e53aa9..4f8312b64f144 100644
+--- a/drivers/dma/fsl-edma-main.c
++++ b/drivers/dma/fsl-edma-main.c
+@@ -357,7 +357,7 @@ static struct fsl_edma_drvdata imx93_data3 = {
+ };
+ 
+ static struct fsl_edma_drvdata imx93_data4 = {
+-	.flags = FSL_EDMA_DRV_HAS_CHMUX | FSL_EDMA_DRV_HAS_DMACLK | FSL_EDMA_DRV_EDMA3,
++	.flags = FSL_EDMA_DRV_HAS_CHMUX | FSL_EDMA_DRV_HAS_DMACLK | FSL_EDMA_DRV_EDMA4,
+ 	.chreg_space_sz = 0x8000,
+ 	.chreg_off = 0x10000,
+ 	.setup_irq = fsl_edma3_irq_init,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+

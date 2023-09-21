@@ -2,71 +2,68 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 566F87AA2FF
-	for <lists+dmaengine@lfdr.de>; Thu, 21 Sep 2023 23:45:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DB8D7AA298
+	for <lists+dmaengine@lfdr.de>; Thu, 21 Sep 2023 23:22:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231191AbjIUVpt (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 21 Sep 2023 17:45:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48510 "EHLO
+        id S232470AbjIUVWT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 21 Sep 2023 17:22:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230383AbjIUVpb (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 21 Sep 2023 17:45:31 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE7B236299;
-        Thu, 21 Sep 2023 11:55:58 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id 98e67ed59e1d1-27474f0f483so162030a91.0;
-        Thu, 21 Sep 2023 11:55:58 -0700 (PDT)
+        with ESMTP id S232552AbjIUVWC (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 21 Sep 2023 17:22:02 -0400
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F12B100A42;
+        Thu, 21 Sep 2023 12:17:11 -0700 (PDT)
+Received: by mail-wm1-x334.google.com with SMTP id 5b1f17b1804b1-401da71b85eso14388775e9.1;
+        Thu, 21 Sep 2023 12:17:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695322558; x=1695927358; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MJY3H9JUg5HCRlzrOpFfJyHgKCn0efjBc0Xf3TmUsH8=;
-        b=nLAAlExbuDQcxWGodyxC0FXHIKjSgk2QXk1naYZZ6bTPK55eb3d0xOGXydSzVF9NHJ
-         11pxm7OFgECx19M6Bah0P7P3Hz8o0+SfrGWxao6VUkPi41BIqjBk/wK134nj33xz2CU5
-         SbLUnItgMJyk1UgIitiU2L/p2Fr/dg2xOraMY2O+rwTs10Xw/HHkxXJAIxZ1d3YDHQJ/
-         J62DlUovpnyhUSHRwH7yvPTnPwYVYocZXhUVEDd24Q8iq/73m1ZITVc4F0lGxHR+aQXT
-         2icV78Mf0rq7aMSYKn4FkmYPvUYUMR2HhYFVXvBBkL0TWIXd2BeP50qo4K1IoDTIvqmM
-         j3yQ==
+        d=gmail.com; s=20230601; t=1695323830; x=1695928630; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ENmOmmDyO4dkcD1BpyQlNPkn3uQwit51bry3W/ndj4k=;
+        b=SDjx4jzKKf7zErScli/HMCzeFCL8iE/OKs31+eJyVAWt8GnJfwbu4UheOvK9owIfuT
+         S8S5sxbuFmocpAR83VNquLxEKCiTHvVeNCt+16jSxsjcnHN9iCli10eIDr7zQvqhhxnq
+         MF5pG9WMz95JTpE4dYR2ZSGrYV0Icsg20TixG4VOPBYg3u6YM0lYKHWx/Iq6dKdbz+LI
+         Fr2E5LFKUUW58e50htN4u/XSAaER4W29IQ8V7L6L6pTKR9JT24z3JDN1PwX9EtjYa3Iw
+         C/DhKnuEVGtxqv8FL0J69MnOGDj6WVDQyNkXnY3X6TNBBLhzXM5nCzhFOEcqEx1izra5
+         Hq/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695322558; x=1695927358;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MJY3H9JUg5HCRlzrOpFfJyHgKCn0efjBc0Xf3TmUsH8=;
-        b=sGYBEOAx022YUn/1ISovMULylkAiOC/COrwyJuxdJ/gDEf5fypHiOacIxiNvCceSA3
-         XHLFh/ft2atIOp6Rsa8YwGKY20hvWCGAAB8KK7PZCGQFXKCCXx6/eko0JUAFN3GGEJZH
-         vEz3X+JU/iGq+Kd9U7jTfmRSo3ItIWnSS5dP5zxlXS/uQpwNSE1Yn7WJeDmhKwolF30V
-         jZcnme32vSoILbsvUwkCB+BZpjAZvpu8zDUwBoPUucbk4NFtSvuBB/xL0niE+3hHBGW0
-         F1v8ZkY860PGfOralUc1Wrvyyf6erYsibIJD+TcJocEGCgc+7PGNX1fh/KjaCHBfhtyL
-         0BBA==
-X-Gm-Message-State: AOJu0YxJ4kgM/Vl7I0eECuZItXpp3xSoInnMqkMfP1CStYUmHIf6Z8xl
-        fGxoigVOhckZ5Zy816Xz5G0MokLGpVVkYqL0rvY=
-X-Google-Smtp-Source: AGHT+IFsINLVD38hImAxY6xxT6qn50qxZWrM/OVFjIHYWEv/oavY7WC8E+MPS+69BTrMKyXMALyrv9Qtxi83B8vlxCw=
-X-Received: by 2002:a05:6a20:440d:b0:134:d4d3:f0a5 with SMTP id
- ce13-20020a056a20440d00b00134d4d3f0a5mr6159466pzb.2.1695322558187; Thu, 21
- Sep 2023 11:55:58 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1695323830; x=1695928630;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ENmOmmDyO4dkcD1BpyQlNPkn3uQwit51bry3W/ndj4k=;
+        b=WbkHm0Cr3JW/gORMh3aUF9zWKcQMv3P4PsbuaXB9EAW4fNmwAXGlytlOHtxR4toXPx
+         +l/91oh+sq1THe/FLhQUwJ32AqyxNUiAPL3MEda+v1YpiigfPnc0kn0k5pKF4Y1psiv3
+         omf9fx/w0+KJS9jq65CHtUDO60mLuSAgtS7W76T+CKDTLoGSrbn8ijcvp8dAIOgdcUfn
+         JYVC5R2worue5TP3eYoig2iBDT47SVNOfVenoOxElloNNSZX/Zj+ofN1GkbKw6Cwfnbu
+         ISJS0upzT1Rpmf5JCt7EVckaH5xIjjTNn3uF50I0BSulTVbtK1p7TPvtjV0SeMNoAnRL
+         D5JA==
+X-Gm-Message-State: AOJu0YyGmWvFcKoN6bakB38XACnzPcPlUooMd9aRxhFXrUsDWmDWpN58
+        y+G9/489N9X97e6Tfm6F4DI=
+X-Google-Smtp-Source: AGHT+IHz3TLJG+ziEtoS9dFznj7pMmUdXA3BCjDrGwVomS3vMGyxNpUFAZCye+dXZh/r/eGoltERuw==
+X-Received: by 2002:a05:600c:46c6:b0:405:36d7:4582 with SMTP id q6-20020a05600c46c600b0040536d74582mr1921439wmo.15.1695323829463;
+        Thu, 21 Sep 2023 12:17:09 -0700 (PDT)
+Received: from freebase (oliv-cloud.duckdns.org. [78.196.47.215])
+        by smtp.gmail.com with ESMTPSA id v4-20020a05600c214400b003fef19bb55csm2621945wml.34.2023.09.21.12.17.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Sep 2023 12:17:09 -0700 (PDT)
+Date:   Thu, 21 Sep 2023 21:17:06 +0200
+From:   Olivier Dautricourt <olivierdautricourt@gmail.com>
+To:     Eric Schwarz <eas@sw-optimization.com>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vinod Koul <vkoul@kernel.org>, Stefan Roese <sr@denx.de>
+Subject: Re: [PATCH] dmaengine: altera-msgdma: fix descriptors freeing logic
+Message-ID: <ZQyWsvcQCJgmG5aO@freebase>
+References: <20230920200636.32870-3-olivierdautricourt@gmail.com>
+ <22402987-305b-024b-044e-53db17037d90@sw-optimization.com>
 MIME-Version: 1.0
-References: <AM0PR08MB30897429213E8DB9BCC1D6C880F8A@AM0PR08MB3089.eurprd08.prod.outlook.com>
-In-Reply-To: <AM0PR08MB30897429213E8DB9BCC1D6C880F8A@AM0PR08MB3089.eurprd08.prod.outlook.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Thu, 21 Sep 2023 15:55:46 -0300
-Message-ID: <CAOMZO5AwD0VUxxi-z8nWuNF=Sx_K+VSjwQHA42=n34+WKsKzCw@mail.gmail.com>
-Subject: Re: [PATCH] dmaengine: imx-sdma: fix deadlock in interrupt handler
-To:     "Tim van der Staaij | Zign" <Tim.vanderstaaij@zigngroup.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Vinod Koul <vkoul@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <22402987-305b-024b-044e-53db17037d90@sw-optimization.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -74,27 +71,63 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Tim,
+On Thu, Sep 21, 2023 at 03:07:15PM +0200, Eric Schwarz wrote:
+> Hello Olivier,
+> 
+> thanks for following up on my comment first. I really appreciate. - I don't
+> have access to the hardware anymore, so I cannot test changes myself.
+> 
+> This patch addresses IMHO three fixes. - Shouldn't it be split up into three
+> small junks so one could also later work w/ git bisect / separate ack's? -
+> That way it is an all or nothing thing. Please regard this remark as
+> cosmetics.
+> 
+> Am 20.09.2023 um 21:58 schrieb Olivier Dautricourt:
+> > Sparse complains because we first take the lock in msgdma_tasklet -> move
+> > locking to msgdma_chan_desc_cleanup.
+> > In consequence, move calling of msgdma_chan_desc_cleanup outside of the
+> > critical section of function msgdma_tasklet.
+> > 
+> > Use spin_unlock_irqsave/restore instead of just spinlock/unlock to keep
+> > state of irqs while executing the callbacks.
+> 
+> What about the locking in the IRQ handler msgdma_irq_handler() itself? -
+> Shouldn't spin_unlock_irqsave/restore() be used there as well instead of
+> just spinlock/unlock()?
 
-On Thu, Sep 21, 2023 at 6:57=E2=80=AFAM Tim van der Staaij | Zign
-<Tim.vanderstaaij@zigngroup.com> wrote:
->
-> dev_warn internally acquires the lock that is already held when
-> sdma_update_channel_loop is called. Therefore it is acquired twice and
-> this is detected as a deadlock. Temporarily release the lock while
-> logging to avoid this.
->
-> Signed-off-by: Tim van der Staaij <tim.vanderstaaij@zigngroup.com>
-> Link: https://lore.kernel.org/all/AM0PR08MB308979EC3A8A53AE6E2D3408802CA@=
-AM0PR08MB3089.eurprd08.prod.outlook.com/
+IMO no:
+It is covered by [1]("Locking Between Hard IRQ and Softirqs/Tasklets")
+The irq handler cannot be preempted by the tasklet, so the
+spin_lock/unlock version is ok. However the tasklet could be interrupted
+by the Hard IRQ hence the disabling of irqs with save/restore when
+entering critical section.
 
-checkpatch gives a warning on this patch:
+It should not be needed to keep interrupts locally disabled while invoking
+callbacks, will add this to the commit description.
 
-WARNING: From:/Signed-off-by: email name mismatch: 'From: "Tim van der
-Staaij | Zign" <Tim.vanderstaaij@zigngroup.com>' !=3D 'Signed-off-by:
-Tim van der Staaij <tim.vanderstaaij@zigngroup.com>'
+[1] https://www.kernel.org/doc/Documentation/kernel-hacking/locking.rst
 
-Should it contain a Fixes tag so that it can be backported to older
-stable-kernels?
+> 
+> > Remove list_del call in msgdma_chan_desc_cleanup, this should be the role
+> > of msgdma_free_descriptor. In consequence replace list_add_tail with
+> > list_move_tail in msgdma_free_descriptor. This fixes the path:
+> > msgdma_free_chan_resources -> msgdma_free_descriptors ->
+> > msgdma_free_desc_list -> msgdma_free_descriptor
+> > which does __not__ seems to free correctly the descriptors as firsts nodes
+> > where not removed from the specified list.
+> > 
+> s/__not__/_not_/
+> s/seems/seem/
+> s/firsts/first/ => Actually I would omit it.
+> s/where/were/
+> 
+> "Fixes: <12 digits git hash> ("commit-message")" is missing [1] isn't it?
+> 
+> [1] https://www.kernel.org/doc/html/latest/process/submitting-patches.html#using-reported-by-tested-by-reviewed-by-suggested-by-and-fixes
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Thank you for your remarks/corrections, i will take them into account
+in next version of the patch.
+
+Kr,
+
+Olivier Dautricourt

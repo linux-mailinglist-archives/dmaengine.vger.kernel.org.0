@@ -2,60 +2,66 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C8527AAEC6
-	for <lists+dmaengine@lfdr.de>; Fri, 22 Sep 2023 11:51:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F8937AAEB8
+	for <lists+dmaengine@lfdr.de>; Fri, 22 Sep 2023 11:50:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232783AbjIVJuz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 22 Sep 2023 05:50:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36152 "EHLO
+        id S232039AbjIVJuP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 22 Sep 2023 05:50:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232542AbjIVJuv (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 22 Sep 2023 05:50:51 -0400
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E45891
-        for <dmaengine@vger.kernel.org>; Fri, 22 Sep 2023 02:50:41 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1qjcnx-0007Ns-Ak; Fri, 22 Sep 2023 11:50:33 +0200
-Received: from [2a0a:edc0:2:b01:1d::c0] (helo=ptx.whiteo.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <sha@pengutronix.de>)
-        id 1qjcnw-0088Hm-6G; Fri, 22 Sep 2023 11:50:32 +0200
-Received: from sha by ptx.whiteo.stw.pengutronix.de with local (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1qjcnw-00AwJ0-3Y; Fri, 22 Sep 2023 11:50:32 +0200
-Date:   Fri, 22 Sep 2023 11:50:32 +0200
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     Tim van der Staaij | Zign <Tim.vanderstaaij@zigngroup.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] dmaengine: imx-sdma: fix deadlock in interrupt handler
-Message-ID: <20230922095032.GU637806@pengutronix.de>
-References: <AM0PR08MB30897429213E8DB9BCC1D6C880F8A@AM0PR08MB3089.eurprd08.prod.outlook.com>
+        with ESMTP id S231384AbjIVJuO (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 22 Sep 2023 05:50:14 -0400
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE80291;
+        Fri, 22 Sep 2023 02:50:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1695376205; x=1726912205;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=zeipEBhaXghXmN5oGpPDW5qjunGQZm56YlJ7LLJ5W1Q=;
+  b=ErI2UfqrnnV+XETjH//ImB4B6Fbl8G56qm7WhmQXJtkF9Ma7fkx7Jl4x
+   8MX2WBzGdi5OKOrAAJZxqnELWFYU34pQsekbyV5VeSFAQwG8Y/CThwaic
+   /1UMQF+bFstHVcfa26ITgLhheh2qXey3uDJR/1vT93cRYVR/7FegEsWuL
+   Z3EzuDjmJjfSmKI1BOA+ROAg1+bx5lKAMwfjRNc+FDRiCEq2WYeoDTLld
+   hee0zCwetjGffmQ5H+j5qeX++5vVLGBDgBORAqb6La8EJqNy1yDBGBJWF
+   iTLGnTx58ym7ryTiw8CWbGyAvMrNElM2UoWLcylUWeAOF7O26OThncKpV
+   g==;
+X-CSE-ConnectionGUID: fQsQIPFwSuS+RkzQs9lxqw==
+X-CSE-MsgGUID: ce4PFu03SpK2T9raFQWtFg==
+X-ThreatScanner-Verdict: Negative
+X-IronPort-AV: E=Sophos;i="6.03,167,1694761200"; 
+   d="scan'208";a="236602553"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 22 Sep 2023 02:50:04 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Fri, 22 Sep 2023 02:49:57 -0700
+Received: from microchip1-OptiPlex-9020.microchip.com (10.10.85.11) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.2507.21 via Frontend Transport; Fri, 22 Sep 2023 02:49:52 -0700
+From:   shravan chippa <shravan.chippa@microchip.com>
+To:     <green.wan@sifive.com>, <vkoul@kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <palmer@dabbelt.com>,
+        <paul.walmsley@sifive.com>, <conor+dt@kernel.org>,
+        <palmer@sifive.com>
+CC:     <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <nagasuresh.relli@microchip.com>, <praveen.kumar@microchip.com>,
+        <shravan.chippa@microchip.com>
+Subject: [PATCH v1 0/3] dma: sf-pdma: various sf-pdma updates for the mpfs platform
+Date:   Fri, 22 Sep 2023 15:20:36 +0530
+Message-ID: <20230922095039.74878-1-shravan.chippa@microchip.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM0PR08MB30897429213E8DB9BCC1D6C880F8A@AM0PR08MB3089.eurprd08.prod.outlook.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: dmaengine@vger.kernel.org
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_PASS,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -63,42 +69,25 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Tim,
+From: Shravan Chippa <shravan.chippa@microchip.com>
 
-On Thu, Sep 21, 2023 at 09:57:11AM +0000, Tim van der Staaij | Zign wrote:
-> dev_warn internally acquires the lock that is already held when
-> sdma_update_channel_loop is called. Therefore it is acquired twice and
-> this is detected as a deadlock. Temporarily release the lock while
-> logging to avoid this.
-> 
-> Signed-off-by: Tim van der Staaij <tim.vanderstaaij@zigngroup.com>
-> Link: https://lore.kernel.org/all/AM0PR08MB308979EC3A8A53AE6E2D3408802CA@AM0PR08MB3089.eurprd08.prod.outlook.com/
-> ---
->  drivers/dma/imx-sdma.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-> index 51012bd39900..3a7cd783a567 100644
-> --- a/drivers/dma/imx-sdma.c
-> +++ b/drivers/dma/imx-sdma.c
-> @@ -904,7 +904,10 @@ static void sdma_update_channel_loop(struct sdma_channel *sdmac)
->  	 * owned buffer is available (i.e. BD_DONE was set too late).
->  	 */
->  	if (sdmac->desc && !is_sdma_channel_enabled(sdmac->sdma, sdmac->channel)) {
-> +		spin_unlock(&sdmac->vc.lock);
->  		dev_warn(sdmac->sdma->dev, "restart cyclic channel %d\n", sdmac->channel);
-> +		spin_lock(&sdmac->vc.lock);
+This series does the following
+1. Adds a PolarFire SoC specific compatible and code to support for
+out-of-order dma transfers 
 
-This is strange. Why and how does dev_warn() call back into the SDMA
-driver?
+2. Adds generic device tree bindings support by using 
+of_dma_controller_register()
 
-We shouldn't merge this without having a clue what exactly goes wrong
-here. Please provide the corresponding lockdep output.
+Shravan Chippa (3):
+  dmaengine: sf-pdma: Support of_dma_controller_register()
+  dt-bindings: dma: sf-pdma: add new compatible name
+  dmaengine: sf-pdma: add mpfs-pdma compatible name
 
-Sascha
+ .../bindings/dma/sifive,fu540-c000-pdma.yaml  | 12 ++--
+ drivers/dma/sf-pdma/sf-pdma.c                 | 68 ++++++++++++++++++-
+ drivers/dma/sf-pdma/sf-pdma.h                 |  6 ++
+ 3 files changed, 79 insertions(+), 7 deletions(-)
 
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.34.1
+

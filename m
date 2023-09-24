@@ -2,98 +2,100 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DD6E37AC5FF
-	for <lists+dmaengine@lfdr.de>; Sun, 24 Sep 2023 02:23:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48C5D7ACA79
+	for <lists+dmaengine@lfdr.de>; Sun, 24 Sep 2023 17:24:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229723AbjIXAYD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 23 Sep 2023 20:24:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37708 "EHLO
+        id S229450AbjIXPYR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 24 Sep 2023 11:24:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229450AbjIXAYD (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 23 Sep 2023 20:24:03 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8219E136;
-        Sat, 23 Sep 2023 17:23:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695515037; x=1727051037;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=e+IP2YTTfPQNfC51BuRVQ3FS282THHINwCwNMeWcoVM=;
-  b=Wts1pFYFwC2R/EcT0g9M9QnLRBVrY8HOEuU7vb6Xr++0RH6PDDGiWjs7
-   bebC8YAJWTioUujvp1YgI42TD7pKsKkMwoZGPT93J+hJCmdsSDdbaWihC
-   iIQ7CQfgTSQd5vSPpWn+FfTdne+qmPQ7zsF+w85PXJkLvvzj/f6QggUQj
-   rKUe98SC96gCG/D2ux7g9pzRajlyJdp9YQJFnfIFPzal6fuSvfLl02nnb
-   6heh9ckcVMGesW/ZoOmr7Kq/4czJYLXjaiVawfYVouKhavBgvb0AcEjJX
-   kWCHtGUfzfJY5sVoln/gxwRHsVKHmDwcSIhaQcn2ZOcyRFmh0bSYJcYg+
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10842"; a="378338267"
-X-IronPort-AV: E=Sophos;i="6.03,171,1694761200"; 
-   d="scan'208";a="378338267"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2023 17:23:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10842"; a="1078798374"
-X-IronPort-AV: E=Sophos;i="6.03,171,1694761200"; 
-   d="scan'208";a="1078798374"
-Received: from fyu1.sc.intel.com ([172.25.103.126])
-  by fmsmga005.fm.intel.com with ESMTP; 23 Sep 2023 17:23:56 -0700
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     "Vinod Koul" <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        "linux-kernel" <linux-kernel@vger.kernel.org>
-Cc:     Dave Jiang <dave.jiang@intel.com>,
-        Sanjay Kumar <sanjay.k.kumar@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH] dmaengine: idxd: rate limit printk in misc interrupt thread
-Date:   Sat, 23 Sep 2023 17:23:47 -0700
-Message-Id: <20230924002347.1117757-1-fenghua.yu@intel.com>
-X-Mailer: git-send-email 2.37.1
+        with ESMTP id S229437AbjIXPYR (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 24 Sep 2023 11:24:17 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14E98B8;
+        Sun, 24 Sep 2023 08:24:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net; s=s31663417;
+ t=1695569018; x=1696173818; i=j.neuschaefer@gmx.net;
+ bh=s5gWdQpVH21Xx+9InxWsz6K6mgquCNB9iZycdR6gpYU=;
+ h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+ b=Eret2MkaH3SBWABhFMXlk84417zAEaOVNeeYXH7F9Fq4dzf3Zp7BQcmi0SYYWW0bqA9bhw23g8i
+ nuhApZhp+yByiQJyoTt1XbR7/LyoeYthVbo6/GbDgsZ8m/uTbNsyFcKpT9Rq5SY0QAUmIxhx9AWtR
+ F9sdKrQL5QHhJkrN3J7S+fd7qd7dJ+K3b70VKkXH0x0Nck9uTtgh+3f/yjguDTYF/T2ak7CHfx4h/
+ B+mbJah0wqhkuwHsWASnmFi3w3bCmEzDaR0JExPMXBCZJwgEqD56Bnxv2JLZ81dAR0M3PoVlc/1SS
+ zjJdx4erucZ6Q29OEEjbFzqNeTLif4D5RMqw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from probook ([89.0.47.152]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MDhlV-1qvBvB1Z6l-00Apx2; Sun, 24
+ Sep 2023 17:23:38 +0200
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     dmaengine@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Wei Xu <xuwei5@hisilicon.com>,
+        John Stultz <john.stultz@linaro.org>,
+        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Vinod Koul <vkoul@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH] dmaengine: hisi: Simplify preconditions of CONFIG_K3_DMA
+Date:   Sun, 24 Sep 2023 17:23:32 +0200
+Message-Id: <20230924152332.2254305-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:mO+5wHE0RmepwGCER4agAwL5sdZdkEmD7ddZjwOsYIJ3KcobDec
+ wb3sIJdspptyosakZW9CkeABC3G/J1vWL9KND2I5KVKZ85sVDAnOGzC2hYA0ZkOtbNEg7DM
+ f0D7YP9fOBJ7Gp9DpNYUECXz0eU1uNSR0keus4fg6t75lndIOM/ONygs49N0SehJOx0gdh7
+ wg12HGeE6B4xLjtsmhEMw==
+UI-OutboundReport: notjunk:1;M01:P0:nvmjNVhzPDU=;4OysFuZ81/aARekur98DArYf/2M
+ 9eVX+uCJB5GJwtGCLsk078tv6WTI29wZzQVhWQURvgqxJ6AR0+kTR9WWEHBYLDXi7XwaEvgKK
+ 7Ts1dPYdI8N9fi0B7cOdJvKRS0S2I9QuIBaxk6HbgK4EeiQg6pQk8ejO9V1jJHAYolQ9uuwER
+ 6HXZnuhH3rFU5YyuAhtc+kFt+KcrMRRQiViOP6d4ZlgrhCtEi4uRas67nJuPWf99oOxk7G6AG
+ 2u3RH4v6ILKIJlHwGXUyvyvhqaBferMW4klA0bzF5Ke9yf8OkhDss/uBrXUs2P1q2V38J6JPh
+ OZrSi+ZW/TSUjKYpJIlI2y1BBrbwvXwyxpXpshZFAYXDCCQN4HhqTKLVd1Wgzj3pBObq2pM6v
+ 8Ha59CKXBUDqhPHwvuVMOEelumkw4vVwN40CqUz16u0X2ZZ8Ld/pUuPwKhzarxH+p9fH+fiDo
+ sJdQ9dgOVsYD8bLZWTh0ADlnUUx+0dbwUdZ1zpbnnXGt/Ry5jafOk3DxLva36iW5Qgw29Ko4l
+ Z61KLwMJKiLJNYDNCVMWS4VR6W2OHDNBn6tXPSoQ6YYDlltj4Cu6hhgL7GhqMClLs+ijNAHjn
+ rupPQtiYgQtqsfFXhDEjim1NjfxMqlqEsZc0I1JZQoU9cuoYUu+qSiPzhW0d51AKg2opqJzJa
+ v7/VRAOHFkjQLrRB412ZF3KT3VMvb0nEDZnkR44Kh52h6UFujgYMaHp0H+bZHj+3VsROHYXbx
+ x57W1O3b/In54de+iMygBNGwCBadRapXTrHDO6gMHf4DfHFjJ0qt4vgkNhntdgL1ljvfj6Q9g
+ tjXPvJW3uhWe6HjiNotlgJq85mMgMuxpEYuErl0jQt+GIOFOsV5lSq4cdrFpO0p43abzFB+5x
+ WDrAC7aw+0/uVdHSLcmrE1Na9wsyvy1O6omriZ/fSp1m6qJrbVEk6Jwx9aOcwYS1R2GZ7Mz3B
+ ZSeMGfHveklIC1ITCJ+viDXfO9k=
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Dave Jiang <dave.jiang@intel.com>
+Commit e39a2329cfb09 ("Kconfig: Allow k3dma driver to be selected for
+more then HISI3xx platforms") expanded the "depends on" line of K3_DMA
+from "ARCH_HI3xxx" to "ARCH_HI3xxx || ARCH_HISI || COMPILE_TEST".
+However, ARCH_HI3xxx implies ARCH_HISI, so it's unnecessary to list
+both.
 
-Add rate limit to the dev_warn() call in the misc interrupt thread. This
-limits dmesg getting spammed if a descriptor submitter is spamming bad
-descriptors with invalid completion records and resulting the errors being
-continuously reported by the misc interrupt handling thread.
+Instead, just list ARCH_HISI, which covers all HiSilicon platforms.
 
-Reported-by: Sanjay Kumar <sanjay.k.kumar@intel.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Fenghua Yu <fenghua.yu@intel.com>
----
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
+ drivers/dma/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This patch was sent to dmaengine mailing list before:
-https://lore.kernel.org/all/165125377735.312075.15715853788802098990.stgit@djiang5-desk3.ch.intel.com/
-But it hasn't be merged into upstream yet. Add my Reviewed-by tag
-and re-send it. No code or commit message change.
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index 4ccae1a3b8842..70ba506dabab5 100644
+=2D-- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -362,7 +362,7 @@ config INTEL_IOATDMA
 
- drivers/dma/idxd/irq.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
-index 041be6a4dec4..8e895a1e1881 100644
---- a/drivers/dma/idxd/irq.c
-+++ b/drivers/dma/idxd/irq.c
-@@ -430,8 +430,8 @@ irqreturn_t idxd_misc_thread(int vec, void *data)
- 		val |= IDXD_INTC_ERR;
- 
- 		for (i = 0; i < 4; i++)
--			dev_warn(dev, "err[%d]: %#16.16llx\n",
--				 i, idxd->sw_err.bits[i]);
-+			dev_warn_ratelimited(dev, "err[%d]: %#16.16llx\n",
-+					     i, idxd->sw_err.bits[i]);
- 		err = true;
- 	}
- 
--- 
-2.32.0
+ config K3_DMA
+ 	tristate "Hisilicon K3 DMA support"
+-	depends on ARCH_HI3xxx || ARCH_HISI || COMPILE_TEST
++	depends on ARCH_HISI || COMPILE_TEST
+ 	select DMA_ENGINE
+ 	select DMA_VIRTUAL_CHANNELS
+ 	help
+=2D-
+2.40.1
 

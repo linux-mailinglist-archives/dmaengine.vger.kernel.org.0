@@ -2,282 +2,208 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C22107ADBB1
-	for <lists+dmaengine@lfdr.de>; Mon, 25 Sep 2023 17:40:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FA3E7ADCB2
+	for <lists+dmaengine@lfdr.de>; Mon, 25 Sep 2023 18:07:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230004AbjIYPk3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 25 Sep 2023 11:40:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53836 "EHLO
+        id S233152AbjIYQHL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 25 Sep 2023 12:07:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229874AbjIYPk2 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 25 Sep 2023 11:40:28 -0400
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BC43FF;
-        Mon, 25 Sep 2023 08:40:20 -0700 (PDT)
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.17.1.22/8.17.1.22) with ESMTP id 38PB8uT6014707;
-        Mon, 25 Sep 2023 17:39:35 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-        message-id:date:mime-version:subject:to:cc:references:from
-        :in-reply-to:content-type:content-transfer-encoding; s=
-        selector1; bh=mGHKtScuDGvlKtHxb7FEML0faIVvgVUaxKEFd7mNV8E=; b=4q
-        Kcoqc3zgo9sJUre04DyZDGbklDpC/KeHLYhQUqjGRISItW8tgxD1HfsY5C4dvmqU
-        ypND1/tw6xNpNdiaI9cj+0DWwB+AO0jLWS/wje1xIs8ahvEonwIRLgsKfwpyGxPj
-        WrbsnrDRuDGY9paZF0VD3ToFCcy5ZYDaUcatISItUInwnHoiND9VP6eDGTO9iYXo
-        ZEP5o7P/ZBL2FD+txkgb4ZEpwSXXmY28sPofNNkoXeBmhTKN4+cuSPwfop+Qz5FQ
-        7qyGBbMEzJI/xgZpubfLrOe/BKmIRB3aBHd5cxl6QkR5912kToqhArv0Ruzk8VDm
-        KERn0jfP42AQsJ6JQr2A==
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3t9qbwr14m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 25 Sep 2023 17:39:35 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 16D6610005C;
-        Mon, 25 Sep 2023 17:39:15 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D8052245514;
-        Mon, 25 Sep 2023 17:39:15 +0200 (CEST)
-Received: from [10.201.20.32] (10.201.20.32) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 25 Sep
- 2023 17:39:13 +0200
-Message-ID: <4eb771d5-1f22-c708-0390-0111e8d1a9a0@foss.st.com>
-Date:   Mon, 25 Sep 2023 17:39:13 +0200
+        with ESMTP id S233171AbjIYQHK (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 25 Sep 2023 12:07:10 -0400
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E5E710A;
+        Mon, 25 Sep 2023 09:07:03 -0700 (PDT)
+Received: by mail-lf1-x12f.google.com with SMTP id 2adb3069b0e04-50308217223so10747095e87.3;
+        Mon, 25 Sep 2023 09:07:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1695658022; x=1696262822; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=b61xHCzm/PcFjiQB0s4w1d7ci9lTYRpAnOY5ncVnfjQ=;
+        b=eNP7hbLm4nobluVho5kIR6+qqKz/21MrDiLuFUtoH0E0XH9o2sgdBHOXBNwgblbI0O
+         D4HKTD2Fzh8a90amRP4LU6d7XHalG78kNtZNyVhy+I3N29bVHAetFKIX7nIx34fglIXZ
+         VdtHOb42FoTZAHmXrdrZ6ePdQZofHdO2yC9jgw/RQMc5GkCmYE3YtSpKqPRazr1v7/aY
+         5kmi5/aJs5ygpuwwcFccGW7b7i8mnHOAiQFTf7Pjxpf3g88dATvdomsVgdKl8o5nZU4v
+         mV9rLabwTST6aPI8Ct2b9IaQ9g0vw5GcHfKbxlzvdRynPmsH0HjSKjr2MtE4dFir6Od2
+         zDsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695658022; x=1696262822;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=b61xHCzm/PcFjiQB0s4w1d7ci9lTYRpAnOY5ncVnfjQ=;
+        b=imO07eDlNMFt11kGcDBE0QSDk4KQnAg27e+xD+V9qTAJ1XnAANwNGFgj2GSvLZZDtS
+         3HSVl7WC7deTpk1wcoXMnbXV4D6AyT3lOKkRHPbhJu60e0/0Sc4y7YX8QDPTlol3DA+k
+         hSikSboonHuEQuEZtaWZRT9PCkyQe8RULUguf4B9zUhEMS4UfU/4pJJ6X/8qRIuIn+Zz
+         87MG/QJaYB5CNR3UPKHLcI2NRII6zS+6b/XGoVujIfXNGZZe4JyjsdQSqz4XGGNeVCki
+         d8ciOK0JR3pADoIx6qZHsVHpgfpJymXQUwU4Dr0cyYgevHJNdlmW4elvJ1v/J/DU5CJW
+         BloQ==
+X-Gm-Message-State: AOJu0YzqSxlV2yzFQvrnVHT6PYhq0eiLZJseNAqz5bz2YfW+KvniGZsG
+        0us7oqqtuzClgcRsXYGoEd4=
+X-Google-Smtp-Source: AGHT+IHJJGG4Om+E1MDWFHJE3JaAFJNt/rkVuW2TQWaswK1DcEB3uaaKTAWvKbQlJnolszT/sx3//g==
+X-Received: by 2002:a05:6512:2248:b0:503:2deb:bbc1 with SMTP id i8-20020a056512224800b005032debbbc1mr7585940lfu.22.1695658021148;
+        Mon, 25 Sep 2023 09:07:01 -0700 (PDT)
+Received: from mobilestation ([178.176.56.174])
+        by smtp.gmail.com with ESMTPSA id l11-20020ac2554b000000b00502fe164ce6sm1883245lfk.204.2023.09.25.09.06.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Sep 2023 09:07:00 -0700 (PDT)
+Date:   Mon, 25 Sep 2023 19:06:56 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     =?utf-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>
+Cc:     Cai Huoqing <cai.huoqing@linux.dev>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Herve Codina <herve.codina@bootlin.com>
+Subject: Re: [PATCH 4/9] dmaengine: dw-edma: HDMA: Add memory barrier before
+ starting the DMA transfer in remote setup
+Message-ID: <3kqkdegy56hr7ghwrg42h3rjc3hcpgfz4jkqdhri2j2qjg3crx@cpuy2ehukzdp>
+References: <20230619170201.5hbgte2optjlbx55@mobilestation.baikal.int>
+ <20230619203207.694bfac6@kmaincent-XPS-13-7390>
+ <tpowhctppelni47dosc27cg4vmzwdqnuvf3rukvmju2guoxzsr@wgxomqzfv6ch>
+ <20230620153006.036ca3ba@kmaincent-XPS-13-7390>
+ <qwkwtsjmfkmvsx4pmjetoxkjrpuwkndm6h6ntkpehxutz2h2jm@bmdzt7ywiuvs>
+ <20230621151948.36125997@kmaincent-XPS-13-7390>
+ <ti6avu3xdrw7rjwskmemuxu4tcerfq3wd3y4c4v26pbjqjcs5h@izqmikcjsv56>
+ <20230622171203.6857b918@kmaincent-XPS-13-7390>
+ <phrpjn5dtqfo2fwjlkrsepjl4mgmjc24skpvcjo43g3p5sjv3g@mfzvfz7ygdad>
+ <20230912105152.42cf1454@kmaincent-XPS-13-7390>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v3 00/11] Introduce STM32 Firewall framework
-Content-Language: en-US
-To:     <Oleksii_Moisieiev@epam.com>, <gregkh@linuxfoundation.org>,
-        <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>, <alexandre.torgue@foss.st.com>,
-        <vkoul@kernel.org>, <jic23@kernel.org>,
-        <olivier.moysan@foss.st.com>, <arnaud.pouliquen@foss.st.com>,
-        <mchehab@kernel.org>, <fabrice.gasnier@foss.st.com>,
-        <andi.shyti@kernel.org>, <ulf.hansson@linaro.org>,
-        <edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
-        <hugues.fruchet@foss.st.com>, <lee@kernel.org>, <will@kernel.org>,
-        <catalin.marinas@arm.com>, <arnd@kernel.org>,
-        <richardcochran@gmail.com>, Frank Rowand <frowand.list@gmail.com>
-CC:     <linux-crypto@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-i2c@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        <alsa-devel@alsa-project.org>, <linux-media@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-phy@lists.infradead.org>, <linux-serial@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <linux-usb@vger.kernel.org>
-References: <20230726083810.232100-1-gatien.chevallier@foss.st.com>
-From:   Gatien CHEVALLIER <gatien.chevallier@foss.st.com>
-In-Reply-To: <20230726083810.232100-1-gatien.chevallier@foss.st.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.201.20.32]
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-09-25_13,2023-09-25_01,2023-05-22_02
-X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230912105152.42cf1454@kmaincent-XPS-13-7390>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hello all,
+Hi Köry
 
-Since the "feature-domains" bindings lacks precision (maybe some
-renaming for better clarity on its purpose), I will send v4 with a
-vendor binding so the generic one better discussed and enriched with
-other contributor examples.
+On Tue, Sep 12, 2023 at 10:52:10AM +0200, Köry Maincent wrote:
+> Hello Serge,
+> 
+> I am back with an hardware design answer:
+> > "Even though the PCIe itself respects the transactions ordering, the 
+> > AXI bus does not have an end-to-end completion acknowledgement (it
+> > terminates at the PCIe EP boundary with bus), and does not guaranteed
+> > ordering if accessing different destinations on the Bus. So, an access to LL
+> > could be declared complete even though the transactions is still being
+> > pipelined in the AXI Bus. (a dozen or so clocks, I can give an accurate
+> > number if needed)
+> > 
+> > The access to DMA registers is done through BAR0 “rolling”
+> > so the transaction does not actually go out on the AXI bus and
+> > looped-back to PCIe DMA, rather it stays inside the PCIe EP.
+> > 
+> > For the above reasons, hypothetically, there’s a chance that even if the DMA
+> > LL is accessed before the DM DB from PCIe RC side, the DB could be updated
+> > before the LL in local memory."
 
-This will avoid mixing several patch set.
+Thanks for the detailed explanation. It doesn't firmly point out to
+the root cause of the problem but mainly confirms a possible race
+condition inside the remote PCIe device itself. That's what I meant in
+my suggestion 3.
 
-Best regards,
-Gatien
+> 
+> On Thu, 22 Jun 2023 19:22:20 +0300
+> Serge Semin <fancer.lancer@gmail.com> wrote:
+>  
+> > If we get assured that hardware with such problem exists (if you'll get
+> > confirmation about the supposition 3. above) then we'll need to
+> > activate your trick for that hardware only. Adding dummy reads for all
+> > the remote eDMA setups doesn't look correct since it adds additional
+> > delay to the execution path and especially seeing nobody has noticed
+> > and reported such problem so far (for instance Gustavo didn't see the
+> > problem on his device otherwise he would have fixed it).
+> > 
+> > So if assumption 3. is correct then I'd suggest the next
+> > implementation: add a new dw_edma_chip_flags flag defined (a.k.a
+> > DW_EDMA_SLOW_MEM), have it specified via the dw_edma_chip.flags field
+> > in the Akida device probe() method and activate your trick only if
+> > that flag is set.
+> 
 
-On 7/26/23 10:37, Gatien Chevallier wrote:
-> Introduce STM32 Firewall framework for STM32MP1x and STM32MP2x
-> platforms. STM32MP1x(ETZPC) and STM32MP2x(RIFSC) Firewall controllers
-> register to the framework to offer firewall services such as access
-> granting.
+> The flag you suggested is about slow memory write but as said above the issue
+> comes from the AXI bus and not the memory. 
+
+AXI bus is a bus what is utilized to access the LL-memory in your
+case. From the CPU perspective it's the same since the access time
+depends on the both parts performance.
+
+> I am wondering why you don't see
+> this issue. 
+
+Well, in my case the DW PCIe eDMA controller is _locally_ implemented.
+So it' CSRs and the LL-memory are accessible from the CPU side over a
+system interconnect. The LL-memory is allocated from the system RAM
+(CPU<->_AXI IC_<->AXI<->DDR<->RAM), while the DW PCIe CSRs are just
+the memory-mapped IO space (CPU<->_AXI IC_<->APB<->AXI<->DBI<->CDM).
+So in my case:
+1. APB is too slow to be updated before the Linked-List data.
+2. MMIO accessors (writel()/readl()/etc) are defined in a way so all
+the memory updates (normal memory writes and reads) are supposed to be
+completed before any further MMIO accesses.
+
+So the ordering is mainly assured by 2 in case of the local DW PCIe
+eDMA implementation.
+
+Your configuration is different. You have the DW PCIe eDMA controller
+implemented remotely. In that case you have both CSRs and Linked-list
+memory accessible over a chain like:
+CPU<->_Some IC_<->AXI/Native<->Some PCIe Host<->... PCIe bus ... <-+
+                                                                   |
++------------------------------------------------------------------+
+|
++->DW eDMA
+   +> BARx<->CDM CSRs
+   +> BARy<->AHB/AXI/APB/etc<->Some SRAM
+                    ^
+                    |
+                    +-----------------------+
+                                            |
+AFAICS a race condition happens due to this + bus being too slow. So
+in case if the LL and CSRs IO writes are performed right one after
+another with no additional delays or syncs in between them, then
+indeed the later one can be finished earlier than the former one.
+
+> If I understand well it should be present on all IP as the DMA
+> register is internal to the IP and the LL memory is external through AXI bus.
+> Did you stress your IP? On my side it appears with lots of operation using
+> several (at least 3) thread through 2 DMA channels.
+
+I didn't stress it up with such test. But AFAICS from a normal systems
+implementations the problem isn't relevant for the locally accessible
+DW PCIe eDMA controllers otherwise at the very least it would have
+popped up in many other places in kernel.
+
+What I meant in my previous message was that it was strange Gustavo
+(the original driver developer) didn't spot the problem you were
+referring to. He was the only one having the Remote DW eDMA hardware
+at hands to perform such tests. Anyway seeing we've got to some
+understanding around the problem and since based on the DW PCIe RP/EP
+internals the CSRs and Application memory are indeed normally accessed
+over the different buses, let's fix the problem as you suggest with
+just using the DW_EDMA_CHIP_LOCAL flag. But please:
+1. Fix it for both HDMA and EDMA controllers.
+2. Create functions like dw_edma_v0_sync_ll_data() and
+dw_hdma_v0_sync_ll_data() between the dw_Xdma_v0_core_write_chunk()
+and dw_Xdma_v0_core_start() methods, which would perform the
+dummy-read from the passed LL-chunk in order to sync the remote memory
+writes.
+3. Based on all our discussions add a saner comment to these methods
+about why the dummy-read is needed for the remote DW eDMA setups.
+
+-Serge(y)
+
 > 
-> This series of patches is a new approach on the previous STM32 system
-> bus, history is available here:
-> https://lore.kernel.org/lkml/20230127164040.1047583/
-> 
-> The need for such framework arises from the fact that there are now
-> multiple hardware firewalls implemented across multiple products.
-> Drivers are shared between different products, using the same code.
-> When it comes to firewalls, the purpose mostly stays the same: Protect
-> hardware resources. But the implementation differs, and there are
-> multiple types of firewalls: peripheral, memory, ...
-> 
-> Some hardware firewall controllers such as the RIFSC implemented on
-> STM32MP2x platforms may require to take ownership of a resource before
-> being able to use it, hence the requirement for firewall services to
-> take/release the ownership of such resources.
-> 
-> On the other hand, hardware firewall configurations are becoming
-> more and more complex. These mecanisms prevent platform crashes
-> or other firewall-related incoveniences by denying access to some
-> resources.
-> 
-> The stm32 firewall framework offers an API that is defined in
-> firewall controllers drivers to best fit the specificity of each
-> firewall.
-> 
-> For every peripherals protected by either the ETZPC or the RIFSC, the
-> firewall framework checks the firewall controlelr registers to see if
-> the peripheral's access is granted to the Linux kernel. If not, the
-> peripheral is configured as secure, the node is marked populated,
-> so that the driver is not probed for that device.
-> 
-> The firewall framework relies on the feature-domain-controller device
-> tree bindings: https://lore.kernel.org/lkml/0c0a82bb-18ae-d057-562b.
-> It is used by peripherals to reference a domain controller, in this
-> case a firewall feature domain. The bus uses the ID referenced by
-> the feature-domains property to know where to look in the firewall
-> to get the security configuration for the peripheral. This allows
-> a device tree description rather than a hardcoded peripheral table
-> in the bus driver.
-> 
-> The STM32 ETZPC device is responsible for filtering accesses based on
-> security level, or co-processor isolation for any resource connected
-> to it.
-> 
-> The RIFSC is responsible for filtering accesses based on Compartment
-> ID / security level / privilege level for any resource connected to
-> it.
-> 
-> STM32MP13/15/25 SoC device tree files are updated in this series to
-> implement this mecanism.
-> 
-> Changes in V2:
-> 
-> 	generic:
-> 		- Add fw_devlink dependency for "feature-domains"
-> 		  property.
-> 
-> 	bindings:
-> 		- Corrected YAMLS errors highlighted by Rob's robot
-> 		- Firewall controllers YAMLs no longer define the
-> 		  maxItems for the "feature-domains" property
-> 		- Renamed st,stm32-rifsc.yaml to
-> 		  st,stm32mp25-rifsc.yaml
-> 		- Fix examples in YAML files
-> 		- Change feature-domains maxItems to 2 in firewall
-> 		  consumer files as there should not be more than
-> 		  2 entries for now
-> 		- Declare "feature-domain-names" as an optional
-> 		  property for firewall controllers child nodes.
-> 		- Add missing "feature-domains" property declaration
-> 		  in bosch,m_can.yaml and st,stm32-cryp.yaml files
-> 
-> 	firewall framework:
-> 		- Support multiple entries for "feature-domains"
-> 		  property
-> 		- Better handle the device-tree parsing using
-> 		  phandle+args APIs
-> 		- Remove "resource firewall" type
-> 		- Add a field for the name of the firewall entry
-> 		- Fix licenses
-> 	
-> 	RIFSC:
-> 		- Add controller name
-> 		- Driver is now a module_platform_driver
-> 		- Fix license
-> 
-> 	ETZPC:
-> 		- Add controller name
-> 		- Driver is now a module_platform_driver
-> 		- Fix license
-> 
-> 	Device trees:
-> 		- Fix rifsc node name
-> 		- Move the "ranges" property under the
-> 		  "feature-domains" one
-> 
-> Changes in V3:
-> 
-> 	Change incorrect ordering for bindings commits leading
-> 	to an error while running
-> 	"make DT_CHECKER_FLAGS=-m dt_binding_check"
-> 
-> Oleksii Moisieiev (1):
->    dt-bindings: Document common device controller bindings
-> 
-> Gatien Chevallier (10):
->    dt-bindings: treewide: add feature-domains description
->    dt-bindings: bus: document RIFSC
->    dt-bindings: bus: document ETZPC
->    firewall: introduce stm32_firewall framework
->    of: property: fw_devlink: Add support for "feature-domains"
->    bus: rifsc: introduce RIFSC firewall controller driver
->    arm64: dts: st: add RIFSC as a domain controller for STM32MP25x boards
->    bus: etzpc: introduce ETZPC firewall controller driver
->    ARM: dts: stm32: add ETZPC as a system bus for STM32MP15x boards
->    ARM: dts: stm32: add ETZPC as a system bus for STM32MP13x boards
-> 
->   .../bindings/bus/st,stm32-etzpc.yaml          |   96 +
->   .../bindings/bus/st,stm32mp25-rifsc.yaml      |  105 +
->   .../bindings/crypto/st,stm32-cryp.yaml        |    4 +
->   .../bindings/crypto/st,stm32-hash.yaml        |    4 +
->   .../devicetree/bindings/dma/st,stm32-dma.yaml |    4 +
->   .../bindings/dma/st,stm32-dmamux.yaml         |    4 +
->   .../feature-domain-controller.yaml            |   84 +
->   .../devicetree/bindings/i2c/st,stm32-i2c.yaml |    4 +
->   .../bindings/iio/adc/st,stm32-adc.yaml        |    4 +
->   .../bindings/iio/adc/st,stm32-dfsdm-adc.yaml  |    4 +
->   .../bindings/iio/dac/st,stm32-dac.yaml        |    4 +
->   .../bindings/media/cec/st,stm32-cec.yaml      |    4 +
->   .../bindings/media/st,stm32-dcmi.yaml         |    4 +
->   .../memory-controllers/st,stm32-fmc2-ebi.yaml |    4 +
->   .../bindings/mfd/st,stm32-lptimer.yaml        |    4 +
->   .../bindings/mfd/st,stm32-timers.yaml         |    5 +
->   .../devicetree/bindings/mmc/arm,pl18x.yaml    |    4 +
->   .../bindings/net/can/bosch,m_can.yaml         |    4 +
->   .../devicetree/bindings/net/stm32-dwmac.yaml  |    4 +
->   .../bindings/phy/phy-stm32-usbphyc.yaml       |    4 +
->   .../bindings/regulator/st,stm32-vrefbuf.yaml  |    4 +
->   .../devicetree/bindings/rng/st,stm32-rng.yaml |    4 +
->   .../bindings/serial/st,stm32-uart.yaml        |    4 +
->   .../bindings/sound/st,stm32-i2s.yaml          |    4 +
->   .../bindings/sound/st,stm32-sai.yaml          |    4 +
->   .../bindings/sound/st,stm32-spdifrx.yaml      |    4 +
->   .../bindings/spi/st,stm32-qspi.yaml           |    4 +
->   .../devicetree/bindings/spi/st,stm32-spi.yaml |    4 +
->   .../devicetree/bindings/usb/dwc2.yaml         |    4 +
->   MAINTAINERS                                   |    7 +
->   arch/arm/boot/dts/st/stm32mp131.dtsi          | 1027 +++---
->   arch/arm/boot/dts/st/stm32mp133.dtsi          |   51 +-
->   arch/arm/boot/dts/st/stm32mp13xc.dtsi         |   19 +-
->   arch/arm/boot/dts/st/stm32mp13xf.dtsi         |   19 +-
->   arch/arm/boot/dts/st/stm32mp151.dtsi          | 2757 +++++++++--------
->   arch/arm/boot/dts/st/stm32mp153.dtsi          |   52 +-
->   arch/arm/boot/dts/st/stm32mp15xc.dtsi         |   19 +-
->   arch/arm64/Kconfig.platforms                  |    1 +
->   arch/arm64/boot/dts/st/stm32mp251.dtsi        |    7 +-
->   drivers/bus/Kconfig                           |    9 +
->   drivers/bus/Makefile                          |    1 +
->   drivers/bus/stm32_etzpc.c                     |  141 +
->   drivers/bus/stm32_firewall.c                  |  288 ++
->   drivers/bus/stm32_firewall.h                  |   83 +
->   drivers/bus/stm32_rifsc.c                     |  252 ++
->   drivers/of/property.c                         |    2 +
->   include/linux/bus/stm32_firewall_device.h     |  140 +
->   47 files changed, 3346 insertions(+), 1919 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/bus/st,stm32-etzpc.yaml
->   create mode 100644 Documentation/devicetree/bindings/bus/st,stm32mp25-rifsc.yaml
->   create mode 100644 Documentation/devicetree/bindings/feature-controllers/feature-domain-controller.yaml
->   create mode 100644 drivers/bus/stm32_etzpc.c
->   create mode 100644 drivers/bus/stm32_firewall.c
->   create mode 100644 drivers/bus/stm32_firewall.h
->   create mode 100644 drivers/bus/stm32_rifsc.c
->   create mode 100644 include/linux/bus/stm32_firewall_device.h
-> 
+> Köry

@@ -2,94 +2,79 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A65F7B28EF
-	for <lists+dmaengine@lfdr.de>; Fri, 29 Sep 2023 01:42:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A2F07B28F2
+	for <lists+dmaengine@lfdr.de>; Fri, 29 Sep 2023 01:43:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232215AbjI1XmP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 28 Sep 2023 19:42:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37390 "EHLO
+        id S229972AbjI1Xns (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 28 Sep 2023 19:43:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231485AbjI1XmO (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 28 Sep 2023 19:42:14 -0400
-Received: from mail-oo1-xc2a.google.com (mail-oo1-xc2a.google.com [IPv6:2607:f8b0:4864:20::c2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C75C1A1
-        for <dmaengine@vger.kernel.org>; Thu, 28 Sep 2023 16:42:12 -0700 (PDT)
-Received: by mail-oo1-xc2a.google.com with SMTP id 006d021491bc7-57bce354d94so3728743eaf.2
-        for <dmaengine@vger.kernel.org>; Thu, 28 Sep 2023 16:42:12 -0700 (PDT)
+        with ESMTP id S229541AbjI1Xnr (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 28 Sep 2023 19:43:47 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A0FD19F
+        for <dmaengine@vger.kernel.org>; Thu, 28 Sep 2023 16:43:45 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-1c3d8fb23d9so102346325ad.0
+        for <dmaengine@vger.kernel.org>; Thu, 28 Sep 2023 16:43:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695944532; x=1696549332; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3RV2WVrYFvmUIy/kF4sgLaI/igSwAmnqnqr5+CNVDt8=;
-        b=eIm0Tr3UrWUjzJ4jN6/2IK7vGtk83w/aM+dkwIMq+AwB2ci1Gu09xf9F9GMwaILj70
-         n4QvEnSrxRKunYK7/hD7XS4qnfKHiKUaPe20ZtTX7CsoKDMIVZZO8CFpNReTVXNSUq67
-         RXlmxi/OVy4WJv6gtNUzW8faa2GmV5dV2N214=
+        d=chromium.org; s=google; t=1695944625; x=1696549425; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=MNHH+1qhuM2be0FNxraZa2k964UVjBr3da8cdiKRngw=;
+        b=Sy1qrqyWxjWf+WyGsozkx32322B0DYBkvwFZER87pdVzcNV/cugNLl7M2HVu3Id8wy
+         ERRRlCOX2YAY3RHcV+ZcuTACBHNDMra7WDiN2NDRA6MVpbkl2R45j5Qrq3lx/wwbbfmL
+         dI6/sb5rjwNXMlDbeoUO46Q6SL6U/J8Ldl814=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695944532; x=1696549332;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3RV2WVrYFvmUIy/kF4sgLaI/igSwAmnqnqr5+CNVDt8=;
-        b=kVrQVfMIE6AUmjNWA+7dxSgSDtff7BF10k9zMHITpjdXbx+lKzVVBHMCKspxbk2xFF
-         OBBFtK3wcYh8jlG8+r0cKS30aCg88kXJ8yGpQXpgkPwwAs4ieOb4qnCpCkbzT7fLw1ZG
-         17Crp7aOKb5ZQ2os3H6e5H333Ybas9h0Et2dfGu+C7ADxx0e/aWObMI2F5qPdOxxRACa
-         cZ1OuzjDZPISRNDFh+Vmj8/IfwhcBIBv5u6gwECz1BPJXxhPzH0n9MEWtPYr3quEZHQO
-         tREiSMRPL6RRKoavRd6mx1FC0t6XhwWVQ6r1NJZMq+QbR3HZ5MYYsRzU0TOnhz+3CpS1
-         kGRQ==
-X-Gm-Message-State: AOJu0YwEL6MXxMd0Fi9KyI7VKH+WR2znFE21EttgFIFMWS890LA4WI4h
-        AYk1K/x5HD1o6KD2gJUNbdxE2g==
-X-Google-Smtp-Source: AGHT+IHBsCldxysDZTajanQY+g4dIkq4a5ohe3XveIhxwgWt0zJyzNyJaoBdNbO8ZXRuiDiGJefhMw==
-X-Received: by 2002:a05:6358:2808:b0:13e:ea2a:40aa with SMTP id k8-20020a056358280800b0013eea2a40aamr1895209rwb.8.1695944531707;
-        Thu, 28 Sep 2023 16:42:11 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1695944625; x=1696549425;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MNHH+1qhuM2be0FNxraZa2k964UVjBr3da8cdiKRngw=;
+        b=pEsQBDLkxXO3EZO8OTA/ukCiqtsb2xv2UAZW11HxmEoPm/CvSjdH4+pVbGqprzObtK
+         dTA6XUDorqhD2Nu0bAgXELwndxWi8lcQD4Gji8o0Pex3xg72XCJNl8jwUY+fHjaLqfa5
+         ItHtqP+g7p0CzrPI3faSCu0Rmahh39xr2y+GIgHTt3i3FrI56SeSQYVM0MD+T1atg7Nu
+         qN0SV2E7g5SyRHuCq4y3Pcx8iYIhfGZoiSVBl1YdZwlj+eWLzHkc6Dobw0rYKKEaCpxG
+         ahsQA91l/finXudpSdXaxnkCajNrsZxJFyhC3uvF1d9VW7PCeV/zOE4C6nyD671F8yuw
+         jM7w==
+X-Gm-Message-State: AOJu0Yy9zGjyJyby6vt1qIu/qiIdkfGYpMkRr9xr3uEyxx3yYFMYO9OH
+        D7XjE1tGwIbe5deoM9IsyK+GotF7gFXKwgDzZkM=
+X-Google-Smtp-Source: AGHT+IE3aB3bki1h2nzKeq4Hvu7L23o/LNCvJSwxc21wrOMfa6r6KlHZeiE4hugYWpH4RLmgxSLGuA==
+X-Received: by 2002:a17:903:1c1:b0:1c4:638:fff4 with SMTP id e1-20020a17090301c100b001c40638fff4mr2370744plh.17.1695944624781;
+        Thu, 28 Sep 2023 16:43:44 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id t6-20020a639546000000b0057a868900a9sm13316234pgn.67.2023.09.28.16.42.10
+        by smtp.gmail.com with ESMTPSA id s10-20020a170902ea0a00b001b895336435sm4068006plg.21.2023.09.28.16.43.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Sep 2023 16:42:10 -0700 (PDT)
-Date:   Thu, 28 Sep 2023 16:42:09 -0700
+        Thu, 28 Sep 2023 16:43:44 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Tudor Ambarus <tudor.ambarus@linaro.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Jie Hai <haijie1@huawei.com>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Green Wan <green.wan@sifive.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Patrice Chotard <patrice.chotard@foss.st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Yu Kuai <yukuai3@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jordy Zomer <jordy@pwning.systems>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
+Cc:     Kees Cook <keescook@chromium.org>,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-        dmaengine@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-tegra@vger.kernel.org, llvm@lists.linux.dev,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 00/21] dmaengine: Annotate with __counted_by
-Message-ID: <202309281641.47911CC@keescook>
-References: <20230817235428.never.111-kees@kernel.org>
- <169590216841.152265.1942803099201042070.b4-ty@kernel.org>
+        Tom Rix <trix@redhat.com>, dmaengine@vger.kernel.org,
+        llvm@lists.linux.dev,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] dmaengine: ep93xx_dma: Annotate struct ep93xx_dma_engine with __counted_by
+Date:   Thu, 28 Sep 2023 16:43:42 -0700
+Message-Id: <20230928234334.work.391-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <169590216841.152265.1942803099201042070.b4-ty@kernel.org>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1305; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=THP69OmSOtOGZgovd3irCbWFIq76IMb1Eo9RFIZ3FIQ=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlFg+uQsbjWwI6QLDwpDQxEemOjDuINJD24mwrU
+ /jndnL6pPuJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZRYPrgAKCRCJcvTf3G3A
+ JjzbD/9786EPnb+KEovN2A394u+CjRE5feFbV0OH2nJ+hoicNA0BmpvVK6QsaJqscUhY5SzZnIh
+ bJD/VopZIUjwI4FITPqd3Yd03UZG5en7eTcobbpl13XYpOvvHfGmu5sAK7daO4UvRki9YbY/N58
+ m+5TiNXLb8SwuOLA1TcJ67oPCf1N+kRUMewPGQzE3BrzjsrmC4nzBzItDiBFJaSmSUv/QI5TA5h
+ A+RxcOH11WeE7S4GGhN0EMcTv+w0/K04pncSa6lEdKHKZUL6I94j5oiRsDNdUNih71JGsyM4sp3
+ Xfg1nHufCoyp/18ig9FZ12Qg4gulxu5dRUqfzDV3HA6QoazyJInWvQizQKTT5hnVX3cTSo2pjN5
+ aeKyS51Yt2Ie3NIsUgexXgNaU70uD3yqBTWTdK8aPYOBW9/0zJF6Oa3c29hUAB6fqhV6a72H3P+
+ M8Hm9ZD9HyYzV49KpOi1i8kzL+d/EqbRdTlSnRkyr4rdGzCk16Bvh02vXWZ56G9V09qWS0cJHXn
+ fk74+F+zDDMUPD74z66DuOExRi9n5LzWvhnNfjql7GYDcnKJFwTM9oyTgNnpqvleA22e68tC3eQ
+ oiGIO/BQrniVpKwWJG6melsLUr2tQIeN+Pj4Gh8KP1Myz/9WxSxu7Sqyn502tYFCrQq2lxwXbwm
+ NkdSZdM Y4Zio4YA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
@@ -100,26 +85,40 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, Sep 28, 2023 at 05:26:08PM +0530, Vinod Koul wrote:
-> 
-> On Thu, 17 Aug 2023 16:58:37 -0700, Kees Cook wrote:
-> > This annotates several structures with the coming __counted_by attribute
-> > for bounds checking of flexible arrays at run-time. For more details, see
-> > commit dd06e72e68bc ("Compiler Attributes: Add __counted_by macro").
-> > 
-> > Thanks!
-> > 
-> > -Kees
-> > 
-> > [...]
-> 
-> Applied, thanks!
+Prepare for the coming implementation by GCC and Clang of the __counted_by
+attribute. Flexible array members annotated with __counted_by can have
+their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
+array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+functions).
 
-Thanks! I've dropped them from my tree. :)
+As found with Coccinelle[1], add __counted_by for struct ep93xx_dma_engine.
 
-Also, I found 1 more, which I'll send separately.
+[1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 
--Kees
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Tom Rix <trix@redhat.com>
+Cc: dmaengine@vger.kernel.org
+Cc: llvm@lists.linux.dev
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/dma/ep93xx_dma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/dma/ep93xx_dma.c b/drivers/dma/ep93xx_dma.c
+index 5c4a448a1254..d6c60635e90d 100644
+--- a/drivers/dma/ep93xx_dma.c
++++ b/drivers/dma/ep93xx_dma.c
+@@ -213,7 +213,7 @@ struct ep93xx_dma_engine {
+ #define INTERRUPT_NEXT_BUFFER	2
+ 
+ 	size_t			num_channels;
+-	struct ep93xx_dma_chan	channels[];
++	struct ep93xx_dma_chan	channels[] __counted_by(num_channels);
+ };
+ 
+ static inline struct device *chan2dev(struct ep93xx_dma_chan *edmac)
 -- 
-Kees Cook
+2.34.1
+

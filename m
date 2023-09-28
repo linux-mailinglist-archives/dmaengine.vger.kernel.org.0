@@ -2,76 +2,46 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D0977B1A4B
-	for <lists+dmaengine@lfdr.de>; Thu, 28 Sep 2023 13:16:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E3BA67B1B71
+	for <lists+dmaengine@lfdr.de>; Thu, 28 Sep 2023 13:56:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232106AbjI1LQV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 28 Sep 2023 07:16:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39632 "EHLO
+        id S231462AbjI1L4G (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 28 Sep 2023 07:56:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232029AbjI1LQK (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 28 Sep 2023 07:16:10 -0400
+        with ESMTP id S229980AbjI1L4F (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 28 Sep 2023 07:56:05 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 260172A2F3;
-        Thu, 28 Sep 2023 04:12:14 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 293FDC433C7;
-        Thu, 28 Sep 2023 11:11:35 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C340121;
+        Thu, 28 Sep 2023 04:56:04 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C0A9C433C8;
+        Thu, 28 Sep 2023 11:56:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695899496;
-        bh=Z72NaU1k+yn8VH2KLYdJDMnZnUKhBkDyH6n6KvVEpYY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ou0HLEYeDRVJuqY0rrG0SmdACv18zyLqyFfvqTO08uOxosewXkrdnUsKZDt4by03d
-         HoyzUC8RESyHsElFy2zn11j09IfZUt6WzHuA2oqO21Ha42SO+KKjXgm6IjLM41ZaXH
-         ZwhiFHQ85UyL+kbBBWakHtQDlKvxSMcDdKQpxgpwCi9X21uHcAKc3G/bOFNdpEQoHk
-         WsdW7mwVvcDmZgiZTnsgMjtrxUa+KpRrLwckKsmw0eTY9s/J352bE6VAvbfbcH27CW
-         a0Gd96itZ8C/fo/0yF0lAtKeo0IL63XfzQLgdegH0q4vvzaFAgyWcriGEs8NCPla5Q
-         foBo5T0e+9G9w==
-Date:   Thu, 28 Sep 2023 16:41:31 +0530
+        s=k20201202; t=1695902163;
+        bh=5PvIM+aPegeroDXqiEYobGZebqOA/gpuCayaIxjoARI=;
+        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+        b=mJze0tmckXpE2hS7/zgZt+kgVdUJNuTPtLBP6W0SJwZtDCyjkiB91BByiIrJJEhNQ
+         fOheUCuszQ+gEuL4tmEU1Quxs4YX62EY3W4ceqRw0YyHkTW2sQiWyvxkUiR9b097tr
+         7qiW58x700puSXlLKptdZbjPOx8dnNwzhYv8O+FJrp9uLy92AcDpmkdglxq0HC66E1
+         J4gIPCgfpPrhYBh7UzH1xuEG3j1tOmSm+QXq1T2bXQnkCZRsMyqYsRdOlZGqWwDOlf
+         WtkrSX9JAJCNB4YxrsfDm5A2E8fWdDYxPIdfve33d2GCXQUel9TLxMYpF6KeeruoqB
+         9d3swdJmnMynw==
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Tudor Ambarus <tudor.ambarus@linaro.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Jie Hai <haijie1@huawei.com>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Green Wan <green.wan@sifive.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Patrice Chotard <patrice.chotard@foss.st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Yu Kuai <yukuai3@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jordy Zomer <jordy@pwning.systems>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-        dmaengine@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-tegra@vger.kernel.org, llvm@lists.linux.dev,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 00/21] dmaengine: Annotate with __counted_by
-Message-ID: <ZRVfYzrdAOrXJUcI@matsya>
-References: <20230817235428.never.111-kees@kernel.org>
- <202309151307.F3341BD5A@keescook>
- <202309221015.AB63726@keescook>
+To:     dmaengine@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Fenghua Yu <fenghua.yu@intel.com>
+Cc:     Dave Jiang <dave.jiang@intel.com>,
+        Sanjay Kumar <sanjay.k.kumar@intel.com>
+In-Reply-To: <20230924002347.1117757-1-fenghua.yu@intel.com>
+References: <20230924002347.1117757-1-fenghua.yu@intel.com>
+Subject: Re: [PATCH] dmaengine: idxd: rate limit printk in misc interrupt
+ thread
+Message-Id: <169590216160.152265.5018881395434400214.b4-ty@kernel.org>
+Date:   Thu, 28 Sep 2023 17:26:01 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202309221015.AB63726@keescook>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.3
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -81,18 +51,22 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 22-09-23, 10:16, Kees Cook wrote:
-> On Fri, Sep 15, 2023 at 01:08:30PM -0700, Kees Cook wrote:
-> > Just a ping on the series... how do these look to you, Vinod?
-> > 
-> > If you want I can carry them in my tree. Please let me know.
+
+On Sat, 23 Sep 2023 17:23:47 -0700, Fenghua Yu wrote:
+> Add rate limit to the dev_warn() call in the misc interrupt thread. This
+> limits dmesg getting spammed if a descriptor submitter is spamming bad
+> descriptors with invalid completion records and resulting the errors being
+> continuously reported by the misc interrupt handling thread.
 > 
-> I'm now carrying this in my for-next/hardening tree. Let me know if
-> you'd prefer I drop it.
+> 
 
-Sorry was busy in travel etc, it should be in dmaengine/next tomorrow.
-You can drop it
+Applied, thanks!
 
-Thanks
+[1/1] dmaengine: idxd: rate limit printk in misc interrupt thread
+      commit: 555921feb2ac03d88647ccc62015e68f157c30a2
+
+Best regards,
 -- 
 ~Vinod
+
+

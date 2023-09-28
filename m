@@ -2,41 +2,43 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 74FCF7B1B7C
-	for <lists+dmaengine@lfdr.de>; Thu, 28 Sep 2023 13:56:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B5B737B1B7E
+	for <lists+dmaengine@lfdr.de>; Thu, 28 Sep 2023 13:56:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231918AbjI1L4Z (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 28 Sep 2023 07:56:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42036 "EHLO
+        id S232319AbjI1L4f (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 28 Sep 2023 07:56:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232179AbjI1L4Y (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 28 Sep 2023 07:56:24 -0400
+        with ESMTP id S232250AbjI1L4d (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 28 Sep 2023 07:56:33 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0024B122;
-        Thu, 28 Sep 2023 04:56:22 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D7E6C433C7;
-        Thu, 28 Sep 2023 11:56:19 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E4F319E;
+        Thu, 28 Sep 2023 04:56:26 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3009CC433CA;
+        Thu, 28 Sep 2023 11:56:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695902182;
-        bh=HlVb6KvrY32WHyaOFqIwYRhmxfd0p63UtxsXodhfazw=;
+        s=k20201202; t=1695902185;
+        bh=XxBvxdoKc83ZQ4fVBEiJGRQrBFbU2kUDHfYCAEg3rO0=;
         h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-        b=E7saClIM2kz8OQdxPj8fdk3EndOTt8S6PvoWE1IlIIJI3C/uL5Vmfktx0wHkfIUVb
-         pe6Sdsr+yubGGnN2H14126lhDChCW3WFxY3PVerfeNj+67lzk0ZYiVwHzQI3VqJks3
-         G0frhOV3lrY8MzkvLpdpuEePXOeyiOPNKpOROUjwaN6qN1p4eQ22o5KCi0x2MvzqMi
-         6KQNhtyt3cnbHryl5s+atXI5JX2kIb82CD3q6rfVr9kTtE/xHnQVRnTRYEpWrvFQ0g
-         YN8gzkIJP5bYj/cwXJeAzoMSMCwMZrFnawjcmZSpNTEEw3YE76kdUNbULbeKksMaul
-         GZy/RAhlrdivw==
+        b=DWs/AJmjugNYilFIwyJtJX5bMS+Av8SjZ7hvdvGjmfxUA+vbf3AmvJLj68u5hwk6t
+         qCo6qsWmzxUVGTgjNSDb2ZHL9NtBVtUI3CTA6/2z72ACNT8ZQa51kfgf9PMIkZyvar
+         oWA1BHoZa9twamGK3cgYXWLp+D5wBKLCS0Vh3kwk/UVDROBY+cB1GyF6Ddx/t1av12
+         2lWslrbs/i6en8kZFj+m+gtGApT8vsffb/qWg/5AWiGBcmmkZEpZz/auAU3wzQ06vC
+         8TIBt6NAQH3RCuLC5CrCP2OnTWuhsMJKak2UWXkDIAbWu8DHvi0Ja1UkpVJL6/PE+G
+         rYVVz4v5JQFUw==
 From:   Vinod Koul <vkoul@kernel.org>
-To:     frank.li@nxp.com, Frank Li <Frank.Li@nxp.com>
-Cc:     dmaengine@vger.kernel.org, gregkh@linuxfoundation.org,
-        imx@lists.linux.dev, linux-kernel@vger.kernel.org, lkp@intel.com,
-        oe-kbuild-all@lists.linux.dev, rafael@kernel.org
-In-Reply-To: <20230921150144.3260231-1-Frank.Li@nxp.com>
-References: <20230921150144.3260231-1-Frank.Li@nxp.com>
-Subject: Re: [PATCH v4 0/3] dmaengine: fsl_edma: add trace and debugfs
- support
-Message-Id: <169590217975.152265.11376979671569668186.b4-ty@kernel.org>
-Date:   Thu, 28 Sep 2023 17:26:19 +0530
+To:     Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Kaiwei Liu <kaiwei.liu@unisoc.com>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kaiwei liu <liukaiwei086@gmail.com>,
+        Wenming Wu <wenming.wu@unisoc.com>
+In-Reply-To: <20230919073801.25054-1-kaiwei.liu@unisoc.com>
+References: <20230919073801.25054-1-kaiwei.liu@unisoc.com>
+Subject: Re: [PATCH V3] dmaengine: sprd: add dma mask interface in probe
+Message-Id: <169590218283.152265.463442694069911752.b4-ty@kernel.org>
+Date:   Thu, 28 Sep 2023 17:26:22 +0530
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
@@ -51,25 +53,18 @@ List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 
-On Thu, 21 Sep 2023 11:01:41 -0400, Frank Li wrote:
-> Change from v3 to v4
-> - Fix build warning
+On Tue, 19 Sep 2023 15:38:01 +0800, Kaiwei Liu wrote:
+> In the probe of DMA, the default addressing range is 32 bits,
+> while the actual DMA hardware addressing range used is 36 bits.
+> So add dma_set_mask_and_coherent function to match DMA
+> addressing range.
 > 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202309210500.owiirl4c-lkp@intel.com/
 > 
-> [...]
 
 Applied, thanks!
 
-[1/3] debugfs_create_regset32() support 8/16/64 bit width registers
-      commit: 09289d0ad1226c4735f8d9f68c9c3e54cbaba3d4
-[2/3] dmaengine: fsl-emda: add debugfs support
-      commit: 105c148c66fa06ca2a375edacfa3139c814af9d1
-[3/3] dmaengine: fsl-edma: add trace event support
-      commit: c8fde7598064fc9b94a53264b1e0c605a140fedb
+[1/1] dmaengine: sprd: add dma mask interface in probe
+      commit: 47b077c21590490f5bcb8ee80c66ce7a6c201d11
 
 Best regards,
 -- 

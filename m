@@ -2,39 +2,45 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 133197B1BB8
-	for <lists+dmaengine@lfdr.de>; Thu, 28 Sep 2023 14:08:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E21C7B1BBB
+	for <lists+dmaengine@lfdr.de>; Thu, 28 Sep 2023 14:08:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229980AbjI1MIC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 28 Sep 2023 08:08:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40284 "EHLO
+        id S229581AbjI1MIH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 28 Sep 2023 08:08:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229581AbjI1MIB (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 28 Sep 2023 08:08:01 -0400
+        with ESMTP id S232250AbjI1MIG (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 28 Sep 2023 08:08:06 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0974611F;
-        Thu, 28 Sep 2023 05:08:00 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76180C433C8;
-        Thu, 28 Sep 2023 12:07:58 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F3D6121;
+        Thu, 28 Sep 2023 05:08:04 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 445D6C433C9;
+        Thu, 28 Sep 2023 12:08:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695902879;
-        bh=aagHP/tT7OX+/Nk9NY1e7msOI3MzWBd3pcmlQFBXIXM=;
-        h=From:To:In-Reply-To:References:Subject:Date:From;
-        b=PNQB0J2zjPqmTiAhBoCMyuzjh2H3IsK5se2FJx8jCzFB8lV+bdsy7ULNVlKbRXL6R
-         KG4l4gCoP21yAVD4QC8cr7ITEntWZjhCvmc3yop2NXifG5jiyDx2w5kkRglI8FZv3/
-         BLB9tpQcf3ichOmkmHAAEqAJjXLj+JwsmlH5APtCLx9c+EJgZat4Oh0niypMV2DnfU
-         8q1y2nn63VgCsxUyL1jkzV6puGC80YGwrJSCafgEVjlUsD8s8BUt5Fxfq4gaeTtc7a
-         KpVx+6BWBIZSnXEp+O7YJvyb9RDzMHr5j0qeEVfmzLrm7nYnIGjvIKKDgeMTqCkKbM
-         az2O+JaFtrj3g==
+        s=k20201202; t=1695902883;
+        bh=lTq1dMVcm8SenHuuZd0wNqXfh3nL/EqbBBqIPVam8dY=;
+        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+        b=WTAllCDmydbwqDjqOlE+YP04DsAP11/lg7bqYHgG+pqjkZLPvrAZj334yu/SIyjL9
+         BJH3Y6HHOlrQ/bAWLhAPc1pBRPHzJSkVOORX6vLS75Dek+N0Rlruvf8wpHnanIkyxl
+         UwekNyShwqpv0PG0ZCL2b73N4ZSXBqSVNMyN9XWVVhwfokZGSg++Fafxjr5znwNdR+
+         I0ZFfwjGqHicHUUYwXNSZWGc4zwe3KTpBgLp1LyP0EKeSNv4y80MRwP8PPpqOj+OpJ
+         lPdjBjt5ciSnkgqqfFVjMHSzZdx1wAOdPee8GA+xszBJycWgjR5WMAZT4Kljwum4cz
+         yTdLzxvZxPwRQ==
 From:   Vinod Koul <vkoul@kernel.org>
-To:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        imx@lists.linux.dev, Frank Li <Frank.Li@nxp.com>
-In-Reply-To: <20230921144652.3259813-1-Frank.Li@nxp.com>
-References: <20230921144652.3259813-1-Frank.Li@nxp.com>
-Subject: Re: [PATCH v2 1/1] dmaengine: fsl-dma: fix DMA error when enabling
- sg if 'DONE' bit is set
-Message-Id: <169590287811.161554.16554289447720451572.b4-ty@kernel.org>
-Date:   Thu, 28 Sep 2023 17:37:58 +0530
+To:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, michal.simek@amd.com,
+        m.tretter@pengutronix.de, peter@korsgaard.com,
+        peter.ujfalusi@gmail.com, harini.katakam@amd.com,
+        Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        git@amd.com
+In-Reply-To: <1695216326-3841352-1-git-send-email-radhey.shyam.pandey@amd.com>
+References: <1695216326-3841352-1-git-send-email-radhey.shyam.pandey@amd.com>
+Subject: Re: [PATCH v2] dt-bindings: dmaengine: zynqmp_dma: add
+ xlnx,bus-width required property
+Message-Id: <169590287991.161554.2765505402103252498.b4-ty@kernel.org>
+Date:   Thu, 28 Sep 2023 17:37:59 +0530
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
@@ -49,16 +55,17 @@ List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 
-On Thu, 21 Sep 2023 10:46:52 -0400, Frank Li wrote:
-> In eDMAv3, clearing 'DONE' bit (bit 30) of CHn_CSR is required when
-> enabling scatter-gather (SG). eDMAv4 does not require this change.
+On Wed, 20 Sep 2023 18:55:26 +0530, Radhey Shyam Pandey wrote:
+> xlnx,bus-width is a required property. In yaml conversion somehow
+> it got missed out. Bring it back and mention it in required list.
+> Also add Harini and myself to the maintainer list.
 > 
 > 
 
 Applied, thanks!
 
-[1/1] dmaengine: fsl-dma: fix DMA error when enabling sg if 'DONE' bit is set
-      commit: 3c67c5236fbf7a58c1a26d57da4465ea5fb25537
+[1/1] dt-bindings: dmaengine: zynqmp_dma: add xlnx,bus-width required property
+      commit: 54a5aff6f98b69e73cba40470f103a72bd436b20
 
 Best regards,
 -- 

@@ -2,42 +2,76 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0425E7B1A09
-	for <lists+dmaengine@lfdr.de>; Thu, 28 Sep 2023 13:08:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D0977B1A4B
+	for <lists+dmaengine@lfdr.de>; Thu, 28 Sep 2023 13:16:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232480AbjI1LI0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 28 Sep 2023 07:08:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38398 "EHLO
+        id S232106AbjI1LQV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 28 Sep 2023 07:16:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231933AbjI1LH2 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 28 Sep 2023 07:07:28 -0400
+        with ESMTP id S232029AbjI1LQK (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 28 Sep 2023 07:16:10 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7644D199E;
-        Thu, 28 Sep 2023 04:05:12 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33219C433A9;
-        Thu, 28 Sep 2023 11:05:10 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 260172A2F3;
+        Thu, 28 Sep 2023 04:12:14 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 293FDC433C7;
+        Thu, 28 Sep 2023 11:11:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695899111;
-        bh=RXNjr5wEScumRKn/TreikDC8qWu4O0tiXE/36zkFsM8=;
+        s=k20201202; t=1695899496;
+        bh=Z72NaU1k+yn8VH2KLYdJDMnZnUKhBkDyH6n6KvVEpYY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gTIGi8B4SUrhiJoeBl7bQ58ZHJVWEd011+becaBjYmaG+mA8yyNHltLM7zooKPuGG
-         fK6jKKIQlC1q2l/PMeGaRv1Jv5FEoUVTqIQkYzrYUVymykUUeIa2sksmxXT82L3lU1
-         YlVuiQH/algnNPgMALiZiNQUMQ7l9hh6HFxnx7VX9bSh4pmG2TgSTov2puH+jsN5PV
-         9PhVL0UzYvrBna+9jLcqMmKBKQDBl/bccIKOEHwQBiiBfqe2Na9vG80djxiEygFlsS
-         dma/FN8YTMcAUFUqV8dFPsy1BLt08ICO7sSLpjrVDO5Q6ivfRVxZQQCbC7V52MA/Op
-         9bROlbT76FAHw==
-Date:   Thu, 28 Sep 2023 16:35:07 +0530
+        b=Ou0HLEYeDRVJuqY0rrG0SmdACv18zyLqyFfvqTO08uOxosewXkrdnUsKZDt4by03d
+         HoyzUC8RESyHsElFy2zn11j09IfZUt6WzHuA2oqO21Ha42SO+KKjXgm6IjLM41ZaXH
+         ZwhiFHQ85UyL+kbBBWakHtQDlKvxSMcDdKQpxgpwCi9X21uHcAKc3G/bOFNdpEQoHk
+         WsdW7mwVvcDmZgiZTnsgMjtrxUa+KpRrLwckKsmw0eTY9s/J352bE6VAvbfbcH27CW
+         a0Gd96itZ8C/fo/0yF0lAtKeo0IL63XfzQLgdegH0q4vvzaFAgyWcriGEs8NCPla5Q
+         foBo5T0e+9G9w==
+Date:   Thu, 28 Sep 2023 16:41:31 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Lizhi Hou <lizhi.hou@amd.com>
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        nishad.saraf@amd.com, sonal.santan@amd.com, max.zhen@amd.com
-Subject: Re: [PATCH V5 0/1] AMD QDMA driver
-Message-ID: <ZRVd4yodNiwhqO9R@matsya>
-References: <1695402939-28924-1-git-send-email-lizhi.hou@amd.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Tudor Ambarus <tudor.ambarus@linaro.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Jie Hai <haijie1@huawei.com>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Green Wan <green.wan@sifive.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Patrice Chotard <patrice.chotard@foss.st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Yu Kuai <yukuai3@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jordy Zomer <jordy@pwning.systems>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+        dmaengine@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-tegra@vger.kernel.org, llvm@lists.linux.dev,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 00/21] dmaengine: Annotate with __counted_by
+Message-ID: <ZRVfYzrdAOrXJUcI@matsya>
+References: <20230817235428.never.111-kees@kernel.org>
+ <202309151307.F3341BD5A@keescook>
+ <202309221015.AB63726@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1695402939-28924-1-git-send-email-lizhi.hou@amd.com>
+In-Reply-To: <202309221015.AB63726@keescook>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -47,75 +81,18 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 22-09-23, 10:15, Lizhi Hou wrote:
-> Hello,
+On 22-09-23, 10:16, Kees Cook wrote:
+> On Fri, Sep 15, 2023 at 01:08:30PM -0700, Kees Cook wrote:
+> > Just a ping on the series... how do these look to you, Vinod?
+> > 
+> > If you want I can carry them in my tree. Please let me know.
 > 
-> The QDMA subsystem is used in conjunction with the PCI Express IP block
-> to provide high performance data transfer between host memory and the
-> card's DMA subsystem.
-> 
->             +-------+       +-------+       +-----------+
->    PCIe     |       |       |       |       |           |
->    Tx/Rx    |       |       |       |  AXI  |           |
->  <=======>  | PCIE  | <===> | QDMA  | <====>| User Logic|
->             |       |       |       |       |           |
->             +-------+       +-------+       +-----------+
+> I'm now carrying this in my for-next/hardening tree. Let me know if
+> you'd prefer I drop it.
 
-This should be in patch description as well
+Sorry was busy in travel etc, it should be in dmaengine/next tomorrow.
+You can drop it
 
-> 
-> Comparing to AMD/Xilinx XDMA subsystem,
->     https://lore.kernel.org/lkml/Y+XeKt5yPr1nGGaq@matsya/
-> the QDMA subsystem is a queue based, configurable scatter-gather DMA
-> implementation which provides thousands of queues, support for multiple
-> physical/virtual functions with single-root I/O virtualization (SR-IOV),
-> and advanced interrupt support. In this mode the IP provides AXI4-MM and
-> AXI4-Stream user interfaces which may be configured on a per-queue basis.
-> 
-> The QDMA has been used for Xilinx Alveo PCIe devices.
->     https://www.xilinx.com/applications/data-center/v70.html
-> 
-> This patch series is to provide the platform driver for AMD QDMA subsystem
-> to support AXI4-MM DMA transfers. More functions, such as AXI4-Stream
-> and SR-IOV, will be supported by future patches.
-> 
-> The device driver for any FPGA based PCIe device which leverages QDMA can
-> call the standard dmaengine APIs to discover and use the QDMA subsystem
-> without duplicating the QDMA driver code in its own driver.
-> 
-> Changes since v4:
-> - Convert to use platform driver callback .remove_new()
-> 
-> Changes since v3:
-> - Minor changes in Kconfig description.
-> 
-> Changes since v2:
-> - A minor change from code review comments.
-> 
-> Changes since v1:
-> - Minor changes from code review comments.
-> - Fixed kernel robot warning.
-> 
-> Nishad Saraf (1):
->   dmaengine: amd: qdma: Add AMD QDMA driver
-> 
->  MAINTAINERS                            |    9 +
->  drivers/dma/Kconfig                    |   13 +
->  drivers/dma/Makefile                   |    1 +
->  drivers/dma/amd/Makefile               |    8 +
->  drivers/dma/amd/qdma-comm-regs.c       |   66 ++
->  drivers/dma/amd/qdma.c                 | 1187 ++++++++++++++++++++++++
->  drivers/dma/amd/qdma.h                 |  269 ++++++
->  include/linux/platform_data/amd_qdma.h |   36 +
->  8 files changed, 1589 insertions(+)
->  create mode 100644 drivers/dma/amd/Makefile
->  create mode 100644 drivers/dma/amd/qdma-comm-regs.c
->  create mode 100644 drivers/dma/amd/qdma.c
->  create mode 100644 drivers/dma/amd/qdma.h
->  create mode 100644 include/linux/platform_data/amd_qdma.h
-> 
-> -- 
-> 2.34.1
-
+Thanks
 -- 
 ~Vinod

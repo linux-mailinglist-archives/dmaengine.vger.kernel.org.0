@@ -2,123 +2,156 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A2F07B28F2
-	for <lists+dmaengine@lfdr.de>; Fri, 29 Sep 2023 01:43:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 715927B3358
+	for <lists+dmaengine@lfdr.de>; Fri, 29 Sep 2023 15:19:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229972AbjI1Xns (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 28 Sep 2023 19:43:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53620 "EHLO
+        id S233289AbjI2NTe (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 29 Sep 2023 09:19:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229541AbjI1Xnr (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 28 Sep 2023 19:43:47 -0400
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A0FD19F
-        for <dmaengine@vger.kernel.org>; Thu, 28 Sep 2023 16:43:45 -0700 (PDT)
-Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-1c3d8fb23d9so102346325ad.0
-        for <dmaengine@vger.kernel.org>; Thu, 28 Sep 2023 16:43:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695944625; x=1696549425; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=MNHH+1qhuM2be0FNxraZa2k964UVjBr3da8cdiKRngw=;
-        b=Sy1qrqyWxjWf+WyGsozkx32322B0DYBkvwFZER87pdVzcNV/cugNLl7M2HVu3Id8wy
-         ERRRlCOX2YAY3RHcV+ZcuTACBHNDMra7WDiN2NDRA6MVpbkl2R45j5Qrq3lx/wwbbfmL
-         dI6/sb5rjwNXMlDbeoUO46Q6SL6U/J8Ldl814=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695944625; x=1696549425;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MNHH+1qhuM2be0FNxraZa2k964UVjBr3da8cdiKRngw=;
-        b=pEsQBDLkxXO3EZO8OTA/ukCiqtsb2xv2UAZW11HxmEoPm/CvSjdH4+pVbGqprzObtK
-         dTA6XUDorqhD2Nu0bAgXELwndxWi8lcQD4Gji8o0Pex3xg72XCJNl8jwUY+fHjaLqfa5
-         ItHtqP+g7p0CzrPI3faSCu0Rmahh39xr2y+GIgHTt3i3FrI56SeSQYVM0MD+T1atg7Nu
-         qN0SV2E7g5SyRHuCq4y3Pcx8iYIhfGZoiSVBl1YdZwlj+eWLzHkc6Dobw0rYKKEaCpxG
-         ahsQA91l/finXudpSdXaxnkCajNrsZxJFyhC3uvF1d9VW7PCeV/zOE4C6nyD671F8yuw
-         jM7w==
-X-Gm-Message-State: AOJu0Yy9zGjyJyby6vt1qIu/qiIdkfGYpMkRr9xr3uEyxx3yYFMYO9OH
-        D7XjE1tGwIbe5deoM9IsyK+GotF7gFXKwgDzZkM=
-X-Google-Smtp-Source: AGHT+IE3aB3bki1h2nzKeq4Hvu7L23o/LNCvJSwxc21wrOMfa6r6KlHZeiE4hugYWpH4RLmgxSLGuA==
-X-Received: by 2002:a17:903:1c1:b0:1c4:638:fff4 with SMTP id e1-20020a17090301c100b001c40638fff4mr2370744plh.17.1695944624781;
-        Thu, 28 Sep 2023 16:43:44 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id s10-20020a170902ea0a00b001b895336435sm4068006plg.21.2023.09.28.16.43.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Sep 2023 16:43:44 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, dmaengine@vger.kernel.org,
-        llvm@lists.linux.dev,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] dmaengine: ep93xx_dma: Annotate struct ep93xx_dma_engine with __counted_by
-Date:   Thu, 28 Sep 2023 16:43:42 -0700
-Message-Id: <20230928234334.work.391-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S233156AbjI2NTd (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 29 Sep 2023 09:19:33 -0400
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B74EE7;
+        Fri, 29 Sep 2023 06:19:31 -0700 (PDT)
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.17.1.22/8.17.1.22) with ESMTP id 38TABSom007571;
+        Fri, 29 Sep 2023 15:18:50 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+        message-id:date:mime-version:subject:from:to:cc:references
+        :in-reply-to:content-type:content-transfer-encoding; s=
+        selector1; bh=KMM5HFfGi3/V+NX/zIj16MtndrNJ3wjO6VBqQEWwOzE=; b=ga
+        rM6WT7soC9Qg5lgEynlNIDEz19ICFxdBxx8K4WKaa81yBoo69ZoqQgPtPJrk+yqH
+        6Ke+T4tgb/wvQ7+D6b8/REeHXj+x3qhuVXstjmlbfDXVsD7fnq1otz0IBlMfWVfL
+        E4pait5J8DRp751sajaRVoUu+IBQuOKISwGGaDU+w8jkYTr9fXxKlpYDQovtoe8f
+        gElrQ2fdRogxsh24zwaguSO+d3txrH3Ag2t7373pPcvxthqul803q1iHU52Zkj5N
+        HDkK8wgJgLFXVxL19kvPUsq9yAyQ76DfuoiJhXjgKUsphyNPOIYM5JXL5gCdij8s
+        EmQ/SdD52jWC2koKfFGg==
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ta9k0s0fb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 29 Sep 2023 15:18:50 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id AE29710002A;
+        Fri, 29 Sep 2023 15:18:48 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4AB3A2865FC;
+        Fri, 29 Sep 2023 15:18:48 +0200 (CEST)
+Received: from [10.201.20.32] (10.201.20.32) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 29 Sep
+ 2023 15:18:46 +0200
+Message-ID: <6e419e89-10f1-e448-10fe-64f1ea9ff862@foss.st.com>
+Date:   Fri, 29 Sep 2023 15:18:18 +0200
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1305; i=keescook@chromium.org;
- h=from:subject:message-id; bh=THP69OmSOtOGZgovd3irCbWFIq76IMb1Eo9RFIZ3FIQ=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlFg+uQsbjWwI6QLDwpDQxEemOjDuINJD24mwrU
- /jndnL6pPuJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZRYPrgAKCRCJcvTf3G3A
- JjzbD/9786EPnb+KEovN2A394u+CjRE5feFbV0OH2nJ+hoicNA0BmpvVK6QsaJqscUhY5SzZnIh
- bJD/VopZIUjwI4FITPqd3Yd03UZG5en7eTcobbpl13XYpOvvHfGmu5sAK7daO4UvRki9YbY/N58
- m+5TiNXLb8SwuOLA1TcJ67oPCf1N+kRUMewPGQzE3BrzjsrmC4nzBzItDiBFJaSmSUv/QI5TA5h
- A+RxcOH11WeE7S4GGhN0EMcTv+w0/K04pncSa6lEdKHKZUL6I94j5oiRsDNdUNih71JGsyM4sp3
- Xfg1nHufCoyp/18ig9FZ12Qg4gulxu5dRUqfzDV3HA6QoazyJInWvQizQKTT5hnVX3cTSo2pjN5
- aeKyS51Yt2Ie3NIsUgexXgNaU70uD3yqBTWTdK8aPYOBW9/0zJF6Oa3c29hUAB6fqhV6a72H3P+
- M8Hm9ZD9HyYzV49KpOi1i8kzL+d/EqbRdTlSnRkyr4rdGzCk16Bvh02vXWZ56G9V09qWS0cJHXn
- fk74+F+zDDMUPD74z66DuOExRi9n5LzWvhnNfjql7GYDcnKJFwTM9oyTgNnpqvleA22e68tC3eQ
- oiGIO/BQrniVpKwWJG6melsLUr2tQIeN+Pj4Gh8KP1Myz/9WxSxu7Sqyn502tYFCrQq2lxwXbwm
- NkdSZdM Y4Zio4YA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [IGNORE][PATCH v4 01/11] dt-bindings: Document common device
+ controller bindings
+From:   Gatien CHEVALLIER <gatien.chevallier@foss.st.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     <Oleksii_Moisieiev@epam.com>, <herbert@gondor.apana.org.au>,
+        <davem@davemloft.net>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <alexandre.torgue@foss.st.com>, <vkoul@kernel.org>,
+        <jic23@kernel.org>, <olivier.moysan@foss.st.com>,
+        <arnaud.pouliquen@foss.st.com>, <mchehab@kernel.org>,
+        <fabrice.gasnier@foss.st.com>, <andi.shyti@kernel.org>,
+        <ulf.hansson@linaro.org>, <edumazet@google.com>, <kuba@kernel.org>,
+        <pabeni@redhat.com>, <hugues.fruchet@foss.st.com>,
+        <lee@kernel.org>, <will@kernel.org>, <catalin.marinas@arm.com>,
+        <arnd@kernel.org>, <richardcochran@gmail.com>,
+        Frank Rowand <frowand.list@gmail.com>, <peng.fan@oss.nxp.com>,
+        <linux-crypto@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-i2c@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        <alsa-devel@alsa-project.org>, <linux-media@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-phy@lists.infradead.org>, <linux-serial@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, <linux-usb@vger.kernel.org>
+References: <20230811100731.108145-1-gatien.chevallier@foss.st.com>
+ <20230811100731.108145-2-gatien.chevallier@foss.st.com>
+ <2023081117-sprout-cruncher-862c@gregkh>
+ <4f0f9d6c-ce4d-73a2-60bf-801c1a1d6cc3@foss.st.com>
+Content-Language: en-US
+In-Reply-To: <4f0f9d6c-ce4d-73a2-60bf-801c1a1d6cc3@foss.st.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-Originating-IP: [10.201.20.32]
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-09-29_11,2023-09-28_03,2023-05-22_02
+X-Spam-Status: No, score=-5.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Prepare for the coming implementation by GCC and Clang of the __counted_by
-attribute. Flexible array members annotated with __counted_by can have
-their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
-array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-functions).
 
-As found with Coccinelle[1], add __counted_by for struct ep93xx_dma_engine.
 
-[1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
+On 8/11/23 14:00, Gatien CHEVALLIER wrote:
+> 
+> 
+> On 8/11/23 12:16, Greg KH wrote:
+>> On Fri, Aug 11, 2023 at 12:07:21PM +0200, Gatien Chevallier wrote:
+>>> From: Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>
+>>>
+>>> Introducing of the common device controller bindings for the controller
+>>> provider and consumer devices. Those bindings are intended to allow
+>>> divided system on chip into multiple domains, that can be used to
+>>> configure hardware permissions.
+>>>
+>>> Signed-off-by: Oleksii Moisieiev <oleksii_moisieiev@epam.com>
+>>> [Gatien: Fix typos and YAML error]
+>>> Signed-off-by: Gatien Chevallier <gatien.chevallier@foss.st.com>
+>>> ---
+>>>
+>>> Changes in V4:
+>>>     Corrected typos and YAML errors
+>>
+>> Why are we supposed to ignore the first patch in this series, but pay
+>> attention to the 10 after this that depend on it?
+>>
+>> totally confused,
+>>
+>> greg k-h
+> 
+> Hello Greg,
+> 
+> I'm sorry that this tag troubles your review. It was first suggested
+> in [1]. The "IGNORE" means ignore review on this thread, as it is still
+> under review in another thread (Link in the cover letter). It does not
+> mean that the content should be ignored for the series. I will change
+> this to something else as this is obviously confusing the review.
+> 
+> @Oleksii, can we imagine integrating this patch to this series or do
+> you prefer to keep it apart?
+> 
 
-Cc: Vinod Koul <vkoul@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Tom Rix <trix@redhat.com>
-Cc: dmaengine@vger.kernel.org
-Cc: llvm@lists.linux.dev
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/dma/ep93xx_dma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi,
 
-diff --git a/drivers/dma/ep93xx_dma.c b/drivers/dma/ep93xx_dma.c
-index 5c4a448a1254..d6c60635e90d 100644
---- a/drivers/dma/ep93xx_dma.c
-+++ b/drivers/dma/ep93xx_dma.c
-@@ -213,7 +213,7 @@ struct ep93xx_dma_engine {
- #define INTERRUPT_NEXT_BUFFER	2
- 
- 	size_t			num_channels;
--	struct ep93xx_dma_chan	channels[];
-+	struct ep93xx_dma_chan	channels[] __counted_by(num_channels);
- };
- 
- static inline struct device *chan2dev(struct ep93xx_dma_chan *edmac)
--- 
-2.34.1
+after a discussion with Oleksii: I'll rename the binding to narrow
+down its scope and integrate the patch in my series. This way, I'll drop
+the [IGNORE] tag.
 
+=> I'll stick with the generic binding for V5 (Sorry for the misleading
+    information in the previous mail)
+
+Best regards,
+Gatien
+
+> Should I consider a resend with another tag if Oleksii prefers to keep
+> this patch apart?
+> 
+> [1] 
+> https://lore.kernel.org/all/1e498b93-d3bd-bd12-e991-e3f4bedf632d@linaro.org/
+> 
+> Best regards,
+> Gatien

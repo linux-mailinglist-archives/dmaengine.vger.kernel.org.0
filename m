@@ -2,113 +2,207 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 525537B4871
-	for <lists+dmaengine@lfdr.de>; Sun,  1 Oct 2023 17:42:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7F8C7B4EB5
+	for <lists+dmaengine@lfdr.de>; Mon,  2 Oct 2023 11:11:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235112AbjJAPm3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 1 Oct 2023 11:42:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35902 "EHLO
+        id S235974AbjJBJLF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 2 Oct 2023 05:11:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234846AbjJAPm3 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 1 Oct 2023 11:42:29 -0400
-Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE573DA;
-        Sun,  1 Oct 2023 08:42:25 -0700 (PDT)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailout.nyi.internal (Postfix) with ESMTP id 5A4695C2B27;
-        Sun,  1 Oct 2023 11:42:25 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Sun, 01 Oct 2023 11:42:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-type:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm1; t=1696174945; x=1696261345; bh=Eq
-        8X0eVmOz7DANbzW3I7LbcdIkb+KZjZmPd1QRhAKl4=; b=No4RpmE/rT30uObrTB
-        Z5Kz+b8yG8wWM/I7KM0kEarzqc5ZmukOUQ8uTwKhrtxt01nqaoc/RhbRmN9ZRjf/
-        OV9bgd0aSxfDQ5S75SAPQU0Fso/qtE8iPyzeyv6P7qi4rarAggr1Pw81TjsgnPFB
-        L42GeR09MzJPVAYFDnAKO4ZE4DO5FNoxOYaShPILm6KYWp7YB2Pj7MiZF/OkSgo/
-        +v2Jg1GGY7qZNJ92salcD5bWlGg1/neqiKWKRxmea9R/lOYuLi+IhiBn3yT2ifyq
-        zvrVwO+biU4rPSJqymXVPQfnj7SaL8WsvDxJSwSUVQPXsShpwwYVIFhcEuqrqRTX
-        ryBQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; t=1696174945; x=1696261345; bh=Eq8X0eVmOz7DA
-        NbzW3I7LbcdIkb+KZjZmPd1QRhAKl4=; b=LiMji9DSASPAO0yGheG4jb6R6dbi6
-        8X8Q0kSlSdrjmSntzrTWg134c+Q7e5njgfFgR2JTM8tw3rVJfVWRLHJVD92XMtQD
-        TXiYglk6E4YwHM4V/8IilOUhUtJIxYyeCdlfuaCtpAroVHJjdp3NxERZF1bJ81D5
-        vwJFiSKcKA2RgbsJZQR40AUEHMJ7rgEhceNjLc8oMRwkX30mn8bCUm3WMPPMQpbe
-        UslqFGE2PyE9RZv/Hb8pZdBtsUq8EqBi4bHzDmidrWFesls/j8MxVGK6xR1uhU7i
-        +I0NUliTpFss5ZYP8QH9v/pTvHW4Omt9wHdmXnLNEI+Z1xysaL+dEnU4Q==
-X-ME-Sender: <xms:YZMZZQLoU6HZhSGlsLzH40pNZvzHG0jyaHgv56pdsCWT2nJhZGAUVQ>
-    <xme:YZMZZQKx-fhS9xS8aCpVo3vooziIN0rO_e4duAvckoQSt7gPZkQY87Z_5O63sDRkt
-    HvAftj1iF1hXf-Ag6s>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvddvgddtudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
-    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
-    hnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:YZMZZQuCkDh5UWKjtkHUbxFoPc2UDMrrF1DfTg5yzGTbDLq_-OBrxA>
-    <xmx:YZMZZdasZJvbbWn2ZJCHE1Zz5kXRu5WumfLN7lN4ky4V9M-I_FWL2g>
-    <xmx:YZMZZXafscJUjEysevzVboTT9BC1LycgwaGSPN8EGjDYfNa7sVZv1A>
-    <xmx:YZMZZb5_GRKzOLFwcOQLN1wAXn5t6E7Ho-vXbnMFbfz-Zx1lbqRTAQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 1E12CB6008D; Sun,  1 Oct 2023 11:42:25 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-958-g1b1b911df8-fm-20230927.002-g1b1b911d
+        with ESMTP id S235965AbjJBJLE (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 2 Oct 2023 05:11:04 -0400
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7192C83;
+        Mon,  2 Oct 2023 02:11:00 -0700 (PDT)
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.17.1.22/8.17.1.22) with ESMTP id 3928E3qR022118;
+        Mon, 2 Oct 2023 11:10:14 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+        message-id:date:mime-version:subject:to:cc:references:from
+        :in-reply-to:content-type:content-transfer-encoding; s=
+        selector1; bh=E01OcOCHWhP/6+N5KY2PJxe8Vqf5B2GZBRHXsK7b/ZI=; b=aA
+        egtRg/HZV5z61BlbQRmw/xhKB5/NOvXNbEABAWfThJ4zPTHndz302pa5QVjGM+sM
+        3J8B5ueo8i4iRhw3Pi7HwaWlrkqWsy58TBUitGYwlxhFctZH+p7nxHxKyjmiDHP0
+        gunyUnqWwhUVh8dpDShiYuX54yeB8rEzvnWdNJYWKBCqzgkrTC+zGteyX1b5Pb5j
+        Rf6xRjDsxe+C3FBAdS36hxq9MRrXNisC3EZbZEbT4TzCJ6MY1lbLR6cryXr1bkaw
+        d59gty15vIlgDcfiUoAb0YziosPbln43LGmK99GlHY0DfgQb6OF9EUVre9tgoPIq
+        Z+Sxdr7e5cMYwyIcmVVA==
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3tew80bymt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 02 Oct 2023 11:10:14 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B9C5F100059;
+        Mon,  2 Oct 2023 11:10:12 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6252F211F22;
+        Mon,  2 Oct 2023 11:10:12 +0200 (CEST)
+Received: from [10.201.20.32] (10.201.20.32) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 2 Oct
+ 2023 11:10:10 +0200
+Message-ID: <f3dbcd84-1320-9efb-f715-71b6bb4c7bdb@foss.st.com>
+Date:   Mon, 2 Oct 2023 11:10:05 +0200
 MIME-Version: 1.0
-Message-Id: <b795ed61-0174-487f-a263-8431e7c76af5@app.fastmail.com>
-In-Reply-To: <ZRlWeeq/AOjyTtnV@MiWiFi-R3L-srv>
-References: <20230929164920.314849-1-Frank.Li@nxp.com>
- <ZRlWeeq/AOjyTtnV@MiWiFi-R3L-srv>
-Date:   Sun, 01 Oct 2023 11:42:04 -0400
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "Baoquan He" <bhe@redhat.com>, "Frank Li" <Frank.Li@nxp.com>
-Cc:     "Vinod Koul" <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        imx@lists.linux.dev, linux-kernel@vger.kernel.org,
-        "kernel test robot" <lkp@intel.com>, oe-kbuild-all@lists.linux.dev,
-        "Rafael J . Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH 1/1] fs: debugfs: fix build error at powerpc platform
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v5 01/11] dt-bindings: document generic access controller
+To:     Rob Herring <robh@kernel.org>
+CC:     <arnd@kernel.org>, <linux-phy@lists.infradead.org>,
+        <linux-mmc@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <robh+dt@kernel.org>, <jic23@kernel.org>, <davem@davemloft.net>,
+        <kuba@kernel.org>, <pabeni@redhat.com>,
+        <linux-spi@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+        <olivier.moysan@foss.st.com>, <linux-media@vger.kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>,
+        Oleksii Moisieiev <oleksii_moisieiev@epam.com>,
+        <edumazet@google.com>, <linux-stm32@st-md-mailman.stormreply.com>,
+        <ulf.hansson@linaro.org>, <richardcochran@gmail.com>,
+        <will@kernel.org>, <linux-crypto@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <arnaud.pouliquen@foss.st.com>, <linux-serial@vger.kernel.org>,
+        <alexandre.torgue@foss.st.com>,
+        Frank Rowand <frowand.list@gmail.com>, <andi.shyti@kernel.org>,
+        <linux-usb@vger.kernel.org>, <peng.fan@oss.nxp.com>,
+        <lee@kernel.org>, <fabrice.gasnier@foss.st.com>,
+        <conor+dt@kernel.org>, <herbert@gondor.apana.org.au>,
+        <linux-arm-kernel@lists.infradead.org>, <catalin.marinas@arm.com>,
+        <al.sa-devel@alsa-project.org>, <hugues.fruchet@foss.st.com>,
+        <devicetree@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        <mchehab@kernel.org>, <vkoul@kernel.org>,
+        <gregkh@linuxfoundation.org>
+References: <20230929142852.578394-1-gatien.chevallier@foss.st.com>
+ <20230929142852.578394-2-gatien.chevallier@foss.st.com>
+ <169600172184.3601218.2121908606358610119.robh@kernel.org>
+Content-Language: en-US
+From:   Gatien CHEVALLIER <gatien.chevallier@foss.st.com>
+In-Reply-To: <169600172184.3601218.2121908606358610119.robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.201.20.32]
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-02_03,2023-09-28_03,2023-05-22_02
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Sun, Oct 1, 2023, at 07:22, Baoquan He wrote:
-> On 09/29/23 at 12:49pm, Frank Li wrote:
->>    ld: fs/debugfs/file.o: in function `debugfs_print_regs':
->>    file.c:(.text+0x95a): undefined reference to `ioread64be'
->> >> ld: file.c:(.text+0x9dd): undefined reference to `ioread64'
->
-> From your reproducer, on x86_64, GENERIC_IOMAP is selected. So the
-> default version of ioread64 and ioread64be in asm-generic/io.h are
-> bypassed. Except of those arch where ioread64 and ioread64be are
-> implemented specifically like alpha, arm64, parisc, power, we may need
-> include include/linux/io-64-nonatomic-hi-lo.h or
-> include/linux/io-64-nonatomic-lo-hi.h to fix above linking issue?
->
-> From my side, below change can fix the issue. However, I am not quite
-> sure which one is chosen between io-64-nonatomic-hi-lo.h and 
-> io-64-nonatomic-hi-lo.h.
 
-It looks like the latest version of the patch only calls
-it for 64-bit targets, so this question should not come up.
 
-On 32-bit targets, it is driver specific which one you need,
-so having it generic code would require passing a flag from
-a driver, but I think that adds more complexity than it help.
+On 9/29/23 17:35, Rob Herring wrote:
+> 
+> On Fri, 29 Sep 2023 16:28:42 +0200, Gatien Chevallier wrote:
+>> From: Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>
+>>
+>> Introducing of the generic access controller bindings for the
+>> access controller provider and consumer devices. Those bindings are
+>> intended to allow a better handling of accesses to resources in a
+>> hardware architecture supporting several compartments.
+>>
+>> This patch is based on [1]. It is integrated in this patchset as it
+>> provides a use-case for it.
+>>
+>> Diffs with [1]:
+>> 	- Rename feature-domain* properties to access-control* to narrow
+>> 	  down the scope of the binding
+>> 	- YAML errors and typos corrected.
+>> 	- Example updated
+>> 	- Some rephrasing in the binding description
+>>
+>> [1]: https://lore.kernel.org/lkml/0c0a82bb-18ae-d057-562b
+>>
+>> Signed-off-by: Oleksii Moisieiev <oleksii_moisieiev@epam.com>
+>> Signed-off-by: Gatien Chevallier <gatien.chevallier@foss.st.com>
+>>
+>> ---
+>> Changes in V5:
+>> 	- Diffs with [1]
+>> 	- Discarded the [IGNORE] tag as the patch is now part of the
+>> 	  patchset
+>>
+>>   .../access-controllers/access-controller.yaml | 90 +++++++++++++++++++
+>>   1 file changed, 90 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/access-controllers/access-controller.yaml
+>>
+> 
+> My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+> on your patch (DT_CHECKER_FLAGS is new in v5.13):
+> 
+> yamllint warnings/errors:
+> 
+> dtschema/dtc warnings/errors:
+> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/access-controllers/access-controller.yaml: access-control-provider: missing type definition
+> 
+> doc reference errors (make refcheckdocs):
+> 
+> See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20230929142852.578394-2-gatien.chevallier@foss.st.com
+> 
+> The base for the series is generally the latest rc1. A different dependency
+> should be noted in *this* patch.
+> 
+> If you already ran 'make dt_binding_check' and didn't see the above
+> error(s), then make sure 'yamllint' is installed and dt-schema is up to
+> date:
+> 
+> pip3 install dtschema --upgrade
+> 
+> Please check and re-submit after running the above command yourself. Note
+> that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+> your schema. However, it must be unset to test all examples with your schema.
+> 
 
-     Arnd
+Hi Rob,
+
+Running:
+1- make dt_binding_check | grep access-control
+2- make dt_binding_check 
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/access-controllers/access-controller.yaml
+from Krzysztof's slideset
+
+with
+
+pip3 show dtschema
+Name: dtschema
+Version: 2023.9
+
+and
+
+pip3 show yamllint
+Name: yamllint
+Version: 1.32.0
+
+I don't see any of the errors reported by the robot. I have to clone
+your repository to reproduce it.
+
+Should I resubmit with a clean dt-check using the latest dtschema?
+
+***********
+However, I get:
+warning: ignoring duplicate '$id' value 
+'http://devicetree.org/schemas/reserved-memory/framebuffer.yaml#
+warning: ignoring duplicate '$id' value 
+'http://devicetree.org/schemas/reserved-memory/memory-region.yaml#
+warning: ignoring duplicate '$id' value 
+'http://devicetree.org/schemas/reserved-memory/shared-dma-pool.yaml#
+warning: ignoring duplicate '$id' value 
+'http://devicetree.org/schemas/reserved-memory/reserved-memory.yaml
+
+Above warnings disappears when switching to:
+pip3 show dtschema
+Name: dtschema
+Version: 2023.7
+
+The above YAMLs seem to be duplicated in dtschema's latest version.
+I guess it's a synchro that needs to be done since:
+https://lore.kernel.org/all/20230830231758.2561402-2-sjg@chromium.org/
+***********
+
+Best regards,
+Gatien

@@ -2,53 +2,55 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A7507B5A63
-	for <lists+dmaengine@lfdr.de>; Mon,  2 Oct 2023 20:42:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F1C507B5A4F
+	for <lists+dmaengine@lfdr.de>; Mon,  2 Oct 2023 20:42:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229655AbjJBSiT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 2 Oct 2023 14:38:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56246 "EHLO
+        id S238763AbjJBSiY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 2 Oct 2023 14:38:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229612AbjJBSiS (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 2 Oct 2023 14:38:18 -0400
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2045.outbound.protection.outlook.com [40.107.22.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 510FDAB;
-        Mon,  2 Oct 2023 11:38:15 -0700 (PDT)
+        with ESMTP id S238747AbjJBSiW (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 2 Oct 2023 14:38:22 -0400
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2076.outbound.protection.outlook.com [40.107.6.76])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 807B99B;
+        Mon,  2 Oct 2023 11:38:18 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FeraK/+wyEjVKTQWo4DroImmWN5lD4syhKBG2GSDf+bCFqmT2PkkLkIFGLRRGl29XQPFo6mIInDwduUZdWsjbs5VR/qVrrtJlZmgjzqBy1JtUH3QboUeLJSOculLqh/+N0Ij5gx42GXc73M0v51CEq+WFypk3GPAVCWtcX9obEWrjVnyBdE+uT3ZvVhkPGGycCmopdTuD1KDFNjrm7hCnIPU4XtbeAIWzkDLro14Oi6n7y8xN+4a3tWyXlhWfBQMEc8IBIcwXo2/Wq/TMVZ1iraIIGVPLyTyaTuZlc7VE2BPHMY+H3y/xfMlsL7wnbhn+ZRkXQtuqs03xeuYS6azuA==
+ b=MCqe/o+6BZHYOekuqNCR/XYCzzbojao2xy6aE3Oj355HVFHtuQZR8Y154+iOFs5cKn5vwKO+K+LaWitYRA93mlesDZfh1ewULrueIf+9auhrlhgGoyyaxxFKh0LBQt5YPf1/iOd2+K+RmPKDiW+8XUTPJbuCtXmpz4dIAYjV9oQCf87/H32Mb+IZAcLoGoNu1Is0QRsxd5W3CBALvzTTd9ztUDRCbfTVb0SzUAOtpi6wMhrluJbq4CNBaITh2KUk4eHPKhbJC4SfrpFzZY61cTikTa/cuFZWPngv40RtwyuDoMM5CsIHswrsCN1G5HcKXslxq5r586HKBa2nI8ZCKQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tC2mgcIv6b4hQoVagsC+0nuvLjFRe3f/kYiGg9YYNcs=;
- b=iXnZFk+UMBgOUjkPy8bhxF9cKz/lYDSuZk9i9xxsva7+wJFArvur8gVcM+GHdlTn6eMu7V8NBUP+rys+bUZ1/lRNG/jFq5FpZfAMooKNGIHcjl9SGAobRQXkj631oK0kQrli4cp/TXFiA0ZYNdE4xnVVZeAFQw24o8DWOGpJFU8FOiRQslUK5KPIKpZdXgADL+Umj/NkNrgtPgcrqBLsSxK7mzSBW6wGoNKVx+FuYGhhhWzXUVl4i9vsINsmsZPIuf0J/CkVR6POyjyw5cRAqB+w4SZN5XKWk1XKcdmILbW8hsKm1IwljqZXnP8y8ScHihKpOkR6q3LZjq57W4M1dw==
+ bh=vE/E2an+MC2WTwMy3CtHu9jt6k/DAy24enLTD5MbX6g=;
+ b=kuD11T/v6BPPrOlW3/AOh1m2fNHl57rOqk8opzYY1z2rBLuSOlcVHBSPnzrNVqk7sY4G0/WG+Lh2iOGACMs0k99uDK7ucCXqBngXEZ9F2hCsuYWuqFnelYtzraxL0Tv884VDCW+he4MHbWzIYBPXVKgW0nRd1rgiol5xrbaHeaBjaT0sXn8TN6WLOTsovq4CYsdSWf9+3cCHtcsPNXjPfbuDrPEnBCb20Re0SftAEaOnTtM9bgTtzVS7crwsvmh6sJdFI7h1Xg9FtIw2QIarJShdVDmhhh26XJRki1KeVHv/XffhmnqYgogeLVXBJf9eJL8D84iWwgeRqASa/f2Lug==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tC2mgcIv6b4hQoVagsC+0nuvLjFRe3f/kYiGg9YYNcs=;
- b=oskeTVPumJU+Lk3Iu6uqRd746BJKayAXNKwSpPSqMmLHX7oZaZQ67POILX4OOy3Lp1GYG1C4q4hVDDsGVwqD2XzpTUuqVnwJM50VtWgf629Kf+WM3rLMQzQk6va2VatW2bc9rpvLTjejeJPugNxGZ1YeF2htvK9c2M5LuT8HsV0=
+ bh=vE/E2an+MC2WTwMy3CtHu9jt6k/DAy24enLTD5MbX6g=;
+ b=q6JdHP+F+HciG9OaU56P/g8cPXnwqqSTR1Il0ZhrJ9og4h8B0JNrcEAQdtD2xal628ER+FuYq420y/4WhSCTvfMfk4ClmMrO2ZqghyX7ou4s/gNYdNIui9naMEgFPcvQYH+vMw5KuomqqgtUPlWsZmr+BN2HWgC1uckLyQPTMRQ=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
- by DBAPR04MB7285.eurprd04.prod.outlook.com (2603:10a6:10:1ac::7) with
+ by DB9PR04MB9283.eurprd04.prod.outlook.com (2603:10a6:10:36d::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6813.28; Mon, 2 Oct
- 2023 18:38:12 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6838.24; Mon, 2 Oct
+ 2023 18:38:15 +0000
 Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
  ([fe80::1774:e25f:f99:aca2]) by AM6PR04MB4838.eurprd04.prod.outlook.com
  ([fe80::1774:e25f:f99:aca2%4]) with mapi id 15.20.6813.027; Mon, 2 Oct 2023
- 18:38:12 +0000
+ 18:38:15 +0000
 From:   Frank Li <Frank.Li@nxp.com>
 To:     arnd@arndb.de, vkoul@kernel.org
 Cc:     Frank.Li@nxp.com, bhe@redhat.com, dmaengine@vger.kernel.org,
         gregkh@linuxfoundation.org, imx@lists.linux.dev,
         linux-kernel@vger.kernel.org, lkp@intel.com,
         oe-kbuild-all@lists.linux.dev, rafael@kernel.org
-Subject: [PATCH v5 0/3] dmaengine: fsl_edma: add trace and debugfs support
-Date:   Mon,  2 Oct 2023 14:37:47 -0400
-Message-Id: <20231002183750.552759-1-Frank.Li@nxp.com>
+Subject: [PATCH v5 1/3] debugfs_create_regset32() support 8/16 bit width registers
+Date:   Mon,  2 Oct 2023 14:37:48 -0400
+Message-Id: <20231002183750.552759-2-Frank.Li@nxp.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231002183750.552759-1-Frank.Li@nxp.com>
+References: <20231002183750.552759-1-Frank.Li@nxp.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-ClientProxiedBy: BYAPR07CA0016.namprd07.prod.outlook.com
@@ -56,52 +58,52 @@ X-ClientProxiedBy: BYAPR07CA0016.namprd07.prod.outlook.com
  (2603:10a6:20b:4::16)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|DBAPR04MB7285:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8d62ea1a-b2b6-4b1c-124d-08dbc376bbb2
+X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|DB9PR04MB9283:EE_
+X-MS-Office365-Filtering-Correlation-Id: 843d7dfc-7c23-4c50-f680-08dbc376bd63
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ah7FOQ5NFudowORALoAsIn91qrMvtri3xH/yVxsSYyKU15vb9BU96OrozGwp5CwAi/3y+zYZfz6dRikbb1yMl5PraGi8khqOxCH3sc9cytgVtgixORBhGckpik3DCtsTcfXbIkIe6/9gsMRpB1GBOdz9csZAW//gO0eCubW73qL218WjxRbUvf6CNxrjbBQ6D9PdfC+Qb2Uh33i9HOLYZzyumVEkgagfiHU/xN3ER6w7OKb9wT6uemA4nqsGBpil/ZAm5OEIaMF2+/vVoYUdfrV6S3X2xJXa9Yeu2H5E/zlIEvsykb8pb60sBlsqAHg5QAcdk8/k+vNyKlvUcElWh2Si/wUjK8GshxU+ILK74qmKb/8wDN5Y6sQ+SE9B+eP4O6rGu/v1NOqrOLVBuLIKl3gPxqZLLKBpm4Rm4bbTicQwX2n+1F109dSHBE5RAkI0Icm3Sa/bpykjQ/mUgezn61XwADzEQXzX2SBrJ8pSr0GqYFjpELfKRoJCKfTG2/UT2nDocxrwAbzGQMYcRS9EVY3w01YgZjxcCEVA8LOKhWn56+pPD/ym4aa/oNV2WX+NePtbfL3PM4Ggq3Ig2WHYU59qA0jHrwYcA0Ns56XiAbA=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(346002)(366004)(39860400002)(136003)(376002)(230922051799003)(1800799009)(186009)(64100799003)(451199024)(66556008)(6512007)(2906002)(66476007)(316002)(66946007)(7416002)(41300700001)(8676002)(4326008)(8936002)(478600001)(6666004)(6506007)(52116002)(5660300002)(38100700002)(26005)(1076003)(36756003)(38350700002)(966005)(6486002)(86362001)(83380400001)(2616005);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: be7wXyLS8wti8/CpW/oIAHj7jWrgS0wi5fi181hl4zhfx2Z40pZVbvmu7KRZLMT+kWPSJ7n4DlOu9VL75AlJ7Z6ElkEpYPNwlSGTBAzamyL5Fqf/akhQ8pOYGQ13JacFPOki3UXTex8YUkOaKQaK0YK+eBBCSLQdmMshmhmqhcYGzVC2Z1ayG8sYL6tqFMXDrJKSKYvvXtwFvy3/MRvtYpU/alMuzAsaF8vMfQA2Cy9p/51JTKeacqT8zL4x9G6av4+Vw7rhh7i46l9TwXaSttOkRvnwt+q38MgQf7JH+6Hx2dVJujyb56BEMIcOMcLc3ytKha2WGghpdi3SjZASrYHQstlvTJUAqyHRzatuLz10mzQQXyST1jhBcESDoBf/7yBF0UeS5fKsl9dFs7+KYd6f3eDeSm3lQtMFvsFnWzFWep99mxKnFeFzdZnjBVu0yVAkch5NT21tInqyA1pYP4T+ez2+NVRZM3Ugz0bxPlN3/TJ0iGsNt8jK5DKHQBrhcAL2X4jzRSKHWG+uy/QDpdn5a8pJp6RUps4vkeeUeYuT2oTPrmU81FNDbiko0bcX8IK0RO6t4rz6MT9qQD46vAwW+CMSk9NXl/MYoOKH1MaKyBHWtmQ3O1HJyac/OSBU
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(136003)(376002)(396003)(346002)(366004)(230922051799003)(451199024)(1800799009)(186009)(64100799003)(66899024)(52116002)(2906002)(7416002)(41300700001)(8676002)(4326008)(8936002)(5660300002)(316002)(36756003)(66946007)(66556008)(6506007)(478600001)(6512007)(38100700002)(6666004)(1076003)(86362001)(38350700002)(2616005)(66476007)(83380400001)(26005)(6486002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?6QFIG0J5v2VfiW1X2NGBPod6vCjCCbZu4ULBq/2lwjKth7naHwvToaDMKRlr?=
- =?us-ascii?Q?EH/1Hx9ZXhEEyvlpU+U4aiSlioSpnsHhauLgjEHBLoaRo19PNnUeBSKFMmUW?=
- =?us-ascii?Q?wOAe+oEfH2bbFDRD9exK6OCuSSNeF/FnX/Ro4CLTh3Qhgz+YraSBwlN0F+bt?=
- =?us-ascii?Q?F7suDXKrf/U6cbObZHf+wskDM0UiFVXgWmvViVhym/SNtg1wr86iAuDb9Byi?=
- =?us-ascii?Q?SPHcxrxTn7E005eX3fOock72eW9UGfKKMra9M39GPHqPXI78IEki1uVhw0yS?=
- =?us-ascii?Q?Uvx4EC3rUBXYUOhXs6PAJJQWZ5IDhdHzzTi2E7FcxL/+gL+E2fXJVmChHp62?=
- =?us-ascii?Q?gfVMum7jUGdmM9wyquEHGs8Srb3+N+jFK2dLXI79HS4s+Qn9lg60CU+ff1xy?=
- =?us-ascii?Q?P2qbGgKQhjQ9Tp1a/HFCvxcARKsD/2keQeWoznXlsDJsrUq7vpcqAnFZuR0A?=
- =?us-ascii?Q?NOPqfLaiXs+i/6kkUmruNLvEsh/CzHsaYacRzRJPN42tWHn58RNKjAXtJiii?=
- =?us-ascii?Q?uxM6MJUnWzjB4M4FKMH8FXHiltBEIJuLdcb3Xdkv0mgrIdOnVFK9CPa1Vozk?=
- =?us-ascii?Q?SPzaFJCl8h28z9CZ0KCfWpeuh9Hhcs+GKFD4THLHZ8aPYq5Rhk2496ysoaKg?=
- =?us-ascii?Q?TJJ179p/zQopM7wCOpHA0RL/v8oglVQcH92zUQGs4W4ODLj4WIbfR6DTwHkI?=
- =?us-ascii?Q?YqT60n+w0JsKpr8ssjkaoJ4IVidrkUIfIE4/eLLGIWWsaidAhDTEWfaEK6s0?=
- =?us-ascii?Q?DDKmQdoycSmfUI9gwIayNSAk6qXJZTmzbkKnpkpI8kXlPLm6MD/UBM9vHsop?=
- =?us-ascii?Q?1isbJGwXQc0P6eTqocNhZqDEHakB6VaBXZCMoalgyZQjF7/HNZzcDZQl4BKp?=
- =?us-ascii?Q?2IAUQtN2ZaNKlykI+J+qftL142PEcykumyKxBYRq5fN5TNROnZ8Paa+NtnVg?=
- =?us-ascii?Q?1QgTUn8HD4h/NZIXO2Q08QZSkRVsF7ZQnJ9KEDO5+RE1x4Htytj7k0jZpPx1?=
- =?us-ascii?Q?trm52OquBpnAQ9HoXRL1tDZZ+6565ZaxgAbAisKtP6I+1ladQ6Pqf2Khvx0/?=
- =?us-ascii?Q?WmucqvlTc4GwIBlc5wr/SFqrbE5J22eQLJizKN1f5iz/A4rp1lhCH8oaLw9s?=
- =?us-ascii?Q?FIPl96jmfo67nEqw9GU3XopIGUGf389WYS4IHc65+RIi9b+Dof91F4eIvs+/?=
- =?us-ascii?Q?KVweOFhuQcjySc/MblOwGs4rGecKpTWeRaz4oFkCeFW090yenZp1izoR6Cwr?=
- =?us-ascii?Q?55S5E1z4Ip8684JkfwoC1JqG/JryeqknLjYozS7oZnnDdREX/1AlH/iToY/W?=
- =?us-ascii?Q?7V1RsJGYFQh8iU/jOebh6ZC56QFeSV/HsEyPmGwc7vos59XH/2Vz8ie3WOlI?=
- =?us-ascii?Q?sdSbcUppOGXZpA0HBNNJLUC20/GqdGXzHFcCIU0OQUhbwt494ty56glb0Cec?=
- =?us-ascii?Q?aC7coSmBjYd7xlYhNoiM8cja8wP63xQdtKuQvsk1e3lvtFV/x55NNg1ciCoX?=
- =?us-ascii?Q?kDn6q67gKel625EYTs5yit6Hp1Fyv1FQ3Zdo+7FMhSzG7qKTgOpWNtgN4DiH?=
- =?us-ascii?Q?TmXs9e4FJUcOtGtSJBzR9ebW7CLpO0FV8X/qYdlz?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?V0bFeTwWm1pleQHFAj8NANR6Rsv9MEOjDLKkfDubW8we+P36do0OBZItJayE?=
+ =?us-ascii?Q?KbR0QmjHuSmF4cC5W9C9suP9+rliMZRmfq5BalfD5iUGU5x4lpQbzxHd676E?=
+ =?us-ascii?Q?nRd3m79d06jRZdKh1BNMhDNs20JWUf7RPCYwEdn2efd5Rs+3trlyuNs7KIln?=
+ =?us-ascii?Q?3EtiNjB4hhog2JkKgKux7LLrU6CBvZ0EJmNrYzNgCrsaF+b/kwk2GMuBcCGa?=
+ =?us-ascii?Q?6ryuQV+0mMYBK6kpMGLV05kyYM3yeBB/lI6diGyl/gwUJhmRWqERh9X5Hrn1?=
+ =?us-ascii?Q?mbCniMXizrgvC97yo1pMt2Ri8m0NKtKE9OW4gSIY1WfC9pMa6xxL/feWFW5L?=
+ =?us-ascii?Q?WeutKesm9ubU9LJlZ3aDYXqqNhMpsraZoT2BSrjOTbY8/ipJmRxcDleIig5A?=
+ =?us-ascii?Q?hfBJdyotdOsw+DVmxYYGNx9s8CIMoJ27XtROe4YxF3nzfpKqya1N0JQ40up8?=
+ =?us-ascii?Q?znIo5WbzRlx1QskTiq1yB7HThjiOIl+2UHNVZ4uSdUQtk+AbU+FLh5QYMle2?=
+ =?us-ascii?Q?53o/JTtihpJMWbCW0r+dOawhJ2kFR71isNlDnNgGLA/wc6ezCOMkIewwBtGv?=
+ =?us-ascii?Q?G2XAIxQlZzkYPvP6HP7oFeMrCBH7YhSHU4AbRsvYDxqMAbxuKX7Lo/2yghwv?=
+ =?us-ascii?Q?wU8vCAaqj5UPW5oPqgqunHbaC5yPe+89xqSnLmbQW3eAB4h2cz4Ea+jsyR0M?=
+ =?us-ascii?Q?NOsiJqLqPMQeEZId13K7we7I8sLLUhThEH40wcA/hhMzQofFeiunCkF2R2yN?=
+ =?us-ascii?Q?zYBQO9kVGQZtf0I/MRdlqIXkLcRd6FJ5GGZuAszNzQT937efEU7L/81nviC3?=
+ =?us-ascii?Q?4oruKL5ObOhxa6JjjfdCYEWiqt/UWCTgxgaojxrYrkJerrfFR0TAlJmuLvLn?=
+ =?us-ascii?Q?RfDA51pGIYSotlmugdbMQ2IGRV+55xQBUwCGGLuu8jlxSa1HP96yLn6GJABR?=
+ =?us-ascii?Q?yCJezgKDC6w5Q6dhKJbKEHWwK+JGIFee/FeFetnPiDhuVRCd+WNi/pB0LFuM?=
+ =?us-ascii?Q?1N7Mk5TQ1klc5Cs+ELUfVQy7Hf4rp1o+Y+3QB4uZLm4QXUH/E+cXB/zrJlqr?=
+ =?us-ascii?Q?5FcD/isIXbsjMFFXuLR2UOa4JRlEuMAc0oi81cZ3QphdLrDRUay4CrX9QfC8?=
+ =?us-ascii?Q?RGr/4iOWyYxd7XHLa8PjY10cumLNlxJJwJKEC5EbKxPArCggP//+jOosw7St?=
+ =?us-ascii?Q?9PNOqp4D2VHa9W6XobGbBJv+vK5x125jIUzHvAi3zjHFb/Q6UaeA+94JeuN3?=
+ =?us-ascii?Q?X0fQ92B2weMDoiXrbVteEXd18+eTa3pzz5dCmSuudEl656eDCKLNXTvb6qn9?=
+ =?us-ascii?Q?BdZcoRyyVX4eLcdBk4Q23L4hNXFuJwxtHfwVsdvO444JBY0jpzcCAsHPfsYb?=
+ =?us-ascii?Q?FgqLSZOJDaeyb55mzrNtENHyKsVZRnmMJVpSQIuJjPOoUAO1TwBFtpgyTcn7?=
+ =?us-ascii?Q?YG6V4oY0zFKLI3IsEKMYgkIPY3UnIT6+Mi3qKdQv8epnWQY9t2OduRR4WMQB?=
+ =?us-ascii?Q?Ir24n2Xk11aNezKKbdPAJ8nBUXGTdGPN5QSV9ByHNclKZRmWT0Xu08KA/Ktl?=
+ =?us-ascii?Q?5GkcgzcSnFdkZjupe7b1mAUeW09VCqTUJMGug3VR?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8d62ea1a-b2b6-4b1c-124d-08dbc376bbb2
+X-MS-Exchange-CrossTenant-Network-Message-Id: 843d7dfc-7c23-4c50-f680-08dbc376bd63
 X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Oct 2023 18:38:12.6928
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Oct 2023 18:38:15.5601
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JfE7y7avZ7t5myvjcFQS3MduOTW8kjIDXMgOfgI/AL34rN38Vot5vYAWWLCY8Kv5JAszIuDJZSBZKlnux2fwLA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR04MB7285
+X-MS-Exchange-CrossTenant-UserPrincipalName: ThWc/+4UbEXe1ZSQ3/2MpInLh6s9rMcaL5TgRePx4PDpGr/D1Y7cqIDYjM6eti22qpDjLQuC7g2nwsSbSJKSpA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB9283
 X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
@@ -112,79 +114,197 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Change from v3 to v5
-- There are still some discussion about 64bit register access.
-  Drop 64 register support and use sperate patch to enable 64bit register
-support in future.
+Enhance the flexibility of `debugfs_create_regset32()` to support registers
+of various bit widths. The key changes are as follows:
 
-Change from v3 to v4
-- Fix build warning
+1. Renamed '*reg32' and '*regset32' to '*reg' and '*regset' in relevant
+   code to reflect that the register width is not limited to 32 bits.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202309210500.owiirl4c-lkp@intel.com/
+2. Added 'size' and 'bigendian' fields to the `struct debugfs_reg` to allow
+   for specifying the size and endianness of registers. These additions
+   enable `debugfs_create_regset()` to support a wider range of register
+   types.
 
-Change from v2 to v3
-- Fixed sparse build warning
-- improve debugfs_create_regset32 and use debugfs_create_regset() to dump
-  all registers
+3. When 'size' is set to 0, it signifies a 32-bit register. This change
+   maintains compatibility with existing code that assumes 32-bit
+   registers.
 
-Change from v1 to v2
-- Fixed tcd trace issue, data need be saved firstly.
+Improve the versatility of `debugfs_create_regset()` and enable it to
+handle registers of different sizes and endianness, offering greater
+flexibility for debugging and monitoring.
 
-=== Trace ===
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
+ fs/debugfs/file.c       | 53 +++++++++++++++++++++++++++--------------
+ include/linux/debugfs.h | 17 +++++++++----
+ 2 files changed, 48 insertions(+), 22 deletions(-)
 
-echo 1 >/sys/kernel/debug/tracing/tracing_on
-echo 1 >/sys/kernel/debug/tracing/events/fsl_edma/enable
-
-Run any dma test
-...
-
-cat /sys/kernel/debug/tracing/trace
-
- uart_testapp_11-448     [000] d..1.    69.185019: edma_fill_tcd:
-==== TCD =====
-  saddr:  0x831ee020
-  soff:       0x8000
-  attr:       0xffff
-  nbytes: 0xfba40000
-  slast:  0x00000000
-  daddr:  0x8aaa4800
-  doff:       0x0001
-  citer:      0x0800
-  dlast:  0xfba40020
-  csr:        0x0052
-  biter:      0x0800
-
- uart_testapp_11-448     [000] d..2.    69.185022: edma_writew: offset 0001803c: value 00000000
- uart_testapp_11-448     [000] d..2.    69.185023: edma_writel: offset 00018020: value 4259001c
- uart_testapp_11-448     [000] d..2.    69.185024: edma_writel: offset 00018030: value 8aaa4000
-
-=== DebugFS ===
-
-cat /sys/kernel/debug/dmaengine/42000000.dma-controller/42000000.dma-controller-CH00/ch_sbr
-0x00208003
-
-Frank Li (3):
-  debugfs_create_regset32() support 8/16 bit width registers
-  dmaengine: fsl-emda: add debugfs support
-  dmaengine: fsl-edma: add trace event support
-
- drivers/dma/Makefile           |   7 +-
- drivers/dma/fsl-edma-common.c  |   2 +
- drivers/dma/fsl-edma-common.h  |  37 +++++-
- drivers/dma/fsl-edma-debugfs.c | 200 +++++++++++++++++++++++++++++++++
- drivers/dma/fsl-edma-main.c    |   2 +
- drivers/dma/fsl-edma-trace.c   |   4 +
- drivers/dma/fsl-edma-trace.h   | 134 ++++++++++++++++++++++
- fs/debugfs/file.c              |  53 ++++++---
- include/linux/debugfs.h        |  17 ++-
- 9 files changed, 428 insertions(+), 28 deletions(-)
- create mode 100644 drivers/dma/fsl-edma-debugfs.c
- create mode 100644 drivers/dma/fsl-edma-trace.c
- create mode 100644 drivers/dma/fsl-edma-trace.h
-
+diff --git a/fs/debugfs/file.c b/fs/debugfs/file.c
+index 87b3753aa4b1..62cc96bb6d72 100644
+--- a/fs/debugfs/file.c
++++ b/fs/debugfs/file.c
+@@ -1137,15 +1137,15 @@ EXPORT_SYMBOL_GPL(debugfs_create_u32_array);
+ #ifdef CONFIG_HAS_IOMEM
+ 
+ /*
+- * The regset32 stuff is used to print 32-bit registers using the
++ * The regset stuff is used to print 32-bit registers using the
+  * seq_file utilities. We offer printing a register set in an already-opened
+- * sequential file or create a debugfs file that only prints a regset32.
++ * sequential file or create a debugfs file that only prints a regset.
+  */
+ 
+ /**
+- * debugfs_print_regs32 - use seq_print to describe a set of registers
++ * debugfs_print_regs - use seq_print to describe a set of registers
+  * @s: the seq_file structure being used to generate output
+- * @regs: an array if struct debugfs_reg32 structures
++ * @regs: an array if struct debugfs_reg structures
+  * @nregs: the length of the above array
+  * @base: the base address to be used in reading the registers
+  * @prefix: a string to be prefixed to every output line
+@@ -1157,30 +1157,47 @@ EXPORT_SYMBOL_GPL(debugfs_create_u32_array);
+  * because some peripherals have several blocks of identical registers,
+  * for example configuration of dma channels
+  */
+-void debugfs_print_regs32(struct seq_file *s, const struct debugfs_reg32 *regs,
++void debugfs_print_regs(struct seq_file *s, const struct debugfs_reg *regs,
+ 			  int nregs, void __iomem *base, char *prefix)
+ {
++	void __iomem *reg;
++	bool b;
+ 	int i;
+ 
+ 	for (i = 0; i < nregs; i++, regs++) {
+ 		if (prefix)
+ 			seq_printf(s, "%s", prefix);
+-		seq_printf(s, "%s = 0x%08x\n", regs->name,
+-			   readl(base + regs->offset));
++
++		b = regs->bigendian;
++		reg = base + regs->offset;
++
++		switch (regs->size) {
++		case sizeof(u8):
++			seq_printf(s, "%s = 0x%02x\n", regs->name, ioread8(reg));
++			break;
++		case sizeof(u16):
++			seq_printf(s, "%s = 0x%04x\n", regs->name,
++				  b ? ioread16be(reg) : ioread16(reg));
++			break;
++		default:
++			seq_printf(s, "%s = 0x%08x\n", regs->name,
++				   b ? ioread32be(reg) : ioread32(reg));
++		}
++
+ 		if (seq_has_overflowed(s))
+ 			break;
+ 	}
+ }
+-EXPORT_SYMBOL_GPL(debugfs_print_regs32);
++EXPORT_SYMBOL_GPL(debugfs_print_regs);
+ 
+-static int debugfs_regset32_show(struct seq_file *s, void *data)
++static int debugfs_regset_show(struct seq_file *s, void *data)
+ {
+-	struct debugfs_regset32 *regset = s->private;
++	struct debugfs_regset *regset = s->private;
+ 
+ 	if (regset->dev)
+ 		pm_runtime_get_sync(regset->dev);
+ 
+-	debugfs_print_regs32(s, regset->regs, regset->nregs, regset->base, "");
++	debugfs_print_regs(s, regset->regs, regset->nregs, regset->base, "");
+ 
+ 	if (regset->dev)
+ 		pm_runtime_put(regset->dev);
+@@ -1188,16 +1205,16 @@ static int debugfs_regset32_show(struct seq_file *s, void *data)
+ 	return 0;
+ }
+ 
+-DEFINE_SHOW_ATTRIBUTE(debugfs_regset32);
++DEFINE_SHOW_ATTRIBUTE(debugfs_regset);
+ 
+ /**
+- * debugfs_create_regset32 - create a debugfs file that returns register values
++ * debugfs_create_regset - create a debugfs file that returns register values
+  * @name: a pointer to a string containing the name of the file to create.
+  * @mode: the permission that the file should have
+  * @parent: a pointer to the parent dentry for this file.  This should be a
+  *          directory dentry if set.  If this parameter is %NULL, then the
+  *          file will be created in the root of the debugfs filesystem.
+- * @regset: a pointer to a struct debugfs_regset32, which contains a pointer
++ * @regset: a pointer to a struct debugfs_regset, which contains a pointer
+  *          to an array of register definitions, the array size and the base
+  *          address where the register bank is to be found.
+  *
+@@ -1205,13 +1222,13 @@ DEFINE_SHOW_ATTRIBUTE(debugfs_regset32);
+  * the names and values of a set of 32-bit registers. If the @mode variable
+  * is so set it can be read from. Writing is not supported.
+  */
+-void debugfs_create_regset32(const char *name, umode_t mode,
++void debugfs_create_regset(const char *name, umode_t mode,
+ 			     struct dentry *parent,
+-			     struct debugfs_regset32 *regset)
++			     struct debugfs_regset *regset)
+ {
+-	debugfs_create_file(name, mode, parent, regset, &debugfs_regset32_fops);
++	debugfs_create_file(name, mode, parent, regset, &debugfs_regset_fops);
+ }
+-EXPORT_SYMBOL_GPL(debugfs_create_regset32);
++EXPORT_SYMBOL_GPL(debugfs_create_regset);
+ 
+ #endif /* CONFIG_HAS_IOMEM */
+ 
+diff --git a/include/linux/debugfs.h b/include/linux/debugfs.h
+index ea2d919fd9c7..247ae4217ea5 100644
+--- a/include/linux/debugfs.h
++++ b/include/linux/debugfs.h
+@@ -26,18 +26,24 @@ struct debugfs_blob_wrapper {
+ 	unsigned long size;
+ };
+ 
+-struct debugfs_reg32 {
++struct debugfs_reg {
+ 	char *name;
++	int size;
++	int bigendian;
+ 	unsigned long offset;
+ };
+ 
+-struct debugfs_regset32 {
++#define debugfs_reg32 debugfs_reg
++
++struct debugfs_regset {
+ 	const struct debugfs_reg32 *regs;
+ 	int nregs;
+ 	void __iomem *base;
+ 	struct device *dev;	/* Optional device for Runtime PM */
+ };
+ 
++#define debugfs_regset32 debugfs_regset
++
+ struct debugfs_u32_array {
+ 	u32 *array;
+ 	u32 n_elements;
+@@ -145,12 +151,15 @@ struct dentry *debugfs_create_blob(const char *name, umode_t mode,
+ 				  struct dentry *parent,
+ 				  struct debugfs_blob_wrapper *blob);
+ 
+-void debugfs_create_regset32(const char *name, umode_t mode,
++void debugfs_create_regset(const char *name, umode_t mode,
+ 			     struct dentry *parent,
+ 			     struct debugfs_regset32 *regset);
+ 
+-void debugfs_print_regs32(struct seq_file *s, const struct debugfs_reg32 *regs,
++#define debugfs_create_regset32 debugfs_create_regset
++
++void debugfs_print_regs(struct seq_file *s, const struct debugfs_reg32 *regs,
+ 			  int nregs, void __iomem *base, char *prefix);
++#define debugfs_print_regs32 debugfs_print_regs
+ 
+ void debugfs_create_u32_array(const char *name, umode_t mode,
+ 			      struct dentry *parent,
 -- 
 2.34.1
 

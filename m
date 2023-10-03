@@ -2,77 +2,80 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E9207B6D83
-	for <lists+dmaengine@lfdr.de>; Tue,  3 Oct 2023 17:57:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A6307B74DE
+	for <lists+dmaengine@lfdr.de>; Wed,  4 Oct 2023 01:28:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231417AbjJCP5O (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 3 Oct 2023 11:57:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35928 "EHLO
+        id S235111AbjJCX2H (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 3 Oct 2023 19:28:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231422AbjJCP5N (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 3 Oct 2023 11:57:13 -0400
-Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2928A9;
-        Tue,  3 Oct 2023 08:57:09 -0700 (PDT)
-Received: by mail-lj1-x22a.google.com with SMTP id 38308e7fff4ca-2bffc55af02so12369121fa.2;
-        Tue, 03 Oct 2023 08:57:09 -0700 (PDT)
+        with ESMTP id S229818AbjJCX2H (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 3 Oct 2023 19:28:07 -0400
+Received: from mail-oi1-x22f.google.com (mail-oi1-x22f.google.com [IPv6:2607:f8b0:4864:20::22f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67932AF
+        for <dmaengine@vger.kernel.org>; Tue,  3 Oct 2023 16:28:03 -0700 (PDT)
+Received: by mail-oi1-x22f.google.com with SMTP id 5614622812f47-3af6bd48093so989028b6e.3
+        for <dmaengine@vger.kernel.org>; Tue, 03 Oct 2023 16:28:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696348628; x=1696953428; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3z8xey7888ReZ3hOd59GeN1rUxRivvGJ0nZ5YMOr8kY=;
-        b=DmRUVYDHBvolfE18U3baN1cilY2O5MN9jX/sWaqIOmgkCE+A7xJeD3ld3rqJZDN5v0
-         mM5OIXEvlZ7cdy1XvQ+O7F7Z8unMDJGaqnXu6MaJoNroVS9ZNbCFfA8NgHpvgxdb5Pfa
-         rBeL7K+EUaaQsJamV3ZBaD8zPSfQLi9bDuygo9LJxHcenp1afOpHl8jX+wGvcJRiUOA2
-         Z4zoFrT/5h5r476yuOKey9brNJ3OyY/jwkIjUrPcarknsBeixwEnRjED3Os6SXPtj1Bl
-         W2msaBGOkbg9Ii1HLmljShxvHoIizncXMEEYmruv+SRmp5EHIp1IeZoo0KZ8LV24VOBc
-         oH+g==
+        d=chromium.org; s=google; t=1696375682; x=1696980482; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=l1cocEZekiORqignw5iQ3QnO8ZAEe34D0CJMf8KTzIs=;
+        b=kmkt1mjeshnqomFJXrb9VPO9h7KiUu+pNppPH5zsgOlumyN2gSxB2gN8n834+FlHas
+         YyV+8ljv2oQrTAlAmNmy4xvuyeXbCDJMlJpGGmtHdRHgnersE0+gfz2D9bHXGHw2hVn6
+         FgtGoph3zItdFwAWwEIK+bNESIOC8wA+XtlFM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696348628; x=1696953428;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3z8xey7888ReZ3hOd59GeN1rUxRivvGJ0nZ5YMOr8kY=;
-        b=Q1jR/hVvDceTikxSybLu0rNDCryi9tpDXOXUpx0I0oIrStbKEs3OUIq2fqacpF4yQB
-         7MycE3FYFtOGdMHgOTiTFF67w0wQMCnV2buShDO7bLB3xLOOojVcEuQCdtRgjePzs2OX
-         KLZMmBuMc95BLfgj6m8Ge7JaZumdRUMVCn4dN2FZ0C9b1SuVkkM/LCkrAbZELrajRKu+
-         BP6n9Kw58OqFDbjqeGGUP3Xe7IyLKbEek9saim3a+mpN4oR6+J0vais2EG8tCW9o1tte
-         IbQ9kA+M4x4OIarDdjC8AbLlVjv+T/NTxPP+Z9WVW1DM7nLDHljpwlt4XG2SAXB//o3N
-         SqCw==
-X-Gm-Message-State: AOJu0YwybH0X5T77VDGcIjn+DPIUGaxUaswBjtIj+ECqdVr8+AdS0JVy
-        JWKFkibo8ChKPn5z4jmDAJBpnOGkbAU=
-X-Google-Smtp-Source: AGHT+IHlWoh3zMtziDQkY+4SnrzOvIP06BmKFTuJ/fLEXqtaBT7Vx/+xohz55kjr70aCTFa3bfkN7g==
-X-Received: by 2002:a2e:bc03:0:b0:2c2:a557:e947 with SMTP id b3-20020a2ebc03000000b002c2a557e947mr7640644ljf.1.1696348627772;
-        Tue, 03 Oct 2023 08:57:07 -0700 (PDT)
-Received: from mobilestation ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id o17-20020a2e90d1000000b002bcd94f9714sm285215ljg.126.2023.10.03.08.57.06
+        d=1e100.net; s=20230601; t=1696375682; x=1696980482;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=l1cocEZekiORqignw5iQ3QnO8ZAEe34D0CJMf8KTzIs=;
+        b=VVmCRAr1rBC7vX5R0DpI78czBhkHKnCJKSxE4U2BEEE4QeVXdMG3HSXIQzNuX2YT72
+         dyIPveefKzO/FUaV9iwJ0LigJ6zRomHagl//pZsuMOy9BWoH9M2alESevdmhvRzPnYT9
+         zEiHxyyjdKC+4RWasee7AxC+tfE7Bi4/0NzJX2cYT2++CdsErXRQUIEOuVx6LeGtXy65
+         2+QIgtB9d4wToKbVPeMbvTlu8toG4Bcxq8kaqvJYVUIlIxRSYRQh6zqsKu2tmhjPyszw
+         xxV/1GIW9uoVQiO1I/BXcXuuoxxLYxvzO2ZKO2EMciOrCNBiVvIlFOvaoq4RaE1nBDR2
+         wb0Q==
+X-Gm-Message-State: AOJu0YwVDSC3qLmdA27gLv4hV5Tohm+bc1JejPHDKTh51sxiiyf61BL1
+        TfDCQa6F/Z7qe2Yj5it1DqvHeQ==
+X-Google-Smtp-Source: AGHT+IGcDZsz8I7q8HeOw+zAOiVjTbrdYbyOyLeLVe3dMszaNS4gWaQkf5NPvjAd8b8Ijnz9eccivg==
+X-Received: by 2002:a05:6808:1386:b0:3ab:83fe:e18f with SMTP id c6-20020a056808138600b003ab83fee18fmr1040629oiw.35.1696375682763;
+        Tue, 03 Oct 2023 16:28:02 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id b2-20020a63a102000000b005637030d00csm1917249pgf.30.2023.10.03.16.28.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Oct 2023 08:57:07 -0700 (PDT)
-Date:   Tue, 3 Oct 2023 18:57:04 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     =?utf-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>
-Cc:     Cai Huoqing <cai.huoqing@linux.dev>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Herve Codina <herve.codina@bootlin.com>
-Subject: Re: [PATCH v2 4/5] dmaengine: dw-edma: HDMA: Add sync read before
- starting the DMA transfer in remote setup
-Message-ID: <lq7imquio2e2y4heczk27nsiutzng43cyz2sgmxa7azn3d3tnu@6hnvyzkuzhxv>
-References: <m6mxnmppc7hybs2tz57anoxq6afu2x63tigjya2eooaninpe4h@ayupt4qauq7v>
- <20231003121542.3139696-1-kory.maincent@bootlin.com>
- <2yh3lus7qqhvewva6dr4p2g7azbgov4ls57xvzefbrw24h2t7m@cbx26pwj73zn>
- <20231003173432.18480fa1@kmaincent-XPS-13-7390>
+        Tue, 03 Oct 2023 16:28:02 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>, dmaengine@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, llvm@lists.linux.dev
+Subject: [PATCH] dmaengine: fsl-edma: Annotate struct struct fsl_edma_engine with __counted_by
+Date:   Tue,  3 Oct 2023 16:27:56 -0700
+Message-Id: <20231003232704.work.596-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1156; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=s8UpsNSdXXPa2sG80VKv45a8RFcNlzZa7z4+aE1gKZA=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlHKN8cBMJPNyzXXuGAC8pBAjZvNoG6NrfePoLd
+ C9D5gSb26qJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZRyjfAAKCRCJcvTf3G3A
+ JuEJD/9v/LCGJzv4Rw87JT1vYJVt0ykGcqLmnwnqOBGGZsqevqD+b7qp14+O1Q8lnIkI4W33lG2
+ WbeXUWN6tcTbe2U5IZqKbtksxWFE9qY5jG44U0LWuYDitzIy3zpXoUzf9KKtH0MFHEZgbdcWT+v
+ advfP2YT7lRageoZr5YdGugHBpNZ/jaZEB75Sbmm6rfce8egfMISd/JvRWzu5Vk1EszldbP1i9b
+ X0VVdfiA4Ip9o7U//FK/Qhh+dHVNCeAxH8tjonoTn8VmX9dVq9kEIIlNdqdakhQ0cqotn8K+UUz
+ TEg4oOAtEvyQFwLSSFJOWWrbwtEsZt/hyQKAZg0s7KrNXDkaRw2QJ+HfpOmnWnrZIEIcSeVSYxl
+ ZG7UCCXQkpA+wJQ7/w/j53k+5e+LHjmnZgv9fkU9QVQs/NUCWMvaldXHJnVsUBfJ2Wsl464Pd6Q
+ VDhJzr/ZMMATrkL4cRoZCmPBuJHtTFPoUDIiMmnFlZab82OB2xZ02UKYagv77ZurGq/O9vmzYdl
+ 6D8O7BYvb1dlOYv/uEpQHR3PaTu2k+nq1RXhNk3opBHUl1hrke7gJEcsFF6ehvPQY2fvHgESw04
+ RR7Lmu9tmg7ilcDwH1bO92ixNm7NP1P8B30siaG24HjWBbalKHnxhHyQaO60ldjhBdlBVJ0wRGl
+ /fnpHhl RpJmix4Q==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231003173432.18480fa1@kmaincent-XPS-13-7390>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -81,37 +84,35 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Oct 03, 2023 at 05:34:32PM +0200, Köry Maincent wrote:
-> On Tue, 3 Oct 2023 18:20:23 +0300
-> Serge Semin <fancer.lancer@gmail.com> wrote:
-> 
-> > On Tue, Oct 03, 2023 at 02:15:42PM +0200, Köry Maincent wrote:
-> > > From: Kory Maincent <kory.maincent@bootlin.com>
-> > > 
-> > > The Linked list element and pointer are not stored in the same memory as
-> > > the HDMA controller register. If the doorbell register is toggled before
-> > > the full write of the linked list a race condition error can appears.
-> > > In remote setup we can only use a readl to the memory to assured the full
-> > > write has occurred.
-> > > 
-> > > Fixes: e74c39573d35 ("dmaengine: dw-edma: Add support for native HDMA")
-> > > Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
-> > > ---
-> > > 
-> > > Changes in v2:
-> > > - Move the sync read in a function.
-> > > - Add commments  
-> > 
-> > Note you need to resubmit the entire series if any of its part has
-> > changed. So please add these patches to your patchset (in place of the
-> > 4/5 and 5/5 patches I commented) and resend it as v3.
-> 
-> Alright.
-> Should I wait for Cai's response for patch 1/5 before sending v3. He seems to
-> never having woken up in our discussions.
+Prepare for the coming implementation by GCC and Clang of the __counted_by
+attribute. Flexible array members annotated with __counted_by can have
+their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
+array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+functions).
 
-Ok. Let's wait for Cai for sometime. We are in the middle of the
-dev-cycle anyway so no reason to rush.
+As found with Coccinelle[1], add __counted_by for struct struct fsl_edma_engine.
 
--Serge(y)
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: dmaengine@vger.kernel.org
+Link: https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci [1]
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/dma/fsl-edma-common.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/dma/fsl-edma-common.h b/drivers/dma/fsl-edma-common.h
+index 40d50cc3d75a..bb5221158a77 100644
+--- a/drivers/dma/fsl-edma-common.h
++++ b/drivers/dma/fsl-edma-common.h
+@@ -225,7 +225,7 @@ struct fsl_edma_engine {
+ 	bool			big_endian;
+ 	struct edma_regs	regs;
+ 	u64			chan_masked;
+-	struct fsl_edma_chan	chans[];
++	struct fsl_edma_chan	chans[] __counted_by(n_chans);
+ };
+ 
+ #define edma_read_tcdreg(chan, __name)				\
+-- 
+2.34.1
 

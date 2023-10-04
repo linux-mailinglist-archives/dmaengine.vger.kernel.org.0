@@ -2,42 +2,44 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 939D67B8249
+	by mail.lfdr.de (Postfix) with ESMTP id BA00A7B824A
 	for <lists+dmaengine@lfdr.de>; Wed,  4 Oct 2023 16:29:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233340AbjJDO3J (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 4 Oct 2023 10:29:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44074 "EHLO
+        id S233431AbjJDO3M (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 4 Oct 2023 10:29:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233430AbjJDO3I (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 4 Oct 2023 10:29:08 -0400
+        with ESMTP id S233430AbjJDO3M (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 4 Oct 2023 10:29:12 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 587C8AB;
-        Wed,  4 Oct 2023 07:29:05 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 656B2C433CA;
-        Wed,  4 Oct 2023 14:29:03 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF02EAB;
+        Wed,  4 Oct 2023 07:29:08 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3FF3C43395;
+        Wed,  4 Oct 2023 14:29:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696429745;
-        bh=i3oPaZJTxFmjSMSUxGfO7GQlP35gAN9BPs9L6YdVA6M=;
+        s=k20201202; t=1696429748;
+        bh=dE+wd+fx3bR2fLrXaHnvGq6sU/3A9Au6dn7p+BhL9ac=;
         h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-        b=bXjY9E97A/1VOk+6wOUzboJsNwLSfsBhUlDN0nyVZqntCaX+JrGAqpSRiLebAkz73
-         dZRR8k7v2qbnFqm+EoY72WFHR6K6P0hsf1y5ObLLt08C2ghLMDZDPTBfnwUGywUJvU
-         wmElgty8QOD7gekd/ios9OzEDDhydG5kUJRUjAUhRXL2xc0syYaA5gRZ3pmUgCKfYk
-         Dyr3gTrP0aK3bIhX0X55FRv7QWWsOVT/LPwOaoBdgNHMZqwOQjH7l48Biw61SELPxz
-         GIiXRuvxFuNilruaA+/tfsscO91fXIm1J/GFic6YnSvYHs7p7wVgjhi5hmC8LdDmPZ
-         MxOHGIksb6QEg==
+        b=bMgMmU+zyhSUHroX0vz4Jjl8UKUURxm6XP4DiBC/XoTBMIbCUEg7K/JFcr3xVYDzQ
+         yUJYkdce4INQVwwIX62m/u1ppOYDHv0lg5kPtOAgtGp8ckvJQPb8Rv1oNx2Dr6KmCB
+         CClMgWKkh8caTFbqRuJR2V785guuQVBPJlmKCbeSKjHB/C8xZ9cR6SS4h1YHicOZZY
+         pA9SpLWV8rpKymzh48BRHxXnaBg8h4neFkLcWwlFaYvypLOz3gxiq89ZWd12B2K+sk
+         l+c+1dhFYo46qqh1mY3GS0EeussZPli8Qrcph8dXGFYha3xIT4WaH8k328RrnwEiX4
+         U634wpEed6zWg==
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Dave Jiang <dave.jiang@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>
-Cc:     dmaengine@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>
-In-Reply-To: <20230908201045.4115614-1-fenghua.yu@intel.com>
-References: <20230908201045.4115614-1-fenghua.yu@intel.com>
-Subject: Re: [PATCH] dmaengine: idxd: add wq driver name support for
- accel-config user tool
-Message-Id: <169642974297.440009.10230225002907030565.b4-ty@kernel.org>
-Date:   Wed, 04 Oct 2023 19:59:02 +0530
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, dmaengine@vger.kernel.org,
+        llvm@lists.linux.dev,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+In-Reply-To: <20230928234334.work.391-kees@kernel.org>
+References: <20230928234334.work.391-kees@kernel.org>
+Subject: Re: [PATCH] dmaengine: ep93xx_dma: Annotate struct
+ ep93xx_dma_engine with __counted_by
+Message-Id: <169642974524.440009.16047886580039006208.b4-ty@kernel.org>
+Date:   Wed, 04 Oct 2023 19:59:05 +0530
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
@@ -53,20 +55,21 @@ List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 
-On Fri, 08 Sep 2023 13:10:45 -0700, Fenghua Yu wrote:
-> With the possibility of multiple wq drivers that can be bound to the wq,
-> the user config tool accel-config needs a way to know which wq driver to
-> bind to the wq. Introduce per wq driver_name sysfs attribute where the user
-> can indicate the driver to be bound to the wq. This allows accel-config to
-> just bind to the driver using wq->driver_name.
+On Thu, 28 Sep 2023 16:43:42 -0700, Kees Cook wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
+> array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
 > 
+> As found with Coccinelle[1], add __counted_by for struct ep93xx_dma_engine.
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] dmaengine: idxd: add wq driver name support for accel-config user tool
-      commit: 7af1e0aceeb321cbc90fcf6fa0bec8870290377f
+[1/1] dmaengine: ep93xx_dma: Annotate struct ep93xx_dma_engine with __counted_by
+      commit: 74d885711c2f619e92f41ef308691948cc63f224
 
 Best regards,
 -- 

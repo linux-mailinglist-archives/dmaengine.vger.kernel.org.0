@@ -2,49 +2,44 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 100147B813B
-	for <lists+dmaengine@lfdr.de>; Wed,  4 Oct 2023 15:46:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 88C4F7B8152
+	for <lists+dmaengine@lfdr.de>; Wed,  4 Oct 2023 15:49:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233300AbjJDNqL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 4 Oct 2023 09:46:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37518 "EHLO
+        id S242658AbjJDNtJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 4 Oct 2023 09:49:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233066AbjJDNqK (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 4 Oct 2023 09:46:10 -0400
+        with ESMTP id S242604AbjJDNtI (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 4 Oct 2023 09:49:08 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53331A9;
-        Wed,  4 Oct 2023 06:46:07 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13389C433C7;
-        Wed,  4 Oct 2023 13:46:05 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CC57C0;
+        Wed,  4 Oct 2023 06:49:03 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D601C433C8;
+        Wed,  4 Oct 2023 13:49:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696427166;
-        bh=HFpyoczoeu93B+eyyu6aLGqXz6EFGkxrIUbFli4Gm9Y=;
+        s=k20201202; t=1696427342;
+        bh=MBEtnPFBJlhd3FWBV+ARjaXUoaZ9Dl2ozbByMBfu4s4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=R9wnh80R+hyC3UCzgdQOevuIaFw10AHaxEtnkhDeM9CZVHt5suUFQbRfVqoBG0NfN
-         YvOVJtocj4W1zPS5tY6h++IK+YC1Ry+VQly3iHEyBj7oVIcj8BOfNh9YghmGBR93iG
-         HA0npNiH6hS+aZsvwYuw2W9obVnKMSlfhaX7kB4E8HG2/y41qD4PUMKOg90/BNtC30
-         D2w/qzlxcwEi3KLRV3G3wn7adzEFWgnVyzBz7qoT5wbTwvrpaFPBsUU5aZr5BrRoDT
-         qGoKCmg4yFlxJaxIh/WBQ8KxBZSUj1sZYCthploXGKeZyjKmeEN/O/HIzd4ZZ3PK2L
-         DUyDfQY1PhKGg==
-Date:   Wed, 4 Oct 2023 19:16:01 +0530
+        b=tIpoJFKMJA0DHSQVOYpxra+hNidIMbiyraE4lEjzw+cwTkFxUsn16H14ra13KIEBF
+         Pog5SjZCOnPNpPWaBdX93VhQne6ExToo7sfS9IKM+FeA0O/u6d8Zh9v7vLssh1SEgf
+         3HHqvCygS2ws+nrlGwGAsS84eyYXkScdnJf00k9X9gCD8/HN7XzZOF43BYMoFzXUy6
+         xMB+26tduI4+vKcg52EvWPk8SRUetcly/+5SDakRDhpwF0ruOvlxc+p/ESDXEKowuE
+         bv2vINVbPlEI9IrohLUDKAzwdUNjfeLtfHI/Gac4t0WPlW7mH9kn3MC2fP2zp8nuID
+         IjYgdNpfm6uqA==
+Date:   Wed, 4 Oct 2023 19:18:58 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Martin =?utf-8?Q?Povi=C5=A1er?= <povik+lin@cutebit.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, asahi@lists.linux.dev,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] dmaengine: apple-sio: Add Apple SIO driver
-Message-ID: <ZR1smXBXyx7xDEmg@matsya>
-References: <20230828170013.75820-1-povik+lin@cutebit.org>
- <20230828170013.75820-3-povik+lin@cutebit.org>
- <ZR1kz7Sil8onc1uC@matsya>
- <06444557-414A-4710-88A0-620975BB258A@cutebit.org>
+To:     coolrrsh@gmail.com
+Cc:     fenghua.yu@intel.com, dave.jiang@intel.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH v2] dmaengine: idxd: Remove redundant memset() for
+ eventlog allocation
+Message-ID: <ZR1tSu0IQHFNuqMo@matsya>
+References: <20230829180027.6357-1-coolrrsh@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <06444557-414A-4710-88A0-620975BB258A@cutebit.org>
+In-Reply-To: <20230829180027.6357-1-coolrrsh@gmail.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -55,83 +50,43 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 04-10-23, 15:32, Martin Povišer wrote:
-
-> >> + * There are two kinds of 'transaction descriptors' in play here.
-> >> + *
-> >> + * There's the struct sio_tx, and the struct dma_async_tx_descriptor embedded
-> >> + * inside, which jointly represent a transaction to the dmaengine subsystem.
-> >> + * At this time we only support those transactions to be cyclic.
-> >> + *
-> >> + * Then there are the coprocessor descriptors, which is what the coprocessor
-> >> + * knows and understands. These don't seem to have a cyclic regime, so we can't
-> >> + * map the dmaengine transaction on an exact coprocessor counterpart. Instead
-> >> + * we continually queue up many coprocessor descriptors to implement a cyclic
-> >> + * transaction.
-> >> + *
-> >> + * The number below is the maximum of how far ahead (how many) coprocessor
-> >> + * descriptors we should be queuing up, per channel, for a cyclic transaction.
-> >> + * Basically it's a made-up number.
-> >> + */
-> >> +#define SIO_MAX_NINFLIGHT 4
-> > 
-> > you meant SIO_MAX_INFLIGHT if not what is NINFLIGHT?
+On 29-08-23, 23:30, coolrrsh@gmail.com wrote:
+> From: Rajeshwar R Shinde <coolrrsh@gmail.com>
 > 
-> I mean the number is arbitrary, it doesn’t reflect any coprocessor limit since
-> I haven’t run the tests to figure one out. It's supposed to be a small reasonable
-> number.
-
-Sorry that was not my question. Should this macro be SIO_MAX_NINFLIGHT
-or SIO_MAX_INFLIGHT..?
-
-> >> +static int sio_device_config(struct dma_chan *chan,
-> >> +      struct dma_slave_config *config)
-> >> +{
-> >> + struct sio_chan *siochan = to_sio_chan(chan);
-> >> + struct sio_data *sio = siochan->host;
-> >> + bool is_tx = sio_chan_direction(siochan->no) == DMA_MEM_TO_DEV;
-> >> + struct sio_shmem_chan_config *cfg = sio->shmem;
-> >> + int ret;
-> >> +
-> >> + switch (is_tx ? config->dst_addr_width : config->src_addr_width) {
-> >> + case DMA_SLAVE_BUSWIDTH_1_BYTE:
-> >> + cfg->datashape = 0;
-> >> + break;
-> >> + case DMA_SLAVE_BUSWIDTH_2_BYTES:
-> >> + cfg->datashape = 1;
-> >> + break;
-> >> + case DMA_SLAVE_BUSWIDTH_4_BYTES:
-> >> + cfg->datashape = 2;
-> >> + break;
-> >> + default:
-> >> + return -EINVAL;
-> >> + }
-> >> +
-> >> + cfg->fifo = 0x800;
-> >> + cfg->limit = 0x800;
-> >> + cfg->threshold = 0x800;
-> >> + dma_wmb();
-> > 
-> > ??
+> dma_alloc_coherent function already zeroes the array 'addr'.
+> So, memset function call is not needed.
 > 
-> Again, shared memory
-> 
-> >> +
-> >> + ret = sio_call(sio, FIELD_PREP(SIOMSG_TYPE, MSG_CONFIGURE) |
-> >> +     FIELD_PREP(SIOMSG_EP, siochan->no));
-> > 
-> > this does not sound okay, can you explain why this call is here
-> 
-> We are sending the configuration to the coprocessor, it will NACK
-> it if invalid, seems very fitting here.
+> This fixes warning such as:
+> drivers/dma/idxd/device.c:783:8-26:
+> WARNING: dma_alloc_coherent used in addr already zeroes out memory,
+> so memset is not needed.
 
-I dont this so, purpose of the device_config() is to send peripheral
-config to driver for use on the next descriptor which is submitted. So
-sending to co-processor now (when we might even have a txn going on)
-does not seem right
+Already fixes by 4ca95a5b220c901f9c2402532ef78bf5aaf7d35d
 
-What would be the behaviour if already a txn is progressing on the
-co-processor
+> 
+> Signed-off-by: Rajeshwar R Shinde <coolrrsh@gmail.com>
+> ---
+> v1->v2
+> Renamed the subject line
+> ---
+>  drivers/dma/idxd/device.c | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+> index 5abbcc61c528..7c74bc60f582 100644
+> --- a/drivers/dma/idxd/device.c
+> +++ b/drivers/dma/idxd/device.c
+> @@ -786,8 +786,6 @@ static int idxd_device_evl_setup(struct idxd_device *idxd)
+>  		goto err_alloc;
+>  	}
+>  
+> -	memset(addr, 0, size);
+> -
+>  	spin_lock(&evl->lock);
+>  	evl->log = addr;
+>  	evl->dma = dma_addr;
+> -- 
+> 2.25.1
 
 -- 
 ~Vinod

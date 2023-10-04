@@ -2,42 +2,50 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FAC87B80D9
-	for <lists+dmaengine@lfdr.de>; Wed,  4 Oct 2023 15:29:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 880887B80E2
+	for <lists+dmaengine@lfdr.de>; Wed,  4 Oct 2023 15:30:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233269AbjJDN3W (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 4 Oct 2023 09:29:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52618 "EHLO
+        id S242608AbjJDNa2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 4 Oct 2023 09:30:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242582AbjJDN3V (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 4 Oct 2023 09:29:21 -0400
+        with ESMTP id S233096AbjJDNa1 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 4 Oct 2023 09:30:27 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0455A9
-        for <dmaengine@vger.kernel.org>; Wed,  4 Oct 2023 06:29:16 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8274C433C7;
-        Wed,  4 Oct 2023 13:29:15 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62D97AD;
+        Wed,  4 Oct 2023 06:30:24 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA32BC433C8;
+        Wed,  4 Oct 2023 13:30:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696426156;
-        bh=M6YfTC8h5m38Sf7lVbQ5/h66p8TGmPFzgb20twQPEps=;
+        s=k20201202; t=1696426224;
+        bh=aJVniq+g35ZseQJZAGkIBzb7ufaQ4aP0ZCjtBHrm/hE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SuLcNx3epSLyNYN++jCD0cQZetp8utOU8azUi47B3wfxadn1ilXDaq6VJd1Ka0PFZ
-         9Mle6a9KB9SCnUXRc7sEt2oUscTrDTk8v0hbX7J8v2vx7m1GwP5bicrVyLpqDgCNyn
-         9jN4oCy5Z8DmDN8+XusHA3PXa5FLTy7mV4zmoqTUagNzmqixoI++PrKjAjp1kXoSA3
-         QVILSDDdmKN/XIIqTVJZKHV+d8dzVMHwB0easchx6ohwIPFKMKUw7Caq60fYnMgPGJ
-         yzhSW66Vo9UVLdoOLcHQyCF4D3iuKBeLyjnYeqZeFjFyhdtHriu7vh/sm0fyM+NSC3
-         Hayee9oRNEPiw==
-Date:   Wed, 4 Oct 2023 18:59:10 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Tan En De <ende.tan@starfivetech.com>
-Cc:     dmaengine@vger.kernel.org, Eugeniy.Paltsev@synopsys.com
-Subject: Re: [v2,1/1] dmaengine: dw-axi-dmac: Support src_maxburst and
- dst_maxburst
-Message-ID: <ZR1optUInIcCgTxN@matsya>
-References: <20230913110425.1271-1-ende.tan@starfivetech.com>
+        b=JHyi7tX99vVdzsJMQXpWs9xJM8JqAe8UVCFgCr1+jn8VyY9G7ZUiy2OMV99FyYbI/
+         9D/91JmtqIi3B5u2Bgfl++OVCgNrrB1kL1PCnn0xfEQg3Iw9Ycy+B8XQrfPhDPsval
+         fWbtbwurTKuZLbkDHw5iCoy1DfuhBafozyS8z9IYqIOG5J/jAJFo+PbtcnN/whIVjP
+         hQb/YK/DAOI1qHF7czLo+bo5IedvtDwQXidg4sMhVQx/R/XTUCcw6I0B9dZvTyPDSc
+         kNiDk/2ZGTHfCupwaaKbZ0KouUMZuGwGksHBjpByPDO9f0392I495pyCfgqJtxuq/r
+         jGLtT3L8mNT9w==
+Received: (nullmailer pid 2755166 invoked by uid 1000);
+        Wed, 04 Oct 2023 13:30:21 -0000
+Date:   Wed, 4 Oct 2023 08:30:21 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     shravan chippa <shravan.chippa@microchip.com>
+Cc:     green.wan@sifive.com, vkoul@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, palmer@dabbelt.com,
+        paul.walmsley@sifive.com, conor+dt@kernel.org,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        nagasuresh.relli@microchip.com, praveen.kumar@microchip.com,
+        Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH v2 2/4] dt-bindings: dma: sf-pdma: add new compatible name
+Message-ID: <20231004133021.GB2743005-robh@kernel.org>
+References: <20231003042215.142678-1-shravan.chippa@microchip.com>
+ <20231003042215.142678-3-shravan.chippa@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230913110425.1271-1-ende.tan@starfivetech.com>
+In-Reply-To: <20231003042215.142678-3-shravan.chippa@microchip.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -48,126 +56,41 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 13-09-23, 19:04, Tan En De wrote:
-> Current implementation has hardcoded CHx_CTL.SRC_MSIZE and
-> CHx_CTL.DST_MSIZE with a constant, namely DWAXIDMAC_BURST_TRANS_LEN_4.
+On Tue, Oct 03, 2023 at 09:52:13AM +0530, shravan chippa wrote:
+> From: Shravan Chippa <shravan.chippa@microchip.com>
 > 
-> However, to support hardware with different source/destination burst
-> transaction length, the aforementioned values shall be configurable
-> based on dma_slave_config set by client driver.
-
-Are client drivers setting this today, will there be regression if not
-set?
-
+> Add new compatible name microchip,mpfs-pdma to support
+> out of order dma transfers
 > 
-> So, this commit is to allow client driver to configure
-> - CHx_CTL.SRC_MSIZE via dma_slave_config.src_maxburst
-> - CHx_CTL.DST_MSIZE via dma_slave_config.dst_maxburst
-> 
-> Signed-off-by: Tan En De <ende.tan@starfivetech.com>
+> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+> Signed-off-by: Shravan Chippa <shravan.chippa@microchip.com>
 > ---
-> v1 -> v2:
-> - Fixed typo (replaced `return -EINVAL` with `goto err_desc_get` in dma_chan_prep_dma_memcpy()).
-> ---
->  .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 38 +++++++++++++++----
->  drivers/dma/dw-axi-dmac/dw-axi-dmac.h         |  3 +-
->  2 files changed, 33 insertions(+), 8 deletions(-)
+>  .../bindings/dma/sifive,fu540-c000-pdma.yaml         | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-> index dd02f84e404d..f234097dffb9 100644
-> --- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-> +++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-> @@ -610,7 +610,7 @@ static int dw_axi_dma_set_hw_desc(struct axi_dma_chan *chan,
->  	size_t axi_block_ts;
->  	size_t block_ts;
->  	u32 ctllo, ctlhi;
-> -	u32 burst_len;
-> +	u32 burst_len, src_burst_trans_len, dst_burst_trans_len;
+> diff --git a/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml b/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
+> index a1af0b906365..974467c4bacb 100644
+> --- a/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
+> +++ b/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
+> @@ -27,10 +27,14 @@ allOf:
 >  
->  	axi_block_ts = chan->chip->dw->hdata->block_size[chan->id];
->  
-> @@ -674,8 +674,20 @@ static int dw_axi_dma_set_hw_desc(struct axi_dma_chan *chan,
->  
->  	hw_desc->lli->block_ts_lo = cpu_to_le32(block_ts - 1);
->  
-> -	ctllo |= DWAXIDMAC_BURST_TRANS_LEN_4 << CH_CTL_L_DST_MSIZE_POS |
-> -		 DWAXIDMAC_BURST_TRANS_LEN_4 << CH_CTL_L_SRC_MSIZE_POS;
-> +	dst_burst_trans_len = chan->config.dst_maxburst ?
-> +				__ffs(chan->config.dst_maxburst) - 1 :
-> +				DWAXIDMAC_BURST_TRANS_LEN_4;
-> +	if (dst_burst_trans_len > DWAXIDMAC_BURST_TRANS_LEN_MAX)
-> +		return -EINVAL;
-> +	ctllo |= dst_burst_trans_len << CH_CTL_L_DST_MSIZE_POS;
-> +
-> +	src_burst_trans_len = chan->config.src_maxburst ?
-> +				__ffs(chan->config.src_maxburst) - 1 :
-> +				DWAXIDMAC_BURST_TRANS_LEN_4;
-> +	if (src_burst_trans_len > DWAXIDMAC_BURST_TRANS_LEN_MAX)
-> +		return -EINVAL;
-> +	ctllo |= src_burst_trans_len << CH_CTL_L_SRC_MSIZE_POS;
-> +
->  	hw_desc->lli->ctl_lo = cpu_to_le32(ctllo);
->  
->  	set_desc_src_master(hw_desc);
-> @@ -878,7 +890,7 @@ dma_chan_prep_dma_memcpy(struct dma_chan *dchan, dma_addr_t dst_adr,
->  	size_t block_ts, max_block_ts, xfer_len;
->  	struct axi_dma_hw_desc *hw_desc = NULL;
->  	struct axi_dma_desc *desc = NULL;
-> -	u32 xfer_width, reg, num;
-> +	u32 xfer_width, reg, num, src_burst_trans_len, dst_burst_trans_len;
->  	u64 llp = 0;
->  	u8 lms = 0; /* Select AXI0 master for LLI fetching */
->  
-> @@ -936,9 +948,21 @@ dma_chan_prep_dma_memcpy(struct dma_chan *dchan, dma_addr_t dst_adr,
->  		}
->  		hw_desc->lli->ctl_hi = cpu_to_le32(reg);
->  
-> -		reg = (DWAXIDMAC_BURST_TRANS_LEN_4 << CH_CTL_L_DST_MSIZE_POS |
-> -		       DWAXIDMAC_BURST_TRANS_LEN_4 << CH_CTL_L_SRC_MSIZE_POS |
-> -		       xfer_width << CH_CTL_L_DST_WIDTH_POS |
-> +		dst_burst_trans_len = chan->config.dst_maxburst ?
-> +					__ffs(chan->config.dst_maxburst) - 1 :
-> +					DWAXIDMAC_BURST_TRANS_LEN_4;
-> +		if (dst_burst_trans_len > DWAXIDMAC_BURST_TRANS_LEN_MAX)
-> +			goto err_desc_get;
-> +		reg |= dst_burst_trans_len << CH_CTL_L_DST_MSIZE_POS;
-> +
-> +		src_burst_trans_len = chan->config.src_maxburst ?
-> +					__ffs(chan->config.src_maxburst) - 1 :
-> +					DWAXIDMAC_BURST_TRANS_LEN_4;
-> +		if (src_burst_trans_len > DWAXIDMAC_BURST_TRANS_LEN_MAX)
-> +			goto err_desc_get;
-> +		reg |= src_burst_trans_len << CH_CTL_L_SRC_MSIZE_POS;
+>  properties:
+>    compatible:
+> -    items:
+> -      - enum:
+> -          - sifive,fu540-c000-pdma
+> -      - const: sifive,pdma0
+> +    oneOf:
+> +      - items:
+> +          - const: microchip,mpfs-pdma # Microchip out of order DMA transfer
+> +          - const: sifive,fu540-c000-pdma # Sifive in-order DMA transfer
 
-this is wrong, mempcy should never use slave config value. These values
-are for peripheral and not meant for mem-mem transfers
+This doesn't really make sense. microchip,mpfs-pdma is compatible with 
+sifive,fu540-c000-pdma and sifive,fu540-c000-pdma is compatible with 
+sifive,pdma0, but microchip,mpfs-pdma is not compatible with 
+sifive,pdma0? (Or replace "compatible with" with "a superset of")
 
-You should try max throughput by aligning the txn to bus width available
-on this system
+Any fallback is only useful if an OS only understanding the fallback 
+will work with the h/w. Does this h/w work without the driver changes?
 
-> +
-> +		reg = (xfer_width << CH_CTL_L_DST_WIDTH_POS |
->  		       xfer_width << CH_CTL_L_SRC_WIDTH_POS |
->  		       DWAXIDMAC_CH_CTL_L_INC << CH_CTL_L_DST_INC_POS |
->  		       DWAXIDMAC_CH_CTL_L_INC << CH_CTL_L_SRC_INC_POS);
-> diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
-> index eb267cb24f67..877bff395740 100644
-> --- a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
-> +++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
-> @@ -265,7 +265,8 @@ enum {
->  	DWAXIDMAC_BURST_TRANS_LEN_128,
->  	DWAXIDMAC_BURST_TRANS_LEN_256,
->  	DWAXIDMAC_BURST_TRANS_LEN_512,
-> -	DWAXIDMAC_BURST_TRANS_LEN_1024
-> +	DWAXIDMAC_BURST_TRANS_LEN_1024,
-> +	DWAXIDMAC_BURST_TRANS_LEN_MAX  = DWAXIDMAC_BURST_TRANS_LEN_1024
->  };
->  
->  #define CH_CTL_L_DST_WIDTH_POS		11
-> 
-> base-commit: 3669558bdf354cd352be955ef2764cde6a9bf5ec
-> -- 
-> 2.34.1
-
--- 
-~Vinod
+Rob

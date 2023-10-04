@@ -2,91 +2,162 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 88C4F7B8152
-	for <lists+dmaengine@lfdr.de>; Wed,  4 Oct 2023 15:49:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 019CA7B815F
+	for <lists+dmaengine@lfdr.de>; Wed,  4 Oct 2023 15:52:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242658AbjJDNtJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 4 Oct 2023 09:49:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33570 "EHLO
+        id S233306AbjJDNw1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 4 Oct 2023 09:52:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242604AbjJDNtI (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 4 Oct 2023 09:49:08 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CC57C0;
-        Wed,  4 Oct 2023 06:49:03 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D601C433C8;
-        Wed,  4 Oct 2023 13:49:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696427342;
-        bh=MBEtnPFBJlhd3FWBV+ARjaXUoaZ9Dl2ozbByMBfu4s4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tIpoJFKMJA0DHSQVOYpxra+hNidIMbiyraE4lEjzw+cwTkFxUsn16H14ra13KIEBF
-         Pog5SjZCOnPNpPWaBdX93VhQne6ExToo7sfS9IKM+FeA0O/u6d8Zh9v7vLssh1SEgf
-         3HHqvCygS2ws+nrlGwGAsS84eyYXkScdnJf00k9X9gCD8/HN7XzZOF43BYMoFzXUy6
-         xMB+26tduI4+vKcg52EvWPk8SRUetcly/+5SDakRDhpwF0ruOvlxc+p/ESDXEKowuE
-         bv2vINVbPlEI9IrohLUDKAzwdUNjfeLtfHI/Gac4t0WPlW7mH9kn3MC2fP2zp8nuID
-         IjYgdNpfm6uqA==
-Date:   Wed, 4 Oct 2023 19:18:58 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     coolrrsh@gmail.com
-Cc:     fenghua.yu@intel.com, dave.jiang@intel.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH v2] dmaengine: idxd: Remove redundant memset() for
- eventlog allocation
-Message-ID: <ZR1tSu0IQHFNuqMo@matsya>
-References: <20230829180027.6357-1-coolrrsh@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230829180027.6357-1-coolrrsh@gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S232786AbjJDNw1 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 4 Oct 2023 09:52:27 -0400
+Received: from hutie.ust.cz (hutie.ust.cz [IPv6:2a03:3b40:fe:f0::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D706AD;
+        Wed,  4 Oct 2023 06:52:22 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cutebit.org; s=mail;
+        t=1696427540; bh=KcjfRyeZMHPf1SqYXPE394CsKwR0EDN9c34JKtA7meo=;
+        h=Subject:From:In-Reply-To:Date:Cc:References:To;
+        b=b0bRMs56ZQdQhG8778vaNx6rLXBxkPB1rTVglaTKYCjHHrzRAtw4c/onwv9LZ4Mmv
+         W6ZhdRJGOX5jbxUPqicRdFcwzHzZp4Wj/prtvmCw8nLpJko2JhWh/jYPfVADSmPgO6
+         jdM6Yf6kiLVU6gD4+dSAoCgYhmz1aJ3k//0+q7Ys=
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.700.6\))
+Subject: Re: [PATCH v2 2/2] dmaengine: apple-sio: Add Apple SIO driver
+From:   =?utf-8?Q?Martin_Povi=C5=A1er?= <povik+lin@cutebit.org>
+In-Reply-To: <ZR1smXBXyx7xDEmg@matsya>
+Date:   Wed, 4 Oct 2023 15:52:09 +0200
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, asahi@lists.linux.dev,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <C054722F-B1E0-4F4E-A45D-5F603738249C@cutebit.org>
+References: <20230828170013.75820-1-povik+lin@cutebit.org>
+ <20230828170013.75820-3-povik+lin@cutebit.org> <ZR1kz7Sil8onc1uC@matsya>
+ <06444557-414A-4710-88A0-620975BB258A@cutebit.org> <ZR1smXBXyx7xDEmg@matsya>
+To:     Vinod Koul <vkoul@kernel.org>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 29-08-23, 23:30, coolrrsh@gmail.com wrote:
-> From: Rajeshwar R Shinde <coolrrsh@gmail.com>
-> 
-> dma_alloc_coherent function already zeroes the array 'addr'.
-> So, memset function call is not needed.
-> 
-> This fixes warning such as:
-> drivers/dma/idxd/device.c:783:8-26:
-> WARNING: dma_alloc_coherent used in addr already zeroes out memory,
-> so memset is not needed.
 
-Already fixes by 4ca95a5b220c901f9c2402532ef78bf5aaf7d35d
+> On 4. 10. 2023, at 15:46, Vinod Koul <vkoul@kernel.org> wrote:
+>=20
+> On 04-10-23, 15:32, Martin Povi=C5=A1er wrote:
+>=20
+>>>> + * There are two kinds of 'transaction descriptors' in play here.
+>>>> + *
+>>>> + * There's the struct sio_tx, and the struct =
+dma_async_tx_descriptor embedded
+>>>> + * inside, which jointly represent a transaction to the dmaengine =
+subsystem.
+>>>> + * At this time we only support those transactions to be cyclic.
+>>>> + *
+>>>> + * Then there are the coprocessor descriptors, which is what the =
+coprocessor
+>>>> + * knows and understands. These don't seem to have a cyclic =
+regime, so we can't
+>>>> + * map the dmaengine transaction on an exact coprocessor =
+counterpart. Instead
+>>>> + * we continually queue up many coprocessor descriptors to =
+implement a cyclic
+>>>> + * transaction.
+>>>> + *
+>>>> + * The number below is the maximum of how far ahead (how many) =
+coprocessor
+>>>> + * descriptors we should be queuing up, per channel, for a cyclic =
+transaction.
+>>>> + * Basically it's a made-up number.
+>>>> + */
+>>>> +#define SIO_MAX_NINFLIGHT 4
+>>>=20
+>>> you meant SIO_MAX_INFLIGHT if not what is NINFLIGHT?
+>>=20
+>> I mean the number is arbitrary, it doesn=E2=80=99t reflect any =
+coprocessor limit since
+>> I haven=E2=80=99t run the tests to figure one out. It's supposed to =
+be a small reasonable
+>> number.
+>=20
+> Sorry that was not my question. Should this macro be SIO_MAX_NINFLIGHT
+> or SIO_MAX_INFLIGHT..?
 
-> 
-> Signed-off-by: Rajeshwar R Shinde <coolrrsh@gmail.com>
-> ---
-> v1->v2
-> Renamed the subject line
-> ---
->  drivers/dma/idxd/device.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-> index 5abbcc61c528..7c74bc60f582 100644
-> --- a/drivers/dma/idxd/device.c
-> +++ b/drivers/dma/idxd/device.c
-> @@ -786,8 +786,6 @@ static int idxd_device_evl_setup(struct idxd_device *idxd)
->  		goto err_alloc;
->  	}
->  
-> -	memset(addr, 0, size);
-> -
->  	spin_lock(&evl->lock);
->  	evl->log = addr;
->  	evl->dma = dma_addr;
-> -- 
-> 2.25.1
+Yeah, I realized after I sent the reply, sorry. I don=E2=80=99t know =
+what you would
+interpret to be the difference between NINFLIGHT and INFLIGHT, in my =
+book
+both would be the "number of inflight=E2=80=9D in the context here.
 
--- 
-~Vinod
+>>>> +static int sio_device_config(struct dma_chan *chan,
+>>>> +      struct dma_slave_config *config)
+>>>> +{
+>>>> + struct sio_chan *siochan =3D to_sio_chan(chan);
+>>>> + struct sio_data *sio =3D siochan->host;
+>>>> + bool is_tx =3D sio_chan_direction(siochan->no) =3D=3D =
+DMA_MEM_TO_DEV;
+>>>> + struct sio_shmem_chan_config *cfg =3D sio->shmem;
+>>>> + int ret;
+>>>> +
+>>>> + switch (is_tx ? config->dst_addr_width : config->src_addr_width) =
+{
+>>>> + case DMA_SLAVE_BUSWIDTH_1_BYTE:
+>>>> + cfg->datashape =3D 0;
+>>>> + break;
+>>>> + case DMA_SLAVE_BUSWIDTH_2_BYTES:
+>>>> + cfg->datashape =3D 1;
+>>>> + break;
+>>>> + case DMA_SLAVE_BUSWIDTH_4_BYTES:
+>>>> + cfg->datashape =3D 2;
+>>>> + break;
+>>>> + default:
+>>>> + return -EINVAL;
+>>>> + }
+>>>> +
+>>>> + cfg->fifo =3D 0x800;
+>>>> + cfg->limit =3D 0x800;
+>>>> + cfg->threshold =3D 0x800;
+>>>> + dma_wmb();
+>>>=20
+>>> ??
+>>=20
+>> Again, shared memory
+>>=20
+>>>> +
+>>>> + ret =3D sio_call(sio, FIELD_PREP(SIOMSG_TYPE, MSG_CONFIGURE) |
+>>>> +     FIELD_PREP(SIOMSG_EP, siochan->no));
+>>>=20
+>>> this does not sound okay, can you explain why this call is here
+>>=20
+>> We are sending the configuration to the coprocessor, it will NACK
+>> it if invalid, seems very fitting here.
+>=20
+> I dont this so, purpose of the device_config() is to send peripheral
+> config to driver for use on the next descriptor which is submitted. So
+> sending to co-processor now (when we might even have a txn going on)
+> does not seem right
+>=20
+> What would be the behaviour if already a txn is progressing on the
+> co-processor
+
+I have no idea.
+
+OK, though is that necessarily part of the dmaengine interface? I ask
+because the other driver I have written (apple-admac.c) does basically
+the same, only it applies the new configuration in MMIO registers rather
+than sending it to a coprocessor, but the end result is the same:
+the configuration gets checked for validity, and applied right away.
+
+Martin
+
+> --=20
+> ~Vinod
+>=20
+

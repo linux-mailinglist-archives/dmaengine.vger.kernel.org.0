@@ -2,44 +2,39 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BA00A7B824A
+	by mail.lfdr.de (Postfix) with ESMTP id 3FDC97B8248
 	for <lists+dmaengine@lfdr.de>; Wed,  4 Oct 2023 16:29:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233431AbjJDO3M (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 4 Oct 2023 10:29:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44084 "EHLO
+        id S233430AbjJDO3O (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 4 Oct 2023 10:29:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233430AbjJDO3M (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 4 Oct 2023 10:29:12 -0400
+        with ESMTP id S242750AbjJDO3N (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 4 Oct 2023 10:29:13 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF02EAB;
-        Wed,  4 Oct 2023 07:29:08 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3FF3C43395;
-        Wed,  4 Oct 2023 14:29:05 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55A5FC1
+        for <dmaengine@vger.kernel.org>; Wed,  4 Oct 2023 07:29:10 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05B25C433C8;
+        Wed,  4 Oct 2023 14:29:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696429748;
-        bh=dE+wd+fx3bR2fLrXaHnvGq6sU/3A9Au6dn7p+BhL9ac=;
-        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-        b=bMgMmU+zyhSUHroX0vz4Jjl8UKUURxm6XP4DiBC/XoTBMIbCUEg7K/JFcr3xVYDzQ
-         yUJYkdce4INQVwwIX62m/u1ppOYDHv0lg5kPtOAgtGp8ckvJQPb8Rv1oNx2Dr6KmCB
-         CClMgWKkh8caTFbqRuJR2V785guuQVBPJlmKCbeSKjHB/C8xZ9cR6SS4h1YHicOZZY
-         pA9SpLWV8rpKymzh48BRHxXnaBg8h4neFkLcWwlFaYvypLOz3gxiq89ZWd12B2K+sk
-         l+c+1dhFYo46qqh1mY3GS0EeussZPli8Qrcph8dXGFYha3xIT4WaH8k328RrnwEiX4
-         U634wpEed6zWg==
+        s=k20201202; t=1696429750;
+        bh=1+vE+/v1IUKVGMmYRM/EOfUwW1yijaJIfT9Ad/Xm77w=;
+        h=From:To:In-Reply-To:References:Subject:Date:From;
+        b=ffbNHhFi4kjKwRihSQmh74BETGMKssfzNSn1nr+viLNoLG5CAQDG/6Vlz44t6bsSs
+         Z2LcAr+t6BJAesz+nvEFgTHdDbafalrFL4/Qix3XSFGBsD7qSB7JAAxN3c0VVJnpZJ
+         nrRQS3tA6oImYCtVk3QsOpCrHCZ8fTaJI6+quGR4K5GZ+LTpaqpuatFdv3PfXAL6lu
+         u461EJQDsBC0MvE85QOMDyshaWk6eSgbM2t7Yxf8hzA6YIn5/P7q3n2FYebeWGwYLn
+         DdxlRRK8YZOE88NFQ9JVBhFh4GqnP+v+TLpy4+txekMvKBLEuszVwUucwohxJ2bia9
+         GQzOI3xw+8UnQ==
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, dmaengine@vger.kernel.org,
-        llvm@lists.linux.dev,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-In-Reply-To: <20230928234334.work.391-kees@kernel.org>
-References: <20230928234334.work.391-kees@kernel.org>
-Subject: Re: [PATCH] dmaengine: ep93xx_dma: Annotate struct
- ep93xx_dma_engine with __counted_by
-Message-Id: <169642974524.440009.16047886580039006208.b4-ty@kernel.org>
-Date:   Wed, 04 Oct 2023 19:59:05 +0530
+To:     dmaengine@vger.kernel.org, Frank Li <Frank.Li@nxp.com>,
+        Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <20230901071115.1322000-1-ruanjinjie@huawei.com>
+References: <20230901071115.1322000-1-ruanjinjie@huawei.com>
+Subject: Re: [PATCH -next] dmaengine: fsl-edma: Remove redundant dev_err()
+ for platform_get_irq()
+Message-Id: <169642974865.440009.2488849155862421145.b4-ty@kernel.org>
+Date:   Wed, 04 Oct 2023 19:59:08 +0530
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
@@ -55,21 +50,20 @@ List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 
-On Thu, 28 Sep 2023 16:43:42 -0700, Kees Cook wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
-> array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
-> 
-> As found with Coccinelle[1], add __counted_by for struct ep93xx_dma_engine.
+On Fri, 01 Sep 2023 15:11:14 +0800, Jinjie Ruan wrote:
+> Since commit 7723f4c5ecdb ("driver core: platform: Add an error message
+> to platform_get_irq*()") and commit 2043727c2882 ("driver core:
+> platform: Make use of the helper function dev_err_probe()"), there is
+> no need to call the dev_err() function directly to print a custom
+> message when handling an error from platform_get_irq() function as it is
+> going to display an appropriate error message in case of a failure.
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] dmaengine: ep93xx_dma: Annotate struct ep93xx_dma_engine with __counted_by
-      commit: 74d885711c2f619e92f41ef308691948cc63f224
+[1/1] dmaengine: fsl-edma: Remove redundant dev_err() for platform_get_irq()
+      commit: 88ba97688a03843755803bfc28b975ae27d533d1
 
 Best regards,
 -- 

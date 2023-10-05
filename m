@@ -2,367 +2,162 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BE0A7BA5B1
-	for <lists+dmaengine@lfdr.de>; Thu,  5 Oct 2023 18:20:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 889167BA86E
+	for <lists+dmaengine@lfdr.de>; Thu,  5 Oct 2023 19:48:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236703AbjJEQTF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 5 Oct 2023 12:19:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52448 "EHLO
+        id S229682AbjJERsF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 5 Oct 2023 13:48:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232676AbjJEQQp (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 5 Oct 2023 12:16:45 -0400
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::228])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E478122E24;
-        Thu,  5 Oct 2023 09:02:43 -0700 (PDT)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id BD7461BF203;
-        Thu,  5 Oct 2023 16:02:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1696521761;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=t1AOlEx/L7+gE0+J2ORCeltlRphI7PGOvKLN+SEcqrE=;
-        b=GKuASQeLtUj2PnjxdqcGQF7jaIehvEIp5VKfelYCSC7dI2aw78BbwPiclHyLRHxfYrIWpE
-        0r4BhCqR/72bNTbx30LXq5CQPxjDin1dUpGOf+0MVVti7d6n0pn/FS8UXK7UyphpuZ9lbD
-        dRr4TM/zdAo1rRCar0XOBeeUV0pMjRxKglgu6Vx6hEgpxuiDKVUVyuDUFzU/duPcezoUXR
-        N8njepsMhBQEKWzQRIaRBaRo51oaJMyPpFM8Fr9FE28U74jP85dLrQpldEhuOti87KXqI+
-        2pYMLmnRNyh+WL9xTKdbRzVV85dqlXY/AuymrimCm3Nv2pcZW5MNHBDj8RuW+w==
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Lizhi Hou <lizhi.hou@amd.com>, Brian Xu <brian.xu@amd.com>,
-        Raj Kumar Rampelli <raj.kumar.rampelli@amd.com>,
-        Vinod Koul <vkoul@kernel.org>, Michal Simek <monstr@monstr.eu>
-Cc:     dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-kernel@vger.kernel.org,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 3/3] dmaengine: xilinx: xdma: Support cyclic transfers
-Date:   Thu,  5 Oct 2023 18:02:37 +0200
-Message-Id: <20231005160237.2804238-4-miquel.raynal@bootlin.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231005160237.2804238-1-miquel.raynal@bootlin.com>
-References: <20231005160237.2804238-1-miquel.raynal@bootlin.com>
+        with ESMTP id S231829AbjJERri (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 5 Oct 2023 13:47:38 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C112AC6;
+        Thu,  5 Oct 2023 10:47:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696528056; x=1728064056;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=m2KYgIJRlXqKxK7hnx7y4PECzNsQwX7LLE3ZQMk+OyI=;
+  b=Owds59HOIwsn26C5y+acD5+rqcfnqz0U/W9s3DCU9up2NOhquY0Ihckv
+   v7LKBeltlyak5w1SrUNR6XMxyoEdOk1r2JBqeNH5oHhM8aeAjhrb6dzZj
+   pzBwoOnbP18l2aoKliYsyYMtNWwUNwJcJEYYO3XtprDbcwKzIVGv+txUN
+   pawjaOon9JtAzEXNDFHj7bsW97XLj5omNKP2I2LDEv8CdSZc8Ra++T1qe
+   5ZQeZiOaNL/RUM08n4kB5g4rp6WWnZkcd9Dzdy60xRyRcukGNCLwpGDx+
+   Vs/NlpbR1RrvDXH/LUVQt2+KKleRbKsCmd+mlAhgfUHP9Umuq3on9YW1V
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="387444251"
+X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
+   d="scan'208";a="387444251"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2023 10:47:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="999034222"
+X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
+   d="scan'208";a="999034222"
+Received: from lkp-server02.sh.intel.com (HELO c3b01524d57c) ([10.239.97.151])
+  by fmsmga006.fm.intel.com with ESMTP; 05 Oct 2023 10:47:33 -0700
+Received: from kbuild by c3b01524d57c with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qoSRf-000Ljc-1n;
+        Thu, 05 Oct 2023 17:47:31 +0000
+Date:   Fri, 6 Oct 2023 01:46:59 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Sergey Khimich <serghox@gmail.com>, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org
+Cc:     oe-kbuild-all@lists.linux.dev,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH] dmaengine: dw-axi-dmac: Add support DMAX_NUM_CHANNELS >
+ 16
+Message-ID: <202310060144.oLP6NoVL-lkp@intel.com>
+References: <20231005113638.2039726-1-serghox@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: miquel.raynal@bootlin.com
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231005113638.2039726-1-serghox@gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-In order to use this dmaengine with sound devices, let's add cyclic
-transfers support. Most of the code is reused from the existing
-scatter-gather implementation, only the final linking between
-descriptors, the control fields (to trigger interrupts more often) and
-the interrupt handling are really different.
+Hi Sergey,
 
-This controller supports up to 32 adjacent descriptors, we assume this
-is way more than enough for the purpose of cyclic transfers and limit to
-32 the number of cycled descriptors. This way, we simplify a lot the
-overall handling of the descriptors.
+kernel test robot noticed the following build warnings:
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- drivers/dma/xilinx/xdma-regs.h |   2 +
- drivers/dma/xilinx/xdma.c      | 166 +++++++++++++++++++++++++++++++--
- 2 files changed, 162 insertions(+), 6 deletions(-)
+[auto build test WARNING on vkoul-dmaengine/next]
+[also build test WARNING on linus/master v6.6-rc4 next-20231005]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-diff --git a/drivers/dma/xilinx/xdma-regs.h b/drivers/dma/xilinx/xdma-regs.h
-index dd98b4526b90..e641a5083e14 100644
---- a/drivers/dma/xilinx/xdma-regs.h
-+++ b/drivers/dma/xilinx/xdma-regs.h
-@@ -44,6 +44,8 @@
- 	 FIELD_PREP(XDMA_DESC_FLAGS_BITS, (flag)))
- #define XDMA_DESC_CONTROL_LAST						\
- 	XDMA_DESC_CONTROL(1, XDMA_DESC_STOPPED | XDMA_DESC_COMPLETED)
-+#define XDMA_DESC_CONTROL_CYCLIC					\
-+	XDMA_DESC_CONTROL(1, XDMA_DESC_COMPLETED)
- 
- /*
-  * Descriptor for a single contiguous memory block transfer.
-diff --git a/drivers/dma/xilinx/xdma.c b/drivers/dma/xilinx/xdma.c
-index 09ed13d6666d..5de67438cf9c 100644
---- a/drivers/dma/xilinx/xdma.c
-+++ b/drivers/dma/xilinx/xdma.c
-@@ -83,6 +83,9 @@ struct xdma_chan {
-  * @dblk_num: Number of hardware descriptor blocks
-  * @desc_num: Number of hardware descriptors
-  * @completed_desc_num: Completed hardware descriptors
-+ * @cyclic: Cyclic transfer vs. scatter-gather
-+ * @periods: Number of periods in the cyclic transfer
-+ * @period_size: Size of a period in bytes in cyclic transfers
-  */
- struct xdma_desc {
- 	struct virt_dma_desc		vdesc;
-@@ -93,6 +96,9 @@ struct xdma_desc {
- 	u32				dblk_num;
- 	u32				desc_num;
- 	u32				completed_desc_num;
-+	bool				cyclic;
-+	u32				periods;
-+	u32				period_size;
- };
- 
- #define XDMA_DEV_STATUS_REG_DMA		BIT(0)
-@@ -174,6 +180,25 @@ static void xdma_link_sg_desc_blocks(struct xdma_desc *sw_desc)
- 	desc->control = cpu_to_le32(XDMA_DESC_CONTROL_LAST);
- }
- 
-+/**
-+ * xdma_link_cyclic_desc_blocks - Link cyclic descriptor blocks for DMA transfer
-+ * @sw_desc: Tx descriptor pointer
-+ */
-+static void xdma_link_cyclic_desc_blocks(struct xdma_desc *sw_desc)
-+{
-+	struct xdma_desc_block *block;
-+	struct xdma_hw_desc *desc;
-+	int i;
-+
-+	block = sw_desc->desc_blocks;
-+	for (i = 0; i < sw_desc->desc_num - 1; i++) {
-+		desc = block->virt_addr + i * XDMA_DESC_SIZE;
-+		desc->next_desc = cpu_to_le64(block->dma_addr + ((i + 1) * XDMA_DESC_SIZE));
-+	}
-+	desc = block->virt_addr + i * XDMA_DESC_SIZE;
-+	desc->next_desc = cpu_to_le64(block->dma_addr);
-+}
-+
- static inline struct xdma_chan *to_xdma_chan(struct dma_chan *chan)
- {
- 	return container_of(chan, struct xdma_chan, vchan.chan);
-@@ -231,9 +256,10 @@ static void xdma_free_desc(struct virt_dma_desc *vdesc)
-  * xdma_alloc_desc - Allocate descriptor
-  * @chan: DMA channel pointer
-  * @desc_num: Number of hardware descriptors
-+ * @cyclic: Whether this is a cyclic transfer
-  */
- static struct xdma_desc *
--xdma_alloc_desc(struct xdma_chan *chan, u32 desc_num)
-+xdma_alloc_desc(struct xdma_chan *chan, u32 desc_num, bool cyclic)
- {
- 	struct xdma_desc *sw_desc;
- 	struct xdma_hw_desc *desc;
-@@ -249,13 +275,17 @@ xdma_alloc_desc(struct xdma_chan *chan, u32 desc_num)
- 
- 	sw_desc->chan = chan;
- 	sw_desc->desc_num = desc_num;
-+	sw_desc->cyclic = cyclic;
- 	dblk_num = DIV_ROUND_UP(desc_num, XDMA_DESC_ADJACENT);
- 	sw_desc->desc_blocks = kcalloc(dblk_num, sizeof(*sw_desc->desc_blocks),
- 				       GFP_NOWAIT);
- 	if (!sw_desc->desc_blocks)
- 		goto failed;
- 
--	control = XDMA_DESC_CONTROL(1, 0);
-+	if (cyclic)
-+		control = XDMA_DESC_CONTROL_CYCLIC;
-+	else
-+		control = XDMA_DESC_CONTROL(1, 0);
- 
- 	sw_desc->dblk_num = dblk_num;
- 	for (i = 0; i < sw_desc->dblk_num; i++) {
-@@ -269,7 +299,10 @@ xdma_alloc_desc(struct xdma_chan *chan, u32 desc_num)
- 			desc[j].control = cpu_to_le32(control);
- 	}
- 
--	xdma_link_sg_desc_blocks(sw_desc);
-+	if (cyclic)
-+		xdma_link_cyclic_desc_blocks(sw_desc);
-+	else
-+		xdma_link_sg_desc_blocks(sw_desc);
- 
- 	return sw_desc;
- 
-@@ -469,7 +502,7 @@ xdma_prep_device_sg(struct dma_chan *chan, struct scatterlist *sgl,
- 	for_each_sg(sgl, sg, sg_len, i)
- 		desc_num += DIV_ROUND_UP(sg_dma_len(sg), XDMA_DESC_BLEN_MAX);
- 
--	sw_desc = xdma_alloc_desc(xdma_chan, desc_num);
-+	sw_desc = xdma_alloc_desc(xdma_chan, desc_num, false);
- 	if (!sw_desc)
- 		return NULL;
- 	sw_desc->dir = dir;
-@@ -524,6 +557,81 @@ xdma_prep_device_sg(struct dma_chan *chan, struct scatterlist *sgl,
- 	return NULL;
- }
- 
-+/**
-+ * xdma_prep_dma_cyclic - prepare for cyclic DMA transactions
-+ * @chan: DMA channel pointer
-+ * @address: Device DMA address to access
-+ * @size: Total length to transfer
-+ * @period_size: Period size to use for each transfer
-+ * @dir: Transfer direction
-+ * @flags: Transfer ack flags
-+ */
-+static struct dma_async_tx_descriptor *
-+xdma_prep_dma_cyclic(struct dma_chan *chan, dma_addr_t address,
-+		     size_t size, size_t period_size,
-+		     enum dma_transfer_direction dir,
-+		     unsigned long flags)
-+{
-+	struct xdma_chan *xdma_chan = to_xdma_chan(chan);
-+	struct xdma_device *xdev = xdma_chan->xdev_hdl;
-+	unsigned int periods = size / period_size;
-+	struct dma_async_tx_descriptor *tx_desc;
-+	struct xdma_desc_block *dblk;
-+	struct xdma_hw_desc *desc;
-+	struct xdma_desc *sw_desc;
-+	unsigned int i;
-+
-+	/*
-+	 * Simplify the whole logic by preventing an abnormally high number of
-+	 * periods and periods size.
-+	 */
-+	if (period_size > XDMA_DESC_BLEN_MAX) {
-+		xdma_err(xdev, "period size limited to %lu bytes\n", XDMA_DESC_BLEN_MAX);
-+		return NULL;
-+	}
-+
-+	if (periods > XDMA_DESC_ADJACENT) {
-+		xdma_err(xdev, "number of periods limited to %u\n", XDMA_DESC_ADJACENT);
-+		return NULL;
-+	}
-+
-+	sw_desc = xdma_alloc_desc(xdma_chan, periods, true);
-+	if (!sw_desc)
-+		return NULL;
-+
-+	sw_desc->periods = periods;
-+	sw_desc->period_size = period_size;
-+	sw_desc->dir = dir;
-+
-+	dblk = sw_desc->desc_blocks;
-+	desc = dblk->virt_addr;
-+
-+	/* fill hardware descriptor */
-+	for (i = 0; i < periods; i++) {
-+		desc->bytes = cpu_to_le32(period_size);
-+		if (dir == DMA_MEM_TO_DEV) {
-+			desc->src_addr = cpu_to_le64(address + i * period_size);
-+			desc->dst_addr = cpu_to_le64(xdma_chan->cfg.dst_addr);
-+		} else {
-+			desc->src_addr = cpu_to_le64(xdma_chan->cfg.src_addr);
-+			desc->dst_addr = cpu_to_le64(address + i * period_size);
-+		}
-+
-+		desc++;
-+	}
-+
-+	tx_desc = vchan_tx_prep(&xdma_chan->vchan, &sw_desc->vdesc, flags);
-+	if (!tx_desc)
-+		goto failed;
-+
-+	return tx_desc;
-+
-+failed:
-+	xdma_free_desc(&sw_desc->vdesc);
-+
-+	return NULL;
-+}
-+
- /**
-  * xdma_device_config - Configure the DMA channel
-  * @chan: DMA channel
-@@ -583,7 +691,36 @@ static int xdma_alloc_chan_resources(struct dma_chan *chan)
- static enum dma_status xdma_tx_status(struct dma_chan *chan, dma_cookie_t cookie,
- 				      struct dma_tx_state *state)
- {
--	return dma_cookie_status(chan, cookie, state);
-+	struct xdma_chan *xdma_chan = to_xdma_chan(chan);
-+	struct xdma_desc *desc = NULL;
-+	struct virt_dma_desc *vd;
-+	enum dma_status ret;
-+	unsigned long flags;
-+	unsigned int period_idx;
-+	u32 residue = 0;
-+
-+	ret = dma_cookie_status(chan, cookie, state);
-+	if (ret == DMA_COMPLETE)
-+		return ret;
-+
-+	spin_lock_irqsave(&xdma_chan->vchan.lock, flags);
-+
-+	vd = vchan_find_desc(&xdma_chan->vchan, cookie);
-+	if (vd)
-+		desc = to_xdma_desc(vd);
-+	if (!desc || !desc->cyclic) {
-+		spin_unlock_irqrestore(&xdma_chan->vchan.lock, flags);
-+		return ret;
-+	}
-+
-+	period_idx = desc->completed_desc_num % desc->periods;
-+	residue = (desc->periods - period_idx) * desc->period_size;
-+
-+	spin_unlock_irqrestore(&xdma_chan->vchan.lock, flags);
-+
-+	dma_set_residue(state, residue);
-+
-+	return ret;
- }
- 
- /**
-@@ -599,6 +736,7 @@ static irqreturn_t xdma_channel_isr(int irq, void *dev_id)
- 	struct virt_dma_desc *vd;
- 	struct xdma_desc *desc;
- 	int ret;
-+	u32 st;
- 
- 	spin_lock(&xchan->vchan.lock);
- 
-@@ -617,6 +755,19 @@ static irqreturn_t xdma_channel_isr(int irq, void *dev_id)
- 		goto out;
- 
- 	desc->completed_desc_num += complete_desc_num;
-+
-+	if (desc->cyclic) {
-+		ret = regmap_read(xdev->rmap, xchan->base + XDMA_CHAN_STATUS,
-+				  &st);
-+		if (ret)
-+			goto out;
-+
-+		regmap_write(xdev->rmap, xchan->base + XDMA_CHAN_STATUS, st);
-+
-+		vchan_cyclic_callback(vd);
-+		goto out;
-+	}
-+
- 	/*
- 	 * if all data blocks are transferred, remove and complete the request
- 	 */
-@@ -630,7 +781,7 @@ static irqreturn_t xdma_channel_isr(int irq, void *dev_id)
- 	    complete_desc_num != XDMA_DESC_BLOCK_NUM * XDMA_DESC_ADJACENT)
- 		goto out;
- 
--	/* transfer the rest of data */
-+	/* transfer the rest of data (SG only) */
- 	xdma_xfer_start(xchan);
- 
- out:
-@@ -930,8 +1081,10 @@ static int xdma_probe(struct platform_device *pdev)
- 
- 	dma_cap_set(DMA_SLAVE, xdev->dma_dev.cap_mask);
- 	dma_cap_set(DMA_PRIVATE, xdev->dma_dev.cap_mask);
-+	dma_cap_set(DMA_CYCLIC, xdev->dma_dev.cap_mask);
- 
- 	xdev->dma_dev.dev = &pdev->dev;
-+	xdev->dma_dev.residue_granularity = DMA_RESIDUE_GRANULARITY_SEGMENT;
- 	xdev->dma_dev.device_free_chan_resources = xdma_free_chan_resources;
- 	xdev->dma_dev.device_alloc_chan_resources = xdma_alloc_chan_resources;
- 	xdev->dma_dev.device_tx_status = xdma_tx_status;
-@@ -941,6 +1094,7 @@ static int xdma_probe(struct platform_device *pdev)
- 	xdev->dma_dev.filter.map = pdata->device_map;
- 	xdev->dma_dev.filter.mapcnt = pdata->device_map_cnt;
- 	xdev->dma_dev.filter.fn = xdma_filter_fn;
-+	xdev->dma_dev.device_prep_dma_cyclic = xdma_prep_dma_cyclic;
- 
- 	ret = dma_async_device_register(&xdev->dma_dev);
- 	if (ret) {
+url:    https://github.com/intel-lab-lkp/linux/commits/Sergey-Khimich/dmaengine-dw-axi-dmac-Add-support-DMAX_NUM_CHANNELS-16/20231006-002509
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git next
+patch link:    https://lore.kernel.org/r/20231005113638.2039726-1-serghox%40gmail.com
+patch subject: [PATCH] dmaengine: dw-axi-dmac: Add support DMAX_NUM_CHANNELS > 16
+config: m68k-allyesconfig (https://download.01.org/0day-ci/archive/20231006/202310060144.oLP6NoVL-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231006/202310060144.oLP6NoVL-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202310060144.oLP6NoVL-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c: In function 'axi_chan_disable':
+>> drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c:202:33: warning: left shift count >= width of type [-Wshift-count-overflow]
+     202 |                                 << (DMAC_CHAN_EN_SHIFT + DMAC_CHAN_BLOCK_SHIFT));
+         |                                 ^~
+   drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c:204:33: warning: left shift count >= width of type [-Wshift-count-overflow]
+     204 |                                 << (DMAC_CHAN_EN2_WE_SHIFT + DMAC_CHAN_BLOCK_SHIFT);
+         |                                 ^~
+   drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c: In function 'axi_chan_enable':
+   drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c:229:33: warning: left shift count >= width of type [-Wshift-count-overflow]
+     229 |                                 << (DMAC_CHAN_EN_SHIFT + DMAC_CHAN_BLOCK_SHIFT) |
+         |                                 ^~
+   drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c:231:33: warning: left shift count >= width of type [-Wshift-count-overflow]
+     231 |                                 << (DMAC_CHAN_EN2_WE_SHIFT + DMAC_CHAN_BLOCK_SHIFT);
+         |                                 ^~
+   drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c: In function 'axi_chan_is_hw_enable':
+   drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c:260:66: warning: left shift count >= width of type [-Wshift-count-overflow]
+     260 |                 return !!(val & ((BIT(chan->id) >> DMAC_CHAN_16) << DMAC_CHAN_BLOCK_SHIFT));
+         |                                                                  ^~
+   drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c: In function 'dma_chan_pause':
+   drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c:1232:33: warning: left shift count >= width of type [-Wshift-count-overflow]
+    1232 |                                 << (DMAC_CHAN_SUSP2_SHIFT + DMAC_CHAN_BLOCK_SHIFT) |
+         |                                 ^~
+   drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c:1234:33: warning: left shift count >= width of type [-Wshift-count-overflow]
+    1234 |                                 << (DMAC_CHAN_SUSP2_WE_SHIFT + DMAC_CHAN_BLOCK_SHIFT);
+         |                                 ^~
+   drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c: In function 'axi_chan_resume':
+   drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c:1279:33: warning: left shift count >= width of type [-Wshift-count-overflow]
+    1279 |                                 << (DMAC_CHAN_SUSP2_SHIFT + DMAC_CHAN_BLOCK_SHIFT));
+         |                                 ^~
+   drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c:1281:33: warning: left shift count >= width of type [-Wshift-count-overflow]
+    1281 |                                 << (DMAC_CHAN_SUSP2_WE_SHIFT + DMAC_CHAN_BLOCK_SHIFT));
+         |                                 ^~
+
+
+vim +202 drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+
+   193	
+   194	static inline void axi_chan_disable(struct axi_dma_chan *chan)
+   195	{
+   196		u64 val;
+   197	
+   198		if (chan->chip->dw->hdata->nr_channels >= DMAC_CHAN_16) {
+   199			val = axi_dma_ioread64(chan->chip, DMAC_CHEN);
+   200			if (chan->id >= DMAC_CHAN_16) {
+   201				val &= ~((BIT(chan->id) >> DMAC_CHAN_16)
+ > 202					<< (DMAC_CHAN_EN_SHIFT + DMAC_CHAN_BLOCK_SHIFT));
+   203				val |=   (BIT(chan->id) >> DMAC_CHAN_16)
+   204					<< (DMAC_CHAN_EN2_WE_SHIFT + DMAC_CHAN_BLOCK_SHIFT);
+   205			} else {
+   206				val &= ~(BIT(chan->id) << DMAC_CHAN_EN_SHIFT);
+   207				val |=   BIT(chan->id) << DMAC_CHAN_EN2_WE_SHIFT;
+   208			}
+   209			axi_dma_iowrite64(chan->chip, DMAC_CHEN, val);
+   210		} else {
+   211			val = axi_dma_ioread32(chan->chip, DMAC_CHEN);
+   212			val &= ~(BIT(chan->id) << DMAC_CHAN_EN_SHIFT);
+   213			if (chan->chip->dw->hdata->reg_map_8_channels)
+   214				val |=   BIT(chan->id) << DMAC_CHAN_EN_WE_SHIFT;
+   215			else
+   216				val |=   BIT(chan->id) << DMAC_CHAN_EN2_WE_SHIFT;
+   217			axi_dma_iowrite32(chan->chip, DMAC_CHEN, (u32)val);
+   218		}
+   219	}
+   220	
+
 -- 
-2.34.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki

@@ -2,136 +2,135 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 594FA7B856B
-	for <lists+dmaengine@lfdr.de>; Wed,  4 Oct 2023 18:36:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 09D547BA2A8
+	for <lists+dmaengine@lfdr.de>; Thu,  5 Oct 2023 17:45:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243409AbjJDQgR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 4 Oct 2023 12:36:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57688 "EHLO
+        id S232953AbjJEPpS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 5 Oct 2023 11:45:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233810AbjJDQgQ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 4 Oct 2023 12:36:16 -0400
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEBA4C0;
-        Wed,  4 Oct 2023 09:36:11 -0700 (PDT)
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 394CT3GR008905;
-        Wed, 4 Oct 2023 18:35:57 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding:content-type; s=
-        selector1; bh=Z53DfuJZW+Q+VIEyVMKQjbTggimV1KXI0jR6FczH0GA=; b=mc
-        rRFYZ9lYhyhVQ3xjC9bRAQGnhylVdtdfjfmU2fREquAnso1HI5dnglaJSS9SAeGL
-        lropzWprYap2aprXttHdw609ifdzDP4o3xNKHHJYSvmg7nh025bnFow8fEgvRRhN
-        Evr+Wxift+2OfjHCTq0uaigoF8eNw1s5zuFli8CSpwLJL7/4QVdVkNWabP4+a5ln
-        DKGNCZmkCd9ViwDWREBZf62Z8PeF4y8+9VxFJz1dCN+TaizOiZQD5US1LVgWW9lw
-        oSSrOvr4oiJ5fA/QvqS4XbIDP2G2J1jdVciGy1tQ9MuZb+zgHD7LTsnE3ZFn+xvK
-        WjwCTcQ2s2LmbSF/aryw==
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3te8t528du-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Oct 2023 18:35:57 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1ED66100053;
-        Wed,  4 Oct 2023 18:35:57 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 16084281EB6;
-        Wed,  4 Oct 2023 18:35:57 +0200 (CEST)
-Received: from localhost (10.252.26.61) by SHFDAG1NODE3.st.com (10.75.129.71)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 4 Oct
- 2023 18:35:56 +0200
-From:   Amelie Delaunay <amelie.delaunay@foss.st.com>
-To:     Vinod Koul <vkoul@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Amelie Delaunay <amelie.delaunay@foss.st.com>
-CC:     <stable@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH 3/3] dmaengine: stm32-mdma: set in_flight_bytes in case CRQA flag is set
-Date:   Wed, 4 Oct 2023 18:35:30 +0200
-Message-ID: <20231004163531.2864160-3-amelie.delaunay@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20231004163531.2864160-1-amelie.delaunay@foss.st.com>
-References: <20231004163531.2864160-1-amelie.delaunay@foss.st.com>
+        with ESMTP id S232999AbjJEPoz (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 5 Oct 2023 11:44:55 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BB4B13C80;
+        Thu,  5 Oct 2023 07:32:31 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5903BC32782;
+        Thu,  5 Oct 2023 10:54:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1696503274;
+        bh=r9QAN25ECg8YV7rovLkgwPyjjglMxbc27XwhgPj0p2k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jylTMHbvJxFAMVfEx+/VTWJ5qLSXYONVK3QwgUliTNxTLcVa8fp1LiFRhv8pXAEiG
+         c6IiyFrR/PMIZPxfaWHGeiEjHY7WqILh+Dz+ukbT78vExFr+jS34I+5LH3isMfZ44S
+         qJKlRR8+urhiXnx8GpuqU0JHlw2ssmvVraMs/zIj7WyVlj3504YyoTfBlXUEIySbmG
+         7SRdbQEUn0OJ7UxE9O9zzI0SzobLyNc1nPSIQU4xE3oVxKEOkYDjFgN/iuu3G0Cxqh
+         H/3Q+LOeLDOYEiQ3Jx6lKEWtH40Fo7GS0K4LLz7c4KaAka3U16sUdq0wM80Xwsg+9q
+         9RYFeYnWmN0Zw==
+Date:   Thu, 5 Oct 2023 11:54:29 +0100
+From:   Conor Dooley <conor@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     shravan chippa <shravan.chippa@microchip.com>,
+        green.wan@sifive.com, vkoul@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, palmer@dabbelt.com,
+        paul.walmsley@sifive.com, conor+dt@kernel.org,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        nagasuresh.relli@microchip.com, praveen.kumar@microchip.com,
+        Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH v2 2/4] dt-bindings: dma: sf-pdma: add new compatible name
+Message-ID: <20231005-wanted-plausible-71dae05ccc7b@spud>
+References: <20231003042215.142678-1-shravan.chippa@microchip.com>
+ <20231003042215.142678-3-shravan.chippa@microchip.com>
+ <20231004133021.GB2743005-robh@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.252.26.61]
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-04_08,2023-10-02_01,2023-05-22_02
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="FXxfjJNs6siMoTeZ"
+Content-Disposition: inline
+In-Reply-To: <20231004133021.GB2743005-robh@kernel.org>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-CRQA flag is set by hardware when the channel request become active and
-the channel is enabled. It is cleared by hardware, when the channel request
-is completed.
-So when it is set, it means MDMA is transferring bytes.
-This information is useful in case of STM32 DMA and MDMA chaining,
-especially when the user pauses DMA before stopping it, to trig one last
-MDMA transfer to get the latest bytes of the SRAM buffer to the
-destination buffer.
-STM32 DCMI driver can then use this to know if the last MDMA transfer in
-case of chaining is done.
 
-Fixes: 696874322771 ("dmaengine: stm32-mdma: add support to be triggered by STM32 DMA")
-Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
-Cc: stable@vger.kernel.org
----
- drivers/dma/stm32-mdma.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+--FXxfjJNs6siMoTeZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/dma/stm32-mdma.c b/drivers/dma/stm32-mdma.c
-index da73e13b8c9d..bae08b3f55c7 100644
---- a/drivers/dma/stm32-mdma.c
-+++ b/drivers/dma/stm32-mdma.c
-@@ -1318,7 +1318,8 @@ static int stm32_mdma_slave_config(struct dma_chan *c,
- 
- static size_t stm32_mdma_desc_residue(struct stm32_mdma_chan *chan,
- 				      struct stm32_mdma_desc *desc,
--				      u32 curr_hwdesc)
-+				      u32 curr_hwdesc,
-+				      struct dma_tx_state *state)
- {
- 	struct stm32_mdma_device *dmadev = stm32_mdma_get_dev(chan);
- 	struct stm32_mdma_hwdesc *hwdesc;
-@@ -1342,6 +1343,10 @@ static size_t stm32_mdma_desc_residue(struct stm32_mdma_chan *chan,
- 	cbndtr = stm32_mdma_read(dmadev, STM32_MDMA_CBNDTR(chan->id));
- 	residue += cbndtr & STM32_MDMA_CBNDTR_BNDT_MASK;
- 
-+	state->in_flight_bytes = 0;
-+	if (chan->chan_config.m2m_hw && (cisr & STM32_MDMA_CISR_CRQA))
-+		state->in_flight_bytes = cbndtr & STM32_MDMA_CBNDTR_BNDT_MASK;
-+
- 	if (!chan->mem_burst)
- 		return residue;
- 
-@@ -1371,11 +1376,10 @@ static enum dma_status stm32_mdma_tx_status(struct dma_chan *c,
- 
- 	vdesc = vchan_find_desc(&chan->vchan, cookie);
- 	if (chan->desc && cookie == chan->desc->vdesc.tx.cookie)
--		residue = stm32_mdma_desc_residue(chan, chan->desc,
--						  chan->curr_hwdesc);
-+		residue = stm32_mdma_desc_residue(chan, chan->desc, chan->curr_hwdesc, state);
- 	else if (vdesc)
--		residue = stm32_mdma_desc_residue(chan,
--						  to_stm32_mdma_desc(vdesc), 0);
-+		residue = stm32_mdma_desc_residue(chan, to_stm32_mdma_desc(vdesc), 0, state);
-+
- 	dma_set_residue(state, residue);
- 
- 	spin_unlock_irqrestore(&chan->vchan.lock, flags);
--- 
-2.25.1
+On Wed, Oct 04, 2023 at 08:30:21AM -0500, Rob Herring wrote:
+> On Tue, Oct 03, 2023 at 09:52:13AM +0530, shravan chippa wrote:
+> > From: Shravan Chippa <shravan.chippa@microchip.com>
+> >=20
+> > Add new compatible name microchip,mpfs-pdma to support
+> > out of order dma transfers
+> >=20
+> > Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+> > Signed-off-by: Shravan Chippa <shravan.chippa@microchip.com>
+> > ---
+> >  .../bindings/dma/sifive,fu540-c000-pdma.yaml         | 12 ++++++++----
+> >  1 file changed, 8 insertions(+), 4 deletions(-)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pd=
+ma.yaml b/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
+> > index a1af0b906365..974467c4bacb 100644
+> > --- a/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
+> > +++ b/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
+> > @@ -27,10 +27,14 @@ allOf:
+> > =20
+> >  properties:
+> >    compatible:
+> > -    items:
+> > -      - enum:
+> > -          - sifive,fu540-c000-pdma
+> > -      - const: sifive,pdma0
+> > +    oneOf:
+> > +      - items:
+> > +          - const: microchip,mpfs-pdma # Microchip out of order DMA tr=
+ansfer
+> > +          - const: sifive,fu540-c000-pdma # Sifive in-order DMA transf=
+er
 
+IIRC I asked for the comments here to be removed on the previous
+version, and my r-b was conditional on that.
+The device specific compatible has merit outside of the ordering, which
+may just be a software policy decision.
+
+> This doesn't really make sense. microchip,mpfs-pdma is compatible with=20
+> sifive,fu540-c000-pdma and sifive,fu540-c000-pdma is compatible with=20
+> sifive,pdma0, but microchip,mpfs-pdma is not compatible with=20
+> sifive,pdma0? (Or replace "compatible with" with "a superset of")
+
+TBH, I am not sure why it was done this way. Probably because the driver
+contains both sifive,pdma0 and sifive,fu540-c000-pdma. Doing
+compatible =3D "microchip,mpfs-pdma", "sifive,fu540-c000-pdma", "sifive,pdm=
+a0";
+thing would be fine.
+
+> Any fallback is only useful if an OS only understanding the fallback=20
+> will work with the h/w. Does this h/w work without the driver changes?
+
+Yes.=20
+I've been hoping that someone from SiFive would come along, and in
+response to this patchset, tell us _why_ the driver does not make use of
+out-of-order transfers to begin with.
+
+Thanks,
+Conor.
+
+--FXxfjJNs6siMoTeZ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZR6V5AAKCRB4tDGHoIJi
+0oX1AP4gvbx/YYM63FggUSYmU1/62CsJzHKn0+mB5T85IMCFwgD/cOxS4ARE5fEz
+L4ddVpARkl5OfnTsKxySy+l9cZjbFgc=
+=hzTR
+-----END PGP SIGNATURE-----
+
+--FXxfjJNs6siMoTeZ--

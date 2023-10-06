@@ -2,116 +2,84 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D5D07BB534
-	for <lists+dmaengine@lfdr.de>; Fri,  6 Oct 2023 12:30:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BE2A7BC07C
+	for <lists+dmaengine@lfdr.de>; Fri,  6 Oct 2023 22:39:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231707AbjJFKaW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 6 Oct 2023 06:30:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45816 "EHLO
+        id S233534AbjJFUjz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 6 Oct 2023 16:39:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231532AbjJFKaV (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 6 Oct 2023 06:30:21 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAEC783;
-        Fri,  6 Oct 2023 03:30:18 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1287C433C7;
-        Fri,  6 Oct 2023 10:30:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696588218;
-        bh=+mvqaTG4RUdvegWzAzQB4Km4EgJ3oHRf9PT0mYVLsRQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dtvkELudcMaOFfelR/3Ox3pum0NvWYQp26iwod064iJ4LtzK46ucZRC1v1NdHxoPP
-         h8UbymfRUuLWVkfnDCpvGPXsD2k0dcL8ANcR951bsdiKUGzIN+nNgci8mTkHNu8XZo
-         TyWSloZk71IEsC88JwZBTtFKuU88e3z+pKFw38oGOylqBoY5KH5nbLPQRgkD7lHlLi
-         3f8msQO4QXgJHBsgwNGsMB+KGaxau8Nl9P9iPqz7AjWp3Ql0NnmVm1NlxGeAn2KV7r
-         qIqkbiySckJv3eyTfJnTYGnHH2CR5N0hpfOcOJKsEqFXeuVdkWDTDeMcOV7cTWIZBG
-         DH99zA3gEvRmA==
-Date:   Fri, 6 Oct 2023 16:00:14 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Kelvin.Cao@microchip.com
-Cc:     dmaengine@vger.kernel.org, George.Ge@microchip.com,
-        christophe.jaillet@wanadoo.fr, hch@infradead.org,
-        linux-kernel@vger.kernel.org, logang@deltatee.com
-Subject: Re: [PATCH v6 1/1] dmaengine: switchtec-dma: Introduce Switchtec DMA
- engine PCI driver
-Message-ID: <ZR/htuZSKGJP1wgU@matsya>
-References: <20230728200327.96496-1-kelvin.cao@microchip.com>
- <20230728200327.96496-2-kelvin.cao@microchip.com>
- <ZMlSLXaYaMry7ioA@matsya>
- <fd597a2a71f1c5146c804bb9fce3495864212d69.camel@microchip.com>
- <b0dc3da623dee479386e7cb75841b8b7913c9890.camel@microchip.com>
+        with ESMTP id S233527AbjJFUjz (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 6 Oct 2023 16:39:55 -0400
+Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC584CE
+        for <dmaengine@vger.kernel.org>; Fri,  6 Oct 2023 13:39:52 -0700 (PDT)
+Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-59bf1dde73fso31023527b3.3
+        for <dmaengine@vger.kernel.org>; Fri, 06 Oct 2023 13:39:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1696624792; x=1697229592; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fCCsvCjoztAYuiGh0Xey9xgcOmDlkIVfrEdnFUpQWQo=;
+        b=qmMMSAtMV0KLM9RtwJ1oPScNfXITRyUkLad/AhjuEweUNldoN0AJeWyNTstvXzmeQ8
+         gPagpsAknageqJ2nJkzj1ta1fJ0XCstDYqFU45yFywpi4tbZ9PIxxmiXc/JGDlzuoCCY
+         PGYi3ppvhtoA1qOCMTA9FCqIf/deMf3VYK0t9K61OJIACuquQmKYrxD3lnzwrG2ohtk/
+         Pw95MIx+DEwBJYHWkm+2yVyA9K84i4zSAu8wFowL3uJFmi5G+cgf7UengCnZeg06OmHC
+         J/v33EpEEpX/CfrOF5KDjxdJs3ik4LGPL6KER0wrk3d2Zaa8I88NSs9sOf0LQy0HuEJC
+         ViFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696624792; x=1697229592;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fCCsvCjoztAYuiGh0Xey9xgcOmDlkIVfrEdnFUpQWQo=;
+        b=XBa+zLEAouY9Xp0vHHiZFhhfFyalwJB5V4jxy5IkeZTfvZ1C0NLn61l/hlFRfD4fcB
+         G46DngKUOKAEqvi9BVr/ZrGexHaGal1NJP9vK0u2Nj7Sp29wCqxqcYMb7PxSkC3s6Q2h
+         9mnbg4T+mehkxAQxq3757VCTNObTlwh6vq50Q18LhsFtKTty2r/42OLTW9V/kArjqQZg
+         0FFcmFp2R2mNre8jXc1gYANQ/+BdjquH0WaNB4JCi1QaS72LrDH/0LItixqaNXxIrWc3
+         vJuyrGIVMeN963KdMDCJot4v0SzMLG1WfyPpn7lx4MdiCNBBomt787iMQ2FkLxTlqsJ1
+         Zi6g==
+X-Gm-Message-State: AOJu0YxIXV/Wsz5cvANsU6AZSWXGGbXFyEfUdlUF2TzxCv+YsbmF/bJW
+        thPeiePxJ9GsYqsQl0nz1oSCrGbaQ0G+O83s4tocmA==
+X-Google-Smtp-Source: AGHT+IFR8NVGwTdVcapVfJC8kRBUPD6L6tfpVRlQ1CZCYYO//rqZ3c7OWFya24qTOj/hY79e7ym8EazegWVwlW4BrEw=
+X-Received: by 2002:a81:7cc5:0:b0:599:b59f:5280 with SMTP id
+ x188-20020a817cc5000000b00599b59f5280mr9869580ywc.28.1696624792113; Fri, 06
+ Oct 2023 13:39:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b0dc3da623dee479386e7cb75841b8b7913c9890.camel@microchip.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <tencent_DD2D371DB5925B4B602B1E1D0A5FA88F1208@qq.com>
+In-Reply-To: <tencent_DD2D371DB5925B4B602B1E1D0A5FA88F1208@qq.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 6 Oct 2023 22:39:40 +0200
+Message-ID: <CACRpkdZtOdBYfHtAE-2QzqhUhELFm38TV93ek7bO1qLJMGiXLA@mail.gmail.com>
+Subject: Re: [PATCH] maengine: ste_dma40: Fix PM disable depth imbalance in d40_probe
+To:     Zhang Shurong <zhang_shurong@foxmail.com>
+Cc:     vkoul@kernel.org, linux-arm-kernel@lists.infradead.org,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 05-10-23, 18:35, Kelvin.Cao@microchip.com wrote:
+On Thu, Oct 5, 2023 at 4:28=E2=80=AFPM Zhang Shurong <zhang_shurong@foxmail=
+.com> wrote:
 
-> > > > +static struct dma_async_tx_descriptor *
-> > > > +switchtec_dma_prep_wimm_data(struct dma_chan *c, dma_addr_t
-> > > > dma_dst, u64 data,
-> > > > +                          unsigned long flags)
-> > > 
-> > > can you please explain what this wimm data refers to...
-> > > 
-> > > I think adding imm callback was a mistake, we need a better
-> > > justification for another user for this, who programs this, what
-> > > gets
-> > > programmed here
-> > 
-> > Sure. I think it's an alternative method to prep_mem and would be
-> > more
-> > convenient to use when the write is 8-byte and the data to be moved
-> > is
-> > not in a DMA mapped memory location. For example, we write to a
-> > doorbell register with the value from a local variable which is not
-> > associated with a DMA address to notify the receiver to consume the
-> > data, after confirming that the previously initiated DMA transactions
-> > of the data have completed. I agree that the use scenario would be
-> > very
-> > limited.
+> The pm_runtime_enable will increase power disable depth. Thus
+> a pairing decrement is needed on the error handling path to
+> keep it balanced according to context.
+> We fix it by calling pm_runtime_disable when error returns.
+>
+> Signed-off-by: Zhang Shurong <zhang_shurong@foxmail.com>
 
-Can you please explain more about this 'value' where is it derived from?
-Who programs it and how...
+Looks correct,
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-> > > > +     /* set sq/cq */
-> > > > +     writel(lower_32_bits(swdma_chan->dma_addr_sq), &chan_fw-
-> > > > > sq_base_lo);
-> > > > +     writel(upper_32_bits(swdma_chan->dma_addr_sq), &chan_fw-
-> > > > > sq_base_hi);
-> > > > +     writel(lower_32_bits(swdma_chan->dma_addr_cq), &chan_fw-
-> > > > > cq_base_lo);
-> > > > +     writel(upper_32_bits(swdma_chan->dma_addr_cq), &chan_fw-
-> > > > > cq_base_hi);
-> > > > +
-> > > > +     writew(SWITCHTEC_DMA_SQ_SIZE, &swdma_chan->mmio_chan_fw-
-> > > > > sq_size);
-> > > > +     writew(SWITCHTEC_DMA_CQ_SIZE, &swdma_chan->mmio_chan_fw-
-> > > > > cq_size);
-> > > 
-> > > what is write happening in the descriptor alloc callback, that does
-> > > not
-> > > sound correct to me
-> > 
-> > All the queue descriptors of a channel are pre-allocated, so I think
-> > it's proper to convey the queue address/size to hardware at this
-> > point.
-> > After this initialization, we only need to assign cookie in submit
-> > and
-> > update queue head to hardware in issue_pending.
-
-Sorry that is not right, you can prepare multiple descriptors and then
-submit. Only at submit is the cookie assigned which is in order, so this
-should be moved to when we start the txn and not in this call
-
--- 
-~Vinod
+Yours,
+Linus Walleij

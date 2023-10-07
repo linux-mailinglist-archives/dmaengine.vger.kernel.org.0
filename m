@@ -2,50 +2,55 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B5D627BC70E
-	for <lists+dmaengine@lfdr.de>; Sat,  7 Oct 2023 13:21:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C31157BC70F
+	for <lists+dmaengine@lfdr.de>; Sat,  7 Oct 2023 13:21:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234087AbjJGLU7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 7 Oct 2023 07:20:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60672 "EHLO
+        id S234148AbjJGLVC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 7 Oct 2023 07:21:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234166AbjJGLU6 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 7 Oct 2023 07:20:58 -0400
-X-Greylist: delayed 450 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 07 Oct 2023 04:20:57 PDT
+        with ESMTP id S234166AbjJGLVB (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 7 Oct 2023 07:21:01 -0400
 Received: from smtp.smtpout.orange.fr (smtp-16.smtpout.orange.fr [80.12.242.16])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 892C2B9
-        for <dmaengine@vger.kernel.org>; Sat,  7 Oct 2023 04:20:57 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 78B01B6
+        for <dmaengine@vger.kernel.org>; Sat,  7 Oct 2023 04:20:59 -0700 (PDT)
 Received: from pop-os.home ([86.243.2.178])
         by smtp.orange.fr with ESMTPA
-        id p5FLqUFvtkkaep5FLqw9nt; Sat, 07 Oct 2023 13:13:25 +0200
+        id p5FLqUFvtkkaep5FPqw9oL; Sat, 07 Oct 2023 13:13:28 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-        s=t20230301; t=1696677205;
-        bh=jCnIoIQF1DC9kwrL6dXuT211TCz3UEY3JUvXyvj4/xA=;
-        h=From:To:Cc:Subject:Date;
-        b=Bz4ajFDCdsu6VLEUWlJxz+ijo79EHIaWdKaD8IFozP5GoVggXqYNJurHxg9jfLDrm
-         Px3gKMs4reBgrw6vI2PGmDIUUEJTMEU/33Otfpt8Q8W1BsWAc8kmio886Bcr8WFN29
-         0/3QG1V7ul7xji93lwONquEqbdiH+v2y7VyXAvP9+1W+o5NtIQXs/Yo+ECEpBr3lIX
-         GiIMQYJ5FtVCsxRdNqzNa/BKr+6T4R/0dM8YrUbhuQRc2KF9in/qpXgLrctRJuN0MH
-         zNij+/NOZS8GuDWL5wna3C6W5BTagVUXYMSa6jAPiSvBMt7kzmyEh5dmS56BUgu/rt
-         Nbz/n1XTUwl3Q==
+        s=t20230301; t=1696677208;
+        bh=SyXlzkufD32ONJRqEUudpUaKb11ktLKN0H131JCB37s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=pa0Ht/+kirGb8FefDOjnr78UXIM/jKWvkUJW1HqJ1jqV7PCngyX3to4Qwqebkgm9K
+         3keqCckP+l0pg1CZP9QpPxdvHMzp3RoDABNokHmtkj1SUaK2ZyKJV7/oknFCxppc46
+         kzzfVDxSvYGwDoTWHYd54DNXfyDKjuC3mPB6jbK2jKFqomJRipzuC2iwChQczE8MxN
+         YyBDLqCvyKmJQv9dQjlhwHIzLY2vGzlmlUh2waj4iT8JTurRZuc5uvUMuLi14Jki8C
+         rfo7eAe+o2iy++uI6XfvE26dIt5fRBM1g1p6lAkk2tGCrKpszW9ummZdTZliNSyY2N
+         ff9FzmYcnxY8w==
 X-ME-Helo: pop-os.home
 X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 07 Oct 2023 13:13:25 +0200
+X-ME-Date: Sat, 07 Oct 2023 13:13:28 +0200
 X-ME-IP: 86.243.2.178
 From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 To:     keescook@chromium.org, gustavoars@kernel.org,
         Daniel Mack <daniel@zonque.org>,
         Haojian Zhuang <haojian.zhuang@gmail.com>,
         Robert Jarzmik <robert.jarzmik@free.fr>,
-        Vinod Koul <vkoul@kernel.org>
+        Vinod Koul <vkoul@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>
 Cc:     linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
         kernel-janitors@vger.kernel.org,
         Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org
-Subject: [PATCH 1/2] dmaengine: pxa_dma: Remove an erroneous BUG_ON() in pxad_free_desc()
-Date:   Sat,  7 Oct 2023 13:13:09 +0200
-Message-Id: <c8fc5563c9593c914fde41f0f7d1489a21b45a9a.1696676782.git.christophe.jaillet@wanadoo.fr>
+        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
+        llvm@lists.linux.dev
+Subject: [PATCH 2/2] dmaengine: pxa_dma: Annotate struct pxad_desc_sw with __counted_by
+Date:   Sat,  7 Oct 2023 13:13:10 +0200
+Message-Id: <1c9ef22826f449a3756bb13a83494e9fe3e0be8b.1696676782.git.christophe.jaillet@wanadoo.fr>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <c8fc5563c9593c914fde41f0f7d1489a21b45a9a.1696676782.git.christophe.jaillet@wanadoo.fr>
+References: <c8fc5563c9593c914fde41f0f7d1489a21b45a9a.1696676782.git.christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -58,34 +63,82 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-If pxad_alloc_desc() fails on the first dma_pool_alloc() call, then
-sw_desc->nb_desc is zero.
-In such a case pxad_free_desc() is called and it will BUG_ON().
+Prepare for the coming implementation by GCC and Clang of the __counted_by
+attribute. Flexible array members annotated with __counted_by can have
+their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+(for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+functions).
 
-Remove this erroneous BUG_ON().
+To do so, the code needs a little shuffling related to how hw_desc is used
+and nb_desc incremented.
 
-It is also useless, because if "sw_desc->nb_desc == 0", then, on the first
-iteration of the for loop, i is -1 and the loop will not be executed.
-(both i and sw_desc->nb_desc are 'int')
+The one by one increment is needed for the error handling path, calling
+pxad_free_desc(), to work correctly.
 
-Fixes: a57e16cf0333 ("dmaengine: pxa: add pxa dmaengine driver")
+So, add a new intermediate variable, desc, to store the result of the
+dma_pool_alloc() call.
+
 Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
- drivers/dma/pxa_dma.c | 1 -
- 1 file changed, 1 deletion(-)
+This patch is part of a work done in parallel of what is currently worked
+on by Kees Cook.
+
+My patches are only related to corner cases that do NOT match the
+semantic of his Coccinelle script[1].
+
+[1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
+---
+ drivers/dma/pxa_dma.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/dma/pxa_dma.c b/drivers/dma/pxa_dma.c
-index 3c574dc0613b..94cef2905940 100644
+index 94cef2905940..c6e2862896e3 100644
 --- a/drivers/dma/pxa_dma.c
 +++ b/drivers/dma/pxa_dma.c
-@@ -722,7 +722,6 @@ static void pxad_free_desc(struct virt_dma_desc *vd)
- 	dma_addr_t dma;
- 	struct pxad_desc_sw *sw_desc = to_pxad_sw_desc(vd);
+@@ -91,7 +91,8 @@ struct pxad_desc_sw {
+ 	bool			cyclic;
+ 	struct dma_pool		*desc_pool;	/* Channel's used allocator */
  
--	BUG_ON(sw_desc->nb_desc == 0);
- 	for (i = sw_desc->nb_desc - 1; i >= 0; i--) {
- 		if (i > 0)
- 			dma = sw_desc->hw_desc[i - 1]->ddadr;
+-	struct pxad_desc_hw	*hw_desc[];	/* DMA coherent descriptors */
++	struct pxad_desc_hw	*hw_desc[] __counted_by(nb_desc);
++						/* DMA coherent descriptors */
+ };
+ 
+ struct pxad_phy {
+@@ -739,6 +740,7 @@ pxad_alloc_desc(struct pxad_chan *chan, unsigned int nb_hw_desc)
+ {
+ 	struct pxad_desc_sw *sw_desc;
+ 	dma_addr_t dma;
++	void *desc;
+ 	int i;
+ 
+ 	sw_desc = kzalloc(struct_size(sw_desc, hw_desc, nb_hw_desc),
+@@ -748,20 +750,21 @@ pxad_alloc_desc(struct pxad_chan *chan, unsigned int nb_hw_desc)
+ 	sw_desc->desc_pool = chan->desc_pool;
+ 
+ 	for (i = 0; i < nb_hw_desc; i++) {
+-		sw_desc->hw_desc[i] = dma_pool_alloc(sw_desc->desc_pool,
+-						     GFP_NOWAIT, &dma);
+-		if (!sw_desc->hw_desc[i]) {
++		desc = dma_pool_alloc(sw_desc->desc_pool, GFP_NOWAIT, &dma);
++		if (!desc) {
+ 			dev_err(&chan->vc.chan.dev->device,
+ 				"%s(): Couldn't allocate the %dth hw_desc from dma_pool %p\n",
+ 				__func__, i, sw_desc->desc_pool);
+ 			goto err;
+ 		}
+ 
++		sw_desc->nb_desc++;
++		sw_desc->hw_desc[i] = desc;
++
+ 		if (i == 0)
+ 			sw_desc->first = dma;
+ 		else
+ 			sw_desc->hw_desc[i - 1]->ddadr = dma;
+-		sw_desc->nb_desc++;
+ 	}
+ 
+ 	return sw_desc;
 -- 
 2.34.1
 

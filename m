@@ -2,45 +2,40 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3218B7BD313
+	by mail.lfdr.de (Postfix) with ESMTP id D8D1D7BD316
 	for <lists+dmaengine@lfdr.de>; Mon,  9 Oct 2023 08:12:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345174AbjJIGMT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 9 Oct 2023 02:12:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33184 "EHLO
+        id S1345173AbjJIGMW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 9 Oct 2023 02:12:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345173AbjJIGMS (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 9 Oct 2023 02:12:18 -0400
+        with ESMTP id S1345180AbjJIGMU (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 9 Oct 2023 02:12:20 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3E30A4;
-        Sun,  8 Oct 2023 23:12:17 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBCE1C433CA;
-        Mon,  9 Oct 2023 06:12:13 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07A2BA4;
+        Sun,  8 Oct 2023 23:12:20 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0755C433C7;
+        Mon,  9 Oct 2023 06:12:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696831937;
-        bh=FTNOXpa65H/cSqigLsrU9/tvUHcGMrJuoHxbZJutJa8=;
+        s=k20201202; t=1696831939;
+        bh=ie4AUCy8wukqhGEqThy7NvmjKahytl7YPvKyPQ1aAxo=;
         h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-        b=dqWM+5MZqoUaGuyBCCy0tnTXdOwqal2FpQ2R8vdT92eBmht1UsZX6gnPTT+cyeDJv
-         DrWg5TGEZDgg81bfklvh9WpewY+gPezRmgN7Hhdn9q3/xrqp3yPwyFf1X7+seOCU+J
-         VJNqSNY7hkkSXcXnntiyo2qyh1ym+l6Q5ajXo31TpUuAWGmGVB7ocWSNz+UNh9SHav
-         PmBIMeRrs6PDY3sYngGZ/vgPIDLM6cZCWqx45ngk0Zz9skzbKXk70orlxIyQh8ILH0
-         ah8psLqd258l0ZUzl0smrZieCFHkFfDRiWqvw6ddeF5YGEJAtsG9n3UVb9X23YP6eb
-         22LnrVkmat2Ww==
+        b=UsHCsaCtRLhbe7N4/cmjQ/VxDb+xUj/cisKv+oggDN3bh61EddpkiUnV9aEuHmny2
+         hIPaicQk1Fwi2z31CNYe+JMKF9gVm2plNmOR7rf1ofYsX6yL9TO7egkjjX2F9sT+tL
+         k1wHQP3t3pc/7ZNL2BQHFu0rxqzrSLG2WKAw4vf9Rqi6jQBDWAKbV472P5OmzIjUNW
+         X1pq6x+YBn1SNPPn74AX1hlK+INP75H21yC+wkTcScSZl7couCyKuRfVLTx40I2gfv
+         mSC/tD0Fj1A+e+YlrbwY8k0OklsG0Op7iLifM3KCvafPscmjRQYmfw+VZy+2u30Nj/
+         tfeD/BC+s5SxA==
 From:   Vinod Koul <vkoul@kernel.org>
-To:     keescook@chromium.org, gustavoars@kernel.org,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org
-In-Reply-To: <c8fc5563c9593c914fde41f0f7d1489a21b45a9a.1696676782.git.christophe.jaillet@wanadoo.fr>
-References: <c8fc5563c9593c914fde41f0f7d1489a21b45a9a.1696676782.git.christophe.jaillet@wanadoo.fr>
-Subject: Re: [PATCH 1/2] dmaengine: pxa_dma: Remove an erroneous BUG_ON()
- in pxad_free_desc()
-Message-Id: <169683193345.43997.16902412199226518649.b4-ty@kernel.org>
-Date:   Mon, 09 Oct 2023 11:42:13 +0530
+To:     Patrice Chotard <patrice.chotard@foss.st.com>,
+        Rob Herring <robh@kernel.org>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20231006213844.333027-1-robh@kernel.org>
+References: <20231006213844.333027-1-robh@kernel.org>
+Subject: Re: [PATCH] dmaengine: Use device_get_match_data()
+Message-Id: <169683193754.43997.16774185911691543891.b4-ty@kernel.org>
+Date:   Mon, 09 Oct 2023 11:42:17 +0530
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
@@ -56,25 +51,17 @@ List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 
-On Sat, 07 Oct 2023 13:13:09 +0200, Christophe JAILLET wrote:
-> If pxad_alloc_desc() fails on the first dma_pool_alloc() call, then
-> sw_desc->nb_desc is zero.
-> In such a case pxad_free_desc() is called and it will BUG_ON().
+On Fri, 06 Oct 2023 16:38:43 -0500, Rob Herring wrote:
+> Use preferred device_get_match_data() instead of of_match_device() to
+> get the driver match data. With this, adjust the includes to explicitly
+> include the correct headers.
 > 
-> Remove this erroneous BUG_ON().
 > 
-> It is also useless, because if "sw_desc->nb_desc == 0", then, on the first
-> iteration of the for loop, i is -1 and the loop will not be executed.
-> (both i and sw_desc->nb_desc are 'int')
-> 
-> [...]
 
 Applied, thanks!
 
-[1/2] dmaengine: pxa_dma: Remove an erroneous BUG_ON() in pxad_free_desc()
-      commit: 83c761f568733277ce1f7eb9dc9e890649c29a8c
-[2/2] dmaengine: pxa_dma: Annotate struct pxad_desc_sw with __counted_by
-      commit: 0481291f0ccbc5147635cf0eb108f9fe5a05ee7d
+[1/1] dmaengine: Use device_get_match_data()
+      commit: a67ba97dfb30486deb4661f770b954387acc898d
 
 Best regards,
 -- 

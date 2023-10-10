@@ -2,51 +2,46 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5761B7C017A
-	for <lists+dmaengine@lfdr.de>; Tue, 10 Oct 2023 18:21:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A32F37C0323
+	for <lists+dmaengine@lfdr.de>; Tue, 10 Oct 2023 20:01:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231231AbjJJQVL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 10 Oct 2023 12:21:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57630 "EHLO
+        id S233489AbjJJSBU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 10 Oct 2023 14:01:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231226AbjJJQVK (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 10 Oct 2023 12:21:10 -0400
+        with ESMTP id S233412AbjJJSBU (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 10 Oct 2023 14:01:20 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E8E98E;
-        Tue, 10 Oct 2023 09:21:09 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C60CAC433C7;
-        Tue, 10 Oct 2023 16:21:07 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E42294
+        for <dmaengine@vger.kernel.org>; Tue, 10 Oct 2023 11:01:19 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78DFFC433C8;
+        Tue, 10 Oct 2023 18:01:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696954868;
-        bh=AbYACsFpW/kkxdoM2rLrN81FheyXlXCz2ZwahMt1rDA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KWg1QYQTVuWLt7aWSi0f4bHdpASD1VwnZQgoXsIphm7L+veLhRXR/F2N5OZPGPmJ4
-         4w4SNb5TU1uCBownhL/bkX6LEbbRWhHe8gjJXCEm3zxQhBCoTgvjdLhHTGVFxlNHC3
-         j+UWh2TpmROCZQBGczKNlHqO86kkKCexwWK6ZDlo74mJplU+h2HJNvOZdiUp931wAa
-         2TR+qoK54KT/eeB6bbPhcDsc5jFjNVURMsaRAXundJNJ+hfo1gM/dHusqqU8y6KSvv
-         KE2CeuE8yLBkkhnQkgjajC0zms25DOGvZEdBi+EiG3OAHHFbdhXijAI+Og4NyGt4Jk
-         PZKe1ft5Lu5tA==
-Received: (nullmailer pid 1005366 invoked by uid 1000);
-        Tue, 10 Oct 2023 16:21:06 -0000
-Date:   Tue, 10 Oct 2023 11:21:06 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Mohan Kumar <mkumard@nvidia.com>
-Cc:     jonathanh@nvidia.com, robh+dt@kernel.org,
-        dmaengine@vger.kernel.org, thierry.reding@gmail.com,
-        devicetree@vger.kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        linux-tegra@vger.kernel.org, vkoul@kernel.org, ldewangan@nvidia.com
-Subject: Re: [PATCH V1 1/2] dt-bindings: dma: Add dma-channel-mask to
- nvidia,tegra210-adma
-Message-ID: <169695486646.1005310.17540883158492688989.robh@kernel.org>
-References: <20231009063509.2269-1-mkumard@nvidia.com>
- <20231009063509.2269-2-mkumard@nvidia.com>
+        s=k20201202; t=1696960878;
+        bh=1VZlB+9ARQ/RUTUA/rHXorjZE1GKKlOGL/rlwGR82FQ=;
+        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+        b=Tsfa3h8FGdqe57cXLDdnQu9gdBAEnW19uWPdqnGA2UBiFduRqmv9taW2d1bYOr6R5
+         J2XMTdAXEfX0V21NO26qW+BRcQK7PGUce5g3QoVGOvRRAp/c2nH4oIOIFKdaDLK4Th
+         0oRSQgSrMq6g5JUvUKgrIOuv2+ml3FmeoOaeT8kKNEEAg3luYecr7uda7pAX6dVbdW
+         j4qFcsX6q7jciC+zyFlo9f8nA39uiGfyt1kSzUjEUDpVWpq8lGMkdk1gqT7gYg/6GW
+         4GL2tpPuk3YRtQrbVfDxaxFUaYdgMv7IaDzHMD/u5FO41Qc4Ry44vHT0liEtEN65oR
+         3e0+yO5msTW/Q==
+From:   Vinod Koul <vkoul@kernel.org>
+To:     dmaengine@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>
+In-Reply-To: <20231010065729.29385-1-vkoul@kernel.org>
+References: <20231010065729.29385-1-vkoul@kernel.org>
+Subject: Re: [PATCH] dmaengine: mmp_tdma: drop unused variable 'of_id'
+Message-Id: <169696087711.52248.11371516127952846322.b4-ty@kernel.org>
+Date:   Tue, 10 Oct 2023 23:31:17 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231009063509.2269-2-mkumard@nvidia.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.3
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -54,15 +49,20 @@ List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 
-On Mon, 09 Oct 2023 12:05:08 +0530, Mohan Kumar wrote:
-> - Add dma-channel-mask binding doc support to nvidia,tegra210-adma
-> to reserve the adma channel usage
+On Tue, 10 Oct 2023 12:27:29 +0530, Vinod Koul wrote:
+> Recent change a67ba97dfb30 ("dmaengine: Use device_get_match_data()")
+> cleaned up device tree data calls but left an unused variable, so drop
+> that
 > 
-> Signed-off-by: Mohan Kumar <mkumard@nvidia.com>
-> ---
->  .../devicetree/bindings/dma/nvidia,tegra210-adma.yaml          | 3 +++
->  1 file changed, 3 insertions(+)
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Applied, thanks!
+
+[1/1] dmaengine: mmp_tdma: drop unused variable 'of_id'
+      commit: 8bf914570650ec5858e18554d70d2838cef01de1
+
+Best regards,
+-- 
+~Vinod
+
 

@@ -2,315 +2,296 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6255B7BF846
-	for <lists+dmaengine@lfdr.de>; Tue, 10 Oct 2023 12:15:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2215D7BFC0A
+	for <lists+dmaengine@lfdr.de>; Tue, 10 Oct 2023 15:00:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229516AbjJJKO7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 10 Oct 2023 06:14:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39566 "EHLO
+        id S232197AbjJJM7h (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 10 Oct 2023 08:59:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230396AbjJJKO5 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 10 Oct 2023 06:14:57 -0400
-Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDFCB97;
-        Tue, 10 Oct 2023 03:14:54 -0700 (PDT)
-Received: by mail-lj1-x230.google.com with SMTP id 38308e7fff4ca-2c27d653856so78013191fa.0;
-        Tue, 10 Oct 2023 03:14:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696932893; x=1697537693; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8uevVZ5l49O79IDGgv2qzPiOyxsWvTfFBE56J4eeoZk=;
-        b=hA1iDf9sro/q53QWqn5VyD3qwu+6NO1J/ZTfz+LpxJNuwjBrPpfqQ59bJcAW+HQBJC
-         xFDPDR4PNs/7xupoIG13oIXE+pbAZMAVmuHGJEZApQyuwQCnSpw8ymICqXjowiktXgJv
-         aw7ivBLZSXbi3YbqXcMc00Wn2pn/T2B3kRz7fbE3pP6i9QQE7J4hAgAtMYfYgvapMwnJ
-         LbLPrGLPID/WW+jQg667PQpbCs6mtp/DOrsR48Y1FJ2Vf1rd+yOR2Vl3qBjqB8AqZE7g
-         irrSAxYZlfDRiHwSPUYObERhMmypQfVbx0AJuj0KwNmSYXo+heelyRZddfTFyI6x38MF
-         fGLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696932893; x=1697537693;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8uevVZ5l49O79IDGgv2qzPiOyxsWvTfFBE56J4eeoZk=;
-        b=RT5CNxFTFxj5uk6TcEL0eNlvs2wmWnIuaGuNPfX8thMqvkTb6eX7bVL9L7GKdxkpmX
-         iv404CxR1phkyKQDsKTS8JiKoW1ZeyLFBBQ4x0qVUPgmEajQYpUXVx4LSEgxhSe/0SIU
-         X0BB+n5XJB92cYshh0vpxEu8WK+x5Rl405wsajD8L4dKqGIHYHVv6NOlJWlPGUcQKx6X
-         zxz8GNMlqcJjeKcIvwtpQptnkoY9oHz5yG6PKfXYkGZljJV6M/iAZCXupBhdNyr+wzOW
-         gq0OjSZeS1ATzxi2CH84k6r8v+d7iJ5wdS7xD/8lVVSD4ydI02W21h9+AR7QKe0ZZZ71
-         4I5w==
-X-Gm-Message-State: AOJu0YyiAIjBALkKUFgJP6D++LKUUEKD6PXjpNkP8d+sPGyAt65927hv
-        jkHJuHCZDWO4qjANroMeX5WDYPGfYAUlqHv6
-X-Google-Smtp-Source: AGHT+IGB9wiyCZOSwRuBPq5oqH4OQsHTMF8mPErWaOJ5w3L00pL0BFWosieAxXXzZXTmjo/nTGYRUA==
-X-Received: by 2002:a05:6512:3b88:b0:504:b84f:7b19 with SMTP id g8-20020a0565123b8800b00504b84f7b19mr11632877lfv.20.1696932892561;
-        Tue, 10 Oct 2023 03:14:52 -0700 (PDT)
-Received: from skhimich.dev.yadro.com ([185.15.172.210])
-        by smtp.gmail.com with ESMTPSA id w2-20020ac25d42000000b004fce9e8c390sm1754454lfd.63.2023.10.10.03.14.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Oct 2023 03:14:52 -0700 (PDT)
-From:   Sergey Khimich <serghox@gmail.com>
-To:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
-Cc:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v2 1/1] dmaengine: dw-axi-dmac: Add support DMAX_NUM_CHANNELS > 16
-Date:   Tue, 10 Oct 2023 13:14:50 +0300
-Message-Id: <20231010101450.2949126-2-serghox@gmail.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20231010101450.2949126-1-serghox@gmail.com>
-References: <20231010101450.2949126-1-serghox@gmail.com>
+        with ESMTP id S232110AbjJJM7b (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 10 Oct 2023 08:59:31 -0400
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42768AC;
+        Tue, 10 Oct 2023 05:59:29 -0700 (PDT)
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.17.1.22/8.17.1.22) with ESMTP id 39A8Ll47012942;
+        Tue, 10 Oct 2023 14:58:49 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding:content-type; s=selector1; bh=McU8TFE
+        IZ+S2rlO5bzzEQ3oyUtZZAZ4HlIsAryT/jcI=; b=BEezo6eAC7VQfos5WepkiXV
+        cgy20U2w0o50zse659NHEzz/MM8ylMMEGdtPNjXojTapb5ZN65ec6d+zSCymKBzc
+        NjIii1ssg/HMg4/v5OXP2al0N/li1LQqBs7DKkFO9G5m0Uh7KzXDU3PpeoWO8rW5
+        rRuAWV3CSV03Tq6MX6J17U5aAG7ZgaEiJePP0HtXMT0Es76/EEW+KUOAllBWD6OK
+        cPOgFE5KAjFjv6tP164z8KaT3g1TD5Qa26sGZI/zmwK/5kvo2W58RDFfOHz7y+Q7
+        biHSCQtGu2WFCuEZv7BGvc0rgQ9VG07/KQhvseByiqJFb4IUELDqcFJpJNxNvIQ=
+        =
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3tkhk3j04b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 10 Oct 2023 14:58:49 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 30BEF100058;
+        Tue, 10 Oct 2023 14:58:48 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0840E2309E2;
+        Tue, 10 Oct 2023 14:58:48 +0200 (CEST)
+Received: from localhost (10.201.20.32) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Tue, 10 Oct
+ 2023 14:58:47 +0200
+From:   Gatien Chevallier <gatien.chevallier@foss.st.com>
+To:     <Oleksii_Moisieiev@epam.com>, <gregkh@linuxfoundation.org>,
+        <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>, <alexandre.torgue@foss.st.com>,
+        <vkoul@kernel.org>, <jic23@kernel.org>,
+        <olivier.moysan@foss.st.com>, <arnaud.pouliquen@foss.st.com>,
+        <mchehab@kernel.org>, <fabrice.gasnier@foss.st.com>,
+        <andi.shyti@kernel.org>, <ulf.hansson@linaro.org>,
+        <edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
+        <hugues.fruchet@foss.st.com>, <lee@kernel.org>, <will@kernel.org>,
+        <catalin.marinas@arm.com>, <arnd@kernel.org>,
+        <richardcochran@gmail.com>, Frank Rowand <frowand.list@gmail.com>,
+        <peng.fan@oss.nxp.com>
+CC:     <linux-crypto@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-i2c@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        <alsa-devel@alsa-project.org>, <linux-media@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-phy@lists.infradead.org>, <linux-serial@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        Gatien Chevallier <gatien.chevallier@foss.st.com>
+Subject: [PATCH v6 00/11] Introduce STM32 Firewall framework
+Date:   Tue, 10 Oct 2023 14:57:08 +0200
+Message-ID: <20231010125719.784627-1-gatien.chevallier@foss.st.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Originating-IP: [10.201.20.32]
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-10_08,2023-10-10_01,2023-05-22_02
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Sergey Khimich <serghox@gmail.com>
+Introduce STM32 Firewall framework for STM32MP1x and STM32MP2x
+platforms. STM32MP1x(ETZPC) and STM32MP2x(RIFSC) Firewall controllers
+register to the framework to offer firewall services such as access
+granting.
 
-Added support for DMA controller with more than 16 channels.
+This series of patches is a new approach on the previous STM32 system
+bus, history is available here:
+https://lore.kernel.org/lkml/20230127164040.1047583/
 
-Signed-off-by: Sergey Khimich <serghox@gmail.com>
----
- .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 156 +++++++++++++-----
- drivers/dma/dw-axi-dmac/dw-axi-dmac.h         |   6 +-
- 2 files changed, 120 insertions(+), 42 deletions(-)
+The need for such framework arises from the fact that there are now
+multiple hardware firewalls implemented across multiple products.
+Drivers are shared between different products, using the same code.
+When it comes to firewalls, the purpose mostly stays the same: Protect
+hardware resources. But the implementation differs, and there are
+multiple types of firewalls: peripheral, memory, ... 
 
-diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-index dd02f84e404d..f2587159bf5a 100644
---- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-+++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-@@ -62,6 +62,17 @@ static inline u32 axi_dma_ioread32(struct axi_dma_chip *chip, u32 reg)
- 	return ioread32(chip->regs + reg);
- }
- 
-+static inline void
-+axi_dma_iowrite64(struct axi_dma_chip *chip, u32 reg, u64 val)
-+{
-+	iowrite64(val, chip->regs + reg);
-+}
-+
-+static inline u64 axi_dma_ioread64(struct axi_dma_chip *chip, u32 reg)
-+{
-+	return ioread64(chip->regs + reg);
-+}
-+
- static inline void
- axi_chan_iowrite32(struct axi_dma_chan *chan, u32 reg, u32 val)
- {
-@@ -182,38 +193,73 @@ static inline u32 axi_chan_irq_read(struct axi_dma_chan *chan)
- 
- static inline void axi_chan_disable(struct axi_dma_chan *chan)
- {
--	u32 val;
--
--	val = axi_dma_ioread32(chan->chip, DMAC_CHEN);
--	val &= ~(BIT(chan->id) << DMAC_CHAN_EN_SHIFT);
--	if (chan->chip->dw->hdata->reg_map_8_channels)
--		val |=   BIT(chan->id) << DMAC_CHAN_EN_WE_SHIFT;
--	else
--		val |=   BIT(chan->id) << DMAC_CHAN_EN2_WE_SHIFT;
--	axi_dma_iowrite32(chan->chip, DMAC_CHEN, val);
-+	u64 val;
-+
-+	if (chan->chip->dw->hdata->nr_channels >= DMAC_CHAN_16) {
-+		val = axi_dma_ioread64(chan->chip, DMAC_CHEN);
-+		if (chan->id >= DMAC_CHAN_16) {
-+			val &= ~((u64)(BIT(chan->id) >> DMAC_CHAN_16)
-+				<< (DMAC_CHAN_EN_SHIFT + DMAC_CHAN_BLOCK_SHIFT));
-+			val |=   (u64)(BIT(chan->id) >> DMAC_CHAN_16)
-+				<< (DMAC_CHAN_EN2_WE_SHIFT + DMAC_CHAN_BLOCK_SHIFT);
-+		} else {
-+			val &= ~(BIT(chan->id) << DMAC_CHAN_EN_SHIFT);
-+			val |=   BIT(chan->id) << DMAC_CHAN_EN2_WE_SHIFT;
-+		}
-+		axi_dma_iowrite64(chan->chip, DMAC_CHEN, val);
-+	} else {
-+		val = axi_dma_ioread32(chan->chip, DMAC_CHEN);
-+		val &= ~(BIT(chan->id) << DMAC_CHAN_EN_SHIFT);
-+		if (chan->chip->dw->hdata->reg_map_8_channels)
-+			val |=   BIT(chan->id) << DMAC_CHAN_EN_WE_SHIFT;
-+		else
-+			val |=   BIT(chan->id) << DMAC_CHAN_EN2_WE_SHIFT;
-+		axi_dma_iowrite32(chan->chip, DMAC_CHEN, (u32)val);
-+	}
- }
- 
- static inline void axi_chan_enable(struct axi_dma_chan *chan)
- {
--	u32 val;
--
--	val = axi_dma_ioread32(chan->chip, DMAC_CHEN);
--	if (chan->chip->dw->hdata->reg_map_8_channels)
--		val |= BIT(chan->id) << DMAC_CHAN_EN_SHIFT |
--			BIT(chan->id) << DMAC_CHAN_EN_WE_SHIFT;
--	else
--		val |= BIT(chan->id) << DMAC_CHAN_EN_SHIFT |
-+	u64 val;
-+
-+	if (chan->chip->dw->hdata->nr_channels >= DMAC_CHAN_16) {
-+		val = axi_dma_ioread64(chan->chip, DMAC_CHEN);
-+		if (chan->id >= DMAC_CHAN_16) {
-+			val |= (u64)(BIT(chan->id) >> DMAC_CHAN_16)
-+				<< (DMAC_CHAN_EN_SHIFT + DMAC_CHAN_BLOCK_SHIFT) |
-+				(u64)(BIT(chan->id) >> DMAC_CHAN_16)
-+				<< (DMAC_CHAN_EN2_WE_SHIFT + DMAC_CHAN_BLOCK_SHIFT);
-+		} else {
-+			val |= BIT(chan->id) << DMAC_CHAN_EN_SHIFT |
- 			BIT(chan->id) << DMAC_CHAN_EN2_WE_SHIFT;
--	axi_dma_iowrite32(chan->chip, DMAC_CHEN, val);
-+		}
-+		axi_dma_iowrite64(chan->chip, DMAC_CHEN, val);
-+	} else {
-+		val = axi_dma_ioread32(chan->chip, DMAC_CHEN);
-+		if (chan->chip->dw->hdata->reg_map_8_channels) {
-+			val |= BIT(chan->id) << DMAC_CHAN_EN_SHIFT |
-+			BIT(chan->id) << DMAC_CHAN_EN_WE_SHIFT;
-+		} else {
-+			val |= BIT(chan->id) << DMAC_CHAN_EN_SHIFT |
-+				BIT(chan->id) << DMAC_CHAN_EN2_WE_SHIFT;
-+		}
-+		axi_dma_iowrite32(chan->chip, DMAC_CHEN, (u32)val);
-+	}
- }
- 
- static inline bool axi_chan_is_hw_enable(struct axi_dma_chan *chan)
- {
--	u32 val;
-+	u64 val;
- 
--	val = axi_dma_ioread32(chan->chip, DMAC_CHEN);
-+	if (chan->chip->dw->hdata->nr_channels >= DMAC_CHAN_16)
-+		val = axi_dma_ioread64(chan->chip, DMAC_CHEN);
-+	else
-+		val = axi_dma_ioread32(chan->chip, DMAC_CHEN);
- 
--	return !!(val & (BIT(chan->id) << DMAC_CHAN_EN_SHIFT));
-+	if (chan->id >= DMAC_CHAN_16)
-+		return !!(val & ((u64)(BIT(chan->id) >> DMAC_CHAN_16) << DMAC_CHAN_BLOCK_SHIFT));
-+	else
-+		return !!(val & (BIT(chan->id) << DMAC_CHAN_EN_SHIFT));
- }
- 
- static void axi_dma_hw_init(struct axi_dma_chip *chip)
-@@ -1175,20 +1221,34 @@ static int dma_chan_pause(struct dma_chan *dchan)
- 	struct axi_dma_chan *chan = dchan_to_axi_dma_chan(dchan);
- 	unsigned long flags;
- 	unsigned int timeout = 20; /* timeout iterations */
--	u32 val;
-+	u64 val;
- 
- 	spin_lock_irqsave(&chan->vc.lock, flags);
- 
--	if (chan->chip->dw->hdata->reg_map_8_channels) {
--		val = axi_dma_ioread32(chan->chip, DMAC_CHEN);
--		val |= BIT(chan->id) << DMAC_CHAN_SUSP_SHIFT |
--			BIT(chan->id) << DMAC_CHAN_SUSP_WE_SHIFT;
--		axi_dma_iowrite32(chan->chip, DMAC_CHEN, val);
-+	if (chan->chip->dw->hdata->nr_channels >= DMAC_CHAN_16) {
-+		val = axi_dma_ioread64(chan->chip, DMAC_CHSUSPREG);
-+		if (chan->id >= DMAC_CHAN_16) {
-+			val |= (u64)(BIT(chan->id) >> DMAC_CHAN_16)
-+				<< (DMAC_CHAN_SUSP2_SHIFT + DMAC_CHAN_BLOCK_SHIFT) |
-+				(u64)(BIT(chan->id) >> DMAC_CHAN_16)
-+				<< (DMAC_CHAN_SUSP2_WE_SHIFT + DMAC_CHAN_BLOCK_SHIFT);
-+		} else {
-+			val |= BIT(chan->id) << DMAC_CHAN_SUSP2_SHIFT |
-+			       BIT(chan->id) << DMAC_CHAN_SUSP2_WE_SHIFT;
-+			}
-+			axi_dma_iowrite64(chan->chip, DMAC_CHSUSPREG, val);
- 	} else {
--		val = axi_dma_ioread32(chan->chip, DMAC_CHSUSPREG);
--		val |= BIT(chan->id) << DMAC_CHAN_SUSP2_SHIFT |
-+		if (chan->chip->dw->hdata->reg_map_8_channels) {
-+			val = axi_dma_ioread32(chan->chip, DMAC_CHEN);
-+			val |= BIT(chan->id) << DMAC_CHAN_SUSP_SHIFT |
-+			BIT(chan->id) << DMAC_CHAN_SUSP_WE_SHIFT;
-+			axi_dma_iowrite32(chan->chip, DMAC_CHEN, (u32)val);
-+		} else {
-+			val = axi_dma_ioread32(chan->chip, DMAC_CHSUSPREG);
-+			val |= BIT(chan->id) << DMAC_CHAN_SUSP2_SHIFT |
- 			BIT(chan->id) << DMAC_CHAN_SUSP2_WE_SHIFT;
--		axi_dma_iowrite32(chan->chip, DMAC_CHSUSPREG, val);
-+			axi_dma_iowrite32(chan->chip, DMAC_CHSUSPREG, (u32)val);
-+		}
- 	}
- 
- 	do  {
-@@ -1210,18 +1270,32 @@ static int dma_chan_pause(struct dma_chan *dchan)
- /* Called in chan locked context */
- static inline void axi_chan_resume(struct axi_dma_chan *chan)
- {
--	u32 val;
--
--	if (chan->chip->dw->hdata->reg_map_8_channels) {
--		val = axi_dma_ioread32(chan->chip, DMAC_CHEN);
--		val &= ~(BIT(chan->id) << DMAC_CHAN_SUSP_SHIFT);
--		val |=  (BIT(chan->id) << DMAC_CHAN_SUSP_WE_SHIFT);
--		axi_dma_iowrite32(chan->chip, DMAC_CHEN, val);
-+	u64 val;
-+
-+	if (chan->chip->dw->hdata->nr_channels >= DMAC_CHAN_16) {
-+		val = axi_dma_ioread64(chan->chip, DMAC_CHSUSPREG);
-+		if (chan->id >= DMAC_CHAN_16) {
-+			val &= ~((u64)(BIT(chan->id) >> DMAC_CHAN_16)
-+				<< (DMAC_CHAN_SUSP2_SHIFT + DMAC_CHAN_BLOCK_SHIFT));
-+			val |=  ((u64)(BIT(chan->id) >> DMAC_CHAN_16)
-+				<< (DMAC_CHAN_SUSP2_WE_SHIFT + DMAC_CHAN_BLOCK_SHIFT));
-+		} else {
-+			val &= ~(BIT(chan->id) << DMAC_CHAN_SUSP2_SHIFT);
-+			val |=  (BIT(chan->id) << DMAC_CHAN_SUSP2_WE_SHIFT);
-+		}
-+			axi_dma_iowrite64(chan->chip, DMAC_CHSUSPREG, val);
- 	} else {
--		val = axi_dma_ioread32(chan->chip, DMAC_CHSUSPREG);
--		val &= ~(BIT(chan->id) << DMAC_CHAN_SUSP2_SHIFT);
--		val |=  (BIT(chan->id) << DMAC_CHAN_SUSP2_WE_SHIFT);
--		axi_dma_iowrite32(chan->chip, DMAC_CHSUSPREG, val);
-+		if (chan->chip->dw->hdata->reg_map_8_channels) {
-+			val = axi_dma_ioread32(chan->chip, DMAC_CHEN);
-+			val &= ~(BIT(chan->id) << DMAC_CHAN_SUSP_SHIFT);
-+			val |=  (BIT(chan->id) << DMAC_CHAN_SUSP_WE_SHIFT);
-+			axi_dma_iowrite32(chan->chip, DMAC_CHEN, (u32)val);
-+		} else {
-+			val = axi_dma_ioread32(chan->chip, DMAC_CHSUSPREG);
-+			val &= ~(BIT(chan->id) << DMAC_CHAN_SUSP2_SHIFT);
-+			val |=  (BIT(chan->id) << DMAC_CHAN_SUSP2_WE_SHIFT);
-+			axi_dma_iowrite32(chan->chip, DMAC_CHSUSPREG, (u32)val);
-+		}
- 	}
- 
- 	chan->is_paused = false;
-diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
-index eb267cb24f67..454904d99654 100644
---- a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
-+++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
-@@ -18,7 +18,7 @@
- 
- #include "../virt-dma.h"
- 
--#define DMAC_MAX_CHANNELS	16
-+#define DMAC_MAX_CHANNELS	32
- #define DMAC_MAX_MASTERS	2
- #define DMAC_MAX_BLK_SIZE	0x200000
- 
-@@ -222,6 +222,10 @@ static inline struct axi_dma_chan *dchan_to_axi_dma_chan(struct dma_chan *dchan)
- /* DMAC_CHEN2 */
- #define DMAC_CHAN_EN2_WE_SHIFT		16
- 
-+/* DMAC CHAN BLOCKS */
-+#define DMAC_CHAN_BLOCK_SHIFT		32
-+#define DMAC_CHAN_16			16
-+
- /* DMAC_CHSUSP */
- #define DMAC_CHAN_SUSP2_SHIFT		0
- #define DMAC_CHAN_SUSP2_WE_SHIFT	16
+Some hardware firewall controllers such as the RIFSC implemented on
+STM32MP2x platforms may require to take ownership of a resource before
+being able to use it, hence the requirement for firewall services to
+take/release the ownership of such resources.
+
+On the other hand, hardware firewall configurations are becoming
+more and more complex. These mecanisms prevent platform crashes
+or other firewall-related incoveniences by denying access to some
+resources.
+
+The stm32 firewall framework offers an API that is defined in
+firewall controllers drivers to best fit the specificity of each
+firewall.
+
+For every peripherals protected by either the ETZPC or the RIFSC, the
+firewall framework checks the firewall controlelr registers to see if
+the peripheral's access is granted to the Linux kernel. If not, the
+peripheral is configured as secure, the node is marked populated,
+so that the driver is not probed for that device.
+
+The firewall framework relies on the access-controller device tree
+binding. It is used by peripherals to reference a domain access
+controller. In this case a firewall controller. The bus uses the ID
+referenced by the access-controller property to know where to look
+in the firewall to get the security configuration for the peripheral.
+This allows a device tree description rather than a hardcoded peripheral
+table in the bus driver.
+
+The STM32 ETZPC device is responsible for filtering accesses based on
+security level, or co-processor isolation for any resource connected
+to it.
+
+The RIFSC is responsible for filtering accesses based on Compartment
+ID / security level / privilege level for any resource connected to
+it.
+
+STM32MP13/15/25 SoC device tree files are updated in this series to
+implement this mecanism.
+
+Changes in V6:
+	- Rename access-controller to access-controllers
+	- Remove access-controller-provider
+	- Update device trees and other bindings accordingly
+	- Rework ETZPC/RIFSC bindings to define what access-controllers
+	  cells contain inside #access-controller-cells
+	- Some other minor fixes
+
+Changes in V5:
+	- Integrate and rework the "feature-domains" binding patch in
+	  this patchset. The binding is renamed to "access-controller"
+	- Rename every feature-domain* reference to access-control*
+	  ones
+	- Correct loop bug and missing select STM32_FIREWALL in 32-bit
+	  platform Kconfig
+	
+
+Changes in V4:
+	- Fix typo in commit message and YAML check errors in
+	  "dt-bindings: Document common device controller bindings"
+	  Note: This patch should be ignored as stated in the cover
+	  letter. I've done this to avoid errors on this series of
+	  patch
+	- Correct code syntax/style issues reported by Simon Horman
+	- Added Jonathan's tag for IIO on the treewide patch
+
+Changes in V3:
+
+	Change incorrect ordering for bindings commits leading
+	to an error while running
+	"make DT_CHECKER_FLAGS=-m dt_binding_check"
+
+Changes in V2:
+
+	generic:
+		- Add fw_devlink dependency for "feature-domains"
+		  property.
+
+	bindings:
+		- Corrected YAMLS errors highlighted by Rob's robot
+		- Firewall controllers YAMLs no longer define the
+		  maxItems for the "feature-domains" property
+		- Renamed st,stm32-rifsc.yaml to
+		  st,stm32mp25-rifsc.yaml
+		- Fix examples in YAML files
+		- Change feature-domains maxItems to 2 in firewall
+		  consumer files as there should not be more than
+		  2 entries for now
+		- Declare "feature-domain-names" as an optional
+		  property for firewall controllers child nodes.
+		- Add missing "feature-domains" property declaration
+		  in bosch,m_can.yaml and st,stm32-cryp.yaml files
+
+	firewall framework:
+		- Support multiple entries for "feature-domains"
+		  property
+		- Better handle the device-tree parsing using
+		  phandle+args APIs
+		- Remove "resource firewall" type
+		- Add a field for the name of the firewall entry
+		- Fix licenses
+	
+	RIFSC:
+		- Add controller name
+		- Driver is now a module_platform_driver
+		- Fix license
+
+	ETZPC:
+		- Add controller name
+		- Driver is now a module_platform_driver
+		- Fix license
+
+	Device trees:
+		- Fix rifsc node name
+		- Move the "ranges" property under the
+		  "feature-domains" one
+Gatien Chevallier (10):
+  dt-bindings: treewide: add access-controllers description
+  dt-bindings: bus: document RIFSC
+  dt-bindings: bus: document ETZPC
+  firewall: introduce stm32_firewall framework
+  of: property: fw_devlink: Add support for "access-controller"
+  bus: rifsc: introduce RIFSC firewall controller driver
+  arm64: dts: st: add RIFSC as an access controller for STM32MP25x
+    boards
+  bus: etzpc: introduce ETZPC firewall controller driver
+  ARM: dts: stm32: add ETZPC as a system bus for STM32MP15x boards
+  ARM: dts: stm32: add ETZPC as a system bus for STM32MP13x boards
+
+Oleksii Moisieiev (1):
+  dt-bindings: document generic access controllers
+
+ .../access-controllers.yaml                   |   84 +
+ .../bindings/bus/st,stm32-etzpc.yaml          |   87 +
+ .../bindings/bus/st,stm32mp25-rifsc.yaml      |   96 +
+ .../bindings/crypto/st,stm32-cryp.yaml        |    4 +
+ .../bindings/crypto/st,stm32-hash.yaml        |    4 +
+ .../devicetree/bindings/dma/st,stm32-dma.yaml |    4 +
+ .../bindings/dma/st,stm32-dmamux.yaml         |    4 +
+ .../devicetree/bindings/i2c/st,stm32-i2c.yaml |    4 +
+ .../bindings/iio/adc/st,stm32-adc.yaml        |    4 +
+ .../bindings/iio/adc/st,stm32-dfsdm-adc.yaml  |    4 +
+ .../bindings/iio/dac/st,stm32-dac.yaml        |    4 +
+ .../bindings/media/cec/st,stm32-cec.yaml      |    4 +
+ .../bindings/media/st,stm32-dcmi.yaml         |    4 +
+ .../memory-controllers/st,stm32-fmc2-ebi.yaml |    4 +
+ .../bindings/mfd/st,stm32-lptimer.yaml        |    4 +
+ .../bindings/mfd/st,stm32-timers.yaml         |    4 +
+ .../devicetree/bindings/mmc/arm,pl18x.yaml    |    4 +
+ .../bindings/net/can/bosch,m_can.yaml         |    4 +
+ .../devicetree/bindings/net/stm32-dwmac.yaml  |    4 +
+ .../bindings/phy/phy-stm32-usbphyc.yaml       |    4 +
+ .../bindings/regulator/st,stm32-vrefbuf.yaml  |    4 +
+ .../devicetree/bindings/rng/st,stm32-rng.yaml |    4 +
+ .../bindings/serial/st,stm32-uart.yaml        |    4 +
+ .../bindings/sound/st,stm32-i2s.yaml          |    4 +
+ .../bindings/sound/st,stm32-sai.yaml          |    4 +
+ .../bindings/sound/st,stm32-spdifrx.yaml      |    4 +
+ .../bindings/spi/st,stm32-qspi.yaml           |    4 +
+ .../devicetree/bindings/spi/st,stm32-spi.yaml |    4 +
+ .../devicetree/bindings/usb/dwc2.yaml         |    4 +
+ MAINTAINERS                                   |    7 +
+ arch/arm/boot/dts/st/stm32mp131.dtsi          | 1025 +++---
+ arch/arm/boot/dts/st/stm32mp133.dtsi          |   51 +-
+ arch/arm/boot/dts/st/stm32mp13xc.dtsi         |   19 +-
+ arch/arm/boot/dts/st/stm32mp13xf.dtsi         |   19 +-
+ arch/arm/boot/dts/st/stm32mp151.dtsi          | 2756 +++++++++--------
+ arch/arm/boot/dts/st/stm32mp153.dtsi          |   52 +-
+ arch/arm/boot/dts/st/stm32mp15xc.dtsi         |   19 +-
+ arch/arm/mach-stm32/Kconfig                   |    1 +
+ arch/arm64/Kconfig.platforms                  |    1 +
+ arch/arm64/boot/dts/st/stm32mp251.dtsi        |    6 +-
+ drivers/bus/Kconfig                           |    9 +
+ drivers/bus/Makefile                          |    1 +
+ drivers/bus/stm32_etzpc.c                     |  141 +
+ drivers/bus/stm32_firewall.c                  |  294 ++
+ drivers/bus/stm32_firewall.h                  |   83 +
+ drivers/bus/stm32_rifsc.c                     |  252 ++
+ drivers/of/property.c                         |    2 +
+ include/linux/bus/stm32_firewall_device.h     |  141 +
+ 48 files changed, 3331 insertions(+), 1919 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/access-controllers/access-controllers.yaml
+ create mode 100644 Documentation/devicetree/bindings/bus/st,stm32-etzpc.yaml
+ create mode 100644 Documentation/devicetree/bindings/bus/st,stm32mp25-rifsc.yaml
+ create mode 100644 drivers/bus/stm32_etzpc.c
+ create mode 100644 drivers/bus/stm32_firewall.c
+ create mode 100644 drivers/bus/stm32_firewall.h
+ create mode 100644 drivers/bus/stm32_rifsc.c
+ create mode 100644 include/linux/bus/stm32_firewall_device.h
+
 -- 
-2.30.2
+2.35.3
 

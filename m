@@ -2,81 +2,100 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 10D7C7C4BA4
-	for <lists+dmaengine@lfdr.de>; Wed, 11 Oct 2023 09:23:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DC277C4CB1
+	for <lists+dmaengine@lfdr.de>; Wed, 11 Oct 2023 10:12:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344424AbjJKHX5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 11 Oct 2023 03:23:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50166 "EHLO
+        id S230104AbjJKIMb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 11 Oct 2023 04:12:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344185AbjJKHX5 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 11 Oct 2023 03:23:57 -0400
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFCB58F;
-        Wed, 11 Oct 2023 00:23:54 -0700 (PDT)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D703AC0008;
-        Wed, 11 Oct 2023 07:23:51 +0000 (UTC)
+        with ESMTP id S229957AbjJKIMb (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 11 Oct 2023 04:12:31 -0400
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::228])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6CAF98;
+        Wed, 11 Oct 2023 01:12:28 -0700 (PDT)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id AB0DA1BF20C;
+        Wed, 11 Oct 2023 08:12:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1697009033;
+        t=1697011947;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XlFUffT8jSN5TarB9jGsVqhpqh8YeMvJSMG5EKL3JgU=;
-        b=RYAJ1oVhzqBvHFnA3CVNnRChMl54EPKmD7dzYTAcz4XLT4A+1uSibtl1tzf/9CJzXnBF85
-        2x8KA2+0Na5fYfYNOmPV2W9sp+TByw/IWfRFWUMh3KmXSF8sP5P6qqAMaN7BwZLOsCfxop
-        anSgqdLU/bipIC7cn6y1wulXd2Tbh1djf1cR8Erc08pXp4VTXt5v08CO6LR7U8YQiHRXv9
-        BLKrHjBtdseH3uJD1frdL7EI3LxElb6bd+iwiuIHH3kIgZ0Ruj/xj9nTM1csasV+d3a2/q
-        GX4WvOf3gDRsx0uWTbNJwhDEOf2g3qTBfLk+tMAQPYByGAirO7mi1d8ZDH3/Zw==
-Date:   Wed, 11 Oct 2023 09:23:50 +0200
-From:   =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>
-To:     Manivannan Sadhasivam <mani@kernel.org>
-Cc:     Cai Huoqing <cai.huoqing@linux.dev>,
+         content-transfer-encoding:content-transfer-encoding;
+        bh=4HMH1lD+WUg/h8euX0dESyMJIfvuUaMHpH1iRNCMCEw=;
+        b=N7n/BlTydq1oNGaSomuVSJYjiApWa2wHro7DBGhmj89qhNZj9e7cTxXS5JgZSwcwfbxqD8
+        n0STB1OWbeBYUNoy29G0stmkriw2RA/muu0763YmpfsgZnxTb8aheYS5M5n7dST4X3/c8L
+        pBuxRjFQd/KPU4eNuuud3V5Cear3sScaj9Y5vBcK2bd3VYtp7jNar4egea1fLJy+JVStHf
+        AF3LpPQRtp10dsZ8fetqdyb+ZXrsmnfL7/mcZ7BgUHM8QisbV7NsWs+ym+Ghcube/MykS/
+        WmH8PvumznGXp2HYT2JIyIlcEA2edKfKi/+Wl4MuJZ63T9extKnne8o+qKCw7A==
+From:   Kory Maincent <kory.maincent@bootlin.com>
+Subject: [PATCH v3 0/6] Fix support of dw-edma HDMA NATIVE IP in remote
+ setup
+Date:   Wed, 11 Oct 2023 10:11:39 +0200
+Message-Id: <20231011-b4-feature_hdma_mainline-v3-0-24ee0c979c6f@bootlin.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIALtYJmUC/x3MSwqDMBRG4a3IHRswxtTSrYhIHn/qBY2S2CKIe
+ 2/o8Bucc1FGYmR6VRclfDnzFgtUXZGbTXxDsC+mtmmVbKQUthMB5vgkTLNfzbQajgtHCPtwug9
+ PKKs9lXxPCHz+18N43z858518agAAAA==
+To:     Manivannan Sadhasivam <mani@kernel.org>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Serge Semin <fancer.lancer@gmail.com>,
         Vinod Koul <vkoul@kernel.org>,
-        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        Cai Huoqing <cai.huoqing@linux.dev>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Herve Codina <herve.codina@bootlin.com>
-Subject: Re: [PATCH v2 2/5] dmaengine: dw-edma: Typos fixes
-Message-ID: <20231011092350.18049672@kmaincent-XPS-13-7390>
-In-Reply-To: <20231010145906.GL4884@thinkpad>
-References: <20231002131749.2977952-1-kory.maincent@bootlin.com>
-        <20231002131749.2977952-3-kory.maincent@bootlin.com>
-        <20231010145906.GL4884@thinkpad>
-Organization: bootlin
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        Herve Codina <herve.codina@bootlin.com>,
+        Kory Maincent <kory.maincent@bootlin.com>,
+        Manivannan Sadhasivam <mani@kernel.org>
+X-Mailer: b4 0.12.3
 X-GND-Sasl: kory.maincent@bootlin.com
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, 10 Oct 2023 20:29:06 +0530
-Manivannan Sadhasivam <mani@kernel.org> wrote:
+This patch series fix the support of dw-edma HDMA NATIVE IP.
+I can only test it in remote HDMA IP setup with single dma transfer, but
+with these fixes it works properly.
 
-> On Mon, Oct 02, 2023 at 03:17:46PM +0200, K=C3=B6ry Maincent wrote:
-> > From: Kory Maincent <kory.maincent@bootlin.com>
-> >=20
-> > Fix "HDMA_V0_REMOTEL_STOP_INT_EN" typo error.
-> > Fix "HDMA_V0_LOCAL_STOP_INT_EN" to "HDMA_V0_LOCAL_ABORT_INT_EN" as the =
-STOP
-> > bit is already set in the same line.
-> >  =20
->=20
-> You should split this into two patches. First one is a typo and is harmle=
-ss,
-> but the second is a _bug_.
+Few fixes has also been added for eDMA version. Similarly to HDMA I have
+tested only eDMA in remote setup.
 
-Thanks for your review.
-Ok I will do so.
-Serge if it is ok for you I will keep your reviewed by on the two separate
-patches.
+Changes in v2:
+- Update comments and fix typos.
+- Removed patches that tackle hypothetical bug and then were not pertinent.
+- Add the similar HDMA race condition in remote setup fix to eDMA IP driver.
+
+Changes in v3:
+- Fix comment style.
+- Split a patch in two to differ bug fix and simple harmless typo.
+
+Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+---
+Kory Maincent (6):
+      dmaengine: dw-edma: Fix the ch_count hdma callback
+      dmaengine: dw-edma: Fix wrong interrupt bit set
+      dmaengine: dw-edma: Typo fix
+      dmaengine: dw-edma: Add HDMA remote interrupt configuration
+      dmaengine: dw-edma: HDMA: Add sync read before starting the DMA transfer in remote setup
+      dmaengine: dw-edma: eDMA: Add sync read before starting the DMA transfer in remote setup
+
+ drivers/dma/dw-edma/dw-edma-v0-core.c | 17 +++++++++++++++
+ drivers/dma/dw-edma/dw-hdma-v0-core.c | 39 +++++++++++++++++++++++------------
+ drivers/dma/dw-edma/dw-hdma-v0-regs.h |  2 +-
+ 3 files changed, 44 insertions(+), 14 deletions(-)
+---
+base-commit: 8bf914570650ec5858e18554d70d2838cef01de1
+change-id: 20231011-b4-feature_hdma_mainline-b6c57f8e3b5d
+
+Best regards,
+-- 
+Köry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+

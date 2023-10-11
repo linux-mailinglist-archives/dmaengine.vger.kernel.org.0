@@ -2,53 +2,53 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2316C7C5088
-	for <lists+dmaengine@lfdr.de>; Wed, 11 Oct 2023 12:50:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 131E17C508F
+	for <lists+dmaengine@lfdr.de>; Wed, 11 Oct 2023 12:51:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231610AbjJKKuV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 11 Oct 2023 06:50:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49722 "EHLO
+        id S231934AbjJKKvj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 11 Oct 2023 06:51:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229938AbjJKKuU (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 11 Oct 2023 06:50:20 -0400
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CFB594;
-        Wed, 11 Oct 2023 03:50:18 -0700 (PDT)
-Received: by mail-lf1-x12d.google.com with SMTP id 2adb3069b0e04-50435a9f800so8722136e87.2;
-        Wed, 11 Oct 2023 03:50:18 -0700 (PDT)
+        with ESMTP id S229938AbjJKKve (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 11 Oct 2023 06:51:34 -0400
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E5FD98;
+        Wed, 11 Oct 2023 03:51:33 -0700 (PDT)
+Received: by mail-lf1-x129.google.com with SMTP id 2adb3069b0e04-50435a9f800so8723245e87.2;
+        Wed, 11 Oct 2023 03:51:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697021417; x=1697626217; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1697021491; x=1697626291; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZE2zpzto2GbRl08daqLzWm48efnAm6lrfofQF2dIJkw=;
-        b=AbnunS41VShV/Xz89QCc4Np6eO/kkKpANue0d6+O75tfgf+yU5Kv3IUtpYLV9Aw8hu
-         wbvKBjvw2aLgUUnnS4C6iPfc3wECOx2tHs+L8sKQBnIZQI7fD0u6uFuGHLAk6WF0Fm2h
-         aGZvkdd1VXT07RWoQgeL3/1rzJfmBuLNCpmULNWbalf3zxzpPyiO6CxK8nREzeFcB83i
-         S3C34Af9re1SZv9Xes/MHFZU1S3S+WvWm8E20ksdMPXHPvuFSzbKOk322lL7l/xR0M6U
-         Rkyd4C/sITJdhTYzXAPgE89CMt9kXbATvmRdRmBtfCFpamjNRCgmeg9zUt4fwV5bQTa6
-         6ywg==
+        bh=ShGf3xWZxL7u0sSfNkL2qhOkBWoTr/U461AtsQmQLsI=;
+        b=IkYbRwfpNrAqKjMikTYW8hik6loecCpGmdFCxlhEN4gKH0D/NhCF35XDwynRoSma9o
+         4Vr+q0lhT5+qvZGOSxxKmYEOjBk3lWYEXyYXL7KJZPwwyrhIkayIVg7HP/At2izsLsmU
+         rBJ9h57VYoeXYidqgMz0GgujfIHei4aHzSsBwpshA43NdC6+1okP55w1v/h833Jn3JZe
+         KGzdE3BDFZXMk7NrU/ziCRQ6jYZ6t4kV24hKbLLPGHrY//LK9TwlzfJMC9fCAefOaZL7
+         9e8JBb96PHBACcLbUb4G2j2RwRWlnOyGRkzUY02Pww53scarM3pqAuK5DYkoLRiwGn+D
+         O6zQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697021417; x=1697626217;
+        d=1e100.net; s=20230601; t=1697021491; x=1697626291;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZE2zpzto2GbRl08daqLzWm48efnAm6lrfofQF2dIJkw=;
-        b=F53l/Mzv8H2o7pP141fMeXTGhctg/OR5h/d2LOR+naeRbvEjEI9MyP3rfi1cIApHMz
-         WoMk3WHBw3mDi3wYP1NLSOPP4kr7y7yg361gZbN65d+rsYde6MktsL/Lu0+7v5w8Wsbu
-         XRIEhP/Vl/B6qMDHuYWBh46msqfRVqA4I4PdQ49e7uo4wiwbv0TmAdakHKseWeA9CCc7
-         f1Ww8f+B9gw82Cbrhn5eMm/TD64g5gTYGpUafuCXJAwRUWHi/tv3vZgbfiDTbR311Q4/
-         CHUnpCfxG4H6quq4AnidSr3wr/XGCf9nwOMpam3FxpNmVQX/uyLf85s+gbRK7pX5q1fq
-         lorQ==
-X-Gm-Message-State: AOJu0Yw05iZ8XvZdnkebldoA4otjtN83b1ctwdrzz6AnNJ8B04flkjyY
-        BV5RQXK/efFl4ftKj8bzR1o=
-X-Google-Smtp-Source: AGHT+IHEb2DixA8ZWXqnbsIEdObzFY47/WOMxB3AENZcKDTvSRUEpL/NHQ+KOQMqBNlfUET4KQ3mZQ==
-X-Received: by 2002:ac2:510b:0:b0:500:94aa:739c with SMTP id q11-20020ac2510b000000b0050094aa739cmr15842283lfb.61.1697021416192;
-        Wed, 11 Oct 2023 03:50:16 -0700 (PDT)
+        bh=ShGf3xWZxL7u0sSfNkL2qhOkBWoTr/U461AtsQmQLsI=;
+        b=JMRjg4ZpAu2CDWnU1Z1TQsK/xRC1klTtLWEFZTNbrQmIVtrPUObkFoHt+bme84+qqm
+         R5wIQ92lzAGpSyO60Ta+fbAj1H1kUxwvXzAWs+jYlNB0ed6iykZKz6TtgaCpF+MDuJTF
+         8QBX58RXZHVe+jlhLTmCHZsE6KZKQrYzHdbcEGLZ5h55LlWjsy7RL4hvLWJ9Gnm9u66q
+         vP9fJof482j/HUOpwMzSC7faUpFhimqIqaL3psv5i4577xLUrrUkpNa0PKYnZniX2NRj
+         Q4k4ZFbS++P04ADyRazJ8cm1JogIbtn6LIzdKsBuP6lEjz75Huo3xL7B+6cbvg5tnCEZ
+         W3BQ==
+X-Gm-Message-State: AOJu0YwOxResqTwbxNqX3H4GB0StIzUpQP4Un1mj3LRK7InX+OriALgg
+        9nj3ov8c2b9rKqLC52ydw4c=
+X-Google-Smtp-Source: AGHT+IH2nfOeFbPn9InT7+ExjXjVAIkXx7SMWRZK2sgYZeeCXsnyc6hx/W6r2oITFhenTPbCXiaX5w==
+X-Received: by 2002:a05:6512:3da8:b0:4ff:7f7f:22e7 with SMTP id k40-20020a0565123da800b004ff7f7f22e7mr20316256lfv.17.1697021491108;
+        Wed, 11 Oct 2023 03:51:31 -0700 (PDT)
 Received: from mobilestation ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id j20-20020a19f514000000b00503098e1748sm2214383lfb.308.2023.10.11.03.50.15
+        by smtp.gmail.com with ESMTPSA id l21-20020ac24315000000b00500a4679148sm2215812lfh.20.2023.10.11.03.51.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Oct 2023 03:50:15 -0700 (PDT)
-Date:   Wed, 11 Oct 2023 13:50:13 +0300
+        Wed, 11 Oct 2023 03:51:30 -0700 (PDT)
+Date:   Wed, 11 Oct 2023 13:51:28 +0300
 From:   Serge Semin <fancer.lancer@gmail.com>
 To:     Kory Maincent <kory.maincent@bootlin.com>
 Cc:     Manivannan Sadhasivam <mani@kernel.org>,
@@ -58,16 +58,15 @@ Cc:     Manivannan Sadhasivam <mani@kernel.org>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
         Herve Codina <herve.codina@bootlin.com>
-Subject: Re: [PATCH v3 5/6] dmaengine: dw-edma: HDMA: Add sync read before
+Subject: Re: [PATCH v3 6/6] dmaengine: dw-edma: eDMA: Add sync read before
  starting the DMA transfer in remote setup
-Message-ID: <o4h5rrfsfu5sipovexqrjl3jatfkh6ht3fycwv5vzh6bhxdygj@3jy3ns7ciglj>
+Message-ID: <ikc5snu4zgrfvo7ecelgu3mlqknvxoahmisqwqmmzph6bx4tos@e6yzx7kxmpk5>
 References: <20231011-b4-feature_hdma_mainline-v3-0-24ee0c979c6f@bootlin.com>
- <20231011-b4-feature_hdma_mainline-v3-5-24ee0c979c6f@bootlin.com>
- <6adlujxc4cnrxbl5fbqpg5fishq7jvk6w6chgjyktbwcxd2dvi@w4ayo5ooh7fq>
+ <20231011-b4-feature_hdma_mainline-v3-6-24ee0c979c6f@bootlin.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6adlujxc4cnrxbl5fbqpg5fishq7jvk6w6chgjyktbwcxd2dvi@w4ayo5ooh7fq>
+In-Reply-To: <20231011-b4-feature_hdma_mainline-v3-6-24ee0c979c6f@bootlin.com>
 X-Spam-Status: No, score=1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_BLOCKED,RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS
@@ -79,77 +78,70 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, Oct 11, 2023 at 01:47:49PM +0300, Serge Semin wrote:
-> On Wed, Oct 11, 2023 at 10:11:44AM +0200, Kory Maincent wrote:
-> > The Linked list element and pointer are not stored in the same memory as
-> > the HDMA controller register. If the doorbell register is toggled before
-> > the full write of the linked list a race condition error can appears.
-> 
-> s/can appears/may occur
+On Wed, Oct 11, 2023 at 10:11:45AM +0200, Kory Maincent wrote:
+> The Linked list element and pointer are not stored in the same memory as
+> the eDMA controller register. If the doorbell register is toggled before
+> the full write of the linked list a race condition error can appears.
 
-It should have been: s/can appears/will occur
+s/can appears/will occur
+
+> In remote setup we can only use a readl to the memory to assured the full
+
+s/assured/assure
+
+> write has occurred.
+> 
+> Fixes: 7e4b8a4fbe2c ("dmaengine: Add Synopsys eDMA IP version 0 support")
+> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+
+Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
 
 -Serge(y)
 
+> ---
 > 
-> > In remote setup we can only use a readl to the memory to assured the full
-> > write has occurred.
+> Changes in v2:
+> - New patch
+> ---
+>  drivers/dma/dw-edma/dw-edma-v0-core.c | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
 > 
-> s/assured/assure
+> diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.c b/drivers/dma/dw-edma/dw-edma-v0-core.c
+> index b38786f0ad79..6245b720fbfe 100644
+> --- a/drivers/dma/dw-edma/dw-edma-v0-core.c
+> +++ b/drivers/dma/dw-edma/dw-edma-v0-core.c
+> @@ -346,6 +346,20 @@ static void dw_edma_v0_core_write_chunk(struct dw_edma_chunk *chunk)
+>  	dw_edma_v0_write_ll_link(chunk, i, control, chunk->ll_region.paddr);
+>  }
+>  
+> +static void dw_edma_v0_sync_ll_data(struct dw_edma_chunk *chunk)
+> +{
+> +	/*
+> +	 * In case of remote eDMA engine setup, the DW PCIe RP/EP internals
+> +	 * configuration registers and Application memory are normally accessed
+> +	 * over different buses. Ensure LL-data reaches the memory before the
+> +	 * doorbell register is toggled by issuing the dummy-read from the remote
+> +	 * LL memory in a hope that the posted MRd TLP will return only after the
+> +	 * last MWr TLP is completed
+> +	 */
+> +	if (!(chunk->chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL))
+> +		readl(chunk->ll_region.vaddr.io);
+> +}
+> +
+>  static void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
+>  {
+>  	struct dw_edma_chan *chan = chunk->chan;
+> @@ -412,6 +426,9 @@ static void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
+>  		SET_CH_32(dw, chan->dir, chan->id, llp.msb,
+>  			  upper_32_bits(chunk->ll_region.paddr));
+>  	}
+> +
+> +	dw_edma_v0_sync_ll_data(chunk);
+> +
+>  	/* Doorbell */
+>  	SET_RW_32(dw, chan->dir, doorbell,
+>  		  FIELD_PREP(EDMA_V0_DOORBELL_CH_MASK, chan->id));
 > 
-> > 
-> > Fixes: e74c39573d35 ("dmaengine: dw-edma: Add support for native HDMA")
-> > Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+> -- 
+> 2.25.1
 > 
-> Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
-> 
-> -Serge(y)
-> 
-> > ---
-> > 
-> > Changes in v2:
-> > - Move the sync read in a function.
-> > - Add commments
-> > ---
-> >  drivers/dma/dw-edma/dw-hdma-v0-core.c | 17 +++++++++++++++++
-> >  1 file changed, 17 insertions(+)
-> > 
-> > diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> > index 04b0bcb6ded9..13b6aec6a6de 100644
-> > --- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> > +++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> > @@ -222,6 +222,20 @@ static void dw_hdma_v0_core_write_chunk(struct dw_edma_chunk *chunk)
-> >  	dw_hdma_v0_write_ll_link(chunk, i, control, chunk->ll_region.paddr);
-> >  }
-> >  
-> > +static void dw_hdma_v0_sync_ll_data(struct dw_edma_chunk *chunk)
-> > +{
-> > +	/*
-> > +	 * In case of remote HDMA engine setup, the DW PCIe RP/EP internals
-> > +	 * configuration registers and Application memory are normally accessed
-> > +	 * over different buses. Ensure LL-data reaches the memory before the
-> > +	 * doorbell register is toggled by issuing the dummy-read from the remote
-> > +	 * LL memory in a hope that the posted MRd TLP will return only after the
-> > +	 * last MWr TLP is completed
-> > +	 */
-> > +	if (!(chunk->chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL))
-> > +		readl(chunk->ll_region.vaddr.io);
-> > +}
-> > +
-> >  static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
-> >  {
-> >  	struct dw_edma_chan *chan = chunk->chan;
-> > @@ -252,6 +266,9 @@ static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
-> >  	/* Set consumer cycle */
-> >  	SET_CH_32(dw, chan->dir, chan->id, cycle_sync,
-> >  		  HDMA_V0_CONSUMER_CYCLE_STAT | HDMA_V0_CONSUMER_CYCLE_BIT);
-> > +
-> > +	dw_hdma_v0_sync_ll_data(chunk);
-> > +
-> >  	/* Doorbell */
-> >  	SET_CH_32(dw, chan->dir, chan->id, doorbell, HDMA_V0_DOORBELL_START);
-> >  }
-> > 
-> > -- 
-> > 2.25.1
-> > 

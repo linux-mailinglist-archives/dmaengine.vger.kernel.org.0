@@ -2,43 +2,41 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3588A7C5688
+	by mail.lfdr.de (Postfix) with ESMTP id 8EA4B7C5689
 	for <lists+dmaengine@lfdr.de>; Wed, 11 Oct 2023 16:17:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234952AbjJKORW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        id S1346421AbjJKORW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
         Wed, 11 Oct 2023 10:17:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38254 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235063AbjJKORU (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 11 Oct 2023 10:17:20 -0400
+        with ESMTP id S235057AbjJKORV (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 11 Oct 2023 10:17:21 -0400
 Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::223])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5513C90;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25004B6;
         Wed, 11 Oct 2023 07:17:18 -0700 (PDT)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D50FA60003;
-        Wed, 11 Oct 2023 14:17:14 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 7ED2B60009;
+        Wed, 11 Oct 2023 14:17:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1697033836;
+        t=1697033837;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=e5QGQHyYORanbuZrCZozt9X9hGMoQ81zeXHxbNIo+JY=;
-        b=d3/E4RkAKlTgf1CAFOLdIGxjx3kHWQz1q3TxLFM1D/dD7oi5iBMIZeWX4OzSZK5TwMuNhj
-        YI7NEXQ8OjvplUFPAUwjnkY7o3D2Nc9JXkk2K/MPNF/ASHkCFeGGzyk48klgt/kJW0bPaB
-        yPMPBt1IIbwovB/xV2C+kxuEi+VUXrlf4yGNce1IP+MMSQtosQD23+VuMVylse7gcj87i+
-        O3c2qS8eMXWY6UnUlulVxpwd7rj2aOs8G+ORz96/zDG84+2FyLBnyB6QGfK1jlJdBmaCxG
-        8x1OrwezwTm7y/BPtRXewsarso5l+PsIr8sOoZW1O2b4gMAzJ1iJnV8KbkvB0A==
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=MG/EpR8bVcQceln2f1UmgAvAjO7ip8LLXAJEWchyMuQ=;
+        b=omBzhJGiXMkoyMhghh9lOAaUVjCKnPJko9Xe2tYr5QUQn9gEm89glW5nCgV4M4Kf+fjdAj
+        2MNQ+dVZPr1bBF+EEFw6qK0tW0Zq+S/WgvqpQlwYQ6qZb3IQA9q8GWLe8LELreHjG2Xvs8
+        LAimgtDlpvBLQz5/RR71tue0F+t+GvuHWQsrklIzBFIKBmK8XP8MCLNCik8+1hRpK6otYR
+        nQrgmYusvkf596qSU9q0Y/lojUUpvcnKjYY7tVABab2KE/ris8OvlHhOjbyI3UHhJtyywT
+        ZAyHI2N5oDVxBacZ+Rscc2nk/Occo0q7lq4lRFK7TXJ/+VmLmG68ZYyG/rCJbA==
 From:   Kory Maincent <kory.maincent@bootlin.com>
-Subject: [PATCH v4 0/6] Fix support of dw-edma HDMA NATIVE IP in remote
- setup
-Date:   Wed, 11 Oct 2023 16:16:56 +0200
-Message-Id: <20231011-b4-feature_hdma_mainline-v4-0-43d417b93138@bootlin.com>
+Date:   Wed, 11 Oct 2023 16:16:57 +0200
+Subject: [PATCH v4 1/6] dmaengine: dw-edma: Fix the ch_count hdma callback
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAFiuJmUC/42NWw6CMBREt0LutzWl5SF8uQ9DSFtu5SbSmrYSD
- WHvVlbg55nJnNkgYiCM0BcbBFwpkncZqlMBZlbujoymzCC4kCUvS6YrZlGlV8BxnhY1Lorcgxw
- y3Zi6tReUup4gz58BLb0P9W3IPFNMPnyOp1X+0j+kq2SciQqRm67tTGOv2vuUq7PxCwz7vn8Bn
- BIlb8IAAAA=
+Content-Transfer-Encoding: 7bit
+Message-Id: <20231011-b4-feature_hdma_mainline-v4-1-43d417b93138@bootlin.com>
+References: <20231011-b4-feature_hdma_mainline-v4-0-43d417b93138@bootlin.com>
+In-Reply-To: <20231011-b4-feature_hdma_mainline-v4-0-43d417b93138@bootlin.com>
 To:     Manivannan Sadhasivam <mani@kernel.org>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Serge Semin <fancer.lancer@gmail.com>,
@@ -61,47 +59,63 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-This patch series fix the support of dw-edma HDMA NATIVE IP.
-I can only test it in remote HDMA IP setup with single dma transfer, but
-with these fixes it works properly.
+The current check of ch_en enabled to know the maximum number of available
+hardware channels is wrong as it check the number of ch_en register set
+but all of them are unset at probe. This register is set at the
+dw_hdma_v0_core_start function which is run lately before a DMA transfer.
 
-Few fixes has also been added for eDMA version. Similarly to HDMA I have
-tested only eDMA in remote setup.
+The HDMA IP have no way to know the number of hardware channels available
+like the eDMA IP, then let set it to maximum channels and let the platform
+set the right number of channels.
+
+Fixes: e74c39573d35 ("dmaengine: dw-edma: Add support for native HDMA")
+Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
+Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+---
+
+See the following thread mail that talk about this issue:
+https://lore.kernel.org/lkml/20230607095832.6d6b1a73@kmaincent-XPS-13-7390/
 
 Changes in v2:
-- Update comments and fix typos.
-- Removed patches that tackle hypothetical bug and then were not pertinent.
-- Add the similar HDMA race condition in remote setup fix to eDMA IP driver.
+- Add comment
 
 Changes in v3:
 - Fix comment style.
-- Split a patch in two to differ bug fix and simple harmless typo.
-
-Changes in v4:
-- Update patch git commit message.
-- Link to v3: https://lore.kernel.org/r/20231011-b4-feature_hdma_mainline-v3-0-24ee0c979c6f@bootlin.com
-
-Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 ---
-Kory Maincent (6):
-      dmaengine: dw-edma: Fix the ch_count hdma callback
-      dmaengine: dw-edma: Fix wrong interrupt bit set
-      dmaengine: dw-edma: Typo fix
-      dmaengine: dw-edma: Add HDMA remote interrupt configuration
-      dmaengine: dw-edma: HDMA: Add sync read before starting the DMA transfer in remote setup
-      dmaengine: dw-edma: eDMA: Add sync read before starting the DMA transfer in remote setup
+ drivers/dma/dw-edma/dw-hdma-v0-core.c | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
 
- drivers/dma/dw-edma/dw-edma-v0-core.c | 17 +++++++++++++++
- drivers/dma/dw-edma/dw-hdma-v0-core.c | 39 +++++++++++++++++++++++------------
- drivers/dma/dw-edma/dw-hdma-v0-regs.h |  2 +-
- 3 files changed, 44 insertions(+), 14 deletions(-)
----
-base-commit: 8bf914570650ec5858e18554d70d2838cef01de1
-change-id: 20231011-b4-feature_hdma_mainline-b6c57f8e3b5d
+diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+index 00b735a0202a..1f4cb7db5475 100644
+--- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
++++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+@@ -65,18 +65,12 @@ static void dw_hdma_v0_core_off(struct dw_edma *dw)
+ 
+ static u16 dw_hdma_v0_core_ch_count(struct dw_edma *dw, enum dw_edma_dir dir)
+ {
+-	u32 num_ch = 0;
+-	int id;
+-
+-	for (id = 0; id < HDMA_V0_MAX_NR_CH; id++) {
+-		if (GET_CH_32(dw, id, dir, ch_en) & BIT(0))
+-			num_ch++;
+-	}
+-
+-	if (num_ch > HDMA_V0_MAX_NR_CH)
+-		num_ch = HDMA_V0_MAX_NR_CH;
+-
+-	return (u16)num_ch;
++	/*
++	 * The HDMA IP have no way to know the number of hardware channels
++	 * available, we set it to maximum channels and let the platform
++	 * set the right number of channels.
++	 */
++	return HDMA_V0_MAX_NR_CH;
+ }
+ 
+ static enum dma_status dw_hdma_v0_core_ch_status(struct dw_edma_chan *chan)
 
-Best regards,
 -- 
-Köry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+2.25.1
 

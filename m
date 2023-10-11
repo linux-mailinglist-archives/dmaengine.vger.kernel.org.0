@@ -2,147 +2,106 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 752ED7C4D9F
-	for <lists+dmaengine@lfdr.de>; Wed, 11 Oct 2023 10:51:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D0687C5053
+	for <lists+dmaengine@lfdr.de>; Wed, 11 Oct 2023 12:38:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230393AbjJKIvJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 11 Oct 2023 04:51:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36998 "EHLO
+        id S1345913AbjJKKiP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 11 Oct 2023 06:38:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230382AbjJKIvI (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 11 Oct 2023 04:51:08 -0400
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A75798;
-        Wed, 11 Oct 2023 01:51:05 -0700 (PDT)
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.17.1.22/8.17.1.22) with ESMTP id 39B5xlfO011115;
-        Wed, 11 Oct 2023 10:50:08 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-        message-id:date:mime-version:subject:to:cc:references:from
-        :in-reply-to:content-type:content-transfer-encoding; s=
-        selector1; bh=8gYo5goS4DqeD1ldn/WMNS5pR/ViIwg7IylwRkFLbCQ=; b=Za
-        TlXAtbPx+MB2v0D8AaSOiCRr0QWaExzh07Zo/oJZvuCeapBUJIlchy/0wVkKmKEn
-        wF4z0gNW2gVgYd+nm+OoUH3zQARoNUOh9jLOsqhjQPZQakZgQ8UQum8NC5lIu53G
-        J9/i4D9RVwogLLkVq45t8JbhccX58FoBHOkPFG54l4Myu31cTN8/lVAO4VwO3iQ/
-        QVK9wmSpmZQtWB32TwY8Jbg0FQFxf0GPdf5ZAKxNUqJf8bLx+7v473H+0cTRORLN
-        +6OGQsijOBEGjRMLIhQfjAvoAYEoRWr3fmVZBKuazCBrw1XmeMdLs2GuCUkIAx4t
-        D2E7cjGWOwhthrlESwYw==
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3tnp24gtuh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 11 Oct 2023 10:50:08 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 21883100064;
-        Wed, 11 Oct 2023 10:50:05 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B630822FA2E;
-        Wed, 11 Oct 2023 10:50:05 +0200 (CEST)
-Received: from [10.201.20.32] (10.201.20.32) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 11 Oct
- 2023 10:50:03 +0200
-Message-ID: <8f1b6915-68be-a525-c5d5-37f0983c14de@foss.st.com>
-Date:   Wed, 11 Oct 2023 10:49:58 +0200
+        with ESMTP id S229750AbjJKKiO (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 11 Oct 2023 06:38:14 -0400
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F63D9D;
+        Wed, 11 Oct 2023 03:38:12 -0700 (PDT)
+Received: by mail-lf1-x12a.google.com with SMTP id 2adb3069b0e04-5033918c09eso8453470e87.2;
+        Wed, 11 Oct 2023 03:38:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1697020691; x=1697625491; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=UAByv1I+aHmJjcNZyAEBlsSCq7nVeKJefcDEUNHdSLc=;
+        b=A9aIBuAo+9QIIoLVIDNX14w/4CrsJsyB7Ttqs93+okej7qillpbLv9LB6OkubmsQIV
+         eBzwMGGHrxGKkNBHjwKBxzq/ODEzeEZ5SNGz6xXbVVIe8kc/WA0h2efjpSBidRU2zevJ
+         4OBCp1DZUue+4AYpIgLvMy2VRGne5Y5WGg/w3Cu7beZHweCfNFX91HUt6dSVDw4wNwyg
+         78zoVRrIwV9jB2LFJlzSu3DXyXeEfpqzU5g9KuKfQPnlE2ffHJqj33D4PHxZPrIFPkGW
+         GzoB1wUsl2n3/ga8m4mQcmvW+BEleMiPMRCTdirtKAF0Ji4py3j+3B8985ohqEFnC1lw
+         B6Fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697020691; x=1697625491;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UAByv1I+aHmJjcNZyAEBlsSCq7nVeKJefcDEUNHdSLc=;
+        b=CFmMI/uqYaRWoZQbh2GdoBu1hNHoHHWKAZg99wYh2rxnHaYSdQnn5aynQZHQe4VGfS
+         qA+VZNr8NFrlgC/aLHvCS12aXPzacG62+8765Yvc0eQAHlAEw+5nrGUuFGf5FVQAbRZA
+         pfzgJX9VJqr6wZ7Uj0BhROrgJ6f2LCgbzloigA1ODDkSSVTZ8qBZ85bs0+j6yRNIMuib
+         t6XXPGcpZy1fyUwYM4+pTiN8nJLaoRnIKBhu4h6wz0cfSejbIk1mcf5ogQpezq7yIMoR
+         hUxtmSLy96BHa7KGq1w8gkZCI8x0Y0mBqD+BO9gHkkHHqqcN+70mqZ9Kd2ZpfCN6WVqA
+         /i3g==
+X-Gm-Message-State: AOJu0YwHGhtGiRROqzsp8iwFbdLUXbkIpDODOsjUxJVbdE3YPYGtDI2t
+        204+z33NUPOiI0qORaQGEkLnPfTl2X0=
+X-Google-Smtp-Source: AGHT+IFZoTNkJ4yMietqGDtPBFUow7+4wWShdxOyhrcSDYk8LXP/KOiYZnq8qMROV50mz4LnyFjfBQ==
+X-Received: by 2002:ac2:5bc7:0:b0:505:6ef8:2544 with SMTP id u7-20020ac25bc7000000b005056ef82544mr16584492lfn.63.1697020690422;
+        Wed, 11 Oct 2023 03:38:10 -0700 (PDT)
+Received: from mobilestation ([178.176.56.174])
+        by smtp.gmail.com with ESMTPSA id v2-20020ac25582000000b004fe1f1c0ee4sm2212496lfg.82.2023.10.11.03.38.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Oct 2023 03:38:09 -0700 (PDT)
+Date:   Wed, 11 Oct 2023 13:38:07 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     =?utf-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>
+Cc:     Manivannan Sadhasivam <mani@kernel.org>,
+        Cai Huoqing <cai.huoqing@linux.dev>,
+        Vinod Koul <vkoul@kernel.org>,
+        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Herve Codina <herve.codina@bootlin.com>
+Subject: Re: [PATCH v2 2/5] dmaengine: dw-edma: Typos fixes
+Message-ID: <pa7nvziczcnj56oozkgy244avbeirkseviimwmaxxlm5ozrjuo@plvebecoc4ev>
+References: <20231002131749.2977952-1-kory.maincent@bootlin.com>
+ <20231002131749.2977952-3-kory.maincent@bootlin.com>
+ <20231010145906.GL4884@thinkpad>
+ <20231011092350.18049672@kmaincent-XPS-13-7390>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v6 10/11] ARM: dts: stm32: add ETZPC as a system bus for
- STM32MP15x boards
-To:     Rob Herring <robh@kernel.org>
-CC:     <Oleksii_Moisieiev@epam.com>, <gregkh@linuxfoundation.org>,
-        <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <alexandre.torgue@foss.st.com>, <vkoul@kernel.org>,
-        <jic23@kernel.org>, <olivier.moysan@foss.st.com>,
-        <arnaud.pouliquen@foss.st.com>, <mchehab@kernel.org>,
-        <fabrice.gasnier@foss.st.com>, <andi.shyti@kernel.org>,
-        <ulf.hansson@linaro.org>, <edumazet@google.com>, <kuba@kernel.org>,
-        <pabeni@redhat.com>, <hugues.fruchet@foss.st.com>,
-        <lee@kernel.org>, <will@kernel.org>, <catalin.marinas@arm.com>,
-        <arnd@kernel.org>, <richardcochran@gmail.com>,
-        Frank Rowand <frowand.list@gmail.com>, <peng.fan@oss.nxp.com>,
-        <linux-crypto@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-i2c@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        <alsa-devel@alsa-project.org>, <linux-media@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-p.hy@lists.infradead.org>, <linux-serial@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <linux-usb@vger.kernel.org>
-References: <20231010125719.784627-1-gatien.chevallier@foss.st.com>
- <20231010125719.784627-11-gatien.chevallier@foss.st.com>
- <20231010184212.GA1221641-robh@kernel.org>
-Content-Language: en-US
-From:   Gatien CHEVALLIER <gatien.chevallier@foss.st.com>
-In-Reply-To: <20231010184212.GA1221641-robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.201.20.32]
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-11_06,2023-10-10_01,2023-05-22_02
-X-Spam-Status: No, score=-5.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20231011092350.18049672@kmaincent-XPS-13-7390>
+X-Spam-Status: No, score=1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Rob,
-
-On 10/10/23 20:42, Rob Herring wrote:
-> On Tue, Oct 10, 2023 at 02:57:18PM +0200, Gatien Chevallier wrote:
->> ETZPC is a firewall controller. Put all peripherals filtered by the
->> ETZPC as ETZPC subnodes and reference ETZPC as an
->> access-control-provider.
->>
->> For more information on which peripheral is securable or supports MCU
->> isolation, please read the STM32MP15 reference manual.
->>
->> Signed-off-by: Gatien Chevallier <gatien.chevallier@foss.st.com>
->> ---
->>
->> Changes in V6:
->>      	- Renamed access-controller to access-controllers
->>      	- Removal of access-control-provider property
->>
->> Changes in V5:
->>      	- Renamed feature-domain* to access-control*
->>
->>   arch/arm/boot/dts/st/stm32mp151.dtsi  | 2756 +++++++++++++------------
->>   arch/arm/boot/dts/st/stm32mp153.dtsi  |   52 +-
->>   arch/arm/boot/dts/st/stm32mp15xc.dtsi |   19 +-
->>   3 files changed, 1450 insertions(+), 1377 deletions(-)
+On Wed, Oct 11, 2023 at 09:23:50AM +0200, Köry Maincent wrote:
+> On Tue, 10 Oct 2023 20:29:06 +0530
+> Manivannan Sadhasivam <mani@kernel.org> wrote:
 > 
-> This is not reviewable. Change the indentation and any non-functional
-> change in one patch and then actual changes in another.
-
-Ok, I'll make it easier to read.
-
+> > On Mon, Oct 02, 2023 at 03:17:46PM +0200, Köry Maincent wrote:
+> > > From: Kory Maincent <kory.maincent@bootlin.com>
+> > > 
+> > > Fix "HDMA_V0_REMOTEL_STOP_INT_EN" typo error.
+> > > Fix "HDMA_V0_LOCAL_STOP_INT_EN" to "HDMA_V0_LOCAL_ABORT_INT_EN" as the STOP
+> > > bit is already set in the same line.
+> > >   
+> > 
+> > You should split this into two patches. First one is a typo and is harmless,
+> > but the second is a _bug_.
 > 
-> This is also an ABI break. Though I'm not sure it's avoidable. All the
-> devices below the ETZPC node won't probe on existing kernel. A
-> simple-bus fallback for ETZPC node should solve that.
-> 
+> Thanks for your review.
+> Ok I will do so.
+> Serge if it is ok for you I will keep your reviewed by on the two separate
+> patches.
 
-I had one issue when trying with a simple-bus fallback that was the
-drivers were probing even though the access rights aren't correct.
-Hence the removal of the simple-bus compatible in the STM32MP25 patch.
+Yeah, it's ok.
 
-Even though a node is tagged with the OF_POPULATED flag when checking
-the access rights with the firewall controller, it seems that when
-simple-bus is probing, there's no check of this flag.
+-Serge(y)
 
-of_platform_populate() checks and sets the OF_POPULATED_BUS flag.
-Maybe that is my error and the firewall bus populate should set
-OF_POPULATED_BUS instead of OF_POPULATED. Is that correct?
-
-Best regards,
-Gatien
-
-> Rob

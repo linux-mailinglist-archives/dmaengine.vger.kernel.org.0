@@ -2,39 +2,40 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C72787C4CB8
-	for <lists+dmaengine@lfdr.de>; Wed, 11 Oct 2023 10:12:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1EDCE7C4CB9
+	for <lists+dmaengine@lfdr.de>; Wed, 11 Oct 2023 10:12:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230234AbjJKIMm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 11 Oct 2023 04:12:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41174 "EHLO
+        id S230270AbjJKIMn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 11 Oct 2023 04:12:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230161AbjJKIMe (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 11 Oct 2023 04:12:34 -0400
+        with ESMTP id S230209AbjJKIMm (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 11 Oct 2023 04:12:42 -0400
 Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8C469C;
-        Wed, 11 Oct 2023 01:12:32 -0700 (PDT)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 4706E1BF213;
-        Wed, 11 Oct 2023 08:12:30 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 489DA9E;
+        Wed, 11 Oct 2023 01:12:35 -0700 (PDT)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id CB7801BF207;
+        Wed, 11 Oct 2023 08:12:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1697011951;
+        t=1697011954;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=iPCuxXS6fiLAq+ZD6dKRSHgB+AgJYpeJ58Nq57Fi1fk=;
-        b=iDWq/Ocs6CBghGUbQvSHc/yBr2WaAenwVpAdxZ73beToAdp6c3U2QVkbd1b1SS1K99gJ+C
-        LAHMOxkUaO9RVeTEGwq7pXq9scZNwboQZzS/nwrvAJ/6dtPxmvsiZVkBKgSx4RBetL7oH4
-        hpXJP4xWdWOxvilgy8ZCoevDRm4CsKghnoQKcqzRsfR/RmxWS4l5qzjn4E9j0lPEvYn+UF
-        Rt1AN+YymB92x8wge/PfuUngSjgU+sSAaSdyNuVHeXd9Zl/MDwaoNoINOfFNZy84FIJwjx
-        X7voyKEhGQ8KdAk9daLsfYkVvn0OCoglHoLS02flf5yfvHYs+Pni/HI2bTHoKA==
+        bh=svngh7gavoOsAoTd14KvI+aVm1JHod9n5Mvh72UXNZY=;
+        b=Mh4FFs5qGnnta/KdhOFirxSlbpfwyU8rWS7+pkpEzJHs0IcWQ4Pc1Bd3A0ZhunxMo2zIfH
+        HyjTs249F1qpcLVApKrrb7H1MZ8O3X5ojm3NQi0nde5Z74VcOUnspyXIPHjWzYF4uCgiwG
+        6tXRh3TiwjaHQidUuiJ5+5NpiwXCSn77BQ8WAWKu5r4pxzgZTgtrS5EKqFmx31GWNGGanO
+        QEP4fXaB6CTcvzGAlAVx4Uy6BQjlndJodNLLxGZ6dEnSUrPRmMOX94lnTnwMEDDr2vPuF6
+        BY5mAeAfjpzbZLizS7IKzL3KdMsbaB+zZeO0+C4JQc+6XkqQOZW+FclSunsyGg==
 From:   Kory Maincent <kory.maincent@bootlin.com>
-Date:   Wed, 11 Oct 2023 10:11:42 +0200
-Subject: [PATCH v3 3/6] dmaengine: dw-edma: Typo fix
+Date:   Wed, 11 Oct 2023 10:11:43 +0200
+Subject: [PATCH v3 4/6] dmaengine: dw-edma: Add HDMA remote interrupt
+ configuration
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20231011-b4-feature_hdma_mainline-v3-3-24ee0c979c6f@bootlin.com>
+Message-Id: <20231011-b4-feature_hdma_mainline-v3-4-24ee0c979c6f@bootlin.com>
 References: <20231011-b4-feature_hdma_mainline-v3-0-24ee0c979c6f@bootlin.com>
 In-Reply-To: <20231011-b4-feature_hdma_mainline-v3-0-24ee0c979c6f@bootlin.com>
 To:     Manivannan Sadhasivam <mani@kernel.org>,
@@ -45,7 +46,8 @@ To:     Manivannan Sadhasivam <mani@kernel.org>,
 Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
         Herve Codina <herve.codina@bootlin.com>,
-        Kory Maincent <kory.maincent@bootlin.com>
+        Kory Maincent <kory.maincent@bootlin.com>,
+        Manivannan Sadhasivam <mani@kernel.org>
 X-Mailer: b4 0.12.3
 X-GND-Sasl: kory.maincent@bootlin.com
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -58,32 +60,31 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Fix "HDMA_V0_REMOTEL_STOP_INT_EN" typo error
+Only the local interruption was configured, remote interrupt was left
+behind. This patch fix it by setting stop and abort remote interrupts when
+the DW_EDMA_CHIP_LOCAL flag is not set.
 
 Fixes: e74c39573d35 ("dmaengine: dw-edma: Add support for native HDMA")
 Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
+Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
+ drivers/dma/dw-edma/dw-hdma-v0-core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Changes in v3:
-- Split the patch in two to differ bug fix and simple harmless typo.
----
- drivers/dma/dw-edma/dw-hdma-v0-regs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/dma/dw-edma/dw-hdma-v0-regs.h b/drivers/dma/dw-edma/dw-hdma-v0-regs.h
-index a974abdf8aaf..eab5fd7177e5 100644
---- a/drivers/dma/dw-edma/dw-hdma-v0-regs.h
-+++ b/drivers/dma/dw-edma/dw-hdma-v0-regs.h
-@@ -15,7 +15,7 @@
- #define HDMA_V0_LOCAL_ABORT_INT_EN		BIT(6)
- #define HDMA_V0_REMOTE_ABORT_INT_EN		BIT(5)
- #define HDMA_V0_LOCAL_STOP_INT_EN		BIT(4)
--#define HDMA_V0_REMOTEL_STOP_INT_EN		BIT(3)
-+#define HDMA_V0_REMOTE_STOP_INT_EN		BIT(3)
- #define HDMA_V0_ABORT_INT_MASK			BIT(2)
- #define HDMA_V0_STOP_INT_MASK			BIT(0)
- #define HDMA_V0_LINKLIST_EN			BIT(0)
+diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+index 108f9127aaaa..04b0bcb6ded9 100644
+--- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
++++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+@@ -237,6 +237,8 @@ static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
+ 		tmp = GET_CH_32(dw, chan->dir, chan->id, int_setup) |
+ 		      HDMA_V0_STOP_INT_MASK | HDMA_V0_ABORT_INT_MASK |
+ 		      HDMA_V0_LOCAL_STOP_INT_EN | HDMA_V0_LOCAL_ABORT_INT_EN;
++		if (!(dw->chip->flags & DW_EDMA_CHIP_LOCAL))
++			tmp |= HDMA_V0_REMOTE_STOP_INT_EN | HDMA_V0_REMOTE_ABORT_INT_EN;
+ 		SET_CH_32(dw, chan->dir, chan->id, int_setup, tmp);
+ 		/* Channel control */
+ 		SET_CH_32(dw, chan->dir, chan->id, control1, HDMA_V0_LINKLIST_EN);
 
 -- 
 2.25.1

@@ -2,55 +2,68 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CDA257C69C3
-	for <lists+dmaengine@lfdr.de>; Thu, 12 Oct 2023 11:35:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CEBA27C717A
+	for <lists+dmaengine@lfdr.de>; Thu, 12 Oct 2023 17:30:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234163AbjJLJf4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 12 Oct 2023 05:35:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44802 "EHLO
+        id S1379373AbjJLPaT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 12 Oct 2023 11:30:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229981AbjJLJfz (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 12 Oct 2023 05:35:55 -0400
+        with ESMTP id S1379229AbjJLPaS (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 12 Oct 2023 11:30:18 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB5E791;
-        Thu, 12 Oct 2023 02:35:53 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97825C433C8;
-        Thu, 12 Oct 2023 09:35:50 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AA29C0;
+        Thu, 12 Oct 2023 08:30:17 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65F77C433C8;
+        Thu, 12 Oct 2023 15:30:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1697103353;
-        bh=niTCfJ5nIaIV1WZUxp0TKmnQ2v5iDejGCa7Cmf/1Jwg=;
+        s=k20201202; t=1697124617;
+        bh=ZtcSIbjB2WpeZfQRyCvdpc+0MAvoSIsAVFQJFGWoAZY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NbRLNQNfMtsTH4iIze3Y5b3OZNLq/K1qI1XUxP39RvQLX6are82KYxLxhQIJskbhv
-         Ntg622Ldzc8WCpGRa43myfybdwUngfgDa9W+DUXImpShUMC0BP4++8C387I4uoSukI
-         1yxtGJ07H91Cq0Ao+k9hivZzCIqrxKXrwvZokNf+NSuk+NQ0l9acbLGYYoNO3WRi8G
-         1nP7oAwYb5SpO4L1tFoXSsdmt8QdGZipRhFnKlg/KnLPkUBsRLtItwoWeisxkLxFUM
-         S/dn/FwJiBY4ZJwEgTCS+me6LDQWB50N3qcbvDOpDw2lxgXX0GWcHY8GpLDDf2mU1I
-         7aTKv13Qc7rXQ==
-Date:   Thu, 12 Oct 2023 10:35:48 +0100
-From:   Conor Dooley <conor@kernel.org>
-To:     Shravan.Chippa@microchip.com
-Cc:     robh@kernel.org, green.wan@sifive.com, vkoul@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, palmer@dabbelt.com,
-        paul.walmsley@sifive.com, conor+dt@kernel.org,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Nagasuresh.Relli@microchip.com, Praveen.Kumar@microchip.com,
-        Conor.Dooley@microchip.com
-Subject: Re: [PATCH v2 2/4] dt-bindings: dma: sf-pdma: add new compatible name
-Message-ID: <20231012-yippee-squid-9fce27a4d84e@spud>
-References: <20231003042215.142678-1-shravan.chippa@microchip.com>
- <20231003042215.142678-3-shravan.chippa@microchip.com>
- <20231004133021.GB2743005-robh@kernel.org>
- <20231005-wanted-plausible-71dae05ccc7b@spud>
- <PH0PR11MB5611CDD7C66363B9F2367C2881D3A@PH0PR11MB5611.namprd11.prod.outlook.com>
+        b=sNlqy8imXhwlW5ogqsGatXLJh6x3ULy2dxsaSxs56ggFVkTV6XlGelwtvmknbj7Xu
+         ShUCZ/8OXslZolbuuvyrBlxLrcJ01GSlmz7CSJEaxf3rAcgbPMbnfuFHufU09E90RW
+         5ApYEGyJHTTls7cFvAibnKaw6QYJ/MgybICMj+V6qAR0vsGzNnF3N6loiEvhXeakbo
+         Tc8RBxaMuLt9cw9IyN5cmf2yVbPk/7zrWOf/NIL+18Z146Hj24oQ+EZR236LNiKgxH
+         rW8s1EpB9lyTQA3S/nGP0hy8u95XFa9UJYnNgK7IXnZV4NIWHKMv5YsKgXN/Jehq6j
+         lkrAiKBqcY2gw==
+Received: (nullmailer pid 821925 invoked by uid 1000);
+        Thu, 12 Oct 2023 15:30:12 -0000
+Date:   Thu, 12 Oct 2023 10:30:12 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Gatien CHEVALLIER <gatien.chevallier@foss.st.com>
+Cc:     Oleksii_Moisieiev@epam.com, gregkh@linuxfoundation.org,
+        herbert@gondor.apana.org.au, davem@davemloft.net,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        alexandre.torgue@foss.st.com, vkoul@kernel.org, jic23@kernel.org,
+        olivier.moysan@foss.st.com, arnaud.pouliquen@foss.st.com,
+        mchehab@kernel.org, fabrice.gasnier@foss.st.com,
+        andi.shyti@kernel.org, ulf.hansson@linaro.org, edumazet@google.com,
+        kuba@kernel.org, pabeni@redhat.com, hugues.fruchet@foss.st.com,
+        lee@kernel.org, will@kernel.org, catalin.marinas@arm.com,
+        arnd@kernel.org, richardcochran@gmail.com,
+        Frank Rowand <frowand.list@gmail.com>, peng.fan@oss.nxp.com,
+        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-iio@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        netdev@vger.kernel.org, linux-p.hy@lists.infradead.org,
+        linux-serial@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH v6 10/11] ARM: dts: stm32: add ETZPC as a system bus for
+ STM32MP15x boards
+Message-ID: <20231012153012.GA698406-robh@kernel.org>
+References: <20231010125719.784627-1-gatien.chevallier@foss.st.com>
+ <20231010125719.784627-11-gatien.chevallier@foss.st.com>
+ <20231010184212.GA1221641-robh@kernel.org>
+ <8f1b6915-68be-a525-c5d5-37f0983c14de@foss.st.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ejP92r94GEiwuG/C"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <PH0PR11MB5611CDD7C66363B9F2367C2881D3A@PH0PR11MB5611.namprd11.prod.outlook.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+In-Reply-To: <8f1b6915-68be-a525-c5d5-37f0983c14de@foss.st.com>
+X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_INVALID,
+        DKIM_SIGNED,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -58,152 +71,65 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+On Wed, Oct 11, 2023 at 10:49:58AM +0200, Gatien CHEVALLIER wrote:
+> Hi Rob,
+> 
+> On 10/10/23 20:42, Rob Herring wrote:
+> > On Tue, Oct 10, 2023 at 02:57:18PM +0200, Gatien Chevallier wrote:
+> > > ETZPC is a firewall controller. Put all peripherals filtered by the
+> > > ETZPC as ETZPC subnodes and reference ETZPC as an
+> > > access-control-provider.
+> > > 
+> > > For more information on which peripheral is securable or supports MCU
+> > > isolation, please read the STM32MP15 reference manual.
+> > > 
+> > > Signed-off-by: Gatien Chevallier <gatien.chevallier@foss.st.com>
+> > > ---
+> > > 
+> > > Changes in V6:
+> > >      	- Renamed access-controller to access-controllers
+> > >      	- Removal of access-control-provider property
+> > > 
+> > > Changes in V5:
+> > >      	- Renamed feature-domain* to access-control*
+> > > 
+> > >   arch/arm/boot/dts/st/stm32mp151.dtsi  | 2756 +++++++++++++------------
+> > >   arch/arm/boot/dts/st/stm32mp153.dtsi  |   52 +-
+> > >   arch/arm/boot/dts/st/stm32mp15xc.dtsi |   19 +-
+> > >   3 files changed, 1450 insertions(+), 1377 deletions(-)
+> > 
+> > This is not reviewable. Change the indentation and any non-functional
+> > change in one patch and then actual changes in another.
+> 
+> Ok, I'll make it easier to read.
+> 
+> > 
+> > This is also an ABI break. Though I'm not sure it's avoidable. All the
+> > devices below the ETZPC node won't probe on existing kernel. A
+> > simple-bus fallback for ETZPC node should solve that.
+> > 
+> 
+> I had one issue when trying with a simple-bus fallback that was the
+> drivers were probing even though the access rights aren't correct.
+> Hence the removal of the simple-bus compatible in the STM32MP25 patch.
 
---ejP92r94GEiwuG/C
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+But it worked before, right? So the difference is you have either added 
+new devices which need setup or your firmware changed how devices are 
+setup (or not setup). Certainly can't fix the latter case. You just need 
+to be explicit about what you are doing to users.
 
-On Thu, Oct 12, 2023 at 09:22:17AM +0000, Shravan.Chippa@microchip.com wrot=
-e:
-> Hi,
->=20
-> > -----Original Message-----
-> > From: Conor Dooley <conor@kernel.org>
-> > Sent: Thursday, October 5, 2023 4:24 PM
-> > To: Rob Herring <robh@kernel.org>
-> > Cc: shravan Chippa - I35088 <Shravan.Chippa@microchip.com>;
-> > green.wan@sifive.com; vkoul@kernel.org; krzysztof.kozlowski+dt@linaro.o=
-rg;
-> > palmer@dabbelt.com; paul.walmsley@sifive.com; conor+dt@kernel.org;
-> > dmaengine@vger.kernel.org; devicetree@vger.kernel.org; linux-
-> > riscv@lists.infradead.org; linux-kernel@vger.kernel.org; Nagasuresh Rel=
-li - I67208
-> > <Nagasuresh.Relli@microchip.com>; Praveen Kumar - I30718
-> > <Praveen.Kumar@microchip.com>; Conor Dooley - M52691
-> > <Conor.Dooley@microchip.com>
-> > Subject: Re: [PATCH v2 2/4] dt-bindings: dma: sf-pdma: add new compatib=
-le
-> > name
-> >=20
-> > On Wed, Oct 04, 2023 at 08:30:21AM -0500, Rob Herring wrote:
-> > > On Tue, Oct 03, 2023 at 09:52:13AM +0530, shravan chippa wrote:
-> > > > From: Shravan Chippa <shravan.chippa@microchip.com>
-> > > >
-> > > > Add new compatible name microchip,mpfs-pdma to support out of order
-> > > > dma transfers
-> > > >
-> > > > Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-> > > > Signed-off-by: Shravan Chippa <shravan.chippa@microchip.com>
-> > > > ---
-> > > >  .../bindings/dma/sifive,fu540-c000-pdma.yaml         | 12 ++++++++=
-----
-> > > >  1 file changed, 8 insertions(+), 4 deletions(-)
-> > > >
-> > > > diff --git
-> > > > a/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
-> > > > b/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
-> > > > index a1af0b906365..974467c4bacb 100644
-> > > > ---
-> > > > a/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
-> > > > +++ b/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.y
-> > > > +++ aml
-> > > > @@ -27,10 +27,14 @@ allOf:
-> > > >
-> > > >  properties:
-> > > >    compatible:
-> > > > -    items:
-> > > > -      - enum:
-> > > > -          - sifive,fu540-c000-pdma
-> > > > -      - const: sifive,pdma0
-> > > > +    oneOf:
-> > > > +      - items:
-> > > > +          - const: microchip,mpfs-pdma # Microchip out of order DM=
-A transfer
-> > > > +          - const: sifive,fu540-c000-pdma # Sifive in-order DMA
-> > > > + transfer
-> >=20
-> > IIRC I asked for the comments here to be removed on the previous versio=
-n, and
-> > my r-b was conditional on that.
-> > The device specific compatible has merit outside of the ordering, which=
- may just
-> > be a software policy decision.
-> >=20
-> > > This doesn't really make sense. microchip,mpfs-pdma is compatible with
-> > > sifive,fu540-c000-pdma and sifive,fu540-c000-pdma is compatible with
-> > > sifive,pdma0, but microchip,mpfs-pdma is not compatible with
-> > > sifive,pdma0? (Or replace "compatible with" with "a superset of")
-> >=20
-> > TBH, I am not sure why it was done this way. Probably because the driver
-> > contains both sifive,pdma0 and sifive,fu540-c000-pdma. Doing compatible=
- =3D
-> > "microchip,mpfs-pdma", "sifive,fu540-c000-pdma", "sifive,pdma0"; thing =
-would
-> > be fine.
-> >=20
-> > > Any fallback is only useful if an OS only understanding the fallback
-> > > will work with the h/w. Does this h/w work without the driver changes?
-> >=20
-> > Yes.
-> > I've been hoping that someone from SiFive would come along, and in resp=
-onse to
-> > this patchset, tell us _why_ the driver does not make use of out-of-ord=
-er transfers
-> > to begin with.
-> >=20
->=20
-> I am also expecting a replay someone from SiFive
-> The out-of-order should work with other RISC-V platforms also.
->=20
-> I will try to send V3 with the below changes (just adding a new compatibl=
-e name)
->=20
-> ****************************
-> --- a/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
-> +++ b/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
-> @@ -29,6 +29,7 @@ properties:
->    compatible:
->      items:
->        - enum:
-> +          - microchip,mpfs-pdma
->            - sifive,fu540-c000-pdma
->        - const: sifive,pdma0
->      description:
-> ***************************
->=20
-> Device tree patch
-> *****************************
-> --- a/arch/riscv/boot/dts/microchip/mpfs.dtsi
-> +++ b/arch/riscv/boot/dts/microchip/mpfs.dtsi
-> @@ -221,7 +221,7 @@ plic: interrupt-controller@c000000 {
->                 };
->                 pdma: dma-controller@3000000 {
-> -                       compatible =3D "sifive,fu540-c000-pdma", "sifive,=
-pdma0";
-> +                       compatible =3D "microchip,mpfs-pdma", "sifive,fu5=
-40-c000-pdma", "sifive,pdma0";
 
-This is gonna produce dtbs_check complaints. Your binding change only
-permits `compatible =3D "microchip,mpfs-pdma", "sifive,pdma0";`
+> Even though a node is tagged with the OF_POPULATED flag when checking
+> the access rights with the firewall controller, it seems that when
+> simple-bus is probing, there's no check of this flag.
 
-Cheers,
-Conor.
+It shouldn't. Those flags are for creating the devices (or not) and 
+removing only devices of_platform_populate() created.
 
->                         reg =3D <0x0 0x3000000 0x0 0x8000>;
->                         interrupt-parent =3D <&plic>;
->                         interrupts =3D <5 6>, <7 8>, <9 10>, <11 12>;
-> ***************************
+> of_platform_populate() checks and sets the OF_POPULATED_BUS flag.
+> Maybe that is my error and the firewall bus populate should set
+> OF_POPULATED_BUS instead of OF_POPULATED. Is that correct?
 
---ejP92r94GEiwuG/C
-Content-Type: application/pgp-signature; name="signature.asc"
+Shrug. Off hand, I'd say probably not, but am not certain.
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZSe99AAKCRB4tDGHoIJi
-0vQ9AQCbY9hLUCrnbF9LvnoMPy66j2uiLwr8OKI1eDpwHw4mOAD+PukoSXw/50R3
-traIq92KfBKrNnBYqcteMG5oDxT8CQ4=
-=2bIJ
------END PGP SIGNATURE-----
-
---ejP92r94GEiwuG/C--
+Rob

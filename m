@@ -2,98 +2,123 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C12E7C967F
-	for <lists+dmaengine@lfdr.de>; Sat, 14 Oct 2023 23:17:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EF677C9BD1
+	for <lists+dmaengine@lfdr.de>; Sun, 15 Oct 2023 23:18:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230371AbjJNVRn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 14 Oct 2023 17:17:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35930 "EHLO
+        id S229772AbjJOVSQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 15 Oct 2023 17:18:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232947AbjJNVRm (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 14 Oct 2023 17:17:42 -0400
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAC63CC
-        for <dmaengine@vger.kernel.org>; Sat, 14 Oct 2023 14:17:40 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qrm0l-0000TD-B3; Sat, 14 Oct 2023 23:17:27 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qrm0i-001hon-FU; Sat, 14 Oct 2023 23:17:24 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qrm0i-00GRLc-62; Sat, 14 Oct 2023 23:17:24 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Rob Herring <robh@kernel.org>,
-        Peter Korsgaard <peter@korsgaard.com>,
-        Liu Shixin <liushixin2@huawei.com>,
-        linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de,
-        dmaengine@vger.kernel.org, "Simek, Michal" <michal.simek@amd.com>,
-        "Pandey, Radhey Shyam" <radhey.shyam.pandey@amd.com>
-Subject: [PATCH] dmaengine: xilinx: xilinx_dma: Fix kernel doc about xilinx_dma_remove()
-Date:   Sat, 14 Oct 2023 23:16:57 +0200
-Message-ID: <20231014211656.1512016-2-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.42.0
+        with ESMTP id S229500AbjJOVSP (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 15 Oct 2023 17:18:15 -0400
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::226])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 429C0A1;
+        Sun, 15 Oct 2023 14:18:11 -0700 (PDT)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 80B0EC0004;
+        Sun, 15 Oct 2023 21:18:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1697404689;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=QyLwk8RWeHwb+iTYV4j14/CAsO9UnmgTLhIoR7pcM84=;
+        b=G5I8ztJvdFI8tTwSCy0AWY+6MRhNlKLte1yNV4fIGQl6O23J6Xdoh0CefROrNByOpZhwE7
+        P/dmdthsO5WAs8rqcbBfrDUN9cugU7l4OxjWmfddhyL0LuZ/a6CfmZiXNmu06TC7W2khE9
+        NDZu0i9NIxBjr696iBip4sRRM3d0VMBYV0oc5glex8E5b5g9pnVjfW5fIkCPQERxPzL1Jd
+        mjqglreUfQeV1UDlGgRG/+b2MG2/c1Vo/UDOnu2p9/qVGfq8Q3Iz2g50VMtUD0J76grZyh
+        DkuCxT22BotwyKZelbq33dd3q4OFLHJ92smEnKVwc5a4qUfDVLMQmLsddUpmAw==
+Date:   Sun, 15 Oct 2023 23:17:56 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Hartley Sweeten <hsweeten@visionengravers.com>,
+        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Lukasz Majewski <lukma@denx.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Mark Brown <broonie@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Sergey Shtylyov <s.shtylyov@omp.ru>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Nikita Shubin <nikita.shubin@maquefel.me>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org,
+        netdev@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-ide@vger.kernel.org,
+        linux-input@vger.kernel.org, alsa-devel@alsa-project.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>
+Subject: Re: (subset) [PATCH v4 00/42] ep93xx device tree conversion
+Message-ID: <169740466288.180093.13375010968334465004.b4-ty@bootlin.com>
+References: <20230915-ep93xx-v4-0-a1d779dcec10@maquefel.me>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1337; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=E6kemoD588QU/owfzY4+Nq8vQhomgHowx5bXIc9aiz4=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlKwVJ06T6bAi892MRyKw4+DQBt2aYs2GBkqzwf 3493OjuIViJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZSsFSQAKCRCPgPtYfRL+ TgEtCAC2ORfHlaxUKTLvim/3klDFLvUNH+ErrSB3LLScdjO5ArdSu5W9GIOc83Z6SGehkU9M8Ve tfvXb3ZJh/wjhBCXHOqBnlvaWeXpc7VKfe70PmTGnZxKz8LCdDrH9gvLJRw4uDVBmu3YmTiL28E +nLFSK0ehG+nIiwlECvYoTKOiRqox1tw/cpgux2aMwObWJK72a4+aU/FgvU5mCe79gfkZ28ojq6 PVyEkx/K4eD+VYwPnDR4Dh2X7P8rb8WWUaYLg4Qu+uMqO6r6oLs2DdDj/eyWSc2no3lPTfnr0tx 87rL7XJfJz2Anxf2CEjxx9qqVTOE/XjbQybJ4bdARSN8sYre
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: dmaengine@vger.kernel.org
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230915-ep93xx-v4-0-a1d779dcec10@maquefel.me>
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Since commit cc99582d46b4 ("dmaengine: xilinx: xilinx_dma: Convert to
-platform remove callback returning void") xilinx_dma_remove() doesn't
-return zero any more. As the function has no return value any more, just
-drop the statement about the return value.
 
-Reported-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
-Hello,
+On Fri, 15 Sep 2023 11:10:42 +0300, Nikita Shubin wrote:
+> This series aims to convert ep93xx from platform to full device tree support.
+> 
+> The main goal is to receive ACK's to take it via Arnd's arm-soc branch.
+> 
+> Major changes:
+> - drop newline at the end from each YAML files
+> - rename dma and clk bindings headers to match first compatible
+> - shrink SoC exported functions number to only 2
+> - dropped some ep93xx_pata fixes from these series
+> - dropped m48t86 stuff from these series
+> 
+> [...]
 
-the wrong kernel doc comment was pointed out by Radhey Shyam Pandey
-during review of the patch that became cc99582d46b4. Vinod Koul still
-picked up the patch unmodified and asked for a follow up patch
-(https://lore.kernel.org/all/ZRUvjz7oO6iK1HTm@matsya). Here it is.
+Applied, thanks!
 
-Best regards
-Uwe
+[13/42] dt-bindings: rtc: Add Cirrus EP93xx
+        commit: 207bddd97881913bcb8bef84737c0971e712fbee
+[14/42] rtc: ep93xx: add DT support for Cirrus EP93xx
+        commit: 1d70f9fe5f1c8fbd5d838223b8aec27c69a7e609
 
- drivers/dma/xilinx/xilinx_dma.c | 2 --
- 1 file changed, 2 deletions(-)
+Best regards,
 
-diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-index 0c363a1ed853..e40696f6f864 100644
---- a/drivers/dma/xilinx/xilinx_dma.c
-+++ b/drivers/dma/xilinx/xilinx_dma.c
-@@ -3242,8 +3242,6 @@ static int xilinx_dma_probe(struct platform_device *pdev)
- /**
-  * xilinx_dma_remove - Driver remove function
-  * @pdev: Pointer to the platform_device structure
-- *
-- * Return: Always '0'
-  */
- static void xilinx_dma_remove(struct platform_device *pdev)
- {
-
-base-commit: cc99582d46b428ba4c2cb7ecd05df4569b02d1f4
 -- 
-2.42.0
-
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com

@@ -2,151 +2,170 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 89A707CA665
-	for <lists+dmaengine@lfdr.de>; Mon, 16 Oct 2023 13:14:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 16E4B7CA692
+	for <lists+dmaengine@lfdr.de>; Mon, 16 Oct 2023 13:19:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232547AbjJPLO0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 16 Oct 2023 07:14:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55230 "EHLO
+        id S231631AbjJPLTg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 16 Oct 2023 07:19:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233291AbjJPLOY (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 16 Oct 2023 07:14:24 -0400
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2056.outbound.protection.outlook.com [40.107.243.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57BC019B;
-        Mon, 16 Oct 2023 04:14:05 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Nrp2L+ZaH223U/dI2f1Q6ywuPSnknjdftJIvNRNpjlvFEFZbv8YGEh3Ke6npea/V7HEoHevWPV0s5Cx0U1xxWiWdHShpULl9lKx/f0+JMWE4/Ldp27l9ruO4nH2R4ic1LMwDuskPNaULEUh+A4EmXrf0zR1FUFdv6PUVwgKNUckWOrvaLVZpWkTd8047Zhea2Q7UAmGcWP3gRSj66PRZHgIMrgkaQB/gbtv6W5RP3GJPOIXmK2xyJsuIs53baoLvpekAg2z4sCH5ARfyICDPdP0ASObMWQUhSZyJiPlxSs3DyFWW3WlcDpGNmrvYdISTaQax1E0Iu6fLBNSwAg+ZBQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QkwRKNjIixJtYP1qOqz3YawMX9EoxTGUjkPstgWT6QM=;
- b=PCf0AuDv8fK5ymwMCjwcqX1auSqaHYW0dHWD9EJbZeHRypPs/YtlWcQcI5i/bduWZgL6no1AlahzkVK6d2ZYVfkwSrkOrL3EPRATrZpjv59Z6zg9ESpgXCxH8yjnTL0AnI2fqtSD3jeOHAOU5kp18ZPJ+bqDRhySa7UlN2F4kplnDvew7SpB/rJzSWLrwvEBh5XrS3W/OWMPW5jzgNFdQOhbwohQ1tUBlVyF1vYMDdjq3FrrnAcEeTkr8qpTPxFvNCOJnzCeMqJP7oac8RuiT6AG3DqSNLVHuIuf7XcyqzvMuGIMRICCAkzR9EyCH3TGpUO+KEeqUoQubZoS6CI7Hg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QkwRKNjIixJtYP1qOqz3YawMX9EoxTGUjkPstgWT6QM=;
- b=aqCvJYgWirO/YaFN1115uZXZ7K0QvC6bfZd558yE34UvMyAh+sOFQFHiypvptfFmAT5+8JotJELAhHeTYQZym1g2uhqoN16QHslrCuu+ao3sWtIEoeMVAzSQ2o4ukOPly1DYDnUYCP+bJrSgEN/37BkKA/I07fKzRTtRmHS5aaXEvGZfzABAi2QEJjpIAdpjtW2Ge+N+LEzzjGrXpoapsyXfdXUnat2wM7iSS/VonL3Q3I+OtAqKa2HzFW5HfJcN5quRu+oLqi8XL+JFzZ8Rf9qJULrKRSv+V4RlESrJjpsG9+zTlTchVz3h5DEpBFPL18R+LnGfurMcGiLb2qTS6g==
-Received: from DM6PR12MB4435.namprd12.prod.outlook.com (2603:10b6:5:2a6::23)
- by PH8PR12MB6794.namprd12.prod.outlook.com (2603:10b6:510:1c5::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6863.44; Mon, 16 Oct
- 2023 11:14:00 +0000
-Received: from DM6PR12MB4435.namprd12.prod.outlook.com
- ([fe80::3d48:a382:4b73:8387]) by DM6PR12MB4435.namprd12.prod.outlook.com
- ([fe80::3d48:a382:4b73:8387%6]) with mapi id 15.20.6886.034; Mon, 16 Oct 2023
- 11:14:00 +0000
-From:   Mohan Kumar D <mkumard@nvidia.com>
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        "krzysztof.kozlowski+dt@linaro.org" 
-        <krzysztof.kozlowski+dt@linaro.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH V1 0/2] Support dma channel mask
-Thread-Topic: [PATCH V1 0/2] Support dma channel mask
-Thread-Index: AQHZ+nrP0nMNq+9+7EGmA8rjAO2gebBMTWwAgAABMoA=
-Date:   Mon, 16 Oct 2023 11:14:00 +0000
-Message-ID: <DM6PR12MB4435D21F738FF9CA2662D79EC1D7A@DM6PR12MB4435.namprd12.prod.outlook.com>
-References: <20231009063509.2269-1-mkumard@nvidia.com>
- <ZS0Z2G64rjrQTobg@matsya>
-In-Reply-To: <ZS0Z2G64rjrQTobg@matsya>
-Accept-Language: en-US, ta-IN
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM6PR12MB4435:EE_|PH8PR12MB6794:EE_
-x-ms-office365-filtering-correlation-id: 1cc01065-ad7a-4ac1-1e72-08dbce38ff98
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ldyM2PqGq+WFSbDFA94nDKVH18ZDHlk3sNydq3bFUZRehDXKTFzz1LVPz2TMMp+GW41I8+8es/fL4CJ5qZ/9QKvwWvZu4IUu6xDSISWnddLWq0qwRx2/pzllIi1UCjYTqdTlzD/gzbdjclCgeQpIgMvkgeOn/ohIvleBQUA7NnWUmdpp0XD10O16eQSPd69KPpg5VyEK2Mao1JvFJ8HDcuelstYsTbxc1GsEQi47GnhupEi/CwXIGQlaoMe8hKdfQKG8Rzn9W2D2nqayzhKulTmULpwyhxk4s953hn+Hvo4EBKjBeNZm1RzzC624Xojqc3vGt48xy/FFe7gQFyzMx3YubGDdIqqI2swDCgDY/EMKQYwL4e+3FXvxUhcPzs0OT2QwWOeD8qlbdfRy0TSwA67b3r3j65He2qLG1EyvW0aIBm4lkr2S6kLk5Q+IaxqVNnWwV1LvN6g4lGpiXIRlosuqDWAumPOUbNlX+MGXuiFnV2pioFYo3bEoF+aVMPXGGHkvU4NWPcmv8YYlDyODsC1ebuzZGRF8agqzftoTImjIZ+L78C37wpS3cFvDibp7GIWY0uhbAvrAFBRQU6s12XBSGdxobr+LPCspHsd7dAFplWp06r0RPDTTG8H+ZhE7
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4435.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(396003)(39860400002)(136003)(366004)(230922051799003)(451199024)(186009)(1800799009)(64100799003)(55016003)(33656002)(71200400001)(478600001)(38100700002)(5660300002)(122000001)(54906003)(76116006)(66446008)(66476007)(66946007)(64756008)(66556008)(52536014)(41300700001)(8936002)(4326008)(8676002)(6916009)(316002)(4744005)(9686003)(83380400001)(26005)(2906002)(38070700005)(7696005)(53546011)(6506007)(86362001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?Z20b4dxyuEBHnEEqMU5vL0CVtZnyTEx91ZH1CMnq37KMM/Lb7fb0jHTHTVD7?=
- =?us-ascii?Q?rCDdiyF8vcRQzybzM6FMAN/ruALPYRGuQA5880NT09PxhnW3yAuH6T30EzXp?=
- =?us-ascii?Q?Bn5goNHT+CtDKMlI+LCazqquSv4EASWAMRyHpPCtGcyo0U6ABvyWKHWxOWEC?=
- =?us-ascii?Q?LykqpvDHMyCCWo96GbEVEJ3ByF22gcqbZE1pTMPe4jKIgmSmtUNIlWH9VBTj?=
- =?us-ascii?Q?Kj0tvDSlCSIGbJkJ6uTI+oIV4xhcChUSAlD8+bePX96IrYCqP0W4hx1bWI++?=
- =?us-ascii?Q?zhtGb3AmU+w6bO5cVyaoTOCmxnA8o4M2UpSWxcY79CLvnqiV1O883rI7tCYC?=
- =?us-ascii?Q?HYXytYFGRhsPisf83FpnqWokkW51B0xIeFHVN/jMc8mgH+p1fAE7VMObAhg5?=
- =?us-ascii?Q?kgFYuDenh+U/A1cRbS10Ruz/3wTIpvt9aErzgByRcdmFVfGO5rkHyWWDUZQL?=
- =?us-ascii?Q?2i2Uc+/St/pokF1JJd4VIwi2Hhbs27EVjaWpIJgDTp+2fIgcCSBmlrrWZb0d?=
- =?us-ascii?Q?yjuAcy9F+mv7TCzLbBQa4yyjw02VmZ1XFB0Ynbw6GtJvtQ3glY9B5sJ6Bn/X?=
- =?us-ascii?Q?w5NgF/FJgIfLJwOx2IRj37Gng2/2C5HE61C8PGIPUeQdalft/BovRJgksx+n?=
- =?us-ascii?Q?rB7meP50tMm4I1O+pgOB++CJFBC4ieBIPwVPyooUxltQvzEnCi/KX00P3eez?=
- =?us-ascii?Q?Yh5Zmq6r64jde+x+NCYgIThgUi/dPQOzA9SqnPH9Db2aSDGlNp1qajbQCrO+?=
- =?us-ascii?Q?cUpZw0RMDNMSRo9pSvRuKiLZoOX6Pw5ZhR71XBNA24veeCuP+y/CzWiCPEk5?=
- =?us-ascii?Q?5YulU2tR/9a6dU02wcGLGJ9ffsOWv5HGsA0sfu3L0vK9HAIJAb0hMUEf3gaw?=
- =?us-ascii?Q?KSVMc3IsYfFJ0o1NcO+f2cLyZzVQY2woyTPkeiLtwtqTh0KchZvFdYjth6p7?=
- =?us-ascii?Q?XQZzoMWrILUC1uXIKZdzqR9pittat4B/q1fX32NEb8EF7XxmUCH6/R8XygCb?=
- =?us-ascii?Q?I3XcAsoYeC008EYoGhx7F+28M3cg14IRf7KU5XWqeWLNCSCB49lmW8hr/G9B?=
- =?us-ascii?Q?E+LCdFqUNqE0nyb8outqEtcXJ/iyozoZ5UkEO5ht+l3zG2zp0uBywvkUIUk9?=
- =?us-ascii?Q?aaq+agV8Bl307NVTDt8jiLkV1y2UcD4uiR3p4u++s584M1IrP3cjgdx5kS6a?=
- =?us-ascii?Q?zGHI8/QPu9PmlApv8WgPsJlbXeWrk2Kdu9ensQwg+bxd1o/hLcmQ80V58jQZ?=
- =?us-ascii?Q?XWIRgGfNSvzblpNjxo+5WJo7e6OTHrPXGW1hHo/N5D0UUBoK9zbyOOp/49b/?=
- =?us-ascii?Q?YLdoQzmoM+suJR/bzfthCWOrMgjtqcEMgt9JX92oeCHszo4dsjlibT6e3UX8?=
- =?us-ascii?Q?aeCHIF1AiW/1kuSfYGpHz1n8HzGghUjYgZdvn+6wIudBUASxeVYX6+uU7A1H?=
- =?us-ascii?Q?o6y6QE4n0QsWmPtaMO7OqHHBDkwEZ+bcuKGaZBMXNN8pZLzLdW0OwnZdlY/B?=
- =?us-ascii?Q?psPxqlKZwid69MIuNlqqegR8sF9XCzH7cAFaKmOj56J4m2yfRw44XSFoZFUA?=
- =?us-ascii?Q?3/ioLjAnLbcHupKc6Pc=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S231442AbjJPLTf (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 16 Oct 2023 07:19:35 -0400
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5DD7B4
+        for <dmaengine@vger.kernel.org>; Mon, 16 Oct 2023 04:19:33 -0700 (PDT)
+Received: by mail-wm1-x32a.google.com with SMTP id 5b1f17b1804b1-40572aeb73cso44416435e9.3
+        for <dmaengine@vger.kernel.org>; Mon, 16 Oct 2023 04:19:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1697455172; x=1698059972; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zAESKt1/T3GVQGNnRZWVrNLSksasl+lznfCvKDEPwao=;
+        b=UDojpBF/iTtTD74S5vIkQixtvxWr6UGJxQKxalVxVsSxz4G+5eJi+1fsDVizpWpo5u
+         lXPTslrFMOTFNCWOZgGfcn7IV0KHYTSiHraYe799JeXZpaq6rk3DN0Hnje++P85tV3HC
+         3hsetIVMZRj5+/6HlOCC8p2nWMxKRxgJtnlGr9WV2TL28Q/qDeyrB84zONZXCY6Uj+fY
+         +UgKo/ISLKyzcBuZ+Ihp62tdd9OHxExBe5h2QeMB9bK02+g6yghYOVn7RJn8GAcFLwgp
+         fP4lcDvdBC0DtfthE+Eyj3MzLNAzg4yp1+OzHfeQwI6qgz9hehwm5PdfWC4WKGWZidy4
+         s8pA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697455172; x=1698059972;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zAESKt1/T3GVQGNnRZWVrNLSksasl+lznfCvKDEPwao=;
+        b=QhCQxFZ1h+Wlt1wFAJHuAXdGgILZn23O5Mk5pNlTk3HiRWKkycpG4P/OFAjSguLa+L
+         7cfFVp7Awgm4zhmNuKaseLpp20+GrWWG5Yit6M2iE6j+jqSHfDKjRDJAPQsMJywmL/PX
+         3IlrMWw2rXfEKlbfP97egBfVk8bRJYFa9PMZnEyQ8nDGpTHORMyF1VtBAxHC7D7QhmWF
+         T7DGO6PbnEZCruFRVfNR1cyJ4BojQk7LPyYkuuf7U+bC9S4Q2wPJG6n1/Q+OvYVZon5G
+         1uQ/KbPnRWe1BSO2x0bMYu4n2h5rjvObIhQ6dNiDcSKXQngk9VmmXnxeamoUK+Hw0kTH
+         7JzQ==
+X-Gm-Message-State: AOJu0Yx5hZGTqra/jltTN7/5IEHopmb07MS5cQKLIeINIlBYyq8vSmuW
+        LgoR13BH/GVZ9pZpHXLWxD2ZV21/1DiEs/TxGq8=
+X-Google-Smtp-Source: AGHT+IFXLn6HVAkJUUvFhoWtP7PoWPk63M+RF0eXFs4sNfYDLfw1h2sjM+ygaKtTEAenciun42rqrA==
+X-Received: by 2002:a05:600c:3ba1:b0:406:872d:7725 with SMTP id n33-20020a05600c3ba100b00406872d7725mr28577118wms.1.1697455171974;
+        Mon, 16 Oct 2023 04:19:31 -0700 (PDT)
+Received: from localhost ([102.36.222.112])
+        by smtp.gmail.com with ESMTPSA id t17-20020a05600c451100b0040535648639sm6892615wmo.36.2023.10.16.04.19.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Oct 2023 04:19:31 -0700 (PDT)
+Date:   Mon, 16 Oct 2023 14:19:27 +0300
+From:   Dan Carpenter <dan.carpenter@linaro.org>
+To:     tudor.ambarus@linaro.org
+Cc:     dmaengine@vger.kernel.org
+Subject: [bug report] dmaengine: at_hdmac: Convert driver to use virt-dma
+Message-ID: <921652fc-d33a-4bf9-8bec-4fbee0f6842b@moroto.mountain>
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4435.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1cc01065-ad7a-4ac1-1e72-08dbce38ff98
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Oct 2023 11:14:00.4562
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: HI/N+k0rKs6Y3EJg3vmq8M0StuSC31tpb7OQnnBmEwmHFiS22fcrANDnqalQOuTyv7NrKhrKFbQInF7JV7QZQw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6794
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Sure, will send rebased patch soon.
+Hello Tudor Ambarus,
 
------Original Message-----
-From: Vinod Koul <vkoul@kernel.org>=20
-Sent: Monday, October 16, 2023 4:39 PM
-To: Mohan Kumar D <mkumard@nvidia.com>
-Cc: robh+dt@kernel.org; thierry.reding@gmail.com; Jonathan Hunter <jonathan=
-h@nvidia.com>; Laxman Dewangan <ldewangan@nvidia.com>; krzysztof.kozlowski+=
-dt@linaro.org; dmaengine@vger.kernel.org; linux-tegra@vger.kernel.org; devi=
-cetree@vger.kernel.org
-Subject: Re: [PATCH V1 0/2] Support dma channel mask
+The patch ac803b56860f: "dmaengine: at_hdmac: Convert driver to use
+virt-dma" from Oct 25, 2022 (linux-next), leads to the following
+Smatch static checker warning:
 
-External email: Use caution opening links or attachments
+drivers/dma/at_hdmac.c:1036 atc_prep_dma_memcpy() warn: pointer dereferenced without being set 'desc->vd.tx.chan'
+drivers/dma/at_hdmac.c:1223 atc_prep_dma_memset_sg() warn: pointer dereferenced without being set 'desc->vd.tx.chan'
+drivers/dma/at_hdmac.c:1387 atc_prep_slave_sg() warn: pointer dereferenced without being set 'desc->vd.tx.chan'
+drivers/dma/at_hdmac.c:1543 atc_prep_dma_cyclic() warn: pointer dereferenced without being set 'desc->vd.tx.chan'
+drivers/dma/at_xdmac.c:1499 at_xdmac_prep_dma_memset_sg() warn: pointer dereferenced without being set 'psg'
+
+drivers/dma/at_hdmac.c
+    960 static struct dma_async_tx_descriptor *
+    961 atc_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dest, dma_addr_t src,
+    962                 size_t len, unsigned long flags)
+    963 {
+    964         struct at_dma                *atdma = to_at_dma(chan->device);
+    965         struct at_dma_chan        *atchan = to_at_dma_chan(chan);
+    966         struct at_desc                *desc = NULL;
+    967         size_t                        xfer_count;
+    968         size_t                        offset;
+    969         size_t                        sg_len;
+    970         unsigned int                src_width;
+    971         unsigned int                dst_width;
+    972         unsigned int                i;
+    973         u32                        ctrla;
+    974         u32                        ctrlb;
+    975 
+    976         dev_dbg(chan2dev(chan), "prep_dma_memcpy: d%pad s%pad l0x%zx f0x%lx\n",
+    977                 &dest, &src, len, flags);
+    978 
+    979         if (unlikely(!len)) {
+    980                 dev_err(chan2dev(chan), "prep_dma_memcpy: length is zero!\n");
+    981                 return NULL;
+    982         }
+    983 
+    984         sg_len = DIV_ROUND_UP(len, ATC_BTSIZE_MAX);
+    985         desc = kzalloc(struct_size(desc, sg, sg_len), GFP_ATOMIC);
+    986         if (!desc)
+    987                 return NULL;
+    988         desc->sglen = sg_len;
+    989 
+    990         ctrlb = ATC_DEFAULT_CTRLB | ATC_IEN |
+    991                 FIELD_PREP(ATC_SRC_ADDR_MODE, ATC_SRC_ADDR_MODE_INCR) |
+    992                 FIELD_PREP(ATC_DST_ADDR_MODE, ATC_DST_ADDR_MODE_INCR) |
+    993                 FIELD_PREP(ATC_FC, ATC_FC_MEM2MEM);
+    994 
+    995         /*
+    996          * We can be a lot more clever here, but this should take care
+    997          * of the most common optimization.
+    998          */
+    999         src_width = dst_width = atc_get_xfer_width(src, dest, len);
+    1000 
+    1001         ctrla = FIELD_PREP(ATC_SRC_WIDTH, src_width) |
+    1002                 FIELD_PREP(ATC_DST_WIDTH, dst_width);
+    1003 
+    1004         for (offset = 0, i = 0; offset < len;
+    1005              offset += xfer_count << src_width, i++) {
+    1006                 struct atdma_sg *atdma_sg = &desc->sg[i];
+    1007                 struct at_lli *lli;
+    1008 
+    1009                 atdma_sg->lli = dma_pool_alloc(atdma->lli_pool, GFP_NOWAIT,
+    1010                                                &atdma_sg->lli_phys);
+    1011                 if (!atdma_sg->lli)
+    1012                         goto err_desc_get;
+    1013                 lli = atdma_sg->lli;
+    1014 
+    1015                 xfer_count = min_t(size_t, (len - offset) >> src_width,
+    1016                                    ATC_BTSIZE_MAX);
+    1017 
+    1018                 lli->saddr = src + offset;
+    1019                 lli->daddr = dest + offset;
+    1020                 lli->ctrla = ctrla | xfer_count;
+    1021                 lli->ctrlb = ctrlb;
+    1022 
+    1023                 desc->sg[i].len = xfer_count << src_width;
+    1024 
+    1025                 atdma_lli_chain(desc, i);
+    1026         }
+    1027 
+    1028         desc->total_len = len;
+    1029 
+    1030         /* set end-of-link to the last link descriptor of list*/
+    1031         set_lli_eol(desc, i - 1);
+    1032 
+    1033         return vchan_tx_prep(&atchan->vc, &desc->vd, flags);
+
+Before this point desc->vd.tx.chan is NULL.
 
 
-On 09-10-23, 12:05, Mohan Kumar wrote:
-> To reserve the dma channel using dma-channel-mask property for Tegra=20
-> platforms.
->
-> Mohan Kumar (2):
->   dt-bindings: dma: Add dma-channel-mask to nvidia,tegra210-adma
->   dmaengine: tegra210-adma: Support dma-channel-mask property
+    1034 
+    1035 err_desc_get:
+--> 1036         atdma_desc_free(&desc->vd);
 
-This fails to apply for me, pls rebase
+This dereferences desc->vd.tx.chan so it will crash.  The other warnings
+are similar except for the "psg" one.  That one will only crash if
+"sg_len" is 1.
 
---
-~Vinod
+    1037         return NULL;
+    1038 }
+
+regards,
+dan carpenter

@@ -2,185 +2,197 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DE2AF7CA78F
-	for <lists+dmaengine@lfdr.de>; Mon, 16 Oct 2023 14:03:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C6AB47CABFA
+	for <lists+dmaengine@lfdr.de>; Mon, 16 Oct 2023 16:48:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230116AbjJPMDd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 16 Oct 2023 08:03:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44062 "EHLO
+        id S232202AbjJPOsM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 16 Oct 2023 10:48:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229501AbjJPMDc (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 16 Oct 2023 08:03:32 -0400
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C840AE6;
-        Mon, 16 Oct 2023 05:03:29 -0700 (PDT)
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.17.1.22/8.17.1.22) with ESMTP id 39G7h1Um007323;
-        Mon, 16 Oct 2023 14:02:47 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-        message-id:date:mime-version:from:subject:to:cc:references
-        :in-reply-to:content-type:content-transfer-encoding; s=
-        selector1; bh=GEtT1vGNrN2L3qXSsS6BjSB5ruMmKsplVyDRLRyeo9Y=; b=1J
-        98O2DjQg2zsjt4f510btLN/TCgkmPUp32hr+x1F3zVIG6OoZLfC3Cbyjc01lX9nZ
-        VSS73Gn48GLdu2Pj2PdtzQCh6rQpYFXh63DE6xW8H+rsFN1zzvxxEYZ+i7yOrOVy
-        1ybut4hcc4ZKwAQt8fVMxknPbllcUus7znWDRJmPQvi1rHJqIrPWzqu6PICGgi4T
-        lPhNG+AgOBhZOVBNR4OCi7G99qM+FbpiuaYRVCuRKuOTObDyKtkIfcpdvYv/o3Zu
-        vwBRb1d9cJyQS7368vGtITam91qeWebiryaExexOXLeN9hsY/CpxbuHNjAGKdma9
-        ZC1Ob39vbFcYhfvYRXtg==
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3tr4hyn1db-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Oct 2023 14:02:47 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3AB9A10005B;
-        Mon, 16 Oct 2023 14:02:45 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A384A22F7D3;
-        Mon, 16 Oct 2023 14:02:45 +0200 (CEST)
-Received: from [10.201.20.32] (10.201.20.32) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 16 Oct
- 2023 14:02:43 +0200
-Message-ID: <b16ed06f-66fd-457b-9610-a67ad07deb60@foss.st.com>
-Date:   Mon, 16 Oct 2023 14:02:39 +0200
+        with ESMTP id S233445AbjJPOsL (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 16 Oct 2023 10:48:11 -0400
+Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2049.outbound.protection.outlook.com [40.107.249.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F2AAB9;
+        Mon, 16 Oct 2023 07:48:09 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=imYKRZBEuqFeDQfjcu8BWZiv830Pzw7v83x9cFhg1rKGXO0oNLN1gTtIH1OK7FFqQ1inG59dvTz0aHqC80YUN8iW+28FIz9tmKEAcCIfXNy95dRqMPmoRZXaUmJsaIiZCVifA/TFUUM3CdIwNj/D18NkGyhLTHqRzt/GOcm81CASUu8dYPNy43hYG9Mo7BE2O+BsfipmwspGARG4NsPZUpGAVxG7I+vEE8L3aCPxKrBhAwsofiYgyQas126hpLXDCE3Pt6t60f5W3JqWThvjf1R7rmVqpny+MmT6GazLb4XjnnyjXQ0T7ReujIfH7+5H0X9hWaio0J1+dNeKdfcsJQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8F2IDySJK2AzyxaqBahCm6XqENXkY+c7XtoQcOJsf+8=;
+ b=HjzL+HHpAnqNvxdIIjnSmdrHu9dhtg51C349bPt4CCO8GQOOdmTKnHzaZzQJX6zFUwC/N+c0CGRB/7VvfPI5LP9uGWBMnfn10EhnqkhE/yxNVMCemK4y0j5VfBhn6635q6rT5hhYrrc8MVHD3swq3ynD7c6sFK3ZlL93Nbs/WGCT21mA94ADVa6F8VAoKM3LuG1qzxwOUiyljuFxu1Ki63FCqBT3C1XzSB+totqPJhi4z2gEFV12wlFrRgZttHbFS9uBIK+c5I0X0OTpO90dKb3YXxTPQchfKPgjlaEG1hauzPO+o8FFt5JgIgpISEWtIrzPwIj6RHI3cFav/0LXHQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8F2IDySJK2AzyxaqBahCm6XqENXkY+c7XtoQcOJsf+8=;
+ b=Mfx6EbyjJhtMUuDTZv2q53KwmlmQ2dXxE9mDcJpF+xXLAuebPL2Iw3Dmbxmlg6mNfbbz/WDa0Nf4sMAZ3bnsN5A6sGz711q+MnoBP5NSOyXTO4b6F0g4E4Q1LIgHAdr7Uo25Qs9DBfygWhQR+jN9PBvgqVyZfc3BzFyYBFj20Pk=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
+ by GV1PR04MB9151.eurprd04.prod.outlook.com (2603:10a6:150:26::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6886.35; Mon, 16 Oct
+ 2023 14:48:07 +0000
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::1774:e25f:f99:aca2]) by AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::1774:e25f:f99:aca2%4]) with mapi id 15.20.6886.034; Mon, 16 Oct 2023
+ 14:48:07 +0000
+Date:   Mon, 16 Oct 2023 10:47:59 -0400
+From:   Frank Li <Frank.li@nxp.com>
+To:     arnd@arndb.de, vkoul@kernel.org
+Cc:     bhe@redhat.com, dmaengine@vger.kernel.org,
+        gregkh@linuxfoundation.org, imx@lists.linux.dev,
+        linux-kernel@vger.kernel.org, lkp@intel.com,
+        oe-kbuild-all@lists.linux.dev, rafael@kernel.org
+Subject: Re: [PATCH v6 0/3] dmaengine: fsl_edma: add trace and debugfs support
+Message-ID: <ZS1NHwdTiHrAoEbk@lizhi-Precision-Tower-5810>
+References: <20231003145212.662955-1-Frank.Li@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231003145212.662955-1-Frank.Li@nxp.com>
+X-ClientProxiedBy: SJ0PR13CA0079.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c4::24) To AM6PR04MB4838.eurprd04.prod.outlook.com
+ (2603:10a6:20b:4::16)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From:   Gatien CHEVALLIER <gatien.chevallier@foss.st.com>
-Subject: Re: [PATCH v6 10/11] ARM: dts: stm32: add ETZPC as a system bus for
- STM32MP15x boards
-To:     Rob Herring <robh@kernel.org>
-CC:     <Oleksii_Moisieiev@epam.com>, <gregkh@linuxfoundation.org>,
-        <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <alexandre.torgue@foss.st.com>, <vkoul@kernel.org>,
-        <jic23@kernel.org>, <olivier.moysan@foss.st.com>,
-        <arnaud.pouliquen@foss.st.com>, <mchehab@kernel.org>,
-        <fabrice.gasnier@foss.st.com>, <andi.shyti@kernel.org>,
-        <ulf.hansson@linaro.org>, <edumazet@google.com>, <kuba@kernel.org>,
-        <pabeni@redhat.com>, <hugues.fruchet@foss.st.com>,
-        <lee@kernel.org>, <will@kernel.org>, <catalin.marinas@arm.com>,
-        <arnd@kernel.org>, <richardcochran@gmail.com>,
-        Frank Rowand <frowand.list@gmail.com>, <peng.fan@oss.nxp.com>,
-        <linux-crypto@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-i2c@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        <alsa-devel@alsa-project.org>, <linux-media@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-p.hy@lists.infradead.org>, <linux-serial@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <linux-usb@vger.kernel.org>
-References: <20231010125719.784627-1-gatien.chevallier@foss.st.com>
- <20231010125719.784627-11-gatien.chevallier@foss.st.com>
- <20231010184212.GA1221641-robh@kernel.org>
- <8f1b6915-68be-a525-c5d5-37f0983c14de@foss.st.com>
- <20231012153012.GA698406-robh@kernel.org>
-Content-Language: en-US
-In-Reply-To: <20231012153012.GA698406-robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.201.20.32]
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-16_05,2023-10-12_01,2023-05-22_02
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|GV1PR04MB9151:EE_
+X-MS-Office365-Filtering-Correlation-Id: 09c0762c-1ef1-4546-9cfd-08dbce56e896
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: bV/1vzRLtovlluli7zcnc2O91yf0ZCtkP2/OfV12gFIZpoewCqwikrSz755X0umuYNuSRgcdd9S4XV95jnNnP3KWttf6pj5PylvraZLfDaEG3dxaUQw69bdWsrlkz3KF+x0Jv5UzivFOI2XmuBntnFSt2tSoZdjkeP8k+YnDs6b38QnMHJGbrqF6nXRRQ4QsvPJdUGuHX1gUYt07Equ3dSrLWaoatuqYvgFbK3QUErmXojDXJRCljH88037reCIpQua6NBH9Jny+geGjD8PGdyZ67Ye30dMWe9EQRQIZZi24WGz0btIgy4TYu9pO4C9CSGb8XS+jvkLf84PGQyPf5kDMg7Fv00xfpyzqKXcmFfEj2iJVQf4qbHkA5HB843BkmfpOEuSVV2iRB0OI0fPlC2HyTMa9oxKiRId5dqDfH5KeCpXxgLNlQhethr4wkFBcny3mxfKpK7+a55BRNWDYFv8z/ppTBk+8HmlxOsJaSguCzRwfZz0NKbCeJPyv/8wd3Wx7lT33Bibwe+zrFPQG7z6qjwLGd5CQHiGQ7f/7CpUnCAjC0n8BFC5KNTAbb4xqD1XAxOWXJUsozNzXnm7SRWZIzS6ULIzR2BjRyxsZKKU=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(376002)(366004)(396003)(136003)(39860400002)(346002)(230922051799003)(451199024)(186009)(1800799009)(64100799003)(26005)(8676002)(8936002)(4326008)(33716001)(38100700002)(5660300002)(83380400001)(41300700001)(478600001)(86362001)(6486002)(966005)(38350700005)(7416002)(2906002)(316002)(6666004)(6506007)(6512007)(9686003)(52116002)(66946007)(66556008)(66476007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?lYSlykP7hJ+WDsW/zfL9mVfgPfhR8l+5xx0NJfe3HhI9j64zfMKYxFqYYE/L?=
+ =?us-ascii?Q?ZqUsE9B06BIhypyu7KstFMVNDB0celjsGkfBs/zPvkC5D7yg/VGK+g4+NbFK?=
+ =?us-ascii?Q?SbRVpszPOiyhffl4J091OLLkmmiitkr9jieQWz7nGe5JVnKWwT3rUi5/rqvS?=
+ =?us-ascii?Q?O+8ZdWShPlZDMehZVukarZKOf3soarUrAxPikKewAmbH52spZfAuPiO8gpIO?=
+ =?us-ascii?Q?Hvme7KDsRTy9ZuIgS83GLWwBg12emE/scBogV+dXQNyBxTYkqfmZ9l/KXVFp?=
+ =?us-ascii?Q?tS6G+TMzjOV4Ox6OM3TW2gqsV7mSIgEXivKLfY8Nmst5cYckoaDSpb0z/4h/?=
+ =?us-ascii?Q?hCE0yRZXTaVGaulU0anOt4qfEuZo9P6rj9qqu93UGmpOgLYzKCDpsoVm8UE1?=
+ =?us-ascii?Q?g/2/DKjs9Wuc56sN66kobq0QrAsmbXPqcFLaOdbPkko/iFFXDuPRP7mafBOf?=
+ =?us-ascii?Q?xcnjACD42KKNI6b499wVb4CS/8+u9c2Hi3epNTy96TOdnirWIM4/Tf42x4dy?=
+ =?us-ascii?Q?/2swna7KOsINa3TcfDM5skceF/vxpahYlVWiIkY518kbKRZD7pRw2DrGhKet?=
+ =?us-ascii?Q?Ko1HoefKDPlXO/GvN6w3bPFYl6iD0YJnTyTDYhLJAxDgiWaZZHBPIaKspnel?=
+ =?us-ascii?Q?FBFfLlSYnOQpLNL9Pa/0+7WTYAjOo0GuL7iqMWkc5SlELNDqi3rlGlrDoods?=
+ =?us-ascii?Q?n7PVoH2+GZqowNilYP+WAd7GNnsSgFOKTba0akDTyzZatQQglhrogRBsuI8s?=
+ =?us-ascii?Q?iAp6KMHlufxAceJ7joEc3hNVVFdWJK0lqXfCtqF4zQshnqSQBVQOXKTMyn4t?=
+ =?us-ascii?Q?NJGAfO30ud3Oo0UAjFP/KstTCxlVWt/5o5nYU7IzoY3TClxA4UQqIiqooK3f?=
+ =?us-ascii?Q?BnYL/8Nv4XOobEur2WI8JO1VIRAYpY9BHfH1V2hDOK40EPQpjMIIYtWFw1W7?=
+ =?us-ascii?Q?v9NpxTLRjEeYAry7QdXxu84AXmoIvRQ8/1Dajb2+G4nKq/HTFCGaaFuSnTER?=
+ =?us-ascii?Q?MXuqFCI5i4CycoXneQAD4gVHHXGRQSu7nDpuXABDKIX3UR/N25DN2LG1N0av?=
+ =?us-ascii?Q?UAyELttw1zhPoZQdEUq8FFdna2QVDUFi5rga42Hv3u1dFHeSFLPWNLyFLWJ4?=
+ =?us-ascii?Q?mg8gz+gdXLhX3lRB4DWcA+uYnI+URW2lEXjV3e1F43l4LS7h8Hu2gi2/H8Da?=
+ =?us-ascii?Q?ydlUp7SFsxhMEmA0hofGNbBPKAlKpJkfxo7znC28e10dmrxX96UZiu9bVqyk?=
+ =?us-ascii?Q?IUkGEp1W6qjrv8wmEjdcof6raVzde6XalFSzAwnfJwWCBWwI7FWH+3nQaUhx?=
+ =?us-ascii?Q?HVmLzOpo2SngdCAZH7/Cd6oC7e79qfAO+ITiqmER2mieN76X4s3Lb91v61ll?=
+ =?us-ascii?Q?rmJ7WQ9G+oN7Ryb385bXPxQ5NuyIsHEjfnXYr6fdBL3T2pGW2iPjYnJFHB+2?=
+ =?us-ascii?Q?yJSsSSvSAyweDYa8bwXGSwc8q3R9n+6qOIpqF/yaxjBPjSLVAwJbcH/P13Xj?=
+ =?us-ascii?Q?AoM6mdBRP+0EOSm7X/7uaWcgxgizTZ88co5EvdgqWBXi8bdn9w/OCzxpt4Eb?=
+ =?us-ascii?Q?xHjd9HR3+W8fZEUsbhLP9Z6NZ1OKrmzX6QwuOrpD?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 09c0762c-1ef1-4546-9cfd-08dbce56e896
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Oct 2023 14:48:07.0584
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1904xQzqPAyQ7d1o9mpS34mlE3bM5X2wLiA+iP8+1P/hX6ngd1A6pd4iycppJJAauPPpWzJYjHHddEkr4myQdA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB9151
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Rob,
+On Tue, Oct 03, 2023 at 10:52:09AM -0400, Frank Li wrote:
+> Change from v5 to v6
+> - Use case 0 and case sizeof(u32) instead of default
 
-On 10/12/23 17:30, Rob Herring wrote:
-> On Wed, Oct 11, 2023 at 10:49:58AM +0200, Gatien CHEVALLIER wrote:
->> Hi Rob,
->>
->> On 10/10/23 20:42, Rob Herring wrote:
->>> On Tue, Oct 10, 2023 at 02:57:18PM +0200, Gatien Chevallier wrote:
->>>> ETZPC is a firewall controller. Put all peripherals filtered by the
->>>> ETZPC as ETZPC subnodes and reference ETZPC as an
->>>> access-control-provider.
->>>>
->>>> For more information on which peripheral is securable or supports MCU
->>>> isolation, please read the STM32MP15 reference manual.
->>>>
->>>> Signed-off-by: Gatien Chevallier <gatien.chevallier@foss.st.com>
->>>> ---
->>>>
->>>> Changes in V6:
->>>>       	- Renamed access-controller to access-controllers
->>>>       	- Removal of access-control-provider property
->>>>
->>>> Changes in V5:
->>>>       	- Renamed feature-domain* to access-control*
->>>>
->>>>    arch/arm/boot/dts/st/stm32mp151.dtsi  | 2756 +++++++++++++------------
->>>>    arch/arm/boot/dts/st/stm32mp153.dtsi  |   52 +-
->>>>    arch/arm/boot/dts/st/stm32mp15xc.dtsi |   19 +-
->>>>    3 files changed, 1450 insertions(+), 1377 deletions(-)
->>>
->>> This is not reviewable. Change the indentation and any non-functional
->>> change in one patch and then actual changes in another.
->>
->> Ok, I'll make it easier to read.
->>
->>>
->>> This is also an ABI break. Though I'm not sure it's avoidable. All the
->>> devices below the ETZPC node won't probe on existing kernel. A
->>> simple-bus fallback for ETZPC node should solve that.
->>>
->>
->> I had one issue when trying with a simple-bus fallback that was the
->> drivers were probing even though the access rights aren't correct.
->> Hence the removal of the simple-bus compatible in the STM32MP25 patch.
-> 
-> But it worked before, right? So the difference is you have either added
-> new devices which need setup or your firmware changed how devices are
-> setup (or not setup). Certainly can't fix the latter case. You just need
-> to be explicit about what you are doing to users.
-> 
-
-I should've specified it was during a test where I deliberately set
-incorrect rights on a peripheral and enabled its node to see if the
-firewall would allow the creation of the device.
+Ping. I fixed build issue. 
 
 > 
->> Even though a node is tagged with the OF_POPULATED flag when checking
->> the access rights with the firewall controller, it seems that when
->> simple-bus is probing, there's no check of this flag.
+> Change from v4 to v5
+> - There are still some discussion about 64bit register access.
+>   Drop 64 register support and use sperate patch to enable 64bit register
+> support in future.
 > 
-> It shouldn't. Those flags are for creating the devices (or not) and
-> removing only devices of_platform_populate() created.
+> Change from v3 to v4
+> - Fix build warning
 > 
-
-About the "simple-bus" being a fallback, I think I understood why I saw
-that the devices were created.
-
-All devices under a node whose compatible is "simple-bus" are created
-in of_platform_device_create_pdata(), called by
-of_platform_default_populate_init() at arch_initcall level. This
-before the firewall-controller has a chance to populate it's bus.
-
-Therefore, when I flag nodes when populating the firewall-bus, the
-devices are already created. The "simple-bus" mechanism is not a
-fallback here as it precedes the driver probe.
-
-Is there a safe way to safely remove/disable a device created this way?
-Devices that are under the firewall controller (simple-bus) node
-should not be probed before it as they're child of it.
-
-Best regards,
-Gatien
-
->> of_platform_populate() checks and sets the OF_POPULATED_BUS flag.
->> Maybe that is my error and the firewall bus populate should set
->> OF_POPULATED_BUS instead of OF_POPULATED. Is that correct?
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202309210500.owiirl4c-lkp@intel.com/
 > 
-> Shrug. Off hand, I'd say probably not, but am not certain.
+> Change from v2 to v3
+> - Fixed sparse build warning
+> - improve debugfs_create_regset32 and use debugfs_create_regset() to dump
+>   all registers
 > 
-> Rob
+> Change from v1 to v2
+> - Fixed tcd trace issue, data need be saved firstly.
+> 
+> === Trace ===
+> 
+> echo 1 >/sys/kernel/debug/tracing/tracing_on
+> echo 1 >/sys/kernel/debug/tracing/events/fsl_edma/enable
+> 
+> Run any dma test
+> ...
+> 
+> cat /sys/kernel/debug/tracing/trace
+> 
+>  uart_testapp_11-448     [000] d..1.    69.185019: edma_fill_tcd:
+> ==== TCD =====
+>   saddr:  0x831ee020
+>   soff:       0x8000
+>   attr:       0xffff
+>   nbytes: 0xfba40000
+>   slast:  0x00000000
+>   daddr:  0x8aaa4800
+>   doff:       0x0001
+>   citer:      0x0800
+>   dlast:  0xfba40020
+>   csr:        0x0052
+>   biter:      0x0800
+> 
+>  uart_testapp_11-448     [000] d..2.    69.185022: edma_writew: offset 0001803c: value 00000000
+>  uart_testapp_11-448     [000] d..2.    69.185023: edma_writel: offset 00018020: value 4259001c
+>  uart_testapp_11-448     [000] d..2.    69.185024: edma_writel: offset 00018030: value 8aaa4000
+> 
+> === DebugFS ===
+> 
+> cat /sys/kernel/debug/dmaengine/42000000.dma-controller/42000000.dma-controller-CH00/ch_sbr
+> 0x00208003
+> 
+> Frank Li (3):
+>   debugfs_create_regset32() support 8/16 bit width registers
+>   dmaengine: fsl-emda: add debugfs support
+>   dmaengine: fsl-edma: add trace event support
+> 
+>  drivers/dma/Makefile           |   7 +-
+>  drivers/dma/fsl-edma-common.c  |   2 +
+>  drivers/dma/fsl-edma-common.h  |  37 +++++-
+>  drivers/dma/fsl-edma-debugfs.c | 200 +++++++++++++++++++++++++++++++++
+>  drivers/dma/fsl-edma-main.c    |   2 +
+>  drivers/dma/fsl-edma-trace.c   |   4 +
+>  drivers/dma/fsl-edma-trace.h   | 134 ++++++++++++++++++++++
+>  fs/debugfs/file.c              |  54 ++++++---
+>  include/linux/debugfs.h        |  17 ++-
+>  9 files changed, 429 insertions(+), 28 deletions(-)
+>  create mode 100644 drivers/dma/fsl-edma-debugfs.c
+>  create mode 100644 drivers/dma/fsl-edma-trace.c
+>  create mode 100644 drivers/dma/fsl-edma-trace.h
+> 
+> -- 
+> 2.34.1
+> 

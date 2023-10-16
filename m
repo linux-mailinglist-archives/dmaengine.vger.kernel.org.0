@@ -2,40 +2,46 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B95777CA653
-	for <lists+dmaengine@lfdr.de>; Mon, 16 Oct 2023 13:13:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 664077CA657
+	for <lists+dmaengine@lfdr.de>; Mon, 16 Oct 2023 13:13:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231478AbjJPLNH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 16 Oct 2023 07:13:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38382 "EHLO
+        id S232618AbjJPLNL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 16 Oct 2023 07:13:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230116AbjJPLNG (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 16 Oct 2023 07:13:06 -0400
+        with ESMTP id S230116AbjJPLNK (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 16 Oct 2023 07:13:10 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C6ED83;
-        Mon, 16 Oct 2023 04:13:05 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5636C433CA;
-        Mon, 16 Oct 2023 11:13:03 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 221B283;
+        Mon, 16 Oct 2023 04:13:09 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE142C433CB;
+        Mon, 16 Oct 2023 11:13:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1697454785;
-        bh=LpH4MXYRVHeojK0PzBPGh2kX9dO/puTQlGQJy0EUKsY=;
+        s=k20201202; t=1697454788;
+        bh=UAUugA1TRH3GNFHUIn31bVskNVQzeqghhP8ABGtukvE=;
         h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-        b=ioNTQQfw3vZ2/xTXFeMZKdkR46rOPDz0HKF6PvniCWfT9gdj6SVXB2clsJWpU2+pa
-         qAhmBp9EaY/pJEtTQLKJ7HGkttQLvp1abGbIdsyA45GLkXl69cGJ8YGoP/EAGYl21h
-         Pd8UT1ELdeEco+5xV9kmKkjRW5SMlKbyfE/AVLKSE5jfXeKxOc+TL/T6JluzU3rBOb
-         8qvnsFfGHteTHZNy/FtPzr3Qj+LD1cGNOt75/94lWCLh3NvSEs3k8BAnghurOXBhAm
-         Qv3xgA0HPSZ4/d021YEEFRTtBPTdmCtfTdPyM7sjdXKrwEImIJ7rRutuLbLQpm3mHH
-         4quA2CPsSpbrA==
+        b=YAqoi0iUbfPDUjpjVXO6wBfsmdA54PwDqLnlg/LzHbRnh41ED/N+x3X8P2cJ74Znt
+         xi4jBbxym5JSYILiAXV3+mnyBwcrIKqXyRYQJK5zBax2zMJ0pllHT+nN8R09wIItqv
+         edhkwzj2RH8z1Dcd3uFtC66uCpCcit/6Kbuq3ls+7HqxWwjKrPjOoZVE5Fswi5SWWd
+         RkSfNglzLl/VHogRcITq0Jk3+9cfRjVpOG9tUwHzca6gLLNAwWPqs8pyjR/fqB6zdX
+         oLtvR9mvjdu3grHwTTTUroGDWT3BNnOzCXG2XuKuAs3MnxhMp5C4zBsmi66yo8Nu2d
+         E60hGccgKUtWw==
 From:   Vinod Koul <vkoul@kernel.org>
-To:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        Sergey Khimich <serghox@gmail.com>
-Cc:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-In-Reply-To: <20231010101450.2949126-1-serghox@gmail.com>
-References: <20231010101450.2949126-1-serghox@gmail.com>
-Subject: Re: [PATCH v2 0/1] Add support DMAX_NUM_CHANNELS > 16
-Message-Id: <169745478337.211836.16188943435637938366.b4-ty@kernel.org>
-Date:   Mon, 16 Oct 2023 16:43:03 +0530
+To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        M'boumba Cedric Madianga <cedric.madianga@gmail.com>,
+        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
+        Amelie Delaunay <amelie.delaunay@foss.st.com>
+Cc:     Alain Volmat <alain.volmat@foss.st.com>, stable@vger.kernel.org,
+        dmaengine@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20231009082450.452877-1-amelie.delaunay@foss.st.com>
+References: <20231009082450.452877-1-amelie.delaunay@foss.st.com>
+Subject: Re: [PATCH] dmaengine: stm32-mdma: correct desc prep when channel
+ running
+Message-Id: <169745478541.211836.5231413059323245231.b4-ty@kernel.org>
+Date:   Mon, 16 Oct 2023 16:43:05 +0530
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
@@ -50,21 +56,20 @@ List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 
-On Tue, 10 Oct 2023 13:14:49 +0300, Sergey Khimich wrote:
-> This patch adds support for DW AXI DMA controller with
-> 32 channels.
-> 
-> v2:
->  - Fix warning reported by kernel test robot:
->    | Reported-by: kernel test robot <lkp@intel.com>
->    | Closes: https://lore.kernel.org/oe-kbuild-all/202310060144.oLP6NoVL-lkp@intel.com/
+On Mon, 09 Oct 2023 10:24:50 +0200, Amelie Delaunay wrote:
+> In case of the prep descriptor while the channel is already running, the
+> CCR register value stored into the channel could already have its EN bit
+> set.  This would lead to a bad transfer since, at start transfer time,
+> enabling the channel while other registers aren't yet properly set.
+> To avoid this, ensure to mask the CCR_EN bit when storing the ccr value
+> into the mdma channel structure.
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] dmaengine: dw-axi-dmac: Add support DMAX_NUM_CHANNELS > 16
-      commit: 495e18b16e3dd8218eaec6a8a55334fb55245d59
+[1/1] dmaengine: stm32-mdma: correct desc prep when channel running
+      commit: 03f25d53b145bc2f7ccc82fc04e4482ed734f524
 
 Best regards,
 -- 

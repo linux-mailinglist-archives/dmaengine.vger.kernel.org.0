@@ -2,197 +2,118 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C6AB47CABFA
-	for <lists+dmaengine@lfdr.de>; Mon, 16 Oct 2023 16:48:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C3C1E7CBED4
+	for <lists+dmaengine@lfdr.de>; Tue, 17 Oct 2023 11:18:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232202AbjJPOsM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 16 Oct 2023 10:48:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42268 "EHLO
+        id S234849AbjJQJSt (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 17 Oct 2023 05:18:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233445AbjJPOsL (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 16 Oct 2023 10:48:11 -0400
-Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2049.outbound.protection.outlook.com [40.107.249.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F2AAB9;
-        Mon, 16 Oct 2023 07:48:09 -0700 (PDT)
+        with ESMTP id S234864AbjJQJSr (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 17 Oct 2023 05:18:47 -0400
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2070.outbound.protection.outlook.com [40.107.237.70])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B89FDFB;
+        Tue, 17 Oct 2023 02:18:45 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=imYKRZBEuqFeDQfjcu8BWZiv830Pzw7v83x9cFhg1rKGXO0oNLN1gTtIH1OK7FFqQ1inG59dvTz0aHqC80YUN8iW+28FIz9tmKEAcCIfXNy95dRqMPmoRZXaUmJsaIiZCVifA/TFUUM3CdIwNj/D18NkGyhLTHqRzt/GOcm81CASUu8dYPNy43hYG9Mo7BE2O+BsfipmwspGARG4NsPZUpGAVxG7I+vEE8L3aCPxKrBhAwsofiYgyQas126hpLXDCE3Pt6t60f5W3JqWThvjf1R7rmVqpny+MmT6GazLb4XjnnyjXQ0T7ReujIfH7+5H0X9hWaio0J1+dNeKdfcsJQ==
+ b=Ppa3bX3HIF5/6Cp5w6h5tIVzaWAzLCsETMd4sfw86cI+D8oFVoMchgnVnaPa/M8HEC90gqr9ee24+NrYNQ11c2TPcHwmsY/HZNpoRfMUyDD8lYM4VtBOpcXED2RLTZg2Y8/TafVS/nPc2EDz+qGJE3h0LHlD7ea0mCecMba0cJpX0kWw9H029a2sH7HbyvXYJngUjGHxNv+cjw8c+kTTeOV2tPVVpG7m3E9s0as1lYlAsMbCnP8vykxrsKcmO7+8b3oPIty0XYt2VpwBR0rAxcKIKNlSk1ccydg2yMnf/NwHkkXGvdzIkk5GyvtphYBMGDN3nmM2QV6WJn1tJARi1g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8F2IDySJK2AzyxaqBahCm6XqENXkY+c7XtoQcOJsf+8=;
- b=HjzL+HHpAnqNvxdIIjnSmdrHu9dhtg51C349bPt4CCO8GQOOdmTKnHzaZzQJX6zFUwC/N+c0CGRB/7VvfPI5LP9uGWBMnfn10EhnqkhE/yxNVMCemK4y0j5VfBhn6635q6rT5hhYrrc8MVHD3swq3ynD7c6sFK3ZlL93Nbs/WGCT21mA94ADVa6F8VAoKM3LuG1qzxwOUiyljuFxu1Ki63FCqBT3C1XzSB+totqPJhi4z2gEFV12wlFrRgZttHbFS9uBIK+c5I0X0OTpO90dKb3YXxTPQchfKPgjlaEG1hauzPO+o8FFt5JgIgpISEWtIrzPwIj6RHI3cFav/0LXHQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ bh=t3KQXlpi54W4lYTL0TH4pmkDKa6qxHZ9Uc6hxiVOVRU=;
+ b=kV28as7r7mv/hWcJr/6IFwVx1sVvb68KwQukLa1odHhM/WkPWJoTUElw6Y83CnaVQRElgYhD1FxYp6rnWY98RBDZYy3/XZ50JkhWGw1rdSW3rpq5GXJAFDxldlDQ5noaKk3JHP6mwTON1/bDV3sAtzSk3ujSm9Qn6+GVhgKIrNQTGelIe+RFua7qzWxIM7qHlDgtZ39JCCu+bGVRu9Q5LCoJxw3V7skHLh9xRf3bmyX+LRbCRhLnvCp/F9BV7B2q0j6pWYOSHWEmIU+CzlfAx5SdM5WpiIOVhoe0lljUZtfEBMmDh8i/xUCsh4fcNssDbII0wK1qoVJ/dF2fGhc1UQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.233) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8F2IDySJK2AzyxaqBahCm6XqENXkY+c7XtoQcOJsf+8=;
- b=Mfx6EbyjJhtMUuDTZv2q53KwmlmQ2dXxE9mDcJpF+xXLAuebPL2Iw3Dmbxmlg6mNfbbz/WDa0Nf4sMAZ3bnsN5A6sGz711q+MnoBP5NSOyXTO4b6F0g4E4Q1LIgHAdr7Uo25Qs9DBfygWhQR+jN9PBvgqVyZfc3BzFyYBFj20Pk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
- by GV1PR04MB9151.eurprd04.prod.outlook.com (2603:10a6:150:26::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6886.35; Mon, 16 Oct
- 2023 14:48:07 +0000
-Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
- ([fe80::1774:e25f:f99:aca2]) by AM6PR04MB4838.eurprd04.prod.outlook.com
- ([fe80::1774:e25f:f99:aca2%4]) with mapi id 15.20.6886.034; Mon, 16 Oct 2023
- 14:48:07 +0000
-Date:   Mon, 16 Oct 2023 10:47:59 -0400
-From:   Frank Li <Frank.li@nxp.com>
-To:     arnd@arndb.de, vkoul@kernel.org
-Cc:     bhe@redhat.com, dmaengine@vger.kernel.org,
-        gregkh@linuxfoundation.org, imx@lists.linux.dev,
-        linux-kernel@vger.kernel.org, lkp@intel.com,
-        oe-kbuild-all@lists.linux.dev, rafael@kernel.org
-Subject: Re: [PATCH v6 0/3] dmaengine: fsl_edma: add trace and debugfs support
-Message-ID: <ZS1NHwdTiHrAoEbk@lizhi-Precision-Tower-5810>
-References: <20231003145212.662955-1-Frank.Li@nxp.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231003145212.662955-1-Frank.Li@nxp.com>
-X-ClientProxiedBy: SJ0PR13CA0079.namprd13.prod.outlook.com
- (2603:10b6:a03:2c4::24) To AM6PR04MB4838.eurprd04.prod.outlook.com
- (2603:10a6:20b:4::16)
+ bh=t3KQXlpi54W4lYTL0TH4pmkDKa6qxHZ9Uc6hxiVOVRU=;
+ b=IjLDhAyZv9VRGnd2cCYA/0YdpoPybTyO5oycHvpC1IkzqL/4XXfyyYooMQbDBxxvdlorGSagWmvYafT2npjZJfIj6op4pXOtgxeAPWuy0EO0K5ww2lZ426d6ZQH8fZsFXTw1Wye9VU4lCE+bQanu9WMOyrMpwqlDT4IMTH/Wmxq0sHZnpN6WSTAteVMRmtyeBAYVVtHnQu4Wdhl8L1yiq43SucjDRTuo3jYIABzGdvfRzPMiM1swLKF25VqJWyc1EZsN4YenbrirkOIscwIalVx+nhJClX/oGiRVRhqxN1LpHzeeIoEBjTVBCniMSy+GZZD2qeNlLoJgRBFHrekUcg==
+Received: from BL0PR1501CA0014.namprd15.prod.outlook.com
+ (2603:10b6:207:17::27) by PH8PR12MB6673.namprd12.prod.outlook.com
+ (2603:10b6:510:1c0::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6863.45; Tue, 17 Oct
+ 2023 09:18:43 +0000
+Received: from BL6PEPF0001AB4B.namprd04.prod.outlook.com
+ (2603:10b6:207:17:cafe::a1) by BL0PR1501CA0014.outlook.office365.com
+ (2603:10b6:207:17::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6886.36 via Frontend
+ Transport; Tue, 17 Oct 2023 09:18:43 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.233) by
+ BL6PEPF0001AB4B.mail.protection.outlook.com (10.167.242.69) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6838.22 via Frontend Transport; Tue, 17 Oct 2023 09:18:43 +0000
+Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
+ (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Tue, 17 Oct
+ 2023 02:18:35 -0700
+Received: from drhqmail201.nvidia.com (10.126.190.180) by
+ drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.41; Tue, 17 Oct 2023 02:18:34 -0700
+Received: from mkumard.nvidia.com (10.127.8.9) by mail.nvidia.com
+ (10.126.190.180) with Microsoft SMTP Server id 15.2.986.41 via Frontend
+ Transport; Tue, 17 Oct 2023 02:18:32 -0700
+From:   Mohan Kumar <mkumard@nvidia.com>
+To:     <vkoul@kernel.org>, <robh+dt@kernel.org>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <ldewangan@nvidia.com>, <krzysztof.kozlowski+dt@linaro.org>
+CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Mohan Kumar <mkumard@nvidia.com>
+Subject: [PATCH V2 0/2] Support dma channel mask
+Date:   Tue, 17 Oct 2023 14:48:14 +0530
+Message-ID: <20231017091816.2490-1-mkumard@nvidia.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
+Content-Type: text/plain
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|GV1PR04MB9151:EE_
-X-MS-Office365-Filtering-Correlation-Id: 09c0762c-1ef1-4546-9cfd-08dbce56e896
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB4B:EE_|PH8PR12MB6673:EE_
+X-MS-Office365-Filtering-Correlation-Id: fe1fc924-8ff1-428c-ba3f-08dbcef20f08
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: bV/1vzRLtovlluli7zcnc2O91yf0ZCtkP2/OfV12gFIZpoewCqwikrSz755X0umuYNuSRgcdd9S4XV95jnNnP3KWttf6pj5PylvraZLfDaEG3dxaUQw69bdWsrlkz3KF+x0Jv5UzivFOI2XmuBntnFSt2tSoZdjkeP8k+YnDs6b38QnMHJGbrqF6nXRRQ4QsvPJdUGuHX1gUYt07Equ3dSrLWaoatuqYvgFbK3QUErmXojDXJRCljH88037reCIpQua6NBH9Jny+geGjD8PGdyZ67Ye30dMWe9EQRQIZZi24WGz0btIgy4TYu9pO4C9CSGb8XS+jvkLf84PGQyPf5kDMg7Fv00xfpyzqKXcmFfEj2iJVQf4qbHkA5HB843BkmfpOEuSVV2iRB0OI0fPlC2HyTMa9oxKiRId5dqDfH5KeCpXxgLNlQhethr4wkFBcny3mxfKpK7+a55BRNWDYFv8z/ppTBk+8HmlxOsJaSguCzRwfZz0NKbCeJPyv/8wd3Wx7lT33Bibwe+zrFPQG7z6qjwLGd5CQHiGQ7f/7CpUnCAjC0n8BFC5KNTAbb4xqD1XAxOWXJUsozNzXnm7SRWZIzS6ULIzR2BjRyxsZKKU=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(376002)(366004)(396003)(136003)(39860400002)(346002)(230922051799003)(451199024)(186009)(1800799009)(64100799003)(26005)(8676002)(8936002)(4326008)(33716001)(38100700002)(5660300002)(83380400001)(41300700001)(478600001)(86362001)(6486002)(966005)(38350700005)(7416002)(2906002)(316002)(6666004)(6506007)(6512007)(9686003)(52116002)(66946007)(66556008)(66476007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?lYSlykP7hJ+WDsW/zfL9mVfgPfhR8l+5xx0NJfe3HhI9j64zfMKYxFqYYE/L?=
- =?us-ascii?Q?ZqUsE9B06BIhypyu7KstFMVNDB0celjsGkfBs/zPvkC5D7yg/VGK+g4+NbFK?=
- =?us-ascii?Q?SbRVpszPOiyhffl4J091OLLkmmiitkr9jieQWz7nGe5JVnKWwT3rUi5/rqvS?=
- =?us-ascii?Q?O+8ZdWShPlZDMehZVukarZKOf3soarUrAxPikKewAmbH52spZfAuPiO8gpIO?=
- =?us-ascii?Q?Hvme7KDsRTy9ZuIgS83GLWwBg12emE/scBogV+dXQNyBxTYkqfmZ9l/KXVFp?=
- =?us-ascii?Q?tS6G+TMzjOV4Ox6OM3TW2gqsV7mSIgEXivKLfY8Nmst5cYckoaDSpb0z/4h/?=
- =?us-ascii?Q?hCE0yRZXTaVGaulU0anOt4qfEuZo9P6rj9qqu93UGmpOgLYzKCDpsoVm8UE1?=
- =?us-ascii?Q?g/2/DKjs9Wuc56sN66kobq0QrAsmbXPqcFLaOdbPkko/iFFXDuPRP7mafBOf?=
- =?us-ascii?Q?xcnjACD42KKNI6b499wVb4CS/8+u9c2Hi3epNTy96TOdnirWIM4/Tf42x4dy?=
- =?us-ascii?Q?/2swna7KOsINa3TcfDM5skceF/vxpahYlVWiIkY518kbKRZD7pRw2DrGhKet?=
- =?us-ascii?Q?Ko1HoefKDPlXO/GvN6w3bPFYl6iD0YJnTyTDYhLJAxDgiWaZZHBPIaKspnel?=
- =?us-ascii?Q?FBFfLlSYnOQpLNL9Pa/0+7WTYAjOo0GuL7iqMWkc5SlELNDqi3rlGlrDoods?=
- =?us-ascii?Q?n7PVoH2+GZqowNilYP+WAd7GNnsSgFOKTba0akDTyzZatQQglhrogRBsuI8s?=
- =?us-ascii?Q?iAp6KMHlufxAceJ7joEc3hNVVFdWJK0lqXfCtqF4zQshnqSQBVQOXKTMyn4t?=
- =?us-ascii?Q?NJGAfO30ud3Oo0UAjFP/KstTCxlVWt/5o5nYU7IzoY3TClxA4UQqIiqooK3f?=
- =?us-ascii?Q?BnYL/8Nv4XOobEur2WI8JO1VIRAYpY9BHfH1V2hDOK40EPQpjMIIYtWFw1W7?=
- =?us-ascii?Q?v9NpxTLRjEeYAry7QdXxu84AXmoIvRQ8/1Dajb2+G4nKq/HTFCGaaFuSnTER?=
- =?us-ascii?Q?MXuqFCI5i4CycoXneQAD4gVHHXGRQSu7nDpuXABDKIX3UR/N25DN2LG1N0av?=
- =?us-ascii?Q?UAyELttw1zhPoZQdEUq8FFdna2QVDUFi5rga42Hv3u1dFHeSFLPWNLyFLWJ4?=
- =?us-ascii?Q?mg8gz+gdXLhX3lRB4DWcA+uYnI+URW2lEXjV3e1F43l4LS7h8Hu2gi2/H8Da?=
- =?us-ascii?Q?ydlUp7SFsxhMEmA0hofGNbBPKAlKpJkfxo7znC28e10dmrxX96UZiu9bVqyk?=
- =?us-ascii?Q?IUkGEp1W6qjrv8wmEjdcof6raVzde6XalFSzAwnfJwWCBWwI7FWH+3nQaUhx?=
- =?us-ascii?Q?HVmLzOpo2SngdCAZH7/Cd6oC7e79qfAO+ITiqmER2mieN76X4s3Lb91v61ll?=
- =?us-ascii?Q?rmJ7WQ9G+oN7Ryb385bXPxQ5NuyIsHEjfnXYr6fdBL3T2pGW2iPjYnJFHB+2?=
- =?us-ascii?Q?yJSsSSvSAyweDYa8bwXGSwc8q3R9n+6qOIpqF/yaxjBPjSLVAwJbcH/P13Xj?=
- =?us-ascii?Q?AoM6mdBRP+0EOSm7X/7uaWcgxgizTZ88co5EvdgqWBXi8bdn9w/OCzxpt4Eb?=
- =?us-ascii?Q?xHjd9HR3+W8fZEUsbhLP9Z6NZ1OKrmzX6QwuOrpD?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 09c0762c-1ef1-4546-9cfd-08dbce56e896
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Oct 2023 14:48:07.0584
+X-Microsoft-Antispam-Message-Info: SW+ND7eoo6a5oGtqwPaOX81OOV5QTkFKzhLGzcRLLooArPa+KrzOBdJ5PrgG7vhFE7M5aV6QMIEz3Bwki0dfxdk8TJb/dJJAHNZNU38XXZ3egBYi7tgY01sCExa3YiI5hZdbEJTpLtNYGY1CrsCc9HDtcv/hqlzMJE667bBBWOT4HARGaOmdIvc0DlbpQgN+LdWUiCayObQOmU0ORO8Nq5Tvc6jhYPB8Qta9yC7nijGGLR6hS2zUh1dVrGCwr0lNnZHVmg0OZUJErfSPP6dOXcg3Qk8eoU39dA461CFrhCFd9dwE/7OsDdC+fD/H1Hn1hYEcax8XFzJhjqTTynSOR0owlwjBTfsyo+5VPKEDftwVkgPRBfny+hjENajivRIJhHdcuJRG6SWVT2BlPSXLB04u3txdkMsseoUrqiJXoHCeoY3SL9zGw2aoURBx38iN6RLl4ORyzySqaJ2Jq791qX/KX+i+O711nmFWlQM3QsEbRmmVFDQEv32RpY0fgLir/zoWMejtRAMaMn8dsxSfqD+FcccpqRds5MPQvMn5eZ8ChEzwU8SqPXWBkVD91fl2Jt8mRT14w9Y94bUNHmKgIqKPVqiBJwsVSIKwG6bGyUv/a+IEpSOiO108JXL2vwX0VyMrLicX+lLGmHaB+ZPWzrii0uOMaW+mNufL7SAB8J2NuCj1gMTUuQk+UplUngUN1w4hO86++r9jQ4fweXaxAkr6QcnOjZCVlduvKgkyv1Zxl0cTwA/t8A8uiXAdJphN
+X-Forefront-Antispam-Report: CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(136003)(39860400002)(346002)(396003)(376002)(230922051799003)(82310400011)(64100799003)(186009)(451199024)(1800799009)(46966006)(36840700001)(40470700004)(47076005)(7696005)(478600001)(36860700001)(83380400001)(2616005)(26005)(7636003)(40460700003)(426003)(40480700001)(336012)(2906002)(6666004)(70206006)(4744005)(8676002)(41300700001)(4326008)(5660300002)(86362001)(316002)(70586007)(110136005)(36756003)(54906003)(107886003)(1076003)(82740400003)(8936002)(356005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Oct 2023 09:18:43.0819
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1904xQzqPAyQ7d1o9mpS34mlE3bM5X2wLiA+iP8+1P/hX6ngd1A6pd4iycppJJAauPPpWzJYjHHddEkr4myQdA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB9151
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-Network-Message-Id: fe1fc924-8ff1-428c-ba3f-08dbcef20f08
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: BL6PEPF0001AB4B.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6673
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Oct 03, 2023 at 10:52:09AM -0400, Frank Li wrote:
-> Change from v5 to v6
-> - Use case 0 and case sizeof(u32) instead of default
+To reserve the dma channel using dma-channel-mask property for Tegra 
+platforms.
 
-Ping. I fixed build issue. 
+Mohan Kumar (2):
+  dt-bindings: dma: Add dma-channel-mask to nvidia,tegra210-adma
+  dmaengine: tegra210-adma: Support dma-channel-mask property
 
-> 
-> Change from v4 to v5
-> - There are still some discussion about 64bit register access.
->   Drop 64 register support and use sperate patch to enable 64bit register
-> support in future.
-> 
-> Change from v3 to v4
-> - Fix build warning
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202309210500.owiirl4c-lkp@intel.com/
-> 
-> Change from v2 to v3
-> - Fixed sparse build warning
-> - improve debugfs_create_regset32 and use debugfs_create_regset() to dump
->   all registers
-> 
-> Change from v1 to v2
-> - Fixed tcd trace issue, data need be saved firstly.
-> 
-> === Trace ===
-> 
-> echo 1 >/sys/kernel/debug/tracing/tracing_on
-> echo 1 >/sys/kernel/debug/tracing/events/fsl_edma/enable
-> 
-> Run any dma test
-> ...
-> 
-> cat /sys/kernel/debug/tracing/trace
-> 
->  uart_testapp_11-448     [000] d..1.    69.185019: edma_fill_tcd:
-> ==== TCD =====
->   saddr:  0x831ee020
->   soff:       0x8000
->   attr:       0xffff
->   nbytes: 0xfba40000
->   slast:  0x00000000
->   daddr:  0x8aaa4800
->   doff:       0x0001
->   citer:      0x0800
->   dlast:  0xfba40020
->   csr:        0x0052
->   biter:      0x0800
-> 
->  uart_testapp_11-448     [000] d..2.    69.185022: edma_writew: offset 0001803c: value 00000000
->  uart_testapp_11-448     [000] d..2.    69.185023: edma_writel: offset 00018020: value 4259001c
->  uart_testapp_11-448     [000] d..2.    69.185024: edma_writel: offset 00018030: value 8aaa4000
-> 
-> === DebugFS ===
-> 
-> cat /sys/kernel/debug/dmaengine/42000000.dma-controller/42000000.dma-controller-CH00/ch_sbr
-> 0x00208003
-> 
-> Frank Li (3):
->   debugfs_create_regset32() support 8/16 bit width registers
->   dmaengine: fsl-emda: add debugfs support
->   dmaengine: fsl-edma: add trace event support
-> 
->  drivers/dma/Makefile           |   7 +-
->  drivers/dma/fsl-edma-common.c  |   2 +
->  drivers/dma/fsl-edma-common.h  |  37 +++++-
->  drivers/dma/fsl-edma-debugfs.c | 200 +++++++++++++++++++++++++++++++++
->  drivers/dma/fsl-edma-main.c    |   2 +
->  drivers/dma/fsl-edma-trace.c   |   4 +
->  drivers/dma/fsl-edma-trace.h   | 134 ++++++++++++++++++++++
->  fs/debugfs/file.c              |  54 ++++++---
->  include/linux/debugfs.h        |  17 ++-
->  9 files changed, 429 insertions(+), 28 deletions(-)
->  create mode 100644 drivers/dma/fsl-edma-debugfs.c
->  create mode 100644 drivers/dma/fsl-edma-trace.c
->  create mode 100644 drivers/dma/fsl-edma-trace.h
-> 
-> -- 
-> 2.34.1
-> 
+ .../bindings/dma/nvidia,tegra210-adma.yaml    |  3 ++
+ drivers/dma/tegra210-adma.c                   | 35 +++++++++++++++++--
+ 2 files changed, 36 insertions(+), 2 deletions(-)
+
+-- 
+2.17.1
+

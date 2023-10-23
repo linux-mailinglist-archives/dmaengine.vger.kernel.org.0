@@ -2,179 +2,164 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DC56D7D2DA8
-	for <lists+dmaengine@lfdr.de>; Mon, 23 Oct 2023 11:09:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 905117D383E
+	for <lists+dmaengine@lfdr.de>; Mon, 23 Oct 2023 15:39:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229498AbjJWJJG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 23 Oct 2023 05:09:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52964 "EHLO
+        id S230519AbjJWNjt (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 23 Oct 2023 09:39:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229981AbjJWJJF (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 23 Oct 2023 05:09:05 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 993C398;
-        Mon, 23 Oct 2023 02:09:02 -0700 (PDT)
-Received: from kwepemm000013.china.huawei.com (unknown [172.30.72.56])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4SDTlz6dxYzMm8l;
-        Mon, 23 Oct 2023 17:04:47 +0800 (CST)
-Received: from [10.174.178.156] (10.174.178.156) by
- kwepemm000013.china.huawei.com (7.193.23.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Mon, 23 Oct 2023 17:08:58 +0800
-Message-ID: <ff4df55f-27f2-8042-be58-a5feb2620551@huawei.com>
-Date:   Mon, 23 Oct 2023 17:08:57 +0800
+        with ESMTP id S230386AbjJWNjs (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 23 Oct 2023 09:39:48 -0400
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB1E691
+        for <dmaengine@vger.kernel.org>; Mon, 23 Oct 2023 06:39:45 -0700 (PDT)
+Received: by mail-wm1-x32a.google.com with SMTP id 5b1f17b1804b1-40806e40fccso24313055e9.2
+        for <dmaengine@vger.kernel.org>; Mon, 23 Oct 2023 06:39:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1698068384; x=1698673184; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Oex7vPSNi+K4wyo+SJFiOJvbKKmAeNdDpD4hzG0BrPE=;
+        b=wTRt2dLgXtTfcjgSlKJO0BnIf+1ysYNsl4AdW0SZkomG13IfUZe9CRa3e5DiDg7I50
+         Rx1eiBSMa8NsXgBT81Pl1DKvbQYloJYuK9H9MeTdoTtQh00Dz9MlSQ2eTJNJ8ahMGnDL
+         edVRUy68rSES3jW5+ZQALZZtjk/DqpBKZonV/RyHPCzJlbDd3hGQwZX9pKxi/u9NwnV7
+         VzvEVXM5yuHWqiRrnNIe07rByVhaVz/21wDjUKrXk9fB50EE9l1x06hmZOA9ZyODjMH/
+         fG1IXyDPZxHkTPYLVYoMg94IS7tPtZzerESYErw5cDR1rZfchcAlw8ZaSEg9jxpidspo
+         hYjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698068384; x=1698673184;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Oex7vPSNi+K4wyo+SJFiOJvbKKmAeNdDpD4hzG0BrPE=;
+        b=dGeVWEwhgpTkUv+AypnngEgfw10iHwamEyHH44ihQ68uelPTwcykd6LTKyGnKMCwzJ
+         Alb1oO2S8zNjGWM7dxTSQ1ZJg0LmNzQJrKMphVvQvljAlU8zfsDWD5fWaKAx8iz9lEB/
+         Gro0WVVYGgr12/rLZCKTZg6H8/s3qCtZrtOngOtT54iRSXaUQekGaQmRf6uO0q7file2
+         Jvl8BjD6aEQOYzZAdzBNz2pfA6LGIYP+WuE6uBiOTurQvehNEnNBf2mLhUHOfiMKqADK
+         MXWgNHw6R2EfyUAsH9hNSSP0ZDMCD0x0ucXG7TG/bZWPT7p44XGuqUaudXeMJWeiuI65
+         +Ogg==
+X-Gm-Message-State: AOJu0Ywoa4lQ/wWXPm2GyHX3BVQjOzflUkoCDZvw5G2G0WGY7vhMVB1p
+        hCPavEK7Mmbx3xnpqFEoGyFHXQ==
+X-Google-Smtp-Source: AGHT+IH5kAoRyKQpRMqONNTgp7G1lcXCc8F0IYiMMwvgYRXd2AetNAdDkKS9m4vRbjni1lH7htGnSQ==
+X-Received: by 2002:a5d:62c7:0:b0:32d:9d0e:7841 with SMTP id o7-20020a5d62c7000000b0032d9d0e7841mr6827228wrv.6.1698068384382;
+        Mon, 23 Oct 2023 06:39:44 -0700 (PDT)
+Received: from localhost ([102.36.222.112])
+        by smtp.gmail.com with ESMTPSA id c17-20020a5d4151000000b0032d87b13240sm7885952wrq.73.2023.10.23.06.39.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Oct 2023 06:39:44 -0700 (PDT)
+Date:   Mon, 23 Oct 2023 16:39:40 +0300
+From:   Dan Carpenter <dan.carpenter@linaro.org>
+To:     Wenchao Hao <haowenchao22@gmail.com>
+Cc:     Wenchao Hao <haowenchao2@huawei.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Douglas Gilbert <dgilbert@interlog.com>,
+        dmaengine@vger.kernel.org, linux-scsi@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH 1/2] scsi: scsi_debug: fix some bugs in
+ sdebug_error_write()
+Message-ID: <44b0eca3-57c1-4edd-ab35-c389dc976273@kadam.mountain>
+References: <96d50cf7-afec-46af-9d98-08099f8dc76e@moroto.mountain>
+ <CAOptpSMTgGwyFkn8o6qAEnUKXh+_mOr8dQKAZUWfM_4QEnxzxw@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.2
-Subject: Re: [PATCH v5 2/2] dt-bindings: dma: HiSilicon: Add bindings for
- HiSilicon Ascend sdma
-To:     Rob Herring <robh@kernel.org>
-CC:     <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <xuqiang36@huawei.com>,
-        <chenweilong@huawei.com>
-References: <20231021093454.39822-1-guomengqi3@huawei.com>
- <20231021093454.39822-3-guomengqi3@huawei.com>
- <20231022211348.GA682758-robh@kernel.org>
-From:   "guomengqi (A)" <guomengqi3@huawei.com>
-In-Reply-To: <20231022211348.GA682758-robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.178.156]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemm000013.china.huawei.com (7.193.23.81)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <CAOptpSMTgGwyFkn8o6qAEnUKXh+_mOr8dQKAZUWfM_4QEnxzxw@mail.gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+On Sat, Oct 21, 2023 at 06:10:44PM +0800, Wenchao Hao wrote:
+> On Fri, Oct 20, 2023 at 10:15 PM Dan Carpenter <dan.carpenter@linaro.org> wrote:
+> >
+> > There are two bug in this code:
+> 
+> Thanks for your fix, some different points of view as follows.
+> 
+> > 1) If count is zero, then it will lead to a NULL dereference.  The
+> > kmalloc() will successfully allocate zero bytes and the test for
+> > "if (buf[0] == '-')" will read beyond the end of the zero size buffer
+> > and Oops.
+> 
+> This sysfs interface is usually used by cmdline, mostly, "echo" is used
+> to write it and "echo" always writes with '\n' terminated, which would
+> not cause a write with count=0.
+> 
 
-在 2023/10/23 5:13, Rob Herring 写道:
-> On Sat, Oct 21, 2023 at 05:34:53PM +0800, Guo Mengqi wrote:
->> Add device-tree binding documentation for sdma hardware on
->> HiSilicon Ascend SoC families.
->>
->> Signed-off-by: Guo Mengqi <guomengqi3@huawei.com>
->> ---
->>   .../bindings/dma/hisilicon,ascend-sdma.yaml   | 73 +++++++++++++++++++
->>   1 file changed, 73 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/dma/hisilicon,ascend-sdma.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/dma/hisilicon,ascend-sdma.yaml b/Documentation/devicetree/bindings/dma/hisilicon,ascend-sdma.yaml
->> new file mode 100644
->> index 000000000000..7b452b54fe0c
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/dma/hisilicon,ascend-sdma.yaml
->> @@ -0,0 +1,73 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/dma/hisilicon,ascend-sdma.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: HiSilicon Ascend System DMA (SDMA) controller
->> +
->> +description: |
->> +  The Ascend SDMA controller is used for transferring data
->> +  in system memory.
->> +
->> +maintainers:
->> +  - Guo Mengqi <guomengqi3@huawei.com>
->> +
->> +allOf:
->> +  - $ref: dma-controller.yaml#
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - hisilicon,ascend310-sdma
->> +      - hisilicon,ascend910-sdma
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  '#dma-cells':
->> +    const: 1
->> +    description:
->> +      Clients specify a single cell with channel number.
->> +
->> +  dma-channel-mask:
->> +    minItems: 1
->> +    maxItems: 2
->> +
->> +  iommus:
->> +    maxItems: 1
->> +
->> +  pasid-num-bits:
->> +    description: |
->> +      This tells smmu that this device supports iommu-sva feature.
-> How is this a feature of the DMA controller? Shouldn't this be part of
-> the iommu cells? How does pasid relate to SVA?
-Hi
+You are saying "sysfs" but this is debugfs.  Sysfs is completely
+different.  Also saying that 'and "echo" always writes with '\n'
+terminated' is not true either even in sysfs...
 
-"pasid-num-bits" shows number of address spaces that device can access.
+> While in terms of security, we should add a check for count==0
+> condition and return EINVAL.
 
-The property is necessary because iommu driver use this property to 
-decide whether the device supports SVA.
+Checking for zero is a valid approach.  I considered that but my way
+was cleaner.
 
-For example,
+> 
+> > 2) The code does not ensure that the user's string is properly NUL
+> > terminated which could lead to a read overflow.
+> >
+> 
+> I don't think so, the copy_from_user() would limit the accessed length
+> to count, so no read overflow would happen.
+> 
+> Userspace's write would allocate a buffer larger than it actually
+> needed(usually 4K), but the buffer would not be cleared, so some
+> dirty data would be passed to the kernel space.
+> 
+> We might have following pairs of parameters for sdebug_error_write:
+> 
+> ubuf: "0 -10 0x12\n0 0 0x2 0x6 0x4 0x2"
+> count=11
+> 
+> the valid data in ubuf is "0 -10 -x12\n", others are dirty data.
+> strndup_user() would return EINVAL for this pair which caused
+> a correct write to fail.
+> 
+> You can recurrent the above error with my script attached.
 
-     pasid-num-bits = <0x10>; // the device can access page table from 
-at most 16 user processes
+You're looking for the buffer overflow in the wrong place.
 
-Descriptions can be found at 
-Documentation/devicetree/bindings/iommu/iommu.txt .
+drivers/scsi/scsi_debug.c
+  1026          if (copy_from_user(buf, ubuf, count)) {
+                                   ^^^
+We copy data from the user but it is not NUL terminated.
 
-This does not fit in iommu cells? I think iommu cells only hold stream 
-id and dma window.
+  1027                  kfree(buf);
+  1028                  return -EFAULT;
+  1029          }
+  1030  
+  1031          if (buf[0] == '-')
+  1032                  return sdebug_err_remove(sdev, buf, count);
+  1033  
+  1034          if (sscanf(buf, "%d", &inject_type) != 1) {
+                           ^^^
+This will read beyond the end of the buffer.  sscanf() relies on a NUL
+terminator to know when then end of the string is.
 
->
->> +      This determines the maximum number of digits in the pasid.
->> +    maximum: 0x10
->> +
->> +  dma-coherent: true
->> +
->> +  dma-can-stall: true
-> What is this?
+  1035                  kfree(buf);
+  1036                  return -EINVAL;
+  1037          }
 
-This means dma controller can wait for iommu to handle the page fault.
+Obviously the user in this situation is like a hacker who wants to do
+something bad, not a normal users.  For a normal user this code is fine
+as you say.
 
-When present, the master can wait for a transaction to  complete for an 
-indefinite amount of time.
+You will need to test this with .c code instead of shell if you want to
+see the bug.
 
-The hardware is designed with stalling support.
+regards,
+dan carpenter
 
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - dma-channel-mask
->> +  - '#dma-cells'
->> +  - iommus
->> +  - pasid-num-bits
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    dma-controller@880e0000 {
->> +        compatible = "hisilicon,ascend310-sdma";
->> +        reg = <0x880e0000 0x10000>;
->> +        dma-channel-mask = <0xff00>;
->> +        iommus = <&smmu 0x7f46>;
->> +        pasid-num-bits = <0x10>;
->> +        dma-coherent;
->> +        dma-can-stall;
->> +        #dma-cells = <1>;
->> +    };
->> +
->> +...
->> -- 
->> 2.17.1
->>
-> .

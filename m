@@ -2,188 +2,173 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A76A67D5972
-	for <lists+dmaengine@lfdr.de>; Tue, 24 Oct 2023 19:10:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FE6A7D5AD4
+	for <lists+dmaengine@lfdr.de>; Tue, 24 Oct 2023 20:44:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343756AbjJXRKC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 24 Oct 2023 13:10:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38210 "EHLO
+        id S1344099AbjJXSoZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 24 Oct 2023 14:44:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230262AbjJXRKB (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 24 Oct 2023 13:10:01 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34D19123;
-        Tue, 24 Oct 2023 10:09:59 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1ca72f8ff3aso32495995ad.0;
-        Tue, 24 Oct 2023 10:09:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698167398; x=1698772198; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Yraf/r3LgDKdGU7IC1yuKox4vPTdXOKCfqDIp0Hoc9U=;
-        b=msv7jzFiXNlvpJq0dwB94dNzYFPVLDM5N2J4eAKC8w0/v1rjRor6PTCB+B0SqumpG8
-         51aT8klFWazz6CJFoWG7MTYTaavrlQilQp7S3zuMUk7uTqLzpmOwBoDYEpWVlVC4gTCT
-         pGIaoPWph6vgUvv3QojMx2QaHD2I/CWfcKa+i02bdew13wwfnAhcV6ZKfGXJwrVm4uEF
-         ny6DYQgkbALBrxFgZ7mKY8RiDJbrjMBt5XlWROhJOiojq2Q1JcXvFvt8QEtf+WAxtF46
-         HUmVKWdushVC3TsK3m/v1Qx586eKOWxvd8btcKd+xrz5I6IwdfPRxsG3LtX02qSiWPvV
-         A7dA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698167399; x=1698772199;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Yraf/r3LgDKdGU7IC1yuKox4vPTdXOKCfqDIp0Hoc9U=;
-        b=qmVbED7F5X2AmBupkKMmetGCQWqiM6Y05BrzSpmpiCSasGm2l05qez8tRcIFBnS2hp
-         wN0c4yqA/edrz1G3bHbLSGosfYYSlDieL2o3dawSSIZKFyTfbjReeMuPlcdU1xQeBK9E
-         l8pmdvjLeTomdCVYzxrrPIdgwvxn2REiKwQH2bunKnUfSLeYcGOHTe7COm3ygZVW5Iyn
-         n4D822RUVT44LOL1W19HVtP2y4rMg2qDfInnE5ttzTgBJViKPFHEiYzusX1t6iKKsiwB
-         Qjh3EJsjjqcyfPcwX2o+3QePCCTki113ROJYUAR/1mSDukmcb1jGSi+9l1H+OxkGsZpC
-         t2qA==
-X-Gm-Message-State: AOJu0Yzjtr5V463JMRwDiCSTOXT6JSufLe4t+hY5VMJjoY1O8+EeKPWd
-        jNsd++VAxVyylzFZfCUbjJ0=
-X-Google-Smtp-Source: AGHT+IFyPec7EkH/coBE09bGlow88NxS7rRVAeU6Ib9G7osqptxCOIliV/Q8kkLiE5rAFNr1JXhC4Q==
-X-Received: by 2002:a17:903:280b:b0:1ca:86b:7ed3 with SMTP id kp11-20020a170903280b00b001ca086b7ed3mr8839119plb.40.1698167398559;
-        Tue, 24 Oct 2023 10:09:58 -0700 (PDT)
-Received: from [0.0.0.0] (74.211.104.32.16clouds.com. [74.211.104.32])
-        by smtp.gmail.com with ESMTPSA id f11-20020a170902ce8b00b001c5076ae6absm7643471plg.126.2023.10.24.10.09.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Oct 2023 10:09:57 -0700 (PDT)
-Message-ID: <cbe14e3a-11c7-4da5-b125-5801244e27f2@gmail.com>
-Date:   Wed, 25 Oct 2023 01:09:34 +0800
+        with ESMTP id S1344042AbjJXSoZ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 24 Oct 2023 14:44:25 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2D3C12C;
+        Tue, 24 Oct 2023 11:44:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1698173062; x=1729709062;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=yXiUqDTjJlLIfMRjPSDr+1lzyNKgBoHGKVQdpfNmqY8=;
+  b=hcVwqSt718wpKv4DJWwNltj/5u6fSw53QEivE872BngUGa1PGCXmyyuq
+   7CVkEL81lz8Kyrs/UULmlL5DnLCNBhIUtG/4CYNI0GqV294wVgq7xxWnc
+   WMs2J9rV5y7glYZlLliXmv7fUs2J1+2CvPMAJg/kXwVV7oPSn+3Bl6dah
+   ZPO4jL6QYvVihfSaSQrpvsJmagV0KStB9j6+0iaWuubmEzYyoFXAMxkHR
+   bG8rUga3MzEelKaSqBslwYPQi0dug1JyEy/OOnlAjCdBcvc/KTQt4wxjA
+   eD5If/tSR0KijipOwqXisZ3VsDB2SYZLZ02V/ibPg8BVSFWFZxMxDtymj
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10873"; a="389993640"
+X-IronPort-AV: E=Sophos;i="6.03,248,1694761200"; 
+   d="scan'208";a="389993640"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2023 11:44:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.03,248,1694761200"; 
+   d="scan'208";a="6558967"
+Received: from lkp-server01.sh.intel.com (HELO 8917679a5d3e) ([10.239.97.150])
+  by fmviesa001.fm.intel.com with ESMTP; 24 Oct 2023 11:44:12 -0700
+Received: from kbuild by 8917679a5d3e with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qvMO0-0008AD-2M;
+        Tue, 24 Oct 2023 18:44:16 +0000
+Date:   Wed, 25 Oct 2023 02:43:27 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Guo Mengqi <guomengqi3@huawei.com>, vkoul@kernel.org,
+        dmaengine@vger.kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        devicetree@vger.kernel.org
+Cc:     oe-kbuild-all@lists.linux.dev, xuqiang36@huawei.com,
+        chenweilong@huawei.com, guomengqi3@huawei.com
+Subject: Re: [PATCH v5 1/2] dmaengine: Add HiSilicon Ascend SDMA engine
+ support
+Message-ID: <202310250208.jwwNXco0-lkp@intel.com>
+References: <20231021093454.39822-2-guomengqi3@huawei.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] scsi: scsi_debug: fix some bugs in
- sdebug_error_write()
-Content-Language: en-US
-To:     Dan Carpenter <dan.carpenter@linaro.org>
-Cc:     Wenchao Hao <haowenchao2@huawei.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Douglas Gilbert <dgilbert@interlog.com>,
-        dmaengine@vger.kernel.org, linux-scsi@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <96d50cf7-afec-46af-9d98-08099f8dc76e@moroto.mountain>
- <CAOptpSMTgGwyFkn8o6qAEnUKXh+_mOr8dQKAZUWfM_4QEnxzxw@mail.gmail.com>
- <44b0eca3-57c1-4edd-ab35-c389dc976273@kadam.mountain>
-From:   Wenchao Hao <haowenchao22@gmail.com>
-In-Reply-To: <44b0eca3-57c1-4edd-ab35-c389dc976273@kadam.mountain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231021093454.39822-2-guomengqi3@huawei.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 10/23/23 9:39 PM, Dan Carpenter wrote:
-> On Sat, Oct 21, 2023 at 06:10:44PM +0800, Wenchao Hao wrote:
->> On Fri, Oct 20, 2023 at 10:15 PM Dan Carpenter <dan.carpenter@linaro.org> wrote:
->>>
->>> There are two bug in this code:
->>
->> Thanks for your fix, some different points of view as follows.
->>
->>> 1) If count is zero, then it will lead to a NULL dereference.  The
->>> kmalloc() will successfully allocate zero bytes and the test for
->>> "if (buf[0] == '-')" will read beyond the end of the zero size buffer
->>> and Oops.
->>
->> This sysfs interface is usually used by cmdline, mostly, "echo" is used
->> to write it and "echo" always writes with '\n' terminated, which would
->> not cause a write with count=0.
->>
-> 
-> You are saying "sysfs" but this is debugfs.  Sysfs is completely
-> different.  Also saying that 'and "echo" always writes with '\n'
-> terminated' is not true either even in sysfs...
-> 
->> While in terms of security, we should add a check for count==0
->> condition and return EINVAL.
-> 
-> Checking for zero is a valid approach.  I considered that but my way
-> was cleaner.
-> 
->>
->>> 2) The code does not ensure that the user's string is properly NUL
->>> terminated which could lead to a read overflow.
->>>
->>
->> I don't think so, the copy_from_user() would limit the accessed length
->> to count, so no read overflow would happen.
->>
->> Userspace's write would allocate a buffer larger than it actually
->> needed(usually 4K), but the buffer would not be cleared, so some
->> dirty data would be passed to the kernel space.
->>
->> We might have following pairs of parameters for sdebug_error_write:
->>
->> ubuf: "0 -10 0x12\n0 0 0x2 0x6 0x4 0x2"
->> count=11
->>
->> the valid data in ubuf is "0 -10 -x12\n", others are dirty data.
->> strndup_user() would return EINVAL for this pair which caused
->> a correct write to fail.
->>
->> You can recurrent the above error with my script attached.
-> 
-> You're looking for the buffer overflow in the wrong place.
-> 
-> drivers/scsi/scsi_debug.c
->   1026          if (copy_from_user(buf, ubuf, count)) {
->                                    ^^^
-> We copy data from the user but it is not NUL terminated.
-> 
->   1027                  kfree(buf);
->   1028                  return -EFAULT;
->   1029          }
->   1030  
->   1031          if (buf[0] == '-')
->   1032                  return sdebug_err_remove(sdev, buf, count);
->   1033  
->   1034          if (sscanf(buf, "%d", &inject_type) != 1) {
->                            ^^^
-> This will read beyond the end of the buffer.  sscanf() relies on a NUL
-> terminator to know when then end of the string is.
-> 
->   1035                  kfree(buf);
->   1036                  return -EINVAL;
->   1037          }
-> 
-> Obviously the user in this situation is like a hacker who wants to do
-> something bad, not a normal users.  For a normal user this code is fine
-> as you say.
-> 
-> You will need to test this with .c code instead of shell if you want to
-> see the bug.
-> 
-> regards,
-> dan carpenter
-> 
+Hi Guo,
 
-Yes, there is bug here if write with .c code. Because your change to use
-strndup_user() would make write with dirty data appended to "ubuf" failed,
-can we fix it with following change:
+kernel test robot noticed the following build warnings:
 
-diff --git a/drivers/scsi/scsi_debug.c b/drivers/scsi/scsi_debug.c
-index 67922e2c4c19..0e8ct724463f 100644
---- a/drivers/scsi/scsi_debug.c
-+++ b/drivers/scsi/scsi_debug.c
-@@ -1019,7 +1019,7 @@ static seize_t sdebug_error_write(struct file *file, const char __user *ubuf,
-        struct sdebug_err_inject *inject;
-        struct scsi_device *sdev = (struct scsi_device *)file->f_inode->i_private;
- 
--       buf = kmalloc(count, GFP_KERNEL);
-+       buf = kzalloc(count + 1, GFP_KERNEL);
-        if (!buf)
-                return -ENOMEM;
+[auto build test WARNING on vkoul-dmaengine/next]
+[also build test WARNING on linus/master v6.6-rc7 next-20231024]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Or is there other kernel lib function which can address this issue?
+url:    https://github.com/intel-lab-lkp/linux/commits/Guo-Mengqi/dmaengine-Add-HiSilicon-Ascend-SDMA-engine-support/20231021-174034
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git next
+patch link:    https://lore.kernel.org/r/20231021093454.39822-2-guomengqi3%40huawei.com
+patch subject: [PATCH v5 1/2] dmaengine: Add HiSilicon Ascend SDMA engine support
+config: openrisc-allyesconfig (https://download.01.org/0day-ci/archive/20231025/202310250208.jwwNXco0-lkp@intel.com/config)
+compiler: or1k-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231025/202310250208.jwwNXco0-lkp@intel.com/reproduce)
 
-Thanks.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202310250208.jwwNXco0-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In file included from arch/openrisc/include/asm/mmu_context.h:18,
+                    from include/linux/mmu_context.h:5,
+                    from drivers/iommu/iommu-sva.c:5:
+>> include/asm-generic/mm_hooks.h:10:40: warning: 'struct mm_struct' declared inside parameter list will not be visible outside of this definition or declaration
+      10 | static inline int arch_dup_mmap(struct mm_struct *oldmm,
+         |                                        ^~~~~~~~~
+   include/asm-generic/mm_hooks.h:16:42: warning: 'struct mm_struct' declared inside parameter list will not be visible outside of this definition or declaration
+      16 | static inline void arch_exit_mmap(struct mm_struct *mm)
+         |                                          ^~~~~~~~~
+   include/asm-generic/mm_hooks.h:20:38: warning: 'struct mm_struct' declared inside parameter list will not be visible outside of this definition or declaration
+      20 | static inline void arch_unmap(struct mm_struct *mm,
+         |                                      ^~~~~~~~~
+   include/asm-generic/mm_hooks.h:25:15: error: unknown type name 'bool'
+      25 | static inline bool arch_vma_access_permitted(struct vm_area_struct *vma,
+         |               ^~~~
+   include/asm-generic/mm_hooks.h:26:17: error: unknown type name 'bool'
+      26 |                 bool write, bool execute, bool foreign)
+         |                 ^~~~
+   include/asm-generic/mm_hooks.h:1:1: note: 'bool' is defined in header '<stdbool.h>'; did you forget to '#include <stdbool.h>'?
+     +++ |+#include <stdbool.h>
+       1 | /* SPDX-License-Identifier: GPL-2.0 */
+   include/asm-generic/mm_hooks.h:26:29: error: unknown type name 'bool'
+      26 |                 bool write, bool execute, bool foreign)
+         |                             ^~~~
+   include/asm-generic/mm_hooks.h:26:29: note: 'bool' is defined in header '<stdbool.h>'; did you forget to '#include <stdbool.h>'?
+   include/asm-generic/mm_hooks.h:26:43: error: unknown type name 'bool'
+      26 |                 bool write, bool execute, bool foreign)
+         |                                           ^~~~
+   include/asm-generic/mm_hooks.h:26:43: note: 'bool' is defined in header '<stdbool.h>'; did you forget to '#include <stdbool.h>'?
+>> arch/openrisc/include/asm/mmu_context.h:21:61: warning: 'struct mm_struct' declared inside parameter list will not be visible outside of this definition or declaration
+      21 | extern int init_new_context(struct task_struct *tsk, struct mm_struct *mm);
+         |                                                             ^~~~~~~~~
+>> arch/openrisc/include/asm/mmu_context.h:21:36: warning: 'struct task_struct' declared inside parameter list will not be visible outside of this definition or declaration
+      21 | extern int init_new_context(struct task_struct *tsk, struct mm_struct *mm);
+         |                                    ^~~~~~~~~~~
+   arch/openrisc/include/asm/mmu_context.h:23:36: warning: 'struct mm_struct' declared inside parameter list will not be visible outside of this definition or declaration
+      23 | extern void destroy_context(struct mm_struct *mm);
+         |                                    ^~~~~~~~~
+   arch/openrisc/include/asm/mmu_context.h:25:30: warning: 'struct task_struct' declared inside parameter list will not be visible outside of this definition or declaration
+      25 |                       struct task_struct *tsk);
+         |                              ^~~~~~~~~~~
+   arch/openrisc/include/asm/mmu_context.h:24:30: warning: 'struct mm_struct' declared inside parameter list will not be visible outside of this definition or declaration
+      24 | extern void switch_mm(struct mm_struct *prev, struct mm_struct *next,
+         |                              ^~~~~~~~~
+   arch/openrisc/include/asm/mmu_context.h:33:17: error: unknown type name 'pgd_t'
+      33 | extern volatile pgd_t *current_pgd[]; /* defined in arch/openrisc/mm/fault.c */
+         |                 ^~~~~
+   include/linux/mmu_context.h:39:15: error: unknown type name 'bool'
+      39 | static inline bool arch_pgtable_dma_compat(struct mm_struct *mm)
+         |               ^~~~
+   include/linux/mmu_context.h: In function 'arch_pgtable_dma_compat':
+   include/linux/mmu_context.h:41:16: error: 'true' undeclared (first use in this function)
+      41 |         return true;
+         |                ^~~~
+   include/linux/mmu_context.h:7:1: note: 'true' is defined in header '<stdbool.h>'; did you forget to '#include <stdbool.h>'?
+       6 | #include <asm/mmu.h>
+     +++ |+#include <stdbool.h>
+       7 | 
+   include/linux/mmu_context.h:41:16: note: each undeclared identifier is reported only once for each function it appears in
+      41 |         return true;
+         |                ^~~~
+   include/linux/mmu_context.h:42:1: error: control reaches end of non-void function [-Werror=return-type]
+      42 | }
+         | ^
+   cc1: some warnings being treated as errors
+
+
+vim +10 include/asm-generic/mm_hooks.h
+
+d6dd61c831226f Jeremy Fitzhardinge 2007-05-02   9  
+c10e83f598d080 Thomas Gleixner     2017-12-14 @10  static inline int arch_dup_mmap(struct mm_struct *oldmm,
+d6dd61c831226f Jeremy Fitzhardinge 2007-05-02  11  				struct mm_struct *mm)
+d6dd61c831226f Jeremy Fitzhardinge 2007-05-02  12  {
+c10e83f598d080 Thomas Gleixner     2017-12-14  13  	return 0;
+d6dd61c831226f Jeremy Fitzhardinge 2007-05-02  14  }
+d6dd61c831226f Jeremy Fitzhardinge 2007-05-02  15  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki

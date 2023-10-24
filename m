@@ -2,83 +2,79 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E04977D58C2
-	for <lists+dmaengine@lfdr.de>; Tue, 24 Oct 2023 18:40:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A76A67D5972
+	for <lists+dmaengine@lfdr.de>; Tue, 24 Oct 2023 19:10:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343918AbjJXQkE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 24 Oct 2023 12:40:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40764 "EHLO
+        id S1343756AbjJXRKC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 24 Oct 2023 13:10:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343912AbjJXQkD (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 24 Oct 2023 12:40:03 -0400
-Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ACFBD7D;
-        Tue, 24 Oct 2023 09:40:00 -0700 (PDT)
-Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-5845213c583so1594680eaf.0;
-        Tue, 24 Oct 2023 09:40:00 -0700 (PDT)
+        with ESMTP id S230262AbjJXRKB (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 24 Oct 2023 13:10:01 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34D19123;
+        Tue, 24 Oct 2023 10:09:59 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1ca72f8ff3aso32495995ad.0;
+        Tue, 24 Oct 2023 10:09:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1698167398; x=1698772198; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Yraf/r3LgDKdGU7IC1yuKox4vPTdXOKCfqDIp0Hoc9U=;
+        b=msv7jzFiXNlvpJq0dwB94dNzYFPVLDM5N2J4eAKC8w0/v1rjRor6PTCB+B0SqumpG8
+         51aT8klFWazz6CJFoWG7MTYTaavrlQilQp7S3zuMUk7uTqLzpmOwBoDYEpWVlVC4gTCT
+         pGIaoPWph6vgUvv3QojMx2QaHD2I/CWfcKa+i02bdew13wwfnAhcV6ZKfGXJwrVm4uEF
+         ny6DYQgkbALBrxFgZ7mKY8RiDJbrjMBt5XlWROhJOiojq2Q1JcXvFvt8QEtf+WAxtF46
+         HUmVKWdushVC3TsK3m/v1Qx586eKOWxvd8btcKd+xrz5I6IwdfPRxsG3LtX02qSiWPvV
+         A7dA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698165599; x=1698770399;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4dgLAi1M/nR9fJIQpQVSn3gxY5AOxSN1+8PQWp2ZK3E=;
-        b=dJEL+fgbBkqa2Hxr8owONWDH6pO4QAKL8M6N0LblYDn0D+mvusaM9LI019LIX+Wr3i
-         SBvjWPRMymU3blibDCev3SK/2zggSLh7i4IpkcLL7+56UwaN+3Q+SvbKam8pCpGxanbT
-         He27KYjc4yS6cs4vdNENuanBRdI3kaR7tLAO5bj36M1FDWyM3CJw3cp0SmL52BmqFpit
-         BdEzxk39cE/f7g8NzIovM7D42nhpblBaxWAThWlKCuq1CXkrmypanbfJwfKuwEnp/Q8S
-         InLGUYhaL1tKdHvTD1oRCIWiQ8RKhoO9Sv7r+HPRugFqxsbmNwjwBGYgYl7NZvibTWWM
-         mHUQ==
-X-Gm-Message-State: AOJu0YxSrNVMn+fgX2LQrUQlYDXBSzDJcV9rjwPhKfF+AMIxCWFlyWiP
-        Fy1vX2SNzu3oZN9A3IdBaw==
-X-Google-Smtp-Source: AGHT+IH7r1RypTRYYRKdrh1wNi7leTTNBWI9FBY2oTxpLiREvX3LYW7p4YgROHwYcoRP/a6v+9+WQw==
-X-Received: by 2002:a4a:df11:0:b0:582:28e:93a8 with SMTP id i17-20020a4adf11000000b00582028e93a8mr12468463oou.3.1698165599325;
-        Tue, 24 Oct 2023 09:39:59 -0700 (PDT)
-Received: from herring.priv (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id f22-20020a4ad816000000b0057aef3cab33sm2002659oov.21.2023.10.24.09.39.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Oct 2023 09:39:58 -0700 (PDT)
-Received: (nullmailer pid 4062523 invoked by uid 1000);
-        Tue, 24 Oct 2023 16:39:56 -0000
-Date:   Tue, 24 Oct 2023 11:39:56 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Gatien CHEVALLIER <gatien.chevallier@foss.st.com>
-Cc:     Oleksii_Moisieiev@epam.com, gregkh@linuxfoundation.org,
-        herbert@gondor.apana.org.au, davem@davemloft.net,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        alexandre.torgue@foss.st.com, vkoul@kernel.org, jic23@kernel.org,
-        olivier.moysan@foss.st.com, arnaud.pouliquen@foss.st.com,
-        mchehab@kernel.org, fabrice.gasnier@foss.st.com,
-        andi.shyti@kernel.org, ulf.hansson@linaro.org, edumazet@google.com,
-        kuba@kernel.org, pabeni@redhat.com, hugues.fruchet@foss.st.com,
-        lee@kernel.org, will@kernel.org, catalin.marinas@arm.com,
-        arnd@kernel.org, richardcochran@gmail.com,
-        Frank Rowand <frowand.list@gmail.com>, peng.fan@oss.nxp.com,
-        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-iio@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-        netdev@vger.kernel.org, linux-p.hy@lists.infradead.org,
-        linux-serial@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH v6 10/11] ARM: dts: stm32: add ETZPC as a system bus for
- STM32MP15x boards
-Message-ID: <20231024163956.GA4049342-robh@kernel.org>
-References: <20231010125719.784627-1-gatien.chevallier@foss.st.com>
- <20231010125719.784627-11-gatien.chevallier@foss.st.com>
- <20231010184212.GA1221641-robh@kernel.org>
- <8f1b6915-68be-a525-c5d5-37f0983c14de@foss.st.com>
- <20231012153012.GA698406-robh@kernel.org>
- <b16ed06f-66fd-457b-9610-a67ad07deb60@foss.st.com>
+        d=1e100.net; s=20230601; t=1698167399; x=1698772199;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Yraf/r3LgDKdGU7IC1yuKox4vPTdXOKCfqDIp0Hoc9U=;
+        b=qmVbED7F5X2AmBupkKMmetGCQWqiM6Y05BrzSpmpiCSasGm2l05qez8tRcIFBnS2hp
+         wN0c4yqA/edrz1G3bHbLSGosfYYSlDieL2o3dawSSIZKFyTfbjReeMuPlcdU1xQeBK9E
+         l8pmdvjLeTomdCVYzxrrPIdgwvxn2REiKwQH2bunKnUfSLeYcGOHTe7COm3ygZVW5Iyn
+         n4D822RUVT44LOL1W19HVtP2y4rMg2qDfInnE5ttzTgBJViKPFHEiYzusX1t6iKKsiwB
+         Qjh3EJsjjqcyfPcwX2o+3QePCCTki113ROJYUAR/1mSDukmcb1jGSi+9l1H+OxkGsZpC
+         t2qA==
+X-Gm-Message-State: AOJu0Yzjtr5V463JMRwDiCSTOXT6JSufLe4t+hY5VMJjoY1O8+EeKPWd
+        jNsd++VAxVyylzFZfCUbjJ0=
+X-Google-Smtp-Source: AGHT+IFyPec7EkH/coBE09bGlow88NxS7rRVAeU6Ib9G7osqptxCOIliV/Q8kkLiE5rAFNr1JXhC4Q==
+X-Received: by 2002:a17:903:280b:b0:1ca:86b:7ed3 with SMTP id kp11-20020a170903280b00b001ca086b7ed3mr8839119plb.40.1698167398559;
+        Tue, 24 Oct 2023 10:09:58 -0700 (PDT)
+Received: from [0.0.0.0] (74.211.104.32.16clouds.com. [74.211.104.32])
+        by smtp.gmail.com with ESMTPSA id f11-20020a170902ce8b00b001c5076ae6absm7643471plg.126.2023.10.24.10.09.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Oct 2023 10:09:57 -0700 (PDT)
+Message-ID: <cbe14e3a-11c7-4da5-b125-5801244e27f2@gmail.com>
+Date:   Wed, 25 Oct 2023 01:09:34 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b16ed06f-66fd-457b-9610-a67ad07deb60@foss.st.com>
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] scsi: scsi_debug: fix some bugs in
+ sdebug_error_write()
+Content-Language: en-US
+To:     Dan Carpenter <dan.carpenter@linaro.org>
+Cc:     Wenchao Hao <haowenchao2@huawei.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Douglas Gilbert <dgilbert@interlog.com>,
+        dmaengine@vger.kernel.org, linux-scsi@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <96d50cf7-afec-46af-9d98-08099f8dc76e@moroto.mountain>
+ <CAOptpSMTgGwyFkn8o6qAEnUKXh+_mOr8dQKAZUWfM_4QEnxzxw@mail.gmail.com>
+ <44b0eca3-57c1-4edd-ab35-c389dc976273@kadam.mountain>
+From:   Wenchao Hao <haowenchao22@gmail.com>
+In-Reply-To: <44b0eca3-57c1-4edd-ab35-c389dc976273@kadam.mountain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -86,97 +82,108 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, Oct 16, 2023 at 02:02:39PM +0200, Gatien CHEVALLIER wrote:
-> Hi Rob,
+On 10/23/23 9:39 PM, Dan Carpenter wrote:
+> On Sat, Oct 21, 2023 at 06:10:44PM +0800, Wenchao Hao wrote:
+>> On Fri, Oct 20, 2023 at 10:15 PM Dan Carpenter <dan.carpenter@linaro.org> wrote:
+>>>
+>>> There are two bug in this code:
+>>
+>> Thanks for your fix, some different points of view as follows.
+>>
+>>> 1) If count is zero, then it will lead to a NULL dereference.  The
+>>> kmalloc() will successfully allocate zero bytes and the test for
+>>> "if (buf[0] == '-')" will read beyond the end of the zero size buffer
+>>> and Oops.
+>>
+>> This sysfs interface is usually used by cmdline, mostly, "echo" is used
+>> to write it and "echo" always writes with '\n' terminated, which would
+>> not cause a write with count=0.
+>>
 > 
-> On 10/12/23 17:30, Rob Herring wrote:
-> > On Wed, Oct 11, 2023 at 10:49:58AM +0200, Gatien CHEVALLIER wrote:
-> > > Hi Rob,
-> > > 
-> > > On 10/10/23 20:42, Rob Herring wrote:
-> > > > On Tue, Oct 10, 2023 at 02:57:18PM +0200, Gatien Chevallier wrote:
-> > > > > ETZPC is a firewall controller. Put all peripherals filtered by the
-> > > > > ETZPC as ETZPC subnodes and reference ETZPC as an
-> > > > > access-control-provider.
-> > > > > 
-> > > > > For more information on which peripheral is securable or supports MCU
-> > > > > isolation, please read the STM32MP15 reference manual.
-> > > > > 
-> > > > > Signed-off-by: Gatien Chevallier <gatien.chevallier@foss.st.com>
-> > > > > ---
-> > > > > 
-> > > > > Changes in V6:
-> > > > >       	- Renamed access-controller to access-controllers
-> > > > >       	- Removal of access-control-provider property
-> > > > > 
-> > > > > Changes in V5:
-> > > > >       	- Renamed feature-domain* to access-control*
-> > > > > 
-> > > > >    arch/arm/boot/dts/st/stm32mp151.dtsi  | 2756 +++++++++++++------------
-> > > > >    arch/arm/boot/dts/st/stm32mp153.dtsi  |   52 +-
-> > > > >    arch/arm/boot/dts/st/stm32mp15xc.dtsi |   19 +-
-> > > > >    3 files changed, 1450 insertions(+), 1377 deletions(-)
-> > > > 
-> > > > This is not reviewable. Change the indentation and any non-functional
-> > > > change in one patch and then actual changes in another.
-> > > 
-> > > Ok, I'll make it easier to read.
-> > > 
-> > > > 
-> > > > This is also an ABI break. Though I'm not sure it's avoidable. All the
-> > > > devices below the ETZPC node won't probe on existing kernel. A
-> > > > simple-bus fallback for ETZPC node should solve that.
-> > > > 
-> > > 
-> > > I had one issue when trying with a simple-bus fallback that was the
-> > > drivers were probing even though the access rights aren't correct.
-> > > Hence the removal of the simple-bus compatible in the STM32MP25 patch.
-> > 
-> > But it worked before, right? So the difference is you have either added
-> > new devices which need setup or your firmware changed how devices are
-> > setup (or not setup). Certainly can't fix the latter case. You just need
-> > to be explicit about what you are doing to users.
-> > 
+> You are saying "sysfs" but this is debugfs.  Sysfs is completely
+> different.  Also saying that 'and "echo" always writes with '\n'
+> terminated' is not true either even in sysfs...
 > 
-> I should've specified it was during a test where I deliberately set
-> incorrect rights on a peripheral and enabled its node to see if the
-> firewall would allow the creation of the device.
+>> While in terms of security, we should add a check for count==0
+>> condition and return EINVAL.
 > 
-> > 
-> > > Even though a node is tagged with the OF_POPULATED flag when checking
-> > > the access rights with the firewall controller, it seems that when
-> > > simple-bus is probing, there's no check of this flag.
-> > 
-> > It shouldn't. Those flags are for creating the devices (or not) and
-> > removing only devices of_platform_populate() created.
-> > 
+> Checking for zero is a valid approach.  I considered that but my way
+> was cleaner.
 > 
-> About the "simple-bus" being a fallback, I think I understood why I saw
-> that the devices were created.
+>>
+>>> 2) The code does not ensure that the user's string is properly NUL
+>>> terminated which could lead to a read overflow.
+>>>
+>>
+>> I don't think so, the copy_from_user() would limit the accessed length
+>> to count, so no read overflow would happen.
+>>
+>> Userspace's write would allocate a buffer larger than it actually
+>> needed(usually 4K), but the buffer would not be cleared, so some
+>> dirty data would be passed to the kernel space.
+>>
+>> We might have following pairs of parameters for sdebug_error_write:
+>>
+>> ubuf: "0 -10 0x12\n0 0 0x2 0x6 0x4 0x2"
+>> count=11
+>>
+>> the valid data in ubuf is "0 -10 -x12\n", others are dirty data.
+>> strndup_user() would return EINVAL for this pair which caused
+>> a correct write to fail.
+>>
+>> You can recurrent the above error with my script attached.
 > 
-> All devices under a node whose compatible is "simple-bus" are created
-> in of_platform_device_create_pdata(), called by
-> of_platform_default_populate_init() at arch_initcall level. This
-> before the firewall-controller has a chance to populate it's bus.
+> You're looking for the buffer overflow in the wrong place.
 > 
-> Therefore, when I flag nodes when populating the firewall-bus, the
-> devices are already created. The "simple-bus" mechanism is not a
-> fallback here as it precedes the driver probe.
+> drivers/scsi/scsi_debug.c
+>   1026          if (copy_from_user(buf, ubuf, count)) {
+>                                    ^^^
+> We copy data from the user but it is not NUL terminated.
 > 
-> Is there a safe way to safely remove/disable a device created this way?
+>   1027                  kfree(buf);
+>   1028                  return -EFAULT;
+>   1029          }
+>   1030  
+>   1031          if (buf[0] == '-')
+>   1032                  return sdebug_err_remove(sdev, buf, count);
+>   1033  
+>   1034          if (sscanf(buf, "%d", &inject_type) != 1) {
+>                            ^^^
+> This will read beyond the end of the buffer.  sscanf() relies on a NUL
+> terminator to know when then end of the string is.
+> 
+>   1035                  kfree(buf);
+>   1036                  return -EINVAL;
+>   1037          }
+> 
+> Obviously the user in this situation is like a hacker who wants to do
+> something bad, not a normal users.  For a normal user this code is fine
+> as you say.
+> 
+> You will need to test this with .c code instead of shell if you want to
+> see the bug.
+> 
+> regards,
+> dan carpenter
+> 
 
-There's 2 ways to handle this. Either controlling creating the device or 
-controlling probing the device. The latter should just work with 
-fw_devlink dependency. The former probably needs some adjustment to 
-simple-pm-bus driver if you have 'simple-bus' compatible. You want it to 
-probe on old kernels and not probe on new kernels with your firewall 
-driver. Look at the commit history for simple-pm-bus. There was some 
-discussion on it as well.
+Yes, there is bug here if write with .c code. Because your change to use
+strndup_user() would make write with dirty data appended to "ubuf" failed,
+can we fix it with following change:
 
-> Devices that are under the firewall controller (simple-bus) node
-> should not be probed before it as they're child of it.
+diff --git a/drivers/scsi/scsi_debug.c b/drivers/scsi/scsi_debug.c
+index 67922e2c4c19..0e8ct724463f 100644
+--- a/drivers/scsi/scsi_debug.c
++++ b/drivers/scsi/scsi_debug.c
+@@ -1019,7 +1019,7 @@ static seize_t sdebug_error_write(struct file *file, const char __user *ubuf,
+        struct sdebug_err_inject *inject;
+        struct scsi_device *sdev = (struct scsi_device *)file->f_inode->i_private;
+ 
+-       buf = kmalloc(count, GFP_KERNEL);
++       buf = kzalloc(count + 1, GFP_KERNEL);
+        if (!buf)
+                return -ENOMEM;
 
-fw_devlink should take care of parent/child dependencies without any 
-explicit handling of the access ctrl binding.
+Or is there other kernel lib function which can address this issue?
 
-Rob
+Thanks.

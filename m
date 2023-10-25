@@ -2,74 +2,104 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 629CE7D62AA
-	for <lists+dmaengine@lfdr.de>; Wed, 25 Oct 2023 09:29:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FA2B7D6407
+	for <lists+dmaengine@lfdr.de>; Wed, 25 Oct 2023 09:51:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232835AbjJYH3p (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 25 Oct 2023 03:29:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60716 "EHLO
+        id S233979AbjJYHvD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 25 Oct 2023 03:51:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232654AbjJYH3n (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 25 Oct 2023 03:29:43 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6866312A
-        for <dmaengine@vger.kernel.org>; Wed, 25 Oct 2023 00:29:39 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id 4fb4d7f45d1cf-53df747cfe5so8350506a12.2
-        for <dmaengine@vger.kernel.org>; Wed, 25 Oct 2023 00:29:39 -0700 (PDT)
+        with ESMTP id S234009AbjJYHvA (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 25 Oct 2023 03:51:00 -0400
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EC89D43
+        for <dmaengine@vger.kernel.org>; Wed, 25 Oct 2023 00:50:57 -0700 (PDT)
+Received: by mail-wm1-x32e.google.com with SMTP id 5b1f17b1804b1-40806e4106dso3052335e9.1
+        for <dmaengine@vger.kernel.org>; Wed, 25 Oct 2023 00:50:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1698218978; x=1698823778; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GaJ6zuWvLeAZ+++ztXhxYXgcxHY1LVJke6okHi+19jg=;
-        b=NJpK7cDjGGcyvVbkPs7oPrWy6HP70s2F3Gxq47QyX+WqzGSRAaTq73cOL69VslnVj4
-         nlDpzMk9ZfGP9oqTlbipioYuBOhan2OsxPc3pDg8Nx9mc/rChQjNJI+jreIQDeYWrnCL
-         19ZXu4eVOA8ilhvULEghUvyhVEi5PYaDzsBTOwqe5FMljIU6uUsapzb0diIxprGjH+Qc
-         JkvBVBPlKOR/ZmcVUfFmYFvHRJwVQZcFKDJfQnoI992vOUoklNIM49dlYDXagXIDJnJG
-         NDnSHer8lj3SfBvycgZgEI2vabeVlBIaoTAqquD8jjcwqULY3LrRXhTZCs170Y35xMxo
-         ib7A==
+        d=linaro.org; s=google; t=1698220256; x=1698825056; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :references:cc:to:content-language:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fHCbt3oIyBZTNzG0a6SA3gqBM3qic8b1PW/OzYT0hTY=;
+        b=yG8oqy0jJsqkMHIHnQ5LVSHcF2PXJvrJ1rX41nQ8q/vRrXDy+7EUGGB2z9GVQpXtcX
+         zeFSo9SHCZazLALnxrghDqJ0RLW1c4dT69fGDgNdVR9ctJzz50qFau5ZJ38yLYfdzeBw
+         WNyF6Zi2Lq1g7MM+fhfujMDkpjnNb5Z9ojd8v2TzaJtXrA3UaZ/Mva6NOUGZdYgTPp5V
+         vrJ0ZIK9jGPC3vNIovvCxh8GRcnt4vfuqIS+up7EPdlYU/KHnMs0/LbcerZt+KvvUPGN
+         gIyaUISHvpNU1ru9dN7nF7/JN9eWw/xPRcvuYAzIEOlRPJBorH6T/0YhG0RS0r3UdsAj
+         kTHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698218978; x=1698823778;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=GaJ6zuWvLeAZ+++ztXhxYXgcxHY1LVJke6okHi+19jg=;
-        b=GIrA1RLUrhImmlfx2Wd9AByX/ZV3a1NVIfk3Jg5bdv5GIgisdlclb5w57h2vsYJHbg
-         Y5Q8vCQeL8C1WUpW6bNWquttEbliNNRwcv8DbNuVy00NTVVo5FG/zyqY3WqHijvYrgBm
-         AQlbjRyHqxVvs54xtw5s1oTPAMbBLU7toZ7jTb9zQzEF4e7oATFX5jqVAz/b8QflLYW1
-         7DVbJmN2rtv9mFnQ5x7p74iXy7GilN4GbuiwARqRtiJx+bS9IAvFqPDsLdjSxVstKLpE
-         UK7rOo3tQ/uN1ST2HeoSRAxTYjLZKNsKcIiqbXFk1dCh2ytIG9XRTE7ptci/tIWCh3l1
-         KDvw==
-X-Gm-Message-State: AOJu0Yx7NZV/6MsJgZUZNWVyB6lYUle6TsLjIglk77QA9T4gvbf02Der
-        81CPvIafgFxd06UCP4XffQtD8A==
-X-Google-Smtp-Source: AGHT+IHPmzZHfHPpMFOB8IpLnVIKGpxikP7sHcZ5pnFTtK0BR5d6mEiHX/eYSI4M+bomv8jRLrOWHA==
-X-Received: by 2002:a05:6402:27d4:b0:540:88ad:11a1 with SMTP id c20-20020a05640227d400b0054088ad11a1mr4370282ede.39.1698218977887;
-        Wed, 25 Oct 2023 00:29:37 -0700 (PDT)
-Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
-        by smtp.gmail.com with ESMTPSA id s21-20020a056402037500b0053e0395059csm8881402edw.21.2023.10.25.00.29.37
+        d=1e100.net; s=20230601; t=1698220256; x=1698825056;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :references:cc:to:content-language:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=fHCbt3oIyBZTNzG0a6SA3gqBM3qic8b1PW/OzYT0hTY=;
+        b=tEqxqDOn+It2Uf+ZP/szp5mEaEqrnsD2kApPrnleQ0tlp/EHAKnuSlGvL1WGg7Vlu8
+         aJEL6Pq2q0ryt6cQQV9Nej/5lEr9dRfogqcyt8x3JehdpLjIWjEUr+oAQujKEPPS889p
+         Aw1DXBkslOqoIrrlBC3oW+OrfO23r9/Pu9/YOKwvbnLDP1I3PoCkAOoi57T7QqW/OmKS
+         KlDMJ+VHfnb27ZiRNPR+25ngYLot7DoDiz3hriPuJpKcz38SjYnKC4SAKObI+E/wW6Mw
+         PxBBgi5xGA0vGrxIyN6kEYrwvMc5aiB3vazd7OLu8nmHgSD4hodNUa3DXdY6240tWtHp
+         3Mfg==
+X-Gm-Message-State: AOJu0YxmAFjzGyeU0atDXiKeL9shRXt2QPyK8cUTlcTbeUtR4/sFOPWn
+        IyKMKRMPNU0ZrUAkruWOX+kOAA==
+X-Google-Smtp-Source: AGHT+IHkFgkIyncR5qpiPGCBrd1mZZZPQhI0m/zUCrlGiixh6mKna/bq06QxEiecV1w1LIBTsixxow==
+X-Received: by 2002:a7b:c4d8:0:b0:408:36bb:5b0c with SMTP id g24-20020a7bc4d8000000b0040836bb5b0cmr16035281wmk.7.1698220255693;
+        Wed, 25 Oct 2023 00:50:55 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:982:cbb0:4b03:ec74:6374:5430? ([2a01:e0a:982:cbb0:4b03:ec74:6374:5430])
+        by smtp.gmail.com with ESMTPSA id i1-20020a05600011c100b0032dcb08bf94sm11538347wrx.60.2023.10.25.00.50.54
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Oct 2023 00:29:37 -0700 (PDT)
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date:   Wed, 25 Oct 2023 09:29:37 +0200
-Message-Id: <CWHCDVXDDU74.3U8VFCO1HHIDU@fairphone.com>
-Cc:     <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+        Wed, 25 Oct 2023 00:50:55 -0700 (PDT)
+Message-ID: <22441cdc-33d3-4303-9deb-cb91e43594e6@linaro.org>
+Date:   Wed, 25 Oct 2023 09:50:54 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From:   Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
 Subject: Re: [PATCH] dt-bindings: dma: qcom,gpi: document the SM8560 GPI DMA
  Engine
-From:   "Luca Weiss" <luca.weiss@fairphone.com>
-To:     "Neil Armstrong" <neil.armstrong@linaro.org>,
-        "Andy Gross" <agross@kernel.org>,
-        "Bjorn Andersson" <andersson@kernel.org>,
-        "Konrad Dybcio" <konrad.dybcio@linaro.org>,
-        "Vinod Koul" <vkoul@kernel.org>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-        "Conor Dooley" <conor+dt@kernel.org>
-X-Mailer: aerc 0.15.2
+Content-Language: en-US, fr
+To:     Luca Weiss <luca.weiss@fairphone.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20231025-topic-sm8650-upstream-bindings-gpi-v1-1-3e8824ae480c@linaro.org>
-In-Reply-To: <20231025-topic-sm8650-upstream-bindings-gpi-v1-1-3e8824ae480c@linaro.org>
+ <CWHCDVXDDU74.3U8VFCO1HHIDU@fairphone.com>
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro Developer Services
+In-Reply-To: <CWHCDVXDDU74.3U8VFCO1HHIDU@fairphone.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -79,52 +109,58 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed Oct 25, 2023 at 9:25 AM CEST, Neil Armstrong wrote:
-> Document the GPI DMA Engine on the SM8650 Platform.
+Hi,
 
-Hi Neil,
+On 25/10/2023 09:29, Luca Weiss wrote:
+> On Wed Oct 25, 2023 at 9:25 AM CEST, Neil Armstrong wrote:
+>> Document the GPI DMA Engine on the SM8650 Platform.
+> 
+> Hi Neil,
+> 
+> The subject of this patch and a few others refer to 8560 instead of
+> 8650. Please fix :)
+> 
+> * dt-bindings: dma: qcom,gpi: document the SM8560 GPI DMA Engine
+> * dt-bindings: usb: qcom,dwc3: document the SM8560 SuperSpeed DWC3 USB controller
+> * dt-bindings: soc: qcom,aoss-qmp: document the SM8560 Always-On Subsystem side channel
 
-The subject of this patch and a few others refer to 8560 instead of
-8650. Please fix :)
+Thanks for noticing :-)
 
-* dt-bindings: dma: qcom,gpi: document the SM8560 GPI DMA Engine
-* dt-bindings: usb: qcom,dwc3: document the SM8560 SuperSpeed DWC3 USB cont=
-roller
-* dt-bindings: soc: qcom,aoss-qmp: document the SM8560 Always-On Subsystem =
-side channel
+I'll wait some time before sending v2, a burst of patches is enough for a day !
 
-Regards
-Luca
+Neil
 
->
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-> ---
-> For convenience, a regularly refreshed linux-next based git tree containi=
-ng
-> all the SM8650 related work is available at:
-> https://git.codelinaro.org/neil.armstrong/linux/-/tree/topic/sm85650/upst=
-ream/integ
-> ---
->  Documentation/devicetree/bindings/dma/qcom,gpi.yaml | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml b/Docume=
-ntation/devicetree/bindings/dma/qcom,gpi.yaml
-> index 88d0de3d1b46..0985b039e6d5 100644
-> --- a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
-> +++ b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
-> @@ -32,6 +32,7 @@ properties:
->                - qcom,sm8350-gpi-dma
->                - qcom,sm8450-gpi-dma
->                - qcom,sm8550-gpi-dma
-> +              - qcom,sm8650-gpi-dma
->            - const: qcom,sm6350-gpi-dma
->        - items:
->            - enum:
->
-> ---
-> base-commit: fe1998aa935b44ef873193c0772c43bce74f17dc
-> change-id: 20231016-topic-sm8650-upstream-bindings-gpi-29a256168e2f
->
-> Best regards,
+> 
+> Regards
+> Luca
+> 
+>>
+>> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+>> ---
+>> For convenience, a regularly refreshed linux-next based git tree containing
+>> all the SM8650 related work is available at:
+>> https://git.codelinaro.org/neil.armstrong/linux/-/tree/topic/sm85650/upstream/integ
+>> ---
+>>   Documentation/devicetree/bindings/dma/qcom,gpi.yaml | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
+>> index 88d0de3d1b46..0985b039e6d5 100644
+>> --- a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
+>> +++ b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
+>> @@ -32,6 +32,7 @@ properties:
+>>                 - qcom,sm8350-gpi-dma
+>>                 - qcom,sm8450-gpi-dma
+>>                 - qcom,sm8550-gpi-dma
+>> +              - qcom,sm8650-gpi-dma
+>>             - const: qcom,sm6350-gpi-dma
+>>         - items:
+>>             - enum:
+>>
+>> ---
+>> base-commit: fe1998aa935b44ef873193c0772c43bce74f17dc
+>> change-id: 20231016-topic-sm8650-upstream-bindings-gpi-29a256168e2f
+>>
+>> Best regards,
+> 
 

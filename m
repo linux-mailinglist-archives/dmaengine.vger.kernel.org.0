@@ -2,203 +2,99 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B24367D6C9E
-	for <lists+dmaengine@lfdr.de>; Wed, 25 Oct 2023 15:02:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB9327D6F5B
+	for <lists+dmaengine@lfdr.de>; Wed, 25 Oct 2023 16:43:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234952AbjJYNBX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 25 Oct 2023 09:01:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52588 "EHLO
+        id S1344859AbjJYOHd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 25 Oct 2023 10:07:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234955AbjJYNBW (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 25 Oct 2023 09:01:22 -0400
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91F1690
-        for <dmaengine@vger.kernel.org>; Wed, 25 Oct 2023 06:01:20 -0700 (PDT)
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 771793FD3A
-        for <dmaengine@vger.kernel.org>; Wed, 25 Oct 2023 13:01:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1698238871;
-        bh=Ja9/pCBWGEb2jT4TVb34dvtYhqs8vTUmcB3t9wcKY1o=;
-        h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
-         To:Cc:Content-Type;
-        b=EHYy9dt903g8qiZzSrrqfJaJsy8c7VpZeHGOPco6b18HEWSAyGvstFFMnK6D6YOSY
-         P3ri4q52Szp63XWu/NIclAeU6MQWerLvECopD96SuMqDCdeAeb5Qs1npLAK0hdbSaZ
-         H/hB2X3MmboO/YlKAkdQOPeHRDO2Kz79OqBdQI3UDJc69NK2cijDQnAYQaqtQx+HlN
-         jmKR5fRQn829vaexNbqZjurSbKsLIabG1JnmRCUyBLhvE/1ZRzLAnA7S/lpICnipfF
-         N3g2sCfd4jbDIdXh63h43u7xrkvFp0fnOT3IBwUoo05w2N/jGYK+sM/9tiPqyiLM8R
-         ZYtQO3+cvFuGg==
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-41cba6d1330so57526491cf.1
-        for <dmaengine@vger.kernel.org>; Wed, 25 Oct 2023 06:01:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698238868; x=1698843668;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ja9/pCBWGEb2jT4TVb34dvtYhqs8vTUmcB3t9wcKY1o=;
-        b=StS75BKFD45JRzvYxUiF0ROkC6m7d9DfXtBhgLsobEe9pkcB9qkvmNIYTJRqhRmv6H
-         eSVDZYNfuAX3AnsUthPSDquEh04qa4ReiCtdgtgPec27f9TRNfHvc/HMjPAvz49PMZ3F
-         TWDqvyrAqV9FRpEjY8MTLvgu0fFojtHhnmVQFlFH853c08/Y89H7GYhlTEwnRu6rFu8J
-         xmaiolgXc28oQgvO9jMIELP4AVc+dybLbEuS95vAB6puYShL/IET+jsSbFajS/QS80L0
-         KkcHRSaoyuk4dHorXWKs59w2X5elA1RUy2bMOaW218hTExOuMaCJmn3bDg3KrrRkmS/A
-         /66Q==
-X-Gm-Message-State: AOJu0YzyKAyoYjrSRLFnaGftBv6ki9hR3/ABbxVs23Vt90wmxK8F1IOB
-        645a/gK8RtLYpmLxxJQ39t5MhBE5eOTNth+Ko85AqVpLpogs9+j2Txty8CmIN5PTS7aeBzwDceG
-        le8WwesHpIt7tIps30Lc+elVmNqSI4os/9q5rg7bYQ2ogf5ey2DBy9A==
-X-Received: by 2002:ac8:7f55:0:b0:403:2877:bc52 with SMTP id g21-20020ac87f55000000b004032877bc52mr14847388qtk.0.1698238868273;
-        Wed, 25 Oct 2023 06:01:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHR4n03DxpEQ8FKBl/cC8JZSa2ZdjBM0k+4vHHfPQdbqvxHY2awJSdK2W4XYzETcAfXppp1yQjthWwRg+k5wtE=
-X-Received: by 2002:ac8:7f55:0:b0:403:2877:bc52 with SMTP id
- g21-20020ac87f55000000b004032877bc52mr14847345qtk.0.1698238867829; Wed, 25
- Oct 2023 06:01:07 -0700 (PDT)
-Received: from 348282803490 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 25 Oct 2023 06:01:07 -0700
-From:   Emil Renner Berthing <emil.renner.berthing@canonical.com>
-In-Reply-To: <20231025102251.3369472-4-shravan.chippa@microchip.com>
-References: <20231025102251.3369472-1-shravan.chippa@microchip.com> <20231025102251.3369472-4-shravan.chippa@microchip.com>
-Mime-Version: 1.0
-Date:   Wed, 25 Oct 2023 06:01:07 -0700
-Message-ID: <CAJM55Z9s4AFcA0OdfBEOP8=OK9Oa3NzV5qZ9f-Q2f0Kn-BcE8A@mail.gmail.com>
-Subject: Re: [PATCH v3 3/4] dmaengine: sf-pdma: add mpfs-pdma compatible name
-To:     shravan chippa <shravan.chippa@microchip.com>,
-        green.wan@sifive.com, vkoul@kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, palmer@dabbelt.com,
-        paul.walmsley@sifive.com, conor+dt@kernel.org
-Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        nagasuresh.relli@microchip.com, praveen.kumar@microchip.com
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        with ESMTP id S1343648AbjJYOHc (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 25 Oct 2023 10:07:32 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E82D182;
+        Wed, 25 Oct 2023 07:07:29 -0700 (PDT)
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39PCu987006100;
+        Wed, 25 Oct 2023 14:07:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=qcppdkim1;
+ bh=CHYSU6xJjUK6nvQnNXApl3ynzhUA5jHy3koCx6UhFgA=;
+ b=NBy9upi43fvmcWQelMA6D4lO8VO95XHBIPJJNzsmeZEMTUAEXsK661OWAEiXa3ULHqBK
+ PANugwWTZNSfI9isUvCOChScJm6UZBMipXWsqkouw5MWqlZZEkCfF4I5Vcxam4odKzkb
+ mj6gqnJRMfX3rC+Qr62lMVzu7vZ0v4QVlxBGvV923AIT5yk/AJ2aNvyAIaKeLSAqY6+M
+ taDI74zPS1QKb0PZhbHZBVOzJqSI86OQkVEGxKdjF6+RT7NnSwoQj1nBYI9aDVcLVpgI
+ NII5K4KV7QDK1Bae8gWp/81BBynrw93LzqHHy160GuGXArQSwJf3ZQy+M3DtgNeqXvDB Kg== 
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ty0tu0f2x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 25 Oct 2023 14:07:14 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 39PE7EW6001824
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 25 Oct 2023 14:07:14 GMT
+Received: from blr-ubuntu-87.ap.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.39; Wed, 25 Oct 2023 07:07:07 -0700
+From:   Sibi Sankar <quic_sibis@quicinc.com>
+To:     <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
+        <will@kernel.org>, <robin.murphy@arm.com>, <joro@8bytes.org>,
+        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>
+CC:     <agross@kernel.org>, <vkoul@kernel.org>, <quic_gurus@quicinc.com>,
+        <conor+dt@kernel.org>, <quic_rjendra@quicinc.com>,
+        <abel.vesa@linaro.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dmaengine@vger.kernel.org>, <iommu@lists.linux.dev>,
+        <quic_tsoni@quicinc.com>, <neil.armstrong@linaro.org>,
+        Sibi Sankar <quic_sibis@quicinc.com>
+Subject: [PATCH 0/3] dt-bindings: Document gpi/scm/smmu for SC8380XP
+Date:   Wed, 25 Oct 2023 19:36:37 +0530
+Message-ID: <20231025140640.22601-1-quic_sibis@quicinc.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: nle9xfV8x7TU7NDqHgK27yujL6vaYoJZ
+X-Proofpoint-GUID: nle9xfV8x7TU7NDqHgK27yujL6vaYoJZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-25_03,2023-10-25_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ lowpriorityscore=0 malwarescore=0 clxscore=1011 mlxlogscore=649
+ suspectscore=0 bulkscore=0 mlxscore=0 phishscore=0 impostorscore=0
+ priorityscore=1501 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2310170001 definitions=main-2310250122
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-shravan chippa wrote:
-> From: Shravan Chippa <shravan.chippa@microchip.com>
->
-> Sifive platform dma does not allow out-of-order transfers,
-> Add a PolarFire SoC specific compatible and code to support
-> for out-of-order dma transfers
->
-> Signed-off-by: Shravan Chippa <shravan.chippa@microchip.com>
-> ---
->  drivers/dma/sf-pdma/sf-pdma.c | 27 ++++++++++++++++++++++++---
->  drivers/dma/sf-pdma/sf-pdma.h |  8 +++++++-
->  2 files changed, 31 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/dma/sf-pdma/sf-pdma.c b/drivers/dma/sf-pdma/sf-pdma.c
-> index 4c456bdef882..9cc4beec40f0 100644
-> --- a/drivers/dma/sf-pdma/sf-pdma.c
-> +++ b/drivers/dma/sf-pdma/sf-pdma.c
-> @@ -25,6 +25,8 @@
->
->  #include "sf-pdma.h"
->
-> +#define PDMA_QUIRK_NO_STRICT_ORDERING   BIT(0)
-> +
->  #ifndef readq
->  static inline unsigned long long readq(void __iomem *addr)
->  {
-> @@ -66,7 +68,7 @@ static struct sf_pdma_desc *sf_pdma_alloc_desc(struct sf_pdma_chan *chan)
->  static void sf_pdma_fill_desc(struct sf_pdma_desc *desc,
->  			      u64 dst, u64 src, u64 size)
->  {
-> -	desc->xfer_type = PDMA_FULL_SPEED;
-> +	desc->xfer_type =  desc->chan->pdma->transfer_type;
->  	desc->xfer_size = size;
->  	desc->dst_addr = dst;
->  	desc->src_addr = src;
-> @@ -520,6 +522,7 @@ static struct dma_chan *sf_pdma_of_xlate(struct of_phandle_args *dma_spec,
->
->  static int sf_pdma_probe(struct platform_device *pdev)
->  {
-> +	const struct sf_pdma_driver_platdata *ddata;
->  	struct sf_pdma *pdma;
->  	int ret, n_chans;
->  	const enum dma_slave_buswidth widths =
-> @@ -545,6 +548,14 @@ static int sf_pdma_probe(struct platform_device *pdev)
->
->  	pdma->n_chans = n_chans;
->
-> +	pdma->transfer_type = PDMA_FULL_SPEED | PDMA_STRICT_ORDERING;
-> +
-> +	ddata  = device_get_match_data(&pdev->dev);
-> +	if (ddata) {
-> +		if (ddata->quirks & PDMA_QUIRK_NO_STRICT_ORDERING)
-> +			pdma->transfer_type &= ~(PDMA_STRICT_ORDERING) ;
+This series documents gpu/scm/smmu for the Qualcomm SC8380XP platform, aka Snapdragon X Elite.
 
-The parentheses are unnecessary and you have an extra space.
+Dependencies: None
+Release Link: https://www.qualcomm.com/news/releases/2023/10/qualcomm-unleashes-snapdragon-x-elite--the-ai-super-charged-plat
 
-With that fixed:
-Reviewed-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+Rajendra Nayak (1):
+  dt-bindings: arm-smmu: Add compatible for SC8380XP SoC
 
-> +	}
-> +
->  	pdma->membase = devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(pdma->membase))
->  		return PTR_ERR(pdma->membase);
-> @@ -632,9 +643,19 @@ static int sf_pdma_remove(struct platform_device *pdev)
->  	return 0;
->  }
->
-> +static const struct sf_pdma_driver_platdata mpfs_pdma = {
-> +	.quirks = PDMA_QUIRK_NO_STRICT_ORDERING,
-> +};
-> +
->  static const struct of_device_id sf_pdma_dt_ids[] = {
-> -	{ .compatible = "sifive,fu540-c000-pdma" },
-> -	{ .compatible = "sifive,pdma0" },
-> +	{
-> +		.compatible = "sifive,fu540-c000-pdma",
-> +	}, {
-> +		.compatible = "sifive,pdma0",
-> +	}, {
-> +		.compatible = "microchip,mpfs-pdma",
-> +		.data	    = &mpfs_pdma,
-> +	},
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, sf_pdma_dt_ids);
-> diff --git a/drivers/dma/sf-pdma/sf-pdma.h b/drivers/dma/sf-pdma/sf-pdma.h
-> index 5c398a83b491..267e79a5e0a5 100644
-> --- a/drivers/dma/sf-pdma/sf-pdma.h
-> +++ b/drivers/dma/sf-pdma/sf-pdma.h
-> @@ -48,7 +48,8 @@
->  #define PDMA_ERR_STATUS_MASK				GENMASK(31, 31)
->
->  /* Transfer Type */
-> -#define PDMA_FULL_SPEED					0xFF000008
-> +#define PDMA_FULL_SPEED					0xFF000000
-> +#define PDMA_STRICT_ORDERING				BIT(3)
->
->  /* Error Recovery */
->  #define MAX_RETRY					1
-> @@ -112,8 +113,13 @@ struct sf_pdma {
->  	struct dma_device       dma_dev;
->  	void __iomem            *membase;
->  	void __iomem            *mappedbase;
-> +	u32			transfer_type;
->  	u32			n_chans;
->  	struct sf_pdma_chan	chans[];
->  };
->
-> +struct sf_pdma_driver_platdata {
-> +	u32 quirks;
-> +};
-> +
->  #endif /* _SF_PDMA_H */
-> --
-> 2.34.1
->
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+Sibi Sankar (2):
+  dt-bindings: dma: qcom: gpi: add compatible for SC8380XP
+  dt-bindings: firmware: qcom,scm: document SCM on SC8380XP SoCs
+
+ Documentation/devicetree/bindings/dma/qcom,gpi.yaml      | 1 +
+ Documentation/devicetree/bindings/firmware/qcom,scm.yaml | 1 +
+ Documentation/devicetree/bindings/iommu/arm,smmu.yaml    | 2 ++
+ 3 files changed, 4 insertions(+)
+
+-- 
+2.17.1
+

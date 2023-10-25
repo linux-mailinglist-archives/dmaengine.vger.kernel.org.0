@@ -2,246 +2,203 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 50B327D6AF6
-	for <lists+dmaengine@lfdr.de>; Wed, 25 Oct 2023 14:14:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B24367D6C9E
+	for <lists+dmaengine@lfdr.de>; Wed, 25 Oct 2023 15:02:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234581AbjJYMOZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 25 Oct 2023 08:14:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57170 "EHLO
+        id S234952AbjJYNBX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 25 Oct 2023 09:01:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231648AbjJYMOZ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 25 Oct 2023 08:14:25 -0400
-Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE8FF182;
-        Wed, 25 Oct 2023 05:14:21 -0700 (PDT)
-Received: from dlp.unisoc.com ([10.29.3.86])
-        by SHSQR01.spreadtrum.com with ESMTP id 39PCDvLd007254;
-        Wed, 25 Oct 2023 20:13:57 +0800 (+08)
-        (envelope-from Kaiwei.Liu@unisoc.com)
-Received: from SHDLP.spreadtrum.com (shmbx07.spreadtrum.com [10.0.1.12])
-        by dlp.unisoc.com (SkyGuard) with ESMTPS id 4SFnmB49j2z2L033G;
-        Wed, 25 Oct 2023 20:09:30 +0800 (CST)
-Received: from xm9614pcu.spreadtrum.com (10.13.2.29) by shmbx07.spreadtrum.com
- (10.0.1.12) with Microsoft SMTP Server (TLS) id 15.0.1497.23; Wed, 25 Oct
- 2023 20:13:56 +0800
-From:   Kaiwei Liu <kaiwei.liu@unisoc.com>
-To:     Vinod Koul <vkoul@kernel.org>, Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>
-CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        kaiwei liu <liukaiwei086@gmail.com>,
-        Wenming Wu <wenming.wu@unisoc.com>
-Subject: [PATCH 3/3] dmaengine: sprd: optimize two stage transfer function
-Date:   Wed, 25 Oct 2023 20:13:48 +0800
-Message-ID: <20231025121348.9147-1-kaiwei.liu@unisoc.com>
-X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.13.2.29]
-X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
- shmbx07.spreadtrum.com (10.0.1.12)
-X-MAIL: SHSQR01.spreadtrum.com 39PCDvLd007254
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,KHOP_HELO_FCRDNS,
-        SPF_HELO_NONE,SPF_NONE autolearn=no autolearn_force=no version=3.4.6
+        with ESMTP id S234955AbjJYNBW (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 25 Oct 2023 09:01:22 -0400
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91F1690
+        for <dmaengine@vger.kernel.org>; Wed, 25 Oct 2023 06:01:20 -0700 (PDT)
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 771793FD3A
+        for <dmaengine@vger.kernel.org>; Wed, 25 Oct 2023 13:01:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1698238871;
+        bh=Ja9/pCBWGEb2jT4TVb34dvtYhqs8vTUmcB3t9wcKY1o=;
+        h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
+         To:Cc:Content-Type;
+        b=EHYy9dt903g8qiZzSrrqfJaJsy8c7VpZeHGOPco6b18HEWSAyGvstFFMnK6D6YOSY
+         P3ri4q52Szp63XWu/NIclAeU6MQWerLvECopD96SuMqDCdeAeb5Qs1npLAK0hdbSaZ
+         H/hB2X3MmboO/YlKAkdQOPeHRDO2Kz79OqBdQI3UDJc69NK2cijDQnAYQaqtQx+HlN
+         jmKR5fRQn829vaexNbqZjurSbKsLIabG1JnmRCUyBLhvE/1ZRzLAnA7S/lpICnipfF
+         N3g2sCfd4jbDIdXh63h43u7xrkvFp0fnOT3IBwUoo05w2N/jGYK+sM/9tiPqyiLM8R
+         ZYtQO3+cvFuGg==
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-41cba6d1330so57526491cf.1
+        for <dmaengine@vger.kernel.org>; Wed, 25 Oct 2023 06:01:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698238868; x=1698843668;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ja9/pCBWGEb2jT4TVb34dvtYhqs8vTUmcB3t9wcKY1o=;
+        b=StS75BKFD45JRzvYxUiF0ROkC6m7d9DfXtBhgLsobEe9pkcB9qkvmNIYTJRqhRmv6H
+         eSVDZYNfuAX3AnsUthPSDquEh04qa4ReiCtdgtgPec27f9TRNfHvc/HMjPAvz49PMZ3F
+         TWDqvyrAqV9FRpEjY8MTLvgu0fFojtHhnmVQFlFH853c08/Y89H7GYhlTEwnRu6rFu8J
+         xmaiolgXc28oQgvO9jMIELP4AVc+dybLbEuS95vAB6puYShL/IET+jsSbFajS/QS80L0
+         KkcHRSaoyuk4dHorXWKs59w2X5elA1RUy2bMOaW218hTExOuMaCJmn3bDg3KrrRkmS/A
+         /66Q==
+X-Gm-Message-State: AOJu0YzyKAyoYjrSRLFnaGftBv6ki9hR3/ABbxVs23Vt90wmxK8F1IOB
+        645a/gK8RtLYpmLxxJQ39t5MhBE5eOTNth+Ko85AqVpLpogs9+j2Txty8CmIN5PTS7aeBzwDceG
+        le8WwesHpIt7tIps30Lc+elVmNqSI4os/9q5rg7bYQ2ogf5ey2DBy9A==
+X-Received: by 2002:ac8:7f55:0:b0:403:2877:bc52 with SMTP id g21-20020ac87f55000000b004032877bc52mr14847388qtk.0.1698238868273;
+        Wed, 25 Oct 2023 06:01:08 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHR4n03DxpEQ8FKBl/cC8JZSa2ZdjBM0k+4vHHfPQdbqvxHY2awJSdK2W4XYzETcAfXppp1yQjthWwRg+k5wtE=
+X-Received: by 2002:ac8:7f55:0:b0:403:2877:bc52 with SMTP id
+ g21-20020ac87f55000000b004032877bc52mr14847345qtk.0.1698238867829; Wed, 25
+ Oct 2023 06:01:07 -0700 (PDT)
+Received: from 348282803490 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 25 Oct 2023 06:01:07 -0700
+From:   Emil Renner Berthing <emil.renner.berthing@canonical.com>
+In-Reply-To: <20231025102251.3369472-4-shravan.chippa@microchip.com>
+References: <20231025102251.3369472-1-shravan.chippa@microchip.com> <20231025102251.3369472-4-shravan.chippa@microchip.com>
+Mime-Version: 1.0
+Date:   Wed, 25 Oct 2023 06:01:07 -0700
+Message-ID: <CAJM55Z9s4AFcA0OdfBEOP8=OK9Oa3NzV5qZ9f-Q2f0Kn-BcE8A@mail.gmail.com>
+Subject: Re: [PATCH v3 3/4] dmaengine: sf-pdma: add mpfs-pdma compatible name
+To:     shravan chippa <shravan.chippa@microchip.com>,
+        green.wan@sifive.com, vkoul@kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, palmer@dabbelt.com,
+        paul.walmsley@sifive.com, conor+dt@kernel.org
+Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        nagasuresh.relli@microchip.com, praveen.kumar@microchip.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: "kaiwei.liu" <kaiwei.liu@unisoc.com>
+shravan chippa wrote:
+> From: Shravan Chippa <shravan.chippa@microchip.com>
+>
+> Sifive platform dma does not allow out-of-order transfers,
+> Add a PolarFire SoC specific compatible and code to support
+> for out-of-order dma transfers
+>
+> Signed-off-by: Shravan Chippa <shravan.chippa@microchip.com>
+> ---
+>  drivers/dma/sf-pdma/sf-pdma.c | 27 ++++++++++++++++++++++++---
+>  drivers/dma/sf-pdma/sf-pdma.h |  8 +++++++-
+>  2 files changed, 31 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/dma/sf-pdma/sf-pdma.c b/drivers/dma/sf-pdma/sf-pdma.c
+> index 4c456bdef882..9cc4beec40f0 100644
+> --- a/drivers/dma/sf-pdma/sf-pdma.c
+> +++ b/drivers/dma/sf-pdma/sf-pdma.c
+> @@ -25,6 +25,8 @@
+>
+>  #include "sf-pdma.h"
+>
+> +#define PDMA_QUIRK_NO_STRICT_ORDERING   BIT(0)
+> +
+>  #ifndef readq
+>  static inline unsigned long long readq(void __iomem *addr)
+>  {
+> @@ -66,7 +68,7 @@ static struct sf_pdma_desc *sf_pdma_alloc_desc(struct sf_pdma_chan *chan)
+>  static void sf_pdma_fill_desc(struct sf_pdma_desc *desc,
+>  			      u64 dst, u64 src, u64 size)
+>  {
+> -	desc->xfer_type = PDMA_FULL_SPEED;
+> +	desc->xfer_type =  desc->chan->pdma->transfer_type;
+>  	desc->xfer_size = size;
+>  	desc->dst_addr = dst;
+>  	desc->src_addr = src;
+> @@ -520,6 +522,7 @@ static struct dma_chan *sf_pdma_of_xlate(struct of_phandle_args *dma_spec,
+>
+>  static int sf_pdma_probe(struct platform_device *pdev)
+>  {
+> +	const struct sf_pdma_driver_platdata *ddata;
+>  	struct sf_pdma *pdma;
+>  	int ret, n_chans;
+>  	const enum dma_slave_buswidth widths =
+> @@ -545,6 +548,14 @@ static int sf_pdma_probe(struct platform_device *pdev)
+>
+>  	pdma->n_chans = n_chans;
+>
+> +	pdma->transfer_type = PDMA_FULL_SPEED | PDMA_STRICT_ORDERING;
+> +
+> +	ddata  = device_get_match_data(&pdev->dev);
+> +	if (ddata) {
+> +		if (ddata->quirks & PDMA_QUIRK_NO_STRICT_ORDERING)
+> +			pdma->transfer_type &= ~(PDMA_STRICT_ORDERING) ;
 
-For SPRD DMA, it provides a function that one channel can start
-the second channel after completing the transmission, which we
-call two stage transfer mode. You can choose which channel can
-generate interrupt when finished. It can support up to two sets
-of such patterns.
-When configuring registers for two stage transfer mode, we need
-to set the mask bit to ensure that the setting are accurate. And
-we should clear the two stage transfer configuration when release
-DMA channel.
-The two stage transfer function is mainly used by SPRD audio, and
-now audio also requires that the data need to be accessed on the
-device side. So here use the src_port_window_size and dst_port_win-
-dow_size in the struct of dma_slave_config.
+The parentheses are unnecessary and you have an extra space.
 
-Signed-off-by: kaiwei.liu <kaiwei.liu@unisoc.com>
----
- drivers/dma/sprd-dma.c | 116 ++++++++++++++++++++++++-----------------
- 1 file changed, 69 insertions(+), 47 deletions(-)
+With that fixed:
+Reviewed-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
 
-diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
-index f8ed2f3f764b..50916296cd08 100644
---- a/drivers/dma/sprd-dma.c
-+++ b/drivers/dma/sprd-dma.c
-@@ -68,6 +68,7 @@
- #define SPRD_DMA_GLB_TRANS_DONE_TRG	BIT(18)
- #define SPRD_DMA_GLB_BLOCK_DONE_TRG	BIT(17)
- #define SPRD_DMA_GLB_FRAG_DONE_TRG	BIT(16)
-+#define SPRD_DMA_GLB_TRG_MASK		GENMASK(19, 16)
- #define SPRD_DMA_GLB_TRG_OFFSET		16
- #define SPRD_DMA_GLB_DEST_CHN_MASK	GENMASK(13, 8)
- #define SPRD_DMA_GLB_DEST_CHN_OFFSET	8
-@@ -155,6 +156,13 @@
- 
- #define SPRD_DMA_SOFTWARE_UID		0
- 
-+#define SPRD_DMA_SRC_CHN0_INT		9
-+#define SPRD_DMA_SRC_CHN1_INT		10
-+#define SPRD_DMA_DST_CHN0_INT		11
-+#define SPRD_DMA_DST_CHN1_INT		12
-+#define SPRD_DMA_2STAGE_SET		1
-+#define SPRD_DMA_2STAGE_CLEAR		0
-+
- /* dma data width values */
- enum sprd_dma_datawidth {
- 	SPRD_DMA_DATAWIDTH_1_BYTE,
-@@ -431,53 +439,57 @@ static enum sprd_dma_req_mode sprd_dma_get_req_type(struct sprd_dma_chn *schan)
- 	return (frag_reg >> SPRD_DMA_REQ_MODE_OFFSET) & SPRD_DMA_REQ_MODE_MASK;
- }
- 
--static int sprd_dma_set_2stage_config(struct sprd_dma_chn *schan)
-+static void sprd_dma_2stage_write(struct sprd_dma_chn *schan,
-+				  u32 config_type, u32 grp_offset)
- {
- 	struct sprd_dma_dev *sdev = to_sprd_dma_dev(&schan->vc.chan);
--	u32 val, chn = schan->chn_num + 1;
--
--	switch (schan->chn_mode) {
--	case SPRD_DMA_SRC_CHN0:
--		val = chn & SPRD_DMA_GLB_SRC_CHN_MASK;
--		val |= BIT(schan->trg_mode - 1) << SPRD_DMA_GLB_TRG_OFFSET;
--		val |= SPRD_DMA_GLB_2STAGE_EN;
--		if (schan->int_type != SPRD_DMA_NO_INT)
--			val |= SPRD_DMA_GLB_SRC_INT;
--
--		sprd_dma_glb_update(sdev, SPRD_DMA_GLB_2STAGE_GRP1, val, val);
--		break;
--
--	case SPRD_DMA_SRC_CHN1:
--		val = chn & SPRD_DMA_GLB_SRC_CHN_MASK;
--		val |= BIT(schan->trg_mode - 1) << SPRD_DMA_GLB_TRG_OFFSET;
--		val |= SPRD_DMA_GLB_2STAGE_EN;
--		if (schan->int_type != SPRD_DMA_NO_INT)
--			val |= SPRD_DMA_GLB_SRC_INT;
--
--		sprd_dma_glb_update(sdev, SPRD_DMA_GLB_2STAGE_GRP2, val, val);
--		break;
--
--	case SPRD_DMA_DST_CHN0:
--		val = (chn << SPRD_DMA_GLB_DEST_CHN_OFFSET) &
--			SPRD_DMA_GLB_DEST_CHN_MASK;
--		val |= SPRD_DMA_GLB_2STAGE_EN;
--		if (schan->int_type != SPRD_DMA_NO_INT)
--			val |= SPRD_DMA_GLB_DEST_INT;
--
--		sprd_dma_glb_update(sdev, SPRD_DMA_GLB_2STAGE_GRP1, val, val);
--		break;
--
--	case SPRD_DMA_DST_CHN1:
--		val = (chn << SPRD_DMA_GLB_DEST_CHN_OFFSET) &
--			SPRD_DMA_GLB_DEST_CHN_MASK;
--		val |= SPRD_DMA_GLB_2STAGE_EN;
--		if (schan->int_type != SPRD_DMA_NO_INT)
--			val |= SPRD_DMA_GLB_DEST_INT;
--
--		sprd_dma_glb_update(sdev, SPRD_DMA_GLB_2STAGE_GRP2, val, val);
--		break;
-+	u32 mask_val;
-+	u32 chn = schan->chn_num + 1;
-+	u32 val = 0;
-+
-+	if (config_type == SPRD_DMA_2STAGE_SET) {
-+		if (schan->chn_mode == SPRD_DMA_SRC_CHN0 ||
-+		    schan->chn_mode == SPRD_DMA_SRC_CHN1) {
-+			val = chn & SPRD_DMA_GLB_SRC_CHN_MASK;
-+			val |= BIT(schan->trg_mode - 1) << SPRD_DMA_GLB_TRG_OFFSET;
-+			val |= SPRD_DMA_GLB_2STAGE_EN;
-+			if (schan->int_type & SPRD_DMA_SRC_CHN0_INT ||
-+			    schan->int_type & SPRD_DMA_SRC_CHN1_INT)
-+				val |= SPRD_DMA_GLB_SRC_INT;
-+			mask_val = SPRD_DMA_GLB_SRC_INT | SPRD_DMA_GLB_TRG_MASK |
-+				   SPRD_DMA_GLB_SRC_CHN_MASK;
-+		} else {
-+			val = (chn << SPRD_DMA_GLB_DEST_CHN_OFFSET) &
-+			       SPRD_DMA_GLB_DEST_CHN_MASK;
-+			val |= SPRD_DMA_GLB_2STAGE_EN;
-+			if (schan->int_type & SPRD_DMA_DST_CHN0_INT ||
-+			    schan->int_type & SPRD_DMA_DST_CHN1_INT)
-+				val |= SPRD_DMA_GLB_DEST_INT;
-+			mask_val = SPRD_DMA_GLB_DEST_INT | SPRD_DMA_GLB_DEST_CHN_MASK;
-+		}
-+	} else {
-+		if (schan->chn_mode == SPRD_DMA_SRC_CHN0 ||
-+		    schan->chn_mode == SPRD_DMA_SRC_CHN1)
-+			mask_val = SPRD_DMA_GLB_SRC_INT | SPRD_DMA_GLB_TRG_MASK |
-+				   SPRD_DMA_GLB_2STAGE_EN | SPRD_DMA_GLB_SRC_CHN_MASK;
-+		else
-+			mask_val = SPRD_DMA_GLB_DEST_INT | SPRD_DMA_GLB_2STAGE_EN |
-+				   SPRD_DMA_GLB_DEST_CHN_MASK;
-+	}
-+	sprd_dma_glb_update(sdev, grp_offset, mask_val, val);
-+}
- 
--	default:
-+static int sprd_dma_2stage_config(struct sprd_dma_chn *schan, u32 config_type)
-+{
-+	struct sprd_dma_dev *sdev = to_sprd_dma_dev(&schan->vc.chan);
-+
-+	if (schan->chn_mode == SPRD_DMA_SRC_CHN0 ||
-+	    schan->chn_mode == SPRD_DMA_DST_CHN0)
-+		sprd_dma_2stage_write(schan, config_type, SPRD_DMA_GLB_2STAGE_GRP1);
-+	else if (schan->chn_mode == SPRD_DMA_SRC_CHN1 ||
-+		 schan->chn_mode == SPRD_DMA_DST_CHN1)
-+		sprd_dma_2stage_write(schan, config_type, SPRD_DMA_GLB_2STAGE_GRP2);
-+	else {
- 		dev_err(sdev->dma_dev.dev, "invalid channel mode setting %d\n",
- 			schan->chn_mode);
- 		return -EINVAL;
-@@ -545,7 +557,7 @@ static void sprd_dma_start(struct sprd_dma_chn *schan)
- 	 * Set 2-stage configuration if the channel starts one 2-stage
- 	 * transfer.
- 	 */
--	if (schan->chn_mode && sprd_dma_set_2stage_config(schan))
-+	if (schan->chn_mode && sprd_dma_2stage_config(schan, SPRD_DMA_2STAGE_SET))
- 		return;
- 
- 	/*
-@@ -569,6 +581,12 @@ static void sprd_dma_stop(struct sprd_dma_chn *schan)
- 	sprd_dma_set_pending(schan, false);
- 	sprd_dma_unset_uid(schan);
- 	sprd_dma_clear_int(schan);
-+	/*
-+	 * If 2-stage transfer is used, the configuration must be clear
-+	 * when release DMA channel.
-+	 */
-+	if (schan->chn_mode)
-+		sprd_dma_2stage_config(schan, SPRD_DMA_2STAGE_CLEAR);
- 	schan->cur_desc = NULL;
- }
- 
-@@ -757,7 +775,9 @@ static int sprd_dma_fill_desc(struct dma_chan *chan,
- 	phys_addr_t llist_ptr;
- 
- 	if (dir == DMA_MEM_TO_DEV) {
--		src_step = sprd_dma_get_step(slave_cfg->src_addr_width);
-+		src_step = slave_cfg->src_port_window_size ?
-+			   slave_cfg->src_port_window_size :
-+			   sprd_dma_get_step(slave_cfg->src_addr_width);
- 		if (src_step < 0) {
- 			dev_err(sdev->dma_dev.dev, "invalid source step\n");
- 			return src_step;
-@@ -773,7 +793,9 @@ static int sprd_dma_fill_desc(struct dma_chan *chan,
- 		else
- 			dst_step = SPRD_DMA_NONE_STEP;
- 	} else {
--		dst_step = sprd_dma_get_step(slave_cfg->dst_addr_width);
-+		dst_step = slave_cfg->dst_port_window_size ?
-+			   slave_cfg->dst_port_window_size :
-+			   sprd_dma_get_step(slave_cfg->dst_addr_width);
- 		if (dst_step < 0) {
- 			dev_err(sdev->dma_dev.dev, "invalid destination step\n");
- 			return dst_step;
--- 
-2.17.1
-
+> +	}
+> +
+>  	pdma->membase = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(pdma->membase))
+>  		return PTR_ERR(pdma->membase);
+> @@ -632,9 +643,19 @@ static int sf_pdma_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>
+> +static const struct sf_pdma_driver_platdata mpfs_pdma = {
+> +	.quirks = PDMA_QUIRK_NO_STRICT_ORDERING,
+> +};
+> +
+>  static const struct of_device_id sf_pdma_dt_ids[] = {
+> -	{ .compatible = "sifive,fu540-c000-pdma" },
+> -	{ .compatible = "sifive,pdma0" },
+> +	{
+> +		.compatible = "sifive,fu540-c000-pdma",
+> +	}, {
+> +		.compatible = "sifive,pdma0",
+> +	}, {
+> +		.compatible = "microchip,mpfs-pdma",
+> +		.data	    = &mpfs_pdma,
+> +	},
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, sf_pdma_dt_ids);
+> diff --git a/drivers/dma/sf-pdma/sf-pdma.h b/drivers/dma/sf-pdma/sf-pdma.h
+> index 5c398a83b491..267e79a5e0a5 100644
+> --- a/drivers/dma/sf-pdma/sf-pdma.h
+> +++ b/drivers/dma/sf-pdma/sf-pdma.h
+> @@ -48,7 +48,8 @@
+>  #define PDMA_ERR_STATUS_MASK				GENMASK(31, 31)
+>
+>  /* Transfer Type */
+> -#define PDMA_FULL_SPEED					0xFF000008
+> +#define PDMA_FULL_SPEED					0xFF000000
+> +#define PDMA_STRICT_ORDERING				BIT(3)
+>
+>  /* Error Recovery */
+>  #define MAX_RETRY					1
+> @@ -112,8 +113,13 @@ struct sf_pdma {
+>  	struct dma_device       dma_dev;
+>  	void __iomem            *membase;
+>  	void __iomem            *mappedbase;
+> +	u32			transfer_type;
+>  	u32			n_chans;
+>  	struct sf_pdma_chan	chans[];
+>  };
+>
+> +struct sf_pdma_driver_platdata {
+> +	u32 quirks;
+> +};
+> +
+>  #endif /* _SF_PDMA_H */
+> --
+> 2.34.1
+>
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv

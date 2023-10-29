@@ -1,31 +1,31 @@
-Return-Path: <dmaengine+bounces-4-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D05BA7DABB6
-	for <lists+dmaengine@lfdr.de>; Sun, 29 Oct 2023 09:01:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4FA747DABB7
+	for <lists+dmaengine@lfdr.de>; Sun, 29 Oct 2023 09:01:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8A65D28173F
-	for <lists+dmaengine@lfdr.de>; Sun, 29 Oct 2023 08:01:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 37907280847
+	for <lists+dmaengine@lfdr.de>; Sun, 29 Oct 2023 08:01:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BA3C7FB;
-	Sun, 29 Oct 2023 08:01:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EB531C02;
+	Sun, 29 Oct 2023 08:01:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 X-Original-To: dmaengine@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48E7A2117
-	for <dmaengine@vger.kernel.org>; Sun, 29 Oct 2023 08:00:58 +0000 (UTC)
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9E3BC9;
-	Sun, 29 Oct 2023 01:00:56 -0700 (PDT)
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R881e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=guanjun@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0Vv31XWv_1698566451;
-Received: from localhost(mailfrom:guanjun@linux.alibaba.com fp:SMTPD_---0Vv31XWv_1698566451)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5CF1873
+	for <dmaengine@vger.kernel.org>; Sun, 29 Oct 2023 08:01:01 +0000 (UTC)
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A772F3;
+	Sun, 29 Oct 2023 01:00:58 -0700 (PDT)
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=guanjun@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0Vv31XX4_1698566453;
+Received: from localhost(mailfrom:guanjun@linux.alibaba.com fp:SMTPD_---0Vv31XX4_1698566453)
           by smtp.aliyun-inc.com;
-          Sun, 29 Oct 2023 16:00:52 +0800
+          Sun, 29 Oct 2023 16:00:53 +0800
 From: 'Guanjun' <guanjun@linux.alibaba.com>
 To: dave.jiang@intel.com,
 	dmaengine@vger.kernel.org,
@@ -40,9 +40,9 @@ Cc: jing.lin@intel.com,
 	jacob.jun.pan@intel.com,
 	yi.l.liu@intel.com,
 	tglx@linutronix.de
-Subject: [PATCH v1 1/2] dmaengine: idxd: Protect int_handle field in hw descriptor
-Date: Sun, 29 Oct 2023 16:00:48 +0800
-Message-Id: <20231029080049.1482701-2-guanjun@linux.alibaba.com>
+Subject: [PATCH v1 2/2] dmaengine: idxd: Fix the incorrect descriptions
+Date: Sun, 29 Oct 2023 16:00:49 +0800
+Message-Id: <20231029080049.1482701-3-guanjun@linux.alibaba.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20231029080049.1482701-1-guanjun@linux.alibaba.com>
 References: <20231029080049.1482701-1-guanjun@linux.alibaba.com>
@@ -56,46 +56,39 @@ Content-Transfer-Encoding: 8bit
 
 From: Guanjun <guanjun@linux.alibaba.com>
 
-The int_handle field in hw descriptor should also be protected
-by wmb() before possibly triggering a DMA read.
+Fix the incorrect descriptions for the GRPCFG register.
+No functional changes
 
 Signed-off-by: Guanjun <guanjun@linux.alibaba.com>
 ---
- drivers/dma/idxd/submit.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/dma/idxd/registers.h | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/dma/idxd/submit.c b/drivers/dma/idxd/submit.c
-index c01db23e3333..3f922518e3a5 100644
---- a/drivers/dma/idxd/submit.c
-+++ b/drivers/dma/idxd/submit.c
-@@ -182,13 +182,6 @@ int idxd_submit_desc(struct idxd_wq *wq, struct idxd_desc *desc)
- 
- 	portal = idxd_wq_portal_addr(wq);
- 
--	/*
--	 * The wmb() flushes writes to coherent DMA data before
--	 * possibly triggering a DMA read. The wmb() is necessary
--	 * even on UP because the recipient is a device.
--	 */
--	wmb();
--
- 	/*
- 	 * Pending the descriptor to the lockless list for the irq_entry
- 	 * that we designated the descriptor to.
-@@ -199,6 +192,13 @@ int idxd_submit_desc(struct idxd_wq *wq, struct idxd_desc *desc)
- 		llist_add(&desc->llnode, &ie->pending_llist);
- 	}
- 
-+	/*
-+	 * The wmb() flushes writes to coherent DMA data before
-+	 * possibly triggering a DMA read. The wmb() is necessary
-+	 * even on UP because the recipient is a device.
-+	 */
-+	wmb();
-+
- 	if (wq_dedicated(wq)) {
- 		iosubmit_cmds512(portal, desc->hw, 1);
- 	} else {
+diff --git a/drivers/dma/idxd/registers.h b/drivers/dma/idxd/registers.h
+index 7b54a3939ea1..385a162a55f2 100644
+--- a/drivers/dma/idxd/registers.h
++++ b/drivers/dma/idxd/registers.h
+@@ -440,12 +440,15 @@ union wqcfg {
+ /*
+  * This macro calculates the offset into the GRPCFG register
+  * idxd - struct idxd *
+- * n - wq id
+- * ofs - the index of the 32b dword for the config register
++ * n - group id
++ * ofs - the index of the 64b qword for the config register
+  *
+- * The WQCFG register block is divided into groups per each wq. The n index
+- * allows us to move to the register group that's for that particular wq.
+- * Each register is 32bits. The ofs gives us the number of register to access.
++ * The GRPCFG register block is divided into three different types, that
++ * includes GRPWQCFG, GRPENGCFG and GRPFLGCFG. The n index in each group
++ * allows us to move to the register group that's for that particular wq,
++ * engine or group flag.
++ * Each register is 64bits. And the ofs in GRPWQCFG gives us the number
++ * of register to access.
+  */
+ #define GRPWQCFG_OFFSET(idxd_dev, n, ofs) ((idxd_dev)->grpcfg_offset +\
+ 					   (n) * GRPCFG_SIZE + sizeof(u64) * (ofs))
 -- 
 2.39.3
 

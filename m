@@ -1,65 +1,74 @@
-Return-Path: <dmaengine+bounces-2-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8FDC27DA3FD
-	for <lists+dmaengine@lfdr.de>; Sat, 28 Oct 2023 01:23:04 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id F22B87DABB5
+	for <lists+dmaengine@lfdr.de>; Sun, 29 Oct 2023 09:01:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B33821C210B7
-	for <lists+dmaengine@lfdr.de>; Fri, 27 Oct 2023 23:23:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AB97F281703
+	for <lists+dmaengine@lfdr.de>; Sun, 29 Oct 2023 08:01:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F3843986E;
-	Fri, 27 Oct 2023 23:23:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="m3BBIsHR"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F030A8F5D;
+	Sun, 29 Oct 2023 08:01:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0106334CD1;
-	Fri, 27 Oct 2023 23:22:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BE46C433C7;
-	Fri, 27 Oct 2023 23:22:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1698448979;
-	bh=euoi0gsHk/0YPq55clyHDu+jm37VY6jlna/C0hrDMTs=;
-	h=Date:From:To:Subject:References:In-Reply-To:From;
-	b=m3BBIsHR/VPcsd5spaOT2brsOBwRM/T6t45o/xQOFCoHp6uRoEuZlXzP5yxodmhG6
-	 fop/7YVrQ3CrisYfNO0SoI2fSbUHc0/Stxnh2jB06DIm37toRNIuzIVjRp4fL8O7tE
-	 aSymxaFR/1XVwVYlkLlig+sIOx7x7CFilpVjsTh4=
-Date: Fri, 27 Oct 2023 19:22:57 -0400
-From: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-To: dccp@vger.kernel.org, dmaengine@vger.kernel.org, 
-	ecryptfs@vger.kernel.org, fio@vger.kernel.org, fstests@vger.kernel.org, 
-	initramfs@vger.kernel.org, io-uring@vger.kernel.org, kernel-janitors@vger.kernel.org, 
-	keyrings@vger.kernel.org, kvm-ppc@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: This list is being migrated to the new vger infra (no action
- required)
-Message-ID: <20231027-vagabond-quail-of-efficiency-dd3dd5@meerkat>
-References: <20231027-strange-debonair-basilisk-cecdab@meerkat>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D950D1873
+	for <dmaengine@vger.kernel.org>; Sun, 29 Oct 2023 08:00:58 +0000 (UTC)
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EB47D3;
+	Sun, 29 Oct 2023 01:00:55 -0700 (PDT)
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=guanjun@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0Vv33MXt_1698566449;
+Received: from localhost(mailfrom:guanjun@linux.alibaba.com fp:SMTPD_---0Vv33MXt_1698566449)
+          by smtp.aliyun-inc.com;
+          Sun, 29 Oct 2023 16:00:50 +0800
+From: 'Guanjun' <guanjun@linux.alibaba.com>
+To: dave.jiang@intel.com,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	vkoul@kernel.org,
+	tony.luck@intel.com,
+	fenghua.yu@intel.com
+Cc: jing.lin@intel.com,
+	ashok.raj@intel.com,
+	sanjay.k.kumar@intel.com,
+	megha.dey@intel.com,
+	jacob.jun.pan@intel.com,
+	yi.l.liu@intel.com,
+	tglx@linutronix.de
+Subject: [PATCH v1 0/2] Some fixes for idxd driver
+Date: Sun, 29 Oct 2023 16:00:47 +0800
+Message-Id: <20231029080049.1482701-1-guanjun@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20231027-strange-debonair-basilisk-cecdab@meerkat>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Oct 27, 2023 at 06:56:49PM -0400, Konstantin Ryabitsev wrote:
-> This list is being migrated to the new vger infrastructure. This should be a
-> fully transparent process and you don't need to change anything about how you
-> participate with the list or how you receive mail.
-> 
-> There will be a brief delay with archives on lore.kernel.org. I will follow up
-> once the archive migration has been completed.
+From: Guanjun <guanjun@linux.alibaba.com>
 
-This work is now complete. If anything isn't working correctly, please report
-it to helpdesk@kernel.org.
+This two patches fix the some issues for idxd driver.
+Please help to review.
 
-Best wishes,
--K
+Thanks,
+Guanjun
+
+Guanjun (2):
+  dmaengine: idxd: Protect int_handle field in hw descriptor
+  dmaengine: idxd: Fix the incorrect descriptions
+
+ drivers/dma/idxd/registers.h | 13 ++++++++-----
+ drivers/dma/idxd/submit.c    | 14 +++++++-------
+ 2 files changed, 15 insertions(+), 12 deletions(-)
+
+-- 
+2.39.3
+
 

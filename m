@@ -1,256 +1,118 @@
-Return-Path: <dmaengine+bounces-42-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-43-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0F0B7DF228
-	for <lists+dmaengine@lfdr.de>; Thu,  2 Nov 2023 13:17:58 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D81B77DFBA1
+	for <lists+dmaengine@lfdr.de>; Thu,  2 Nov 2023 21:39:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 72959B20DE4
-	for <lists+dmaengine@lfdr.de>; Thu,  2 Nov 2023 12:17:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 015F31C20FBB
+	for <lists+dmaengine@lfdr.de>; Thu,  2 Nov 2023 20:39:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8DC0182AE;
-	Thu,  2 Nov 2023 12:17:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98104125B0;
+	Thu,  2 Nov 2023 20:39:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X3R5u0l6"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 952C0179BF
-	for <dmaengine@vger.kernel.org>; Thu,  2 Nov 2023 12:17:48 +0000 (UTC)
-Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDC3F193;
-	Thu,  2 Nov 2023 05:17:46 -0700 (PDT)
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 3A2CHFCR024307;
-	Thu, 2 Nov 2023 20:17:15 +0800 (+08)
-	(envelope-from Kaiwei.Liu@unisoc.com)
-Received: from SHDLP.spreadtrum.com (shmbx07.spreadtrum.com [10.0.1.12])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4SLjS10k1Yz2M9fbK;
-	Thu,  2 Nov 2023 20:12:33 +0800 (CST)
-Received: from xm9614pcu.spreadtrum.com (10.13.2.29) by shmbx07.spreadtrum.com
- (10.0.1.12) with Microsoft SMTP Server (TLS) id 15.0.1497.23; Thu, 2 Nov 2023
- 20:17:14 +0800
-From: Kaiwei Liu <kaiwei.liu@unisoc.com>
-To: Vinod Koul <vkoul@kernel.org>, Orson Zhai <orsonzhai@gmail.com>,
-        Baolin
- Wang <baolin.wang@linux.alibaba.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>
-CC: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        kaiwei liu
-	<liukaiwei086@gmail.com>,
-        Wenming Wu <wenming.wu@unisoc.com>
-Subject: [PATCH 2/2] dmaengine: sprd: optimize two stage transfer function
-Date: Thu, 2 Nov 2023 20:17:08 +0800
-Message-ID: <20231102121708.32279-1-kaiwei.liu@unisoc.com>
-X-Mailer: git-send-email 2.17.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E0FD208CC;
+	Thu,  2 Nov 2023 20:39:34 +0000 (UTC)
+Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A922181;
+	Thu,  2 Nov 2023 13:39:33 -0700 (PDT)
+Received: by mail-lj1-x22e.google.com with SMTP id 38308e7fff4ca-2c5028e5b88so19453081fa.3;
+        Thu, 02 Nov 2023 13:39:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1698957571; x=1699562371; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=grYQIWgbXucL1+7FC1aZjuyPVvNYgF4xifW6xFLOhH8=;
+        b=X3R5u0l6B4WCxarz67HYg8Wky5p7NHsh6+0oQX+0KTj35uRkeaYnD/IAy+SmcylRmH
+         +0MjnjmdiHZMQ3/CI5MeD8QcVzoaTKAQ5RdhSCr/UPjykBDS8c3vZO3lGAv+6dGOcMaC
+         YEMlHRNKe/M53qdWOlXchJpWuoHIMxwOm74/C/D9AeWRsVSwCSk04YMiIe3fVnuuodzY
+         lE8z9lUk/7avYqtY+ZkmRkc9V+soRGO6sdtbDJHtzszsKsJ44hcR7Wq6dqUWRz0tpxHN
+         vbYry6WgH2S7KqGdg6O5fXN0e7ktPuNdl3v6Fa0O/RNCO1iwvI2/MFxItPxg+BiIndoQ
+         N7tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698957571; x=1699562371;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=grYQIWgbXucL1+7FC1aZjuyPVvNYgF4xifW6xFLOhH8=;
+        b=Xv+Ge+FlmMGGru3QhpwoOcAfDuyndovIAjuDeTLdjrYmRjHwGVag04M80bNh4LKv3v
+         lUGy7aO4l4/gK+v4xe5y/K+uvZxN2oMURxhDP/yxPx07DuAEYIyoDCmnvGfsM9g5FPj/
+         ZE0WaJbS0NYebVgaNguO8KehWVqYhXLcMuQw+pqEeK8r9mH7DNjWuZJ52Qit3UwIWFEr
+         xSk7Zx98abjIEXA0svpkIuKcRTkcfMtlrSwgsVCR0IBPnPRoJoOfdMXVQcIRu8ELSEFO
+         P6q7GhnUaOPwa/Gss8aDLrSWNg6bLtZrqZom2KDdz/21fdYSfIemtFtUgWskh0U5vcsP
+         mhhg==
+X-Gm-Message-State: AOJu0YyhKvankdyQdOwHz/+kEKBc67C6ht8RJ6uV+p6LVBF6Ge5k/d+b
+	oFcl2f/rPwjMLsFRx1I9J2o=
+X-Google-Smtp-Source: AGHT+IF78CK3Pd6QAPRZgbcYPcc9m7luJi71eDeYjOsgXNFou2RfWXhSxNNo4RMpfDsdPbxLJmKuJA==
+X-Received: by 2002:a2e:b53c:0:b0:2bf:b133:dd65 with SMTP id z28-20020a2eb53c000000b002bfb133dd65mr14376270ljm.38.1698957570956;
+        Thu, 02 Nov 2023 13:39:30 -0700 (PDT)
+Received: from prasmi.home ([2a00:23c8:2501:c701:fc00:5a9d:a85b:5d31])
+        by smtp.gmail.com with ESMTPSA id d8-20020a05600c34c800b0040770ec2c19sm270175wmq.10.2023.11.02.13.39.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Nov 2023 13:39:30 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Vinod Koul <vkoul@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH] dt-bindings: dma: rz-dmac: Document RZ/Five SoC
+Date: Thu,  2 Nov 2023 20:39:22 +0000
+Message-Id: <20231102203922.548353-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.13.2.29]
-X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
- shmbx07.spreadtrum.com (10.0.1.12)
-X-MAIL:SHSQR01.spreadtrum.com 3A2CHFCR024307
+Content-Transfer-Encoding: 8bit
 
-From: "kaiwei.liu" <kaiwei.liu@unisoc.com>
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-For SPRD DMA, it provides a function that one channel can start
-the second channel after completing the transmission, which we
-call two stage transfer mode. You can choose which channel can
-generate interrupt when finished. It can support up to two sets
-of such patterns.
-When configuring registers for two stage transfer mode, we need
-to set the mask bit to ensure that the setting are accurate. And
-we should clear the two stage transfer configuration when release
-DMA channel.
-The two stage transfer function is mainly used by SPRD audio, and
-now audio also requires that the data need to be accessed on the
-device side. So here use the src_port_window_size and dst_port_win-
-dow_size in the struct of dma_slave_config.
+The DMAC block on the RZ/Five SoC is identical to one found on the RZ/G2UL
+SoC. "renesas,r9a07g043-dmac" compatible string will be used on the
+RZ/Five SoC so to make this clear, update the comment to include RZ/Five
+SoC.
 
-Signed-off-by: kaiwei.liu <kaiwei.liu@unisoc.com>
+No driver changes are required as generic compatible string
+"renesas,rz-dmac" will be used as a fallback on RZ/Five SoC.
+
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 ---
- drivers/dma/sprd-dma.c | 116 ++++++++++++++++++++++++-----------------
- 1 file changed, 69 insertions(+), 47 deletions(-)
+ Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
-index 8ab5a9082fc5..f54f4ba1a8bd 100644
---- a/drivers/dma/sprd-dma.c
-+++ b/drivers/dma/sprd-dma.c
-@@ -68,6 +68,7 @@
- #define SPRD_DMA_GLB_TRANS_DONE_TRG	BIT(18)
- #define SPRD_DMA_GLB_BLOCK_DONE_TRG	BIT(17)
- #define SPRD_DMA_GLB_FRAG_DONE_TRG	BIT(16)
-+#define SPRD_DMA_GLB_TRG_MASK		GENMASK(19, 16)
- #define SPRD_DMA_GLB_TRG_OFFSET		16
- #define SPRD_DMA_GLB_DEST_CHN_MASK	GENMASK(13, 8)
- #define SPRD_DMA_GLB_DEST_CHN_OFFSET	8
-@@ -155,6 +156,13 @@
- 
- #define SPRD_DMA_SOFTWARE_UID		0
- 
-+#define SPRD_DMA_SRC_CHN0_INT		9
-+#define SPRD_DMA_SRC_CHN1_INT		10
-+#define SPRD_DMA_DST_CHN0_INT		11
-+#define SPRD_DMA_DST_CHN1_INT		12
-+#define SPRD_DMA_2STAGE_SET		1
-+#define SPRD_DMA_2STAGE_CLEAR		0
-+
- /* dma data width values */
- enum sprd_dma_datawidth {
- 	SPRD_DMA_DATAWIDTH_1_BYTE,
-@@ -431,53 +439,57 @@ static enum sprd_dma_req_mode sprd_dma_get_req_type(struct sprd_dma_chn *schan)
- 	return (frag_reg >> SPRD_DMA_REQ_MODE_OFFSET) & SPRD_DMA_REQ_MODE_MASK;
- }
- 
--static int sprd_dma_set_2stage_config(struct sprd_dma_chn *schan)
-+static void sprd_dma_2stage_write(struct sprd_dma_chn *schan,
-+				  u32 config_type, u32 grp_offset)
- {
- 	struct sprd_dma_dev *sdev = to_sprd_dma_dev(&schan->vc.chan);
--	u32 val, chn = schan->chn_num + 1;
--
--	switch (schan->chn_mode) {
--	case SPRD_DMA_SRC_CHN0:
--		val = chn & SPRD_DMA_GLB_SRC_CHN_MASK;
--		val |= BIT(schan->trg_mode - 1) << SPRD_DMA_GLB_TRG_OFFSET;
--		val |= SPRD_DMA_GLB_2STAGE_EN;
--		if (schan->int_type != SPRD_DMA_NO_INT)
--			val |= SPRD_DMA_GLB_SRC_INT;
--
--		sprd_dma_glb_update(sdev, SPRD_DMA_GLB_2STAGE_GRP1, val, val);
--		break;
--
--	case SPRD_DMA_SRC_CHN1:
--		val = chn & SPRD_DMA_GLB_SRC_CHN_MASK;
--		val |= BIT(schan->trg_mode - 1) << SPRD_DMA_GLB_TRG_OFFSET;
--		val |= SPRD_DMA_GLB_2STAGE_EN;
--		if (schan->int_type != SPRD_DMA_NO_INT)
--			val |= SPRD_DMA_GLB_SRC_INT;
--
--		sprd_dma_glb_update(sdev, SPRD_DMA_GLB_2STAGE_GRP2, val, val);
--		break;
--
--	case SPRD_DMA_DST_CHN0:
--		val = (chn << SPRD_DMA_GLB_DEST_CHN_OFFSET) &
--			SPRD_DMA_GLB_DEST_CHN_MASK;
--		val |= SPRD_DMA_GLB_2STAGE_EN;
--		if (schan->int_type != SPRD_DMA_NO_INT)
--			val |= SPRD_DMA_GLB_DEST_INT;
--
--		sprd_dma_glb_update(sdev, SPRD_DMA_GLB_2STAGE_GRP1, val, val);
--		break;
--
--	case SPRD_DMA_DST_CHN1:
--		val = (chn << SPRD_DMA_GLB_DEST_CHN_OFFSET) &
--			SPRD_DMA_GLB_DEST_CHN_MASK;
--		val |= SPRD_DMA_GLB_2STAGE_EN;
--		if (schan->int_type != SPRD_DMA_NO_INT)
--			val |= SPRD_DMA_GLB_DEST_INT;
--
--		sprd_dma_glb_update(sdev, SPRD_DMA_GLB_2STAGE_GRP2, val, val);
--		break;
-+	u32 mask_val;
-+	u32 chn = schan->chn_num + 1;
-+	u32 val = 0;
-+
-+	if (config_type == SPRD_DMA_2STAGE_SET) {
-+		if (schan->chn_mode == SPRD_DMA_SRC_CHN0 ||
-+		    schan->chn_mode == SPRD_DMA_SRC_CHN1) {
-+			val = chn & SPRD_DMA_GLB_SRC_CHN_MASK;
-+			val |= BIT(schan->trg_mode - 1) << SPRD_DMA_GLB_TRG_OFFSET;
-+			val |= SPRD_DMA_GLB_2STAGE_EN;
-+			if (schan->int_type & SPRD_DMA_SRC_CHN0_INT ||
-+			    schan->int_type & SPRD_DMA_SRC_CHN1_INT)
-+				val |= SPRD_DMA_GLB_SRC_INT;
-+			mask_val = SPRD_DMA_GLB_SRC_INT | SPRD_DMA_GLB_TRG_MASK |
-+				   SPRD_DMA_GLB_SRC_CHN_MASK;
-+		} else {
-+			val = (chn << SPRD_DMA_GLB_DEST_CHN_OFFSET) &
-+			       SPRD_DMA_GLB_DEST_CHN_MASK;
-+			val |= SPRD_DMA_GLB_2STAGE_EN;
-+			if (schan->int_type & SPRD_DMA_DST_CHN0_INT ||
-+			    schan->int_type & SPRD_DMA_DST_CHN1_INT)
-+				val |= SPRD_DMA_GLB_DEST_INT;
-+			mask_val = SPRD_DMA_GLB_DEST_INT | SPRD_DMA_GLB_DEST_CHN_MASK;
-+		}
-+	} else {
-+		if (schan->chn_mode == SPRD_DMA_SRC_CHN0 ||
-+		    schan->chn_mode == SPRD_DMA_SRC_CHN1)
-+			mask_val = SPRD_DMA_GLB_SRC_INT | SPRD_DMA_GLB_TRG_MASK |
-+				   SPRD_DMA_GLB_2STAGE_EN | SPRD_DMA_GLB_SRC_CHN_MASK;
-+		else
-+			mask_val = SPRD_DMA_GLB_DEST_INT | SPRD_DMA_GLB_2STAGE_EN |
-+				   SPRD_DMA_GLB_DEST_CHN_MASK;
-+	}
-+	sprd_dma_glb_update(sdev, grp_offset, mask_val, val);
-+}
- 
--	default:
-+static int sprd_dma_2stage_config(struct sprd_dma_chn *schan, u32 config_type)
-+{
-+	struct sprd_dma_dev *sdev = to_sprd_dma_dev(&schan->vc.chan);
-+
-+	if (schan->chn_mode == SPRD_DMA_SRC_CHN0 ||
-+	    schan->chn_mode == SPRD_DMA_DST_CHN0)
-+		sprd_dma_2stage_write(schan, config_type, SPRD_DMA_GLB_2STAGE_GRP1);
-+	else if (schan->chn_mode == SPRD_DMA_SRC_CHN1 ||
-+		 schan->chn_mode == SPRD_DMA_DST_CHN1)
-+		sprd_dma_2stage_write(schan, config_type, SPRD_DMA_GLB_2STAGE_GRP2);
-+	else {
- 		dev_err(sdev->dma_dev.dev, "invalid channel mode setting %d\n",
- 			schan->chn_mode);
- 		return -EINVAL;
-@@ -545,7 +557,7 @@ static void sprd_dma_start(struct sprd_dma_chn *schan)
- 	 * Set 2-stage configuration if the channel starts one 2-stage
- 	 * transfer.
- 	 */
--	if (schan->chn_mode && sprd_dma_set_2stage_config(schan))
-+	if (schan->chn_mode && sprd_dma_2stage_config(schan, SPRD_DMA_2STAGE_SET))
- 		return;
- 
- 	/*
-@@ -569,6 +581,12 @@ static void sprd_dma_stop(struct sprd_dma_chn *schan)
- 	sprd_dma_set_pending(schan, false);
- 	sprd_dma_unset_uid(schan);
- 	sprd_dma_clear_int(schan);
-+	/*
-+	 * If 2-stage transfer is used, the configuration must be clear
-+	 * when release DMA channel.
-+	 */
-+	if (schan->chn_mode)
-+		sprd_dma_2stage_config(schan, SPRD_DMA_2STAGE_CLEAR);
- 	schan->cur_desc = NULL;
- }
- 
-@@ -757,7 +775,9 @@ static int sprd_dma_fill_desc(struct dma_chan *chan,
- 	phys_addr_t llist_ptr;
- 
- 	if (dir == DMA_MEM_TO_DEV) {
--		src_step = sprd_dma_get_step(slave_cfg->src_addr_width);
-+		src_step = slave_cfg->src_port_window_size ?
-+			   slave_cfg->src_port_window_size :
-+			   sprd_dma_get_step(slave_cfg->src_addr_width);
- 		if (src_step < 0) {
- 			dev_err(sdev->dma_dev.dev, "invalid source step\n");
- 			return src_step;
-@@ -773,7 +793,9 @@ static int sprd_dma_fill_desc(struct dma_chan *chan,
- 		else
- 			dst_step = SPRD_DMA_NONE_STEP;
- 	} else {
--		dst_step = sprd_dma_get_step(slave_cfg->dst_addr_width);
-+		dst_step = slave_cfg->dst_port_window_size ?
-+			   slave_cfg->dst_port_window_size :
-+			   sprd_dma_get_step(slave_cfg->dst_addr_width);
- 		if (dst_step < 0) {
- 			dev_err(sdev->dma_dev.dev, "invalid destination step\n");
- 			return dst_step;
+diff --git a/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml b/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
+index c284abc6784a..a42b6a26a6d3 100644
+--- a/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
++++ b/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
+@@ -16,7 +16,7 @@ properties:
+   compatible:
+     items:
+       - enum:
+-          - renesas,r9a07g043-dmac # RZ/G2UL
++          - renesas,r9a07g043-dmac # RZ/G2UL and RZ/Five
+           - renesas,r9a07g044-dmac # RZ/G2{L,LC}
+           - renesas,r9a07g054-dmac # RZ/V2L
+       - const: renesas,rz-dmac
 -- 
-2.17.1
+2.34.1
 
 

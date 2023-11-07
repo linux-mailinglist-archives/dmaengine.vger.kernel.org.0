@@ -1,163 +1,116 @@
-Return-Path: <dmaengine+bounces-56-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-57-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C761B7E2609
-	for <lists+dmaengine@lfdr.de>; Mon,  6 Nov 2023 14:49:08 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 59F217E3862
+	for <lists+dmaengine@lfdr.de>; Tue,  7 Nov 2023 11:03:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 824412815AA
-	for <lists+dmaengine@lfdr.de>; Mon,  6 Nov 2023 13:49:07 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DB3F6B20B53
+	for <lists+dmaengine@lfdr.de>; Tue,  7 Nov 2023 10:03:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADF9A25103;
-	Mon,  6 Nov 2023 13:49:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9335012E4E;
+	Tue,  7 Nov 2023 10:03:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Zl0xJ/1q"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bk4gaDjT"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 280EE24A06
-	for <dmaengine@vger.kernel.org>; Mon,  6 Nov 2023 13:48:59 +0000 (UTC)
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 068FDDB;
-	Mon,  6 Nov 2023 05:48:57 -0800 (PST)
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.22/8.17.1.22) with ESMTP id 3A6C4JCu000561;
-	Mon, 6 Nov 2023 14:48:35 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=selector1; bh=Vexw1pM
-	NsxV4L+zqMyWZmWeII8r5bD8hhKoly+cx7vg=; b=Zl0xJ/1qDPheRcpJFz2E5Fh
-	Ap7nez2oMUGyn2tQI9ehrgGUmIdE3OUSVmH+Mmk+PkYTEsGaPfzZH4vz36iZ+7nd
-	aPS/tE0i53cfR19ptmB0hq626zuQKbJlsTIv0Y89zS9aOwQ1rwEeuOSXW2RHXwZ7
-	lQLD54brzL9Hq3ZaUje3Z8Fda6GT7NgKy9kOtS/YMq70ZpDWlhabA/YyIAkaiQtV
-	VdfwjhQpfrPKMDTSsqOwEARwKjWBFuIxAFfNPtuM4b3sKoLAdLQCiIFkK7ObTKId
-	CCOPGUaliYtco1laBSXkpkeo7zMinru45+ZWCx2rHyUIbOQ3RT+DAIUlA4OvQlA=
-	=
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3u5ej0q7kg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 06 Nov 2023 14:48:35 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id ABAEF100059;
-	Mon,  6 Nov 2023 14:48:33 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 822AD24B890;
-	Mon,  6 Nov 2023 14:48:33 +0100 (CET)
-Received: from localhost (10.201.20.208) by SHFDAG1NODE3.st.com (10.75.129.71)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 6 Nov
- 2023 14:48:33 +0100
-From: Amelie Delaunay <amelie.delaunay@foss.st.com>
-To: Vinod Koul <vkoul@kernel.org>,
-        Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Amelie Delaunay <amelie.delaunay@foss.st.com>,
-        Pierre Yves MORDRET
-	<pierre-yves.mordret@st.com>,
-        M'boumba Cedric Madianga
-	<cedric.madianga@gmail.com>
-CC: Arnd Bergmann <arnd@arndb.de>, <stable@vger.kernel.org>,
-        kernel test robot
-	<lkp@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] dmaengine: stm32-dma: avoid bitfield overflow assertion
-Date: Mon, 6 Nov 2023 14:48:32 +0100
-Message-ID: <20231106134832.1470305-1-amelie.delaunay@foss.st.com>
-X-Mailer: git-send-email 2.25.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F08C12E4B
+	for <dmaengine@vger.kernel.org>; Tue,  7 Nov 2023 10:03:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F09FC433C8;
+	Tue,  7 Nov 2023 10:03:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1699351414;
+	bh=bWZ6TlmbziygfFmzn8DJ8B8+NSX0r3GA9/sNPaBGwnE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=bk4gaDjTtwFHgvtlGbF11Fvslf2eY0W0LRz/VcujvbQFg0zH/VbbCyIlEUiryy34m
+	 xdFpE8ln+wzm8/wjPP5mlaEvQid/pDTXV0clQX8HpwktsrKxgQkKUMdhR3b3h6rgLC
+	 ll9L9Mqe6H2Mx8ZZ1P30D8qOqv/s8lq0d2h4z5BS3KW/Zat8uej3wPySwsbnKKBHiT
+	 Haa/IUuE18EpE/05z3FgOajEduhR9S4A16QGTkvF6/SlQzcAyR6XwrVqnjjxPXWXS/
+	 Ru1baVHa97/j9RyYyI689+Fq3oodR6lXizWtESHkvSYbx+a78Sdw0ffSd8PGaqMiwx
+	 2NPcg3PfT8wVQ==
+Message-ID: <0db70a26-bc3f-48f4-acfc-9fc7f960252f@kernel.org>
+Date: Tue, 7 Nov 2023 11:03:27 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.201.20.208]
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-11-06_12,2023-11-02_03,2023-05-22_02
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dmaengine: pl330: set subsys_initcall level
+Content-Language: en-US
+To: Bumyong Lee <bumyong.lee@samsung.com>, Vinod Koul <vkoul@kernel.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <CGME20231031035024epcas2p240760f064c90e017a3ada73d9271e9c9@epcas2p2.samsung.com>
+ <20231031034854.115624-1-bumyong.lee@samsung.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20231031034854.115624-1-bumyong.lee@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-stm32_dma_get_burst() returns a negative error for invalid input, which
-gets turned into a large u32 value in stm32_dma_prep_dma_memcpy() that
-in turn triggers an assertion because it does not fit into a two-bit field:
-drivers/dma/stm32-dma.c: In function 'stm32_dma_prep_dma_memcpy':
-include/linux/compiler_types.h:354:38: error: call to '__compiletime_assert_282' declared with attribute error: FIELD_PREP: value too large for the field
-     _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-                                         ^
-   include/linux/compiler_types.h:335:4: note: in definition of macro '__compiletime_assert'
-       prefix ## suffix();    \
-       ^~~~~~
-   include/linux/compiler_types.h:354:2: note: in expansion of macro '_compiletime_assert'
-     _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-     ^~~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_assert'
-    #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-                                        ^~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:68:3: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-      BUILD_BUG_ON_MSG(__builtin_constant_p(_val) ?  \
-      ^~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:114:3: note: in expansion of macro '__BF_FIELD_CHECK'
-      __BF_FIELD_CHECK(_mask, 0ULL, _val, "FIELD_PREP: "); \
-      ^~~~~~~~~~~~~~~~
-   drivers/dma/stm32-dma.c:1237:4: note: in expansion of macro 'FIELD_PREP'
-       FIELD_PREP(STM32_DMA_SCR_PBURST_MASK, dma_burst) |
-       ^~~~~~~~~~
+On 31/10/2023 04:48, Bumyong Lee wrote:
+> module_amba_driver is macro for module_init/exit
+> module_init is device_initcall level when it configured
+> with built-in driver.
+> 
+> pl330 is dmaengine driver. because slave drivers depend on
+> dmaengine drivers, dmaengine drivers is more appropriate
+> subsys_initcall.
 
-As an easy workaround, assume the error can happen, so try to handle this
-by failing stm32_dma_prep_dma_memcpy() before the assertion. It replicates
-what is done in stm32_dma_set_xfer_param() where stm32_dma_get_burst() is
-also used.
+The same is true for all resource providers and we do not manually order
+them via initcalls. Sorry, this was fine as is. Implement defer for your
+drivers, not hack initcalls. If you upstreamed them, then it could even
+work out of the box for you .
 
-Fixes: 1c32d6c37cc2 ("dmaengine: stm32-dma: use bitfield helpers")
-Fixes: a2b6103b7a8a ("dmaengine: stm32-dma: Improve memory burst management")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
-Cc: stable@vger.kernel.org
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202311060135.Q9eMnpCL-lkp@intel.com/
----
-Updated from v1: https://lore.kernel.org/lkml/20230214103222.1193307-1-arnd@kernel.org/T/
-- change dma_burst from u32 to int, and check for negative value, as done
-in stm32_dma_set_xfer_param()
-- Add 'Cc:', 'Reported-by:' and 'Closes:' tags
----
- drivers/dma/stm32-dma.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
-index 0b30151fb45c..9840594a6aaa 100644
---- a/drivers/dma/stm32-dma.c
-+++ b/drivers/dma/stm32-dma.c
-@@ -1249,8 +1249,8 @@ static struct dma_async_tx_descriptor *stm32_dma_prep_dma_memcpy(
- 	enum dma_slave_buswidth max_width;
- 	struct stm32_dma_desc *desc;
- 	size_t xfer_count, offset;
--	u32 num_sgs, best_burst, dma_burst, threshold;
--	int i;
-+	u32 num_sgs, best_burst, threshold;
-+	int dma_burst, i;
- 
- 	num_sgs = DIV_ROUND_UP(len, STM32_DMA_ALIGNED_MAX_DATA_ITEMS);
- 	desc = kzalloc(struct_size(desc, sg_req, num_sgs), GFP_NOWAIT);
-@@ -1268,6 +1268,10 @@ static struct dma_async_tx_descriptor *stm32_dma_prep_dma_memcpy(
- 		best_burst = stm32_dma_get_best_burst(len, STM32_DMA_MAX_BURST,
- 						      threshold, max_width);
- 		dma_burst = stm32_dma_get_burst(chan, best_burst);
-+		if (dma_burst < 0) {
-+			kfree(desc);
-+			return NULL;
-+		}
- 
- 		stm32_dma_clear_reg(&desc->sg_req[i].chan_reg);
- 		desc->sg_req[i].chan_reg.dma_scr =
--- 
-2.25.1
+Best regards,
+Krzysztof
 
 

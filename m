@@ -1,290 +1,139 @@
-Return-Path: <dmaengine+bounces-79-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-80-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 152407E8ADB
-	for <lists+dmaengine@lfdr.de>; Sat, 11 Nov 2023 13:16:25 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 859417E8C0F
+	for <lists+dmaengine@lfdr.de>; Sat, 11 Nov 2023 19:18:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 29AC91C208D4
-	for <lists+dmaengine@lfdr.de>; Sat, 11 Nov 2023 12:16:24 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 869D7B20AAC
+	for <lists+dmaengine@lfdr.de>; Sat, 11 Nov 2023 18:18:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B5151429A;
-	Sat, 11 Nov 2023 12:16:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD2951C291;
+	Sat, 11 Nov 2023 18:18:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ieWhQyFx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ldh8Gy7H"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A624F1426D
-	for <dmaengine@vger.kernel.org>; Sat, 11 Nov 2023 12:16:17 +0000 (UTC)
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48A623AA7;
-	Sat, 11 Nov 2023 04:16:15 -0800 (PST)
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 3ABCG63E085235;
-	Sat, 11 Nov 2023 06:16:06 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1699704966;
-	bh=VPVOyYGUIuFjbpFVz4WDtMguuciLFwkUVgaypjccsg0=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=ieWhQyFxSW/6mi9DeB+HPtmerWC5vXi83Qi/fPlUkwuQKYoYnGesY9bG9bao9mHQf
-	 tF6xV5xBKEueRE2cszsgwEVI89lEW/3sjbzja0eDY4jDr85aP1Zkhyiuom/YzL5zQG
-	 R3MzCHtRT9cS4DKxAeTV+FIahP65+JMHDNXYAjD4=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 3ABCG6VN081761
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Sat, 11 Nov 2023 06:16:06 -0600
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sat, 11
- Nov 2023 06:16:06 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Sat, 11 Nov 2023 06:16:06 -0600
-Received: from uda0492258.dhcp.ti.com (ileaxei01-snat2.itg.ti.com [10.180.69.6])
-	by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 3ABCFtVY100939;
-	Sat, 11 Nov 2023 06:16:04 -0600
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: <peter.ujfalusi@gmail.com>, <vkoul@kernel.org>
-CC: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
-        <vigneshr@ti.com>, <s-vadapalli@ti.com>
-Subject: [RFC PATCH 3/3] dmaengine: ti: k3-udma-glue: Add function to request RX channel by ID
-Date: Sat, 11 Nov 2023 17:45:55 +0530
-Message-ID: <20231111121555.2656760-4-s-vadapalli@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231111121555.2656760-1-s-vadapalli@ti.com>
-References: <20231111121555.2656760-1-s-vadapalli@ti.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49E041C281;
+	Sat, 11 Nov 2023 18:18:36 +0000 (UTC)
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B75032D77;
+	Sat, 11 Nov 2023 10:18:33 -0800 (PST)
+Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-507a0907896so4148744e87.2;
+        Sat, 11 Nov 2023 10:18:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1699726712; x=1700331512; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Os4KBIFKBrhxCNe2iV6sYOSUCifSAC9wTubOo6x2YGA=;
+        b=ldh8Gy7H+fB07WnLwLs4whDNnMWJ9t73ETCn0BOh3NQjk1P1KoAlxgUQzAeWW8GcEn
+         jzLSifyLLc751Uhmr6jpH6gTwvteDNMBluLUa3smHHCpHWKKDWUN4dw3Q8Dn3lJzrVtn
+         xEw0kEw4h4uaZge4XWlBny6oXs5UkBAyI0NcnaLEEDIU37btmMlQnuiTj9RID6/QzKY6
+         FZaIhrW49f6tl7kkn+onwyBlDyVwEeuEvAi6yBSPDyy237djg6kfIAWH8TPD4WgoasJj
+         CHY9BOytR4oy1nGYgsmRCW/GSxsy158ud7ywWmUzL6pxcwW84MUFaekqH3WgVGMuX8C6
+         K+fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699726712; x=1700331512;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Os4KBIFKBrhxCNe2iV6sYOSUCifSAC9wTubOo6x2YGA=;
+        b=rDwZOUddggUx0kGP8x3bgps8bw0XOL69m5Xdbnci9ss2kVsz6ANLdI5s3Y+KSbIpPU
+         /HpwQGGBlLio72Nn5u/WDECuImnOIB6YKWuMhabbUITXyMJG13KLar2QK+3G7o/CgRUT
+         QDenmyAWgDClNK0uASFgveKvnoL+GkLAgxHM1HjN745fXoG7i1VpTcLxfWAXtz+MK5+g
+         ef3JDJx6RGIx2T7iikvmKKj/zWh6yB16+TgS550TnACKWhOabFmOWS3D91CzJIADLAd1
+         kh59cCpsAAbCPeGCCb/I5Z7RaoBaGJ24W7RUikiBPsP4T8tMzfEVYy5RAZa3QV+JpJzD
+         YzxQ==
+X-Gm-Message-State: AOJu0YyoYna2ZbQlghrWUrG/L99ZoFMxRCgiVHqKkmxFbL32PCkBRsKB
+	DLkDLgT5gynjqGHCQXhjo4Q=
+X-Google-Smtp-Source: AGHT+IGWSLvEEWKMjKSkylq9sGZ0KV/8c86kVFIgYc1m0RkjmWY37s2qpjH05vtA3bG5UrjESvvwcA==
+X-Received: by 2002:a05:6512:2399:b0:500:be57:ce53 with SMTP id c25-20020a056512239900b00500be57ce53mr2275395lfv.42.1699726711568;
+        Sat, 11 Nov 2023 10:18:31 -0800 (PST)
+Received: from giga-mm.home ([2a02:1210:8629:800:82ee:73ff:feb8:99e3])
+        by smtp.gmail.com with ESMTPSA id n20-20020a170906b31400b009e656ce2930sm1403421ejz.60.2023.11.11.10.18.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 Nov 2023 10:18:30 -0800 (PST)
+Message-ID: <80ed91bb971516638fa1793d648939815eba7630.camel@gmail.com>
+Subject: Re: [PATCH v3 14/42] power: reset: Add a driver for the ep93xx reset
+From: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+To: Andy Shevchenko <andy@kernel.org>, nikita.shubin@maquefel.me
+Cc: Hartley Sweeten <hsweeten@visionengravers.com>, Lennert Buytenhek
+ <kernel@wantstofly.org>, Russell King <linux@armlinux.org.uk>, Lukasz
+ Majewski <lukma@denx.de>, Linus Walleij <linus.walleij@linaro.org>, Bartosz
+ Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>,  Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Daniel Lezcano
+ <daniel.lezcano@linaro.org>,  Thomas Gleixner <tglx@linutronix.de>,
+ Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni
+ <alexandre.belloni@bootlin.com>, Wim Van Sebroeck <wim@linux-watchdog.org>,
+  Guenter Roeck <linux@roeck-us.net>, Sebastian Reichel <sre@kernel.org>,
+ Thierry Reding <thierry.reding@gmail.com>, Uwe
+ =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Mark
+ Brown <broonie@kernel.org>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,  Paolo
+ Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>, Miquel Raynal
+ <miquel.raynal@bootlin.com>,  Richard Weinberger <richard@nod.at>, Vignesh
+ Raghavendra <vigneshr@ti.com>, Damien Le Moal <dlemoal@kernel.org>, Sergey
+ Shtylyov <s.shtylyov@omp.ru>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+ soc@kernel.org, Liam Girdwood <lgirdwood@gmail.com>,  Jaroslav Kysela
+ <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Michael Peters
+ <mpeters@embeddedts.com>, Kris Bahnsen <kris@embeddedts.com>, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org, 
+ linux-watchdog@vger.kernel.org, linux-pm@vger.kernel.org, 
+ linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org,
+ netdev@vger.kernel.org,  dmaengine@vger.kernel.org,
+ linux-mtd@lists.infradead.org,  linux-ide@vger.kernel.org,
+ linux-input@vger.kernel.org,  alsa-devel@alsa-project.org
+Date: Sat, 11 Nov 2023 19:18:28 +0100
+In-Reply-To: <ZLq0Z0QgBdCoDpV+@smile.fi.intel.com>
+References: <20230605-ep93xx-v3-0-3d63a5f1103e@maquefel.me>
+	 <20230605-ep93xx-v3-14-3d63a5f1103e@maquefel.me>
+	 <ZLq0Z0QgBdCoDpV+@smile.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-The existing function k3_udma_glue_request_remote_rx_chn() supports
-requesting an RX DMA channel and flow by the name of the RX DMA channel.
-Add support to request RX channel by ID in the form of a new function
-k3_udma_glue_request_remote_rx_chn_by_id() and export it.
+Hi Andy,
 
-Since the implementation of k3_udma_glue_request_remote_rx_chn_by_id()
-reuses most of the code in k3_udma_glue_request_remote_rx_chn(), create
-a new function k3_udma_glue_request_remote_rx_chn_common() for the
-common code.
+On Fri, 2023-07-21 at 19:37 +0300, Andy Shevchenko wrote:
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* Issue the reboot */
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0ep93xx_devcfg_set_clear(priv=
+->map, EP93XX_SYSCON_DEVCFG_SWRST, 0x00);
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0ep93xx_devcfg_set_clear(priv=
+->map, 0x00, EP93XX_SYSCON_DEVCFG_SWRST);
+>=20
+>=20
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0mdelay(1000);
+>=20
+> Atomic?! Such a huge delay must be explained, esp. why it's atomic.
 
-Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
----
- drivers/dma/ti/k3-udma-glue.c    | 140 ++++++++++++++++++++++---------
- include/linux/dma/k3-udma-glue.h |   4 +
- 2 files changed, 103 insertions(+), 41 deletions(-)
+atomic or not, SoC is supposed to reset itself here.
+However there is an errata [1] and the SoC can lockup instead.
+So even pr_emerg() makes sense to me.
 
-diff --git a/drivers/dma/ti/k3-udma-glue.c b/drivers/dma/ti/k3-udma-glue.c
-index d3f04d446c4e..167fe77de71e 100644
---- a/drivers/dma/ti/k3-udma-glue.c
-+++ b/drivers/dma/ti/k3-udma-glue.c
-@@ -1076,52 +1076,21 @@ k3_udma_glue_request_rx_chn_priv(struct device *dev, const char *name,
- 	return ERR_PTR(ret);
- }
- 
--static struct k3_udma_glue_rx_channel *
--k3_udma_glue_request_remote_rx_chn(struct device *dev, const char *name,
--				   struct k3_udma_glue_rx_channel_cfg *cfg)
-+static int
-+k3_udma_glue_request_remote_rx_chn_common(struct k3_udma_glue_rx_channel *rx_chn,
-+					  struct k3_udma_glue_rx_channel_cfg *cfg,
-+					  struct device *dev)
- {
--	struct k3_udma_glue_rx_channel *rx_chn;
- 	int ret, i;
- 
--	if (cfg->flow_id_num <= 0 ||
--	    cfg->flow_id_use_rxchan_id ||
--	    cfg->def_flow_cfg ||
--	    cfg->flow_id_base < 0)
--		return ERR_PTR(-EINVAL);
--
--	/*
--	 * Remote RX channel is under control of Remote CPU core, so
--	 * Linux can only request and manipulate by dedicated RX flows
--	 */
--
--	rx_chn = devm_kzalloc(dev, sizeof(*rx_chn), GFP_KERNEL);
--	if (!rx_chn)
--		return ERR_PTR(-ENOMEM);
--
--	rx_chn->common.dev = dev;
--	rx_chn->common.swdata_size = cfg->swdata_size;
--	rx_chn->remote = true;
--	rx_chn->udma_rchan_id = -1;
--	rx_chn->flow_num = cfg->flow_id_num;
--	rx_chn->flow_id_base = cfg->flow_id_base;
--	rx_chn->psil_paired = false;
--
--	/* parse of udmap channel */
--	ret = of_k3_udma_glue_parse_chn(dev->of_node, name,
--					&rx_chn->common, false);
--	if (ret)
--		goto err;
--
- 	rx_chn->common.hdesc_size = cppi5_hdesc_calc_size(rx_chn->common.epib,
--						rx_chn->common.psdata_size,
--						rx_chn->common.swdata_size);
-+							  rx_chn->common.psdata_size,
-+							  rx_chn->common.swdata_size);
- 
- 	rx_chn->flows = devm_kcalloc(dev, rx_chn->flow_num,
- 				     sizeof(*rx_chn->flows), GFP_KERNEL);
--	if (!rx_chn->flows) {
--		ret = -ENOMEM;
--		goto err;
--	}
-+	if (!rx_chn->flows)
-+		return -ENOMEM;
- 
- 	rx_chn->common.chan_dev.class = &k3_udma_glue_devclass;
- 	rx_chn->common.chan_dev.parent = xudma_get_device(rx_chn->common.udmax);
-@@ -1132,7 +1101,7 @@ k3_udma_glue_request_remote_rx_chn(struct device *dev, const char *name,
- 		dev_err(dev, "Channel Device registration failed %d\n", ret);
- 		put_device(&rx_chn->common.chan_dev);
- 		rx_chn->common.chan_dev.parent = NULL;
--		goto err;
-+		return ret;
- 	}
- 
- 	if (xudma_is_pktdma(rx_chn->common.udmax)) {
-@@ -1144,19 +1113,108 @@ k3_udma_glue_request_remote_rx_chn(struct device *dev, const char *name,
- 
- 	ret = k3_udma_glue_allocate_rx_flows(rx_chn, cfg);
- 	if (ret)
--		goto err;
-+		return ret;
- 
- 	for (i = 0; i < rx_chn->flow_num; i++)
- 		rx_chn->flows[i].udma_rflow_id = rx_chn->flow_id_base + i;
- 
- 	k3_udma_glue_dump_rx_chn(rx_chn);
- 
-+	return 0;
-+}
-+
-+static struct k3_udma_glue_rx_channel *
-+k3_udma_glue_request_remote_rx_chn(struct device *dev, const char *name,
-+				   struct k3_udma_glue_rx_channel_cfg *cfg)
-+{
-+	struct k3_udma_glue_rx_channel *rx_chn;
-+	int ret;
-+
-+	if (cfg->flow_id_num <= 0 ||
-+	    cfg->flow_id_use_rxchan_id ||
-+	    cfg->def_flow_cfg ||
-+	    cfg->flow_id_base < 0)
-+		return ERR_PTR(-EINVAL);
-+
-+	/*
-+	 * Remote RX channel is under control of Remote CPU core, so
-+	 * Linux can only request and manipulate by dedicated RX flows
-+	 */
-+
-+	rx_chn = devm_kzalloc(dev, sizeof(*rx_chn), GFP_KERNEL);
-+	if (!rx_chn)
-+		return ERR_PTR(-ENOMEM);
-+
-+	rx_chn->common.dev = dev;
-+	rx_chn->common.swdata_size = cfg->swdata_size;
-+	rx_chn->remote = true;
-+	rx_chn->udma_rchan_id = -1;
-+	rx_chn->flow_num = cfg->flow_id_num;
-+	rx_chn->flow_id_base = cfg->flow_id_base;
-+	rx_chn->psil_paired = false;
-+
-+	/* parse of udmap channel */
-+	ret = of_k3_udma_glue_parse_chn(dev->of_node, name,
-+					&rx_chn->common, false);
-+	if (ret)
-+		goto err;
-+
-+	ret = k3_udma_glue_request_remote_rx_chn_common(rx_chn, cfg, dev);
-+	if (ret)
-+		goto err;
-+
-+	return rx_chn;
-+
-+err:
-+	k3_udma_glue_release_rx_chn(rx_chn);
-+	return ERR_PTR(ret);
-+}
-+
-+struct k3_udma_glue_rx_channel *
-+k3_udma_glue_request_remote_rx_chn_by_id(struct device *dev, struct device_node *udmax_np,
-+					 struct k3_udma_glue_rx_channel_cfg *cfg, u32 thread_id)
-+{
-+	struct k3_udma_glue_rx_channel *rx_chn;
-+	int ret;
-+
-+	if (cfg->flow_id_num <= 0 ||
-+	    cfg->flow_id_use_rxchan_id ||
-+	    cfg->def_flow_cfg ||
-+	    cfg->flow_id_base < 0)
-+		return ERR_PTR(-EINVAL);
-+
-+	/*
-+	 * Remote RX channel is under control of Remote CPU core, so
-+	 * Linux can only request and manipulate by dedicated RX flows
-+	 */
-+
-+	rx_chn = devm_kzalloc(dev, sizeof(*rx_chn), GFP_KERNEL);
-+	if (!rx_chn)
-+		return ERR_PTR(-ENOMEM);
-+
-+	rx_chn->common.dev = dev;
-+	rx_chn->common.swdata_size = cfg->swdata_size;
-+	rx_chn->remote = true;
-+	rx_chn->udma_rchan_id = -1;
-+	rx_chn->flow_num = cfg->flow_id_num;
-+	rx_chn->flow_id_base = cfg->flow_id_base;
-+	rx_chn->psil_paired = false;
-+
-+	ret = of_k3_udma_glue_parse_chn_by_id(udmax_np, &rx_chn->common, false, thread_id);
-+	if (ret)
-+		goto err;
-+
-+	ret = k3_udma_glue_request_remote_rx_chn_common(rx_chn, cfg, dev);
-+	if (ret)
-+		goto err;
-+
- 	return rx_chn;
- 
- err:
- 	k3_udma_glue_release_rx_chn(rx_chn);
- 	return ERR_PTR(ret);
- }
-+EXPORT_SYMBOL_GPL(k3_udma_glue_request_remote_rx_chn_by_id);
- 
- struct k3_udma_glue_rx_channel *
- k3_udma_glue_request_rx_chn(struct device *dev, const char *name,
-diff --git a/include/linux/dma/k3-udma-glue.h b/include/linux/dma/k3-udma-glue.h
-index 6205d84430ca..a81d1b8f889c 100644
---- a/include/linux/dma/k3-udma-glue.h
-+++ b/include/linux/dma/k3-udma-glue.h
-@@ -108,6 +108,10 @@ struct k3_udma_glue_rx_channel_cfg {
- 
- struct k3_udma_glue_rx_channel;
- 
-+struct k3_udma_glue_rx_channel *
-+k3_udma_glue_request_remote_rx_chn_by_id(struct device *dev, struct device_node *udmax_np,
-+					 struct k3_udma_glue_rx_channel_cfg *cfg, u32 thread_id);
-+
- struct k3_udma_glue_rx_channel *k3_udma_glue_request_rx_chn(
- 		struct device *dev,
- 		const char *name,
--- 
-2.34.1
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pr_emerg("Unable to restart =
+system\n");
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return NOTIFY_DONE;
+
+[1] http://web.archive.org/web/20161130230727/http://www.cirrus.com/en/pubs=
+/appNote/AN258REV2.pdf
+
+--=20
+Alexander Sverdlin.
 
 

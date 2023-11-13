@@ -1,82 +1,133 @@
-Return-Path: <dmaengine+bounces-83-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-84-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B67257E916A
-	for <lists+dmaengine@lfdr.de>; Sun, 12 Nov 2023 16:29:50 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 02DD17E9998
+	for <lists+dmaengine@lfdr.de>; Mon, 13 Nov 2023 11:00:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8D8881C203B8
-	for <lists+dmaengine@lfdr.de>; Sun, 12 Nov 2023 15:29:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 334E11C20433
+	for <lists+dmaengine@lfdr.de>; Mon, 13 Nov 2023 10:00:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DA8D14296;
-	Sun, 12 Nov 2023 15:29:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B5A51BDC8;
+	Mon, 13 Nov 2023 10:00:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gDQimoD7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gxt6jNL1"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F28514288
-	for <dmaengine@vger.kernel.org>; Sun, 12 Nov 2023 15:29:45 +0000 (UTC)
-Received: from mail-qv1-xf32.google.com (mail-qv1-xf32.google.com [IPv6:2607:f8b0:4864:20::f32])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A9D626A4
-	for <dmaengine@vger.kernel.org>; Sun, 12 Nov 2023 07:29:43 -0800 (PST)
-Received: by mail-qv1-xf32.google.com with SMTP id 6a1803df08f44-66d13ac2796so22361316d6.2
-        for <dmaengine@vger.kernel.org>; Sun, 12 Nov 2023 07:29:43 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 074FF1C285;
+	Mon, 13 Nov 2023 10:00:31 +0000 (UTC)
+Received: from mail-qv1-xf35.google.com (mail-qv1-xf35.google.com [IPv6:2607:f8b0:4864:20::f35])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8473010D;
+	Mon, 13 Nov 2023 02:00:27 -0800 (PST)
+Received: by mail-qv1-xf35.google.com with SMTP id 6a1803df08f44-66d0ceba445so22074936d6.0;
+        Mon, 13 Nov 2023 02:00:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699802982; x=1700407782; darn=vger.kernel.org;
-        h=mime-version:date:subject:to:reply-to:message-id:from:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gzEQZH9R0t/Bapn1f5f6ajXZtSVpYGE27W0bmAfXRxs=;
-        b=gDQimoD7/SWxzQ7MOemWc8kF03fM5d5nG9dTfShPVVx5JKRp0tmRc/fgAVLk6Hyv0A
-         XvfxFpQj8IZzeqReKJCTVOGWwI91VwXmZ1ghbtbR2sKcQyqEH/wHllEbKSIqacWMTBLU
-         vfI0MC8rJ1+X1K3a9xjvVrRpCJ8MryQgD6OqY8fqizIce73J5nvqtKyv6unxYs/5KY1V
-         kSBRpdEwGZsFq5daV6jHuAkISHJdk70lSh3cfhjplbQvgrDLPjXiUh0bMnVt5U8cfk6W
-         d8VK81Iu65IrQsF3BYJUwpdWTiGfk8NUWAg0L5KJ+Npy1bnHyonD2TlDqe4+uecegJoZ
-         Wveg==
+        d=gmail.com; s=20230601; t=1699869626; x=1700474426; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JbOR8jc4vESBCIxoa+hxCKP6qo+nQDlXSDfPg0qKWS8=;
+        b=Gxt6jNL11g8ADqbbtUUu7sfCA5TCxef+Oi9O6UCpUMz2Hl9UAcCsrVGQSAJY0rchSa
+         2fWXVq7AXmWx9ZEJFNMQFvJIZDkZIXeHv3rXTKLTInXimIL/ARnozwGG5lHaBnIYHq84
+         T+nbbCmlUVIzSwHWnuogJ6NMqKpUOmuI7tlR1e4u+1y/C9grNtO1dK5DZHv0+RK28hi/
+         RBU4Pd6DCFzy0+1+KS+0smnNeLou21/Q8HtbSTb8Mj8pOMM+xbjo3DeBsignlYjtGXvp
+         OtNJiD4Po/PezVaW5KiouZMhCgMGPbaaOxgGUf2ydmM7atI4j9IyQ76HgLPRe0c3dX+g
+         4wXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699802982; x=1700407782;
-        h=mime-version:date:subject:to:reply-to:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gzEQZH9R0t/Bapn1f5f6ajXZtSVpYGE27W0bmAfXRxs=;
-        b=YtQNRYTE2hg2MiJbkWaP1/SlF+DwHUFSrz6Fp1pDttTNauZcSLabc6c3L1aq3uDzox
-         7lEpk28jkLxZ6Svif1aKzPphcHvbq+0T0u2+mS3yWMrUIGN17Dr199lPzDPxP63blASz
-         jcFp39cmpu03cWOFC2rzACkvG3ES8TS7Usfwgs6ewjf8EJ2tnyCYn9+tMWIchUjcdXQ3
-         XqFl6j2gQOLaLv6sjbezJmdDgngEN9N0moCuG4D7uMEyt1YoOU1sC3Wv95GpcbMarkVT
-         WVnsQY71tVe3WmHDVEVOts1vSYJpRizrdqLdV8ROXRH8N9zDHx3a4XLl0xfCzsDgklGQ
-         L4/g==
-X-Gm-Message-State: AOJu0YxbcFzIcDoY0yhREGf+VC8GAPo7oyVwS+nPrrcHbVRVlsDDqEki
-	qDpYTtc7OYOS0oR44VZu21pVTcRAoc4=
-X-Google-Smtp-Source: AGHT+IEdO6H6PdMWySUuxOlnfjUXjSKHspIk3/oUR+NPCaQkxxNRmGB6CasatQDZkHv0sVvth9km+Q==
-X-Received: by 2002:a05:6214:205:b0:64f:6199:a8e with SMTP id i5-20020a056214020500b0064f61990a8emr4217957qvt.23.1699802981920;
-        Sun, 12 Nov 2023 07:29:41 -0800 (PST)
-Received: from [198.135.52.44] ([198.135.52.44])
-        by smtp.gmail.com with ESMTPSA id h3-20020a0cd803000000b0066d15724feesm1325463qvj.68.2023.11.12.07.29.41
-        for <dmaengine@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 12 Nov 2023 07:29:41 -0800 (PST)
-From: Peter Wilson <martin15wamburu@gmail.com>
-X-Google-Original-From: Peter Wilson <info@alrigga.com>
-Message-ID: <9b2b733f2261c7a36a14b83fabcf240be7801b0d9d6ec24fa5b96fcd58a818fb@mx.google.com>
-Reply-To: eurinvstacc@gmail.com
-To: dmaengine@vger.kernel.org
-Subject: :once again
-Date: Sun, 12 Nov 2023 07:29:14 -0800
+        d=1e100.net; s=20230601; t=1699869626; x=1700474426;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JbOR8jc4vESBCIxoa+hxCKP6qo+nQDlXSDfPg0qKWS8=;
+        b=ElWU8ncAAVEDWaTjvNLg4RUgiS5h6Ii4YjZrG6Fp0TZA6A7rlO0+9c7LCWHQ58dXU8
+         8aPKc5TmZgdo/2ijwqylqewCBXF0IvLWEizVWEXR/HaEDefp2y/HFjWOzCZ9Hzi9EGl6
+         dcOJ1yy5tF7xNafy7b4GKJ4GSle1SezSbSfXV9uq4SK+p8tNak1ot4oiaxumVobG8IFc
+         6VUqBknm52oIehzckjwpEogdj29+Wl0WUQH9tnGQiuWCiZQI1k7okfN8XMdq+BWFD+Fe
+         eeTDZCEWofJ83zSGwU7U0qY/eEtE62BAXsCw4ipi1iLWqwKHaBrpCJ4uds2yvq3hl3xf
+         JcZw==
+X-Gm-Message-State: AOJu0YxuqSIsvehFjH2URJaMUnmivfdqyzd4fIxT8nYTH7/rk1hhChTU
+	CnRgg+Z0zB9QUrJasWU8NFjMsuXzsm0L7XKc7jM=
+X-Google-Smtp-Source: AGHT+IGCUr7PujFC+poPa2QrZRvWL4HOk1bJVQMa23HsF2MY33M5q50/7KY3Uea2911BZ50MrpHn+FMZq5R37QecRrw=
+X-Received: by 2002:ad4:45b4:0:b0:658:1eec:408a with SMTP id
+ y20-20020ad445b4000000b006581eec408amr4664228qvu.40.1699869626386; Mon, 13
+ Nov 2023 02:00:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-X-Spam-Level: *
+References: <20230605-ep93xx-v3-0-3d63a5f1103e@maquefel.me>
+ <20230605-ep93xx-v3-14-3d63a5f1103e@maquefel.me> <ZLq0Z0QgBdCoDpV+@smile.fi.intel.com>
+ <80ed91bb971516638fa1793d648939815eba7630.camel@gmail.com>
+In-Reply-To: <80ed91bb971516638fa1793d648939815eba7630.camel@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 13 Nov 2023 11:59:49 +0200
+Message-ID: <CAHp75VeYHscM-r94kTrpH44W=OGVq+qoNNQZoVrR5_n-_K_Xsw@mail.gmail.com>
+Subject: Re: [PATCH v3 14/42] power: reset: Add a driver for the ep93xx reset
+To: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+Cc: Andy Shevchenko <andy@kernel.org>, nikita.shubin@maquefel.me, 
+	Hartley Sweeten <hsweeten@visionengravers.com>, Lennert Buytenhek <kernel@wantstofly.org>, 
+	Russell King <linux@armlinux.org.uk>, Lukasz Majewski <lukma@denx.de>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+	Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, 
+	Sebastian Reichel <sre@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Mark Brown <broonie@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Vinod Koul <vkoul@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, 
+	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Damien Le Moal <dlemoal@kernel.org>, 
+	Sergey Shtylyov <s.shtylyov@omp.ru>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, soc@kernel.org, 
+	Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Michael Peters <mpeters@embeddedts.com>, Kris Bahnsen <kris@embeddedts.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org, netdev@vger.kernel.org, 
+	dmaengine@vger.kernel.org, linux-mtd@lists.infradead.org, 
+	linux-ide@vger.kernel.org, linux-input@vger.kernel.org, 
+	alsa-devel@alsa-project.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello dmaengine,
+On Sat, Nov 11, 2023 at 8:18=E2=80=AFPM Alexander Sverdlin
+<alexander.sverdlin@gmail.com> wrote:
+> On Fri, 2023-07-21 at 19:37 +0300, Andy Shevchenko wrote:
 
-Are you Thinking of starting a new project or expanding your business? We can fund it. Terms and Conditions Apply.
+...
 
-Regards,
-Peter Wilson
+> > > +       mdelay(1000);
+> >
+> > Atomic?! Such a huge delay must be explained, esp. why it's atomic.
+>
+> atomic or not, SoC is supposed to reset itself here.
+> However there is an errata [1] and the SoC can lockup instead.
+
+Good, and what I'm saying is that this piece of code must have a
+comment explaining this.
+
+> So even pr_emerg() makes sense to me.
+
+This is irrelevant to the comment.
+
+> > > +       pr_emerg("Unable to restart system\n");
+> > > +       return NOTIFY_DONE;
+>
+> [1] http://web.archive.org/web/20161130230727/http://www.cirrus.com/en/pu=
+bs/appNote/AN258REV2.pdf
+
+--=20
+With Best Regards,
+Andy Shevchenko
 

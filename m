@@ -1,213 +1,429 @@
-Return-Path: <dmaengine+bounces-162-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-163-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13F1D7F326F
-	for <lists+dmaengine@lfdr.de>; Tue, 21 Nov 2023 16:36:35 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 05A277F40CA
+	for <lists+dmaengine@lfdr.de>; Wed, 22 Nov 2023 10:01:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6DFB2B2189F
-	for <lists+dmaengine@lfdr.de>; Tue, 21 Nov 2023 15:36:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8B0271F21EAC
+	for <lists+dmaengine@lfdr.de>; Wed, 22 Nov 2023 09:01:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 738EA5810B;
-	Tue, 21 Nov 2023 15:36:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33F363B79E;
+	Wed, 22 Nov 2023 09:01:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dzMsCZWx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ayx/+bGr"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C423910C;
-	Tue, 21 Nov 2023 07:36:24 -0800 (PST)
-Received: by mail-lf1-x132.google.com with SMTP id 2adb3069b0e04-50aab3bf71fso3664879e87.3;
-        Tue, 21 Nov 2023 07:36:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700580983; x=1701185783; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=jMwkSetSrGsH8YXWn5E9oRyhdsEgnZ0K9d+hYpnmxv8=;
-        b=dzMsCZWxgovsh6RSKgcAyFKU6bRd6AYqTQHrXyT21Nntrie3+snK93/TTAGYDkT1+2
-         sghYeKyH6R3mWwB3IxH4yIeGs9DX682733dmrov5YpqDJSuXDbYa4M0M4msGIWF95cbV
-         7in5IA3eCPL97ltAe8+zkliyZAnx/WpXXJpU/5XBJdLrj8+KC8vq4MLGV7lfbZ4j1IYI
-         fEuZNbmIg2M/viB+/QqjelF8c5fM7wENIYBM0afvVaztDpvoj8t93+PBCwrYsLzUBw5M
-         HPB1lMOm+qxPyHHHM7QB51I8cftoVaH3t+VfCzaf4EEQvX/Et+w1rsdtL3jxRw+yQ231
-         TEFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700580983; x=1701185783;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jMwkSetSrGsH8YXWn5E9oRyhdsEgnZ0K9d+hYpnmxv8=;
-        b=IwNj0l9i7nF77bfiZ+hEz4AiTp0kbAYKbqoWRdezOexs0fTDWEIie/glCDFYABa03U
-         84upDIjrWOL4AZaGn9r+xf9oJy6OHKxO9upkBIawwWNfyI/aGYeaHIlAoPG9/nAHgqNH
-         GVMs7Quz6B+clgKAG2NFAh9OC8JoprZjvUqKy1UAv3xBITQK7htVsvvHQNWSFJW9R841
-         MRvmhi0KyRBdzntz8HBfBovdlNmFShw3+YWzqNuIRIw3PkJGbHcojOzUQDirWh7EOfe7
-         npKaxYJE4DDfq2hLCgUtIrzjIPdXr8zuzjFPoyMgJkgXSqN5kvI8g4wdBvfQt8wIjTWs
-         Gp1g==
-X-Gm-Message-State: AOJu0Yw3tR75+TsGrqJ+qiQ0cyINYml9av065w0ypO2q0Uob1QP0IyNM
-	sO0t++RG5Ocxs84KBiViMYcVIroJ3AI=
-X-Google-Smtp-Source: AGHT+IHRCdxBLO692OEhkiaKU55WtxCQjl+pJfUrUegKHw5bdVxFoiaBFuIt1BmU0vEiXd1e3r4UQA==
-X-Received: by 2002:a05:6512:2033:b0:50a:a2ba:fa86 with SMTP id s19-20020a056512203300b0050aa2bafa86mr7009361lfs.15.1700580982627;
-        Tue, 21 Nov 2023 07:36:22 -0800 (PST)
-Received: from mobilestation ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id c11-20020a056512074b00b0050915816a16sm1552710lfs.145.2023.11.21.07.36.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Nov 2023 07:36:22 -0800 (PST)
-Date: Tue, 21 Nov 2023 18:36:19 +0300
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Kory Maincent <kory.maincent@bootlin.com>, 
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Vinod Koul <vkoul@kernel.org>, 
-	Cai Huoqing <cai.huoqing@linux.dev>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
-	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Herve Codina <herve.codina@bootlin.com>
-Subject: Re: [PATCH v6 0/6] Fix support of dw-edma HDMA NATIVE IP in remote
- setup
-Message-ID: <bqtgnsxqmvndog4jtmyy6lnj2cp4kh7c2lcwmjjqbet53vrhhn@i6fc6vxsvbam>
-References: <20231117-b4-feature_hdma_mainline-v6-0-ebf7aa0e40d7@bootlin.com>
- <20231121062629.GA3315@thinkpad>
- <js3qo4i67tdhbbcopvfaav4c7fzhz4tc2nai45rzfmbpq7l3xa@7ac2colelvnz>
- <20231121120828.GC3315@thinkpad>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6FB61D69A;
+	Wed, 22 Nov 2023 09:01:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5BC97C433C8;
+	Wed, 22 Nov 2023 09:01:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1700643674;
+	bh=YfNv2uqY6jpXX11dkmdghWjVP3xVlwDVv4WSgO4lXlc=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=Ayx/+bGrAJUPf+yY5cuaPfWUunuWfvHEmP5+Fx79GgB++9kLuLvhBmBtYlZ+Pqhqi
+	 lDZQ3RVU0ZLJ3wE3cW8QFodWbgHSi2tk4MGOqNsQweY2IrEG7VdHIgf6cKUhJncoxw
+	 IXHhliLrVE/CLsNvzIpw1jSA9M2RQ8/NBxHn7Jfg6DnuW9yIH7bVKs1oUn9CCtnEux
+	 cYmX/wq+hGZ/BaM+pCppDibaMlwu8/lB0R48OEzAS6u4Rkd+mr94O+fqa/rj9tyZ5l
+	 zM959Dolc6PPjrE+BWIbQh3iina1qtAy5xr4RRzJpL729OQtItBmt+g5pSiE4+8iqA
+	 Pia9UvTydOr1g==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD1CC072A2;
+	Wed, 22 Nov 2023 09:01:14 +0000 (UTC)
+From:
+ Nikita Shubin via B4 Relay <devnull+nikita.shubin.maquefel.me@kernel.org>
+Subject: [PATCH v5 00/39] ep93xx device tree conversion
+Date: Wed, 22 Nov 2023 11:59:38 +0300
+Message-Id: <20231122-ep93xx-v5-0-d59a76d5df29@maquefel.me>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231121120828.GC3315@thinkpad>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPrCXWUC/2WOy27DIBBFfyVi3bEYxo86q/5H1QWGcUGtcQqO5
+ SjyvweysaIur+aeM/cuEkfPSZxPdxF59cnPIYfm7SSM0+GbwduchZKKZCsb4EtP2wYSTdcSdqy
+ sErk86MQwRB2MK/VJp4VjOVwij357fvj8ynmM8wSLi6wPb61qVNQoVeE7SQUIwf/4RVfJXQcfP
+ ib9d+WRf6uJi9L5tMzx9ty8UhH/m7cSSCDbkm5GREn84ig71voAezzAOoMabdf11rBB+Qru+/4
+ A1KSSfTMBAAA=
+To: Hartley Sweeten <hsweeten@visionengravers.com>, 
+ Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, Lukasz Majewski <lukma@denx.de>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Sebastian Reichel <sre@kernel.org>, 
+ Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Nikita Shubin <nikita.shubin@maquefel.me>, Vinod Koul <vkoul@kernel.org>, 
+ Wim Van Sebroeck <wim@linux-watchdog.org>, 
+ Guenter Roeck <linux@roeck-us.net>, 
+ Thierry Reding <thierry.reding@gmail.com>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+ Mark Brown <broonie@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Miquel Raynal <miquel.raynal@bootlin.com>, 
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
+ Damien Le Moal <dlemoal@kernel.org>, Sergey Shtylyov <s.shtylyov@omp.ru>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-clk@vger.kernel.org, 
+ linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
+ dmaengine@vger.kernel.org, linux-watchdog@vger.kernel.org, 
+ linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org, 
+ netdev@vger.kernel.org, linux-mtd@lists.infradead.org, 
+ linux-ide@vger.kernel.org, linux-input@vger.kernel.org, 
+ linux-sound@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Andrew Lunn <andrew@lunn.ch>, Andy Shevchenko <andy.shevchenko@gmail.com>
+X-Mailer: b4 0.13-dev-e3e53
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1700643671; l=13702;
+ i=nikita.shubin@maquefel.me; s=20230718; h=from:subject:message-id;
+ bh=YfNv2uqY6jpXX11dkmdghWjVP3xVlwDVv4WSgO4lXlc=; =?utf-8?q?b=3D4eixXzQUKlt8?=
+ =?utf-8?q?ITFwAedShd7qdEmN09LtXIKl7HWExNvqe/7ceFqkOAeix/b0l58dyI5YUbJscfsL?=
+ LwbWvPmsCefF8yqWMXjfBacsxfCG0W4TFAEDrqSbo+yd3j6RUV7B
+X-Developer-Key: i=nikita.shubin@maquefel.me; a=ed25519;
+ pk=vqf5YIUJ7BJv3EJFaNNxWZgGuMgDH6rwufTLflwU9ac=
+X-Endpoint-Received:
+ by B4 Relay for nikita.shubin@maquefel.me/20230718 with auth_id=65
+X-Original-From: Nikita Shubin <nikita.shubin@maquefel.me>
+Reply-To: <nikita.shubin@maquefel.me>
 
-On Tue, Nov 21, 2023 at 05:38:28PM +0530, Manivannan Sadhasivam wrote:
-> On Tue, Nov 21, 2023 at 01:55:22PM +0300, Serge Semin wrote:
-> > Hi Mani
-> > 
-> > On Tue, Nov 21, 2023 at 11:56:29AM +0530, Manivannan Sadhasivam wrote:
-> > > On Fri, Nov 17, 2023 at 11:03:48AM +0100, Kory Maincent wrote:
-> > > > This patch series fix the support of dw-edma HDMA NATIVE IP.
-> > > > I can only test it in remote HDMA IP setup with single dma transfer, but
-> > > > with these fixes it works properly.
-> > > > 
-> > > > Few fixes has also been added for eDMA version. Similarly to HDMA I have
-> > > > tested only eDMA in remote setup.
-> > > > 
-> > > 
-> > > Just out of curiosity, can you share how you are setting EDMA_MF_HDMA_NATIVE?
-> > 
-> > This topic has already been concerned on v1 (in another context
-> > though):
-> > https://lore.kernel.org/dmaengine/20230621151948.36125997@kmaincent-XPS-13-7390/
-> > 
-> > Here is the repo with the out-of-tree driver Kory said he was using
-> > together with the kernel's version of the DW eDMA/hDMA driver:
-> > https://github.com/Brainchip-Inc/akida_dw_edma
-> > 
-> 
+This series aims to convert ep93xx from platform to full device tree support.
 
-> Thanks Sergey, I missed it! But looks like we are not focusing on the HDMA
-> integration in designware-ep.c. Have you/anyone thought about it? Was it
-> discussed previously that I missed?
+The main goal is to receive ACK's to take it via Arnd's arm-soc branch.
 
-No. We haven't discussed that in the framework of this patchset.
+Bit thanks to Krzysztof Kozlowski for his zero-day review.
 
-> 
-> HDMA is used in one of the recent Qcom SoCs (SA8775) that Qcom folks are
-> bringing up and I'd like to have a common solution like we have for eDMA.
+Krzysztof, Sergey, i've changed some files that you have already provided tag:
+- dt-bindings: spi: Add Cirrus EP93xx
+- ata: pata_ep93xx: add device tree support
 
-AFAICS it won't be that easy to do for HDMA. Unlike eDMA, HDMA doesn't
-have a handy global config registers to determine the number of R/W
-channels.  Kory also said that auto-detecting them by dummy-writing to
-all the CH_EN registers didn't work either because all, even
-unavailable, channels CSRs were writable. This part was discussed
-earlier:
-https://lore.kernel.org/lkml/20230607144014.6356a197@kmaincent-XPS-13-7390/
-So if you don't come up with some more clever solution, then alas the
-number of R/W channels will need to be specified by the platform
-code/driver.
+Added DMA and renamed clock header file.
 
-Regarding how to auto-detect HDMA. I can't be absolutely sure whether
-it will work but if we assume that:
-1. HDMA reg-space is always unrolled (mapped over a separate reg-space),
-2. Lowest 16 bits of base+0x8 are RO in EDMA (DMA_CTRL_OFF) and RW in HDMA
-(prefetch CSR),
-then we can implement a procedure like this:
+Sergey, Damien, i've changed some files that you have already provided tag:
+- ata: pata_ep93xx: add device tree support
 
-1. If iATU/xDMA reg-space is specified and it's writable at the
-xDMA-base+0x8 then it's HDMA controller and amount of channels is
-supposed to be pre-initialized by the low-level platform driver,
-otherwise it's eDMA and the read value can be used to determine the
-number of channels.
-2. If iATU/xDMA reg-space isn't specified then the viewport-based eDMA
-auto-detection procedure will be executed.
+Added OF DMA setup and dropped platform file.
 
-For all of that you'll need to fix the
-dw_pcie_edma_find_chip()/dw_pcie_edma_detect() method somehow.
+Mark, i've changed some files that you have already provided tag:
+- spi: ep93xx: add DT support for Cirrus EP93xx
 
-Alternatively, to keep things simple you can convert the
-dw_pcie_edma_find_chip()/dw_pcie_edma_detect() methods to just relying
-on the HDMA settings being fully specified by the low-level drivers.
+Added OF DMA setup and dropped platform file.
 
--Serge(y)
+Major updates:
 
-> 
-> - Mani
-> 
-> > -Serge(y)
-> > 
-> > > 
-> > > - Mani
-> > > 
-> > > > Changes in v2:
-> > > > - Update comments and fix typos.
-> > > > - Removed patches that tackle hypothetical bug and then were not pertinent.
-> > > > - Add the similar HDMA race condition in remote setup fix to eDMA IP driver.
-> > > > 
-> > > > Changes in v3:
-> > > > - Fix comment style.
-> > > > - Split a patch in two to differ bug fix and simple harmless typo.
-> > > > 
-> > > > Changes in v4:
-> > > > - Update patch git commit message.
-> > > > - Link to v3: https://lore.kernel.org/r/20231011-b4-feature_hdma_mainline-v3-0-24ee0c979c6f@bootlin.com
-> > > > 
-> > > > Changes in v5:
-> > > > - No change
-> > > > - Rebase to mainline 6.7-rc1
-> > > > - Link to v4: https://lore.kernel.org/r/20231011-b4-feature_hdma_mainline-v4-0-43d417b93138@bootlin.com
-> > > > 
-> > > > Changes in v6:
-> > > > - Fix several commit messages and comments.
-> > > > - Link to v5: https://lore.kernel.org/r/20231114-b4-feature_hdma_mainline-v5-0-7bc86d83c6f7@bootlin.com
-> > > > 
-> > > > Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
-> > > > ---
-> > > > Kory Maincent (6):
-> > > >       dmaengine: dw-edma: Fix the ch_count hdma callback
-> > > >       dmaengine: dw-edma: Fix wrong interrupt bit set for HDMA
-> > > >       dmaengine: dw-edma: HDMA_V0_REMOTEL_STOP_INT_EN typo fix
-> > > >       dmaengine: dw-edma: Add HDMA remote interrupt configuration
-> > > >       dmaengine: dw-edma: HDMA: Add sync read before starting the DMA transfer in remote setup
-> > > >       dmaengine: dw-edma: eDMA: Add sync read before starting the DMA transfer in remote setup
-> > > > 
-> > > >  drivers/dma/dw-edma/dw-edma-v0-core.c | 17 +++++++++++++++
-> > > >  drivers/dma/dw-edma/dw-hdma-v0-core.c | 39 +++++++++++++++++++++++------------
-> > > >  drivers/dma/dw-edma/dw-hdma-v0-regs.h |  2 +-
-> > > >  3 files changed, 44 insertions(+), 14 deletions(-)
-> > > > ---
-> > > > base-commit: b85ea95d086471afb4ad062012a4d73cd328fa86
-> > > > change-id: 20231011-b4-feature_hdma_mainline-b6c57f8e3b5d
-> > > > 
-> > > > Best regards,
-> > > > -- 
-> > > > Köry Maincent, Bootlin
-> > > > Embedded Linux and kernel engineering
-> > > > https://bootlin.com
-> > > > 
-> > > 
-> > > -- 
-> > > மணிவண்ணன் சதாசிவம்
-> 
-> -- 
-> மணிவண்ணன் சதாசிவம்
+- reboot, pinctrl, clk are now auxiliary and instantiated from SoC driver as
+  Stephen Boyd suggested
+- i moved all clock code to clk-ep93xx.c, as it no longer has a separate dt node, 
+  so XTALI is externalk for this driver and passed as index 0, and pll1, pll2 are
+  internal and passed via pointer for parent_data
+- reboot bindings dropped
+- pinctrl and clk bindings moved to syscon YAML
+- xlate added for DMA, so now all DMA users use it via device tree, otherwise probe 
+  order messed up and we might end up probing before DMA with no possibility to defer probing
+- DMA port bindings dropped, they are described in YAML file
+- DMA platform code dropped
+- i2s, spi, pata now use OF DMA
+- YAML and dtsi/dts changed to reflect auxiliary conversion and DMA changes
+
+Patches should be now formated with '--patience'
+
+---
+Changes in v5:
+
+- gpio: ep93xx: split device in multiple
+  - ordered headers
+  - use irqd_to_hwirq()
+  - s/platform_get_irq()/platform_get_irq_optional()/
+ 
+- [PATCH v4 02/42] ARM: ep93xx: add swlocked prototypes
+  - replaced with ARM: ep93xx: add regmap aux_dev
+
+- [PATCH v4 03/42] dt-bindings: clock: Add Cirrus EP93xx
+  - fixed identation
+  - removed EP93XX_CLK_END
+  - and dropped it
+  - clock bindings moved to syscon with renaming to cirrus,ep9301-syscon.h
+
+- clk: ep93xx: add DT support for Cirrus EP93xx
+  - convert to auxiliary and use parent device tree node
+  - moved all clocks except XTALI here
+  - used devm version everywhere and *_parent_hw() instead of passing name where it's possible
+  - unfortunately devm_clk_hw_register_fixed_rate doesn't have a parent index version
+
+- [PATCH v4 05/42] dt-bindings: pinctrl: Add Cirrus EP93xx
+  - "unevaluatedProperties: false" for pins
+  - returned "additionalProperties: false" where it was
+  - and dropped it
+
+- pinctrl: add a Cirrus ep93xx SoC pin controller
+  - sorted includes
+  - convert to auxiliary and use parent device tree node
+
+- power: reset: Add a driver for the ep93xx reset
+  - convert to auxiliary device
+
+- dt-bindings: soc: Add Cirrus EP93xx
+  - dropped all ref to reboot, clk, pinctrl subnodes
+  - added pins, as it's now used for pinctrl
+  - added #clock-cells, as it's now used for clk
+
+- dt-bindings: pwm: Add Cirrus EP93xx
+  - $ref to pwm.yaml
+  - fixed 'pwm-cells'
+  - s/additionalProperties/unevaluatedProperties/
+
+- soc: Add SoC driver for Cirrus ep93xx
+  - removed clocks, they are moved to clk auxiliary driver, as we dropped the clk dt node
+  - removed all swlocked exported functions
+  - dropped static spinlock
+  - added instantiating auxiliary reboot, clk, pinctrl
+
+- dt-bindings: spi: Add Cirrus EP93xx
+  - Document DMA support
+
+- spi: ep93xx: add DT support for Cirrus EP93xx
+  - dropped CONFIG_OF and SPI/DMA platform data entirely
+  - s/master/host/
+  - reworked DMA setup so we can use probe defer
+
+- dt-bindings: dma: Add Cirrus EP93xx
+  - dropped bindings header (moved ports description to YAML)
+  - changed '#dma-cells' to 2, we use port, direction in cells so we can drop platform code completely
+
+- dma: cirrus: add DT support for Cirrus EP93xx
+  - dropped platform probing completely
+  - dropped struct ep93xx_dma_data replaced with internal struct ep93xx_dma_chan_cfg with port/direction
+  - added xlate functions for m2m/m2p
+  - we require filters to set dma_cfg before hw_setup
+
+- dt-bindings: ata: Add Cirrus EP93xx
+  - Document DMA support 
+
+- ata: pata_ep93xx: add device tree support
+  - drop DMA platform header with data
+  - use DMA OF so we can defer probing until DMA is up
+
+- ARM: dts: add Cirrus EP93XX SoC .dtsi
+- ARM: dts: ep93xx: add ts7250 board
+- ARM: dts: ep93xx: Add EDB9302 DT
+  - replaced "eclk: clock-controller" to syscon reference
+  - replaced "pinctrl: pinctrl" to syscon reference
+  - gpios are now "enabled" by default
+  - reworked i2s node
+  - change all dma nodes and refs
+
+- new additions to I2S
+  - Document DMA
+  - Document Audio Port usage
+  - drop legacy DMA support
+
+- Link to v4: https://lore.kernel.org/r/20230915-ep93xx-v4-0-a1d779dcec10@maquefel.me
+
+Changes in v4:
+
+- gpio: ep93xx: split device in multiple
+  - s/generic_handle_irq/generic_handle_domain_irq/
+  - s/int offset/irq_hw_number_t offset/ though now it looks a bit odd to me
+  - drop i = 0
+  - drop 'error'
+  - use dev_err_probe withour printing devname once again
+
+dt-bindings: clock: Add Cirrus EP93xx
+  - renamed cirrus,ep93xx-clock.h -> cirrus,ep9301-clk.h
+
+clk: ep93xx: add DT support for Cirrus EP93xx
+  - drop unused includes
+  - use .name only for xtali, pll1, pll2 parents
+  - convert // to /*
+  - pass clk_parent_data instead of char* clock name
+
+dt-bindings: pinctrl: Add Cirrus EP93xx
+  - s/additionalProperties/unevaluatedProperties/
+
+dt-bindings: soc: Add Cirrus EP93xx
+  - move syscon to soc directory
+  - add vendor prefix
+  - make reboot same style as pinctrl, clk
+  - use absolute path for ref
+  - expand example
+
+soc: Add SoC driver for Cirrus ep93xx
+  - s/0xf0000000/GENMASK(31, 28)/
+  - s/ret/ep93xx_chip_revision(map)/
+  - drop symbol exports
+  - convert to platform driver
+
+dt-bindings: rtc: Add Cirrus EP93xx
+  - allOf: with $ref to rtc.yaml
+  - s/additionalProperties/unevaluatedProperties/
+
+dt-bindings: watchdog: Add Cirrus EP93x
+  - drop description
+  - reword
+
+power: reset: Add a driver for the ep93xx reset
+  - lets use 'GPL-2.0+' instead of '(GPL-2.0)'
+  - s/of_device/of/
+  - drop mdelay with warning
+  - return 0 at the end
+
+net: cirrus: add DT support for Cirrus EP93xx
+  - fix leaking np
+
+mtd: nand: add support for ts72xx
+  - +bits.h
+  - drop comment
+  - ok to fwnode_get_next_child_node
+  - use goto to put handle and nand and report error
+
+ARM: dts: add Cirrus EP93XX SoC .dtsi
+  - add simple-bus for ebi, as we don't require to setup anything
+  - add arm,pl011 compatible to uart nodes
+  - drop i2c-gpio, as it's isn't used anywhere
+
+ARM: dts: ep93xx: add ts7250 board
+  - generic node name for temperature-sensor
+  - drop i2c
+  - move nand, rtc, watchdog to ebi node
+ 
+- Link to v3: https://lore.kernel.org/r/20230605-ep93xx-v3-0-3d63a5f1103e@maquefel.me
+
+---
+Alexander Sverdlin (3):
+      ASoC: ep93xx: Drop legacy DMA support
+      ARM: dts: ep93xx: Add EDB9302 DT
+      ASoC: cirrus: edb93xx: Delete driver
+
+Nikita Shubin (36):
+      gpio: ep93xx: split device in multiple
+      ARM: ep93xx: add regmap aux_dev
+      clk: ep93xx: add DT support for Cirrus EP93xx
+      pinctrl: add a Cirrus ep93xx SoC pin controller
+      power: reset: Add a driver for the ep93xx reset
+      dt-bindings: soc: Add Cirrus EP93xx
+      soc: Add SoC driver for Cirrus ep93xx
+      dt-bindings: dma: Add Cirrus EP93xx
+      dma: cirrus: add DT support for Cirrus EP93xx
+      dt-bindings: watchdog: Add Cirrus EP93x
+      watchdog: ep93xx: add DT support for Cirrus EP93xx
+      dt-bindings: pwm: Add Cirrus EP93xx
+      pwm: ep93xx: add DT support for Cirrus EP93xx
+      dt-bindings: spi: Add Cirrus EP93xx
+      spi: ep93xx: add DT support for Cirrus EP93xx
+      dt-bindings: net: Add Cirrus EP93xx
+      net: cirrus: add DT support for Cirrus EP93xx
+      dt-bindings: mtd: Add ts7200 nand-controller
+      mtd: rawnand: add support for ts72xx
+      dt-bindings: ata: Add Cirrus EP93xx
+      ata: pata_ep93xx: add device tree support
+      dt-bindings: input: Add Cirrus EP93xx keypad
+      input: keypad: ep93xx: add DT support for Cirrus EP93xx
+      dt-bindings: wdt: Add ts72xx
+      wdt: ts72xx: add DT support for ts72xx
+      gpio: ep93xx: add DT support for gpio-ep93xx
+      ASoC: dt-bindings: ep93xx: Document DMA support
+      ASoC: dt-bindings: ep93xx: Document Audio Port support
+      ARM: dts: add Cirrus EP93XX SoC .dtsi
+      ARM: dts: ep93xx: add ts7250 board
+      ARM: ep93xx: DT for the Cirrus ep93xx SoC platforms
+      pwm: ep93xx: drop legacy pinctrl
+      ata: pata_ep93xx: remove legacy pinctrl use
+      ARM: ep93xx: delete all boardfiles
+      ARM: ep93xx: soc: drop defines
+      dma: cirrus: remove platform code
+
+ .../bindings/arm/cirrus/cirrus,ep9301.yaml         |   38 +
+ .../bindings/ata/cirrus,ep9312-pata.yaml           |   42 +
+ .../bindings/dma/cirrus,ep9301-dma-m2m.yaml        |   84 ++
+ .../bindings/dma/cirrus,ep9301-dma-m2p.yaml        |  144 ++
+ .../bindings/input/cirrus,ep9307-keypad.yaml       |   87 ++
+ .../devicetree/bindings/mtd/technologic,nand.yaml  |   45 +
+ .../devicetree/bindings/net/cirrus,ep9301-eth.yaml |   59 +
+ .../devicetree/bindings/pwm/cirrus,ep9301-pwm.yaml |   53 +
+ .../bindings/soc/cirrus/cirrus,ep9301-syscon.yaml  |   83 ++
+ .../bindings/sound/cirrus,ep9301-i2s.yaml          |   16 +
+ .../devicetree/bindings/spi/cirrus,ep9301-spi.yaml |   70 +
+ .../bindings/watchdog/cirrus,ep9301-wdt.yaml       |   42 +
+ .../bindings/watchdog/technologic,ts7200-wdt.yaml  |   45 +
+ arch/arm/Makefile                                  |    1 -
+ arch/arm/boot/dts/cirrus/Makefile                  |    4 +
+ arch/arm/boot/dts/cirrus/ep93xx-bk3.dts            |  126 ++
+ arch/arm/boot/dts/cirrus/ep93xx-edb9302.dts        |  182 +++
+ arch/arm/boot/dts/cirrus/ep93xx-ts7250.dts         |  145 ++
+ arch/arm/boot/dts/cirrus/ep93xx.dtsi               |  442 ++++++
+ arch/arm/mach-ep93xx/Kconfig                       |   20 +-
+ arch/arm/mach-ep93xx/Makefile                      |   11 -
+ arch/arm/mach-ep93xx/clock.c                       |  733 ----------
+ arch/arm/mach-ep93xx/core.c                        | 1017 --------------
+ arch/arm/mach-ep93xx/dma.c                         |  114 --
+ arch/arm/mach-ep93xx/edb93xx.c                     |  344 -----
+ arch/arm/mach-ep93xx/ep93xx-regs.h                 |   38 -
+ arch/arm/mach-ep93xx/gpio-ep93xx.h                 |  111 --
+ arch/arm/mach-ep93xx/hardware.h                    |   25 -
+ arch/arm/mach-ep93xx/irqs.h                        |   76 --
+ arch/arm/mach-ep93xx/platform.h                    |   42 -
+ arch/arm/mach-ep93xx/soc.h                         |  212 ---
+ arch/arm/mach-ep93xx/timer-ep93xx.c                |  143 --
+ arch/arm/mach-ep93xx/ts72xx.c                      |  422 ------
+ arch/arm/mach-ep93xx/ts72xx.h                      |   94 --
+ arch/arm/mach-ep93xx/vision_ep9307.c               |  311 -----
+ drivers/ata/pata_ep93xx.c                          |  106 +-
+ drivers/clk/Kconfig                                |    8 +
+ drivers/clk/Makefile                               |    1 +
+ drivers/clk/clk-ep93xx.c                           |  855 ++++++++++++
+ drivers/dma/ep93xx_dma.c                           |  292 +++-
+ drivers/gpio/gpio-ep93xx.c                         |  345 ++---
+ drivers/input/keyboard/ep93xx_keypad.c             |   74 +-
+ drivers/mtd/nand/raw/Kconfig                       |    7 +
+ drivers/mtd/nand/raw/Makefile                      |    1 +
+ drivers/mtd/nand/raw/technologic-nand-controller.c |  223 +++
+ drivers/net/ethernet/cirrus/ep93xx_eth.c           |   63 +-
+ drivers/pinctrl/Kconfig                            |    7 +
+ drivers/pinctrl/Makefile                           |    1 +
+ drivers/pinctrl/pinctrl-ep93xx.c                   | 1433 ++++++++++++++++++++
+ drivers/power/reset/Kconfig                        |   10 +
+ drivers/power/reset/Makefile                       |    1 +
+ drivers/power/reset/ep93xx-restart.c               |   81 ++
+ drivers/pwm/pwm-ep93xx.c                           |   26 +-
+ drivers/soc/Kconfig                                |    1 +
+ drivers/soc/Makefile                               |    1 +
+ drivers/soc/cirrus/Kconfig                         |   13 +
+ drivers/soc/cirrus/Makefile                        |    2 +
+ drivers/soc/cirrus/soc-ep93xx.c                    |  247 ++++
+ drivers/spi/spi-ep93xx.c                           |   68 +-
+ drivers/watchdog/ep93xx_wdt.c                      |    8 +
+ drivers/watchdog/ts72xx_wdt.c                      |    8 +
+ include/dt-bindings/soc/cirrus,ep9301-syscon.h     |   46 +
+ include/linux/platform_data/dma-ep93xx.h           |   94 --
+ include/linux/platform_data/eth-ep93xx.h           |   10 -
+ include/linux/platform_data/keypad-ep93xx.h        |   32 -
+ include/linux/platform_data/spi-ep93xx.h           |   15 -
+ include/linux/soc/cirrus/ep93xx.h                  |   47 +-
+ sound/soc/cirrus/Kconfig                           |    9 -
+ sound/soc/cirrus/Makefile                          |    4 -
+ sound/soc/cirrus/edb93xx.c                         |  117 --
+ sound/soc/cirrus/ep93xx-i2s.c                      |   19 -
+ sound/soc/cirrus/ep93xx-pcm.c                      |   19 +-
+ 72 files changed, 5200 insertions(+), 4515 deletions(-)
+---
+base-commit: be3ca57cfb777ad820c6659d52e60bbdd36bf5ff
+change-id: 20230605-ep93xx-01c76317e2d2
+
+Best regards,
+-- 
+Nikita Shubin <nikita.shubin@maquefel.me>
+
 

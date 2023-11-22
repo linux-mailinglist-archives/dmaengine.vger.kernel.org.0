@@ -1,280 +1,143 @@
-Return-Path: <dmaengine+bounces-166-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-167-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3E157F40FA
-	for <lists+dmaengine@lfdr.de>; Wed, 22 Nov 2023 10:02:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F7D97F4197
+	for <lists+dmaengine@lfdr.de>; Wed, 22 Nov 2023 10:27:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D5C381C20914
-	for <lists+dmaengine@lfdr.de>; Wed, 22 Nov 2023 09:02:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B06411C208C6
+	for <lists+dmaengine@lfdr.de>; Wed, 22 Nov 2023 09:27:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 241D051012;
-	Wed, 22 Nov 2023 09:01:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HBcdI0Zx"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DBEF3D98B;
+	Wed, 22 Nov 2023 09:27:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9332547771
-	for <dmaengine@vger.kernel.org>; Wed, 22 Nov 2023 09:01:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 61393C32792;
-	Wed, 22 Nov 2023 09:01:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700643676;
-	bh=/Eu1jPM5XAh3TNC0e7AdVNOVWmGnmM/PpDRzdmQnOcc=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=HBcdI0Zxx+p/cLx+tCeYfvdtVO9fYQTc7EVali4/uYrrmuaoNwCmVCTi+gR0x2fgH
-	 GRa4Ht/nJpznZfPTDXkzKlPosmFf1oVGDHnlkgdAW4ENRqNh+PGmsasuT7lsLfaKYh
-	 jamSRqDc7n6dp6Td/rvwTxRGaFxEQRRSqzr3WdSOCvrj/4qgIPo894wtUpdm+1EqNZ
-	 ol25vq8g9ponFVQh0+ZIR1GaKjJvj/xTgY33VnRQhtVKPzdpiM9rOIApNA9MLw11/P
-	 eCM3CFtSPWB0+HxqcG56yv5HP4QP0R8NlsQoosJIPfjLMBtpn2M+AGdlU+r0gUWjJa
-	 jZynr1qb06zbg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5114BC61D9B;
-	Wed, 22 Nov 2023 09:01:16 +0000 (UTC)
-From:
- Nikita Shubin via B4 Relay <devnull+nikita.shubin.maquefel.me@kernel.org>
-Date: Wed, 22 Nov 2023 12:00:17 +0300
-Subject: [PATCH v5 39/39] dma: cirrus: remove platform code
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 76DCC9D;
+	Wed, 22 Nov 2023 01:27:26 -0800 (PST)
+Received: from loongson.cn (unknown [112.20.112.120])
+	by gateway (Coremail) with SMTP id _____8AxEvB7yV1lfuM7AA--.52566S3;
+	Wed, 22 Nov 2023 17:27:23 +0800 (CST)
+Received: from localhost.localdomain (unknown [112.20.112.120])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx3y92yV1lMF5JAA--.31241S2;
+	Wed, 22 Nov 2023 17:27:20 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Vinod Koul <vkoul@kernel.org>,
+	dmaengine@vger.kernel.org,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	loongson-kernel@lists.loongnix.cn,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	Yingkun Meng <mengyingkun@loongson.cn>,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v5 0/2] New driver for the Loongson LS2X APB DMA Controller
+Date: Wed, 22 Nov 2023 17:27:09 +0800
+Message-Id: <cover.1700644483.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20231122-ep93xx-v5-39-d59a76d5df29@maquefel.me>
-References: <20231122-ep93xx-v5-0-d59a76d5df29@maquefel.me>
-In-Reply-To: <20231122-ep93xx-v5-0-d59a76d5df29@maquefel.me>
-To: Vinod Koul <vkoul@kernel.org>, 
- Nikita Shubin <nikita.shubin@maquefel.me>, 
- Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Cc: linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, 
- Alexander Sverdlin <alexander.sverdlin@gmail.com>
-X-Mailer: b4 0.13-dev-e3e53
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1700643671; l=6309;
- i=nikita.shubin@maquefel.me; s=20230718; h=from:subject:message-id;
- bh=+tLkemiit8U40rwcZBRxzc8wAunM3ib1SVOlQnohSXM=; =?utf-8?q?b=3Dp9PGpVWHh/kf?=
- =?utf-8?q?4iQleyY6J4d/xlCca4my8YA3NVriyoJJEQt6NK3bwhZrPKA0vNnF/hspo1qf3FkZ?=
- rbGvyzVuBgTdHBQ99luwFWo92OGt7SrZXscB4hGSiyGMXx3JoQVs
-X-Developer-Key: i=nikita.shubin@maquefel.me; a=ed25519;
- pk=vqf5YIUJ7BJv3EJFaNNxWZgGuMgDH6rwufTLflwU9ac=
-X-Endpoint-Received:
- by B4 Relay for nikita.shubin@maquefel.me/20230718 with auth_id=65
-X-Original-From: Nikita Shubin <nikita.shubin@maquefel.me>
-Reply-To: <nikita.shubin@maquefel.me>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Bx3y92yV1lMF5JAA--.31241S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7ur43WFW7JFyDJw1Utw1kWFX_yoW8Zw1kpF
+	W3WayakF1jqFyxCrs3J348ur1av3WfJ39xWa9xA34DZay7Cr12v3yfKa1qvFW7CFWIgFWj
+	vFZ3GFyUCFnFyrXCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	XVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
+	6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
+	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xII
+	jxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
+	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
+	67AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUc9a9UUUUU
 
-From: Nikita Shubin <nikita.shubin@maquefel.me>
+Hi all:
 
-Remove DMA platform header, from now on we use device tree for dma
-clients.
+This patchset introduces you to the LS2X apbdma controller.
 
-Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
----
- drivers/dma/ep93xx_dma.c                 | 51 +++++++++++++++--
- include/linux/platform_data/dma-ep93xx.h | 98 --------------------------------
- 2 files changed, 47 insertions(+), 102 deletions(-)
+The Loongson LS2X APB DMA controller is available on Loongson-2K chips.
+It is a single-channel, configurable DMA controller IP core based on the
+AXI bus, whose main function is to integrate DMA functionality on a chip
+dedicated to carrying data between memory and peripherals in APB bus
+(e.g. nand).
 
-diff --git a/drivers/dma/ep93xx_dma.c b/drivers/dma/ep93xx_dma.c
-index 5e29b64caa46..1c879b6187b1 100644
---- a/drivers/dma/ep93xx_dma.c
-+++ b/drivers/dma/ep93xx_dma.c
-@@ -17,6 +17,7 @@
- #include <linux/clk.h>
- #include <linux/init.h>
- #include <linux/interrupt.h>
-+#include <linux/dma-mapping.h>
- #include <linux/dmaengine.h>
- #include <linux/module.h>
- #include <linux/mod_devicetable.h>
-@@ -26,8 +27,6 @@
- #include <linux/platform_device.h>
- #include <linux/slab.h>
- 
--#include <linux/platform_data/dma-ep93xx.h>
--
- #include "dmaengine.h"
- 
- /* M2P registers */
-@@ -107,6 +106,26 @@
- #define DMA_MAX_CHAN_BYTES		0xffff
- #define DMA_MAX_CHAN_DESCRIPTORS	32
- 
-+/*
-+ * M2P channels.
-+ *
-+ * Note that these values are also directly used for setting the PPALLOC
-+ * register.
-+ */
-+#define EP93XX_DMA_I2S1			0
-+#define EP93XX_DMA_I2S2			1
-+#define EP93XX_DMA_AAC1			2
-+#define EP93XX_DMA_AAC2			3
-+#define EP93XX_DMA_AAC3			4
-+#define EP93XX_DMA_I2S3			5
-+#define EP93XX_DMA_UART1		6
-+#define EP93XX_DMA_UART2		7
-+#define EP93XX_DMA_UART3		8
-+#define EP93XX_DMA_IRDA			9
-+/* M2M channels */
-+#define EP93XX_DMA_SSP			10
-+#define EP93XX_DMA_IDE			11
-+
- enum ep93xx_dma_type {
- 	M2P_DMA,
- 	M2M_DMA,
-@@ -243,6 +262,32 @@ static struct ep93xx_dma_chan *to_ep93xx_dma_chan(struct dma_chan *chan)
- 	return container_of(chan, struct ep93xx_dma_chan, chan);
- }
- 
-+static inline bool ep93xx_dma_chan_is_m2p(struct dma_chan *chan)
-+{
-+	if (device_is_compatible(chan->device->dev, "cirrus,ep9301-dma-m2p"))
-+		return true;
-+
-+	return !strcmp(dev_name(chan->device->dev), "ep93xx-dma-m2p");
-+}
-+
-+/**
-+ * ep93xx_dma_chan_direction - returns direction the channel can be used
-+ * @chan: channel
-+ *
-+ * This function can be used in filter functions to find out whether the
-+ * channel supports given DMA direction. Only M2P channels have such
-+ * limitation, for M2M channels the direction is configurable.
-+ */
-+static inline enum dma_transfer_direction
-+ep93xx_dma_chan_direction(struct dma_chan *chan)
-+{
-+	if (!ep93xx_dma_chan_is_m2p(chan))
-+		return DMA_TRANS_NONE;
-+
-+	/* even channels are for TX, odd for RX */
-+	return (chan->chan_id % 2 == 0) ? DMA_MEM_TO_DEV : DMA_DEV_TO_MEM;
-+}
-+
- /**
-  * ep93xx_dma_set_active - set new active descriptor chain
-  * @edmac: channel
-@@ -1432,8 +1477,6 @@ static struct dma_chan *ep93xx_m2m_dma_of_xlate(struct of_phandle_args *dma_spec
- 	u8 port = dma_spec->args[0];
- 	u8 direction = dma_spec->args[1];
- 
--	dev_info(edma->dma_dev.dev, "%s: port=%d", __func__, port);
--
- 	switch (port) {
- 	case EP93XX_DMA_SSP:
- 	case EP93XX_DMA_IDE:
-diff --git a/include/linux/platform_data/dma-ep93xx.h b/include/linux/platform_data/dma-ep93xx.h
-deleted file mode 100644
-index 7a2ef279498b..000000000000
---- a/include/linux/platform_data/dma-ep93xx.h
-+++ /dev/null
-@@ -1,98 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef __ASM_ARCH_DMA_H
--#define __ASM_ARCH_DMA_H
--
--#include <linux/types.h>
--#include <linux/dmaengine.h>
--#include <linux/dma-mapping.h>
--#include <linux/property.h>
--
--/*
-- * M2P channels.
-- *
-- * Note that these values are also directly used for setting the PPALLOC
-- * register.
-- */
--#define EP93XX_DMA_I2S1		0
--#define EP93XX_DMA_I2S2		1
--#define EP93XX_DMA_AAC1		2
--#define EP93XX_DMA_AAC2		3
--#define EP93XX_DMA_AAC3		4
--#define EP93XX_DMA_I2S3		5
--#define EP93XX_DMA_UART1	6
--#define EP93XX_DMA_UART2	7
--#define EP93XX_DMA_UART3	8
--#define EP93XX_DMA_IRDA		9
--/* M2M channels */
--#define EP93XX_DMA_SSP		10
--#define EP93XX_DMA_IDE		11
--
--/**
-- * struct ep93xx_dma_data - configuration data for the EP93xx dmaengine
-- * @port: peripheral which is requesting the channel
-- * @direction: TX/RX channel
-- * @name: optional name for the channel, this is displayed in /proc/interrupts
-- *
-- * This information is passed as private channel parameter in a filter
-- * function. Note that this is only needed for slave/cyclic channels.  For
-- * memcpy channels %NULL data should be passed.
-- */
--struct ep93xx_dma_data {
--	int				port;
--	enum dma_transfer_direction	direction;
--	const char			*name;
--};
--
--/**
-- * struct ep93xx_dma_chan_data - platform specific data for a DMA channel
-- * @name: name of the channel, used for getting the right clock for the channel
-- * @base: mapped registers
-- * @irq: interrupt number used by this channel
-- */
--struct ep93xx_dma_chan_data {
--	const char			*name;
--	void __iomem			*base;
--	int				irq;
--};
--
--/**
-- * struct ep93xx_dma_platform_data - platform data for the dmaengine driver
-- * @channels: array of channels which are passed to the driver
-- * @num_channels: number of channels in the array
-- *
-- * This structure is passed to the DMA engine driver via platform data. For
-- * M2P channels, contract is that even channels are for TX and odd for RX.
-- * There is no requirement for the M2M channels.
-- */
--struct ep93xx_dma_platform_data {
--	struct ep93xx_dma_chan_data	*channels;
--	size_t				num_channels;
--};
--
--static inline bool ep93xx_dma_chan_is_m2p(struct dma_chan *chan)
--{
--	if (device_is_compatible(chan->device->dev, "cirrus,ep9301-dma-m2p"))
--		return true;
--
--	return !strcmp(dev_name(chan->device->dev), "ep93xx-dma-m2p");
--}
--
--/**
-- * ep93xx_dma_chan_direction - returns direction the channel can be used
-- * @chan: channel
-- *
-- * This function can be used in filter functions to find out whether the
-- * channel supports given DMA direction. Only M2P channels have such
-- * limitation, for M2M channels the direction is configurable.
-- */
--static inline enum dma_transfer_direction
--ep93xx_dma_chan_direction(struct dma_chan *chan)
--{
--	if (!ep93xx_dma_chan_is_m2p(chan))
--		return DMA_TRANS_NONE;
--
--	/* even channels are for TX, odd for RX */
--	return (chan->chan_id % 2 == 0) ? DMA_MEM_TO_DEV : DMA_DEV_TO_MEM;
--}
--
--#endif /* __ASM_ARCH_DMA_H */
+Thanks.
+
+----
+V5:
+patch(2/2):
+ - Rebase on dmaengine/next;
+ - Annotate struct ls2x_dma_sg with __counted_by;
+ - .remove()->.remove_new();
+ - Drop duplicate assignments in ls2x_dma_chan_init().
+
+Link to V4:
+https://lore.kernel.org/all/cover.1691647870.git.zhoubinbin@loongson.cn/
+
+V4:
+patch(2/2)
+  - Drop linux/of_device.h;
+  - Meaningful parameter name for ls2x_dma_fill_desc(): i->sg_index; 
+  - Check the slave config and reject invalid configurations;
+  - Update data width handle;
+  - Use generic xlate: of_dma_xlate_by_chan_id().
+
+Link to V3:
+https://lore.kernel.org/dmaengine/cover.1689075791.git.zhoubinbin@loongson.cn/
+
+V3:
+patch(1/2)
+  - Add clocks property;
+  - Drop dma-channels property, for we are single-channel dmac.
+patch(2/2)
+  - Add clk support. 
+
+Link to V2:
+https://lore.kernel.org/dmaengine/cover.1686192243.git.zhoubinbin@loongson.cn/
+
+V2:
+patch(1/2)
+  - Minor changes from Conor;
+  - Add Reviewed-by tag.
+patch(2/2)
+  - Fix build errors from lkp@intel.com.
+
+Link to V1:
+https://lore.kernel.org/dmaengine/cover.1685448898.git.zhoubinbin@loongson.cn/
+
+Binbin Zhou (2):
+  dt-bindings: dmaengine: Add Loongson LS2X APB DMA controller
+  dmaengine: ls2x-apb: new driver for the Loongson LS2X APB DMA
+    controller
+
+ .../bindings/dma/loongson,ls2x-apbdma.yaml    |  62 ++
+ MAINTAINERS                                   |   7 +
+ drivers/dma/Kconfig                           |  14 +
+ drivers/dma/Makefile                          |   1 +
+ drivers/dma/ls2x-apb-dma.c                    | 705 ++++++++++++++++++
+ 5 files changed, 789 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/loongson,ls2x-apbdma.yaml
+ create mode 100644 drivers/dma/ls2x-apb-dma.c
 
 -- 
-2.41.0
+2.39.3
 
 

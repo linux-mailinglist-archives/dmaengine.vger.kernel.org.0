@@ -1,124 +1,104 @@
-Return-Path: <dmaengine+bounces-173-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-174-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8533C7F4A23
-	for <lists+dmaengine@lfdr.de>; Wed, 22 Nov 2023 16:21:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 805417F4B41
+	for <lists+dmaengine@lfdr.de>; Wed, 22 Nov 2023 16:43:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 158A3B20AF9
-	for <lists+dmaengine@lfdr.de>; Wed, 22 Nov 2023 15:21:30 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0A850B20C2E
+	for <lists+dmaengine@lfdr.de>; Wed, 22 Nov 2023 15:43:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBD5E4D59B;
-	Wed, 22 Nov 2023 15:21:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 249C94EB34;
+	Wed, 22 Nov 2023 15:42:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XBiwfeEt"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mji1BkSe"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C744492;
-	Wed, 22 Nov 2023 07:21:23 -0800 (PST)
-Received: by mail-lf1-x133.google.com with SMTP id 2adb3069b0e04-507cee17b00so8989635e87.2;
-        Wed, 22 Nov 2023 07:21:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700666482; x=1701271282; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oZb7t9CIaCI1EmqCGNDEmmfTHYSkAh2W2qnzin89dzA=;
-        b=XBiwfeEtRMv6mDKRa9lGJeiewy6sfr7YweV8W5K7LEUI7dIIFb+aTdaAmVejqFXSL+
-         b1/2fZYWgNB0jm1sKWKGRiAGwezEKyj+FhHZGoIvlX/ulbWmHQUNRp8InCG3Ys0+cGWC
-         KpKqf8PeKOI1o13it5RJv8mBKfep+YmOVItaOnFbHhx6FLHTRD/03QoxaNiJl9NyDbcn
-         H+4uuR2e00aoucaoGxb2mcRArWDqaOGHqayOIFQ2DGQydXRNwPfADykvk+pEBlF8/htR
-         i2PfPlbxqTru0yLAG6KCO34I73t8cnkeJ1hwS+heCnVDbWdMHuWC4RUi+h+NDJV8VORt
-         OHjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700666482; x=1701271282;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oZb7t9CIaCI1EmqCGNDEmmfTHYSkAh2W2qnzin89dzA=;
-        b=m7E/PL8HgVJ8QzO5K5G34dEpWwtpWgk+tuQbdcjWOmSY46oAJbvOb7aEYbVIQwbQDv
-         66PzpgvPtq3O6jo8w8y2870MGo9j0WfW+LKTn6zT4y5MwWI6AXlN28pOG3Qu0UYp0+w2
-         1ELzZ1h5ljLhvXmSaCQHvEgn6YqsUV3ZbaxrZGXjXZ63xpoEhCm1YmCl+VZUgNj0Z+S9
-         3taC1vCqlinJJnLtAXJcImpDp//mDv52XY9k/C4vTWyPc1sURTdPh/+mK7vN8Y+9LzZ4
-         QDOSzUi9ASkLiUyegS0rX2LwZ0psHymrvrvNwNrw7SWAxPLPOziwIUozXEGteOULV3O1
-         40bg==
-X-Gm-Message-State: AOJu0YzocM41oCUutDFBq/Vj/7+v+YEeLDh7pBo/oo0cv8tMYy0UHbYs
-	XaYl7J8fqrFBw0O4RnUZdIQ=
-X-Google-Smtp-Source: AGHT+IERwepuirZh9+8AanLFanzyVFkQXgU0ThpU6hGLzGEZcIO0CGc5ahO2OuSVGVtes+ubfWEzQw==
-X-Received: by 2002:a19:5506:0:b0:500:7cab:efc3 with SMTP id n6-20020a195506000000b005007cabefc3mr1958214lfe.11.1700666481663;
-        Wed, 22 Nov 2023 07:21:21 -0800 (PST)
-Received: from ?IPV6:2001:999:251:b686:cec4:d552:2937:637c? ([2001:999:251:b686:cec4:d552:2937:637c])
-        by smtp.gmail.com with ESMTPSA id m16-20020a0565120a9000b0050aa9e8e26asm1317351lfu.5.2023.11.22.07.21.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Nov 2023 07:21:20 -0800 (PST)
-Message-ID: <ed1d0221-d0ee-4a7d-8955-d5973027d113@gmail.com>
-Date: Wed, 22 Nov 2023 17:22:47 +0200
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD1FF1722;
+	Wed, 22 Nov 2023 07:42:53 -0800 (PST)
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 3AMFgkoF031020;
+	Wed, 22 Nov 2023 09:42:46 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1700667766;
+	bh=DLJe1Pv87UHy4+v/+5Kl00sc0UqsngVKRFxbrZDoRBc=;
+	h=From:To:CC:Subject:Date;
+	b=mji1BkSeSk8jptEDhZpS9TG7R2mKKMR2VLHw0WFskUBSkNtKuiospkQSzYFuezXWv
+	 maYIxJIFzleiV9fuBCC5pEkWrgABRPWkz6qWW7MOcMzn2iRLlZjOJzd3PQs+mA3VPR
+	 7xjLF7FsySaoedySQEEVOP/Dizw3LS6+/GpDLbk8=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 3AMFgkMn011949
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 22 Nov 2023 09:42:46 -0600
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 22
+ Nov 2023 09:42:45 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 22 Nov 2023 09:42:45 -0600
+Received: from uda0132425.dhcp.ti.com (ileaxei01-snat.itg.ti.com [10.180.69.5])
+	by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 3AMFggJl046973;
+	Wed, 22 Nov 2023 09:42:43 -0600
+From: Vignesh Raghavendra <vigneshr@ti.com>
+To: Peter Ujfalusi <peter.ujfalusi@gmail.com>, Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH v2 0/4] dt-bindings: dma: ti: k3*: Update optional reg regions
+Date: Wed, 22 Nov 2023 21:12:34 +0530
+Message-ID: <20231122154238.815781-1-vigneshr@ti.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/4] Add APIs to request TX/RX DMA channels by ID
-To: Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc: vkoul@kernel.org, dmaengine@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- srk@ti.com, vigneshr@ti.com
-References: <20231114083906.3143548-1-s-vadapalli@ti.com>
- <9d465de4-3930-4856-9d8e-7deb567a628f@gmail.com>
- <c693efec-ab67-44bb-8871-a40dc408f278@ti.com>
-Content-Language: en-US
-From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
-In-Reply-To: <c693efec-ab67-44bb-8871-a40dc408f278@ti.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Hi Siddharth,
+DMAs on TI K3 SoCs have channel configuration registers region which are
+usually hidden from Linux and configured via Device Manager Firmware
+APIs. But certain early SWs like bootloader which run before Device
+Manager is fully up would need to directly configure these registers and
+thus require to be in DT description.
 
-On 17/11/2023 07:55, Siddharth Vadapalli wrote:
->> I would really like to follow a standard binding since what will happen
->> if the firmware will start to provision channels/flows for DMAengine
->> users? It is not that simple to hack that around.
-> 
-> Please consider the following use-case for which the APIs are being added by
-> this series. I apologize for not explaining the idea behind the APIs in more
-> detail earlier.
-> 
-> Firmware running on a remote core is in control of a peripheral (CPSW Ethernet
-> Switch for example) and shares the peripheral across software running on
-> different cores. The control path between the Firmware and the Clients on
-> various cores is via RPMsg, while the data path used by the Clients is the DMA
-> Channels. In the example where Clients send data to the shared peripheral over
-> DMA, the Clients send RPMsg based requests to the Firmware to obtain the
-> allocated thead IDs. Firmware allocates the thread IDs by making a request to
-> TISCI Resource Manager followed by sharing the thread IDs to the Clients.
-> 
-> In such use cases, the Linux Client is probed by RPMsg endpoint discovery over
-> the RPMsg bus. Therefore, there is no device-tree corresponding to the Client
-> device. The Client knows the DMA Channel IDs as well as the RX Flow details from
-> the Firmware. Knowing these details, the Client can request the configuration of
-> the TX and RX Channels/Flows by using the DMA APIs which this series adds.
+This add bindings for such configuration regions. Backward
+compatibility is maintained to existing DT by only mandating existing
+regions to be present and this new region as optional.
 
-I see, so the CPSW will be probed in a similar way as USB peripherals
-for example? The CPSW does not have a DT entry at all? Is this correct?
+This update is mainly to aid SPL/U-Boot to reuse kernel DT as is. And is
+applicable to entire K3 family of SoCs.
 
-> Please let me know in case of any suggestions for an implementation which shall
-> address the above use-case.
+v2:
+Fix issues pointed out by Conor and Peter
+* Add new patch 1/4 to describe existing register regions
+* Rename cfg region as ring
+* Add bchan register space for bcdma
+* Include descriptions for new registers
+v1: https://lore.kernel.org/all/20230810174356.3322583-1-vigneshr@ti.com/
 
-How does the driver knows how to request a DMA resource from the remote
-core? How that scales with different SoCs and even with changes in the
-firmware?
+Vignesh Raghavendra (4):
+  dt-bindings: dma: ti: k3-*: Add descriptions for register regions
+  dt-bindings: dma: ti: k3-bcdma: Describe cfg register regions
+  dt-bindings: dma: ti: k3-pktdma: Describe cfg register regions
+  dt-bindings: dma: ti: k3-udma: Describe cfg register regions
 
-You are right, this is in a grey area. The DMA channel as it is
-controlled by the remote processor, it lends a thread to clients on
-other cores (like Linux) via RPMsg.
-Well, it is similar to how non DT is working in a way.
-
-This CPSW type is not yet supported mainline, right?
+ .../devicetree/bindings/dma/ti/k3-bcdma.yaml  | 43 +++++++++++++------
+ .../devicetree/bindings/dma/ti/k3-pktdma.yaml | 26 +++++++++--
+ .../devicetree/bindings/dma/ti/k3-udma.yaml   | 20 +++++++--
+ 3 files changed, 71 insertions(+), 18 deletions(-)
 
 -- 
-Péter
+2.42.0
+
 

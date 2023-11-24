@@ -1,129 +1,166 @@
-Return-Path: <dmaengine+bounces-219-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-220-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 093147F7498
-	for <lists+dmaengine@lfdr.de>; Fri, 24 Nov 2023 14:11:27 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8578C7F74AA
+	for <lists+dmaengine@lfdr.de>; Fri, 24 Nov 2023 14:16:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 349471C20AD0
-	for <lists+dmaengine@lfdr.de>; Fri, 24 Nov 2023 13:11:26 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 092F8B20FFB
+	for <lists+dmaengine@lfdr.de>; Fri, 24 Nov 2023 13:16:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D69D286B2;
-	Fri, 24 Nov 2023 13:11:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gwRislTF"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7915017745;
+	Fri, 24 Nov 2023 13:16:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C4AD286B1
-	for <dmaengine@vger.kernel.org>; Fri, 24 Nov 2023 13:11:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82F5EC433C7;
-	Fri, 24 Nov 2023 13:11:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700831482;
-	bh=8mSUBJxI783kfIzyz9GSZzzaCFUJHxcazdbjVcAVjms=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gwRislTFWoUpbIAeSU6Nl6zfJlA2hHazkpMHRWwk9xlfqdBST05qHkygTrB/KdI7r
-	 51xlEdqbDAUWEftLQF/3StrTWDZhEKVJv82hnIxP5ECOZ6MbjW30FiQdz5rmcuhooV
-	 JcWCIGIAAYF1nQp38YEyfqSo4WYAy0WYuKkjCqpwqztZXQ56Iq3aGGmkspuGQyUw90
-	 uYnVOunwL5WwW6/9vu6Y5/ay0WbyuEFXLcftlXOBE3aX7IkFlkwD8DwEUexwQ5d2tE
-	 VPkoeWLgPvjjhBLVXO8SbqczGhAz6cddyHhKytlzsa7TxKJSEVQ7W9Dew31et1jyBq
-	 VN1baeDG7bQfw==
-Date: Fri, 24 Nov 2023 18:41:18 +0530
-From: Vinod Koul <vkoul@kernel.org>
-To: Kaiwei Liu <kaiwei.liu@unisoc.com>
-Cc: Orson Zhai <orsonzhai@gmail.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Chunyan Zhang <zhang.lyra@gmail.com>, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kaiwei liu <liukaiwei086@gmail.com>,
-	Wenming Wu <wenming.wu@unisoc.com>
-Subject: Re: [PATCH 1/2] dmaengine: sprd: delete enable opreation in probe
-Message-ID: <ZWCg9hmfvexyn7xK@matsya>
-References: <20231102121623.31924-1-kaiwei.liu@unisoc.com>
+Received: from mail.pcs.gmbh (mail.pcs.gmbh [89.27.162.52])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BBFCD71;
+	Fri, 24 Nov 2023 05:16:39 -0800 (PST)
+Received: from mail.csna.de (mail.csna.de [89.27.162.50])
+	by mail.pcs.gmbh with ESMTPA
+	; Fri, 24 Nov 2023 14:16:19 +0100
+Received: from EXCHANGE2019.pcs.ditec.de (mail.pcs.com [89.27.162.5])
+	by mail.csna.de with ESMTPSA
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256)
+	; Fri, 24 Nov 2023 14:16:18 +0100
+Received: from EXCHANGE2019.pcs.ditec.de (192.168.8.214) by
+ EXCHANGE2019.pcs.ditec.de (192.168.8.214) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.42; Fri, 24 Nov 2023 14:16:19 +0100
+Received: from lxtpfaff.pcs.ditec.de (192.168.9.96) by
+ EXCHANGE2019.pcs.ditec.de (192.168.8.214) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42
+ via Frontend Transport; Fri, 24 Nov 2023 14:16:19 +0100
+Date: Fri, 24 Nov 2023 14:16:19 +0100
+From: Thomas Pfaff <tpfaff@pcs.com>
+To: Vinod Koul <vkoul@kernel.org>
+CC: <ludovic.desroches@microchip.com>, <tudor.ambarus@microchip.com>,
+	<nicolas.ferre@microchip.com>, <linux-arm-kernel@lists.infradead.org>,
+	<dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC 1/2 stable-6.1] dmaengine: at_hdmac: get next dma
+ transfer from the right list
+In-Reply-To: <ZWCcvK5L9vHwSfb2@matsya>
+Message-ID: <ce621979-8fcc-4f43-9090-74849fb488f3@pcs.com>
+References: <15c92c2f-71e7-f4fd-b90b-412ab53e5a25@pcs.com> <ZWCcvK5L9vHwSfb2@matsya>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231102121623.31924-1-kaiwei.liu@unisoc.com>
+Content-Type: text/plain; charset="US-ASCII"
+X-KSE-ServerInfo: EXCHANGE2019.pcs.ditec.de, 9
+X-KSE-AntiSpam-Interceptor-Info: white sender email list
+X-KSE-AttachmentFiltering-Interceptor-Info: protection disabled
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 24.11.2023 11:04:00
+X-KSE-BulkMessagesFiltering-Scan-Result: protection disabled
 
-On 02-11-23, 20:16, Kaiwei Liu wrote:
-> From: "kaiwei.liu" <kaiwei.liu@unisoc.com>
 
-Typo is subject line
+Thank you for your answer.
 
+I was marking the patches as RFC and for stable 6.1 only.
+Between 6.1 and mainline, at_hdmac was ported to use virt-dma, there is 
+no possibility for my patches to go to mainline and being backported.
+Most likely they are no longer needed in recent kernels.
+
+Kind regards,
+Thomas
+
+On Fri, 24 Nov 2023, Vinod Koul wrote:
+
+> On 14-11-23, 13:22, Thomas Pfaff wrote:
+> > From: Thomas Pfaff <tpfaff@pcs.com>
+> > 
+> > In kernel 6.1, atc_advance_work and atc_handle_error are checking for the 
+> > next dma transfer inside active list, but the descriptor is taken from the 
+> > queue instead.
 > 
-> In the probe of dma, it will allocate device memory and do some
-> initalization settings. All operations are only at the software
-> level and don't need the DMA hardware power on. It doesn't need
-> to resume the device and set the device active as well. here
-> delete unnecessary operation.
-
-Don't you need to read or write to the device? Without enable that wont
-work right?
-
-Lastly patches appear disjoint, pls thread them properly
-
+> Sorry that is not how this works. Please send the patch for mainline and
+> add a stable tag to the patches. They will be backported to stable
+> kernels
 > 
-> Signed-off-by: kaiwei.liu <kaiwei.liu@unisoc.com>
-> ---
->  drivers/dma/sprd-dma.c | 19 ++-----------------
->  1 file changed, 2 insertions(+), 17 deletions(-)
+> Also, your patch threading is broken, they appear disjoint and not as a
+> series
 > 
-> diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
-> index 08fcf1ec368c..8ab5a9082fc5 100644
-> --- a/drivers/dma/sprd-dma.c
-> +++ b/drivers/dma/sprd-dma.c
-> @@ -1203,21 +1203,11 @@ static int sprd_dma_probe(struct platform_device *pdev)
->  	}
->  
->  	platform_set_drvdata(pdev, sdev);
-> -	ret = sprd_dma_enable(sdev);
-> -	if (ret)
-> -		return ret;
-> -
-> -	pm_runtime_set_active(&pdev->dev);
-> -	pm_runtime_enable(&pdev->dev);
-> -
-> -	ret = pm_runtime_get_sync(&pdev->dev);
-> -	if (ret < 0)
-> -		goto err_rpm;
->  
->  	ret = dma_async_device_register(&sdev->dma_dev);
->  	if (ret < 0) {
->  		dev_err(&pdev->dev, "register dma device failed:%d\n", ret);
-> -		goto err_register;
-> +		return ret;
->  	}
->  
->  	sprd_dma_info.dma_cap = sdev->dma_dev.cap_mask;
-> @@ -1226,16 +1216,11 @@ static int sprd_dma_probe(struct platform_device *pdev)
->  	if (ret)
->  		goto err_of_register;
->  
-> -	pm_runtime_put(&pdev->dev);
-> +	pm_runtime_enable(&pdev->dev);
->  	return 0;
->  
->  err_of_register:
->  	dma_async_device_unregister(&sdev->dma_dev);
-> -err_register:
-> -	pm_runtime_put_noidle(&pdev->dev);
-> -	pm_runtime_disable(&pdev->dev);
-> -err_rpm:
-> -	sprd_dma_disable(sdev);
->  	return ret;
->  }
->  
+> Thanks
+> 
+> > 
+> > Signed-off-by: Thomas Pfaff <tpfaff@pcs.com>
+> > ---
+> > diff --git a/drivers/dma/at_hdmac.c b/drivers/dma/at_hdmac.c
+> > index 858bd64f1313..68c1bfbefc5c 100644
+> > --- a/drivers/dma/at_hdmac.c
+> > +++ b/drivers/dma/at_hdmac.c
+> > @@ -490,6 +490,27 @@ atc_chain_complete(struct at_dma_chan *atchan, struct at_desc *desc)
+> >  	}
+> >  }
+> >  
+> > +/**
+> > + * atc_start_next - start next pending transaction if any
+> > + * @atchan: channel where the transaction ended
+> > + *
+> > + * Called with atchan->lock held
+> > + */
+> > +static void atc_start_next(struct at_dma_chan *atchan)
+> > +{
+> > +	struct at_desc *desc = NULL;
+> > +
+> > +	if (!list_empty(&atchan->active_list))
+> > +		desc = atc_first_active(atchan);
+> > +	else if (!list_empty(&atchan->queue)) {
+> > +		desc = atc_first_queued(atchan);
+> > +		list_move_tail(&desc->desc_node, &atchan->active_list);
+> > +	}
+> > +
+> > +	if (desc)
+> > +		atc_dostart(atchan, desc);
+> > +}
+> > +
+> >  /**
+> >   * atc_advance_work - at the end of a transaction, move forward
+> >   * @atchan: channel where the transaction ended
+> > @@ -513,11 +534,7 @@ static void atc_advance_work(struct at_dma_chan *atchan)
+> >  
+> >  	/* advance work */
+> >  	spin_lock_irqsave(&atchan->lock, flags);
+> > -	if (!list_empty(&atchan->active_list)) {
+> > -		desc = atc_first_queued(atchan);
+> > -		list_move_tail(&desc->desc_node, &atchan->active_list);
+> > -		atc_dostart(atchan, desc);
+> > -	}
+> > +	atc_start_next(atchan);
+> >  	spin_unlock_irqrestore(&atchan->lock, flags);
+> >  }
+> >  
+> > @@ -529,7 +546,6 @@ static void atc_advance_work(struct at_dma_chan *atchan)
+> >  static void atc_handle_error(struct at_dma_chan *atchan)
+> >  {
+> >  	struct at_desc *bad_desc;
+> > -	struct at_desc *desc;
+> >  	struct at_desc *child;
+> >  	unsigned long flags;
+> >  
+> > @@ -543,11 +559,7 @@ static void atc_handle_error(struct at_dma_chan *atchan)
+> >  	list_del_init(&bad_desc->desc_node);
+> >  
+> >  	/* Try to restart the controller */
+> > -	if (!list_empty(&atchan->active_list)) {
+> > -		desc = atc_first_queued(atchan);
+> > -		list_move_tail(&desc->desc_node, &atchan->active_list);
+> > -		atc_dostart(atchan, desc);
+> > -	}
+> > +	atc_start_next(atchan);
+> >  
+> >  	/*
+> >  	 * KERN_CRITICAL may seem harsh, but since this only happens
+> > 
+> 
 > -- 
-> 2.17.1
+> ~Vinod
+> 
+> 
 
--- 
-~Vinod
+
 

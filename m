@@ -1,131 +1,138 @@
-Return-Path: <dmaengine+bounces-202-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-203-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 14BAA7F6B85
-	for <lists+dmaengine@lfdr.de>; Fri, 24 Nov 2023 05:58:18 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 839C17F6DD3
+	for <lists+dmaengine@lfdr.de>; Fri, 24 Nov 2023 09:15:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C217B28163C
-	for <lists+dmaengine@lfdr.de>; Fri, 24 Nov 2023 04:58:16 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 07A56B20A1F
+	for <lists+dmaengine@lfdr.de>; Fri, 24 Nov 2023 08:15:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48E0546A8;
-	Fri, 24 Nov 2023 04:58:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8FE29464;
+	Fri, 24 Nov 2023 08:15:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oEJWSGTf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LbHb21R8"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AAC8D67;
-	Thu, 23 Nov 2023 20:58:12 -0800 (PST)
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 3AO4w6dK043238;
-	Thu, 23 Nov 2023 22:58:06 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1700801886;
-	bh=Q1gyWSbxTBCR6bJ5T/9ZpdTilTyPX7BqQhvvGnSbOb4=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=oEJWSGTf2FUhC/x6FubTI7xI72Udx/1rWalhkg5rsLoPb0bo499WD12iRhhg5qCPm
-	 Ye83/7gUMIs9Yq3FPJ0hJA8kDg6aKQpOx9ldoSRHQjP/Flt5NSEk0Axe3T4AObMhBI
-	 jP7a5cX+dkj0wLlXSTve+1VYrz2eV8IBT/pV2wmQ=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 3AO4w60Q081147
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 23 Nov 2023 22:58:06 -0600
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 23
- Nov 2023 22:58:06 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 23 Nov 2023 22:58:06 -0600
-Received: from uda0132425.dhcp.ti.com (ileaxei01-snat2.itg.ti.com [10.180.69.6])
-	by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 3AO4vo8j004756;
-	Thu, 23 Nov 2023 22:58:03 -0600
-From: Vignesh Raghavendra <vigneshr@ti.com>
-To: Peter Ujfalusi <peter.ujfalusi@gmail.com>, Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH v3 4/4] dt-bindings: dma: ti: k3-udma: Describe cfg register regions
-Date: Fri, 24 Nov 2023 10:27:22 +0530
-Message-ID: <20231124045722.191817-5-vigneshr@ti.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231124045722.191817-1-vigneshr@ti.com>
-References: <20231124045722.191817-1-vigneshr@ti.com>
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EF2C1703
+	for <dmaengine@vger.kernel.org>; Fri, 24 Nov 2023 00:15:32 -0800 (PST)
+Received: by mail-ej1-x62a.google.com with SMTP id a640c23a62f3a-a02d12a2444so232557566b.3
+        for <dmaengine@vger.kernel.org>; Fri, 24 Nov 2023 00:15:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1700813730; x=1701418530; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=f8eC04cTsoeDgEjV4igr1B0hZNEeJHAsb9D/Lg7TaQM=;
+        b=LbHb21R8Z1M0Zf4/kiYe7lCUj2t2dQq2B4LNd66ma9T+v6AVDq+pHGsb8ooRKdCt3/
+         IjBat8jrDcPamJgv4rGRFClvRb5CcgxTSY5sOj9LOTV2CPEX6FwmN2YvAb792qoCTzNd
+         6FvkaN4SNFiAsrwLSwGwC9JauwP9CSUr/XrOxuwswDWEUNakE1oHdj8NsXMlf+1lV1Pa
+         fHpG3LvYYK3cgXQX9lqaBoY744vQ+anGN+GMPtIecuylthOb901iw0LmMejHngkKI2PB
+         4kle7PMcZtuI6hQ6g0hqhLuqgfHZLQD7BVLZaScY9Br8vVbnHy8dGMybwTuXy9mqzv+1
+         DGaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700813730; x=1701418530;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=f8eC04cTsoeDgEjV4igr1B0hZNEeJHAsb9D/Lg7TaQM=;
+        b=EVLTCumWTG+ZQi9jb81Uc0ao0A8LEEZh2oyTMAcj1dCUG370uebImKmsgpfQ616Dq4
+         CvrOX8jR9mxVDr0h1mNbWkgurRGfECj038SfQHgv8iwPuMi0XfPfNi4B1AzJfrdgJCuH
+         HrS25SvWHTZ/kjndkvROjPGx6WSs7RazpsJ4KlY29MdCXgkGnZA/HPBBGJankEna2rGS
+         EQSgZnneivLax9Y3Uv83uQWGI6qWqr7ATG4aK/Zh6QAf6One9Gi/zKsmmXwTX1qszdDP
+         KeabIqoNKUpJ1YdapMd1ly9QQKkTjLY1MVyFUIuRXwE2IQruo7LhyIYEw3EDh5HmirNa
+         aL1A==
+X-Gm-Message-State: AOJu0Ywiy0v9KEUALDTycbX2+ZwamgwzYB3WA/Z8U+0/7VZ28o6HKEJI
+	m+iVLAe2sQjhWJ2B93dYS9bs6g==
+X-Google-Smtp-Source: AGHT+IETDLKBOCl2urHa/cDw7dYAvuOpux+rqajafYGrRjZ2ktUBawGw4Dj4V5ZfKbB0azg9RuxcFg==
+X-Received: by 2002:a17:906:c288:b0:9ff:3b31:bb6 with SMTP id r8-20020a170906c28800b009ff3b310bb6mr1316598ejz.62.1700813730562;
+        Fri, 24 Nov 2023 00:15:30 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.218.100])
+        by smtp.gmail.com with ESMTPSA id x22-20020a1709060a5600b009c3827134e5sm1749428ejf.117.2023.11.24.00.15.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Nov 2023 00:15:29 -0800 (PST)
+Message-ID: <f241a042-4bff-42e4-98ed-fcb3eb6aa663@linaro.org>
+Date: Fri, 24 Nov 2023 09:15:27 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/4] dt-bindings: dma: ti: k3-*: Add descriptions for
+ register regions
+Content-Language: en-US
+To: Vignesh Raghavendra <vigneshr@ti.com>,
+ Peter Ujfalusi <peter.ujfalusi@gmail.com>, Vinod Koul <vkoul@kernel.org>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20231124045722.191817-1-vigneshr@ti.com>
+ <20231124045722.191817-2-vigneshr@ti.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20231124045722.191817-2-vigneshr@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Unified DMA (UDMA) module on K3 SoCs have TX and RX channel cfg and RX
-flow cfg register regions which are usually configured by a Device
-Management firmware. But certain entities such as bootloader (like
-U-Boot) may have to access them directly. Describe this region in the
-binding documentation for completeness of module description.
+On 24/11/2023 05:57, Vignesh Raghavendra wrote:
+> In preparation for introducing more register regions, add description
+> for existing register regions so that its easier to map reg-names to
+> that of SoC Documentations/TRMs.
+> 
+> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
 
-Keep the binding compatible with existing DTS files by requiring first
-four regions to be present at least.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
----
- .../devicetree/bindings/dma/ti/k3-udma.yaml       | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/dma/ti/k3-udma.yaml b/Documentation/devicetree/bindings/dma/ti/k3-udma.yaml
-index ded588bd079a..b18cf2bfdb5b 100644
---- a/Documentation/devicetree/bindings/dma/ti/k3-udma.yaml
-+++ b/Documentation/devicetree/bindings/dma/ti/k3-udma.yaml
-@@ -69,16 +69,24 @@ properties:
-       - ti,j721e-navss-mcu-udmap
- 
-   reg:
-+    minItems: 3
-     items:
-       - description: UDMA-P Control /Status Registers region
-       - description: RX Channel Realtime Registers region
-       - description: TX Channel Realtime Registers region
-+      - description: TX Configuration Registers region
-+      - description: RX Configuration Registers region
-+      - description: RX Flow Configuration Registers region
- 
-   reg-names:
-+    minItems: 3
-     items:
-       - const: gcfg
-       - const: rchanrt
-       - const: tchanrt
-+      - const: tchan
-+      - const: rchan
-+      - const: rflow
- 
-   msi-parent: true
- 
-@@ -161,8 +169,11 @@ examples:
-                 compatible = "ti,am654-navss-main-udmap";
-                 reg = <0x0 0x31150000 0x0 0x100>,
-                       <0x0 0x34000000 0x0 0x100000>,
--                      <0x0 0x35000000 0x0 0x100000>;
--                reg-names = "gcfg", "rchanrt", "tchanrt";
-+                      <0x0 0x35000000 0x0 0x100000>,
-+                      <0x0 0x30b00000 0x0 0x20000>,
-+                      <0x0 0x30c00000 0x0 0x8000>,
-+                      <0x0 0x30d00000 0x0 0x4000>;
-+                reg-names = "gcfg", "rchanrt", "tchanrt", "tchan", "rchan", "rflow";
-                 #dma-cells = <1>;
- 
-                 ti,ringacc = <&ringacc>;
--- 
-2.43.0
+Best regards,
+Krzysztof
 
 

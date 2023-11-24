@@ -1,139 +1,159 @@
-Return-Path: <dmaengine+bounces-214-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-215-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8DAA07F7143
-	for <lists+dmaengine@lfdr.de>; Fri, 24 Nov 2023 11:19:05 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C1F2A7F7370
+	for <lists+dmaengine@lfdr.de>; Fri, 24 Nov 2023 13:08:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 418BB1F20F31
-	for <lists+dmaengine@lfdr.de>; Fri, 24 Nov 2023 10:19:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F333E1C20D80
+	for <lists+dmaengine@lfdr.de>; Fri, 24 Nov 2023 12:08:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 082E3199B3;
-	Fri, 24 Nov 2023 10:19:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8531C23763;
+	Fri, 24 Nov 2023 12:08:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KnlpQTpU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BDV2VTHm"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3239BC
-	for <dmaengine@vger.kernel.org>; Fri, 24 Nov 2023 02:18:56 -0800 (PST)
-Received: by mail-ej1-x62b.google.com with SMTP id a640c23a62f3a-a0064353af8so545357266b.0
-        for <dmaengine@vger.kernel.org>; Fri, 24 Nov 2023 02:18:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1700821135; x=1701425935; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=sVfLAD0SAh88quit8wvboqEwon0PkYr8hAnaxk4593s=;
-        b=KnlpQTpUQIr/vSDWLLHHR8+l8jYPl6txde0ykrVenqrbs+yns3Pcy5qtRRezlChqIq
-         s1dtOIfZsEBS3keQGOIt2/PJVYU3VxsKUbYwGFEgL/SnUku7Fl+21YrccsgaP0R+qbUd
-         pdq7kyMX9h3UZa2LE+Tt/AQ7qLsqmUmP4Su7f81dyA/hhtXW9SRo8/TgsD911WJ+5T2w
-         71Ob5l6ivfAQrNIMbk/kf/0GFUk+uXRbzFZZG1VEYCwPVTGLtR7zJNEFEFKHjiVTaVJz
-         Kr5W+NrY5ciFsWQx+kC+2MdCUPj5SG/39xgRVhDKx2lbvEepk7DypsWhbFEd8VIJI/3+
-         E99A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700821135; x=1701425935;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sVfLAD0SAh88quit8wvboqEwon0PkYr8hAnaxk4593s=;
-        b=qZFpD5bJer/lYxWi6q2Owzbs8nOxlIbt8fyFvP3LI4Wcib2uJvFn18oujgxQxV5i4K
-         GlXOHo1P5Oj7AOvfSjIwc3cNS6FmgAPBpgHyts3AlN8bSO716Sy/fPj7KBGuEq9ER2O7
-         P+V00XmzLo2pI8sVdADi0tuKXAUO5SqU6P/cMw1/ACta7h1CotLsh3++SnHqHQKxSa/A
-         9L0cvQiNjFjOc5Dcf+lv/6nne7Muu0QXfV+nRV1UlZUyShO8Z7WA2k7uzoBH7RfYqY41
-         7DNp7vwXHE8vUFxeyZiEm142N1yUml5yrLW0j8WRErJ9v1Slw5xuLDV00FVZhJd5PqF4
-         /YmQ==
-X-Gm-Message-State: AOJu0YzHwQbDNPZIhLj4a5QB07ubg5NO4HHAkLinSniN+BIMQVxBR2yq
-	6Xcm5/2iKh7PGVfVsYl6qe6vvQ==
-X-Google-Smtp-Source: AGHT+IF34FPSc1XRNxx6ZRXQXY5VaoC/3epqzBdA2qB7Z+ywKzZaJ4WmaSuOnoRrKrocC/pjzpyGxw==
-X-Received: by 2002:a17:907:e92:b0:9a5:dc2b:6a5 with SMTP id ho18-20020a1709070e9200b009a5dc2b06a5mr5791235ejc.35.1700821135184;
-        Fri, 24 Nov 2023 02:18:55 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.218.100])
-        by smtp.gmail.com with ESMTPSA id e27-20020a1709062c1b00b009fda627abd9sm1870560ejh.79.2023.11.24.02.18.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Nov 2023 02:18:54 -0800 (PST)
-Message-ID: <7d87a9f0-d5e8-4896-9b5f-f178dba92b56@linaro.org>
-Date: Fri, 24 Nov 2023 11:18:53 +0100
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65DF11D68D;
+	Fri, 24 Nov 2023 12:08:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22583C433CC;
+	Fri, 24 Nov 2023 12:08:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1700827727;
+	bh=GmiTsGtZkHaCeXTzHWMEwflW5T9uYFI6FuYPKmtSRmE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BDV2VTHm7KKeLd+Vmf8zPIy9vQN6GsySYSxO9z9iDtyDh9QNRTyjI7lq+8w/AhcFH
+	 h3MtG3dVtx0/32c4kXeUs8mYqujSf6DhPwt6ewwbT48bYifcoc04yqMxFA4AzkEajw
+	 BXrlGqBu9EvIw2thyrABW9n8YByTmZ8Tt7rOF1xlAEEIaQfopXAf8mCxGmyEOiN6pa
+	 S2B8WxTF9oUU/lc7LS2/fZz7Wx3Ef1CrGEAK1sZOoAvjry96M6WLR+3/zRi3zlAtWS
+	 InXn9hsgZ8k6bqNR5Za3nCt7eT5sp9XDfBU/ZIDhhGkbmFDuI+tNul1HjXajqOMoux
+	 bEYng6buVCr4A==
+Date: Fri, 24 Nov 2023 17:38:43 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: shravan chippa <shravan.chippa@microchip.com>
+Cc: green.wan@sifive.com, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, palmer@dabbelt.com,
+	paul.walmsley@sifive.com, conor+dt@kernel.org,
+	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	nagasuresh.relli@microchip.com, praveen.kumar@microchip.com
+Subject: Re: [PATCH v4 1/4] dmaengine: sf-pdma: Support
+ of_dma_controller_register()
+Message-ID: <ZWCSS+UXpRO+4y9h@matsya>
+References: <20231031052753.3430169-1-shravan.chippa@microchip.com>
+ <20231031052753.3430169-2-shravan.chippa@microchip.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 5/5] dt-bindings: interrupt-controller: qcom,pdc:
- document pdc on X1E80100
-Content-Language: en-US
-To: Sibi Sankar <quic_sibis@quicinc.com>, andersson@kernel.org,
- konrad.dybcio@linaro.org, will@kernel.org, robin.murphy@arm.com,
- joro@8bytes.org, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
- conor+dt@kernel.org
-Cc: agross@kernel.org, vkoul@kernel.org, quic_gurus@quicinc.com,
- quic_rjendra@quicinc.com, abel.vesa@linaro.org,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
- iommu@lists.linux.dev, quic_tsoni@quicinc.com, neil.armstrong@linaro.org
-References: <20231124100608.29964-1-quic_sibis@quicinc.com>
- <20231124100608.29964-6-quic_sibis@quicinc.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20231124100608.29964-6-quic_sibis@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231031052753.3430169-2-shravan.chippa@microchip.com>
 
-On 24/11/2023 11:06, Sibi Sankar wrote:
-> The X1E80100 SoC includes a PDC, document it.
+On 31-10-23, 10:57, shravan chippa wrote:
+> From: Shravan Chippa <shravan.chippa@microchip.com>
 > 
-> Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
+> Update sf-pdma driver to adopt generic DMA device tree bindings.
+> It calls of_dma_controller_register() with sf-pdma specific
+> of_dma_xlate to get the generic DMA device tree helper support
+> and the DMA clients can look up the sf-pdma controller using
+> standard APIs.
+> 
+> Signed-off-by: Shravan Chippa <shravan.chippa@microchip.com>
 > ---
+>  drivers/dma/sf-pdma/sf-pdma.c | 44 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+> 
+> diff --git a/drivers/dma/sf-pdma/sf-pdma.c b/drivers/dma/sf-pdma/sf-pdma.c
+> index d1c6956af452..4c456bdef882 100644
+> --- a/drivers/dma/sf-pdma/sf-pdma.c
+> +++ b/drivers/dma/sf-pdma/sf-pdma.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/dma-mapping.h>
+>  #include <linux/of.h>
+> +#include <linux/of_dma.h>
+>  #include <linux/slab.h>
+>  
+>  #include "sf-pdma.h"
+> @@ -490,6 +491,33 @@ static void sf_pdma_setup_chans(struct sf_pdma *pdma)
+>  	}
+>  }
+>  
+> +static struct dma_chan *sf_pdma_of_xlate(struct of_phandle_args *dma_spec,
+> +					 struct of_dma *ofdma)
+> +{
+> +	struct sf_pdma *pdma = ofdma->of_dma_data;
+> +	struct device *dev = pdma->dma_dev.dev;
+> +	struct sf_pdma_chan *chan;
+> +	struct dma_chan *c;
+> +	u32 channel_id;
+> +
+> +	if (dma_spec->args_count != 1) {
+> +		dev_err(dev, "Bad number of cells\n");
+> +		return NULL;
+> +	}
+> +
+> +	channel_id = dma_spec->args[0];
+> +
+> +	chan = &pdma->chans[channel_id];
+> +
+> +	c = dma_get_slave_channel(&chan->vchan.chan);
+> +	if (!c) {
+> +		dev_err(dev, "No more channels available\n");
+> +		return NULL;
+> +	}
+> +
+> +	return c;
+> +}
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+This seems could be replaced by of_dma_xlate_by_chan_id() can you tell
+me why that cant be used?
 
-Best regards,
-Krzysztof
+> +
+>  static int sf_pdma_probe(struct platform_device *pdev)
+>  {
+>  	struct sf_pdma *pdma;
+> @@ -563,7 +591,20 @@ static int sf_pdma_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> +	ret = of_dma_controller_register(pdev->dev.of_node,
+> +					 sf_pdma_of_xlate, pdma);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev,
+> +			"Can't register SiFive Platform OF_DMA. (%d)\n", ret);
+> +		goto err_unregister;
+> +	}
+> +
+>  	return 0;
+> +
+> +err_unregister:
+> +	dma_async_device_unregister(&pdma->dma_dev);
+> +
+> +	return ret;
+>  }
+>  
+>  static int sf_pdma_remove(struct platform_device *pdev)
+> @@ -583,6 +624,9 @@ static int sf_pdma_remove(struct platform_device *pdev)
+>  		tasklet_kill(&ch->err_tasklet);
+>  	}
+>  
+> +	if (pdev->dev.of_node)
+> +		of_dma_controller_free(pdev->dev.of_node);
+> +
+>  	dma_async_device_unregister(&pdma->dma_dev);
+>  
+>  	return 0;
+> -- 
+> 2.34.1
 
+-- 
+~Vinod
 

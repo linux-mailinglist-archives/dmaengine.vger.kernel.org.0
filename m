@@ -1,48 +1,48 @@
-Return-Path: <dmaengine+bounces-199-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-200-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9374D7F6B7F
-	for <lists+dmaengine@lfdr.de>; Fri, 24 Nov 2023 05:58:12 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2637F7F6B81
+	for <lists+dmaengine@lfdr.de>; Fri, 24 Nov 2023 05:58:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 34F552816BC
-	for <lists+dmaengine@lfdr.de>; Fri, 24 Nov 2023 04:58:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D652A2814E6
+	for <lists+dmaengine@lfdr.de>; Fri, 24 Nov 2023 04:58:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79D143D6E;
-	Fri, 24 Nov 2023 04:58:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51933441A;
+	Fri, 24 Nov 2023 04:58:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UECTTwLZ"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gmaFe0vk"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47B2CD6E;
-	Thu, 23 Nov 2023 20:58:04 -0800 (PST)
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 3AO4vvpS043202;
-	Thu, 23 Nov 2023 22:57:57 -0600
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 776CED6F;
+	Thu, 23 Nov 2023 20:58:06 -0800 (PST)
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 3AO4w08f043213;
+	Thu, 23 Nov 2023 22:58:00 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1700801877;
-	bh=HjBkXljfWp+92EwJDlN9yJARdABEr4KgfTuFDro3yCM=;
+	s=ti-com-17Q1; t=1700801880;
+	bh=Nr4yvQ63vzpR8jqHfgCSy9Z4F3QZkyPd0SgK2o1Puek=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=UECTTwLZQJBtqdkxcku7VjuIAnrjR/CnNySAFURiGUvs/9Z7Thl7pyZFtivXWUb98
-	 H4lKhgYy8mv/sD8lMPuAHlqF3NINsbh/7zegDWgoV4su+iaTvkevcB48KIDZrnyll9
-	 TYCQcIq7hoEnOJQCWay0SMGunw82EPfJglMlRHBQ=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 3AO4vv5f076370
+	b=gmaFe0vkxa1e98/bnamHh/Mf3otRudVdOxqh89ystSFq0MIb080N6ji9Dw1AoSVNJ
+	 jwl8Ol32lS3W3YjJZUFTGAHMNIyMsaUBgGFg1HLkPrA8Ql5OsodY3FCuDUCux2INhI
+	 HTl/6Jup/xBjjZs6d+i74HsBr+G3449DctnXZ//Y=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 3AO4w0Ps080884
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 23 Nov 2023 22:57:57 -0600
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+	Thu, 23 Nov 2023 22:58:00 -0600
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 23
- Nov 2023 22:57:57 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ Nov 2023 22:58:00 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 23 Nov 2023 22:57:57 -0600
+ Frontend Transport; Thu, 23 Nov 2023 22:58:00 -0600
 Received: from uda0132425.dhcp.ti.com (ileaxei01-snat2.itg.ti.com [10.180.69.6])
-	by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 3AO4vo8g004756;
-	Thu, 23 Nov 2023 22:57:54 -0600
+	by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 3AO4vo8h004756;
+	Thu, 23 Nov 2023 22:57:57 -0600
 From: Vignesh Raghavendra <vigneshr@ti.com>
 To: Peter Ujfalusi <peter.ujfalusi@gmail.com>, Vinod Koul <vkoul@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -52,9 +52,9 @@ To: Peter Ujfalusi <peter.ujfalusi@gmail.com>, Vinod Koul <vkoul@kernel.org>,
 CC: <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>,
         <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH v3 1/4] dt-bindings: dma: ti: k3-*: Add descriptions for register regions
-Date: Fri, 24 Nov 2023 10:27:19 +0530
-Message-ID: <20231124045722.191817-2-vigneshr@ti.com>
+Subject: [PATCH v3 2/4] dt-bindings: dma: ti: k3-bcdma: Describe cfg register regions
+Date: Fri, 24 Nov 2023 10:27:20 +0530
+Message-ID: <20231124045722.191817-3-vigneshr@ti.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20231124045722.191817-1-vigneshr@ti.com>
 References: <20231124045722.191817-1-vigneshr@ti.com>
@@ -68,93 +68,85 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-In preparation for introducing more register regions, add description
-for existing register regions so that its easier to map reg-names to
-that of SoC Documentations/TRMs.
+Block copy DMA(BCDMA)module on K3 SoCs have ring, BCHAN, TX and RX
+channel cfg register regions which are usually configured by a Device
+Management firmware. But certain entities such as bootloader (like
+U-Boot) may have to access them directly. Describe this region in the
+binding documentation for completeness of module description.
+
+Keep the binding compatible with existing DTS files by requiring first
+five regions to be present at least.
 
 Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
 ---
- .../devicetree/bindings/dma/ti/k3-bcdma.yaml   | 18 +++++++++++++++---
- .../devicetree/bindings/dma/ti/k3-pktdma.yaml  |  6 +++++-
- .../devicetree/bindings/dma/ti/k3-udma.yaml    |  5 ++++-
- 3 files changed, 24 insertions(+), 5 deletions(-)
+ .../devicetree/bindings/dma/ti/k3-bcdma.yaml  | 23 +++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml b/Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml
-index 4ca300a42a99..11727af9df73 100644
+index 11727af9df73..27b8e1636560 100644
 --- a/Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml
 +++ b/Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml
-@@ -141,7 +141,10 @@ allOf:
-         ti,sci-rm-range-tchan: false
+@@ -37,11 +37,11 @@ properties:
  
-         reg:
--          maxItems: 3
-+          items:
-+            - description: BCDMA Control /Status Registers region
-+            - description: RX Channel Realtime Registers region
-+            - description: Ring Realtime Registers region
+   reg:
+     minItems: 3
+-    maxItems: 5
++    maxItems: 9
  
-         reg-names:
-           items:
-@@ -160,7 +163,12 @@ allOf:
+   reg-names:
+     minItems: 3
+-    maxItems: 5
++    maxItems: 9
+ 
+   "#dma-cells":
+     const: 3
+@@ -163,20 +163,30 @@ allOf:
      then:
        properties:
          reg:
--          minItems: 5
-+          items:
-+            - description: BCDMA Control /Status Registers region
-+            - description: Block Copy Channel Realtime Registers region
-+            - description: RX Channel Realtime Registers region
-+            - description: TX Channel Realtime Registers region
-+            - description: Ring Realtime Registers region
++          minItems: 5
+           items:
+             - description: BCDMA Control /Status Registers region
+             - description: Block Copy Channel Realtime Registers region
+             - description: RX Channel Realtime Registers region
+             - description: TX Channel Realtime Registers region
+             - description: Ring Realtime Registers region
++            - description: Ring Configuration Registers region
++            - description: TX Channel Configuration Registers region
++            - description: RX Channel Configuration Registers region
++            - description: Block Copy Channel Configuration Registers region
  
          reg-names:
++          minItems: 5
            items:
-@@ -184,7 +192,11 @@ allOf:
-         ti,sci-rm-range-bchan: false
+             - const: gcfg
+             - const: bchanrt
+             - const: rchanrt
+             - const: tchanrt
+             - const: ringrt
++            - const: ring
++            - const: tchan
++            - const: rchan
++            - const: bchan
  
-         reg:
--          maxItems: 4
-+          items:
-+            - description: BCDMA Control /Status Registers region
-+            - description: RX Channel Realtime Registers region
-+            - description: TX Channel Realtime Registers region
-+            - description: Ring Realtime Registers region
+       required:
+         - ti,sci-rm-range-bchan
+@@ -232,8 +242,13 @@ examples:
+                       <0x0 0x4c000000 0x0 0x20000>,
+                       <0x0 0x4a820000 0x0 0x20000>,
+                       <0x0 0x4aa40000 0x0 0x20000>,
+-                      <0x0 0x4bc00000 0x0 0x100000>;
+-                reg-names = "gcfg", "bchanrt", "rchanrt", "tchanrt", "ringrt";
++                      <0x0 0x4bc00000 0x0 0x100000>,
++                      <0x0 0x48600000 0x0 0x8000>,
++                      <0x0 0x484a4000 0x0 0x2000>,
++                      <0x0 0x484c2000 0x0 0x2000>,
++                      <0x0 0x48420000 0x0 0x2000>;
++                reg-names = "gcfg", "bchanrt", "rchanrt", "tchanrt", "ringrt",
++                            "ring", "tchan", "rchan", "bchan";
+                 msi-parent = <&inta_main_dmss>;
+                 #dma-cells = <3>;
  
-         reg-names:
-           items:
-diff --git a/Documentation/devicetree/bindings/dma/ti/k3-pktdma.yaml b/Documentation/devicetree/bindings/dma/ti/k3-pktdma.yaml
-index a69f62f854d8..3580b08f65c6 100644
---- a/Documentation/devicetree/bindings/dma/ti/k3-pktdma.yaml
-+++ b/Documentation/devicetree/bindings/dma/ti/k3-pktdma.yaml
-@@ -45,7 +45,11 @@ properties:
-       The second cell is the ASEL value for the channel
- 
-   reg:
--    maxItems: 4
-+    items:
-+      - description: Packet DMA Control /Status Registers region
-+      - description: RX Channel Realtime Registers region
-+      - description: TX Channel Realtime Registers region
-+      - description: Ring Realtime Registers region
- 
-   reg-names:
-     items:
-diff --git a/Documentation/devicetree/bindings/dma/ti/k3-udma.yaml b/Documentation/devicetree/bindings/dma/ti/k3-udma.yaml
-index 22f6c5e2f7f4..ded588bd079a 100644
---- a/Documentation/devicetree/bindings/dma/ti/k3-udma.yaml
-+++ b/Documentation/devicetree/bindings/dma/ti/k3-udma.yaml
-@@ -69,7 +69,10 @@ properties:
-       - ti,j721e-navss-mcu-udmap
- 
-   reg:
--    maxItems: 3
-+    items:
-+      - description: UDMA-P Control /Status Registers region
-+      - description: RX Channel Realtime Registers region
-+      - description: TX Channel Realtime Registers region
- 
-   reg-names:
-     items:
 -- 
 2.43.0
 

@@ -1,46 +1,46 @@
-Return-Path: <dmaengine+bounces-249-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-250-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A985D7FAB56
-	for <lists+dmaengine@lfdr.de>; Mon, 27 Nov 2023 21:27:20 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD5297FAB59
+	for <lists+dmaengine@lfdr.de>; Mon, 27 Nov 2023 21:27:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C31401C20E31
-	for <lists+dmaengine@lfdr.de>; Mon, 27 Nov 2023 20:27:19 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CA6F8B21365
+	for <lists+dmaengine@lfdr.de>; Mon, 27 Nov 2023 20:27:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7A4545C15;
-	Mon, 27 Nov 2023 20:27:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DF6C4642C;
+	Mon, 27 Nov 2023 20:27:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AThFRUDC"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lapHfLT8"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C743D4B;
-	Mon, 27 Nov 2023 12:27:12 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CA36D4D;
+	Mon, 27 Nov 2023 12:27:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701116832; x=1732652832;
+  t=1701116835; x=1732652835;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=buoGPdrkkKx4hhUIceeTcYHbzYQ9xgtGVojseC0ReWs=;
-  b=AThFRUDCMuac86msr1Sx+P8hPr9f6Z7ojv/yRh16/g2UWRX7/Mg8b9RJ
-   s0/Lh1KZcFTooMOsTJfBZepeBiZYrrq62Vb6YRHcEjaUXUxm2eK72+QD3
-   OrS+DDRhv8Q4UGpiuIjjl94GclnohET7AEc+kWoFl6/fixBbZ+XsVTUj2
-   t+QE7yfRnePWMz21HSzQOmzhZF6ZHGd11QdcQeh9cuhV8ZgJ3bqKFf1Wt
-   pdGswO3c2/piM2BpTECd/y7cGzovQmdow4NfpdsRndXG9gN5KTUHyZ3WR
-   6yh8fYGA2Bo565dS7rOTf5s6J0ZORzmZE5lOhvnqllX+TlorboH/u5r9i
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10907"; a="457115462"
+  bh=g0CJ08TTgyAzZEVGqXStJEZZ7q/F/2UL56Fr67YcaEU=;
+  b=lapHfLT8mq4jL1Erv8dvyq08JVf6KWhl642MrYQtAI36x/cahtz3R1Ox
+   rdL08FWFBTh81SU9PSmYC3sNpV2osN6mPVcKTptQq0ilojQAIWTvmxY1C
+   abbhKpfuwpjhZvyWzedhkUXGC4GoUkfeaPc9tc5AZrizCPMT1A27orgc/
+   0ovG40r9Z+6fDNRPMDHZOZOu7oRmfKp92il0xtmQey8/PcmEdxjAtZYte
+   A4tIkThrkqKGLd1mWBnFuJvMRYiaG4mHIBdbluPT/kvo29RVEBlsh72Rz
+   Le46A12QF3WnlOIjhUiTBYImkd+pGcYG5QNuhTj/4geKsGInqmQCDqtmq
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10907"; a="457115477"
 X-IronPort-AV: E=Sophos;i="6.04,231,1695711600"; 
-   d="scan'208";a="457115462"
+   d="scan'208";a="457115477"
 Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2023 12:27:12 -0800
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2023 12:27:14 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.04,231,1695711600"; 
-   d="scan'208";a="16394517"
+   d="scan'208";a="16394520"
 Received: from rpkulapa-mobl.amr.corp.intel.com (HELO tzanussi-mobl1.hsd1.il.comcast.net) ([10.213.183.92])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2023 12:27:11 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2023 12:27:13 -0800
 From: Tom Zanussi <tom.zanussi@linux.intel.com>
 To: herbert@gondor.apana.org.au,
 	davem@davemloft.net,
@@ -57,9 +57,9 @@ Cc: dave.jiang@intel.com,
 	linux-kernel@vger.kernel.org,
 	linux-crypto@vger.kernel.org,
 	dmaengine@vger.kernel.org
-Subject: [PATCH v10 01/14] dmaengine: idxd: add external module driver support for dsa_bus_type
-Date: Mon, 27 Nov 2023 14:26:51 -0600
-Message-Id: <20231127202704.1263376-2-tom.zanussi@linux.intel.com>
+Subject: [PATCH v10 02/14] dmaengine: idxd: Rename drv_enable/disable_wq to idxd_drv_enable/disable_wq, and export
+Date: Mon, 27 Nov 2023 14:26:52 -0600
+Message-Id: <20231127202704.1263376-3-tom.zanussi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231127202704.1263376-1-tom.zanussi@linux.intel.com>
 References: <20231127202704.1263376-1-tom.zanussi@linux.intel.com>
@@ -71,56 +71,132 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Dave Jiang <dave.jiang@intel.com>
+Rename drv_enable_wq and drv_disable_wq to idxd_drv_enable_wq and
+idxd_drv_disable_wq respectively, so that they're no longer too
+generic to be exported.  This also matches existing naming within the
+idxd driver.
 
-Add support to allow an external driver to be registered to the
-dsa_bus_type and also auto-loaded.
+And to allow idxd sub-drivers to enable and disable wqs, export them.
 
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 Reviewed-by: Fenghua Yu <fenghua.yu@intel.com>
-Acked-by: Vinod Koul <vkoul@kernel.org>
 ---
- drivers/dma/idxd/bus.c  | 6 ++++++
- drivers/dma/idxd/idxd.h | 3 +++
- 2 files changed, 9 insertions(+)
+ drivers/dma/idxd/cdev.c   | 6 +++---
+ drivers/dma/idxd/device.c | 6 ++++--
+ drivers/dma/idxd/dma.c    | 6 +++---
+ drivers/dma/idxd/idxd.h   | 4 ++--
+ 4 files changed, 12 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/dma/idxd/bus.c b/drivers/dma/idxd/bus.c
-index 6f84621053c6..0c9e689a2e77 100644
---- a/drivers/dma/idxd/bus.c
-+++ b/drivers/dma/idxd/bus.c
-@@ -67,11 +67,17 @@ static void idxd_config_bus_remove(struct device *dev)
- 	idxd_drv->remove(idxd_dev);
+diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
+index 0423655f5a88..1d918d45d9f6 100644
+--- a/drivers/dma/idxd/cdev.c
++++ b/drivers/dma/idxd/cdev.c
+@@ -550,7 +550,7 @@ static int idxd_user_drv_probe(struct idxd_dev *idxd_dev)
+ 	}
+ 
+ 	wq->type = IDXD_WQT_USER;
+-	rc = drv_enable_wq(wq);
++	rc = idxd_drv_enable_wq(wq);
+ 	if (rc < 0)
+ 		goto err;
+ 
+@@ -565,7 +565,7 @@ static int idxd_user_drv_probe(struct idxd_dev *idxd_dev)
+ 	return 0;
+ 
+ err_cdev:
+-	drv_disable_wq(wq);
++	idxd_drv_disable_wq(wq);
+ err:
+ 	destroy_workqueue(wq->wq);
+ 	wq->type = IDXD_WQT_NONE;
+@@ -580,7 +580,7 @@ static void idxd_user_drv_remove(struct idxd_dev *idxd_dev)
+ 
+ 	mutex_lock(&wq->wq_lock);
+ 	idxd_wq_del_cdev(wq);
+-	drv_disable_wq(wq);
++	idxd_drv_disable_wq(wq);
+ 	wq->type = IDXD_WQT_NONE;
+ 	destroy_workqueue(wq->wq);
+ 	wq->wq = NULL;
+diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+index 8f754f922217..feca8534a1c5 100644
+--- a/drivers/dma/idxd/device.c
++++ b/drivers/dma/idxd/device.c
+@@ -1350,7 +1350,7 @@ int idxd_wq_request_irq(struct idxd_wq *wq)
+ 	return rc;
  }
  
-+static int idxd_bus_uevent(const struct device *dev, struct kobj_uevent_env *env)
-+{
-+	return add_uevent_var(env, "MODALIAS=" IDXD_DEVICES_MODALIAS_FMT, 0);
-+}
-+
- struct bus_type dsa_bus_type = {
- 	.name = "dsa",
- 	.match = idxd_config_bus_match,
- 	.probe = idxd_config_bus_probe,
- 	.remove = idxd_config_bus_remove,
-+	.uevent = idxd_bus_uevent,
- };
- EXPORT_SYMBOL_GPL(dsa_bus_type);
+-int drv_enable_wq(struct idxd_wq *wq)
++int idxd_drv_enable_wq(struct idxd_wq *wq)
+ {
+ 	struct idxd_device *idxd = wq->idxd;
+ 	struct device *dev = &idxd->pdev->dev;
+@@ -1482,8 +1482,9 @@ int drv_enable_wq(struct idxd_wq *wq)
+ err:
+ 	return rc;
+ }
++EXPORT_SYMBOL_NS_GPL(idxd_drv_enable_wq, IDXD);
+ 
+-void drv_disable_wq(struct idxd_wq *wq)
++void idxd_drv_disable_wq(struct idxd_wq *wq)
+ {
+ 	struct idxd_device *idxd = wq->idxd;
+ 	struct device *dev = &idxd->pdev->dev;
+@@ -1503,6 +1504,7 @@ void drv_disable_wq(struct idxd_wq *wq)
+ 	wq->type = IDXD_WQT_NONE;
+ 	wq->client_count = 0;
+ }
++EXPORT_SYMBOL_NS_GPL(idxd_drv_disable_wq, IDXD);
+ 
+ int idxd_device_drv_probe(struct idxd_dev *idxd_dev)
+ {
+diff --git a/drivers/dma/idxd/dma.c b/drivers/dma/idxd/dma.c
+index 47a01893cfdb..e7043e235408 100644
+--- a/drivers/dma/idxd/dma.c
++++ b/drivers/dma/idxd/dma.c
+@@ -314,7 +314,7 @@ static int idxd_dmaengine_drv_probe(struct idxd_dev *idxd_dev)
+ 
+ 	wq->type = IDXD_WQT_KERNEL;
+ 
+-	rc = drv_enable_wq(wq);
++	rc = idxd_drv_enable_wq(wq);
+ 	if (rc < 0) {
+ 		dev_dbg(dev, "Enable wq %d failed: %d\n", wq->id, rc);
+ 		rc = -ENXIO;
+@@ -333,7 +333,7 @@ static int idxd_dmaengine_drv_probe(struct idxd_dev *idxd_dev)
+ 	return 0;
+ 
+ err_dma:
+-	drv_disable_wq(wq);
++	idxd_drv_disable_wq(wq);
+ err:
+ 	wq->type = IDXD_WQT_NONE;
+ 	mutex_unlock(&wq->wq_lock);
+@@ -347,7 +347,7 @@ static void idxd_dmaengine_drv_remove(struct idxd_dev *idxd_dev)
+ 	mutex_lock(&wq->wq_lock);
+ 	__idxd_wq_quiesce(wq);
+ 	idxd_unregister_dma_channel(wq);
+-	drv_disable_wq(wq);
++	idxd_drv_disable_wq(wq);
+ 	mutex_unlock(&wq->wq_lock);
+ }
  
 diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index 1e89c80a07fc..e541d19f14d0 100644
+index e541d19f14d0..ae3be5cb2ee3 100644
 --- a/drivers/dma/idxd/idxd.h
 +++ b/drivers/dma/idxd/idxd.h
-@@ -655,6 +655,9 @@ static inline int idxd_wq_driver_name_match(struct idxd_wq *wq, struct device *d
- 	return (strncmp(wq->driver_name, dev->driver->name, strlen(dev->driver->name)) == 0);
- }
- 
-+#define MODULE_ALIAS_IDXD_DEVICE(type) MODULE_ALIAS("idxd:t" __stringify(type) "*")
-+#define IDXD_DEVICES_MODALIAS_FMT "idxd:t%d"
-+
- int __must_check __idxd_driver_register(struct idxd_device_driver *idxd_drv,
- 					struct module *module, const char *mod_name);
- #define idxd_driver_register(driver) \
+@@ -685,8 +685,8 @@ void idxd_unmask_error_interrupts(struct idxd_device *idxd);
+ /* device control */
+ int idxd_device_drv_probe(struct idxd_dev *idxd_dev);
+ void idxd_device_drv_remove(struct idxd_dev *idxd_dev);
+-int drv_enable_wq(struct idxd_wq *wq);
+-void drv_disable_wq(struct idxd_wq *wq);
++int idxd_drv_enable_wq(struct idxd_wq *wq);
++void idxd_drv_disable_wq(struct idxd_wq *wq);
+ int idxd_device_init_reset(struct idxd_device *idxd);
+ int idxd_device_enable(struct idxd_device *idxd);
+ int idxd_device_disable(struct idxd_device *idxd);
 -- 
 2.34.1
 

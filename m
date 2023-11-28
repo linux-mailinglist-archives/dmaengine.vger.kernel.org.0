@@ -1,350 +1,178 @@
-Return-Path: <dmaengine+bounces-281-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-282-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A2B277FC7CF
-	for <lists+dmaengine@lfdr.de>; Tue, 28 Nov 2023 22:16:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id AB5027FC8DB
+	for <lists+dmaengine@lfdr.de>; Tue, 28 Nov 2023 22:58:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 78279B21D00
-	for <lists+dmaengine@lfdr.de>; Tue, 28 Nov 2023 21:16:46 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E2346B21141
+	for <lists+dmaengine@lfdr.de>; Tue, 28 Nov 2023 21:58:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23F1342ABC;
-	Tue, 28 Nov 2023 21:16:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6959481A8;
+	Tue, 28 Nov 2023 21:58:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RPQpPMW9"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="EpxOH/eB"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1F1361A1;
-	Tue, 28 Nov 2023 13:16:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701206195; x=1732742195;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=u3LLIxB0xpITkynhMFsp2gJVUo9d/a86JchoCpeKieE=;
-  b=RPQpPMW9tqmz+W1p3C3qrvhNPyHF8A+pzA5IdL03AJqOLDpvib5R9CdI
-   aphGyj8XUo4hCniQtTDNp3+Ic8bC1+DODyFZhz/H2hYycvHOsSyt87zvq
-   FqyOmsOOGNVwhtuN5FIBDEIpFCK4jmNvbwT7BBQwQwwXPpje+X7V9PZMO
-   fRVB1iks5gQ4WiUh7XJz6z1aCO5RkUhJ8gkK/9fb8TOrzpY5qg2XFle1z
-   DVCIJUOe3LyvuYBlZfOPM4je8cqmkmNaEWEMKIifoor70ZcwKVtWZe1BR
-   biLjOU65N3cf+2z9iWmvkrnBo8DPWLEXq1JTWPNJNyyV0bUe3HCe4+3EO
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10908"; a="14594451"
-X-IronPort-AV: E=Sophos;i="6.04,234,1695711600"; 
-   d="scan'208";a="14594451"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2023 13:09:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10908"; a="886574132"
-X-IronPort-AV: E=Sophos;i="6.04,234,1695711600"; 
-   d="scan'208";a="886574132"
-Received: from arelysna-mobl3.amr.corp.intel.com ([10.209.144.161])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2023 13:09:26 -0800
-Message-ID: <e0d1e4441dc7976450efd07322be0fe5a7526efe.camel@linux.intel.com>
-Subject: Re: [PATCH v10 14/14] dmaengine: idxd: Add support for device/wq
- defaults
-From: Tom Zanussi <tom.zanussi@linux.intel.com>
-To: Fenghua Yu <fenghua.yu@intel.com>, herbert@gondor.apana.org.au, 
-	davem@davemloft.net, vkoul@kernel.org
-Cc: dave.jiang@intel.com, tony.luck@intel.com, wajdi.k.feghali@intel.com, 
- james.guilford@intel.com, kanchana.p.sridhar@intel.com,
- vinodh.gopal@intel.com,  giovanni.cabiddu@intel.com, pavel@ucw.cz,
- linux-kernel@vger.kernel.org,  linux-crypto@vger.kernel.org,
- dmaengine@vger.kernel.org
-Date: Tue, 28 Nov 2023 15:09:06 -0600
-In-Reply-To: <00aa3b9f-d81e-3dc2-3fb0-bb79e16564d3@intel.com>
-References: <20231127202704.1263376-1-tom.zanussi@linux.intel.com>
-	 <20231127202704.1263376-15-tom.zanussi@linux.intel.com>
-	 <00aa3b9f-d81e-3dc2-3fb0-bb79e16564d3@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2083.outbound.protection.outlook.com [40.107.104.83])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C749197;
+	Tue, 28 Nov 2023 13:58:05 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VNF0f3F6laCOZhs5o93IEcGCicpQQJT5HFzxLf1prs26ZbCEoUaDvb1C+B/BluvWoTv+mkPeATKQcv+k2X+yadoVh0mXGtBWun9wK9fX5+7Qsjas+AtxEBnuOx5Nykwjw7UKnM4BwZa6zYkKlpwweGq2XvDUOa2FRUL5DhKADKdZzJGX19YYQV6XJYeLZm8NHagmvRfvxMMdQHxXIvluglqnn+lVFsmWU3Bno3EppxyaMiCpqEdM4pkHt/LiHYMMBvIvxOJmHPf+9GxXeGOqHmfnfP6hbCuS2TYaPWWUoib1rdLStHqNH5UGajL6eerF5DrASd3/PTpZlH6BEIGgIQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uWjD3b7e+Wo1Gyp4U1J57AVQ6mICM9SLtWlIoXVePZ4=;
+ b=VULKqLowyhl7nQJilXgnMYrhe1YWcIqQL5umeie9V+wD1eOeHnF/zWio3jTJ7XSdRKghqUlYSJxL7rS4VDqWbehabfV6pBq6jhyijGaRNllX2l1n67RLreHRAvWqoK1qxk96Jgt6ClWdxHVc0kBGklu5G2dlXg8jxALbWcAhXf5igb5iRcYqCSsGHKunkvf+yJ38SY2yc3/3Tc0Bv31MV4SP74f4UBU5EcHWJdYunqfyHawzc/xvSgu57xk6M2L1Nhx+WRyllJB9sTjBkSZfxUYD5zGwu1KN4DIVMeFkktIY1Jcvly3KZFfNUkF3GSQgI+YZOaEl9CvYron6b4QkKg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uWjD3b7e+Wo1Gyp4U1J57AVQ6mICM9SLtWlIoXVePZ4=;
+ b=EpxOH/eBJWVz2XK6aSlYkMrfT+mOROB44In/2YEFJ+xnq2OKaFkyVlZcxM7mPzHDrdqNTc1s/C+IFyW1zEqvRBcJbajdzsc9sOefWghTVDZNXXOyqk9QG9fLOnTVvzeXZHqaCU32JhtmrHKHsGGWoe2FDJKXlnMJJQuUela11Hg=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
+ by AM7PR04MB6965.eurprd04.prod.outlook.com (2603:10a6:20b:104::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7046.22; Tue, 28 Nov
+ 2023 21:58:03 +0000
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::95f5:5118:258f:ee40]) by AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::95f5:5118:258f:ee40%6]) with mapi id 15.20.7046.015; Tue, 28 Nov 2023
+ 21:58:03 +0000
+Date: Tue, 28 Nov 2023 16:57:55 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: wangxiaolei <xiaolei.wang@windriver.com>
+Cc: vkoul@kernel.org, imx@lists.linux.dev, dmaengine@vger.kernel.org,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: dmaengine: fsl-edma: dmatest timeout
+Message-ID: <ZWZiY4Cy/GP8L+Px@lizhi-Precision-Tower-5810>
+References: <64cde245-0e53-6559-0a3b-ffe0a5415519@windriver.com>
+ <ZWYJgc/S8xMofmWw@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZWYJgc/S8xMofmWw@lizhi-Precision-Tower-5810>
+X-ClientProxiedBy: BYAPR07CA0075.namprd07.prod.outlook.com
+ (2603:10b6:a03:12b::16) To AM6PR04MB4838.eurprd04.prod.outlook.com
+ (2603:10a6:20b:4::16)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|AM7PR04MB6965:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9d0c4c24-53ea-4a63-e645-08dbf05d1805
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	iuShHfhRthVWQ81fnhjkcVf6muTCjlxKwL7ff96+ZKMgpBRQtFulE790l2tZ5OOrKT4UP1vBj8H0+F/UUMNDGhT7WJ/eDL1PgzoZPApkzIfkvFnf2mxGZrbvn6usRcEOgSwZSZRfLhXn4+L46suOMoe1yhJXdmAyf566wkZg2XWT9OfkHzmzVMDwdn8zqvrepONnEjncYVh3obnhdYJLIp4fzDewf2XipmBB4joWs2ETVdCU/MGIzDTu9/SNvZ5HkEZSHslC3tP/5rJ9OOe6gbrGdsYpjHOcxD96KtCyAbenxgTuRSVSCJd9JEhcgG0E/cJHIAlBdbnkQss+4hbP2BL8P0BrdIIe5btvf16fW7kTn5p7lVZYC2vF/mc/DcMD9rLn7xtXOZR3aAwtrY/Y4uWRAO/97wQkmjqBuD7fuSguKAff/JqJNLp1iYPGNjxUB5YyyUn7ZMvVKD7nZtbdQ5EG8ZO6uob1QQRmg/i+r7uc2iDgGPzv/UrcgwyJ2ayXL6dJGAoZMPo3XOncoQJdpj2JSrR3D7GWRbwyLgFFpd2K//54V7qsnHxJQB7MBeR45VCLHIDXpfi59Jm8Hamm03zqzhFMlUB7aBZzc8MrhKpo1vrSxIl+87/C0NNFskZ/
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(396003)(136003)(366004)(346002)(376002)(39860400002)(230922051799003)(186009)(451199024)(64100799003)(1800799012)(33716001)(41300700001)(5660300002)(2906002)(66556008)(6916009)(66476007)(8676002)(8936002)(66946007)(38350700005)(316002)(4326008)(9686003)(38100700002)(86362001)(83380400001)(6512007)(52116002)(6486002)(26005)(6666004)(6506007)(478600001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?0Os5RrxnXXnbJpF2nXo/jonHgzl/aE7+WM2mcfUTDQgZEHHnpyzfr/UMerPt?=
+ =?us-ascii?Q?+qlm/RsBNulTt5RNVcSstuKj5xC+nbmA4irt1mPWcAYk4eAk/mXaajlcx1C3?=
+ =?us-ascii?Q?Yl865FNNUxDdRssVi5W/kuWcnnC8w00gtH7wPTwBJFjQzQN1ZdUjSeRa/trZ?=
+ =?us-ascii?Q?qPpac3cP1/oQVUZZhZ35LwzhCfZT09zz9tnqgZ+BgIhhDyvrN5wI2tEXvV5L?=
+ =?us-ascii?Q?PbpT5bZuIu12JAwHucd+8mz6XTuhKQGD+7CO7A6y1l/omctdYwGbf5WArgbB?=
+ =?us-ascii?Q?DqEyi47qQ5ULfyp6MsrLEx+riAP8QeRpj77NrGCJbyavecWYDNvyN875ZK5F?=
+ =?us-ascii?Q?X3MBR84xeu3aaCt+CUeKld5zdCGmw+KdhyQGzRbXI/oX6RwJ6mLy0Opst34f?=
+ =?us-ascii?Q?gBcpvI4u0NcXXFvzNiZW1ziaPVDU2hBj1Lp+k322U685f0Ji/te/1H7mDItq?=
+ =?us-ascii?Q?ixPq4JAz16vyUCUATFkhJ0tpBFS+JqUvzZKxii/Izg1CzUhyWxNaqg7Jhm9z?=
+ =?us-ascii?Q?RacQfGD1QmY5yntKHUsQHJl+C66PKCYcfSSMihlDw71dlXvd8syANUPzvrJr?=
+ =?us-ascii?Q?eP2L8U+V1vY80q1rZ0h0oQ8m0avVm5zqClEWSSBYNPzcSko366oZosfBnwZq?=
+ =?us-ascii?Q?3vyhPVKNh1FkVmm5YPsoILo/y4D7ps+DcL9aCX+25v/z7XdwXrXKPzx6u9Bd?=
+ =?us-ascii?Q?fSnaBdYdvSF1H8l59GhNTz5+oCZrgxS8L9ZxzbUhDQox3ArOiMkr33xr89dA?=
+ =?us-ascii?Q?RpQPm6A5XHkVZeYMLF7ciOQqqyPypklD+nsCnW19F5MzYwxTARsqZSZ0oBs8?=
+ =?us-ascii?Q?BVDLHE0Ll7KSLs9xVRvheuVzzslrkaBoJHcuLpX+GtQgeSmg4yxFEHiG6tyQ?=
+ =?us-ascii?Q?rIK9WN0vvGuqA+u6DduGyOYdLffi1H/RIo5iznQjiafggSd5O9jJ+dgUPuPN?=
+ =?us-ascii?Q?km5AOsgn1BpQfrxMqe3tWHqtZsXDH5NotLbEXflZAnnkQWeD9nFjownuRuFW?=
+ =?us-ascii?Q?5hvXdd6MulhufkiBqOwraEzWvA3p6Ut/wuNKDOWkL1ZZWC/2uG3UABbNPyVc?=
+ =?us-ascii?Q?GDCYUe6x7gsxOtyz4/c9QgXk9+VQybBcabZlyWfhIbuUE9MUJnXy5V1ijQhY?=
+ =?us-ascii?Q?1cExIszvDSHOw0eU/UppmAtUu7M/FS1sFt3vEufVxjx55xv9dtcLJ051n8Bj?=
+ =?us-ascii?Q?PCeJWmuHsuoPo9wlZtglUgTmbdBmSzaycyWz5jeTo+sIT5qAPy8ltiACZA9r?=
+ =?us-ascii?Q?P1BEw4VCuueqcgg+iJyL3LBvjcmyz3SY4Zp0H2pp7Exr6mh49rBFzGVKWnmD?=
+ =?us-ascii?Q?I6TuP7Yf5M6YWa8H75SdpCmmrzCcok2ji2CTsM0VjpfPlYoArTLkCAx/ZqoM?=
+ =?us-ascii?Q?8LfSzH7gxd56taXPayOaKpmu9FXLmpL0YXyfY5fuEhP7AcSIyD1J9Q+uWQbC?=
+ =?us-ascii?Q?KUIYeU9gbm+pZMaNpd83AnZStkxwNlJUqvwaVoBnyiH/TAFxzrSLkUcpzJAw?=
+ =?us-ascii?Q?+3Ggn5MXYi+BoJG660g9tOuKzoJS0f5eGjqMZSLXXBFdaJfjaoI+zVHzR1aO?=
+ =?us-ascii?Q?T9/sy5CfuqK8C6d9AIA=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9d0c4c24-53ea-4a63-e645-08dbf05d1805
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Nov 2023 21:58:03.0455
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ynO2pQ3wt+4GhLLh7B5mM6hVOCOr28lpzSGXgv7WQs8WB7d7yg26yyLoIVUjzppAAeONYFBoMh8L3Tv3vJOuYg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB6965
 
-Hi Fenghua,
+On Tue, Nov 28, 2023 at 10:38:41AM -0500, Frank Li wrote:
+> On Tue, Nov 28, 2023 at 12:43:59PM +0800, wangxiaolei wrote:
+> > Hi
+> > 
+> > When I executed the following command to do dmatest on the imx8qm platform,
+> > 
+> > I found that the timeout occurred on the current mainline kernel:
+> > 
+> > 
+> > modprobe dmatest run=1 iterations=42
+> > 
+> 
+> dmatest use mem to mem transfer. It seldom used at actual system. Let me
+> check it. 
+> 
+> Frank
+> 
+> > 
+> > I found that the completion interrupt was not received in
+> > fsl_edma3_tx_handler().
 
-On Tue, 2023-11-28 at 12:31 -0800, Fenghua Yu wrote:
-> Hi, Tom,
->=20
-> On 11/27/23 12:27, Tom Zanussi wrote:
-> > Add a load_device_defaults() function pointer to struct
-> > idxd_driver_data, which if defined, will be called when an idxd
-> > device
-> > is probed and will allow the idxd device to be configured with
-> > default
-> > values.
-> >=20
-> > The load_device_defaults() function is passed an idxd device to
-> > work
-> > with to set specific device attributes.
-> >=20
-> > Also add a load_device_defaults() implementation IAA devices;
-> > future
-> > patches would add default functions for other device types such as
-> > DSA.
-> >=20
-> > The way idxd device probing works, if the device configuration is
-> > valid at that point e.g. at least one workqueue and engine is
-> > properly
-> > configured then the device will be enabled and ready to go.
-> >=20
-> > The IAA implementation, idxd_load_iaa_device_defaults(), configures
-> > a
-> > single workqueue (wq0) for each device with the following default
-> > values:
-> >=20
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mode=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 "dedicated"
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 threshold=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 size=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A016
->=20
-> Why is it 16?
->=20
-> If wqcap supports less than 16, configuring wq size 16 will fail.
-> If wqcap supports more than 16, wq size 16 uses less wq size than=20
-> capable and less performance.
->=20
-> Is it better to set wq size as total wq size reported in wqcap?
+I test at imx93, it works. I supposed it is the same as 8qm.
 
-Yes, good point.  I'll calculate this based on wqcap.
+echo dma0chan0 > /sys/module/dmatest/parameters/channel
+echo 2000 > /sys/module/dmatest/parameters/timeout
+echo 1 > /sys/module/dmatest/parameters/iterations
+echo 1 > /sys/module/dmatest/parameters/run
 
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 priority=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A010
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 type=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0IDXD_WQT_KERNEL
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 group=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 name=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "iaa_crypto"
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 driver_name=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 "crypto"
-> >=20
-> > Note that this now adds another configuration step for any users
-> > that
-> > want to configure their own devices/workqueus with something
-> > different
-> > in that they'll first need to disable (in the case of IAA) wq0 and
-> > the
-> > device itself before they can set their own attributes and re-
-> > enable,
-> > since they've been already been auto-enabled.=C2=A0 Note also that in
-> > order
-> > for the new configuration to be applied to the deflate-iaa crypto
-> > algorithm the iaa_crypto module needs to unregister the old
-> > version,
-> > which is accomplished by removing the iaa_crypto module, and
-> > re-registering it with the new configuration by reinserting the
-> > iaa_crypto module.
-> >=20
-> > Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
-> > ---
-> > =C2=A0 drivers/dma/idxd/Makefile=C2=A0=C2=A0 |=C2=A0 2 +-
-> > =C2=A0 drivers/dma/idxd/defaults.c | 53
-> > +++++++++++++++++++++++++++++++++++++
-> > =C2=A0 drivers/dma/idxd/idxd.h=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 4 +++
-> > =C2=A0 drivers/dma/idxd/init.c=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 7 +++++
-> > =C2=A0 4 files changed, 65 insertions(+), 1 deletion(-)
-> > =C2=A0 create mode 100644 drivers/dma/idxd/defaults.c
-> >=20
-> > diff --git a/drivers/dma/idxd/Makefile b/drivers/dma/idxd/Makefile
-> > index c5e679070e46..2b4a0d406e1e 100644
-> > --- a/drivers/dma/idxd/Makefile
-> > +++ b/drivers/dma/idxd/Makefile
-> > @@ -4,7 +4,7 @@ obj-$(CONFIG_INTEL_IDXD_BUS) +=3D idxd_bus.o
-> > =C2=A0 idxd_bus-y :=3D bus.o
-> > =C2=A0=20
-> > =C2=A0 obj-$(CONFIG_INTEL_IDXD) +=3D idxd.o
-> > -idxd-y :=3D init.o irq.o device.o sysfs.o submit.o dma.o cdev.o
-> > debugfs.o
-> > +idxd-y :=3D init.o irq.o device.o sysfs.o submit.o dma.o cdev.o
-> > debugfs.o defaults.o
-> > =C2=A0=20
-> > =C2=A0 idxd-$(CONFIG_INTEL_IDXD_PERFMON) +=3D perfmon.o
-> > =C2=A0=20
-> > diff --git a/drivers/dma/idxd/defaults.c
-> > b/drivers/dma/idxd/defaults.c
-> > new file mode 100644
-> > index 000000000000..a0c9faad8efe
-> > --- /dev/null
-> > +++ b/drivers/dma/idxd/defaults.c
-> > @@ -0,0 +1,53 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/* Copyright(c) 2023 Intel Corporation. All rights rsvd. */
-> > +#include <linux/kernel.h>
-> > +#include "idxd.h"
-> > +
-> > +int idxd_load_iaa_device_defaults(struct idxd_device *idxd)
-> > +{
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct idxd_engine *engine;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct idxd_group *group;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct idxd_wq *wq;
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (!test_bit(IDXD_FLAG_CONF=
-IGURABLE, &idxd->flags))
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0return 0;
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0wq =3D idxd->wqs[0];
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (wq->state !=3D IDXD_WQ_D=
-ISABLED)
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0return -EPERM;
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* set mode to "dedicated" *=
-/
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0set_bit(WQ_FLAG_DEDICATED, &=
-wq->flags);
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0wq->threshold =3D 0;
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* set size to 16 */
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0wq->size =3D 16;
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* set priority to 10 */
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0wq->priority =3D 10;
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* set type to "kernel" */
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0wq->type =3D IDXD_WQT_KERNEL=
-;
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* set wq group to 0 */
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0group =3D idxd->groups[0];
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0wq->group =3D group;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0group->num_wqs++;
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* set name to "iaa_crypto" =
-*/
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0memset(wq->name, 0, WQ_NAME_=
-SIZE + 1);
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0strscpy(wq->name, "iaa_crypt=
-o", WQ_NAME_SIZE + 1);
->=20
-> Is strcpy(wq->name, "iaa_crypto") simpler than memset() and
-> strscpy()?
+I add debug message: 
 
-That's what I originally had, but checkpatch complained about it,
-suggesting strscpy, so I changed it to make checkpatch happy.
+[  154.090765] fsl_edma_tx_chan_handler
+[  154.094711] fsl_edma_prep_memcpy 8d842340 8d839280 7104
+[  154.100063] fsl_edma_tx_chan_handler
+[  154.103949] fsl_edma_prep_memcpy 8d8419c0 8d838580 4288
+[  154.109265] fsl_edma_tx_chan_handler
+[  154.113235] fsl_edma_prep_memcpy 8d840ec0 8d838340 6016
+[  154.118573] fsl_edma_tx_chan_handler
+[  154.122508] fsl_edma_prep_memcpy 8d841c00 8d83a8c0 1920
+[  154.127791] fsl_edma_tx_chan_handler
+[  154.131738] fsl_edma_prep_memcpy 8d840040 8d838200 14784
+[  154.137272] fsl_edma_tx_chan_handler
+[  154.141171] fsl_edma_prep_memcpy 8d840280 8d838080 15616
+[  154.146716] fsl_edma_tx_chan_handler
+[  154.150598] fsl_edma_prep_memcpy 8d840e00 8d838f40 4928
+[  154.155915] fsl_edma_tx_chan_handler
+[  154.159858] fsl_edma_prep_memcpy 8d8419c0 8d838040 7424
+[  154.165203] fsl_edma_tx_chan_handler
+[  154.169140] fsl_edma_prep_memcpy 8d841700 8d839380 2560
 
->=20
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* set driver_name to "crypt=
-o" */
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0memset(wq->driver_name, 0, D=
-RIVER_NAME_SIZE + 1);
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0strscpy(wq->driver_name, "cr=
-ypto", DRIVER_NAME_SIZE + 1);
->=20
-> Is strcpy(wq->driver_name, "crypto") simpler?
+Frank
 
-Same here.
-
-Thanks,
-
-Tom
-
->=20
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0engine =3D idxd->engines[0];
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* set engine group to 0 */
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0engine->group =3D idxd->grou=
-ps[0];
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0engine->group->num_engines++=
-;
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return 0;
-> > +}
-> > diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-> > index 62ea21b25906..47de3f93ff1e 100644
-> > --- a/drivers/dma/idxd/idxd.h
-> > +++ b/drivers/dma/idxd/idxd.h
-> > @@ -277,6 +277,8 @@ struct idxd_dma_dev {
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct dma_device dma;
-> > =C2=A0 };
-> > =C2=A0=20
-> > +typedef int (*load_device_defaults_fn_t) (struct idxd_device
-> > *idxd);
-> > +
-> > =C2=A0 struct idxd_driver_data {
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0const char *name_prefix=
-;
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0enum idxd_type type;
-> > @@ -286,6 +288,7 @@ struct idxd_driver_data {
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0int evl_cr_off;
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0int cr_status_off;
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0int cr_result_off;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0load_device_defaults_fn_t lo=
-ad_device_defaults;
-> > =C2=A0 };
-> > =C2=A0=20
-> > =C2=A0 struct idxd_evl {
-> > @@ -730,6 +733,7 @@ void idxd_unregister_devices(struct idxd_device
-> > *idxd);
-> > =C2=A0 void idxd_wqs_quiesce(struct idxd_device *idxd);
-> > =C2=A0 bool idxd_queue_int_handle_resubmit(struct idxd_desc *desc);
-> > =C2=A0 void multi_u64_to_bmap(unsigned long *bmap, u64 *val, int count)=
-;
-> > +int idxd_load_iaa_device_defaults(struct idxd_device *idxd);
-> > =C2=A0=20
-> > =C2=A0 /* device interrupt control */
-> > =C2=A0 irqreturn_t idxd_misc_thread(int vec, void *data);
-> > diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-> > index 0eb1c827a215..14df1f1347a8 100644
-> > --- a/drivers/dma/idxd/init.c
-> > +++ b/drivers/dma/idxd/init.c
-> > @@ -59,6 +59,7 @@ static struct idxd_driver_data idxd_driver_data[]
-> > =3D {
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0.evl_cr_off =3D offsetof(struct iax_evl_entry, c=
-r),
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0.cr_status_off =3D offsetof(struct
-> > iax_completion_record, status),
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0.cr_result_off =3D offsetof(struct
-> > iax_completion_record, error_code),
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0.load_device_defaults =3D
-> > idxd_load_iaa_device_defaults,
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0},
-> > =C2=A0 };
-> > =C2=A0=20
-> > @@ -745,6 +746,12 @@ static int idxd_pci_probe(struct pci_dev
-> > *pdev, const struct pci_device_id *id)
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0goto err;
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
-> > =C2=A0=20
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (data->load_device_defaul=
-ts) {
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0rc =3D data->load_device_defaults(idxd);
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0if (rc)
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0dev_wa=
-rn(dev, "IDXD loading device defaults
-> > failed\n");
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
-> > +
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0rc =3D idxd_register_de=
-vices(idxd);
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (rc) {
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0dev_err(dev, "IDXD sysfs setup failed\n");
->=20
-> Thanks.
->=20
-> -Fenghua
-
+> > 
+> > I didn't find any special configuration from the manual. Can anyone give
+> > some suggestions?
+> > 
+> > 
+> > thanks
+> > 
+> > xiaolei
+> > 
 

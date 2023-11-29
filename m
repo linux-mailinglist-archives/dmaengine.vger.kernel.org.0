@@ -1,65 +1,65 @@
-Return-Path: <dmaengine+bounces-301-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-302-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8C1D57FCED4
-	for <lists+dmaengine@lfdr.de>; Wed, 29 Nov 2023 07:06:38 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6D827FCEDC
+	for <lists+dmaengine@lfdr.de>; Wed, 29 Nov 2023 07:09:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BCE0C1C2084A
-	for <lists+dmaengine@lfdr.de>; Wed, 29 Nov 2023 06:06:37 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 200B2B21673
+	for <lists+dmaengine@lfdr.de>; Wed, 29 Nov 2023 06:09:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1A77DDA4;
-	Wed, 29 Nov 2023 06:06:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D94B7D269;
+	Wed, 29 Nov 2023 06:09:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q66W6vPz"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4hz6Fo0z"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 919861BEE
-	for <dmaengine@vger.kernel.org>; Tue, 28 Nov 2023 22:06:05 -0800 (PST)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5ce16bc121aso68692447b3.1
-        for <dmaengine@vger.kernel.org>; Tue, 28 Nov 2023 22:06:05 -0800 (PST)
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24715AF
+	for <dmaengine@vger.kernel.org>; Tue, 28 Nov 2023 22:09:08 -0800 (PST)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5cef61289fdso63994017b3.1
+        for <dmaengine@vger.kernel.org>; Tue, 28 Nov 2023 22:09:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701237965; x=1701842765; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1701238147; x=1701842947; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BFBgGZHgdrEFpnu/cpKOcJzser1reIBdXzg/6fniV64=;
-        b=q66W6vPzM7okuZ9Mx4XIk8VNR+c1Amb08ha3K6IyxL3kfGNjEzHARUvK1MbtPPtEFp
-         ZPOD1wgCX8lknocIHcP0VGD5HDPJQxpBXosT1oXyajw7zu37sVQoc6Y1j7UbI2+eeJCm
-         K9bkfvk7rTaDRA8xFD+fhnMOLFisGgWZ9LBMH2HUdJ5ePFW3DCLjb8eJeFA8H7lFIMsI
-         ePfBdYk3uEHvo8u74wAYaNCs0OlhSDKNJDF/nudnkW/uTKyvKeykaRXv/kPEYS/cWK4r
-         eDqNFhS93XPBXVQkpoZ9PEsnaevZp9Tvm43EaDXvRArQRLd/Y6aOCXYhgYrAvLa4pD4B
-         AQXA==
+        bh=KtrAPaslMvSrZFznq3cpY4nyS514mOCdxUhLK1bsTtI=;
+        b=4hz6Fo0zr13+6MdTqERmKQ2VkYDymvvESL+rjVDOPONoVDKJ89JS5vZAr9cGWgmXeI
+         iCe4Gr1jGA18zFyltB0mAD/LvIZELVoE4c6EchCPHovFaQBUpiekq7sj9kf+v7Wo8EJx
+         Bm88PjF0fpSLVtBhcE5rMR6F2oPPd6VcEL7z3yoUssqZtKKmZXq1surFKjBwgpE7KTGB
+         45g0aomlFJveBDLt1HtrdcU0h7pVzqQqVGdMrOL48/QkMYR4xYLFGf/1+0gDvqZJ/CB6
+         Go1mLYlC8a6PciJgAAiTpf4CoQrR+BbzOfToCpWOsL7ZNwT+lyqyaGCbo+M6Eii4LMDn
+         IpRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701237965; x=1701842765;
+        d=1e100.net; s=20230601; t=1701238147; x=1701842947;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BFBgGZHgdrEFpnu/cpKOcJzser1reIBdXzg/6fniV64=;
-        b=we7UCOXnPidHqkR3T6//5AgAHco/WZED/XLaGTojW2Or73lv1PO3eSwFdkN5zEBrEA
-         1KL+yVHcZoiurBGrstHgziUM0khLopVaHybMv4XLKn54yoGw5SVqY6u+oqUZ3cZVTIT3
-         dt4afyQeqGi/k84mKzlKKL5wGjMo/VMuhQxiOVwLiU0XYJGKBb/I7qIty9ZKNMtEUsE4
-         HSmhDyeNe6q3ZIHI+KwCz2jaRBAPkn4JDAae92hwHTkExAqr1cajXYudzjAI8FB25jhE
-         g4azqcmfFFwwXYp3+RvhZEsGY0vZe9YrxYnsnA27m6DDUfhC4k+hjpZzQvoqC9V9pKSi
-         SXXA==
-X-Gm-Message-State: AOJu0YxARNsX4kNyDn39TUSv7a+Zq14miEQN3TCU10byrXqQ2QDLc3We
-	4H6SKHKqhyEzpLZBpVWfxt8IgsvLPEdR
-X-Google-Smtp-Source: AGHT+IG4ZcbE3hB8V6+vKX0zxYUr0OpHfbf/WNlvcGBdlOoo8eTYBCxtpp+7m/8KdVPZTHDTWhORx94znMfW
+        bh=KtrAPaslMvSrZFznq3cpY4nyS514mOCdxUhLK1bsTtI=;
+        b=f9mR28HMGTeOHjiku/g0fl9u/7UF9RL/hUvAFIqpK3hhEnoqTyFdxnrlBs5c5n1YD1
+         108rhHw56Npgd5Qk6Jg0QU3PWT3RWbItbiE+cq3lSZB4CopPmuJxeIEa/lbjAWk8nadp
+         d/+97Mb/rRGAF95AZtH/UfEeFHohstiscsps7N9bbMZFmlOz81WT9bgwS7WsOtp4shdY
+         seJUnRy/ObZzQVzELUHHHm6UTh3YEWEplyrpcP0froe5L0gfP0r6b5b5wUrTxc+bbFqH
+         gflQ/bAJ9A8a5C1k9opWeWA7CGWkIECISxI215tTbxK9cMkoUb/Mnxyv9YIRq7gA8vov
+         DLbQ==
+X-Gm-Message-State: AOJu0YzClVwwwDJu4UU/5B3gRRpUNTSq0Jqf/hN7enQwte3fQI24lf5s
+	Ea81zr99CI3V6wMXtYUze4SPlCmAzNr9
+X-Google-Smtp-Source: AGHT+IErKpR33sSuZDb458AGzbTTTl+rmkeUZNxvoUYyius6/ySrcsirHg/Fcs0NR9CFHutX0EyL3PHfE3h2
 X-Received: from morats.c.googlers.com ([fda3:e722:ac3:cc00:14:4d90:c0a8:d9e])
- (user=moritzf job=sendgmr) by 2002:a25:c044:0:b0:db5:1f69:704e with SMTP id
- c65-20020a25c044000000b00db51f69704emr38263ybf.1.1701237964651; Tue, 28 Nov
- 2023 22:06:04 -0800 (PST)
-Date: Wed, 29 Nov 2023 06:06:03 +0000
-In-Reply-To: <4-v1-720585788a7d+811b-iommu_fwspec_p1_jgg@nvidia.com>
+ (user=moritzf job=sendgmr) by 2002:a25:3741:0:b0:db5:2a4:aef1 with SMTP id
+ e62-20020a253741000000b00db502a4aef1mr107973yba.13.1701238147290; Tue, 28 Nov
+ 2023 22:09:07 -0800 (PST)
+Date: Wed, 29 Nov 2023 06:09:06 +0000
+In-Reply-To: <7-v1-720585788a7d+811b-iommu_fwspec_p1_jgg@nvidia.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <0-v1-720585788a7d+811b-iommu_fwspec_p1_jgg@nvidia.com> <4-v1-720585788a7d+811b-iommu_fwspec_p1_jgg@nvidia.com>
-Message-ID: <20231129060603.hxtmbsefxurxnwkh@google.com>
-Subject: Re: [PATCH 04/10] iommu: Mark dev_iommu_get() with lockdep
+References: <0-v1-720585788a7d+811b-iommu_fwspec_p1_jgg@nvidia.com> <7-v1-720585788a7d+811b-iommu_fwspec_p1_jgg@nvidia.com>
+Message-ID: <20231129060906.qti7uztsk2u7ehlp@google.com>
+Subject: Re: [PATCH 07/10] acpi: Do not return struct iommu_ops from acpi_iommu_configure_id()
 From: Moritz Fischer <moritzf@google.com>
 To: Jason Gunthorpe <jgg@nvidia.com>
 Cc: David Airlie <airlied@gmail.com>, Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
@@ -90,32 +90,107 @@ Cc: David Airlie <airlied@gmail.com>, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
 	Rob Herring <robh@kernel.org>, Thierry Reding <thierry.reding@gmail.com>
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 
-On Tue, Nov 28, 2023 at 08:48:00PM -0400, Jason Gunthorpe wrote:
-> Allocation of dev->iommu must be done under the
-> iommu_probe_device_lock. Mark this with lockdep to discourage future
-> mistakes.
+On Tue, Nov 28, 2023 at 08:48:03PM -0400, Jason Gunthorpe wrote:
+> Nothing needs this pointer. Return a normal error code with the usual
+> IOMMU semantic that ENODEV means 'there is no IOMMU driver'.
 
+> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
 > Tested-by: Hector Martin <marcan@marcan.st>
 > Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
 > ---
->   drivers/iommu/iommu.c | 2 ++
->   1 file changed, 2 insertions(+)
+>   drivers/acpi/scan.c | 29 +++++++++++++++++------------
+>   1 file changed, 17 insertions(+), 12 deletions(-)
 
-> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-> index 0d25468d53a68a..4323b6276e977f 100644
-> --- a/drivers/iommu/iommu.c
-> +++ b/drivers/iommu/iommu.c
-> @@ -334,6 +334,8 @@ static struct dev_iommu *dev_iommu_get(struct device  
-> *dev)
+> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+> index 444a0b3c72f2d8..340ba720c72129 100644
+> --- a/drivers/acpi/scan.c
+> +++ b/drivers/acpi/scan.c
+> @@ -1562,8 +1562,7 @@ static inline const struct iommu_ops  
+> *acpi_iommu_fwspec_ops(struct device *dev)
+>   	return fwspec ? fwspec->ops : NULL;
+>   }
+
+> -static const struct iommu_ops *acpi_iommu_configure_id(struct device  
+> *dev,
+> -						       const u32 *id_in)
+> +static int acpi_iommu_configure_id(struct device *dev, const u32 *id_in)
 >   {
->   	struct dev_iommu *param = dev->iommu;
+>   	int err;
+>   	const struct iommu_ops *ops;
+> @@ -1577,7 +1576,7 @@ static const struct iommu_ops  
+> *acpi_iommu_configure_id(struct device *dev,
+>   	ops = acpi_iommu_fwspec_ops(dev);
+>   	if (ops) {
+>   		mutex_unlock(&iommu_probe_device_lock);
+> -		return ops;
+> +		return 0;
+>   	}
 
-> +	lockdep_assert_held(&iommu_probe_device_lock);
+>   	err = iort_iommu_configure_id(dev, id_in);
+> @@ -1594,12 +1593,14 @@ static const struct iommu_ops  
+> *acpi_iommu_configure_id(struct device *dev,
+
+>   	/* Ignore all other errors apart from EPROBE_DEFER */
+>   	if (err == -EPROBE_DEFER) {
+> -		return ERR_PTR(err);
+> +		return err;
+>   	} else if (err) {
+>   		dev_dbg(dev, "Adding to IOMMU failed: %d\n", err);
+> -		return NULL;
+> +		return -ENODEV;
+>   	}
+> -	return acpi_iommu_fwspec_ops(dev);
+> +	if (!acpi_iommu_fwspec_ops(dev))
+> +		return -ENODEV;
+> +	return 0;
+>   }
+
+>   #else /* !CONFIG_IOMMU_API */
+> @@ -1611,10 +1612,9 @@ int acpi_iommu_fwspec_init(struct device *dev, u32  
+> id,
+>   	return -ENODEV;
+>   }
+
+> -static const struct iommu_ops *acpi_iommu_configure_id(struct device  
+> *dev,
+> -						       const u32 *id_in)
+> +static int acpi_iommu_configure_id(struct device *dev, const u32 *id_in)
+>   {
+> -	return NULL;
+> +	return -ENODEV;
+>   }
+
+>   #endif /* !CONFIG_IOMMU_API */
+> @@ -1628,7 +1628,7 @@ static const struct iommu_ops  
+> *acpi_iommu_configure_id(struct device *dev,
+>   int acpi_dma_configure_id(struct device *dev, enum dev_dma_attr attr,
+>   			  const u32 *input_id)
+>   {
+> -	const struct iommu_ops *iommu;
+> +	int ret;
+
+>   	if (attr == DEV_DMA_NOT_SUPPORTED) {
+>   		set_dma_ops(dev, &dma_dummy_ops);
+> @@ -1637,10 +1637,15 @@ int acpi_dma_configure_id(struct device *dev,  
+> enum dev_dma_attr attr,
+
+>   	acpi_arch_dma_setup(dev);
+
+> -	iommu = acpi_iommu_configure_id(dev, input_id);
+> -	if (PTR_ERR(iommu) == -EPROBE_DEFER)
+> +	ret = acpi_iommu_configure_id(dev, input_id);
+> +	if (ret == -EPROBE_DEFER)
+>   		return -EPROBE_DEFER;
+
+> +	/*
+> +	 * Historically this routine doesn't fail driver probing due to errors
+> +	 * in acpi_iommu_configure_id()
+> +	 */
 > +
->   	if (param)
->   		return param;
+>   	arch_setup_dma_ops(dev, 0, U64_MAX, attr == DEV_DMA_COHERENT);
 
+>   	return 0;
 > --
 > 2.42.0
 

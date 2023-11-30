@@ -1,274 +1,190 @@
-Return-Path: <dmaengine+bounces-333-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-334-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E41FB7FFB30
-	for <lists+dmaengine@lfdr.de>; Thu, 30 Nov 2023 20:23:54 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A3037FFB79
+	for <lists+dmaengine@lfdr.de>; Thu, 30 Nov 2023 20:38:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 59ABCB21253
-	for <lists+dmaengine@lfdr.de>; Thu, 30 Nov 2023 19:23:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 69A3E1C20BED
+	for <lists+dmaengine@lfdr.de>; Thu, 30 Nov 2023 19:38:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8872342074;
-	Thu, 30 Nov 2023 19:23:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B42AB52F66;
+	Thu, 30 Nov 2023 19:38:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ABHshLH0"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="T65RmwOH"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::221])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 847D2171D
-	for <dmaengine@vger.kernel.org>; Thu, 30 Nov 2023 11:23:43 -0800 (PST)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 1455B240003;
-	Thu, 30 Nov 2023 19:23:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1701372221;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f+anfi2GDRmS9F4Ro1QYA6AhDYJUTQdHt709iDGZslw=;
-	b=ABHshLH00IuulwUpGkcUiT+3HUWmbIojXWpxOJmLDUtufpKbT68/ePv41qaKHOnbiuYLza
-	hKjBJ+t3XQbMUnYWT6WkyoEvHZEyl12zdODdMpIw7WVW/iBfZx+OTPpAecmR5K3Jy+Lano
-	y12LzyDureqM/cIJCiXuHGHXG2CINeVr4C/ERohGr6EyS/SOpUfZD/zGL4dH9L5AX1JUHK
-	xErNaSNIrP2TzkrMqIEoSLBqkkLPqGExfxoktZdj0j3zD4953ibvdRyTlXCGRc44A0u1Ru
-	77rnTqzz+W80WBBB/b51t2NkCU30CwRdd4gJzC0i1xNI0qDXo89LplyVXI5R4g==
-Date: Thu, 30 Nov 2023 20:23:39 +0100
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Jan Kuliga <jankul@alatek.krakow.pl>
-Cc: Lizhi Hou <lizhi.hou@amd.com>, Brian Xu <brian.xu@amd.com>, Raj Kumar
- Rampelli <raj.kumar.rampelli@amd.com>, Vinod Koul <vkoul@kernel.org>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Michal Simek
- <monstr@monstr.eu>, dmaengine@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] dmaengine: xilinx: xdma: Add
- terminate_all/synchronize callbacks
-Message-ID: <20231130202339.5feac088@xps-13>
-In-Reply-To: <f2192d19-08e6-4f8b-b15c-f8bf44f9058b@alatek.krakow.pl>
-References: <20231130111315.729430-1-miquel.raynal@bootlin.com>
-	<20231130111315.729430-5-miquel.raynal@bootlin.com>
-	<674c7bf3-77dd-9b44-a2cb-8e769a2080df@amd.com>
-	<f2192d19-08e6-4f8b-b15c-f8bf44f9058b@alatek.krakow.pl>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2084.outbound.protection.outlook.com [40.107.244.84])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02896D7F;
+	Thu, 30 Nov 2023 11:38:51 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nbB2o9spCbjo97WfNJE0ypkRCl+X5B66/jK4JaIxoK612dcvAwtNqDtDohHvS6mAD3dE/a7UO6Eb2iDMJ/gePz8lRohxSti+A5cMk1Zy8LG5OQwlUnP1GId7ahSTTCq+vGro29GE7YlQbQjg2YhZxos9eVjsin25osac6xXIFqcbM7ihfSiUT0td45WLSq+NM82FVwymoZAWZq7j98p2/xF5BUj//i9i5dUeE+bOdfKpooXX3R50Od/9YBXFSgEHrnxYisx4hwdWKB0ds8cJ3/Hnk0sPVMU4jjKY8hiOENBfrwX7fb5X/4yoI0mvriACKOkwkofwfdxNPJFiLESxcQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xDRZaMc9z3c/fNsnadu7iC1WOhR0GdmLUbCcdr5PmII=;
+ b=KjYow+94tGrpDmoXkLRZMwH5v39oGWAtWG7mgN7GMwcb9YHrle+831dY7KeCXH8qj6tr2OKbzohNo02F/8Prod/sIZ5nPeCQD2iYMiLGLOsjl5T07IitivMOFFcwB8ipcg4viDNdiRZxMuPY4fF0rfiMeyxaemBYyMKvMIZK7s+mrm+CMnbAZsCnWaV6pdabbphTxtJ0PJhOaW0FvilvE3PealyNZ13eygzcI6pF2JCqL6pjeXV7sikKPkHz5ydPs/ucICdVby2d1ZfOjVTwlNpOO0g7/bUvUJryfaeDoa7UvXwidxyyc4KnpEbRAgHj1jf4I2C2CZYeCdcz3RR13Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xDRZaMc9z3c/fNsnadu7iC1WOhR0GdmLUbCcdr5PmII=;
+ b=T65RmwOHGhzhH875XrpkxmnGM15G5Nj0qDqo2fvYLq850ktWxYWwZKwEG2M9p5wXrHhQIrt33u4NkCQ8e8dqPjSKMpG8dA3NaaWSGV+c67NKHHyddU7OL4HfGrqx+KApmlZShwghApnI4O6yIRsWMLd+c/0p1x6rcksv8m2nQ9M=
+Received: from CY5PR15CA0001.namprd15.prod.outlook.com (2603:10b6:930:14::8)
+ by MN2PR12MB4271.namprd12.prod.outlook.com (2603:10b6:208:1d7::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7046.24; Thu, 30 Nov
+ 2023 19:38:48 +0000
+Received: from CY4PEPF0000FCC5.namprd03.prod.outlook.com
+ (2603:10b6:930:14:cafe::4e) by CY5PR15CA0001.outlook.office365.com
+ (2603:10b6:930:14::8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7046.26 via Frontend
+ Transport; Thu, 30 Nov 2023 19:38:47 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CY4PEPF0000FCC5.mail.protection.outlook.com (10.167.242.107) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7046.17 via Frontend Transport; Thu, 30 Nov 2023 19:38:47 +0000
+Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Thu, 30 Nov
+ 2023 13:38:47 -0600
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB06.amd.com
+ (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Thu, 30 Nov
+ 2023 13:38:46 -0600
+Received: from xsjlizhih40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.34 via Frontend
+ Transport; Thu, 30 Nov 2023 13:38:46 -0600
+From: Lizhi Hou <lizhi.hou@amd.com>
+To: <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: Lizhi Hou <lizhi.hou@amd.com>, <nishad.saraf@amd.com>,
+	<sonal.santan@amd.com>, <max.zhen@amd.com>
+Subject: [PATCH V8 0/2] AMD QDMA driver
+Date: Thu, 30 Nov 2023 11:38:21 -0800
+Message-ID: <1701373103-67868-1-git-send-email-lizhi.hou@amd.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: miquel.raynal@bootlin.com
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000FCC5:EE_|MN2PR12MB4271:EE_
+X-MS-Office365-Filtering-Correlation-Id: 99054f0e-66d1-4829-48c6-08dbf1dbf8cb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	cZEcjF6h3247pVVJuOb2GCx/TPBp5GEe10Vzp5zbKx8pyJMYXQCKtOv22KA30qhEuujDoqRQFrLaO8FeO5PtZtn8sNE0GuwbbazDbAzbKW51Y6+6zRiKUniG2vbWAXmYnVZ/5pejQg4OwVtcxH0+qGYWBxl0BBjt92cFCQEVyLdMRx7GLe0HrIfh7pacW1kzIhIWs6uG7CY/NV0bQREqAMm6O1JldexJIejXzQKillDs98CsIRDzsyGALMNXDhWY8NOl3vYHNi0TegpV3OVTontwCnlWLm20aJgEz3kcS7GHXfF4RuvA/CuHTReIw3VEfdYjYUg52jkhtmtaybADDweCy4PaJKnjaFhWGlk41R0hEqhwHadMUW89SSMLbDs5Eo+Q5JGdzzkvj2MeoYHgsL8IHMabq9UGGaPpHF50V6A++zQDBASgat2S2gkGUyPth42WeFB4L8bx69R1YzKwl5iNKoeGOXYatpGSBMSWR8pcC0t77BP2mAAe9D1Cg+Lxm6P7lbfroAj8Npy1MPNFGuFbRdhJcSOcEC6U19gc6+j3CGZgi9YMX5FowwB+hiBCS+H+cwoCWT1lWLEuKxVWWTRsk2WbRMcd2XSo4eo+nUfWfoA5cCpGUgAHHSC+3+91b3bPxo9iTAwR/FP0MoDeWqGIhm75DGhN51UvGbpwNxrlp1gyPHhm5PLRnFvtGid5PrFwd5X4z5iHSi2PLWlv+E3V/n4CvoEoR5hAwVx2TNS6/51uzt0As2R8y3V2GptoVG/RVAEnNxoDxrIpCtttHRyPyRpTkFHEn/IWqLy5+PFlMNbU21s7vtLGY4ZinZIexufCaIYutca1FGy/kgR9Vw==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(346002)(136003)(376002)(396003)(230273577357003)(230922051799003)(230173577357003)(64100799003)(82310400011)(451199024)(1800799012)(186009)(46966006)(36840700001)(40470700004)(81166007)(47076005)(40480700001)(356005)(82740400003)(83380400001)(26005)(41300700001)(36756003)(336012)(36860700001)(426003)(2616005)(6666004)(40460700003)(966005)(5660300002)(2906002)(54906003)(44832011)(316002)(70586007)(110136005)(70206006)(478600001)(8676002)(86362001)(8936002)(4326008)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Nov 2023 19:38:47.6167
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 99054f0e-66d1-4829-48c6-08dbf1dbf8cb
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000FCC5.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4271
 
-Hi Jan,
+Hello,
 
-jankul@alatek.krakow.pl wrote on Thu, 30 Nov 2023 20:06:51 +0100:
+The QDMA subsystem is used in conjunction with the PCI Express IP block
+to provide high performance data transfer between host memory and the
+card's DMA subsystem.
 
-> Hi,
->=20
-> On 30.11.2023 18:28, Lizhi Hou wrote:
-> > Added Jan Kuliga who submitted a similar change.
-> > =20
-> Thanks for CC'ing me to the other patchset. I'm currently working on inte=
-rleaved-DMA transfers implementation for XDMA. While testing it, I've come =
-across a flaw in mine patch you mentioned here (and it also exists in the M=
-iquel's patch).
->=20
-> > https://lore.kernel.org/dmaengine/20231124192524.134989-1-jankul@alatek=
- =20
-> .krakow.pl/T/#m20c1ca4bba291f6ca07a8e5fbcaeed9fd0a6f008 >
-> > Thanks,
-> >=20
-> > Lizhi
-> >=20
-> > On 11/30/23 03:13, Miquel Raynal wrote: =20
-> >> The driver is capable of starting scatter-gather transfers and needs t=
- =20
-> o
-> >> wait until their end. It is also capable of starting cyclic transfers
-> >> and will only be "reset" next time the channel will be reused. In
-> >> practice most of the time we hear no audio glitch because the sound ca=
- =20
-> rd
-> >> stops the flow on its side so the DMA transfers are just
-> >> discarded. There are however some cases (when playing a bit with a
-> >> number of frames and with a discontinuous sound file) when the sound
-> >> card seems to be slightly too slow at stopping the flow, leading to a
-> >> glitch that can be heard.
-> >>
-> >> In all cases, we need to earn better control of the DMA engine and
-> >> adding proper ->device_terminate_all() and ->device_synchronize()
-> >> callbacks feels totally relevant. With these two callbacks, no glitch
-> >> can be heard anymore.
-> >>
-> >> Fixes: cd8c732ce1a5 ("dmaengine: xilinx: xdma: Support cyclic transfer=
- =20
-> s")
-> >> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> >> ---
-> >>
-> >> This was only tested with cyclic transfers.
-> >> ---
-> >> =C2=A0 drivers/dma/xilinx/xdma.c | 68 ++++++++++++++++++++++++++++++++=
- =20
-> +++++++
-> >> =C2=A0 1 file changed, 68 insertions(+)
-> >>
-> >> diff --git a/drivers/dma/xilinx/xdma.c b/drivers/dma/xilinx/xdma.c
-> >> index e931ff42209c..290bb5d2d1e2 100644
-> >> --- a/drivers/dma/xilinx/xdma.c
-> >> +++ b/drivers/dma/xilinx/xdma.c
-> >> @@ -371,6 +371,31 @@ static int xdma_xfer_start(struct xdma_chan *xcha=
- =20
-> n)
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 xchan->busy =3D true;
-> >> +
-> >> +=C2=A0=C2=A0=C2=A0 return 0;
-> >> +}
-> >> +
-> >> +/**
-> >> + * xdma_xfer_stop - Stop DMA transfer
-> >> + * @xchan: DMA channel pointer
-> >> + */
-> >> +static int xdma_xfer_stop(struct xdma_chan *xchan)
-> >> +{
-> >> +=C2=A0=C2=A0=C2=A0 struct virt_dma_desc *vd =3D vchan_next_desc(&xcha=
- =20
-> n->vchan);
-> >> +=C2=A0=C2=A0=C2=A0 struct xdma_device *xdev =3D xchan->xdev_hdl;
-> >> +=C2=A0=C2=A0=C2=A0 int ret;
-> >> +
-> >> +=C2=A0=C2=A0=C2=A0 if (!vd || !xchan->busy)
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
-> >> +
-> >> +=C2=A0=C2=A0=C2=A0 /* clear run stop bit to prevent any further auto-=
- =20
-> triggering */
-> >> +=C2=A0=C2=A0=C2=A0 ret =3D regmap_write(xdev->rmap, xchan->base + XDM=
- =20
-> A_CHAN_CONTROL_W1C,
-> >> +_______________________ =20
-> _____ CHAN_CTRL_RUN_STOP);
-> >> +=C2=A0=C2=A0=C2=A0 if (ret)
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret; =20
->=20
-> Shouldn't status register be cleared prior to using it next time? It can =
-be cleared-on-read by doing a read from a separate register (offset 0x44)
-> .
-> >> +
-> >> +=C2=A0=C2=A0=C2=A0 xchan->busy =3D false;
-> >> +
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
-> >> =C2=A0 }
-> >> @@ -475,6 +500,47 @@ static void xdma_issue_pending(struct dma_chan >>=
- *chan)
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 spin_unlock_irqrestore(&xdma_chan->vcha=
- =20
-> n.lock, flags);
-> >> =C2=A0 }
-> >> +/**
-> >> + * xdma_terminate_all - Terminate all transactions
-> >> + * @chan: DMA channel pointer
-> >> + */
-> >> +static int xdma_terminate_all(struct dma_chan *chan)
-> >> +{
-> >> +=C2=A0=C2=A0=C2=A0 struct xdma_chan *xdma_chan =3D to_xdma_chan(chan)=
- =20
-> ;
-> >> +=C2=A0=C2=A0=C2=A0 struct xdma_desc *desc =3D NULL;
-> >> +=C2=A0=C2=A0=C2=A0 struct virt_dma_desc *vd;
-> >> +=C2=A0=C2=A0=C2=A0 unsigned long flags;
-> >> +=C2=A0=C2=A0=C2=A0 LIST_HEAD(head);
-> >> +
-> >> +=C2=A0=C2=A0=C2=A0 spin_lock_irqsave(&xdma_chan->vchan.lock, flags);
-> >> +=C2=A0=C2=A0=C2=A0 xdma_xfer_stop(xdma_chan);
-> >> +
-> >> +=C2=A0=C2=A0=C2=A0 vd =3D vchan_next_desc(&xdma_chan->vchan);
-> >> +=C2=A0=C2=A0=C2=A0 if (vd)
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 desc =3D to_xdma_desc(vd);
-> >> +=C2=A0=C2=A0=C2=A0 if (desc) {
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dma_cookie_complete(&desc-=
- =20
-> >vdesc.tx); =20
-> Prior to a call to vchan_terminate_vdesc(), the vd node has to be deleted=
- from vc.desc_issued list. Otherwise, if there is more than one descriptor =
-present on that list, its link with list's head is going to be lost and fre=
-eing resources associated with it will become impossible (doing so results =
-in dma_pool_destroy() failure). I noticed it when I was playing with a larg=
-e number of interleaved DMA TXs.
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vchan_terminate_vdesc(&des=
- =20
-> c->vdesc);
-> >> +=C2=A0=C2=A0=C2=A0 }
-> >> +
-> >> +=C2=A0=C2=A0=C2=A0 vchan_get_all_descriptors(&xdma_chan->vchan, &head=
- =20
-> );
-> >> +=C2=A0=C2=A0=C2=A0 spin_unlock_irqrestore(&xdma_chan->vchan.lock, fla=
- =20
-> gs);
-> >> +=C2=A0=C2=A0=C2=A0 vchan_dma_desc_free_list(&xdma_chan->vchan, &head)=
- =20
-> ;
-> >> +
-> >> +=C2=A0=C2=A0=C2=A0 return 0;
-> >> +}
-> >> +
-> >> +/**
-> >> + * xdma_synchronize - Synchronize terminated transactions
-> >> + * @chan: DMA channel pointer
-> >> + */
-> >> +static void xdma_synchronize(struct dma_chan *chan)
-> >> +{
-> >> +=C2=A0=C2=A0=C2=A0 struct xdma_chan *xdma_chan =3D to_xdma_chan(chan)=
- =20
-> ;
-> >> +
-> >> +=C2=A0=C2=A0=C2=A0 vchan_synchronize(&xdma_chan->vchan);
-> >> +}
-> >> +
-> >> =C2=A0 /**
-> >> =C2=A0=C2=A0 * xdma_prep_device_sg - prepare a descriptor for a DMA tr=
- =20
-> ansaction
-> >> =C2=A0=C2=A0 * @chan: DMA channel pointer
-> >> @@ -1088,6 +1154,8 @@ static int xdma_probe(struct platform_device *pd=
- =20
-> ev)
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 xdev->dma_dev.device_prep_slave_sg =3D =
-xdma_prep_device_sg;
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 xdev->dma_dev.device_config =3D xdma_de=
- =20
-> vice_config;
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 xdev->dma_dev.device_issue_pending =3D =
-xdma_issue_pending;
-> >> +=C2=A0=C2=A0=C2=A0 xdev->dma_dev.device_terminate_all =3D xdma_termin=
- =20
-> ate_all;
-> >> +=C2=A0=C2=A0=C2=A0 xdev->dma_dev.device_synchronize =3D xdma_synchron=
- =20
-> ize;
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 xdev->dma_dev.filter.map =3D pdata->dev=
- =20
-> ice_map;
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 xdev->dma_dev.filter.mapcnt =3D pdata->=
- =20
-> device_map_cnt;
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 xdev->dma_dev.filter.fn =3D xdma_filter=
- =20
-> _fn;
->=20
-> I have already prepared a patch with an appropriate fix, which I'm going =
-to submit with the whole patch series, once I have interleaved DMA transfer=
-s properly sorted out (hopefully soon). Or maybe should I post this patch w=
-ith fix, immediately as a reply to the already sent one? What do you prefer?
+            +-------+       +-------+       +-----------+
+   PCIe     |       |       |       |       |           |
+   Tx/Rx    |       |       |       |  AXI  |           |
+ <=======>  | PCIE  | <===> | QDMA  | <====>| User Logic|
+            |       |       |       |       |           |
+            +-------+       +-------+       +-----------+
 
-I see. Well in the case of cyclic transfers it looks like this is enough
-(I don't have any way to test interleaved/SG transfers) so maybe
-maintainers can take this now as it is ready and fixes cyclic
-transfers, so when the interleaved transfers are ready you can
-improve these functions with a series on top of it?
+Comparing to AMD/Xilinx XDMA subsystem,
+    https://lore.kernel.org/lkml/Y+XeKt5yPr1nGGaq@matsya/
+the QDMA subsystem is a queue based, configurable scatter-gather DMA
+implementation which provides thousands of queues, support for multiple
+physical/virtual functions with single-root I/O virtualization (SR-IOV),
+and advanced interrupt support. In this mode the IP provides AXI4-MM and
+AXI4-Stream user interfaces which may be configured on a per-queue basis.
 
-Thanks,
-Miqu=C3=A8l
+The QDMA has been used for Xilinx Alveo PCIe devices.
+    https://www.xilinx.com/applications/data-center/v70.html
+
+This patch series is to provide the platform driver for AMD QDMA subsystem
+to support AXI4-MM DMA transfers. More functions, such as AXI4-Stream
+and SR-IOV, will be supported by future patches.
+
+The device driver for any FPGA based PCIe device which leverages QDMA can
+call the standard dmaengine APIs to discover and use the QDMA subsystem
+without duplicating the QDMA driver code in its own driver.
+
+Changes since v7:
+- Fixed smatch warnings
+
+Changes since v6:
+- Added a patch to create amd/ and empty Kconfig/Makefile for AMD drivers
+- Moved source code under amd/qdma/
+- Minor changes for code review comments
+
+Changes since v5:
+- Add more in patch description.
+
+Changes since v4:
+- Convert to use platform driver callback .remove_new()
+
+Changes since v3:
+- Minor changes in Kconfig description.
+
+Changes since v2:
+- A minor change from code review comments.
+
+Changes since v1:
+- Minor changes from code review comments.
+- Fixed kernel robot warning.
+
+Lizhi Hou (1):
+  dmaengine: amd: Add empty Kconfig and Makefile for AMD drivers
+
+Nishad Saraf (1):
+  dmaengine: amd: qdma: Add AMD QDMA driver
+
+ MAINTAINERS                            |    8 +
+ drivers/dma/Kconfig                    |    2 +
+ drivers/dma/Makefile                   |    1 +
+ drivers/dma/amd/Kconfig                |   14 +
+ drivers/dma/amd/Makefile               |    6 +
+ drivers/dma/amd/qdma/Makefile          |    8 +
+ drivers/dma/amd/qdma/qdma-comm-regs.c  |   64 ++
+ drivers/dma/amd/qdma/qdma.c            | 1185 ++++++++++++++++++++++++
+ drivers/dma/amd/qdma/qdma.h            |  265 ++++++
+ include/linux/platform_data/amd_qdma.h |   36 +
+ 10 files changed, 1589 insertions(+)
+ create mode 100644 drivers/dma/amd/Kconfig
+ create mode 100644 drivers/dma/amd/Makefile
+ create mode 100644 drivers/dma/amd/qdma/Makefile
+ create mode 100644 drivers/dma/amd/qdma/qdma-comm-regs.c
+ create mode 100644 drivers/dma/amd/qdma/qdma.c
+ create mode 100644 drivers/dma/amd/qdma/qdma.h
+ create mode 100644 include/linux/platform_data/amd_qdma.h
+
+-- 
+2.34.1
+
 

@@ -1,212 +1,241 @@
-Return-Path: <dmaengine+bounces-330-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-331-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 99C4F7FF3AC
-	for <lists+dmaengine@lfdr.de>; Thu, 30 Nov 2023 16:36:21 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 427B37FF83A
+	for <lists+dmaengine@lfdr.de>; Thu, 30 Nov 2023 18:29:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D084AB20DD9
-	for <lists+dmaengine@lfdr.de>; Thu, 30 Nov 2023 15:36:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F1B53281678
+	for <lists+dmaengine@lfdr.de>; Thu, 30 Nov 2023 17:28:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67248524C9;
-	Thu, 30 Nov 2023 15:36:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 283DC5674F;
+	Thu, 30 Nov 2023 17:28:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="YdUFck0v"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Siqls4DW"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2073.outbound.protection.outlook.com [40.107.244.73])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E8FC1B3;
-	Thu, 30 Nov 2023 07:36:09 -0800 (PST)
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2052.outbound.protection.outlook.com [40.107.220.52])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B119510D1
+	for <dmaengine@vger.kernel.org>; Thu, 30 Nov 2023 09:28:53 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QrP3cCKO8O71SL7p/MXN0qrKCJPKw4rIGWpdjK+k1jAMj26xzPVnoJMqtlUVNy0eY2kGpvo31+/e9ANxarwpYv3U9XfyRm5Zy0BMsjHvdxcSYGC1hDY6VcXWVAs1btwWg7ekytuAZIpFYveaK0byj8BJ7+/1R9ndcg6v3+vRv2xHn7kMXMnIktEi/HpxnwAOO9vXZ1++hzDGi4dwqOM6xyp5VrH7UxZTWpwcj5/qzE8siD9z2m6gjeGfpbr8xazPqETPWpshJsdxNpCVc40iddol6NFEjBk2F+7LEP6qbHwgytfybr4EPgny4uWJ4zbMjHTtfWphHwzig0W1/2WdoA==
+ b=P0KdHf+TcTGkpbPIFRu4sreO8b/wZfkwKZvlokAumMLj3FGuFJWXssFya2HMTozlytbblw7X7q/PnWOjzjScNeNjisxyvMYo1xlUN56jdb2cE4lxkzay16oqC09VohQ5qsg6HcTfeH2W5bmnYPagGXpYL0Z8KdfICrh7e1zhdznhipXRJLfAg6jCxd+pzwO8GvMtzq0ggh1jvTTYI3dYa0loy6Keg6siWIn7SUxxaE0ReUPXWDOZhaU9Z/eu/3Kibvm6YRNfxvbxGtlGc4XuWSfZM1sihEZQnPHZm94mCVGhEWjnmJwOphAEQaTK9kbi5nttjUBSRagCbHN1rz8fwQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Yg+iGpeFsD329cG0CVnQudByMeC7keQFt7dotbkdYDc=;
- b=iL858/IN1JSH/hl7GNcNhLLAC/8NeaVUGnbX+bWwy3VZCX9IGYZKgYg9Byd+BQSLIuxjLwtzLHZvIK+52JomGquV5+pIMG7ROdSxRnFHi13kDaPosIKwwCoWmzT4fAvirKfAQNvV2pPx6+saMpCzhF5aWETSwrilL7ueaAagAY9W1hudNpNw8djK8t8eJGBXMDZWJLjbE5GiHy93Xy78KIFtn8P3+mHtWWLMtqLd/BpmvjTZKgDybSlZ3M8kC/1Y6QW9gKA0hOlv/qXSW8PleUPbdVz7Oq07ygnq5uc1s1CM+z6lpfq71/ft/KxPcuK/81184pCXc0Bj12kaylA7OA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ bh=cjq8HQpEEvf3r/ZtBvIF5CLD7t1kH77EUBCb4qgQ/qY=;
+ b=RJ2Ub3g8uLw5Q+5BizllNJu59+guVAfvCrzJ7NNUKAOuzPdUWhjF4QOl2wN+GX03IKN9BD5JF6L5qDogqdWasqx3MZABPKMUn3FvCUth/9aDJdk/JT+HTaiRCiuQGJcU92S55pTgXiqs+z33HB83NIgkbmO03enNJbt+KPGz4GzSF+Gthts5N7zoD+iiU7iXAdebG6ncAsX6KiAveG+GB7UJkoMuFBaOR/wKuKBZMkMrMzptEKVXMGrXGsUT1kgKqfFFB27sNBq4nO7DDu2DHFPy/Z8a5WNNHoElG9SKTUdBlIpncNFpdZWMa+nZ4P8i8xm3FGIk9l09V732GqS1oQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=bootlin.com smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Yg+iGpeFsD329cG0CVnQudByMeC7keQFt7dotbkdYDc=;
- b=YdUFck0v/wQP/dQh2YzHV+D9N71jIQTMMuO0OWmwdTX2brvjeclF2u+Trd1zteOQZl5t8WRD92nbsANdYCSIWRvOfxy+LuKl5ZPnXtgv5cqFGiGb/nhBJg7HaXUmcVlAWn2q194KeDQmQ2XSXzIoUu/IHAS2Zk0KaRsVxHJqCqgFl6QtaOxnXcvpRxuhVMRx1/DgHxVU8A56lmtwCbFb6fakdnvOGJBunQhcO2ibAx/8UrgDbtIECEDZOFC3BxpFUO9ZRqiz7QE+PPv5XOKIrT74Nq3iACUswq11eqx0yXmaxMsWmcbiZsMpDigPbBIY+Htmi6iGoJYjg/7JYDNXXQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
- by BY5PR12MB4999.namprd12.prod.outlook.com (2603:10b6:a03:1da::13) with
+ bh=cjq8HQpEEvf3r/ZtBvIF5CLD7t1kH77EUBCb4qgQ/qY=;
+ b=Siqls4DWqNYhxbQC0kTIIw+8D3B+YxzhJz/L0csLI4VJHfWahLtYzScTvv6V0tagPswvyMXapYUq5tqwq/icbEWnX92wNq8q6ZMKMsAPsslAnm+OaCVeWOqfznmMjArAV+zZ6IvGbTedL/1zZOu7WAn0ILdxpoPaXw0pg8hqU/s=
+Received: from SN7PR04CA0060.namprd04.prod.outlook.com (2603:10b6:806:120::35)
+ by DM4PR12MB6254.namprd12.prod.outlook.com (2603:10b6:8:a5::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7046.24; Thu, 30 Nov
- 2023 15:36:02 +0000
-Received: from LV2PR12MB5869.namprd12.prod.outlook.com
- ([fe80::60d4:c1e3:e1aa:8f93]) by LV2PR12MB5869.namprd12.prod.outlook.com
- ([fe80::60d4:c1e3:e1aa:8f93%4]) with mapi id 15.20.7046.015; Thu, 30 Nov 2023
- 15:36:02 +0000
-Date: Thu, 30 Nov 2023 11:36:00 -0400
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: David Airlie <airlied@gmail.com>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Albert Ou <aou@eecs.berkeley.edu>, asahi@lists.linux.dev,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Danilo Krummrich <dakr@redhat.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Dexuan Cui <decui@microsoft.com>, devicetree@vger.kernel.org,
-	dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	David Woodhouse <dwmw2@infradead.org>,
-	Frank Rowand <frowand.list@gmail.com>,
-	Hanjun Guo <guohanjun@huawei.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>, iommu@lists.linux.dev,
-	Jon Hunter <jonathanh@nvidia.com>, Joerg Roedel <joro@8bytes.org>,
-	Karol Herbst <kherbst@redhat.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Laxman Dewangan <ldewangan@nvidia.com>, Len Brown <lenb@kernel.org>,
-	linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-hyperv@vger.kernel.org, linux-mips@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-snps-arc@lists.infradead.org,
-	linux-tegra@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Lyude Paul <lyude@redhat.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	nouveau@lists.freedesktop.org, Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-	Sven Peter <sven@svenpeter.dev>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Vineet Gupta <vgupta@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-	Wei Liu <wei.liu@kernel.org>, Will Deacon <will@kernel.org>,
-	Lu Baolu <baolu.lu@linux.intel.com>, Christoph Hellwig <hch@lst.de>,
-	Jerry Snitselaar <jsnitsel@redhat.com>,
-	Hector Martin <marcan@marcan.st>, Moritz Fischer <mdf@kernel.org>,
-	patches@lists.linux.dev,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Rob Herring <robh@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 10/10] ACPI: IORT: Allow COMPILE_TEST of IORT
-Message-ID: <20231130153600.GI1389974@nvidia.com>
-References: <10-v1-720585788a7d+811b-iommu_fwspec_p1_jgg@nvidia.com>
- <2e0f0aac-6287-45d1-ae96-6549c15a8418@arm.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2e0f0aac-6287-45d1-ae96-6549c15a8418@arm.com>
-X-ClientProxiedBy: SA1P222CA0150.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:806:3c2::20) To LV2PR12MB5869.namprd12.prod.outlook.com
- (2603:10b6:408:176::16)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7025.29; Thu, 30 Nov
+ 2023 17:28:49 +0000
+Received: from SN1PEPF000252A0.namprd05.prod.outlook.com
+ (2603:10b6:806:120:cafe::b1) by SN7PR04CA0060.outlook.office365.com
+ (2603:10b6:806:120::35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7046.24 via Frontend
+ Transport; Thu, 30 Nov 2023 17:28:49 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ SN1PEPF000252A0.mail.protection.outlook.com (10.167.242.7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7046.17 via Frontend Transport; Thu, 30 Nov 2023 17:28:49 +0000
+Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Thu, 30 Nov
+ 2023 11:28:48 -0600
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB06.amd.com
+ (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Thu, 30 Nov
+ 2023 11:28:48 -0600
+Received: from [172.19.74.144] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.34 via Frontend
+ Transport; Thu, 30 Nov 2023 11:28:47 -0600
+Message-ID: <674c7bf3-77dd-9b44-a2cb-8e769a2080df@amd.com>
+Date: Thu, 30 Nov 2023 09:28:47 -0800
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v2 4/4] dmaengine: xilinx: xdma: Add
+ terminate_all/synchronize callbacks
+Content-Language: en-US
+To: Miquel Raynal <miquel.raynal@bootlin.com>, Brian Xu <brian.xu@amd.com>,
+	Raj Kumar Rampelli <raj.kumar.rampelli@amd.com>, Vinod Koul
+	<vkoul@kernel.org>, Jan Kuliga <jankul@alatek.krakow.pl>
+CC: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Michal Simek
+	<monstr@monstr.eu>, <dmaengine@vger.kernel.org>
+References: <20231130111315.729430-1-miquel.raynal@bootlin.com>
+ <20231130111315.729430-5-miquel.raynal@bootlin.com>
+From: Lizhi Hou <lizhi.hou@amd.com>
+In-Reply-To: <20231130111315.729430-5-miquel.raynal@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|BY5PR12MB4999:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6b55249c-1995-414b-dc14-08dbf1ba0f1b
-X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
+X-MS-TrafficTypeDiagnostic: SN1PEPF000252A0:EE_|DM4PR12MB6254:EE_
+X-MS-Office365-Filtering-Correlation-Id: ae544c6e-ca38-4d21-119e-08dbf1c9d0b6
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	qxL5KGbETW+8VNAFa+yAFxiHNsxzKTkhEa1mtpquu4qbY4dj/oWdidOguAA+zraXx8AiH9qDvzSPTYib4QTECykhbAWOPnmLlANTEuXR7+e49oYaBEyhsMXw3JK0qJCTKdiKcIOhkbOZa4jK01K7eqqB1lzJ3jnxxCf/ZGEZMn5ka8CR/WTblJwU5q5SDQnoGEaN0pt5N+Izb8Y5KnWAX/bsCTqnRLVf6V/v2j6stqqJzNzt4J9YO3rXZ8O8NG2wCRbIaWAd63rHuJQhfwg8axjebcQZlEj/4AjDPE9paYsAOvWe4EKQIUxhwSFaT7VFgcMQQJAuZPdymtbSFm43MOsVsx86nj1+fN3MWgBOepfnCWaFMa1KeT45AwpHYZHpD27c0ZTfbYoyLa7ujPnVa5856MARpyT91E4C5S/ouYY3BUUSvY3cNIRt1AtPGw2m2YHTyL7ogXwKzFFOolWafF0C0AEtkOeADjjhLgvRfiqiMIcbpfSMTvQDl12tC3RYZqDpmyzMCA0O1rd8vHlgWJBEWFEgruJio/nFZxnYdYzX7eO0dJjSVbd3USXY40i0
+	bOfF6zvd/OoreNEdfvzJrVFGPcwekS5rPJhUfXWwOJQNUxkT7P9dhzQrFcqizQIAt+M4HucyDiY/HN8LW71lHvrj+NH46D/BR+1QJHzs5Up1RoFto7p46TuRl65jr5REqEiNf/n0Y2DDLq05+DqFwxTTuoEEBMPAyFt3PL71maUn7KTvPHCtbBQPUR30ou4TCI6Kj0Bv1DAuK4JmNQzQ3oKyavmQEL8A2DdmntDqfInHy/eCmBArGvkly6igoyhkaBBBE8PrjX8nNG+0B9o/NvUOsUmuuDCiZmNjRuXTPLaW0dvKUNZUaV1XP2murOPNxXdDoxplRBgwO8ydbnraRHo1uXGicb+mhFZR236KHSOvXrBJWkBGd8xyQfFwpJQ0UZb/lVX9+cA/5RaM5ETVKFBz9k8PZdmqrTip7K7K6o+0ibDp0wvhnkP7fRPGsX2JBQM3HTA/FjoP4XfS/PSoGiO8h0dL/HRiAgfy0qGDChli1SgnGGSxDcLkE4bTV7y3q4wmvybkOqerlWWDXdHKEiJx+S6TqoKCxHigG7n9i/JF+b06rbU/BFsJ9Rxdn7e6CLyaLAAexF+JbgO57efFAlhJ1iLJXowANuTxMQTWl8WoRoXGSiBKRGWOAkih6Y+FXl6qOr5bufHrEfiRLpNEuMg3v/uidjNgjIbywd7rQzyyW7kxKbG9AkV2olgCjHru1+EldZEuaF9wSR+5N/ALxjiMxYtqZZXia02mbmXIR7ks0mR4HHm5Pj4qq/AdjFQE9pSdb/Lg/1XSMNLNmGH/YK3WY6UmyAXA4YmWBywBCUo=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(136003)(366004)(396003)(376002)(39860400002)(230922051799003)(64100799003)(186009)(451199024)(1800799012)(86362001)(66946007)(54906003)(66476007)(6916009)(33656002)(38100700002)(36756003)(1076003)(26005)(6506007)(2616005)(6512007)(2906002)(316002)(66556008)(6486002)(8676002)(5660300002)(7406005)(478600001)(41300700001)(4326008)(7366002)(7416002)(8936002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?caei0Cy5UF+TDyu1d/BtLe0eaGTnF0CTgxbf1uVSWylnu4MeOPu0sDqE5OVp?=
- =?us-ascii?Q?b5bHBmW3h3fCQq66Ma6qYMWJ53Zvyc8w64EvByrXIa1UgYU7wvD9XWaDWdSK?=
- =?us-ascii?Q?DlsyxkAyfwBgxysPu942dNosJ9vkV1c9S8uPo8gEV7ETDuyOlLMHoDzVO3mm?=
- =?us-ascii?Q?M3zl1WMxshhtJt5OKBths+QAM/kKDd0tO0Qv0kmwEMUL3Lo/HhQeb78DSwuV?=
- =?us-ascii?Q?OZcZWWa0wXA6Ajvt37Q9HLH9IeHwqx+qzFmbxFN0V9+CWHARSsHv/cjmLVlK?=
- =?us-ascii?Q?fpWruoAwztyPxdN1x5B9YMfofd8jZYszKpUfJThKdEPItXSnpzpm6bKLT4hI?=
- =?us-ascii?Q?//QDTT25yFdoYmVRySDotuiIKxMSJyqrIZeks5GSeE8C17DvyvmLhE4hz10U?=
- =?us-ascii?Q?7IoEYcW5xAAETSiMGEk9uOkiuC8/QIqeglYq61ymiA65I1Vt4EwZDtqT97Qb?=
- =?us-ascii?Q?/6IAVyqcmL0PXtiihKS6ntyF9zDWq4+lh+HVHbFNE99IkZodDYIyEoP15hSK?=
- =?us-ascii?Q?57H1UYklF0el1o6YvMhosjfZkMbaBIW3Fb4oirt9cvlzNQJ/tj+ipaCyjnjv?=
- =?us-ascii?Q?IKNTFHvRU0vhM6wAlXYezy2rRmhYCjHWrLC4ycT5JfZaG/4WlayVulJ6NycM?=
- =?us-ascii?Q?aJbsPz80zYxjvRhIFUEJ8Fzk8Rs4+2VGloDDnZcyOuRzqETB7G2S+nIJmdI3?=
- =?us-ascii?Q?OeOncIOdeNRc2wSdMGi7TYQxcQMwmItWW9bZuC4QX/PWeej/alDurMixs1uH?=
- =?us-ascii?Q?bcLGm4DRe8Yia1GgW2PnidAQS518vkG0GdSVsM1ZKJOslfofaPubfysNMjkR?=
- =?us-ascii?Q?9LXlEyC2R86ngKC08R6oFLEVAY8SByH8wUt0V0IpXXiJUFcftJA3XxvTidsy?=
- =?us-ascii?Q?ATm/8IAzU4FfhUjf0DoJA1JpT3DrIJ2smRKcbb5ELYGq0DgR9hdbCU/RryVK?=
- =?us-ascii?Q?ihxKd4qOfeVOHcBcUUMjEWT3xdB3E2XADvaVxZxq7iOp8aNfP+jat/4wQ87t?=
- =?us-ascii?Q?ITtve5Xy3G9lrAZ4kRJK1c3bSx+2Ci9SpyBbZ8egJ9pq64HN+z6AQ5LEVhBi?=
- =?us-ascii?Q?+/koQlHHuTL8dnKwPD5R5z9r2XoxzJizhTTA+mJpkMlzKKa4RsZvnoPgwvfi?=
- =?us-ascii?Q?nUxcY6uhNjPSKzV1F6TtAYopBQcvNoOBJal4tbjagTR+QTtDC84j0ckJomIQ?=
- =?us-ascii?Q?EK0W7soDBkooK0Ky1/4kGuG7HVHxv/xuS51begtclSYfg86B5TZdPUzL1UEJ?=
- =?us-ascii?Q?LfrJyK0z9nPKcqT37K8/ZxM1IVhGZA3R6QpAFJXgF417qjrBGJyiMPysrJ2+?=
- =?us-ascii?Q?MI+vDqMHQ875DkbhjlrIAZXUjehJ8SvF6Ok3O1o5Sz5HmlppNcoIEwMuW1mN?=
- =?us-ascii?Q?hGleadb8PtQfaVuRbFBNVlP9TKjcMaxwxIdBc4YXjSlaokshC5KxdPwHCCsT?=
- =?us-ascii?Q?JlY6HcT1zSOmt2XRDLUNSGW1jl34faPcm16PpVESd94xaoGbj1+ag6BaJE14?=
- =?us-ascii?Q?6jt0fUtQ0fnMaX4qhpeN/+I+1yh9bMhxQichFiiYwF3SZE2V6SC8juSKjYoW?=
- =?us-ascii?Q?1gPexDaeTVW1GX1I996PWwFN1n6GVufExkN4COyW?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6b55249c-1995-414b-dc14-08dbf1ba0f1b
-X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5869.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Nov 2023 15:36:02.5907
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(136003)(376002)(396003)(39860400002)(346002)(230922051799003)(1800799012)(451199024)(82310400011)(186009)(64100799003)(40470700004)(36840700001)(46966006)(31686004)(40480700001)(41300700001)(36860700001)(86362001)(31696002)(478600001)(5660300002)(40460700003)(2906002)(356005)(83380400001)(44832011)(966005)(4326008)(16576012)(70206006)(54906003)(110136005)(70586007)(426003)(36756003)(26005)(316002)(2616005)(336012)(8936002)(8676002)(82740400003)(81166007)(47076005)(53546011)(36900700001)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Nov 2023 17:28:49.4901
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5LTnlNz9icLXiTZJDWxS9wuH1D8XRDWGsPtXpCwOpV1tmhns5DhDddp3Q4CbplUF
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4999
+X-MS-Exchange-CrossTenant-Network-Message-Id: ae544c6e-ca38-4d21-119e-08dbf1c9d0b6
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF000252A0.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6254
 
-On Thu, Nov 30, 2023 at 02:10:48PM +0000, Robin Murphy wrote:
-> > diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-> > index 7673bb82945b6c..309378e76a9bc9 100644
-> > --- a/drivers/iommu/Kconfig
-> > +++ b/drivers/iommu/Kconfig
-> > @@ -318,6 +318,7 @@ config ARM_SMMU
-> >   	select IOMMU_API
-> >   	select IOMMU_IO_PGTABLE_LPAE
-> >   	select ARM_DMA_USE_IOMMU if ARM
-> > +	select ACPI_IORT if ACPI
-> 
-> This is incomplete. If you want the driver to be responsible for enabling
-> its own probing mechanisms then you need to select OF and ACPI too. 
+Added Jan Kuliga who submitted a similar change.
 
-Well, yes, we do have that minor issue today that drivers can be
-compiled without any way to parse any FW and are thus completely
-useless.
+https://lore.kernel.org/dmaengine/20231124192524.134989-1-jankul@alatek.krakow.pl/T/#m20c1ca4bba291f6ca07a8e5fbcaeed9fd0a6f008
 
-Certainly one could make the case this should be
-   depends on OF || ACPI
-   select ACPI_IORT if ACPI
 
-And similar in other drivers so they have the minimum dependencies to
-actually be able to work. This would be the correct way to use
-kconfig.
+Thanks,
 
-But who cares? I'm not trying to fix everything here, I'm trying to
-allow COMPILE_TEST for more sub components of this one driver.
+Lizhi
 
-> And all the other drivers which probe from IORT should surely also
-> select ACPI_IORT, and thus ACPI as well. And maybe the PCI core
-> should as well because there are general properties of PCI host
-> bridges and devices described in there?
-
-Now you are just arguring to an absurdity.
-
-> But of course that's clearly backwards nonsense, because drivers do not and
-> should not do that, so this change is not appropriate either.
-
-This patch is about COMPILE_TEST.
-
-> theoretical bug becomes real. There's really no practical value to be had
-> from compile-testing IORT.
-
-COMPILE_TEST is to make it easier to maintain the kernel code by
-reducing the neccessary combinations required to get complete compile
-coverage. 100% compile test is a laudible goal on its own.
-
-I have no idea what you are talking about with "no practical value"
-just because you don't use COMPILE_TEST doesn't mean it has "no
-practical value". It exists, people like me use, we can make it
-better. Why is this even a point of debate? :(
-
-Jason
+On 11/30/23 03:13, Miquel Raynal wrote:
+> The driver is capable of starting scatter-gather transfers and needs to
+> wait until their end. It is also capable of starting cyclic transfers
+> and will only be "reset" next time the channel will be reused. In
+> practice most of the time we hear no audio glitch because the sound card
+> stops the flow on its side so the DMA transfers are just
+> discarded. There are however some cases (when playing a bit with a
+> number of frames and with a discontinuous sound file) when the sound
+> card seems to be slightly too slow at stopping the flow, leading to a
+> glitch that can be heard.
+>
+> In all cases, we need to earn better control of the DMA engine and
+> adding proper ->device_terminate_all() and ->device_synchronize()
+> callbacks feels totally relevant. With these two callbacks, no glitch
+> can be heard anymore.
+>
+> Fixes: cd8c732ce1a5 ("dmaengine: xilinx: xdma: Support cyclic transfers")
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
+>
+> This was only tested with cyclic transfers.
+> ---
+>   drivers/dma/xilinx/xdma.c | 68 +++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 68 insertions(+)
+>
+> diff --git a/drivers/dma/xilinx/xdma.c b/drivers/dma/xilinx/xdma.c
+> index e931ff42209c..290bb5d2d1e2 100644
+> --- a/drivers/dma/xilinx/xdma.c
+> +++ b/drivers/dma/xilinx/xdma.c
+> @@ -371,6 +371,31 @@ static int xdma_xfer_start(struct xdma_chan *xchan)
+>   		return ret;
+>   
+>   	xchan->busy = true;
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * xdma_xfer_stop - Stop DMA transfer
+> + * @xchan: DMA channel pointer
+> + */
+> +static int xdma_xfer_stop(struct xdma_chan *xchan)
+> +{
+> +	struct virt_dma_desc *vd = vchan_next_desc(&xchan->vchan);
+> +	struct xdma_device *xdev = xchan->xdev_hdl;
+> +	int ret;
+> +
+> +	if (!vd || !xchan->busy)
+> +		return -EINVAL;
+> +
+> +	/* clear run stop bit to prevent any further auto-triggering */
+> +	ret = regmap_write(xdev->rmap, xchan->base + XDMA_CHAN_CONTROL_W1C,
+> +			   CHAN_CTRL_RUN_STOP);
+> +	if (ret)
+> +		return ret;
+> +
+> +	xchan->busy = false;
+> +
+>   	return 0;
+>   }
+>   
+> @@ -475,6 +500,47 @@ static void xdma_issue_pending(struct dma_chan *chan)
+>   	spin_unlock_irqrestore(&xdma_chan->vchan.lock, flags);
+>   }
+>   
+> +/**
+> + * xdma_terminate_all - Terminate all transactions
+> + * @chan: DMA channel pointer
+> + */
+> +static int xdma_terminate_all(struct dma_chan *chan)
+> +{
+> +	struct xdma_chan *xdma_chan = to_xdma_chan(chan);
+> +	struct xdma_desc *desc = NULL;
+> +	struct virt_dma_desc *vd;
+> +	unsigned long flags;
+> +	LIST_HEAD(head);
+> +
+> +	spin_lock_irqsave(&xdma_chan->vchan.lock, flags);
+> +	xdma_xfer_stop(xdma_chan);
+> +
+> +	vd = vchan_next_desc(&xdma_chan->vchan);
+> +	if (vd)
+> +		desc = to_xdma_desc(vd);
+> +	if (desc) {
+> +		dma_cookie_complete(&desc->vdesc.tx);
+> +		vchan_terminate_vdesc(&desc->vdesc);
+> +	}
+> +
+> +	vchan_get_all_descriptors(&xdma_chan->vchan, &head);
+> +	spin_unlock_irqrestore(&xdma_chan->vchan.lock, flags);
+> +	vchan_dma_desc_free_list(&xdma_chan->vchan, &head);
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * xdma_synchronize - Synchronize terminated transactions
+> + * @chan: DMA channel pointer
+> + */
+> +static void xdma_synchronize(struct dma_chan *chan)
+> +{
+> +	struct xdma_chan *xdma_chan = to_xdma_chan(chan);
+> +
+> +	vchan_synchronize(&xdma_chan->vchan);
+> +}
+> +
+>   /**
+>    * xdma_prep_device_sg - prepare a descriptor for a DMA transaction
+>    * @chan: DMA channel pointer
+> @@ -1088,6 +1154,8 @@ static int xdma_probe(struct platform_device *pdev)
+>   	xdev->dma_dev.device_prep_slave_sg = xdma_prep_device_sg;
+>   	xdev->dma_dev.device_config = xdma_device_config;
+>   	xdev->dma_dev.device_issue_pending = xdma_issue_pending;
+> +	xdev->dma_dev.device_terminate_all = xdma_terminate_all;
+> +	xdev->dma_dev.device_synchronize = xdma_synchronize;
+>   	xdev->dma_dev.filter.map = pdata->device_map;
+>   	xdev->dma_dev.filter.mapcnt = pdata->device_map_cnt;
+>   	xdev->dma_dev.filter.fn = xdma_filter_fn;
 

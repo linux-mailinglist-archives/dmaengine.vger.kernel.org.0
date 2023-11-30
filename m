@@ -1,164 +1,87 @@
-Return-Path: <dmaengine+bounces-321-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-323-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2365B7FED8E
-	for <lists+dmaengine@lfdr.de>; Thu, 30 Nov 2023 12:12:49 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 81BE67FED97
+	for <lists+dmaengine@lfdr.de>; Thu, 30 Nov 2023 12:13:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CA1A7281CF3
-	for <lists+dmaengine@lfdr.de>; Thu, 30 Nov 2023 11:12:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B30011C20BE6
+	for <lists+dmaengine@lfdr.de>; Thu, 30 Nov 2023 11:13:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2769B3C085;
-	Thu, 30 Nov 2023 11:12:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB1293B78C;
+	Thu, 30 Nov 2023 11:13:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hS29cAae"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RR3ng+9I"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC8B118E01;
-	Thu, 30 Nov 2023 11:12:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEC73C433C7;
-	Thu, 30 Nov 2023 11:12:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701342762;
-	bh=GGfXE9jnMr/28RJ1AbOcy/7HFYYF7xL3m95Mfm15Tps=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hS29cAaeUtXdeK+kiZWZ8qW3M4rlyGHM7IrFWTDxn8Nt0aXiAvnbAmRc/aoZ3Gp0j
-	 V7SRDf/8hQJMNOEslGbmVEQwuQ3v/n0aab4QU6apKhqRzbBW1fGVCc4o5+lNiYt0iI
-	 /7/amZz6HtQ5TNJ7z/1iEkJX2GzxXQ/d0Y8W3VVN2EeZqpbt6InWklo12ZeEHk9H/Z
-	 dLnoiGTasJF7l2Ws/GUmhIMMkZ/lsrZ8w7RC7r6TB1mn3zon1xzXFqjFmv6WUa2sKK
-	 u5jJfB5MNcKrcJC5o7DP2m9wYEaZRsNjXWMH0W1KpYnQMkdMULlFup8a//0ud2c0XX
-	 Dh6gxHxqd0DdA==
-Date: Thu, 30 Nov 2023 12:12:26 +0100
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: linux-hyperv@vger.kernel.org, Karol Herbst <kherbst@redhat.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jerry Snitselaar <jsnitsel@redhat.com>,
-	dri-devel@lists.freedesktop.org, patches@lists.linux.dev,
-	Laxman Dewangan <ldewangan@nvidia.com>,
-	Hanjun Guo <guohanjun@huawei.com>, linux-riscv@lists.infradead.org,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Frank Rowand <frowand.list@gmail.com>,
-	Christoph Hellwig <hch@lst.de>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Wei Liu <wei.liu@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Dexuan Cui <decui@microsoft.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Jon Hunter <jonathanh@nvidia.com>, linux-acpi@vger.kernel.org,
-	iommu@lists.linux.dev, Danilo Krummrich <dakr@redhat.com>,
-	nouveau@lists.freedesktop.org, linux-snps-arc@lists.infradead.org,
-	Len Brown <lenb@kernel.org>, devicetree@vger.kernel.org,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-	Will Deacon <will@kernel.org>, Sven Peter <sven@svenpeter.dev>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Vineet Gupta <vgupta@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-	Moritz Fischer <mdf@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Vinod Koul <vkoul@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Hector Martin <marcan@marcan.st>, linux-mips@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, asahi@lists.linux.dev,
-	Sudeep Holla <sudeep.holla@arm.com>, dmaengine@vger.kernel.org,
-	David Woodhouse <dwmw2@infradead.org>,
-	Lu Baolu <baolu.lu@linux.intel.com>
-Subject: Re: [PATCH 10/10] ACPI: IORT: Allow COMPILE_TEST of IORT
-Message-ID: <ZWhuGl1l5V5b+w4P@lpieralisi>
-References: <0-v1-720585788a7d+811b-iommu_fwspec_p1_jgg@nvidia.com>
- <10-v1-720585788a7d+811b-iommu_fwspec_p1_jgg@nvidia.com>
- <ZWc0qPWzNWPkL8vt@lpieralisi>
- <20231129191240.GZ436702@nvidia.com>
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::224])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13406D50
+	for <dmaengine@vger.kernel.org>; Thu, 30 Nov 2023 03:13:18 -0800 (PST)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 25F49E0009;
+	Thu, 30 Nov 2023 11:13:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1701342796;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=8V3ujd/rftS59b/t6fdmENtgEWzOHd92a0x/FPbG0Nc=;
+	b=RR3ng+9IcFSOm+RHv+MpmVjFc3FA3Mjl0pGGTNQqnC0R1N7XJN3uXbI5Hj9UsxmGp1quuP
+	v6pALZ55wYl8CirrDfaetXJeuo+/ob2f29rn6ZkIXQdKl8sOyNHNChRuUezvn8+HvJQQCQ
+	K+M4jVhA6cviZ2BoWBLFPoyHfFTIYgDihoquWPGxt3YxSI10ANJz7b0bjtgyN3frTmtnO9
+	T4SWXo19W6o7yyCwnFKeUMYXOeYDR9kNLJvZCwvGIswDf2zy529553bswkhHLwZ2yM51Gx
+	sy+vO/mlzg5KB816Nccox6flQbusgI004hcu8ene99ZIeek7HuzpRq3WKl7z3Q==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Lizhi Hou <lizhi.hou@amd.com>,
+	Brian Xu <brian.xu@amd.com>,
+	Raj Kumar Rampelli <raj.kumar.rampelli@amd.com>,
+	Vinod Koul <vkoul@kernel.org>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Michal Simek <monstr@monstr.eu>,
+	dmaengine@vger.kernel.org,
+	Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH v2 0/4] dmaengine: xilinx: Misc (cyclic) transfers fixes
+Date: Thu, 30 Nov 2023 12:13:11 +0100
+Message-Id: <20231130111315.729430-1-miquel.raynal@bootlin.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231129191240.GZ436702@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Wed, Nov 29, 2023 at 03:12:40PM -0400, Jason Gunthorpe wrote:
-> On Wed, Nov 29, 2023 at 01:55:04PM +0100, Lorenzo Pieralisi wrote:
-> 
-> > I don't think it should be done this way. Is the goal compile testing
-> > IORT code ? 
-> 
-> Yes
-> 
-> > If so, why are we forcing it through the SMMU (only because
-> > it can be compile tested while eg SMMUv3 driver can't ?) menu entry ?
-> 
-> Because something needs to select it, and SMMU is one of the places
-> that are implicitly using it.
-> 
-> It isn't (and shouldn't be) a user selectable kconfig. Currently the
-> only thing that selects it is the ARM64 master kconfig.
+Hello,
 
-I never said it should be a user selectable kconfig. I said that
-I don't like using the SMMU entry (only) to select it just because
-that entry allows COMPILE_TEST.
+So far all my testing was performed by looping the playback output to
+the recording input and comparing the files using FFTs. Unfortunately,
+when the DMA engine suffers from the same issue on both sides, some
+issues may appear un-noticed. I now have proper hardware to really
+listen to the actual sound, so here are a couple of fixes and
+improvements.
 
-> > This looks a bit artificial (and it is unclear from the Kconfig
-> > file why only that driver selects IORT, it looks like eg the SMMUv3
-> > does not have the same dependency - there is also the SMMUv3 perf
-> > driver to consider).
-> 
-> SMMUv3 doesn't COMPILE_TEST so it picks up the dependency transitivity
-> through ARM64. I'm not sure why IORT was put as a global ARM64 kconfig
-> dependency and not put in the places that directly need it.
+Cheers,
+Miquèl
 
-Because IORT is used by few ARM64 system IPs (that are enabled by
-default, eg GIC), it makes sense to have a generic ARM64 select (if ACPI).
+Changes in v2:
+* Added a patch to clarify the logic in the interrupt handler between
+  cyclic and sg transfers.
+* Fixed the count of elapsed periods without breaking SG.
 
-> "perf driver" ? There is a bunch of GIC stuff that uses this too but I
-> don't know if it compile tests.
+Miquel Raynal (4):
+  dmaengine: xilinx: xdma: Fix the count of elapsed periods in cyclic
+    mode
+  dmaengine: xilinx: xdma: Clarify the logic between cyclic/sg modes
+  dmaengine: xilinx: xdma: Better handling of the busy variable
+  dmaengine: xilinx: xdma: Add terminate_all/synchronize callbacks
 
-"SMMUv3 perf driver" drivers/perf/arm_smmuv3_pmu.c
+ drivers/dma/xilinx/xdma.c | 103 +++++++++++++++++++++++++++++++-------
+ 1 file changed, 85 insertions(+), 18 deletions(-)
 
-> > Maybe we can move IORT code into drivers/acpi and add a silent config
-> > option there with a dependency on ARM64 || COMPILE_TEST.
-> 
-> That seems pretty weird to me, this is the right way to approach it,
-> IMHO. Making an entire directory condition is pretty incompatible with
-> COMPILE_TEST as a philosophy.
+-- 
+2.34.1
 
-That's not what I was suggesting. I was suggesting to move iort.c (or
-some portions of it) into drivers/acpi if we care enough to compile test
-it on arches !ARM64.
-
-It is also weird to have a file in drivers/acpi/arm64 that you want
-to compile test on other arches IMO (and I don't think it is very useful
-to compile test it either).
-
-> > Don't know but at least it is clearer. As for the benefits of compile
-> > testing IORT code - yes the previous patch is a warning to fix but
-> > I am not so sure about the actual benefits.
-> 
-> IMHO COMPILE_TEST is an inherently good thing. It makes development
-> easier for everyone because you have a less fractured code base to
-> work with.
-
-I am talking about IORT code, not COMPILE_TEST as a whole.
-
-I am not sure what "less fractured" means in this context.
-
-Anyway - it is not a big deal either way but I don't like selecting
-ACPI_IORT only on kconfig entries that allow COMPILE_TEST to implicitly
-compile test it so *if* we want to do it we will have to do it
-differently.
-
-Thanks,
-Lorenzo
 

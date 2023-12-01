@@ -1,47 +1,47 @@
-Return-Path: <dmaengine+bounces-344-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-348-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 16EA48013FA
-	for <lists+dmaengine@lfdr.de>; Fri,  1 Dec 2023 21:11:22 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4AAFB801400
+	for <lists+dmaengine@lfdr.de>; Fri,  1 Dec 2023 21:11:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 94CF51F20FDD
-	for <lists+dmaengine@lfdr.de>; Fri,  1 Dec 2023 20:11:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0079F281D5E
+	for <lists+dmaengine@lfdr.de>; Fri,  1 Dec 2023 20:11:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7B8856B99;
-	Fri,  1 Dec 2023 20:11:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CDFB56B82;
+	Fri,  1 Dec 2023 20:11:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NS9tAgA/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DWlR0wVp"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 160BFF2;
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FEA410F3;
 	Fri,  1 Dec 2023 12:11:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1701461469; x=1732997469;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=+16TGDFbGczjwVEHR20VFjlDoX6KPg2OQQUQCG8p4LE=;
-  b=NS9tAgA/XnIiJ1fO+EpeIyqbcH75C4jumTCsJOKosutZWfU88jr/RDtc
-   v2O+wocBZC5qmn4mcKrg96e5TD3DJg5WQ8jEoMWpVOqlfwo5kz17vlbmo
-   YTdLmD8ahGuvXjOClJk9Lrlm+XipLsHOGPV0OO4R5aRMQ5t7RGUMC0Lh+
-   4806TCCnpv6sF1PnBwzb0dXXdlHRRMyi9lTNzJCx9RT+4AavCbXkrNzTN
-   x9ziPqZfcd7xtCNF/G7hEnfcWnGwdyJWq6b1vbiF2xXBD5JTq3Ey8mQ55
-   A8e7aoh21vDX9YNsqDng/C14FoKUWomKbuZDt4WlAoioUcN0yM0GtS5cL
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10911"; a="427868"
+  bh=O5lYQY8OUj1H+LsLFubb+LDkgwZqykmFWIYOhAxTB/U=;
+  b=DWlR0wVpiXzZNvuEEtlx7bp62eTfYvaRVBMv9+8IhsuaC6OiNuxd9PgQ
+   0u4/SU28meJrAX8dfykHE9UZspDRt9W921DqiEzGi+Z0I0LXhJa7JUCax
+   fzxDTCRBMWqOZnzZmbxTJSLI0czGRpt7eKCNcy0J5j4nbBgkWlMNu9nk7
+   3SB/eyjK4Z/1ISrCU9/O70LK0dCCiW1+LPb02ECZpiSksSEJR7Dyt46ca
+   rsx0XNw6vDZlo0ODNraUFYmvPtEuubJune2iJ458t9bZ/CEHGT2d5PwHw
+   q5+KmKYGW7H6sP+N9IEa5xzzWVKYbmleoxOKvEm6R8kPd69l5YTNEB/mH
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10911"; a="427873"
 X-IronPort-AV: E=Sophos;i="6.04,242,1695711600"; 
-   d="scan'208";a="427868"
+   d="scan'208";a="427873"
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2023 12:10:58 -0800
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2023 12:10:59 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10911"; a="860671192"
+X-IronPort-AV: E=McAfee;i="6600,9927,10911"; a="860671196"
 X-IronPort-AV: E=Sophos;i="6.04,242,1695711600"; 
-   d="scan'208";a="860671192"
+   d="scan'208";a="860671196"
 Received: from temersox-mobl2.amr.corp.intel.com (HELO tzanussi-mobl1.amr.corp.intel.com) ([10.213.166.197])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2023 12:10:51 -0800
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2023 12:10:57 -0800
 From: Tom Zanussi <tom.zanussi@linux.intel.com>
 To: herbert@gondor.apana.org.au,
 	davem@davemloft.net,
@@ -58,9 +58,9 @@ Cc: dave.jiang@intel.com,
 	linux-kernel@vger.kernel.org,
 	linux-crypto@vger.kernel.org,
 	dmaengine@vger.kernel.org
-Subject: [PATCH v11 06/14] dmaengine: idxd: add callback support for iaa crypto
-Date: Fri,  1 Dec 2023 14:10:27 -0600
-Message-Id: <20231201201035.172465-7-tom.zanussi@linux.intel.com>
+Subject: [PATCH v11 07/14] crypto: iaa - Add IAA Compression Accelerator Documentation
+Date: Fri,  1 Dec 2023 14:10:28 -0600
+Message-Id: <20231201201035.172465-8-tom.zanussi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231201201035.172465-1-tom.zanussi@linux.intel.com>
 References: <20231201201035.172465-1-tom.zanussi@linux.intel.com>
@@ -72,285 +72,914 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Create a lightweight callback interface to allow idxd sub-drivers to
-be notified when work sent to idxd wqs has completed.
+Because the IAA Compression Accelerator requires significant user
+setup in order to be used properly, this adds documentation on the
+iaa_crypto driver including setup, usage, and examples.
 
-For a sub-driver to be notified of work completion, it needs to:
-
-  - Set the descriptor's 'Request Completion Interrupt'
-    (IDXD_OP_FLAG_RCI)
-
-  - Set the sub-driver desc_complete() callback when registering the
-    sub-driver e.g.:
-
-      struct idxd_device_driver my_drv = {
-            .probe = my_probe,
-            .desc_complete = my_complete,
-      }
-
-  - Set the sub-driver-specific context in the sub-driver's descriptor
-    e.g:
-
-      idxd_desc->crypto.req = req;
-      idxd_desc->crypto.tfm = tfm;
-      idxd_desc->crypto.src_addr = src_addr;
-      idxd_desc->crypto.dst_addr = dst_addr;
-
-When the work completes and the completion irq fires, idxd will invoke
-the desc_complete() callback with pointers to the descriptor, context,
-and completion_type.
-
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
-Reviewed-by: Fenghua Yu <fenghua.yu@intel.com>
-Acked-by: Vinod Koul <vkoul@kernel.org>
 ---
- drivers/dma/idxd/device.c |  2 +-
- drivers/dma/idxd/dma.c    |  3 +-
- drivers/dma/idxd/idxd.h   | 62 ++++++++++++++++++++++++++++++++-------
- drivers/dma/idxd/irq.c    | 12 ++++----
- drivers/dma/idxd/submit.c |  6 ++--
- 5 files changed, 65 insertions(+), 20 deletions(-)
+ .../driver-api/crypto/iaa/iaa-crypto.rst      | 824 ++++++++++++++++++
+ Documentation/driver-api/crypto/iaa/index.rst |  20 +
+ Documentation/driver-api/crypto/index.rst     |  20 +
+ Documentation/driver-api/index.rst            |   1 +
+ 4 files changed, 865 insertions(+)
+ create mode 100644 Documentation/driver-api/crypto/iaa/iaa-crypto.rst
+ create mode 100644 Documentation/driver-api/crypto/iaa/index.rst
+ create mode 100644 Documentation/driver-api/crypto/index.rst
 
-diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-index e6176de0e12b..f43d81128b96 100644
---- a/drivers/dma/idxd/device.c
-+++ b/drivers/dma/idxd/device.c
-@@ -1271,7 +1271,7 @@ static void idxd_flush_pending_descs(struct idxd_irq_entry *ie)
- 		tx = &desc->txd;
- 		tx->callback = NULL;
- 		tx->callback_result = NULL;
--		idxd_dma_complete_txd(desc, ctype, true);
-+		idxd_dma_complete_txd(desc, ctype, true, NULL, NULL);
- 	}
- }
- 
-diff --git a/drivers/dma/idxd/dma.c b/drivers/dma/idxd/dma.c
-index e7043e235408..cd835eabd31b 100644
---- a/drivers/dma/idxd/dma.c
-+++ b/drivers/dma/idxd/dma.c
-@@ -22,7 +22,7 @@ static inline struct idxd_wq *to_idxd_wq(struct dma_chan *c)
- 
- void idxd_dma_complete_txd(struct idxd_desc *desc,
- 			   enum idxd_complete_type comp_type,
--			   bool free_desc)
-+			   bool free_desc, void *ctx, u32 *status)
- {
- 	struct idxd_device *idxd = desc->wq->idxd;
- 	struct dma_async_tx_descriptor *tx;
-@@ -359,6 +359,7 @@ static enum idxd_dev_type dev_types[] = {
- struct idxd_device_driver idxd_dmaengine_drv = {
- 	.probe = idxd_dmaengine_drv_probe,
- 	.remove = idxd_dmaengine_drv_remove,
-+	.desc_complete = idxd_dma_complete_txd,
- 	.name = "dmaengine",
- 	.type = dev_types,
- };
-diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index 4b67181f4396..62ea21b25906 100644
---- a/drivers/dma/idxd/idxd.h
-+++ b/drivers/dma/idxd/idxd.h
-@@ -13,6 +13,7 @@
- #include <linux/bitmap.h>
- #include <linux/perf_event.h>
- #include <linux/iommu.h>
-+#include <linux/crypto.h>
- #include <uapi/linux/idxd.h>
- #include "registers.h"
- 
-@@ -57,11 +58,23 @@ enum idxd_type {
- #define IDXD_ENQCMDS_RETRIES		32
- #define IDXD_ENQCMDS_MAX_RETRIES	64
- 
-+enum idxd_complete_type {
-+	IDXD_COMPLETE_NORMAL = 0,
-+	IDXD_COMPLETE_ABORT,
-+	IDXD_COMPLETE_DEV_FAIL,
-+};
+diff --git a/Documentation/driver-api/crypto/iaa/iaa-crypto.rst b/Documentation/driver-api/crypto/iaa/iaa-crypto.rst
+new file mode 100644
+index 000000000000..de587cf9cbed
+--- /dev/null
++++ b/Documentation/driver-api/crypto/iaa/iaa-crypto.rst
+@@ -0,0 +1,824 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+struct idxd_desc;
++=========================================
++IAA Compression Accelerator Crypto Driver
++=========================================
 +
- struct idxd_device_driver {
- 	const char *name;
- 	enum idxd_dev_type *type;
- 	int (*probe)(struct idxd_dev *idxd_dev);
- 	void (*remove)(struct idxd_dev *idxd_dev);
-+	void (*desc_complete)(struct idxd_desc *desc,
-+			      enum idxd_complete_type comp_type,
-+			      bool free_desc,
-+			      void *ctx, u32 *status);
- 	struct device_driver drv;
- };
- 
-@@ -174,12 +187,6 @@ enum idxd_op_type {
- 	IDXD_OP_NONBLOCK = 1,
- };
- 
--enum idxd_complete_type {
--	IDXD_COMPLETE_NORMAL = 0,
--	IDXD_COMPLETE_ABORT,
--	IDXD_COMPLETE_DEV_FAIL,
--};
--
- struct idxd_dma_chan {
- 	struct dma_chan chan;
- 	struct idxd_wq *wq;
-@@ -378,6 +385,14 @@ static inline unsigned int evl_size(struct idxd_device *idxd)
- 	return idxd->evl->size * evl_ent_size(idxd);
- }
- 
-+struct crypto_ctx {
-+	struct acomp_req *req;
-+	struct crypto_tfm *tfm;
-+	dma_addr_t src_addr;
-+	dma_addr_t dst_addr;
-+	bool compress;
-+};
++Tom Zanussi <tom.zanussi@linux.intel.com>
 +
- /* IDXD software descriptor */
- struct idxd_desc {
- 	union {
-@@ -390,7 +405,10 @@ struct idxd_desc {
- 		struct iax_completion_record *iax_completion;
- 	};
- 	dma_addr_t compl_dma;
--	struct dma_async_tx_descriptor txd;
-+	union {
-+		struct dma_async_tx_descriptor txd;
-+		struct crypto_ctx crypto;
-+	};
- 	struct llist_node llnode;
- 	struct list_head list;
- 	int id;
-@@ -417,6 +435,15 @@ enum idxd_completion_status {
- #define idxd_dev_to_idxd(idxd_dev) container_of(idxd_dev, struct idxd_device, idxd_dev)
- #define idxd_dev_to_wq(idxd_dev) container_of(idxd_dev, struct idxd_wq, idxd_dev)
- 
-+static inline struct idxd_device_driver *wq_to_idxd_drv(struct idxd_wq *wq)
-+{
-+	struct device *dev = wq_confdev(wq);
-+	struct idxd_device_driver *idxd_drv =
-+		container_of(dev->driver, struct idxd_device_driver, drv);
++The IAA crypto driver supports compression/decompression compatible
++with the DEFLATE compression standard described in RFC 1951, which is
++the compression/decompression algorithm exported by this module.
 +
-+	return idxd_drv;
-+}
++The IAA hardware spec can be found here:
 +
- static inline struct idxd_device *confdev_to_idxd(struct device *dev)
- {
- 	struct idxd_dev *idxd_dev = confdev_to_idxd_dev(dev);
-@@ -678,6 +705,24 @@ void idxd_driver_unregister(struct idxd_device_driver *idxd_drv);
- #define module_idxd_driver(__idxd_driver) \
- 	module_driver(__idxd_driver, idxd_driver_register, idxd_driver_unregister)
- 
-+void idxd_free_desc(struct idxd_wq *wq, struct idxd_desc *desc);
-+void idxd_dma_complete_txd(struct idxd_desc *desc,
-+			   enum idxd_complete_type comp_type,
-+			   bool free_desc, void *ctx, u32 *status);
++  https://cdrdv2.intel.com/v1/dl/getContent/721858
 +
-+static inline void idxd_desc_complete(struct idxd_desc *desc,
-+				      enum idxd_complete_type comp_type,
-+				      bool free_desc)
-+{
-+	struct idxd_device_driver *drv;
-+	u32 status;
++The iaa_crypto driver is designed to work as a layer underneath
++higher-level compression devices such as zswap.
 +
-+	drv = wq_to_idxd_drv(desc->wq);
-+	if (drv->desc_complete)
-+		drv->desc_complete(desc, comp_type, free_desc,
-+				   &desc->txd, &status);
-+}
++Users can select IAA compress/decompress acceleration by specifying
++one of the supported IAA compression algorithms in whatever facility
++allows compression algorithms to be selected.
 +
- int idxd_register_bus_type(void);
- void idxd_unregister_bus_type(void);
- int idxd_register_devices(struct idxd_device *idxd);
-@@ -731,14 +776,11 @@ int idxd_wq_request_irq(struct idxd_wq *wq);
- /* submission */
- int idxd_submit_desc(struct idxd_wq *wq, struct idxd_desc *desc);
- struct idxd_desc *idxd_alloc_desc(struct idxd_wq *wq, enum idxd_op_type optype);
--void idxd_free_desc(struct idxd_wq *wq, struct idxd_desc *desc);
- int idxd_enqcmds(struct idxd_wq *wq, void __iomem *portal, const void *desc);
++For example, a zswap device can select the IAA 'fixed' mode
++represented by selecting the 'deflate-iaa' crypto compression
++algorithm::
++
++  # echo deflate-iaa > /sys/module/zswap/parameters/compressor
++
++This will tell zswap to use the IAA 'fixed' compression mode for all
++compresses and decompresses.
++
++Currently, there is only one compression modes available, 'fixed'
++mode.
++
++The 'fixed' compression mode implements the compression scheme
++specified by RFC 1951 and is given the crypto algorithm name
++'deflate-iaa'.  (Because the IAA hardware has a 4k history-window
++limitation, only buffers <= 4k, or that have been compressed using a
++<= 4k history window, are technically compliant with the deflate spec,
++which allows for a window of up to 32k.  Because of this limitation,
++the IAA fixed mode deflate algorithm is given its own algorithm name
++rather than simply 'deflate').
++
++
++Config options and other setup
++==============================
++
++The IAA crypto driver is available via menuconfig using the following
++path::
++
++  Cryptographic API -> Hardware crypto devices -> Support for Intel(R) IAA Compression Accelerator
++
++In the configuration file the option called CONFIG_CRYPTO_DEV_IAA_CRYPTO.
++
++The IAA crypto driver also supports statistics, which are available
++via menuconfig using the following path::
++
++  Cryptographic API -> Hardware crypto devices -> Support for Intel(R) IAA Compression -> Enable Intel(R) IAA Compression Accelerator Statistics
++
++In the configuration file the option called CONFIG_CRYPTO_DEV_IAA_CRYPTO_STATS.
++
++The following config options should also be enabled::
++
++  CONFIG_IRQ_REMAP=y
++  CONFIG_INTEL_IOMMU=y
++  CONFIG_INTEL_IOMMU_SVM=y
++  CONFIG_PCI_ATS=y
++  CONFIG_PCI_PRI=y
++  CONFIG_PCI_PASID=y
++  CONFIG_INTEL_IDXD=m
++  CONFIG_INTEL_IDXD_SVM=y
++
++IAA is one of the first Intel accelerator IPs that can work in
++conjunction with the Intel IOMMU.  There are multiple modes that exist
++for testing. Based on IOMMU configuration, there are 3 modes::
++
++  - Scalable
++  - Legacy
++  - No IOMMU
++
++
++Scalable mode
++-------------
++
++Scalable mode supports Shared Virtual Memory (SVM or SVA). It is
++entered when using the kernel boot commandline::
++
++  intel_iommu=on,sm_on
++
++with VT-d turned on in BIOS.
++
++With scalable mode, both shared and dedicated workqueues are available
++for use.
++
++For scalable mode, the following BIOS settings should be enabled::
++
++  Socket Configuration > IIO Configuration > Intel VT for Directed I/O (VT-d) > Intel VT for Directed I/O
++
++  Socket Configuration > IIO Configuration > PCIe ENQCMD > ENQCMDS
++
++
++Legacy mode
++-----------
++
++Legacy mode is entered when using the kernel boot commandline::
++
++  intel_iommu=off
++
++or VT-d is not turned on in BIOS.
++
++If you have booted into Linux and not sure if VT-d is on, do a "dmesg
++| grep -i dmar". If you don't see a number of DMAR devices enumerated,
++most likely VT-d is not on.
++
++With legacy mode, only dedicated workqueues are available for use.
++
++
++No IOMMU mode
++-------------
++
++No IOMMU mode is entered when using the kernel boot commandline::
++
++  iommu=off.
++
++With no IOMMU mode, only dedicated workqueues are available for use.
++
++
++Usage
++=====
++
++accel-config
++------------
++
++When loaded, the iaa_crypto driver automatically creates a default
++configuration and enables it, and assigns default driver attributes.
++If a different configuration or set of driver attributes is required,
++the user must first disable the IAA devices and workqueues, reset the
++configuration, and then re-register the deflate-iaa algorithm with the
++crypto subsystem by removing and reinserting the iaa_crypto module.
++
++The :ref:`iaa_disable_script` in the 'Use Cases'
++section below can be used to disable the default configuration.
++
++See :ref:`iaa_default_config` below for details of the default
++configuration.
++
++More likely than not, however, and because of the complexity and
++configurability of the accelerator devices, the user will want to
++configure the device and manually enable the desired devices and
++workqueues.
++
++The userspace tool to help doing that is called accel-config.  Using
++accel-config to configure device or loading a previously saved config
++is highly recommended.  The device can be controlled via sysfs
++directly but comes with the warning that you should do this ONLY if
++you know exactly what you are doing.  The following sections will not
++cover the sysfs interface but assumes you will be using accel-config.
++
++The :ref:`iaa_sysfs_config` section in the appendix below can be
++consulted for the sysfs interface details if interested.
++
++The accel-config tool along with instructions for building it can be
++found here:
++
++  https://github.com/intel/idxd-config/#readme
++
++Typical usage
++-------------
++
++In order for the iaa_crypto module to actually do any
++compression/decompression work on behalf of a facility, one or more
++IAA workqueues need to be bound to the iaa_crypto driver.
++
++For instance, here's an example of configuring an IAA workqueue and
++binding it to the iaa_crypto driver (note that device names are
++specified as 'iax' rather than 'iaa' - this is because upstream still
++has the old 'iax' device naming in place) ::
++
++  # configure wq1.0
++
++  accel-config config-wq --group-id=0 --mode=dedicated --type=kernel --name="iaa_crypto" --device_name="crypto" iax1/wq1.0
++
++  # enable IAA device iax1
++
++  accel-config enable-device iax1
++
++  # enable wq1.0 on IAX device iax1
++
++  accel-config enable-wq iax1/wq1.0
++
++Whenever a new workqueue is bound to or unbound from the iaa_crypto
++driver, the available workqueues are 'rebalanced' such that work
++submitted from a particular CPU is given to the most appropriate
++workqueue available.  Current best practice is to configure and bind
++at least one workqueue for each IAA device, but as long as there is at
++least one workqueue configured and bound to any IAA device in the
++system, the iaa_crypto driver will work, albeit most likely not as
++efficiently.
++
++The IAA crypto algorigthms is operational and compression and
++decompression operations are fully enabled following the successful
++binding of the first IAA workqueue to the iaa_crypto driver.
++
++Similarly, the IAA crypto algorithm is not operational and compression
++and decompression operations are disabled following the unbinding of
++the last IAA worqueue to the iaa_crypto driver.
++
++As a result, the IAA crypto algorithms and thus the IAA hardware are
++only available when one or more workques are bound to the iaa_crypto
++driver.
++
++When there are no IAA workqueues bound to the driver, the IAA crypto
++algorithms can be unregistered by removing the module.
++
++
++Driver attributes
++-----------------
++
++There are a couple user-configurable driver attributes that can be
++used to configure various modes of operation.  They're listed below,
++along with their default values.  To set any of these attributes, echo
++the appropriate values to the attribute file located under
++/sys/bus/dsa/drivers/crypto/
++
++The attribute settings at the time the IAA algorithms are registered
++are captured in each algorithm's crypto_ctx and used for all compresses
++and decompresses when using that algorithm.
++
++The available attributes are:
++
++  - verify_compress
++
++    Toggle compression verification.  If set, each compress will be
++    internally decompressed and the contents verified, returning error
++    codes if unsuccessful.  This can be toggled with 0/1::
++
++      echo 0 > /sys/bus/dsa/drivers/crypto/verify_compress
++
++    The default setting is '1' - verify all compresses.
++
++  - sync_mode
++
++    Select mode to be used to wait for completion of each compresses
++    and decompress operation.
++
++    The crypto async interface support implemented by iaa_crypto
++    provides an implementation that satisfies the interface but does
++    so in a synchronous manner - it fills and submits the IDXD
++    descriptor and then loops around waiting for it to complete before
++    returning.  This isn't a problem at the moment, since all existing
++    callers (e.g. zswap) wrap any asynchronous callees in a
++    synchronous wrapper anyway.
++
++    The iaa_crypto driver does however provide true asynchronous
++    support for callers that can make use of it.  In this mode, it
++    fills and submits the IDXD descriptor, then returns immediately
++    with -EINPROGRESS.  The caller can then either poll for completion
++    itself, which requires specific code in the caller which currently
++    nothing in the upstream kernel implements, or go to sleep and wait
++    for an interrupt signaling completion.  This latter mode is
++    supported by current users in the kernel such as zswap via
++    synchronous wrappers.  Although it is supported this mode is
++    significantly slower than the synchronous mode that does the
++    polling in the iaa_crypto driver previously mentioned.
++
++    This mode can be enabled by writing 'async_irq' to the sync_mode
++    iaa_crypto driver attribute::
++
++      echo async_irq > /sys/bus/dsa/drivers/crypto/sync_mode
++
++    Async mode without interrupts (caller must poll) can be enabled by
++    writing 'async' to it::
++
++      echo async > /sys/bus/dsa/drivers/crypto/sync_mode
++
++    The mode that does the polling in the iaa_crypto driver can be
++    enabled by writing 'sync' to it::
++
++      echo sync > /sys/bus/dsa/drivers/crypto/sync_mode
++
++    The default mode is 'sync'.
++
++.. _iaa_default_config:
++
++IAA Default Configuration
++-------------------------
++
++When the iaa_crypto driver is loaded, each IAA device has a single
++work queue configured for it, with the following attributes::
++
++          mode              "dedicated"
++          threshold         0
++          size              Total WQ Size from WQCAP
++          priority          10
++          type              IDXD_WQT_KERNEL
++          group             0
++          name              "iaa_crypto"
++          driver_name       "crypto"
++
++The devices and workqueues are also enabled and therefore the driver
++is ready to be used without any additional configuration.
++
++The default driver attributes in effect when the driver is loaded are::
++
++          sync_mode         "sync"
++          verify_compress   1
++
++In order to change either the device/work queue or driver attributes,
++the enabled devices and workqueues must first be disabled.  In order
++to have the new configuration applied to the deflate-iaa crypto
++algorithm, it needs to be re-registered by removing and reinserting
++the iaa_crypto module.  The :ref:`iaa_disable_script` in the 'Use
++Cases' section below can be used to disable the default configuration.
++
++Statistics
++==========
++
++If the optional debugfs statistics support is enabled, the IAA crypto
++driver will generate statistics which can be accessed in debugfs at::
++
++  # ls -al /sys/kernel/debug/iaa-crypto/
++  total 0
++  drwxr-xr-x  2 root root 0 Mar  3 09:35 .
++  drwx------ 47 root root 0 Mar  3 09:35 ..
++  -rw-r--r--  1 root root 0 Mar  3 09:35 max_acomp_delay_ns
++  -rw-r--r--  1 root root 0 Mar  3 09:35 max_adecomp_delay_ns
++  -rw-r--r--  1 root root 0 Mar  3 09:35 max_comp_delay_ns
++  -rw-r--r--  1 root root 0 Mar  3 09:35 max_decomp_delay_ns
++  -rw-r--r--  1 root root 0 Mar  3 09:35 stats_reset
++  -rw-r--r--  1 root root 0 Mar  3 09:35 total_comp_bytes_out
++  -rw-r--r--  1 root root 0 Mar  3 09:35 total_comp_calls
++  -rw-r--r--  1 root root 0 Mar  3 09:35 total_decomp_bytes_in
++  -rw-r--r--  1 root root 0 Mar  3 09:35 total_decomp_calls
++  -rw-r--r--  1 root root 0 Mar  3 09:35 wq_stats
++
++Most of the above statisticss are self-explanatory.  The wq_stats file
++shows per-wq stats, a set for each iaa device and wq in addition to
++some global stats::
++
++  # cat wq_stats
++  global stats:
++    total_comp_calls: 100
++    total_decomp_calls: 100
++    total_comp_bytes_out: 22800
++    total_decomp_bytes_in: 22800
++    total_completion_einval_errors: 0
++    total_completion_timeout_errors: 0
++    total_completion_comp_buf_overflow_errors: 0
++
++  iaa device:
++    id: 1
++    n_wqs: 1
++    comp_calls: 0
++    comp_bytes: 0
++    decomp_calls: 0
++    decomp_bytes: 0
++    wqs:
++      name: iaa_crypto
++      comp_calls: 0
++      comp_bytes: 0
++      decomp_calls: 0
++      decomp_bytes: 0
++
++  iaa device:
++    id: 3
++    n_wqs: 1
++    comp_calls: 0
++    comp_bytes: 0
++    decomp_calls: 0
++    decomp_bytes: 0
++    wqs:
++      name: iaa_crypto
++      comp_calls: 0
++      comp_bytes: 0
++      decomp_calls: 0
++      decomp_bytes: 0
++
++  iaa device:
++    id: 5
++    n_wqs: 1
++    comp_calls: 100
++    comp_bytes: 22800
++    decomp_calls: 100
++    decomp_bytes: 22800
++    wqs:
++      name: iaa_crypto
++      comp_calls: 100
++      comp_bytes: 22800
++      decomp_calls: 100
++      decomp_bytes: 22800
++
++Writing 0 to 'stats_reset' resets all the stats, including the
++per-device and per-wq stats::
++
++  # echo 0 > stats_reset
++  # cat wq_stats
++    global stats:
++    total_comp_calls: 0
++    total_decomp_calls: 0
++    total_comp_bytes_out: 0
++    total_decomp_bytes_in: 0
++    total_completion_einval_errors: 0
++    total_completion_timeout_errors: 0
++    total_completion_comp_buf_overflow_errors: 0
++    ...
++
++
++Use cases
++=========
++
++Simple zswap test
++-----------------
++
++For this example, the kernel should be configured according to the
++dedicated mode options described above, and zswap should be enabled as
++well::
++
++  CONFIG_ZSWAP=y
++
++This is a simple test that uses iaa_compress as the compressor for a
++swap (zswap) device.  It sets up the zswap device and then uses the
++memory_memadvise program listed below to forcibly swap out and in a
++specified number of pages, demonstrating both compress and decompress.
++
++The zswap test expects the work queues for each IAA device on the
++system to be configured properly as a kernel workqueue with a
++workqueue driver_name of "crypto".
++
++The first step is to make sure the iaa_crypto module is loaded::
++
++  modprobe iaa_crypto
++
++If the IAA devices and workqueues haven't previously been disabled and
++reconfigured, then the default configuration should be in place and no
++further IAA configuration is necessary.  See :ref:`iaa_default_config`
++below for details of the default configuration.
++
++If the default configuration is in place, you should see the iaa
++devices and wq0s enabled::
++
++  # cat /sys/bus/dsa/devices/iax1/state
++  enabled
++  # cat /sys/bus/dsa/devices/iax1/wq1.0/state
++  enabled
++
++To demonstrate that the following steps work as expected, these
++commands can be used to enable debug output::
++
++  # echo -n 'module iaa_crypto +p' > /sys/kernel/debug/dynamic_debug/control
++  # echo -n 'module idxd +p' > /sys/kernel/debug/dynamic_debug/control
++
++Use the following commands to enable zswap::
++
++  # echo 0 > /sys/module/zswap/parameters/enabled
++  # echo 50 > /sys/module/zswap/parameters/max_pool_percent
++  # echo deflate-iaa > /sys/module/zswap/parameters/compressor
++  # echo zsmalloc > /sys/module/zswap/parameters/zpool
++  # echo 1 > /sys/module/zswap/parameters/enabled
++  # echo 0 > /sys/module/zswap/parameters/same_filled_pages_enabled
++  # echo 100 > /proc/sys/vm/swappiness
++  # echo never > /sys/kernel/mm/transparent_hugepage/enabled
++  # echo 1 > /proc/sys/vm/overcommit_memory
++
++Now you can now run the zswap workload you want to measure. For
++example, using the memory_memadvise code below, the following command
++will swap in and out 100 pages::
++
++  ./memory_madvise 100
++
++  Allocating 100 pages to swap in/out
++  Swapping out 100 pages
++  Swapping in 100 pages
++  Swapped out and in 100 pages
++
++You should see something like the following in the dmesg output::
++
++  [  404.202972] idxd 0000:e7:02.0: iaa_comp_acompress: dma_map_sg, src_addr 223925c000, nr_sgs 1, req->src 00000000ee7cb5e6, req->slen 4096, sg_dma_len(sg) 4096
++  [  404.202973] idxd 0000:e7:02.0: iaa_comp_acompress: dma_map_sg, dst_addr 21dadf8000, nr_sgs 1, req->dst 000000008d6acea8, req->dlen 4096, sg_dma_len(sg) 8192
++  [  404.202975] idxd 0000:e7:02.0: iaa_compress: desc->src1_addr 223925c000, desc->src1_size 4096, desc->dst_addr 21dadf8000, desc->max_dst_size 4096, desc->src2_addr 2203543000, desc->src2_size 1568
++  [  404.202981] idxd 0000:e7:02.0: iaa_compress_verify: (verify) desc->src1_addr 21dadf8000, desc->src1_size 228, desc->dst_addr 223925c000, desc->max_dst_size 4096, desc->src2_addr 0, desc->src2_size 0
++  ...
++
++Now that basic functionality has been demonstrated, the defaults can
++be erased and replaced with a different configuration.  To do that,
++first disable zswap::
++
++  # echo lzo > /sys/module/zswap/parameters/compressor
++  # swapoff -a
++  # echo 0 > /sys/module/zswap/parameters/accept_threshold_percent
++  # echo 0 > /sys/module/zswap/parameters/max_pool_percent
++  # echo 0 > /sys/module/zswap/parameters/enabled
++  # echo 0 > /sys/module/zswap/parameters/enabled
++
++Then run the :ref:`iaa_disable_script` in the 'Use Cases' section
++below to disable the default configuration.
++
++Finally turn swap back on::
++
++  # swapon -a
++
++Following all that the IAA device(s) can now be re-configured and
++enabled as desired for further testing.  Below is one example.
++
++The zswap test expects the work queues for each IAA device on the
++system to be configured properly as a kernel workqueue with a
++workqueue driver_name of "crypto".
++
++The below script automatically does that::
++
++  #!/bin/bash
++
++  echo "IAA devices:"
++  lspci -d:0cfe
++  echo "# IAA devices:"
++  lspci -d:0cfe | wc -l
++
++  #
++  # count iaa instances
++  #
++  iaa_dev_id="0cfe"
++  num_iaa=$(lspci -d:${iaa_dev_id} | wc -l)
++  echo "Found ${num_iaa} IAA instances"
++
++  #
++  # disable iaa wqs and devices
++  #
++  echo "Disable IAA"
++
++  for ((i = 1; i < ${num_iaa} * 2; i += 2)); do
++      echo disable wq iax${i}/wq${i}.0
++      accel-config disable-wq iax${i}/wq${i}.0
++      echo disable iaa iax${i}
++      accel-config disable-device iax${i}
++  done
++
++  echo "End Disable IAA"
++
++  #
++  # configure iaa wqs and devices
++  #
++  echo "Configure IAA"
++  for ((i = 1; i < ${num_iaa} * 2; i += 2)); do
++      accel-config config-wq --group-id=0 --mode=dedicated --size=128 --priority=10 --type=kernel --name="iaa_crypto" --driver_name="crypto" iax${i}/wq${i}
++  done
++
++  echo "End Configure IAA"
++
++  #
++  # enable iaa wqs and devices
++  #
++  echo "Enable IAA"
++
++  for ((i = 1; i < ${num_iaa} * 2; i += 2)); do
++      echo enable iaa iaa${i}
++      accel-config enable-device iaa${i}
++      echo enable wq iaa${i}/wq${i}.0
++      accel-config enable-wq iaa${i}/wq${i}.0
++  done
++
++  echo "End Enable IAA"
++
++When the workqueues are bound to the iaa_crypto driver, you should
++see something similar to the following in dmesg output if you've
++enabled debug output (echo -n 'module iaa_crypto +p' >
++/sys/kernel/debug/dynamic_debug/control)::
++
++  [   60.752344] idxd 0000:f6:02.0: add_iaa_wq: added wq 000000004068d14d to iaa 00000000c9585ba2, n_wq 1
++  [   60.752346] iaa_crypto: rebalance_wq_table: nr_nodes=2, nr_cpus 160, nr_iaa 8, cpus_per_iaa 20
++  [   60.752347] iaa_crypto: rebalance_wq_table: iaa=0
++  [   60.752349] idxd 0000:6a:02.0: request_iaa_wq: getting wq from iaa_device 0000000042d7bc52 (0)
++  [   60.752350] idxd 0000:6a:02.0: request_iaa_wq: returning unused wq 00000000c8bb4452 (0) from iaa device 0000000042d7bc52 (0)
++  [   60.752352] iaa_crypto: rebalance_wq_table: assigned wq for cpu=0, node=0 = wq 00000000c8bb4452
++  [   60.752354] iaa_crypto: rebalance_wq_table: iaa=0
++  [   60.752355] idxd 0000:6a:02.0: request_iaa_wq: getting wq from iaa_device 0000000042d7bc52 (0)
++  [   60.752356] idxd 0000:6a:02.0: request_iaa_wq: returning unused wq 00000000c8bb4452 (0) from iaa device 0000000042d7bc52 (0)
++  [   60.752358] iaa_crypto: rebalance_wq_table: assigned wq for cpu=1, node=0 = wq 00000000c8bb4452
++  [   60.752359] iaa_crypto: rebalance_wq_table: iaa=0
++  [   60.752360] idxd 0000:6a:02.0: request_iaa_wq: getting wq from iaa_device 0000000042d7bc52 (0)
++  [   60.752361] idxd 0000:6a:02.0: request_iaa_wq: returning unused wq 00000000c8bb4452 (0) from iaa device 0000000042d7bc52 (0)
++  [   60.752362] iaa_crypto: rebalance_wq_table: assigned wq for cpu=2, node=0 = wq 00000000c8bb4452
++  [   60.752364] iaa_crypto: rebalance_wq_table: iaa=0
++  .
++  .
++  .
++
++Once the workqueues and devices have been enabled, the IAA crypto
++algorithms are enabled and available.  When the IAA crypto algorithms
++have been successfully enabled, you should see the following dmesg
++output::
++
++  [   64.893759] iaa_crypto: iaa_crypto_enable: iaa_crypto now ENABLED
++
++Now run the following zswap-specific setup commands to have zswap use
++the 'fixed' compression mode::
++
++  echo 0 > /sys/module/zswap/parameters/enabled
++  echo 50 > /sys/module/zswap/parameters/max_pool_percent
++  echo deflate-iaa > /sys/module/zswap/parameters/compressor
++  echo zsmalloc > /sys/module/zswap/parameters/zpool
++  echo 1 > /sys/module/zswap/parameters/enabled
++  echo 0 > /sys/module/zswap/parameters/same_filled_pages_enabled
++
++  echo 100 > /proc/sys/vm/swappiness
++  echo never > /sys/kernel/mm/transparent_hugepage/enabled
++  echo 1 > /proc/sys/vm/overcommit_memory
++
++Finally, you can now run the zswap workload you want to measure. For
++example, using the code below, the following command will swap in and
++out 100 pages::
++
++  ./memory_madvise 100
++
++  Allocating 100 pages to swap in/out
++  Swapping out 100 pages
++  Swapping in 100 pages
++  Swapped out and in 100 pages
++
++You should see something like the following in the dmesg output if
++you've enabled debug output (echo -n 'module iaa_crypto +p' >
++/sys/kernel/debug/dynamic_debug/control)::
++
++  [  404.202972] idxd 0000:e7:02.0: iaa_comp_acompress: dma_map_sg, src_addr 223925c000, nr_sgs 1, req->src 00000000ee7cb5e6, req->slen 4096, sg_dma_len(sg) 4096
++  [  404.202973] idxd 0000:e7:02.0: iaa_comp_acompress: dma_map_sg, dst_addr 21dadf8000, nr_sgs 1, req->dst 000000008d6acea8, req->dlen 4096, sg_dma_len(sg) 8192
++  [  404.202975] idxd 0000:e7:02.0: iaa_compress: desc->src1_addr 223925c000, desc->src1_size 4096, desc->dst_addr 21dadf8000, desc->max_dst_size 4096, desc->src2_addr 2203543000, desc->src2_size 1568
++  [  404.202981] idxd 0000:e7:02.0: iaa_compress_verify: (verify) desc->src1_addr 21dadf8000, desc->src1_size 228, desc->dst_addr 223925c000, desc->max_dst_size 4096, desc->src2_addr 0, desc->src2_size 0
++  [  409.203227] idxd 0000:e7:02.0: iaa_comp_adecompress: dma_map_sg, src_addr 21ddd8b100, nr_sgs 1, req->src 0000000084adab64, req->slen 228, sg_dma_len(sg) 228
++  [  409.203235] idxd 0000:e7:02.0: iaa_comp_adecompress: dma_map_sg, dst_addr 21ee3dc000, nr_sgs 1, req->dst 000000004e2990d0, req->dlen 4096, sg_dma_len(sg) 4096
++  [  409.203239] idxd 0000:e7:02.0: iaa_decompress: desc->src1_addr 21ddd8b100, desc->src1_size 228, desc->dst_addr 21ee3dc000, desc->max_dst_size 4096, desc->src2_addr 0, desc->src2_size 0
++  [  409.203254] idxd 0000:e7:02.0: iaa_comp_adecompress: dma_map_sg, src_addr 21ddd8b100, nr_sgs 1, req->src 0000000084adab64, req->slen 228, sg_dma_len(sg) 228
++  [  409.203256] idxd 0000:e7:02.0: iaa_comp_adecompress: dma_map_sg, dst_addr 21f1551000, nr_sgs 1, req->dst 000000004e2990d0, req->dlen 4096, sg_dma_len(sg) 4096
++  [  409.203257] idxd 0000:e7:02.0: iaa_decompress: desc->src1_addr 21ddd8b100, desc->src1_size 228, desc->dst_addr 21f1551000, desc->max_dst_size 4096, desc->src2_addr 0, desc->src2_size 0
++
++In order to unregister the IAA crypto algorithms, and register new
++ones using different parameters, any users of the current algorithm
++should be stopped and the IAA workqueues and devices disabled.
++
++In the case of zswap, remove the IAA crypto algorithm as the
++compressor and turn off swap (to remove all references to
++iaa_crypto)::
++
++  echo lzo > /sys/module/zswap/parameters/compressor
++  swapoff -a
++
++  echo 0 > /sys/module/zswap/parameters/accept_threshold_percent
++  echo 0 > /sys/module/zswap/parameters/max_pool_percent
++  echo 0 > /sys/module/zswap/parameters/enabled
++
++Once zswap is disabled and no longer using iaa_crypto, the IAA wqs and
++devices can be disabled.
++
++.. _iaa_disable_script:
++
++IAA disable script
++------------------
++
++The below script automatically does that::
++
++  #!/bin/bash
++
++  echo "IAA devices:"
++  lspci -d:0cfe
++  echo "# IAA devices:"
++  lspci -d:0cfe | wc -l
++
++  #
++  # count iaa instances
++  #
++  iaa_dev_id="0cfe"
++  num_iaa=$(lspci -d:${iaa_dev_id} | wc -l)
++  echo "Found ${num_iaa} IAA instances"
++
++  #
++  # disable iaa wqs and devices
++  #
++  echo "Disable IAA"
++
++  for ((i = 1; i < ${num_iaa} * 2; i += 2)); do
++      echo disable wq iax${i}/wq${i}.0
++      accel-config disable-wq iax${i}/wq${i}.0
++      echo disable iaa iax${i}
++      accel-config disable-device iax${i}
++  done
++
++  echo "End Disable IAA"
++
++Finally, at this point the iaa_crypto module can be removed, which
++will unregister the current IAA crypto algorithms::
++
++  rmmod iaa_crypto
++
++
++memory_madvise.c (gcc -o memory_memadvise memory_madvise.c)::
++
++  #include <stdio.h>
++  #include <stdlib.h>
++  #include <string.h>
++  #include <unistd.h>
++  #include <sys/mman.h>
++  #include <linux/mman.h>
++
++  #ifndef MADV_PAGEOUT
++  #define MADV_PAGEOUT    21      /* force pages out immediately */
++  #endif
++
++  #define PG_SZ           4096
++
++  int main(int argc, char **argv)
++  {
++        int i, nr_pages = 1;
++        int64_t *dump_ptr;
++        char *addr, *a;
++        int loop = 1;
++
++        if (argc > 1)
++                nr_pages = atoi(argv[1]);
++
++        printf("Allocating %d pages to swap in/out\n", nr_pages);
++
++        /* allocate pages */
++        addr = mmap(NULL, nr_pages * PG_SZ, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
++        *addr = 1;
++
++        /* initialize data in page to all '*' chars */
++        memset(addr, '*', nr_pages * PG_SZ);
++
++         printf("Swapping out %d pages\n", nr_pages);
++
++        /* Tell kernel to swap it out */
++        madvise(addr, nr_pages * PG_SZ, MADV_PAGEOUT);
++
++        while (loop > 0) {
++                /* Wait for swap out to finish */
++                sleep(5);
++
++                a = addr;
++
++                printf("Swapping in %d pages\n", nr_pages);
++
++                /* Access the page ... this will swap it back in again */
++                for (i = 0; i < nr_pages; i++) {
++                        if (a[0] != '*') {
++                                printf("Bad data from decompress!!!!!\n");
++
++                                dump_ptr = (int64_t *)a;
++                                 for (int j = 0; j < 100; j++) {
++                                        printf("  page %d data: %#llx\n", i, *dump_ptr);
++                                        dump_ptr++;
++                                }
++                        }
++
++                        a += PG_SZ;
++                }
++
++                loop --;
++        }
++
++       printf("Swapped out and in %d pages\n", nr_pages);
++
++Appendix
++========
++
++.. _iaa_sysfs_config:
++
++IAA sysfs config interface
++--------------------------
++
++Below is a description of the IAA sysfs interface, which as mentioned
++in the main document, should only be used if you know exactly what you
++are doing.  Even then, there's no compelling reason to use it directly
++since accel-config can do everything the sysfs interface can and in
++fact accel-config is based on it under the covers.
++
++The 'IAA config path' is /sys/bus/dsa/devices and contains
++subdirectories representing each IAA device, workqueue, engine, and
++group.  Note that in the sysfs interface, the IAA devices are actually
++named using iax e.g. iax1, iax3, etc. (Note that IAA devices are the
++odd-numbered devices; the even-numbered devices are DSA devices and
++can be ignored for IAA).
++
++The 'IAA device bind path' is /sys/bus/dsa/drivers/idxd/bind and is
++the file that is written to enable an IAA device.
++
++The 'IAA workqueue bind path' is /sys/bus/dsa/drivers/crypto/bind and
++is the file that is written to enable an IAA workqueue.
++
++Similarly /sys/bus/dsa/drivers/idxd/unbind and
++/sys/bus/dsa/drivers/crypto/unbind are used to disable IAA devices and
++workqueues.
++
++The basic sequence of commands needed to set up the IAA devices and
++workqueues is:
++
++For each device::
++  1) Disable any workqueues enabled on the device.  For example to
++     disable workques 0 and 1 on IAA device 3::
++
++       # echo wq3.0 > /sys/bus/dsa/drivers/crypto/unbind
++       # echo wq3.1 > /sys/bus/dsa/drivers/crypto/unbind
++
++  2) Disable the device. For example to disable IAA device 3::
++
++       # echo iax3 > /sys/bus/dsa/drivers/idxd/unbind
++
++  3) configure the desired workqueues.  For example, to configure
++     workqueue 3 on IAA device 3::
++
++       # echo dedicated > /sys/bus/dsa/devices/iax3/wq3.3/mode
++       # echo 128 > /sys/bus/dsa/devices/iax3/wq3.3/size
++       # echo 0 > /sys/bus/dsa/devices/iax3/wq3.3/group_id
++       # echo 10 > /sys/bus/dsa/devices/iax3/wq3.3/priority
++       # echo "kernel" > /sys/bus/dsa/devices/iax3/wq3.3/type
++       # echo "iaa_crypto" > /sys/bus/dsa/devices/iax3/wq3.3/name
++       # echo "crypto" > /sys/bus/dsa/devices/iax3/wq3.3/driver_name
++
++  4) Enable the device. For example to enable IAA device 3::
++
++       # echo iax3 > /sys/bus/dsa/drivers/idxd/bind
++
++  5) Enable the desired workqueues on the device.  For example to
++     enable workques 0 and 1 on IAA device 3::
++
++       # echo wq3.0 > /sys/bus/dsa/drivers/crypto/bind
++       # echo wq3.1 > /sys/bus/dsa/drivers/crypto/bind
+diff --git a/Documentation/driver-api/crypto/iaa/index.rst b/Documentation/driver-api/crypto/iaa/index.rst
+new file mode 100644
+index 000000000000..aa6837e27264
+--- /dev/null
++++ b/Documentation/driver-api/crypto/iaa/index.rst
+@@ -0,0 +1,20 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++=================================
++IAA (Intel Analytics Accelerator)
++=================================
++
++IAA provides hardware compression and decompression via the crypto
++API.
++
++.. toctree::
++   :maxdepth: 1
++
++   iaa-crypto
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/driver-api/crypto/index.rst b/Documentation/driver-api/crypto/index.rst
+new file mode 100644
+index 000000000000..fb9709b98bea
+--- /dev/null
++++ b/Documentation/driver-api/crypto/index.rst
+@@ -0,0 +1,20 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++==============
++Crypto Drivers
++==============
++
++Documentation for crypto drivers that may need more involved setup and
++configuration.
++
++.. toctree::
++   :maxdepth: 1
++
++   iaa/index
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/driver-api/index.rst b/Documentation/driver-api/index.rst
+index f549a68951d7..8b95501cc208 100644
+--- a/Documentation/driver-api/index.rst
++++ b/Documentation/driver-api/index.rst
+@@ -115,6 +115,7 @@ available subsections can be seen below.
+    hte/index
+    wmi
+    dpll
++   crypto/index
  
- /* dmaengine */
- int idxd_register_dma_device(struct idxd_device *idxd);
- void idxd_unregister_dma_device(struct idxd_device *idxd);
--void idxd_dma_complete_txd(struct idxd_desc *desc,
--			   enum idxd_complete_type comp_type, bool free_desc);
- 
- /* cdev */
- int idxd_cdev_register(void);
-diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
-index 2183d7f9cdbd..c8a0aa874b11 100644
---- a/drivers/dma/idxd/irq.c
-+++ b/drivers/dma/idxd/irq.c
-@@ -123,7 +123,7 @@ static void idxd_abort_invalid_int_handle_descs(struct idxd_irq_entry *ie)
- 
- 	list_for_each_entry_safe(d, t, &flist, list) {
- 		list_del(&d->list);
--		idxd_dma_complete_txd(d, IDXD_COMPLETE_ABORT, true);
-+		idxd_desc_complete(d, IDXD_COMPLETE_ABORT, true);
- 	}
- }
- 
-@@ -534,7 +534,7 @@ static void idxd_int_handle_resubmit_work(struct work_struct *work)
- 		 */
- 		if (rc != -EAGAIN) {
- 			desc->completion->status = IDXD_COMP_DESC_ABORT;
--			idxd_dma_complete_txd(desc, IDXD_COMPLETE_ABORT, false);
-+			idxd_desc_complete(desc, IDXD_COMPLETE_ABORT, false);
- 		}
- 		idxd_free_desc(wq, desc);
- 	}
-@@ -575,11 +575,11 @@ static void irq_process_pending_llist(struct idxd_irq_entry *irq_entry)
- 			 * and 0xff, which DSA_COMP_STATUS_MASK can mask out.
- 			 */
- 			if (unlikely(desc->completion->status == IDXD_COMP_DESC_ABORT)) {
--				idxd_dma_complete_txd(desc, IDXD_COMPLETE_ABORT, true);
-+				idxd_desc_complete(desc, IDXD_COMPLETE_ABORT, true);
- 				continue;
- 			}
- 
--			idxd_dma_complete_txd(desc, IDXD_COMPLETE_NORMAL, true);
-+			idxd_desc_complete(desc, IDXD_COMPLETE_NORMAL, true);
- 		} else {
- 			spin_lock(&irq_entry->list_lock);
- 			list_add_tail(&desc->list,
-@@ -618,11 +618,11 @@ static void irq_process_work_list(struct idxd_irq_entry *irq_entry)
- 		 * and 0xff, which DSA_COMP_STATUS_MASK can mask out.
- 		 */
- 		if (unlikely(desc->completion->status == IDXD_COMP_DESC_ABORT)) {
--			idxd_dma_complete_txd(desc, IDXD_COMPLETE_ABORT, true);
-+			idxd_desc_complete(desc, IDXD_COMPLETE_ABORT, true);
- 			continue;
- 		}
- 
--		idxd_dma_complete_txd(desc, IDXD_COMPLETE_NORMAL, true);
-+		idxd_desc_complete(desc, IDXD_COMPLETE_NORMAL, true);
- 	}
- }
- 
-diff --git a/drivers/dma/idxd/submit.c b/drivers/dma/idxd/submit.c
-index 5e651e216094..f927743a5ba2 100644
---- a/drivers/dma/idxd/submit.c
-+++ b/drivers/dma/idxd/submit.c
-@@ -127,7 +127,8 @@ static void llist_abort_desc(struct idxd_wq *wq, struct idxd_irq_entry *ie,
- 	spin_unlock(&ie->list_lock);
- 
- 	if (found)
--		idxd_dma_complete_txd(found, IDXD_COMPLETE_ABORT, false);
-+		idxd_dma_complete_txd(found, IDXD_COMPLETE_ABORT, false,
-+				      NULL, NULL);
- 
- 	/*
- 	 * completing the descriptor will return desc to allocator and
-@@ -137,7 +138,8 @@ static void llist_abort_desc(struct idxd_wq *wq, struct idxd_irq_entry *ie,
- 	 */
- 	list_for_each_entry_safe(d, t, &flist, list) {
- 		list_del_init(&d->list);
--		idxd_dma_complete_txd(found, IDXD_COMPLETE_ABORT, true);
-+		idxd_dma_complete_txd(found, IDXD_COMPLETE_ABORT, true,
-+				      NULL, NULL);
- 	}
- }
+ .. only::  subproject and html
  
 -- 
 2.34.1

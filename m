@@ -1,46 +1,46 @@
-Return-Path: <dmaengine+bounces-389-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-390-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 83FBF8060C1
-	for <lists+dmaengine@lfdr.de>; Tue,  5 Dec 2023 22:26:23 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8D758060C6
+	for <lists+dmaengine@lfdr.de>; Tue,  5 Dec 2023 22:26:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 066701F21711
-	for <lists+dmaengine@lfdr.de>; Tue,  5 Dec 2023 21:26:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6E7CC1F21641
+	for <lists+dmaengine@lfdr.de>; Tue,  5 Dec 2023 21:26:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4C0E6E2A8;
-	Tue,  5 Dec 2023 21:26:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D15356E2AD;
+	Tue,  5 Dec 2023 21:26:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NKfBepbr"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I2VbCR0X"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DCE01A3;
-	Tue,  5 Dec 2023 13:26:16 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C55DA5;
+	Tue,  5 Dec 2023 13:26:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701811576; x=1733347576;
+  t=1701811578; x=1733347578;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=rTD98vtw3hdRw8ue6G3GDyWgKgi7Tc/FRWTkR5xmgD0=;
-  b=NKfBepbrOQitT8Eo2wyJzDSYcD3InGoM0arSyB0CIWmic8Ey1q8JKGb6
-   N5EiKpgUqySd+ADQ3XAJxB8IDuf54px3An+YAltrm6KZz7tG6LLUmfs77
-   e9kcLD/QBZLoXrHStBM2XI2jczCl5AvKf/LUwBrWBluXue/mxVbYjTMPu
-   ThJz07GRR/62pNm478W/+OFjJe8ygYV8Btwt3HTZxIvTEWi7AE5N+jbIi
-   367p1llhCXmW3SYxIfXwRhzFThyNHuegBGofOjkaNlrHkOgzwvmEXQYk+
-   CH2Tgx8gpKbDxH8h4+I2A8CeVc14Y9o25we1Ltq4GS31RaJA+8m0KxuN+
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="396751700"
+  bh=FOJKKwBDyPTvOhkSfKzfKhw74WOFaAM0dGsOitiUkxI=;
+  b=I2VbCR0XapuLrgTrF9vfCFcYUqU9bi1mOdN312awnDNwqESNRShDoRAC
+   DOtLnyY2w2/83T9AuuPDkTlDFZItXCc+nmYpLf/C/ng7sCQd8ZHav64bl
+   x3zUdrS3JxiSI+P270ZhWJgEjX2PxODn06cJuuNRFcVlARIWLGp8qRjjc
+   62Tk4OKOQy5RXKl9XKOnP7e4MSwm3UqyiQzevwnYgoRdTtNeBbDoy8k7r
+   Eub+yJsV+tlrBc78l5kIu/N7KxIxnMT8KuR+QtelgyDS5Q7mH7VyhbBW4
+   Qpcj2fMlwRDdCq/dpOJsN6uzWoKD600WZDChMVTEkR49DNe2SLbXYSttP
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="396751714"
 X-IronPort-AV: E=Sophos;i="6.04,253,1695711600"; 
-   d="scan'208";a="396751700"
+   d="scan'208";a="396751714"
 Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 13:26:15 -0800
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 13:26:17 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.04,253,1695711600"; 
-   d="scan'208";a="19102729"
+   d="scan'208";a="19102743"
 Received: from jsamonte-mobl.amr.corp.intel.com (HELO tzanussi-mobl1.amr.corp.intel.com) ([10.212.71.180])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 13:26:13 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 13:26:16 -0800
 From: Tom Zanussi <tom.zanussi@linux.intel.com>
 To: herbert@gondor.apana.org.au,
 	davem@davemloft.net,
@@ -57,9 +57,9 @@ Cc: dave.jiang@intel.com,
 	linux-kernel@vger.kernel.org,
 	linux-crypto@vger.kernel.org,
 	dmaengine@vger.kernel.org
-Subject: [PATCH v12 13/14] crypto: iaa - Add IAA Compression Accelerator stats
-Date: Tue,  5 Dec 2023 15:25:29 -0600
-Message-Id: <20231205212530.285671-14-tom.zanussi@linux.intel.com>
+Subject: [PATCH v12 14/14] dmaengine: idxd: Add support for device/wq defaults
+Date: Tue,  5 Dec 2023 15:25:30 -0600
+Message-Id: <20231205212530.285671-15-tom.zanussi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231205212530.285671-1-tom.zanussi@linux.intel.com>
 References: <20231205212530.285671-1-tom.zanussi@linux.intel.com>
@@ -71,603 +71,182 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add support for optional debugfs statistics support for the IAA
-Compression Accelerator.  This is enabled by the kernel config item:
+Add a load_device_defaults() function pointer to struct
+idxd_driver_data, which if defined, will be called when an idxd device
+is probed and will allow the idxd device to be configured with default
+values.
 
-  CRYPTO_DEV_IAA_CRYPTO_STATS
+The load_device_defaults() function is passed an idxd device to work
+with to set specific device attributes.
 
-When enabled, the IAA crypto driver will generate statistics which can
-be accessed at /sys/kernel/debug/iaa-crypto/.
+Also add a load_device_defaults() implementation IAA devices; future
+patches would add default functions for other device types such as
+DSA.
 
-See Documentation/driver-api/crypto/iax/iax-crypto.rst for details.
+The way idxd device probing works, if the device configuration is
+valid at that point e.g. at least one workqueue and engine is properly
+configured then the device will be enabled and ready to go.
+
+The IAA implementation, idxd_load_iaa_device_defaults(), configures a
+single workqueue (wq0) for each device with the following default
+values:
+
+      mode     	        "dedicated"
+      threshold		0
+      size		Total WQ Size from WQCAP
+      priority		10
+      type		IDXD_WQT_KERNEL
+      group		0
+      name              "iaa_crypto"
+      driver_name       "crypto"
+
+Note that this now adds another configuration step for any users that
+want to configure their own devices/workqueus with something different
+in that they'll first need to disable (in the case of IAA) wq0 and the
+device itself before they can set their own attributes and re-enable,
+since they've been already been auto-enabled.  Note also that in order
+for the new configuration to be applied to the deflate-iaa crypto
+algorithm the iaa_crypto module needs to unregister the old version,
+which is accomplished by removing the iaa_crypto module, and
+re-registering it with the new configuration by reinserting the
+iaa_crypto module.
 
 Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/crypto/intel/iaa/Kconfig            |   9 +
- drivers/crypto/intel/iaa/Makefile           |   2 +
- drivers/crypto/intel/iaa/iaa_crypto.h       |  13 +
- drivers/crypto/intel/iaa/iaa_crypto_main.c  |  39 ++-
- drivers/crypto/intel/iaa/iaa_crypto_stats.c | 313 ++++++++++++++++++++
- drivers/crypto/intel/iaa/iaa_crypto_stats.h |  53 ++++
- 6 files changed, 427 insertions(+), 2 deletions(-)
- create mode 100644 drivers/crypto/intel/iaa/iaa_crypto_stats.c
- create mode 100644 drivers/crypto/intel/iaa/iaa_crypto_stats.h
+ drivers/dma/idxd/Makefile   |  2 +-
+ drivers/dma/idxd/defaults.c | 53 +++++++++++++++++++++++++++++++++++++
+ drivers/dma/idxd/idxd.h     |  4 +++
+ drivers/dma/idxd/init.c     |  7 +++++
+ 4 files changed, 65 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/dma/idxd/defaults.c
 
-diff --git a/drivers/crypto/intel/iaa/Kconfig b/drivers/crypto/intel/iaa/Kconfig
-index fcccb6ff7e29..d53f4b1d494f 100644
---- a/drivers/crypto/intel/iaa/Kconfig
-+++ b/drivers/crypto/intel/iaa/Kconfig
-@@ -8,3 +8,12 @@ config CRYPTO_DEV_IAA_CRYPTO
- 	  decompression with the Intel Analytics Accelerator (IAA)
- 	  hardware using the cryptographic API.  If you choose 'M'
- 	  here, the module will be called iaa_crypto.
-+
-+config CRYPTO_DEV_IAA_CRYPTO_STATS
-+	bool "Enable Intel(R) IAA Compression Accelerator Statistics"
-+	depends on CRYPTO_DEV_IAA_CRYPTO
-+	default n
-+	help
-+	  Enable statistics for the IAA compression accelerator.
-+	  These include per-device and per-workqueue statistics in
-+	  addition to global driver statistics.
-diff --git a/drivers/crypto/intel/iaa/Makefile b/drivers/crypto/intel/iaa/Makefile
-index cc87feffd059..b64b208d2344 100644
---- a/drivers/crypto/intel/iaa/Makefile
-+++ b/drivers/crypto/intel/iaa/Makefile
-@@ -8,3 +8,5 @@ ccflags-y += -I $(srctree)/drivers/dma/idxd -DDEFAULT_SYMBOL_NAMESPACE=IDXD
- obj-$(CONFIG_CRYPTO_DEV_IAA_CRYPTO) := iaa_crypto.o
+diff --git a/drivers/dma/idxd/Makefile b/drivers/dma/idxd/Makefile
+index c5e679070e46..2b4a0d406e1e 100644
+--- a/drivers/dma/idxd/Makefile
++++ b/drivers/dma/idxd/Makefile
+@@ -4,7 +4,7 @@ obj-$(CONFIG_INTEL_IDXD_BUS) += idxd_bus.o
+ idxd_bus-y := bus.o
  
- iaa_crypto-y := iaa_crypto_main.o iaa_crypto_comp_fixed.o
-+
-+iaa_crypto-$(CONFIG_CRYPTO_DEV_IAA_CRYPTO_STATS) += iaa_crypto_stats.o
-diff --git a/drivers/crypto/intel/iaa/iaa_crypto.h b/drivers/crypto/intel/iaa/iaa_crypto.h
-index de014ac53adb..014420f7beb0 100644
---- a/drivers/crypto/intel/iaa/iaa_crypto.h
-+++ b/drivers/crypto/intel/iaa/iaa_crypto.h
-@@ -48,6 +48,11 @@ struct iaa_wq {
- 	bool			remove;
+ obj-$(CONFIG_INTEL_IDXD) += idxd.o
+-idxd-y := init.o irq.o device.o sysfs.o submit.o dma.o cdev.o debugfs.o
++idxd-y := init.o irq.o device.o sysfs.o submit.o dma.o cdev.o debugfs.o defaults.o
  
- 	struct iaa_device	*iaa_device;
+ idxd-$(CONFIG_INTEL_IDXD_PERFMON) += perfmon.o
+ 
+diff --git a/drivers/dma/idxd/defaults.c b/drivers/dma/idxd/defaults.c
+new file mode 100644
+index 000000000000..c607ae8dd12c
+--- /dev/null
++++ b/drivers/dma/idxd/defaults.c
+@@ -0,0 +1,53 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright(c) 2023 Intel Corporation. All rights rsvd. */
++#include <linux/kernel.h>
++#include "idxd.h"
 +
-+	u64			comp_calls;
-+	u64			comp_bytes;
-+	u64			decomp_calls;
-+	u64			decomp_bytes;
++int idxd_load_iaa_device_defaults(struct idxd_device *idxd)
++{
++	struct idxd_engine *engine;
++	struct idxd_group *group;
++	struct idxd_wq *wq;
++
++	if (!test_bit(IDXD_FLAG_CONFIGURABLE, &idxd->flags))
++		return 0;
++
++	wq = idxd->wqs[0];
++
++	if (wq->state != IDXD_WQ_DISABLED)
++		return -EPERM;
++
++	/* set mode to "dedicated" */
++	set_bit(WQ_FLAG_DEDICATED, &wq->flags);
++	wq->threshold = 0;
++
++	/* only setting up 1 wq, so give it all the wq space */
++	wq->size = idxd->max_wq_size;
++
++	/* set priority to 10 */
++	wq->priority = 10;
++
++	/* set type to "kernel" */
++	wq->type = IDXD_WQT_KERNEL;
++
++	/* set wq group to 0 */
++	group = idxd->groups[0];
++	wq->group = group;
++	group->num_wqs++;
++
++	/* set name to "iaa_crypto" */
++	memset(wq->name, 0, WQ_NAME_SIZE + 1);
++	strscpy(wq->name, "iaa_crypto", WQ_NAME_SIZE + 1);
++
++	/* set driver_name to "crypto" */
++	memset(wq->driver_name, 0, DRIVER_NAME_SIZE + 1);
++	strscpy(wq->driver_name, "crypto", DRIVER_NAME_SIZE + 1);
++
++	engine = idxd->engines[0];
++
++	/* set engine group to 0 */
++	engine->group = idxd->groups[0];
++	engine->group->num_engines++;
++
++	return 0;
++}
+diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
+index 62ea21b25906..47de3f93ff1e 100644
+--- a/drivers/dma/idxd/idxd.h
++++ b/drivers/dma/idxd/idxd.h
+@@ -277,6 +277,8 @@ struct idxd_dma_dev {
+ 	struct dma_device dma;
  };
  
- struct iaa_device_compression_mode {
-@@ -69,6 +74,11 @@ struct iaa_device {
- 
- 	int				n_wq;
- 	struct list_head		wqs;
++typedef int (*load_device_defaults_fn_t) (struct idxd_device *idxd);
 +
-+	u64				comp_calls;
-+	u64				comp_bytes;
-+	u64				decomp_calls;
-+	u64				decomp_bytes;
+ struct idxd_driver_data {
+ 	const char *name_prefix;
+ 	enum idxd_type type;
+@@ -286,6 +288,7 @@ struct idxd_driver_data {
+ 	int evl_cr_off;
+ 	int cr_status_off;
+ 	int cr_result_off;
++	load_device_defaults_fn_t load_device_defaults;
  };
  
- struct wq_table_entry {
-@@ -157,4 +167,7 @@ struct iaa_compression_ctx {
- 	bool		use_irq;
+ struct idxd_evl {
+@@ -730,6 +733,7 @@ void idxd_unregister_devices(struct idxd_device *idxd);
+ void idxd_wqs_quiesce(struct idxd_device *idxd);
+ bool idxd_queue_int_handle_resubmit(struct idxd_desc *desc);
+ void multi_u64_to_bmap(unsigned long *bmap, u64 *val, int count);
++int idxd_load_iaa_device_defaults(struct idxd_device *idxd);
+ 
+ /* device interrupt control */
+ irqreturn_t idxd_misc_thread(int vec, void *data);
+diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+index 0eb1c827a215..14df1f1347a8 100644
+--- a/drivers/dma/idxd/init.c
++++ b/drivers/dma/idxd/init.c
+@@ -59,6 +59,7 @@ static struct idxd_driver_data idxd_driver_data[] = {
+ 		.evl_cr_off = offsetof(struct iax_evl_entry, cr),
+ 		.cr_status_off = offsetof(struct iax_completion_record, status),
+ 		.cr_result_off = offsetof(struct iax_completion_record, error_code),
++		.load_device_defaults = idxd_load_iaa_device_defaults,
+ 	},
  };
  
-+extern struct list_head iaa_devices;
-+extern struct mutex iaa_devices_lock;
-+
- #endif
-diff --git a/drivers/crypto/intel/iaa/iaa_crypto_main.c b/drivers/crypto/intel/iaa/iaa_crypto_main.c
-index 2f90a43500f0..eafa2dd7a5bb 100644
---- a/drivers/crypto/intel/iaa/iaa_crypto_main.c
-+++ b/drivers/crypto/intel/iaa/iaa_crypto_main.c
-@@ -14,6 +14,7 @@
- 
- #include "idxd.h"
- #include "iaa_crypto.h"
-+#include "iaa_crypto_stats.h"
- 
- #ifdef pr_fmt
- #undef pr_fmt
-@@ -85,8 +86,8 @@ static void wq_table_clear_entry(int cpu)
- 	memset(entry->wqs, 0, entry->max_wqs * sizeof(struct idxd_wq *));
- }
- 
--static LIST_HEAD(iaa_devices);
--static DEFINE_MUTEX(iaa_devices_lock);
-+LIST_HEAD(iaa_devices);
-+DEFINE_MUTEX(iaa_devices_lock);
- 
- /* If enabled, IAA hw crypto algos are registered, unavailable otherwise */
- static bool iaa_crypto_enabled;
-@@ -1052,6 +1053,7 @@ static inline int check_completion(struct device *dev,
- 			ret = -ETIMEDOUT;
- 			dev_dbg(dev, "%s timed out, size=0x%x\n",
- 				op_str, comp->output_size);
-+			update_completion_timeout_errs();
- 			goto out;
- 		}
- 
-@@ -1061,6 +1063,7 @@ static inline int check_completion(struct device *dev,
- 			dev_dbg(dev, "compressed > uncompressed size,"
- 				" not compressing, size=0x%x\n",
- 				comp->output_size);
-+			update_completion_comp_buf_overflow_errs();
- 			goto out;
- 		}
- 
-@@ -1073,6 +1076,7 @@ static inline int check_completion(struct device *dev,
- 		dev_dbg(dev, "iaa %s status=0x%x, error=0x%x, size=0x%x\n",
- 			op_str, comp->status, comp->error_code, comp->output_size);
- 		print_hex_dump(KERN_INFO, "cmp-rec: ", DUMP_PREFIX_OFFSET, 8, 1, comp, 64, 0);
-+		update_completion_einval_errs();
- 
- 		goto out;
- 	}
-@@ -1094,6 +1098,8 @@ static int deflate_generic_decompress(struct acomp_req *req)
- 	kunmap_local(src);
- 	kunmap_local(dst);
- 
-+	update_total_sw_decomp_calls();
-+
- 	return ret;
- }
- 
-@@ -1161,6 +1167,15 @@ static void iaa_desc_complete(struct idxd_desc *idxd_desc,
- 		ctx->req->dlen = idxd_desc->iax_completion->output_size;
+@@ -745,6 +746,12 @@ static int idxd_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 		goto err;
  	}
  
-+	/* Update stats */
-+	if (ctx->compress) {
-+		update_total_comp_bytes_out(ctx->req->dlen);
-+		update_wq_comp_bytes(iaa_wq->wq, ctx->req->dlen);
-+	} else {
-+		update_total_decomp_bytes_in(ctx->req->dlen);
-+		update_wq_decomp_bytes(iaa_wq->wq, ctx->req->dlen);
++	if (data->load_device_defaults) {
++		rc = data->load_device_defaults(idxd);
++		if (rc)
++			dev_warn(dev, "IDXD loading device defaults failed\n");
 +	}
 +
- 	if (ctx->compress && compression_ctx->verify_compress) {
- 		dma_addr_t src_addr, dst_addr;
- 		u32 compression_crc;
-@@ -1280,6 +1295,10 @@ static int iaa_compress(struct crypto_tfm *tfm,	struct acomp_req *req,
- 		goto err;
- 	}
- 
-+	/* Update stats */
-+	update_total_comp_calls();
-+	update_wq_comp_calls(wq);
-+
- 	if (ctx->async_mode && !disable_async) {
- 		ret = -EINPROGRESS;
- 		dev_dbg(dev, "%s: returning -EINPROGRESS\n", __func__);
-@@ -1294,6 +1313,10 @@ static int iaa_compress(struct crypto_tfm *tfm,	struct acomp_req *req,
- 
- 	*dlen = idxd_desc->iax_completion->output_size;
- 
-+	/* Update stats */
-+	update_total_comp_bytes_out(*dlen);
-+	update_wq_comp_bytes(wq, *dlen);
-+
- 	*compression_crc = idxd_desc->iax_completion->crc;
- 
- 	if (!ctx->async_mode)
-@@ -1510,6 +1533,10 @@ static int iaa_decompress(struct crypto_tfm *tfm, struct acomp_req *req,
- 		goto err;
- 	}
- 
-+	/* Update stats */
-+	update_total_decomp_calls();
-+	update_wq_decomp_calls(wq);
-+
- 	if (ctx->async_mode && !disable_async) {
- 		ret = -EINPROGRESS;
- 		dev_dbg(dev, "%s: returning -EINPROGRESS\n", __func__);
-@@ -1540,6 +1567,10 @@ static int iaa_decompress(struct crypto_tfm *tfm, struct acomp_req *req,
- 
- 	if (!ctx->async_mode)
- 		idxd_free_desc(wq, idxd_desc);
-+
-+	/* Update stats */
-+	update_total_decomp_bytes_in(slen);
-+	update_wq_decomp_bytes(wq, slen);
- out:
- 	return ret;
- err:
-@@ -2104,6 +2135,9 @@ static int __init iaa_crypto_init_module(void)
- 		goto err_sync_attr_create;
- 	}
- 
-+	if (iaa_crypto_debugfs_init())
-+		pr_warn("debugfs init failed, stats not available\n");
-+
- 	pr_debug("initialized\n");
- out:
- 	return ret;
-@@ -2126,6 +2160,7 @@ static void __exit iaa_crypto_cleanup_module(void)
- 	if (iaa_unregister_compression_device())
- 		pr_debug("IAA compression device unregister failed\n");
- 
-+	iaa_crypto_debugfs_cleanup();
- 	driver_remove_file(&iaa_crypto_driver.drv,
- 			   &driver_attr_sync_mode);
- 	driver_remove_file(&iaa_crypto_driver.drv,
-diff --git a/drivers/crypto/intel/iaa/iaa_crypto_stats.c b/drivers/crypto/intel/iaa/iaa_crypto_stats.c
-new file mode 100644
-index 000000000000..0279edc6194e
---- /dev/null
-+++ b/drivers/crypto/intel/iaa/iaa_crypto_stats.c
-@@ -0,0 +1,313 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright(c) 2021 Intel Corporation. All rights rsvd. */
-+
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/highmem.h>
-+#include <linux/mm.h>
-+#include <linux/slab.h>
-+#include <linux/delay.h>
-+#include <linux/smp.h>
-+#include <uapi/linux/idxd.h>
-+#include <linux/idxd.h>
-+#include <linux/dmaengine.h>
-+#include "../../dma/idxd/idxd.h"
-+#include <linux/debugfs.h>
-+#include <crypto/internal/acompress.h>
-+#include "iaa_crypto.h"
-+#include "iaa_crypto_stats.h"
-+
-+static u64 total_comp_calls;
-+static u64 total_decomp_calls;
-+static u64 total_sw_decomp_calls;
-+static u64 max_comp_delay_ns;
-+static u64 max_decomp_delay_ns;
-+static u64 max_acomp_delay_ns;
-+static u64 max_adecomp_delay_ns;
-+static u64 total_comp_bytes_out;
-+static u64 total_decomp_bytes_in;
-+static u64 total_completion_einval_errors;
-+static u64 total_completion_timeout_errors;
-+static u64 total_completion_comp_buf_overflow_errors;
-+
-+static struct dentry *iaa_crypto_debugfs_root;
-+
-+void update_total_comp_calls(void)
-+{
-+	total_comp_calls++;
-+}
-+
-+void update_total_comp_bytes_out(int n)
-+{
-+	total_comp_bytes_out += n;
-+}
-+
-+void update_total_decomp_calls(void)
-+{
-+	total_decomp_calls++;
-+}
-+
-+void update_total_sw_decomp_calls(void)
-+{
-+	total_sw_decomp_calls++;
-+}
-+
-+void update_total_decomp_bytes_in(int n)
-+{
-+	total_decomp_bytes_in += n;
-+}
-+
-+void update_completion_einval_errs(void)
-+{
-+	total_completion_einval_errors++;
-+}
-+
-+void update_completion_timeout_errs(void)
-+{
-+	total_completion_timeout_errors++;
-+}
-+
-+void update_completion_comp_buf_overflow_errs(void)
-+{
-+	total_completion_comp_buf_overflow_errors++;
-+}
-+
-+void update_max_comp_delay_ns(u64 start_time_ns)
-+{
-+	u64 time_diff;
-+
-+	time_diff = ktime_get_ns() - start_time_ns;
-+
-+	if (time_diff > max_comp_delay_ns)
-+		max_comp_delay_ns = time_diff;
-+}
-+
-+void update_max_decomp_delay_ns(u64 start_time_ns)
-+{
-+	u64 time_diff;
-+
-+	time_diff = ktime_get_ns() - start_time_ns;
-+
-+	if (time_diff > max_decomp_delay_ns)
-+		max_decomp_delay_ns = time_diff;
-+}
-+
-+void update_max_acomp_delay_ns(u64 start_time_ns)
-+{
-+	u64 time_diff;
-+
-+	time_diff = ktime_get_ns() - start_time_ns;
-+
-+	if (time_diff > max_acomp_delay_ns)
-+		max_acomp_delay_ns = time_diff;
-+}
-+
-+void update_max_adecomp_delay_ns(u64 start_time_ns)
-+{
-+	u64 time_diff;
-+
-+	time_diff = ktime_get_ns() - start_time_ns;
-+
-+	if (time_diff > max_adecomp_delay_ns)
-+
-+		max_adecomp_delay_ns = time_diff;
-+}
-+
-+void update_wq_comp_calls(struct idxd_wq *idxd_wq)
-+{
-+	struct iaa_wq *wq = idxd_wq_get_private(idxd_wq);
-+
-+	wq->comp_calls++;
-+	wq->iaa_device->comp_calls++;
-+}
-+
-+void update_wq_comp_bytes(struct idxd_wq *idxd_wq, int n)
-+{
-+	struct iaa_wq *wq = idxd_wq_get_private(idxd_wq);
-+
-+	wq->comp_bytes += n;
-+	wq->iaa_device->comp_bytes += n;
-+}
-+
-+void update_wq_decomp_calls(struct idxd_wq *idxd_wq)
-+{
-+	struct iaa_wq *wq = idxd_wq_get_private(idxd_wq);
-+
-+	wq->decomp_calls++;
-+	wq->iaa_device->decomp_calls++;
-+}
-+
-+void update_wq_decomp_bytes(struct idxd_wq *idxd_wq, int n)
-+{
-+	struct iaa_wq *wq = idxd_wq_get_private(idxd_wq);
-+
-+	wq->decomp_bytes += n;
-+	wq->iaa_device->decomp_bytes += n;
-+}
-+
-+static void reset_iaa_crypto_stats(void)
-+{
-+	total_comp_calls = 0;
-+	total_decomp_calls = 0;
-+	total_sw_decomp_calls = 0;
-+	max_comp_delay_ns = 0;
-+	max_decomp_delay_ns = 0;
-+	max_acomp_delay_ns = 0;
-+	max_adecomp_delay_ns = 0;
-+	total_comp_bytes_out = 0;
-+	total_decomp_bytes_in = 0;
-+	total_completion_einval_errors = 0;
-+	total_completion_timeout_errors = 0;
-+	total_completion_comp_buf_overflow_errors = 0;
-+}
-+
-+static void reset_wq_stats(struct iaa_wq *wq)
-+{
-+	wq->comp_calls = 0;
-+	wq->comp_bytes = 0;
-+	wq->decomp_calls = 0;
-+	wq->decomp_bytes = 0;
-+}
-+
-+static void reset_device_stats(struct iaa_device *iaa_device)
-+{
-+	struct iaa_wq *iaa_wq;
-+
-+	iaa_device->comp_calls = 0;
-+	iaa_device->comp_bytes = 0;
-+	iaa_device->decomp_calls = 0;
-+	iaa_device->decomp_bytes = 0;
-+
-+	list_for_each_entry(iaa_wq, &iaa_device->wqs, list)
-+		reset_wq_stats(iaa_wq);
-+}
-+
-+static void wq_show(struct seq_file *m, struct iaa_wq *iaa_wq)
-+{
-+	seq_printf(m, "    name: %s\n", iaa_wq->wq->name);
-+	seq_printf(m, "    comp_calls: %llu\n", iaa_wq->comp_calls);
-+	seq_printf(m, "    comp_bytes: %llu\n", iaa_wq->comp_bytes);
-+	seq_printf(m, "    decomp_calls: %llu\n", iaa_wq->decomp_calls);
-+	seq_printf(m, "    decomp_bytes: %llu\n\n", iaa_wq->decomp_bytes);
-+}
-+
-+static void device_stats_show(struct seq_file *m, struct iaa_device *iaa_device)
-+{
-+	struct iaa_wq *iaa_wq;
-+
-+	seq_puts(m, "iaa device:\n");
-+	seq_printf(m, "  id: %d\n", iaa_device->idxd->id);
-+	seq_printf(m, "  n_wqs: %d\n", iaa_device->n_wq);
-+	seq_printf(m, "  comp_calls: %llu\n", iaa_device->comp_calls);
-+	seq_printf(m, "  comp_bytes: %llu\n", iaa_device->comp_bytes);
-+	seq_printf(m, "  decomp_calls: %llu\n", iaa_device->decomp_calls);
-+	seq_printf(m, "  decomp_bytes: %llu\n", iaa_device->decomp_bytes);
-+	seq_puts(m, "  wqs:\n");
-+
-+	list_for_each_entry(iaa_wq, &iaa_device->wqs, list)
-+		wq_show(m, iaa_wq);
-+}
-+
-+static void global_stats_show(struct seq_file *m)
-+{
-+	seq_puts(m, "global stats:\n");
-+	seq_printf(m, "  total_comp_calls: %llu\n", total_comp_calls);
-+	seq_printf(m, "  total_decomp_calls: %llu\n", total_decomp_calls);
-+	seq_printf(m, "  total_sw_decomp_calls: %llu\n", total_sw_decomp_calls);
-+	seq_printf(m, "  total_comp_bytes_out: %llu\n", total_comp_bytes_out);
-+	seq_printf(m, "  total_decomp_bytes_in: %llu\n", total_decomp_bytes_in);
-+	seq_printf(m, "  total_completion_einval_errors: %llu\n",
-+		   total_completion_einval_errors);
-+	seq_printf(m, "  total_completion_timeout_errors: %llu\n",
-+		   total_completion_timeout_errors);
-+	seq_printf(m, "  total_completion_comp_buf_overflow_errors: %llu\n\n",
-+		   total_completion_comp_buf_overflow_errors);
-+}
-+
-+static int wq_stats_show(struct seq_file *m, void *v)
-+{
-+	struct iaa_device *iaa_device;
-+
-+	mutex_lock(&iaa_devices_lock);
-+
-+	global_stats_show(m);
-+
-+	list_for_each_entry(iaa_device, &iaa_devices, list)
-+		device_stats_show(m, iaa_device);
-+
-+	mutex_unlock(&iaa_devices_lock);
-+
-+	return 0;
-+}
-+
-+static int iaa_crypto_stats_reset(void *data, u64 value)
-+{
-+	struct iaa_device *iaa_device;
-+
-+	reset_iaa_crypto_stats();
-+
-+	mutex_lock(&iaa_devices_lock);
-+
-+	list_for_each_entry(iaa_device, &iaa_devices, list)
-+		reset_device_stats(iaa_device);
-+
-+	mutex_unlock(&iaa_devices_lock);
-+
-+	return 0;
-+}
-+
-+static int wq_stats_open(struct inode *inode, struct file *file)
-+{
-+	return single_open(file, wq_stats_show, file);
-+}
-+
-+static const struct file_operations wq_stats_fops = {
-+	.open = wq_stats_open,
-+	.read = seq_read,
-+	.llseek = seq_lseek,
-+	.release = single_release,
-+};
-+
-+DEFINE_DEBUGFS_ATTRIBUTE(wq_stats_reset_fops, NULL, iaa_crypto_stats_reset, "%llu\n");
-+
-+int __init iaa_crypto_debugfs_init(void)
-+{
-+	if (!debugfs_initialized())
-+		return -ENODEV;
-+
-+	iaa_crypto_debugfs_root = debugfs_create_dir("iaa_crypto", NULL);
-+	if (!iaa_crypto_debugfs_root)
-+		return -ENOMEM;
-+
-+	debugfs_create_u64("max_comp_delay_ns", 0644,
-+			   iaa_crypto_debugfs_root, &max_comp_delay_ns);
-+	debugfs_create_u64("max_decomp_delay_ns", 0644,
-+			   iaa_crypto_debugfs_root, &max_decomp_delay_ns);
-+	debugfs_create_u64("max_acomp_delay_ns", 0644,
-+			   iaa_crypto_debugfs_root, &max_comp_delay_ns);
-+	debugfs_create_u64("max_adecomp_delay_ns", 0644,
-+			   iaa_crypto_debugfs_root, &max_decomp_delay_ns);
-+	debugfs_create_u64("total_comp_calls", 0644,
-+			   iaa_crypto_debugfs_root, &total_comp_calls);
-+	debugfs_create_u64("total_decomp_calls", 0644,
-+			   iaa_crypto_debugfs_root, &total_decomp_calls);
-+	debugfs_create_u64("total_sw_decomp_calls", 0644,
-+			   iaa_crypto_debugfs_root, &total_sw_decomp_calls);
-+	debugfs_create_u64("total_comp_bytes_out", 0644,
-+			   iaa_crypto_debugfs_root, &total_comp_bytes_out);
-+	debugfs_create_u64("total_decomp_bytes_in", 0644,
-+			   iaa_crypto_debugfs_root, &total_decomp_bytes_in);
-+	debugfs_create_file("wq_stats", 0644, iaa_crypto_debugfs_root, NULL,
-+			    &wq_stats_fops);
-+	debugfs_create_file("stats_reset", 0644, iaa_crypto_debugfs_root, NULL,
-+			    &wq_stats_reset_fops);
-+
-+	return 0;
-+}
-+
-+void __exit iaa_crypto_debugfs_cleanup(void)
-+{
-+	debugfs_remove_recursive(iaa_crypto_debugfs_root);
-+}
-+
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/crypto/intel/iaa/iaa_crypto_stats.h b/drivers/crypto/intel/iaa/iaa_crypto_stats.h
-new file mode 100644
-index 000000000000..c10b87b86fa4
---- /dev/null
-+++ b/drivers/crypto/intel/iaa/iaa_crypto_stats.h
-@@ -0,0 +1,53 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright(c) 2021 Intel Corporation. All rights rsvd. */
-+
-+#ifndef __CRYPTO_DEV_IAA_CRYPTO_STATS_H__
-+#define __CRYPTO_DEV_IAA_CRYPTO_STATS_H__
-+
-+#if defined(CONFIG_CRYPTO_DEV_IAA_CRYPTO_STATS)
-+int	iaa_crypto_debugfs_init(void);
-+void	iaa_crypto_debugfs_cleanup(void);
-+
-+void	update_total_comp_calls(void);
-+void	update_total_comp_bytes_out(int n);
-+void	update_total_decomp_calls(void);
-+void	update_total_sw_decomp_calls(void);
-+void	update_total_decomp_bytes_in(int n);
-+void	update_max_comp_delay_ns(u64 start_time_ns);
-+void	update_max_decomp_delay_ns(u64 start_time_ns);
-+void	update_max_acomp_delay_ns(u64 start_time_ns);
-+void	update_max_adecomp_delay_ns(u64 start_time_ns);
-+void	update_completion_einval_errs(void);
-+void	update_completion_timeout_errs(void);
-+void	update_completion_comp_buf_overflow_errs(void);
-+
-+void	update_wq_comp_calls(struct idxd_wq *idxd_wq);
-+void	update_wq_comp_bytes(struct idxd_wq *idxd_wq, int n);
-+void	update_wq_decomp_calls(struct idxd_wq *idxd_wq);
-+void	update_wq_decomp_bytes(struct idxd_wq *idxd_wq, int n);
-+
-+#else
-+static inline int	iaa_crypto_debugfs_init(void) { return 0; }
-+static inline void	iaa_crypto_debugfs_cleanup(void) {}
-+
-+static inline void	update_total_comp_calls(void) {}
-+static inline void	update_total_comp_bytes_out(int n) {}
-+static inline void	update_total_decomp_calls(void) {}
-+static inline void	update_total_sw_decomp_calls(void) {}
-+static inline void	update_total_decomp_bytes_in(int n) {}
-+static inline void	update_max_comp_delay_ns(u64 start_time_ns) {}
-+static inline void	update_max_decomp_delay_ns(u64 start_time_ns) {}
-+static inline void	update_max_acomp_delay_ns(u64 start_time_ns) {}
-+static inline void	update_max_adecomp_delay_ns(u64 start_time_ns) {}
-+static inline void	update_completion_einval_errs(void) {}
-+static inline void	update_completion_timeout_errs(void) {}
-+static inline void	update_completion_comp_buf_overflow_errs(void) {}
-+
-+static inline void	update_wq_comp_calls(struct idxd_wq *idxd_wq) {}
-+static inline void	update_wq_comp_bytes(struct idxd_wq *idxd_wq, int n) {}
-+static inline void	update_wq_decomp_calls(struct idxd_wq *idxd_wq) {}
-+static inline void	update_wq_decomp_bytes(struct idxd_wq *idxd_wq, int n) {}
-+
-+#endif // CONFIG_CRYPTO_DEV_IAA_CRYPTO_STATS
-+
-+#endif
+ 	rc = idxd_register_devices(idxd);
+ 	if (rc) {
+ 		dev_err(dev, "IDXD sysfs setup failed\n");
 -- 
 2.34.1
 

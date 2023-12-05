@@ -1,47 +1,47 @@
-Return-Path: <dmaengine+bounces-372-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-373-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B1278044DA
-	for <lists+dmaengine@lfdr.de>; Tue,  5 Dec 2023 03:27:55 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8424804D81
+	for <lists+dmaengine@lfdr.de>; Tue,  5 Dec 2023 10:21:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 890C3B20C4D
-	for <lists+dmaengine@lfdr.de>; Tue,  5 Dec 2023 02:27:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6BEE11F212B5
+	for <lists+dmaengine@lfdr.de>; Tue,  5 Dec 2023 09:21:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22A3179C5;
-	Tue,  5 Dec 2023 02:27:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACBC83E47B;
+	Tue,  5 Dec 2023 09:21:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PHy9zCzE"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cclanZ6L"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FA8130D0;
-	Mon,  4 Dec 2023 18:27:06 -0800 (PST)
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EACF2183;
+	Tue,  5 Dec 2023 01:21:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701743226; x=1733279226;
+  t=1701768108; x=1733304108;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=kOpRCM/Alytm6Ynqn23OIlROnY/GAJM/+vJVGPgtI58=;
-  b=PHy9zCzEY6L4VlLz9TDVuY9apzg7jdcwqxJzKYoOye53zw4QhGRAx6ar
-   tGpppxa4Msf/+Ic7PAgylu2LROYRQjsr3fC3lpq/fcp+NIkecVbT0zwLG
-   lo4Vo1tVkJ1wKfK6/vz4bBdCTwbp24W/oTyop3VXleGm9GDaX8FsyD9hh
-   L0MERMCigohU54IXkIQdwLvxjehKfSmQuHTSTS7ru67TxfFgrXIbgjQce
-   mnKVqKqzEvPUKbhaV+wr6xX2BHhotXnP+Nita3LvGkW0sUm5JKq0B/haY
-   Q44vM0U8nvcvCsuA25K7v3dc0JDEUAw/KtGgdC6c+gV4TARIknpOwLj1C
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="706160"
+  bh=59iQKEDl6X80Ax03Nq5CpaD02G8tfcF3NvfxIuhVihs=;
+  b=cclanZ6L24/3h6MGwFC2QoqnvinXwRPYsHlidEv0SzMFhlDr8Tl/WcAt
+   BjbojHGC6wxRljnQ++2jPywL37T3VQCzkZwxCcj3aDdkQRq/lSu0wY89k
+   vefXnJ1k5+vSr+ImiznprO9To2cIoKpkX69yPzciFA6Zy1ft48omW8DJR
+   pgNReXxpD9aYZwYcRnGpMmabNtTgQ5Of2fBJyT3BE5Ml5AbdRsfL9Pvh+
+   X9+g2zBAOBDuq7L/UsY9kg9JgPYPEy9/+k10ffYVLebtAUcfq9YDgec2Z
+   zRDW5+nCGkqwWuNJ5wrAo1GlzBLxoDBDVn1TLaKCTilV1Rc+zOJOlvHTI
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="378893727"
 X-IronPort-AV: E=Sophos;i="6.04,251,1695711600"; 
-   d="scan'208";a="706160"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2023 18:27:02 -0800
+   d="scan'208";a="378893727"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 01:21:46 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="770756219"
+X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="841387858"
 X-IronPort-AV: E=Sophos;i="6.04,251,1695711600"; 
-   d="scan'208";a="770756219"
+   d="scan'208";a="841387858"
 Received: from rex-z390-aorus-pro.sh.intel.com ([10.239.161.21])
-  by orsmga002.jf.intel.com with ESMTP; 04 Dec 2023 18:26:57 -0800
+  by fmsmga004.fm.intel.com with ESMTP; 05 Dec 2023 01:21:42 -0800
 From: Rex Zhang <rex.zhang@intel.com>
 To: tom.zanussi@linux.intel.com
 Cc: dave.jiang@intel.com,
@@ -55,146 +55,138 @@ Cc: dave.jiang@intel.com,
 	linux-crypto@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	pavel@ucw.cz,
-	rex.zhang@intel.com,
 	tony.luck@intel.com,
 	vinodh.gopal@intel.com,
 	vkoul@kernel.org,
 	wajdi.k.feghali@intel.com
-Subject: Re: [PATCH v11 11/14] crypto: iaa - Add support for deflate-iaa compression algorithm
-Date: Tue,  5 Dec 2023 10:26:55 +0800
-Message-Id: <20231205022655.3616965-1-rex.zhang@intel.com>
+Subject: Re: [PATCH v11 14/14] dmaengine: idxd: Add support for device/wq defaults
+Date: Tue,  5 Dec 2023 17:21:39 +0800
+Message-Id: <20231205092139.3682047-1-rex.zhang@intel.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <1a44f8396c6b7014de9b9bde4d5f5a4dbf0ef7a1.camel@linux.intel.com>
-References: <1a44f8396c6b7014de9b9bde4d5f5a4dbf0ef7a1.camel@linux.intel.com>
+In-Reply-To: <20231201201035.172465-15-tom.zanussi@linux.intel.com>
+References: <20231201201035.172465-15-tom.zanussi@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 Hi Tom,
 
-On 2023-12-04 at 15:41:46 -0600, Tom Zanussi wrote:
-> Hi Rex,
-> 
-> On Mon, 2023-12-04 at 23:00 +0800, Rex Zhang wrote:
-> > Hi, Tom,
-> > 
-> > On 2023-12-01 at 14:10:32 -0600, Tom Zanussi wrote:
-> > 
-> > [snip]
-> > 
-> > > +static int iaa_wq_put(struct idxd_wq *wq)
-> > > +{
-> > > +       struct idxd_device *idxd = wq->idxd;
-> > > +       struct iaa_wq *iaa_wq;
-> > > +       bool free = false;
-> > > +       int ret = 0;
-> > > +
-> > > +       spin_lock(&idxd->dev_lock);
-> > > +       iaa_wq = idxd_wq_get_private(wq);
-> > > +       if (iaa_wq) {
-> > > +               iaa_wq->ref--;
-> > > +               if (iaa_wq->ref == 0 && iaa_wq->remove) {
-> > > +                       __free_iaa_wq(iaa_wq);
-> > > +                       idxd_wq_set_private(wq, NULL);
-> > > +                       free = true;
-> > > +               }
-> > > +               idxd_wq_put(wq);
-> > > +       } else {
-> > > +               ret = -ENODEV;
-> > > +       }
-> > > +       spin_unlock(&idxd->dev_lock);
-> > __free_iaa_wq() may cause schedule, whether it should be move out of
-> > the
-> > context between spin_lock() and spin_unlock()?
-> 
-> Yeah, I suppose it makes more sense to have it below anyway, will move
-> it there.
-> 
-> > > +       if (free)
-> > > +               kfree(iaa_wq);
-> > > +
-> > > +       return ret;
-> > > +}
-> > 
-> > [snip]
-> > 
-> > > @@ -800,12 +1762,38 @@ static void iaa_crypto_remove(struct
-> > > idxd_dev *idxd_dev)
-> > >  
-> > >         remove_iaa_wq(wq);
-> > >  
-> > > +       spin_lock(&idxd->dev_lock);
-> > > +       iaa_wq = idxd_wq_get_private(wq);
-> > > +       if (!iaa_wq) {
-> > > +               spin_unlock(&idxd->dev_lock);
-> > > +               pr_err("%s: no iaa_wq available to remove\n",
-> > > __func__);
-> > > +               goto out;
-> > > +       }
-> > > +
-> > > +       if (iaa_wq->ref) {
-> > > +               iaa_wq->remove = true;
-> > > +       } else {
-> > > +               wq = iaa_wq->wq;
-> > > +               __free_iaa_wq(iaa_wq);
-> > > +               idxd_wq_set_private(wq, NULL);
-> > > +               free = true;
-> > > +       }
-> > > +       spin_unlock(&idxd->dev_lock);
-> > __free_iaa_wq() may cause schedule, whether it should be move out of
-> > the
-> > context between spin_lock() and spin_unlock()?
-> 
-> Same.
-> 
-> > > +
-> > > +       if (free)
-> > > +               kfree(iaa_wq);
-> > > +
-> > >         idxd_drv_disable_wq(wq);
-> > >         rebalance_wq_table();
-> > >  
-> > > -       if (nr_iaa == 0)
-> > > +       if (nr_iaa == 0) {
-> > > +               iaa_crypto_enabled = false;
-> > Is it necessary to add iaa_unregister_compression_device() here?
-> > All iaa devices are disabled cause the variable first_wq will be
-> > true,
-> > if enable wq, iaa_register_compression_device() will fail due to the
-> > algorithm is existed.
-> 
-> No, this is required by review input from a previous version - the
-> compression device can only be unregistered on module exit.
-Do it mean disabling all WQs followed by enabling WQ is unacceptable?
-User must do "rmmod iaa_crypto" before enabling WQ in this case.
+On 2023-12-01 at 14:10:35 -0600, Tom Zanussi wrote:
 
-Thanks.
-> 
-> Thanks,
-> 
-> Tom
-> 
-> > >                 free_wq_table();
-> > > +               module_put(THIS_MODULE);
-> > >  
-> > > +               pr_info("iaa_crypto now DISABLED\n");
-> > > +       }
-> > > +out:
-> > >         mutex_unlock(&iaa_devices_lock);
-> > >         mutex_unlock(&wq->wq_lock);
-> > >  }
-> > 
-> > [snip]
-> > 
-> > Thanks,
-> > Rex Zhang
-> > > -- 
-> > > 2.34.1
-> > > 
+[snip]
+
+> +int idxd_load_iaa_device_defaults(struct idxd_device *idxd)
+> +{
+> +	struct idxd_engine *engine;
+> +	struct idxd_group *group;
+> +	struct idxd_wq *wq;
+> +
+> +	if (!test_bit(IDXD_FLAG_CONFIGURABLE, &idxd->flags))
+> +		return 0;
+In the virtualization case, it is not configurable in guest OS,
+then the default work queue will not be enabled. Is it expected?
+> +
+> +	wq = idxd->wqs[0];
+> +
+> +	if (wq->state != IDXD_WQ_DISABLED)
+> +		return -EPERM;
+> +
+> +	/* set mode to "dedicated" */
+> +	set_bit(WQ_FLAG_DEDICATED, &wq->flags);
+> +	wq->threshold = 0;
+> +
+> +	/* only setting up 1 wq, so give it all the wq space */
+> +	wq->size = idxd->max_wq_size;
+> +
+> +	/* set priority to 10 */
+> +	wq->priority = 10;
+> +
+> +	/* set type to "kernel" */
+> +	wq->type = IDXD_WQT_KERNEL;
+> +
+> +	/* set wq group to 0 */
+> +	group = idxd->groups[0];
+> +	wq->group = group;
+> +	group->num_wqs++;
+> +
+> +	/* set name to "iaa_crypto" */
+> +	memset(wq->name, 0, WQ_NAME_SIZE + 1);
+> +	strscpy(wq->name, "iaa_crypto", WQ_NAME_SIZE + 1);
+> +
+> +	/* set driver_name to "crypto" */
+> +	memset(wq->driver_name, 0, DRIVER_NAME_SIZE + 1);
+> +	strscpy(wq->driver_name, "crypto", DRIVER_NAME_SIZE + 1);
+> +
+> +	engine = idxd->engines[0];
+> +
+> +	/* set engine group to 0 */
+> +	engine->group = idxd->groups[0];
+> +	engine->group->num_engines++;
+> +
+> +	return 0;
+> +}
+> diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
+> index 62ea21b25906..47de3f93ff1e 100644
+> --- a/drivers/dma/idxd/idxd.h
+> +++ b/drivers/dma/idxd/idxd.h
+> @@ -277,6 +277,8 @@ struct idxd_dma_dev {
+>  	struct dma_device dma;
+>  };
+>  
+> +typedef int (*load_device_defaults_fn_t) (struct idxd_device *idxd);
+> +
+>  struct idxd_driver_data {
+>  	const char *name_prefix;
+>  	enum idxd_type type;
+> @@ -286,6 +288,7 @@ struct idxd_driver_data {
+>  	int evl_cr_off;
+>  	int cr_status_off;
+>  	int cr_result_off;
+> +	load_device_defaults_fn_t load_device_defaults;
+>  };
+>  
+>  struct idxd_evl {
+> @@ -730,6 +733,7 @@ void idxd_unregister_devices(struct idxd_device *idxd);
+>  void idxd_wqs_quiesce(struct idxd_device *idxd);
+>  bool idxd_queue_int_handle_resubmit(struct idxd_desc *desc);
+>  void multi_u64_to_bmap(unsigned long *bmap, u64 *val, int count);
+> +int idxd_load_iaa_device_defaults(struct idxd_device *idxd);
+>  
+>  /* device interrupt control */
+>  irqreturn_t idxd_misc_thread(int vec, void *data);
+> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+> index 0eb1c827a215..14df1f1347a8 100644
+> --- a/drivers/dma/idxd/init.c
+> +++ b/drivers/dma/idxd/init.c
+> @@ -59,6 +59,7 @@ static struct idxd_driver_data idxd_driver_data[] = {
+>  		.evl_cr_off = offsetof(struct iax_evl_entry, cr),
+>  		.cr_status_off = offsetof(struct iax_completion_record, status),
+>  		.cr_result_off = offsetof(struct iax_completion_record, error_code),
+> +		.load_device_defaults = idxd_load_iaa_device_defaults,
+>  	},
+>  };
+>  
+> @@ -745,6 +746,12 @@ static int idxd_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  		goto err;
+>  	}
+>  
+> +	if (data->load_device_defaults) {
+> +		rc = data->load_device_defaults(idxd);
+> +		if (rc)
+> +			dev_warn(dev, "IDXD loading device defaults failed\n");
+> +	}
+> +
+>  	rc = idxd_register_devices(idxd);
+>  	if (rc) {
+>  		dev_err(dev, "IDXD sysfs setup failed\n");
+
+Thanks,
+Rex Zhang
+> -- 
+> 2.34.1
 > 
 

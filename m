@@ -1,115 +1,93 @@
-Return-Path: <dmaengine+bounces-406-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-407-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A13298091FE
-	for <lists+dmaengine@lfdr.de>; Thu,  7 Dec 2023 20:59:53 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B38788092DD
+	for <lists+dmaengine@lfdr.de>; Thu,  7 Dec 2023 21:59:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3F7091F2107B
-	for <lists+dmaengine@lfdr.de>; Thu,  7 Dec 2023 19:59:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E50811C2087D
+	for <lists+dmaengine@lfdr.de>; Thu,  7 Dec 2023 20:59:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 719F64F8B5;
-	Thu,  7 Dec 2023 19:59:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38B1E4F884;
+	Thu,  7 Dec 2023 20:59:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dvw6tfCg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X9c9Deq4"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67F1410EF;
-	Thu,  7 Dec 2023 11:59:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701979185; x=1733515185;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=kySfWtvu+dSPcwXer3wIupFJdUPFKblbUaSVoORb70Q=;
-  b=Dvw6tfCg1HbCoA7YHTR9030Ij/guFpUzHRxRNoPHev8ERR1msJBY8GGI
-   ms6xI0KPWozSuW0qONAWMby0smFMIV8MGqicNqsNeWwEwTc4rIbmS9mgM
-   anOwJL5Qsf+UMNA/0DYj/QNEdKpHni1C2UkwrkkLJNGv7TlX/m697NxpX
-   ev6dGy4OdxVI6IrXAlhabJq6OdSKm0J6MLZ6O7lj8COh/DqrbVWcAa/rs
-   Q+owQ0HY6ll4ui9YdZWyECUUmkqhyPIDMc1k2C1C8y1gQq6a5QhSqORPW
-   3bKvWjEnxgy7LrEa0KBjdqu221nwzhR6oBAPXIBS2jIXOhsKUj/a2g7a0
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="1163579"
-X-IronPort-AV: E=Sophos;i="6.04,258,1695711600"; 
-   d="scan'208";a="1163579"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 11:59:44 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="945166057"
-X-IronPort-AV: E=Sophos;i="6.04,258,1695711600"; 
-   d="scan'208";a="945166057"
-Received: from barinat-mobl1.amr.corp.intel.com ([10.213.188.213])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 11:59:41 -0800
-Message-ID: <ae9e4984a50842e056363cbae73ea01a745aebb6.camel@linux.intel.com>
-Subject: Re: [PATCH v12 13/14] crypto: iaa - Add IAA Compression Accelerator
- stats
-From: Tom Zanussi <tom.zanussi@linux.intel.com>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>, 
-	herbert@gondor.apana.org.au, davem@davemloft.net, fenghua.yu@intel.com, 
-	vkoul@kernel.org
-Cc: dave.jiang@intel.com, tony.luck@intel.com, wajdi.k.feghali@intel.com, 
- james.guilford@intel.com, kanchana.p.sridhar@intel.com,
- vinodh.gopal@intel.com,  giovanni.cabiddu@intel.com, pavel@ucw.cz,
- linux-kernel@vger.kernel.org,  linux-crypto@vger.kernel.org,
- dmaengine@vger.kernel.org
-Date: Thu, 07 Dec 2023 13:59:39 -0600
-In-Reply-To: <4f53df8e-0957-44b6-b18e-e4362800e180@wanadoo.fr>
-References: <20231205212530.285671-1-tom.zanussi@linux.intel.com>
-	 <20231205212530.285671-14-tom.zanussi@linux.intel.com>
-	 <4f53df8e-0957-44b6-b18e-e4362800e180@wanadoo.fr>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 178797096E;
+	Thu,  7 Dec 2023 20:59:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 973C6C433CB;
+	Thu,  7 Dec 2023 20:59:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701982761;
+	bh=C21rcvb5f90zCPP0WfTqfPYIWbLBcAu22m6JrTOBcPY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=X9c9Deq4Hu5p/+2MCzm19VQNajjN2p45xeo1yF7xkiwC8xz2rGgTxZKv9UDEV9lEb
+	 siIg91bqWQA4fHnQVZOK2B7hf/39/siATgl+J3rRFiUJsWkcgFWFCOaQGmOhDyuMya
+	 FL3gO7HQ7jsVl3u3zvXSDonLQOvufh/6NS4OYPpI3QlxUpu0MoqmWpOZ2A0pNuRBhB
+	 wXAPihB46OwvR1QYV98BwbuLm5T53dglI6vavT1h5tNQkpStpWXetKA5KBdlGg8+Rc
+	 yPNQOdWnssXrC/7hv2UFw6f5Sfhx0++xDoXxlx4f0jZhtjCpWuftos831wvIhrRVFZ
+	 Iq7jopWWvc4bw==
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-50be3eed85aso1657854e87.2;
+        Thu, 07 Dec 2023 12:59:21 -0800 (PST)
+X-Gm-Message-State: AOJu0YzoBQWw7K+JV09lUNmIwHPMlnpQUWTdnW4ZMNtxvMXgqVD+tnbR
+	IX5fQq1IjJUqJLcIHbBe879pSQChJtL2sQkG0Q==
+X-Google-Smtp-Source: AGHT+IEVQgvulIjqQm258FjkM+m3ikdwhnUFuJgkTHBt8qMmT08fchzBbboDXtYublXIeoxrUzYy+qKRkBfsZGjDplk=
+X-Received: by 2002:a05:6512:159d:b0:50b:e713:574d with SMTP id
+ bp29-20020a056512159d00b0050be713574dmr2319296lfb.75.1701982759757; Thu, 07
+ Dec 2023 12:59:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20231122235050.2966280-1-robh@kernel.org>
+In-Reply-To: <20231122235050.2966280-1-robh@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Date: Thu, 7 Dec 2023 14:59:07 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKrpWoHxU1=FaCkJCg-E5G6JjudjsiUvv4cdQVyKM88KQ@mail.gmail.com>
+Message-ID: <CAL_JsqKrpWoHxU1=FaCkJCg-E5G6JjudjsiUvv4cdQVyKM88KQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: dma: Drop undocumented examples
+To: Vinod Koul <vkoul@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Christophe,
+On Wed, Nov 22, 2023 at 5:50=E2=80=AFPM Rob Herring <robh@kernel.org> wrote=
+:
+>
+> The compatibles "ti,omap-sdma" and "ti,dra7-dma-crossbar" aren't document=
+ed
+> by a schema which causes warnings:
+>
+> Documentation/devicetree/bindings/dma/dma-controller.example.dtb: /exampl=
+e-0/dma-controller@48000000: failed to match any schema with compatible: ['=
+ti,omap-sdma']
+> Documentation/devicetree/bindings/dma/dma-router.example.dtb: /example-0/=
+dma-router@4a002b78: failed to match any schema with compatible: ['ti,dra7-=
+dma-crossbar']
+>
+> As no one has cared to fix them, just drop them.
+>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/dma/dma-controller.yaml   | 15 ---------------
+>  .../devicetree/bindings/dma/dma-router.yaml       | 11 -----------
+>  2 files changed, 26 deletions(-)
 
-On Thu, 2023-12-07 at 07:22 +0100, Christophe JAILLET wrote:
-> Le 05/12/2023 =C3=A0 22:25, Tom Zanussi a =C3=A9crit=C2=A0:
-> > Add support for optional debugfs statistics support for the IAA
-> > Compression Accelerator.=C2=A0 This is enabled by the kernel config
-> > item:
-> >=20
-> > =C2=A0=C2=A0 CRYPTO_DEV_IAA_CRYPTO_STATS
-> >=20
-> > When enabled, the IAA crypto driver will generate statistics which
-> > can
-> > be accessed at /sys/kernel/debug/iaa-crypto/.
-> >=20
-> > See Documentation/driver-api/crypto/iax/iax-crypto.rst for details.
-> >=20
-> > Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
-> > ---
->=20
-> > +void update_max_adecomp_delay_ns(u64 start_time_ns)
-> > +{
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0u64 time_diff;
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0time_diff =3D ktime_get_ns()=
- - start_time_ns;
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (time_diff > max_adecomp_=
-delay_ns)
-> > +
->=20
-> Nit: unneeded NL.
->=20
+Vinod, Can you pick this up please.
 
-Good eye, thanks for pointing it out.
+As pointed out, examples don't document anything. "ti,omap-sdma" is
+not documented at all (though in use). "ti,dra7-dma-crossbar" is
+documented in dma/ti-dma-crossbar.txt and there's still an example
+there.
 
-Tom
-
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0max_adecomp_delay_ns =3D time_diff;
-> > +}
->=20
-> CJ
-
+Rob
 

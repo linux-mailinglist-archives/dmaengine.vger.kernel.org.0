@@ -1,98 +1,133 @@
-Return-Path: <dmaengine+bounces-414-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-415-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 056AF80A145
-	for <lists+dmaengine@lfdr.de>; Fri,  8 Dec 2023 11:38:54 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9965880A4B1
+	for <lists+dmaengine@lfdr.de>; Fri,  8 Dec 2023 14:49:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 65BECB20AEC
-	for <lists+dmaengine@lfdr.de>; Fri,  8 Dec 2023 10:38:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 40E761F20F7C
+	for <lists+dmaengine@lfdr.de>; Fri,  8 Dec 2023 13:49:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B52481094B;
-	Fri,  8 Dec 2023 10:38:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 291511D537;
+	Fri,  8 Dec 2023 13:49:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="zctloH8A"
+	dkim=temperror (0-bit key) header.d=alatek.krakow.pl header.i=@alatek.krakow.pl header.b="MYardXXq"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06D23213A;
-	Fri,  8 Dec 2023 02:38:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1702031925; x=1733567925;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=YqtwfEJlrD8L5HAaw7G5HYRJskztVsmoK7bidkNMsB4=;
-  b=zctloH8AEKC14aTjLPffN5LArbkrK1k4hk39Lr3lgocidQfo+bno4cs/
-   kR3KZZYwby8eeOcyVcmLfIUMslm7zYl91yTve7jpGVeE0kEY7H+kmL+gj
-   CLcaOztcTG3gwAjubhAO3D1iXaA3Qm0d9JN2lk+h7KfPUCVHEvt/kjnzt
-   Q5DsWx+OAZIplA0aQGusK7ztD+Jm98CpuC3ffkucuZ54uIK9lZXMy5QtW
-   ev3J0o7XH0MKVKQWH39fXdD01Dh/G4rIpF92faoXsTPj5+qMawJts3r8N
-   PMvsiPWGAqFMFxEsac/aaoO6bap2cxfjdAlfIZAw49N4fnSXMToRYH8VO
-   w==;
-X-CSE-ConnectionGUID: Cvz3gSbpStiroKFn2Lwqew==
-X-CSE-MsgGUID: P2J285XTS/SOK+VrfSFpng==
-X-ThreatScanner-Verdict: Negative
-X-IronPort-AV: E=Sophos;i="6.04,260,1695711600"; 
-   d="scan'208";a="13864092"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 08 Dec 2023 03:38:40 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 8 Dec 2023 03:38:11 -0700
-Received: from microchip1-OptiPlex-9020.microchip.com (10.10.85.11) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Fri, 8 Dec 2023 03:38:06 -0700
-From: shravan chippa <shravan.chippa@microchip.com>
-To: <green.wan@sifive.com>, <vkoul@kernel.org>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <palmer@dabbelt.com>,
-	<paul.walmsley@sifive.com>, <conor+dt@kernel.org>
-CC: <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<nagasuresh.relli@microchip.com>, <praveen.kumar@microchip.com>,
-	<shravan.chippa@microchip.com>, Conor Dooley <conor.dooley@microchip.com>
-Subject: [PATCH v5 4/4] riscv: dts: microchip: add specific compatible for mpfs pdma
-Date: Fri, 8 Dec 2023 16:08:56 +0530
-Message-ID: <20231208103856.3732998-5-shravan.chippa@microchip.com>
+Received: from helios.alatek.com.pl (helios.alatek.com.pl [85.14.123.227])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7DFE1995;
+	Fri,  8 Dec 2023 05:48:55 -0800 (PST)
+Received: from localhost (localhost [127.0.0.1])
+	by helios.alatek.com.pl (Postfix) with ESMTP id C09D92D00F4D;
+	Fri,  8 Dec 2023 14:48:52 +0100 (CET)
+Received: from helios.alatek.com.pl ([127.0.0.1])
+ by localhost (helios.alatek.com.pl [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id 9n85sZtZLwIn; Fri,  8 Dec 2023 14:48:48 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by helios.alatek.com.pl (Postfix) with ESMTP id 803642D00F4C;
+	Fri,  8 Dec 2023 14:48:48 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.10.3 helios.alatek.com.pl 803642D00F4C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alatek.krakow.pl;
+	s=99EE5E86-D06A-11EC-BE24-DBCCD0A148D3; t=1702043328;
+	bh=+VrUs53iMXBZp4C7bjp6gDelybgLg3+ZHMDAxXckBJs=;
+	h=From:To:Date:Message-Id:MIME-Version;
+	b=MYardXXqLKxjfVOaKoQBrfRPdwTUXWmWyzaSnUDJugfH8YrzKCNefTsTAD9Jv+oEF
+	 9EVTE9HTbOIw8vCzNpbGpaOJCG0eFp2M2CdaSAV0eNwzTlQmuLnMuNJcpfY70pX3/7
+	 Ay+Wp/kBTbJI2PpyXqSmcMYoDjx6WBFCvuGfsxhU9rgeujtCyGxjr8wKSBXbkJtizx
+	 OrVne/bn3VeVUJCumU3HOZue+YaU6/fhb9N/BANMm6sYBP5eoQxNsKdZxKg4brkI1s
+	 TOshiGnfClOP1Nk3YhNXsSLDSNJOV+gHFfgGdN5Ns3XCHgpXwz5+GJIWuZIhmFX3hK
+	 rKeMju6+kauRw==
+X-Virus-Scanned: amavis at alatek.com.pl
+Received: from helios.alatek.com.pl ([127.0.0.1])
+ by localhost (helios.alatek.com.pl [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id cK0tzk6p_mU6; Fri,  8 Dec 2023 14:48:48 +0100 (CET)
+Received: from localhost.localdomain (unknown [10.125.125.6])
+	by helios.alatek.com.pl (Postfix) with ESMTPSA id E35882D00F4A;
+	Fri,  8 Dec 2023 14:48:47 +0100 (CET)
+From: Jan Kuliga <jankul@alatek.krakow.pl>
+To: lizhi.hou@amd.com,
+	brian.xu@amd.com,
+	raj.kumar.rampelli@amd.com,
+	vkoul@kernel.org,
+	michal.simek@amd.com,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	miquel.raynal@bootlin.com
+Cc: jankul@alatek.krakow.pl
+Subject: [PATCH v4 0/8] Miscellaneous xdma driver enhancements
+Date: Fri,  8 Dec 2023 14:48:38 +0100
+Message-Id: <20231208134838.49500-1-jankul@alatek.krakow.pl>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231208103856.3732998-1-shravan.chippa@microchip.com>
-References: <20231208103856.3732998-1-shravan.chippa@microchip.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-From: Shravan Chippa <shravan.chippa@microchip.com>
+Hi,
 
-Add specific compatible for PolarFire SoC for The SiFive PDMA driver
+This patchset introduces a couple of xdma driver enhancements. The most
+important change is the introduction of interleaved DMA transfers
+feature, which is a big deal, as it allows DMAEngine clients to express
+DMA transfers in an arbitrary way. This is extremely useful in FPGA
+environments, where in one FPGA system there may be a need to do DMA both
+to/from FIFO at a fixed address and to/from a (non)contiguous RAM.
 
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-Signed-off-by: Shravan Chippa <shravan.chippa@microchip.com>
+It is a another reroll of my previous patch series [1], but it is heavily
+modified one as it is based on Miquel's patchset [2]. We agreed on doing
+it that way, as both our patchsets touched the very same piece of code.
+The discussion took place under [2] thread.
+
+I tested it with XDMA v4.1 (Rev.20) IP core, with both sg and
+interleaved DMA transfers.
+
+Jan
+
+Changes since v1:
+[PATCH 1/5]:=20
+Complete a terminated descriptor with dma_cookie_complete()
+Don't reinitialize temporary list head in xdma_terminate_all()=20
+[PATCH 4/5]:
+Fix incorrect text wrapping
+
+Changes since v2:
+[PATCH 1/5]:
+DO NOT schedule callback from within xdma_terminate_all()
+
+Changes since v3:
+Base patchset on Miquel's [2] series
+Reorganize commits` structure
+Introduce interleaved DMA transfers feature
+Implement transfer error reporting
+
+[1]:
+https://lore.kernel.org/dmaengine/20231124192524.134989-1-jankul@alatek.k=
+rakow.pl/T/#t
+
+[2]:
+https://lore.kernel.org/dmaengine/20231130111315.729430-1-miquel.raynal@b=
+ootlin.com/T/#t
+
 ---
- arch/riscv/boot/dts/microchip/mpfs.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Jan Kuliga (8):
+  dmaengine: xilinx: xdma: Get rid of unused code
+  dmaengine: xilinx: xdma: Add necessary macro definitions
+  dmaengine: xilinx: xdma: Ease dma_pool alignment requirements
+  dmaengine: xilinx: xdma: Rework xdma_terminate_all()
+  dmaengine: xilinx: xdma: Add error checking in xdma_channel_isr()
+  dmaengine: xilinx: xdma: Add transfer error reporting
+  dmaengine: xilinx: xdma: Prepare the introduction of interleaved DMA
+    transfers
+  dmaengine: xilinx: xdma: Introduce interleaved DMA transfers
 
-diff --git a/arch/riscv/boot/dts/microchip/mpfs.dtsi b/arch/riscv/boot/dts/microchip/mpfs.dtsi
-index a6faf24f1dba..e3e9c5b2b33c 100644
---- a/arch/riscv/boot/dts/microchip/mpfs.dtsi
-+++ b/arch/riscv/boot/dts/microchip/mpfs.dtsi
-@@ -236,7 +236,7 @@ plic: interrupt-controller@c000000 {
- 		};
- 
- 		pdma: dma-controller@3000000 {
--			compatible = "sifive,fu540-c000-pdma", "sifive,pdma0";
-+			compatible = "microchip,mpfs-pdma", "sifive,pdma0";
- 			reg = <0x0 0x3000000 0x0 0x8000>;
- 			interrupt-parent = <&plic>;
- 			interrupts = <5 6>, <7 8>, <9 10>, <11 12>;
--- 
+ drivers/dma/xilinx/xdma-regs.h |  30 ++--
+ drivers/dma/xilinx/xdma.c      | 285 ++++++++++++++++++++++-----------
+ 2 files changed, 210 insertions(+), 105 deletions(-)
+
+--=20
 2.34.1
 
 

@@ -1,149 +1,164 @@
-Return-Path: <dmaengine+bounces-434-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-436-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1FFDA80C3D5
-	for <lists+dmaengine@lfdr.de>; Mon, 11 Dec 2023 10:00:47 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F5CF80C751
+	for <lists+dmaengine@lfdr.de>; Mon, 11 Dec 2023 11:54:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A31F51F20FA9
-	for <lists+dmaengine@lfdr.de>; Mon, 11 Dec 2023 09:00:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CF83F2816CA
+	for <lists+dmaengine@lfdr.de>; Mon, 11 Dec 2023 10:54:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE171210E3;
-	Mon, 11 Dec 2023 09:00:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74C2B2D60C;
+	Mon, 11 Dec 2023 10:54:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="v4biwjQq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iJ2xmnKN"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D2AAF2;
-	Mon, 11 Dec 2023 01:00:38 -0800 (PST)
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 3BB90PYY053914;
-	Mon, 11 Dec 2023 03:00:25 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1702285225;
-	bh=fes+2jdnu+cwIMijeZdTMvzhl1D0uYB5n4UdqPCiFzA=;
-	h=Date:CC:Subject:To:References:From:In-Reply-To;
-	b=v4biwjQqh4yHk+hxF5kuE9O9FLHdyyIWt0w28StEmAc2FDOvIEL8CR/6On0YqXbIy
-	 o4HucvSfagdygapccICe6/WquECjS3an7Lm9ZBlQahKRbBDdZ7HrimRrwE3OzvnODo
-	 R+5g1UcJYWNYNNIMF+HeLvw8nmpCzT/IWCh86DfE=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 3BB90PEe010336
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 11 Dec 2023 03:00:25 -0600
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 11
- Dec 2023 03:00:25 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 11 Dec 2023 03:00:25 -0600
-Received: from [172.24.227.9] (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 3BB90M8N004370;
-	Mon, 11 Dec 2023 03:00:23 -0600
-Message-ID: <08e04ee2-b6e7-4da6-87f4-6d111dc25286@ti.com>
-Date: Mon, 11 Dec 2023 14:30:21 +0530
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5323925547
+	for <dmaengine@vger.kernel.org>; Mon, 11 Dec 2023 10:54:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 304A1C433C7;
+	Mon, 11 Dec 2023 10:54:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702292045;
+	bh=Mew19YXARFjy0JbYv18LDqEwa392ENZRfLl+eSvOMKA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iJ2xmnKNSkDBALZLpUjhCE29HPVqxORPSTSbZ46jS2m+jtpo7r2n4BUX0Xm4zvOTH
+	 YO6lfYSyBivPT45enhCace80oThVdPEhEZEJYn0MZp9oKA1FTQh47NItT2oQV2KZjQ
+	 wyfZAZXpCQ2DGEdq0HEf/ax/d61eVh6BFo3fpdKdQgM6pR4w1Uekomk54AxzcGz7w0
+	 0YJ0t67KITwfy6FW8SkEs3PSMEqCO0o1ipj9vPM0TigyFZgRHxuj7QrDHXh+6bvxUi
+	 ywroaL9KQdcVubnmIOpoV4uW+UsVhxjOi3v4x99zDQ1lkA/Ehr5TGlRptO25obv3RO
+	 ju07LyRJ7ZK3Q==
+Date: Mon, 11 Dec 2023 16:24:01 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Jan Kuliga <jankul@alatek.krakow.pl>
+Cc: lizhi.hou@amd.com, brian.xu@amd.com, raj.kumar.rampelli@amd.com,
+	michal.simek@amd.com, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org, miquel.raynal@bootlin.com
+Subject: Re: [PATCH v4 4/8] dmaengine: xilinx: xdma: Rework
+ xdma_terminate_all()
+Message-ID: <ZXbqSQ9W/VrAA0ZE@matsya>
+References: <20231208134838.49500-1-jankul@alatek.krakow.pl>
+ <20231208134929.49523-5-jankul@alatek.krakow.pl>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-CC: <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>, <vigneshr@ti.com>, <s-vadapalli@ti.com>
-Subject: Re: [PATCH 0/4] Add APIs to request TX/RX DMA channels by ID
-Content-Language: en-US
-To: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
-References: <20231114083906.3143548-1-s-vadapalli@ti.com>
- <9d465de4-3930-4856-9d8e-7deb567a628f@gmail.com>
- <c693efec-ab67-44bb-8871-a40dc408f278@ti.com>
- <ed1d0221-d0ee-4a7d-8955-d5973027d113@gmail.com>
- <a4ca48fb-2e87-494a-bc71-8970d7f8c6a0@ti.com>
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-In-Reply-To: <a4ca48fb-2e87-494a-bc71-8970d7f8c6a0@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231208134929.49523-5-jankul@alatek.krakow.pl>
 
-If there are no concerns, may I post the v2 of this series, rebasing it on the
-latest linux-next tree with minor code cleanup and reordering of the patches?
+On 08-12-23, 14:49, Jan Kuliga wrote:
+> Simplify xdma_xfer_stop(). Stop the dma engine and clear its status
+> register unconditionally - just do what its name states. This change
+> also allows to call it without grabbing a lock, which minimizes
+> the total time spent with a spinlock held.
+> 
+> Delete the currently processed vd.node from the vc.desc_issued list
+> prior to passing it to vchan_terminate_vdesc(). In case there's more
+> than one descriptor pending on vc.desc_issued list, calling
+> vchan_terminate_desc() results in losing the link between
+> vc.desc_issued list head and the second descriptor on the list. Doing so
+> results in resources leakege, as vchan_dma_desc_free_list() won't be
+> able to properly free memory resources attached to descriptors,
+> resulting in dma_pool_destroy() failure.
+> 
+> Don't call vchan_dma_desc_free_list() from within xdma_terminate_all().
+> Move all terminated descriptors to the vc.desc_terminated list instead.
+> This allows to postpone freeing memory resources associated with
+> descriptors until the call to vchan_synchronize(), which is called from
+> xdma_synchronize() callback. This is the right way to do it -
+> xdma_terminate_all() should return as soon as possible, while freeing
+> resources (that may be time consuming in case of large number of
+> descriptors) can be done safely later.
+> 
+> Fixes: 290bb5d2d1e2
+> ("dmaengine: xilinx: xdma: Add terminate_all/synchronize callbacks")
+> 
+> Signed-off-by: Jan Kuliga <jankul@alatek.krakow.pl>
+> ---
+>  drivers/dma/xilinx/xdma.c | 32 ++++++++++++++++----------------
+>  1 file changed, 16 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/dma/xilinx/xdma.c b/drivers/dma/xilinx/xdma.c
+> index 1bce48e5d86c..521ba2a653b6 100644
+> --- a/drivers/dma/xilinx/xdma.c
+> +++ b/drivers/dma/xilinx/xdma.c
+> @@ -379,20 +379,20 @@ static int xdma_xfer_start(struct xdma_chan *xchan)
+>   */
+>  static int xdma_xfer_stop(struct xdma_chan *xchan)
+>  {
+> -	struct virt_dma_desc *vd = vchan_next_desc(&xchan->vchan);
+> -	struct xdma_device *xdev = xchan->xdev_hdl;
+>  	int ret;
+> -
+> -	if (!vd || !xchan->busy)
+> -		return -EINVAL;
+> +	u32 val;
+> +	struct xdma_device *xdev = xchan->xdev_hdl;
+> 
+>  	/* clear run stop bit to prevent any further auto-triggering */
+>  	ret = regmap_write(xdev->rmap, xchan->base + XDMA_CHAN_CONTROL_W1C,
+> -			   CHAN_CTRL_RUN_STOP);
+> +							CHAN_CTRL_RUN_STOP);
 
-On 04/12/23 13:51, Siddharth Vadapalli wrote:
-> Hello Péter,
+Why this change, checkpatch would tell you this is not expected
+alignment (run with strict)
+
+>  	if (ret)
+>  		return ret;
 > 
-> On 22/11/23 20:52, Péter Ujfalusi wrote:
->> Hi Siddharth,
->>
->> On 17/11/2023 07:55, Siddharth Vadapalli wrote:
->>>> I would really like to follow a standard binding since what will happen
->>>> if the firmware will start to provision channels/flows for DMAengine
->>>> users? It is not that simple to hack that around.
->>>
->>> Please consider the following use-case for which the APIs are being added by
->>> this series. I apologize for not explaining the idea behind the APIs in more
->>> detail earlier.
->>>
->>> Firmware running on a remote core is in control of a peripheral (CPSW Ethernet
->>> Switch for example) and shares the peripheral across software running on
->>> different cores. The control path between the Firmware and the Clients on
->>> various cores is via RPMsg, while the data path used by the Clients is the DMA
->>> Channels. In the example where Clients send data to the shared peripheral over
->>> DMA, the Clients send RPMsg based requests to the Firmware to obtain the
->>> allocated thead IDs. Firmware allocates the thread IDs by making a request to
->>> TISCI Resource Manager followed by sharing the thread IDs to the Clients.
->>>
->>> In such use cases, the Linux Client is probed by RPMsg endpoint discovery over
->>> the RPMsg bus. Therefore, there is no device-tree corresponding to the Client
->>> device. The Client knows the DMA Channel IDs as well as the RX Flow details from
->>> the Firmware. Knowing these details, the Client can request the configuration of
->>> the TX and RX Channels/Flows by using the DMA APIs which this series adds.
->>
->> I see, so the CPSW will be probed in a similar way as USB peripherals
->> for example? The CPSW does not have a DT entry at all? Is this correct?
+> -	xchan->busy = false;
+> +	/* Clear the channel status register */
+> +	ret = regmap_read(xdev->rmap, xchan->base + XDMA_CHAN_STATUS_RC, &val);
+> +	if (ret)
+> +		return ret;
 > 
-> I apologize for the delayed response. Yes, the CPSW instance which shall be in
-> control of Firmware running on the remote core will not have a DT entry. The
-> Linux Client driver shall be probed when the Firmware announces its endpoint
-> over the RPMsg bus, which the Client driver shall register with the RPMsg framework.
+>  	return 0;
+>  }
+> @@ -505,25 +505,25 @@ static void xdma_issue_pending(struct dma_chan *chan)
+>  static int xdma_terminate_all(struct dma_chan *chan)
+>  {
+>  	struct xdma_chan *xdma_chan = to_xdma_chan(chan);
+> -	struct xdma_desc *desc = NULL;
+>  	struct virt_dma_desc *vd;
+>  	unsigned long flags;
+>  	LIST_HEAD(head);
 > 
->>
->>> Please let me know in case of any suggestions for an implementation which shall
->>> address the above use-case.
->>
->> How does the driver knows how to request a DMA resource from the remote
->> core? How that scales with different SoCs and even with changes in the
->> firmware?
+> -	spin_lock_irqsave(&xdma_chan->vchan.lock, flags);
+>  	xdma_xfer_stop(xdma_chan);
 > 
-> After getting probed, the Client driver communicates with Firmware via RPMsg,
-> requesting details of the allocated resources including the TX Channels and RX
-> Flows. Knowing these parameters, the Client driver can use the newly added DMA
-> APIs to request TX Channel and RX Flows by IDs. The only dependency here is that
-> the Client driver needs to know which DMA instance to request these resources
-> from. That information is hard coded in the driver's data in the form of the
-> compatible used for the DMA instance, thereby allowing the Client driver to get
-> a reference to the DMA controller node using the of_find_compatible_node() API.
+> +	spin_lock_irqsave(&xdma_chan->vchan.lock, flags);
+> +
+> +	xdma_chan->busy = false;
+>  	vd = vchan_next_desc(&xdma_chan->vchan);
+> -	if (vd)
+> -		desc = to_xdma_desc(vd);
+> -	if (desc) {
+> -		dma_cookie_complete(&desc->vdesc.tx);
+> -		vchan_terminate_vdesc(&desc->vdesc);
+> +	if (vd) {
+> +		list_del(&vd->node);
+> +		dma_cookie_complete(&vd->tx);
+> +		vchan_terminate_vdesc(vd);
+>  	}
+> -
+>  	vchan_get_all_descriptors(&xdma_chan->vchan, &head);
+> +	list_splice_tail(&head, &xdma_chan->vchan.desc_terminated);
+> +
+>  	spin_unlock_irqrestore(&xdma_chan->vchan.lock, flags);
+> -	vchan_dma_desc_free_list(&xdma_chan->vchan, &head);
 > 
-> Since all the resource allocation information comes from Firmware, the
-> device-specific details will be hard coded in the Firmware while the Client
-> driver can be used across all K3 SoCs which have the same DMA APIs.
-> 
->>
->> You are right, this is in a grey area. The DMA channel as it is
->> controlled by the remote processor, it lends a thread to clients on
->> other cores (like Linux) via RPMsg.
->> Well, it is similar to how non DT is working in a way.
->>
->> This CPSW type is not yet supported mainline, right?
-> 
-> Yes, it is not yet supported in mainline. This series is a dependency for
-> upstreaming the Client driver.
-> 
+>  	return 0;
+>  }
+> --
+> 2.34.1
 
 -- 
-Regards,
-Siddharth.
+~Vinod
 

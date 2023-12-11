@@ -1,48 +1,48 @@
-Return-Path: <dmaengine+bounces-436-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-437-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F5CF80C751
-	for <lists+dmaengine@lfdr.de>; Mon, 11 Dec 2023 11:54:10 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 59E3B80C75A
+	for <lists+dmaengine@lfdr.de>; Mon, 11 Dec 2023 11:54:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CF83F2816CA
-	for <lists+dmaengine@lfdr.de>; Mon, 11 Dec 2023 10:54:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 89A4E1C20C74
+	for <lists+dmaengine@lfdr.de>; Mon, 11 Dec 2023 10:54:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74C2B2D60C;
-	Mon, 11 Dec 2023 10:54:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD24B347B6;
+	Mon, 11 Dec 2023 10:54:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iJ2xmnKN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KdXAbsnT"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5323925547
-	for <dmaengine@vger.kernel.org>; Mon, 11 Dec 2023 10:54:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 304A1C433C7;
-	Mon, 11 Dec 2023 10:54:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3B3F3454A
+	for <dmaengine@vger.kernel.org>; Mon, 11 Dec 2023 10:54:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F6F6C433C8;
+	Mon, 11 Dec 2023 10:54:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702292045;
-	bh=Mew19YXARFjy0JbYv18LDqEwa392ENZRfLl+eSvOMKA=;
+	s=k20201202; t=1702292084;
+	bh=BsHdeJO+VdYNGqLVNFanltGKbE5xp7hh0b7y/NioNh8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iJ2xmnKNSkDBALZLpUjhCE29HPVqxORPSTSbZ46jS2m+jtpo7r2n4BUX0Xm4zvOTH
-	 YO6lfYSyBivPT45enhCace80oThVdPEhEZEJYn0MZp9oKA1FTQh47NItT2oQV2KZjQ
-	 wyfZAZXpCQ2DGEdq0HEf/ax/d61eVh6BFo3fpdKdQgM6pR4w1Uekomk54AxzcGz7w0
-	 0YJ0t67KITwfy6FW8SkEs3PSMEqCO0o1ipj9vPM0TigyFZgRHxuj7QrDHXh+6bvxUi
-	 ywroaL9KQdcVubnmIOpoV4uW+UsVhxjOi3v4x99zDQ1lkA/Ehr5TGlRptO25obv3RO
-	 ju07LyRJ7ZK3Q==
-Date: Mon, 11 Dec 2023 16:24:01 +0530
+	b=KdXAbsnTPeBzkUV49rrm+8BHCXL1GrauQEjZ1xD1cTxcDbPT7iRs/dX1nYv/WztM5
+	 rYJjRE8VzwyjBaPhoBhI/bQ0pyNcpprQMjHFuuIjwwaSt+IPyDd7ZayTaKcu4NP55m
+	 9gtu2S+xvpSrCqTHaKRGughnRlc2AypkgptqRqNBey5ZEuaeeMG8ddgOPTGRC4I+oM
+	 OvvxLS1uDPHAZf0/jL2Rn/1yVf1VThaIPiGGijho0AeBrnKyawhnyoPn+7wcVQqvcO
+	 EUi5slbpVwiQUkRYH3r1V1yGKe9iH68ga5/vKB3PqTDjPHnc3ZnXPKEPvOepLqbVJT
+	 E8dxPIrzf2l8g==
+Date: Mon, 11 Dec 2023 16:24:40 +0530
 From: Vinod Koul <vkoul@kernel.org>
 To: Jan Kuliga <jankul@alatek.krakow.pl>
 Cc: lizhi.hou@amd.com, brian.xu@amd.com, raj.kumar.rampelli@amd.com,
 	michal.simek@amd.com, dmaengine@vger.kernel.org,
 	linux-kernel@vger.kernel.org, miquel.raynal@bootlin.com
-Subject: Re: [PATCH v4 4/8] dmaengine: xilinx: xdma: Rework
- xdma_terminate_all()
-Message-ID: <ZXbqSQ9W/VrAA0ZE@matsya>
-References: <20231208134838.49500-1-jankul@alatek.krakow.pl>
- <20231208134929.49523-5-jankul@alatek.krakow.pl>
+Subject: Re: [FIXED PATCH v4 6/8] dmaengine: xilinx: xdma: Add transfer error
+ reporting
+Message-ID: <ZXbqcGSL6oVD8YDS@matsya>
+References: <9d683987-53db-a53e-9215-3a29f0167183@amd.com>
+ <20231208220802.56458-1-jankul@alatek.krakow.pl>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -51,111 +51,89 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231208134929.49523-5-jankul@alatek.krakow.pl>
+In-Reply-To: <20231208220802.56458-1-jankul@alatek.krakow.pl>
 
-On 08-12-23, 14:49, Jan Kuliga wrote:
-> Simplify xdma_xfer_stop(). Stop the dma engine and clear its status
-> register unconditionally - just do what its name states. This change
-> also allows to call it without grabbing a lock, which minimizes
-> the total time spent with a spinlock held.
-> 
-> Delete the currently processed vd.node from the vc.desc_issued list
-> prior to passing it to vchan_terminate_vdesc(). In case there's more
-> than one descriptor pending on vc.desc_issued list, calling
-> vchan_terminate_desc() results in losing the link between
-> vc.desc_issued list head and the second descriptor on the list. Doing so
-> results in resources leakege, as vchan_dma_desc_free_list() won't be
-> able to properly free memory resources attached to descriptors,
-> resulting in dma_pool_destroy() failure.
-> 
-> Don't call vchan_dma_desc_free_list() from within xdma_terminate_all().
-> Move all terminated descriptors to the vc.desc_terminated list instead.
-> This allows to postpone freeing memory resources associated with
-> descriptors until the call to vchan_synchronize(), which is called from
-> xdma_synchronize() callback. This is the right way to do it -
-> xdma_terminate_all() should return as soon as possible, while freeing
-> resources (that may be time consuming in case of large number of
-> descriptors) can be done safely later.
-> 
-> Fixes: 290bb5d2d1e2
-> ("dmaengine: xilinx: xdma: Add terminate_all/synchronize callbacks")
+On 08-12-23, 23:08, Jan Kuliga wrote:
+> Extend the capability of transfer status reporting. Introduce error flag,
+> which allows to report error in case of a interrupt-reported error
+> condition.
+
+Pls post the updated series, noting changes from last rev
+
 > 
 > Signed-off-by: Jan Kuliga <jankul@alatek.krakow.pl>
 > ---
->  drivers/dma/xilinx/xdma.c | 32 ++++++++++++++++----------------
->  1 file changed, 16 insertions(+), 16 deletions(-)
+>  drivers/dma/xilinx/xdma.c | 26 +++++++++++++++-----------
+>  1 file changed, 15 insertions(+), 11 deletions(-)
 > 
 > diff --git a/drivers/dma/xilinx/xdma.c b/drivers/dma/xilinx/xdma.c
-> index 1bce48e5d86c..521ba2a653b6 100644
+> index d1bc36133a45..a7cd378b7e9a 100644
 > --- a/drivers/dma/xilinx/xdma.c
 > +++ b/drivers/dma/xilinx/xdma.c
-> @@ -379,20 +379,20 @@ static int xdma_xfer_start(struct xdma_chan *xchan)
+> @@ -85,6 +85,7 @@ struct xdma_chan {
+>   * @cyclic: Cyclic transfer vs. scatter-gather
+>   * @periods: Number of periods in the cyclic transfer
+>   * @period_size: Size of a period in bytes in cyclic transfers
+> + * @error: tx error flag
 >   */
->  static int xdma_xfer_stop(struct xdma_chan *xchan)
->  {
-> -	struct virt_dma_desc *vd = vchan_next_desc(&xchan->vchan);
-> -	struct xdma_device *xdev = xchan->xdev_hdl;
->  	int ret;
-> -
-> -	if (!vd || !xchan->busy)
-> -		return -EINVAL;
-> +	u32 val;
-> +	struct xdma_device *xdev = xchan->xdev_hdl;
+>  struct xdma_desc {
+>  	struct virt_dma_desc		vdesc;
+> @@ -97,6 +98,7 @@ struct xdma_desc {
+>  	bool				cyclic;
+>  	u32				periods;
+>  	u32				period_size;
+> +	bool				error;
+>  };
 > 
->  	/* clear run stop bit to prevent any further auto-triggering */
->  	ret = regmap_write(xdev->rmap, xchan->base + XDMA_CHAN_CONTROL_W1C,
-> -			   CHAN_CTRL_RUN_STOP);
-> +							CHAN_CTRL_RUN_STOP);
-
-Why this change, checkpatch would tell you this is not expected
-alignment (run with strict)
-
->  	if (ret)
->  		return ret;
+>  #define XDMA_DEV_STATUS_REG_DMA		BIT(0)
+> @@ -274,6 +276,7 @@ xdma_alloc_desc(struct xdma_chan *chan, u32 desc_num, bool cyclic)
+>  	sw_desc->chan = chan;
+>  	sw_desc->desc_num = desc_num;
+>  	sw_desc->cyclic = cyclic;
+> +	sw_desc->error = false;
+>  	dblk_num = DIV_ROUND_UP(desc_num, XDMA_DESC_ADJACENT);
+>  	sw_desc->desc_blocks = kcalloc(dblk_num, sizeof(*sw_desc->desc_blocks),
+>  				       GFP_NOWAIT);
+> @@ -770,20 +773,20 @@ static enum dma_status xdma_tx_status(struct dma_chan *chan, dma_cookie_t cookie
+>  	spin_lock_irqsave(&xdma_chan->vchan.lock, flags);
 > 
-> -	xchan->busy = false;
-> +	/* Clear the channel status register */
-> +	ret = regmap_read(xdev->rmap, xchan->base + XDMA_CHAN_STATUS_RC, &val);
-> +	if (ret)
-> +		return ret;
-> 
->  	return 0;
->  }
-> @@ -505,25 +505,25 @@ static void xdma_issue_pending(struct dma_chan *chan)
->  static int xdma_terminate_all(struct dma_chan *chan)
->  {
->  	struct xdma_chan *xdma_chan = to_xdma_chan(chan);
-> -	struct xdma_desc *desc = NULL;
->  	struct virt_dma_desc *vd;
->  	unsigned long flags;
->  	LIST_HEAD(head);
-> 
-> -	spin_lock_irqsave(&xdma_chan->vchan.lock, flags);
->  	xdma_xfer_stop(xdma_chan);
-> 
-> +	spin_lock_irqsave(&xdma_chan->vchan.lock, flags);
-> +
-> +	xdma_chan->busy = false;
->  	vd = vchan_next_desc(&xdma_chan->vchan);
+>  	vd = vchan_find_desc(&xdma_chan->vchan, cookie);
 > -	if (vd)
 > -		desc = to_xdma_desc(vd);
-> -	if (desc) {
-> -		dma_cookie_complete(&desc->vdesc.tx);
-> -		vchan_terminate_vdesc(&desc->vdesc);
-> +	if (vd) {
-> +		list_del(&vd->node);
-> +		dma_cookie_complete(&vd->tx);
-> +		vchan_terminate_vdesc(vd);
->  	}
+> -	if (!desc || !desc->cyclic) {
+> -		spin_unlock_irqrestore(&xdma_chan->vchan.lock, flags);
+> -		return ret;
+> -	}
 > -
->  	vchan_get_all_descriptors(&xdma_chan->vchan, &head);
-> +	list_splice_tail(&head, &xdma_chan->vchan.desc_terminated);
-> +
->  	spin_unlock_irqrestore(&xdma_chan->vchan.lock, flags);
-> -	vchan_dma_desc_free_list(&xdma_chan->vchan, &head);
+> -	period_idx = desc->completed_desc_num % desc->periods;
+> -	residue = (desc->periods - period_idx) * desc->period_size;
+> +	if (!vd)
+> +		goto out;
 > 
->  	return 0;
+> +	desc = to_xdma_desc(vd);
+> +	if (desc->error) {
+> +		ret = DMA_ERROR;
+> +	} else if (desc->cyclic) {
+> +		period_idx = desc->completed_desc_num % desc->periods;
+> +		residue = (desc->periods - period_idx) * desc->period_size;
+> +		dma_set_residue(state, residue);
+> +	}
+> +out:
+>  	spin_unlock_irqrestore(&xdma_chan->vchan.lock, flags);
+> 
+> -	dma_set_residue(state, residue);
+> -
+>  	return ret;
 >  }
+> 
+> @@ -820,6 +823,7 @@ static irqreturn_t xdma_channel_isr(int irq, void *dev_id)
+>  	st &= XDMA_CHAN_STATUS_MASK;
+>  	if ((st & XDMA_CHAN_ERROR_MASK) ||
+>  		!(st & (CHAN_CTRL_IE_DESC_COMPLETED | CHAN_CTRL_IE_DESC_STOPPED))) {
+> +		desc->error = true;
+>  		xdma_err(xdev, "channel error, status register value: 0x%x", st);
+>  		goto out;
+>  	}
 > --
 > 2.34.1
 

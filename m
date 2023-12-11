@@ -1,84 +1,94 @@
-Return-Path: <dmaengine+bounces-439-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-440-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D57080C834
-	for <lists+dmaengine@lfdr.de>; Mon, 11 Dec 2023 12:41:03 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 10F7880C89C
+	for <lists+dmaengine@lfdr.de>; Mon, 11 Dec 2023 12:57:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EAEFA1F21806
-	for <lists+dmaengine@lfdr.de>; Mon, 11 Dec 2023 11:41:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8CC98B20DA5
+	for <lists+dmaengine@lfdr.de>; Mon, 11 Dec 2023 11:57:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E1C0374DA;
-	Mon, 11 Dec 2023 11:40:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C68F838DDD;
+	Mon, 11 Dec 2023 11:57:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MHY8QewY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iJCFuiwC"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FDE62AF13
-	for <dmaengine@vger.kernel.org>; Mon, 11 Dec 2023 11:40:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EC12C433C8;
-	Mon, 11 Dec 2023 11:40:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A987738DD4
+	for <dmaengine@vger.kernel.org>; Mon, 11 Dec 2023 11:57:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 360A5C433C8;
+	Mon, 11 Dec 2023 11:57:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702294857;
-	bh=5I0PYKVYM7syKP7JCpCzQG2R4ozPV4d953nCGoVm7Qc=;
+	s=k20201202; t=1702295849;
+	bh=f7zaWwRmNF7dE+t0wkFnZGPtHDh8NCiV/vSatviei50=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MHY8QewYlY5P5h7xtAty4w70caY2eAemqXWDaem4ihpf0udcp1AGjQ8CJd+0P2Z+H
-	 6dFyezMHK0Q5fKGDuoRBXC0LNOxWXG+pbx2C8zRxOTGdfSiK/xCn38jxa4KAIjx0pu
-	 FnbuzBKl0Gtar/m4aOQhIY19VB8gtYkrrTjwV/1QQYHakllRcgnXvqbmmmfnzca65j
-	 ec0bxle9JdPn42qF8uCK62vdAuDzGpMQocyMpb50gn58+jlbCQPUK6j49NH97yHqlF
-	 hbS+mG4Oj0ZbQt/bb8n5zqqLeCyYsoJT6AoeSE/cJTg1Pwd0tMWAlws4RXU5uwQHo4
-	 E6LydrTH76M3Q==
-Date: Mon, 11 Dec 2023 17:10:53 +0530
+	b=iJCFuiwCrgd/gJPq0nQBruKCePHfDzR5dGgp2MEcGBnmLCO7wjWQNGthFNuvx1gv0
+	 HUJRiYO+ovvN5g8zsr6LEfl5U6P2WFdlXDE5wqKSjl8rkpyAxHiNFgiVRxeLFncil4
+	 DzF4lJOJwc/HcW3vmxzkv7HQEUhz6wBP0VbOLuxjoXmY8Rua/ejtiSOEaPzIKlzbMx
+	 zjNTQYqPn3HhXem6Mv/FfimjAHoxVJppHZAOhCVpvd4YW5GvWza2rjsgN04B1MPcuw
+	 YeBCT/rNvxq9WEK+36Qhf06h9bHtJdsRuHt2HxgMt4MDT6iblhxHVPWxEz8N/1Q88k
+	 AGhcerK4ZwGgg==
+Date: Mon, 11 Dec 2023 17:27:22 +0530
 From: Vinod Koul <vkoul@kernel.org>
-To: liu kaiwei <liukaiwei086@gmail.com>
-Cc: Kaiwei Liu <kaiwei.liu@unisoc.com>, Orson Zhai <orsonzhai@gmail.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Chunyan Zhang <zhang.lyra@gmail.com>, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Wenming Wu <wenming.wu@unisoc.com>
-Subject: Re: [PATCH 1/2] dmaengine: sprd: delete enable opreation in probe
-Message-ID: <ZXb1RWaFWHVDx1wV@matsya>
-References: <20231102121623.31924-1-kaiwei.liu@unisoc.com>
- <ZWCg9hmfvexyn7xK@matsya>
- <CAOgAA6FzZ4q=rdmh8ySJRhojkGCgyV4PVjT6JAOUix+CF9PFtw@mail.gmail.com>
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+	Nuno =?iso-8859-1?Q?S=E1?= <noname.nuno@gmail.com>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] dmaengine: axi-dmac: Small code cleanup
+Message-ID: <ZXb5IhaNiKJufH/k@matsya>
+References: <20231204140352.30420-1-paul@crapouillou.net>
+ <20231204140352.30420-2-paul@crapouillou.net>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOgAA6FzZ4q=rdmh8ySJRhojkGCgyV4PVjT6JAOUix+CF9PFtw@mail.gmail.com>
+In-Reply-To: <20231204140352.30420-2-paul@crapouillou.net>
 
-On 06-12-23, 17:32, liu kaiwei wrote:
-> On Fri, Nov 24, 2023 at 9:11 PM Vinod Koul <vkoul@kernel.org> wrote:
-> >
-> > On 02-11-23, 20:16, Kaiwei Liu wrote:
-> > > From: "kaiwei.liu" <kaiwei.liu@unisoc.com>
-> >
-> > Typo is subject line
-> >
-> > >
-> > > In the probe of dma, it will allocate device memory and do some
-> > > initalization settings. All operations are only at the software
-> > > level and don't need the DMA hardware power on. It doesn't need
-> > > to resume the device and set the device active as well. here
-> > > delete unnecessary operation.
-> >
-> > Don't you need to read or write to the device? Without enable that wont
-> > work right?
-> >
+On 04-12-23, 15:03, Paul Cercueil wrote:
+> Use a for() loop instead of a while() loop in axi_dmac_fill_linear_sg().
+
+Why?
+
 > 
-> Yes, it doesn't need to read or write to the device in the probe of DMA.
-> We will enable the DMA when allocating the DMA channel.
-
-So you will probe even if device is not present! I think it makes sense
-to access device registers in probe!
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>  drivers/dma/dma-axi-dmac.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+> 
+> diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
+> index 2457a420c13d..760940b21eab 100644
+> --- a/drivers/dma/dma-axi-dmac.c
+> +++ b/drivers/dma/dma-axi-dmac.c
+> @@ -508,16 +508,13 @@ static struct axi_dmac_sg *axi_dmac_fill_linear_sg(struct axi_dmac_chan *chan,
+>  	segment_size = ((segment_size - 1) | chan->length_align_mask) + 1;
+>  
+>  	for (i = 0; i < num_periods; i++) {
+> -		len = period_len;
+> -
+> -		while (len > segment_size) {
+> +		for (len = period_len; len > segment_size; sg++) {
+>  			if (direction == DMA_DEV_TO_MEM)
+>  				sg->dest_addr = addr;
+>  			else
+>  				sg->src_addr = addr;
+>  			sg->x_len = segment_size;
+>  			sg->y_len = 1;
+> -			sg++;
+>  			addr += segment_size;
+>  			len -= segment_size;
+>  		}
+> -- 
+> 2.42.0
+> 
 
 -- 
 ~Vinod

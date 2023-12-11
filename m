@@ -1,93 +1,84 @@
-Return-Path: <dmaengine+bounces-432-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-433-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A40E80C0BC
-	for <lists+dmaengine@lfdr.de>; Mon, 11 Dec 2023 06:37:23 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 530D180C155
+	for <lists+dmaengine@lfdr.de>; Mon, 11 Dec 2023 07:31:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A956BB2094B
-	for <lists+dmaengine@lfdr.de>; Mon, 11 Dec 2023 05:37:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F22BB1F20F12
+	for <lists+dmaengine@lfdr.de>; Mon, 11 Dec 2023 06:31:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B47F1E519;
-	Mon, 11 Dec 2023 05:37:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21F911947F;
+	Mon, 11 Dec 2023 06:31:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Id1d1h9c"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39BC5ED;
-	Sun, 10 Dec 2023 21:37:10 -0800 (PST)
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=guanjun@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0VyB1LNZ_1702273027;
-Received: from localhost(mailfrom:guanjun@linux.alibaba.com fp:SMTPD_---0VyB1LNZ_1702273027)
-          by smtp.aliyun-inc.com;
-          Mon, 11 Dec 2023 13:37:07 +0800
-From: 'Guanjun' <guanjun@linux.alibaba.com>
-To: dave.jiang@intel.com,
-	dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	vkoul@kernel.org,
-	tony.luck@intel.com,
-	fenghua.yu@intel.com
-Cc: jing.lin@intel.com,
-	ashok.raj@intel.com,
-	sanjay.k.kumar@intel.com,
-	megha.dey@intel.com,
-	jacob.jun.pan@intel.com,
-	yi.l.liu@intel.com,
-	tglx@linutronix.de,
-	guanjun@linux.alibaba.com
-Subject: [PATCH v5 2/2] dmaengine: idxd: Fix incorrect descriptions for GRPCFG register
-Date: Mon, 11 Dec 2023 13:37:04 +0800
-Message-Id: <20231211053704.2725417-3-guanjun@linux.alibaba.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20231211053704.2725417-1-guanjun@linux.alibaba.com>
-References: <20231211053704.2725417-1-guanjun@linux.alibaba.com>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEAAE33C1;
+	Mon, 11 Dec 2023 06:31:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96050C433C7;
+	Mon, 11 Dec 2023 06:31:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702276274;
+	bh=1UR/8Pgn6x9/GIOen//ufXC9UJE3MESdFkpeRuRU6eY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Id1d1h9cPtfeRpQh1xeNBJ7U16PgqN5ObnLGNB3xt4Z5F3Xv8RLsyLlV7Dh2ccO6H
+	 px37LqnMNQbLXatiUKgNjWZd5T/OqoXec89+sYipmc8iN/qWucaU1T5HJBJDL9z5N4
+	 Zre26yqquDl3RBofbZofoU/uc0w6coVBJvuxDjwkIGdSkYO6DfIbQ/0QItE+yKfZh4
+	 uk2xzqjWZzS9gsOMPFAKM0CGODsYOzOSKC1EGRllmjNG0JvllzfB96Hijt54EEuweL
+	 2aAyWFMpEvT/iVVvRj8RUmpBtwMFQBv5O5zEK9hM5TeijIaCrAkHLUKYwbHR1sBNuJ
+	 E+mTG07AAJaFQ==
+Date: Mon, 11 Dec 2023 12:01:09 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: dma: Drop undocumented examples
+Message-ID: <ZXasrcpZ+ChRsKpz@matsya>
+References: <20231122235050.2966280-1-robh@kernel.org>
+ <CAL_JsqKrpWoHxU1=FaCkJCg-E5G6JjudjsiUvv4cdQVyKM88KQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_JsqKrpWoHxU1=FaCkJCg-E5G6JjudjsiUvv4cdQVyKM88KQ@mail.gmail.com>
 
-From: Guanjun <guanjun@linux.alibaba.com>
+On 07-12-23, 14:59, Rob Herring wrote:
+> On Wed, Nov 22, 2023 at 5:50 PM Rob Herring <robh@kernel.org> wrote:
+> >
+> > The compatibles "ti,omap-sdma" and "ti,dra7-dma-crossbar" aren't documented
+> > by a schema which causes warnings:
+> >
+> > Documentation/devicetree/bindings/dma/dma-controller.example.dtb: /example-0/dma-controller@48000000: failed to match any schema with compatible: ['ti,omap-sdma']
+> > Documentation/devicetree/bindings/dma/dma-router.example.dtb: /example-0/dma-router@4a002b78: failed to match any schema with compatible: ['ti,dra7-dma-crossbar']
+> >
+> > As no one has cared to fix them, just drop them.
+> >
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > ---
+> >  .../devicetree/bindings/dma/dma-controller.yaml   | 15 ---------------
+> >  .../devicetree/bindings/dma/dma-router.yaml       | 11 -----------
+> >  2 files changed, 26 deletions(-)
+> 
+> Vinod, Can you pick this up please.
+> 
+> As pointed out, examples don't document anything. "ti,omap-sdma" is
+> not documented at all (though in use). "ti,dra7-dma-crossbar" is
+> documented in dma/ti-dma-crossbar.txt and there's still an example
+> there.
 
-Fix incorrect descriptions for the GRPCFG register which has three
-sub-registers (GRPWQCFG, GRPENGCFG and GRPFLGCFG).
-No functional changes
+Sure, queued up now
 
-Signed-off-by: Guanjun <guanjun@linux.alibaba.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Fenghua Yu <fenghua.yu@intel.com>
-Acked-by: Lijun Pan <lijun.pan@intel.com>
----
- drivers/dma/idxd/registers.h | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/dma/idxd/registers.h b/drivers/dma/idxd/registers.h
-index 7b54a3939ea1..315c004f58e4 100644
---- a/drivers/dma/idxd/registers.h
-+++ b/drivers/dma/idxd/registers.h
-@@ -440,12 +440,14 @@ union wqcfg {
- /*
-  * This macro calculates the offset into the GRPCFG register
-  * idxd - struct idxd *
-- * n - wq id
-- * ofs - the index of the 32b dword for the config register
-+ * n - group id
-+ * ofs - the index of the 64b qword for the config register
-  *
-- * The WQCFG register block is divided into groups per each wq. The n index
-- * allows us to move to the register group that's for that particular wq.
-- * Each register is 32bits. The ofs gives us the number of register to access.
-+ * The GRPCFG register block is divided into three sub-registers, which
-+ * are GRPWQCFG, GRPENGCFG and GRPFLGCFG. The n index allows us to move
-+ * to the register block that contains the three sub-registers.
-+ * Each register block is 64bits. And the ofs gives us the offset
-+ * within the GRPWQCFG register to access.
-  */
- #define GRPWQCFG_OFFSET(idxd_dev, n, ofs) ((idxd_dev)->grpcfg_offset +\
- 					   (n) * GRPCFG_SIZE + sizeof(u64) * (ofs))
 -- 
-2.39.3
-
+~Vinod
 

@@ -1,47 +1,47 @@
-Return-Path: <dmaengine+bounces-468-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-469-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BE88180E15A
-	for <lists+dmaengine@lfdr.de>; Tue, 12 Dec 2023 03:22:11 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F7E780E15B
+	for <lists+dmaengine@lfdr.de>; Tue, 12 Dec 2023 03:22:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 667031F21BE0
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AE7161C21709
 	for <lists+dmaengine@lfdr.de>; Tue, 12 Dec 2023 02:22:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A35A23AE;
-	Tue, 12 Dec 2023 02:22:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 253EB23A0;
+	Tue, 12 Dec 2023 02:22:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lt/SCGt5"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ToSqclYt"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A457D5
-	for <dmaengine@vger.kernel.org>; Mon, 11 Dec 2023 18:22:04 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFEABE5
+	for <dmaengine@vger.kernel.org>; Mon, 11 Dec 2023 18:22:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702347724; x=1733883724;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
+  t=1702347725; x=1733883725;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
   bh=SsZ0Cj1VCqg3K4TCYEE+ZPILHx6tGaNBNDo3BJFIN2o=;
-  b=Lt/SCGt5jLvvGsPpT3rJArXsLfnGBJGBMlzFjqoMTd2OiYV33CS7Ffij
-   nr6aoIR8TlD8eGXrBkR4x5cP2y8dN7Fk9dC7lwDa7f91w06Vu3iNxnFFw
-   4ubJ9Z5XPFRNl8+u6yJcdCujAowcFCBhf8hLsqUn7k2ZbqVHQNi2yjSdF
-   EZOf7Gu4kMidIxm/EdP9vmrsEzEssxeRxyeeFPV+u1/+ZVJDTNf0v6Jcq
-   D8hG99NLhMwBbW7N9NLxaNvoCM1rJt3a47MPkwgpsjCwQJ0N5SvK2O0Z5
-   wK360KPsbGo5hvH79nhSYJTvS0dZp5K/wlLR96t103kA0RRZcWslaODX6
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10921"; a="461217910"
+  b=ToSqclYt//pmFTmf4y3M7unLhaijl8+UXh2iX+VcrydCfXESEDO8XiH6
+   BZ8ViPCLxvyQhvHz0OUAnXFKS1EjCyf9T8qV9MMTlzmrZ0rCRk7KVcOYz
+   mQkdM1Xee+ahIZ+2W+8hDJwmO9Xd7LyGijJIh12Uw2uU9AHaa7SHuA0bL
+   WbPS1204OW3TKrnLkS+xsV+n/2BvyLPCQrFtnhGyAts7u/S9t4F2mA3dv
+   emZEymBHUPpNTtyPKI2AnEfYv7i2Oa8N5bQtuW1EbxOALGqvAyY28+6CO
+   MjDT8OKbSPOhDnUxeJFIGcLxt2Z1B1fdg7lTERrXnyPu3XGDn/7RVWMu0
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10921"; a="461217916"
 X-IronPort-AV: E=Sophos;i="6.04,269,1695711600"; 
-   d="scan'208";a="461217910"
+   d="scan'208";a="461217916"
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2023 18:22:03 -0800
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2023 18:22:04 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10921"; a="807556776"
+X-IronPort-AV: E=McAfee;i="6600,9927,10921"; a="807556783"
 X-IronPort-AV: E=Sophos;i="6.04,269,1695711600"; 
-   d="scan'208";a="807556776"
+   d="scan'208";a="807556783"
 Received: from rex-z390-aorus-pro.sh.intel.com ([10.239.161.21])
-  by orsmga001.jf.intel.com with ESMTP; 11 Dec 2023 18:22:00 -0800
+  by orsmga001.jf.intel.com with ESMTP; 11 Dec 2023 18:22:03 -0800
 From: Rex Zhang <rex.zhang@intel.com>
 To: vkoul@kernel.org,
 	dmaengine@vger.kernel.org
@@ -49,9 +49,11 @@ Cc: dave.jiang@intel.com,
 	fenghua.yu@intel.com,
 	rex.zhang@intel.com
 Subject: [PATCH] dmaengine: idxd: Move dma_free_coherent() out of spinlocked context
-Date: Tue, 12 Dec 2023 10:21:57 +0800
-Message-Id: <20231212022158.358619-1-rex.zhang@intel.com>
+Date: Tue, 12 Dec 2023 10:21:58 +0800
+Message-Id: <20231212022158.358619-2-rex.zhang@intel.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20231212022158.358619-1-rex.zhang@intel.com>
+References: <20231212022158.358619-1-rex.zhang@intel.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>

@@ -1,104 +1,115 @@
-Return-Path: <dmaengine+bounces-481-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-485-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D103F80E73F
-	for <lists+dmaengine@lfdr.de>; Tue, 12 Dec 2023 10:19:40 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12F3380E9F1
+	for <lists+dmaengine@lfdr.de>; Tue, 12 Dec 2023 12:12:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0E3B21C213A2
-	for <lists+dmaengine@lfdr.de>; Tue, 12 Dec 2023 09:19:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9A34E281E27
+	for <lists+dmaengine@lfdr.de>; Tue, 12 Dec 2023 11:12:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5D955813D;
-	Tue, 12 Dec 2023 09:19:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01CF15CD1B;
+	Tue, 12 Dec 2023 11:11:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b="abG4gKiv"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="S96wkB+G"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail.8bytes.org (mail.8bytes.org [IPv6:2a01:238:42d9:3f00:e505:6202:4f0c:f051])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 03543EE;
-	Tue, 12 Dec 2023 01:19:28 -0800 (PST)
-Received: from 8bytes.org (p4ffe1e67.dip0.t-ipconnect.de [79.254.30.103])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.8bytes.org (Postfix) with ESMTPSA id 985681A4F1D;
-	Tue, 12 Dec 2023 10:19:26 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=8bytes.org;
-	s=default; t=1702372767;
-	bh=bEwFfSnf2RFnsUSszwfjtJnyVAQAG+2ku4jSVsqYtho=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=abG4gKivOGRZ/AI3r3S4ykAogD7/67qJfPpecLXixxPdCLvNaaHplc2zY7kr49dVW
-	 //lK3CmDXn8kgeq/V0CZR9ktKlB8X0k+ITJm0ltQTznpuMo6Vb74aQpMwh3nTTGVkp
-	 Vy6AfWo4XcQNBdkAhhR+006eTJRikgSpnu1zxfyJ76UClAzcqQ5x8fI3bS/syUfk5j
-	 4EzlogNC4F5cinu2gbIPFhhEV/M0hyHlrd2XxZSENppE6ttNDQtHQ8JgEKvxnsEjaT
-	 tGQK7YmKPtfzARKk+wVIW1dNCyoJC63TSQbXOzaQtz4LM+81hJrx/weWcfjW4iINH9
-	 K1OBYT39fG51A==
-Date: Tue, 12 Dec 2023 10:19:25 +0100
-From: Joerg Roedel <joro@8bytes.org>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: David Airlie <airlied@gmail.com>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Albert Ou <aou@eecs.berkeley.edu>, asahi@lists.linux.dev,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Danilo Krummrich <dakr@redhat.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Dexuan Cui <decui@microsoft.com>, devicetree@vger.kernel.org,
-	dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	David Woodhouse <dwmw2@infradead.org>,
-	Frank Rowand <frowand.list@gmail.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>, iommu@lists.linux.dev,
-	Jon Hunter <jonathanh@nvidia.com>,
-	Karol Herbst <kherbst@redhat.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Laxman Dewangan <ldewangan@nvidia.com>, Len Brown <lenb@kernel.org>,
-	linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-hyperv@vger.kernel.org, linux-mips@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-snps-arc@lists.infradead.org,
-	linux-tegra@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-	Lyude Paul <lyude@redhat.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	nouveau@lists.freedesktop.org, Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-	Sven Peter <sven@svenpeter.dev>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Vineet Gupta <vgupta@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-	Wei Liu <wei.liu@kernel.org>, Will Deacon <will@kernel.org>,
-	Lu Baolu <baolu.lu@linux.intel.com>, Christoph Hellwig <hch@lst.de>,
-	Jerry Snitselaar <jsnitsel@redhat.com>,
-	Hector Martin <marcan@marcan.st>, Moritz Fischer <mdf@kernel.org>,
-	Moritz Fischer <moritzf@google.com>, patches@lists.linux.dev,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Rob Herring <robh@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Thierry Reding <treding@nvidia.com>
-Subject: Re: [PATCH v2 0/7] IOMMU related FW parsing cleanup
-Message-ID: <ZXglne-jYLXHZbtn@8bytes.org>
-References: <0-v2-16e4def25ebb+820-iommu_fwspec_p1_jgg@nvidia.com>
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93A0210C7;
+	Tue, 12 Dec 2023 03:11:10 -0800 (PST)
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 3BCBAEbn031704;
+	Tue, 12 Dec 2023 05:10:14 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1702379414;
+	bh=c3xZPTrlmq5zKDBwFw/CwKWYbPbI3+6H+5cNtLUVu3k=;
+	h=From:To:CC:Subject:Date;
+	b=S96wkB+GbpaD8/Yimg5ACTTq+GTJ2I8Hto4UZ/eixVQINahk/Cwl6I1WabbxwmJRo
+	 /iIEude9hKWy0+w5+KRCknl5LHIXEp1DwuRezAtRBHkWhQEYKH0lOadvXdxwsyt7f3
+	 y2e16x9sz6S0tndLstOkyHs35aoHusQMGeDvNl8o=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 3BCBAEXJ014613
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 12 Dec 2023 05:10:14 -0600
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 12
+ Dec 2023 05:10:14 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 12 Dec 2023 05:10:14 -0600
+Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [172.24.227.9])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 3BCBAB9v088764;
+	Tue, 12 Dec 2023 05:10:12 -0600
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: <peter.ujfalusi@gmail.com>, <vkoul@kernel.org>
+CC: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
+        <vigneshr@ti.com>, <s-vadapalli@ti.com>
+Subject: [PATCH v2 0/4] Add APIs to request TX/RX DMA channels by ID
+Date: Tue, 12 Dec 2023 16:40:07 +0530
+Message-ID: <20231212111011.1401641-1-s-vadapalli@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0-v2-16e4def25ebb+820-iommu_fwspec_p1_jgg@nvidia.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Thu, Dec 07, 2023 at 02:03:07PM -0400, Jason Gunthorpe wrote:
-> Jason Gunthorpe (7):
->   iommu: Remove struct iommu_ops *iommu from arch_setup_dma_ops()
->   iommmu/of: Do not return struct iommu_ops from of_iommu_configure()
->   iommu/of: Use -ENODEV consistently in of_iommu_configure()
->   iommu: Mark dev_iommu_get() with lockdep
->   iommu: Mark dev_iommu_priv_set() with a lockdep
->   acpi: Do not return struct iommu_ops from acpi_iommu_configure_id()
->   iommu/tegra: Use tegra_dev_iommu_get_stream_id() in the remaining
->     places
+The existing APIs for requesting TX and RX DMA channels rely on parsing
+a device-tree node to obtain the Channel/Thread IDs from their names.
+However, it is possible to know the thread IDs by alternative means such
+as being informed by Firmware on a remote core via RPMsg regarding the
+allocated TX/RX DMA channel IDs. In such cases, the driver can be probed
+by non device-tree methods such as RPMsg-bus, due to which it is not
+necessary that the device using the DMA has a device-tree node
+corresponding to it. Thus, add APIs to enable the driver to make use of
+the existing DMA APIs even when there's no device-tree node.
 
-Applied, thanks.
+Additionally, since the name of the device for the remote RX channel is
+being set purely on the basis of the RX channel ID itself, it can result
+in duplicate names when multiple flows are used on the same channel.
+Avoid name duplication by including the flow in the name.
+
+Series is based on linux-next tagged next-20231212.
+
+v1:
+https://lore.kernel.org/r/20231114083906.3143548-1-s-vadapalli@ti.com/
+Changes since v1:
+- Rebased series on linux-next tagged next-20231212.
+- Updated commit messages with details regarding the use-case for which
+  the newly added APIs will be required.
+- Removed unnecessary return value check within
+  "of_k3_udma_glue_parse_chn()" function in patch 1, since it will fall
+  through to "out_put_spec" anyway.
+- Removed unnecessary return value check within
+  "of_k3_udma_glue_parse_chn_by_id()" function in patch 1, since it will
+  fall through to "out_put_spec" anyway.
+- Moved patch 4 of v1 series to patch 2 of current series.
+
+RFC Series:
+https://lore.kernel.org/r/20231111121555.2656760-1-s-vadapalli@ti.com/
+Changes since RFC Series:
+- Rebased patches 1, 2 and 3 on linux-next tagged next-20231114.
+- Added patch 4 to the series.
+
+Siddharth Vadapalli (4):
+  dmaengine: ti: k3-udma-glue: Add function to parse channel by ID
+  dmaengine: ti: k3-udma-glue: Update name for remote RX channel device
+  dmaengine: ti: k3-udma-glue: Add function to request TX channel by ID
+  dmaengine: ti: k3-udma-glue: Add function to request RX channel by ID
+
+ drivers/dma/ti/k3-udma-glue.c    | 304 ++++++++++++++++++++++---------
+ include/linux/dma/k3-udma-glue.h |   8 +
+ 2 files changed, 225 insertions(+), 87 deletions(-)
+
+-- 
+2.34.1
+
 

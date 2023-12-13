@@ -1,153 +1,114 @@
-Return-Path: <dmaengine+bounces-511-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-512-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B41281178B
-	for <lists+dmaengine@lfdr.de>; Wed, 13 Dec 2023 16:41:33 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 109788118A2
+	for <lists+dmaengine@lfdr.de>; Wed, 13 Dec 2023 17:05:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6FF211C20EFB
-	for <lists+dmaengine@lfdr.de>; Wed, 13 Dec 2023 15:41:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 985FA1F218C0
+	for <lists+dmaengine@lfdr.de>; Wed, 13 Dec 2023 16:05:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 703082F84B;
-	Wed, 13 Dec 2023 15:31:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1626D2F84B;
+	Wed, 13 Dec 2023 16:05:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rebx+32w"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="54WpcFRk"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5345147A9;
-	Wed, 13 Dec 2023 07:29:11 -0800 (PST)
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 3BDFT7UE125058;
-	Wed, 13 Dec 2023 09:29:07 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1702481347;
-	bh=qG9fVDRrbj/BtpoBAlezZnVtaEVeTj0X3XMa9chEaVs=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=rebx+32wMIauXQXCpQqFnMZB/vtnkpAxFAetuW/5Y4dGpaoS0WQOj3njiuODXRxx8
-	 hNnUk20Y/EzONlbpsDatRccW9v37n0aX8iV9PMQjYJHUUwqb04BPbGaON8yc7rD18G
-	 956JH2z2jKZZ2yhaIhopKQvZbKnFDN3qmOsUZVWs=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 3BDFT7T3092864
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 13 Dec 2023 09:29:07 -0600
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 13
- Dec 2023 09:29:07 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 13 Dec 2023 09:29:07 -0600
-Received: from localhost ([10.250.64.83])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 3BDFT5lr040281;
-	Wed, 13 Dec 2023 09:29:06 -0600
-Date: Wed, 13 Dec 2023 20:59:05 +0530
-From: Jai Luthra <j-luthra@ti.com>
-To: "Achath, Vaishnav" <vaishnav.a@ti.com>
-CC: "vkoul@kernel.org" <vkoul@kernel.org>,
-        "peter.ujfalusi@gmail.com"
-	<peter.ujfalusi@gmail.com>,
-        "dmaengine@vger.kernel.org"
-	<dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "Brattlof, Bryan" <bb@ti.com>,
-        "Raghavendra,
- Vignesh" <vigneshr@ti.com>,
-        "Choudhary, Jayesh" <j-choudhary@ti.com>,
-        "Kumar,
- Udit" <u-kumar1@ti.com>
-Subject: Re: [PATCH v2] dmaengine: ti: k3-udma: Add PSIL threads for AM62P
- and J722S
-Message-ID: <divyx7p7s4hzhhl3g4ffqcsma7n5mxzpy2ttghgknfnaim7tso@smxuizahkiuh>
-References: <20231213081318.26203-1-vaishnav.a@ti.com>
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66933AC;
+	Wed, 13 Dec 2023 08:05:10 -0800 (PST)
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BDAeIhK020074;
+	Wed, 13 Dec 2023 17:04:54 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=selector1; bh=vP0Cuvt
+	nE+r/ntZNTtv47/xL+GFWmIspcly1Iqw0j54=; b=54WpcFRkZY3+P0q8YGNKJ1L
+	3/vcUxpmMxvEPoMd4eASPOSK4gswANmkfFk33VIp8PBPN1flMJ8cdpNRDhpjtuKm
+	MeXMSIwMUVzwo3n8p+c19CSPDDqMMr9N36CiyFD0chWuCK8opJx8aQvAemes3DvG
+	Wms6WMBRrPT9EE5ENnb50SPvNhU5mfUKnkWkvEQ67Px/szRmrTJl0kYAzXh8R/ma
+	zirqhNkc4ef3bniaAVjesfFFiLEWAiT3I5WwGQMcLdXj2Mf16RtD20L2WdtpRKak
+	iQoNF0LJQEXSW/kE3pkNpkdW5KAicYTP2o2ZO6ZN8JAvRuqfGPUVs6QcLcLaGVQ=
+	=
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3uyb2k1by1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 13 Dec 2023 17:04:54 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5BF0B100057;
+	Wed, 13 Dec 2023 17:04:53 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 28F7A24B88D;
+	Wed, 13 Dec 2023 17:04:53 +0100 (CET)
+Received: from localhost (10.252.16.151) by SHFDAG1NODE3.st.com (10.75.129.71)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 13 Dec
+ 2023 17:04:52 +0100
+From: Amelie Delaunay <amelie.delaunay@foss.st.com>
+To: Vinod Koul <vkoul@kernel.org>, Dave Jiang <dave.jiang@intel.com>
+CC: <linux-stm32@st-md-mailman.stormreply.com>,
+        Amelie Delaunay
+	<amelie.delaunay@foss.st.com>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] dmaengine: fix NULL pointer in channel unregistration function
+Date: Wed, 13 Dec 2023 17:04:52 +0100
+Message-ID: <20231213160452.2598073-1-amelie.delaunay@foss.st.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="jjt27m45ffmmgn36"
-Content-Disposition: inline
-In-Reply-To: <20231213081318.26203-1-vaishnav.a@ti.com>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-13_09,2023-12-13_01,2023-05-22_02
 
---jjt27m45ffmmgn36
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Vaishnav,
-
-Thanks for the patch.
-
-On Dec 13, 2023 at 13:43:18 +0530, Achath, Vaishnav wrote:
-> From: Vignesh Raghavendra <vigneshr@ti.com>
->=20
-> Add PSIL thread information and enable UDMA support for AM62P
-> and J722S SoC. J722S SoC family is a superset of AM62P, thus
-> common PSIL thread ID map is reused for both devices.
->=20
-> For those interested, more details about the SoC can be found
-> in the Technical Reference Manual here:
-> 	AM62P - https://www.ti.com/lit/pdf/spruj83
-> 	J722S -	https://www.ti.com/lit/zip/sprujb3
->=20
-> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-> Signed-off-by: Bryan Brattlof <bb@ti.com>
-> Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
-
-Reviewed-by: Jai Luthra <j-luthra@ti.com>
-
-> ---
-> V1: https://lore.kernel.org/all/20231212203655.3155565-2-bb@ti.com/
-> J722S Bootlog with DMA enabled : https://gist.github.com/vaishnavachath/4=
-6b56dab34dfea3a171d3ad266160780
->=20
-> V1->V2:
-> 	* Add J722S support and additional CSI2RX channels
-> 	* Update copyright year to 2023 and update commit message.
->=20
->  drivers/dma/ti/Makefile        |   3 +-
->  drivers/dma/ti/k3-psil-am62p.c | 325 +++++++++++++++++++++++++++++++++
->  drivers/dma/ti/k3-psil-priv.h  |   1 +
->  drivers/dma/ti/k3-psil.c       |   2 +
->  drivers/dma/ti/k3-udma.c       |   2 +
->  5 files changed, 332 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/dma/ti/k3-psil-am62p.c
-
+__dma_async_device_channel_register() can fail. In case of failure,
+chan->local is freed (with free_percpu()), and chan->local is nullified.
+When dma_async_device_unregister() is called (because of managed API or
+intentionally by DMA controller driver), channels are unconditionally
+unregistered, leading to this NULL pointer:
+[    1.318693] Unable to handle kernel NULL pointer dereference at virtual address 00000000000000d0
 [...]
+[    1.484499] Call trace:
+[    1.486930]  device_del+0x40/0x394
+[    1.490314]  device_unregister+0x20/0x7c
+[    1.494220]  __dma_async_device_channel_unregister+0x68/0xc0
 
->=20
+Look at dma_async_device_register() function error path, channel device
+unregistration is done only if chan->local is not NULL.
 
---=20
-Thanks,
-Jai
+Then add the same condition at the beginning of
+__dma_async_device_channel_unregister() function, to avoid NULL pointer
+issue whatever the API used to reach this function.
 
-GPG Fingerprint: 4DE0 D818 E5D5 75E8 D45A AFC5 43DE 91F9 249A 7145
+Fixes: d2fb0a043838 ("dmaengine: break out channel registration")
+Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
+---
+ drivers/dma/dmaengine.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---jjt27m45ffmmgn36
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+index b7388ae62d7f..491b22240221 100644
+--- a/drivers/dma/dmaengine.c
++++ b/drivers/dma/dmaengine.c
+@@ -1103,6 +1103,9 @@ EXPORT_SYMBOL_GPL(dma_async_device_channel_register);
+ static void __dma_async_device_channel_unregister(struct dma_device *device,
+ 						  struct dma_chan *chan)
+ {
++	if (chan->local == NULL)
++		return;
++
+ 	WARN_ONCE(!device->device_release && chan->client_count,
+ 		  "%s called while %d clients hold a reference\n",
+ 		  __func__, chan->client_count);
+-- 
+2.25.1
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEETeDYGOXVdejUWq/FQ96R+SSacUUFAmV5zcAACgkQQ96R+SSa
-cUUjIA//Z1liHzE5jSpnUbTIHISEpHvYHFjqdiYUNOkIMmtCbVGX/VY0p9fj8/u4
-Xnkv2bOKI8kmbP7k2H0ntkDjP6bgw5vqQH6KtE7JUXx8zPo0QQpAp+Xd/6fmzrmq
-XQq5ZxoFirE3AJwcakACr6FNbmHoqR0mB4dSPmEtNO+F0zmYPsiUVCKIUtwo4jS0
-OOi/eOOg9yjf6uHuOYpyWP41+0eE34G6Ps2mimeLrcWjWm/q79jc57XT1+qBtAwG
-fz7EVQFvmY8aYlcVgishUVakPiBqNQdh/XbOxYDQwycsWM/nu32L8RKdy6aTVDdN
-QUI4ylYPU0bdr6bsyIKFzGqSTg/zwdBSkMGMwKRb4Zn7dBEMEwXwN+DR5wLRNx28
-Ln7nYeSg+b3An22cbpIYgH0ZiBRGYcxFG8K+5OL7gXxH2ho7nxeS119/hqg/wdgZ
-qdLtwHwy2I9gxQ8oe3OekmFpcEgfwEuN3fQTesXSBwlE6TMVUJ6JrzwEVknOAH41
-g6xqB0tLZAXJyAwsVIpDUZ/wKJCoIvWoja/edS8jQv3uPZ7tX7iUhJzgo8Fl697X
-yMWKnaE9lHxUfHDQRuy21fEdXQPmly5y24bFhciN6G6W6kQkR4aQ1yNm9xiTZkkE
-FWm0BARzjeO2FROUx8ELZgnHrECrTrdQPClDW3I6G/B2gAvN6sQ=
-=d1gH
------END PGP SIGNATURE-----
-
---jjt27m45ffmmgn36--
 

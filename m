@@ -1,95 +1,133 @@
-Return-Path: <dmaengine+bounces-517-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-528-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 11EB5811C91
-	for <lists+dmaengine@lfdr.de>; Wed, 13 Dec 2023 19:32:12 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 97F2A812F01
+	for <lists+dmaengine@lfdr.de>; Thu, 14 Dec 2023 12:43:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9A606B21255
-	for <lists+dmaengine@lfdr.de>; Wed, 13 Dec 2023 18:32:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0B096282352
+	for <lists+dmaengine@lfdr.de>; Thu, 14 Dec 2023 11:43:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43EC45DF05;
-	Wed, 13 Dec 2023 18:32:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 989214AF71;
+	Thu, 14 Dec 2023 11:43:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eUG6SRQd"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Bqjbd6Hj"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 249C1181;
-	Wed, 13 Dec 2023 10:30:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702492246; x=1734028246;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=6mjYUiiWTKU+zQiM8bgxUs35x1rWNcFswLWdtn0ALYc=;
-  b=eUG6SRQdn5X8kzpmImO21Ma9G1Klzb6ftQkQx03SYHf9nwbjFGko2ULA
-   pSYyiNPtZoMpVECnRGuTBDakExojL3NbwXHEpF3weByxM63Gh4qUgR1+5
-   IXKRspijowgQik2AWYp13joScbOBZ3wtmdnNKNTFLN0102yXeTv4cKXIy
-   7UOqLgtGe2rI867rs5ZwmS32vdWUDUYFoLLUuIdQvq7yjPFIcBf7iZmvv
-   +5egqyGp6fjx+Lal/O6P9adZ3EFaZlSkK8BnopS4i7eO5UGdzeTvSSuhu
-   nH6qF80Yv2NfYKCQQNvBcGZ5oSgk1fZ7e2nxA7x6G4Mco0PdZvOjZU+cg
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="1844802"
-X-IronPort-AV: E=Sophos;i="6.04,273,1695711600"; 
-   d="scan'208";a="1844802"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 10:30:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="750222872"
-X-IronPort-AV: E=Sophos;i="6.04,273,1695711600"; 
-   d="scan'208";a="750222872"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 10:30:43 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1rDU0H-00000005bnG-04KO;
-	Wed, 13 Dec 2023 20:30:41 +0200
-Date: Wed, 13 Dec 2023 20:30:40 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Nikita Shubin <nikita.shubin@maquefel.me>
-Cc: Vinod Koul <vkoul@kernel.org>,
-	Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-	linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-	Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v6 40/40] dma: cirrus: remove platform code
-Message-ID: <ZXn4UIkoJeHnAAGW@smile.fi.intel.com>
-References: <20231212-ep93xx-v6-0-c307b8ac9aa8@maquefel.me>
- <20231212-ep93xx-v6-40-c307b8ac9aa8@maquefel.me>
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AE16B2;
+	Thu, 14 Dec 2023 03:43:00 -0800 (PST)
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3BE5tKH8000547;
+	Thu, 14 Dec 2023 11:42:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding; s=qcppdkim1; bh=UaPkvFvrgs/7Kiutb4T2
+	XzNFd/EKJ1AzPTC8kfhBZE4=; b=Bqjbd6HjqtgfwrN1X32fHLW4lG/+8MoxpPLR
+	OAN2yEqCqRZ0maPPBtcLj9e5zDYXyWofXUs5y5L7YRVFtbAuQXSKXH/z7/gdZs1X
+	rVH6hZMyPhoDv6hy1llB5vbhAjhhRttYuKUJt8EO4ybVOwJrSKOf1aKjz81ou/Ci
+	4l+F/akw6y5+FELOnIo20+dly7fNQvMlYJr9c8gk+AHyOX6eDCBofok6w9anYUUI
+	P6GaQfqECGrTYX18Nkbo0f8t1ZDHyYQ4ddwQ2PD5o8G9rV9sTfdhT5TXHWp5qgTC
+	vkLs12idH3QSI8fEUWDiT7ygfHOQ6yCuMXKbFV5ni2F414Izag==
+Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3uyp0p9a38-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 14 Dec 2023 11:42:48 +0000 (GMT)
+Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+	by APBLRPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 3BEBgh38003053;
+	Thu, 14 Dec 2023 11:42:43 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 3uvhaktcgh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 14 Dec 2023 11:42:43 +0000
+Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3BEBghom002916;
+	Thu, 14 Dec 2023 11:42:43 GMT
+Received: from hu-devc-blr-u22-a.qualcomm.com (hu-mdalam-blr.qualcomm.com [10.131.36.157])
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 3BEBghj5002826
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 14 Dec 2023 11:42:43 +0000
+Received: by hu-devc-blr-u22-a.qualcomm.com (Postfix, from userid 466583)
+	id 81C9D414B7; Thu, 14 Dec 2023 17:12:42 +0530 (+0530)
+From: Md Sadre Alam <quic_mdalam@quicinc.com>
+To: thara.gopinath@gmail.com, herbert@gondor.apana.org.au, davem@davemloft.net,
+        agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        vkoul@kernel.org, linux-crypto@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, quic_srichara@quicinc.com,
+        quic_varada@quicinc.com
+Cc: quic_mdalam@quicinc.com
+Subject: [PATCH 00/11] Add cmd descriptor support
+Date: Thu, 14 Dec 2023 17:12:28 +0530
+Message-Id: <20231214114239.2635325-1-quic_mdalam@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231212-ep93xx-v6-40-c307b8ac9aa8@maquefel.me>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: tqziVHUzaBsXNm0zfwIgwYP9Qqh9ElzM
+X-Proofpoint-GUID: tqziVHUzaBsXNm0zfwIgwYP9Qqh9ElzM
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ mlxlogscore=491 mlxscore=0 priorityscore=1501 phishscore=0 impostorscore=0
+ clxscore=1015 malwarescore=0 lowpriorityscore=0 adultscore=0 bulkscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2311290000 definitions=main-2312140080
 
-On Tue, Dec 12, 2023 at 11:20:57AM +0300, Nikita Shubin wrote:
-> Remove DMA platform header, from now on we use device tree for dma
+This series of patches will add command descriptor
+support to read/write crypto engine register via
+BAM/DMA
 
-DMA
+We need this support because if there is multiple EE's
+(Execution Environment) accessing the same CE even with
+different BAM pipe , then there will be race condition.
+To avoid this race condition BAM HW having LOCK/UNLOCK 
+feature on BAM pipes and this LOCK/UNLOCK will be set
+via command descriptor only.
 
-> clients.
+Since each EE's having their dedicated BAM pipe, BAM allows
+Locking and Unlocking on BAM pipe. So if one EE's requesting
+for CE5 access then that EE's first has to LOCK the BAM pipe
+while setting LOCK bit on command descriptor and then access
+it. After finishing the request EE's has to UNLOCK the BAM pipe
+so in this way we race condition will not happen.
 
-...
+Md Sadre Alam (11):
+  crypto: qce - Add support for crypto address read
+  crypto: qce - Add bam dma support for crypto register r/w
+  crypto: qce - Convert register r/w for skcipher via BAM/DMA
+  crypto: qce - Convert register r/w for sha via BAM/DMA
+  crypto: qce - Convert register r/w for aead via BAM/DMA
+  drivers: bam_dma: Add LOCK & UNLOCK flag support
+  crypto: qce - Add LOCK and UNLOCK flag support
+  crypto: qce - Add support for lock aquire,lock release api.
+  crypto: qce - Add support for lock/unlock in skcipher
+  crypto: qce - Add support for lock/unlock in sha
+  crypto: qce - Add support for lock/unlock in aead
 
-> +static inline bool ep93xx_dma_chan_is_m2p(struct dma_chan *chan)
-> +{
-> +	if (device_is_compatible(chan->device->dev, "cirrus,ep9301-dma-m2p"))
-> +		return true;
-> +
-> +	return !strcmp(dev_name(chan->device->dev), "ep93xx-dma-m2p");
-> +}
-
-Hmm... Isn't the same as new helper in a header in another patch?
+ drivers/crypto/qce/aead.c        |  16 +++
+ drivers/crypto/qce/common.c      | 144 +++++++++++++------
+ drivers/crypto/qce/core.c        |   9 ++
+ drivers/crypto/qce/core.h        |  12 ++
+ drivers/crypto/qce/dma.c         | 238 +++++++++++++++++++++++++++++++
+ drivers/crypto/qce/dma.h         |  26 +++-
+ drivers/crypto/qce/sha.c         |  16 +++
+ drivers/crypto/qce/skcipher.c    |  16 +++
+ drivers/dma/qcom/bam_dma.c       |  10 ++
+ include/linux/dma/qcom_bam_dma.h |   2 +
+ 10 files changed, 447 insertions(+), 42 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.34.1
 
 

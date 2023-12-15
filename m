@@ -1,56 +1,55 @@
-Return-Path: <dmaengine+bounces-532-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-533-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 49FA4813E94
-	for <lists+dmaengine@lfdr.de>; Fri, 15 Dec 2023 01:12:57 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 85E13813EB1
+	for <lists+dmaengine@lfdr.de>; Fri, 15 Dec 2023 01:24:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6DDCA1C22035
-	for <lists+dmaengine@lfdr.de>; Fri, 15 Dec 2023 00:12:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3D75D283E9D
+	for <lists+dmaengine@lfdr.de>; Fri, 15 Dec 2023 00:24:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1C5DEC6;
-	Fri, 15 Dec 2023 00:12:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAE4F361;
+	Fri, 15 Dec 2023 00:24:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XTNK8xXg"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Gfir7HKR"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92789EBF;
-	Fri, 15 Dec 2023 00:12:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 963DA7FC;
+	Fri, 15 Dec 2023 00:24:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702599169; x=1734135169;
+  t=1702599890; x=1734135890;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=LoCKoEMTXvBDPQWtkdfBuHckUE9e5g/vm6kupeuuk8w=;
-  b=XTNK8xXg87URC3rpnYDLg25Um31kfou09AxblKzC5Zr4kvzbXg48/eIR
-   kUFvtZ2htLITakk8acZNiJVmcnBb6sB4xp2Xo1VWq6tWoYJ/1GMglDrIj
-   1JmTMDsnDIdd9FGHlVWQsjt15OB0neSNMAzUbN14swDjFJYePwxi4elDM
-   TJOb2fscgvAXXviBuzN5tmcSG9WdchZ7Lr5CY5ilftrxOC3DWb6igtG10
-   vj9h8iidmIMfTaPaZ1pRdwZDVu8wKMWoiUVsQQVmWBR0Vc1Ni+s+Lx4ml
-   X92xU+5d/5FwOjBpdMeedY9214y5HzTB3fLHE8m9dYvHoa+3ciBS4YuXp
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="8607220"
+  bh=EOXDnLezHvp+UiDY/7mkYoXNOd7E6rY6LHj0YTRlehI=;
+  b=Gfir7HKRuYrwlOocCePEdyOScasIgVEOmFDOehnhdwwPtoDZ4pEP2blP
+   4+JE7lN9ydq5qglT/qRItdq0ciu7laK7DQg/1YvucSAxT+rBMMJ7ps7eO
+   NSOXop0wGjZN2HjYdeLugBUWUZDCPSDBIG00J1fKpRknJTbfpMNlvlOgJ
+   Bx9qCW0VOosrsI7fz5nmkJy3UXToc/bb50N09xGYMvwGqAdPly8sV2MIU
+   SoLfGiABB+RtNzc+QrRlbgPlv1n+jWJSh/R1DkxWlxcvmYZ5NfJr8qqT0
+   DPyutxDRRpEj8h4Kz+u2RxaDhlCcH0r1Ye9cbcMR6gkChfI+Gp3UTwSyQ
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="2366456"
 X-IronPort-AV: E=Sophos;i="6.04,277,1695711600"; 
-   d="scan'208";a="8607220"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2023 16:12:49 -0800
+   d="scan'208";a="2366456"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2023 16:24:50 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="1105922790"
 X-IronPort-AV: E=Sophos;i="6.04,277,1695711600"; 
-   d="scan'208";a="1105922790"
+   d="scan'208";a="22629518"
 Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by fmsmga005.fm.intel.com with ESMTP; 14 Dec 2023 16:12:44 -0800
+  by orviesa001.jf.intel.com with ESMTP; 14 Dec 2023 16:24:45 -0800
 Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1rDvoo-000MqL-0e;
-	Fri, 15 Dec 2023 00:12:42 +0000
-Date: Fri, 15 Dec 2023 08:11:48 +0800
+	id 1rDw0Q-000Mr3-1m;
+	Fri, 15 Dec 2023 00:24:42 +0000
+Date: Fri, 15 Dec 2023 08:23:56 +0800
 From: kernel test robot <lkp@intel.com>
 To: Md Sadre Alam <quic_mdalam@quicinc.com>, thara.gopinath@gmail.com,
 	herbert@gondor.apana.org.au, davem@davemloft.net, agross@kernel.org,
@@ -58,11 +57,10 @@ To: Md Sadre Alam <quic_mdalam@quicinc.com>, thara.gopinath@gmail.com,
 	linux-crypto@vger.kernel.org, linux-arm-msm@vger.kernel.org,
 	linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
 	quic_srichara@quicinc.com, quic_varada@quicinc.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	quic_mdalam@quicinc.com
+Cc: oe-kbuild-all@lists.linux.dev, quic_mdalam@quicinc.com
 Subject: Re: [PATCH 02/11] crypto: qce - Add bam dma support for crypto
  register r/w
-Message-ID: <202312150743.EugqdZaA-lkp@intel.com>
+Message-ID: <202312150856.hFSqQCnr-lkp@intel.com>
 References: <20231214114239.2635325-3-quic_mdalam@quicinc.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -88,40 +86,38 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Md-Sadre-Alam/crypto-qce-
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git master
 patch link:    https://lore.kernel.org/r/20231214114239.2635325-3-quic_mdalam%40quicinc.com
 patch subject: [PATCH 02/11] crypto: qce - Add bam dma support for crypto register r/w
-config: arm-randconfig-004-20231215 (https://download.01.org/0day-ci/archive/20231215/202312150743.EugqdZaA-lkp@intel.com/config)
-compiler: clang version 16.0.4 (https://github.com/llvm/llvm-project.git ae42196bc493ffe877a7e3dff8be32035dea4d07)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231215/202312150743.EugqdZaA-lkp@intel.com/reproduce)
+config: m68k-allmodconfig (https://download.01.org/0day-ci/archive/20231215/202312150856.hFSqQCnr-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231215/202312150856.hFSqQCnr-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202312150743.EugqdZaA-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202312150856.hFSqQCnr-lkp@intel.com/
 
-All errors (new ones prefixed by >>):
+All error/warnings (new ones prefixed by >>):
 
    In file included from drivers/crypto/qce/dma.c:11:
->> drivers/crypto/qce/core.h:32:24: error: field has incomplete type 'struct tasklet_struct'
-           struct tasklet_struct done_tasklet;
-                                 ^
-   drivers/crypto/qce/core.h:32:9: note: forward declaration of 'struct tasklet_struct'
-           struct tasklet_struct done_tasklet;
-                  ^
-   drivers/crypto/qce/dma.c:44:17: warning: implicit conversion from enumeration type 'enum dma_transfer_direction' to different enumeration type 'enum dma_data_direction' [-Wenum-conversion]
-                           qce_sgl_cnt, dir)) {
-                           ~~~~~~~~~~~~~^~~~
-   include/linux/dma-mapping.h:419:58: note: expanded from macro 'dma_map_sg'
-   #define dma_map_sg(d, s, n, r) dma_map_sg_attrs(d, s, n, r, 0)
-                                  ~~~~~~~~~~~~~~~~          ^
-   drivers/crypto/qce/dma.c:53:52: warning: implicit conversion from enumeration type 'enum dma_transfer_direction' to different enumeration type 'enum dma_data_direction' [-Wenum-conversion]
-                   dma_unmap_sg(qce->dev, qce_bam_sgl, qce_sgl_cnt, dir);
-                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~
-   include/linux/dma-mapping.h:420:62: note: expanded from macro 'dma_unmap_sg'
-   #define dma_unmap_sg(d, s, n, r) dma_unmap_sg_attrs(d, s, n, r, 0)
-                                    ~~~~~~~~~~~~~~~~~~          ^
-   2 warnings and 1 error generated.
+>> drivers/crypto/qce/core.h:32:31: error: field 'done_tasklet' has incomplete type
+      32 |         struct tasklet_struct done_tasklet;
+         |                               ^~~~~~~~~~~~
+   In file included from drivers/crypto/qce/dma.c:7:
+   drivers/crypto/qce/dma.c: In function 'qce_dma_prep_cmd_sg':
+>> drivers/crypto/qce/dma.c:44:38: warning: implicit conversion from 'enum dma_transfer_direction' to 'enum dma_data_direction' [-Wenum-conversion]
+      44 |                         qce_sgl_cnt, dir)) {
+         |                                      ^~~
+   include/linux/dma-mapping.h:419:58: note: in definition of macro 'dma_map_sg'
+     419 | #define dma_map_sg(d, s, n, r) dma_map_sg_attrs(d, s, n, r, 0)
+         |                                                          ^
+   drivers/crypto/qce/dma.c:53:66: warning: implicit conversion from 'enum dma_transfer_direction' to 'enum dma_data_direction' [-Wenum-conversion]
+      53 |                 dma_unmap_sg(qce->dev, qce_bam_sgl, qce_sgl_cnt, dir);
+         |                                                                  ^~~
+   include/linux/dma-mapping.h:420:62: note: in definition of macro 'dma_unmap_sg'
+     420 | #define dma_unmap_sg(d, s, n, r) dma_unmap_sg_attrs(d, s, n, r, 0)
+         |                                                              ^
 
 
-vim +32 drivers/crypto/qce/core.h
+vim +/done_tasklet +32 drivers/crypto/qce/core.h
 
 ec8f5d8f6f76b9 Stanimir Varbanov 2014-06-25  10  
 ec8f5d8f6f76b9 Stanimir Varbanov 2014-06-25  11  /**

@@ -1,131 +1,86 @@
-Return-Path: <dmaengine+bounces-541-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-543-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD3558148D8
-	for <lists+dmaengine@lfdr.de>; Fri, 15 Dec 2023 14:15:11 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id EF87E814DA6
+	for <lists+dmaengine@lfdr.de>; Fri, 15 Dec 2023 17:55:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4D4741F249D0
-	for <lists+dmaengine@lfdr.de>; Fri, 15 Dec 2023 13:15:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 285321C2119C
+	for <lists+dmaengine@lfdr.de>; Fri, 15 Dec 2023 16:55:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 604E830D0C;
-	Fri, 15 Dec 2023 13:14:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA3813EA6B;
+	Fri, 15 Dec 2023 16:55:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="DIiMSFMx"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U+TR9UVY"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from aposti.net (aposti.net [89.234.176.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C44693065B;
-	Fri, 15 Dec 2023 13:14:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-	s=mail; t=1702646031;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kAeMuIy1XyR2uI2Lp4H2je64QseMIBGkzrSyKbKGd4Y=;
-	b=DIiMSFMxTT1aXlDXsy/PFjuLsM+XpoHYg0O5x93fbK0H4ObtJC8KMmoG5cWrdP7CLuV480
-	S8lKlFIBKgMSWMsyyCDK0whoT0VT03xXOTmqvGWPh3Z1LLgqLy5DfaF0oe8XdNfIl+nw6X
-	aD/W6o2E4+ikDbHVRK0jH8lN3mUCMko=
-From: Paul Cercueil <paul@crapouillou.net>
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Lars-Peter Clausen <lars@metafoo.de>,
-	=?UTF-8?q?Nuno=20S=C3=A1?= <noname.nuno@gmail.com>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 5/5] dmaengine: axi-dmac: Improve cyclic DMA transfers in SG mode
-Date: Fri, 15 Dec 2023 14:13:13 +0100
-Message-ID: <20231215131313.23840-6-paul@crapouillou.net>
-In-Reply-To: <20231215131313.23840-1-paul@crapouillou.net>
-References: <20231215131313.23840-1-paul@crapouillou.net>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26DD23EA69;
+	Fri, 15 Dec 2023 16:55:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1702659319; x=1734195319;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=RoQz5Hj3AlwnPNUQqmm0YVyXpkRm7JA23dpjOTRWF2o=;
+  b=U+TR9UVYD8nm/zUSFD/Bje9kvwpxBFBhMD/T2aBlMJe56SL+/flFqUD0
+   tTTIHJf8AhTTxyHmcsL2hS2PDkzP3kzKTVmTAqSSH39EpveAOzLEH9IhI
+   zS99okglr2g5qVJNdntCacIJTZYDDJMT9gZbIP+5d4yH3NuYAwOovTVXl
+   M2nUrSNkLrz7aFwc1AATm9Qb5r+7vanJzrRNyT/Ufl8KsX9AXDTGedqDW
+   56y/cRsmI92UbK2wqrzwXAPzxHu/Yz0VxTJyZPxQFLzutORR70nlXOImb
+   N80O1siJZSaqAsxoM7RpCCRcZG6f9oEu2paqpf79WrrzfnVA0N8PDzbF3
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="398091302"
+X-IronPort-AV: E=Sophos;i="6.04,279,1695711600"; 
+   d="scan'208";a="398091302"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2023 08:55:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="948027381"
+X-IronPort-AV: E=Sophos;i="6.04,279,1695711600"; 
+   d="scan'208";a="948027381"
+Received: from gyuchull-mobl2.amr.corp.intel.com ([10.212.27.50])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2023 08:55:16 -0800
+Message-ID: <204ec32b24062a29baf2cb0e9c1c4bba097833d5.camel@linux.intel.com>
+Subject: Re: [PATCH v12 00/14] crypto: Add Intel Analytics Accelerator (IAA)
+ crypto compression driver
+From: Tom Zanussi <tom.zanussi@linux.intel.com>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: davem@davemloft.net, fenghua.yu@intel.com, vkoul@kernel.org, 
+ dave.jiang@intel.com, tony.luck@intel.com, wajdi.k.feghali@intel.com, 
+ james.guilford@intel.com, kanchana.p.sridhar@intel.com,
+ vinodh.gopal@intel.com,  giovanni.cabiddu@intel.com, pavel@ucw.cz,
+ linux-kernel@vger.kernel.org,  linux-crypto@vger.kernel.org,
+ dmaengine@vger.kernel.org
+Date: Fri, 15 Dec 2023 10:55:15 -0600
+In-Reply-To: <ZXwi+UN0OP9+ht99@gondor.apana.org.au>
+References: <20231205212530.285671-1-tom.zanussi@linux.intel.com>
+	 <ZXwi+UN0OP9+ht99@gondor.apana.org.au>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam: Yes
 
-For cyclic transfers, chain the last descriptor to the first one, and
-disable IRQ generation if there is no callback registered with the
-cyclic transfer.
+On Fri, 2023-12-15 at 17:57 +0800, Herbert Xu wrote:
+> On Tue, Dec 05, 2023 at 03:25:16PM -0600, Tom Zanussi wrote:
+> > Hi, this is v12 of the IAA crypto driver, incorporating feedback
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+[snip]
 
----
-v2: New patch
----
- drivers/dma/dma-axi-dmac.c | 22 ++++++++++++++--------
- 1 file changed, 14 insertions(+), 8 deletions(-)
+> All applied.=C2=A0 Thanks.
 
-diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
-index f63acae511fb..4e339c04fc1e 100644
---- a/drivers/dma/dma-axi-dmac.c
-+++ b/drivers/dma/dma-axi-dmac.c
-@@ -285,12 +285,14 @@ static void axi_dmac_start_transfer(struct axi_dmac_chan *chan)
- 
- 	/*
- 	 * If the hardware supports cyclic transfers and there is no callback to
--	 * call and only a single segment, enable hw cyclic mode to avoid
--	 * unnecessary interrupts.
-+	 * call, enable hw cyclic mode to avoid unnecessary interrupts.
- 	 */
--	if (chan->hw_cyclic && desc->cyclic && !desc->vdesc.tx.callback &&
--		desc->num_sgs == 1)
--		flags |= AXI_DMAC_FLAG_CYCLIC;
-+	if (chan->hw_cyclic && desc->cyclic && !desc->vdesc.tx.callback) {
-+		if (chan->hw_sg)
-+			desc->sg[desc->num_sgs - 1].hw->flags &= ~AXI_DMAC_HW_FLAG_IRQ;
-+		else if (desc->num_sgs == 1)
-+			flags |= AXI_DMAC_FLAG_CYCLIC;
-+	}
- 
- 	if (chan->hw_partial_xfer)
- 		flags |= AXI_DMAC_FLAG_PARTIAL_REPORT;
-@@ -411,7 +413,6 @@ static bool axi_dmac_transfer_done(struct axi_dmac_chan *chan,
- 	if (chan->hw_sg) {
- 		if (active->cyclic) {
- 			vchan_cyclic_callback(&active->vdesc);
--			start_next = true;
- 		} else {
- 			list_del(&active->vdesc.node);
- 			vchan_cookie_complete(&active->vdesc);
-@@ -667,7 +668,7 @@ static struct dma_async_tx_descriptor *axi_dmac_prep_dma_cyclic(
- {
- 	struct axi_dmac_chan *chan = to_axi_dmac_chan(c);
- 	struct axi_dmac_desc *desc;
--	unsigned int num_periods, num_segments;
-+	unsigned int num_periods, num_segments, num_sgs;
- 
- 	if (direction != chan->direction)
- 		return NULL;
-@@ -681,11 +682,16 @@ static struct dma_async_tx_descriptor *axi_dmac_prep_dma_cyclic(
- 
- 	num_periods = buf_len / period_len;
- 	num_segments = DIV_ROUND_UP(period_len, chan->max_length);
-+	num_sgs = num_periods * num_segments;
- 
--	desc = axi_dmac_alloc_desc(chan, num_periods * num_segments);
-+	desc = axi_dmac_alloc_desc(chan, num_sgs);
- 	if (!desc)
- 		return NULL;
- 
-+	/* Chain the last descriptor to the first, and remove its "last" flag */
-+	desc->sg[num_sgs - 1].hw->next_sg_addr = desc->sg[0].hw_phys;
-+	desc->sg[num_sgs - 1].hw->flags &= ~AXI_DMAC_HW_FLAG_LAST;
-+
- 	axi_dmac_fill_linear_sg(chan, direction, buf_addr, num_periods,
- 		period_len, desc->sg);
- 
--- 
-2.42.0
+Thanks, Herbert!
+
+Tom
 
 

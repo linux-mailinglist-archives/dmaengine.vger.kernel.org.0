@@ -1,25 +1,25 @@
-Return-Path: <dmaengine+bounces-538-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-539-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 840AC8148D1
-	for <lists+dmaengine@lfdr.de>; Fri, 15 Dec 2023 14:14:27 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D6B808148D3
+	for <lists+dmaengine@lfdr.de>; Fri, 15 Dec 2023 14:14:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 005BEB20FDB
-	for <lists+dmaengine@lfdr.de>; Fri, 15 Dec 2023 13:14:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8C169282F0B
+	for <lists+dmaengine@lfdr.de>; Fri, 15 Dec 2023 13:14:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65DC02DB6A;
-	Fri, 15 Dec 2023 13:14:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3833B2DF91;
+	Fri, 15 Dec 2023 13:14:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="n73GF01n"
+	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="UIcXbG7C"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from aposti.net (aposti.net [89.234.176.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A43082DB78;
-	Fri, 15 Dec 2023 13:14:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896C62DF8F;
+	Fri, 15 Dec 2023 13:14:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
@@ -28,10 +28,10 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=dX1OOI1l+mZGv2ZWGYC1ua/+SRhxUb4vYorhXQG2m0s=;
-	b=n73GF01nlvHq339iRA74SaYN1veT8I1ymfb0jyl4RXfsslvWnxW8Sigt6UGYAq0KKmDwt/
-	l0mmWMMHKRX4jyKHL6DdB9ueF2czOEgP0AbgpUzqhX4I8+vBvKmer9DU0oUwCM/txc2hdU
-	TmL1k3pWMFkaKPOw9u2qHVQN4x3utqk=
+	bh=DfTyNXzfHCBEsP75+j9tuzi+q9BjmgIsVWTMiU/h6PU=;
+	b=UIcXbG7CBMh88X7t8sZevtwrmaHlWv/g0RP3uQ6xH5EHBISmC30BrAsOhMogM5QvY/RQb9
+	sDnWahVnoDWEl0gC976GnESmk1OOQRn/iBQleCIREPLL1vGp1FCpwEzb4yq+K0It3rjtmn
+	7c4/ox+xPUj1aoI9v8eALHbOI5fi1bo=
 From: Paul Cercueil <paul@crapouillou.net>
 To: Vinod Koul <vkoul@kernel.org>
 Cc: Lars-Peter Clausen <lars@metafoo.de>,
@@ -40,9 +40,9 @@ Cc: Lars-Peter Clausen <lars@metafoo.de>,
 	dmaengine@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 2/5] dmaengine: axi-dmac: Allocate hardware descriptors
-Date: Fri, 15 Dec 2023 14:13:10 +0100
-Message-ID: <20231215131313.23840-3-paul@crapouillou.net>
+Subject: [PATCH v2 3/5] dmaengine: axi-dmac: Add support for scatter-gather transfers
+Date: Fri, 15 Dec 2023 14:13:11 +0100
+Message-ID: <20231215131313.23840-4-paul@crapouillou.net>
 In-Reply-To: <20231215131313.23840-1-paul@crapouillou.net>
 References: <20231215131313.23840-1-paul@crapouillou.net>
 Precedence: bulk
@@ -54,306 +54,276 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam: Yes
 
-Change where and how the DMA transfers meta-data is stored, to prepare
-for the upcoming introduction of scatter-gather support.
+Implement support for scatter-gather transfers. Build a chain of
+hardware descriptors, each one corresponding to a segment of the
+transfer, and linked to the next one. The hardware will transfer the
+chain and only fire interrupts when the whole chain has been
+transferred.
 
-Allocate hardware descriptors in the format that the HDL core will be
-expecting them when the scatter-gather feature is enabled, and use these
-fields to store the data that was previously stored in the axi_dmac_sg
-structure.
-
-Note that the 'x_len' and 'y_len' fields now contain the transfer length
-minus one, since that's what the hardware will expect in these fields.
+Support for scatter-gather is automatically enabled when the driver
+detects that the hardware supports it, by writing then reading the
+AXI_DMAC_REG_SG_ADDRESS register. If not available, the driver will fall
+back to standard DMA transfers.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/dma/dma-axi-dmac.c | 134 ++++++++++++++++++++++++-------------
- 1 file changed, 88 insertions(+), 46 deletions(-)
+ drivers/dma/dma-axi-dmac.c | 135 +++++++++++++++++++++++++------------
+ 1 file changed, 93 insertions(+), 42 deletions(-)
 
 diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
-index 760940b21eab..185230a769b9 100644
+index 185230a769b9..5109530b66de 100644
 --- a/drivers/dma/dma-axi-dmac.c
 +++ b/drivers/dma/dma-axi-dmac.c
-@@ -97,20 +97,31 @@
+@@ -81,9 +81,13 @@
+ #define AXI_DMAC_REG_CURRENT_DEST_ADDR	0x438
+ #define AXI_DMAC_REG_PARTIAL_XFER_LEN	0x44c
+ #define AXI_DMAC_REG_PARTIAL_XFER_ID	0x450
++#define AXI_DMAC_REG_CURRENT_SG_ID	0x454
++#define AXI_DMAC_REG_SG_ADDRESS		0x47c
++#define AXI_DMAC_REG_SG_ADDRESS_HIGH	0x4bc
+ 
+ #define AXI_DMAC_CTRL_ENABLE		BIT(0)
+ #define AXI_DMAC_CTRL_PAUSE		BIT(1)
++#define AXI_DMAC_CTRL_ENABLE_SG		BIT(2)
+ 
+ #define AXI_DMAC_IRQ_SOT		BIT(0)
+ #define AXI_DMAC_IRQ_EOT		BIT(1)
+@@ -97,12 +101,16 @@
  /* The maximum ID allocated by the hardware is 31 */
  #define AXI_DMAC_SG_UNUSED 32U
  
-+struct axi_dmac_hw_desc {
-+	u32 flags;
-+	u32 id;
-+	u64 dest_addr;
-+	u64 src_addr;
-+	u64 __unused;
-+	u32 y_len;
-+	u32 x_len;
-+	u32 src_stride;
-+	u32 dst_stride;
-+	u64 __pad[2];
-+};
++/* Flags for axi_dmac_hw_desc.flags */
++#define AXI_DMAC_HW_FLAG_LAST		BIT(0)
++#define AXI_DMAC_HW_FLAG_IRQ		BIT(1)
 +
- struct axi_dmac_sg {
--	dma_addr_t src_addr;
--	dma_addr_t dest_addr;
--	unsigned int x_len;
--	unsigned int y_len;
--	unsigned int dest_stride;
--	unsigned int src_stride;
--	unsigned int id;
- 	unsigned int partial_len;
- 	bool schedule_when_free;
-+
-+	struct axi_dmac_hw_desc *hw;
-+	dma_addr_t hw_phys;
+ struct axi_dmac_hw_desc {
+ 	u32 flags;
+ 	u32 id;
+ 	u64 dest_addr;
+ 	u64 src_addr;
+-	u64 __unused;
++	u64 next_sg_addr;
+ 	u32 y_len;
+ 	u32 x_len;
+ 	u32 src_stride;
+@@ -150,6 +158,7 @@ struct axi_dmac_chan {
+ 	bool hw_partial_xfer;
+ 	bool hw_cyclic;
+ 	bool hw_2d;
++	bool hw_sg;
  };
  
- struct axi_dmac_desc {
- 	struct virt_dma_desc vdesc;
-+	struct axi_dmac_chan *chan;
-+
- 	bool cyclic;
- 	bool have_partial_xfer;
+ struct axi_dmac {
+@@ -224,9 +233,11 @@ static void axi_dmac_start_transfer(struct axi_dmac_chan *chan)
+ 	unsigned int flags = 0;
+ 	unsigned int val;
  
-@@ -229,7 +240,7 @@ static void axi_dmac_start_transfer(struct axi_dmac_chan *chan)
- 	sg = &desc->sg[desc->num_submitted];
+-	val = axi_dmac_read(dmac, AXI_DMAC_REG_START_TRANSFER);
+-	if (val) /* Queue is full, wait for the next SOT IRQ */
+-		return;
++	if (!chan->hw_sg) {
++		val = axi_dmac_read(dmac, AXI_DMAC_REG_START_TRANSFER);
++		if (val) /* Queue is full, wait for the next SOT IRQ */
++			return;
++	}
  
- 	/* Already queued in cyclic mode. Wait for it to finish */
--	if (sg->id != AXI_DMAC_SG_UNUSED) {
-+	if (sg->hw->id != AXI_DMAC_SG_UNUSED) {
- 		sg->schedule_when_free = true;
+ 	desc = chan->next_desc;
+ 
+@@ -245,9 +256,10 @@ static void axi_dmac_start_transfer(struct axi_dmac_chan *chan)
  		return;
  	}
-@@ -246,16 +257,16 @@ static void axi_dmac_start_transfer(struct axi_dmac_chan *chan)
- 		chan->next_desc = desc;
- 	}
  
--	sg->id = axi_dmac_read(dmac, AXI_DMAC_REG_TRANSFER_ID);
-+	sg->hw->id = axi_dmac_read(dmac, AXI_DMAC_REG_TRANSFER_ID);
+-	desc->num_submitted++;
+-	if (desc->num_submitted == desc->num_sgs ||
+-	    desc->have_partial_xfer) {
++	if (chan->hw_sg) {
++		chan->next_desc = NULL;
++	} else if (++desc->num_submitted == desc->num_sgs ||
++		   desc->have_partial_xfer) {
+ 		if (desc->cyclic)
+ 			desc->num_submitted = 0; /* Start again */
+ 		else
+@@ -259,14 +271,16 @@ static void axi_dmac_start_transfer(struct axi_dmac_chan *chan)
  
- 	if (axi_dmac_dest_is_mem(chan)) {
--		axi_dmac_write(dmac, AXI_DMAC_REG_DEST_ADDRESS, sg->dest_addr);
--		axi_dmac_write(dmac, AXI_DMAC_REG_DEST_STRIDE, sg->dest_stride);
-+		axi_dmac_write(dmac, AXI_DMAC_REG_DEST_ADDRESS, sg->hw->dest_addr);
-+		axi_dmac_write(dmac, AXI_DMAC_REG_DEST_STRIDE, sg->hw->dst_stride);
- 	}
+ 	sg->hw->id = axi_dmac_read(dmac, AXI_DMAC_REG_TRANSFER_ID);
  
- 	if (axi_dmac_src_is_mem(chan)) {
--		axi_dmac_write(dmac, AXI_DMAC_REG_SRC_ADDRESS, sg->src_addr);
--		axi_dmac_write(dmac, AXI_DMAC_REG_SRC_STRIDE, sg->src_stride);
-+		axi_dmac_write(dmac, AXI_DMAC_REG_SRC_ADDRESS, sg->hw->src_addr);
-+		axi_dmac_write(dmac, AXI_DMAC_REG_SRC_STRIDE, sg->hw->src_stride);
+-	if (axi_dmac_dest_is_mem(chan)) {
+-		axi_dmac_write(dmac, AXI_DMAC_REG_DEST_ADDRESS, sg->hw->dest_addr);
+-		axi_dmac_write(dmac, AXI_DMAC_REG_DEST_STRIDE, sg->hw->dst_stride);
+-	}
++	if (!chan->hw_sg) {
++		if (axi_dmac_dest_is_mem(chan)) {
++			axi_dmac_write(dmac, AXI_DMAC_REG_DEST_ADDRESS, sg->hw->dest_addr);
++			axi_dmac_write(dmac, AXI_DMAC_REG_DEST_STRIDE, sg->hw->dst_stride);
++		}
+ 
+-	if (axi_dmac_src_is_mem(chan)) {
+-		axi_dmac_write(dmac, AXI_DMAC_REG_SRC_ADDRESS, sg->hw->src_addr);
+-		axi_dmac_write(dmac, AXI_DMAC_REG_SRC_STRIDE, sg->hw->src_stride);
++		if (axi_dmac_src_is_mem(chan)) {
++			axi_dmac_write(dmac, AXI_DMAC_REG_SRC_ADDRESS, sg->hw->src_addr);
++			axi_dmac_write(dmac, AXI_DMAC_REG_SRC_STRIDE, sg->hw->src_stride);
++		}
  	}
  
  	/*
-@@ -270,8 +281,8 @@ static void axi_dmac_start_transfer(struct axi_dmac_chan *chan)
+@@ -281,8 +295,14 @@ static void axi_dmac_start_transfer(struct axi_dmac_chan *chan)
  	if (chan->hw_partial_xfer)
  		flags |= AXI_DMAC_FLAG_PARTIAL_REPORT;
  
--	axi_dmac_write(dmac, AXI_DMAC_REG_X_LENGTH, sg->x_len - 1);
--	axi_dmac_write(dmac, AXI_DMAC_REG_Y_LENGTH, sg->y_len - 1);
-+	axi_dmac_write(dmac, AXI_DMAC_REG_X_LENGTH, sg->hw->x_len);
-+	axi_dmac_write(dmac, AXI_DMAC_REG_Y_LENGTH, sg->hw->y_len);
+-	axi_dmac_write(dmac, AXI_DMAC_REG_X_LENGTH, sg->hw->x_len);
+-	axi_dmac_write(dmac, AXI_DMAC_REG_Y_LENGTH, sg->hw->y_len);
++	if (chan->hw_sg) {
++		axi_dmac_write(dmac, AXI_DMAC_REG_SG_ADDRESS, (u32)sg->hw_phys);
++		axi_dmac_write(dmac, AXI_DMAC_REG_SG_ADDRESS_HIGH,
++			       (u64)sg->hw_phys >> 32);
++	} else {
++		axi_dmac_write(dmac, AXI_DMAC_REG_X_LENGTH, sg->hw->x_len);
++		axi_dmac_write(dmac, AXI_DMAC_REG_Y_LENGTH, sg->hw->y_len);
++	}
  	axi_dmac_write(dmac, AXI_DMAC_REG_FLAGS, flags);
  	axi_dmac_write(dmac, AXI_DMAC_REG_START_TRANSFER, 1);
  }
-@@ -286,9 +297,9 @@ static inline unsigned int axi_dmac_total_sg_bytes(struct axi_dmac_chan *chan,
- 	struct axi_dmac_sg *sg)
- {
- 	if (chan->hw_2d)
--		return sg->x_len * sg->y_len;
-+		return (sg->hw->x_len + 1) * (sg->hw->y_len + 1);
- 	else
--		return sg->x_len;
-+		return (sg->hw->x_len + 1);
- }
+@@ -359,6 +379,9 @@ static void axi_dmac_compute_residue(struct axi_dmac_chan *chan,
+ 	rslt->result = DMA_TRANS_NOERROR;
+ 	rslt->residue = 0;
  
- static void axi_dmac_dequeue_partial_xfers(struct axi_dmac_chan *chan)
-@@ -307,9 +318,9 @@ static void axi_dmac_dequeue_partial_xfers(struct axi_dmac_chan *chan)
- 		list_for_each_entry(desc, &chan->active_descs, vdesc.node) {
- 			for (i = 0; i < desc->num_sgs; i++) {
- 				sg = &desc->sg[i];
--				if (sg->id == AXI_DMAC_SG_UNUSED)
-+				if (sg->hw->id == AXI_DMAC_SG_UNUSED)
- 					continue;
--				if (sg->id == id) {
-+				if (sg->hw->id == id) {
- 					desc->have_partial_xfer = true;
- 					sg->partial_len = len;
- 					found_sg = true;
-@@ -376,12 +387,12 @@ static bool axi_dmac_transfer_done(struct axi_dmac_chan *chan,
- 
- 	do {
- 		sg = &active->sg[active->num_completed];
--		if (sg->id == AXI_DMAC_SG_UNUSED) /* Not yet submitted */
-+		if (sg->hw->id == AXI_DMAC_SG_UNUSED) /* Not yet submitted */
- 			break;
--		if (!(BIT(sg->id) & completed_transfers))
-+		if (!(BIT(sg->hw->id) & completed_transfers))
- 			break;
- 		active->num_completed++;
--		sg->id = AXI_DMAC_SG_UNUSED;
-+		sg->hw->id = AXI_DMAC_SG_UNUSED;
- 		if (sg->schedule_when_free) {
- 			sg->schedule_when_free = false;
- 			start_next = true;
-@@ -476,22 +487,52 @@ static void axi_dmac_issue_pending(struct dma_chan *c)
- 	spin_unlock_irqrestore(&chan->vchan.lock, flags);
- }
- 
--static struct axi_dmac_desc *axi_dmac_alloc_desc(unsigned int num_sgs)
-+static struct axi_dmac_desc *
-+axi_dmac_alloc_desc(struct axi_dmac_chan *chan, unsigned int num_sgs)
- {
-+	struct axi_dmac *dmac = chan_to_axi_dmac(chan);
-+	struct device *dev = dmac->dma_dev.dev;
-+	struct axi_dmac_hw_desc *hws;
- 	struct axi_dmac_desc *desc;
-+	dma_addr_t hw_phys;
- 	unsigned int i;
- 
- 	desc = kzalloc(struct_size(desc, sg, num_sgs), GFP_NOWAIT);
- 	if (!desc)
- 		return NULL;
- 	desc->num_sgs = num_sgs;
-+	desc->chan = chan;
- 
--	for (i = 0; i < num_sgs; i++)
--		desc->sg[i].id = AXI_DMAC_SG_UNUSED;
-+	hws = dma_alloc_coherent(dev, PAGE_ALIGN(num_sgs * sizeof(*hws)),
-+				&hw_phys, GFP_ATOMIC);
-+	if (!hws) {
-+		kfree(desc);
-+		return NULL;
-+	}
++	if (chan->hw_sg)
++		return;
 +
-+	for (i = 0; i < num_sgs; i++) {
-+		desc->sg[i].hw = &hws[i];
-+		desc->sg[i].hw_phys = hw_phys + i * sizeof(*hws);
-+
-+		hws[i].id = AXI_DMAC_SG_UNUSED;
-+		hws[i].flags = 0;
+ 	/*
+ 	 * We get here if the last completed segment is partial, which
+ 	 * means we can compute the residue from that segment onwards
+@@ -385,36 +408,46 @@ static bool axi_dmac_transfer_done(struct axi_dmac_chan *chan,
+ 	    (completed_transfers & AXI_DMAC_FLAG_PARTIAL_XFER_DONE))
+ 		axi_dmac_dequeue_partial_xfers(chan);
+ 
+-	do {
+-		sg = &active->sg[active->num_completed];
+-		if (sg->hw->id == AXI_DMAC_SG_UNUSED) /* Not yet submitted */
+-			break;
+-		if (!(BIT(sg->hw->id) & completed_transfers))
+-			break;
+-		active->num_completed++;
+-		sg->hw->id = AXI_DMAC_SG_UNUSED;
+-		if (sg->schedule_when_free) {
+-			sg->schedule_when_free = false;
+-			start_next = true;
++	if (chan->hw_sg) {
++		if (active->cyclic) {
++			vchan_cyclic_callback(&active->vdesc);
++		} else {
++			list_del(&active->vdesc.node);
++			vchan_cookie_complete(&active->vdesc);
++			active = axi_dmac_active_desc(chan);
+ 		}
++	} else {
++		do {
++			sg = &active->sg[active->num_completed];
++			if (sg->hw->id == AXI_DMAC_SG_UNUSED) /* Not yet submitted */
++				break;
++			if (!(BIT(sg->hw->id) & completed_transfers))
++				break;
++			active->num_completed++;
++			sg->hw->id = AXI_DMAC_SG_UNUSED;
++			if (sg->schedule_when_free) {
++				sg->schedule_when_free = false;
++				start_next = true;
++			}
+ 
+-		if (sg->partial_len)
+-			axi_dmac_compute_residue(chan, active);
++			if (sg->partial_len)
++				axi_dmac_compute_residue(chan, active);
+ 
+-		if (active->cyclic)
+-			vchan_cyclic_callback(&active->vdesc);
++			if (active->cyclic)
++				vchan_cyclic_callback(&active->vdesc);
+ 
+-		if (active->num_completed == active->num_sgs ||
+-		    sg->partial_len) {
+-			if (active->cyclic) {
+-				active->num_completed = 0; /* wrap around */
+-			} else {
+-				list_del(&active->vdesc.node);
+-				vchan_cookie_complete(&active->vdesc);
+-				active = axi_dmac_active_desc(chan);
++			if (active->num_completed == active->num_sgs ||
++			    sg->partial_len) {
++				if (active->cyclic) {
++					active->num_completed = 0; /* wrap around */
++				} else {
++					list_del(&active->vdesc.node);
++					vchan_cookie_complete(&active->vdesc);
++					active = axi_dmac_active_desc(chan);
++				}
+ 			}
+-		}
+-	} while (active);
++		} while (active);
 +	}
  
+ 	return start_next;
+ }
+@@ -478,8 +511,12 @@ static void axi_dmac_issue_pending(struct dma_chan *c)
+ 	struct axi_dmac_chan *chan = to_axi_dmac_chan(c);
+ 	struct axi_dmac *dmac = chan_to_axi_dmac(chan);
+ 	unsigned long flags;
++	u32 ctrl = AXI_DMAC_CTRL_ENABLE;
++
++	if (chan->hw_sg)
++		ctrl |= AXI_DMAC_CTRL_ENABLE_SG;
+ 
+-	axi_dmac_write(dmac, AXI_DMAC_REG_CTRL, AXI_DMAC_CTRL_ENABLE);
++	axi_dmac_write(dmac, AXI_DMAC_REG_CTRL, ctrl);
+ 
+ 	spin_lock_irqsave(&chan->vchan.lock, flags);
+ 	if (vchan_issue_pending(&chan->vchan))
+@@ -516,8 +553,14 @@ axi_dmac_alloc_desc(struct axi_dmac_chan *chan, unsigned int num_sgs)
+ 
+ 		hws[i].id = AXI_DMAC_SG_UNUSED;
+ 		hws[i].flags = 0;
++
++		/* Link hardware descriptors */
++		hws[i].next_sg_addr = hw_phys + (i + 1) * sizeof(*hws);
+ 	}
+ 
++	/* The last hardware descriptor will trigger an interrupt */
++	desc->sg[num_sgs - 1].hw->flags = AXI_DMAC_HW_FLAG_LAST | AXI_DMAC_HW_FLAG_IRQ;
++
  	return desc;
  }
  
-+static void axi_dmac_free_desc(struct axi_dmac_desc *desc)
-+{
-+	struct axi_dmac *dmac = chan_to_axi_dmac(desc->chan);
-+	struct device *dev = dmac->dma_dev.dev;
-+	struct axi_dmac_hw_desc *hw = desc->sg[0].hw;
-+	dma_addr_t hw_phys = desc->sg[0].hw_phys;
+@@ -753,6 +796,9 @@ static bool axi_dmac_regmap_rdwr(struct device *dev, unsigned int reg)
+ 	case AXI_DMAC_REG_CURRENT_DEST_ADDR:
+ 	case AXI_DMAC_REG_PARTIAL_XFER_LEN:
+ 	case AXI_DMAC_REG_PARTIAL_XFER_ID:
++	case AXI_DMAC_REG_CURRENT_SG_ID:
++	case AXI_DMAC_REG_SG_ADDRESS:
++	case AXI_DMAC_REG_SG_ADDRESS_HIGH:
+ 		return true;
+ 	default:
+ 		return false;
+@@ -905,6 +951,10 @@ static int axi_dmac_detect_caps(struct axi_dmac *dmac, unsigned int version)
+ 	if (axi_dmac_read(dmac, AXI_DMAC_REG_FLAGS) == AXI_DMAC_FLAG_CYCLIC)
+ 		chan->hw_cyclic = true;
+ 
++	axi_dmac_write(dmac, AXI_DMAC_REG_SG_ADDRESS, 0xffffffff);
++	if (axi_dmac_read(dmac, AXI_DMAC_REG_SG_ADDRESS))
++		chan->hw_sg = true;
 +
-+	dma_free_coherent(dev, PAGE_ALIGN(desc->num_sgs * sizeof(*hw)),
-+			  hw, hw_phys);
-+	kfree(desc);
-+}
-+
- static struct axi_dmac_sg *axi_dmac_fill_linear_sg(struct axi_dmac_chan *chan,
- 	enum dma_transfer_direction direction, dma_addr_t addr,
- 	unsigned int num_periods, unsigned int period_len,
-@@ -510,21 +551,22 @@ static struct axi_dmac_sg *axi_dmac_fill_linear_sg(struct axi_dmac_chan *chan,
- 	for (i = 0; i < num_periods; i++) {
- 		for (len = period_len; len > segment_size; sg++) {
- 			if (direction == DMA_DEV_TO_MEM)
--				sg->dest_addr = addr;
-+				sg->hw->dest_addr = addr;
- 			else
--				sg->src_addr = addr;
--			sg->x_len = segment_size;
--			sg->y_len = 1;
-+				sg->hw->src_addr = addr;
-+			sg->hw->x_len = segment_size - 1;
-+			sg->hw->y_len = 0;
-+			sg->hw->flags = 0;
- 			addr += segment_size;
- 			len -= segment_size;
- 		}
+ 	axi_dmac_write(dmac, AXI_DMAC_REG_Y_LENGTH, 1);
+ 	if (axi_dmac_read(dmac, AXI_DMAC_REG_Y_LENGTH) == 1)
+ 		chan->hw_2d = true;
+@@ -1005,6 +1055,7 @@ static int axi_dmac_probe(struct platform_device *pdev)
+ 	dma_dev->dst_addr_widths = BIT(dmac->chan.dest_width);
+ 	dma_dev->directions = BIT(dmac->chan.direction);
+ 	dma_dev->residue_granularity = DMA_RESIDUE_GRANULARITY_DESCRIPTOR;
++	dma_dev->max_sg_burst = 31; /* 31 SGs maximum in one burst */
+ 	INIT_LIST_HEAD(&dma_dev->channels);
  
- 		if (direction == DMA_DEV_TO_MEM)
--			sg->dest_addr = addr;
-+			sg->hw->dest_addr = addr;
- 		else
--			sg->src_addr = addr;
--		sg->x_len = len;
--		sg->y_len = 1;
-+			sg->hw->src_addr = addr;
-+		sg->hw->x_len = len - 1;
-+		sg->hw->y_len = 0;
- 		sg++;
- 		addr += len;
- 	}
-@@ -551,7 +593,7 @@ static struct dma_async_tx_descriptor *axi_dmac_prep_slave_sg(
- 	for_each_sg(sgl, sg, sg_len, i)
- 		num_sgs += DIV_ROUND_UP(sg_dma_len(sg), chan->max_length);
- 
--	desc = axi_dmac_alloc_desc(num_sgs);
-+	desc = axi_dmac_alloc_desc(chan, num_sgs);
- 	if (!desc)
- 		return NULL;
- 
-@@ -560,7 +602,7 @@ static struct dma_async_tx_descriptor *axi_dmac_prep_slave_sg(
- 	for_each_sg(sgl, sg, sg_len, i) {
- 		if (!axi_dmac_check_addr(chan, sg_dma_address(sg)) ||
- 		    !axi_dmac_check_len(chan, sg_dma_len(sg))) {
--			kfree(desc);
-+			axi_dmac_free_desc(desc);
- 			return NULL;
- 		}
- 
-@@ -595,7 +637,7 @@ static struct dma_async_tx_descriptor *axi_dmac_prep_dma_cyclic(
- 	num_periods = buf_len / period_len;
- 	num_segments = DIV_ROUND_UP(period_len, chan->max_length);
- 
--	desc = axi_dmac_alloc_desc(num_periods * num_segments);
-+	desc = axi_dmac_alloc_desc(chan, num_periods * num_segments);
- 	if (!desc)
- 		return NULL;
- 
-@@ -650,26 +692,26 @@ static struct dma_async_tx_descriptor *axi_dmac_prep_interleaved(
- 			return NULL;
- 	}
- 
--	desc = axi_dmac_alloc_desc(1);
-+	desc = axi_dmac_alloc_desc(chan, 1);
- 	if (!desc)
- 		return NULL;
- 
- 	if (axi_dmac_src_is_mem(chan)) {
--		desc->sg[0].src_addr = xt->src_start;
--		desc->sg[0].src_stride = xt->sgl[0].size + src_icg;
-+		desc->sg[0].hw->src_addr = xt->src_start;
-+		desc->sg[0].hw->src_stride = xt->sgl[0].size + src_icg;
- 	}
- 
- 	if (axi_dmac_dest_is_mem(chan)) {
--		desc->sg[0].dest_addr = xt->dst_start;
--		desc->sg[0].dest_stride = xt->sgl[0].size + dst_icg;
-+		desc->sg[0].hw->dest_addr = xt->dst_start;
-+		desc->sg[0].hw->dst_stride = xt->sgl[0].size + dst_icg;
- 	}
- 
- 	if (chan->hw_2d) {
--		desc->sg[0].x_len = xt->sgl[0].size;
--		desc->sg[0].y_len = xt->numf;
-+		desc->sg[0].hw->x_len = xt->sgl[0].size - 1;
-+		desc->sg[0].hw->y_len = xt->numf - 1;
- 	} else {
--		desc->sg[0].x_len = xt->sgl[0].size * xt->numf;
--		desc->sg[0].y_len = 1;
-+		desc->sg[0].hw->x_len = xt->sgl[0].size * xt->numf - 1;
-+		desc->sg[0].hw->y_len = 0;
- 	}
- 
- 	if (flags & DMA_CYCLIC)
-@@ -685,7 +727,7 @@ static void axi_dmac_free_chan_resources(struct dma_chan *c)
- 
- static void axi_dmac_desc_free(struct virt_dma_desc *vdesc)
- {
--	kfree(container_of(vdesc, struct axi_dmac_desc, vdesc));
-+	axi_dmac_free_desc(to_axi_dmac_desc(vdesc));
- }
- 
- static bool axi_dmac_regmap_rdwr(struct device *dev, unsigned int reg)
+ 	dmac->chan.vchan.desc_free = axi_dmac_desc_free;
 -- 
 2.42.0
 

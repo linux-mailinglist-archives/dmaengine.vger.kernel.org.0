@@ -1,60 +1,60 @@
-Return-Path: <dmaengine+bounces-553-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-554-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DCC3E816677
-	for <lists+dmaengine@lfdr.de>; Mon, 18 Dec 2023 07:27:29 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 72D18816679
+	for <lists+dmaengine@lfdr.de>; Mon, 18 Dec 2023 07:27:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9462C2825FF
-	for <lists+dmaengine@lfdr.de>; Mon, 18 Dec 2023 06:27:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 97D101C221F5
+	for <lists+dmaengine@lfdr.de>; Mon, 18 Dec 2023 06:27:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E33CC79EF;
-	Mon, 18 Dec 2023 06:26:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13E4ACA4D;
+	Mon, 18 Dec 2023 06:27:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EQ0q1FQb"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wQwNOS9r"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48B637464;
-	Mon, 18 Dec 2023 06:26:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 637608470;
+	Mon, 18 Dec 2023 06:27:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 3BI6QpG0121895;
-	Mon, 18 Dec 2023 00:26:51 -0600
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 3BI6Qs8n121907;
+	Mon, 18 Dec 2023 00:26:54 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1702880811;
-	bh=xX67062yd24mxHA9UldMnhvbksslocwl/qQK5mCsL90=;
+	s=ti-com-17Q1; t=1702880814;
+	bh=hvyAogCDuF0aiWDT6fef8PtsOTs666fOdyAhOsf1BYY=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=EQ0q1FQby2dGxL3FeLkzcQRZBAhcuoEXrBWENFEvYO5rstwMSV6eg+TziASuvnExH
-	 l5JvDMG5Vscp6bo9c+WVuoLmkapGa6dNQmuZDyBOUUmuu94QzCdml5+FECWZxj0GG7
-	 IHLM8kK9lj41MKNDEeUum/QKj87w5WgSmpNqJ4Rw=
+	b=wQwNOS9rLCkPxthqp/9ZBvb7/EzEQlm/jFSxPyKIuyg/Tw81BOe57zfyHmJO8GjSz
+	 +W+EYiOwI1vab0ts+3cHCr1v5sbv3mEB5SxvAK5rTN4w0gE6MCVcb6AaFJiM+Japxr
+	 kMS0NvHMUnuVnC0+lwtFlT+/comas20lJPsl22zo=
 Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 3BI6QptJ066524
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 3BI6Qs3h009127
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 18 Dec 2023 00:26:51 -0600
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE114.ent.ti.com
+	Mon, 18 Dec 2023 00:26:54 -0600
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE114.ent.ti.com
  (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 18
- Dec 2023 00:26:51 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ Dec 2023 00:26:54 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 18 Dec 2023 00:26:51 -0600
+ Frontend Transport; Mon, 18 Dec 2023 00:26:54 -0600
 Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 3BI6QebI063306;
-	Mon, 18 Dec 2023 00:26:49 -0600
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 3BI6QebJ063306;
+	Mon, 18 Dec 2023 00:26:51 -0600
 From: Siddharth Vadapalli <s-vadapalli@ti.com>
 To: <peter.ujfalusi@gmail.com>, <vkoul@kernel.org>
 CC: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
         <vigneshr@ti.com>, <s-vadapalli@ti.com>
-Subject: [PATCH v3 3/4] dmaengine: ti: k3-udma-glue: Add function to request TX chan for thread ID
-Date: Mon, 18 Dec 2023 11:56:39 +0530
-Message-ID: <20231218062640.2338453-4-s-vadapalli@ti.com>
+Subject: [PATCH v3 4/4] dmaengine: ti: k3-udma-glue: Add function to request RX chan for thread ID
+Date: Mon, 18 Dec 2023 11:56:40 +0530
+Message-ID: <20231218062640.2338453-5-s-vadapalli@ti.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231218062640.2338453-1-s-vadapalli@ti.com>
 References: <20231218062640.2338453-1-s-vadapalli@ti.com>
@@ -68,216 +68,234 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-The existing function k3_udma_glue_request_tx_chn() supports requesting
-a TX DMA channel by its name. Add a new function to request TX DMA channel
-for a given thread ID, named k3_udma_glue_request_tx_chn_for_thread_id().
+The existing function k3_udma_glue_request_remote_rx_chn() supports
+requesting an RX DMA channel and flow by the name of the RX DMA channel.
+Add support to request RX DMA channel for a given thread ID in the form of
+a new function named k3_udma_glue_request_remote_rx_chn_for_thread_id().
 Also, export it for use by drivers which are probed by alternate methods
 (non device-tree) but still wish to make use of the existing DMA APIs. Such
-drivers could be informed about the thread ID corresponding to the TX DMA
+drivers could be informed about the thread ID corresponding to the RX DMA
 channel by RPMsg for example.
 
-Since the new function k3_udma_glue_request_tx_chn_for_thread_id() reuses
-most of the code in k3_udma_glue_request_tx_chn(), create a new function
-for the common code, named k3_udma_glue_request_tx_chn_common().
+Since the new function k3_udma_glue_request_remote_rx_chn_for_thread_id()
+reuses most of the code in k3_udma_glue_request_remote_rx_chn(), create a
+new function named k3_udma_glue_request_remote_rx_chn_common() for the
+common code.
 
 Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
 ---
 Changes since v2:
-- Renamed function "k3_udma_glue_request_tx_chn_by_id()" to
-  "k3_udma_glue_request_tx_chn_for_thread_id()".
+- Renamed function "k3_udma_glue_request_remote_rx_chn_by_id()" to
+  "k3_udma_glue_request_remote_rx_chn_for_thread_id()".
 - Updated commit message to reflect function renaming.
 
 Changes since v1:
 - Updated commit message indicating the use-case for which the patch is
   being added.
 
- drivers/dma/ti/k3-udma-glue.c    | 102 +++++++++++++++++++++++--------
+ drivers/dma/ti/k3-udma-glue.c    | 137 ++++++++++++++++++++++---------
  include/linux/dma/k3-udma-glue.h |   5 ++
- 2 files changed, 81 insertions(+), 26 deletions(-)
+ 2 files changed, 103 insertions(+), 39 deletions(-)
 
 diff --git a/drivers/dma/ti/k3-udma-glue.c b/drivers/dma/ti/k3-udma-glue.c
-index eff1ae3d3efe..a475bbea35ee 100644
+index a475bbea35ee..c9b93055dc9d 100644
 --- a/drivers/dma/ti/k3-udma-glue.c
 +++ b/drivers/dma/ti/k3-udma-glue.c
-@@ -274,29 +274,13 @@ static int k3_udma_glue_cfg_tx_chn(struct k3_udma_glue_tx_channel *tx_chn)
- 	return tisci_rm->tisci_udmap_ops->tx_ch_cfg(tisci_rm->tisci, &req);
+@@ -1073,52 +1073,21 @@ k3_udma_glue_request_rx_chn_priv(struct device *dev, const char *name,
+ 	return ERR_PTR(ret);
  }
  
--struct k3_udma_glue_tx_channel *k3_udma_glue_request_tx_chn(struct device *dev,
--		const char *name, struct k3_udma_glue_tx_channel_cfg *cfg)
+-static struct k3_udma_glue_rx_channel *
+-k3_udma_glue_request_remote_rx_chn(struct device *dev, const char *name,
+-				   struct k3_udma_glue_rx_channel_cfg *cfg)
 +static int
-+k3_udma_glue_request_tx_chn_common(struct device *dev,
-+				   struct k3_udma_glue_tx_channel *tx_chn,
-+				   struct k3_udma_glue_tx_channel_cfg *cfg)
++k3_udma_glue_request_remote_rx_chn_common(struct k3_udma_glue_rx_channel *rx_chn,
++					  struct k3_udma_glue_rx_channel_cfg *cfg,
++					  struct device *dev)
  {
--	struct k3_udma_glue_tx_channel *tx_chn;
- 	int ret;
+-	struct k3_udma_glue_rx_channel *rx_chn;
+ 	int ret, i;
  
--	tx_chn = devm_kzalloc(dev, sizeof(*tx_chn), GFP_KERNEL);
--	if (!tx_chn)
+-	if (cfg->flow_id_num <= 0 ||
+-	    cfg->flow_id_use_rxchan_id ||
+-	    cfg->def_flow_cfg ||
+-	    cfg->flow_id_base < 0)
+-		return ERR_PTR(-EINVAL);
+-
+-	/*
+-	 * Remote RX channel is under control of Remote CPU core, so
+-	 * Linux can only request and manipulate by dedicated RX flows
+-	 */
+-
+-	rx_chn = devm_kzalloc(dev, sizeof(*rx_chn), GFP_KERNEL);
+-	if (!rx_chn)
 -		return ERR_PTR(-ENOMEM);
 -
--	tx_chn->common.dev = dev;
--	tx_chn->common.swdata_size = cfg->swdata_size;
--	tx_chn->tx_pause_on_err = cfg->tx_pause_on_err;
--	tx_chn->tx_filt_einfo = cfg->tx_filt_einfo;
--	tx_chn->tx_filt_pswords = cfg->tx_filt_pswords;
--	tx_chn->tx_supr_tdpkt = cfg->tx_supr_tdpkt;
+-	rx_chn->common.dev = dev;
+-	rx_chn->common.swdata_size = cfg->swdata_size;
+-	rx_chn->remote = true;
+-	rx_chn->udma_rchan_id = -1;
+-	rx_chn->flow_num = cfg->flow_id_num;
+-	rx_chn->flow_id_base = cfg->flow_id_base;
+-	rx_chn->psil_paired = false;
 -
 -	/* parse of udmap channel */
 -	ret = of_k3_udma_glue_parse_chn(dev->of_node, name,
--					&tx_chn->common, true);
+-					&rx_chn->common, false);
 -	if (ret)
 -		goto err;
 -
- 	tx_chn->common.hdesc_size = cppi5_hdesc_calc_size(tx_chn->common.epib,
- 						tx_chn->common.psdata_size,
- 						tx_chn->common.swdata_size);
-@@ -312,7 +296,7 @@ struct k3_udma_glue_tx_channel *k3_udma_glue_request_tx_chn(struct device *dev,
- 	if (IS_ERR(tx_chn->udma_tchanx)) {
- 		ret = PTR_ERR(tx_chn->udma_tchanx);
- 		dev_err(dev, "UDMAX tchanx get err %d\n", ret);
--		goto err;
-+		return ret;
- 	}
- 	tx_chn->udma_tchan_id = xudma_tchan_get_id(tx_chn->udma_tchanx);
+ 	rx_chn->common.hdesc_size = cppi5_hdesc_calc_size(rx_chn->common.epib,
+ 						rx_chn->common.psdata_size,
+ 						rx_chn->common.swdata_size);
  
-@@ -325,7 +309,7 @@ struct k3_udma_glue_tx_channel *k3_udma_glue_request_tx_chn(struct device *dev,
+ 	rx_chn->flows = devm_kcalloc(dev, rx_chn->flow_num,
+ 				     sizeof(*rx_chn->flows), GFP_KERNEL);
+-	if (!rx_chn->flows) {
+-		ret = -ENOMEM;
+-		goto err;
+-	}
++	if (!rx_chn->flows)
++		return -ENOMEM;
+ 
+ 	rx_chn->common.chan_dev.class = &k3_udma_glue_devclass;
+ 	rx_chn->common.chan_dev.parent = xudma_get_device(rx_chn->common.udmax);
+@@ -1129,7 +1098,7 @@ k3_udma_glue_request_remote_rx_chn(struct device *dev, const char *name,
  		dev_err(dev, "Channel Device registration failed %d\n", ret);
- 		put_device(&tx_chn->common.chan_dev);
- 		tx_chn->common.chan_dev.parent = NULL;
+ 		put_device(&rx_chn->common.chan_dev);
+ 		rx_chn->common.chan_dev.parent = NULL;
 -		goto err;
 +		return ret;
  	}
  
- 	if (xudma_is_pktdma(tx_chn->common.udmax)) {
-@@ -349,7 +333,7 @@ struct k3_udma_glue_tx_channel *k3_udma_glue_request_tx_chn(struct device *dev,
- 					     &tx_chn->ringtxcq);
- 	if (ret) {
- 		dev_err(dev, "Failed to get TX/TXCQ rings %d\n", ret);
+ 	if (xudma_is_pktdma(rx_chn->common.udmax)) {
+@@ -1141,19 +1110,109 @@ k3_udma_glue_request_remote_rx_chn(struct device *dev, const char *name,
+ 
+ 	ret = k3_udma_glue_allocate_rx_flows(rx_chn, cfg);
+ 	if (ret)
 -		goto err;
 +		return ret;
- 	}
  
- 	/* Set the dma_dev for the rings to be configured */
-@@ -365,13 +349,13 @@ struct k3_udma_glue_tx_channel *k3_udma_glue_request_tx_chn(struct device *dev,
- 	ret = k3_ringacc_ring_cfg(tx_chn->ringtx, &cfg->tx_cfg);
- 	if (ret) {
- 		dev_err(dev, "Failed to cfg ringtx %d\n", ret);
--		goto err;
-+		return ret;
- 	}
+ 	for (i = 0; i < rx_chn->flow_num; i++)
+ 		rx_chn->flows[i].udma_rflow_id = rx_chn->flow_id_base + i;
  
- 	ret = k3_ringacc_ring_cfg(tx_chn->ringtxcq, &cfg->txcq_cfg);
- 	if (ret) {
- 		dev_err(dev, "Failed to cfg ringtx %d\n", ret);
--		goto err;
-+		return ret;
- 	}
- 
- 	/* request and cfg psi-l */
-@@ -382,11 +366,42 @@ struct k3_udma_glue_tx_channel *k3_udma_glue_request_tx_chn(struct device *dev,
- 	ret = k3_udma_glue_cfg_tx_chn(tx_chn);
- 	if (ret) {
- 		dev_err(dev, "Failed to cfg tchan %d\n", ret);
--		goto err;
-+		return ret;
- 	}
- 
- 	k3_udma_glue_dump_tx_chn(tx_chn);
+ 	k3_udma_glue_dump_rx_chn(rx_chn);
  
 +	return 0;
 +}
 +
-+struct k3_udma_glue_tx_channel *
-+k3_udma_glue_request_tx_chn(struct device *dev, const char *name,
-+			    struct k3_udma_glue_tx_channel_cfg *cfg)
++static struct k3_udma_glue_rx_channel *
++k3_udma_glue_request_remote_rx_chn(struct device *dev, const char *name,
++				   struct k3_udma_glue_rx_channel_cfg *cfg)
 +{
-+	struct k3_udma_glue_tx_channel *tx_chn;
++	struct k3_udma_glue_rx_channel *rx_chn;
 +	int ret;
 +
-+	tx_chn = devm_kzalloc(dev, sizeof(*tx_chn), GFP_KERNEL);
-+	if (!tx_chn)
++	if (cfg->flow_id_num <= 0 ||
++	    cfg->flow_id_use_rxchan_id ||
++	    cfg->def_flow_cfg ||
++	    cfg->flow_id_base < 0)
++		return ERR_PTR(-EINVAL);
++
++	/*
++	 * Remote RX channel is under control of Remote CPU core, so
++	 * Linux can only request and manipulate by dedicated RX flows
++	 */
++
++	rx_chn = devm_kzalloc(dev, sizeof(*rx_chn), GFP_KERNEL);
++	if (!rx_chn)
 +		return ERR_PTR(-ENOMEM);
 +
-+	tx_chn->common.dev = dev;
-+	tx_chn->common.swdata_size = cfg->swdata_size;
-+	tx_chn->tx_pause_on_err = cfg->tx_pause_on_err;
-+	tx_chn->tx_filt_einfo = cfg->tx_filt_einfo;
-+	tx_chn->tx_filt_pswords = cfg->tx_filt_pswords;
-+	tx_chn->tx_supr_tdpkt = cfg->tx_supr_tdpkt;
++	rx_chn->common.dev = dev;
++	rx_chn->common.swdata_size = cfg->swdata_size;
++	rx_chn->remote = true;
++	rx_chn->udma_rchan_id = -1;
++	rx_chn->flow_num = cfg->flow_id_num;
++	rx_chn->flow_id_base = cfg->flow_id_base;
++	rx_chn->psil_paired = false;
 +
 +	/* parse of udmap channel */
 +	ret = of_k3_udma_glue_parse_chn(dev->of_node, name,
-+					&tx_chn->common, true);
++					&rx_chn->common, false);
 +	if (ret)
 +		goto err;
 +
-+	ret = k3_udma_glue_request_tx_chn_common(dev, tx_chn, cfg);
++	ret = k3_udma_glue_request_remote_rx_chn_common(rx_chn, cfg, dev);
 +	if (ret)
 +		goto err;
 +
- 	return tx_chn;
- 
- err:
-@@ -395,6 +410,41 @@ struct k3_udma_glue_tx_channel *k3_udma_glue_request_tx_chn(struct device *dev,
- }
- EXPORT_SYMBOL_GPL(k3_udma_glue_request_tx_chn);
- 
-+struct k3_udma_glue_tx_channel *
-+k3_udma_glue_request_tx_chn_for_thread_id(struct device *dev,
-+					  struct k3_udma_glue_tx_channel_cfg *cfg,
-+					  struct device_node *udmax_np, u32 thread_id)
-+{
-+	struct k3_udma_glue_tx_channel *tx_chn;
-+	int ret;
-+
-+	tx_chn = devm_kzalloc(dev, sizeof(*tx_chn), GFP_KERNEL);
-+	if (!tx_chn)
-+		return ERR_PTR(-ENOMEM);
-+
-+	tx_chn->common.dev = dev;
-+	tx_chn->common.swdata_size = cfg->swdata_size;
-+	tx_chn->tx_pause_on_err = cfg->tx_pause_on_err;
-+	tx_chn->tx_filt_einfo = cfg->tx_filt_einfo;
-+	tx_chn->tx_filt_pswords = cfg->tx_filt_pswords;
-+	tx_chn->tx_supr_tdpkt = cfg->tx_supr_tdpkt;
-+
-+	ret = of_k3_udma_glue_parse_chn_by_id(udmax_np, &tx_chn->common, true, thread_id);
-+	if (ret)
-+		goto err;
-+
-+	ret = k3_udma_glue_request_tx_chn_common(dev, tx_chn, cfg);
-+	if (ret)
-+		goto err;
-+
-+	return tx_chn;
++	return rx_chn;
 +
 +err:
-+	k3_udma_glue_release_tx_chn(tx_chn);
++	k3_udma_glue_release_rx_chn(rx_chn);
 +	return ERR_PTR(ret);
 +}
-+EXPORT_SYMBOL_GPL(k3_udma_glue_request_tx_chn_for_thread_id);
 +
- void k3_udma_glue_release_tx_chn(struct k3_udma_glue_tx_channel *tx_chn)
- {
- 	if (tx_chn->psil_paired) {
++struct k3_udma_glue_rx_channel *
++k3_udma_glue_request_remote_rx_chn_for_thread_id(struct device *dev,
++						 struct k3_udma_glue_rx_channel_cfg *cfg,
++						 struct device_node *udmax_np, u32 thread_id)
++{
++	struct k3_udma_glue_rx_channel *rx_chn;
++	int ret;
++
++	if (cfg->flow_id_num <= 0 ||
++	    cfg->flow_id_use_rxchan_id ||
++	    cfg->def_flow_cfg ||
++	    cfg->flow_id_base < 0)
++		return ERR_PTR(-EINVAL);
++
++	/*
++	 * Remote RX channel is under control of Remote CPU core, so
++	 * Linux can only request and manipulate by dedicated RX flows
++	 */
++
++	rx_chn = devm_kzalloc(dev, sizeof(*rx_chn), GFP_KERNEL);
++	if (!rx_chn)
++		return ERR_PTR(-ENOMEM);
++
++	rx_chn->common.dev = dev;
++	rx_chn->common.swdata_size = cfg->swdata_size;
++	rx_chn->remote = true;
++	rx_chn->udma_rchan_id = -1;
++	rx_chn->flow_num = cfg->flow_id_num;
++	rx_chn->flow_id_base = cfg->flow_id_base;
++	rx_chn->psil_paired = false;
++
++	ret = of_k3_udma_glue_parse_chn_by_id(udmax_np, &rx_chn->common, false, thread_id);
++	if (ret)
++		goto err;
++
++	ret = k3_udma_glue_request_remote_rx_chn_common(rx_chn, cfg, dev);
++	if (ret)
++		goto err;
++
+ 	return rx_chn;
+ 
+ err:
+ 	k3_udma_glue_release_rx_chn(rx_chn);
+ 	return ERR_PTR(ret);
+ }
++EXPORT_SYMBOL_GPL(k3_udma_glue_request_remote_rx_chn_for_thread_id);
+ 
+ struct k3_udma_glue_rx_channel *
+ k3_udma_glue_request_rx_chn(struct device *dev, const char *name,
 diff --git a/include/linux/dma/k3-udma-glue.h b/include/linux/dma/k3-udma-glue.h
-index e443be4d3b4b..c81386ceb1c1 100644
+index c81386ceb1c1..1e491c5dcac2 100644
 --- a/include/linux/dma/k3-udma-glue.h
 +++ b/include/linux/dma/k3-udma-glue.h
-@@ -26,6 +26,11 @@ struct k3_udma_glue_tx_channel;
- struct k3_udma_glue_tx_channel *k3_udma_glue_request_tx_chn(struct device *dev,
- 		const char *name, struct k3_udma_glue_tx_channel_cfg *cfg);
+@@ -114,6 +114,11 @@ struct k3_udma_glue_rx_channel *k3_udma_glue_request_rx_chn(
+ 		const char *name,
+ 		struct k3_udma_glue_rx_channel_cfg *cfg);
  
-+struct k3_udma_glue_tx_channel *
-+k3_udma_glue_request_tx_chn_for_thread_id(struct device *dev,
-+					  struct k3_udma_glue_tx_channel_cfg *cfg,
-+					  struct device_node *udmax_np, u32 thread_id);
++struct k3_udma_glue_rx_channel *
++k3_udma_glue_request_remote_rx_chn_for_thread_id(struct device *dev,
++						 struct k3_udma_glue_rx_channel_cfg *cfg,
++						 struct device_node *udmax_np, u32 thread_id);
 +
- void k3_udma_glue_release_tx_chn(struct k3_udma_glue_tx_channel *tx_chn);
- int k3_udma_glue_push_tx_chn(struct k3_udma_glue_tx_channel *tx_chn,
- 			     struct cppi5_host_desc_t *desc_tx,
+ void k3_udma_glue_release_rx_chn(struct k3_udma_glue_rx_channel *rx_chn);
+ int k3_udma_glue_enable_rx_chn(struct k3_udma_glue_rx_channel *rx_chn);
+ void k3_udma_glue_disable_rx_chn(struct k3_udma_glue_rx_channel *rx_chn);
 -- 
 2.34.1
 

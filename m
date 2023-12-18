@@ -1,302 +1,141 @@
-Return-Path: <dmaengine+bounces-554-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-564-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72D18816679
-	for <lists+dmaengine@lfdr.de>; Mon, 18 Dec 2023 07:27:42 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD760816D1F
+	for <lists+dmaengine@lfdr.de>; Mon, 18 Dec 2023 12:58:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 97D101C221F5
-	for <lists+dmaengine@lfdr.de>; Mon, 18 Dec 2023 06:27:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6CEF41F21054
+	for <lists+dmaengine@lfdr.de>; Mon, 18 Dec 2023 11:58:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13E4ACA4D;
-	Mon, 18 Dec 2023 06:27:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 959EE20333;
+	Mon, 18 Dec 2023 11:48:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wQwNOS9r"
+	dkim=temperror (0-bit key) header.d=alatek.krakow.pl header.i=@alatek.krakow.pl header.b="ND8zoMLw"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from helios.alatek.com.pl (helios.alatek.com.pl [85.14.123.227])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 637608470;
-	Mon, 18 Dec 2023 06:27:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 3BI6Qs8n121907;
-	Mon, 18 Dec 2023 00:26:54 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1702880814;
-	bh=hvyAogCDuF0aiWDT6fef8PtsOTs666fOdyAhOsf1BYY=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=wQwNOS9rLCkPxthqp/9ZBvb7/EzEQlm/jFSxPyKIuyg/Tw81BOe57zfyHmJO8GjSz
-	 +W+EYiOwI1vab0ts+3cHCr1v5sbv3mEB5SxvAK5rTN4w0gE6MCVcb6AaFJiM+Japxr
-	 kMS0NvHMUnuVnC0+lwtFlT+/comas20lJPsl22zo=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 3BI6Qs3h009127
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 18 Dec 2023 00:26:54 -0600
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 18
- Dec 2023 00:26:54 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 18 Dec 2023 00:26:54 -0600
-Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 3BI6QebJ063306;
-	Mon, 18 Dec 2023 00:26:51 -0600
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: <peter.ujfalusi@gmail.com>, <vkoul@kernel.org>
-CC: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
-        <vigneshr@ti.com>, <s-vadapalli@ti.com>
-Subject: [PATCH v3 4/4] dmaengine: ti: k3-udma-glue: Add function to request RX chan for thread ID
-Date: Mon, 18 Dec 2023 11:56:40 +0530
-Message-ID: <20231218062640.2338453-5-s-vadapalli@ti.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC1F2032C;
+	Mon, 18 Dec 2023 11:48:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alatek.krakow.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alatek.krakow.pl
+Received: from localhost (localhost [127.0.0.1])
+	by helios.alatek.com.pl (Postfix) with ESMTP id 1FD762D01867;
+	Mon, 18 Dec 2023 12:39:20 +0100 (CET)
+Received: from helios.alatek.com.pl ([127.0.0.1])
+ by localhost (helios.alatek.com.pl [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id gGqg9rPT4wgP; Mon, 18 Dec 2023 12:39:15 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by helios.alatek.com.pl (Postfix) with ESMTP id 9A9E52D01866;
+	Mon, 18 Dec 2023 12:39:15 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.10.3 helios.alatek.com.pl 9A9E52D01866
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alatek.krakow.pl;
+	s=99EE5E86-D06A-11EC-BE24-DBCCD0A148D3; t=1702899555;
+	bh=mXCs9y64eWuttsE1FX3hE40mVputIsPbWNfeVVkmAa0=;
+	h=From:To:Date:Message-Id:MIME-Version;
+	b=ND8zoMLwVg7nNq9XJv8geoSeRIuUgImoEICKkDj3RCiiZmULbzn5QHg1AIkbwEYoX
+	 mse8q4fJYmAVpDhUVoVXsSOXuMqHWahxRVvqALmAIjxPpnGF9E0HadhI6K0v6QdIi7
+	 vuQvVn9jB6j3UvncQpKip/SDF/M08uDoTkDEvGEYccKHauTEr3Z/rvrBaELMyzi7lF
+	 1ePYjxMpe+H0zFwaA8VNcFHu/x+4qtjtK9pjH6mWe91W66O6+BgD4iESDd5govgUAC
+	 zYxrZV/L2c70fnUrRJXc4hrsrfVmP+Pm1vE1MlrV/GtGyT+5RXnke0YoWBFNupTI8J
+	 qQuHM4RWrL9Eg==
+X-Virus-Scanned: amavis at alatek.com.pl
+Received: from helios.alatek.com.pl ([127.0.0.1])
+ by localhost (helios.alatek.com.pl [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id UApvNHih8UAM; Mon, 18 Dec 2023 12:39:15 +0100 (CET)
+Received: from ideapad.. (unknown [10.0.2.2])
+	by helios.alatek.com.pl (Postfix) with ESMTPSA id 4F0E32D01865;
+	Mon, 18 Dec 2023 12:39:15 +0100 (CET)
+From: Jan Kuliga <jankul@alatek.krakow.pl>
+To: lizhi.hou@amd.com,
+	brian.xu@amd.com,
+	raj.kumar.rampelli@amd.com,
+	vkoul@kernel.org,
+	michal.simek@amd.com,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	miquel.raynal@bootlin.com
+Cc: jankul@alatek.krakow.pl
+Subject: [PATCH v5 0/8] Miscellaneous xdma driver enhancements
+Date: Mon, 18 Dec 2023 12:39:04 +0100
+Message-Id: <20231218113904.9071-1-jankul@alatek.krakow.pl>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231218062640.2338453-1-s-vadapalli@ti.com>
-References: <20231218062640.2338453-1-s-vadapalli@ti.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: quoted-printable
 
-The existing function k3_udma_glue_request_remote_rx_chn() supports
-requesting an RX DMA channel and flow by the name of the RX DMA channel.
-Add support to request RX DMA channel for a given thread ID in the form of
-a new function named k3_udma_glue_request_remote_rx_chn_for_thread_id().
-Also, export it for use by drivers which are probed by alternate methods
-(non device-tree) but still wish to make use of the existing DMA APIs. Such
-drivers could be informed about the thread ID corresponding to the RX DMA
-channel by RPMsg for example.
+Hi,
 
-Since the new function k3_udma_glue_request_remote_rx_chn_for_thread_id()
-reuses most of the code in k3_udma_glue_request_remote_rx_chn(), create a
-new function named k3_udma_glue_request_remote_rx_chn_common() for the
-common code.
+This patchset introduces a couple of xdma driver enhancements. The most
+important change is the introduction of interleaved DMA transfers
+feature, which is a big deal, as it allows DMAEngine clients to express
+DMA transfers in an arbitrary way. This is extremely useful in FPGA
+environments, where in one FPGA system there may be a need to do DMA both
+to/from FIFO at a fixed address and to/from a (non)contiguous RAM.
 
-Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
----
-Changes since v2:
-- Renamed function "k3_udma_glue_request_remote_rx_chn_by_id()" to
-  "k3_udma_glue_request_remote_rx_chn_for_thread_id()".
-- Updated commit message to reflect function renaming.
+It is a another reroll of my previous patch series [1], but it is heavily
+modified one as it is based on Miquel's patchset [2]. We agreed on doing
+it that way, as both our patchsets touched the very same piece of code.
+The discussion took place under [2] thread.
+
+I tested it with XDMA v4.1 (Rev.20) IP core, with both sg and
+interleaved DMA transfers.
+
+Jan
 
 Changes since v1:
-- Updated commit message indicating the use-case for which the patch is
-  being added.
+[PATCH 1/5]:=20
+Complete a terminated descriptor with dma_cookie_complete()
+Don't reinitialize temporary list head in xdma_terminate_all()=20
+[PATCH 4/5]:
+Fix incorrect text wrapping
 
- drivers/dma/ti/k3-udma-glue.c    | 137 ++++++++++++++++++++++---------
- include/linux/dma/k3-udma-glue.h |   5 ++
- 2 files changed, 103 insertions(+), 39 deletions(-)
+Changes since v2:
+[PATCH 1/5]:
+DO NOT schedule callback from within xdma_terminate_all()
 
-diff --git a/drivers/dma/ti/k3-udma-glue.c b/drivers/dma/ti/k3-udma-glue.c
-index a475bbea35ee..c9b93055dc9d 100644
---- a/drivers/dma/ti/k3-udma-glue.c
-+++ b/drivers/dma/ti/k3-udma-glue.c
-@@ -1073,52 +1073,21 @@ k3_udma_glue_request_rx_chn_priv(struct device *dev, const char *name,
- 	return ERR_PTR(ret);
- }
- 
--static struct k3_udma_glue_rx_channel *
--k3_udma_glue_request_remote_rx_chn(struct device *dev, const char *name,
--				   struct k3_udma_glue_rx_channel_cfg *cfg)
-+static int
-+k3_udma_glue_request_remote_rx_chn_common(struct k3_udma_glue_rx_channel *rx_chn,
-+					  struct k3_udma_glue_rx_channel_cfg *cfg,
-+					  struct device *dev)
- {
--	struct k3_udma_glue_rx_channel *rx_chn;
- 	int ret, i;
- 
--	if (cfg->flow_id_num <= 0 ||
--	    cfg->flow_id_use_rxchan_id ||
--	    cfg->def_flow_cfg ||
--	    cfg->flow_id_base < 0)
--		return ERR_PTR(-EINVAL);
--
--	/*
--	 * Remote RX channel is under control of Remote CPU core, so
--	 * Linux can only request and manipulate by dedicated RX flows
--	 */
--
--	rx_chn = devm_kzalloc(dev, sizeof(*rx_chn), GFP_KERNEL);
--	if (!rx_chn)
--		return ERR_PTR(-ENOMEM);
--
--	rx_chn->common.dev = dev;
--	rx_chn->common.swdata_size = cfg->swdata_size;
--	rx_chn->remote = true;
--	rx_chn->udma_rchan_id = -1;
--	rx_chn->flow_num = cfg->flow_id_num;
--	rx_chn->flow_id_base = cfg->flow_id_base;
--	rx_chn->psil_paired = false;
--
--	/* parse of udmap channel */
--	ret = of_k3_udma_glue_parse_chn(dev->of_node, name,
--					&rx_chn->common, false);
--	if (ret)
--		goto err;
--
- 	rx_chn->common.hdesc_size = cppi5_hdesc_calc_size(rx_chn->common.epib,
- 						rx_chn->common.psdata_size,
- 						rx_chn->common.swdata_size);
- 
- 	rx_chn->flows = devm_kcalloc(dev, rx_chn->flow_num,
- 				     sizeof(*rx_chn->flows), GFP_KERNEL);
--	if (!rx_chn->flows) {
--		ret = -ENOMEM;
--		goto err;
--	}
-+	if (!rx_chn->flows)
-+		return -ENOMEM;
- 
- 	rx_chn->common.chan_dev.class = &k3_udma_glue_devclass;
- 	rx_chn->common.chan_dev.parent = xudma_get_device(rx_chn->common.udmax);
-@@ -1129,7 +1098,7 @@ k3_udma_glue_request_remote_rx_chn(struct device *dev, const char *name,
- 		dev_err(dev, "Channel Device registration failed %d\n", ret);
- 		put_device(&rx_chn->common.chan_dev);
- 		rx_chn->common.chan_dev.parent = NULL;
--		goto err;
-+		return ret;
- 	}
- 
- 	if (xudma_is_pktdma(rx_chn->common.udmax)) {
-@@ -1141,19 +1110,109 @@ k3_udma_glue_request_remote_rx_chn(struct device *dev, const char *name,
- 
- 	ret = k3_udma_glue_allocate_rx_flows(rx_chn, cfg);
- 	if (ret)
--		goto err;
-+		return ret;
- 
- 	for (i = 0; i < rx_chn->flow_num; i++)
- 		rx_chn->flows[i].udma_rflow_id = rx_chn->flow_id_base + i;
- 
- 	k3_udma_glue_dump_rx_chn(rx_chn);
- 
-+	return 0;
-+}
-+
-+static struct k3_udma_glue_rx_channel *
-+k3_udma_glue_request_remote_rx_chn(struct device *dev, const char *name,
-+				   struct k3_udma_glue_rx_channel_cfg *cfg)
-+{
-+	struct k3_udma_glue_rx_channel *rx_chn;
-+	int ret;
-+
-+	if (cfg->flow_id_num <= 0 ||
-+	    cfg->flow_id_use_rxchan_id ||
-+	    cfg->def_flow_cfg ||
-+	    cfg->flow_id_base < 0)
-+		return ERR_PTR(-EINVAL);
-+
-+	/*
-+	 * Remote RX channel is under control of Remote CPU core, so
-+	 * Linux can only request and manipulate by dedicated RX flows
-+	 */
-+
-+	rx_chn = devm_kzalloc(dev, sizeof(*rx_chn), GFP_KERNEL);
-+	if (!rx_chn)
-+		return ERR_PTR(-ENOMEM);
-+
-+	rx_chn->common.dev = dev;
-+	rx_chn->common.swdata_size = cfg->swdata_size;
-+	rx_chn->remote = true;
-+	rx_chn->udma_rchan_id = -1;
-+	rx_chn->flow_num = cfg->flow_id_num;
-+	rx_chn->flow_id_base = cfg->flow_id_base;
-+	rx_chn->psil_paired = false;
-+
-+	/* parse of udmap channel */
-+	ret = of_k3_udma_glue_parse_chn(dev->of_node, name,
-+					&rx_chn->common, false);
-+	if (ret)
-+		goto err;
-+
-+	ret = k3_udma_glue_request_remote_rx_chn_common(rx_chn, cfg, dev);
-+	if (ret)
-+		goto err;
-+
-+	return rx_chn;
-+
-+err:
-+	k3_udma_glue_release_rx_chn(rx_chn);
-+	return ERR_PTR(ret);
-+}
-+
-+struct k3_udma_glue_rx_channel *
-+k3_udma_glue_request_remote_rx_chn_for_thread_id(struct device *dev,
-+						 struct k3_udma_glue_rx_channel_cfg *cfg,
-+						 struct device_node *udmax_np, u32 thread_id)
-+{
-+	struct k3_udma_glue_rx_channel *rx_chn;
-+	int ret;
-+
-+	if (cfg->flow_id_num <= 0 ||
-+	    cfg->flow_id_use_rxchan_id ||
-+	    cfg->def_flow_cfg ||
-+	    cfg->flow_id_base < 0)
-+		return ERR_PTR(-EINVAL);
-+
-+	/*
-+	 * Remote RX channel is under control of Remote CPU core, so
-+	 * Linux can only request and manipulate by dedicated RX flows
-+	 */
-+
-+	rx_chn = devm_kzalloc(dev, sizeof(*rx_chn), GFP_KERNEL);
-+	if (!rx_chn)
-+		return ERR_PTR(-ENOMEM);
-+
-+	rx_chn->common.dev = dev;
-+	rx_chn->common.swdata_size = cfg->swdata_size;
-+	rx_chn->remote = true;
-+	rx_chn->udma_rchan_id = -1;
-+	rx_chn->flow_num = cfg->flow_id_num;
-+	rx_chn->flow_id_base = cfg->flow_id_base;
-+	rx_chn->psil_paired = false;
-+
-+	ret = of_k3_udma_glue_parse_chn_by_id(udmax_np, &rx_chn->common, false, thread_id);
-+	if (ret)
-+		goto err;
-+
-+	ret = k3_udma_glue_request_remote_rx_chn_common(rx_chn, cfg, dev);
-+	if (ret)
-+		goto err;
-+
- 	return rx_chn;
- 
- err:
- 	k3_udma_glue_release_rx_chn(rx_chn);
- 	return ERR_PTR(ret);
- }
-+EXPORT_SYMBOL_GPL(k3_udma_glue_request_remote_rx_chn_for_thread_id);
- 
- struct k3_udma_glue_rx_channel *
- k3_udma_glue_request_rx_chn(struct device *dev, const char *name,
-diff --git a/include/linux/dma/k3-udma-glue.h b/include/linux/dma/k3-udma-glue.h
-index c81386ceb1c1..1e491c5dcac2 100644
---- a/include/linux/dma/k3-udma-glue.h
-+++ b/include/linux/dma/k3-udma-glue.h
-@@ -114,6 +114,11 @@ struct k3_udma_glue_rx_channel *k3_udma_glue_request_rx_chn(
- 		const char *name,
- 		struct k3_udma_glue_rx_channel_cfg *cfg);
- 
-+struct k3_udma_glue_rx_channel *
-+k3_udma_glue_request_remote_rx_chn_for_thread_id(struct device *dev,
-+						 struct k3_udma_glue_rx_channel_cfg *cfg,
-+						 struct device_node *udmax_np, u32 thread_id);
-+
- void k3_udma_glue_release_rx_chn(struct k3_udma_glue_rx_channel *rx_chn);
- int k3_udma_glue_enable_rx_chn(struct k3_udma_glue_rx_channel *rx_chn);
- void k3_udma_glue_disable_rx_chn(struct k3_udma_glue_rx_channel *rx_chn);
--- 
+Changes since v3:
+Base patchset on Miquel's [2] series
+Reorganize commits` structure
+Introduce interleaved DMA transfers feature
+Implement transfer error reporting
+
+Changes since v4:
+Get rid of duplicated line of code
+Fix various coding style issues
+
+[1]:
+https://lore.kernel.org/dmaengine/20231124192524.134989-1-jankul@alatek.k=
+rakow.pl/T/#t
+
+[2]:
+https://lore.kernel.org/dmaengine/20231130111315.729430-1-miquel.raynal@b=
+ootlin.com/T/#t
+
+---
+Jan Kuliga (8):
+  dmaengine: xilinx: xdma: Get rid of unused code
+  dmaengine: xilinx: xdma: Add necessary macro definitions
+  dmaengine: xilinx: xdma: Ease dma_pool alignment requirements
+  dmaengine: xilinx: xdma: Rework xdma_terminate_all()
+  dmaengine: xilinx: xdma: Add error checking in xdma_channel_isr()
+  dmaengine: xilinx: xdma: Add transfer error reporting
+  dmaengine: xilinx: xdma: Prepare the introduction of interleaved DMA
+    transfers
+  dmaengine: xilinx: xdma: Implement interleaved DMA transfers
+
+ drivers/dma/xilinx/xdma-regs.h |  30 ++--
+ drivers/dma/xilinx/xdma.c      | 283 +++++++++++++++++++++++----------
+ 2 files changed, 210 insertions(+), 103 deletions(-)
+
+--=20
 2.34.1
 
 

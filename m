@@ -1,125 +1,150 @@
-Return-Path: <dmaengine+bounces-573-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-574-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67B258180F6
-	for <lists+dmaengine@lfdr.de>; Tue, 19 Dec 2023 06:21:57 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2967D818125
+	for <lists+dmaengine@lfdr.de>; Tue, 19 Dec 2023 06:51:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 165D32843A8
-	for <lists+dmaengine@lfdr.de>; Tue, 19 Dec 2023 05:21:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B05091F2215C
+	for <lists+dmaengine@lfdr.de>; Tue, 19 Dec 2023 05:51:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BFB2C144;
-	Tue, 19 Dec 2023 05:21:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33516C131;
+	Tue, 19 Dec 2023 05:50:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MgRza+71"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="cHEKPKrQ"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-oi1-f196.google.com (mail-oi1-f196.google.com [209.85.167.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A0D3C135;
-	Tue, 19 Dec 2023 05:21:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oi1-f196.google.com with SMTP id 5614622812f47-3bb53e20a43so1118644b6e.1;
-        Mon, 18 Dec 2023 21:21:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702963289; x=1703568089; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iXTjzEkw8OFrAh4CNOzzIVMOXEqR1EzYUmovt7erKHQ=;
-        b=MgRza+71i2NeRIu/XOvCGjjz9jjfDDfOch4D7r2+u0/GoL1A/sq3hyJoqN2jxy0fDK
-         CJSkATY/BoIBhQrLp7u88U0FljSyGkFGTHgWdeI4mUqJAzWUEuhMx6dgUFOJgidzKf3C
-         sENU86tZPgeKDFnGAC6NAbLlUATwpm0vd9A+ABi4oJo46zbPeA8HG3vQhxmkqy797+a4
-         IKPiP0K6I82RaF8EmQIaRr2PlSSCcH7AKPSoWrOzTfebZvusVLVDqtnokRXDno4WlNUl
-         cWiO4HDxYpXBKUA6LiUJ15l/icdiq9exvTg3iQIy1k/6DBT2Q/6rxGVYRYFRW8dL6BYT
-         Y53Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702963289; x=1703568089;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iXTjzEkw8OFrAh4CNOzzIVMOXEqR1EzYUmovt7erKHQ=;
-        b=ObdD+uGSfY17zJm9wz+HBaNez+Nt3x/mzzN2s6LUepARmmDGpMfqHc5TwUsLqPuEO0
-         njC1u9KbVW3zJaZWH02aJrCN9NkH1rTRtEDT/ZMRVft2EKUQGZSyM1e8X3AopokLaOL4
-         WwADa0zfwprJs3yOBV3EPeTcgmpgxGD1DQUuDC1uXH0+LajExfWbamh4/KvMmOXp4h+1
-         usmF5055s9GFi6Uf3McFlDZiuhTShhKIGVmyKNaMID4epw6U6S9SC0rD/JKnztoICPjk
-         VmnKzFihCgeDrt6Jq2uJaONSWVr65uqUabNjt/dEOAPm0h5uwgEtP/fwYYJGMK1u97+m
-         cE/Q==
-X-Gm-Message-State: AOJu0YwsVUXlhdWf1i6Ugiwub3Jq/GU/JuQFnUR2iaYEwLTw7B5d8J3g
-	8ivJk7JkbI35mn4boB24ZoNqduKp8wwizFUbmLM=
-X-Google-Smtp-Source: AGHT+IExu2UUTVW55XpIzN8CyfhNwIo39L53hSrC8lX1idTempJVLK4Fnu6r1i9cmpAA7/JCYHskXE+IMc6lmh0ds7I=
-X-Received: by 2002:a05:6808:3021:b0:3b8:5e9a:b2bd with SMTP id
- ay33-20020a056808302100b003b85e9ab2bdmr22236711oib.15.1702963289456; Mon, 18
- Dec 2023 21:21:29 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A81CCBE5A
+	for <dmaengine@vger.kernel.org>; Tue, 19 Dec 2023 05:50:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20231219055054epoutp021886e3d581b65a763adabaf97d8a527b~iJbHH712O1829018290epoutp02M
+	for <dmaengine@vger.kernel.org>; Tue, 19 Dec 2023 05:50:54 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20231219055054epoutp021886e3d581b65a763adabaf97d8a527b~iJbHH712O1829018290epoutp02M
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1702965054;
+	bh=vS1oP5iGRxlsDO6czYXHKxfOWISMU1maD1ga+U6KYqU=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=cHEKPKrQ9C24XsPzoFidZJNBEgHd2vwOdKCrsSVj6FiEr31szGAPiYxYAP4yqRhD1
+	 uQZe94lqrrgJrMM1cjHVVpBdJKZL9bpY2x9880k1TkV3oSvTce3CG5LCmoSSEt8p6k
+	 ZTKGW1Ykgme+T6nQfj1M4N/6QAxKn13mqr8Bs2Lk=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+	epcas2p4.samsung.com (KnoxPortal) with ESMTP id
+	20231219055054epcas2p41441ffa6ab7a24551330537018b50d57~iJbGsWXkM0806908069epcas2p4F;
+	Tue, 19 Dec 2023 05:50:54 +0000 (GMT)
+Received: from epsmgec2p1.samsung.com (unknown [182.195.36.92]) by
+	epsnrtp3.localdomain (Postfix) with ESMTP id 4SvQlx5VKxz4x9Q8; Tue, 19 Dec
+	2023 05:50:53 +0000 (GMT)
+Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
+	epsmgec2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	3C.7B.08648.D3F21856; Tue, 19 Dec 2023 14:50:53 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
+	20231219055052epcas2p4bb1d8210f650ab18370711db2194e8e3~iJbFLfEkC1416214162epcas2p4F;
+	Tue, 19 Dec 2023 05:50:52 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20231219055052epsmtrp2a009a5976b11e6c6760815ccee5f3fb4~iJbFK1D491965519655epsmtrp22;
+	Tue, 19 Dec 2023 05:50:52 +0000 (GMT)
+X-AuditID: b6c32a43-721fd700000021c8-eb-65812f3d3ed7
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	CF.B9.08755.C3F21856; Tue, 19 Dec 2023 14:50:52 +0900 (KST)
+Received: from localhost.localdomain (unknown [10.229.9.55]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20231219055052epsmtip2c7090de8b6f9c19b6b06dd8b455c5082~iJbE6muV52053220532epsmtip2K;
+	Tue, 19 Dec 2023 05:50:52 +0000 (GMT)
+From: Bumyong Lee <bumyong.lee@samsung.com>
+To: vkoul@kernel.org, p.zabel@pengutronix.de
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, Bumyong Lee
+	<bumyong.lee@samsung.com>
+Subject: [PATCH] dmaengine: pl330: issue_pending waits until WFP state
+Date: Tue, 19 Dec 2023 14:50:26 +0900
+Message-ID: <20231219055026.118695-1-bumyong.lee@samsung.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231102121623.31924-1-kaiwei.liu@unisoc.com> <ZWCg9hmfvexyn7xK@matsya>
- <CAOgAA6FzZ4q=rdmh8ySJRhojkGCgyV4PVjT6JAOUix+CF9PFtw@mail.gmail.com> <ZXb1RWaFWHVDx1wV@matsya>
-In-Reply-To: <ZXb1RWaFWHVDx1wV@matsya>
-From: liu kaiwei <liukaiwei086@gmail.com>
-Date: Tue, 19 Dec 2023 13:21:18 +0800
-Message-ID: <CAOgAA6FJrJ2kVg4hg3sAE_VAG8SyQ4UzKikU+Ofa=N2w0Q4Ghg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dmaengine: sprd: delete enable opreation in probe
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Kaiwei Liu <kaiwei.liu@unisoc.com>, Orson Zhai <orsonzhai@gmail.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Chunyan Zhang <zhang.lyra@gmail.com>, 
-	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Wenming Wu <wenming.wu@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrNKsWRmVeSWpSXmKPExsWy7bCmua6tfmOqwZO/WhZ7T1tYrJ76l9Xi
+	8q45bBZ3751gsdh55wSzA6vHplWdbB79fw08+rasYvT4vEkugCUq2yYjNTEltUghNS85PyUz
+	L91WyTs43jne1MzAUNfQ0sJcSSEvMTfVVsnFJ0DXLTMHaKuSQlliTilQKCCxuFhJ386mKL+0
+	JFUhI7+4xFYptSAlp8C8QK84Mbe4NC9dLy+1xMrQwMDIFKgwITvjzsM+1oLL7BU9b/8yNzCu
+	Y+ti5OSQEDCRWLd/DWMXIxeHkMAORom2KVfYIJxPjBIPrp5lhnC+MUr8/7seyOEAa9kxpR4i
+	vpdRYtO6iywQzkdGibNzzrKDzGUT0JZ4dWACK4gtIqAj8efqEbB9zAIpEn2z3rOA2MICbhKn
+	N01kBLFZBFQlHi9dCNbLK2Ar8ffHGaj75CUW71jODBEXlDg58wkLxBx5ieats5kharaxSxy6
+	bA9hu0j8XrGIEcIWlnh1fAs7hC0l8fndXqiZ+RIz59xggbBrJL7e+wcVt5dYdOYnO8iTzAKa
+	Eut36UP8qyxx5BbUVj6JjsN/2SHCvBIdbUIQpqpE0816iBnSEsvOzGCFsD0krv6/wQRiCwnE
+	Sly7sIx9AqP8LCSvzELyyiyEtQsYmVcxiqUWFOempyYbFRjCYzQ5P3cTIzjVaTnvYLwy/5/e
+	IUYmDsZDjBIczEoivC6L6lOFeFMSK6tSi/Lji0pzUosPMZoCA3cis5Rocj4w2eaVxBuaWBqY
+	mJkZmhuZGpgrifPea52bIiSQnliSmp2aWpBaBNPHxMEp1cB0SZpdcRFXxAaD9VznV/29+S/5
+	a4WzhcbvqrcbRefMrrq3O7BlYumml2WRm/9fD2E590Zp2cPViZMDa1akTedccebW5Qfa93er
+	Cf8Wm5VddG/uqq3FRfPrf0skfVcP6X7YG22ZxLCkV5X7nHI6R2/Sh2KlYP/vlRcfebc3GDy4
+	ypZpxXvMXd74h43p0gUOL79UWpVczZ8iY9t87M55q/Z565L+nv9Y9I2vv6LO4TT/a55tM8vX
+	cSj3TxZ84nnqg16avL7YQx1bj0+d09SutjkJ2WXusnmp6jBx941Yu8dxk8Umef3Oyw09GL3y
+	fi5TGVeI7RQnIXu9GKNLfXF73vx2Wvr0iq5gkhO3RIXqJzklluKMREMt5qLiRAAzfNuM/gMA
+	AA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprDLMWRmVeSWpSXmKPExsWy7bCSvK6NfmOqQctlUYu9py0sVk/9y2px
+	edccNou7906wWOy8c4LZgdVj06pONo/+vwYefVtWMXp83iQXwBLFZZOSmpNZllqkb5fAlXHn
+	YR9rwWX2ip63f5kbGNexdTFycEgImEjsmFLfxcjJISSwm1Fi5gUpEFtCQFriRes3VghbWOJ+
+	yxEgmwuo5j2jxOvrsxlBEmwC2hKvDkwAKxIR0JOYufoAM4jNLJAm8ejtQTYQW1jATeL0polg
+	9SwCqhKPly5kB7F5BWwl/v44wwaxQF5i8Y7lzBBxQYmTM5+wQMyRl2jeOpt5AiPfLCSpWUhS
+	CxiZVjFKphYU56bnFhsWGOallusVJ+YWl+al6yXn525iBAegluYOxu2rPugdYmTiYDzEKMHB
+	rCTC67KoPlWINyWxsiq1KD++qDQntfgQozQHi5I4r/iL3hQhgfTEktTs1NSC1CKYLBMHp1QD
+	U9HcRvU3zK7Tky6dO/p61SXzSfZnHqxiKlvBdjLCUjPX2Ou+7ceCo0crniZMzy+Jf7mE5zr7
+	fMVHGV3/y3hUlrPkXPd/7XJRZprC20IR9dULKn03S7YL+bL9OxqxNWtKk0fURZkXrauVz7+O
+	T092mf7zrFj10jWxMg3nxc+9/9WwSjmiXTrp9Gw/tidMzvpi6QmBdxdybsoWaY5esuVl0pw/
+	X/7ZHL7wtjKr9eLjI8/i2c9Oclnx6ZNCp/0thQJPEd4XE9gKjgWWnc/3n+7fuv+0QESg0qJ+
+	CZFWJ6kQ078P3c/o+NwWapi3v5lppo73CtGC4Dlzmp/wXTy1OKvVW+pa7BueRTxM0UzhHY3J
+	SizFGYmGWsxFxYkAQszlr68CAAA=
+X-CMS-MailID: 20231219055052epcas2p4bb1d8210f650ab18370711db2194e8e3
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20231219055052epcas2p4bb1d8210f650ab18370711db2194e8e3
+References: <CGME20231219055052epcas2p4bb1d8210f650ab18370711db2194e8e3@epcas2p4.samsung.com>
 
-On Mon, Dec 11, 2023 at 7:41=E2=80=AFPM Vinod Koul <vkoul@kernel.org> wrote=
-:
->
-> On 06-12-23, 17:32, liu kaiwei wrote:
-> > On Fri, Nov 24, 2023 at 9:11=E2=80=AFPM Vinod Koul <vkoul@kernel.org> w=
-rote:
-> > >
-> > > On 02-11-23, 20:16, Kaiwei Liu wrote:
-> > > > From: "kaiwei.liu" <kaiwei.liu@unisoc.com>
-> > >
-> > > Typo is subject line
-> > >
-> > > >
-> > > > In the probe of dma, it will allocate device memory and do some
-> > > > initalization settings. All operations are only at the software
-> > > > level and don't need the DMA hardware power on. It doesn't need
-> > > > to resume the device and set the device active as well. here
-> > > > delete unnecessary operation.
-> > >
-> > > Don't you need to read or write to the device? Without enable that wo=
-nt
-> > > work right?
-> > >
-> >
-> > Yes, it doesn't need to read or write to the device in the probe of DMA=
-.
-> > We will enable the DMA when allocating the DMA channel.
->
-> So you will probe even if device is not present! I think it makes sense
-> to access device registers in probe!
+According to DMA-330 errata notice[1] 71930, DMAKILL
+cannot clear internal signal, named pipeline_req_active.
+it makes that pl330 would wait forever in WFP state
+although dma already send dma request if pl330 gets
+dma request before entering WFP state.
 
-There is another reason why we delete enable/disable and not to access
-device in probe. The current driver is applicable to two DMA devices
-in different
-power domain. For some scenes, one of the domain is power off and when you
-probe,  enable the dma with the domain power off may cause crash.
+The errata suggests that polling until entering WFP state
+as workaround and then peripherals allows to issue dma request.
 
-For example, one case is for audio co-processor and DMA serves for it,
-DMA's power domain is off during initialization since audio is not used
-at that time, so we cannot read/write DMA's register for this kind of cases=
-.
+[1]: https://developer.arm.com/documentation/genc008428/latest
+Signed-off-by: Bumyong Lee <bumyong.lee@samsung.com>
+---
+ drivers/dma/pl330.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-@Baolin Wang
-Hi baolin=EF=BC=8Cwhat's your opinion?
+diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
+index 3cf0b38387ae..c29744bfdf2c 100644
+--- a/drivers/dma/pl330.c
++++ b/drivers/dma/pl330.c
+@@ -1053,6 +1053,9 @@ static bool _trigger(struct pl330_thread *thrd)
+ 
+ 	thrd->req_running = idx;
+ 
++	if (desc->rqtype == DMA_MEM_TO_DEV || desc->rqtype == DMA_DEV_TO_MEM)
++		UNTIL(thrd, PL330_STATE_WFP);
++
+ 	return true;
+ }
+ 
+-- 
+2.43.0
 
-> --
-> ~Vinod
 

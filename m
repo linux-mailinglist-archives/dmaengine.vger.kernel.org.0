@@ -1,48 +1,48 @@
-Return-Path: <dmaengine+bounces-614-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-615-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA0A481BBFE
-	for <lists+dmaengine@lfdr.de>; Thu, 21 Dec 2023 17:30:04 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0296F81BC01
+	for <lists+dmaengine@lfdr.de>; Thu, 21 Dec 2023 17:30:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 188071C22DDA
-	for <lists+dmaengine@lfdr.de>; Thu, 21 Dec 2023 16:30:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ABAEC1F2699B
+	for <lists+dmaengine@lfdr.de>; Thu, 21 Dec 2023 16:30:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6295D58212;
-	Thu, 21 Dec 2023 16:29:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B525059906;
+	Thu, 21 Dec 2023 16:30:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sYioqI4K"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WVEMAgwX"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 391FD5820C;
-	Thu, 21 Dec 2023 16:29:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3B5AC433C8;
-	Thu, 21 Dec 2023 16:29:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9382859902;
+	Thu, 21 Dec 2023 16:30:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 465E9C433C7;
+	Thu, 21 Dec 2023 16:29:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703176198;
-	bh=U3RUFSniU347sPhJd99D0lKyyS41ROfCrLn86vMGlC0=;
+	s=k20201202; t=1703176201;
+	bh=X0qSBvf7Mbhm4GVx+NgoSROHhDHP4ul/RH27a/ieHP8=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=sYioqI4KzjldEdIHKQoqLYPjSktXwI7SSauGnyN6LLrgN+u9/ypayE+DtHrI7GHNw
-	 nLeC9HB4Fo4yPNIc0NcjMT7QkV9TMcwdmb8oVS3AR6Neyq6vcYxtYhysIXAEiPRUp3
-	 PL2Ak7G0Dawk2bcwmPPa3n+aurZEkpB7Ryp3HcMcmI47UGW+3cEhncfhXTGk8SbMPv
-	 +nKcniO/vylvKMieP8+06payYeCi3nIQ/YKQndRFxcygThY0LZy33td9eyPpUW+9R+
-	 GAPF1WkviVnz7di6a7DjzURD1PubwYC9VLyu6+OG76O+ILVFVbJ/fVe80Dk9dQJAZP
-	 bmylyf3gaaOjw==
+	b=WVEMAgwXCgJyR2kjyQOg0mEcMxty6AQpfqaof6j2BxOy66KvhpWSqP9RMmVHbRaMc
+	 +C+ZcJsIAXS9SfPrQ22RFek286AZ9IjuC4skdhQ/ODgE0AcNsNCRvTrT77jzmnqy0V
+	 PZ8M4VC6RhXwO3iZZ5M6pdFSUxwYMVWc7o2WO0Q1tHcLKkOIncZgiAkJKNh7H6zjFU
+	 D7ULZHI0MHddCGhurzuLDWxWxzywqyJKevXKHCmj5Uur2SsvFt5wXR0x2eH4tbhhcY
+	 UfPGvO8XkY/T+7wYBs+sZlTJ5Lmrl5dEMyTFIiFHPxQCvSpGoEGSdaSB9DIn8tlw0K
+	 cJnpWzGK2g0BQ==
 From: Vinod Koul <vkoul@kernel.org>
-To: Fenghua Yu <fenghua.yu@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
- Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org, 
- dmaengine@vger.kernel.org
-In-Reply-To: <ac991f5f42112fa782a881d391d447529cbc4a23.1702967302.git.christophe.jaillet@wanadoo.fr>
-References: <ac991f5f42112fa782a881d391d447529cbc4a23.1702967302.git.christophe.jaillet@wanadoo.fr>
-Subject: Re: [PATCH v2] dmaengine: idxd: Remove usage of the deprecated
- ida_simple_xx() API
-Message-Id: <170317619628.683420.9023964494393917924.b4-ty@kernel.org>
-Date: Thu, 21 Dec 2023 21:59:56 +0530
+To: linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>
+Cc: kernel test robot <lkp@intel.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org
+In-Reply-To: <20231218060834.19222-1-rdunlap@infradead.org>
+References: <20231218060834.19222-1-rdunlap@infradead.org>
+Subject: Re: [PATCH] dmaengine: std_dma40: fix kernel-doc warnings and
+ spelling
+Message-Id: <170317619891.683420.428561244511510954.b4-ty@kernel.org>
+Date: Thu, 21 Dec 2023 21:59:58 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -54,21 +54,20 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.12.3
 
 
-On Tue, 19 Dec 2023 20:33:50 +0100, Christophe JAILLET wrote:
-> ida_alloc() and ida_free() should be preferred to the deprecated
-> ida_simple_get() and ida_simple_remove().
+On Sun, 17 Dec 2023 22:08:34 -0800, Randy Dunlap wrote:
+> Correct kernel-doc warnings as reported by kernel test robot:
 > 
-> This is less verbose.
+> ste_dma40.c:57: warning: Excess struct member 'dev_tx' description in 'stedma40_platform_data'
+> ste_dma40.c:57: warning: Excess struct member 'dev_rx' description in 'stedma40_platform_data'
 > 
-> Note that the upper limit of ida_simple_get() is exclusive, but the one of
-> ida_alloc_range() is inclusive. Sothis change allows one more device.
+> Correct spellos as reported by codespell.
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] dmaengine: idxd: Remove usage of the deprecated ida_simple_xx() API
-      commit: 1075ee66a8c19bfa375b19c236fd6a22a867f138
+[1/1] dmaengine: std_dma40: fix kernel-doc warnings and spelling
+      commit: 71a5197e2b872afeef8ade3099ffc4050466b542
 
 Best regards,
 -- 

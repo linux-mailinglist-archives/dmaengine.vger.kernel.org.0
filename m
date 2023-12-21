@@ -1,47 +1,46 @@
-Return-Path: <dmaengine+bounces-623-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-624-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0E2881BC15
-	for <lists+dmaengine@lfdr.de>; Thu, 21 Dec 2023 17:31:56 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 292DE81BC17
+	for <lists+dmaengine@lfdr.de>; Thu, 21 Dec 2023 17:32:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 430F2B22D16
-	for <lists+dmaengine@lfdr.de>; Thu, 21 Dec 2023 16:31:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B24FC1F26C8C
+	for <lists+dmaengine@lfdr.de>; Thu, 21 Dec 2023 16:32:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F03465821C;
-	Thu, 21 Dec 2023 16:30:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E2AC627FB;
+	Thu, 21 Dec 2023 16:30:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EmkEMka5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d0F3lHrS"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D074F58207;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 202035993F;
+	Thu, 21 Dec 2023 16:30:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F601C433C9;
 	Thu, 21 Dec 2023 16:30:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFF09C433C7;
-	Thu, 21 Dec 2023 16:30:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703176226;
-	bh=+5oiufljMRZTop1sokIuh1irSP8FrIYI3ZjuJb+rbx0=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=EmkEMka5PwRQt939P1w2hGl0c3kIURauT7Ltbfo+vT3Ygjh0RzfaufajKatj56W1a
-	 pZvWmj0ZA1Q6tiC6lBm8o5NqKWPEVijWaAG1em6JAq/Djz7jeIbDe6RIsmn+2jfg+m
-	 AKWMnGrjlR9v36EdCRfqBRjW1PIdKxi5GoRjS70RUEG5AmwCtqfuO6tVR2oX5E58hM
-	 g5t8kWz9u5VWPNPWRv9zq44U7STd14f+I3B6LDJCsygJvMP3hX6vOQJYHr8tk9ZQGm
-	 G3s/whhaiTpJbWyNUQEHpqlLOrvYzqcplXhN/5cBkJgKt3B/g1bSZFTuN182TPFFNY
-	 FSQciuSdOe6PQ==
+	s=k20201202; t=1703176228;
+	bh=qiAu0Z0L+6zSRjJdFQmQuvjQA8bxbqa0s5rr0Z170HM=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=d0F3lHrSa+1DC/9Cm0Rhwa/iDr/wKJJ2fuL7brT8jdw+qWk3INt1jQ09ILPWcrZXy
+	 yHNp3DfbRZdom05U9fHKwjcelmFLtbbgeiXlwgv7lEXHYU1wjRkevRpwSakjh1PxGU
+	 DvWS601C6poivsiShGCsqdMTzxnrX2N/pZPBWcVylpflCBw4FHH6LVZkOsgfzW7dlu
+	 2mDpSG0iga3nO0V9JlIkugR7VupNVnZlG8pncf7UXd0/21QljV8a0FZ073Rwesoffj
+	 /mkjtjE97ncDK5Wq6omFq+5eV+1Hn5GWwMZOENrJs0h/hYs9QIv+geb/75AFFVDETE
+	 cPEe1H4Qyauiw==
 From: Vinod Koul <vkoul@kernel.org>
-To: lizhi.hou@amd.com, brian.xu@amd.com, raj.kumar.rampelli@amd.com, 
- michal.simek@amd.com, dmaengine@vger.kernel.org, 
- linux-kernel@vger.kernel.org, miquel.raynal@bootlin.com, 
- Jan Kuliga <jankul@alatek.krakow.pl>
-In-Reply-To: <20231218113904.9071-1-jankul@alatek.krakow.pl>
-References: <20231218113904.9071-1-jankul@alatek.krakow.pl>
-Subject: Re: [PATCH v5 0/8] Miscellaneous xdma driver enhancements
-Message-Id: <170317622335.683420.15291981209572271704.b4-ty@kernel.org>
-Date: Thu, 21 Dec 2023 22:00:23 +0530
+To: p.zabel@pengutronix.de, Bumyong Lee <bumyong.lee@samsung.com>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20231219055026.118695-1-bumyong.lee@samsung.com>
+References: <CGME20231219055052epcas2p4bb1d8210f650ab18370711db2194e8e3@epcas2p4.samsung.com>
+ <20231219055026.118695-1-bumyong.lee@samsung.com>
+Subject: Re: [PATCH] dmaengine: pl330: issue_pending waits until WFP state
+Message-Id: <170317622670.683420.3881501030324253538.b4-ty@kernel.org>
+Date: Thu, 21 Dec 2023 22:00:26 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -53,34 +52,22 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.12.3
 
 
-On Mon, 18 Dec 2023 12:39:04 +0100, Jan Kuliga wrote:
-> This patchset introduces a couple of xdma driver enhancements. The most
-> important change is the introduction of interleaved DMA transfers
-> feature, which is a big deal, as it allows DMAEngine clients to express
-> DMA transfers in an arbitrary way. This is extremely useful in FPGA
-> environments, where in one FPGA system there may be a need to do DMA both
-> to/from FIFO at a fixed address and to/from a (non)contiguous RAM.
+On Tue, 19 Dec 2023 14:50:26 +0900, Bumyong Lee wrote:
+> According to DMA-330 errata notice[1] 71930, DMAKILL
+> cannot clear internal signal, named pipeline_req_active.
+> it makes that pl330 would wait forever in WFP state
+> although dma already send dma request if pl330 gets
+> dma request before entering WFP state.
+> 
+> The errata suggests that polling until entering WFP state
+> as workaround and then peripherals allows to issue dma request.
 > 
 > [...]
 
 Applied, thanks!
 
-[1/8] dmaengine: xilinx: xdma: Get rid of unused code
-      commit: 6e2387183312cdfce6326b2626c0b801c2ffe686
-[2/8] dmaengine: xilinx: xdma: Add necessary macro definitions
-      commit: 7a9c7f46bd0abea214d96f00f78622f24c798ad8
-[3/8] dmaengine: xilinx: xdma: Ease dma_pool alignment requirements
-      commit: e5bc76b0e1c54906ca744ed1a7872f4f407d5d2e
-[4/8] dmaengine: xilinx: xdma: Rework xdma_terminate_all()
-      commit: 2e142cebb1645ac18db1e66f0c30a8d720d00c0b
-[5/8] dmaengine: xilinx: xdma: Add error checking in xdma_channel_isr()
-      commit: c38d055a7c021145ab3a07cf69992d287440c4cb
-[6/8] dmaengine: xilinx: xdma: Add transfer error reporting
-      commit: c3fcb6f5575fcfd240baa339319d2a42d137cd8e
-[7/8] dmaengine: xilinx: xdma: Prepare the introduction of interleaved DMA transfers
-      commit: fa88abfd0d03fea8b800ff1df4f161c804d24c8a
-[8/8] dmaengine: xilinx: xdma: Implement interleaved DMA transfers
-      commit: 01e6d907656134949c4126e7fd64984d4daa4c1e
+[1/1] dmaengine: pl330: issue_pending waits until WFP state
+      commit: d114d3a096194fb2a9c3bedd7be6587b97610625
 
 Best regards,
 -- 

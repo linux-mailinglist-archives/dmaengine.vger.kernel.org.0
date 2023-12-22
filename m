@@ -1,89 +1,125 @@
-Return-Path: <dmaengine+bounces-638-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-639-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id C914C81C76A
-	for <lists+dmaengine@lfdr.de>; Fri, 22 Dec 2023 10:40:32 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9BC0381C911
+	for <lists+dmaengine@lfdr.de>; Fri, 22 Dec 2023 12:28:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 539AFB20E1C
-	for <lists+dmaengine@lfdr.de>; Fri, 22 Dec 2023 09:40:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CD5E31C22064
+	for <lists+dmaengine@lfdr.de>; Fri, 22 Dec 2023 11:28:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEAB3DDAB;
-	Fri, 22 Dec 2023 09:40:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NKf4O8lF"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD10D1773E;
+	Fri, 22 Dec 2023 11:28:08 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5790DDA3
-	for <dmaengine@vger.kernel.org>; Fri, 22 Dec 2023 09:40:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38B48C433C7;
-	Fri, 22 Dec 2023 09:40:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703238025;
-	bh=Iy4oXj3nws/xs7/vUDvLO61UmjzamQgxPGLmju9ESZA=;
-	h=From:To:Subject:Date:From;
-	b=NKf4O8lFKtZyIRbGJLczwX1nHycIk4lxllO1NDImJ1XTGCzdkZQVX49kuiSdDYJqw
-	 aJa58lqcKN/YX/hQRBTMS6NuhwmwOTpLwyyA7m8ixITWONZtYmPFiQPm8kJL2ORI2a
-	 OKiwPIaVwcTMqmd5kAGnibV8P9r8bgF2sO8GtRvLoBSbmnF29z5IUhr5RZ5cl3ta0g
-	 iFW9OHl/XN1csstz/J+wM6Mgb1FI3Qf8ZnsPmzCrL6f+Fs8CCl3kX5roc4jPwi3K2T
-	 F2ffsfzbJYNk1oy0LOIg+QQ7ejdjoOVrq8OneNv62om6BVjHyzmj1Q+aWxF/G4cV9d
-	 /wG8UkEnbPX4Q==
-From: Vinod Koul <vkoul@kernel.org>
-To: dmaengine@vger.kernel.org,
-	Lizhi Hou <lizhi.hou@amd.com>,
-	Brian Xu <brian.xu@amd.com>,
-	Raj Kumar Rampelli <raj.kumar.rampelli@amd.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Michal Simek <michal.simek@amd.com>
-Subject: [PATCH] dmaengine: xilinx: xdma: Workaround truncation compilation error
-Date: Fri, 22 Dec 2023 15:10:17 +0530
-Message-ID: <20231222094017.731917-1-vkoul@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9996C17730;
+	Fri, 22 Dec 2023 11:28:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
+Received: from dlp.unisoc.com ([10.29.3.86])
+	by SHSQR01.spreadtrum.com with ESMTP id 3BMBRbqR014972;
+	Fri, 22 Dec 2023 19:27:37 +0800 (+08)
+	(envelope-from Kaiwei.Liu@unisoc.com)
+Received: from SHDLP.spreadtrum.com (shmbx07.spreadtrum.com [10.0.1.12])
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4SxPxn6z72z2QTSsR;
+	Fri, 22 Dec 2023 19:21:17 +0800 (CST)
+Received: from xm9614pcu.spreadtrum.com (10.13.2.29) by shmbx07.spreadtrum.com
+ (10.0.1.12) with Microsoft SMTP Server (TLS) id 15.0.1497.23; Fri, 22 Dec
+ 2023 19:27:35 +0800
+From: Kaiwei Liu <kaiwei.liu@unisoc.com>
+To: Vinod Koul <vkoul@kernel.org>, Orson Zhai <orsonzhai@gmail.com>,
+        Baolin
+ Wang <baolin.wang@linux.alibaba.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>
+CC: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        kaiwei liu
+	<liukaiwei086@gmail.com>,
+        Wenming Wu <wenming.wu@unisoc.com>
+Subject: [PATCH V2 1/2] dmaengine: sprd: delete enable operation in probe
+Date: Fri, 22 Dec 2023 19:27:14 +0800
+Message-ID: <20231222112714.9660-1-kaiwei.liu@unisoc.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
+ shmbx07.spreadtrum.com (10.0.1.12)
+X-MAIL:SHSQR01.spreadtrum.com 3BMBRbqR014972
 
-Increase length to be copied to be large enough to overcome the
-following compilation error. The buf is large enough for this purpose.
+From: "kaiwei.liu" <kaiwei.liu@unisoc.com>
 
-drivers/dma/xilinx/xilinx_dpdma.c: In function ‘xilinx_dpdma_debugfs_desc_done_irq_read’:
-drivers/dma/xilinx/xilinx_dpdma.c:313:39: error: ‘snprintf’ output may be truncated before the last format character [-Werror=format-truncation=]
-  313 |         snprintf(buf, out_str_len, "%d",
-      |                                       ^
-drivers/dma/xilinx/xilinx_dpdma.c:313:9: note: ‘snprintf’ output between 2 and 6 bytes into a destination of size 5
-  313 |         snprintf(buf, out_str_len, "%d",
-      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  314 |                  dpdma_debugfs.xilinx_dpdma_irq_done_count);
-      |                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In the probe of dma, it will allocate device memory and do some
+initalization settings. All operations are only at the software
+level. Furthermore, The current dma driver is applicable to two
+DMA devices in different power domain. For some scenes, one of
+the domain is power off and when you probe, enable the dma with
+the domain power off may cause crash.
 
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+For example, one case is for audio co-processor and DMA serves for
+it, dma's power domain is off during initialization since audio is
+not used at that time, so we can not read/write DMA's register for
+this kind of cases.
+
+Signed-off-by: kaiwei.liu <kaiwei.liu@unisoc.com>
 ---
- drivers/dma/xilinx/xilinx_dpdma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Change in V2:
+-Fix typo in subject line
+-Fix patches disjoint error
+-modify commit message
+-move pm_runtime_enable function before dma_async_device_register
+---
+ drivers/dma/sprd-dma.c | 13 ++-----------
+ 1 file changed, 2 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/dma/xilinx/xilinx_dpdma.c b/drivers/dma/xilinx/xilinx_dpdma.c
-index 69587d85a7cd..b82815e64d24 100644
---- a/drivers/dma/xilinx/xilinx_dpdma.c
-+++ b/drivers/dma/xilinx/xilinx_dpdma.c
-@@ -309,7 +309,7 @@ static ssize_t xilinx_dpdma_debugfs_desc_done_irq_read(char *buf)
+diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
+index 3f54ff37c5e0..cb48731d70b2 100644
+--- a/drivers/dma/sprd-dma.c
++++ b/drivers/dma/sprd-dma.c
+@@ -1203,16 +1203,9 @@ static int sprd_dma_probe(struct platform_device *pdev)
+ 	}
  
- 	out_str_len = strlen(XILINX_DPDMA_DEBUGFS_UINT16_MAX_STR);
- 	out_str_len = min_t(size_t, XILINX_DPDMA_DEBUGFS_READ_MAX_SIZE,
--			    out_str_len);
-+			    out_str_len + 1);
- 	snprintf(buf, out_str_len, "%d",
- 		 dpdma_debugfs.xilinx_dpdma_irq_done_count);
+ 	platform_set_drvdata(pdev, sdev);
+-	ret = sprd_dma_enable(sdev);
+-	if (ret)
+-		return ret;
+ 
+-	pm_runtime_set_active(&pdev->dev);
+ 	pm_runtime_enable(&pdev->dev);
+-
+-	ret = pm_runtime_get_sync(&pdev->dev);
+-	if (ret < 0)
+-		goto err_rpm;
++	pm_runtime_get_noresume(&pdev->dev);
+ 
+ 	ret = dma_async_device_register(&sdev->dma_dev);
+ 	if (ret < 0) {
+@@ -1226,7 +1219,7 @@ static int sprd_dma_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto err_of_register;
+ 
+-	pm_runtime_put(&pdev->dev);
++	pm_runtime_put_noidle(&pdev->dev);
+ 	return 0;
+ 
+ err_of_register:
+@@ -1234,8 +1227,6 @@ static int sprd_dma_probe(struct platform_device *pdev)
+ err_register:
+ 	pm_runtime_put_noidle(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
+-err_rpm:
+-	sprd_dma_disable(sdev);
+ 	return ret;
+ }
  
 -- 
-2.43.0
+2.17.1
 
 

@@ -1,103 +1,252 @@
-Return-Path: <dmaengine+bounces-647-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-648-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0122381D074
-	for <lists+dmaengine@lfdr.de>; Sat, 23 Dec 2023 00:28:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id BDC5881D273
+	for <lists+dmaengine@lfdr.de>; Sat, 23 Dec 2023 06:22:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AA15D284FCE
-	for <lists+dmaengine@lfdr.de>; Fri, 22 Dec 2023 23:28:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6B2BB28553F
+	for <lists+dmaengine@lfdr.de>; Sat, 23 Dec 2023 05:22:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5553E33CF3;
-	Fri, 22 Dec 2023 23:28:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5B4E4A34;
+	Sat, 23 Dec 2023 05:22:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qa+VmtYq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DJPE3TrT"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3ABF33CE8;
-	Fri, 22 Dec 2023 23:28:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=jeAP6X2umucewZGQcbSnRUGvrVAC3CUeMMR9f5t1VmA=; b=qa+VmtYqW88mxyclWdLRDcbIhG
-	8+d3pSFKjjwzsoaEa1pk7FniLC5ZTnppQmBusT/Hy+pZCBm7Nj5S6n8OlTn6dT2EfXEEBLkZ8fJ69
-	cVglYodDW4UCHvTc8ZN0P+KWZIXTChCAIP0QbyVuybzy9Vx907eVzL+R0EI9xhGouvkGPOZTAMGdd
-	uWzTlmFbco9E4R8SP9qpToiu/wHVCETcU+b8bWZTqgtxsHJApdJvuJWBQErTWxKhYZlCwfeOgxuAj
-	d4DV4PXrdwAfK2AFcIZ+uSQ+u4WSFkuEmOSxRinrpugoPjzz1G74wLhtT4xPJ1WS3Pf2zHE3zkGIE
-	E4Ukp8Tg==;
-Received: from [50.53.46.231] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGowZ-0070qb-1B;
-	Fri, 22 Dec 2023 23:28:39 +0000
-Message-ID: <d821f459-25bf-4712-bc07-4240a02602f4@infradead.org>
-Date: Fri, 22 Dec 2023 15:28:38 -0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E11F14A12
+	for <dmaengine@vger.kernel.org>; Sat, 23 Dec 2023 05:22:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703308947; x=1734844947;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=yzrGfBYG2n+AJNKK6K2eUlm3eQFCK8KMAhWJA5AVc3k=;
+  b=DJPE3TrTPIUmXR3slIpFY89tY/u2929DKOl3BtekEvoYTAGgsYEWgrZC
+   xEArv7fcHri20QJKpihtYSJr1kUK+JWhQIzMydVjh9ZBofcH3yOhAsNzi
+   zuRTO6UsEUsFRLq9UV+jvt7lv/ETlFVN+w94apVMbsCl9FHdcJ+lzVVNo
+   NyKVYLr20hm0JUFbxv7F1SKpZX3eA/9Cdvb5d2g62kcwkvAnNpExAvrVl
+   AUf1e3V9L2g/6eVvRUD5wrxOjJ6//y77bHVMQ/pryXnKJLA8ihSNSGJeA
+   YD2XFceC0FSASSGgJQF7nozvHMIgkPAruOSLsqJzLbtYLXqeCWFV4tjrk
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="393346322"
+X-IronPort-AV: E=Sophos;i="6.04,298,1695711600"; 
+   d="scan'208";a="393346322"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 21:22:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="1108694264"
+X-IronPort-AV: E=Sophos;i="6.04,298,1695711600"; 
+   d="scan'208";a="1108694264"
+Received: from rex-z390-aorus-pro.sh.intel.com ([10.239.161.21])
+  by fmsmga005.fm.intel.com with ESMTP; 22 Dec 2023 21:22:25 -0800
+From: Rex Zhang <rex.zhang@intel.com>
+To: lijun.pan@intel.com
+Cc: dave.jiang@intel.com,
+	dmaengine@vger.kernel.org,
+	fenghua.yu@intel.com,
+	rex.zhang@intel.com,
+	vkoul@kernel.org
+Subject: Re: [PATCH] dmaengine: idxd: Convert spinlock to mutex to lock evl workqueue
+Date: Sat, 23 Dec 2023 13:21:51 +0800
+Message-Id: <20231223052151.978892-1-rex.zhang@intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <511cbc9a-632b-4a7e-a57d-01a21ba904a6@intel.com>
+References: <511cbc9a-632b-4a7e-a57d-01a21ba904a6@intel.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dmaengine: xilinx: xdma: Fix kernel-doc warnings
-Content-Language: en-US
-To: Jan Kuliga <jankul@alatek.krakow.pl>, lizhi.hou@amd.com,
- brian.xu@amd.com, raj.kumar.rampelli@amd.com, vkoul@kernel.org,
- michal.simek@amd.com, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: kernel test robot <lkp@intel.com>
-References: <20231222231728.7156-1-jankul@alatek.krakow.pl>
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20231222231728.7156-1-jankul@alatek.krakow.pl>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Hi Lijun,
 
-
-On 12/22/23 15:17, Jan Kuliga wrote:
-> Replace hyphens with colons where necessary.
+On 2023-12-20 at 19:17:20 -0600, Lijun Pan wrote:
 > 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202312230634.3AIMQ3OP-lkp@intel.com/
-> Signed-off-by: Jan Kuliga <jankul@alatek.krakow.pl>
-
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
-
-Thanks.
-
-> ---
->  drivers/dma/xilinx/xdma.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/dma/xilinx/xdma.c b/drivers/dma/xilinx/xdma.c
-> index 4ebc90b41bdb..927c68ed6bbc 100644
-> --- a/drivers/dma/xilinx/xdma.c
-> +++ b/drivers/dma/xilinx/xdma.c
-> @@ -548,11 +548,11 @@ static void xdma_synchronize(struct dma_chan *chan)
->  
->  /**
->   * xdma_fill_descs - Fill hardware descriptors with contiguous memory block addresses
-> - * @sw_desc - tx descriptor state container
-> - * @src_addr - Value for a ->src_addr field of a first descriptor
-> - * @dst_addr - Value for a ->dst_addr field of a first descriptor
-> - * @size - Total size of a contiguous memory block
-> - * @filled_descs_num - Number of filled hardware descriptors for corresponding sw_desc
-> + * @sw_desc: tx descriptor state container
-> + * @src_addr: Value for a ->src_addr field of a first descriptor
-> + * @dst_addr: Value for a ->dst_addr field of a first descriptor
-> + * @size: Total size of a contiguous memory block
-> + * @filled_descs_num: Number of filled hardware descriptors for corresponding sw_desc
->   */
->  static inline u32 xdma_fill_descs(struct xdma_desc *sw_desc, u64 src_addr,
->  				  u64 dst_addr, u32 size, u32 filled_descs_num)
+> On 12/19/2023 9:53 PM, Rex Zhang wrote:
+> > The drain_workqueue() is not in a locked context. In the multi-task case,
+> > it's possible to call queue_work() when drain_workqueue() is ongoing, then
+> > it can cause Call Trace due to pushing a work into a draining workqueue:
+> >      Call Trace:
+> >      <TASK>
+> >      ? __warn+0x7d/0x140
+> >      ? __queue_work+0x2b2/0x440
+> >      ? report_bug+0x1f8/0x200
+> >      ? handle_bug+0x3c/0x70
+> >      ? exc_invalid_op+0x18/0x70
+> >      ? asm_exc_invalid_op+0x1a/0x20
+> >      ? __queue_work+0x2b2/0x440
+> >      queue_work_on+0x28/0x30
+> >      idxd_misc_thread+0x303/0x5a0 [idxd]
+> >      ? __schedule+0x369/0xb40
+> >      ? __pfx_irq_thread_fn+0x10/0x10
+> >      ? irq_thread+0xbc/0x1b0
+> >      irq_thread_fn+0x21/0x70
+> >      irq_thread+0x102/0x1b0
+> >      ? preempt_count_add+0x74/0xa0
+> >      ? __pfx_irq_thread_dtor+0x10/0x10
+> >      ? __pfx_irq_thread+0x10/0x10
+> >      kthread+0x103/0x140
+> >      ? __pfx_kthread+0x10/0x10
+> >      ret_from_fork+0x31/0x50
+> >      ? __pfx_kthread+0x10/0x10
+> >      ret_from_fork_asm+0x1b/0x30
+> >      </TASK>
+> > The original locker for event log was spinlock, drain_workqueue() can't
+> 
+> s/locker/lock
+> 
+> Other than that,
+> 
+> Tested-by: Lijun Pan <lijun.pan@intel.com>
+> Reviewed-by: Lijun Pan <lijun.pan@intel.com>
+Thanks for pointing out.
+Will update.
 
--- 
-#Randy
-https://people.kernel.org/tglx/notes-about-netiquette
-https://subspace.kernel.org/etiquette.html
+> > be in a spinlocked context because it may cause task rescheduling. The
+> > spinlock was called in thread and irq thread context, the current usages
+> > does not require a spinlock for event log, so it's feasible to convert
+> > spinlock to mutex.
+> > For putting drain_workqueue() into a locked context, convert the spinlock
+> > to mutex, then lock drain_workqueue() by mutex.
+> > 
+> > Fixes: c40bd7d9737b ("dmaengine: idxd: process user page faults for completion record")
+> > Signed-off-by: Rex Zhang <rex.zhang@intel.com>
+> > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> > Reviewed-by: Fenghua Yu <fenghua.yu@intel.com>
+> > ---
+> >   drivers/dma/idxd/cdev.c    | 5 ++---
+> >   drivers/dma/idxd/debugfs.c | 4 ++--
+> >   drivers/dma/idxd/device.c  | 8 ++++----
+> >   drivers/dma/idxd/idxd.h    | 2 +-
+> >   drivers/dma/idxd/init.c    | 2 +-
+> >   drivers/dma/idxd/irq.c     | 4 ++--
+> >   6 files changed, 12 insertions(+), 13 deletions(-)
+> > 
+> > diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
+> > index 0423655f5a88..556cac187612 100644
+> > --- a/drivers/dma/idxd/cdev.c
+> > +++ b/drivers/dma/idxd/cdev.c
+> > @@ -342,7 +342,7 @@ static void idxd_cdev_evl_drain_pasid(struct idxd_wq *wq, u32 pasid)
+> >   	if (!evl)
+> >   		return;
+> > -	spin_lock(&evl->lock);
+> > +	mutex_lock(&evl->lock);
+> >   	status.bits = ioread64(idxd->reg_base + IDXD_EVLSTATUS_OFFSET);
+> >   	t = status.tail;
+> >   	h = evl->head;
+> > @@ -354,9 +354,8 @@ static void idxd_cdev_evl_drain_pasid(struct idxd_wq *wq, u32 pasid)
+> >   			set_bit(h, evl->bmap);
+> >   		h = (h + 1) % size;
+> >   	}
+> > -	spin_unlock(&evl->lock);
+> > -
+> >   	drain_workqueue(wq->wq);
+> > +	mutex_unlock(&evl->lock);
+> >   }
+> >   static int idxd_cdev_release(struct inode *node, struct file *filep)
+> > diff --git a/drivers/dma/idxd/debugfs.c b/drivers/dma/idxd/debugfs.c
+> > index 9cfbd9b14c4c..7f689b3aff65 100644
+> > --- a/drivers/dma/idxd/debugfs.c
+> > +++ b/drivers/dma/idxd/debugfs.c
+> > @@ -66,7 +66,7 @@ static int debugfs_evl_show(struct seq_file *s, void *d)
+> >   	if (!evl || !evl->log)
+> >   		return 0;
+> > -	spin_lock(&evl->lock);
+> > +	mutex_lock(&evl->lock);
+> >   	h = evl->head;
+> >   	evl_status.bits = ioread64(idxd->reg_base + IDXD_EVLSTATUS_OFFSET);
+> > @@ -87,7 +87,7 @@ static int debugfs_evl_show(struct seq_file *s, void *d)
+> >   		dump_event_entry(idxd, s, i, &count, processed);
+> >   	}
+> > -	spin_unlock(&evl->lock);
+> > +	mutex_unlock(&evl->lock);
+> >   	return 0;
+> >   }
+> > diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+> > index 8f754f922217..042e076a6f2a 100644
+> > --- a/drivers/dma/idxd/device.c
+> > +++ b/drivers/dma/idxd/device.c
+> > @@ -770,7 +770,7 @@ static int idxd_device_evl_setup(struct idxd_device *idxd)
+> >   		goto err_alloc;
+> >   	}
+> > -	spin_lock(&evl->lock);
+> > +	mutex_lock(&evl->lock);
+> >   	evl->log = addr;
+> >   	evl->dma = dma_addr;
+> >   	evl->log_size = size;
+> > @@ -791,7 +791,7 @@ static int idxd_device_evl_setup(struct idxd_device *idxd)
+> >   	gencfg.evl_en = 1;
+> >   	iowrite32(gencfg.bits, idxd->reg_base + IDXD_GENCFG_OFFSET);
+> > -	spin_unlock(&evl->lock);
+> > +	mutex_unlock(&evl->lock);
+> >   	return 0;
+> >   err_alloc:
+> > @@ -811,7 +811,7 @@ static void idxd_device_evl_free(struct idxd_device *idxd)
+> >   	if (!gencfg.evl_en)
+> >   		return;
+> > -	spin_lock(&evl->lock);
+> > +	mutex_lock(&evl->lock);
+> >   	gencfg.evl_en = 0;
+> >   	iowrite32(gencfg.bits, idxd->reg_base + IDXD_GENCFG_OFFSET);
+> > @@ -826,7 +826,7 @@ static void idxd_device_evl_free(struct idxd_device *idxd)
+> >   	bitmap_free(evl->bmap);
+> >   	evl->log = NULL;
+> >   	evl->size = IDXD_EVL_SIZE_MIN;
+> > -	spin_unlock(&evl->lock);
+> > +	mutex_unlock(&evl->lock);
+> >   }
+> >   static void idxd_group_config_write(struct idxd_group *group)
+> > diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
+> > index 1e89c80a07fc..b925c972b99b 100644
+> > --- a/drivers/dma/idxd/idxd.h
+> > +++ b/drivers/dma/idxd/idxd.h
+> > @@ -283,7 +283,7 @@ struct idxd_driver_data {
+> >   struct idxd_evl {
+> >   	/* Lock to protect event log access. */
+> > -	spinlock_t lock;
+> > +	struct mutex lock;
+> >   	void *log;
+> >   	dma_addr_t dma;
+> >   	/* Total size of event log = number of entries * entry size. */
+> > diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+> > index 0eb1c827a215..611101f99405 100644
+> > --- a/drivers/dma/idxd/init.c
+> > +++ b/drivers/dma/idxd/init.c
+> > @@ -351,7 +351,7 @@ static int idxd_init_evl(struct idxd_device *idxd)
+> >   	if (!evl)
+> >   		return -ENOMEM;
+> > -	spin_lock_init(&evl->lock);
+> > +	mutex_init(&evl->lock);
+> >   	evl->size = IDXD_EVL_SIZE_MIN;
+> >   	idxd->evl_cache = kmem_cache_create(dev_name(idxd_confdev(idxd)),
+> > diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
+> > index 2183d7f9cdbd..3037eda986de 100644
+> > --- a/drivers/dma/idxd/irq.c
+> > +++ b/drivers/dma/idxd/irq.c
+> > @@ -363,7 +363,7 @@ static void process_evl_entries(struct idxd_device *idxd)
+> >   	evl_status.bits = 0;
+> >   	evl_status.int_pending = 1;
+> > -	spin_lock(&evl->lock);
+> > +	mutex_lock(&evl->lock);
+> >   	/* Clear interrupt pending bit */
+> >   	iowrite32(evl_status.bits_upper32,
+> >   		  idxd->reg_base + IDXD_EVLSTATUS_OFFSET + sizeof(u32));
+> > @@ -381,7 +381,7 @@ static void process_evl_entries(struct idxd_device *idxd)
+> >   	evl->head = h;
+> >   	evl_status.head = h;
+> >   	iowrite32(evl_status.bits_lower32, idxd->reg_base + IDXD_EVLSTATUS_OFFSET);
+> > -	spin_unlock(&evl->lock);
+> > +	mutex_unlock(&evl->lock);
+> >   }
+> >   irqreturn_t idxd_misc_thread(int vec, void *data)
 

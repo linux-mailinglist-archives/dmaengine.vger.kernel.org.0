@@ -1,120 +1,116 @@
-Return-Path: <dmaengine+bounces-658-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-659-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C520981DFB3
-	for <lists+dmaengine@lfdr.de>; Mon, 25 Dec 2023 11:22:40 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B199481E22B
+	for <lists+dmaengine@lfdr.de>; Mon, 25 Dec 2023 20:56:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BE3901C218DC
-	for <lists+dmaengine@lfdr.de>; Mon, 25 Dec 2023 10:22:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 005F71F21599
+	for <lists+dmaengine@lfdr.de>; Mon, 25 Dec 2023 19:56:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA9BA2E401;
-	Mon, 25 Dec 2023 10:22:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C12DF537F8;
+	Mon, 25 Dec 2023 19:55:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="oEszm892"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NxYtli9Z"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mout.web.de (mout.web.de [212.227.15.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A69935EF3;
-	Mon, 25 Dec 2023 10:22:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1703499745; x=1704104545; i=markus.elfring@web.de;
-	bh=ehzvFIgSeJSu3nZAjymVW905vwyKajE8awgJ7Isa/V4=;
-	h=X-UI-Sender-Class:Date:Subject:From:To:Cc:References:
-	 In-Reply-To;
-	b=oEszm8925iw94XfHKFlwJrQA3oD8t9iCFVEqmEKTAJn/d1LpUVHuRzeCtKqRSVop
-	 IDnFqQMAvI3kAaIOoVEmlDgOQyaAmlFWJNLZeLXGI6sb7sQE+j/OExm3fpVb1ygIb
-	 rmJGL0JuqwYEE1i4bmUKtlrlrSjEPZ2Jo+n/3pu7+TkKggu0n2qWDDWPDM+yGgEo8
-	 K3dfYiV+T0Sa+s9ZA0887eMXL5SeQhF8jDos9A0bvHGW/9lk/8pywFlVdLcfHuf3/
-	 7ZlhgUL3tXfdcibkx0FY/Q025QRi3yaR8qPwVJK8ix3kO1zBKdvmnM65ZWtXVfSeQ
-	 1hbRuY2FnOyb0KmseA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MeDQZ-1qk1702OPf-00auKj; Mon, 25
- Dec 2023 11:22:25 +0100
-Message-ID: <3184e80d-9056-4a0f-b0c0-8c1fefa62196@web.de>
-Date: Mon, 25 Dec 2023 11:22:24 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55A9D537F1;
+	Mon, 25 Dec 2023 19:55:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-67f9fac086bso25831486d6.3;
+        Mon, 25 Dec 2023 11:55:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703534157; x=1704138957; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=v+5mdzcIi0J0U/jyti3PngFAcX/L3/DjChGGJD4WjO0=;
+        b=NxYtli9ZFO+nMhFI9jJM7AmM0UEQP1AYBBIsOQxfutncfFzrXXCl15MO/db7qTycZK
+         E+BH/bT9aSglTtOFm3KR2+eZigo1JECteRjB+Lf6D4H+VUekocZzQOW9kNtiT6vNAEdu
+         eyULYF4OpMBf9aO1e3D6n6vle9kAczFQsb+PP3Gpcj0oNr7p6TzgdohHThbsm/UKZGkI
+         b7vElq1p6YB//aONShEDs/fdGYpRWY/CXq75zdr+SSC1pzI1Yeu71uwlTIlo01Fasmfd
+         zmN59m49OnC7ZyKAwFOtXPoIG+DlBtpEIU1qiuOKJ3GnObSqiIA8sdeJ/CFmjuNqHnfP
+         vTTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703534157; x=1704138957;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=v+5mdzcIi0J0U/jyti3PngFAcX/L3/DjChGGJD4WjO0=;
+        b=MfRAV5ecmWVJGgpiky0hi3GmiB0RSj+818pzkavsUq3u4xlw+Whbpcbc4NR5ck1qNu
+         mzcma0jmC70uzLWUrPKdfEreDwKq/4KUHcuv50N6x93Ea0w6D5niLKf+VqYbmmktx+dR
+         p/wzOi9BfKKdLdt4VCrQiHo7gACGfG9umiT0lEHhZ5QJd1G1H52wPrcp25SfIZSe3LJu
+         qsrKc7seUPyYM3N5xNz4c1jHqGLQbBsDPt3yFtFm9t9Evr+B6lr0lA9cg6lXJbFBJxGZ
+         N7io5fHfSC5x1GBHnVGrxyrUjEKl7ebN4OVw9EPlUrU//1Fuw8ySkFOPhyunRP3aN9l5
+         Q0KQ==
+X-Gm-Message-State: AOJu0YzROFql4ZIsbY1+HX9/cPP1tbA3e8CECrK5NuBBHPpoHCInyVBG
+	ikQqfEgCpEjx2AuIkPwvZPFRqML9CAnc1JlNO8I=
+X-Google-Smtp-Source: AGHT+IGXQ1DzDW/z7mbnW1aKOma9kP1mZ08AqBa7wFFHcRRfcWmagU8jQFFGhrorFhUOmpGd2hGTlBhrmy9h8xA7nx4=
+X-Received: by 2002:ad4:5c49:0:b0:67f:6982:edb4 with SMTP id
+ a9-20020ad45c49000000b0067f6982edb4mr13149244qva.14.1703534157222; Mon, 25
+ Dec 2023 11:55:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: [PATCH 3/3] dmaengine: timb_dma: One function call less in
- td_alloc_init_desc() after error detection
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-To: dmaengine@vger.kernel.org, kernel-janitors@vger.kernel.org,
- Vinod Koul <vkoul@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, cocci@inria.fr
-References: <ebd531dd-60e3-4ac3-821e-aa9890960283@web.de>
-In-Reply-To: <ebd531dd-60e3-4ac3-821e-aa9890960283@web.de>
-Content-Type: text/plain; charset=UTF-8
+References: <20231212-ep93xx-v6-0-c307b8ac9aa8@maquefel.me>
+ <ZXnxBtqbneUMbvwq@smile.fi.intel.com> <d6e898200b96e816ea8c8c9a847307088ec5821c.camel@maquefel.me>
+In-Reply-To: <d6e898200b96e816ea8c8c9a847307088ec5821c.camel@maquefel.me>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 25 Dec 2023 21:55:20 +0200
+Message-ID: <CAHp75Vcx8oviLiCu=cnzKcdXjEq9wG=PCiBuPTBYe6FFfUcz7Q@mail.gmail.com>
+Subject: Re: [PATCH v6 00/40] ep93xx device tree conversion
+To: Nikita Shubin <nikita.shubin@maquefel.me>
+Cc: Andy Shevchenko <andy@kernel.org>, Hartley Sweeten <hsweeten@visionengravers.com>, 
+	Alexander Sverdlin <alexander.sverdlin@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	Lukasz Majewski <lukma@denx.de>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Vinod Koul <vkoul@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, 
+	Guenter Roeck <linux@roeck-us.net>, Thierry Reding <thierry.reding@gmail.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Mark Brown <broonie@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, 
+	Vignesh Raghavendra <vigneshr@ti.com>, Damien Le Moal <dlemoal@kernel.org>, 
+	Sergey Shtylyov <s.shtylyov@omp.ru>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
+	dmaengine@vger.kernel.org, linux-watchdog@vger.kernel.org, 
+	linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-mtd@lists.infradead.org, linux-ide@vger.kernel.org, 
+	linux-input@vger.kernel.org, linux-sound@vger.kernel.org, 
+	Arnd Bergmann <arnd@arndb.de>, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Andrew Lunn <andrew@lunn.ch>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Rl1oMsp960JeDUAqYdAIMvOPYzMZfHe1CPjrgQS8GX9vY8IVCkF
- CO9ZPyUVlIUdzV1NfxsNHpGudjLmqX5lzPWD7LxC6H1HFeQ3L4oqImoT3Y/gWNHLFu5dyKz
- 3oYYWmS3TF5mA57xcx4hY8VEcZaVyew4VcCz1/Nu/QTUUZ3KIYkbZE4P1MywpCwQzl2BmU7
- 6wCx9mmTI5E005sLqqBXA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:DM+q4z1Nt9I=;Yiy9v3GEYKJ7vkCTt0gbBFxvhr6
- QQmXDJcB9xFHFIV/evpPM9LazU4h7+QdcqGygL7EizOHIuTT1vdcmXN5tzm502oFecGQzM/hM
- 27qsHBQR0sC6JnWnYUacaNYqdAVyidi7gG9vz38XV8PdrWvhFhnwtJVTkwVj59DLenAdPcrZt
- FgbvJ1spHeU9GQwE9PW84AhL6MjzinuMmWc2awjrhIcCWscB9lN2BMgTmacJtFOrHAbydXwIR
- PsF6/hQCrpFpBbetPGX8VdiLlDL/yb7IPr4Mqn7xBkVMQLrudPY635aAOSpm4tDyw/tU6PSMM
- z8kVNLlZRjXuYAe1PVx126xa8FchFE1tHGfhwByiJY66g+HzNbBPNyAbbqc9PqUJt6b/7cBNH
- VzPHmAoPLAQSAUhEP3Ye856LSNHveP6PdzT/mstARIomDHwKl3buDlKmwfa3ZwLt5Ot8PEA6K
- IxUyXxQJ/QP4Lm1jhCYDG0ew6a6/3jVMockeFZtQO5iPAMZI2L4b5kTW25QI24+ppXdNdXXIB
- 164iSOVFSGTKFa97n5+ASz35gV+FkVtHDwnPZMn6tCvUW0DjvXqE+tscu8bKHmuql72hfFAu2
- /XWy/thQlMekjkNHpTdRhg4fqsQbkloBawkz70Hu3XivxMkbruJ63qWqYx66SPDoRFdHsQSHN
- e0QlVCxY9NmYA8rNFg7Qcf/XRdWtteakBztpRv0S+EjY9QtB9ynoXM5VJfCYVNmuUJyggfZER
- f2T2c/xAy4ptlWk6mdLAOxc3/jjZ6AjuXp12ukm6O9vrmjF0Ihc4mqTU3MTl7IAWOHPV53I77
- 3bJg7CTTQqYaKHLvK3cpDgxmVrbO0tCPEzH+9woWVn/0lAs7+9Vtpcku4G4yUUzP/XWomgsd6
- 6dBojfTz18rfvRP4+nffu5WWSMUf9eTSy9RxuxaPL+Dc/PRhupM5f99a46u9SK704wTtFDd07
- xA/PZJj6AbZw62+6YvDgBaexhdU=
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Mon, 25 Dec 2023 10:55:52 +0100
+On Sat, Dec 23, 2023 at 11:13=E2=80=AFAM Nikita Shubin
+<nikita.shubin@maquefel.me> wrote:
+> On Wed, 2023-12-13 at 19:59 +0200, Andy Shevchenko wrote:
 
-The kfree() function was called in one case by the
-td_alloc_init_desc() function during error handling
-even if the passed data structure member contained a null pointer.
-This issue was detected by using the Coccinelle software.
+...
 
-Thus use another label.
+> I haven't found any missing tags, that b4 didn't apply, the ones above
+> refer to a very old iteration and were given to cover letter and i
+> don't feel like they need to be included.
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/dma/timb_dma.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+When somebody gives you a tag against a cover letter, it means the
+entire series (if not spelled differently). `b4` even has a parameter
+-t for that IIRC.
 
-diff --git a/drivers/dma/timb_dma.c b/drivers/dma/timb_dma.c
-index fc1f67bf9c06..831c67af0237 100644
-=2D-- a/drivers/dma/timb_dma.c
-+++ b/drivers/dma/timb_dma.c
-@@ -333,7 +333,7 @@ static struct timb_dma_desc *td_alloc_init_desc(struct=
- timb_dma_chan *td_chan)
 
- 	td_desc->desc_list =3D kzalloc(td_desc->desc_list_len, GFP_KERNEL);
- 	if (!td_desc->desc_list)
--		goto err;
-+		goto free_td_desc;
-
- 	dma_async_tx_descriptor_init(&td_desc->txd, chan);
- 	td_desc->txd.tx_submit =3D td_tx_submit;
-@@ -351,4 +351,5 @@ static struct timb_dma_desc *td_alloc_init_desc(struct=
- timb_dma_chan *td_chan)
- 	return td_desc;
- err:
- 	kfree(td_desc->desc_list);
-+free_td_desc:
- 	kfree(td_desc);
-=2D-
-2.43.0
-
+--=20
+With Best Regards,
+Andy Shevchenko
 

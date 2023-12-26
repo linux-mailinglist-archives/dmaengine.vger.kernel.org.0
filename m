@@ -1,342 +1,128 @@
-Return-Path: <dmaengine+bounces-664-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-665-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F15D581E814
-	for <lists+dmaengine@lfdr.de>; Tue, 26 Dec 2023 16:38:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9C03F81EA0E
+	for <lists+dmaengine@lfdr.de>; Tue, 26 Dec 2023 21:54:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 149561C20ED1
-	for <lists+dmaengine@lfdr.de>; Tue, 26 Dec 2023 15:38:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C68FA1C212C0
+	for <lists+dmaengine@lfdr.de>; Tue, 26 Dec 2023 20:54:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21D334F20B;
-	Tue, 26 Dec 2023 15:38:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B0B1EAF3;
+	Tue, 26 Dec 2023 20:54:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YR2FPmQV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V7iy9utS"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E750D4F207;
-	Tue, 26 Dec 2023 15:38:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0BB8C433C7;
-	Tue, 26 Dec 2023 15:37:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703605082;
-	bh=mjuSKXBYLBTXrExGzU7ImcTp0tooyzuVATIRqErYFjc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=YR2FPmQVEXPusZIXW7SWDAJHfCZpkjfL3RZo0Z+RHzcmIOCMr1fFMtXzY59YZi3aJ
-	 9/fJA6jFtN6DhzfysEU3V04JmfGUA7BlgtuTyBQHdK4Gtu+lDykw/eb8TAORwGD5qM
-	 pKMqUpUQXl7E7DEB08RD6naH3IhC9PXeh6nhXWF6TcVYcqRZKAD5amRPmNzFR+HARK
-	 b0bN5IBB4tKwZDZalmrftan7S3aOrVPUnN+3yd4B/1HtQisGlb/zr3KJ3QkKEI9C1p
-	 o0RnLTNQJIO/cM4k3QOabK33IUBf8mnsMul5ivPtReMtWJMUieSKv23mQ/Uw4RS3j5
-	 O7J9Ppj88oddg==
-Date: Tue, 26 Dec 2023 15:37:54 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Sumit Semwal
- <sumit.semwal@linaro.org>, Christian =?UTF-8?B?S8O2bmln?=
- <christian.koenig@amd.com>, Vinod Koul <vkoul@kernel.org>, Jonathan Corbet
- <corbet@lwn.net>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- dmaengine@vger.kernel.org, linux-iio@vger.kernel.org,
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linaro-mm-sig@lists.linaro.org, Nuno =?UTF-8?B?U8Oh?=
- <noname.nuno@gmail.com>, Michael Hennerich <Michael.Hennerich@analog.com>
-Subject: Re: [PATCH v5 0/8] iio: new DMABUF based API, v5
-Message-ID: <20231226153754.6d5b2c5e@jic23-huawei>
-In-Reply-To: <a303d86e82b1ac15a7ef16bef0fc77e03601f633.camel@crapouillou.net>
-References: <20231219175009.65482-1-paul@crapouillou.net>
-	<20231221163031.1a410905@jic23-huawei>
-	<a303d86e82b1ac15a7ef16bef0fc77e03601f633.camel@crapouillou.net>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F9CAEAF2;
+	Tue, 26 Dec 2023 20:54:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703624049; x=1735160049;
+  h=message-id:subject:from:to:cc:date:
+   content-transfer-encoding:mime-version;
+  bh=6vm3/1J8+0RlhGUApQzpmYZe5Ax8xA/w2zIHtPsoe6A=;
+  b=V7iy9utSXW+GsdVQwa6V9UgsJ7Xpz27eOFY6cG3CDkhNly2XTc/xd3Zq
+   gKM++pCtizEwYC1Z+5HoxcmcdFesucM3QUc0W8cj9k5oXQebEmYlq1SSy
+   5vuGWnjjZlquEEgbl9X5S6kGlenl0YCdu1oyGSLMr/S+8TWKIlwCqYORA
+   to/5/ZhJaJgGqaCdC2g7i0XLq/NTMINjzppQZ2E6UP3HFpvOkD4lrq+br
+   nuuyN3tq8LeI9KsfWdkwEyaYdNsALooC7UJ5NUpjaEjr1M3qQuyVn1Fby
+   YAXAlQIWuUEQ5wEAzUJO/9Zv8cXbUpNYAF3f+s6ZxLlfc8yWmglK8gmvA
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10935"; a="399168939"
+X-IronPort-AV: E=Sophos;i="6.04,307,1695711600"; 
+   d="scan'208";a="399168939"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Dec 2023 12:54:08 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.04,307,1695711600"; 
+   d="scan'208";a="20102656"
+Received: from smorga5x-mobl.amr.corp.intel.com ([10.212.113.189])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Dec 2023 12:53:27 -0800
+Message-ID: <00e3eea06f5dde61734a53af797b190692060aab.camel@linux.intel.com>
+Subject: [PATCH] crypto: iaa - Account for cpu-less numa nodes
+From: Tom Zanussi <tom.zanussi@linux.intel.com>
+To: herbert@gondor.apana.org.au, davem@davemloft.net, fenghua.yu@intel.com
+Cc: rex.zhang@intel.com, dave.jiang@intel.com, tony.luck@intel.com, 
+	linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, 
+	dmaengine@vger.kernel.org
+Date: Tue, 26 Dec 2023 14:53:26 -0600
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, 21 Dec 2023 18:56:52 +0100
-Paul Cercueil <paul@crapouillou.net> wrote:
+In some configurations e.g. systems with CXL, a numa node can have 0
+cpus and cpumask_nth() will return a cpu value that doesn't exist,
+which will result in an attempt to add an entry to the wq table at a
+bad index.
 
-> Hi Jonathan,
->=20
-> Le jeudi 21 d=C3=A9cembre 2023 =C3=A0 16:30 +0000, Jonathan Cameron a =C3=
-=A9crit=C2=A0:
-> > On Tue, 19 Dec 2023 18:50:01 +0100
-> > Paul Cercueil <paul@crapouillou.net> wrote:
-> >  =20
-> > > [V4 was: "iio: Add buffer write() support"][1]
-> > >=20
-> > > Hi Jonathan,
-> > >  =20
-> > Hi Paul,
-> >  =20
-> > > This is a respin of the V3 of my patchset that introduced a new
-> > > interface based on DMABUF objects [2]. =20
-> >=20
-> > Great to see this moving forwards.
-> >  =20
-> > >=20
-> > > The V4 was a split of the patchset, to attempt to upstream buffer
-> > > write() support first. But since there is no current user upstream,
-> > > it
-> > > was not merged. This V5 is about doing the opposite, and contains
-> > > the
-> > > new DMABUF interface, without adding the buffer write() support. It
-> > > can
-> > > already be used with the upstream adi-axi-adc driver. =20
-> >=20
-> > Seems like a sensible path in the short term.
-> >  =20
-> > >=20
-> > > In user-space, Libiio uses it to transfer back and forth blocks of
-> > > samples between the hardware and the applications, without having
-> > > to
-> > > copy the data.
-> > >=20
-> > > On a ZCU102 with a FMComms3 daughter board, running Libiio from the
-> > > pcercuei/dev-new-dmabuf-api branch [3], compiled with
-> > > WITH_LOCAL_DMABUF_API=3DOFF (so that it uses fileio):
-> > > =C2=A0 sudo utils/iio_rwdev -b 4096 -B cf-ad9361-lpc
-> > > =C2=A0 Throughput: 116 MiB/s
-> > >=20
-> > > Same hardware, with the DMABUF API (WITH_LOCAL_DMABUF_API=3DON):
-> > > =C2=A0 sudo utils/iio_rwdev -b 4096 -B cf-ad9361-lpc
-> > > =C2=A0 Throughput: 475 MiB/s
-> > >=20
-> > > This benchmark only measures the speed at which the data can be
-> > > fetched
-> > > to iio_rwdev's internal buffers, and does not actually try to read
-> > > the
-> > > data (e.g. to pipe it to stdout). It shows that fetching the data
-> > > is
-> > > more than 4x faster using the new interface.
-> > >=20
-> > > When actually reading the data, the performance difference isn't
-> > > that
-> > > impressive (maybe because in case of DMABUF the data is not in
-> > > cache): =20
-> >=20
-> > This needs a bit more investigation ideally. Perhaps perf counters
-> > can be
-> > used to establish that cache misses are the main different between
-> > dropping it on the floor and actually reading the data. =20
->=20
-> Yes, we'll work on it. The other big difference is that fileio uses
-> dma_alloc_coherent() while the DMABUFs use non-coherent mappings. I
-> guess coherent memory is faster for the typical access pattern (which
-> is "read/write everything sequentially once").
+To fix this, when iterating the cpus for a node, skip any node that
+doesn't have cpus.
 
-Long time since I last worked much with a platform that wasn't always
-IO coherent, so I've forgotten how all this works (all ends up as no-ops
-on platforms I tend to use these days!)  Good luck, I'll be interested
-to see what this turns out to be.
+Also, as a precaution, add a warning and bail if cpumask_nth() returns
+a nonexistent cpu.
 
->=20
-> > >=20
-> > > WITH_LOCAL_DMABUF_API=3DOFF (so that it uses fileio):
-> > > =C2=A0 sudo utils/iio_rwdev -b 4096 cf-ad9361-lpc | dd of=3D/dev/zero
-> > > status=3Dprogress
-> > > =C2=A0 2446422528 bytes (2.4 GB, 2.3 GiB) copied, 22 s, 111 MB/s
-> > >=20
-> > > WITH_LOCAL_DMABUF_API=3DON:
-> > > =C2=A0 sudo utils/iio_rwdev -b 4096 cf-ad9361-lpc | dd of=3D/dev/zero
-> > > status=3Dprogress
-> > > =C2=A0 2334388736 bytes (2.3 GB, 2.2 GiB) copied, 21 s, 114 MB/s
-> > >=20
-> > > One interesting thing to note is that fileio is (currently)
-> > > actually
-> > > faster than the DMABUF interface if you increase a lot the buffer
-> > > size.
-> > > My explanation is that the cache invalidation routine takes more
-> > > and
-> > > more time the bigger the DMABUF gets. This is because the DMABUF is
-> > > backed by small-size pages, so a (e.g.) 64 MiB DMABUF is backed by
-> > > up
-> > > to 16 thousands pages, that have to be invalidated one by one. This
-> > > can
-> > > be addressed by using huge pages, but the udmabuf driver does not
-> > > (yet)
-> > > support creating DMABUFs backed by huge pages. =20
-> >=20
-> > I'd imagine folios of reasonable size will help sort of a huge page
-> > as then hopefully it will use the flush by va range instructions if
-> > available.
-> >  =20
-> > >=20
-> > > Anyway, the real benefits happen when the DMABUFs are either shared
-> > > between IIO devices, or between the IIO subsystem and another
-> > > filesystem. In that case, the DMABUFs are simply passed around
-> > > drivers,
-> > > without the data being copied at any moment.
-> > >=20
-> > > We use that feature to transfer samples from our transceivers to
-> > > USB,
-> > > using a DMABUF interface to FunctionFS [4].
-> > >=20
-> > > This drastically increases the throughput, to about 274 MiB/s over
-> > > a
-> > > USB3 link, vs. 127 MiB/s using IIO's fileio interface + write() to
-> > > the
-> > > FunctionFS endpoints, for a lower CPU usage (0.85 vs. 0.65 load
-> > > avg.). =20
-> >=20
-> > This is a nice example.=C2=A0 Where are you with getting the patch merg=
-ed? =20
->=20
-> I'll send a new version (mostly a [RESEND]...) in the coming days. As
-> you can see from the review on my last attempt, the main blocker is
-> that nobody wants to merge a new interface if the rest of the kernel
-> bits aren't upstream yet. Kind of a chicken-and-egg problem :)
->=20
-> > Overall, this code looks fine to me, though there are some parts that
-> > need review by other maintainers (e.g. Vinod for the dmaengine
-> > callback)
-> > and I'd like a 'looks fine' at least form those who know a lot more
-> > about dmabuf than I do.
-> >=20
-> > To actually make this useful sounds like either udmabuf needs some
-> > perf
-> > improvements, or there has to be an upstream case of sharing it
-> > without
-> > something else (e.g your functionfs patches).=C2=A0 So what do we need =
-to
-> > get in before the positive benefit becomes worth carrying this extra
-> > complexity? (which isn't too bad so I'm fine with a small benefit and
-> > promises of riches :) =20
->=20
-> I think the FunctionFS DMABUF interface can be pushed as well for 5.9,
-> in parallel of this one, as the feedback on the V1 was good. I might
-> just need some help pushing it forward (kind of a "I merge it if you
-> merge it" guarantee).
+Reported-by: Zhang, Rex <rex.zhang@intel.com>
+Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
+---
+ drivers/crypto/intel/iaa/iaa_crypto_main.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-Ok. If we get a 'fine by us' from DMABUF folk I'd be happy to make
-that commitment for the IIO parts.
+diff --git a/drivers/crypto/intel/iaa/iaa_crypto_main.c b/drivers/crypto/in=
+tel/iaa/iaa_crypto_main.c
+index 5093361b0107..782157a74043 100644
+--- a/drivers/crypto/intel/iaa/iaa_crypto_main.c
++++ b/drivers/crypto/intel/iaa/iaa_crypto_main.c
+@@ -1017,12 +1017,17 @@ static void rebalance_wq_table(void)
+ 		return;
+ 	}
+=20
+-	for_each_online_node(node) {
++	for_each_node_with_cpus(node) {
+ 		node_cpus =3D cpumask_of_node(node);
+=20
+ 		for (cpu =3D 0; cpu < nr_cpus_per_node; cpu++) {
+ 			int node_cpu =3D cpumask_nth(cpu, node_cpus);
+=20
++			if (WARN_ON(node_cpu >=3D nr_cpu_ids)) {
++				pr_debug("node_cpu %d doesn't exist!\n", node_cpu);
++				return;
++			}
++
+ 			if ((cpu % cpus_per_iaa) =3D=3D 0)
+ 				iaa++;
+=20
+@@ -2095,10 +2100,13 @@ static struct idxd_device_driver iaa_crypto_driver =
+=3D {
+ static int __init iaa_crypto_init_module(void)
+ {
+ 	int ret =3D 0;
++	int node;
+=20
+ 	nr_cpus =3D num_online_cpus();
+-	nr_nodes =3D num_online_nodes();
+-	nr_cpus_per_node =3D nr_cpus / nr_nodes;
++	for_each_node_with_cpus(node)
++		nr_nodes++;
++	if (nr_nodes)
++		nr_cpus_per_node =3D nr_cpus / nr_nodes;
+=20
+ 	if (crypto_has_comp("deflate-generic", 0, 0))
+ 		deflate_generic_tfm =3D crypto_alloc_comp("deflate-generic", 0, 0);
+--=20
+2.34.1
 
-Jonathan
-
->=20
-> Cheers,
-> -Paul
->=20
-> >=20
-> > Jonathan
-> >  =20
-> > >=20
-> > > Based on linux-next/next-20231219.
-> > >=20
-> > > Cheers,
-> > > -Paul
-> > >=20
-> > > [1]
-> > > https://lore.kernel.org/all/20230807112113.47157-1-paul@crapouillou.n=
-et/
-> > > [2]
-> > > https://lore.kernel.org/all/20230403154800.215924-1-paul@crapouillou.=
-net/
-> > > [3]
-> > > https://github.com/analogdevicesinc/libiio/tree/pcercuei/dev-new-dmab=
-uf-api
-> > > [4]
-> > > https://lore.kernel.org/all/20230322092118.9213-1-paul@crapouillou.ne=
-t/
-> > >=20
-> > > ---
-> > > Changelog:
-> > > - [3/8]: Replace V3's dmaengine_prep_slave_dma_array() with a new
-> > > =C2=A0 dmaengine_prep_slave_dma_vec(), which uses a new 'dma_vec'
-> > > struct.
-> > > =C2=A0 Note that at some point we will need to support cyclic transfe=
-rs
-> > > =C2=A0 using dmaengine_prep_slave_dma_vec(). Maybe with a new "flags"
-> > > =C2=A0 parameter to the function?
-> > >=20
-> > > - [4/8]: Implement .device_prep_slave_dma_vec() instead of V3's
-> > > =C2=A0 .device_prep_slave_dma_array().
-> > >=20
-> > > =C2=A0 @Vinod: this patch will cause a small conflict with my other
-> > > =C2=A0 patchset adding scatter-gather support to the axi-dmac driver.
-> > > =C2=A0 This patch adds a call to axi_dmac_alloc_desc(num_sgs), but the
-> > > =C2=A0 prototype of this function changed in my other patchset - it
-> > > would
-> > > =C2=A0 have to be passed the "chan" variable. I don't know how you
-> > > prefer it
-> > > =C2=A0 to be resolved. Worst case scenario (and if @Jonathan is okay
-> > > with
-> > > =C2=A0 that) this one patch can be re-sent later, but it would make t=
-his
-> > > =C2=A0 patchset less "atomic".
-> > >=20
-> > > - [5/8]:
-> > > =C2=A0 - Use dev_err() instead of pr_err()
-> > > =C2=A0 - Inline to_iio_dma_fence()
-> > > =C2=A0 - Add comment to explain why we unref twice when detaching dma=
-buf
-> > > =C2=A0 - Remove TODO comment. It is actually safe to free the file's
-> > > =C2=A0=C2=A0=C2=A0 private data even when transfers are still pending=
- because it
-> > > =C2=A0=C2=A0=C2=A0 won't be accessed.
-> > > =C2=A0 - Fix documentation of new fields in struct
-> > > iio_buffer_access_funcs
-> > > =C2=A0 - iio_dma_resv_lock() does not need to be exported, make it
-> > > static
-> > >=20
-> > > - [7/8]:
-> > > =C2=A0 - Use the new dmaengine_prep_slave_dma_vec().
-> > > =C2=A0 - Restrict to input buffers, since output buffers are not yet
-> > > =C2=A0=C2=A0=C2=A0 supported by IIO buffers.
-> > >=20
-> > > - [8/8]:
-> > > =C2=A0 Use description lists for the documentation of the three new
-> > > IOCTLs
-> > > =C2=A0 instead of abusing subsections.
-> > >=20
-> > > ---
-> > > Alexandru Ardelean (1):
-> > > =C2=A0 iio: buffer-dma: split iio_dma_buffer_fileio_free() function
-> > >=20
-> > > Paul Cercueil (7):
-> > > =C2=A0 iio: buffer-dma: Get rid of outgoing queue
-> > > =C2=A0 dmaengine: Add API function dmaengine_prep_slave_dma_vec()
-> > > =C2=A0 dmaengine: dma-axi-dmac: Implement device_prep_slave_dma_vec
-> > > =C2=A0 iio: core: Add new DMABUF interface infrastructure
-> > > =C2=A0 iio: buffer-dma: Enable support for DMABUFs
-> > > =C2=A0 iio: buffer-dmaengine: Support new DMABUF based userspace API
-> > > =C2=A0 Documentation: iio: Document high-speed DMABUF based API
-> > >=20
-> > > =C2=A0Documentation/iio/dmabuf_api.rst=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 54 +++
-> > > =C2=A0Documentation/iio/index.rst=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
-=C2=A0=C2=A0 2 +
-> > > =C2=A0drivers/dma/dma-axi-dmac.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 |=C2=A0 40 ++
-> > > =C2=A0drivers/iio/buffer/industrialio-buffer-dma.c=C2=A0 | 242 ++++++=
-++---
-> > > =C2=A0.../buffer/industrialio-buffer-dmaengine.c=C2=A0=C2=A0=C2=A0 |=
-=C2=A0 52 ++-
-> > > =C2=A0drivers/iio/industrialio-buffer.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 402
-> > > ++++++++++++++++++
-> > > =C2=A0include/linux/dmaengine.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0 25 ++
-> > > =C2=A0include/linux/iio/buffer-dma.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 33 +-
-> > > =C2=A0include/linux/iio/buffer_impl.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 26 ++
-> > > =C2=A0include/uapi/linux/iio/buffer.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 22 +
-> > > =C2=A010 files changed, 836 insertions(+), 62 deletions(-)
-> > > =C2=A0create mode 100644 Documentation/iio/dmabuf_api.rst
-> > >  =20
-> >  =20
->=20
->=20
 
 

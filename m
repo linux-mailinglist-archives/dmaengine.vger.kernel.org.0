@@ -1,364 +1,181 @@
-Return-Path: <dmaengine+bounces-691-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-693-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB77082543D
-	for <lists+dmaengine@lfdr.de>; Fri,  5 Jan 2024 14:14:20 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D00B825AC0
+	for <lists+dmaengine@lfdr.de>; Fri,  5 Jan 2024 19:54:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3B5E71F21A91
-	for <lists+dmaengine@lfdr.de>; Fri,  5 Jan 2024 13:14:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D7FD3281D80
+	for <lists+dmaengine@lfdr.de>; Fri,  5 Jan 2024 18:54:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA7492D7AF;
-	Fri,  5 Jan 2024 13:10:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 316913D3A1;
+	Fri,  5 Jan 2024 18:48:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="1MykyLek"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="OtiEQ4Md"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2047.outbound.protection.outlook.com [40.107.102.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B05582D622;
-	Fri,  5 Jan 2024 13:10:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 405A5xIQ029634;
-	Fri, 5 Jan 2024 14:08:15 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	selector1; bh=pdoLzds6ybOz4DH26I8jBcXVv6K38hVXWpk0gC53suE=; b=1M
-	ykyLekQxVB8QeCibzGBFTU+wwbLAaFThGpcG3Uv7SVcH8MRj4Ho8gJ43sRxYxZPb
-	vPzYj/z5+v+6p7Ns9TMhn+bCIEAdHVMnHk7KLgRsD808/d2Z6dPnGhFJ9wjI/Dbx
-	XkC0qvX9W2hynl7CwPzDudaCEF0STykNcFY+7dHZjkl2d27a2JyCVrsF8yhzHtp1
-	pHOsRJBNCG4Q8mB2+SpGFAtZuvH8vTxCX1/Ha0eWpW8DZBNqWptIw47STH88jj7n
-	C3g3pqfRik7xFBA7gUNSGu7eJbwHrN5e7hsd6Ik5dvB75DEYq5mkVrIeN1WC/yx+
-	hKdTGOBgSBxB7Ck7wvzA==
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ve9gfj62u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 05 Jan 2024 14:08:15 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8AE39100038;
-	Fri,  5 Jan 2024 14:08:14 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7EE2322A6C9;
-	Fri,  5 Jan 2024 14:08:14 +0100 (CET)
-Received: from localhost (10.201.20.32) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 5 Jan
- 2024 14:08:14 +0100
-From: Gatien Chevallier <gatien.chevallier@foss.st.com>
-To: <Oleksii_Moisieiev@epam.com>, <gregkh@linuxfoundation.org>,
-        <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>, <alexandre.torgue@foss.st.com>,
-        <vkoul@kernel.org>, <jic23@kernel.org>, <olivier.moysan@foss.st.com>,
-        <arnaud.pouliquen@foss.st.com>, <mchehab@kernel.org>,
-        <fabrice.gasnier@foss.st.com>, <andi.shyti@kernel.org>,
-        <ulf.hansson@linaro.org>, <edumazet@google.com>, <kuba@kernel.org>,
-        <pabeni@redhat.com>, <hugues.fruchet@foss.st.com>, <lee@kernel.org>,
-        <will@kernel.org>, <catalin.marinas@arm.com>, <arnd@kernel.org>,
-        <richardcochran@gmail.com>, Frank Rowand <frowand.list@gmail.com>,
-        <peng.fan@oss.nxp.com>, <lars@metafoo.de>, <rcsekar@samsung.com>,
-        <wg@grandegger.com>, <mkl@pengutronix.de>
-CC: <linux-crypto@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <dmaengine@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
-        <linux-iio@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        <linux-media@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-        <linux-serial@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>,
-        Gatien Chevallier
-	<gatien.chevallier@foss.st.com>
-Subject: [PATCH v9 13/13] ARM: dts: stm32: put ETZPC as an access controller for STM32MP13x boards
-Date: Fri, 5 Jan 2024 14:04:04 +0100
-Message-ID: <20240105130404.301172-14-gatien.chevallier@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240105130404.301172-1-gatien.chevallier@foss.st.com>
-References: <20240105130404.301172-1-gatien.chevallier@foss.st.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9759F3D38C
+	for <dmaengine@vger.kernel.org>; Fri,  5 Jan 2024 18:48:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=h3SI8zxpG0MEQOV8ixMlXjFx0ycjC+dDjdA6BkU5TWRSOFdqShzYvsJ0uO9BMKRqn4f5j59jplhBkrlx51EeV4d2xbn7AtMUNhlVaBLFL3qnotx/TcjiQj8bQgob7fQNYlW4Y1gKemTUhkd3rnNDtPhuO1pFG6i6e5pwxbh9nYu2/IgTeltI2VyBA1uopDkPW3xWSRWWuwY9lQhTCypxfjPTPILDN3OJtEb1JVqljvZz4M1FoSUvQLYDFKBuuC0qeqM/GvnZjJwY7/Ebw+pHLe0przmOg4D3agNtCy++QdBJhHgxvB3mwc5VNsOo8qMYpW4sRquTDBBo/19EKNHviQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pW8GX4Y0wD79Q4gLECr33oJzfZzOaTs0vveSw6K0Oc4=;
+ b=XoK6UOMaVzlabyqMnIdc24qZJr0nssLIN391Z7Iy9ePSVtOwywFG3zdr8igRozxSapVaymDHtRxxz7CmaEayn42mYLYGh1frA32i16GRQrA2Hc/wCZAp78XJTMiw+WxImxeWzsaluDF6oA+aDoZb+fNqhCd6itBZP9fFgJPN5q5tIdHBWPs2QqIGi6rCotnw2Y/r1sSBPQktCwcfVXF2+u8SHb1/jQ859AfDuHwUHmX1GZf+v+o9UgglI0sYWh9REJOaLgKM+C/feAqUEK2w/vN9mGr/XdGSATr0pJBTeAoejRCWMXJ3XEY4Lbq+ss2xsqEU0TKXmWb2uyljkHQJEw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pW8GX4Y0wD79Q4gLECr33oJzfZzOaTs0vveSw6K0Oc4=;
+ b=OtiEQ4MdNFX0wW9HlT950jt43nXCfPYi6KItgTb8vNS2wabV6fhBXGa8+YeUvIIbGcKsba72EAJmPwwtFkqSwVTkPLC6/GeEQPDPRxR5RRJL/Vd8M4PmdlI+TnYR620OCc/kZDKSiptz5GJbLHJD2tnAREyVqJ65uJE3IJNgzMo=
+Received: from MN0PR12MB5953.namprd12.prod.outlook.com (2603:10b6:208:37c::15)
+ by SA1PR12MB6848.namprd12.prod.outlook.com (2603:10b6:806:25f::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.25; Fri, 5 Jan
+ 2024 18:48:01 +0000
+Received: from MN0PR12MB5953.namprd12.prod.outlook.com
+ ([fe80::aea:c51c:23ee:6b49]) by MN0PR12MB5953.namprd12.prod.outlook.com
+ ([fe80::aea:c51c:23ee:6b49%4]) with mapi id 15.20.7159.013; Fri, 5 Jan 2024
+ 18:48:01 +0000
+From: "Pandey, Radhey Shyam" <radhey.shyam.pandey@amd.com>
+To: Peter Korsgaard <peter@korsgaard.com>, Vinod Koul <vkoul@kernel.org>,
+	"dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
+CC: "Simek, Michal" <michal.simek@amd.com>
+Subject: RE: [PATCH] dmaengine: xilinx_dma: check for invalid vdma interleaved
+ parameters
+Thread-Topic: [PATCH] dmaengine: xilinx_dma: check for invalid vdma
+ interleaved parameters
+Thread-Index: AQHaQAey7qs4CWRnVkeicKGguwu76A==
+Date: Fri, 5 Jan 2024 18:48:00 +0000
+Message-ID:
+ <MN0PR12MB595393BDA24914C876750D05B7662@MN0PR12MB5953.namprd12.prod.outlook.com>
+References: <20240105105956.1370220-1-peter@korsgaard.com>
+In-Reply-To: <20240105105956.1370220-1-peter@korsgaard.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MN0PR12MB5953:EE_|SA1PR12MB6848:EE_
+x-ms-office365-filtering-correlation-id: ded2ff47-afd7-40e0-f4c5-08dc0e1ed7ab
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ vBwzKoCoSjNY9dIFIRxUF/bxfKkv8992zk5NSskgZJUyBeFvSJhbav4k4XZL3prmolJ4reVYsiygs/pSNQe6a9wuiGxr46RjObEeqxrhysX3jB8xfhBgCB/bIXGbo8EtKu8dzVL+4S+AGKhpslNSQv1CWIZZtHUEhJfODMRh0p+beM7h53OkSZkBfNpLNXAVuK5KmBV3REuKIpCe5yWQKfScs5q+HnJi1IUD9PRyDVw2XhpdOYkQNK1QnemG4FZcZsHUtcZxH1knfoQCUuZtgjFnIHFLc+GVTF19750yAm4xcrGc5oeeRwNY8riXThUReD326rUQTS5wnwGZGxbA487ErouBbg8Qq8tXE5QGspJ91vKqlcmCCyrTSKALuQiqtMptHB0h/9xCuh+NiahBrqKCQFDBgaYnvXeqNS2MDumpkWMMfqiX3m+2oGdMrNiCbattHni7cL7Z/sWr+uHSOYwBU3WemTm7TM1+KsHs08DZfqOl+M58L/s8GIa0qvScjTCdkvV5t8p26Xxs1PqwaXIVV93QNqFoeitFTk8VYFPLHjiSqSbulc1TdNu0u8FNeqdu6PXKjhaxiBjRKeVQxVvpfDsdqwJdggTj1ppA7ciWmDjhv1YwwESelDdfwLpe
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB5953.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(346002)(376002)(396003)(136003)(39860400002)(230922051799003)(451199024)(64100799003)(186009)(1800799012)(26005)(71200400001)(66556008)(122000001)(83380400001)(38100700002)(110136005)(66946007)(76116006)(64756008)(66446008)(66476007)(478600001)(86362001)(5660300002)(2906002)(8936002)(4326008)(8676002)(33656002)(52536014)(55016003)(38070700009)(316002)(9686003)(7696005)(6506007)(41300700001)(53546011);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?rZMBy0t0t7B5CeAV92/2Crse/Nx7b87+Jyx3k20qx7A36qTmFQg1ARekbReL?=
+ =?us-ascii?Q?YMxu0z+Un8DkgQcb4Jyph/VRFQ0dC/mB9qGfHBG5huj0opV5PubCk7w6DtZg?=
+ =?us-ascii?Q?BuTJEQf0wh8VuOoyyyaLCcN0VyJMNjRdvkN30kcRFYMXqRXEtbr8HrOtxRZl?=
+ =?us-ascii?Q?ymkXMupUmxA97cl879H4TTNWv5F0WyZAyzHm+6GwHKHr/31UMtObL1i/gXlH?=
+ =?us-ascii?Q?Y0Wr90DtoCNgFEtWmKcegs5S1X+fMKeqUupj3WfEc/1Gvq1SxEf4vhIwz32R?=
+ =?us-ascii?Q?3IO0WMej4rgKrCyeJ1NBCi5jpyEQG45k/DOpQeYlb8XpUq+ZdmHRqDB7qbIv?=
+ =?us-ascii?Q?nqHENPnK5E+bMW9Vz4iPKaW1DeNEwK0SydwnMc/eA6FritzNNE352vXtiSW7?=
+ =?us-ascii?Q?IhNzqmc+9Rv6xI35xp13Dz0WndFxu5EF+HCAA9Nl0uLq71G5ACa8OzChEynX?=
+ =?us-ascii?Q?BzEgWF/MlW1xXb1ZDUJIL/wHrApWvgNT/Z+PdUYA4/vj9Uz1+S4DNugEiV/C?=
+ =?us-ascii?Q?Jq2QZlEBpd6nflUO2UKMgGIrbeESvUohLmS/ZJIMJ9QFlKgBP8HYQYwM9SIm?=
+ =?us-ascii?Q?6eBvN3Irr3BqnHuAixvUCpvBSmlgNIIpMIpOSbuOvke/dW5PTiYf049BcJHV?=
+ =?us-ascii?Q?NPNuUzfW7h1j//Y0/Bf2nmo+ACp7D0JD6bLGh8QuBC1neT1/+84AnJmIsRrt?=
+ =?us-ascii?Q?Fa63BVVqJXSbBYCvPj8D0NvMuxupzbeH/7HKKzxrL9w3ZFORebFpPNsrbvPP?=
+ =?us-ascii?Q?ocpDrrkc6Lau7DqA2L/Icg2XBNUeHyN+ucrl92BGvlaf5/Z0gqmXkiWL9Gjh?=
+ =?us-ascii?Q?WXaKjjSuOGN/pzE7/lZs5SWrwjBdS7buzSgCtCFfXZki42ICwchctBAnS+Bh?=
+ =?us-ascii?Q?nj9C745YSFF0C9PlygjmzPoH08Nc9Z8sdhkA92jOdL+roDsxIqr0LPN5/Srb?=
+ =?us-ascii?Q?uqPmsmA/KyqlbC28dvKQIJBaCq1//8RB240UrwGPLcAmQeZIbkkwlRvb4Zkl?=
+ =?us-ascii?Q?/oAbyYvqONq9ZVprVVaSEg+3Z+OxcjYbGEIU/J2CRe6A6IX12OcMAOrr8giq?=
+ =?us-ascii?Q?hp14u0fQWYwNQWwegCiKDcSNB7arOovL/ncYLO4+z59LMOkR1aZXN/3RKyUD?=
+ =?us-ascii?Q?dLLPc67sMj6ao1xz/tKOogPW91jC6WaRwM4H7TTmX84k56MQkAXXW2Jvs+o6?=
+ =?us-ascii?Q?xqIDN7A+FRKorELU7L4r7ucOUV9QWUlMklzqtoREtxKyhT4LPsdL4859q4qA?=
+ =?us-ascii?Q?O7GbzOmFyMpxbH92OP2n4Bw6ju//+wGDGc3NwX7kjR3k2AN7yWEAtCJniLZd?=
+ =?us-ascii?Q?JOIuzh5+ToLp73XF4JetdSk/AB9UjjKWxL+ykBzWP08lqQBNZkIO60INxZlh?=
+ =?us-ascii?Q?K6wIrsZZMa/4j3bZxGj2TCtBCEbyjLdYjEmeXO9Te7nU/9gd7xv9Gixt7Q/c?=
+ =?us-ascii?Q?UA1wi+DgnGJarLpvhJdY81R3AWmHCGKvu3vc6YsIoGMGJvmYgj2n0/z83Ov9?=
+ =?us-ascii?Q?pJCplrdKUCMYWbpi1NxwyTqUodiWB6uiyPSTetejxE/S0oNDYIXsTgesEZdA?=
+ =?us-ascii?Q?9768DfZzit4GNdXSH8s=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-05_06,2024-01-05_01,2023-05-22_02
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB5953.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ded2ff47-afd7-40e0-f4c5-08dc0e1ed7ab
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jan 2024 18:48:00.9673
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 33zbnrSlCJjRBtABhMVotGaQ0hlV9kOm6DMuSUo2UmYlMGwkCX2RxVPF3hO/gScR
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6848
 
-Reference ETZPC as an access-control-provider.
+> -----Original Message-----
+> From: Peter Korsgaard <peter@korsgaard.com>
+> Sent: Friday, January 5, 2024 4:30 PM
+> To: Vinod Koul <vkoul@kernel.org>; dmaengine@vger.kernel.org
+> Cc: Michal Simek <michal.simek@amd.com>; Peter Korsgaard
+> <peter@korsgaard.com>
+> Subject: [PATCH] dmaengine: xilinx_dma: check for invalid vdma interleave=
+d
+> parameters
+>=20
+> The VDMA HSIZE register (corresponding to sgl[0].size) is only 16bit wide=
+ /
+> the VSIZE register (corresponding to numf) is only 13bit wide, so reject
+> requests not fitting within that rather than silently transferring too li=
+ttle data.
+>=20
+> Signed-off-by: Peter Korsgaard <peter@korsgaard.com>
+Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+Thanks!
 
-For more information on which peripheral is securable or supports MCU
-isolation, please read the STM32MP13 reference manual
-
-Signed-off-by: Gatien Chevallier <gatien.chevallier@foss.st.com>
----
-
-Patch not present in V6
-
- arch/arm/boot/dts/st/stm32mp131.dtsi  | 26 ++++++++++++++++++++++++++
- arch/arm/boot/dts/st/stm32mp133.dtsi  |  1 +
- arch/arm/boot/dts/st/stm32mp13xc.dtsi |  1 +
- arch/arm/boot/dts/st/stm32mp13xf.dtsi |  1 +
- 4 files changed, 29 insertions(+)
-
-diff --git a/arch/arm/boot/dts/st/stm32mp131.dtsi b/arch/arm/boot/dts/st/stm32mp131.dtsi
-index 6ba8e3fd43b0..74ceece168ce 100644
---- a/arch/arm/boot/dts/st/stm32mp131.dtsi
-+++ b/arch/arm/boot/dts/st/stm32mp131.dtsi
-@@ -883,6 +883,7 @@ etzpc: bus@5c007000 {
- 			reg = <0x5c007000 0x400>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-+			#access-controller-cells = <1>;
- 			ranges;
- 
- 			adc_2: adc@48004000 {
-@@ -895,6 +896,7 @@ adc_2: adc@48004000 {
- 				#interrupt-cells = <1>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-+				access-controllers = <&etzpc 33>;
- 				status = "disabled";
- 
- 				adc2: adc@0 {
-@@ -942,6 +944,7 @@ usbotg_hs: usb@49000000 {
- 				dr_mode = "otg";
- 				otg-rev = <0x200>;
- 				usb33d-supply = <&scmi_usb33>;
-+				access-controllers = <&etzpc 34>;
- 				status = "disabled";
- 			};
- 
-@@ -955,6 +958,7 @@ usart1: serial@4c000000 {
- 				dmas = <&dmamux1 41 0x400 0x5>,
- 				<&dmamux1 42 0x400 0x1>;
- 				dma-names = "rx", "tx";
-+				access-controllers = <&etzpc 16>;
- 				status = "disabled";
- 			};
- 
-@@ -968,6 +972,7 @@ usart2: serial@4c001000 {
- 				dmas = <&dmamux1 43 0x400 0x5>,
- 				<&dmamux1 44 0x400 0x1>;
- 				dma-names = "rx", "tx";
-+				access-controllers = <&etzpc 17>;
- 				status = "disabled";
- 			};
- 
-@@ -979,6 +984,7 @@ i2s4: audio-controller@4c002000 {
- 				dmas = <&dmamux1 83 0x400 0x01>,
- 				<&dmamux1 84 0x400 0x01>;
- 				dma-names = "rx", "tx";
-+				access-controllers = <&etzpc 13>;
- 				status = "disabled";
- 			};
- 
-@@ -993,6 +999,7 @@ spi4: spi@4c002000 {
- 				dmas = <&dmamux1 83 0x400 0x01>,
- 				       <&dmamux1 84 0x400 0x01>;
- 				dma-names = "rx", "tx";
-+				access-controllers = <&etzpc 18>;
- 				status = "disabled";
- 			};
- 
-@@ -1007,6 +1014,7 @@ spi5: spi@4c003000 {
- 				dmas = <&dmamux1 85 0x400 0x01>,
- 				       <&dmamux1 86 0x400 0x01>;
- 				dma-names = "rx", "tx";
-+				access-controllers = <&etzpc 19>;
- 				status = "disabled";
- 			};
- 
-@@ -1025,6 +1033,7 @@ i2c3: i2c@4c004000 {
- 				dma-names = "rx", "tx";
- 				st,syscfg-fmp = <&syscfg 0x4 0x4>;
- 				i2c-analog-filter;
-+				access-controllers = <&etzpc 20>;
- 				status = "disabled";
- 			};
- 
-@@ -1043,6 +1052,7 @@ i2c4: i2c@4c005000 {
- 				dma-names = "rx", "tx";
- 				st,syscfg-fmp = <&syscfg 0x4 0x8>;
- 				i2c-analog-filter;
-+				access-controllers = <&etzpc 21>;
- 				status = "disabled";
- 			};
- 
-@@ -1061,6 +1071,7 @@ i2c5: i2c@4c006000 {
- 				dma-names = "rx", "tx";
- 				st,syscfg-fmp = <&syscfg 0x4 0x10>;
- 				i2c-analog-filter;
-+				access-controllers = <&etzpc 22>;
- 				status = "disabled";
- 			};
- 
-@@ -1073,6 +1084,7 @@ timers12: timer@4c007000 {
- 				interrupt-names = "global";
- 				clocks = <&rcc TIM12_K>;
- 				clock-names = "int";
-+				access-controllers = <&etzpc 23>;
- 				status = "disabled";
- 
- 				pwm {
-@@ -1097,6 +1109,7 @@ timers13: timer@4c008000 {
- 				interrupt-names = "global";
- 				clocks = <&rcc TIM13_K>;
- 				clock-names = "int";
-+				access-controllers = <&etzpc 24>;
- 				status = "disabled";
- 
- 				pwm {
-@@ -1121,6 +1134,7 @@ timers14: timer@4c009000 {
- 				interrupt-names = "global";
- 				clocks = <&rcc TIM14_K>;
- 				clock-names = "int";
-+				access-controllers = <&etzpc 25>;
- 				status = "disabled";
- 
- 				pwm {
-@@ -1150,6 +1164,7 @@ timers15: timer@4c00a000 {
- 				<&dmamux1 107 0x400 0x1>,
- 				<&dmamux1 108 0x400 0x1>;
- 				dma-names = "ch1", "up", "trig", "com";
-+				access-controllers = <&etzpc 26>;
- 				status = "disabled";
- 
- 				pwm {
-@@ -1177,6 +1192,7 @@ timers16: timer@4c00b000 {
- 				dmas = <&dmamux1 109 0x400 0x1>,
- 				<&dmamux1 110 0x400 0x1>;
- 				dma-names = "ch1", "up";
-+				access-controllers = <&etzpc 27>;
- 				status = "disabled";
- 
- 				pwm {
-@@ -1204,6 +1220,7 @@ timers17: timer@4c00c000 {
- 				dmas = <&dmamux1 111 0x400 0x1>,
- 				       <&dmamux1 112 0x400 0x1>;
- 				dma-names = "ch1", "up";
-+				access-controllers = <&etzpc 28>;
- 				status = "disabled";
- 
- 				pwm {
-@@ -1228,6 +1245,7 @@ lptimer2: timer@50021000 {
- 				clocks = <&rcc LPTIM2_K>;
- 				clock-names = "mux";
- 				wakeup-source;
-+				access-controllers = <&etzpc 1>;
- 				status = "disabled";
- 
- 				pwm {
-@@ -1262,6 +1280,7 @@ lptimer3: timer@50022000 {
- 				clocks = <&rcc LPTIM3_K>;
- 				clock-names = "mux";
- 				wakeup-source;
-+				access-controllers = <&etzpc 2>;
- 				status = "disabled";
- 
- 				pwm {
-@@ -1290,6 +1309,7 @@ hash: hash@54003000 {
- 				resets = <&rcc HASH1_R>;
- 				dmas = <&mdma 30 0x2 0x1000a02 0x0 0x0>;
- 				dma-names = "in";
-+				access-controllers = <&etzpc 41>;
- 			};
- 
- 			rng: rng@54004000 {
-@@ -1297,6 +1317,7 @@ rng: rng@54004000 {
- 				reg = <0x54004000 0x400>;
- 				clocks = <&rcc RNG1_K>;
- 				resets = <&rcc RNG1_R>;
-+				access-controllers = <&etzpc 40>;
- 			};
- 
- 			fmc: memory-controller@58002000 {
-@@ -1311,6 +1332,7 @@ fmc: memory-controller@58002000 {
- 				#size-cells = <1>;
- 				clocks = <&rcc FMC_K>;
- 				resets = <&rcc FMC_R>;
-+				access-controllers = <&etzpc 54>;
- 				status = "disabled";
- 
- 				nand-controller@4,0 {
-@@ -1344,6 +1366,7 @@ qspi: spi@58003000 {
- 				dma-names = "tx", "rx";
- 				clocks = <&rcc QSPI_K>;
- 				resets = <&rcc QSPI_R>;
-+				access-controllers = <&etzpc 55>;
- 				status = "disabled";
- 			};
- 
-@@ -1358,6 +1381,7 @@ sdmmc1: mmc@58005000 {
- 				cap-sd-highspeed;
- 				cap-mmc-highspeed;
- 				max-frequency = <130000000>;
-+				access-controllers = <&etzpc 50>;
- 				status = "disabled";
- 			};
- 
-@@ -1372,6 +1396,7 @@ sdmmc2: mmc@58007000 {
- 				cap-sd-highspeed;
- 				cap-mmc-highspeed;
- 				max-frequency = <130000000>;
-+				access-controllers = <&etzpc 51>;
- 				status = "disabled";
- 			};
- 
-@@ -1385,6 +1410,7 @@ usbphyc: usbphyc@5a006000 {
- 				resets = <&rcc USBPHY_R>;
- 				vdda1v1-supply = <&scmi_reg11>;
- 				vdda1v8-supply = <&scmi_reg18>;
-+				access-controllers = <&etzpc 5>;
- 				status = "disabled";
- 
- 				usbphyc_port0: usb-phy@0 {
-diff --git a/arch/arm/boot/dts/st/stm32mp133.dtsi b/arch/arm/boot/dts/st/stm32mp133.dtsi
-index c4d3a520c14b..3e394c8e58b9 100644
---- a/arch/arm/boot/dts/st/stm32mp133.dtsi
-+++ b/arch/arm/boot/dts/st/stm32mp133.dtsi
-@@ -47,6 +47,7 @@ adc_1: adc@48003000 {
- 		#interrupt-cells = <1>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		access-controllers = <&etzpc 32>;
- 		status = "disabled";
- 
- 		adc1: adc@0 {
-diff --git a/arch/arm/boot/dts/st/stm32mp13xc.dtsi b/arch/arm/boot/dts/st/stm32mp13xc.dtsi
-index b9fb071a1471..a8bd5fe6536c 100644
---- a/arch/arm/boot/dts/st/stm32mp13xc.dtsi
-+++ b/arch/arm/boot/dts/st/stm32mp13xc.dtsi
-@@ -11,6 +11,7 @@ cryp: crypto@54002000 {
- 		interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&rcc CRYP1>;
- 		resets = <&rcc CRYP1_R>;
-+		access-controllers = <&etzpc 42>;
- 		status = "disabled";
- 	};
- };
-diff --git a/arch/arm/boot/dts/st/stm32mp13xf.dtsi b/arch/arm/boot/dts/st/stm32mp13xf.dtsi
-index b9fb071a1471..a8bd5fe6536c 100644
---- a/arch/arm/boot/dts/st/stm32mp13xf.dtsi
-+++ b/arch/arm/boot/dts/st/stm32mp13xf.dtsi
-@@ -11,6 +11,7 @@ cryp: crypto@54002000 {
- 		interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&rcc CRYP1>;
- 		resets = <&rcc CRYP1_R>;
-+		access-controllers = <&etzpc 42>;
- 		status = "disabled";
- 	};
- };
--- 
-2.35.3
+> ---
+>  drivers/dma/xilinx/xilinx_dma.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>=20
+> diff --git a/drivers/dma/xilinx/xilinx_dma.c
+> b/drivers/dma/xilinx/xilinx_dma.c index e40696f6f864..5eb51ae93e89
+> 100644
+> --- a/drivers/dma/xilinx/xilinx_dma.c
+> +++ b/drivers/dma/xilinx/xilinx_dma.c
+> @@ -112,7 +112,9 @@
+>=20
+>  /* Register Direct Mode Registers */
+>  #define XILINX_DMA_REG_VSIZE			0x0000
+> +#define XILINX_DMA_VSIZE_MASK			GENMASK(12, 0)
+>  #define XILINX_DMA_REG_HSIZE			0x0004
+> +#define XILINX_DMA_HSIZE_MASK			GENMASK(15, 0)
+>=20
+>  #define XILINX_DMA_REG_FRMDLY_STRIDE		0x0008
+>  #define XILINX_DMA_FRMDLY_STRIDE_FRMDLY_SHIFT	24
+> @@ -2050,6 +2052,10 @@ xilinx_vdma_dma_prep_interleaved(struct
+> dma_chan *dchan,
+>  	if (!xt->numf || !xt->sgl[0].size)
+>  		return NULL;
+>=20
+> +	if (xt->numf & ~XILINX_DMA_VSIZE_MASK ||
+> +	    xt->sgl[0].size & ~XILINX_DMA_HSIZE_MASK)
+> +		return NULL;
+> +
+>  	if (xt->frame_size !=3D 1)
+>  		return NULL;
+>=20
+> --
+> 2.39.2
 
 

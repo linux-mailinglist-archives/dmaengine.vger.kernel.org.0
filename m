@@ -1,181 +1,571 @@
-Return-Path: <dmaengine+bounces-693-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-694-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D00B825AC0
-	for <lists+dmaengine@lfdr.de>; Fri,  5 Jan 2024 19:54:54 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 79393825EC9
+	for <lists+dmaengine@lfdr.de>; Sat,  6 Jan 2024 08:53:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D7FD3281D80
-	for <lists+dmaengine@lfdr.de>; Fri,  5 Jan 2024 18:54:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4264F1F24793
+	for <lists+dmaengine@lfdr.de>; Sat,  6 Jan 2024 07:53:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 316913D3A1;
-	Fri,  5 Jan 2024 18:48:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E3E44428;
+	Sat,  6 Jan 2024 07:52:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="OtiEQ4Md"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JhgEQXO+"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2047.outbound.protection.outlook.com [40.107.102.47])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9759F3D38C
-	for <dmaengine@vger.kernel.org>; Fri,  5 Jan 2024 18:48:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=h3SI8zxpG0MEQOV8ixMlXjFx0ycjC+dDjdA6BkU5TWRSOFdqShzYvsJ0uO9BMKRqn4f5j59jplhBkrlx51EeV4d2xbn7AtMUNhlVaBLFL3qnotx/TcjiQj8bQgob7fQNYlW4Y1gKemTUhkd3rnNDtPhuO1pFG6i6e5pwxbh9nYu2/IgTeltI2VyBA1uopDkPW3xWSRWWuwY9lQhTCypxfjPTPILDN3OJtEb1JVqljvZz4M1FoSUvQLYDFKBuuC0qeqM/GvnZjJwY7/Ebw+pHLe0przmOg4D3agNtCy++QdBJhHgxvB3mwc5VNsOo8qMYpW4sRquTDBBo/19EKNHviQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pW8GX4Y0wD79Q4gLECr33oJzfZzOaTs0vveSw6K0Oc4=;
- b=XoK6UOMaVzlabyqMnIdc24qZJr0nssLIN391Z7Iy9ePSVtOwywFG3zdr8igRozxSapVaymDHtRxxz7CmaEayn42mYLYGh1frA32i16GRQrA2Hc/wCZAp78XJTMiw+WxImxeWzsaluDF6oA+aDoZb+fNqhCd6itBZP9fFgJPN5q5tIdHBWPs2QqIGi6rCotnw2Y/r1sSBPQktCwcfVXF2+u8SHb1/jQ859AfDuHwUHmX1GZf+v+o9UgglI0sYWh9REJOaLgKM+C/feAqUEK2w/vN9mGr/XdGSATr0pJBTeAoejRCWMXJ3XEY4Lbq+ss2xsqEU0TKXmWb2uyljkHQJEw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pW8GX4Y0wD79Q4gLECr33oJzfZzOaTs0vveSw6K0Oc4=;
- b=OtiEQ4MdNFX0wW9HlT950jt43nXCfPYi6KItgTb8vNS2wabV6fhBXGa8+YeUvIIbGcKsba72EAJmPwwtFkqSwVTkPLC6/GeEQPDPRxR5RRJL/Vd8M4PmdlI+TnYR620OCc/kZDKSiptz5GJbLHJD2tnAREyVqJ65uJE3IJNgzMo=
-Received: from MN0PR12MB5953.namprd12.prod.outlook.com (2603:10b6:208:37c::15)
- by SA1PR12MB6848.namprd12.prod.outlook.com (2603:10b6:806:25f::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.25; Fri, 5 Jan
- 2024 18:48:01 +0000
-Received: from MN0PR12MB5953.namprd12.prod.outlook.com
- ([fe80::aea:c51c:23ee:6b49]) by MN0PR12MB5953.namprd12.prod.outlook.com
- ([fe80::aea:c51c:23ee:6b49%4]) with mapi id 15.20.7159.013; Fri, 5 Jan 2024
- 18:48:01 +0000
-From: "Pandey, Radhey Shyam" <radhey.shyam.pandey@amd.com>
-To: Peter Korsgaard <peter@korsgaard.com>, Vinod Koul <vkoul@kernel.org>,
-	"dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
-CC: "Simek, Michal" <michal.simek@amd.com>
-Subject: RE: [PATCH] dmaengine: xilinx_dma: check for invalid vdma interleaved
- parameters
-Thread-Topic: [PATCH] dmaengine: xilinx_dma: check for invalid vdma
- interleaved parameters
-Thread-Index: AQHaQAey7qs4CWRnVkeicKGguwu76A==
-Date: Fri, 5 Jan 2024 18:48:00 +0000
-Message-ID:
- <MN0PR12MB595393BDA24914C876750D05B7662@MN0PR12MB5953.namprd12.prod.outlook.com>
-References: <20240105105956.1370220-1-peter@korsgaard.com>
-In-Reply-To: <20240105105956.1370220-1-peter@korsgaard.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MN0PR12MB5953:EE_|SA1PR12MB6848:EE_
-x-ms-office365-filtering-correlation-id: ded2ff47-afd7-40e0-f4c5-08dc0e1ed7ab
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- vBwzKoCoSjNY9dIFIRxUF/bxfKkv8992zk5NSskgZJUyBeFvSJhbav4k4XZL3prmolJ4reVYsiygs/pSNQe6a9wuiGxr46RjObEeqxrhysX3jB8xfhBgCB/bIXGbo8EtKu8dzVL+4S+AGKhpslNSQv1CWIZZtHUEhJfODMRh0p+beM7h53OkSZkBfNpLNXAVuK5KmBV3REuKIpCe5yWQKfScs5q+HnJi1IUD9PRyDVw2XhpdOYkQNK1QnemG4FZcZsHUtcZxH1knfoQCUuZtgjFnIHFLc+GVTF19750yAm4xcrGc5oeeRwNY8riXThUReD326rUQTS5wnwGZGxbA487ErouBbg8Qq8tXE5QGspJ91vKqlcmCCyrTSKALuQiqtMptHB0h/9xCuh+NiahBrqKCQFDBgaYnvXeqNS2MDumpkWMMfqiX3m+2oGdMrNiCbattHni7cL7Z/sWr+uHSOYwBU3WemTm7TM1+KsHs08DZfqOl+M58L/s8GIa0qvScjTCdkvV5t8p26Xxs1PqwaXIVV93QNqFoeitFTk8VYFPLHjiSqSbulc1TdNu0u8FNeqdu6PXKjhaxiBjRKeVQxVvpfDsdqwJdggTj1ppA7ciWmDjhv1YwwESelDdfwLpe
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB5953.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(346002)(376002)(396003)(136003)(39860400002)(230922051799003)(451199024)(64100799003)(186009)(1800799012)(26005)(71200400001)(66556008)(122000001)(83380400001)(38100700002)(110136005)(66946007)(76116006)(64756008)(66446008)(66476007)(478600001)(86362001)(5660300002)(2906002)(8936002)(4326008)(8676002)(33656002)(52536014)(55016003)(38070700009)(316002)(9686003)(7696005)(6506007)(41300700001)(53546011);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?rZMBy0t0t7B5CeAV92/2Crse/Nx7b87+Jyx3k20qx7A36qTmFQg1ARekbReL?=
- =?us-ascii?Q?YMxu0z+Un8DkgQcb4Jyph/VRFQ0dC/mB9qGfHBG5huj0opV5PubCk7w6DtZg?=
- =?us-ascii?Q?BuTJEQf0wh8VuOoyyyaLCcN0VyJMNjRdvkN30kcRFYMXqRXEtbr8HrOtxRZl?=
- =?us-ascii?Q?ymkXMupUmxA97cl879H4TTNWv5F0WyZAyzHm+6GwHKHr/31UMtObL1i/gXlH?=
- =?us-ascii?Q?Y0Wr90DtoCNgFEtWmKcegs5S1X+fMKeqUupj3WfEc/1Gvq1SxEf4vhIwz32R?=
- =?us-ascii?Q?3IO0WMej4rgKrCyeJ1NBCi5jpyEQG45k/DOpQeYlb8XpUq+ZdmHRqDB7qbIv?=
- =?us-ascii?Q?nqHENPnK5E+bMW9Vz4iPKaW1DeNEwK0SydwnMc/eA6FritzNNE352vXtiSW7?=
- =?us-ascii?Q?IhNzqmc+9Rv6xI35xp13Dz0WndFxu5EF+HCAA9Nl0uLq71G5ACa8OzChEynX?=
- =?us-ascii?Q?BzEgWF/MlW1xXb1ZDUJIL/wHrApWvgNT/Z+PdUYA4/vj9Uz1+S4DNugEiV/C?=
- =?us-ascii?Q?Jq2QZlEBpd6nflUO2UKMgGIrbeESvUohLmS/ZJIMJ9QFlKgBP8HYQYwM9SIm?=
- =?us-ascii?Q?6eBvN3Irr3BqnHuAixvUCpvBSmlgNIIpMIpOSbuOvke/dW5PTiYf049BcJHV?=
- =?us-ascii?Q?NPNuUzfW7h1j//Y0/Bf2nmo+ACp7D0JD6bLGh8QuBC1neT1/+84AnJmIsRrt?=
- =?us-ascii?Q?Fa63BVVqJXSbBYCvPj8D0NvMuxupzbeH/7HKKzxrL9w3ZFORebFpPNsrbvPP?=
- =?us-ascii?Q?ocpDrrkc6Lau7DqA2L/Icg2XBNUeHyN+ucrl92BGvlaf5/Z0gqmXkiWL9Gjh?=
- =?us-ascii?Q?WXaKjjSuOGN/pzE7/lZs5SWrwjBdS7buzSgCtCFfXZki42ICwchctBAnS+Bh?=
- =?us-ascii?Q?nj9C745YSFF0C9PlygjmzPoH08Nc9Z8sdhkA92jOdL+roDsxIqr0LPN5/Srb?=
- =?us-ascii?Q?uqPmsmA/KyqlbC28dvKQIJBaCq1//8RB240UrwGPLcAmQeZIbkkwlRvb4Zkl?=
- =?us-ascii?Q?/oAbyYvqONq9ZVprVVaSEg+3Z+OxcjYbGEIU/J2CRe6A6IX12OcMAOrr8giq?=
- =?us-ascii?Q?hp14u0fQWYwNQWwegCiKDcSNB7arOovL/ncYLO4+z59LMOkR1aZXN/3RKyUD?=
- =?us-ascii?Q?dLLPc67sMj6ao1xz/tKOogPW91jC6WaRwM4H7TTmX84k56MQkAXXW2Jvs+o6?=
- =?us-ascii?Q?xqIDN7A+FRKorELU7L4r7ucOUV9QWUlMklzqtoREtxKyhT4LPsdL4859q4qA?=
- =?us-ascii?Q?O7GbzOmFyMpxbH92OP2n4Bw6ju//+wGDGc3NwX7kjR3k2AN7yWEAtCJniLZd?=
- =?us-ascii?Q?JOIuzh5+ToLp73XF4JetdSk/AB9UjjKWxL+ykBzWP08lqQBNZkIO60INxZlh?=
- =?us-ascii?Q?K6wIrsZZMa/4j3bZxGj2TCtBCEbyjLdYjEmeXO9Te7nU/9gd7xv9Gixt7Q/c?=
- =?us-ascii?Q?UA1wi+DgnGJarLpvhJdY81R3AWmHCGKvu3vc6YsIoGMGJvmYgj2n0/z83Ov9?=
- =?us-ascii?Q?pJCplrdKUCMYWbpi1NxwyTqUodiWB6uiyPSTetejxE/S0oNDYIXsTgesEZdA?=
- =?us-ascii?Q?9768DfZzit4GNdXSH8s=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0507563AA;
+	Sat,  6 Jan 2024 07:52:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704527575; x=1736063575;
+  h=date:from:to:cc:subject:message-id;
+  bh=IdRQdyc10fnhJVdYmoegiNznl/2hqeedxfHeTwxNEfw=;
+  b=JhgEQXO+OuaLWQRuIc73XIvDxOP+1/3dEJwaIYkXTVElV5RlnpP/DhUv
+   XqDMRdZt/gOZmV0tXQiWjRPwICZ5cDQjC0h+TtLEmI/5Hb3ABFVp9cpJy
+   OTho7jdAzVkZPRBc/aEyPWKvoFcoW4Fav2U9wYfFqR9JF3m4txWEDrJso
+   TvK7tlM/n69InUbCerfqEv6PAjd/I58EjY8IY5QJ9w7AmdquTt2Z3uSrS
+   g6Nk5oV+vEp7grua5uQTb0H9io4QuC5r1UjZ2A9w3kq96oKVK8GUFOhnc
+   ovUQv2ZRzgBLfdA4X+5CqVoVUrscefkGaOlrV015qwm4YLkpFQpxF3eI/
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10944"; a="382611073"
+X-IronPort-AV: E=Sophos;i="6.04,336,1695711600"; 
+   d="scan'208";a="382611073"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2024 23:52:53 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10944"; a="1027960224"
+X-IronPort-AV: E=Sophos;i="6.04,336,1695711600"; 
+   d="scan'208";a="1027960224"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by fmsmga006.fm.intel.com with ESMTP; 05 Jan 2024 23:52:50 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rM1U8-0002CH-1g;
+	Sat, 06 Jan 2024 07:52:48 +0000
+Date: Sat, 06 Jan 2024 15:52:19 +0800
+From: kernel test robot <lkp@intel.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Linux Memory Management List <linux-mm@kvack.org>,
+ dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, kasan-dev@googlegroups.com,
+ linux-arm-msm@vger.kernel.org, linux-bcachefs@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, netdev@vger.kernel.org
+Subject: [linux-next:master] BUILD REGRESSION
+ e2425464bc87159274879ab30f9d4fe624b9fcd2
+Message-ID: <202401061514.ukKN3xCH-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB5953.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ded2ff47-afd7-40e0-f4c5-08dc0e1ed7ab
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jan 2024 18:48:00.9673
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 33zbnrSlCJjRBtABhMVotGaQ0hlV9kOm6DMuSUo2UmYlMGwkCX2RxVPF3hO/gScR
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6848
 
-> -----Original Message-----
-> From: Peter Korsgaard <peter@korsgaard.com>
-> Sent: Friday, January 5, 2024 4:30 PM
-> To: Vinod Koul <vkoul@kernel.org>; dmaengine@vger.kernel.org
-> Cc: Michal Simek <michal.simek@amd.com>; Peter Korsgaard
-> <peter@korsgaard.com>
-> Subject: [PATCH] dmaengine: xilinx_dma: check for invalid vdma interleave=
-d
-> parameters
->=20
-> The VDMA HSIZE register (corresponding to sgl[0].size) is only 16bit wide=
- /
-> the VSIZE register (corresponding to numf) is only 13bit wide, so reject
-> requests not fitting within that rather than silently transferring too li=
-ttle data.
->=20
-> Signed-off-by: Peter Korsgaard <peter@korsgaard.com>
-Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
-Thanks!
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+branch HEAD: e2425464bc87159274879ab30f9d4fe624b9fcd2  Add linux-next specific files for 20240105
 
-> ---
->  drivers/dma/xilinx/xilinx_dma.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->=20
-> diff --git a/drivers/dma/xilinx/xilinx_dma.c
-> b/drivers/dma/xilinx/xilinx_dma.c index e40696f6f864..5eb51ae93e89
-> 100644
-> --- a/drivers/dma/xilinx/xilinx_dma.c
-> +++ b/drivers/dma/xilinx/xilinx_dma.c
-> @@ -112,7 +112,9 @@
->=20
->  /* Register Direct Mode Registers */
->  #define XILINX_DMA_REG_VSIZE			0x0000
-> +#define XILINX_DMA_VSIZE_MASK			GENMASK(12, 0)
->  #define XILINX_DMA_REG_HSIZE			0x0004
-> +#define XILINX_DMA_HSIZE_MASK			GENMASK(15, 0)
->=20
->  #define XILINX_DMA_REG_FRMDLY_STRIDE		0x0008
->  #define XILINX_DMA_FRMDLY_STRIDE_FRMDLY_SHIFT	24
-> @@ -2050,6 +2052,10 @@ xilinx_vdma_dma_prep_interleaved(struct
-> dma_chan *dchan,
->  	if (!xt->numf || !xt->sgl[0].size)
->  		return NULL;
->=20
-> +	if (xt->numf & ~XILINX_DMA_VSIZE_MASK ||
-> +	    xt->sgl[0].size & ~XILINX_DMA_HSIZE_MASK)
-> +		return NULL;
-> +
->  	if (xt->frame_size !=3D 1)
->  		return NULL;
->=20
-> --
-> 2.39.2
+Error/Warning reports:
 
+https://lore.kernel.org/oe-kbuild-all/202401061458.1ymPozGI-lkp@intel.com
+
+Error/Warning: (recently discovered and may have been fixed)
+
+Warning: /sys/devices/.../hwmon/hwmon<i>/curr1_crit is defined 2 times:  Documentation/ABI/testing/sysfs-driver-intel-xe-hwmon:35  Documentation/ABI/testing/sysfs-driver-intel-i915-hwmon:52
+Warning: /sys/devices/.../hwmon/hwmon<i>/energy1_input is defined 2 times:  Documentation/ABI/testing/sysfs-driver-intel-xe-hwmon:54  Documentation/ABI/testing/sysfs-driver-intel-i915-hwmon:65
+Warning: /sys/devices/.../hwmon/hwmon<i>/in0_input is defined 2 times:  Documentation/ABI/testing/sysfs-driver-intel-xe-hwmon:46  Documentation/ABI/testing/sysfs-driver-intel-i915-hwmon:0
+Warning: /sys/devices/.../hwmon/hwmon<i>/power1_crit is defined 2 times:  Documentation/ABI/testing/sysfs-driver-intel-xe-hwmon:22  Documentation/ABI/testing/sysfs-driver-intel-i915-hwmon:39
+Warning: /sys/devices/.../hwmon/hwmon<i>/power1_max is defined 2 times:  Documentation/ABI/testing/sysfs-driver-intel-xe-hwmon:0  Documentation/ABI/testing/sysfs-driver-intel-i915-hwmon:8
+Warning: /sys/devices/.../hwmon/hwmon<i>/power1_max_interval is defined 2 times:  Documentation/ABI/testing/sysfs-driver-intel-xe-hwmon:62  Documentation/ABI/testing/sysfs-driver-intel-i915-hwmon:30
+Warning: /sys/devices/.../hwmon/hwmon<i>/power1_rated_max is defined 2 times:  Documentation/ABI/testing/sysfs-driver-intel-xe-hwmon:14  Documentation/ABI/testing/sysfs-driver-intel-i915-hwmon:22
+
+Unverified Error/Warning (likely false positive, please contact us if interested):
+
+drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c:6147:9-13: ERROR: invalid reference to the index variable of the iterator on line 6138
+drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c:6357:1-7: preceding lock on line 6318
+drivers/net/ethernet/marvell/octeontx2/af/rvu_npc_fs.c:575:9-32: duplicated argument to & or |
+{standard input}:20841: Warning: overflow in branch to .L4773; converted into longer instruction sequence
+{standard input}:52226: Warning: overflow in branch to .L4679; converted into longer instruction sequence
+{standard input}:54153: Warning: overflow in branch to .L4936; converted into longer instruction sequence
+{standard input}:5891: Warning: overflow in branch to .L1414; converted into longer instruction sequence
+
+Error/Warning ids grouped by kconfigs:
+
+gcc_recent_errors
+|-- arm-randconfig-r062-20240105
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-dst_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-filled_descs_num-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-size-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-src_addr-not-described-in-xdma_fill_descs
+|   `-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-sw_desc-not-described-in-xdma_fill_descs
+|-- arm64-randconfig-r053-20240104
+|   |-- drivers-net-ethernet-marvell-octeontx2-af-rvu_nix.c:ERROR:invalid-reference-to-the-index-variable-of-the-iterator-on-line
+|   |-- drivers-net-ethernet-marvell-octeontx2-af-rvu_nix.c:preceding-lock-on-line
+|   `-- drivers-net-ethernet-marvell-octeontx2-af-rvu_npc_fs.c:duplicated-argument-to-or
+|-- i386-randconfig-012-20240105
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-dst_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-filled_descs_num-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-size-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-src_addr-not-described-in-xdma_fill_descs
+|   `-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-sw_desc-not-described-in-xdma_fill_descs
+|-- i386-randconfig-016-20240105
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-dst_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-filled_descs_num-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-size-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-src_addr-not-described-in-xdma_fill_descs
+|   `-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-sw_desc-not-described-in-xdma_fill_descs
+|-- m68k-randconfig-r113-20240105
+|   |-- WARNING:modpost:missing-MODULE_DESCRIPTION()-in-drivers-base-regmap-regmap-mmio.o
+|   `-- drivers-hwmon-max31827.c:sparse:sparse:dubious:x-y
+|-- m68k-randconfig-r131-20240105
+|   |-- drivers-hwmon-max31827.c:sparse:sparse:dubious:x-y
+|   |-- fs-bcachefs-btree_iter.c:sparse:sparse:incompatible-types-in-comparison-expression-(different-address-spaces):
+|   `-- fs-bcachefs-btree_locking.c:sparse:sparse:incompatible-types-in-comparison-expression-(different-address-spaces):
+|-- microblaze-randconfig-r121-20240105
+|   `-- drivers-hwmon-max31827.c:sparse:sparse:dubious:x-y
+|-- microblaze-randconfig-r123-20240105
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-dst_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-filled_descs_num-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-size-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-src_addr-not-described-in-xdma_fill_descs
+|   `-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-sw_desc-not-described-in-xdma_fill_descs
+|-- mips-allyesconfig
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-dst_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-filled_descs_num-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-size-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-src_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-sw_desc-not-described-in-xdma_fill_descs
+|   `-- drivers-gpu-drm-msm-disp-dpu1-dpu_encoder.c:warning:Excess-struct-member-debugfs_root-description-in-dpu_encoder_virt
+|-- nios2-randconfig-001-20240105
+|   `-- WARNING:modpost:missing-MODULE_DESCRIPTION()-in-fs-exportfs-exportfs.o
+|-- nios2-randconfig-r133-20240105
+|   `-- drivers-hwmon-max31827.c:sparse:sparse:dubious:x-y
+|-- openrisc-randconfig-r053-20240105
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-dst_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-filled_descs_num-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-size-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-src_addr-not-described-in-xdma_fill_descs
+|   `-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-sw_desc-not-described-in-xdma_fill_descs
+|-- openrisc-randconfig-r121-20240105
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-dst_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-filled_descs_num-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-size-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-src_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-sw_desc-not-described-in-xdma_fill_descs
+|   `-- drivers-hwmon-max31827.c:sparse:sparse:dubious:x-y
+|-- parisc-randconfig-002-20240105
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-dst_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-filled_descs_num-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-size-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-src_addr-not-described-in-xdma_fill_descs
+|   `-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-sw_desc-not-described-in-xdma_fill_descs
+|-- riscv-allmodconfig
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-dst_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-filled_descs_num-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-size-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-src_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-sw_desc-not-described-in-xdma_fill_descs
+|   `-- drivers-gpu-drm-msm-disp-dpu1-dpu_encoder.c:warning:Excess-struct-member-debugfs_root-description-in-dpu_encoder_virt
+|-- riscv-allyesconfig
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-dst_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-filled_descs_num-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-size-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-src_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-sw_desc-not-described-in-xdma_fill_descs
+|   `-- drivers-gpu-drm-msm-disp-dpu1-dpu_encoder.c:warning:Excess-struct-member-debugfs_root-description-in-dpu_encoder_virt
+|-- s390-randconfig-001-20240105
+|   |-- WARNING:modpost:missing-MODULE_DESCRIPTION()-in-fs-exportfs-exportfs.o
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-dst_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-filled_descs_num-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-size-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-src_addr-not-described-in-xdma_fill_descs
+|   `-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-sw_desc-not-described-in-xdma_fill_descs
+|-- s390-randconfig-r132-20240105
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-dst_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-filled_descs_num-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-size-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-src_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-sw_desc-not-described-in-xdma_fill_descs
+|   |-- drivers-hwmon-max31827.c:sparse:sparse:dubious:x-y
+|   `-- mm-kasan-common.c:sparse:sparse:incorrect-type-in-argument-(different-base-types)-expected-restricted-gfp_t-usertype-flags-got-unsigned-long-usertype-size
+|-- sh-allmodconfig
+|   |-- include-linux-syscalls.h:internal-compiler-error:in-change_address_1-at-emit-rtl.cc
+|   `-- standard-input:Error:pcrel-too-far
+|-- sh-allnoconfig
+|   |-- standard-input:Error:pcrel-too-far
+|   `-- standard-input:Warning:overflow-in-branch-to-.L1609-converted-into-longer-instruction-sequence
+|-- sh-randconfig-001-20240105
+|   |-- include-linux-syscalls.h:internal-compiler-error:in-change_address_1-at-emit-rtl.cc
+|   `-- standard-input:Error:pcrel-too-far
+|-- sh-randconfig-002-20240105
+|   |-- include-linux-syscalls.h:internal-compiler-error:in-change_address_1-at-emit-rtl.cc
+|   |-- standard-input:Error:pcrel-too-far
+|   `-- standard-input:Warning:overflow-in-branch-to-.L4853-converted-into-longer-instruction-sequence
+|-- sh-randconfig-r022-20221121
+|   `-- standard-input:Warning:overflow-in-branch-to-.L4679-converted-into-longer-instruction-sequence
+|-- sh-randconfig-r031-20220728
+|   `-- standard-input:Warning:overflow-in-branch-to-.L4936-converted-into-longer-instruction-sequence
+|-- sh-randconfig-r051-20240105
+|   |-- include-linux-syscalls.h:internal-compiler-error:in-change_address_1-at-emit-rtl.cc
+|   `-- standard-input:Error:pcrel-too-far
+|-- sh-randconfig-r064-20240105
+|   `-- standard-input:Error:pcrel-too-far
+|-- sh-randconfig-r111-20240105
+|   |-- fs-bcachefs-btree_iter.c:sparse:sparse:incompatible-types-in-comparison-expression-(different-address-spaces):
+|   |-- fs-bcachefs-btree_locking.c:sparse:sparse:incompatible-types-in-comparison-expression-(different-address-spaces):
+|   |-- standard-input:Error:pcrel-too-far
+|   `-- standard-input:Warning:overflow-in-branch-to-.L1414-converted-into-longer-instruction-sequence
+|-- sh-randconfig-r112-20240105
+|   |-- fs-bcachefs-btree_iter.c:sparse:sparse:incompatible-types-in-comparison-expression-(different-address-spaces):
+|   |-- fs-bcachefs-btree_locking.c:sparse:sparse:incompatible-types-in-comparison-expression-(different-address-spaces):
+|   |-- include-linux-syscalls.h:internal-compiler-error:in-change_address_1-at-emit-rtl.cc
+|   |-- standard-input:Error:pcrel-too-far
+|   `-- standard-input:Warning:overflow-in-branch-to-.L4773-converted-into-longer-instruction-sequence
+|-- sparc-randconfig-001-20240105
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-dst_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-filled_descs_num-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-size-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-src_addr-not-described-in-xdma_fill_descs
+|   `-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-sw_desc-not-described-in-xdma_fill_descs
+|-- sparc-randconfig-r132-20240105
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-size-not-described-in-xdma_fill_descs
+|   `-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-sw_desc-not-described-in-xdma_fill_descs
+|-- sparc64-randconfig-001-20240105
+|   |-- WARNING:modpost:missing-MODULE_DESCRIPTION()-in-lib-zlib_inflate-zlib_inflate.o
+|   `-- fbcon.c:(.text):undefined-reference-to-fb_is_primary_device
+|-- sparc64-randconfig-002-20240105
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-dst_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-filled_descs_num-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-size-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-src_addr-not-described-in-xdma_fill_descs
+|   `-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-sw_desc-not-described-in-xdma_fill_descs
+`-- x86_64-allnoconfig
+    |-- Warning:sys-devices-...-hwmon-hwmon-i-curr1_crit-is-defined-times:Documentation-ABI-testing-sysfs-driver-intel-xe-hwmon-Documentation-ABI-testing-sysfs-driver-intel-i915-hwmon
+    |-- Warning:sys-devices-...-hwmon-hwmon-i-energy1_input-is-defined-times:Documentation-ABI-testing-sysfs-driver-intel-xe-hwmon-Documentation-ABI-testing-sysfs-driver-intel-i915-hwmon
+    |-- Warning:sys-devices-...-hwmon-hwmon-i-in0_input-is-defined-times:Documentation-ABI-testing-sysfs-driver-intel-xe-hwmon-Documentation-ABI-testing-sysfs-driver-intel-i915-hwmon
+    |-- Warning:sys-devices-...-hwmon-hwmon-i-power1_crit-is-defined-times:Documentation-ABI-testing-sysfs-driver-intel-xe-hwmon-Documentation-ABI-testing-sysfs-driver-intel-i915-hwmon
+    |-- Warning:sys-devices-...-hwmon-hwmon-i-power1_max-is-defined-times:Documentation-ABI-testing-sysfs-driver-intel-xe-hwmon-Documentation-ABI-testing-sysfs-driver-intel-i915-hwmon
+    |-- Warning:sys-devices-...-hwmon-hwmon-i-power1_max_interval-is-defined-times:Documentation-ABI-testing-sysfs-driver-intel-xe-hwmon-Documentation-ABI-testing-sysfs-driver-intel-i915-hwmon
+    `-- Warning:sys-devices-...-hwmon-hwmon-i-power1_rated_max-is-defined-times:Documentation-ABI-testing-sysfs-driver-intel-xe-hwmon-Documentation-ABI-testing-sysfs-driver-intel-i915-hwmon
+clang_recent_errors
+|-- arm-defconfig
+|   `-- drivers-gpu-drm-msm-disp-dpu1-dpu_encoder.c:warning:Excess-struct-member-debugfs_root-description-in-dpu_encoder_virt
+|-- arm64-allyesconfig
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-dst_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-filled_descs_num-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-size-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-src_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-sw_desc-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:operator:has-lower-precedence-than-will-be-evaluated-first
+|   |-- drivers-dma-xilinx-xdma.c:warning:variable-desc-is-uninitialized-when-used-here
+|   |-- drivers-gpu-drm-imagination-pvr_mmu.c:warning:Excess-struct-member-l0_free_tables-description-in-pvr_mmu_op_context
+|   |-- drivers-gpu-drm-imagination-pvr_mmu.c:warning:Excess-struct-member-l0_prealloc_tables-description-in-pvr_mmu_op_context
+|   |-- drivers-gpu-drm-imagination-pvr_mmu.c:warning:Excess-struct-member-l1_free_tables-description-in-pvr_mmu_op_context
+|   |-- drivers-gpu-drm-imagination-pvr_mmu.c:warning:Excess-struct-member-l1_prealloc_tables-description-in-pvr_mmu_op_context
+|   |-- drivers-gpu-drm-imagination-pvr_mmu.c:warning:Excess-struct-member-pvr_dev-description-in-pvr_mmu_backing_page
+|   |-- drivers-gpu-drm-imagination-pvr_mmu.c:warning:Excess-struct-member-sgt-description-in-pvr_mmu_op_context
+|   |-- drivers-gpu-drm-imagination-pvr_mmu.c:warning:Excess-struct-member-sgt_offset-description-in-pvr_mmu_op_context
+|   `-- drivers-gpu-drm-msm-disp-dpu1-dpu_encoder.c:warning:Excess-struct-member-debugfs_root-description-in-dpu_encoder_virt
+|-- hexagon-allyesconfig
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-dst_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-filled_descs_num-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-size-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-src_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-sw_desc-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:operator:has-lower-precedence-than-will-be-evaluated-first
+|   `-- drivers-dma-xilinx-xdma.c:warning:variable-desc-is-uninitialized-when-used-here
+|-- i386-allyesconfig
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-dst_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-filled_descs_num-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-size-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-src_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-sw_desc-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:operator:has-lower-precedence-than-will-be-evaluated-first
+|   |-- drivers-dma-xilinx-xdma.c:warning:variable-desc-is-uninitialized-when-used-here
+|   `-- drivers-gpu-drm-msm-disp-dpu1-dpu_encoder.c:warning:Excess-struct-member-debugfs_root-description-in-dpu_encoder_virt
+|-- i386-randconfig-004-20240105
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-dst_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-filled_descs_num-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-size-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-src_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-sw_desc-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:operator:has-lower-precedence-than-will-be-evaluated-first
+|   `-- drivers-dma-xilinx-xdma.c:warning:variable-desc-is-uninitialized-when-used-here
+|-- mips-maltaup_defconfig
+|   `-- WARNING:modpost:missing-MODULE_DESCRIPTION()-in-lib-zlib_inflate-zlib_inflate.o
+|-- powerpc-allmodconfig
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-dst_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-filled_descs_num-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-size-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-src_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-sw_desc-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:operator:has-lower-precedence-than-will-be-evaluated-first
+|   |-- drivers-dma-xilinx-xdma.c:warning:variable-desc-is-uninitialized-when-used-here
+|   `-- drivers-gpu-drm-msm-disp-dpu1-dpu_encoder.c:warning:Excess-struct-member-debugfs_root-description-in-dpu_encoder_virt
+|-- powerpc-allyesconfig
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-dst_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-filled_descs_num-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-size-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-src_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-sw_desc-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:operator:has-lower-precedence-than-will-be-evaluated-first
+|   |-- drivers-dma-xilinx-xdma.c:warning:variable-desc-is-uninitialized-when-used-here
+|   `-- drivers-gpu-drm-msm-disp-dpu1-dpu_encoder.c:warning:Excess-struct-member-debugfs_root-description-in-dpu_encoder_virt
+|-- powerpc-randconfig-003-20240105
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-dst_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-filled_descs_num-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-size-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-src_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-sw_desc-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:operator:has-lower-precedence-than-will-be-evaluated-first
+|   |-- drivers-dma-xilinx-xdma.c:warning:variable-desc-is-uninitialized-when-used-here
+|   `-- drivers-gpu-drm-msm-disp-dpu1-dpu_encoder.c:warning:Excess-struct-member-debugfs_root-description-in-dpu_encoder_virt
+|-- powerpc64-randconfig-002-20240105
+|   |-- WARNING:modpost:missing-MODULE_DESCRIPTION()-in-lib-zlib_inflate-zlib_inflate.o
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-dst_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-filled_descs_num-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-size-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-src_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-sw_desc-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:operator:has-lower-precedence-than-will-be-evaluated-first
+|   `-- drivers-dma-xilinx-xdma.c:warning:variable-desc-is-uninitialized-when-used-here
+|-- powerpc64-randconfig-003-20240105
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-dst_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-filled_descs_num-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-size-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-src_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-sw_desc-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:operator:has-lower-precedence-than-will-be-evaluated-first
+|   `-- drivers-dma-xilinx-xdma.c:warning:variable-desc-is-uninitialized-when-used-here
+|-- riscv-randconfig-r113-20240105
+|   `-- mm-kasan-common.c:sparse:sparse:incorrect-type-in-argument-(different-base-types)-expected-restricted-gfp_t-usertype-flags-got-unsigned-long-usertype-size
+|-- x86_64-allmodconfig
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-dst_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-filled_descs_num-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-size-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-src_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-sw_desc-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:operator:has-lower-precedence-than-will-be-evaluated-first
+|   |-- drivers-dma-xilinx-xdma.c:warning:variable-desc-is-uninitialized-when-used-here
+|   `-- drivers-gpu-drm-msm-disp-dpu1-dpu_encoder.c:warning:Excess-struct-member-debugfs_root-description-in-dpu_encoder_virt
+|-- x86_64-allyesconfig
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-dst_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-filled_descs_num-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-size-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-src_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-sw_desc-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:operator:has-lower-precedence-than-will-be-evaluated-first
+|   |-- drivers-dma-xilinx-xdma.c:warning:variable-desc-is-uninitialized-when-used-here
+|   `-- drivers-gpu-drm-msm-disp-dpu1-dpu_encoder.c:warning:Excess-struct-member-debugfs_root-description-in-dpu_encoder_virt
+|-- x86_64-buildonly-randconfig-001-20240105
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-dst_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-filled_descs_num-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-size-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-src_addr-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-sw_desc-not-described-in-xdma_fill_descs
+|   |-- drivers-dma-xilinx-xdma.c:warning:operator:has-lower-precedence-than-will-be-evaluated-first
+|   `-- drivers-dma-xilinx-xdma.c:warning:variable-desc-is-uninitialized-when-used-here
+`-- x86_64-randconfig-076-20240105
+    |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-dst_addr-not-described-in-xdma_fill_descs
+    |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-filled_descs_num-not-described-in-xdma_fill_descs
+    |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-size-not-described-in-xdma_fill_descs
+    |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-src_addr-not-described-in-xdma_fill_descs
+    |-- drivers-dma-xilinx-xdma.c:warning:Function-parameter-or-struct-member-sw_desc-not-described-in-xdma_fill_descs
+    |-- drivers-dma-xilinx-xdma.c:warning:operator:has-lower-precedence-than-will-be-evaluated-first
+    `-- drivers-dma-xilinx-xdma.c:warning:variable-desc-is-uninitialized-when-used-here
+
+elapsed time: 1449m
+
+configs tested: 179
+configs skipped: 2
+
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                      axs103_smp_defconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20240105   gcc  
+arc                   randconfig-002-20240105   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   clang
+arm                      integrator_defconfig   gcc  
+arm                   randconfig-001-20240105   clang
+arm                   randconfig-002-20240105   clang
+arm                   randconfig-003-20240105   clang
+arm                   randconfig-004-20240105   clang
+arm                           sama5_defconfig   gcc  
+arm                        shmobile_defconfig   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240105   clang
+arm64                 randconfig-002-20240105   clang
+arm64                 randconfig-003-20240105   clang
+arm64                 randconfig-004-20240105   clang
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240105   gcc  
+csky                  randconfig-002-20240105   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+hexagon               randconfig-001-20240105   clang
+hexagon               randconfig-002-20240105   clang
+i386                             allmodconfig   clang
+i386                              allnoconfig   clang
+i386                             allyesconfig   clang
+i386         buildonly-randconfig-001-20240105   clang
+i386         buildonly-randconfig-002-20240105   clang
+i386         buildonly-randconfig-003-20240105   clang
+i386         buildonly-randconfig-004-20240105   clang
+i386         buildonly-randconfig-005-20240105   clang
+i386         buildonly-randconfig-006-20240105   clang
+i386                                defconfig   gcc  
+i386                  randconfig-001-20240105   clang
+i386                  randconfig-002-20240105   clang
+i386                  randconfig-003-20240105   clang
+i386                  randconfig-004-20240105   clang
+i386                  randconfig-005-20240105   clang
+i386                  randconfig-006-20240105   clang
+i386                  randconfig-011-20240105   gcc  
+i386                  randconfig-012-20240105   gcc  
+i386                  randconfig-013-20240105   gcc  
+i386                  randconfig-014-20240105   gcc  
+i386                  randconfig-015-20240105   gcc  
+i386                  randconfig-016-20240105   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240105   gcc  
+loongarch             randconfig-002-20240105   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   clang
+mips                             allyesconfig   gcc  
+mips                        maltaup_defconfig   clang
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240105   gcc  
+nios2                 randconfig-002-20240105   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20240105   gcc  
+parisc                randconfig-002-20240105   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   clang
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                       maple_defconfig   gcc  
+powerpc                 mpc832x_rdb_defconfig   clang
+powerpc                 mpc836x_rdk_defconfig   clang
+powerpc                  mpc866_ads_defconfig   clang
+powerpc                  mpc885_ads_defconfig   clang
+powerpc               randconfig-001-20240105   clang
+powerpc               randconfig-002-20240105   clang
+powerpc               randconfig-003-20240105   clang
+powerpc64                        alldefconfig   gcc  
+powerpc64             randconfig-001-20240105   clang
+powerpc64             randconfig-002-20240105   clang
+powerpc64             randconfig-003-20240105   clang
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   clang
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                 randconfig-001-20240105   clang
+riscv                 randconfig-002-20240105   clang
+riscv                          rv32_defconfig   clang
+s390                             allmodconfig   gcc  
+s390                              allnoconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                  randconfig-001-20240105   gcc  
+s390                  randconfig-002-20240105   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                         apsh4a3a_defconfig   gcc  
+sh                                  defconfig   gcc  
+sh                    randconfig-001-20240105   gcc  
+sh                    randconfig-002-20240105   gcc  
+sh                           se7750_defconfig   gcc  
+sh                   sh7770_generic_defconfig   gcc  
+sh                            titan_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                       sparc32_defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240105   gcc  
+sparc64               randconfig-002-20240105   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20240105   clang
+um                    randconfig-002-20240105   clang
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240105   clang
+x86_64       buildonly-randconfig-002-20240105   clang
+x86_64       buildonly-randconfig-003-20240105   clang
+x86_64       buildonly-randconfig-004-20240105   clang
+x86_64       buildonly-randconfig-005-20240105   clang
+x86_64       buildonly-randconfig-006-20240105   clang
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240105   gcc  
+x86_64                randconfig-002-20240105   gcc  
+x86_64                randconfig-003-20240105   gcc  
+x86_64                randconfig-004-20240105   gcc  
+x86_64                randconfig-005-20240105   gcc  
+x86_64                randconfig-006-20240105   gcc  
+x86_64                randconfig-011-20240105   clang
+x86_64                randconfig-012-20240105   clang
+x86_64                randconfig-013-20240105   clang
+x86_64                randconfig-014-20240105   clang
+x86_64                randconfig-015-20240105   clang
+x86_64                randconfig-016-20240105   clang
+x86_64                randconfig-071-20240105   clang
+x86_64                randconfig-072-20240105   clang
+x86_64                randconfig-073-20240105   clang
+x86_64                randconfig-074-20240105   clang
+x86_64                randconfig-075-20240105   clang
+x86_64                randconfig-076-20240105   clang
+x86_64                          rhel-8.3-rust   clang
+xtensa                            allnoconfig   gcc  
+xtensa                       common_defconfig   gcc  
+xtensa                randconfig-001-20240105   gcc  
+xtensa                randconfig-002-20240105   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 

@@ -1,149 +1,211 @@
-Return-Path: <dmaengine+bounces-699-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-700-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2271C8268F8
-	for <lists+dmaengine@lfdr.de>; Mon,  8 Jan 2024 08:54:58 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D19A826DA7
+	for <lists+dmaengine@lfdr.de>; Mon,  8 Jan 2024 13:20:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B46371F21E09
-	for <lists+dmaengine@lfdr.de>; Mon,  8 Jan 2024 07:54:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 742A51C2235E
+	for <lists+dmaengine@lfdr.de>; Mon,  8 Jan 2024 12:20:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE8C914287;
-	Mon,  8 Jan 2024 07:54:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BE8F3FE4E;
+	Mon,  8 Jan 2024 12:20:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vp8Cbrc2"
+	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="dlxo1pt/"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from aposti.net (aposti.net [89.234.176.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 091A614291;
-	Mon,  8 Jan 2024 07:54:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-50e5a9bcec9so1678607e87.3;
-        Sun, 07 Jan 2024 23:54:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704700469; x=1705305269; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PGbmqWC/KzPKcYaESUuYlyd0RnrSGyhu219OoaqIaLU=;
-        b=Vp8Cbrc2BU8pKSPNarvRgC9kaycA6FOtY+rPEpCTLsD2WaTR0TTWP6WvdOTsCt6ToR
-         01+H0ynelhtIQ48pM03NgDHnyg5b2Yftt8huJMx9Ekezwun4cx56fA/wtlWlI5RyhQmm
-         Gtem5L5Y0m9ptEIq6jqli9Kzpl6/+erjSkxVuTlPp6kkq4JvYtKGu2rUcU6ygNbqeQRX
-         e+SxXLqTwwbYDXnwlUu+Dil9eakIho8I6xoZLxC4OSLEkH9q501Cgjd22bH3W9o0p++I
-         xmAmCy7S/JfPs1LCQMA73BLjcYutEZliIV6oxogWAdtN2e6qTbn67MxXjAkkTaJGkATI
-         69YA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704700469; x=1705305269;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PGbmqWC/KzPKcYaESUuYlyd0RnrSGyhu219OoaqIaLU=;
-        b=RwTec7WqsLTVoQqJz3CkbVc0y6DsLH8koZDyJU1ttt/X8Ag0wZYQq1DbOV+/ppdc/y
-         dN51SgvVUblcD3flLkrilgtaw1tHkm9NHhVm0rtiM2xxYPgvNPdZoCvVne1FxxzkV3CA
-         XWi7JI8yxQmR+csUlPrz7sU/ILnNEViax1hY/+FOEHU3ee7rPeYcfiDJi/oY7jHrwaJo
-         f389I/flP8EPqlNRI3gcQAlDjLO6jm1mm/oJnUApSRw/u4L9UBQ7GjWNZ2Fq7FjkA9wl
-         uU5iwFzZDm5xKVp3cq+emQQmI9Wy5Iyl4ioPEYiZzOcjtoSIlxzD/RNdFicurlm+syUi
-         mnQg==
-X-Gm-Message-State: AOJu0YwXaqsXcLZwlG9s09MJQp3U+QcAI55xtO73Ugx66gwM5fKuCUOO
-	+YWVeXwBULBWyE4W4yG7amY=
-X-Google-Smtp-Source: AGHT+IFmchzpqUSycpA9C6A/V4GWrH3Howr6WhLlclctBL3Vc4ihTxOp29WvvA5z1dgYBb/46CMRsg==
-X-Received: by 2002:a05:6512:e9a:b0:50e:aa8c:e558 with SMTP id bi26-20020a0565120e9a00b0050eaa8ce558mr1382076lfb.2.1704700468703;
-        Sun, 07 Jan 2024 23:54:28 -0800 (PST)
-Received: from [10.0.0.100] (host-213-145-197-219.kaisa-laajakaista.fi. [213.145.197.219])
-        by smtp.gmail.com with ESMTPSA id bp33-20020a05651215a100b0050e7e2d0f1csm1076347lfb.211.2024.01.07.23.54.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 07 Jan 2024 23:54:28 -0800 (PST)
-Message-ID: <3e8ffbce-e894-4130-b9a2-f267ba54ee12@gmail.com>
-Date: Mon, 8 Jan 2024 09:55:03 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5D6F3FE3B;
+	Mon,  8 Jan 2024 12:20:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+	s=mail; t=1704716446;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=e/gl3waAmRsVvHaSKsJ9/eFbRDdv4GZ/gdDUqwyQv+E=;
+	b=dlxo1pt/kw/1GOutVLNVnaDwrqVU2K+JAk09BZ9VZKRsTIRDw1/x2IxODjHegcvgd9niYg
+	edavWPoW4sKRh27wAjwiu6kXiaFwkz4gftZIPA2Lq2mKm2q+kRVezgSXhXH/EJ6af5k+Qk
+	l1b6HGRGMGpmO4GTfy7TX12Y8b/sLXo=
+Message-ID: <86a30af0db2232bd473a38cd001342156cd4012e.camel@crapouillou.net>
+Subject: Re: [PATCH v5 3/8] dmaengine: Add API function
+ dmaengine_prep_slave_dma_vec()
+From: Paul Cercueil <paul@crapouillou.net>
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen
+ <lars@metafoo.de>,  Sumit Semwal <sumit.semwal@linaro.org>, Christian
+ =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,  Jonathan Corbet
+ <corbet@lwn.net>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ dmaengine@vger.kernel.org, linux-iio@vger.kernel.org, 
+ linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ linaro-mm-sig@lists.linaro.org, Nuno =?ISO-8859-1?Q?S=E1?=
+ <noname.nuno@gmail.com>, Michael Hennerich <Michael.Hennerich@analog.com>
+Date: Mon, 08 Jan 2024 13:20:44 +0100
+In-Reply-To: <ZYRWbROAuMXftH07@matsya>
+References: <20231219175009.65482-1-paul@crapouillou.net>
+	 <20231219175009.65482-4-paul@crapouillou.net> <ZYRWbROAuMXftH07@matsya>
+Autocrypt: addr=paul@crapouillou.net; prefer-encrypt=mutual;
+ keydata=mQENBF0KhcEBCADkfmrzdTOp/gFOMQX0QwKE2WgeCJiHPWkpEuPH81/HB2dpjPZNW03ZMLQfECbbaEkdbN4YnPfXgcc1uBe5mwOAPV1MBlaZcEt4M67iYQwSNrP7maPS3IaQJ18ES8JJ5Uf5UzFZaUawgH+oipYGW+v31cX6L3k+dGsPRM0Pyo0sQt52fsopNPZ9iag0iY7dGNuKenaEqkYNjwEgTtNz8dt6s3hMpHIKZFL3OhAGi88wF/21isv0zkF4J0wlf9gYUTEEY3Eulx80PTVqGIcHZzfavlWIdzhe+rxHTDGVwseR2Y1WjgFGQ2F+vXetAB8NEeygXee+i9nY5qt9c07m8mzjABEBAAG0JFBhdWwgQ2VyY3VlaWwgPHBhdWxAY3JhcG91aWxsb3UubmV0PokBTgQTAQoAOBYhBNdHYd8OeCBwpMuVxnPua9InSr1BBQJdCoXBAhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEHPua9InSr1BgvIH/0kLyrI3V0f33a6D3BJwc1grbygPVYGuC5l5eMnAI+rDmLR19E2yvibRpgUc87NmPEQPpbbtAZt8On/2WZoE5OIPdlId/AHNpdgAtGXo0ZX4LGeVPjxjdkbrKVHxbcdcnY+zzaFglpbVSvp76pxqgVg8PgxkAAeeJV+ET4t0823Gz2HzCL/6JZhvKAEtHVulOWoBh368SYdolp1TSfORWmHzvQiCCCA+j0cMkYVGzIQzEQhX7Urf9N/nhU5/SGLFEi9DcBfXoGzhyQyLXflhJtKm3XGB1K/pPulbKaPcKAl6rIDWPuFpHkSbmZ9r4KFlBwgAhlGy6nqP7O3u7q23hRW5AQ0EXQqFwQEIAMo+MgvYHsyjX3Ja4Oolg1Txzm8woj30ch2nACFCqaO0R/1kLj2VVeLrDyQUOlXx9PD6IQI4M8wy8m0sR4wV2p/g/paw7k65cjzYYLh+FdLNyO7IW
+	YXndJO+wDPi3aK/YKUYepqlP+QsmaHNYNdXEQDRKqNfJg8t0f5rfzp9ryxd1tCnbV+tG8VHQWiZXNqN7062DygSNXFUfQ0vZ3J2D4oAcIAEXTymRQ2+hr3Hf7I61KMHWeSkCvCG2decTYsHlw5Erix/jYWqVOtX0roOOLqWkqpQQJWtU+biWrAksmFmCp5fXIg1Nlg39v21xCXBGxJkxyTYuhdWyu1yDQ+LSIUAEQEAAYkBNgQYAQoAIBYhBNdHYd8OeCBwpMuVxnPua9InSr1BBQJdCoXBAhsMAAoJEHPua9InSr1B4wsH/Az767YCT0FSsMNt1jkkdLCBi7nY0GTW+PLP1a4zvVqFMo/vD6uz1ZflVTUAEvcTi3VHYZrlgjcxmcGu239oruqUS8Qy/xgZBp9KF0NTWQSl1iBfVbIU5VV1vHS6r77W5x0qXgfvAUWOH4gmN3MnF01SH2zMcLiaUGF+mcwl15rHbjnT3Nu2399aSE6cep86igfCAyFUOXjYEGlJy+c6UyT+DUylpjQg0nl8MlZ/7Whg2fAU9+FALIbQYQzGlT4c71SibR9T741jnegHhlmV4WXXUD6roFt54t0MSAFSVxzG8mLcSjR2cLUJ3NIPXixYUSEn3tQhfZj07xIIjWxAYZo=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dmaengine: ti: k3-udma: Report short packet errors
-Content-Language: en-US
-To: Jai Luthra <j-luthra@ti.com>, Vinod Koul <vkoul@kernel.org>,
- Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, dmaengine@vger.kernel.org,
- linux-kernel@vger.kernel.org, Vignesh Raghavendra <vigneshr@ti.com>
-References: <20240103-tr_resp_err-v1-1-2fdf6d48ab92@ti.com>
-From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
-In-Reply-To: <20240103-tr_resp_err-v1-1-2fdf6d48ab92@ti.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
+Hi Vinod,
 
+Le jeudi 21 d=C3=A9cembre 2023 =C3=A0 20:44 +0530, Vinod Koul a =C3=A9crit=
+=C2=A0:
+> On 19-12-23, 18:50, Paul Cercueil wrote:
+> > This function can be used to initiate a scatter-gather DMA
+> > transfer,
+> > where the address and size of each segment is located in one entry
+> > of
+> > the dma_vec array.
+> >=20
+> > The major difference with dmaengine_prep_slave_sg() is that it
+> > supports
+> > specifying the lengths of each DMA transfer; as trying to override
+> > the
+> > length of the transfer with dmaengine_prep_slave_sg() is a very
+> > tedious
+> > process. The introduction of a new API function is also justified
+> > by the
+> > fact that scatterlists are on their way out.
+> >=20
+> > Note that dmaengine_prep_interleaved_dma() is not helpful either in
+> > that
+> > case, as it assumes that the address of each segment will be higher
+> > than
+> > the one of the previous segment, which we just cannot guarantee in
+> > case
+> > of a scatter-gather transfer.
+> >=20
+> > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> >=20
+> > ---
+> > v3: New patch
+> >=20
+> > v5: Replace with function dmaengine_prep_slave_dma_vec(), and
+> > struct
+> > =C2=A0=C2=A0=C2=A0 'dma_vec'.
+> > =C2=A0=C2=A0=C2=A0 Note that at some point we will need to support cycl=
+ic
+> > transfers
+> > =C2=A0=C2=A0=C2=A0 using dmaengine_prep_slave_dma_vec(). Maybe with a n=
+ew "flags"
+> > =C2=A0=C2=A0=C2=A0 parameter to the function?
+> > ---
+> > =C2=A0include/linux/dmaengine.h | 25 +++++++++++++++++++++++++
+> > =C2=A01 file changed, 25 insertions(+)
+> >=20
+> > diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> > index 3df70d6131c8..ee5931ddb42f 100644
+> > --- a/include/linux/dmaengine.h
+> > +++ b/include/linux/dmaengine.h
+> > @@ -160,6 +160,16 @@ struct dma_interleaved_template {
+> > =C2=A0	struct data_chunk sgl[];
+> > =C2=A0};
+> > =C2=A0
+> > +/**
+> > + * struct dma_vec - DMA vector
+> > + * @addr: Bus address of the start of the vector
+> > + * @len: Length in bytes of the DMA vector
+> > + */
+> > +struct dma_vec {
+> > +	dma_addr_t addr;
+> > +	size_t len;
+> > +};
 
-On 03/01/2024 11:07, Jai Luthra wrote:
-> Propagate the TR response status to the device using BCDMA
-> split-channels. For example CSI-RX driver should be able to check if a
-> frame was not transferred completely (short packet) and needs to be
-> discarded.
+I don't want to be pushy, but I'd like to know how to solve this now,
+otherwise I'll just send the same patches for my v6.
 
-Make sense,
+> so you want to transfer multiple buffers, right? why not use
+> dmaengine_prep_slave_sg(). If there is reason for not using that one?
 
-Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+The reason is that we want to have the possibility to transfer less
+than the total size of the scatterlist, and that's currently very hard
+to do - scatterlists were designed to not be tampered with.
 
-> 
-> Fixes: 25dcb5dd7b7c ("dmaengine: ti: New driver for K3 UDMA")
-> Signed-off-by: Jai Luthra <j-luthra@ti.com>
-> ---
->  drivers/dma/ti/k3-udma.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-> index 30fd2f386f36..037f1408e798 100644
-> --- a/drivers/dma/ti/k3-udma.c
-> +++ b/drivers/dma/ti/k3-udma.c
-> @@ -3968,6 +3968,7 @@ static void udma_desc_pre_callback(struct virt_dma_chan *vc,
->  {
->  	struct udma_chan *uc = to_udma_chan(&vc->chan);
->  	struct udma_desc *d;
-> +	u8 status;
->  
->  	if (!vd)
->  		return;
-> @@ -3977,12 +3978,12 @@ static void udma_desc_pre_callback(struct virt_dma_chan *vc,
->  	if (d->metadata_size)
->  		udma_fetch_epib(uc, d);
->  
-> -	/* Provide residue information for the client */
->  	if (result) {
->  		void *desc_vaddr = udma_curr_cppi5_desc_vaddr(d, d->desc_idx);
->  
->  		if (cppi5_desc_get_type(desc_vaddr) ==
->  		    CPPI5_INFO0_DESC_TYPE_VAL_HOST) {
-> +			/* Provide residue information for the client */
->  			result->residue = d->residue -
->  					  cppi5_hdesc_get_pktlen(desc_vaddr);
->  			if (result->residue)
-> @@ -3991,7 +3992,12 @@ static void udma_desc_pre_callback(struct virt_dma_chan *vc,
->  				result->result = DMA_TRANS_NOERROR;
->  		} else {
->  			result->residue = 0;
-> -			result->result = DMA_TRANS_NOERROR;
-> +			/* Propagate TR Response errors to the client */
-> +			status = d->hwdesc[0].tr_resp_base->status;
-> +			if (status)
-> +				result->result = DMA_TRANS_ABORTED;
-> +			else
-> +				result->result = DMA_TRANS_NOERROR;
->  		}
->  	}
->  }
-> 
-> ---
-> base-commit: 610a9b8f49fbcf1100716370d3b5f6f884a2835a
-> change-id: 20240103-tr_resp_err-9f4eebbdcd3b
-> 
-> Best regards,
+Christian K=C3=B6nig then suggested to introduce a "dma_vec" which had been
+on his TODO list for a while now.
 
--- 
-Péter
+> Furthermore I missed replying to your email earlier on use of
+> dmaengine_prep_interleaved_dma(), my apologies.
+> That can be made to work for you as well. Please see the notes where
+> icg
+> can be ignored and it does not need icg value to be set
+>=20
+> Infact, interleaved api can be made to work in most of these cases I
+> can
+> think of...
+
+Interleaved API only supports incrementing addresses, I see no way to
+decrement the address (without using crude hacks e.g. overflowing
+size_t). I can't guarantee that my DMABUF's pages are ordered in
+memory.
+
+Cheers,
+-Paul
+
+> > +
+> > =C2=A0/**
+> > =C2=A0 * enum dma_ctrl_flags - DMA flags to augment operation
+> > preparation,
+> > =C2=A0 *=C2=A0 control completion, and communicate status.
+> > @@ -910,6 +920,10 @@ struct dma_device {
+> > =C2=A0	struct dma_async_tx_descriptor
+> > *(*device_prep_dma_interrupt)(
+> > =C2=A0		struct dma_chan *chan, unsigned long flags);
+> > =C2=A0
+> > +	struct dma_async_tx_descriptor
+> > *(*device_prep_slave_dma_vec)(
+> > +		struct dma_chan *chan, const struct dma_vec *vecs,
+> > +		size_t nents, enum dma_transfer_direction
+> > direction,
+> > +		unsigned long flags);
+> > =C2=A0	struct dma_async_tx_descriptor *(*device_prep_slave_sg)(
+> > =C2=A0		struct dma_chan *chan, struct scatterlist *sgl,
+> > =C2=A0		unsigned int sg_len, enum dma_transfer_direction
+> > direction,
+> > @@ -972,6 +986,17 @@ static inline struct dma_async_tx_descriptor
+> > *dmaengine_prep_slave_single(
+> > =C2=A0						=C2=A0 dir, flags,
+> > NULL);
+> > =C2=A0}
+> > =C2=A0
+> > +static inline struct dma_async_tx_descriptor
+> > *dmaengine_prep_slave_dma_vec(
+> > +	struct dma_chan *chan, const struct dma_vec *vecs, size_t
+> > nents,
+> > +	enum dma_transfer_direction dir, unsigned long flags)
+> > +{
+> > +	if (!chan || !chan->device || !chan->device-
+> > >device_prep_slave_dma_vec)
+> > +		return NULL;
+> > +
+> > +	return chan->device->device_prep_slave_dma_vec(chan, vecs,
+> > nents,
+> > +						=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dir,
+> > flags);
+> > +}
+> > +
+> > =C2=A0static inline struct dma_async_tx_descriptor
+> > *dmaengine_prep_slave_sg(
+> > =C2=A0	struct dma_chan *chan, struct scatterlist
+> > *sgl,	unsigned int sg_len,
+> > =C2=A0	enum dma_transfer_direction dir, unsigned long flags)
+> > --=20
+> > 2.43.0
+>=20
+
 

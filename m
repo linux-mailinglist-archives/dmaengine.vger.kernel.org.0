@@ -1,426 +1,295 @@
-Return-Path: <dmaengine+bounces-705-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-706-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2395827B4B
-	for <lists+dmaengine@lfdr.de>; Tue,  9 Jan 2024 00:07:32 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C5C9827C7A
+	for <lists+dmaengine@lfdr.de>; Tue,  9 Jan 2024 02:18:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 87B6C285132
-	for <lists+dmaengine@lfdr.de>; Mon,  8 Jan 2024 23:07:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9A3EA1F2433B
+	for <lists+dmaengine@lfdr.de>; Tue,  9 Jan 2024 01:18:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C43B53E1A;
-	Mon,  8 Jan 2024 23:07:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC02B17D3;
+	Tue,  9 Jan 2024 01:18:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ujp5thpA"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="K7rnWjeT"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA1741A85;
-	Mon,  8 Jan 2024 23:07:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704755248; x=1736291248;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=WLRAE5v+D1gq2v3TUdz+WwggrGJtRxNSxHcm83S2+Y4=;
-  b=Ujp5thpAe6uSkmiwfie9bsu3rbCtsGnuh+4lCvAWkp1ayQT1kJtkYdDh
-   h1ehQoNCnGR8/OgLSIHWOtJZtRLT+wjaO7N0XZ7v9+qJnuTH8pdLKO4Kp
-   a/cxM1ybubEpzAkR7XnogWfGXdEgwGJ44QnncRxzE6hgrnh14ON2vUcwJ
-   kGPH/JcnO8FyU/+BGp4mudZtC2gt4KZHx2I0p/sAJjljeqB6NjRENhmc6
-   xJVgEuvu0h0h6oSIToFd6afbFLNfreMctHZDFwNv4gDvZQURpSJqM9m1D
-   wkJY0031fWEauAIiKyopNHvbBXCpQXnlaoPQ4IQu/9BQUTVRFoWknEnL9
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="464423821"
-X-IronPort-AV: E=Sophos;i="6.04,181,1695711600"; 
-   d="scan'208";a="464423821"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2024 15:07:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="904959777"
-X-IronPort-AV: E=Sophos;i="6.04,181,1695711600"; 
-   d="scan'208";a="904959777"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by orsmga004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 08 Jan 2024 15:07:27 -0800
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 8 Jan 2024 15:07:27 -0800
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Mon, 8 Jan 2024 15:07:27 -0800
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.101)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 8 Jan 2024 15:07:27 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=V5FCWSc5/7ySCR7VWTLDsbfF0nVPMx1TiMGG2q9SeoyKX9aeAtevTmtIWcDeQBzBne6Vg8/HUr7tlzZGrzzBHx3QuSLjunyvTnDI/LQZjT5SYiSfLNeWOJwkvBF+XUiPNbCFSOBftThMhTLZbtYKuivuwcao3BPPljQ/JL1xIp+ek7FyWixdL+QQPXy9r+mJC0GacdEj0GEA9dLNtU14eWUhygnZCBQ4CBboY8b92Un+8ERgltdefDJQNAmGoqEZIPlAx9RYJdWXhjFLrRGSo90XUScihGFLPrWA+qaAxUgjxtJzjJNDpFOwogk6+m1J96YgRUU/lqtoPMHk42pAzw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GhPDdUJ/I3KKFz5JjKpo+NIDnoIUHyEHQoB1zf0XyhM=;
- b=FM/zJ9n9TTVq95tW4pXZ1UFM+VM/Q0Ikf2YVI5x4OoNiKci68hlsXrfdU5cJYRt7IhPXXIFvppuyQ3JoVq2LhwwGIckKJS39ppC7OcsHmo5mShcPOjQDiJceWbCKsjnZ4hkQjr2fb3siGaT5VUnJhvMSoBueT6FM3tZYkvyTsxnidjl+XffQjZp8rr2UjBHZQgWEkOMu+3N06UH77P1VP0GTr9r5TLu5KM5SJYs2eg3OURygZXlm3Saby2f9is8KbzoSHCnRD5fiCfmY/lRpGAkMRFDjcdpVaG1xmsHNTO8xqNK2hlCHxhONDFcBfHAWrIXdJ/HkWyKxRnmrUMZP+g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH7PR11MB5984.namprd11.prod.outlook.com (2603:10b6:510:1e3::15)
- by PH8PR11MB6878.namprd11.prod.outlook.com (2603:10b6:510:22a::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.23; Mon, 8 Jan
- 2024 23:07:24 +0000
-Received: from PH7PR11MB5984.namprd11.prod.outlook.com
- ([fe80::6f7b:337d:383c:7ad1]) by PH7PR11MB5984.namprd11.prod.outlook.com
- ([fe80::6f7b:337d:383c:7ad1%4]) with mapi id 15.20.7159.020; Mon, 8 Jan 2024
- 23:07:24 +0000
-Message-ID: <563b1dd6-8e91-4cb1-8981-5f18dc1d7130@intel.com>
-Date: Mon, 8 Jan 2024 16:07:20 -0700
-User-Agent: Betterbird (Linux)
-Subject: Re: [PATCH] crypto: iaa - Remove header table code
-To: Tom Zanussi <tom.zanussi@linux.intel.com>, <herbert@gondor.apana.org.au>,
-	<davem@davemloft.net>, <fenghua.yu@intel.com>
-CC: <dan.carpenter@linaro.org>, <tony.luck@intel.com>,
-	<linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-	<dmaengine@vger.kernel.org>
-References: <8bde35bf981a1e490114c6b50fc4755a64da55a5.camel@linux.intel.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <8bde35bf981a1e490114c6b50fc4755a64da55a5.camel@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR03CA0251.namprd03.prod.outlook.com
- (2603:10b6:a03:3a0::16) To PH7PR11MB5984.namprd11.prod.outlook.com
- (2603:10b6:510:1e3::15)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 129EA15A4
+	for <dmaengine@vger.kernel.org>; Tue,  9 Jan 2024 01:18:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20240109011804epoutp02d7d282d52293a6417637918ebc4a50ba~oiP4qgWx12938829388epoutp02O
+	for <dmaengine@vger.kernel.org>; Tue,  9 Jan 2024 01:18:04 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20240109011804epoutp02d7d282d52293a6417637918ebc4a50ba~oiP4qgWx12938829388epoutp02O
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1704763084;
+	bh=F005C07UIM+p33NeB1c2UyrlA4ZMHWNvS2i18QxUfug=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=K7rnWjeT5qIp9vNfwswc2EBvttxUeUy2Lpnajrg0bKf/th2rC5hgX1lyJUFIMxKm1
+	 lqEjLhAC/s2pmAKL9WWo9gWq9iOxhV4gCAiUuQ8+1Fa/4wEbFhWAS88meVVq1K3sdh
+	 PBrNYAxr81sXxNJQE4o70uZsr+5Qo1/lRq7CkigM=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+	epcas2p1.samsung.com (KnoxPortal) with ESMTP id
+	20240109011803epcas2p1961e260ca04fcc3b5bbfa6a0289cd04d~oiP4avPIV1442614426epcas2p1X;
+	Tue,  9 Jan 2024 01:18:03 +0000 (GMT)
+Received: from epsmges2p4.samsung.com (unknown [182.195.36.90]) by
+	epsnrtp1.localdomain (Postfix) with ESMTP id 4T8CjR2hczz4x9Q0; Tue,  9 Jan
+	2024 01:18:03 +0000 (GMT)
+Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
+	epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+	6D.26.09607.BCE9C956; Tue,  9 Jan 2024 10:18:03 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
+	20240109011802epcas2p3c16cc83244b79ff4d22a0facee599224~oiP3gK3ty1632216322epcas2p3i;
+	Tue,  9 Jan 2024 01:18:02 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240109011802epsmtrp2b9868c113ba41b256ba4532fd9d24052~oiP3fUPpd1050210502epsmtrp2f;
+	Tue,  9 Jan 2024 01:18:02 +0000 (GMT)
+X-AuditID: b6c32a48-963ff70000002587-6c-659c9ecb3a43
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	6F.C9.08817.ACE9C956; Tue,  9 Jan 2024 10:18:02 +0900 (KST)
+Received: from KORCO121695 (unknown [10.229.18.180]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20240109011802epsmtip29cd389aa44399016c9b5662f48afedb6~oiP3Vi3Lc2892828928epsmtip2h;
+	Tue,  9 Jan 2024 01:18:02 +0000 (GMT)
+From: "bumyong.lee" <bumyong.lee@samsung.com>
+To: <wens@kernel.org>
+Cc: "'Vinod Koul'" <vkoul@kernel.org>, <p.zabel@pengutronix.de>,
+	<dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+In-Reply-To: <CAGb2v67sf20Wnoxbi3BrfL0AW6+USWgd7+ZMf-3AVqrXKLXTgA@mail.gmail.com>
+Subject: RE: [PATCH] dmaengine: pl330: issue_pending waits until WFP state
+Date: Tue, 9 Jan 2024 10:18:02 +0900
+Message-ID: <000001da4299$b0f3d410$12db7c30$@samsung.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR11MB5984:EE_|PH8PR11MB6878:EE_
-X-MS-Office365-Filtering-Correlation-Id: 510b98c9-bc92-4fd9-8223-08dc109e932a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: KnSlA/J2ozajhbe8oW0VCLJuprYywRGRmu01aDL/YKB+6fBJ6QExAS/gJjiMyc9HJ78DCeQRaj5l4N1a7UuGV9C9ENJABziKp2iIUOpdZyR9PuOhYDYKB1nR/YcRI9sKmUVqZQeB2ehQL2Gz+jiyrVgG8cqXXvA7lJFIqiyvgM/J4ojF1DM/Rztb8oZ5eTtM+OMJEq0C6QT4oqapMREBwbWIbWnlmJXE1fs+wtFsTbJIRKm3FAWhiWaC2R6+8Z0MgKBzcHAJX9PhmsTXGN8Mp/GHt0n5XWtfSWVBToV4wocbVU0M481OGuBQBwSQsKr4oRnDpOtwCfsGIfoOG3z0zCTbEDj+gJFSuZEit0kQ7ZdBf94/DyqJmMerXgkmCxQkjvKvJ4DGELdz9za8JYW+mhoY1+1o+MzHIdaC2hpP/JwigXEC9VZtC+cK1ebQR7Hnoap9+6HWu7bs0bnZxLE8DgXzhTiJie9ZRFwCRyOhPAU9Ma2+jPuN7KOlmns8tFkfIZaPw1aX1nfpVJJjMvxwZZQWN+Lm2Gvm4nwlR1UISbvtzi8fM9+MhIjngwZIUtuZIZlsriVjdK2eT7bMXugoqU2/dFEdvRVxPdJlWuyBOBs=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5984.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(376002)(366004)(39860400002)(136003)(346002)(230922051799003)(186009)(64100799003)(451199024)(1800799012)(31686004)(66946007)(66556008)(66476007)(2906002)(5660300002)(44832011)(316002)(6666004)(8676002)(8936002)(41300700001)(6636002)(4326008)(478600001)(82960400001)(36756003)(86362001)(31696002)(38100700002)(966005)(2616005)(26005)(53546011)(6486002)(6506007)(83380400001)(6512007)(45980500001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?eGFjdVJnRTRKUWNwYzZIN3JhdnJQbFYydTFOaWZzajVCdFNtLzdHbEtMbWQy?=
- =?utf-8?B?RGlxUkcyMksyTFRDZWc1N3U1K0dJdW9VUlEwSGNiUmlocWNCZnl6N2FoRURG?=
- =?utf-8?B?M0pRMWVMTnJqbDRueE51U3ZKcXAzRVZ4TnV2UzZiZi9SUG5yOU1reUdRREZ6?=
- =?utf-8?B?VERSTlpzMERQQ0F5YkppNzhnbnBoa3BXVktwRU40S3RGUlZIRmJ1Y0ZIdkNW?=
- =?utf-8?B?ZmxiZjVMYUVIRkhnRUl4ZTFnWnQ0YUg1NitMNDQ2MzBBNFltaWxMT2VtdUow?=
- =?utf-8?B?M1BNUC96VmRRYkN2Rm1pdnVnelV2WllNK0RnZTIxcnh3bWdNdVJVeXo0U2p4?=
- =?utf-8?B?Qlp5QU9kcDg4d1JDQ0tEdnNqZDI1dzM4QkpWYkZ1UlU5dEFvOUlCcU5VU3Zi?=
- =?utf-8?B?YkNNMU5Fa0xZb3NJdS81bnVFSmluN3FCaGRWRUdKVXVZRi9JRXNFZ1hRamVp?=
- =?utf-8?B?U2srWEVzQkJJcDl1cUJVZ01RTms1dTFkbmFwUitPV0ZtRGJrenFNS2psVlM4?=
- =?utf-8?B?WWl6SndXaW1WNGlHQXBnNG8yUlBHbGR4U0ZPSm5jYitUb0paWTZsazAyQytm?=
- =?utf-8?B?SzczWDVPdEd2dFZPOHY4M3FCcVYzTHEyNkN1S0ZSODlCWmFpZXVoUGRvVnpq?=
- =?utf-8?B?VzVPbmppeFpVVCtnZFNzSDh1cTNwdnk0bmprVXZJUmo0eS9aaDlnQnZvWlNr?=
- =?utf-8?B?d1BXdHplZ2RSM0JGM094d0JDcFlyL2NuazVCTzJGWjQra1UvQlRxS2JUT0E4?=
- =?utf-8?B?Mk5SZFB6bTRIVVV2M3JpdVQ4RHFCbHdhaU1jTmRDWkUxT2Q5UC8yWUxldHNX?=
- =?utf-8?B?UTYxdUdmQ2RLdnYzWFo2eUFBYm1ZRGh2MVc1K21kVFA0RFp4azFFMkt6U2NQ?=
- =?utf-8?B?SFVUUy9CZC9HNEQzN0hsSHJMRHh4WGx5MGNvYVY1dHgxSHJmdW9sTEs0aUt2?=
- =?utf-8?B?QjJGZFRJeHE1K3JhNm1WV2FOdUxhd0ZCSmUxd3dIWmZqRVNUd3R3VFBER0hD?=
- =?utf-8?B?V21Cd1lLeGpYQXlqRURwNUlidjF2SkxOQW0wVjVUUVNsVk1aUzI3QW9PZFBH?=
- =?utf-8?B?WFUzam1XOVJiOGxreDdBN2tlV2x3UXNENTc3TXRNYXRQdUh2dzB1TnJZUnZr?=
- =?utf-8?B?aW1JaTdkOTIvWGc3VkdaRWpxY2o4d0VYNXFjK0tacXU2OW5kMzFWUUU3YUY1?=
- =?utf-8?B?YUhYd3c3T2JRTm52SkdNYVpCWDU4bGhyam5GT2gxbVdRL2xIUE5OWkVRRlBT?=
- =?utf-8?B?aW9kQk5wWG8vOHVXUnJMRU1pdHJwcWRwd2dmSGN5MHZoa0Q1ODl2aE1HMHAy?=
- =?utf-8?B?Z2xQZnpOWG9RY3V4aysvR1JjUGNZSkNDTnlCQW1oYklrOXU5KzlWQVFPTjBt?=
- =?utf-8?B?cnNzWHd3UmpBd2ZYOCtPUkxhb252RFNMQTlQK2wxNmFXc3ZhZDV5bE81WGda?=
- =?utf-8?B?a3ZCLzVnYXZETmZUNS9ESll3MzFJaC9zQytGQ3hEZmN4Rk1qdWg1ZmpuU3pV?=
- =?utf-8?B?bEtBS0IxZkp0K0xrcmplY1FoVlZVME5XZzhNK25jUm16S1drMnFEM1oyOTFO?=
- =?utf-8?B?SUNMQ3RJWlVBZ2JWa3FYaWROeEt4OEJIRVFXZm43dTNpWVJJb25VRGRxM0FY?=
- =?utf-8?B?Szk1Nlk2OWNQVWw0dzEvK1g4UGVEK2d2UTFFWEZZN1lscStkVHFEVnRPSlBM?=
- =?utf-8?B?b21TY29qb2lHN0Z1S25IMVRDTDQ3TDBsYjVrNnhjY2RvdllzSWtMQ3IzQjlz?=
- =?utf-8?B?Z0dEaEdGMVVEWnFvOWg2YXgvNnJDYTFMbGxmWGtnbFpVenNwL285VUhLZm1H?=
- =?utf-8?B?UlRwS1h1amdnb3Z4SkdJWXd0Q0JUV3VkL1llb0dpbTdjNmhJazgrRjhISTBB?=
- =?utf-8?B?MUdoRlY5YlR1d3QvclRvWXpNV0Z0RjFEVWFpWDdkcFV5S3A0OVNzbVN3Zi9W?=
- =?utf-8?B?UE9tWXBSbmVoY2cvdHJMVXZJbVA1ZTE3RUlRdWo1SjNzN1F6eG1YYStqZ3Zj?=
- =?utf-8?B?TTBoWlJOOHQ4eUJnZU8wYUVVQVJTT2pKSnBzaHBFVURVM01UVWNsdU43Mlhs?=
- =?utf-8?B?MkdwaGlmS0s5QXY3QTl6cC9tL3ZqdzJIRmVvY0dNWU5HMElEdHlMODAxam9a?=
- =?utf-8?Q?xNMamMtDksL9zdI8p3k8xIbzG?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 510b98c9-bc92-4fd9-8223-08dc109e932a
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB5984.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2024 23:07:24.2782
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sXyWX/8+nOVdDYk3wT/0Z20RICOXCPWm/QgEfAyQkgzR3nWrD3KWje0zrnIuc4JcggchFsUTGCPuaVg5wpNSyQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB6878
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQJFg/wutkK7a/Rd7wqs74hlulytOgGLTehrAiCF6NsCwn1+1QD5nG5JAk7i1OivrGnMwA==
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrHKsWRmVeSWpSXmKPExsWy7bCmqe7peXNSDba0ClusnvqX1eLyrjls
+	FnfvnWCx2HnnBLPFrLnX2RxYPTat6mTz6P9r4PF5k1wAc1S2TUZqYkpqkUJqXnJ+SmZeuq2S
+	d3C8c7ypmYGhrqGlhbmSQl5ibqqtkotPgK5bZg7QRiWFssScUqBQQGJxsZK+nU1RfmlJqkJG
+	fnGJrVJqQUpOgXmBXnFibnFpXrpeXmqJlaGBgZEpUGFCdsbDrYYFk20r9jxsYm9gnKXfxcjJ
+	ISFgIvH+/2mmLkYuDiGBHYwSmzYtYYZwPjFKdK9ZyQ7hfGOUmP1rCxtMy79rT6Fa9jJKHJj2
+	kQ3CeckoMfnqS3aQKjYBXYmZLw+ygNgiAqIS254vYwaxmQXqJDqmvAGzOQUCJfZMvglWIyzg
+	JdH4fCZrFyMHB4uAikTvxEKQMK+ApcSRB3vZIGxBiZMzn7BAjJGX2P52DjPEQQoSP58uY4VY
+	FSbx+9xlRogaEYnZnW1QNT/ZJc6e9ISwXSQurG1ihLCFJV4d38IOYUtJfH63F+rJfImZc26w
+	QNg1El/v/YOK20ssOvOTHeRMZgFNifW79EFMCQFliSO3oC7jk+g4/JcdIswr0dEmBGGqSjTd
+	rIeYIS2x7MwM1gmMSrOQvDULyVuzkJw/C2HVAkaWVYxiqQXFuempxUYFJvCITs7P3cQIToha
+	HjsYZ7/9oHeIkYmD8RCjBAezkgiv5IzZqUK8KYmVValF+fFFpTmpxYcYTYHhPJFZSjQ5H5iS
+	80riDU0sDUzMzAzNjUwNzJXEee+1zk0REkhPLEnNTk0tSC2C6WPi4JRqYDrluMJeSCutdGub
+	lu3T6eErDptFSFm/+XCmfOG5q+/3OtxNZ1hoekUmxcTgViCXW/fy7dabrnqy8feWmPQEzyhM
+	O9W+9ZlF2LwTjg0M9jurP9jZxpxcMdV0AovAtE0TZuVt7Vweca3st93N785chhM5j2acWio/
+	P+MJm39daM/VnPu6oobfXy2a/N5ozkrF5UqFBlwaIrWyIfOVz1d9UrS1P18euWNJRofu6b7l
+	l0MvrM6zWR9Q+fXT1qwZNrz3s9eVsa3s1FRtLbU81LrbWP7Wa4NnH1MUl9yNnrD1wdu6pxPO
+	PXhlKhkWfPzNFk2fo/6TQqY7uPlceyD5KTvrybWwROPTjopTj9ddc1XjUVdiKc5INNRiLipO
+	BADchZEMEQQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrLLMWRmVeSWpSXmKPExsWy7bCSvO6peXNSDZ4tNLZYPfUvq8XlXXPY
+	LO7eO8FisfPOCWaLWXOvszmwemxa1cnm0f/XwOPzJrkA5igum5TUnMyy1CJ9uwSujIdbDQsm
+	21bsedjE3sA4S7+LkZNDQsBE4t+1p0wgtpDAbkaJWcdyIOLSEi9av7FC2MIS91uOANlcQDXP
+	GSX6P85lBEmwCehKzHx5kAXEFhEQldj2fBkzSBGzQBOjxIPp11kgOm4wSeyc/58dpIpTIFBi
+	z+SbYB3CAl4Sjc9nAo3l4GARUJHonVgIEuYVsJQ48mAvG4QtKHFy5hOwcmYBbYmnN59C2fIS
+	29/OYYa4TkHi59NlrBBHhEn8PneZEaJGRGJ2ZxvzBEbhWUhGzUIyahaSUbOQtCxgZFnFKJla
+	UJybnltsWGCUl1quV5yYW1yal66XnJ+7iREcI1paOxj3rPqgd4iRiYPxEKMEB7OSCK/kjNmp
+	QrwpiZVVqUX58UWlOanFhxilOViUxHm/ve5NERJITyxJzU5NLUgtgskycXBKNTAtV5U7NTUq
+	7ZiryZHZbo8+rRFnechwNv/kRrnVti+fekoGzjxS0BOSzfD+Z2hGw0PtLU5yIlzHT1oxHe5X
+	+Fp1oebh7wuHwiJaRXapWEw033Yka17vX9Eep0JWEfuF9aqG8guNll5T6lcp+eDA+5v9RtD8
+	UxvCDm3OcOa4PXP1lxtyAWbsZQ4R/TO2Vl5Ycb82VEfW7MiG9nkcVsUf3wQcOn6yQc6ORZt5
+	unih49LpT65fVbTVeX8+2prDc3ZpS7Je89Wmt2bS17S/J4qcjGwo5r15KHn96adHdrktX5hx
+	R680f6o25/3mC+61vxmtb7/p3L9WUnLeXG23G3tEXi+Vlo+TfK7mWnebrzn7XpASS3FGoqEW
+	c1FxIgAS3orQAAMAAA==
+X-CMS-MailID: 20240109011802epcas2p3c16cc83244b79ff4d22a0facee599224
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20231219055052epcas2p4bb1d8210f650ab18370711db2194e8e3
+References: <CGME20231219055052epcas2p4bb1d8210f650ab18370711db2194e8e3@epcas2p4.samsung.com>
+	<20231219055026.118695-1-bumyong.lee@samsung.com>
+	<170317622670.683420.3881501030324253538.b4-ty@kernel.org>
+	<ZYhQ2-OnjDgoqjvt@wens.tw> <000001da3869$ca643fa0$5f2cbee0$@samsung.com>
+	<CAGb2v67sf20Wnoxbi3BrfL0AW6+USWgd7+ZMf-3AVqrXKLXTgA@mail.gmail.com>
 
+Hello.
 
-
-On 1/8/24 15:53, Tom Zanussi wrote:
-> The header table and related code is currently unused - it was
-> included and used for canned mode, but canned mode has been removed,
-> so this code can be safely removed as well.
+> > > This seems to cause a stall on my Quartz 64 model B (RK3566) once
+> > > Bluetooth over UART is initialized, when combined with a patch of
+> > > mine that enables DMA on UARTs [1]. Reverting this patch gets
+> > > everything running again.
+> > >
+> > > The following are RCU stalls detected, followed by stack traces
+> > > produced with pseudo-NMI. Without pseudo-NMIs no stack traces are
+> produced.
+> > >
+> > >     rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
+> > >     rcu:     0-...0: (0 ticks this GP) idle=80fc/1/0x4000000000000000
+> > > softirq=693/693 fqs=31498
+> > >     rcu:     3-...0: (3 ticks this GP) idle=2b44/1/0x4000000000000000
+> > > softirq=553/556 fqs=31498
+> > >     rcu:     (detected by 1, t=162830 jiffies, g=-307, q=32 ncpus=4)
+> > >     Sending NMI from CPU 1 to CPUs 0:
+> > >     NMI backtrace for cpu 0
+> > >     CPU: 0 PID: 1200 Comm: (udev-worker) Not tainted 6.7.0-rc6-next-
+> > > 20231222-10300-g8b07e3811bc7 #17
+> > >     Hardware name: Pine64 RK3566 Quartz64-B Board (DT)
+> > >     pstate: 00400009 (nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> > >     pc : queued_spin_lock_slowpath+0x50/0x330
+> > >     lr : pl330_irq_handler+0x2f8/0x5a0
+> > >     sp : ffffffc080003ec0
+> > >     pmr_save: 00000060
+> > >     x29: ffffffc080003ec0 x28: ffffff80017c7000 x27: ffffff8001a58d80
+> > >     x26: 0000000000000060 x25: ffffff80017d0338 x24: ffffff800161ae38
+> > >     x23: ffffff8001597c00 x22: ffffffc081960000 x21: 0000000000000000
+> > >     x20: ffffff800161ac80 x19: ffffff80010c5180 x18: 0000000000000000
+> > >     x17: ffffffc06e724000 x16: ffffffc080000000 x15: 0000000000000000
+> > >     x14: 0000000000000000 x13: ffffff80042f102f x12: ffffffc083ad3cc4
+> > >     x11: 0000000000000040 x10: ffffff800022a0a8 x9 : ffffff800022a0a0
+> > >     x8 : ffffff8000400270 x7 : 0000000000000000 x6 : 0000000000000000
+> > >     x5 : ffffff8000400248 x4 : ffffffc06e724000 x3 : ffffffc080003fa0
+> > >     x2 : 0000000000000000 x1 : 0000000000000001 x0 : ffffff800161ae38
+> > >     Call trace:
+> > >      queued_spin_lock_slowpath+0x50/0x330
+> > >      __handle_irq_event_percpu+0x38/0x16c
+> > >      handle_irq_event+0x44/0xf8
+> > >      handle_fasteoi_irq+0xb0/0x28c
+> > >      generic_handle_domain_irq+0x2c/0x44
+> > >      gic_handle_irq+0x10c/0x240
+> > >      call_on_irq_stack+0x24/0x4c
+> > >      do_interrupt_handler+0x80/0x8c
+> > >      el1_interrupt+0x44/0x98
+> > >      el1h_64_irq_handler+0x18/0x24
+> > >      el1h_64_irq+0x78/0x7c
+> > >      __d_rehash+0x0/0x94
+> > >      d_add+0x40/0x80
+> > >      simple_lookup+0x4c/0x78
+> > >      path_openat+0x5ec/0xed0
+> > >      do_filp_open+0x80/0x12c
+> > >      do_sys_openat2+0xb4/0xe8
+> > >      __arm64_sys_openat+0x64/0xa4
+> > >      invoke_syscall+0x48/0x114
+> > >      el0_svc_common.constprop.0+0x40/0xe0
+> > >      do_el0_svc+0x1c/0x28
+> > >      el0_svc+0x34/0xd4
+> > >      el0t_64_sync_handler+0x100/0x12c
+> > >      el0t_64_sync+0x1a4/0x1a8
+> > >     Sending NMI from CPU 1 to CPUs 3:
+> > >     NMI backtrace for cpu 3
+> > >     CPU: 3 PID: 31 Comm: kworker/3:0 Not tainted
+> > > 6.7.0-rc6-next-20231222-
+> > > 10300-g8b07e3811bc7 #17
+> > >     Hardware name: Pine64 RK3566 Quartz64-B Board (DT)
+> > >     Workqueue: events hci_uart_write_work [hci_uart]
+> > >     pstate: 80400009 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> > >     pc : _state+0x2c/0x138
+> > >     lr : pl330_start_thread.isra.0+0x2e0/0x32c
+> > >     sp : ffffffc08157bb20
+> > >     pmr_save: 00000060
+> > >     x29: ffffffc08157bb20 x28: 0000000000000000 x27: 0000000000000060
+> > >     x26: ffffffc080c4e658 x25: 0000000000000060 x24: 0000000001a20000
+> > >     x23: ffffff8001555000 x22: ffffffc081960020 x21: ffffff800161b068
+> > >     x20: 0000000000000000 x19: ffffff800161b050 x18: ffffffffffffffff
+> > >     x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000001
+> > >     x14: 0000000000000004 x13: 0000000000000009 x12: 0000000000000005
+> > >     x11: 0000000000000027 x10: 000000000000002b x9 : 0000000000000032
+> > >     x8 : ffffffc08154521d x7 : 0000000000000005 x6 : 0000000000000010
+> > >     x5 : 0000000000000001 x4 : ffffffc081960d04 x3 : ffffff800161b280
+> > >     x2 : ffffff800161b050 x1 : 0000000000204000 x0 : 0000000000000108
+> > >     Call trace:
+> > >      _state+0x2c/0x138
+> > >      pl330_tasklet+0x1f8/0x818
+> > >      pl330_issue_pending+0x150/0x178
+> > >      serial8250_tx_dma+0x150/0x21c
+> > >      serial8250_start_tx+0x9c/0x1c0
+> > >      __uart_start+0x74/0xfc
+> > >      uart_write+0xfc/0x2f0
+> > >      ttyport_write_buf+0x4c/0x90
+> > >      serdev_device_write_buf+0x24/0x38
+> > >      hci_uart_write_work+0x54/0x164 [hci_uart]
+> > >      process_one_work+0x13c/0x2bc
+> > >      worker_thread+0x2a0/0x52c
+> > >      kthread+0xe0/0xe4
+> > >      ret_from_fork+0x10/0x20
+> > I think the dma channel already passed WFP state.
+> >
+> > The errata[1] says that
+> > 4.  The driver polls the status of channel 0 until it observes that
+> >      it has entered the "Waiting for peripheral" state 5.  The driver
+> > enables the peripheral to allow it to issue DMA requests
+> >
+> > When I review 8250_dma.c, I think serial8250_do_prepare_tx_dma() of
+> > serial8250_tx_dma() would enable peripheral to allow issue DMA requests.
+> > serial8250_do_prepare_tx_dma(p) performs before
+> > dma_async_issue_pending() It means that serial8250_tx_dma() has
+> > reversed sequence step 4 and 5 for pl330.
 > 
-> This indirectly fixes a bug reported by Dan Carpenter.
+> serial8250_prepare_tx_dma() on Rockchip doesn't do anything. The callback
+> called in serial8250_prepare_tx_dma() simply isn't set.
 > 
-> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> Closes: https://lore.kernel.org/linux-crypto/b2e0bd974981291e16882686a2b9b1db3986abe4.camel@linux.intel.com/T/#m4403253d6a4347a925fab4fc1cdb4ef7c095fb86
-> Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-> ---
->  drivers/crypto/intel/iaa/iaa_crypto.h         |  25 ----
->  .../crypto/intel/iaa/iaa_crypto_comp_fixed.c  |   1 -
->  drivers/crypto/intel/iaa/iaa_crypto_main.c    | 108 +-----------------
->  3 files changed, 3 insertions(+), 131 deletions(-)
+> For this hardware the DMA request will be asserted when the TX FIFO is
+> empty, or when the RX FIFO has data, depending on the direction.
 > 
-> diff --git a/drivers/crypto/intel/iaa/iaa_crypto.h b/drivers/crypto/intel/iaa/iaa_crypto.h
-> index 014420f7beb0..2524091a5f70 100644
-> --- a/drivers/crypto/intel/iaa/iaa_crypto.h
-> +++ b/drivers/crypto/intel/iaa/iaa_crypto.h
-> @@ -59,10 +59,8 @@ struct iaa_device_compression_mode {
->  	const char			*name;
->  
->  	struct aecs_comp_table_record	*aecs_comp_table;
-> -	struct aecs_decomp_table_record	*aecs_decomp_table;
->  
->  	dma_addr_t			aecs_comp_table_dma_addr;
-> -	dma_addr_t			aecs_decomp_table_dma_addr;
->  };
->  
->  /* Representation of IAA device with wqs, populated by probe */
-> @@ -107,23 +105,6 @@ struct aecs_comp_table_record {
->  	u32 reserved_padding[2];
->  } __packed;
->  
-> -/* AECS for decompress */
-> -struct aecs_decomp_table_record {
-> -	u32 crc;
-> -	u32 xor_checksum;
-> -	u32 low_filter_param;
-> -	u32 high_filter_param;
-> -	u32 output_mod_idx;
-> -	u32 drop_init_decomp_out_bytes;
-> -	u32 reserved[36];
-> -	u32 output_accum_data[2];
-> -	u32 out_bits_valid;
-> -	u32 bit_off_indexing;
-> -	u32 input_accum_data[64];
-> -	u8  size_qw[32];
-> -	u32 decomp_state[1220];
-> -} __packed;
-> -
->  int iaa_aecs_init_fixed(void);
->  void iaa_aecs_cleanup_fixed(void);
->  
-> @@ -136,9 +117,6 @@ struct iaa_compression_mode {
->  	int			ll_table_size;
->  	u32			*d_table;
->  	int			d_table_size;
-> -	u32			*header_table;
-> -	int			header_table_size;
-> -	u16			gen_decomp_table_flags;
->  	iaa_dev_comp_init_fn_t	init;
->  	iaa_dev_comp_free_fn_t	free;
->  };
-> @@ -148,9 +126,6 @@ int add_iaa_compression_mode(const char *name,
->  			     int ll_table_size,
->  			     const u32 *d_table,
->  			     int d_table_size,
-> -			     const u8 *header_table,
-> -			     int header_table_size,
-> -			     u16 gen_decomp_table_flags,
->  			     iaa_dev_comp_init_fn_t init,
->  			     iaa_dev_comp_free_fn_t free);
->  
-> diff --git a/drivers/crypto/intel/iaa/iaa_crypto_comp_fixed.c b/drivers/crypto/intel/iaa/iaa_crypto_comp_fixed.c
-> index 45cf5d74f0fb..19d9a333ac49 100644
-> --- a/drivers/crypto/intel/iaa/iaa_crypto_comp_fixed.c
-> +++ b/drivers/crypto/intel/iaa/iaa_crypto_comp_fixed.c
-> @@ -78,7 +78,6 @@ int iaa_aecs_init_fixed(void)
->  				       sizeof(fixed_ll_sym),
->  				       fixed_d_sym,
->  				       sizeof(fixed_d_sym),
-> -				       NULL, 0, 0,
->  				       init_fixed_mode, NULL);
->  	if (!ret)
->  		pr_debug("IAA fixed compression mode initialized\n");
-> diff --git a/drivers/crypto/intel/iaa/iaa_crypto_main.c b/drivers/crypto/intel/iaa/iaa_crypto_main.c
-> index dfd3baf0a8d8..39a5fc905c4d 100644
-> --- a/drivers/crypto/intel/iaa/iaa_crypto_main.c
-> +++ b/drivers/crypto/intel/iaa/iaa_crypto_main.c
-> @@ -258,16 +258,14 @@ static void free_iaa_compression_mode(struct iaa_compression_mode *mode)
->  	kfree(mode->name);
->  	kfree(mode->ll_table);
->  	kfree(mode->d_table);
-> -	kfree(mode->header_table);
->  
->  	kfree(mode);
->  }
->  
->  /*
-> - * IAA Compression modes are defined by an ll_table, a d_table, and an
-> - * optional header_table.  These tables are typically generated and
-> - * captured using statistics collected from running actual
-> - * compress/decompress workloads.
-> + * IAA Compression modes are defined by an ll_table and a d_table.
-> + * These tables are typically generated and captured using statistics
-> + * collected from running actual compress/decompress workloads.
->   *
->   * A module or other kernel code can add and remove compression modes
->   * with a given name using the exported @add_iaa_compression_mode()
-> @@ -315,9 +313,6 @@ EXPORT_SYMBOL_GPL(remove_iaa_compression_mode);
->   * @ll_table_size: The ll table size in bytes
->   * @d_table: The d table
->   * @d_table_size: The d table size in bytes
-> - * @header_table: Optional header table
-> - * @header_table_size: Optional header table size in bytes
-> - * @gen_decomp_table_flags: Otional flags used to generate the decomp table
->   * @init: Optional callback function to init the compression mode data
->   * @free: Optional callback function to free the compression mode data
->   *
-> @@ -330,9 +325,6 @@ int add_iaa_compression_mode(const char *name,
->  			     int ll_table_size,
->  			     const u32 *d_table,
->  			     int d_table_size,
-> -			     const u8 *header_table,
-> -			     int header_table_size,
-> -			     u16 gen_decomp_table_flags,
->  			     iaa_dev_comp_init_fn_t init,
->  			     iaa_dev_comp_free_fn_t free)
->  {
-> @@ -370,16 +362,6 @@ int add_iaa_compression_mode(const char *name,
->  		mode->d_table_size = d_table_size;
->  	}
->  
-> -	if (header_table) {
-> -		mode->header_table = kzalloc(header_table_size, GFP_KERNEL);
-> -		if (!mode->header_table)
-> -			goto free;
-> -		memcpy(mode->header_table, header_table, header_table_size);
-> -		mode->header_table_size = header_table_size;
-> -	}
-> -
-> -	mode->gen_decomp_table_flags = gen_decomp_table_flags;
-> -
->  	mode->init = init;
->  	mode->free = free;
->  
-> @@ -420,10 +402,6 @@ static void free_device_compression_mode(struct iaa_device *iaa_device,
->  	if (device_mode->aecs_comp_table)
->  		dma_free_coherent(dev, size, device_mode->aecs_comp_table,
->  				  device_mode->aecs_comp_table_dma_addr);
-> -	if (device_mode->aecs_decomp_table)
-> -		dma_free_coherent(dev, size, device_mode->aecs_decomp_table,
-> -				  device_mode->aecs_decomp_table_dma_addr);
-> -
->  	kfree(device_mode);
->  }
->  
-> @@ -440,73 +418,6 @@ static int check_completion(struct device *dev,
->  			    bool compress,
->  			    bool only_once);
->  
-> -static int decompress_header(struct iaa_device_compression_mode *device_mode,
-> -			     struct iaa_compression_mode *mode,
-> -			     struct idxd_wq *wq)
-> -{
-> -	dma_addr_t src_addr, src2_addr;
-> -	struct idxd_desc *idxd_desc;
-> -	struct iax_hw_desc *desc;
-> -	struct device *dev;
-> -	int ret = 0;
-> -
-> -	idxd_desc = idxd_alloc_desc(wq, IDXD_OP_BLOCK);
-> -	if (IS_ERR(idxd_desc))
-> -		return PTR_ERR(idxd_desc);
-> -
-> -	desc = idxd_desc->iax_hw;
-> -
-> -	dev = &wq->idxd->pdev->dev;
-> -
-> -	src_addr = dma_map_single(dev, (void *)mode->header_table,
-> -				  mode->header_table_size, DMA_TO_DEVICE);
-> -	dev_dbg(dev, "%s: mode->name %s, src_addr %llx, dev %p, src %p, slen %d\n",
-> -		__func__, mode->name, src_addr,	dev,
-> -		mode->header_table, mode->header_table_size);
-> -	if (unlikely(dma_mapping_error(dev, src_addr))) {
-> -		dev_dbg(dev, "dma_map_single err, exiting\n");
-> -		ret = -ENOMEM;
-> -		return ret;
-> -	}
-> -
-> -	desc->flags = IAX_AECS_GEN_FLAG;
-> -	desc->opcode = IAX_OPCODE_DECOMPRESS;
-> -
-> -	desc->src1_addr = (u64)src_addr;
-> -	desc->src1_size = mode->header_table_size;
-> -
-> -	src2_addr = device_mode->aecs_decomp_table_dma_addr;
-> -	desc->src2_addr = (u64)src2_addr;
-> -	desc->src2_size = 1088;
-> -	dev_dbg(dev, "%s: mode->name %s, src2_addr %llx, dev %p, src2_size %d\n",
-> -		__func__, mode->name, desc->src2_addr, dev, desc->src2_size);
-> -	desc->max_dst_size = 0; // suppressed output
-> -
-> -	desc->decompr_flags = mode->gen_decomp_table_flags;
-> -
-> -	desc->priv = 0;
-> -
-> -	desc->completion_addr = idxd_desc->compl_dma;
-> -
-> -	ret = idxd_submit_desc(wq, idxd_desc);
-> -	if (ret) {
-> -		pr_err("%s: submit_desc failed ret=0x%x\n", __func__, ret);
-> -		goto out;
-> -	}
-> -
-> -	ret = check_completion(dev, idxd_desc->iax_completion, false, false);
-> -	if (ret)
-> -		dev_dbg(dev, "%s: mode->name %s check_completion failed ret=%d\n",
-> -			__func__, mode->name, ret);
-> -	else
-> -		dev_dbg(dev, "%s: mode->name %s succeeded\n", __func__,
-> -			mode->name);
-> -out:
-> -	dma_unmap_single(dev, src_addr, 1088, DMA_TO_DEVICE);
-> -
-> -	return ret;
-> -}
-> -
->  static int init_device_compression_mode(struct iaa_device *iaa_device,
->  					struct iaa_compression_mode *mode,
->  					int idx, struct idxd_wq *wq)
-> @@ -529,24 +440,11 @@ static int init_device_compression_mode(struct iaa_device *iaa_device,
->  	if (!device_mode->aecs_comp_table)
->  		goto free;
->  
-> -	device_mode->aecs_decomp_table = dma_alloc_coherent(dev, size,
-> -							    &device_mode->aecs_decomp_table_dma_addr, GFP_KERNEL);
-> -	if (!device_mode->aecs_decomp_table)
-> -		goto free;
-> -
->  	/* Add Huffman table to aecs */
->  	memset(device_mode->aecs_comp_table, 0, sizeof(*device_mode->aecs_comp_table));
->  	memcpy(device_mode->aecs_comp_table->ll_sym, mode->ll_table, mode->ll_table_size);
->  	memcpy(device_mode->aecs_comp_table->d_sym, mode->d_table, mode->d_table_size);
->  
-> -	if (mode->header_table) {
-> -		ret = decompress_header(device_mode, mode, wq);
-> -		if (ret) {
-> -			pr_debug("iaa header decompression failed: ret=%d\n", ret);
-> -			goto free;
-> -		}
-> -	}
-> -
->  	if (mode->init) {
->  		ret = mode->init(device_mode);
->  		if (ret)
+> From the DesignWare UART release notes:
+> 
+> In mode 0 (single shot DMA), the dma_tx_req_n signal goes active low under
+> the following conditions:
+> - When the Transmitter Holding Register is empty in non-FIFO mode
+> - When the transmitter FIFO is empty in FIFO mode with Programmable THRE
+>   interrupt mode disabled
+> - When the transmitter FIFO is at or below the programmed threshold with
+>   Programmable THRE interrupt mode enabled
+> 
+> Mode 1 (continuous DMA) is the same, minus the first condition.
+> 
+> > But I'm not sure if the errata suggests normal slave driver dma usage
+> > sequence or not.
+> 
+> I'm not sure what you mean by this.
+
+Errata suggests that Slave device must not send DMA request until PL330
+enters WFP state. so I made wait until WFP state in _trigger().
+If slave device didn't send DMA request, I think it is okay to wait
+until pl330 changes their state to WFP in _trigger().
+
+According to your description,
+In order for serial8250 to follow the sequence of the errata, I guess
+serial8250 should change mode from fifo mode to DMA mode after doing
+issue_pending() not to send DMA request until WFP.
+
+If case of samsung_tty.c, it changes dma mode after doing issue_pending()
+
+s3c64xx_start_rx_dma(ourport); // do issue_pending()
+if (ourport->rx_mode == S3C24XX_RX_PIO) 
+        enable_rx_dma(ourport); // change uart mode to DMA mode
+                                     // to send DMA request
+
+But I'm not sure if most of slave devices send DMA request 
+before doing issue_pending().
+
+> 
+> > If it is abnormal sequence, I think it should be handled by quirk
+> 
+> A quirk on which device? The DMA controller?
+If the sequence of requesting DMA before doing issue_pending() is common,
+The errata suggests wrong sequence for DMA usage in linux.
+So, it should be applied to pl330 not to wait WFP _trigger() when quirk
+is not enabled.
+
+Unfortunately, I couldn't find more good way when I check pl330 trm
+and errata.
+
+Best regards
+
 

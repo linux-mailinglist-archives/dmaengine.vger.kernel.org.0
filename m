@@ -1,70 +1,71 @@
-Return-Path: <dmaengine+bounces-721-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-720-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 21A3282AA8B
-	for <lists+dmaengine@lfdr.de>; Thu, 11 Jan 2024 10:09:10 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4277382AA80
+	for <lists+dmaengine@lfdr.de>; Thu, 11 Jan 2024 10:06:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B8AEBB23CE3
-	for <lists+dmaengine@lfdr.de>; Thu, 11 Jan 2024 09:09:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 50A961C26313
+	for <lists+dmaengine@lfdr.de>; Thu, 11 Jan 2024 09:06:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 572AC1078D;
-	Thu, 11 Jan 2024 09:09:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73632FC0B;
+	Thu, 11 Jan 2024 09:05:24 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9525D101FB;
-	Thu, 11 Jan 2024 09:08:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AAF2DF6E;
+	Thu, 11 Jan 2024 09:05:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-6dc36e501e1so3434378a34.1;
-        Thu, 11 Jan 2024 01:08:59 -0800 (PST)
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-5edfcba97e3so53639907b3.2;
+        Thu, 11 Jan 2024 01:05:22 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704964138; x=1705568938;
+        d=1e100.net; s=20230601; t=1704963921; x=1705568721;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7s8mOe6yBrTL8Dc+4RBtqbm0YylyeY2R2uNKT3a55V8=;
-        b=Lyd+IrHoz6Nk7QLTjKdRssSu1eWUG5FOwduoh/dDzxVjxAdrQne23pmfdHmFXnSEEB
-         LZYNwAtfLOeKpYCLy4zf57XGb+YgIKT3jtTCe47IYVeMWx4AY4A7m7BAJ1LbCf75bIJl
-         EmTGDPE5tao+wpyt7Nn4y0nFnpouitemvEfqC0wo3B3WeDcdXYUv35KkFsmjFsMD2VSD
-         MMdZh634CWICqQK4IBDyVTNzFTB1hNQZwwQutOW00aECBOthrx0DCTjFNhCMG+f21eti
-         9LhfFLkXRLHEWSdJHZaB+ih622fExGvGkPZKbji0p93FAnhUl2tsUomu7s9+VfFXU6rD
-         qkPQ==
-X-Gm-Message-State: AOJu0Yxhgkwy7QqED6vEknsfy1mW31Ns3CWLrqN4MBQpEboMSZzgtnkN
-	9Y2Lc4BaTdqvcilssQL1GuHLc7GYcvkXYA==
-X-Google-Smtp-Source: AGHT+IE6wcozzThLKTxEe+RwwmuuBKAGvcbNTPskMBgyKIQ2pNnoMJBMr4L4SOPTDBtUsp2PKYGnqg==
-X-Received: by 2002:a81:a747:0:b0:5f6:e673:3f1c with SMTP id e68-20020a81a747000000b005f6e6733f1cmr301977ywh.98.1704963669071;
-        Thu, 11 Jan 2024 01:01:09 -0800 (PST)
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com. [209.85.128.170])
-        by smtp.gmail.com with ESMTPSA id g189-20020a0df6c6000000b005a4da74b869sm246045ywf.139.2024.01.11.01.01.08
+        bh=iR6KU/zGe5ub/62SWQbwkfMRKXXvW7W7wYmrGRm2qBE=;
+        b=gYXHOGG3tkCqkbtLdpX4dcQklepvn6Bepm9GYZTcJTxNvEeQ8Dms0wlGMgwlboBswh
+         +GroZYRA2OOcyGJ/ERvOqr98ZXKTcTIG7vhCEDuOia7AVFDQPkaWJFimADwr4TvwMO2C
+         pdEufVdFJkm88EEDfREcX7cn1zDdSDrqLWBY3crbirO2LDbwDfO3d5fKv1k15DYhL0ft
+         LvWFj2vxLyeHNwj5kK6sZbnW//FjQ7uideRCaKgURGDqEFFiqHj5oqBgdPAEV3e2ioGg
+         aVknLTI76MlZI7iwP5haxNJOZajuPO3TFQ9NBQZQztNUni+grig9V3HPd++tDsjWWZSC
+         fI/g==
+X-Gm-Message-State: AOJu0Yx2JFAzmn393PWiluols84mZEF/VuNNR3jGYyq/IdByCoIvfkeq
+	XWPCsuv05VeebxarblzuplOAwmH9sGcFHw==
+X-Google-Smtp-Source: AGHT+IEPl3K98FtUDTMOoP6Sn8AxfrFnU3KMpA7rl3Oft8tdXtvZ9KYKqRRtsyYpCS7ljRmkPaSysA==
+X-Received: by 2002:a05:690c:fd1:b0:5d7:1940:f3d2 with SMTP id dg17-20020a05690c0fd100b005d71940f3d2mr296288ywb.58.1704963920831;
+        Thu, 11 Jan 2024 01:05:20 -0800 (PST)
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com. [209.85.219.172])
+        by smtp.gmail.com with ESMTPSA id u80-20020a818453000000b005e7467eaa43sm254600ywf.32.2024.01.11.01.05.20
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Jan 2024 01:01:08 -0800 (PST)
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-5e7f0bf46a2so48228847b3.1;
-        Thu, 11 Jan 2024 01:01:08 -0800 (PST)
-X-Received: by 2002:a81:bc50:0:b0:5f3:6024:53c with SMTP id
- b16-20020a81bc50000000b005f36024053cmr322891ywl.32.1704963668540; Thu, 11 Jan
- 2024 01:01:08 -0800 (PST)
+        Thu, 11 Jan 2024 01:05:20 -0800 (PST)
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-dbf2b5556f9so1367952276.2;
+        Thu, 11 Jan 2024 01:05:20 -0800 (PST)
+X-Received: by 2002:a5b:5d2:0:b0:dbf:196c:b615 with SMTP id
+ w18-20020a5b05d2000000b00dbf196cb615mr950823ybp.0.1704963919994; Thu, 11 Jan
+ 2024 01:05:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240110222717.193719-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20240110222717.193719-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20240110222210.193479-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20240110222210.193479-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 11 Jan 2024 10:00:53 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdX4bv0dtJ-G1o9by91RmP3DH1HQKvDL51g_25Yq=Yd2LQ@mail.gmail.com>
-Message-ID: <CAMuHMdX4bv0dtJ-G1o9by91RmP3DH1HQKvDL51g_25Yq=Yd2LQ@mail.gmail.com>
-Subject: Re: [PATCH] dmaengine: sh: rz-dmac: Avoid format-overflow warning
+Date: Thu, 11 Jan 2024 10:05:00 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdXSLBARbtc91F=cWqTdL+UcT4wJbr0_m5+iz_6BXA4Acw@mail.gmail.com>
+Message-ID: <CAMuHMdXSLBARbtc91F=cWqTdL+UcT4wJbr0_m5+iz_6BXA4Acw@mail.gmail.com>
+Subject: Re: [PATCH] dmaengine: usb-dmac: Avoid format-overflow warning
 To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Biju Das <biju.das.jz@bp.renesas.com>, dmaengine@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+Cc: Vinod Koul <vkoul@kernel.org>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Tudor Ambarus <tudor.ambarus@linaro.org>, Kees Cook <keescook@chromium.org>, 
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, 
 	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
 	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
@@ -72,63 +73,55 @@ Content-Transfer-Encoding: quoted-printable
 
 Hi Prabhakar,
 
-On Wed, Jan 10, 2024 at 11:27=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.=
+On Wed, Jan 10, 2024 at 11:23=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.=
 com> wrote:
 > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 >
-> The max channel count for RZ DMAC is 16, hence use u8 instead of unsigned
-> int and make the pdev_irqname string long enough to avoid the warning.
-
-Note that the danger lies into someone changing
-RZ_DMAC_MAX_CHANNELS later...
-
-> This fixes the below issue:
-> drivers/dma/sh/rz-dmac.c: In function =E2=80=98rz_dmac_probe=E2=80=99:
-> drivers/dma/sh/rz-dmac.c:770:34: warning: =E2=80=98%u=E2=80=99 directive =
-writing between 1 and 10 bytes into a region of size 3 [-Wformat-overflow=
-=3D]
->   770 |         sprintf(pdev_irqname, "ch%u", index);
+> gcc points out that the fix-byte buffer might be too small:
+> drivers/dma/sh/usb-dmac.c: In function 'usb_dmac_probe':
+> drivers/dma/sh/usb-dmac.c:720:34: warning: '%u' directive writing between=
+ 1 and 10 bytes into a region of size 3 [-Wformat-overflow=3D]
+>   720 |         sprintf(pdev_irqname, "ch%u", index);
 >       |                                  ^~
-> In function =E2=80=98rz_dmac_chan_probe=E2=80=99,
->     inlined from =E2=80=98rz_dmac_probe=E2=80=99 at drivers/dma/sh/rz-dma=
-c.c:910:9:
-> drivers/dma/sh/rz-dmac.c:770:31: note: directive argument in the range [0=
-, 4294967294]
->   770 |         sprintf(pdev_irqname, "ch%u", index);
+> In function 'usb_dmac_chan_probe',
+>     inlined from 'usb_dmac_probe' at drivers/dma/sh/usb-dmac.c:814:9:
+> drivers/dma/sh/usb-dmac.c:720:31: note: directive argument in the range [=
+0, 4294967294]
+>   720 |         sprintf(pdev_irqname, "ch%u", index);
 >       |                               ^~~~~~
-> drivers/dma/sh/rz-dmac.c:770:9: note: =E2=80=98sprintf=E2=80=99 output be=
-tween 4 and 13 bytes into a destination of size 5
->   770 |         sprintf(pdev_irqname, "ch%u", index);
+> drivers/dma/sh/usb-dmac.c:720:9: note: 'sprintf' output between 4 and 13 =
+bytes into a destination of size 5
+>   720 |         sprintf(pdev_irqname, "ch%u", index);
 >       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 >
-> While at it use scnprintf() instead of sprintf() to make the code
-> more robust.
+> Maximum number of channels for USB-DMAC as per the driver is 1-99 so use
+> u8 instead of unsigned int/int for DMAC channel indexing and make the
+> pdev_irqname string long enough to avoid the warning.
+>
+> While at it use scnprintf() instead of sprintf() to make the code more
+> robust.
 >
 > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Some nits below...
+One nit below.
 
-> --- a/drivers/dma/sh/rz-dmac.c
-> +++ b/drivers/dma/sh/rz-dmac.c
-> @@ -845,9 +845,9 @@ static int rz_dmac_probe(struct platform_device *pdev=
-)
+> --- a/drivers/dma/sh/usb-dmac.c
+> +++ b/drivers/dma/sh/usb-dmac.c
+
+> @@ -768,8 +768,8 @@ static int usb_dmac_probe(struct platform_device *pde=
+v)
+>         const enum dma_slave_buswidth widths =3D USB_DMAC_SLAVE_BUSWIDTH;
 >         struct dma_device *engine;
->         struct rz_dmac *dmac;
->         int channel_num;
+>         struct usb_dmac *dmac;
 > -       unsigned int i;
 >         int ret;
->         int irq;
 > +       u8 i;
 
 Personally, I'm not much a fan of making loop counters smaller than
-(unsigned) int.  If you do go this way, you should change channel_num
-to u8, too, just like i in rz_dmac_remove().
-
->
->         dmac =3D devm_kzalloc(&pdev->dev, sizeof(*dmac), GFP_KERNEL);
->         if (!dmac)
+(unsigned) int.  If you do go this way, there are more loops over all
+channels still using int.
 
 Gr{oetje,eeting}s,
 

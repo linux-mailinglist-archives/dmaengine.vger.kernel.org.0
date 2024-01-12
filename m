@@ -1,123 +1,98 @@
-Return-Path: <dmaengine+bounces-730-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-731-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4596282BC0D
-	for <lists+dmaengine@lfdr.de>; Fri, 12 Jan 2024 08:51:15 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E9D3E82BE72
+	for <lists+dmaengine@lfdr.de>; Fri, 12 Jan 2024 11:21:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CC77FB2174E
-	for <lists+dmaengine@lfdr.de>; Fri, 12 Jan 2024 07:51:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1DAE61C2394E
+	for <lists+dmaengine@lfdr.de>; Fri, 12 Jan 2024 10:21:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7681A5D734;
-	Fri, 12 Jan 2024 07:51:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5992064CE5;
+	Fri, 12 Jan 2024 10:16:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CyExNmij"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OTc6kLuE"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A80815D72A;
-	Fri, 12 Jan 2024 07:51:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705045866; x=1736581866;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Xl/4Y7vFo/j15AbuTLfV9oqpl4jq6vvLAHasmyBlIMk=;
-  b=CyExNmijT4++vg+gDPyuzdS3Vf0aMW5Hu4Rwu9L15tTs19ra/IpfQbd4
-   KsAUOJHiDu5LkrVVu3jrXwPYUB2KJVEYicw1j0NoQn6VlTq8hj6AJbsYl
-   YQD6eszenJ6FaqUP2CHrEnvhkHpzGCJmiitBZXC/2htXv1l6YndVZSTos
-   TH5uwpzRg3uS+Lsgfa+5Raqpw9VlSp0fPy+z+gU8Ct6QQH3fe2x4mlHCP
-   zKASJOrM9wXLv68EvozE6bik5HWrGSMz+wX2ePxCrmxun+NVNrjHZsp8G
-   bB7P9ovQ6XEARbwKm4oPBcV3++gQyXQe/MJOiwTNA23NY9snmIY9CpdbT
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10950"; a="5838478"
-X-IronPort-AV: E=Sophos;i="6.04,188,1695711600"; 
-   d="scan'208";a="5838478"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 23:51:05 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.04,188,1695711600"; 
-   d="scan'208";a="24632527"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orviesa002.jf.intel.com with ESMTP; 11 Jan 2024 23:51:02 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rOCJd-0009DA-1R;
-	Fri, 12 Jan 2024 07:50:58 +0000
-Date: Fri, 12 Jan 2024 15:50:07 +0800
-From: kernel test robot <lkp@intel.com>
-To: Arnd Bergmann <arnd@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-	Frank Li <Frank.Li@nxp.com>, Peng Fan <peng.fan@nxp.com>
-Cc: oe-kbuild-all@lists.linux.dev, Arnd Bergmann <arnd@arndb.de>,
-	Fabio Estevam <festevam@denx.de>, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev
-Subject: Re: [PATCH] dmaengine: fsl-edma: fix Makefile logic
-Message-ID: <202401121539.8Awy5Che-lkp@intel.com>
-References: <20240110232255.1099757-1-arnd@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17ACE60B89;
+	Fri, 12 Jan 2024 10:16:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8CE61C000F;
+	Fri, 12 Jan 2024 10:16:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1705054607;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0K0NkJXHATQCdt6Zs6v3+PLVIU0Q+wxMutthUOuyUe0=;
+	b=OTc6kLuE8/j50AyxXkOpTdbycuBdRRsukDgen1EqqVONnMp0PamyOrRuoWRUIED/OYtTEw
+	7lkETMD0ixKhcBqNAjH/q0aO8LEJ7usz/0T6/CqFl/jKKnibtxI88c0XjSB0knZL1yMsy4
+	0pQ6aNrdW9EBzF87wkoZ7lNQK5KQWfh9qwzn26VoEfVeiE7OykI+AtQuPKiaEYpZgpl7Lp
+	yg4MyEJLoXbjJyzj4G3h37iTqwWY7Y1qqfyxUn+Uy1OYxw8EgIGKuqGsoredvq/F2Z+seW
+	r0v8UJV84XImt35JzOb6qjErjAXnp2jFnbJBQ7hiBgOWs1fa6EVlq6+Ya4qVCg==
+Date: Fri, 12 Jan 2024 11:16:37 +0100
+From: =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Serge Semin <fancer.lancer@gmail.com>, Gustavo Pimentel
+ <gustavo.pimentel@synopsys.com>, Vinod Koul <vkoul@kernel.org>, Cai Huoqing
+ <cai.huoqing@linux.dev>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, Herve Codina
+ <herve.codina@bootlin.com>
+Subject: Re: [PATCH v6 0/6] Fix support of dw-edma HDMA NATIVE IP in remote
+ setup
+Message-ID: <20240112111637.01a5ea21@kmaincent-XPS-13-7390>
+In-Reply-To: <20231122171242.GA266396@thinkpad>
+References: <20231117-b4-feature_hdma_mainline-v6-0-ebf7aa0e40d7@bootlin.com>
+	<20231121062629.GA3315@thinkpad>
+	<js3qo4i67tdhbbcopvfaav4c7fzhz4tc2nai45rzfmbpq7l3xa@7ac2colelvnz>
+	<20231121120828.GC3315@thinkpad>
+	<bqtgnsxqmvndog4jtmyy6lnj2cp4kh7c2lcwmjjqbet53vrhhn@i6fc6vxsvbam>
+	<20231122171242.GA266396@thinkpad>
+Organization: bootlin
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240110232255.1099757-1-arnd@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: kory.maincent@bootlin.com
 
-Hi Arnd,
+On Wed, 22 Nov 2023 22:42:42 +0530
+Manivannan Sadhasivam <mani@kernel.org> wrote:
 
-kernel test robot noticed the following build errors:
+> > For all of that you'll need to fix the
+> > dw_pcie_edma_find_chip()/dw_pcie_edma_detect() method somehow.
+> >=20
+> > Alternatively, to keep things simple you can convert the
+> > dw_pcie_edma_find_chip()/dw_pcie_edma_detect() methods to just relying
+> > on the HDMA settings being fully specified by the low-level drivers.
+> >  =20
+>=20
+> This looks like the best possible solution at the moment. Thanks for the
+> insight!
+>=20
+> I will post the patches together with the HDMA enablement ones.
 
-[auto build test ERROR on linus/master]
-[also build test ERROR on v6.7 next-20240111]
-[cannot apply to vkoul-dmaengine/next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Hello Manivannan,
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Arnd-Bergmann/dmaengine-fsl-edma-fix-Makefile-logic/20240111-072410
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20240110232255.1099757-1-arnd%40kernel.org
-patch subject: [PATCH] dmaengine: fsl-edma: fix Makefile logic
-config: powerpc-ge_imp3a_defconfig (https://download.01.org/0day-ci/archive/20240112/202401121539.8Awy5Che-lkp@intel.com/config)
-compiler: powerpc-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240112/202401121539.8Awy5Che-lkp@intel.com/reproduce)
+What is the status of this series?
+Do you want to wait for designware-ep.c to be HDMA compatible before merging
+the fixes? Do you expect us to do something? We can't work on the
+designware-ep.c driver as we do not have such hardware.
+Shouldn't fixes be merged as soon as possible?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401121539.8Awy5Che-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   powerpc-linux-ld: drivers/dma/fsl-edma-common.o: in function `fsl_edma_prep_dma_cyclic':
->> fsl-edma-common.c:(.text+0x85e): undefined reference to `vchan_tx_submit'
->> powerpc-linux-ld: fsl-edma-common.c:(.text+0x866): undefined reference to `vchan_tx_desc_free'
->> powerpc-linux-ld: fsl-edma-common.c:(.text+0x86e): undefined reference to `vchan_tx_submit'
-   powerpc-linux-ld: fsl-edma-common.c:(.text+0x876): undefined reference to `vchan_tx_desc_free'
-   powerpc-linux-ld: drivers/dma/fsl-edma-common.o: in function `fsl_edma_prep_memcpy':
-   fsl-edma-common.c:(.text+0xa56): undefined reference to `vchan_tx_submit'
-   powerpc-linux-ld: fsl-edma-common.c:(.text+0xa5a): undefined reference to `vchan_tx_desc_free'
-   powerpc-linux-ld: fsl-edma-common.c:(.text+0xa66): undefined reference to `vchan_tx_submit'
-   powerpc-linux-ld: fsl-edma-common.c:(.text+0xa6a): undefined reference to `vchan_tx_desc_free'
-   powerpc-linux-ld: drivers/dma/fsl-edma-common.o: in function `fsl_edma_prep_slave_sg':
-   fsl-edma-common.c:(.text+0xe32): undefined reference to `vchan_tx_submit'
-   powerpc-linux-ld: fsl-edma-common.c:(.text+0xe36): undefined reference to `vchan_tx_desc_free'
-   powerpc-linux-ld: fsl-edma-common.c:(.text+0xe42): undefined reference to `vchan_tx_submit'
-   powerpc-linux-ld: fsl-edma-common.c:(.text+0xe46): undefined reference to `vchan_tx_desc_free'
-   powerpc-linux-ld: drivers/dma/fsl-edma-common.o: in function `fsl_edma_terminate_all':
->> fsl-edma-common.c:(.text+0x13c0): undefined reference to `vchan_dma_desc_free_list'
-   powerpc-linux-ld: drivers/dma/fsl-edma-common.o: in function `fsl_edma_free_chan_resources':
-   fsl-edma-common.c:(.text+0x15d4): undefined reference to `vchan_dma_desc_free_list'
-   powerpc-linux-ld: drivers/dma/fsl-edma-common.o: in function `fsl_edma_tx_status':
->> fsl-edma-common.c:(.text+0x1e10): undefined reference to `vchan_find_desc'
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Regards,
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
 

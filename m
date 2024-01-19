@@ -1,66 +1,66 @@
-Return-Path: <dmaengine+bounces-762-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-764-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 012B18329EB
-	for <lists+dmaengine@lfdr.de>; Fri, 19 Jan 2024 14:01:43 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6CB4D8329F1
+	for <lists+dmaengine@lfdr.de>; Fri, 19 Jan 2024 14:02:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5C1ED1F23281
-	for <lists+dmaengine@lfdr.de>; Fri, 19 Jan 2024 13:01:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 92B1A1C22FD2
+	for <lists+dmaengine@lfdr.de>; Fri, 19 Jan 2024 13:02:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 917735380D;
-	Fri, 19 Jan 2024 13:01:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8324A53E2A;
+	Fri, 19 Jan 2024 13:01:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="chlwqT5n"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="l1SAwvsn"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2046A52F86;
-	Fri, 19 Jan 2024 13:00:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF2A537F8;
+	Fri, 19 Jan 2024 13:01:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705669260; cv=none; b=iB2nmH0SSZ0pwZBPcZSJiStmvwEThanOLpJy6d4x9c1cSWuOnKDMD/3x4Fozs/DrSRqgncgfAJu6l67TB0jNq3l1GRBFuCZJYFQ31dTZ6t9ByaE6smpX9glnMbvAU72+ZKqJmyyNDZ8t20ukepONkPI+6sYh3LxElYgY6wg6nSo=
+	t=1705669261; cv=none; b=ZS34LDnSsyKD1E/2fqzMXgAlShFJXBeHsGYbqwUJzsNPxh07mWKDrRCmcf7dBU8vLLCtKeZwxoMXI6akVA2bOmZSwuRlsPDgFQXQrQiW1ywbp439BwerBKupLGhXvoKqjODfdpY5q7m6k5FreGGTF41RfhdCHEnH8BdNIjkstYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705669260; c=relaxed/simple;
-	bh=EerfizSXmr8ySSTQG3Ek8cTyqeYJTbG6H8QUFJ+dUbc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=dwpLCOz/f7dLawmjcu/GJHbnaMaMKdniV4eNpJ52H8rkV8eN34hswRKpMyeW6RvoNm5WRA7raFXMDGsEgU/2ft2sq1pF6v+L69tK5+BxC/Il9Fp+6/6rTAwnys2MIUcUBhtWPVB2Bs9J80C3OZYWhqnhun/L8Xjb/JgGdaj0WU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=chlwqT5n; arc=none smtp.client-ip=205.220.168.131
+	s=arc-20240116; t=1705669261; c=relaxed/simple;
+	bh=jX++M430EcANMENTDtP9yb5IhDtDJ5Z2fZ7ZYqDAREE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=UF0OytzyReHod+UpVkTPv/vYmQGTr2RKhFWUTy1ptcLoPSPf2hhdXmLUssa95N2wcd443QV0EbvJpZfVm/N+QyXL7n5pZYj+QVYppdagoPs4b0M07yZB3Pq/Cc6dkTQEKj9guN3vhwEkINGioTRpQezGDzDQ6KPhp9Or+tDbu28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=l1SAwvsn; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40JCRWRX021492;
-	Fri, 19 Jan 2024 13:00:44 GMT
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40J9FRuv025502;
+	Fri, 19 Jan 2024 13:00:45 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references; s=
-	qcppdkim1; bh=J5N0eH+XorUHi+CvGk/WwzsrjWyuz4FCQ2eZXs4R5nY=; b=ch
-	lwqT5nOSWEWRJwPAFnbuTrHhaRl7l9q+E5zsdLBei1bYES4dpzq0is7VpLxwOiwc
-	fVeaPlli/Ix157Tc0v/tvnr9baWTAN7N1uhzUt4HC07lc5Ru2YCRUdrAhzV62m+H
-	5gxKk7AHTMfGm9WudeqFPsadude9nT1xV4pEr9lFF4nVPL2tn2eYnDcDdxdtMQyo
-	dvJFe0+cWlptKAhAxhE9nzoe1zOytYvB2FuzW4GrRUrwtOha9l9Qw6l4OOZTtziy
-	WM5FKtijvB1vhn5Wjr+5V2SnE3mwq1T/6Kpfm7xNHnhKmqbaO8yr0kshUXrOM3CR
-	LJJKmBw5tL+TYPD30C5A==
+	qcppdkim1; bh=fK+ysfreXQCoYCrRDidxH8G6FWPAOE4Xo0Df71HiZKw=; b=l1
+	SAwvsnRzclC6ZNnViiJkoMcIH/kygWCF6FgiHLjIDQgxyCIoD4RTZWIZg2d5e9RF
+	6xEgVYLaaVWsKqiag9a5HuTViAG0Nz6LO8EeQC535ADy92D3BA+wgDf3EU3llQOx
+	tYDllR8T4J4CDh6HwnMLqF7dymlosZK/wB9ZksWCgNGAFUn+l2slW60FFWVXn5Rt
+	lJ0rEy4jHVsbpYtaSry/deaKcGtmQKEWOJLkh5HLokmyJDYUBi8X9hR8Nhb79L89
+	fDdQZSa5Pbeub1TIgQSf9Z6O3B8RyppFuwiCH0M/eYrkgb+wffKq91B1MDTrn0n7
+	b3H0OKUr0C9fcSkAziww==
 Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vqh2k90tv-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vqh2k90ub-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 19 Jan 2024 13:00:43 +0000 (GMT)
+	Fri, 19 Jan 2024 13:00:45 +0000 (GMT)
 Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 40JD0eMr023790;
-	Fri, 19 Jan 2024 13:00:40 GMT
+	by APBLRPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 40JD0Wfh023730;
+	Fri, 19 Jan 2024 13:00:42 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 3vkkkmtgrw-1
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 3vkkkmtgs8-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Fri, 19 Jan 2024 13:00:40 +0000
+	Fri, 19 Jan 2024 13:00:42 +0000
 Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40JD0dLE023785;
-	Fri, 19 Jan 2024 13:00:39 GMT
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40JD0fbb023804;
+	Fri, 19 Jan 2024 13:00:41 GMT
 Received: from hu-sgudaval-hyd.qualcomm.com (hu-msarkar-hyd.qualcomm.com [10.213.111.194])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 40JD0dlN023784;
-	Fri, 19 Jan 2024 13:00:39 +0000
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 40JD0fN1023801;
+	Fri, 19 Jan 2024 13:00:41 +0000
 Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 3891782)
-	id 3BC35273A; Fri, 19 Jan 2024 18:30:38 +0530 (+0530)
+	id 5BE75273A; Fri, 19 Jan 2024 18:30:40 +0530 (+0530)
 From: Mrinmay Sarkar <quic_msarkar@quicinc.com>
 To: vkoul@kernel.org, jingoohan1@gmail.com, conor+dt@kernel.org,
         konrad.dybcio@linaro.org, manivannan.sadhasivam@linaro.org,
@@ -79,9 +79,9 @@ Cc: quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
         Kishon Vijay Abraham I <kishon@kernel.org>, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev
-Subject: [PATCH v1 3/6] PCI: dwc: Add HDMA support
-Date: Fri, 19 Jan 2024 18:30:19 +0530
-Message-Id: <1705669223-5655-4-git-send-email-quic_msarkar@quicinc.com>
+Subject: [PATCH v1 4/6] dmaengine: dw-edma: Move HDMA_V0_MAX_NR_CH definition to edma.h
+Date: Fri, 19 Jan 2024 18:30:20 +0530
+Message-Id: <1705669223-5655-5-git-send-email-quic_msarkar@quicinc.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1705669223-5655-1-git-send-email-quic_msarkar@quicinc.com>
 References: <1705669223-5655-1-git-send-email-quic_msarkar@quicinc.com>
@@ -89,13 +89,13 @@ X-QCInternal: smtphost
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: z69Q7pBn-mgOoTOjfxot1-qCLdMS5U1p
-X-Proofpoint-ORIG-GUID: z69Q7pBn-mgOoTOjfxot1-qCLdMS5U1p
+X-Proofpoint-GUID: 2M1_j7cANaScCFkrQDV0zx96fN0Wmx4y
+X-Proofpoint-ORIG-GUID: 2M1_j7cANaScCFkrQDV0zx96fN0Wmx4y
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-01-19_07,2024-01-19_02,2023-05-22_02
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
- clxscore=1015 impostorscore=0 phishscore=0 mlxlogscore=803 mlxscore=0
+ clxscore=1015 impostorscore=0 phishscore=0 mlxlogscore=695 mlxscore=0
  suspectscore=0 bulkscore=0 malwarescore=0 priorityscore=1501
  lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2311290000 definitions=main-2401190066
@@ -107,103 +107,72 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Hyper DMA (HDMA) is already supported by the dw-edma dmaengine driver.
-Unlike it's predecessor Embedded DMA (eDMA), HDMA supports only the
-unrolled mapping format. So the platform drivers need to provide a valid
-base address of the CSRs. Also, there is no standard way to auto detect
-the number of available read/write channels in a platform. So the platform
-drivers has to provide that information as well.
-
-For adding HDMA support, the mapping format set by the platform drivers is
-used to detect whether eDMA or HDMA is being used, since we cannot auto
-detect it in a sane way.
+To maintain uniformity with eDMA, let's move the HDMA max channel
+definition to edma.h. While at it, let's also rename it to HDMA_MAX_NR_CH.
 
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
 ---
- drivers/pci/controller/dwc/pcie-designware.c | 55 ++++++++++++++++++++++++----
- 1 file changed, 47 insertions(+), 8 deletions(-)
+ drivers/dma/dw-edma/dw-hdma-v0-core.c | 4 ++--
+ drivers/dma/dw-edma/dw-hdma-v0-regs.h | 3 +--
+ include/linux/dma/edma.h              | 1 +
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 96575b8..07a1f2d 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -880,7 +880,29 @@ static struct dw_edma_plat_ops dw_pcie_edma_ops = {
- 	.irq_vector = dw_pcie_edma_irq_vector,
- };
- 
--static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
-+static int dw_pcie_find_hdma(struct dw_pcie *pci)
-+{
-+	/*
-+	 * Since HDMA supports only unrolled mapping, platform drivers need to
-+	 * provide a valid base address.
-+	 */
-+	if (!pci->edma.reg_base)
-+		return -ENODEV;
-+
-+	/*
-+	 * Since there is no standard way to detect the number of read/write
-+	 * HDMA channels, platform drivers are expected to provide the channel
-+	 * count. Let's also do a sanity check of them to make sure that the
-+	 * counts are within the limit specified by the spec.
-+	 */
-+	if (!pci->edma.ll_wr_cnt || pci->edma.ll_wr_cnt > dw_edma_get_max_wr_ch(pci->edma.mf) ||
-+	    !pci->edma.ll_rd_cnt || pci->edma.ll_rd_cnt > dw_edma_get_max_rd_ch(pci->edma.mf))
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static int dw_pcie_find_edma(struct dw_pcie *pci)
+diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+index 1f4cb7d..819ef1f 100644
+--- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
++++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+@@ -54,7 +54,7 @@ static void dw_hdma_v0_core_off(struct dw_edma *dw)
  {
- 	u32 val;
+ 	int id;
  
-@@ -912,13 +934,6 @@ static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
- 		return -ENODEV;
- 	}
- 
--	pci->edma.dev = pci->dev;
--
--	if (!pci->edma.ops)
--		pci->edma.ops = &dw_pcie_edma_ops;
--
--	pci->edma.flags |= DW_EDMA_CHIP_LOCAL;
--
- 	pci->edma.ll_wr_cnt = FIELD_GET(PCIE_DMA_NUM_WR_CHAN, val);
- 	pci->edma.ll_rd_cnt = FIELD_GET(PCIE_DMA_NUM_RD_CHAN, val);
- 
-@@ -930,6 +945,30 @@ static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
- 	return 0;
+-	for (id = 0; id < HDMA_V0_MAX_NR_CH; id++) {
++	for (id = 0; id < HDMA_MAX_NR_CH; id++) {
+ 		SET_BOTH_CH_32(dw, id, int_setup,
+ 			       HDMA_V0_STOP_INT_MASK | HDMA_V0_ABORT_INT_MASK);
+ 		SET_BOTH_CH_32(dw, id, int_clear,
+@@ -70,7 +70,7 @@ static u16 dw_hdma_v0_core_ch_count(struct dw_edma *dw, enum dw_edma_dir dir)
+ 	 * available, we set it to maximum channels and let the platform
+ 	 * set the right number of channels.
+ 	 */
+-	return HDMA_V0_MAX_NR_CH;
++	return HDMA_MAX_NR_CH;
  }
  
-+static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
-+{
-+	int ret;
-+
-+	if (pci->edma.mf == EDMA_MF_HDMA_NATIVE) {
-+		ret = dw_pcie_find_hdma(pci);
-+		if (ret)
-+			return ret;
-+	} else {
-+		ret = dw_pcie_find_edma(pci);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	pci->edma.dev = pci->dev;
-+
-+	if (!pci->edma.ops)
-+		pci->edma.ops = &dw_pcie_edma_ops;
-+
-+	pci->edma.flags |= DW_EDMA_CHIP_LOCAL;
-+
-+	return 0;
-+}
-+
- static int dw_pcie_edma_irq_verify(struct dw_pcie *pci)
- {
- 	struct platform_device *pdev = to_platform_device(pci->dev);
+ static enum dma_status dw_hdma_v0_core_ch_status(struct dw_edma_chan *chan)
+diff --git a/drivers/dma/dw-edma/dw-hdma-v0-regs.h b/drivers/dma/dw-edma/dw-hdma-v0-regs.h
+index a974abd..cd7eab2 100644
+--- a/drivers/dma/dw-edma/dw-hdma-v0-regs.h
++++ b/drivers/dma/dw-edma/dw-hdma-v0-regs.h
+@@ -11,7 +11,6 @@
+ 
+ #include <linux/dmaengine.h>
+ 
+-#define HDMA_V0_MAX_NR_CH			8
+ #define HDMA_V0_LOCAL_ABORT_INT_EN		BIT(6)
+ #define HDMA_V0_REMOTE_ABORT_INT_EN		BIT(5)
+ #define HDMA_V0_LOCAL_STOP_INT_EN		BIT(4)
+@@ -92,7 +91,7 @@ struct dw_hdma_v0_ch {
+ } __packed;
+ 
+ struct dw_hdma_v0_regs {
+-	struct dw_hdma_v0_ch ch[HDMA_V0_MAX_NR_CH];	/* 0x0000..0x0fa8 */
++	struct dw_hdma_v0_ch ch[HDMA_MAX_NR_CH];	/* 0x0000..0x0fa8 */
+ } __packed;
+ 
+ struct dw_hdma_v0_lli {
+diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
+index 550f6a4..2cdf249a 100644
+--- a/include/linux/dma/edma.h
++++ b/include/linux/dma/edma.h
+@@ -14,6 +14,7 @@
+ 
+ #define EDMA_MAX_WR_CH                                  8
+ #define EDMA_MAX_RD_CH                                  8
++#define HDMA_MAX_NR_CH					8
+ 
+ struct dw_edma;
+ struct dw_edma_chip;
 -- 
 2.7.4
 

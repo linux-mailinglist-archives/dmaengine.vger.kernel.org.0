@@ -1,48 +1,48 @@
-Return-Path: <dmaengine+bounces-792-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-791-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA3D7836E0B
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Jan 2024 18:43:53 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 96FDA836E0A
+	for <lists+dmaengine@lfdr.de>; Mon, 22 Jan 2024 18:43:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4C5CE1F24DBA
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Jan 2024 17:43:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 508EC282925
+	for <lists+dmaengine@lfdr.de>; Mon, 22 Jan 2024 17:43:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DF3E4879E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5ADA34879B;
 	Mon, 22 Jan 2024 17:05:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p/7p2wvY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zipi+Xj+"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1616B482FF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16134482FC;
 	Mon, 22 Jan 2024 17:05:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705943133; cv=none; b=uwZKOUlfpJR7PyylEiqAcRBa3w5N8CjJ+oes7cpSTIFz+tH+AcaTHg7JVZpRbnMo8IfsUsQLyZ3I4t5aEfA39ovfS5TAcOgMXjVMWDnJYMKhhC3Pf8L9wlsxMHwTV/69U1z+HZ+npW/UPM2rx1+RE902XEnXsTWK2Mdc3HQoFd4=
+	t=1705943133; cv=none; b=LZLlTI2IZGM8hF+a5nBD5ZJepuncS1poO+b4rJlq4mas6jBv9rgrtFsR5Fc4MfrvQuW1fOAgxwwD5k/xWDpxdmycCnJOLXvXuXxkqLq7g01+ELuxuozG03P1tpYDG8A0EFM2MnGQ3O8NRUVijmzVpo5O8VOLdcjHsqlVPZLDwmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705943133; c=relaxed/simple;
-	bh=D4Sbqcpeq8NQUiUA6r8dDLIKkjJnY3txceHj/LWQjDU=;
+	bh=JdOHpoopJxRFnjbFQBUm9b3RMTijAagwBCFmoFDWfog=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=aTW+zg7adfxQqodeWQOe+RHYNY/IHGHJVCb2jnBlmQxqnfGEjhuzOVA5UR+sMTXhxAQf7WoqiSBbRw4fe+Ku2qlklLkPefU2sCJyKtQjTAdCySoejifM8sLSnPkEVQlZo2PIO7AUUjOXsP0S2AMVorTkN2eCHe3mgxtwVOjfAJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p/7p2wvY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60C5DC433C7;
+	 MIME-Version; b=VlxzEAaIWVPYxjG0y7CDLvh+lDi7A15JI6zPMwppOq/ESdUGeJb6ZEVHkFOKqlgUEyjRdrgyS9QPRY89COdlxq0AS0bvaNz22H5dpvVJ0zsVAWho+/hO8r+iPbmReitQRvruAcNDwRw+2ng4h0fZ6UIV8JGZe0og/8Y3zEgqiI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zipi+Xj+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88155C43394;
 	Mon, 22 Jan 2024 17:05:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1705943132;
-	bh=D4Sbqcpeq8NQUiUA6r8dDLIKkjJnY3txceHj/LWQjDU=;
+	bh=JdOHpoopJxRFnjbFQBUm9b3RMTijAagwBCFmoFDWfog=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=p/7p2wvYMlTdP94HXxpN1cEiiKF/xUKljKopS2B5leeAYirfrkCYsknZIuSgrRZgv
-	 D3sWInZ7PzgCccyg4TnjZrviuZr3ahcpMbeLqRQA1TOQBZbf38BUuSfIts6I9rhZVg
-	 Mj5MSDoRrFacqoQd085ezjmy62ud+/OxQc6lJrIaYivMX1ZJXXvJNqG5aHqs/IjULj
-	 wkrcsd1GAugkzQlFP5Mj8AQoazXQL5CvER2s3xaOgI0OUTUEBQXhv+vrg/NQJ+njPX
-	 0adOkuWMtzCGnSn8ZUPYSamp9yZ49WERonkl1YoxhMxR6UiUgvFiubzIt5bfaF9MWi
-	 Ck4Lgwg52dJ+A==
+	b=Zipi+Xj+/jgKkYfY1ZTFr/SWeePZYEaELd9CMz2ZBHo0BJzFH0fsmxI/0g9h5ma5p
+	 +UzAyg/pwdYibC7tzW8FhgaFb14pKR6Krc/U2QoLvaNiXZR2OqogtLcryKb7yGd4IO
+	 s4rsPh9nT59QIz5ULDfIPlg1ZEYA2zBKIsj/U8M0q19Es2+ZaH8282OJmMVPoLH8KD
+	 Mh/hiz6RnV2/9PFhOkooIeGSwxS1ir+L3+MBi251vYM99iBCk11zOHQ9jIzwnbdt0L
+	 JchWknEfmyDpo9GkQw84o2izZ1eoMiMVPGuo8MGJnQfl3mLIZ/WGoXZkpiijLRat24
+	 XPCUV1JtCr1OQ==
 Received: by wens.tw (Postfix, from userid 1000)
-	id BC7A35F725; Tue, 23 Jan 2024 01:05:29 +0800 (CST)
+	id D68205FFB2; Tue, 23 Jan 2024 01:05:29 +0800 (CST)
 From: Chen-Yu Tsai <wens@kernel.org>
 To: Rob Herring <robh+dt@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
@@ -61,9 +61,9 @@ Cc: Chen-Yu Tsai <wens@csie.org>,
 	linux-sound@vger.kernel.org,
 	dmaengine@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/7] dt-bindings: sound: sun4i-spdif: Fix requirements for H6
-Date: Tue, 23 Jan 2024 01:05:12 +0800
-Message-Id: <20240122170518.3090814-2-wens@kernel.org>
+Subject: [PATCH 2/7] dt-bindings: sound: sun4i-spdif: Add Allwinner H616 compatible
+Date: Tue, 23 Jan 2024 01:05:13 +0800
+Message-Id: <20240122170518.3090814-3-wens@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240122170518.3090814-1-wens@kernel.org>
 References: <20240122170518.3090814-1-wens@kernel.org>
@@ -77,39 +77,42 @@ Content-Transfer-Encoding: 8bit
 
 From: Chen-Yu Tsai <wens@csie.org>
 
-When the H6 was added to the bindings, only the TX DMA channel was
-added. As the hardware supports both transmit and receive functions,
-the binding is missing the RX DMA channel and is thus incorrect.
-Also, the reset control was not made mandatory.
+The SPDIF hardware block found in the H616 SoC has the same layout as
+the one found in the H6 SoC, except that it is missing the receiver
+side.
 
-Add the RX DMA channel for SPDIF on H6 by removing the compatible from
-the list of compatibles that should only have a TX DMA channel. And add
-the H6 compatible to the list of compatibles that require the reset
-control to be present.
+Add a new compatible string for it.
 
-Fixes: b20453031472 ("dt-bindings: sound: sun4i-spdif: Add Allwinner H6 compatible")
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- .../devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml    | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml   | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml b/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml
-index 8108c564dd78..98e2e053fa19 100644
+index 98e2e053fa19..aa32dc950e72 100644
 --- a/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml
 +++ b/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml
-@@ -62,6 +62,7 @@ allOf:
-             enum:
+@@ -22,6 +22,7 @@ properties:
+       - const: allwinner,sun6i-a31-spdif
+       - const: allwinner,sun8i-h3-spdif
+       - const: allwinner,sun50i-h6-spdif
++      - const: allwinner,sun50i-h616-spdif
+       - items:
+           - const: allwinner,sun8i-a83t-spdif
+           - const: allwinner,sun8i-h3-spdif
+@@ -63,6 +64,7 @@ allOf:
                - allwinner,sun6i-a31-spdif
                - allwinner,sun8i-h3-spdif
-+              - allwinner,sun50i-h6-spdif
+               - allwinner,sun50i-h6-spdif
++              - allwinner,sun50i-h616-spdif
  
      then:
        required:
-@@ -73,7 +74,6 @@ allOf:
+@@ -74,6 +76,7 @@ allOf:
            contains:
              enum:
                - allwinner,sun8i-h3-spdif
--              - allwinner,sun50i-h6-spdif
++              - allwinner,sun50i-h616-spdif
  
      then:
        properties:

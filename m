@@ -1,69 +1,68 @@
-Return-Path: <dmaengine+bounces-805-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-806-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5901F83861F
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Jan 2024 04:42:40 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 460C583862A
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Jan 2024 04:48:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7E5281C27A15
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Jan 2024 03:42:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EB0A428936A
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Jan 2024 03:48:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EF323C30;
-	Tue, 23 Jan 2024 03:42:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE6CC1852;
+	Tue, 23 Jan 2024 03:48:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V07Nt+12"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ExY/XeQ0"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B4D3C2D
-	for <dmaengine@vger.kernel.org>; Tue, 23 Jan 2024 03:42:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FCCE17E8
+	for <dmaengine@vger.kernel.org>; Tue, 23 Jan 2024 03:48:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705981355; cv=none; b=MuLQFcTX2FYzAdqzXZWlrhng4fEiokQq6SR+CkrzICwjVNzynCgSZBj3Cf2LMt34g8Extxxai6cwegf5BKEW+lvG/ZJitwcIGGnk8CNmpyLBkgkRny4ZzXmK8Uj9k4rdUthMlVCZPgZeOYyonNr21AZTHklTonRVGaUuoEwe43o=
+	t=1705981723; cv=none; b=ggx5F+Mc9nDOSyH4ubhMFbxp4CWE6XoxwXge4GW60a0F6JTKohDRyXbooqo+2sZYo2clsx7PQJGVW+qm0xfKzpdL60O9Z9y7lbV66vPsOj7uqqT9oJAK8zGDuc5dMw9UFjIfYdU/iT8g7Xqx/sTPSvJNZwbfbcwwtmchDpWCrQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705981355; c=relaxed/simple;
+	s=arc-20240116; t=1705981723; c=relaxed/simple;
 	bh=m1Mw71M5iP/JI9mrsj0Hrq/3V0EgaxqrlGXcHSLBINg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JYr3HBPFO7XyzWgogQY20B0xVv51kHyzX5qrjvy/ADaDBT/J0UVfYoIXR5LZgcOsUJt7s/+xC17gGoBrrHgvsrPmEas77V/CFQ+4LauqIJrRhVJLdDEWOiS2FvAGQSsyBY+VIJFLTBErPN8tLthz7loDIK74eNB6KffgAnTQWBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V07Nt+12; arc=none smtp.client-ip=192.55.52.120
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kWXLkH62jAw+Qp6XWyhP1RDp93Qxr/Bh0+zbbefk7XChZihqEiBNCZNd0o/EhMmxuliFCZanOdPkLKCKPIEPhz9aVNW/lOPoGxhd8JhRVrO0OZqSaQr06RsGoU5QTSFyihskciyw6To5aChygbIdEV0ehRiavZ5XOLfRU7uKjCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ExY/XeQ0; arc=none smtp.client-ip=192.55.52.120
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705981352; x=1737517352;
+  t=1705981719; x=1737517719;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
   bh=m1Mw71M5iP/JI9mrsj0Hrq/3V0EgaxqrlGXcHSLBINg=;
-  b=V07Nt+12SvHXZ5d3u9K4UVAFFbPnFxLGy/bF7aytSfUFJcm1xvxVvQWv
-   HdDC4FwyXtUNCl2c0XFnUbt0fm0r91QWcakQyqVvKq5zPtY4mCoPFWShv
-   LezDPwChFBi/q2OAtPFBQEkrI7ise0OLDy9yA9M9RYoNOhapA1xGcfswM
-   fQS1BwINwOHsQ+8489oH0mcvf140wexIsh6oHVtnd90W5wK1JUhTHkY5C
-   SyGH66khIewnzVlA6hQmiuGgPwYziEhjiQvRyxCCUWGPLBVaap4bT3VOB
-   yc+MQlTQpjx1Ys0wvhM2iVN8o4BEDnRyNzLvosv+uD3yHnHUPNEdcJHnh
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="400261404"
+  b=ExY/XeQ08CrCQrroZ2La24ljCNv3du+/fVZ8BY09cdJpvVtK928SjIZU
+   FneJ0+0a3LqVkC4SqfrREikLc69JsHK372kbuFJlsvq1a2s67S6J6YVUQ
+   8INhF/5QjKxSDynKtVRmhK/9M4v2llMgttSBvFy9PggRf7C+Tfuzcqgnj
+   lmB2ByrueM5nkIITBOFHQVU+F5/V+cKSkWeNXLg11oSc4Ba971apq2Uwr
+   WhqJj2zUSz29vtkcoB29d7C61xvt0iZy0ojhnuaRQFCnnXL0k73iU9Yso
+   ghxDrDqY0xHynxidlHhzWMvDvWXirqjWViOFRBFIsg3kCdvCMy8WshymW
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="400262370"
 X-IronPort-AV: E=Sophos;i="6.05,213,1701158400"; 
-   d="scan'208";a="400261404"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 19:42:31 -0800
+   d="scan'208";a="400262370"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 19:48:38 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="876197937"
 X-IronPort-AV: E=Sophos;i="6.05,213,1701158400"; 
-   d="scan'208";a="876197937"
+   d="scan'208";a="1448794"
 Received: from rex-z390-aorus-pro.sh.intel.com ([10.239.161.21])
-  by FMSMGA003.fm.intel.com with ESMTP; 22 Jan 2024 19:42:29 -0800
+  by fmviesa003.fm.intel.com with ESMTP; 22 Jan 2024 19:48:36 -0800
 From: Rex Zhang <rex.zhang@intel.com>
 To: dmaengine@vger.kernel.org,
-	rvkoul@kernel.org
+	vkoul@kernel.org
 Cc: dave.jiang@intel.com,
 	fenghua.yu@intel.com,
 	lijun.pan@intel.com,
 	rex.zhang@intel.com
-Subject: [PATCH v3] dmaengine: idxd: Convert spinlock to mutex to lock evl workqueue
-Date: Tue, 23 Jan 2024 11:42:26 +0800
-Message-Id: <20240123034226.3019887-1-rex.zhang@intel.com>
+Subject: [RESEND PATCH v3] dmaengine: idxd: Convert spinlock to mutex to lock evl workqueue
+Date: Tue, 23 Jan 2024 11:48:31 +0800
+Message-Id: <20240123034831.3020048-1-rex.zhang@intel.com>
 X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org

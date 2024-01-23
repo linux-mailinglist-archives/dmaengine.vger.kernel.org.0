@@ -1,39 +1,39 @@
-Return-Path: <dmaengine+bounces-801-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-802-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id BFD3B837E26
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Jan 2024 02:36:10 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4AE74837E3D
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Jan 2024 02:36:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1CC751F2466A
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Jan 2024 01:36:10 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 92B49B203F1
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Jan 2024 01:36:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDE4A5B217;
-	Tue, 23 Jan 2024 00:40:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6692257307;
+	Tue, 23 Jan 2024 00:41:04 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F266459154;
-	Tue, 23 Jan 2024 00:40:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82FC64F207;
+	Tue, 23 Jan 2024 00:41:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705970413; cv=none; b=fVjv9ev4QIHqAoY/Xst76433zEzCT77y+D5MF7tdB/K6T5FNLuJyKmcHkP67FS7IsLI5iPlNe0A/ElsS6LLaZeQGlBQcdikzSuMyE9GOesjFQ+Rq8OAJtHupEAFV7xa75NRGhJLCfX+5Ut9CrKAAbwCThKvW7AAPgy8UXJMEutU=
+	t=1705970464; cv=none; b=bzp83AKDvfWWfOa1KCVawlSWVrFeKkufqIPddAO7KPRy+ZndonxcBqVgKHWclCWtoGMu9uTeODLn+zhUK3Kv1WzP8nNUn48iQwKatIfZBfQoLS3iVXRPPoyTSq4pXxsPQT/P3wDA62XpHgXZT9FCUQOWDhi8koyAw/ruN8aA0ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705970413; c=relaxed/simple;
-	bh=HK1pRkQ0hzPNI4jNHlfS/gFmz3+HSJPrYT+o7/tAoK8=;
+	s=arc-20240116; t=1705970464; c=relaxed/simple;
+	bh=UbGceyRiBi7uZH0lDWNsttwvZ5/EMF3MFYFsi+KKQ4U=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oec1TtzfccGi4gegasrfKK8PTRSpWgXfgVQVV69Ok00XZ14VlyB0sGHfYkIvvqI4JPXGz4uyx2kwT3mupbb/1KXEEV5zXuRXWx+W+dNvn/tpMOXAqWVI6+/uNV99ieGq1VDr11G0+3GWQhPJl+S9mXcSmNKwypnaHh0fKaa/Qk4=
+	 MIME-Version:Content-Type; b=T+Vt4RiX0hMkVbbm0gv7EqfRs+rFFurF66d+mj8LE6RgAydLMx787UTVgzwlGqY2aCUTKKR9A3kWD42y/81CVOa91n6AxN9RUXOs0Fq31bJAJDAEuW6hpoHrL2+bV0A02yd7f1exXHjz9YHxZC0FY7zp4jZybz2dDfkPZroYOZY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1B27BFEC;
-	Mon, 22 Jan 2024 16:40:57 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A490D1FB;
+	Mon, 22 Jan 2024 16:41:47 -0800 (PST)
 Received: from minigeek.lan (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 128A13F73F;
-	Mon, 22 Jan 2024 16:40:08 -0800 (PST)
-Date: Tue, 23 Jan 2024 00:39:20 +0000
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A41813F73F;
+	Mon, 22 Jan 2024 16:40:59 -0800 (PST)
+Date: Tue, 23 Jan 2024 00:40:10 +0000
 From: Andre Przywara <andre.przywara@arm.com>
 To: Chen-Yu Tsai <wens@kernel.org>
 Cc: Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
@@ -46,12 +46,12 @@ Cc: Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
  linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
  linux-sound@vger.kernel.org, dmaengine@vger.kernel.org,
  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/7] arm64: dts: allwinner: h6: Add RX DMA channel for
- SPDIF
-Message-ID: <20240123003920.08813e16@minigeek.lan>
-In-Reply-To: <20240122170518.3090814-6-wens@kernel.org>
+Subject: Re: [PATCH 4/7] dt-bindings: dma: allwinner,sun50i-a64-dma: Add
+ compatible for H616
+Message-ID: <20240123004010.59cac5ad@minigeek.lan>
+In-Reply-To: <20240122170518.3090814-5-wens@kernel.org>
 References: <20240122170518.3090814-1-wens@kernel.org>
-	<20240122170518.3090814-6-wens@kernel.org>
+	<20240122170518.3090814-5-wens@kernel.org>
 Organization: Arm Ltd.
 X-Mailer: Claws Mail 4.2.0 (GTK 3.24.31; x86_64-slackware-linux-gnu)
 Precedence: bulk
@@ -63,84 +63,79 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 23 Jan 2024 01:05:16 +0800
+On Tue, 23 Jan 2024 01:05:15 +0800
 Chen-Yu Tsai <wens@kernel.org> wrote:
+
+Hi,
 
 > From: Chen-Yu Tsai <wens@csie.org>
 > 
-> The SPDIF hardware found on the H6 supports both transmit and receive
-> functions. However it is missing the RX DMA channel.
-> 
-> Add the SPDIF hardware block's RX DMA channel. Also remove the
-> by-default pinmux, since the end device can choose to implement
-> either or both functionalities.
-> 
-> Fixes: f95b598df419 ("arm64: dts: allwinner: Add SPDIF node for Allwinner H6")
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> The DMA controllers found on the H616 and H618 are the same as the one
+> found on the H6. The only difference is the DMA endpoint (DRQ) layout.
 
-Looks alright, just moving lines around, order of rx, tx DMA is correct:
+That does not seem to be entirely true: The H616 encodes the two lowest
+bits in DMA_DESC_ADDR_REG differently: on the H6 they must be 0 (word
+aligned), on the H616 these contain bits [33:32] of the address of the
+DMA descriptor. The manual doesn't describe the descriptor format in
+much detail, but ec31c5c59492 suggests that those two bits are put in
+the "para" word of the descriptor.
 
-Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+The good thing it that this encoding is backwards compatible, so I
+think the fallback string still holds: Any driver just implementing the
+H6 encoding would be able to drive the H616.
+
+I think the A100 was mis-described, as mentioned here:
+https://lore.kernel.org/linux-arm-kernel/29e575b6-14cb-73f1-512d-9f0f934490ea@arm.com/
+I think we should:
+- make the A100 use: "allwinner,sun50i-a100-dma", "sun50i-h6-dma"
+- make the H616 use: "allwinner,sun50i-h616-dma", "allwinner,sun50i-a100-dma", "sun50i-h6-dma"
+
+Does that make sense?
 
 Cheers,
 Andre
 
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts | 2 ++
->  arch/arm64/boot/dts/allwinner/sun50i-h6-tanix.dtsi      | 2 ++
->  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi            | 7 +++----
->  3 files changed, 7 insertions(+), 4 deletions(-)
+> Since the number of channels and endpoints are described with additional
+> generic properties, just add a new H616-specific compatible string and
+> fallback to the H6 one.
 > 
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-> index 9ec49ac2f6fd..381d58cea092 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-> @@ -291,6 +291,8 @@ sw {
->  };
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> ---
+>  .../bindings/dma/allwinner,sun50i-a64-dma.yaml    | 15 +++++++++++----
+>  1 file changed, 11 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/allwinner,sun50i-a64-dma.yaml b/Documentation/devicetree/bindings/dma/allwinner,sun50i-a64-dma.yaml
+> index ec2d7a789ffe..e5693be378bd 100644
+> --- a/Documentation/devicetree/bindings/dma/allwinner,sun50i-a64-dma.yaml
+> +++ b/Documentation/devicetree/bindings/dma/allwinner,sun50i-a64-dma.yaml
+> @@ -28,6 +28,9 @@ properties:
+>        - items:
+>            - const: allwinner,sun8i-r40-dma
+>            - const: allwinner,sun50i-a64-dma
+> +      - items:
+> +          - const: allwinner,sun50i-h616-dma
+> +          - const: allwinner,sun50i-h6-dma
 >  
->  &spdif {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&spdif_tx_pin>;
->  	status = "okay";
->  };
+>    reg:
+>      maxItems: 1
+> @@ -59,10 +62,14 @@ required:
+>  if:
+>    properties:
+>      compatible:
+> -      enum:
+> -        - allwinner,sun20i-d1-dma
+> -        - allwinner,sun50i-a100-dma
+> -        - allwinner,sun50i-h6-dma
+> +      oneOf:
+> +        - enum:
+> +            - allwinner,sun20i-d1-dma
+> +            - allwinner,sun50i-a100-dma
+> +            - allwinner,sun50i-h6-dma
+> +        - items:
+> +            - const: allwinner,sun50i-h616-dma
+> +            - const: allwinner,sun50i-h6-dma
 >  
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix.dtsi
-> index 4903d6358112..855b7d43bc50 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix.dtsi
-> @@ -166,6 +166,8 @@ &r_ir {
->  };
->  
->  &spdif {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&spdif_tx_pin>;
->  	status = "okay";
->  };
->  
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> index ca1d287a0a01..d11e5041bae9 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> @@ -406,6 +406,7 @@ spi1_cs_pin: spi1-cs-pin {
->  				function = "spi1";
->  			};
->  
-> +			/omit-if-no-ref/
->  			spdif_tx_pin: spdif-tx-pin {
->  				pins = "PH7";
->  				function = "spdif";
-> @@ -655,10 +656,8 @@ spdif: spdif@5093000 {
->  			clocks = <&ccu CLK_BUS_SPDIF>, <&ccu CLK_SPDIF>;
->  			clock-names = "apb", "spdif";
->  			resets = <&ccu RST_BUS_SPDIF>;
-> -			dmas = <&dma 2>;
-> -			dma-names = "tx";
-> -			pinctrl-names = "default";
-> -			pinctrl-0 = <&spdif_tx_pin>;
-> +			dmas = <&dma 2>, <&dma 2>;
-> +			dma-names = "rx", "tx";
->  			status = "disabled";
->  		};
->  
+>  then:
+>    properties:
 
 

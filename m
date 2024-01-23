@@ -1,155 +1,119 @@
-Return-Path: <dmaengine+bounces-808-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-809-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 75981839667
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Jan 2024 18:29:11 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id EB32D8396D8
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Jan 2024 18:49:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A83A71C20ACE
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Jan 2024 17:29:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8109B1F21A57
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Jan 2024 17:49:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8308E7FBBF;
-	Tue, 23 Jan 2024 17:29:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 584D2811F5;
+	Tue, 23 Jan 2024 17:48:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="XxnkR309"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y8tDoqL4"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2077.outbound.protection.outlook.com [40.107.105.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E246B7F7EF;
-	Tue, 23 Jan 2024 17:29:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.105.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706030947; cv=fail; b=ly8e7ijWIlD/2MzkadGz0AsWRwQHLHn48S+1NbPoM1+983pyVsW3gUx6eH9W8W+cj1g9Tfhiorp4DFBhUNPS5RBDpRAggAmFkk+gW5dzdXzT3fP3l/oaon6VJUf7cJpiNuHi7ul37ehoriFlP09yzNPt/OpDQLKo/f7WXOomXf0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706030947; c=relaxed/simple;
-	bh=RxPSEEeZG5glZ7E6ehagg9TDFiHtrb0uWUlMR+0Okuc=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=s2sFF+Yh6npoZmApCR8trmrMOI7K8+Bct8eMiTU4NRHQ8sUUzmdHhck7spAnXB5+9/H12cNFOiow2bbkz4FcpGY2oGSO3l3LVvDGHpu24WV/GCboB+Hw1+brjdf4ZThoN4E5K/kwIAVhB5LdHJPQ5fDff+aPJQ3zfvurVUJGWAg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=XxnkR309; arc=fail smtp.client-ip=40.107.105.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QMYTrBmbIYnVSjnBf4LiHoAQZ3Kzu+3fmIPdWslWjvnXgG8xvpnxtIWPgDKtTNzVkncjNYmp7hW7aWW+IIH75ybBmvQY/L/+oa+k8xIa/d6pma8LFVmS80HjU2zVlU6fxbxesD4ioWgHQ/5oFtelD1t9tB/wgpvI7854EFfaNdQ10XbTJffOPEKIWotUZj1pv+Br2cu9e6qAOTQbvKS+kpgdtYwvEolOKlK6icYewBJkaio8nDYoMLuPOVXyREJ/Q5AwNOayT2+bq5tYQ5+dwPnBTHi7N9aTv9r9FcuMRd8BnELSVh/JLZSnxC0XtI/LP6N15P6Hcz/kONbPZbTC8g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FaVRvLb3crWnNJztg5UYqFPbR1jQJLWKM8Jz4MY3efc=;
- b=nGbwMRSQiJdktgL6TEMoSUTnNley4dP4LLhWrcCYTscKeGb8Wqpj+2xN5ciABW3dG2rXHr0kRkhkFrFPkglUIPjvFYauS5ngRcGCtZ/xNb9bWv3BAyVn0otGCYBaekqnHE1bm4uEyfoAebCUVkDVQI85dE6ilK5h2VNtOEevGpZAaLHJp36Uhclbd5r7u/5AQtXSSa5I6TQb55SnRvuLAEViPH3Tuf7yAQj7CUinVeYOlrHr/VgNG3nAm1BSqzwjBY6slTeat8/OasRtpVXLLb3Hh1pwCw4kGRGbOOv2Q3SF/HA0LPBzGL05TgcD84nUIsVaj0JxWocZ5hXMXxSYlQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FaVRvLb3crWnNJztg5UYqFPbR1jQJLWKM8Jz4MY3efc=;
- b=XxnkR309QTQMzaNbKPBWAInHEU+Y8Se6whlbqhDUTrJty9+cdZPBlSBTDQ9iX+HKXjxA0zQOoNg05qt7bnzBPdtihtIEYqlTHSQ43ApYfxNaJ1F4mYvpSa8b3qrGUXsJFcEjwjVVzzDH9eLZvSMIWDgtjkO08qEZbyBEaSWBtzk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AS8PR04MB7960.eurprd04.prod.outlook.com (2603:10a6:20b:2a8::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.36; Tue, 23 Jan
- 2024 17:29:02 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::c8b4:5648:8948:e85c]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::c8b4:5648:8948:e85c%3]) with mapi id 15.20.7202.035; Tue, 23 Jan 2024
- 17:29:02 +0000
-From: Frank Li <Frank.Li@nxp.com>
-To: Vinod Koul <vkoul@kernel.org>,
-	Barry Song <Baohua.Song@csr.com>,
-	dmaengine@vger.kernel.org (open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM),
-	linux-kernel@vger.kernel.org (open list)
-Cc: imx@lists.linux.dev
-Subject: [PATCH 1/1] dmaengine: fix is_slave_direction() return false when DMA_DEV_TO_DEV
-Date: Tue, 23 Jan 2024 12:28:41 -0500
-Message-Id: <20240123172842.3764529-1-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR05CA0111.namprd05.prod.outlook.com
- (2603:10b6:a03:334::26) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9F86811F6;
+	Tue, 23 Jan 2024 17:48:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706032136; cv=none; b=uaYsDuD24rZeuSGenCEoQWJtJaCpnMkrNxNtZ/xk+6O1i+pdssjEtoAxWGrDFdvnn0qgFJnh5K9/WL4CSNKati7LDvGGP+JpeyF0HRUi2oUBuNTY4u/gUr+Ms+LHNDFNo6a4JcEF6NIylU1ejnmjp4pAFnUu8LQ4zy2xkLPacnw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706032136; c=relaxed/simple;
+	bh=QQ9uZ4Wazjii5m802qrsRtRIm765++713g/rq7dljig=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VgMQ2WYJDbQMVLoDBwPaeHE7VpTHhnLmm2/B0CkdwjVTZrcGJCw3NXbhQAggOwMt82Hr2kLT2RiseTJAV6f3Of/slMDE1L5g8Nm6/rfmWRY8ZukoA9qI5P04ZHtSh6ZM49tiyaqaFnmW4JYEf7G2jDUf+S/22BRKeUc6Ff95E2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y8tDoqL4; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-337cf4eabc9so3753213f8f.3;
+        Tue, 23 Jan 2024 09:48:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706032133; x=1706636933; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EUjlyaIMA5LD+Pgub4rYNwex11S+1W6zP2cY/Lr1Xls=;
+        b=Y8tDoqL4P14FPmRdnia+YasCKacgcDoSIoz32rIb+nbjdKa444md6RAUiyPg3ABLRD
+         ll1+u+HbbU4Race4hgDflHeVGCseT6joltFc5xCt6IT61XEWQC/39lL7DmQdHCg1NCOF
+         ajICtrFwtMk7OYUFjLqS+o8U5+gp700tfR8iG0vRbuajRU+HtZpYDoErYQfTMGXu/C/R
+         Eh3s0cUeh0VNvYHwQpKtBO0r4Xebl1Yq4Owg49Nr8U//8DxMW/YCr25UOdsKIkShX36y
+         Xqiwyi3eN943waCFAgjxuUlnyvetHLAs47IRlZhAsxjZZAaZKD2h8NM+2rvP8AM7qs8j
+         miZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706032133; x=1706636933;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EUjlyaIMA5LD+Pgub4rYNwex11S+1W6zP2cY/Lr1Xls=;
+        b=RjihdfSsMYB7AlM+V5ROZZOy36FESy/x51lbC9XyqZqAtLtMJezQMuyNWIAeTOJs3B
+         GmiA2DxVEXgnzGy2sFwzZymnmibLpAf9jnREFns7hGBq8oRNUM9HGAJuQcM1jjGJEpTl
+         7LkHaD3FQgmtj7eqg7l3jbIOFy2WGxXrggI8xjFMrFdioHbnm3fVABAWnCCYNm1+sxdD
+         yR0ytozA25XN7yTwkj6JfujGqmqqBzj9N5BwNfegziV6rNRvYoo1zOped5VpordOHXf8
+         Zhkpubw14v2E6VIN6hyqs8nCOzfp876UJGIUJcZu+KjRqaaqHK1LVm9do7jwakq2vAbm
+         EWMg==
+X-Gm-Message-State: AOJu0Yzr6ofuctxXZg3q6RNTakKIkCz2ucZ3GEkwZiFpo/KzTZgD7MIl
+	HBBHDnbCAuYcNrJ3JZx3MvgWCNdB4aqqoJ63RNzHLiBo+5Wpw8to
+X-Google-Smtp-Source: AGHT+IGctHEVFEZp6eUBc8QU6uDhSqzejWNbzNEdCvC2potV0ciD/WNpi/cB1xLvCujpx1Tux5Yl1A==
+X-Received: by 2002:a05:6000:1089:b0:337:c80f:6e19 with SMTP id y9-20020a056000108900b00337c80f6e19mr3407648wrw.69.1706032132766;
+        Tue, 23 Jan 2024 09:48:52 -0800 (PST)
+Received: from jernej-laptop.localnet (86-58-14-70.dynamic.telemach.net. [86.58.14.70])
+        by smtp.gmail.com with ESMTPSA id y6-20020a5d6146000000b003392f625adcsm7158392wrt.36.2024.01.23.09.48.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jan 2024 09:48:52 -0800 (PST)
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To: Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Samuel Holland <samuel@sholland.org>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Vinod Koul <vkoul@kernel.org>, Chen-Yu Tsai <wens@kernel.org>
+Cc: Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+ linux-sound@vger.kernel.org, dmaengine@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject:
+ Re: [PATCH 1/7] dt-bindings: sound: sun4i-spdif: Fix requirements for H6
+Date: Tue, 23 Jan 2024 18:48:51 +0100
+Message-ID: <3271743.aeNJFYEL58@jernej-laptop>
+In-Reply-To: <20240122170518.3090814-2-wens@kernel.org>
+References:
+ <20240122170518.3090814-1-wens@kernel.org>
+ <20240122170518.3090814-2-wens@kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS8PR04MB7960:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9fea57fa-1b61-439b-06bf-08dc1c38ca31
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	lNIimTaQhFeebeh+kD7n9ggcjkb9N3sNGQGNfWG8hpX+kMUmbAk1VVR/Q3j7kqajA12zYoW0BVb5ADTe1oc8PO9aZAa13NWsaQBp04yAcd4KuAqQaSSOjKAMgMN0+SDJSpB9hqu3c0pKSBOjG7jMLwNu5JVSfua1ZVlYI0+D7sFEQItnBu71zWTsR8SGy1IHC0UMcQEFVpbooJwM+LjfeBFtEDKYArYYt25UovV55Iz/d97mD6DbWkgxADjY1pxSQvg3D043zsfZwowm3TGK2+YXxjmiwLKIFFOveV8iMRek4PBwJYzCYf8Yr0RSzG2q0bPoTN9Mc3SEF1xsf/0udeik3vKyQSxzeFhou4+Yr0fbkjXWPTkZXCy8aoPrCO0dfqSCt1U7aqVuvgTQihZBRnxgMG/yyC0o/Y70w8DQu3+WUiVpre64k0yj9ue2PqN5J6WYy/hWJyZHpWaGEhC8zRFxQNqZ6bfb+kTIlabA7mi/ZCI2HgLoVOQf4Em7FzsXXujkD9gC6cw4Xptxkt+pEsIMveUcieGIyUx2M3tPj12RPL1y/ZyOUnBcWsNJGyqrXiIbhwISGmg8kObwnMBK4Iz5oflhNrCgOtItXkTE9HXQm5c+tlKS6/C/FY9YWVOS
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(39860400002)(396003)(136003)(346002)(366004)(230922051799003)(1800799012)(186009)(451199024)(64100799003)(38350700005)(2616005)(4326008)(5660300002)(8676002)(6486002)(1076003)(83380400001)(6512007)(8936002)(52116002)(316002)(66476007)(6666004)(6506007)(66556008)(66946007)(478600001)(26005)(110136005)(38100700002)(4744005)(2906002)(36756003)(41300700001)(86362001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?9ENpJ0NufuoFyllsj+/dCyz41duxDhBvWpgP9HjVNTSRI0mhhGh7KJUq1f2R?=
- =?us-ascii?Q?ssTjX2dJ/jhSCStgNCb7f9lJbHwgE3jwzDN85ixY9aIi0u2WgYs2m14WtF2H?=
- =?us-ascii?Q?JJINHR/512SW8V4vq4gs3pIjKW61JBBZji1GdsUhj6HBR3uFNChFxTcqOg0r?=
- =?us-ascii?Q?ZrOJGKz/CV6nAaedYMla1fz4vo+euYW+lvoM7QCEP2rwf1RdFVR5InfYdfEc?=
- =?us-ascii?Q?rF7DLAnrwODwku46DNt2zPfJZ5VPcuJ5RxtD3umIsBoDKqj5DVMYjort25gR?=
- =?us-ascii?Q?xjnRFpZNuvrwiAaSYGrPXFyog56EbBMpp45GH+XWVnNvybS8ZGcqQf3DfkjL?=
- =?us-ascii?Q?Xo0N+d9DGnBo+yBY6jOGc3DCgfwtb2AfCgWPacNcW2pmi1ebGag7p+F+qxPf?=
- =?us-ascii?Q?fZBQU1Zb44T8+sO986vgKEdlDWh/wWfvhdc0FpyztzqGVypo6wGRtrXtSe4a?=
- =?us-ascii?Q?XfhJNj0zHt0pae+7a3LS6AZ+Wf8jr3+jY9XAuI2OePzwBk780X0+U99kgE3t?=
- =?us-ascii?Q?dmiz456itMPih+mvwxkqyDtCwyKxo9e6j4UFwgBHBigiG3wouyf7xidPQ+CM?=
- =?us-ascii?Q?hm/RvdDZOQ0h3DwCfR5zAaiyHfdXVgkyTRhtwgLRhvsVgbXudi4D5GlgfG/D?=
- =?us-ascii?Q?ESJpp6cPePAn043i4+EAZimNUWenupiTEF4t0+Yt2WBTTlcQhN22v2J8zADQ?=
- =?us-ascii?Q?T9kITKvY2KG6bRXg+RwD4idcz7ALZAdiTznZTRona9CkB/5gzLVBdxHugQLk?=
- =?us-ascii?Q?V6mHMTgcqe32WAn67GS1pyR076gOpyYYNWa+egwrnAEAjBvaCGn9d1LtAaOZ?=
- =?us-ascii?Q?PGPrPyDisFpdUtboUo4PT8YT/nUGCkOqdI1roW0MwKauzhjKS1STBgCcHJXo?=
- =?us-ascii?Q?xYkpJWAmbniBNtZIS0siZ3eH0C8D8ULfuxRBBKHtYQc7l0oS0sdvr9Hgu/IO?=
- =?us-ascii?Q?mKNLih/g0ftZ/2blmEZH/ObEZtzOgUNXJkfVk48CFAs7HIMsu4kWc4AXO/fJ?=
- =?us-ascii?Q?sli4ev6n7yfGqVrxLY3JYJySdVAQUOav/sHxwVG+LKK7UlAQ5nM2pjp2HLmm?=
- =?us-ascii?Q?qXplmATgrwhfx2gRuMZoQwEDBOSXdMadIAMpw8qG1vx/Px5+HGUm0aWawmma?=
- =?us-ascii?Q?sGBBlJdD66LTYDcZtsTlZhVWTVJeZY5ltLB/7sAqwBy5XlY9RI6EzJCNGKBG?=
- =?us-ascii?Q?BfVAoqquXK0jpsTTExz/Lho5+/Q/d6S8+1P2XeJoGpV5mHFp2QXYrVb7g97i?=
- =?us-ascii?Q?yrEtz/Kpv+9N06stExhERNfS6vSRDbtbpa1BiauSPCG98tKiB9UGmxK+C/QE?=
- =?us-ascii?Q?ugFFjGhw+fkfIX1nHBOPN2ufQ8ad+VYRO7xJ3LDX80DM51t2+BRv37kDUSRG?=
- =?us-ascii?Q?bDBTJW5kev/zyIso0Sud9ycXu7c7nPf7d6ieC8qdQYPJ+UYzX8UqbsUVUr6S?=
- =?us-ascii?Q?Dbd+bDCKzNJ03GN7D17b0ocyiekKEtaERaFuWqxT/QgTC1HNPmcInG+KM0BX?=
- =?us-ascii?Q?dGLOW1BXjA4Igm5tdcTRV7jsqh0uCz4GwOR9DUIBoTaxUYPVh1wlbz0th8I4?=
- =?us-ascii?Q?dC2tfxh/04MOVZJC0Yv1LbGJ1Bq3UZtXD+HGTCZA?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9fea57fa-1b61-439b-06bf-08dc1c38ca31
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jan 2024 17:29:01.9625
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DLcc1KkywJeGQd749MTlrRCs9UrMVZWJwVPeosYxIp3rydgpNiZ43umigjI29IbK5uUzhwxoi5uiWPq5gfuFKw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB7960
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-is_slave_direction() should return true when direction is DMA_DEV_TO_DEV.
+Dne ponedeljek, 22. januar 2024 ob 18:05:12 CET je Chen-Yu Tsai napisal(a):
+> From: Chen-Yu Tsai <wens@csie.org>
+> 
+> When the H6 was added to the bindings, only the TX DMA channel was
+> added. As the hardware supports both transmit and receive functions,
+> the binding is missing the RX DMA channel and is thus incorrect.
+> Also, the reset control was not made mandatory.
+> 
+> Add the RX DMA channel for SPDIF on H6 by removing the compatible from
+> the list of compatibles that should only have a TX DMA channel. And add
+> the H6 compatible to the list of compatibles that require the reset
+> control to be present.
+> 
+> Fixes: b20453031472 ("dt-bindings: sound: sun4i-spdif: Add Allwinner H6 compatible")
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 
-Fixes: 49920bc66984 ("dmaengine: add new enum dma_transfer_direction")
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
- include/linux/dmaengine.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
 
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index 3df70d6131c8f..752dbde4cec1f 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -953,7 +953,8 @@ static inline int dmaengine_slave_config(struct dma_chan *chan,
- 
- static inline bool is_slave_direction(enum dma_transfer_direction direction)
- {
--	return (direction == DMA_MEM_TO_DEV) || (direction == DMA_DEV_TO_MEM);
-+	return (direction == DMA_MEM_TO_DEV) || (direction == DMA_DEV_TO_MEM) ||
-+	       (direction == DMA_DEV_TO_DEV);
- }
- 
- static inline struct dma_async_tx_descriptor *dmaengine_prep_slave_single(
--- 
-2.34.1
+Best regards,
+Jernej
+
 
 

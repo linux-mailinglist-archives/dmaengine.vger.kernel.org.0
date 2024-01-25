@@ -1,55 +1,55 @@
-Return-Path: <dmaengine+bounces-823-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-824-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA24083C4BA
-	for <lists+dmaengine@lfdr.de>; Thu, 25 Jan 2024 15:32:14 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D743A83C4EC
+	for <lists+dmaengine@lfdr.de>; Thu, 25 Jan 2024 15:37:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 858C428D10F
-	for <lists+dmaengine@lfdr.de>; Thu, 25 Jan 2024 14:32:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 15A191C21D07
+	for <lists+dmaengine@lfdr.de>; Thu, 25 Jan 2024 14:37:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45D296E2B0;
-	Thu, 25 Jan 2024 14:32:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B72946E2BD;
+	Thu, 25 Jan 2024 14:37:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YVJA1mvh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AyNb4R1O"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 153586DCED;
-	Thu, 25 Jan 2024 14:32:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8603E4F218;
+	Thu, 25 Jan 2024 14:37:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706193128; cv=none; b=lB2X54qCIgYpCQHO/3yBc5NY4fH7m91PL9eJhOHEmWROfHQe9FIvyc846vTJW41TojolOakvUrCXXtLl3zx1lkLn0yYBU7T6jLj+K/IAxfOdjyYzbb4SK36AVCPnJ7TC5MaarqMcjnIT1uzFh6WS1D70NF4/9tNbQVLV5K3r8vQ=
+	t=1706193466; cv=none; b=cTZ1LdjFUY1UN5xMuYvM7Nreg6giyucRWWrpriYFIRmuAVbVcBFYeDVOXsonQQ2Hsnp2aB8HCKeTOI3cg6Shph/tcJNHrWfkaxbMpJ5w5FMqQS+YkSdQIBTv7ZAFMt8T7lbGQyQ5u/MOW1fu5bQzQW5qgSMhQ+mEX6A3Lv7aW9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706193128; c=relaxed/simple;
-	bh=SJIO9VIDAxEd2fRuCQOCXVo5yJC9Bfk6F7wNGJj+PcI=;
+	s=arc-20240116; t=1706193466; c=relaxed/simple;
+	bh=YAJ84nFqDAAULU1LrFi+Bod6RZHD93P1gKfDzYnewtE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m35dzHgDrTiUYk05YYh0WSInXKZbCjQNQPgUuEwJ5qc2dgEmjHBUykIkAz+pMH3U3wyaasE01DQT0KMxWTmHORYrsiiqQZpx39duXx57NcmmX2E9Y12hwaCNm9aN9ihOMyXLDg9gxhB8Nf9I2pRUD7/taKIqQIjF8UA2pmDaHJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YVJA1mvh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96214C433A6;
-	Thu, 25 Jan 2024 14:32:07 +0000 (UTC)
+	 To:Cc:Content-Type; b=BfhRTvw59D5I/VM4DJ/fngE9qlABrRwm4z1jF0iSv6Xgv/4uY2VVSpgOi9227W932u0yevgoSmQWW71k6UpLf6OuVxoi5ycaYrPkH3Nfpo7Fj3UlGgrn3lvqTnrcm+8g+/uKu7TdIjw2DpwFRojsQ3uZ0W/XxLou6mtT85KOmq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AyNb4R1O; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15BA8C43390;
+	Thu, 25 Jan 2024 14:37:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706193127;
-	bh=SJIO9VIDAxEd2fRuCQOCXVo5yJC9Bfk6F7wNGJj+PcI=;
+	s=k20201202; t=1706193466;
+	bh=YAJ84nFqDAAULU1LrFi+Bod6RZHD93P1gKfDzYnewtE=;
 	h=References:In-Reply-To:Reply-To:From:Date:Subject:To:Cc:From;
-	b=YVJA1mvh6RwBjLGjd1sfDBtmLYMeZk2Vb1Vxa9VgXpAdZSTyvCqebluNvJMNpga2H
-	 zIqQVyYC/2Itq6ME2zUndhbGU4wwQMJnTve1RG55b1fQ/wcezBKtWxmpEWMVKaRfPN
-	 VRi3BhTaZ65e1dTFRmPd9YdQ+AOzFYFMs0Aq/ftOmbbA6XWBUf17nr8Begw8wZ+jjY
-	 SK8tNApqDdTp/yh4/WxDr7l2WFY1/iBN3tKF1fuJAize0s0umkXhfRxinfpn7d4l8t
-	 9uNdR4vKJYZc9dL1X4CLmwfwL2Vl/NzNUFqD4CjjJ4/+K6Pal52rpWZtW4O4SsQSe1
-	 Lk+cu6IQtoPvQ==
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-5ce942efda5so5115017a12.2;
-        Thu, 25 Jan 2024 06:32:07 -0800 (PST)
-X-Gm-Message-State: AOJu0YxHg+LyqLWzNAkbQzwQjk7TNIq1TH6Q/rkXiFbdc4GIE1t0uqX+
-	zIypEnfEKefWCKh0NZThdzffx6D1fH1wXw92aBSW6tz6tmocsyvmjhs/MNNawcfKkgfZ23kfjXD
-	0wNI79b4GsRoOOqznQI0TksZo5tY=
-X-Google-Smtp-Source: AGHT+IHrAfERyC/G24kGm+lJuLa6CaK8isz0YBY43lr4aF2Wssm2223XiVCbwz+daaJHCxHYabrneXLR5cWNqYl33Sk=
-X-Received: by 2002:a17:90a:cc0e:b0:28d:bd5f:1e5 with SMTP id
- b14-20020a17090acc0e00b0028dbd5f01e5mr711022pju.44.1706193127134; Thu, 25 Jan
- 2024 06:32:07 -0800 (PST)
+	b=AyNb4R1Ox5Sv2XDBewRnHPFjArH3pt/MhCM8kNlYk9WkiHcEteOyf0pd2LTXukMPx
+	 rYrcrzhgbjYoAeElb3dPQHnCbRmPRmpWVx+sz4KgHLcN/bc0R+Y8kNBIXrvnvFcPNF
+	 +qVAsIFvC8zTMU+dl7NNYyjepXSp14gk+vDTuipT51iBWRsihoZacfckqZm8mSCzvn
+	 dWQ9BDdLV2mOX0SmDkF37brPI4Qwn6AMiHaJkqOrYrnc5ab/ve0FHrULTNMndADKUJ
+	 nfdVSrh0fBPJkTJIhd91uYfy92B9KYbpt5rM3OSG7OpF91X8Ti+iXgBjAhbl/g/g4p
+	 R0fq1xCMR5s9A==
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-5cddfe0cb64so3625355a12.0;
+        Thu, 25 Jan 2024 06:37:46 -0800 (PST)
+X-Gm-Message-State: AOJu0YxBPzsFVTo3TvPt3TO5Fzv9hwGWkBBwFlP42cgTVO6Ok2A5K1Lh
+	SHeftDQDCZKwI7uPngltTtXuxaVdVW9Jy0gY9hscZSU5AKPwCKwADuXCmgDzlqqrhqtCj+FRp+y
+	ATkbFJUj9eKxZo3sXKiAkrIYh6Eg=
+X-Google-Smtp-Source: AGHT+IHMDXu5vLiZaszPKiS42W06RUB1yoz7PCt7rek3lH97h03j66qsoEA9gOP8ssrxNd6PSDM1IsM6gy8Gek1sVvc=
+X-Received: by 2002:a17:90b:b85:b0:28c:a9d0:33ff with SMTP id
+ bd5-20020a17090b0b8500b0028ca9d033ffmr645889pjb.62.1706193465678; Thu, 25 Jan
+ 2024 06:37:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -57,16 +57,16 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20240122170518.3090814-1-wens@kernel.org> <20240122170518.3090814-5-wens@kernel.org>
- <20240122-resemble-nearness-60dafde2e25d@spud>
-In-Reply-To: <20240122-resemble-nearness-60dafde2e25d@spud>
+ <20240123004010.59cac5ad@minigeek.lan>
+In-Reply-To: <20240123004010.59cac5ad@minigeek.lan>
 Reply-To: wens@kernel.org
 From: Chen-Yu Tsai <wens@kernel.org>
-Date: Thu, 25 Jan 2024 22:31:55 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65hGBVyhnok79fn9bgdXXeLHVZ0uUobqxaVU75Lh5-BCg@mail.gmail.com>
-Message-ID: <CAGb2v65hGBVyhnok79fn9bgdXXeLHVZ0uUobqxaVU75Lh5-BCg@mail.gmail.com>
+Date: Thu, 25 Jan 2024 22:37:34 +0800
+X-Gmail-Original-Message-ID: <CAGb2v66UmLuWyLvvULZeW6MKFauM-xAMPAO9W_TPAByXYqKCBg@mail.gmail.com>
+Message-ID: <CAGb2v66UmLuWyLvvULZeW6MKFauM-xAMPAO9W_TPAByXYqKCBg@mail.gmail.com>
 Subject: Re: [PATCH 4/7] dt-bindings: dma: allwinner,sun50i-a64-dma: Add
  compatible for H616
-To: Conor Dooley <conor@kernel.org>
+To: Andre Przywara <andre.przywara@arm.com>
 Cc: Rob Herring <robh+dt@kernel.org>, 
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
 	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
@@ -78,15 +78,52 @@ Cc: Rob Herring <robh+dt@kernel.org>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 23, 2024 at 2:18=E2=80=AFAM Conor Dooley <conor@kernel.org> wro=
-te:
+On Tue, Jan 23, 2024 at 8:41=E2=80=AFAM Andre Przywara <andre.przywara@arm.=
+com> wrote:
 >
-> On Tue, Jan 23, 2024 at 01:05:15AM +0800, Chen-Yu Tsai wrote:
+> On Tue, 23 Jan 2024 01:05:15 +0800
+> Chen-Yu Tsai <wens@kernel.org> wrote:
+>
+> Hi,
+>
 > > From: Chen-Yu Tsai <wens@csie.org>
 > >
 > > The DMA controllers found on the H616 and H618 are the same as the one
 > > found on the H6. The only difference is the DMA endpoint (DRQ) layout.
-> >
+>
+> That does not seem to be entirely true: The H616 encodes the two lowest
+> bits in DMA_DESC_ADDR_REG differently: on the H6 they must be 0 (word
+> aligned), on the H616 these contain bits [33:32] of the address of the
+> DMA descriptor. The manual doesn't describe the descriptor format in
+> much detail, but ec31c5c59492 suggests that those two bits are put in
+> the "para" word of the descriptor.
+
+Good catch. So, same as the A100 I believe?
+
+> The good thing it that this encoding is backwards compatible, so I
+> think the fallback string still holds: Any driver just implementing the
+> H6 encoding would be able to drive the H616.
+>
+> I think the A100 was mis-described, as mentioned here:
+> https://lore.kernel.org/linux-arm-kernel/29e575b6-14cb-73f1-512d-9f0f9344=
+90ea@arm.com/
+> I think we should:
+> - make the A100 use: "allwinner,sun50i-a100-dma", "sun50i-h6-dma"
+> - make the H616 use: "allwinner,sun50i-h616-dma", "allwinner,sun50i-a100-=
+dma", "sun50i-h6-dma"
+>
+> Does that make sense?
+
+I wouldn't call that exactly backward compatible. Say the driver forgot to
+clear the two bits. It would work fine on the H6, but the accessed address
+could be way off on the A100 and H616.
+
+
+ChenYu
+
+> Cheers,
+> Andre
+>
 > > Since the number of channels and endpoints are described with additiona=
 l
 > > generic properties, just add a new H616-specific compatible string and
@@ -131,21 +168,8 @@ ml
 > > +        - items:
 > > +            - const: allwinner,sun50i-h616-dma
 > > +            - const: allwinner,sun50i-h6-dma
+> >
+> >  then:
+> >    properties:
 >
-> Instead of introducing this complexity, could you instead use "contains"
-> here? Unless I am missing soemthing, you can achieve the same thing here
-> with:
-> |if:
-> |  properties:
-> |    compatible:
-> |      constains:
-> |        enum:
-> |          - allwinner,sun20i-d1-dma
-> |          - allwinner,sun50i-a100-dma
-> |          - allwinner,sun50i-h6-dma
-
-Thank you for the reminder. I had a vague impression that something
-simpler worked, but couldn't remember what exactly.
-
-ChenYu
 

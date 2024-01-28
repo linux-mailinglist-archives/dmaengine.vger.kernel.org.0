@@ -1,137 +1,154 @@
-Return-Path: <dmaengine+bounces-839-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-840-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5AFEC83F3F0
-	for <lists+dmaengine@lfdr.de>; Sun, 28 Jan 2024 06:00:50 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id D329A83F542
+	for <lists+dmaengine@lfdr.de>; Sun, 28 Jan 2024 12:52:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 833F41C21A0D
-	for <lists+dmaengine@lfdr.de>; Sun, 28 Jan 2024 05:00:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 74BFAB21B45
+	for <lists+dmaengine@lfdr.de>; Sun, 28 Jan 2024 11:52:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0A8863D9;
-	Sun, 28 Jan 2024 05:00:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B2901F958;
+	Sun, 28 Jan 2024 11:52:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qaEkJ80M"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WgdmjXpE"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D16186116;
-	Sun, 28 Jan 2024 05:00:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 634341F93F;
+	Sun, 28 Jan 2024 11:52:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706418043; cv=none; b=CcaSYzQDndwja6fUS+SE/MDBl3BvAOO6O01qDrSMnbZ7us+JfX7t345qQCaS/X8zmUUaOUwlXsQEdj4LtfjXjWRKjlH5wVUg3kwrXsbHb1gPOANouF1yn6Z9AdpIfSxnd1zFCFCtVmoDNd+AgZ6BwLUzSlRXp56Qh+9HxzO7o7Y=
+	t=1706442737; cv=none; b=Iu/semMTlUlZmlAtaFzsYK/Bqhrw39yu1tf2VK03sllq6I+kfIpXcV/8ExN15jcTJbbTC3nKGRWDZgSH5zqcn0OX4SzCmFPqQgESqZzzl9e/jxWAQBzolCrSJbQn7U9xOiEs4Cvmm8QjDsN/1YA3LsSIpUHsspbwk9KUjzRoAuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706418043; c=relaxed/simple;
-	bh=ogcAvDrUKdfvDm23jvMymVOtUfnEhfEGQUl/5hs1Ywk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=NJWoj6Wf/mfP412cBwei3EKo/kYWjdRnmfZzbHNg3EvAW6gspNaD5wbOWkE4q9laj4qPTjylNRL3zIvQqTsATrKPEZsq8fXClWbqa8p7sduLa5t0tX/kxJXwhjN1avLlCCf+ZQ5wEhpcAhXvBhHXzeCFkpUfQftVOgc417n0NBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=qaEkJ80M; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40S50VR9000624;
-	Sat, 27 Jan 2024 23:00:31 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1706418031;
-	bh=731f90R3A/dRcqxYvM7aL6//fI0w+YT6eNiSJ79wbIc=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=qaEkJ80M34VyUHFGQuU0YJvfohF+SHUdMpEQrFutBby43nSw1wb0I9Lbcd39p8sbK
-	 PFbURZW3954GCI62jSdWPpxETnUMnY28leA9vDO/Dmxsj87KU/b1IToTB7ezraWduO
-	 4G3LG1eF2sxECr7PR/kwP/Q65wFeGVwl5RCLUbfU=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40S50VOl019212
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Sat, 27 Jan 2024 23:00:31 -0600
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sat, 27
- Jan 2024 23:00:30 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Sat, 27 Jan 2024 23:00:30 -0600
-Received: from [10.249.141.75] ([10.249.141.75])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40S50R8U107717;
-	Sat, 27 Jan 2024 23:00:28 -0600
-Message-ID: <2286ff68-ae30-47d4-9362-16bc780bfe03@ti.com>
-Date: Sun, 28 Jan 2024 10:30:27 +0530
+	s=arc-20240116; t=1706442737; c=relaxed/simple;
+	bh=DWUruREuV56XioT1JmC92e6/6xkEVGX5lxDBmEj2D5o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DkHWIc9GEBc6xahxElnudEOkk6bLQAMo9WknvNxbLmBj3Hu7RThGf4OjLSkgw6S0XNcPCyZnS5bPnvTqSKmIAMpvwPH/nPE4IuadEcMmWLqYnzGEo/O5b6GMzCmAmppscamXQ9pyUERvfVGcRGDxbGh0IehtjvH7sqh7guoQ/Io=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WgdmjXpE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CDBAC433F1;
+	Sun, 28 Jan 2024 11:52:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706442737;
+	bh=DWUruREuV56XioT1JmC92e6/6xkEVGX5lxDBmEj2D5o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WgdmjXpEgJk67VqXsN/zDeYuy0OptjdBSDw39FktwLwmTqcsAoSXpRBIBZANfLehK
+	 wy0KUZpPdmxNMndX0pwFTw7Jx+E+kfY3XLYOjoOhF53V9fvHsi1rpt+o/JdeZ3q4PL
+	 QVaIy6eLbpaJFs6lb/khwIApPWmj9Vnc2bjguARZf44nwF4aYCKRjXZtjK4TsHwyE6
+	 6rGM6LQwsRH7yjVCbi49/Q91TJ7IZnjr6aCZrKuVXe3X096FKxVoAHletP2Z8qk8w2
+	 4QH8DEiibMl4buLDDW+iJnc7J3Qz4sofy/fIRqLDsk/QZ1XifrU495T3cyDxU7rkcb
+	 aZzkivNci53Iw==
+Date: Sun, 28 Jan 2024 11:52:11 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Chen-Yu Tsai <wens@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>, Vinod Koul <vkoul@kernel.org>,
+	Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+	linux-sound@vger.kernel.org, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/7] dt-bindings: dma: allwinner,sun50i-a64-dma: Add
+ compatible for H616
+Message-ID: <20240128-lumber-turban-a32709039bca@spud>
+References: <20240127163247.384439-1-wens@kernel.org>
+ <20240127163247.384439-5-wens@kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dmaengine: ti: k3-psil-j721s2: Add entry for CSI2RX
-Content-Language: en-US
-To: Vaishnav Achath <vaishnav.a@ti.com>, <vkoul@kernel.org>,
-        <peter.ujfalusi@gmail.com>
-CC: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <j-choudhary@ti.com>
-References: <20240125111449.855876-1-vaishnav.a@ti.com>
-From: "Kumar, Udit" <u-kumar1@ti.com>
-In-Reply-To: <20240125111449.855876-1-vaishnav.a@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="3filDIpPgYvC6Gxr"
+Content-Disposition: inline
+In-Reply-To: <20240127163247.384439-5-wens@kernel.org>
 
-Thanks Vaishnav
 
-On 1/25/2024 4:44 PM, Vaishnav Achath wrote:
-> The CSI2RX subsystem uses PSI-L DMA to transfer frames to memory. It can
-> have up to 32 threads per instance. J721S2 has two instances of the
-> subsystem, so there are 64 threads total, Add them to the endpoint map.
->
-> Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
+--3filDIpPgYvC6Gxr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sun, Jan 28, 2024 at 12:32:44AM +0800, Chen-Yu Tsai wrote:
+> From: Chen-Yu Tsai <wens@csie.org>
+>=20
+> The DMA controllers found on the H616 and H618 are the same as the one
+> found on the A100. The only difference is the DMA endpoint (DRQ) layout.
+>=20
+> Since the number of channels and endpoints are described with additional
+> generic properties, just add a new H616-specific compatible string and
+> fallback to the A100 one.
+>=20
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+
+Cheers,
+Conor.
+
 > ---
-> Tested on J721S2 EVM on 6.8.0-rc1-next-20240124 for CSI2RX capture with
-> OV5640: https://gist.github.com/vaishnavachath/e6918ae4dadeb34c4cbad515bffcc558
->
->   drivers/dma/ti/k3-psil-j721s2.c | 73 +++++++++++++++++++++++++++++++++
->   1 file changed, 73 insertions(+)
->
-> diff --git a/drivers/dma/ti/k3-psil-j721s2.c b/drivers/dma/ti/k3-psil-j721s2.c
-> index 1d5430fc5724..ba08bdcdcd2b 100644
-> --- a/drivers/dma/ti/k3-psil-j721s2.c
-> +++ b/drivers/dma/ti/k3-psil-j721s2.c
-> @@ -57,6 +57,14 @@
->   		},					\
->   	}
->   
-> +#define PSIL_CSI2RX(x)					\
-> +	{						\
-> +		.thread_id = x,				\
-> +		.ep_config = {				\
-> +			.ep_type = PSIL_EP_NATIVE,	\
-> +		},					\
-> +	}
-> +
->   /* PSI-L source thread IDs, used for RX (DMA_DEV_TO_MEM) */
->   static struct psil_ep j721s2_src_ep_map[] = {
->   	/* PDMA_MCASP - McASP0-4 */
-> @@ -114,6 +122,71 @@ static struct psil_ep j721s2_src_ep_map[] = {
->   	PSIL_PDMA_XY_PKT(0x4707),
->   	PSIL_PDMA_XY_PKT(0x4708),
->   	PSIL_PDMA_XY_PKT(0x4709),
-> +	/* CSI2RX */
-> +	PSIL_CSI2RX(0x4940),
-> +	PSIL_CSI2RX(0x4941),
-> +	PSIL_CSI2RX(0x4942),
-> +	PSIL_CSI2RX(0x4943),
-> +	PSIL_CSI2RX(0x4944),
-> +	PSIL_CSI2RX(0x4945),
-> +	PSIL_CSI2RX(0x4946),
-> +	PSIL_CSI2RX(0x4947),
-> +	PSIL_CSI2RX(0x4948),
-> +	PSIL_CSI2RX(0x4949),
+> Changes since v1:
+> - Switch to "contains" for if-properties statement
+> - Fall back to A100 instead of H6
+>=20
+>  .../bindings/dma/allwinner,sun50i-a64-dma.yaml       | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/dma/allwinner,sun50i-a64-d=
+ma.yaml b/Documentation/devicetree/bindings/dma/allwinner,sun50i-a64-dma.ya=
+ml
+> index ec2d7a789ffe..0f2501f72cca 100644
+> --- a/Documentation/devicetree/bindings/dma/allwinner,sun50i-a64-dma.yaml
+> +++ b/Documentation/devicetree/bindings/dma/allwinner,sun50i-a64-dma.yaml
+> @@ -28,6 +28,9 @@ properties:
+>        - items:
+>            - const: allwinner,sun8i-r40-dma
+>            - const: allwinner,sun50i-a64-dma
+> +      - items:
+> +          - const: allwinner,sun50i-h616-dma
+> +          - const: allwinner,sun50i-a100-dma
+> =20
+>    reg:
+>      maxItems: 1
+> @@ -59,10 +62,11 @@ required:
+>  if:
+>    properties:
+>      compatible:
+> -      enum:
+> -        - allwinner,sun20i-d1-dma
+> -        - allwinner,sun50i-a100-dma
+> -        - allwinner,sun50i-h6-dma
+> +      contains:
+> +        enum:
+> +          - allwinner,sun20i-d1-dma
+> +          - allwinner,sun50i-a100-dma
+> +          - allwinner,sun50i-h6-dma
+> =20
+>  then:
+>    properties:
+> --=20
+> 2.39.2
+>=20
 
-Reviewed-by: Udit Kumar <u-kumar1@ti.com>
+--3filDIpPgYvC6Gxr
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-> +	PSIL_CSI2RX(0x494a),
-> +	PSIL_CSI2RX(0x494b),
-> [..]
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZbY/5wAKCRB4tDGHoIJi
+0s+/AQDVwz+WvIMq2mM9erSGJtAYznAC59P2JyZJYmURWme/qQD/fGChAVqdsgui
+AX8DW7Jlp09pnmhWFzpPSLMz9MyJfg0=
+=hlqD
+-----END PGP SIGNATURE-----
+
+--3filDIpPgYvC6Gxr--
 

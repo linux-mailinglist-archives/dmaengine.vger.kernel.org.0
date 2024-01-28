@@ -1,147 +1,208 @@
-Return-Path: <dmaengine+bounces-841-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-842-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB24783F544
-	for <lists+dmaengine@lfdr.de>; Sun, 28 Jan 2024 12:53:06 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D3FB83F886
+	for <lists+dmaengine@lfdr.de>; Sun, 28 Jan 2024 18:28:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1DA6DB21B0C
-	for <lists+dmaengine@lfdr.de>; Sun, 28 Jan 2024 11:53:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6ACEC1C21672
+	for <lists+dmaengine@lfdr.de>; Sun, 28 Jan 2024 17:28:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B5161F94B;
-	Sun, 28 Jan 2024 11:52:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28D6D288A7;
+	Sun, 28 Jan 2024 17:28:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="nVl1GD4e"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qpNQvyge"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B17F623745;
-	Sun, 28 Jan 2024 11:52:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E40792D044;
+	Sun, 28 Jan 2024 17:28:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706442779; cv=none; b=IHeN9//OB3QYHgFs1UEfz3syPJZBzVC5cK4SvACc7lScHxpIwvqXu29j1e143RLou4PoBTRvN59aAI9/axlJkUN0zOo1pIGEbHaZyUgMryM/xNv5aCpyXKNslleBAAY53BSzUdvkKGQ9ny4a3PF4SuCFHMMwS0WamH5263V+LOo=
+	t=1706462888; cv=none; b=VJA/hxeyunhTBfsV/QoaoTHfuERB6CgDYEi6sNJAeck25zz6KVwom0jXBFI8e0Ifty62zDHEri8krvW6U4erZwwBwL9uD/71QKjWbT5TWzxFCMEUbVmPqSYurRr4r+lqTDX/pv2crwvJFnGESV5XXqrJ5cDRRnrnV5iWZ7dVRNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706442779; c=relaxed/simple;
-	bh=8qgAYxoJEnz0fBm9iJvQjJPfTW90lqM8TrpQVaYANAU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iT011zMy6eRPGRvh4NAW6AAln1aAgEIIXvxr5UbNV2wZdXz2afuxzkwjgHvQdtp/VKG8UmsKl52GXgz3NuZBoXvhQkHrz9VvGxR5JbsDRcf3xXDD3Fnw1mpeBjCauuuO0Kb5suLdlxGQYGZ6ePGnYPZMOMrx/mjNvpFQCi/ij1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b=nVl1GD4e; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
-	s=s31663417; t=1706442770; x=1707047570; i=erick.archer@gmx.com;
-	bh=8qgAYxoJEnz0fBm9iJvQjJPfTW90lqM8TrpQVaYANAU=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-	b=nVl1GD4eYpC6MnLtFA0UzYbsxUtHCpP4SFQ1CJzTGpfUzyEHjN2LB7T5RBvAhv6E
-	 9RvvjVO+Lj8jkkSOrMC8OyWRn1rnPZgEXqlqiULjQA2WqB7m0eIeLdvIw01U55+hZ
-	 1nEyHxiLWLSG7VJEywQgXu2102QMPYoOD5+2s9zN2sU6Kh4EZexqLQAxkgLfxRk4Q
-	 Lt+dNk82L3IBmop+fEiiGRLpqk0fIyFudgajxqkzG1dCgDI48r1uuR9gqnpgCJA5j
-	 DCgWrDNpSmxV6fy7xWZefyzG0zo0D44U1Y+9yaALoOkHVsE2fyNTHw4EgzkIjcXGa
-	 GJlznFKSGIXxosN7Mg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from localhost.localdomain ([79.157.194.183]) by mail.gmx.net
- (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1MA7GS-1rMxFg0ZEw-00BeIA; Sun, 28 Jan 2024 12:52:50 +0100
-From: Erick Archer <erick.archer@gmx.com>
-To: Vinod Koul <vkoul@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Erick Archer <erick.archer@gmx.com>,
-	dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] dmaengine: pl08x: Use kcalloc() instead of kzalloc()
-Date: Sun, 28 Jan 2024 12:52:36 +0100
-Message-Id: <20240128115236.4791-1-erick.archer@gmx.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1706462888; c=relaxed/simple;
+	bh=d48xGCfdHgQFf8NpyiDWQFPtYzrREixBaUNB9/MDMRI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WFRmz5WzI8S2rd8RtQRNciMU22r2xVZKKT70PYyj0pp/2AkoLtTMETbwv+KTRCm+e/xavjF+m01Dg++w43qV2v8eZ6IBEiJKzyTFKazhJs1/lTIH6srh1uB7Pj3LTRBqNhWYEvut2SnakdDU6Y+5X6V5z7QAafCsDCShU3LEdfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qpNQvyge; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E493C433F1;
+	Sun, 28 Jan 2024 17:28:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706462887;
+	bh=d48xGCfdHgQFf8NpyiDWQFPtYzrREixBaUNB9/MDMRI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qpNQvygeP1kIb4jcRwrWzShjUPJi7+MCYpyhtJ6xVOF5HBZw61OUpGyi0kAO9Car+
+	 i8BXxlXBSZEdxa+ZFt3ZTzETuYDEBMqBfl8HNDNGDNqa16AV8LIZP8m5EdZKl66edV
+	 aY+qUJTj5D0yf+p1RI/ouX0UoERCqJCGYhHr7Xw6rfhtOLZUkzxg2o65vk8Ln0XpLz
+	 0ODuet16dx/eY5UcEP8aKsS9XR9/WOQsdIC0ZVvmW2jS+d2KUwEWH2Q+V8cYqdkhNA
+	 TyShHsrqj7XzwLJmYcUPUAxoSefLw+sHbxtvWbAbqLaShsOhXS7jm4uRfD5Nkcq57j
+	 bekYc02qspRPA==
+Date: Sun, 28 Jan 2024 17:28:03 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Duje =?utf-8?Q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: mmp-dma: convert to YAML
+Message-ID: <20240128-feminine-sulfite-8891c60ec123@spud>
+References: <20240127-pxa-dma-yaml-v1-1-573bafe86454@skole.hr>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="FsqycuUB7fyG5ylo"
+Content-Disposition: inline
+In-Reply-To: <20240127-pxa-dma-yaml-v1-1-573bafe86454@skole.hr>
+
+
+--FsqycuUB7fyG5ylo
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:RzKISSY/CLtSCejfdxskHKGt4rJ30dy5Yk/kNZCNg7MRaPI3vlW
- Nv5dbh5aUMKwYCD7ONlvAabEiHNdT3bBzs8znGkP/YKzHZWTg5zc/xBdx9ufsPuPzKm0Em9
- W6446vGNg0Y8Bxw5OCcPNCMjsXrVi4urUSEA/Vztze8EmhnzlP+ORc/IhLqnLRy3bYhXAoQ
- R9OokhH7JTaC0q4SHbbrQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:NqWDpYotzqo=;YRCXAJOFtmujiztYMgzyJerwsJ2
- /VNB6fVwkBl5evt3pnh9L91ilk14Ne7edFPWUOJ4RX73VcxLPD9AjKqEG5usCnfLyykIMfZah
- L4qdB4Op1PvYUWK1Ro+lt/Qu2+uS6q1i3uJ6M+4pOjZRQ5/TltA5H6pDkjFYM2Or0yw3k/i3F
- bEpNSfCOabKffmwE13OCnNuQaV3MARhfwCPV7LNSqvR3aeyzuzSW7Y/ibLZEIzMUieVqA/nZ7
- BksZZnmMOAmiqDJxCKum3WKpGHC48dzh5hm6txYIUbhdZ3JK1a8PuSN/yG1GaFgIWjYMd7X8u
- ljVqvPrcIUzs8G2Io1oulc/XzRdx5j9pXIZCgphpHN7iHmYM0QWZ5PeRyJFpv5Iln9rTILm+H
- K1ZyNjAUyAM/WilEgE3sqLjZmTPo3tRijA+1pITz8Pk3HW7BivG47IfXu87/JOFZD/PQwaJEl
- KlvO7/UvFuxz4xAHOVX4JTkNRz2AmyVrdN97z4gUX3hV9SPj3wcVq8O4O84XBnOcvfgHckJQi
- SuGP8ez8oLMfHnewSQfpqSe1ss1D0lAIJSAcHjVEQ3x+dUTra36/6mb0WNKzJo5OuImr6gd2U
- gS5enXim+kJMv8FQAt4aMgFO3yBucLEuAdplCpIOB6l4RCxgDOWpBC1wguykKVCrmI5l8RCcf
- SR5tO8dAQfyrR435pJrKdKGIsb0TtMhEtVIKek7w3/6tV+R4S/uge0cp46lUfpxDwhkWhssot
- FLjR8VxSgNYk9Ctxk/lYJyhWaQY8SCXeowqf3cV/M0pmKboqJf0VmijKmHQx+38GFbJhI5n86
- epx6wOTa5eRHN5dc/Z3Hi1+F42rW+5W5tuXPaSvZ5FPU40PFcNic7XxQgTU1iNoQ2tiFJYjjO
- 8KisukA11HOlrSnOz6C/svPsobWntEUOePplcuzq8jqgfEUtSId3DBoYqWcLM9W89w+9CNSG+
- 1Xww/wifeRY2UF0NVIqEIOzLDyg=
 
-This is an effort to get rid of all multiplications from allocation
-functions in order to prevent integer overflows [1].
+Hey,
 
-Here the multiplication is obviously safe because the "channels"
-member can only be 8 or 2. This value is set when the "vendor_data"
-structs are initialized.
+On Sat, Jan 27, 2024 at 05:53:45PM +0100, Duje Mihanovi=C4=87 wrote:
+> Convert the Marvell MMP DMA binding to YAML.
+>=20
+> The TXT binding mentions that the controller may have one IRQ per DMA
+> channel. Examples of this were dropped in the YAML binding because of
+> dt_binding_check complaints (either too many interrupt cells or
+> interrupts) and the fact that this is not used in any of the in-tree
+> device trees.
+>=20
+> Signed-off-by: Duje Mihanovi=C4=87 <duje.mihanovic@skole.hr>
+> ---
+>  .../devicetree/bindings/dma/marvell,mmp-dma.yaml   | 82 ++++++++++++++++=
+++++++
+>  Documentation/devicetree/bindings/dma/mmp-dma.txt  | 81 ----------------=
+-----
+>  2 files changed, 82 insertions(+), 81 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/dma/marvell,mmp-dma.yaml b=
+/Documentation/devicetree/bindings/dma/marvell,mmp-dma.yaml
+> new file mode 100644
+> index 000000000000..fe94ba9143e0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/marvell,mmp-dma.yaml
+> @@ -0,0 +1,82 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dma/marvell,mmp-dma.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Marvell MMP DMA controller
+> +
+> +maintainers:
+> +  - Duje Mihanovi=C4=87 <duje.mihanovic@skole.hr>
+> +
+> +description:
+> +  Marvell MMP SoCs may have two types of DMA controllers, peripheral and=
+ audio.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - marvell,pdma-1.0
+> +      - marvell,adma-1.0
+> +      - marvell,pxa910-squ
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description:
+> +      Interrupt lines for the controller, may be shared or one per DMA c=
+hannel
+> +    minItems: 1
+> +
+> +  '#dma-channels':
+> +    deprecated: true
+> +
+> +  '#dma-requests':
+> +    deprecated: true
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - '#dma-cells'
+> +
+> +allOf:
+> +  - $ref: dma-controller.yaml#
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - marvell,adma-1.0
+> +              - marvell,pxa910-squ
+> +    then:
+> +      properties:
+> +        asram:
+> +          description:
+> +            phandle to the SRAM pool
+> +          minItems: 1
+> +          maxItems: 1
+> +        iram:
+> +          maxItems:=20
 
-static struct vendor_data vendor_pl080 =3D {
-	[...]
-	.channels =3D 8,
-	[...]
-};
+These properties are not mentioned in the text binding, nor commit
+message. Where did they come from?
 
-static struct vendor_data vendor_nomadik =3D {
-	[...]
-	.channels =3D 8,
-	[...]
-};
+That said, for properties that are only usable on some platforms, please
+define them at the top level and conditionally permit/constrain them.
 
-static struct vendor_data vendor_pl080s =3D {
-	[...]
-	.channels =3D 8,
-	[...]
-};
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  # Peripheral controller
+> +  - |
+> +    pdma0: dma-controller@d4000000 {
 
-static struct vendor_data vendor_pl081 =3D {
-	[...]
-	.channels =3D 2,
-	[...]
-};
+The label is not needed here or below.
+In fact, I'd probably delete the second example as it shows nothing that
+the first one does not.
 
-However, using kcalloc() is more appropriate [1] and improves
-readability. This patch has no effect on runtime behavior.
+thanks,
+Conor.
 
-Link: https://github.com/KSPP/linux/issues/162 [1]
-Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-co=
-ded-arithmetic-in-allocator-arguments [1]
-Signed-off-by: Erick Archer <erick.archer@gmx.com>
-=2D--
- drivers/dma/amba-pl08x.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> +        compatible =3D "marvell,pdma-1.0";
+> +        reg =3D <0xd4000000 0x10000>;
+> +        interrupts =3D <47>;
+> +        #dma-cells =3D <2>;
+> +        dma-channels =3D <16>;
+> +    };
+> +
+> +  # Audio controller
+> +  - |
+> +    squ: dma-controller@d42a0800 {
+> +        compatible =3D "marvell,pxa910-squ";
+> +        reg =3D <0xd42a0800 0x100>;
+> +        interrupts =3D <46>;
+> +        #dma-cells =3D <2>;
+> +        dma-channels =3D <2>;
+> +    };
 
-diff --git a/drivers/dma/amba-pl08x.c b/drivers/dma/amba-pl08x.c
-index eea8bd33b4b7..e40766108787 100644
-=2D-- a/drivers/dma/amba-pl08x.c
-+++ b/drivers/dma/amba-pl08x.c
-@@ -2855,8 +2855,8 @@ static int pl08x_probe(struct amba_device *adev, con=
-st struct amba_id *id)
- 	}
+--FsqycuUB7fyG5ylo
+Content-Type: application/pgp-signature; name="signature.asc"
 
- 	/* Initialize physical channels */
--	pl08x->phy_chans =3D kzalloc((vd->channels * sizeof(*pl08x->phy_chans)),
--			GFP_KERNEL);
-+	pl08x->phy_chans =3D kcalloc(vd->channels, sizeof(*pl08x->phy_chans),
-+				   GFP_KERNEL);
- 	if (!pl08x->phy_chans) {
- 		ret =3D -ENOMEM;
- 		goto out_no_phychans;
-=2D-
-2.25.1
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZbaOowAKCRB4tDGHoIJi
+0m+3AP9YxodicQITyEr/b/mKRwodDU8jOXJAYo19Ub+5NXgh3QEAjNIVJuDzLiYE
+yllcgmsNqNpWgE9hTaQcUSvqNwkinQc=
+=hw/+
+-----END PGP SIGNATURE-----
+
+--FsqycuUB7fyG5ylo--
 

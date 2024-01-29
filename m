@@ -1,54 +1,54 @@
-Return-Path: <dmaengine+bounces-853-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-854-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 739CD840B4E
-	for <lists+dmaengine@lfdr.de>; Mon, 29 Jan 2024 17:26:25 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 794EF840B51
+	for <lists+dmaengine@lfdr.de>; Mon, 29 Jan 2024 17:26:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 29A491F23F74
-	for <lists+dmaengine@lfdr.de>; Mon, 29 Jan 2024 16:26:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AC0B01C228C8
+	for <lists+dmaengine@lfdr.de>; Mon, 29 Jan 2024 16:26:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81C8F156985;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E57AB156995;
 	Mon, 29 Jan 2024 16:26:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="k5GrHF+/"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Kq7zWzyG"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57B5E156960;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00273155A5F;
 	Mon, 29 Jan 2024 16:26:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706545571; cv=none; b=h7aECX0kOWG6dvsHMGxPLypHfbswFU3uOZvTyrJWknO1p5FvUFfs5JNrwVuJDym+uldO8Jv0bmNTyfM+ZR+Xobityl/7hWZRbxh0ic+Lt7PkTI+tbyiq+dSFc7qReOVj1xAuFYd2+nBmrdF930OuEpfKRJOyJJFmX9CF3ilRf2k=
+	t=1706545571; cv=none; b=FWa9TdkEA0fcWG+yiUiYwPmilUBszONfaidY/qCYiOQOdj2YP95GMkb4+6X0hhpHv2ZSYQuYoPsiPIgF/vuqdGQpdmEveuEc+aKUOaDNkQFLTS6WiM0J4wVr8UNA7t16p7RbTSd+DJjiZvYdODc/vRYChzEaY2McoHm+unycnng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706545571; c=relaxed/simple;
-	bh=QRCYGQMJR35x7Hogymwk07ORHyYx6BkNlkL42bEP7sI=;
+	bh=fqv4o+qKl3gS1s7xHmfm0lxwsPu6RFBo7Lq+u+UUsxM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=E8oFzBBOLqi3wZTHNd4i8Vi4uzE54YsTbBRiRYJGUNcZ2hhAa3W4634EgqhWem5xxuW4AuHs8uyGeK4D9E9HqKut48tNslifdqBrUNHuXmoeBfuSHxzPQzQe3qicBtzD8B0c599hzF31i7N2xl1CXZr2MXw7Cyy/3NJa6/3J0Hw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=k5GrHF+/; arc=none smtp.client-ip=217.70.183.196
+	 In-Reply-To:To:Cc; b=jtBVK3VHav3i5dZKK7hLJUDkfY2RgtTYZ3BTl4a4Okhu8B83pHeuA8MKaeI9vBkZqmdTzZq9L4RVQgpJzFP/ToYQtKw1CyZ3kn0aGyVDtMtAwUe36nQ57zoNxeaoOgUBVr4iDGCsS5BUmlA9iHciAvzFAw5GyXfXEIJXZuf9EKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Kq7zWzyG; arc=none smtp.client-ip=217.70.183.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 182D8E0010;
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A9A73E0012;
 	Mon, 29 Jan 2024 16:26:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1706545567;
+	t=1706545568;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Cl2LjMo9y4kvfDVQJV3DM0tMK1TINYKcgigqy6Qohec=;
-	b=k5GrHF+/cE2YcEU+sP/ZTqdhcWth22NgGjZKNYsBFnWS/VdP0SRYxEmA0wDLWXAVPK2Cve
-	br/QlNjk3a09/RA2WAjt2vrxplIjdT51/24S1d0MfNKe6h1pcm/zI1xIDeccSAyOSihSht
-	7zycuWtRCJ+vGt9A4uUAVQKBQboajZRqgEi0ix1BCX+/uCAKMsOwJIdFE91izfxoG99Aow
-	IoXb6QxhNjgQE+uWehybms87oNF9UbyaKRLc/ITeSY2M/beZCQGNFddZIYntp/y00rb/fH
-	SyZ80LWWLklTzYLdA4brhu48wFtND9xw9WUhcpHVC8/ctblqHNzDCB/PELotiQ==
+	bh=svngh7gavoOsAoTd14KvI+aVm1JHod9n5Mvh72UXNZY=;
+	b=Kq7zWzyGymSB4C0hKIBsi+TBs4qe86eZC9Mm5XNrRlLN3O7Azi8Tk8JpXUzAzkjHz7+8mG
+	U3vlauIOB3BY+whBKNcymcmD5Webw9voUAqV6BnHjPOaREEVfHRnaykm2+T643SZsMyplK
+	7+QWojGybHLSpdK0HjTiyyom6WFN/MTQI9fDeu71b4WlPWzAGHM06FRG+IvR5+io+/gQb2
+	Bz/QuD17zOhtwuCt6t7W97cgMF6MAHEolr+xcxAUipXHJrCWjXz+0OCZN4P+ZxnTGGj4Q4
+	WpLN2p+Wz9ivU642RHXGUzy6hUn/MdIjtzU+Tus+mMpq3AAks5tGMGMqNDyvWg==
 From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Mon, 29 Jan 2024 17:25:59 +0100
-Subject: [PATCH v7 3/6] dmaengine: dw-edma: HDMA_V0_REMOTEL_STOP_INT_EN
- typo fix
+Date: Mon, 29 Jan 2024 17:26:00 +0100
+Subject: [PATCH v7 4/6] dmaengine: dw-edma: Add HDMA remote interrupt
+ configuration
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -57,7 +57,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240129-b4-feature_hdma_mainline-v7-3-8e8c1acb7a46@bootlin.com>
+Message-Id: <20240129-b4-feature_hdma_mainline-v7-4-8e8c1acb7a46@bootlin.com>
 References: <20240129-b4-feature_hdma_mainline-v7-0-8e8c1acb7a46@bootlin.com>
 In-Reply-To: <20240129-b4-feature_hdma_mainline-v7-0-8e8c1acb7a46@bootlin.com>
 To: Manivannan Sadhasivam <mani@kernel.org>, 
@@ -72,36 +72,31 @@ Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 X-Mailer: b4 0.12.4
 X-GND-Sasl: kory.maincent@bootlin.com
 
-Fix "HDMA_V0_REMOTEL_STOP_INT_EN" typo error
+Only the local interruption was configured, remote interrupt was left
+behind. This patch fix it by setting stop and abort remote interrupts when
+the DW_EDMA_CHIP_LOCAL flag is not set.
 
 Fixes: e74c39573d35 ("dmaengine: dw-edma: Add support for native HDMA")
-Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
+Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
+ drivers/dma/dw-edma/dw-hdma-v0-core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Changes in v3:
-- Split the patch in two to differ bug fix and simple harmless typo.
-
-Changes in v6:
-- Mention the typo in the subject.
----
- drivers/dma/dw-edma/dw-hdma-v0-regs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/dma/dw-edma/dw-hdma-v0-regs.h b/drivers/dma/dw-edma/dw-hdma-v0-regs.h
-index a974abdf8aaf..eab5fd7177e5 100644
---- a/drivers/dma/dw-edma/dw-hdma-v0-regs.h
-+++ b/drivers/dma/dw-edma/dw-hdma-v0-regs.h
-@@ -15,7 +15,7 @@
- #define HDMA_V0_LOCAL_ABORT_INT_EN		BIT(6)
- #define HDMA_V0_REMOTE_ABORT_INT_EN		BIT(5)
- #define HDMA_V0_LOCAL_STOP_INT_EN		BIT(4)
--#define HDMA_V0_REMOTEL_STOP_INT_EN		BIT(3)
-+#define HDMA_V0_REMOTE_STOP_INT_EN		BIT(3)
- #define HDMA_V0_ABORT_INT_MASK			BIT(2)
- #define HDMA_V0_STOP_INT_MASK			BIT(0)
- #define HDMA_V0_LINKLIST_EN			BIT(0)
+diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+index 108f9127aaaa..04b0bcb6ded9 100644
+--- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
++++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+@@ -237,6 +237,8 @@ static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
+ 		tmp = GET_CH_32(dw, chan->dir, chan->id, int_setup) |
+ 		      HDMA_V0_STOP_INT_MASK | HDMA_V0_ABORT_INT_MASK |
+ 		      HDMA_V0_LOCAL_STOP_INT_EN | HDMA_V0_LOCAL_ABORT_INT_EN;
++		if (!(dw->chip->flags & DW_EDMA_CHIP_LOCAL))
++			tmp |= HDMA_V0_REMOTE_STOP_INT_EN | HDMA_V0_REMOTE_ABORT_INT_EN;
+ 		SET_CH_32(dw, chan->dir, chan->id, int_setup, tmp);
+ 		/* Channel control */
+ 		SET_CH_32(dw, chan->dir, chan->id, control1, HDMA_V0_LINKLIST_EN);
 
 -- 
 2.25.1

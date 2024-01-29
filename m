@@ -1,59 +1,60 @@
-Return-Path: <dmaengine+bounces-874-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-875-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2966284125A
-	for <lists+dmaengine@lfdr.de>; Mon, 29 Jan 2024 19:42:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 40BE184125E
+	for <lists+dmaengine@lfdr.de>; Mon, 29 Jan 2024 19:42:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5BA491C231F1
-	for <lists+dmaengine@lfdr.de>; Mon, 29 Jan 2024 18:42:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 72FBF1C23554
+	for <lists+dmaengine@lfdr.de>; Mon, 29 Jan 2024 18:42:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BF9A15D5D1;
-	Mon, 29 Jan 2024 18:35:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FC97156967;
+	Mon, 29 Jan 2024 18:36:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZYTT02aR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pkFF/wWx"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 113BB15D5CD;
-	Mon, 29 Jan 2024 18:35:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5407215DBBE;
+	Mon, 29 Jan 2024 18:36:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706553357; cv=none; b=Im5k0wEtu64xluaJVxItZ+6kqKpJsH6hhIFRntx/mkOM0+Xk3krtgTu4hxEB47LOXpGlFRUyH+ZNMXLk4a7jKek/cRko/r++9hC+r2vaA4lpFo1GtOV8PvheVHKe1ECJIT6woE04TVlK94gnRPAmGKMRljsD+2Hx8XG+eTUuFoc=
+	t=1706553362; cv=none; b=PC1OvhwN+FSbyU0xTuQbbVSZ+WahEEGHV26fwo5I8M+V7Dz84iK2UabVyMTW3fnuJ1yPiHnN/F5SrK9xycjW14VNuocMVMTo+yEGg93XmzCfcGsLsMrxBGDeFCDrUm3YrfQgFTrZIS1lPhnTKLZ05fE0j5qwDXhlkiWxNwxoNzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706553357; c=relaxed/simple;
-	bh=sHnTdcZPKggZ9cS+k/fUWyeM7AgLx2VIukC+7lqjp6c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ITvCAVQ2QyGDW8aK8gwmLKjs7IQO/wb9DpIKx0dTdF+hraATzX7q5cDZCgq7PueVg+X0rYp+m6ldEICjBO0hjUay4+XAhgBD5/fxxOYXXfkg6S72wCN4qf7LVTeukQ34QZBaR/VGpw1a7TpNApHCJlgg7DqbDU8J7bxEzFWfPgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZYTT02aR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F0E6C433C7;
-	Mon, 29 Jan 2024 18:35:56 +0000 (UTC)
+	s=arc-20240116; t=1706553362; c=relaxed/simple;
+	bh=TmHzqRdk/0Z19JkTcZYGsBTA7oxVAWrK/jTNv7xJCIw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=r1s0NFJvkOyuRS0jgjjEb/Jkz3lSF2fQINXAPZsoI6qoVH4Xw6k2ZEISf8tslDJXzi9FT2eWcvzmfDjtccIX2dtGWmj++gO2HyS4iH6LTTDtGNSllMLXCHU3vgUO0fixNEDDOhpVCQQhb1xTCBIo53MuSKrB8w6Yx/3u1u1OQqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pkFF/wWx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16FA1C433F1;
+	Mon, 29 Jan 2024 18:36:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706553356;
-	bh=sHnTdcZPKggZ9cS+k/fUWyeM7AgLx2VIukC+7lqjp6c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZYTT02aRIWBR4NoxeM5Ea52H0K0yDxOoZqcDHZh+IeWNSs/gBkfH22wbEq9NTSpcu
-	 T5gTzl3tnJXEI8+pLeh9nnW+MijiABmSzXUYfB4pS+NjCj5cD6v6yybW0uyxxq0llu
-	 /XrE2OuIqfKBHNXn8b5rVTIIwQkhZcMBe/12v4NkXQeztLP8wfo9VBM77e1YDImJeP
-	 nd/eVg6Yt1d65C5vvyGmuovXKD1ikWSB6VKn0F2FuGyca2YDDbN1v4/y/bocLOipuQ
-	 ysAYwhSnkb64Jx0UMsxzYOk5FKMsgxXWYCxhqPYqp2Cj/dT+fowAdO8cfOVIb19dRW
-	 MHFEJoGsrBTpA==
+	s=k20201202; t=1706553362;
+	bh=TmHzqRdk/0Z19JkTcZYGsBTA7oxVAWrK/jTNv7xJCIw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=pkFF/wWxIF1lWmMUplTX6lOEe6A5ec4s3UPhOprspq+Vb+zOZnu/PwnEWpLe3aDNM
+	 OmkQQ73bBSjX4HW71Zcet54r3pBq1wa1vpqHdDLxaRxigmPJ6KzDBB0v/qMRqJxDHz
+	 rtcOaJXNnuLIzrQQHaGpnH683YPdxaUdspQqj156JaT1k4d/2rSpXmsGhwTETDBBgc
+	 aY4wsgfouIOCyBOli5AjJFzb0K24biGeV+tP4o02Lk8KdJLJatS4CpvdF6VfJTxY4r
+	 PbUQYvdsDlRRLu/MTmQXT/nBhO62WT1/lxQ1qChZdrZN07CmqoS4J+cZ2HprzYJvPi
+	 mdqj7HprL1ZYA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Vinod Koul <vkoul@kernel.org>,
+Cc: Hector Martin <marcan@marcan.st>,
+	=?UTF-8?q?Martin=20Povi=C5=A1er?= <povik+lin@cutebit.org>,
+	Vinod Koul <vkoul@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	manivannan.sadhasivam@linaro.org,
+	sven@svenpeter.dev,
+	asahi@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
 	dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 10/10] dmaengine: dw-edma: increase size of 'name' in debugfs code
-Date: Mon, 29 Jan 2024 13:35:18 -0500
-Message-ID: <20240129183530.464274-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 1/5] dmaengine: apple-admac: Keep upper bits of REG_BUS_WIDTH
+Date: Mon, 29 Jan 2024 13:35:53 -0500
+Message-ID: <20240129183559.464502-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240129183530.464274-1-sashal@kernel.org>
-References: <20240129183530.464274-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -63,81 +64,53 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.14
+X-stable-base: Linux 6.1.75
 Content-Transfer-Encoding: 8bit
 
-From: Vinod Koul <vkoul@kernel.org>
+From: Hector Martin <marcan@marcan.st>
 
-[ Upstream commit cb95a4fa50bbc1262bfb7fea482388a50b12948f ]
+[ Upstream commit 306f5df81fcc89b462fbeb9dbe26d9a8ad7c7582 ]
 
-We seem to have hit warnings of 'output may be truncated' which is fixed
-by increasing the size of 'name'
+For RX channels, REG_BUS_WIDTH seems to default to a value of 0xf00, and
+macOS preserves the upper bits when setting the configuration in the
+lower ones. If we reset the upper bits to 0, this causes framing errors
+on suspend/resume (the data stream "tears" and channels get swapped
+around). Keeping the upper bits untouched, like the macOS driver does,
+fixes this issue.
 
-drivers/dma/dw-edma/dw-hdma-v0-debugfs.c: In function ‘dw_hdma_v0_debugfs_on’:
-drivers/dma/dw-edma/dw-hdma-v0-debugfs.c:125:50: error: ‘%d’ directive output may be truncated writing between 1 and 11 bytes into a region of size 8 [-Werror=format-truncation=]
-  125 |                 snprintf(name, sizeof(name), "%s:%d", CHANNEL_STR, i);
-      |                                                  ^~
-
-drivers/dma/dw-edma/dw-hdma-v0-debugfs.c: In function ‘dw_hdma_v0_debugfs_on’:
-drivers/dma/dw-edma/dw-hdma-v0-debugfs.c:142:50: error: ‘%d’ directive output may be truncated writing between 1 and 11 bytes into a region of size 8 [-Werror=format-truncation=]
-  142 |                 snprintf(name, sizeof(name), "%s:%d", CHANNEL_STR, i);
-      |                                                  ^~
-drivers/dma/dw-edma/dw-edma-v0-debugfs.c: In function ‘dw_edma_debugfs_regs_wr’:
-drivers/dma/dw-edma/dw-edma-v0-debugfs.c:193:50: error: ‘%d’ directive output may be truncated writing between 1 and 11 bytes into a region of size 8 [-Werror=format-truncation=]
-  193 |                 snprintf(name, sizeof(name), "%s:%d", CHANNEL_STR, i);
-      |                                                  ^~
-
+Signed-off-by: Hector Martin <marcan@marcan.st>
+Reviewed-by: Martin Povišer <povik+lin@cutebit.org>
+Signed-off-by: Martin Povišer <povik+lin@cutebit.org>
+Link: https://lore.kernel.org/r/20231029170704.82238-1-povik+lin@cutebit.org
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/dw-edma/dw-edma-v0-debugfs.c | 4 ++--
- drivers/dma/dw-edma/dw-hdma-v0-debugfs.c | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/dma/apple-admac.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
-index 0745d9e7d259..406f169b09a7 100644
---- a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
-+++ b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
-@@ -176,7 +176,7 @@ dw_edma_debugfs_regs_wr(struct dw_edma *dw, struct dentry *dent)
- 	};
- 	struct dentry *regs_dent, *ch_dent;
- 	int nr_entries, i;
--	char name[16];
-+	char name[32];
+diff --git a/drivers/dma/apple-admac.c b/drivers/dma/apple-admac.c
+index 4cf8da77bdd9..cac4532fe23a 100644
+--- a/drivers/dma/apple-admac.c
++++ b/drivers/dma/apple-admac.c
+@@ -56,6 +56,8 @@
  
- 	regs_dent = debugfs_create_dir(WRITE_STR, dent);
+ #define REG_BUS_WIDTH(ch)	(0x8040 + (ch) * 0x200)
  
-@@ -239,7 +239,7 @@ static noinline_for_stack void dw_edma_debugfs_regs_rd(struct dw_edma *dw,
- 	};
- 	struct dentry *regs_dent, *ch_dent;
- 	int nr_entries, i;
--	char name[16];
-+	char name[32];
++#define BUS_WIDTH_WORD_SIZE	GENMASK(3, 0)
++#define BUS_WIDTH_FRAME_SIZE	GENMASK(7, 4)
+ #define BUS_WIDTH_8BIT		0x00
+ #define BUS_WIDTH_16BIT		0x01
+ #define BUS_WIDTH_32BIT		0x02
+@@ -739,7 +741,8 @@ static int admac_device_config(struct dma_chan *chan,
+ 	struct admac_data *ad = adchan->host;
+ 	bool is_tx = admac_chan_direction(adchan->no) == DMA_MEM_TO_DEV;
+ 	int wordsize = 0;
+-	u32 bus_width = 0;
++	u32 bus_width = readl_relaxed(ad->base + REG_BUS_WIDTH(adchan->no)) &
++		~(BUS_WIDTH_WORD_SIZE | BUS_WIDTH_FRAME_SIZE);
  
- 	regs_dent = debugfs_create_dir(READ_STR, dent);
- 
-diff --git a/drivers/dma/dw-edma/dw-hdma-v0-debugfs.c b/drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
-index 520c81978b08..dcdc57fe976c 100644
---- a/drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
-+++ b/drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
-@@ -116,7 +116,7 @@ static void dw_hdma_debugfs_regs_ch(struct dw_edma *dw, enum dw_edma_dir dir,
- static void dw_hdma_debugfs_regs_wr(struct dw_edma *dw, struct dentry *dent)
- {
- 	struct dentry *regs_dent, *ch_dent;
--	char name[16];
-+	char name[32];
- 	int i;
- 
- 	regs_dent = debugfs_create_dir(WRITE_STR, dent);
-@@ -133,7 +133,7 @@ static void dw_hdma_debugfs_regs_wr(struct dw_edma *dw, struct dentry *dent)
- static void dw_hdma_debugfs_regs_rd(struct dw_edma *dw, struct dentry *dent)
- {
- 	struct dentry *regs_dent, *ch_dent;
--	char name[16];
-+	char name[32];
- 	int i;
- 
- 	regs_dent = debugfs_create_dir(READ_STR, dent);
+ 	switch (is_tx ? config->dst_addr_width : config->src_addr_width) {
+ 	case DMA_SLAVE_BUSWIDTH_1_BYTE:
 -- 
 2.43.0
 

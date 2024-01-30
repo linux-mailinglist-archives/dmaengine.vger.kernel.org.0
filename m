@@ -1,236 +1,142 @@
-Return-Path: <dmaengine+bounces-910-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-911-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 69FE4842D5A
-	for <lists+dmaengine@lfdr.de>; Tue, 30 Jan 2024 20:55:07 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 24701842DE1
+	for <lists+dmaengine@lfdr.de>; Tue, 30 Jan 2024 21:31:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8E66D1C2210E
-	for <lists+dmaengine@lfdr.de>; Tue, 30 Jan 2024 19:55:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9B7EE1F26F9C
+	for <lists+dmaengine@lfdr.de>; Tue, 30 Jan 2024 20:31:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC2C671B32;
-	Tue, 30 Jan 2024 19:54:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC3E379DD3;
+	Tue, 30 Jan 2024 20:31:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A5RzVUB7"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q+fMadDJ"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33B8769DFC;
-	Tue, 30 Jan 2024 19:54:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D909B79DD4;
+	Tue, 30 Jan 2024 20:30:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706644490; cv=none; b=sCEhltkd27C6mtDeRg5FhM57TR2AoS49h5IpWpIFG6bPIjhjySEzi19UKXrXM/xhQ1H3tMdPt0ABVz2E3whngja2MAQ+rH+/TCDjkHfGT9NJxT7mXTnUzPAMGiNCGdcaCnF/+dpoFZnUXIlh7Qe8hn8H2sGVVfzE2nUtuMUd0Ys=
+	t=1706646661; cv=none; b=CpsRxbxnibiyl2nN1akrCAghgaNz2Rr+l2sHcOCitSjbgmkLK5c4NMsDvs976mAEqjgZzYt35TeP+aWHo9vTDg58aAz42MrneOkQ7Yo5F+hktwKIeytEUeS3bXwDUhVj+MdefPvmtoK9IKJZ8Imd1lPJarADIZj/vcsA5Dx3sXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706644490; c=relaxed/simple;
-	bh=gPwbbno0aGugg781DXMwRoNug/UCpH5hFB/aMixfvwM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WRtY+b3dRBvHJ/JhshFYaKy5L1dU+20xt9BadqZB08eUnCiHrG4Z0Ay9b5XO6IYC08AJ6g7Xnqy3zEr77B0FkPqD+6+khO12Co2YwEHJLSXc3ql6Il11yY1g+NNTMwIw0N82pyq5ojEZT0i7xoRLOf4DbRBIMX0Qly6egEvwlnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A5RzVUB7; arc=none smtp.client-ip=209.85.219.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-68c420bf6f1so1325456d6.1;
-        Tue, 30 Jan 2024 11:54:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706644488; x=1707249288; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zQJp9jA6d6XZuU5QdlSPAbpEyuca5EDh5G5T6f/NIxE=;
-        b=A5RzVUB7l+6tjVIhR3dbs1k7WJxI2j8IkXK05deBRXcVrR7DVM5l0LAxd+fmfmB68N
-         NSnVtvkfbQamx4PNOx5vd60MkN2gEE9Etmzvnm9BEORwPzudT2ssa1xPHHIkbdNKIprt
-         8j+ZoIYJrgLPWHW00DKhOrbWBPDEJNaLBGH2h5sBJC/9n1A9gBztCP/BDHM2mgyFWjxq
-         2NJFMahVjboOatUpis9XxPLS7oo1s0oe6L/LQpLgVvodZ1tIwPfDvQh9PtYkRHSBvgPl
-         mibmxXqeidfYpjd6HKfGqUyS1Tmf6sxznfsssiT/MdF9I2ECwj/Y9k8U3ZpmjIScThlL
-         z9YQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706644488; x=1707249288;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zQJp9jA6d6XZuU5QdlSPAbpEyuca5EDh5G5T6f/NIxE=;
-        b=MdgLDtLnI1wY+r0yToZd/DgtxolpAfkvyLVI7BHE5nEJqywb1fuQAz+pVY8vgdMGxq
-         b7dXkQ757MVavTgqbbwZOoI5p/Yeq6qvenqA2WLOrdGeVtKyYru8DZqBIAZmm9aZ2Wy2
-         cNU3W6XL2Nn3B77eewkUv02Qylj7cyKuAbXVBZvvZmP4krDuG/jGqaXr/Ukj2ZJkjIs2
-         8/xJo5lEpoTcMiY/MxnQ9oDz6/hZBIUl31zZ7+v3Sd/+hZ+RqnX/3eh8iAuFJmZ6TzTQ
-         KPAFnLRubYv6AkMvIf6A0JvwpHnZbx4DAgZxupjkcjYNb612kPvOCJ5aMralCXeq868n
-         OH8g==
-X-Gm-Message-State: AOJu0YwESXhp/GXhh9cOjKqPcAHdFRawzIyCdAg0xnuBlb9ofdA6eQdw
-	MdKJk5CiWj2d+TauVefDVmQbe5GmNa7VNps2h0dFQZwx26grWndd
-X-Google-Smtp-Source: AGHT+IEYpRvCcOvTByPEbJxBYIEAA7nFLJ0D6RhnyNwbg/qeiqFvNHRR58UTfQQx7B1gLl7ssYxp7A==
-X-Received: by 2002:a05:6214:29ce:b0:681:7231:de7d with SMTP id gh14-20020a05621429ce00b006817231de7dmr2465910qvb.42.1706644488140;
-        Tue, 30 Jan 2024 11:54:48 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUUo9FEqdjEVzcXpX6Yk8Y2+ntQ7fJzvcC4CNNAUZ3/5ZljTHaby7QlbcBGP9/rGBLHt6iwkmPra8M9eShMflAujDVuzllXbi1B7P5KmPpbzcCyFJ+1xmQlAhQgpCzSo6Lx1aZV5M2clVBGUIL3P5jAxr9bXVood44kdqAGiQxjeNYao4wxK2nyIlJpW8s67SS4MBP8hPMcTeiQ+4nXgHrWFBFzCE7vy/q9bOefmDMD5e0UuDs17mF7IDKo3Gu5lRCKux922tvyq6ryRwQNIEEhTbj0DDILXGXitJgffGOTdrP5wEANSq+Wkf2FlxZozwDwAdzANeSLUun5Sy9jmibzU7XGJpIVb7KOcApMiJOItkhGgzWGJWJXeuEpicMFbmf8ml2dAJ8yEzX2GWlMwxm6/E8g8tnS7z5jJMYJpo75Qo2pmNJbXwqQBFYIvQ==
-Received: from fauth1-smtp.messagingengine.com (fauth1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id mc8-20020a056214554800b006819636ba87sm4716749qvb.7.2024.01.30.11.54.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jan 2024 11:54:47 -0800 (PST)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailfauth.nyi.internal (Postfix) with ESMTP id F33501200043;
-	Tue, 30 Jan 2024 14:54:46 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Tue, 30 Jan 2024 14:54:47 -0500
-X-ME-Sender: <xms:BlS5ZcnGCJI3T4OM8KlSdsaLdPmczQy2e9MiMWoIbW8tbC07wVwhuQ>
-    <xme:BlS5Zb1Vl-cUpCfEIkUwGtSRn_n7nzlnaLUpTo_W80oQEXDZwZXrCPtrxaDVayBv2
-    ORghb4rQXyZgVQ3Sw>
-X-ME-Received: <xmr:BlS5ZaqnE3qisdeyqU8bclsoqvUVoB7nYKakaz3J1xF1RBxyE4nuaOQwIEEkWA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrfedtjedgieefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggujgesthdtrodttddtvdenucfhrhhomhepuehoqhhu
-    nhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrg
-    htthgvrhhnpeeitdefvefhteeklefgtefhgeelkeefffelvdevhfehueektdevhfettddv
-    teevvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    gsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdei
-    gedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfih
-    igmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:BlS5ZYmLnOSye25CNTWbyhp5qppfvfZmR8zW6UmAZOri3_ZZkwce2A>
-    <xmx:BlS5Za1DlKhXI7lla6uFdN3w3L7bliYKNaQ5nvgKv6d0BFkxAkdVhw>
-    <xmx:BlS5ZfvaUOaKCCbCOWtxCpg46djAQYqW2nSCltRVOKyzyp01EVrE0w>
-    <xmx:BlS5ZUNX2shbwDSW9NRQenq3gC283Cp9Sp8hwtuDC2NnKwzsdLHCB1DL7eo>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 30 Jan 2024 14:54:46 -0500 (EST)
-Date: Tue, 30 Jan 2024 11:53:46 -0800
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>, Vinod Koul <vkoul@kernel.org>,
-	Dave Jiang <dave.jiang@intel.com>, dmaengine@vger.kernel.org,
-	linux-kernel <linux-kernel@vger.kernel.org>,
-	Nikhil Rao <nikhil.rao@intel.com>, Tony Zhu <tony.zhu@intel.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
-Subject: Re: [PATCH] dmaengine: idxd: Change wmb() to smp_wmb() when copying
- completion record to user space
-Message-ID: <ZblTystHpVkvjbkv@boqun-archlinux>
-References: <20240130025806.2027284-1-fenghua.yu@intel.com>
- <Zbk4wGNcB-g91Vr0@FVFF77S0Q05N>
+	s=arc-20240116; t=1706646661; c=relaxed/simple;
+	bh=2/KBwsPO3whpyFBvrCj3xnlg42ijgGLiSwxQ8/wfXis=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MwOaMrs4mBf64d2h3BhAJqvmzHmBMcfdJA7QB8nrlH4Ab0tsVCeKZCI1xCWYGYAwVYvV7o1PZmUh9DRR84zzv5q6dj+3HGuj9h44VJAnkZqqbiTVL/U1b7nm+Z2nqpbs+TMtnvGJZ3yfHvjofok5m7wPvRs7/fy254FqGo2hiw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q+fMadDJ; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706646660; x=1738182660;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=2/KBwsPO3whpyFBvrCj3xnlg42ijgGLiSwxQ8/wfXis=;
+  b=Q+fMadDJe8YwP3xy0vXz7mMKZnRZK+2qvMJQnVR7NYvZ+FoT12z4wksz
+   uXakEQ+Ijco4foHOK9xahKmGOJVB4GZ5u5p8sJ3BgevL3uE7TfsDgTR6i
+   5zH284/xPTwVRNRrZrAuSkKPSWpcpMpCQRDvHkP/p+mOmQfWtuZBY5PCk
+   TBDzqcKc6sfu0i6OKTOVbmc7xKo9ftiXYwOUFFmOVsDVp5EM/XdQrFW1R
+   bJL4Zf7PkL2a1TTJAIMRl7OhQTgbP9tm8+0xymUzQ+ZxezKNLeoH+ZyPl
+   3lh11iyz+9lV7uRlyzFGqcgYM0GHZ1BTY2Qh2lAJ4keOq3xy8VB77iado
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="10493952"
+X-IronPort-AV: E=Sophos;i="6.05,230,1701158400"; 
+   d="scan'208";a="10493952"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 12:30:59 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="907617882"
+X-IronPort-AV: E=Sophos;i="6.05,230,1701158400"; 
+   d="scan'208";a="907617882"
+Received: from anjishnu-mobl1.amr.corp.intel.com (HELO [10.212.150.19]) ([10.212.150.19])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 12:30:56 -0800
+Message-ID: <388be136-f91c-403a-99e1-7a10c5bf9691@intel.com>
+Date: Tue, 30 Jan 2024 12:30:56 -0800
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zbk4wGNcB-g91Vr0@FVFF77S0Q05N>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dmaengine: idxd: Change wmb() to smp_wmb() when copying
+ completion record to user space
+Content-Language: en-US
+To: Boqun Feng <boqun.feng@gmail.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>, Vinod Koul <vkoul@kernel.org>,
+ Dave Jiang <dave.jiang@intel.com>, dmaengine@vger.kernel.org,
+ linux-kernel <linux-kernel@vger.kernel.org>,
+ Nikhil Rao <nikhil.rao@intel.com>, Tony Zhu <tony.zhu@intel.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org
+References: <20240130025806.2027284-1-fenghua.yu@intel.com>
+ <Zbk4wGNcB-g91Vr0@FVFF77S0Q05N> <ZblTystHpVkvjbkv@boqun-archlinux>
+From: Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <ZblTystHpVkvjbkv@boqun-archlinux>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jan 30, 2024 at 05:58:24PM +0000, Mark Rutland wrote:
-> This patch might be ok (it looks reasonable as an optimization), but I think
-> the description of wmb() and smp_wmb() is incorrect. I also think that you're
+On 1/30/24 11:53, Boqun Feng wrote:
+>>> Fixes: b022f59725f0 ("dmaengine: idxd: add idxd_copy_cr() to copy user completion record during page fault handling")
+>>> Suggested-by: Nikhil Rao <nikhil.rao@intel.com>
+>>> Tested-by: Tony Zhu <tony.zhu@intel.com>
+> Since it has a "Fixes" tag and a "Tested-by" tag, I'd assume there has
+> been a test w/ and w/o this patch showing it can resolve a real issue
+> *constantly*? If so, I think x86 might be broken somewhere.
+> 
+> [Cc x86 maintainers]
 
-Agreed. A wmb() -> smp_wmb() change can only be an optimization rather
-than a fix.
-
-> missing an rmb()/smp_rmb()eor equivalent on the reader side.
-> 
-> On Mon, Jan 29, 2024 at 06:58:06PM -0800, Fenghua Yu wrote:
-> > wmb() is used to ensure status in the completion record is written
-> > after the rest of the completion record, making it visible to the user.
-> > However, on SMP systems, this may not guarantee visibility across
-> > different CPUs.
-> > 
-> > Considering this scenario that event log handler is running on CPU1 while
-> > user app is polling completion record (cr) status on CPU2:
-> > 
-> > 	CPU1				CPU2
-> > event log handler			user app
-> > 
-> > 					1. cr = 0 (status = 0)
-> > 2. copy X to user cr except "status"
-> > 3. wmb()
-> > 4. copy Y to user cr "status"
-> > 					5. poll status value Y
-> > 				 	6. read rest cr which is still 0.
-> > 					   cr handling fails
-> > 					7. cr value X visible now
-> > 
-> > Although wmb() ensure value Y is written and visible after X is written
-> > on CPU1, the order is not guaranteed on CPU2. So user app may see status
-> > value Y while cr value X is still not visible yet on CPU2. This will
-> > cause reading 0 from the rest of cr and cr handling fails.
-> 
-> The wmb() on CPU1 ensures the order of the reads, but you need an rmb() on CPU2
-> between reading the 'status' and 'rest' parts; otherwise CPU2 (or the
-> compiler!) is permitted to hoist the read of 'rest' early, before reading from
-> 'status', and hence you can end up with a sequence that is effectively:
-> 
-> 	CPU1				CPU2
->   event log handler			user app
-> 					
->   					1. cr = 0 (status = 0)
->   				 	6a. read rest cr which is still 0.
->   2. copy X to user cr except "status"
->   3. wmb()
->   4. copy Y to user cr "status"
->   					5. poll status value Y
->   					6b. cr handling fails
->   					7. cr value X visible now
-> 
-> Since this is all to regular cacheable memory, it's *sufficient* to use
-> smp_wmb() and smp_rmb(), but that's an optimization rather than an ordering
-> fix.
-> 
-> Note that on x86_64, TSO means that the stores are in-order (and so smp_wmb()
-> is just a compiler barrier), and IIUC loads are not reordered w.r.t. other
-> loads (and so smp_rmb() is also just a compiler barrier).
-> 
-> > Changing wmb() to smp_wmb() ensures Y is written after X on both CPU1
-> > and CPU2. This guarantees that user app can consume cr in right order.
-
-A barrier can only provide ordering for memory accesses on the same CPU,
-so this doesn't make any sense.
-
-> 
-> This implies that smp_wmb() is *stronger* than wmb(), whereas smp_wmb() is
-> actually *weaker* (e.g. on x86_64 wmb() is an sfence, whereas smp_wmb() is a
-> barrier()).
-> 
-> Thanks,
-> Mark.
-> 
-> > 
-> > Fixes: b022f59725f0 ("dmaengine: idxd: add idxd_copy_cr() to copy user completion record during page fault handling")
-> > Suggested-by: Nikhil Rao <nikhil.rao@intel.com>
-> > Tested-by: Tony Zhu <tony.zhu@intel.com>
-
-Since it has a "Fixes" tag and a "Tested-by" tag, I'd assume there has
-been a test w/ and w/o this patch showing it can resolve a real issue
-*constantly*? If so, I think x86 might be broken somewhere.
-
-[Cc x86 maintainers]
-
-Regards,
-Boqun
-
-> > Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-> > ---
-> >  drivers/dma/idxd/cdev.c | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
-> > index 77f8885cf407..9b7388a23cbe 100644
-> > --- a/drivers/dma/idxd/cdev.c
-> > +++ b/drivers/dma/idxd/cdev.c
-> > @@ -681,9 +681,10 @@ int idxd_copy_cr(struct idxd_wq *wq, ioasid_t pasid, unsigned long addr,
-> >  		 * Ensure that the completion record's status field is written
-> >  		 * after the rest of the completion record has been written.
-> >  		 * This ensures that the user receives the correct completion
-> > -		 * record information once polling for a non-zero status.
-> > +		 * record information on any CPU once polling for a non-zero
-> > +		 * status.
-> >  		 */
-> > -		wmb();
-> > +		smp_wmb();
-> >  		status = *(u8 *)cr;
-> >  		if (put_user(status, (u8 __user *)addr))
-> >  			left += status_size;
-> > -- 
-> > 2.37.1
-> > 
-> > 
+Fenghua, could you perhaps explain how this problem affects end users?
+What symptom was observed that made it obvious something was broken and
+what changes with this patch?
 

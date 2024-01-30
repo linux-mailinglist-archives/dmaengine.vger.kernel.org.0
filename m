@@ -1,50 +1,58 @@
-Return-Path: <dmaengine+bounces-904-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-905-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E35D6842B52
-	for <lists+dmaengine@lfdr.de>; Tue, 30 Jan 2024 18:58:49 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id BA990842B5D
+	for <lists+dmaengine@lfdr.de>; Tue, 30 Jan 2024 19:00:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A034128D053
-	for <lists+dmaengine@lfdr.de>; Tue, 30 Jan 2024 17:58:48 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5C6D4B23D7A
+	for <lists+dmaengine@lfdr.de>; Tue, 30 Jan 2024 18:00:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0E34156960;
-	Tue, 30 Jan 2024 17:58:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 451F314E2D8;
+	Tue, 30 Jan 2024 18:00:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="paUzmvVL"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7034B15530D;
-	Tue, 30 Jan 2024 17:58:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B53D86AD7;
+	Tue, 30 Jan 2024 18:00:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706637519; cv=none; b=dARlvcghBoY05kPVmLotNUjEmZusajIBHiyTgILTREU5fwg1FlTAMNftSdSNjzVQvLuxfR/DrQFSefITy+wxfUIyGMejEyUwVBEgYLWozYOoDTi7chpmBtSpWPVoXlC+NTlPpjCKXZ8/fMUG5jU6qlcQxgApo92qQGh8Xf4PhwI=
+	t=1706637611; cv=none; b=dt6IPSWF2Z7jiohIlPq7kBOZvrtti1uMTb8ewtHdOndY04Bdk7BihvsTKiC7bx9ifzMb80wQNP/PJjkvlOXPVcxUTcuS+jl1aLdtXBh7BHVF8IzdDIdX9ARlifum5QvwMh3rNw9GC+pv7AYcNB8SHUW3QhHXtmYeGr4fDreU790=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706637519; c=relaxed/simple;
-	bh=haZtEcAtM6RAOUswKZSwgnSzcYCz0/OtRj7b44h2iHM=;
+	s=arc-20240116; t=1706637611; c=relaxed/simple;
+	bh=Leq+aBcecMtjaU8wcgnaTXc3I/FzMFtv8L5SuzFFELQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LYJdIDwm4N4b9CxW4+Fn5w7NnmiP01uJ0wLtpDXgHfEEBYQytmJQuLOyRK7f1ZrxWSN70EBv+yW2Dtz0lNEd1t46gElhZJXBLUfOHH1p7XohhhAcwThMcktJky7aa83PUqgQ11PBw+Hu/1+GnA/cIa3gh293zM1tqOu/yjYfhy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D5AB7DA7;
-	Tue, 30 Jan 2024 09:59:18 -0800 (PST)
-Received: from FVFF77S0Q05N (unknown [10.57.45.140])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 820CA3F762;
-	Tue, 30 Jan 2024 09:58:32 -0800 (PST)
-Date: Tue, 30 Jan 2024 17:58:24 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Fenghua Yu <fenghua.yu@intel.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Dave Jiang <dave.jiang@intel.com>,
-	dmaengine@vger.kernel.org,
-	linux-kernel <linux-kernel@vger.kernel.org>,
-	Nikhil Rao <nikhil.rao@intel.com>, Tony Zhu <tony.zhu@intel.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH] dmaengine: idxd: Change wmb() to smp_wmb() when copying
- completion record to user space
-Message-ID: <Zbk4wGNcB-g91Vr0@FVFF77S0Q05N>
-References: <20240130025806.2027284-1-fenghua.yu@intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tthwtz9ztMa1BLGnrjqX9PIzDbUXAn1d+o2kBMyGOq7BrItIobVg53DhAJnrjtXLuunl8VU9RfPBRGYBAgyMnvF2o53ugkkzD/IrzeGaeMZ7f+wHKY4uR8qSWwq8RmHlv9ZjUsX1e4HONmxnvz7LFhLFt93b2Q4lDNh7jK5zOUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=paUzmvVL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62B83C433C7;
+	Tue, 30 Jan 2024 18:00:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706637609;
+	bh=Leq+aBcecMtjaU8wcgnaTXc3I/FzMFtv8L5SuzFFELQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=paUzmvVLfZOfghJHlUBgAPUByfg0YZeRwarVpJfH2+pVJOACdO9crnXtEgZnKiETs
+	 iTELXp5pLtub7qUSlJU2bXCEr9nMps8mEUph78TptJiouJq4fevg3Lq94ga67mgJsk
+	 QiJRTsrb6kOh74dD/+Cq98cO3dQv01yBT+iKQZsbkvTfBc3yOdkZLoKQxIYNWcYsSv
+	 QBJ3YMUMNphLMzWyVDgnOgJKW2n4nhcMwOd2pHmVyIhttYZFBtmy7Z8j+X9/aynEug
+	 PtftQSk30Or1ePBlG5XwZ5Id15mxdoCWq95q3PeyQ5RnrMAIF5EpSioMpYGuMVHf+/
+	 nh3xIEi4BaDJQ==
+Date: Tue, 30 Jan 2024 12:00:07 -0600
+From: Rob Herring <robh@kernel.org>
+To: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+Cc: vkoul@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, michal.simek@amd.com,
+	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	git@amd.com, Abin Joseph <abin.joseph@amd.com>
+Subject: Re: [PATCH] dt-bindings: dmaengine: xilinx_dma: Remove DMA client
+ binding
+Message-ID: <20240130180007.GA2062314-robh@kernel.org>
+References: <1705650270-503536-1-git-send-email-radhey.shyam.pandey@amd.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -53,101 +61,25 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240130025806.2027284-1-fenghua.yu@intel.com>
+In-Reply-To: <1705650270-503536-1-git-send-email-radhey.shyam.pandey@amd.com>
 
-This patch might be ok (it looks reasonable as an optimization), but I think
-the description of wmb() and smp_wmb() is incorrect. I also think that you're
-missing an rmb()/smp_rmb()eor equivalent on the reader side.
-
-On Mon, Jan 29, 2024 at 06:58:06PM -0800, Fenghua Yu wrote:
-> wmb() is used to ensure status in the completion record is written
-> after the rest of the completion record, making it visible to the user.
-> However, on SMP systems, this may not guarantee visibility across
-> different CPUs.
+On Fri, Jan 19, 2024 at 01:14:30PM +0530, Radhey Shyam Pandey wrote:
+> From: Abin Joseph <abin.joseph@amd.com>
 > 
-> Considering this scenario that event log handler is running on CPU1 while
-> user app is polling completion record (cr) status on CPU2:
+> It is not required to document dma consumer binding and its
+> example inside dma producer binding, so remove it.
 > 
-> 	CPU1				CPU2
-> event log handler			user app
-> 
-> 					1. cr = 0 (status = 0)
-> 2. copy X to user cr except "status"
-> 3. wmb()
-> 4. copy Y to user cr "status"
-> 					5. poll status value Y
-> 				 	6. read rest cr which is still 0.
-> 					   cr handling fails
-> 					7. cr value X visible now
-> 
-> Although wmb() ensure value Y is written and visible after X is written
-> on CPU1, the order is not guaranteed on CPU2. So user app may see status
-> value Y while cr value X is still not visible yet on CPU2. This will
-> cause reading 0 from the rest of cr and cr handling fails.
-
-The wmb() on CPU1 ensures the order of the reads, but you need an rmb() on CPU2
-between reading the 'status' and 'rest' parts; otherwise CPU2 (or the
-compiler!) is permitted to hoist the read of 'rest' early, before reading from
-'status', and hence you can end up with a sequence that is effectively:
-
-	CPU1				CPU2
-  event log handler			user app
-					
-  					1. cr = 0 (status = 0)
-  				 	6a. read rest cr which is still 0.
-  2. copy X to user cr except "status"
-  3. wmb()
-  4. copy Y to user cr "status"
-  					5. poll status value Y
-  					6b. cr handling fails
-  					7. cr value X visible now
-
-Since this is all to regular cacheable memory, it's *sufficient* to use
-smp_wmb() and smp_rmb(), but that's an optimization rather than an ordering
-fix.
-
-Note that on x86_64, TSO means that the stores are in-order (and so smp_wmb()
-is just a compiler barrier), and IIUC loads are not reordered w.r.t. other
-loads (and so smp_rmb() is also just a compiler barrier).
-
-> Changing wmb() to smp_wmb() ensures Y is written after X on both CPU1
-> and CPU2. This guarantees that user app can consume cr in right order.
-
-This implies that smp_wmb() is *stronger* than wmb(), whereas smp_wmb() is
-actually *weaker* (e.g. on x86_64 wmb() is an sfence, whereas smp_wmb() is a
-barrier()).
-
-Thanks,
-Mark.
-
-> 
-> Fixes: b022f59725f0 ("dmaengine: idxd: add idxd_copy_cr() to copy user completion record during page fault handling")
-> Suggested-by: Nikhil Rao <nikhil.rao@intel.com>
-> Tested-by: Tony Zhu <tony.zhu@intel.com>
-> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+> Signed-off-by: Abin Joseph <abin.joseph@amd.com>
+> Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
 > ---
->  drivers/dma/idxd/cdev.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
-> index 77f8885cf407..9b7388a23cbe 100644
-> --- a/drivers/dma/idxd/cdev.c
-> +++ b/drivers/dma/idxd/cdev.c
-> @@ -681,9 +681,10 @@ int idxd_copy_cr(struct idxd_wq *wq, ioasid_t pasid, unsigned long addr,
->  		 * Ensure that the completion record's status field is written
->  		 * after the rest of the completion record has been written.
->  		 * This ensures that the user receives the correct completion
-> -		 * record information once polling for a non-zero status.
-> +		 * record information on any CPU once polling for a non-zero
-> +		 * status.
->  		 */
-> -		wmb();
-> +		smp_wmb();
->  		status = *(u8 *)cr;
->  		if (put_user(status, (u8 __user *)addr))
->  			left += status_size;
-> -- 
-> 2.37.1
-> 
-> 
+> I am working on txt to yaml binding conversion and will send out
+> as followup patch.
+
+It is fine to just drop this in the conversion, but either way.
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+> ---
+>  .../bindings/dma/xilinx/xilinx_dma.txt        | 23 -------------------
+>  1 file changed, 23 deletions(-)
 

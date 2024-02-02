@@ -1,72 +1,72 @@
-Return-Path: <dmaengine+bounces-930-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-931-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4C0C846E45
-	for <lists+dmaengine@lfdr.de>; Fri,  2 Feb 2024 11:50:59 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C00C846E4A
+	for <lists+dmaengine@lfdr.de>; Fri,  2 Feb 2024 11:51:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8C468298FD0
-	for <lists+dmaengine@lfdr.de>; Fri,  2 Feb 2024 10:50:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 23EA9299003
+	for <lists+dmaengine@lfdr.de>; Fri,  2 Feb 2024 10:51:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80C77128808;
-	Fri,  2 Feb 2024 10:50:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61F7D13B7B4;
+	Fri,  2 Feb 2024 10:51:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VOXD2IKQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dvo8XzHi"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E45422067;
-	Fri,  2 Feb 2024 10:50:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72C6C22067;
+	Fri,  2 Feb 2024 10:51:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706871054; cv=none; b=I0k4byhEl8BhRIIiEAFRCx6XxxUOipDtaUopB0pr+krPp5PJ3356mO+dVuNUVv7tNRq/QOVX4iIidgPyAuZtKmaJUSxmGYwq5nnv0pqZ36bz+0ZAgU+P5sYtBwX5zg9FVcbqnh7dKefqH2eShdBtKGNeGO15Yhh0tZS6TIg/gu4=
+	t=1706871077; cv=none; b=AcMcGPkfCJ86RSlKWZylAgl9xvqzKOq+W4tKI6wR+KrNE8BBbaKf+WNKxAnkU6RywGzdvF/d2Di1GF89UNbJERcSUR8ogYRyqqt06QNJH4DJBrtkyAzI3apUmXxHNaXMx4xxF0K3N3RCg+ivh7acvb676AQamyKL/xiyqlYMTF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706871054; c=relaxed/simple;
-	bh=EU60AJ/wPOUddPzydcM0wLpZPFMiP7dkEkSpksaeKT0=;
+	s=arc-20240116; t=1706871077; c=relaxed/simple;
+	bh=IOY6464NxNU4brqTtjjX6NWMS6Lq4bFk/LCbg383F2A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sx6p8NlTbN0qyPXlg8BDJgrSv2hx29AAKHrtOaZv3eEwDe3sO0iUivQgoyVaF2oHn7cBRa31oFqQ8S5QJQbFk1AENLBitYRikixNl+OGFtFCTLZ7hRTDoXiLE2/CKxd7IsBGXKB8y4iSOJ94bPLJT6LhyBx/7KuX7zH2sc7sTX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VOXD2IKQ; arc=none smtp.client-ip=209.85.167.42
+	 Content-Type:Content-Disposition:In-Reply-To; b=VUIKcJAaZQZwuLrrfYHEKbPgyd8c91jGfJZzC6YzNEkvyV219IuL78XJH4mNO9ZZGQcuiVLG1/GSC+gl+tqC/JbgrgkviNoBgFMCEln0rSZKNeAjp7DUXf8NlIRJYVMLF7l3+/AW8ANQ9S1PcBV/plnGnWJ325ZtP+hwAUtJ0pM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dvo8XzHi; arc=none smtp.client-ip=209.85.208.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5113303e664so1295711e87.0;
-        Fri, 02 Feb 2024 02:50:52 -0800 (PST)
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2d05b06b5f9so22743181fa.3;
+        Fri, 02 Feb 2024 02:51:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706871050; x=1707475850; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1706871073; x=1707475873; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ezetAdrGUzi80LfrZYbUgN2AgU2wxiaRJ4LeWUJ80vI=;
-        b=VOXD2IKQaa0qmE7HlLGUcC+PZU7Yf+3rNY32GFLhKpRR9Zy5xcyLYYdMC/WVjisBng
-         A/2pYp2SVcvO+Plwj099bBdstcgHVtfr8IQUs4KVvFKFCq1tE/gYaNzvknBM46arfFRS
-         fxv79brTco8grpW5ZuUiKObYpvTljNNXHZyIyhZKEkijtfS6JOu5PyxyUi8QYAItxXMq
-         mqFQzwO8BNGRaO5hwAm0+Vc3UZXARfNPvCnfKoNoMWgVshwkERETsd7fraXR0Y4o46T6
-         iSWA8F3+tH/8pP7PaQGAQCAcRTg0hI0++ffv0kIxVQx74P/oHtIsceRFyarBeJxRq4JS
-         Y1Mw==
+        bh=kx4mIgU1jBfilctvZhlH5DYX3FWSs/9dFiVk8rkOVB0=;
+        b=Dvo8XzHiGKjF4p0kxiOA6W1fyeSj2rWZfQPo3i0fIUKa2vWaPtxWLQuSgjKFoqdIPP
+         p9tTYQ022FUr/9VRdxbWLnOs5CaTfvXPS8XgIZkqh5I9xQlddvJ9nuVMAj762UT4Hn13
+         nd2rfqDj7usjSCoPq0VcpqNAW7h96alzRGni2iFFkFT/43dkHLFsa1OuHgSPAY/49zqa
+         Yr+1KBcH12dcaRtsz7D8Fse+x/B8glXG1XjJ529UVwuMj6XqrGUq9nVlBouzYPQ/XyM6
+         LtJuCK0V0dXX80pBTzKGRjqUBZho2qizSjZhM7iK2P4VcnP5avwFUGkckoXa7lFwMfwP
+         GN/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706871050; x=1707475850;
+        d=1e100.net; s=20230601; t=1706871073; x=1707475873;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ezetAdrGUzi80LfrZYbUgN2AgU2wxiaRJ4LeWUJ80vI=;
-        b=wj+ddnZnkmuAxkCbUIrErIaLN8sFCeYMuog7jecNDBVOvMkbCGfE7QhE7mnRFm1Ioh
-         u4I7OJr8q1Aw99vLVoqFak5jwtt10JIzj5rzfBM6KLJvl5RtrxvwM9rMIRhaxLT5d/ok
-         em3IPKUM7aIkiU7wEAvjpnKw+gJ+AH423wls/h0Uj4rzGliEYc+kTuA2EyOup4zd8TGT
-         uoJV2ehWy25tleNiSw0FsRWsrstbzf23Oy6jdb5xAaA2rXrGRrPLRwMNE2TwHxeg67AZ
-         YX8GAzHtoUIWUJNH03BLpD0dJ70KPLEjDoXrdKi8Ikx6exqaW3DrdcotFZP3iYHAlk7d
-         Fu2Q==
-X-Gm-Message-State: AOJu0YzawIYQOP00/GBbhYvLYqHEsLr0eZLyNbC6L9SFzlrO9K8LPAqe
-	SzakoYHmN7krgILXfjDsSAVmSBqNbP5Cb8eeF+bKac+XIyztcOB1
-X-Google-Smtp-Source: AGHT+IFY7jsnsgdzXAniUyhH+YrHZWSG4wTqXL2QlAUjlS9x8Z4+/xFbrmQQNMg3zLD4lMrXE5cjdw==
-X-Received: by 2002:a05:6512:3482:b0:511:2e09:932a with SMTP id v2-20020a056512348200b005112e09932amr2955145lfr.41.1706871050260;
-        Fri, 02 Feb 2024 02:50:50 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCWj5ayWlnGWMF9RRgGQCgfJQbV9I/DbvuUKLSCAWq2E12OaHxHBPZ/rXf4JAAyKIGHNwf0pSFtjjP7tB8c0MaFozEwdtSjwEO0W455NWXoHb6R7R6wV3BN6rU5l9R2Qusn4YmAGq+gqjIvRKFvZ6W5cU9ikwMW8cxyy43gQHMWZ0sfJENwJ49WcH9jWeqaSN9ykTqbZOque/PJ5jscp/LRhASU18wRP3haiz9jRZEbRejkXHXtC92sAd7jIgw7opJEfORBQUFJs9DDjH3xPvmt4iQmqDjPZK393DJvcskFgd5QfYQnEjcUTWaJXRuhpQ8WMU+8zTtnLtD4Jp5LQ5up75cdX6N4DhKCCpHehb2QR8ObSjuAr6KDU0zIlAmt9jFCx9L6S0Twsh27Incm8518G4YFXA7+oydGqMAsls+5bIBzdbC8IRTNFhsrTh940mFyMNxLaxff0I4CWvsYTKq2JOysZ4H+RlgQn3TyyVX7n4NlBywQBwURGw7TimJc76siAPdV08SQA7abdNKVG59JMjOSVaBz6C1tGCMUQPFcL03sPplDC13pNHNe2z1pUAX8GvVxGS0+ZC9rdxmQM3FIuRY47iTEb1OU8SKRdJN/xLVYswAC1ZsEXEEEj3yc+sQX+gkZVVPhiXQQ1NfdKCYM3GTBswjiRNScimpk+52OT+6jjeGEy6UyWfFd8/QV8npV7yvldCGfNhWd3l34aEbltlGf061qmonQ7Ul8XSsXpbdLflft3BlnV6bUUXW1VwOcH4HFdInpDYb7TpbZHygr/6/hv+zYgDFKLgCOFiQd86fq24YrWbdN6Bs+BNcG25foLwVVkrMOnUbNe9DJQbH8FFmIznOiqJBV5mhFMyLYnH7YG0ghtQkUxIzHcPTaWnqQgW/1g1IQbhOPuBqucDmYHaD6N3hwr0dAE
+        bh=kx4mIgU1jBfilctvZhlH5DYX3FWSs/9dFiVk8rkOVB0=;
+        b=UIkxNWPZV06r0AIWLXCi0Z1ZJ/M1OurysbNS9nOnFhK7X9SP4lInsKbfZR+ZYeN76n
+         /ABomRVV3t6/q+eM0YgNgXVQj/fS2QXqHa+AEx2FOc5R3sRDnp2VpHUIX6r96AbxzCQb
+         nuBBypfrwnsRieVlEAkzVHHd3pdhJavjsHJsr8/0H1gS/xd7efoVpEGXxN4y62cjNZov
+         KBir15Ui1IcHpEjHxUV9GocJJazP3q0olBPxiUHiKgC4vNUeWfZAw6IHsZxAkAgJBZzJ
+         plKBanJm5/ScTMvaYl8HeICYXkKlgqNE7fw19m3W1Ks4WllNmQNGjTrc5Di3pKzRCH2t
+         IheA==
+X-Gm-Message-State: AOJu0Yxu+/QGv3h9vSAtjFYQQRuvQ6PtV14Tw3XFfzXklbcxzWur78pu
+	MR2RXmR3+9N8/3QFdYz/chq/6pp0RSDplwekNoH5pS137Zlf43ox
+X-Google-Smtp-Source: AGHT+IFBBAv4djkjIr64uSUqBaRgzJgTXmTCYRnLptqsty5wsmiMjBqHWBJy6fRmQbvifnYBus9v4Q==
+X-Received: by 2002:a2e:3c0f:0:b0:2d0:54ac:35a with SMTP id j15-20020a2e3c0f000000b002d054ac035amr990510lja.4.1706871073157;
+        Fri, 02 Feb 2024 02:51:13 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVHq+TVXuo5qAsWn2M07nkxLeFNz1PodEBo1sRZRYCLFTYpE77y15gWwkSE+lEJSNnsEz8coRLdXJ0rsUXI23QOOGaSE7TstJYQEssCaZCzD7BUaNHwBb4ziHp0BAKjLFKcuaZrIri7O/HWr7uHzLPxiNanY44oaCb+y9oCorn/VH1KFT/8PUCL5mm5q7A4BZR7aF0iXlnwmKlGElSdpwA8IvZltIj/CmBwcraguqkv4JWvzLa7daY4pmn9Aa2tyTEudKY5CsuK3RFE0KMQQXYx6Kid0jBaNRi7hzgiy6M3eRT6CF5ib9cI6Nd9G4ho8CTIXZODz6dyyzn/wLecTxt9tAe1fhnufBaMta04dEWL3BNhLa+E85Svbx3INGbslJNrQWK+JkdW/YKDSN9Kw5tAEYaU3Z7cJE13TgF1+1OVYC3VKcnPePhSjFPin/4szTTFLOIEqLGn/WUqjefN3R84AzA3VKP25fb7xAoK8QvPdF734i6yKutr9d2zhNOo5w+gfomo8GmdD+DZGcpgM7OxMEEb1T0nKNdp537/YSVomy/mkXFj1bNSC/dL44l1ffnWfZIUvkm4WQEq5RQPtsesZYfoGgv8FN5ozrguaVWsT3KG5oe6hi9641BykkJcAAbtfzaLF6DiKChg7hKLQPT5nupdw60gZUvEIKJY+DfGXg4OdeZf/TZ+YLs9Nif/c1tlQ50O8wJRFldJMnHWzze8rSmRN2B/aAyUM+k/mkHKfbG3CfHbAv9UMjwe5ZK9rDlpx2HvvaFF5a+t86lv47WVGibUCy3eFcLeSLXygnj/dCBlnFKQVFKurWYC9XtWn9C2Yn8uurLdZc+3grv1HGMII4tjfEk7YTZ3mXjgmg86MOc14fxUNdFAdwzI7RwkooVuqVXkWE3lTAtu3V0lwWYz9mGwoXI+iLvx
 Received: from mobilestation ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id d10-20020ac24c8a000000b0051121bedf76sm209502lfl.34.2024.02.02.02.50.48
+        by smtp.gmail.com with ESMTPSA id bx30-20020a05651c199e00b002d0511e7420sm241007ljb.6.2024.02.02.02.51.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Feb 2024 02:50:49 -0800 (PST)
-Date: Fri, 2 Feb 2024 13:50:47 +0300
+        Fri, 02 Feb 2024 02:51:12 -0800 (PST)
+Date: Fri, 2 Feb 2024 13:51:10 +0300
 From: Serge Semin <fancer.lancer@gmail.com>
 To: Mrinmay Sarkar <quic_msarkar@quicinc.com>
 Cc: vkoul@kernel.org, jingoohan1@gmail.com, conor+dt@kernel.org, 
@@ -79,11 +79,11 @@ Cc: vkoul@kernel.org, jingoohan1@gmail.com, conor+dt@kernel.org,
 	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
 	Kishon Vijay Abraham I <kishon@kernel.org>, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev
-Subject: Re: [PATCH v1 1/6] dmaengine: dw-edma: Pass 'struct dw_edma_chip' to
- irq_vector()
-Message-ID: <vlllubkhvya3po7xdxqrb555vox6xwbrujn3ekyka7rbtrhaum@uqvkofe3zlat>
+Subject: Re: [PATCH v1 2/6] dmaengine: dw-edma: Introduce helpers for getting
+ the eDMA/HDMA max channel count
+Message-ID: <yaf4wvjqy27whulyppep5qvw3cabfcvaoyxfn3p2i7khc3deyv@42pjna2sfmzr>
 References: <1705669223-5655-1-git-send-email-quic_msarkar@quicinc.com>
- <1705669223-5655-2-git-send-email-quic_msarkar@quicinc.com>
+ <1705669223-5655-3-git-send-email-quic_msarkar@quicinc.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -92,13 +92,12 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1705669223-5655-2-git-send-email-quic_msarkar@quicinc.com>
+In-Reply-To: <1705669223-5655-3-git-send-email-quic_msarkar@quicinc.com>
 
-On Fri, Jan 19, 2024 at 06:30:17PM +0530, Mrinmay Sarkar wrote:
+On Fri, Jan 19, 2024 at 06:30:18PM +0530, Mrinmay Sarkar wrote:
 > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > 
-> eDMA client drivers defining the irq_vector() callback need to access the
-> members of dw_edma_chip structure. So let's pass that pointer instead.
+> Add common helpers for getting the eDMA/HDMA max channel count.
 
 See my comment to the patch 4:
 https://lore.kernel.org/linux-pci/qfdsnz7louqdrs6mhz72o6mzjo66kw63vtlhgpz6hgqfyyzyhq@tge3r7mvwtw3/
@@ -109,122 +108,96 @@ https://lore.kernel.org/linux-pci/qfdsnz7louqdrs6mhz72o6mzjo66kw63vtlhgpz6hgqfyy
 > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
 > ---
->  drivers/dma/dw-edma/dw-edma-core.c           | 11 +++++------
->  drivers/dma/dw-edma/dw-edma-pcie.c           |  4 ++--
->  drivers/pci/controller/dwc/pcie-designware.c |  4 ++--
->  include/linux/dma/edma.h                     |  3 ++-
->  4 files changed, 11 insertions(+), 11 deletions(-)
+>  drivers/dma/dw-edma/dw-edma-core.c           | 18 ++++++++++++++++++
+>  drivers/pci/controller/dwc/pcie-designware.c |  6 +++---
+>  include/linux/dma/edma.h                     | 14 ++++++++++++++
+>  3 files changed, 35 insertions(+), 3 deletions(-)
 > 
 > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-> index 6823624..7fe1c19 100644
+> index 7fe1c19..2bd6e43 100644
 > --- a/drivers/dma/dw-edma/dw-edma-core.c
 > +++ b/drivers/dma/dw-edma/dw-edma-core.c
-> @@ -849,7 +849,7 @@ static int dw_edma_irq_request(struct dw_edma *dw,
->  
->  	if (chip->nr_irqs == 1) {
->  		/* Common IRQ shared among all channels */
-> -		irq = chip->ops->irq_vector(dev, 0);
-> +		irq = chip->ops->irq_vector(chip, 0);
->  		err = request_irq(irq, dw_edma_interrupt_common,
->  				  IRQF_SHARED, dw->name, &dw->irq[0]);
->  		if (err) {
-> @@ -874,7 +874,7 @@ static int dw_edma_irq_request(struct dw_edma *dw,
->  		dw_edma_add_irq_mask(&rd_mask, *rd_alloc, dw->rd_ch_cnt);
->  
->  		for (i = 0; i < (*wr_alloc + *rd_alloc); i++) {
-> -			irq = chip->ops->irq_vector(dev, i);
-> +			irq = chip->ops->irq_vector(chip, i);
->  			err = request_irq(irq,
->  					  i < *wr_alloc ?
->  						dw_edma_interrupt_write :
-> @@ -895,7 +895,7 @@ static int dw_edma_irq_request(struct dw_edma *dw,
->  
->  err_irq_free:
->  	for  (i--; i >= 0; i--) {
-> -		irq = chip->ops->irq_vector(dev, i);
-> +		irq = chip->ops->irq_vector(chip, i);
->  		free_irq(irq, &dw->irq[i]);
->  	}
->  
-> @@ -975,7 +975,7 @@ int dw_edma_probe(struct dw_edma_chip *chip)
->  
->  err_irq_free:
->  	for (i = (dw->nr_irqs - 1); i >= 0; i--)
-> -		free_irq(chip->ops->irq_vector(dev, i), &dw->irq[i]);
-> +		free_irq(chip->ops->irq_vector(chip, i), &dw->irq[i]);
->  
+> @@ -902,6 +902,24 @@ static int dw_edma_irq_request(struct dw_edma *dw,
 >  	return err;
 >  }
-> @@ -984,7 +984,6 @@ EXPORT_SYMBOL_GPL(dw_edma_probe);
->  int dw_edma_remove(struct dw_edma_chip *chip)
+>  
+> +static u32 dw_edma_get_max_ch(enum dw_edma_map_format mf, enum dw_edma_dir dir)
+> +{
+> +	if (mf == EDMA_MF_HDMA_NATIVE)
+> +		return HDMA_MAX_NR_CH;
+> +
+> +	return dir == EDMA_DIR_WRITE ? EDMA_MAX_WR_CH : EDMA_MAX_RD_CH;
+> +}
+> +
+> +u32 dw_edma_get_max_rd_ch(enum dw_edma_map_format mf)
+> +{
+> +	return dw_edma_get_max_ch(mf, EDMA_DIR_READ);
+> +}
+> +
+> +u32 dw_edma_get_max_wr_ch(enum dw_edma_map_format mf)
+> +{
+> +	return dw_edma_get_max_ch(mf, EDMA_DIR_WRITE);
+> +}
+> +
+>  int dw_edma_probe(struct dw_edma_chip *chip)
 >  {
->  	struct dw_edma_chan *chan, *_chan;
-> -	struct device *dev = chip->dev;
->  	struct dw_edma *dw = chip->dw;
->  	int i;
->  
-> @@ -997,7 +996,7 @@ int dw_edma_remove(struct dw_edma_chip *chip)
->  
->  	/* Free irqs */
->  	for (i = (dw->nr_irqs - 1); i >= 0; i--)
-> -		free_irq(chip->ops->irq_vector(dev, i), &dw->irq[i]);
-> +		free_irq(chip->ops->irq_vector(chip, i), &dw->irq[i]);
->  
->  	/* Deregister eDMA device */
->  	dma_async_device_unregister(&dw->dma);
-> diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-> index 1c60437..2b13725 100644
-> --- a/drivers/dma/dw-edma/dw-edma-pcie.c
-> +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-> @@ -90,9 +90,9 @@ static const struct dw_edma_pcie_data snps_edda_data = {
->  	.rd_ch_cnt			= 2,
->  };
->  
-> -static int dw_edma_pcie_irq_vector(struct device *dev, unsigned int nr)
-> +static int dw_edma_pcie_irq_vector(struct dw_edma_chip *chip, unsigned int nr)
->  {
-> -	return pci_irq_vector(to_pci_dev(dev), nr);
-> +	return pci_irq_vector(to_pci_dev(chip->dev), nr);
->  }
->  
->  static u64 dw_edma_pcie_address(struct device *dev, phys_addr_t cpu_addr)
+>  	struct device *dev;
 > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 250cf7f..eca047a 100644
+> index eca047a..96575b8 100644
 > --- a/drivers/pci/controller/dwc/pcie-designware.c
 > +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -858,9 +858,9 @@ static u32 dw_pcie_readl_dma(struct dw_pcie *pci, u32 reg)
->  	return val;
->  }
->  
-> -static int dw_pcie_edma_irq_vector(struct device *dev, unsigned int nr)
-> +static int dw_pcie_edma_irq_vector(struct dw_edma_chip *edma, unsigned int nr)
->  {
-> -	struct platform_device *pdev = to_platform_device(dev);
-> +	struct platform_device *pdev = to_platform_device(edma->dev);
+> @@ -864,7 +864,7 @@ static int dw_pcie_edma_irq_vector(struct dw_edma_chip *edma, unsigned int nr)
 >  	char name[6];
 >  	int ret;
 >  
+> -	if (nr >= EDMA_MAX_WR_CH + EDMA_MAX_RD_CH)
+> +	if (nr >= dw_edma_get_max_rd_ch(edma->mf) + dw_edma_get_max_wr_ch(edma->mf))
+>  		return -EINVAL;
+>  
+>  	ret = platform_get_irq_byname_optional(pdev, "dma");
+> @@ -923,8 +923,8 @@ static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
+>  	pci->edma.ll_rd_cnt = FIELD_GET(PCIE_DMA_NUM_RD_CHAN, val);
+>  
+>  	/* Sanity check the channels count if the mapping was incorrect */
+> -	if (!pci->edma.ll_wr_cnt || pci->edma.ll_wr_cnt > EDMA_MAX_WR_CH ||
+> -	    !pci->edma.ll_rd_cnt || pci->edma.ll_rd_cnt > EDMA_MAX_RD_CH)
+> +	if (!pci->edma.ll_wr_cnt || pci->edma.ll_wr_cnt > dw_edma_get_max_wr_ch(pci->edma.mf) ||
+> +	    !pci->edma.ll_rd_cnt || pci->edma.ll_rd_cnt > dw_edma_get_max_rd_ch(pci->edma.mf))
+>  		return -EINVAL;
+>  
+>  	return 0;
 > diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
-> index 3080747..7197a58 100644
+> index 7197a58..550f6a4 100644
 > --- a/include/linux/dma/edma.h
 > +++ b/include/linux/dma/edma.h
-> @@ -16,6 +16,7 @@
->  #define EDMA_MAX_RD_CH                                  8
+> @@ -106,6 +106,9 @@ struct dw_edma_chip {
+>  #if IS_REACHABLE(CONFIG_DW_EDMA)
+>  int dw_edma_probe(struct dw_edma_chip *chip);
+>  int dw_edma_remove(struct dw_edma_chip *chip);
+> +
+> +u32 dw_edma_get_max_rd_ch(enum dw_edma_map_format mf);
+> +u32 dw_edma_get_max_wr_ch(enum dw_edma_map_format mf);
+>  #else
+>  static inline int dw_edma_probe(struct dw_edma_chip *chip)
+>  {
+> @@ -116,6 +119,17 @@ static inline int dw_edma_remove(struct dw_edma_chip *chip)
+>  {
+>  	return 0;
+>  }
+> +
+> +static inline u32 dw_edma_get_max_rd_ch(enum dw_edma_map_format mf)
+> +{
+> +	return 0;
+> +}
+> +
+> +static inline u32 dw_edma_get_max_wr_ch(enum dw_edma_map_format mf)
+> +{
+> +	return 0;
+> +}
+> +
+>  #endif /* CONFIG_DW_EDMA */
 >  
->  struct dw_edma;
-> +struct dw_edma_chip;
->  
->  struct dw_edma_region {
->  	u64		paddr;
-> @@ -41,7 +42,7 @@ struct dw_edma_region {
->   *			automatically.
->   */
->  struct dw_edma_plat_ops {
-> -	int (*irq_vector)(struct device *dev, unsigned int nr);
-> +	int (*irq_vector)(struct dw_edma_chip *chip, unsigned int nr);
->  	u64 (*pci_address)(struct device *dev, phys_addr_t cpu_addr);
->  };
->  
+>  #endif /* _DW_EDMA_H */
 > -- 
 > 2.7.4
 > 

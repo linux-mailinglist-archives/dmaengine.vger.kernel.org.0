@@ -1,166 +1,103 @@
-Return-Path: <dmaengine+bounces-934-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-935-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3C9184748C
-	for <lists+dmaengine@lfdr.de>; Fri,  2 Feb 2024 17:19:59 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D3BC847574
+	for <lists+dmaengine@lfdr.de>; Fri,  2 Feb 2024 17:57:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 60CD11F21D16
-	for <lists+dmaengine@lfdr.de>; Fri,  2 Feb 2024 16:19:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 088FF1F225F2
+	for <lists+dmaengine@lfdr.de>; Fri,  2 Feb 2024 16:57:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47E0F1482EF;
-	Fri,  2 Feb 2024 16:19:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6BDF1482F9;
+	Fri,  2 Feb 2024 16:57:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bHw0DS2T"
+	dkim=pass (2048-bit key) header.d=gigaio-com.20230601.gappssmtp.com header.i=@gigaio-com.20230601.gappssmtp.com header.b="PGUSzw+P"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221291482EC
-	for <dmaengine@vger.kernel.org>; Fri,  2 Feb 2024 16:19:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDBB61482F8
+	for <dmaengine@vger.kernel.org>; Fri,  2 Feb 2024 16:57:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706890788; cv=none; b=fJzx4gbu0qQLMlJ4ip+1JQ56ayrw5yvS/odcCqw3szvuk09LinXrMZYpAR20KmfMw4W50SQYnLzJUIFD8ysxmboTwL+OOwO5RnLLpTolbfDGJWOEAGBujVm0lUh54HISYOfx66SeLboVY4GlqJh9qzfirB08dfc0mUD3gRzBAeQ=
+	t=1706893036; cv=none; b=AvGxWm0/45fUKk+0QPqcgyxlssPqQENBk5t98McSWVC9MV2ZUtYCxif0XekaSc+yLurG8ma67A9sERNteRdElthnbyU+Q6S0VtRqQCRWhDpAAPtDJ25U1BmRa7f1pq5gTMCBHcMBIvnXsgrA7mZiulD9HkSGZOWIta8EQeLNdcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706890788; c=relaxed/simple;
-	bh=3jWTcJQ2ZaJDa1JOha3/9xpKiMZarYUJeE5FmnGvkaM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=euxI7FVT/23bOvXj1KEjQr5rLBkTgeuy3KHt1P49QBx4FGio/IqF9Lp9cjvSyyG7kBUkqB+HAD8cwyE8W4lzllEr18QWu+z/i7xmg0r7a5Qh+Iqif4DRPM7R558GzK46/2/LZjmUwr5N0biNnqVXjp9BSE5RErXGmKfammIkEoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bHw0DS2T; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26EA7C43609;
-	Fri,  2 Feb 2024 16:19:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706890787;
-	bh=3jWTcJQ2ZaJDa1JOha3/9xpKiMZarYUJeE5FmnGvkaM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bHw0DS2TaQBKXDQKeffRLCZCgjMba8rtyLYh8lg2HYHU+y/P0XnOGdLkpnTOgzj2z
-	 3Y4Q9n0Kg31F4k8iiBU//hY3v+62Lnda23baoLVP9+jgzbxq9fxE7shhBE05eEEdBn
-	 7vsVhadeVjVHtIL8LojZOFNh55UkM1l5CMVCm+lXXxK3CD2SVBjZASifnC8dWwZC0r
-	 m5sAV7SD/Ou8oh02+Qv0+Hb4Ga0DbqL8+ISKM7zlkDFZcX3gU4fuL7v/cjt5Rsiea5
-	 dBKmcd1GEdhB+0yBpjGIaoCGgkOv7veiYAvx73OT5ncPlWlMC6jjDKphQG5X99IvHp
-	 ZHp62+BcM/Eew==
-Date: Fri, 2 Feb 2024 17:19:44 +0100
-From: Vinod Koul <vkoul@kernel.org>
-To: Tudor Ambarus <tudor.ambarus@linaro.org>
-Cc: dmaengine@vger.kernel.org,
-	Ludovic Desroches <ludovic.desroches@microchip.com>
-Subject: Re: [PATCH] dmaengine: at_hdmac: add missing kernel-doc style
- description
-Message-ID: <Zb0WINaX6X58K91u@matsya>
-References: <20240130163216.633034-1-vkoul@kernel.org>
- <acd56301-d7b1-4218-9f89-eccc283a9c7e@linaro.org>
+	s=arc-20240116; t=1706893036; c=relaxed/simple;
+	bh=fDK3fO6SzLEkn0PyA2smu3PbHzCIqdjXGL2c3LSqC44=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=aIq214oQxy03BsYUW+TlH4/9CcuQwbZBvCkYKrHXk84uRcatazcLf7eVCI7S0CjX33hWqRm7pGtOQTb+1ViWRv/Q/iIigyaI2ydKpVra1RLoTYzmV5FAXxAP+8pMmwqDnUQxSoExxssDk4l5Q22GiPdgATHn52ny0FIqCqFnhYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gigaio.com; spf=pass smtp.mailfrom=gigaio.com; dkim=pass (2048-bit key) header.d=gigaio-com.20230601.gappssmtp.com header.i=@gigaio-com.20230601.gappssmtp.com header.b=PGUSzw+P; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gigaio.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gigaio.com
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a370315191dso113092066b.2
+        for <dmaengine@vger.kernel.org>; Fri, 02 Feb 2024 08:57:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gigaio-com.20230601.gappssmtp.com; s=20230601; t=1706893033; x=1707497833; darn=vger.kernel.org;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=l/j2yffF9APVtday5fePGXWrTMYep/RttzWXs8NSL4Y=;
+        b=PGUSzw+PaV/AUdpHf+ofvyyPIkI7hB8OeC/QpuJijkq1VYEwc78bBzRRG+QKXvx5gP
+         YwcLGs7g4qBrvhdBxz1anJ662YPhxJkPg4bULuz3oQVNUYVe1pFFQtvMZp8C2q2LDTId
+         0D/K3Nxp/A1Wev77WJhym5bm+QCnNVc5fV0HLQ1Bi9GfnnbQsLW9ahF8yYiJwS9SbQxJ
+         DW50rZ3mg3/4y4tpiP385iXmS7OjTN1ybl4evV9SMxGZAmCLEaBo8Wbl524A7KxttCym
+         hVxpTkamK2nusWGLNYAuO0TXgDW6FARlYEVigZTD7Vm9+xRrFQ+nMa8bjVuh3hghnlzP
+         lHVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706893033; x=1707497833;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=l/j2yffF9APVtday5fePGXWrTMYep/RttzWXs8NSL4Y=;
+        b=lnhgBRMHXETsotaJS6KA6J9ZG7v3ArGCvYMwPUPUqYD+ZOdnOqTD0TaHpMMObrvw4C
+         ISNnU70JUNCkQUr1Vi+2PMngAQz4KY7NW4aU2+4D6EG7Nw4sd0SSeiy1qBgmmZbazVk8
+         S+lCAPBiL5CAg5i4TOtgA10ZQ2DTIlyt0e2iwiK2/s7w+aKee4zfxlg1sW4t+R2Tralx
+         eFiAEsLssy0A9+hZrKZsCRbgD9fnWrRVQcLLgXJAWI127DTu7y9EdXXh2IrKpmSumYo3
+         h8bjLY7n6Dfwesn3+9b9z/SWSUKpNcJIFdviqCMK5xRZRrc7tu6YPZoD4/zlVxHJbGuj
+         cf4A==
+X-Gm-Message-State: AOJu0YyCvL0VgWNiPAGML5uj0h5micCkpQUaNdyoHuGR0GUk1SXwhvPy
+	3v9P8e3TplzqEbKjTsGuIeaU+TTp3TYYtcAEzXHMNbUsf83pz0j7nr0tKMcuvtM=
+X-Google-Smtp-Source: AGHT+IGuFgYOFuUc56jQOFR7ubtKGaDB+sFkQl2PqLIAWXKZ9jk10FiP5P+v/t2JFhMf1qY/W9T6dw==
+X-Received: by 2002:a17:906:7f17:b0:a35:65c3:50f7 with SMTP id d23-20020a1709067f1700b00a3565c350f7mr4168000ejr.28.1706893033048;
+        Fri, 02 Feb 2024 08:57:13 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCUL29IQWmaEBmJeO+3JWP/VTWZ/4dk8Vnzrz/7/hjZW887rBEbxLbG3EsBkUxXWaRiIbiLvnW39969OJePOh6iOROyRR1OCaGmTNsi3unbNezNytujmjMpcXPsBgA08G/FfYpBHTJQprcne1Lu6ueZkPkQu1i32NcSojFulUNiLegUL
+Received: from [10.0.0.11] ([46.151.20.179])
+        by smtp.gmail.com with ESMTPSA id wn7-20020a170907068700b00a2e9f198cffsm1047379ejb.72.2024.02.02.08.57.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 Feb 2024 08:57:12 -0800 (PST)
+Message-ID: <1f0cdf3c-be91-427f-86eb-4982de13e446@gigaio.com>
+Date: Fri, 2 Feb 2024 17:57:12 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <acd56301-d7b1-4218-9f89-eccc283a9c7e@linaro.org>
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Sanjay R Mehta <sanju.mehta@amd.com>, Gary R Hook <gary.hook@amd.com>,
+ Tom Lendacky <thomas.lendacky@amd.com>
+Cc: dmaengine@vger.kernel.org, Eric Pilmore <epilmore@gigaio.com>,
+ tstruk@gigaio.com
+From: Tadeusz Struk <tstruk@gigaio.com>
+Subject: Using PTDMA driver for generic DMA
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Toudor,
+Hello,
+I'm trying to use the AMD PTDMA engine for generic data transfers,
+but I can't get it to work.
+It fails for me with "ptdma 0000:52:00.2: PTDMA error: (null) (0x27)"
+which, I'm guessing, translates to "ERR 39: ODMA0_AXI_DECERR"
+After some research I've found a note in drivers/dma/ptdma/Kconfig,
+which says that "...this DMA controller is intended to be used with
+AMD Non-Transparent Bridge devices and not for general purpose 
+peripheral DMA."
+My question is, what is the "ERR 39: ODMA0_AXI_DECERR", and is it even
+possible to use the PTDMA engine to talk to anything else other than
+AMD NTB?
 
-On 31-01-24, 08:28, Tudor Ambarus wrote:
-> 
-> Hi, Vinod,
-> 
-> On 1/30/24 16:32, Vinod Koul wrote:
-> > We get following warning with W=1:
-> > 
-> > drivers/dma/at_hdmac.c:243: warning: Function parameter or struct member 'boundary' not described in 'at_desc'
-> > drivers/dma/at_hdmac.c:243: warning: Function parameter or struct member 'dst_hole' not described in 'at_desc'
-> > drivers/dma/at_hdmac.c:243: warning: Function parameter or struct member 'src_hole' not described in 'at_desc'
-> > drivers/dma/at_hdmac.c:243: warning: Function parameter or struct member 'memset_buffer' not described in 'at_desc'
-> > drivers/dma/at_hdmac.c:243: warning: Function parameter or struct member 'memset_paddr' not described in 'at_desc'
-> > drivers/dma/at_hdmac.c:243: warning: Function parameter or struct member 'memset_vaddr' not described in 'at_desc'
-> > drivers/dma/at_hdmac.c:255: warning: Enum value 'ATC_IS_PAUSED' not described in enum 'atc_status'
-> > drivers/dma/at_hdmac.c:255: warning: Enum value 'ATC_IS_CYCLIC' not described in enum 'atc_status'
-> > drivers/dma/at_hdmac.c:287: warning: Function parameter or struct member 'cyclic' not described in 'at_dma_chan'
-> > drivers/dma/at_hdmac.c:350: warning: Function parameter or struct member 'memset_pool' not described in 'at_dma'
-> > 
-> > Fix this by adding the required description and also drop unused struct
-> > member 'cyclic' in 'at_dma_chan'
-> > 
-> 
-> Thanks for fixing these! Few nits below that you may consider while
-> applying.
-> 
-> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> > ---
-> >  drivers/dma/at_hdmac.c | 11 ++++++++++-
-> >  1 file changed, 10 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/dma/at_hdmac.c b/drivers/dma/at_hdmac.c
-> > index 6bad536e0492..57d0697ad194 100644
-> > --- a/drivers/dma/at_hdmac.c
-> > +++ b/drivers/dma/at_hdmac.c
-> > @@ -224,6 +224,12 @@ struct atdma_sg {
-> >   * @total_len: total transaction byte count
-> >   * @sglen: number of sg entries.
-> >   * @sg: array of sgs.
-> > + * @boundary: Interleaved dma boundary
-> how about: number of transfers to perform before the automatic address
-> increment operation
-> > + * @dst_hole: Interleaved dma destination hole
-> how about: value to add to the destination address when the boundary has
-> been reached
-> > + * @src_hole: Interleaved dma source hole
-> 
-> and here the same, but for source
-> > + * @memset_buffer: buffer for memset
-> how about: buffer used for the memset operation
-> > + * @memset_paddr: paddr for buffer for memset
-> 
-> how about: physical address of the buffer used for the memset operation
-> 
-> > + * @memset_vaddr: vaddr for buffer for memset
-> 
-> and here the same but with virtual
-> 
-> >   */
-> >  struct at_desc {
-> >  	struct				virt_dma_desc vd;
-> > @@ -247,6 +253,9 @@ struct at_desc {
-> >  /**
-> >   * enum atc_status - information bits stored in channel status flag
-> >   *
-> > + * @ATC_IS_PAUSED: If channel is pause
-> 
-> typo, s/pause/paused
-
-I have updated these and applied the patch, thanks for better
-suggestions
-
-> 
-> Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org>
-> 
-> Cheers,
-> ta
-> > + * @ATC_IS_CYCLIC: If channel is cyclic
-> > + *
-> >   * Manipulated with atomic operations.
-> >   */
-> >  enum atc_status {
-> > @@ -282,7 +291,6 @@ struct at_dma_chan {
-> >  	u32			save_cfg;
-> >  	u32			save_dscr;
-> >  	struct dma_slave_config	dma_sconfig;
-> > -	bool			cyclic;
-> >  	struct at_desc		*desc;
-> >  };
-> >  
-> > @@ -333,6 +341,7 @@ static inline u8 convert_buswidth(enum dma_slave_buswidth addr_width)
-> >   * @save_imr: interrupt mask register that is saved on suspend/resume cycle
-> >   * @all_chan_mask: all channels availlable in a mask
-> >   * @lli_pool: hw lli table
-> > + * @memset_pool: hw memset pool
-> >   * @chan: channels table to store at_dma_chan structures
-> >   */
-> >  struct at_dma {
-
--- 
-~Vinod
+Thanks,
+Tadeusz
 

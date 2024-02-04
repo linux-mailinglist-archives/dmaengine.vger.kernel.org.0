@@ -1,31 +1,31 @@
-Return-Path: <dmaengine+bounces-947-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-948-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B9C5848BAA
-	for <lists+dmaengine@lfdr.de>; Sun,  4 Feb 2024 08:01:02 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0DEFF848BAD
+	for <lists+dmaengine@lfdr.de>; Sun,  4 Feb 2024 08:01:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 413CA284ED2
-	for <lists+dmaengine@lfdr.de>; Sun,  4 Feb 2024 07:01:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 32BBC1C214A7
+	for <lists+dmaengine@lfdr.de>; Sun,  4 Feb 2024 07:01:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C78B11701;
-	Sun,  4 Feb 2024 06:59:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F54212B66;
+	Sun,  4 Feb 2024 06:59:56 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6A0C2C6;
-	Sun,  4 Feb 2024 06:59:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44649DDBD;
+	Sun,  4 Feb 2024 06:59:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707029995; cv=none; b=KYHMxYX/lxeut0hBNj77tnrBYaeULVrRtSGA+k2FRHi6jAcPAA25WkcV+KD0gdqh0KevjvnIwl1Qm1R2Ki5OJSxTI2k0LZ9u6XBe63M3rBRha6pbSqZvHD4W6+HBUWbo36sRrLzw68HrmAkVZOztm6UJTuaCt5drXGmkCPaeBjY=
+	t=1707029996; cv=none; b=kIChef9ZKMLxh3i1WxYRpfTatBCos32bQoqr8bJXwvhpA9KKojIHDhZ1eIZjOrL823K5uyO8CoU5NsS6oA7mrlKsKhIGaz17oduSkylVj7KJcHwCtTXWByb0+P+DazLaYvD7rQ3BFnD/eXUvq9tcaSY9oA4Uvzyi6CTdQxrf1Wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707029995; c=relaxed/simple;
-	bh=9OW5lbTgsybuOL7jtGkXXqnABZ3G6uX7yDMsBY+osVw=;
+	s=arc-20240116; t=1707029996; c=relaxed/simple;
+	bh=ZcPciE1A5owLabkIC4nfdTFrxgIGeN/EJixCqoNdbFw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=B1UqGvqw5sSz/jiXb87alejd9Y/+U3jG3WnQKatxDL88haxIpayKjB+B+dY4Qgav4fQXj9QS74s/2EWhU7yvuf3lDhqqyVk4s3NXjsZshAm/JgKeQSJ9kaS6ORZJKpa3Bg2qYVhGtzlf/Tka4tegp+Mz+jy3lfPR75b1QsmhV/w=
+	 MIME-Version; b=pjSQZFyNPypLt2o7MDlRC3BqGvVDPiSbSYzyA9NfrHEimkYpMlU+D3l9R3GmU/Txgmpxs4skCgRx3xFuZW1BnsSALvUMXNkrasB/T4eExbNHH683Pn6nJ2C8IJTpPC1d9VKKw+dgPM7tbM8EW49DfGsRpsWEwJps+stlajKoT48=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
@@ -33,18 +33,18 @@ Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id CFB1A220A6;
-	Sun,  4 Feb 2024 06:59:51 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 88BBD220A9;
+	Sun,  4 Feb 2024 06:59:52 +0000 (UTC)
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B6A711338E;
-	Sun,  4 Feb 2024 06:59:51 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6D7B71338E;
+	Sun,  4 Feb 2024 06:59:52 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 1ft/Kuc1v2WIZwAAD6G6ig
-	(envelope-from <aporta@suse.de>); Sun, 04 Feb 2024 06:59:51 +0000
+	id HpxjGOg1v2WKZwAAD6G6ig
+	(envelope-from <aporta@suse.de>); Sun, 04 Feb 2024 06:59:52 +0000
 From: Andrea della Porta <andrea.porta@suse.com>
 To: Vinod Koul <vkoul@kernel.org>,
 	Florian Fainelli <florian.fainelli@broadcom.com>,
@@ -59,9 +59,9 @@ Cc: Maxime Ripard <maxime@cerno.tech>,
 	Dom Cobley <popcornmix@gmail.com>,
 	Phil Elwell <phil@raspberrypi.com>,
 	Andrea della Porta <andrea.porta@suse.com>
-Subject: [PATCH 07/12] bcm2835-dma: Support dma flags for multi-beat burst
-Date: Sun,  4 Feb 2024 07:59:35 +0100
-Message-ID: <570953f9532e2dc46568674d3c1348cdf26488b6.1706948717.git.andrea.porta@suse.com>
+Subject: [PATCH 08/12] bcm2835-dma: Need to keep PROT bits set in CS on 40bit controller
+Date: Sun,  4 Feb 2024 07:59:36 +0100
+Message-ID: <98d536c4d9789e176ab83ab3d2257c08f0075bdb.1706948717.git.andrea.porta@suse.com>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <cover.1706948717.git.andrea.porta@suse.com>
 References: <cover.1706948717.git.andrea.porta@suse.com>
@@ -102,100 +102,94 @@ X-Spam-Flag: NO
 
 From: Dom Cobley <popcornmix@gmail.com>
 
-Add a control bit to enable a multi-beat burst on a DMA.
-This improves DMA performance and is required for HDMI audio.
+Resetting them to zero puts DMA channel into secure mode
+which makes further accesses impossible
 
-Signed-off-by: Dom Cobley <popcornmix@gmail.com>
+Cc: Dom Cobley <popcornmix@gmail.com>
 Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
 ---
- drivers/dma/bcm2835-dma.c | 28 ++++++++++++++++++++--------
- 1 file changed, 20 insertions(+), 8 deletions(-)
+ drivers/dma/bcm2835-dma.c | 27 +++++++++++++++++----------
+ 1 file changed, 17 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
-index d8d1f9ba2572..a20700a400a2 100644
+index a20700a400a2..1b3f470274b2 100644
 --- a/drivers/dma/bcm2835-dma.c
 +++ b/drivers/dma/bcm2835-dma.c
-@@ -156,7 +156,8 @@ struct bcm2835_desc {
- #define BCM2835_DMA_S_WIDTH	BIT(9) /* 128bit writes if set */
- #define BCM2835_DMA_S_DREQ	BIT(10) /* enable SREQ for source */
- #define BCM2835_DMA_S_IGNORE	BIT(11) /* ignore source reads - read 0 */
--#define BCM2835_DMA_BURST_LENGTH(x) ((x & 15) << 12)
-+#define BCM2835_DMA_BURST_LENGTH(x) (((x) & 15) << 12)
-+#define BCM2835_DMA_GET_BURST_LENGTH(x) (((x) >> 12) & 15)
- #define BCM2835_DMA_CS_FLAGS(x) ((x) & (BCM2835_DMA_PRIORITY(15) | \
- 				      BCM2835_DMA_PANIC_PRIORITY(15) | \
- 				      BCM2835_DMA_WAIT_FOR_WRITES | \
-@@ -180,6 +181,11 @@ struct bcm2835_desc {
- #define WIDE_DEST(x) (((x) & BCM2835_DMA_WIDE_DEST) ? \
- 		      BCM2835_DMA_D_WIDTH : 0)
+@@ -239,6 +239,8 @@ struct bcm2835_desc {
+ #define BCM2711_DMA40_WR_PAUSED		BIT(5)  /* Writing is paused */
+ #define BCM2711_DMA40_DREQ_PAUSED	BIT(6)  /* Is paused by DREQ flow control */
+ #define BCM2711_DMA40_WAITING_FOR_WRITES BIT(7)  /* Waiting for last write */
++// we always want to run in supervisor mode
++#define BCM2711_DMA40_PROT		(BIT(8) | BIT(9))
+ #define BCM2711_DMA40_ERR		BIT(10)
+ #define BCM2711_DMA40_QOS(x)		(((x) & 0x1f) << 16)
+ #define BCM2711_DMA40_PANIC_QOS(x)	(((x) & 0x1f) << 20)
+@@ -246,10 +248,10 @@ struct bcm2835_desc {
+ #define BCM2711_DMA40_DISDEBUG		BIT(29)
+ #define BCM2711_DMA40_ABORT		BIT(30)
+ #define BCM2711_DMA40_HALT		BIT(31)
+-#define BCM2711_DMA40_CS_FLAGS(x) ((x) & (BCM2711_DMA40_QOS(15) | \
+-					BCM2711_DMA40_PANIC_QOS(15) | \
+-					BCM2711_DMA40_WAIT_FOR_WRITES |	\
+-					BCM2711_DMA40_DISDEBUG))
++#define BCM2711_DMA40_CS_FLAGS(x)	((x) & (BCM2711_DMA40_QOS(15) | \
++					 BCM2711_DMA40_PANIC_QOS(15) | \
++					 BCM2711_DMA40_WAIT_FOR_WRITES | \
++					 BCM2711_DMA40_DISDEBUG))
  
-+/* A fake bit to request that the driver requires multi-beat burst */
-+#define BCM2835_DMA_BURST BIT(30)
-+#define BURST_LENGTH(x) (((x) & BCM2835_DMA_BURST) ? \
-+			 BCM2835_DMA_BURST_LENGTH(3) : 0)
-+
- /* debug register bits */
- #define BCM2835_DMA_DEBUG_LAST_NOT_SET_ERR	BIT(0)
- #define BCM2835_DMA_DEBUG_FIFO_ERR		BIT(1)
-@@ -282,7 +288,7 @@ struct bcm2835_desc {
- /* the max dma length for different channels */
- #define MAX_DMA40_LEN SZ_1G
+ /* Transfer information bits */
+ #define BCM2711_DMA40_INTEN		BIT(0)
+@@ -679,7 +681,7 @@ static void bcm2835_dma_abort(struct bcm2835_chan *c)
+ 			dev_err(c->vc.chan.device->dev,
+ 				"failed to halt dma\n");
  
--#define BCM2711_DMA40_BURST_LEN(x)	((min(x, 16) - 1) << 8)
-+#define BCM2711_DMA40_BURST_LEN(x)	(((x) & 15) << 8)
- #define BCM2711_DMA40_INC		BIT(12)
- #define BCM2711_DMA40_SIZE_32		(0 << 13)
- #define BCM2711_DMA40_SIZE_64		(1 << 13)
-@@ -359,12 +365,16 @@ static inline uint32_t to_bcm2711_ti(uint32_t info)
+-		writel(0, chan_base + BCM2711_DMA40_CS);
++		writel(BCM2711_DMA40_PROT, chan_base + BCM2711_DMA40_CS);
+ 		writel(0, chan_base + BCM2711_DMA40_CB);
+ 	} else {
+ 		/*
+@@ -739,7 +741,7 @@ static void bcm2835_dma_start_desc(struct bcm2835_chan *c)
+ 	if (c->is_40bit_channel) {
+ 		writel(to_bcm2711_cbaddr(d->cb_list[0].paddr),
+ 		       c->chan_base + BCM2711_DMA40_CB);
+-		writel(BCM2711_DMA40_ACTIVE | BCM2711_DMA40_CS_FLAGS(c->dreq),
++		writel(BCM2711_DMA40_ACTIVE | BCM2711_DMA40_PROT | BCM2711_DMA40_CS_FLAGS(c->dreq),
+ 		       c->chan_base + BCM2711_DMA40_CS);
+ 	} else {
+ 		writel(d->cb_list[0].paddr, c->chan_base + BCM2835_DMA_ADDR);
+@@ -772,8 +774,13 @@ static irqreturn_t bcm2835_dma_callback(int irq, void *data)
+ 	 * if this IRQ handler is threaded.) If the channel is finished, it
+ 	 * will remain idle despite the ACTIVE flag being set.
+ 	 */
+-	writel(BCM2835_DMA_INT | BCM2835_DMA_ACTIVE | BCM2835_DMA_CS_FLAGS(c->dreq),
+-	       c->chan_base + BCM2835_DMA_CS);
++	if (c->is_40bit_channel)
++		writel(BCM2835_DMA_INT | BCM2711_DMA40_ACTIVE | BCM2711_DMA40_PROT |
++		       BCM2711_DMA40_CS_FLAGS(c->dreq),
++		       c->chan_base + BCM2711_DMA40_CS);
++	else
++		writel(BCM2835_DMA_INT | BCM2835_DMA_ACTIVE | BCM2835_DMA_CS_FLAGS(c->dreq),
++		       c->chan_base + BCM2835_DMA_CS);
  
- static inline uint32_t to_bcm2711_srci(uint32_t info)
- {
--	return ((info & BCM2835_DMA_S_INC) ? BCM2711_DMA40_INC : 0);
-+	return ((info & BCM2835_DMA_S_INC) ? BCM2711_DMA40_INC : 0) |
-+	       ((info & BCM2835_DMA_S_WIDTH) ? BCM2711_DMA40_SIZE_128 : 0) |
-+	       BCM2711_DMA40_BURST_LEN(BCM2835_DMA_GET_BURST_LENGTH(info));
+ 	d = c->desc;
+ 
+@@ -1227,14 +1234,14 @@ void bcm2711_dma40_memcpy(dma_addr_t dst, dma_addr_t src, size_t size)
+ 	scb->next_cb = 0;
+ 
+ 	writel(to_bcm2711_cbaddr(memcpy_scb_dma), memcpy_chan + BCM2711_DMA40_CB);
+-	writel(BCM2711_DMA40_MEMCPY_FLAGS + BCM2711_DMA40_ACTIVE,
++	writel(BCM2711_DMA40_MEMCPY_FLAGS | BCM2711_DMA40_ACTIVE | BCM2711_DMA40_PROT,
+ 	       memcpy_chan + BCM2711_DMA40_CS);
+ 
+ 	/* Poll for completion */
+ 	while (!(readl(memcpy_chan + BCM2711_DMA40_CS) & BCM2711_DMA40_END))
+ 		cpu_relax();
+ 
+-	writel(BCM2711_DMA40_END, memcpy_chan + BCM2711_DMA40_CS);
++	writel(BCM2711_DMA40_END | BCM2711_DMA40_PROT, memcpy_chan + BCM2711_DMA40_CS);
+ 
+ 	spin_unlock_irqrestore(&memcpy_lock, flags);
  }
- 
- static inline uint32_t to_bcm2711_dsti(uint32_t info)
- {
--	return ((info & BCM2835_DMA_D_INC) ? BCM2711_DMA40_INC : 0);
-+	return ((info & BCM2835_DMA_D_INC) ? BCM2711_DMA40_INC : 0) |
-+	       ((info & BCM2835_DMA_D_WIDTH) ? BCM2711_DMA40_SIZE_128 : 0) |
-+	       BCM2711_DMA40_BURST_LEN(BCM2835_DMA_GET_BURST_LENGTH(info));
- }
- 
- static inline uint32_t to_bcm2711_cbaddr(dma_addr_t addr)
-@@ -933,7 +943,8 @@ static struct dma_async_tx_descriptor *bcm2835_dma_prep_dma_memcpy(
- 	struct bcm2835_chan *c = to_bcm2835_dma_chan(chan);
- 	struct bcm2835_desc *d;
- 	u32 info = BCM2835_DMA_D_INC | BCM2835_DMA_S_INC |
--		   WAIT_RESP(c->dreq) | WIDE_SOURCE(c->dreq) | WIDE_DEST(c->dreq);
-+		   WAIT_RESP(c->dreq) | WIDE_SOURCE(c->dreq) |
-+		   WIDE_DEST(c->dreq) | BURST_LENGTH(c->dreq);
- 	u32 extra = BCM2835_DMA_INT_EN;
- 	size_t max_len = bcm2835_dma_max_frame_length(c);
- 	size_t frames;
-@@ -964,8 +975,8 @@ static struct dma_async_tx_descriptor *bcm2835_dma_prep_slave_sg(
- 	struct bcm2835_chan *c = to_bcm2835_dma_chan(chan);
- 	struct bcm2835_desc *d;
- 	dma_addr_t src = 0, dst = 0;
--	u32 info = WAIT_RESP(c->dreq) |
--		   WIDE_SOURCE(c->dreq) | WIDE_DEST(c->dreq);
-+	u32 info = WAIT_RESP(c->dreq) | WIDE_SOURCE(c->dreq) |
-+		   WIDE_DEST(c->dreq) | BURST_LENGTH(c->dreq);
- 	u32 extra = BCM2835_DMA_INT_EN;
- 	size_t frames;
- 
-@@ -1017,7 +1028,8 @@ static struct dma_async_tx_descriptor *bcm2835_dma_prep_dma_cyclic(
- 	struct bcm2835_chan *c = to_bcm2835_dma_chan(chan);
- 	struct bcm2835_desc *d;
- 	dma_addr_t src, dst;
--	u32 info = WAIT_RESP(c->dreq) | WIDE_SOURCE(c->dreq) | WIDE_DEST(c->dreq);
-+	u32 info = WAIT_RESP(c->dreq) | WIDE_SOURCE(c->dreq) |
-+		   WIDE_DEST(c->dreq) | BURST_LENGTH(c->dreq);
- 	u32 extra = 0;
- 	size_t max_len = bcm2835_dma_max_frame_length(c);
- 	size_t frames;
 -- 
 2.41.0
 

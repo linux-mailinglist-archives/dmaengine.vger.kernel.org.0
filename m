@@ -1,151 +1,138 @@
-Return-Path: <dmaengine+bounces-939-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-940-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6BA9E8488C9
-	for <lists+dmaengine@lfdr.de>; Sat,  3 Feb 2024 21:48:04 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 007A0848B9C
+	for <lists+dmaengine@lfdr.de>; Sun,  4 Feb 2024 07:59:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 20C5B1F236C3
-	for <lists+dmaengine@lfdr.de>; Sat,  3 Feb 2024 20:48:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 32C661C21DC8
+	for <lists+dmaengine@lfdr.de>; Sun,  4 Feb 2024 06:59:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7533811CB7;
-	Sat,  3 Feb 2024 20:47:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GN/4T/Rq"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBA3F79DC;
+	Sun,  4 Feb 2024 06:59:50 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23B6811C8B;
-	Sat,  3 Feb 2024 20:47:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A9C079CC;
+	Sun,  4 Feb 2024 06:59:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706993264; cv=none; b=jlHohH7yfiqm1aODvTEoRzozoJHyHq1DQ7ES2BOcq9dVz2b+4SNndJB+s/+bk8J3g6DofQPr4y1npog3G2IG4G4mHLUVM2cxA/h4uk/6BMUqOIDNV7ie7I63ID0ZT2BZisuax44gcmHw1qfETMPElhTTUaUPmIWMGa7B90w/jjg=
+	t=1707029990; cv=none; b=ah5zfRgQ1+7l9CwWeHoP1zyd/UtQsucusXzmBCy895K3aahc/TGrGlVA76ZVrpiEXtQ6VBapNj50m5BMCqAgRViHnwXpMKdEQgOAjZXJN/kfYqnk+YDjv/UT4ZwGvlNcxVZnSsYuZWAE47TQcSoi8vetlWbp3ibpPeOUY0EM7uc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706993264; c=relaxed/simple;
-	bh=f2I8gWEzkwSZbGGlhrQHuwLADXjkshYxOtnScKHw11s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M2ieEU5QHTImoDhGtfYNa29Wywi7gIvfmRQDOwqtEX7rQU3S70ZYCAa0Q37NDayfaw5QzJSdzRrwKGUDkcG+c0mOxfiuM6qN9KQ/GLWe4Kk9MBpW7RMnsPttj1gIs8KJjDm2MNRl4GAsJXdiHVc2GPNXG4wN40yX/1kkA+4unpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GN/4T/Rq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA2F8C433F1;
-	Sat,  3 Feb 2024 20:47:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706993263;
-	bh=f2I8gWEzkwSZbGGlhrQHuwLADXjkshYxOtnScKHw11s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GN/4T/RqtAM5pPUfQihjK3Wa8sAV3pUsmPhYvA/cg2Mt2nro2ZyjanWbrJsFNV3X0
-	 z5BUbR+pQSMZAeHOP3sXKHIURcwPfLXvK10KTL7JVV6BMqAtJcWeBZZaUNH8BgEZwr
-	 WzCvc/4pSyEOOKjimaGiYIRPvzhm5cFZkClqVzDoxmb/PXTafnKB5XS5SvdpzINgmK
-	 q/IJVnPabe73UT5UmIzBjjFDfb7yi95qtdPjsD2ng69sNJ9Ox97m8liHEvjdKMoKE0
-	 QcQjfDe1BO9oUeMuwNyLPZn3s3kiyHosGSbJT7/8lpjlfsPnQ91fjVkcMwRyGM/tUl
-	 QPqwMl+qAzuzA==
-Date: Sat, 3 Feb 2024 21:47:39 +0100
-From: Wolfram Sang <wsa@kernel.org>
-To: Gatien Chevallier <gatien.chevallier@foss.st.com>
-Cc: Oleksii_Moisieiev@epam.com, gregkh@linuxfoundation.org,
-	herbert@gondor.apana.org.au, davem@davemloft.net,
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, alexandre.torgue@foss.st.com, vkoul@kernel.org,
-	jic23@kernel.org, olivier.moysan@foss.st.com,
-	arnaud.pouliquen@foss.st.com, mchehab@kernel.org,
-	fabrice.gasnier@foss.st.com, andi.shyti@kernel.org,
-	ulf.hansson@linaro.org, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, hugues.fruchet@foss.st.com, lee@kernel.org,
-	will@kernel.org, catalin.marinas@arm.com, arnd@kernel.org,
-	richardcochran@gmail.com, Frank Rowand <frowand.list@gmail.com>,
-	peng.fan@oss.nxp.com, lars@metafoo.de, rcsekar@samsung.com,
-	wg@grandegger.com, mkl@pengutronix.de, linux-crypto@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-iio@vger.kernel.org, alsa-devel@alsa-project.org,
-	linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-	netdev@vger.kernel.org, linux-phy@lists.infradead.org,
-	linux-serial@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-usb@vger.kernel.org
-Subject: Re: [PATCH v8 02/13] dt-bindings: treewide: add access-controllers
- description
-Message-ID: <Zb6ma9lHMu3SAe0U@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-	Gatien Chevallier <gatien.chevallier@foss.st.com>,
-	Oleksii_Moisieiev@epam.com, gregkh@linuxfoundation.org,
-	herbert@gondor.apana.org.au, davem@davemloft.net,
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, alexandre.torgue@foss.st.com, vkoul@kernel.org,
-	jic23@kernel.org, olivier.moysan@foss.st.com,
-	arnaud.pouliquen@foss.st.com, mchehab@kernel.org,
-	fabrice.gasnier@foss.st.com, andi.shyti@kernel.org,
-	ulf.hansson@linaro.org, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, hugues.fruchet@foss.st.com, lee@kernel.org,
-	will@kernel.org, catalin.marinas@arm.com, arnd@kernel.org,
-	richardcochran@gmail.com, Frank Rowand <frowand.list@gmail.com>,
-	peng.fan@oss.nxp.com, lars@metafoo.de, rcsekar@samsung.com,
-	wg@grandegger.com, mkl@pengutronix.de, linux-crypto@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-iio@vger.kernel.org, alsa-devel@alsa-project.org,
-	linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-	netdev@vger.kernel.org, linux-phy@lists.infradead.org,
-	linux-serial@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-usb@vger.kernel.org
-References: <20231212152356.345703-1-gatien.chevallier@foss.st.com>
- <20231212152356.345703-3-gatien.chevallier@foss.st.com>
+	s=arc-20240116; t=1707029990; c=relaxed/simple;
+	bh=nXreGAjrFbd8QOMMOtwFbxJI53YV7XOtsiSG8Cl+1sw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GYOKMUkxV+GngK9WUc8QlAhhisLAvdWMjdfcr08XPqBM7KSHjGj7vlsBchbdiDNAsIi4nbSmOpMDmAQhfwZqSqk64FE8s3W1fl8znZt3r+MrrgY04NoSCzDnTOSadKZWDCWQyikoW0clBDqjmYXXod1lkqmtajOizhAJsEGjh2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 363D021FAA;
+	Sun,  4 Feb 2024 06:59:47 +0000 (UTC)
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 136131338E;
+	Sun,  4 Feb 2024 06:59:47 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id X25xAuM1v2V4ZwAAD6G6ig
+	(envelope-from <aporta@suse.de>); Sun, 04 Feb 2024 06:59:47 +0000
+From: Andrea della Porta <andrea.porta@suse.com>
+To: Vinod Koul <vkoul@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	dmaengine@vger.kernel.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Maxime Ripard <maxime@cerno.tech>,
+	Dom Cobley <popcornmix@gmail.com>,
+	Phil Elwell <phil@raspberrypi.com>,
+	Andrea della Porta <andrea.porta@suse.com>
+Subject: [PATCH 00/12] Add support for BCM2712 DMA engine
+Date: Sun,  4 Feb 2024 07:59:28 +0100
+Message-ID: <cover.1706948717.git.andrea.porta@suse.com>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="VPm+VxExOC+V7OZ+"
-Content-Disposition: inline
-In-Reply-To: <20231212152356.345703-3-gatien.chevallier@foss.st.com>
+Content-Transfer-Encoding: 8bit
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spam-Level: ****
+X-Spam-Score: 4.10
+X-Spamd-Result: default: False [4.10 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 R_MISSING_CHARSET(2.50)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 MIME_GOOD(-0.10)[text/plain];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 BROKEN_CONTENT_TYPE(1.50)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 NEURAL_HAM_SHORT(-0.20)[-0.999];
+	 RCPT_COUNT_TWELVE(0.00)[13];
+	 MID_CONTAINS_FROM(1.00)[];
+	 FORGED_SENDER(0.30)[andrea.porta@suse.com,aporta@suse.de];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 MIME_TRACE(0.00)[0:+];
+	 FREEMAIL_CC(0.00)[cerno.tech,gmail.com,raspberrypi.com,suse.com];
+	 FROM_NEQ_ENVFROM(0.10)[andrea.porta@suse.com,aporta@suse.de];
+	 RCVD_TLS_ALL(0.00)[]
+X-Spam-Flag: NO
 
+This patchset aims to update the dma engine for BCM* chipset with respect
+to current advancements in downstream vendor tree. In particular:
 
---VPm+VxExOC+V7OZ+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+* Added support for BCM2712 DMA.
+* Extended DMA addressing to 40 bit. Since BCM2711 also supports 40 bit addressing,
+it will also benefit from the update.
+* Handled the devicetree node from vendor dts (e.g. "dma40").
 
-On Tue, Dec 12, 2023 at 04:23:45PM +0100, Gatien Chevallier wrote:
-> access-controllers is an optional property that allows a peripheral to
-> refer to one or more domain access controller(s).
->=20
-> Description of this property is added to all peripheral binding files of
-> the peripheral under the STM32 firewall controller. It allows an accurate
-> representation of the hardware, where various peripherals are connected
-> to a firewall bus. The firewall can then check the peripheral accesses
-> before allowing its device to probe.
->=20
-> Signed-off-by: Gatien Chevallier <gatien.chevallier@foss.st.com>
+The only difference between the application of this patch and the relative code
+in vendor tree is the dropping of channel reservation for BCM2708 DMA legacy
+driver, that seems to have not made its way to upstream anyway, and it's
+probably used only from deprecated subsystems.
 
-Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com> # for I2C
+Compile tested and runtime tested on RPi4B only.
 
+Dom Cobley (4):
+  bcm2835-dma: Support dma flags for multi-beat burst
+  bcm2835-dma: Need to keep PROT bits set in CS on 40bit controller
+  dmaengine: bcm2835: Rename to_bcm2711_cbaddr to to_40bit_cbaddr
+  bcm2835-dma: Fixes for dma_abort
 
---VPm+VxExOC+V7OZ+
-Content-Type: application/pgp-signature; name="signature.asc"
+Maxime Ripard (2):
+  dmaengine: bcm2835: Use to_bcm2711_cbaddr where relevant
+  dmaengine: bcm2835: Support DMA-Lite channels
 
------BEGIN PGP SIGNATURE-----
+Phil Elwell (6):
+  bcm2835-dma: Add support for per-channel flags
+  bcm2835-dma: Add proper 40-bit DMA support
+  bcm2835-dma: Add NO_WAIT_RESP, DMA_WIDE_SOURCE and DMA_WIDE_DEST flag
+  bcm2835-dma: Advertise the full DMA range
+  bcm2835-dma: Derive slave DMA addresses correctly
+  dmaengine: bcm2835: Add BCM2712 support
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmW+pmsACgkQFA3kzBSg
-KbY64RAAof4Gx7h4jhXu9UFvGgxDMB7nucJwU2vnrWAQqslpX78IIuHnDzQGSdx4
-YeqQnv3x5PquSqBz8x/rnE1ptR0LqnAgeJdEOQB0AAicQ+VFy75kPngr9dtiCJuf
-SrCwaIYQ13qIhhC6pa7HTEUSQN/KX6DVSffmeJmOJoHIqGa1L1ldEH5tujF71Plb
-q5ugpGi2Jkmb+UU5/EaXadNKZ5b3BSp/xWur8Eemy9Z4DqqoipzJRzSJHufFNZDR
-pRdNn14JQlzQ948vT+YdpGqPE6jrVpd48rygAjaXsPx3cVQx7ouU6tKPnFLjtgyp
-tb0R2ZIQNXVaQV36XLwhvv0qFqHEiY36q+GjYSEbMHbO1b0+zneKgmZXNSwCclEp
-WQ8DrD3UEKTXcDHmoRV5GVgzZyk7wmK8zq3jofTemYyfKhSvsmAiufzZCQLV/9GI
-ScuNib34aJrsiIXiD40DsFNcutPh2v+aBXQmtfpkA++3ZvY9aBQa5KeEqzrKPaa0
-AVXFtXPN4hnNkUzTogCTHEvL7dYtbi0h7W5fun3D5kOLdZuewR8vFAotIaDRG7tB
-S7AWJDu+x2RT2xAs2yJEfSHMwoBZRdq3nJVugmRDb+VELZmIDBdN4vwBRXfi+cHr
-ouzPgt76DcQhfF6JGRUhloWtVuWW3QRQ1uYMpWUrKztG+3WiqBU=
-=nMRV
------END PGP SIGNATURE-----
+ drivers/dma/bcm2835-dma.c | 701 ++++++++++++++++++++++++++++++++------
+ 1 file changed, 588 insertions(+), 113 deletions(-)
 
---VPm+VxExOC+V7OZ+--
+-- 
+2.41.0
+
 

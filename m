@@ -1,50 +1,50 @@
-Return-Path: <dmaengine+bounces-946-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-944-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0606848BA7
-	for <lists+dmaengine@lfdr.de>; Sun,  4 Feb 2024 08:00:49 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E19C848BA4
+	for <lists+dmaengine@lfdr.de>; Sun,  4 Feb 2024 08:00:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4F3651F22E70
-	for <lists+dmaengine@lfdr.de>; Sun,  4 Feb 2024 07:00:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 70B821C2118E
+	for <lists+dmaengine@lfdr.de>; Sun,  4 Feb 2024 07:00:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E45CB10A25;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AD3DD310;
 	Sun,  4 Feb 2024 06:59:54 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3D128C17;
-	Sun,  4 Feb 2024 06:59:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 462F1B657;
+	Sun,  4 Feb 2024 06:59:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707029994; cv=none; b=mjkgeCA6xlci04n1Hp0UFmjTgniggA+HdHC+A779emJelHv/WoeP2/lSgop7nawV9J0FGBdy+EIDdhVvoYVH+hg6LFiTl2/ZBLnfxR9ttkjEcp0N83EiTNB7neqM4C0EhMAXS6SPqZ4fl49PHglEnslq+mzHnWBEw6BeV7Tjb7k=
+	t=1707029994; cv=none; b=ZDpf3RjUm2SPp4NQDihuwvwEvSHEHIZaL/AkB5xxOJmhgyIhP6sQevUbcrNq9rIIMI5DtJzQhjdHfKCZFaktGKTrsWCfLl18q2P/S3sw+Q3eb0kE5zxp/AbrDdW4Fhdxbpywxj53//AcFprLtp69Jnwxv0AJ9pZqdmQ/AWcOpY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707029994; c=relaxed/simple;
-	bh=T0cXZKxURE4YghBQLPnvhURdvp3T10Ujdc6SAFKDpIw=;
+	bh=5kh8IMg0n6Kqqa0rKuDttiR7WGh9gumvPfhqew3EzT8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=G3z3fNW8MiLrr/pUZUOWqzXZdVpIcj0fytyTzX1E9/GLprx1y4Uqs9XAg7WXtzWwK1pw4+R8zPh/Rk72tDa1HjnAatyj7Pm0pcPPtSsDPyT/iFKIkmbAjBWvpJzlM2v+I7XrLcfXaW7emBYrL9GuXYFifhU7BL6igwEvA7tAadY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.131
+	 MIME-Version; b=q4OUbPfIzjLsxGOvhbGhNnCpHAt2iYjiwpGQZ8yI701Ja1rhwohI3j9VMG6YhbNkkOyy83MGvxCU2jzRJiLXoRc4R72bSakXtgdzmGMgFgTLkrI6LISPL/TYGtuXu9duu6woH5GNrWTuUJjzZNfO3TZAglqvaZUTknoPcDsD+0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id D68081F7F1;
-	Sun,  4 Feb 2024 06:59:49 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 7BB3A220A5;
+	Sun,  4 Feb 2024 06:59:50 +0000 (UTC)
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BE0CA1338E;
-	Sun,  4 Feb 2024 06:59:49 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 645071338E;
+	Sun,  4 Feb 2024 06:59:50 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 29hkLOU1v2WCZwAAD6G6ig
-	(envelope-from <aporta@suse.de>); Sun, 04 Feb 2024 06:59:49 +0000
+	id 8ZZ8FuY1v2WEZwAAD6G6ig
+	(envelope-from <aporta@suse.de>); Sun, 04 Feb 2024 06:59:50 +0000
 From: Andrea della Porta <andrea.porta@suse.com>
 To: Vinod Koul <vkoul@kernel.org>,
 	Florian Fainelli <florian.fainelli@broadcom.com>,
@@ -58,9 +58,9 @@ To: Vinod Koul <vkoul@kernel.org>,
 Cc: Maxime Ripard <maxime@cerno.tech>,
 	Dom Cobley <popcornmix@gmail.com>,
 	Phil Elwell <phil@raspberrypi.com>
-Subject: [PATCH 04/12] bcm2835-dma: Advertise the full DMA range
-Date: Sun,  4 Feb 2024 07:59:32 +0100
-Message-ID: <a56a6d24066a64598efe4343090e51e2223475b8.1706948717.git.andrea.porta@suse.com>
+Subject: [PATCH 05/12] bcm2835-dma: Derive slave DMA addresses correctly
+Date: Sun,  4 Feb 2024 07:59:33 +0100
+Message-ID: <30da53ebdf43b712da790fd2ae0f0040f71762b8.1706948717.git.andrea.porta@suse.com>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <cover.1706948717.git.andrea.porta@suse.com>
 References: <cover.1706948717.git.andrea.porta@suse.com>
@@ -71,26 +71,21 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Level: ******
-X-Spamd-Bar: ++++++
-Authentication-Results: smtp-out2.suse.de;
+Authentication-Results: smtp-out1.suse.de;
 	dkim=none
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [6.29 / 50.00];
+X-Spamd-Result: default: False [7.49 / 50.00];
 	 ARC_NA(0.00)[];
 	 RCVD_VIA_SMTP_AUTH(0.00)[];
 	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
 	 FROM_HAS_DN(0.00)[];
 	 TO_DN_SOME(0.00)[];
-	 R_MISSING_CHARSET(2.50)[];
 	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 R_MISSING_CHARSET(2.50)[];
 	 MIME_GOOD(-0.10)[text/plain];
 	 TO_MATCH_ENVRCPT_ALL(0.00)[];
 	 BROKEN_CONTENT_TYPE(1.50)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
 	 RCVD_COUNT_THREE(0.00)[3];
 	 MX_GOOD(-0.01)[];
-	 NEURAL_HAM_SHORT(-0.20)[-0.997];
 	 RCPT_COUNT_TWELVE(0.00)[12];
 	 MID_CONTAINS_FROM(1.00)[];
 	 FORGED_SENDER(0.30)[andrea.porta@suse.com,aporta@suse.de];
@@ -100,86 +95,85 @@ X-Spamd-Result: default: False [6.29 / 50.00];
 	 FREEMAIL_CC(0.00)[cerno.tech,gmail.com,raspberrypi.com];
 	 FROM_NEQ_ENVFROM(0.10)[andrea.porta@suse.com,aporta@suse.de];
 	 RCVD_TLS_ALL(0.00)[]
-X-Spam-Score: 6.29
-X-Rspamd-Queue-Id: D68081F7F1
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: 7.49
+X-Rspamd-Queue-Id: 7BB3A220A5
+X-Spam-Level: *******
 X-Spam-Flag: NO
+X-Spamd-Bar: +++++++
 
 From: Phil Elwell <phil@raspberrypi.com>
 
-Unless the DMA mask is set wider than 32 bits, DMA mapping will use a
-bounce buffer.
+Slave addresses for DMA are meant to be supplied as physical addresses
+(contrary to what struct snd_dmaengine_dai_dma_data does). It is up to
+the DMA controller driver to perform the translation based on its own
+view of the world, as described in Device Tree.
+
+Now that the Pi Device Trees have the correct peripheral mappings,
+replace the hacky address munging with phys_to_dma().
 
 Signed-off-by: Phil Elwell <phil@raspberrypi.com>
 ---
- drivers/dma/bcm2835-dma.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+ drivers/dma/bcm2835-dma.c | 23 +++++------------------
+ 1 file changed, 5 insertions(+), 18 deletions(-)
 
 diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
-index 36bad198b655..237dcdb8d726 100644
+index 237dcdb8d726..077812eda609 100644
 --- a/drivers/dma/bcm2835-dma.c
 +++ b/drivers/dma/bcm2835-dma.c
-@@ -39,6 +39,7 @@
- #define BCM2711_DMA_MEMCPY_CHAN 14
- 
- struct bcm2835_dma_cfg_data {
-+	u64	dma_mask;
- 	u32	chan_40bit_mask;
- };
- 
-@@ -308,10 +309,12 @@ DEFINE_SPINLOCK(memcpy_lock);
- 
- static const struct bcm2835_dma_cfg_data bcm2835_dma_cfg = {
- 	.chan_40bit_mask = 0,
-+	.dma_mask = DMA_BIT_MASK(32),
- };
- 
- static const struct bcm2835_dma_cfg_data bcm2711_dma_cfg = {
- 	.chan_40bit_mask = BIT(11) | BIT(12) | BIT(13) | BIT(14),
-+	.dma_mask = DMA_BIT_MASK(36),
- };
- 
- static inline size_t bcm2835_dma_max_frame_length(struct bcm2835_chan *c)
-@@ -1263,6 +1266,8 @@ static struct dma_chan *bcm2835_dma_xlate(struct of_phandle_args *spec,
- 
- static int bcm2835_dma_probe(struct platform_device *pdev)
- {
-+	const struct bcm2835_dma_cfg_data *cfg_data;
-+	const struct of_device_id *of_id;
- 	struct bcm2835_dmadev *od;
- 	struct resource *res;
- 	void __iomem *base;
-@@ -1272,13 +1277,20 @@ static int bcm2835_dma_probe(struct platform_device *pdev)
- 	int irq_flags;
- 	uint32_t chans_available;
- 	char chan_name[BCM2835_DMA_CHAN_NAME_SIZE];
--	const struct of_device_id *of_id;
- 	int chan_count, chan_start, chan_end;
- 
-+	of_id = of_match_node(bcm2835_dma_of_match, pdev->dev.of_node);
-+	if (!of_id) {
-+		dev_err(&pdev->dev, "Failed to match compatible string\n");
-+		return -EINVAL;
-+	}
-+
-+	cfg_data = of_id->data;
-+
- 	if (!pdev->dev.dma_mask)
- 		pdev->dev.dma_mask = &pdev->dev.coherent_dma_mask;
- 
--	rc = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
-+	rc = dma_set_mask_and_coherent(&pdev->dev, cfg_data->dma_mask);
- 	if (rc) {
- 		dev_err(&pdev->dev, "Unable to set DMA mask\n");
- 		return rc;
-@@ -1342,7 +1354,7 @@ static int bcm2835_dma_probe(struct platform_device *pdev)
- 		return -EINVAL;
+@@ -18,6 +18,7 @@
+  *	Copyright 2012 Marvell International Ltd.
+  */
+ #include <linux/dmaengine.h>
++#include <linux/dma-direct.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/dmapool.h>
+ #include <linux/err.h>
+@@ -980,22 +981,12 @@ static struct dma_async_tx_descriptor *bcm2835_dma_prep_slave_sg(
+ 	if (direction == DMA_DEV_TO_MEM) {
+ 		if (c->cfg.src_addr_width != DMA_SLAVE_BUSWIDTH_4_BYTES)
+ 			return NULL;
+-		src = c->cfg.src_addr;
+-		/*
+-		 * One would think it ought to be possible to get the physical
+-		 * to dma address mapping information from the dma-ranges DT
+-		 * property, but I've not found a way yet that doesn't involve
+-		 * open-coding the whole thing.
+-		 */
+-		if (c->is_40bit_channel)
+-			src |= 0x400000000ull;
++		src = phys_to_dma(chan->device->dev, c->cfg.src_addr);
+ 		info |= BCM2835_DMA_S_DREQ | BCM2835_DMA_D_INC;
+ 	} else {
+ 		if (c->cfg.dst_addr_width != DMA_SLAVE_BUSWIDTH_4_BYTES)
+ 			return NULL;
+-		dst = c->cfg.dst_addr;
+-		if (c->is_40bit_channel)
+-			dst |= 0x400000000ull;
++		dst = phys_to_dma(chan->device->dev, c->cfg.dst_addr);
+ 		info |= BCM2835_DMA_D_DREQ | BCM2835_DMA_S_INC;
  	}
  
--	od->cfg_data = of_id->data;
-+	od->cfg_data = cfg_data;
+@@ -1064,17 +1055,13 @@ static struct dma_async_tx_descriptor *bcm2835_dma_prep_dma_cyclic(
+ 	if (direction == DMA_DEV_TO_MEM) {
+ 		if (c->cfg.src_addr_width != DMA_SLAVE_BUSWIDTH_4_BYTES)
+ 			return NULL;
+-		src = c->cfg.src_addr;
+-		if (c->is_40bit_channel)
+-			src |= 0x400000000ull;
++		src = phys_to_dma(chan->device->dev, c->cfg.src_addr);
+ 		dst = buf_addr;
+ 		info |= BCM2835_DMA_S_DREQ | BCM2835_DMA_D_INC;
+ 	} else {
+ 		if (c->cfg.dst_addr_width != DMA_SLAVE_BUSWIDTH_4_BYTES)
+ 			return NULL;
+-		dst = c->cfg.dst_addr;
+-		if (c->is_40bit_channel)
+-			dst |= 0x400000000ull;
++		dst = phys_to_dma(chan->device->dev, c->cfg.dst_addr);
+ 		src = buf_addr;
+ 		info |= BCM2835_DMA_D_DREQ | BCM2835_DMA_S_INC;
  
- 	/* Request DMA channel mask from device tree */
- 	if (of_property_read_u32(pdev->dev.of_node,
 -- 
 2.41.0
 

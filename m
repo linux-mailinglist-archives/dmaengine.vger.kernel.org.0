@@ -1,31 +1,31 @@
-Return-Path: <dmaengine+bounces-951-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-952-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7700848BB3
-	for <lists+dmaengine@lfdr.de>; Sun,  4 Feb 2024 08:02:07 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 42D1C848BB6
+	for <lists+dmaengine@lfdr.de>; Sun,  4 Feb 2024 08:02:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9EFAD1F21AC8
-	for <lists+dmaengine@lfdr.de>; Sun,  4 Feb 2024 07:02:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 675A21C214E7
+	for <lists+dmaengine@lfdr.de>; Sun,  4 Feb 2024 07:02:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E9AF13FFC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC7BA14286;
 	Sun,  4 Feb 2024 06:59:58 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28A4A125B2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C16F12B7C;
 	Sun,  4 Feb 2024 06:59:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707029997; cv=none; b=jk5OgxJpmmFKwNd57KmY3+VrCs08YXwM3xuhuZClNOhfrnbgeW+rBezRTCXGGZ8YlA1dsvsy0IDm3lNGPBhttShQKg6BoClrGsSQPkFSCiZ3bqRwMRjrwXOKeKkE6XyWbrL0BmulGl3UGua65Hip9ZHluetSqad6pMgGYkocy/0=
+	t=1707029998; cv=none; b=GFYr1/iVbeZrEgzRizxikGlKb7ZzbKku6AoLjCdajEpeo8eeSTYA/Ge3HOIJgyY9PaMdCmzIB4bDDDZXS0lvO0Tz5ICokM5UULrAwHAxTJ9q4o2p7xwbeR0U6C8P7ov5xvnadOGi1KEa1Z/juvdpoU8DZzUki2qraY1lnrQxwoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707029997; c=relaxed/simple;
-	bh=56+EYnhTzYCX4V42OfpniywmQllqA5fZMDMWcPIdodA=;
+	s=arc-20240116; t=1707029998; c=relaxed/simple;
+	bh=020N7Gb9gRsLhm34iARADqQ4O0GxTTu4o0v7s15PXOU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qIfIcj0w9du4mBz+BbFMHjyppo0PSVfs5LoSkLbqCSpoZTpW63TgDCiGL15GRZio+Ug/wIq7geF8H4dS0HSxiIfsofmt0Mdfc+moZnOPQTBePKD6DRzNX2+UE2852PqtGMRI0sCtzIkdTprmM1oXTdNPIREaeL5eXoAJbrVYxnE=
+	 MIME-Version; b=gvYh58OLFA71Wj2JcXJeqE3qmOH5vGFVRFosVtqX/KxEYlBsyvsFhgduUq4JrenY81poGGoeK6wiDsQloTolKRs8zDvYFwP2uUeUPDoCJsArRm0CxYg+BbPeuZgU7ERJVcmbSe7i7g0nzwK/jxdOinDV9+QN9QJSjAnU8yhWPqA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
@@ -33,18 +33,18 @@ Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 7E72921D16;
-	Sun,  4 Feb 2024 06:59:54 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 3240921DF4;
+	Sun,  4 Feb 2024 06:59:55 +0000 (UTC)
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 66FA61338E;
-	Sun,  4 Feb 2024 06:59:54 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 190AB1338E;
+	Sun,  4 Feb 2024 06:59:55 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id wgoUF+o1v2WUZwAAD6G6ig
-	(envelope-from <aporta@suse.de>); Sun, 04 Feb 2024 06:59:54 +0000
+	id ojjIA+s1v2WWZwAAD6G6ig
+	(envelope-from <aporta@suse.de>); Sun, 04 Feb 2024 06:59:55 +0000
 From: Andrea della Porta <andrea.porta@suse.com>
 To: Vinod Koul <vkoul@kernel.org>,
 	Florian Fainelli <florian.fainelli@broadcom.com>,
@@ -57,10 +57,11 @@ To: Vinod Koul <vkoul@kernel.org>,
 	linux-kernel@vger.kernel.org
 Cc: Maxime Ripard <maxime@cerno.tech>,
 	Dom Cobley <popcornmix@gmail.com>,
-	Phil Elwell <phil@raspberrypi.com>
-Subject: [PATCH 11/12] dmaengine: bcm2835: Rename to_bcm2711_cbaddr to to_40bit_cbaddr
-Date: Sun,  4 Feb 2024 07:59:39 +0100
-Message-ID: <a6e1aee2e719745ead7402684df4ab0fd840cc07.1706948717.git.andrea.porta@suse.com>
+	Phil Elwell <phil@raspberrypi.com>,
+	Andrea della Porta <andrea.porta@suse.com>
+Subject: [PATCH 12/12] bcm2835-dma: Fixes for dma_abort
+Date: Sun,  4 Feb 2024 07:59:40 +0100
+Message-ID: <3d0dcc017339f7a78cd9840103db75f5be4034c6.1706948717.git.andrea.porta@suse.com>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <cover.1706948717.git.andrea.porta@suse.com>
 References: <cover.1706948717.git.andrea.porta@suse.com>
@@ -72,111 +73,167 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Authentication-Results: smtp-out1.suse.de;
-	dkim=none
-X-Spamd-Result: default: False [7.49 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 R_MISSING_CHARSET(2.50)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 BROKEN_CONTENT_TYPE(1.50)[];
-	 R_RATELIMIT(0.00)[to_ip_from(RLckep3cwzuj8o9t5iepipyqkk)];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 MX_GOOD(-0.01)[];
-	 RCPT_COUNT_TWELVE(0.00)[12];
-	 MID_CONTAINS_FROM(1.00)[];
-	 FORGED_SENDER(0.30)[andrea.porta@suse.com,aporta@suse.de];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 R_DKIM_NA(2.20)[];
-	 MIME_TRACE(0.00)[0:+];
-	 FREEMAIL_CC(0.00)[cerno.tech,gmail.com,raspberrypi.com];
-	 FROM_NEQ_ENVFROM(0.10)[andrea.porta@suse.com,aporta@suse.de];
-	 RCVD_TLS_ALL(0.00)[]
+	none
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	 REPLY(-4.00)[]
 X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: 7.49
-X-Rspamd-Queue-Id: 7E72921D16
-X-Spam-Level: *******
+X-Rspamd-Queue-Id: 3240921DF4
+X-Spam-Level: 
+X-Spam-Score: -4.00
 X-Spam-Flag: NO
-X-Spamd-Bar: +++++++
 
 From: Dom Cobley <popcornmix@gmail.com>
 
-As the shifted address also applies to bcm2712,
-give the function a more specific name.
+There is a problem with the current abort scheme
+when dma is blocked on a DREQ which prevents halting.
+
+This is triggered by SPI driver which aborts dma
+in this state and so leads to a halt timeout.
+
+Discussion with Broadcom suggests the sequence:
+
+CS.ACTIVE=0
+while (CS.OUTSTANDING_TRANSACTIONS == 0)
+  wait()
+DEBUG.RESET=1
+
+should be safe on a dma40 channel.
+
+Unfortunately the non-dma40 channels don't have
+OUTSTANDING_TRANSACTIONS, so we need a more
+complicated scheme.
+
+We attempt to abort the channel, which will work
+if there is no blocked DREQ.
+
+It it times out, we can assume there is no AXI
+transfer in progress and reset anyway.
+
+The length of the timeout is observed at ~20us.
 
 Signed-off-by: Dom Cobley <popcornmix@gmail.com>
+Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
 ---
- drivers/dma/bcm2835-dma.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/dma/bcm2835-dma.c | 72 +++++++++++++++++++++------------------
+ 1 file changed, 39 insertions(+), 33 deletions(-)
 
 diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
-index 055c558caa0e..40df0a165992 100644
+index 40df0a165992..5751d1c6ff94 100644
 --- a/drivers/dma/bcm2835-dma.c
 +++ b/drivers/dma/bcm2835-dma.c
-@@ -386,7 +386,7 @@ static inline uint32_t to_bcm2711_dsti(uint32_t info)
- 	       BCM2711_DMA40_BURST_LEN(BCM2835_DMA_GET_BURST_LENGTH(info));
- }
- 
--static inline uint32_t to_bcm2711_cbaddr(dma_addr_t addr)
-+static inline uint32_t to_40bit_cbaddr(dma_addr_t addr)
+@@ -245,6 +245,7 @@ struct bcm2835_desc {
+ #define BCM2711_DMA40_ERR		BIT(10)
+ #define BCM2711_DMA40_QOS(x)		(((x) & 0x1f) << 16)
+ #define BCM2711_DMA40_PANIC_QOS(x)	(((x) & 0x1f) << 20)
++#define BCM2711_DMA40_TRANSACTIONS	BIT(25)
+ #define BCM2711_DMA40_WAIT_FOR_WRITES	BIT(28)
+ #define BCM2711_DMA40_DISDEBUG		BIT(29)
+ #define BCM2711_DMA40_ABORT		BIT(30)
+@@ -671,30 +672,37 @@ static void bcm2835_dma_fill_cb_chain_with_sg(
+ static void bcm2835_dma_abort(struct bcm2835_chan *c)
  {
- 	WARN_ON_ONCE(addr & 0x1f);
- 	return (addr >> 5);
-@@ -573,10 +573,10 @@ static struct bcm2835_desc *bcm2835_dma_create_cb_chain(
- 		if (frame && c->is_40bit_channel)
- 			((struct bcm2711_dma40_scb *)
- 			 d->cb_list[frame - 1].cb)->next_cb =
--				to_bcm2711_cbaddr(cb_entry->paddr);
-+				to_40bit_cbaddr(cb_entry->paddr);
- 		if (frame && !c->is_40bit_channel)
- 			d->cb_list[frame - 1].cb->next = c->is_2712 ?
--			to_bcm2711_cbaddr(cb_entry->paddr) : cb_entry->paddr;
-+			to_40bit_cbaddr(cb_entry->paddr) : cb_entry->paddr;
- 
- 		/* update src and dst and length */
- 		if (src && (info & BCM2835_DMA_S_INC)) {
-@@ -751,14 +751,14 @@ static void bcm2835_dma_start_desc(struct bcm2835_chan *c)
- 	c->desc = d = to_bcm2835_dma_desc(&vd->tx);
+ 	void __iomem *chan_base = c->chan_base;
+-	long int timeout = 10000;
+-
+-	/*
+-	 * A zero control block address means the channel is idle.
+-	 * (The ACTIVE flag in the CS register is not a reliable indicator.)
+-	 */
+-	if (!readl(chan_base + BCM2835_DMA_ADDR))
+-		return;
++	long timeout = 100;
  
  	if (c->is_40bit_channel) {
--		writel(to_bcm2711_cbaddr(d->cb_list[0].paddr),
-+		writel(to_40bit_cbaddr(d->cb_list[0].paddr),
- 		       c->chan_base + BCM2711_DMA40_CB);
- 		writel(BCM2711_DMA40_ACTIVE | BCM2711_DMA40_PROT | BCM2711_DMA40_CS_FLAGS(c->dreq),
- 		       c->chan_base + BCM2711_DMA40_CS);
+-		/* Halt the current DMA */
+-		writel(readl(chan_base + BCM2711_DMA40_CS) | BCM2711_DMA40_HALT,
++		/*
++		 * A zero control block address means the channel is idle.
++		 * (The ACTIVE flag in the CS register is not a reliable indicator.)
++		 */
++		if (!readl(chan_base + BCM2711_DMA40_CB))
++			return;
++
++		/* Pause the current DMA */
++		writel(readl(chan_base + BCM2711_DMA40_CS) & ~BCM2711_DMA40_ACTIVE,
+ 		       chan_base + BCM2711_DMA40_CS);
+ 
+-		while ((readl(chan_base + BCM2711_DMA40_CS) & BCM2711_DMA40_HALT) && --timeout)
++		/* wait for outstanding transactions to complete */
++		while ((readl(chan_base + BCM2711_DMA40_CS) & BCM2711_DMA40_TRANSACTIONS) &&
++		       --timeout)
+ 			cpu_relax();
+ 
+-		/* Peripheral might be stuck and fail to halt */
++		/* Peripheral might be stuck and fail to complete */
+ 		if (!timeout)
+ 			dev_err(c->vc.chan.device->dev,
+-				"failed to halt dma\n");
++				"failed to complete pause on dma %d (CS:%08x)\n", c->ch,
++				readl(chan_base + BCM2711_DMA40_CS));
+ 
++		/* Set CS back to default state */
+ 		writel(BCM2711_DMA40_PROT, chan_base + BCM2711_DMA40_CS);
+-		writel(0, chan_base + BCM2711_DMA40_CB);
++
++		/* Reset the DMA */
++		writel(readl(chan_base + BCM2711_DMA40_DEBUG) | BCM2711_DMA40_DEBUG_RESET,
++		       chan_base + BCM2711_DMA40_DEBUG);
  	} else {
- 		writel(BIT(31), c->chan_base + BCM2835_DMA_CS);
+ 		/*
+ 		 * A zero control block address means the channel is idle.
+@@ -703,20 +711,6 @@ static void bcm2835_dma_abort(struct bcm2835_chan *c)
+ 		if (!readl(chan_base + BCM2835_DMA_ADDR))
+ 			return;
  
--		writel(c->is_2712 ? to_bcm2711_cbaddr(d->cb_list[0].paddr) : d->cb_list[0].paddr,
-+		writel(c->is_2712 ? to_40bit_cbaddr(d->cb_list[0].paddr) : d->cb_list[0].paddr,
- 		       c->chan_base + BCM2835_DMA_ADDR);
- 		writel(BCM2835_DMA_ACTIVE | BCM2835_DMA_CS_FLAGS(c->dreq),
- 		       c->chan_base + BCM2835_DMA_CS);
-@@ -1126,10 +1126,10 @@ static struct dma_async_tx_descriptor *bcm2835_dma_prep_dma_cyclic(
- 	if (c->is_40bit_channel)
- 		((struct bcm2711_dma40_scb *)
- 		 d->cb_list[frames - 1].cb)->next_cb =
--			to_bcm2711_cbaddr(d->cb_list[0].paddr);
-+			to_40bit_cbaddr(d->cb_list[0].paddr);
- 	else
- 		d->cb_list[d->frames - 1].cb->next = c->is_2712 ?
--		to_bcm2711_cbaddr(d->cb_list[0].paddr) : d->cb_list[0].paddr;
-+		to_40bit_cbaddr(d->cb_list[0].paddr) : d->cb_list[0].paddr;
+-		/* Write 0 to the active bit - Pause the DMA */
+-		writel(readl(chan_base + BCM2835_DMA_CS) & ~BCM2835_DMA_ACTIVE,
+-		       chan_base + BCM2835_DMA_CS);
+-
+-		/* wait for DMA to be paused */
+-		while ((readl(chan_base + BCM2835_DMA_CS) & BCM2835_DMA_WAITING_FOR_WRITES) &&
+-		       --timeout)
+-			cpu_relax();
+-
+-		/* Peripheral might be stuck and fail to signal AXI write responses */
+-		if (!timeout)
+-			dev_err(c->vc.chan.device->dev,
+-				"failed to pause dma\n");
+-
+ 		/* We need to clear the next DMA block pending */
+ 		writel(0, chan_base + BCM2835_DMA_NEXTCB);
  
- 	return vchan_tx_prep(&c->vc, &d->vd, flags);
+@@ -724,15 +718,27 @@ static void bcm2835_dma_abort(struct bcm2835_chan *c)
+ 		writel(readl(chan_base + BCM2835_DMA_CS) | BCM2835_DMA_ABORT | BCM2835_DMA_ACTIVE,
+ 		       chan_base + BCM2835_DMA_CS);
+ 
+-		/* wait for DMA to have been aborted */
+-		timeout = 10000;
++		/* wait for DMA to be aborted */
+ 		while ((readl(chan_base + BCM2835_DMA_CS) & BCM2835_DMA_ABORT) && --timeout)
+ 			cpu_relax();
+ 
+-		/* Peripheral might be stuck and fail to signal AXI write responses */
+-		if (!timeout)
++		/* Write 0 to the active bit - Pause the DMA */
++		writel(readl(chan_base + BCM2835_DMA_CS) & ~BCM2835_DMA_ACTIVE,
++		       chan_base + BCM2835_DMA_CS);
++
++		/*
++		 * Peripheral might be stuck and fail to complete
++		 * This is expected when dreqs are enabled but not asserted
++		 * so only report error in non dreq case
++		 */
++		if (!timeout && !(readl(chan_base + BCM2835_DMA_TI) &
++		   (BCM2835_DMA_S_DREQ | BCM2835_DMA_D_DREQ)))
+ 			dev_err(c->vc.chan.device->dev,
+-				"failed to abort dma\n");
++				"failed to complete pause on dma %d (CS:%08x)\n", c->ch,
++				readl(chan_base + BCM2835_DMA_CS));
++
++		/* Set CS back to default state and reset the DMA */
++		writel(BCM2835_DMA_RESET, chan_base + BCM2835_DMA_CS);
+ 	}
  }
-@@ -1251,7 +1251,7 @@ void bcm2711_dma40_memcpy(dma_addr_t dst, dma_addr_t src, size_t size)
- 	scb->len = size;
- 	scb->next_cb = 0;
- 
--	writel(to_bcm2711_cbaddr(memcpy_scb_dma), memcpy_chan + BCM2711_DMA40_CB);
-+	writel(to_40bit_cbaddr(memcpy_scb_dma), memcpy_chan + BCM2711_DMA40_CB);
- 	writel(BCM2711_DMA40_MEMCPY_FLAGS | BCM2711_DMA40_ACTIVE | BCM2711_DMA40_PROT,
- 	       memcpy_chan + BCM2711_DMA40_CS);
  
 -- 
 2.41.0

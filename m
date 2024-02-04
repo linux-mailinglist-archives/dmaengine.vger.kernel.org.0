@@ -1,49 +1,49 @@
-Return-Path: <dmaengine+bounces-945-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-947-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 905F7848BA6
-	for <lists+dmaengine@lfdr.de>; Sun,  4 Feb 2024 08:00:47 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B9C5848BAA
+	for <lists+dmaengine@lfdr.de>; Sun,  4 Feb 2024 08:01:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CB381B217AB
-	for <lists+dmaengine@lfdr.de>; Sun,  4 Feb 2024 07:00:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 413CA284ED2
+	for <lists+dmaengine@lfdr.de>; Sun,  4 Feb 2024 07:01:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5E87101FA;
-	Sun,  4 Feb 2024 06:59:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C78B11701;
+	Sun,  4 Feb 2024 06:59:55 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0609ABE5B;
-	Sun,  4 Feb 2024 06:59:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6A0C2C6;
+	Sun,  4 Feb 2024 06:59:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707029994; cv=none; b=lf2xTTJrIW+gR3wDEvsvS75EDjqzeLpGiHfBTFY5sI8t9BkpMz/1VJbrDXUXHYyqKCQbpqbmbKK7Sh5b1HBZl5ux/TuzrQCfHXAES6erQi5cWQ65KdYbj/h8T8UQy41a10ldDxRYiTPi7hID4ohB8FQGgjkk9gjP1mm9PgLZogI=
+	t=1707029995; cv=none; b=KYHMxYX/lxeut0hBNj77tnrBYaeULVrRtSGA+k2FRHi6jAcPAA25WkcV+KD0gdqh0KevjvnIwl1Qm1R2Ki5OJSxTI2k0LZ9u6XBe63M3rBRha6pbSqZvHD4W6+HBUWbo36sRrLzw68HrmAkVZOztm6UJTuaCt5drXGmkCPaeBjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707029994; c=relaxed/simple;
-	bh=rh182kPLwPBgXmqkJrJq/F9lrkyEUmIXjxYZ5ygA1Z8=;
+	s=arc-20240116; t=1707029995; c=relaxed/simple;
+	bh=9OW5lbTgsybuOL7jtGkXXqnABZ3G6uX7yDMsBY+osVw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Cgi5rfZxBs9Y3dg1WzATvlLFz/lqa3KoNZm6s/rdcONTozXwKdWmiglQYhi4nQ2/15WkA3unGDS8aXvmdLvg6ChCgirEYlUq5MbjZQepZmQmU+ReIyD7bujxVo/YjLSmIfBygnd03WZzQjtqIczZQQMaOB8QP937USaIahIjLKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.131
+	 MIME-Version; b=B1UqGvqw5sSz/jiXb87alejd9Y/+U3jG3WnQKatxDL88haxIpayKjB+B+dY4Qgav4fQXj9QS74s/2EWhU7yvuf3lDhqqyVk4s3NXjsZshAm/JgKeQSJ9kaS6ORZJKpa3Bg2qYVhGtzlf/Tka4tegp+Mz+jy3lfPR75b1QsmhV/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 2C8441F7F2;
+	by smtp-out1.suse.de (Postfix) with ESMTPS id CFB1A220A6;
 	Sun,  4 Feb 2024 06:59:51 +0000 (UTC)
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 134271338E;
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B6A711338E;
 	Sun,  4 Feb 2024 06:59:51 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Q/J2Auc1v2WGZwAAD6G6ig
+	id 1ft/Kuc1v2WIZwAAD6G6ig
 	(envelope-from <aporta@suse.de>); Sun, 04 Feb 2024 06:59:51 +0000
 From: Andrea della Porta <andrea.porta@suse.com>
 To: Vinod Koul <vkoul@kernel.org>,
@@ -57,10 +57,11 @@ To: Vinod Koul <vkoul@kernel.org>,
 	linux-kernel@vger.kernel.org
 Cc: Maxime Ripard <maxime@cerno.tech>,
 	Dom Cobley <popcornmix@gmail.com>,
-	Phil Elwell <phil@raspberrypi.com>
-Subject: [PATCH 06/12] dmaengine: bcm2835: Use to_bcm2711_cbaddr where relevant
-Date: Sun,  4 Feb 2024 07:59:34 +0100
-Message-ID: <b8962397fa4e77f6f82067c44bcf89e70050d4d4.1706948717.git.andrea.porta@suse.com>
+	Phil Elwell <phil@raspberrypi.com>,
+	Andrea della Porta <andrea.porta@suse.com>
+Subject: [PATCH 07/12] bcm2835-dma: Support dma flags for multi-beat burst
+Date: Sun,  4 Feb 2024 07:59:35 +0100
+Message-ID: <570953f9532e2dc46568674d3c1348cdf26488b6.1706948717.git.andrea.porta@suse.com>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <cover.1706948717.git.andrea.porta@suse.com>
 References: <cover.1706948717.git.andrea.porta@suse.com>
@@ -71,64 +72,130 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Level: ******
-X-Spamd-Bar: ++++++
-Authentication-Results: smtp-out2.suse.de;
-	dkim=none
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [6.29 / 50.00];
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spamd-Result: default: False [1.30 / 50.00];
 	 ARC_NA(0.00)[];
 	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
 	 FROM_HAS_DN(0.00)[];
 	 TO_DN_SOME(0.00)[];
-	 R_MISSING_CHARSET(2.50)[];
 	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 R_MISSING_CHARSET(2.50)[];
 	 MIME_GOOD(-0.10)[text/plain];
 	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 REPLY(-4.00)[];
 	 BROKEN_CONTENT_TYPE(1.50)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 R_RATELIMIT(0.00)[to_ip_from(RLckep3cwzuj8o9t5iepipyqkk)];
+	 R_RATELIMIT(0.00)[to_ip_from(RLecjp584x17qehbj331hhfqn7)];
 	 RCVD_COUNT_THREE(0.00)[3];
-	 MX_GOOD(-0.01)[];
-	 NEURAL_HAM_SHORT(-0.20)[-0.997];
-	 RCPT_COUNT_TWELVE(0.00)[12];
+	 RCPT_COUNT_TWELVE(0.00)[13];
 	 MID_CONTAINS_FROM(1.00)[];
-	 BAYES_SPAM(0.00)[18.46%];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
 	 FORGED_SENDER(0.30)[andrea.porta@suse.com,aporta@suse.de];
 	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 R_DKIM_NA(2.20)[];
 	 MIME_TRACE(0.00)[0:+];
-	 FREEMAIL_CC(0.00)[cerno.tech,gmail.com,raspberrypi.com];
+	 FREEMAIL_CC(0.00)[cerno.tech,gmail.com,raspberrypi.com,suse.com];
 	 FROM_NEQ_ENVFROM(0.10)[andrea.porta@suse.com,aporta@suse.de];
 	 RCVD_TLS_ALL(0.00)[]
-X-Spam-Score: 6.29
-X-Rspamd-Queue-Id: 2C8441F7F2
+X-Spam-Level: *
+X-Spam-Score: 1.30
 X-Spam-Flag: NO
 
-From: Maxime Ripard <maxime@cerno.tech>
+From: Dom Cobley <popcornmix@gmail.com>
 
-bcm2711_dma40_memcpy has some code strictly equivalent to the
-to_bcm2711_cbaddr() function. Let's use it instead.
+Add a control bit to enable a multi-beat burst on a DMA.
+This improves DMA performance and is required for HDMI audio.
 
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Signed-off-by: Dom Cobley <popcornmix@gmail.com>
+Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
 ---
- drivers/dma/bcm2835-dma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/bcm2835-dma.c | 28 ++++++++++++++++++++--------
+ 1 file changed, 20 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
-index 077812eda609..d8d1f9ba2572 100644
+index d8d1f9ba2572..a20700a400a2 100644
 --- a/drivers/dma/bcm2835-dma.c
 +++ b/drivers/dma/bcm2835-dma.c
-@@ -1214,7 +1214,7 @@ void bcm2711_dma40_memcpy(dma_addr_t dst, dma_addr_t src, size_t size)
- 	scb->len = size;
- 	scb->next_cb = 0;
+@@ -156,7 +156,8 @@ struct bcm2835_desc {
+ #define BCM2835_DMA_S_WIDTH	BIT(9) /* 128bit writes if set */
+ #define BCM2835_DMA_S_DREQ	BIT(10) /* enable SREQ for source */
+ #define BCM2835_DMA_S_IGNORE	BIT(11) /* ignore source reads - read 0 */
+-#define BCM2835_DMA_BURST_LENGTH(x) ((x & 15) << 12)
++#define BCM2835_DMA_BURST_LENGTH(x) (((x) & 15) << 12)
++#define BCM2835_DMA_GET_BURST_LENGTH(x) (((x) >> 12) & 15)
+ #define BCM2835_DMA_CS_FLAGS(x) ((x) & (BCM2835_DMA_PRIORITY(15) | \
+ 				      BCM2835_DMA_PANIC_PRIORITY(15) | \
+ 				      BCM2835_DMA_WAIT_FOR_WRITES | \
+@@ -180,6 +181,11 @@ struct bcm2835_desc {
+ #define WIDE_DEST(x) (((x) & BCM2835_DMA_WIDE_DEST) ? \
+ 		      BCM2835_DMA_D_WIDTH : 0)
  
--	writel((u32)(memcpy_scb_dma >> 5), memcpy_chan + BCM2711_DMA40_CB);
-+	writel(to_bcm2711_cbaddr(memcpy_scb_dma), memcpy_chan + BCM2711_DMA40_CB);
- 	writel(BCM2711_DMA40_MEMCPY_FLAGS + BCM2711_DMA40_ACTIVE,
- 	       memcpy_chan + BCM2711_DMA40_CS);
++/* A fake bit to request that the driver requires multi-beat burst */
++#define BCM2835_DMA_BURST BIT(30)
++#define BURST_LENGTH(x) (((x) & BCM2835_DMA_BURST) ? \
++			 BCM2835_DMA_BURST_LENGTH(3) : 0)
++
+ /* debug register bits */
+ #define BCM2835_DMA_DEBUG_LAST_NOT_SET_ERR	BIT(0)
+ #define BCM2835_DMA_DEBUG_FIFO_ERR		BIT(1)
+@@ -282,7 +288,7 @@ struct bcm2835_desc {
+ /* the max dma length for different channels */
+ #define MAX_DMA40_LEN SZ_1G
  
+-#define BCM2711_DMA40_BURST_LEN(x)	((min(x, 16) - 1) << 8)
++#define BCM2711_DMA40_BURST_LEN(x)	(((x) & 15) << 8)
+ #define BCM2711_DMA40_INC		BIT(12)
+ #define BCM2711_DMA40_SIZE_32		(0 << 13)
+ #define BCM2711_DMA40_SIZE_64		(1 << 13)
+@@ -359,12 +365,16 @@ static inline uint32_t to_bcm2711_ti(uint32_t info)
+ 
+ static inline uint32_t to_bcm2711_srci(uint32_t info)
+ {
+-	return ((info & BCM2835_DMA_S_INC) ? BCM2711_DMA40_INC : 0);
++	return ((info & BCM2835_DMA_S_INC) ? BCM2711_DMA40_INC : 0) |
++	       ((info & BCM2835_DMA_S_WIDTH) ? BCM2711_DMA40_SIZE_128 : 0) |
++	       BCM2711_DMA40_BURST_LEN(BCM2835_DMA_GET_BURST_LENGTH(info));
+ }
+ 
+ static inline uint32_t to_bcm2711_dsti(uint32_t info)
+ {
+-	return ((info & BCM2835_DMA_D_INC) ? BCM2711_DMA40_INC : 0);
++	return ((info & BCM2835_DMA_D_INC) ? BCM2711_DMA40_INC : 0) |
++	       ((info & BCM2835_DMA_D_WIDTH) ? BCM2711_DMA40_SIZE_128 : 0) |
++	       BCM2711_DMA40_BURST_LEN(BCM2835_DMA_GET_BURST_LENGTH(info));
+ }
+ 
+ static inline uint32_t to_bcm2711_cbaddr(dma_addr_t addr)
+@@ -933,7 +943,8 @@ static struct dma_async_tx_descriptor *bcm2835_dma_prep_dma_memcpy(
+ 	struct bcm2835_chan *c = to_bcm2835_dma_chan(chan);
+ 	struct bcm2835_desc *d;
+ 	u32 info = BCM2835_DMA_D_INC | BCM2835_DMA_S_INC |
+-		   WAIT_RESP(c->dreq) | WIDE_SOURCE(c->dreq) | WIDE_DEST(c->dreq);
++		   WAIT_RESP(c->dreq) | WIDE_SOURCE(c->dreq) |
++		   WIDE_DEST(c->dreq) | BURST_LENGTH(c->dreq);
+ 	u32 extra = BCM2835_DMA_INT_EN;
+ 	size_t max_len = bcm2835_dma_max_frame_length(c);
+ 	size_t frames;
+@@ -964,8 +975,8 @@ static struct dma_async_tx_descriptor *bcm2835_dma_prep_slave_sg(
+ 	struct bcm2835_chan *c = to_bcm2835_dma_chan(chan);
+ 	struct bcm2835_desc *d;
+ 	dma_addr_t src = 0, dst = 0;
+-	u32 info = WAIT_RESP(c->dreq) |
+-		   WIDE_SOURCE(c->dreq) | WIDE_DEST(c->dreq);
++	u32 info = WAIT_RESP(c->dreq) | WIDE_SOURCE(c->dreq) |
++		   WIDE_DEST(c->dreq) | BURST_LENGTH(c->dreq);
+ 	u32 extra = BCM2835_DMA_INT_EN;
+ 	size_t frames;
+ 
+@@ -1017,7 +1028,8 @@ static struct dma_async_tx_descriptor *bcm2835_dma_prep_dma_cyclic(
+ 	struct bcm2835_chan *c = to_bcm2835_dma_chan(chan);
+ 	struct bcm2835_desc *d;
+ 	dma_addr_t src, dst;
+-	u32 info = WAIT_RESP(c->dreq) | WIDE_SOURCE(c->dreq) | WIDE_DEST(c->dreq);
++	u32 info = WAIT_RESP(c->dreq) | WIDE_SOURCE(c->dreq) |
++		   WIDE_DEST(c->dreq) | BURST_LENGTH(c->dreq);
+ 	u32 extra = 0;
+ 	size_t max_len = bcm2835_dma_max_frame_length(c);
+ 	size_t frames;
 -- 
 2.41.0
 

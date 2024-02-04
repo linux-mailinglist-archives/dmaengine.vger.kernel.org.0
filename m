@@ -1,50 +1,50 @@
-Return-Path: <dmaengine+bounces-948-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-949-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0DEFF848BAD
-	for <lists+dmaengine@lfdr.de>; Sun,  4 Feb 2024 08:01:20 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9136A848BB0
+	for <lists+dmaengine@lfdr.de>; Sun,  4 Feb 2024 08:01:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 32BBC1C214A7
-	for <lists+dmaengine@lfdr.de>; Sun,  4 Feb 2024 07:01:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4E535284F1E
+	for <lists+dmaengine@lfdr.de>; Sun,  4 Feb 2024 07:01:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F54212B66;
-	Sun,  4 Feb 2024 06:59:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 191E8134A0;
+	Sun,  4 Feb 2024 06:59:57 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44649DDBD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3194611199;
 	Sun,  4 Feb 2024 06:59:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707029996; cv=none; b=kIChef9ZKMLxh3i1WxYRpfTatBCos32bQoqr8bJXwvhpA9KKojIHDhZ1eIZjOrL823K5uyO8CoU5NsS6oA7mrlKsKhIGaz17oduSkylVj7KJcHwCtTXWByb0+P+DazLaYvD7rQ3BFnD/eXUvq9tcaSY9oA4Uvzyi6CTdQxrf1Wo=
+	t=1707029997; cv=none; b=uznueJbESrBXFMs15dyzG+SpwTqUlu4sL9+v3zI9Hl88QexGSNuI/wAUlEsiDkFrqGAMYLfFwhKwSUvcO424hAUe25VgZ4WwqUjLViRA1BDpg9IyaF4efD64g9Xn0fS/YPObegyfyI5X7DMXFdeomqd213obkC8PaoAlKjRas48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707029996; c=relaxed/simple;
-	bh=ZcPciE1A5owLabkIC4nfdTFrxgIGeN/EJixCqoNdbFw=;
+	s=arc-20240116; t=1707029997; c=relaxed/simple;
+	bh=fEiZY2YX2MHJuQp5ijo0Czu63wTrLJQIY2BAuIr7Q3Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pjSQZFyNPypLt2o7MDlRC3BqGvVDPiSbSYzyA9NfrHEimkYpMlU+D3l9R3GmU/Txgmpxs4skCgRx3xFuZW1BnsSALvUMXNkrasB/T4eExbNHH683Pn6nJ2C8IJTpPC1d9VKKw+dgPM7tbM8EW49DfGsRpsWEwJps+stlajKoT48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.130
+	 MIME-Version; b=NtvQHK15IKUpTIP53reCYnCGvNKfrY1Yn/FNG7irtWmaHN3yZ0efkLV+wdQQlyOpTWVsXTd6htMioO4NX8rvnb8vH/G2/aJwbJ+S+WcM4YhCeg8VD58sjl6BA3n1kky163CFlasXWZ/qnI+S60qHXitrAoNV4khcMngisRoPJYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 88BBD220A9;
-	Sun,  4 Feb 2024 06:59:52 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 350CC1F7EE;
+	Sun,  4 Feb 2024 06:59:53 +0000 (UTC)
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6D7B71338E;
-	Sun,  4 Feb 2024 06:59:52 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1CD541338E;
+	Sun,  4 Feb 2024 06:59:53 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id HpxjGOg1v2WKZwAAD6G6ig
-	(envelope-from <aporta@suse.de>); Sun, 04 Feb 2024 06:59:52 +0000
+	id tsDtBOk1v2WMZwAAD6G6ig
+	(envelope-from <aporta@suse.de>); Sun, 04 Feb 2024 06:59:53 +0000
 From: Andrea della Porta <andrea.porta@suse.com>
 To: Vinod Koul <vkoul@kernel.org>,
 	Florian Fainelli <florian.fainelli@broadcom.com>,
@@ -57,11 +57,10 @@ To: Vinod Koul <vkoul@kernel.org>,
 	linux-kernel@vger.kernel.org
 Cc: Maxime Ripard <maxime@cerno.tech>,
 	Dom Cobley <popcornmix@gmail.com>,
-	Phil Elwell <phil@raspberrypi.com>,
-	Andrea della Porta <andrea.porta@suse.com>
-Subject: [PATCH 08/12] bcm2835-dma: Need to keep PROT bits set in CS on 40bit controller
-Date: Sun,  4 Feb 2024 07:59:36 +0100
-Message-ID: <98d536c4d9789e176ab83ab3d2257c08f0075bdb.1706948717.git.andrea.porta@suse.com>
+	Phil Elwell <phil@raspberrypi.com>
+Subject: [PATCH 09/12] dmaengine: bcm2835: Add BCM2712 support
+Date: Sun,  4 Feb 2024 07:59:37 +0100
+Message-ID: <eb48d7f35252c7a2ddeda54fb326210c4bef8f18.1706948717.git.andrea.porta@suse.com>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <cover.1706948717.git.andrea.porta@suse.com>
 References: <cover.1706948717.git.andrea.porta@suse.com>
@@ -72,124 +71,69 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Authentication-Results: smtp-out1.suse.de;
+Authentication-Results: smtp-out2.suse.de;
 	none
-X-Spamd-Result: default: False [1.30 / 50.00];
+X-Spam-Level: ****
+X-Spam-Score: 4.10
+X-Spamd-Result: default: False [4.10 / 50.00];
 	 ARC_NA(0.00)[];
 	 RCVD_VIA_SMTP_AUTH(0.00)[];
 	 FROM_HAS_DN(0.00)[];
 	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
 	 R_MISSING_CHARSET(2.50)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
 	 MIME_GOOD(-0.10)[text/plain];
 	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 REPLY(-4.00)[];
 	 BROKEN_CONTENT_TYPE(1.50)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
 	 R_RATELIMIT(0.00)[to_ip_from(RLecjp584x17qehbj331hhfqn7)];
 	 RCVD_COUNT_THREE(0.00)[3];
-	 RCPT_COUNT_TWELVE(0.00)[13];
+	 NEURAL_HAM_SHORT(-0.20)[-0.999];
+	 RCPT_COUNT_TWELVE(0.00)[12];
 	 MID_CONTAINS_FROM(1.00)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
 	 FORGED_SENDER(0.30)[andrea.porta@suse.com,aporta@suse.de];
 	 FUZZY_BLOCKED(0.00)[rspamd.com];
 	 MIME_TRACE(0.00)[0:+];
-	 FREEMAIL_CC(0.00)[cerno.tech,gmail.com,raspberrypi.com,suse.com];
+	 FREEMAIL_CC(0.00)[cerno.tech,gmail.com,raspberrypi.com];
 	 FROM_NEQ_ENVFROM(0.10)[andrea.porta@suse.com,aporta@suse.de];
 	 RCVD_TLS_ALL(0.00)[]
-X-Spam-Level: *
-X-Spam-Score: 1.30
 X-Spam-Flag: NO
 
-From: Dom Cobley <popcornmix@gmail.com>
+From: Phil Elwell <phil@raspberrypi.com>
 
-Resetting them to zero puts DMA channel into secure mode
-which makes further accesses impossible
+BCM2712 has 6 40-bit channels - DMA6 to DMA11. Add a new compatible
+string to indicate that the current platform is BCM2712.
 
-Cc: Dom Cobley <popcornmix@gmail.com>
-Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+Signed-off-by: Phil Elwell <phil@raspberrypi.com>
 ---
- drivers/dma/bcm2835-dma.c | 27 +++++++++++++++++----------
- 1 file changed, 17 insertions(+), 10 deletions(-)
+ drivers/dma/bcm2835-dma.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
-index a20700a400a2..1b3f470274b2 100644
+index 1b3f470274b2..548cf7343d83 100644
 --- a/drivers/dma/bcm2835-dma.c
 +++ b/drivers/dma/bcm2835-dma.c
-@@ -239,6 +239,8 @@ struct bcm2835_desc {
- #define BCM2711_DMA40_WR_PAUSED		BIT(5)  /* Writing is paused */
- #define BCM2711_DMA40_DREQ_PAUSED	BIT(6)  /* Is paused by DREQ flow control */
- #define BCM2711_DMA40_WAITING_FOR_WRITES BIT(7)  /* Waiting for last write */
-+// we always want to run in supervisor mode
-+#define BCM2711_DMA40_PROT		(BIT(8) | BIT(9))
- #define BCM2711_DMA40_ERR		BIT(10)
- #define BCM2711_DMA40_QOS(x)		(((x) & 0x1f) << 16)
- #define BCM2711_DMA40_PANIC_QOS(x)	(((x) & 0x1f) << 20)
-@@ -246,10 +248,10 @@ struct bcm2835_desc {
- #define BCM2711_DMA40_DISDEBUG		BIT(29)
- #define BCM2711_DMA40_ABORT		BIT(30)
- #define BCM2711_DMA40_HALT		BIT(31)
--#define BCM2711_DMA40_CS_FLAGS(x) ((x) & (BCM2711_DMA40_QOS(15) | \
--					BCM2711_DMA40_PANIC_QOS(15) | \
--					BCM2711_DMA40_WAIT_FOR_WRITES |	\
--					BCM2711_DMA40_DISDEBUG))
-+#define BCM2711_DMA40_CS_FLAGS(x)	((x) & (BCM2711_DMA40_QOS(15) | \
-+					 BCM2711_DMA40_PANIC_QOS(15) | \
-+					 BCM2711_DMA40_WAIT_FOR_WRITES | \
-+					 BCM2711_DMA40_DISDEBUG))
+@@ -326,6 +326,12 @@ static const struct bcm2835_dma_cfg_data bcm2711_dma_cfg = {
+ 	.dma_mask = DMA_BIT_MASK(36),
+ };
  
- /* Transfer information bits */
- #define BCM2711_DMA40_INTEN		BIT(0)
-@@ -679,7 +681,7 @@ static void bcm2835_dma_abort(struct bcm2835_chan *c)
- 			dev_err(c->vc.chan.device->dev,
- 				"failed to halt dma\n");
- 
--		writel(0, chan_base + BCM2711_DMA40_CS);
-+		writel(BCM2711_DMA40_PROT, chan_base + BCM2711_DMA40_CS);
- 		writel(0, chan_base + BCM2711_DMA40_CB);
- 	} else {
- 		/*
-@@ -739,7 +741,7 @@ static void bcm2835_dma_start_desc(struct bcm2835_chan *c)
- 	if (c->is_40bit_channel) {
- 		writel(to_bcm2711_cbaddr(d->cb_list[0].paddr),
- 		       c->chan_base + BCM2711_DMA40_CB);
--		writel(BCM2711_DMA40_ACTIVE | BCM2711_DMA40_CS_FLAGS(c->dreq),
-+		writel(BCM2711_DMA40_ACTIVE | BCM2711_DMA40_PROT | BCM2711_DMA40_CS_FLAGS(c->dreq),
- 		       c->chan_base + BCM2711_DMA40_CS);
- 	} else {
- 		writel(d->cb_list[0].paddr, c->chan_base + BCM2835_DMA_ADDR);
-@@ -772,8 +774,13 @@ static irqreturn_t bcm2835_dma_callback(int irq, void *data)
- 	 * if this IRQ handler is threaded.) If the channel is finished, it
- 	 * will remain idle despite the ACTIVE flag being set.
- 	 */
--	writel(BCM2835_DMA_INT | BCM2835_DMA_ACTIVE | BCM2835_DMA_CS_FLAGS(c->dreq),
--	       c->chan_base + BCM2835_DMA_CS);
-+	if (c->is_40bit_channel)
-+		writel(BCM2835_DMA_INT | BCM2711_DMA40_ACTIVE | BCM2711_DMA40_PROT |
-+		       BCM2711_DMA40_CS_FLAGS(c->dreq),
-+		       c->chan_base + BCM2711_DMA40_CS);
-+	else
-+		writel(BCM2835_DMA_INT | BCM2835_DMA_ACTIVE | BCM2835_DMA_CS_FLAGS(c->dreq),
-+		       c->chan_base + BCM2835_DMA_CS);
- 
- 	d = c->desc;
- 
-@@ -1227,14 +1234,14 @@ void bcm2711_dma40_memcpy(dma_addr_t dst, dma_addr_t src, size_t size)
- 	scb->next_cb = 0;
- 
- 	writel(to_bcm2711_cbaddr(memcpy_scb_dma), memcpy_chan + BCM2711_DMA40_CB);
--	writel(BCM2711_DMA40_MEMCPY_FLAGS + BCM2711_DMA40_ACTIVE,
-+	writel(BCM2711_DMA40_MEMCPY_FLAGS | BCM2711_DMA40_ACTIVE | BCM2711_DMA40_PROT,
- 	       memcpy_chan + BCM2711_DMA40_CS);
- 
- 	/* Poll for completion */
- 	while (!(readl(memcpy_chan + BCM2711_DMA40_CS) & BCM2711_DMA40_END))
- 		cpu_relax();
- 
--	writel(BCM2711_DMA40_END, memcpy_chan + BCM2711_DMA40_CS);
-+	writel(BCM2711_DMA40_END | BCM2711_DMA40_PROT, memcpy_chan + BCM2711_DMA40_CS);
- 
- 	spin_unlock_irqrestore(&memcpy_lock, flags);
- }
++static const struct bcm2835_dma_cfg_data bcm2712_dma_cfg = {
++	.chan_40bit_mask = BIT(6) | BIT(7) | BIT(8) | BIT(9) |
++				 BIT(10) | BIT(11),
++	.dma_mask = DMA_BIT_MASK(40),
++};
++
+ static inline size_t bcm2835_dma_max_frame_length(struct bcm2835_chan *c)
+ {
+ 	/* lite and normal channels have different max frame length */
+@@ -1250,6 +1256,7 @@ EXPORT_SYMBOL(bcm2711_dma40_memcpy);
+ static const struct of_device_id bcm2835_dma_of_match[] = {
+ 	{ .compatible = "brcm,bcm2835-dma", .data = &bcm2835_dma_cfg },
+ 	{ .compatible = "brcm,bcm2711-dma", .data = &bcm2711_dma_cfg },
++	{ .compatible = "brcm,bcm2712-dma", .data = &bcm2712_dma_cfg },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, bcm2835_dma_of_match);
 -- 
 2.41.0
 

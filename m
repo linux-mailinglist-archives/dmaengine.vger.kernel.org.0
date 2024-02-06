@@ -1,151 +1,98 @@
-Return-Path: <dmaengine+bounces-963-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-964-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7043484BCC1
-	for <lists+dmaengine@lfdr.de>; Tue,  6 Feb 2024 19:12:02 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 80F4184BE31
+	for <lists+dmaengine@lfdr.de>; Tue,  6 Feb 2024 20:39:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2D60D284BB6
-	for <lists+dmaengine@lfdr.de>; Tue,  6 Feb 2024 18:12:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ACAED1C23076
+	for <lists+dmaengine@lfdr.de>; Tue,  6 Feb 2024 19:39:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE54AE56C;
-	Tue,  6 Feb 2024 18:11:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83DBA17555;
+	Tue,  6 Feb 2024 19:39:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="fN9o3gxl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nt77VMdX"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF48DF5C;
-	Tue,  6 Feb 2024 18:11:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58CF217BAE;
+	Tue,  6 Feb 2024 19:39:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707243116; cv=none; b=X5iYTCGVKQur5hL1kblyjAE/QfGZIsVZ/G4NfKNbk5Lg6WoeQDyuTNxYFC91KmBznSq20gL5EbZ2NlwDpwfhOwy+c9H16kKiEYJLURvqk9VTQWRcvF7NzW4lFj5q8Dd4GeWuDsUrtpYmlXRW13KLVxO9aDy/7ZZVALqJhrB32Ts=
+	t=1707248375; cv=none; b=n/rV4t972MbVsTb6F6gYvcpS3rtt1nEcDzGgNyvDHgZKedJL9zJxnh1+grj50WzAnDKmgFYxK/u86Uq/Uz9lQ7VipTnzt971Mcjcah0lABdd32MR3ZnIES+ddXQWua8Z0zVC9QDO1EWJR2vg99n05/Et30vHAWdAlRY+HcYivRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707243116; c=relaxed/simple;
-	bh=0xCltA7q5mR+wvdJo77KvomyKBNbq4PakOFRBQWRUlo=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=hM6qNgmy8Iq9xqRLA5x6dy9dIDvQCbabORjwu6i19UaP8s+eTmkB+63brqtqHd0N0nSG8B0IEHmIGs3WFiMYjb22+cGt7BlF1Pr0OugXpSp1UYdD4ycPTkFveE2n1r0epPyHRXEM6kxvBmgwcACKCPAyJyMADNq7hiS+hu74Y1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=fN9o3gxl; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=s31663417; t=1707243098; x=1707847898; i=wahrenst@gmx.net;
-	bh=0xCltA7q5mR+wvdJo77KvomyKBNbq4PakOFRBQWRUlo=;
-	h=X-UI-Sender-Class:Date:Subject:From:To:Cc:References:
-	 In-Reply-To;
-	b=fN9o3gxlcphThgIoTQbySPzUKLbbsi8VcWQ6xHxGScSJggm6ELjI/5HDK+dObCF8
-	 3hRPzNwplGHEBrsWjbC3baAqdE89F+fQOVIrYvaeeatnKDZxnY5DYGM7FNk3D54lK
-	 duwOCZZ6WmlrCOZEWKUqdKz3R0vzFNhng2a5zzECXfGV5vi5Yn+VEuRQ0A7yEu/NW
-	 R3L7gQ49Fka0hGEcrSoMa1f4rC3Ri9+smnzYBx3x2mViZ0Cc1lnJsT8PLs7byp+3Q
-	 Z1rcJJ0uvfPsCtfHUUlcU5FdhvxLP7s/B/8ih+4I5u9EMFtUl7vRpQ6J/FXkW9my1
-	 vOQpyvgsRvoXrX0cKQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.167] ([37.4.248.43]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1M26r3-1rZtxL28Sn-002XWj; Tue, 06
- Feb 2024 19:11:38 +0100
-Message-ID: <956e0b7c-b1b2-4eaa-bb6d-da6f9dc2335d@gmx.net>
-Date: Tue, 6 Feb 2024 19:11:37 +0100
+	s=arc-20240116; t=1707248375; c=relaxed/simple;
+	bh=BqxQ7FEXnzOrBOd7zj6mYuOjgycKqkJG9Ox/LfYw7ms=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=i4ZEEXHt2TYH5v1CPZcfRRE7j75Y75gX6LAl4hRIr9pJnrDq8PPXA/rwSsS/xTmfTryod+XbllTtcz2kQeb1oJrEJq3EDtuuxrNZf6HUJnHaRh8bkfXZwGwg7aOmZYnx/qgiznNtgCEvJ4SIc7JWAz5Rb1eStWxCxdUm1y8ADOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nt77VMdX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC340C433F1;
+	Tue,  6 Feb 2024 19:39:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707248374;
+	bh=BqxQ7FEXnzOrBOd7zj6mYuOjgycKqkJG9Ox/LfYw7ms=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=nt77VMdXUt5FjMlr8RCREY65FvC8+hBjPE8hs4xXz1s7YvoV7OToDZl1R19bOZDIZ
+	 ZQad5Rw+Gk34NATfN8E5itpqs6s6KSoo+J9Xx+tjbhAMJ57w0XbMBdz+N09oXPbjPl
+	 AdOMZUZ3EwFkcaVS85n60VP8YHCiF6SqO+aOL+oLQdgjUtpB5GKahUNc4Srdo2TuKR
+	 DZBemHXcgkVo/pjtzisQkzavKbr6Lx3fNPoWjMk7AJ/d2ZfAULTIncMSJ6mjS6SAGM
+	 b8k9t1/y4YWGYPthsbJKg0j4K936lUUc/xrS27z7b17HDCHRcrzl+q/nCOmEQMr3Jy
+	 q6JTU7zynApsQ==
+From: Conor Dooley <conor@kernel.org>
+To: green.wan@sifive.com,
+	vkoul@kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	palmer@dabbelt.com,
+	paul.walmsley@sifive.com,
+	conor+dt@kernel.org,
+	shravan chippa <shravan.chippa@microchip.com>
+Cc: conor@kernel.org,
+	Conor Dooley <conor.dooley@microchip.com>,
+	dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	nagasuresh.relli@microchip.com,
+	praveen.kumar@microchip.com
+Subject: Re: (subset) [PATCH v5 0/4] dma: sf-pdma: various sf-pdma updates for the mpfs platform
+Date: Tue,  6 Feb 2024 19:39:25 +0000
+Message-ID: <20240206-luckily-udder-ffd828ccdc57@spud>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20231208103856.3732998-1-shravan.chippa@microchip.com>
+References: <20231208103856.3732998-1-shravan.chippa@microchip.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 02/12] bcm2835-dma: Add proper 40-bit DMA support
-Content-Language: en-US
-From: Stefan Wahren <wahrenst@gmx.net>
-To: Dave Stevenson <dave.stevenson@raspberrypi.com>,
- Andrea della Porta <andrea.porta@suse.com>
-Cc: Vinod Koul <vkoul@kernel.org>,
- Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui
- <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, dmaengine@vger.kernel.org,
- linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Maxime Ripard <maxime@cerno.tech>,
- Dom Cobley <popcornmix@gmail.com>, Phil Elwell <phil@raspberrypi.com>
-References: <cover.1706948717.git.andrea.porta@suse.com>
- <eeb94204c30c2182f5ffd3ec083c04399ecdee32.1706948717.git.andrea.porta@suse.com>
- <8736c115-e11c-41ca-85eb-7cd19a205068@gmx.net>
- <CAPY8ntCEvsTJwoEBYc7JsTaYfdMURhmytvvVMcLVNBkmdTNcZQ@mail.gmail.com>
- <42e760f9-8304-4237-bb68-54c98eb7fcb9@gmx.net>
-In-Reply-To: <42e760f9-8304-4237-bb68-54c98eb7fcb9@gmx.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:nllgblqBmJF4zoJgDkTdDxoz/jEocWqLZhyH92vrzLMmpjtK34m
- IiNTqRD0hh4FUybvEsZgpu90X1qWq7P3L3Wgl/qkDh0AHIDyWB33PjNd0iTLQQZfEHI8g0N
- hMpuKJWkIIwg47fpy7TnEM6bmdREJBiU2lB9Muj4CPE7LSJ2ekHxCjwFEZZTma1pJbsCSfb
- XSym7HdR+wBzWj66qYIyA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:ipCYQAYl42Y=;9awlrRFIDrjhwjZwhMLwIKp+pyF
- 93QqdbxqN3frwaNwGiCFMMl8hJZNZzkZsHfbje7RPtTixAct0rBLX9BRQ9leHZ4SxcqYUPcHA
- 2FVVa8pdxKxCis1W8N2NWd8MqRFknRfR+fuPbmnmxvsn28wbKnfifXx/zpt4wXBNiMuzx4VTb
- GScP362CD14hQ98tqS8hslR6xLOmslGNm69iiajVysJdTxNXOdEjdUHSdktrOFdP1/IBI5JEF
- b5+x1WFmJJ0kg1bmQhxiqD2+RrospR6nFoWZweAWF6175Sxvp1g/0Vfnbhop0NsOnvm/VGvgS
- q+ju+UpTC1kj34Jdnu5COx4p16DblCUrNfe3BvVPYduedQKofLWXcS9VAo9GwTkypIxCFsZun
- QZXyQhenfaf14hSXpAVsW/LwqcBpa1/2nhkTlIGwFj9QH8mRPq0OBF5vaALqca22gpl2LxCN1
- CdAeZZW2ePmqQQzDvXJV1oZTLcDW+2U3pckkTfSBHJc50T6c5hURFM/MtLprPjwnHeQ3fC2CA
- HMUtslcK/k8KJq7co7DU1o5FNTpvEpKhdibFKWxomEunETqy9uBYhTD0w0FcB8+L6Uezac74S
- zUKZfaMmagT/12Vkg5wweTEyURGeNiQnjuRgIqjSA21f5POTeqOo5tQCnMVJed20heuz7W6rG
- DLUHs6DnIt6cLDRyXzFX0Ig2L9Td8jlPxEfojWzDciYYsr9yX5OeMEnXkNnJI4ePc8S1f8lnU
- vj+1S6aBl66M0mmjpu10BDT4TZhVCnR+59zeXAtJcsrNbhcoNzGXjF57XcMU5CRWyzUX6rpiw
- wVPlF9qj1g6fTwZ19bQH5lGFN3PRkGRtTQYZykgYbdBWo=
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=443; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=xmtgk10aREoc8W34f44KzSWunePLW5lmhs8pdAnijqk=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDKmHut7wx7dWlExfcNHWa3tnQMT2pqO2387rZOe0dZstl 98k7fmjo5SFQYyDQVZMkSXxdl+L1Po/Ljuce97CzGFlAhnCwMUpABN538vIsJF7rtPM7173ukOX vrPqXhavN/VYiDjfpgseC85sqa9+nsnwk3HRzTmVmgsWbM5TeJudttX7Q8HFm/veCVy/58+8SWZ FEzMA
+X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
+Content-Transfer-Encoding: 8bit
 
-Am 06.02.24 um 19:08 schrieb Stefan Wahren:
-> Hi Dave and Andrea,
->
-> Am 06.02.24 um 17:31 schrieb Dave Stevenson:
->> Hi Stefan and Andrea
->>
->> On Mon, 5 Feb 2024 at 18:50, Stefan Wahren <wahrenst@gmx.net> wrote:
->>> Hi Andrea,
->>>
->>> [add Dave]
->>>
->>> Am 04.02.24 um 07:59 schrieb Andrea della Porta:
->>>> From: Phil Elwell <phil@raspberrypi.org>
->>>>
->>>> BCM2711 has 4 DMA channels with a 40-bit address range, allowing them
->>>> to access the full 4GB of memory on a Pi 4.
->>>>
->>>> Cc: Phil Elwell <phil@raspberrypi.org>
->>>> Cc: Maxime Ripard <maxime@cerno.tech>
->>>> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
->>> mainlining isn't that simple by sending just the downstream patches to
->>> the mailing list. In many cases there reasons why this hasn't been
->>> upstreamed yet.
->>>
->>> In my opinion just this feature is worth a separate patch series. In
->>> 2021 i already send an initial version, which tried to implement it
->>> in a
->>> cleaner & maintainabler way [1]. In the meantime Dave Stevenson from
->>> Raspberry Pi wrote that he also wanted to work on this. Maybe you want
->>> to work on this together?
->> Yes, I'm looking at reworking Stefan's series to work on Pi4 & Pi5 as
->> it's needed for HDMI audio (and other things) on those platforms which
->> I'm working to upstream.
->>
->> I was getting weirdness from the sdhci block when I was last looking
->> at it, so it was just proving a little trickier than first thought.
->> Hopefully I'll get some time on it in the next couple of weeks.
-> i must confess that my series was just a draft to see that the general
-> approach would be accepted. Yes, it's possible that there are issues :-(
->
-> Maybe i can help you a little bit by taking care of first two patches
-> (node name fix & YAML conversion)?
-Forget about this, it's already done
->
-> Regards
->> =C2=A0=C2=A0 Dave
->>
->>> [1] -
->>> https://lore.kernel.org/linux-arm-kernel/13ec386b-2305-27da-9765-8fa3a=
-d71146c@i2se.com/T/
->>>
->
+From: Conor Dooley <conor.dooley@microchip.com>
 
+On Fri, 08 Dec 2023 16:08:52 +0530, shravan chippa wrote:
+> From: Shravan Chippa <shravan.chippa@microchip.com>
+> 
+> Changes from V4 -> V5:
+> 
+> Modified commit msg
+> Replaced the sf_pdma_of_xlate() function with
+> of_dma_xlate_by_chan_id()
+> 
+> [...]
+
+Applied to riscv-dt-for-next, thanks!
+
+[4/4] riscv: dts: microchip: add specific compatible for mpfs pdma
+      https://git.kernel.org/conor/c/5669bb5a16a0
+
+Thanks,
+Conor.
 

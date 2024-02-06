@@ -1,145 +1,127 @@
-Return-Path: <dmaengine+bounces-960-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-961-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0342084A6B0
-	for <lists+dmaengine@lfdr.de>; Mon,  5 Feb 2024 22:11:44 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B3F6884BAF3
+	for <lists+dmaengine@lfdr.de>; Tue,  6 Feb 2024 17:31:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2253D1C2652D
-	for <lists+dmaengine@lfdr.de>; Mon,  5 Feb 2024 21:11:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6F8AF28923E
+	for <lists+dmaengine@lfdr.de>; Tue,  6 Feb 2024 16:31:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1AB94F5EF;
-	Mon,  5 Feb 2024 19:06:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FD4C10E4;
+	Tue,  6 Feb 2024 16:31:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="CFGjo7pS"
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="YKQedl+r"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB804F5E9;
-	Mon,  5 Feb 2024 19:06:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98041137E
+	for <dmaengine@vger.kernel.org>; Tue,  6 Feb 2024 16:31:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707160003; cv=none; b=Q7RtfQ3G5pIIOnNG9CA3JGIkH4r9pPkC8BSlAXtynOqakeWGYqmquGRJ+F2+Tj61+J1Fez4xFElDHIFqY1bfJwIbZeTxG+lEFSnuW6pVUR2ap0g7Yt2IEBBzKcEXD+4aToV6baUuOjbABeI6ncIkjX/6w7LcMOrV3HgFSYo+3RE=
+	t=1707237085; cv=none; b=qr+Cuq9wgYUNnPI4WBn4ZC5kSR+F6UhHLNvsEYHgBevX/oXKRvZnO+heUZHywymnhSSmm07/psyhJmEMBZ3WiypRrq1iJH8m4Xo1xKwUeAea+ybh2g+umKYdXk0HyOo8wd4P0P3pdxjtCLUBhgdRLDukwDVja+utcRpP8CyhsDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707160003; c=relaxed/simple;
-	bh=e2OL4EiWvWIn9xVFVK1QFdVDd5fgSWtFdp0kgfHTXGM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NevAqEeOzjGax+Ce16GvJ9PVH7Tn8SzUSGYPkOdXozpdiAEJMwFdw77Sp1zj73uGzfj5sdxTycQ/NOck161Zq9h4gN49YhB/u4ch66Z3Q6TMA3yRpl5EdgWGY8Ad7VNXkasSzI9EsM92QqllxQGUcjYbGOqbWE6T/l7dh+d83s0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=CFGjo7pS; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=s31663417; t=1707159986; x=1707764786; i=wahrenst@gmx.net;
-	bh=e2OL4EiWvWIn9xVFVK1QFdVDd5fgSWtFdp0kgfHTXGM=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=CFGjo7pS2S2sF0CGwdUzGzoBAgKOXGcn82YLTASuQPe9G6Q83AqbLoZ/YEtPcNe4
-	 lfOqdi1GlbnHa4V6E10vBUqg2Ygkm1hhPSsAoDuxRM3piFFe+ehxUC61NvvNU8gaR
-	 vAX9vfUnjKGo/z4by0mTaUWu0Qqt4TzSFrZcrIEImTjhc8AmZron26KbFHczYE+FZ
-	 jO/zlGPHthvY12+T85z+iXCNK3r2ycNdzdQbo0Vq90Hd03J7wLfwSA5vvCVcsquos
-	 f5EHOXY2LFevX9RvPNc6MDb0LrwgVGICfxzUQ0id52+sDaW/YH+weiGBFWISaWUVt
-	 QffHEKoLjx2uqxN5Mg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.167] ([37.4.248.43]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MvbG2-1qi8N22ow2-00shgQ; Mon, 05
- Feb 2024 20:06:26 +0100
-Message-ID: <a12a0bf1-c59d-4b87-87ac-546f0f5e8d72@gmx.net>
-Date: Mon, 5 Feb 2024 20:06:25 +0100
+	s=arc-20240116; t=1707237085; c=relaxed/simple;
+	bh=m5YMgx/Rk89i31JsX7thzYfxW4hoc3JFWWBtlsOhGSQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NJQdImQlCku9IFOfSf+xuudh0w/t3Qx1NjPB5J/MDTTM1nfgOsFZ2JfNOC7qmqh6GD5OobadItswsF0owLtt0PECz9zwAl4o/f7qfsjhP1fCtYZAae3EimX+iy8xNlmSveLGf020BKN37Z96LxDPmIcjIJpWp9YnsPMmd2qcLiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=YKQedl+r; arc=none smtp.client-ip=209.85.219.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raspberrypi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-dc6df0f9bcdso5286845276.2
+        for <dmaengine@vger.kernel.org>; Tue, 06 Feb 2024 08:31:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=raspberrypi.com; s=google; t=1707237082; x=1707841882; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=wRJIyHV5VgYGC62PnCxR7qX0sGX7lOztrrbBlwUaWj8=;
+        b=YKQedl+r7VZqwhdAcmGDUbp/RlNzWvhM23qfqFWUB7cwWEK2G9wl/mKY69IqPzWoYo
+         DAj5wfTnCtgZbQ6DK91/iln5K3buC5ycQ7KbLcn45ungN8/d8c/Z2w6DdvGDa5XrMytG
+         3y9CvLnUUPkiwvd/SVKFjDs0EghOGp1aqJHR6zkyAw1A4y214gcgfT/xuRWASrVFI0q1
+         mUh3br6xmetxLf2qbgVItK9bDWnYiOQhUrfK2GgLv4U5/8iVs9JWFcNNXrHcXP7JpFCI
+         rtbAUQDq4WLZSqQbf2URaADp1KpEp/WhxpsMZaLaXhAimTAWiecKyj8wMTWz2M9dMciA
+         gabw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707237082; x=1707841882;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wRJIyHV5VgYGC62PnCxR7qX0sGX7lOztrrbBlwUaWj8=;
+        b=U+DANZnyBN9vfnqVU4xEq2E/8eFPRi3Dp09g8qlouZJnZWQvpzVAOnFweubwVDIOGJ
+         MKi+WTrq7rA35h47cc/fHsoUg0qzWqyU7enCpeZKrON0R1to6OpaRa2ViCo6xlcbZyoA
+         CJd6W+BVqm2FE0scyb9YEk7fzsaC5q2L6YOH70iY6J301MpnUR+MP/wosamQqxo4x5s9
+         3z+MjhSdWh5hwbvrh4puY1FKjZFp4vwQFf+bnvqwWfgeLyAPwZlTNGJixRnx8lUyXIy4
+         cLqCZ5ab7fDiu+Q2Hfmjr0eSsAaJ2OFYzE2P/bOjIelYBIC3FKfOD1hWkPGHd6/wjOC8
+         4E4w==
+X-Gm-Message-State: AOJu0YzLJH6WU1mzvvXg6PkhNqUdM33yTR6+fhrmOsaS7i0P0/COgPvd
+	I0AJuY2Fr8VM9TQfpB/1hYM3XhM5pVxYnhpygt8xgeoB4aU6PfJfpzt54c5M3q9ZjVt4MSz9HFW
+	o1x+KXgdKrVFZbk72EIl7QWEhY1wZRTtp9yopOw==
+X-Google-Smtp-Source: AGHT+IH/RWk7n17FsIM6ZLFkgpIBG5LLj62gEHMbGZsFtCblxeMsBXg47ecJv1kl1vVPCeDRQ/RSwDIIaW275+Ua6iY=
+X-Received: by 2002:a5b:50:0:b0:dc6:e219:980e with SMTP id e16-20020a5b0050000000b00dc6e219980emr2261716ybp.56.1707237082535;
+ Tue, 06 Feb 2024 08:31:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/12] Add support for BCM2712 DMA engine
-Content-Language: en-US
-To: Andrea della Porta <andrea.porta@suse.com>, Vinod Koul
- <vkoul@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
- Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, dmaengine@vger.kernel.org,
- linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Cc: Maxime Ripard <maxime@cerno.tech>, Dom Cobley <popcornmix@gmail.com>,
- Phil Elwell <phil@raspberrypi.com>
-References: <cover.1706948717.git.andrea.porta@suse.com>
-From: Stefan Wahren <wahrenst@gmx.net>
-In-Reply-To: <cover.1706948717.git.andrea.porta@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:nJiNqVk/3+nZThAYal+pN6vhJK0NctDKoVu/OKHGcg10XoKbpGu
- cuY8O8OOO1QONMKNJZVAfo6x3fzZRJFIaUJj2nNiVl4mtHckd1HbZiV4l6W+PDnZ0H4qiUx
- pcKh8tu/G2meJTF2khqF4Nw81J8L0Z5BZLTzlGnylb2xBOjPP1c5C9U74C2WLCJaSTbRMql
- 3fh07nh6ZGRKXg+johyCg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:D0ByTQ4dxtk=;wVGIfcHu2aqaBPu4fkqTwf9T5Wz
- sthJxR2uEffnPYrkNDt7HwyWrQuU8aOC/YFD3SQsSE8hLvz67vi7VM0cjLvXZ0CitMAZp8SGD
- 17s2jUrjvNo1IWDtoA4AQi2Dr4MiaphAs89o3WBvv2BgRUZmlG5ub0Us5irBWEGAlONyRPAKU
- Sj0ObMkaSAsEGYtnSq2KOLFGLsI8q26ec8GhaBZqjOephWoC1IqDkeDJkVb09X9KiErCmhTfO
- B2zBfvF44ruSXlZI5GWqSsxjadCajaL2AyMfGSnXocfYMoRv8+ECMhoTuweZJAZ2JVbGXRAbi
- nHQy8rkUd9r+2yRiayNrrcwg91gUvL7H+6mmvwodXCjUxJfydJyHEBSnKLquYVTyS9S29ZJLc
- vomggZHaG6lHgaug6clsoRk5PFM7zR3d3KJ45X7oHkdt0p+UOu5QHaSlcca4Jh8eIfGiOj9uq
- sPiuxJDyl9aT7C3bV7AJFRBNOOW3ehBVuFfd86t/mEQOloAKScTnVRozFb18coNui+TcE0Izi
- leFf/NVBxuZlknRpygDQjz74Fk7ID7W3zYTPBrKGEH9vrtKeN1t8KtIfhOYl+P0kc7XnPaIyA
- 46QxH5847H1XTP57224inOS65uUzIPcGVZpphwIMv6003dP/TnPbjEEp4T++/IlJYhtXWpQPy
- b/cNvq506jtn6PdVARCbvxDKZLhWWqp1i6IbII7lpvRl6gD0dAf3azK2Gfn9dF4ZJ4Gy5OnMM
- 72DrFB5oAlDmcQ864YogPaNglENiSk4L2fqVegyG9+HCt/BP7KRmZjplqrMoYC0WPn1o+/P4A
- ZJ3hfRM8ZGYtvxGkipp6Dwtb40d0cOLYIb7cbPP9Pj6oI=
+References: <cover.1706948717.git.andrea.porta@suse.com> <eeb94204c30c2182f5ffd3ec083c04399ecdee32.1706948717.git.andrea.porta@suse.com>
+ <8736c115-e11c-41ca-85eb-7cd19a205068@gmx.net>
+In-Reply-To: <8736c115-e11c-41ca-85eb-7cd19a205068@gmx.net>
+From: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Date: Tue, 6 Feb 2024 16:31:06 +0000
+Message-ID: <CAPY8ntCEvsTJwoEBYc7JsTaYfdMURhmytvvVMcLVNBkmdTNcZQ@mail.gmail.com>
+Subject: Re: [PATCH 02/12] bcm2835-dma: Add proper 40-bit DMA support
+To: Stefan Wahren <wahrenst@gmx.net>
+Cc: Andrea della Porta <andrea.porta@suse.com>, Vinod Koul <vkoul@kernel.org>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui <rjui@broadcom.com>, 
+	Scott Branden <sbranden@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, dmaengine@vger.kernel.org, 
+	linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, Maxime Ripard <maxime@cerno.tech>, 
+	Dom Cobley <popcornmix@gmail.com>, Phil Elwell <phil@raspberrypi.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Andrea,
+Hi Stefan and Andrea
 
-Am 04.02.24 um 07:59 schrieb Andrea della Porta:
-> This patchset aims to update the dma engine for BCM* chipset with respec=
-t
-> to current advancements in downstream vendor tree. In particular:
+On Mon, 5 Feb 2024 at 18:50, Stefan Wahren <wahrenst@gmx.net> wrote:
 >
-> * Added support for BCM2712 DMA.
-> * Extended DMA addressing to 40 bit. Since BCM2711 also supports 40 bit =
-addressing,
-> it will also benefit from the update.
-> * Handled the devicetree node from vendor dts (e.g. "dma40").
+> Hi Andrea,
 >
-> The only difference between the application of this patch and the relati=
-ve code
-> in vendor tree is the dropping of channel reservation for BCM2708 DMA le=
-gacy
-> driver, that seems to have not made its way to upstream anyway, and it's
-> probably used only from deprecated subsystems.
+> [add Dave]
 >
-> Compile tested and runtime tested on RPi4B only.
-sorry but this is not sufficient. AFAIK only the Raspberry Pi 5 has a
-BCM2712. I suggest to start with BCM2711 40 bit support, which is enough
-work.
+> Am 04.02.24 um 07:59 schrieb Andrea della Porta:
+> > From: Phil Elwell <phil@raspberrypi.org>
+> >
+> > BCM2711 has 4 DMA channels with a 40-bit address range, allowing them
+> > to access the full 4GB of memory on a Pi 4.
+> >
+> > Cc: Phil Elwell <phil@raspberrypi.org>
+> > Cc: Maxime Ripard <maxime@cerno.tech>
+> > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> mainlining isn't that simple by sending just the downstream patches to
+> the mailing list. In many cases there reasons why this hasn't been
+> upstreamed yet.
+>
+> In my opinion just this feature is worth a separate patch series. In
+> 2021 i already send an initial version, which tried to implement it in a
+> cleaner & maintainabler way [1]. In the meantime Dave Stevenson from
+> Raspberry Pi wrote that he also wanted to work on this. Maybe you want
+> to work on this together?
 
-This whole series does neither contain a change to the dt-bindings nor
-to the DTS files. This is not how it works.
+Yes, I'm looking at reworking Stefan's series to work on Pi4 & Pi5 as
+it's needed for HDMI audio (and other things) on those platforms which
+I'm working to upstream.
 
-Best regards
->
-> Dom Cobley (4):
->    bcm2835-dma: Support dma flags for multi-beat burst
->    bcm2835-dma: Need to keep PROT bits set in CS on 40bit controller
->    dmaengine: bcm2835: Rename to_bcm2711_cbaddr to to_40bit_cbaddr
->    bcm2835-dma: Fixes for dma_abort
->
-> Maxime Ripard (2):
->    dmaengine: bcm2835: Use to_bcm2711_cbaddr where relevant
->    dmaengine: bcm2835: Support DMA-Lite channels
->
-> Phil Elwell (6):
->    bcm2835-dma: Add support for per-channel flags
->    bcm2835-dma: Add proper 40-bit DMA support
->    bcm2835-dma: Add NO_WAIT_RESP, DMA_WIDE_SOURCE and DMA_WIDE_DEST flag
->    bcm2835-dma: Advertise the full DMA range
->    bcm2835-dma: Derive slave DMA addresses correctly
->    dmaengine: bcm2835: Add BCM2712 support
->
->   drivers/dma/bcm2835-dma.c | 701 ++++++++++++++++++++++++++++++++------
->   1 file changed, 588 insertions(+), 113 deletions(-)
->
+I was getting weirdness from the sdhci block when I was last looking
+at it, so it was just proving a little trickier than first thought.
+Hopefully I'll get some time on it in the next couple of weeks.
 
+  Dave
+
+> [1] -
+> https://lore.kernel.org/linux-arm-kernel/13ec386b-2305-27da-9765-8fa3ad71146c@i2se.com/T/
 

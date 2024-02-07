@@ -1,47 +1,47 @@
-Return-Path: <dmaengine+bounces-965-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-966-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E005484C619
-	for <lists+dmaengine@lfdr.de>; Wed,  7 Feb 2024 09:19:56 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 372FF84C620
+	for <lists+dmaengine@lfdr.de>; Wed,  7 Feb 2024 09:22:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7D77E1F229F2
-	for <lists+dmaengine@lfdr.de>; Wed,  7 Feb 2024 08:19:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 733541C21376
+	for <lists+dmaengine@lfdr.de>; Wed,  7 Feb 2024 08:22:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17F1A200BE;
-	Wed,  7 Feb 2024 08:19:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1402120310;
+	Wed,  7 Feb 2024 08:22:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Chi+r8jn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jFRkqTVX"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2FDD200BA;
-	Wed,  7 Feb 2024 08:19:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E02062030D;
+	Wed,  7 Feb 2024 08:22:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707293991; cv=none; b=mz4i5lXOOhcffu/4USoZ99y2ndcRW9yclPhgzmJMsKI2zRqLWpL6TnUFOlCUQTUHb3Qf0rMeeFfHaaryeyBcVwNU8GK+5/gYTaNpzkTJ3IAFHrAry/wrpkPWjwE71j6lLAm58BKQxOuS9avOa14z8UnM7Nxoy6gE6AuAD7CIO2g=
+	t=1707294134; cv=none; b=DkA4UC16wi/4AKgFiEcZYxHtxE8B/JNovdmXqQXWmfKP1+HmL/eMAJlcHgk8HbzaZYAcJ2HEXqCkx5kd9cDxaSm2ls4ZtfIY7f8iDwGfy6zfQJs5h0/saSQtRbmd1Qeu+MW/v57BvCyfTusErB3cIyaWC9PGjWkOnrLQGiDb/+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707293991; c=relaxed/simple;
-	bh=+sQ5L6rGBsn2M996CLaOLE7iyMKt30Zg+NEaU+RovJU=;
+	s=arc-20240116; t=1707294134; c=relaxed/simple;
+	bh=ONyfgYZpeNqlc+twIxjgoeZr/daOvsSeNW0AuvuRyrg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bSK2SdVNvnTRuoZs6tmUTVcSDP8Gonz79TcPVZgMQR42465hx5/q+YMWsOLAwETUdQshHxegi1YqS+fPl6gKjQCjNVE692EjDe5eyFvYptq2IL6dxMJc4noWvUA9EMuiwNFcHFxB7r2pxZ4ZpKx1bnaXMGeIY0+FsD56jhDOQi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Chi+r8jn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00540C433C7;
-	Wed,  7 Feb 2024 08:19:49 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=hs0GpodgShufppbeDZ9Mt+GKP+eXxmuk0ZuMg5VrtEyoU64xzeJrwuwSrwx11DCqcybdgWT9meTNyds1zt6I4PIkLSOcXLlKbNohAVL8mbC+p1CtSKp8oZD0qbIjNLe+7nLNHuu6zdaa+75lZTAgaC9TP+HmAm+KMhJl9pRlGpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jFRkqTVX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07C6DC433F1;
+	Wed,  7 Feb 2024 08:22:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707293990;
-	bh=+sQ5L6rGBsn2M996CLaOLE7iyMKt30Zg+NEaU+RovJU=;
+	s=k20201202; t=1707294133;
+	bh=ONyfgYZpeNqlc+twIxjgoeZr/daOvsSeNW0AuvuRyrg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Chi+r8jnVDNxdg4OKMOcUAwAT8K7f3du0gXeb/kEWU5YIcUw5nLi5sEvEy/yghrOj
-	 pRT6L2oNaRbXWwUxvnhgRq6pyThhfjylfjrhAEPS7edfRORjVu7wp0RDNexGfO0AR+
-	 MlYubfCxW7PQAQ5D/iazBvKS2t5VJg9R1P4R25jSAOdSt61RV71c39hYVFfM8z3XnA
-	 zY4fRzUMQWUc2CYwNYtf8llDXLal9H+SOsLWctPN8h1T5kUonBVLcgvZNZAzB9a5wj
-	 sCaOohs7HL9keZXJmJoPN71GCNJ3T/BPfD5nfwHc5l1mvjOFnhNsjOwpeZuU8IQ0uR
-	 /t6ES/82DDZdw==
-Date: Wed, 7 Feb 2024 09:19:47 +0100
+	b=jFRkqTVXJP/LrrxAulBnht89YU8gjhBMPmIBHvCcPhp6f6YxyBHeWezLZZE34gZOS
+	 IU2JCGkUciXPkSTswXwub4IzKzhzd1DPHhEYhS9lL07WYcfQPQos2JwatEHlP4z7rl
+	 xNqZjRWAzM/y2Q/LwzxU8/A2LVwVTo7+5gTnO23fxTHOYnUuay4gswThtob/U4pL6v
+	 NZ+PMrKh456IV1hTci6j6R0SU+5pjRnKp6kfTVXE4Mm1PkGm51v5Ls78JYshD5udqF
+	 xe4k/YM5hAuQRznHiJx4GdohNQef5dJLrXcyrrkcLKAl1YT1Pd44Nw/kY9A0r8O3W1
+	 kTiprXynIGUwQ==
+Date: Wed, 7 Feb 2024 09:22:10 +0100
 From: Vinod Koul <vkoul@kernel.org>
 To: Andrea della Porta <andrea.porta@suse.com>
 Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
@@ -52,9 +52,10 @@ Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
 	Maxime Ripard <maxime@cerno.tech>,
 	Dom Cobley <popcornmix@gmail.com>,
 	Phil Elwell <phil@raspberrypi.com>
-Subject: Re: [PATCH 00/12] Add support for BCM2712 DMA engine
-Message-ID: <ZcM9I-U3w7xRcWVt@matsya>
+Subject: Re: [PATCH 07/12] bcm2835-dma: Support dma flags for multi-beat burst
+Message-ID: <ZcM9slv_x-CltW6y@matsya>
 References: <cover.1706948717.git.andrea.porta@suse.com>
+ <570953f9532e2dc46568674d3c1348cdf26488b6.1706948717.git.andrea.porta@suse.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -63,48 +64,111 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1706948717.git.andrea.porta@suse.com>
+In-Reply-To: <570953f9532e2dc46568674d3c1348cdf26488b6.1706948717.git.andrea.porta@suse.com>
 
 On 04-02-24, 07:59, Andrea della Porta wrote:
-> This patchset aims to update the dma engine for BCM* chipset with respect
-> to current advancements in downstream vendor tree. In particular:
+> From: Dom Cobley <popcornmix@gmail.com>
 > 
-> * Added support for BCM2712 DMA.
-> * Extended DMA addressing to 40 bit. Since BCM2711 also supports 40 bit addressing,
-> it will also benefit from the update.
-> * Handled the devicetree node from vendor dts (e.g. "dma40").
+> Add a control bit to enable a multi-beat burst on a DMA.
+> This improves DMA performance and is required for HDMI audio.
 > 
-> The only difference between the application of this patch and the relative code
-> in vendor tree is the dropping of channel reservation for BCM2708 DMA legacy
-> driver, that seems to have not made its way to upstream anyway, and it's
-> probably used only from deprecated subsystems.
+> Signed-off-by: Dom Cobley <popcornmix@gmail.com>
+> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> ---
+>  drivers/dma/bcm2835-dma.c | 28 ++++++++++++++++++++--------
+>  1 file changed, 20 insertions(+), 8 deletions(-)
 > 
-> Compile tested and runtime tested on RPi4B only.
-> 
-> Dom Cobley (4):
->   bcm2835-dma: Support dma flags for multi-beat burst
->   bcm2835-dma: Need to keep PROT bits set in CS on 40bit controller
->   dmaengine: bcm2835: Rename to_bcm2711_cbaddr to to_40bit_cbaddr
->   bcm2835-dma: Fixes for dma_abort
-> 
-> Maxime Ripard (2):
->   dmaengine: bcm2835: Use to_bcm2711_cbaddr where relevant
->   dmaengine: bcm2835: Support DMA-Lite channels
-> 
-> Phil Elwell (6):
->   bcm2835-dma: Add support for per-channel flags
->   bcm2835-dma: Add proper 40-bit DMA support
->   bcm2835-dma: Add NO_WAIT_RESP, DMA_WIDE_SOURCE and DMA_WIDE_DEST flag
->   bcm2835-dma: Advertise the full DMA range
->   bcm2835-dma: Derive slave DMA addresses correctly
->   dmaengine: bcm2835: Add BCM2712 support
-> 
->  drivers/dma/bcm2835-dma.c | 701 ++++++++++++++++++++++++++++++++------
->  1 file changed, 588 insertions(+), 113 deletions(-)
+> diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
+> index d8d1f9ba2572..a20700a400a2 100644
+> --- a/drivers/dma/bcm2835-dma.c
+> +++ b/drivers/dma/bcm2835-dma.c
+> @@ -156,7 +156,8 @@ struct bcm2835_desc {
+>  #define BCM2835_DMA_S_WIDTH	BIT(9) /* 128bit writes if set */
+>  #define BCM2835_DMA_S_DREQ	BIT(10) /* enable SREQ for source */
+>  #define BCM2835_DMA_S_IGNORE	BIT(11) /* ignore source reads - read 0 */
+> -#define BCM2835_DMA_BURST_LENGTH(x) ((x & 15) << 12)
+> +#define BCM2835_DMA_BURST_LENGTH(x) (((x) & 15) << 12)
 
-Everything is modifying one file and still you have 2 different tags for patches, why?
+why this changes, sounds like it does not belong here.. 
 
-Consistency is a good thing, right...
+
+> +#define BCM2835_DMA_GET_BURST_LENGTH(x) (((x) >> 12) & 15)
+>  #define BCM2835_DMA_CS_FLAGS(x) ((x) & (BCM2835_DMA_PRIORITY(15) | \
+>  				      BCM2835_DMA_PANIC_PRIORITY(15) | \
+>  				      BCM2835_DMA_WAIT_FOR_WRITES | \
+> @@ -180,6 +181,11 @@ struct bcm2835_desc {
+>  #define WIDE_DEST(x) (((x) & BCM2835_DMA_WIDE_DEST) ? \
+>  		      BCM2835_DMA_D_WIDTH : 0)
+>  
+> +/* A fake bit to request that the driver requires multi-beat burst */
+> +#define BCM2835_DMA_BURST BIT(30)
+> +#define BURST_LENGTH(x) (((x) & BCM2835_DMA_BURST) ? \
+> +			 BCM2835_DMA_BURST_LENGTH(3) : 0)
+> +
+>  /* debug register bits */
+>  #define BCM2835_DMA_DEBUG_LAST_NOT_SET_ERR	BIT(0)
+>  #define BCM2835_DMA_DEBUG_FIFO_ERR		BIT(1)
+> @@ -282,7 +288,7 @@ struct bcm2835_desc {
+>  /* the max dma length for different channels */
+>  #define MAX_DMA40_LEN SZ_1G
+>  
+> -#define BCM2711_DMA40_BURST_LEN(x)	((min(x, 16) - 1) << 8)
+> +#define BCM2711_DMA40_BURST_LEN(x)	(((x) & 15) << 8)
+>  #define BCM2711_DMA40_INC		BIT(12)
+>  #define BCM2711_DMA40_SIZE_32		(0 << 13)
+>  #define BCM2711_DMA40_SIZE_64		(1 << 13)
+> @@ -359,12 +365,16 @@ static inline uint32_t to_bcm2711_ti(uint32_t info)
+>  
+>  static inline uint32_t to_bcm2711_srci(uint32_t info)
+>  {
+> -	return ((info & BCM2835_DMA_S_INC) ? BCM2711_DMA40_INC : 0);
+> +	return ((info & BCM2835_DMA_S_INC) ? BCM2711_DMA40_INC : 0) |
+> +	       ((info & BCM2835_DMA_S_WIDTH) ? BCM2711_DMA40_SIZE_128 : 0) |
+> +	       BCM2711_DMA40_BURST_LEN(BCM2835_DMA_GET_BURST_LENGTH(info));
+>  }
+>  
+>  static inline uint32_t to_bcm2711_dsti(uint32_t info)
+>  {
+> -	return ((info & BCM2835_DMA_D_INC) ? BCM2711_DMA40_INC : 0);
+> +	return ((info & BCM2835_DMA_D_INC) ? BCM2711_DMA40_INC : 0) |
+> +	       ((info & BCM2835_DMA_D_WIDTH) ? BCM2711_DMA40_SIZE_128 : 0) |
+> +	       BCM2711_DMA40_BURST_LEN(BCM2835_DMA_GET_BURST_LENGTH(info));
+>  }
+>  
+>  static inline uint32_t to_bcm2711_cbaddr(dma_addr_t addr)
+> @@ -933,7 +943,8 @@ static struct dma_async_tx_descriptor *bcm2835_dma_prep_dma_memcpy(
+>  	struct bcm2835_chan *c = to_bcm2835_dma_chan(chan);
+>  	struct bcm2835_desc *d;
+>  	u32 info = BCM2835_DMA_D_INC | BCM2835_DMA_S_INC |
+> -		   WAIT_RESP(c->dreq) | WIDE_SOURCE(c->dreq) | WIDE_DEST(c->dreq);
+> +		   WAIT_RESP(c->dreq) | WIDE_SOURCE(c->dreq) |
+> +		   WIDE_DEST(c->dreq) | BURST_LENGTH(c->dreq);
+>  	u32 extra = BCM2835_DMA_INT_EN;
+>  	size_t max_len = bcm2835_dma_max_frame_length(c);
+>  	size_t frames;
+> @@ -964,8 +975,8 @@ static struct dma_async_tx_descriptor *bcm2835_dma_prep_slave_sg(
+>  	struct bcm2835_chan *c = to_bcm2835_dma_chan(chan);
+>  	struct bcm2835_desc *d;
+>  	dma_addr_t src = 0, dst = 0;
+> -	u32 info = WAIT_RESP(c->dreq) |
+> -		   WIDE_SOURCE(c->dreq) | WIDE_DEST(c->dreq);
+> +	u32 info = WAIT_RESP(c->dreq) | WIDE_SOURCE(c->dreq) |
+> +		   WIDE_DEST(c->dreq) | BURST_LENGTH(c->dreq);
+>  	u32 extra = BCM2835_DMA_INT_EN;
+>  	size_t frames;
+>  
+> @@ -1017,7 +1028,8 @@ static struct dma_async_tx_descriptor *bcm2835_dma_prep_dma_cyclic(
+>  	struct bcm2835_chan *c = to_bcm2835_dma_chan(chan);
+>  	struct bcm2835_desc *d;
+>  	dma_addr_t src, dst;
+> -	u32 info = WAIT_RESP(c->dreq) | WIDE_SOURCE(c->dreq) | WIDE_DEST(c->dreq);
+> +	u32 info = WAIT_RESP(c->dreq) | WIDE_SOURCE(c->dreq) |
+> +		   WIDE_DEST(c->dreq) | BURST_LENGTH(c->dreq);
+>  	u32 extra = 0;
+>  	size_t max_len = bcm2835_dma_max_frame_length(c);
+>  	size_t frames;
+> -- 
+> 2.41.0
 
 -- 
 ~Vinod

@@ -1,46 +1,46 @@
-Return-Path: <dmaengine+bounces-982-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-983-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A2B584D4D5
-	for <lists+dmaengine@lfdr.de>; Wed,  7 Feb 2024 22:54:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6ED0484D51B
+	for <lists+dmaengine@lfdr.de>; Wed,  7 Feb 2024 23:00:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4C7811C23532
-	for <lists+dmaengine@lfdr.de>; Wed,  7 Feb 2024 21:54:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9FCB21C20C00
+	for <lists+dmaengine@lfdr.de>; Wed,  7 Feb 2024 22:00:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBFD416CEB3;
-	Wed,  7 Feb 2024 21:26:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F534135A6B;
+	Wed,  7 Feb 2024 21:27:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HccgynSs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NLe+iGHM"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B345016CEA8;
-	Wed,  7 Feb 2024 21:26:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E79E7135A52;
+	Wed,  7 Feb 2024 21:27:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707341179; cv=none; b=L/Hde++YDUQldNhO7yxgri432z5nND05TFFpdu0KkvAh64++kFQMmQgx2FFP6ttwFJn7j71C6neRi0eqtjap28ctaOPFYpS2BLgZhPem4om1a4/97pLNEsmClqdNlxT2nww0YdYNyMltzyQDYWqspkHvxIqOkwths2O2CoGKcZA=
+	t=1707341228; cv=none; b=Z7lkesgLR+py8ivGp76AwAfwIe+F2rNMsV1M2hhcgnHpf2mHZiNROw4uJHnI1arbX2nmBVBDq85oQF5x5yHmYjYL7+rtAp0A3Q9FJtb7ilTeYhm7asaFfurdx6EQ7SMtyWzdteHnHdeKA59FYvF3jcuG7lAMBWiCsN0u3sgmJ5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707341179; c=relaxed/simple;
+	s=arc-20240116; t=1707341228; c=relaxed/simple;
 	bh=9m1jj0JfmvljBoVsanyPCb70uqWdNvxZtOaXmyRb2l4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Yoau8/0H5NJalYcCCRaOSu4bWLPkwj8JxQwXTPNtFIR1lzT2EJxXbMKxPeySxCv6k7QsZDejBC2inuwYeLTasr7L2NZpTmgT4yXmpwWwceKX5hewPC3Ba1EIl6obzSt+ipcEjL5OwpMoI03p9vhPGNDVwPprC/WfLTBhsSUVCsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HccgynSs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F5C5C433F1;
-	Wed,  7 Feb 2024 21:26:17 +0000 (UTC)
+	 MIME-Version; b=mYouPaHBWgKwSK7NOpNEz5phtKgoFTErfx2RGDdxTEPS7m2y5DMf7d6jPh/F+L1zPOBzOm1uVczDRBW6oxnt37rgdllBJAC+tsgzPA+pCojtuAlpHsjiIcR5khGoauLd/abasU8RuAmS/Sc8pViLNp+NX1Jl1zrqIcFVK+vJ4QM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NLe+iGHM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 567BAC433C7;
+	Wed,  7 Feb 2024 21:27:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707341178;
+	s=k20201202; t=1707341226;
 	bh=9m1jj0JfmvljBoVsanyPCb70uqWdNvxZtOaXmyRb2l4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HccgynSsX5IseWwfBoVCdJtv6kB1xfbeRtxr/0bbO9MSSm+SewfExoKPKXCO9/7Ff
-	 e3bJ3O0NhWsIdHj0rdIsy0BtCqPtdIZKS2zJfwSVSH9aIHksN+WqtvjLWg38ILI/J9
-	 7ys4SUj1/hmZo4xakuIHGJQ3Ajkc3ck44IJT1GT3eZKFyl95vVfpjGSdPtLY13lv1W
-	 MleNsloRCP6DJems5+q8vM1bzINaEB8WzGxcJSj7fDrevak3xEYBOew2hQRt2SPetW
-	 PuBi85fgZJbYlf4cKXqekHxNwCJ5rgkKUNyTJT8+PZ92/iuK6/3cuc6Pmoa+2XlcMK
-	 +TClaraVOg3Ow==
+	b=NLe+iGHMIR1odpGwmSAbEeuEFHHLQVboMOJuGrUm5iNhrQi1pkDWUh+HXYSLc3coC
+	 8JTSIO1hBvwQfmovRWkx2DdCtlM0/q7uBG+Tc3IPchz5gDUGRg4PJ1LUZ4YulItxXi
+	 +BveYICwkvea3UoigJ4IPQMz4aspi4dsjLmWhrDoDsUocFTBkL5kXMv1us0UF43PPN
+	 7dd2KKN4Xo94N+iX/3WgG7TszxXozFcV7mHCEBficLCvwdHvcany8c/cKLFXF8/ze/
+	 ljrnUHQR/3ID7Fpun6hGFUNQ9x1a/Nf52D4ycSUhG8FjlnFWoiDdpIvgMtvNQZsYNx
+	 BgGtNBHngtEDw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -49,12 +49,12 @@ Cc: Kunwu Chan <chentao@kylinos.cn>,
 	Sasha Levin <sashal@kernel.org>,
 	peter.ujfalusi@gmail.com,
 	dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 04/23] dmaengine: ti: edma: Add some null pointer checks to the edma_probe
-Date: Wed,  7 Feb 2024 16:25:45 -0500
-Message-ID: <20240207212611.3793-4-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 03/16] dmaengine: ti: edma: Add some null pointer checks to the edma_probe
+Date: Wed,  7 Feb 2024 16:26:43 -0500
+Message-ID: <20240207212700.4287-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240207212611.3793-1-sashal@kernel.org>
-References: <20240207212611.3793-1-sashal@kernel.org>
+In-Reply-To: <20240207212700.4287-1-sashal@kernel.org>
+References: <20240207212700.4287-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -63,7 +63,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.148
+X-stable-base: Linux 5.10.209
 Content-Transfer-Encoding: 8bit
 
 From: Kunwu Chan <chentao@kylinos.cn>

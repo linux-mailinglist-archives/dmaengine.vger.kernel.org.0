@@ -1,73 +1,73 @@
-Return-Path: <dmaengine+bounces-994-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-995-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id BB3E784FE2D
-	for <lists+dmaengine@lfdr.de>; Fri,  9 Feb 2024 22:09:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5070C84FEFE
+	for <lists+dmaengine@lfdr.de>; Fri,  9 Feb 2024 22:36:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3F2601F222A6
-	for <lists+dmaengine@lfdr.de>; Fri,  9 Feb 2024 21:09:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8DBF61F23069
+	for <lists+dmaengine@lfdr.de>; Fri,  9 Feb 2024 21:36:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08D8E15AF1;
-	Fri,  9 Feb 2024 21:08:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A494918623;
+	Fri,  9 Feb 2024 21:36:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="WbamIEfQ"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="CO+83cQr"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2054.outbound.protection.outlook.com [40.107.8.54])
+Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2047.outbound.protection.outlook.com [40.107.104.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F08D294;
-	Fri,  9 Feb 2024 21:08:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.8.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36C04168A7;
+	Fri,  9 Feb 2024 21:36:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.104.47
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707512937; cv=fail; b=EmMX1GmHqi5JnbNQacSwX/lhLsGguycWG0zf+jpS8VxlRLzflDLxZ/fbQ3nkr9cIZOsvQz0mziFVe4pmkGSNvsvL3gej0to3yZg7lMVLf/3mnL9DeQF1vG8Euom7ykb1rgo3ziGxRiAjdqraajoYn93D4BVckpLhe+7wWspp91I=
+	t=1707514585; cv=fail; b=a9Wk29TZyf0hL5ySUdc3wB3SwczrNNwKXIuVxCnklhx7SYLHCo+w6IRLpozL7DdYQ+Et7SDPg69yIscZM9lYX/UBerdRgwsRPQ8xHyLmEkJ7FAMCkpWwLSWdphiG8X4g6dBWnERmXlhT8FEpKF6ebJmiyRtes6mSnqyuT57Qzng=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707512937; c=relaxed/simple;
-	bh=0oW/5nA4MeA3odwpyjmRzeiw3ueX6d+hPZj+MCCFpY4=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=XoO4ntjtku0a6GigC23Eu+NS79rm4C3ThP00TTVZSz7wcLQF+xRCGf7tYMbheUt1gsxTZXe9Avdt8Jasapwwc3gt3vXZ9SL7AmjF8zH+k6Ef/uZeXjZxkrBaQJIdBPqzN8uLxAAYI3AGFADMaaoSItpPUC83DduLxx9LQNfXkt8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=WbamIEfQ; arc=fail smtp.client-ip=40.107.8.54
+	s=arc-20240116; t=1707514585; c=relaxed/simple;
+	bh=qxQHYPj7E7f1TTgAVbrbHCfdJpdOq8D88t/Ncyq8qbA=;
+	h=From:To:Subject:Date:Message-Id:Content-Type:MIME-Version; b=NJt3v5RdDdfakeyIKqcwOGaxMTnjoL55Q74G0kxmhwYkEhZrMNx969ZqTurzpn6DtOJ607rBTpBn3dugalw8JJyIfZffF0g9CAbfZIQhj9uJoj4QaS5T6MZQfChJgi1M4eQOZL1+rq8ELCR1zkFGlvbPuAVy0iyzf5etG1d9aMY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=CO+83cQr; arc=fail smtp.client-ip=40.107.104.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BGJKcqH8X+67xY/pwCmZ6yBo//NVprXeWQm/kLZJWvcS2/YkPac9Qe/SQkgNiitXD/g/IsRv9zNJI1mityeUawzeZGSGdg/bGjFp528pZap2k/Q5JHKecwezicJpJLT2dUpvUeLl0ZxCutnrp3Ic05eRusaGjXHKdVDPtKFXYnIve5ULoUDFCYnyVgTRH8x3GSNKB6VcP40pX9GWNIqdozH2BZOZTqrw5RZF1qdiOaTfu2fqzkwUq86Vk8FbAo8R4Fs4k2OlT2NmSA5t916In4WvPh+XK2LKXz1zHj3sGLmLNlXUZUNVjojqFBnQ9ulHBtq8whp4sVVSfU0DYVgGlg==
+ b=SWUXwxC0cZNBWavGIqZt5hDR/l5S1qcMIq7Q9JSAwaKgoAZQlJfSyjPw1xSemj9WxwdOeLYf4BdzgkW03VCY7sp/IEx9G5nkwgs5TX7ClSERKtaFzVIMRY1127uBTmXryqmR9pFcDgUS7afVMjur2FE2HP4Ts50Bx4fy5HhuBOfAnhuG4RHIaxG54FWe0TDAvPe+KUmskVjPQmyoknjr8OuH3jTxkp+VhQa8yP/HlFqyGAv4XTG02DJ8PeeZaDTQniICs1Zv25kHlFtJERGhbgHK1NxtG+AJY7UfPguKN3vxXviH0ftRdg9ftiEZ5xOXPN87T3ltjcW7+w4mMTStRg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dB4LBb7c46BDd7fVCheisagKzzeCGgNAdZ5lhEMr2M8=;
- b=DMpfPSvPQVYF8GerBoMvZZkQ/fyMW6C8XznnPglTaMW8OefdycLLQPDsg1yslnQXHu8ax66Zvpe9FDNfcOeyIY1x+b69oHN/bD569Xz7iQW8u4PUtnPI+A/l3jj2i4TRb72biiW5jBaMeLHb8CG5k6w+MLu7K/7XM651ovylLIqEi5n/d7905SOrKPdZbDNbygKNPTfIalHTnGMg8yxeObRZXvTzMFZFsgUTZ1qgXI3jAwPgUny2aY51ckvqkl1kP3anJ60bUnrcTDgD/RQ85QbT3YaWcbq+fT5VJQC9AmriGvOqpEAjPZkQ2sb7cMpR570rgMQY/ZaGszxOBZl/mw==
+ bh=NCgQT+iu7zN/lWq2++cYqvoF3yQ2hWfYWC5WoP3CT1Y=;
+ b=UzRzNodc/JzqZ6d1EDYnhaM+zHw8lDr/c/NJZvxJvRgbep4uDWkuqdecCL01gze+UHQsP6hqGpy+zVsAYt7r+FPV7gQrH0dqUvmDCIuJ3pF7r9l3uKUeBjgoAWxbFeDTrL19udDXQ8yKZ4LSvO2PQKfai5K+H61SRavURJ2CfUB/8AuaidGTldj3cPCSyPKPv3fCZxUg0qW8MlWmfa21Ep84yGKhcj8tNAkL6whU1rWZfEqhk6ioVjS6jJmLFgOFRgqshtosEDZfazvshn9SbXLQ0jjllWpzNtYWVe4Xs2k9a1CoWk9hOuTjqHK0faIIq07GEgIWMoHAwiipGH6ttQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dB4LBb7c46BDd7fVCheisagKzzeCGgNAdZ5lhEMr2M8=;
- b=WbamIEfQul7p87fzIeokzkHDveBMoXpGTtMbBHpxJWn/aYEuCEgQvnGOwGPyyTuMX6SOB4VbQU842/xwGcvwrSyaG8O8FVznqgLwUwHtp2t2Ot/azzy/R7uqzZzWL/queuBNSyaRNmf4F8v4sjvRaNz7v/qq5Jg/E03wJ+bhLR4=
+ bh=NCgQT+iu7zN/lWq2++cYqvoF3yQ2hWfYWC5WoP3CT1Y=;
+ b=CO+83cQrQ4DuyVWU9mgYLgTQ0WnQgZYUsRlusCZgrbDGUJ5Xh6PXwc3ld08Mt9qp/in83Zv9dYSHRnVjGVbbHIgxXVVbvyZHUvGlKcJXAKb8zG/K8BgJI3L3IKV5k0971psnirNdI0rzYoI1Ha+NC1XX3Xhax2mlHOFfy42wepk=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AM9PR04MB8226.eurprd04.prod.outlook.com (2603:10a6:20b:3ea::20) with
+ by PAXPR04MB8800.eurprd04.prod.outlook.com (2603:10a6:102:20f::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.27; Fri, 9 Feb
- 2024 21:08:52 +0000
+ 2024 21:36:20 +0000
 Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
  ([fe80::c8b4:5648:8948:e85c]) by PAXPR04MB9642.eurprd04.prod.outlook.com
  ([fe80::c8b4:5648:8948:e85c%3]) with mapi id 15.20.7270.025; Fri, 9 Feb 2024
- 21:08:52 +0000
+ 21:36:20 +0000
 From: Frank Li <Frank.Li@nxp.com>
 To: Vinod Koul <vkoul@kernel.org>,
+	linux-kernel@vger.kernel.org (open list),
 	dmaengine@vger.kernel.org (open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM),
-	linux-kernel@vger.kernel.org (open list)
-Cc: imx@lists.linux.dev
-Subject: [PATCH 1/1] dmaengine: fsl-qdma: add __iomem and struct in union to fix sparse warning
-Date: Fri,  9 Feb 2024 16:08:37 -0500
-Message-Id: <20240209210837.304873-1-Frank.Li@nxp.com>
+	imx@lists.linux.dev (open list:FREESCALE eDMA DRIVER)
+Subject: [PATCH v2 1/2] dmaengine: fsl-edma: add trace event support
+Date: Fri,  9 Feb 2024 16:36:03 -0500
+Message-Id: <20240209213606.367025-1-Frank.Li@nxp.com>
 X-Mailer: git-send-email 2.34.1
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: BY3PR10CA0003.namprd10.prod.outlook.com
- (2603:10b6:a03:255::8) To PAXPR04MB9642.eurprd04.prod.outlook.com
+X-ClientProxiedBy: SJ0P220CA0021.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:a03:41b::8) To PAXPR04MB9642.eurprd04.prod.outlook.com
  (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -76,126 +76,370 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM9PR04MB8226:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8eb1f4d6-29b0-4550-e631-08dc29b35180
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PAXPR04MB8800:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1bb04aa9-eb9e-4b10-c121-08dc29b72777
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	fK0gK/grNEAszjXfwbWic/AsifZ8IM/M7aTHgS4HzaAeOzACkNzrKg3+YASug9YEoV2a9nm9o0d4UXxK1Qu4V/40CHC9a/otD9+FwOQ8GaOOm40II48zZL6Z+jy+U87GrtrKpVL/YOKyQxpJEIybINAB9hobxhWLFp+wHKi0hcgIHhyaD6QzCH+1ANmdsgah7Sznoj4mE6E4DW1FHt9dFrYqMcycdTlUlxWMKrrDpAuDR9SfJ7B/4Dy/6Emrl9AAeNnSRtKeVw4FhwCO31lrXNbQnVe39G3yJhKNOnSl/4gF2MGb4Q2wVSHFRShiCu6UvK4td0mXk8xDbI5SR+zDQpTS3hgEC6/MxOYZ+7zNdp+y2MmU/3rCw+xTINgDTZVEy4KMs8E1I3Uaj0u23zzPiHK+2iaf9Tui6INXimm6rwibQlvb3IL7s36hlzInwkY3D28krBHg6jhpsWCF810QgeT5eCI7MVcGPB5kFhV94KPLl9MBlAZayAIdhIUaOTtHQZ8ziMTYgMHeuHIxtCdVJwDE8Z4svZZC5b2jygEb4IuY0U86dG3qIJjAxoh5sOMRje+vqH6m0vl3ONLY8bisrK7tCaO/Xw+KYtDFF+9M7Sk=
+	pwhIFm5f//HROANjmYllesTkITSUR8E2rrvMw23iy+Z77E6aXVxaYou1qhb7HRwo5pJ+t6LRrFQkzsMF1gczfJwh92zcqwr/X7M/NdnJhAeGfe7bNUeNiFZYliew3uKIkVUlDA8siiilQ0GjpzHwld5ts45pFuRgO/K2694L8FjJ2UugCqe2Gi6I41nhzE/e58wcXCL4YI61l1Vt7e6bYYz5iyF06Fb3xWh2PFAOsWGjt+zVRGisb25QeDt/z9uVbfxDpBcaG7YueLucXEH9tQDObk+HVM2bksKtARQQ0yB9XoO5dbN6JkL6BuFBmwO6xeXYIZimKibzHIWnz5hS0emjBij261C3spG60BBywoPhDe8g0WiZz17A/1Gm0lxoxeK7gVY4p16DYvkYQGGgnWkOKaazswPC70TdOp4niMIOt0d0Hp1Etq4BSKv9I4FBb3P1D+qi/M05R6o/jhTGVfD/VDW2QXjXLsag08W1ztVQejmv6MKU9kyonwJOuEa0GCmEMYik0a4CMlSdqoo4oHq1VFh4qlBjH5ieUQzeVEChNPOxj37xRJj1M4nJh28mIrkihtUx38MtYJ0jocmguomxVPMvRwYNiuASHef0A7ufCpo9YodPMPFylKev6/Rm
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(346002)(136003)(376002)(366004)(39860400002)(230922051799003)(230273577357003)(64100799003)(1800799012)(451199024)(186009)(52116002)(41300700001)(6506007)(478600001)(2616005)(6512007)(966005)(6486002)(2906002)(5660300002)(4326008)(8676002)(66556008)(66476007)(66946007)(8936002)(316002)(6666004)(38350700005)(26005)(83380400001)(38100700002)(36756003)(86362001)(1076003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(346002)(396003)(366004)(39860400002)(136003)(230922051799003)(451199024)(1800799012)(186009)(64100799003)(5660300002)(2906002)(41300700001)(38100700002)(86362001)(478600001)(38350700005)(6512007)(6506007)(6486002)(83380400001)(1076003)(66556008)(26005)(66946007)(66476007)(316002)(36756003)(8936002)(8676002)(2616005)(6666004)(52116002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?LcE/rvjsSlNhO0Cc4MhGk5sSRjx2/l4gkkjXe34jvAPeHQZdEMNMfN0OkFhE?=
- =?us-ascii?Q?aNyWAGzQkK+AVe+Y3ky8B5ZuTv3axR/D4DrTvkIyMp611kFvwYbWKwy3OTAu?=
- =?us-ascii?Q?ajafU9SBoKc8o9YQloHQ8fZZHQtFUhA6AFbyjU6xdrbTI8UiClyDiOYIh6wX?=
- =?us-ascii?Q?FpI8FOOefIyPP4yD+zcsGcygKXIVlI7vDNOdDt0JbiCtRA95+vJz4LBDTV75?=
- =?us-ascii?Q?Dx6SXbzy5RDggGpNWtvi7NqEOrOXsLsaMssvuxDAiZwrhw65yZnCI1lHzFab?=
- =?us-ascii?Q?1U72CnAWkoy/emXte2p6JhkA9NrrGmBPmqjPTmYs6kdfMWWx2Fs2CXsb1ezC?=
- =?us-ascii?Q?OrFXHIvH3eBTlrNfh8Tk2wPwo2wfM9sQUDNFSs3+a6/Vb9Z8bUCnF8hA25Tr?=
- =?us-ascii?Q?Va5TmxehNlWU3kQucXMv29m7naLKQEAEehyEgK2jWo/QirPN4F21pwgA4Oay?=
- =?us-ascii?Q?gyfQBtiyVjL4Wo+BUGPKXwiAJL5agptOc002YFfJrpcgNL1/Ug4VOfJjTxr+?=
- =?us-ascii?Q?0IoAG2c28AKxsdx8nhz1L8gowt3lXBeP+cUw3tWiEQI1Z1eN+r9y7jVEZk8r?=
- =?us-ascii?Q?gVoSQvpsHXJWCYG2SmXcdJXzmdVaxzJ7MICxbz8plQZj/slYXwmVKoMypu8W?=
- =?us-ascii?Q?iap/irN34OfzmmI0JhlzuNX/RQM5jsIdj+LNUKZ9PI4xDwmtOQlCGtUuf76m?=
- =?us-ascii?Q?OeUlqCBPjsWtkLylgO8DKasJ8byKdG+eS49wFuJ+qDkOgX3Bnhknt1quSJSZ?=
- =?us-ascii?Q?bh2leAeEoXNl7oX8Yk1NAA1AnoCc1wJMDmxLfN8PwKnemC0Cc4KhBgDrjXIy?=
- =?us-ascii?Q?r1FHKcncym/+fhn3ajW3r/HkTaDt2XpJStCl/awzU0qc/3vA3m/R7unyZKXL?=
- =?us-ascii?Q?xo0Dy82awSb28F9rD/gHkekM1hF/bU44OzPakv+h99I/6xQo9r+otCV1vjYM?=
- =?us-ascii?Q?hqcIlOuXcO8jtJL7U3BkQobCSDaNYAFb6DftMJ5lrCN+g9u3d8/1aTxIXFiP?=
- =?us-ascii?Q?fxCOaGoSCp1XaNX/YMqyNgsNDcbd++I4KdAlRykrhrnI6viKVhtkK/gqi0sO?=
- =?us-ascii?Q?LFWIprZJPNXIQB5oxG3W4lfIu9lOpkiEvGTn0TReQPzv28ll0FRRu2EZasD0?=
- =?us-ascii?Q?lpAP5RIdmnmicSmExMPM9cJPKDM/vjSJ72xeo0Cix28lD8G6PtdqfEsLjZkl?=
- =?us-ascii?Q?ZaDIu4O3kRCJzgydWrwBQFOYE5wnJRBUdfKZ8jNt82tYOPVPXnYzdyefem7t?=
- =?us-ascii?Q?EhqBayJlpw0Q/xJtOJzOzJamPAHHH3+XM8eIFyFTL0ktqo3esX1Tr27cN/L6?=
- =?us-ascii?Q?R+5Tmyx1vmt5CHjyTezNiTQ5eeLXLvda/WKwLKEkPD71IpkFVlJMOpPpBZHk?=
- =?us-ascii?Q?2vwAT5zfjayGL5a91rYhW4vZWPwwiTaF/Ap2PYymwENzZ4hWsDE8635QNOjU?=
- =?us-ascii?Q?vcJfXJcaJb6wIuiSihWMwduXoZ0VGbKd2aEGgnexjMNh8PAs8E8/yDrVkOT6?=
- =?us-ascii?Q?gETxg2R6G78Gf6kH80JGZ75D/LgLCHRmro+pvxdU8eYwZyZZ6Er/DQsyFHje?=
- =?us-ascii?Q?4L86pbuunLi2ksZOcN0cdQg9sgUni2gb4pqtQqEP?=
+	=?us-ascii?Q?zIvQEe7XVBlFvDlF1REafip2mtP7xlkE2nf9xH0ROpv5QHhgp8A34qVK14X7?=
+ =?us-ascii?Q?RBg/dmmTU9tHtBHtCa1h+uUfXJ7S0ABPfQHCSoVTefMnARdX6tccSNipL1qf?=
+ =?us-ascii?Q?f4nsyZxPnMiKAZEEZfuTjDfaF3wGtkXnly89UL7bC6zsDIk7u14+6BvXdjXt?=
+ =?us-ascii?Q?H0AeZ7wu5u12rcGhT/inI/1rGUY/K1Jz3eUR0T431birOvezx70uyEAeo0sy?=
+ =?us-ascii?Q?/xvwdUQuLodsqXv1/8apmT6GIolEJ8TndWtIkBw8zRyXUX0oSC2PHOcZQlSs?=
+ =?us-ascii?Q?E+ciyI3v51Tt3Bz4wOboyaM951blft03T7+Q+xvJZBS46IjptqVG7hV9krYQ?=
+ =?us-ascii?Q?kvIQrm09E8fHYN3t5P8LB0Ppyjn+ixfM81SNr/+MwnCYKwRKvv6KTckPYCJZ?=
+ =?us-ascii?Q?Qclb5MlWuXQsOl9+ODOEc5wVfDkyVEDdxQfsWeCFkeSsrog5O818j/zAjm95?=
+ =?us-ascii?Q?y/4/I/pffzbrJymxcw/92UIIJD0ByAXvY9ksSluYvKsiPiJaJGIkDitbY3wj?=
+ =?us-ascii?Q?Dd/7LAHeX/uzE5KCi/u2E2Q1RiVaL4PcrSV3qQ3OEwn/cnEJY4lDJBjoNY9X?=
+ =?us-ascii?Q?YVzawfJmrcG065ikunie6NfCcIHvAicY3PzgscnlvHMoiHwR5V6CfjNw+3j0?=
+ =?us-ascii?Q?bqWO89TGT3JfoC3VErFH/1VF8TgF3129+Gq6jcusX3ywAeIiTxCh+es47MGr?=
+ =?us-ascii?Q?nrW+SVA/Yt3neNn6fKffSfupeTFGVIkpro4EBTuNJKTokAosURNyCaE3GYvP?=
+ =?us-ascii?Q?Ql5JsEg5SSz6ukSJt6JowcsFodbr1yvADAgVz7L68pJEXtNSFbtQdggLOAkz?=
+ =?us-ascii?Q?E4qYyp81peAVeLxxuEUfbK6jvw1LGgT261/YBf79qgqhoE7z7ZTZCAzoz2FI?=
+ =?us-ascii?Q?qrVerrJszzUHtxS5sO1x0JE97cuLQA+V5DZu2nRJl2u7yYYLhgQLz4DZzBjo?=
+ =?us-ascii?Q?CaqSFu177e5spcdKuZugDGQ0rId/3XmbBKuDetI2r7BYoqY5mgtcQhnwnURJ?=
+ =?us-ascii?Q?O/Pp3txDehcJKW2M58Fh9olafWBcF4vmIxMaVRjJ2YWLQv9+UIN5bF6CJoAu?=
+ =?us-ascii?Q?Ae+UR7SAB0TMbhSxf4/Qx1AZvC1AVU4D5ZllSdJGxjPYP03qi9P1GnnUArsd?=
+ =?us-ascii?Q?ZQuITuiDnkhr/hvwQDv9S0DTQrl/gS94R408urGQSOwa01WFvCGZYLYYW8KH?=
+ =?us-ascii?Q?QmX+XFfPpsgUePzBWXPsxh1e19HYdFnFSP6bMhJMH4tfzZoEyjF4Nz9XIE+x?=
+ =?us-ascii?Q?ewJYL320vNeaHnOT9oIvOkynR5I+qbyatK3Siu2fom1tbWxJNEMySNNsnKFG?=
+ =?us-ascii?Q?1WSJ6kKRJkPvWshTIcmhcTszP+u1UYqnYmzyhZQoHPl0LgK3if8NfrlJUURs?=
+ =?us-ascii?Q?0yqrMZzTafrXOEqGE4KvEhGzDj62++6QT4LpBWFD5TVQUniMW69JU4zkK1ty?=
+ =?us-ascii?Q?SE5Y9rEi9SZi69qJWbLzT2nYc3KAmudSavYUUuko1d8LASDulGTUWAoe8hX9?=
+ =?us-ascii?Q?EYrRPYY/clSgoQSzpXRLjbYduzVD7gRh6nY87+XiKZUATMhhkfzea79MhS1c?=
+ =?us-ascii?Q?xczYWbjQAnD/vbm9Nn0=3D?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8eb1f4d6-29b0-4550-e631-08dc29b35180
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1bb04aa9-eb9e-4b10-c121-08dc29b72777
 X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Feb 2024 21:08:52.4620
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Feb 2024 21:36:20.0332
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cjkQr9I7RYrMjRguWyD30NMGxpFzYn246qOK4EPnoftaFcg6Crx8r7O634Obb0b6PyPW0fN2g/YkRyMe0Du/3Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8226
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5Hq/eWsgk5TyJmTTkEsbpWWfD7hEoII8k+4InkoX6tohQLvkEzwh8RgIpfBgR+KZ9ByAz3LmxxVcG0sa+9NB2A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8800
 
-Fix below sparse warnings.
+Implement trace event support to enhance logging functionality for
+register access and the transfer control descriptor (TCD) context.
+This will enable more comprehensive monitoring and analysis of system
+activities
 
-drivers/dma/fsl-qdma.c:645:50: sparse: warning: incorrect type in argument 2 (different address spaces)
-drivers/dma/fsl-qdma.c:645:50: sparse:    expected void [noderef] __iomem *addr
-drivers/dma/fsl-qdma.c:645:50: sparse:    got void
-
-drivers/dma/fsl-qdma.c:387:15: sparse: sparse: restricted __le32 degrades to integer
-drivers/dma/fsl-qdma.c:390:19: sparse:     expected restricted __le64 [usertype] data
-drivers/dma/fsl-qdma.c:392:13: sparse:     expected unsigned int [assigned] [usertype] cmd
-
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202402081929.mggOTHaZ-lkp@intel.com/
 Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
- drivers/dma/fsl-qdma.c | 21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+ drivers/dma/Makefile          |   6 +-
+ drivers/dma/fsl-edma-common.c |   2 +
+ drivers/dma/fsl-edma-common.h |  45 +++++++++---
+ drivers/dma/fsl-edma-trace.c  |   4 ++
+ drivers/dma/fsl-edma-trace.h  | 132 ++++++++++++++++++++++++++++++++++
+ 5 files changed, 178 insertions(+), 11 deletions(-)
+ create mode 100644 drivers/dma/fsl-edma-trace.c
+ create mode 100644 drivers/dma/fsl-edma-trace.h
 
-diff --git a/drivers/dma/fsl-qdma.c b/drivers/dma/fsl-qdma.c
-index 1e3bf6f30f784..5005e138fc239 100644
---- a/drivers/dma/fsl-qdma.c
-+++ b/drivers/dma/fsl-qdma.c
-@@ -161,6 +161,10 @@ struct fsl_qdma_format {
- 			u8 __reserved1[2];
- 			u8 cfg8b_w1;
- 		} __packed;
-+		struct {
-+			__le32 __reserved2;
-+			__le32 cmd;
-+		} __packed;
- 		__le64 data;
- 	};
- } __packed;
-@@ -355,7 +359,6 @@ static void fsl_qdma_free_chan_resources(struct dma_chan *chan)
- static void fsl_qdma_comp_fill_memcpy(struct fsl_qdma_comp *fsl_comp,
- 				      dma_addr_t dst, dma_addr_t src, u32 len)
- {
--	u32 cmd;
- 	struct fsl_qdma_format *sdf, *ddf;
- 	struct fsl_qdma_format *ccdf, *csgf_desc, *csgf_src, *csgf_dest;
+diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
+index dfd40d14e4089..802ca916f05f5 100644
+--- a/drivers/dma/Makefile
++++ b/drivers/dma/Makefile
+@@ -31,10 +31,12 @@ obj-$(CONFIG_DW_AXI_DMAC) += dw-axi-dmac/
+ obj-$(CONFIG_DW_DMAC_CORE) += dw/
+ obj-$(CONFIG_DW_EDMA) += dw-edma/
+ obj-$(CONFIG_EP93XX_DMA) += ep93xx_dma.o
++fsl-edma-trace-$(CONFIG_TRACING) := fsl-edma-trace.o
++CFLAGS_fsl-edma-trace.o := -I$(src)
+ obj-$(CONFIG_FSL_DMA) += fsldma.o
+-fsl-edma-objs := fsl-edma-main.o fsl-edma-common.o
++fsl-edma-objs := fsl-edma-main.o fsl-edma-common.o ${fsl-edma-trace-y}
+ obj-$(CONFIG_FSL_EDMA) += fsl-edma.o
+-mcf-edma-objs := mcf-edma-main.o fsl-edma-common.o
++mcf-edma-objs := mcf-edma-main.o fsl-edma-common.o ${fsl-edma-trace-y}
+ obj-$(CONFIG_MCF_EDMA) += mcf-edma.o
+ obj-$(CONFIG_FSL_QDMA) += fsl-qdma.o
+ obj-$(CONFIG_FSL_RAID) += fsl_raid.o
+diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
+index b18faa7cfedb9..ebd9647671c9f 100644
+--- a/drivers/dma/fsl-edma-common.c
++++ b/drivers/dma/fsl-edma-common.c
+@@ -546,6 +546,8 @@ void fsl_edma_fill_tcd(struct fsl_edma_chan *fsl_chan,
+ 		csr |= EDMA_TCD_CSR_START;
  
-@@ -384,15 +387,11 @@ static void fsl_qdma_comp_fill_memcpy(struct fsl_qdma_comp *fsl_comp,
- 	/* This entry is the last entry. */
- 	qdma_csgf_set_f(csgf_dest, len);
- 	/* Descriptor Buffer */
--	cmd = cpu_to_le32(FSL_QDMA_CMD_RWTTYPE <<
--			  FSL_QDMA_CMD_RWTTYPE_OFFSET) |
--			  FSL_QDMA_CMD_PF;
--	sdf->data = QDMA_SDDF_CMD(cmd);
--
--	cmd = cpu_to_le32(FSL_QDMA_CMD_RWTTYPE <<
--			  FSL_QDMA_CMD_RWTTYPE_OFFSET);
--	cmd |= cpu_to_le32(FSL_QDMA_CMD_LWC << FSL_QDMA_CMD_LWC_OFFSET);
--	ddf->data = QDMA_SDDF_CMD(cmd);
-+	sdf->cmd = cpu_to_le32((FSL_QDMA_CMD_RWTTYPE << FSL_QDMA_CMD_RWTTYPE_OFFSET) |
-+			       FSL_QDMA_CMD_PF);
+ 	fsl_edma_set_tcd_to_le(fsl_chan, tcd, csr, csr);
 +
-+	ddf->cmd = cpu_to_le32((FSL_QDMA_CMD_RWTTYPE << FSL_QDMA_CMD_RWTTYPE_OFFSET) |
-+			       (FSL_QDMA_CMD_LWC << FSL_QDMA_CMD_LWC_OFFSET));
++	trace_edma_fill_tcd(fsl_chan, tcd);
  }
  
- /*
-@@ -626,7 +625,7 @@ static int fsl_qdma_halt(struct fsl_qdma_engine *fsl_qdma)
+ static struct fsl_edma_desc *fsl_edma_alloc_desc(struct fsl_edma_chan *fsl_chan,
+diff --git a/drivers/dma/fsl-edma-common.h b/drivers/dma/fsl-edma-common.h
+index a05a1f283ece2..365affd5b0764 100644
+--- a/drivers/dma/fsl-edma-common.h
++++ b/drivers/dma/fsl-edma-common.h
+@@ -249,6 +249,11 @@ struct fsl_edma_engine {
+ 	struct fsl_edma_chan	chans[] __counted_by(n_chans);
+ };
  
- static int
- fsl_qdma_queue_transfer_complete(struct fsl_qdma_engine *fsl_qdma,
--				 void *block,
-+				 __iomem void *block,
- 				 int id)
++static inline u32 fsl_edma_drvflags(struct fsl_edma_chan *fsl_chan)
++{
++	return fsl_chan->edma->drvdata->flags;
++}
++
+ #define edma_read_tcdreg_c(chan, _tcd,  __name)				\
+ (sizeof((_tcd)->__name) == sizeof(u64) ?				\
+ 	edma_readq(chan->edma, &(_tcd)->__name) :			\
+@@ -352,6 +357,9 @@ do {								\
+ 		fsl_edma_set_tcd_to_le_c((struct fsl_edma_hw_tcd *)_tcd, _val, _field);		\
+ } while (0)
+ 
++/* Need after struct defination */
++#include "fsl-edma-trace.h"
++
+ /*
+  * R/W functions for big- or little-endian registers:
+  * The eDMA controller's endian is independent of the CPU core's endian.
+@@ -370,23 +378,38 @@ static inline u64 edma_readq(struct fsl_edma_engine *edma, void __iomem *addr)
+ 		h = ioread32(addr + 4);
+ 	}
+ 
++	trace_edma_readl(edma, addr, l);
++	trace_edma_readl(edma, addr + 4, h);
++
+ 	return (h << 32) | l;
+ }
+ 
+ static inline u32 edma_readl(struct fsl_edma_engine *edma, void __iomem *addr)
  {
- 	bool duplicate;
++	u32 val;
++
+ 	if (edma->big_endian)
+-		return ioread32be(addr);
++		val = ioread32be(addr);
+ 	else
+-		return ioread32(addr);
++		val = ioread32(addr);
++
++	trace_edma_readl(edma, addr, val);
++
++	return val;
+ }
+ 
+ static inline u16 edma_readw(struct fsl_edma_engine *edma, void __iomem *addr)
+ {
++	u16 val;
++
+ 	if (edma->big_endian)
+-		return ioread16be(addr);
++		val = ioread16be(addr);
+ 	else
+-		return ioread16(addr);
++		val = ioread16(addr);
++
++	trace_edma_readw(edma, addr, val);
++
++	return val;
+ }
+ 
+ static inline void edma_writeb(struct fsl_edma_engine *edma,
+@@ -397,6 +420,8 @@ static inline void edma_writeb(struct fsl_edma_engine *edma,
+ 		iowrite8(val, (void __iomem *)((unsigned long)addr ^ 0x3));
+ 	else
+ 		iowrite8(val, addr);
++
++	trace_edma_writeb(edma, addr, val);
+ }
+ 
+ static inline void edma_writew(struct fsl_edma_engine *edma,
+@@ -407,6 +432,8 @@ static inline void edma_writew(struct fsl_edma_engine *edma,
+ 		iowrite16be(val, (void __iomem *)((unsigned long)addr ^ 0x2));
+ 	else
+ 		iowrite16(val, addr);
++
++	trace_edma_writew(edma, addr, val);
+ }
+ 
+ static inline void edma_writel(struct fsl_edma_engine *edma,
+@@ -416,6 +443,8 @@ static inline void edma_writel(struct fsl_edma_engine *edma,
+ 		iowrite32be(val, addr);
+ 	else
+ 		iowrite32(val, addr);
++
++	trace_edma_writel(edma, addr, val);
+ }
+ 
+ static inline void edma_writeq(struct fsl_edma_engine *edma,
+@@ -428,6 +457,9 @@ static inline void edma_writeq(struct fsl_edma_engine *edma,
+ 		iowrite32(val & 0xFFFFFFFF, addr);
+ 		iowrite32(val >> 32, addr + 4);
+ 	}
++
++	trace_edma_writel(edma, addr, val & 0xFFFFFFFF);
++	trace_edma_writel(edma, addr + 4, val >> 32);
+ }
+ 
+ static inline struct fsl_edma_chan *to_fsl_edma_chan(struct dma_chan *chan)
+@@ -435,11 +467,6 @@ static inline struct fsl_edma_chan *to_fsl_edma_chan(struct dma_chan *chan)
+ 	return container_of(chan, struct fsl_edma_chan, vchan.chan);
+ }
+ 
+-static inline u32 fsl_edma_drvflags(struct fsl_edma_chan *fsl_chan)
+-{
+-	return fsl_chan->edma->drvdata->flags;
+-}
+-
+ static inline struct fsl_edma_desc *to_fsl_edma_desc(struct virt_dma_desc *vd)
+ {
+ 	return container_of(vd, struct fsl_edma_desc, vdesc);
+diff --git a/drivers/dma/fsl-edma-trace.c b/drivers/dma/fsl-edma-trace.c
+new file mode 100644
+index 0000000000000..28300ad80bb75
+--- /dev/null
++++ b/drivers/dma/fsl-edma-trace.c
+@@ -0,0 +1,4 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#define CREATE_TRACE_POINTS
++#include "fsl-edma-common.h"
+diff --git a/drivers/dma/fsl-edma-trace.h b/drivers/dma/fsl-edma-trace.h
+new file mode 100644
+index 0000000000000..d3541301a2470
+--- /dev/null
++++ b/drivers/dma/fsl-edma-trace.h
+@@ -0,0 +1,132 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++/*
++ * Copyright 2023 NXP.
++ */
++
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM fsl_edma
++
++#if !defined(__LINUX_FSL_EDMA_TRACE) || defined(TRACE_HEADER_MULTI_READ)
++#define __LINUX_FSL_EDMA_TRACE
++
++#include <linux/types.h>
++#include <linux/tracepoint.h>
++
++DECLARE_EVENT_CLASS(edma_log_io,
++	TP_PROTO(struct fsl_edma_engine *edma, void __iomem *addr, u32 value),
++	TP_ARGS(edma, addr, value),
++	TP_STRUCT__entry(
++		__field(struct fsl_edma_engine *, edma)
++		__field(void __iomem *, addr)
++		__field(u32, value)
++	),
++	TP_fast_assign(
++		__entry->edma = edma;
++		__entry->addr = addr;
++		__entry->value = value;
++	),
++	TP_printk("offset %08x: value %08x",
++		(u32)(__entry->addr - __entry->edma->membase), __entry->value)
++);
++
++DEFINE_EVENT(edma_log_io, edma_readl,
++	TP_PROTO(struct fsl_edma_engine *edma, void __iomem *addr, u32 value),
++	TP_ARGS(edma, addr, value)
++);
++
++DEFINE_EVENT(edma_log_io, edma_writel,
++	TP_PROTO(struct fsl_edma_engine *edma, void __iomem *addr,  u32 value),
++	TP_ARGS(edma, addr, value)
++);
++
++DEFINE_EVENT(edma_log_io, edma_readw,
++	TP_PROTO(struct fsl_edma_engine *edma, void __iomem *addr, u32 value),
++	TP_ARGS(edma, addr, value)
++);
++
++DEFINE_EVENT(edma_log_io, edma_writew,
++	TP_PROTO(struct fsl_edma_engine *edma, void __iomem *addr,  u32 value),
++	TP_ARGS(edma, addr, value)
++);
++
++DEFINE_EVENT(edma_log_io, edma_readb,
++	TP_PROTO(struct fsl_edma_engine *edma, void __iomem *addr, u32 value),
++	TP_ARGS(edma, addr, value)
++);
++
++DEFINE_EVENT(edma_log_io, edma_writeb,
++	TP_PROTO(struct fsl_edma_engine *edma, void __iomem *addr,  u32 value),
++	TP_ARGS(edma, addr, value)
++);
++
++DECLARE_EVENT_CLASS(edma_log_tcd,
++	TP_PROTO(struct fsl_edma_chan *chan, void *tcd),
++	TP_ARGS(chan, tcd),
++	TP_STRUCT__entry(
++		__field(u64, saddr)
++		__field(u16, soff)
++		__field(u16, attr)
++		__field(u32, nbytes)
++		__field(u64, slast)
++		__field(u64, daddr)
++		__field(u16, doff)
++		__field(u16, citer)
++		__field(u64, dlast_sga)
++		__field(u16, csr)
++		__field(u16, biter)
++
++	),
++	TP_fast_assign(
++		__entry->saddr = fsl_edma_get_tcd_to_cpu(chan, tcd, saddr),
++		__entry->soff = fsl_edma_get_tcd_to_cpu(chan, tcd, soff),
++		__entry->attr = fsl_edma_get_tcd_to_cpu(chan, tcd, attr),
++		__entry->nbytes = fsl_edma_get_tcd_to_cpu(chan, tcd, nbytes),
++		__entry->slast = fsl_edma_get_tcd_to_cpu(chan, tcd, slast),
++		__entry->daddr = fsl_edma_get_tcd_to_cpu(chan, tcd, daddr),
++		__entry->doff = fsl_edma_get_tcd_to_cpu(chan, tcd, doff),
++		__entry->citer = fsl_edma_get_tcd_to_cpu(chan, tcd, citer),
++		__entry->dlast_sga = fsl_edma_get_tcd_to_cpu(chan, tcd, dlast_sga),
++		__entry->csr = fsl_edma_get_tcd_to_cpu(chan, tcd, csr),
++		__entry->biter = fsl_edma_get_tcd_to_cpu(chan, tcd, biter);
++	),
++	TP_printk("\n==== TCD =====\n"
++		  "  saddr:  0x%016llx\n"
++		  "  soff:               0x%04x\n"
++		  "  attr:               0x%04x\n"
++		  "  nbytes:         0x%08x\n"
++		  "  slast:  0x%016llx\n"
++		  "  daddr:  0x%016llx\n"
++		  "  doff:               0x%04x\n"
++		  "  citer:              0x%04x\n"
++		  "  dlast:  0x%016llx\n"
++		  "  csr:                0x%04x\n"
++		  "  biter:              0x%04x\n",
++		__entry->saddr,
++		__entry->soff,
++		__entry->attr,
++		__entry->nbytes,
++		__entry->slast,
++		__entry->daddr,
++		__entry->doff,
++		__entry->citer,
++		__entry->dlast_sga,
++		__entry->csr,
++		__entry->biter)
++);
++
++DEFINE_EVENT(edma_log_tcd, edma_fill_tcd,
++	TP_PROTO(struct fsl_edma_chan *chan, void *tcd),
++	TP_ARGS(chan, tcd)
++);
++
++#endif
++
++/* this part must be outside header guard */
++
++#undef TRACE_INCLUDE_PATH
++#define TRACE_INCLUDE_PATH .
++
++#undef TRACE_INCLUDE_FILE
++#define TRACE_INCLUDE_FILE fsl-edma-trace
++
++#include <trace/define_trace.h>
 -- 
 2.34.1
 

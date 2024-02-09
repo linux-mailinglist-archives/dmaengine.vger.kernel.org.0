@@ -1,106 +1,116 @@
-Return-Path: <dmaengine+bounces-988-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-989-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10A7984F145
-	for <lists+dmaengine@lfdr.de>; Fri,  9 Feb 2024 09:16:30 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A89C284FAB1
+	for <lists+dmaengine@lfdr.de>; Fri,  9 Feb 2024 18:10:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id ADF9C1F249CB
-	for <lists+dmaengine@lfdr.de>; Fri,  9 Feb 2024 08:16:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CF3E41C218F8
+	for <lists+dmaengine@lfdr.de>; Fri,  9 Feb 2024 17:10:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2859A657BD;
-	Fri,  9 Feb 2024 08:16:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E750D7BAE4;
+	Fri,  9 Feb 2024 17:10:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gigaio-com.20230601.gappssmtp.com header.i=@gigaio-com.20230601.gappssmtp.com header.b="Gqbyp6VY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b/Ntb0GA"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50ED456B89
-	for <dmaengine@vger.kernel.org>; Fri,  9 Feb 2024 08:16:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B52FE6DD18;
+	Fri,  9 Feb 2024 17:10:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707466585; cv=none; b=NkAgToTi60eD6INiRfaCjZMr0bb7kakimBhbR9o7lwmQr1nsEhKoekmKPjyMiKRPdXVIhOjm4CY0/+trKsZQoNSs3P3Rh1e8d7HyJTnsY++/qPjWdOBs6D3zUon8nC8Lkp1dIoPtehbYOMuNrVnipWWUqqhbHknWm6sLRpMwRQk=
+	t=1707498634; cv=none; b=qIWDCNk4BJM14cIAZks0epRFB+I7z0jAJF+Yi/OzrSFJxIFRjH+imfjx7SESsFih/wbGlsc0hosQ+F0y7tjz5d1P2vJmT+b9bFiD4ybK7cJP8Ts69uTBlwVYsR/BdONA2L8Ia/2e9YDiwAxr2DGBf6hbq+PbeKJ59H+8O4Xn8sI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707466585; c=relaxed/simple;
-	bh=zob0PpMY2d8n82gawhjb6dg8g/2o1MFbYDg1mK8goqA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rTqkXzwPBOkW5ZAA658qFUJLAx6bUFNFSgsiwZCZwYSMsPHHpV4btn8kMje6beXVHPmV28LlE7FhONIWosxIaxP8U3aeGlRisN4mLL9V7F37yzMn6RT5Zaj96zR7TQhsaCZPQrVyVVX6oXcIRqAVEQ6qjJqAslVcSnm52Rukf6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gigaio.com; spf=pass smtp.mailfrom=gigaio.com; dkim=pass (2048-bit key) header.d=gigaio-com.20230601.gappssmtp.com header.i=@gigaio-com.20230601.gappssmtp.com header.b=Gqbyp6VY; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gigaio.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gigaio.com
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-55fe4534e9bso904387a12.0
-        for <dmaengine@vger.kernel.org>; Fri, 09 Feb 2024 00:16:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gigaio-com.20230601.gappssmtp.com; s=20230601; t=1707466581; x=1708071381; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3V+wXAqiHixIfTUYs8JQvGWDRc7BZjDQdODziqTfPzU=;
-        b=Gqbyp6VYud5V2P/huZ5yO2szfTh0ArwxdbeB+RXrynBw7alK24js4A/HCVvcRi2c1m
-         86mkPNJ87CvX6qip4hqAkNjxTdUaKXV+rzl6DSwMUGv33hozE94EsNHRqRsnuL+w169r
-         zc2PCfxwtdb+KaPdO4B/yPuZmVUcJKgU1dwf5JUCQc3lkS9MTOb2+BneqxzflPbh/ivJ
-         kT2xCpZ90FrmlaLlZDpyVriLdpoctRHdWFPUxAQeJ9mLmybbQHzvWBsjJ1UpVWqF2JcE
-         smb+tvvMKRZYXFxKDyMnJC7LJAFd4IF0ArTuz4ZTe1IA7cOl85XhZ5XkYf3GKkt5QQnh
-         LnEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707466581; x=1708071381;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3V+wXAqiHixIfTUYs8JQvGWDRc7BZjDQdODziqTfPzU=;
-        b=uf62KdZ+yl9IzaXVKL03dGmt7dDJr/n1LAjYaD2OGTNg83CBfwfhZoeUJG6TIrOwKw
-         lt9Vzr3fC/fR18kv7mIpmbqIX2gaMoXimcKwnwtyWE0f7VAgJ3cRIRHOTPCoCQ9qzFrZ
-         mCXTkLvtLB9+Mj0tKBU3Q/ydoZZrRHRMUl7IBQx/d6ts3AJ5P5kCmaTOfYP4e4D/CzzG
-         jWeVy9H9arkFYiSAmvBkPYgDIvOTY0Wpty2a1FIpzxthDTVi+Ke4GpxWz5vpcukcBCDT
-         R2MSzdbv9egnedhDDbBKB4259mFQx7Asitt0b/RPNhjOxDCyK8ImFr84gxtIno7Idr+h
-         lfrw==
-X-Gm-Message-State: AOJu0YxRO0S6AWLn3xvgx0QYpfWifhl4fdgRRLyRkBKiXLOj/qh4IaWH
-	8O0WUatZdtnsfCRNGra3QdRDa4iNszwwON1DNRRF7oKN+tafDHyLDcbqicCyv2I=
-X-Google-Smtp-Source: AGHT+IHearlQSuku3V98oBAatvyfhPHa7Mg2JPdbgti28T0EdSt088p3/0FtfyZVGNKLkpnkznn/ew==
-X-Received: by 2002:a05:6402:505:b0:560:bea6:50c9 with SMTP id m5-20020a056402050500b00560bea650c9mr708473edv.14.1707466581452;
-        Fri, 09 Feb 2024 00:16:21 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWlIEp95Z8028hnT2u5XHfJGZiVluiboUdHlLdVFgBsJGv7XRFHFZ6Z/fmRGenydPvWb231D0sCP9StY0ANED3x9OKNR9sDCX0Mxztle3pz7GGZodJVeP6UJBhsP5cF6snITutqClXJqDuGVbfMkwzJWQtPU70PB8qJUySYKdlJVd4z+YDpSkWXo/pGsUjtFQbN9ar0A8xpZAeBI2D4Lic=
-Received: from [10.0.0.11] ([46.151.19.162])
-        by smtp.gmail.com with ESMTPSA id et11-20020a056402378b00b0056058f2603asm544323edb.3.2024.02.09.00.16.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 Feb 2024 00:16:21 -0800 (PST)
-Message-ID: <8248b074-d323-44a4-bd78-dd66e4beb7b6@gigaio.com>
-Date: Fri, 9 Feb 2024 09:16:20 +0100
+	s=arc-20240116; t=1707498634; c=relaxed/simple;
+	bh=1DJyQGZWkyINk+0P2VsSNjoETpjN/mE2UKBByCakbuc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=QUdFuQXXx0oV0s4UARDZryBv8s0GSm54hMEbICMBL6PopFWdsVL+BEIT6enDcPOxFZ1MD4nf3hHvTu7IImAyCVZrJhXg35jHyO3lpBp/83BMh6Fzmxi1XHfl5skZ+C458d8oFhqEhLpWTp6ULvVEdFWBOEENG+sC6N2oEVkXRzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b/Ntb0GA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2009C433F1;
+	Fri,  9 Feb 2024 17:10:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707498634;
+	bh=1DJyQGZWkyINk+0P2VsSNjoETpjN/mE2UKBByCakbuc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=b/Ntb0GAdQuPhorZNPOqkKxNKtS8/IC3CPaCzUNDjuhbYzgUQQpN1nmdSRvATUagt
+	 qR9FDSA7njDGtlOYo+Zr0LP43Yo+UHHd20nwenjRUDNlOxOJcwoh4KlYQ5IGHF6Vdu
+	 niQeED7H47m8v8MBn/PUy5rKWUTsf6A1c1IKtB0fAm75YTEE+pqEhfcoe67FWUJlZN
+	 FJlS+9EPDJKcR+ZnaskzZ3CYg7565Pehp9v35jt2ROMid1UdTUNQX0yBUEfpo5VObV
+	 v86ez5zUEaMr2Ym5FD/N5JAAciRcNcGrxxCM3Kn+eU0e5awsgmKEyLUo5ltCbxn+NR
+	 qlATClLOoxEzA==
+Date: Fri, 9 Feb 2024 11:10:32 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Serge Semin <fancer.lancer@gmail.com>
+Cc: Mrinmay Sarkar <quic_msarkar@quicinc.com>, vkoul@kernel.org,
+	jingoohan1@gmail.com, conor+dt@kernel.org, konrad.dybcio@linaro.org,
+	manivannan.sadhasivam@linaro.org, robh+dt@kernel.org,
+	quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
+	quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
+	dmitry.baryshkov@linaro.org, quic_krichai@quicinc.com,
+	quic_vbadigan@quicinc.com, quic_parass@quicinc.com,
+	quic_schintav@quicinc.com, quic_shijjose@quicinc.com,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	mhi@lists.linux.dev
+Subject: Re: [PATCH v1 3/6] PCI: dwc: Add HDMA support
+Message-ID: <20240209171032.GA1004885@bhelgaas>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Using PTDMA driver for generic DMA
-To: Raju Rangoju <Raju.Rangoju@amd.com>, Sanjay R Mehta
- <sanju.mehta@amd.com>, Gary R Hook <gary.hook@amd.com>,
- Tom Lendacky <thomas.lendacky@amd.com>
-Cc: dmaengine@vger.kernel.org, Eric Pilmore <epilmore@gigaio.com>,
- Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-References: <1f0cdf3c-be91-427f-86eb-4982de13e446@gigaio.com>
- <6a447bd4-f6f1-fc1f-9a0d-2810357fb1b5@amd.com>
-Content-Language: en-US
-From: Tadeusz Struk <tstruk@gigaio.com>
-In-Reply-To: <6a447bd4-f6f1-fc1f-9a0d-2810357fb1b5@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <oa76ts3zqud7mtkpilbo4uub7gazqncnbh6rma26kaz6wt6fch@ufv672fgrcgj>
 
-Hi Raju,
-On 2/7/24 14:26, Raju Rangoju wrote:
-> Hello Tadeusz,
-> 
-> Sorry for the delay in response.
-> 
-> The "ERR 39: ODMA0_AXI_DECERR" is a Decode Error relating to destination.
+On Sat, Feb 03, 2024 at 12:40:39AM +0300, Serge Semin wrote:
+> On Fri, Jan 19, 2024 at 06:30:19PM +0530, Mrinmay Sarkar wrote:
+> > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > 
+> > Hyper DMA (HDMA) is already supported by the dw-edma dmaengine driver.
+> > Unlike it's predecessor Embedded DMA (eDMA), HDMA supports only the
+> > unrolled mapping format. So the platform drivers need to provide a valid
+> > base address of the CSRs. Also, there is no standard way to auto detect
+> > the number of available read/write channels in a platform. So the platform
+> > drivers has to provide that information as well.
+> ...
 
-Could you please send a patch that adds short comments explaining these 
-error codes similar to this one?
+> Basically this change defines two versions of the eDMA info
+> initialization procedure:
+> 1. use pre-defined CSRs mapping format and amount of channels,
+> 2. auto-detect CSRs mapping and the amount of channels.
+> The second version also supports the optional CSRs mapping format
+> detection procedure by means of the DW_PCIE_CAP_EDMA_UNROLL flag
+> semantics. Thus should this patch is accepted there will be the
+> functionality duplication. I suggest to make things a bit more
+> flexible than that. Instead of creating the two types of the
+> init-methods selectable based on the mapping format, let's split up
+> the already available DW eDMA engine detection procedure into the next
+> three stages:
+> 1. initialize DW eDMA data,
+> 2. auto-detect the CSRs mapping format,
+> 3. auto-detect the amount of channels.
+> and convert the later two to being optional. They will be skipped in case
+> if the mapping format or the amount of channels have been pre-defined
+> by the platform drivers. Thus we can keep the eDMA data init procedure
+> more linear thus easier to read, drop redundant DW_PCIE_CAP_EDMA_UNROLL flag
+> and use the new functionality for the Renesas R-Car S4-8's PCIe
+> controller (for which the auto-detection didn't work), for HDMA with compat
+> and _native_ CSRs mapping. See the attached patches for details:
 
-Thanks and regards,
-Tadeusz
+I am still bound by the opinion of Google's legal team that I cannot
+accept the code changes that were attached here.  I think it's fair to
+read the review comments (thank you for those), but I suggest not
+reading the patches that were attached.
+
+Bjorn
 

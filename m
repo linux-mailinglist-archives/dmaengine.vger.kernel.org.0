@@ -1,77 +1,110 @@
-Return-Path: <dmaengine+bounces-996-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-997-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 02AFE84FF00
-	for <lists+dmaengine@lfdr.de>; Fri,  9 Feb 2024 22:36:47 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 64AA884FF47
+	for <lists+dmaengine@lfdr.de>; Fri,  9 Feb 2024 22:53:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5B666B265E3
-	for <lists+dmaengine@lfdr.de>; Fri,  9 Feb 2024 21:36:44 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CD655B29FE3
+	for <lists+dmaengine@lfdr.de>; Fri,  9 Feb 2024 21:53:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 771E0210FA;
-	Fri,  9 Feb 2024 21:36:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2ECF220DED;
+	Fri,  9 Feb 2024 21:53:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="HcbP1jmY"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I2ogn8E3"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2061.outbound.protection.outlook.com [40.107.104.61])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 699EB1B268;
-	Fri,  9 Feb 2024 21:36:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.104.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88CB107AA;
+	Fri,  9 Feb 2024 21:53:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.18
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707514589; cv=fail; b=Uq0EuL7W1Hdcj8QAH9oypCcSz/JujuuThgmnvjZlh7icCzCb1oYiCJZDLTBQlUZmoekrj1DUzlvYMX95IlJiHnBF8Vn1oRy+FCzz5uI9adg+XKgpAQePCG3vJVyjvcq6zuiUvZE6pPFbEdtWdi4O3qNpYCE+f39ZOxdyp8w46WA=
+	t=1707515620; cv=fail; b=UfxuE5O+uXdRXjDwXvJZKsPXiKLxJammvQtcjoxH5tZrxN+6BH8nxc5GBKD2RfpG9PSvEgLQo+Dmz528BCLHuyt/9AxCxM23a7QsCzcd/H28WKtFgbeCfubgafrAzee/IBYpD4NG36NsFuhhKCnAfSKAnba0W9IhL/I1F66j4mA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707514589; c=relaxed/simple;
-	bh=GbaRWCp2XVRkw+90MR10wsdT8RAC20inXAGjN/iPJ00=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=t0lVwhnjXLAFw2unDKEWJd/jeuGb0C8HeUoTLjFLoUvtdToKXis1+mdIGoKo9dL/wVVFa/nlqBNanUX8m2X+YW6B23XNX4V+S0kwEdxbDoOott3+GBmGPn8MR0VSqjJy8U3IpokTFfFxj4e55YCWM0dW132gmn2EUDjVXWM0ReM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=HcbP1jmY; arc=fail smtp.client-ip=40.107.104.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	s=arc-20240116; t=1707515620; c=relaxed/simple;
+	bh=AJyHNTuv9fUGAJGxhwSnE3Zsnasg6R3k69xFXVeUSNQ=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Y8D2R7fNIsJDwHuFz1IjfdB4LI9i8BB/Flyfdvhwi0gswCCwi8p95mcSOohZVEU/J79oI0zOqej+pId2gFgrjAscJf1a3cd9Z5pObNT5AAb9Hvz52LOxl54lVayl9hxVP4qcqpsAie7fFjm1EEx00P8Q//EHbBIKZLkKr5e6c1k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I2ogn8E3; arc=fail smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707515617; x=1739051617;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=AJyHNTuv9fUGAJGxhwSnE3Zsnasg6R3k69xFXVeUSNQ=;
+  b=I2ogn8E3n2er44PPXZ9HLtNhsTlcaalZMfoz4pBvU+H+k6LVjD2XTk/Z
+   4PtC5+O10jyMmHceetaea2TPgRVoG2vANyEa10LumfAlJwrmJ9q2EgiiR
+   YknCE+zudRUhTCKZ0Wv+0YU10Gddkpc1MxIcNnR9/XDJs8/F07izKEBJE
+   TFiD9n/WVpczIZjsHHiti2bvXLYXV2sepAM+Ogdt9fkgp2DpYql3Rf9Iz
+   uT0jOB6q4TegQdYAIAColykqfRv42u68QO/jxVI34Z7ZH7s8Oy6fbEV7u
+   blqlYDgekuvWu3uO9Hr5v7NQKbPfanCxmOkDs/AQfxiD7LlKD3KOL3jDL
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10979"; a="1641200"
+X-IronPort-AV: E=Sophos;i="6.05,257,1701158400"; 
+   d="scan'208";a="1641200"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2024 13:53:37 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,257,1701158400"; 
+   d="scan'208";a="2032849"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 09 Feb 2024 13:53:37 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 9 Feb 2024 13:53:36 -0800
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Fri, 9 Feb 2024 13:53:36 -0800
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.40) by
+ edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 9 Feb 2024 13:53:36 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=g8JUdxa9rNo2/ZEdbUGOfHIDHjzmpVm2/Zrv41YIgQVbNnTofJ4yK4cquc88M5veHQuOCE6Z4ieDJoBuplc+059WSmiU6cdIoIFoDPW4Ycv+FbGW0HK4zJeFN7Ml4chERaRB/vaNmDzQNHgFVB1lPE8tmg6smpuyrW57ksr8qOWLzzElGgONaHE3+9NQJzlzOYbg5N8WHVoOiKzYczGj8g8zbVX3kZxx3Ka6/AzIqbq02o9vzkNRchkiGHlaThEUFxyC5lgXTwRR9RYXmrNkUiLCy6aHqfGDMqfx9hxX/7DEjxbmZ3NmAaTvcx8l5ffPHGeYmhHPHXqQchloV4c9OA==
+ b=YZgalDi42LZAveUjGUoYnoIpMoy9Aut2ZJtGrCSXl6HElYRVb/OJlMiuJ3+Bzu51qu5ZSJXYHDK/CIBHOSrGPuPPZXsfyo1KLFhv1+wmhijNWB0tKBxhcxqiP2btbqrm5PwS9cvfs9R9H1vvFuF32FBC7ndJ1Y+wZeEftnmHXTh5ppwOe4Qy9gMYdZ2Kq0ZwD3NDxSaWwj+QgL6JEP3T1AwO8V96YLO8QPnGgLVshW+cX1UMSRtHzrgdxbxMrusJbMdrGUgcDRCtL8ftLIl4t0Da+LnyzdEYjmN2rh+h0QK2XGju0xw534BR3n3XytmRSDMa7K+H089P/6rxk17x4w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YrP2/nQTL0M7B4BZ7DGiXO1mITOdYQ+1nQszWsa05pg=;
- b=j5T0CWIayPaUJv1a5/uAMnzOhSsYwWNHCs8azneL3lS3IA/Egye4cD4zQeDjYsGu/Tk+0zK5icJxjvL7/QOGVwxzj4EwyJ/oSmnLB2nekZnC0CQO8GIU5as6MnWreLLAg7GQkozesXJzeX6zqIT5t28M+FqKExqUNEb9nBveD894JN2lwcKjpt24x+AaSpAYLbolASgVEUuWSyMHGBju2JbqL1WUD6oGuNT7FzbMJP0GEqGgpo/TNxN1L7gajRRepl9iVPVuYcQolfgeH+BSglmcEE+r+RGQk8s3evTvCW1OSHXDeBBQ/snC9g41dJCBk94qxdEhRNK/4Ji5o1Sxdw==
+ bh=B3Knffrzvyy0sXhp4AyPQac3rmSSFYpp4E2XDbK8Olg=;
+ b=Ox9c0AssnYE21zMmsxSpPFQNsZiEDN456tWGTiJbimSomx3zTeqD7+atfOAw/AcBQIMWgnXyir93nFbYwOcOm3bReUaPwFtYZctwDTi1OHhagPLfcegNDoYGWJlaNCnbXPm3dA/htq8PFyGkeODv8DDIQBI/+DD/GlwrTgB5fYDaMiUnnKng50KRoI8sDVdsjkaNODZS/88P2dtzoATrZsI+tH7sitJKcj3q/oIkKLhvex8KRwSp1EdP2vBkz/MRDmAf1t23hAJbReVLgoJ13kxnaJcxDkVTTGe3VKK9n7J4wL1f8FrCGR5NUhf4WeY94BwXnEB7zMALMa7YQBOfkw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YrP2/nQTL0M7B4BZ7DGiXO1mITOdYQ+1nQszWsa05pg=;
- b=HcbP1jmYkjZ7lZLtc0eoPhGmKf4pxBSR755zkHh4NMsQJ3C1DAi4xz0/5E7YZC5TDgirS2OB2068yNZ3toJWmsl+ZFVZ6YsanQZZ6p4AdVKljdYiY2TKsd0boRx1AiJSC35G3rT2ZRGykEE1tsddGJjZNlHTWGLxPhlW9/8V1Y8=
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by PAXPR04MB8800.eurprd04.prod.outlook.com (2603:10a6:102:20f::13) with
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB7141.namprd11.prod.outlook.com (2603:10b6:510:22f::14)
+ by PH7PR11MB6796.namprd11.prod.outlook.com (2603:10b6:510:1ba::6) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.27; Fri, 9 Feb
- 2024 21:36:21 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::c8b4:5648:8948:e85c]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::c8b4:5648:8948:e85c%3]) with mapi id 15.20.7270.025; Fri, 9 Feb 2024
- 21:36:21 +0000
-From: Frank Li <Frank.Li@nxp.com>
-To: Vinod Koul <vkoul@kernel.org>,
-	imx@lists.linux.dev (open list:FREESCALE eDMA DRIVER),
-	dmaengine@vger.kernel.org (open list:FREESCALE eDMA DRIVER),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 2/2] dmaengine: fsl-edma: use _Generic to handle difference type
-Date: Fri,  9 Feb 2024 16:36:04 -0500
-Message-Id: <20240209213606.367025-2-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240209213606.367025-1-Frank.Li@nxp.com>
-References: <20240209213606.367025-1-Frank.Li@nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0P220CA0021.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:a03:41b::8) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.39; Fri, 9 Feb
+ 2024 21:53:34 +0000
+Received: from PH8PR11MB7141.namprd11.prod.outlook.com
+ ([fe80::be6e:94e9:76f7:5c3a]) by PH8PR11MB7141.namprd11.prod.outlook.com
+ ([fe80::be6e:94e9:76f7:5c3a%4]) with mapi id 15.20.7270.024; Fri, 9 Feb 2024
+ 21:53:34 +0000
+Message-ID: <4237a933-0f61-417f-bbb6-ce5954b304d4@intel.com>
+Date: Sat, 10 Feb 2024 05:53:25 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dmaengine: idxd: Ensure safe user copy of completion
+ record
+Content-Language: en-US
+To: Fenghua Yu <fenghua.yu@intel.com>, Vinod Koul <vkoul@kernel.org>, "Dave
+ Jiang" <dave.jiang@intel.com>
+CC: <dmaengine@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>,
+	Tony Zhu <tony.zhu@intel.com>
+References: <20240209191412.1050270-1-fenghua.yu@intel.com>
+From: Lijun Pan <lijun.pan@intel.com>
+In-Reply-To: <20240209191412.1050270-1-fenghua.yu@intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SI2PR01CA0053.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:193::7) To PH8PR11MB7141.namprd11.prod.outlook.com
+ (2603:10b6:510:22f::14)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -79,164 +112,174 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PAXPR04MB8800:EE_
-X-MS-Office365-Filtering-Correlation-Id: ad64102a-d4e1-43f3-3795-08dc29b728a3
+X-MS-TrafficTypeDiagnostic: PH8PR11MB7141:EE_|PH7PR11MB6796:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0f53155d-057e-4d93-6cf2-08dc29b98fee
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	PPWZmHxlLSBktIlsC+IqZZUcKzORpXIEYj9s93+PqvfXyyZBq8z4MoOvA09QRLD0oPcLqHR5fm1luQCpsCSpm3ivx/EDq79aynYhNN7AEV6tfq52mtuT6M6cW8BCaRSDaBbKvB15rJ1tb3A6vuKM99DIx5j1y6TF/zYi0g9E7kqyqpZN7Nw4IXBCZoam726oQ7qDR5mZUo1EMEGXQZAel4kwDV1myJC1HWHFS9T2Cgf4Y2XuzLQ1FQvfxgv+FHRT88XssI+1xAYOdwQxeI7DmiWj74zaMw9NkfJR+Lfr90aknB/j4UrxVoiVO7Son6nCovqYy6fpG7rP7D+18BIWk81JmbeIj3sM+HzqpRQfSh9+hslm022Yfpx/6jm8Ue+UhsPPAlvQd1SURrqOExzm2uqbPL6cfArc4sqpCAQVEpNoggKcl4CFOZf3v+OFjfOFupoHHgzOeKSn1HvSwskLRdPVFNmqXOQ4Cj5Sph/g0hyOte12bNEVd7f28BZtdPVucIflgaRrefzbdNO5h6Hp0b/4bqYvfz+IkxfHPeh2BkBRfPgXyPvpZ2sKQl/74d3ZS59wawygnsLEZVKxdJ0/vJvqpe3ORrSE3bw/B1MWe2iDJgBPHUML536Fz7pQn5Ic
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(346002)(396003)(366004)(39860400002)(136003)(230273577357003)(230922051799003)(451199024)(1800799012)(186009)(64100799003)(5660300002)(2906002)(41300700001)(38100700002)(86362001)(478600001)(38350700005)(6512007)(6506007)(6486002)(83380400001)(1076003)(66556008)(26005)(66946007)(66476007)(316002)(36756003)(8936002)(8676002)(2616005)(6666004)(52116002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: EPppxMrwxpomdbvGnwzt8xEwI+XWhG8BfpiWzBR83aZUvvs256fUlmbQRMpYN7hLFbwBMbECW8WYWFlfFW3wRYKkMJ6BXuNXORpd/D10+Xo+vYbOC1gpyZsmkytl0VyNufZ3q/LIZmt6BUUvYAyWB77h9wMO1AeKC6YJsHMDIj4OPuA9lNZt94CvCRChpLKJp/i+uWatvSH17ToXvWjK25cSWwH8sXGks7NbouW4wOmslW3lTdc/YRYn38Sgi4bGWbuqTRLsw5WWd6wQFZb4UduXpZ0J0Mj9ehzjLS8xKgtibzuqH/q1g0pElF9jYy9E/oWPPE3VSFdRXuIlUbb5Y035lFEeQDVeXFpq4AQFn58/aWQj2BY+3pn6vtnFR3sdxefUx/MoEvqLVygBDfqM9mtUIGL9pz3bklQGr65tzRxRxVdP8yBzrk6NrPZnLnoMcTJ2048rE7ymGo7X1T6kotkltBvGmrUbl3FqJNnQ2t+uMQJ7pPkVN694qxEGD+NwvRuZFEOjOsn7sibhexBrFka8YORzPNZc4/7qDrUQHFuIj/WuJDDwcO2TbS++Inie
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB7141.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(366004)(346002)(376002)(136003)(39860400002)(230922051799003)(1800799012)(451199024)(64100799003)(186009)(83380400001)(82960400001)(86362001)(31696002)(2616005)(316002)(107886003)(6486002)(6636002)(53546011)(110136005)(66556008)(66476007)(26005)(6506007)(38100700002)(54906003)(478600001)(6666004)(66946007)(6512007)(36756003)(5660300002)(44832011)(4326008)(8936002)(8676002)(31686004)(41300700001)(2906002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?dxZVB4l0K7L0+DbAHWT2veJIeeIpBKevvTJdnJ3EGv28aP58LXV0X68JhPoA?=
- =?us-ascii?Q?lSA5nIgL2PhfYVPEbmJqw7/dIi9fZwJu36sMjm2Ww4b3GIs+Ct5uJSMEA9ht?=
- =?us-ascii?Q?s1cxlcECGzOq6n84bt2HxCkpm3fARegpfyOpahZRT5SUsUU8O+0Ss3J2YOUR?=
- =?us-ascii?Q?QG6H7gf4nhqwtHm9tR28DiupsdbibeNCb8kJeUEKyc3aaWXvF+nhzQ7/QxIk?=
- =?us-ascii?Q?x0T01lwvMSej+cRKpmnodGsbcasCGWKAaLETuHjnjrAGOF/c3bZNmZ9eklNB?=
- =?us-ascii?Q?Mz2monyvl5JqhSz57/J9UxcatoTHvDi55UH/jxqMe7feKZrsi6TNzlP/sIu6?=
- =?us-ascii?Q?qzlvEDnbYfgiCyHoQgMmX/+MixU/JzP2cIwiLC7aGOjWz+ItBXliuCAF3pFU?=
- =?us-ascii?Q?hRaBdGMfvnEZEr9NoD9KkiRiFf/fVm585Ct2rlE7VvGQaWGc7k2zzREKVDN6?=
- =?us-ascii?Q?/FLcVD7lAW6omeiHlGqHG/DbZs9mN7l0682GzlSFTP07qBuy2A5/0qio34uV?=
- =?us-ascii?Q?braAvy98TTACp3Gua01ptsr5z+ggyg1S2ZvbTK1G+bu900Qo/oHkqioJEJYw?=
- =?us-ascii?Q?em51uVnLY0GzYV5mxdh17daO4ZyG7ujKkPe7mawjh3O4wFDM89yf8VqonH9u?=
- =?us-ascii?Q?Ec5Zcnpn/Q/dbIVflUxrfgol6bkV/n/3Z6iWXhQDGkqi/HkCTBQ1wB+vwAv3?=
- =?us-ascii?Q?xvvN3AkDwx+1bhDcxjK2M7KSDgZkgRDA5icvQuoYEvYx+X0ieK4aTDIDAKvI?=
- =?us-ascii?Q?acPxNZv/9M//HFvaTlcxs5a4iVaMDkjJd/KKJPMPMNzI8/Sz9xzy1aI25kU7?=
- =?us-ascii?Q?bz85f410f4KX0j9DsXNvbsR172CF8D9cFzxAl8xiN3oQffOKS8f0IqVaRTZt?=
- =?us-ascii?Q?Nk2Q1oaTzlSw98muMEsZnU/3VjPJ/OfdkL5fI5Mq35IyJzhPOKueUPhtnqrr?=
- =?us-ascii?Q?TilvJchMiVnQUN4CoTgmRhyHHSRYQAsVcGb50UZXWXuRM0PngwFwV5mUMqgg?=
- =?us-ascii?Q?NIR0Xvhj8iv8/J9u8y8BtPeCOYUlxLTqzWHfQrYd51YY17byA2ky/iHhv4zO?=
- =?us-ascii?Q?WmAx2rLvS1H/go4f33IjBbwiBzCgsmJnd5abFUwSWqG2liJzzRiKioIKE4mr?=
- =?us-ascii?Q?QMNQpdTGQzCA8Do1rh52ZzyQIROFAZGhfEWZe7ce7v20wFCv54guFzGasMXG?=
- =?us-ascii?Q?4+Zc3T2JWsQxM5wDDAQJIo8GKEDNEnMXjHvL4sOV6Yo7SRaTOts8VrBGuGhh?=
- =?us-ascii?Q?A1/8+dfZMKg69XATEk7t9vE2XNV1p2a2+7pFoUeoTkb6TkYBEKcR4Q133pJT?=
- =?us-ascii?Q?U5fJORoNDFBqFZMVrDZ98zscZqlfoXMgKlkDpEPTntbLsI9+rnZsLh/FKTjv?=
- =?us-ascii?Q?u6uqtq7oVxIZM35P0yk+xk6Ofi9Bp2yADQ8cCvHpoJ8vRNf19RdnOTKF4Aie?=
- =?us-ascii?Q?8VhSoLlruPcpN+UFZegxe8en81veazpgpiE4eOD9fQOLxRylXCjBbusR/brN?=
- =?us-ascii?Q?x1V2MCEV0FKGgRHqiDP/3S2ImstixN6HGKGBeVK0fdnO/e30o5gsFG0M/Ug8?=
- =?us-ascii?Q?Aw83ATbWPpj+4rhzqVY=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ad64102a-d4e1-43f3-3795-08dc29b728a3
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?T3FsUXNvTkU1K1hEamVQOCtZTU9Ec3pSZjAyNmM2RzFvaHgwTzhSK0dqeDla?=
+ =?utf-8?B?c0VuU2wwN1dqdjZ5d21Xb3QwQ3BUbFkrbEtmZ0h1RnJ4RDRWZldHNDNuMHBE?=
+ =?utf-8?B?QVFqWkFOZWdtWklJZndoejROUVcyajA2RjB6bjRaM3A1UUZFOXlGS0JQM1I4?=
+ =?utf-8?B?SUdsK05yM2ZVYWFyUFZ4RGc5YXJmK3NHMXhtNzZGM2J1dm5WWWxNT3hScVg0?=
+ =?utf-8?B?alRqaWc2NmVpdzh6YW5sR3lXYldKcWwvZTFrbXNDWHppQm5ZQkZhSEg0Zmcx?=
+ =?utf-8?B?UldHTjg3c3YwOXVsVVIxTG1OcWMyRFFFYkZOaDd0L1MrWk1FTEJLbkVsakEx?=
+ =?utf-8?B?QkQ3QlBmNEVMWjlkTjBRYW5QekhWZWVrb1EwU0pwSlk5M1Z3UFh2YmErUHdH?=
+ =?utf-8?B?VEVaWGlWalAxdmRlVnd3bmM4Uk5yR0kzQkFuZnUzcGo5QUhDSGZLVnpjR0lP?=
+ =?utf-8?B?NjBjNUpWODlhZ011Vy95a2ZuMi9pWlBYZkQySVRxZ1hkL29hK0RjWlVuNi9Y?=
+ =?utf-8?B?YjRtN2VTTU9LaFJaZXNaaWNZRkNQcHFpRWdNQ2I2VGljMHpCd0I1QzRrR0N0?=
+ =?utf-8?B?WVdLK291QlRUMk1iazNnZ1ByT1FvRVY5aWR3MTRMMmVpcDJUWXltaFBWcnI4?=
+ =?utf-8?B?L0tTclpBTFpGMnlodDluWjlkOHlqMElzRXlkZ1R1ZFhKMVQvQkVOTEU0eWNI?=
+ =?utf-8?B?ZWt4NDRoTEcxKzBHUW1hUm9sZUtpTHB4Sy9YVW13Tm1QcFJ4VFF4bWh3WDV5?=
+ =?utf-8?B?RUpCSFBXOGRoQ09IbUM5RWY0WWdCNmZsV2wrdjNpR3dFa0Y5UVZFZG1yMHI1?=
+ =?utf-8?B?MVlTL0VpOVdueGF5b1VVTlBLWExpQlR5c3hsWGZKSTViTm9CTlBjdWZ2UEFv?=
+ =?utf-8?B?VDZGcFMyTm9GNnBHZTl0VTZHWDJLcUtZLytNcENiMnhQU21OZTVsYzVPOXY1?=
+ =?utf-8?B?K1BHQkRSVHJqTXF0U0RZdmJKTWNuR3AvU1U3RDdCR0RGeUJNNVdsa2xzempV?=
+ =?utf-8?B?aHFodnhqZVAvQXFzMk5xb1o3WUU3dlovd0ZXUm9QLzFZbjdzbEg2UnFRdTJQ?=
+ =?utf-8?B?RTJVbmdic0NLNUpKeWtRUDNTS1BZOXIzc1JlRUIwRmZOaG0xT3pHdmVrVTNv?=
+ =?utf-8?B?RXB0YzIyMndvMVpITGZZRUFreWdCU3dsbm5KMU0rTnNSU0NDU1k5MSs1YzM2?=
+ =?utf-8?B?MERKa2dkUkJ5RkxaRDhQenAvOXppb0M0L3N3elRLOEEvT2FKVHdDSXJDaEdk?=
+ =?utf-8?B?c1dicGZCTXYwSTBEUng3RlJyUHVaUW1uSDJxclRyMjdPeVIwUU4wN2xLdVJm?=
+ =?utf-8?B?MW1PQm5xd3ZnWTU2bFRWakl6cEMrVzFIb0V1TjR2ZGJoMFZRUVZUaGpuRU5x?=
+ =?utf-8?B?Z21hZlRhZDZrMFBkTVpRU0ZGTEFBTXR5V1kyc0FsSlhhbTI2REc3Zy9LbW9a?=
+ =?utf-8?B?Y21oaUI4Y3ZVWXRJQkVHblVVbmpyTHZBTUF5WSszUU00aHhoWVl1cTkydzY5?=
+ =?utf-8?B?MjNBYkZzeTNzZC9tQk8yWVJjZHhnc3V0Y25YeHNTdllPbHRzcjR5dUI3bmtX?=
+ =?utf-8?B?VDNocVlkNWg0R1JnU1ovMnJtbmNGaHpQemFvYk9VODZ2N2RBZi9KSTEvQndp?=
+ =?utf-8?B?SWhUVGtNb3pkVW0wVnZJV0k4QnZTK3RqbHh0ZWc3R1g2WnlPNE9KQThscmNB?=
+ =?utf-8?B?UFY4TVo3ZnVWOHl1UWZOS3ByZisvbDVkcXh5TkxiZFhncm0rV29MVmFuREJj?=
+ =?utf-8?B?VDFyU3ljbFp5eXI2UVZyTmN0MXBhNThZeE5vMFRyZ3NueHVKZm4yeTF5ZkhK?=
+ =?utf-8?B?cEcrL1cxR290RUlmc2hwcm1oNk5yb1RXVFlueDRjNlNIcGlreWpFVTlaVC8y?=
+ =?utf-8?B?YVovVFk5NXpvc1l1WWFQb3pjUnlIM2x0bU9ZRFF3SFJTWW84RzBLNFoxRjhW?=
+ =?utf-8?B?S21icTFGd3RwVEdsVllnUW5kUHNvSEV6TUEzZTVQL2FjVEM0M0NRSHN5WldM?=
+ =?utf-8?B?dzlUSkhDREJJMjNNZ2htWVVhSXZ6amkwZGRyb0JlN3RvaHJld2dIT1NSZ0hE?=
+ =?utf-8?B?V0xVWjkxSzROajlMM0tod0xPWnU5RW5kZk1jRlR1cDlyNEFSUkh5L3VONTRh?=
+ =?utf-8?Q?xZV2aQqYrrn7KPlXGTJLjLAXD?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0f53155d-057e-4d93-6cf2-08dc29b98fee
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB7141.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Feb 2024 21:36:21.8865
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Feb 2024 21:53:34.3611
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WyQrTJVvmTA2hqiSTvitVtZFD6nLytG/2Ze9aUCFVCbYUvTiwGPiMMfmerwSBIjsCJE0Yn35TM4eOXfh/Chnqg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8800
+X-MS-Exchange-CrossTenant-UserPrincipalName: cIsu+S53HsYRtPYP0NOmD878PP2r/rViiAUUNVtrU12edu9LM05jGbdR3CbKIV96/Aog46+HOZHqRG4IaBHFrg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB6796
+X-OriginatorOrg: intel.com
 
-Introduce the use of C11 standard _Generic in the fsl-edma driver for
-handling different TCD field types. Improve code clarity and help
-compiler optimization.
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
 
-Notes:
-    Change from v1 to v2
-    - Fixed sparse build warnings
+On 2/10/2024 3:14 AM, Fenghua Yu wrote:
+> If CONFIG_HARDENED_USERCOPY is enabled, copying completion record from
+> event log cache to user triggers a kernel bug.
+> 
+> [ 1987.159822] usercopy: Kernel memory exposure attempt detected from SLUB object 'dsa0' (offset 74, size 31)!
+> [ 1987.170845] ------------[ cut here ]------------
+> [ 1987.176086] kernel BUG at mm/usercopy.c:102!
+> [ 1987.180946] invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
+> [ 1987.186866] CPU: 17 PID: 528 Comm: kworker/17:1 Not tainted 6.8.0-rc2+ #5
+> [ 1987.194537] Hardware name: Intel Corporation AvenueCity/AvenueCity, BIOS BHSDCRB1.86B.2492.D03.2307181620 07/18/2023
+> [ 1987.206405] Workqueue: wq0.0 idxd_evl_fault_work [idxd]
+> [ 1987.212338] RIP: 0010:usercopy_abort+0x72/0x90
+> [ 1987.217381] Code: 58 65 9c 50 48 c7 c2 17 85 61 9c 57 48 c7 c7 98 fd 6b 9c 48 0f 44 d6 48 c7 c6 b3 08 62 9c 4c 89 d1 49 0f 44 f3 e8 1e 2e d5 ff <0f> 0b 49 c7 c1 9e 42 61 9c 4c 89 cf 4d 89 c8 eb a9 66 66 2e 0f 1f
+> [ 1987.238505] RSP: 0018:ff62f5cf20607d60 EFLAGS: 00010246
+> [ 1987.244423] RAX: 000000000000005f RBX: 000000000000001f RCX: 0000000000000000
+> [ 1987.252480] RDX: 0000000000000000 RSI: ffffffff9c61429e RDI: 00000000ffffffff
+> [ 1987.260538] RBP: ff62f5cf20607d78 R08: ff2a6a89ef3fffe8 R09: 00000000fffeffff
+> [ 1987.268595] R10: ff2a6a89eed00000 R11: 0000000000000003 R12: ff2a66934849c89a
+> [ 1987.276652] R13: 0000000000000001 R14: ff2a66934849c8b9 R15: ff2a66934849c899
+> [ 1987.284710] FS:  0000000000000000(0000) GS:ff2a66b22fe40000(0000) knlGS:0000000000000000
+> [ 1987.293850] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [ 1987.300355] CR2: 00007fe291a37000 CR3: 000000010fbd4005 CR4: 0000000000f71ef0
+> [ 1987.308413] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [ 1987.316470] DR3: 0000000000000000 DR6: 00000000fffe07f0 DR7: 0000000000000400
+> [ 1987.324527] PKRU: 55555554
+> [ 1987.327622] Call Trace:
+> [ 1987.330424]  <TASK>
+> [ 1987.332826]  ? show_regs+0x6e/0x80
+> [ 1987.336703]  ? die+0x3c/0xa0
+> [ 1987.339988]  ? do_trap+0xd4/0xf0
+> [ 1987.343662]  ? do_error_trap+0x75/0xa0
+> [ 1987.347922]  ? usercopy_abort+0x72/0x90
+> [ 1987.352277]  ? exc_invalid_op+0x57/0x80
+> [ 1987.356634]  ? usercopy_abort+0x72/0x90
+> [ 1987.360988]  ? asm_exc_invalid_op+0x1f/0x30
+> [ 1987.365734]  ? usercopy_abort+0x72/0x90
+> [ 1987.370088]  __check_heap_object+0xb7/0xd0
+> [ 1987.374739]  __check_object_size+0x175/0x2d0
+> [ 1987.379588]  idxd_copy_cr+0xa9/0x130 [idxd]
+> [ 1987.384341]  idxd_evl_fault_work+0x127/0x390 [idxd]
+> [ 1987.389878]  process_one_work+0x13e/0x300
+> [ 1987.394435]  ? __pfx_worker_thread+0x10/0x10
+> [ 1987.399284]  worker_thread+0x2f7/0x420
+> [ 1987.403544]  ? _raw_spin_unlock_irqrestore+0x2b/0x50
+> [ 1987.409171]  ? __pfx_worker_thread+0x10/0x10
+> [ 1987.414019]  kthread+0x107/0x140
+> [ 1987.417693]  ? __pfx_kthread+0x10/0x10
+> [ 1987.421954]  ret_from_fork+0x3d/0x60
+> [ 1987.426019]  ? __pfx_kthread+0x10/0x10
+> [ 1987.430281]  ret_from_fork_asm+0x1b/0x30
+> [ 1987.434744]  </TASK>
+> 
+> The issue arises because event log cache is created using
+> kmem_cache_create() which is not suitable for user copy.
+> 
+> Fix the issue by creating event log cache with
+> kmem_cache_create_usercopy(), ensuring safe user copy.
+s/, ensuring/ to ensure
 
- drivers/dma/fsl-edma-common.h | 61 +++++++++++++----------------------
- 1 file changed, 22 insertions(+), 39 deletions(-)
 
-diff --git a/drivers/dma/fsl-edma-common.h b/drivers/dma/fsl-edma-common.h
-index 365affd5b0764..cb3e0f00c80eb 100644
---- a/drivers/dma/fsl-edma-common.h
-+++ b/drivers/dma/fsl-edma-common.h
-@@ -255,12 +255,11 @@ static inline u32 fsl_edma_drvflags(struct fsl_edma_chan *fsl_chan)
- }
- 
- #define edma_read_tcdreg_c(chan, _tcd,  __name)				\
--(sizeof((_tcd)->__name) == sizeof(u64) ?				\
--	edma_readq(chan->edma, &(_tcd)->__name) :			\
--		((sizeof((_tcd)->__name) == sizeof(u32)) ?		\
--			edma_readl(chan->edma, &(_tcd)->__name) :	\
--			edma_readw(chan->edma, &(_tcd)->__name)		\
--		))
-+_Generic(((_tcd)->__name),						\
-+	__iomem __le64 : edma_readq(chan->edma, &(_tcd)->__name),		\
-+	__iomem __le32 : edma_readl(chan->edma, &(_tcd)->__name),		\
-+	__iomem __le16 : edma_readw(chan->edma, &(_tcd)->__name)		\
-+	)
- 
- #define edma_read_tcdreg(chan, __name)								\
- ((fsl_edma_drvflags(chan) & FSL_EDMA_DRV_TCD64) ?						\
-@@ -268,23 +267,13 @@ static inline u32 fsl_edma_drvflags(struct fsl_edma_chan *fsl_chan)
- 	edma_read_tcdreg_c(chan, ((struct fsl_edma_hw_tcd __iomem *)chan->tcd), __name)		\
- )
- 
--#define edma_write_tcdreg_c(chan, _tcd, _val, __name)				\
--do {										\
--	switch (sizeof(_tcd->__name)) {						\
--	case sizeof(u64):							\
--		edma_writeq(chan->edma, (u64 __force)_val, &_tcd->__name);	\
--		break;								\
--	case sizeof(u32):							\
--		edma_writel(chan->edma, (u32 __force)_val, &_tcd->__name);	\
--		break;								\
--	case sizeof(u16):							\
--		edma_writew(chan->edma, (u16 __force)_val, &_tcd->__name);	\
--		break;								\
--	case sizeof(u8):							\
--		edma_writeb(chan->edma, (u8 __force)_val, &_tcd->__name);	\
--		break;								\
--	}									\
--} while (0)
-+#define edma_write_tcdreg_c(chan, _tcd, _val, __name)					\
-+_Generic((_tcd->__name),								\
-+	__iomem __le64 : edma_writeq(chan->edma, (u64 __force)(_val), &_tcd->__name),	\
-+	__iomem __le32 : edma_writel(chan->edma, (u32 __force)(_val), &_tcd->__name),	\
-+	__iomem __le16 : edma_writew(chan->edma, (u16 __force)(_val), &_tcd->__name),	\
-+	__iomem u8 : edma_writeb(chan->edma, _val, &_tcd->__name)			\
-+	)
- 
- #define edma_write_tcdreg(chan, val, __name)							   \
- do {												   \
-@@ -325,9 +314,11 @@ do {	\
- 						 (((struct fsl_edma_hw_tcd *)_tcd)->_field))
- 
- #define fsl_edma_le_to_cpu(x)						\
--(sizeof(x) == sizeof(u64) ? le64_to_cpu((__force __le64)(x)) :		\
--	(sizeof(x) == sizeof(u32) ? le32_to_cpu((__force __le32)(x)) :	\
--				    le16_to_cpu((__force __le16)(x))))
-+_Generic((x),								\
-+	__le64 : le64_to_cpu((x)),					\
-+	__le32 : le32_to_cpu((x)),					\
-+	__le16 : le16_to_cpu((x))					\
-+)
- 
- #define fsl_edma_get_tcd_to_cpu(_chan, _tcd, _field)				\
- (fsl_edma_drvflags(_chan) & FSL_EDMA_DRV_TCD64 ?				\
-@@ -335,19 +326,11 @@ do {	\
- 	fsl_edma_le_to_cpu(((struct fsl_edma_hw_tcd *)_tcd)->_field))
- 
- #define fsl_edma_set_tcd_to_le_c(_tcd, _val, _field)					\
--do {											\
--	switch (sizeof((_tcd)->_field)) {						\
--	case sizeof(u64):								\
--		*(__force __le64 *)(&((_tcd)->_field)) = cpu_to_le64(_val);		\
--		break;									\
--	case sizeof(u32):								\
--		*(__force __le32 *)(&((_tcd)->_field)) = cpu_to_le32(_val);		\
--		break;									\
--	case sizeof(u16):								\
--		*(__force __le16 *)(&((_tcd)->_field)) = cpu_to_le16(_val);		\
--		break;									\
--	}										\
--} while (0)
-+_Generic(((_tcd)->_field),								\
-+	__le64 : (_tcd)->_field = cpu_to_le64(_val),					\
-+	__le32 : (_tcd)->_field = cpu_to_le32(_val),					\
-+	__le16 : (_tcd)->_field = cpu_to_le16(_val)					\
-+)
- 
- #define fsl_edma_set_tcd_to_le(_chan, _tcd, _val, _field)	\
- do {								\
--- 
-2.34.1
 
+> 
+> Fixes: c2f156bf168f ("dmaengine: idxd: create kmem cache for event log fault items")
+> Reported-by: Tony Zhu <tony.zhu@intel.com>
+> Tested-by: Tony Zhu <tony.zhu@intel.com>
+> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+
+Reviewed-by: Lijun Pan <lijun.pan@intel.com>
+
+> ---
+>   drivers/dma/idxd/init.c | 15 ++++++++++++---
+>   1 file changed, 12 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+> index 14df1f1347a8..4954adc6bb60 100644
+> --- a/drivers/dma/idxd/init.c
+> +++ b/drivers/dma/idxd/init.c
+> @@ -343,7 +343,9 @@ static void idxd_cleanup_internals(struct idxd_device *idxd)
+>   static int idxd_init_evl(struct idxd_device *idxd)
+>   {
+>   	struct device *dev = &idxd->pdev->dev;
+> +	unsigned int evl_cache_size;
+>   	struct idxd_evl *evl;
+> +	const char *idxd_name;
+>   
+>   	if (idxd->hw.gen_cap.evl_support == 0)
+>   		return 0;
+> @@ -355,9 +357,16 @@ static int idxd_init_evl(struct idxd_device *idxd)
+>   	spin_lock_init(&evl->lock);
+>   	evl->size = IDXD_EVL_SIZE_MIN;
+>   
+> -	idxd->evl_cache = kmem_cache_create(dev_name(idxd_confdev(idxd)),
+> -					    sizeof(struct idxd_evl_fault) + evl_ent_size(idxd),
+> -					    0, 0, NULL);
+> +	idxd_name = dev_name(idxd_confdev(idxd));
+> +	evl_cache_size = sizeof(struct idxd_evl_fault) + evl_ent_size(idxd);
+> +	/*
+> +	 * Since completion record in evl_cache will be copied to user
+> +	 * when handling completion record page fault, need to create
+> +	 * the cache suitable for user copy.
+> +	 */
+
+Maybe briefly compare kmem_cache_create() with 
+kmem_cache_create_usercopy() and add up to the above comments. If you 
+think it too verbose, then forget about it.
+
+> +	idxd->evl_cache = kmem_cache_create_usercopy(idxd_name, evl_cache_size,
+> +						     0, 0, 0, evl_cache_size,
+> +						     NULL);
+>   	if (!idxd->evl_cache) {
+>   		kfree(evl);
+>   		return -ENOMEM;
 

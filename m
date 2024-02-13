@@ -1,221 +1,128 @@
-Return-Path: <dmaengine+bounces-1004-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1005-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF316852914
-	for <lists+dmaengine@lfdr.de>; Tue, 13 Feb 2024 07:39:52 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E04FF852A51
+	for <lists+dmaengine@lfdr.de>; Tue, 13 Feb 2024 08:54:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 915AA2841B6
-	for <lists+dmaengine@lfdr.de>; Tue, 13 Feb 2024 06:39:51 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 690AAB22A3F
+	for <lists+dmaengine@lfdr.de>; Tue, 13 Feb 2024 07:54:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F2221428E;
-	Tue, 13 Feb 2024 06:39:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q+MGNRiQ"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 824DD1775E;
+	Tue, 13 Feb 2024 07:53:20 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 833D51426A;
-	Tue, 13 Feb 2024 06:39:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E92117743;
+	Tue, 13 Feb 2024 07:53:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707806385; cv=none; b=paPfjtlnWGykuRUKbL33XeqR10I+5OmVDnVJmm28bi1IjNwZK8cH2v4pRwi2joxYcd/K+fdf6lyxHYy8fO1ah2Emcp3UUp68PmFtFMQi+WGFtYBJjpFUiUprDVoFiSKOSNEtk/ix26QFsrgh6/y8cNt4b3PUvFYgwLsoLeiEBN8=
+	t=1707810800; cv=none; b=Noss5BMsnFlJjNnyYLv1W3ADUXNdpb/bnbjPljDBLhpQz5BtdgeSG+XrU+bBpILrkaAgvnyYnqG0z8sxYgZMOXzTPxIr4PxZbROD/PtWoIy92hnbc4Y7Egm86y4lRvkSdvEefLCynEPRgx8KsToEZeX5VcRefuzfkx0DLwRRheo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707806385; c=relaxed/simple;
-	bh=5z9UIrzaRsQ7ZunjBz8WH+0j8VWBYxAQUZhJg20X9eY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=h1Y3Os/DN5VAYniJ6wdJI5n+3gMq1PNG+ueCWzWA+ogSvgEWvnh0awwjuC0sIgOFzHMxMHQ95f6Orx8YJX4MFy6fPijiBv0QPUrZaYbs4GxV2Dv4gmkUU2pPNwiZ2GAbXbFJdZqtQ8I7CuezmmUufzMyKYiS+Pz1ES4kBhcxwqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q+MGNRiQ; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-55fe4534e9bso5103237a12.0;
-        Mon, 12 Feb 2024 22:39:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707806382; x=1708411182; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+8pt6VHhKtuQrCkrL4eYU+g664w9Q1Xy3QJwOydZtt8=;
-        b=Q+MGNRiQsqnUizrS6rSXTOr9KDrjdQj321PCAXf31mYLucXFnp1OLnfqHVYpDlD2OS
-         Bz5IcU68W1qrH3vi4aqLcG/x+BEWAplluI3v1+aGuTltowmIa6cvGvRUNbzRpo56k31K
-         TD7RaWyYdAS7VYB0nEkJHxTQf7EC+FTnmEoIeV5Kz4wSsULiOxYDmCrpf63OdqV8Wi4M
-         BLcXmCPdh+EMd6R7ZAcYh4HN8+mjZTlk27VGpjwZfrVbd8nGj1o+C2l597WYK9q5MqDb
-         QL6LbaF2DTo7RrfAw3U0PxdTzzuKhnvnbM6nk5mmEKNy+IJKAlX5F2jRo4Inx/xFuNOi
-         xKsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707806382; x=1708411182;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+8pt6VHhKtuQrCkrL4eYU+g664w9Q1Xy3QJwOydZtt8=;
-        b=p9Mj/fnqz1Jb//vQyRt5uEqoNF59Blq9AVQPoaBW9b2pSnzxVZ+NBT+4ZHXVwxB3hU
-         hDCq51jCekpSsFKYJG9Fh8Is2BgfCwL2Ihk6Sb7Si9oBdH58Xn/0TY2OOkMOYdLhUjNo
-         huEnnKCPmzEpryG8hD258j5jMrSvyKnz+x2pWp1LeeBjv8/2ET4S6whQBjgQD56xCQ+O
-         MLIhfrH+to3k9MNQiPhkOJ1rl1etMnMjlLcASzO6p+1Y9V1j7CZ1tBblj48W+kqQGd6v
-         yEIFxnQqTKRAMnV3e2k/u11Xoly99FZuvNxQJB5a24CMQGT/iR1GRjds8KPH0eoAHxnA
-         wZcg==
-X-Forwarded-Encrypted: i=1; AJvYcCW4LWRuItuFs2J7/b4wuT92fu8sUKh6eHszMSGWzuQRQNa/DCnR3IofK2fn0GRm6NWZ8spys4SlV41rD8ycui7WyO6600RcuQfZAHGkeMw+8FmUTNUumnVCfQ0kqCFa7ZQk2F/+EAESrxBO8mqY4xzBUXx2/rqEVN8hcUubkmNV8/Y8ZQ==
-X-Gm-Message-State: AOJu0YzRU0O8Qi6wbyNe0zo5jMKX1hs6aUzfLEllCYilQZYLsgv44NWc
-	K0cYvrVmJwKPFxtg/v0zB00jYcOIjIHrIkn8vCUiKoZzFGi4zoyv
-X-Google-Smtp-Source: AGHT+IEqTmOc0sq5TASgr87A4NKy6RXgxM2CfARszUCki67UusO4d/oDgeciP7n5Wq9/B0mV0FG0vQ==
-X-Received: by 2002:a05:6402:22ec:b0:561:f77b:c0b0 with SMTP id dn12-20020a05640222ec00b00561f77bc0b0mr366141edb.39.1707806381728;
-        Mon, 12 Feb 2024 22:39:41 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWmM20RiFucNWcWudlwle5UIyivsj+VmyDj7ESp8ItNoGl5Yc18W9SP3AlsHqwsqVhGWO2jvgKyufk2AkNY/kAD7VeW+AyCnXMFpNiPKQE3S/sTlke2zF7/3CBJL6u/KU058BjWwOxnhM9KyOH/OT1e7xPJ+XrN3Qclo5vCGFpkhzC0uM6UVp7b3W5clFIF3+c0ap7yZxWuPUH8SSwwE3/okSnIeLpnOOqlMcrWHE5+ZHlBEvgpSVlwDRm5Bb4QfaLsswyoKzvTAWoIwwj3ctKeudkLu5+8ggfaIUscp8N3YO7D16b5lH2WMzFppilQ/WYcW7t8DM8Yb5sP3RKNnI7XSiAhQYMK2JQPMLlQY/MiMiZ9enOfMxvC11YJWP5KpcqWyhPiy40pWVS5tlb88WdcYF6fEs3I1rIfmmHdYdlYuC8P/uhwKKWjS+XIFHD6Nhdfyz+iU7ca6CBmaMbcDGUc7rjLOZgrUXJh
-Received: from localhost.lan (031011218106.poznan.vectranet.pl. [31.11.218.106])
-        by smtp.gmail.com with ESMTPSA id fg5-20020a056402548500b00561814de0easm2847074edb.62.2024.02.12.22.39.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Feb 2024 22:39:41 -0800 (PST)
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-To: Vinod Koul <vkoul@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
-Subject: [PATCH] dt-bindings: dma: convert MediaTek High-Speed controller to the json-schema
-Date: Tue, 13 Feb 2024 07:39:19 +0100
-Message-Id: <20240213063919.20196-1-zajec5@gmail.com>
-X-Mailer: git-send-email 2.35.3
+	s=arc-20240116; t=1707810800; c=relaxed/simple;
+	bh=h2mcc3tinXFTTUlzRS/uHQRAwxsDtAwyOZUFiyrUldQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=flBgj2nXH8WZopqddbBcqJI2VGjaYqyaGGOWCH5EH30oTgssBpzC4Uo8piLsPEnAlNQS59K9zihPmm2oWp2cMNSu4QuQKfQc78NLazn8btCaPBFUjNuHnzuYXx/SNRZxctX2+n6ZVUajaQiFXmjj7hPPK/JnSryuPVl13PHtSuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D71F0C433C7;
+	Tue, 13 Feb 2024 07:53:10 +0000 (UTC)
+Date: Tue, 13 Feb 2024 13:23:06 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Serge Semin <fancer.lancer@gmail.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>,
+	Mrinmay Sarkar <quic_msarkar@quicinc.com>,
+	Manivannan Sadhasivam <mani@kernel.org>, vkoul@kernel.org,
+	jingoohan1@gmail.com, conor+dt@kernel.org, konrad.dybcio@linaro.org,
+	robh+dt@kernel.org, quic_shazhuss@quicinc.com,
+	quic_nitegupt@quicinc.com, quic_ramkri@quicinc.com,
+	quic_nayiluri@quicinc.com, dmitry.baryshkov@linaro.org,
+	quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
+	quic_parass@quicinc.com, quic_schintav@quicinc.com,
+	quic_shijjose@quicinc.com,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	mhi@lists.linux.dev
+Subject: Re: [PATCH v1 3/6] PCI: dwc: Add HDMA support
+Message-ID: <20240213075232.GA5067@thinkpad>
+References: <oa76ts3zqud7mtkpilbo4uub7gazqncnbh6rma26kaz6wt6fch@ufv672fgrcgj>
+ <20240209171032.GA1004885@bhelgaas>
+ <qppxhhlbjqmop2vmaa6b5zjesgry75hapllokcmllgfwti4tbo@55aeewwp23cq>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <qppxhhlbjqmop2vmaa6b5zjesgry75hapllokcmllgfwti4tbo@55aeewwp23cq>
 
-From: Rafał Miłecki <rafal@milecki.pl>
+On Sun, Feb 11, 2024 at 10:37:43PM +0300, Serge Semin wrote:
+> On Fri, Feb 09, 2024 at 11:10:32AM -0600, Bjorn Helgaas wrote:
+> > On Sat, Feb 03, 2024 at 12:40:39AM +0300, Serge Semin wrote:
+> > > On Fri, Jan 19, 2024 at 06:30:19PM +0530, Mrinmay Sarkar wrote:
+> > > > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > > 
+> > > > Hyper DMA (HDMA) is already supported by the dw-edma dmaengine driver.
+> > > > Unlike it's predecessor Embedded DMA (eDMA), HDMA supports only the
+> > > > unrolled mapping format. So the platform drivers need to provide a valid
+> > > > base address of the CSRs. Also, there is no standard way to auto detect
+> > > > the number of available read/write channels in a platform. So the platform
+> > > > drivers has to provide that information as well.
+> > > ...
+> > 
+> > > Basically this change defines two versions of the eDMA info
+> > > initialization procedure:
+> > > 1. use pre-defined CSRs mapping format and amount of channels,
+> > > 2. auto-detect CSRs mapping and the amount of channels.
+> > > The second version also supports the optional CSRs mapping format
+> > > detection procedure by means of the DW_PCIE_CAP_EDMA_UNROLL flag
+> > > semantics. Thus should this patch is accepted there will be the
+> > > functionality duplication. I suggest to make things a bit more
+> > > flexible than that. Instead of creating the two types of the
+> > > init-methods selectable based on the mapping format, let's split up
+> > > the already available DW eDMA engine detection procedure into the next
+> > > three stages:
+> > > 1. initialize DW eDMA data,
+> > > 2. auto-detect the CSRs mapping format,
+> > > 3. auto-detect the amount of channels.
+> > > and convert the later two to being optional. They will be skipped in case
+> > > if the mapping format or the amount of channels have been pre-defined
+> > > by the platform drivers. Thus we can keep the eDMA data init procedure
+> > > more linear thus easier to read, drop redundant DW_PCIE_CAP_EDMA_UNROLL flag
+> > > and use the new functionality for the Renesas R-Car S4-8's PCIe
+> > > controller (for which the auto-detection didn't work), for HDMA with compat
+> > > and _native_ CSRs mapping. See the attached patches for details:
+> > 
+> > I am still bound by the opinion of Google's legal team that I cannot
+> > accept the code changes that were attached here.  I think it's fair to
+> > read the review comments (thank you for those), but I suggest not
+> > reading the patches that were attached.
+> 
+> Em, the review comment and the resultant patches were my own private
+> researches and developments. Is Google now blocking even individual
+> contributors?
+> 
+> In anyway if you are agree with the changes suggested above you can
+> set to the patches any author you think would be acceptable. My only
+> concern was to maintain the cleanness of the driver code developed by
+> me and which is going to be affected in the framework of this series.
+> 
 
-This helps validating DTS files. Introduced changes:
-1. Adjusted "reg" in example
-2. Added includes to example
+I take the patch authorship seriously, so I won't change the author of your
+patches. Instead, I'll just create my own patches based on your comments above.
 
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
----
- .../bindings/dma/mediatek,mt7622-hsdma.yaml   | 63 +++++++++++++++++++
- .../devicetree/bindings/dma/mtk-hsdma.txt     | 33 ----------
- 2 files changed, 63 insertions(+), 33 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/dma/mediatek,mt7622-hsdma.yaml
- delete mode 100644 Documentation/devicetree/bindings/dma/mtk-hsdma.txt
+- Mani
 
-diff --git a/Documentation/devicetree/bindings/dma/mediatek,mt7622-hsdma.yaml b/Documentation/devicetree/bindings/dma/mediatek,mt7622-hsdma.yaml
-new file mode 100644
-index 000000000000..3f1e120e40a3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/mediatek,mt7622-hsdma.yaml
-@@ -0,0 +1,63 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dma/mediatek,mt7622-hsdma.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: MediaTek High-Speed DMA Controller
-+
-+maintainers:
-+  - Sean Wang <sean.wang@mediatek.com>
-+
-+allOf:
-+  - $ref: dma-controller.yaml#
-+
-+properties:
-+  compatible:
-+    enum:
-+      - mediatek,mt7622-hsdma
-+      - mediatek,mt7623-hsdma
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: hsdma
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  "#dma-cells":
-+    description: Channel number
-+    const: 1
-+
-+required:
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - power-domains
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/mt2701-clk.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/power/mt2701-power.h>
-+
-+    dma-controller@1b007000 {
-+        compatible = "mediatek,mt7623-hsdma";
-+        reg = <0x1b007000 0x1000>;
-+        interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_LOW>;
-+        clocks = <&ethsys CLK_ETHSYS_HSDMA>;
-+        clock-names = "hsdma";
-+        power-domains = <&scpsys MT2701_POWER_DOMAIN_ETH>;
-+        #dma-cells = <1>;
-+    };
-diff --git a/Documentation/devicetree/bindings/dma/mtk-hsdma.txt b/Documentation/devicetree/bindings/dma/mtk-hsdma.txt
-deleted file mode 100644
-index 4bb317359dc6..000000000000
---- a/Documentation/devicetree/bindings/dma/mtk-hsdma.txt
-+++ /dev/null
-@@ -1,33 +0,0 @@
--MediaTek High-Speed DMA Controller
--==================================
--
--This device follows the generic DMA bindings defined in dma/dma.txt.
--
--Required properties:
--
--- compatible:	Must be one of
--		  "mediatek,mt7622-hsdma": for MT7622 SoC
--		  "mediatek,mt7623-hsdma": for MT7623 SoC
--- reg:		Should contain the register's base address and length.
--- interrupts:	Should contain a reference to the interrupt used by this
--		device.
--- clocks:	Should be the clock specifiers corresponding to the entry in
--		clock-names property.
--- clock-names:	Should contain "hsdma" entries.
--- power-domains: Phandle to the power domain that the device is part of
--- #dma-cells: 	The length of the DMA specifier, must be <1>. This one cell
--		in dmas property of a client device represents the channel
--		number.
--Example:
--
--        hsdma: dma-controller@1b007000 {
--		compatible = "mediatek,mt7623-hsdma";
--		reg = <0 0x1b007000 0 0x1000>;
--		interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_LOW>;
--		clocks = <&ethsys CLK_ETHSYS_HSDMA>;
--		clock-names = "hsdma";
--		power-domains = <&scpsys MT2701_POWER_DOMAIN_ETH>;
--		#dma-cells = <1>;
--	};
--
--DMA clients must use the format described in dma/dma.txt file.
 -- 
-2.35.3
-
+மணிவண்ணன் சதாசிவம்
 

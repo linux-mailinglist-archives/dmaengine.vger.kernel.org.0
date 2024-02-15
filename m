@@ -1,175 +1,229 @@
-Return-Path: <dmaengine+bounces-1016-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1017-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24BE28558FD
-	for <lists+dmaengine@lfdr.de>; Thu, 15 Feb 2024 03:50:14 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8CFBB856074
+	for <lists+dmaengine@lfdr.de>; Thu, 15 Feb 2024 12:00:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 506DA1F24AE1
-	for <lists+dmaengine@lfdr.de>; Thu, 15 Feb 2024 02:50:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A7B6D1C209AE
+	for <lists+dmaengine@lfdr.de>; Thu, 15 Feb 2024 11:00:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C95921864;
-	Thu, 15 Feb 2024 02:50:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B978132C3B;
+	Thu, 15 Feb 2024 10:46:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YIwq6ksP"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="UY6Fx3jO"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3853317C8;
-	Thu, 15 Feb 2024 02:50:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9992612E1C4;
+	Thu, 15 Feb 2024 10:46:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707965408; cv=none; b=JbsmKQLtOP/5SQ1FEHMNe6kE2vkGKd0/VSDTql7dZG3HMdiiCtsUsfBSMaECN5Y8s14yEYskdsx9KS+6Of66EZYaBN5sd/h9FBl8zizwUCZVtExIn8eexXjFSu8Eyco6C0CH+65haY6R0BvzJ8AfaaYt9ku+n0wBPaiaUmh/NLc=
+	t=1707993987; cv=none; b=GEN6WkEfV5SUsRRNtxdBJMi8GDWogOCuc+4tzIQLSs7bCO4+KXalnE+mWvXImigA4whFVijV3Ky/hdoyzCZo8ZYSSF+Oi/b20mIcWC+4vGpAXN5MfP3nbmWH/R0oGCKTlybrnNUn2BK0ZbIZoJr14hrLSrwynqqnGYPYa8A8b0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707965408; c=relaxed/simple;
-	bh=fxOG2hwLQS9vVV1tfX/vi+Hg5sEDWSbTQsqcU+i0MTM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RWkQSx/ZnHab+Vp2ijqXXIXbKv/maOSssPF/cGXmEcwRxgCdd8oEMd+s9TnmnhbX3wd0k8PEbDmKt29l4BW0sF7Xsa74V0fKPAqXFen+X0W3qUMAZBgQ1D1q3tN1Kr+9Hd3lbTkWc/WsxwzB5ePH/VojT9HQvwTx7j9apELCkps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YIwq6ksP; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1707993987; c=relaxed/simple;
+	bh=m1LjF1npWj8tCKHK1NcAZBpF2cD039mfR5VwBO1BovM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=kccfve1LLYruIby3ee7i3f8uAtjKVcHl/PJIX6wLXuxIww1yzZz22c++Ib6sxkXWLcy6nSnd0haZ0f2T+q5iPIfFYMGcGxXZoRXYmSj6KCnN0Vuqz4rfZgjA51jb4/qZcRh53xWavexcDAGnNC0PhDAKP0lkrRMw67H1PJ4dQBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=UY6Fx3jO; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707965406; x=1739501406;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=fxOG2hwLQS9vVV1tfX/vi+Hg5sEDWSbTQsqcU+i0MTM=;
-  b=YIwq6ksPqqW2PNoYXFZtxa53X32LoE6vp+jgBLAkjMhg8P9fNgWyrG5G
-   H8veL5iuKiwwxiO0dMl/cqGF2T0SkEEYgsLwQsyvr4n6t+3kEFfNMG/z0
-   nmTdV2jpwBXhdiApYTKr7EJya3DR7CMVG/hGt0haImswwtDd4wLJTaPlf
-   BYXBJtsa3EjMFAusWxQmdrMpX/AYkSBANYzvoWSlxtiiF2q+1Gjyifnm1
-   Qyrdr61f0AC/ABqmYJs6rGPD80vTIUbF++AXZt8sErsM1xIj9wsfHyy5y
-   nLdeeT+e+LnySwsNak9OK5YxF8eJRmOrx7fWHqHpRjaUky5kL3R+XC905
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="13432548"
-X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
-   d="scan'208";a="13432548"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 18:50:05 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
-   d="scan'208";a="3331964"
-Received: from fyu1.sc.intel.com ([172.25.103.126])
-  by fmviesa007.fm.intel.com with ESMTP; 14 Feb 2024 18:50:05 -0800
-From: Fenghua Yu <fenghua.yu@intel.com>
-To: "Vinod Koul" <vkoul@kernel.org>,
-	"Dave Jiang" <dave.jiang@intel.com>
-Cc: dmaengine@vger.kernel.org,
-	"linux-kernel" <linux-kernel@vger.kernel.org>,
-	Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH v2] dmaengine: idxd: Remove shadow Event Log head stored in idxd
-Date: Wed, 14 Feb 2024 18:49:31 -0800
-Message-Id: <20240215024931.1739621-1-fenghua.yu@intel.com>
-X-Mailer: git-send-email 2.37.1
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1707993986; x=1739529986;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:to:cc;
+  bh=m1LjF1npWj8tCKHK1NcAZBpF2cD039mfR5VwBO1BovM=;
+  b=UY6Fx3jOMxV3CrJQzLMf9i15vr0aa8ezR/NecGHE3kehyXm5VcCE/Nqn
+   70B2FUz/F6NhT/E+YqoDloyJ6H5KJOKreM0JqfMvMe8LbSIcaWo4qgRmJ
+   X1h49QteXFNcCWk+l6B28N8QzVUX5kNgcsBM7U/nuTszksBXLcJ7Y0i4F
+   Z8mE2BbIvJKqobYVfoZnUUzLLZHZuUvlOCMAjQRXKWXW1eSxS3KsMuOIw
+   hRZT7zLKMcONeUIY6DoygyTY3pJfs4nyqJQ8SxlLEyPh+JMnC62NxnHL2
+   Zx3f6WUMeTf3YfrZoe/GQB4tXM6IvS3WrWQO8Tw8S4BlKLG5iNhPFZM2a
+   g==;
+X-CSE-ConnectionGUID: sBOc7X1pTDaZ9glc9RjUSQ==
+X-CSE-MsgGUID: IeU7h4lfSoWKR0brJFk/NA==
+X-IronPort-AV: E=Sophos;i="6.06,161,1705388400"; 
+   d="scan'208";a="247024159"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 15 Feb 2024 03:46:24 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 15 Feb 2024 03:46:01 -0700
+Received: from che-lt-i66125lx.microchip.com (10.10.85.11) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Thu, 15 Feb 2024 03:45:56 -0700
+From: Durai Manickam KR <durai.manickamkr@microchip.com>
+Date: Thu, 15 Feb 2024 16:15:44 +0530
+Subject: [PATCH] dt-bindings: dma: convert atmel-dma.txt to YAML
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240215-dmac-v1-1-8f1c6f031c98@microchip.com>
+X-B4-Tracking: v=1; b=H4sIAFfrzWUC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDI0MT3ZTcxGRd0zQTi7QU8zTjJMsUJaDSgqLUtMwKsDHRsbW1AFX/e49
+ WAAAA
+To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+	"Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+	<conor+dt@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>,
+	"Alexandre Belloni" <alexandre.belloni@bootlin.com>, Claudiu Beznea
+	<claudiu.beznea@tuxon.dev>, Ludovic Desroches
+	<ludovic.desroches@microchip.com>, Tudor Ambarus <tudor.ambarus@linaro.org>
+CC: <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	"Durai Manickam KR" <durai.manickamkr@microchip.com>
+X-Mailer: b4 0.12.4
 
-head is defined in idxd->evl as a shadow of head in the EVLSTATUS register.
-There are two issues related to the shadow head:
+Added a description, required properties and appropriate compatibles
+for all the SoCs that are supported by microchip.
 
-1. Mismatch between the shadow head and the state of the EVLSTATUS
-   register:
-   If Event Log is supported, upon completion of the Enable Device command,
-   the Event Log head in the variable idxd->evl->head should be cleared to
-   match the state of the EVLSTATUS register. But the variable is not reset
-   currently, leading mismatch between the variable and the register state.
-   The mismatch causes incorrect processing of Event Log entries.
-
-2. Unnecessary shadow head definition:
-   The shadow head is unnecessary as head can be read directly from the
-   EVLSTATUS register. Reading head from the register incurs no additional
-   cost because event log head and tail are always read together and
-   tail is already read directly from the register as required by hardware.
-
-Remove the shadow Event Log head stored in idxd->evl to address the
-mentioned issues.
-
-Fixes: 244da66cda35 ("dmaengine: idxd: setup event log configuration")
-Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+Signed-off-by: Durai Manickam KR <durai.manickamkr@microchip.com>
 ---
-Change Log:
-- A previous patch tries to fix this issue in a different way:
-https://lore.kernel.org/lkml/20240209191851.1050501-1-fenghua.yu@intel.com/
-  After discussion with Dave Jiang, removing shadow head might be
-  a right fix.
+ .../devicetree/bindings/dma/atmel-dma.txt          | 42 -------------
+ .../bindings/dma/microchip,at91-dma.yaml           | 71 ++++++++++++++++++++++
+ 2 files changed, 71 insertions(+), 42 deletions(-)
 
- drivers/dma/idxd/cdev.c    | 2 +-
- drivers/dma/idxd/debugfs.c | 2 +-
- drivers/dma/idxd/idxd.h    | 1 -
- drivers/dma/idxd/irq.c     | 3 +--
- 4 files changed, 3 insertions(+), 5 deletions(-)
+diff --git a/Documentation/devicetree/bindings/dma/atmel-dma.txt b/Documentation/devicetree/bindings/dma/atmel-dma.txt
+deleted file mode 100644
+index f69bcf5a6343..000000000000
+--- a/Documentation/devicetree/bindings/dma/atmel-dma.txt
++++ /dev/null
+@@ -1,42 +0,0 @@
+-* Atmel Direct Memory Access Controller (DMA)
+-
+-Required properties:
+-- compatible: Should be "atmel,<chip>-dma".
+-- reg: Should contain DMA registers location and length.
+-- interrupts: Should contain DMA interrupt.
+-- #dma-cells: Must be <2>, used to represent the number of integer cells in
+-the dmas property of client devices.
+-
+-Example:
+-
+-dma0: dma@ffffec00 {
+-	compatible = "atmel,at91sam9g45-dma";
+-	reg = <0xffffec00 0x200>;
+-	interrupts = <21>;
+-	#dma-cells = <2>;
+-};
+-
+-DMA clients connected to the Atmel DMA controller must use the format
+-described in the dma.txt file, using a three-cell specifier for each channel:
+-a phandle plus two integer cells.
+-The three cells in order are:
+-
+-1. A phandle pointing to the DMA controller.
+-2. The memory interface (16 most significant bits), the peripheral interface
+-(16 less significant bits).
+-3. Parameters for the at91 DMA configuration register which are device
+-dependent:
+-  - bit 7-0: peripheral identifier for the hardware handshaking interface. The
+-  identifier can be different for tx and rx.
+-  - bit 11-8: FIFO configuration. 0 for half FIFO, 1 for ALAP, 2 for ASAP.
+-
+-Example:
+-
+-i2c0@i2c@f8010000 {
+-	compatible = "atmel,at91sam9x5-i2c";
+-	reg = <0xf8010000 0x100>;
+-	interrupts = <9 4 6>;
+-	dmas = <&dma0 1 7>,
+-	       <&dma0 1 8>;
+-	dma-names = "tx", "rx";
+-};
+diff --git a/Documentation/devicetree/bindings/dma/microchip,at91-dma.yaml b/Documentation/devicetree/bindings/dma/microchip,at91-dma.yaml
+new file mode 100644
+index 000000000000..a0a582902e4d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/microchip,at91-dma.yaml
+@@ -0,0 +1,71 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/microchip,at91-dma.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Atmel Direct Memory Access Controller (DMA)
++
++maintainers:
++  - Ludovic Desroches <ludovic.desroches@microchip.com>
++  - Tudor Ambarus <tudor.ambarus@linaro.org>
++
++description: |
++  The Atmel Direct Memory Access Controller (DMAC) transfers data from a source
++  peripheral to a destination peripheral over one or more AMBA buses. One channel
++  is required for each source/destination pair. In the most basic configuration,
++  the DMAC has one master interface and one channel. The master interface reads
++  the data from a source and writes it to a destination. Two AMBA transfers are
++  required for each DMAC data transfer. This is also known as a dual-access transfer.
++  The DMAC is programmed via the APB interface.
++
++properties:
++  compatible:
++    oneOf:
++      - enum:
++          - atmel,at91sam9g45-dma
++          - atmel,at91sam9rl-dma
++  reg:
++    description: Should contain DMA registers location and length.
++    maxItems: 1
++
++  interrupts:
++    description: Should contain the DMA interrupts associated to the DMA channels.
++    maxItems: 1
++
++  "#dma-cells":
++    description:
++      Must be <2>, used to represent the number of integer cells in the dmas
++      property of client devices.
++    const: 2
++
++  clocks:
++    description: Should contain a clock specifier for each entry in clock-names.
++    maxItems: 1
++
++  clock-names:
++    description: Should contain the clock of the DMA controller.
++    const: dma_clk
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - "#dma-cells"
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++    dma0: dma-controller@ffffec00 {
++            compatible = "atmel,at91sam9g45-dma";
++            reg = <0xffffec00 0x200>;
++            interrupts = <21>;
++            #dma-cells = <2>;
++            clocks = <&pmc 2 20>;
++            clock-names = "dma_clk";
++    };
++
++...
 
-diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
-index 77f8885cf407..e5a94a93a3cc 100644
---- a/drivers/dma/idxd/cdev.c
-+++ b/drivers/dma/idxd/cdev.c
-@@ -345,7 +345,7 @@ static void idxd_cdev_evl_drain_pasid(struct idxd_wq *wq, u32 pasid)
- 	spin_lock(&evl->lock);
- 	status.bits = ioread64(idxd->reg_base + IDXD_EVLSTATUS_OFFSET);
- 	t = status.tail;
--	h = evl->head;
-+	h = status.head;
- 	size = evl->size;
- 
- 	while (h != t) {
-diff --git a/drivers/dma/idxd/debugfs.c b/drivers/dma/idxd/debugfs.c
-index 9cfbd9b14c4c..f3f25ee676f3 100644
---- a/drivers/dma/idxd/debugfs.c
-+++ b/drivers/dma/idxd/debugfs.c
-@@ -68,9 +68,9 @@ static int debugfs_evl_show(struct seq_file *s, void *d)
- 
- 	spin_lock(&evl->lock);
- 
--	h = evl->head;
- 	evl_status.bits = ioread64(idxd->reg_base + IDXD_EVLSTATUS_OFFSET);
- 	t = evl_status.tail;
-+	h = evl_status.head;
- 	evl_size = evl->size;
- 
- 	seq_printf(s, "Event Log head %u tail %u interrupt pending %u\n\n",
-diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index 47de3f93ff1e..d0f5db6cf1ed 100644
---- a/drivers/dma/idxd/idxd.h
-+++ b/drivers/dma/idxd/idxd.h
-@@ -300,7 +300,6 @@ struct idxd_evl {
- 	unsigned int log_size;
- 	/* The number of entries in the event log. */
- 	u16 size;
--	u16 head;
- 	unsigned long *bmap;
- 	bool batch_fail[IDXD_MAX_BATCH_IDENT];
- };
-diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
-index c8a0aa874b11..348aa21389a9 100644
---- a/drivers/dma/idxd/irq.c
-+++ b/drivers/dma/idxd/irq.c
-@@ -367,9 +367,9 @@ static void process_evl_entries(struct idxd_device *idxd)
- 	/* Clear interrupt pending bit */
- 	iowrite32(evl_status.bits_upper32,
- 		  idxd->reg_base + IDXD_EVLSTATUS_OFFSET + sizeof(u32));
--	h = evl->head;
- 	evl_status.bits = ioread64(idxd->reg_base + IDXD_EVLSTATUS_OFFSET);
- 	t = evl_status.tail;
-+	h = evl_status.head;
- 	size = idxd->evl->size;
- 
- 	while (h != t) {
-@@ -378,7 +378,6 @@ static void process_evl_entries(struct idxd_device *idxd)
- 		h = (h + 1) % size;
- 	}
- 
--	evl->head = h;
- 	evl_status.head = h;
- 	iowrite32(evl_status.bits_lower32, idxd->reg_base + IDXD_EVLSTATUS_OFFSET);
- 	spin_unlock(&evl->lock);
+---
+base-commit: 7e90b5c295ec1e47c8ad865429f046970c549a66
+change-id: 20240214-dmac-5f48fd7f3b9d
+
+Best regards,
 -- 
-2.37.1
+Durai Manickam KR <durai.manickamkr@microchip.com>
 
 

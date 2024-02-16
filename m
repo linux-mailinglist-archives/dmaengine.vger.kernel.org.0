@@ -1,86 +1,131 @@
-Return-Path: <dmaengine+bounces-1032-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1033-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4CB39857CBC
-	for <lists+dmaengine@lfdr.de>; Fri, 16 Feb 2024 13:36:37 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 49699857D15
+	for <lists+dmaengine@lfdr.de>; Fri, 16 Feb 2024 14:01:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DBE13B23D22
-	for <lists+dmaengine@lfdr.de>; Fri, 16 Feb 2024 12:36:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5A5B91C24485
+	for <lists+dmaengine@lfdr.de>; Fri, 16 Feb 2024 13:01:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D195612AAD7;
-	Fri, 16 Feb 2024 12:35:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97F4477F25;
+	Fri, 16 Feb 2024 13:01:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FXNVFE5W"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wwv5QaAF"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A545112AACD;
-	Fri, 16 Feb 2024 12:35:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6B011292CE
+	for <dmaengine@vger.kernel.org>; Fri, 16 Feb 2024 13:01:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708086912; cv=none; b=K66tfj7/B75FUezMj6ktJtNJsRZ3xGaH2qaoCS1I0B9MFKrcvlzPZhSJ2WWgYz1bBTGzPlx+P7M56uKQdhYQ6cXzO3Eekn0aNU22ZQXvpH7FE7rsUNhx5ipVOlxMwN0SbMjKwBnJxC2EYOQdxUH4TaHBZ4tDw6uBLF4csqsKq1Q=
+	t=1708088497; cv=none; b=eAL2sF041r7/7jXaRtKfk0zypKE4JF0fJXCmhzP72mwUcp4TUrZBSGI/OH3QJDJWgrlxPkV4L0eTnwHCA83+ue/+/BozKy6JeajepxTNSRgIeJsUQhsASdzsj2rVhZqOao3VyIp5iuKWBYvN1J297zhxzj4wgwdRl+hsol43SXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708086912; c=relaxed/simple;
-	bh=UCRiDyTqdTBsdu54tzQMV73u+uOJTw/lzTO7cUztjsY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=WRmgL2J02zBsy88FMpvEIz/OC7NCP4JF4CeaTFuzEXlx1npKmEzdfb2XR7nzdHd84STNVzUjU91/AKuuItrKWEFXUAid5YeZZGIZzLBm2eJt5F1VeTGh/8127qARfOVYvsISM2mHSI52Zsvu/eFEJcMPnTggbTtyiyG8eNRN0Xs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FXNVFE5W; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A519DC43390;
-	Fri, 16 Feb 2024 12:35:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708086912;
-	bh=UCRiDyTqdTBsdu54tzQMV73u+uOJTw/lzTO7cUztjsY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=FXNVFE5WwTEsk8Bfhtzq5qn5xeME8qrv+hVulFLS3GE5ukWRdA7tF2IT855hoHMJT
-	 vL5CrYah9+d+uEWoTLI71TayZ+ZKRF4QKW03k2krROUYQ+sUYFUZRHqf7bwX0rTNeJ
-	 rwU+Rv756b4oXkW2qHQZVbb/jZkd7oEme++pRE3X9W9+QaTBJ8PRxsjIaCgb/ZJsB/
-	 UZ10e2hy2lDTP4MLxMPjnVhaJuu77QM27XCdPiSstoj5DDOyeiTd2ANl2hTNYbCx8B
-	 919xeiBPkw7tFpq1Swn4IbCE8vuompsTaw9+ZWQY1dFjg+X2uyeg0Wma9mWweYK2Nq
-	 64rluxBo9M0vg==
-From: Vinod Koul <vkoul@kernel.org>
-To: Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
- Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-renesas-soc@vger.kernel.org
-In-Reply-To: <96aad3b532ee401f19693e18038494f43ddb90e9.1707915609.git.geert+renesas@glider.be>
-References: <96aad3b532ee401f19693e18038494f43ddb90e9.1707915609.git.geert+renesas@glider.be>
-Subject: Re: [PATCH] dt-bindings: renesas,rcar-dmac: Add r8a779h0 support
-Message-Id: <170808690922.369652.2274140141441534554.b4-ty@kernel.org>
-Date: Fri, 16 Feb 2024 18:05:09 +0530
+	s=arc-20240116; t=1708088497; c=relaxed/simple;
+	bh=r8evepnKTdo5eSVTlP6hiRimjsynuUHwqD8ImaiPr94=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=c0ULV3G6lBKBnO09OU8qdJBqxpMVfcgWKAMS7frW/M8Ew1lAOH3ooc9XFxVQ/HH19GZgU7ESofWYeeJNDzxRJ50X5kv/vU5bl178vD/KNI9hsLe+oUJxCWmYtlYJPmTxvXVoEhw+N1uChvvb6134uhi2S2L7NlGFayhLUYmbQis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wwv5QaAF; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-40fb3b5893eso4625215e9.0
+        for <dmaengine@vger.kernel.org>; Fri, 16 Feb 2024 05:01:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708088494; x=1708693294; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=iQmWZKKSDqNbBGSl9IJ3yHfxwOBvYZqEicdX+texpws=;
+        b=Wwv5QaAFgUFrFFODWnz0a+nw3qnUFyco6Y49rAiuXFfWqFhDvB1eRHgVsMqCtpgs24
+         WaQVnBeB764Pcd5pB+9P8dPUCo4inPcPqxjoDdFBUbqiX6M5rcpt6XEaXSs735Jsscuk
+         1/tT2UtFFOjUfr/1ViIYcx89uCdVcxXg3AcvXnSBk6lkF9CoUvIYptiYuZRXVEkTIHed
+         NZolPUpeoGJWNhuGTDfLagu+etH4g42XExQm/aTtnFaLxo7wRd8KBzT8KQ20AEwTx8Qf
+         3ZEoJrLsHjThqo31DgC9T0NS6qyOdl6iJbrCbzGeU+kTrX4AMexxKY8r9f6u2DIMdTY6
+         qR4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708088494; x=1708693294;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=iQmWZKKSDqNbBGSl9IJ3yHfxwOBvYZqEicdX+texpws=;
+        b=KTb2kPt5fZJTHveyw6NbRnkrQhNXKngnSkbQjzPPLiLWU1bl7YT3mhXrXajuZwsRzz
+         vlbofwaL/S1xLs+B8XcSGCNXyGP6HRbwGh+yPFBJLcfe9II7dmkN8vrwOZYpfXkKUaTO
+         lrpR9xsqKNUkx+ZTxM7QjUpvh3myYXEptlCtDOciP/BJX+EV44WibXw+Kfe85wWP6q7+
+         a9wrbDuEa4IPYq9FfPOZN6ZL8lZMIX5di8UOa1vE4zEng4tHYZ18j+EWAS/6tFkkicKW
+         j337kpVP/68zeDqKiyo9h9QRZ9SCfGF1SU2sKS9bYL7ixToqw/lCqwaQ+6Q0PYIYuuCu
+         pF2w==
+X-Gm-Message-State: AOJu0YyUHSA1fdSZBBDtWRnZm1MecFSCaW55EFL/WYV8nutwRoc8I2+l
+	rAnxNzcuDaX8Jyy3YEcUDMyeQsvGOmZwYxBL/YysbGpige0vSF+chxzZDVWKizbv6w==
+X-Google-Smtp-Source: AGHT+IE4U6WDitPfBIbNEmk2s5LBfnEH28RU91KCepV5OvLYNwkemjC/yux2tNVUgFtSIqJ0BqonNw==
+X-Received: by 2002:a05:600c:5246:b0:411:bd5b:d5e with SMTP id fc6-20020a05600c524600b00411bd5b0d5emr3305049wmb.17.1708088493806;
+        Fri, 16 Feb 2024 05:01:33 -0800 (PST)
+Received: from ?IPv6:2001:a61:3456:4e01:6ae:b55a:bd1d:57fc? ([2001:a61:3456:4e01:6ae:b55a:bd1d:57fc])
+        by smtp.gmail.com with ESMTPSA id j25-20020a05600c1c1900b004117e45f12esm2308303wms.22.2024.02.16.05.01.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Feb 2024 05:01:33 -0800 (PST)
+Message-ID: <5168655a6e6b522d80c30d66ad733ae2fe547d8c.camel@gmail.com>
+Subject: Re: [PATCH] dmaengine: axi-dmac: move to device managed probe
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Vinod Koul <vkoul@kernel.org>, Nuno Sa <nuno.sa@analog.com>
+Cc: dmaengine@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>
+Date: Fri, 16 Feb 2024 14:01:32 +0100
+In-Reply-To: <Zc9TaGFInAQA-Zik@matsya>
+References: <20240214-axi-dmac-devm-probe-v1-1-22d633da19cb@analog.com>
+	 <Zc9TaGFInAQA-Zik@matsya>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 (3.50.3-1.fc39) 
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.3
 
+On Fri, 2024-02-16 at 17:52 +0530, Vinod Koul wrote:
+> On 14-02-24, 13:29, Nuno Sa wrote:
+> > In axi_dmac_probe(), there's a mix in using device managed APIs and
+> > explicitly cleaning things in the driver .remove() hook. Move to use
+> > device managed APIs and thus drop the .remove() hook.
+> >=20
+> > While doing this move request_irq() before of_dma_controller_register()
+> > so the previous cleanup order in the .remove() hook is preserved.
+>=20
+> It is good that we are doing this, but moving irq to devm doesnt help a
+> lot, there exists a race
+>=20
+> I would suggest you use the axi_dmac_free_dma_controller() to all free
+> up irq explicitly, that will ensure things no chance of irq firing and
+> scheduling tasklet when we are removing
+>=20
 
-On Wed, 14 Feb 2024 14:00:34 +0100, Geert Uytterhoeven wrote:
-> Document support for the Direct Memory Access Controllers (DMAC) in the
-> Renesas R-Car V4M (R8A779H0) SoC.
-> 
-> Based on a patch in the BSP by Thanh Le.
-> 
-> 
+Hi Vinod,
 
-Applied, thanks!
+Hmm wait... Before the patch we had:
 
-[1/1] dt-bindings: renesas,rcar-dmac: Add r8a779h0 support
-      commit: 35b78e2eef2d75c8722bf39d6bd1d89a8e21479e
+static void axi_dmac_remove(struct platform_device *pdev)
+{
+	struct axi_dmac *dmac =3D platform_get_drvdata(pdev);
 
-Best regards,
--- 
-~Vinod
+	of_dma_controller_free(pdev->dev.of_node);
+	free_irq(dmac->irq, dmac);
 
+So, you mean that there's actually a possible bug/race in the above? The ir=
+q is only
+being released after of_dma_controller_free(). So, I guess I should not mov=
+e
+request_irq() at all and then I can still use devm_request_irq(). If I do i=
+t after
+registering the device then it will be released before of_dma_controller_fr=
+ee(). Am I
+missing something?
+
+Thanks for the feedback!
+- Nuno S=C3=A1
+
+>=20
 
 

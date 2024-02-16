@@ -1,290 +1,147 @@
-Return-Path: <dmaengine+bounces-1021-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1022-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CC7A6856DD2
-	for <lists+dmaengine@lfdr.de>; Thu, 15 Feb 2024 20:35:21 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F0EB8579D6
+	for <lists+dmaengine@lfdr.de>; Fri, 16 Feb 2024 11:04:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5A8C51F2728A
-	for <lists+dmaengine@lfdr.de>; Thu, 15 Feb 2024 19:35:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0BF5B285739
+	for <lists+dmaengine@lfdr.de>; Fri, 16 Feb 2024 10:04:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AF1813A885;
-	Thu, 15 Feb 2024 19:34:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D4151CA86;
+	Fri, 16 Feb 2024 10:02:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hcxBanyL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FGzRSAUZ"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DE9C1386AE;
-	Thu, 15 Feb 2024 19:34:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 395FA1C6A0;
+	Fri, 16 Feb 2024 10:02:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708025685; cv=none; b=gaQrmeVk1pLVDo2rhRRGIdgMoBcEfe856gzg3pLXd5lKSX+aT3dT5aSRBmFgzXX9jCBMDoTD6bDRf86fSCohxhs1tr1kDojGCK4uNldLvMlKsqWHQ61LSQPReQ5nPx3OnejUB8FHmCcyD4TKmpAzAarH5/+VELCQcOzrNThE5m0=
+	t=1708077774; cv=none; b=ifGwK5+1b+nYgluSI1td4F5il4RZLh5zDuz0lBXba0/B/9nIBclVO+qI0stBNN0m5bk6VubsIqQOVT0JcqTq1to/pDKeAcib0Y8//4AYH9LLldHx+51yDY2ngRc3yZjnHfPj8y6pO/3b1VyBAfRnERS953yt5M9W654L1ROhfAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708025685; c=relaxed/simple;
-	bh=yRnLyISh3ozdfGzOQyeO/YUOe2fAUcXlNVFlHde4M6M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n8JKyHnbp8JR0XmavFbLGW2e7DBZiIiyUqfxabCczRpW24VXAoIPEkSPXWROAKZEVZLxA98MOYuvLTEH3b+qeDA/Twr7C45siYm23ZfB7x2jiAriJrG+6+DWAl9n7vx9wGh75Dby8uUiA5UR0WSqat9rUpZnJerS1Ot3LMqvZZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hcxBanyL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D989C433C7;
-	Thu, 15 Feb 2024 19:34:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708025684;
-	bh=yRnLyISh3ozdfGzOQyeO/YUOe2fAUcXlNVFlHde4M6M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hcxBanyLQEEN6fX42vS/bUklK63T/N6Rwy5XBP0I5CnNlTL7f1HtGGJLePgvd/uO4
-	 3/1JJYefxII4USHvReXc3uKbI2dZgEGsyR4smQXzrUvoXR0P9jhtBchK1CUhwMwKo3
-	 QZP5/c37D/Zg1bI4rE7nO7Ur+AUmtAC7i/CWwbHzKQ2/6tq3pKNSAEe+5rVphEXPdr
-	 2h5lbxOXn8jZCGwUELfWVzg0X9A0h3p+JOXzR2TRL3GUicxZ83I26A5/v5bdYKNfHi
-	 QtkONIKQdtF3KlCs8Z/XOKqRn/J8mYzjWShJAk9KwLh0HemfW92ggpIDKpPVWJdf/8
-	 YK1J1J8qEQZbQ==
-Date: Thu, 15 Feb 2024 19:34:39 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Durai Manickam KR <durai.manickamkr@microchip.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: dma: convert atmel-xdma.txt to YAML
-Message-ID: <20240215-snowstorm-quack-fdb7f9c35c2e@spud>
-References: <20240215-xdma-v1-1-1139960cf096@microchip.com>
+	s=arc-20240116; t=1708077774; c=relaxed/simple;
+	bh=IfQgRdKXeDU2cuydr28jpQ3er3ltiRCVsT8Oao+apnw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=cGKmmy7jIUPF8JV08hs34C0gwwQKNPK5pZwO5nZhjuNFiTo+n59cZbkoKSCA9E/un0kCJnxPWiuhcAGiiOD0T48Qy2jnK4NrEPfRgzfRUizPM5a5kNXqqvaIN284KbmsJrCRvPUWGNlP5HS8Dv7MwK8ZDBixmnzTNoLqJJCdkVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FGzRSAUZ; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2d21a68dd3bso4356801fa.1;
+        Fri, 16 Feb 2024 02:02:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708077769; x=1708682569; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xYAodHIG8Kts+r2cf/WooO9lWPZfRnR3+oSzMbThTMk=;
+        b=FGzRSAUZ1jPndT3mjKYzRhuxKNcCdU/azX9qwtt75NXEhvsQIwSBkSXeH/Iww4zPmn
+         FOMUJ5Q9p+BPqIhaMdK9ktKLeP+KiTvukZ/iiFzSc3sgL4U7inFYNuZ7WxbTF6ylZ4/B
+         0aMj06IS4BxSwYYShgT9AYG8pbHMWfXRKDmVd0tFUb+CKC7SSUy8gY4EgdqRhz1Iqhre
+         2zXgAOln7NEIlzU8E9On3CKomNT5R5mJBlXMjd0R49copqmy2MErNrEOkllIpyvySGt8
+         6mMrXQG8XaXET/9ktCnUKgoosbL4PEkmWo7T3jFswJsYrJRCKfIgBEasGYheDkI1Abc+
+         HixA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708077769; x=1708682569;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xYAodHIG8Kts+r2cf/WooO9lWPZfRnR3+oSzMbThTMk=;
+        b=BkQ0OPrqwoo3sxJXZ5E9eH/AN0k12dLOmK+Hr6R4AXUofwMIEbmfqOaA/j3OXVxMtt
+         h5YsjCHqHBpYSNWwk+BuYfezElSTTrREZ6RFDlB+Yaa0KoLqiGQxffYta6LsXgAUPxAn
+         afmo3GGJ3MrKu916hpjOOrrVwXpZPknmqklvQMIlgl/sI+padV4Dzqmmo7EhK/03NIH1
+         xXgp2mbxTFDXeTVzR06QZ1QwFjOyNoFdrkj9c6x7o8KdZ9rZ7XZE22zTAzRCbPI2MDyp
+         JOdzqKSY6mfB0x2HdXVrUDbbhwTIjSo+LWcissHDkDTMiFSQWp+RpjKXIG9YAvo9iaHq
+         +F8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXot5WcSJEo236BUwJl/ZMxQedjWhkyA2CLAi53quoZN3hfdTCeHy7TWTeBfeYETQcssFtRuIGCVofBylMKE5+vyqhOYTV8XOpa
+X-Gm-Message-State: AOJu0YySpFFNmddoarWVb5zwVblFmXpb1/fI2YGw1l6exvqjuJfHyNl+
+	k1JVUhMx5swqTNvXJbfLyzdQRHmbuYi8+6cjYE73YOEZuN9UUoS5Rs7hzQdq
+X-Google-Smtp-Source: AGHT+IF83jhQvvc3JcDaAEg2EM3ssGQ2gj6HAurgJNJADC/zD3PfMIygfWSCrSdVOAB8vL6pTjVkpQ==
+X-Received: by 2002:a2e:9dc7:0:b0:2d0:b244:5f09 with SMTP id x7-20020a2e9dc7000000b002d0b2445f09mr2991501ljj.51.1708077769127;
+        Fri, 16 Feb 2024 02:02:49 -0800 (PST)
+Received: from morpheus.home.roving-it.com.com (8.c.1.0.0.0.0.0.0.0.0.0.0.0.0.0.1.8.6.2.1.1.b.f.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:fb11:2681::1c8])
+        by smtp.googlemail.com with ESMTPSA id bu13-20020a056000078d00b0033b4796641asm1808213wrb.22.2024.02.16.02.02.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Feb 2024 02:02:48 -0800 (PST)
+From: Peter Robinson <pbrobinson@gmail.com>
+To: linux-tegra@vger.kernel.org
+Cc: Peter Robinson <pbrobinson@gmail.com>,
+	Jon Hunter <jonathanh@nvidia.com>,
+	Thierry Reding <treding@nvidia.com>,
+	Sameer Pujar <spujar@nvidia.com>,
+	Laxman Dewangan <ldewangan@nvidia.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	dmaengine@vger.kernel.org
+Subject: [PATCH 2/2] dmaengine: tegra210-adma: Update dependency to ARCH_TEGRA
+Date: Fri, 16 Feb 2024 10:02:38 +0000
+Message-ID: <20240216100246.568473-2-pbrobinson@gmail.com>
+X-Mailer: git-send-email 2.43.1
+In-Reply-To: <20240216100246.568473-1-pbrobinson@gmail.com>
+References: <20240216100246.568473-1-pbrobinson@gmail.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="2uNUAPuRLcz3Tc2D"
-Content-Disposition: inline
-In-Reply-To: <20240215-xdma-v1-1-1139960cf096@microchip.com>
+Content-Transfer-Encoding: 8bit
 
+Update the architecture dependency to be the generic Tegra
+because the driver works on the four latest Tegra generations
+not just Tegra210, if you build a kernel with a specific
+ARCH_TEGRA_xxx_SOC option that excludes Tegra210 you don't get
+this driver.
 
---2uNUAPuRLcz3Tc2D
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fixes: 433de642a76c9 ("dmaengine: tegra210-adma: add support for Tegra186/Tegra194")
+Signed-off-by: Peter Robinson <pbrobinson@gmail.com>
+Cc: Jon Hunter <jonathanh@nvidia.com>
+Cc: Thierry Reding <treding@nvidia.com>
+Cc: Sameer Pujar <spujar@nvidia.com>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: dmaengine@vger.kernel.org
+---
 
-On Thu, Feb 15, 2024 at 04:25:15PM +0530, Durai Manickam KR wrote:
-> Added a description, required properties and appropriate compatibles
-> for all the SoCs that are supported by microchip for the XDMAC.
->=20
-> Signed-off-by: Durai Manickam KR <durai.manickamkr@microchip.com>
-> ---
->  .../devicetree/bindings/dma/atmel-xdma.txt         | 54 ---------------
->  .../bindings/dma/microchip,at91-xdma.yaml          | 77 ++++++++++++++++=
-++++++
->  2 files changed, 77 insertions(+), 54 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/dma/atmel-xdma.txt b/Docum=
-entation/devicetree/bindings/dma/atmel-xdma.txt
-> deleted file mode 100644
-> index 76d649b3a25d..000000000000
-> --- a/Documentation/devicetree/bindings/dma/atmel-xdma.txt
-> +++ /dev/null
-> @@ -1,54 +0,0 @@
-> -* Atmel Extensible Direct Memory Access Controller (XDMAC)
-> -
-> -* XDMA Controller
+v2: fix spelling of option
+v3: Update T210 -> Tegra210
+    use "and later" rather than all current devices
 
-> -- interrupts: Should contain DMA interrupt.
-> -- #dma-cells: Must be <1>, used to represent the number of integer cells=
- in
-> -the dmas property of client devices.
-> -  - The 1st cell specifies the channel configuration register:
-> -    - bit 13: SIF, source interface identifier, used to get the memory
-> -    interface identifier,
-> -    - bit 14: DIF, destination interface identifier, used to get the per=
-ipheral
-> -    interface identifier,
-> -    - bit 30-24: PERID, peripheral identifier.
-> -
-> -Example:
-> -
-> -dma1: dma-controller@f0004000 {
-> -	compatible =3D "atmel,sama5d4-dma";
-> -	reg =3D <0xf0004000 0x200>;
-> -	interrupts =3D <50 4 0>;
-> -	#dma-cells =3D <1>;
-> -};
-> -
-> -
-> -* DMA clients
-> -DMA clients connected to the Atmel XDMA controller must use the format
-> -described in the dma.txt file, using a one-cell specifier for each chann=
-el.
-> -The two cells in order are:
-> -1. A phandle pointing to the DMA controller.
-> -2. Channel configuration register. Configurable fields are:
-> -    - bit 13: SIF, source interface identifier, used to get the memory
-> -    interface identifier,
-> -    - bit 14: DIF, destination interface identifier, used to get the per=
-ipheral
-> -    interface identifier,
-> -  - bit 30-24: PERID, peripheral identifier.
-> -
-> -Example:
-> -
-> -i2c2: i2c@f8024000 {
-> -	compatible =3D "atmel,at91sam9x5-i2c";
-> -	reg =3D <0xf8024000 0x4000>;
-> -	interrupts =3D <34 4 6>;
-> -	dmas =3D <&dma1
-> -		(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
-> -		 | AT91_XDMAC_DT_PERID(6))>,
-> -	       <&dma1
-> -		(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
-> -		| AT91_XDMAC_DT_PERID(7))>;
-> -	dma-names =3D "tx", "rx";
-> -};
-> diff --git a/Documentation/devicetree/bindings/dma/microchip,at91-xdma.ya=
-ml b/Documentation/devicetree/bindings/dma/microchip,at91-xdma.yaml
-> new file mode 100644
-> index 000000000000..0bd79c7b5e6f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/microchip,at91-xdma.yaml
-> @@ -0,0 +1,77 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/microchip,at91-xdma.yaml#
+ drivers/dma/Kconfig | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-Filename matching a compatible please.
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index e928f2ca0f1e9..ae23b886a6c60 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -643,16 +643,16 @@ config TEGRA20_APB_DMA
+ 
+ config TEGRA210_ADMA
+ 	tristate "NVIDIA Tegra210 ADMA support"
+-	depends on (ARCH_TEGRA_210_SOC || COMPILE_TEST)
++	depends on (ARCH_TEGRA || COMPILE_TEST)
+ 	select DMA_ENGINE
+ 	select DMA_VIRTUAL_CHANNELS
+ 	help
+-	  Support for the NVIDIA Tegra210 ADMA controller driver. The
+-	  DMA controller has multiple DMA channels and is used to service
+-	  various audio clients in the Tegra210 audio processing engine
+-	  (APE). This DMA controller transfers data from memory to
+-	  peripheral and vice versa. It does not support memory to
+-	  memory data transfer.
++	  Support for the NVIDIA Tegra210 and later ADMA
++	  controller driver. The DMA controller has multiple DMA channels
++	  and is used to service various audio clients in the Tegra210
++	  audio processing engine (APE). This DMA controller transfers
++	  data from memory to peripheral and vice versa. It does not
++	  support memory to memory data transfer.
+ 
+ config TIMB_DMA
+ 	tristate "Timberdale FPGA DMA support"
+-- 
+2.43.1
 
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Atmel Extensible Direct Memory Access Controller (XDMAC)
-> +
-> +maintainers:
-> +  - Durai Manickam KR <durai.manickamkr@microchip.com>
-> +
-> +description: |
-
-The | is not needed, you've no formatting to preserve.
-
-> +  The Atmel Extensible Direct Memory Access Controller (XDMAC) performs =
-peripheral
-> +  data transfer and memory move operations over one or two bus ports thr=
-ough the
-> +  unidirectional communication channel. Each channel is fully programmab=
-le and
-> +  provides both peripheral or memory-to-memory transfers.
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - enum:
-> +          - atmel,sama5d4-dma
-> +          - microchip,sama7g5-dma
-> +          - microchip,sam9x7-dma
-
-The text binding says:
-> -- compatible: Should be "atmel,sama5d4-dma", "microchip,sam9x60-dma" or
-> -  "microchip,sama7g5-dma" or
-> -  "microchip,sam9x7-dma", "atmel,sama5d4-dma".
-That's not what you have here at all.
-
-> +      - items:
-> +          - const: atmel,sama5d4-dma
-> +          - const: microchip,sam9x60-dma
-
-This looks backwards.
-
-> +  reg:
-> +    description: Should contain DMA registers location and length.
-> +    maxItems: 1
-
-Same comments here about descriptions for well known properties as the
-other DMA controller.
-
-> +
-> +  interrupts:
-> +    description: Should contain the DMA interrupts associated to the DMA=
- channels.
-> +    maxItems: 1
-> +
-> +  "#dma-cells":
-> +    description: |
-> +      Must be <1>, used to represent the number of integer cells in the =
-dmas
-> +      property of client device.
-> +      -The 1st cell specifies the channel configuration register:
-> +      -bit 13: SIF, source interface identifier, used to get the memory
-> +               interface identifier,
-> +      -bit 14: DIF, destination interface identifier, used to get the pe=
-ripheral
-> +               interface identifier,
-> +      -bit 30-24: PERID, peripheral identifier.
-> +    const: 1
-> +
-> +  clocks:
-> +    description: Should contain a clock specifier for each entry in cloc=
-k-names.
-> +    maxItems: 1
-
-And here about adding properties. Please explain in your commit message
-where the new properties came from.
-
-> +
-> +  clock-names:
-> +    description: Should contain the clock of the DMA controller.
-> +    const: dma_clk
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - "#dma-cells"
-> +  - clocks
-> +  - clock-names
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    dma0: dma-controller@f0004000 {
-
-And same here about the label :)
-
-Cheers,
-Conor.
-
-> +            compatible =3D "atmel,sama5d4-dma";
-> +            reg =3D <0xffffec00 0x200>;
-> +            interrupts =3D <50 4 0>;
-> +            #dma-cells =3D <1>;
-> +            clocks =3D <&pmc 2 20>;
-> +            clock-names =3D "dma_clk";
-> +    };
-> +
-> +...
->=20
-> ---
-> base-commit: 8d3dea210042f54b952b481838c1e7dfc4ec751d
-> change-id: 20240215-xdma-36e8bdbf8141
->=20
-> Best regards,
-> --=20
-> Durai Manickam KR <durai.manickamkr@microchip.com>
->=20
-
---2uNUAPuRLcz3Tc2D
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZc5nTwAKCRB4tDGHoIJi
-0mWeAQDyxMRExEs8PvvE6a8W3mU1c68idO13L6qbJOJZzZggbwD+PeCtNY1Irgpl
-9q5poFzXZZ7w/mux7+IUq6SBm6lUzA4=
-=pFvp
------END PGP SIGNATURE-----
-
---2uNUAPuRLcz3Tc2D--
 

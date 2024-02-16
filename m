@@ -1,56 +1,63 @@
-Return-Path: <dmaengine+bounces-1030-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1031-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1F05857CB1
-	for <lists+dmaengine@lfdr.de>; Fri, 16 Feb 2024 13:35:31 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3512C857CB6
+	for <lists+dmaengine@lfdr.de>; Fri, 16 Feb 2024 13:35:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 48EF71F22ED4
-	for <lists+dmaengine@lfdr.de>; Fri, 16 Feb 2024 12:35:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E541E289189
+	for <lists+dmaengine@lfdr.de>; Fri, 16 Feb 2024 12:35:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FC1D129A69;
-	Fri, 16 Feb 2024 12:35:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93CB9129A83;
+	Fri, 16 Feb 2024 12:35:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kSljmYpH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GbvU/Ry5"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07731129A64;
-	Fri, 16 Feb 2024 12:35:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65EC3129A77;
+	Fri, 16 Feb 2024 12:35:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708086904; cv=none; b=bWcZLOEcbYJGMyvf6+w4UDWakayaHTQQEhoOBQ3W3j4VbSy+HrFP4unXZmxp1bugdEaTfzzElwVMhJeGhyUgmNtbU9OfuCu0sJuClB8QmF+SxXGoln6l8SmEwLk5Z0dNabcHXKOU/dX4d84kkmgD/F8E4RGihQOi/qocwrld09o=
+	t=1708086909; cv=none; b=NXQ0ulMx0yBYn0krhiGhB/BGJ1KlvChhoxEQg3ZcUutj7tq6LVfdQ/pOmKLOXkDxJGtqvYyAjWLkS0lBoT+y+HcJqtVkqNxUfEHgiu0UJDFFf+UJm1nCSLq+J8DRVb4fw3G/prLbcEu5wtS+Zs9f4hJgsFL/s876Vno1S1zd0MM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708086904; c=relaxed/simple;
-	bh=f9p3vuSDaNnDZUBZxZEDy6+wZqVBMar8YgtJYLvVCdY=;
+	s=arc-20240116; t=1708086909; c=relaxed/simple;
+	bh=riZV/gkwObqh/32FznqVlHkFGhQ6oMb4j7nisfi+Pj8=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Df3F/2G9s/b8Xa4gg9teS9Ls6c4ylZlr4lqLWK0EvEe2eL4+zMo/PRpJj3aAG2ghNAZkVnIcTYlRludMgF4co2A9A68JAL1/dEPGO5MshC6sV4nptga4485mVzxV/wkR/05PbqiwzePELIYpEPnTu/y1JlSiEqcdu3+4lD24/T0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kSljmYpH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 683D1C433F1;
-	Fri, 16 Feb 2024 12:35:01 +0000 (UTC)
+	 MIME-Version:Content-Type; b=O6D4bN9k82Y3QzuRjURl54DixTOCjIXFaT9zybyTLATnCWAbj/2zqvsmtSshJQ2egbGRcEmxJISBfIkphjRGcfZ79fDm07HU9je7Mhh0ORprtl+U7t/SwgnZeSe8TZpeU2JC/NjA99CaJX0rJiyjk+1vDMldfMRd/gkbL+6qrGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GbvU/Ry5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23F96C43390;
+	Fri, 16 Feb 2024 12:35:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708086903;
-	bh=f9p3vuSDaNnDZUBZxZEDy6+wZqVBMar8YgtJYLvVCdY=;
+	s=k20201202; t=1708086909;
+	bh=riZV/gkwObqh/32FznqVlHkFGhQ6oMb4j7nisfi+Pj8=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=kSljmYpH9Kg2JosIDJdxZoN4kJYhfq8yu29SWWtsoWozeQ9M4n8HAAdcNtXuNnoFR
-	 ZrhbAf96iAbIHRKPh0mc1zvYUbP7LyI2Cr++jp71UPsk4+jjSUDv4RRwctU4p7+M5z
-	 0ZAdxQXMQpmwGDF3L6Bgt3nIN0/UqM0BzJyJy7uAYSaxj8f1MomoKkhmWiHLK67vQb
-	 1NPZwtp/FCMThwO2IBjmvcQ4D5a8h+YJ4O7IFYJkXGPFW8IRB+HfAOvxHczC3AUpHB
-	 Mq4OXNSIbgD7S1yKqnlu9bomgEendjff84v0VRaKEIDGOANIqxfhT6qrubifRjxABu
-	 U3HY3HwRgO1Pw==
+	b=GbvU/Ry5/vrxGXr+/cJ3ce+0WWNod37nCHhivKlwvOvOdU5rB51aeeuNiEHWGi+8U
+	 TXcgT9qIiajvxhmUVcdq9QiyvNJO934lWk/dSBK1mHGl1qC52TivCDJiNA3gjEkbOK
+	 Jujz3PrRMuF3/zL1pp1CFwJdkmJu+dQ9Gl/6h22lnW0l/yY6H6QSrS+VpCo7YWm/bT
+	 lMZfmM73SdV1EKg7JQYCsf8aadyoODC1NHPcwbSRF0ag4mDj9WmJ+iT6fbdS4LMrnp
+	 OiHS+V5j/x/7KZw/4N6vqdOTXTkXo9IhSr0aJNQyCwXOneWWbM0qaL2814yyhoK2fU
+	 wEBhPlEo4mgjA==
 From: Vinod Koul <vkoul@kernel.org>
-To: Fenghua Yu <fenghua.yu@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
- "Ricardo B. Marliere" <ricardo@marliere.net>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-In-Reply-To: <20240213-bus_cleanup-idxd-v1-1-c3e703675387@marliere.net>
-References: <20240213-bus_cleanup-idxd-v1-1-c3e703675387@marliere.net>
-Subject: Re: [PATCH] dmaengine: idxd: make dsa_bus_type const
-Message-Id: <170808690093.369652.14612734405908397819.b4-ty@kernel.org>
-Date: Fri, 16 Feb 2024 18:05:00 +0530
+To: Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5@gmail.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Sean Wang <sean.wang@mediatek.com>, dmaengine@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+ =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>
+In-Reply-To: <20240213063919.20196-1-zajec5@gmail.com>
+References: <20240213063919.20196-1-zajec5@gmail.com>
+Subject: Re: [PATCH] dt-bindings: dma: convert MediaTek High-Speed
+ controller to the json-schema
+Message-Id: <170808690375.369652.1439304081643409723.b4-ty@kernel.org>
+Date: Fri, 16 Feb 2024 18:05:03 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -58,24 +65,21 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Mailer: b4 0.12.3
 
 
-On Tue, 13 Feb 2024 11:43:15 -0300, Ricardo B. Marliere wrote:
-> Since commit d492cc2573a0 ("driver core: device.h: make struct
-> bus_type a const *"), the driver core can properly handle constant
-> struct bus_type, move the dsa_bus_type variable to be a constant
-> structure as well, placing it into read-only memory which can not be
-> modified at runtime.
+On Tue, 13 Feb 2024 07:39:19 +0100, Rafał Miłecki wrote:
+> This helps validating DTS files. Introduced changes:
+> 1. Adjusted "reg" in example
+> 2. Added includes to example
 > 
 > 
-> [...]
 
 Applied, thanks!
 
-[1/1] dmaengine: idxd: make dsa_bus_type const
-      commit: cf497f3585f944ff42cc2c84453569f37a1bd6b9
+[1/1] dt-bindings: dma: convert MediaTek High-Speed controller to the json-schema
+      commit: fa3400504824944ec04bd3f236fd5ac57c099fd5
 
 Best regards,
 -- 

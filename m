@@ -1,63 +1,59 @@
-Return-Path: <dmaengine+bounces-1031-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1032-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3512C857CB6
-	for <lists+dmaengine@lfdr.de>; Fri, 16 Feb 2024 13:35:54 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4CB39857CBC
+	for <lists+dmaengine@lfdr.de>; Fri, 16 Feb 2024 13:36:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E541E289189
-	for <lists+dmaengine@lfdr.de>; Fri, 16 Feb 2024 12:35:52 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DBE13B23D22
+	for <lists+dmaengine@lfdr.de>; Fri, 16 Feb 2024 12:36:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93CB9129A83;
-	Fri, 16 Feb 2024 12:35:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D195612AAD7;
+	Fri, 16 Feb 2024 12:35:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GbvU/Ry5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FXNVFE5W"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65EC3129A77;
-	Fri, 16 Feb 2024 12:35:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A545112AACD;
+	Fri, 16 Feb 2024 12:35:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708086909; cv=none; b=NXQ0ulMx0yBYn0krhiGhB/BGJ1KlvChhoxEQg3ZcUutj7tq6LVfdQ/pOmKLOXkDxJGtqvYyAjWLkS0lBoT+y+HcJqtVkqNxUfEHgiu0UJDFFf+UJm1nCSLq+J8DRVb4fw3G/prLbcEu5wtS+Zs9f4hJgsFL/s876Vno1S1zd0MM=
+	t=1708086912; cv=none; b=K66tfj7/B75FUezMj6ktJtNJsRZ3xGaH2qaoCS1I0B9MFKrcvlzPZhSJ2WWgYz1bBTGzPlx+P7M56uKQdhYQ6cXzO3Eekn0aNU22ZQXvpH7FE7rsUNhx5ipVOlxMwN0SbMjKwBnJxC2EYOQdxUH4TaHBZ4tDw6uBLF4csqsKq1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708086909; c=relaxed/simple;
-	bh=riZV/gkwObqh/32FznqVlHkFGhQ6oMb4j7nisfi+Pj8=;
+	s=arc-20240116; t=1708086912; c=relaxed/simple;
+	bh=UCRiDyTqdTBsdu54tzQMV73u+uOJTw/lzTO7cUztjsY=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=O6D4bN9k82Y3QzuRjURl54DixTOCjIXFaT9zybyTLATnCWAbj/2zqvsmtSshJQ2egbGRcEmxJISBfIkphjRGcfZ79fDm07HU9je7Mhh0ORprtl+U7t/SwgnZeSe8TZpeU2JC/NjA99CaJX0rJiyjk+1vDMldfMRd/gkbL+6qrGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GbvU/Ry5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23F96C43390;
-	Fri, 16 Feb 2024 12:35:03 +0000 (UTC)
+	 MIME-Version:Content-Type; b=WRmgL2J02zBsy88FMpvEIz/OC7NCP4JF4CeaTFuzEXlx1npKmEzdfb2XR7nzdHd84STNVzUjU91/AKuuItrKWEFXUAid5YeZZGIZzLBm2eJt5F1VeTGh/8127qARfOVYvsISM2mHSI52Zsvu/eFEJcMPnTggbTtyiyG8eNRN0Xs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FXNVFE5W; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A519DC43390;
+	Fri, 16 Feb 2024 12:35:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708086909;
-	bh=riZV/gkwObqh/32FznqVlHkFGhQ6oMb4j7nisfi+Pj8=;
+	s=k20201202; t=1708086912;
+	bh=UCRiDyTqdTBsdu54tzQMV73u+uOJTw/lzTO7cUztjsY=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=GbvU/Ry5/vrxGXr+/cJ3ce+0WWNod37nCHhivKlwvOvOdU5rB51aeeuNiEHWGi+8U
-	 TXcgT9qIiajvxhmUVcdq9QiyvNJO934lWk/dSBK1mHGl1qC52TivCDJiNA3gjEkbOK
-	 Jujz3PrRMuF3/zL1pp1CFwJdkmJu+dQ9Gl/6h22lnW0l/yY6H6QSrS+VpCo7YWm/bT
-	 lMZfmM73SdV1EKg7JQYCsf8aadyoODC1NHPcwbSRF0ag4mDj9WmJ+iT6fbdS4LMrnp
-	 OiHS+V5j/x/7KZw/4N6vqdOTXTkXo9IhSr0aJNQyCwXOneWWbM0qaL2814yyhoK2fU
-	 wEBhPlEo4mgjA==
+	b=FXNVFE5WwTEsk8Bfhtzq5qn5xeME8qrv+hVulFLS3GE5ukWRdA7tF2IT855hoHMJT
+	 vL5CrYah9+d+uEWoTLI71TayZ+ZKRF4QKW03k2krROUYQ+sUYFUZRHqf7bwX0rTNeJ
+	 rwU+Rv756b4oXkW2qHQZVbb/jZkd7oEme++pRE3X9W9+QaTBJ8PRxsjIaCgb/ZJsB/
+	 UZ10e2hy2lDTP4MLxMPjnVhaJuu77QM27XCdPiSstoj5DDOyeiTd2ANl2hTNYbCx8B
+	 919xeiBPkw7tFpq1Swn4IbCE8vuompsTaw9+ZWQY1dFjg+X2uyeg0Wma9mWweYK2Nq
+	 64rluxBo9M0vg==
 From: Vinod Koul <vkoul@kernel.org>
 To: Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
  Conor Dooley <conor+dt@kernel.org>, 
- =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5@gmail.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Sean Wang <sean.wang@mediatek.com>, dmaengine@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
- =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>
-In-Reply-To: <20240213063919.20196-1-zajec5@gmail.com>
-References: <20240213063919.20196-1-zajec5@gmail.com>
-Subject: Re: [PATCH] dt-bindings: dma: convert MediaTek High-Speed
- controller to the json-schema
-Message-Id: <170808690375.369652.1439304081643409723.b4-ty@kernel.org>
-Date: Fri, 16 Feb 2024 18:05:03 +0530
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
+ Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-renesas-soc@vger.kernel.org
+In-Reply-To: <96aad3b532ee401f19693e18038494f43ddb90e9.1707915609.git.geert+renesas@glider.be>
+References: <96aad3b532ee401f19693e18038494f43ddb90e9.1707915609.git.geert+renesas@glider.be>
+Subject: Re: [PATCH] dt-bindings: renesas,rcar-dmac: Add r8a779h0 support
+Message-Id: <170808690922.369652.2274140141441534554.b4-ty@kernel.org>
+Date: Fri, 16 Feb 2024 18:05:09 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -65,21 +61,22 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.12.3
 
 
-On Tue, 13 Feb 2024 07:39:19 +0100, Rafał Miłecki wrote:
-> This helps validating DTS files. Introduced changes:
-> 1. Adjusted "reg" in example
-> 2. Added includes to example
+On Wed, 14 Feb 2024 14:00:34 +0100, Geert Uytterhoeven wrote:
+> Document support for the Direct Memory Access Controllers (DMAC) in the
+> Renesas R-Car V4M (R8A779H0) SoC.
+> 
+> Based on a patch in the BSP by Thanh Le.
 > 
 > 
 
 Applied, thanks!
 
-[1/1] dt-bindings: dma: convert MediaTek High-Speed controller to the json-schema
-      commit: fa3400504824944ec04bd3f236fd5ac57c099fd5
+[1/1] dt-bindings: renesas,rcar-dmac: Add r8a779h0 support
+      commit: 35b78e2eef2d75c8722bf39d6bd1d89a8e21479e
 
 Best regards,
 -- 

@@ -1,72 +1,75 @@
-Return-Path: <dmaengine+bounces-1035-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1036-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D6A385A0CA
-	for <lists+dmaengine@lfdr.de>; Mon, 19 Feb 2024 11:17:28 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1259685A255
+	for <lists+dmaengine@lfdr.de>; Mon, 19 Feb 2024 12:46:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8643A1F23763
-	for <lists+dmaengine@lfdr.de>; Mon, 19 Feb 2024 10:17:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BD9402809B1
+	for <lists+dmaengine@lfdr.de>; Mon, 19 Feb 2024 11:46:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4749F28DB5;
-	Mon, 19 Feb 2024 10:17:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A6A92C84C;
+	Mon, 19 Feb 2024 11:46:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="oKIOQ6ui"
+	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="GPZTh5MV"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A0528DBD
-	for <dmaengine@vger.kernel.org>; Mon, 19 Feb 2024 10:17:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE8C92C68E;
+	Mon, 19 Feb 2024 11:46:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708337829; cv=none; b=T3ClL4ijNbDKt2+DCq9DfVRMpuKqamxZhvAi1US1DO5VxXyJJ/eRfj/RdVOuJLE2yzxkscssD6XrO1cU1LEOPRvpFu9NiHINBnHMJazlJROUWTZDMe1ZuxmgrXyPwuaSR89wetkLPI6NoJ+UTWcpj9+CCy3QGBSk3FVnPeq1LxA=
+	t=1708343174; cv=none; b=Z9yixbfzazsPZjiS826xbUwFoulQ8AF7lYK0yb42zcdzYiPZGCXtJrLRerDVH6f2JQiasZbFIImVl5R/ZnIufGeAfzVwjqFteAINba3YMldJaq8lsub+a7OBRJdeReuhz98j7dt3wUSJi3DbFz7K89EIPNomMVt2AnA3GuNg4y8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708337829; c=relaxed/simple;
-	bh=6roOxEVnsLfbtbTzAbab0yVVN4cgu8hdi24lEZlmOW8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=s4bCWm3DhQstZwMH+3XGXySzTxQEhQ9vDr2ep0dt77R4pJm4wEKAhMahJaBR5AAqcfX8CTZgWIec250J0zbGIGGC4Kscx+7mnbVMLtqd1DvaJ19oYvNm4MJ99zGX4TyStJ9oE4LNnBALSEcAfAx0BbGpO+V7YhWz5iiFNdheFR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=oKIOQ6ui; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41J4l79c011886;
-	Mon, 19 Feb 2024 05:16:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=
-	from:date:subject:mime-version:content-type
-	:content-transfer-encoding:message-id:to:cc; s=DKIM; bh=fc9shZm+
-	OAZfxdhZnG9bGGwcpv+9tCmKQ0PFuQVb/Vo=; b=oKIOQ6uie/Db0HAyDzUifR+4
-	VXZzj/WhGu5W0pKApaHcRkW93IxU3QYwdgGyX+ZmfRWs2kRkho4kFYsnI1iywNaZ
-	8dSv9PPkO03GRKNf7zt4fuWzkDCHjCyyRa4f7K6oSqwTVfVu5NI4GsLiZW8GTabe
-	V4U4MFRbj1jyanZY5lL7mP6wzbTHTP3bmp5NhdRADTMWgWvMLrq4wHr+NTVTWXH8
-	bpvJl2KZn0IFw1h5z4THNQNzqRj9pf6fClbLvAFczlPY+Rfe9oUojGncnPYgYArm
-	phyZCKmf4WoNk+7lX0PSM1Kx1iT9ozYB9oWGON2GK/6nkjtubkfNXyp6LodwJw==
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 3waqh8ep32-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 19 Feb 2024 05:16:53 -0500 (EST)
-Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
-	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 41JAGqtS003628
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 19 Feb 2024 05:16:52 -0500
-Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
- ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Mon, 19 Feb 2024 05:16:51 -0500
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
- ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Mon, 19 Feb 2024 05:16:51 -0500
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Mon, 19 Feb 2024 05:16:51 -0500
-Received: from [127.0.0.1] ([10.44.3.56])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 41JAGh3r029741;
-	Mon, 19 Feb 2024 05:16:45 -0500
-From: Nuno Sa <nuno.sa@analog.com>
-Date: Mon, 19 Feb 2024 11:20:05 +0100
-Subject: [PATCH v2] dmaengine: axi-dmac: move to device managed probe
+	s=arc-20240116; t=1708343174; c=relaxed/simple;
+	bh=ZLdHVZJAAAsJKH0nm7DlEteP3dEdil2jcxKBXSOFsXw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=qbHtkunXVE3f7amQhKojvLE/gWhRMih5n5pl81UkeUvikKFxaUlOGOj5VvEC2CXM7GfXwJb/ELGQ+B7FrTD+X2Sem3S+aBhBcGQTne1bQReqaetq3L4qDCV8JjPZfPDI2DINx9x72zd0zCPp0t9Nq6KqjHDDs1sFEmwFtSoKh4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=GPZTh5MV; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6e43ee3f6fbso1154952b3a.3;
+        Mon, 19 Feb 2024 03:46:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708343172; x=1708947972;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:dkim-signature:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=f9dBN/g8PVu9zXkbkm1kFd1y636aWTHVivk7klXjspk=;
+        b=lukl9hc3BAuLYfkGguA778MNg1vhgRkdycck0QMAGfnlQ9BQC4dBVnnJZIw0Ysiddr
+         dz6TRHds0MWm9paP+tn4oTsdU0+cg0+YhGKicdGP8+r7xy/m7fbo1Nob1lOR0C8nuq+C
+         +3gpA8ffGNWvsvyQyzoJ+D1FaQRG3Tc+eaLwXbYLdu0DkzehDxR5BeBgNEtoth8JxzBz
+         LWfEwTXyKruof2ZAw0XZk3/gyq/hEgKnZiwI4t1O7M0tiTjKfAEkzDD39yzBjjw3ES2u
+         keMIxE3oX3AEQucdryeWxji2M1A8fTLamQprcyFsDoUbRssJUiOaAxfu4LI0/YF78ytR
+         jUwg==
+X-Forwarded-Encrypted: i=1; AJvYcCWiQD1dO95aTPwVqzQoEsBseFw9p+a11ZG5BaLQ2kwaK+uaKxCx8MD4b7535A31kMitnVKrKIPzVUsbSwjVwaZcy1vLgwRoeeJxv38g
+X-Gm-Message-State: AOJu0YwUFBgQ/KMw+gFLHhsB4VJLBUogl4RL3W9E5rNjwFfAHP29FmZb
+	BxsTs0HtCBNEFOlOrLGHL/8nUTW11kuIQdF0nIdH9h+EWQpOvnJbYbofWmPn0DeEPA==
+X-Google-Smtp-Source: AGHT+IHaMvJE3zBOKZBwunmhEb3RzIMNIX9xDRt90aebem4P93dQyK4lpz4lV3/QnnOV1kJ9fUxFVQ==
+X-Received: by 2002:aa7:864d:0:b0:6e3:7331:3b7a with SMTP id a13-20020aa7864d000000b006e373313b7amr5795668pfo.27.1708343171966;
+        Mon, 19 Feb 2024 03:46:11 -0800 (PST)
+Received: from mail.marliere.net ([24.199.118.162])
+        by smtp.gmail.com with ESMTPSA id t4-20020a62d144000000b006e3b868b8b8sm3443384pfl.130.2024.02.19.03.46.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Feb 2024 03:46:11 -0800 (PST)
+From: "Ricardo B. Marliere" <ricardo@marliere.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
+	s=2024; t=1708343170;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=f9dBN/g8PVu9zXkbkm1kFd1y636aWTHVivk7klXjspk=;
+	b=GPZTh5MVJmleh2ejHnqIvrOSQIsyqR1nUDwQL7roYQUu5r5f89QU3YcGiMdQOTV9ThEaqk
+	Vu7IC4Wbs7PRAefKMlRUhBazFOPMhlefLEZtRNbLjQW1ggAuGa/99ENmRpG1k71n1rSt+T
+	Cs40UoXBvYqY5IfcmXm/UUlIofptoW9NXWXwAqBKuWZSb6Ajfd1QEeP+azS3IyLbEee30I
+	r0osyMevrf6wmEZpbs53s3hd4QlcEUrxspXbJMXqF1pj0wg8F5N5bwIGKuSHAR5Wx8MQTT
+	i+dMDBZQuSHVn4mzHbjfG58TWZ86SkGUMwo9VHowjcoFzSSPw3SMIop+4gufVg==
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
+Date: Mon, 19 Feb 2024 08:46:56 -0300
+Subject: [PATCH] dmaengine: idxd: constify the struct device_type usage
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -74,210 +77,154 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-ID: <20240219-axi-dmac-devm-probe-v2-1-1a6737294f69@analog.com>
-X-B4-Tracking: v=1; b=H4sIAFQr02UC/32NTQ6CMBBGr0Jm7RhaENGV9zAs+jOFSYSS1jQY0
- rtbOYDL95LvfTtECkwR7tUOgRJH9ksBearATGoZCdkWBlnLtpaiRbUx2lkZtJRmXIPXhPYqenJ
- N5/Slh7JcAznejupzKDxxfPvwOU6S+Nn/vSRQoJS2axqrxM3oh1rUy49n42cYcs5fzVDLBrcAA
- AA=
-To: <dmaengine@vger.kernel.org>
-CC: Lars-Peter Clausen <lars@metafoo.de>, Vinod Koul <vkoul@kernel.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1708338006; l=5227;
- i=nuno.sa@analog.com; s=20231116; h=from:subject:message-id;
- bh=6roOxEVnsLfbtbTzAbab0yVVN4cgu8hdi24lEZlmOW8=;
- b=uPH6qJBdjZ4VWYfmEAHTdBDw364LdFfUi2HAbQz5q0jg5LbVuI4txRgRTT/u2Tv394jN5BBMK
- nQ+VrNeYmSgB4KmJh7PjRab30sdalyx95CylmC4W97FSg1NbW/+7p0W
-X-Developer-Key: i=nuno.sa@analog.com; a=ed25519;
- pk=3NQwYA013OUYZsmDFBf8rmyyr5iQlxV/9H4/Df83o1E=
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-ORIG-GUID: Z7b_Jj6zSYbPEeLrl7OP_CEbkZkfzUFz
-X-Proofpoint-GUID: Z7b_Jj6zSYbPEeLrl7OP_CEbkZkfzUFz
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-19_07,2024-02-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- lowpriorityscore=0 mlxlogscore=839 suspectscore=0 spamscore=0
- impostorscore=0 adultscore=0 mlxscore=0 priorityscore=1501 clxscore=1015
- phishscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402190077
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240219-device_cleanup-dmaengine-v1-1-9f72f3cf3587@marliere.net>
+X-B4-Tracking: v=1; b=H4sIAK8/02UC/x2MwQqDMBAFf0X2bCAJveivFJFl84wL7VYSWoTgv
+ xt6HJiZRhVFUWkeGhX8tOrHOoRxINnZMpymzhR9fPgYJpe6JFjlBbbv4dKbYVkNDh5bkMA8SaK
+ eHwWbnv/1c7muG8Kz7z9qAAAA
+To: Fenghua Yu <fenghua.yu@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+ Vinod Koul <vkoul@kernel.org>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Ricardo B. Marliere" <ricardo@marliere.net>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4365; i=ricardo@marliere.net;
+ h=from:subject:message-id; bh=ZLdHVZJAAAsJKH0nm7DlEteP3dEdil2jcxKBXSOFsXw=;
+ b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBl0z+wiyHB1Y74MjkRjbvGpa4OoiWJXWcQ+jCdU
+ nmKnUjzOKyJAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZdM/sAAKCRDJC4p8Y4ZY
+ pqaHD/9iqbYNVL9ebqauZTuwQB+vd4/KZ68RaPvYmo3yawIRgvHZGGnOh6fhDep5N60uxnnBv6+
+ fE1Vj1r/5JbHaxFLopjNSqNTwFpb/rxurKwjuDdjdSrKrjhtXzAsSedshTxS65Tb++5VpfeFvPU
+ SA6fvSy9y3REmLRVFgkHDOfsgRXWJxHp6BsgmQ5+//kf/F7GquecvkQ8ZIW+0RfCa9P4MewvoUf
+ d/w4+dW0Ah6Ts8BJooZM7wUUoub7VVujEQBMb4NAnc2FuH0DQuWFVMRYws2SMbd/k4koFOChVRj
+ jolrAxT2s7Rj33STI6WnzWyk4Wkne3jNrExWBFit2AZXSvuKScoMi692W37IcPaQR3K+KzvTjeW
+ iCziYnysSeQylcPcikkJ6FuggivhfBOT3DqqGI5kStkm9h9xmKbeSElnN1SlV582/UM3eSTA25f
+ SDgR0ekgTXdlmTVRLPqtpHsTjVjjDSMuH+0KGYGKn876sDIpWd8CVo+sRdFDb8G4VxBCUACn4t/
+ vRwk7sqvvRE1I0QZlnQxNAIYCOyPAWuIkWfzjDfBbgT5uLBYvHpCL4TSpPeKFmvDi4sVzN/lGjR
+ KUY0uaDfO/BHvvsoUGIWZyn3I5YpOIkypdXp5xe32HV4G4cUblk+h2yNLnHTJ8nmApodDPH+7yb
+ iNbqk6+L6ei/QyQ==
+X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
+ fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
 
-In axi_dmac_probe(), there's a mix in using device managed APIs and
-explicitly cleaning things in the driver .remove() hook. Move to use
-device managed APIs and thus drop the .remove() hook.
+Since commit aed65af1cc2f ("drivers: make device_type const"), the driver
+core can properly handle constant struct device_type. Move the
+dsa_device_type, iax_device_type, idxd_wq_device_type, idxd_cdev_file_type,
+idxd_cdev_device_type and idxd_group_device_type variables to be constant
+structures as well, placing it into read-only memory which can not be
+modified at runtime.
 
-While doing this move request_irq() before of_dma_controller_register()
-so the previous cleanup order in the .remove() hook is preserved.
-
-Signed-off-by: Nuno Sa <nuno.sa@analog.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
 ---
-Changes in v2:
-- Keep devm_request_irq() after of_dma_controller_register() so we free
-  the irq first and avoid any possible race agains
-  of_dma_controller_register().
-- Link to v1: https://lore.kernel.org/r/20240214-axi-dmac-devm-probe-v1-1-22d633da19cb@analog.com
+ drivers/dma/idxd/cdev.c  |  4 ++--
+ drivers/dma/idxd/idxd.h  | 12 ++++++------
+ drivers/dma/idxd/sysfs.c | 10 +++++-----
+ 3 files changed, 13 insertions(+), 13 deletions(-)
 
-Vinod,
-
-This actually made me think if I shouldn't have a preliminary patch
-just moving free_irq() before of_dma_controller_register() and treating
-it as bug (adding a proper fixes tag). Then moving to devm_ in a follow up
-patch.
-
-What do you think? Is it worth it to backport this?
----
- drivers/dma/dma-axi-dmac.c | 78 ++++++++++++++++++++--------------------------
- 1 file changed, 34 insertions(+), 44 deletions(-)
-
-diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
-index 4e339c04fc1e..bdb752f11869 100644
---- a/drivers/dma/dma-axi-dmac.c
-+++ b/drivers/dma/dma-axi-dmac.c
-@@ -1002,6 +1002,16 @@ static int axi_dmac_detect_caps(struct axi_dmac *dmac, unsigned int version)
- 	return 0;
+diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
+index 77f8885cf407..72bb982d7af7 100644
+--- a/drivers/dma/idxd/cdev.c
++++ b/drivers/dma/idxd/cdev.c
+@@ -152,7 +152,7 @@ static void idxd_file_dev_release(struct device *dev)
+ 	mutex_unlock(&wq->wq_lock);
  }
  
-+static void axi_dmac_tasklet_kill(void *task)
-+{
-+	tasklet_kill(task);
-+}
-+
-+static void axi_dmac_free_dma_controller(void *of_node)
-+{
-+	of_dma_controller_free(of_node);
-+}
-+
- static int axi_dmac_probe(struct platform_device *pdev)
- {
- 	struct dma_device *dma_dev;
-@@ -1025,14 +1035,10 @@ static int axi_dmac_probe(struct platform_device *pdev)
- 	if (IS_ERR(dmac->base))
- 		return PTR_ERR(dmac->base);
- 
--	dmac->clk = devm_clk_get(&pdev->dev, NULL);
-+	dmac->clk = devm_clk_get_enabled(&pdev->dev, NULL);
- 	if (IS_ERR(dmac->clk))
- 		return PTR_ERR(dmac->clk);
- 
--	ret = clk_prepare_enable(dmac->clk);
--	if (ret < 0)
--		return ret;
--
- 	version = axi_dmac_read(dmac, ADI_AXI_REG_VERSION);
- 
- 	if (version >= ADI_AXI_PCORE_VER(4, 3, 'a'))
-@@ -1041,7 +1047,7 @@ static int axi_dmac_probe(struct platform_device *pdev)
- 		ret = axi_dmac_parse_dt(&pdev->dev, dmac);
- 
- 	if (ret < 0)
--		goto err_clk_disable;
-+		return ret;
- 
- 	INIT_LIST_HEAD(&dmac->chan.active_descs);
- 
-@@ -1072,7 +1078,7 @@ static int axi_dmac_probe(struct platform_device *pdev)
- 
- 	ret = axi_dmac_detect_caps(dmac, version);
- 	if (ret)
--		goto err_clk_disable;
-+		return ret;
- 
- 	dma_dev->copy_align = (dmac->chan.address_align_mask + 1);
- 
-@@ -1088,57 +1094,42 @@ static int axi_dmac_probe(struct platform_device *pdev)
- 		    !AXI_DMAC_DST_COHERENT_GET(ret)) {
- 			dev_err(dmac->dma_dev.dev,
- 				"Coherent DMA not supported in hardware");
--			ret = -EINVAL;
--			goto err_clk_disable;
-+			return -EINVAL;
- 		}
- 	}
- 
--	ret = dma_async_device_register(dma_dev);
-+	ret = dmaenginem_async_device_register(dma_dev);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * Put the action in here so it get's done before unregistering the DMA
-+	 * device.
-+	 */
-+	ret = devm_add_action_or_reset(&pdev->dev, axi_dmac_tasklet_kill,
-+				       &dmac->chan.vchan.task);
- 	if (ret)
--		goto err_clk_disable;
-+		return ret;
- 
- 	ret = of_dma_controller_register(pdev->dev.of_node,
- 		of_dma_xlate_by_chan_id, dma_dev);
- 	if (ret)
--		goto err_unregister_device;
-+		return ret;
- 
--	ret = request_irq(dmac->irq, axi_dmac_interrupt_handler, IRQF_SHARED,
--		dev_name(&pdev->dev), dmac);
-+	ret = devm_add_action_or_reset(&pdev->dev, axi_dmac_free_dma_controller,
-+				       pdev->dev.of_node);
- 	if (ret)
--		goto err_unregister_of;
-+		return ret;
- 
--	platform_set_drvdata(pdev, dmac);
-+	ret = devm_request_irq(&pdev->dev, dmac->irq, axi_dmac_interrupt_handler,
-+			       IRQF_SHARED, dev_name(&pdev->dev), dmac);
-+	if (ret)
-+		return ret;
- 
- 	regmap = devm_regmap_init_mmio(&pdev->dev, dmac->base,
- 		 &axi_dmac_regmap_config);
--	if (IS_ERR(regmap)) {
--		ret = PTR_ERR(regmap);
--		goto err_free_irq;
--	}
--
--	return 0;
--
--err_free_irq:
--	free_irq(dmac->irq, dmac);
--err_unregister_of:
--	of_dma_controller_free(pdev->dev.of_node);
--err_unregister_device:
--	dma_async_device_unregister(&dmac->dma_dev);
--err_clk_disable:
--	clk_disable_unprepare(dmac->clk);
--
--	return ret;
--}
--
--static void axi_dmac_remove(struct platform_device *pdev)
--{
--	struct axi_dmac *dmac = platform_get_drvdata(pdev);
- 
--	of_dma_controller_free(pdev->dev.of_node);
--	free_irq(dmac->irq, dmac);
--	tasklet_kill(&dmac->chan.vchan.task);
--	dma_async_device_unregister(&dmac->dma_dev);
--	clk_disable_unprepare(dmac->clk);
-+	return PTR_ERR_OR_ZERO(regmap);
+-static struct device_type idxd_cdev_file_type = {
++static const struct device_type idxd_cdev_file_type = {
+ 	.name = "idxd_file",
+ 	.release = idxd_file_dev_release,
+ 	.groups = cdev_file_attribute_groups,
+@@ -169,7 +169,7 @@ static void idxd_cdev_dev_release(struct device *dev)
+ 	kfree(idxd_cdev);
  }
  
- static const struct of_device_id axi_dmac_of_match_table[] = {
-@@ -1153,7 +1144,6 @@ static struct platform_driver axi_dmac_driver = {
- 		.of_match_table = axi_dmac_of_match_table,
- 	},
- 	.probe = axi_dmac_probe,
--	.remove_new = axi_dmac_remove,
+-static struct device_type idxd_cdev_device_type = {
++static const struct device_type idxd_cdev_device_type = {
+ 	.name = "idxd_cdev",
+ 	.release = idxd_cdev_dev_release,
  };
- module_platform_driver(axi_dmac_driver);
+diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
+index f14a660a2a34..d8d3611bf79a 100644
+--- a/drivers/dma/idxd/idxd.h
++++ b/drivers/dma/idxd/idxd.h
+@@ -282,7 +282,7 @@ typedef int (*load_device_defaults_fn_t) (struct idxd_device *idxd);
+ struct idxd_driver_data {
+ 	const char *name_prefix;
+ 	enum idxd_type type;
+-	struct device_type *dev_type;
++	const struct device_type *dev_type;
+ 	int compl_size;
+ 	int align;
+ 	int evl_cr_off;
+@@ -520,11 +520,11 @@ extern const struct bus_type dsa_bus_type;
  
+ extern bool support_enqcmd;
+ extern struct ida idxd_ida;
+-extern struct device_type dsa_device_type;
+-extern struct device_type iax_device_type;
+-extern struct device_type idxd_wq_device_type;
+-extern struct device_type idxd_engine_device_type;
+-extern struct device_type idxd_group_device_type;
++extern const struct device_type dsa_device_type;
++extern const struct device_type iax_device_type;
++extern const struct device_type idxd_wq_device_type;
++extern const struct device_type idxd_engine_device_type;
++extern const struct device_type idxd_group_device_type;
+ 
+ static inline bool is_dsa_dev(struct idxd_dev *idxd_dev)
+ {
+diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
+index 523ae0dff7d4..7f28f01be672 100644
+--- a/drivers/dma/idxd/sysfs.c
++++ b/drivers/dma/idxd/sysfs.c
+@@ -91,7 +91,7 @@ static void idxd_conf_engine_release(struct device *dev)
+ 	kfree(engine);
+ }
+ 
+-struct device_type idxd_engine_device_type = {
++const struct device_type idxd_engine_device_type = {
+ 	.name = "engine",
+ 	.release = idxd_conf_engine_release,
+ 	.groups = idxd_engine_attribute_groups,
+@@ -577,7 +577,7 @@ static void idxd_conf_group_release(struct device *dev)
+ 	kfree(group);
+ }
+ 
+-struct device_type idxd_group_device_type = {
++const struct device_type idxd_group_device_type = {
+ 	.name = "group",
+ 	.release = idxd_conf_group_release,
+ 	.groups = idxd_group_attribute_groups,
+@@ -1369,7 +1369,7 @@ static void idxd_conf_wq_release(struct device *dev)
+ 	kfree(wq);
+ }
+ 
+-struct device_type idxd_wq_device_type = {
++const struct device_type idxd_wq_device_type = {
+ 	.name = "wq",
+ 	.release = idxd_conf_wq_release,
+ 	.groups = idxd_wq_attribute_groups,
+@@ -1798,13 +1798,13 @@ static void idxd_conf_device_release(struct device *dev)
+ 	kfree(idxd);
+ }
+ 
+-struct device_type dsa_device_type = {
++const struct device_type dsa_device_type = {
+ 	.name = "dsa",
+ 	.release = idxd_conf_device_release,
+ 	.groups = idxd_attribute_groups,
+ };
+ 
+-struct device_type iax_device_type = {
++const struct device_type iax_device_type = {
+ 	.name = "iax",
+ 	.release = idxd_conf_device_release,
+ 	.groups = idxd_attribute_groups,
 
 ---
-base-commit: de7d9cb3b064fdfb2e0e7706d14ffee20b762ad2
-change-id: 20240214-axi-dmac-devm-probe-d718ef36fb58
---
+base-commit: 35b78e2eef2d75c8722bf39d6bd1d89a8e21479e
+change-id: 20240219-device_cleanup-dmaengine-e0ef1c1aa9cd
 
-Thanks!
-- Nuno Sá
+Best regards,
+-- 
+Ricardo B. Marliere <ricardo@marliere.net>
 
 

@@ -1,80 +1,73 @@
-Return-Path: <dmaengine+bounces-1037-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1038-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7307E85A7F6
-	for <lists+dmaengine@lfdr.de>; Mon, 19 Feb 2024 16:57:55 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF24D85A804
+	for <lists+dmaengine@lfdr.de>; Mon, 19 Feb 2024 17:00:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F38BB1F25DDE
-	for <lists+dmaengine@lfdr.de>; Mon, 19 Feb 2024 15:57:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 773092812E5
+	for <lists+dmaengine@lfdr.de>; Mon, 19 Feb 2024 15:59:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 338B639FC5;
-	Mon, 19 Feb 2024 15:57:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3C763A29A;
+	Mon, 19 Feb 2024 15:59:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="AEOvFmq0"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="JyukACi/"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from EUR01-VE1-obe.outbound.protection.outlook.com (mail-ve1eur01on2087.outbound.protection.outlook.com [40.107.14.87])
+Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2074.outbound.protection.outlook.com [40.107.241.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 164D93A1D0;
-	Mon, 19 Feb 2024 15:57:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.14.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8915838DF2;
+	Mon, 19 Feb 2024 15:59:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.74
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708358267; cv=fail; b=kmNkth9KCzEvD1OMkHM+s6Aepd8cg7QLJtE/EedldxtXuatzyGeXKS7V0zaNjn2PoSYwFmTHUd65t3sSxh+qkcu8VqTO7zGr/ykM0BV+DSjZH7GETK1epeliuteeyR8VlkHIAgeCvMjbEoh9y8kYHpbRPBnbz7DPjjTzbZMOjjw=
+	t=1708358395; cv=fail; b=mKA/Inz80tClZi1suDCC/q+4m0eaGL7paaNQIPxLYExOLEo9aOmWe5g6ipGJSVcHMBdq7K2DYfhP2x9BgCuyrSXfYM93kxVzv9TeCTNV3fM/oeGSdWrC3+oB3B6THPJg3aId2h7JzJ5iq0u9fTlFG/RnEkgoQ/BIeJS2JRlhBK8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708358267; c=relaxed/simple;
-	bh=eJNxE6nRQlBvNXRhKUmHShP4Bsm+42d6Qm6TJMRTsm8=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=NoYcx0XwtvbCFCalcB3C4te7b2/p11IuoWNHBEaDHwDDeNwwd2oDoHo0ezCBMD9isBNXv3Ze9ZIsX78CVXfZBOEQCx8sGtuv++/C1k8gGMVznC6N07HYiMb1FrDGoVeNTyZoP9HnNb/mwHCU/VOn2Up5PRu625b8ywL8Xy1LU1I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=AEOvFmq0; arc=fail smtp.client-ip=40.107.14.87
+	s=arc-20240116; t=1708358395; c=relaxed/simple;
+	bh=PbebcNxPPqgmQwzviQuB7uu2/erkbS8O0hptgyXd1J8=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=IcRT+C6Nf1xi6mxg92LqOpBCYJE0ibFFEcDM4V0i8qQCtxsPMM8kPFe1lj4IOk83ezWQ57NIgr6FWa6WsqR13UKzIpryyQmx0al5ct1he5aixzmojfsSev1cowwdNXpovTLy2sM8wvaABw+Ru5WYzJaUKxyDczKdBIK9t3o5km0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=JyukACi/; arc=fail smtp.client-ip=40.107.241.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CA3QmyMSwY6i/Wi18VlsuTNwD0lazMUhTXZ+TrsUeW4DEy/otahe1slPISvpcYDlIbFoFlzB8OL2JQZL0NLKuVNQUWikWjbjZSjE4GuCdXlk2DAMPk+zw+OH3LhI/0ZBnGKwsJR7lSIRKsZWjnjE7f/J4JC9DbrD/zfW6jyO72K/f2e8jl8yfcQpmRYpJh/ba6FG5Dl1ZQONWzOS6Cmo8scOFz+VtnMR7JcfmRohfLekAf4f9kMFU1jF2gQgj0+9veBJtc1Nt4wHgQpFUbwHrPTJYC1Jbmdm6w2+KaJAxqrT4Y/agfJANHS+i4mrWaFp2D2LOnAl4E/+Ehe0ytSSSA==
+ b=oNaOtdOovodA9mO0IhHA9A6rGJELW9kzx5Li1p2XltDdTyTzcCWVZzssXHH5qH/hdF7+unDcCJ6JbtSSlBlsdAzRP/ybVDolB6oaQllNRB7LpY6JnXDAK1ViaBz+Zn+cgEU99aMD+bwguhtDmMeIUnbj2WEe1MHcnqp/dUNaxrWLWd72pw0vHfVCUK71YCIDq0YTc9hIs1tn6vTa/TfsXVbcmbofGkMvLcxzln7/HGh0+RF8KaWR1Lr4ZMzMz7nqxItbENVYr7Sfc6tjYVXSHYJt0+UeOHhTKAs3BM51xLSGjFekpTlcofyPUI29895TheyT7X6ULvDZQucF/LHlHA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6QR9JHvOYDB7WaZoNx3oAvzHoFGlMIBRxyB/mZOX6yY=;
- b=BI/BE3s0An2s9g2nuEC3XmPrx3IWqPu1bhRj0ocHiaba6E+pLkfYrif5mheTADoZT/1YRcnVWlBlqfl8PzYM+sXp97btvp8bmcjsisIa4Bcw6AXDDylB7nRCzop3xvllYS0IElka07CmL7tN/l86hrgpmOkXHliDxWb9XkEK5XWGvGGQ9wkRwLB4neiRXUbWGkZ1G902nI2SwaPXc6w90Eh/ertwwtUJexLnqW/bNi5MxNynw3BQ9fMZuj5r6DLtkiwM+rNccVFx23lwl8wgV01GvDGNDw+WINrGwbCPfSa2hbqj3CeTpicYNXyhkYPoOHovS0vTmIb5/4gTyMXeqg==
+ bh=0a/URzydOecL9yZy0YkXo2W/IfmwvDzcgc8qqKA0Tss=;
+ b=YiuMZhcxws+ghsTXAmQuTtNVifTQDuHZGKWE7jwSfPmCYFAfNaVd2JwQ3AN1o18+2jZ+uRu1CVoCz2Py94ud2oGwL/t4LpjQu2bgMq8VuW7SUmqqW+pc1A9Ba1gF6mjWfgOxZonrnMbKZdVR7o+52nEeXCMc61zb7kSnP38bmJtyRukh+QUWEU+dMc04FUpxdIUD7XI0mynjjhfY10iJ4wrpVycYMdbiH7v/pzmscjUv5d5l0n67SyY6xYyAwT4Eqs02UblTMvdsOwE/SA2ptR3shYficvPF5UinbRGYf8wD/I9RFhfzc1U3w4aBm+XyVvk9iaHn5HUkTekY4PVcQw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6QR9JHvOYDB7WaZoNx3oAvzHoFGlMIBRxyB/mZOX6yY=;
- b=AEOvFmq00SoR8XgVVVmRm5k1YAxjgANiPDPDLcmLN1f+d6AoujRQTF6IJi1yJukmYujOjBeT2qZZC8sp2WP5cEZqCVszTEKN2xhHA8Yz2aGtGf8x1kwfbMyDOdXYYRPjzfmbCaL9GaEWJ1aiwfKFz4RYD9xdtH8q/MCXGNaLHKE=
+ bh=0a/URzydOecL9yZy0YkXo2W/IfmwvDzcgc8qqKA0Tss=;
+ b=JyukACi/74BxsAyvcbAA2hond08Bj/RlcubcXqfAXDBNS1ZuLAcrUzueXDj6rnG660AwQ+oLOJ1r9VsGlYycnnvvKf2T8u4Lqhy+3rVDagkQFymf2OANt9qXl9CNbfHOuL2dsEi0vhhzZT/aaJoODGMTy0VBGIhTtJTDNI4brLQ=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by PR3PR04MB7369.eurprd04.prod.outlook.com (2603:10a6:102:89::5) with
+ by AS8PR04MB8627.eurprd04.prod.outlook.com (2603:10a6:20b:42a::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.38; Mon, 19 Feb
- 2024 15:57:42 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.27; Mon, 19 Feb
+ 2024 15:59:50 +0000
 Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
  ([fe80::c8b4:5648:8948:e85c]) by PAXPR04MB9642.eurprd04.prod.outlook.com
  ([fe80::c8b4:5648:8948:e85c%3]) with mapi id 15.20.7292.036; Mon, 19 Feb 2024
- 15:57:42 +0000
+ 15:59:50 +0000
 From: Frank Li <Frank.Li@nxp.com>
 To: Vinod Koul <vkoul@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
 	dmaengine@vger.kernel.org (open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM),
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE),
 	linux-kernel@vger.kernel.org (open list)
 Cc: imx@lists.linux.dev
-Subject: [PATCH 1/1] dmaengine: mxs-dma: switch from dma_coherent to dma_pool
-Date: Mon, 19 Feb 2024 10:57:27 -0500
-Message-Id: <20240219155728.606497-1-Frank.Li@nxp.com>
+Subject: [PATCH v2 1/1] dmaengine: fsl-qdma: add __iomem and struct in union to fix sparse warning
+Date: Mon, 19 Feb 2024 10:59:39 -0500
+Message-Id: <20240219155939.611237-1-Frank.Li@nxp.com>
 X-Mailer: git-send-email 2.34.1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SA1P222CA0028.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:806:22c::30) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+X-ClientProxiedBy: BYAPR01CA0051.prod.exchangelabs.com (2603:10b6:a03:94::28)
+ To PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -82,150 +75,203 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PR3PR04MB7369:EE_
-X-MS-Office365-Filtering-Correlation-Id: 73c2a603-728f-4160-675f-08dc3163813c
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS8PR04MB8627:EE_
+X-MS-Office365-Filtering-Correlation-Id: 55080c36-cc7a-4038-c3fc-08dc3163cdd2
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	ymFT7SZK0zWKvJgloo27uQv8Dir39FMM/SbRCmqXvMqzr6T2ro6xR0Msk79XzHqIe5DO+ekKtQup+Aelr9qiv/BulAWYrWMEccxyObJ3An5SxukO6Ud/aYUWpHFugDpb0w0mavpQJvsA2unlbhHpHnvIJxsr8LsYWXxPe3/3fHO+2C0dxmR19j+d7by7CTwu701KVWdGnMmswBeJYyZ6I1IpgcVdsE7LJMMca+rkbAAZyYiSxNtoBiUMmq258yPOQjCrk0anQvvfSIz3YZA/nq6+YMxyphHMglor9Fi5Mq8LHmJovp0XOeMI4W51xKdUSx441MB5W3Y1wEpNeaijwDUZjwdA5i5cMye52epzp44oy/3aNB8IWoLRObpr1HIOMooYZMnPFPkMrd/LO24ubVhYmZwoc5vtVpVXVGRC2wJVT7NCQztVCtUx3tdeFR8d/NpzF+Uops8ZjqJRQTPEgOSrx1FEvMYbCgf//B+1pKbUH78JNFp8z9fdlT6H3eQeAkCF/flOC3rUxdl9jhMmCQQ87UfLzgdtxBggAbTvleKZIRak9IRkQjKkGmgBwLbPC1wJgR/sYY0RP5U8NA7s/HxkbBmF2OkLrcRiYPTkSzBP98zv0ATO+9AqhM751UK+
+	+8LuqDWaaHys4k1Ljq7OPAWe2XtgASEhQq9MDX239sSdxaAbPFT3CQtlK0fSGKCb5zaOahUUXih7FMU0/VdHfo6qifU1NIyge/m/uKrUgSnlKBE9Ovc39Zjx+jFatWSoBSqX4W+vGgt7xPjsmeing5ZppDpBusdDOuPQnxrZTUcjvnhsJOy/3qoxruVwBbZH6S4GyuRZXQK4zgD8CKLeXIcCxtjprqUKSjBWMQHDG/Ug8y+Ue1/R8flB8NIa0iZj9huuRh44Mrfg3XcgVoTfab1w0ArW7YZkEBHIzwy6LVqSceVG0HbVnz/koB/4eNjLPxg+gt2BztSGt+0lUknox5EXIxdOaEzdlf/CHHmJE8pklMqTdbloHQu0+SjW99jbkBpekCGmrM7qt2fm1MXGy65naArVNWKv7zemeOeBHUtc2unjS7527wYvAdCs/B1f1JUqLtVXXzpVSC2uQ7la051178paKdAjUcXNhvXu94SIURjH/9H4uM8HvZPROcz4A+p3vNcooaxYIPbv0HOJymSQjswIvDquPSu00fn1JgbVSYyPSxOR/x2PW4mwqjhA/B9LDO6SPRz80KWbFPAvbuAIt1XEaw3YThqxbUV6HLk=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38350700005);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(230273577357003)(38350700005);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?SpoVnCW1xe06J2MT48aqJzRj8TCVsG7UV/xTCKJDhZQd6EfXIbaE0vebyx/G?=
- =?us-ascii?Q?wrOt1YboyjYQ66eUh6yJcjJrE/i9T83n/TzFAfrtcwZA19D0EbczNwbfh7nE?=
- =?us-ascii?Q?arF/yxcXSkd1EFV70eU2PmQY58tTEI9pGf/k8GFRVsMjWTLkBAmG+ADvSIth?=
- =?us-ascii?Q?3jmKRo0TGrFI2AniVgReAjqC+7W7KdFhBrh7b1urFF/lztpyH0FVjm16mSdJ?=
- =?us-ascii?Q?igxjKf9h0tl8Kcbkiv5elRojMzXNROIjnOqEd0e6obOIxyOZ2XPzedFpDUlj?=
- =?us-ascii?Q?662/prt1TrVCDzyah87uST926QCwH2r8zQ6ceoPwBSGVl0lC/QQHepEZyfPm?=
- =?us-ascii?Q?wnpHrG2VqYu9tJJUoMmZB9LrnnSEPhc/5ZaA8gvnPe4h3LH+6cMnIR7ctrK0?=
- =?us-ascii?Q?lkyC1594XneZfZ6EL2tbBW27Bhlq9ZmGuUoyDzDU+9yAkpgt2SgTUJh7EqtP?=
- =?us-ascii?Q?Mfgq9Ha00LfA/RnOenxt+DFHzlsQNQfG9aMfZu6hf0N9/YAvNoacTmQEfMBn?=
- =?us-ascii?Q?US9q3kqL0iW0mb/53euYCqHi52+glg/VJMIx1n3fNiwqKbK7SaKySfbkqFnV?=
- =?us-ascii?Q?diXYEP8UTGHEMASzQsa7S0DN2lGEcegcXpp+tNSPCla1hAPeCBGQjRcbYs8i?=
- =?us-ascii?Q?pr7LE0jYHn5rExwEUUyLxCvF4uFa0ULfPmwCBWHJOzrvXGQQjZHwHck8YOGB?=
- =?us-ascii?Q?cnbavGACSSfVQRLwRs7fkffdIF7iJ9fVpf+rTQd1EVCC5Rrgh6jegC9Jxpjj?=
- =?us-ascii?Q?iHwtMuEAHXGZhB3e+L0N6uxfGd0l2NZB9f2Vt+e7eHINn+782DcFPZplwKIH?=
- =?us-ascii?Q?RRlTIkoR4Npg+omVm7SGysoCkT0gTeNFsQHfE7sV1wtgQ2cKIYN+E8TgUhzb?=
- =?us-ascii?Q?ZKoNTIyogwysVKy7Dm44tvtXW3UwJ/OmpXfRL18yvdbKeFNVunIAYL7FMecG?=
- =?us-ascii?Q?r7kai2H3k70redTjGsL+Ke4VxhEjqaDXktZ/OUy+Z5RH/GXHjbLpmPVQgfr5?=
- =?us-ascii?Q?DOQzl5JWPZVL45lspw/gD3qe5/ElPGu6cSyfV1KfywrppaUI6lW5nKEZ9Mlc?=
- =?us-ascii?Q?PqpBkAZOu34V7sKvK5UryYYOnZ30gOXxSLzDxkjILIk4ASfYKDptheveTKnv?=
- =?us-ascii?Q?YB25aN6RfgBW4zfacsvos7QQEPeqEZOh0EV12nOqwbmWBJnEh5qn2ZeAul+d?=
- =?us-ascii?Q?K1KI9kC8HnzU+zACMk8JCdGay/BThsItOi+ezuOVEI3Q1reIqjyohfN/suXr?=
- =?us-ascii?Q?yowB/oNOGcFdZ0hCQuOIwOasYqQyUV99gpugFlMOKRne9zufKcGQcJVqsXGD?=
- =?us-ascii?Q?9ObI9xGvTo4vy469913DdU5kFP5RrisAysrQ2bYDCMb/CdvML0AXuKw3/eau?=
- =?us-ascii?Q?Mk2/wWiTEGMRUydEyQp3PwvAL5dipXQMRWwDlCNX0iGd3Q63YySYH2aswrh5?=
- =?us-ascii?Q?phAccJ7sJpguzcKIgBtfeIXLMHdc9rCdwI8cz+wWcKlU7t3U3pqRkzuW98Uj?=
- =?us-ascii?Q?ePnL1klGBbO40isZMLCEzoNW9fYrrmk7VV0EsCGNad6a8JvaGxNXhL5gGn3G?=
- =?us-ascii?Q?uEs3XCkuKpL/iRxj/zOu1zsi1m3KEHCOPKXjdzqC?=
+	=?utf-8?B?RzBUOVBtTlI4RlliUkU4cDREa2trcE1YTkNSMmhWK3oybXNoWEZzaExSMFcr?=
+ =?utf-8?B?QjlvcWJBMWN6b3hYbkNZYU1tbVAzUlBXckVYT3cyNVNqUzU1VmQrKzU0MzNN?=
+ =?utf-8?B?QlBGYk5PWTFyRUtMWnJuWVFhc0I0ZDhQUXVQcFR0NWRXK25TOHVaMEdNcFdm?=
+ =?utf-8?B?dGhxYkZxOE9hcEZIUFgvZ3U4QmdmQmdGVHhXZU1rdGpzY21mUjcxNndlL2d2?=
+ =?utf-8?B?RUY3c0NkNVF5VStOYkxFazh3emhacTdEN3pod3FpdFN4M2ZRUWVzc2crQ2tv?=
+ =?utf-8?B?NklaejlITFBPOTJtd0dkOGZGdFZITHBsL0E5VXpaVjJkV1FXdkFGaFQxVjdt?=
+ =?utf-8?B?d082U090aFRTakx0UFA0aWUxMnR3MVIwUVJOMXpCU2w0dWNIZWZPdEFPdC9U?=
+ =?utf-8?B?S1lVc3E4aENQeUIyVjg2YXBMM0JSekRUdHh6bDNIbUxiY3Q5a295WnZrSitY?=
+ =?utf-8?B?QVRWQjgzQkNjT2d0S2ladEZhOUxTaDJicEg4ZGcxMkYyTWt0ZTVEQ2V0TWQ2?=
+ =?utf-8?B?dkdyS0lvYTlmZWVDRWxLUGJZS1FiaExMaFRaeHBIWmxHQTYxOHBhK20rak1s?=
+ =?utf-8?B?QWFTWktSL0ZlaFFpbFJkVjdzbUpLWDlsWGJnaTZodXZudTNFanFsS0NYRkRO?=
+ =?utf-8?B?ZkdyWm1HcjV5S3hxUHUxMllhcjNsS2FmWXBOVEZaVU1vOFhDY29KOFI0RXJ0?=
+ =?utf-8?B?c0RURkFVVWMxNVVTSkxINEFpcFJKN2QyNlBMOGhqVGM4M2hDb2krWTdzdW1V?=
+ =?utf-8?B?VVkyQzJ5SjBpd01QZmlhdnlNNU45ZlM4WlZiNk1kcmhQOGplZFVKeFcvVnBp?=
+ =?utf-8?B?bTVlcUdpSnJ0emhaVkcxNDdzeDVnbUNxSG81UjM5WCtYei9TL2xGZ3RjamFS?=
+ =?utf-8?B?R0VIRURDZ0l3S2dXZVJmVk91R3VzSk5YaFZrbk1lbFVjYlJob2tpT0gzSjFv?=
+ =?utf-8?B?M2RnVXdSNHZIdEdJc25tVE01Y0ZlTTBWTE8rbzBwUk9QbWFDNmdzUklKSCta?=
+ =?utf-8?B?bnMydGllZ0pVdTBMZFBzWHpXc2l3UmkvZE0vd00wd3pMKzJNY255bXp3Zklo?=
+ =?utf-8?B?MVp3SHRubnNQSnJTcHpWM1hHSkg1bEpRRW04K21FR01ERnpUOENiNTB2SGpi?=
+ =?utf-8?B?Z1ZTS1M5YjIzVklVdXlzaFpvcjNBbmJNd0hKamxnY2hlc3YvL0JHY3Y4S1lD?=
+ =?utf-8?B?aXhGZEVKQTZRQUVuUTN0MGR4cExpdXYwWk9HdnZPZUF5THk5a1VKeHI4Snov?=
+ =?utf-8?B?eGJUejgyU240MnFEUm9TTCtpWUJoc1MwbzV5SGlseENabnNTdUIrQ3FjSkZp?=
+ =?utf-8?B?YWExdFlBamszWWJhWXZWeDhhditHM1B3OXJ2L0wyREs5M0pLcVZhdFh1NXda?=
+ =?utf-8?B?NHdhNjdnRTRsUVEzNkd3ZEdOOGlQdFMyOHBoNzA3WHNCM2YyM2ZOVFdqYll4?=
+ =?utf-8?B?VlFUb0w0c2MvQjZGOCs5Y01DYkkrUDBpaUQwTVpyZEZFVHRaeVF2QmpkdWNU?=
+ =?utf-8?B?ckJLNk4wUGZoN1lGL04zM0g0TDYyRFNsS2pOY2x1UEpOQ2xsZ0oxd052RlZO?=
+ =?utf-8?B?OEtqakcwSWhHSGwyd1lsQUtKRFYrT2t6VFkrb01GVFVqalZNNnJ5U0tJdjNG?=
+ =?utf-8?B?OU5Wb0xaV3JkMFp6NUQ2a1BrbVczMFdmeERRMHBrNGVwN282dlhpMnJNYVBn?=
+ =?utf-8?B?eWtwZFVmcUhIRDhaS1J3QmFVS2JIamoyeTJLaGVvL21FK3VGQk94enRMbTFu?=
+ =?utf-8?B?K3J1R2VlL0ZuQ2R2em9iazdsTTdBSHh6a2RvdHE4dm9Td2Mra2RqOTQ1TU1J?=
+ =?utf-8?B?bFlJT3RDYzlmNlh3dnJkZUtQcmlNRzNPSTdLRVpvOUtSK2tPT0ptWFA5eXZZ?=
+ =?utf-8?B?aEdKVXRPN0JVVWIyOVZiYjNqNHhxalJUYTE1NnlqYURSdmxJS0NvcU14anFX?=
+ =?utf-8?B?ZTVWalBMdjlGNXhDMHlYbHhkVGV4M1hUNnV5YWVVS3dvWGx4bXlhWDF4WW1L?=
+ =?utf-8?B?OXg4N05ETlJ1TVdjbkNuRTJYTHVpQmtsZktZajZLdlIxc0pNYTNhdG1VYUdW?=
+ =?utf-8?B?d3hsSTB6REZCRmNLVVRpMXYzVUhkZjJpY3pVVTRLNWthMmZianNScjBibWtn?=
+ =?utf-8?Q?0+sJFFvizIvFw564+4BJD9P4K?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 73c2a603-728f-4160-675f-08dc3163813c
+X-MS-Exchange-CrossTenant-Network-Message-Id: 55080c36-cc7a-4038-c3fc-08dc3163cdd2
 X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2024 15:57:42.0299
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2024 15:59:50.5545
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: E8NpVxe/+TiUjGR6Xt+LW6x8frIdrVN6l8c0ntuq/CtSsqNBfzmzHjBIN8ediIrvLsxz3k+bxZEpcEEQZ1X8xA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3PR04MB7369
+X-MS-Exchange-CrossTenant-UserPrincipalName: v196wIL0kct3kdHDxeRsSgysEsEwXVw3I/HajQN2fKOPPbyzHengqvckbJVGQ5kQA7i0LeTvxAlbQKttFw4fIg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8627
 
-From: Han Xu <han.xu@nxp.com>
+Fix below sparse warnings.
 
-Using dma_pool to manage dma descriptor memory.
+drivers/dma/fsl-qdma.c:645:50: sparse: warning: incorrect type in argument 2 (different address spaces)
+drivers/dma/fsl-qdma.c:645:50: sparse:    expected void [noderef] __iomem *addr
+drivers/dma/fsl-qdma.c:645:50: sparse:    got void
 
-Signed-off-by: Han Xu <han.xu@nxp.com>
+drivers/dma/fsl-qdma.c:387:15: sparse: sparse: restricted __le32 degrades to integer
+drivers/dma/fsl-qdma.c:390:19: sparse:     expected restricted __le64 [usertype] data
+drivers/dma/fsl-qdma.c:392:13: sparse:     expected unsigned int [assigned] [usertype] cmd
+
+QDMA decriptor have below 3 kind formats. (little endian)
+
+Compound Command Descriptor Format
+  ┌──────┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┐
+  │Offset│3│3│2│2│2│2│2│2│2│2│2│2│1│1│1│1│1│1│1│1│1│1│ │ │ │ │ │ │ │ │ │ │
+  │      │1│0│9│8│7│6│5│4│3│2│1│0│9│8│7│6│5│4│3│2│1│0│9│8│7│6│5│4│3│2│1│0│
+  ├──────┼─┴─┼─┴─┴─┼─┴─┴─┼─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┼─┴─┴─┴─┴─┴─┴─┴─┤
+  │ 0x0C │DD │  -  │QUEUE│             -                 │      ADDR     │
+  ├──────┼───┴─────┴─────┴───────────────────────────────┴───────────────┤
+  │ 0x08 │                       ADDR                                    │
+  ├──────┼─────┬─────────────────┬───────────────────────────────────────┤
+  │ 0x04 │ FMT │    OFFSET       │                   -                   │
+  ├──────┼─┬─┬─┴─────────────────┴───────────────────────┬───────────────┤
+  │      │ │S│                                           │               │
+  │ 0x00 │-│E│                   -                       │    STATUS     │
+  │      │ │R│                                           │               │
+  └──────┴─┴─┴───────────────────────────────────────────┴───────────────┘
+
+Compound S/G Table Entry Format
+ ┌──────┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┐
+ │Offset│3│3│2│2│2│2│2│2│2│2│2│2│1│1│1│1│1│1│1│1│1│1│ │ │ │ │ │ │ │ │ │ │
+ │      │1│0│9│8│7│6│5│4│3│2│1│0│9│8│7│6│5│4│3│2│1│0│9│8│7│6│5│4│3│2│1│0│
+ ├──────┼─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┼─┴─┴─┴─┴─┴─┴─┴─┤
+ │ 0x0C │                      -                        │    ADDR       │
+ ├──────┼───────────────────────────────────────────────┴───────────────┤
+ │ 0x08 │                          ADDR                                 │
+ ├──────┼─┬─┬───────────────────────────────────────────────────────────┤
+ │ 0x04 │E│F│                    LENGTH                                 │
+ ├──────┼─┴─┴─────────────────────────────────┬─────────────────────────┤
+ │ 0x00 │              -                      │        OFFSET           │
+ └──────┴─────────────────────────────────────┴─────────────────────────┘
+
+Source/Destination Descriptor Format
+  ┌──────┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┐
+  │Offset│3│3│2│2│2│2│2│2│2│2│2│2│1│1│1│1│1│1│1│1│1│1│ │ │ │ │ │ │ │ │ │ │
+  │      │1│0│9│8│7│6│5│4│3│2│1│0│9│8│7│6│5│4│3│2│1│0│9│8│7│6│5│4│3│2│1│0│
+  ├──────┼─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┤
+  │ 0x0C │                            CMD                                │
+  ├──────┼───────────────────────────────────────────────────────────────┤
+  │ 0x08 │                             -                                 │
+  ├──────┼───────────────┬───────────────────────┬───────────────────────┤
+  │ 0x04 │       -       │         S[D]SS        │        S[D]SD         │
+  ├──────┼───────────────┴───────────────────────┴───────────────────────┤
+  │ 0x00 │                             -                                 │
+  └──────┴───────────────────────────────────────────────────────────────┘
+
+Previous code use 64bit 'data' map to 0x8 and 0xC. In little endian system
+CMD is high part of 64bit 'data'. It is correct by left shift 32. But in
+big endian system, shift left 32 will write to 0x8 position. Sparse detect
+this problem.
+
+Add below field ot match 'Source/Destination Descriptor Format'.
+struct {
+	__le32 __reserved2;
+	__le32 cmd;
+} __packed;
+
+Using ddf(sdf)->cmd save to correct posistion regardless endian.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202402081929.mggOTHaZ-lkp@intel.com/
 Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
- drivers/dma/mxs-dma.c | 24 +++++++++++++++++-------
- 1 file changed, 17 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/dma/mxs-dma.c b/drivers/dma/mxs-dma.c
-index cfb9962417ef6..a60bf7a22492d 100644
---- a/drivers/dma/mxs-dma.c
-+++ b/drivers/dma/mxs-dma.c
-@@ -24,6 +24,7 @@
- #include <linux/of_dma.h>
- #include <linux/list.h>
- #include <linux/dma/mxs-dma.h>
-+#include <linux/dmapool.h>
+Notes:
+    Change from v1 to v2
+    - update commit message to show why add 'cmd'
+    
+    fsl-edma-common.c's build warning should not cause by this driver. which is
+    difference drivers. This driver will not use any code related with
+    fsl-edma-common.c.
+
+ drivers/dma/fsl-qdma.c | 21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/dma/fsl-qdma.c b/drivers/dma/fsl-qdma.c
+index 1e3bf6f30f784..5005e138fc239 100644
+--- a/drivers/dma/fsl-qdma.c
++++ b/drivers/dma/fsl-qdma.c
+@@ -161,6 +161,10 @@ struct fsl_qdma_format {
+ 			u8 __reserved1[2];
+ 			u8 cfg8b_w1;
+ 		} __packed;
++		struct {
++			__le32 __reserved2;
++			__le32 cmd;
++		} __packed;
+ 		__le64 data;
+ 	};
+ } __packed;
+@@ -355,7 +359,6 @@ static void fsl_qdma_free_chan_resources(struct dma_chan *chan)
+ static void fsl_qdma_comp_fill_memcpy(struct fsl_qdma_comp *fsl_comp,
+ 				      dma_addr_t dst, dma_addr_t src, u32 len)
+ {
+-	u32 cmd;
+ 	struct fsl_qdma_format *sdf, *ddf;
+ 	struct fsl_qdma_format *ccdf, *csgf_desc, *csgf_src, *csgf_dest;
  
- #include <asm/irq.h>
- 
-@@ -104,6 +105,7 @@ struct mxs_dma_ccw {
- 
- #define CCW_BLOCK_SIZE	(4 * PAGE_SIZE)
- #define NUM_CCW	(int)(CCW_BLOCK_SIZE / sizeof(struct mxs_dma_ccw))
-+#define CCW_BLOCK_ALGIN	32
- 
- struct mxs_dma_chan {
- 	struct mxs_dma_engine		*mxs_dma;
-@@ -117,6 +119,7 @@ struct mxs_dma_chan {
- 	enum dma_status			status;
- 	unsigned int			flags;
- 	bool				reset;
-+	struct dma_pool			*ccw_pool;
- #define MXS_DMA_SG_LOOP			(1 << 0)
- #define MXS_DMA_USE_SEMAPHORE		(1 << 1)
- };
-@@ -398,9 +401,8 @@ static int mxs_dma_alloc_chan_resources(struct dma_chan *chan)
- 	struct mxs_dma_engine *mxs_dma = mxs_chan->mxs_dma;
- 	int ret;
- 
--	mxs_chan->ccw = dma_alloc_coherent(mxs_dma->dma_device.dev,
--					   CCW_BLOCK_SIZE,
--					   &mxs_chan->ccw_phys, GFP_KERNEL);
-+	mxs_chan->ccw = dma_pool_zalloc(mxs_chan->ccw_pool, GFP_ATOMIC, &mxs_chan->ccw_phys);
+@@ -384,15 +387,11 @@ static void fsl_qdma_comp_fill_memcpy(struct fsl_qdma_comp *fsl_comp,
+ 	/* This entry is the last entry. */
+ 	qdma_csgf_set_f(csgf_dest, len);
+ 	/* Descriptor Buffer */
+-	cmd = cpu_to_le32(FSL_QDMA_CMD_RWTTYPE <<
+-			  FSL_QDMA_CMD_RWTTYPE_OFFSET) |
+-			  FSL_QDMA_CMD_PF;
+-	sdf->data = QDMA_SDDF_CMD(cmd);
+-
+-	cmd = cpu_to_le32(FSL_QDMA_CMD_RWTTYPE <<
+-			  FSL_QDMA_CMD_RWTTYPE_OFFSET);
+-	cmd |= cpu_to_le32(FSL_QDMA_CMD_LWC << FSL_QDMA_CMD_LWC_OFFSET);
+-	ddf->data = QDMA_SDDF_CMD(cmd);
++	sdf->cmd = cpu_to_le32((FSL_QDMA_CMD_RWTTYPE << FSL_QDMA_CMD_RWTTYPE_OFFSET) |
++			       FSL_QDMA_CMD_PF);
 +
- 	if (!mxs_chan->ccw) {
- 		ret = -ENOMEM;
- 		goto err_alloc;
-@@ -428,8 +430,7 @@ static int mxs_dma_alloc_chan_resources(struct dma_chan *chan)
- err_clk:
- 	free_irq(mxs_chan->chan_irq, mxs_dma);
- err_irq:
--	dma_free_coherent(mxs_dma->dma_device.dev, CCW_BLOCK_SIZE,
--			mxs_chan->ccw, mxs_chan->ccw_phys);
-+	dma_pool_free(mxs_chan->ccw_pool, mxs_chan->ccw, mxs_chan->ccw_phys);
- err_alloc:
- 	return ret;
++	ddf->cmd = cpu_to_le32((FSL_QDMA_CMD_RWTTYPE << FSL_QDMA_CMD_RWTTYPE_OFFSET) |
++			       (FSL_QDMA_CMD_LWC << FSL_QDMA_CMD_LWC_OFFSET));
  }
-@@ -443,8 +444,7 @@ static void mxs_dma_free_chan_resources(struct dma_chan *chan)
  
- 	free_irq(mxs_chan->chan_irq, mxs_dma);
+ /*
+@@ -626,7 +625,7 @@ static int fsl_qdma_halt(struct fsl_qdma_engine *fsl_qdma)
  
--	dma_free_coherent(mxs_dma->dma_device.dev, CCW_BLOCK_SIZE,
--			mxs_chan->ccw, mxs_chan->ccw_phys);
-+	dma_pool_free(mxs_chan->ccw_pool, mxs_chan->ccw, mxs_chan->ccw_phys);
- 
- 	clk_disable_unprepare(mxs_dma->clk);
- }
-@@ -745,6 +745,7 @@ static int mxs_dma_probe(struct platform_device *pdev)
- 	struct device_node *np = pdev->dev.of_node;
- 	const struct mxs_dma_type *dma_type;
- 	struct mxs_dma_engine *mxs_dma;
-+	struct dma_pool *ccw_pool;
- 	int ret, i;
- 
- 	mxs_dma = devm_kzalloc(&pdev->dev, sizeof(*mxs_dma), GFP_KERNEL);
-@@ -797,6 +798,15 @@ static int mxs_dma_probe(struct platform_device *pdev)
- 	mxs_dma->pdev = pdev;
- 	mxs_dma->dma_device.dev = &pdev->dev;
- 
-+	ccw_pool = dma_pool_create("ccw_pool", mxs_dma->dma_device.dev, CCW_BLOCK_SIZE,
-+				   CCW_BLOCK_ALGIN, 0);
-+
-+	for (i = 0; i < MXS_DMA_CHANNELS; i++) {
-+		struct mxs_dma_chan *mxs_chan = &mxs_dma->mxs_chans[i];
-+
-+		mxs_chan->ccw_pool = ccw_pool;
-+	}
-+
- 	/* mxs_dma gets 65535 bytes maximum sg size */
- 	dma_set_max_seg_size(mxs_dma->dma_device.dev, MAX_XFER_BYTES);
- 
+ static int
+ fsl_qdma_queue_transfer_complete(struct fsl_qdma_engine *fsl_qdma,
+-				 void *block,
++				 __iomem void *block,
+ 				 int id)
+ {
+ 	bool duplicate;
 -- 
 2.34.1
 

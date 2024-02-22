@@ -1,110 +1,116 @@
-Return-Path: <dmaengine+bounces-1068-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1069-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9CB9385FA6E
-	for <lists+dmaengine@lfdr.de>; Thu, 22 Feb 2024 14:56:32 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 826FD85FA8E
+	for <lists+dmaengine@lfdr.de>; Thu, 22 Feb 2024 14:59:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3C94F1F21C83
-	for <lists+dmaengine@lfdr.de>; Thu, 22 Feb 2024 13:56:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3BF89282492
+	for <lists+dmaengine@lfdr.de>; Thu, 22 Feb 2024 13:59:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 431A6134CDC;
-	Thu, 22 Feb 2024 13:56:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDE49137C2B;
+	Thu, 22 Feb 2024 13:58:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fgED2uSd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R/XGtNPC"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C5D41332B1;
-	Thu, 22 Feb 2024 13:56:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF09135A6F;
+	Thu, 22 Feb 2024 13:58:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708610188; cv=none; b=ZBxJRX7hk5imfW4VO2a4AEhtXrRiUvhfxFwOJiaRznofjd7KXhrmrabk/um16t5xrpW+4JVuEFmABpeQlD/lWsCnQkHg/MZXEMetSkExmPJ34tphXq4hq12BfBhk+fSbcy56DxqBSYqLKfwcpsc19ukKzN9jHFh/odOTkMZww2A=
+	t=1708610334; cv=none; b=ii1mCsGtK9E0OwbvQ3aMW4tw2BsVxV2O49iukb1Phen5kDPI0onDte08g0S+exlFKqntF3ga9xR8OLajMo1rTiLzRSKV7rHd/PfiHORSnHNarDfBvOGwtjAq0XrSGMsGhuCeNDtYtvxxAjh+ThZPNr/mS83Dy8RmrLAMAmWXEeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708610188; c=relaxed/simple;
-	bh=MqoH/IOMmub+1LbZRsNMRZZ4RRoQgIMbnId83nDHWHU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eruveQ22c/S1SugcOO/oFMiCQbnw0XGIhRijT9GA96p6ty97XzR0TfJ8NNTihcdZJ1cEpYGXnELoVpBXIlW9msgF2ct6murzjtxf/Ish06coka7kwwHTIJse+NEws/+dyN4h9lHMFlkmwNN8RRcJ1cDHzkH04gZGgoQbobjEhXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fgED2uSd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27054C433C7;
-	Thu, 22 Feb 2024 13:56:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708610187;
-	bh=MqoH/IOMmub+1LbZRsNMRZZ4RRoQgIMbnId83nDHWHU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fgED2uSdV26bmPjcjKgSvl5QoBplk92aKt2fml1vwu6eyULr31kq1flV8HdEnXHiZ
-	 FqmiL3243+Cvi/pepo5M7OMjS+cFk9TSQuj0YF5sry40RskU7G5BytN7NTwvPjWdGR
-	 RjGgKxy9U/tmjE29F0l9AyG8ZjxUUWt/ZCrNP+lVPNSqlyNgBoBY/ztfNikMQ4aYUQ
-	 YPtrCQ4x3cJvlK6Jd2hm7t8ETlERCYLHulHJDEavef/dCaA0feyGwUkAjoZE//Raxt
-	 E5byi1qXLbiVoVQAaGSIe9OMCoWp6vsCblZhQkqYhJJ4SjAx3bzmZU/4IfIaI5YYKt
-	 OtzTMGBv58jiA==
-Date: Thu, 22 Feb 2024 19:26:23 +0530
-From: Vinod Koul <vkoul@kernel.org>
-To: Tadeusz Struk <tstruk@gmail.com>
-Cc: Raju Rangoju <Raju.Rangoju@amd.com>,
-	Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Sanjay R Mehta <sanju.mehta@amd.com>,
-	Eric Pilmore <epilmore@gigaio.com>, dmaengine@vger.kernel.org,
-	Tadeusz Struk <tstruk@gigaio.com>, stable@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: ptdma: use consistent DMA masks
-Message-ID: <ZddShyFNaozKwB66@matsya>
-References: <6a447bd4-f6f1-fc1f-9a0d-2810357fb1b5@amd.com>
- <20240219201039.40379-1-tstruk@gigaio.com>
+	s=arc-20240116; t=1708610334; c=relaxed/simple;
+	bh=BPj7ZTa0ybr98UPnmaRLp0/4ee86tORekl3Li+MJZ0A=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=BUbKaEjVYnLFcrZ/ly2ISLhfQungEHgkZGPH4CiUsWEXn5qXqV4vqR7sfLEGLlK2Joe0y2MgzSlWwGxm1ss9/kBIMbCAFQ4Sb8/7VmTSXiwtU3IeH8jPYowSpY4h4IFRNeu6kZSabgQMvhb9pcqdAKJHDOQkPaJJ0KmIPoIovJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R/XGtNPC; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5645efb2942so1522584a12.1;
+        Thu, 22 Feb 2024 05:58:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708610331; x=1709215131; darn=vger.kernel.org;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wsFRRGkWpORaXCmeXzSxC+JNHyxXCgQHjaZ6TzY3sLk=;
+        b=R/XGtNPCZln/c+4ZCHVeaZ4DD+R1bYGfrmp0e5lJstvDmlfIYKLT66SN3URkCHso8e
+         yJZw08H6tvFIYiI7ImgBWinfTDjZ0ZjP7E0xayb7wdKRm68OvzdNXLD6aE6fI9N4r5CE
+         qhN2mxONVR30/iIUuWrgM4Tj5sQjA3G81umyWAkyz3+qvlvYW11O6IaYhPFZGJxCuZZB
+         4CfeKakatucNFmlUYhjC3OLddWTDeYj9j3xoPc6d4dKyDuiPN9aOftCN99P2q84Hj+NI
+         ZymJe7uyXH2uCPrNJqUfkK0Odz3VS3PLRwcgtadSbNvEo2mmeGupqGiuoBR102AsoNFP
+         tqKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708610331; x=1709215131;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wsFRRGkWpORaXCmeXzSxC+JNHyxXCgQHjaZ6TzY3sLk=;
+        b=gZLcuZqN86OyNOyUGYe75goJeai6LkZdVJgbWjY+Xj+Z9BcOYJhhGPC5clPVaSg/cj
+         P0qkStfSxuXJwLxIsmUBax7ZlkLoStgGJme+S4nD4xYzfj4VXvaU7wi0Q4yro77SqT4M
+         SloOFWQB51v9DWj596XlT0AvTgVrGWelEHsVGLA5l3Rjnkf6oM98ZQM8GxxeZqVXoVMH
+         QtnYEV9tEoR66wdRtRqJKC6juv5+Y3i63o6ZkV+yLCqXJAbjXvSqWaL4YctVN3n4Y8dv
+         bS2YehTWqCO3C+3uwUdoOnQ28WWoVH22E+KefPtgl+cd0/jIiNepk+CdapL1syUATJ3x
+         cDoA==
+X-Forwarded-Encrypted: i=1; AJvYcCVF+sLLeX8pnNFgqxj1M3ErvJoI+ACI9TWOO7UuAAtmTVPJcEV06RV4ZkHvpVWh/FjH/cWLC/WVvbhtMJ1OsS5drwuSaEiWe1qFz0cQLMbhvXMETRQYUvokNaExSjPPHMT+diKw8te3
+X-Gm-Message-State: AOJu0YxC6WfRbtwbaqc7z5jT/5G/KJ8OWk47r2vyh0AW0HhqgAvRdikB
+	KwBwRTdTQ/R4DI9v30Z04c7/JzcO8+OIQlAonLTM8LHKuuwst3+P
+X-Google-Smtp-Source: AGHT+IFIlQeNdFyMQvX3AKp0V/AMXaTukTRqPqjOa9oGpQBWhBKGNXokCjDwSjAF5L3jJ+ukTvxjOg==
+X-Received: by 2002:a17:907:72c1:b0:a3f:4fd7:3cef with SMTP id du1-20020a17090772c100b00a3f4fd73cefmr2878725ejc.2.1708610330935;
+        Thu, 22 Feb 2024 05:58:50 -0800 (PST)
+Received: from felia.fritz.box ([2a02:810d:7e40:14b0:e4dd:831d:c00a:fc45])
+        by smtp.gmail.com with ESMTPSA id m8-20020a1709060d8800b00a3eeb10acb4sm2805317eji.185.2024.02.22.05.58.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Feb 2024 05:58:50 -0800 (PST)
+From: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
+	Vinod Koul <vkoul@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	dmaengine@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH] MAINTAINERS: adjust file entry in MEDIATEK DMA DRIVER
+Date: Thu, 22 Feb 2024 14:58:47 +0100
+Message-Id: <20240222135847.5160-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240219201039.40379-1-tstruk@gigaio.com>
 
-On 19-02-24, 21:10, Tadeusz Struk wrote:
-> The PTDMA driver sets DMA masks in two different places for the same
-> device inconsistently. First call is in pt_pci_probe(), where it uses
-> 48bit mask. The second call is in pt_dmaengine_register(), where it
-> uses a 64bit mask. Using 64bit dma mask causes IO_PAGE_FAULT errors
-> on DMA transfers between main memory and other devices.
-> Without the extra call it works fine. Additionally the second call
-> doesn't check the return value so it can silently fail.
-> Remove the superfluous dma_set_mask() call and only use 48bit mask.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: b0b4a6b10577 ("dmaengine: ptdma: register PTDMA controller as a DMA resource")
-> 
-No empty line here please
+Commit fa3400504824 ("dt-bindings: dma: convert MediaTek High-Speed
+controller to the json-schema")  converts mtk-hsdma.txt to
+mediatek,mt7622-hsdma.yaml, but misses to adjust its reference in
+MAINTAINERS.
 
-> Signed-off-by: Tadeusz Struk <tstruk@gigaio.com>
+Hence, ./scripts/get_maintainer.pl --self-test=patterns complains about a
+broken reference.
 
-I cant pick this, it was sent by email which this patch was not
-signed-off by, please either resend from same id as sob or sign with
-both
+Repair this file reference in MEDIATEK DMA DRIVER.
 
-> ---
->  drivers/dma/ptdma/ptdma-dmaengine.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/drivers/dma/ptdma/ptdma-dmaengine.c b/drivers/dma/ptdma/ptdma-dmaengine.c
-> index 1aa65e5de0f3..f79240734807 100644
-> --- a/drivers/dma/ptdma/ptdma-dmaengine.c
-> +++ b/drivers/dma/ptdma/ptdma-dmaengine.c
-> @@ -385,8 +385,6 @@ int pt_dmaengine_register(struct pt_device *pt)
->  	chan->vc.desc_free = pt_do_cleanup;
->  	vchan_init(&chan->vc, dma_dev);
->  
-> -	dma_set_mask_and_coherent(pt->dev, DMA_BIT_MASK(64));
-> -
->  	ret = dma_async_device_register(dma_dev);
->  	if (ret)
->  		goto err_reg;
-> -- 
-> 2.43.2
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e27cc69a867c..28b2013031bd 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13743,7 +13743,7 @@ L:	dmaengine@vger.kernel.org
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ L:	linux-mediatek@lists.infradead.org (moderated for non-subscribers)
+ S:	Maintained
+-F:	Documentation/devicetree/bindings/dma/mtk-*
++F:	Documentation/devicetree/bindings/dma/mediatek,*
+ F:	drivers/dma/mediatek/
+ 
+ MEDIATEK ETHERNET DRIVER
 -- 
-~Vinod
+2.17.1
+
 

@@ -1,116 +1,211 @@
-Return-Path: <dmaengine+bounces-1069-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1070-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 826FD85FA8E
-	for <lists+dmaengine@lfdr.de>; Thu, 22 Feb 2024 14:59:10 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C5FA85FA99
+	for <lists+dmaengine@lfdr.de>; Thu, 22 Feb 2024 15:01:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3BF89282492
-	for <lists+dmaengine@lfdr.de>; Thu, 22 Feb 2024 13:59:09 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D6730B257B5
+	for <lists+dmaengine@lfdr.de>; Thu, 22 Feb 2024 14:01:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDE49137C2B;
-	Thu, 22 Feb 2024 13:58:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B2EB135410;
+	Thu, 22 Feb 2024 14:01:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R/XGtNPC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p0XnSrP1"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF09135A6F;
-	Thu, 22 Feb 2024 13:58:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A7D8130AD2;
+	Thu, 22 Feb 2024 14:01:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708610334; cv=none; b=ii1mCsGtK9E0OwbvQ3aMW4tw2BsVxV2O49iukb1Phen5kDPI0onDte08g0S+exlFKqntF3ga9xR8OLajMo1rTiLzRSKV7rHd/PfiHORSnHNarDfBvOGwtjAq0XrSGMsGhuCeNDtYtvxxAjh+ThZPNr/mS83Dy8RmrLAMAmWXEeA=
+	t=1708610464; cv=none; b=JX5XWo03PcoJyAYBTyPtMu5XXQj3DQUhfqqnYYs6Iapx8S7OGHOk/Oe3Fqa9e47ZxJYIp29v8/6pDiIjpLeayLuiao9Gun1ODfhm7EzCvN6FdVob7aKTVeb4lrxOe0LUuS57QlL8BFdbBNf6CQTnjci+BgVs3DrZHN/67sZDVLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708610334; c=relaxed/simple;
-	bh=BPj7ZTa0ybr98UPnmaRLp0/4ee86tORekl3Li+MJZ0A=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=BUbKaEjVYnLFcrZ/ly2ISLhfQungEHgkZGPH4CiUsWEXn5qXqV4vqR7sfLEGLlK2Joe0y2MgzSlWwGxm1ss9/kBIMbCAFQ4Sb8/7VmTSXiwtU3IeH8jPYowSpY4h4IFRNeu6kZSabgQMvhb9pcqdAKJHDOQkPaJJ0KmIPoIovJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R/XGtNPC; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5645efb2942so1522584a12.1;
-        Thu, 22 Feb 2024 05:58:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708610331; x=1709215131; darn=vger.kernel.org;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wsFRRGkWpORaXCmeXzSxC+JNHyxXCgQHjaZ6TzY3sLk=;
-        b=R/XGtNPCZln/c+4ZCHVeaZ4DD+R1bYGfrmp0e5lJstvDmlfIYKLT66SN3URkCHso8e
-         yJZw08H6tvFIYiI7ImgBWinfTDjZ0ZjP7E0xayb7wdKRm68OvzdNXLD6aE6fI9N4r5CE
-         qhN2mxONVR30/iIUuWrgM4Tj5sQjA3G81umyWAkyz3+qvlvYW11O6IaYhPFZGJxCuZZB
-         4CfeKakatucNFmlUYhjC3OLddWTDeYj9j3xoPc6d4dKyDuiPN9aOftCN99P2q84Hj+NI
-         ZymJe7uyXH2uCPrNJqUfkK0Odz3VS3PLRwcgtadSbNvEo2mmeGupqGiuoBR102AsoNFP
-         tqKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708610331; x=1709215131;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wsFRRGkWpORaXCmeXzSxC+JNHyxXCgQHjaZ6TzY3sLk=;
-        b=gZLcuZqN86OyNOyUGYe75goJeai6LkZdVJgbWjY+Xj+Z9BcOYJhhGPC5clPVaSg/cj
-         P0qkStfSxuXJwLxIsmUBax7ZlkLoStgGJme+S4nD4xYzfj4VXvaU7wi0Q4yro77SqT4M
-         SloOFWQB51v9DWj596XlT0AvTgVrGWelEHsVGLA5l3Rjnkf6oM98ZQM8GxxeZqVXoVMH
-         QtnYEV9tEoR66wdRtRqJKC6juv5+Y3i63o6ZkV+yLCqXJAbjXvSqWaL4YctVN3n4Y8dv
-         bS2YehTWqCO3C+3uwUdoOnQ28WWoVH22E+KefPtgl+cd0/jIiNepk+CdapL1syUATJ3x
-         cDoA==
-X-Forwarded-Encrypted: i=1; AJvYcCVF+sLLeX8pnNFgqxj1M3ErvJoI+ACI9TWOO7UuAAtmTVPJcEV06RV4ZkHvpVWh/FjH/cWLC/WVvbhtMJ1OsS5drwuSaEiWe1qFz0cQLMbhvXMETRQYUvokNaExSjPPHMT+diKw8te3
-X-Gm-Message-State: AOJu0YxC6WfRbtwbaqc7z5jT/5G/KJ8OWk47r2vyh0AW0HhqgAvRdikB
-	KwBwRTdTQ/R4DI9v30Z04c7/JzcO8+OIQlAonLTM8LHKuuwst3+P
-X-Google-Smtp-Source: AGHT+IFIlQeNdFyMQvX3AKp0V/AMXaTukTRqPqjOa9oGpQBWhBKGNXokCjDwSjAF5L3jJ+ukTvxjOg==
-X-Received: by 2002:a17:907:72c1:b0:a3f:4fd7:3cef with SMTP id du1-20020a17090772c100b00a3f4fd73cefmr2878725ejc.2.1708610330935;
-        Thu, 22 Feb 2024 05:58:50 -0800 (PST)
-Received: from felia.fritz.box ([2a02:810d:7e40:14b0:e4dd:831d:c00a:fc45])
-        by smtp.gmail.com with ESMTPSA id m8-20020a1709060d8800b00a3eeb10acb4sm2805317eji.185.2024.02.22.05.58.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Feb 2024 05:58:50 -0800 (PST)
-From: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-	Vinod Koul <vkoul@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	dmaengine@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] MAINTAINERS: adjust file entry in MEDIATEK DMA DRIVER
-Date: Thu, 22 Feb 2024 14:58:47 +0100
-Message-Id: <20240222135847.5160-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+	s=arc-20240116; t=1708610464; c=relaxed/simple;
+	bh=fSetG6elC4kpGUF26Sm8cvkGBwCQN75G2SfsKotHPXY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JJr2VaIkHGDOAtsEMxtIS3NPHRJe4NWXUS6EBRGxOKz5ocbb+ZfOixAdsAkYCnZxTwYUYhuZazfthP9gTTiS5uVwINYwNcJnpCRhmwn/nxB60xMYWGpd0rl4x3Zzw6oQ8uU6hFe8CszGX9TnKOGSZrFr9/avvQlWzJB5tOccFto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p0XnSrP1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20F08C43394;
+	Thu, 22 Feb 2024 14:01:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708610463;
+	bh=fSetG6elC4kpGUF26Sm8cvkGBwCQN75G2SfsKotHPXY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=p0XnSrP1p41eJvsTuLVLWF3U172Yn44+9AWCLJyshiGIzDu3f4HbenetnbJ9qYlqN
+	 Cm8k3vM3W2zpUaYdkwanrZxskr5cHCpBN+RRNIfRfv4M3+qML31eu7lbTcS7YM3TIV
+	 gcza/0AMDg+C2B4c6Sj0LbPgxE8BQBrpLWwkcX5Ay6V96c4HDuOAhLVxwrYo7blybV
+	 uG+JT2ikmgzsqAMxA5Gq8YkDg7+0LJOC3CrE1aSD/yhQqzaZ527s/WyvjZavgn19Jh
+	 Pgn0eiyk1shaGPFGtubF841FexMLoSA8rrkGCK7e8yzEP9/eeVDpPetN49erR/5QxS
+	 tI2Og5OfRrI9w==
+Date: Thu, 22 Feb 2024 19:30:59 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
+Subject: Re: [PATCH v2 1/1] dmaengine: fsl-qdma: add __iomem and struct in
+ union to fix sparse warning
+Message-ID: <ZddTmwh82K6biJSx@matsya>
+References: <20240219155939.611237-1-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240219155939.611237-1-Frank.Li@nxp.com>
 
-Commit fa3400504824 ("dt-bindings: dma: convert MediaTek High-Speed
-controller to the json-schema")  converts mtk-hsdma.txt to
-mediatek,mt7622-hsdma.yaml, but misses to adjust its reference in
-MAINTAINERS.
+On 19-02-24, 10:59, Frank Li wrote:
+> Fix below sparse warnings.
 
-Hence, ./scripts/get_maintainer.pl --self-test=patterns complains about a
-broken reference.
+This does not apply for me, can you rebase
 
-Repair this file reference in MEDIATEK DMA DRIVER.
+> 
+> drivers/dma/fsl-qdma.c:645:50: sparse: warning: incorrect type in argument 2 (different address spaces)
+> drivers/dma/fsl-qdma.c:645:50: sparse:    expected void [noderef] __iomem *addr
+> drivers/dma/fsl-qdma.c:645:50: sparse:    got void
+> 
+> drivers/dma/fsl-qdma.c:387:15: sparse: sparse: restricted __le32 degrades to integer
+> drivers/dma/fsl-qdma.c:390:19: sparse:     expected restricted __le64 [usertype] data
+> drivers/dma/fsl-qdma.c:392:13: sparse:     expected unsigned int [assigned] [usertype] cmd
+> 
+> QDMA decriptor have below 3 kind formats. (little endian)
+> 
+> Compound Command Descriptor Format
+>   ┌──────┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┐
+>   │Offset│3│3│2│2│2│2│2│2│2│2│2│2│1│1│1│1│1│1│1│1│1│1│ │ │ │ │ │ │ │ │ │ │
+>   │      │1│0│9│8│7│6│5│4│3│2│1│0│9│8│7│6│5│4│3│2│1│0│9│8│7│6│5│4│3│2│1│0│
+>   ├──────┼─┴─┼─┴─┴─┼─┴─┴─┼─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┼─┴─┴─┴─┴─┴─┴─┴─┤
+>   │ 0x0C │DD │  -  │QUEUE│             -                 │      ADDR     │
+>   ├──────┼───┴─────┴─────┴───────────────────────────────┴───────────────┤
+>   │ 0x08 │                       ADDR                                    │
+>   ├──────┼─────┬─────────────────┬───────────────────────────────────────┤
+>   │ 0x04 │ FMT │    OFFSET       │                   -                   │
+>   ├──────┼─┬─┬─┴─────────────────┴───────────────────────┬───────────────┤
+>   │      │ │S│                                           │               │
+>   │ 0x00 │-│E│                   -                       │    STATUS     │
+>   │      │ │R│                                           │               │
+>   └──────┴─┴─┴───────────────────────────────────────────┴───────────────┘
+> 
+> Compound S/G Table Entry Format
+>  ┌──────┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┐
+>  │Offset│3│3│2│2│2│2│2│2│2│2│2│2│1│1│1│1│1│1│1│1│1│1│ │ │ │ │ │ │ │ │ │ │
+>  │      │1│0│9│8│7│6│5│4│3│2│1│0│9│8│7│6│5│4│3│2│1│0│9│8│7│6│5│4│3│2│1│0│
+>  ├──────┼─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┼─┴─┴─┴─┴─┴─┴─┴─┤
+>  │ 0x0C │                      -                        │    ADDR       │
+>  ├──────┼───────────────────────────────────────────────┴───────────────┤
+>  │ 0x08 │                          ADDR                                 │
+>  ├──────┼─┬─┬───────────────────────────────────────────────────────────┤
+>  │ 0x04 │E│F│                    LENGTH                                 │
+>  ├──────┼─┴─┴─────────────────────────────────┬─────────────────────────┤
+>  │ 0x00 │              -                      │        OFFSET           │
+>  └──────┴─────────────────────────────────────┴─────────────────────────┘
+> 
+> Source/Destination Descriptor Format
+>   ┌──────┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┐
+>   │Offset│3│3│2│2│2│2│2│2│2│2│2│2│1│1│1│1│1│1│1│1│1│1│ │ │ │ │ │ │ │ │ │ │
+>   │      │1│0│9│8│7│6│5│4│3│2│1│0│9│8│7│6│5│4│3│2│1│0│9│8│7│6│5│4│3│2│1│0│
+>   ├──────┼─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┤
+>   │ 0x0C │                            CMD                                │
+>   ├──────┼───────────────────────────────────────────────────────────────┤
+>   │ 0x08 │                             -                                 │
+>   ├──────┼───────────────┬───────────────────────┬───────────────────────┤
+>   │ 0x04 │       -       │         S[D]SS        │        S[D]SD         │
+>   ├──────┼───────────────┴───────────────────────┴───────────────────────┤
+>   │ 0x00 │                             -                                 │
+>   └──────┴───────────────────────────────────────────────────────────────┘
+> 
+> Previous code use 64bit 'data' map to 0x8 and 0xC. In little endian system
+> CMD is high part of 64bit 'data'. It is correct by left shift 32. But in
+> big endian system, shift left 32 will write to 0x8 position. Sparse detect
+> this problem.
+> 
+> Add below field ot match 'Source/Destination Descriptor Format'.
+> struct {
+> 	__le32 __reserved2;
+> 	__le32 cmd;
+> } __packed;
+> 
+> Using ddf(sdf)->cmd save to correct posistion regardless endian.
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202402081929.mggOTHaZ-lkp@intel.com/
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+> 
+> Notes:
+>     Change from v1 to v2
+>     - update commit message to show why add 'cmd'
+>     
+>     fsl-edma-common.c's build warning should not cause by this driver. which is
+>     difference drivers. This driver will not use any code related with
+>     fsl-edma-common.c.
+> 
+>  drivers/dma/fsl-qdma.c | 21 ++++++++++-----------
+>  1 file changed, 10 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/dma/fsl-qdma.c b/drivers/dma/fsl-qdma.c
+> index 1e3bf6f30f784..5005e138fc239 100644
+> --- a/drivers/dma/fsl-qdma.c
+> +++ b/drivers/dma/fsl-qdma.c
+> @@ -161,6 +161,10 @@ struct fsl_qdma_format {
+>  			u8 __reserved1[2];
+>  			u8 cfg8b_w1;
+>  		} __packed;
+> +		struct {
+> +			__le32 __reserved2;
+> +			__le32 cmd;
+> +		} __packed;
+>  		__le64 data;
+>  	};
+>  } __packed;
+> @@ -355,7 +359,6 @@ static void fsl_qdma_free_chan_resources(struct dma_chan *chan)
+>  static void fsl_qdma_comp_fill_memcpy(struct fsl_qdma_comp *fsl_comp,
+>  				      dma_addr_t dst, dma_addr_t src, u32 len)
+>  {
+> -	u32 cmd;
+>  	struct fsl_qdma_format *sdf, *ddf;
+>  	struct fsl_qdma_format *ccdf, *csgf_desc, *csgf_src, *csgf_dest;
+>  
+> @@ -384,15 +387,11 @@ static void fsl_qdma_comp_fill_memcpy(struct fsl_qdma_comp *fsl_comp,
+>  	/* This entry is the last entry. */
+>  	qdma_csgf_set_f(csgf_dest, len);
+>  	/* Descriptor Buffer */
+> -	cmd = cpu_to_le32(FSL_QDMA_CMD_RWTTYPE <<
+> -			  FSL_QDMA_CMD_RWTTYPE_OFFSET) |
+> -			  FSL_QDMA_CMD_PF;
+> -	sdf->data = QDMA_SDDF_CMD(cmd);
+> -
+> -	cmd = cpu_to_le32(FSL_QDMA_CMD_RWTTYPE <<
+> -			  FSL_QDMA_CMD_RWTTYPE_OFFSET);
+> -	cmd |= cpu_to_le32(FSL_QDMA_CMD_LWC << FSL_QDMA_CMD_LWC_OFFSET);
+> -	ddf->data = QDMA_SDDF_CMD(cmd);
+> +	sdf->cmd = cpu_to_le32((FSL_QDMA_CMD_RWTTYPE << FSL_QDMA_CMD_RWTTYPE_OFFSET) |
+> +			       FSL_QDMA_CMD_PF);
+> +
+> +	ddf->cmd = cpu_to_le32((FSL_QDMA_CMD_RWTTYPE << FSL_QDMA_CMD_RWTTYPE_OFFSET) |
+> +			       (FSL_QDMA_CMD_LWC << FSL_QDMA_CMD_LWC_OFFSET));
+>  }
+>  
+>  /*
+> @@ -626,7 +625,7 @@ static int fsl_qdma_halt(struct fsl_qdma_engine *fsl_qdma)
+>  
+>  static int
+>  fsl_qdma_queue_transfer_complete(struct fsl_qdma_engine *fsl_qdma,
+> -				 void *block,
+> +				 __iomem void *block,
+>  				 int id)
+>  {
+>  	bool duplicate;
+> -- 
+> 2.34.1
 
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e27cc69a867c..28b2013031bd 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13743,7 +13743,7 @@ L:	dmaengine@vger.kernel.org
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- L:	linux-mediatek@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
--F:	Documentation/devicetree/bindings/dma/mtk-*
-+F:	Documentation/devicetree/bindings/dma/mediatek,*
- F:	drivers/dma/mediatek/
- 
- MEDIATEK ETHERNET DRIVER
 -- 
-2.17.1
-
+~Vinod
 

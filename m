@@ -1,90 +1,90 @@
-Return-Path: <dmaengine+bounces-1065-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1066-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 18D3D85FA25
-	for <lists+dmaengine@lfdr.de>; Thu, 22 Feb 2024 14:46:15 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE35185FA32
+	for <lists+dmaengine@lfdr.de>; Thu, 22 Feb 2024 14:47:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C862628A0E5
-	for <lists+dmaengine@lfdr.de>; Thu, 22 Feb 2024 13:46:13 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6E4BDB297CB
+	for <lists+dmaengine@lfdr.de>; Thu, 22 Feb 2024 13:47:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C9381332B1;
-	Thu, 22 Feb 2024 13:46:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FAA01339B8;
+	Thu, 22 Feb 2024 13:47:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EUx3003C"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iPYcxwwB"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25567132C23;
-	Thu, 22 Feb 2024 13:46:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D85D558ADF;
+	Thu, 22 Feb 2024 13:47:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708609570; cv=none; b=Zu85QIXQW3Le3cFxPxLBzLdygAeLl3x8cavKmVNaIkFq0/XYn/bTNh9s4OsfkGb9K29QqrZhFMty0o2ggnGIw0u7UR3X2Lnd8nDUqKIoJKdfpOg8TFUfLCkzWALsuyBIB3h0GWm5eXqMw3hsgKtOa2wcMoBZv3x3PevmvoFCHeQ=
+	t=1708609628; cv=none; b=QF6NhjKpdBVBdiBF77Fb96hMnfjguJmSWuNRobs/pI7zfqBo99j15tlIL/bmtcNYO6qpQzCFP4xfp2ZLij4b4/i9ihh5TR2JN1wIxHq8Bd2tTkBq4p4oBZUOn4/zpCWtCoAmUsJcukpjJKqdFjvrT6VbRuest7RPUC0//v9J4w8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708609570; c=relaxed/simple;
-	bh=Us47+ijyom5i1wqBLUBBCfgKRKudvHeAYAOiNM2YUIA=;
+	s=arc-20240116; t=1708609628; c=relaxed/simple;
+	bh=aAkb71uaG7bEs8LOfMCDfKO2FHHwbVImI5+22zd2L68=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ebyUqH6Jucr7sDuPFP/IGqVC+8kE+Cl/HqRgYNvQpnUqD+wrkLXyGPbv3yfOmS7ecOjAnbfuIjW2ZdgHZmRyUdF56O3PnsWydV54J2Llm9dQts8G91B8E5DQq0nKmFtDV1gu0L4h+m8DOdMRddK0/UPtza20+YFyFtHxlQ+e0TI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EUx3003C; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31280C433F1;
-	Thu, 22 Feb 2024 13:46:08 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=ppeOgTb1f9aypeH7j6fYJcPYxVQts67cmsF30HqphogiyENr6ROYs6jVPT0yNrSb03H6+JRfnFhOCE83+VTrZTUugLZpLVwDpddhxy+sohqhSGTKaP37NNKX9NJMHy1jrlA6COzDslWGFX6oGR88EitR75Sas9QROpctMZcZkKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iPYcxwwB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07225C433C7;
+	Thu, 22 Feb 2024 13:47:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708609569;
-	bh=Us47+ijyom5i1wqBLUBBCfgKRKudvHeAYAOiNM2YUIA=;
+	s=k20201202; t=1708609627;
+	bh=aAkb71uaG7bEs8LOfMCDfKO2FHHwbVImI5+22zd2L68=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EUx3003Cp7ldWfBXBLSIiIxRYMFl3qcgIR9G3hXiJfOchm+QuA3wnfW2C4Wmecz3s
-	 RNrhzyISNpbBtSEZio7yOat0n1KaGFdwZasmRG/rCdot+YfGE7o2zsvukwJ0zDhQpy
-	 6k6wNWggvD/OTUsZkESxPNfyekrvsjyOw+iWy7PKaojLXpjQCR+P2eAoOHaFqvIOO7
-	 bQrrtgEeY80H9lF8LLLSgCKOC8ROM2vtoC/RC7kiZrdvoIVuALccEPYPGg7JhIffsx
-	 tfdWItd/tZXtuW0i2OJlA7RoR3wa+kkC2hnvm64G7L5ewQPoV0ZyeJ1OwS24oa6y8M
-	 PMXwAmeln2/xA==
-Date: Thu, 22 Feb 2024 19:16:05 +0530
+	b=iPYcxwwB3QaqCQy7d9saeV4mtm5mGIXaFfX/921oXth2O8u9EUE2Me/gONDNgPLxN
+	 3p5ZG24Plvnm2bz4OOGbfbwHpsLK10FWJjWGWhzkZata1PxFdhbWfWs5W7x7jlFiKw
+	 nNKT1lH48sH3CHDxcDPoII1SDocHAdWLIl8bZM6an5QdgedYmlEPS0pLdD6avoZcdb
+	 QkkAXGdEL6lOINxUKa9D8v+iYGpUsTFCwUZGYG8RH2ojj5qmkQuMID4wzAOloZBr5m
+	 6eSbmZlB3PebaXPPRm7uymprC0U2RspDvqR4GUzans+HI7BpCp/5ZdE4s+J7nKLRvR
+	 T9vcv1stRH3Kg==
+Date: Thu, 22 Feb 2024 19:17:03 +0530
 From: Vinod Koul <vkoul@kernel.org>
-To: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: change in AMD ptdma maintainer
-Message-ID: <ZddQHZIo8fLCoqec@matsya>
-References: <20240222083004.1907070-1-Basavaraj.Natikar@amd.com>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	"open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>,
+	"moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
+Subject: Re: [PATCH 1/1] dmaengine: mxs-dma: switch from dma_coherent to
+ dma_pool
+Message-ID: <ZddQVzs-VvjraJAf@matsya>
+References: <20240219155728.606497-1-Frank.Li@nxp.com>
+ <CAOMZO5C4XFGoWYgexdFLgHiXAoAP7-aMdi=K6CG3adQE_mHAmA@mail.gmail.com>
+ <ZdTjrzYIiD8pwHk8@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240222083004.1907070-1-Basavaraj.Natikar@amd.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZdTjrzYIiD8pwHk8@lizhi-Precision-Tower-5810>
 
-On 22-02-24, 14:00, Basavaraj Natikar wrote:
-> As 'Sanjay R Mehta' stepped down from the role of ptdma maintainer, I
-> request to be added as the new maintainer of AMD PTDMA.
+On 20-02-24, 12:38, Frank Li wrote:
+> On Mon, Feb 19, 2024 at 01:23:22PM -0300, Fabio Estevam wrote:
+> > On Mon, Feb 19, 2024 at 12:57 PM Frank Li <Frank.Li@nxp.com> wrote:
+> > >
+> > > From: Han Xu <han.xu@nxp.com>
+> > >
+> > > Using dma_pool to manage dma descriptor memory.
+> > 
+> > Please clearly describe the motivation for doing this.
+> 
+> This try to fix a cma_alloc failure. But it is not correct to use dma_pool.
+> let's work out a better method.
 
-Should you not CC Sanjay?
+Good one, but this should be in log :-)
 
 > 
-> Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-> ---
->  MAINTAINERS | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index e2c6187a3ac8..becd09410b8c 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1034,7 +1034,7 @@ F:	include/linux/amd-pstate.h
->  F:	tools/power/x86/amd_pstate_tracer/amd_pstate_trace.py
->  
->  AMD PTDMA DRIVER
-> -M:	Sanjay R Mehta <sanju.mehta@amd.com>
-> +M:	Basavaraj Natikar <Basavaraj.Natikar@amd.com>
->  L:	dmaengine@vger.kernel.org
->  S:	Maintained
->  F:	drivers/dma/ptdma/
-> -- 
-> 2.25.1
+> Frank
 
 -- 
 ~Vinod

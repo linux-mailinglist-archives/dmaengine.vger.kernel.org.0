@@ -1,210 +1,248 @@
-Return-Path: <dmaengine+bounces-1070-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1071-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6C5FA85FA99
-	for <lists+dmaengine@lfdr.de>; Thu, 22 Feb 2024 15:01:11 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DEF9F85FAC5
+	for <lists+dmaengine@lfdr.de>; Thu, 22 Feb 2024 15:08:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D6730B257B5
-	for <lists+dmaengine@lfdr.de>; Thu, 22 Feb 2024 14:01:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 40E09287A0A
+	for <lists+dmaengine@lfdr.de>; Thu, 22 Feb 2024 14:08:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B2EB135410;
-	Thu, 22 Feb 2024 14:01:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E32F14691F;
+	Thu, 22 Feb 2024 14:06:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p0XnSrP1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K+NyHl2g"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A7D8130AD2;
-	Thu, 22 Feb 2024 14:01:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A3EE14A4E4
+	for <dmaengine@vger.kernel.org>; Thu, 22 Feb 2024 14:06:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708610464; cv=none; b=JX5XWo03PcoJyAYBTyPtMu5XXQj3DQUhfqqnYYs6Iapx8S7OGHOk/Oe3Fqa9e47ZxJYIp29v8/6pDiIjpLeayLuiao9Gun1ODfhm7EzCvN6FdVob7aKTVeb4lrxOe0LUuS57QlL8BFdbBNf6CQTnjci+BgVs3DrZHN/67sZDVLw=
+	t=1708610774; cv=none; b=bg0uQBRRK1wW9A4SQIbrUx021SWOqtjQX103YPAe2gxGEyUWV5TyMIM+GknHVesQqRkVu+qjyRduDfAWwplBfxRA+15nKANi82zBmB2e2Mq5qE3tZyWROGZhVhHNEtvDqZytD4wmN+89XVk/rUUeylSwZSbYwN8Xeu+Ks4eiKNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708610464; c=relaxed/simple;
-	bh=fSetG6elC4kpGUF26Sm8cvkGBwCQN75G2SfsKotHPXY=;
+	s=arc-20240116; t=1708610774; c=relaxed/simple;
+	bh=whB5aLDVQI+QzQKk7qssaJUU3gWEdKCsJubaDWjnUhw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JJr2VaIkHGDOAtsEMxtIS3NPHRJe4NWXUS6EBRGxOKz5ocbb+ZfOixAdsAkYCnZxTwYUYhuZazfthP9gTTiS5uVwINYwNcJnpCRhmwn/nxB60xMYWGpd0rl4x3Zzw6oQ8uU6hFe8CszGX9TnKOGSZrFr9/avvQlWzJB5tOccFto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p0XnSrP1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20F08C43394;
-	Thu, 22 Feb 2024 14:01:02 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=IvETe8zUjq6aCxBn5FKhCdMnlCc9pGLvvQufn7Nf2Kg0F77pxhZ9osZ66LSkoN9/wMoRT9hsYDaMSYZhwrb566i/gW5C/tWf3VpU8THRTOZVfqnZqK1nKowMmv22rpzw88Fe0unVoSZtcI2R6kaMTdtrHp9nYZGNaRjpErU+3HY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K+NyHl2g; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F8ADC433F1;
+	Thu, 22 Feb 2024 14:06:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708610463;
-	bh=fSetG6elC4kpGUF26Sm8cvkGBwCQN75G2SfsKotHPXY=;
+	s=k20201202; t=1708610773;
+	bh=whB5aLDVQI+QzQKk7qssaJUU3gWEdKCsJubaDWjnUhw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=p0XnSrP1p41eJvsTuLVLWF3U172Yn44+9AWCLJyshiGIzDu3f4HbenetnbJ9qYlqN
-	 Cm8k3vM3W2zpUaYdkwanrZxskr5cHCpBN+RRNIfRfv4M3+qML31eu7lbTcS7YM3TIV
-	 gcza/0AMDg+C2B4c6Sj0LbPgxE8BQBrpLWwkcX5Ay6V96c4HDuOAhLVxwrYo7blybV
-	 uG+JT2ikmgzsqAMxA5Gq8YkDg7+0LJOC3CrE1aSD/yhQqzaZ527s/WyvjZavgn19Jh
-	 Pgn0eiyk1shaGPFGtubF841FexMLoSA8rrkGCK7e8yzEP9/eeVDpPetN49erR/5QxS
-	 tI2Og5OfRrI9w==
-Date: Thu, 22 Feb 2024 19:30:59 +0530
+	b=K+NyHl2gbVXAXTlX6jxdlQLJ7xNDD6vcXY/sWElbXwGX1YBjVVvrOXaRi34eXp+cu
+	 7FXWp9ANlAtSuqHbHH1zSB5KWTH0NTZKd+Z/1xTFPBMNUCQoE8e9zDqT/yAnckrmGg
+	 1V0/1X5YutvGYWOuMbqZkSjnv42ejFxVTGROf4fJiyXXiGpRqzbBRqRtQlqddOunUT
+	 0GJOO0PkS1VOx/9WPIUXT79NqJnb1XU00v0NUCDHHqGVknysJAStqNSt+cpj27AUea
+	 H7Klmpl2TgKN8zEEAIjcSz052d07Zv1mrDM3+G+sLCaasKSpaCXoYJJgUIHG8X7uzU
+	 9FJ+xCxfhTEmg==
+Date: Thu, 22 Feb 2024 19:36:09 +0530
 From: Vinod Koul <vkoul@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
-Subject: Re: [PATCH v2 1/1] dmaengine: fsl-qdma: add __iomem and struct in
- union to fix sparse warning
-Message-ID: <ZddTmwh82K6biJSx@matsya>
-References: <20240219155939.611237-1-Frank.Li@nxp.com>
+To: Nuno Sa <nuno.sa@analog.com>
+Cc: dmaengine@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCH v2] dmaengine: axi-dmac: move to device managed probe
+Message-ID: <ZddU0YQGh-HOmmOZ@matsya>
+References: <20240219-axi-dmac-devm-probe-v2-1-1a6737294f69@analog.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240219155939.611237-1-Frank.Li@nxp.com>
+In-Reply-To: <20240219-axi-dmac-devm-probe-v2-1-1a6737294f69@analog.com>
 
-On 19-02-24, 10:59, Frank Li wrote:
-> Fix below sparse warnings.
-
-This does not apply for me, can you rebase
-
+On 19-02-24, 11:20, Nuno Sa wrote:
+> In axi_dmac_probe(), there's a mix in using device managed APIs and
+> explicitly cleaning things in the driver .remove() hook. Move to use
+> device managed APIs and thus drop the .remove() hook.
 > 
-> drivers/dma/fsl-qdma.c:645:50: sparse: warning: incorrect type in argument 2 (different address spaces)
-> drivers/dma/fsl-qdma.c:645:50: sparse:    expected void [noderef] __iomem *addr
-> drivers/dma/fsl-qdma.c:645:50: sparse:    got void
+> While doing this move request_irq() before of_dma_controller_register()
+> so the previous cleanup order in the .remove() hook is preserved.
 > 
-> drivers/dma/fsl-qdma.c:387:15: sparse: sparse: restricted __le32 degrades to integer
-> drivers/dma/fsl-qdma.c:390:19: sparse:     expected restricted __le64 [usertype] data
-> drivers/dma/fsl-qdma.c:392:13: sparse:     expected unsigned int [assigned] [usertype] cmd
-> 
-> QDMA decriptor have below 3 kind formats. (little endian)
-> 
-> Compound Command Descriptor Format
->   ┌──────┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┐
->   │Offset│3│3│2│2│2│2│2│2│2│2│2│2│1│1│1│1│1│1│1│1│1│1│ │ │ │ │ │ │ │ │ │ │
->   │      │1│0│9│8│7│6│5│4│3│2│1│0│9│8│7│6│5│4│3│2│1│0│9│8│7│6│5│4│3│2│1│0│
->   ├──────┼─┴─┼─┴─┴─┼─┴─┴─┼─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┼─┴─┴─┴─┴─┴─┴─┴─┤
->   │ 0x0C │DD │  -  │QUEUE│             -                 │      ADDR     │
->   ├──────┼───┴─────┴─────┴───────────────────────────────┴───────────────┤
->   │ 0x08 │                       ADDR                                    │
->   ├──────┼─────┬─────────────────┬───────────────────────────────────────┤
->   │ 0x04 │ FMT │    OFFSET       │                   -                   │
->   ├──────┼─┬─┬─┴─────────────────┴───────────────────────┬───────────────┤
->   │      │ │S│                                           │               │
->   │ 0x00 │-│E│                   -                       │    STATUS     │
->   │      │ │R│                                           │               │
->   └──────┴─┴─┴───────────────────────────────────────────┴───────────────┘
-> 
-> Compound S/G Table Entry Format
->  ┌──────┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┐
->  │Offset│3│3│2│2│2│2│2│2│2│2│2│2│1│1│1│1│1│1│1│1│1│1│ │ │ │ │ │ │ │ │ │ │
->  │      │1│0│9│8│7│6│5│4│3│2│1│0│9│8│7│6│5│4│3│2│1│0│9│8│7│6│5│4│3│2│1│0│
->  ├──────┼─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┼─┴─┴─┴─┴─┴─┴─┴─┤
->  │ 0x0C │                      -                        │    ADDR       │
->  ├──────┼───────────────────────────────────────────────┴───────────────┤
->  │ 0x08 │                          ADDR                                 │
->  ├──────┼─┬─┬───────────────────────────────────────────────────────────┤
->  │ 0x04 │E│F│                    LENGTH                                 │
->  ├──────┼─┴─┴─────────────────────────────────┬─────────────────────────┤
->  │ 0x00 │              -                      │        OFFSET           │
->  └──────┴─────────────────────────────────────┴─────────────────────────┘
-> 
-> Source/Destination Descriptor Format
->   ┌──────┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┐
->   │Offset│3│3│2│2│2│2│2│2│2│2│2│2│1│1│1│1│1│1│1│1│1│1│ │ │ │ │ │ │ │ │ │ │
->   │      │1│0│9│8│7│6│5│4│3│2│1│0│9│8│7│6│5│4│3│2│1│0│9│8│7│6│5│4│3│2│1│0│
->   ├──────┼─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┤
->   │ 0x0C │                            CMD                                │
->   ├──────┼───────────────────────────────────────────────────────────────┤
->   │ 0x08 │                             -                                 │
->   ├──────┼───────────────┬───────────────────────┬───────────────────────┤
->   │ 0x04 │       -       │         S[D]SS        │        S[D]SD         │
->   ├──────┼───────────────┴───────────────────────┴───────────────────────┤
->   │ 0x00 │                             -                                 │
->   └──────┴───────────────────────────────────────────────────────────────┘
-> 
-> Previous code use 64bit 'data' map to 0x8 and 0xC. In little endian system
-> CMD is high part of 64bit 'data'. It is correct by left shift 32. But in
-> big endian system, shift left 32 will write to 0x8 position. Sparse detect
-> this problem.
-> 
-> Add below field ot match 'Source/Destination Descriptor Format'.
-> struct {
-> 	__le32 __reserved2;
-> 	__le32 cmd;
-> } __packed;
-> 
-> Using ddf(sdf)->cmd save to correct posistion regardless endian.
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202402081929.mggOTHaZ-lkp@intel.com/
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> Signed-off-by: Nuno Sa <nuno.sa@analog.com>
 > ---
+> Changes in v2:
+> - Keep devm_request_irq() after of_dma_controller_register() so we free
+>   the irq first and avoid any possible race agains
+>   of_dma_controller_register().
+> - Link to v1: https://lore.kernel.org/r/20240214-axi-dmac-devm-probe-v1-1-22d633da19cb@analog.com
 > 
-> Notes:
->     Change from v1 to v2
->     - update commit message to show why add 'cmd'
->     
->     fsl-edma-common.c's build warning should not cause by this driver. which is
->     difference drivers. This driver will not use any code related with
->     fsl-edma-common.c.
+> Vinod,
 > 
->  drivers/dma/fsl-qdma.c | 21 ++++++++++-----------
->  1 file changed, 10 insertions(+), 11 deletions(-)
+> This actually made me think if I shouldn't have a preliminary patch
+> just moving free_irq() before of_dma_controller_register() and treating
+> it as bug (adding a proper fixes tag). Then moving to devm_ in a follow up
+> patch.
+
+That does sound better
+
 > 
-> diff --git a/drivers/dma/fsl-qdma.c b/drivers/dma/fsl-qdma.c
-> index 1e3bf6f30f784..5005e138fc239 100644
-> --- a/drivers/dma/fsl-qdma.c
-> +++ b/drivers/dma/fsl-qdma.c
-> @@ -161,6 +161,10 @@ struct fsl_qdma_format {
->  			u8 __reserved1[2];
->  			u8 cfg8b_w1;
->  		} __packed;
-> +		struct {
-> +			__le32 __reserved2;
-> +			__le32 cmd;
-> +		} __packed;
->  		__le64 data;
->  	};
->  } __packed;
-> @@ -355,7 +359,6 @@ static void fsl_qdma_free_chan_resources(struct dma_chan *chan)
->  static void fsl_qdma_comp_fill_memcpy(struct fsl_qdma_comp *fsl_comp,
->  				      dma_addr_t dst, dma_addr_t src, u32 len)
->  {
-> -	u32 cmd;
->  	struct fsl_qdma_format *sdf, *ddf;
->  	struct fsl_qdma_format *ccdf, *csgf_desc, *csgf_src, *csgf_dest;
->  
-> @@ -384,15 +387,11 @@ static void fsl_qdma_comp_fill_memcpy(struct fsl_qdma_comp *fsl_comp,
->  	/* This entry is the last entry. */
->  	qdma_csgf_set_f(csgf_dest, len);
->  	/* Descriptor Buffer */
-> -	cmd = cpu_to_le32(FSL_QDMA_CMD_RWTTYPE <<
-> -			  FSL_QDMA_CMD_RWTTYPE_OFFSET) |
-> -			  FSL_QDMA_CMD_PF;
-> -	sdf->data = QDMA_SDDF_CMD(cmd);
-> -
-> -	cmd = cpu_to_le32(FSL_QDMA_CMD_RWTTYPE <<
-> -			  FSL_QDMA_CMD_RWTTYPE_OFFSET);
-> -	cmd |= cpu_to_le32(FSL_QDMA_CMD_LWC << FSL_QDMA_CMD_LWC_OFFSET);
-> -	ddf->data = QDMA_SDDF_CMD(cmd);
-> +	sdf->cmd = cpu_to_le32((FSL_QDMA_CMD_RWTTYPE << FSL_QDMA_CMD_RWTTYPE_OFFSET) |
-> +			       FSL_QDMA_CMD_PF);
-> +
-> +	ddf->cmd = cpu_to_le32((FSL_QDMA_CMD_RWTTYPE << FSL_QDMA_CMD_RWTTYPE_OFFSET) |
-> +			       (FSL_QDMA_CMD_LWC << FSL_QDMA_CMD_LWC_OFFSET));
+> What do you think? Is it worth it to backport this?
+
+Yes bugs should be backported
+
+> ---
+>  drivers/dma/dma-axi-dmac.c | 78 ++++++++++++++++++++--------------------------
+>  1 file changed, 34 insertions(+), 44 deletions(-)
+> 
+> diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
+> index 4e339c04fc1e..bdb752f11869 100644
+> --- a/drivers/dma/dma-axi-dmac.c
+> +++ b/drivers/dma/dma-axi-dmac.c
+> @@ -1002,6 +1002,16 @@ static int axi_dmac_detect_caps(struct axi_dmac *dmac, unsigned int version)
+>  	return 0;
 >  }
 >  
->  /*
-> @@ -626,7 +625,7 @@ static int fsl_qdma_halt(struct fsl_qdma_engine *fsl_qdma)
->  
->  static int
->  fsl_qdma_queue_transfer_complete(struct fsl_qdma_engine *fsl_qdma,
-> -				 void *block,
-> +				 __iomem void *block,
->  				 int id)
+> +static void axi_dmac_tasklet_kill(void *task)
+> +{
+> +	tasklet_kill(task);
+> +}
+> +
+> +static void axi_dmac_free_dma_controller(void *of_node)
+> +{
+> +	of_dma_controller_free(of_node);
+> +}
+> +
+>  static int axi_dmac_probe(struct platform_device *pdev)
 >  {
->  	bool duplicate;
-> -- 
-> 2.34.1
+>  	struct dma_device *dma_dev;
+> @@ -1025,14 +1035,10 @@ static int axi_dmac_probe(struct platform_device *pdev)
+>  	if (IS_ERR(dmac->base))
+>  		return PTR_ERR(dmac->base);
+>  
+> -	dmac->clk = devm_clk_get(&pdev->dev, NULL);
+> +	dmac->clk = devm_clk_get_enabled(&pdev->dev, NULL);
+>  	if (IS_ERR(dmac->clk))
+>  		return PTR_ERR(dmac->clk);
+>  
+> -	ret = clk_prepare_enable(dmac->clk);
+> -	if (ret < 0)
+> -		return ret;
+> -
+>  	version = axi_dmac_read(dmac, ADI_AXI_REG_VERSION);
+>  
+>  	if (version >= ADI_AXI_PCORE_VER(4, 3, 'a'))
+> @@ -1041,7 +1047,7 @@ static int axi_dmac_probe(struct platform_device *pdev)
+>  		ret = axi_dmac_parse_dt(&pdev->dev, dmac);
+>  
+>  	if (ret < 0)
+> -		goto err_clk_disable;
+> +		return ret;
+>  
+>  	INIT_LIST_HEAD(&dmac->chan.active_descs);
+>  
+> @@ -1072,7 +1078,7 @@ static int axi_dmac_probe(struct platform_device *pdev)
+>  
+>  	ret = axi_dmac_detect_caps(dmac, version);
+>  	if (ret)
+> -		goto err_clk_disable;
+> +		return ret;
+>  
+>  	dma_dev->copy_align = (dmac->chan.address_align_mask + 1);
+>  
+> @@ -1088,57 +1094,42 @@ static int axi_dmac_probe(struct platform_device *pdev)
+>  		    !AXI_DMAC_DST_COHERENT_GET(ret)) {
+>  			dev_err(dmac->dma_dev.dev,
+>  				"Coherent DMA not supported in hardware");
+> -			ret = -EINVAL;
+> -			goto err_clk_disable;
+> +			return -EINVAL;
+>  		}
+>  	}
+>  
+> -	ret = dma_async_device_register(dma_dev);
+> +	ret = dmaenginem_async_device_register(dma_dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/*
+> +	 * Put the action in here so it get's done before unregistering the DMA
+> +	 * device.
+> +	 */
+> +	ret = devm_add_action_or_reset(&pdev->dev, axi_dmac_tasklet_kill,
+> +				       &dmac->chan.vchan.task);
+>  	if (ret)
+> -		goto err_clk_disable;
+> +		return ret;
+>  
+>  	ret = of_dma_controller_register(pdev->dev.of_node,
+>  		of_dma_xlate_by_chan_id, dma_dev);
+>  	if (ret)
+> -		goto err_unregister_device;
+> +		return ret;
+>  
+> -	ret = request_irq(dmac->irq, axi_dmac_interrupt_handler, IRQF_SHARED,
+> -		dev_name(&pdev->dev), dmac);
+> +	ret = devm_add_action_or_reset(&pdev->dev, axi_dmac_free_dma_controller,
+> +				       pdev->dev.of_node);
+>  	if (ret)
+> -		goto err_unregister_of;
+> +		return ret;
+>  
+> -	platform_set_drvdata(pdev, dmac);
+> +	ret = devm_request_irq(&pdev->dev, dmac->irq, axi_dmac_interrupt_handler,
+> +			       IRQF_SHARED, dev_name(&pdev->dev), dmac);
+> +	if (ret)
+> +		return ret;
+>  
+>  	regmap = devm_regmap_init_mmio(&pdev->dev, dmac->base,
+>  		 &axi_dmac_regmap_config);
+> -	if (IS_ERR(regmap)) {
+> -		ret = PTR_ERR(regmap);
+> -		goto err_free_irq;
+> -	}
+> -
+> -	return 0;
+> -
+> -err_free_irq:
+> -	free_irq(dmac->irq, dmac);
+> -err_unregister_of:
+> -	of_dma_controller_free(pdev->dev.of_node);
+> -err_unregister_device:
+> -	dma_async_device_unregister(&dmac->dma_dev);
+> -err_clk_disable:
+> -	clk_disable_unprepare(dmac->clk);
+> -
+> -	return ret;
+> -}
+> -
+> -static void axi_dmac_remove(struct platform_device *pdev)
+> -{
+> -	struct axi_dmac *dmac = platform_get_drvdata(pdev);
+>  
+> -	of_dma_controller_free(pdev->dev.of_node);
+> -	free_irq(dmac->irq, dmac);
+> -	tasklet_kill(&dmac->chan.vchan.task);
+> -	dma_async_device_unregister(&dmac->dma_dev);
+> -	clk_disable_unprepare(dmac->clk);
+> +	return PTR_ERR_OR_ZERO(regmap);
+>  }
+>  
+>  static const struct of_device_id axi_dmac_of_match_table[] = {
+> @@ -1153,7 +1144,6 @@ static struct platform_driver axi_dmac_driver = {
+>  		.of_match_table = axi_dmac_of_match_table,
+>  	},
+>  	.probe = axi_dmac_probe,
+> -	.remove_new = axi_dmac_remove,
+>  };
+>  module_platform_driver(axi_dmac_driver);
+>  
+> 
+> ---
+> base-commit: de7d9cb3b064fdfb2e0e7706d14ffee20b762ad2
+> change-id: 20240214-axi-dmac-devm-probe-d718ef36fb58
+> --
+> 
+> Thanks!
+> - Nuno S�
 
 -- 
 ~Vinod

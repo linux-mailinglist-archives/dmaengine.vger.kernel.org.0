@@ -1,249 +1,138 @@
-Return-Path: <dmaengine+bounces-1071-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1072-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DEF9F85FAC5
-	for <lists+dmaengine@lfdr.de>; Thu, 22 Feb 2024 15:08:17 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E501685FBFD
+	for <lists+dmaengine@lfdr.de>; Thu, 22 Feb 2024 16:13:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 40E09287A0A
-	for <lists+dmaengine@lfdr.de>; Thu, 22 Feb 2024 14:08:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A00BC284805
+	for <lists+dmaengine@lfdr.de>; Thu, 22 Feb 2024 15:13:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E32F14691F;
-	Thu, 22 Feb 2024 14:06:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 280B2148FE3;
+	Thu, 22 Feb 2024 15:13:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K+NyHl2g"
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="Sguijdpm"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A3EE14A4E4
-	for <dmaengine@vger.kernel.org>; Thu, 22 Feb 2024 14:06:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D72F133439
+	for <dmaengine@vger.kernel.org>; Thu, 22 Feb 2024 15:13:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708610774; cv=none; b=bg0uQBRRK1wW9A4SQIbrUx021SWOqtjQX103YPAe2gxGEyUWV5TyMIM+GknHVesQqRkVu+qjyRduDfAWwplBfxRA+15nKANi82zBmB2e2Mq5qE3tZyWROGZhVhHNEtvDqZytD4wmN+89XVk/rUUeylSwZSbYwN8Xeu+Ks4eiKNs=
+	t=1708614787; cv=none; b=rUIw1+FctZNYZXswMlvloySWJ8jtUCW0nv0FavsIwgztN+hkyMaFLXc8PV1QOENMKzP+xh6ZulKNX1sRWb5Ge2r7H+zKikoAQORa0kk+3JO5IWLaabXKmOZjcdWthTwYqA35KU+yhC714SoccRAk5ERhzPJ6Y5w1NXsMWQDz3oY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708610774; c=relaxed/simple;
-	bh=whB5aLDVQI+QzQKk7qssaJUU3gWEdKCsJubaDWjnUhw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IvETe8zUjq6aCxBn5FKhCdMnlCc9pGLvvQufn7Nf2Kg0F77pxhZ9osZ66LSkoN9/wMoRT9hsYDaMSYZhwrb566i/gW5C/tWf3VpU8THRTOZVfqnZqK1nKowMmv22rpzw88Fe0unVoSZtcI2R6kaMTdtrHp9nYZGNaRjpErU+3HY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K+NyHl2g; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F8ADC433F1;
-	Thu, 22 Feb 2024 14:06:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708610773;
-	bh=whB5aLDVQI+QzQKk7qssaJUU3gWEdKCsJubaDWjnUhw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=K+NyHl2gbVXAXTlX6jxdlQLJ7xNDD6vcXY/sWElbXwGX1YBjVVvrOXaRi34eXp+cu
-	 7FXWp9ANlAtSuqHbHH1zSB5KWTH0NTZKd+Z/1xTFPBMNUCQoE8e9zDqT/yAnckrmGg
-	 1V0/1X5YutvGYWOuMbqZkSjnv42ejFxVTGROf4fJiyXXiGpRqzbBRqRtQlqddOunUT
-	 0GJOO0PkS1VOx/9WPIUXT79NqJnb1XU00v0NUCDHHqGVknysJAStqNSt+cpj27AUea
-	 H7Klmpl2TgKN8zEEAIjcSz052d07Zv1mrDM3+G+sLCaasKSpaCXoYJJgUIHG8X7uzU
-	 9FJ+xCxfhTEmg==
-Date: Thu, 22 Feb 2024 19:36:09 +0530
-From: Vinod Koul <vkoul@kernel.org>
-To: Nuno Sa <nuno.sa@analog.com>
-Cc: dmaengine@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH v2] dmaengine: axi-dmac: move to device managed probe
-Message-ID: <ZddU0YQGh-HOmmOZ@matsya>
-References: <20240219-axi-dmac-devm-probe-v2-1-1a6737294f69@analog.com>
+	s=arc-20240116; t=1708614787; c=relaxed/simple;
+	bh=6BFk0y00HAQKaJOF+NauTEIi8nEF3A99wjD20akaeqg=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=dNvR6/oYaZCzem4iya1UYBMJ0bbnE4bX9C+a4UqWtIFVW4zGIwieytFMT9EI8Su03hjmCtEjzrZWp66lkWpd7+cnI/iWXOm/vC6xMUq4F1bAbRoV/1hQp4IWNKv33mYXPRoQXsR+iNP4xNSVe4h8/MhJIDXTDGP6r/l6oniRV0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=Sguijdpm; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41MEXhdh030385;
+	Thu, 22 Feb 2024 10:12:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=
+	from:subject:date:message-id:mime-version:content-type
+	:content-transfer-encoding:to:cc; s=DKIM; bh=J2jnJK1zdM8CGOpB1vS
+	E0M3+6f/a+TNhLEnRSFO1iNI=; b=SguijdpmxwOOI6eZQGfvNJFniFImdSLk7/p
+	zI5zlKR4wID3sZ1B8bemT/BEHI5/OKhdZektIzothBt5MIA8GlGiSRDl46taXviW
+	BXQLaNSD8JlHiC/sz3zq2kZnpCRzMhPXYgztbGP97WZGUo0ENSSL3djrvh9dTW/i
+	tvo/2aV8VACOyd6JWdAtKScBuvYbmj1c1x2nua0cuiZtU1dFAJ0xei612O3ojlNq
+	sQefCDEW2CVIdZOAop1cOg/5wYkmpmmoKz6FIIjZpfdOs5LKZVzLc70fuZBpMA3j
+	ThrbuYWRVrCnlYdTxOkLUOjc4vrMnj5khA4nezNLPgTadPQ614A==
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 3wd21gh7u3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 Feb 2024 10:12:52 -0500 (EST)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 41MFCo5Y060151
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 22 Feb 2024 10:12:50 -0500
+Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
+ ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Thu, 22 Feb 2024 10:12:50 -0500
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
+ ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Thu, 22 Feb 2024 10:12:49 -0500
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Thu, 22 Feb 2024 10:12:49 -0500
+Received: from [127.0.0.1] ([10.44.3.55])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 41MFCe40017151;
+	Thu, 22 Feb 2024 10:12:43 -0500
+From: Nuno Sa <nuno.sa@analog.com>
+Subject: [PATCH v3 0/2] dmaengine: axi-dmac: move to device managed probe
+Date: Thu, 22 Feb 2024 16:15:49 +0100
+Message-ID: <20240222-axi-dmac-devm-probe-v3-0-16bdca9e64d6@analog.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240219-axi-dmac-devm-probe-v2-1-1a6737294f69@analog.com>
+X-B4-Tracking: v=1; b=H4sIACZl12UC/33NQQ6CMBCF4auYrh1Dp1jAlfcwLko7hSZCSWsaD
+ OHuFlaaGJf/S+abhUUKjiK7HBYWKLno/JhDHA9M92rsCJzJzbDAskBegpodmEFpMJQGmIJvCUz
+ Fa7JC2vZcs3w5BbJu3tXbPXfv4tOH1/4k8W397yUOHBCNFMIo3uj2qkb18N1J+4FtYMJPpPmNY
+ Ea4kpWosCmtbL6QdV3fetM/9fwAAAA=
+To: <dmaengine@vger.kernel.org>
+CC: Lars-Peter Clausen <lars@metafoo.de>, Vinod Koul <vkoul@kernel.org>,
+        <stable@kernel.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708614963; l=993;
+ i=nuno.sa@analog.com; s=20231116; h=from:subject:message-id;
+ bh=6BFk0y00HAQKaJOF+NauTEIi8nEF3A99wjD20akaeqg=;
+ b=Hdy9k7Qf63jnTx+C32CgWEhTD6/yxwe9GuREjN7OjdSs3PzWmqEnIHGcPZdvXLBl+NGXUbwz6
+ HSnaRSKzA3TBebLmCv8fTVViSdU0ufZHEZZ+As+h9ajMWeb16cNWF2O
+X-Developer-Key: i=nuno.sa@analog.com; a=ed25519;
+ pk=3NQwYA013OUYZsmDFBf8rmyyr5iQlxV/9H4/Df83o1E=
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-GUID: sMsuXbxBf0EoQtaQOwK7F2x42Jz_agaq
+X-Proofpoint-ORIG-GUID: sMsuXbxBf0EoQtaQOwK7F2x42Jz_agaq
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-22_11,2024-02-22_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ adultscore=0 malwarescore=0 spamscore=0 lowpriorityscore=0 phishscore=0
+ impostorscore=0 mlxlogscore=581 mlxscore=0 priorityscore=1501
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2402220121
 
-On 19-02-24, 11:20, Nuno Sa wrote:
-> In axi_dmac_probe(), there's a mix in using device managed APIs and
-> explicitly cleaning things in the driver .remove() hook. Move to use
-> device managed APIs and thus drop the .remove() hook.
-> 
-> While doing this move request_irq() before of_dma_controller_register()
-> so the previous cleanup order in the .remove() hook is preserved.
-> 
-> Signed-off-by: Nuno Sa <nuno.sa@analog.com>
-> ---
-> Changes in v2:
-> - Keep devm_request_irq() after of_dma_controller_register() so we free
->   the irq first and avoid any possible race agains
->   of_dma_controller_register().
-> - Link to v1: https://lore.kernel.org/r/20240214-axi-dmac-devm-probe-v1-1-22d633da19cb@analog.com
-> 
-> Vinod,
-> 
-> This actually made me think if I shouldn't have a preliminary patch
-> just moving free_irq() before of_dma_controller_register() and treating
-> it as bug (adding a proper fixes tag). Then moving to devm_ in a follow up
-> patch.
+Added a new patch so we can easily backport a possible race in the
+unbind path.
 
-That does sound better
+---
+Changes in v3:
+- Patch 1
+  * New patch.
+- Patch 2
+  * Updated commit message (request_irq() is no longer moved).
+- Link to v2: https://lore.kernel.org/r/20240219-axi-dmac-devm-probe-v2-1-1a6737294f69@analog.com
 
-> 
-> What do you think? Is it worth it to backport this?
+Changes in v2:
+- Keep devm_request_irq() after of_dma_controller_register() so we free
+  the irq first and avoid any possible race agains
+  of_dma_controller_register().
+- Link to v1: https://lore.kernel.org/r/20240214-axi-dmac-devm-probe-v1-1-22d633da19cb@analog.com
 
-Yes bugs should be backported
+---
+Nuno Sa (2):
+      dmaengine: axi-dmac: fix possible race in remove()
+      dmaengine: axi-dmac: move to device managed probe
 
-> ---
->  drivers/dma/dma-axi-dmac.c | 78 ++++++++++++++++++++--------------------------
->  1 file changed, 34 insertions(+), 44 deletions(-)
-> 
-> diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
-> index 4e339c04fc1e..bdb752f11869 100644
-> --- a/drivers/dma/dma-axi-dmac.c
-> +++ b/drivers/dma/dma-axi-dmac.c
-> @@ -1002,6 +1002,16 @@ static int axi_dmac_detect_caps(struct axi_dmac *dmac, unsigned int version)
->  	return 0;
->  }
->  
-> +static void axi_dmac_tasklet_kill(void *task)
-> +{
-> +	tasklet_kill(task);
-> +}
-> +
-> +static void axi_dmac_free_dma_controller(void *of_node)
-> +{
-> +	of_dma_controller_free(of_node);
-> +}
-> +
->  static int axi_dmac_probe(struct platform_device *pdev)
->  {
->  	struct dma_device *dma_dev;
-> @@ -1025,14 +1035,10 @@ static int axi_dmac_probe(struct platform_device *pdev)
->  	if (IS_ERR(dmac->base))
->  		return PTR_ERR(dmac->base);
->  
-> -	dmac->clk = devm_clk_get(&pdev->dev, NULL);
-> +	dmac->clk = devm_clk_get_enabled(&pdev->dev, NULL);
->  	if (IS_ERR(dmac->clk))
->  		return PTR_ERR(dmac->clk);
->  
-> -	ret = clk_prepare_enable(dmac->clk);
-> -	if (ret < 0)
-> -		return ret;
-> -
->  	version = axi_dmac_read(dmac, ADI_AXI_REG_VERSION);
->  
->  	if (version >= ADI_AXI_PCORE_VER(4, 3, 'a'))
-> @@ -1041,7 +1047,7 @@ static int axi_dmac_probe(struct platform_device *pdev)
->  		ret = axi_dmac_parse_dt(&pdev->dev, dmac);
->  
->  	if (ret < 0)
-> -		goto err_clk_disable;
-> +		return ret;
->  
->  	INIT_LIST_HEAD(&dmac->chan.active_descs);
->  
-> @@ -1072,7 +1078,7 @@ static int axi_dmac_probe(struct platform_device *pdev)
->  
->  	ret = axi_dmac_detect_caps(dmac, version);
->  	if (ret)
-> -		goto err_clk_disable;
-> +		return ret;
->  
->  	dma_dev->copy_align = (dmac->chan.address_align_mask + 1);
->  
-> @@ -1088,57 +1094,42 @@ static int axi_dmac_probe(struct platform_device *pdev)
->  		    !AXI_DMAC_DST_COHERENT_GET(ret)) {
->  			dev_err(dmac->dma_dev.dev,
->  				"Coherent DMA not supported in hardware");
-> -			ret = -EINVAL;
-> -			goto err_clk_disable;
-> +			return -EINVAL;
->  		}
->  	}
->  
-> -	ret = dma_async_device_register(dma_dev);
-> +	ret = dmaenginem_async_device_register(dma_dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/*
-> +	 * Put the action in here so it get's done before unregistering the DMA
-> +	 * device.
-> +	 */
-> +	ret = devm_add_action_or_reset(&pdev->dev, axi_dmac_tasklet_kill,
-> +				       &dmac->chan.vchan.task);
->  	if (ret)
-> -		goto err_clk_disable;
-> +		return ret;
->  
->  	ret = of_dma_controller_register(pdev->dev.of_node,
->  		of_dma_xlate_by_chan_id, dma_dev);
->  	if (ret)
-> -		goto err_unregister_device;
-> +		return ret;
->  
-> -	ret = request_irq(dmac->irq, axi_dmac_interrupt_handler, IRQF_SHARED,
-> -		dev_name(&pdev->dev), dmac);
-> +	ret = devm_add_action_or_reset(&pdev->dev, axi_dmac_free_dma_controller,
-> +				       pdev->dev.of_node);
->  	if (ret)
-> -		goto err_unregister_of;
-> +		return ret;
->  
-> -	platform_set_drvdata(pdev, dmac);
-> +	ret = devm_request_irq(&pdev->dev, dmac->irq, axi_dmac_interrupt_handler,
-> +			       IRQF_SHARED, dev_name(&pdev->dev), dmac);
-> +	if (ret)
-> +		return ret;
->  
->  	regmap = devm_regmap_init_mmio(&pdev->dev, dmac->base,
->  		 &axi_dmac_regmap_config);
-> -	if (IS_ERR(regmap)) {
-> -		ret = PTR_ERR(regmap);
-> -		goto err_free_irq;
-> -	}
-> -
-> -	return 0;
-> -
-> -err_free_irq:
-> -	free_irq(dmac->irq, dmac);
-> -err_unregister_of:
-> -	of_dma_controller_free(pdev->dev.of_node);
-> -err_unregister_device:
-> -	dma_async_device_unregister(&dmac->dma_dev);
-> -err_clk_disable:
-> -	clk_disable_unprepare(dmac->clk);
-> -
-> -	return ret;
-> -}
-> -
-> -static void axi_dmac_remove(struct platform_device *pdev)
-> -{
-> -	struct axi_dmac *dmac = platform_get_drvdata(pdev);
->  
-> -	of_dma_controller_free(pdev->dev.of_node);
-> -	free_irq(dmac->irq, dmac);
-> -	tasklet_kill(&dmac->chan.vchan.task);
-> -	dma_async_device_unregister(&dmac->dma_dev);
-> -	clk_disable_unprepare(dmac->clk);
-> +	return PTR_ERR_OR_ZERO(regmap);
->  }
->  
->  static const struct of_device_id axi_dmac_of_match_table[] = {
-> @@ -1153,7 +1144,6 @@ static struct platform_driver axi_dmac_driver = {
->  		.of_match_table = axi_dmac_of_match_table,
->  	},
->  	.probe = axi_dmac_probe,
-> -	.remove_new = axi_dmac_remove,
->  };
->  module_platform_driver(axi_dmac_driver);
->  
-> 
-> ---
-> base-commit: de7d9cb3b064fdfb2e0e7706d14ffee20b762ad2
-> change-id: 20240214-axi-dmac-devm-probe-d718ef36fb58
-> --
-> 
-> Thanks!
-> - Nuno Sá
+ drivers/dma/dma-axi-dmac.c | 78 ++++++++++++++++++++--------------------------
+ 1 file changed, 34 insertions(+), 44 deletions(-)
+---
+base-commit: de7d9cb3b064fdfb2e0e7706d14ffee20b762ad2
+change-id: 20240214-axi-dmac-devm-probe-d718ef36fb58
+--
 
--- 
-~Vinod
+Thanks!
+- Nuno SÃ¡
+
 

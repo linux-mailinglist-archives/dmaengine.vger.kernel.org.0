@@ -1,56 +1,54 @@
-Return-Path: <dmaengine+bounces-1081-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1082-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F1B5860AFA
-	for <lists+dmaengine@lfdr.de>; Fri, 23 Feb 2024 07:52:20 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1EC7C860B2C
+	for <lists+dmaengine@lfdr.de>; Fri, 23 Feb 2024 08:10:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 137F21F249CE
-	for <lists+dmaengine@lfdr.de>; Fri, 23 Feb 2024 06:52:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ADAB0284589
+	for <lists+dmaengine@lfdr.de>; Fri, 23 Feb 2024 07:10:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39EB612B98;
-	Fri, 23 Feb 2024 06:52:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29AEA12E46;
+	Fri, 23 Feb 2024 07:10:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PgRqckuH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LbUYA4Wa"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD0F12B68;
-	Fri, 23 Feb 2024 06:52:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A70111B5
+	for <dmaengine@vger.kernel.org>; Fri, 23 Feb 2024 07:10:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708671134; cv=none; b=QBHMdEmTpYv4wTuFIxP1QbQz9+4xXEJkPUwvz3Vp+CrPOqj1txPtJZPpT+oNDSXT086qT+GijETSRGd9T4mnydiKgoSB4w+ULKG07Cks2JuSZ1DAmX4yREndljKSfO+xRHdOVHoOhbyE13L3ZNvQzx8l/0fMT9lAGtKS+7OFHOQ=
+	t=1708672223; cv=none; b=LTVZe407acurKop5rKcLMzSX7CyAPg0WFxQb02U5W7wV3QWBuiv62ptmL+Fp55La3+RhRGIjoIy47cN1/7FGmJZ/5OiQbAdjH3TaaHh8jjXtg6hAmgemK9cmyV1ALtchrk45d+JlxbfQdSZbOJYg7lZE7KuvCPB3ltBDdE75E+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708671134; c=relaxed/simple;
-	bh=PD7fumnCozoMq2DQsY+y9uUvvocD8d5Y6Kd1TmUZGME=;
+	s=arc-20240116; t=1708672223; c=relaxed/simple;
+	bh=3eVLF2ZUABFGxE9k31vBPei5Vo4JSC5Sx9LI5jj/uiU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dw6wYSOSZNv9NmwGcjm2zrx4RvTgGhvXPtoy3Co8AEzqSFXtZ3tXfyWen++oLFUeLiS1gvBiFLCpNMvj1ixPB105x0ogfEUXqPORuiFha+vYuBRir6EqrXLww+3M5GitOrHXoKRM4W2gBxDw54WlYYfm04WVsL3lEpX5T5lNARY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PgRqckuH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6B55C433F1;
-	Fri, 23 Feb 2024 06:52:12 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=DMMujs3d/eq/fykvwtFmfSDmiVQXdF1aZZjXrlhr9RaNKa+ST2OHbpiFSOkBexYxwtKhImASXp2h/xG4TRngsWkwpHhSjqA2EDOMdn25tvZ2DNgmwwLHOYtLtoSDQPBC+HA2hy4bmM3z+QsVKoSBm5DhPJX4d1cxvpWKBuGKXz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LbUYA4Wa; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19419C433F1;
+	Fri, 23 Feb 2024 07:10:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708671133;
-	bh=PD7fumnCozoMq2DQsY+y9uUvvocD8d5Y6Kd1TmUZGME=;
+	s=k20201202; t=1708672222;
+	bh=3eVLF2ZUABFGxE9k31vBPei5Vo4JSC5Sx9LI5jj/uiU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PgRqckuHHpeG6b/y+o1PlCuXDpjKutm2i7hjezlMXMLPBb4fBDGxRoOSNKJHhc8pE
-	 OxBj9vmBbGXqqVb5ZcyIHLvTL2ICq2QGj40anvgA8T11EbYQfYxjLDfIOhy50t3JMI
-	 Mm0y4D6JhnVTx3iq0aB6Z6Zf3n5RombqXY77ubmVYR7t2wTkZKJ/yBO+2naiOXMZYW
-	 jFIjOmwmh4ifN+ZhZqzBDtOG/ieym/d7W8QeHMBAFq/M7fgIGnyqDg+ezEk/4AMDZU
-	 jrzktN9+DJDPhD2hLFa3YhCZ+1wMDIAtsxd1laZGv148Gr+FTna61ctdu88J7TZ6tW
-	 sXM897v+vajJQ==
-Date: Fri, 23 Feb 2024 12:22:08 +0530
+	b=LbUYA4Wa/9GQRY6mUsrgypLPhnKeze7G/jcXJSvZ9R0uRwZ6mF5MYcsRqIcZSuAPE
+	 Ts7x/suh4M3V8vWzMd9mn/0rGLRCbr1yDwgLm5Gy9E3P0bWfmA6+poAQBzjoR580Qp
+	 FiAu6A1zyKjZMadanaFXLtWW5PyeSHed1NRCuVqOtwvLV1T9tXufgJy8b3P12SJW9j
+	 u4i+EpIPPheYKOCFjUzsjrNSCYLLg7K6K01+5+EGHKvuJwSG/91KIEd5qnm2eufXXt
+	 AkiWuTrkKjIdkHClRi7RNPwla79bU5PQv+vC/yOkoq5E0POCsghpaoFHhjj1BYpPTa
+	 NYmtxC0pFB2Pg==
+Date: Fri, 23 Feb 2024 12:40:18 +0530
 From: Vinod Koul <vkoul@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
-Subject: Re: [PATCH v2 1/1] dmaengine: fsl-qdma: add __iomem and struct in
- union to fix sparse warning
-Message-ID: <ZdhAmICEsIxtJYFI@matsya>
-References: <20240219155939.611237-1-Frank.Li@nxp.com>
- <ZddTmwh82K6biJSx@matsya>
+To: Nuno Sa <nuno.sa@analog.com>
+Cc: dmaengine@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCH v3 2/2] dmaengine: axi-dmac: move to device managed probe
+Message-ID: <ZdhE2m40lsxIgdr7@matsya>
+References: <20240222-axi-dmac-devm-probe-v3-0-16bdca9e64d6@analog.com>
+ <20240222-axi-dmac-devm-probe-v3-2-16bdca9e64d6@analog.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -59,15 +57,15 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZddTmwh82K6biJSx@matsya>
+In-Reply-To: <20240222-axi-dmac-devm-probe-v3-2-16bdca9e64d6@analog.com>
 
-On 22-02-24, 19:30, Vinod Koul wrote:
-> On 19-02-24, 10:59, Frank Li wrote:
-> > Fix below sparse warnings.
-> 
-> This does not apply for me, can you rebase
+On 22-02-24, 16:15, Nuno Sa wrote:
+> In axi_dmac_probe(), there's a mix in using device managed APIs and
+> explicitly cleaning things in the driver .remove() hook. Move to use
+> device managed APIs and thus drop the .remove() hook.
 
-Nevermind I had issues in my local branch, this works
+This one fails for me somehow (applied on next after merging fixes with
+patch1 on fixes)
 
 -- 
 ~Vinod

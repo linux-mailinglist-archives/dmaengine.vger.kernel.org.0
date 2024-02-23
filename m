@@ -1,205 +1,202 @@
-Return-Path: <dmaengine+bounces-1095-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1101-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58BD286112E
-	for <lists+dmaengine@lfdr.de>; Fri, 23 Feb 2024 13:11:42 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5462F861887
+	for <lists+dmaengine@lfdr.de>; Fri, 23 Feb 2024 17:57:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 713541C20C72
-	for <lists+dmaengine@lfdr.de>; Fri, 23 Feb 2024 12:11:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C33361F224CB
+	for <lists+dmaengine@lfdr.de>; Fri, 23 Feb 2024 16:57:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0FFC7B3F4;
-	Fri, 23 Feb 2024 12:11:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A50E7128831;
+	Fri, 23 Feb 2024 16:57:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="ytcpBCp4"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="U4VPDVMl"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F07F1427F;
-	Fri, 23 Feb 2024 12:11:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708690294; cv=none; b=chR9S9tMTRuShfYUwSWLwSi+w0SXpqIPWmRpDzXUTeoo50estwbELF8uzIVeEOdC8KwMm12iUBXWWV/NKNqX5cgqz1vclGV/dy1oUBtKpYvCFx2GxAuK5nEXZXC9zXU4Z9Lg1vnvD1n6AgIk8+kIoJLX5F4i/JntUlP/UfFffdI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708690294; c=relaxed/simple;
-	bh=3A3K2ELw3nB3j1z66xTP0KH+PvL2WJ78US2gUb6iSkY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=dzloQ+XVWRFSL18opKnGxD3wOCUwlPmjevuGSYr8QrOIHUFuXhJ6oNa+HjfXkIJON+Kl/qTV+BfRKvoIn2VJ2HA/lhE/KH0tajBobowx2iPwLRpAj7tRABfqIX3biutobDNaCGdtHozzjl1cXkSNQiqvgoX0bg9SKKsWjaehVRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=ytcpBCp4; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41N9b2JT014757;
-	Fri, 23 Feb 2024 07:11:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=
-	from:date:subject:mime-version:content-type
-	:content-transfer-encoding:message-id:references:in-reply-to:to
-	:cc; s=DKIM; bh=S4d0AT6oM91tAUIZJ87WXIleXKClwHIJCUxbBY7ixLU=; b=
-	ytcpBCp4nKV/s/z/L40R22WVMQ/yKve1MzYfbYk9cr5uAeFBCQH+IV5j47nGlX7h
-	OzdhWwY84nI5/mPaMLngaGhWU696+6JJh1S6MpguOSt1CfX0HFhTO+tIciXaR5fm
-	wBcNqHU7YPQqS2PaTGmIbdyNqUE4ND9aOmp2gdYLgxJfdTYu/BtlirO00VGZcMya
-	9P5nNPwVHg0adUAN7nkaYn2KE/GZfWA57YMJ0mGuoq7edTjB9S8WvzsUrzdYMtaM
-	Api/7TKjhjKqRBbVfKmySiR4AWYQBZy9HEBZoc1zn+9oQwPVV+z1qJcecDbfHVWm
-	aI1V40Y2eJAcAqK/Y0S36w==
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 3wd21pectf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 23 Feb 2024 07:11:12 -0500 (EST)
-Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
-	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 41NCBBD1004375
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 23 Feb 2024 07:11:11 -0500
-Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
- ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Fri, 23 Feb 2024 07:11:11 -0500
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
- ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Fri, 23 Feb 2024 07:11:10 -0500
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Fri, 23 Feb 2024 07:11:10 -0500
-Received: from [127.0.0.1] ([10.44.3.55])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 41NCAb2X032246;
-	Fri, 23 Feb 2024 07:11:03 -0500
-From: Nuno Sa <nuno.sa@analog.com>
-Date: Fri, 23 Feb 2024 13:14:04 +0100
-Subject: [PATCH v7 6/6] Documentation: iio: Document high-speed DMABUF
- based API
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD78384A37;
+	Fri, 23 Feb 2024 16:57:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.40
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708707426; cv=fail; b=Sk/tyk0FeSNS1nnzooIaSaArBxKOYGwBYzMucO74pp/x/WvVfi/MtelvQortsWHo34YySDBNz4TycqqoOoxNCpHeSrkw4lny+F+RNzAQjse8r1Gy620Doa+hA3xAyil6mdwGchKeaXNKCk/K/SeVCuE5alYqGSFmY0KxYs8wvoc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708707426; c=relaxed/simple;
+	bh=PK0b6REY+aezegtPHhQjPP7bLmf+GEbSfBanD3e3k90=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fKiM55AvXTpyhZmcRt24jqwajZ7NMXb+bLCDmyb4VOsxG31fBhBZoyg9Yzn/B8D9hu914aFD8GvTvAwAThNjodgd1w1TQHgY8tIM1mxdSLVHt7ZO1gcPakQOIa7jSi57BHUXUzw87gzoDKrB9bjnJHiMOkXrsc2/edM4GHo2IhI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=U4VPDVMl; arc=fail smtp.client-ip=40.107.236.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=c25Afx22CEH5ZugQvNuz3loUh3Ge7EXLL4PtymNI9fCfgeSb+FKXpfCXJwAGzRocL5t7ZTHOosEr25nvXlRqyg1CaDmkBheKQPj/CH2yNphHUoOVOT1mw3xwfg1nNlQHeA440z+yH+ZvQmWoP47S7hH7INJcM7EUZWm/orUb8XcOlVAsb8zygcBj96WUTt9+i5bWET9HAw+TeI7uA+ZHgn+Wmu5xV91vnwNG3yC6ynYB2O3mytIHjY831JTAPblUyu2QKPxK/cPO5XOkSTAAoizjWDF96H3oY7dKPNvKzylV5b6EUKIPil2Xm8o2zeK4J6mycE99hHlGlSiXwAxxJw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xDRZaMc9z3c/fNsnadu7iC1WOhR0GdmLUbCcdr5PmII=;
+ b=aOgg2Bf/2/CXja9ACfZMuS1uHdNg5OGtf+NU6veevOkD7fwcDDABYH2X6J732npgcWHrGBewxsxqYPC20+YWjYn+SNYUBqSQxDpTXd5UscPZq4pZJb/83tQrUSRjOfg2O1C7CpL7c+iYtF6tS9hjIIWPZ2ocuu8wS6nK6IlRDlWSLHMyNhGiaOyeqQp56JWWibYi4r1MrxjWZSdoikzaeir8i6Rvm1S0f6TGqMhjr/ndByXyT2OQQDftcJw9/EMJOgFb0WCYxPD9PFndTDj81+P28IElNJfSwJvDXcMEnjnMihB9HKTWUBMS7R4SaXFvaP6O1HYfyoFQxGof6fHlow==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xDRZaMc9z3c/fNsnadu7iC1WOhR0GdmLUbCcdr5PmII=;
+ b=U4VPDVMlHPsnr9J5YO/LvF1V0yJhjoIx3AgTwfoQew9NGQ5HnZ+mHA9T5kexIIG3uHAPMcU58N4wh1IXtw2q7qUhpeziAYF0wPVR+XI8V4SQFpSPMgV0VTEidg9nIidsmtYZIf8Dnp9mRbT+djddTyCbJi8rOY5itvislAP81go=
+Received: from DM6PR21CA0002.namprd21.prod.outlook.com (2603:10b6:5:174::12)
+ by CH3PR12MB7593.namprd12.prod.outlook.com (2603:10b6:610:141::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.22; Fri, 23 Feb
+ 2024 16:57:02 +0000
+Received: from SA2PEPF00001505.namprd04.prod.outlook.com
+ (2603:10b6:5:174:cafe::1a) by DM6PR21CA0002.outlook.office365.com
+ (2603:10b6:5:174::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.12 via Frontend
+ Transport; Fri, 23 Feb 2024 16:57:02 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ SA2PEPF00001505.mail.protection.outlook.com (10.167.242.37) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7292.25 via Frontend Transport; Fri, 23 Feb 2024 16:57:01 +0000
+Received: from SATLEXMB08.amd.com (10.181.40.132) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 23 Feb
+ 2024 10:57:01 -0600
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB08.amd.com
+ (10.181.40.132) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 23 Feb
+ 2024 08:57:01 -0800
+Received: from xsjlizhih40.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
+ Transport; Fri, 23 Feb 2024 10:57:00 -0600
+From: Lizhi Hou <lizhi.hou@amd.com>
+To: <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: Lizhi Hou <lizhi.hou@amd.com>, <nishad.saraf@amd.com>,
+	<sonal.santan@amd.com>, <max.zhen@amd.com>
+Subject: [RESEND PATCH V8 0/2] AMD QDMA driver
+Date: Fri, 23 Feb 2024 08:56:41 -0800
+Message-ID: <1708707403-47386-1-git-send-email-lizhi.hou@amd.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240223-iio-dmabuf-v7-6-78cfaad117b9@analog.com>
-References: <20240223-iio-dmabuf-v7-0-78cfaad117b9@analog.com>
-In-Reply-To: <20240223-iio-dmabuf-v7-0-78cfaad117b9@analog.com>
-To: Vinod Koul <vkoul@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        Jonathan Corbet
-	<corbet@lwn.net>,
-        Paul Cercueil <paul@crapouillou.net>
-CC: Daniel Vetter <daniel@ffwll.ch>,
-        Michael Hennerich
-	<Michael.Hennerich@analog.com>,
-        <linux-doc@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-iio@vger.kernel.org>, <linux-media@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <linaro-mm-sig@lists.linaro.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1708690439; l=3175;
- i=nuno.sa@analog.com; s=20231116; h=from:subject:message-id;
- bh=z7VWDFc/regIP5bhzx5ddI5hjHZUDa7CubfT2DvBqJ8=;
- b=ZeCFCCmBGvyup+Nc++CCzyNQ3WY0zc4zrSfRBrsq/X9t0SdbOXSWy6WJu+e/NnQ/chIERoHRI
- 2XzSTAcXv0pCOdDqVE3ZBXbWcRsFyFzJWuvmExyBgMrE1NgvR8ybw4e
-X-Developer-Key: i=nuno.sa@analog.com; a=ed25519;
- pk=3NQwYA013OUYZsmDFBf8rmyyr5iQlxV/9H4/Df83o1E=
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-GUID: Nt2f0PucLUTrPhVHTJjsdoVNy_yaYrct
-X-Proofpoint-ORIG-GUID: Nt2f0PucLUTrPhVHTJjsdoVNy_yaYrct
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-22_15,2024-02-23_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- suspectscore=0 malwarescore=0 mlxlogscore=521 priorityscore=1501
- impostorscore=0 clxscore=1015 lowpriorityscore=0 bulkscore=0 adultscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2402230087
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA2PEPF00001505:EE_|CH3PR12MB7593:EE_
+X-MS-Office365-Filtering-Correlation-Id: bf52b980-d1b8-45c3-6e47-08dc349074d2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	3owEvGogpXxedVTS6NpxEtJPnYAd6CO/ZvuSnz6uR1VetekzlL74Z41cW3SgR7fm8ZBCILHSmZdOgVJ+J8OZlPFqa6jawhQHMro/9ap3DLKk6/MtC9/rYb7BGBZqNfwgOk9Ocvtw3Zj9A3YW9TDS7eEeWdJ6eb1T+lUmgXEvMsvuSsmnsoiQcbP9NH2iSoN+3pX1dIm4QubBFIN54PRKrmK0U/DxjbdmZZFKq4jaoyCDEnyotX/0tmRVSSqwUT7HbUxn+epti1XW1j82A6fwshewKjWMeCPDwjU8+6vhDJAlF9rYfZf33zTSIOUL53nsqiY19umZo90E0JSL/bZe9EBwy+Tc588jdtgCltIhi+VvoZ0DOsJPjNUJrw43DDSgVDYsInG70z2WoBNYATwLg+TydQxyRSWQhYeCBl3TwGR8YVKoI8E3yNIeCJDhR/s1SyxACtzlBkizEufHajQt+W592nKLA71+GIp+iFJNnzieMTlrC62mqOcZn9aR4wzk1++bSkt4vx28JANYs//ztccyhNy8NV8Q7BvUrK2AZr9AAr9m2Z82hpt9Y82prvqneX6MI3S8j8ueEFFcaxXI0FIialYGwDXVn5uH01TCXLkBwWYI3Kt6mZQDOEWOaV6NZVR3DqnM2HHRdIBDLGafjw==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(230273577357003)(36860700004)(46966006)(40470700004);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Feb 2024 16:57:01.9025
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: bf52b980-d1b8-45c3-6e47-08dc349074d2
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SA2PEPF00001505.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7593
 
-From: Paul Cercueil <paul@crapouillou.net>
+Hello,
 
-Document the new DMABUF based API.
+The QDMA subsystem is used in conjunction with the PCI Express IP block
+to provide high performance data transfer between host memory and the
+card's DMA subsystem.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Signed-off-by: Nuno Sa <nuno.sa@analog.com>
----
- Documentation/iio/dmabuf_api.rst | 54 ++++++++++++++++++++++++++++++++++++++++
- Documentation/iio/index.rst      |  2 ++
- 2 files changed, 56 insertions(+)
+            +-------+       +-------+       +-----------+
+   PCIe     |       |       |       |       |           |
+   Tx/Rx    |       |       |       |  AXI  |           |
+ <=======>  | PCIE  | <===> | QDMA  | <====>| User Logic|
+            |       |       |       |       |           |
+            +-------+       +-------+       +-----------+
 
-diff --git a/Documentation/iio/dmabuf_api.rst b/Documentation/iio/dmabuf_api.rst
-new file mode 100644
-index 000000000000..1cd6cd51a582
---- /dev/null
-+++ b/Documentation/iio/dmabuf_api.rst
-@@ -0,0 +1,54 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===================================
-+High-speed DMABUF interface for IIO
-+===================================
-+
-+1. Overview
-+===========
-+
-+The Industrial I/O subsystem supports access to buffers through a
-+file-based interface, with read() and write() access calls through the
-+IIO device's dev node.
-+
-+It additionally supports a DMABUF based interface, where the userspace
-+can attach DMABUF objects (externally created) to a IIO buffer, and
-+subsequently use them for data transfers.
-+
-+A userspace application can then use this interface to share DMABUF
-+objects between several interfaces, allowing it to transfer data in a
-+zero-copy fashion, for instance between IIO and the USB stack.
-+
-+The userspace application can also memory-map the DMABUF objects, and
-+access the sample data directly. The advantage of doing this vs. the
-+read() interface is that it avoids an extra copy of the data between the
-+kernel and userspace. This is particularly useful for high-speed devices
-+which produce several megabytes or even gigabytes of data per second.
-+It does however increase the userspace-kernelspace synchronization
-+overhead, as the DMA_BUF_SYNC_START and DMA_BUF_SYNC_END IOCTLs have to
-+be used for data integrity.
-+
-+2. User API
-+===========
-+
-+As part of this interface, three new IOCTLs have been added. These three
-+IOCTLs have to be performed on the IIO buffer's file descriptor,
-+obtained using the IIO_BUFFER_GET_FD_IOCTL() ioctl.
-+
-+  ``IIO_BUFFER_DMABUF_ATTACH_IOCTL(int)``
-+    Attach the DMABUF object, identified by its file descriptor, to the
-+    IIO buffer. Returns zero on success, and a negative errno value on
-+    error.
-+
-+  ``IIO_BUFFER_DMABUF_DETACH_IOCTL(int)``
-+    Detach the given DMABUF object, identified by its file descriptor,
-+    from the IIO buffer. Returns zero on success, and a negative errno
-+    value on error.
-+
-+    Note that closing the IIO buffer's file descriptor will
-+    automatically detach all previously attached DMABUF objects.
-+
-+  ``IIO_BUFFER_DMABUF_ENQUEUE_IOCTL(struct iio_dmabuf *iio_dmabuf)``
-+    Enqueue a previously attached DMABUF object to the buffer queue.
-+    Enqueued DMABUFs will be read from (if output buffer) or written to
-+    (if input buffer) as long as the buffer is enabled.
-diff --git a/Documentation/iio/index.rst b/Documentation/iio/index.rst
-index 1b7292c58cd0..3eae8fcb1938 100644
---- a/Documentation/iio/index.rst
-+++ b/Documentation/iio/index.rst
-@@ -9,6 +9,8 @@ Industrial I/O
- 
-    iio_configfs
- 
-+   dmabuf_api
-+
-    ep93xx_adc
- 
-    bno055
+Comparing to AMD/Xilinx XDMA subsystem,
+    https://lore.kernel.org/lkml/Y+XeKt5yPr1nGGaq@matsya/
+the QDMA subsystem is a queue based, configurable scatter-gather DMA
+implementation which provides thousands of queues, support for multiple
+physical/virtual functions with single-root I/O virtualization (SR-IOV),
+and advanced interrupt support. In this mode the IP provides AXI4-MM and
+AXI4-Stream user interfaces which may be configured on a per-queue basis.
+
+The QDMA has been used for Xilinx Alveo PCIe devices.
+    https://www.xilinx.com/applications/data-center/v70.html
+
+This patch series is to provide the platform driver for AMD QDMA subsystem
+to support AXI4-MM DMA transfers. More functions, such as AXI4-Stream
+and SR-IOV, will be supported by future patches.
+
+The device driver for any FPGA based PCIe device which leverages QDMA can
+call the standard dmaengine APIs to discover and use the QDMA subsystem
+without duplicating the QDMA driver code in its own driver.
+
+Changes since v7:
+- Fixed smatch warnings
+
+Changes since v6:
+- Added a patch to create amd/ and empty Kconfig/Makefile for AMD drivers
+- Moved source code under amd/qdma/
+- Minor changes for code review comments
+
+Changes since v5:
+- Add more in patch description.
+
+Changes since v4:
+- Convert to use platform driver callback .remove_new()
+
+Changes since v3:
+- Minor changes in Kconfig description.
+
+Changes since v2:
+- A minor change from code review comments.
+
+Changes since v1:
+- Minor changes from code review comments.
+- Fixed kernel robot warning.
+
+Lizhi Hou (1):
+  dmaengine: amd: Add empty Kconfig and Makefile for AMD drivers
+
+Nishad Saraf (1):
+  dmaengine: amd: qdma: Add AMD QDMA driver
+
+ MAINTAINERS                            |    8 +
+ drivers/dma/Kconfig                    |    2 +
+ drivers/dma/Makefile                   |    1 +
+ drivers/dma/amd/Kconfig                |   14 +
+ drivers/dma/amd/Makefile               |    6 +
+ drivers/dma/amd/qdma/Makefile          |    8 +
+ drivers/dma/amd/qdma/qdma-comm-regs.c  |   64 ++
+ drivers/dma/amd/qdma/qdma.c            | 1185 ++++++++++++++++++++++++
+ drivers/dma/amd/qdma/qdma.h            |  265 ++++++
+ include/linux/platform_data/amd_qdma.h |   36 +
+ 10 files changed, 1589 insertions(+)
+ create mode 100644 drivers/dma/amd/Kconfig
+ create mode 100644 drivers/dma/amd/Makefile
+ create mode 100644 drivers/dma/amd/qdma/Makefile
+ create mode 100644 drivers/dma/amd/qdma/qdma-comm-regs.c
+ create mode 100644 drivers/dma/amd/qdma/qdma.c
+ create mode 100644 drivers/dma/amd/qdma/qdma.h
+ create mode 100644 include/linux/platform_data/amd_qdma.h
 
 -- 
-2.43.2
+2.34.1
 
 

@@ -1,53 +1,52 @@
-Return-Path: <dmaengine+bounces-1104-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1108-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E456861C36
-	for <lists+dmaengine@lfdr.de>; Fri, 23 Feb 2024 20:00:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CC303862CCE
+	for <lists+dmaengine@lfdr.de>; Sun, 25 Feb 2024 21:23:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 033B8283926
-	for <lists+dmaengine@lfdr.de>; Fri, 23 Feb 2024 19:00:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 67E8F283260
+	for <lists+dmaengine@lfdr.de>; Sun, 25 Feb 2024 20:23:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B11F01339BA;
-	Fri, 23 Feb 2024 19:00:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17DB217997;
+	Sun, 25 Feb 2024 20:23:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="gSJOHz8G"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sw-optimization.com header.i=@sw-optimization.com header.b="edXJWmE/"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.smtpout.orange.fr (smtp-27.smtpout.orange.fr [80.12.242.27])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18DE8143C6F
-	for <dmaengine@vger.kernel.org>; Fri, 23 Feb 2024 19:00:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.27
+Received: from mx11lb.world4you.com (mx11lb.world4you.com [81.19.149.121])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D72D2FE;
+	Sun, 25 Feb 2024 20:23:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.19.149.121
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708714803; cv=none; b=rXKF6a3RqSMRNVXRfbp967VWsaQ0CUsB7vRW/+gENMhhU8jE+v0AEjuPOVzTtY2/a5IEOk8oAdXuSpsXyFaDA2Qu8SrnPMPg9aG8v3WlHxsQq9Fdu+ebHLmDOCHR7t0DA7h65KdSAbKYJlVXj6A7azWBpC7sWSIlKKrpD7zoqXI=
+	t=1708892593; cv=none; b=eQ1vZPPQVFDQ0jaWQRgYmN/l82v+BEiy8ERQHdXz9O/qzEOGbjVENJhWgziABrPpVDrIUtbQzWpRwfaFueVcP55q9Tra04DkfaJiK0UnP17RtPiCX9Eu1mjtPsyHWjPYqjpXv7Z5IGWf5QMFiXpTEE20BoLZ6XDpazYaEmssUgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708714803; c=relaxed/simple;
-	bh=7UqDuwBDaflgwCxw652350Ulcmu75Iyquu+SWNAvWw4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nLXA50UuuwuqLUt/uwFG20BvF4hoXxG1PC2iWqjUGTa5iUR4lZVRCeZIcUPHVopoxZ0vP2NPJBpE9En98CWn8o3iy3EIfKSifSwsro/Lo02KG42x5DmBwA+8QlgqcEjKJRu1zYMsydhKVu1HBMXLWCJeTRGktRnAX6Hl+mSQO0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=gSJOHz8G; arc=none smtp.client-ip=80.12.242.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
-Received: from [192.168.1.18] ([92.140.202.140])
-	by smtp.orange.fr with ESMTPA
-	id dad3rSWmGAVWCdad3rWYDQ; Fri, 23 Feb 2024 19:50:38 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1708714238;
-	bh=b2nzjyV92V5xFcCR433HxBvfMH7+kUtrO9FWeyeWOCQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=gSJOHz8G0WmTpVutXKnIFVjcLbBB1QIclwwVEQyQ4j6idFD9JbNJap3o6UKPBJVZz
-	 cqMFD/y4EvOF8qWOv8Y8+4Qy1CHhsbC2ahw9ZY+oHwAwBojDPKbLC+0eARYERsT9kZ
-	 J8MljnZMQYF9Ed3LsOYxwkorekwBuoSpdxNXoEfegcDpWAKJ/8I6lQGCdD5v3FdVWp
-	 qo8FRhlWim+zAOeryHLsfiwrcj1wkkTTeNGWvmNwMpDTDfoPGJkMYbh8KayxOMxHWG
-	 NjB7hOFJZMC9iA/hGqmcSxgeeNpY5s+jus6lwGJZpxVEzbWBI1yZ87CD5L9VV1q6tH
-	 oiJ1FRv0DTNCA==
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Fri, 23 Feb 2024 19:50:38 +0100
-X-ME-IP: 92.140.202.140
-Message-ID: <530912d2-aa44-494d-bd51-dcac6147b78a@wanadoo.fr>
-Date: Fri, 23 Feb 2024 19:50:37 +0100
+	s=arc-20240116; t=1708892593; c=relaxed/simple;
+	bh=yW/+obWtXZSHaK0Je1F5WkuDWcXhnWjrtjf+VbTL55I=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=mMfQ0Kw9Fgrt13u/s3V54YjJBMhtVI+Ibd6X8dVlVUaGNEFB1MnhOW7aa67VHK5XeU4wBHOunin0TAlhr1YbkYW29MLcAOOjMFmIhDJS3v2nyESOkaEVhYm0OwoB3II55i1smKtOWBzvxC8VUq0SYKfESKSu4yD9YCvfvULXoss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sw-optimization.com; spf=pass smtp.mailfrom=sw-optimization.com; dkim=pass (1024-bit key) header.d=sw-optimization.com header.i=@sw-optimization.com header.b=edXJWmE/; arc=none smtp.client-ip=81.19.149.121
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sw-optimization.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sw-optimization.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sw-optimization.com; s=dkim11; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=ECMTj4d0RwuHIR6RVnxKDJNLLn5ad3xX9dN37q8WZfk=; b=edXJWmE/j2+9KN6qSnOzuJ2cHo
+	cotC8/3KLRovQiwfhhrdtKZClEeOFBhE2BtXx/BKrsE4vJ240ZAiffmNmJ618+l++GnK7ap42JQqz
+	OR+84dsQPF5WezZHAjkVd3uBM35J0UXLrIJAYU+L2JNsLO/BbKJNB/dLOTu1qv3BoSnk=;
+Received: from [82.194.150.36] (helo=[192.168.0.145])
+	by mx11lb.world4you.com with esmtpa (Exim 4.96.2)
+	(envelope-from <eas@sw-optimization.com>)
+	id 1reKkj-0006le-1n;
+	Sun, 25 Feb 2024 21:05:37 +0100
+Message-ID: <245a848c-5bbc-463d-b7e1-b82cea2c4dba@sw-optimization.com>
+Date: Sun, 25 Feb 2024 21:05:37 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -55,154 +54,156 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND PATCH V8 2/2] dmaengine: amd: qdma: Add AMD QDMA driver
-Content-Language: en-MW
-To: Lizhi Hou <lizhi.hou@amd.com>, vkoul@kernel.org,
- dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Nishad Saraf <nishads@amd.com>, nishad.saraf@amd.com,
- sonal.santan@amd.com, max.zhen@amd.com
-References: <1708707403-47386-1-git-send-email-lizhi.hou@amd.com>
- <1708707403-47386-3-git-send-email-lizhi.hou@amd.com>
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <1708707403-47386-3-git-send-email-lizhi.hou@amd.com>
+Subject: Re: [PATCH] dmaengine: altera-msgdma: fix descriptors freeing logic
+From: Eric Schwarz <eas@sw-optimization.com>
+To: Olivier Dautricourt <olivierdautricourt@gmail.com>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Vinod Koul <vkoul@kernel.org>, Stefan Roese <sr@denx.de>
+References: <20230920200636.32870-3-olivierdautricourt@gmail.com>
+ <22402987-305b-024b-044e-53db17037d90@sw-optimization.com>
+ <ZQyWsvcQCJgmG5aO@freebase>
+ <8d18106d-444e-9346-26cc-3767540df5d8@sw-optimization.com>
+ <ZQ3B9NWVmLvaVhJX@freebase>
+ <5e2404d4-f36c-7718-c0fc-d226aefdf2f6@sw-optimization.com>
+Content-Language: de-DE
+In-Reply-To: <5e2404d4-f36c-7718-c0fc-d226aefdf2f6@sw-optimization.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-AV-Do-Run: Yes
 
-Le 23/02/2024 à 17:56, Lizhi Hou a écrit :
-> From: Nishad Saraf <nishads@amd.com>
+Hello Olivier,
+
+just a ping on getting the patches / fixes below mainline. - Were you 
+able to get hardware for testing?
+
+Many thanks
+Eric
+
+
+Am 28.09.2023 um 09:57 schrieb Eric Schwarz:
+> Hello Olivier,
 > 
-> Adds driver to enable PCIe board which uses AMD QDMA (the Queue-based
-> Direct Memory Access) subsystem. For example, Xilinx Alveo V70 AI
-> Accelerator devices.
->      https://www.xilinx.com/applications/data-center/v70.html
+> Am 22.09.2023 um 18:33 schrieb Olivier Dautricourt:
+>> Hi Eric,
+>>
+>> On Fri, Sep 22, 2023 at 09:49:59AM +0200, Eric Schwarz wrote:
+>>> Hello Olivier,
+>>>
+>>>>> Am 20.09.2023 um 21:58 schrieb Olivier Dautricourt:
+>>>>>> Sparse complains because we first take the lock in msgdma_tasklet 
+>>>>>> -> move
+>>>>>> locking to msgdma_chan_desc_cleanup.
+>>>>>> In consequence, move calling of msgdma_chan_desc_cleanup outside 
+>>>>>> of the
+>>>>>> critical section of function msgdma_tasklet.
+>>>>>>
+>>>>>> Use spin_unlock_irqsave/restore instead of just spinlock/unlock to 
+>>>>>> keep
+>>>>>> state of irqs while executing the callbacks.
+>>>>>
+>>>>> What about the locking in the IRQ handler msgdma_irq_handler() 
+>>>>> itself? -
+>>>>> Shouldn't spin_unlock_irqsave/restore() be used there as well 
+>>>>> instead of
+>>>>> just spinlock/unlock()?
+>>>>
+>>>> IMO no:
+>>>> It is covered by [1]("Locking Between Hard IRQ and Softirqs/Tasklets")
+>>>> The irq handler cannot be preempted by the tasklet, so the
+>>>> spin_lock/unlock version is ok. However the tasklet could be 
+>>>> interrupted
+>>>> by the Hard IRQ hence the disabling of irqs with save/restore when
+>>>> entering critical section.
+>>>>
+>>>> It should not be needed to keep interrupts locally disabled while 
+>>>> invoking
+>>>> callbacks, will add this to the commit description.
+>>>>
+>>>> [1] https://www.kernel.org/doc/Documentation/kernel-hacking/locking.rst
+>>>
+>>> Thanks for the link. I have read differently here [2] w/ special 
+>>> emphasis on
+>>> "Lesson 3: spinlocks revisited.".
+>>>
+>>> [2] https://www.kernel.org/doc/Documentation/locking/spinlocks.txt
+>>>
+>>
+>> This chapter [2] says that our code must use irq versions of spin_lock
+>> because our handler does indeed play with the lock. However this
+>> requirement does not apply to the irq handler itself, as we know that the
+>> interrupt line is disabled during the execution of the handler (and our
+>> handler is not shared with another irq).
 > 
-> The QDMA subsystem is used in conjunction with the PCI Express IP block
-> to provide high performance data transfer between host memory and the
-> card's DMA subsystem.
+> "... as we know that the interrupt line is disabled during the execution 
+> of the handler (and our handler is not shared with another irq)."
 > 
->              +-------+       +-------+       +-----------+
->     PCIe     |       |       |       |       |           |
->     Tx/Rx    |       |       |       |  AXI  |           |
->   <=======>  | PCIE  | <===> | QDMA  | <====>| User Logic|
->              |       |       |       |       |           |
->              +-------+       +-------+       +-----------+
+> That was the point I wanted to be sure about. So if the IRQ handler 
+> cannot be called twice ensured by architecture neither on single or 
+> multi CPU systems (SMP or others) I am fine.
+> Thanks for your response on that. Appreciated.
 > 
-> The primary mechanism to transfer data using the QDMA is for the QDMA
-> engine to operate on instructions (descriptors) provided by the host
-> operating system. Using the descriptors, the QDMA can move data in both
-> the Host to Card (H2C) direction, or the Card to Host (C2H) direction.
-> The QDMA provides a per-queue basis option whether DMA traffic goes
-> to an AXI4 memory map (MM) interface or to an AXI4-Stream interface.
+> Because you take the effort to set up hardware and environment again you 
+> may also test following fixes/improvements from zynqmp driver which 
+> could then be merged into altera-msgdma driver. Please check yourself:
 > 
-> The hardware detail is provided by
->      https://docs.xilinx.com/r/en-US/pg302-qdma
+> f2b816a1dfb8 ("dmaengine: zynqmp_dma: Add device_synchronize support")
+> # Caught by your patchset
+> #9558cf4ad07e ("dmaengine: zynqmp_dma: fix lockdep warning in tasklet")
+> # Caught by your patchset
+> #16ed0ef3e931 ("dmaengine: zynqmp_dma: cleanup after completing all 
+> descriptors")
+> # Caught by your patchset - For the altera-msgdma driver it is a real 
+> fix not an optimization.
+> #48594dbf793a ("dmaengine: zynqmp_dma: Use list_move_tail instead of 
+> list_del/list_add_tail")
+> 5ba080aada5e ("dmaengine: zynqmp_dma: Fix race condition in the probe")
 > 
-> Implements dmaengine APIs to support MM DMA transfers.
-> - probe the available DMA channels
-> - use dma_slave_map for channel lookup
-> - use virtual channel to manage dmaengine tx descriptors
-> - implement device_prep_slave_sg callback to handle host scatter gather
->    list
-> - implement descriptor metadata operations to set device address for DMA
->    transfer
+> Note: If the sequence is applied in reverse order the log would be 
+> comparable to zynqmp driver's log.
 > 
-> Signed-off-by: Nishad Saraf <nishads@amd.com>
-> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
-> ---
-
-...
-
-> +static void qdma_free_qintr_rings(struct qdma_device *qdev)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < qdev->qintr_ring_num; i++) {
-> +		if (!qdev->qintr_rings[i].base)
-> +			continue;
-> +
-> +		dma_free_coherent(&qdev->pdev->dev, QDMA_INTR_RING_SIZE,
-> +				  qdev->qintr_rings[i].base,
-> +				  qdev->qintr_rings[i].dev_base);
-> +	}
-> +}
-> +
-> +static int qdma_alloc_qintr_rings(struct qdma_device *qdev)
-> +{
-> +	u32 ctxt[QDMA_CTXT_REGMAP_LEN];
-> +	struct device *dev = &qdev->pdev->dev;
-> +	struct qdma_intr_ring *ring;
-> +	struct qdma_ctxt_intr intr_ctxt;
-> +	u32 vector;
-> +	int ret, i;
-> +
-> +	qdev->qintr_ring_num = qdev->queue_irq_num;
-> +	qdev->qintr_rings = devm_kcalloc(dev, qdev->qintr_ring_num,
-> +					 sizeof(*qdev->qintr_rings),
-> +					 GFP_KERNEL);
-> +	if (!qdev->qintr_rings)
-> +		return -ENOMEM;
-> +
-> +	vector = qdev->queue_irq_start;
-> +	for (i = 0; i < qdev->qintr_ring_num; i++, vector++) {
-> +		ring = &qdev->qintr_rings[i];
-> +		ring->qdev = qdev;
-> +		ring->msix_id = qdev->err_irq_idx + i + 1;
-> +		ring->ridx = i;
-> +		ring->color = 1;
-> +		ring->base = dma_alloc_coherent(dev, QDMA_INTR_RING_SIZE,
-> +						&ring->dev_base,
-> +						GFP_KERNEL);
-
-Hi,
-
-Does it make sense to use dmam_alloc_coherent() and remove 
-qdma_free_qintr_rings()?
-
-If yes, maybe the function could be renamed as qdmam_alloc_qintr_rings() 
-or devm_qdma_alloc_qintr_rings() to show that it is fully managed.
-
-CJ
-
-> +		if (!ring->base) {
-> +			qdma_err(qdev, "Failed to alloc intr ring %d", i);
-> +			ret = -ENOMEM;
-> +			goto failed;
-> +		}
-> +		intr_ctxt.agg_base = QDMA_INTR_RING_BASE(ring->dev_base);
-> +		intr_ctxt.size = (QDMA_INTR_RING_SIZE - 1) / 4096;
-> +		intr_ctxt.vec = ring->msix_id;
-> +		intr_ctxt.valid = true;
-> +		intr_ctxt.color = true;
-> +		ret = qdma_prog_context(qdev, QDMA_CTXT_INTR_COAL,
-> +					QDMA_CTXT_CLEAR, ring->ridx, NULL);
-> +		if (ret) {
-> +			qdma_err(qdev, "Failed clear intr ctx, ret %d", ret);
-> +			goto failed;
-> +		}
-> +
-> +		qdma_prep_intr_context(qdev, &intr_ctxt, ctxt);
-> +		ret = qdma_prog_context(qdev, QDMA_CTXT_INTR_COAL,
-> +					QDMA_CTXT_WRITE, ring->ridx, ctxt);
-> +		if (ret) {
-> +			qdma_err(qdev, "Failed setup intr ctx, ret %d", ret);
-> +			goto failed;
-> +		}
-> +
-> +		ret = devm_request_threaded_irq(dev, vector, NULL,
-> +						qdma_queue_isr, IRQF_ONESHOT,
-> +						"amd-qdma-queue", ring);
-> +		if (ret) {
-> +			qdma_err(qdev, "Failed to request irq %d", vector);
-> +			goto failed;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +
-> +failed:
-> +	qdma_free_qintr_rings(qdev);
-> +	return ret;
-> +}
-
-...
+> IMHO your patchset could/should be extended by two more patches and 
+> split into small junks as mentioned. Then history would stay intact to 
+> be compared to zynqmp driver.
+> 
+> Note: Take care about "Developer’s Certificate of Origin 1.1". IMHO 
+> "Signed-off-by" tags from the other patches might/must be copied at 
+> least for most of the patches then, which would make it easier to get it 
+> into mainline.
+> 
+> Btw, some cosmetic changes could be made in the mainlined driver:
+> 
+> 30s/implements/Implements/
+> 31s/data/Data/
+> 32s/data/Data/
+> 33s/the/The/
+> 39s/data/Data/
+> 40s/data/Data/
+> 41s/characteristics/Characteristics/
+> 109s/response/Response/
+> 154s/implements/Implements/
+> 154s/sw\ /SW\ /
+> 155s/support/Support/
+> 155s/api/API/
+> 156s/assosiated/Associated/
+> 157s/node\ /Node\ /
+> 158s/transmit/Transmit/
+> 259s/Hw/HW/
+> 291s/Hw/HW/
+> 322s/prepare/Prepare/
+> 327s/transfer/Transfer/
+> 378s/prepare/Prepare/
+> 384s/transfer/Transfer/
+> 385s/transfer/Transfer/
+> 502s/its/it\'s/
+> 514s/oder/order/
+> 530s/copy\ /Copy\ /
+> 680s/sSGDMA/mSGDMA/
+> 723s/Interrupt/interrupt/
+> 752s/\(\)//
+> 921s/\(\)//
+> 
+> ... and another patch, if that is taken into account.
+> 
+> Cheers
+> Eric
 

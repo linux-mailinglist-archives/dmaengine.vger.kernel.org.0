@@ -1,98 +1,139 @@
-Return-Path: <dmaengine+bounces-1115-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1116-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF4548673BD
-	for <lists+dmaengine@lfdr.de>; Mon, 26 Feb 2024 12:46:01 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8948D8673EC
+	for <lists+dmaengine@lfdr.de>; Mon, 26 Feb 2024 12:52:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 650D01F2D885
-	for <lists+dmaengine@lfdr.de>; Mon, 26 Feb 2024 11:46:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A2D6E1C2326A
+	for <lists+dmaengine@lfdr.de>; Mon, 26 Feb 2024 11:52:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C36651DA37;
-	Mon, 26 Feb 2024 11:45:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1DEC1EB35;
+	Mon, 26 Feb 2024 11:52:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FKOYLbUG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mUnRJzQy"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F42E1D54B
-	for <dmaengine@vger.kernel.org>; Mon, 26 Feb 2024 11:45:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2239B1DA2E
+	for <dmaengine@vger.kernel.org>; Mon, 26 Feb 2024 11:52:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708947956; cv=none; b=tO8gfQUYwidY098QdxCYeeKJCj+GmCaxQ8KbX1QJfaY4cmJhES8qnrbn1gxDacQa6mavXzkWVjwN394M1CNy1hdHryaOvL+kYYl3XKB4by4RfXtq1cm6fYzyGV2x9S3ZCvCoyShNGeD0RDvgzn2wjht+YcgwSgN3eXY9oIHOEUY=
+	t=1708948352; cv=none; b=XAuBhtKER8GfwLj9VWXro7vMs+RUV3nfJKzmgZz3BLZ5GB3EzCw1xVuvNpMHZW6VeOqErRbBv9vLjbmhysUj3d5aoDb3uTfZz+n/mc3+id4JNETx5fkpJXe8Y0m0WqW/7KUwcmTpc8NseQffJkr4ibQ8WCx0o25PBRJGwUfPN1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708947956; c=relaxed/simple;
-	bh=5QHOzDnr2fZFc8mJv/ASjvc4DZGcBtF/FA4nRGxtHbI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LDxsquDWdYfZ+A7kyMLFtkJC6jY0oVrLltNonSMBfrmrJXOqbHY3f3x3EMbA48HFWS6osyhZWN2VrudAKASkihblVodekcaqzxE2RFR9j25sGDLI7Wyaz3c8dUeOicrEznqGSyPqkY/O/Fa3yYh9EIIg21fJvVj1+JAVW2H3u3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FKOYLbUG; arc=none smtp.client-ip=209.85.218.48
+	s=arc-20240116; t=1708948352; c=relaxed/simple;
+	bh=BCspbtwrDy65BB7rOp5vz3y81XTaY6XHQSQGB8e5Fo0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uZI0aBw63zMiIEzN0zRil1pbZj6PbI95u1WB+ptnKq+MfXC2CCeGciowEuUYBKJzguijExtNOxspGzR4QiyoHTsXPK0sf2MLcUZ61RnJm5faPKaDPy6M9225Pw9JGVJ/+Kg8tbMsTHazVld0jtawHKngb/nU9ZWvJqQ7U2DsvRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mUnRJzQy; arc=none smtp.client-ip=209.85.218.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a431324e84cso117532766b.1
-        for <dmaengine@vger.kernel.org>; Mon, 26 Feb 2024 03:45:54 -0800 (PST)
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a43488745bcso128131466b.3
+        for <dmaengine@vger.kernel.org>; Mon, 26 Feb 2024 03:52:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708947953; x=1709552753; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5QHOzDnr2fZFc8mJv/ASjvc4DZGcBtF/FA4nRGxtHbI=;
-        b=FKOYLbUGDQbtXJBEJNWkNW9CH7hEMkO3rlzlqmmwRupvA1OSmmJQW2ZSXRnsgfGJW4
-         PcfNfwhDOfLhYUfvoKU7heXXnV4uLJX4Rni6bOCazo0C8B6DxTqbvuTIHlh7CQcWvsW0
-         PtAGR9Q+B/J8BLrp824TsctVBjs7BCTwbuewjrCWzD2DRvX0Q4fG2Obro2ViMV1O+vL1
-         pvCK4gCs0AQJm9Exy5bT6ToG5xOodxBI2+GsEDvt3muGymAE5RNhmV6A0gCu+PIDWigB
-         bu0RvujSON2hYeiZ/BRX+F4y788nj3HHVuq3TYQ1HntiKDEbqeFeMT6Wj3eDaOuREUI1
-         gP7w==
+        d=linaro.org; s=google; t=1708948349; x=1709553149; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qB8hWXSvkZbqLJ31D8l/uDsLKWgY2404VtdI5HHKIEY=;
+        b=mUnRJzQyF1iolYW3eAIgAd0R/F/Jus4C48XGCR4njOqJXNK9janRL+hPcTTFw8sG8C
+         /znvoGKpMx/mY9jLqPguJqiADZPoPqvIldi9T3/Y0ty09AJJaQvG3zFw+JNKkpGfhhXi
+         Qkxe78m8axVtcoq02K78EuHT/LoyDfqudiUAGj4rRfgG4NhWb6ofEW1dEOFPK3zBmRUp
+         ggPVpeqb107+ctWQui23CSORaV8SNkrq5Thr5yYf8/AZIdKsEl9kidEwyaQo7sQILOf/
+         Uc0HMC6ytwtlPLunYAQV5qTs6ZzHtXsoc+yeIE9Vfgwf7MPzjDu5J9AcPhmPMBIP6cOX
+         Me9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708947953; x=1709552753;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5QHOzDnr2fZFc8mJv/ASjvc4DZGcBtF/FA4nRGxtHbI=;
-        b=hqVinafJBnIhTu1JPl7tBHYbcPq+MXcF6TNKxSwX3D2cMzh09JVwsXtBKkMZd2vPzD
-         DgnVRHSOnYIBv1Hvgpx8/PZeUzUalgviDrf+LP9ufKXFLPGlPlJEB/1lEmJTZUF3oSZa
-         nkBS/MStB9L81DdxRll1VZNt47sprDArfWGS0WBdGhZklE4GmWD1qdOTXyIHYrRZgTtW
-         jMKHMYNH/kV2IzAHhrvEiV+KYE19luJw7iiib01ckyLaeJwdkh3/FZVuovnsOdhwuXFf
-         cUUunArClZ1cqK2tKnK6DfJLgp6RHFSEcrHSqS8+Fh7VEZWTFelSnlIzJlCmHacBusKv
-         LRrw==
-X-Forwarded-Encrypted: i=1; AJvYcCUCc53xuayRZ6lXZCklSKHh/LlM174k0ZvqlRWWXVL9IK4bcBZiWxnEZ01MPgxF6XlbYdkDgjbTh/1zOKpBSsp3PEdPxFUR0GKy
-X-Gm-Message-State: AOJu0Yw8RSCbFRrfuiPDaYkVUdVkXyLQGQLJRYZ06xoFwa7Jx+vEt5oN
-	3X+O98T+hr9gjEdDvM7PSvA7OZO1e4JyfR1JmrOWlQ6jc9QBSJWMeNiPvNfkpUw=
-X-Google-Smtp-Source: AGHT+IH8TtND5SHe97VFjkocDpWlBzqqd8/3crqG9Nh3OaWBEP6nmhxYTZJXMwvAZhqQ56h19IStNQ==
-X-Received: by 2002:a17:906:2419:b0:a3e:f7ae:49b6 with SMTP id z25-20020a170906241900b00a3ef7ae49b6mr4000009eja.49.1708947953323;
-        Mon, 26 Feb 2024 03:45:53 -0800 (PST)
-Received: from [192.168.0.173] ([79.115.63.202])
-        by smtp.gmail.com with ESMTPSA id vh12-20020a170907d38c00b00a3ee9305b02sm2337992ejc.20.2024.02.26.03.45.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Feb 2024 03:45:52 -0800 (PST)
-Message-ID: <1d7b31a1-60c4-45b3-a7ae-a3a2c2e126a8@linaro.org>
-Date: Mon, 26 Feb 2024 13:45:50 +0200
+        d=1e100.net; s=20230601; t=1708948349; x=1709553149;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qB8hWXSvkZbqLJ31D8l/uDsLKWgY2404VtdI5HHKIEY=;
+        b=SgSTZc2iiykHZJIUdKIBAj4WXfxizb38VJxp8djGktqZzM0XfM9bHl6B3Afa58Mhsj
+         TUChQoGdSufygOiwKpnnB2bOluyhNlmXUYmI5xZijf9Oqe7ROZ9ujYx6JK9FH+jHWx+d
+         +CRpXIrievNgN1mNm64nwMBB1b01M5c/lUuPHTv0QqXzA0ePTIAC12T+KzcRx7+vSvQd
+         nTOOeqDNtY4NbWbHwXFUbRer2X9uGRqA0ocNb0ZoEkA/yNcC4MHxXwuvsFouy15NweEh
+         Tizyz04Htg/W5ybYJA0MhU3cyodobo2jotI1FX1o6a4dYRyDlZqzXgVF+7mzEZWdCxuG
+         qxCw==
+X-Gm-Message-State: AOJu0Yw0YEMJgG5kA8qsX61nNs7bBOAJLSwATcBuOTeJEiYh1vnqBsDs
+	CbHf1jLxZ2kMS3acmyTUE/96HGxvY9Ucka8xSyDu0p7LFnLlIELqRsc6x86eKaQ=
+X-Google-Smtp-Source: AGHT+IF8nZj2AxIU8pGo453OtUaGq+NyQ4OirQx0LwfQNcLkXJfG2Vu4AamqJIoyTfiPDFE9fbm0Ig==
+X-Received: by 2002:a17:906:2e89:b0:a3f:5144:ada2 with SMTP id o9-20020a1709062e8900b00a3f5144ada2mr4942148eji.2.1708948349541;
+        Mon, 26 Feb 2024 03:52:29 -0800 (PST)
+Received: from 1.. ([79.115.63.202])
+        by smtp.gmail.com with ESMTPSA id w9-20020a1709064a0900b00a3d153fba90sm2328999eju.220.2024.02.26.03.52.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Feb 2024 03:52:29 -0800 (PST)
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+To: claudiu.beznea@tuxon.dev,
+	nicolas.ferre@microchip.com
+Cc: dmaengine@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mtd@lists.infradead.org,
+	linux-crypto@vger.kernel.org,
+	Tudor Ambarus <tudor.ambarus@linaro.org>
+Subject: [PATCH v2] MAINTAINERS: Remove T Ambarus from few mchp entries
+Date: Mon, 26 Feb 2024 13:52:25 +0200
+Message-Id: <20240226115225.75675-1-tudor.ambarus@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] MAINTAINERS: Remove T Ambarus from few mchp entries
-Content-Language: en-US
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: claudiu.beznea@tuxon.dev, nicolas.ferre@microchip.com,
- dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mtd@lists.infradead.org, linux-crypto@vger.kernel.org
-References: <20240226094718.29104-1-tudor.ambarus@linaro.org>
- <20240226112132.22025454@xps-13>
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <20240226112132.22025454@xps-13>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1536; i=tudor.ambarus@linaro.org; h=from:subject; bh=BCspbtwrDy65BB7rOp5vz3y81XTaY6XHQSQGB8e5Fo0=; b=owEBbQGS/pANAwAKAUtVT0eljRTpAcsmYgBl3Ht5X/XCQnIus7mvWtg0Lsru8nzZ50DOo0DbB MejgeqpNFOJATMEAAEKAB0WIQQdQirKzw7IbV4d/t9LVU9HpY0U6QUCZdx7eQAKCRBLVU9HpY0U 6Q0OB/9/8s7uW+XXz7vgrg8wAJxmRQkx0Dkl1yCpnGHa8UxC3I8g3KZx/LyeB4cZAIDa3lyLDLI dbPlxvq+sB4jGQkzIZumZEIf/DCIbx3TcDxiTqtNl3Q6GaBMuCarpXsK7/E4g2Ho1DGAmBbuRid XtP2GTIu06CaR9ctAoPrdbr2RFiAr0nB2yOLcSjxiHmLIXop09uU4iAIlbOUziE+4cM70AbOMLX A2uMAPr+t/0ORkizGNJT8/zIvisNxpdMxTVhAHBD4y6kpENvKaShsop8mAFy8X70+TNxP+7aWtX ddrEC5AxeDtAMdNq7sfBwInmw3zlYXFw4BXbOymWMnCZlvew
+X-Developer-Key: i=tudor.ambarus@linaro.org; a=openpgp; fpr=280B06FD4CAAD2980C46DDDF4DB1B079AD29CF3D
+Content-Transfer-Encoding: 8bit
 
+I have been no longer at Microchip for more than a year and I'm no
+longer interested in maintaining these drivers. Let other mchp people
+step up, thus remove myself. Thanks for the nice collaboration everyone!
 
+Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+---
+Shall go through the at91 tree.
 
-On 26.02.2024 12:21, Miquel Raynal wrote:
-> Could we mark these entries orphaned instead of removing them?
+v2: make entries as orphan instead of removing them
 
-ok, will send v2.
+ MAINTAINERS | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e1475ca38ff2..bce0ae12d599 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14350,7 +14350,6 @@ F:	drivers/misc/xilinx_tmr_manager.c
+ 
+ MICROCHIP AT91 DMA DRIVERS
+ M:	Ludovic Desroches <ludovic.desroches@microchip.com>
+-M:	Tudor Ambarus <tudor.ambarus@linaro.org>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ L:	dmaengine@vger.kernel.org
+ S:	Supported
+@@ -14399,9 +14398,8 @@ F:	Documentation/devicetree/bindings/media/microchip,csi2dc.yaml
+ F:	drivers/media/platform/microchip/microchip-csi2dc.c
+ 
+ MICROCHIP ECC DRIVER
+-M:	Tudor Ambarus <tudor.ambarus@linaro.org>
+ L:	linux-crypto@vger.kernel.org
+-S:	Maintained
++S:	Orphan
+ F:	drivers/crypto/atmel-ecc.*
+ 
+ MICROCHIP EIC DRIVER
+@@ -14506,9 +14504,8 @@ S:	Maintained
+ F:	drivers/mmc/host/atmel-mci.c
+ 
+ MICROCHIP NAND DRIVER
+-M:	Tudor Ambarus <tudor.ambarus@linaro.org>
+ L:	linux-mtd@lists.infradead.org
+-S:	Supported
++S:	Orphan
+ F:	Documentation/devicetree/bindings/mtd/atmel-nand.txt
+ F:	drivers/mtd/nand/raw/atmel/*
+ 
+-- 
+2.34.1
+
 

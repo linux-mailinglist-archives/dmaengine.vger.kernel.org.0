@@ -1,139 +1,132 @@
-Return-Path: <dmaengine+bounces-1116-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1117-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8948D8673EC
-	for <lists+dmaengine@lfdr.de>; Mon, 26 Feb 2024 12:52:36 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C9D7D8676A8
+	for <lists+dmaengine@lfdr.de>; Mon, 26 Feb 2024 14:34:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A2D6E1C2326A
-	for <lists+dmaengine@lfdr.de>; Mon, 26 Feb 2024 11:52:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0764F1C247FB
+	for <lists+dmaengine@lfdr.de>; Mon, 26 Feb 2024 13:34:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1DEC1EB35;
-	Mon, 26 Feb 2024 11:52:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83E7812881A;
+	Mon, 26 Feb 2024 13:34:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mUnRJzQy"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mlXB3JID"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2239B1DA2E
-	for <dmaengine@vger.kernel.org>; Mon, 26 Feb 2024 11:52:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 302147FBAA;
+	Mon, 26 Feb 2024 13:34:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708948352; cv=none; b=XAuBhtKER8GfwLj9VWXro7vMs+RUV3nfJKzmgZz3BLZ5GB3EzCw1xVuvNpMHZW6VeOqErRbBv9vLjbmhysUj3d5aoDb3uTfZz+n/mc3+id4JNETx5fkpJXe8Y0m0WqW/7KUwcmTpc8NseQffJkr4ibQ8WCx0o25PBRJGwUfPN1Y=
+	t=1708954477; cv=none; b=hU6JfemUpjotRXhVwPBjDs83JnXPFtEzkiLgUPELGCpS9BL1NlXJVmRMGPOVosUdtiBRjtLf2p09w8EQQ8YE0CMYZP43XQp0VoeGzoqI/F2H5CJrDN/t7bfEkWv7M5h2umuf5zRDBbakDMlpLBPvJbBpXgHEBtyG+lPt1CSzV0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708948352; c=relaxed/simple;
-	bh=BCspbtwrDy65BB7rOp5vz3y81XTaY6XHQSQGB8e5Fo0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uZI0aBw63zMiIEzN0zRil1pbZj6PbI95u1WB+ptnKq+MfXC2CCeGciowEuUYBKJzguijExtNOxspGzR4QiyoHTsXPK0sf2MLcUZ61RnJm5faPKaDPy6M9225Pw9JGVJ/+Kg8tbMsTHazVld0jtawHKngb/nU9ZWvJqQ7U2DsvRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mUnRJzQy; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a43488745bcso128131466b.3
-        for <dmaengine@vger.kernel.org>; Mon, 26 Feb 2024 03:52:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708948349; x=1709553149; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qB8hWXSvkZbqLJ31D8l/uDsLKWgY2404VtdI5HHKIEY=;
-        b=mUnRJzQyF1iolYW3eAIgAd0R/F/Jus4C48XGCR4njOqJXNK9janRL+hPcTTFw8sG8C
-         /znvoGKpMx/mY9jLqPguJqiADZPoPqvIldi9T3/Y0ty09AJJaQvG3zFw+JNKkpGfhhXi
-         Qkxe78m8axVtcoq02K78EuHT/LoyDfqudiUAGj4rRfgG4NhWb6ofEW1dEOFPK3zBmRUp
-         ggPVpeqb107+ctWQui23CSORaV8SNkrq5Thr5yYf8/AZIdKsEl9kidEwyaQo7sQILOf/
-         Uc0HMC6ytwtlPLunYAQV5qTs6ZzHtXsoc+yeIE9Vfgwf7MPzjDu5J9AcPhmPMBIP6cOX
-         Me9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708948349; x=1709553149;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qB8hWXSvkZbqLJ31D8l/uDsLKWgY2404VtdI5HHKIEY=;
-        b=SgSTZc2iiykHZJIUdKIBAj4WXfxizb38VJxp8djGktqZzM0XfM9bHl6B3Afa58Mhsj
-         TUChQoGdSufygOiwKpnnB2bOluyhNlmXUYmI5xZijf9Oqe7ROZ9ujYx6JK9FH+jHWx+d
-         +CRpXIrievNgN1mNm64nwMBB1b01M5c/lUuPHTv0QqXzA0ePTIAC12T+KzcRx7+vSvQd
-         nTOOeqDNtY4NbWbHwXFUbRer2X9uGRqA0ocNb0ZoEkA/yNcC4MHxXwuvsFouy15NweEh
-         Tizyz04Htg/W5ybYJA0MhU3cyodobo2jotI1FX1o6a4dYRyDlZqzXgVF+7mzEZWdCxuG
-         qxCw==
-X-Gm-Message-State: AOJu0Yw0YEMJgG5kA8qsX61nNs7bBOAJLSwATcBuOTeJEiYh1vnqBsDs
-	CbHf1jLxZ2kMS3acmyTUE/96HGxvY9Ucka8xSyDu0p7LFnLlIELqRsc6x86eKaQ=
-X-Google-Smtp-Source: AGHT+IF8nZj2AxIU8pGo453OtUaGq+NyQ4OirQx0LwfQNcLkXJfG2Vu4AamqJIoyTfiPDFE9fbm0Ig==
-X-Received: by 2002:a17:906:2e89:b0:a3f:5144:ada2 with SMTP id o9-20020a1709062e8900b00a3f5144ada2mr4942148eji.2.1708948349541;
-        Mon, 26 Feb 2024 03:52:29 -0800 (PST)
-Received: from 1.. ([79.115.63.202])
-        by smtp.gmail.com with ESMTPSA id w9-20020a1709064a0900b00a3d153fba90sm2328999eju.220.2024.02.26.03.52.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Feb 2024 03:52:29 -0800 (PST)
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-To: claudiu.beznea@tuxon.dev,
-	nicolas.ferre@microchip.com
-Cc: dmaengine@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mtd@lists.infradead.org,
-	linux-crypto@vger.kernel.org,
-	Tudor Ambarus <tudor.ambarus@linaro.org>
-Subject: [PATCH v2] MAINTAINERS: Remove T Ambarus from few mchp entries
-Date: Mon, 26 Feb 2024 13:52:25 +0200
-Message-Id: <20240226115225.75675-1-tudor.ambarus@linaro.org>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1708954477; c=relaxed/simple;
+	bh=/x/cq3y9mTCgiZ8o1taGp5qapBsu0Js+9yDBIjMHSCM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AtV5pgDqIhaTTwuW5Bb+BqNZyLW0C90VzrM3FuoTdXSQGU0aZocMdmZ5As3mdhObVtkUOTiCRonRURpfju9RAGGB3pKtN3IcRBca8q5WUdXkfsB1Ifm5z0xNdbpRKrLq9/BFqCceGoU9WXPLZnCIn1ULjU24trs/4ZCqqxapcTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mlXB3JID; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2ADBC433F1;
+	Mon, 26 Feb 2024 13:34:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708954477;
+	bh=/x/cq3y9mTCgiZ8o1taGp5qapBsu0Js+9yDBIjMHSCM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mlXB3JIDgx/sTAcksbq0alUlQoDqCg6Xa3YRQvX+pgHlAoRwWxZK+VdSrlRj2tFh2
+	 WgOrqwDvcC936qN+jwQVKZ/yBQozALrLax6Y8j04m5tXRnyj+JkydmSGoAHzI7WgUI
+	 KqHTDMC3IriE7ZmWZAWypMlkbGGGXGTUl75UxvB8UQxmPLTH1VniZKEwN8uwFciqms
+	 hwp8jKhmWx+NwD6hVHBlXwL+99E5v8sceenvE+1GFPEtOhMZEULqLhe1Vhh6Xoh1H7
+	 LbARsrm2bNZ7stG6i92/78t2no6FlD6iljD6IA0lgyMjwaXW3x4+YOsejbn+51ZFV8
+	 QZQeWeabe5phA==
+Date: Mon, 26 Feb 2024 13:34:23 +0000
+From: Mark Brown <broonie@kernel.org>
+To: nikita.shubin@maquefel.me
+Cc: Hartley Sweeten <hsweeten@visionengravers.com>,
+	Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Lukasz Majewski <lukma@denx.de>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andy Shevchenko <andy@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Sebastian Reichel <sre@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Sergey Shtylyov <s.shtylyov@omp.ru>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Ralf Baechle <ralf@linux-mips.org>,
+	"Wu, Aaron" <Aaron.Wu@analog.com>, Lee Jones <lee@kernel.org>,
+	Olof Johansson <olof@lixom.net>, Niklas Cassel <cassel@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-clk@vger.kernel.org,
+	linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-watchdog@vger.kernel.org,
+	linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org,
+	netdev@vger.kernel.org, linux-mtd@lists.infradead.org,
+	linux-ide@vger.kernel.org, linux-input@vger.kernel.org,
+	linux-sound@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v8 00/38] ep93xx device tree conversion
+Message-ID: <168fd3d7-d1e9-467e-bdd0-36c12aa81b68@sirena.org.uk>
+References: <20240226-ep93xx-v8-0-3136dca7238f@maquefel.me>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1536; i=tudor.ambarus@linaro.org; h=from:subject; bh=BCspbtwrDy65BB7rOp5vz3y81XTaY6XHQSQGB8e5Fo0=; b=owEBbQGS/pANAwAKAUtVT0eljRTpAcsmYgBl3Ht5X/XCQnIus7mvWtg0Lsru8nzZ50DOo0DbB MejgeqpNFOJATMEAAEKAB0WIQQdQirKzw7IbV4d/t9LVU9HpY0U6QUCZdx7eQAKCRBLVU9HpY0U 6Q0OB/9/8s7uW+XXz7vgrg8wAJxmRQkx0Dkl1yCpnGHa8UxC3I8g3KZx/LyeB4cZAIDa3lyLDLI dbPlxvq+sB4jGQkzIZumZEIf/DCIbx3TcDxiTqtNl3Q6GaBMuCarpXsK7/E4g2Ho1DGAmBbuRid XtP2GTIu06CaR9ctAoPrdbr2RFiAr0nB2yOLcSjxiHmLIXop09uU4iAIlbOUziE+4cM70AbOMLX A2uMAPr+t/0ORkizGNJT8/zIvisNxpdMxTVhAHBD4y6kpENvKaShsop8mAFy8X70+TNxP+7aWtX ddrEC5AxeDtAMdNq7sfBwInmw3zlYXFw4BXbOymWMnCZlvew
-X-Developer-Key: i=tudor.ambarus@linaro.org; a=openpgp; fpr=280B06FD4CAAD2980C46DDDF4DB1B079AD29CF3D
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="bOKaKvSbzTVE2lWB"
+Content-Disposition: inline
+In-Reply-To: <20240226-ep93xx-v8-0-3136dca7238f@maquefel.me>
+X-Cookie: Walk softly and carry a BFG-9000.
 
-I have been no longer at Microchip for more than a year and I'm no
-longer interested in maintaining these drivers. Let other mchp people
-step up, thus remove myself. Thanks for the nice collaboration everyone!
 
-Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
----
-Shall go through the at91 tree.
+--bOKaKvSbzTVE2lWB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-v2: make entries as orphan instead of removing them
+On Mon, Feb 26, 2024 at 10:29:56AM +0300, Nikita Shubin via B4 Relay wrote:
 
- MAINTAINERS | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+> The goal is to receive ACKs for all patches in series to merge it via Arnd branch.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e1475ca38ff2..bce0ae12d599 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14350,7 +14350,6 @@ F:	drivers/misc/xilinx_tmr_manager.c
- 
- MICROCHIP AT91 DMA DRIVERS
- M:	Ludovic Desroches <ludovic.desroches@microchip.com>
--M:	Tudor Ambarus <tudor.ambarus@linaro.org>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- L:	dmaengine@vger.kernel.org
- S:	Supported
-@@ -14399,9 +14398,8 @@ F:	Documentation/devicetree/bindings/media/microchip,csi2dc.yaml
- F:	drivers/media/platform/microchip/microchip-csi2dc.c
- 
- MICROCHIP ECC DRIVER
--M:	Tudor Ambarus <tudor.ambarus@linaro.org>
- L:	linux-crypto@vger.kernel.org
--S:	Maintained
-+S:	Orphan
- F:	drivers/crypto/atmel-ecc.*
- 
- MICROCHIP EIC DRIVER
-@@ -14506,9 +14504,8 @@ S:	Maintained
- F:	drivers/mmc/host/atmel-mci.c
- 
- MICROCHIP NAND DRIVER
--M:	Tudor Ambarus <tudor.ambarus@linaro.org>
- L:	linux-mtd@lists.infradead.org
--S:	Supported
-+S:	Orphan
- F:	Documentation/devicetree/bindings/mtd/atmel-nand.txt
- F:	drivers/mtd/nand/raw/atmel/*
- 
--- 
-2.34.1
+What are the actual dependencies here?
 
+--bOKaKvSbzTVE2lWB
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXck18ACgkQJNaLcl1U
+h9CsAAf+OGvM07gxhxeVoFEY2namqi3/k8QFeVfcgOHP2bvSRWzLj+Za5HJ77pCz
+5NPf/dOYtbqSn6Tg6tGG7nkioQECfPyoUc75jpIZHzFp2uPzk5Zx62L2WVoDnbBX
+6hzWj6VDqDZtgCB5xzXzHhEDL/OpxrUTqA3S+jeaPIeLLf5xnRDl1M4sESkZQseD
+DMzGQouGu00Z+BSB/iAt4O2uN1DAyS/jipqNGmJzmCGD8wt9LbHfpDdzzQ+q6+iw
+JDA6z8gDwF3jF1NH6SuoCvsVgNsRQyqLoMP/4ziVTz/XxQa2S91NnuSVz3Vk3y/k
+gLUn1koeWlce3T54eUcZau09HwlwFg==
+=w2Qd
+-----END PGP SIGNATURE-----
+
+--bOKaKvSbzTVE2lWB--
 

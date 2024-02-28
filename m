@@ -1,62 +1,62 @@
-Return-Path: <dmaengine+bounces-1157-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1159-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8214086B95E
-	for <lists+dmaengine@lfdr.de>; Wed, 28 Feb 2024 21:51:08 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 64D9186B969
+	for <lists+dmaengine@lfdr.de>; Wed, 28 Feb 2024 21:51:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1336F1F29F95
-	for <lists+dmaengine@lfdr.de>; Wed, 28 Feb 2024 20:51:08 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A4B47B27188
+	for <lists+dmaengine@lfdr.de>; Wed, 28 Feb 2024 20:51:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5B8472903;
-	Wed, 28 Feb 2024 20:49:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29E9976F00;
+	Wed, 28 Feb 2024 20:49:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UTuIpcQ2"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F/gkgw7Y"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F75C161B5E;
-	Wed, 28 Feb 2024 20:49:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E9BD70043;
+	Wed, 28 Feb 2024 20:49:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709153387; cv=none; b=ji1YIzy2udDDd5L7hUBEfHPX1xUtVP2x5oFI5hZ6HPM9wn2ASvL9/CapDb5a0OmIqKgDEjquK7mLWqYCnUF3QeKy+KAyZe/JG4PLRXvibf8oEtzMvJOXga9NcAoYoMnnKKfyJ1VRtabO08pF0QIa4hDuAy+Mpq9qcaFGMAFNCXs=
+	t=1709153389; cv=none; b=rLt5856WQuBj8mieEEjC43sLL244EwMtjO1Wx4B4+zHO5h29rCNQ8dVjJq6xVWuV2yGHevkYyd+miykkLWRb+xbUWeJ6XnHZHVmWenKjYtBIsC9uku3q4KFFfsBqJb39bR8UhBjDmrKkUKdrX/P6Ch7xXiYtiB4teQYeh/zfKlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709153387; c=relaxed/simple;
-	bh=fln8BdnmbmK5Zmrs6qz4ah5cZtVSbnFVhGrQ/3X00RA=;
+	s=arc-20240116; t=1709153389; c=relaxed/simple;
+	bh=F4b2geX9W5KhXMqEu52b1/d3qPI5zOp6cxLtiYLUnNE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bR7qa05MAhi3G2dw3jxnruL91zj34tLoh58VHmIAKBJrGhvh2EQtvof3OqaVptcXBPXO5LPN0AdpHqLkX0Z/eZOWXuJbhSvVzvii6WmGQQdLnjm1p3/qmsp/bBn653AjNVhQvAuwDMQZbNoguFylNgIrFCKFFxvA7CnQC2RC2/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UTuIpcQ2; arc=none smtp.client-ip=192.198.163.17
+	 MIME-Version; b=SqnoIAWR5oJNPkQss2PxqD+CUoxEOce/LfejPiVyWmVzORnozwPwlYOEY+3Byfg8NANbcMN6D2Isf6Lf+JbKxGjWQ2S1RM6fPGHiWjbaYgDUNpfjG3ElsB8g4GB69Y6E9vkJUl8eufVGP1KYfTVJmXs/2YjwVFptJvm6gFs9W6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F/gkgw7Y; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709153386; x=1740689386;
+  t=1709153387; x=1740689387;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=fln8BdnmbmK5Zmrs6qz4ah5cZtVSbnFVhGrQ/3X00RA=;
-  b=UTuIpcQ230LmuxNDCIdadBUqS+tHM90i9tt8na+4IkYKQFw3HtqNRfz2
-   jmsoUS3mKEwHsG66ovYl59pC2pD2HT3ajEpNvx7ZJyiNGOE5keefIplPX
-   IQoAOlsvMejxbTM3APXI9YYRNMjK3z8JHSPnX4eI84zfJst/1qiPxzoB0
-   L0LYz7yVyvtqYPOBHmubs6pZ8U/ECJ4VcDhJtmYJ6cHsqrSjrYWv6p0wM
-   fpY3cR/sOlB0v8J5WTmLzCZ0bIBSneWOF70MC0DT6LHI81IiUZNIrzc1H
-   mEm/nh9Isvt1rxRBxzgAPBE+efrR3ZMWoY/elnag/+mak+Bdx4cM6THK2
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="3428740"
+  bh=F4b2geX9W5KhXMqEu52b1/d3qPI5zOp6cxLtiYLUnNE=;
+  b=F/gkgw7YM9B+7loM2W0xpqJ6jU57HuXvleaDALSY3xUIkht9c2Uqq2if
+   1aCwAGj6DK5nwW7qgwzqB/VqHjhle1XB9yMxqu3/x0eiADWoVNNu3rTpm
+   sqoeXt2/sj8R2OYBn27EIOl0d0F4FRN4FPoIAzAPHYac+E89ShrkltgIU
+   qsOAujLc7sR2VoDzzr82BeHQTz/SyFzcQ/lP+G4RAYwNP7P4w7NKvp/bO
+   4mmqY/mOZWHCxcaXViIKhC7OrKpdGUGCmoYE+V2Yy6ofYV+v+DyXCBKDF
+   cQ8fJYmxhMjhrrUIzP1S5rmCy1JB/eiFzFT0FbhCv7wz0DJ7XGyPzEN2Y
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="3428771"
 X-IronPort-AV: E=Sophos;i="6.06,191,1705392000"; 
-   d="scan'208";a="3428740"
+   d="scan'208";a="3428771"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 12:49:45 -0800
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 12:49:46 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="937034661"
+X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="937034664"
 X-IronPort-AV: E=Sophos;i="6.06,191,1705392000"; 
-   d="scan'208";a="937034661"
+   d="scan'208";a="937034664"
 Received: from black.fi.intel.com ([10.237.72.28])
   by fmsmga001.fm.intel.com with ESMTP; 28 Feb 2024 12:49:41 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 538665F5; Wed, 28 Feb 2024 22:49:34 +0200 (EET)
+	id 5F749631; Wed, 28 Feb 2024 22:49:34 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Vinod Koul <vkoul@kernel.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
@@ -78,9 +78,9 @@ Cc: Jonathan Cameron <jic23@kernel.org>,
 	Jakub Kicinski <kuba@kernel.org>,
 	Paolo Abeni <pabeni@redhat.com>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH v4 6/8] spi: Use new helpers from overflow.h in __spi_alloc_controller()
-Date: Wed, 28 Feb 2024 22:41:36 +0200
-Message-ID: <20240228204919.3680786-7-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v4 7/8] net-device: Use new helpers from overflow.h in netdevice APIs
+Date: Wed, 28 Feb 2024 22:41:37 +0200
+Message-ID: <20240228204919.3680786-8-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 In-Reply-To: <20240228204919.3680786-1-andriy.shevchenko@linux.intel.com>
 References: <20240228204919.3680786-1-andriy.shevchenko@linux.intel.com>
@@ -93,41 +93,57 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 We have two new helpers struct_size_with_data() and struct_data_pointer()
-that we can utilize in __spi_alloc_controller(). Do it so.
+that we can utilize in alloc_netdev_mqs() and netdev_priv(). Do it so.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/spi/spi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ include/linux/netdevice.h |  3 ++-
+ net/core/dev.c            | 10 +++++-----
+ 2 files changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index ba4d3fde2054..de7a23da58c6 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -3089,12 +3089,12 @@ struct spi_controller *__spi_alloc_controller(struct device *dev,
- 					      unsigned int size, bool slave)
+diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+index c41019f34179..d046dca18854 100644
+--- a/include/linux/netdevice.h
++++ b/include/linux/netdevice.h
+@@ -25,6 +25,7 @@
+ #include <linux/bug.h>
+ #include <linux/delay.h>
+ #include <linux/atomic.h>
++#include <linux/overflow.h>
+ #include <linux/prefetch.h>
+ #include <asm/cache.h>
+ #include <asm/byteorder.h>
+@@ -2668,7 +2669,7 @@ void dev_net_set(struct net_device *dev, struct net *net)
+  */
+ static inline void *netdev_priv(const struct net_device *dev)
  {
- 	struct spi_controller	*ctlr;
--	size_t ctlr_size = ALIGN(sizeof(*ctlr), dma_get_cache_alignment());
-+	int align = dma_get_cache_alignment();
- 
- 	if (!dev)
- 		return NULL;
- 
--	ctlr = kzalloc(size + ctlr_size, GFP_KERNEL);
-+	ctlr = kzalloc(struct_size_with_data(ctlr, align, size), GFP_KERNEL);
- 	if (!ctlr)
- 		return NULL;
- 
-@@ -3114,7 +3114,7 @@ struct spi_controller *__spi_alloc_controller(struct device *dev,
- 		ctlr->dev.class = &spi_master_class;
- 	ctlr->dev.parent = dev;
- 	pm_suspend_ignore_children(&ctlr->dev, true);
--	spi_controller_set_devdata(ctlr, (void *)ctlr + ctlr_size);
-+	spi_controller_set_devdata(ctlr, struct_data_pointer(ctlr, align));
- 
- 	return ctlr;
+-	return (char *)dev + ALIGN(sizeof(struct net_device), NETDEV_ALIGN);
++	return struct_data_pointer(dev, NETDEV_ALIGN);
  }
+ 
+ /* Set the sysfs physical device reference for the network logical device
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 69c3e3613372..80b765bb8ba2 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -10859,12 +10859,12 @@ struct net_device *alloc_netdev_mqs(int sizeof_priv, const char *name,
+ 		return NULL;
+ 	}
+ 
+-	alloc_size = sizeof(struct net_device);
+-	if (sizeof_priv) {
++	if (sizeof_priv)
+ 		/* ensure 32-byte alignment of private area */
+-		alloc_size = ALIGN(alloc_size, NETDEV_ALIGN);
+-		alloc_size += sizeof_priv;
+-	}
++		alloc_size = struct_size_with_data(p, NETDEV_ALIGN, sizeof_priv);
++	else
++		alloc_size = sizeof(struct net_device);
++
+ 	/* ensure 32-byte alignment of whole construct */
+ 	alloc_size += NETDEV_ALIGN - 1;
+ 
 -- 
 2.43.0.rc1.1.gbec44491f096
 

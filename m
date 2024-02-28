@@ -1,34 +1,34 @@
-Return-Path: <dmaengine+bounces-1159-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1158-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 64D9186B969
-	for <lists+dmaengine@lfdr.de>; Wed, 28 Feb 2024 21:51:44 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7970586B963
+	for <lists+dmaengine@lfdr.de>; Wed, 28 Feb 2024 21:51:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A4B47B27188
-	for <lists+dmaengine@lfdr.de>; Wed, 28 Feb 2024 20:51:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9DDC91C26C6E
+	for <lists+dmaengine@lfdr.de>; Wed, 28 Feb 2024 20:51:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29E9976F00;
-	Wed, 28 Feb 2024 20:49:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9563D72932;
+	Wed, 28 Feb 2024 20:49:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F/gkgw7Y"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QZ09pxQo"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E9BD70043;
-	Wed, 28 Feb 2024 20:49:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5DA470024;
+	Wed, 28 Feb 2024 20:49:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709153389; cv=none; b=rLt5856WQuBj8mieEEjC43sLL244EwMtjO1Wx4B4+zHO5h29rCNQ8dVjJq6xVWuV2yGHevkYyd+miykkLWRb+xbUWeJ6XnHZHVmWenKjYtBIsC9uku3q4KFFfsBqJb39bR8UhBjDmrKkUKdrX/P6Ch7xXiYtiB4teQYeh/zfKlw=
+	t=1709153388; cv=none; b=A4I/YGhh7YB2UJXVAYotwg7A2QWygpwDT/3YxWzznFJxoGlJTzk1rk7VQTn6jSEBn1PQ7i3IujN8kgJMAmOrVbK+2DOpFUkZXvHxY61AN0jsIfIncCuBK2hCagQ03+GwjOxHYvfJwS5jRekYlh6wNSNnlPp9KSOjNWljKTJjaK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709153389; c=relaxed/simple;
-	bh=F4b2geX9W5KhXMqEu52b1/d3qPI5zOp6cxLtiYLUnNE=;
+	s=arc-20240116; t=1709153388; c=relaxed/simple;
+	bh=8BAIf0j7CaHKQ/zZDl1HE0ybcnT2/U9McrHMACFS6nk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SqnoIAWR5oJNPkQss2PxqD+CUoxEOce/LfejPiVyWmVzORnozwPwlYOEY+3Byfg8NANbcMN6D2Isf6Lf+JbKxGjWQ2S1RM6fPGHiWjbaYgDUNpfjG3ElsB8g4GB69Y6E9vkJUl8eufVGP1KYfTVJmXs/2YjwVFptJvm6gFs9W6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F/gkgw7Y; arc=none smtp.client-ip=192.198.163.17
+	 MIME-Version; b=Bc6m38LBgqBZkBhVaFOtO+WM5p2QxZ8o3FtlkQCeA2ForQLLRsS5mqXmZ150IPNqqpksrdFB/R+ifzRjCAEA//Yy1dPEbUlmF6xqymY1Xm30Tw+mcCVVNjBgaLK2K9Xn2yI8cYM2vPR4HbHSKdrMxPw65FDIbK2NzIda08I08Bk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QZ09pxQo; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
@@ -36,27 +36,27 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   t=1709153387; x=1740689387;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=F4b2geX9W5KhXMqEu52b1/d3qPI5zOp6cxLtiYLUnNE=;
-  b=F/gkgw7YM9B+7loM2W0xpqJ6jU57HuXvleaDALSY3xUIkht9c2Uqq2if
-   1aCwAGj6DK5nwW7qgwzqB/VqHjhle1XB9yMxqu3/x0eiADWoVNNu3rTpm
-   sqoeXt2/sj8R2OYBn27EIOl0d0F4FRN4FPoIAzAPHYac+E89ShrkltgIU
-   qsOAujLc7sR2VoDzzr82BeHQTz/SyFzcQ/lP+G4RAYwNP7P4w7NKvp/bO
-   4mmqY/mOZWHCxcaXViIKhC7OrKpdGUGCmoYE+V2Yy6ofYV+v+DyXCBKDF
-   cQ8fJYmxhMjhrrUIzP1S5rmCy1JB/eiFzFT0FbhCv7wz0DJ7XGyPzEN2Y
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="3428771"
+  bh=8BAIf0j7CaHKQ/zZDl1HE0ybcnT2/U9McrHMACFS6nk=;
+  b=QZ09pxQorS2cktz5/PqzrEEJ1ZhQzKXIsb/o28M2LCQ+Y/WAQrWPi0VI
+   Rnv6d9HOpXGy6XYOgXfU6x6TWSfN5oVmL2F8YxXIUAyYmk8CjoMPkjzsW
+   Fwn1wxZlojqJnEXm59296i/tLew/BkQND+BmXAjUhUQ84Y98vJiDMKV7t
+   KEqO3hTKBM7agMu1DmK4Y9H+bai+gkmYnYO8A6rAZ11lZXv8mTFqS9Y7L
+   qWIeOqx9ig/8Igy/UlXUQ2WnbV+GN033+kopYAGurPJQzxiccqpA/OwJz
+   +IHR+BErf/HlrfaSP/wON9gSqHMrs9buO8WTXEFpX6SwySuDkVhDZfHdo
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="3428753"
 X-IronPort-AV: E=Sophos;i="6.06,191,1705392000"; 
-   d="scan'208";a="3428771"
+   d="scan'208";a="3428753"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
   by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 12:49:46 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="937034664"
+X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="937034663"
 X-IronPort-AV: E=Sophos;i="6.06,191,1705392000"; 
-   d="scan'208";a="937034664"
+   d="scan'208";a="937034663"
 Received: from black.fi.intel.com ([10.237.72.28])
   by fmsmga001.fm.intel.com with ESMTP; 28 Feb 2024 12:49:41 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 5F749631; Wed, 28 Feb 2024 22:49:34 +0200 (EET)
+	id 6F964715; Wed, 28 Feb 2024 22:49:34 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Vinod Koul <vkoul@kernel.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
@@ -78,9 +78,9 @@ Cc: Jonathan Cameron <jic23@kernel.org>,
 	Jakub Kicinski <kuba@kernel.org>,
 	Paolo Abeni <pabeni@redhat.com>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH v4 7/8] net-device: Use new helpers from overflow.h in netdevice APIs
-Date: Wed, 28 Feb 2024 22:41:37 +0200
-Message-ID: <20240228204919.3680786-8-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v4 8/8] dmaengine: ste_dma40: Use new helpers from overflow.h
+Date: Wed, 28 Feb 2024 22:41:38 +0200
+Message-ID: <20240228204919.3680786-9-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 In-Reply-To: <20240228204919.3680786-1-andriy.shevchenko@linux.intel.com>
 References: <20240228204919.3680786-1-andriy.shevchenko@linux.intel.com>
@@ -93,57 +93,57 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 We have two new helpers struct_size_with_data() and struct_data_pointer()
-that we can utilize in alloc_netdev_mqs() and netdev_priv(). Do it so.
+that we can utilize in d40_hw_detect_init(). Do it so.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- include/linux/netdevice.h |  3 ++-
- net/core/dev.c            | 10 +++++-----
- 2 files changed, 7 insertions(+), 6 deletions(-)
+ drivers/dma/ste_dma40.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-index c41019f34179..d046dca18854 100644
---- a/include/linux/netdevice.h
-+++ b/include/linux/netdevice.h
-@@ -25,6 +25,7 @@
- #include <linux/bug.h>
+diff --git a/drivers/dma/ste_dma40.c b/drivers/dma/ste_dma40.c
+index 2c489299148e..bead3b8836c7 100644
+--- a/drivers/dma/ste_dma40.c
++++ b/drivers/dma/ste_dma40.c
+@@ -15,6 +15,7 @@
+ #include <linux/clk.h>
  #include <linux/delay.h>
- #include <linux/atomic.h>
+ #include <linux/log2.h>
 +#include <linux/overflow.h>
- #include <linux/prefetch.h>
- #include <asm/cache.h>
- #include <asm/byteorder.h>
-@@ -2668,7 +2669,7 @@ void dev_net_set(struct net_device *dev, struct net *net)
-  */
- static inline void *netdev_priv(const struct net_device *dev)
- {
--	return (char *)dev + ALIGN(sizeof(struct net_device), NETDEV_ALIGN);
-+	return struct_data_pointer(dev, NETDEV_ALIGN);
- }
+ #include <linux/pm.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/err.h>
+@@ -3141,6 +3142,7 @@ static int __init d40_hw_detect_init(struct platform_device *pdev,
+ 	int num_log_chans;
+ 	int num_phy_chans;
+ 	int num_memcpy_chans;
++	size_t sz;
+ 	int i;
+ 	u32 pid;
+ 	u32 cid;
+@@ -3207,11 +3209,9 @@ static int __init d40_hw_detect_init(struct platform_device *pdev,
+ 		 "hardware rev: %d with %d physical and %d logical channels\n",
+ 		 rev, num_phy_chans, num_log_chans);
  
- /* Set the sysfs physical device reference for the network logical device
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 69c3e3613372..80b765bb8ba2 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -10859,12 +10859,12 @@ struct net_device *alloc_netdev_mqs(int sizeof_priv, const char *name,
- 		return NULL;
- 	}
+-	base = devm_kzalloc(dev,
+-		ALIGN(sizeof(struct d40_base), 4) +
+-		(num_phy_chans + num_log_chans + num_memcpy_chans) *
+-		sizeof(struct d40_chan), GFP_KERNEL);
+-
++	sz = array_size(num_phy_chans + num_log_chans + num_memcpy_chans,
++			sizeof(struct d40_chan));
++	base = devm_kzalloc(dev, struct_size_with_data(base, 4, sz), GFP_KERNEL);
+ 	if (!base)
+ 		return -ENOMEM;
  
--	alloc_size = sizeof(struct net_device);
--	if (sizeof_priv) {
-+	if (sizeof_priv)
- 		/* ensure 32-byte alignment of private area */
--		alloc_size = ALIGN(alloc_size, NETDEV_ALIGN);
--		alloc_size += sizeof_priv;
--	}
-+		alloc_size = struct_size_with_data(p, NETDEV_ALIGN, sizeof_priv);
-+	else
-+		alloc_size = sizeof(struct net_device);
-+
- 	/* ensure 32-byte alignment of whole construct */
- 	alloc_size += NETDEV_ALIGN - 1;
+@@ -3223,7 +3223,7 @@ static int __init d40_hw_detect_init(struct platform_device *pdev,
+ 	base->virtbase = virtbase;
+ 	base->plat_data = plat_data;
+ 	base->dev = dev;
+-	base->phy_chans = ((void *)base) + ALIGN(sizeof(struct d40_base), 4);
++	base->phy_chans = struct_data_pointer(base, 4);
+ 	base->log_chans = &base->phy_chans[num_phy_chans];
  
+ 	if (base->plat_data->num_of_phy_chans == 14) {
 -- 
 2.43.0.rc1.1.gbec44491f096
 

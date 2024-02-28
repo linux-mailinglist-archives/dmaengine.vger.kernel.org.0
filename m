@@ -1,61 +1,65 @@
-Return-Path: <dmaengine+bounces-1150-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1151-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00F6086B3BA
-	for <lists+dmaengine@lfdr.de>; Wed, 28 Feb 2024 16:51:21 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C23F86B592
+	for <lists+dmaengine@lfdr.de>; Wed, 28 Feb 2024 18:08:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B0ED128B89C
-	for <lists+dmaengine@lfdr.de>; Wed, 28 Feb 2024 15:51:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0BC94280E3C
+	for <lists+dmaengine@lfdr.de>; Wed, 28 Feb 2024 17:08:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD6F415CD5D;
-	Wed, 28 Feb 2024 15:51:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADA65208DF;
+	Wed, 28 Feb 2024 17:08:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JyAE0/Wu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DvJnUvPM"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D6FD1552F8;
-	Wed, 28 Feb 2024 15:51:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 814EF208D2;
+	Wed, 28 Feb 2024 17:08:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709135475; cv=none; b=ndByAyrv1VhwLbyiszy4VLQRQUvYlP6Rn1+P9ol76zpRAv0qIGxa5prB+OWlEPg7WTIDt7JohXv3fJJE27L7DRzi6v0xbsnxTW9jqpVFO0l/Rg0qWignqs3g2EAwBrRqjlj+chLGX5XYoKAviHma4PC1+thReBrSBByxdKMK1vI=
+	t=1709140081; cv=none; b=Z2QI9/UanG4EUuhBoBISdrI42b4K6Yg1dq5rVpns/rQqzoEUMh0MUmOjPddz8Q1GLCjWn9lVNU3Rrryb/vhb5NoPAxwWEKcnKheGhpdh4jYnDzExzUnKtWdYatCeLvDwRq4lo8v97TEg/bnoeSbEUCCtT4M/hpc9dhSUt2QP6GA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709135475; c=relaxed/simple;
-	bh=bBANsiX1oqnfELIhJ2Ldb94oj+2VzQup9IpDxs0eqNw=;
+	s=arc-20240116; t=1709140081; c=relaxed/simple;
+	bh=pOuRea6BcrpelSLBSjZEKw2v4BzFJQ/wIcZuMm258OA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HYBP2pCt7YDu1QXovGj5wov9YnabGCl6r1DkSmyKQdWt4vGxoIYZPWqbWzUJxIZVejLqpebEVZ+2VCiXBQN8uAQW0sXD4+uJ1Z5Qmzb+bJ7Kq/MQ1I+gHtwTjUL9otkxCKkWTX8QxPdNJEU+XUKV9Fj++iK5RBs2G+KGgotK4ZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JyAE0/Wu; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04038C433C7;
-	Wed, 28 Feb 2024 15:51:14 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=OBig7xRXMukmutW7/d7DyQAV9pZ+u4gwGotx0DwMbjJ+FuuelFDH4hFPqb1BJgj1lOvF5QxkG4eYWLhAHn2ckhd1YQXmYOKV3s4BPbLAbBLb+r1mh+zm1+tQOx8X5+pBf3IxzweEv4TIjjclK1tt8OKmTamLBm4d9cUYE339Z64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DvJnUvPM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD3FAC433F1;
+	Wed, 28 Feb 2024 17:08:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709135475;
-	bh=bBANsiX1oqnfELIhJ2Ldb94oj+2VzQup9IpDxs0eqNw=;
+	s=k20201202; t=1709140081;
+	bh=pOuRea6BcrpelSLBSjZEKw2v4BzFJQ/wIcZuMm258OA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JyAE0/WuLiyanl4AqhvdmoyyCs6ZyNSZ7MlqNMRQ5+1IIOffTm+eRgtri2sd4+agA
-	 S0jcKZcceEDROliTshY9ZBYADM2jMCpCf7wMwt6Vx5tNXUmhtlB77aMHxihfG7HyWo
-	 c1zJ/pwFSjLzL1hAT+lSzVv04nlummiIM5VUBzmQf/AMtYEpY+coMS7LAHH9bSRelg
-	 XKsCvVm/XYCPEKtm9Zry30vkB2cA+s2MWEOvwzBMPsq6Da8wMXnI82sy14QsDzG147
-	 Ep2zWHqwrFN5Rf38qfZqFtSLM3vODS7ClRt8v9wFejRW8w8KfAVDUjPwO2JXV7FFRQ
-	 uNJAHrnwhI7AQ==
-Date: Wed, 28 Feb 2024 09:51:12 -0600
+	b=DvJnUvPMBab76WOE4uz6Op5Jr28ARmCElH2uanEQiw8HquYASy/RXP4FYBZImq3AL
+	 mMrhvnc9KME4g5YkWwALd0PvrWEoy4vMxznr5cY7Qa7IRWEn+7PVbRQapsn6JIITgA
+	 tq/spAh5kfCnULx56BMPqY9dA/UsgjT0HofMRWo3yuyUrmUOp/9MY/s4s56ypO9huf
+	 LHBqLFZW0a61icxbWCJk5vOyRe6PjOWT3mAuZ6btvxyIs7OpIeduP5KPDsFv3koBz7
+	 SLQswe15efKH4qDOrXOtCBFm4BBvZyOwmdRLekgwdi51YtAU7WeT1+Kss9/fSWxhGu
+	 LH2sZIbaleLJA==
+Date: Wed, 28 Feb 2024 11:07:58 -0600
 From: Rob Herring <robh@kernel.org>
-To: Jia Jie Ho <jiajie.ho@starfivetech.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S . Miller" <davem@davemloft.net>,
+To: Inochi Amaoto <inochiama@outlook.com>
+Cc: Vinod Koul <vkoul@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-	Vinod Koul <vkoul@kernel.org>, linux-crypto@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	dmaengine@vger.kernel.org
-Subject: Re: [PATCH v3 1/6] dt-bindings: crypto: starfive: Add jh8100 support
-Message-ID: <20240228155112.GA4059153-robh@kernel.org>
-References: <20240227163758.198133-1-jiajie.ho@starfivetech.com>
- <20240227163758.198133-2-jiajie.ho@starfivetech.com>
+	Chen Wang <unicorn_wang@outlook.com>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Liu Gui <kenneth.liu@sophgo.com>,
+	Jingbao Qiu <qiujingbao.dlmu@gmail.com>, dlan@gentoo.org,
+	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] dt-bindings: soc: sophgo: Add top misc controller
+ of CV18XX/SG200X series SoC
+Message-ID: <20240228170758.GA282254-robh@kernel.org>
+References: <PH7PR20MB49624AFE44E26F26490DC827BB502@PH7PR20MB4962.namprd20.prod.outlook.com>
+ <PH7PR20MB4962BEA2751F7C45A16E40B9BB502@PH7PR20MB4962.namprd20.prod.outlook.com>
+ <20240223003334.GA3981337-robh@kernel.org>
+ <IA1PR20MB4953C60F0B70D82922D3AD36BB552@IA1PR20MB4953.namprd20.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -64,76 +68,86 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240227163758.198133-2-jiajie.ho@starfivetech.com>
+In-Reply-To: <IA1PR20MB4953C60F0B70D82922D3AD36BB552@IA1PR20MB4953.namprd20.prod.outlook.com>
 
-On Wed, Feb 28, 2024 at 12:37:53AM +0800, Jia Jie Ho wrote:
-> Add compatible string and additional interrupt for StarFive JH8100
-> crypto engine.
+On Fri, Feb 23, 2024 at 09:47:05AM +0800, Inochi Amaoto wrote:
+> On Thu, Feb 22, 2024 at 05:33:34PM -0700, Rob Herring wrote:
+> > On Tue, Feb 20, 2024 at 06:28:59PM +0800, Inochi Amaoto wrote:
+> > > CV18XX/SG200X series SoCs have a special top misc system controller,
+> > > which provides register access for several devices. In addition to
+> > > register access, this system controller also contains some subdevices
+> > > (such as dmamux).
+> > > 
+> > > Add bindings for top misc controller of CV18XX/SG200X series SoC.
+> > > 
+> > > Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
+> > > ---
+> > >  .../soc/sophgo/sophgo,cv1800-top-syscon.yaml  | 48 +++++++++++++++++++
+> > >  1 file changed, 48 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/soc/sophgo/sophgo,cv1800-top-syscon.yaml
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/soc/sophgo/sophgo,cv1800-top-syscon.yaml b/Documentation/devicetree/bindings/soc/sophgo/sophgo,cv1800-top-syscon.yaml
+> > > new file mode 100644
+> > > index 000000000000..29825fee66d5
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/soc/sophgo/sophgo,cv1800-top-syscon.yaml
+> > > @@ -0,0 +1,48 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/soc/sophgo/sophgo,cv1800-top-syscon.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Sophgo CV1800/SG2000 SoC top system controller
+> > > +
+> > > +maintainers:
+> > > +  - Inochi Amaoto <inochiama@outlook.com>
+> > > +
+> > > +description:
+> > > +  The Sophgo CV1800/SG2000 SoC top misc system controller provides
+> > > +  register access to configure related modules.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    items:
+> > > +      - const: sophgo,cv1800-top-syscon
+> > > +      - const: syscon
+> > > +      - const: simple-mfd
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - reg
+> > > +
+> > > +additionalProperties:
+> > > +  type: object
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +    syscon@3000000 {
+> > > +      compatible = "sophgo,cv1800-top-syscon",
+> > > +                   "syscon", "simple-mfd";
+> > > +      reg = <0x03000000 0x1000>;
+> > > +
+> > > +      dma-router {
+> > 
+> > Is there no defined register set you can put in 'reg' here?
+> > 
 > 
-> Signed-off-by: Jia Jie Ho <jiajie.ho@starfivetech.com>
-> ---
->  .../crypto/starfive,jh7110-crypto.yaml        | 30 +++++++++++++++++--
->  1 file changed, 28 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/crypto/starfive,jh7110-crypto.yaml b/Documentation/devicetree/bindings/crypto/starfive,jh7110-crypto.yaml
-> index 71a2876bd6e4..d44d77908966 100644
-> --- a/Documentation/devicetree/bindings/crypto/starfive,jh7110-crypto.yaml
-> +++ b/Documentation/devicetree/bindings/crypto/starfive,jh7110-crypto.yaml
-> @@ -12,7 +12,9 @@ maintainers:
->  
->  properties:
->    compatible:
-> -    const: starfive,jh7110-crypto
-> +    enum:
-> +      - starfive,jh8100-crypto
-> +      - starfive,jh7110-crypto
->  
->    reg:
->      maxItems: 1
-> @@ -28,7 +30,10 @@ properties:
->        - const: ahb
->  
->    interrupts:
-> -    maxItems: 1
-> +    minItems: 1
-> +    items:
-> +      - description: SHA2 module irq
-> +      - description: SM3 module irq
->  
->    resets:
->      maxItems: 1
-> @@ -54,6 +59,27 @@ required:
->  
->  additionalProperties: false
->  
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          const: starfive,jh7110-crypto
-> +
-> +    then:
-> +      properties:
-> +        interrupts:
-> +          maxItems: 1
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          const: starfive,jh8100-crypto
-> +
-> +    then:
-> +      properties:
-> +        interrupts:
-> +          maxItems: 2
+> It has multiple registers in the syscon. But in fact, the dmamux
+> is a virtual device. And the syscon device only have some discrete 
+> registers. This is why I did not put reg. It should access the
+> device using the offset defined in the patch 3.
 
-This is already the max. Don't you want 'minItems: 2'?
+I would add:
 
-> +
->  examples:
->    - |
->      crypto: crypto@16000000 {
-> -- 
-> 2.34.1
-> 
+reg = <0x154 8>, <0x298 0x4>;
+
+(with appropriate "ranges" in parent)
+
+No requirement for Linux to use this either.
+
+Rob
 

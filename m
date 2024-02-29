@@ -1,74 +1,74 @@
-Return-Path: <dmaengine+bounces-1185-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1186-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2067686C3A0
-	for <lists+dmaengine@lfdr.de>; Thu, 29 Feb 2024 09:35:27 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC84786C602
+	for <lists+dmaengine@lfdr.de>; Thu, 29 Feb 2024 10:50:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B4EC71F25548
-	for <lists+dmaengine@lfdr.de>; Thu, 29 Feb 2024 08:35:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7C5BF289A7D
+	for <lists+dmaengine@lfdr.de>; Thu, 29 Feb 2024 09:50:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 437FF50263;
-	Thu, 29 Feb 2024 08:34:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EBFD627F8;
+	Thu, 29 Feb 2024 09:49:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yKh9iKDD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SRvQcjLs"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A95D45026C
-	for <dmaengine@vger.kernel.org>; Thu, 29 Feb 2024 08:34:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C39D627F9
+	for <dmaengine@vger.kernel.org>; Thu, 29 Feb 2024 09:49:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709195696; cv=none; b=phpKpS0bPOeBO8dBQm9xqqxFy5Hv+2xFeC2YEeoK9iiAfSQ+6k+XLNgC/A4BzWQttB4u5zADe7epaqNXDGXtujgbweDfUBBTcQ+ppcDWsqRO2z5J9jxVbOtli24EVh4qGjvTwevsjUy/pELNy0FF6nEOGUdNL5uQpmiVUaeZ9tk=
+	t=1709200198; cv=none; b=X4tVHkjjFhp/oeVSSV6XQreO0Z+fUeGxDfVmFmWSLfnaai0qzFVzcgeJSaEnve2Xp0RDL45XaT6PlDZwny0wV0Rq4mCjIGIRdEbG2dPYxheSkGXXYHv2f64yOg3u9IIF5gEhFbb/MaAkHzHMK6Tb2gEINUzYvPye6T3n5gUKD+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709195696; c=relaxed/simple;
-	bh=+HmrAoVlbn0/eK7ZWpGHWzAHFkQKVrJu92TuaGFS20I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=gsYrqpNgczhQe5fQ93mz32Ziy1UlPe8lo/8p0bohexG8KY+kEmamGyAYUBOiL8lhD+Kl//4Zxklwcx39PvWqxZYK62MYbnn1VWivQRLanYaQofnUQl062bi1mR9kBbqgUcbfmCHR+gHAm6burEgaYfWHZvFC8CsoU1MvKBE3QWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yKh9iKDD; arc=none smtp.client-ip=209.85.128.181
+	s=arc-20240116; t=1709200198; c=relaxed/simple;
+	bh=YQc04LTlvo4O236/tf50vYFPrMePz6Wmbdw/Sbqdtfk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hCXVYlfTYbJ8lsXKkijfejVRpOxNmCRLLXMIncid0F4Ya6lD0ck5TIArnMe6Pp2yepgbw4keG4mh5oim2wP5kvPM8itMtTfiz/GnYrAYky5qkt+J61vyc6azHgR9lYi4kDkN63aTXbo69gN/WQaH3cMWUwyU2GxZkQcVlQ32n9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SRvQcjLs; arc=none smtp.client-ip=209.85.208.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-60925d20af0so6688887b3.2
-        for <dmaengine@vger.kernel.org>; Thu, 29 Feb 2024 00:34:54 -0800 (PST)
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d269dc3575so6511521fa.1
+        for <dmaengine@vger.kernel.org>; Thu, 29 Feb 2024 01:49:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709195693; x=1709800493; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=linaro.org; s=google; t=1709200195; x=1709804995; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=60LOvNZ2Ndtzh9xFqMCqDsoxJoOF8eAu+PCSMMNPn8E=;
-        b=yKh9iKDDYJB4xagsF/o0/0h9vr7HMBJ2FHu6tD5/9Z4m2DrrVZiicisDi2+Oh+KqLh
-         jlFAEkqQEVvCYbu5TFULirAZtSF2lnrsXvY5VHzayO50DrlDUDysNToRIsTloMg3GOqK
-         rin+/akAmLue6QiCKyLHweZYWQ4hyqxKsYldJshFl/0tYwv6CfXJYHkrXBN88OFp/gdY
-         hgKR+xcFAcCP0ejqBdr0777qRapSfJiJ6bSbAmbKbOlI7mcrHJ+vhqRbt0bXJVEoiYU7
-         OSmzmRDsZG16g/Cx83NbIO/WpfQzPAK6a7NYtZGirUNzYS6z2+Rca209qOud2qsvOZiQ
-         lI7w==
+        bh=pi5jl9cezcdpxbE9WQjb4AV/3qiJLkvEpnKJOdWQrpk=;
+        b=SRvQcjLsaBePcJZAp3dhPPKXPeJiXiKskRHE5GbvR5J6KK6IAXLqkTwQtg/bduRoT1
+         zogFT8cuHL3BIlXjZpiycLerDPqmN7afDTRZBPNPtDN6uYkEFFFgrb6NLLJ1vbCS6DjX
+         /uYesNLeWSJhQaqVetf1zL+88jO8RL/MQOv7Ar+z4lnIkkjWhnVml5hepBMs1Wrwbmva
+         +qlcboeq92veaAEgbjwQocYUKwPDsurKei8o8QuF8cSs6IeiJeauh05mfj/xR0QxuTX2
+         9kzqoP3EZzu1qbLVtCo/r+/oCXRixZ05gSoB8SFeEdwJnrUKAbQzqJ5Y2LnLI5nFi/ds
+         qJrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709195693; x=1709800493;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1709200195; x=1709804995;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=60LOvNZ2Ndtzh9xFqMCqDsoxJoOF8eAu+PCSMMNPn8E=;
-        b=WyGbBDqIWs+9F/bNY9zxug0DEB4UDfW/pfOzRNL9OmSPpfgmEc/9PfqNGMWXqnCCGb
-         InWmpuZd+qb7wnhD4/Tz2lIBjUzmBZQY/IwX5zvVy6OQ35zQJuMaKSOdNhNlj1JdThFf
-         Kni/3UZcmFgH3H1/ojNMoFM/FXv7alQgxD3/BokP1CnQVL7L9LAw4fN7//rJyiWQGVZN
-         4b8K1X/7WYcPLYjAKzZaJwu27G6FgwAu+2qNU47mMy/oEYRIsTC7AZ5AsSlhDeHUxx1I
-         qCQk0cbC+xsBTsEnaqySV90r/lsmvEiuTqbRY1PBvlAeJoHkALlE1lQlproSOZoN6oXy
-         W7Dw==
-X-Forwarded-Encrypted: i=1; AJvYcCXPrrnfWXR8LpGBxjcwiLhH+ajf06JhvmqC/mIPD3bQ+7wSU9q/RZU3uPrVIPzKgtEPVqeTsS3fuVp+bONfo6lO9KKEPWZp/NgD
-X-Gm-Message-State: AOJu0Yxu4jTj+IuPBQUQSBiUs2EVefwBVVYsLXrHplgiehtIelWkhTZD
-	rxoD2Ki7peHIQfPCPEALQqATCFnjIL63SS6cUO0xY6zeFHRJreKCNsn2+tN9ryM=
-X-Google-Smtp-Source: AGHT+IGfiOk90QwtL7zPVCOC2SOcqn54y3lu/ppu4KA9GzrUHTMGHfQ4kvyO0o6As3sFw3eALjOLuQ==
-X-Received: by 2002:a0d:de06:0:b0:609:647f:5750 with SMTP id h6-20020a0dde06000000b00609647f5750mr1374630ywe.50.1709195693527;
-        Thu, 29 Feb 2024 00:34:53 -0800 (PST)
+        bh=pi5jl9cezcdpxbE9WQjb4AV/3qiJLkvEpnKJOdWQrpk=;
+        b=tvpOSGGn63HsQlpe5pW2NX4aEodnp8VSzCF7rRv++CxuK/gXTids9rPJWJyPMGl6Ci
+         4KQ21ZxMCCU/rfUrLVzas95Q2aQi8J7SZVe3Tob6ySzjjpkknSgR62Y6SDukc2C0OyId
+         O90cQxu5qkI8DRHtjNUM3BE/2U+hcZ1g5oUg68I09pO+6t4VPIVMP9Xf/WErvNU/ymMH
+         TN8i9AiiMXelfv0hQDJsZKef51qrHnu/a6vIlEmi6q/IFSE0qXs/4AGD3l0U3jBtYNOO
+         EhTHXJ0dGo8DAbKPMCDhKQmWgZOZjUe1hu7B89ytvlbEPb/NJnPGVdzOiN0or3XcT0Gd
+         h8Ew==
+X-Forwarded-Encrypted: i=1; AJvYcCUxVf5Gj86Jvv8Dkj0PMCjd+W8TEcNdAdtqSEmMesgYiPVZBH4zkTu+YOjU/dzHlQm4xxdgCAdiO8ZyepbWnms//TYln8ltSJ7A
+X-Gm-Message-State: AOJu0YyU4f9DoGrqs9rnSikyuTimiPIRC1j2hgKtq+KJUS7UezbMR/Up
+	AeQbR62Frh2hDLHTVc27YNXG6tlwbkDcCUCMu9J5qsqGfbPq1EPwE5rQ6AZitDQ=
+X-Google-Smtp-Source: AGHT+IFH7O/J1Sqs6CDrHXaVDDFk3dxqW3VNmYolyu+a04hSURH26GxNtx6lpxRy+855Y1fMve8jPg==
+X-Received: by 2002:a05:651c:8a:b0:2d2:47c7:65a with SMTP id 10-20020a05651c008a00b002d247c7065amr521491ljq.20.1709200195564;
+        Thu, 29 Feb 2024 01:49:55 -0800 (PST)
 Received: from [192.168.1.20] ([178.197.222.97])
-        by smtp.gmail.com with ESMTPSA id i68-20020a0ddf47000000b0060969b6e74asm248178ywe.123.2024.02.29.00.34.50
+        by smtp.gmail.com with ESMTPSA id x18-20020a2e9dd2000000b002d11d0e37b5sm159862ljj.130.2024.02.29.01.49.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 Feb 2024 00:34:52 -0800 (PST)
-Message-ID: <e42fb231-af1d-4e86-b875-685f30f0894e@linaro.org>
-Date: Thu, 29 Feb 2024 09:34:50 +0100
+        Thu, 29 Feb 2024 01:49:55 -0800 (PST)
+Message-ID: <bb3b61b6-4f39-4123-be50-0e2c8f07eb99@linaro.org>
+Date: Thu, 29 Feb 2024 10:49:43 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -76,18 +76,18 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: dma: fsl-edma: remove 'clocks' from
- required
+Subject: Re: [PATCH 4/5] dt-bindings: fsl-dma: fsl-edma: add fsl,imx8ulp-edma
+ compatible string
 Content-Language: en-US
 To: Frank Li <Frank.Li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
  Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Peng Fan <peng.fan@nxp.com>,
- "open list:FREESCALE eDMA DRIVER" <imx@lists.linux.dev>,
- "open list:FREESCALE eDMA DRIVER" <dmaengine@vger.kernel.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-References: <20240228212627.629608-1-Frank.Li@nxp.com>
+ Conor Dooley <conor+dt@kernel.org>, Peng Fan <peng.fan@nxp.com>
+Cc: imx@lists.linux.dev, dmaengine@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ Joy Zou <joy.zou@nxp.com>
+References: <20240227-8ulp_edma-v1-0-7fcfe1e265c2@nxp.com>
+ <20240227-8ulp_edma-v1-4-7fcfe1e265c2@nxp.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -133,18 +133,33 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240228212627.629608-1-Frank.Li@nxp.com>
+In-Reply-To: <20240227-8ulp_edma-v1-4-7fcfe1e265c2@nxp.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 28/02/2024 22:26, Frank Li wrote:
-> fsl,imx8qm-adma and fsl,imx8qm-edma don't require 'clocks'. Remove it from
-> required and add 'if' block for other compatible string to keep the same
-> restrictions.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+On 27/02/2024 18:21, Frank Li wrote:
+>  
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: fsl,imx8ulp-edma
+> +    then:
+> +      properties:
+> +        clock:
+> +          maxItems: 33
+> +        clock-names:
+> +          items:
+> +            - const: dma
+> +            - pattern: "^CH[0-31]-clk$"
+> +        interrupt-names: false
+> +        interrupts:
+> +          maxItems: 32
+> +        "#dma-cells":
+> +          const: 3
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Why suddenly fsl,vf610-edma can have from 2 to 33 clocks? Constrain
+properly the variants.
 
 Best regards,
 Krzysztof

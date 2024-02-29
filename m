@@ -1,184 +1,140 @@
-Return-Path: <dmaengine+bounces-1197-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1198-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF11886CEB5
-	for <lists+dmaengine@lfdr.de>; Thu, 29 Feb 2024 17:21:12 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6BDFE86CEF2
+	for <lists+dmaengine@lfdr.de>; Thu, 29 Feb 2024 17:26:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CDC8E1C20DC8
-	for <lists+dmaengine@lfdr.de>; Thu, 29 Feb 2024 16:21:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 26BFD285E74
+	for <lists+dmaengine@lfdr.de>; Thu, 29 Feb 2024 16:26:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04503142911;
-	Thu, 29 Feb 2024 16:04:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 491BD7828E;
+	Thu, 29 Feb 2024 16:20:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="n1W16ORT"
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="pXE4uxG3"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2062.outbound.protection.outlook.com [40.107.6.62])
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1A471428F6;
-	Thu, 29 Feb 2024 16:03:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.62
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709222641; cv=fail; b=HXb2GBZQsXmNRoc1wJ+nhjhLy020g4d9mLP/Vo7gP+ywZ+h/MaG1cAFhPiX/N+dJ7hDF4RbEngZkkOxbOytpj64KurO48Oqvoyf2bRbo2Mm68oEfxJbqEjTofa3v8dsKIp0KxFBK/+/hiM8YpUAfQ9P2xdBPZX/KpIg6L9vInOo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709222641; c=relaxed/simple;
-	bh=J34PPTPZgDMqAJFs3GBmF2I1prgWnq03Z89gr/voEps=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=eFPd0RPIFOa3KKToQH2CdJk6ozD6CfWL0JUlBRNmasvFnnMuEGG74BTEEuyvbDM1mvpSqVxJw8HDTRJHlgb3xCQR68VbwNn5vzNrE76cgN7JllpBAmUN8hDPXLh007ScQUZXL1i2kYongkVkdnjLGuhUCnq8Tm0w2hSA+HJqelY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=n1W16ORT; arc=fail smtp.client-ip=40.107.6.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZsB1VpTf9q2ZZRj+8d6naV88OJb2oriN4MSDcoqSvhFllaT7yfjataVDG7xbXBDfKp+mbdZznVtFQ9G32+OMeNNkvAmfvxPU5NcOdjpquU5VtRF+vNeWnYjvG6K3foKrGAJq4LGw7NbSyg5c/l0YktsFtFX8cMk5gVThzQPQyD2p7ADyUHmPo/kM2w+/fwRSw3qdyoY22kBH3eBZyX5Jy5FlOvc3Otsj0Xzc+KDH9Mjd6vnZDfeU+IFD1Fm7pJV2nYsO19E6/n9nolldkdkYszmmJSCH9vC/qXNJ3qfdZ2x+EWPmS9VgpgU/kNjkWuhuV16l6Uz/FATW9CUC4XYEcg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZcBMaqnfcJaU3c109p+MopciobkS2+LH7jcK3QTrXEM=;
- b=SjSu45uke1va1vVflCB0U4VT7gTiA0D0ZObIZ2z3pr78ptUXdPGN37mjpxILz2K7Y/6eKDGNSbxN2lEefL1Zmm/108inI/oSJyHlhI1S+YLlHpFw1MCX6JCmOg0rF+b++k1NmYFBRVKX15A1kvETd9YWuIMLPicS9sCPftgWzR7hszg8ByB0k3+OTQgmbB5MggHIlKoXw2E6zIJUf1ThSi2b59fReL3YEeENvHJG9BfZnMMO9AQLLU/AcNakYf9is4H49GIzhD/+fq5hAmbddZe8vKWQ3Bk+J+fVo+7QzCGRc71OkBZwjFbeExoY1gOMUg2NXyolE8xTsvLOU1aD+w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZcBMaqnfcJaU3c109p+MopciobkS2+LH7jcK3QTrXEM=;
- b=n1W16ORTj+eUe6B8zHHVOOVc20DNdoxoebNQ6Ufs+Qw1S9vO/iYaWJvhBjQXP4wazfSNaSluXkgUYfSjpvnO9ZUAICmDWYTCRadnFyWRB9PXCxC00OUlNg5nfuFbcpzPByL+QcMQpC+LlITV2IGfmIyJ+PoIeN7pWvs14pp9E5M=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by PAXPR04MB8765.eurprd04.prod.outlook.com (2603:10a6:102:20c::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.41; Thu, 29 Feb
- 2024 16:03:57 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9af4:87e:d74:94aa]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9af4:87e:d74:94aa%7]) with mapi id 15.20.7316.035; Thu, 29 Feb 2024
- 16:03:57 +0000
-Date: Thu, 29 Feb 2024 11:03:49 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Peng Fan <peng.fan@nxp.com>,
-	imx@lists.linux.dev, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	Joy Zou <joy.zou@nxp.com>
-Subject: Re: [PATCH 4/5] dt-bindings: fsl-dma: fsl-edma: add fsl,imx8ulp-edma
- compatible string
-Message-ID: <ZeCq5Sk+sPA9rEtI@lizhi-Precision-Tower-5810>
-References: <20240227-8ulp_edma-v1-0-7fcfe1e265c2@nxp.com>
- <20240227-8ulp_edma-v1-4-7fcfe1e265c2@nxp.com>
- <bb3b61b6-4f39-4123-be50-0e2c8f07eb99@linaro.org>
- <ZeCooFQtOK9MuuJn@lizhi-Precision-Tower-5810>
- <ec835855-49f6-4b9a-9c58-e3fb90946c26@linaro.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ec835855-49f6-4b9a-9c58-e3fb90946c26@linaro.org>
-X-ClientProxiedBy: SJ0PR03CA0173.namprd03.prod.outlook.com
- (2603:10b6:a03:338::28) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B49FA7829D
+	for <dmaengine@vger.kernel.org>; Thu, 29 Feb 2024 16:20:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709223646; cv=none; b=XQIXsq26Y4plcr2rzCgHxDo/E16tu+wHnVMxYIByBjDiovIJi91qqO0s3J7wwbYkBXiysZNsnqAumQP2k3T9L9Rv0QJaWmPMmdDmm3aRoIdw1hQiUdgWVt+4b5vm+lLNOsvSY0JVJTiYKH6bC9ln7xa/460GulqECfatI7HxPcI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709223646; c=relaxed/simple;
+	bh=XPjecJVgILETFitquX4Ub1RqqD+qTgTUae9qAAfLUic=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=vGYv6mkgNzZM5GkOWy05D1UVom8rMRip5ptIWubvmUxEWU90aVYiwbNVymTqdpl60od2W1HsIBhBT/OReGno5LmZLcb+vB+I8ZMTqE1Z4Luplyz2jdUl4l89NFmch8vhdvjJZmMGcZS/ogdNVc3hMrmQX1P9iZXFD62FSLsZuAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=pXE4uxG3; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41TEaiUR007950;
+	Thu, 29 Feb 2024 11:20:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=
+	from:subject:date:message-id:mime-version:content-type
+	:content-transfer-encoding:to:cc; s=DKIM; bh=ij5h2GWQC95T8hJki1o
+	XwPuJda/gTCPEH6Sq3AZh4XM=; b=pXE4uxG3d6i8Ddt8vMQHdNqp1IA5i38aZY5
+	TJp1yk+0IdqtNe3Z/vpHkUX05L31WiqMPKeLDXF4WuiN33nz3W1zm1Yu+Lcy4D1n
+	talJu06thOWglsDY/DqXm52qPu7632y22WV6hr1GKE+kJFf9ZP65ieCoUeIW/lJK
+	YgGFu22eb/pYdvy4rep4wat3tmzchX/Mz7yshwYBVRufCHu9XglAhcOdb8KAvt/u
+	wu33BeSs8lmYL0PDqzgakDXIS/G5oo7v/rxFvt+kbqhRHq3NKSwDmY1p3wOF/dZB
+	fPWjHupWsGmaUYhCMUXZYSevh/gP5V31Ft3Ibgi1UuoO01Yt6ZA==
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 3wjcr2uv8y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 29 Feb 2024 11:20:28 -0500 (EST)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 41TGKQIa035243
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 29 Feb 2024 11:20:26 -0500
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Thu, 29 Feb
+ 2024 11:20:26 -0500
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Thu, 29 Feb 2024 11:20:25 -0500
+Received: from [127.0.0.1] ([10.44.3.58])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 41TGKHwZ019308;
+	Thu, 29 Feb 2024 11:20:19 -0500
+From: Nuno Sa <nuno.sa@analog.com>
+Subject: [PATCH RESEND v3 0/2] dmaengine: axi-dmac: move to device managed
+ probe
+Date: Thu, 29 Feb 2024 17:23:15 +0100
+Message-ID: <20240229-axi-dmac-devm-probe-v3-0-f0e78d2ab5b1@analog.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PAXPR04MB8765:EE_
-X-MS-Office365-Filtering-Correlation-Id: b466f03a-a194-46d3-a01b-08dc39400906
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	U9y/MKehX7nFJ+ySl/9nISwxyqJ9wy5cxQnLPAvW0MtUyT6BTBJf9G4o2zoQz5k00hdju1zNpQ+jsgFbuEFhqHLdihVcltpMQ33RCX3dqjVpjgji9Qjr7kUtaivKqosnUpJKWI4nZ3BtMaDr8iNtWQ5+YYNYGnoIvAkOTVj+Zk2qyx3fS50hKo57TBGnLTj/p017GpKWnzLi1W3Jd2O2XkZsa8QWwBiGsBDdmxxYvhDYpWlLTgjghxAkLt7SxQEUZm4dzqXntBzD56xlRXieMSS3M56tiV4JTv99x6XvMQLE76JbL2hLyHYcbTf2nDD9dpVQO/e1oekIA5Zmcux5VUB+07Qo7nPKtkSpJjHz3ehEv4YZB+rvz30O0VCgPiekIUofCpJQjHm5YEeQoPl4TODW/16etEVJ6NG99pfhhyNMD1Yfq6PbGxeGeNtgJbtCt9KgspZ113UeZZcUZgNTtg1N3ueiW/2mVLfGx3nxiWnZBs3fMXfl0oPXQlfws2FyzLMxPenM7JaJ8/YVqDdZhtTnq3cQwCxYkwrKR+s3rje12UYeiLzJFG/L/urTjfQwclT8Syhr7trIZp87nFK3+xTsZtLX8xsZtZrYHe0AhkL5DGQYb4p7Rz83eJSyUwTBB+29o+p9BFrfZ9gPNOHNNzn8pFrK9wdFGUj5c0O84gJ6xp6hN2sfS4PKxgto9lJT6gQvwJ/Tmfri/kEl4KhB4w==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?IjcCy+mjIrDzqFzxHD0ERFqfa9FcsKI7nIPTx11guxHaFtYvbN1uytSjPp7r?=
- =?us-ascii?Q?JF3+CNxEo/lBUgoIGkxVb0uVUuLq4qfDvicBTPY+/rgHZtyg3THJQfW60ihX?=
- =?us-ascii?Q?nBCJw+pgTXdtoSXzh5yju/78cKrUkytc7YoKTpXYCD7WeHBMAnPZrx8nbh8h?=
- =?us-ascii?Q?NaBkdc+1ZSpbEeSEUpqXcM61U2jZfAbWjmcU0uwAchcBLe9m0mNFG6W1Gay8?=
- =?us-ascii?Q?84mJ3v2sOjOo+MwPPqaF5wpFTo5HJPEMOQIOKC+t7QXJ3L1V6OH5F/UkJfzS?=
- =?us-ascii?Q?YLqjvwo7NfZYxEf8hGZNvm353iKurJeaxJygxqTQBekrPVVHK7hLOFSufrWn?=
- =?us-ascii?Q?eoFnTBUcL1W5cSr/lPB1XmjRQV2ENDsKOP1A5IhbwrdfcYIJE3V7xYvZ2ZnG?=
- =?us-ascii?Q?0tZqPAP+LbTFbplLv2AZi491VgwOtAF4mGRIXb/pb5ddQvrJhzdl6MEMrE49?=
- =?us-ascii?Q?DLCjNPfh9+HNkxA40Nqk+p0/cJaV7yLWtkjx1kYXsZnvHcDeKm2i1BNXgaYv?=
- =?us-ascii?Q?ShU61wiEs+wsSErmwIR/EasqCZ+BVZG1P9plmnpmTFcjrvosbl58uA55t+e6?=
- =?us-ascii?Q?AZ6/0IcOelAk09JekXmye+i0MPtVTy5WUbNxrl7+ukQLSkwji4lFOX1kiFla?=
- =?us-ascii?Q?0uX7Cfcz9lZPcRRjHYETxuLkpag3CepIqBeyW0pVN4QVINQBy3al3VsSLJNV?=
- =?us-ascii?Q?E6lTCJBLZNvXwpyzgcL3A1ByHC0KHCi1Cuq9KJuCo+xFLGyhuSGzAr1LTFGq?=
- =?us-ascii?Q?Ub/7mjn/cDP/Se2iR9t3wXygdksYuoG6B/fQp7AAI3em79ITy+3MA8X+aQtm?=
- =?us-ascii?Q?62xmCaFzVdL/fNOJNmpfWLPBPnU7lu7LJ+sd3j0OFeTh2YBbOnSNknZeMxYW?=
- =?us-ascii?Q?aqa0GiAMtc6lHZQpI1H39Q39RDpQIxC3DSdL0xE/Iyeg7DMLoAypwq66f8dH?=
- =?us-ascii?Q?Po8h4DcN8UjCRnZuWQHf4Y83QbZacm7v0Ci++wyl69u1W+Au6g0K2ZIWI3IC?=
- =?us-ascii?Q?eKfyBf1og2EEs+04pFubdVdcoqXAS2lNBlvURfKwgBqBD+c1DyqqqGVrolQt?=
- =?us-ascii?Q?D9AMJHqOfsgzvA6sv1Bie90lN00Ii0WqvJHGaJOJ1PMmKYgL7HFdMpoYHM7A?=
- =?us-ascii?Q?3F+ZU5Xxog1vA6cpv5lEq7wjRXxv9OwfPPJdNYg2p5McnnuNxH+hW4OQRl4Z?=
- =?us-ascii?Q?mAHxh2P4h6tyEGqJEpfQP7V2fQ0hyk2DcUTygttffUhM3twhEm79SRW2THLm?=
- =?us-ascii?Q?XAMoBz9pQPoMyUaVKY2fztDXd7kK7jaVIGZf3a7gOs3/6F58MQRlO2zCPuMk?=
- =?us-ascii?Q?pQQ70y1Jsu+u0/yzyv2QVrheL2OLBYLvhLSuSrCyoHVG/eV/onNFSKw5oo7l?=
- =?us-ascii?Q?kY5JMyTbSmhlxN8LihmNFN+0VVchhSDQbGLA2nfnk4M34tPzYrecsxo54vA6?=
- =?us-ascii?Q?4IoijdEJwHRbFEXGp35DGpR+ZvJB300TgDbEMW5nrm9AeBuKgE5ddHjch3KE?=
- =?us-ascii?Q?VhzE8vB7VFjImdDygxW3Une5EErEUXY3UuWQw7XnVYkfCR7nIeIowKM4cCjc?=
- =?us-ascii?Q?uu2kgjM0TdwfVlJKT9jghA9HC8s1RPv//DPcjJep?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b466f03a-a194-46d3-a01b-08dc39400906
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Feb 2024 16:03:57.3073
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Kx4pFx9R/AkC10Hvnjo4HoMO5PY1V0zGfnMvw/AVQUVW9+DJoUOi1gqQdANAXxlkHXHx1RXelq4L7b5+5ZQqaA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8765
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAHOv4GUC/33NMQ+CMBAF4L9COnuGXrFQJwddHXQ0DqU9sIlQU
+ 0yjMfx3GyaNxPHdy33vxQYKjga2zl4sUHSD830KYpExc9F9S+BsygxzLHLkBeiHA9tpA5ZiB7f
+ gawJb8ooaIZt6VbH0eQvUuMeknthhd9ztt+yc7hc33H14TmORT+1fN3LggGilEFZzZeqN7vXVt
+ 0vjuwmM+ImoeQQTwrUsRYmqaKT6QcQHgjiPCMiBy9oarUgWVn4h4zi+AZ4F6yhJAQAA
+To: <dmaengine@vger.kernel.org>
+CC: Lars-Peter Clausen <lars@metafoo.de>, Vinod Koul <vkoul@kernel.org>,
+        <stable@kernel.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1709223821; l=1190;
+ i=nuno.sa@analog.com; s=20231116; h=from:subject:message-id;
+ bh=XPjecJVgILETFitquX4Ub1RqqD+qTgTUae9qAAfLUic=;
+ b=r0pJtOXgjp4IqERXWp7JMeZpbih4N342nyq/SgbFLllqZctKoObWOfTCaDXiUleu5Bk/vuKyb
+ Qehpycp//oOBhwdIgvNqQixfU0X4lo3g1UDV3IZ6uWNy2hsBrEs9wAc
+X-Developer-Key: i=nuno.sa@analog.com; a=ed25519;
+ pk=3NQwYA013OUYZsmDFBf8rmyyr5iQlxV/9H4/Df83o1E=
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-GUID: oHizItM0bTfFAudWC-u_77Q8ULnevOI7
+X-Proofpoint-ORIG-GUID: oHizItM0bTfFAudWC-u_77Q8ULnevOI7
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-29_02,2024-02-29_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ mlxlogscore=626 clxscore=1015 mlxscore=0 malwarescore=0 bulkscore=0
+ phishscore=0 suspectscore=0 lowpriorityscore=0 priorityscore=1501
+ adultscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2402290125
 
-On Thu, Feb 29, 2024 at 04:58:23PM +0100, Krzysztof Kozlowski wrote:
-> On 29/02/2024 16:54, Frank Li wrote:
-> > On Thu, Feb 29, 2024 at 10:49:43AM +0100, Krzysztof Kozlowski wrote:
-> >> On 27/02/2024 18:21, Frank Li wrote:
-> >>>  
-> >>> +  - if:
-> >>> +      properties:
-> >>> +        compatible:
-> >>> +          contains:
-> >>> +            const: fsl,imx8ulp-edma
-> >>> +    then:
-> >>> +      properties:
-> >>> +        clock:
-> >>> +          maxItems: 33
-> >>> +        clock-names:
-> >>> +          items:
-> >>> +            - const: dma
-> >>> +            - pattern: "^CH[0-31]-clk$"
-> >>> +        interrupt-names: false
-> >>> +        interrupts:
-> >>> +          maxItems: 32
-> >>> +        "#dma-cells":
-> >>> +          const: 3
-> >>
-> >> Why suddenly fsl,vf610-edma can have from 2 to 33 clocks? Constrain
-> >> properly the variants.
-> > 
-> > Suppose you talk about 'fsl,imx8ulp-edma' instead 'fsl,vf610-edma'.
-> > 
-> > imx8ulp each channel have one clk, there are 32 channel. 1 channel for core
-> > controller. So max became 32.
-> > 
-> > I can add above information in commit message.
-> 
-> No, I meant Vybrid. Quick look at this code and the actual file suggest
-> that you allow vybrid with 30-whatever clocks. Test it.
+Added a new patch so we can easily backport a possible race in the
+unbind path.
 
-Any tools or good method to find it? 
+Vinod, I'm just resending these patches. I applied and compiled them on
+top of the next branch. Tip in:
 
-Frank
+716141d366f4 ("dmaengine: of: constify of_phandle_args in of_dma_find_controller()") 
 
-> 
-> Best regards,
-> Krzysztof
-> 
+---
+Changes in v3:
+- Patch 1
+  * New patch.
+- Patch 2
+  * Updated commit message (request_irq() is no longer moved).
+- Link to v2: https://lore.kernel.org/r/20240219-axi-dmac-devm-probe-v2-1-1a6737294f69@analog.com
+
+Changes in v2:
+- Keep devm_request_irq() after of_dma_controller_register() so we free
+  the irq first and avoid any possible race agains
+  of_dma_controller_register().
+- Link to v1: https://lore.kernel.org/r/20240214-axi-dmac-devm-probe-v1-1-22d633da19cb@analog.com
+
+---
+Nuno Sa (2):
+      dmaengine: axi-dmac: fix possible race in remove()
+      dmaengine: axi-dmac: move to device managed probe
+
+ drivers/dma/dma-axi-dmac.c | 78 ++++++++++++++++++++--------------------------
+ 1 file changed, 34 insertions(+), 44 deletions(-)
+---
+base-commit: 716141d366f45d62ffe4dd53a045867b26e29d19
+change-id: 20240214-axi-dmac-devm-probe-d718ef36fb58
+--
+
+Thanks!
+- Nuno Sá
+
 

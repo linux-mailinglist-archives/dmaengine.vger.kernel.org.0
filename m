@@ -1,207 +1,121 @@
-Return-Path: <dmaengine+bounces-1229-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1230-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80E0886F4FA
-	for <lists+dmaengine@lfdr.de>; Sun,  3 Mar 2024 14:09:55 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 14D0D86F577
+	for <lists+dmaengine@lfdr.de>; Sun,  3 Mar 2024 15:12:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EB9D1B2190F
-	for <lists+dmaengine@lfdr.de>; Sun,  3 Mar 2024 13:09:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A7DAF1F22180
+	for <lists+dmaengine@lfdr.de>; Sun,  3 Mar 2024 14:12:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC1E9C8DD;
-	Sun,  3 Mar 2024 13:09:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 008745A0F2;
+	Sun,  3 Mar 2024 14:12:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TFS4Wcld"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aaDfvrKn"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A105EC121;
-	Sun,  3 Mar 2024 13:09:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C156D59B78;
+	Sun,  3 Mar 2024 14:12:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709471386; cv=none; b=u8B0MbfN3Vkk0L/lSHn7zNlV5JfE/wZOfj+fwvbjeUaG3RhXsSGpLQkp0GTOP2h82UIRCgCnjKcACOIf2pQ1G2XYDp/LEUjY92ycj3a7k+97SnoJU/Dd5J5w/TvoOyO3gXCKoFne+JY3sEju8WeBz5PkJLNOpxDo1h0kJQQMqqM=
+	t=1709475161; cv=none; b=FWtQleUdRWrPDcF1o76JLlxMmQfqlfCwcat5JcxqkbdIoAkCvVTygOxC2G2+iY1HqXYcyIUj+pGy9nrgBPmvZu58yPGbKxM9sZPpcewolflypUlTRAJyU1yI8gQCjd4ZngSq+yEVQE/20zsNQ/SZ034EkrXn8J3O1xA7/kAb1jA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709471386; c=relaxed/simple;
-	bh=vrYalRsEVZ5fLjX42yXSYdIo9++d6kZ4+2yqiD07orw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=o0oH6VrDhaJSXMKlqcEMWIxmVVK9gqOipHOgH+705Yt1lfvgtd49IpeeWJkXncn7U8qYJNF10wWtir1C8KeXpjh2WnGknwBhja3rhqgwziYbdchdvAlQlGyv0iBR33f4x60+Z9U6MrexS29fJxMWB96fRy8VcF8q7O6xAPTL5vU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TFS4Wcld; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CDD6C433C7;
-	Sun,  3 Mar 2024 13:09:39 +0000 (UTC)
+	s=arc-20240116; t=1709475161; c=relaxed/simple;
+	bh=e7TtZTt6negFXYMOthELEKIIMFN91RWYmubklIaNQB0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K2+zfcgOalWnUxe4JKuPS8WzmXVK8yEXgqdiCO9Yagv+G0ew+rcXAU7mVQt4IqEUl+cvm82ll9aqexeBsdI2+7m3beDpgy6TSJeMiucnt70nNj+2x2X9duoqRZ/maIcp7KfRNxl6gp82iGKhaatMt3MJecEYZU6MFdpUn5Bwtok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aaDfvrKn; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8703CC433F1;
+	Sun,  3 Mar 2024 14:12:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709471386;
-	bh=vrYalRsEVZ5fLjX42yXSYdIo9++d6kZ4+2yqiD07orw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=TFS4WclduKBieWz1UkcNTKSuCZDyLEdTgFUGthkob7mjSQrWCfm9HvCnDfnyY6qtW
-	 MkNYLN/+XpB8K5gsWQPw9jLMIA09LfI+cLBVXF39xCggrkuXWM8et+8sLHBUbBJRqI
-	 xDrdrgOWWfgXvxEDr6Gh1WcJHxAOynrX5AmOLrn8EPti9G+E7lNvw6MrWX7xS3wt1a
-	 iR5kSIXQa3DC4H0bDcBa/OR87oQv//6vdDCNA27zEcdCrWAQ4BNq4xlKYmmDjJ2gJs
-	 prN85/sJhYV3U+JYiPlVPjJGOFuu9uyRmpGARyS0QvQrrLnM99LERQnKwoZHA2+avH
-	 8Vgq+BsIhZqhA==
-Date: Sun, 3 Mar 2024 13:09:28 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Nuno =?UTF-8?B?U8Oh?= <noname.nuno@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Vinod Koul
- <vkoul@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Jonathan
- Cameron <Jonathan.Cameron@huawei.com>, Mark Brown <broonie@kernel.org>,
- Kees Cook <keescook@chromium.org>, linux-arm-kernel@lists.infradead.org,
- dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-iio@vger.kernel.org, linux-spi@vger.kernel.org,
- netdev@vger.kernel.org, linux-hardening@vger.kernel.org, Lars-Peter Clausen
- <lars@metafoo.de>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, Nuno Sa
- <nuno.sa@analog.com>
-Subject: Re: [PATCH v4 5/8] iio: core: Use new helpers from overflow.h in
- iio_device_alloc()
-Message-ID: <20240303130928.0c2fea09@jic23-huawei>
-In-Reply-To: <9519dda9acd9db009dcb43102cc9b36943b35217.camel@gmail.com>
-References: <20240228204919.3680786-1-andriy.shevchenko@linux.intel.com>
-	<20240228204919.3680786-6-andriy.shevchenko@linux.intel.com>
-	<9519dda9acd9db009dcb43102cc9b36943b35217.camel@gmail.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
+	s=k20201202; t=1709475161;
+	bh=e7TtZTt6negFXYMOthELEKIIMFN91RWYmubklIaNQB0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aaDfvrKnqH4Qlfl3ZvLVT/d9em1h5PCMym8D5iLtWrFpkefEk38LMQKk1eCp1t+vY
+	 JlukEiY1xus8v39ySUXxewXidPAF7jd7ZAPwfk9VgoB12yUqxluj5zLruKEUXrP+F3
+	 gNbEwppOpHcgdtNI1JDQlW7h7iWXIMWhGnYrrdmkHBrqkYIm3jpB6sD5FlzfjPg2Ew
+	 X1oipLSPHlGYkZB8XQYea0zgaJlTDxjDK0uKTGRdPyswLoEuahSl6EbzRhwZnQuAiM
+	 Uua/ix46UPixnDZgoqknf94AAKrHoHIO4q/EmYBrx+4pC34e4xVt97j662sgDcmGTJ
+	 TPcBbkLPPTRiA==
+Date: Sun, 3 Mar 2024 19:42:36 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Bjorn Andersson <andersson@kernel.org>
+Cc: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
+	konrad.dybcio@linaro.org, bjorn.andersson@linaro.org,
+	andi.shyti@kernel.org, wsa@kernel.org,
+	linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+	quic_vdadhani@quicinc.com
+Subject: Re: [PATCH v1] i2c: i2c-qcom-geni: Parse Error correctly in i2c GSI
+ mode
+Message-ID: <ZeSFVEcA9g2WTyJz@matsya>
+References: <20240301112638.990045-1-quic_msavaliy@quicinc.com>
+ <fuggv2kghhxijcljavzsus5uagjiknj5mrzwmqbxbhkyov5t75@smpxbhpdz7cv>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fuggv2kghhxijcljavzsus5uagjiknj5mrzwmqbxbhkyov5t75@smpxbhpdz7cv>
 
-On Thu, 29 Feb 2024 16:29:43 +0100
-Nuno S=C3=A1 <noname.nuno@gmail.com> wrote:
-
-> On Wed, 2024-02-28 at 22:41 +0200, Andy Shevchenko wrote:
-> > We have two new helpers struct_size_with_data() and struct_data_pointer=
-()
-> > that we can utilize in iio_device_alloc(). Do it so.
-> >=20
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+On 01-03-24, 10:37, Bjorn Andersson wrote:
+> On Fri, Mar 01, 2024 at 04:56:38PM +0530, Mukesh Kumar Savaliya wrote:
+> > we are seeing protocol errors like NACK as transfer failure but
+> > ideally it should report exact error like NACK, BUS_PROTO or ARB_LOST.
+> > 
+> > Hence we are adding such error support in GSI mode and reporting it
+> > accordingly by adding respective error logs.
+> > 
+> > geni_i2c_gpi_xfer() needed to allocate heap based memory instead of
+> > stack memory to handle and store the geni_i2c_dev handle.
+> > 
+> > Copy event status from GSI driver to the i2c device status and parse
+> > error when callback comes from gsi driver to the i2c driver. In the
+> > gpi.c, we need to store callback param into i2c config data structure
+> > so that inside the i2c driver, we can check what exactly the error is
+> > and parse it accordingly.
+> > 
+> > Fixes: d8703554f4de ("i2c: qcom-geni: Add support for GPI DMA")
+> > Co-developed-by: Viken Dadhaniya <quic_vdadhani@quicinc.com>
+> > Signed-off-by: Viken Dadhaniya <quic_vdadhani@quicinc.com>
+> > Signed-off-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
 > > ---
-> > =C2=A0drivers/iio/industrialio-core.c | 5 ++---
-> > =C2=A01 file changed, 2 insertions(+), 3 deletions(-)
-> >=20
-> > diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio=
--core.c
-> > index 1986b3386307..223013725e32 100644
-> > --- a/drivers/iio/industrialio-core.c
-> > +++ b/drivers/iio/industrialio-core.c
-> > @@ -1644,7 +1644,7 @@ struct iio_dev *iio_device_alloc(struct device *p=
-arent,
-> > int sizeof_priv)
-> > =C2=A0	size_t alloc_size;
-> > =C2=A0
-> > =C2=A0	if (sizeof_priv)
-> > -		alloc_size =3D ALIGN(alloc_size, IIO_DMA_MINALIGN) +
-> > sizeof_priv;
-> > +		alloc_size =3D struct_size_with_data(iio_dev_opaque,
-> > IIO_DMA_MINALIGN, sizeof_priv);
-> > =C2=A0	else
-> > =C2=A0		alloc_size =3D sizeof(struct iio_dev_opaque);
-> > =C2=A0
-> > @@ -1655,8 +1655,7 @@ struct iio_dev *iio_device_alloc(struct device *p=
-arent,
-> > int sizeof_priv)
-> > =C2=A0	indio_dev =3D &iio_dev_opaque->indio_dev;
-> > =C2=A0
-> > =C2=A0	if (sizeof_priv)
-> > -		indio_dev->priv =3D (char *)iio_dev_opaque +
-> > -			ALIGN(sizeof(struct iio_dev_opaque),
-> > IIO_DMA_MINALIGN);
-> > +		indio_dev->priv =3D struct_data_pointer(iio_dev_opaque,
-> > IIO_DMA_MINALIGN); =20
->=20
-> I'd +1 for implementing what Kees suggested in IIO. Only thing is (I thin=
-k), we
-> need to move struct iio_dev indioo_dev to the end of struct iio_dev_opaqu=
-e.
+> >  drivers/dma/qcom/gpi.c             | 12 +++++++-
+> >  drivers/i2c/busses/i2c-qcom-geni.c | 46 +++++++++++++++++++-----------
+> >  include/linux/dma/qcom-gpi-dma.h   |  4 +++
+> >  3 files changed, 44 insertions(+), 18 deletions(-)
+> > 
+> > diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
+> > index 1c93864e0e4d..6d718916fba4 100644
+> > --- a/drivers/dma/qcom/gpi.c
+> > +++ b/drivers/dma/qcom/gpi.c
+> > @@ -1076,7 +1076,17 @@ static void gpi_process_xfer_compl_event(struct gchan *gchan,
+> >  	dev_dbg(gpii->gpi_dev->dev, "Residue %d\n", result.residue);
+> >  
+> >  	dma_cookie_complete(&vd->tx);
+> > -	dmaengine_desc_get_callback_invoke(&vd->tx, &result);
+> > +	if (gchan->protocol == QCOM_GPI_I2C) {
+> > +		struct dmaengine_desc_callback cb;
+> > +		struct gpi_i2c_config *i2c;
+> > +
+> > +		dmaengine_desc_get_callback(&vd->tx, &cb);
+> > +		i2c = cb.callback_param;
+> > +		i2c->status = compl_event->status;
+> 
+> What would the DMA maintainer say about extending struct
+> dmaengine_tx_result with some protocol-specific status field?
 
-That is going to be messy and without horrible hacks (I think) add more pad=
-ding we
-don't need.  At the moment the struct iio_dev and the struct iio_dev_opaque
-are aligned as at the start of the structure.
+That would be sane thing to do if we can get protocol status. Most of
+the times DMA txn would tell you success or fail, here we have firmware
+which tells us this and I see no reason why this can't be propagated.
 
-The priv data is aligned by padding the larger struct iio_dev_opaque,
-so if you want the priv handle to be to data defined in struct iio_dev you =
-would
-need to add additional padding so that
-
-struct iio_dev_opaque {
-	stuff...
-	// this next __aligned() is implicit anyway because of the rules for
-	// a structure always being aligned to the alignment of it's max aligned
-	// element.
-	struct iio_dev __aligned (IIO_DMA_ALIGN) { =20
-		stuff
-		u8 priv[] __aligned(IIO_DMA_ALIGN);
-	}
-}
-
-How about using what Kees suggests on the iio_dev_opaque (which think is cl=
-eaner
-anyway as that's what we are allocating) and keeping the magic pointer to p=
-riv
-in the struct iio_dev; The compiler looses some visibility for iio_priv() a=
-ccesses
-but can it do much with those anyway? They always get cast to a struct driv=
-er_specific *
-and getting the original allocation wrong is not easy to do as we pass
-that struct size in.  Note, for others not aware of what is going on here, =
-the
-priv pointer in iio_dev is to allow efficient static inline iio_priv() call=
-s without
-needing to either make a function call, or expose the internals of the opaq=
-ue
-structure in which the iio_dev and the priv data are embedded.
-
-Standard pattern is:
-
-struct driver_specific *bob;
-struct iio_dev *indio_dev =3D dev_iio_device_alloc(dev, sizeof(*bob));
-// which allocates the iio_dev_opaque, but returns the contained iio_dev
-bob =3D iio_priv(indio_dev);
-
-So
-
-struct iio_dev_opaque {
-	struct iio_dev indio_dev {
-		stuff..
-		void *priv;=09
-	};
-	stuff..
-	int priv_count;
-	u8 priv[] __aligned(IIO_DMA_ALIGN) __counted_by(priv_count);
-}
-with indio_dev->priv =3D iio_dev_opaque->dev?
-
-This cleanups up a few IIO core bits but no impact outside them.
-Nice to have those cleanups.
-
-Is there any way to have that internal iio_dev->priv pointer associated with
-a __counted_by even though it's pointing elsewhere than a local variable si=
-zed
-trailing element? =20
-
-struct iio_dev {
-	stuff
-
-	u32 count;
-	void *priv __counted_by(count);
-}
-compiles with gcc but without digging further I have no idea if it does any=
-thing useful!
-
-Jonathan
-
->=20
-> - Nuno S=C3=A1
->=20
->=20
->=20
-
+-- 
+~Vinod
 

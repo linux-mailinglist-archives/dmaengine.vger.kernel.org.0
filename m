@@ -1,59 +1,59 @@
-Return-Path: <dmaengine+bounces-1254-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1255-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8CBBA870C50
-	for <lists+dmaengine@lfdr.de>; Mon,  4 Mar 2024 22:20:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D044E870C53
+	for <lists+dmaengine@lfdr.de>; Mon,  4 Mar 2024 22:20:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1AD342874A8
-	for <lists+dmaengine@lfdr.de>; Mon,  4 Mar 2024 21:20:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5EB7F288401
+	for <lists+dmaengine@lfdr.de>; Mon,  4 Mar 2024 21:20:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D98F7BAE2;
-	Mon,  4 Mar 2024 21:20:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27E607BB12;
+	Mon,  4 Mar 2024 21:20:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lxQAEf6B"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JZMxX+Km"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3CEC47F79;
-	Mon,  4 Mar 2024 21:20:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27BFE7B3E6;
+	Mon,  4 Mar 2024 21:20:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709587220; cv=none; b=eXWWmIVDEyCnoooGrkwdQo82GMYUKIlk8c1jEc3OAZWgJNkFnJG2l/GoQknxo8OPjnav8PokMNP53Z3WejXjClPyZwS5sGI04NgtgR+gQXBwDWu/HesHLZXHbynt5jHSeVYplOATs8M9fRC8NBkAlx6+yZdg1+82V/hZwb536DI=
+	t=1709587222; cv=none; b=IdEDkoQZarv+zDUoDToj44B3HYPlO8foK7eVttaK8/5hLvN+s+F+MynsJFZXlIgY8wNPIHBtHIuvmbLUzBw8voq7KpmWG15GVd0uQdWYYr5QFIo74Nt5NuK/TPYjzCV/3rYQEWQkNn1IEpL0rJRcAx7zOeVUs98FWwdQQZToxqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709587220; c=relaxed/simple;
-	bh=88Pe+kMFtA2O1ACHKEEsbE0yNTFbS+C7bzIC7aRQfyY=;
+	s=arc-20240116; t=1709587222; c=relaxed/simple;
+	bh=JssRPPLmPLeJKfOPjgxKKGEFvGgnvCIuSR7u+UyBWtQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FwJ4jYa6f3IrpqKPjBXqRkgUh4faFH2cHZWPYl0hf2E7D7yNmKs8br9QfjBBaMV93coNJnNZVeeKDjCQJ6pYWLDYmKR2ZnSEYglnbl4S/t0sJAqC4thigGM8en5g/3klslofB0kHUIocqJ+AVSdFrJFZJDH/9Ur6HgOUmOFlx80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lxQAEf6B; arc=none smtp.client-ip=192.198.163.15
+	 MIME-Version; b=SWhN+cpddJV+wNEnH3qvf2JLwJO60graiUsOE8nyED9TsTHYHf8BOM0nJWCK7Yc5Wykn1emah2L7cJrTn6quZNZ2n3hsnTAO/7NTuwv0EH4yinLgqDPuvh/IZFq9l/vjPg3Ly6YH6ByY+wZVXVQ2f0ogDChV7Jk5kQqiVbK7kV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JZMxX+Km; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709587219; x=1741123219;
+  t=1709587220; x=1741123220;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=88Pe+kMFtA2O1ACHKEEsbE0yNTFbS+C7bzIC7aRQfyY=;
-  b=lxQAEf6BWcaexBTDANLzDC8f+H+VrPf1+UWE9LrWmUW76mQW75LpwJL0
-   SG+qVJtZtK8rSSWueXgGjzoh4ad1oJ7uijW2jM9xkWB41Zzxh8VwcdT+5
-   cDhvRrKnhKq1KXpDBLUmAnlkrWRZcH9WQPPhWoJ+aLaNow4E2v31NXepj
-   8ubzG3c17iRIsw/1ztg7mXxvee0zkeh/TinHkTmS2TXYL415Wcmt35WNP
-   9a2oavUC25fx0CV6kDc4d9siSto18sd/BDOzLlNOTdW7xHq5gsSCgG6f+
-   vsdl+mBQBk0rIAd2A0JKePmBn1bzeApqgEp+o3vAQhUlkpDdjeOCgmOCA
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="4271347"
+  bh=JssRPPLmPLeJKfOPjgxKKGEFvGgnvCIuSR7u+UyBWtQ=;
+  b=JZMxX+KmO3X63CjpqAPdxJ+7kiqpRjm2yyBkLsDEt6E4hLYMTlnDPAN4
+   jpq1Tn4N7PlsU0Nh2f0tS4nD8goQL3bC/BtDS8vuozP5zwUk7TZVa2z11
+   yVZzvopoYdYdn9QVXheukUZ1+z15hnIQSVGksjX/6bSrVSJm2SMc4YN1Z
+   00EVJUwCBrkNJuI2YnTKrZQMuWOyE1v+ASD9FnQm+UOqaayM1owK98vU+
+   4A6ldOt88kxV8NaFO+BhS5wk4kHiZjG8/CNC+5Gd3ZqpZ78nAx+hCrCXS
+   e/5Dd9RjJY6tg1YZsUUSFeqgiG0pzEMKEGrx0fonluS+vHvgnB28aT1df
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="4271353"
 X-IronPort-AV: E=Sophos;i="6.06,204,1705392000"; 
-   d="scan'208";a="4271347"
+   d="scan'208";a="4271353"
 Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 13:20:18 -0800
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 13:20:20 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,204,1705392000"; 
-   d="scan'208";a="9040258"
+   d="scan'208";a="9040267"
 Received: from skedaras-mobl1.amr.corp.intel.com (HELO tzanussi-mobl1.amr.corp.intel.com) ([10.212.77.241])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 13:20:18 -0800
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 13:20:19 -0800
 From: Tom Zanussi <tom.zanussi@linux.intel.com>
 To: herbert@gondor.apana.org.au,
 	davem@davemloft.net
@@ -61,9 +61,9 @@ Cc: andre.glover@linux.intel.com,
 	linux-kernel@vger.kernel.org,
 	linux-crypto@vger.kernel.org,
 	dmaengine@vger.kernel.org
-Subject: [PATCH 2/4] crypto: iaa - Remove comp/decomp delay statistics
-Date: Mon,  4 Mar 2024 15:20:09 -0600
-Message-Id: <20240304212011.1525003-3-tom.zanussi@linux.intel.com>
+Subject: [PATCH 3/4] crypto: iaa - Add global_stats file and remove individual stat files
+Date: Mon,  4 Mar 2024 15:20:10 -0600
+Message-Id: <20240304212011.1525003-4-tom.zanussi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240304212011.1525003-1-tom.zanussi@linux.intel.com>
 References: <20240304212011.1525003-1-tom.zanussi@linux.intel.com>
@@ -75,180 +75,193 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-As part of the simplification/cleanup of the iaa statistics, remove
-the comp/decomp delay statistics.
-
-They're actually not really useful and can be/are being more flexibly
-generated using standard kernel tracing infrastructure.
+Currently, the wq_stats output also includes the global stats, while
+the individual global stats are also available as separate debugfs
+files.  Since these are all read-only, there's really no reason to
+have them as separate files, especially since we already display them
+as global stats in the wq_stats.  It makes more sense to just add a
+separate global_stats file to display those, and remove them from the
+wq_stats, as well as removing the individual stats files.
 
 Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
 ---
- drivers/crypto/intel/iaa/iaa_crypto_main.c  |  9 -------
- drivers/crypto/intel/iaa/iaa_crypto_stats.c | 28 ---------------------
- drivers/crypto/intel/iaa/iaa_crypto_stats.h |  8 ------
- 3 files changed, 45 deletions(-)
+ .../driver-api/crypto/iaa/iaa-crypto.rst      | 76 +++++++++++--------
+ drivers/crypto/intel/iaa/iaa_crypto_stats.c   | 30 ++++----
+ 2 files changed, 61 insertions(+), 45 deletions(-)
 
-diff --git a/drivers/crypto/intel/iaa/iaa_crypto_main.c b/drivers/crypto/intel/iaa/iaa_crypto_main.c
-index 466bd0c71816..89bc06d4ebc9 100644
---- a/drivers/crypto/intel/iaa/iaa_crypto_main.c
-+++ b/drivers/crypto/intel/iaa/iaa_crypto_main.c
-@@ -1494,7 +1494,6 @@ static int iaa_comp_acompress(struct acomp_req *req)
- 	u32 compression_crc;
- 	struct idxd_wq *wq;
- 	struct device *dev;
--	u64 start_time_ns;
- 	int order = -1;
+diff --git a/Documentation/driver-api/crypto/iaa/iaa-crypto.rst b/Documentation/driver-api/crypto/iaa/iaa-crypto.rst
+index de587cf9cbed..7b28aef39ba0 100644
+--- a/Documentation/driver-api/crypto/iaa/iaa-crypto.rst
++++ b/Documentation/driver-api/crypto/iaa/iaa-crypto.rst
+@@ -321,33 +321,30 @@ driver will generate statistics which can be accessed in debugfs at::
  
- 	compression_ctx = crypto_tfm_ctx(tfm);
-@@ -1568,10 +1567,8 @@ static int iaa_comp_acompress(struct acomp_req *req)
- 		" req->dlen %d, sg_dma_len(sg) %d\n", dst_addr, nr_sgs,
- 		req->dst, req->dlen, sg_dma_len(req->dst));
+   # ls -al /sys/kernel/debug/iaa-crypto/
+   total 0
+-  drwxr-xr-x  2 root root 0 Mar  3 09:35 .
+-  drwx------ 47 root root 0 Mar  3 09:35 ..
+-  -rw-r--r--  1 root root 0 Mar  3 09:35 max_acomp_delay_ns
+-  -rw-r--r--  1 root root 0 Mar  3 09:35 max_adecomp_delay_ns
+-  -rw-r--r--  1 root root 0 Mar  3 09:35 max_comp_delay_ns
+-  -rw-r--r--  1 root root 0 Mar  3 09:35 max_decomp_delay_ns
+-  -rw-r--r--  1 root root 0 Mar  3 09:35 stats_reset
+-  -rw-r--r--  1 root root 0 Mar  3 09:35 total_comp_bytes_out
+-  -rw-r--r--  1 root root 0 Mar  3 09:35 total_comp_calls
+-  -rw-r--r--  1 root root 0 Mar  3 09:35 total_decomp_bytes_in
+-  -rw-r--r--  1 root root 0 Mar  3 09:35 total_decomp_calls
+-  -rw-r--r--  1 root root 0 Mar  3 09:35 wq_stats
+-
+-Most of the above statisticss are self-explanatory.  The wq_stats file
+-shows per-wq stats, a set for each iaa device and wq in addition to
+-some global stats::
++  drwxr-xr-x  2 root root 0 Mar  3 07:55 .
++  drwx------ 53 root root 0 Mar  3 07:55 ..
++  -rw-r--r--  1 root root 0 Mar  3 07:55 global_stats
++  -rw-r--r--  1 root root 0 Mar  3 07:55 stats_reset
++  -rw-r--r--  1 root root 0 Mar  3 07:55 wq_stats
  
--	start_time_ns = iaa_get_ts();
- 	ret = iaa_compress(tfm, req, wq, src_addr, req->slen, dst_addr,
- 			   &req->dlen, &compression_crc, disable_async);
--	update_max_comp_delay_ns(start_time_ns);
- 	if (ret == -EINPROGRESS)
- 		return ret;
+-  # cat wq_stats
++The global_stats file shows a set of global statistics collected since
++the driver has been loaded or reset::
++
++  # cat global_stats
+   global stats:
+-    total_comp_calls: 100
+-    total_decomp_calls: 100
+-    total_comp_bytes_out: 22800
+-    total_decomp_bytes_in: 22800
++    total_comp_calls: 4300
++    total_decomp_calls: 4164
++    total_sw_decomp_calls: 0
++    total_comp_bytes_out: 5993989
++    total_decomp_bytes_in: 5993989
+     total_completion_einval_errors: 0
+     total_completion_timeout_errors: 0
+-    total_completion_comp_buf_overflow_errors: 0
++    total_completion_comp_buf_overflow_errors: 136
++
++The wq_stats file shows per-wq stats, a set for each iaa device and wq
++in addition to some global stats::
  
-@@ -1618,7 +1615,6 @@ static int iaa_comp_adecompress_alloc_dest(struct acomp_req *req)
- 	struct iaa_wq *iaa_wq;
- 	struct device *dev;
- 	struct idxd_wq *wq;
--	u64 start_time_ns;
- 	int order = -1;
++  # cat wq_stats
+   iaa device:
+     id: 1
+     n_wqs: 1
+@@ -379,21 +376,36 @@ some global stats::
+   iaa device:
+     id: 5
+     n_wqs: 1
+-    comp_calls: 100
+-    comp_bytes: 22800
+-    decomp_calls: 100
+-    decomp_bytes: 22800
++    comp_calls: 1360
++    comp_bytes: 1999776
++    decomp_calls: 0
++    decomp_bytes: 0
+     wqs:
+       name: iaa_crypto
+-      comp_calls: 100
+-      comp_bytes: 22800
+-      decomp_calls: 100
+-      decomp_bytes: 22800
++      comp_calls: 1360
++      comp_bytes: 1999776
++      decomp_calls: 0
++      decomp_bytes: 0
++
++  iaa device:
++    id: 7
++    n_wqs: 1
++    comp_calls: 2940
++    comp_bytes: 3994213
++    decomp_calls: 4164
++    decomp_bytes: 5993989
++    wqs:
++      name: iaa_crypto
++      comp_calls: 2940
++      comp_bytes: 3994213
++      decomp_calls: 4164
++      decomp_bytes: 5993989
++    ...
  
- 	cpu = get_cpu();
-@@ -1675,10 +1671,8 @@ static int iaa_comp_adecompress_alloc_dest(struct acomp_req *req)
- 	dev_dbg(dev, "dma_map_sg, dst_addr %llx, nr_sgs %d, req->dst %p,"
- 		" req->dlen %d, sg_dma_len(sg) %d\n", dst_addr, nr_sgs,
- 		req->dst, req->dlen, sg_dma_len(req->dst));
--	start_time_ns = iaa_get_ts();
- 	ret = iaa_decompress(tfm, req, wq, src_addr, req->slen,
- 			     dst_addr, &req->dlen, true);
--	update_max_decomp_delay_ns(start_time_ns);
- 	if (ret == -EOVERFLOW) {
- 		dma_unmap_sg(dev, req->dst, sg_nents(req->dst), DMA_FROM_DEVICE);
- 		req->dlen *= 2;
-@@ -1709,7 +1703,6 @@ static int iaa_comp_adecompress(struct acomp_req *req)
- 	int nr_sgs, cpu, ret = 0;
- 	struct iaa_wq *iaa_wq;
- 	struct device *dev;
--	u64 start_time_ns;
- 	struct idxd_wq *wq;
+-Writing 0 to 'stats_reset' resets all the stats, including the
++Writing to 'stats_reset' resets all the stats, including the
+ per-device and per-wq stats::
  
- 	if (!iaa_crypto_enabled) {
-@@ -1769,10 +1762,8 @@ static int iaa_comp_adecompress(struct acomp_req *req)
- 		" req->dlen %d, sg_dma_len(sg) %d\n", dst_addr, nr_sgs,
- 		req->dst, req->dlen, sg_dma_len(req->dst));
- 
--	start_time_ns = iaa_get_ts();
- 	ret = iaa_decompress(tfm, req, wq, src_addr, req->slen,
- 			     dst_addr, &req->dlen, false);
--	update_max_decomp_delay_ns(start_time_ns);
- 	if (ret == -EINPROGRESS)
- 		return ret;
- 
+-  # echo 0 > stats_reset
++  # echo 1 > stats_reset
+   # cat wq_stats
+     global stats:
+     total_comp_calls: 0
 diff --git a/drivers/crypto/intel/iaa/iaa_crypto_stats.c b/drivers/crypto/intel/iaa/iaa_crypto_stats.c
-index c9f83af4b307..7820062a91e5 100644
+index 7820062a91e5..0f225bdf2279 100644
 --- a/drivers/crypto/intel/iaa/iaa_crypto_stats.c
 +++ b/drivers/crypto/intel/iaa/iaa_crypto_stats.c
-@@ -20,8 +20,6 @@
- static u64 total_comp_calls;
- static u64 total_decomp_calls;
- static u64 total_sw_decomp_calls;
--static u64 max_comp_delay_ns;
--static u64 max_decomp_delay_ns;
- static u64 total_comp_bytes_out;
- static u64 total_decomp_bytes_in;
- static u64 total_completion_einval_errors;
-@@ -70,26 +68,6 @@ void update_completion_comp_buf_overflow_errs(void)
- 	total_completion_comp_buf_overflow_errors++;
+@@ -159,7 +159,7 @@ static void device_stats_show(struct seq_file *m, struct iaa_device *iaa_device)
+ 		wq_show(m, iaa_wq);
  }
  
--void update_max_comp_delay_ns(u64 start_time_ns)
--{
--	u64 time_diff;
--
--	time_diff = ktime_get_ns() - start_time_ns;
--
--	if (time_diff > max_comp_delay_ns)
--		max_comp_delay_ns = time_diff;
--}
--
--void update_max_decomp_delay_ns(u64 start_time_ns)
--{
--	u64 time_diff;
--
--	time_diff = ktime_get_ns() - start_time_ns;
--
--	if (time_diff > max_decomp_delay_ns)
--		max_decomp_delay_ns = time_diff;
--}
--
- void update_wq_comp_calls(struct idxd_wq *idxd_wq)
+-static void global_stats_show(struct seq_file *m)
++static int global_stats_show(struct seq_file *m, void *v)
  {
- 	struct iaa_wq *wq = idxd_wq_get_private(idxd_wq);
-@@ -127,8 +105,6 @@ static void reset_iaa_crypto_stats(void)
- 	total_comp_calls = 0;
- 	total_decomp_calls = 0;
- 	total_sw_decomp_calls = 0;
--	max_comp_delay_ns = 0;
--	max_decomp_delay_ns = 0;
- 	total_comp_bytes_out = 0;
- 	total_decomp_bytes_in = 0;
- 	total_completion_einval_errors = 0;
-@@ -252,10 +228,6 @@ int __init iaa_crypto_debugfs_init(void)
+ 	seq_puts(m, "global stats:\n");
+ 	seq_printf(m, "  total_comp_calls: %llu\n", total_comp_calls);
+@@ -173,6 +173,8 @@ static void global_stats_show(struct seq_file *m)
+ 		   total_completion_timeout_errors);
+ 	seq_printf(m, "  total_completion_comp_buf_overflow_errors: %llu\n\n",
+ 		   total_completion_comp_buf_overflow_errors);
++
++	return 0;
+ }
+ 
+ static int wq_stats_show(struct seq_file *m, void *v)
+@@ -181,8 +183,6 @@ static int wq_stats_show(struct seq_file *m, void *v)
+ 
+ 	mutex_lock(&iaa_devices_lock);
+ 
+-	global_stats_show(m);
+-
+ 	list_for_each_entry(iaa_device, &iaa_devices, list)
+ 		device_stats_show(m, iaa_device);
+ 
+@@ -219,6 +219,18 @@ static const struct file_operations wq_stats_fops = {
+ 	.release = single_release,
+ };
+ 
++static int global_stats_open(struct inode *inode, struct file *file)
++{
++	return single_open(file, global_stats_show, file);
++}
++
++static const struct file_operations global_stats_fops = {
++	.open = global_stats_open,
++	.read = seq_read,
++	.llseek = seq_lseek,
++	.release = single_release,
++};
++
+ DEFINE_DEBUGFS_ATTRIBUTE(wq_stats_reset_fops, NULL, iaa_crypto_stats_reset, "%llu\n");
+ 
+ int __init iaa_crypto_debugfs_init(void)
+@@ -228,16 +240,8 @@ int __init iaa_crypto_debugfs_init(void)
  
  	iaa_crypto_debugfs_root = debugfs_create_dir("iaa_crypto", NULL);
  
--	debugfs_create_u64("max_comp_delay_ns", 0644,
--			   iaa_crypto_debugfs_root, &max_comp_delay_ns);
--	debugfs_create_u64("max_decomp_delay_ns", 0644,
--			   iaa_crypto_debugfs_root, &max_decomp_delay_ns);
- 	debugfs_create_u64("total_comp_calls", 0644,
- 			   iaa_crypto_debugfs_root, &total_comp_calls);
- 	debugfs_create_u64("total_decomp_calls", 0644,
-diff --git a/drivers/crypto/intel/iaa/iaa_crypto_stats.h b/drivers/crypto/intel/iaa/iaa_crypto_stats.h
-index c916ca83f070..3787a5f507eb 100644
---- a/drivers/crypto/intel/iaa/iaa_crypto_stats.h
-+++ b/drivers/crypto/intel/iaa/iaa_crypto_stats.h
-@@ -13,8 +13,6 @@ void	update_total_comp_bytes_out(int n);
- void	update_total_decomp_calls(void);
- void	update_total_sw_decomp_calls(void);
- void	update_total_decomp_bytes_in(int n);
--void	update_max_comp_delay_ns(u64 start_time_ns);
--void	update_max_decomp_delay_ns(u64 start_time_ns);
- void	update_completion_einval_errs(void);
- void	update_completion_timeout_errs(void);
- void	update_completion_comp_buf_overflow_errs(void);
-@@ -24,8 +22,6 @@ void	update_wq_comp_bytes(struct idxd_wq *idxd_wq, int n);
- void	update_wq_decomp_calls(struct idxd_wq *idxd_wq);
- void	update_wq_decomp_bytes(struct idxd_wq *idxd_wq, int n);
- 
--static inline u64	iaa_get_ts(void) { return ktime_get_ns(); }
--
- #else
- static inline int	iaa_crypto_debugfs_init(void) { return 0; }
- static inline void	iaa_crypto_debugfs_cleanup(void) {}
-@@ -35,8 +31,6 @@ static inline void	update_total_comp_bytes_out(int n) {}
- static inline void	update_total_decomp_calls(void) {}
- static inline void	update_total_sw_decomp_calls(void) {}
- static inline void	update_total_decomp_bytes_in(int n) {}
--static inline void	update_max_comp_delay_ns(u64 start_time_ns) {}
--static inline void	update_max_decomp_delay_ns(u64 start_time_ns) {}
- static inline void	update_completion_einval_errs(void) {}
- static inline void	update_completion_timeout_errs(void) {}
- static inline void	update_completion_comp_buf_overflow_errs(void) {}
-@@ -46,8 +40,6 @@ static inline void	update_wq_comp_bytes(struct idxd_wq *idxd_wq, int n) {}
- static inline void	update_wq_decomp_calls(struct idxd_wq *idxd_wq) {}
- static inline void	update_wq_decomp_bytes(struct idxd_wq *idxd_wq, int n) {}
- 
--static inline u64	iaa_get_ts(void) { return 0; }
--
- #endif // CONFIG_CRYPTO_DEV_IAA_CRYPTO_STATS
- 
- #endif
+-	debugfs_create_u64("total_comp_calls", 0644,
+-			   iaa_crypto_debugfs_root, &total_comp_calls);
+-	debugfs_create_u64("total_decomp_calls", 0644,
+-			   iaa_crypto_debugfs_root, &total_decomp_calls);
+-	debugfs_create_u64("total_sw_decomp_calls", 0644,
+-			   iaa_crypto_debugfs_root, &total_sw_decomp_calls);
+-	debugfs_create_u64("total_comp_bytes_out", 0644,
+-			   iaa_crypto_debugfs_root, &total_comp_bytes_out);
+-	debugfs_create_u64("total_decomp_bytes_in", 0644,
+-			   iaa_crypto_debugfs_root, &total_decomp_bytes_in);
++	debugfs_create_file("global_stats", 0644, iaa_crypto_debugfs_root, NULL,
++			    &global_stats_fops);
+ 	debugfs_create_file("wq_stats", 0644, iaa_crypto_debugfs_root, NULL,
+ 			    &wq_stats_fops);
+ 	debugfs_create_file("stats_reset", 0644, iaa_crypto_debugfs_root, NULL,
 -- 
 2.34.1
 

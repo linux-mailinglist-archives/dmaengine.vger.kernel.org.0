@@ -1,298 +1,198 @@
-Return-Path: <dmaengine+bounces-1289-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1290-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E3F0C875234
-	for <lists+dmaengine@lfdr.de>; Thu,  7 Mar 2024 15:47:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9EB1C87553E
+	for <lists+dmaengine@lfdr.de>; Thu,  7 Mar 2024 18:33:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 143861C25106
-	for <lists+dmaengine@lfdr.de>; Thu,  7 Mar 2024 14:47:10 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 90BA51C23232
+	for <lists+dmaengine@lfdr.de>; Thu,  7 Mar 2024 17:33:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1916A1EB3A;
-	Thu,  7 Mar 2024 14:46:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A70D130AFF;
+	Thu,  7 Mar 2024 17:33:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VGC0olyx"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="W/+lTlBz"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2074.outbound.protection.outlook.com [40.107.21.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CE811EB2F
-	for <dmaengine@vger.kernel.org>; Thu,  7 Mar 2024 14:46:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709822765; cv=none; b=Z35COnhR2Qw/yj0Vi9YpcRNpnk0V8tfMmq/DiroziGOlYzTagmBxLh8cfT7O+FA/NmNCjBxwjy47ulLt/93WIFFRpasee90sdU6nGrGXq+ApKqelcFgewruonTBRKuTFOzuDnF/M2UakXxOR6pvjndEUuP8iLOisKqfBF/grotQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709822765; c=relaxed/simple;
-	bh=T8zKZi+9e/wRkkXQuIyTPYSMNwjFkafxbUNOpkl3+qc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qCH7NXHSpnhtOFcrSKUZymM7lX7dyGt+cF9BqzM8QHsaFCnfG3Z+qig53t3LgdrxwLEMrgtyRwcGdGU+BTzH2R2xe533kugPiFJJ+Qo2MyBV9ZzI3B1skcArkOFsly1S9Y30HI/7KVcxcjuAJ8oBnkHSy6E2JXSJ90/a8h7jyEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VGC0olyx; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dcbc6a6808fso1015138276.2
-        for <dmaengine@vger.kernel.org>; Thu, 07 Mar 2024 06:46:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709822762; x=1710427562; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=2DO8lbCCr4NY9SSOFNXjweEcXDNHlsqaoWwqb/vXIE8=;
-        b=VGC0olyx4+ekyU73epZOlVwW2fbB9ZZXbSlRsOpBP4DD4BHSrIMU9aYkFZWtzsl9BD
-         swx7BBlIgnoHQTlhkihYv8dueiCe7oDPA5xQJnMO03jn2K9i5+xmDQFxhnloNVLGVwbA
-         B2I6NWNDej/+MHz9TlrMkdF97+xDhJAkdD/gnvceALRxUD6v6EVkloBVVDrhPqX23inS
-         tQbMUwiDoQmB+F0N76OClqB95Uu4Qv3YKu/GPoIzpaxBejDHlPe0f053YHiA/F4CUtTZ
-         3MSmVpjlEsxq4sPPmjhdSmcsVYd9NVIXamXTTSkBX2Q2CsYJ0mxP76g4ZSm3gdWRTfXy
-         dx+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709822762; x=1710427562;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2DO8lbCCr4NY9SSOFNXjweEcXDNHlsqaoWwqb/vXIE8=;
-        b=MEvSl9NZ6FviFk4SOuzJWbfPO1FU/xwWX3akN+xEvyofP9XcI87ELgwv/FdUHzEQip
-         Y4AT90aECA7QaOuJgsoam73XKwHnFaRZP23/nA21nVOD0UJIMNvMGrU9AzBTz9J5J3nE
-         ySSH5VHkIqqlf1K4OlL17kYKcwC2WGP8u2fumajUp1r/xU3OXGQzvUnckdzWpdOtBh18
-         RuhvnAjUGHFT/RIFI6XxH0X0fBovJRTHNEO2lN4XUAYW3IHulUPCWgogiMcknAMCuEKf
-         /ppU3XA5XegQ5oiFMTaP6W4H77vSgCUFOwEdgC5UzsuzLVqo7YuvrO6tW71nNE8eDeEg
-         z/hQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUPeeXN0kWQXM9j6Hj7Qv6sEGNvdNUlaYcOeaA/o8CtxInzW7TQ5XOf7lG4OE3ifeJ9b0kVlBCUuc9G8utOzTfZGueBFuSL/ujk
-X-Gm-Message-State: AOJu0Yzkfd5NZMLeZAhX9v2QCitUk8tW9g0F6ceKllxzmHO6x65ii23D
-	Wg+i2lwIPzgZcFSElqGfir/vDr9xHebsARiJLwI7gsn+6M7dZzJ1pKc9swCy489BBm1D+WFrDK+
-	ZjESigDqax2tIO5begoSpB3Rqj7c/7Fi3LiboUw==
-X-Google-Smtp-Source: AGHT+IHqhppg8UCV3HnmeMYmICt+0nHtX3/aUVZcC/1R/yM7ReBzagzjsighT1k9YP/mJ4X58nZ4HCAj9jCSD/TbItY=
-X-Received: by 2002:a25:3604:0:b0:dcd:97ad:74b3 with SMTP id
- d4-20020a253604000000b00dcd97ad74b3mr14205958yba.63.1709822761998; Thu, 07
- Mar 2024 06:46:01 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB6AE12D76A;
+	Thu,  7 Mar 2024 17:33:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.74
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709832794; cv=fail; b=u1WLjDaMvvMRUQtJJtyM6ROLvYoDr15Ka9wlbDhYCGrPQA5p80JTHdOQJvj8EtEsGkPftufTrzMJdgDLm+NtuMICFf9QCfBG9sTin9YCEcvUX0swteWFSvAfpquU6ft5JW2VUFQBXRLljGAf3gEydPWUlOsFzPZWfrwIqLTHj24=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709832794; c=relaxed/simple;
+	bh=M8D6VP7v9cHTLZND3ljNIE8GMTXWrv8Xtwn1U6Prze0=;
+	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=kaG3Q3Dg0Clf48E7MKH0i1YTSiYG8uc1vKaVueuU+krgB2RtnCed7TUKB765GuPvOTc9/ZeHUkuhTfKEZbcQHhHO8Tbttn5FGm6d339SkgsvwkhvcMNwtuJ8AOt0DKaIoS8IAQDlJobolIgznFOS8AczSmhH7iO+ZzzI8j7Xzp0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=W/+lTlBz; arc=fail smtp.client-ip=40.107.21.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=l1ge4+grC5GlRTl4MSfevlcEJGVxjNbdaYfYPBuM/UJN9csgZrrafBt7Po2cjiWRyh30Sm+ZhWxLyI9gFMH9cRnUlVp8AAz0gIwq3qhNkThqvoCuQ5AHhUdwtNX7GZilxc3WevM7Xincax7gLhEiOGcStAjlR/70pdjXz3JoKb5FTyzYRuhUyzqEZmdHhl/Igg3jLzH6ZYa6yzWT8AcVqWBbjBJMBGOfC4EY1uzyX6sHjLBlRXnIyg6qoFtxR/7SJLaY/ULxoyWVY8OQ26Wzt5uFonu1jZwFd70EfMH1wfIDRfAKTmOJhNwCTno7/+EVjarlHJKRRY1OLpkiX2ZKkA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=b8MH23tEHI55dGijl5VmNOaeaG8rqAFNf1DvhvXzhlU=;
+ b=T5wrq2DUma7ofGnTGqZBPyPPYUU7/OkdqlOEEg37T2JA8YwpY/qmP0Cfx/B3b2Oy91kBUYNLR5KxPQqXl+LLIxDgWZHwHc/UHNdsl7eU/zfDS3iQv4gi4HQTMdXyOsqo8AF7h8FP7/r/IQNoZKhBSZQQFOg5C9R9zkuljIaBFRoGoFd62ERk2hEG2t3ZQ0NadWQ0IEZPWIoBbaX/02MY8/g5uCE3B1vuHm30lK47KsHK23sj716MsjaTLZ/tNmMajRJeMNOvX6WERjjM8lHlYnLIrhFp3Re4+wiEF3Vm+0qkCiQRWopROPjkUyXB5X1EuQC7PpVf80ddr4+1wjWlFA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=b8MH23tEHI55dGijl5VmNOaeaG8rqAFNf1DvhvXzhlU=;
+ b=W/+lTlBzS/AJh+8CGYKmKcZlqQPvb2K+D+bVq8ywmR2y1SgGs4Eelruu6QK/CadVzCU2wZAACT5yKM3+wA8nquJMpX5f+Omm3afAZ3aMLxxbb4l556vUN0IKpm62741fP/bLqrrD9iKcE3EnWW2nAbfWdym/ud8CKpGxHkW1MyI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by AM8PR04MB7794.eurprd04.prod.outlook.com (2603:10a6:20b:247::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.24; Thu, 7 Mar
+ 2024 17:33:10 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::3168:91:27c6:edf6]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::3168:91:27c6:edf6%3]) with mapi id 15.20.7362.024; Thu, 7 Mar 2024
+ 17:33:09 +0000
+From: Frank Li <Frank.Li@nxp.com>
+Subject: [PATCH v2 0/4] dmaengine: fsl-sdma: Some improvement for fsl-sdma
+Date: Thu, 07 Mar 2024 12:32:40 -0500
+Message-Id: <20240307-sdma_upstream-v2-0-e97305a43cf5@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADj66WUC/3XMQQ6DIBCF4auYWZdmxKqlq96jMQ3CUFkIBiyxM
+ dy91H2X/0vet0OkYCnCrdohULLReleCnypQk3QvYlaXBo78gg02LOpZPt9LXAPJmUlFo5HtKHr
+ TQ/ksgYzdDu8xlJ5sXH34HHyqf+s/KdUM2bUTSmPdtSOKu9uWs/IzDDnnL5ejVAKoAAAA
+To: Vinod Koul <vkoul@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>
+Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
+ Frank Li <Frank.Li@nxp.com>, Nicolin Chen <b42378@freescale.com>, 
+ Shengjiu Wang <shengjiu.wang@nxp.com>, Joy Zou <joy.zou@nxp.com>, 
+ Daniel Baluta <daniel.baluta@nxp.com>, Vipul Kumar <vipul_kumar@mentor.com>, 
+ Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>, 
+ Robin Gong <yibin.gong@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>
+X-Mailer: b4 0.13-dev-c87ef
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1709832785; l=1322;
+ i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
+ bh=M8D6VP7v9cHTLZND3ljNIE8GMTXWrv8Xtwn1U6Prze0=;
+ b=09blFXmwEx6KRxrMBcArBZvTqdjCTomqGRRvi6I/gjSGj0g/5sx291fTmSDKCJogNh73VKhkP
+ JaDdVoTkvHkC95q/caEcE59QyivBk6++D06J1QdLoj9hlRgpNFJwMzh
+X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
+ pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
+X-ClientProxiedBy: SJ0PR13CA0065.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c4::10) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240307093605.4142639-1-quic_msavaliy@quicinc.com>
- <CAA8EJprndszVSjAVs_UzAjhb+x1B1Of4JCkygZ=8kgzuY2RwCQ@mail.gmail.com> <25ec87af-c911-46b7-87c9-b21065d70f9f@quicinc.com>
-In-Reply-To: <25ec87af-c911-46b7-87c9-b21065d70f9f@quicinc.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Thu, 7 Mar 2024 16:45:50 +0200
-Message-ID: <CAA8EJprky=tFjJbGTBL7+9E=kqxQKjxB_RcmzHUt31GqUVfNmQ@mail.gmail.com>
-Subject: Re: [PATCH v2] i2c: i2c-qcom-geni: Parse Error correctly in i2c GSI mode
-To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-Cc: konrad.dybcio@linaro.org, bjorn.andersson@linaro.org, vkoul@kernel.org, 
-	andi.shyti@kernel.org, wsa@kernel.org, linux-arm-msm@vger.kernel.org, 
-	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, quic_vdadhani@quicinc.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM8PR04MB7794:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3fc24e47-5067-4963-c671-08dc3ecca838
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	RCkSD8lnvPbHLpnDwv5STTSDAfqqkOwsV6+uc2VjsWN46Pzhec+Sobz0ZFwbiRnhMsIbV8+cYqoNBW251bDmitYXFM4KX3pOHAHkED+zVdhj+slmFEbJlC9owtPdxAmsIlIzacHdwF6wkzQg77ZOGqzzPreq7QfnXcOFGD3QsFXJf5mTceByFqQeyTF/k3Zxvuj+tk7p+axSHerZ/ma7X0wOi9OtJ6tibhmpTEyE8fEOx+HYnpcvczCGdC6D4oiF3U1beHhI75BFu+h4GGj7IRuiDHEdCQe6vI97SeycaLOwiFhWxk6ypJaP8h9fZaylnWNONmLx56rZfhwKK3QpN7lRJnGViqs6XH/LuVxEWQSXrelnMZgljvwWuGflPbpQeNwneJbbIhdbeuW6eV4m+cnUv1GI/GVcx3FLrHa2dXtzjc0yvh1fwyb5Qt+eLI5t/SoKMxXXAgi1uQAHwhrawdEu/6b8pTBF+cskROhYjA9COG+JeQQ77Waghtr122ZpIQRNDyxIPxzPPX/ZnULWZ1n6XnHwHdK7bjTcUk1Lj55gbJQgPCj6kbrulmk3tUO9fUDF7otxlB68Y8xch0nMnbbH4h2oF258roUeKcQ4zoe95x/n0Ksky4/yu8OBeB7Rz00yVH+LgVYo7x/pIIc5zgDi8WUWrV2WZchkgLW24uk=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?djJDSzh5TUJDdUptNUwxUWxabEx3d3FNYUMvZFlpaEMvM2d2MXVwTjVZanY3?=
+ =?utf-8?B?RUlGc0dkRGw3RmNHTzVycm1Wd3Jva0FGK3JVTjdRQ2RqMzh5YU1OaGluSmJI?=
+ =?utf-8?B?cWFNYzhvbnFyQWFPWWdvNVlpQWFhcytaR1lPd3RSbGxHOEpJeXFuUTlNejVS?=
+ =?utf-8?B?WGwwd3lQekpZL2hiMUVEYkQ0MHNFTi9aK3h2d1drUDRSazNadDVVTlJpaEVw?=
+ =?utf-8?B?ZTYycjZRWkZneVBQTEVSR29MVDZnNk1hNlhPRE5ML21XWEllWW9Fc25HL2Rv?=
+ =?utf-8?B?a1hNUzk5RW12R3ZJbGpzRmNhTExITERBYmFJVjY2L1NiTXMyNmhYWGdQVmpp?=
+ =?utf-8?B?ejMvNHRRU3Q2YkY2VnBzaEtmVlNCcklGNlNKTmlsWk42ZDNxaWV5c1dBQm5C?=
+ =?utf-8?B?WEFOWDh5R1ZnR0pKN2JpbTNtTkR2cmFRTi8wQnJKUXAwVGx2d250NzBTV3pR?=
+ =?utf-8?B?TG5FTTNxdUpqMWxRVURyR2hIYUxaRkxTdWlkM3IxdXZFblc5aHJ3ZFJFT1c5?=
+ =?utf-8?B?VjRsdkZwQlJ4eFJreXJrdjdRQm45cEJtRUc1b2paeFEwRm00QkU5eHgvWHZ2?=
+ =?utf-8?B?dkJobzdodERnSnc4a0YvTG9VWEx6azM5RmE0SWticTRaTHg3amVtVzM3SUxR?=
+ =?utf-8?B?c3hxZGxqR0ZhMStvU1RxQVdVbzErbUtEMVlOOVFiZ2EwWU1mZE9oNjVHVTd6?=
+ =?utf-8?B?d05IWE4vMFl3ZkM2eTZkdit3UDJBYjFqMStDaDg2NDRyYWNqZE11eExWczA3?=
+ =?utf-8?B?NmY2SDBPWkpXNFU2UDRhV1NoMENPVndNamN3c1BUcTlOUjVvN0RSQlJWV1Rn?=
+ =?utf-8?B?UVVVYVhwcmd0WjdzaTU1OVZkWFFMNE9jUEpVazJFM1pud0RpSUtRdjdmanN0?=
+ =?utf-8?B?QWVOcFdwQjBrLzRWWW5nTjJtd05rL2J2bUZUeC9UZnBOeEh6VUpsaDZkWml6?=
+ =?utf-8?B?TFU4L1BCa01nV05FL3pVM09WT2JFZUdDaTNCc0M2TzBMaWFpVVFGN3hPOGRT?=
+ =?utf-8?B?ekdXNlhqUDdNeUdmTWJkdWVKTm42QjRSMDB2OFN4bVdWV0p4MTh6djFDdmtC?=
+ =?utf-8?B?RmErdXA5ZDZoUVpFNFlhWkRzaC9QM0FJNUVsTlZuREttNVVGYS9WeEFPOTRO?=
+ =?utf-8?B?bnRScnk0OU1ncktwM01sMWVjUUdDZ1huRmJ2c0Rkenlub2tvc1YvU1lXNHgz?=
+ =?utf-8?B?NCtrc3RzdG1qbUY1RndiT2Z4S1ZEVXR1eVg1U3R5Q0dId0FmWDQwYkQrOG5l?=
+ =?utf-8?B?cnRBR0ptNitWYzNudVZoUUVaZEpiQ2lTNmZkZGk4bnhSMW1mTE15bS9mNmVR?=
+ =?utf-8?B?cTA5WUcyeWlrL0tHZW9JclFOMjg1bXlxMXZGWSt1T2hXNFFXeWlZeEN3ekhI?=
+ =?utf-8?B?Vm0ydGwvWWg5R21EbFI5WnRzZFVQYXFXdnl0MlZ2c0Z6M3NNcGVoTzhSSkpV?=
+ =?utf-8?B?Uk9xbGgySkcwV1BVc2tKMmxXQmxCUEQzK3BQZnRwNWI2VElpdHQvUFRHRm5q?=
+ =?utf-8?B?a0RCaGlKYVhPYm5HUXZuZytMYzhKK1FSZ3hxWDNNMHJsc05HcDBQZFNDSDBo?=
+ =?utf-8?B?R3h2L2Z0N1paZHVrOHlyOWZBNUk0UjdHNEdjd0Z3cFpkV1NsWnJOTjVJOXZI?=
+ =?utf-8?B?anp5UERxa21leG4rdE4xYVlnZW1KTElQVmZiRFN5U2ZIME9EUms3LzlRME90?=
+ =?utf-8?B?d0NZcllBcVBDaHJOUHJsYndQZ004dU1VZ0hDUEVXMFZuNHowOVVzWkVLWHBz?=
+ =?utf-8?B?eCtnUlRKQkpFS3BkVDI5UEhrd1JVQ2tTVGpGVmk1dUUzdmc4RTJmQTBpRTkz?=
+ =?utf-8?B?TVNFWGhFOVRSdUlPb3VhaERUODJTeUNUaW1mNm8yU2xSRDAraWhjM1RzYUFy?=
+ =?utf-8?B?R3ZXaE1TeEhkYkJIckFTOUJYQSsxb2ZMWHJuU0NWNEVweXJGSlJBNzV2YWVC?=
+ =?utf-8?B?NWJLZEVGL0E4UVJMSXZYenpIVlpXRE1GbExxdnl3Z0g1RTNjbjNpNEFQU052?=
+ =?utf-8?B?SmFteDhUVk1ZU0lpK1VveGNySzQveG16TUd1elk0OVFXTVRVT2VPS2ZwOHZH?=
+ =?utf-8?B?Ym9GaUp3U1gxN1Y4MG40WXFUeTZiK0RuTU0wVHlWRmd5bSsvd3FVbi9tcTZu?=
+ =?utf-8?Q?3URuhWfQqJxZyZd1QgO++0Zq2?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3fc24e47-5067-4963-c671-08dc3ecca838
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2024 17:33:09.7692
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: et76e6myCO67rQrDYFh1uFv8/FI8kV1D+Nidf7z0US3O4Q+khg0fK9TNC3fEaSbyKWyTD4xi2ke5xvCg2DlJMg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7794
 
-On Thu, 7 Mar 2024 at 15:46, Mukesh Kumar Savaliya
-<quic_msavaliy@quicinc.com> wrote:
->
->
->
->
-> On 3/7/2024 3:23 PM, Dmitry Baryshkov wrote:
-> > On Thu, 7 Mar 2024 at 11:36, Mukesh Kumar Savaliya
-> > <quic_msavaliy@quicinc.com> wrote:
-> >>
-> >> We are seeing transfer failure instead of NACK error for simple
-> >> device scan test.Ideally it should report exact error like NACK
-> >> if device is not present.
-> >>
-> >> We may also expect errors like BUS_PROTO or ARB_LOST, hence we are
-> >> adding such error support in GSI mode and reporting it accordingly
-> >> by adding respective error logs.
-> >
-> > Please take a look at the
-> > Documentation/process/submitting-patches.rst. This is not the expected
-> > style of commit messages.
-> >
->
-> Thanks Dmitry ! Gone through the link and tried to align to the
-> guidance. I will be adding into the actual upload in V3.
+To: Vinod Koul <vkoul@kernel.org>
+To: Shawn Guo <shawnguo@kernel.org>
+To: Sascha Hauer <s.hauer@pengutronix.de>
+To: Pengutronix Kernel Team <kernel@pengutronix.de>
+To: Fabio Estevam <festevam@gmail.com>
+To: NXP Linux Team <linux-imx@nxp.com>
+Cc: dmaengine@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: imx@lists.linux.dev
 
-Let me quote the relevant part for you:
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
+Changes in v2:
+- remove ccb_phy from struct sdma_engine
+- add i2c test platform and sdma script version informaiton at commit
+  message.
+- Link to v1: https://lore.kernel.org/r/20240303-sdma_upstream-v1-0-869cd0165b09@nxp.com
 
-Describe your changes in imperative mood, e.g. "make xyzzy do frotz"
-instead of "[This patch] makes xyzzy do frotz" or "[I] changed xyzzy
-to do frotz", as if you are giving orders to the codebase to change
-its behaviour.
+---
+Joy Zou (1):
+      dmaengine: imx-sdma: Add multi fifo for DEV_TO_DEV
 
->
-> When we run scan test for i2c devices, we see transfer failures instead
-> of NACK. This is wrong because there is no data transfer failure but
-> it's a slave response to the i2c master controller.
->
-> This change correctly identifies NACK error. Also adds support for other
-> protocol errors like BUS_PROTO and ARB_LOST. This helps to exactly know
-> the response on the bus.
->
-> Function geni_i2c_gpi_xfer() gets called for any i2c GSI mode transfer
-> and waits for the response as success OR failure. If slave is not
-> present OR NACKing, GSI generates an error interrupt which calls ISR and
-> it further calls gpi_process_xfer_compl_event(). Now
-> dmaengine_desc_callback_invoke() will call i2c_gpi_cb_result() where we
-> have added parsing status parameters to identify respective errors.
->
-> >>
-> >> During geni_i2c_gpi_xfer(), we should expect callback param as a
-> >> transfer result. For that we have added a new structure named
-> >> gpi_i2c_result, which will store xfer result.
-> >>
-> >> Upon receiving an interrupt, gpi_process_xfer_compl_event() will
-> >> store transfer result into status variable and then call the
-> >> dmaengine_desc_callback_invoke(). Hence i2c_gpi_cb_result() can
-> >> parse the respective errors.
-> >>
-> >> while parsing error from the status param, use FIELD_GET with the
-> >
-> > Sentences start with the uppercase letter.
->
-> Sure, will do while/While change. Will take care in next patch.
->
-> >
-> >> mask instead of multiple shifting operations for each error.
-> >
-> >
-> >>
-> >> Fixes: d8703554f4de ("i2c: qcom-geni: Add support for GPI DMA")
-> >> Co-developed-by: Viken Dadhaniya <quic_vdadhani@quicinc.com>
-> >> Signed-off-by: Viken Dadhaniya <quic_vdadhani@quicinc.com>
-> >> Signed-off-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-> >> ---
-> >> ---
-> Sorry, i Missed to add V1 -> V2 : will add into next patch upload.
-> >> - Commit log changed we->We.
-> >> - Explained the problem that we are not detecing NACK error.
-> >> - Removed Heap based memory allocation and hence memory leakage issue.
-> >> - Used FIELD_GET and removed shiting and masking every time as suggested by Bjorn.
-> >> - Changed commit log to reflect the code changes done.
-> >> - Removed adding anything into struct gpi_i2c_config and created new structure
-> >>    for error status as suggested by Bjorn.
-> >> ---
-> >>   drivers/dma/qcom/gpi.c             | 12 +++++++++++-
-> >>   drivers/i2c/busses/i2c-qcom-geni.c | 19 +++++++++++++++----
-> >>   include/linux/dma/qcom-gpi-dma.h   | 10 ++++++++++
-> >>   3 files changed, 36 insertions(+), 5 deletions(-)
-> >>
-> >> diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
-> >> index 1c93864e0e4d..e3508d51fdc9 100644
-> >> --- a/drivers/dma/qcom/gpi.c
-> >> +++ b/drivers/dma/qcom/gpi.c
-> >> @@ -1076,7 +1076,17 @@ static void gpi_process_xfer_compl_event(struct gchan *gchan,
-> >>          dev_dbg(gpii->gpi_dev->dev, "Residue %d\n", result.residue);
-> >>
-> >>          dma_cookie_complete(&vd->tx);
-> >> -       dmaengine_desc_get_callback_invoke(&vd->tx, &result);
-> >> +       if (gchan->protocol == QCOM_GPI_I2C) {
-> >> +               struct dmaengine_desc_callback cb;
-> >> +               struct gpi_i2c_result *i2c;
-> >> +
-> >> +               dmaengine_desc_get_callback(&vd->tx, &cb);
-> >> +               i2c = cb.callback_param;
-> >> +               i2c->status = compl_event->status;
-> >> +               dmaengine_desc_callback_invoke(&cb, &result);
-> >> +       } else {
-> >> +               dmaengine_desc_get_callback_invoke(&vd->tx, &result);
-> >
-> > Is there such error reporting for SPI or UART protocols?
-> >
->
-> Such errors are not there for SPI or UART because
-> NACK/BUS_PROTO/ARB_LOST errors are protocol specific errors. These error
-> comes in
-> middle of the transfers. As these are like expected protocol errors
-> depending on the slave device/s response.
+Nicolin Chen (1):
+      dmaengine: imx-sdma: Support allocate memory from internal SRAM (iram)
 
-Yes, these particular errors are I2C specific. My question was more
-generic: do we have any similar errors for SPI or UART GENI protocols
-that we should report from GPI to the corresponding driver?
+Robin Gong (1):
+      dmaengine: imx-sdma: Add i2c dma support
 
->
-> >> +       }
-> >>
-> >>   gpi_free_desc:
-> >>          spin_lock_irqsave(&gchan->vc.lock, flags);
-> >> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
-> >> index da94df466e83..36a7c0c0ff54 100644
-> >> --- a/drivers/i2c/busses/i2c-qcom-geni.c
-> >> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
-> >> @@ -66,6 +66,7 @@ enum geni_i2c_err_code {
-> >>          GENI_TIMEOUT,
-> >>   };
-> >>
-> >> +#define I2C_DMA_TX_IRQ_MASK    GENMASK(12, 5)
-> >>   #define DM_I2C_CB_ERR          ((BIT(NACK) | BIT(BUS_PROTO) | BIT(ARB_LOST)) \
-> >>                                                                          << 5)
-> >>
-> >> @@ -99,6 +100,7 @@ struct geni_i2c_dev {
-> >>          struct dma_chan *rx_c;
-> >>          bool gpi_mode;
-> >>          bool abort_done;
-> >> +       struct gpi_i2c_result i2c_result;
-> >>   };
-> >>
-> >>   struct geni_i2c_desc {
-> >> @@ -484,9 +486,18 @@ static int geni_i2c_tx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
-> >>
-> >>   static void i2c_gpi_cb_result(void *cb, const struct dmaengine_result *result)
-> >>   {
-> >> -       struct geni_i2c_dev *gi2c = cb;
-> >> -
-> >> -       if (result->result != DMA_TRANS_NOERROR) {
-> >> +       struct gpi_i2c_result *i2c_res = cb;
-> >> +       struct geni_i2c_dev *gi2c = container_of(i2c_res, struct geni_i2c_dev, i2c_result);
-> >> +       u32 status;
-> >> +
-> >> +       status = FIELD_GET(I2C_DMA_TX_IRQ_MASK, i2c_res->status);
-> >> +       if (status == BIT(NACK)) {
-> >> +               geni_i2c_err(gi2c, NACK);
-> >> +       } else if (status == BIT(BUS_PROTO)) {
-> >> +               geni_i2c_err(gi2c, BUS_PROTO);
-> >> +       } else if (status == BIT(ARB_LOST)) {
-> >> +               geni_i2c_err(gi2c, ARB_LOST);
-> >> +       } else if (result->result != DMA_TRANS_NOERROR) {
-> >>                  dev_err(gi2c->se.dev, "DMA txn failed:%d\n", result->result);
-> >>                  gi2c->err = -EIO;
-> >>          } else if (result->residue) {
-> >> @@ -568,7 +579,7 @@ static int geni_i2c_gpi(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
-> >>          }
-> >>
-> >>          desc->callback_result = i2c_gpi_cb_result;
-> >> -       desc->callback_param = gi2c;
-> >> +       desc->callback_param = &gi2c->i2c_result;
-> >>
-> >>          dmaengine_submit(desc);
-> >>          *buf = dma_buf;
-> >> diff --git a/include/linux/dma/qcom-gpi-dma.h b/include/linux/dma/qcom-gpi-dma.h
-> >> index 6680dd1a43c6..f585c6a35e51 100644
-> >> --- a/include/linux/dma/qcom-gpi-dma.h
-> >> +++ b/include/linux/dma/qcom-gpi-dma.h
-> >> @@ -80,4 +80,14 @@ struct gpi_i2c_config {
-> >>          bool multi_msg;
-> >>   };
-> >>
-> >> +/**
-> >> + * struct gpi_i2c_result - i2c transfer status result in GSI mode
-> >> + *
-> >> + * @status: store txfer status value as part of callback
-> >> + *
-> >> + */
-> >> +struct gpi_i2c_result {
-> >> +       u32 status;
-> >> +};
-> >> +
-> >>   #endif /* QCOM_GPI_DMA_H */
-> >> --
-> >> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> >> a Linux Foundation Collaborative Project
-> >>
-> >>
-> >
-> >
+Shengjiu Wang (1):
+      dmaengine: imx-sdma: Support 24bit/3bytes for sg mode
 
+ drivers/dma/imx-sdma.c      | 64 ++++++++++++++++++++++++++++++++++++++-------
+ include/linux/dma/imx-dma.h |  1 +
+ 2 files changed, 55 insertions(+), 10 deletions(-)
+---
+base-commit: af20f396b91f335f907422249285cc499fb4e0d8
+change-id: 20240303-sdma_upstream-acebfa5b97f7
 
-
+Best regards,
 -- 
-With best wishes
-Dmitry
+Frank Li <Frank.Li@nxp.com>
+
 

@@ -1,139 +1,122 @@
-Return-Path: <dmaengine+bounces-1311-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1312-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CB5648766FF
-	for <lists+dmaengine@lfdr.de>; Fri,  8 Mar 2024 16:06:29 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C3DD8876904
+	for <lists+dmaengine@lfdr.de>; Fri,  8 Mar 2024 18:01:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 860DE285569
-	for <lists+dmaengine@lfdr.de>; Fri,  8 Mar 2024 15:06:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8163C2862BE
+	for <lists+dmaengine@lfdr.de>; Fri,  8 Mar 2024 17:01:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A371D15AF;
-	Fri,  8 Mar 2024 15:06:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BF6F1CFAB;
+	Fri,  8 Mar 2024 17:01:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="RMGk4lgb"
+	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="mmd0bdG2"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+Received: from aposti.net (aposti.net [89.234.176.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCE19322A
-	for <dmaengine@vger.kernel.org>; Fri,  8 Mar 2024 15:06:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B3E615D0;
+	Fri,  8 Mar 2024 17:01:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.234.176.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709910380; cv=none; b=Csvw6InM802fSalOZ6gArzaucg+6wZR5dncruKSVGQ/9T1ytt2/c73+zbUXaYFaC0YMusa3YK+WWPsEjel1gagCDDXRWAdo0N+jmo7Thin0RC9vIMOsFFVlvi7x1P9DGruM929RDaSWj73sW0l6jiMlAUH5GQOUxQmeEL9gtucg=
+	t=1709917276; cv=none; b=b+9K0LZWxST9I8HxMEQD3NUkyww1Gp/2c8VzArpgRkkPTW6nB1WKwORYlBCgcL99f2jSwmCm4US/zIRBLN4Vl4vGiMXp3ieI2xOvUK6a/kAYeKR6O+Zt61yzJkm6gW/ecUJ5gA3WSCTA7DxIL2p9igURxNyVAMVAPZfCOGGbs6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709910380; c=relaxed/simple;
-	bh=7K7XjjuuDVmZoheJLsmPuwqN4KUFOWM5enHgBCjK8gA=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=UlzKOYYJOYJoO98nLecxsHai9mIMK7RX0mOwb/Beu18gZprkhVe0z9b98cTa7rlXn8klVNEJeLt4KNCFHlQOMPCvt82lertesMbRXbmh2RixzoqAns5O6eh9qrfhims4RaWE4BRMthImgupAU6+0cekK5uiepBHsdtOmSRm+5UU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=RMGk4lgb; arc=none smtp.client-ip=209.85.128.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raspberrypi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-60a0579a931so6137727b3.0
-        for <dmaengine@vger.kernel.org>; Fri, 08 Mar 2024 07:06:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google; t=1709910378; x=1710515178; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=axI3J2zPNBTuuTSQPMGPqfRBpJXr7xhUiDs5BnpD2pg=;
-        b=RMGk4lgbWguFqnV4B0iMg6QxRhxRZsbWvw9humNE1xojcesWcCC+LJ6EAu6nKSuuNY
-         OKrjqKHNmDzmNP9bJma5D5ax1GjWuisQUKveD4OB233a7+Da41h5VB0296NDzPfJbRdj
-         qvAiRZAo+UGNiPehMvMymop9y16vmUfFV0FXBd8iMbDC+c8hLdEih7eYj0VB6Hho763O
-         nBdikSl/LUry1JmS+qxw+6kvIbgW6BSDo27q9XLDJFRlNYoH7P/l00FqQod2JGPf6oOg
-         7tQwhdUv4JwMnJ36hZfI0DG6NM4g6upP1v0+G+m16n+jciTHemSwEvqxxvdZKfVcfHSf
-         8q4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709910378; x=1710515178;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=axI3J2zPNBTuuTSQPMGPqfRBpJXr7xhUiDs5BnpD2pg=;
-        b=uoysEzKZYnyDhM2bLwtID0iqAviKDTJCNw8jX+iQpaKGyi8uliIY4roGN4FoO2qldr
-         M0JQNCif7tNVXgKb3Lh4tMKxi+Scsw9SkkTqSoF/mlAd6Pokgg1N3yjXjnmUsFCo6kbQ
-         xvI1+d5lO6Jb7WEZzCnuWOX9eTXkkF1gYwfhZ1iTxsJDcHXodB04xCs6+Sz3m+IkTmBT
-         O6nqxToygPxlQ+nQsmgjvpGN+ZtQmpymbIhiEn1+knXGdqQvBSLMuziv+TTNw8lCMSnJ
-         J51sQKDb+viJBhRNfym36G7g5OUIrm6TKRryetnf/H5YL6AUiiY39ofKUQ89Yw8b0xbt
-         ehhw==
-X-Forwarded-Encrypted: i=1; AJvYcCXh7B/ZjSADdRrOTTFOU54qrzgPimz14vn+yMWPwGhmQ2QtMKduVyNd0AHAfKvuIt5ZChDJx97HJqKpzIhRpk4PtqpPNmpgSJBR
-X-Gm-Message-State: AOJu0YxKVcMfx6gIR6rLOBiPj4sVt3FaqYM0DhkUM+LBT1gH+T9ppmm8
-	kAltbAKW0r66SvXywIl6M7IREdM1v+oO1dBEMTu+DQMqfiwB3D/zPP+RiyQjJreDrYybgdalMYa
-	EKR1AjNBNttEvCv1tsDs/qDOUwGHTF1ZM+9yk0g==
-X-Google-Smtp-Source: AGHT+IFPjvRVAZhj2KVjP0oxh4Wt6WXqKEiHEys0nCNZxI94SUj0Gz/IxXTE4vOhz893yhBNzBJVLmlT7IcS9rCrnOs=
-X-Received: by 2002:a25:ae8b:0:b0:dcd:ba5a:8704 with SMTP id
- b11-20020a25ae8b000000b00dcdba5a8704mr18539467ybj.24.1709910377508; Fri, 08
- Mar 2024 07:06:17 -0800 (PST)
+	s=arc-20240116; t=1709917276; c=relaxed/simple;
+	bh=5s4uVZYzL5xnUpS0cs0ZcugLLMwfYan+D4jDkzO05oI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=F5yeBgfJBUpt2plQ6RABpe+qB0nYeW6sYW3gh+vcsrZAb/1TEz+n6rA4PEoz4R++trqZpT7ps0pC48ZEukXYfiVs+Vd/gP7ZcI479ZusZIjUIch4ojcPvfeC6fbN4H1LYC1c9KTxTuMvcy4mswmOXFpJXyZsBO6rnJajtTK2Jec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=mmd0bdG2; arc=none smtp.client-ip=89.234.176.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+	s=mail; t=1709917266;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=SFBKjiymmjn1Cc3fHZlhJhqjEETz/4Y5VvGtGcGIiE0=;
+	b=mmd0bdG2Y0uIyMvOaFFYjT8Bw1Stk2P0bT4cT5sR/e4CzY9Zm9IbFsvaT9Hfsr9jTrdlkv
+	hBs20kbmTnPHjoFINI/0dooDsZ/lEFTN/ma1tt030mEWOn3CDLI1ldB2WDsxQlMUagr13Y
+	jenhVg/B0/sIAM4we3ixpKlj8VvNc7Q=
+From: Paul Cercueil <paul@crapouillou.net>
+To: Jonathan Cameron <jic23@kernel.org>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Vinod Koul <vkoul@kernel.org>,
+	Sumit Semwal <sumit.semwal@linaro.org>
+Cc: Nuno Sa <nuno.sa@analog.com>,
+	Michael Hennerich <michael.hennerich@analog.com>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	dmaengine@vger.kernel.org,
+	linux-iio@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org,
+	Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v8 0/6] iio: new DMABUF based API
+Date: Fri,  8 Mar 2024 18:00:40 +0100
+Message-ID: <20240308170046.92899-1-paul@crapouillou.net>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date: Fri, 8 Mar 2024 15:06:01 +0000
-Message-ID: <CAPY8ntByJYzSv0kTAc1kY0Dp=vwrzcA0oWiPpyg7x7_BQwGSnA@mail.gmail.com>
-Subject: DMA range support on BCM283x
-To: Vinod Koul <vkoul@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>, 
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, dmaengine@vger.kernel.org, 
-	Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, linux-rpi-kernel@lists.infradead.org, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>
-Cc: Maxime Ripard <mripard@kernel.org>, Mark Brown <broonie@kernel.org>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Stefan Wahren <wahrenst@gmx.net>, 
-	Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, Jim Quinlan <jim2101024@gmail.com>, 
-	Phil Elwell <phil@raspberrypi.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi All
+Hi Jonathan,
 
-I'm looking at the DMA configuration on BCM283x as part of upstreaming
-the 40 bit controller for BCM2711.
+Here's the final(tm) version of the IIO DMABUF patchset.
 
-It looks like we have a historical misconfiguration, and I'm not sure
-how we resolve it.
+This v8 fixes the remaining few issues that Christian reported.
 
-On BCM283x, dma address != CPU physical address, particularly for the
-peripheral registers.
+I also updated the documentation patch as there has been changes to
+index.rst.
 
-The DMA users have been passing in the DMA address extracted from DT,
-eg HDMI audio [1], SPI [2], and MMC [3]. Certainly for HDMI audio this
-is implied as correct by struct snd_dmaengine_dai_dma_data taking a
-dma_addr_t, except snd_dmaengine_pcm_set_config_from_dai_data() then
-assigns that dma_addr_t to a phys_addr_t[4].
+This was based on next-20240308.
 
-Our understanding now is that this is incorrect, and they should be
-passed the CPU physical address. "dma-ranges" should then reflect the
-mapping, and the dma driver should be using dma_map_resource() to map
-between the two (although it currently doesn't consider dma-ranges as
-raised in [5]).
+Changelog:
 
-BCM283x DT currently doesn't cover the peripheral registers in
-"dma-ranges", although it is present in "ranges". AIUI it's considered
-ABI so we can't now mandate that mapping be present.
+- [3/6]:
+    - Fix swapped fence direction
+    - Simplify fence wait mechanism
+    - Remove "Buffer closed with active transfers" print, as it was dead
+      code
+    - Un-export iio_buffer_dmabuf_{get,put}. They are not used anywhere
+      else so they can even be static.
+    - Prevent attaching already-attached DMABUFs
+- [6/6]:
+    Renamed dmabuf_api.rst -> iio_dmabuf_api.rst, and updated index.rst
+    whose format changed in iio/togreg.
 
-Assuming I'm correct with the above, the question is how to implement
-a solution that corrects the behaviour whilst still supporting the old
-DT, and preferably isn't spread far and wide through the code.
-Worst case is to require all DMA users and the DMA controller to look
-for the dma-ranges property, observe the range isn't present, and drop
-back to the current behaviour.
-Slightly nicer is to use the knowledge that "ranges" and "dma-ranges"
-in this case should be identical, so have the DMA controller driver
-attempt a lookup with "ranges" if "dma-ranges" fails.
+Cheers,
+-Paul
 
-It's an awkward situation that we find ourselves in, but any advice on
-routes forward would be appreciated.
+Paul Cercueil (6):
+  dmaengine: Add API function dmaengine_prep_peripheral_dma_vec()
+  dmaengine: dma-axi-dmac: Implement device_prep_peripheral_dma_vec
+  iio: core: Add new DMABUF interface infrastructure
+  iio: buffer-dma: Enable support for DMABUFs
+  iio: buffer-dmaengine: Support new DMABUF based userspace API
+  Documentation: iio: Document high-speed DMABUF based API
 
-Many thanks
-  Dave
+ Documentation/iio/iio_dmabuf_api.rst          |  54 ++
+ Documentation/iio/index.rst                   |   1 +
+ drivers/dma/dma-axi-dmac.c                    |  40 ++
+ drivers/iio/buffer/industrialio-buffer-dma.c  | 181 ++++++-
+ .../buffer/industrialio-buffer-dmaengine.c    |  59 ++-
+ drivers/iio/industrialio-buffer.c             | 462 ++++++++++++++++++
+ include/linux/dmaengine.h                     |  27 +
+ include/linux/iio/buffer-dma.h                |  31 ++
+ include/linux/iio/buffer_impl.h               |  30 ++
+ include/uapi/linux/iio/buffer.h               |  22 +
+ 10 files changed, 890 insertions(+), 17 deletions(-)
+ create mode 100644 Documentation/iio/iio_dmabuf_api.rst
 
-[1] https://github.com/torvalds/linux/blob/master/drivers/gpu/drm/vc4/vc4_hdmi.c#L2729-L2743
-dates back to bb7d78568814 ("drm/vc4: Add HDMI audio support") in 2017
-[2] https://github.com/torvalds/linux/blob/master/drivers/spi/spi-bcm2835.c#L898-L905
-dates back to 3ecd37edaa2a ("spi: bcm2835: enable dma modes for
-transfers meeting certain conditions") in 2015
-[3] https://github.com/torvalds/linux/blob/master/drivers/mmc/host/bcm2835.c#L1370-L1380
-[4] https://github.com/torvalds/linux/blob/master/sound/core/pcm_dmaengine.c#L112
-and line 120.
-[5] https://lkml.org/lkml/2024/2/5/1161
+-- 
+2.43.0
+
 

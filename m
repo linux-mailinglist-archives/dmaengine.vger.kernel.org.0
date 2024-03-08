@@ -1,63 +1,52 @@
-Return-Path: <dmaengine+bounces-1305-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1306-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 92AA0875F82
-	for <lists+dmaengine@lfdr.de>; Fri,  8 Mar 2024 09:31:29 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 039C2876028
+	for <lists+dmaengine@lfdr.de>; Fri,  8 Mar 2024 09:51:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 503AFB217CC
-	for <lists+dmaengine@lfdr.de>; Fri,  8 Mar 2024 08:31:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3516C1C228BE
+	for <lists+dmaengine@lfdr.de>; Fri,  8 Mar 2024 08:51:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11DA91BDDB;
-	Fri,  8 Mar 2024 08:31:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A42929CFB;
+	Fri,  8 Mar 2024 08:51:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="R0Gk5oDx"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="of2pqqxZ"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7874C3214;
-	Fri,  8 Mar 2024 08:31:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5CDB208AD;
+	Fri,  8 Mar 2024 08:51:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709886680; cv=none; b=J7XMoWmgxlQ9OXTr/7MC/n4VDFWgzfjDs25td+L/EJrdUGMObMrS9T6oxlG2NiKKyxM2+r5/bfnBx9WytlMNc3y8gPGSBgRJF/mSFl4mjxUB+at8SZhh94XVfWN3svJ4vRlCxRECMtQFk+IUtAf2FAchqT6aA8I40yt/EDkX3h4=
+	t=1709887879; cv=none; b=SgpaxdbafI7kdjexLz1U8d21gdMgVEhKIsDjM49hETnH8h8X/KXYTqIuQRKmGJC5WokamvVGPMgX0VfxnxsuyfrqxNBI1lKJdmukgbLBmRs5rBTcCCItTviUhVV55AhzyWHxF2H9KkFLqglbB7wUBElLPDKYXwN/qntMHXL9f6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709886680; c=relaxed/simple;
-	bh=+DF9vRiArhUyXhhhb8gcTRYI1HSCO9TwBHB3JFkJRDk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Tdi6uJoygLVwjiOw/cHQtUliNRFMo6T+Gi3JUcTecrI0dy4ULTDKkij7fM+xATC9YjqL2USd1bSUCQsYs9b6Vu0PK6Z1nZxLSIbYcT3441M+H+NsoFC32n7t7aL4hp7LiV6JVK92ZT9PcEvRHEm1ddSp9p2CDUDdKRtcZUvQlZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=R0Gk5oDx; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42868sT2006942;
-	Fri, 8 Mar 2024 08:31:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=yIccJuIEDZZJkTHxklIyIAT7gx8dwfNVhqyWMGhbaOU=; b=R0
-	Gk5oDxvvzonVZ9Xa7t+iNWmMoGGMJ277dApNecQLZQ2FTqbyl7V+uYDWJaGVakAx
-	A3lh1G1RPFhrU8ISsyi+FgPdxJntX2DVXKdUHvv66LvDW6nXRQ7xwbq1keH7qyGD
-	ATGyGzwryNddxbW5icy8Hj284Qe4efb+T4A5NX2kE7wz5+WwWI2nU95itN6aGiBi
-	6waqWcvzv9orZ2mO3m4MT3vP9Y2ldpFujUpwxG8JCMnxAjypI9ubhxudrlbGWFqI
-	D59Y16TXXfbcx7A45mtgKu/rmN2b88dRfvHRzHrU5pbmS20g8KUMX+uMuZJyhzT6
-	ZvPj3CxacKFce6z+wcAw==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wqn8n18re-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 08 Mar 2024 08:31:14 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4288VEOb024189
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 8 Mar 2024 08:31:14 GMT
-Received: from [10.216.43.112] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Fri, 8 Mar
- 2024 00:31:10 -0800
-Message-ID: <6bacd2be-14d4-49cc-9c98-7010a5f9f9bc@quicinc.com>
-Date: Fri, 8 Mar 2024 14:01:07 +0530
+	s=arc-20240116; t=1709887879; c=relaxed/simple;
+	bh=xa9S9gA+2Kdx0nRGP4a+OCGAFa+zMDo98VZV5Yh0Xcg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HKb+gO2wUttVDRUw9fk4H82hWUAQP46Xa8E0J0+SuOCzBNpvKV1Ma6fqoRlKsDlmk7irfQd5WraM8TStUldavxX792ScmFEHOeQnp/Csj1hC44Vqu+w0m1dYwz2wq6EeBCd1+oZlf9S2tb/UMUXh2iW4hFIkBscH88VYa5Rffco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=of2pqqxZ; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=IPYOyNy9SYM4JNCOX10vMNStn8WkuVS6FnTRy1OZhq8=;
+	t=1709887877; x=1710319877; b=of2pqqxZxl23woIulpy9kOTQsuDdqvWDpRW5oc0AXqzKULJ
+	tXR3gQ6nPdgX0WIUcrFZ5n/RtE+pN5PEmy8RO2yuZgmFehjgqzjGYRjFy+y5vTaInSVwFLlzL8bFp
+	cQhMnCDhJqp5jbx0vUM0dNeOpDT0oyPLJTIdIbYTOXV8xXb8CTeDvHE3KniTKUuCBiaRbKrOe5hBg
+	ZDz7KhgCGMjf9j01af7OCtvAbiJjOCfqD+R26VayiX42juYJwjU6L2nQ9Af9NZuaNK/F9VC6Ww+Ju
+	Dwk+DI84ZvUdiu/qwuCGOknJ7W7VpM4fo63vBkDFt2Vc6+QziMuBu9kj3egnFOsA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1riVwf-0005on-QT; Fri, 08 Mar 2024 09:51:13 +0100
+Message-ID: <12de921e-ae42-4eb3-a61a-dadc6cd640b8@leemhuis.info>
+Date: Fri, 8 Mar 2024 09:51:13 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -65,93 +54,75 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] i2c: i2c-qcom-geni: Parse Error correctly in i2c GSI
- mode
-Content-Language: en-US
-To: Andi Shyti <andi.shyti@kernel.org>
-CC: <konrad.dybcio@linaro.org>, <andersson@kernel.org>, <vkoul@kernel.org>,
-        <wsa@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-i2c@vger.kernel.org>, <quic_vdadhani@quicinc.com>
-References: <20240307205539.217204-1-quic_msavaliy@quicinc.com>
- <cmtru4nvoab6g5emp2yrxnvfpvtrcsuna6dqsyewpagg3qmkau@r2zoj6vgslet>
- <9dbe987a-fdd1-4bec-b350-5936abf69b1b@quicinc.com>
- <yocn3rjxn37c7qniv2kkawgg2k7ghdwvrxcf77tdlpujnul3du@6oqvt5v4ykno>
-From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-In-Reply-To: <yocn3rjxn37c7qniv2kkawgg2k7ghdwvrxcf77tdlpujnul3du@6oqvt5v4ykno>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: dmaengine: CPU stalls while loading bluetooth module
+Content-Language: en-US, de-DE
+To: "bumyong.lee" <bumyong.lee@samsung.com>,
+ 'karthikeyan' <karthikeyan@linumiz.com>, vkoul@kernel.org
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+ parthiban@linumiz.com, saravanan@linumiz.com,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <CGME20240305062038epcas2p143c5e1e725d8a934b0208266a2f78ccb@epcas2p1.samsung.com>
+ <1553a526-6f28-4a68-88a8-f35bd22d9894@linumiz.com>
+ <000001da6ecc$adb25420$0916fc60$@samsung.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+In-Reply-To: <000001da6ecc$adb25420$0916fc60$@samsung.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: PFNXOaHvYy00tuIf_lCSNwkrriXsvgFP
-X-Proofpoint-GUID: PFNXOaHvYy00tuIf_lCSNwkrriXsvgFP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-08_06,2024-03-06_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 bulkscore=0
- adultscore=0 lowpriorityscore=0 priorityscore=1501 mlxscore=0
- impostorscore=0 malwarescore=0 suspectscore=0 spamscore=0 phishscore=0
- mlxlogscore=921 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2403080066
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1709887877;4e0565a6;
+X-HE-SMSGID: 1riVwf-0005on-QT
 
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
-
-On 3/8/2024 12:32 PM, Andi Shyti wrote:
-> Hi Mukesh,
-> 
-> ...
-> 
->>>> Fixes: d8703554f4de ("i2c: qcom-geni: Add support for GPI DMA")
->>>
->>> I still don't understand what's the fix here. You are making a
->>> generic DMA error to be more specific... where is the bug? What
->>> exactly is broken now?
->>>
->> This is about being particular while reporting specific error.
->> Like i mentioned, instead of generic DMA transfer error, it should be
->> particular error 1) NACK 2) BUT_PROTO 3)ARB_LOST.
->> Ofcourse when data transfer via DMA fails, it can be considered as
->> DMA Txfer fail.
->> In summary so far driver was considering all failure as txfer failure,
->> but i2c has errors which are kind of response/condition on the bus.
-> 
-> I understand that, but what I need to know is: does the system
-> crash? does the system act in unexpected way?
-> 
-> Moving from "you received an error" to "you received a nack" is
-> not a fix, it's an improvement and it should not have the Fixes
-> tag.
-> 
-> Having the Fixes tag decides which path this patch will take to
-> to reach upstream. It's important because after it gets to
-> upstream other people will take your patch and backport it older
-> kernels.
-> 
-> I want to avoid this extra work when not necessary.
-> 
-
-Sure, then i think i should be removing fixes tag. It's not a crash but
-it's an improvement. That being said, i think don't need to CC stable 
-kernel list and i should remove fixes tag ?
-
->> Sorry if it confusing still, but please let me know if anything required to
->> be updated in  commit log which can bring clarity.
+On 05.03.24 08:13, bumyong.lee wrote:
+>> we have encountered CPU stalls in mainline kernel while loading the
+>> bluetooth module. We have custom board based on rockchip rv1109 soc and
+>> there is bluetooth chipset of relatek 8821cs. CPU is stalls  while realtek
+>> 8821cs module.
 >>
->>> Besides, keep in mind, that commits with fixes tags get
->>> backported to older kernels (this one dates back to 5.18) and you
->>> should also Cc the stable mailing list:
->>>
->>> Cc: <stable@vger.kernel.org> # v5.18+
+>> Bug/Regression:
+>> In current mainline, we found CPU is stalls when we load bluetooth module.
+>> git bisect shows commit 22a9d9585812440211b0b34a6bc02ade62314be4
+>> as a bad, which produce CPU stalls.
 >>
->> Sure, will add into CC. was waiting for reviewed-by tag.
+>> git show 22a9d9585812440211b0b34a6bc02ade62314be4
+>> commit 22a9d9585812440211b0b34a6bc02ade62314be4
+>> Author: Bumyong Lee <bumyong.lee@samsung.com>
+>> Date:   Tue Dec 19 14:50:26 2023 +0900
+>>
+>>      dmaengine: pl330: issue_pending waits until WFP state
+>>
+> [...]
+>>
+>> By reverting this commit, we have success in loading of bluetooth module.
 > 
-> No need to resend.
-
-ok, sure.
-
+>> Output of CPU stalls:
+> [...]
 > 
-> Thanks,
-> Andi
+> I discussed this issue. Could you refer to this[1]?
+> I haven't received anymore reply from him after that.
+> If you have any more opinion, please let me know.
+> [1]: https://lore.kernel.org/lkml/000001da3869$ca643fa0$5f2cbee0$@samsung.com/T/
+
+Hmmm. 6.8 final is due. Is that something we can live with? Or would it
+be a good idea to revert above commit for now and reapply it when
+something better emerged? I doubt that the answer is "yes, let's do
+that", but I have to ask.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+P.S.: To be sure the issue doesn't fall through the cracks unnoticed,
+I'm adding it to regzbot, the Linux kernel regression tracking bot:
+
+#regzbot report /
+#regzbot introduced 22a9d9585812440211b
+#regzbot duplicate: https://lore.kernel.org/lkml/ZYhQ2-OnjDgoqjvt@wens.tw/
+#regzbot title dmaengine: CPU stalls while loading bluetooth module
+#regzbot ignore-activity
 

@@ -1,44 +1,46 @@
-Return-Path: <dmaengine+bounces-1312-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1313-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3DD8876904
-	for <lists+dmaengine@lfdr.de>; Fri,  8 Mar 2024 18:01:18 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C5AB687690D
+	for <lists+dmaengine@lfdr.de>; Fri,  8 Mar 2024 18:01:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8163C2862BE
-	for <lists+dmaengine@lfdr.de>; Fri,  8 Mar 2024 17:01:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7F833285EE0
+	for <lists+dmaengine@lfdr.de>; Fri,  8 Mar 2024 17:01:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BF6F1CFAB;
-	Fri,  8 Mar 2024 17:01:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D60FE1D546;
+	Fri,  8 Mar 2024 17:01:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="mmd0bdG2"
+	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="j+J1M/DP"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from aposti.net (aposti.net [89.234.176.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B3E615D0;
-	Fri,  8 Mar 2024 17:01:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20E361CFAC;
+	Fri,  8 Mar 2024 17:01:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.234.176.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709917276; cv=none; b=b+9K0LZWxST9I8HxMEQD3NUkyww1Gp/2c8VzArpgRkkPTW6nB1WKwORYlBCgcL99f2jSwmCm4US/zIRBLN4Vl4vGiMXp3ieI2xOvUK6a/kAYeKR6O+Zt61yzJkm6gW/ecUJ5gA3WSCTA7DxIL2p9igURxNyVAMVAPZfCOGGbs6E=
+	t=1709917284; cv=none; b=HlZ1mRQGuQgBVcf3SsBss3S86QFx5nSeiQNgMq7YpAoNyXHJsmHxTZy+PC7Uv0NYE0qjL+imFFyG6TiSdZvVZLfBqKoQ3ibXDT3fR1K8B2kWnD+t10AGDq05B+FZew+u2aAJZxCjKS+zZdjkZrcj6SHFXlhaWe+TTkgL3yNjqco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709917276; c=relaxed/simple;
-	bh=5s4uVZYzL5xnUpS0cs0ZcugLLMwfYan+D4jDkzO05oI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=F5yeBgfJBUpt2plQ6RABpe+qB0nYeW6sYW3gh+vcsrZAb/1TEz+n6rA4PEoz4R++trqZpT7ps0pC48ZEukXYfiVs+Vd/gP7ZcI479ZusZIjUIch4ojcPvfeC6fbN4H1LYC1c9KTxTuMvcy4mswmOXFpJXyZsBO6rnJajtTK2Jec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=mmd0bdG2; arc=none smtp.client-ip=89.234.176.197
+	s=arc-20240116; t=1709917284; c=relaxed/simple;
+	bh=dIPejsxCVXO4sB5OE4zOyVvE5MyAZsCXKgIuK4hUO70=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=gM18xPXDYf5g95K/z217EVexmksxJ3AXo4HLCsQ2dWwJ8TnqH9tbEp5iFBIJMmssPsZbYYMUbnV2dtaPmiX/6ICyR8KPPFOaDv95HV7H7KgZc6WNY19fOdS7bUIhJzQJUeM+9zgIkNM4EjA9hT75I04nndcogCr0qvfrTkqFods=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=j+J1M/DP; arc=none smtp.client-ip=89.234.176.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-	s=mail; t=1709917266;
+	s=mail; t=1709917267;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=SFBKjiymmjn1Cc3fHZlhJhqjEETz/4Y5VvGtGcGIiE0=;
-	b=mmd0bdG2Y0uIyMvOaFFYjT8Bw1Stk2P0bT4cT5sR/e4CzY9Zm9IbFsvaT9Hfsr9jTrdlkv
-	hBs20kbmTnPHjoFINI/0dooDsZ/lEFTN/ma1tt030mEWOn3CDLI1ldB2WDsxQlMUagr13Y
-	jenhVg/B0/sIAM4we3ixpKlj8VvNc7Q=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tTnfJ7u5064ZSLz1RAOyX6FudlHZyR78isy9u39T0jc=;
+	b=j+J1M/DPupEG6sqwwm4ck8EG7HNvYd4r/7swDMRhedkJWvkMeV0rdiEKCMBlmZbmNew1gp
+	BDk7EF8C303dbKbGfiBeJfyFKqY8yCxN/9otis4PjJBN3IcONKiZ2ra4NYIECauoVJSo5V
+	zbhYF3d2/pgVq7V0tPIN00WUuuFM8yI=
 From: Paul Cercueil <paul@crapouillou.net>
 To: Jonathan Cameron <jic23@kernel.org>,
 	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
@@ -56,9 +58,11 @@ Cc: Nuno Sa <nuno.sa@analog.com>,
 	dri-devel@lists.freedesktop.org,
 	linaro-mm-sig@lists.linaro.org,
 	Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v8 0/6] iio: new DMABUF based API
-Date: Fri,  8 Mar 2024 18:00:40 +0100
-Message-ID: <20240308170046.92899-1-paul@crapouillou.net>
+Subject: [PATCH v8 1/6] dmaengine: Add API function dmaengine_prep_peripheral_dma_vec()
+Date: Fri,  8 Mar 2024 18:00:41 +0100
+Message-ID: <20240308170046.92899-2-paul@crapouillou.net>
+In-Reply-To: <20240308170046.92899-1-paul@crapouillou.net>
+References: <20240308170046.92899-1-paul@crapouillou.net>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -67,55 +71,97 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi Jonathan,
+This function can be used to initiate a scatter-gather DMA transfer,
+where the address and size of each segment is located in one entry of
+the dma_vec array.
 
-Here's the final(tm) version of the IIO DMABUF patchset.
+The major difference with dmaengine_prep_slave_sg() is that it supports
+specifying the lengths of each DMA transfer; as trying to override the
+length of the transfer with dmaengine_prep_slave_sg() is a very tedious
+process. The introduction of a new API function is also justified by the
+fact that scatterlists are on their way out.
 
-This v8 fixes the remaining few issues that Christian reported.
+Note that dmaengine_prep_interleaved_dma() is not helpful either in that
+case, as it assumes that the address of each segment will be higher than
+the one of the previous segment, which we just cannot guarantee in case
+of a scatter-gather transfer.
 
-I also updated the documentation patch as there has been changes to
-index.rst.
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Nuno Sa <nuno.sa@analog.com>
 
-This was based on next-20240308.
+---
+v3: New patch
 
-Changelog:
+v5: Replace with function dmaengine_prep_slave_dma_vec(), and struct
+    'dma_vec'.
+    Note that at some point we will need to support cyclic transfers
+    using dmaengine_prep_slave_dma_vec(). Maybe with a new "flags"
+    parameter to the function?
 
-- [3/6]:
-    - Fix swapped fence direction
-    - Simplify fence wait mechanism
-    - Remove "Buffer closed with active transfers" print, as it was dead
-      code
-    - Un-export iio_buffer_dmabuf_{get,put}. They are not used anywhere
-      else so they can even be static.
-    - Prevent attaching already-attached DMABUFs
-- [6/6]:
-    Renamed dmabuf_api.rst -> iio_dmabuf_api.rst, and updated index.rst
-    whose format changed in iio/togreg.
+v7:
+  - Renamed *device_prep_slave_dma_vec() -> device_prep_peripheral_dma_vec();
+  - Added a new flag parameter to the function as agreed between Paul
+    and Vinod. I renamed the first parameter to prep_flags as it's supposed to
+    be used (I think) with enum dma_ctrl_flags. I'm not really sure how that API
+    can grow but I was thinking in just having a bool cyclic parameter (as the
+    first intention of the flags is to support cyclic transfers) but ended up
+    "respecting" the previously agreed approach.
+---
+ include/linux/dmaengine.h | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-Cheers,
--Paul
-
-Paul Cercueil (6):
-  dmaengine: Add API function dmaengine_prep_peripheral_dma_vec()
-  dmaengine: dma-axi-dmac: Implement device_prep_peripheral_dma_vec
-  iio: core: Add new DMABUF interface infrastructure
-  iio: buffer-dma: Enable support for DMABUFs
-  iio: buffer-dmaengine: Support new DMABUF based userspace API
-  Documentation: iio: Document high-speed DMABUF based API
-
- Documentation/iio/iio_dmabuf_api.rst          |  54 ++
- Documentation/iio/index.rst                   |   1 +
- drivers/dma/dma-axi-dmac.c                    |  40 ++
- drivers/iio/buffer/industrialio-buffer-dma.c  | 181 ++++++-
- .../buffer/industrialio-buffer-dmaengine.c    |  59 ++-
- drivers/iio/industrialio-buffer.c             | 462 ++++++++++++++++++
- include/linux/dmaengine.h                     |  27 +
- include/linux/iio/buffer-dma.h                |  31 ++
- include/linux/iio/buffer_impl.h               |  30 ++
- include/uapi/linux/iio/buffer.h               |  22 +
- 10 files changed, 890 insertions(+), 17 deletions(-)
- create mode 100644 Documentation/iio/iio_dmabuf_api.rst
-
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index 752dbde4cec1..856df8cd9a4e 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -160,6 +160,16 @@ struct dma_interleaved_template {
+ 	struct data_chunk sgl[];
+ };
+ 
++/**
++ * struct dma_vec - DMA vector
++ * @addr: Bus address of the start of the vector
++ * @len: Length in bytes of the DMA vector
++ */
++struct dma_vec {
++	dma_addr_t addr;
++	size_t len;
++};
++
+ /**
+  * enum dma_ctrl_flags - DMA flags to augment operation preparation,
+  *  control completion, and communicate status.
+@@ -910,6 +920,10 @@ struct dma_device {
+ 	struct dma_async_tx_descriptor *(*device_prep_dma_interrupt)(
+ 		struct dma_chan *chan, unsigned long flags);
+ 
++	struct dma_async_tx_descriptor *(*device_prep_peripheral_dma_vec)(
++		struct dma_chan *chan, const struct dma_vec *vecs,
++		size_t nents, enum dma_transfer_direction direction,
++		unsigned long prep_flags, unsigned long flags);
+ 	struct dma_async_tx_descriptor *(*device_prep_slave_sg)(
+ 		struct dma_chan *chan, struct scatterlist *sgl,
+ 		unsigned int sg_len, enum dma_transfer_direction direction,
+@@ -973,6 +987,19 @@ static inline struct dma_async_tx_descriptor *dmaengine_prep_slave_single(
+ 						  dir, flags, NULL);
+ }
+ 
++static inline struct dma_async_tx_descriptor *dmaengine_prep_peripheral_dma_vec(
++	struct dma_chan *chan, const struct dma_vec *vecs, size_t nents,
++	enum dma_transfer_direction dir, unsigned long prep_flags,
++	unsigned long flags)
++{
++	if (!chan || !chan->device || !chan->device->device_prep_peripheral_dma_vec)
++		return NULL;
++
++	return chan->device->device_prep_peripheral_dma_vec(chan, vecs, nents,
++							    dir, prep_flags,
++							    flags);
++}
++
+ static inline struct dma_async_tx_descriptor *dmaengine_prep_slave_sg(
+ 	struct dma_chan *chan, struct scatterlist *sgl,	unsigned int sg_len,
+ 	enum dma_transfer_direction dir, unsigned long flags)
 -- 
 2.43.0
 

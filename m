@@ -1,117 +1,139 @@
-Return-Path: <dmaengine+bounces-1310-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1311-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B67B876593
-	for <lists+dmaengine@lfdr.de>; Fri,  8 Mar 2024 14:47:59 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB5648766FF
+	for <lists+dmaengine@lfdr.de>; Fri,  8 Mar 2024 16:06:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 669A01C212BD
-	for <lists+dmaengine@lfdr.de>; Fri,  8 Mar 2024 13:47:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 860DE285569
+	for <lists+dmaengine@lfdr.de>; Fri,  8 Mar 2024 15:06:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D7C93838A;
-	Fri,  8 Mar 2024 13:47:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A371D15AF;
+	Fri,  8 Mar 2024 15:06:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PdnS/0bl"
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="RMGk4lgb"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A80EF1DA5F;
-	Fri,  8 Mar 2024 13:47:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCE19322A
+	for <dmaengine@vger.kernel.org>; Fri,  8 Mar 2024 15:06:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709905675; cv=none; b=AGL8HHhdPC/JAJkVNkDpcOGT9YMhUJefLT8VvkSpi24O2qKy8CygV34875BHQ7nMOhNgaoixudPBvlEGV725SCDuN/6JGXlLBsJeDyrkgik5rg6db+9p1P7xk8z0rfrl4H6R+vgknRnFIn08wIfbzor7qZHA49E/NS0GOJfjHt4=
+	t=1709910380; cv=none; b=Csvw6InM802fSalOZ6gArzaucg+6wZR5dncruKSVGQ/9T1ytt2/c73+zbUXaYFaC0YMusa3YK+WWPsEjel1gagCDDXRWAdo0N+jmo7Thin0RC9vIMOsFFVlvi7x1P9DGruM929RDaSWj73sW0l6jiMlAUH5GQOUxQmeEL9gtucg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709905675; c=relaxed/simple;
-	bh=/PRw9ccKt0T4kEd8hXPgc3tzzQevKpZOpxLku2uhNBw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=ZWL+TWXyqYioA9YIo68AIlcsmNHEmDmh1caPs3gkaPjs8bvldckcTzvNPTalsRxWPyqeqfo/aaO26VYO5vIWRipCOSZxZJAuMJxmpsaPV5EKKHcM1Q4F8uYXIfniCHX9jMqyUZuBSyKO2ANSIogOSeQ6uKaGb6T7jDvTZPxfdeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PdnS/0bl; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-413183f5e11so3738345e9.1;
-        Fri, 08 Mar 2024 05:47:53 -0800 (PST)
+	s=arc-20240116; t=1709910380; c=relaxed/simple;
+	bh=7K7XjjuuDVmZoheJLsmPuwqN4KUFOWM5enHgBCjK8gA=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=UlzKOYYJOYJoO98nLecxsHai9mIMK7RX0mOwb/Beu18gZprkhVe0z9b98cTa7rlXn8klVNEJeLt4KNCFHlQOMPCvt82lertesMbRXbmh2RixzoqAns5O6eh9qrfhims4RaWE4BRMthImgupAU6+0cekK5uiepBHsdtOmSRm+5UU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=RMGk4lgb; arc=none smtp.client-ip=209.85.128.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raspberrypi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-60a0579a931so6137727b3.0
+        for <dmaengine@vger.kernel.org>; Fri, 08 Mar 2024 07:06:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709905672; x=1710510472; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=H3LkD4Cs569/mWMx7CY8g9v6QR6hNkaicC0wA3uOs4A=;
-        b=PdnS/0blFjT5gD8GVCBQsmM2DYkC61WiuPLD0g5/gqC9rvggl5vOi4BTrUSs5IKDBw
-         +HBQLosEN/T31uuFdLFxo3oWixF9UpCZFSL/hOGGsrCEE5LPt8ESahz+MAGQ2dfZsrxQ
-         zY2gDdwjE+6ViNrMjHEyEUPE+mXw1nLj/Y/Uz9EqfPMK0tYO0YOQNWBPkFTHO9wiaxeN
-         btku5QsXJMY1il+kwRO2wGFkP1ITQ7xQA1UqHCZqgTLT1pH46JVKY+AOc5q0symhJupl
-         NtHuBn5MwdzYST41rGmpk8womVFqqhBWipqL9epG761pWQM3+wpYHheNR/+Jl6Gzn5c3
-         Rqqw==
+        d=raspberrypi.com; s=google; t=1709910378; x=1710515178; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=axI3J2zPNBTuuTSQPMGPqfRBpJXr7xhUiDs5BnpD2pg=;
+        b=RMGk4lgbWguFqnV4B0iMg6QxRhxRZsbWvw9humNE1xojcesWcCC+LJ6EAu6nKSuuNY
+         OKrjqKHNmDzmNP9bJma5D5ax1GjWuisQUKveD4OB233a7+Da41h5VB0296NDzPfJbRdj
+         qvAiRZAo+UGNiPehMvMymop9y16vmUfFV0FXBd8iMbDC+c8hLdEih7eYj0VB6Hho763O
+         nBdikSl/LUry1JmS+qxw+6kvIbgW6BSDo27q9XLDJFRlNYoH7P/l00FqQod2JGPf6oOg
+         7tQwhdUv4JwMnJ36hZfI0DG6NM4g6upP1v0+G+m16n+jciTHemSwEvqxxvdZKfVcfHSf
+         8q4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709905672; x=1710510472;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=H3LkD4Cs569/mWMx7CY8g9v6QR6hNkaicC0wA3uOs4A=;
-        b=Q/xB3dupvcZpvxyOdyq4QFcV+mF0a2/LC6WaH0aEvdRf5GdcCRPGNlmFuZhFcJ4yGL
-         Wgc4DRvYU5Eo+FEzJ1V5bpw05rvnehDREnIpusFVJw9wb4C/seHI5wxsLCcLHXhJvKUf
-         AklWn43SmjLvW+FghO4h9M3HMBT2HOv0s5XzUaPgM4wNvI/bpYObJ4WLweXw78+hetuS
-         akPRWuk4lqbo+T966+qPZbxUmjGK2h/na5lLMeEFoO8nbxYZJ11xFGldmHSEbRMAGbHq
-         V2KRJ5PwYkXGXiCrbvOZ8jcHvJy9n5bQFS26FwC8BhNdavd5w9lLKXJSYa/2czSceK6a
-         6JoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXwhE7gZnjGbB1KrkAVF0TONYbwvpsBOnQ0T6umAtwa/7d8s5F/hNHdrORpQiCxUsji+HeZ01kw9/YnrDYizCRE43utpiuc844Qsg5AiJ+8bgz/xAjisKa9+UR3Y3lgboZ8lV9KZk6f
-X-Gm-Message-State: AOJu0Ywy+zQxMEu0AATj1vt380FXdvmwpMdKF32SUqkB/kO7cxTB2Zdp
-	/3GvOcozVJx9f7E2pYuvpUJStJ5rQO4eb7AbsYwETwyEP4mW6Hb0zkhZOWSce4M=
-X-Google-Smtp-Source: AGHT+IHz13x6X2BWLbykrXVF/3dnnmS2gP0gNigiX/RmQnrD0Lb3lyONWH83Un+e7PrVA1AjP9sS1w==
-X-Received: by 2002:a05:600c:524c:b0:410:78fb:bed2 with SMTP id fc12-20020a05600c524c00b0041078fbbed2mr289359wmb.19.1709905671793;
-        Fri, 08 Mar 2024 05:47:51 -0800 (PST)
-Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
-        by smtp.gmail.com with ESMTPSA id p23-20020a05600c1d9700b004131d2307e7sm85386wms.12.2024.03.08.05.47.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Mar 2024 05:47:51 -0800 (PST)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Vinod Koul <vkoul@kernel.org>,
-	dmaengine@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] dmaengine: pch_dma: remove unused function chan2parent
-Date: Fri,  8 Mar 2024 13:47:50 +0000
-Message-Id: <20240308134750.2058556-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.39.2
+        d=1e100.net; s=20230601; t=1709910378; x=1710515178;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=axI3J2zPNBTuuTSQPMGPqfRBpJXr7xhUiDs5BnpD2pg=;
+        b=uoysEzKZYnyDhM2bLwtID0iqAviKDTJCNw8jX+iQpaKGyi8uliIY4roGN4FoO2qldr
+         M0JQNCif7tNVXgKb3Lh4tMKxi+Scsw9SkkTqSoF/mlAd6Pokgg1N3yjXjnmUsFCo6kbQ
+         xvI1+d5lO6Jb7WEZzCnuWOX9eTXkkF1gYwfhZ1iTxsJDcHXodB04xCs6+Sz3m+IkTmBT
+         O6nqxToygPxlQ+nQsmgjvpGN+ZtQmpymbIhiEn1+knXGdqQvBSLMuziv+TTNw8lCMSnJ
+         J51sQKDb+viJBhRNfym36G7g5OUIrm6TKRryetnf/H5YL6AUiiY39ofKUQ89Yw8b0xbt
+         ehhw==
+X-Forwarded-Encrypted: i=1; AJvYcCXh7B/ZjSADdRrOTTFOU54qrzgPimz14vn+yMWPwGhmQ2QtMKduVyNd0AHAfKvuIt5ZChDJx97HJqKpzIhRpk4PtqpPNmpgSJBR
+X-Gm-Message-State: AOJu0YxKVcMfx6gIR6rLOBiPj4sVt3FaqYM0DhkUM+LBT1gH+T9ppmm8
+	kAltbAKW0r66SvXywIl6M7IREdM1v+oO1dBEMTu+DQMqfiwB3D/zPP+RiyQjJreDrYybgdalMYa
+	EKR1AjNBNttEvCv1tsDs/qDOUwGHTF1ZM+9yk0g==
+X-Google-Smtp-Source: AGHT+IFPjvRVAZhj2KVjP0oxh4Wt6WXqKEiHEys0nCNZxI94SUj0Gz/IxXTE4vOhz893yhBNzBJVLmlT7IcS9rCrnOs=
+X-Received: by 2002:a25:ae8b:0:b0:dcd:ba5a:8704 with SMTP id
+ b11-20020a25ae8b000000b00dcdba5a8704mr18539467ybj.24.1709910377508; Fri, 08
+ Mar 2024 07:06:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+From: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Date: Fri, 8 Mar 2024 15:06:01 +0000
+Message-ID: <CAPY8ntByJYzSv0kTAc1kY0Dp=vwrzcA0oWiPpyg7x7_BQwGSnA@mail.gmail.com>
+Subject: DMA range support on BCM283x
+To: Vinod Koul <vkoul@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, dmaengine@vger.kernel.org, 
+	Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, linux-rpi-kernel@lists.infradead.org, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>
+Cc: Maxime Ripard <mripard@kernel.org>, Mark Brown <broonie@kernel.org>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Stefan Wahren <wahrenst@gmx.net>, 
+	Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, Jim Quinlan <jim2101024@gmail.com>, 
+	Phil Elwell <phil@raspberrypi.com>
+Content-Type: text/plain; charset="UTF-8"
 
-The helper function chan2parent is not used and has never been
-used since the first commit to the code back in 2010. The function
-is redundant and can be removed.
+Hi All
 
-Cleans up clang scan build warning:
-drivers/dma/pch_dma.c:158:30: warning: unused function 'chan2parent' [-Wunused-function]
+I'm looking at the DMA configuration on BCM283x as part of upstreaming
+the 40 bit controller for BCM2711.
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- drivers/dma/pch_dma.c | 5 -----
- 1 file changed, 5 deletions(-)
+It looks like we have a historical misconfiguration, and I'm not sure
+how we resolve it.
 
-diff --git a/drivers/dma/pch_dma.c b/drivers/dma/pch_dma.c
-index c359decc07a3..6b2793b07694 100644
---- a/drivers/dma/pch_dma.c
-+++ b/drivers/dma/pch_dma.c
-@@ -155,11 +155,6 @@ static inline struct device *chan2dev(struct dma_chan *chan)
- 	return &chan->dev->device;
- }
- 
--static inline struct device *chan2parent(struct dma_chan *chan)
--{
--	return chan->dev->device.parent;
--}
--
- static inline
- struct pch_dma_desc *pdc_first_active(struct pch_dma_chan *pd_chan)
- {
--- 
-2.39.2
+On BCM283x, dma address != CPU physical address, particularly for the
+peripheral registers.
 
+The DMA users have been passing in the DMA address extracted from DT,
+eg HDMI audio [1], SPI [2], and MMC [3]. Certainly for HDMI audio this
+is implied as correct by struct snd_dmaengine_dai_dma_data taking a
+dma_addr_t, except snd_dmaengine_pcm_set_config_from_dai_data() then
+assigns that dma_addr_t to a phys_addr_t[4].
+
+Our understanding now is that this is incorrect, and they should be
+passed the CPU physical address. "dma-ranges" should then reflect the
+mapping, and the dma driver should be using dma_map_resource() to map
+between the two (although it currently doesn't consider dma-ranges as
+raised in [5]).
+
+BCM283x DT currently doesn't cover the peripheral registers in
+"dma-ranges", although it is present in "ranges". AIUI it's considered
+ABI so we can't now mandate that mapping be present.
+
+Assuming I'm correct with the above, the question is how to implement
+a solution that corrects the behaviour whilst still supporting the old
+DT, and preferably isn't spread far and wide through the code.
+Worst case is to require all DMA users and the DMA controller to look
+for the dma-ranges property, observe the range isn't present, and drop
+back to the current behaviour.
+Slightly nicer is to use the knowledge that "ranges" and "dma-ranges"
+in this case should be identical, so have the DMA controller driver
+attempt a lookup with "ranges" if "dma-ranges" fails.
+
+It's an awkward situation that we find ourselves in, but any advice on
+routes forward would be appreciated.
+
+Many thanks
+  Dave
+
+[1] https://github.com/torvalds/linux/blob/master/drivers/gpu/drm/vc4/vc4_hdmi.c#L2729-L2743
+dates back to bb7d78568814 ("drm/vc4: Add HDMI audio support") in 2017
+[2] https://github.com/torvalds/linux/blob/master/drivers/spi/spi-bcm2835.c#L898-L905
+dates back to 3ecd37edaa2a ("spi: bcm2835: enable dma modes for
+transfers meeting certain conditions") in 2015
+[3] https://github.com/torvalds/linux/blob/master/drivers/mmc/host/bcm2835.c#L1370-L1380
+[4] https://github.com/torvalds/linux/blob/master/sound/core/pcm_dmaengine.c#L112
+and line 120.
+[5] https://lkml.org/lkml/2024/2/5/1161
 

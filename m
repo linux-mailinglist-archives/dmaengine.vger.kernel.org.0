@@ -1,97 +1,224 @@
-Return-Path: <dmaengine+bounces-1323-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1324-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4AB9876D5E
-	for <lists+dmaengine@lfdr.de>; Fri,  8 Mar 2024 23:56:47 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 493AB8774A2
+	for <lists+dmaengine@lfdr.de>; Sun, 10 Mar 2024 01:56:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 91702B21417
-	for <lists+dmaengine@lfdr.de>; Fri,  8 Mar 2024 22:56:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EC60928151F
+	for <lists+dmaengine@lfdr.de>; Sun, 10 Mar 2024 00:55:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2566236AF6;
-	Fri,  8 Mar 2024 22:56:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E5837FE;
+	Sun, 10 Mar 2024 00:55:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R3zOKUb8"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from 5.mo560.mail-out.ovh.net (5.mo560.mail-out.ovh.net [87.98.181.248])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B3F36139
-	for <dmaengine@vger.kernel.org>; Fri,  8 Mar 2024 22:56:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=87.98.181.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D67421FB9;
+	Sun, 10 Mar 2024 00:55:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709938599; cv=none; b=RqURb9+5v5yPy/iB/ut/wgoDrtX/OJeuylMhNF6rYVuclhp5SklyYykuKY+YwjBuZx6Xz+F9Hbz94IXjvaOOJe+EYtjByXmNwJSvSOocSa4R73gQllX2haZdnh4XwMA6BH0wAWtaffMHpMga9f1LpXsnGWFtmYjCM5pFn372EdM=
+	t=1710032156; cv=none; b=JIV1lC+CO2ixoBSwVoAsr64wQ+x7mSXtmRw94N948JbM5uz+sgrXlf++wSMuPASkX9+0f3Nd+/bZp7+QR82ldMd7OHBQ15F3K0CNbZXZk6qgTNAhitMrsexrU9GTDwo2wgI0suGSJJfnaHG5ztFY3bTvCy3spSCgYSeoF6mKOE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709938599; c=relaxed/simple;
-	bh=ea/FMOT+LuvBUIf6Z9oNmYg5v6oX6zLSUSAj65JmdWo=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=o0VxPPGI2QI8zgpe3VNWZTW/y+/aCAh0z8HH2WSBVCk/Zuc43gp6FVZhPcWcNb9FoQZmEm18xDA8uNM6gPCJF0D1ifGklnOZXDrLAYbwhSCHqNhbbCcdxCaOuOk+TLBOV2ljIHrAI9KCQdC+/k6LigpAyivJjtlUHAJS30o3H5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=etezian.org; arc=none smtp.client-ip=87.98.181.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etezian.org
-Received: from director7.ghost.mail-out.ovh.net (unknown [10.108.2.211])
-	by mo560.mail-out.ovh.net (Postfix) with ESMTP id 4Ts1kV4cp5z1NLH
-	for <dmaengine@vger.kernel.org>; Fri,  8 Mar 2024 22:56:34 +0000 (UTC)
-Received: from ghost-submission-6684bf9d7b-7mrq4 (unknown [10.110.178.91])
-	by director7.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 0BF541FD79;
-	Fri,  8 Mar 2024 22:56:34 +0000 (UTC)
-Received: from etezian.org ([37.59.142.98])
-	by ghost-submission-6684bf9d7b-7mrq4 with ESMTPSA
-	id 53omAKKX62XQVgUAplAmPw
-	(envelope-from <andi@etezian.org>); Fri, 08 Mar 2024 22:56:33 +0000
-Authentication-Results:garm.ovh; auth=pass (GARM-98R0028d618e52-d2b1-40c7-9d69-95ea762b9783,
-                    2D11F706EFA52336831762ECFB2C8F5C1953C755) smtp.auth=andi@etezian.org
-X-OVh-ClientIp:89.217.109.169
-From: Andi Shyti <andi.shyti@kernel.org>
-To: konrad.dybcio@linaro.org, andersson@kernel.org, vkoul@kernel.org, 
- wsa@kernel.org, linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, 
- Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-Cc: quic_vdadhani@quicinc.com
-In-Reply-To: <20240307205539.217204-1-quic_msavaliy@quicinc.com>
-References: <20240307205539.217204-1-quic_msavaliy@quicinc.com>
-Subject: Re: [PATCH v3] i2c: i2c-qcom-geni: Parse Error correctly in i2c
- GSI mode
-Message-Id: <170993858923.2618408.4667207790973009000.b4-ty@kernel.org>
-Date: Fri, 08 Mar 2024 23:56:29 +0100
+	s=arc-20240116; t=1710032156; c=relaxed/simple;
+	bh=WSizNHAfSuY2tyhrxSDIPKba58sQViEr4CM533Vwtew=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lq0x/2nueLGI57V875YVpYdiQzlGAYhBJdY3gaz2NwP58jA0udrVidqQerTO93Op4X2HdCH7Z9tPc3xa6ZAKkaQsn11be7IuUflAGDQFpdluhASPum6QN4sZGvXN8kmw4tcyRFd2CCS99wJ3BCpQr61lDgHLFkitykMFqCg+rE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R3zOKUb8; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710032154; x=1741568154;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=WSizNHAfSuY2tyhrxSDIPKba58sQViEr4CM533Vwtew=;
+  b=R3zOKUb8Wpmos543aFi4XOi7eSokbxxt+nBOP/ySDKjsQi9LKMG3QpX/
+   xhprTLdCKriXiGead5aS7WC0BOwrgFDNniMDIUsnhLAo6pYn+M9LxEdEU
+   xVYFnWo3B9qz69BuW4HpSo3cQ3qXBU2hzkNn4UWt3mqTZEyfTn4lH/weq
+   AJANezZ3AW3DVeKyrJ441zTM8tJs177SLXA3O4UKqkjn7hy+5oqMRyKVp
+   4M9BLmKVX6fcC0QhbKJE2XA/EfqnWEr/SmH5rNGDRZhXOv6en+lx8ranr
+   RbNtDWu06iEMWoD1s2Rd8ikso+L+FW+3TeuSasfxjX9vQWKgo6w9mWkoL
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11008"; a="16134081"
+X-IronPort-AV: E=Sophos;i="6.07,113,1708416000"; 
+   d="scan'208";a="16134081"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2024 16:55:53 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,113,1708416000"; 
+   d="scan'208";a="11244977"
+Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 09 Mar 2024 16:55:49 -0800
+Received: from kbuild by b21307750695 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rj7Td-0007mZ-2J;
+	Sun, 10 Mar 2024 00:55:45 +0000
+Date: Sun, 10 Mar 2024 08:55:20 +0800
+From: kernel test robot <lkp@intel.com>
+To: Paul Cercueil <paul@crapouillou.net>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Lars-Peter Clausen <lars@metafoo.de>, Vinod Koul <vkoul@kernel.org>,
+	Sumit Semwal <sumit.semwal@linaro.org>
+Cc: oe-kbuild-all@lists.linux.dev, Nuno Sa <nuno.sa@analog.com>,
+	Michael Hennerich <michael.hennerich@analog.com>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-iio@vger.kernel.org,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org,
+	Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v8 3/6] iio: core: Add new DMABUF interface infrastructure
+Message-ID: <202403100826.wjMQq4I6-lkp@intel.com>
+References: <20240308170046.92899-4-paul@crapouillou.net>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
-X-Ovh-Tracer-Id: 10926295649741245147
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: 0
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrieeigddtgecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecunecujfgurhephffvvegjfhfukfffgggtgffosehtjeertdertdejnecuhfhrohhmpeetnhguihcuufhhhihtihcuoegrnhguihdrshhhhihtiheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrhhnpeffteehudffvdfhudfgffdugfejjeduheehgeefgeeuhfeiuefghffgueffvdfgfeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeduvdejrddtrddtrddupdekledrvddujedruddtledrudeiledpfeejrdehledrudegvddrleeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpegrnhguihesvghtvgiiihgrnhdrohhrghdpnhgspghrtghpthhtohepuddprhgtphhtthhopegumhgrvghnghhinhgvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdfovfetjfhoshhtpehmohehiedtpdhmohguvgepshhmthhpohhuth
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240308170046.92899-4-paul@crapouillou.net>
 
-Hi
+Hi Paul,
 
-On Fri, 08 Mar 2024 02:25:39 +0530, Mukesh Kumar Savaliya wrote:
-> I2C driver currently reports "DMA txn failed" error even though it's
-> NACK OR BUS_PROTO OR ARB_LOST. Detect NACK error when no device ACKs
-> on the bus instead of generic transfer failure which doesn't give any
-> specific clue.
-> 
-> Make Changes inside i2c driver callback handler function
-> i2c_gpi_cb_result() to parse these errors and make sure GSI driver
-> stores the error status during error interrupt.
-> 
-> [...]
+kernel test robot noticed the following build errors:
 
-Applied to i2c/i2c-host on
+[auto build test ERROR on jic23-iio/togreg]
+[also build test ERROR on vkoul-dmaengine/next lwn/docs-next linus/master v6.8-rc7 next-20240308]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git
+url:    https://github.com/intel-lab-lkp/linux/commits/Paul-Cercueil/dmaengine-Add-API-function-dmaengine_prep_peripheral_dma_vec/20240309-010421
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
+patch link:    https://lore.kernel.org/r/20240308170046.92899-4-paul%40crapouillou.net
+patch subject: [PATCH v8 3/6] iio: core: Add new DMABUF interface infrastructure
+config: nios2-randconfig-r071-20240309 (https://download.01.org/0day-ci/archive/20240310/202403100826.wjMQq4I6-lkp@intel.com/config)
+compiler: nios2-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240310/202403100826.wjMQq4I6-lkp@intel.com/reproduce)
 
-Thank you,
-Andi
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202403100826.wjMQq4I6-lkp@intel.com/
 
-Patches applied
-===============
-[1/1] i2c: i2c-qcom-geni: Parse Error correctly in i2c GSI mode
-      commit: 313d6aa4c64875ed8a10339a2db8766f49108efb
+All errors (new ones prefixed by >>, old ones prefixed by <<):
 
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/mac-celtic.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/mac-greek.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/mac-inuit.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/unicode/utf8data.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/bcachefs/mean_and_variance_test.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/jbd2/jbd2.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/fat/fat.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/fat/fat_test.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/sysv/sysv.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/pstore/pstore.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in security/keys/encrypted-keys/encrypted-keys.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in crypto/cast_common.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_ubsan.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/irqchip/irq-meson-gpio.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpio/gpio-gw-pld.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpio/gpio-pcf857x.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pwm/pwm-visconti.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/video/fbdev/goldfishfb.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/video/fbdev/vfb.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt6765-vcodec.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt6779-mm.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt6779-cam.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt2712-apmixedsys.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt2712.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt2712-bdp.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt2712-img.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt2712-jpgdec.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt2712-mfg.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt2712-vdec.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt2712-venc.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt7622-eth.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt7622-aud.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt7986-apmixed.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt7986-topckgen.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8167-mfgcfg.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8195-mfg.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/qcom/lpass-gfm-sm8250.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/qcom/videocc-sdm845.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/sunxi-ng/suniv-f1c100s-ccu.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/sunxi-ng/sun20i-d1-r-ccu.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/sunxi-ng/sun50i-h6-r-ccu.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/sunxi-ng/sun6i-a31-ccu.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/sunxi-ng/sun9i-a80-ccu.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/sunxi-ng/sun9i-a80-de-ccu.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/sunxi-ng/sun9i-a80-usb-ccu.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/clk-gate_test.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/regulator/da9121-regulator.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/regulator/max20411-regulator.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/tty/serial/esp32_uart.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/tty/serial/esp32_acm.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/tty/goldfish.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/lp.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/ppdev.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/base/regmap/regmap-slimbus.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/base/regmap/regmap-sccb.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/misc/fastrpc.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mfd/arizona.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dax/dax.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mtd/parsers/tplink_safeloader.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/spi/spi-altera-core.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/auxdisplay/line-display.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/host/ohci-exynos.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/class/usbtmc.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/serial/mxuport.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/misc/isight_firmware.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/function/usb_f_acm.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/function/usb_f_ss_lb.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/function/u_serial.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/function/usb_f_serial.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/function/usb_f_obex.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/legacy/g_zero.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/mon/usbmon.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/input/touchscreen/cyttsp_i2c_common.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/input/vivaldi-fmap.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/input/tests/input_test.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/media/rc/rc-core.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/media/dvb-frontends/mb86a16.o
+WARNING: modpost: drivers/mmc/host/davinci_mmc: section mismatch in reference: davinci_mmcsd_driver+0x8 (section: .data) -> davinci_mmcsd_remove (section: .exit.text)
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mmc/host/tmio_mmc_core.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mmc/host/renesas_sdhi_core.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mmc/core/mmc_core.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mmc/core/pwrseq_simple.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mmc/core/pwrseq_emmc.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mmc/core/sdio_uart.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/leds/flash/leds-rt4505.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/crypto/xilinx/zynqmp-aes-gcm.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-light.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-log.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-power-supply.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-i2c.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-sdio.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/devfreq/governor_performance.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/devfreq/governor_userspace.o
+WARNING: modpost: drivers/memory/emif: section mismatch in reference: emif_driver+0x8 (section: .data) -> emif_remove (section: .exit.text)
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/nvmem/nvmem_brcm_nvram.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/nvmem/nvmem_u-boot-env.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/parport/parport.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pcmcia/pcmcia_rsrc.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/iio/adc/ingenic-adc.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/iio/buffer/kfifo_buf.o
+>> ERROR: modpost: module industrialio uses symbol dma_buf_attach from namespace DMA_BUF, but does not import it.
+>> ERROR: modpost: module industrialio uses symbol dma_buf_map_attachment from namespace DMA_BUF, but does not import it.
+>> ERROR: modpost: module industrialio uses symbol dma_buf_unmap_attachment from namespace DMA_BUF, but does not import it.
+>> ERROR: modpost: module industrialio uses symbol dma_buf_get from namespace DMA_BUF, but does not import it.
+>> ERROR: modpost: module industrialio uses symbol dma_buf_put from namespace DMA_BUF, but does not import it.
+>> ERROR: modpost: module industrialio uses symbol dma_buf_detach from namespace DMA_BUF, but does not import it.
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 

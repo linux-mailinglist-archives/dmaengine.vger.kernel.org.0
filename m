@@ -1,84 +1,107 @@
-Return-Path: <dmaengine+bounces-1342-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1343-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32F9087926D
-	for <lists+dmaengine@lfdr.de>; Tue, 12 Mar 2024 11:50:04 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 465A3879554
+	for <lists+dmaengine@lfdr.de>; Tue, 12 Mar 2024 14:49:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C828F1F229D1
-	for <lists+dmaengine@lfdr.de>; Tue, 12 Mar 2024 10:50:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 092BF285AFD
+	for <lists+dmaengine@lfdr.de>; Tue, 12 Mar 2024 13:49:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E1E978262;
-	Tue, 12 Mar 2024 10:49:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D7207A708;
+	Tue, 12 Mar 2024 13:49:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X3qa8QlU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BCWzIPF/"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38A382572;
-	Tue, 12 Mar 2024 10:49:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F0C67A704;
+	Tue, 12 Mar 2024 13:49:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710240597; cv=none; b=Pv21HCC4W1f0EfiZE2/GExDrud3XQYE61N+5rs+gEBK+RXfJrw7B0aDz9cBfp1LmnPFxv3BfWEeyOhzxTA8kmS09QiPjej2JDlQMAvCnw1OE1cckWt62v/kAjJlsuCSTOwnn7Da4lMXSSJIqxrZbrcbmfkLWycey/xLMw96c8UE=
+	t=1710251347; cv=none; b=aTn6qB6irCQIxK87JhlDsdP5m8jDxUuTHIAKSEHtn6qXQdLY+61gPS8dd6O3XgXUTPxV4mFXQCmUKQxfRXibP1lU26zFpSgXztCp3eTjf4qNblABDedXkA7Md5on0r+jgDD3gijsEAPR81qElww3GILFB+VY0BTM1iGfU/3zVD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710240597; c=relaxed/simple;
-	bh=k7eWGMgPqwqZjBIDKNIRhhMZiM7PCrUCJpk8T5Qn8Dk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gNtE4KSPAlhm0P387rEKqSgXr5L4F+7dU3vmdGD5G3mU9NaasxqX0fa9WvxwN/8TTpl6DZZ3nCoCBOstMZ2XA49EP0JFrMyN4ToW1fGICmVAxavvx2mRu3hjNMLbi/jAOwEdb37Rw9a7Oo8DGphCYKmHO5r4NHgO/RMdMpc6pvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X3qa8QlU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A9F3C433C7;
-	Tue, 12 Mar 2024 10:49:56 +0000 (UTC)
+	s=arc-20240116; t=1710251347; c=relaxed/simple;
+	bh=Wb92OThv6k4OLavfNWH6cZjJsriX0oW5ZwyOXvYtVpc=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=YsbEo3jZFnWWUC2rS17kQGQ9SCvyfdYx6d8HKFyGAMQLwg+6aKIpQreI1xyxbVxTYUJsExwjD0KLdGwczzMRJbuX1jrFbuYMVDBqSoHZO1UAzr893N0uNT/3vUSdNwhkIMoCe9XlE3zX0dRkkFeJaEVsQSzjWnkFpm2brd7tTzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BCWzIPF/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C74B5C433F1;
+	Tue, 12 Mar 2024 13:49:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710240597;
-	bh=k7eWGMgPqwqZjBIDKNIRhhMZiM7PCrUCJpk8T5Qn8Dk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X3qa8QlUAH4tSzpbj7vs7UgKS7Vrt+ayvuDAk+I6fndufc4F5eIzBqETKf6LVclhl
-	 JtZUIEwRCRsmynCL3OHTmYnY0u1pcqGvjb4ylRb7jofw4XVIsgH37oFZS8cPjBdAwr
-	 RTFVF/OOp9WPVsBzBFt3nNU51J4JyrGF50ioThCMolaNzhG3WuoHsQj3d5GLlqvLnH
-	 yMW60K6sg3/nEO5U5FRtRaIJ2wF7XCdTwQocncw4Z0Uev7vty0AyhlI9u5hXByYMRB
-	 0wUr5o9/WVMab+ZigTmrhQ1h2jG12gLJZ9Hz3WQ0Lw04jXy/FNOm0l50hTKBacQuV8
-	 nJQMdLYv+n2Mg==
-Date: Tue, 12 Mar 2024 11:49:52 +0100
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-Cc: konrad.dybcio@linaro.org, andersson@kernel.org, vkoul@kernel.org, 
-	wsa@kernel.org, linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, quic_vdadhani@quicinc.com, 
-	Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH v3] i2c: i2c-qcom-geni: Parse Error correctly in i2c GSI
- mode
-Message-ID: <a5oiihch2yqsosq337hogqzd3r4ldgfrzub4m6kofheh2k3qjv@wxageydv4q37>
-References: <20240307205539.217204-1-quic_msavaliy@quicinc.com>
+	s=k20201202; t=1710251346;
+	bh=Wb92OThv6k4OLavfNWH6cZjJsriX0oW5ZwyOXvYtVpc=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=BCWzIPF/x07OIJgxoJPA8WS2i/Psr/uNcXF2ElWNLPkAB8/aV5LofDrBJRoXEXtkL
+	 UGL++oYc4lWMDT/MkRrEFhJuErUOfURwiwWwyo1zO1xuJo6yEWJNKqMFujFnifXEiX
+	 +Fkh5LRP5kU9N05xlw4Ko+dl3chuinVo1rcMG+zT5cRuP7v4qG6d98ETLJW7GrRcRH
+	 z7j+on1s4kMek23RCMUr6EytNtzxUuuf/3Ey6ZcAdyT6pj5CsVjV34bNotJhHwwuED
+	 dqR4CiZC2+Nuxh3QxKJDfjtwQ5e4JQ9oh4ytm5o74J22LSODlqKna9lQw2clC1CaUp
+	 5bFUqdvngAIiA==
+Date: Tue, 12 Mar 2024 07:49:05 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240307205539.217204-1-quic_msavaliy@quicinc.com>
+From: Rob Herring <robh@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Conor Dooley <conor+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org, 
+ Vinod Koul <vkoul@kernel.org>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+In-Reply-To: <20240311222522.1939951-1-robh@kernel.org>
+References: <20240311222522.1939951-1-robh@kernel.org>
+Message-Id: <171025134347.2083269.1302794772701834117.robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: dma: snps,dma-spear1340: Fix
+ data{-,_}width schema
 
-Hi Mukesh,
 
-> +	status = FIELD_GET(I2C_DMA_TX_IRQ_MASK, i2c_res->status);
+On Mon, 11 Mar 2024 16:25:22 -0600, Rob Herring wrote:
+> 'data-width' and 'data_width' properties are defined as arrays, but the
+> schema is defined as a matrix. That works currently since everything gets
+> decoded in to matrices, but that is internal to dtschema and could change.
+> 
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../bindings/dma/snps,dma-spear1340.yaml      | 38 +++++++++----------
+>  1 file changed, 17 insertions(+), 21 deletions(-)
+> 
 
-This fails here:
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-drivers/i2c/busses/i2c-qcom-geni.c: In function 'i2c_gpi_cb_result':
-drivers/i2c/busses/i2c-qcom-geni.c:493:18: error: implicit declaration of function 'FIELD_GET' [-Werror=implicit-function-declaration]
-  493 |         status = FIELD_GET(I2C_DMA_TX_IRQ_MASK, i2c_res->status);
-      |                  ^~~~~~~~~
-cc1: all warnings being treated as errors
+yamllint warnings/errors:
 
-I will remove this patch from the i2c/i2c-host and we will need
-to wait for the next merge window to get this through.
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/dma/snps,dma-spear1340.example.dtb: dma-controller@fc000000: data-width:0: [8, 8] is too short
+	from schema $id: http://devicetree.org/schemas/dma/snps,dma-spear1340.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/dma/snps,dma-spear1340.example.dtb: dma-controller@fc000000: Unevaluated properties are not allowed ('data-width' was unexpected)
+	from schema $id: http://devicetree.org/schemas/dma/snps,dma-spear1340.yaml#
 
-Please submit v4 with the Cc list recommended by Wolfram.
+doc reference errors (make refcheckdocs):
 
-Thanks,
-Andi
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240311222522.1939951-1-robh@kernel.org
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
 

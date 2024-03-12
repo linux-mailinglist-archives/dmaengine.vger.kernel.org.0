@@ -1,132 +1,186 @@
-Return-Path: <dmaengine+bounces-1340-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1341-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id AFECA8790D3
-	for <lists+dmaengine@lfdr.de>; Tue, 12 Mar 2024 10:24:46 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C4668790F3
+	for <lists+dmaengine@lfdr.de>; Tue, 12 Mar 2024 10:28:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 510A3B22537
-	for <lists+dmaengine@lfdr.de>; Tue, 12 Mar 2024 09:24:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6E9C51F2270A
+	for <lists+dmaengine@lfdr.de>; Tue, 12 Mar 2024 09:28:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B50678264;
-	Tue, 12 Mar 2024 09:20:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA9EA7826D;
+	Tue, 12 Mar 2024 09:28:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eW4gS9y3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RQGVnjDQ"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2D2C78262;
-	Tue, 12 Mar 2024 09:20:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05BA98464;
+	Tue, 12 Mar 2024 09:28:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710235241; cv=none; b=Jk6RNPQ2eIJMUjye9G/HDaT5koRc6/37wCk4LFfeogHg8/GDtZquR0PYRKUxsVfQwCD9jh1cz71IuVd56fPxe1UQKqUR1wSE1dOhmuusSWyHiE/AO/XwvDczKnpp+ksUKGL1cmICAZn80qHBAnkXUK5L2gmoaFJDeQO5TT3LaRw=
+	t=1710235706; cv=none; b=czb69FxyuONlz3Ax4W/7SZJBWDudf/fMI8WfCzzmumUiCgQLR+8X6VL6RFTYu1lJYDtGMx47EGH/AnaK2sGz6yJ8gDKeuRUFglFxpC+PStdE25eWsw9TCl91KOPV69u02DkWITmfkgjKm77/Y769fBAsPyjKU0AUnByvdSCKu/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710235241; c=relaxed/simple;
-	bh=zxkiu9aVl8Thl9uVJ1JoV9B0j7ibOXaq9f6g5nQEndM=;
+	s=arc-20240116; t=1710235706; c=relaxed/simple;
+	bh=lOb/wLij4QiyTntQtdEH4T0DBOmfeMvCyGzvtevrdlM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ag0FLqJVls6gu15xSy421QxoahnltJrxOBus+m7cyEbE8lE365llTt8RyJpIdkWP7lcLIgSNPoYyImLTI52cuhdJsplJMJQYBBP1hU960mVO32eHwL0Vt+ShCUvN65LkLIHxV7pBDXz5Db6TY3FofUVAvNT4LtVqbFdSF2GFvgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eW4gS9y3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A19DC433C7;
-	Tue, 12 Mar 2024 09:20:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710235240;
-	bh=zxkiu9aVl8Thl9uVJ1JoV9B0j7ibOXaq9f6g5nQEndM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eW4gS9y3c6ESVgdHCwyPh8dT4j7jVE5Ns+Y/Jp2Wot7zMcCeUx039VarVhmkSNaCI
-	 vh9kFGjlbX6e+wHvJBaykGLQzjL+n0j2RbCStymyE8Ct2uPLt9aUl+x10x4X5PXjJF
-	 UllMPXed667HVZAB56aCHxQXZPrLeVXIjZgbFsIeeTxs0pUQwGHBW1xtpHppk8zTVB
-	 xsJ3NFVXQJ23Wo22FCw2ODnh1vv8TKkLajwcBlQg6TQT/zrfQ4u5locg8ajB5aDHbb
-	 QowO/OXolXhjulJI4IMXEnfyghJaciZmhI/Stfa0RBri+MU20SkF11LQv2N4SMK9lH
-	 KghG9PGxE4Bmg==
-Date: Tue, 12 Mar 2024 10:20:37 +0100
-From: Wolfram Sang <wsa@kernel.org>
-To: Andi Shyti <andi.shyti@kernel.org>
-Cc: konrad.dybcio@linaro.org, andersson@kernel.org, vkoul@kernel.org,
-	linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-	Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
-	quic_vdadhani@quicinc.com
-Subject: Re: [PATCH v3] i2c: i2c-qcom-geni: Parse Error correctly in i2c GSI
- mode
-Message-ID: <ZfAeZbV0cXGR_Lkn@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>, konrad.dybcio@linaro.org,
-	andersson@kernel.org, vkoul@kernel.org,
-	linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-	Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
-	quic_vdadhani@quicinc.com
-References: <20240307205539.217204-1-quic_msavaliy@quicinc.com>
- <170993858923.2618408.4667207790973009000.b4-ty@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=dvNi+8QaVSbzQ2bHpMvJygxQc5wkjl3JiR5WvVdOnmpjXgYFdAtIgm3VtiN1B0DhJNYZ8Wgi1gRde+L2h7V/I0BsZTbNBU2w3CnDOOf1M7Ze1hn901N7p8Qg3u46QP3beWJ0cLlV+FotQnbseDCF6aR4PpfknEgodcXQySbkvQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RQGVnjDQ; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-512e4f4e463so7229213e87.1;
+        Tue, 12 Mar 2024 02:28:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710235703; x=1710840503; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=vypzRSmygKV0lPftTIj3GZMtWC14VrjuyGuYtz9gYZI=;
+        b=RQGVnjDQNpbDWN9CC2pHpD1X04lB9ZG0dSa3XRc25JVP2wdfbvPTgk2ImJbGyTmPMd
+         xScAsn17Y8T7chcQE3ds6eXlmCrIETI7pP65e1HJG8qubAV7zRM/VgqiFM5YbzdeMD6R
+         N/Tz5Wqxof1ySM/tImM+NbbfvIllvDLCV/+txQ22UjsDyBrJE8bH7OtwdBCTnyKePFq6
+         ihkScWr0KmvGZatwspWRr3oWBUkEyFKxnlnAtpZraDY+SKFvWi7tVc0QXAHTY0OckmwF
+         RxPQJn4HzXXz7w3JxWk/4Pb8MNGwp7putzac2ipOs+814TJxt58xg/X5xLd03zVmBVmE
+         skYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710235703; x=1710840503;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vypzRSmygKV0lPftTIj3GZMtWC14VrjuyGuYtz9gYZI=;
+        b=alxe3PgMa/9sR4WLuTc/tUV15HASSDEqkkTwPjDRueqs28Tqm8605NWPsCSergqO7K
+         wnRQbTVcxVeAdV6dW2Pd9NZTkdMEpvjskPBWlJk8wCnaFCWXC5Gt6kr+qesR0W/nLXSW
+         edeCxQOCRL3TUhVaWeB5llpOFKOq4Uujx1mEOpLRSb8EsR28ROTkkGdHN0ZWSoEVwu2l
+         C+Z4s7E8sSDcrj140hnbXkg3x4at16kspbRhD9QW2rr9S2X0Q93+PGyxklrMNdclHc7c
+         atogS3rSSxMQjTQFqkQ0yvyv87iKqoIWvb9mAtrEhdjYWqKnRn9McGaJiZ7iy/PiYEaT
+         bblA==
+X-Forwarded-Encrypted: i=1; AJvYcCWXqxscMxnAppm2uFBOpVXAKknc0jlw/0hkWMZ39NWbwig/wvaQfACKFRzrAb0yKH9TyXZL6LJMXMqhqsVO6ZWAKpYUeQkgHdsKRg3dXcI4hUFOWnOlOADIzo626o0S1un6PhOFtIUoy7A2hbmRe9zskxlv1D0LFoBvAmyXgqdqOTGRRQ==
+X-Gm-Message-State: AOJu0YwxvMzlQ7VVYsreRRcsqwlQbRHvzYR50Lgo7OzGxg8Ovuhk8Zlc
+	lpDsIdrOokGrEO0E2zj7rgNzc5og7Fy+S/Ou/JRtfSn7XGtvcK9e
+X-Google-Smtp-Source: AGHT+IGtRkGYkdMwkStxreKfnlfTpKe7ly77/KT/i5Sci+pS0MCZOhWw102gaE9pYvHRg+q+/Lz8Bg==
+X-Received: by 2002:ac2:5e6d:0:b0:513:91c4:aa6 with SMTP id a13-20020ac25e6d000000b0051391c40aa6mr1680002lfr.63.1710235702881;
+        Tue, 12 Mar 2024 02:28:22 -0700 (PDT)
+Received: from mobilestation ([178.176.56.174])
+        by smtp.gmail.com with ESMTPSA id b8-20020a0565120b8800b00513b3928e36sm444420lfv.266.2024.03.12.02.28.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Mar 2024 02:28:22 -0700 (PDT)
+Date: Tue, 12 Mar 2024 12:28:20 +0300
+From: Serge Semin <fancer.lancer@gmail.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Viresh Kumar <vireshk@kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Vinod Koul <vkoul@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, dmaengine@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: dma: snps,dma-spear1340: Fix data{-,_}width
+ schema
+Message-ID: <v32llcm32lrgxx7inpndjyl4bj2jq3m4sncb7h23hii5k4krlo@gavzbjsuq3sr>
+References: <20240311222522.1939951-1-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ewTupQRwbxuX6vVW"
-Content-Disposition: inline
-In-Reply-To: <170993858923.2618408.4667207790973009000.b4-ty@kernel.org>
-
-
---ewTupQRwbxuX6vVW
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240311222522.1939951-1-robh@kernel.org>
 
+On Mon, Mar 11, 2024 at 04:25:22PM -0600, Rob Herring wrote:
+> 'data-width' and 'data_width' properties are defined as arrays, but the
+> schema is defined as a matrix. That works currently since everything gets
+> decoded in to matrices, but that is internal to dtschema and could change.
 
-> On Fri, 08 Mar 2024 02:25:39 +0530, Mukesh Kumar Savaliya wrote:
-> > I2C driver currently reports "DMA txn failed" error even though it's
-> > NACK OR BUS_PROTO OR ARB_LOST. Detect NACK error when no device ACKs
-> > on the bus instead of generic transfer failure which doesn't give any
-> > specific clue.
-> >=20
-> > Make Changes inside i2c driver callback handler function
-> > i2c_gpi_cb_result() to parse these errors and make sure GSI driver
-> > stores the error status during error interrupt.
-> >=20
-> > [...]
->=20
-> Applied to i2c/i2c-host on
->=20
-> git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git
+Can't remember now why I didn't implement that that way initially.
+Probably because something didn't work back then during the
+DT-bindings check procedure. Anyway thanks for fixing the schema.
 
-Because this patch touches a file in the DMA realm, we should have an
-ack here from one of the maintainers. So they know and are okay with us
-changing something in their area.
+Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
 
-$ scripts/get_maintainer.pl -f drivers/dma/qcom/gpi.c
-Bjorn Andersson <andersson@kernel.org>
-Konrad Dybcio <konrad.dybcio@linaro.org>
-Vinod Koul <vkoul@kernel.org>
-linux-arm-msm@vger.kernel.org
-dmaengine@vger.kernel.org
-linux-kernel@vger.kernel.org
+-Serge(y)
 
-
---ewTupQRwbxuX6vVW
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmXwHmIACgkQFA3kzBSg
-KbYXUg//WE/vhqWVUyvCYAfe5NQpcr7VSpWQXTelvzhJov7fHX3qVMD5ZAzW9CSk
-Vh6iDgfKCb5JRNrKSvjyPsLvv5Ld2gDglF7+wyVZYh9ZhVpp8ncad6fLuXI3cul5
-mz7QRQ+R92BypzyAXEqE1jHIMgx3n4CDMBYrcJ3QLisUWzp8hPBmyTW7L/JMY3Xg
-Shyf+55Ncf80CXmvL3u1k/KbpGc01KFNMKSI7I0LU/NoJ2ckiVn+eVbpsWQX0JOz
-Ijso7riZWp8ltziANFSBxW0KiGpLlwnHuZUfb7gBPZ5SBNx+PVhX1SsKiw41szko
-JzC0F9WTMmt5FTj2GX7AcidnhpJP/Y4oQP23Nkt5DCkuTwNx3zwqauutshYpjl8x
-/KUyTCyE3eCgF6BzSt6/tWYOz7se4QTGGtAj6y/bnw3txppPOtPFoLP7b/8XPink
-/oQSho2ipuxF3A1o9YjDidV5YZCdbo/aByH0WTXuALJVWbAIgw4/4iMN3zqd30nH
-2jETRKrPj+AC529yh5Q/zUo1cHpNLLwIc+TblAfy0I3vL/aUiRNQssPETln5QxdW
-vkciPDnGD6Ut8gM7uMSbUcsiSItdisAqbDKdR8UoSXdl6YiHIRxh081r0ZanFB8E
-TGzku1i6hOgZ4L0F61zHREFxRRv+w/okp5LSv+FgHav0hKPiC0o=
-=Wqz8
------END PGP SIGNATURE-----
-
---ewTupQRwbxuX6vVW--
+> 
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../bindings/dma/snps,dma-spear1340.yaml      | 38 +++++++++----------
+>  1 file changed, 17 insertions(+), 21 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml b/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+> index 5da8291a7de0..7b0ff4afcaa1 100644
+> --- a/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+> +++ b/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+> @@ -93,10 +93,9 @@ properties:
+>    data-width:
+>      $ref: /schemas/types.yaml#/definitions/uint32-array
+>      description: Data bus width per each DMA master in bytes.
+> +    maxItems: 4
+>      items:
+> -      maxItems: 4
+> -      items:
+> -        enum: [4, 8, 16, 32]
+> +      enum: [4, 8, 16, 32]
+>  
+>    data_width:
+>      $ref: /schemas/types.yaml#/definitions/uint32-array
+> @@ -106,28 +105,26 @@ properties:
+>        deprecated. It' usage is discouraged in favor of data-width one. Moreover
+>        the property incorrectly permits to define data-bus width of 8 and 16
+>        bits, which is impossible in accordance with DW DMAC IP-core data book.
+> +    maxItems: 4
+>      items:
+> -      maxItems: 4
+> -      items:
+> -        enum:
+> -          - 0 # 8 bits
+> -          - 1 # 16 bits
+> -          - 2 # 32 bits
+> -          - 3 # 64 bits
+> -          - 4 # 128 bits
+> -          - 5 # 256 bits
+> -        default: 0
+> +      enum:
+> +        - 0 # 8 bits
+> +        - 1 # 16 bits
+> +        - 2 # 32 bits
+> +        - 3 # 64 bits
+> +        - 4 # 128 bits
+> +        - 5 # 256 bits
+> +      default: 0
+>  
+>    multi-block:
+>      $ref: /schemas/types.yaml#/definitions/uint32-array
+>      description: |
+>        LLP-based multi-block transfer supported by hardware per
+>        each DMA channel.
+> +    maxItems: 8
+>      items:
+> -      maxItems: 8
+> -      items:
+> -        enum: [0, 1]
+> -        default: 1
+> +      enum: [0, 1]
+> +      default: 1
+>  
+>    snps,max-burst-len:
+>      $ref: /schemas/types.yaml#/definitions/uint32-array
+> @@ -138,11 +135,10 @@ properties:
+>        will be from 1 to max-burst-len words. It's an array property with one
+>        cell per channel in the units determined by the value set in the
+>        CTLx.SRC_TR_WIDTH/CTLx.DST_TR_WIDTH fields (data width).
+> +    maxItems: 8
+>      items:
+> -      maxItems: 8
+> -      items:
+> -        enum: [4, 8, 16, 32, 64, 128, 256]
+> -        default: 256
+> +      enum: [4, 8, 16, 32, 64, 128, 256]
+> +      default: 256
+>  
+>    snps,dma-protection-control:
+>      $ref: /schemas/types.yaml#/definitions/uint32
+> -- 
+> 2.43.0
+> 
+> 
 

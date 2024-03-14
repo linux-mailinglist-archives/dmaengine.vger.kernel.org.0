@@ -1,157 +1,166 @@
-Return-Path: <dmaengine+bounces-1382-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1383-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E295987B5D5
-	for <lists+dmaengine@lfdr.de>; Thu, 14 Mar 2024 01:37:29 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0830287B676
+	for <lists+dmaengine@lfdr.de>; Thu, 14 Mar 2024 03:39:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CA267B21BF2
-	for <lists+dmaengine@lfdr.de>; Thu, 14 Mar 2024 00:37:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A988F284B85
+	for <lists+dmaengine@lfdr.de>; Thu, 14 Mar 2024 02:39:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 601A9440C;
-	Thu, 14 Mar 2024 00:37:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FEF11841;
+	Thu, 14 Mar 2024 02:39:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NtVM7fZ7"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="AldDp34J"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2045.outbound.protection.outlook.com [40.107.22.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FA903D75;
-	Thu, 14 Mar 2024 00:37:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710376642; cv=none; b=jiljoG8y+13QjqxHeIa6DEhBPCP9BiSl5fGcTO1FC2d+CT2gNTBqSejYRL7VCz576e09sZWwI3TyXMP+TsKBUkjea59ggW9xyzjpmsG2+rW75PbH5otxi+JQU2xIlOCtNQgR30/ZxgTMzuQXr1JfjZQg63OQf1EYXeMG9QhEUIc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710376642; c=relaxed/simple;
-	bh=/QlMMY4Hg9yaPdoSTOcaEY42ynVEhlurCMB1qau/fbs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YdWsOFoRm9fP9z+rTqBXauvh3HuxnkpWyeWBWQBlHun6PjXtreGul6iDyz+kq4ssZ6xw+sxKLHFZ+QQiVoVRhGWlnn2t223yoAlM52W8UHVacI6vjLHYl0sD8h/BGk7PnLCbUKiYxRX3AVYX3u8hAsC2hd3DNL/N6IOTGbRXSAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NtVM7fZ7; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710376641; x=1741912641;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=/QlMMY4Hg9yaPdoSTOcaEY42ynVEhlurCMB1qau/fbs=;
-  b=NtVM7fZ73wU0gqAB5xSSQl3aIW2J8WvLGH/kVJr8pVSf1URZQ8eXAsqH
-   QWkYJphA6diEPaBsdcwmmyG0pGTxOFI0pRO/UYgE2nugZQwDOncjhzx8o
-   h+uiCelNV0iIFIWndGOVE3HjIlv4SZ8tRt4yi0acFzoEh2JxXV36b95P+
-   4DwGoYw+wtUDZ1ifEqr999hR3dRuRZhkFlhHwglZf8J2lUC1KF2znYvme
-   OKI+tR/axhlWoVZSnUskxbBK65HmIYTRWbFN1eKo9m4WlIfG5nCUqS2rd
-   +UkBYfhdwusl9RWfe6qHbWUTM0iR1yfXMTUDusBdFX3zVUERym63Mfhc+
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11012"; a="5041966"
-X-IronPort-AV: E=Sophos;i="6.07,124,1708416000"; 
-   d="scan'208";a="5041966"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2024 17:37:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,124,1708416000"; 
-   d="scan'208";a="12189279"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.112.230]) ([10.212.112.230])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2024 17:37:19 -0700
-Message-ID: <cfb23a18-ee56-4d3d-b0cf-fd47c0dc6f4b@intel.com>
-Date: Wed, 13 Mar 2024 17:37:18 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E37A55;
+	Thu, 14 Mar 2024 02:39:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710383969; cv=fail; b=sRYtureSTh80kMNO+q4/O7m1pAlAjXR/vgNuF6gBODF2IKz4t2sRFhFJrTnKRYqwi5eYDfm34wn5XPJcdiAEdMwT1CP0sPjMRo2cosSFJFx7d1AClgD43LoKAdKvGksvs2XF5ZjsOg3gbYv38I4nwZdvDQsZoZCDP59BUs5kFbY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710383969; c=relaxed/simple;
+	bh=7WIRNpVM7zjR8odoDx9pOMyyqv4MunbRLwMld90VtxY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=IjuCHkX9Scj2YqQIl4TGdtwMnFuvubupHTK1jJVtDFkBiz8/4J9wBoUbanEmNia68VSPxcX/OBNR0wnKaZKrYwcluu9pvnIpKgpuvPKvUj8ZA1MWcbI9+D7uBHqc2RHPI8JfT18j0tQ8J9hQSslfGWL4D5BBgX8LPCFnfwzBmPk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=AldDp34J; arc=fail smtp.client-ip=40.107.22.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ro/sPoQidjNIESJuInLqNDScjpVETfk+sSx2yU6WVmmUnAm/LQivPU08oDdPhYXy77rqKozRE3DiozwZgDpQbAWURcTJwg6iHKrFz0slSLkXVS8vfNCFGGFCKAXD6qQoZyqLaX3rxzKar/JzitXRgnm7gDYuB7RGc+KI1HMIQhOeIsdQAtvT3PUBlqF75CohHOh4HD0DZdl/k2WA/ZrJqzciim3YCKniADW7IXZSYvmyhVAoQ4nrbrfoAoJYOBo03mO4BiI6GaWeEhaL+HowNWoBaf85+9/VWK5NMSN+daC0fvSIaCi2lwiczPCjQ5GjsjXwZ7gTFrQpS3dIbECu0Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=64iAqNmlBU+Vnz+qzRcMFrEcgDa2NjRH9SpJQPfQ/sc=;
+ b=GeCnxSO65pCW9XO5Z2JDUHbtZzgbNP68cwIsRaL5D6XwyTf/EgCdUDHmDj34nYNVIXnYa0+r4JxUSlx3JG7a/wA3p9CeyiexMgVtwPm5KYqZI+hN+QID+GwxAyR0wRcTPFuBEAeFMIO6bY2ci5oiYwRNlAf5NTUHw/GKS7xaODTvhJDwMASgohx9L+79nPMDDHrl0eBgAdjtmnWlos/yRRkSc/OtqOBKw261CyrTzVEwp1e/pQzIDh4itOqGyw+rWOencj7FnFY7Olbuo+m/ZyVfs0eM6s7JSuCWQIXw3NX/+jbdR3znVBtbV9rQO5NgKQ/CBJoOVjSpwgpGPQEIgQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=64iAqNmlBU+Vnz+qzRcMFrEcgDa2NjRH9SpJQPfQ/sc=;
+ b=AldDp34JKU2ah0VETNwL5dPb3OqeShPQsWinttlJGZzSpLWKD+BdEIm3Crem5RGI49Qwoyh2CvLaMo61FFqn6aGEn0dyB4r3IixR8RtL0veB+RYFYjvrjN6NO3zGcx6P3s0uoRfxNzsk+c6JSPPlPdMPGV147qt47MlptRqHLK8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by PAXPR04MB8143.eurprd04.prod.outlook.com (2603:10a6:102:1c4::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.21; Thu, 14 Mar
+ 2024 02:39:24 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::3168:91:27c6:edf6]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::3168:91:27c6:edf6%3]) with mapi id 15.20.7362.035; Thu, 14 Mar 2024
+ 02:39:24 +0000
+Date: Wed, 13 Mar 2024 22:39:15 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	NXP Linux Team <linux-imx@nxp.com>, dmaengine@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev, Robin Gong <yibin.gong@nxp.com>,
+	Clark Wang <xiaoning.wang@nxp.com>, Joy Zou <joy.zou@nxp.com>,
+	Daniel Baluta <daniel.baluta@nxp.com>
+Subject: Re: [PATCH v2 4/4] dmaengine: imx-sdma: Add i2c dma support
+Message-ID: <ZfJjUzWv2WOs/CFt@lizhi-Precision-Tower-5810>
+References: <20240307-sdma_upstream-v2-0-e97305a43cf5@nxp.com>
+ <20240307-sdma_upstream-v2-4-e97305a43cf5@nxp.com>
+ <CAOMZO5ARM2pS93jLjpYZRfLU-tohuDXUZxDrWFjvVBGtH2t_aQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOMZO5ARM2pS93jLjpYZRfLU-tohuDXUZxDrWFjvVBGtH2t_aQ@mail.gmail.com>
+X-ClientProxiedBy: BY3PR04CA0022.namprd04.prod.outlook.com
+ (2603:10b6:a03:217::27) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dmaengine: idxd: Fix oops during rmmod on single-CPU
- platforms
-Content-Language: en-US
-To: Fenghua Yu <fenghua.yu@intel.com>, Vinod Koul <vkoul@kernel.org>
-Cc: dmaengine@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>,
- Terrence Xu <terrence.xu@intel.com>, "Zanussi, Tom" <tom.zanussi@intel.com>
-References: <20240313214031.1658045-1-fenghua.yu@intel.com>
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20240313214031.1658045-1-fenghua.yu@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PAXPR04MB8143:EE_
+X-MS-Office365-Filtering-Correlation-Id: 33f490d4-e653-4cf5-988d-08dc43cff602
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	b2VOLU7oXzii+4sqeoRGPZBb2Y4G9+dlGzpRESPNbSkwQfo/U/InhYWNQHHkp0Ov9yS+cMJV4wiwCO57wqyTeY3EJZ4h0Fc2pi8qG3CKiRzB6wb7B2EjvVO4LVqR6J1P4vt+Cg4DOfSPnMqe0W7x0iEwMOBGf/XzdBlMKzsSy3wddD9cu2FMsok4ypK8b4lp6jhAfosLHX9WRkeZj2FL9xMPhS9EekgMzAE4eVgKlJ/Lt5ghy6KNH7NeHc7Xlydzh0N457j8dLFtCtLFjXapzwxIVTzNOTlpAMwbutsQP35XBCKGBle7+lW8zkhPUhvu2SckhWj+XhfIDiXDtSPsJLDIh88hQe8IbDAo8IaiA6VOaq4GHHu7GvdGjlcqZKD1bDIFKSwEW0qxB0bv28RUOwQM7QtrFY3hjAr7Fse/8pMKPdfxGIliCPgx0h4uawiizYw2NPwUHYdWgQrVVP4/OpHr56a6kUyuSBKuWzoUCrin+TPATKL4MkLn8NqJU2aabUbJ78rxFIwGHVl63ezQ1Z12L+ctuvJ6FS8vnM74H+FanaqGjkgv6LRWK1QIhG1DAbMbPkQ24gsjAuXNEVFHogSpvJGqmxCf58ZggRAuEQwWPyGE5zW6UttNN7i1ZL20zEmy6ZAkYfW/AVY0yfquGPYGHzskdLr/ZSC+CrRihGI=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(52116005)(376005)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VFhtV3J6QXJPMmVqZDZ5K3poTnd3Q0hrL2krUjNVMVpDaVN6OGhTcU5tSHpT?=
+ =?utf-8?B?c210K0tkeWRGa1BSdjZwRDBDcXhDcWUyWWtKNkNpc3lqTVcxL2w3LzlUTG1o?=
+ =?utf-8?B?ZTZvTFNnaytIYjYvYkZqVDZTUHFjajFtRFVjOVlGaWVOM1Y5VHBEK3A4ZzZK?=
+ =?utf-8?B?d1BEemhzSEs0SGxaaDdEU2xnVHlMaHhOMWJwSk9TZXQ5Tko1VkI0Vyt1OSt5?=
+ =?utf-8?B?cUxWM3BQNVkzYnFiZ203SnFiVnNFM1hxellqSU1qY0FTNlUyNGJQMDlVdm9J?=
+ =?utf-8?B?Y0owajBtQW9QMUk0ZzlnOHpHSnkwWWJvbzNlWjlRclBxMjVKTTE0OGxTZCtm?=
+ =?utf-8?B?U0NpQzU1UnFlMmljSmVZYnJmR2RHTjh0bk9kWVMvU1hsNnNIc1gwTExJZThB?=
+ =?utf-8?B?ajIwSmNWNHZNbFhWWEF5MXpMV0NsNmNWNXRDOVVEc2VIWUR3OEhSZDc4L2hO?=
+ =?utf-8?B?NS9MZXBvbCs2MEY2ckczcDlQOGJhYTlYTEhrSVM5cHl6UzF0ZmRFRjZ1YVZX?=
+ =?utf-8?B?VC92ZVRDUVRLanNSa0lJT01NbGt1M0VvUE1UTlJobmNDdEVEMWgyL21kWEhB?=
+ =?utf-8?B?TUg3clRqdE02Ni9xY3FPQytQRjhFZGhKRjcyR1VzaDRVUW9LaCtyTlEveVhW?=
+ =?utf-8?B?b2x4NG9pcDhwbXZ2NTNWQlBmV291aTRBR1IrOWQ5ditNOGh2VE1maGxtaEFI?=
+ =?utf-8?B?SWxUa1pHWUtZLzFldFdLcjRnREs1Y3ZydktrY2RQRVVEUHI4L2lqY0piaUhH?=
+ =?utf-8?B?U0duWFUwVkVKdC9zTU1LTm5RMXJBaUZQYVBJbzF5TjRrMDF6SUpjQVRsYkRu?=
+ =?utf-8?B?OEp5S2d0bXBOTXI2Yll0TUpSOUFhNXQ1OG1wSlc0WFcvc2p6bmRlUlBwandj?=
+ =?utf-8?B?RVhRWUlJeTFVVm84ais3RnFTalJVZFZaWDF5L0l0ajhPZkp1b3BPekE4aDk0?=
+ =?utf-8?B?UXpNb3pRelgyRzJuK2laM05kdXR5NHRxZlp4VklrVHkzM1JKY2dPSDFYTlNj?=
+ =?utf-8?B?djBVa2J5ckxBTG9wRlVKZHhDS0pXaWR2dHVWL0hEcUhYM3d2VkU1NVJCdGVE?=
+ =?utf-8?B?Q25RZ2JIZkc4cVRpRGUrdUJNZVhEOGQvbnU4U3V4TXlIYjR0STdTdmEyRXA2?=
+ =?utf-8?B?R3NQdGtEYmRGK2lXMGRoMVUyeXhReGlFeUhJOVorc2lZWCtucmdmMkdGeVlj?=
+ =?utf-8?B?UEZMVWpWUndGWUN6QXdOYmc1RmRvWGYwSENsdFBRYzFZQ1ppQ2JORGpYeXNz?=
+ =?utf-8?B?V3hRV3BDQXRQWld2aUlLTHBHeTZ1dmdpTDhpcHp0YjQvUk0xWmMxQ1lreHJ2?=
+ =?utf-8?B?VzNnbDkvTk94QzIycFdUMENCRGNOUng5ZCtwRUlJOVQ4dlFvdlhtdmF2eGJ0?=
+ =?utf-8?B?SVQxVGFyUTNXbm1NazE4QzBQR3NrSXpmUmI5cUpBaVRKY0dHc2VtY2hvU21S?=
+ =?utf-8?B?bzZaU2doNzRLZ0trN2xkM1EwMkFQQXFpK3lldkZOMkVoaUIzQ2JuTnFqaGlT?=
+ =?utf-8?B?SjErUndHMTRTSkFYWm0rQVh6czhQWWg1ekdJMDZLNlBnV1Zac1dhYmpGRzZN?=
+ =?utf-8?B?NmxOTUtiSmNMWmZOOWdvMFNXUnJjQXB5dDFrbVc3ejlRRm0xaWxyeURkeFFE?=
+ =?utf-8?B?UXJ4ckt4bTJRTVk4Ujl3eW0vbkRYU0w1S1EzeWJzSFZ2WUxGR0RPbjdtVDBt?=
+ =?utf-8?B?R3NMM296UDd3MXFlZGwyUnhzdkxBMHpoVmdZcW9uS2QyeFFGeWF3MTBEeVlv?=
+ =?utf-8?B?TVFjUkNjd0pyNzd6Vm5DTFJyQ2RkZ2pPb09xRzIrRS9ISC8rSG5IeUhGZE9I?=
+ =?utf-8?B?bm0vWThJTDBFa0JrckwxdnBJRllQaENaaERacEF0WXlFSVNZMVRkMCsyVFZU?=
+ =?utf-8?B?K1ZzcTRaWGFmVFFiaTNnVGxvNHlwTEE4dktZaFYwZ2dteDVrV2ltK3grQzN6?=
+ =?utf-8?B?bEtRRjNLMndCM1pBbEpWVWVqZ0VYb3BaNVZzYjZ2MVVOUFhPYjFmUkFndVk3?=
+ =?utf-8?B?ZTk3cExkTzdFaXJOMks0QUxJUzZESVZMcjM3QmZ3NWlBQW92Wk1lZENHTklq?=
+ =?utf-8?B?b202ckYwNTFndHB3bHlUWkR6ajRuaHpaVStXcVBPVlIxSHdoNFhEdnpUNG9D?=
+ =?utf-8?Q?I6+COHsKJ8tzQZLMehVBAbEC9?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 33f490d4-e653-4cf5-988d-08dc43cff602
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Mar 2024 02:39:24.5513
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: O3lsYi3diKurYxmToFj86neLupkGE4cukTN1Iqm7h5O5k2RbvvmziYeFbN4rAL00jjlS/pv88cfn5TJmxKf6DA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8143
 
-
-
-On 3/13/24 2:40 PM, Fenghua Yu wrote:
-> During the removal of the idxd driver, registered offline callback is
-> invoked as part of the clean up process. However, on systems with only
-> one CPU online, no valid target is available to migrate the
-> perf context, resulting in a kernel oops:
+On Wed, Mar 13, 2024 at 07:15:04AM -0300, Fabio Estevam wrote:
+> On Thu, Mar 7, 2024 at 2:33 PM Frank Li <Frank.Li@nxp.com> wrote:
+> >
+> > From: Robin Gong <yibin.gong@nxp.com>
+> >
+> > New sdma script (sdma-6q: v3.5, sdma-7d: v4.5) support i2c at imx8mp and
 > 
->     BUG: unable to handle page fault for address: 000000000002a2b8
->     #PF: supervisor write access in kernel mode
->     #PF: error_code(0x0002) - not-present page
->     PGD 1470e1067 P4D 0 
->     Oops: 0002 [#1] PREEMPT SMP NOPTI
->     CPU: 0 PID: 20 Comm: cpuhp/0 Not tainted 6.8.0-rc6-dsa+ #57
->     Hardware name: Intel Corporation AvenueCity/AvenueCity, BIOS BHSDCRB1.86B.2492.D03.2307181620 07/18/2023
->     RIP: 0010:mutex_lock+0x2e/0x50
->     ...
->     Call Trace:
->     <TASK>
->     __die+0x24/0x70
->     page_fault_oops+0x82/0x160
->     do_user_addr_fault+0x65/0x6b0
->     __pfx___rdmsr_safe_on_cpu+0x10/0x10
->     exc_page_fault+0x7d/0x170
->     asm_exc_page_fault+0x26/0x30
->     mutex_lock+0x2e/0x50
->     mutex_lock+0x1e/0x50
->     perf_pmu_migrate_context+0x87/0x1f0
->     perf_event_cpu_offline+0x76/0x90 [idxd]
->     cpuhp_invoke_callback+0xa2/0x4f0
->     __pfx_perf_event_cpu_offline+0x10/0x10 [idxd]
->     cpuhp_thread_fun+0x98/0x150
->     smpboot_thread_fn+0x27/0x260
->     smpboot_thread_fn+0x1af/0x260
->     __pfx_smpboot_thread_fn+0x10/0x10
->     kthread+0x103/0x140
->     __pfx_kthread+0x10/0x10
->     ret_from_fork+0x31/0x50
->     __pfx_kthread+0x10/0x10
->     ret_from_fork_asm+0x1b/0x30
->     <TASK>
+> v3.5/ v4.5 is from 2019, so not "new".
+> https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/commit/imx/sdma/sdma-imx6q.bin?id=55edf5202154de59ee1c6a5b6b6ba6fa54571515
 > 
-> Fix the issue by preventing the migration of the perf context to an
-> invalid target.
+> I think you meant  v3.6/v4.6 that Joy Zou has just submitted:
 > 
-> Fixes: 81dd4d4d6178 ("dmaengine: idxd: Add IDXD performance monitor support")
-> Reported-by: Terrence Xu <terrence.xu@intel.com>
-> Tested-by: Terrence Xu <terrence.xu@intel.com>
-> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+> https://lore.kernel.org/linux-firmware/20240313071332.1784885-1-joy.zou@nxp.com/T/#u
 
-Cc: Tom Zanussi
+Thank you point it out. Previous an internal git commit miss lead it. After
+confirm with joy zou, it should be v3.6/v4.6. Will update next version.
 
-
-> ---
->  drivers/dma/idxd/perfmon.c | 9 +++------
->  1 file changed, 3 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/dma/idxd/perfmon.c b/drivers/dma/idxd/perfmon.c
-> index fdda6d604262..5e94247e1ea7 100644
-> --- a/drivers/dma/idxd/perfmon.c
-> +++ b/drivers/dma/idxd/perfmon.c
-> @@ -528,14 +528,11 @@ static int perf_event_cpu_offline(unsigned int cpu, struct hlist_node *node)
->  		return 0;
->  
->  	target = cpumask_any_but(cpu_online_mask, cpu);
-> -
->  	/* migrate events if there is a valid target */
-> -	if (target < nr_cpu_ids)
-> +	if (target < nr_cpu_ids) {
->  		cpumask_set_cpu(target, &perfmon_dsa_cpu_mask);
-> -	else
-> -		target = -1;
-> -
-> -	perf_pmu_migrate_context(&idxd_pmu->pmu, cpu, target);
-> +		perf_pmu_migrate_context(&idxd_pmu->pmu, cpu, target);
-> +	}
->  
->  	return 0;
->  }
+Frank
 

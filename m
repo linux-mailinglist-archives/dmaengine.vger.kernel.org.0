@@ -1,163 +1,160 @@
-Return-Path: <dmaengine+bounces-1398-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1399-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A050C87DD39
-	for <lists+dmaengine@lfdr.de>; Sun, 17 Mar 2024 13:56:02 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id EE7E987DD6F
+	for <lists+dmaengine@lfdr.de>; Sun, 17 Mar 2024 15:40:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 372391F21317
-	for <lists+dmaengine@lfdr.de>; Sun, 17 Mar 2024 12:56:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 53FD51F212D9
+	for <lists+dmaengine@lfdr.de>; Sun, 17 Mar 2024 14:40:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 774A41B28D;
-	Sun, 17 Mar 2024 12:55:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 575861A38E5;
+	Sun, 17 Mar 2024 14:40:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="PN0199Zw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dKtr+Dwe"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B67C136A;
-	Sun, 17 Mar 2024 12:55:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C4D6634;
+	Sun, 17 Mar 2024 14:40:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710680156; cv=none; b=pwRlXr06Kiq+rcaOdc8H4f9QQONA6Sc1x1kV9Dd/nQdygftcQYFCo9GCKezB18cho4YhyrTfL26wltQzCYIULbi5GdjRZ53o6Zwaq3ACnOFf3JQWSplrv9IAsohdfJYS5X3H8lCofzQ+5q51P+5DrB3lDpuu0ZD0D7tas3R33Mo=
+	t=1710686439; cv=none; b=cn+dUE46GHSd0kblsIxORBRfXfMe+nVp5lf0H+EJQPDqE6FbvIGwt/oxkortqURSceEUizukSJ1R8S1vj9qFYDFQIHy00QeCKQj8HIfLa5O0CCun7X+qWRJ1bl9QwpS1Wxb9sNhmb/G8DPFLR9GsCiJwO3nliUtI1lCjaMIebn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710680156; c=relaxed/simple;
-	bh=xwrmrE8IcvQB6scD2/O+jg7MyJ4j0/Sl++hhinClxKw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IKNXMsRdfLGuRwoUCum+sSMQ2UjKuLfP8nTqsDiYgnP5CRCpYQWKfStS0e2YlG2t820mCYWvasRv6x+RUfQMttRvLBInhkLzxZE/h8Q9ZLgsDqBd05VlvPzelsqC1wiC3A+BQszaLQUhLdeXP7tPog2NSZkgmGWSdgzP+jDJCeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=PN0199Zw; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1710680134; x=1711284934; i=wahrenst@gmx.net;
-	bh=3eOlEoN6SfpTcqL+Nb/fFWrFrYcV/qmikqb4ystGr/4=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=PN0199ZwKmpeUW8FGzs8yhLcUD3TeOi1qkkqcuo4Bc28tWp+qPI28ajvp0H5+qv/
-	 rlb37+dP6JTcV1aAeZKu/uFSBPeVmXhIRm5mHqNlaOagFtsb515NdHN52Mx9om+S9
-	 GMnhn3pOd/cKu1mHtQdddIBBReGvAsD7yZIwvVn/SgB4KP8ps43pc4dYAYCGnhXPF
-	 AQ5fTuxPJ7uv++s4P+6ODf+2r/8YcPqiRB6DpWoGtVBMlgsJa3Jr3+4pjd9f164el
-	 6GGEclAVW8JwmSiMYUzeWyDkL4EwomOTCoq45tTaaJemyKLXhHAUf8lCWTNo+HXSq
-	 9AQTsIUxX1rvmxYo9A==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.167] ([37.4.248.43]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MEV3C-1raGXk1cNO-00Fycb; Sun, 17
- Mar 2024 13:55:34 +0100
-Message-ID: <dd29bcb5-f737-4e89-b296-db54e13df9ee@gmx.net>
-Date: Sun, 17 Mar 2024 13:55:32 +0100
+	s=arc-20240116; t=1710686439; c=relaxed/simple;
+	bh=8EuWl5V+QQMbWGcfJ2pFCZ8np3id+nvKGueBQOIkTFc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rzgk83gRUX6UiVTvPQwPyPl782t7kZtnZ0RLLSpPK6wPlRvHSoKHnYyrPV24x30f0JiVEGsyKS3xaEiF8v5CBfOWX3qo+OaD1YPkkGncqeoD5SsV2XBncMJ4LVmNiip7d6deYOgGbTOI3VGZzr4R7EhdYDW/UU9OSzxtbhhS+1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dKtr+Dwe; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA2F5C433C7;
+	Sun, 17 Mar 2024 14:40:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710686438;
+	bh=8EuWl5V+QQMbWGcfJ2pFCZ8np3id+nvKGueBQOIkTFc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dKtr+DweepUvkz9XmC6s6tFfVLDvg3NJQ53mdAWpe7D57rIPu/ywL0XiBMLGKX0S1
+	 w0LgwNXL+JoayFB/OD7Hl87yJ5gsLnAfXaZqQWsZ2MbQTzG4CEtHtR8qFweaMy6LkZ
+	 Bo/tblRLYVQi30EClPIuDIKRlO3FBHSoxIxKvf8tJweM4BumHKAq2iDfLqdpKaCqBa
+	 7oslql+2UK4x5jEhLgC4g/wo86z26AxjpXmY9VtW0rr8782SnrZwbv1OuUfpU14eSD
+	 XHHUp7Yk2KnjPa5xyQ/ZO35a+q7scUxJaB4wsB2c5+TzfE5WPdnZbVsEk3PgdNL7ZJ
+	 XOmNyRoDF5ymg==
+Date: Sun, 17 Mar 2024 14:40:34 +0000
+From: Conor Dooley <conor@kernel.org>
+To: keguang.zhang@gmail.com
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-mips@vger.kernel.org,
+	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 1/2] dt-bindings: dma: Add Loongson-1 DMA
+Message-ID: <20240317-exorcist-spectator-90f5acb3fe2a@spud>
+References: <20240316-loongson1-dma-v6-0-90de2c3cc928@gmail.com>
+ <20240316-loongson1-dma-v6-1-90de2c3cc928@gmail.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 02/15] dmaengine: bcm2835: Add support for per-channel
- flags
-Content-Language: en-US
-To: Andrea della Porta <andrea.porta@suse.com>, Vinod Koul
- <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui
- <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Saenz Julienne <nsaenz@kernel.org>,
- dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
- linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, dave.stevenson@raspberrypi.com
-Cc: Phil Elwell <phil@raspberrypi.org>, Maxime Ripard <maxime@cerno.tech>,
- Dom Cobley <popcornmix@gmail.com>
-References: <cover.1710226514.git.andrea.porta@suse.com>
- <da598378f733a8d45a35ed77f9626cc082262b1a.1710226514.git.andrea.porta@suse.com>
-From: Stefan Wahren <wahrenst@gmx.net>
-In-Reply-To: <da598378f733a8d45a35ed77f9626cc082262b1a.1710226514.git.andrea.porta@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="irsz1jOWazJ+F7GF"
+Content-Disposition: inline
+In-Reply-To: <20240316-loongson1-dma-v6-1-90de2c3cc928@gmail.com>
+
+
+--irsz1jOWazJ+F7GF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:jub8QDgSnZ8AbSgBVMW8uke/xMwe9dhFq6FVCojQ8aQHsYD5xYe
- 57cmu43IYbWzOV29/Z70p0cFAl1m0UJhGxktZFocGeazwdn5/qoXVRNxT/gMA3YYJMBbutd
- Yiz68XaOVZACJ1WA216mIwJDnGJXJAF7j0OEVYLlooR1Iioj3GLQolceZ4jPPIN6qx7zcol
- QDgqRuRxVGBgwpCQQcf0w==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:TIF9uqa/PxY=;6PRj0Lq0EZp9bJwDP99uvSFDlZM
- SV13KTGpVXH7plqQz1K1PxEhcvGYUk9dFFaA9rhtE8ThE2BL21RrBB9eGHlhaF1ufG5h7SuIb
- A73Bkhg8wBm+OkBbu8kTy2gY5op83w8KOuyO9pRjEN+FWHj28GLzFoLzUe71Y57knzfwd+ziN
- De32tMBj5/liKY4VJZhYQHnUsp7RFKc6E5lQJRxYNH0hXIeq4SbmwllAnHQWW3vbCK7VoxWMt
- bhSttjcB+cHB+871Ka3U1HVl5GDEsenHxWHnkej69mWS5RcpuCIDoIhdn/pGntlZvpr0lantT
- z6/No3yXtXZZDVF0B/iWMRfnybdzglpjNhaLimHYkWxeY45uLhPJxWcpj8vhC7BfCn7EY9paL
- EMb42osDcjDa6bT96UwBgnB55jun21yDt8WXGhNYUFuFWJ+Ekx39D823PdpC9AIURdzKRtS4D
- Dg60kkGrvGcmQYS3zLqH9ocU3DXRw6Gk0F/ei99rA4QxVYWI0qVT6qqpwTF0hR3Hy6kOpHafS
- 7bigysWVk7iC8WsjP5eANJxtFNJgi1jZfCLsXlJqLEVoeeRU8YObYTZsMcYbmLgMnVpVSZnFh
- 54gfdUD4U7RHtXtGZsyYrnCnpl6bWXVy2OC5pQuNhZMnaxC9zOw3c4DmR8QHMOsa3zmdVets8
- JKGyFpU3u0D5MKBpIjImOGGTuLeY7dXGWNqr5PVaQue8hvceObdLCdWY/s5TAeIdgEOQ6lfkU
- yPAjiGOCIuoOvPKPSoK99RUfv1kqCUEPHwelDv35Ha5SS4WJ5iDj+Nesn+3gO+2QKQyOOc9CL
- 1qYxP0gw4PzhpbQSfoq/SJ+umz3zkmvnwMqUNWaiXVbFE=
 
-Hi Andrea,
-
-Am 13.03.24 um 15:08 schrieb Andrea della Porta:
-> From: Phil Elwell <phil@raspberrypi.org>
->
-> Add the ability to interpret the high bits of the dreq specifier as
-> flags to be included in the DMA_CS register. The motivation for this
-> change is the ability to set the DISDEBUG flag for SD card transfers
-> to avoid corruption when using the VPU debugger.
-
-AFAIK this and the following 2 patches also requires modification on the
-DT side. So either they must be included in the series or we better
-leave them out completely. I'm not sure which one are really necessary
-for 40 bit support.
-
-Regards
-
->
-> Signed-off-by: Phil Elwell <phil@raspberrypi.org>
-> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+On Sat, Mar 16, 2024 at 07:33:53PM +0800, Keguang Zhang via B4 Relay wrote:
+> From: Keguang Zhang <keguang.zhang@gmail.com>
+>=20
+> Add devicetree binding document for Loongson-1 DMA.
+>=20
+> Signed-off-by: Keguang Zhang <keguang.zhang@gmail.com>
 > ---
->   drivers/dma/bcm2835-dma.c | 10 ++++++++--
->   1 file changed, 8 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
-> index 428253b468ac..3d9973dd041d 100644
-> --- a/drivers/dma/bcm2835-dma.c
-> +++ b/drivers/dma/bcm2835-dma.c
-> @@ -137,6 +137,10 @@ struct bcm2835_desc {
->   #define BCM2835_DMA_S_DREQ	BIT(10) /* enable SREQ for source */
->   #define BCM2835_DMA_S_IGNORE	BIT(11) /* ignore source reads - read 0 *=
-/
->   #define BCM2835_DMA_BURST_LENGTH(x) (((x) & 15) << 12)
-> +#define BCM2835_DMA_CS_FLAGS(x) ((x) & (BCM2835_DMA_PRIORITY(15) | \
-> +				      BCM2835_DMA_PANIC_PRIORITY(15) | \
-> +				      BCM2835_DMA_WAIT_FOR_WRITES | \
-> +				      BCM2835_DMA_DIS_DEBUG))
->   #define BCM2835_DMA_PER_MAP(x)	(((x) & 31) << 16) /* REQ source */
->   #define BCM2835_DMA_WAIT(x)	(((x) & 31) << 21) /* add DMA-wait cycles =
-*/
->   #define BCM2835_DMA_NO_WIDE_BURSTS BIT(26) /* no 2 beat write bursts *=
-/
-> @@ -449,7 +453,8 @@ static void bcm2835_dma_start_desc(struct bcm2835_ch=
-an *c)
->   	c->desc =3D to_bcm2835_dma_desc(&vd->tx);
->
->   	writel(c->desc->cb_list[0].paddr, c->chan_base + BCM2835_DMA_ADDR);
-> -	writel(BCM2835_DMA_ACTIVE, c->chan_base + BCM2835_DMA_CS);
-> +	writel(BCM2835_DMA_ACTIVE | BCM2835_DMA_CS_FLAGS(c->dreq),
-> +	       c->chan_base + BCM2835_DMA_CS);
->   }
->
->   static irqreturn_t bcm2835_dma_callback(int irq, void *data)
-> @@ -476,7 +481,8 @@ static irqreturn_t bcm2835_dma_callback(int irq, voi=
-d *data)
->   	 * if this IRQ handler is threaded.) If the channel is finished, it
->   	 * will remain idle despite the ACTIVE flag being set.
->   	 */
-> -	writel(BCM2835_DMA_INT | BCM2835_DMA_ACTIVE,
-> +	writel(BCM2835_DMA_INT | BCM2835_DMA_ACTIVE |
-> +	       BCM2835_DMA_CS_FLAGS(c->dreq),
->   	       c->chan_base + BCM2835_DMA_CS);
->
->   	d =3D c->desc;
+> V5 -> V6:
+>    Change the compatible to the fallback
+>    Some minor fixes
+> V4 -> V5:
+>    A newly added patch
+> ---
+>  .../devicetree/bindings/dma/loongson,ls1x-dma.yaml | 66 ++++++++++++++++=
+++++++
+>  1 file changed, 66 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/dma/loongson,ls1x-dma.yaml=
+ b/Documentation/devicetree/bindings/dma/loongson,ls1x-dma.yaml
+> new file mode 100644
+> index 000000000000..06358df725c6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/loongson,ls1x-dma.yaml
+> @@ -0,0 +1,66 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dma/loongson,ls1x-dma.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Loongson-1 DMA Controller
+> +
+> +maintainers:
+> +  - Keguang Zhang <keguang.zhang@gmail.com>
+> +
+> +description:
+> +  Loongson-1 DMA controller provides 3 independent channels for
+> +  peripherals such as NAND and AC97.
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - const: loongson,ls1b-dma
+> +      - items:
+> +          - enum:
+> +              - loongson,ls1c-dma
+> +          - const: loongson,ls1b-dma
+
+Aren't there several more devices in this family? Do they not have DMA
+controllers?
+
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description: Each channel has a dedicated interrupt line.
+> +    minItems: 1
+> +    maxItems: 3
+
+Is this number not fixed for each SoC?
+
+> +  interrupt-names:
+> +    minItems: 1
+> +    items:
+> +      - pattern: ch0
+> +      - pattern: ch1
+> +      - pattern: ch2
+
+Why have you made these a pattern? There's no regex being used here at
+all.
+
+Cheers,
+Cono4.
+
+--irsz1jOWazJ+F7GF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZfcA4gAKCRB4tDGHoIJi
+0lP/AP47luMqgw9H62E5Kh4XOy3gFu5oK9MKoTJGSLIkYe8yOAEA1syRMF+H+Mkd
+ellE3fp+DlhtlN/nYHEjn78JkaMscAU=
+=eCSd
+-----END PGP SIGNATURE-----
+
+--irsz1jOWazJ+F7GF--
 

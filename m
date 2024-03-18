@@ -1,121 +1,159 @@
-Return-Path: <dmaengine+bounces-1420-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1422-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E931687EC5A
-	for <lists+dmaengine@lfdr.de>; Mon, 18 Mar 2024 16:42:40 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2CDD087EF4C
+	for <lists+dmaengine@lfdr.de>; Mon, 18 Mar 2024 18:56:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A6476281E03
-	for <lists+dmaengine@lfdr.de>; Mon, 18 Mar 2024 15:42:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5CBBE1C222FA
+	for <lists+dmaengine@lfdr.de>; Mon, 18 Mar 2024 17:56:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34BCA524C1;
-	Mon, 18 Mar 2024 15:42:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E599055C34;
+	Mon, 18 Mar 2024 17:56:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ob7rNXNx"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="wBboJq0u"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1D5D4EB49;
-	Mon, 18 Mar 2024 15:42:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 765C455C2B;
+	Mon, 18 Mar 2024 17:56:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710776555; cv=none; b=pQUpQ82flDGhk/hESiDFXXb6K8wVLkN2Y7u5eWBSLCLlewx7OxCRup3k1AjzjjdhAUAgY2jN02YK0aaLSI1IQQDj25A7JNXFLJkSKmXg7UhTb3p5kgRDQOLMdd2TrlcTi580rh//JlDzl9QeI5e/JaAj5z2O6kqYQntm8Z93HPc=
+	t=1710784583; cv=none; b=MxbUR9rcEjRkv8Iy9+04NehGTZU2KDuHIc3V0pbFHR0hEuJ1kmnP9hSMfaSRBtjAywxAAFlHFmpzb41z/fhdkW9KWNzWn8pvvdlpxocMcynEwcCmu3LEO2zNC8T9C6SZaGJS0t13nTkPIOanT6ZlCShTl2pmgS3UzVvb6Pc5zI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710776555; c=relaxed/simple;
-	bh=wiO6Bh3K57JlVluzbql0nVmgIijn97Jq2YMvmvx8BNA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hQs0j+G4G2XxjDsBw1X5VJFLPlMJQqZUsYM/+H9/WnkNhSrOwFrPzi0kkU9lW0o29IP73j5VkDQk0/mkt8RRva3pkdDCRsLd3+owSQoaumFmGu9oZyIfueuqj/IvdFoF7lYxliJYS4zGTdLjiUBJLysKIJo2Xk0vcyWAOCv//00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ob7rNXNx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67237C433F1;
-	Mon, 18 Mar 2024 15:42:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710776554;
-	bh=wiO6Bh3K57JlVluzbql0nVmgIijn97Jq2YMvmvx8BNA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ob7rNXNxKDRr+C+oZa2j8cP9ZvdMcI5EKEBvGUHg6RzPvyS3S3EHNrNj3fG0dlVw5
-	 FCfHynwhxT7rM19px4zE9vNS3rGis9Z/eIak1o/6GKfZ1ko4BMFmEZj4MKrIu4FgLp
-	 RnTdi0pn5vgZ3L6LwVAXv3CMCxffafBiaFgep8W5vabN0pCfYuIrikKWOLKT7BI7ct
-	 9tSsvImCrV1WIg0HXJUULPCgKdMKTZ47F17ApczNvAzWz9nqL3LWSGhKKA/fi73S0o
-	 Y7rLAE5Zt4knyBWxlTMrQq/whFbFAEMbkw/TeNraEKeZnP/7O9AE6CjeKW9P4H8mXT
-	 uP/ryqrqh9mFQ==
-Date: Mon, 18 Mar 2024 15:42:30 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Keguang Zhang <keguang.zhang@gmail.com>, Vinod Koul <vkoul@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-mips@vger.kernel.org,
-	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 0/2] Add support for Loongson1 DMA
-Message-ID: <20240318-saxophone-sudden-ce0df3a953a8@spud>
-References: <20240316-loongson1-dma-v6-0-90de2c3cc928@gmail.com>
- <CAAhV-H6aGS6VXGzkqWTyxL7bGw=KdjmnRZj7SpwrV5hT6XQcpg@mail.gmail.com>
- <CAJhJPsVSM-8VA604p2Vr58QJEp+Tg72YTTntnip64Ejz=0aQng@mail.gmail.com>
- <CAAhV-H5TR=y_AmbF6QMJmoS0BhfB=K7forMg0-b2YWm7trktjA@mail.gmail.com>
- <20240318-average-likely-6a55c18db7bb@spud>
- <CAAhV-H4oMoPt7WwWc7wbxy-ShNQ8dPkuTAuvSEGAPBKvkkn24w@mail.gmail.com>
+	s=arc-20240116; t=1710784583; c=relaxed/simple;
+	bh=9gjkxijxpavPBjT+YAINHA1vIXHl9kXRXGA9e4hXPOg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bZQxVREwdwaH6EQ+f25llxJFPwkjgJuxa71QfVVo6OmI6k47ZBXiAZuJgsV2ZLaTrBK5+xa/LLe0nO/1WR7tYXD9Z7Zc8HoULoEs+aNmmChZjc+hmPYIh1uggme5ZlGDwhe/3qXi6ELH//yMB4q+hM5OvkmsclFuKOpwm2ykaMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=wBboJq0u; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1710784581; x=1742320581;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=9gjkxijxpavPBjT+YAINHA1vIXHl9kXRXGA9e4hXPOg=;
+  b=wBboJq0uS4JkndIvV45N//JT/OkoPK+oRKZxEhnp/paGeRKq2FkaJAgx
+   Gx72wWPqNtch91Z7JJ33ojh10O0jpYJGvQJbRD/MWsrKdts1w5f3+8n6K
+   iLX1qDNC9SlmsaASimFOB/t4hkYU7UE/KjzfvvvuaMIXpZ//hKXMIxkUp
+   YJwM9jlqXs0Rd8cPkylxcjJnSIzNqymIkbkkQGtiElDd/rw7Gh7S0wpIx
+   b6Z98nb5vZktzmCotF9K7SFoYsdLMbIChgkYMBwdteQpP61zkawrJ9wPy
+   1+tdZtQZWgaqceAZW5veaeCmv+uas5+g3npcv7DM+HCqcJT/OEx+jH8Bp
+   g==;
+X-CSE-ConnectionGUID: 4vmFKSkTSKazXyGlRjISMg==
+X-CSE-MsgGUID: 8CuTW6MIRk+GSYMwJcVhAA==
+X-IronPort-AV: E=Sophos;i="6.07,134,1708412400"; 
+   d="scan'208";a="185071343"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 18 Mar 2024 10:56:20 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 18 Mar 2024 10:55:54 -0700
+Received: from localhost (10.10.85.11) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
+ Transport; Mon, 18 Mar 2024 10:55:54 -0700
+From: Kelvin Cao <kelvin.cao@microchip.com>
+To: <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <logang@deltatee.com>, <George.Ge@microchip.com>,
+	<christophe.jaillet@wanadoo.fr>, <hch@infradead.org>
+Subject: [PATCH v8 0/1] Switchtec Switch DMA Engine Driver
+Date: Mon, 18 Mar 2024 09:33:12 -0700
+Message-ID: <20240318163313.236948-1-kelvin.cao@microchip.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="FRokeeiQacP7TgxH"
-Content-Disposition: inline
-In-Reply-To: <CAAhV-H4oMoPt7WwWc7wbxy-ShNQ8dPkuTAuvSEGAPBKvkkn24w@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
+Hi,
+ 
+This is v8 of the Switchtec Switch DMA Engine Driver, incorporating
+changes for the v2/v3/v4/v5/v6 review comments. This version is same as
+v7 except some newly added Gen5 device IDs.
 
---FRokeeiQacP7TgxH
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+v8 changes:
+  - Rebase onto kernel 6.8
+  - Add Gen5 device IDs
+ 
+v7 changes:
+  - Remove implementation of device_prep_dma_imm_data
 
-On Mon, Mar 18, 2024 at 10:26:51PM +0800, Huacai Chen wrote:
-> Hi, Conor,
->=20
-> On Mon, Mar 18, 2024 at 7:28=E2=80=AFPM Conor Dooley <conor@kernel.org> w=
-rote:
-> >
-> > On Mon, Mar 18, 2024 at 03:31:59PM +0800, Huacai Chen wrote:
-> > > On Mon, Mar 18, 2024 at 10:08=E2=80=AFAM Keguang Zhang <keguang.zhang=
-@gmail.com> wrote:
-> > > >
-> > > > Hi Huacai,
-> > > >
-> > > > > Hi, Keguang,
-> > > > >
-> > > > > Sorry for the late reply, there is already a ls2x-apb-dma driver,=
- I'm
-> > > > > not sure but can they share the same code base? If not, can rename
-> > > > > this driver to ls1x-apb-dma for consistency?
-> > > >
-> > > > There are some differences between ls1x DMA and ls2x DMA, such as
-> > > > registers and DMA descriptors.
-> > > > I will rename it to ls1x-apb-dma.
-> > > OK, please also rename the yaml file to keep consistency.
-> >
-> > No, the yaml file needs to match the (one of the) compatible strings.
-> OK, then I think we can also rename the compatible strings, if possible.
+v6 changes:
+  - Fix './scripts/checkpatch.pl --strict' warnings
+  - Use readl_poll_timeout_atomic for status checking with timeout
+  - Wrap enable_channel/disable_channel over channel_op
+  - Use flag GFP_NOWAIT for mem allocation in switchtec_dma_alloc_desc
+  - Use proper comment for macro SWITCHTEC_DMA_DEVICE
 
-If there are no other types of dma controller on this device, I do not
-see why would we add "apb" into the compatible as there is nothing to
-differentiate this controller from.
+v5 changes:
+  - Remove unnecessary structure modifier '__packed'
+  - Remove the use of union of identical data types in a structure
+  - Remove unnecessary call sites of synchronize_irq
+  - Remove unnecessary rcu lock for pdev during device initialization
+  - Use pci_request_irq/pci_free_irq to replace request_irq/free_irq
+  - Add mailing list info in file MAINTAINERS
+  - Miscellaneous cleanups
 
---FRokeeiQacP7TgxH
-Content-Type: application/pgp-signature; name="signature.asc"
+v4 changes:
+  - Sort driver entry in drivers/dma/Kconfig and drivers/dma/Makefile
+    alphabetically 
+  - Fix miscellaneous style issues
+  - Correct year in copyright
+  - Add function and call sites to flush PCIe MMIO Write
+  - Add a helper to wait for status register update
+  - Move synchronize_irq out of RCU critical section
+  - Remove unnecessary endianness conversion for register access
+  - Remove some unused code
+  - Use pci_enable_device/pci_request_mem_regions instead of
+    pcim_enable_device/pcim_iomap_regions to make the resource lifetime
+    management more understandable
+  - Use offset macros instead of memory mapped structures when accessing
+    some registers
+  - Remove the attempt to set DMA mask with smaller number as it would 
+    never succeed if the first attempt with bigger number fails
+  - Use PCI_VENDOR_ID_MICROSEMI in include/linux/pci_ids.h as device ID
 
------BEGIN PGP SIGNATURE-----
+v3 changes:
+  - Remove some unnecessary memory/variable zeroing
+ 
+v2 changes:
+  - Move put_device(dma_dev->dev) before kfree(swdma_dev) as dma_dev is
+    part of swdma_dev.
+  - Convert dev_ print calls to pci_ print calls to make the use of
+    print functions consistent within switchtec_dma_create().
+  - Remove some dev_ print calls, which use device pointer as handles,
+    to ensure there's no reference issue when the device is unbound.
+  - Remove unused .driver_data from pci_device_id structure.
+ 
+v1:
+The following patch implements a DMAEngine driver to use the DMA
+controller in Switchtec PSX/PFX switchtes. The DMA controller appears as
+a PCI function on the switch upstream port. The DMA function can include
+one or more DMA channels.
+ 
+This patchset is based off of 6.8.
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZfhg5gAKCRB4tDGHoIJi
-0sTjAQDALytttuYfVJsyQy7sDZDV8tYi6psKezR8Bc3oDe2MVwD+L29VHP1xWfy+
-9VXdiRDcAPkATuvmQv2ntv9hE0bTTwg=
-=hLYv
------END PGP SIGNATURE-----
+Kelvin Cao (1):
+  dmaengine: switchtec-dma: Introduce Switchtec DMA engine PCI driver
 
---FRokeeiQacP7TgxH--
+ MAINTAINERS                 |    6 +
+ drivers/dma/Kconfig         |    9 +
+ drivers/dma/Makefile        |    1 +
+ drivers/dma/switchtec_dma.c | 1546 +++++++++++++++++++++++++++++++++++
+ 4 files changed, 1562 insertions(+)
+ create mode 100644 drivers/dma/switchtec_dma.c
+
+-- 
+2.25.1
+
 

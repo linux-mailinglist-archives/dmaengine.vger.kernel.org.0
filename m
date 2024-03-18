@@ -1,158 +1,181 @@
-Return-Path: <dmaengine+bounces-1432-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1433-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC0A387F31C
-	for <lists+dmaengine@lfdr.de>; Mon, 18 Mar 2024 23:31:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B4E887F320
+	for <lists+dmaengine@lfdr.de>; Mon, 18 Mar 2024 23:34:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 06E441F21B43
-	for <lists+dmaengine@lfdr.de>; Mon, 18 Mar 2024 22:31:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C6DEB1F21EDC
+	for <lists+dmaengine@lfdr.de>; Mon, 18 Mar 2024 22:34:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54B3F5A4C9;
-	Mon, 18 Mar 2024 22:31:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5937A5A4CC;
+	Mon, 18 Mar 2024 22:34:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Q4OGZfZm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G7WMpyMu"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02olkn2047.outbound.protection.outlook.com [40.92.43.47])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97B2958211;
-	Mon, 18 Mar 2024 22:31:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.43.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710801083; cv=fail; b=Iqy6Mf5OOvXNklHuJENo+0c9tPCVhqGikcxGyMJXt19VrXnRSyl2qZ+BrxNhvm/vLvyFYL8l5NlpODHYOv6VhbHLNgqJRu0q3I/QsSAhsJikZFqaJz84D9cLlFWBT+BRm+YzwhtUFxIz2K+A42OFH6TipcS5SLlcBYfBKSGHjQc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710801083; c=relaxed/simple;
-	bh=d5O4NLMEA/JX/CTZPyo+koWWGuY10Bt0pQ6+lqxjrgg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Zgg1G2wPTQ6dQtYRypaZ+4TVN3j75PdEU0wI7npLDwDDqEI4DJJ9WEdQMFWpnVFOTfS+YheUhEMS4F4Lb5vkZlHnPE1aHj1oZdeW30LlcYyNRLe/EtQkfmcT1Q9jlGjNRTH2xXeyTxuGlxsInMJgL8+fdz/YdnuKFnrp479ck4E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Q4OGZfZm; arc=fail smtp.client-ip=40.92.43.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FSLidO+CFvWVWfAzgZ0BHQS2/AjaxW6/9Seknapo2dEyDdub3lLK3QcMOA+Egy59WsuCWTT6l+nOv8+ljcXbMbBtcHhWzvu5965NqXzbSzsdYf7qWfO420Tg6LUPJ9+pUgHZvm9DVILHvGUoM2hGrTzyWJLmeTgMC+ebzJEcnWDklxIB57XM85/aFfxpaaHBMQsmRPovCuVLlFIPlghdYeLdOzrdY2kjd+OaGqm8hEJt+Rqj8xE4dPDsiucemYlPuuixmu+bKPkOzo/sqR45f3ISp6u2QRHabb3Cc4mGkJQuuqLckV0TutWdBBTBaHZfoHOUJVI+4lox6tacvZLXpQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QyPdaIf932MmKKJhCHKz7sBXKtaFNzWLq4EPdd2EneM=;
- b=ZeNoBn7zol9a/cKEzDQoxS4jBlJlxHRTXzRfbeM/gH00ZppOShYq/YdBQi3X7U7JBt6fApv2BuVXCo31jzD2ld5SxjLHHdnC7gBvgcsdLGSWIPF4JzMZrZ6Yo7ZMeiNC8RkfkMsN4w7trvw8wPSxXr0VgrcFMgPiofZOZ2fIWVrKzhFPS7EszvuT+CgykK2aQkCh6FHkcCH6jHgJblqWq6lJJJDvoeJeXmwUWM0+MBdxxsF7Y8VoW0eiRJo38B8/52uED8G4aFaK+Mjl39XFCIMw5GywKVH+6WF4l9Hn1jCXwRRUjuMVQj9vVzwqOI7Vb7z45ghXR0OOgWFQVX+nBw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QyPdaIf932MmKKJhCHKz7sBXKtaFNzWLq4EPdd2EneM=;
- b=Q4OGZfZmq11JIL/BliE7CPJYj42uEgpelHj85UNAGqK+7B66NQkTI7f3tF9iNXqNJD6+ELHP6VGTOu84G6DPdvT1fLEKBfbinC3PQWOjYyi98iIrK8pzDskBlCYmH1i4Tz0uaExhqYBV42FcK9pvRCai03yjLB2LR4J8gFBmbhSl9QRzFgkZ/olKgfZb06hu6r2lNOgnVDfknCvH4yIsfTAmcP37lfzkutUkZSOL2noXH8sq5PkD0/5UCtZQ4NARhSpWZHmMAFEZyb/zkZz2Jn0ESW50h19BPeNYaxiYxJypYbiBmtDxZoIUt3dZtJFsbprLxIULmw4c6S4HEllVcA==
-Received: from IA1PR20MB4953.namprd20.prod.outlook.com (2603:10b6:208:3af::19)
- by CH3PR20MB7304.namprd20.prod.outlook.com (2603:10b6:610:1e3::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.27; Mon, 18 Mar
- 2024 22:31:19 +0000
-Received: from IA1PR20MB4953.namprd20.prod.outlook.com
- ([fe80::8615:efe2:7c8e:2041]) by IA1PR20MB4953.namprd20.prod.outlook.com
- ([fe80::8615:efe2:7c8e:2041%3]) with mapi id 15.20.7386.025; Mon, 18 Mar 2024
- 22:31:19 +0000
-Date: Tue, 19 Mar 2024 06:31:15 +0800
-From: Inochi Amaoto <inochiama@outlook.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Inochi Amaoto <inochiama@outlook.com>, Vinod Koul <vkoul@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Chen Wang <unicorn_wang@outlook.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Jisheng Zhang <jszhang@kernel.org>, 
-	Liu Gui <kenneth.liu@sophgo.com>, Jingbao Qiu <qiujingbao.dlmu@gmail.com>, dlan@gentoo.org, 
-	dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v4 0/4] riscv: sophgo: add dmamux support for Sophgo
- CV1800/SG2000 SoCs
-Message-ID:
- <IA1PR20MB49530E879C1415DDD9680D07BB2D2@IA1PR20MB4953.namprd20.prod.outlook.com>
-References: <IA1PR20MB49536DED242092A49A69CEB6BB2D2@IA1PR20MB4953.namprd20.prod.outlook.com>
- <c312d643-cf77-4a6c-8368-bc30d1e54b4c@linaro.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c312d643-cf77-4a6c-8368-bc30d1e54b4c@linaro.org>
-X-TMN: [iNfowU2Y41ZWco1q/97yTFPuevjP62CxX83VuEglnt8=]
-X-ClientProxiedBy: TYCPR01CA0170.jpnprd01.prod.outlook.com
- (2603:1096:400:2b2::10) To IA1PR20MB4953.namprd20.prod.outlook.com
- (2603:10b6:208:3af::19)
-X-Microsoft-Original-Message-ID:
- <4e7gpdqduv6mtxenagddx7atq5darrlmqkjziqigv2zxqhtk7j@prk4ifthcn4m>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F0925A4C9
+	for <dmaengine@vger.kernel.org>; Mon, 18 Mar 2024 22:34:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710801282; cv=none; b=B1t4eZMl9+Dd9HQHs7RpgzIVZxlbtDvScWo1+OxgaIkcC4l3J6iuOZ+rFF1MO3heVb+1lDzx22U+FIHOTPDWWpe8lORhAP/ImNx5Lme569XwahApfpppCbVgGLZKW/HfliPgfNcGF/lXszuHZf2sG8eZUUCF/YVUurNGjK4dR+g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710801282; c=relaxed/simple;
+	bh=KAVVKtGv0Dflj+0iDbUsAiFvEfAuYzoGzmmLbUkoqBY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ane1RK/3sF8GntersxF6wMcgp1OJXmmAtzA2SmlMpbuVWKqPNK+eFFvfBVLZUqTxssHt76ziu99KwKH44e68WV5vlKSdwnsNYPPJZ8XB/vop9S0OtArM/t1bmR90hzriXsQdw7zc6eVNxDT/2ojVxF2jFUYsYFjoTEGDvyABgHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=G7WMpyMu; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1710801279;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6jXlSBIlF4PVmUNb+okDw4AvjuoKV2r08ixisfQWS6w=;
+	b=G7WMpyMufp8+wtUoNlagmo0nfO9kURhZK2JcghxFVDPDyPi2SGsmip+MlHYKvVU7PeSfx9
+	4WUq9Sgwagv1lNx3d+sIURxmCmPZ7cPDMcoEd1g7hhesCNn/y894maB5Lnxl4BntK+ljNK
+	CF8t7Z6hQjkO3gYNuwnBcAmjBZLdI1M=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-412-L9pf_RK7PsepToOtfnVN3A-1; Mon, 18 Mar 2024 18:34:37 -0400
+X-MC-Unique: L9pf_RK7PsepToOtfnVN3A-1
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-789e79ca3a6so353092985a.0
+        for <dmaengine@vger.kernel.org>; Mon, 18 Mar 2024 15:34:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710801277; x=1711406077;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6jXlSBIlF4PVmUNb+okDw4AvjuoKV2r08ixisfQWS6w=;
+        b=QFJSe7NB09L8yjdTUyHbOLFCtnfwjFdDfFU+mOcsp6WuAx6GN3pZZKsLIvTKWI3Bed
+         dzwCDadfzsR5qHXwi9mcIvedbZ9vm+WsZFLYXm6FYDcQZBWRuHlwugKqZCPcNL4LG5GE
+         ajOAeejYx2s4V2Fs68kSh0rkjSfUC0Oz8J4QeXGSHqIcCjQRT54cfKL8SQGkBavC+cIl
+         t/7/8J1IizwWKG0WFwJJ9CytXi6A1rzDZNBA6uV9dQfuhZac6xwloUivdY+uzZCxmogZ
+         zEyjuMtYJ6FBKLMrUQnzbECJH9RYuz35ZBX85A+yId8ImERQXIs7/cG4DecN6wBF7ZmX
+         cqFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWfulUmd3oKjpEONqg8HOfJQwh1EGLcTekG6+JvODWB7bwMFK2ZGDa6ZsIM9TtbF2PZUOR3hfw+yl/QJ87VX2BuRdr02c0I1G+h
+X-Gm-Message-State: AOJu0Yx+EW9IiV0kIkaYASMu1PCGMhziw2JHoFH9HMNObVCH8TUXoamN
+	BpMGJsxgx3/cx6tNtghvpIhgh4VclEQtngsQ69ShGF4/fB9I2nRP3HqUDHqYwma2X0+VQJRtj3S
+	+vO0BVx9DB/0OVv4/ckH5V0id/dRmfz3tOvo00uyudpmJXtkNS4qKAzrI0Q==
+X-Received: by 2002:a05:620a:4088:b0:789:e926:e011 with SMTP id f8-20020a05620a408800b00789e926e011mr1271903qko.9.1710801277347;
+        Mon, 18 Mar 2024 15:34:37 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHweuIRI23cSHeG74OXrXJnFw+5b+ABImqZCPu3ACDGJg3h2Tgq1/VWrSq2/OaAJzWA2e/gCw==
+X-Received: by 2002:a05:620a:4088:b0:789:e926:e011 with SMTP id f8-20020a05620a408800b00789e926e011mr1271887qko.9.1710801277053;
+        Mon, 18 Mar 2024 15:34:37 -0700 (PDT)
+Received: from localhost (ip70-163-216-141.ph.ph.cox.net. [70.163.216.141])
+        by smtp.gmail.com with ESMTPSA id v21-20020a05620a441500b0078a0df3489esm414765qkp.116.2024.03.18.15.34.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Mar 2024 15:34:36 -0700 (PDT)
+Date: Mon, 18 Mar 2024 15:34:35 -0700
+From: Jerry Snitselaar <jsnitsel@redhat.com>
+To: Tom Zanussi <tom.zanussi@linux.intel.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+	dmaengine@vger.kernel.org
+Subject: Re: Question about the recent idxd/iaa changes
+Message-ID: <7rrvqwcvuzvygnbow2wvzolvp5bq5dgaytk24filf3uyz47tv7@dvvj4y6tz6xb>
+References: <6jxxptlp44ipbafnbfi4ntyphd22eqj7j7grpwfsnvunuspkre@iolf6nbqfoxp>
+ <oqg5575kdaifbkftpg6rcp7koc572agsbuatkty63rosfl47hu@utiou35xdt4y>
+ <f653d44ae2a955b021eea2acb7616321d8e0cff7.camel@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR20MB4953:EE_|CH3PR20MB7304:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0c28bde0-960c-42d6-91e4-08dc479b21db
-X-MS-Exchange-SLBlob-MailProps:
-	RlF2DIMZ1qUQWS8lN22nUCivNlPfDo3s8kxTv3+hC8u6wWb+oytnlQO+16SR/+JoKwapFgBeOYyiPm4Ym39fE0E3UOjAcXV+xCQdqWaxBxia89wU2nSHDQ0K9d/CpoYD2y3FBkZmQ5J3oJb5e5QK/xB3piMm7Go5NMXYORPCZNZa2lh2I4h9Yve9ci0srbZTtutJ0YiBz32xshN4+529f879xuGlKItyeBw8vigPk73bNqq9Z1BEyWAZTPgXUnWEEuVFIKMR0HQX9BoMAsN4dH4eoroBZkJisOwEcayx4JOV9kCSfqsPbz5Thixz7lvO79oUQDkrtV9dsB6fKFfXEx/5QrWTHPOikDn22EBLkFC93a4qzWr2iTNpGg5pmcXGamzS5I0qkg8qjHo9OuccUadZTBGqnCyy+O77yJfop4sXzTDKaSuoP2CPKWZBD9uTXPlxGfLPWI7H4iidMCQQ2pb41ngZgtpguPY5tRsGpwUKtmx7q3m3ZiDO/ZlnDejO3wpVFOdFdoVLXest5Fky7EvTKdsgzqGhAu/nJ1sJMiZzyDg+wkO+SfP0cGIOJlkg7t4ZHEHfxErmsyXcDljq/LrqVghyJ5OtXekePcRWLKtTJ1kDDIATQ3G1IORLv0p/w7aD6J4QNrcxHRFuZRmNVq5zxfw79Zk9bsA8YA8OemMp7RURXAIIGNweFnwaWmzSU3OCILqr8JV30TVhSusW5IaF2NyFh1gCrW6PTvBBbZLKe/tiZ882yKlx2KIdQFh9fVFac2XUtUc044bB+JX3+ExQXK3rWKntAC87LtLo/ZAVBzXNuc9zovFHGwQiXcm+yagzaBk8zON+uUIhn4VfdE7+P/Z0w8nK
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	9lIDvXg97p7RsiU6OfFWc8c7/KKQnxCXhIjQxRdYirl9tmF5guQ7RzhsCOqX98hUhBLdwvHOBtzcV/ZbXBOh677DkgoR6/PxSBBY5l3pYtHTknu80ZeX9nKIHtEnJWranhl/m8+QwpYOznnEHbQ2vI9pqhjcY9f+l9yQdGq4j+3JvN6LX4IlB67+UJfW+k1Jnsn+eqg9t0Jjt9NFV10x8wyTrtQ5spOKc1XfrUnAB610cQIhWhMVuKx2EtPKReIhR/yWyexNrfQILobIV9gti3K537XCqYOSEDM6EtqqlXiNjFOd8jzEJXtFiAv2HfbzEzJ/7Plvd8OAfDHgSIUCRjXFBOjMygxVI7uqf/9v6eHIsQkFSswPfflDh2lh+0owf28AMGyhuLGWAepAWyKMFU/8f5Q0XLV1/4Y1euDAtncGOhzPww2/vgukzTHlBXx5g4FPq9NOUfF6gjBnqb8mSy4QrgbmhhbKu/yejVCYKL+ba28t72M91/3dJ1QTxGT1JtrlvKeFctFW/SXGRCdXQkmdi4AViD9pEtSPjGWCaUjGb5DEVrGw+On4ivgVOJLdnT7cRronZtGFarjmqNtKkeWOv4WWBsv6TxRgi52vfiw7byIHtwVwoIwlv6jzEJCjju6ot+SGYSW+GMfp+2aee/3md0MTPAxF7QE3iiLtICWhJBbcWacu1lJXslq8eacL
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?nspD/VbLp9TThLKwdD6APSod/a6uyWyG1kCXW5hgFcIZW8IsF5BCOOtqcrmz?=
- =?us-ascii?Q?9fIW2vL+JVWGRhAu2r+RM3Da4RTNusBYQFFt3H8tS/JkNEgGLggZ/dBIzUIu?=
- =?us-ascii?Q?Bi9oodGYy76CuVJtxCYhwTgGG4AzNlEUu5tlq9x8V6GKVtQOttA2sjp+lFbj?=
- =?us-ascii?Q?mGgFS4q/c+BGoS96jeByHyPtRve4TNGublX98qYgk9JAKTWNTeM+6Q2LmIIw?=
- =?us-ascii?Q?pwbO061Jvb8/RYsvS1pl3y1mhqeu+5uhud/tVC7kP5X+nWf/CqFmFE/pQY48?=
- =?us-ascii?Q?DcNn/OuflxvdunmF9JFyyaeX+ysPfF/d8h65yaanjTO7uYdVN8WcMjYi9jRY?=
- =?us-ascii?Q?05NvdnqatS9d6SBRxyEUWwi3e5h+Y0TXni3vFpxsQQQgAxUoUCHkVbVAiVyt?=
- =?us-ascii?Q?P1fTjefDeJXm4TDwtIF8ahtZO6eGNSag23Szsca5lzWSlN3BFGKQSV5I6UJk?=
- =?us-ascii?Q?m3RxwYdkivxFcxClCVZDhefm2Ywnb4mLaMrFKrnewpsFwoik0O7rWTu3lvNp?=
- =?us-ascii?Q?M62H/ZqqBy4IP3JPf8i9CBsN6SKE1KmrO4IIYEvuZVlPG6AplEOUI9NTs0h7?=
- =?us-ascii?Q?OkzZjVGsnBhUX33cKE4j9eZlCUi9t3KiLglw3DunUutbdkpQ0nfpWB7OZBpw?=
- =?us-ascii?Q?qFbCQ3o5x9rMEL7ZLrXIDf0POAVRXaqWCj2Ha4S6CaduifG2jHL4wyb15YWT?=
- =?us-ascii?Q?uo0YaAdVu2EYPMQ/Car133D/PtdiUpmpGJzNqMjyW/1n1CmkdSCAZAtzREix?=
- =?us-ascii?Q?ck5Zldx7W9ImEtt1h0/x1t0xmJIUGI0HOYCSfRzuuJqnKPoufsyHhKRiu+SU?=
- =?us-ascii?Q?HaDpUfaYqlnjjcM2+ow+G3lhnY4TwruYi3kngBVZLw6bUkS/ORMDo+NYm06U?=
- =?us-ascii?Q?KtOBAIt78y2fiKCsBecdavR6XNZcvUojM5wJAjO6hBBMLsN7fzpQoHzdMFwp?=
- =?us-ascii?Q?Y3DHw0q4jhfl+DrvUKL/fyjJtutW9zBfTMW6Qeh8U/fQm3cMCEL3eYeEA/29?=
- =?us-ascii?Q?TQsFkn4gITo+kaXVqmKthsQnh8NDIrWZpGHCasNiJfYQrQjRIegZKdKhxArl?=
- =?us-ascii?Q?SmlAAj7cCkjFBW8+zBGASPjJ8G5ky3YIfACYWsDbNJduGJ59y/EdXF2L4CLv?=
- =?us-ascii?Q?UMjLHlvXFFbRB9eEFdCw5JgGwEFGOYffInTxWjHM54tPA5q6W8zl1vhHnzLT?=
- =?us-ascii?Q?9agyqpCnirf4NQpNgwLDW4e/dxFr47pLUt84M72fTFSmkEUzukfb27Zr6nXg?=
- =?us-ascii?Q?PmOV1+VAECBfH+IHZRyY?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0c28bde0-960c-42d6-91e4-08dc479b21db
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR20MB4953.namprd20.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2024 22:31:19.7077
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR20MB7304
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f653d44ae2a955b021eea2acb7616321d8e0cff7.camel@linux.intel.com>
 
-On Mon, Mar 18, 2024 at 09:06:19AM +0100, Krzysztof Kozlowski wrote:
-> On 18/03/2024 07:38, Inochi Amaoto wrote:
-> > Add dma multiplexer support for the Sophgo CV1800/SG2000 SoCs.
+On Mon, Mar 18, 2024 at 04:57:52PM -0500, Tom Zanussi wrote:
+> Hi Jerry,
+> 
+> On Mon, 2024-03-18 at 13:35 -0700, Jerry Snitselaar wrote:
+> > On Mon, Mar 18, 2024 at 01:18:58AM -0700, Jerry Snitselaar wrote:
+> > > With adding the support for loading external drivers like iaa,
+> > > autoloading, and default configs, systems with IAA that are booted
+> > > in
+> > > legacy mode get a number of probe failing messages from the user
+> > > driver for the iax wqs before it probes with the iaa_crypto
+> > > driver. Should the name match check occur prior to checking if user
+> > > pasid is enabled in idxd_user_drv_probe? On a GNR system this will
+> > > generate over 100 log messages at boot like the following:
+> > > 
+> > > [   56.885504] user: probe of wq15.0 failed with error -95
+> > > 
+> > > Regards,
+> > > Jerry
+> > > 
 > > 
-> > The patch include the following patch:
-> > http://lore.kernel.org/linux-riscv/PH7PR20MB4962F822A64CB127911978AABB4E2@PH7PR20MB4962.namprd20.prod.outlook.com/
+> > Hi Tom,
+> > 
+> > A couple more iaa questions I had:
+> > 
+> > - Are you supposed to disable all iax workqueues/devices to
+> >   reconfigure a workqueue? It seems perfectly happy to let you
+> >   disable, reconfigure, and enable just one. I know for idxd in
+> >   general the intent is to be able to disable, configure, and enable
+> >   workqueues/devices as needed for different users. I'm wondering if
+> >   that is the case for iaa as well since it talks about unloading and
+> >   loading iaa_crypto for new configurations.
+> > 
 > 
-> What does it mean? Did you include here some other commit, so when it
-> get applied we end up with two same commits? No, that's not how to
-> handle dependencies. Explain instead the dependency or combine patchsets.
+> In general the idea is that you set up your workqueues/devices, which
+> registers the iaa-crypto algorithm and makes it available as a plugin
+> to e.g. zswap. The register happens on the probe of the first wq,
+> subsequent wqs are added after that and rebalance the wq table, so
+> yeah,  you can also reconfigure wqs in the same way.
 > 
-> Best regards,
-> Krzysztof
+> But you can't remove and reconfigure everything and re-register the
+> algorithm, see below.
+> 
+> > 
+> > - Is there a reason that iaa_crypto needs to be reloaded beyond the
+> >   compression algorithm registration? I tried moving the unregister
+> >   into iaa_crypto_remove with a check that the iaa_devices list is
+> >   empty, and it seemed to work, but I wasn't sure if there some other
+> >   reason for it being in iaa_crypto_cleanup_module instead of
+> >   iaa_crypto_remove similar to the register call in iaa_crypto_probe.
+> > 
+> 
+> The requirement to only allow the algorithm to be unregistered on
+> module unload came from the crypto maintainer during review [1].
+> 
+> Specifically, this part:
+> 
+>   1) Never unregister your crypto algorithms, even after the last
+>   piece of hardware has been unplugged.  The algorithms should only
+>   be unregistered (if they have been registered through the first
+>   successful probe call) in the module unload function.
+> 
+> hth,
+> 
+> Tom
+> 
+> 
+> [1] https://lore.kernel.org/lkml/ZC58JggIXgpJ1tpD@gondor.apana.org.au/
+> 
 > 
 
-Hi Krzysztof,
-
-It seems that I missed an important point: Is it suitable to add
-an initital binding for the syscon, and add the dma-router property
-in this patch? If so, the dependency can be resolved and I will
-maintain the syscon change in the orignal patchset.
+Thank you for the explanation and information Tom.
 
 Regards,
-Inochi
+Jerry
+
+
+> 
+> 
+> 
+> > Regards,
+> > Jerry
+> > 
+> 
+
 

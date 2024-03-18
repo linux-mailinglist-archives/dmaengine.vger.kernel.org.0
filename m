@@ -1,74 +1,74 @@
-Return-Path: <dmaengine+bounces-1408-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1409-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E0D387E4AE
-	for <lists+dmaengine@lfdr.de>; Mon, 18 Mar 2024 09:04:49 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE9FD87E4B8
+	for <lists+dmaengine@lfdr.de>; Mon, 18 Mar 2024 09:06:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2EE661C2150A
-	for <lists+dmaengine@lfdr.de>; Mon, 18 Mar 2024 08:04:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6A8481F22415
+	for <lists+dmaengine@lfdr.de>; Mon, 18 Mar 2024 08:06:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D104249FA;
-	Mon, 18 Mar 2024 08:04:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0235724B26;
+	Mon, 18 Mar 2024 08:06:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SYITraCZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qACeTz+J"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4885A249F7
-	for <dmaengine@vger.kernel.org>; Mon, 18 Mar 2024 08:04:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AD96249F9
+	for <dmaengine@vger.kernel.org>; Mon, 18 Mar 2024 08:06:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710749083; cv=none; b=qxgHyQRNtFYPTe1NQNoR8pDpaTr45Mr5rm6zCMf/cS0GEqbQ3Hsrp8et6jM3MERgOXJhuc/fQaA/BBFQ7UPESGvUNnvkmCqbRiGxU3iS5CmhiD5xmKUYeUmd8zZoK7oJeNTxnRAol135vpTn2HXbzZ8ITw0T31N3OFfrpKwmmqI=
+	t=1710749184; cv=none; b=DL9ddvbKkFQ0qOnpKZO13gi60Q8BN6YpRg7+prZdqAa267a8oKkskPURUJsKxuGxTMSPcc3vdOKxZKLxf7r/h3oYoGonSfK+Wm2JWHt3jHxeeAFAz198khOANER1MJ6dQKsQc3j0oRV7Rjod+2bTg00IHGdjY6M4yjRA0jfwf9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710749083; c=relaxed/simple;
-	bh=oq1dzdw3Uz3XTlLmpXkTiCcbiwjb9ZZ1vYSM+Qp2Fj4=;
+	s=arc-20240116; t=1710749184; c=relaxed/simple;
+	bh=FcYgI/tf8gKa7CaoL0LufWA+vyKA0kqmlKG/b5khAf0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M53bgtat81sbwzR15/U5WtXN/nI3tnA0XoQ61tg1VQBYIGccpH7S24R4jnpbG4XlJRBUHuta3YXcxbPCIkW9lL1eZQD3ulFX2bVam/sCQBwR36JWD1oHkn/z8JJBJ0lZ7SvaqhFkHAHBWUm++/bci5djuQ0FHuIj2LfRcd7LUBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SYITraCZ; arc=none smtp.client-ip=209.85.218.51
+	 In-Reply-To:Content-Type; b=o8qg2vxC1yskz7DpiTLX8i4Jq/LdvfRjRnjSIkiADL/JQMijt8cPhPzr7V04tg9qB8mTZosxv80axioEiYOUHZh1HBN6OnTDf0m2yYYMsbrLx7z5fCUDcW+Bw+cL0Q5a079waYoiMc6DAZRJDXo4dMoHBx2xzTYY0at0/0baHIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qACeTz+J; arc=none smtp.client-ip=209.85.208.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a46ce899faaso14798766b.1
-        for <dmaengine@vger.kernel.org>; Mon, 18 Mar 2024 01:04:42 -0700 (PDT)
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-56b0af675deso381297a12.1
+        for <dmaengine@vger.kernel.org>; Mon, 18 Mar 2024 01:06:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710749081; x=1711353881; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1710749182; x=1711353982; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ghmVWRSrqClyKHrgUHN9zje0aTYyr114l2VvB7Za0Gw=;
-        b=SYITraCZKA8wS9+bgbyVSur3wQVQjpHmtVw9+NiQHxYC7dttOy5+XvVOZ4QASre8xJ
-         m+Su7PmeKzSzGcPVbtbNSLou3tDkbfehSvq3UxiCGtcUFPmFGfBqPcaqTeIkoDIMZsg6
-         ivr7hZ8aqiZkKZxpHfm0A6P6eu1viFYQFrrStM0zvAemgUCaKNIrYaTXBPcHSa0YM3ow
-         axAD9eoh7wU7SsRwWjXADWn1GvEmVP3xBTPdYNnkPV39luwHwGSoI/dbZKPK3l/L8LBI
-         fTKN9KMm5bC//JopJ/dgsf0H4QrqBQnAeUrSDq38pLdW/L085bdmfqU0vtWl+FQBCvTY
-         rCpQ==
+        bh=wNdPcqkJUqR4MseEglXxoGHIFdUJsQixnM5V4B0XMM8=;
+        b=qACeTz+JIF0QbsWmxWPZzxiSwYSDfsKzN4gJUHZ3aQFf2ICM028EqCgqKHWh/QaCap
+         sjJobBio+CxddWAn05i6z7gsWT2jNiosUPHnQwPW6DpDvJyeftuITfRf4PzROKvdggJt
+         Z7lNGL6IIdu890BmhMlzNHoijbpacBsncMkzuTgF988N0Hp8drSxCfJcm195uykKV//b
+         FRCUie/HawTusoi1kiIthFAVBCPwdN/z4pAo8rPxYySDybi9Bvh9W5uO/nnuZ7GljkF6
+         G+ck7GX7yvqxZVgldWHvZY/lu5bIblRu4ORGqyQ3rDPrESMFB3uP3MduD7Mn6vqBjrw8
+         YIXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710749081; x=1711353881;
+        d=1e100.net; s=20230601; t=1710749182; x=1711353982;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ghmVWRSrqClyKHrgUHN9zje0aTYyr114l2VvB7Za0Gw=;
-        b=INcFBQEcOzz45NcQ7k4scNCoLrc5/j7w+8jqEWkIloKUh0Ys90Efbv7Pr5ctwZKd/X
-         GU/r6gp373gUooDy1BKR2RUSaFTh6SKQgGrUwr54cy8gSs/MkC62NnRE8RiXNd7E3LQ4
-         rZJMOsBAkLKQRzg13YbHUjoW+mG7OtI1twNp5Vb4Z+6hTNAxww9y5F40fMxbV0CgMfI3
-         6Q6Ym5nPyJCdNlvnNDBTDcvADdOmGQxucs4oyy0A+hvc7cF/KNPj/JaJ//FaDsUCjlPb
-         R8VjFsbjq7iUakRhRJ9Hs0D3n5u7smGE4bm6Iy07WFnjPF4iQXpFM324ypAUnQgsjfcj
-         Fp/g==
-X-Forwarded-Encrypted: i=1; AJvYcCWH0H6rZbPFGalj43R0gC196z3hlYAfykgEvNReL1jNTrsJgVFGz3bLsR+sEj1i4GhMe6qynQ72xRAGCCXy1wCLYjEwOwWtO8DY
-X-Gm-Message-State: AOJu0YyFpEY0pi3yuD8SBYpMw1aXcmGv+lrp+UKldAYot6K96GRvj75w
-	rv1/jQ6y1kQ+0g9lwuZWptgnY0+QSPJOSWX5BRMfxTu/ng9R1Zr7+BUJ0aPOEmc=
-X-Google-Smtp-Source: AGHT+IEwGp9CREnzM723i0nIIoRPqk9cwAylqXBjhbq7ww2uvfIBv1O6dGPw3jzisccTgSnHRTynjA==
-X-Received: by 2002:a17:906:11c8:b0:a46:87bc:6f95 with SMTP id o8-20020a17090611c800b00a4687bc6f95mr7286828eja.20.1710749080719;
-        Mon, 18 Mar 2024 01:04:40 -0700 (PDT)
+        bh=wNdPcqkJUqR4MseEglXxoGHIFdUJsQixnM5V4B0XMM8=;
+        b=Gs4EGXc4BQkiOyjB3PA0P9zDi474Ox5nwUjr3THHjWzo8/xzOqxaJwwEs4ycnQUs8Q
+         cljkcL55J/1JD2TivscOGYBIIG6RkBWQKdrpPlKZ9AGjBbUv+RaR1wugcqQney1Bw6DU
+         6N4NJ4aBcBun+kveEI9MT2dk74LUXBJ6Osf2g7qE2s/AAhLLyDzF48P1xBIc49NdmO5m
+         N/eXpqudA+ys0jNDGhXuwjt0fITZftdFQXTAcgnDUwbgFvLTZQIP1CoL/UaWlhnHCCke
+         ztQG9gJglOottLAZ7dhMn+A3Q89aRx+pkuX8gBUHklxgNG/LZp7HGvZor0DG7GDaoVEO
+         GWcg==
+X-Forwarded-Encrypted: i=1; AJvYcCUMTQqh7KADGtwq1DlOEX5WhrO8EeecyhU8+mXFHbwnozFqBvnHz2qxHEXBsXMRxs38DczY9nT8F1ELQRKTCuumZMD1BCjEG64B
+X-Gm-Message-State: AOJu0Yz8lLTxo3fofV/aqcUjA+SVgsPHQg+z7DCSUjnVbNblf7djv6CK
+	pw140I2HgWfrtYQzYyKf0A7Qzd55MDUnA6DFT8is9lSHDYjJB6cj0mA4X5z8iGU=
+X-Google-Smtp-Source: AGHT+IGY/sQ+SJ1RU22mVDSbz8U8LRPZ1mGNMak0XM3W8vCfrL8OdCqPbJgNwMCUk6LbBa/CzDWbcA==
+X-Received: by 2002:a17:906:d0cc:b0:a46:c8d5:6ab6 with SMTP id bq12-20020a170906d0cc00b00a46c8d56ab6mr596927ejb.2.1710749181736;
+        Mon, 18 Mar 2024 01:06:21 -0700 (PDT)
 Received: from [192.168.1.20] ([178.197.222.97])
-        by smtp.gmail.com with ESMTPSA id i26-20020a1709061cda00b00a46baa4723asm1133801ejh.119.2024.03.18.01.04.38
+        by smtp.gmail.com with ESMTPSA id i26-20020a1709061cda00b00a46baa4723asm1133801ejh.119.2024.03.18.01.06.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 Mar 2024 01:04:40 -0700 (PDT)
-Message-ID: <3f6753ab-ef3c-4bf2-a885-afbf5ad83ccc@linaro.org>
-Date: Mon, 18 Mar 2024 09:04:37 +0100
+        Mon, 18 Mar 2024 01:06:21 -0700 (PDT)
+Message-ID: <c312d643-cf77-4a6c-8368-bc30d1e54b4c@linaro.org>
+Date: Mon, 18 Mar 2024 09:06:19 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -76,8 +76,8 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/4] dt-bindings: soc: sophgo: Add top misc controller
- of CV18XX/SG200X series SoC
+Subject: Re: [PATCH v4 0/4] riscv: sophgo: add dmamux support for Sophgo
+ CV1800/SG2000 SoCs
 Content-Language: en-US
 To: Inochi Amaoto <inochiama@outlook.com>, Vinod Koul <vkoul@kernel.org>,
  Rob Herring <robh@kernel.org>,
@@ -90,7 +90,6 @@ Cc: Jisheng Zhang <jszhang@kernel.org>, Liu Gui <kenneth.liu@sophgo.com>,
  dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
 References: <IA1PR20MB49536DED242092A49A69CEB6BB2D2@IA1PR20MB4953.namprd20.prod.outlook.com>
- <IA1PR20MB495375AEBA417DB6908CAC98BB2D2@IA1PR20MB4953.namprd20.prod.outlook.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -136,73 +135,19 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <IA1PR20MB495375AEBA417DB6908CAC98BB2D2@IA1PR20MB4953.namprd20.prod.outlook.com>
+In-Reply-To: <IA1PR20MB49536DED242092A49A69CEB6BB2D2@IA1PR20MB4953.namprd20.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 18/03/2024 07:38, Inochi Amaoto wrote:
-> CV18XX/SG200X series SoCs have a special top misc system controller,
-> which provides register access for several devices. In addition to
-> register access, this system controller also contains some subdevices
-> (such as dmamux).
+> Add dma multiplexer support for the Sophgo CV1800/SG2000 SoCs.
 > 
-> Add bindings for top misc controller of CV18XX/SG200X series SoC.
-> 
-> Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
-> ---
->  .../soc/sophgo/sophgo,cv1800-top-syscon.yaml  | 57 +++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/sophgo/sophgo,cv1800-top-syscon.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/sophgo/sophgo,cv1800-top-syscon.yaml b/Documentation/devicetree/bindings/soc/sophgo/sophgo,cv1800-top-syscon.yaml
-> new file mode 100644
-> index 000000000000..009e45e520d9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/sophgo/sophgo,cv1800-top-syscon.yaml
-> @@ -0,0 +1,57 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/soc/sophgo/sophgo,cv1800-top-syscon.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Sophgo CV1800/SG2000 SoC top system controller
-> +
-> +maintainers:
-> +  - Inochi Amaoto <inochiama@outlook.com>
-> +
-> +description:
-> +  The Sophgo CV1800/SG2000 SoC top misc system controller provides
-> +  register access to configure related modules.
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: sophgo,cv1800-top-syscon
-> +      - const: syscon
-> +      - const: simple-mfd
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties:
-> +  type: object
+> The patch include the following patch:
+> http://lore.kernel.org/linux-riscv/PH7PR20MB4962F822A64CB127911978AABB4E2@PH7PR20MB4962.namprd20.prod.outlook.com/
 
-You have schema for the child, don't you? So use it: add 'dma-router' to
-the properties with $ref. additionalProperties: false.
-
-Explain the dependencies and merging bindings via one tree in the cover
-letter or commit changelog.
+What does it mean? Did you include here some other commit, so when it
+get applied we end up with two same commits? No, that's not how to
+handle dependencies. Explain instead the dependency or combine patchsets.
 
 Best regards,
 Krzysztof

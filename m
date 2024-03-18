@@ -1,181 +1,210 @@
-Return-Path: <dmaengine+bounces-1407-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1408-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8423387E41C
-	for <lists+dmaengine@lfdr.de>; Mon, 18 Mar 2024 08:32:17 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E0D387E4AE
+	for <lists+dmaengine@lfdr.de>; Mon, 18 Mar 2024 09:04:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3999C280C91
-	for <lists+dmaengine@lfdr.de>; Mon, 18 Mar 2024 07:32:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2EE661C2150A
+	for <lists+dmaengine@lfdr.de>; Mon, 18 Mar 2024 08:04:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45C372262B;
-	Mon, 18 Mar 2024 07:32:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D104249FA;
+	Mon, 18 Mar 2024 08:04:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BPtWy+0D"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SYITraCZ"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1313B12B76;
-	Mon, 18 Mar 2024 07:32:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4885A249F7
+	for <dmaengine@vger.kernel.org>; Mon, 18 Mar 2024 08:04:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710747132; cv=none; b=nTSTYx/aQEJxOgpcGvFnw4895Cweg3eniIyDb3tPEwf6ZWvjHHZJwr9t7wKUGnVgMG8JOWrNh8DiPpM7gfsauEWWdV1XYjqxHBYLGrNnF+e+7L0sWIReyD3iUB22LleE/4ssG6evGXeW8D74ZRrqgKtBa6Wt5L3lQkUAyNLYcn4=
+	t=1710749083; cv=none; b=qxgHyQRNtFYPTe1NQNoR8pDpaTr45Mr5rm6zCMf/cS0GEqbQ3Hsrp8et6jM3MERgOXJhuc/fQaA/BBFQ7UPESGvUNnvkmCqbRiGxU3iS5CmhiD5xmKUYeUmd8zZoK7oJeNTxnRAol135vpTn2HXbzZ8ITw0T31N3OFfrpKwmmqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710747132; c=relaxed/simple;
-	bh=bbXziPqpBRV0qZLhsg4AuOlJ5+y5Q/jIj9u9f8Qa0oE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LYe5tKaPFOaUQQgDisaUJMpnh+XXG+FJYco8Ubw9fnTrCEgMIRGsd/bN0lWPj2fGK59T0vv6FXkfeqdipMo7hr5jyRNYUoMSCdBEr7die878q2v7Awe+BkIT53y4HYrhlpGljPfrCKUajihgcYtOF1TI/rMgVXmZX7IYu2a2uBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BPtWy+0D; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BD32C433F1;
-	Mon, 18 Mar 2024 07:32:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710747131;
-	bh=bbXziPqpBRV0qZLhsg4AuOlJ5+y5Q/jIj9u9f8Qa0oE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=BPtWy+0DdHelY0cUpomDcHadMgLGsnERO7NmFWITDsTFpK6lYBLOZlL1UYXRjxKdv
-	 jwLuYbEZZHPba25GsXQfPaoAU6XWIwkGnYyq9jgtXIMn6En6oDx5dhagvajEv7/huV
-	 G/o6Vwov+mZluIFM6Lxk7xH2XG3tWyR6P4Q31mMSWpPQuGYEOlnv0ZkfZMdBwAn6Up
-	 pSyc/F+gLepn/StzjSGPAIWMSXGWvenpHTi7qAKnjQWlVJI+dM03CtCApJCelT57RC
-	 QLTLnSsHrs1OjCveuSINDLZb/aEvbBcKuhkZXsX9xgOKcRKRGrwtOLGT9useW7R0u+
-	 NcmmtXPAbERsg==
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a46a7b8e07fso200419266b.2;
-        Mon, 18 Mar 2024 00:32:11 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVBzxt7lVKl7gztnC+BSOpIeNN8YzVH3IbpA6RkINjtvF5NpeEd5PNOyqvPRoWCKqsFkRfcqUejos2hJPgGiPdAhcodNeKPjxyz3iUboRL97M4a5MUo7+owzx7kSB8T31mD5nzq/DHVq/ZAf9tKyWYMqLSIqSLwaH+T9+86S9w9d3yr+NRz9Tg/bC1zJf4ncPzYfcu8dVViNtacH15grs8=
-X-Gm-Message-State: AOJu0YwENSaIcT2ygYcH/sW6Dj8UPM2RSR8FnROXCQeaAI2AiHjJjeL6
-	srK2jLUZNB3zafUSBq2K2cQgwattO+DCS+h2LR6TtTAXfkH5fhnNMSzxLXyU8f1cYPc+Hcle8p+
-	zcTgabF4dGXLAJWuPOGkiRnstKCo=
-X-Google-Smtp-Source: AGHT+IGJX09VGiPCmDBQJOuiE6At/QFzjXzSe62Lp5pSTm289d5FIHTFaalD0QxYzSNcbCHWVXOQPMIzfeA2/rY4UUA=
-X-Received: by 2002:a17:906:aec4:b0:a46:83fd:b52d with SMTP id
- me4-20020a170906aec400b00a4683fdb52dmr5654190ejb.30.1710747130092; Mon, 18
- Mar 2024 00:32:10 -0700 (PDT)
+	s=arc-20240116; t=1710749083; c=relaxed/simple;
+	bh=oq1dzdw3Uz3XTlLmpXkTiCcbiwjb9ZZ1vYSM+Qp2Fj4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=M53bgtat81sbwzR15/U5WtXN/nI3tnA0XoQ61tg1VQBYIGccpH7S24R4jnpbG4XlJRBUHuta3YXcxbPCIkW9lL1eZQD3ulFX2bVam/sCQBwR36JWD1oHkn/z8JJBJ0lZ7SvaqhFkHAHBWUm++/bci5djuQ0FHuIj2LfRcd7LUBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SYITraCZ; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a46ce899faaso14798766b.1
+        for <dmaengine@vger.kernel.org>; Mon, 18 Mar 2024 01:04:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710749081; x=1711353881; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ghmVWRSrqClyKHrgUHN9zje0aTYyr114l2VvB7Za0Gw=;
+        b=SYITraCZKA8wS9+bgbyVSur3wQVQjpHmtVw9+NiQHxYC7dttOy5+XvVOZ4QASre8xJ
+         m+Su7PmeKzSzGcPVbtbNSLou3tDkbfehSvq3UxiCGtcUFPmFGfBqPcaqTeIkoDIMZsg6
+         ivr7hZ8aqiZkKZxpHfm0A6P6eu1viFYQFrrStM0zvAemgUCaKNIrYaTXBPcHSa0YM3ow
+         axAD9eoh7wU7SsRwWjXADWn1GvEmVP3xBTPdYNnkPV39luwHwGSoI/dbZKPK3l/L8LBI
+         fTKN9KMm5bC//JopJ/dgsf0H4QrqBQnAeUrSDq38pLdW/L085bdmfqU0vtWl+FQBCvTY
+         rCpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710749081; x=1711353881;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ghmVWRSrqClyKHrgUHN9zje0aTYyr114l2VvB7Za0Gw=;
+        b=INcFBQEcOzz45NcQ7k4scNCoLrc5/j7w+8jqEWkIloKUh0Ys90Efbv7Pr5ctwZKd/X
+         GU/r6gp373gUooDy1BKR2RUSaFTh6SKQgGrUwr54cy8gSs/MkC62NnRE8RiXNd7E3LQ4
+         rZJMOsBAkLKQRzg13YbHUjoW+mG7OtI1twNp5Vb4Z+6hTNAxww9y5F40fMxbV0CgMfI3
+         6Q6Ym5nPyJCdNlvnNDBTDcvADdOmGQxucs4oyy0A+hvc7cF/KNPj/JaJ//FaDsUCjlPb
+         R8VjFsbjq7iUakRhRJ9Hs0D3n5u7smGE4bm6Iy07WFnjPF4iQXpFM324ypAUnQgsjfcj
+         Fp/g==
+X-Forwarded-Encrypted: i=1; AJvYcCWH0H6rZbPFGalj43R0gC196z3hlYAfykgEvNReL1jNTrsJgVFGz3bLsR+sEj1i4GhMe6qynQ72xRAGCCXy1wCLYjEwOwWtO8DY
+X-Gm-Message-State: AOJu0YyFpEY0pi3yuD8SBYpMw1aXcmGv+lrp+UKldAYot6K96GRvj75w
+	rv1/jQ6y1kQ+0g9lwuZWptgnY0+QSPJOSWX5BRMfxTu/ng9R1Zr7+BUJ0aPOEmc=
+X-Google-Smtp-Source: AGHT+IEwGp9CREnzM723i0nIIoRPqk9cwAylqXBjhbq7ww2uvfIBv1O6dGPw3jzisccTgSnHRTynjA==
+X-Received: by 2002:a17:906:11c8:b0:a46:87bc:6f95 with SMTP id o8-20020a17090611c800b00a4687bc6f95mr7286828eja.20.1710749080719;
+        Mon, 18 Mar 2024 01:04:40 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.222.97])
+        by smtp.gmail.com with ESMTPSA id i26-20020a1709061cda00b00a46baa4723asm1133801ejh.119.2024.03.18.01.04.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Mar 2024 01:04:40 -0700 (PDT)
+Message-ID: <3f6753ab-ef3c-4bf2-a885-afbf5ad83ccc@linaro.org>
+Date: Mon, 18 Mar 2024 09:04:37 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240316-loongson1-dma-v6-0-90de2c3cc928@gmail.com>
- <CAAhV-H6aGS6VXGzkqWTyxL7bGw=KdjmnRZj7SpwrV5hT6XQcpg@mail.gmail.com> <CAJhJPsVSM-8VA604p2Vr58QJEp+Tg72YTTntnip64Ejz=0aQng@mail.gmail.com>
-In-Reply-To: <CAJhJPsVSM-8VA604p2Vr58QJEp+Tg72YTTntnip64Ejz=0aQng@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 18 Mar 2024 15:31:59 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5TR=y_AmbF6QMJmoS0BhfB=K7forMg0-b2YWm7trktjA@mail.gmail.com>
-Message-ID: <CAAhV-H5TR=y_AmbF6QMJmoS0BhfB=K7forMg0-b2YWm7trktjA@mail.gmail.com>
-Subject: Re: [PATCH v6 0/2] Add support for Loongson1 DMA
-To: Keguang Zhang <keguang.zhang@gmail.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-mips@vger.kernel.org, dmaengine@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/4] dt-bindings: soc: sophgo: Add top misc controller
+ of CV18XX/SG200X series SoC
+Content-Language: en-US
+To: Inochi Amaoto <inochiama@outlook.com>, Vinod Koul <vkoul@kernel.org>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Chen Wang <unicorn_wang@outlook.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+Cc: Jisheng Zhang <jszhang@kernel.org>, Liu Gui <kenneth.liu@sophgo.com>,
+ Jingbao Qiu <qiujingbao.dlmu@gmail.com>, dlan@gentoo.org,
+ dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+References: <IA1PR20MB49536DED242092A49A69CEB6BB2D2@IA1PR20MB4953.namprd20.prod.outlook.com>
+ <IA1PR20MB495375AEBA417DB6908CAC98BB2D2@IA1PR20MB4953.namprd20.prod.outlook.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <IA1PR20MB495375AEBA417DB6908CAC98BB2D2@IA1PR20MB4953.namprd20.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 18, 2024 at 10:08=E2=80=AFAM Keguang Zhang <keguang.zhang@gmail=
-.com> wrote:
->
-> Hi Huacai,
->
-> > Hi, Keguang,
-> >
-> > Sorry for the late reply, there is already a ls2x-apb-dma driver, I'm
-> > not sure but can they share the same code base? If not, can rename
-> > this driver to ls1x-apb-dma for consistency?
->
-> There are some differences between ls1x DMA and ls2x DMA, such as
-> registers and DMA descriptors.
-> I will rename it to ls1x-apb-dma.
-OK, please also rename the yaml file to keep consistency.
+On 18/03/2024 07:38, Inochi Amaoto wrote:
+> CV18XX/SG200X series SoCs have a special top misc system controller,
+> which provides register access for several devices. In addition to
+> register access, this system controller also contains some subdevices
+> (such as dmamux).
+> 
+> Add bindings for top misc controller of CV18XX/SG200X series SoC.
+> 
+> Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
+> ---
+>  .../soc/sophgo/sophgo,cv1800-top-syscon.yaml  | 57 +++++++++++++++++++
+>  1 file changed, 57 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/sophgo/sophgo,cv1800-top-syscon.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/sophgo/sophgo,cv1800-top-syscon.yaml b/Documentation/devicetree/bindings/soc/sophgo/sophgo,cv1800-top-syscon.yaml
+> new file mode 100644
+> index 000000000000..009e45e520d9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/sophgo/sophgo,cv1800-top-syscon.yaml
+> @@ -0,0 +1,57 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/soc/sophgo/sophgo,cv1800-top-syscon.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Sophgo CV1800/SG2000 SoC top system controller
+> +
+> +maintainers:
+> +  - Inochi Amaoto <inochiama@outlook.com>
+> +
+> +description:
+> +  The Sophgo CV1800/SG2000 SoC top misc system controller provides
+> +  register access to configure related modules.
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: sophgo,cv1800-top-syscon
+> +      - const: syscon
+> +      - const: simple-mfd
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties:
+> +  type: object
 
-Huacai
+You have schema for the child, don't you? So use it: add 'dma-router' to
+the properties with $ref. additionalProperties: false.
 
-> Thanks!
->
-> >
-> > Huacai
-> >
-> > On Sat, Mar 16, 2024 at 7:34=E2=80=AFPM Keguang Zhang via B4 Relay
-> > <devnull+keguang.zhang.gmail.com@kernel.org> wrote:
-> > >
-> > > Add the driver and dt-binding document for Loongson1 DMA.
-> > >
-> > > Changelog
-> > > V5 -> V6:
-> > >    Change the compatible to the fallback
-> > >    Implement .device_prep_dma_cyclic for Loongson1 sound driver,
-> > >    as well as .device_pause and .device_resume.
-> > >    Set the limitation LS1X_DMA_MAX_DESC and put all descriptors
-> > >    into one page to save memory
-> > >    Move dma_pool_zalloc() into ls1x_dma_alloc_desc()
-> > >    Drop dma_slave_config structure
-> > >    Use .remove_new instead of .remove
-> > >    Use KBUILD_MODNAME for the driver name
-> > >    Improve the debug information
-> > >    Some minor fixes
-> > > V4 -> V5:
-> > >    Add the dt-binding document
-> > >    Add DT support
-> > >    Use DT information instead of platform data
-> > >    Use chan_id of struct dma_chan instead of own id
-> > >    Use of_dma_xlate_by_chan_id() instead of ls1x_dma_filter()
-> > >    Update the author information to my official name
-> > > V3 -> V4:
-> > >    Use dma_slave_map to find the proper channel.
-> > >    Explicitly call devm_request_irq() and tasklet_kill().
-> > >    Fix namespace issue.
-> > >    Some minor fixes and cleanups.
-> > > V2 -> V3:
-> > >    Rename ls1x_dma_filter_fn to ls1x_dma_filter.
-> > > V1 -> V2:
-> > >    Change the config from 'DMA_LOONGSON1' to 'LOONGSON1_DMA',
-> > >    and rearrange it in alphabetical order in Kconfig and Makefile.
-> > >    Fix comment style.
-> > >
-> > > Keguang Zhang (2):
-> > >   dt-bindings: dma: Add Loongson-1 DMA
-> > >   dmaengine: Loongson1: Add Loongson1 dmaengine driver
-> > >
-> > >  .../bindings/dma/loongson,ls1x-dma.yaml       |  64 +++
-> > >  drivers/dma/Kconfig                           |   9 +
-> > >  drivers/dma/Makefile                          |   1 +
-> > >  drivers/dma/loongson1-dma.c                   | 492 ++++++++++++++++=
-++
-> > >  4 files changed, 566 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/dma/loongson,ls=
-1x-dma.yaml
-> > >  create mode 100644 drivers/dma/loongson1-dma.c
-> > >
-> > > --
-> > > 2.39.2
-> > >
-> > > base-commit: 719136e5c24768ebdf80b9daa53facebbdd377c3
-> > > ---
-> > > Keguang Zhang (2):
-> > >       dt-bindings: dma: Add Loongson-1 DMA
-> > >       dmaengine: Loongson1: Add Loongson1 dmaengine driver
-> > >
-> > >  .../devicetree/bindings/dma/loongson,ls1x-dma.yaml |  66 ++
-> > >  drivers/dma/Kconfig                                |   9 +
-> > >  drivers/dma/Makefile                               |   1 +
-> > >  drivers/dma/loongson1-dma.c                        | 665 +++++++++++=
-++++++++++
-> > >  4 files changed, 741 insertions(+)
-> > > ---
-> > > base-commit: a1e7655b77e3391b58ac28256789ea45b1685abb
-> > > change-id: 20231120-loongson1-dma-163afe5708b9
-> > >
-> > > Best regards,
-> > > --
-> > > Keguang Zhang <keguang.zhang@gmail.com>
-> > >
-> > >
->
->
->
-> --
-> Best regards,
->
-> Keguang Zhang
+Explain the dependencies and merging bindings via one tree in the cover
+letter or commit changelog.
+
+Best regards,
+Krzysztof
+
 

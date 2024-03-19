@@ -1,134 +1,249 @@
-Return-Path: <dmaengine+bounces-1436-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1437-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6CD6C87F582
-	for <lists+dmaengine@lfdr.de>; Tue, 19 Mar 2024 03:41:12 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 468C887F605
+	for <lists+dmaengine@lfdr.de>; Tue, 19 Mar 2024 04:23:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 271C1282BF1
-	for <lists+dmaengine@lfdr.de>; Tue, 19 Mar 2024 02:41:11 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 95371B21452
+	for <lists+dmaengine@lfdr.de>; Tue, 19 Mar 2024 03:23:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76D0F7B3EB;
-	Tue, 19 Mar 2024 02:41:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46AC37BB12;
+	Tue, 19 Mar 2024 03:22:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dsm3ozNn"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="noESFHcl"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A5FF33FE;
-	Tue, 19 Mar 2024 02:41:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A7BE535CA
+	for <dmaengine@vger.kernel.org>; Tue, 19 Mar 2024 03:22:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710816066; cv=none; b=a5QgEmxMUYTxQZKIul/MyLF5K8TRhxv4O/mk8U9FuHCxSF+ksMlrrWepYS55+bkq4vBk5FW4PpjPxBLPiZ5kpMqWw0yyyTyFn26g3Xa5u8HUb5ZvKN1NLAGtlVewAtPtn7Epw0mHD8xD04KGn+NyzP/q0qgpF68dOXh+678KJgQ=
+	t=1710818574; cv=none; b=YRzSw7Fh42oReOgFEdP/Rl4XNMwy9SdM0ujeUPxz/W7vJUtBo5910dQn7bka/r30spr6D6pFRNo7ll6+u5+NTjo7G274O0P0reRKIDZMrR9PWNr5gyET0EROvFX6/Awji0M43aqDTige3JhTCl/82xEqiI3wero3oPRTw5+wFGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710816066; c=relaxed/simple;
-	bh=3ub4ncvqYvXyiNVjOCBt4ba6/O87K2dqhXmuWt7lj4c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VnzLbYG5ku19+Othy5Ugz0ODC5/CXyRbmXPHLmS25Y+XLT1o4PHUfPEYUiwDVDkEHiPfLsMm6qcMCDMd+lp3mm0RcfYan8JPBqHgNNNQRdXf76YSjAd8NFTxasOXZeSRjMyjhyNpHBFNBEto/Nl5Bgw38EGkd8d6Zx+nDtc9KkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dsm3ozNn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE420C43399;
-	Tue, 19 Mar 2024 02:41:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710816065;
-	bh=3ub4ncvqYvXyiNVjOCBt4ba6/O87K2dqhXmuWt7lj4c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Dsm3ozNngtqNbRPQU4pz65ZAyGsxlfuf1a9Pjc4UzHb9kkq+kbMKnfypQ5HMlEt+k
-	 vQFRMJN4AekNBUzy/XxZyAknNgr55M2FyffxcSxMC4a7I1bv3t8x1tIrwVC6iY6usv
-	 cbTf0VwcSwexkvKDpiAp24pmZp9npKSUbjIl9jb384RoSheOIX7umNVfg8emqkOL53
-	 XQdkDaFKaohbjf7oNP59NalRf/uysHzH540pXRmEd1/i1T2MJGyTpBusQUuyuW16ZK
-	 ugUr7vXxq1PHgFP3jCHgzfAKoHO9IVPBGuerFN90xP/QXUS3Ved8WV4dcM/y9FNeF7
-	 bsCO1FbA0wdbw==
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-513d3e57518so5365189e87.3;
-        Mon, 18 Mar 2024 19:41:05 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWc0tlZ4JdhBx2D8ghnNG5nacbCZ9YC7Q8etr5P6KBnerdPseFZhyuYZ/hmLJIlasNSvljJjjHHQaB5+BWq0CyVUjiX67JA7CPQyBzgoctqG/ZOaHorEu4107SZ449u8a/ssJ7iboVCyK+SO6cGtr75WbF7ZdFM02tO/vlPWbgVJbOXtBaPPW+ry01cgMwqUH8c8FQ0PSp6MzOl/LLbOOk=
-X-Gm-Message-State: AOJu0YyTo1xlEm2qUo7oTSNeZhP+frLOhxuIINSw4Kqj+0DpI/TTS7F1
-	H/U8q2tZllr1cN6cW3sSdsmaFkoKxBsRPwi5ZCYEbpTrel9abmJ4uuNVQFwLtERBJjOAsoEtqfS
-	nfXA0mBBlSQexHoBR98dA3lgQZjo=
-X-Google-Smtp-Source: AGHT+IGV97VjOSsYVFgOZWmkNKgxKdHut2PXg2d4iYsFbh+2T05kimd5E/BwkdwGxnlPNv4kX7fg1f2FWwe7xmsCqPM=
-X-Received: by 2002:ac2:5f91:0:b0:513:c9a4:5ee5 with SMTP id
- r17-20020ac25f91000000b00513c9a45ee5mr8911556lfe.30.1710816064094; Mon, 18
- Mar 2024 19:41:04 -0700 (PDT)
+	s=arc-20240116; t=1710818574; c=relaxed/simple;
+	bh=XV/4qYUUqsZtiaCMZA5wf1yevwpa5sgxnUmhJQsi9qA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BXlkQaxqTEKS7iUs3FRU5IV9EfPntjhhaPrhy3haPwWVyUsdzCJk+8Wl75NDQApbWGlFUsfm5PMV4yabZLotBALszYeFavp36M3/D06b+3L68BxrH1+rj0pA/SAgm9Xl2yqIvLF6fwmrr5FzihjAPS4SkDcNvqS54HI3PoHpBsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=noESFHcl; arc=none smtp.client-ip=209.85.219.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-68ee2c0a237so37461416d6.1
+        for <dmaengine@vger.kernel.org>; Mon, 18 Mar 2024 20:22:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1710818570; x=1711423370; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jMw9a1z02q9ezrV1ZNQg91O+JjWFgILRbLm9d5yMuuc=;
+        b=noESFHclqvXd6k6lIQy0vogl5h4TP4QMv45Ym4BrgqdJNfHYxhHQN4R2I7+5tO1sK0
+         slpmFESOmH1z0KpOjOw6lU6Uhg3/wiDDF6thZWVFSiSh6SJo2HSwRZM9ENtbPVGyQ2u7
+         GBtyseVYwc6oMHSIi2VGuLUXvek1INjFfHqWA0qv8yO2fdt6ClfPQOqeQW+Spi8jvMZL
+         uv0el+bvFmgbLc1z0G3ncPkxdsd+yGrmJWIAEHddQCoEd4VQ3zUON7kzrpHVmG/P+t8p
+         LbkBS8XUyGfj/G91njZXQ71PHqxZWgSEiYst89o1ZVYxPF+uODuwS/PlHavubX1GLIHn
+         aSwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710818570; x=1711423370;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jMw9a1z02q9ezrV1ZNQg91O+JjWFgILRbLm9d5yMuuc=;
+        b=AGAZaVHcZ8ChUP1P90rORg6jSt3qL4d8IVdPWXZWARmO5GPU7ekOFCAJXG+6i2FTKq
+         /6/fELENZ01mQ5S3O1hSkRzuViOtCZq9/YMtNkmD2WEh3zbtBZ1KaHKX6I+zIFwnsVUC
+         UF+INrCdaRRdV9I2EVVrAUNFbXRoWj4NnHSb1SVeoapl9PP+N5z7UbPA3x9ckm1Maobe
+         FqnecR4Ays7fla8dWslsixL8GviSL2+mCahnz/uoQYUuLsLtL2NnZKuxaJP6pa0jpfAW
+         aO+nSdLnh+s5mT68Ei+mD5p4AlOx4b6a1FUa4NHGjqDy7XC23mTlNOn6eYEQbdwmFOUj
+         CH2A==
+X-Forwarded-Encrypted: i=1; AJvYcCW9SYXWBZCLTj85m1HbSYTDkkSlwBC+YBQd8i3Ks+sx6tzlA/SaDjkD/t/q13RZFkXkynz6XeJQ3lviV9oohUo98cnfSB484hQh
+X-Gm-Message-State: AOJu0Yzz1IHBakUt0gb3RNM20+IpxfmNDQWgU4SWbqecK2V6IPiawcwR
+	Xg8Mg7J/CzqYCbQ7RCkM9v0faGc8PgAxJk4BH7xW0sft4GS3TvUhhbEMMAs5exQ=
+X-Google-Smtp-Source: AGHT+IG8Y3FR9B/B9mSnEIBCA8gr+6fLKtICJUUHKawjSCnnvGpGfdMy55hTxouwueL4wMN6IN5QSA==
+X-Received: by 2002:a05:6214:c49:b0:696:20b8:cfc5 with SMTP id r9-20020a0562140c4900b0069620b8cfc5mr2771527qvj.6.1710818570458;
+        Mon, 18 Mar 2024 20:22:50 -0700 (PDT)
+Received: from [100.64.0.1] ([136.226.86.189])
+        by smtp.gmail.com with ESMTPSA id jx5-20020a0562142b0500b0068f4520e42dsm6034517qvb.16.2024.03.18.20.22.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Mar 2024 20:22:50 -0700 (PDT)
+Message-ID: <29f468c5-1aaa-4326-8088-e03a1d6b7174@sifive.com>
+Date: Mon, 18 Mar 2024 22:22:47 -0500
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240316-loongson1-dma-v6-0-90de2c3cc928@gmail.com>
- <CAAhV-H6aGS6VXGzkqWTyxL7bGw=KdjmnRZj7SpwrV5hT6XQcpg@mail.gmail.com>
- <CAJhJPsVSM-8VA604p2Vr58QJEp+Tg72YTTntnip64Ejz=0aQng@mail.gmail.com>
- <CAAhV-H5TR=y_AmbF6QMJmoS0BhfB=K7forMg0-b2YWm7trktjA@mail.gmail.com>
- <20240318-average-likely-6a55c18db7bb@spud> <CAAhV-H4oMoPt7WwWc7wbxy-ShNQ8dPkuTAuvSEGAPBKvkkn24w@mail.gmail.com>
- <20240318-saxophone-sudden-ce0df3a953a8@spud> <CAJhJPsXKZr7XDC-i1O_tpcgGE9c0yk7S9Qjnpk7hrU0evAJ+FQ@mail.gmail.com>
-In-Reply-To: <CAJhJPsXKZr7XDC-i1O_tpcgGE9c0yk7S9Qjnpk7hrU0evAJ+FQ@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 19 Mar 2024 10:40:54 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5Gm6mACV4smxDB=BJvLr8C1AmgY=mMqfNYOOxEUBhqFA@mail.gmail.com>
-Message-ID: <CAAhV-H5Gm6mACV4smxDB=BJvLr8C1AmgY=mMqfNYOOxEUBhqFA@mail.gmail.com>
-Subject: Re: [PATCH v6 0/2] Add support for Loongson1 DMA
-To: Keguang Zhang <keguang.zhang@gmail.com>
-Cc: Conor Dooley <conor@kernel.org>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-mips@vger.kernel.org, dmaengine@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/4] dt-bindings: dmaengine: Add dmamux for
+ CV18XX/SG200X series SoC
+Content-Language: en-US
+To: Inochi Amaoto <inochiama@outlook.com>, Vinod Koul <vkoul@kernel.org>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Jisheng Zhang <jszhang@kernel.org>, Liu Gui <kenneth.liu@sophgo.com>,
+ Jingbao Qiu <qiujingbao.dlmu@gmail.com>, dlan@gentoo.org,
+ dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+ Chen Wang <unicorn_wang@outlook.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+References: <IA1PR20MB49536DED242092A49A69CEB6BB2D2@IA1PR20MB4953.namprd20.prod.outlook.com>
+ <IA1PR20MB49532DE75E794419E58F9268BB2D2@IA1PR20MB4953.namprd20.prod.outlook.com>
+From: Samuel Holland <samuel.holland@sifive.com>
+In-Reply-To: <IA1PR20MB49532DE75E794419E58F9268BB2D2@IA1PR20MB4953.namprd20.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 19, 2024 at 10:32=E2=80=AFAM Keguang Zhang <keguang.zhang@gmail=
-.com> wrote:
->
-> On Mon, Mar 18, 2024 at 11:42=E2=80=AFPM Conor Dooley <conor@kernel.org> =
-wrote:
-> >
-> > On Mon, Mar 18, 2024 at 10:26:51PM +0800, Huacai Chen wrote:
-> > > Hi, Conor,
-> > >
-> > > On Mon, Mar 18, 2024 at 7:28=E2=80=AFPM Conor Dooley <conor@kernel.or=
-g> wrote:
-> > > >
-> > > > On Mon, Mar 18, 2024 at 03:31:59PM +0800, Huacai Chen wrote:
-> > > > > On Mon, Mar 18, 2024 at 10:08=E2=80=AFAM Keguang Zhang <keguang.z=
-hang@gmail.com> wrote:
-> > > > > >
-> > > > > > Hi Huacai,
-> > > > > >
-> > > > > > > Hi, Keguang,
-> > > > > > >
-> > > > > > > Sorry for the late reply, there is already a ls2x-apb-dma dri=
-ver, I'm
-> > > > > > > not sure but can they share the same code base? If not, can r=
-ename
-> > > > > > > this driver to ls1x-apb-dma for consistency?
-> > > > > >
-> > > > > > There are some differences between ls1x DMA and ls2x DMA, such =
-as
-> > > > > > registers and DMA descriptors.
-> > > > > > I will rename it to ls1x-apb-dma.
-> > > > > OK, please also rename the yaml file to keep consistency.
-> > > >
-> > > > No, the yaml file needs to match the (one of the) compatible string=
-s.
-> > > OK, then I think we can also rename the compatible strings, if possib=
-le.
-> >
-> > If there are no other types of dma controller on this device, I do not
-> > see why would we add "apb" into the compatible as there is nothing to
-> > differentiate this controller from.
->
-> That's true. 1A/1B/1C only have one APB DMA.
-> Should I keep the compatible "ls1b-dma" and "ls1c-dma"?
-The name "apbdma" comes from the user manual, "exchange data between
-memory and apb devices", at present there are two drivers using this
-naming: tegra20-apb-dma.c and ls2x-apb-dma.c.
+On 2024-03-18 1:38 AM, Inochi Amaoto wrote:
+> The DMA IP of Sophgo CV18XX/SG200X is based on a DW AXI CORE, with
+> an additional channel remap register located in the top system control
+> area. The DMA channel is exclusive to each core.
+> 
+> Add the dmamux binding for CV18XX/SG200X series SoC
+> 
+> Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../bindings/dma/sophgo,cv1800-dmamux.yaml    | 47 ++++++++++++++++
+>  include/dt-bindings/dma/cv1800-dma.h          | 55 +++++++++++++++++++
+>  2 files changed, 102 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/sophgo,cv1800-dmamux.yaml
+>  create mode 100644 include/dt-bindings/dma/cv1800-dma.h
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/sophgo,cv1800-dmamux.yaml b/Documentation/devicetree/bindings/dma/sophgo,cv1800-dmamux.yaml
+> new file mode 100644
+> index 000000000000..c813c66737ba
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/sophgo,cv1800-dmamux.yaml
+> @@ -0,0 +1,47 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dma/sophgo,cv1800-dmamux.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Sophgo CV1800/SG200 Series DMA mux
+> +
+> +maintainers:
+> +  - Inochi Amaoto <inochiama@outlook.com>
+> +
+> +allOf:
+> +  - $ref: dma-router.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: sophgo,cv1800-dmamux
+> +
+> +  reg:
+> +    maxItems: 2
+> +
+> +  '#dma-cells':
+> +    const: 3
+> +    description:
+> +      The first cells is DMA channel. The second one is device id.
+> +      The third one is the cpu id.
 
-Huacai
+There are 43 devices, but only 8 channels. Since the channel is statically
+specified in the devicetree as the first cell here, that means the SoC DT author
+must pre-select which 8 of the 43 devices are usable, right? And then the rest
+would have to omit their dma properties. Wouldn't it be better to leave out the
+channel number here and dynamically allocate channels at runtime?
 
->
+Regards,
+Samuel
+
+> +
+> +  dma-masters:
+> +    maxItems: 1
+> +
+> +  dma-requests:
+> +    const: 8
+> +
+> +required:
+> +  - '#dma-cells'
+> +  - dma-masters
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    dma-router {
+> +      compatible = "sophgo,cv1800-dmamux";
+> +      #dma-cells = <3>;
+> +      dma-masters = <&dmac>;
+> +      dma-requests = <8>;
+> +    };
+> diff --git a/include/dt-bindings/dma/cv1800-dma.h b/include/dt-bindings/dma/cv1800-dma.h
+> new file mode 100644
+> index 000000000000..3ce9dac25259
+> --- /dev/null
+> +++ b/include/dt-bindings/dma/cv1800-dma.h
+> @@ -0,0 +1,55 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
+> +
+> +#ifndef __DT_BINDINGS_DMA_CV1800_H__
+> +#define __DT_BINDINGS_DMA_CV1800_H__
+> +
+> +#define DMA_I2S0_RX		0
+> +#define DMA_I2S0_TX		1
+> +#define DMA_I2S1_RX		2
+> +#define DMA_I2S1_TX		3
+> +#define DMA_I2S2_RX		4
+> +#define DMA_I2S2_TX		5
+> +#define DMA_I2S3_RX		6
+> +#define DMA_I2S3_TX		7
+> +#define DMA_UART0_RX		8
+> +#define DMA_UART0_TX		9
+> +#define DMA_UART1_RX		10
+> +#define DMA_UART1_TX		11
+> +#define DMA_UART2_RX		12
+> +#define DMA_UART2_TX		13
+> +#define DMA_UART3_RX		14
+> +#define DMA_UART3_TX		15
+> +#define DMA_SPI0_RX		16
+> +#define DMA_SPI0_TX		17
+> +#define DMA_SPI1_RX		18
+> +#define DMA_SPI1_TX		19
+> +#define DMA_SPI2_RX		20
+> +#define DMA_SPI2_TX		21
+> +#define DMA_SPI3_RX		22
+> +#define DMA_SPI3_TX		23
+> +#define DMA_I2C0_RX		24
+> +#define DMA_I2C0_TX		25
+> +#define DMA_I2C1_RX		26
+> +#define DMA_I2C1_TX		27
+> +#define DMA_I2C2_RX		28
+> +#define DMA_I2C2_TX		29
+> +#define DMA_I2C3_RX		30
+> +#define DMA_I2C3_TX		31
+> +#define DMA_I2C4_RX		32
+> +#define DMA_I2C4_TX		33
+> +#define DMA_TDM0_RX		34
+> +#define DMA_TDM0_TX		35
+> +#define DMA_TDM1_RX		36
+> +#define DMA_AUDSRC		37
+> +#define DMA_SPI_NAND		38
+> +#define DMA_SPI_NOR		39
+> +#define DMA_UART4_RX		40
+> +#define DMA_UART4_TX		41
+> +#define DMA_SPI_NOR1		42
+> +
+> +#define DMA_CPU_A53		0
+> +#define DMA_CPU_C906_0		1
+> +#define DMA_CPU_C906_1		2
+> +
+> +
+> +#endif // __DT_BINDINGS_DMA_CV1800_H__
 > --
-> Best regards,
->
-> Keguang Zhang
+> 2.44.0
+> 
+> 
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
+
 

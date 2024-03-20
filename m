@@ -1,113 +1,160 @@
-Return-Path: <dmaengine+bounces-1451-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1452-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D81E880B36
-	for <lists+dmaengine@lfdr.de>; Wed, 20 Mar 2024 07:28:34 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 32A5D881496
+	for <lists+dmaengine@lfdr.de>; Wed, 20 Mar 2024 16:29:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D9186283836
-	for <lists+dmaengine@lfdr.de>; Wed, 20 Mar 2024 06:28:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9BE691F23643
+	for <lists+dmaengine@lfdr.de>; Wed, 20 Mar 2024 15:29:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F330918659;
-	Wed, 20 Mar 2024 06:28:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8863B4F1E5;
+	Wed, 20 Mar 2024 15:29:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="X4dOTilF"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Ic/l4w7/";
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="h3dLUlY7"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mx0b-00230701.pphosted.com (mx0b-00230701.pphosted.com [148.163.158.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950811864A;
-	Wed, 20 Mar 2024 06:28:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 621931EB44;
+	Wed, 20 Mar 2024 15:29:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710916108; cv=none; b=rqG+VqjA5Z4BRMgWJ0K3Dgy8HdqZ/Jb2A4gJkZpeplihOW2lJdHQFHnC1RjwpBmCZjOvcAx/NXczEnbJVjeBgICc35SPR/ble4uk7hzT879MMO4WMQouUwJr9y/eCk71O8pwS7aaL4YBmzLhn+69tBddgc22alJ5gIF2qkCfa3Y=
+	t=1710948550; cv=none; b=iEK65opwh1zhLTSIn91gfPKjIKht/D+X34e1h4fyVjcfBWl1FfvERcbKAmv94HHvlxH0CRZOBROC3Vu42os8C9rMbLb0uxWq9A5BmLnvePK4ewFcTwU+ehoj9mPwxLk/A8aLBDao/FjAP0qFR1dz3vadpU2jA3739cue794M5E8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710916108; c=relaxed/simple;
-	bh=NHf4lcNnbKil3Xd3j0ggC1F+MXxx5165hkG+xD5RsMs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p5Ht/pG3qeXQB4U/cVPXRGO+yLi5M2Zf4a7QSYIU2h+vX4f7HARGuTSGkK/xrOc/IrYgeOZvHycHlKGbTiiCLK9VoeauwV54TsfOzagWj37RraaUp7WekuVbwcCpH+VDjCnm8sb4j3hQvI3uEgpWHz1lVnVhkwkE+GE6Rt20F/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=X4dOTilF; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=+uvbFMBaxnEo7FnlRK2VWajdBLpdj74HCBLMlUuMnzs=;
-	t=1710916106; x=1711348106; b=X4dOTilFLlgayLWWCqi/gx7N9s7/xqE38i/e7uH+77VYwTK
-	sgdY/JzK4jlAtJJpHxb+AAQiUjenqEhjEzl5AbkbX1Fd07fhCM9wQKWJ0mghctqnypInTb6ZAanDI
-	CtrW5tWGXlT7d9mjqwRzN9HLQBHoH3Q0bPB1LW2eI6atPosLTY/9XkA78EC4y+AFnyUuSZGZq4F5Z
-	Z2XIkkOEhRMFf9w/fyi9ar7hZMiAWOJittvQCjjOOYg8lVzeC50ZjsfsEppvWwB2SRCRbPOANc0ti
-	PCCoG41xuhBFbUyggeTfpKr0gvy/SVww8reMFcXhWLrUsYw6xfJlQu43nKQOp6Lg==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rmpR0-0007mH-ND; Wed, 20 Mar 2024 07:28:22 +0100
-Message-ID: <9490757c-4d7c-4d8b-97e2-812a237f902b@leemhuis.info>
-Date: Wed, 20 Mar 2024 07:28:22 +0100
+	s=arc-20240116; t=1710948550; c=relaxed/simple;
+	bh=CQySag7xm2muRwM/T32TWtIU0dCJiXAtitG8wW/6ZwE=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=jMvjhQ4vDGNNWFWRYmDTB0Kk//PUaAuekA9Y6xt6pEpsba5ewcMO2BSNoDO9xmzNCGhoGYthPhtteqPc2O+uPE/VWvWD+amgX9RjdYJNeOWrx4GXFuggES+ayXtIpTM7en3Oz8s56E8A+Hz/QEmaHzQ5LyHkeJeL/7XtgholmiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=synopsys.com; spf=pass smtp.mailfrom=synopsys.com; dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b=Ic/l4w7/; dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b=h3dLUlY7; arc=none smtp.client-ip=148.163.158.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=synopsys.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=synopsys.com
+Received: from pps.filterd (m0098572.ppops.net [127.0.0.1])
+	by mx0b-00230701.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42KDXNiA029987;
+	Wed, 20 Mar 2024 08:28:59 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com; h=
+	from:to:cc:subject:date:message-id; s=pfptdkimsnps; bh=xwEnEgNmd
+	ia2OaQNO3Qw1uAkOGxJ+2PH6QxnIB8iPco=; b=Ic/l4w7/SyaR+OMNoJiKy7VRL
+	8rwzvopHqbHVF0Hk0X8jDNUlcCmvGTureqVtqSj5eQYLfJPjFxyEeYVuS3PbPR10
+	0cJzpvaSe3vLgpOTVnUCSKwR1VMHgm9hHYC/vMSqzvypFQvF3d3aeLddpXQJvxR0
+	LiLXmHoBkpF6TS7Goc8WIZgYTHqZa5NJP9/lHqktm6/h+gfloQGFsmCBGL6h9QUw
+	DuwtIF/A0RCWwCpXmTTrbX3F0huBCwBTKCYR18oDuXcsrW5REGXbYfJ2vhvQMH2T
+	CAEcdbxrd3KBvhaMLn5s9Z+zRqoWaGSxE8twcsOsaiu8BdTw6uFZEH2puscmg==
+Received: from smtprelay-out1.synopsys.com (smtprelay-out1.synopsys.com [149.117.87.133])
+	by mx0b-00230701.pphosted.com (PPS) with ESMTPS id 3wwa2d2tsn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 20 Mar 2024 08:28:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+	t=1710948538; bh=CQySag7xm2muRwM/T32TWtIU0dCJiXAtitG8wW/6ZwE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=h3dLUlY7pY/W5eXBsu8su9hnYtorjoWAAG8ABb7MA/B6f2fX/whLLAYGQoCzV7DeO
+	 hQvaEVyK9P/VcO3VA5Uq0nQ3IEPt4s2wEtDAY5gpe2embjNgOBfawXtyIZA4PS414c
+	 4zuNwi1SO6fOSE89V5qsSeaj0zAWKaD3yYUfXJiGvTA97i4ZAJf4GvkwtIZBB6vCKw
+	 XxHNGnVuts1QbpxJOZqS9WxdB4IAkvH6xQBGDWzxJx8zKpIaUIBaLtseKneAsphZfC
+	 K8VK+OHUx0WJfhCmlcEKWUD9B4u+1gGOQfn8v1mULzSaxBriOJchNczRe+B1S+Ea9W
+	 douD72xHNfQwQ==
+Received: from mailhost.synopsys.com (badc-mailhost3.synopsys.com [10.192.0.81])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits)
+	 client-signature RSA-PSS (2048 bits))
+	(Client CN "mailhost.synopsys.com", Issuer "SNPSica2" (verified OK))
+	by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 8031F401D4;
+	Wed, 20 Mar 2024 15:28:58 +0000 (UTC)
+Received: from us01odcvde44181.internal.synopsys.com (us01odcvde44181.internal.synopsys.com [10.192.159.204])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(Client did not present a certificate)
+	by mailhost.synopsys.com (Postfix) with ESMTPSA id 258AEA00CD;
+	Wed, 20 Mar 2024 15:28:58 +0000 (UTC)
+X-SNPS-Relay: synopsys.com
+From: Joao Pinto <Joao.Pinto@synopsys.com>
+To: Eugeniy.Paltsev@synopsys.com, dmaengine@vger.kernel.org
+Cc: Joao.Pinto@synopsys.com, Martin.McKenny@synopsys.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] Avoid hw_desc array overrun in dw-axi-dmac
+Date: Wed, 20 Mar 2024 15:28:45 +0000
+Message-Id: <1710948525-45471-1-git-send-email-jpinto@synopsys.com>
+X-Mailer: git-send-email 2.6.3
+X-Proofpoint-ORIG-GUID: hYAtkIeHxNylq951z4uwgP0XupkakxBa
+X-Proofpoint-GUID: hYAtkIeHxNylq951z4uwgP0XupkakxBa
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-20_10,2024-03-18_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_active_cloned_notspam policy=outbound_active_cloned score=0
+ priorityscore=1501 spamscore=0 clxscore=1011 adultscore=0 suspectscore=0
+ malwarescore=0 impostorscore=0 phishscore=0 bulkscore=0 mlxscore=0
+ lowpriorityscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2403140001 definitions=main-2403200123
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: dmaengine: CPU stalls while loading bluetooth module
-Content-Language: en-US, de-DE
-To: "bumyong.lee" <bumyong.lee@samsung.com>,
- 'Linux regressions mailing list' <regressions@lists.linux.dev>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
- parthiban@linumiz.com, saravanan@linumiz.com,
- 'karthikeyan' <karthikeyan@linumiz.com>, vkoul@kernel.org
-References: <CGME20240305062038epcas2p143c5e1e725d8a934b0208266a2f78ccb@epcas2p1.samsung.com>
- <1553a526-6f28-4a68-88a8-f35bd22d9894@linumiz.com>
- <000001da6ecc$adb25420$0916fc60$@samsung.com>
- <12de921e-ae42-4eb3-a61a-dadc6cd640b8@leemhuis.info>
- <000001da7140$6a0f1570$3e2d4050$@samsung.com>
- <07b0c5f6-1fe2-474e-a312-5eb85a14a5c8@leemhuis.info>
- <001001da7a60$78603130$69209390$@samsung.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <001001da7a60$78603130$69209390$@samsung.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1710916106;93568396;
-X-HE-SMSGID: 1rmpR0-0007mH-ND
 
-On 20.03.24 01:49, bumyong.lee wrote:
->>>> Hmmm. 6.8 final is due. Is that something we can live with? Or would
->>>> it be a good idea to revert above commit for now and reapply it when
->>>> something better emerged? I doubt that the answer is "yes, let's do
->>>> that", but I have to ask.
->>>
->>> I couldn't find better way now.
->>> I think it's better to follow you mentioned
->>
->> 6.8 is out, but that issue afaics was not resolved, so allow me to ask:
->> did "submit a revert" fell through the cracks or is there some other
->> solution in the works? Or am I missing something?
-> 
-> "submit a revert" would fix the issue. but it would make another issue
-> that the errata[1] 719340 described.
+I have a use case where nr_buffers = 3 and in which each descriptor is composed by 3
+segments, resulting in the DMA channel descs_allocated to be 9. Since axi_desc_put()
+handles the hw_desc considering the descs_allocated, this scenario would result in a
+kernel panic (hw_desc array will be overrun).
 
-"Make" as it "that other issue was present before the culprit was
-applied"? Then that other issue does not matter due to the "no
-regression" rule and how Linus afaics wants to see it applied in
-practice. For details on the latter, see the quotes from him here:
-https://docs.kernel.org/process/handling-regressions.html
- Hence please submit a revert (or tell me if I misunderstood something)
--- or of course a workaround for the other issue that does not cause the
-regression people reported.
+To fix this, the proposal is to add a new member to the axi_dma_desc structure,
+where we keep the number of allocated hw_descs (axi_desc_alloc()) and use it in
+axi_desc_put() to handle the hw_desc array correctly.
 
-> [...]
-> [1]: https://developer.arm.com/documentation/genc008428/latest
+Additionally I propose to remove the axi_chan_start_first_queued() call after completing
+the transfer, since it was identified that unbalance can occur (started descriptors can
+be interrupted and transfer ignored due to DMA channel not being enabled).
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+Signed-off-by: Joao Pinto <jpinto@synopsys.com>
+---
+ drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c | 7 ++-----
+ drivers/dma/dw-axi-dmac/dw-axi-dmac.h          | 1 +
+ 2 files changed, 3 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+index a86a81f..b39f37a 100644
+--- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
++++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+@@ -302,6 +302,7 @@ static struct axi_dma_desc *axi_desc_alloc(u32 num)
+ 		kfree(desc);
+ 		return NULL;
+ 	}
++	desc->nr_hw_descs = num;
+ 
+ 	return desc;
+ }
+@@ -328,7 +329,7 @@ static struct axi_dma_lli *axi_desc_get(struct axi_dma_chan *chan,
+ static void axi_desc_put(struct axi_dma_desc *desc)
+ {
+ 	struct axi_dma_chan *chan = desc->chan;
+-	int count = atomic_read(&chan->descs_allocated);
++	int count = desc->nr_hw_descs;
+ 	struct axi_dma_hw_desc *hw_desc;
+ 	int descs_put;
+ 
+@@ -1139,9 +1139,6 @@ static void axi_chan_block_xfer_complete(struct axi_dma_chan *chan)
+ 		/* Remove the completed descriptor from issued list before completing */
+ 		list_del(&vd->node);
+ 		vchan_cookie_complete(vd);
+-
+-		/* Submit queued descriptors after processing the completed ones */
+-		axi_chan_start_first_queued(chan);
+ 	}
+ 
+ out:
+diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
+index 454904d..ac571b4 100644
+--- a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
++++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
+@@ -104,6 +104,7 @@ struct axi_dma_desc {
+ 	u32				completed_blocks;
+ 	u32				length;
+ 	u32				period_len;
++	u32				nr_hw_descs;
+ };
+ 
+ struct axi_dma_chan_config {
+-- 
+1.8.3.1
+
 

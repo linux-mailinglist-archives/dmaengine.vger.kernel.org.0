@@ -1,109 +1,107 @@
-Return-Path: <dmaengine+bounces-1453-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1454-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6DDEC8815AF
-	for <lists+dmaengine@lfdr.de>; Wed, 20 Mar 2024 17:32:22 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3751F8815B9
+	for <lists+dmaengine@lfdr.de>; Wed, 20 Mar 2024 17:36:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 270C528556E
-	for <lists+dmaengine@lfdr.de>; Wed, 20 Mar 2024 16:32:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 68BA01C22D69
+	for <lists+dmaengine@lfdr.de>; Wed, 20 Mar 2024 16:36:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B135AA47;
-	Wed, 20 Mar 2024 16:32:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8073328F8;
+	Wed, 20 Mar 2024 16:36:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a7e6M0S/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RQbqhAni"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF63E7EB;
-	Wed, 20 Mar 2024 16:32:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961EF23B0;
+	Wed, 20 Mar 2024 16:36:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710952337; cv=none; b=U6e9YZl4DGxLIoKY29+hZUlyL2ySpToz7UJb49U6hjTpQ3m/Qc7M9/Ko6cIasBtWicFZHpgWMyyLtJNhPPVV26bdWJUVabyTczCrKK36d1S2wIYQbwZrApXHkHEg3pHkxVFMgbbh5f0HItDjdfYi/ZoqqyVYCEpsSz3zRQirRz8=
+	t=1710952577; cv=none; b=p4ZfuasTDZWTOu52TXlLIFUdWHD/1rrhom2cOG+XlkNDUYEbV8DC2o26gNp8TkfmHTwNMjFVJq78AdHIszAjzSJy/bnVNX/MByjEhpGfs6q7dBj9tV8gEi/iB5C98XM8gei62xjygcIRfk8VXkoRZAgPvDbjdDfOy7XWlpcHi98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710952337; c=relaxed/simple;
-	bh=BUylS3kME2q0eaZg/TAVRkngmIlm+goa7PviZhmabOg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=d06d/ZflQXMuhkgpDjgZslP60TMGnHZPYKWRSfCXZjEU1G2l+bt9SBWhjG1ViIgF9dWc6H2cR//LrEQM3pK7wwyWegL1Os129+stafpg1hB81/h+sHDUsm//Q72lMt2zxAhEiILeLO0jQSsWSS+EqPzCHmysyJXUcS1lC8NekKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a7e6M0S/; arc=none smtp.client-ip=192.198.163.7
+	s=arc-20240116; t=1710952577; c=relaxed/simple;
+	bh=IZWzUcUQSGNwdaxYBiV+HfK0sSMW26jM8b/iVcIFLzY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IcTHoTL5DhKRTnz0+KcGFi5vbFEQKkKpeodgvLmb/GX1LSb1/n1I+PR3qnRHHCvDWZKij0c5EYU2hDpj97Ne16egQC36C3s1zk9cYGlqcR+MFcn/p20Ix1mbrMY89F9xVBP9/sLtYdOcZm9bn10Acsyw8q9oPfNi4FwC+7o/IfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RQbqhAni; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710952336; x=1742488336;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=BUylS3kME2q0eaZg/TAVRkngmIlm+goa7PviZhmabOg=;
-  b=a7e6M0S/NnRO1q8VX63PZY/HgJ1InDRVCU9ftPLo1Uvd9K6mNegAGGZg
-   a1bvckuHYcM8vFtLcxCmBkExyfF/HTamiDbCL741VynYtWHA3BG6Yz4om
-   YPuxo+1gFqxhtlHovXmOCeugIsEQwdS8Ol+0OrxR45FHgky8s3O36tq+R
-   lFbEjG23s+wFYd5du1yHf0Ssk0+7fubBmXo0EGNPDCJy9WEw2SnNSVhqD
-   95r6PmKlYxM+8YtYzyvTIkdcRo0X19RSUuGd3pWJxrQBBm6E5KyAI5aE1
-   udJNcXTLoYv9VQPF5+YFuyWs6Bw8+bA0xmXCR9L7Hv3yZdvb7curCUrRX
+  t=1710952576; x=1742488576;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=IZWzUcUQSGNwdaxYBiV+HfK0sSMW26jM8b/iVcIFLzY=;
+  b=RQbqhAniAN0KKUnpILdGLkhdjNzW9vNYbYqtuhkc4G6jbZIAnmX9Lxet
+   d7zRK/1Csf864AcQKDtPJz50fuCTcf8iXMEAVO5breDl5VmycnHxB1Gjk
+   Uuh7yD5pO5OQVvJGJ9NtThLXTPR+HSfWN9gwnWcOKqAA7zkJdrR+DQkjO
+   J4Klm6K7KHiY7TCGdSy1WDp/zEyh/g4NF9I+01KGjBPu7vKycoPKFR4WA
+   aEpN3mI5H1nHg6VPBohCkxgiV7BLYBOlb5yNcS6eiO5Dy3hNk6Idqbsx0
+   0sPesK9Pw1qVZkAJe8GFv3fIg1mebl3e4EC74qGqkARhdZfrKHd538T0I
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11019"; a="31324324"
+X-IronPort-AV: E=McAfee;i="6600,9927,11019"; a="31324666"
 X-IronPort-AV: E=Sophos;i="6.07,140,1708416000"; 
-   d="scan'208";a="31324324"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 09:32:15 -0700
+   d="scan'208";a="31324666"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 09:36:15 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11019"; a="937063848"
+X-IronPort-AV: E=McAfee;i="6600,9927,11019"; a="914672869"
 X-IronPort-AV: E=Sophos;i="6.07,140,1708416000"; 
-   d="scan'208";a="937063848"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 20 Mar 2024 09:32:13 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 4CDA930D; Wed, 20 Mar 2024 18:32:12 +0200 (EET)
+   d="scan'208";a="914672869"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 09:36:13 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rmyvC-0000000Ecch-3gnt;
+	Wed, 20 Mar 2024 18:36:10 +0200
+Date: Wed, 20 Mar 2024 18:36:10 +0200
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Vinod Koul <vkoul@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH v1 1/1] idma64: Don't try to serve interrupts when device is powered off
-Date: Wed, 20 Mar 2024 18:32:10 +0200
-Message-ID: <20240320163210.1153679-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Vinod Koul <vkoul@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH v1 1/1] idma64: Don't try to serve interrupts when device
+ is powered off
+Message-ID: <ZfsQeo8NxOuHVbfE@smile.fi.intel.com>
+References: <20240320163210.1153679-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240320163210.1153679-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-When iDMA 64-bit device is powered off, the IRQ status register
-is all 1:s. This is never happen in real case and signalling that
-the device is simply powered off. Don't try to serve interrupts
-that are not ours.
+On Wed, Mar 20, 2024 at 06:32:10PM +0200, Andy Shevchenko wrote:
+> When iDMA 64-bit device is powered off, the IRQ status register
+> is all 1:s. This is never happen in real case and signalling that
+> the device is simply powered off. Don't try to serve interrupts
+> that are not ours.
 
-Fixes: 667dfed98615 ("dmaengine: add a driver for Intel integrated DMA 64-bit")
-Reported-by: Heiner Kallweit <hkallweit1@gmail.com>
-Closes: https://lore.kernel.org/r/700bbb84-90e1-4505-8ff0-3f17ea8bc631@gmail.com
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/dma/idma64.c | 4 ++++
- 1 file changed, 4 insertions(+)
+...
 
-diff --git a/drivers/dma/idma64.c b/drivers/dma/idma64.c
-index 78a938969d7d..1b60e73d9322 100644
---- a/drivers/dma/idma64.c
-+++ b/drivers/dma/idma64.c
-@@ -173,6 +173,10 @@ static irqreturn_t idma64_irq(int irq, void *dev)
- 
- 	dev_vdbg(idma64->dma.dev, "%s: status=%#x\n", __func__, status);
- 
-+	/* Since IRQ may be shared, check if DMA controller is powered on */
-+	if (status == GENMASK(31, 0))
-+		return IRQ_NONE;
-+
- 	/* Check if we have any interrupt from the DMA controller */
- 	if (!status)
- 		return IRQ_NONE;
+>  	dev_vdbg(idma64->dma.dev, "%s: status=%#x\n", __func__, status);
+
+Dunno if I actually also need to move this message to after the checks...
+
+> +	/* Since IRQ may be shared, check if DMA controller is powered on */
+> +	if (status == GENMASK(31, 0))
+> +		return IRQ_NONE;
+> +
+>  	/* Check if we have any interrupt from the DMA controller */
+>  	if (!status)
+>  		return IRQ_NONE;
+
 -- 
-2.43.0.rc1.1.gbec44491f096
+With Best Regards,
+Andy Shevchenko
+
 
 

@@ -1,75 +1,75 @@
-Return-Path: <dmaengine+bounces-1463-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1464-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A49D58855B6
-	for <lists+dmaengine@lfdr.de>; Thu, 21 Mar 2024 09:30:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 65ACA8855D7
+	for <lists+dmaengine@lfdr.de>; Thu, 21 Mar 2024 09:37:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 605C9283225
-	for <lists+dmaengine@lfdr.de>; Thu, 21 Mar 2024 08:30:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0F6F2281DBD
+	for <lists+dmaengine@lfdr.de>; Thu, 21 Mar 2024 08:37:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFE15749F;
-	Thu, 21 Mar 2024 08:30:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A8F712B81;
+	Thu, 21 Mar 2024 08:37:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UCNKV443"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VHtHIZkk"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE337C8FF
-	for <dmaengine@vger.kernel.org>; Thu, 21 Mar 2024 08:30:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30F6AF519
+	for <dmaengine@vger.kernel.org>; Thu, 21 Mar 2024 08:37:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711009849; cv=none; b=PkkDD9r5IHSYlHF5V5MuajG34raEP8RhM9IIzwp3sK2XfCrux22OgPb/TM7o/MI1aSuqHHncgTxPTo+08c7KKMrBU15nNFnVVPU2AMU4WVF+TdbBtm34eZDt+ieTOAdmsSBXBxd1WYhFrunKhiBur3EmZe2QzvlWpgqAPkaBYcA=
+	t=1711010248; cv=none; b=Zrz2PZEUjVgOOkbKgMGWqzvc8G8otSVehul7nuX9iu0WwzR/8rp4nsc9JCAeUBcweP+7zbZ28HHBnWOXeOlnAcSS4SNRG7WkCoxNDUU+kan2WydtUxIKgNEu6vWoVFh0RQBhKzLbVYOPHguO7UKu4uVfBLczCLI0tddt7r8MuO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711009849; c=relaxed/simple;
-	bh=t1fHw1awRXRQyV+kQOhR60wgkUGvz4lCJwmSxqfqDUE=;
+	s=arc-20240116; t=1711010248; c=relaxed/simple;
+	bh=PAw9lHqYDnapYYW64NJkyIltJxb0RSurl0mSUrSxLPM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qO5efIn9I5kKLyljZiN+QvI9qlpFFCM0VOonGYVrAFEMDApTA98xMjUxXcYygiR3OIOjI3BfpikLY27uKuVsrp686wewVBb725TQQB4uQmfIgVCy14HCMTvuJRc3gU2nGddy34rRS3QqlmuoO+/XRnmo5L3rlBcMA3+QM6E7oxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UCNKV443; arc=none smtp.client-ip=209.85.218.45
+	 In-Reply-To:Content-Type; b=q+SBkaIJXybSjzE88chmlLcZOYlYgZ50yUWZfyNF3xSYioB5+Zg5I0lKV/JOaeUUTyGiVOvTt0AEzDSDlDYttpeYkXe84+Cp3TJMIQX7rYS/onhkm9ygaKhWrgztZsVKdMR4FoXYU4Tp1GbLEVu8bdb+lA/ZsmVCjxfF+d5zJYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VHtHIZkk; arc=none smtp.client-ip=209.85.208.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a470c79ef7cso74760566b.0
-        for <dmaengine@vger.kernel.org>; Thu, 21 Mar 2024 01:30:47 -0700 (PDT)
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5684db9147dso641870a12.2
+        for <dmaengine@vger.kernel.org>; Thu, 21 Mar 2024 01:37:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711009846; x=1711614646; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1711010244; x=1711615044; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=TrrgpFAClZqcHwsKzwgVOqViRyO3pBZpHR8vfJnAO2o=;
-        b=UCNKV443yEjjwAvwV6yJTZMf9sLynmRGruaFlnNGM3jDjuvPQ88za4VOfORan034Kv
-         WytDbCGxNd5sLD3nq9Yqxaxch6d6Yl/OrmhS2TtTu9NE/OECAynKGSMzlqtSsU0hp7AN
-         Kh5fV/NHb0PHHlroE1S1j983AlUwFpvTHgazgTh5jBXG42+eEwSBnxBUlVnMyN9AVEGF
-         cSf9xEUNR/4lhoqog/n4wA2Y8oJd9ZnjUZIypnUzOyyL0OD9A71+W2kdkbWvePlamey+
-         AKVIoCuUeWrKgCm8Ilb12Yq2xMDm3yiDinsUT5mbONekQ+tdOTP/or9VnX1LCzGNBl0x
-         dnEQ==
+        bh=1LJdX5HINEABbkAABFqbmX72U+4J6Fq5DjsUiL3/oFM=;
+        b=VHtHIZkkhdTTZ2S9U/5X+TbePY8bLO/rZ12zSf2VbHpJ7bVBExUFpiljsh4A/Q+V9g
+         LbtLpncBWzuvj7sGYk4L9sm/WHF9PGZI00oSKvC+tk+wAeE3VxSXSJvyKkRkfsD3ZOVL
+         rmY2rV49uVdW+kYSFRrqo3eTYGbdDgvP8QbXM1KXFKgB2I/bREh0Q+Tufvk5A1iqgAqL
+         nDA4/o9L1ts0mqbLqGVoyRxcHiypb27uZ7RDiLYEy80FXobj+1OipWsr2zF2b8CUhQpK
+         kPTh/WftpFUzAzikORwHDxlbi1ou/mUSJlpmJkU6TuFre86vFXsneck3pGWCM/GMpA+u
+         FfWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711009846; x=1711614646;
+        d=1e100.net; s=20230601; t=1711010244; x=1711615044;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TrrgpFAClZqcHwsKzwgVOqViRyO3pBZpHR8vfJnAO2o=;
-        b=vSmhYIy6DxjV0yck8GGTzqQBNqW2iQUKFcA/x9nVj3EoDWVrcG/jYsnvUrUK6GVn82
-         8PAp1nX+jP/eUfJhyd2IvqVKJjAzTiScmZZirN6C4pggA+mJvQzVxZk8FUbo9UNcA0XI
-         QeVjEzaYWrO1gIr3BiVm2HWi3Z34YDnGCz89Dq3g9/wKfPQD+9Pte8hCGJ3XUTaPedHz
-         iPu0rQJKS4urg1ihpiyvdC0N0A59csrWdW2JWcaj8LnyE3OlpCOf923LNPvrgZ2EBp7E
-         lyEknggEcGVTbKi81xzl/5VllVeQVcYsxElBXV9JIfumNVrFpVExZYxhtHBvJSZZQ7xj
-         D9Zg==
-X-Forwarded-Encrypted: i=1; AJvYcCWrrH+kl9GXWMo5AbqDYF0CDOxvNiyupxcaQuLLjFz2TRjC6xw0i3dypOndEcqKRR4L6mQPbTKz1rQIL0Ma4+YNOo5HpWAeBVLm
-X-Gm-Message-State: AOJu0Ywmr3FKsc4cQBlqYgD6r1Oru6jkmaJx3q5SbeGpph1f3x/G1szb
-	lHDp8sNLthM8pMH9YdHxrytygn1dVHLjgOmLDedRO5+/Hrh3DjiNitOjYCuXuSA=
-X-Google-Smtp-Source: AGHT+IFPBVTwgh43hcOfmhRh+pY+VSXaZHFqVPGwGydBW4lDZMezjp4+Y0kkgD8hHMpcbEY+kxxmyQ==
-X-Received: by 2002:a17:906:81ce:b0:a46:2512:aa4f with SMTP id e14-20020a17090681ce00b00a462512aa4fmr1775361ejx.33.1711009846210;
-        Thu, 21 Mar 2024 01:30:46 -0700 (PDT)
+        bh=1LJdX5HINEABbkAABFqbmX72U+4J6Fq5DjsUiL3/oFM=;
+        b=mnsJMqdC3F0PCHyyQX5qaMKryFDHJHFnA8gZkKXseUP/qFA1eVhGjBkibA6v1cOGEw
+         GJgDNn4pCRj8jzxepWJZN3yoizkH+45hN7gOPop61SbdL46gR1OcU7RBEyFBUpTQvWt0
+         4V0aV9dM67+aiKEqzHLZaoQ3fprGhp+LGLD3dTTNW0G1le6qSkmzk1CKWnrI4o74NqUh
+         j7hcriR1XCPGFo9dxJUbDllABEjdcw7J06O5iH0LlmLmRPXdjow0hBTAcfsaovWmutXx
+         20uF8hdJWrJTPAhykAGajz5zh0O2P5drWi3cUts7Ws0Imt8zbimjGKzIk0WrHYySs2r0
+         D2cA==
+X-Forwarded-Encrypted: i=1; AJvYcCX6P+50uMZn6a+1uYFBGKg7wM0pF2RcJ5LKulwz1oQ/2uYXjSj4yfqlR9xnKX4vyd+8tC44YydTULUKclIAN3tICkHty4J3Pvld
+X-Gm-Message-State: AOJu0Yy842onvUaiS4rt9XJpKrH5DFNnNxeCuS7tGqqiL7c0AGrH2QV9
+	eSnguGIVBZB9ZwXIK9mhaaDK4QZTkCT9YrAV5AkFbvr+hZPQFdMyNPATquDq8AQ=
+X-Google-Smtp-Source: AGHT+IG6zJglxzpL3+82jfITASQmJOCWIwdnfUuLTIM2+eo2I1Az4z278xjCcrw8ML8UvOyNmRBQwA==
+X-Received: by 2002:a17:906:c411:b0:a46:635b:bb3e with SMTP id u17-20020a170906c41100b00a46635bbb3emr11536587ejz.52.1711010244441;
+        Thu, 21 Mar 2024 01:37:24 -0700 (PDT)
 Received: from [192.168.1.20] ([178.197.222.97])
-        by smtp.gmail.com with ESMTPSA id i26-20020a1709061cda00b00a46baa4723asm4744125ejh.119.2024.03.21.01.30.44
+        by smtp.gmail.com with ESMTPSA id la10-20020a170906ad8a00b00a46ee3c31afsm1951096ejb.154.2024.03.21.01.37.22
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Mar 2024 01:30:45 -0700 (PDT)
-Message-ID: <9074d48f-9bb2-4047-b293-815ab953be98@linaro.org>
-Date: Thu, 21 Mar 2024 09:30:43 +0100
+        Thu, 21 Mar 2024 01:37:23 -0700 (PDT)
+Message-ID: <2528ae13-a84e-484c-bcf1-278025394c49@linaro.org>
+Date: Thu, 21 Mar 2024 09:37:21 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -77,13 +77,13 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] dt-bindings: dma: Convert ingenic-pdma doc to YAML
+Subject: Re: [PATCH 1/2] dmaengine: ingenic: add Ingenic PDMA controller
+ support.
 To: bin.yao@ingenic.com, vkoul@kernel.org
 Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
  conor+dt@kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, 1587636487@qq.com
 References: <20240321080228.24147-1-bin.yao@ingenic.com>
- <20240321080228.24147-2-bin.yao@ingenic.com>
 Content-Language: en-US
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
@@ -130,161 +130,343 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240321080228.24147-2-bin.yao@ingenic.com>
+In-Reply-To: <20240321080228.24147-1-bin.yao@ingenic.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 21/03/2024 09:02, bin.yao@ingenic.com wrote:
 > From: "bin.yao" <bin.yao@ingenic.com>
 > 
-> Convert the textual documentation for the Ingenic SoCs PDMA Controller
-
-I don't see any conversion here.
-
-> devicetree binding to YAML.
+> This module can be found on ingenic victory soc.
 > 
 > Signed-off-by: bin.yao <bin.yao@ingenic.com>
-
-Are you sure this is Latin transliteration of your name? With a dot in
-between? Looks like email login...
-
 > ---
->  .../devicetree/bindings/dma/ingenic,pdma.yaml | 67 +++++++++++++++++++
->  include/dt-bindings/dma/ingenic-pdma.h        | 45 +++++++++++++
->  2 files changed, 112 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/ingenic,pdma.yaml
->  create mode 100644 include/dt-bindings/dma/ingenic-pdma.h
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/ingenic,pdma.yaml b/Documentation/devicetree/bindings/dma/ingenic,pdma.yaml
-> new file mode 100644
-> index 000000000000..290dbf182a01
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/ingenic,pdma.yaml
+>  drivers/dma/Kconfig        |    6 +
+>  drivers/dma/Makefile       |    1 +
+>  drivers/dma/ingenic-pdma.c | 1356 ++++++++++++++++++++++++++++++++++++
+>  3 files changed, 1363 insertions(+)
+>  create mode 100644 drivers/dma/ingenic-pdma.c
 
+...
 
-> @@ -0,0 +1,67 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/ingenic,pdma.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +static int ingenic_dma_chan_init(struct ingenic_dma_engine *dma, int id)
+> +{
+> +	struct ingenic_dma_chan *dmac = NULL;
 > +
-> +title: Ingenic SoCs PDMA Controller
+> +	if ((id < 0) || (id >= INGENIC_DMA_CHAN_CNT))
+> +		return -EINVAL;
 > +
-> +maintainers:
-> +  - bin.yao <bin.yao@ingenic.com>
+> +	dmac = devm_kzalloc(dma->dev, sizeof(*dmac), GFP_KERNEL);
+> +	if (!dmac)
+> +		return -ENOMEM;
 > +
-
-What is PDMA? Why this is not DMA? Provide description explaining this.
-
-> +allOf:
-> +  - $ref: dma-controller.yaml#
+> +	dmac->id = id;
+> +	dmac->iomem = dma->iomem + dmac->id * DMACH_OFF;
+> +	dmac->engine = dma;
 > +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - ingenic,t33-pdma
-
-There is no such soc like t33 so far. Please point me to SoC/board/other
-bindings.
-
+> +	spin_lock_init(&dmac->hdesc_lock);
+> +	init_completion(&dmac->completion);
 > +
-> +  reg:
-> +    maxItems: 1
+> +	dmac->slave_id = pdma_maps[id] & INGENIC_DMA_TYPE_REQ_MSK;
+> +	dma->chan[id] = dmac;
+> +	INIT_LIST_HEAD(&dmac->ingenic_dma_sdesc_list_submitted);
+> +	INIT_LIST_HEAD(&dmac->ingenic_dma_sdesc_list_issued);
 > +
-> +  interrupts:
-> +    maxItems: 1
+> +	dma_cookie_init(&dmac->chan);
+> +	dmac->chan.device = &dma->dma_device;
+> +	dmac->working_sdesc = NULL;
+> +	list_add_tail(&dmac->chan.device_node, &dma->dma_device.channels);
+> +	tasklet_init(&dmac->task, ingenic_dma_complete, (unsigned long)dmac);
 > +
-> +  interrupts-names:
-> +    const: pdma
-
-Drop names, not needed.
-
+> +	return 0;
+> +}
 > +
-> +  "#dma-cells":
-> +    const: 1
+> +static int ingenic_dma_probe(struct platform_device *pdev)
+> +{
+> +	struct ingenic_dma_engine *ingenic_dma = NULL;
+> +	unsigned int reg_dmac = DMAC_DMAE;
+> +	struct device *dev = &pdev->dev;
+> +	struct resource *iores;
+> +	int i, ret = 0;
 > +
-> +  dma-channels:
-> +    const: 32
+> +	if (!dev->of_node) {
+> +		dev_err(dev, "This driver must be probed from devicetree\n");
 
-Drop property, not needed.
+This driver cannot be probed other way. Drop.
 
+> +		return -EINVAL;
+> +	}
 > +
-> +  clocks:
-> +    maxItems: 1
+> +	ingenic_dma = devm_kzalloc(&pdev->dev, sizeof(struct ingenic_dma_engine),
+
+ssizeof(*(
+
+> +				   GFP_KERNEL);
+> +	if (!ingenic_dma)
+> +		return -ENOMEM;
 > +
-> +  clock-names:
-> +    const: gate_pdma
+> +	ingenic_dma->dma_data = (struct ingenic_dma_data *)device_get_match_data(dev);
 
-Drop names, not needed.
+Why the cast?
 
+> +	if (!ingenic_dma->dma_data)
+> +		return -EINVAL;
 > +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - interrupts-names
-> +  - "#dma-cells"
-> +  - dma-channels
-> +  - clocks
-> +  - clock-names
+> +	/*
+> +	 * Obtaining parameters from the device tree.
+> +	 */
+
+Drop obvious comments.
+
+> +	ingenic_dma->dev = dev;
+> +	if (!of_property_read_u32(pdev->dev.of_node, "programed-chs",
+
+No, there is no such property. NAK.
+
+Upstream your DTS or I will be NAKing your patches. Because otherwise
+you try to sneak a lot of undocumented stuff here.
+
+> +				  &ingenic_dma->chan_programed))
+> +		ingenic_dma->chan_reserved |= ingenic_dma->chan_programed;
 > +
-> +unevaluatedProperties: false
+> +	if (HWATTR_SPECIAL_CH01_SUP(ingenic_dma->dma_data->hwattr) &&
+> +	    of_property_read_bool(pdev->dev.of_node, "special-chs")) {
+> +		ingenic_dma->chan_reserved  |= DMA_SPECAIL_CHS;
+> +		ingenic_dma->chan_programed |= DMA_SPECAIL_CHS;
+> +		ingenic_dma->special_ch = true;
+> +	}
 > +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/ingenic,jz4780-cgu.h>
-> +    pdma:dma@13420000 {
-
-Drop label.
-
-Node names should be generic. See also an explanation and list of
-examples (not exhaustive) in DT specification:
-https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
-
-It does not look like you tested the bindings, at least after quick
-look. Please run `make dt_binding_check` (see
-Documentation/devicetree/bindings/writing-schema.rst for instructions).
-Maybe you need to update your dtschema and yamllint.
-
-> +      compatible = "ingenic,t33-pdma";
-> +      reg = <0x13420000 0x10000>;
-> +      interrupt-parent = <&intc>;
-> +      interrupt-names = "pdma";
-> +      interrupts = <10>;
-> +      #dma-cells = <0x1>;
-
-That's not hex!
-
-> +      dma-channels = <0x20>;
-> +      clocks = <&cgu JZ4780_CLK_PDMA>;
-> +      clock-names = "gate_pdma";
-> +    };
+> +	ingenic_dma->intc_ch = -1;
+> +	if (HWATTR_INTC_IRQ_SUP(ingenic_dma->dma_data->hwattr) &&
+> +	    !of_property_read_u32(pdev->dev.of_node, "intc-ch",
+> +				  &ingenic_dma->intc_ch)) {
 > +
-> diff --git a/include/dt-bindings/dma/ingenic-pdma.h b/include/dt-bindings/dma/ingenic-pdma.h
-> new file mode 100644
-> index 000000000000..66188d588232
-> --- /dev/null
-> +++ b/include/dt-bindings/dma/ingenic-pdma.h
-
-Same filename as binding.
-
-> @@ -0,0 +1,45 @@
-> +/* SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause */
-> +/*
-> + * Copyright (C) 2024 Ingenic Semiconductor Co., Ltd.
-> + * Author: bin.yao <bin.yao@ingenic.com>
-> + */
+> +		if (BIT(ingenic_dma->intc_ch) & ingenic_dma->chan_reserved)
+> +			dev_warn(ingenic_dma->dev,
+> +				 "intc irq channel %d is already reserved\n",
+> +				 ingenic_dma->intc_ch);
 > +
-> +#ifndef __DT_BINDINGS_INGENIC_PDMA_H__
-> +#define __DT_BINDINGS_INGENIC_PDMA_H__
+> +		ingenic_dma->chan_reserved |= BIT(ingenic_dma->intc_ch);
+> +	}
 > +
-> +/*
-> + * Request type numbers for the INGENIC DMA controller.
-> + */
-> +#define INGENIC_DMA_REQ_AIC_LOOP_RX	0x5
+> +	/*
+> +	 * obtaining the base address of the DMA peripheral.
+> +	 */
 
-IDs start from 0, not 5. IDs are decimal, not hex.
+Drop obvious comments.
+
+> +	iores = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (iores) {
+> +		ingenic_dma->iomem = devm_ioremap_resource(&pdev->dev, iores);
+
+Combine these two, there's helper for this.
+
+> +		if (IS_ERR(ingenic_dma->iomem))
+> +			return PTR_ERR(ingenic_dma->iomem);
+> +	} else {
+> +		dev_err(dev, "Failed to get I/O memory\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	/*
+> +	 * Get PDMA interrupt.
+> +	 */
+
+Drop
+
+> +	ingenic_dma->irq_pdma = platform_get_irq_byname(pdev, "pdma");
+> +	if (ingenic_dma->irq_pdma < 0) {
+> +		dev_err(dev, "Unable to get pdma irq\n");
+> +		return ingenic_dma->irq_pdma;
+
+Syntax is return dev_err_probe().
+
+> +	}
+> +
+> +	ret = devm_request_irq(&pdev->dev, ingenic_dma->irq_pdma,
+> +			       pdma_int_handler, 0, "pdma", ingenic_dma);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to request pdma irq\n");
+> +		return ret;
+> +	}
+> +
+> +	/*
+> +	 * Get PDMA descriptor interrupt.
+> +	 */
+> +	if (HWATTR_DESC_INTER_SUP(ingenic_dma->dma_data->hwattr)) {
+> +		ingenic_dma->irq_pdmad = platform_get_irq_byname(pdev, "pdmad");
+
+NAK, you must be joking. You do not have second interrupt.
+
+You must clean your code before upstream from all downstream weirdness
+and incorrectness. You cannot send different binding than driver.
+
+What's more, I don't trust that you will send usable binding, judging by
+the driver, so I expect to see upstreamed DTS.
+
+> +		if (ingenic_dma->irq_pdmad < 0) {
+> +			dev_err(&pdev->dev, "Unable to get pdmad irq\n");
+> +			return ingenic_dma->irq_pdmad;
+> +		}
+> +		ret = devm_request_irq(&pdev->dev, ingenic_dma->irq_pdmad,
+> +				       pdmad_int_handler, 0, "pdmad", ingenic_dma);
+> +		if (ret) {
+> +			dev_err(dev, "Failed to request pdmad irq\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	/*
+> +	 * Initialize dma channel.
+> +	 */
+> +	INIT_LIST_HEAD(&ingenic_dma->dma_device.channels);
+> +	for (i = 0; i < ingenic_dma->dma_data->nb_channels; i++) {
+> +		/*reserved one channel for intc interrupt*/
+> +		if (ingenic_dma->intc_ch == i)
+> +			continue;
+> +		ingenic_dma_chan_init(ingenic_dma, i);
+> +	}
+> +
+> +	dma_cap_set(DMA_MEMCPY, ingenic_dma->dma_device.cap_mask);
+> +	dma_cap_set(DMA_SLAVE, ingenic_dma->dma_device.cap_mask);
+> +	dma_cap_set(DMA_CYCLIC, ingenic_dma->dma_device.cap_mask);
+> +
+> +	ingenic_dma->dma_device.dev = &pdev->dev;
+> +	ingenic_dma->dma_device.device_alloc_chan_resources = ingenic_dma_alloc_chan_resources;
+> +	ingenic_dma->dma_device.device_free_chan_resources = ingenic_dma_free_chan_resources;
+> +	ingenic_dma->dma_device.device_tx_status = ingenic_dma_tx_status;
+> +	ingenic_dma->dma_device.device_prep_slave_sg = ingenic_dma_prep_slave_sg;
+> +	ingenic_dma->dma_device.device_prep_dma_cyclic = ingenic_dma_prep_dma_cyclic;
+> +	ingenic_dma->dma_device.device_prep_dma_memcpy = ingenic_dma_prep_dma_memcpy;
+> +	ingenic_dma->dma_device.device_config = ingenic_dma_config;
+> +	ingenic_dma->dma_device.device_terminate_all = ingenic_dma_terminate_all;
+> +	ingenic_dma->dma_device.device_issue_pending = ingenic_dma_issue_pending;
+> +	ingenic_dma->dma_device.copy_align = DMAENGINE_ALIGN_4_BYTES;
+> +	ingenic_dma->dma_device.src_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
+> +						  BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
+> +						  BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
+> +	ingenic_dma->dma_device.dst_addr_widths = ingenic_dma->dma_device.src_addr_widths;
+> +	ingenic_dma->dma_device.directions = BIT(DMA_DEV_TO_MEM) |
+> +					     BIT(DMA_MEM_TO_DEV) |
+> +					     BIT(DMA_MEM_TO_MEM);
+> +	ingenic_dma->dma_device.residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
+> +
+> +	dma_set_max_seg_size(ingenic_dma->dma_device.dev, DTC_TC_MSK);
+> +
+> +	ingenic_dma->gate_clk = devm_clk_get(&pdev->dev, "gate_pdma");
+> +	if (IS_ERR(ingenic_dma->gate_clk))
+> +		return PTR_ERR(ingenic_dma->gate_clk);
+> +
+> +	ret = dma_async_device_register(&ingenic_dma->dma_device);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Unable to register dma\n");
+> +		clk_disable(ingenic_dma->gate_clk);
+> +		return ret;
+> +	}
+> +
+> +	of_ingenic_dma_info.dma_cap = ingenic_dma->dma_device.cap_mask;
+> +	ret = of_dma_controller_register(pdev->dev.of_node,
+> +					 of_dma_simple_xlate,
+> +					 &of_ingenic_dma_info);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Unable to register dma to device tree\n");
+> +		dma_async_device_unregister(&ingenic_dma->dma_device);
+> +		clk_disable(ingenic_dma->gate_clk);
+> +		return ret;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, ingenic_dma);
+> +
+> +	clk_prepare_enable(ingenic_dma->gate_clk);
+> +
+> +	if (ingenic_dma->chan_programed)
+> +		writel(ingenic_dma->chan_programed, ingenic_dma->iomem + DMACP);
+> +	if (ingenic_dma->intc_ch >= 0)
+> +		reg_dmac |= DMAC_INTCE |
+> +			    ((ingenic_dma->intc_ch << DMAC_INTCC_SFT) & DMAC_INTCC_MSK);
+> +	if (ingenic_dma->special_ch)
+> +		reg_dmac |= DMAC_CH01;
+> +	writel(reg_dmac, ingenic_dma->iomem + DMAC);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused ingenic_dma_suspend(struct device *dev)
+> +{
+> +	struct ingenic_dma_engine *ingenic_dma = dev_get_drvdata(dev);
+> +	struct ingenic_dma_chan *dmac;
+> +	unsigned long flg;
+> +	int i;
+> +
+> +	for (i = 0; i < ingenic_dma->dma_data->nb_channels; i++) {
+> +		dmac = ingenic_dma->chan[i];
+> +		spin_lock_irqsave(&dmac->hdesc_lock, flg);
+> +		if (!list_empty(&dmac->ingenic_dma_sdesc_list_submitted)) {
+> +			spin_unlock_irqrestore(&dmac->hdesc_lock, flg);
+> +			return -EBUSY;
+> +		}
+> +		if (!list_empty(&dmac->ingenic_dma_sdesc_list_issued)) {
+> +			spin_unlock_irqrestore(&dmac->hdesc_lock, flg);
+> +			return -EBUSY;
+> +		}
+> +		spin_unlock_irqrestore(&dmac->hdesc_lock, flg);
+> +	}
+> +	clk_disable_unprepare(ingenic_dma->gate_clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused ingenic_dma_resume(struct device *dev)
+> +{
+> +	struct ingenic_dma_engine *ingenic_dma = dev_get_drvdata(dev);
+> +
+> +	clk_prepare_enable(ingenic_dma->gate_clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct dev_pm_ops ingenic_dma_dev_pm_ops = {
+> +	SET_SYSTEM_SLEEP_PM_OPS(ingenic_dma_suspend, ingenic_dma_resume)
+> +};
+> +
+> +static const struct ingenic_dma_data t33_soc_data = {
+> +	.nb_channels = 32,
+> +};
+> +
+> +static const struct of_device_id ingenic_dma_dt_match[] = {
+> +	{ .compatible = "ingenic,t33-pdma",   .data = &t33_soc_data },
+
+Don't merge lines. Open existing code and look how it is done there.
+
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, ingenic_dma_dt_match);
+> +
+> +static struct platform_driver ingenic_dma_driver = {
+> +	.probe			= ingenic_dma_probe,
+> +	.driver = {
+> +		.name		= "ingenic-dma",
+> +		.of_match_table = ingenic_dma_dt_match,
+> +		.pm		= &ingenic_dma_dev_pm_ops,
+> +	},
+> +};
+> +
+> +static int __init ingenic_dma_init(void)
+> +{
+> +	return platform_driver_register(&ingenic_dma_driver);
+> +}
+> +subsys_initcall(ingenic_dma_init);
+> +
+> +static void __exit ingenic_dma_exit(void)
+> +{
+> +	platform_driver_unregister(&ingenic_dma_driver);
+> +}
+> +module_exit(ingenic_dma_exit);
+> +
+> +MODULE_AUTHOR("bin.yao <bin.yao@ingenic.com>");
+> +MODULE_DESCRIPTION("Ingenic dma driver");
+
+Why do you add second Ingenic dma driver? That's duplication.
 
 Best regards,
 Krzysztof

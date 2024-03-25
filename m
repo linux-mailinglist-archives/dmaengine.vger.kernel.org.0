@@ -1,128 +1,101 @@
-Return-Path: <dmaengine+bounces-1479-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1480-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61A36887C70
-	for <lists+dmaengine@lfdr.de>; Sun, 24 Mar 2024 12:10:52 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 091BC889F06
+	for <lists+dmaengine@lfdr.de>; Mon, 25 Mar 2024 13:23:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 12349281790
-	for <lists+dmaengine@lfdr.de>; Sun, 24 Mar 2024 11:10:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9DE8A1F3827E
+	for <lists+dmaengine@lfdr.de>; Mon, 25 Mar 2024 12:23:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14E8F175A5;
-	Sun, 24 Mar 2024 11:10:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4F08130A61;
+	Mon, 25 Mar 2024 07:31:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qdOmj8Ip"
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="XJu3axtJ"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m32123.qiye.163.com (mail-m32123.qiye.163.com [220.197.32.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5EA87F9;
-	Sun, 24 Mar 2024 11:10:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110E413C66E;
+	Mon, 25 Mar 2024 03:17:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711278648; cv=none; b=WN9EB/GJiNR7G+U+fG3aqB7VeFb6UpIduVmbQMMclvj1Nd3Pii1o284Y/b4CkgK2i8BIdNRoTDlIxd1IETwitwPx6+kYrbvsm2MTnO2E6uN1D7n8Chf4kFntUIZL19+UK90nMs4QQn10Gwuse7Jg/iSWO8Z4zCJUtroqS2Fev+I=
+	t=1711336626; cv=none; b=a+uaW4ebEYZ62snPgvGV5ZUKDT8TWaQEz+bB79JGbyOdI2f9AqI2iEmS1hg5vIroWr4zQeM5kne3RoxpQCTesAKWkf3Tib897beEIK2E5EfgxX5UhCLxB3r31nGJQTXhdvS5FN+ifXyWgb1YME3wuGPmyzRVedPQlJLQc1H7+U4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711278648; c=relaxed/simple;
-	bh=SliL9lrMTLlb02DVUsEIoBH8kLWyicIpi30CBkLACAo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AzLipZMaqjkBBHaCv0ODOKvQJJ5H+6LYx9MfbDUEAUAgvwO+jvo/98cf8urchR5Vra7X5kG6ynKN3XsK3BO3SYZE0GYvQZ33v4wAAamXgqMsIB2AGOdDCEj57Cd1rXvv0mvRt6aB52rl6Bl5r5Qwbc92zhafuAqj8yL/H+dUoxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qdOmj8Ip; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 070DBC433C7;
-	Sun, 24 Mar 2024 11:10:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711278647;
-	bh=SliL9lrMTLlb02DVUsEIoBH8kLWyicIpi30CBkLACAo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=qdOmj8IpSvL3J1HmB8y+mew6CrhOA5NEiJ+Rg96N5Ypb0+1f6aHFpehOcU8yMYb1T
-	 K+47LI2WbRdPyAtvyY5X9mIQEBr9Pt+UpiFubwh09VFW0BMVCFaSPhauvft+3QF0ta
-	 9/ZFA5SCCUitIIwkoOTDD3W2+ivaUkMR2V7NgvG6xR2tqP65XaCWCFY2JQRU4TtM4S
-	 CxIYu4u5VRpCBy2i5e+K5CELBbNGfgrL6KbZOWBh2Yn5WZRVpuU8qauoXFqQga+Ucl
-	 Z5wWRlAxqQv/w5DNHX2WaHoSzjmRBN42Kzg//5BJDZT4VmaLFknBalJp5xjyeSY43z
-	 TLSSlAUd1MY9w==
-Date: Sun, 24 Mar 2024 11:10:29 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>, Jonathan
- Corbet <corbet@lwn.net>, Lars-Peter Clausen <lars@metafoo.de>, Vinod Koul
- <vkoul@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>, Nuno Sa
- <nuno.sa@analog.com>, Michael Hennerich <michael.hennerich@analog.com>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- dmaengine@vger.kernel.org, linux-iio@vger.kernel.org,
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linaro-mm-sig@lists.linaro.org
-Subject: Re: [PATCH v9 0/6] iio: new DMABUF based API
-Message-ID: <20240324111029.3c57b885@jic23-huawei>
-In-Reply-To: <20240310124836.31863-1-paul@crapouillou.net>
-References: <20240310124836.31863-1-paul@crapouillou.net>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1711336626; c=relaxed/simple;
+	bh=IV+b5GbhTAg4OFsAhpQ2bmvejJAJKfMTsfB5GnpgPsg=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=Grbs1gTImPG5E/7ze6qTYyMjzO+sE3Rwg4mLYDedntQm9EbNF8I3olIJ83Q3IGkW4J6+PrSRdutq/YNFjjwoEoTSptxs5gNTjrAoamvYiPCwpqeCvAaFhTcscZT9prb3QCdlidc0eSw9GJmiXA8bGXpHaEd1dQSCCdTp0/01xhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=XJu3axtJ; arc=none smtp.client-ip=220.197.32.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+DKIM-Signature: a=rsa-sha256;
+	b=XJu3axtJuclKjDhrBiJnfTTZK1beWCElLQpLCJ5C0A3Z0UK70ZnF8fBg/PxSPLRmYBjnhK46XOcecJ909nhrPk7cH0/VXPmKLQkfPqn+7Sd4sSBwjETQv+zBG8HK26ljiVGSAkoO5dAJ4UrFFFHDKIx49wyPdl2wXJrFJ2rE8p4=;
+	c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=jMh34jf4s6vSoWqvWlOz1uTF/jW64ljn7FLzVGPFfxU=;
+	h=date:mime-version:subject:message-id:from;
+Received: from localhost.localdomain (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTPA id 8C1707C0373;
+	Mon, 25 Mar 2024 10:38:10 +0800 (CST)
+From: Sugar Zhang <sugar.zhang@rock-chips.com>
+To: heiko@sntech.de,
+	vkoul@kernel.org
+Cc: linux-rockchip@lists.infradead.org,
+	Sugar Zhang <sugar.zhang@rock-chips.com>,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1] dmaengine: Add support for audio interleaved transfer
+Date: Mon, 25 Mar 2024 10:37:49 +0800
+Message-Id: <20240325103731.v1.1.I502ea9c86c8403dc5b1f38abf40be8b6ee13c1dc@changeid>
+X-Mailer: git-send-email 2.7.4
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGUtLQ1ZNTkJOQ0JMSENOTkpVEwETFh
+	oSFyQUDg9ZV1kYEgtZQVlOQ1VJSVVMVUpKT1lXWRYaDxIVHRRZQVlPS0hVSk1PSUxOVUpLS1VKQk
+	tLWQY+
+X-HM-Tid: 0a8e7378f5c309d2kunm8c1707c0373
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MDo6SBw*NDMLHg04HAscSjQd
+	MRkKCT9VSlVKTEpKSEhPSUJKTU5CVTMWGhIXVQgOHBoJVQETGhUcOwkUGBBWGBMSCwhVGBQWRVlX
+	WRILWUFZTkNVSUlVTFVKSk9ZV1kIAVlBSkJLTTcG
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Sun, 10 Mar 2024 13:48:29 +0100
-Paul Cercueil <paul@crapouillou.net> wrote:
+This patch add support for interleaved transfer which used
+for interleaved audio or 2d video data transfer.
 
-> Hi Jonathan,
-> 
-> Here's the final-er version of the IIO DMABUF patchset.
-> 
-> This v9 fixes the few issues reported by the kernel bot.
-> 
-> This was based on next-20240308.
-> 
-> Changelog:
-> 
-> - [3/6]:
->     - Select DMA_SHARED_BUFFER in Kconfig
->     - Remove useless forward declaration of 'iio_dma_fence'
->     - Import DMA-BUF namespace
->     - Add missing __user tag to iio_buffer_detach_dmabuf() argument
+for audio situation, we add 'nump' for number of period frames.
 
-Merge window is coming to an end, and whilst we obviously have
-plenty of time left in this cycle, I would like to get this queued
-up fairly early so any issues can shake out and the various series
-that will build on this can progress.
+Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
+---
 
-Hopefully Paul has addressed all remaining comments.
-So I'm looking for RB or Ack for DMABUF and dmaengine parts from
-respective reviewers/maintainers.
+ include/linux/dmaengine.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Thanks
-
-Jonathan
-
-> 
-> Cheers,
-> -Paul
-> 
-> Paul Cercueil (6):
->   dmaengine: Add API function dmaengine_prep_peripheral_dma_vec()
->   dmaengine: dma-axi-dmac: Implement device_prep_peripheral_dma_vec
->   iio: core: Add new DMABUF interface infrastructure
->   iio: buffer-dma: Enable support for DMABUFs
->   iio: buffer-dmaengine: Support new DMABUF based userspace API
->   Documentation: iio: Document high-speed DMABUF based API
-> 
->  Documentation/iio/iio_dmabuf_api.rst          |  54 ++
->  Documentation/iio/index.rst                   |   1 +
->  drivers/dma/dma-axi-dmac.c                    |  40 ++
->  drivers/iio/Kconfig                           |   1 +
->  drivers/iio/buffer/industrialio-buffer-dma.c  | 181 ++++++-
->  .../buffer/industrialio-buffer-dmaengine.c    |  59 ++-
->  drivers/iio/industrialio-buffer.c             | 462 ++++++++++++++++++
->  include/linux/dmaengine.h                     |  27 +
->  include/linux/iio/buffer-dma.h                |  31 ++
->  include/linux/iio/buffer_impl.h               |  30 ++
->  include/uapi/linux/iio/buffer.h               |  22 +
->  11 files changed, 891 insertions(+), 17 deletions(-)
->  create mode 100644 Documentation/iio/iio_dmabuf_api.rst
-> 
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index 752dbde..5263cde 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -144,6 +144,7 @@ struct data_chunk {
+  *		Otherwise, destination is filled contiguously (icg ignored).
+  *		Ignored if dst_inc is false.
+  * @numf: Number of frames in this template.
++ * @nump: Number of period frames in this template.
+  * @frame_size: Number of chunks in a frame i.e, size of sgl[].
+  * @sgl: Array of {chunk,icg} pairs that make up a frame.
+  */
+@@ -156,6 +157,7 @@ struct dma_interleaved_template {
+ 	bool src_sgl;
+ 	bool dst_sgl;
+ 	size_t numf;
++	size_t nump;
+ 	size_t frame_size;
+ 	struct data_chunk sgl[];
+ };
+-- 
+2.7.4
 
 

@@ -1,142 +1,142 @@
-Return-Path: <dmaengine+bounces-1514-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1515-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A4AD88C41B
-	for <lists+dmaengine@lfdr.de>; Tue, 26 Mar 2024 14:50:22 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 35E3E88C5AE
+	for <lists+dmaengine@lfdr.de>; Tue, 26 Mar 2024 15:49:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BC0531C3F089
-	for <lists+dmaengine@lfdr.de>; Tue, 26 Mar 2024 13:50:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CA73E1F61F57
+	for <lists+dmaengine@lfdr.de>; Tue, 26 Mar 2024 14:49:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9403A4EB37;
-	Tue, 26 Mar 2024 13:50:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ZHynT0rv"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5773813C665;
+	Tue, 26 Mar 2024 14:49:27 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C405182A3;
-	Tue, 26 Mar 2024 13:50:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A32BED9;
+	Tue, 26 Mar 2024 14:49:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711461017; cv=none; b=RD5qOCesad4ax4Dqi4S5x7z4VkPEcZHAHWM8uHMgva1D+jZZ8px3Fn+Kgta8NJRuF41krq9+30mPdhWvwKerei+nTkY7ftL8sf0DPhJyu8wJABQ/KdURnuTqCcJTi502wn+QYFgLGRFaX5GnKafXWLLV0y8MDFUHevGw6rXO87Q=
+	t=1711464567; cv=none; b=W5aRuY4FA+MFSwww+a9KSGBm6rjqxF/qS+LJFKNBU4hSPwhPIFxU2Jq1/l2LG5AczpGnyOXcEwvCrz/Q3NaPNqAwMPJKDzDYJJ1da4uSW1XH+h3VH+mdRZ4O2ERbQ09krA9hqDHEy8zJZYxtmOTIYcpbBICCxe2Qt3z18yuixBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711461017; c=relaxed/simple;
-	bh=ge9l/Gwc3AxYtcSsPMc+z1dOFILly49XM8PZgooU2WM=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Y0XUCqfVYp6gQfyfrzXCDNXXBjfvElqF0SP43s96YOIJLM69XfpVHOOcQTfxa05XXO+N/BI7+i9gN/SexRS51Q787gPsGe8EZ1zzNlhQAeYAyoaYfzIbktfUzhnkuk9/GwS4y81lwPxYewkmTnCdbQZN5V7Cb08QhYLzu+vMScU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ZHynT0rv; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:Reply-To:Cc:To:From:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=42Ec/7rrOkb0s10VDIHJ7GTucWOmYS68hh6j9o0Neio=;
-	t=1711461015; x=1711893015; b=ZHynT0rvvMp2iCCb9ldJ5pRPHY7yKvOU2jYRS+XrzZX39b7
-	KfT+NkSz/HRTZtcKISuA4qKuCuw5iKPlizxYWPndZjP4cxAJ39VVrh2+SZ3TTbikHOVfUIByH2WG/
-	fjRzSDFhI9BPhl5i9ENXHcbcRFUh7LHg3UjM0M0lvOiR5qskJQyC9BgU+M4/qztpQTtY/NRRuyPtK
-	XC+ThhiT7WHVorQ0a59wjET1Eaq2VVrzfQUDLgoyv0FuMtw4XrpGJUk0HMnUVH/ZsVTpzyTm8beWS
-	qW5ple9+9k4oQIBvuZps1qeq+veh6uc1b6cna0OvRUuAVLJr3ddVai3ejKvk7+Yw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rp7Bl-0003I9-VQ; Tue, 26 Mar 2024 14:50:06 +0100
-Message-ID: <8734a80b-c7a9-4cc2-91c9-123b391d468c@leemhuis.info>
-Date: Tue, 26 Mar 2024 14:50:05 +0100
+	s=arc-20240116; t=1711464567; c=relaxed/simple;
+	bh=NjGYoZS9MYNf6KYedY89CIBd6GNJTkqJoAov7a2XKRo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PKa2GUP2mvNfmdnlyNeLbfnsCask9NEB4lp/RWBjl2d0U9X7MSBPz3S8LBcMRCJLBPg2ZLxsqT1391GskXnP9fC6P3xxTX/6E6DPlfevlCTKnIJjxYKl4YICDrwonkiLmXmCzDJBct5JO5U+vELkj+9bAOiu2XeEv2qMEhP4aN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: u4/HncuNQveTDgvADY/MsQ==
+X-CSE-MsgGUID: xKfSFc0eQ3Cp9nnBEl04Pw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="28999055"
+X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
+   d="scan'208";a="28999055"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 07:49:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="914882408"
+X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
+   d="scan'208";a="914882408"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 07:49:12 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andy@kernel.org>)
+	id 1rp86t-0000000GKYj-43J8;
+	Tue, 26 Mar 2024 16:49:07 +0200
+Date: Tue, 26 Mar 2024 16:49:07 +0200
+From: Andy Shevchenko <andy@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: nikita.shubin@maquefel.me,
+	Hartley Sweeten <hsweeten@visionengravers.com>,
+	Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Lukasz Majewski <lukma@denx.de>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Sebastian Reichel <sre@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	Mark Brown <broonie@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Sergey Shtylyov <s.shtylyov@omp.ru>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Ralf Baechle <ralf@linux-mips.org>,
+	"Wu, Aaron" <Aaron.Wu@analog.com>, Lee Jones <lee@kernel.org>,
+	Olof Johansson <olof@lixom.net>, Niklas Cassel <cassel@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-clk@vger.kernel.org,
+	linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-watchdog@vger.kernel.org,
+	linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org,
+	netdev@vger.kernel.org, linux-mtd@lists.infradead.org,
+	linux-ide@vger.kernel.org, linux-input@vger.kernel.org,
+	linux-sound@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v9 00/38] ep93xx device tree conversion
+Message-ID: <ZgLgY11N8dkpTZJB@smile.fi.intel.com>
+References: <20240326-ep93xx-v9-0-156e2ae5dfc8@maquefel.me>
+ <dc3e2cb4-f631-4611-8814-0dc04c5502f0@linaro.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: dmaengine: CPU stalls while loading bluetooth module
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: vkoul@kernel.org
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
- parthiban@linumiz.com, saravanan@linumiz.com,
- 'karthikeyan' <karthikeyan@linumiz.com>,
- "bumyong.lee" <bumyong.lee@samsung.com>,
- 'Linux regressions mailing list' <regressions@lists.linux.dev>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <CGME20240305062038epcas2p143c5e1e725d8a934b0208266a2f78ccb@epcas2p1.samsung.com>
- <1553a526-6f28-4a68-88a8-f35bd22d9894@linumiz.com>
- <000001da6ecc$adb25420$0916fc60$@samsung.com>
- <12de921e-ae42-4eb3-a61a-dadc6cd640b8@leemhuis.info>
- <000001da7140$6a0f1570$3e2d4050$@samsung.com>
- <07b0c5f6-1fe2-474e-a312-5eb85a14a5c8@leemhuis.info>
- <001001da7a60$78603130$69209390$@samsung.com>
- <9490757c-4d7c-4d8b-97e2-812a237f902b@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <9490757c-4d7c-4d8b-97e2-812a237f902b@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1711461015;a078b924;
-X-HE-SMSGID: 1rp7Bl-0003I9-VQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dc3e2cb4-f631-4611-8814-0dc04c5502f0@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-for once, to make this easily accessible to everyone.
-
-Vinod Koul, what's your option here? We have two reports about
-regressions caused by 22a9d958581244 ("dmaengine: pl330: issue_pending
-waits until WFP state") [v6.8-rc1] now:
-
-https://lore.kernel.org/lkml/1553a526-6f28-4a68-88a8-f35bd22d9894@linumiz.com/
-
-https://lore.kernel.org/all/ZYhQ2-OnjDgoqjvt@wens.tw/
-[the first link points to the start of this thread]
-
-To me it sounds like this is a change that better should be reverted,
-but you are of course the better judge here.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-On 20.03.24 07:28, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 20.03.24 01:49, bumyong.lee wrote:
->>>>> Hmmm. 6.8 final is due. Is that something we can live with? Or would
->>>>> it be a good idea to revert above commit for now and reapply it when
->>>>> something better emerged? I doubt that the answer is "yes, let's do
->>>>> that", but I have to ask.
->>>>
->>>> I couldn't find better way now.
->>>> I think it's better to follow you mentioned
->>>
->>> 6.8 is out, but that issue afaics was not resolved, so allow me to ask:
->>> did "submit a revert" fell through the cracks or is there some other
->>> solution in the works? Or am I missing something?
->>
->> "submit a revert" would fix the issue. but it would make another issue
->> that the errata[1] 719340 described.
+On Tue, Mar 26, 2024 at 11:19:54AM +0100, Krzysztof Kozlowski wrote:
+> On 26/03/2024 10:18, Nikita Shubin via B4 Relay wrote:
+> > The goal is to recieve ACKs for all patches in series to merge it via Arnd branch.
+> > 
+> > Some changes since last version (v8):
+> > 
+> > - Most important, fixed bug in Device Tree resulting in CS4271 not working by Alexander Sverdlin.
+> > - added #interrupt-cells to gpio nodes with interrupts-controller
+> > - fixed some EOF in dtsi files
+> > - fixed identation and type in ep93xx-keypad thanks to Andy Shevchenko
+> > 
+> > Stephen Boyd, Vinod Koul PLEASE! give some comments on following, couse i hadn't one for a couple of iterations already:
+> > 
+> > Following patches require attention from Stephen Boyd, as they were converted to aux_dev as suggested:
+> > 
+> > - ARM: ep93xx: add regmap aux_dev
+> > - clk: ep93xx: add DT support for Cirrus EP93xx
+> > 
+> > Following patches require attention from Vinod Koul:
+> > 
+> > - dma: cirrus: Convert to DT for Cirrus EP93xx
+> > - dma: cirrus: remove platform code
 > 
-> "Make" as it "that other issue was present before the culprit was
-> applied"? Then that other issue does not matter due to the "no
-> regression" rule and how Linus afaics wants to see it applied in
-> practice. For details on the latter, see the quotes from him here:
-> https://docs.kernel.org/process/handling-regressions.html
->  Hence please submit a revert (or tell me if I misunderstood something)
-> -- or of course a workaround for the other issue that does not cause the
-> regression people reported.
-> 
->> [...]
->> [1]: https://developer.arm.com/documentation/genc008428/latest
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
-> 
-> 
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+> A lot of this could have been already merged if you split it... Just
+> saying...
 
-#regzbot poke
+But you able to apply DT schema patches if you wish.
+Just doing? :-)
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 

@@ -1,75 +1,75 @@
-Return-Path: <dmaengine+bounces-1490-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1491-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 28E9A88BABF
-	for <lists+dmaengine@lfdr.de>; Tue, 26 Mar 2024 07:51:02 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EA7BC88BAC6
+	for <lists+dmaengine@lfdr.de>; Tue, 26 Mar 2024 07:51:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 908AFB224AF
-	for <lists+dmaengine@lfdr.de>; Tue, 26 Mar 2024 06:50:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 880882A87AE
+	for <lists+dmaengine@lfdr.de>; Tue, 26 Mar 2024 06:51:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECED112880F;
-	Tue, 26 Mar 2024 06:50:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 469C484D12;
+	Tue, 26 Mar 2024 06:51:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JiFZVdOc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nNNWQsmj"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FFB7823DA
-	for <dmaengine@vger.kernel.org>; Tue, 26 Mar 2024 06:50:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 757301272A8
+	for <dmaengine@vger.kernel.org>; Tue, 26 Mar 2024 06:51:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711435851; cv=none; b=tI0U0WfL1qmHpMVUc8qsHo/OGZbbmEeQHFdynSDxb2P7XRbZwON1n1zvL4d0xfCFVaf/vbPM+aAIwBL0VrjA6NAUVORtO/8YCsWduiOEFECBL0x57jVIRVn+3mmsoqypat25uut55AqeJyETlVRwnn5/zVSUtgWk4Hza85WsUcg=
+	t=1711435894; cv=none; b=mKBlDfAQ81kGLa7/QXx3M+9PRMVr1N1VFz1J8b4VjSVJ70bpbu8A10UhQpfgNaaVZeGqc6dFKV02Mzw8xlzQL5DZPYCanmoqXPiiMwu2mNl91nUk4030qT8yUzcFDGUo1iFUXFk+AYhkI9ALVInFt3nmNQEV7sjamTZWIFrnMdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711435851; c=relaxed/simple;
-	bh=+UeqcSIa8j3tiyfU3G25KJScLdmp2Wmms8GGl1R6LGI=;
+	s=arc-20240116; t=1711435894; c=relaxed/simple;
+	bh=XMYmyg6j+x1fMC/aD7Sus31kCZBytCleG6kliYvou0c=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ofz1Kz1Q++Uc1PHBsjy0V9I6ZC2vTP7q1Iue59yxK1L/Y3bDCfP2B4/J46owmczW6qdLmBOrJJJUqk1rcevBJY06zJSHbw22tt1f+JKYo/0e2X3YkmL6F+YRY7RInHVjc6S7wWirOSF4sYNvEVA42J7Sp08IPDJVj5e27ity96c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JiFZVdOc; arc=none smtp.client-ip=209.85.218.43
+	 In-Reply-To:Content-Type; b=NWxteOXNEoC/HM4g7njzWd8fSvr1QddXcCFs5UskhHeuRe+QbdDe3yHLUNFRRTZcuFwoPIlcoykDKeuKcfKZfm9FcB5YGmRQQxVTJb0PzF4w2e30THqw9m7ou9ox1PPqOI2DCNE/OwL3iuQ7Y2lu6NAJTggXYEVd8ICev0Vjp0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nNNWQsmj; arc=none smtp.client-ip=209.85.167.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a4751063318so262535166b.0
-        for <dmaengine@vger.kernel.org>; Mon, 25 Mar 2024 23:50:49 -0700 (PDT)
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5157af37806so6116249e87.0
+        for <dmaengine@vger.kernel.org>; Mon, 25 Mar 2024 23:51:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711435848; x=1712040648; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1711435890; x=1712040690; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=CcYszJVzk4g1YlTjCZo19PYSJoJO6aoTmeXZSldpIoM=;
-        b=JiFZVdOc6IyE8zmeQEwxmaV12EkHEy1EXpNf5hcZQ7lnHK19Ztc4TmmI53ZcF0XkaF
-         EYgtv7vbb/bdUQoRZFpokaX/GYcSKoe45uFC/NdB0HxYm4FUbVzR9lwMbfU6AuBcbg3T
-         6Q3eEOSUATQXCRRW8v5uErJ/n3pbXggK4iHfOQo0Pg5bBb93aEsX8A9q/BGL2vyiP2t8
-         urkYe+m6HXwPPbYO0pQivl7CyIrkHsk36JVmxhkMN4oDmPJvnc+sc53RlLgsfwOai41q
-         BOXl4XlUtM/uLodBwhT3CnXfj78MVmYrUKoJjfiX69gUgE77f+Y+T3nQcY/H1F/+McL7
-         cz/A==
+        bh=ZQQUbFAlR5W/6GE/lvdJOw1ZfdoypRl3WnR9N4vE3Do=;
+        b=nNNWQsmjG4L3VoC5Ic4Mq7XiqBW/ysXMBIm0RQzbK1dz9dMz5OtUk/42GvzQiAdUWk
+         jsK19iDWigGYO988D2XMh4vzTV8EOk0UepBdfewKk3aL4MwlXG/LNsWgFLZcWGKYzYGy
+         XxbtEp0NfBygAR3kjjETcZ658S8IriQV9YQ2RMca0y8kA7uNGo6iEOvTkjh1ZBwCRCPS
+         EJ/sfqT9w9Cn5NP4zly+pzo7ysgvt7lHJpZuK91sJv5Ikxsa7cVEV7ILWGkM60qD0DYw
+         NNYKjLxNw+/PRcA8c98DXrNZqmWzgFoKKURllHhnvWxie+1Rs7h6b/rkrnczQiZsxpf8
+         QFxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711435848; x=1712040648;
+        d=1e100.net; s=20230601; t=1711435890; x=1712040690;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CcYszJVzk4g1YlTjCZo19PYSJoJO6aoTmeXZSldpIoM=;
-        b=MNTaBHPLRtFsb5NqD7GgQ0X9SG5GvwxuhzIK5rmmRySxZVV3rxQGgtVJbLGWOC6/tL
-         /ZjS/jOafdO2Ix3eHiXKnnIG668kEDMYCeH51SfAQwym+RrSqBE7N+712m0Iy7Es3NBk
-         WtNzZWkUj076+QYg1oFzIKMxW+ZlTqyqpFjW5pSb08+mUU3Fkgu0eBcDu2x6IyCKOSsb
-         HJSRJnwmIT6jotwqh/yUECRdmu1bkMzVmMrxrszwoousOIfOn8Q2hwbnEBjuxpcBKL+X
-         1YXxZPy7tCezX5KWfNI1/ZhD1zh7jwkkVPYetm/tTt+H6HaPxSXVyTL/c2Mo1DMnC0rt
-         /Skg==
-X-Forwarded-Encrypted: i=1; AJvYcCVfu2u0uYchtvK+V8ZSOj0uL/xPJkYnz+PriheP2011VU3bjFnLCLdBUoD88XVETF0hjDJPQUbuc11CfgcB2t71sxoSLoVituey
-X-Gm-Message-State: AOJu0YxTST7enTAHQ5sZk2hpOPDXpN4EErrxn7r0QElUaSLdVEm7Av2q
-	IhwAqdi1XP+eP/haKEqey1B+JimyXis/el4/ElP4rGEQx9kRy9bQgIESwRXebcI=
-X-Google-Smtp-Source: AGHT+IE4HfWUGwxqmUfayIT22jk+nqjwUsI8ApUyR9/HchWuudDay05zuCJfHGFE1BreKgJVEwWcTg==
-X-Received: by 2002:a17:906:b257:b0:a47:39c6:8970 with SMTP id ce23-20020a170906b25700b00a4739c68970mr205641ejb.39.1711435847894;
-        Mon, 25 Mar 2024 23:50:47 -0700 (PDT)
+        bh=ZQQUbFAlR5W/6GE/lvdJOw1ZfdoypRl3WnR9N4vE3Do=;
+        b=P1iHvJx9MSyfpMqAvWXS8ToeOlIhVSKmoxDx2+EDz2Z1b7icpOxoT7XQjpC3i94et2
+         FmUP84UNVHk1Mz0lRFl7V3hRULo/jhBXAIBc4423iiGsEWmk4YTjFFgrCYZKCEwuI01v
+         1qlH9SEspCn1PcqnAxbRx7o6+413UAVRtGssahi/I2eAK2CMkiKpdzUz/MImKKCl6Bt8
+         1u37nUjfI+ajzOdtjj14TQv3WYW1Ab9W84wa/C5z/IPpE0vw1uxfE1VFUtu9T0Z6418y
+         vsSFg20gICs2OvbNS9Zv4ZajhDuwVvDzm6RpbO0rKVRbcAPx/bBXxS+6Llexk/nFm7wF
+         PQJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXyhAN5fB6eoqKpjbYQvXD4ZHRzDv7TY+V4razNTrctj8D1g7kJcKagE+XSOQqUs4q+3TPIIhaoPs7rOscS2tyjTfnhZxmAl+Kp
+X-Gm-Message-State: AOJu0YwiTQNdUssAnlRLj0GBFFmD+/Eezgg3cK4oFZRCUxTNtWppK+6b
+	HiUpet+MNYrsIlpW3Ae8Q33AGfu72VjqrMGDSOsfECUiN0Y85IyKylAEGHJWq/Q=
+X-Google-Smtp-Source: AGHT+IFaUb++Oio47WMhGl4Izq878yZKJXYnIiH4zNqnBwAnklh75GT9lgEaRz9sdP0bQgc3aapeuA==
+X-Received: by 2002:ac2:4dba:0:b0:515:9e22:698a with SMTP id h26-20020ac24dba000000b005159e22698amr1295548lfe.2.1711435890540;
+        Mon, 25 Mar 2024 23:51:30 -0700 (PDT)
 Received: from [192.168.1.20] ([178.197.222.44])
-        by smtp.gmail.com with ESMTPSA id h22-20020a1709060f5600b00a473a1fe089sm3867467ejj.1.2024.03.25.23.50.46
+        by smtp.gmail.com with ESMTPSA id bn10-20020a170907268a00b00a475301cd82sm2504353ejc.170.2024.03.25.23.51.29
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Mar 2024 23:50:47 -0700 (PDT)
-Message-ID: <4a30ce5d-c308-4983-8c7b-d83ced6a9ef1@linaro.org>
-Date: Tue, 26 Mar 2024 07:50:45 +0100
+        Mon, 25 Mar 2024 23:51:30 -0700 (PDT)
+Message-ID: <e32e05c8-805b-42ce-9b03-87d1bf3feb56@linaro.org>
+Date: Tue, 26 Mar 2024 07:51:28 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -143,22 +143,19 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 26/03/2024 04:37, Frank Li wrote:
-> On Tue, Mar 26, 2024 at 09:47:03AM +0800, Inochi Amaoto wrote:
->> The DMA IP of Sophgo CV18XX/SG200X is based on a DW AXI CORE, with
->> an additional channel remap register located in the top system control
->> area. The DMA channel is exclusive to each core.
->>
->> Add the dmamux binding for CV18XX/SG200X series SoC
->>
->> Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
->> ---
->>  .../bindings/dma/sophgo,cv1800-dmamux.yaml    | 48 ++++++++++++++++
->>  include/dt-bindings/dma/cv1800-dma.h          | 55 +++++++++++++++++++
+>> +properties:
+>> +  compatible:
+>> +    const: sophgo,cv1800-dmamux
+>> +
+>> +  reg:
+>> +    items:
+>> +      - description: DMA channal remapping register
+>> +      - description: DMA channel interrupt mapping register
+>> +
 > 
-> I remember checkpatch.pl require .h have seperate patch.
+> Look like driver have not use it.
 
-Why do you insist on that? Bindings header should be with binding.
-That's incorrect advice.
+And what does it mean for the bindings?
 
 Best regards,
 Krzysztof

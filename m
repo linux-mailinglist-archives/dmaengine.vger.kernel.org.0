@@ -1,99 +1,121 @@
-Return-Path: <dmaengine+bounces-1516-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1517-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E02D88C5EB
-	for <lists+dmaengine@lfdr.de>; Tue, 26 Mar 2024 15:54:02 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D71A988CC10
+	for <lists+dmaengine@lfdr.de>; Tue, 26 Mar 2024 19:32:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DBA911F63900
-	for <lists+dmaengine@lfdr.de>; Tue, 26 Mar 2024 14:54:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 92547307AA9
+	for <lists+dmaengine@lfdr.de>; Tue, 26 Mar 2024 18:32:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BB9E13C80F;
-	Tue, 26 Mar 2024 14:53:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23EC185293;
+	Tue, 26 Mar 2024 18:32:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UPBVhnlf"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE3213C809;
-	Tue, 26 Mar 2024 14:53:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3E2366;
+	Tue, 26 Mar 2024 18:32:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711464804; cv=none; b=reyXTS3nmeE30abO6/XdFbNk9TTtAE5WzLimOLuzl9BhwIMH8sNNiX1arTgcUgBLPJXnRTM7xMecnIX2VKXRyEke2cI0iTvSsJRkFgbVzHl8ndJK+0raqZUtUOH/KRQPhkiC1xhvQ6EDuoV1gRH0tEODp8CJVp0AFoK6Gve4XZI=
+	t=1711477964; cv=none; b=RG9v0HGbETkSJPfIiLTSPHT7DCJK73VPwSsvX/+Qy25t4XRwhbxWVE5XUhXaflCaa5f36V95Q5ixo1lhpc69GVqjKDG5EdSiEcRNiaB5yFueET3T8spxyBh/Wf/h189t+k+SH9iOOu9txsAgF9vDW9lHQA8uGnTcUr03UFKL8YQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711464804; c=relaxed/simple;
-	bh=Sxpuzis818g33XaA/nNCRA+K2FZNjUkOrkHHjScAvXA=;
+	s=arc-20240116; t=1711477964; c=relaxed/simple;
+	bh=NUM/VQUj1n9cy0CvGlCZX+P9uXr4/dy72JoGSLHufxM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rt0noE9t5agmdJvHBwLZq2qySjSmpRk2XAt+tc8s6rYNb6xO5YEgbdv6x0RkkDF18FmcNiM3TocFXBKJo2leEgoQOzx8l0Dl1V6XJ3DuPMqhqQ79YTgiTFUDU24je0qqHZHfRrUTUED+Llyy9eMd7blJAYzka2AQnpCcK9H1AY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: Wj7kzTgcRAmabAGb5ciqwA==
-X-CSE-MsgGUID: xgHfqc95TwSLwHQmJgalNQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="28999629"
-X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
-   d="scan'208";a="28999629"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 07:53:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="914882499"
-X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
-   d="scan'208";a="914882499"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 07:53:20 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andy@kernel.org>)
-	id 1rp8Av-0000000GKce-2zLk;
-	Tue, 26 Mar 2024 16:53:17 +0200
-Date: Tue, 26 Mar 2024 16:53:17 +0200
-From: Andy Shevchenko <andy@kernel.org>
-To: nikita.shubin@maquefel.me
-Cc: Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-	dmaengine@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v9 00/38] ep93xx device tree conversion
-Message-ID: <ZgLhXanNnQ147rUP@smile.fi.intel.com>
-References: <20240326-ep93xx-v9-0-156e2ae5dfc8@maquefel.me>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Dl4b3YngjDYlvkXuZeiiFG6n0vmcOq+qfYZ2G+x0rLYOD5YefijSGCxB51zoqQIeoyiYHiNh6vj2F9Skgdo+qtNO4aHX4OslwEjS7RSktYYx1T5kT6mTCp/dRxyLN36lU4zDUvdKGMfSM4T4ZUjrJjcKXooXQ7o1LVGFR0AJi+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UPBVhnlf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 485F5C433F1;
+	Tue, 26 Mar 2024 18:32:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711477963;
+	bh=NUM/VQUj1n9cy0CvGlCZX+P9uXr4/dy72JoGSLHufxM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UPBVhnlf3WgVLSfhU2d3qPkER6edrVKGY0wPi+vl9sFQP3kSNWNPDsQ6i4JcXR7vn
+	 WiZwKCOzJ/NuPL5hLeBH97lnMywL0RrCLN6opS+iIlkrJ9Hsf0qpBYCUOHcL2qQKs3
+	 N6vZzXHUZB2Yi0vERUjybqVDqAYHybjE/jXZUFgSwow0x9v4i4E6/If7v9KCzzEq4A
+	 xQq/4w++Jy4axdgvEHOCyY4+UJASVNs2Kqf13epHbcQydYdvhl3ZzbIKUN6NA3ENKC
+	 4WGOAiiFqhAV7nR0nA5o7QAsnpXZbgwgDgvcUfvKwEwgxqBrCPpZ8EG7bHUdAeeFrG
+	 Pmw2uyGN9iV6A==
+Date: Tue, 26 Mar 2024 18:32:39 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Tan Chun Hau <chunhau.tan@starfivetech.com>
+Cc: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+	Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Ley Foon Tan <leyfoon.tan@starfivetech.com>,
+	Jee Heng Sia <jeeheng.sia@starfivetech.com>,
+	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: dma: snps,dw-axi-dmac: Add JH8100
+ support
+Message-ID: <20240326-maternity-alive-6cb8f6b2e037@spud>
+References: <20240326095457.201572-1-chunhau.tan@starfivetech.com>
+ <20240326095457.201572-2-chunhau.tan@starfivetech.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="hN0bqbopRWGDKaVk"
+Content-Disposition: inline
+In-Reply-To: <20240326095457.201572-2-chunhau.tan@starfivetech.com>
+
+
+--hN0bqbopRWGDKaVk
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240326-ep93xx-v9-0-156e2ae5dfc8@maquefel.me>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 26, 2024 at 12:18:27PM +0300, Nikita Shubin via B4 Relay wrote:
-> The goal is to recieve ACKs for all patches in series to merge it via Arnd branch.
-> 
-> Some changes since last version (v8):
-> 
-> - Most important, fixed bug in Device Tree resulting in CS4271 not working by Alexander Sverdlin.
-> - added #interrupt-cells to gpio nodes with interrupts-controller
-> - fixed some EOF in dtsi files
-> - fixed identation and type in ep93xx-keypad thanks to Andy Shevchenko
-> 
-> Stephen Boyd, Vinod Koul PLEASE! give some comments on following, couse i
-> hadn't one for a couple of iterations already:
+On Tue, Mar 26, 2024 at 02:54:56AM -0700, Tan Chun Hau wrote:
+> Add support for StarFive JH8100 SoC in Sysnopsys Designware AXI DMA
+> controller.
 
+Your commit message should explain what makes this incompatible with
+existing devices. That inforatiion does appear to be in the driver
+patch, but should also be here. Otherwise,
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
->       clk: ep93xx: add DT support for Cirrus EP93xx
+>=20
+> Signed-off-by: Tan Chun Hau <chunhau.tan@starfivetech.com>
+> ---
+>  Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml =
+b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
+> index 363cf8bd150d..525f5f3932f5 100644
+> --- a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
+> +++ b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
+> @@ -21,6 +21,7 @@ properties:
+>        - snps,axi-dma-1.01a
+>        - intel,kmb-axi-dma
+>        - starfive,jh7110-axi-dma
+> +      - starfive,jh8100-axi-dma
+> =20
+>    reg:
+>      minItems: 1
+> --=20
+> 2.25.1
+>=20
 
->       dma: cirrus: Convert to DT for Cirrus EP93xx
+--hN0bqbopRWGDKaVk
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks for pursuing this!
+-----BEGIN PGP SIGNATURE-----
 
-I just left the respective patches (I hope I haven't missed anything) that you
-are waiting for the review.
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZgMUxwAKCRB4tDGHoIJi
+0vGxAP0e/9BfT/Cc5S7oAvgGnrjYwSinfk93mUrAKWU7SUAcWgD9EksxI511Ha//
+B3vFWbGOJJZDcakWwlM9rjiatGEljAQ=
+=Dmpe
+-----END PGP SIGNATURE-----
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+--hN0bqbopRWGDKaVk--
 

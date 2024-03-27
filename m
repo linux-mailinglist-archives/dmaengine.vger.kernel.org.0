@@ -1,75 +1,75 @@
-Return-Path: <dmaengine+bounces-1542-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1545-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 303AE88D5B5
-	for <lists+dmaengine@lfdr.de>; Wed, 27 Mar 2024 06:07:45 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5210288D61F
+	for <lists+dmaengine@lfdr.de>; Wed, 27 Mar 2024 06:57:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B4A891F2B481
-	for <lists+dmaengine@lfdr.de>; Wed, 27 Mar 2024 05:07:44 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A6D1AB22EE1
+	for <lists+dmaengine@lfdr.de>; Wed, 27 Mar 2024 05:57:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8FE2D26A;
-	Wed, 27 Mar 2024 05:07:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FD3118026;
+	Wed, 27 Mar 2024 05:57:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nJ4cvSY6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YQ7unryc"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C1B963BF
-	for <dmaengine@vger.kernel.org>; Wed, 27 Mar 2024 05:07:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79E9175AA
+	for <dmaengine@vger.kernel.org>; Wed, 27 Mar 2024 05:57:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711516058; cv=none; b=iyu3UICaeQfnrMoRJHLnC1VJGjA1ENE0rBd0/KsMIzzBvr7hTKDe335/XQDreIF+l+IKWWtQmOfKyEh6OW5usl5LZtWsbxlnZb/acr3X+jj8nMc2uKEWjyqfy0eLyTuAlN7AlZcCBkMQaeN1My7ko+XkCARdZRn7/KKxTxN5WhI=
+	t=1711519056; cv=none; b=W+d0kmE00gwJW936a10jdDLifjNQbH2Dptt57KIMvaLJTa59+CQxx+KrhH8fsojacTK0/+Bvakew8hM1IsGMp6AY7982gPuVtkh4hJ6sZNL+4N5TJvR8Nh/tkNKj75ygbMMfTfXXdEc4mtrXr/eb5qkU7fie79BRJEApZ6IO3Rg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711516058; c=relaxed/simple;
-	bh=6hRrPE77vMG9UB+u2FZ3N08FEfbvyAhJGxbSd6EuVlM=;
+	s=arc-20240116; t=1711519056; c=relaxed/simple;
+	bh=A+E6Q8O/+odDiW3CmDioCMgwZfI7X8h9ZMP4WmUHwBE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FgV+xqs0ChO27qknhWzUe3XBxRqhGOQRXQOZi2Df/RDOINR60Cdifq257DIG7DdGvcGNEn6A8XRQ6UVOsVM1d3IHaDYwzAOhCUZI6ppFHGCe5WdBmI8HNSnvG/tQ2U4eB3SjfQpt7ZDmztvMs++8+NHG5bB2b/EvaNeswmj2krI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nJ4cvSY6; arc=none smtp.client-ip=209.85.218.51
+	 In-Reply-To:Content-Type; b=g+kgy3J5ktk2iZWdZv74IsRbgLT2UuMZRqtEjKNN5hIZpYLlW6wlkaX4hXnbzaWjjtfD+2rFssQscQydg532ZM4YQR5uH+HcfAYpc17AEyJ7LCh2j2xUjNkTqRZinpvgJUlz2Bdz7pvr0O6AhHWtDPA+ZiH2r9m/qfHNH43s7Dk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YQ7unryc; arc=none smtp.client-ip=209.85.218.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a468004667aso846421566b.2
-        for <dmaengine@vger.kernel.org>; Tue, 26 Mar 2024 22:07:36 -0700 (PDT)
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a4a387ff7acso349268566b.2
+        for <dmaengine@vger.kernel.org>; Tue, 26 Mar 2024 22:57:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711516054; x=1712120854; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1711519053; x=1712123853; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=/j/wkfnU1VMtlD/kDo+x6lLCbpnn8+R/4k1WBBOkFIQ=;
-        b=nJ4cvSY6gnVf4RRHoeSMIHgnar5jPBgsCwbnnW6oSdwx6NrcvEb3w50No93GB2LVhf
-         /PlRabLRgZV5JZz1QhBJgs66UDJidTrOe2S86AanQ3O+meXq5lOY+06eQvicBhRpKyCR
-         kiqERp/I2widroPubgcF508ITqKMzG/TzXxwBKEVIa2ftAZTcoD6PgD/VhZ+v2TTV1tA
-         WirLlFulCjEX4/cMMsw6waqIzAh/Jo9GpCRmhsRxVGOhRF7lW9SwGz0P+MSgkW05suEe
-         jv+JKIdzG+S0oTXVXL5iybsv7XdoEzDTFkjr82ORR0Rkl3HkMmHx0DptNcGA+R9MArEC
-         wbdQ==
+        bh=vauhzS1zFrSoAno2ebrQWSRp6RiLw20nALTCk+DSh4A=;
+        b=YQ7unrycEQzcL0CpfY7iaq8l+p0vR5BmeT1rDhDj4xbxg2DhKiY1Kf1CgvA1o4geDC
+         zb9ZsQsBKmIrmKceYOpf6HSVIGcPhIQsCbsIdKnovz4uZnJiuMZRzFTwr7TacgYlP9zr
+         FPi1hmr7ifb1dhK5hP4NWXNpr8NL0Pa3ETyumrif0HRQuABgeUoqE7RqpqFI1hn3sm8v
+         BuwQyJCArIgpNbx/fqzwaAINx9dRolmNZovSG+3A5PyoErSPVbP3q2pC2ngr1VL1Fqb4
+         Yk5xBBygI+nz87qnXovPxXIijSJRrS3pvhZr2u6Ouwl/sXzsYjxQto9H9xkXk+6+ZOUi
+         sH8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711516054; x=1712120854;
+        d=1e100.net; s=20230601; t=1711519053; x=1712123853;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/j/wkfnU1VMtlD/kDo+x6lLCbpnn8+R/4k1WBBOkFIQ=;
-        b=ZZSrqtVEvi6iAqqsrb9HJT9F3M+v+2NgyoiZm98WqhONyrH1X7FVrFJJP+jqQFo76a
-         GmY9RjdrmRizHQJ4NirzS8rmaaBZPQe84awFLl823ryZzFMLF6dXwHJiyrYcrN4Iw6sp
-         i95UaXGGlKWqKMA+EAOx5/JSyocAuLhfGTia9T2OgqjMWo+55XhtZBjniv1nEFIGCI49
-         BNKNkxUZHaYQ8r2cpnMdvglvp6OVtYkj6j1XwJqlPSV/Kg/wxrN3Ydw0dlmW1pWP/1tm
-         2Ia/uTW8/3fv+7kWZUWB+TDNxYO0xcoeYuPpxijVqQsnB6CkMa40iJU2Q/oZNzQQeU43
-         KYYg==
-X-Forwarded-Encrypted: i=1; AJvYcCV4YLHHTPJV9xssnvrLwvn7OD6Lkz1e+FdTex7nHEY7AJDW8wwogtDpYsOmxqkivy2lxFwmhZZ14stI0SGolg7bvz7AtiH8eV6S
-X-Gm-Message-State: AOJu0YyWJQ2x6VXv5IN1J96+7OL6DVJEsgWfYjQXOvmFwf5F9dHV8h8w
-	IwG5U3V9Pto1ocd6t6AaBGF4E/y2qZIZyTsKzCXGKS/BB7x0OPItCNwLUoUIz60=
-X-Google-Smtp-Source: AGHT+IHlo+FYMJRDViGKDBKHGZt4C85CAdTPEoXLJs8oiXtdIa99YCUHjkKw6jicrE8R7Bo7TiFa/A==
-X-Received: by 2002:a17:906:7cd:b0:a4d:f2d9:cf1a with SMTP id m13-20020a17090607cd00b00a4df2d9cf1amr1965395ejc.63.1711516054468;
-        Tue, 26 Mar 2024 22:07:34 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.222.44])
-        by smtp.gmail.com with ESMTPSA id l19-20020a17090612d300b00a46cffe6d06sm4950533ejb.42.2024.03.26.22.07.31
+        bh=vauhzS1zFrSoAno2ebrQWSRp6RiLw20nALTCk+DSh4A=;
+        b=Qp/ijlouyn6IIUzFwXPqNJa94D1QaAjapUPFQxj8V+gVdzbfRvndtMIJ/KIZjWpZXs
+         c22zbIgQU68bsztpRg27cX3O7hAi8vs83ituSvk93C3zr+GYhlUlVBK82OZd7woQ7PJV
+         VzQNVU3/+CP4Pjt53jUHpIUO4D9ttItqBSNkPvt6P44gmoVXjLaBB5C8CNTMX8fFJh5q
+         jxJCps3SkMdvYjUuvhVnHWlWw0PRw7QtXrg2MIrNNR9Wx7bJ3ArhiQTer6DNTMa/hri0
+         2HlCVTFHPKnpp8W4cVS2jciWLs2jGvFxfsSuBVokoq7oaawIiClgHZDswDK8ueHCQY9z
+         xhVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUfDN2zDaUBb/u9GujwHOszZEStOBMPgoTcq6JxE3h4ujzq83ZMFKsdvSUIIPiNMyIyZBB8+7PxsdEHS3mfpZ3Tc22TjH1oTFeT
+X-Gm-Message-State: AOJu0YzajHnpt4YXOFz4a7cPfm19u9GIBrfIicN5vyj1RNKnw2H8+8Ov
+	g9N8mK8K2kfSfd1os6R4fC9lUl+ftM2/2hQZYPp29PZcyL74HkxU2jipZfSHS4c=
+X-Google-Smtp-Source: AGHT+IHgkILYmFrhP+1BUm5J8vIOXx7XAe6AnD/e+QIq7e6Sav87TDQXgMfr4F3e8r5OX6uegtkhNg==
+X-Received: by 2002:a17:906:c35a:b0:a47:223f:2285 with SMTP id ci26-20020a170906c35a00b00a47223f2285mr2239743ejb.7.1711519053181;
+        Tue, 26 Mar 2024 22:57:33 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.199.128])
+        by smtp.gmail.com with ESMTPSA id s10-20020a170906354a00b00a47a33b3aa2sm3466993eja.157.2024.03.26.22.57.30
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 Mar 2024 22:07:33 -0700 (PDT)
-Message-ID: <a16f45c9-747c-4a19-98a3-aa5f47ee5c4d@linaro.org>
-Date: Wed, 27 Mar 2024 06:07:30 +0100
+        Tue, 26 Mar 2024 22:57:32 -0700 (PDT)
+Message-ID: <f23f2e60-e5c0-4c3c-9722-dba63a6e7ef6@linaro.org>
+Date: Wed, 27 Mar 2024 06:57:30 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -77,44 +77,28 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 00/38] ep93xx device tree conversion
-To: Andy Shevchenko <andy@kernel.org>
-Cc: nikita.shubin@maquefel.me, Hartley Sweeten
- <hsweeten@visionengravers.com>,
- Alexander Sverdlin <alexander.sverdlin@gmail.com>,
- Russell King <linux@armlinux.org.uk>, Lukasz Majewski <lukma@denx.de>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Sebastian Reichel <sre@kernel.org>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
- Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck
- <linux@roeck-us.net>, Thierry Reding <thierry.reding@gmail.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- Mark Brown <broonie@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- Damien Le Moal <dlemoal@kernel.org>, Sergey Shtylyov <s.shtylyov@omp.ru>,
+Subject: Re: [PATCH 00/19] amba: store owner from modules with
+ amba_driver_register()
+To: Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Russell King <linux@armlinux.org.uk>, Mike Leach <mike.leach@linaro.org>,
+ James Clark <james.clark@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Andi Shyti
+ <andi.shyti@kernel.org>, Olivia Mackall <olivia@selenic.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>, Vinod Koul <vkoul@kernel.org>,
  Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, Ralf Baechle <ralf@linux-mips.org>,
- "Wu, Aaron" <Aaron.Wu@analog.com>, Lee Jones <lee@kernel.org>,
- Olof Johansson <olof@lixom.net>, Niklas Cassel <cassel@kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
- dmaengine@vger.kernel.org, linux-watchdog@vger.kernel.org,
- linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org,
- netdev@vger.kernel.org, linux-mtd@lists.infradead.org,
- linux-ide@vger.kernel.org, linux-input@vger.kernel.org,
- linux-sound@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
- Andrew Lunn <andrew@lunn.ch>
-References: <20240326-ep93xx-v9-0-156e2ae5dfc8@maquefel.me>
- <dc3e2cb4-f631-4611-8814-0dc04c5502f0@linaro.org>
- <ZgLgY11N8dkpTZJB@smile.fi.intel.com>
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Michal Simek <michal.simek@amd.com>, Eric Auger <eric.auger@redhat.com>,
+ Alex Williamson <alex.williamson@redhat.com>
+Cc: linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org,
+ linux-stm32@st-md-mailman.stormreply.com, linux-i2c@vger.kernel.org,
+ linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
+ linux-input@vger.kernel.org, kvm@vger.kernel.org
+References: <20240326-module-owner-amba-v1-0-4517b091385b@linaro.org>
+ <3f61d6d3-a0d6-4c49-b094-6ba62d09ab14@arm.com>
 Content-Language: en-US
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
@@ -161,43 +145,29 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <ZgLgY11N8dkpTZJB@smile.fi.intel.com>
+In-Reply-To: <3f61d6d3-a0d6-4c49-b094-6ba62d09ab14@arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 26/03/2024 15:49, Andy Shevchenko wrote:
-> On Tue, Mar 26, 2024 at 11:19:54AM +0100, Krzysztof Kozlowski wrote:
->> On 26/03/2024 10:18, Nikita Shubin via B4 Relay wrote:
->>> The goal is to recieve ACKs for all patches in series to merge it via Arnd branch.
->>>
->>> Some changes since last version (v8):
->>>
->>> - Most important, fixed bug in Device Tree resulting in CS4271 not working by Alexander Sverdlin.
->>> - added #interrupt-cells to gpio nodes with interrupts-controller
->>> - fixed some EOF in dtsi files
->>> - fixed identation and type in ep93xx-keypad thanks to Andy Shevchenko
->>>
->>> Stephen Boyd, Vinod Koul PLEASE! give some comments on following, couse i hadn't one for a couple of iterations already:
->>>
->>> Following patches require attention from Stephen Boyd, as they were converted to aux_dev as suggested:
->>>
->>> - ARM: ep93xx: add regmap aux_dev
->>> - clk: ep93xx: add DT support for Cirrus EP93xx
->>>
->>> Following patches require attention from Vinod Koul:
->>>
->>> - dma: cirrus: Convert to DT for Cirrus EP93xx
->>> - dma: cirrus: remove platform code
->>
->> A lot of this could have been already merged if you split it... Just
->> saying...
+On 27/03/2024 00:24, Suzuki K Poulose wrote:
+> Hi Krzysztof
 > 
-> But you able to apply DT schema patches if you wish.
-> Just doing? :-)
+> On 26/03/2024 20:23, Krzysztof Kozlowski wrote:
+>> Merging
+>> =======
+>> All further patches depend on the first amba patch, therefore please ack
+>> and this should go via one tree.
+> 
+> Are you able to provide a stable branch with these patches once you pull
 
-Me? Why? DT bindings are supposed to go via subsystem maintainers, not
-DT tree. Plus, I do not apply any bindings patches, except for managed
-subsystems and none of them are touched here.
+I doubt I will be merging this. I think amba code goes through Russell.
+
+> them in to "one tree" here ? We have changes coming up in the coresight
+> tree, which would conflict with the changes here (horribly).
+> 
+
+You mean conflict with  coresight conversion to platform driver? Worst
+case it is solveable: just drop .owner.
 
 Best regards,
 Krzysztof

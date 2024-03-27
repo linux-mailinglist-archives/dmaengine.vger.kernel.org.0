@@ -1,52 +1,54 @@
-Return-Path: <dmaengine+bounces-1551-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1552-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EFAD888DACC
-	for <lists+dmaengine@lfdr.de>; Wed, 27 Mar 2024 10:59:23 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C58F88DACE
+	for <lists+dmaengine@lfdr.de>; Wed, 27 Mar 2024 10:59:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 93DE51F2A053
-	for <lists+dmaengine@lfdr.de>; Wed, 27 Mar 2024 09:59:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BD7F71C26ABA
+	for <lists+dmaengine@lfdr.de>; Wed, 27 Mar 2024 09:59:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5995A3A264;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B121746B98;
 	Wed, 27 Mar 2024 09:59:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="MRW0GmJG"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="l6Q7GSZi"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 597D22EB05;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBF2B38395;
 	Wed, 27 Mar 2024 09:59:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711533554; cv=none; b=In44JU6iRCdu7VHilFt/X1ruy4QZHALGBAosl9vwFicjANPgKX/aFecS3zxtePe0Ay7qYx7pJHkfcVMzNxy0zvk59GZw92hD3W1jGvISEJOoXaZm/HWtvYZbAUZ4mt+6vj98tQ+wvLAwjrN0aAIDJI7OJfgYCmOeLdvNXXJF5yI=
+	t=1711533554; cv=none; b=dCeZCkLYxY/MFd7StugoYtIHe/lE+Iy8UBVgc/hrUaosNxVfVUES9tAq1nTBD2wKv2TATKF7Vaa+jxKZLDjJcz3fxTPIRuPMhNinhX5jXFtriegl0OVBwB2YEMxdTE+r3Pl/+SGRlGihqjmIcU0ZtJo6pN1cuDWX6adb86rCGzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711533554; c=relaxed/simple;
-	bh=hH3nkol0D9n+79wP1SeGr0CEiZZZ6HOE9y+63tUTgbc=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=GY1ZjYz+F7kTyO7bumO8dT3xeZhvO9QKG9Aadmea89nMHRKIGetFiBu1u+ge++2LfRCIcptSkAdKkIdZAC/06HlzBYJhqVGQ8hkG9DTt+Lu6LS1DsTP844LypeX0Y3KyJvM4W3tu7EQUGn4uefN/fpWDlkR/DwoT2T/62gxwFo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=MRW0GmJG; arc=none smtp.client-ip=217.70.183.200
+	bh=0tN/2/cS6x19N/2l/Wo09eS8tiwkR/o9XaPpyzxE/c8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ZEHVdS7vbALoaPqEIDZ9LVcdDnwALJXnAHnlUng5+lPISAQPh/warA2RBtlMrBV0DxU9J+/uV9UJVyuluDHtS48CzWzzAp4GGn+whyM5mGSNiSCi/Nf0Wx7hGJWEknGO61e0lD7oA4GCGj9XTpc6EgS/EGtZzVfNNxfDdhex/nY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=l6Q7GSZi; arc=none smtp.client-ip=217.70.183.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D04492000A;
-	Wed, 27 Mar 2024 09:59:08 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 9FA8D2000B;
+	Wed, 27 Mar 2024 09:59:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1711533549;
+	t=1711533550;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=7AOXxENiOZu9Q6E3lamw5EvRntGLECkgd1135Gi9eBM=;
-	b=MRW0GmJGmT5NXlfZgPDZ/CmlB9F26D3GSUxcAKua51sDU37KRtUxeHOF7IN0L0hCpRYVxe
-	UREGGnXzExpEhaS24jSVfOogB7aYJMy2X/T7Ol99ClztzmgQcjJETRj6Opgp0aDKrdvy1y
-	ZGucnqwmXtyGw4EXO17++BZ2WHvvR8cDtfqPLsSEEbfPnvdgd9KcKZdq9vucrNEd9GH1Ci
-	EOXPQj8QTzcyrd+5YXzec3fN2/pJEQjf1pbCZGpnbQOQ3w0k8wD+WkLEtv2pNz3YVSvRh2
-	0KuOMM3zLY5EtHzgDxUfotTfV7V1zvWWOBnAEmV0ebkKSR32RwW/EgCYAHXB0Q==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4g70CEkuUSM1WtA7B5LTii3U2wOnA2Oz3/OdBqqrL5M=;
+	b=l6Q7GSZiup/bbdE0wbavpZwfrd7xGJe9vle11q+vc9vXfvzMn7zM7/E8Qi8rNtlJxsEseu
+	+VYfMMEbl3/frfCX/kadadS63dTaDWCG3apw/cqxoRK9mhysQVEUQ3J53i5J/tLGs3Ng0Y
+	chiv8YVfl2eTJcNer159ITHbdVxl5n4N3MDeUPXs8q4XhnnBIQQvw0myelrbls/ZBXCfBh
+	ts2NcDIMR29k4DYkup5BGbN9603EedrzU1u8aVjxA3VG9jw1/Tk8gMESGY+TUwcFL+6Lr6
+	qHLSPOC5g5/D4wnitDS5gGqJPNuhvshy6th0BvB3YN9p8Pk4xq8mUKzPiKnXCA==
 From: Louis Chauvet <louis.chauvet@bootlin.com>
-Subject: [PATCH 0/3] dmaengine: xilinx: xdma: Various fixes for xdma
-Date: Wed, 27 Mar 2024 10:58:47 +0100
-Message-Id: <20240327-digigram-xdma-fixes-v1-0-45f4a52c0283@bootlin.com>
+Date: Wed, 27 Mar 2024 10:58:48 +0100
+Subject: [PATCH 1/3] dmaengine: xilinx: xdma: Fix wrong offsets in the
+ buffers addresses in dma descriptor
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -55,9 +57,9 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIANftA2YC/x3LTQqAIBBA4avIrBvInwi6SrSYcrJZZKEQgnT3p
- OXH41XInIQzTKpC4keyXLFBdwq2g2JgFN8Mpjeut8aglyAh0YnFn4S7FM5IpK0b9Dq60UE778R
- /aOO8vO8HCsbB0GUAAAA=
+Message-Id: <20240327-digigram-xdma-fixes-v1-1-45f4a52c0283@bootlin.com>
+References: <20240327-digigram-xdma-fixes-v1-0-45f4a52c0283@bootlin.com>
+In-Reply-To: <20240327-digigram-xdma-fixes-v1-0-45f4a52c0283@bootlin.com>
 To: Lizhi Hou <lizhi.hou@amd.com>, Brian Xu <brian.xu@amd.com>, 
  Raj Kumar Rampelli <raj.kumar.rampelli@amd.com>, 
  Vinod Koul <vkoul@kernel.org>, Michal Simek <michal.simek@amd.com>, 
@@ -67,48 +69,53 @@ Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
  Louis Chauvet <louis.chauvet@bootlin.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=927;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1016;
  i=louis.chauvet@bootlin.com; h=from:subject:message-id;
- bh=hH3nkol0D9n+79wP1SeGr0CEiZZZ6HOE9y+63tUTgbc=;
- b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBmA+3rUgXjk92zRe2bs1JcSuniCJEA2pWJHuOXfeNo
- 13hmjpuJAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCZgPt6wAKCRAgrS7GWxAs4hVxEA
- C77RZ5Smytho2eHluPFl/tNiMpTM13E2gnesZiJIllJO9w6RNQemRttPhvUtGurWFnmZhUS44Ax14y
- +Bqp7O98ut1vyIxDQSs81D7wzkpL2UkhSkzCpli2Th5U+6c6kxrq1NMCRGSSPCgIlbecwvZP5oTk0S
- rt8koWLl69W7lxnaH8yJmlH9WuW2E02Zt7li5SF6/N7J4t78D0BZCrYcYE04IN5gjzJDLu12BGaQly
- 2iCXZ+MOFEiqaDNpaCNA5bEVArgYjqRvSYFWJcZBQyNu+QLE/qHUAgdOVeu7THzkgXxGONf8dMCYHi
- 5KbryTkfRGC3DJZ6BKFy0DMduGoeTdMqujAKi0vm+Oh4rfJNSGoNu+o+hYhCeo1ftcQvCVNkvMwiVq
- GKERHylegaimhBMj1obVlXbn/TXQmDzVlm4Aql9ffsr02OGWIuUgWYPw/4WOjD/ZnPJt9q9kLFtxL0
- BTOon4x23OwZNzmTpnSylaX3BUTQjXvRrWAta5z+Ylg2mqj7vyFa6cUMl6+smItDlVbIq6XtKYbK24
- oOQvyZQWA6Q2TCK3MclWGXj/n/SgyYasjrJlKS3LRIVMQkp/cvrFK+vv/+6wQhmbdS08qiNjkeoFX4
- ACrf013c/F1QYS/sahrejJEI2o0I8PvxhSPDCGByZQwAHFlsDsNFN2iYr2yA==
+ bh=Uzr2bK6DiI1V4GZAhaVT5cYNAM7G0VnbzgyNu2t/W38=;
+ b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBmA+3s0JG0WdUbsy7i8QDPfbhTO08tGTlQ8yyvl92x
+ mhKGN06JAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCZgPt7AAKCRAgrS7GWxAs4g4LEA
+ CggITrUpwzuuj5zMdD6jmZdbJKYNK+s2pg7X1fhI0UGcqV0xoraveSkRKutOQyLWZq+Ed84ipqZdjP
+ MXlUapOFmdBj8saXaitR1COGB8uI47gmjB2taQAcQkS8Cxc9d6ws50ThDSYIPvbyt8SHYgJCOsKZVk
+ PLgohKVXHgzWTOv4OB0nsjvy57uzt6R1atpK7Rs4jaQZ6MCzI1EwJa1Mvz+sihPcDuWch3jPnlleEM
+ TkF1BFRS8Gz/rSORI13d6lAHRZTqg7Spz9uCSGwtV7malBOrjU0hpqh/sbG0GvjTSshVTDHWXfc16O
+ n0YqzRd8tlbBxBc+IY+Cv/ibaeq3cX9jthdMcUREkeiQe+P4pX9ScFLLssIUHX//0wFxBbvpkRo0U4
+ 8+VMRtWIqJA8lRHGN7DoAC3hMc0H++vybnbWVJILCCsJ93/Dg1gri6aJKWib2d5ynhhNi0MWO4EeqI
+ LU4deXn7+m1HaH/SrPFQafgW74OCmhlIU5FEY3hAaLc8Sq+paZ1wIHyj4aOOfW+pD+bmOz456/8VX9
+ kOR0xk9lOpV184m9twPtMeZMoC6UiWY3kAOb2eLxz0dSO2Pm1YuDcMLibOYqayi1bEzLete3blPbyY
+ OO6W6kL2GB7PsPH/jiXQEUjx5xDuBgZa3u7MY9xy+00z5GS7SVAtExS/wdQw==
 X-Developer-Key: i=louis.chauvet@bootlin.com; a=openpgp;
  fpr=8B7104AE9A272D6693F527F2EC1883F55E0B40A5
 X-GND-Sasl: louis.chauvet@bootlin.com
 
-The current driver have some issues, this series fixes them.
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-PATCH 1 is fixing a wrong offset computation in the dma descriptor address
-PATCH 2 is fixing the xdma_synchronize callback, which was not waiting 
-   properly for the last transfer.
-PATCH 3 is clarifing the documentation for xdma_fill_descs 
+The addition of interleaved transfers slightly changed the way
+addresses inside DMA descriptors are derived, breaking cyclic
+transfers.
 
+Fixes: 3e184e64c2e5 ("dmaengine: xilinx: xdma: Prepare the introduction of interleaved DMA transfers")
+Cc: stable@vger.kernel.org
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
 ---
-Louis Chauvet (1):
-      dmaengine: xilinx: xdma: Fix synchronization issue
+ drivers/dma/xilinx/xdma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Miquel Raynal (2):
-      dmaengine: xilinx: xdma: Fix wrong offsets in the buffers addresses in dma descriptor
-      dmaengine: xilinx: xdma: Clarify kdoc in XDMA driver
+diff --git a/drivers/dma/xilinx/xdma.c b/drivers/dma/xilinx/xdma.c
+index 170017ff2aad..b9788aa8f6b7 100644
+--- a/drivers/dma/xilinx/xdma.c
++++ b/drivers/dma/xilinx/xdma.c
+@@ -704,7 +704,7 @@ xdma_prep_dma_cyclic(struct dma_chan *chan, dma_addr_t address,
+ 	desc_num = 0;
+ 	for (i = 0; i < periods; i++) {
+ 		desc_num += xdma_fill_descs(sw_desc, *src, *dst, period_size, desc_num);
+-		addr += i * period_size;
++		addr += period_size;
+ 	}
+ 
+ 	tx_desc = vchan_tx_prep(&xdma_chan->vchan, &sw_desc->vdesc, flags);
 
- drivers/dma/xilinx/xdma-regs.h |  3 +++
- drivers/dma/xilinx/xdma.c      | 42 +++++++++++++++++++++++++++---------------
- 2 files changed, 30 insertions(+), 15 deletions(-)
----
-base-commit: 8e938e39866920ddc266898e6ae1fffc5c8f51aa
-change-id: 20240322-digigram-xdma-fixes-aa13451b7474
-
-Best regards,
 -- 
-Louis Chauvet <louis.chauvet@bootlin.com>
+2.43.0
 
 

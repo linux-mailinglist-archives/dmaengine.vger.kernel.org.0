@@ -1,71 +1,75 @@
-Return-Path: <dmaengine+bounces-1541-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1539-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7E7188D50A
-	for <lists+dmaengine@lfdr.de>; Wed, 27 Mar 2024 04:27:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 317AE88D4C9
+	for <lists+dmaengine@lfdr.de>; Wed, 27 Mar 2024 03:50:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F2ADAB22A1A
-	for <lists+dmaengine@lfdr.de>; Wed, 27 Mar 2024 03:27:41 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 47C71B2167A
+	for <lists+dmaengine@lfdr.de>; Wed, 27 Mar 2024 02:50:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EF7D224DC;
-	Wed, 27 Mar 2024 03:27:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8108219FC;
+	Wed, 27 Mar 2024 02:50:39 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2120.outbound.protection.partner.outlook.cn [139.219.146.120])
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2096.outbound.protection.partner.outlook.cn [139.219.17.96])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 560B620DD0;
-	Wed, 27 Mar 2024 03:27:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F51817BA6;
+	Wed, 27 Mar 2024 02:50:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.96
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711510056; cv=fail; b=r7/04S3WLHbrh8o//C95mu+sZdevWKWABTtLxq/8PPaemAu4J0MWRiq3iowrw9J9lGjAvRRsqKfpQDAmxb4QrqwWN6QJ1ak/LpP3mwaiYbFXJBkCfZ24amMxTSApe2O+BXEx6F8IKxPZpW3Tt+O7S9CuGSH38Jidh1UAwopgdQc=
+	t=1711507839; cv=fail; b=k2Nmnwyi3Ddd84JDfznQGudhXFS6omHBBzV5ml1g3VWknw+LfLYdLozrKHzvy2Su0ZZIGmUzPxC4Sq+FVxjRViiJcwj5PWE/bYlJrlo/UP5/hC17kNLTAiKgQ7uMhYFup6DiaQTxEYx/EnaqI64RdGC4zdQtK+/7AxskbZtzbSE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711510056; c=relaxed/simple;
-	bh=6mNI4TS/DXPa4QYaZCp3GnabEiUkexi5OhQrqeGJcd0=;
-	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=tOTaEN+epgS0ZUsVRWzIw/KrAUUh7cg7jS5/QIosaeKSGFE/TzKpZ6M2y2iGDo0QQtEq9qMD2iZki3r6EN6KbUhusl9Ez7mmSHCk6+mIMplYPSaEfdGX3R3BLgBYbswcsT5qWfDpnzVNy66qPvH5/rB6xv5hwLBKf8RrmF21jzo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.120
+	s=arc-20240116; t=1711507839; c=relaxed/simple;
+	bh=vFPdxktJQvKv601CZsD1nIshoRhsS56TxR0fwJaRfcM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=rzy6fs6btp/exn4KQsxtW6FdWj70Wa7WZ34UJ0qYiAQrDcM3M8W3HBy0+kBTlsK3rdJZkjZdoEamDdva2O28QH9K6SBZCoqzi6hroM7702sCJVte9aKLH+s2h8hNC3iH04ojdk7qwEe3R75Ks9U3KuKfKvPm/jYKaIE14GdGvyE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.96
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nuAEATmEazILeycjeKlXV3UfxGnVI0L0hkXOBmR2wf1tObMUIDb+co+xVrsrMARDvfNp7As2KfxRLTVjw9Zf2RUhMhjDo4Si0eH8quPEG+9ozhQWjkNhUVqOEuqE4HzoMd+skcVw83+c8cmtMMgtt6qKeNko/7A8h99itWxwxhN0tyRcasLsDUGxnHjX30kbMzTwAmYSa5IIE/S/WkEyUX5/Uc1nvmfkK/HLmN+58Z0htEsd9Z+12LFadT+0V3v4F0+kzjrKpaxwz8n7UHpM8Z7T4FNjAD+/XAVOk/wMthXdDXYmlvKzU6IaAmkrQO6E/xQImT2mAeuEfa4CKSYdig==
+ b=KTg/oEjQqsSO3FLfz7qDXZkH1qRRP7sX3hjz7WxEy4ZAThOuHIF/TSyH8/pWJLF4ML/x3vsrOEarJAus7A43JMKero8rpJ6emnWOi9vHwfJi7wZOTXxfumkpYs2+VL0hMeZ4T1XWjr0w8yEXc/Z/75t3KJgnbpOpwrJLDZHv3pPTVJLjcJXBR71d/JRBMLBCCMN37xWA/4ITqpeAR9uwTwkRWh1gM6TgSew5yLadpQFe8LfCgmCxdSDfpYDiGeoqY66YuYd6MkQksX7+DwS9nwDYdetQrgkM3y8NjBfMgxPuh2sWNiLyA9Nn/QNtkALIGu7actjp3sjMX3+wlUi1dA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IdcMCIcERo7vykoimDGDFyaeHTetpEMbQv7DVusPsTg=;
- b=PE6iihaZYjjAQFa1GUduJ8x8EWaohpZJTlUTun9zEI7gzus4VK+Vxd6bxbVpE2aDofKE1eR1wbWlu7j5b8653yoZh/rJmnRK8L5gTBLPUHLnlPY0ybyOush1rg1LNwyHngZ+bseR98cyLmBMSX33FIwsnSjJpCRE0bl41RDHD1PR46gWInS4NstVSUd/QX0fZeFKK0HHBERKyBL0B+6u2VoC5MqcvnTopveoKvUfqromk5xWtBdrW+TeAZULeErImw5FJ/m3s1+UmfrLnQAr26K5FYqowaea+SIHJhHxIm1wP2EZn74J19uC459SDqgX4dKs8Mco952L6fmAht25iA==
+ bh=BtVK3a7P7VP7BP4Xrh/hvM9yQxZocloCz/3AwYhv5XY=;
+ b=S+9a9jyNUbXGw10IZE2hqbWJXXh3vTsPdfrtP8pGP+weM2hmiNMcMHey439DJ0hTcwnKsGKBciIEj7UD8+aXsxIlr6uCgY9Esky2ydiX9fI6RqL7u1Wn9K9T1GPhrkDiu50UJ722eF/3HjUcVl3WMuU3iNR7DlrQ2DiKF75AYc2cCu2QYBIKkvOfEAz1p0js/EvmMXVMe/1LlaeExO4ogvP3IJkpWiakwbJ0XKd2K1UO2xNjJMoKGkgA9RtnS2t6zPzOJUN0H/iupK3dPOKckLsfCCl+yMKTpxt1myoD6Cb3sT6pWq7LxNMcpP87mGj3JdZ0Cx6vrUc6xotSG/35ww==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=starfivetech.com; dmarc=pass action=none
  header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Received: from NT0PR01MB1182.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:10::10) by NT0PR01MB1264.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:12::9) with Microsoft SMTP Server (version=TLS1_2,
+Received: from BJSPR01MB0595.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c211:e::20) by BJSPR01MB0547.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c211:e::19) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.33; Wed, 27 Mar
- 2024 01:55:04 +0000
-Received: from NT0PR01MB1182.CHNPR01.prod.partner.outlook.cn
- ([fe80::3dc9:e0c9:9a09:3bb7]) by
- NT0PR01MB1182.CHNPR01.prod.partner.outlook.cn ([fe80::3dc9:e0c9:9a09:3bb7%4])
- with mapi id 15.20.7409.031; Wed, 27 Mar 2024 01:55:04 +0000
-From: JiaJie Ho <jiajie.ho@starfivetech.com>
-To: 'Herbert Xu' <herbert@gondor.apana.org.au>, "'David S . Miller'"
-	<davem@davemloft.net>, 'Rob Herring' <robh+dt@kernel.org>, 'Krzysztof
- Kozlowski' <krzysztof.kozlowski+dt@linaro.org>, 'Conor Dooley'
-	<conor+dt@kernel.org>, 'Eugeniy Paltsev' <Eugeniy.Paltsev@synopsys.com>,
-	'Vinod Koul' <vkoul@kernel.org>, "'linux-crypto@vger.kernel.org'"
-	<linux-crypto@vger.kernel.org>, "'devicetree@vger.kernel.org'"
-	<devicetree@vger.kernel.org>, "'linux-kernel@vger.kernel.org'"
-	<linux-kernel@vger.kernel.org>, "'dmaengine@vger.kernel.org'"
-	<dmaengine@vger.kernel.org>
-Subject: RE: [PATCH v4 0/7] crypto: starfive: Add support for JH8100
-Thread-Topic: [PATCH v4 0/7] crypto: starfive: Add support for JH8100
-Thread-Index: AQHabswuRP6vmqtmzUiwGSiP4uQyCbFK9DVg
-Date: Wed, 27 Mar 2024 01:55:04 +0000
+ 2024 02:50:32 +0000
+Received: from BJSPR01MB0595.CHNPR01.prod.partner.outlook.cn
+ ([fe80::d0cf:5e2e:fd40:4aef]) by
+ BJSPR01MB0595.CHNPR01.prod.partner.outlook.cn ([fe80::d0cf:5e2e:fd40:4aef%4])
+ with mapi id 15.20.7409.031; Wed, 27 Mar 2024 02:50:32 +0000
+From: ChunHau Tan <chunhau.tan@starfivetech.com>
+To: Conor Dooley <conor@kernel.org>
+CC: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, Vinod Koul
+	<vkoul@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>, JeeHeng Sia
+	<jeeheng.sia@starfivetech.com>, "dmaengine@vger.kernel.org"
+	<dmaengine@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 1/2] dt-bindings: dma: snps,dw-axi-dmac: Add JH8100
+ support
+Thread-Topic: [PATCH 1/2] dt-bindings: dma: snps,dw-axi-dmac: Add JH8100
+ support
+Thread-Index: AQHaf2Ox5nUOkqHZ30+sw9x0qtoLj7FKWS6AgACLBgA=
+Date: Wed, 27 Mar 2024 02:50:32 +0000
 Message-ID:
- <NT0PR01MB1182C3CD53AA7CB251BDD99D8A34A@NT0PR01MB1182.CHNPR01.prod.partner.outlook.cn>
-References: <20240305071006.2181158-1-jiajie.ho@starfivetech.com>
-In-Reply-To: <20240305071006.2181158-1-jiajie.ho@starfivetech.com>
+ <BJSPR01MB059504FC203190B95D9D1C549E34A@BJSPR01MB0595.CHNPR01.prod.partner.outlook.cn>
+References: <20240326095457.201572-1-chunhau.tan@starfivetech.com>
+ <20240326095457.201572-2-chunhau.tan@starfivetech.com>
+ <20240326-maternity-alive-6cb8f6b2e037@spud>
+In-Reply-To: <20240326-maternity-alive-6cb8f6b2e037@spud>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
@@ -73,43 +77,45 @@ X-MS-TNEF-Correlator:
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=starfivetech.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: NT0PR01MB1182:EE_|NT0PR01MB1264:EE_
-x-ms-office365-filtering-correlation-id: 6a58d795-5fa5-4a36-b113-08dc4e00ebf1
+x-ms-traffictypediagnostic: BJSPR01MB0595:EE_|BJSPR01MB0547:EE_
+x-ms-office365-filtering-correlation-id: b0b3e791-1897-42e3-4f59-08dc4e08ab94
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
 x-microsoft-antispam-message-info:
- FyyoNmpx69xw9V6F3Jt920pD7QvFM+ZMzpIQdv6ykNn0D6skwysQRH4YvpstdfPsihqRitHVDbvlV9qqFXCHdjVG48wXRDhdVmcHLEYyZB+mwVnZ4Bl9Y8lPMq6syCzkrZSBB1wB3usSPiZN3vqa+gjD4nh72sHPhXEzaq9/M9v/lUDQF1NKICCacqRRpp80cVEeaXURxFVBcB+fHXUTv+hjpJYQW10DI/KP/h11zdcCnfuJWZSHWazjY/oI8WCEjASPp7RumyxzcTQFNAcpA8N1vWjYQrF+mIAdDbFlU9DsWx1Fq4IeYA/pKUmMmPKfhqxWv6PGow65OJqwBuVRqY22VtcGinau7qVEjK2Wg7CEtLudYCv2K7EB/jcAkQgTT0JWJGNKNEPaasmueARwHLh2HGHAw7XdIrTXghMdibhrQaDt/IcD7ubAJmLy9ZIMjicskxl6l+e2oa5VeFm0NLi14kIMlVUsi7SMdIP+r7KpY094W6H6NpeayYBCi6jlzgPMMS3ogbbdjRYlG9kjA2q+oh9Dd6cP9AnEeRibLgI89hbsv5cWQyyZ0bPiETmy7ixFoYz43pykDb9M7COqPe0sqIP+ekMHjjWLC/FTqb1XUic/9xln20/FMCQs+RmU/fbgbuYoScoNzg7dbAClfw==
+ wRCQrkuBNZQ9BrRqR+5tkZp95juHOwXTt95gFzUNT+OmG1RUh9JLqBghKMIO7CQ/DVIMT3v+tjPl1V21tSOHhtrawdXSggX4fKH/WfJVoI1WeKeOyt3r+mXiNgsq5UFgKCMtvIH6XX+5XzIn3TXwppOOcogIXDp8VHUO3+zFcYjue0E8MEXQqxqFt5ZvVNK3BDlwdTalIPa+eO+GEaaGXo+WvwDRil3d1OtQHkxFfcCQcDaBOpVKU4GdpeOkrfrY69el1dHfNK/zUGvarJBuVNOKaKtEB4p+76qiLiYKVhyCgbevkqnzANJfbZOuOhnz7PNnS6WYoSVScGe193J067lLzSXF+4P7ihr+dE78TxukXQkzqSMBsqa4r4kZgpTNjdyNirPOFAJbNHf+dBp5cbsBQTRzkHzSC1IfMNaBfOELu6xIv0fX0jmYAlC9Ei8VtyFMjlpkIq1vSShIEVdaMltAunozhlXRoMhjNhM9hQjL8wqajXee6Z4pr+DgUlLF9oDoUil+BIiDFnVYLPjNYfXxSvZxo9q943u/sAYPF4zJccvMod/OnjkR7rcoDwUxDtWrG6+dF+O6ERiKk4NUjOLH/zf1htcasRmSsBmU4EsvUh6C8f4dSrnLtP0Se023
 x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:NT0PR01MB1182.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(7416005)(41320700004)(1800799015)(366007)(38070700009)(921011);DIR:OUT;SFP:1102;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BJSPR01MB0595.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(41320700004)(366007)(38070700009);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?0qffVL/8J822Ra1K1k0+YVG8qTDkWO0Nx2xGdQanPSsVTL3TgN46tpWGnAD0?=
- =?us-ascii?Q?p6Kt+n4Y5Ou4SwMwdvQ3Z5RNcDUzgN0OaykSiOVdIPLL8n8TNbvg5vV+pEBz?=
- =?us-ascii?Q?mC46CThCr3XmFH+/Zh4Q8vdgsueO6hFVxvKnRrrjvj7wJhskhkH5EBRUwESc?=
- =?us-ascii?Q?gxCCFnigREePZW6MtEkYOn0fSG6vYdOVYFz7azy66ANFZfLX6TEwpTK7jBkR?=
- =?us-ascii?Q?ombdvLNDwyyWbmHajbCpJIpQWw2nbSCByUv+5vJXk3j/wl1wf8ed5/J0BLDO?=
- =?us-ascii?Q?3TFGSMpUf+bKbtsSrrwKuUHpuQmHf+Nx5gTXL2BFdAoN+l4RxOkzbqsqXCpN?=
- =?us-ascii?Q?kTxL0AUlA2GcKxD7N4VPEGauxGd1a01WbyiMHSy3+nv6YvuaiLusyLr083WM?=
- =?us-ascii?Q?Xej7RuyBgIkCHNt+3unAy2am5ZqcJO1SyxEoMkgiE1K6p9cilDR9a7mvsXOg?=
- =?us-ascii?Q?LhoK8sjXPLQr/LruH5Puf3RBu6AihKH6Qlhs71pIH05dlNoPjgZlKHN9LmZH?=
- =?us-ascii?Q?1y2ywn+YULz9SZUF8xC43D2StkJjdxEhsouQUGE3L2NKqkZuxJRfRf7tGXHc?=
- =?us-ascii?Q?97MQZ74uEloU9a8ko5TuMwg8OVnES4XrLGitXK5olVqmLK4lCyIAY+wxmqNM?=
- =?us-ascii?Q?eGrAat5NWaw4VTK3UzoajFQvgtaihUABVzaj3laPHx8KaBrnGiwU50Ace8gO?=
- =?us-ascii?Q?I2Rp+CDepmctahLm/lTV0irjJ2Npf6OcCsZApjG+U/BTomCuS1roGjgzj9jp?=
- =?us-ascii?Q?rdkdB34oK69r0LobGzxTCb3ol0a79GHpfdquo+cz3Zbk1TZRLOtYCRQJdA6d?=
- =?us-ascii?Q?DBNvuu0TOvzJplUJQrSGhRLlcOQhIU96Mzpynn2oqniBU5VNotIwrT8xROxa?=
- =?us-ascii?Q?A0z50/OgHF1nj4yUjL3ybe1VHf496FcBJc5RbTMxLyZho4xi4eP5o3iH2a9L?=
- =?us-ascii?Q?+7ht62Lq3eDTWx3ORlLdkm9NvxPizyJSbRTY5vttf09Y5bUav5MDyOlGI4E4?=
- =?us-ascii?Q?pAcIZC6p71s7D2VzQIXJP5Uv0RjnTkw2+unLPB8shJbAx2xj9/aU6CQAlKCL?=
- =?us-ascii?Q?1tOLKXr1LNUA0/kbGz7pcWHG6n1Jtye8JWBg8SCZ5cYoDVu+psR6tnuBU2bo?=
- =?us-ascii?Q?DyPobTDcgBTQYfirzftuO2y8MOTQuxZfXUBPIHrbsI8Weix+nH6quQFaOO+h?=
- =?us-ascii?Q?8dDF02qlDQPQ3zG7K0LWA5BvAC2AmhGOeGPfWFergFmOCyHHHwLY1cXgFffG?=
- =?us-ascii?Q?SQFBDEpjZH2qwWUW5ntx9eVf9bWPMISdyA7+/87yCq0T3nTpfUwROqWD2AW4?=
- =?us-ascii?Q?/NMYGg/cEg7kaj3GopAc8G+yTzGpb6eJvqic2fv/NErtJYr9fEHiSjv3tyFv?=
- =?us-ascii?Q?XbBRgktGXeF7frmAh9q9e6UvbbvD6uaQ4EX+soNErO8FMrfyaRMWV1NEDec9?=
- =?us-ascii?Q?tn7dYwpPj60TWPU5axo94r2d1AzVISA/2KHmf+F3cIjVUbrV8eTpCxZO5qUg?=
- =?us-ascii?Q?qhTDF81FCwiX+J2SXxZlCLIAnPOVqGL1g27upDwbrl12HQ2nbqxuMR/arwGG?=
- =?us-ascii?Q?8MhOFkJ4fqjcSoEmaneJHCIr+cBxZ/oe9dsQvHr7?=
+ =?us-ascii?Q?v9vvQh4F6sKtE236U5J4C/URcbsRsh2jzICVzD4WVs5dq7B+dVNbFSmWGym3?=
+ =?us-ascii?Q?cZTk7mdjExESabYJ/ehybOidLklOwcumqJZNEoGIE/jDTu7LJpbPm/VBlxFM?=
+ =?us-ascii?Q?QZzFHbrgGRxHHvp0GVK/OLOWJdTMUcmcTfLqfxyM5tcEnbnoY7u7lhSwYBvm?=
+ =?us-ascii?Q?5evJufOKUIQLJKLIVOvjIZyTkegBtfzHOdCGKkURaFni+RPSYdpWP0/HCRQg?=
+ =?us-ascii?Q?rvInUrOLSn3zLyVQramPRAsYuoHp6F+eLKYMwjAFaDXbe6txICugIGPdW66I?=
+ =?us-ascii?Q?8d0CNAx2xdkrapFC6dfJ0xtSIHEf/Ae4yGH0WOX1pjUS0HeEriKmqn3dJ74V?=
+ =?us-ascii?Q?9g67FDt9w1EXfx+rtfKaTq6T/RPGJpTqbpYR51Bn8CrfT/HkLLIrCTv/zeWh?=
+ =?us-ascii?Q?4SpU0syri6zlrSKz5rYP/TtznfGSP6pHEWm4E8SUVgwMyIv8boi655c2SrTr?=
+ =?us-ascii?Q?wiHU+jFA5+jdoDK33uVt0ui9ZBQnkK1wdyF82kKlnywtsyXpmArbZvK01pbk?=
+ =?us-ascii?Q?q2YtJPpFd2kcMH6YIw+fwPZzPVKHCuCYKlqsV5nqTYiXSlSCVc2nKmDIJ5Km?=
+ =?us-ascii?Q?hh9a5fNtcd2IcloEnqrL0D30KGhTWFYfbuQuFxk57v8mF1MSyJvplkXibsQl?=
+ =?us-ascii?Q?mjf4D1YrgVA7LmMniTIcwH8z7oiHqCKRdNnXgL2PH2K948YKnYI5f+X/abis?=
+ =?us-ascii?Q?xyskLAjQnYlxlAfjLH4udiUfqt9PNhTCsI8fagb0BWCS8Q/JThh1+7AONg0I?=
+ =?us-ascii?Q?9SSlhYWbBx7bcmAb84/qutv+yehxK+Wdv6TmM9IZKDgKcr60GmGi4sSaV1Rn?=
+ =?us-ascii?Q?WJ3nKlAhZBPfDjeZITW+9wVUTYN4OgVv3qlmOC69mthFk6SV/nIZSFmPxSla?=
+ =?us-ascii?Q?mIB1HQzKks1oQhaUkki6I8phvUyzTHECKklbgeHOaWNkZjhIxDAFuZtNnVBB?=
+ =?us-ascii?Q?9Tps//4OV4VgVMBC21sWBSVz7QWyet9eg4QtYRwqR8HvMhf+3wegPU3YLPW3?=
+ =?us-ascii?Q?6oIgT+lqVJRANsvrFyxe8UgKr5D5cQcY8lWukHRjIhfN6jiDOWh4snzpsF1P?=
+ =?us-ascii?Q?opX/FZhQqkh/JfHnjE/v4Rmc23yqvbF4eZGDpN0vgRl9zZg9A9D9KlT+vo++?=
+ =?us-ascii?Q?9s/9WkptQMQCFZDbYHvcHMLsj9tuMmijpDPr7cM2DGXmilhhCNWrfOyDKLLk?=
+ =?us-ascii?Q?FlKIHBq8EZ6h3fJP3143HUrtCoJvNt+3HZAELyVos8+o2CiKu+k+14oIVPxP?=
+ =?us-ascii?Q?+cJVy38hunDfsK4JWH9aZVr4IDxpUpEXRqBEdEj0ag5c1ORLtEGT7Pp0PurA?=
+ =?us-ascii?Q?n/zirxoX9rAMjjMZpf626Ku/F6y6hu9lh10VVL/nCMlyaDmPNsRZV/NcmVBV?=
+ =?us-ascii?Q?AOXjKt+Y1eQ4EBVob7iaRWkavlc/NYhuv8rzfMJgra6Z2tMg3TLpc92Y3m0U?=
+ =?us-ascii?Q?UB535Gn5HtprWNtjUxeQHzyrc0M864tjwW34ezafNYJRrzjH8EwHD8dtIqA9?=
+ =?us-ascii?Q?LMMcOB84bfF89gazTd+vIhQx4n7itIx//3ZwDewKpVAk0IurMoKBbL+WUscT?=
+ =?us-ascii?Q?DEhZD0qJm8nzIENXuNRZQzAIreHCVHIRSQacsAO4Ki3W7s0OEbxWF2Uq8z1M?=
+ =?us-ascii?Q?ZT7biMFmJksdPJQHNOXkhucHimmoa256AyzCM0O6KnihB6W22QtV/4V9TnUo?=
+ =?us-ascii?Q?6ZaDBA=3D=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -120,70 +126,65 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-OriginatorOrg: starfivetech.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: NT0PR01MB1182.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6a58d795-5fa5-4a36-b113-08dc4e00ebf1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2024 01:55:04.4909
+X-MS-Exchange-CrossTenant-AuthSource: BJSPR01MB0595.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-Network-Message-Id: b0b3e791-1897-42e3-4f59-08dc4e08ab94
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2024 02:50:32.4727
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Dq5uJF/FrrP6BPyhFIA0I7tE6GQgaxqQnhJErKpXE/mwm64px77vsxj4kqjM0dlkf0O9EM4YvwGHb08yPeyVjtzZw0nEaB3GBJ/oMO/C2eY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: NT0PR01MB1264
+X-MS-Exchange-CrossTenant-userprincipalname: QA4Wqmf37vIKbPDZQUsOTm+MWKvkCOOkrzM5pmLOAm/J6EWdMqPA7GKwioN1IPt+fbrWgBNT0GJdHXDPXsKnSOwN1xg9i3Pz0WWZwtmr1EE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BJSPR01MB0547
 
-> This patch series add driver support for StarFive JH8100 SoC crypto engin=
-e.
-> Patch 1 adds compatible string and update irq descriptions for
-> JH8100 device. Subsequent patches update current driver implementations t=
-o
-> support both 7110 and 8100 variants.
->=20
-> v3->v4:
-> - Updated interrupts descriptions for jh8100-crypto compatible. (Rob)
-> - Added patch 3 to skip unneeded key freeing for RSA module.
->=20
-> v2->v3:
-> - Use of device data instead of #ifdef CONFIG_ for different device
->   variants.
-> - Updated dt bindings compatible and interrupts descriptions.
-> - Added patch 4 to support hardware quirks for dw-axi-dmac driver.
->=20
-> v1->v2:
-> - Resolved build warnings reported by kernel test robot
->   https://lore.kernel.org/oe-kbuild-all/202312170614.24rtwf9x-
-> lkp@intel.com/
->=20
-> Jia Jie Ho (7):
->   dt-bindings: crypto: starfive: Add jh8100 support
->   crypto: starfive: Update hash dma usage
->   crypto: starfive: Skip unneeded key free
->   crypto: starfive: Use dma for aes requests
->   dmaengine: dw-axi-dmac: Support hardware quirks
->   crypto: starfive: Add sm3 support for JH8100
->   crypto: starfive: Add sm4 support for JH8100
->=20
->  .../crypto/starfive,jh7110-crypto.yaml        |   30 +-
->  drivers/crypto/starfive/Kconfig               |   30 +-
->  drivers/crypto/starfive/Makefile              |    5 +-
->  drivers/crypto/starfive/jh7110-aes.c          |  592 ++++++---
->  drivers/crypto/starfive/jh7110-cryp.c         |   77 +-
->  drivers/crypto/starfive/jh7110-cryp.h         |  114 +-
->  drivers/crypto/starfive/jh7110-hash.c         |  316 +++--
->  drivers/crypto/starfive/jh7110-rsa.c          |    3 +
->  drivers/crypto/starfive/jh8100-sm3.c          |  544 ++++++++
->  drivers/crypto/starfive/jh8100-sm4.c          | 1119 +++++++++++++++++
->  .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    |   32 +-
->  drivers/dma/dw-axi-dmac/dw-axi-dmac.h         |    2 +
->  include/linux/dma/dw_axi.h                    |   11 +
->  13 files changed, 2437 insertions(+), 438 deletions(-)  create mode 1006=
-44
-> drivers/crypto/starfive/jh8100-sm3.c
->  create mode 100644 drivers/crypto/starfive/jh8100-sm4.c
->  create mode 100644 include/linux/dma/dw_axi.h
->=20
 
-Hi Herbert,
-Could you please help review this patch series?
 
-Thanks,
-Jia Jie
+> -----Original Message-----
+> From: Conor Dooley <conor@kernel.org>
+> Sent: Wednesday, 27 March, 2024 2:33 AM
+> To: ChunHau Tan <chunhau.tan@starfivetech.com>
+> Cc: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>; Vinod Koul
+> <vkoul@kernel.org>; Rob Herring <robh@kernel.org>; Krzysztof Kozlowski
+> <krzysztof.kozlowski+dt@linaro.org>; Conor Dooley <conor+dt@kernel.org>;
+> Leyfoon Tan <leyfoon.tan@starfivetech.com>; JeeHeng Sia
+> <jeeheng.sia@starfivetech.com>; dmaengine@vger.kernel.org;
+> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH 1/2] dt-bindings: dma: snps,dw-axi-dmac: Add JH8100
+> support
+>=20
+> On Tue, Mar 26, 2024 at 02:54:56AM -0700, Tan Chun Hau wrote:
+> > Add support for StarFive JH8100 SoC in Sysnopsys Designware AXI DMA
+> > controller.
+>=20
+> Your commit message should explain what makes this incompatible with exis=
+ting
+> devices. That inforatiion does appear to be in the driver patch, but shou=
+ld also be
+> here. Otherwise,
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+
+Okay, thank you for the feedback.
+>=20
+> >
+> > Signed-off-by: Tan Chun Hau <chunhau.tan@starfivetech.com>
+> > ---
+> >  Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git
+> > a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
+> > b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
+> > index 363cf8bd150d..525f5f3932f5 100644
+> > --- a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
+> > +++ b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
+> > @@ -21,6 +21,7 @@ properties:
+> >        - snps,axi-dma-1.01a
+> >        - intel,kmb-axi-dma
+> >        - starfive,jh7110-axi-dma
+> > +      - starfive,jh8100-axi-dma
+> >
+> >    reg:
+> >      minItems: 1
+> > --
+> > 2.25.1
+> >
 

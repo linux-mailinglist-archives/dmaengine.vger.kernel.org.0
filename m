@@ -1,48 +1,48 @@
-Return-Path: <dmaengine+bounces-1561-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1562-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A699088E4B7
-	for <lists+dmaengine@lfdr.de>; Wed, 27 Mar 2024 15:11:40 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 40DF088E5EE
+	for <lists+dmaengine@lfdr.de>; Wed, 27 Mar 2024 15:29:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EBD7DB30F2B
-	for <lists+dmaengine@lfdr.de>; Wed, 27 Mar 2024 14:09:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BA60129C6E8
+	for <lists+dmaengine@lfdr.de>; Wed, 27 Mar 2024 14:29:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D56312A146;
-	Wed, 27 Mar 2024 12:32:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 880321369AB;
+	Wed, 27 Mar 2024 12:53:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="R/XhVYBz"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="RsvqqV1y"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6DAF12E1F6;
-	Wed, 27 Mar 2024 12:32:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77B9313793D;
+	Wed, 27 Mar 2024 12:53:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711542738; cv=none; b=rEsCtQjwu0sO5nXfA+x87wWAFLxzIEPRxB7vXbWz1aJ7eI4Y7Pe2vzhMOfz4SmHx1bNc3lCPMGFPTXL7b6y151Q/AOOtNzIQHZu2U5qHr9MAxs9+DrFthab3/848U9SL7CEzw30jR16AN7XmD2fDQDRdadpJQbSmvG4WtI+pI2w=
+	t=1711543992; cv=none; b=oyuhLUzVgGaNKUfW1i+xs3rR59NCWwLskAMHRMBEFmbsIRmcPNMW6Z94kMkMddnBJKNa6rVowP8IjInVtjA/LTgBqLvQIPW+TwwrpVdR7FmK7HlqzaYTfNio0hMtok7OgkcBiFzJRvucl+0od1BNnPKOYyHwr72SHTLEx3jXsnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711542738; c=relaxed/simple;
-	bh=eauS07e0uZwR+eZxZshxdp8VELzhQtI+0tJN5Bk/9a0=;
+	s=arc-20240116; t=1711543992; c=relaxed/simple;
+	bh=S83QBORogKvvtFt+xB9g1z1TUhvqrmHBi2LnzlxLI+w=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PzacOj07Qk3RzTEqdNeEU/aQRVZgDyEI4z6H89PvGLzVJhMa1rbV3QQ5Kw5MfDDK0M1VWTynokhD/ieQKVwUSvMPgs4isMdU2csm4J+6cpGMMLTchItehfWKk17KvVv5R2Irt8So//So9PKrtlIqpW9nQmvGXDF5eVDzLfja8Ww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=R/XhVYBz; arc=none smtp.client-ip=213.167.242.64
+	 In-Reply-To:Content-Type; b=fuJrfQG2jjMVfCkEmzIR7JfYuSWPULdgtw/FIE0f7ElMVsg74jzEBfDVO6T9few7xb+1o6G2+h+YUKUtqZNv4VIOOJG9M9mUmRLJ7z11KNG0vK8YCp/kUvX2W+Zt/QllB47tGRmq1WzkHs+k19ibDgEZVvTebEW7PUfkLhmQhIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=RsvqqV1y; arc=none smtp.client-ip=213.167.242.64
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Received: from [192.168.88.20] (91-154-34-181.elisa-laajakaista.fi [91.154.34.181])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id B27A413AC;
-	Wed, 27 Mar 2024 13:31:42 +0100 (CET)
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0323513AC;
+	Wed, 27 Mar 2024 13:52:34 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1711542703;
-	bh=eauS07e0uZwR+eZxZshxdp8VELzhQtI+0tJN5Bk/9a0=;
+	s=mail; t=1711543955;
+	bh=S83QBORogKvvtFt+xB9g1z1TUhvqrmHBi2LnzlxLI+w=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=R/XhVYBz/Xl8N2++t3nmiSoiRRLe2gh6g7vIBhaJrAckHr4Jx3pFLnMThSu2rUq9W
-	 g8YhfPneQKhc2pONRNzCZW4zWDbhjiRuvy4qU9QnZkYtDCcoq6sQW1Hra530hwGk3U
-	 WuUg5mDqbAQEqx04MMKPZ2lEnFkeHvDrrfrG3LVI=
-Message-ID: <e0c8200f-cf91-466f-8769-10817bc9fb8c@ideasonboard.com>
-Date: Wed, 27 Mar 2024 14:32:12 +0200
+	b=RsvqqV1ylYgKPTrEsc3QorvZgRVPWY2ERuy3XvqkE0surXevQSkZ0HHAV/Myll2/H
+	 DJfQZiPnzGheI/s6ncQRotKHDG0gItaVEil0L4g2tODmMm8qlXhgUvSJ5cFcOIjB4/
+	 kiATP5jVE4GNcNnsyuLeeZneJNM7Mjfk4a25w49w=
+Message-ID: <15f85f9f-d995-4146-82a9-5f11d715799a@ideasonboard.com>
+Date: Wed, 27 Mar 2024 14:53:04 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -50,16 +50,16 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dmaengine: xilinx: dpdma: Fix race condition in
- vsync IRQ
+Subject: Re: [PATCH v2 2/2] dmaengine: xilinx: dpdma: Add support for cyclic
+ dma mode
 Content-Language: en-US
 To: Vishal Sagar <vishal.sagar@amd.com>
 Cc: michal.simek@amd.com, dmaengine@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
  varunkumar.allagadapa@amd.com, laurent.pinchart@ideasonboard.com,
- vkoul@kernel.org, Sean Anderson <sean.anderson@linux.dev>
+ vkoul@kernel.org
 References: <20240228042124.3074044-1-vishal.sagar@amd.com>
- <20240228042124.3074044-2-vishal.sagar@amd.com>
+ <20240228042124.3074044-3-vishal.sagar@amd.com>
 From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
  xsFNBE6ms0cBEACyizowecZqXfMZtnBniOieTuFdErHAUyxVgtmr0f5ZfIi9Z4l+uUN4Zdw2
@@ -104,80 +104,175 @@ Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
  ueeIlwJl5CpT5l8RpoZXEOVtXYn8zzOJ7oGZYINRV9Pf8qKGLf3Dft7zKBP832I3PQjeok7F
  yjt+9S+KgSFSHP3Pa4E7lsSdWhSlHYNdG/czhoUkSCN09C0rEK93wxACx3vtxPLjXu6RptBw
  3dRq7n+mQChEB1am0BueV1JZaBboIL0AGlSJkm23kw==
-In-Reply-To: <20240228042124.3074044-2-vishal.sagar@amd.com>
+In-Reply-To: <20240228042124.3074044-3-vishal.sagar@amd.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 28/02/2024 06:21, Vishal Sagar wrote:
-> From: Neel Gandhi <neel.gandhi@xilinx.com>
+> From: Rohit Visavalia <rohit.visavalia@xilinx.com>
 > 
-> The vchan_next_desc() function, called from
-> xilinx_dpdma_chan_queue_transfer(), must be called with
-> virt_dma_chan.lock held. This isn't correctly handled in all code paths,
-> resulting in a race condition between the .device_issue_pending()
-> handler and the IRQ handler which causes DMA to randomly stop. Fix it by
-> taking the lock around xilinx_dpdma_chan_queue_transfer() calls that are
-> missing it.
+> This patch adds support for DPDMA cyclic dma mode,
+> DMA cyclic transfers are required by audio streaming.
 > 
-> Signed-off-by: Neel Gandhi <neel.gandhi@amd.com>
+> Signed-off-by: Rohit Visavalia <rohit.visavalia@amd.com>
 > Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 > Signed-off-by: Vishal Sagar <vishal.sagar@amd.com>
-
-Sean posted almost identical, but very slightly better patch, for this, 
-so I think we can pick that one instead.
-
-  Tomi
-
 > 
-> Link: https://lore.kernel.org/all/20220122121407.11467-1-neel.gandhi@xilinx.com
 > ---
->   drivers/dma/xilinx/xilinx_dpdma.c | 10 ++++++++--
->   1 file changed, 8 insertions(+), 2 deletions(-)
+>   drivers/dma/xilinx/xilinx_dpdma.c | 97 +++++++++++++++++++++++++++++++
+>   1 file changed, 97 insertions(+)
 > 
 > diff --git a/drivers/dma/xilinx/xilinx_dpdma.c b/drivers/dma/xilinx/xilinx_dpdma.c
-> index b82815e64d24..28d9af8f00f0 100644
+> index 28d9af8f00f0..88ad2f35538a 100644
 > --- a/drivers/dma/xilinx/xilinx_dpdma.c
 > +++ b/drivers/dma/xilinx/xilinx_dpdma.c
-> @@ -1097,12 +1097,14 @@ static void xilinx_dpdma_chan_vsync_irq(struct  xilinx_dpdma_chan *chan)
->   	 * Complete the active descriptor, if any, promote the pending
->   	 * descriptor to active, and queue the next transfer, if any.
->   	 */
-> +	spin_lock(&chan->vchan.lock);
->   	if (chan->desc.active)
->   		vchan_cookie_complete(&chan->desc.active->vdesc);
->   	chan->desc.active = pending;
->   	chan->desc.pending = NULL;
->   
->   	xilinx_dpdma_chan_queue_transfer(chan);
-> +	spin_unlock(&chan->vchan.lock);
->   
->   out:
->   	spin_unlock_irqrestore(&chan->lock, flags);
-> @@ -1264,10 +1266,12 @@ static void xilinx_dpdma_issue_pending(struct dma_chan *dchan)
->   	struct xilinx_dpdma_chan *chan = to_xilinx_chan(dchan);
->   	unsigned long flags;
->   
-> -	spin_lock_irqsave(&chan->vchan.lock, flags);
-> +	spin_lock_irqsave(&chan->lock, flags);
-> +	spin_lock(&chan->vchan.lock);
->   	if (vchan_issue_pending(&chan->vchan))
->   		xilinx_dpdma_chan_queue_transfer(chan);
-> -	spin_unlock_irqrestore(&chan->vchan.lock, flags);
-> +	spin_unlock(&chan->vchan.lock);
-> +	spin_unlock_irqrestore(&chan->lock, flags);
+> @@ -669,6 +669,84 @@ static void xilinx_dpdma_chan_free_tx_desc(struct virt_dma_desc *vdesc)
+>   	kfree(desc);
 >   }
 >   
->   static int xilinx_dpdma_config(struct dma_chan *dchan,
-> @@ -1495,7 +1499,9 @@ static void xilinx_dpdma_chan_err_task(struct tasklet_struct *t)
->   		    XILINX_DPDMA_EINTR_CHAN_ERR_MASK << chan->id);
+> +/**
+> + * xilinx_dpdma_chan_prep_cyclic - Prepare a cyclic dma descriptor
+> + * @chan: DPDMA channel
+> + * @buf_addr: buffer address
+> + * @buf_len: buffer length
+> + * @period_len: number of periods
+> + * @flags: tx flags argument passed in to prepare function
+> + *
+> + * Prepare a tx descriptor incudling internal software/hardware descriptors
+> + * for the given cyclic transaction.
+> + *
+> + * Return: A dma async tx descriptor on success, or NULL.
+> + */
+> +static struct dma_async_tx_descriptor *
+> +xilinx_dpdma_chan_prep_cyclic(struct xilinx_dpdma_chan *chan,
+> +			      dma_addr_t buf_addr, size_t buf_len,
+> +			      size_t period_len, unsigned long flags)
+> +{
+> +	struct xilinx_dpdma_tx_desc *tx_desc;
+> +	struct xilinx_dpdma_sw_desc *sw_desc, *last = NULL;
+> +	unsigned int periods = buf_len / period_len;
+> +	unsigned int i;
+> +
+> +	tx_desc = xilinx_dpdma_chan_alloc_tx_desc(chan);
+> +	if (!tx_desc)
+> +		return (void *)tx_desc;
+
+Just return NULL here?
+
+> +
+> +	for (i = 0; i < periods; i++) {
+> +		struct xilinx_dpdma_hw_desc *hw_desc;
+> +
+> +		if (!IS_ALIGNED(buf_addr, XILINX_DPDMA_ALIGN_BYTES)) {
+> +			dev_err(chan->xdev->dev,
+> +				"buffer should be aligned at %d B\n",
+> +				XILINX_DPDMA_ALIGN_BYTES);
+> +			goto error;
+> +		}
+> +
+> +		sw_desc = xilinx_dpdma_chan_alloc_sw_desc(chan);
+> +		if (!sw_desc)
+> +			goto error;
+> +
+> +		xilinx_dpdma_sw_desc_set_dma_addrs(chan->xdev, sw_desc, last,
+> +						   &buf_addr, 1);
+> +		hw_desc = &sw_desc->hw;
+> +		hw_desc->xfer_size = period_len;
+> +		hw_desc->hsize_stride =
+> +			FIELD_PREP(XILINX_DPDMA_DESC_HSIZE_STRIDE_HSIZE_MASK,
+> +				   period_len) |
+> +			FIELD_PREP(XILINX_DPDMA_DESC_HSIZE_STRIDE_STRIDE_MASK,
+> +				   period_len);
+> +		hw_desc->control |= XILINX_DPDMA_DESC_CONTROL_PREEMBLE;
+> +		hw_desc->control |= XILINX_DPDMA_DESC_CONTROL_IGNORE_DONE;
+> +		hw_desc->control |= XILINX_DPDMA_DESC_CONTROL_COMPLETE_INTR;
+
+You could:
+
+hw_desc->control |= XILINX_DPDMA_DESC_CONTROL_PREEMBLE |
+		    XILINX_DPDMA_DESC_CONTROL_IGNORE_DONE |
+		    XILINX_DPDMA_DESC_CONTROL_COMPLETE_INTR;
+
+Although... Shouldn't control always be 0 here, so you can just 
+hw_desc->control = ...;
+
+> +
+> +		list_add_tail(&sw_desc->node, &tx_desc->descriptors);
+> +
+> +		buf_addr += period_len;
+> +		last = sw_desc;
+> +	}
+> +
+> +	sw_desc = list_first_entry(&tx_desc->descriptors,
+> +				   struct xilinx_dpdma_sw_desc, node);
+> +	last->hw.next_desc = lower_32_bits(sw_desc->dma_addr);
+> +	if (chan->xdev->ext_addr)
+> +		last->hw.addr_ext |=
+> +			FIELD_PREP(XILINX_DPDMA_DESC_ADDR_EXT_NEXT_ADDR_MASK,
+> +				   upper_32_bits(sw_desc->dma_addr));
+> +
+> +	last->hw.control |= XILINX_DPDMA_DESC_CONTROL_LAST_OF_FRAME;
+> +
+> +	return vchan_tx_prep(&chan->vchan, &tx_desc->vdesc, flags);
+> +
+> +error:
+> +	xilinx_dpdma_chan_free_tx_desc(&tx_desc->vdesc);
+> +
+> +	return NULL;
+> +}
+> +
+>   /**
+>    * xilinx_dpdma_chan_prep_interleaved_dma - Prepare an interleaved dma
+>    *					    descriptor
+> @@ -1190,6 +1268,23 @@ static void xilinx_dpdma_chan_handle_err(struct xilinx_dpdma_chan *chan)
+>   /* -----------------------------------------------------------------------------
+>    * DMA Engine Operations
+>    */
+> +static struct dma_async_tx_descriptor *
+> +xilinx_dpdma_prep_dma_cyclic(struct dma_chan *dchan, dma_addr_t buf_addr,
+> +			     size_t buf_len, size_t period_len,
+> +			     enum dma_transfer_direction direction,
+> +			     unsigned long flags)
+> +{
+> +	struct xilinx_dpdma_chan *chan = to_xilinx_chan(dchan);
+> +
+> +	if (direction != DMA_MEM_TO_DEV)
+> +		return NULL;
+> +
+> +	if (buf_len % period_len)
+> +		return NULL;
+> +
+> +	return xilinx_dpdma_chan_prep_cyclic(chan, buf_addr, buf_len,
+> +						 period_len, flags);
+
+The parameters should be aligned above.
+
+> +}
 >   
->   	spin_lock_irqsave(&chan->lock, flags);
-> +	spin_lock(&chan->vchan.lock);
->   	xilinx_dpdma_chan_queue_transfer(chan);
-> +	spin_unlock(&chan->vchan.lock);
->   	spin_unlock_irqrestore(&chan->lock, flags);
->   }
+>   static struct dma_async_tx_descriptor *
+>   xilinx_dpdma_prep_interleaved_dma(struct dma_chan *dchan,
+> @@ -1673,6 +1768,7 @@ static int xilinx_dpdma_probe(struct platform_device *pdev)
 >   
+>   	dma_cap_set(DMA_SLAVE, ddev->cap_mask);
+>   	dma_cap_set(DMA_PRIVATE, ddev->cap_mask);
+> +	dma_cap_set(DMA_CYCLIC, ddev->cap_mask);
+>   	dma_cap_set(DMA_INTERLEAVE, ddev->cap_mask);
+>   	dma_cap_set(DMA_REPEAT, ddev->cap_mask);
+>   	dma_cap_set(DMA_LOAD_EOT, ddev->cap_mask);
+> @@ -1680,6 +1776,7 @@ static int xilinx_dpdma_probe(struct platform_device *pdev)
+>   
+>   	ddev->device_alloc_chan_resources = xilinx_dpdma_alloc_chan_resources;
+>   	ddev->device_free_chan_resources = xilinx_dpdma_free_chan_resources;
+> +	ddev->device_prep_dma_cyclic = xilinx_dpdma_prep_dma_cyclic;
+>   	ddev->device_prep_interleaved_dma = xilinx_dpdma_prep_interleaved_dma;
+>   	/* TODO: Can we achieve better granularity ? */
+>   	ddev->device_tx_status = dma_cookie_status;
+
+While I'm not too familiar with dma engines, this looks fine to me. So, 
+other than the few cosmetics comments:
+
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+
+  Tomi
 
 

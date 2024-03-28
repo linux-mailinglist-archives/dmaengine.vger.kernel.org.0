@@ -1,34 +1,34 @@
-Return-Path: <dmaengine+bounces-1627-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1629-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9E3DA890760
-	for <lists+dmaengine@lfdr.de>; Thu, 28 Mar 2024 18:45:15 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25AD5890764
+	for <lists+dmaengine@lfdr.de>; Thu, 28 Mar 2024 18:45:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id ED9B71F25E5E
-	for <lists+dmaengine@lfdr.de>; Thu, 28 Mar 2024 17:45:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4919A1C2B685
+	for <lists+dmaengine@lfdr.de>; Thu, 28 Mar 2024 17:45:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4955912F360;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDF7426AF6;
 	Thu, 28 Mar 2024 17:45:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jwbyfY7u"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PKjnHymg"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20DC43BBDC;
-	Thu, 28 Mar 2024 17:45:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE570128370;
+	Thu, 28 Mar 2024 17:45:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711647910; cv=none; b=rc/CPwb6S+WpDLeDcIjin8kvFY+tih6NA6ZOvHnB1lWh3+WJEx2msLcdh70ObAGRWKaSUPCdrELYar4cp2EGHNI06ZYgnnF+aZ4jFbbfngm5csT6EgY6bseGforsanfITkApsCiyNlREOGMfA/v9s1mraEfWKZSZs/x30diNCCk=
+	t=1711647910; cv=none; b=JVesYLOpavsh3xSKHAgE/ZJrFkispCI0faSuBU6qTfIw7lZKjpt8NQWXL5AJBUnyMrLqWPy++pdWaXGXdA5/q7e54jQyy0X4vV1DRiECM2JMhI8GsKi+adepqp9YAsaZDEqvGrgV3RfnTXRj5PCrjNqdAUMdt4Z3cuKYVj86ikI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711647910; c=relaxed/simple;
-	bh=qUxcy08WSCXTRqv6KjjM/Da3kQd1/M5/JyKNmDp5AQU=;
+	bh=mwRtl4Gj3eQKhBy8l2CMkKhpHHKi5w8URb2yHTrh+zM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZsRtv1wtxVpkpjA+LMJvw0jZGgQj1/yKS8j9kFiPkLWSascM7IYRCWct5E4ZdqrkpVglLNYvY+zSwRtxxdSznkrPd5TEVEDTxFC6FXuoGI7koyGz7ck3anUsRlli43tqJ+ymWPgvKR139uJhtI6DnK2KGdDnW5R4HrN5tJJqUIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jwbyfY7u; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version:Content-Type; b=MMDcSIQgWo33TPwBEBck/YVS5YojiINactY5jEP3+0cAALH6M8HeQLfQzm/vRHEWiaCtdw1/mmXO1rR8wpFb/UpFXLr0qGoTD6XwbjKhUeBlWyn0QRN8CbmDu70qy6BNV9b0XDekIDzV4O6qbN5jOH3a+OcvZQAiXjiTgxV1gq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PKjnHymg; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
@@ -36,26 +36,26 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   t=1711647908; x=1743183908;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=qUxcy08WSCXTRqv6KjjM/Da3kQd1/M5/JyKNmDp5AQU=;
-  b=jwbyfY7uAnak1JJWtqwaRz89vkYBq5Zw8aFrH/DZBY4mc+6xm2tLzJOv
-   zu8eDp2VmuJWUinKiqmX5odND/3I7+T75cExyGD0fKL+OM7tZNLi//tvk
-   K5hXj0k2Gwxb6Qk7NlvqwM+6W9Rftu6uVl3BaiInUsomCB/QZLCxL/SFY
-   kAfD4nNy499v9U1xoaWI/DJNWtMJcvAnue0iBpQATs9YknCCnGs2y/mSM
-   FLJ96n56C7BwT/S8Ug9NrU01GP7gPLTsYfwrdPNhVhM6NEJI1wnFmM5o9
-   gD5cObniF0lmsWj7R6o/UQZCIZm/16mESKpQnxyUTZikP04F0r3NSjVvz
-   g==;
-X-CSE-ConnectionGUID: 7pIVIbaaSQKQu2CQCHT38A==
-X-CSE-MsgGUID: x68Ch6Y8Sn+4+wZwvQH41w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="10631347"
+  bh=mwRtl4Gj3eQKhBy8l2CMkKhpHHKi5w8URb2yHTrh+zM=;
+  b=PKjnHymg/Pd0tjeVENTFTdHZshQbVlXOVPqmKwUSTo/2QT8aI4QVkYR1
+   Bmrf/J/0RT9bnD+yQA/Hx8oNz6PFfX/Ww0DJW6wncaGUzt+rBHOa4jqk4
+   QcpoyRpsWGEwRsN+Fa+O1C4lr9cY3GkbP86f3m+H2Xs11EmCdp6WmDyHa
+   //AXQDsPW4LCiB+WEVR1YEsa6zd+fCTHt6gZHMW2e08JMzaOeVF6DsD1U
+   qm8urAq13ORPCauY3jjgsI2MTw4e5E2fu5IxJ7ch1H3SabiVvSUIG9aFS
+   G4VOGuDG3mzkyxsJDNSSIMAl8z+bOwI0Whdz6S0xIUYajFlMIUo4U0sBb
+   A==;
+X-CSE-ConnectionGUID: Zq8ukXv7TdmVH3+1eRR/Rg==
+X-CSE-MsgGUID: c6qpZ5IJQIKqzCGFmnz6cA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="10631352"
 X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
-   d="scan'208";a="10631347"
+   d="scan'208";a="10631352"
 Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 10:44:58 -0700
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 10:44:59 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
-   d="scan'208";a="16675583"
+   d="scan'208";a="16675604"
 Received: from jf5300-b11a264t.jf.intel.com ([10.242.51.89])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 10:44:58 -0700
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 10:44:59 -0700
 From: Andre Glover <andre.glover@linux.intel.com>
 To: tom.zanussi@linux.intel.com,
 	herbert@gondor.apana.org.au,
@@ -69,9 +69,9 @@ Cc: dave.jiang@intel.com,
 	linux-crypto@vger.kernel.org,
 	dmaengine@vger.kernel.org,
 	andre.glover@linux.intel.com
-Subject: [PATCH 1/4] crypto: Add 'canned' compression mode for zlib
-Date: Thu, 28 Mar 2024 10:44:42 -0700
-Message-Id: <da61521930e080d940f724b67dcaaeecd512e723.1710969449.git.andre.glover@linux.intel.com>
+Subject: [PATCH 2/4] crypto: iaa - Add deflate-canned compression algorithm
+Date: Thu, 28 Mar 2024 10:44:43 -0700
+Message-Id: <f59789265e79701d021ecc45bc50252d8d2a5981.1710969449.git.andre.glover@linux.intel.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <cover.1710969449.git.andre.glover@linux.intel.com>
 References: <cover.1710969449.git.andre.glover@linux.intel.com>
@@ -81,206 +81,84 @@ List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 The 'canned' compression mode implements a compression scheme that uses
-statically defined Huffman tables. Since the Deflate block header is a
-constant, it is not stored with the compressed data. The Huffman tables
-used were generated from statistics derived from swapped 4KB pages of
-SPEC CPU17 workloads. We believe that these tables should be generally
-applicable to page compression.
+statically-defined customized Huffman tables. Since the Deflate block
+header is a constant, it is not stored with the compressed data. The
+Huffman tables used were generated from statistics derived from swapped
+4KB pages of SPEC CPU17 workloads. Canned mode provides better compression
+than using the Deflate standard's (RFC-1951) "fixed" tables and better
+latencies than dynamic compression.
 
-Canned mode provides lower compression and decompression latencies than
-dynamic compression with slightly lower compression ratio.
+Compressing a data set of 4300 4KB pages sampled from SPEC CPU17 workloads
+produces a compression ratio of 2.88 for IAA canned compression and 2.69
+for IAA fixed compression, which is a 7% improvement.
 
-Below is a table showing the latency improvements of zlib, between dynamic
-and canned modes, and the compression ratio for each mode while using a
-set of 4300 4KB pages sampled from SPEC CPU17 workloads:
+Either 'fixed' or 'canned' modes can be chosen as the mode to be used
+by crypto facilities by selecting the corresponding algorithm.  For
+example, to use IAA fixed mode in zswap:
 
-_________________________________________________________
-| Zlib Level |  Canned Latency Gain  |    Comp Ratio    |
-|------------|-----------------------|------------------|
-|            | compress | decompress | dynamic | canned |
-|____________|__________|____________|_________|________|
-|     1      |    49%   |    29%     |  3.16   |  2.92  |
-|------------|----------|------------|---------|--------|
-|     6	     |    27%   |    28%     |  3.35   |  3.09  |
-|------------|----------|------------|---------|--------|
-|     9      |    12%   |    29%     |  3.36   |  3.11  |
-|____________|__________|____________|_________|________|
+  echo deflate-iaa > /sys/module/zswap/parameters/compressor
 
-Canned mode is exposed by the 'deflate-canned' crypto algorithm in the
-zlib crypto driver. The set of static canned-mode deflate and inflate
-tables were generated and are used in the same manner as the pre-existing
-zlib fixed tables. We have insured that the 'canned' mode additions do not
-impact existing zlib performance or functionality.
+To choose 'canned' mode:
 
+  echo deflate-iaa-canned > /sys/module/zswap/parameters/compressor
+
+[ Based on work originally by George Powley, Jing Lin and Kyung Min
+Park ]
+
+Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
 Signed-off-by: Andre Glover <andre.glover@linux.intel.com>
 ---
- crypto/deflate.c             |  72 +++++++++++--
- crypto/testmgr.c             |  10 ++
- crypto/testmgr.h             |  74 ++++++++++++++
- include/linux/zlib.h         |  10 ++
- lib/Kconfig                  |   9 ++
- lib/zlib_deflate/defcanned.h | 118 ++++++++++++++++++++++
- lib/zlib_deflate/deflate.c   |   8 +-
- lib/zlib_deflate/deftree.c   |  15 ++-
- lib/zlib_inflate/infcanned.h | 191 +++++++++++++++++++++++++++++++++++
- lib/zlib_inflate/inflate.c   |  15 ++-
- lib/zlib_inflate/inflate.h   |   5 +-
- lib/zlib_inflate/infutil.h   |  16 +++
- 12 files changed, 529 insertions(+), 14 deletions(-)
- create mode 100644 lib/zlib_deflate/defcanned.h
- create mode 100644 lib/zlib_inflate/infcanned.h
+ .../driver-api/crypto/iaa/iaa-crypto.rst      |  15 +-
+ crypto/testmgr.c                              |  10 +
+ crypto/testmgr.h                              |  72 +++++
+ drivers/crypto/intel/iaa/Kconfig              |   1 +
+ drivers/crypto/intel/iaa/Makefile             |   2 +-
+ drivers/crypto/intel/iaa/iaa_crypto.h         |  38 +++
+ .../crypto/intel/iaa/iaa_crypto_comp_canned.c | 116 ++++++++
+ .../crypto/intel/iaa/iaa_crypto_comp_fixed.c  |   1 +
+ drivers/crypto/intel/iaa/iaa_crypto_main.c    | 271 ++++++++++++++++--
+ 9 files changed, 500 insertions(+), 26 deletions(-)
+ create mode 100644 drivers/crypto/intel/iaa/iaa_crypto_comp_canned.c
 
-diff --git a/crypto/deflate.c b/crypto/deflate.c
-index 6e31e0db0e86..cda9dc5cab36 100644
---- a/crypto/deflate.c
-+++ b/crypto/deflate.c
-@@ -37,6 +37,7 @@
- struct deflate_ctx {
- 	struct z_stream_s comp_stream;
- 	struct z_stream_s decomp_stream;
-+	bool canned;
- };
+diff --git a/Documentation/driver-api/crypto/iaa/iaa-crypto.rst b/Documentation/driver-api/crypto/iaa/iaa-crypto.rst
+index 7b28aef39ba0..b64bd780ad87 100644
+--- a/Documentation/driver-api/crypto/iaa/iaa-crypto.rst
++++ b/Documentation/driver-api/crypto/iaa/iaa-crypto.rst
+@@ -30,8 +30,8 @@ algorithm::
+ This will tell zswap to use the IAA 'fixed' compression mode for all
+ compresses and decompresses.
  
- static int deflate_comp_init(struct deflate_ctx *ctx)
-@@ -50,9 +51,16 @@ static int deflate_comp_init(struct deflate_ctx *ctx)
- 		ret = -ENOMEM;
- 		goto out;
- 	}
--	ret = zlib_deflateInit2(stream, DEFLATE_DEF_LEVEL, Z_DEFLATED,
--				-DEFLATE_DEF_WINBITS, DEFLATE_DEF_MEMLEVEL,
--				Z_DEFAULT_STRATEGY);
-+
-+	if (IS_ENABLED(CONFIG_ZLIB_CANNED) && ctx->canned)
-+		ret = zlib_deflateInit2(stream, DEFLATE_DEF_LEVEL, Z_DEFLATED,
-+					DEFLATE_DEF_CANNED_WINBITS,
-+					DEFLATE_DEF_MEMLEVEL,
-+					Z_CANNED);
-+	else
-+		ret = zlib_deflateInit2(stream, DEFLATE_DEF_LEVEL, Z_DEFLATED,
-+					-DEFLATE_DEF_WINBITS, DEFLATE_DEF_MEMLEVEL,
-+					Z_DEFAULT_STRATEGY);
- 	if (ret != Z_OK) {
- 		ret = -EINVAL;
- 		goto out_free;
-@@ -74,7 +82,16 @@ static int deflate_decomp_init(struct deflate_ctx *ctx)
- 		ret = -ENOMEM;
- 		goto out;
- 	}
--	ret = zlib_inflateInit2(stream, -DEFLATE_DEF_WINBITS);
-+
-+	/*
-+	 * The wrap is embedded in bits 31:4 of the windowBits argument and is incremented
-+	 * by 1 during extraction.
-+	 */
-+	if (IS_ENABLED(CONFIG_ZLIB_CANNED) && ctx->canned)
-+		ret = zlib_inflateInit2(stream, (((ZLIB_CANNED_WRAP - 1) << 4) |
-+						  (DEFLATE_DEF_CANNED_WINBITS)));
-+	else
-+		ret = zlib_inflateInit2(stream, -DEFLATE_DEF_WINBITS);
- 	if (ret != Z_OK) {
- 		ret = -EINVAL;
- 		goto out_free;
-@@ -130,6 +147,25 @@ static void *deflate_alloc_ctx(struct crypto_scomp *tfm)
- 	return ctx;
- }
+-Currently, there is only one compression modes available, 'fixed'
+-mode.
++Currently, two compression modes are available to all IAA hardware,
++'canned' and 'fixed' modes.
  
-+static __maybe_unused void *deflate_canned_alloc_ctx(struct crypto_scomp *tfm)
-+{
-+	struct deflate_ctx *ctx;
-+	int ret;
-+
-+	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		return ERR_PTR(-ENOMEM);
-+
-+	ctx->canned = true;
-+	ret = __deflate_init(ctx);
-+	if (ret) {
-+		kfree(ctx);
-+		return ERR_PTR(ret);
-+	}
-+
-+	return ctx;
-+}
-+
- static int deflate_init(struct crypto_tfm *tfm)
- {
- 	struct deflate_ctx *ctx = crypto_tfm_ctx(tfm);
-@@ -219,6 +255,11 @@ static int __deflate_decompress(const u8 *src, unsigned int slen,
- 	stream->next_out = (u8 *)dst;
- 	stream->avail_out = *dlen;
+ The 'fixed' compression mode implements the compression scheme
+ specified by RFC 1951 and is given the crypto algorithm name
+@@ -42,6 +42,17 @@ which allows for a window of up to 32k.  Because of this limitation,
+ the IAA fixed mode deflate algorithm is given its own algorithm name
+ rather than simply 'deflate').
  
-+	if (IS_ENABLED(CONFIG_ZLIB_CANNED) && dctx->canned) {
-+		ret = zlib_inflate(stream, Z_FINISH);
-+		goto inflate_done;
-+	}
++The 'canned' compression mode implements a good general-purpose
++compression scheme whose tables were generated from statistics derived
++from a wide variety of SPEC17 workloads.  It provides much better
++overall characteristics than the existing deflate-1951 tables
++implemented by 'fixed'. 'Canned' mode is implemented by the
++'deflate-iaa-canned' crypto algorithm.::
 +
- 	ret = zlib_inflate(stream, Z_SYNC_FLUSH);
- 	/*
- 	 * Work around a bug in zlib, which sometimes wants to taste an extra
-@@ -231,6 +272,8 @@ static int __deflate_decompress(const u8 *src, unsigned int slen,
- 		stream->avail_in = 1;
- 		ret = zlib_inflate(stream, Z_FINISH);
- 	}
++A zswap device can select the IAA 'canned' mode represented by
++selecting the 'deflate-iaa-canned' crypto compression algorithm::
 +
-+inflate_done:
- 	if (ret != Z_STREAM_END) {
- 		ret = -EINVAL;
- 		goto out;
-@@ -269,7 +312,8 @@ static struct crypto_alg alg = {
- 	.coa_decompress  	= deflate_decompress } }
- };
++  # echo deflate-iaa-canned > /sys/module/zswap/parameters/compressor
  
--static struct scomp_alg scomp = {
-+static struct scomp_alg scomp[] = {
-+{
- 	.alloc_ctx		= deflate_alloc_ctx,
- 	.free_ctx		= deflate_free_ctx,
- 	.compress		= deflate_scompress,
-@@ -279,7 +323,19 @@ static struct scomp_alg scomp = {
- 		.cra_driver_name = "deflate-scomp",
- 		.cra_module	 = THIS_MODULE,
- 	}
--};
-+#ifdef CONFIG_ZLIB_CANNED
-+}, {
-+	.alloc_ctx		= deflate_canned_alloc_ctx,
-+	.free_ctx		= deflate_free_ctx,
-+	.compress		= deflate_scompress,
-+	.decompress		= deflate_sdecompress,
-+	.base			= {
-+		.cra_name	= "deflate-canned",
-+		.cra_driver_name = "deflate-scomp-canned",
-+		.cra_module	 = THIS_MODULE,
-+	}
-+#endif
-+} };
- 
- static int __init deflate_mod_init(void)
- {
-@@ -289,7 +345,7 @@ static int __init deflate_mod_init(void)
- 	if (ret)
- 		return ret;
- 
--	ret = crypto_register_scomp(&scomp);
-+	ret = crypto_register_scomps(scomp, ARRAY_SIZE(scomp));
- 	if (ret) {
- 		crypto_unregister_alg(&alg);
- 		return ret;
-@@ -301,7 +357,7 @@ static int __init deflate_mod_init(void)
- static void __exit deflate_mod_fini(void)
- {
- 	crypto_unregister_alg(&alg);
--	crypto_unregister_scomp(&scomp);
-+	crypto_unregister_scomps(scomp, ARRAY_SIZE(scomp));
- }
- 
- subsys_initcall(deflate_mod_init);
+ Config options and other setup
+ ==============================
 diff --git a/crypto/testmgr.c b/crypto/testmgr.c
-index 3dddd288ca02..94fd9ceef207 100644
+index 94fd9ceef207..8981e8fb220b 100644
 --- a/crypto/testmgr.c
 +++ b/crypto/testmgr.c
 @@ -4806,6 +4806,16 @@ static const struct alg_test_desc alg_test_descs[] = {
@@ -288,40 +166,40 @@ index 3dddd288ca02..94fd9ceef207 100644
  			}
  		}
 +	}, {
-+		.alg = "deflate-scomp-canned",
++		.alg = "deflate-iaa-canned",
 +		.test = alg_test_comp,
 +		.fips_allowed = 1,
 +		.suite = {
 +			.comp = {
-+				.comp = __VECS(deflate_scomp_canned_comp_tv_template),
-+				.decomp = __VECS(deflate_scomp_canned_decomp_tv_template)
++				.comp = __VECS(deflate_iaa_canned_comp_tv_template),
++				.decomp = __VECS(deflate_iaa_canned_decomp_tv_template)
 +			}
 +		}
  	}, {
- 		.alg = "dh",
- 		.test = alg_test_kpp,
+ 		.alg = "deflate-scomp-canned",
+ 		.test = alg_test_comp,
 diff --git a/crypto/testmgr.h b/crypto/testmgr.h
-index 986f331a5fc2..38c4c96e11e2 100644
+index 38c4c96e11e2..c79ba30c2194 100644
 --- a/crypto/testmgr.h
 +++ b/crypto/testmgr.h
-@@ -34526,6 +34526,80 @@ static const struct comp_testvec deflate_decomp_tv_template[] = {
+@@ -34526,6 +34526,78 @@ static const struct comp_testvec deflate_decomp_tv_template[] = {
  	},
  };
  
-+static const struct comp_testvec deflate_scomp_canned_comp_tv_template[] = {
++static const struct comp_testvec deflate_iaa_canned_comp_tv_template[] = {
 +	{
 +		.inlen	= 70,
-+		.outlen	= 36,
++		.outlen	= 37,
 +		.input	= "Join us now and share the software "
 +			"Join us now and share the software ",
 +		.output	= "\x6d\x23\x43\x23\xa4\x71\x31\xd2"
 +			  "\x88\xc8\x61\x52\x75\x84\x56\x1a"
 +			  "\x13\xa2\x8e\xd6\x49\x63\x43\x74"
 +			  "\xd2\x98\xc8\xe0\xd8\x61\x58\x69"
-+			  "\xcb\x77\xf9\x0f",
++			  "\xcb\x71\x01\xe5\x3f",
 +	}, {
 +		.inlen	= 191,
-+		.outlen	= 129,
++		.outlen	= 128,
 +		.input	= "This document describes a compression method based on the DEFLATE"
 +			"compression algorithm.  This document defines the application of "
 +			"the DEFLATE algorithm to the IP Payload Compression Protocol.",
@@ -334,20 +212,19 @@ index 986f331a5fc2..38c4c96e11e2 100644
 +			  "\x05\x3d\x36\x44\x27\xf5\x69\xe5"
 +			  "\xdb\xde\xbb\x5b\x2b\x7d\x37\x75"
 +			  "\xd8\xc0\xc8\xe8\xd0\xd8\x90\x70"
-+			  "\x7b\xa9\xb4\x9b\x28\x70\x70\x68"
-+			  "\x04\x84\xc5\x1d\xd5\x51\x51\x61"
-+			  "\xa1\x1a\x75\x2c\xee\x11\x19\xac"
-+			  "\x1f\x2b\x3f\x80\x34\x36\x52\x68"
-+			  "\x68\xe3\x2f\xf5\x57\x0f\x0f\x8b"
-+			  "\x54\x6b\xa5\x2d\xf5\x06\xf2\x8f"
-+			  "\x8e\x8c\x8d\xd4\x44\x86\xd9\xff"
-+			  "\x07",
++			  "\x7b\xa9\x54\x1c\x38\x38\x34\x02"
++			  "\xc2\xe2\x8e\xea\xa8\xa8\xb0\x50"
++			  "\x8d\x3a\x16\xf7\x88\x0c\xd6\x8f"
++			  "\x95\x1f\x40\x1a\x1b\x29\x34\xb4"
++			  "\xf1\x97\xfa\xab\x87\x87\x45\xaa"
++			  "\xb5\xd2\x96\x7a\x03\xf9\x47\x47"
++			  "\xc6\x46\x6a\x22\xc3\xec\xff\x03",
 +	},
 +};
 +
-+static const struct comp_testvec deflate_scomp_canned_decomp_tv_template[] = {
++static const struct comp_testvec deflate_iaa_canned_decomp_tv_template[] = {
 +	{
-+		.inlen	= 129,
++		.inlen	= 128,
 +		.outlen	= 191,
 +		.input	= "\xdd\x42\x42\x63\xa4\xda\x48\x4d"
 +			  "\x5c\xb8\x2e\x22\x56\xaa\xd5\xc5"
@@ -358,286 +235,164 @@ index 986f331a5fc2..38c4c96e11e2 100644
 +			  "\x05\x3d\x36\x44\x27\xf5\x69\xe5"
 +			  "\xdb\xde\xbb\x5b\x2b\x7d\x37\x75"
 +			  "\xd8\xc0\xc8\xe8\xd0\xd8\x90\x70"
-+			  "\x7b\xa9\xb4\x9b\x28\x70\x70\x68"
-+			  "\x04\x84\xc5\x1d\xd5\x51\x51\x61"
-+			  "\xa1\x1a\x75\x2c\xee\x11\x19\xac"
-+			  "\x1f\x2b\x3f\x80\x34\x36\x52\x68"
-+			  "\x68\xe3\x2f\xf5\x57\x0f\x0f\x8b"
-+			  "\x54\x6b\xa5\x2d\xf5\x06\xf2\x8f"
-+			  "\x8e\x8c\x8d\xd4\x44\x86\xd9\xff"
-+			  "\x07",
++			  "\x7b\xa9\x54\x1c\x38\x38\x34\x02"
++			  "\xc2\xe2\x8e\xea\xa8\xa8\xb0\x50"
++			  "\x8d\x3a\x16\xf7\x88\x0c\xd6\x8f"
++			  "\x95\x1f\x40\x1a\x1b\x29\x34\xb4"
++			  "\xf1\x97\xfa\xab\x87\x87\x45\xaa"
++			  "\xb5\xd2\x96\x7a\x03\xf9\x47\x47"
++			  "\xc6\x46\x6a\x22\xc3\xec\xff\x03",
 +		.output	= "This document describes a compression method based on the DEFLATE"
 +			"compression algorithm.  This document defines the application of "
 +			"the DEFLATE algorithm to the IP Payload Compression Protocol.",
 +	}, {
-+		.inlen	= 36,
++		.inlen	= 37,
 +		.outlen	= 70,
 +		.input	= "\x6d\x23\x43\x23\xa4\x71\x31\xd2"
 +			  "\x88\xc8\x61\x52\x75\x84\x56\x1a"
 +			  "\x13\xa2\x8e\xd6\x49\x63\x43\x74"
 +			  "\xd2\x98\xc8\xe0\xd8\x61\x58\x69"
-+			  "\xcb\x77\xf9\x0f",
++			  "\xcb\x71\x01\xe5\x3f",
 +		.output	= "Join us now and share the software "
 +			"Join us now and share the software ",
 +	},
 +};
 +
- /*
-  * LZO test vectors (null-terminated strings).
-  */
-diff --git a/include/linux/zlib.h b/include/linux/zlib.h
-index 78ede944c082..05290b3c273f 100644
---- a/include/linux/zlib.h
-+++ b/include/linux/zlib.h
-@@ -166,7 +166,14 @@ typedef z_stream *z_streamp;
+ static const struct comp_testvec deflate_scomp_canned_comp_tv_template[] = {
+ 	{
+ 		.inlen	= 70,
+diff --git a/drivers/crypto/intel/iaa/Kconfig b/drivers/crypto/intel/iaa/Kconfig
+index d53f4b1d494f..a78fb0db814f 100644
+--- a/drivers/crypto/intel/iaa/Kconfig
++++ b/drivers/crypto/intel/iaa/Kconfig
+@@ -2,6 +2,7 @@ config CRYPTO_DEV_IAA_CRYPTO
+ 	tristate "Support for Intel(R) IAA Compression Accelerator"
+ 	depends on CRYPTO_DEFLATE
+ 	depends on INTEL_IDXD
++	select ZLIB_CANNED
+ 	default n
+ 	help
+ 	  This driver supports acceleration for compression and
+diff --git a/drivers/crypto/intel/iaa/Makefile b/drivers/crypto/intel/iaa/Makefile
+index b64b208d2344..9667e89bd88a 100644
+--- a/drivers/crypto/intel/iaa/Makefile
++++ b/drivers/crypto/intel/iaa/Makefile
+@@ -7,6 +7,6 @@ ccflags-y += -I $(srctree)/drivers/dma/idxd -DDEFAULT_SYMBOL_NAMESPACE=IDXD
  
- #define Z_FILTERED            1
- #define Z_HUFFMAN_ONLY        2
-+#define Z_CANNED              3
- #define Z_DEFAULT_STRATEGY    0
-+
-+#ifdef CONFIG_ZLIB_CANNED
-+#define Z_STRATEGY_MAX Z_CANNED
-+#else
-+#define Z_STRATEGY_MAX Z_HUFFMAN_ONLY
-+#endif
- /* compression strategy; see deflateInit2() below for details */
+ obj-$(CONFIG_CRYPTO_DEV_IAA_CRYPTO) := iaa_crypto.o
  
- #define Z_BINARY   0
-@@ -177,6 +184,9 @@ typedef z_stream *z_streamp;
- #define Z_DEFLATED   8
- /* The deflate compression method (the only one supported in this version) */
+-iaa_crypto-y := iaa_crypto_main.o iaa_crypto_comp_fixed.o
++iaa_crypto-y := iaa_crypto_main.o iaa_crypto_comp_fixed.o iaa_crypto_comp_canned.o
  
-+#define DEFLATE_DEF_CANNED_WINBITS	12
-+#define ZLIB_CANNED_WRAP   4
-+
-                         /* basic functions */
+ iaa_crypto-$(CONFIG_CRYPTO_DEV_IAA_CRYPTO_STATS) += iaa_crypto_stats.o
+diff --git a/drivers/crypto/intel/iaa/iaa_crypto.h b/drivers/crypto/intel/iaa/iaa_crypto.h
+index 56985e395263..33ff0f95c543 100644
+--- a/drivers/crypto/intel/iaa/iaa_crypto.h
++++ b/drivers/crypto/intel/iaa/iaa_crypto.h
+@@ -39,6 +39,15 @@
+ 					 IAA_DECOMP_CHECK_FOR_EOB | \
+ 					 IAA_DECOMP_STOP_ON_EOB)
  
- extern int zlib_deflate_workspacesize (int windowBits, int memLevel);
-diff --git a/lib/Kconfig b/lib/Kconfig
-index 5ddda7c2ed9b..2cf46e863c30 100644
---- a/lib/Kconfig
-+++ b/lib/Kconfig
-@@ -320,6 +320,15 @@ config ZLIB_DEFLATE
- 	tristate
- 	select BITREVERSE
- 
-+config ZLIB_CANNED
-+	bool
-+	depends on ZLIB_INFLATE && ZLIB_DEFLATE
-+	prompt "Enable canned compression mode support for kernel zlib"
-+	help
-+	 Enable canned compression mode support for zlib in the kernel.
-+	 The 'canned' compression mode implements a compression scheme that
-+	 uses statically defined Huffman tables.
-+
- config ZLIB_DFLTCC
- 	def_bool y
- 	depends on S390
-diff --git a/lib/zlib_deflate/defcanned.h b/lib/zlib_deflate/defcanned.h
-new file mode 100644
-index 000000000000..5db1fc749d74
---- /dev/null
-+++ b/lib/zlib_deflate/defcanned.h
-@@ -0,0 +1,118 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
 +/*
-+ * These tables were generated from statistics derived from a wide
-+ * variety of SPEC17 workloads and implement a good general-purpose
-+ * compression scheme called simply 'canned'.
++ * iaa_cap.dec_aecs_format_ver == 1 means the decompress internal state in
++ * the AECS is Format 2, which requires a different length from Format 1.
++ * See Intel® In-Memory Analytics Accelerator Architecture Specification
++ * Sections 6.4.1.1 and 7.2.2 for details.
 + */
++#define DECOMP_INT_STATE_FMT1_LEN	1088
++#define DECOMP_INT_STATE_FMT2_LEN	1248
 +
-+static ct_data canned_ltree[286] = {
-+	{.Len = 0x5, .Code = 0x8}, {.Len = 0x7, .Code = 0x12}, {.Len = 0x8, .Code = 0x66},
-+	{.Len = 0x8, .Code = 0xe6}, {.Len = 0x8, .Code = 0x16}, {.Len = 0x9, .Code = 0x45},
-+	{.Len = 0x8, .Code = 0x96}, {.Len = 0x9, .Code = 0x145}, {.Len = 0x8, .Code = 0x56},
-+	{.Len = 0x9, .Code = 0xc5}, {.Len = 0x8, .Code = 0xd6}, {.Len = 0x9, .Code = 0x1c5},
-+	{.Len = 0x9, .Code = 0x25}, {.Len = 0x9, .Code = 0x125}, {.Len = 0x9, .Code = 0xa5},
-+	{.Len = 0x9, .Code = 0x1a5}, {.Len = 0x8, .Code = 0x36}, {.Len = 0x9, .Code = 0x65},
-+	{.Len = 0x9, .Code = 0x165}, {.Len = 0x9, .Code = 0xe5}, {.Len = 0x9, .Code = 0x1e5},
-+	{.Len = 0x9, .Code = 0x15}, {.Len = 0x9, .Code = 0x115}, {.Len = 0x9, .Code = 0x95},
-+	{.Len = 0x8, .Code = 0xb6}, {.Len = 0x9, .Code = 0x195}, {.Len = 0x9, .Code = 0x55},
-+	{.Len = 0x9, .Code = 0x155}, {.Len = 0x9, .Code = 0xd5}, {.Len = 0x9, .Code = 0x1d5},
-+	{.Len = 0x9, .Code = 0x35}, {.Len = 0x9, .Code = 0x135}, {.Len = 0x7, .Code = 0x52},
-+	{.Len = 0x9, .Code = 0xb5}, {.Len = 0x9, .Code = 0x1b5}, {.Len = 0x9, .Code = 0x75},
-+	{.Len = 0x9, .Code = 0x175}, {.Len = 0x9, .Code = 0xf5}, {.Len = 0x9, .Code = 0x1f5},
-+	{.Len = 0x9, .Code = 0xd}, {.Len = 0x8, .Code = 0x76}, {.Len = 0x9, .Code = 0x10d},
-+	{.Len = 0x9, .Code = 0x8d}, {.Len = 0x9, .Code = 0x18d}, {.Len = 0x9, .Code = 0x4d},
-+	{.Len = 0x9, .Code = 0x14d}, {.Len = 0x8, .Code = 0xf6}, {.Len = 0x9, .Code = 0xcd},
-+	{.Len = 0x7, .Code = 0x32}, {.Len = 0x7, .Code = 0x72}, {.Len = 0x8, .Code = 0xe},
-+	{.Len = 0x8, .Code = 0x8e}, {.Len = 0x8, .Code = 0x4e}, {.Len = 0x8, .Code = 0xce},
-+	{.Len = 0x8, .Code = 0x2e}, {.Len = 0x8, .Code = 0xae}, {.Len = 0x7, .Code = 0xa},
-+	{.Len = 0x8, .Code = 0x6e}, {.Len = 0x8, .Code = 0xee}, {.Len = 0x9, .Code = 0x1cd},
-+	{.Len = 0x8, .Code = 0x1e}, {.Len = 0x8, .Code = 0x9e}, {.Len = 0x8, .Code = 0x5e},
-+	{.Len = 0x7, .Code = 0x4a}, {.Len = 0x7, .Code = 0x2a}, {.Len = 0x8, .Code = 0xde},
-+	{.Len = 0x9, .Code = 0x2d}, {.Len = 0x9, .Code = 0x12d}, {.Len = 0x8, .Code = 0x3e},
-+	{.Len = 0x9, .Code = 0xad}, {.Len = 0x8, .Code = 0xbe}, {.Len = 0x9, .Code = 0x1ad},
-+	{.Len = 0x8, .Code = 0x7e}, {.Len = 0x9, .Code = 0x6d}, {.Len = 0x9, .Code = 0x16d},
-+	{.Len = 0x9, .Code = 0xed}, {.Len = 0x9, .Code = 0x1ed}, {.Len = 0x9, .Code = 0x1d},
-+	{.Len = 0x9, .Code = 0x11d}, {.Len = 0x9, .Code = 0x9d}, {.Len = 0x8, .Code = 0xfe},
-+	{.Len = 0x9, .Code = 0x19d}, {.Len = 0x9, .Code = 0x5d}, {.Len = 0x9, .Code = 0x15d},
-+	{.Len = 0x9, .Code = 0xdd}, {.Len = 0x9, .Code = 0x1dd}, {.Len = 0x9, .Code = 0x3d},
-+	{.Len = 0x9, .Code = 0x13d}, {.Len = 0x8, .Code = 0x1}, {.Len = 0x9, .Code = 0xbd},
-+	{.Len = 0x9, .Code = 0x1bd}, {.Len = 0x9, .Code = 0x7d}, {.Len = 0x9, .Code = 0x17d},
-+	{.Len = 0x9, .Code = 0xfd}, {.Len = 0x9, .Code = 0x1fd}, {.Len = 0x9, .Code = 0x3},
-+	{.Len = 0x8, .Code = 0x81}, {.Len = 0x7, .Code = 0x6a}, {.Len = 0x8, .Code = 0x41},
-+	{.Len = 0x7, .Code = 0x1a}, {.Len = 0x7, .Code = 0x5a}, {.Len = 0x7, .Code = 0x3a},
-+	{.Len = 0x8, .Code = 0xc1}, {.Len = 0x9, .Code = 0x103}, {.Len = 0x8, .Code = 0x21},
-+	{.Len = 0x8, .Code = 0xa1}, {.Len = 0x9, .Code = 0x83}, {.Len = 0x9, .Code = 0x183},
-+	{.Len = 0x8, .Code = 0x61}, {.Len = 0x8, .Code = 0xe1}, {.Len = 0x8, .Code = 0x11},
-+	{.Len = 0x8, .Code = 0x91}, {.Len = 0x8, .Code = 0x51}, {.Len = 0x9, .Code = 0x43},
-+	{.Len = 0x8, .Code = 0xd1}, {.Len = 0x8, .Code = 0x31}, {.Len = 0x8, .Code = 0xb1},
-+	{.Len = 0x8, .Code = 0x71}, {.Len = 0x9, .Code = 0x143}, {.Len = 0x9, .Code = 0xc3},
-+	{.Len = 0x8, .Code = 0xf1}, {.Len = 0x9, .Code = 0x1c3}, {.Len = 0x9, .Code = 0x23},
-+	{.Len = 0x9, .Code = 0x123}, {.Len = 0x9, .Code = 0xa3}, {.Len = 0x9, .Code = 0x1a3},
-+	{.Len = 0x9, .Code = 0x63}, {.Len = 0x9, .Code = 0x163}, {.Len = 0x8, .Code = 0x9},
-+	{.Len = 0x9, .Code = 0xe3}, {.Len = 0x9, .Code = 0x1e3}, {.Len = 0x9, .Code = 0x13},
-+	{.Len = 0x9, .Code = 0x113}, {.Len = 0x9, .Code = 0x93}, {.Len = 0x9, .Code = 0x193},
-+	{.Len = 0x9, .Code = 0x53}, {.Len = 0x8, .Code = 0x89}, {.Len = 0x9, .Code = 0x153},
-+	{.Len = 0x9, .Code = 0xd3}, {.Len = 0x9, .Code = 0x1d3}, {.Len = 0x9, .Code = 0x33},
-+	{.Len = 0x9, .Code = 0x133}, {.Len = 0x9, .Code = 0xb3}, {.Len = 0x9, .Code = 0x1b3},
-+	{.Len = 0x8, .Code = 0x49}, {.Len = 0x9, .Code = 0x73}, {.Len = 0x9, .Code = 0x173},
-+	{.Len = 0x9, .Code = 0xf3}, {.Len = 0x9, .Code = 0x1f3}, {.Len = 0x9, .Code = 0xb},
-+	{.Len = 0x9, .Code = 0x10b}, {.Len = 0x9, .Code = 0x8b}, {.Len = 0x8, .Code = 0xc9},
-+	{.Len = 0x9, .Code = 0x18b}, {.Len = 0x9, .Code = 0x4b}, {.Len = 0x9, .Code = 0x14b},
-+	{.Len = 0x9, .Code = 0xcb}, {.Len = 0x9, .Code = 0x1cb}, {.Len = 0x9, .Code = 0x2b},
-+	{.Len = 0x9, .Code = 0x12b}, {.Len = 0x8, .Code = 0x29}, {.Len = 0x9, .Code = 0xab},
-+	{.Len = 0x9, .Code = 0x1ab}, {.Len = 0x9, .Code = 0x6b}, {.Len = 0x9, .Code = 0x16b},
-+	{.Len = 0x9, .Code = 0xeb}, {.Len = 0x9, .Code = 0x1eb}, {.Len = 0x9, .Code = 0x1b},
-+	{.Len = 0x9, .Code = 0x11b}, {.Len = 0x9, .Code = 0x9b}, {.Len = 0x9, .Code = 0x19b},
-+	{.Len = 0x9, .Code = 0x5b}, {.Len = 0x9, .Code = 0x15b}, {.Len = 0x9, .Code = 0xdb},
-+	{.Len = 0x9, .Code = 0x1db}, {.Len = 0x9, .Code = 0x3b}, {.Len = 0x8, .Code = 0xa9},
-+	{.Len = 0x9, .Code = 0x13b}, {.Len = 0x9, .Code = 0xbb}, {.Len = 0x9, .Code = 0x1bb},
-+	{.Len = 0x9, .Code = 0x7b}, {.Len = 0x9, .Code = 0x17b}, {.Len = 0x9, .Code = 0xfb},
-+	{.Len = 0x9, .Code = 0x1fb}, {.Len = 0x8, .Code = 0x69}, {.Len = 0x9, .Code = 0x7},
-+	{.Len = 0x9, .Code = 0x107}, {.Len = 0x9, .Code = 0x87}, {.Len = 0x9, .Code = 0x187},
-+	{.Len = 0x9, .Code = 0x47}, {.Len = 0x9, .Code = 0x147}, {.Len = 0x8, .Code = 0xe9},
-+	{.Len = 0x8, .Code = 0x19}, {.Len = 0x9, .Code = 0xc7}, {.Len = 0x9, .Code = 0x1c7},
-+	{.Len = 0x9, .Code = 0x27}, {.Len = 0x9, .Code = 0x127}, {.Len = 0x9, .Code = 0xa7},
-+	{.Len = 0x9, .Code = 0x1a7}, {.Len = 0x9, .Code = 0x67}, {.Len = 0x8, .Code = 0x99},
-+	{.Len = 0x9, .Code = 0x167}, {.Len = 0x9, .Code = 0xe7}, {.Len = 0x9, .Code = 0x1e7},
-+	{.Len = 0x9, .Code = 0x17}, {.Len = 0x9, .Code = 0x117}, {.Len = 0x9, .Code = 0x97},
-+	{.Len = 0x9, .Code = 0x197}, {.Len = 0x8, .Code = 0x59}, {.Len = 0x9, .Code = 0x57},
-+	{.Len = 0x9, .Code = 0x157}, {.Len = 0x9, .Code = 0xd7}, {.Len = 0x9, .Code = 0x1d7},
-+	{.Len = 0x9, .Code = 0x37}, {.Len = 0x9, .Code = 0x137}, {.Len = 0x9, .Code = 0xb7},
-+	{.Len = 0x9, .Code = 0x1b7}, {.Len = 0x9, .Code = 0x77}, {.Len = 0x9, .Code = 0x177},
-+	{.Len = 0x9, .Code = 0xf7}, {.Len = 0x9, .Code = 0x1f7}, {.Len = 0x9, .Code = 0xf},
-+	{.Len = 0x9, .Code = 0x10f}, {.Len = 0x9, .Code = 0x8f}, {.Len = 0x8, .Code = 0xd9},
-+	{.Len = 0x9, .Code = 0x18f}, {.Len = 0x9, .Code = 0x4f}, {.Len = 0x9, .Code = 0x14f},
-+	{.Len = 0x9, .Code = 0xcf}, {.Len = 0x9, .Code = 0x1cf}, {.Len = 0x9, .Code = 0x2f},
-+	{.Len = 0x9, .Code = 0x12f}, {.Len = 0x9, .Code = 0xaf}, {.Len = 0x9, .Code = 0x1af},
-+	{.Len = 0x9, .Code = 0x6f}, {.Len = 0x9, .Code = 0x16f}, {.Len = 0x9, .Code = 0xef},
-+	{.Len = 0x9, .Code = 0x1ef}, {.Len = 0x9, .Code = 0x1f}, {.Len = 0x9, .Code = 0x11f},
-+	{.Len = 0x8, .Code = 0x39}, {.Len = 0x9, .Code = 0x9f}, {.Len = 0x9, .Code = 0x19f},
-+	{.Len = 0x9, .Code = 0x5f}, {.Len = 0x9, .Code = 0x15f}, {.Len = 0x9, .Code = 0xdf},
-+	{.Len = 0x9, .Code = 0x1df}, {.Len = 0x9, .Code = 0x3f}, {.Len = 0x9, .Code = 0x13f},
-+	{.Len = 0x9, .Code = 0xbf}, {.Len = 0x9, .Code = 0x1bf}, {.Len = 0xb, .Code = 0x3ff},
-+	{.Len = 0x9, .Code = 0x7f}, {.Len = 0x9, .Code = 0x17f}, {.Len = 0x9, .Code = 0xff},
-+	{.Len = 0x8, .Code = 0xb9}, {.Len = 0xa, .Code = 0x1ff}, {.Len = 0x4, .Code = 0x0},
-+	{.Len = 0x5, .Code = 0x18}, {.Len = 0x6, .Code = 0x2}, {.Len = 0x5, .Code = 0x4},
-+	{.Len = 0x5, .Code = 0x14}, {.Len = 0x5, .Code = 0xc}, {.Len = 0x8, .Code = 0x79},
-+	{.Len = 0x8, .Code = 0xf9}, {.Len = 0x7, .Code = 0x7a}, {.Len = 0x7, .Code = 0x6},
-+	{.Len = 0x6, .Code = 0x22}, {.Len = 0x8, .Code = 0x5}, {.Len = 0x7, .Code = 0x46},
-+	{.Len = 0x7, .Code = 0x26}, {.Len = 0x8, .Code = 0x85}, {.Len = 0x5, .Code = 0x1c},
-+	{.Len = 0xe, .Code = 0x7ff}, {.Len = 0xe, .Code = 0x27ff}, {.Len = 0xf, .Code = 0x37ff},
-+	{.Len = 0xf, .Code = 0x77ff}, {.Len = 0xf, .Code = 0xfff}, {.Len = 0xf, .Code = 0x4fff},
-+	{.Len = 0xf, .Code = 0x2fff}, {.Len = 0xf, .Code = 0x6fff}, {.Len = 0xf, .Code = 0x1fff},
-+	{.Len = 0xf, .Code = 0x5fff}, {.Len = 0xf, .Code = 0x3fff}, {.Len = 0xf, .Code = 0x7fff},
-+	{.Len = 0xe, .Code = 0x17ff},
-+};
+ /* Representation of IAA workqueue */
+ struct iaa_wq {
+ 	struct list_head	list;
+@@ -59,8 +68,10 @@ struct iaa_device_compression_mode {
+ 	const char			*name;
+ 
+ 	struct aecs_comp_table_record	*aecs_comp_table;
++	struct aecs_decomp_table_record	*aecs_decomp_table;
+ 
+ 	dma_addr_t			aecs_comp_table_dma_addr;
++	dma_addr_t			aecs_decomp_table_dma_addr;
+ };
+ 
+ /* Representation of IAA device with wqs, populated by probe */
+@@ -77,6 +88,7 @@ struct iaa_device {
+ 	atomic64_t			comp_bytes;
+ 	atomic64_t			decomp_calls;
+ 	atomic64_t			decomp_bytes;
++	u32				src2_size;
+ };
+ 
+ struct wq_table_entry {
+@@ -105,8 +117,27 @@ struct aecs_comp_table_record {
+ 	u32 reserved_padding[2];
+ } __packed;
+ 
++/* AECS for decompress */
++struct aecs_decomp_table_record {
++	u32 crc;
++	u32 xor_checksum;
++	u32 low_filter_param;
++	u32 high_filter_param;
++	u32 output_mod_idx;
++	u32 drop_init_decomp_out_bytes;
++	u32 reserved[36];
++	u32 output_accum_data[2];
++	u32 out_bits_valid;
++	u32 bit_off_indexing;
++	u32 input_accum_data[64];
++	u8  size_qw[32];
++	u32 decomp_state[1220];
++} __packed;
 +
-+static ct_data canned_dtree[30] = {
-+	{.Len = 0x7, .Code = 0x3f}, {.Len = 0x4, .Code = 0x2}, {.Len = 0x9, .Code = 0xff},
-+	{.Len = 0x3, .Code = 0x0}, {.Len = 0x8, .Code = 0x7f}, {.Len = 0x3, .Code = 0x4},
-+	{.Len = 0x6, .Code = 0xf}, {.Len = 0x4, .Code = 0xa}, {.Len = 0x4, .Code = 0x6},
-+	{.Len = 0x5, .Code = 0xd}, {.Len = 0x4, .Code = 0xe}, {.Len = 0x5, .Code = 0x1d},
-+	{.Len = 0x4, .Code = 0x1}, {.Len = 0x5, .Code = 0x3}, {.Len = 0x5, .Code = 0x13},
-+	{.Len = 0x4, .Code = 0x9}, {.Len = 0x4, .Code = 0x5}, {.Len = 0x5, .Code = 0xb},
-+	{.Len = 0x5, .Code = 0x1b}, {.Len = 0x5, .Code = 0x7}, {.Len = 0x5, .Code = 0x17},
-+	{.Len = 0x6, .Code = 0x2f}, {.Len = 0x6, .Code = 0x1f}, {.Len = 0x9, .Code = 0x1ff},
-+	{.Len = 0x0, .Code = 0x0}, {.Len = 0x0, .Code = 0x0}, {.Len = 0x0, .Code = 0x0},
-+	{.Len = 0x0, .Code = 0x0}, {.Len = 0x0, .Code = 0x0}, {.Len = 0x0, .Code = 0x0},
-+};
-diff --git a/lib/zlib_deflate/deflate.c b/lib/zlib_deflate/deflate.c
-index 3a1d8d34182e..5debefd8c799 100644
---- a/lib/zlib_deflate/deflate.c
-+++ b/lib/zlib_deflate/deflate.c
-@@ -218,10 +218,16 @@ int zlib_deflateInit2(
-     }
-     if (memLevel < 1 || memLevel > MAX_MEM_LEVEL || method != Z_DEFLATED ||
-         windowBits < 9 || windowBits > 15 || level < 0 || level > 9 ||
--	strategy < 0 || strategy > Z_HUFFMAN_ONLY) {
-+	strategy < 0 || strategy > Z_STRATEGY_MAX) {
-         return Z_STREAM_ERROR;
-     }
+ int iaa_aecs_init_fixed(void);
+ void iaa_aecs_cleanup_fixed(void);
++int iaa_aecs_init_canned(void);
++void iaa_aecs_cleanup_canned(void);
  
-+    if (IS_ENABLED(CONFIG_ZLIB_CANNED) && strategy == Z_CANNED) {
-+        if (windowBits > DEFLATE_DEF_CANNED_WINBITS)
-+            return Z_STREAM_ERROR;
-+        noheader = 1; /* suppress zlib header for canned compression */
-+    }
-+
-     /*
-      * Direct the workspace's pointers to the chunks that were allocated
-      * along with the deflate_workspace struct.
-diff --git a/lib/zlib_deflate/deftree.c b/lib/zlib_deflate/deftree.c
-index a4a34da512fe..919a14a593e5 100644
---- a/lib/zlib_deflate/deftree.c
-+++ b/lib/zlib_deflate/deftree.c
-@@ -124,6 +124,13 @@ static static_tree_desc  static_d_desc =
- static static_tree_desc  static_bl_desc =
- {(const ct_data *)0, extra_blbits, 0,   BL_CODES, MAX_BL_BITS};
+ typedef int (*iaa_dev_comp_init_fn_t) (struct iaa_device_compression_mode *mode);
+ typedef int (*iaa_dev_comp_free_fn_t) (struct iaa_device_compression_mode *mode);
+@@ -117,6 +148,9 @@ struct iaa_compression_mode {
+ 	int			ll_table_size;
+ 	u32			*d_table;
+ 	int			d_table_size;
++	u8			*header_table;
++	int			header_table_size;
++	u16			gen_decomp_table_flags;
+ 	iaa_dev_comp_init_fn_t	init;
+ 	iaa_dev_comp_free_fn_t	free;
+ };
+@@ -126,6 +160,9 @@ int add_iaa_compression_mode(const char *name,
+ 			     int ll_table_size,
+ 			     const u32 *d_table,
+ 			     int d_table_size,
++			     const u8 *header_table,
++			     int header_table_size,
++			     u16 gen_decomp_table_flags,
+ 			     iaa_dev_comp_init_fn_t init,
+ 			     iaa_dev_comp_free_fn_t free);
  
-+#ifdef CONFIG_ZLIB_CANNED
-+#include "defcanned.h"
-+#else
-+#define canned_ltree NULL
-+#define canned_dtree NULL
-+#endif
-+
- /* ===========================================================================
-  * Local (static) routines in this file.
-  */
-@@ -810,7 +817,7 @@ ulg zlib_tr_flush_block(
-     int max_blindex = 0;  /* index of last bit length code of non zero freq */
+@@ -133,6 +170,7 @@ void remove_iaa_compression_mode(const char *name);
  
-     /* Build the Huffman trees unless a stored block is forced */
--    if (s->level > 0) {
-+    if (s->level > 0 && !(IS_ENABLED(CONFIG_ZLIB_CANNED) && s->strategy == Z_CANNED)) {
+ enum iaa_mode {
+ 	IAA_MODE_FIXED,
++	IAA_MODE_CANNED,
+ };
  
- 	 /* Check if the file is ascii or binary */
- 	if (s->data_type == Z_UNKNOWN) set_data_type(s);
-@@ -866,10 +873,12 @@ ulg zlib_tr_flush_block(
-     } else
- #endif /* STORED_FILE_OK */
- 
-+    if (IS_ENABLED(CONFIG_ZLIB_CANNED) && s->strategy == Z_CANNED) {
-+        compress_block(s, (ct_data *)canned_ltree, (ct_data *)canned_dtree);
- #ifdef FORCE_STORED
--    if (buf != (char*)0) { /* force stored block */
-+    } else if (buf != (char *)0) { /* force stored block */
- #else
--    if (stored_len+4 <= opt_lenb && buf != (char*)0) {
-+    } else if (stored_len + 4 <= opt_lenb && buf != (char *)0) {
-                        /* 4: two words for the lengths */
- #endif
-         /* The test buf != NULL is only necessary if LIT_BUFSIZE > WSIZE.
-diff --git a/lib/zlib_inflate/infcanned.h b/lib/zlib_inflate/infcanned.h
+ struct iaa_compression_ctx {
+diff --git a/drivers/crypto/intel/iaa/iaa_crypto_comp_canned.c b/drivers/crypto/intel/iaa/iaa_crypto_comp_canned.c
 new file mode 100644
-index 000000000000..86ca4aedba51
+index 000000000000..26ea887978e6
 --- /dev/null
-+++ b/lib/zlib_inflate/infcanned.h
-@@ -0,0 +1,191 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
++++ b/drivers/crypto/intel/iaa/iaa_crypto_comp_canned.c
+@@ -0,0 +1,116 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright(c) 2021 Intel Corporation. All rights rsvd. */
 +
-+/* infcanned.h -- table for decoding canned codes
-+ * Generated automatically by makecanned().
-+ */
++#include "iaa_crypto.h"
++#include "idxd.h"
 +
-+/* WARNING: this file should *not* be used by applications.
-+ * It is part of the implementation of this library and is
-+ * subject to change. Applications should only use zlib.h.
-+ */
++#define IAA_AECS_ALIGN	32
 +
 +/*
 + * These tables were generated from statistics derived from a wide
@@ -645,261 +400,596 @@ index 000000000000..86ca4aedba51
 + * compression scheme called simply 'canned'.
 + */
 +
-+static const code lencan[576] = {
-+	{16, 4, 3}, {0, 8, 88}, {16, 6, 5}, {0, 9, 95}, {16, 5, 6}, {17, 8, 17}, {17, 7, 13},
-+	{0, 9, 185}, {0, 5, 0}, {0, 8, 128}, {0, 7, 56}, {0, 9, 149}, {16, 5, 8}, {0, 9, 39},
-+	{0, 8, 50}, {0, 9, 221}, {16, 4, 3}, {0, 8, 110}, {0, 7, 1}, {0, 9, 131}, {16, 5, 7},
-+	{0, 9, 21}, {0, 8, 4}, {0, 9, 204}, {16, 5, 4}, {0, 8, 192}, {0, 7, 99}, {0, 9, 167},
-+	{18, 5, 31}, {0, 9, 77}, {0, 8, 60}, {0, 9, 238}, {16, 4, 3}, {0, 8, 104}, {17, 6, 15},
-+	{0, 9, 122}, {16, 5, 6}, {0, 9, 12}, {18, 7, 23}, {0, 9, 195}, {0, 5, 0}, {0, 8, 160},
-+	{0, 7, 64}, {0, 9, 158}, {16, 5, 8}, {0, 9, 66}, {0, 8, 54}, {0, 9, 230}, {16, 4, 3},
-+	{0, 8, 115}, {0, 7, 48}, {0, 9, 140}, {16, 5, 7}, {0, 9, 30}, {0, 8, 16}, {0, 9, 213},
-+	{16, 5, 4}, {0, 8, 240}, {0, 7, 101}, {0, 9, 175}, {18, 5, 31}, {0, 9, 86}, {0, 8, 68},
-+	{0, 9, 247}, {16, 4, 3}, {0, 8, 98}, {16, 6, 5}, {0, 9, 113}, {16, 5, 6}, {0, 9, 5},
-+	{18, 7, 19}, {0, 9, 189}, {0, 5, 0}, {0, 8, 144}, {0, 7, 63}, {0, 9, 154}, {16, 5, 8},
-+	{0, 9, 44}, {0, 8, 52}, {0, 9, 226}, {16, 4, 3}, {0, 8, 112}, {0, 7, 32}, {0, 9, 135},
-+	{16, 5, 7}, {0, 9, 26}, {0, 8, 8}, {0, 9, 209}, {16, 5, 4}, {0, 8, 208}, {0, 7, 100},
-+	{0, 9, 171}, {18, 5, 31}, {0, 9, 82}, {0, 8, 62}, {0, 9, 243}, {16, 4, 3}, {0, 8, 108},
-+	{17, 6, 15}, {0, 9, 126}, {16, 5, 6}, {0, 9, 17}, {0, 8, 2}, {0, 9, 199}, {0, 5, 0},
-+	{0, 8, 184}, {0, 7, 97}, {0, 9, 163}, {16, 5, 8}, {0, 9, 73}, {0, 8, 57}, {0, 9, 234},
-+	{16, 4, 3}, {0, 8, 117}, {0, 7, 49}, {0, 9, 145}, {16, 5, 7}, {0, 9, 35}, {0, 8, 40},
-+	{0, 9, 217}, {16, 5, 4}, {16, 8, 9}, {17, 7, 11}, {0, 9, 180}, {18, 5, 31}, {0, 9, 91},
-+	{0, 8, 72}, {0, 9, 252}, {16, 4, 3}, {0, 8, 96}, {16, 6, 5}, {0, 9, 106}, {16, 5, 6},
-+	{18, 8, 27}, {17, 7, 13}, {0, 9, 187}, {0, 5, 0}, {0, 8, 136}, {0, 7, 56}, {0, 9, 151},
-+	{16, 5, 8}, {0, 9, 42}, {0, 8, 51}, {0, 9, 223}, {16, 4, 3}, {0, 8, 111}, {0, 7, 1},
-+	{0, 9, 133}, {16, 5, 7}, {0, 9, 23}, {0, 8, 6}, {0, 9, 206}, {16, 5, 4}, {0, 8, 200},
-+	{0, 7, 99}, {0, 9, 169}, {18, 5, 31}, {0, 9, 79}, {0, 8, 61}, {0, 9, 241}, {16, 4, 3},
-+	{0, 8, 105}, {17, 6, 15}, {0, 9, 124}, {16, 5, 6}, {0, 9, 14}, {18, 7, 23}, {0, 9, 197},
-+	{0, 5, 0}, {0, 8, 176}, {0, 7, 64}, {0, 9, 161}, {16, 5, 8}, {0, 9, 69}, {0, 8, 55},
-+	{0, 9, 232}, {16, 4, 3}, {0, 8, 116}, {0, 7, 48}, {0, 9, 142}, {16, 5, 7}, {0, 9, 33},
-+	{0, 8, 24}, {0, 9, 215}, {16, 5, 4}, {0, 8, 255}, {0, 7, 101}, {0, 9, 178}, {18, 5, 31},
-+	{0, 9, 89}, {0, 8, 70}, {0, 9, 249}, {16, 4, 3}, {0, 8, 102}, {16, 6, 5}, {0, 9, 119},
-+	{16, 5, 6}, {0, 9, 9}, {18, 7, 19}, {0, 9, 193}, {0, 5, 0}, {0, 8, 152}, {0, 7, 63},
-+	{0, 9, 156}, {16, 5, 8}, {0, 9, 47}, {0, 8, 53}, {0, 9, 228}, {16, 4, 3}, {0, 8, 114},
-+	{0, 7, 32}, {0, 9, 138}, {16, 5, 7}, {0, 9, 28}, {0, 8, 10}, {0, 9, 211}, {16, 5, 4},
-+	{0, 8, 224}, {0, 7, 100}, {0, 9, 173}, {18, 5, 31}, {0, 9, 84}, {0, 8, 65}, {0, 9, 245},
-+	{16, 4, 3}, {0, 8, 109}, {17, 6, 15}, {0, 9, 129}, {16, 5, 6}, {0, 9, 19}, {0, 8, 3},
-+	{0, 9, 202}, {0, 5, 0}, {0, 8, 191}, {0, 7, 97}, {0, 9, 165}, {16, 5, 8}, {0, 9, 75},
-+	{0, 8, 58}, {0, 9, 236}, {16, 4, 3}, {0, 8, 120}, {0, 7, 49}, {0, 9, 147}, {16, 5, 7},
-+	{0, 9, 37}, {0, 8, 46}, {0, 9, 219}, {16, 5, 4}, {16, 8, 10}, {17, 7, 11}, {0, 9, 182},
-+	{18, 5, 31}, {0, 9, 93}, {0, 8, 80}, {0, 9, 254}, {16, 4, 3}, {0, 8, 88}, {16, 6, 5},
-+	{0, 9, 103}, {16, 5, 6}, {17, 8, 17}, {17, 7, 13}, {0, 9, 186}, {0, 5, 0}, {0, 8, 128},
-+	{0, 7, 56}, {0, 9, 150}, {16, 5, 8}, {0, 9, 41}, {0, 8, 50}, {0, 9, 222}, {16, 4, 3},
-+	{0, 8, 110}, {0, 7, 1}, {0, 9, 132}, {16, 5, 7}, {0, 9, 22}, {0, 8, 4}, {0, 9, 205},
-+	{16, 5, 4}, {0, 8, 192}, {0, 7, 99}, {0, 9, 168}, {18, 5, 31}, {0, 9, 78}, {0, 8, 60},
-+	{0, 9, 239}, {16, 4, 3}, {0, 8, 104}, {17, 6, 15}, {0, 9, 123}, {16, 5, 6}, {0, 9, 13},
-+	{18, 7, 23}, {0, 9, 196}, {0, 5, 0}, {0, 8, 160}, {0, 7, 64}, {0, 9, 159}, {16, 5, 8},
-+	{0, 9, 67}, {0, 8, 54}, {0, 9, 231}, {16, 4, 3}, {0, 8, 115}, {0, 7, 48}, {0, 9, 141},
-+	{16, 5, 7}, {0, 9, 31}, {0, 8, 16}, {0, 9, 214}, {16, 5, 4}, {0, 8, 240}, {0, 7, 101},
-+	{0, 9, 177}, {18, 5, 31}, {0, 9, 87}, {0, 8, 68}, {0, 9, 248}, {16, 4, 3}, {0, 8, 98},
-+	{16, 6, 5}, {0, 9, 118}, {16, 5, 6}, {0, 9, 7}, {18, 7, 19}, {0, 9, 190}, {0, 5, 0},
-+	{0, 8, 144}, {0, 7, 63}, {0, 9, 155}, {16, 5, 8}, {0, 9, 45}, {0, 8, 52}, {0, 9, 227},
-+	{16, 4, 3}, {0, 8, 112}, {0, 7, 32}, {0, 9, 137}, {16, 5, 7}, {0, 9, 27}, {0, 8, 8},
-+	{0, 9, 210}, {16, 5, 4}, {0, 8, 208}, {0, 7, 100}, {0, 9, 172}, {18, 5, 31}, {0, 9, 83},
-+	{0, 8, 62}, {0, 9, 244}, {16, 4, 3}, {0, 8, 108}, {17, 6, 15}, {0, 9, 127}, {16, 5, 6},
-+	{0, 9, 18}, {0, 8, 2}, {0, 9, 201}, {0, 5, 0}, {0, 8, 184}, {0, 7, 97}, {0, 9, 164},
-+	{16, 5, 8}, {0, 9, 74}, {0, 8, 57}, {0, 9, 235}, {16, 4, 3}, {0, 8, 117}, {0, 7, 49},
-+	{0, 9, 146}, {16, 5, 7}, {0, 9, 36}, {0, 8, 40}, {0, 9, 218}, {16, 5, 4}, {16, 8, 9},
-+	{17, 7, 11}, {0, 9, 181}, {18, 5, 31}, {0, 9, 92}, {0, 8, 72}, {0, 9, 253}, {16, 4, 3},
-+	{0, 8, 96}, {16, 6, 5}, {0, 9, 107}, {16, 5, 6}, {18, 8, 27}, {17, 7, 13}, {0, 9, 188},
-+	{0, 5, 0}, {0, 8, 136}, {0, 7, 56}, {0, 9, 153}, {16, 5, 8}, {0, 9, 43}, {0, 8, 51},
-+	{0, 9, 225}, {16, 4, 3}, {0, 8, 111}, {0, 7, 1}, {0, 9, 134}, {16, 5, 7}, {0, 9, 25},
-+	{0, 8, 6}, {0, 9, 207}, {16, 5, 4}, {0, 8, 200}, {0, 7, 99}, {0, 9, 170}, {18, 5, 31},
-+	{0, 9, 81}, {0, 8, 61}, {0, 9, 242}, {16, 4, 3}, {0, 8, 105}, {17, 6, 15}, {0, 9, 125},
-+	{16, 5, 6}, {0, 9, 15}, {18, 7, 23}, {0, 9, 198}, {0, 5, 0}, {0, 8, 176}, {0, 7, 64},
-+	{0, 9, 162}, {16, 5, 8}, {0, 9, 71}, {0, 8, 55}, {0, 9, 233}, {16, 4, 3}, {0, 8, 116},
-+	{0, 7, 48}, {0, 9, 143}, {16, 5, 7}, {0, 9, 34}, {0, 8, 24}, {0, 9, 216}, {16, 5, 4},
-+	{0, 8, 255}, {0, 7, 101}, {0, 9, 179}, {18, 5, 31}, {0, 9, 90}, {0, 8, 70}, {0, 9, 250},
-+	{16, 4, 3}, {0, 8, 102}, {16, 6, 5}, {0, 9, 121}, {16, 5, 6}, {0, 9, 11}, {18, 7, 19},
-+	{0, 9, 194}, {0, 5, 0}, {0, 8, 152}, {0, 7, 63}, {0, 9, 157}, {16, 5, 8}, {0, 9, 59},
-+	{0, 8, 53}, {0, 9, 229}, {16, 4, 3}, {0, 8, 114}, {0, 7, 32}, {0, 9, 139}, {16, 5, 7},
-+	{0, 9, 29}, {0, 8, 10}, {0, 9, 212}, {16, 5, 4}, {0, 8, 224}, {0, 7, 100}, {0, 9, 174},
-+	{18, 5, 31}, {0, 9, 85}, {0, 8, 65}, {0, 9, 246}, {16, 4, 3}, {0, 8, 109}, {17, 6, 15},
-+	{0, 9, 130}, {16, 5, 6}, {0, 9, 20}, {0, 8, 3}, {0, 9, 203}, {0, 5, 0}, {0, 8, 191},
-+	{0, 7, 97}, {0, 9, 166}, {16, 5, 8}, {0, 9, 76}, {0, 8, 58}, {0, 9, 237}, {16, 4, 3},
-+	{0, 8, 120}, {0, 7, 49}, {0, 9, 148}, {16, 5, 7}, {0, 9, 38}, {0, 8, 46}, {0, 9, 220},
-+	{16, 5, 4}, {16, 8, 10}, {17, 7, 11}, {0, 9, 183}, {18, 5, 31}, {0, 9, 94}, {0, 8, 80},
-+	{6, 9, 512}, {96, 1, 0}, {0, 2, 251}, {96, 1, 0}, {19, 5, 35}, {96, 1, 0}, {0, 2, 251},
-+	{96, 1, 0}, {20, 6, 67}, {96, 1, 0}, {0, 2, 251}, {96, 1, 0}, {16, 5, 258}, {96, 1, 0},
-+	{0, 2, 251}, {96, 1, 0}, {21, 6, 131}, {96, 1, 0}, {0, 2, 251}, {96, 1, 0}, {19, 5, 43},
-+	{96, 1, 0}, {0, 2, 251}, {96, 1, 0}, {20, 6, 99}, {96, 1, 0}, {0, 2, 251}, {96, 1, 0},
-+	{19, 6, 51}, {96, 1, 0}, {0, 2, 251}, {96, 1, 0}, {21, 6, 195}, {96, 1, 0}, {0, 2, 251},
-+	{96, 1, 0}, {19, 5, 35}, {96, 1, 0}, {0, 2, 251}, {96, 1, 0}, {20, 6, 83}, {96, 1, 0},
-+	{0, 2, 251}, {96, 1, 0}, {16, 5, 258}, {96, 1, 0}, {0, 2, 251}, {96, 1, 0}, {21, 6, 163},
-+	{96, 1, 0}, {0, 2, 251}, {96, 1, 0}, {19, 5, 43}, {96, 1, 0}, {0, 2, 251}, {96, 1, 0},
-+	{20, 6, 115}, {96, 1, 0}, {0, 2, 251}, {96, 1, 0}, {19, 6, 59}, {96, 1, 0}, {0, 2, 251},
-+	{96, 1, 0}, {21, 6, 227},
++static const u32 canned_ll_iaa[286] = {
++0x28002,  0x38024,  0x40066,  0x40067,  0x40068,  0x48144,  0x40069,  0x48145,
++0x4006a,  0x48146,  0x4006b,  0x48147,  0x48148,  0x48149,  0x4814a,  0x4814b,
++0x4006c,  0x4814c,  0x4814d,  0x4814e,  0x4814f,  0x48150,  0x48151,  0x48152,
++0x4006d,  0x48153,  0x48154,  0x48155,  0x48156,  0x48157,  0x48158,  0x48159,
++0x38025,  0x4815a,  0x4815b,  0x4815c,  0x4815d,  0x4815e,  0x4815f,  0x48160,
++0x4006e,  0x48161,  0x48162,  0x48163,  0x48164,  0x48165,  0x4006f,  0x48166,
++0x38026,  0x38027,  0x40070,  0x40071,  0x40072,  0x40073,  0x40074,  0x40075,
++0x38028,  0x40076,  0x40077,  0x48167,  0x40078,  0x40079,  0x4007a,  0x38029,
++0x3802a,  0x4007b,  0x48168,  0x48169,  0x4007c,  0x4816a,  0x4007d,  0x4816b,
++0x4007e,  0x4816c,  0x4816d,  0x4816e,  0x4816f,  0x48170,  0x48171,  0x48172,
++0x4007f,  0x48173,  0x48174,  0x48175,  0x48176,  0x48177,  0x48178,  0x48179,
++0x40080,  0x4817a,  0x4817b,  0x4817c,  0x4817d,  0x4817e,  0x4817f,  0x48180,
++0x40081,  0x3802b,  0x40082,  0x3802c,  0x3802d,  0x3802e,  0x40083,  0x48181,
++0x40084,  0x40085,  0x48182,  0x48183,  0x40086,  0x40087,  0x40088,  0x40089,
++0x4008a,  0x48184,  0x4008b,  0x4008c,  0x4008d,  0x4008e,  0x48185,  0x48186,
++0x4008f,  0x48187,  0x48188,  0x48189,  0x4818a,  0x4818b,  0x4818c,  0x4818d,
++0x40090,  0x4818e,  0x4818f,  0x48190,  0x48191,  0x48192,  0x48193,  0x48194,
++0x40091,  0x48195,  0x48196,  0x48197,  0x48198,  0x48199,  0x4819a,  0x4819b,
++0x40092,  0x4819c,  0x4819d,  0x4819e,  0x4819f,  0x481a0,  0x481a1,  0x481a2,
++0x40093,  0x481a3,  0x481a4,  0x481a5,  0x481a6,  0x481a7,  0x481a8,  0x481a9,
++0x40094,  0x481aa,  0x481ab,  0x481ac,  0x481ad,  0x481ae,  0x481af,  0x481b0,
++0x481b1,  0x481b2,  0x481b3,  0x481b4,  0x481b5,  0x481b6,  0x481b7,  0x481b8,
++0x40095,  0x481b9,  0x481ba,  0x481bb,  0x481bc,  0x481bd,  0x481be,  0x481bf,
++0x40096,  0x481c0,  0x481c1,  0x481c2,  0x481c3,  0x481c4,  0x481c5,  0x40097,
++0x40098,  0x481c6,  0x481c7,  0x481c8,  0x481c9,  0x481ca,  0x481cb,  0x481cc,
++0x40099,  0x481cd,  0x481ce,  0x481cf,  0x481d0,  0x481d1,  0x481d2,  0x481d3,
++0x4009a,  0x481d4,  0x481d5,  0x481d6,  0x481d7,  0x481d8,  0x481d9,  0x481da,
++0x481db,  0x481dc,  0x481dd,  0x481de,  0x481df,  0x481e0,  0x481e1,  0x481e2,
++0x4009b,  0x481e3,  0x481e4,  0x481e5,  0x481e6,  0x481e7,  0x481e8,  0x481e9,
++0x481ea,  0x481eb,  0x481ec,  0x481ed,  0x481ee,  0x481ef,  0x481f0,  0x481f1,
++0x4009c,  0x481f2,  0x481f3,  0x481f4,  0x481f5,  0x481f6,  0x481f7,  0x481f8,
++0x481f9,  0x481fa,  0x481fb,  0x587fe,  0x481fc,  0x481fd,  0x481fe,  0x4009d,
++0x503fe,  0x20000,  0x28003,  0x30010,  0x28004,  0x28005,  0x28006,  0x4009e,
++0x4009f,  0x3802f,  0x38030,  0x30011,  0x400a0,  0x38031,  0x38032,  0x400a1,
++0x28007,  0x73ff8,  0x73ff9,  0x7fff6,  0x7fff7,  0x7fff8,  0x7fff9,  0x7fffa,
++0x7fffb,  0x7fffc,  0x7fffd,  0x7fffe,  0x7ffff,  0x73ffa,
 +};
 +
-+static const code distcan[512] = {
-+	{16, 3, 4}, {21, 4, 65}, {16, 4, 2}, {21, 5, 97}, {17, 3, 7}, {23, 4, 257},
-+	{19, 4, 17}, {24, 5, 769}, {16, 3, 4}, {22, 4, 193}, {18, 4, 13}, {23, 5, 385},
-+	{17, 3, 7}, {19, 5, 25}, {20, 4, 33}, {18, 6, 9}, {16, 3, 4}, {21, 4, 65},
-+	{16, 4, 2}, {22, 5, 129}, {17, 3, 7}, {23, 4, 257}, {19, 4, 17}, {25, 5, 1025},
-+	{16, 3, 4}, {22, 4, 193}, {18, 4, 13}, {24, 5, 513}, {17, 3, 7}, {20, 5, 49},
-+	{20, 4, 33}, {26, 6, 2049}, {16, 3, 4}, {21, 4, 65}, {16, 4, 2}, {21, 5, 97},
-+	{17, 3, 7}, {23, 4, 257}, {19, 4, 17}, {24, 5, 769}, {16, 3, 4}, {22, 4, 193},
-+	{18, 4, 13}, {23, 5, 385}, {17, 3, 7}, {19, 5, 25}, {20, 4, 33}, {25, 6, 1537},
-+	{16, 3, 4}, {21, 4, 65}, {16, 4, 2}, {22, 5, 129}, {17, 3, 7}, {23, 4, 257},
-+	{19, 4, 17}, {25, 5, 1025}, {16, 3, 4}, {22, 4, 193}, {18, 4, 13}, {24, 5, 513},
-+	{17, 3, 7}, {20, 5, 49}, {20, 4, 33}, {16, 7, 1}, {16, 3, 4}, {21, 4, 65},
-+	{16, 4, 2}, {21, 5, 97}, {17, 3, 7}, {23, 4, 257}, {19, 4, 17}, {24, 5, 769},
-+	{16, 3, 4}, {22, 4, 193}, {18, 4, 13}, {23, 5, 385}, {17, 3, 7}, {19, 5, 25},
-+	{20, 4, 33}, {18, 6, 9}, {16, 3, 4}, {21, 4, 65}, {16, 4, 2}, {22, 5, 129},
-+	{17, 3, 7}, {23, 4, 257}, {19, 4, 17}, {25, 5, 1025}, {16, 3, 4}, {22, 4, 193},
-+	{18, 4, 13}, {24, 5, 513}, {17, 3, 7}, {20, 5, 49}, {20, 4, 33}, {26, 6, 2049},
-+	{16, 3, 4}, {21, 4, 65}, {16, 4, 2}, {21, 5, 97}, {17, 3, 7}, {23, 4, 257},
-+	{19, 4, 17}, {24, 5, 769}, {16, 3, 4}, {22, 4, 193}, {18, 4, 13}, {23, 5, 385},
-+	{17, 3, 7}, {19, 5, 25}, {20, 4, 33}, {25, 6, 1537}, {16, 3, 4}, {21, 4, 65},
-+	{16, 4, 2}, {22, 5, 129}, {17, 3, 7}, {23, 4, 257}, {19, 4, 17}, {25, 5, 1025},
-+	{16, 3, 4}, {22, 4, 193}, {18, 4, 13}, {24, 5, 513}, {17, 3, 7}, {20, 5, 49},
-+	{20, 4, 33}, {17, 8, 5}, {16, 3, 4}, {21, 4, 65}, {16, 4, 2}, {21, 5, 97},
-+	{17, 3, 7}, {23, 4, 257}, {19, 4, 17}, {24, 5, 769}, {16, 3, 4}, {22, 4, 193},
-+	{18, 4, 13}, {23, 5, 385}, {17, 3, 7}, {19, 5, 25}, {20, 4, 33}, {18, 6, 9},
-+	{16, 3, 4}, {21, 4, 65}, {16, 4, 2}, {22, 5, 129}, {17, 3, 7}, {23, 4, 257},
-+	{19, 4, 17}, {25, 5, 1025}, {16, 3, 4}, {22, 4, 193}, {18, 4, 13}, {24, 5, 513},
-+	{17, 3, 7}, {20, 5, 49}, {20, 4, 33}, {26, 6, 2049}, {16, 3, 4}, {21, 4, 65},
-+	{16, 4, 2}, {21, 5, 97}, {17, 3, 7}, {23, 4, 257}, {19, 4, 17}, {24, 5, 769},
-+	{16, 3, 4}, {22, 4, 193}, {18, 4, 13}, {23, 5, 385}, {17, 3, 7}, {19, 5, 25},
-+	{20, 4, 33}, {25, 6, 1537}, {16, 3, 4}, {21, 4, 65}, {16, 4, 2}, {22, 5, 129},
-+	{17, 3, 7}, {23, 4, 257}, {19, 4, 17}, {25, 5, 1025}, {16, 3, 4}, {22, 4, 193},
-+	{18, 4, 13}, {24, 5, 513}, {17, 3, 7}, {20, 5, 49}, {20, 4, 33}, {16, 7, 1},
-+	{16, 3, 4}, {21, 4, 65}, {16, 4, 2}, {21, 5, 97}, {17, 3, 7}, {23, 4, 257},
-+	{19, 4, 17}, {24, 5, 769}, {16, 3, 4}, {22, 4, 193}, {18, 4, 13}, {23, 5, 385},
-+	{17, 3, 7}, {19, 5, 25}, {20, 4, 33}, {18, 6, 9}, {16, 3, 4}, {21, 4, 65},
-+	{16, 4, 2}, {22, 5, 129}, {17, 3, 7}, {23, 4, 257}, {19, 4, 17}, {25, 5, 1025},
-+	{16, 3, 4}, {22, 4, 193}, {18, 4, 13}, {24, 5, 513}, {17, 3, 7}, {20, 5, 49},
-+	{20, 4, 33}, {26, 6, 2049}, {16, 3, 4}, {21, 4, 65}, {16, 4, 2}, {21, 5, 97},
-+	{17, 3, 7}, {23, 4, 257}, {19, 4, 17}, {24, 5, 769}, {16, 3, 4}, {22, 4, 193},
-+	{18, 4, 13}, {23, 5, 385}, {17, 3, 7}, {19, 5, 25}, {20, 4, 33}, {25, 6, 1537},
-+	{16, 3, 4}, {21, 4, 65}, {16, 4, 2}, {22, 5, 129}, {17, 3, 7}, {23, 4, 257},
-+	{19, 4, 17}, {25, 5, 1025}, {16, 3, 4}, {22, 4, 193}, {18, 4, 13}, {24, 5, 513},
-+	{17, 3, 7}, {20, 5, 49}, {20, 4, 33}, {16, 9, 3}, {16, 3, 4}, {21, 4, 65},
-+	{16, 4, 2}, {21, 5, 97}, {17, 3, 7}, {23, 4, 257}, {19, 4, 17}, {24, 5, 769},
-+	{16, 3, 4}, {22, 4, 193}, {18, 4, 13}, {23, 5, 385}, {17, 3, 7}, {19, 5, 25},
-+	{20, 4, 33}, {18, 6, 9}, {16, 3, 4}, {21, 4, 65}, {16, 4, 2}, {22, 5, 129},
-+	{17, 3, 7}, {23, 4, 257}, {19, 4, 17}, {25, 5, 1025}, {16, 3, 4}, {22, 4, 193},
-+	{18, 4, 13}, {24, 5, 513}, {17, 3, 7}, {20, 5, 49}, {20, 4, 33}, {26, 6, 2049},
-+	{16, 3, 4}, {21, 4, 65}, {16, 4, 2}, {21, 5, 97}, {17, 3, 7}, {23, 4, 257},
-+	{19, 4, 17}, {24, 5, 769}, {16, 3, 4}, {22, 4, 193}, {18, 4, 13}, {23, 5, 385},
-+	{17, 3, 7}, {19, 5, 25}, {20, 4, 33}, {25, 6, 1537}, {16, 3, 4}, {21, 4, 65},
-+	{16, 4, 2}, {22, 5, 129}, {17, 3, 7}, {23, 4, 257}, {19, 4, 17}, {25, 5, 1025},
-+	{16, 3, 4}, {22, 4, 193}, {18, 4, 13}, {24, 5, 513}, {17, 3, 7}, {20, 5, 49},
-+	{20, 4, 33}, {16, 7, 1}, {16, 3, 4}, {21, 4, 65}, {16, 4, 2}, {21, 5, 97},
-+	{17, 3, 7}, {23, 4, 257}, {19, 4, 17}, {24, 5, 769}, {16, 3, 4}, {22, 4, 193},
-+	{18, 4, 13}, {23, 5, 385}, {17, 3, 7}, {19, 5, 25}, {20, 4, 33}, {18, 6, 9},
-+	{16, 3, 4}, {21, 4, 65}, {16, 4, 2}, {22, 5, 129}, {17, 3, 7}, {23, 4, 257},
-+	{19, 4, 17}, {25, 5, 1025}, {16, 3, 4}, {22, 4, 193}, {18, 4, 13}, {24, 5, 513},
-+	{17, 3, 7}, {20, 5, 49}, {20, 4, 33}, {26, 6, 2049}, {16, 3, 4}, {21, 4, 65},
-+	{16, 4, 2}, {21, 5, 97}, {17, 3, 7}, {23, 4, 257}, {19, 4, 17}, {24, 5, 769},
-+	{16, 3, 4}, {22, 4, 193}, {18, 4, 13}, {23, 5, 385}, {17, 3, 7}, {19, 5, 25},
-+	{20, 4, 33}, {25, 6, 1537}, {16, 3, 4}, {21, 4, 65}, {16, 4, 2}, {22, 5, 129},
-+	{17, 3, 7}, {23, 4, 257}, {19, 4, 17}, {25, 5, 1025}, {16, 3, 4}, {22, 4, 193},
-+	{18, 4, 13}, {24, 5, 513}, {17, 3, 7}, {20, 5, 49}, {20, 4, 33}, {17, 8, 5},
-+	{16, 3, 4}, {21, 4, 65}, {16, 4, 2}, {21, 5, 97}, {17, 3, 7}, {23, 4, 257},
-+	{19, 4, 17}, {24, 5, 769}, {16, 3, 4}, {22, 4, 193}, {18, 4, 13}, {23, 5, 385},
-+	{17, 3, 7}, {19, 5, 25}, {20, 4, 33}, {18, 6, 9}, {16, 3, 4}, {21, 4, 65},
-+	{16, 4, 2}, {22, 5, 129}, {17, 3, 7}, {23, 4, 257}, {19, 4, 17}, {25, 5, 1025},
-+	{16, 3, 4}, {22, 4, 193}, {18, 4, 13}, {24, 5, 513}, {17, 3, 7}, {20, 5, 49},
-+	{20, 4, 33}, {26, 6, 2049}, {16, 3, 4}, {21, 4, 65}, {16, 4, 2}, {21, 5, 97},
-+	{17, 3, 7}, {23, 4, 257}, {19, 4, 17}, {24, 5, 769}, {16, 3, 4}, {22, 4, 193},
-+	{18, 4, 13}, {23, 5, 385}, {17, 3, 7}, {19, 5, 25}, {20, 4, 33}, {25, 6, 1537},
-+	{16, 3, 4}, {21, 4, 65}, {16, 4, 2}, {22, 5, 129}, {17, 3, 7}, {23, 4, 257},
-+	{19, 4, 17}, {25, 5, 1025}, {16, 3, 4}, {22, 4, 193}, {18, 4, 13}, {24, 5, 513},
-+	{17, 3, 7}, {20, 5, 49}, {20, 4, 33}, {16, 7, 1}, {16, 3, 4}, {21, 4, 65},
-+	{16, 4, 2}, {21, 5, 97}, {17, 3, 7}, {23, 4, 257}, {19, 4, 17}, {24, 5, 769},
-+	{16, 3, 4}, {22, 4, 193}, {18, 4, 13}, {23, 5, 385}, {17, 3, 7}, {19, 5, 25},
-+	{20, 4, 33}, {18, 6, 9}, {16, 3, 4}, {21, 4, 65}, {16, 4, 2}, {22, 5, 129},
-+	{17, 3, 7}, {23, 4, 257}, {19, 4, 17}, {25, 5, 1025}, {16, 3, 4}, {22, 4, 193},
-+	{18, 4, 13}, {24, 5, 513}, {17, 3, 7}, {20, 5, 49}, {20, 4, 33}, {26, 6, 2049},
-+	{16, 3, 4}, {21, 4, 65}, {16, 4, 2}, {21, 5, 97}, {17, 3, 7}, {23, 4, 257},
-+	{19, 4, 17}, {24, 5, 769}, {16, 3, 4}, {22, 4, 193}, {18, 4, 13}, {23, 5, 385},
-+	{17, 3, 7}, {19, 5, 25}, {20, 4, 33}, {25, 6, 1537}, {16, 3, 4}, {21, 4, 65},
-+	{16, 4, 2}, {22, 5, 129}, {17, 3, 7}, {23, 4, 257}, {19, 4, 17}, {25, 5, 1025},
-+	{16, 3, 4}, {22, 4, 193}, {18, 4, 13}, {24, 5, 513}, {17, 3, 7}, {20, 5, 49},
-+	{20, 4, 33}, {26, 9, 3073},
++static const u32 canned_d_iaa[30] = {
++0x3807e,  0x20004,  0x481fe,  0x18000,  0x400fe,  0x18001,  0x3003c,  0x20005,
++0x20006,  0x28016,  0x20007,  0x28017,  0x20008,  0x28018,  0x28019,  0x20009,
++0x2000a,  0x2801a,  0x2801b,  0x2801c,  0x2801d,  0x3003d,  0x3003e,  0x481ff,
++0x0,  0x0,  0x0,  0x0,  0x0,  0x0,
 +};
-diff --git a/lib/zlib_inflate/inflate.c b/lib/zlib_inflate/inflate.c
-index d1efad69f02b..a0b331733da7 100644
---- a/lib/zlib_inflate/inflate.c
-+++ b/lib/zlib_inflate/inflate.c
-@@ -72,6 +72,11 @@ int zlib_inflateInit2(z_streamp strm, int windowBits)
-     }
-     else {
-         state->wrap = (windowBits >> 4) + 1;
-+        if (IS_ENABLED(CONFIG_ZLIB_CANNED) && state->wrap == ZLIB_CANNED_WRAP) {
-+            windowBits &= 15;
-+            if (windowBits > DEFLATE_DEF_CANNED_WINBITS)
-+                return Z_STREAM_ERROR;
-+        }
-     }
-     if (windowBits < 8 || windowBits > 15) {
-         return Z_STREAM_ERROR;
-@@ -363,6 +368,13 @@ int zlib_inflate(z_streamp strm, int flush)
-     for (;;)
-         switch (state->mode) {
-         case HEAD:
-+            if (IS_ENABLED(CONFIG_ZLIB_CANNED) && state->wrap == ZLIB_CANNED_WRAP) {
-+                zlib_cannedtables(state);
-+                state->mode = LEN;
-+                state->last = 1;
-+                PULLBYTE();
-+                break;
-+            }
-             if (state->wrap == 0) {
-                 state->mode = TYPEDO;
-                 break;
-@@ -702,7 +714,8 @@ int zlib_inflate(z_streamp strm, int flush)
-             state->mode = LEN;
-             break;
-         case CHECK:
--            if (state->wrap) {
-+            if (state->wrap && !(IS_ENABLED(CONFIG_ZLIB_CANNED) &&
-+                                 state->wrap == ZLIB_CANNED_WRAP)) {
-                 NEEDBITS(32);
-                 out -= left;
-                 strm->total_out += out;
-diff --git a/lib/zlib_inflate/inflate.h b/lib/zlib_inflate/inflate.h
-index f79337ddf98c..08d75d00285a 100644
---- a/lib/zlib_inflate/inflate.h
-+++ b/lib/zlib_inflate/inflate.h
-@@ -74,7 +74,10 @@ typedef enum {
- struct inflate_state {
-     inflate_mode mode;          /* current inflate mode */
-     int last;                   /* true if processing last block */
--    int wrap;                   /* bit 0 true for zlib, bit 1 true for gzip */
-+    int wrap;                   /*
-+                                 * bit 0 true for zlib, bit 1 true for gzip,
-+                                 * bit 2 true for canned mode
-+                                 */
-     int havedict;               /* true if dictionary provided */
-     int flags;                  /* gzip header method and flags (0 if zlib) */
-     unsigned dmax;              /* zlib header max distance (INFLATE_STRICT) */
-diff --git a/lib/zlib_inflate/infutil.h b/lib/zlib_inflate/infutil.h
-index 784ab33b7842..f72ee6ca399f 100644
---- a/lib/zlib_inflate/infutil.h
-+++ b/lib/zlib_inflate/infutil.h
-@@ -36,4 +36,20 @@ static_assert(offsetof(struct inflate_workspace, dfltcc_state) % 8 == 0);
- 
- #define WS(strm) ((struct inflate_workspace *)(strm->workspace))
- 
-+/*
-+ * Return state with length and distance decoding tables and index sizes set to
-+ * canned code decoding.  This returns canned tables from infcanned.h if
-+ * CONFIG_ZLIB_CANNED is set, otherwise it will get removed during
-+ * compliation.
-+ */
-+static inline void zlib_cannedtables(struct inflate_state *state)
++
++#define HEADER_SIZE_IN_BITS 656
++static const u8 canned_header[] = {
++0xed, 0xfd, 0x05, 0x5c, 0x54, 0xcf, 0x17, 0x06,
++0x8c, 0xcf, 0x02, 0x22, 0x62, 0x61, 0x63, 0xaf,
++0x8d, 0x85, 0xbb, 0xe4, 0x82, 0xc0, 0x2e, 0x8a,
++0x88, 0x8d, 0x8d, 0xcd, 0xb2, 0xbb, 0x08, 0x4a,
++0x49, 0x28, 0x36, 0x36, 0x36, 0x36, 0x36, 0x76,
++0x2b, 0x36, 0x26, 0xd8, 0xd8, 0xd8, 0xad, 0xd8,
++0xad, 0xd8, 0xf1, 0x53, 0xf9, 0x9e, 0xb9, 0x33,
++0x03, 0xbb, 0x97, 0x5d, 0xe6, 0x7d, 0xff, 0x1d,
++0xef, 0x1e, 0x1f, 0x9e, 0x7b, 0xce, 0x9c, 0x39,
++0x33, 0xe7, 0x4c, 0xdc, 0xeb, 0xe7, 0xf3, 0xf9,
++0x7c, 0x3e,
++};
++
++#define CEIL(a, b)	(((a) + ((b) - 1)) / (b))
++
++int iaa_aecs_init_canned(void)
 +{
-+#ifdef CONFIG_ZLIB_CANNED
-+#include "infcanned.h"
-+	state->lencode = lencan;
-+	state->lenbits = 9;
-+	state->distcode = distcan;
-+	state->distbits = 9;
-+#endif
++	u16 gen_decomp_table_flags;
++	unsigned int slen;
++	int ret;
++
++	slen = CEIL(HEADER_SIZE_IN_BITS, 8);
++
++	gen_decomp_table_flags = 0x1; /* enable decompression */
++	gen_decomp_table_flags |= 1 << 9; /* suppress output */
++
++	/*
++	 * Bits 8:6 specify the number of bits to ignore at the end of the
++	 * compressed input stream.
++	 * See Intel® In-Memory Analytics Accelerator Architecture Specification
++	 * Sections 6.3.3.1 for details.
++	 */
++	gen_decomp_table_flags |= (((slen * 8) - HEADER_SIZE_IN_BITS) << 6);
++
++	ret = add_iaa_compression_mode("canned",
++				       canned_ll_iaa,
++				       sizeof(canned_ll_iaa),
++				       canned_d_iaa,
++				       sizeof(canned_d_iaa),
++				       canned_header,
++				       sizeof(canned_header),
++				       gen_decomp_table_flags,
++				       NULL, NULL);
++
++	if (!ret)
++		pr_debug("IAA canned compression mode initialized\n");
++
++	return ret;
 +}
- #endif
++
++void iaa_aecs_cleanup_canned(void)
++{
++	remove_iaa_compression_mode("canned");
++}
+diff --git a/drivers/crypto/intel/iaa/iaa_crypto_comp_fixed.c b/drivers/crypto/intel/iaa/iaa_crypto_comp_fixed.c
+index 19d9a333ac49..45cf5d74f0fb 100644
+--- a/drivers/crypto/intel/iaa/iaa_crypto_comp_fixed.c
++++ b/drivers/crypto/intel/iaa/iaa_crypto_comp_fixed.c
+@@ -78,6 +78,7 @@ int iaa_aecs_init_fixed(void)
+ 				       sizeof(fixed_ll_sym),
+ 				       fixed_d_sym,
+ 				       sizeof(fixed_d_sym),
++				       NULL, 0, 0,
+ 				       init_fixed_mode, NULL);
+ 	if (!ret)
+ 		pr_debug("IAA fixed compression mode initialized\n");
+diff --git a/drivers/crypto/intel/iaa/iaa_crypto_main.c b/drivers/crypto/intel/iaa/iaa_crypto_main.c
+index 1ff6b7c77d89..f141a389f5ca 100644
+--- a/drivers/crypto/intel/iaa/iaa_crypto_main.c
++++ b/drivers/crypto/intel/iaa/iaa_crypto_main.c
+@@ -34,6 +34,7 @@ static unsigned int nr_cpus_per_node;
+ static unsigned int cpus_per_iaa;
+ 
+ static struct crypto_comp *deflate_generic_tfm;
++static struct crypto_acomp *deflate_canned_tfm;
+ 
+ /* Per-cpu lookup table for balanced wqs */
+ static struct wq_table_entry __percpu *wq_table;
+@@ -91,7 +92,8 @@ DEFINE_MUTEX(iaa_devices_lock);
+ 
+ /* If enabled, IAA hw crypto algos are registered, unavailable otherwise */
+ static bool iaa_crypto_enabled;
+-static bool iaa_crypto_registered;
++static bool iaa_crypto_fixed_registered;
++static bool iaa_crypto_canned_registered;
+ 
+ /* Verify results of IAA compress or not */
+ static bool iaa_verify_compress = true;
+@@ -258,14 +260,16 @@ static void free_iaa_compression_mode(struct iaa_compression_mode *mode)
+ 	kfree(mode->name);
+ 	kfree(mode->ll_table);
+ 	kfree(mode->d_table);
++	kfree(mode->header_table);
+ 
+ 	kfree(mode);
+ }
+ 
+ /*
+- * IAA Compression modes are defined by an ll_table and a d_table.
+- * These tables are typically generated and captured using statistics
+- * collected from running actual compress/decompress workloads.
++ * IAA Compression modes are defined by an ll_table, a d_table, and an
++ * optional header_table. These tables are typically generated and
++ * captured using statistics collected from running actual
++ * compress/decompress workloads.
+  *
+  * A module or other kernel code can add and remove compression modes
+  * with a given name using the exported @add_iaa_compression_mode()
+@@ -313,6 +317,9 @@ EXPORT_SYMBOL_GPL(remove_iaa_compression_mode);
+  * @ll_table_size: The ll table size in bytes
+  * @d_table: The d table
+  * @d_table_size: The d table size in bytes
++ * @header_table: Optional header table
++ * @header_table_size: Optional header table size in bytes
++ * @gen_decomp_table_flags: Otional flags used to generate the decomp table
+  * @init: Optional callback function to init the compression mode data
+  * @free: Optional callback function to free the compression mode data
+  *
+@@ -325,6 +332,9 @@ int add_iaa_compression_mode(const char *name,
+ 			     int ll_table_size,
+ 			     const u32 *d_table,
+ 			     int d_table_size,
++			     const u8 *header_table,
++			     int header_table_size,
++			     u16 gen_decomp_table_flags,
+ 			     iaa_dev_comp_init_fn_t init,
+ 			     iaa_dev_comp_free_fn_t free)
+ {
+@@ -362,6 +372,16 @@ int add_iaa_compression_mode(const char *name,
+ 		mode->d_table_size = d_table_size;
+ 	}
+ 
++	if (header_table) {
++		mode->header_table = kzalloc(header_table_size, GFP_KERNEL);
++		if (!mode->header_table)
++			goto free;
++		memcpy(mode->header_table, header_table, header_table_size);
++		mode->header_table_size = header_table_size;
++	}
++
++	mode->gen_decomp_table_flags = gen_decomp_table_flags;
++
+ 	mode->init = init;
+ 	mode->free = free;
+ 
+@@ -394,14 +414,19 @@ get_iaa_device_compression_mode(struct iaa_device *iaa_device, int idx)
+ static void free_device_compression_mode(struct iaa_device *iaa_device,
+ 					 struct iaa_device_compression_mode *device_mode)
+ {
+-	size_t size = sizeof(struct aecs_comp_table_record) + IAA_AECS_ALIGN;
++	size_t c_size = sizeof(struct aecs_comp_table_record) + IAA_AECS_ALIGN;
++	size_t d_size = sizeof(struct aecs_decomp_table_record) + IAA_AECS_ALIGN;
+ 	struct device *dev = &iaa_device->idxd->pdev->dev;
+ 
+ 	kfree(device_mode->name);
+ 
+ 	if (device_mode->aecs_comp_table)
+-		dma_free_coherent(dev, size, device_mode->aecs_comp_table,
++		dma_free_coherent(dev, c_size, device_mode->aecs_comp_table,
+ 				  device_mode->aecs_comp_table_dma_addr);
++	if (device_mode->aecs_decomp_table)
++		dma_free_coherent(dev, d_size, device_mode->aecs_decomp_table,
++				  device_mode->aecs_decomp_table_dma_addr);
++
+ 	kfree(device_mode);
+ }
+ 
+@@ -418,11 +443,79 @@ static int check_completion(struct device *dev,
+ 			    bool compress,
+ 			    bool only_once);
+ 
++static int decompress_header(struct iaa_device_compression_mode *device_mode,
++			     struct iaa_compression_mode *mode,
++			     struct idxd_wq *wq)
++{
++	dma_addr_t src_addr, src2_addr;
++	struct idxd_desc *idxd_desc;
++	struct iax_hw_desc *desc;
++	struct device *dev;
++	struct iaa_wq *iaa_wq;
++	struct iaa_device *iaa_device;
++	int ret = 0;
++
++	idxd_desc = idxd_alloc_desc(wq, IDXD_OP_BLOCK);
++	if (IS_ERR(idxd_desc))
++		return PTR_ERR(idxd_desc);
++
++	desc = idxd_desc->iax_hw;
++
++	iaa_wq = idxd_wq_get_private(wq);
++	iaa_device = iaa_wq->iaa_device;
++	dev = &wq->idxd->pdev->dev;
++
++	src_addr = dma_map_single(dev, (void *)mode->header_table,
++				  mode->header_table_size, DMA_TO_DEVICE);
++	dev_dbg(dev, "%s: mode->name %s, src_addr %llx, dev %p, src %p, slen %d\n",
++		__func__, mode->name, src_addr,	dev,
++		mode->header_table, mode->header_table_size);
++	if (unlikely(dma_mapping_error(dev, src_addr))) {
++		dev_dbg(dev, "dma_map_single err, exiting\n");
++		ret = -ENOMEM;
++		return ret;
++	}
++	src2_addr = device_mode->aecs_decomp_table_dma_addr;
++
++	desc->flags = IAX_AECS_GEN_FLAG;
++	desc->opcode = IAX_OPCODE_DECOMPRESS;
++	desc->decompr_flags = mode->gen_decomp_table_flags;
++	desc->priv = 0;
++
++	desc->src1_addr = (u64)src_addr;
++	desc->src1_size = mode->header_table_size;
++	desc->src2_addr = (u64)src2_addr;
++	desc->src2_size = iaa_device->src2_size;
++	dev_dbg(dev, "%s: mode->name %s, src2_addr %llx, dev %p, src2_size %d\n",
++		__func__, mode->name, desc->src2_addr, dev, desc->src2_size);
++	desc->max_dst_size = 0; // suppressed output
++	desc->completion_addr = idxd_desc->compl_dma;
++
++	ret = idxd_submit_desc(wq, idxd_desc);
++	if (ret) {
++		pr_err("%s: submit_desc failed ret=0x%x\n", __func__, ret);
++		goto out;
++	}
++
++	ret = check_completion(dev, idxd_desc->iax_completion, false, false);
++	if (ret)
++		dev_dbg(dev, "%s: mode->name %s check_completion failed ret=%d\n",
++			__func__, mode->name, ret);
++	else
++		dev_dbg(dev, "%s: mode->name %s succeeded\n", __func__,
++			mode->name);
++out:
++	dma_unmap_single(dev, src_addr, desc->src2_size, DMA_TO_DEVICE);
++
++	return ret;
++}
++
+ static int init_device_compression_mode(struct iaa_device *iaa_device,
+ 					struct iaa_compression_mode *mode,
+ 					int idx, struct idxd_wq *wq)
+ {
+-	size_t size = sizeof(struct aecs_comp_table_record) + IAA_AECS_ALIGN;
++	size_t c_size = sizeof(struct aecs_comp_table_record) + IAA_AECS_ALIGN;
++	size_t d_size = sizeof(struct aecs_decomp_table_record) + IAA_AECS_ALIGN;
+ 	struct device *dev = &iaa_device->idxd->pdev->dev;
+ 	struct iaa_device_compression_mode *device_mode;
+ 	int ret = -ENOMEM;
+@@ -435,16 +528,29 @@ static int init_device_compression_mode(struct iaa_device *iaa_device,
+ 	if (!device_mode->name)
+ 		goto free;
+ 
+-	device_mode->aecs_comp_table = dma_alloc_coherent(dev, size,
++	device_mode->aecs_comp_table = dma_alloc_coherent(dev, c_size,
+ 							  &device_mode->aecs_comp_table_dma_addr, GFP_KERNEL);
+ 	if (!device_mode->aecs_comp_table)
+ 		goto free;
+ 
++	device_mode->aecs_decomp_table = dma_alloc_coherent(dev, d_size,
++							    &device_mode->aecs_decomp_table_dma_addr, GFP_KERNEL);
++	if (!device_mode->aecs_decomp_table)
++		goto free;
++
+ 	/* Add Huffman table to aecs */
+ 	memset(device_mode->aecs_comp_table, 0, sizeof(*device_mode->aecs_comp_table));
+ 	memcpy(device_mode->aecs_comp_table->ll_sym, mode->ll_table, mode->ll_table_size);
+ 	memcpy(device_mode->aecs_comp_table->d_sym, mode->d_table, mode->d_table_size);
+ 
++	if (mode->header_table) {
++		ret = decompress_header(device_mode, mode, wq);
++		if (ret) {
++			pr_debug("iaa header decompression failed: ret=%d\n", ret);
++			goto free;
++		}
++	}
++
+ 	if (mode->init) {
+ 		ret = mode->init(device_mode);
+ 		if (ret)
+@@ -786,6 +892,13 @@ static int save_iaa_wq(struct idxd_wq *wq)
+ 			goto out;
+ 		}
+ 
++		idxd = new_device->idxd;
++		/* Set IAA device src2 size based on AECS Format Version */
++		if (idxd->hw.iaa_cap.dec_aecs_format_ver)
++			new_device->src2_size = DECOMP_INT_STATE_FMT2_LEN;
++		else
++			new_device->src2_size = DECOMP_INT_STATE_FMT1_LEN;
++
+ 		ret = add_iaa_wq(new_device, wq, &new_wq);
+ 		if (ret) {
+ 			del_iaa_device(new_device);
+@@ -1006,6 +1119,24 @@ static int deflate_generic_decompress(struct acomp_req *req)
+ 	return ret;
+ }
+ 
++static int deflate_canned_decompress(struct acomp_req *req)
++{
++	int ret;
++	struct acomp_req *sw_req;
++
++	sw_req = acomp_request_alloc(deflate_canned_tfm);
++	acomp_request_set_params(sw_req, req->src, req->dst, req->slen, req->dlen);
++
++	ret = crypto_acomp_decompress(sw_req);
++
++	req->dlen = sw_req->dlen;
++
++	acomp_request_free(sw_req);
++	update_total_sw_decomp_calls();
++
++	return ret;
++}
++
+ static int iaa_remap_for_verify(struct device *dev, struct iaa_wq *iaa_wq,
+ 				struct acomp_req *req,
+ 				dma_addr_t *src_addr, dma_addr_t *dst_addr);
+@@ -1052,13 +1183,20 @@ static void iaa_desc_complete(struct idxd_desc *idxd_desc,
+ 		dev_dbg(dev, "%s: check_completion failed ret=%d\n", __func__, ret);
+ 		if (!ctx->compress &&
+ 		    idxd_desc->iax_completion->status == IAA_ANALYTICS_ERROR) {
+-			pr_warn("%s: falling back to deflate-generic decompress, "
++			char *deflate_str =  (compression_ctx->mode == IAA_MODE_CANNED) ?
++					      "deflate-canned" : "deflate-generic";
++
++			pr_warn("%s: falling back to %s decompress, "
+ 				"analytics error code %x\n", __func__,
+-				idxd_desc->iax_completion->error_code);
+-			ret = deflate_generic_decompress(ctx->req);
++				deflate_str, idxd_desc->iax_completion->error_code);
++
++			if (compression_ctx->mode == IAA_MODE_CANNED)
++				ret = deflate_canned_decompress(ctx->req);
++			else
++				ret = deflate_generic_decompress(ctx->req);
++
+ 			if (ret) {
+-				dev_dbg(dev, "%s: deflate-generic failed ret=%d\n",
+-					__func__, ret);
++				dev_dbg(dev, "%s: %s failed ret=%d\n", __func__, deflate_str, ret);
+ 				err = -EIO;
+ 				goto err;
+ 			}
+@@ -1288,6 +1426,7 @@ static int iaa_compress_verify(struct crypto_tfm *tfm, struct acomp_req *req,
+ 	struct iaa_wq *iaa_wq;
+ 	struct pci_dev *pdev;
+ 	struct device *dev;
++	dma_addr_t src2_addr;
+ 	int ret = 0;
+ 
+ 	iaa_wq = idxd_wq_get_private(wq);
+@@ -1328,6 +1467,13 @@ static int iaa_compress_verify(struct crypto_tfm *tfm, struct acomp_req *req,
+ 		desc->src1_addr, desc->src1_size, desc->dst_addr,
+ 		desc->max_dst_size, desc->src2_addr, desc->src2_size);
+ 
++	if (ctx->mode == IAA_MODE_CANNED) {
++		src2_addr = active_compression_mode->aecs_decomp_table_dma_addr;
++		desc->src2_addr = (u64)src2_addr;
++		desc->src2_size = iaa_device->src2_size;
++		desc->flags |= IDXD_OP_FLAG_RD_SRC2_AECS;
++	}
++
+ 	ret = idxd_submit_desc(wq, idxd_desc);
+ 	if (ret) {
+ 		dev_dbg(dev, "submit_desc (verify) failed ret=%d\n", ret);
+@@ -1375,6 +1521,7 @@ static int iaa_decompress(struct crypto_tfm *tfm, struct acomp_req *req,
+ 	struct iaa_wq *iaa_wq;
+ 	struct pci_dev *pdev;
+ 	struct device *dev;
++	dma_addr_t src2_addr;
+ 	int ret = 0;
+ 
+ 	iaa_wq = idxd_wq_get_private(wq);
+@@ -1406,6 +1553,13 @@ static int iaa_decompress(struct crypto_tfm *tfm, struct acomp_req *req,
+ 	desc->src1_size = slen;
+ 	desc->completion_addr = idxd_desc->compl_dma;
+ 
++	if (ctx->mode == IAA_MODE_CANNED) {
++		src2_addr = active_compression_mode->aecs_decomp_table_dma_addr;
++		desc->src2_addr = (u64)src2_addr;
++		desc->src2_size = iaa_device->src2_size;
++		desc->flags |= IDXD_OP_FLAG_RD_SRC2_AECS;
++	}
++
+ 	if (ctx->use_irq && !disable_async) {
+ 		desc->flags |= IDXD_OP_FLAG_RCI;
+ 
+@@ -1450,13 +1604,20 @@ static int iaa_decompress(struct crypto_tfm *tfm, struct acomp_req *req,
+ 	if (ret) {
+ 		dev_dbg(dev, "%s: check_completion failed ret=%d\n", __func__, ret);
+ 		if (idxd_desc->iax_completion->status == IAA_ANALYTICS_ERROR) {
+-			pr_warn("%s: falling back to deflate-generic decompress, "
++			char *deflate_str =  (ctx->mode == IAA_MODE_CANNED) ?
++					      "deflate-canned" : "deflate-generic";
++
++			pr_warn("%s: falling back to %s decompress, "
+ 				"analytics error code %x\n", __func__,
+-				idxd_desc->iax_completion->error_code);
+-			ret = deflate_generic_decompress(req);
++				deflate_str, idxd_desc->iax_completion->error_code);
++
++			if (ctx->mode == IAA_MODE_CANNED)
++				ret = deflate_canned_decompress(req);
++			else
++				ret = deflate_generic_decompress(req);
++
+ 			if (ret) {
+-				dev_dbg(dev, "%s: deflate-generic failed ret=%d\n",
+-					__func__, ret);
++				dev_dbg(dev, "%s: %s failed ret=%d\n", __func__, deflate_str, ret);
+ 				goto err;
+ 			}
+ 		} else {
+@@ -1821,6 +1982,33 @@ static struct acomp_alg iaa_acomp_fixed_deflate = {
+ 	}
+ };
+ 
++static int iaa_comp_init_canned(struct crypto_acomp *acomp_tfm)
++{
++	struct crypto_tfm *tfm = crypto_acomp_tfm(acomp_tfm);
++	struct iaa_compression_ctx *ctx = crypto_tfm_ctx(tfm);
++
++	compression_ctx_init(ctx);
++
++	ctx->mode = IAA_MODE_CANNED;
++
++	return 0;
++}
++
++static struct acomp_alg iaa_acomp_canned_deflate = {
++	.init			= iaa_comp_init_canned,
++	.compress		= iaa_comp_acompress,
++	.decompress		= iaa_comp_adecompress,
++	.dst_free               = dst_free,
++	.base			= {
++		.cra_name		= "deflate-canned",
++		.cra_driver_name	= "deflate-iaa-canned",
++		.cra_ctxsize		= sizeof(struct iaa_compression_ctx),
++		.cra_flags		= CRYPTO_ALG_ASYNC,
++		.cra_module		= THIS_MODULE,
++		.cra_priority		= IAA_ALG_PRIORITY,
++	}
++};
++
+ static int iaa_register_compression_device(void)
+ {
+ 	int ret;
+@@ -1830,16 +2018,30 @@ static int iaa_register_compression_device(void)
+ 		pr_err("deflate algorithm acomp fixed registration failed (%d)\n", ret);
+ 		goto out;
+ 	}
++	iaa_crypto_fixed_registered = true;
+ 
+-	iaa_crypto_registered = true;
++	ret = crypto_register_acomp(&iaa_acomp_canned_deflate);
++	if (ret) {
++		pr_err("deflate algorithm acomp canned registration failed (%d)\n", ret);
++		goto err_canned;
++	}
++	iaa_crypto_canned_registered = true;
++
++	goto out;
++
++err_canned:
++	crypto_unregister_acomp(&iaa_acomp_fixed_deflate);
++	iaa_crypto_fixed_registered = false;
+ out:
+ 	return ret;
+ }
+ 
+ static int iaa_unregister_compression_device(void)
+ {
+-	if (iaa_crypto_registered)
++	if (iaa_crypto_fixed_registered)
+ 		crypto_unregister_acomp(&iaa_acomp_fixed_deflate);
++	if (iaa_crypto_canned_registered)
++		crypto_unregister_acomp(&iaa_acomp_canned_deflate);
+ 
+ 	return 0;
+ }
+@@ -2014,9 +2216,20 @@ static int __init iaa_crypto_init_module(void)
+ 		deflate_generic_tfm = crypto_alloc_comp("deflate-generic", 0, 0);
+ 
+ 	if (IS_ERR_OR_NULL(deflate_generic_tfm)) {
+-		pr_err("IAA could not alloc %s tfm: errcode = %ld\n",
+-		       "deflate-generic", PTR_ERR(deflate_generic_tfm));
+-		return -ENOMEM;
++		ret = PTR_ERR(deflate_generic_tfm);
++		pr_err("IAA could not alloc %s tfm: errcode = %d\n",
++		       "deflate-generic", ret);
++		goto out;
++	}
++
++	if (crypto_has_acomp("deflate-canned", 0, 0))
++		deflate_canned_tfm = crypto_alloc_acomp("deflate-canned", 0, 0);
++
++	if (IS_ERR_OR_NULL(deflate_canned_tfm)) {
++		ret = PTR_ERR(deflate_canned_tfm);
++		pr_err("IAA could not alloc %s tfm: errcode = %d\n",
++		       "deflate-canned", ret);
++		goto err_deflate_canned_tfm;
+ 	}
+ 
+ 	ret = iaa_aecs_init_fixed();
+@@ -2025,6 +2238,12 @@ static int __init iaa_crypto_init_module(void)
+ 		goto err_aecs_init;
+ 	}
+ 
++	ret = iaa_aecs_init_canned();
++	if (ret < 0) {
++		pr_debug("IAA canned compression mode init failed\n");
++		goto err_canned;
++	}
++
+ 	ret = idxd_driver_register(&iaa_crypto_driver);
+ 	if (ret) {
+ 		pr_debug("IAA wq sub-driver registration failed\n");
+@@ -2058,8 +2277,12 @@ static int __init iaa_crypto_init_module(void)
+ err_verify_attr_create:
+ 	idxd_driver_unregister(&iaa_crypto_driver);
+ err_driver_reg:
++	iaa_aecs_cleanup_canned();
++err_canned:
+ 	iaa_aecs_cleanup_fixed();
+ err_aecs_init:
++	crypto_free_acomp(deflate_canned_tfm);
++err_deflate_canned_tfm:
+ 	crypto_free_comp(deflate_generic_tfm);
+ 
+ 	goto out;
+@@ -2076,8 +2299,10 @@ static void __exit iaa_crypto_cleanup_module(void)
+ 	driver_remove_file(&iaa_crypto_driver.drv,
+ 			   &driver_attr_verify_compress);
+ 	idxd_driver_unregister(&iaa_crypto_driver);
++	iaa_aecs_cleanup_canned();
+ 	iaa_aecs_cleanup_fixed();
+ 	crypto_free_comp(deflate_generic_tfm);
++	crypto_free_acomp(deflate_canned_tfm);
+ 
+ 	pr_debug("cleaned up\n");
+ }
 -- 
 2.27.0
 

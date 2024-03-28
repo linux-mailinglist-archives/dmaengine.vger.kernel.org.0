@@ -1,167 +1,179 @@
-Return-Path: <dmaengine+bounces-1630-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1631-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7DB31890766
-	for <lists+dmaengine@lfdr.de>; Thu, 28 Mar 2024 18:45:21 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 484FA890774
+	for <lists+dmaengine@lfdr.de>; Thu, 28 Mar 2024 18:47:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AF7161C29E9F
-	for <lists+dmaengine@lfdr.de>; Thu, 28 Mar 2024 17:45:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B465A1F28C61
+	for <lists+dmaengine@lfdr.de>; Thu, 28 Mar 2024 17:47:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BCDF128370;
-	Thu, 28 Mar 2024 17:45:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BB2312E1FF;
+	Thu, 28 Mar 2024 17:47:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JcsbCQW6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MUsNPf2L"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F93E12F38C;
-	Thu, 28 Mar 2024 17:45:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AD0A128370;
+	Thu, 28 Mar 2024 17:47:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711647912; cv=none; b=NREPul0fah30+zY1eC07AyPm5qPLjD1GTe0pxxEfFApr1axfbDaK9LIOw7VtrIn62AlZU7gn/Zv9um4LTkiQUA5NImHEW9LlFlENCPWPyTN/hforoUv8Zi8LGs4SG0gdqLHi4ZE1T96t7QesJ0S9r2oujLWfp2oFwVLrIPQkK6M=
+	t=1711648041; cv=none; b=XAKCScK08pev/G397T6wbBVjFDQDs0QchDKNhkKXlOxurVxNXi7IVr3Yo+uVP1hT84HgHCZIRWjg6fsO/pPP7gDEcrXGfg9znMr6Y7aFkf3PmpJLZpIj7wGBgRVbncdZWFP8x/VnD7VdPPqnUBknJK61m57RNBoQY+rJFUA2QUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711647912; c=relaxed/simple;
-	bh=OiI+HabGYQA9Bx+Wt6goUKKVjRy0/sOX9BxjFGUxS9g=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WZAhey7kuJl2d74Vp0hmLxMTTDjfG0N1qyBtZ3E+OkYi9XOJiugGt5jbV8cUJ3ZYQNn1TVAXC63Ho5VDQYRNmqEHYUMaC4gHI/TwMoRQ0HiCWE3Wah/tzfwoFOFdoHLTR5V0DWIQqSkiy9SltZfs3eEM6MG2DVWpyJorEgfUHYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JcsbCQW6; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711647911; x=1743183911;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=OiI+HabGYQA9Bx+Wt6goUKKVjRy0/sOX9BxjFGUxS9g=;
-  b=JcsbCQW63AFEA15h5HoZP0cK0oiJkakEvpZCBZhLd90cwWrVhH4u2XYS
-   7qofSy0xnl7pvqQiNzOUnDGDLEKd6UcvIQF1XhfXtLvGkxlSFMp3opLQ9
-   VWy9V7x3RD38VHRFmMafYNxaQJLOjkD6IzhTXsm9FnfTJhUIABOgVXADW
-   T63avfO+MAbIri/ZK927neJWLjNCLXvSEfABM3EBdZigVGiA8H5LIH9Di
-   Fhl8IZ9Pd8SfoGyq7VxxFxTcbcMZ/gMB6rck59sPuU86SEVAc/s9sq8P3
-   VosAGmgwFh/eNV3AMgH9eNk2nLpTO+U783hzvkxaCyqO72vNs729aTLi/
-   Q==;
-X-CSE-ConnectionGUID: GIv0eCI5RdS9WzVgjNd1Uw==
-X-CSE-MsgGUID: 2mWrmFxmS7u9Ud8XM3kAnw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="10631360"
-X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
-   d="scan'208";a="10631360"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 10:45:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
-   d="scan'208";a="16675654"
-Received: from jf5300-b11a264t.jf.intel.com ([10.242.51.89])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 10:45:00 -0700
-From: Andre Glover <andre.glover@linux.intel.com>
-To: tom.zanussi@linux.intel.com,
-	herbert@gondor.apana.org.au,
-	davem@davemloft.net
-Cc: dave.jiang@intel.com,
-	fenghua.yu@intel.com,
-	wajdi.k.feghali@intel.com,
-	james.guilford@intel.com,
-	vinodh.gopal@intel.com,
-	tony.luck@intel.com,
-	linux-crypto@vger.kernel.org,
-	dmaengine@vger.kernel.org,
-	andre.glover@linux.intel.com
-Subject: [PATCH 4/4] crypto: iaa - Add Software Compression stats to IAA Compression Accelerator stats
-Date: Thu, 28 Mar 2024 10:44:45 -0700
-Message-Id: <f5136e3a9f4745dc8ecdfc9f0cc8ebd793fbd602.1710969449.git.andre.glover@linux.intel.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <cover.1710969449.git.andre.glover@linux.intel.com>
-References: <cover.1710969449.git.andre.glover@linux.intel.com>
+	s=arc-20240116; t=1711648041; c=relaxed/simple;
+	bh=2RJ4UftN8nrBTsBDUrVAd7hn5NaOKJnB1Fl2J9lWRkU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=M4/nI/blH1MF8+2yoP/n1fZ+Ue/1Zx6s/9F0+I9GEGsw21dTfK1ZAwTXK3KCQUbiBITvPcn46h3FwKAgJgYu9OGwaKRpSPSShNzL85kmxOwYRjcvVG/3s5MfwxHtMLZ+KurFtgPiiEtZf2RyPLR4/oeTxD/M/1HRHXjg8tW/f/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MUsNPf2L; arc=none smtp.client-ip=209.85.221.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-4d43d602cd6so385137e0c.0;
+        Thu, 28 Mar 2024 10:47:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711648038; x=1712252838; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WOul4usuPisehHXyQcZLwgce2H6JwRccYEaJQWtP1Jo=;
+        b=MUsNPf2LdIJPPW0QsF9yWj+TtesSZvxodFKQx4SR1NwzBHA0FZwXBUMhCjEMxw9C2t
+         HhjFYUYs90eF6MJZkELF1PoTcSZqcyg/5bRNddJJv0cS9PWo+4uQ2iSCQaC4XlC8UlRR
+         7egy4uDmdazuOYjKAbr8/w/EJX5F5+Zpd9ah1DVfw25rSA+S4sG4xkMp2StUJJ7b4JHU
+         N7LQMQMNr3dOAfB6CyReNMnb9qVkNTrfAY7khKDxiJa+E6t2DvdnnnTJsNr633HfFdbb
+         ve1ickFoQcPaFy+3G/clglw6CJNhDXstrWbS38QiA1yLB7Lk4oUL2cIVTDzzuTJMxcUx
+         5ujw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711648038; x=1712252838;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WOul4usuPisehHXyQcZLwgce2H6JwRccYEaJQWtP1Jo=;
+        b=FTqdh7Qk9JUJtRMcc6U9AWiJZGvkUNp0voAseEjoQewVGVAc3vTEffGhoAflhGfud8
+         Mfaet/iY/IDEOywdwNGMeKoghpSj02DmYYy0LMkxlZUJvj4G2Sh4lx2cJ5QTkFX/I2XX
+         UgCdGZLQsSArbO2qPmgRxRuSY46aMb07pCqmUGiqi0yZIsk2gBnt96UFMdm98OefxRnz
+         cuvgJdBxWLmtZds2Qak9hzCx+W79SzMd3E7xm4sNbO+/iU3Sd+dR8LSCfqNhCqEIKVBh
+         GCLCesRRD8bh/B5VzuJURvSs7ZXd1fEdCa7c2HaPH3uRbAIE4BCMNKaxaAVEc7wLSqbc
+         lmbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV2AELX+s3Ri/P1sMvSyKP4y170FcrAHR5R4xijzssxgnT9+w/CF5jlOw3hu9L0uKOh0BgUp8GVe0AcNTWcTdhIMiMgszexhFm423YsTOj9To8G7Kipun2zblgphJwkXs6+xnFOh4JqoWW3bt+6swEwZxtEkgmojS4M5bwCXHFdxo9A7iESoYlxpF/TMFug7qWAuqcEyCVUXRa8VEXgNhRjFHRSj3kTKFu5QWzRLePJ1jtlzstVjVp1UYFjXGGIiXeyChjvNrcPdQYah2RtQqOYvUj1J6T/MP5LLWZnoSyVTNALjJ/R7QPPVJKf51oU7gpyMh5YR5nRKEL8/WXjc3082Lfa6qXNcmUxMuFoQJ94qniYC4XagaGURaDTrQ15tKqw6+K5ha2egriX3IrBYSegT8gN5gczoopOxwRH3RKKS8jjo0uogQCHJ5i9J/5B6KVTKcxqQu9hkR4meUMdVk1umbe7BFpTog+4utMcRX27sIuWDfOZQ1te4rASDtKZGma9Ql6Hm2z3IyHXHY08sHGtSL004EOIWsc/9wglMYvLy5gKmGNQ+Ub+myDLrEBoLDzHVKiRPj90vxFMsm460SY=
+X-Gm-Message-State: AOJu0Yx7+7ACXHzYJTfbS1syhBNOfHroiuYIKQOqusVbIshZNPMgLSaI
+	O+iv3mUT3CfIy15IZD0eRSTn3JEej3LMQ2ey6q9cVscvLqqXMvD2mUbdao+vHw+gyrcq5S2tmDJ
+	PrmEbnyAv3kOMN9yBIA0Z81J+Yok=
+X-Google-Smtp-Source: AGHT+IHhsrATdsPlGDNfn/hR7BQXc3o4d86Rd7NcYHBOy9LUQjNRQoJ0rDqs8OMJuSA4Qyiba22Ugt9rz6m/+ouyIBc=
+X-Received: by 2002:a67:f7c6:0:b0:476:fbbb:14bc with SMTP id
+ a6-20020a67f7c6000000b00476fbbb14bcmr3836850vsp.30.1711648038557; Thu, 28 Mar
+ 2024 10:47:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240327160314.9982-1-apais@linux.microsoft.com>
+ <20240327160314.9982-10-apais@linux.microsoft.com> <9c31b697-3d80-407a-82b3-cfbb19fafb31@arm.com>
+In-Reply-To: <9c31b697-3d80-407a-82b3-cfbb19fafb31@arm.com>
+From: Allen <allen.lkml@gmail.com>
+Date: Thu, 28 Mar 2024 10:47:06 -0700
+Message-ID: <CAOMdWSL9GUkoOOX4LNwMOV24-8xnmFKep15xj8NnmnBss-RYAQ@mail.gmail.com>
+Subject: Re: [PATCH 9/9] mmc: Convert from tasklet to BH workqueue
+To: Christian Loehle <christian.loehle@arm.com>
+Cc: Allen Pais <apais@linux.microsoft.com>, linux-kernel@vger.kernel.org, tj@kernel.org, 
+	keescook@chromium.org, vkoul@kernel.org, marcan@marcan.st, sven@svenpeter.dev, 
+	florian.fainelli@broadcom.com, rjui@broadcom.com, sbranden@broadcom.com, 
+	paul@crapouillou.net, Eugeniy.Paltsev@synopsys.com, 
+	manivannan.sadhasivam@linaro.org, vireshk@kernel.org, Frank.Li@nxp.com, 
+	leoyang.li@nxp.com, zw@zh-kernel.org, wangzhou1@hisilicon.com, 
+	haijie1@huawei.com, shawnguo@kernel.org, s.hauer@pengutronix.de, 
+	sean.wang@mediatek.com, matthias.bgg@gmail.com, 
+	angelogioacchino.delregno@collabora.com, afaerber@suse.de, 
+	logang@deltatee.com, daniel@zonque.org, haojian.zhuang@gmail.com, 
+	robert.jarzmik@free.fr, andersson@kernel.org, konrad.dybcio@linaro.org, 
+	orsonzhai@gmail.com, baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com, 
+	patrice.chotard@foss.st.com, linus.walleij@linaro.org, wens@csie.org, 
+	jernej.skrabec@gmail.com, peter.ujfalusi@gmail.com, kys@microsoft.com, 
+	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com, 
+	jassisinghbrar@gmail.com, mchehab@kernel.org, maintainers@bluecherrydvr.com, 
+	aubin.constans@microchip.com, ulf.hansson@linaro.org, manuel.lauss@gmail.com, 
+	mirq-linux@rere.qmqm.pl, jh80.chung@samsung.com, oakad@yahoo.com, 
+	hayashi.kunihiko@socionext.com, mhiramat@kernel.org, brucechang@via.com.tw, 
+	HaraldWelte@viatech.com, pierre@ossman.eu, duncan.sands@free.fr, 
+	stern@rowland.harvard.edu, oneukum@suse.com, 
+	openipmi-developer@lists.sourceforge.net, dmaengine@vger.kernel.org, 
+	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-rpi-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
+	imx@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
+	linux-mediatek@lists.infradead.org, linux-actions@lists.infradead.org, 
+	linux-arm-msm@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, linux-rdma@vger.kernel.org, 
+	linux-media@vger.kernel.org, linux-mmc@vger.kernel.org, 
+	linux-omap@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	linux-s390@vger.kernel.org, netdev@vger.kernel.org, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Update optional debugfs statistics support for IAA with additional software
-compression statistics. The software compression statistics will track
-instances where iaa falls back to software deflate (e.g. when the source
-data input length is greater than 4KB).
+On Thu, Mar 28, 2024 at 3:16=E2=80=AFAM Christian Loehle
+<christian.loehle@arm.com> wrote:
+>
+> On 27/03/2024 16:03, Allen Pais wrote:
+> > The only generic interface to execute asynchronously in the BH context =
+is
+> > tasklet; however, it's marked deprecated and has some design flaws. To
+> > replace tasklets, BH workqueue support was recently added. A BH workque=
+ue
+> > behaves similarly to regular workqueues except that the queued work ite=
+ms
+> > are executed in the BH context.
+> >
+> > This patch converts drivers/infiniband/* from tasklet to BH workqueue.
+> s/infiniband/mmc
 
-Signed-off-by: Andre Glover <andre.glover@linux.intel.com>
----
- drivers/crypto/intel/iaa/iaa_crypto_main.c  | 2 ++
- drivers/crypto/intel/iaa/iaa_crypto_stats.c | 8 ++++++++
- drivers/crypto/intel/iaa/iaa_crypto_stats.h | 2 ++
- 3 files changed, 12 insertions(+)
+Will fix it in v2.
+> >
+> > Based on the work done by Tejun Heo <tj@kernel.org>
+> > Branch: https://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git for-6=
+.10
+> >
+> > Signed-off-by: Allen Pais <allen.lkml@gmail.com>
+> > ---
+> >  drivers/mmc/host/atmel-mci.c                  | 35 ++++-----
+> >  drivers/mmc/host/au1xmmc.c                    | 37 ++++-----
+> >  drivers/mmc/host/cb710-mmc.c                  | 15 ++--
+> >  drivers/mmc/host/cb710-mmc.h                  |  3 +-
+> >  drivers/mmc/host/dw_mmc.c                     | 25 ++++---
+> >  drivers/mmc/host/dw_mmc.h                     |  9 ++-
+> For dw_mmc:
+> Performance numbers look good FWIW.
+> for i in $(seq 0 5); do echo performance > /sys/devices/system/cpu/cpu$i/=
+cpufreq/scaling_governor; done
+> for i in $(seq 0 4); do fio --name=3Dtest --rw=3Drandread --bs=3D4k --run=
+time=3D30 --time_based --filename=3D/dev/mmcblk1 --minimal --numjobs=3D6 --=
+iodepth=3D32 --group_reporting | awk -F ";" '{print $8}'; sleep 30; done
+> Baseline:
+> 1758
+> 1773
+> 1619
+> 1835
+> 1639
+> to:
+> 1743
+> 1643
+> 1860
+> 1638
+> 1872
+> (I'd call that equivalent).
+> This is on a RK3399.
+> I would prefer most of the naming to change from "work" to "workqueue" in=
+ the driver
+> code.
+> Apart from that:
+> Reviewed-by: Christian Loehle <christian.loehle@arm.com>
+> Tested-by: Christian Loehle <christian.loehle@arm.com>
 
-diff --git a/drivers/crypto/intel/iaa/iaa_crypto_main.c b/drivers/crypto/intel/iaa/iaa_crypto_main.c
-index 4d34096b80ca..ad88ad727d0a 100644
---- a/drivers/crypto/intel/iaa/iaa_crypto_main.c
-+++ b/drivers/crypto/intel/iaa/iaa_crypto_main.c
-@@ -1152,6 +1152,8 @@ static int deflate_generic_compress(struct acomp_req *req)
- 	kunmap_local(src);
- 	kunmap_local(dst);
- 
-+	update_total_sw_comp_calls();
-+
- 	return ret;
- }
- 
-diff --git a/drivers/crypto/intel/iaa/iaa_crypto_stats.c b/drivers/crypto/intel/iaa/iaa_crypto_stats.c
-index f5cc3d29ca19..42aae8a738ac 100644
---- a/drivers/crypto/intel/iaa/iaa_crypto_stats.c
-+++ b/drivers/crypto/intel/iaa/iaa_crypto_stats.c
-@@ -19,6 +19,7 @@
- 
- static atomic64_t total_comp_calls;
- static atomic64_t total_decomp_calls;
-+static atomic64_t total_sw_comp_calls;
- static atomic64_t total_sw_decomp_calls;
- static atomic64_t total_comp_bytes_out;
- static atomic64_t total_decomp_bytes_in;
-@@ -43,6 +44,11 @@ void update_total_decomp_calls(void)
- 	atomic64_inc(&total_decomp_calls);
- }
- 
-+void update_total_sw_comp_calls(void)
-+{
-+	atomic64_inc(&total_sw_comp_calls);
-+}
-+
- void update_total_sw_decomp_calls(void)
- {
- 	atomic64_inc(&total_sw_decomp_calls);
-@@ -174,6 +180,8 @@ static int global_stats_show(struct seq_file *m, void *v)
- 		   atomic64_read(&total_comp_calls));
- 	seq_printf(m, "  total_decomp_calls: %llu\n",
- 		   atomic64_read(&total_decomp_calls));
-+	seq_printf(m, "  total_sw_comp_calls: %llu\n",
-+		   atomic64_read(&total_sw_comp_calls));
- 	seq_printf(m, "  total_sw_decomp_calls: %llu\n",
- 		   atomic64_read(&total_sw_decomp_calls));
- 	seq_printf(m, "  total_comp_bytes_out: %llu\n",
-diff --git a/drivers/crypto/intel/iaa/iaa_crypto_stats.h b/drivers/crypto/intel/iaa/iaa_crypto_stats.h
-index 3787a5f507eb..6e0c6f9939bf 100644
---- a/drivers/crypto/intel/iaa/iaa_crypto_stats.h
-+++ b/drivers/crypto/intel/iaa/iaa_crypto_stats.h
-@@ -11,6 +11,7 @@ void	iaa_crypto_debugfs_cleanup(void);
- void	update_total_comp_calls(void);
- void	update_total_comp_bytes_out(int n);
- void	update_total_decomp_calls(void);
-+void	update_total_sw_comp_calls(void);
- void	update_total_sw_decomp_calls(void);
- void	update_total_decomp_bytes_in(int n);
- void	update_completion_einval_errs(void);
-@@ -29,6 +30,7 @@ static inline void	iaa_crypto_debugfs_cleanup(void) {}
- static inline void	update_total_comp_calls(void) {}
- static inline void	update_total_comp_bytes_out(int n) {}
- static inline void	update_total_decomp_calls(void) {}
-+static inline void	update_total_sw_comp_calls(void) {}
- static inline void	update_total_sw_decomp_calls(void) {}
- static inline void	update_total_decomp_bytes_in(int n) {}
- static inline void	update_completion_einval_errs(void) {}
--- 
-2.27.0
+ Thank you very much for testing and the review. Will have your
+concerns addressed in v2.
 
+- Allen
 

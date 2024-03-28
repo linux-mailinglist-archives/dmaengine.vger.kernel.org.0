@@ -1,152 +1,166 @@
-Return-Path: <dmaengine+bounces-1624-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1625-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 311A58905C4
-	for <lists+dmaengine@lfdr.de>; Thu, 28 Mar 2024 17:41:02 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 91AA889064F
+	for <lists+dmaengine@lfdr.de>; Thu, 28 Mar 2024 17:51:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 554871C26D3B
-	for <lists+dmaengine@lfdr.de>; Thu, 28 Mar 2024 16:41:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 00FA21F28324
+	for <lists+dmaengine@lfdr.de>; Thu, 28 Mar 2024 16:51:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6076F139589;
-	Thu, 28 Mar 2024 16:37:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E0403BBF9;
+	Thu, 28 Mar 2024 16:49:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="nwqpFkoD"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="BAq5l3fC"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2063.outbound.protection.outlook.com [40.107.92.63])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CC1F3BBF3;
-	Thu, 28 Mar 2024 16:37:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711643834; cv=none; b=k6CGDXCM9aMBEAi2Gm1//Kh+NdhZKZv73k87mUWe7V1zgmKFDLvObXxRI8mFQtCGfXCgIUdS8jiTqJV26JSzKeJmUou/fdiF/BoIc1sB101XdxDAUfqbKkO1giH2Dqo+ddznGqIEv1HcL+EWpzF8RxWo9CiEc1YaGUsWG6ttt4U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711643834; c=relaxed/simple;
-	bh=/iFXd2bzZPhj4ozZeU0FU3oFCOqJ/fd5qZILAEiheyc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IpwL5yQ3uSN5SJX010gLG3cKbxWvD3YrhUkYkPr3bPa8vB2WW3QSJNirxkRR6R8hfsQbF4K0nbT5lFXrigyQvOlAetYXL4ae5tekWucJPG+cHKzMIboHlfysdoug9q5HrlW30St4DqqSB4caYBKqdg1sf0S/oe+zf5NlUmkke0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=nwqpFkoD; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Received: from [192.168.88.20] (91-154-34-181.elisa-laajakaista.fi [91.154.34.181])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 3E566D20;
-	Thu, 28 Mar 2024 17:36:37 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1711643797;
-	bh=/iFXd2bzZPhj4ozZeU0FU3oFCOqJ/fd5qZILAEiheyc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=nwqpFkoD5oaC+xPHjSJyuDP0OZF+tppig+7BmRgQFdX6Xgoy2qU1h4Cg2L200Y14F
-	 xwvFHVehOa7lOAaiGkEARFKZ3XtrUjvYaTE9AwOlf28aSB2PVm+l1PrFYGxAvcAyBh
-	 QMzqCzQZzkmEGmsWm6k2Ei+YODdNm7sb91OnT2VM=
-Message-ID: <4f994662-347d-4562-9108-5d7e3798fa51@ideasonboard.com>
-Date: Thu, 28 Mar 2024 18:37:06 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 321752A8D3;
+	Thu, 28 Mar 2024 16:49:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.63
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711644581; cv=fail; b=V8brkBOZHPYJLlHP3eQa7w2vtxOFXSWoozQ1FFuXkYlIU+HpTqSTx703p9ht3FA9ROlHON/ZO1HJMwK5Fueepd4ih36aQS/L7531OUn32BG4SzsO3Ta/0ppXQOKETV7P1UXqdv1eGMHDJEUXPwq5115Q+sAn0WZJFlTUwnnBab4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711644581; c=relaxed/simple;
+	bh=H8qQZvKjP/xZzUtA8M54dIhiFexlnmPVlE/3gJ73bWM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Lywtu/sitnZCqhbBdhAUhPkbdI63nPOimMjrnZQNVumP5mRKAK5GIjCBM0NQm+XrM7rotfhdhAH53VVnxxV11xH5hQAqAyiV+oyY8MgHcziXy5DjIPWzyGi5B3tNbAtfgAHxdazjyEzdt+yxDLtiH0oahvpZ/ZgQRUr7MBqJ1Iw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=BAq5l3fC; arc=fail smtp.client-ip=40.107.92.63
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gnFO9j+VDoAG/OZ4uV8FROL4vjoEOkkIVU9GlE9DWvD2IwkU4JdvFWC5CIgbJXpjpBqLf02YXi7aXOK8T0C2TAAmqaVs/tZJ4SaKHje+EYioPA/lguUwhH+SqDTreexTAWEZZmhzVQyFSWI6Z2EU2RiTqhbM9Pg1PWzL5JcUZf7LnQoVxw8RivWhIRX+O32dfqn7/ag1cayKztwa1KObkKnynW0ErxGW70nKvWt1tJXhtNXVVoXBpWBpWZKx/TTL8D21rwybkUib+i4ijc2PfCdvg89Js5uiMLzDJ2Kt2aGK2W8WdfY0zfBD8ToqYvvkEWSIzrCJbVM24Az91/alFw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sz+JJ8M6UaHKqaNSwPwHZC8UDY3ykb/E75Tw7AheXAM=;
+ b=ZO1vxfXbAKfGK3R54UZWnZxO/XU5AvN3nC0nya5GFS8LdBM+SZKy/lRtFcDltrqhJqzScG3zrFjqDF/onMuEBSN5tNzttOSb7GLAovNgK8umIvPtFJQ07eFK9gIEMvp/Sw/MkW7i3sI6zm9oUT4HshHhpPxT9l3wULK0EQTodnWM7bEHqXkRaO1C7SQXkcPgN8fuM8NYa1yXQ3f28sgz/RmcZTSHabfeE2Xdrr/WabgLic5I7UDspVnBTQQgX1CdX77oyqWjCM4MtLA3GHzUEsUpvDduu/COf3DVmWS3ugu4kBegHKeFSYwlQvKznL6x69zc/SeJ7U2LZkpyAk13Xw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=bootlin.com smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sz+JJ8M6UaHKqaNSwPwHZC8UDY3ykb/E75Tw7AheXAM=;
+ b=BAq5l3fCxMJGIs0cYBdvH1l9zRMzeDk9H5y6PtPtUy6nXFW0rGBwiqlHkCxZHUVSiz4vJf6CfbD5i7fX4EAekMZhyQIHxaL8E3hOo9IESt43zKMR/1uD/vUenedQTJw0BT5XSMgMebwF+GYUoSFl0n9jJZSnlnW900nEOysSTgM=
+Received: from DM6PR07CA0075.namprd07.prod.outlook.com (2603:10b6:5:337::8) by
+ CH2PR12MB4054.namprd12.prod.outlook.com (2603:10b6:610:a6::18) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7409.32; Thu, 28 Mar 2024 16:49:36 +0000
+Received: from DS1PEPF0001709C.namprd05.prod.outlook.com
+ (2603:10b6:5:337:cafe::4) by DM6PR07CA0075.outlook.office365.com
+ (2603:10b6:5:337::8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.37 via Frontend
+ Transport; Thu, 28 Mar 2024 16:49:36 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ DS1PEPF0001709C.mail.protection.outlook.com (10.167.18.106) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7409.10 via Frontend Transport; Thu, 28 Mar 2024 16:49:36 +0000
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 28 Mar
+ 2024 11:49:35 -0500
+Received: from [172.19.74.144] (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
+ Transport; Thu, 28 Mar 2024 11:49:34 -0500
+Message-ID: <fd6ef776-d861-0dc7-2809-27868ca894e3@amd.com>
+Date: Thu, 28 Mar 2024 09:49:29 -0700
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] dma: xilinx_dpdma: Remove unnecessary use of
- irqsave/restore
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH 2/3] dmaengine: xilinx: xdma: Fix synchronization issue
 Content-Language: en-US
-To: Sean Anderson <sean.anderson@linux.dev>
-Cc: Michal Simek <michal.simek@amd.com>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
-References: <20240308210034.3634938-1-sean.anderson@linux.dev>
- <20240308210034.3634938-3-sean.anderson@linux.dev>
- <0652c82f-b0a2-4881-ac51-38399b180ad4@ideasonboard.com>
- <d6a8c1c8-258a-447b-b6cd-199f33199388@linux.dev>
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <d6a8c1c8-258a-447b-b6cd-199f33199388@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+CC: Louis Chauvet <louis.chauvet@bootlin.com>, Brian Xu <brian.xu@amd.com>,
+	Raj Kumar Rampelli <raj.kumar.rampelli@amd.com>, Vinod Koul
+	<vkoul@kernel.org>, Michal Simek <michal.simek@amd.com>, Jan Kuliga
+	<jankul@alatek.krakow.pl>, <dmaengine@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<stable@vger.kernel.org>
+References: <20240327-digigram-xdma-fixes-v1-0-45f4a52c0283@bootlin.com>
+ <20240327-digigram-xdma-fixes-v1-2-45f4a52c0283@bootlin.com>
+ <b59dd8cd-fd75-5342-d411-817f33e0ff48@amd.com>
+ <20240328012257.4a5955f2@xps-13>
+From: Lizhi Hou <lizhi.hou@amd.com>
+In-Reply-To: <20240328012257.4a5955f2@xps-13>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Received-SPF: None (SATLEXMB03.amd.com: lizhi.hou@amd.com does not designate
+ permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS1PEPF0001709C:EE_|CH2PR12MB4054:EE_
+X-MS-Office365-Filtering-Correlation-Id: ff2ec159-ca4c-4536-c5aa-08dc4f470d1e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	5cC7V/W98U6Xk3tUiPPjPUcHZAcY+N6r9xdEt7YTMOH5vqeqcOnDLMuGWEXLM8rCSzXqNIed0AqJSEgUeGZuo3fkRvOK5/aOU9vvlpP1mlfpsv1XKJvFtduxf7oIAX6y2+kOb7/rItRpYDQOXN2FPF45gP8UzafwYW8liujGGWgPuhtJ0vbB1KKLlDYVNJVMS+WONvfi/rjy3WlvCylkcjg19lOTUo9CueKq2VHlG8ntKaPqtsUcX+oOqzcqyThvXJo/H9b+Dtx2XOXf18r2pPsJGXCGQp924EvPQuCwgkPQ+KIXoQng+uj0v+UzLGWu3toXynnxoAu7i1Uu+yBD/YuNxKsFoKCkMTRXgc+9SWP1PT3TCI9aP1dR1qtYOptD1KUIPAvAa9JAUE49Z5WLHHzhl8VeI3rAU4BsNPpukH1p3C0sFVmxsKwEOM3zMrpFjYCOBLnuT5cL716Y1kkZG+YJkAGtLe2GQcCslNMoL4E/Jr7+QCCNAUFu0aCNCAf3ijLw6Nz6cNKzqEmpoWoJ4DWox8Ca1HKZDF87QQUDUysrx2vfpCMIov8+jELwUR23824Or/bq1lpKtqB8QuwkW2TnCRpmj2y6iO5E4UZROkMNkttWDXOoopswdOifG7S8tXlOrmxOpCjmB91m9yl9x6dNvQVzNN+NYIiq++9neapoJ17wTSFOsjgPeJYsYnUIfC2Baj0QUnqIumhcZnHPItdsyoyr8D2SpyTM5reZzxyR/9yK7KB34OEbRFNrMZ0e
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(82310400014)(376005)(36860700004)(1800799015);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2024 16:49:36.0379
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ff2ec159-ca4c-4536-c5aa-08dc4f470d1e
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS1PEPF0001709C.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4054
 
-On 28/03/2024 17:00, Sean Anderson wrote:
-> On 3/27/24 08:27, Tomi Valkeinen wrote:
->> Hi,
+
+On 3/27/24 17:23, Miquel Raynal wrote:
+> Hi Lizhi,
+>
+>>> @@ -376,6 +378,8 @@ static int xdma_xfer_start(struct xdma_chan *xchan)
+>>>    		return ret;
+>>>    >   	xchan->busy = true;
+>>> +	xchan->stop_requested = false;
+>>> +	reinit_completion(&xchan->last_interrupt);
+>> If stop_requested is true, it should not start another transfer. So I would suggest to add
 >>
->> On 08/03/2024 23:00, Sean Anderson wrote:
->>> xilinx_dpdma_chan_done_irq and xilinx_dpdma_chan_vsync_irq are always
->>> called with IRQs disabled from xilinx_dpdma_irq_handler. Therefore we
->>> don't need to save/restore the IRQ flags.
+>>        if (xchan->stop_requested)
 >>
->> I think this is fine, but a few thoughts:
+>>                   return -ENODEV;
+> Maybe -EBUSY in this case?
+>
+> I thought synchronize() was mandatory in-between. If that's not the
+> case then indeed we need to block or error-out if a new transfer
+> gets started.
+
+Okay. It looks issue_pending is not expected between terminate_all() and 
+synchronize().
+
+This check is not needed.
+
+
+Thanks,
+
+Lizhi
+
+>
+>> at the beginning of xdma_xfer_start().
 >>
->> - Is spin_lock clearly faster than the irqsave variant, or is this a pointless optimization? It's safer to just use irqsave variant, instead of making sure the code is always called from the expected contexts.
-> 
-> It's not an optimization. Technically this will save a few instructions,
-> but...
-> 
->> - Is this style documented/recommended anywhere? Going through docs, I only found docs telling to use irqsave when mixing irq and non-irq contexts.
-> 
-> The purpose is mainly to make it clear that this is meant to be called
-> in IRQ context. With irqsave, there's an implication that this could be
-> called in non-IRQ context, which it never is.
-
-Hmm, I see. Yes, I think that makes sense.
-
->> - Does this cause issues on PREEMPT_RT?
-> 
-> Why would it?
-
-I was reading locktypes.rst, I started wondering what it means if 
-spinlocks are changed into sleeping locks. But thinking about it again, 
-it doesn't matter, as the irq will still be masked when in irq-context.
-
-So:
-
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-
-  Tomi
-
-
+>> xdma_xfer_start() is protected by chan lock.
+>>
+>>>    >   	return 0;
+>>>    }
+> Thanks,
+> Miquèl
 

@@ -1,158 +1,234 @@
-Return-Path: <dmaengine+bounces-1635-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1636-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id CC533890856
-	for <lists+dmaengine@lfdr.de>; Thu, 28 Mar 2024 19:31:59 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DFFD9890879
+	for <lists+dmaengine@lfdr.de>; Thu, 28 Mar 2024 19:44:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0C0951F21474
-	for <lists+dmaengine@lfdr.de>; Thu, 28 Mar 2024 18:31:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 50F3CB21D33
+	for <lists+dmaengine@lfdr.de>; Thu, 28 Mar 2024 18:44:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A5F9136E0D;
-	Thu, 28 Mar 2024 18:31:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D91D137749;
+	Thu, 28 Mar 2024 18:44:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QQ+Ol01e"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dNj/cwYG"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A3C1327F8;
-	Thu, 28 Mar 2024 18:31:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A481132809;
+	Thu, 28 Mar 2024 18:44:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711650709; cv=none; b=SMfPpC/Ltxe6Y8bC5SBajqJZrUZLWeDjd2q2tPn0YmZY9VqROns4nCSEjN28OGtBPUoFVC6vNDa/1JN0QcGmhBt6aACp2g2UpXJYEOUrvYNlyQdao53zf+y/wfrcMLfoc7GQcKGxMhctD+J7/mfxBTufds1UkseUkYlu5fDxnxY=
+	t=1711651465; cv=none; b=E1aPwSEldYuNd3/vVEi+8SLKyy0in9kaiXIcpLZ6jSnqtWYTP9IMeWU8hIC63qQIVUTmTEEmeM+cbdh3JIvAKB3+cVOgqFzWHif0qdJ/iLOHOBvA6e0+cF3qcqiwM2+gU7ZYZrAD8wbbHvAFXWqLPXpxID8TlYC/h+fOQq9khkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711650709; c=relaxed/simple;
-	bh=09Kq07Ctu1YK6YAopY47/y5AlbJwjHjNBMXfeYxKY3s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mc+bmHU7JCh9T2qz/jKyKISblvHUMRyjYOEKwefhMp+SpBo+KEZunCDaUOfyxVqaH2nRtbEFzsaXfY7St2PHPArtNQ18jv3kbP8sMNYjt2B8WRyDhc54G3/LIVhXybYiD9uu0NBwwzc92ifzdPX4yIYM9RzRZUURIOKxpkoXwjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QQ+Ol01e; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9561C433C7;
-	Thu, 28 Mar 2024 18:31:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711650709;
-	bh=09Kq07Ctu1YK6YAopY47/y5AlbJwjHjNBMXfeYxKY3s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QQ+Ol01eGrtbmmXmm5UOF8z3YVrAFzrLyUinoyXQOw2oD/3BtgXxtRpcyL6qEGHMi
-	 Fuf1dGmu1+mXVCx0A2v+QG1OZmZa5GwKeTprSp0vXiGl5WvN4w7glf0wb/Ho4jGsI6
-	 A7WhuNfxRZ+SYEDd2EHDavctgY396ec7mZY6h+UmOVbwQhncgmm56Grgtq512eTU0I
-	 juRVEJtAyO8mA2/2SAJmqgsMiWvU8lqDqaMAEVDmDUSGgn+tYLJ7mum23hafaIgM0S
-	 0/cB+mlWradcKD4+nkGPqD1rFiy3Q7s73Qm1b4qRq5IHy2lK358t2WVn9s4EqNJkuF
-	 qXaWYWlrz6OoQ==
-Date: Fri, 29 Mar 2024 00:01:43 +0530
-From: Vinod Koul <vkoul@kernel.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Allen Pais <apais@linux.microsoft.com>, linux-kernel@vger.kernel.org,
-	Tejun Heo <tj@kernel.org>, Kees Cook <keescook@chromium.org>,
-	Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Paul Cercueil <paul@crapouillou.net>, Eugeniy.Paltsev@synopsys.com,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Viresh Kumar <vireshk@kernel.org>, Frank Li <Frank.Li@nxp.com>,
-	Leo Li <leoyang.li@nxp.com>, zw@zh-kernel.org,
-	Zhou Wang <wangzhou1@hisilicon.com>, haijie1@huawei.com,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-	logang@deltatee.com, Daniel Mack <daniel@zonque.org>,
-	Haojian Zhuang <haojian.zhuang@gmail.com>,
-	Robert Jarzmik <robert.jarzmik@free.fr>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Orson Zhai <orsonzhai@gmail.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Chunyan Zhang <zhang.lyra@gmail.com>,
-	Patrice Chotard <patrice.chotard@foss.st.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>, peter.ujfalusi@gmail.com,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	maintainers@bluecherrydvr.com, aubin.constans@microchip.com,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Manuel Lauss <manuel.lauss@gmail.com>,
-	=?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-	"jh80.chung" <jh80.chung@samsung.com>, oakad@yahoo.com,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>, brucechang@via.com.tw,
-	HaraldWelte@viatech.com, pierre@ossman.eu, duncan.sands@free.fr,
-	Alan Stern <stern@rowland.harvard.edu>,
-	Oliver Neukum <oneukum@suse.com>,
-	openipmi-developer@lists.sourceforge.net, dmaengine@vger.kernel.org,
-	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-rpi-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	imx@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
-	linux-mediatek@lists.infradead.org,
-	linux-actions@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-tegra@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-	"linux-mmc @ vger . kernel . org" <linux-mmc@vger.kernel.org>,
-	Linux-OMAP <linux-omap@vger.kernel.org>,
-	Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-	linux-s390@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
-	linux-usb@vger.kernel.org
-Subject: Re: [PATCH 2/9] dma: Convert from tasklet to BH workqueue
-Message-ID: <ZgW3j1qkLA-QU4iM@matsya>
-References: <20240327160314.9982-1-apais@linux.microsoft.com>
- <20240327160314.9982-3-apais@linux.microsoft.com>
- <ZgUGXTKPVhrA1tam@matsya>
- <2e9257af-c123-406b-a189-eaebeecc1d71@app.fastmail.com>
+	s=arc-20240116; t=1711651465; c=relaxed/simple;
+	bh=4jJArD811RJcc+gAYwImLmK4dy10KhWADxTR/PrA1zM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=R8rPdthdh6+2z5v83g4mjecPNqCLENad0IBzFz+9MGkrJ7Wm3qUregmWTKd6+aXfHV7HCTHGBn0OK8AkcLwwthghwMRzuCsVCF1cTBSi1OVhF3hJ+i+84Jz9QWWu9daRkgxhJjXrL5NpSJiAmK19uZVAifsc86ar2+a3HB8ddVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=dNj/cwYG; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Cc:Content-ID:Content-Description;
+	bh=pNOqZu7GfLqkG1YD8n5bDGZjW6EBZpWpPfAiqoLn+l8=; b=dNj/cwYGeF+fb2AjBYQ/MksH0I
+	un/I9R3xvMEzCrV8z3J8u4V77TQiei3wek5rXFQqwOJ/h+cQm2tjNgihrWyh5c679hFtlcsv4cwvG
+	KvVzJ7rZNryfrhF1OS+03U1K8BMV7vmMzK7DtoSQIsqShYMw+cCNC7ehKdWCNvfW/XkGX4eptK1fr
+	RhYXbH/S8thnw+Te3nWY0CUP7o7Ii5Ks0tHns11+ldcLAeeMV8SnOgxFMJH7DnK7/GjcuQcykruck
+	atgUk75340wpH91FGuDsnxdnc73c0i3v8pdeRWbh59DRMJD5p+bCz5WwXAVmlVA8oHACsiRMcIUv6
+	rlT8y3pw==;
+Received: from [50.53.2.121] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rpujb-0000000FECU-2AdZ;
+	Thu, 28 Mar 2024 18:44:19 +0000
+Message-ID: <b52825eb-ba5e-4caf-b68e-9a632180876f@infradead.org>
+Date: Thu, 28 Mar 2024 11:44:16 -0700
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2e9257af-c123-406b-a189-eaebeecc1d71@app.fastmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] docs: dma: correct dma_set_mask() sample code
+Content-Language: en-US
+To: Frank Li <Frank.Li@nxp.com>, imx@lists.linux.dev,
+ linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+ Jonathan Corbet <corbet@lwn.net>, "Michael S. Tsirkin" <mst@redhat.com>,
+ Li Zhijian <lizhijian@fujitsu.com>,
+ "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>
+References: <20240328154827.809286-1-Frank.Li@nxp.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20240328154827.809286-1-Frank.Li@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 28-03-24, 11:08, Arnd Bergmann wrote:
-> On Thu, Mar 28, 2024, at 06:55, Vinod Koul wrote:
-> > On 27-03-24, 16:03, Allen Pais wrote:
-> >> The only generic interface to execute asynchronously in the BH context is
-> >> tasklet; however, it's marked deprecated and has some design flaws. To
-> >> replace tasklets, BH workqueue support was recently added. A BH workqueue
-> >> behaves similarly to regular workqueues except that the queued work items
-> >> are executed in the BH context.
-> >
-> > Thanks for conversion, am happy with BH alternative as it helps in
-> > dmaengine where we need shortest possible time between tasklet and
-> > interrupt handling to maximize dma performance
-> 
-> I still feel that we want something different for dmaengine,
-> at least in the long run. As we have discussed in the past,
-> the tasklet context in these drivers is what the callbacks
-> from the dma client device is run in, and a lot of these probably
-> want something other than tasklet context, e.g. just call
-> complete() on a client-provided completion structure.
-> 
-> Instead of open-coding the use of the system_bh_wq in each
-> dmaengine, how about we start with a custom WQ_BH
-> specifically for the dmaengine subsystem and wrap them
-> inside of another interface.
-> 
-> Since almost every driver associates the tasklet with the
-> dma_chan, we could go one step further and add the
-> work_queue structure directly into struct dma_chan,
-> with the wrapper operating on the dma_chan rather than
-> the work_queue.
+Hi,
 
-I think that is very great idea. having this wrapped in dma_chan would
-be very good way as well
+I have some text corrections. No idea if the updates
+are correct or not.
 
-Am not sure if Allen is up for it :-)
+
+On 3/28/24 08:48, Frank Li wrote:
+> There are bunch of codes in driver like
+> 
+>        if (dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64)))
+>                dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32))
+> 
+> Actaully it is wrong because if dma_set_mask_and_coherent(64) failure,
+
+  Actually                                                      fails,
+
+> dma_set_mask_and_coherent(32) will be failure by the same reason.
+
+                                will fail for the same reason.
+
+> 
+> And dma_set_mask_and_coherent(64) never return failure.
+
+                                          returns failure.
+
+> 
+> According to defination of dma_set_mask(), it indicate the width of address
+
+            to the definition                   indicates
+
+> that device DMA can access. If it can access 64bit address, it must access
+
+                                               64-bit
+
+> 32bit address inherently. So only need set biggest address width.
+
+  32-bit
+
+> 
+> See below code fragment:
+> 
+> dma_set_mask(mask)
+> {
+> 	mask = (dma_addr_t)mask;
+> 
+> 	if (!dev->dma_mask || !dma_supported(dev, mask))
+> 		return -EIO;
+> 
+> 	arch_dma_set_mask(dev, mask);
+> 	*dev->dma_mask = mask;
+> 	return 0;
+> }
+> 
+> dma_supported() will call dma_direct_supported or iommux's dma_supported
+> call back function.
+> 
+> int dma_direct_supported(struct device *dev, u64 mask)
+> {
+> 	u64 min_mask = (max_pfn - 1) << PAGE_SHIFT;
+> 
+> 	/*
+> 	 * Because 32-bit DMA masks are so common we expect every architecture
+> 	 * to be able to satisfy them - either by not supporting more physical
+> 	 * memory, or by providing a ZONE_DMA32.  If neither is the case, the
+> 	 * architecture needs to use an IOMMU instead of the direct mapping.
+> 	 */
+> 	if (mask >= DMA_BIT_MASK(32))
+> 		return 1;
+> 
+> 	...
+> }
+> 
+> The iommux's dma_supported() actual means iommu require devices's minimized
+
+                               actually           requires
+or just drop "actual"
+
+> dma capatiblity.
+
+      capability.
+
+> 
+> An example:
+> 
+> static int sba_dma_supported( struct device *dev, u64 mask)()
+> {
+> 	...
+> 	 * check if mask is >= than the current max IO Virt Address
+>          * The max IO Virt address will *always* < 30 bits.
+>          */
+>         return((int)(mask >= (ioc->ibase - 1 +
+>                         (ioc->pdir_size / sizeof(u64) * IOVP_SIZE) )));
+> 	...
+> }
+> 
+> 1 means supported. 0 means unsupported.
+> 
+> Correct document to make it more clear and provide correct sample code.
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  Documentation/core-api/dma-api-howto.rst | 24 ++++++++++++++++++++++--
+>  1 file changed, 22 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/core-api/dma-api-howto.rst b/Documentation/core-api/dma-api-howto.rst
+> index e8a55f9d61dbc..7871d3b906104 100644
+> --- a/Documentation/core-api/dma-api-howto.rst
+> +++ b/Documentation/core-api/dma-api-howto.rst
+> @@ -203,13 +203,33 @@ setting the DMA mask fails.  In this manner, if a user of your driver reports
+>  that performance is bad or that the device is not even detected, you can ask
+>  them for the kernel messages to find out exactly why.
+>  
+> -The standard 64-bit addressing device would do something like this::
+> +The 24-bit addressing device would do something like this::
+>  
+> -	if (dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64))) {
+> +	if (dma_set_mask_and_coherent(dev, DMA_BIT_MASK(24))) {
+>  		dev_warn(dev, "mydev: No suitable DMA available\n");
+>  		goto ignore_this_device;
+>  	}
+>  
+> +The standard 64-bit addressing device would do something like this::
+> +
+> +	dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64))
+
+                                                        ;
+
+> +
+> +dma_set_mask_and_coherence never return fail when DMA_BIT_MASK(64). Typical
+
+   dma_set_mask_and_coherent        returns failure when DMA_BIT_MASK(64) <does what?>. Typical
+?
+
+> +error code like::
+> +
+> +	/* Wrong code */
+> +	if (dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64)))
+> +		dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32))
+
+                                                                ;
+
+> +
+> +dma_set_mask_and_coherence() will never return failure when bigger then 32.
+
+   dma_set_mask_and_coherent()
+
+> +So typical code like::
+> +
+> +	/* Recommented code */
+
+           Recommended
+
+> +	if (support_64bit)
+> +		dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
+> +	else
+> +		dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
+> +
+>  If the device only supports 32-bit addressing for descriptors in the
+>  coherent allocations, but supports full 64-bits for streaming mappings
+>  it would look like this::
 
 -- 
-~Vinod
+#Randy
 

@@ -1,346 +1,107 @@
-Return-Path: <dmaengine+bounces-1585-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1586-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 85B2D88F09B
-	for <lists+dmaengine@lfdr.de>; Wed, 27 Mar 2024 22:05:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 077E588F3AB
+	for <lists+dmaengine@lfdr.de>; Thu, 28 Mar 2024 01:26:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A90EE1C2A973
-	for <lists+dmaengine@lfdr.de>; Wed, 27 Mar 2024 21:05:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3254E1C23166
+	for <lists+dmaengine@lfdr.de>; Thu, 28 Mar 2024 00:26:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B308315356E;
-	Wed, 27 Mar 2024 21:05:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0D788F72;
+	Thu, 28 Mar 2024 00:23:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VnEGkXgg"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Zj6lr0AL"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 254E2152E16
-	for <dmaengine@vger.kernel.org>; Wed, 27 Mar 2024 21:05:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF5951E498;
+	Thu, 28 Mar 2024 00:23:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711573526; cv=none; b=pVM7UruRo7a6JqZphTqTKTYlZTssrN0MnVzVegxNjxn0i18NY+BHdPaEfwvMHrfrUiU1RLLJ2YpyVgu1YBOGZ352tTvsSbCG4thEZEMee9zIdg1uVHR8DlYFC7qBLYZTayS6lPDXbS0vp4w/nlv6DT3wvqEGZLtTRyRqzHGoRk0=
+	t=1711585406; cv=none; b=BcMuXeUGWUHaEnLQZrWpY7tOyYqu/jtojRcgXwxVCS9KWjXsTKghUjddymbpy6MMSSehi0ZyM51pQmmBPCKgm4RNMZbMFRATShioxfK5XHEFpmiyDx82TNEJS27Pk4duPOHAI4Mz8dsE+QO1ONwucvS69pC/9I6z8ArJxx9BxI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711573526; c=relaxed/simple;
-	bh=QFfCU2ShjmjmejolYLNR3xXPEKKaNd0/8UhyYa0TwxY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mN1BPPHWxq5REiGlwJ0jumR83cw4bX/tRgSG/JPsu49VdId2ic+3L0H5OwMAQwWAtNSI1VTGv3JTDukUSiyKx0i/x0aY+qzFpPgVcClIQKz2C2BBAbu7A81iMSNK1clHHpcwhLEOkR/pz35MqDBEDTV2EsWnFBraEyO8y1PuUfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VnEGkXgg; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-56be32b9775so267474a12.1
-        for <dmaengine@vger.kernel.org>; Wed, 27 Mar 2024 14:05:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711573521; x=1712178321; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=kvroJO6bsNvnGtvMGrSLScYHhDXOfSKf/BJavmfHO9k=;
-        b=VnEGkXggk2CkMMagQO2wSMkXkcQ695bFLM+cmDpxCDYXxVAVDi0n+uCoqGuQACDL/r
-         hY2kX/6sdtl8GPIZFBfgDF78dd3tI0O8fiZwK3U7lDh2DThaiGHo3WZQjspw2fV2/soH
-         FeO8A0ST/J6psbHCD/WYbtW3pWtdakrIhO/wDscAneHa++5Ojgd53N99W9WufZiy4gjU
-         tAIEKLgwSk3Mj1eJYq661z6WxuZciRAHb/ZxGI/f12cQG9ajyLHSbpzc9t/VIPyJIwwT
-         RMtDB7n5kVf4qNt4b0PclCz4BYBQSoPOezRI+ryoIQWqKA+ANywOh8ZXYhcwwbgDjlGa
-         h4cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711573521; x=1712178321;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kvroJO6bsNvnGtvMGrSLScYHhDXOfSKf/BJavmfHO9k=;
-        b=BMPKQCie2erwYUvIhBAiUhJgcySUZdt6zVIjksP6Ijng/slD7rvqDuwgtCbf4HIxxK
-         /3TCqr2GD+3TGVwMPZzlpwCH5dTeY0l6qBpAg1fQpPoozmuqse+SDFk2oviCJJgr7AyW
-         AjYkrvEhtT8oC5SMpS4K4XAXa/rcUT/88Kt3gRLqOOVlrJOG9JxwKeRbhVuP5ikvT762
-         g2LXTpxRazgPqU8+Gm+amupHpEsEFNCmamcAQ7nWC84YtwAzMN8dBqQocxhagexEwLA2
-         ct7+EJTx2sNqgtxzc/jk0U5z591hdE//wngr5y3TKulbBnFAngAaxt6RDgIenocpQN4t
-         3T8w==
-X-Forwarded-Encrypted: i=1; AJvYcCXusgMLfKLBDEvOkd5WEXGSureQAVao85I6P4GMGH745LNYlay60JFKMuOriK0ZwsS7dZ+MVrHV9sALYmjlPcZqtMgZVhfZxIni
-X-Gm-Message-State: AOJu0YxfzVd2KSNp8VrYG0AeSjCtJ83sAKBQFva6yORniPikhrG7rxgw
-	92t/24zHDrIAAnvQ2UMz7YxH7wtiEZPSsyOL85SFNJ4Dfm3UAOu2qLmJwfB0jxE=
-X-Google-Smtp-Source: AGHT+IF6t7YYt5GlUd8lfYhh2av2vkxIM3TOqXNXPaXpHlhre1V2wxY1wrF1QXdBb2kLUPzUW8uZaw==
-X-Received: by 2002:a17:906:46d0:b0:a47:52ff:194d with SMTP id k16-20020a17090646d000b00a4752ff194dmr441490ejs.35.1711573521467;
-        Wed, 27 Mar 2024 14:05:21 -0700 (PDT)
-Received: from [192.168.92.47] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
-        by smtp.gmail.com with ESMTPSA id xj8-20020a170906db0800b00a4a33a9f077sm4089735ejb.11.2024.03.27.14.05.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Mar 2024 14:05:21 -0700 (PDT)
-Message-ID: <ccb312aa-3c4c-41bb-a3f4-b94971edb346@linaro.org>
-Date: Wed, 27 Mar 2024 22:05:18 +0100
+	s=arc-20240116; t=1711585406; c=relaxed/simple;
+	bh=QBhJNdXt3ZDE1KYix7kVNCLNrhefe3LPg7AK/U9VUX4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EYmj9afwlijNeXYr1FVsyj/Z2f78J8j71Jh9MS1Qf9Sm2rvNtI712wmFC67qvMvmSJcHl8CLO4sWcnTASgpYdjM84X/HKWQ+h8wc5xgLb4THgdu38q6Spv3wOSTofdbAZaq3KSqTUybb7TZl2Bc3SFU4Kp0a1G88EyaQgSTxbuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Zj6lr0AL; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 71C63FF802;
+	Thu, 28 Mar 2024 00:23:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1711585396;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wrkfJcTuEi+D+HvBe61cn2FoxEmO6/EMkOnHD/GfbVk=;
+	b=Zj6lr0AL5lpyDHEmBNKHoDUp8yYNVdu+j6B2c/n+9L4YqqNlPbqUykWamyW25LRM7Zl2n0
+	4gBIpQViRbWJi50k/2DGDhQoluW7Mx2v5juh32IvkijyCIXq/oTpkCD7HT5VRhJwcATOWL
+	j38C8hYFXRA+OjFsOorQUiUzwWY7DgvKekSna9OBvnB9/jLcp0E4G0CY48x5zSfA78ec/h
+	6jlZrsYjsyOWsxKeOrtZVbJpLTr1z86o74MT4buG1l3QBFMb8gAN0ZUR6z2aadu1DpZrOU
+	kaugZr7iYw0QuWll34OHEdvLE9nN2GQhGces5PpaaOA23A7wp3LNPmxlAYDeYg==
+Date: Thu, 28 Mar 2024 01:23:13 +0100
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Lizhi Hou <lizhi.hou@amd.com>
+Cc: Louis Chauvet <louis.chauvet@bootlin.com>, Brian Xu <brian.xu@amd.com>,
+ Raj Kumar Rampelli <raj.kumar.rampelli@amd.com>, Vinod Koul
+ <vkoul@kernel.org>, Michal Simek <michal.simek@amd.com>, Jan Kuliga
+ <jankul@alatek.krakow.pl>, <dmaengine@vger.kernel.org>,
+ <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+ <stable@vger.kernel.org>
+Subject: Re: [PATCH 2/3] dmaengine: xilinx: xdma: Fix synchronization issue
+Message-ID: <20240328012257.4a5955f2@xps-13>
+In-Reply-To: <b59dd8cd-fd75-5342-d411-817f33e0ff48@amd.com>
+References: <20240327-digigram-xdma-fixes-v1-0-45f4a52c0283@bootlin.com>
+	<20240327-digigram-xdma-fixes-v1-2-45f4a52c0283@bootlin.com>
+	<b59dd8cd-fd75-5342-d411-817f33e0ff48@amd.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] i2c: i2c-qcom-geni: Add support to share an I2C SE
- from two subsystem
-To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>, andersson@kernel.org,
- vkoul@kernel.org, andi.shyti@kernel.org, wsa@kernel.org,
- linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
-Cc: quic_vdadhani@quicinc.com
-References: <20240327101825.1142012-1-quic_msavaliy@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
- 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
- izWDgYvmBE8=
-In-Reply-To: <20240327101825.1142012-1-quic_msavaliy@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On 27.03.2024 11:18 AM, Mukesh Kumar Savaliya wrote:
-> Add feature to share an I2C serial engine from two subsystem(SS) so that
+Hi Lizhi,
 
-from -> between
-subystem -> subsystems
+> > @@ -376,6 +378,8 @@ static int xdma_xfer_start(struct xdma_chan *xchan)
+> >   		return ret; =20
+> >   >   	xchan->busy =3D true; =20
+> > +	xchan->stop_requested =3D false;
+> > +	reinit_completion(&xchan->last_interrupt); =20
+>=20
+> If stop_requested is true, it should not start another transfer. So I wou=
+ld suggest to add
+>=20
+>  =C2=A0=C2=A0=C2=A0=C2=A0 if (xchan->stop_requested)
+>=20
+>  =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=
+=A0 return -ENODEV;
 
-> individual client from different subsystem can work on the same bus.
+Maybe -EBUSY in this case?
 
-client -> clients
-subystem -> subsystems
+I thought synchronize() was mandatory in-between. If that's not the
+case then indeed we need to block or error-out if a new transfer
+gets started.
 
-"work on the same bus" - access the same bus? Does that concern both
-read and write to the same slave device?
+>=20
+> at the beginning of xdma_xfer_start().
+>=20
+> xdma_xfer_start() is protected by chan lock.
+>=20
+> >   >   	return 0; =20
+> >   }
 
-
-Please give a more specific example. Could that be for example APSS and
-TZ?
-
-> 
-> This is possible in GSI mode where driver queues the TRE with required
-> descriptors and ensures it executes them in a mutual exclusive way.
-
-mutually
-
-the "it" and "them" are confusing, could you reword this?
-
-> Add Lock TRE at the start of the transfer and Unlock TRE at the end of
-> the transfer protecting the DMA channel. This way not allowing other SS
-> to queue anything in between and disturb the data path.
-
-'Issue a "Lock TRE" command at the start of the transfer and an "Unlock TRE"
-at the end of it. This prevents other subsystems from concurrently
-performing DMA transfers through the same GPI channel, so as to avoid
-disturbing the data path.'
-
-Would that be a fair representation of what this is trying to achieve?
-
-> 
-> Since the GPIOs are also shared for the i2c bus, do not touch GPIO
-> configuration while going to runtime suspend and only turn off the
-> clocks. This will allow other SS to continue to transfer the data.
-> 
-> To realize this, add below change:
-> 1) Check if the Particular I2C requires to be shared during probe() time.
-
-This requires a dt-bindings change. Had you run something like:
-
-./scripts/checkpatch.pl -g $(git describe --abbrev=0)..HEAD
-
-you'dve noticed there's new warnings.
-
-> 2) If shared SE add LOCK TRE inside gpi_create_i2c_tre() before first
->    message.
-> 3) If shared SE add UNLOCK TRE inside gpi_create_i2c_tre() before
->    last transfer message.
-
-You already described this above.
-
-> 4) Export function geni_se_clks_off() to call explicitly instead of
->    geni_se_resources_off().
-
-Do we expect other SEs (UART, I3C, SPI) to also support this "shared"
-configuration? Would it be beneficial to make the "shared" cases common
-and bail out of geni_se_resources_off() early if a SE is marked as such?
-
-> 
-> Signed-off-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-> ---
->  drivers/dma/qcom/gpi.c             | 33 +++++++++++++++++++++++++++++-
->  drivers/i2c/busses/i2c-qcom-geni.c | 24 ++++++++++++++++------
->  drivers/soc/qcom/qcom-geni-se.c    |  4 +++-
->  include/linux/dma/qcom-gpi-dma.h   |  6 ++++++
->  include/linux/soc/qcom/geni-se.h   |  3 +++
-
-This is a big no-go, you're changing files across 3 different subsystems,
-you must split this patch up. In this case, you want one for dma, one for
-soc and one for i2c. Check ./scripts/get_maintainer.pl <filename>
-
->  5 files changed, 62 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
-> index 1c93864e0e4d..df276ccf9cbb 100644
-> --- a/drivers/dma/qcom/gpi.c
-> +++ b/drivers/dma/qcom/gpi.c
-> @@ -2,6 +2,7 @@
->  /*
->   * Copyright (c) 2017-2020, The Linux Foundation. All rights reserved.
->   * Copyright (c) 2020, Linaro Limited
-> + * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
->   */
->  
->  #include <dt-bindings/dma/qcom-gpi.h>
-> @@ -65,6 +66,12 @@
->  /* DMA TRE */
->  #define TRE_DMA_LEN		GENMASK(23, 0)
->  
-> +/* Lock TRE */
-> +#define TRE_I2C_LOCK_WORD_3	(3 << 20 | 0 << 16 | BIT(0))
-> +
-> +/* Unlock TRE */
-> +#define TRE_I2C_UNLOCK_WORD_3	(3 << 20 | 1 << 16 | BIT(8))
-
-The comments you're introducing don't seem particularly helpful, looking
-at the define names. You should also avoid adding random shifted values
-and #define the bitfields used in your messages with BIT() and GENMASK()
-
-> +
->  /* Register offsets from gpi-top */
->  #define GPII_n_CH_k_CNTXT_0_OFFS(n, k)	(0x20000 + (0x4000 * (n)) + (0x80 * (k)))
->  #define GPII_n_CH_k_CNTXT_0_EL_SIZE	GENMASK(31, 24)
-> @@ -522,7 +529,7 @@ struct gpii {
->  	bool ieob_set;
->  };
->  
-> -#define MAX_TRE 3
-> +#define MAX_TRE 5
-
-This almost looks like a separate commit itself? Definitely needs
-an explanation.
-
->  
->  struct gpi_desc {
->  	struct virt_dma_desc vd;
-> @@ -1644,6 +1651,18 @@ static int gpi_create_i2c_tre(struct gchan *chan, struct gpi_desc *desc,
->  	struct gpi_tre *tre;
->  	unsigned int i;
->  
-> +	/* create lock tre for first tranfser */
-> +	if (i2c->shared_se && i2c->first_msg) {
-> +		tre = &desc->tre[tre_idx];
-> +		tre_idx++;
-> +
-> +		/* lock: chain bit set */
-
-What does this mean?
-
-> +		tre->dword[0] = 0;
-> +		tre->dword[1] = 0;
-> +		tre->dword[2] = 0;
-> +		tre->dword[3] = TRE_I2C_LOCK_WORD_3;
-> +	}
-> +
->  	/* first create config tre if applicable */
->  	if (i2c->set_config) {
->  		tre = &desc->tre[tre_idx];
-> @@ -1702,6 +1721,18 @@ static int gpi_create_i2c_tre(struct gchan *chan, struct gpi_desc *desc,
->  		tre->dword[3] |= u32_encode_bits(1, TRE_FLAGS_IEOT);
->  	}
->  
-> +	/* Unlock tre for last transfer */
-> +	if (i2c->shared_se && i2c->last_msg && i2c->op != I2C_READ) {
-> +		tre = &desc->tre[tre_idx];
-> +		tre_idx++;
-> +
-> +		/* unlock tre: ieob set */
-
-What does this mean?
-
-> +		tre->dword[0] = 0;
-> +		tre->dword[1] = 0;
-> +		tre->dword[2] = 0;
-> +		tre->dword[3] = TRE_I2C_UNLOCK_WORD_3;
-> +	}
-> +
->  	for (i = 0; i < tre_idx; i++)
->  		dev_dbg(dev, "TRE:%d %x:%x:%x:%x\n", i, desc->tre[i].dword[0],
->  			desc->tre[i].dword[1], desc->tre[i].dword[2], desc->tre[i].dword[3]);
-> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
-> index da94df466e83..c5935c5f46e8 100644
-> --- a/drivers/i2c/busses/i2c-qcom-geni.c
-> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
-> @@ -1,5 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  // Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
-> +// Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
->  
->  #include <linux/acpi.h>
->  #include <linux/clk.h>
-> @@ -99,6 +100,7 @@ struct geni_i2c_dev {
->  	struct dma_chan *rx_c;
->  	bool gpi_mode;
->  	bool abort_done;
-> +	bool is_shared;
->  };
->  
->  struct geni_i2c_desc {
-> @@ -601,6 +603,7 @@ static int geni_i2c_gpi_xfer(struct geni_i2c_dev *gi2c, struct i2c_msg msgs[], i
->  	peripheral.clk_div = itr->clk_div;
->  	peripheral.set_config = 1;
->  	peripheral.multi_msg = false;
-> +	peripheral.shared_se = gi2c->is_shared;
->  
->  	for (i = 0; i < num; i++) {
->  		gi2c->cur = &msgs[i];
-> @@ -611,6 +614,8 @@ static int geni_i2c_gpi_xfer(struct geni_i2c_dev *gi2c, struct i2c_msg msgs[], i
->  		if (i < num - 1)
->  			peripheral.stretch = 1;
->  
-> +		peripheral.first_msg = (i == 0) ? true : false;
-> +		peripheral.last_msg = (i == num - 1) ? true : false;
-
-Why the ternary operator? == already returns a boolean value
-
->  		peripheral.addr = msgs[i].addr;
->  
->  		ret =  geni_i2c_gpi(gi2c, &msgs[i], &config,
-> @@ -802,6 +807,11 @@ static int geni_i2c_probe(struct platform_device *pdev)
->  		gi2c->clk_freq_out = KHZ(100);
->  	}
->  
-> +	if (of_property_read_bool(pdev->dev.of_node, "qcom,shared-se")) {
-> +		gi2c->is_shared = true;
-> +		dev_info(&pdev->dev, "Multi-EE usecase with shared SE\n");
-
-How would this line be useful in my kernel log?
-
-Konrad
+Thanks,
+Miqu=C3=A8l
 

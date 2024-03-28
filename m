@@ -1,147 +1,152 @@
-Return-Path: <dmaengine+bounces-1623-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1624-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5B3E48904E5
-	for <lists+dmaengine@lfdr.de>; Thu, 28 Mar 2024 17:21:45 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 311A58905C4
+	for <lists+dmaengine@lfdr.de>; Thu, 28 Mar 2024 17:41:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DB9DF1F2729A
-	for <lists+dmaengine@lfdr.de>; Thu, 28 Mar 2024 16:21:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 554871C26D3B
+	for <lists+dmaengine@lfdr.de>; Thu, 28 Mar 2024 16:41:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98F54130A4D;
-	Thu, 28 Mar 2024 16:21:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6076F139589;
+	Thu, 28 Mar 2024 16:37:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GVuIXyRn"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="nwqpFkoD"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC6454773;
-	Thu, 28 Mar 2024 16:21:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CC1F3BBF3;
+	Thu, 28 Mar 2024 16:37:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711642898; cv=none; b=BHUkZ6vvnwRgFvZ6jxndEHokw+bnU5zvpjpPKKkXUT+ZhjMdskH8bffiyC3mA3YkF07ItCn3eGOFzjeni6DC9OFQG7+EVJuJoHvtG2nkUZMmCdmxXWwwK2vsTEAvWUXM+DMAfLUexdP+bv3LALltiFfPBwqRBuMOKAEnO2kgBmU=
+	t=1711643834; cv=none; b=k6CGDXCM9aMBEAi2Gm1//Kh+NdhZKZv73k87mUWe7V1zgmKFDLvObXxRI8mFQtCGfXCgIUdS8jiTqJV26JSzKeJmUou/fdiF/BoIc1sB101XdxDAUfqbKkO1giH2Dqo+ddznGqIEv1HcL+EWpzF8RxWo9CiEc1YaGUsWG6ttt4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711642898; c=relaxed/simple;
-	bh=cb1ZOrJZuOdP2ez095r01xUHOIJ2EXFtH/u5E76hFpE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UAhf7W5BBJMJ3JZlhj6tK4Y1CsQk7EUJvVfC80lWKgREqWMNqXlf/ocVGknyxh5SDRV1yyydgQno6frJ/+VV5GIrZfWNP2hAR89j6QBAiI9UUcXx+LGljNLQaibuKlMk7y1PHr9Aup9Q/+YgNXU/5Qbwo1sw5shnsM++cljPDco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GVuIXyRn; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6ea80de0e97so860362b3a.2;
-        Thu, 28 Mar 2024 09:21:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711642896; x=1712247696; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TpQlnbUKf5vfOk3TpOVHNGMqh00k5XUuxEvlHT+naYc=;
-        b=GVuIXyRnEOti+ZArUGMdas65Ycfks2BEQJ4q6b3IftsM7hrnlM5TcjQrmI9itmCfCA
-         JricJsaqQJnC6govb5/aWFTyxzJKmUcvAg9+QstTk8xKKRvfKuA0Z330a1GfhBQSs9mY
-         5h+sdUlJ1osXdd+W8DbS3t32g0GraRuodbQp+As2heEByotL5ahFqNZUc8SCu9MAC5zv
-         g+BIpTZCcdg0fuMpFCvVo/GfpPglVlL616W4yGw3XQasSu35z7h1iOJvh1w3NZk28srh
-         A9F/+jcc2sRAVGM8NcNp2o5dLfYuvGHfzLTz0FETHx5DFIe9kLBtYHWFpz07qaFnVprw
-         Jurw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711642896; x=1712247696;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TpQlnbUKf5vfOk3TpOVHNGMqh00k5XUuxEvlHT+naYc=;
-        b=WbhvvZVXvqXNwxGifGABAucJq7CdaeEHdPTIEZIYFUasPntOMj/VixM1/OnE+SIMsj
-         bm8yrbb2xqV5Bvg9d8Zu49KEfVDU4pPsbfjDfHc+YTjnTFK0c9HsnuQ3G9CglMEbYXLc
-         WJjlsOeqFKktVkmg/HsMLRFx5zP7g6FaWBy/AAuJgRI1nfvfIjqRGznFObauVFqRdtYy
-         Ls0HjEkAX3fqvgdFqPrlj0IyOaU0gDciDzMJfT5hEsYTvb0NjW/nKiEUMUXNYXQonTTO
-         K1eiceMx5nbX0yxHurqel5DMCaawJyYUxOQjmtsiyVMF6m56G27cvot0ledIkzgJN6uK
-         EkSg==
-X-Forwarded-Encrypted: i=1; AJvYcCXA4VnwcHmiG3PLYRXiRv3RSsC7Zw9+nMj3WMq9kgtD6t7Ao5zynCAeMmP44jmQYozq0PlpiZPkvz9ivy6hDSSnWpKFrKZx+fui3ZPogELN1Pu4gdqGwmpEvyoJaIxj7z6eL3D6lVhKUZX3fltZDnhnNK19ogzNAoQhqqMXX5Ridk+mzQnxzjSSz2/6i3nyyzb+b2d3ExW4jQKYlBmV016TPz0x0mirUU3/DfeaDGi8XMY/FJLo6y12ubr1R2u2rirEu8jjsryxqVSFIsNxFJSv/HW5IlOVx7RD6nGAY+6Z81jN6cG8R1f78H0iVzlcRHO82yzFBr5BB8Qstre5/lgCru+y57AS5/i1EOcV3za0QTPcIkVbq8v45uOr1HfoEuJlwbQty0LoQXEv+fGk7Ust8bVC562BR73AAegs6nv6m5xs69gUxH9IHco2drv15MFhoyjZBE/10Aj6DSEP3TRMtqERwRltPzTjAIYDskyiRaa78rJMU3zM1wLNT6vhscCDTs4GKbFmox2yykuIbm3KEiF5l7a3JzLmQqbrAruXqZwbYHAglrvcVnDGcD4VWDKjk+blSPz0inKKFz2kQqQ=
-X-Gm-Message-State: AOJu0Yy8eOH7vv0e0wUekk9QIfnTvtX/McJ3TqODamXZt2p/lIv1AviE
-	vSp3MAyO/hu/kc0MhmmbPaC2lArjiUX/ji4wCbhNW2tnapf1W/ff
-X-Google-Smtp-Source: AGHT+IHNLtSIfLiMjPgdNbH73n29Rqo4mQsh/oBERN464FH6NwbPkAtXL24hv7Aec7RU+H+HqkGb1w==
-X-Received: by 2002:a05:6a20:7495:b0:1a5:7308:3297 with SMTP id p21-20020a056a20749500b001a573083297mr1591044pzd.0.1711642896210;
-        Thu, 28 Mar 2024 09:21:36 -0700 (PDT)
-Received: from localhost ([2620:10d:c090:400::5:4d4e])
-        by smtp.gmail.com with ESMTPSA id fd37-20020a056a002ea500b006eab6ac1f83sm1576815pfb.0.2024.03.28.09.21.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Mar 2024 09:21:35 -0700 (PDT)
-Sender: Tejun Heo <htejun@gmail.com>
-Date: Thu, 28 Mar 2024 06:21:34 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Allen Pais <apais@linux.microsoft.com>, linux-kernel@vger.kernel.org,
-	keescook@chromium.org, vkoul@kernel.org, marcan@marcan.st,
-	sven@svenpeter.dev, florian.fainelli@broadcom.com,
-	rjui@broadcom.com, sbranden@broadcom.com, paul@crapouillou.net,
-	Eugeniy.Paltsev@synopsys.com, manivannan.sadhasivam@linaro.org,
-	vireshk@kernel.org, Frank.Li@nxp.com, leoyang.li@nxp.com,
-	zw@zh-kernel.org, wangzhou1@hisilicon.com, haijie1@huawei.com,
-	shawnguo@kernel.org, s.hauer@pengutronix.de, sean.wang@mediatek.com,
-	matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com,
-	afaerber@suse.de, logang@deltatee.com, daniel@zonque.org,
-	haojian.zhuang@gmail.com, robert.jarzmik@free.fr,
-	andersson@kernel.org, konrad.dybcio@linaro.org, orsonzhai@gmail.com,
-	baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com,
-	patrice.chotard@foss.st.com, linus.walleij@linaro.org,
-	wens@csie.org, jernej.skrabec@gmail.com, peter.ujfalusi@gmail.com,
-	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, jassisinghbrar@gmail.com, mchehab@kernel.org,
-	maintainers@bluecherrydvr.com, aubin.constans@microchip.com,
-	manuel.lauss@gmail.com, mirq-linux@rere.qmqm.pl,
-	jh80.chung@samsung.com, oakad@yahoo.com,
-	hayashi.kunihiko@socionext.com, mhiramat@kernel.org,
-	brucechang@via.com.tw, HaraldWelte@viatech.com, pierre@ossman.eu,
-	duncan.sands@free.fr, stern@rowland.harvard.edu, oneukum@suse.com,
-	openipmi-developer@lists.sourceforge.net, dmaengine@vger.kernel.org,
-	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-rpi-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	imx@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
-	linux-mediatek@lists.infradead.org,
-	linux-actions@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-tegra@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-	linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org, linux-s390@vger.kernel.org,
-	netdev@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH 9/9] mmc: Convert from tasklet to BH workqueue
-Message-ID: <ZgWZDtNU4tCwqyeu@slm.duckdns.org>
-References: <20240327160314.9982-1-apais@linux.microsoft.com>
- <20240327160314.9982-10-apais@linux.microsoft.com>
- <CAPDyKFpuKadPQv6+61C2pE4x4FE-DUC5W6WCCPu9Nb2DnDB56g@mail.gmail.com>
+	s=arc-20240116; t=1711643834; c=relaxed/simple;
+	bh=/iFXd2bzZPhj4ozZeU0FU3oFCOqJ/fd5qZILAEiheyc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IpwL5yQ3uSN5SJX010gLG3cKbxWvD3YrhUkYkPr3bPa8vB2WW3QSJNirxkRR6R8hfsQbF4K0nbT5lFXrigyQvOlAetYXL4ae5tekWucJPG+cHKzMIboHlfysdoug9q5HrlW30St4DqqSB4caYBKqdg1sf0S/oe+zf5NlUmkke0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=nwqpFkoD; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Received: from [192.168.88.20] (91-154-34-181.elisa-laajakaista.fi [91.154.34.181])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 3E566D20;
+	Thu, 28 Mar 2024 17:36:37 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1711643797;
+	bh=/iFXd2bzZPhj4ozZeU0FU3oFCOqJ/fd5qZILAEiheyc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=nwqpFkoD5oaC+xPHjSJyuDP0OZF+tppig+7BmRgQFdX6Xgoy2qU1h4Cg2L200Y14F
+	 xwvFHVehOa7lOAaiGkEARFKZ3XtrUjvYaTE9AwOlf28aSB2PVm+l1PrFYGxAvcAyBh
+	 QMzqCzQZzkmEGmsWm6k2Ei+YODdNm7sb91OnT2VM=
+Message-ID: <4f994662-347d-4562-9108-5d7e3798fa51@ideasonboard.com>
+Date: Thu, 28 Mar 2024 18:37:06 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFpuKadPQv6+61C2pE4x4FE-DUC5W6WCCPu9Nb2DnDB56g@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] dma: xilinx_dpdma: Remove unnecessary use of
+ irqsave/restore
+Content-Language: en-US
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: Michal Simek <michal.simek@amd.com>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
+References: <20240308210034.3634938-1-sean.anderson@linux.dev>
+ <20240308210034.3634938-3-sean.anderson@linux.dev>
+ <0652c82f-b0a2-4881-ac51-38399b180ad4@ideasonboard.com>
+ <d6a8c1c8-258a-447b-b6cd-199f33199388@linux.dev>
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
+ 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
+In-Reply-To: <d6a8c1c8-258a-447b-b6cd-199f33199388@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On 28/03/2024 17:00, Sean Anderson wrote:
+> On 3/27/24 08:27, Tomi Valkeinen wrote:
+>> Hi,
+>>
+>> On 08/03/2024 23:00, Sean Anderson wrote:
+>>> xilinx_dpdma_chan_done_irq and xilinx_dpdma_chan_vsync_irq are always
+>>> called with IRQs disabled from xilinx_dpdma_irq_handler. Therefore we
+>>> don't need to save/restore the IRQ flags.
+>>
+>> I think this is fine, but a few thoughts:
+>>
+>> - Is spin_lock clearly faster than the irqsave variant, or is this a pointless optimization? It's safer to just use irqsave variant, instead of making sure the code is always called from the expected contexts.
+> 
+> It's not an optimization. Technically this will save a few instructions,
+> but...
+> 
+>> - Is this style documented/recommended anywhere? Going through docs, I only found docs telling to use irqsave when mixing irq and non-irq contexts.
+> 
+> The purpose is mainly to make it clear that this is meant to be called
+> in IRQ context. With irqsave, there's an implication that this could be
+> called in non-IRQ context, which it never is.
 
-On Thu, Mar 28, 2024 at 01:53:25PM +0100, Ulf Hansson wrote:
-> At this point we have suggested to drivers to switch to use threaded
-> irq handlers (and regular work queues if needed too). That said,
-> what's the benefit of using the BH work queue?
+Hmm, I see. Yes, I think that makes sense.
 
-BH workqueues should behave about the same as tasklets which have more
-limited interface and is subtly broken in an expensive-to-fix way (around
-freeing in-flight work item), so the plan is to replace tasklets with BH
-workqueues and remove tasklets from the kernel.
+>> - Does this cause issues on PREEMPT_RT?
+> 
+> Why would it?
 
-The [dis]advantages of BH workqueues over threaded IRQs or regular threaded
-workqueues are the same as when you compare them to tasklets. No thread
-switching overhead, so latencies will be a bit tighter. Wheteher that
-actually matters really depends on the use case. Here, the biggest advantage
-is that it's mostly interchangeable with tasklets and can thus be swapped
-easily.
+I was reading locktypes.rst, I started wondering what it means if 
+spinlocks are changed into sleeping locks. But thinking about it again, 
+it doesn't matter, as the irq will still be masked when in irq-context.
 
-Thanks.
+So:
 
--- 
-tejun
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+
+  Tomi
+
+
 

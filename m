@@ -1,166 +1,211 @@
-Return-Path: <dmaengine+bounces-1625-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1626-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91AA889064F
-	for <lists+dmaengine@lfdr.de>; Thu, 28 Mar 2024 17:51:43 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 98ED589075D
+	for <lists+dmaengine@lfdr.de>; Thu, 28 Mar 2024 18:45:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 00FA21F28324
-	for <lists+dmaengine@lfdr.de>; Thu, 28 Mar 2024 16:51:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4D0FA295187
+	for <lists+dmaengine@lfdr.de>; Thu, 28 Mar 2024 17:45:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E0403BBF9;
-	Thu, 28 Mar 2024 16:49:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9DB08172D;
+	Thu, 28 Mar 2024 17:45:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="BAq5l3fC"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TjEzPczO"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2063.outbound.protection.outlook.com [40.107.92.63])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 321752A8D3;
-	Thu, 28 Mar 2024 16:49:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.63
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711644581; cv=fail; b=V8brkBOZHPYJLlHP3eQa7w2vtxOFXSWoozQ1FFuXkYlIU+HpTqSTx703p9ht3FA9ROlHON/ZO1HJMwK5Fueepd4ih36aQS/L7531OUn32BG4SzsO3Ta/0ppXQOKETV7P1UXqdv1eGMHDJEUXPwq5115Q+sAn0WZJFlTUwnnBab4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711644581; c=relaxed/simple;
-	bh=H8qQZvKjP/xZzUtA8M54dIhiFexlnmPVlE/3gJ73bWM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Lywtu/sitnZCqhbBdhAUhPkbdI63nPOimMjrnZQNVumP5mRKAK5GIjCBM0NQm+XrM7rotfhdhAH53VVnxxV11xH5hQAqAyiV+oyY8MgHcziXy5DjIPWzyGi5B3tNbAtfgAHxdazjyEzdt+yxDLtiH0oahvpZ/ZgQRUr7MBqJ1Iw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=BAq5l3fC; arc=fail smtp.client-ip=40.107.92.63
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gnFO9j+VDoAG/OZ4uV8FROL4vjoEOkkIVU9GlE9DWvD2IwkU4JdvFWC5CIgbJXpjpBqLf02YXi7aXOK8T0C2TAAmqaVs/tZJ4SaKHje+EYioPA/lguUwhH+SqDTreexTAWEZZmhzVQyFSWI6Z2EU2RiTqhbM9Pg1PWzL5JcUZf7LnQoVxw8RivWhIRX+O32dfqn7/ag1cayKztwa1KObkKnynW0ErxGW70nKvWt1tJXhtNXVVoXBpWBpWZKx/TTL8D21rwybkUib+i4ijc2PfCdvg89Js5uiMLzDJ2Kt2aGK2W8WdfY0zfBD8ToqYvvkEWSIzrCJbVM24Az91/alFw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sz+JJ8M6UaHKqaNSwPwHZC8UDY3ykb/E75Tw7AheXAM=;
- b=ZO1vxfXbAKfGK3R54UZWnZxO/XU5AvN3nC0nya5GFS8LdBM+SZKy/lRtFcDltrqhJqzScG3zrFjqDF/onMuEBSN5tNzttOSb7GLAovNgK8umIvPtFJQ07eFK9gIEMvp/Sw/MkW7i3sI6zm9oUT4HshHhpPxT9l3wULK0EQTodnWM7bEHqXkRaO1C7SQXkcPgN8fuM8NYa1yXQ3f28sgz/RmcZTSHabfeE2Xdrr/WabgLic5I7UDspVnBTQQgX1CdX77oyqWjCM4MtLA3GHzUEsUpvDduu/COf3DVmWS3ugu4kBegHKeFSYwlQvKznL6x69zc/SeJ7U2LZkpyAk13Xw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=bootlin.com smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sz+JJ8M6UaHKqaNSwPwHZC8UDY3ykb/E75Tw7AheXAM=;
- b=BAq5l3fCxMJGIs0cYBdvH1l9zRMzeDk9H5y6PtPtUy6nXFW0rGBwiqlHkCxZHUVSiz4vJf6CfbD5i7fX4EAekMZhyQIHxaL8E3hOo9IESt43zKMR/1uD/vUenedQTJw0BT5XSMgMebwF+GYUoSFl0n9jJZSnlnW900nEOysSTgM=
-Received: from DM6PR07CA0075.namprd07.prod.outlook.com (2603:10b6:5:337::8) by
- CH2PR12MB4054.namprd12.prod.outlook.com (2603:10b6:610:a6::18) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7409.32; Thu, 28 Mar 2024 16:49:36 +0000
-Received: from DS1PEPF0001709C.namprd05.prod.outlook.com
- (2603:10b6:5:337:cafe::4) by DM6PR07CA0075.outlook.office365.com
- (2603:10b6:5:337::8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.37 via Frontend
- Transport; Thu, 28 Mar 2024 16:49:36 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- DS1PEPF0001709C.mail.protection.outlook.com (10.167.18.106) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7409.10 via Frontend Transport; Thu, 28 Mar 2024 16:49:36 +0000
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 28 Mar
- 2024 11:49:35 -0500
-Received: from [172.19.74.144] (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Thu, 28 Mar 2024 11:49:34 -0500
-Message-ID: <fd6ef776-d861-0dc7-2809-27868ca894e3@amd.com>
-Date: Thu, 28 Mar 2024 09:49:29 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF32426AF6;
+	Thu, 28 Mar 2024 17:45:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711647907; cv=none; b=UhJ+Df7Ry/7U+fDp77tWqRgLp2/6RsJJkTnCtVxPKrlDMXyRQwer6bDmU9/pUUrVHAeAw8JSsh9TwMF5GJ2AaSsImQYRAldLXZ/MAm7VZmiENd0qil+BwMcnT+iR8UFNQ+1M7BPrDmgptoTeCB3qg906iboTtfJaJu1xjVcYpBU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711647907; c=relaxed/simple;
+	bh=njo01UyIuCS4hJErYPZdC79rPyF1110IDRpOnxYG0K0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=H07QDQvVyZaLN+9KIH9o+qCh2BxR/VoTGlwBrrjY3pk6X99Zm4DaCvPdVzyi9Ua6LH2O8XPVNgKqTnUYbzgpSHA6ubW7QGcCqDDPpK/JGzl9eboUvHuEjbn9nc0KVuFvO6ntH5uY9iNqq5x+MVeXGznePcvNcjOKaJO+H9H769Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TjEzPczO; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711647906; x=1743183906;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=njo01UyIuCS4hJErYPZdC79rPyF1110IDRpOnxYG0K0=;
+  b=TjEzPczOrfyLnTJ+rAOcj4pIP8/N+ybP8xNfr/tOdIvHVdk0AbQivpYo
+   R34uyu7dKHEoNf3ymc1ZzRSZv8QxxlhAcMerwopNjDZrMMwRbycT+aznQ
+   LJ073iwW4nHviTNq6stigd4ncVJyDHvwIKt0qIb3ouGNxk9GoShmVgezp
+   VKLShyheirxO5/Tdy/i0JyFs7V8wonIH5fq9Geh63K1MKxOYH/x2Z6N/A
+   JgL3IfOv1BaNW/rAzCBsSxpPM/o9bX5L3iTpzUV546009si4Qlvmh6GVv
+   X+DcQkRJPAZ3u8ejNI7u+HQ4on3aSwgZgUb5Op6gsCaxRgt+GYdV4oz1I
+   A==;
+X-CSE-ConnectionGUID: mozWwTXBRlSf8jc3KwBplg==
+X-CSE-MsgGUID: Hf1mjSBnSVub/4wzwOBAJA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="10631342"
+X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
+   d="scan'208";a="10631342"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 10:44:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
+   d="scan'208";a="16675562"
+Received: from jf5300-b11a264t.jf.intel.com ([10.242.51.89])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 10:44:57 -0700
+From: Andre Glover <andre.glover@linux.intel.com>
+To: tom.zanussi@linux.intel.com,
+	herbert@gondor.apana.org.au,
+	davem@davemloft.net
+Cc: dave.jiang@intel.com,
+	fenghua.yu@intel.com,
+	wajdi.k.feghali@intel.com,
+	james.guilford@intel.com,
+	vinodh.gopal@intel.com,
+	tony.luck@intel.com,
+	linux-crypto@vger.kernel.org,
+	dmaengine@vger.kernel.org,
+	andre.glover@linux.intel.com
+Subject: [PATCH 0/4] crypto: Add new compression modes for zlib and IAA 
+Date: Thu, 28 Mar 2024 10:44:41 -0700
+Message-Id: <cover.1710969449.git.andre.glover@linux.intel.com>
+X-Mailer: git-send-email 2.27.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH 2/3] dmaengine: xilinx: xdma: Fix synchronization issue
-Content-Language: en-US
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-CC: Louis Chauvet <louis.chauvet@bootlin.com>, Brian Xu <brian.xu@amd.com>,
-	Raj Kumar Rampelli <raj.kumar.rampelli@amd.com>, Vinod Koul
-	<vkoul@kernel.org>, Michal Simek <michal.simek@amd.com>, Jan Kuliga
-	<jankul@alatek.krakow.pl>, <dmaengine@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<stable@vger.kernel.org>
-References: <20240327-digigram-xdma-fixes-v1-0-45f4a52c0283@bootlin.com>
- <20240327-digigram-xdma-fixes-v1-2-45f4a52c0283@bootlin.com>
- <b59dd8cd-fd75-5342-d411-817f33e0ff48@amd.com>
- <20240328012257.4a5955f2@xps-13>
-From: Lizhi Hou <lizhi.hou@amd.com>
-In-Reply-To: <20240328012257.4a5955f2@xps-13>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Received-SPF: None (SATLEXMB03.amd.com: lizhi.hou@amd.com does not designate
- permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS1PEPF0001709C:EE_|CH2PR12MB4054:EE_
-X-MS-Office365-Filtering-Correlation-Id: ff2ec159-ca4c-4536-c5aa-08dc4f470d1e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	5cC7V/W98U6Xk3tUiPPjPUcHZAcY+N6r9xdEt7YTMOH5vqeqcOnDLMuGWEXLM8rCSzXqNIed0AqJSEgUeGZuo3fkRvOK5/aOU9vvlpP1mlfpsv1XKJvFtduxf7oIAX6y2+kOb7/rItRpYDQOXN2FPF45gP8UzafwYW8liujGGWgPuhtJ0vbB1KKLlDYVNJVMS+WONvfi/rjy3WlvCylkcjg19lOTUo9CueKq2VHlG8ntKaPqtsUcX+oOqzcqyThvXJo/H9b+Dtx2XOXf18r2pPsJGXCGQp924EvPQuCwgkPQ+KIXoQng+uj0v+UzLGWu3toXynnxoAu7i1Uu+yBD/YuNxKsFoKCkMTRXgc+9SWP1PT3TCI9aP1dR1qtYOptD1KUIPAvAa9JAUE49Z5WLHHzhl8VeI3rAU4BsNPpukH1p3C0sFVmxsKwEOM3zMrpFjYCOBLnuT5cL716Y1kkZG+YJkAGtLe2GQcCslNMoL4E/Jr7+QCCNAUFu0aCNCAf3ijLw6Nz6cNKzqEmpoWoJ4DWox8Ca1HKZDF87QQUDUysrx2vfpCMIov8+jELwUR23824Or/bq1lpKtqB8QuwkW2TnCRpmj2y6iO5E4UZROkMNkttWDXOoopswdOifG7S8tXlOrmxOpCjmB91m9yl9x6dNvQVzNN+NYIiq++9neapoJ17wTSFOsjgPeJYsYnUIfC2Baj0QUnqIumhcZnHPItdsyoyr8D2SpyTM5reZzxyR/9yK7KB34OEbRFNrMZ0e
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(82310400014)(376005)(36860700004)(1800799015);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2024 16:49:36.0379
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ff2ec159-ca4c-4536-c5aa-08dc4f470d1e
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS1PEPF0001709C.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4054
 
+This patch series adds 'canned' compression for Intel IAA and zlib. It
+also adds 'dynamic' compression for Intel IAA which is compatible with zlib
+deflate algorithms. 
 
-On 3/27/24 17:23, Miquel Raynal wrote:
-> Hi Lizhi,
->
->>> @@ -376,6 +378,8 @@ static int xdma_xfer_start(struct xdma_chan *xchan)
->>>    		return ret;
->>>    >   	xchan->busy = true;
->>> +	xchan->stop_requested = false;
->>> +	reinit_completion(&xchan->last_interrupt);
->> If stop_requested is true, it should not start another transfer. So I would suggest to add
->>
->>        if (xchan->stop_requested)
->>
->>                   return -ENODEV;
-> Maybe -EBUSY in this case?
->
-> I thought synchronize() was mandatory in-between. If that's not the
-> case then indeed we need to block or error-out if a new transfer
-> gets started.
+The original IAA crypto submissions [1] included a 'canned' compression
+mode, but support for 'canned' compression was removed during the review
+because it didn't have an equivalent software implementation available [2].
 
-Okay. It looks issue_pending is not expected between terminate_all() and 
-synchronize().
+Deflate compression can be done in a variety of modes. The dynamic mode
+uses Huffman tables that are generated/optimized for that particular
+input. This gives the best compression ratio but has the longest latency.
+The fixed mode uses Huffman tables that are defined by the Deflate
+standard. It generally gives the best latency but with a lower compression
+ratio. The 'canned' compression mode implements a compression scheme that
+uses a statically defined set of Huffman tables, but where the Deflate
+Block Header is implied rather than stored with the compressed data. 
 
-This check is not needed.
+The 'canned' mode results in lower compression/decompression latencies
+compared to using the dynamic mode, but it results in a better compression
+ratio than using the fixed mode.
 
+Below is a table showing the latency improvements with zlib, between
+zlib dynamic and zlib canned modes, and the compression ratio for 
+each mode while using a set of 4300 4KB pages sampled from SPEC 
+CPU17 workloads:
+_________________________________________________________
+| Zlib Level |  Canned Latency Gain  |    Comp Ratio    |
+|------------|-----------------------|------------------|
+|            | compress | decompress | dynamic | canned |
+|____________|__________|____________|_________|________|
+|     1      |    49%   |    29%     |  3.16   |  2.92  |
+|------------|----------|------------|---------|--------|
+|     6	     |    27%   |    28%     |  3.35   |  3.09  |
+|------------|----------|------------|---------|--------|
+|     9      |    12%   |    29%     |  3.36   |  3.11  |
+|____________|__________|____________|_________|________|
 
-Thanks,
+Using the same data set as for the above table, IAA fixed-mode compression
+results in a compression ratio of 2.69. Using IAA canned-mode compression
+results in a ratio of 2.88, which is a 7% improvement. This data shows that
+the canned mode results in better latencies than the dynamic mode, but a
+better ratio than the fixed mode. Thus, the canned mode would be preferred
+when compression and decompression latencies are valued more than the
+compression ratio.
 
-Lizhi
+'Dynamic' mode IAA compression is a HW accelerated dynamic Deflate that is
+fully compatible with software decompress implementations, including zlib.
+'Dynamic' IAA compression allows users to perform hardware-accelerated
+compression that achieves a higher compression ratio than both 'canned'
+and 'fixed' compression modes. Thus, Dynamic IAA compression should be
+used when the goal is to produce the best compression ratio while
+minimizing latencies by using IAA hardware acceleration.  IAA
+decompression is fully compatible with software compress implementations,
+when the uncompressed size is no more than 4KB.
 
->
->> at the beginning of xdma_xfer_start().
->>
->> xdma_xfer_start() is protected by chan lock.
->>
->>>    >   	return 0;
->>>    }
-> Thanks,
-> Miquèl
+Below is a table showing the compression ratio seen when compressing a
+data set of 4300 4KB pages sampled from SPEC CPU17 workloads via various
+IAA compression modes:
+
+|---------------------------------------|
+|		 Intel IAA              |
+|---------------------------------------|
+| compression mode | compression ratio  |
+|---------------------------------------|
+| fixed	           |	2.69            |
+|---------------------------------------|
+| canned           |	2.88		|
+|---------------------------------------|
+| dynamic          |	3.14		|
+|---------------------------------------|
+
+Patch 1/4 adds a software implementation of “canned’ mode to the
+existing zlib software library and exposes it as “deflate-canned”.
+This was done instead of creating a new canned-mode library to avoid a lot
+of code duplication. Testing shows that this change has no performance
+impact to the existing zlib algorithms.
+
+Patch 2/4 adds IAA 'canned' support which is based on the original
+implementation [1] and will be exposed as 'deflate-iaa-canned'
+
+Patch 3/4 adds 'dynamic' mode IAA compression support and will be exposed
+as 'deflate-iaa-dynamic'.
+
+Patch 4/4 adds software compression stats to the optional debugfs
+statistics support for IAA.
+
+[1] https://lore.kernel.org/lkml/20230605201536.738396-1-tom.zanussi@linux.intel.com/
+[2] https://lore.kernel.org/lkml/ZIw%2Fjtxdg6O1O0j3@gondor.apana.org.au/
+
+Andre Glover (4):
+  crypto: Add 'canned' compression mode for zlib
+  crypto: iaa - Add deflate-canned compression algorithm
+  crypto: iaa - Add deflate-iaa-dynamic compression algorithm
+  crypto: iaa - Add Software Compression stats to IAA Compression
+    Accelerator stats
+
+ .../driver-api/crypto/iaa/iaa-crypto.rst      |  36 +-
+ crypto/deflate.c                              |  72 +++-
+ crypto/testmgr.c                              |  30 ++
+ crypto/testmgr.h                              | 220 +++++++++++
+ drivers/crypto/intel/iaa/Kconfig              |   1 +
+ drivers/crypto/intel/iaa/Makefile             |   2 +-
+ drivers/crypto/intel/iaa/iaa_crypto.h         |  44 ++-
+ .../crypto/intel/iaa/iaa_crypto_comp_canned.c | 116 ++++++
+ .../intel/iaa/iaa_crypto_comp_dynamic.c       |  22 ++
+ .../crypto/intel/iaa/iaa_crypto_comp_fixed.c  |   1 +
+ drivers/crypto/intel/iaa/iaa_crypto_main.c    | 361 ++++++++++++++++--
+ drivers/crypto/intel/iaa/iaa_crypto_stats.c   |   8 +
+ drivers/crypto/intel/iaa/iaa_crypto_stats.h   |   2 +
+ include/linux/zlib.h                          |  10 +
+ lib/Kconfig                                   |   9 +
+ lib/zlib_deflate/defcanned.h                  | 118 ++++++
+ lib/zlib_deflate/deflate.c                    |   8 +-
+ lib/zlib_deflate/deftree.c                    |  15 +-
+ lib/zlib_inflate/infcanned.h                  | 191 +++++++++
+ lib/zlib_inflate/inflate.c                    |  15 +-
+ lib/zlib_inflate/inflate.h                    |   5 +-
+ lib/zlib_inflate/infutil.h                    |  16 +
+ 22 files changed, 1255 insertions(+), 47 deletions(-)
+ create mode 100644 drivers/crypto/intel/iaa/iaa_crypto_comp_canned.c
+ create mode 100644 drivers/crypto/intel/iaa/iaa_crypto_comp_dynamic.c
+ create mode 100644 lib/zlib_deflate/defcanned.h
+ create mode 100644 lib/zlib_inflate/infcanned.h
+
+-- 
+2.27.0
+
 

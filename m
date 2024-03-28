@@ -1,132 +1,126 @@
-Return-Path: <dmaengine+bounces-1600-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1601-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC3D988F8A6
-	for <lists+dmaengine@lfdr.de>; Thu, 28 Mar 2024 08:27:53 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E420188F8AB
+	for <lists+dmaengine@lfdr.de>; Thu, 28 Mar 2024 08:28:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ECD031C232D1
-	for <lists+dmaengine@lfdr.de>; Thu, 28 Mar 2024 07:27:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 829EB1F264F9
+	for <lists+dmaengine@lfdr.de>; Thu, 28 Mar 2024 07:28:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F5F02561F;
-	Thu, 28 Mar 2024 07:27:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C057A4E1D1;
+	Thu, 28 Mar 2024 07:28:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bOOytuCo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J/6iqpYV"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 369A413ACC;
-	Thu, 28 Mar 2024 07:27:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 968B72561F;
+	Thu, 28 Mar 2024 07:28:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711610869; cv=none; b=FhadZ13hDmMdHNNU5KXy6SIkErIlidNfEZ/vADSqJI7HnnEGgfpvdfU5Hy0Ozw5+AJsOuPhcod8nUxdBu/Yk7CKMKQ/Wqo956wTQG/3OPy6OhqCpOGHtuNbYHpyqZVnnLXNOF7Gp4iDIwqd62j7ORTKlJlBt5uHRedq8NE3rylw=
+	t=1711610921; cv=none; b=QctZqf6+uvY2PhfYYA+cD/S4fs1RGOaK5Fkuj542YKc0dRM/RXVnGeWBDhTNuripLareD4pIrPe9Ui28G3f9d3cm1CftsY4veGt8FySFsOI5cEhUPK/kG6oOuuVPS8qn/05afEY5vtCalr8YVDKRAnk7ij6zelGYYgYwhAo/w2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711610869; c=relaxed/simple;
-	bh=nEcoLKbWbbnmmhagJLDz5mxJHGXM7Y7imMxfavzWVFY=;
+	s=arc-20240116; t=1711610921; c=relaxed/simple;
+	bh=ijOEeCiS3qSRc5vkkBFknmGBS+NCZHRyFeKZjNVu8LY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IwmXvukmimi9hXXNE7lt9NRsbBnYpQ6Kji7CJAZHIZrguA/BH4tbD9t3+UqH0CK6BRU7PHJTsfap4M7WwUuMwd0JBXKUin/WLjwb4EcpodHxKBCQ9MupMSn3Fd7FD0MqUP+9xKpfqD8ntHIHUAMjuFto+mYtu2Ff3LHwv1PRXi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bOOytuCo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EA1AC433F1;
-	Thu, 28 Mar 2024 07:27:48 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=ISaI8v82eQsdTWU3cXmB8i60TJGYjHk+PEPU9hlaEuLbh6Q9tuYyI7vXewA0dcnAPyKsryEFNuM2f50tj1wrzl7YMHC4J6HsTp+eXpHkhPeDvLlifgVYzCb+i3+m2xMhl3f0I72kq6Ve/80LzAG8qyKzQXL90Io8cxm897MWFjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J/6iqpYV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97067C433C7;
+	Thu, 28 Mar 2024 07:28:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711610869;
-	bh=nEcoLKbWbbnmmhagJLDz5mxJHGXM7Y7imMxfavzWVFY=;
+	s=k20201202; t=1711610921;
+	bh=ijOEeCiS3qSRc5vkkBFknmGBS+NCZHRyFeKZjNVu8LY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bOOytuCo32SXKvu9CCqI+7WhrAn2GjGLDKCkhHBsc/+K9K6bQfvSmDOyxmt0SpL1z
-	 RV7KMOXCBbORlNujIal2rut2yUo9+0IOMtLV2mCVYiWTz0pjISqu2MjWyKaUzoFpzn
-	 9uhBm/ZeoOJh2jsWhG58+lZgcByTjkiECcty95nVDDVhCYFFpLvtcXlAi62ynhRiLI
-	 wlA3n9FFGheMjLsW18lxQgYE9pFzJAKEPsbuJN2VlnbCvIj6MbJG85x1g2e6lEvjpn
-	 BCPIekYGrm3BwT0Q+Ek7p3BDmVgYhoRtAH6Scw71YALKcTzFltY7V0doAXdkXx6yxF
-	 d/95lCjhtV7Ug==
-Date: Thu, 28 Mar 2024 12:57:44 +0530
+	b=J/6iqpYVddWxSoR5VY0JmEmW4RcV/6iab+8AbRwbjn4SjChctq6U3Alq9l+CjysUZ
+	 qZNTL9Izuu8wY2frtyAVw3wDuRHzpUE69hGn36EbvtqVJ4TYZkyrFhYNfjpP3tgn2+
+	 cnzKqD5vtY1KFUKigjos8wS21Qt4lzA0SQ5WZV7/O9Wm7DOob8OAoK1+Oq9U8zzTeO
+	 hVPuwAF9OL9DbOJ75C3pu4BwkibFNTRcBW945xSeK7Wipm1xFc9a6k8VeV0Xu+Jffz
+	 CTaSO7cblVE8SXngaSMsRb7mU2T04eEC9FzDD2Aa54t/uf1VA2IlZ3SKyyGo7zakM1
+	 CwqxWbkerrB9g==
+Date: Thu, 28 Mar 2024 12:58:36 +0530
 From: Vinod Koul <vkoul@kernel.org>
-To: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Cc: nikita.shubin@maquefel.me, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+To: Nikita Shubin <nikita.shubin@maquefel.me>
+Cc: Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Arnd Bergmann <arnd@arndb.de>
 Subject: Re: [PATCH v9 09/38] dma: cirrus: Convert to DT for Cirrus EP93xx
-Message-ID: <ZgUb8JKn3nXmhkGn@matsya>
+Message-ID: <ZgUcJByXpLJfG10T@matsya>
 References: <20240326-ep93xx-v9-0-156e2ae5dfc8@maquefel.me>
  <20240326-ep93xx-v9-9-156e2ae5dfc8@maquefel.me>
  <ZgTytMtgvqcHlEsO@matsya>
- <d620c37f58b303260096f73e04dfff6bb65ed1ef.camel@gmail.com>
+ <821da3f70fcd326860a995514791b228e3f3f7b7.camel@maquefel.me>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <d620c37f58b303260096f73e04dfff6bb65ed1ef.camel@gmail.com>
+In-Reply-To: <821da3f70fcd326860a995514791b228e3f3f7b7.camel@maquefel.me>
 
-On 28-03-24, 08:21, Alexander Sverdlin wrote:
+On 28-03-24, 10:24, Nikita Shubin wrote:
 > Hello Vinod!
+> 
+> Thank you for looking into this.
 > 
 > On Thu, 2024-03-28 at 10:01 +0530, Vinod Koul wrote:
 > > On 26-03-24, 12:18, Nikita Shubin via B4 Relay wrote:
 > > > From: Nikita Shubin <nikita.shubin@maquefel.me>
 > > > 
-> > > Convert Cirrus EP93xx DMA to device tree usage:
-> > 
-> > Subsytem is dmaengine: pls fix that
-> > 
-> > > 
-> > > - add OF ID match table with data
-> > > - add of_probe for device tree
-> > > - add xlate for m2m/m2p
-> > > - drop subsys_initcall code
-> > > - drop platform probe
-> > > - drop platform structs usage
-> > > 
-> > > > From now on it only supports device tree probing.
-> > > 
-> > > Co-developed-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-> > > Signed-off-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-> > > Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
-> > > ---
-> > > Â  drivers/dma/ep93xx_dma.cÂ Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â  | 239 ++++++++++++++++++++++++-------
-> > > Â  include/linux/platform_data/dma-ep93xx.h |Â Â  6 +
-> > > Â  2 files changed, 191 insertions(+), 54 deletions(-)
-> > > 
-> > > diff --git a/drivers/dma/ep93xx_dma.c b/drivers/dma/ep93xx_dma.c
-> > > index d6c60635e90d..17c8e2badee2 100644
-> > > --- a/drivers/dma/ep93xx_dma.c
-> > > +++ b/drivers/dma/ep93xx_dma.c
-> 
-> [...]
-> 
-> > > Â  
-> > > @@ -104,6 +106,11 @@
-> > > Â  #define DMA_MAX_CHAN_BYTES		0xffff
-> > > Â  #define DMA_MAX_CHAN_DESCRIPTORS	32
-> > > Â  
 > > > +enum ep93xx_dma_type {
-> > > +	M2P_DMA,
+> > > +       M2P_DMA,
 > > 
 > > Is this missing P2M?
+> > 
+> > > +       M2M_DMA,
+> > > +};
+> > > +
 > 
-> Not really. It's not the most obvious one, but anyway a way to enumerate
-> two types of DMA engines:
+> These are internal types used only to distinguish M2P/P2M and M2M
+> capable controllers in "of_device_id ep93xx_dma_of_ids[]".
 > 
-> "7.1.1 DMA Features List
-> DMA specific features are:
-> â€¢ Ten fully independent, programmable DMA controller internal M2P/P2M
-> channels (5 Tx and 5 Rx).
-> â€¢ Two dedicated channels for Memory-to-Memory (M2M) and
-> Memory-to-External Peripheral Transfers (external M2P/P2M)."
+> So M2P_DMA is M2P/P2M, a can rename M2P_DMA to M2P_P2M_DMA to avoid
+> confusion.
 > 
-> Now the confusing part is that this "M2M" engine is actually used
-> to transfer to and from *some* devices, like SPI and IDE.
-> So both engines are capable of M2P and P2M, maybe Cirrus has named
-> two engines in a sub-optimal way decades ago and this is now a bit
-> historical naming.
+> 
+> > >  struct ep93xx_dma_engine;
+> > >  static int ep93xx_dma_slave_config_write(struct dma_chan *chan,
+> > >                                          enum
+> > > dma_transfer_direction dir,
+> > > @@ -129,11 +136,17 @@ struct ep93xx_dma_desc {
+> > >         struct list_head                node;
+> > >  };
+> > >  
+> > > +struct ep93xx_dma_chan_cfg {
+> > > +       u8                              port;
+> > > +       enum dma_transfer_direction     dir;
+> > 
+> > Why is direction stored here, it should be derived from the prep_xxx
+> > call, that has direction as an argument
+> > 
+> > 
+> 
+> M2P/P2M channels aren't unidirectional.
+> 
+> Citing "EP9xx User Guide":
+> 
+> "Ten fully independent, programmable DMA controller internal M2P/P2M
+> channels (5 Tx and 5 Rx)."
+> 
+> We need to return correct channel based on Device Tree provided data,
+> because we need direction in device_alloc_chan_resources() for hardware
+> setup before prepping.
 
-Okay, thanks for clarifying (might be worthwhile to mention this in
-comments)
+Okay it sounds okay in that case...
+
+> 
+> May be i am mistaking somewhere.
 
 -- 
 ~Vinod

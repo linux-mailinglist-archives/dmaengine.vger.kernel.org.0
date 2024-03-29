@@ -1,209 +1,158 @@
-Return-Path: <dmaengine+bounces-1662-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1663-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80D2B891FF4
-	for <lists+dmaengine@lfdr.de>; Fri, 29 Mar 2024 16:14:19 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A2CE38920A6
+	for <lists+dmaengine@lfdr.de>; Fri, 29 Mar 2024 16:41:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3BB53289AB9
-	for <lists+dmaengine@lfdr.de>; Fri, 29 Mar 2024 15:14:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D3C871C277E0
+	for <lists+dmaengine@lfdr.de>; Fri, 29 Mar 2024 15:41:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEA1B149C51;
-	Fri, 29 Mar 2024 14:35:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BFFC11182;
+	Fri, 29 Mar 2024 15:41:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="PcedNrqd"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HPuJTw+U"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from EUR01-DB5-obe.outbound.protection.outlook.com (mail-db5eur01on2139.outbound.protection.outlook.com [40.107.15.139])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0084A1494D7;
-	Fri, 29 Mar 2024 14:35:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.15.139
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711722935; cv=fail; b=WW1kIXOcDrvl2QYrtNE04JZJWElAI5nvFlxNE3/Fi7AzzQdMHv+3nVVpnRlzWG5FBS3e+i5mtrNvxct1TeI/y3aabYxeX0HLjn7ydfivMq+5dBJlA9cF7NapbZ2HVH22G5lVp62RwhlCDFS5cA32tR0D5o36OKhkMh9SJYRtI1I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711722935; c=relaxed/simple;
-	bh=GUg1Wj4dT0857ArZKskce7IdNNMU6FU4HDK9KygVLKM=;
-	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=SuARp9vlowFTPPQnUS21tAW7qJlk17mS71D5htoGooa+RW7FraLZJiEqZ/Pe/UpEBb3UKJDEGsPeTd8tOYsnpwBCbF/OpYmCv6E9OEHPfyUUYSEhWVsCiVTEXFXmJOsdcGsPEXebNBRPk5w3B3dPgsa73LrILDyc2+B84CL+nSc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=PcedNrqd; arc=fail smtp.client-ip=40.107.15.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=C85q0VCmnMmra2C3qWNfJ2/hBIbFINP2l0h3ZSUT7ro53VtjETqAOA8q6OYDpjvqGbkvXv/dZ0vJmZyvqKyE+n7UnaP0jYa0X4l4T/cP/xq+HbBOhYiuE+PlrSCv26mPsyD5OykLIoFOGOmy7XKu6w+mjd09m6dG7RrtjaR4Qgl6QCia6oZM8ompPgdaZZeUyQvEg+qaRPJXV/n4DHUetVgTsBumNoZoc3Ql7iq43Qt5UNh2ZFiPIuw9tiViPX0cFlfwk7rIm9o7RGF5F04PZSrFVuhSKC284KGSYT+slrBfrAqnbOV2wk+cb7+p5JshYi5e+JhnhrtUhRvM8zwVzQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bzM7oGmNAXKt9ZcnTiFTPEbnaZJfG8FJkAmk1UGopoA=;
- b=f3KdOoj3PTEQcGBN9TZ3r6vOc2ZMPCvK6U0xwTeu+kdM6oYEj5xm7rdQ9U6EW+1K39wUX012DjHh/HZxmGYdUeU5k0RoBcuQDyTm3S6Aify3u9/y7dZccoo4mlBZ+dRCaC3s0HDfS4zrfPuYX7Y1ocTdVYzEjWFXR4PO9uYHq+7Pbb3GliVVhSxmwpFCnu1/TIVdg8xncsn0YwJA7En9+tIWmU5OM26vy4n6bp0rIBfhIMJ0t6otYSnSy6qBNGAib0fFfMwLzM8lyBgSe1T0OdgeyZFlh8DgxKA1IyAForhhCKHxS0SNHvY+pwo3vOoCDkMJTN09cQdPZVv4NRzaxA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bzM7oGmNAXKt9ZcnTiFTPEbnaZJfG8FJkAmk1UGopoA=;
- b=PcedNrqdy0Wpij1dnWrHqUiz8FzsOAgCff6Zh22MpluF7EGbh0HiDAQFkVGHn7QuT40EEixxBAqv1+cr4QC1Yo+h1Ov9LzDje7lhTjztOgdqTIorohGCcD4feQG75ho0LB/UzCreDXYS9kShCEJwqUD4L294msVystXPCI66ayU=
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AM0PR04MB6897.eurprd04.prod.outlook.com (2603:10a6:208:184::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.32; Fri, 29 Mar
- 2024 14:35:31 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::3168:91:27c6:edf6]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::3168:91:27c6:edf6%3]) with mapi id 15.20.7409.039; Fri, 29 Mar 2024
- 14:35:31 +0000
-From: Frank Li <Frank.Li@nxp.com>
-Date: Fri, 29 Mar 2024 10:34:45 -0400
-Subject: [PATCH v4 5/5] dmaengine: imx-sdma: Add i2c dma support
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240329-sdma_upstream-v4-5-daeb3067dea7@nxp.com>
-References: <20240329-sdma_upstream-v4-0-daeb3067dea7@nxp.com>
-In-Reply-To: <20240329-sdma_upstream-v4-0-daeb3067dea7@nxp.com>
-To: Vinod Koul <vkoul@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, 
- Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Joy Zou <joy.zou@nxp.com>
-Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- imx@lists.linux.dev, Frank Li <Frank.Li@nxp.com>, 
- Robin Gong <yibin.gong@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>, 
- Daniel Baluta <daniel.baluta@nxp.com>
-X-Mailer: b4 0.13-dev-e586c
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1711722904; l=1789;
- i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
- bh=2tg8wOjhxhqBB6OjCDOf5puoLCfcQRBtu71Xv9Qv30I=;
- b=LXSSGgqH8US8n5b67XUXJBfdoReehi8kxIDWjaQDidy7IHKOY66hgL1wKYghw66OzIHIRYT8g
- S9p+5c2/021CeVJ+kJkGGpUlTDFHV4mqtoP8r978c+QKGuYeyXg6Zxd
-X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
- pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
-X-ClientProxiedBy: SJ0PR13CA0153.namprd13.prod.outlook.com
- (2603:10b6:a03:2c7::8) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 100E21DDEA;
+	Fri, 29 Mar 2024 15:41:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711726862; cv=none; b=M1QIVgw4prWTQk4WXsc3K57sYUJ8/tMq/rL0NePo8xAlW6QBUFUVZtma3n0M035jBycazgXPv6oeHJRZ1nR31inZ1WFGaF2s9yTdLqPD+EyUPzSo4nn0rn2WSo4f8aZounGhXCUHVP58pLBeQlz6wMKrJUxV2IcT6QvL6kCOYqE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711726862; c=relaxed/simple;
+	bh=bzeVKulJy/hP5GNpCoE2RYDk0i6XfvDfXpyD/AV4Lg4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IQWneDmnPQ/u7ICo2vjUJMcQ1CBZATdtzV2Gqiz9WEQGaUGD3us2yG6C94EgARiks47bVZrE9PlTPFlj6HIqZVbVgFxNDYUhBT+h/iKZchCQKxEgN6xLZYfEC7ipt7PyVA0Un0yiCjhLUuj6CYiUJPKUcDvsYcF5uS26v3aBOcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HPuJTw+U; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B77EC433F1;
+	Fri, 29 Mar 2024 15:40:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711726861;
+	bh=bzeVKulJy/hP5GNpCoE2RYDk0i6XfvDfXpyD/AV4Lg4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HPuJTw+U4Lwdm2PhfqOl7arf9uQWMGDioUT4VPWqocBfmxF5bvrua6lI0nk5bEpF6
+	 S23TW/S8CiFM5Qf3RMQp6KaLR0dTfRYMP/FLCCA7LVkJ6+zws5TeYnIyJSuS9a+FED
+	 WrMiY4ehrh6eoBrpVMO4ehijdQ9ocyo77sA1L93U7RRM9jgtR0pZw18rx8CfF/7q8y
+	 J8aJWUSCZZg5OgGscongYcMrs+CBY3zwtHztIpc42MFTTbCB6JG8fhtiuNJjXjEaGu
+	 +teoxnY9ElCdOZN+j29yFxogg4puEYmznow+hseIeYDj+UW25btqU4GNSA3z5emh9K
+	 v9GWw22lvHLxg==
+Date: Fri, 29 Mar 2024 15:40:57 +0000
+From: Conor Dooley <conor@kernel.org>
+To: keguang.zhang@gmail.com
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>, linux-mips@vger.kernel.org,
+	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 1/2] dt-bindings: dma: Add Loongson-1 APB DMA
+Message-ID: <20240329-destruct-giggling-b27e373295ba@spud>
+References: <20240329-loongson1-dma-v7-0-37db58608de5@gmail.com>
+ <20240329-loongson1-dma-v7-1-37db58608de5@gmail.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM0PR04MB6897:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	yIHc1bOzm/OZft0yFWfDCkrqKWNkvO5Cec0G8CdgmYtDMPEF5F+bpwK6nD12nwwwsol6YTlP/doacsXaHiyh4KnpHjr7xP33DM63nf+11rZVySF4OrIR+UjlbJ20XTUxFF17F93ottVtpubn1BFkXFaO9SezTwxOaPXDdH5fQAwg9BUYomIiddidy6nkN9RGZbOUXN63u+qkkOvGwZ6Eutk+2Vzzxp5brcS+gFpkXArCY90wpu8c8DmUhqTmj6cr4eZsiYxFBFIxuS14TeQey5egNk8n2amQCG33oDnoqP31S/ePfbi+aUlzw/BqSUfOzDfDeyntzdJwQ2jIRGgZXuPf6WreS4kMXCaGxCLRjFt5DyGmsxa7/GigVpSQGd+mj7OtiNFRsl830llW3Eb9zfStMg4RG21Jva69lAjn6GOBIKAQjyzCJVeHoNLJx4CTDUNTR3+dWopzdUZvtWizlTmOl0VtxmA24PZxzO8YDey3BvPObQqpbsfiGl4mp2oIdCFzbDZFELPuDZ9q5vkpI6P2e2nZKiK/1ZYSH6xpfzHWhP1hPL8lMX6RcO7m/mLGTLHfvkfKvy4Q3LI3odpgjvgP0gAQs0QnmyXgntB/OwXsNhY0eln+0xEL+c+AqIKca0Kvsp/VoGliJnxuaNAf6xRZUEZTWCiIBkp3SCo0pn2djgTBEQwuzcRqGJb8xpm0f2tX3S4I8f3wEo2bQknFWvLFp/sLUPou3uV6A1g/NiM=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(7416005)(52116005)(376005)(38350700005)(921011);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?YU4xVlBiandJQkU2TzhNVEFUdGtUOEREZXN0ei9zS2FaK045eFV0WE1sQzdx?=
- =?utf-8?B?L01WS2drQyswUWtSWSticzRpWllJa0RKcjhrRDRwdXFRdTg3VzlqM1pWUmpa?=
- =?utf-8?B?TVVGZFMyekxic2NCbm1BMC9pYVFqWG1kUGdhNTBTSlRHbHZJUkZMQ3VNZFc0?=
- =?utf-8?B?dGlUVnI0OXNoWStYMGhocWZRN1VMbWpBaWJRUHhwVDNxU1dpcllvNzFFeWZ3?=
- =?utf-8?B?elRqRVRkN0RsQ1lnQmxiL1pGNVpwMU1LcHNKcWNnM01jYm9HbzZBbUw5Nk41?=
- =?utf-8?B?MFRraXVLNXhKekRVWkswallnc1l1WG9kYWdlUWE0eFZrQ1FHNENPYmZ4RmhF?=
- =?utf-8?B?UkQ0WWRCQ2kyZENDRVlIYTc2c2ZNbmFMbWN3aGcwa0tFaTZuZmlYNW03bHFI?=
- =?utf-8?B?d21OYVJBL1JzdUJadHdFbGpBdnZZb1EwaDBUTFFrNjZBVTkwb2VaMVM5SDgz?=
- =?utf-8?B?cSt0NmxvWVMxZlFhR1RVWEY2SE9oVkNEUGV2bW1BKzB4Q09IUC91TWhWRlU3?=
- =?utf-8?B?YXNpOEtSSWY1amxLdUtuVVlEVFErV0pZcWVWOVlFRkNqQ3pvSkVEVTN0UTIy?=
- =?utf-8?B?aThSSWE3c3dpR0YyT3krU1AvWmJtUUpaNFUwK2hVa3l0QTJIMUxOT3N0bytE?=
- =?utf-8?B?VzVZbHdzUlk0ZkU5TjdyQmtmTDZhUi9zN0dVZFYySkw0NGxjVko4YU1rbnEy?=
- =?utf-8?B?dkt2SEl3dHlvQVVGUmJTV0g2TURWLzZyT1l6OXMxdGpKNk83SkVuUzZCdktV?=
- =?utf-8?B?VkJNU1FPaENiTE5KekdYM0x4aWNmQmkwQitsQXlVczRqUWRvcUc0ZWNnSENL?=
- =?utf-8?B?UGRNT1l5L1A2L0s0SXpCUXNhcUh2b09YMk5xNm5paENQcE9Ld0JxZ3Y4VkRR?=
- =?utf-8?B?MDZBTWJLVXV2dXpROGQvWDZWVjVlZFhlRHllR1BMVUhnSWsrYzUzLzhKa25S?=
- =?utf-8?B?d3pFcHZBNHJ5dlBoZlVDYW1GQzlvV0RReEJMRWtsZWpqSENVeWdjM0ZrdEk4?=
- =?utf-8?B?dDhpVjY4SUkrOHZGbmRVNTBPRlBIT1JBY0VDMU1wVUxQYTMwZ0t3b2taak11?=
- =?utf-8?B?RWxlWHJMWnE2OUtXQW95RUUvL2FZYjlBVExCUWkxRkNDeWwySjNvUG50Zno3?=
- =?utf-8?B?c1plUXBmcm1nZ2hCNU1CSkN4WDljcE44M0twTWlrRlMwVFlVTWhlRkhQbjJC?=
- =?utf-8?B?TmtReW5ZTXJhZUo3RFlCRDR4UUN4aVZLSEx5YTk5OG9LY2JXWlJlbVdLemhB?=
- =?utf-8?B?SW9wM09BcG02SVU2Y2lVYkJRWTJDbEtKVk53K1R2WVpGb0QvSzVsWW9aM3N0?=
- =?utf-8?B?V3RBOExhYWNHUkJ2NmUzMTh1cGl0N01yZlRJUjBtN1Bwa1pvTXNxTW8wYzhk?=
- =?utf-8?B?UjFZUVJsMEMvL3IyVUYya0dtZzZhN3orN0k0NGJqbXQ0TlFONkZMSFh6aWZx?=
- =?utf-8?B?UllrWEFiOXE1THhwdVFCc0FUSmwzNlNsd0RwaDlIUzdkQllVZzFsTkZJK25p?=
- =?utf-8?B?QzcwbXhrc0h1c3ZHSGcrdlV6Wlloc0xZOW81YTNKMWpaZUVEenVZcUE2YXFS?=
- =?utf-8?B?WlNKWjdSSzlzNUJMSEc2MTBxSDlBbW5OazR1QnlmcURjaVdiR1NNVmVGUTBy?=
- =?utf-8?B?ZmFiSHhDMkJlRlBDSlNOVEZFMXhSVG9SREFIYkZOMnVzWlhpOGh5bkUwbEwr?=
- =?utf-8?B?dTQ4SXc5K2pRQ0ZOL0tlSGhyRWNwT2I3RnR4WFoyeVRyMG11dVlubUhZNnNj?=
- =?utf-8?B?WU1FNHlhLzArUDU4T2x4Q3VuYktISVBIZTNBcWVwU1d4YWlMOU1IRHBja3pZ?=
- =?utf-8?B?TnhpY0Eza3JCd09tVWZ6ZG9aU2ZINFRMY1liTGkyRzhJOENZcEZoR2xRWXp5?=
- =?utf-8?B?b0JQV2xBT3RtNGJqaFRxMm5IZ1NJb0V4UG1uYnlzQmhUaHozWmw0ZHZmem4v?=
- =?utf-8?B?c2luSWtFeGtDMllTbk9uNmkwenRDaVJjNm82VG0xSlNEMlhmZGZSeWYxWUNS?=
- =?utf-8?B?dXI4aU1TU0V5R3hZbTJCZ0M4WFJFalVWWXM4RjVLbXRNRmpwYUkwSnNHcWpV?=
- =?utf-8?B?dTRJWGJoTVhpa2tvTzc5aG5JWm5Kb2RObVpELzkrNGx6UGpJVWhFQVBLZEYx?=
- =?utf-8?Q?pc84=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 19c60f02-77da-4273-f04d-08dc4ffd7c73
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Mar 2024 14:35:31.3812
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qpMJouv7/D34jnV49po4ghvJNRXsAK/6DQCr7/FjPLz1RLlaaljiwPPMT9ujTd8Ab1U3oxaTjEltK0SAI9G/sA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6897
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="0+H86LmlfZrUlS4b"
+Content-Disposition: inline
+In-Reply-To: <20240329-loongson1-dma-v7-1-37db58608de5@gmail.com>
 
-From: Robin Gong <yibin.gong@nxp.com>
 
-New sdma script (sdma-6q: v3.6, sdma-7d: v4.6) support i2c at imx8mp and
-imx6ull. So add I2C dma support.
+--0+H86LmlfZrUlS4b
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-Acked-by: Clark Wang <xiaoning.wang@nxp.com>
-Reviewed-by: Joy Zou <joy.zou@nxp.com>
-Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
- drivers/dma/imx-sdma.c      | 7 +++++++
- include/linux/dma/imx-dma.h | 1 +
- 2 files changed, 8 insertions(+)
+On Fri, Mar 29, 2024 at 07:26:57PM +0800, Keguang Zhang via B4 Relay wrote:
+> From: Keguang Zhang <keguang.zhang@gmail.com>
+>=20
+> Add devicetree binding document for Loongson-1 APB DMA.
+>=20
+> Signed-off-by: Keguang Zhang <keguang.zhang@gmail.com>
+> ---
+> Changes in v7:
+> - Change the comptible to 'loongson,ls1*-apbdma' (suggested by Huacai Che=
+n)
+> - Update the title and description part accordingly
+> - Rename the file to loongson,ls1b-apbdma.yaml
+> - Add a compatible string for LS1A
+> - Delete minItems of 'interrupts'
+> - Change patterns of 'interrupt-names' to const
+>=20
+> Changes in v6:
+> - Change the compatible to the fallback
+> - Some minor fixes
+>=20
+> Changes in v5:
+> - A newly added patch
+> ---
+>  .../bindings/dma/loongson,ls1b-apbdma.yaml         | 65 ++++++++++++++++=
+++++++
+>  1 file changed, 65 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/dma/loongson,ls1b-apbdma.y=
+aml b/Documentation/devicetree/bindings/dma/loongson,ls1b-apbdma.yaml
+> new file mode 100644
+> index 000000000000..449da9fc2de1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/loongson,ls1b-apbdma.yaml
+> @@ -0,0 +1,65 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dma/loongson,ls1b-apbdma.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Loongson-1 APB DMA Controller
+> +
+> +maintainers:
+> +  - Keguang Zhang <keguang.zhang@gmail.com>
+> +
+> +description:
+> +  Loongson-1 APB DMA controller provides 3 independent channels for
+> +  peripherals such as NAND, audio playback and capture.
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - const: loongson,ls1b-apbdma
+> +      - items:
+> +          - enum:
+> +              - loongson,ls1a-apbdma
+> +              - loongson,ls1c-apbdma
+> +          - const: loongson,ls1b-apbdma
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description: Each channel has a dedicated interrupt line.
 
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index f68ab34a3c880..1ab8a7d3a50dc 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -251,6 +251,8 @@ struct sdma_script_start_addrs {
- 	s32 sai_2_mcu_addr;
- 	s32 uart_2_mcu_rom_addr;
- 	s32 uartsh_2_mcu_rom_addr;
-+	s32 i2c_2_mcu_addr;
-+	s32 mcu_2_i2c_addr;
- 	/* End of v3 array */
- 	s32 mcu_2_zqspi_addr;
- 	/* End of v4 array */
-@@ -1081,6 +1083,11 @@ static int sdma_get_pc(struct sdma_channel *sdmac,
- 		per_2_emi = sdma->script_addrs->sai_2_mcu_addr;
- 		emi_2_per = sdma->script_addrs->mcu_2_sai_addr;
- 		break;
-+	case IMX_DMATYPE_I2C:
-+		per_2_emi = sdma->script_addrs->i2c_2_mcu_addr;
-+		emi_2_per = sdma->script_addrs->mcu_2_i2c_addr;
-+		sdmac->is_ram_script = true;
-+		break;
- 	case IMX_DMATYPE_HDMI:
- 		emi_2_per = sdma->script_addrs->hdmi_dma_addr;
- 		sdmac->is_ram_script = true;
-diff --git a/include/linux/dma/imx-dma.h b/include/linux/dma/imx-dma.h
-index cfec5f946e237..76a8de9ae1517 100644
---- a/include/linux/dma/imx-dma.h
-+++ b/include/linux/dma/imx-dma.h
-@@ -41,6 +41,7 @@ enum sdma_peripheral_type {
- 	IMX_DMATYPE_SAI,	/* SAI */
- 	IMX_DMATYPE_MULTI_SAI,	/* MULTI FIFOs For Audio */
- 	IMX_DMATYPE_HDMI,       /* HDMI Audio */
-+	IMX_DMATYPE_I2C,	/* I2C */
- };
- 
- enum imx_dma_prio {
+If there's a respin, make this an items list. If you do, you can then
+drop the maxItems and description. Ideally with that change made,
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 
--- 
-2.34.1
+Thanks,
+Conor.
 
+--0+H86LmlfZrUlS4b
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZgbhCQAKCRB4tDGHoIJi
+0obNAQDHSnU+L7QN0TvySd5Y0LJgYUIxoxrj+cqFE3M6JzCtuwD/elNAaXBx1lsH
+jQzAYajJtRWsOWzHjRne3oSnDKRFmAg=
+=Mb/N
+-----END PGP SIGNATURE-----
+
+--0+H86LmlfZrUlS4b--
 

@@ -1,115 +1,60 @@
-Return-Path: <dmaengine+bounces-1665-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1666-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 528728921D0
-	for <lists+dmaengine@lfdr.de>; Fri, 29 Mar 2024 17:39:55 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 489718921E7
+	for <lists+dmaengine@lfdr.de>; Fri, 29 Mar 2024 17:45:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0D8F2282B92
-	for <lists+dmaengine@lfdr.de>; Fri, 29 Mar 2024 16:39:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E477E1F25090
+	for <lists+dmaengine@lfdr.de>; Fri, 29 Mar 2024 16:45:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D3DF6AFB9;
-	Fri, 29 Mar 2024 16:39:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46DDA4F217;
+	Fri, 29 Mar 2024 16:45:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uW7qxP8y"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jggTfNMT"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFC1422075;
-	Fri, 29 Mar 2024 16:39:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C5EC3613C;
+	Fri, 29 Mar 2024 16:45:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711730379; cv=none; b=W0SvH0vhQF5Daz/mkL2FjSexSefYH+RudWNOQ9mM9pziEPMGYTFGKxWLV92lKlTFzZ4/ZvBwKl3nsGXRWqGpWwDSP2Cg2gwzkMhgceq7Mn3Bn6E1kxg4/U2K+q/Y68BX4OncRfDy9EueLLmOrqFvagA1GRau7CB9enAwYRmnRGY=
+	t=1711730729; cv=none; b=loWXEhcph9Zy+6KRCSMBV/yc2hehVMN13l3ZtzchzPjucILROhU/tUGezZMfy2Re/xImp2hLE0e9v/mwG8eTDFvWKIQLIZ2cbwlQzkoGuo7YAkhowMTKvXgIMqQAMVG2O6MDLa/UzAHGgZnOiyL46/jVPSsHnaIFSeKXFKStXVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711730379; c=relaxed/simple;
-	bh=bg+h7PlnfTedz1YBjzApxZkMOAnsBGDd8/EzMTXhZfQ=;
+	s=arc-20240116; t=1711730729; c=relaxed/simple;
+	bh=/LGwy+a6PttgrCg1DdbffQ69croSPBQk2G5RjbG3jpU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dFqDq9Fg2X0yRxLQCIq4kT74ICYEQkQ9Ig+AV/efNoNp6CpybpsL4e3Jyq4r4aFWahKP8xbk1E4uWsOACZiyzlpiwTBlfGuxlVcBWACjSC8KNy5BpcE1QOlHAXFaic/nr72DLOu7evcB0CXVangeKuZi8wxvigdTvQSTIgSahRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uW7qxP8y; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4D9DC433C7;
-	Fri, 29 Mar 2024 16:39:37 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZRHBr5oc2uC7q4VU48n0xgaKSHsDBcabW0F+gmPvQzFDS7Z8uri5ZVp/+RPZn3Vbih4wRvGQsyCIVf+JV8ppm6ObpbisBXV38a6c67tHqVDV8WKw+zyjP5Zsr4fIXSCCp4Ad6ADCeNlXDzX5fB4E7cLUXxkwpzHpADh4v6YHZqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jggTfNMT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB439C433C7;
+	Fri, 29 Mar 2024 16:45:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711730378;
-	bh=bg+h7PlnfTedz1YBjzApxZkMOAnsBGDd8/EzMTXhZfQ=;
+	s=k20201202; t=1711730728;
+	bh=/LGwy+a6PttgrCg1DdbffQ69croSPBQk2G5RjbG3jpU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uW7qxP8y8ACgUR891lLqNXK4nRCSSexkXmk3NVlX/43RdUbJKhMUBo+3F7ImHHCLd
-	 EgMy3VnFONlXXBX8N/84xV65QgEoe3byfIcVSoYOnvkYvas222h0lZkI0ts/7GK5dK
-	 RXDBa+pCTcdJsCx5bNqP+0NeWpjfPDjTw0LzbJBD2TGFbdPiUtd9S2xCHSf/YkWg3h
-	 LkeVRnbJmAa4tPbrg134PWkZdQ7HBQC4t3veXbL+goDjmVnDap5Tj4fOkvn8ClJwbk
-	 uuZW1rzs8wZhLpPlp2dMwsOxB3VXY8Xf/XxfLnuX/VdqMAE2Sw5BpezoMJa9uZRiGz
-	 dYTGMY6Ps7ZVQ==
-Date: Fri, 29 Mar 2024 22:09:34 +0530
+	b=jggTfNMT17IKwvzb3Hqukd3XSp3edS6mZ+raouDn+O36b0jhgVSUFzsgu9c1PdJ4Q
+	 iPyjGZicbXoLE8/zdEo+yOp06wKtPG5cj1vS8VbVAq0S0/OFoQMpdxkakoDiVuvAyZ
+	 YgWSu2JNtnFjUzXYb/IVsclCYmEJtm+bZq+0tr9L/GCGu3eMZiBlJM0uUF9RzyO1SW
+	 juAjP5h/rBaZ67pI73jVat0PxnIrY+ELEspwRdGg3Vxubh2VdE4pUugjigXszxZAFx
+	 tiQZm5+3/DJx1em7EvKCBlah0QtM0JXDy3VsG5/hTj2r8NlZBiEqiqcG1sN9vEaf2u
+	 B6CBLpvSu+OAw==
+Date: Fri, 29 Mar 2024 22:15:24 +0530
 From: Vinod Koul <vkoul@kernel.org>
-To: Allen <allen.lkml@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Allen Pais <apais@linux.microsoft.com>,
-	linux-kernel@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-	Kees Cook <keescook@chromium.org>, Hector Martin <marcan@marcan.st>,
-	Sven Peter <sven@svenpeter.dev>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Paul Cercueil <paul@crapouillou.net>, Eugeniy.Paltsev@synopsys.com,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Viresh Kumar <vireshk@kernel.org>, Frank Li <Frank.Li@nxp.com>,
-	Leo Li <leoyang.li@nxp.com>, zw@zh-kernel.org,
-	Zhou Wang <wangzhou1@hisilicon.com>, haijie1@huawei.com,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-	logang@deltatee.com, Daniel Mack <daniel@zonque.org>,
-	Haojian Zhuang <haojian.zhuang@gmail.com>,
-	Robert Jarzmik <robert.jarzmik@free.fr>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Orson Zhai <orsonzhai@gmail.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Chunyan Zhang <zhang.lyra@gmail.com>,
-	Patrice Chotard <patrice.chotard@foss.st.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>, peter.ujfalusi@gmail.com,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	maintainers@bluecherrydvr.com, aubin.constans@microchip.com,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Manuel Lauss <manuel.lauss@gmail.com>,
-	=?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-	"jh80.chung" <jh80.chung@samsung.com>, oakad@yahoo.com,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>, brucechang@via.com.tw,
-	HaraldWelte@viatech.com, pierre@ossman.eu, duncan.sands@free.fr,
-	Alan Stern <stern@rowland.harvard.edu>,
-	Oliver Neukum <oneukum@suse.com>,
-	openipmi-developer@lists.sourceforge.net, dmaengine@vger.kernel.org,
-	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-rpi-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	imx@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
-	linux-mediatek@lists.infradead.org,
-	linux-actions@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-tegra@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-	"linux-mmc @ vger . kernel . org" <linux-mmc@vger.kernel.org>,
-	Linux-OMAP <linux-omap@vger.kernel.org>,
-	Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-	linux-s390@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
-	linux-usb@vger.kernel.org
-Subject: Re: [PATCH 2/9] dma: Convert from tasklet to BH workqueue
-Message-ID: <ZgbuxmxncU0-0jhA@matsya>
-References: <20240327160314.9982-1-apais@linux.microsoft.com>
- <20240327160314.9982-3-apais@linux.microsoft.com>
- <ZgUGXTKPVhrA1tam@matsya>
- <2e9257af-c123-406b-a189-eaebeecc1d71@app.fastmail.com>
- <ZgW3j1qkLA-QU4iM@matsya>
- <CAOMdWSKY9D75FM3bswUfXn2o7bGtrei3G5kLt6JdcdOPDXaG8g@mail.gmail.com>
+To: Andi Shyti <andi.shyti@kernel.org>
+Cc: konrad.dybcio@linaro.org, andersson@kernel.org, wsa@kernel.org,
+	linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+	Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
+	quic_vdadhani@quicinc.com,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: Re: [PATCH v4] i2c: i2c-qcom-geni: Parse Error correctly in i2c GSI
+ mode
+Message-ID: <ZgbwJAb7Ffktf554@matsya>
+References: <20240313052639.1747078-1-quic_msavaliy@quicinc.com>
+ <171161140136.2698925.4294566764047886777.b4-ty@kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -118,23 +63,29 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAOMdWSKY9D75FM3bswUfXn2o7bGtrei3G5kLt6JdcdOPDXaG8g@mail.gmail.com>
+In-Reply-To: <171161140136.2698925.4294566764047886777.b4-ty@kernel.org>
 
-On 28-03-24, 12:39, Allen wrote:
-
-> > I think that is very great idea. having this wrapped in dma_chan would
-> > be very good way as well
-> >
-> > Am not sure if Allen is up for it :-)
+On 28-03-24, 08:36, Andi Shyti wrote:
+> Hi
 > 
->  Thanks Arnd, I know we did speak about this at LPC. I did start
-> working on using completion. I dropped it as I thought it would
-> be easier to move to workqueues.
+> On Wed, 13 Mar 2024 10:56:39 +0530, Mukesh Kumar Savaliya wrote:
+> > I2C driver currently reports "DMA txn failed" error even though it's
+> > NACK OR BUS_PROTO OR ARB_LOST. Detect NACK error when no device ACKs
+> > on the bus instead of generic transfer failure which doesn't give any
+> > specific clue.
+> > 
+> > Make Changes inside i2c driver callback handler function
+> > i2c_gpi_cb_result() to parse these errors and make sure GSI driver
+> > stores the error status during error interrupt.
+> > 
+> > [...]
 > 
-> Vinod, I would like to give this a shot and put out a RFC, I would
-> really appreciate review and feedback.
+> Applied to i2c/i2c-host-next on
+> 
+> git://git.kernel.org/pub/scm/linux/kernel/git/local tree
 
-Sounds like a good plan to me
+You applied changes to dmaengine driver without my ack! I dont agree to
+the approach here, we could do better
 
 -- 
 ~Vinod

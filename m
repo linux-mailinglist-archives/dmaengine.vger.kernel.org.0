@@ -1,60 +1,59 @@
-Return-Path: <dmaengine+bounces-1666-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1667-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 489718921E7
-	for <lists+dmaengine@lfdr.de>; Fri, 29 Mar 2024 17:45:35 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 39CDE8927F7
+	for <lists+dmaengine@lfdr.de>; Sat, 30 Mar 2024 00:55:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E477E1F25090
-	for <lists+dmaengine@lfdr.de>; Fri, 29 Mar 2024 16:45:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E9B5B2842B0
+	for <lists+dmaengine@lfdr.de>; Fri, 29 Mar 2024 23:55:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46DDA4F217;
-	Fri, 29 Mar 2024 16:45:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B85A913DDAC;
+	Fri, 29 Mar 2024 23:55:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jggTfNMT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dRBBhENU"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C5EC3613C;
-	Fri, 29 Mar 2024 16:45:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 830AA85644;
+	Fri, 29 Mar 2024 23:55:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711730729; cv=none; b=loWXEhcph9Zy+6KRCSMBV/yc2hehVMN13l3ZtzchzPjucILROhU/tUGezZMfy2Re/xImp2hLE0e9v/mwG8eTDFvWKIQLIZ2cbwlQzkoGuo7YAkhowMTKvXgIMqQAMVG2O6MDLa/UzAHGgZnOiyL46/jVPSsHnaIFSeKXFKStXVU=
+	t=1711756500; cv=none; b=Sn5EsEj6iku1JlPCEJgWPKiSXqYwTQSllmrdpUCOXpiAJodvqrW7N2FXCYwH5t5y1QXIVJLgQ4SFTNUo3cTKgdbmLpj1rTcFBbmx6zsKW7pumm6KtEfWbj3Q3IYoNTPIlmA4/rICrmEi9QkkemSy/z/rodYPPKSAkaU4GtdYUTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711730729; c=relaxed/simple;
-	bh=/LGwy+a6PttgrCg1DdbffQ69croSPBQk2G5RjbG3jpU=;
+	s=arc-20240116; t=1711756500; c=relaxed/simple;
+	bh=qeoez9ZPUzTd3Q2NKfA2e2k8lx5b8TFJ7Z/BE/D0yCE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZRHBr5oc2uC7q4VU48n0xgaKSHsDBcabW0F+gmPvQzFDS7Z8uri5ZVp/+RPZn3Vbih4wRvGQsyCIVf+JV8ppm6ObpbisBXV38a6c67tHqVDV8WKw+zyjP5Zsr4fIXSCCp4Ad6ADCeNlXDzX5fB4E7cLUXxkwpzHpADh4v6YHZqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jggTfNMT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB439C433C7;
-	Fri, 29 Mar 2024 16:45:27 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=DeIsdWQYI1iIS2yeLTK1iZCH25/D0bttRCqaLl406QMz4kJAS552he+Y+WNUELyU77wrOlzif81bcDX4Mr+DP+bhc60wrnvIyHGOXmwXyyJJlEyRc95FLeMjoQW6DYJgRqHc6gSyhIp93nr0McXRH+fhaDVshrrKyqpKLdSZGfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dRBBhENU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99D6BC433C7;
+	Fri, 29 Mar 2024 23:54:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711730728;
-	bh=/LGwy+a6PttgrCg1DdbffQ69croSPBQk2G5RjbG3jpU=;
+	s=k20201202; t=1711756500;
+	bh=qeoez9ZPUzTd3Q2NKfA2e2k8lx5b8TFJ7Z/BE/D0yCE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jggTfNMT17IKwvzb3Hqukd3XSp3edS6mZ+raouDn+O36b0jhgVSUFzsgu9c1PdJ4Q
-	 iPyjGZicbXoLE8/zdEo+yOp06wKtPG5cj1vS8VbVAq0S0/OFoQMpdxkakoDiVuvAyZ
-	 YgWSu2JNtnFjUzXYb/IVsclCYmEJtm+bZq+0tr9L/GCGu3eMZiBlJM0uUF9RzyO1SW
-	 juAjP5h/rBaZ67pI73jVat0PxnIrY+ELEspwRdGg3Vxubh2VdE4pUugjigXszxZAFx
-	 tiQZm5+3/DJx1em7EvKCBlah0QtM0JXDy3VsG5/hTj2r8NlZBiEqiqcG1sN9vEaf2u
-	 B6CBLpvSu+OAw==
-Date: Fri, 29 Mar 2024 22:15:24 +0530
-From: Vinod Koul <vkoul@kernel.org>
-To: Andi Shyti <andi.shyti@kernel.org>
-Cc: konrad.dybcio@linaro.org, andersson@kernel.org, wsa@kernel.org,
-	linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-	Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
-	quic_vdadhani@quicinc.com,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+	b=dRBBhENUyWeK+c09cMAQRqguYXZ1dBOm/LTKAqwzBcauccPYHPByg+R1fipX9gmPh
+	 nWzfgMy/zyKclpTbZJxJBNhipDPNdGozdiS1m+eupU54SnYaq2HJxnwNuKK/1otZXZ
+	 Q7mr7SXYLnPFzLLX9yS3VD7IjHSEIaPqTbscerPbABf2T5WvvWMNsj1zZKHbmp+lwJ
+	 Z22idm+2ThIfkJ1wqVcRd1AY71BJyUJsDPFavEYF4HzNBX4u0PTl97Fl4RSIZ4k37t
+	 JfbGJ5+h1PG//0YTiA7Aal/RKqtxyiEzk6hLUO5auhEB7/4ebbozJsqjm5mQrTFGct
+	 K1FdDXDePepcA==
+Date: Sat, 30 Mar 2024 00:54:56 +0100
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Vinod Koul <vkoul@kernel.org>
+Cc: konrad.dybcio@linaro.org, andersson@kernel.org, wsa@kernel.org, 
+	linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>, 
+	quic_vdadhani@quicinc.com, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Subject: Re: [PATCH v4] i2c: i2c-qcom-geni: Parse Error correctly in i2c GSI
  mode
-Message-ID: <ZgbwJAb7Ffktf554@matsya>
+Message-ID: <mo7d5ayw4gy2lqb6e5o4ijegodx6a5naytatwmoblujftwdjfg@sc4amlo3va7g>
 References: <20240313052639.1747078-1-quic_msavaliy@quicinc.com>
  <171161140136.2698925.4294566764047886777.b4-ty@kernel.org>
+ <ZgbwJAb7Ffktf554@matsya>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -63,30 +62,46 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <171161140136.2698925.4294566764047886777.b4-ty@kernel.org>
+In-Reply-To: <ZgbwJAb7Ffktf554@matsya>
 
-On 28-03-24, 08:36, Andi Shyti wrote:
-> Hi
-> 
-> On Wed, 13 Mar 2024 10:56:39 +0530, Mukesh Kumar Savaliya wrote:
-> > I2C driver currently reports "DMA txn failed" error even though it's
-> > NACK OR BUS_PROTO OR ARB_LOST. Detect NACK error when no device ACKs
-> > on the bus instead of generic transfer failure which doesn't give any
-> > specific clue.
+Hi Vinod,
+
+On Fri, Mar 29, 2024 at 10:15:24PM +0530, Vinod Koul wrote:
+> On 28-03-24, 08:36, Andi Shyti wrote:
+> > On Wed, 13 Mar 2024 10:56:39 +0530, Mukesh Kumar Savaliya wrote:
+> > > I2C driver currently reports "DMA txn failed" error even though it's
+> > > NACK OR BUS_PROTO OR ARB_LOST. Detect NACK error when no device ACKs
+> > > on the bus instead of generic transfer failure which doesn't give any
+> > > specific clue.
+> > > 
+> > > Make Changes inside i2c driver callback handler function
+> > > i2c_gpi_cb_result() to parse these errors and make sure GSI driver
+> > > stores the error status during error interrupt.
+> > > 
+> > > [...]
 > > 
-> > Make Changes inside i2c driver callback handler function
-> > i2c_gpi_cb_result() to parse these errors and make sure GSI driver
-> > stores the error status during error interrupt.
+> > Applied to i2c/i2c-host-next on
 > > 
-> > [...]
+> > git://git.kernel.org/pub/scm/linux/kernel/git/local tree
 > 
-> Applied to i2c/i2c-host-next on
-> 
-> git://git.kernel.org/pub/scm/linux/kernel/git/local tree
+> You applied changes to dmaengine driver without my ack! I dont agree to
+> the approach here, we could do better
 
-You applied changes to dmaengine driver without my ack! I dont agree to
-the approach here, we could do better
+This patch has been around for quite some time and there has been
+time to review it. Altrady two people have approved it.
 
--- 
-~Vinod
+This patch has already been merged once via the i2c with the
+agreement of everyone, but reverted for a trivial failure.
+
+Your review come after I have merged the patch (I did merge it
+even earlier, but forgot to send the notification, which was
+anyway sent before your review).
+
+Above all, I appreciate your review, but it wouldn't be fair to
+revert it now. If Mukesh is OK, I can do it, otherwise we can
+send subsequent patches.
+
+Mukesh, please let me know what's your preference.
+
+Andi
 

@@ -1,66 +1,66 @@
-Return-Path: <dmaengine+bounces-1660-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1661-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D6A0891FEC
-	for <lists+dmaengine@lfdr.de>; Fri, 29 Mar 2024 16:13:49 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CF75B891FEF
+	for <lists+dmaengine@lfdr.de>; Fri, 29 Mar 2024 16:14:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C7657287BC1
-	for <lists+dmaengine@lfdr.de>; Fri, 29 Mar 2024 15:13:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 84657289728
+	for <lists+dmaengine@lfdr.de>; Fri, 29 Mar 2024 15:14:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E16513BAF7;
-	Fri, 29 Mar 2024 14:35:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D980B1494C8;
+	Fri, 29 Mar 2024 14:35:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="K1pOOc0p"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="oAg9knPI"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from EUR01-DB5-obe.outbound.protection.outlook.com (mail-db5eur01on2139.outbound.protection.outlook.com [40.107.15.139])
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2099.outbound.protection.outlook.com [40.107.8.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9120013BAD4;
-	Fri, 29 Mar 2024 14:35:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.15.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB9351494B5;
+	Fri, 29 Mar 2024 14:35:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.8.99
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711722927; cv=fail; b=k9//CLCHPMETYl2Qzpj98hskaUmTUOQxaCUcaBVGtb4KrtYazV9F+HvGxP2XSg1ZQn7pYoZD7Zv1oDOtlrEbZBpnThuv6b/Ia833pczTxEB+jXJ+ApyUYxAYvuralWf+PgzEAwUABrhApfvBs6ZXPfXmUvt1vWVFz5h6++VySzM=
+	t=1711722931; cv=fail; b=dzSSYiieLrm+vwDfNP/9cgl8MJVdOSgPyLhBpLKhw93KbPXCxcjtkv0wKZC7LRzdTj+rHInunMKo4VbYLFfAklHM4f2Y/0cn9Gwz0TwmY2H6bQruB806yScoWR3oGoBtMLBuwtHUzNBZwDwoI77kI2mh+tF9u26V7WyxRe4kG/A=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711722927; c=relaxed/simple;
-	bh=WDtLyRQI+V5vTiC7LmgN0/WTeCcbXau+vPvX1ltm1Eg=;
+	s=arc-20240116; t=1711722931; c=relaxed/simple;
+	bh=w3/LnRmOby3DOaAX14fhu0J2aAP8MxFdhxfkIy4OS0k=;
 	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=bFYPo8UJVDSWTzD67q3y0mCYBrj+gyy3RIPbpJrvQrZ1V21KUkhBf12YRZ6yV1vSLHMPX5PUHI42WEk5h3vdAKSLDn4YV82ElU8oLO3/tSZS4M6c0130qLa/p3bIwKf017Qy4yHDDNyKK4ybv6pUGYJQzvMmH/bo0g3hUW+ZzF0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=K1pOOc0p; arc=fail smtp.client-ip=40.107.15.139
+	 To:Cc:MIME-Version; b=IoJbsxLbpLG2pJrq0Lrw6mTen94WixuADRNEIxwiZ+8Hb2QOAyuWc9KfdhJFp+svClS/olryMsXEwqSQ6K96PKSCv7OITd6r6PXcFyWBRTL8XAKcK0bWZLMJgC2lFEo9DaNXJ+FWyXZf5s4c/K1qpvux4xV5x5kH/8pcfgykkLc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=oAg9knPI; arc=fail smtp.client-ip=40.107.8.99
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QAcr3kMxi8KcMQ8yh3Hc0EDmj+wqlvqrPhyQtI95T7tX407+ip2yc9ukTfSYNb4Oi8i2y2n+3QXkqYCP9HnHbiIBx5GOIvyeypcyLFGRU6sWSgtNqYMQ54BtnohMJBKBSoOK9LSoq+ehvJt60AVmfdHaXpRAPLURvtkTQ8S25i7uBim/3cqUqF4jGwcMwV/J2qXaw/JYbG6oB+poUs7o6ESfXiNzj6fEj2VDUPdPMexM92/41ZQdE2v+L074u1/oqBgkjy5jOTO5suVlChrL4BmKd/YT9mYkWST4CJrxLZZx95pZrrtrpaZsia8PLQTtD3xUMo3Popju9/1Bjn2o0Q==
+ b=eNGEkThWcG0p3qc5GctW2H10lrtAdBlXNMvA037dOG4YnuOApns0FVs7j/Yne3HxOaocvIk6FBYwA9gzUKl3izc6OV+pLnOxr9TepmGZJach8RiPEQOzJV23fupIRzuaVFKPObQ3Zw6vvUAX+bLE4Wos9pfjBfjdN6PqVLIwYnHQJQyL1bPHzBrSdhKAYUKGyXv1rfDpFx7ofJ7Jzr8/jAE6lP97C2ujbbnApapgagH+A1FHRFbwX+ewVJ1dLK9h/XlT4gmJKOX+Iu0kCzwIfG0PQylDFXk4eoYx+aODS9ddR23vK4qOE7QYL6yB5i3PCjDmmeTLYdo4RXW2UAZ2Kg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6smyow8kf6oBw5BBoj7lAbZzkwWsN9AQy5l1oH7+KpI=;
- b=i7poIuEuz3mRnucU18GQmkoMvWoslmu2TUNq0oaYB7pNrldG593S+z+seDN50lN6VyM1wA7RGv/9KJovZzua78YdSKkDzup1bJR3DP5cQVQRY7NfFPmg6uxqV6JGQpwCVVFle8xkkA9Qq0pGJD5E1E1RgJhUMBfCY8U1friVqsbvRpZtL/9A6Wj8NpdmfWfC7KxyvClZPQPz3Gsim53tXdMnIYTJbaF7UxSGT42GPKHyFykr47gsjDium/CAFqsacPm6l9+PKbuxMLPuiKb6y6Vfm27ruwu2u7Tbmut7ZE42PaehRLEUEOFJolwEC9A9BgrHoi9PYeQx6b8HErkvGQ==
+ bh=sOqlssOfhHPLSNxPWLykgfHC201TbPMyJDi1TZaFm7I=;
+ b=NEZdDrx5DQ1C45mnfNRy0Wb3pwhTYlnXFbqniw4KivChzrxKjJ5OqRDGjOPKnZfvNNAalAhv4pOt+bAieFibPslZCt5gb3wdrnF4pef6vrjzcyHi2RelrQzmuQ81FtLdQ3a7fBZOVXwZYkZJnTiTfcLvygTGRqf0BHThECKeyA5bje/cpE1gL7s4I0+zm/nA92Ax3iQK5dGG56Xj+qBKM9PUHWHJu0Y3wrcP2shGM/pme7PSg/KsPyOGQ7WQT5pXxg712dOAkGgrxzQACo3DTBZb+faXqvhFJb39WOxt0PE3u/qqHmAW2alBlhZN8e4CxvfpUj1qGQgeCYrsUBb1UA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6smyow8kf6oBw5BBoj7lAbZzkwWsN9AQy5l1oH7+KpI=;
- b=K1pOOc0p0OiRfE5vzu4cK+7AfjiMOAUMF7tvEl757Y8r0jt5kPD8xZuF4jANlAnZIcliemRizczdGDrjQ5ZQCgSYPsZimo9wJRpM2tW8bDB/3CvK2oz4xLjYnHRbrg/AQEwdt4Ed8m1lnZ9tSeAHiGtlkQBOTBMpy0ymRAipja4=
+ bh=sOqlssOfhHPLSNxPWLykgfHC201TbPMyJDi1TZaFm7I=;
+ b=oAg9knPIdbXt9jpBCA9y+pd7Fy0W9uC21mXAO1P+sVIZMSjAIVA/RiDRKzslCvnowwToIR7ZYExDcb/QmThecNmu7a1JgB33Jl9W+mnIA28EbUPvv1NTrh9YM4rqa6HsPRyvmvo00ICkgStn2geNCD43ji774qIaZWrZVEldmzI=
 Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
  by AM0PR04MB6897.eurprd04.prod.outlook.com (2603:10a6:208:184::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.32; Fri, 29 Mar
- 2024 14:35:23 +0000
+ 2024 14:35:27 +0000
 Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
  ([fe80::3168:91:27c6:edf6]) by PAXPR04MB9642.eurprd04.prod.outlook.com
  ([fe80::3168:91:27c6:edf6%3]) with mapi id 15.20.7409.039; Fri, 29 Mar 2024
- 14:35:23 +0000
+ 14:35:27 +0000
 From: Frank Li <Frank.Li@nxp.com>
-Date: Fri, 29 Mar 2024 10:34:43 -0400
-Subject: [PATCH v4 3/5] dmaengine: imx-sdma: support dual fifo for
- DEV_TO_DEV
+Date: Fri, 29 Mar 2024 10:34:44 -0400
+Subject: [PATCH v4 4/5] dt-bindings: fsl-imx-sdma: Add I2C peripheral types
+ ID
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240329-sdma_upstream-v4-3-daeb3067dea7@nxp.com>
+Message-Id: <20240329-sdma_upstream-v4-4-daeb3067dea7@nxp.com>
 References: <20240329-sdma_upstream-v4-0-daeb3067dea7@nxp.com>
 In-Reply-To: <20240329-sdma_upstream-v4-0-daeb3067dea7@nxp.com>
 To: Vinod Koul <vkoul@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
@@ -72,15 +72,13 @@ To: Vinod Koul <vkoul@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>, Joy Zou <joy.zou@nxp.com>
 Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
  linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- imx@lists.linux.dev, Frank Li <Frank.Li@nxp.com>, 
- Shengjiu Wang <shengjiu.wang@nxp.com>, 
- Iuliana Prodan <iuliana.prodan@nxp.com>
+ imx@lists.linux.dev, Frank Li <Frank.Li@nxp.com>
 X-Mailer: b4 0.13-dev-e586c
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1711722904; l=2211;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1711722904; l=778;
  i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
- bh=f/3k48+9FaySkCBcvGuMB4syTNvpqPDE/E6mQZq2QGQ=;
- b=UJ+qrh8+F4HLdPlVyBD/nfhfBula+Xu8HW7enHougqJY0Q3530GMrKdkcu5kBu0U3chz9uJQS
- p7fGcjoiGzjA8EwVIbtgZVUgUPK0f/l6QeShJ1/EhUwCNVJThrTJJHj
+ bh=w3/LnRmOby3DOaAX14fhu0J2aAP8MxFdhxfkIy4OS0k=;
+ b=WRAmUvA5azocOYneepgzi5q+NuFA6H/EsMNNctRWBy9lT92rpqdKc1iYzd9XIEdmJ9UmP+LK7
+ s4fUuedNPwpAWiFfSBIY54X3o2O9w6DgpIEwP/DEgxJAsEE13lTfIMB
 X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
  pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
 X-ClientProxiedBy: SJ0PR13CA0153.namprd13.prod.outlook.com
@@ -98,120 +96,79 @@ X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	dFi84h7XCbk7kt774IXUOufVUoWNpyrpmP8hPWHFvJPiKjkNGx8QYgRuSI1jQCxk8EoKYe4+crMXObmxVzK4GwkiBq5BUqj4bKNSE3ptj2NBq/c6BlI+jLnYgzcTkpFCySwdnwLj4p6uvXpx2jarqzYAxSD9E8rL9gLNhHeCMXm0DNGtx03IAvmeqOIa1xxWh0dSIKRtXZuSiEsUvHVbO9T6zOlqcXUG+u554Y+3WC7yB8vpK0FbiCq1iB3nXCYG++Cd/qR33kjBlkr9Jo+HLmdTtNtiulxd+2gg98xQEzlhW/IHqOmnpr8sTEhqD9gG+mupFiSc/TtdXNwzm5eiL4AZkkIfqQ4SzW78xlqnFYWy+Z4imDh4tclDysOXyOYTE+AOblkcgMne8MlbS0Vl7XVC/vXi4jIAltmhE1z2jjDcX4rR01FYYmvaQF7XWVhbsk8QOrpsIC+dSRRUrQ5ggPV74cO+k3ULfQ6A0JPaxgZkEJm93IzOqum3zINkJgI3D8r5iPLQATAj/OVyTeJovNC+9151reBf86ybMuT58v1EKCsma8iCfkdweKS5z85Je2bxYdVUuSAfyT8BsyslWZTrYqqpBcrz4EWNYba96777btDifR4zbsLSBdgsO23dVQM1De/tbe1RKuTnoPLFNZudItE2EqwQmrC/suRyT9WDlaGyNWfzZCEIFiRiTcMiyIL6uh8FMtTrKWdon/Uk3iaROoy3pIaMe6jCFQJl+sE=
+	aS4lFSxbTXkTvIGhKawgsh1u1heO6ATuEdSxmi0+ZGGEkZB2qllq6s5+aBw0EBvWe6mfk0CjOGGHuqQi/t7DogqnZ9+yCS8W6RNmBg+mjS1iIRBEUfkXs7dW87nx8De5zahnQeD2YNEkLZ6e69PF/9wxcqAfXsgPQ2l+b5WijNp3rMjKz8bR8Xs5h11ZSlShGzQwK5mTbwlqz6Dj2mtSWiudUgOw46nklE3qOJZJRcugLlTfS43LbM6+Weo2pIeB+nevXi3wOHHVovCc3U6nVpJybYBnqvyE3gZTpfij6aq6TLemgbTvEhpC1XQ3CISeJg0iYCLw+ijQF28l3aCti+BfQASjGiKjO3te0XPyDyQHmKlxK2+DLRvGna5i0hobA26WNw+ZH6SUVp0XM7VETGPXkBftGVZJusNcswepQJ3776wZpq6Jyh+S2T70K166hy2fWkZ3EsO3/JHlHoRS0Gk/qK/edjTAqSIbuZv9DaUF7kfhsQ7q517c47lmwqy7ThZRiIFdFRM9hSXReCnFjIOL6GlqXBo7PRQQy70lv4vOK9SLDFKo3He7BlyzGhq1ZSJz+95erutoKd5EcnuLRnYSFgeDaQRrN2jxNcCvj6VAKWAniaQGoCui029sqe7AHvENBq7TlARhpNH50wvnQ/CcQJRc+svWNLhA2e8bfJWhd6MQpgms8HLLUh58vSyNRtZ9zOZNF5rHLQp9lv2ck2kIfRD7ed4jxND2isHwXeA=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(7416005)(52116005)(376005)(38350700005)(921011);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ZUtxWUpsR294ak9oeVdaS3RGbFY2RnJSOVNTK3ZNVXQ0eEJsYnNoYkRkaFEz?=
- =?utf-8?B?bGFlc1FuQlBQUFJlY2FMUGhMcE9WM3BXbzkvNGxDK1ZzWGdVeDRpMXVXd09O?=
- =?utf-8?B?NEFidWhNSXRlSEhpaTJwMzN3Wm5QOTBWbWkxOERyVkJSM2dQV2lzMmozV2Mr?=
- =?utf-8?B?b1VyK3BFNW1mK3krOENHek1PNjlXVkdJeXk0KytPck9jOFFTQjJYbmxOQnhu?=
- =?utf-8?B?OVdGcnVqakxEZmIreU5kSGhNb2p2ZUtaYko3VUJrVWJiZm04TFQ5Zy9LRTkx?=
- =?utf-8?B?Y2tCYm1oZ2dHNDNpVTVjUDg5aFgwdEc3dTJRV3k0MFUrSkl1ZDhtVUY2ZlBp?=
- =?utf-8?B?NVdHNVF4VCt2NlhCamZvQUJLQnUvZ3pKN1FGVndHMzRxYUxNRDY0ZjRHQ25U?=
- =?utf-8?B?bU5iR2FhU0lGN3BHMVNEVHhMK2dPY1VCbU9jY28zM3IrV0FVaDdkNmM2Zkxx?=
- =?utf-8?B?OGd1UjhBT3dhT1FGdSs4UDJwRWV0NjA5ZnBUZHhrZ1FiQVFET3F6NktVcnpI?=
- =?utf-8?B?d1VPUUxtWTkyS0hNL1pmSjk4MDMxWStHYTRwclliSGJjTHZUT2xac0xLaUZN?=
- =?utf-8?B?cmJZU3duWlV5elpYL2JPcUptdHZ0bllVWE0zc1g5SjZjL2JrSFgvZEJFOXcw?=
- =?utf-8?B?Q0hvZ2lZRmg3QXBhS3NNTlY2T3I5aWN1STNXZFFhVWhwakxCcGFpODY2TVhO?=
- =?utf-8?B?MmNTVjhtYWNKTEZSKy9aMWxFdVdWMzZFOG5hNG1rK0ZsVGJmdm5rSlo0SHkv?=
- =?utf-8?B?WU12cGcvZnQvNkRQaHQ3eHN4SmNQbkV2eE9sVnFkMDhCMldDYnZuNWw1SkE2?=
- =?utf-8?B?ZS83K29vMkFORlVaR1lRUm0rYmN1S1h1dGpXa3F1YUlZcEhIZStmT01MQ2hn?=
- =?utf-8?B?SVg4d3RtOWh6Q3EvbHRRQ3hobEQ0QnBXSUI0RlZOMHl3M3cvMUFKVTZHemdO?=
- =?utf-8?B?T0lZcStOZnU1V09nZ1VjNU4vaVhjT1ZGcFlhMUExTUh6QzhsaUtBdWlwMjhC?=
- =?utf-8?B?OEdTN0U3MjVTZEZvQUxaSTI5di9tY3ZGMHU1bWs2eWhlR0NzREQ3RmVpUWVt?=
- =?utf-8?B?cTdmQXFoRmI3aklSK08zaFQwMFZDOVVReWFGbGxab2tzOGVHeSswMlZVdVIv?=
- =?utf-8?B?a1pyNSsvZURDaTgzTUVqQzlEMnVQK21vQmNZTThQbk9SalNnY3F5WE8zMTJ3?=
- =?utf-8?B?dVUwZyt6WnMrZkx0K3ExcHZrSGFLeEErOTNHamJKM2k1eU40eS9iWmpvUm5Q?=
- =?utf-8?B?WXZiQTlBVkU3T01mSmoxb2lHSmQzSlBVK01PejFVdVg3OVhFZnZ5MHNUK2tB?=
- =?utf-8?B?bW1LVDRlMm5ad3BLdWE3N2luMkhWUjNTclBHVkRzeTFZd0F5dnVENThIekNo?=
- =?utf-8?B?VlhmMml3Z0FFdG9FOHBRUitKdGFmb1IreXlVaGlOTjQ5alBuZ0dGZXdKeG5t?=
- =?utf-8?B?a0ZnT21jaXRwVVlVMDhQdzJVMU96REwvWnBUekx3aEo1UGMrUThNUVhncTln?=
- =?utf-8?B?TmFRaUdteENuRjN3Y2kvRHNmYTNzb1FpRmlObWhvTDZwSjBHTytlNnNnVWNl?=
- =?utf-8?B?UE5qZW1TM2d5RnNRQ2xkRjJRWU9rZ1dUaE5zNHMzSy84VjZoVklMamNRWkJU?=
- =?utf-8?B?eDZCa3pFclgrc0VFTGNLbjRkbHhGd2NteVVKNTJMeGlTRGU2RldUdUNXQVFP?=
- =?utf-8?B?N2g0d3c1L1F0VEVwVWlxZ0pFZEJaVGVIVGU4SkpYVVB3RUQwalZ0ZFlrYy9p?=
- =?utf-8?B?VnliUGJUanBOV0h0MTJCL3JiWXhwOTdIVlRRYkRaY1hMN3gvT1BXT1llUldp?=
- =?utf-8?B?UlpGVjQzekFlOFRSdmZzSUN2bkdOb2d6R1BHK29sdm1qa2JVcGFIR3YzN1Rt?=
- =?utf-8?B?V3hiVzBHbkpIU21uakRRR1VCM0RqZVZFUldQR0loREcvcVFWclA4bno3WlNa?=
- =?utf-8?B?MEx5aVVPQXFJYzZEKytpSXEvc3pnc3pJRlYxQXBIZ1hLeWtuQmhsOTgxY0FT?=
- =?utf-8?B?RGM5dzVDNUVFbUQ3bUlYTEVYR1RSNmxBeHo5VmdoV1VUOWlRQnFsTjBoUkpl?=
- =?utf-8?B?VDZVSi81ZXNTUDVtN3FvZVB4MFEydHIxVXd0cWovdEQvK1pNZzVRSFVkNCtZ?=
- =?utf-8?Q?rX3oMmZhtydOmGP4DbzR96RT0?=
+	=?utf-8?B?TmVvMWZhaEtRQUc2RXh1TG9sMWd0b2g5VitORTkvenNSdjh1MXdpSlpDTnVx?=
+ =?utf-8?B?ejR0MEFPZ3VWTHZ4Ny85NWhPUzFUSHFJOGhLSEtnWnU5dGJpTmg0SWJXelRZ?=
+ =?utf-8?B?K1d0Q0dhcUNaYnlOM0hOQnh6Z1E2TXMrU0cyTVgyZDc0cExwQ09MemdTZjR5?=
+ =?utf-8?B?KytYbll1UEg5WVMwMzlZdHhLK2ZjZElCV0JlcEUvNVAvVDNiRGpwN0tFbVFQ?=
+ =?utf-8?B?MVp2ZjF4eGdlTU5zRTlHcjBsOTRMS3kzS05iZVVsYnZnREtwUlhqNEh3dDVo?=
+ =?utf-8?B?MXlZZXI4MEpxMWNaSDJqNDhLc0R3VkhIcnU2ZzJlSUxVdzFvTk5YNkVZTnVD?=
+ =?utf-8?B?N3V6MXUxSFJLZjNubVNVU2I1WmovSS9Eam5HTU5vcXY4SzlZS0JaRTNPR21p?=
+ =?utf-8?B?a1crZzhGaSs1VkdTTm9FTFRFVzB6eTVRcXpIbzZUdFNzOG01eUl4Y20yU3l5?=
+ =?utf-8?B?LzNPTlNFQ25rSGRmWVlNbEpaa0pJVmg5c3N2UUhZdmlWSWtlZ1FKbWZHNDFp?=
+ =?utf-8?B?d2NVZi9XeVVsL2hwelZBWC9GRjM0R2ZOcHNHbDBNLzBaeVR1cTJRUlBHSUtD?=
+ =?utf-8?B?STRMcDJDb1E0WGhaN2NRc3RVUklKQ3dhdE9zWXcxbXpqY3J2OGYrSW1iL0lF?=
+ =?utf-8?B?NWlEUVZoZ2RxQm9pM29XSlAwRzRtMVJRNHV6Z1I3VzI5ajEvMmRxV3pKd094?=
+ =?utf-8?B?N2kxN3lqbFRCUGtNMExueDlzTkZrZVdsOVF4RjNTdVRId1FKTFgwemJuSmxE?=
+ =?utf-8?B?MG95dy9QbG5sQVFSR3A3b3Q0OUlwTzhjSnlvY3ovazN3bVB0TXhvNkdKRkI1?=
+ =?utf-8?B?dkhWZEp5MnR2T2Z6TFlTbDg4UDRrS0VmYUMxNU5VWnlWUHlpYVlNK05kVVkw?=
+ =?utf-8?B?ZnpDZGNvVm5EbmlJajQ3WDdGcmlibEZjb045dGZCUWEwZG1YekxpSk5zSTRV?=
+ =?utf-8?B?RjE2WGlRbzA5V3B1OWdPZmh1c21PQkhwV2RGcHg3ZGc5ZTdYTFJ2UzVzQ3Za?=
+ =?utf-8?B?amlBTk9pZnRKK29EcFY1UXprUW1iOUdHM25abU0wZUpLOGt6NVVUSzVObXd0?=
+ =?utf-8?B?THcvVkFrUVFZRVphQzdEWWRud2J1a0ZPT01IK1l0UEVZY1pqS1NTRjhIdExM?=
+ =?utf-8?B?bE9FcEFCWlYrRHMrb09CSGV2eXhHekwxVm9SVTRVU2FXWlZ3OCtTR1JkZXpK?=
+ =?utf-8?B?V3pZbW9RbW1Kc0F1aWVMKzRDbkxrekg5Yk5CY2VQRHJtRjlzWEtITHUzUFRD?=
+ =?utf-8?B?a3NFUFJEdklpUG4yQWlhMnowdlVsZkV0WGpTOG9jbmUyd3N0ZWtwcnNhUkJs?=
+ =?utf-8?B?ZEp3V1QxS01YK0VkM0FuMkd4RHR0OUhPWTdDM2tyUEtMTVorb25DejR1ZHhy?=
+ =?utf-8?B?WGVoMFR2M0RCamNudC9Wb0FObHV0dGNZWWJKbHZ5N1JQcVpGTmlMblpja1pW?=
+ =?utf-8?B?WDRDZU5teEJ4T0NYZ253dTJkdGJTMmh3bjNIQkpXTFJoekk5Z1hOMldhSDVy?=
+ =?utf-8?B?L1kwbnBzWlZ0VlBDNzJBU0VqbkxnVFpkbHNacCtEV2ZxeDRoZHhPQW41NVg0?=
+ =?utf-8?B?MVpOMjdxa1gwbkF6TDFRQkxRNWxNU3ZBK0tmQ2pQaG0zRFhUemxMRC9zVGRE?=
+ =?utf-8?B?V2YweEJoQ3VaVTlyYWxsTEtkemd4UjNCRGMxRXRDT3BuNS8waTUrMU1yUm1y?=
+ =?utf-8?B?SUhUQ29JYlh4ZUZBR0RGck10VDdpLy9wMm1zNDlFM0NRbnhVQjZFWWMvYk5M?=
+ =?utf-8?B?aEc0UDM5YmhtTWNhRElaazFieGEyaG1DQzNxZnB0eFRXcTU4REN6M05PRW5N?=
+ =?utf-8?B?U0VEbjdQK0VWa2FPa01NazNjSFNVUks3TytIT2dKVkFTNHYzTWo0NCtUZFVJ?=
+ =?utf-8?B?QjEwQ1QrZFN0ZFhHbU1oS0NxbjUvQW03N1pDQjhTbUV6eEJHYTJrNzdzZWZ4?=
+ =?utf-8?B?VU5nZ25uM1lOYUJ5OGg4dWdveGxpRlZNb0tpWExWRlYzcUVmODlYWEE4RXRl?=
+ =?utf-8?B?cFRhSWVyV0hCSzU3L2UvWktrRVlCdThkL0YyS3YrVytLNzlVM2VxT1J0ekEx?=
+ =?utf-8?B?bHhobUNBNFNyVFJzOFl6bFh4NTBya3ZUUmYzeGY5MzlSL2xCWnhwaVNiY1Ur?=
+ =?utf-8?Q?7cOklzS6pLE3Cl9ZYpmUj4INF?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 93270e98-d73e-4195-d698-08dc4ffd7788
+X-MS-Exchange-CrossTenant-Network-Message-Id: e6453ddc-ec16-42ed-572f-08dc4ffd79d3
 X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Mar 2024 14:35:23.1367
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Mar 2024 14:35:26.9777
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /7P/5v9n1NA/aedrJM3ZR8661xxSgjzUB3uQliy8GrIHXMeDuFWHBm4YGH3PImhrjRA3r1LTS8xTVuAfzo0MYQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: wrq9Rw+ITqunAQ6owL8TYZZm81DiwvAk/JZTSC+EA6AGCtub9xDygZOCubbhcl42ElvkZTtWckMV8xkfUkHOPQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6897
 
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
+Add peripheral types ID 26 for I2C because sdma firmware (sdma-6q: v3.6,
+sdma-7d: v4.6) support I2C DMA transfer.
 
-SSI and SPDIF are dual fifo interface, when support ASRC P2P
-with SSI and SPDIF, the src fifo or dst fifo number can be
-two.
-
-The p2p watermark level bit 13 and 14 are designed for
-these use case. This patch is to complete this function
-in driver.
-
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Signed-off-by: Joy Zou <joy.zou@nxp.com>
-Acked-by: Iuliana Prodan <iuliana.prodan@nxp.com>
 Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
- drivers/dma/imx-sdma.c | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/dma/fsl,imx-sdma.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 6be4c1e441266..f68ab34a3c880 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -138,7 +138,11 @@
-  *						0: Source on AIPS
-  *	12		Destination Bit(DP)	1: Destination on SPBA
-  *						0: Destination on AIPS
-- *	13-15		---------		MUST BE 0
-+ *	13		Source FIFO		1: Source is dual FIFO
-+ *						0: Source is single FIFO
-+ *	14		Destination FIFO	1: Destination is dual FIFO
-+ *						0: Destination is single FIFO
-+ *	15		---------		MUST BE 0
-  *	16-23		Higher WML		HWML
-  *	24-27		N			Total number of samples after
-  *						which Pad adding/Swallowing
-@@ -169,6 +173,8 @@
- #define SDMA_WATERMARK_LEVEL_SPDIF	BIT(10)
- #define SDMA_WATERMARK_LEVEL_SP		BIT(11)
- #define SDMA_WATERMARK_LEVEL_DP		BIT(12)
-+#define SDMA_WATERMARK_LEVEL_SD		BIT(13)
-+#define SDMA_WATERMARK_LEVEL_DD		BIT(14)
- #define SDMA_WATERMARK_LEVEL_HWML	(0xFF << 16)
- #define SDMA_WATERMARK_LEVEL_LWE	BIT(28)
- #define SDMA_WATERMARK_LEVEL_HWE	BIT(29)
-@@ -1258,6 +1264,16 @@ static void sdma_set_watermarklevel_for_p2p(struct sdma_channel *sdmac)
- 		sdmac->watermark_level |= SDMA_WATERMARK_LEVEL_DP;
+diff --git a/Documentation/devicetree/bindings/dma/fsl,imx-sdma.yaml b/Documentation/devicetree/bindings/dma/fsl,imx-sdma.yaml
+index b95dd8db5a30a..80bcd3a6ecaf3 100644
+--- a/Documentation/devicetree/bindings/dma/fsl,imx-sdma.yaml
++++ b/Documentation/devicetree/bindings/dma/fsl,imx-sdma.yaml
+@@ -93,6 +93,7 @@ properties:
+           - Shared ASRC: 23
+           - SAI: 24
+           - HDMI Audio: 25
++          - I2C: 26
  
- 	sdmac->watermark_level |= SDMA_WATERMARK_LEVEL_CONT;
-+
-+	/*
-+	 * Limitation: The p2p script support dual fifos in maximum,
-+	 * So when fifo number is larger than 1, force enable dual
-+	 * fifos.
-+	 */
-+	if (sdmac->n_fifos_src > 1)
-+		sdmac->watermark_level |= SDMA_WATERMARK_LEVEL_SD;
-+	if (sdmac->n_fifos_dst > 1)
-+		sdmac->watermark_level |= SDMA_WATERMARK_LEVEL_DD;
- }
- 
- static void sdma_set_watermarklevel_for_sais(struct sdma_channel *sdmac)
+        The third cell: transfer priority ID
+          enum:
 
 -- 
 2.34.1

@@ -1,68 +1,68 @@
-Return-Path: <dmaengine+bounces-1657-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1658-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D2947891FE3
-	for <lists+dmaengine@lfdr.de>; Fri, 29 Mar 2024 16:13:05 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6207D891FE6
+	for <lists+dmaengine@lfdr.de>; Fri, 29 Mar 2024 16:13:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 014681C25EA3
-	for <lists+dmaengine@lfdr.de>; Fri, 29 Mar 2024 15:13:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CAF0E1F30C6C
+	for <lists+dmaengine@lfdr.de>; Fri, 29 Mar 2024 15:13:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14E944D131;
-	Fri, 29 Mar 2024 14:35:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B09D85623;
+	Fri, 29 Mar 2024 14:35:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="L+W9STm0"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="VG/rXU3i"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2110.outbound.protection.outlook.com [40.107.8.110])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB51E4C63F;
-	Fri, 29 Mar 2024 14:35:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C6A028383;
+	Fri, 29 Mar 2024 14:35:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.8.110
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711722915; cv=fail; b=HQtxVpUtjgIWO32DjPwAhKQyS//+1mScTRN9ctxFaYAM5GLC6ZCutaqHN+qqMYMD6KpL1y/3GK3D73JacRrWLNVQYw5v1UIdUnsx7GpeVBUDlKD8BRLrg7IDQ/EBF6HH7yztB+NJW6BCkc9nfDhMWOD+wpu4k4jSAO11ar167jg=
+	t=1711722917; cv=fail; b=B8GvMVk+HVHdHL+9z8G2o1vrR2nUovtaABbnxLITLzUJv+AxsswCgRBANO8It3WTpy0HjN2lIJ3YG6c0ugItOO2ihXATE8h5Dy475+sRLI3Pi7viUCem6ZoHEOMWPaA12/cMEFzBb2nWPSqya/NSKiu+fGbGDDqxeHeRmWgS0fA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711722915; c=relaxed/simple;
-	bh=rTF/ueJwkfK5eKU9xU0B+wAeJhkRlyXR0sutzsAX11Y=;
-	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=VmCveQcQFdmmYowgpO2O7ZDIm9ut5hiefkaKnqz1MVVryVNKsjxVYhkJm2AgL92gHluk2hoB8GdSiUbHkSlWzKw5gO3li4wkL3jbRoOSw+bH8YDT4T8/+SpsyWq9lYaG/MBVVxkMsLmKMDLyScmQgIe8QSbX0ro94tFdxmnUcHI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=L+W9STm0; arc=fail smtp.client-ip=40.107.8.110
+	s=arc-20240116; t=1711722917; c=relaxed/simple;
+	bh=pkEVvWOsGPC8GRmMAKNJcok9PfGzxBg+simpRDnERxE=;
+	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
+	 To:Cc:MIME-Version; b=Cf2iLXNNAsE+pqSet37YEs6LSBTJn45U0PKpoFVQ9m5A2aZGxBs7FL6UsUYI+aBz17HLQw4+eBCMxt5PZiKwDekUoS59MR2W5UBEWGmfsyP6mZFE362lWD4qNETFEJVBVcBW5GVyKTOIkisUkRu7YpHtSCUPuLJbLpo4Y2tq/zI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=VG/rXU3i; arc=fail smtp.client-ip=40.107.8.110
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=K8Kz2v09S/l5DdmK8S6HyY2v6g3/ZOSOXyz8KC+JQOE86xh+BfKvG9jTPCi+BpdiRc+TRAxgzvy+WRVnWEtKtGsCDOG+kiA2CCSWvkKsT24ZC0HsPurBOThI+mD7x7NOU1b04/OGQzJufbDdkogcsfyOgfN5izlm5m/pLFBI2PQ4gZlj6a0LDYb9gxahyiUkBgYxofI0kexIb5yEqnuMbF2EL8GNFqECb8EqhO0j3ou+ZhAqcO7MOcbQB38gnXKr9T0J472WI5WZhi5Z13Ym7Ud3koLSDEKECSNv0+imAXQSf1ODrlBCPcUOaYGfsLsh9ijhkU0QHsZQCoa0oEJxdw==
+ b=L2IG99KKq7D7aiA6evL27ILl9dlaCO2kNxuTK12dVKYxLxSsZky0sB7yV/c2z4ISOWrRcpeSgPnL1jg3IOOK8pBJX4uCZ0NZJxlBgbuQG1FPs0IHnrFi0E/wWOiWKGK3FTa9XRRt2vbI3UC8iXwNrgKw9K35kc4Tyd8jvnJxS4jOR17XQ9XfbzJ8SXLNccsDJwYn17Wif5GWJdQJ1iv+g8R96jKF1LkPn8DgyC179x2UM+g3U6vnv6YwNoF6Pr6CDc8dtQykMr+g4EI3dmLH9GBNJOTQTXHf/z5dZgjoYfDFvFjLvlkH6+Jwgv7X4AsskYdGLCWu5pp2w5paH5yr1A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lEpycwDr2hVMwHRV1ANJZ3dTItXuFvQQefStg25p2jI=;
- b=nM49lxGKhvym4YGETp5/Wc25HzWhXRZfD6YC/ax4dH3TLoguCovQX/46QpS/C/x+98yFYNS45lPwi9DUKWVKqg0uZ2U9cB/10F6ha+BYBjlZEHQYy0wzKwnbtHyenyg5RcikArfUlZFmY1VCPqbgs9jvi9KC4V5YnjA7VS5ilsMP7ULPzbS8nkypBOiSLbBffMIWulxu3GOhmGLZoEnMvazGSgFlLY7yuF4s03KUGa3oRz69pva/mcUJaPJlHzgKF6Hf2T84jWF+EbsOQEkqPsravY2TJbzWCpwpq1tDicogecxIHtweraLgL8pYsDVY9RI5h/9NjqDhqvKQ/vE1IA==
+ bh=xKzF2nPeJMZc/TEzPO9lzXdhY8kN2NWlNrZ/LDL9oZI=;
+ b=OQETLLN8IOXDLfIznJdHax/PB/tRC6cqojA3U0WAsmJcZK0WyzHWFIIJV5gcp87Y/R3hAO/NsWJGtFJvsYVKt59O/S5dZXQjaLRxdz7E9MlaOY21t8ftswNdPpumqFPCo18ZP1L3fdcAcIUgNYNuVkfu7Ul1OMvn6x9AbyXBatiw1VzHVHPmLiMrrA4YWsOSgZzvtSc8UJcjPZacXhh8tqB8qrirLcsYiF90My6QRpIlw+PUwSwL7ptDJdOZ4QbhC4DVU0JIPRHv1gT2dbVxFGHBw3N5HGtTXxAKvC6oIQ3rTEBwRD4HpRgIK/4tK93L4mnM1ehXPlvjTNB1F+M6iA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lEpycwDr2hVMwHRV1ANJZ3dTItXuFvQQefStg25p2jI=;
- b=L+W9STm0kukd+KSObbJjgWoYgPRxNUHariTyErbCZj7mVxj/og8JRwsb/Z/48cy0/LJiTdJyhRCTFg97GltlQ13rifvWQged57ZEOcwgf7T8QEYcN5iDAV8dqJ02Bo7zn8+CNCLI+krrpThjtIZsqCcwRJdpC1ujDBXy0pHsDAE=
+ bh=xKzF2nPeJMZc/TEzPO9lzXdhY8kN2NWlNrZ/LDL9oZI=;
+ b=VG/rXU3itKTw0vanpvq3TH++XbnKaBZat+1FHLFKBzj/c65sYqYeRKukfsgoQwZ7+u01lmj6ouXpzHyzFYbxW+wAYTA6GU9HZzdxsXtHJu4NrpzJQQfVV/WXvJPik1aRCEvyIlgf23stLXiYkM4su4Zidnm247myHCKsze6bN6U=
 Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
  by AM0PR04MB6897.eurprd04.prod.outlook.com (2603:10a6:208:184::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.32; Fri, 29 Mar
- 2024 14:35:09 +0000
+ 2024 14:35:14 +0000
 Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
  ([fe80::3168:91:27c6:edf6]) by PAXPR04MB9642.eurprd04.prod.outlook.com
  ([fe80::3168:91:27c6:edf6%3]) with mapi id 15.20.7409.039; Fri, 29 Mar 2024
- 14:35:09 +0000
+ 14:35:14 +0000
 From: Frank Li <Frank.Li@nxp.com>
-Subject: [PATCH v4 0/5] dmaengine: fsl-sdma: Some improvement for fsl-sdma
-Date: Fri, 29 Mar 2024 10:34:40 -0400
-Message-Id: <20240329-sdma_upstream-v4-0-daeb3067dea7@nxp.com>
+Date: Fri, 29 Mar 2024 10:34:41 -0400
+Subject: [PATCH v4 1/5] dmaengine: imx-sdma: Support allocate memory from
+ internal SRAM (iram)
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAIDRBmYC/3XNSw6CMBSF4a2Qjq3pk4oj92GMKe2tdMAjLTYYw
- t4tjJDE4bnJ998ZRQgeIroWMwqQfPR9l4c4Fcg0unsB9jZvxAgThBOOo2318z3EMYBusTZQOy3
- rSjmFshkCOD9tvfsj78bHsQ+fLZ/oev1XShQTfCkrYwktZU2qWzcNZ9O3aO0ktrfqaFm2UClOp
- BbcOPlr+c7Sy9HybK3mylorhBW7v8uyfAHn8O5XIAEAAA==
+Message-Id: <20240329-sdma_upstream-v4-1-daeb3067dea7@nxp.com>
+References: <20240329-sdma_upstream-v4-0-daeb3067dea7@nxp.com>
+In-Reply-To: <20240329-sdma_upstream-v4-0-daeb3067dea7@nxp.com>
 To: Vinod Koul <vkoul@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
  Sascha Hauer <s.hauer@pengutronix.de>, 
  Pengutronix Kernel Team <kernel@pengutronix.de>, 
@@ -74,16 +74,13 @@ Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
  imx@lists.linux.dev, Frank Li <Frank.Li@nxp.com>, 
  Nicolin Chen <b42378@freescale.com>, Shengjiu Wang <shengjiu.wang@nxp.com>, 
- Daniel Baluta <daniel.baluta@nxp.com>, Vipul Kumar <vipul_kumar@mentor.com>, 
- Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>, 
- Robin Gong <yibin.gong@nxp.com>, Iuliana Prodan <iuliana.prodan@nxp.com>, 
- Clark Wang <xiaoning.wang@nxp.com>
+ Daniel Baluta <daniel.baluta@nxp.com>
 X-Mailer: b4 0.13-dev-e586c
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1711722904; l=2573;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1711722904; l=4382;
  i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
- bh=rTF/ueJwkfK5eKU9xU0B+wAeJhkRlyXR0sutzsAX11Y=;
- b=YKpUHrsGM/6oSSvURlCVQoCZDjeOWm2rvfdsCsHPEgOlGwKwGGYq1wR/iw1ujzoxRbCJ1sDv/
- Z0T/Obke6tcCthhyozlNn65rvBZB8iByKe9sqOOptEUIJScwUSjRoga
+ bh=35WKrihwsy+0gjRgHH1219vF/6YHpbFAEnJbyCUA0F4=;
+ b=8FQewc4AtWErArOu5ERlHECcf9kFO4oB7cXVz0gS7aQQbVo1Jl/U0e4bq7Si4v4LQukc5niJz
+ AL6s/M03Td0BWIWFlOmcNc3hFxVRKQ6o/tw6WlO6Y93i25zI7Q2efSi
 X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
  pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
 X-ClientProxiedBy: SJ0PR13CA0153.namprd13.prod.outlook.com
@@ -101,124 +98,188 @@ X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	ApQtPF+9DkZRiXJJ0bxHTngLS6t4oyJH/T2JQ87Sd/8R6wL5tI1qM/bc26VuHnYuyXEFFyBCYK91S+akI9ewJXBqrWD7YyHVd8HGnzTGdJoNB34QsZGICUhZs24WZgkrumsgRbpwV/SlwNHLGKfUtkDe82IEhi5P2DA67UUTZgKsWyoXMOOQDfCSv5olLq+4ihqbvaPe9KyxOzySa763kJNbLk52bffTzJxAXb5jO5S5ixJzmK1MQ/cwQbyMMzAcutIuj11/Guh5mgYGsZ11J93pWxvVboYpUqv2znqOJAqGa2TZD0ek7+04myNm10TlcmIItVBcapXvrPLmAcoduqYT4DR5f3Mn1U7MHp4fu4yQUz35ak5+o3lF8KY5J2X/YbfLgeX5az0iTbsnbn9MTe+UjYlfzvSUK1+doClBNqjeG3B+XNteiMoXosqtUPcU8xm0QaQAQ+XKnjBxsf/Nwh0sB3ba8ZpOaf9jWH7tTq9h9RRa+dWvV5dEGuzBaaSHAf05gPmZGayNZ/RD0YDl30IUXmn+SQyJy7HWdNYoHeLy/kA2969O1ecEGtVgud2ITuvMu4VCaA4CG9RUm5ngwy0dMYDIf81xCZneIVQnORnF2ZVq5SCe4mFCxIeYVuzZhif4feB6FGI9oPrHJyoSLbWAwnMc/JeougvVHbBnn9QZ360fjOllV1yJ6LNcwQVt
+	zOLLoYU/6JuAYy2YkGDdQ6BMA1edzPcCcU9pcCZpfASdtOathn0KAc2ul5MLR8hWo5GNBnknqAtdap/5O5d9Q1O+gU2VBkGk/VA3r8iGxfMIVWa1IZ0Jm7QqZarZ9oIixKMdOiMdm20NvQFq7VsQNdrAB1n880yCOh0YQ9ilmgLpYtKy7qX/8RU4ST++JL3q7/k/xQZfrgiwFNWGF0B2qXNSpLo4MtPjrHq9cSOWd1/UYQAagZaqxh7nvm9+yCi2O7xl8IOTUJ5NKyRkR/nAL0v9bvl8h1HgN1CTP6eqaPzz0AgKWDYZ/tXlgz1X928VugfiyorxZJrooRxvF/+jwTZQUHrNFjQ1rIRlqgB4dIJfD/TbnkoKoJBmG5oUU8Cf0Jk9OGJO4Q37bHnb9cndHEIjXT2+oGdkA8q0vChNAqEuzh6efXOnhCfl6tnB4p6GvvjO+i4xVu22gGOebTx/nSmH5NvJ5xLaAGOKfOCQou1lBwTz1X/En64FzRNne3ZqnRQ0W2YMudnRgPnp2UIeGe/JOnJiPagT1cntEAM6khYXXayKo8SlXZNCwIeaeZCDDLxkygdtDZSC3P/T7f5WbciDK0c63gzypLG61Mx7QE6mvSnqPHTE+TsOZUry24fW/otk9JfvJnLnyGryFXenNNqBjJ7D8Py/UOR5Mvv1by2ick0quv3S/xpIiV86Hi6i0qByFDBlB+cYmgP7iODCpp3m37aINvtyx5fcZ7xn7uI=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(7416005)(52116005)(376005)(38350700005)(921011);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?dENvSGdmdXVJUnNZYUtGM0FoL2ZHMjhMMzNBQ1lrRFlldzdmcVZrZ3NQMW5p?=
- =?utf-8?B?VXpDSGp3N2JvUjNYck1DS2o3b3FEbWVFZVhIeFFnc2VLOTJ2dkp4VVdMck9p?=
- =?utf-8?B?Qm93WUl4cTZlWWpiTVF4cXNxRDVPdUlPQmo0Vk5wVC9mUkMwb0crN29JQ3Nz?=
- =?utf-8?B?c1dOR3RFNitWZFFiQ1hIdzcrM3lnVFhWMFRwaFFCdU8wVFo1MFRRMysxNWlP?=
- =?utf-8?B?WW56Sy9ZTGNvcU1JYkhPTFN3NG5oMVRZK0FiajlhL3Q1S2dhSmFHOWNqNnZO?=
- =?utf-8?B?UDJlS1BJZ2N5amlZNlJzY204NDYvb0hLYnVkODUvRzM3T2NiWENYVXdwU0xP?=
- =?utf-8?B?ZmlRN1FuL0h1SjNRQ1pCUktXRmozRTJpU09ORlpVdnMvVzlybnlDMitPeGFt?=
- =?utf-8?B?S2J3eTNqREx0ZmZCNXpkbXNod1VwL3JrVDZXNGtGUFdSOEVUR3lHQTRBUzNU?=
- =?utf-8?B?eXkyR1BDUTBIVTdEZXhuaC93RGdwSEFTMnAyUDJkSU9KbGVWSHdOZzNWRFNz?=
- =?utf-8?B?UjR5eGgzdEM0VUpoMEFxN2JiUDJFN3A3alUyTlhuL2JMWHVMSE1VVHFFRWdn?=
- =?utf-8?B?Uzl0S0NzNExzV1BLY1l6TWVUTHMwRWhvSkQ4RkJEdUFGUW50VXNrT1ZrY1pP?=
- =?utf-8?B?L053bGg4cGxaM3h1M1RrR1lpUndXUW02L09WS3Fka3JLZFh3RDBLZHpONHU0?=
- =?utf-8?B?RkxybDcxZVc1SG1heUpUZE1jMEFVbHdXVi8wY001Z1cyL0hxaDdQbnRaQjBE?=
- =?utf-8?B?bjdWQlg3S215dlFFZjd4cGQ5elYzVkVjU2kyTTFxclo0K1ZWWW42dkNtMGZI?=
- =?utf-8?B?c05NWHdkWVVnL3ZVNDQwSHdrWkhWUWR4eTZCNTR3TFNBMXpQWTFTd1V4TDRy?=
- =?utf-8?B?N2FTRms1UXhEQVF2VTlSdUVpWjRLVWVxQWVBVFBYblBtVVc5cmdqSzNMcTFQ?=
- =?utf-8?B?L0dsbGJLeWtoSkEzRU9ua0dOM1Fqbm5zbDJSL3lKakdSdldWWTFXUmRRZHBV?=
- =?utf-8?B?SXJoY01uSi9ETWw5VFVrSkJ2eHlBd1ZwajZnWWJzdGlTVHVBZERtU21nRWJ3?=
- =?utf-8?B?T1JsajZ6TC81ZitJcFhMNVJtVHZxcFArV2grbGVVM2RWM21oQTFsQ1lVcHRR?=
- =?utf-8?B?cU14SWcxenFkU3g5THpJVUJTODRXcElnOVVPODlMR1ZFcUZIcWNsZWhRMDVE?=
- =?utf-8?B?c2JMZCsvMmI4RTlHb3Y5RjNncWdXeVJ6M3FKU29nU0hyR0JtYm5yUEJBNE5N?=
- =?utf-8?B?SlJCaWc3SUx6Zm5PSVQrSmhwcTYrb3dzSHJ4RzJBNWNYQjhKZytNaDNyUksy?=
- =?utf-8?B?MnVJYTA4MDJFQzcxb2kweithNTF2dE5rYytXYnBWWnF4TEwrOFVzK2VYVzhJ?=
- =?utf-8?B?UHVNMXRvOHdyNXc4WU44K2RwRlo4TWNxTFZNQlM0Z3d6VEIwSGJsWU9vd3dX?=
- =?utf-8?B?aVVjZ2JqaUR5bUxmWnJIMjR1OEE3VXY1TDJCVnovTFQvYVBUcnNaWDAzSVc4?=
- =?utf-8?B?SGJqUmZvVE81TGx4M0dubGZ1Rk5OMlZ1eExDQWp2ZGoyZHVnZWo5V2luZThn?=
- =?utf-8?B?NDB6QndoMkJ2akJUbHJlcHZjWFFYN3BXNFE5c2ZDeE9FcTlvWk1tczZuUGRy?=
- =?utf-8?B?ZXlWNXNhM2tPQ29xMnZ0VmtmUmZmZnZIdCtUK0lYRGYxVHVMVzRQbStSeENT?=
- =?utf-8?B?ODJtK0ZvR0NEbDJ4SWdNbnJvbjc4YlYzUFF2SmF0cmt0VzE1ckdKamh3aE16?=
- =?utf-8?B?bzU5V3VyMm1QQ1JDTTluU2NUa0tmUlJxbVcyb1p2SW94ZUxTbUp3b3VRVUt1?=
- =?utf-8?B?eS9Kd2xWL1E2NFdRUGNFVTgxRkNWeDNTcGVTSkNPVCtiVHpWREN0Q3dqUjls?=
- =?utf-8?B?QSs1bXM3NjBteDR6ZDNCZmU0ZkFveGJCcEV2MUs2cHBqRDQwOHhSbjdaMytK?=
- =?utf-8?B?RTZsNVhOTzZuN3Q2RS95bWlERlN6R1VYYVRGdkUvdjIrTnpjcnBqTjdpN3Vm?=
- =?utf-8?B?Y1ZrK3JtKzVNVmVNc2tZd0lBS1pLQm14RHpqNGlMbkZyczYxSkRTL0dWM2lV?=
- =?utf-8?B?MkhPSnRDQ2dwZ3ZKdVdGZUNtUXBHc1JLbW1BU3gwbUJmaWdRS3p2UitiN0N0?=
- =?utf-8?Q?I/RqkT6OTXauC2ZH2WyV06Nyg?=
+	=?utf-8?B?ZHhTUGt1Nk0vUDg1V3RicE90RUhZak0wYmpYOW9SeFM5eEhITzBsQXBGcHpH?=
+ =?utf-8?B?bzJDdUZWbVZDMUJwUkg4VndZN2QrZ1ZCbTZPUnZXTjZPcWN4bE9xTENoU1dU?=
+ =?utf-8?B?N2ZEU3RuQWFBaG5YY1E2c2ZUeGNRenAxVHp6OHFORFVpUzEwWGdobzZNcUNz?=
+ =?utf-8?B?YlRBZ2kvb3hrdXpGYXRYV29uNnlaVjhGS3hWQjI2RHBFeFVxZ0w3OVhFSUJD?=
+ =?utf-8?B?Rkw1Y0dENlg0YU1uMllHb2kxMXkwcnNtTG1FOHJTZy9tK00wN1VHTUxhUjdC?=
+ =?utf-8?B?WS9oazNBaUt1WWN6bUVndmlkL3V6SWlBTEc4ck1OSHEyMzdRNmpqZk9XNlZs?=
+ =?utf-8?B?eWJObThJUkFwNHh0Z2FNWnFnWFcyM0k3ZkpyTWU2LzV1Zk5jM09aR2Nwdk9I?=
+ =?utf-8?B?YXExdllkdW9CT3FRdXdWcnZ3WGlQWnoxL3VqWHAwK1cxWXI5SmdtaDNSNGM1?=
+ =?utf-8?B?ekZFTDVBVFlQVDQ5ZnRLbmVWTUcxSHdxZmZkSGdKem44cVRPWU9pbzExN0ta?=
+ =?utf-8?B?aVZXLzl3VkxxUkYxaXhkUUo2UDBKYUZNLzB5endnRXpDcEl1ZzVRZy9WdWF4?=
+ =?utf-8?B?ZlRlRnp0RlhSS1A1bWsvUUJDbFVYak1mMzV3bEJUR3BWd1h4TWozLzdTUWZi?=
+ =?utf-8?B?cnJUSWdHWENvUnlXMXBIKzFXNFlSZ0pCbjZPeTNZbFQ5ZmZsSHFUVm45NzI5?=
+ =?utf-8?B?anNabkNvZ0VIZU1lZnJlRUlLUUZxeUNZVEhISXcyU0tnaWNURDMxRUhrbTJv?=
+ =?utf-8?B?MFRhV3BNSS9qalJVTE9yR2hDaFNIcFVMSE5jS0lCWWhkRzZZVCtMRU9ZNTFj?=
+ =?utf-8?B?dTA3YWgxTkhpc2tobHJ6d2hzcGJrWUYvZWJrTUJ1aUk1enJFYjhtbUU0dFhJ?=
+ =?utf-8?B?TjdTMmU1cHBRaytWRVd1NDdTL09leDFZMWxDWUpweXErZDlqK3VscnlPTFpY?=
+ =?utf-8?B?K3p5Z0lFSXo5TzdnTFd5S3doOUlqcjNXYjMrdHEzazUyZXNTbXpoK1JsZmZ2?=
+ =?utf-8?B?NDRETTNPRmsvUWV5VEhLMDVvZGtNVjFWWFNNRE94R09kQ0hsaGQ3NllZQzgr?=
+ =?utf-8?B?elk1NzFSdmh2NThvcU9kMk9SKzlndTZhU2htZ3VJN3ZIdEJsNTk3SzlGTjNE?=
+ =?utf-8?B?azNwT3I1d0d6cEdibE9JODcwdUI0Q2NyM3p1TkUrL1FCUWJ5TTMxRzNTY1dI?=
+ =?utf-8?B?RnJHa25CV3BuNUpFT29LQ2dkUFVsbmN0QWlDam5VMytXbVFiYm9iclNxeHNJ?=
+ =?utf-8?B?bXA4Q1ppbVpnM3NNQ25ZNDJQV1JtWXZPSVB3UWZoQmxQdy9KdDZzYWlld1lK?=
+ =?utf-8?B?dmJVODdycmcyT1FuOUlQbk1PRVFESjhXQWZPOEFuczAyaVliUElVT0FnMUNo?=
+ =?utf-8?B?VWNjUFg2eUVVNFBKcHhPVmZFc1lDRWRMa1BWU2gweEg0NjIyRTBnb2ZOT3c5?=
+ =?utf-8?B?MU9zU0ZuTnM0anQ3cHdHbnlwV3NhMDVGQkNLOEo4WjdTaTZMcFovMjBSU290?=
+ =?utf-8?B?N1plbWl2d0dVU3hyZFk3Q0oyUlYwNlVTWFZyMnlXME9rMElzb3BlZTNFNENT?=
+ =?utf-8?B?NG13b2dZZ05xTTFPODgwMldhUHFxM1RTKzRZTzkvdFlOcmE4WGNDMVRPN3pJ?=
+ =?utf-8?B?bUl5bDNPN1ZWWHdaMElUa3ZMdHpOSFlpYXZHUEZUU015N2tVcHBISW83VW5T?=
+ =?utf-8?B?azVTUkdYTVFOMDFoVmVRSkFkWXBYWGtuYjg4RGxQbWV3MUU3TityVnVoUHli?=
+ =?utf-8?B?Y05aaTdTOFQ5N2dvQ21sYUtNOHpNUEhSTVFWK1oyTnlGV01icFA2QXBNMDFB?=
+ =?utf-8?B?Z24rcFp2djdYekFucThBVlYrUDhsdzdMcG90dzdZajNhZGg5TkdkT05oZnht?=
+ =?utf-8?B?WDc3T2NIUXJPK1puaTlGTjJlQysvRDk0VWREMFdDeHJwc29XMXBaQnJONkFq?=
+ =?utf-8?B?WHE0SnM5RStTbHRBejh2d1NvbTAzaHdtc0V6Q3ZCS2RVMXM0dkh3bkVsbHZG?=
+ =?utf-8?B?RnovYnY0dGVsenJHTTdHYXIyYVNlWUZUa1Rab1RVRC84VzhCRWRXQ25ic2pR?=
+ =?utf-8?B?dStydkxNL2NrSGNVTkt3bW4waXZvbnFwOVlBS0pvMEEyUWlLRUhETlRjc05u?=
+ =?utf-8?Q?XndNsPpatKgUb50WZo3TeZpNX?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 784ecb27-ec19-410e-047b-08dc4ffd6f83
+X-MS-Exchange-CrossTenant-Network-Message-Id: 577fa877-4713-411f-b6cc-08dc4ffd7223
 X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Mar 2024 14:35:09.6676
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Mar 2024 14:35:14.0767
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9s0hYxp+rN9QykbEnluHSD0t7KHBJP+xWPc62CxMh7QxdexAtwkQ1FRSzCoXFndRUDFv2SwZBgNCwnauoe5f+w==
+X-MS-Exchange-CrossTenant-UserPrincipalName: Zen0XB4vsWNAu3ECNWaEZDIV9seMTCJmhTm9YnomvhPrXfWKpcVch4X1y6DFeLhcSwitbM2/Pnhp3p7vVPqZ+Q==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6897
 
-To: Vinod Koul <vkoul@kernel.org>
-To: Shawn Guo <shawnguo@kernel.org>
-To: Sascha Hauer <s.hauer@pengutronix.de>
-To: Pengutronix Kernel Team <kernel@pengutronix.de>
-To: Fabio Estevam <festevam@gmail.com>
-To: NXP Linux Team <linux-imx@nxp.com>
-To: Rob Herring <robh@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-To: Conor Dooley <conor+dt@kernel.org>
-To: Joy Zou <joy.zou@nxp.com>
-Cc: dmaengine@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: imx@lists.linux.dev
+From: Nicolin Chen <b42378@freescale.com>
 
+Allocate memory from SoC internal SRAM to reduce DDR access and keep DDR in
+lower power state (such as self-referesh) longer.
+
+Check iram_pool before sdma_init() so that ccb/context could be allocated
+from iram because DDR maybe in self-referesh in lower power audio case
+while sdma still running.
+
+Reviewed-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Signed-off-by: Nicolin Chen <b42378@freescale.com>
+Signed-off-by: Joy Zou <joy.zou@nxp.com>
+Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
 Signed-off-by: Frank Li <Frank.Li@nxp.com>
-
-Changes in v4:                                                             
-- using shenjing MULT FIFO support patches, because more clear commit
-message .         
-- Link to v3: https://lore.kernel.org/r/20240318-sdma_upstream-v3-0-da37ddd44d49@nxp.com
-
-Changes in v3:
-- Fixed sdma firware version number (v3.6/v4.6).
-- Update sdma binding doc and pass dt_binding_check
-make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j8  dt_binding_check DT_SCHEMA_FILES=fsl,imx-sdma.yaml
-  LINT    Documentation/devicetree/bindings
-  DTEX    Documentation/devicetree/bindings/dma/fsl,imx-sdma.example.dts
-  CHKDT   Documentation/devicetree/bindings/processed-schema.json
-  SCHEMA  Documentation/devicetree/bindings/processed-schema.json
-  DTC_CHK Documentation/devicetree/bindings/dma/fsl,imx-sdma.example.dtb
-
-- Link to v2: https://lore.kernel.org/r/20240307-sdma_upstream-v2-0-e97305a43cf5@nxp.com
-
-Changes in v2:
-- remove ccb_phy from struct sdma_engine
-- add i2c test platform and sdma script version informaiton at commit
-  message.
-- Link to v1: https://lore.kernel.org/r/20240303-sdma_upstream-v1-0-869cd0165b09@nxp.com
-
 ---
-Frank Li (1):
-      dt-bindings: fsl-imx-sdma: Add I2C peripheral types ID
+ drivers/dma/imx-sdma.c | 46 ++++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 36 insertions(+), 10 deletions(-)
 
-Nicolin Chen (1):
-      dmaengine: imx-sdma: Support allocate memory from internal SRAM (iram)
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index 9b42f5e96b1e0..4f1a9d1b152d6 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -24,6 +24,7 @@
+ #include <linux/semaphore.h>
+ #include <linux/spinlock.h>
+ #include <linux/device.h>
++#include <linux/genalloc.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/firmware.h>
+ #include <linux/slab.h>
+@@ -531,6 +532,7 @@ struct sdma_engine {
+ 	/* clock ratio for AHB:SDMA core. 1:1 is 1, 2:1 is 0*/
+ 	bool				clk_ratio;
+ 	bool                            fw_loaded;
++	struct gen_pool			*iram_pool;
+ };
+ 
+ static int sdma_config_write(struct dma_chan *chan,
+@@ -1358,8 +1360,14 @@ static int sdma_request_channel0(struct sdma_engine *sdma)
+ {
+ 	int ret = -EBUSY;
+ 
+-	sdma->bd0 = dma_alloc_coherent(sdma->dev, PAGE_SIZE, &sdma->bd0_phys,
+-				       GFP_NOWAIT);
++	if (sdma->iram_pool)
++		sdma->bd0 = gen_pool_dma_alloc(sdma->iram_pool,
++					sizeof(struct sdma_buffer_descriptor),
++					&sdma->bd0_phys);
++	else
++		sdma->bd0 = dma_alloc_coherent(sdma->dev,
++					sizeof(struct sdma_buffer_descriptor),
++					&sdma->bd0_phys, GFP_NOWAIT);
+ 	if (!sdma->bd0) {
+ 		ret = -ENOMEM;
+ 		goto out;
+@@ -1379,10 +1387,14 @@ static int sdma_request_channel0(struct sdma_engine *sdma)
+ static int sdma_alloc_bd(struct sdma_desc *desc)
+ {
+ 	u32 bd_size = desc->num_bd * sizeof(struct sdma_buffer_descriptor);
++	struct sdma_engine *sdma = desc->sdmac->sdma;
+ 	int ret = 0;
+ 
+-	desc->bd = dma_alloc_coherent(desc->sdmac->sdma->dev, bd_size,
+-				      &desc->bd_phys, GFP_NOWAIT);
++	if (sdma->iram_pool)
++		desc->bd = gen_pool_dma_alloc(sdma->iram_pool, bd_size, &desc->bd_phys);
++	else
++		desc->bd = dma_alloc_coherent(sdma->dev, bd_size, &desc->bd_phys, GFP_NOWAIT);
++
+ 	if (!desc->bd) {
+ 		ret = -ENOMEM;
+ 		goto out;
+@@ -1394,9 +1406,12 @@ static int sdma_alloc_bd(struct sdma_desc *desc)
+ static void sdma_free_bd(struct sdma_desc *desc)
+ {
+ 	u32 bd_size = desc->num_bd * sizeof(struct sdma_buffer_descriptor);
++	struct sdma_engine *sdma = desc->sdmac->sdma;
+ 
+-	dma_free_coherent(desc->sdmac->sdma->dev, bd_size, desc->bd,
+-			  desc->bd_phys);
++	if (sdma->iram_pool)
++		gen_pool_free(sdma->iram_pool, (unsigned long)desc->bd, bd_size);
++	else
++		dma_free_coherent(desc->sdmac->sdma->dev, bd_size, desc->bd, desc->bd_phys);
+ }
+ 
+ static void sdma_desc_free(struct virt_dma_desc *vd)
+@@ -2068,6 +2083,7 @@ static int sdma_init(struct sdma_engine *sdma)
+ {
+ 	int i, ret;
+ 	dma_addr_t ccb_phys;
++	int ccbsize;
+ 
+ 	ret = clk_enable(sdma->clk_ipg);
+ 	if (ret)
+@@ -2083,10 +2099,14 @@ static int sdma_init(struct sdma_engine *sdma)
+ 	/* Be sure SDMA has not started yet */
+ 	writel_relaxed(0, sdma->regs + SDMA_H_C0PTR);
+ 
+-	sdma->channel_control = dma_alloc_coherent(sdma->dev,
+-			MAX_DMA_CHANNELS * sizeof(struct sdma_channel_control) +
+-			sizeof(struct sdma_context_data),
+-			&ccb_phys, GFP_KERNEL);
++	ccbsize = MAX_DMA_CHANNELS * (sizeof(struct sdma_channel_control)
++		  + sizeof(struct sdma_context_data));
++
++	if (sdma->iram_pool)
++		sdma->channel_control = gen_pool_dma_alloc(sdma->iram_pool, ccbsize, &ccb_phys);
++	else
++		sdma->channel_control = dma_alloc_coherent(sdma->dev, ccbsize, &ccb_phys,
++							   GFP_KERNEL);
+ 
+ 	if (!sdma->channel_control) {
+ 		ret = -ENOMEM;
+@@ -2272,6 +2292,12 @@ static int sdma_probe(struct platform_device *pdev)
+ 			vchan_init(&sdmac->vc, &sdma->dma_device);
+ 	}
+ 
++	if (np) {
++		sdma->iram_pool = of_gen_pool_get(np, "iram", 0);
++		if (sdma->iram_pool)
++			dev_info(&pdev->dev, "alloc bd from iram.\n");
++	}
++
+ 	ret = sdma_init(sdma);
+ 	if (ret)
+ 		goto err_init;
 
-Robin Gong (1):
-      dmaengine: imx-sdma: Add i2c dma support
-
-Shengjiu Wang (2):
-      dmaengine: imx-sdma: Support 24bit/3bytes for sg mode
-      dmaengine: imx-sdma: support dual fifo for DEV_TO_DEV
-
- .../devicetree/bindings/dma/fsl,imx-sdma.yaml      |  1 +
- drivers/dma/imx-sdma.c                             | 75 ++++++++++++++++++----
- include/linux/dma/imx-dma.h                        |  1 +
- 3 files changed, 66 insertions(+), 11 deletions(-)
----
-base-commit: af20f396b91f335f907422249285cc499fb4e0d8
-change-id: 20240303-sdma_upstream-acebfa5b97f7
-
-Best regards,
----
-Frank Li <Frank.Li@nxp.com>
+-- 
+2.34.1
 
 

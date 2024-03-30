@@ -1,201 +1,165 @@
-Return-Path: <dmaengine+bounces-1671-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1672-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C07B7892BD0
-	for <lists+dmaengine@lfdr.de>; Sat, 30 Mar 2024 16:24:10 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5945B892C3F
+	for <lists+dmaengine@lfdr.de>; Sat, 30 Mar 2024 18:58:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0C990B215AE
-	for <lists+dmaengine@lfdr.de>; Sat, 30 Mar 2024 15:24:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DA3F11F2298F
+	for <lists+dmaengine@lfdr.de>; Sat, 30 Mar 2024 17:58:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 978D6381CC;
-	Sat, 30 Mar 2024 15:24:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 105613FB2C;
+	Sat, 30 Mar 2024 17:58:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="hapkq9M1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kKaSRplx"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03olkn2070.outbound.protection.outlook.com [40.92.59.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0F3A1C0DEF;
-	Sat, 30 Mar 2024 15:24:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.59.70
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711812243; cv=fail; b=rAw2OeXxwinhOCVzltCdtRN/kho2JXcW0R7CJVu6VGYW8sdYtYLXapXQvQyfkchubXmxdJxbYz8Nv0FBEQ2zjWfvztAcLVnli0Ce7TK3AhGCKXbcYWCgIkfWZcXU2x9LDmdkKgm4DSWl31HZtdqgrqnlAarnW6Dq3deRYQly8fA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711812243; c=relaxed/simple;
-	bh=mgOyeD9piZnUBQpAOdgX6Pv0wnCmVXamNecDH+ZfGGA=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=QOHhe40T8ZgN26Ev226ah+iC5fxpRof+jDgew1FZfLL0Aqpj5MlnhiGnoHtJN3RKyKfOO2Zit9LzvQbRxq8wBObUn3ep+48IUOgnY10k9kJbBuQDeE91O8vustGm+Zsk0nUFssng7vr5toimkz6GieY+fpYbbrW0Xe2Z28MjPpk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=hapkq9M1; arc=fail smtp.client-ip=40.92.59.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Kj/ZaovklV1aZ9gLY/T6FUzp/GLYrz9nqvtVe6CWX1j/idoavn/tvQ8MAsuSMCANHE9DKrkDtFEFJIZYvA/MbY2CBrmPeuPfYa+QxtiP8hRXISZCNF18qw6GHpTqWRf1zlqy6ya5gZGvyQO2yhOvsne/h9D2Gom7jVuwPSmNQcEyUefw6nRd3flSsM+v/+sUmR2xACLe11V88z/xamELXpvGgLa9z3tu8EjlYwFKMHPWpo98WSUEQUHEW6cwB5+81ngplSOlz82JNuhTgVmvjiVt038qgBjOFG2LABSOPltaTEdMuNz1Weo/COQb1XAnChorr7vIGlpAi1JmakrWNw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mFOsPr1VrjllHTP4jRfLDiW2C4PsBe9dz1I3i5L7he0=;
- b=oI32ae/W2P7eK6/UkT+LqXmz8W72VjsDnYyYiDrTPvzY3USLUrJAKw3W7KJJx9p0soiNuqrUsSx90SzjAinKaKIp+waJ5n5bj4/DRRM+ZLXI17dyFsb++JAHZ5q/4HsT+cDAyGlA32xxIODp9NOUIaZxGOCpadrpOtj/JYOjg9e1WotwpLa77yh/Xk/EtI4q2SnDMEgALzw2AvYtjVM/xIsiggAVb+zLhrng+s65ixyegDHPN51c0zRFyjFjIlJfVLwSj5pb/0Q4jkDZb3J4KIr9uNW2OC5s/3B2kd7a0z3poeZPpirzh4FNy0+UZPfLhcySHW5Y8VeUFF2wJj14lQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mFOsPr1VrjllHTP4jRfLDiW2C4PsBe9dz1I3i5L7he0=;
- b=hapkq9M1Dy63rdLywPrRJmkYVhigaWAC7Q26yAo4V01SEQMZi5TaZYGZGM0G6P5o2AAzfKVunK90RkthPMMyEnoFRnkMFHV3l3R04ITOgFkC5EW6muNivLKxUkpgvyEvl/qOBc2YOvoL/fVfpt5pvShWpANR4l5p1X7QWbTJRIfGPGNWtZStmz+ETpFUR3DSSla3Rl8bkdwHIZUN96wV9RR1uu6zOGQHhkucuhtoOv6YbOGoVsd/mfQ76YJz65iTZ0FV0gaeArLT3t9C457GhOncerpVlqzsUVByMsqzyD9yqwrngYUkrrmmKAWCk/tKGB40xtwGzhxfKVS5aAc7Mg==
-Received: from AS8PR02MB7237.eurprd02.prod.outlook.com (2603:10a6:20b:3f1::10)
- by AS2PR02MB9882.eurprd02.prod.outlook.com (2603:10a6:20b:60a::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.42; Sat, 30 Mar
- 2024 15:23:58 +0000
-Received: from AS8PR02MB7237.eurprd02.prod.outlook.com
- ([fe80::9817:eaf5:e2a7:e486]) by AS8PR02MB7237.eurprd02.prod.outlook.com
- ([fe80::9817:eaf5:e2a7:e486%4]) with mapi id 15.20.7409.042; Sat, 30 Mar 2024
- 15:23:58 +0000
-From: Erick Archer <erick.archer@outlook.com>
-To: Vinod Koul <vkoul@kernel.org>,
-	Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Erick Archer <erick.archer@outlook.com>,
-	dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2] dmaengine: pl08x: Use kcalloc() instead of kzalloc()
-Date: Sat, 30 Mar 2024 16:23:23 +0100
-Message-ID:
- <AS8PR02MB72373D9261B3B166048A8E218B392@AS8PR02MB7237.eurprd02.prod.outlook.com>
-X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [1H35qK6MGHoef3vB4Ews3U3ZfWukVP9B]
-X-ClientProxiedBy: MA2P292CA0003.ESPP292.PROD.OUTLOOK.COM
- (2603:10a6:250:1::20) To AS8PR02MB7237.eurprd02.prod.outlook.com
- (2603:10a6:20b:3f1::10)
-X-Microsoft-Original-Message-ID:
- <20240330152324.6997-1-erick.archer@outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308563C473
+	for <dmaengine@vger.kernel.org>; Sat, 30 Mar 2024 17:58:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711821523; cv=none; b=WknIBmVaJFSDPmJQXMW7mQ7e5znDVzwA9w57Y5NJQJAr/nhDDYd1ZZiGYlxl+yczjsc+WDWdvF+iGteNRKU9PwvSq6gjjNEgSAGN6ooZA1X727addm6UY+Vo+uhWpCGeE6fv1KTScdbsyXdWHzEmDyajscwDCDSqJx/Ig65QT0E=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711821523; c=relaxed/simple;
+	bh=gznZUdRjC840/RIpKY+qbDdAJIfZQ5O12HDGRmxBxms=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=mLsIutmq49iL5WRAR3afvtKvtpNosRiDfMGLQWCd0CNi2a9WMdEKERPbbrm1peKzJbTO+X8HSa87Lpk/UaERJciRK4wBKGdVFsMJA4x2ywIylIULfMGc82aKv5JSh28ms5VMdIPl7qlvqZPhjVlFr6FRauljE4w6TtDLF7qkU18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kKaSRplx; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4154bf94fe4so11474725e9.2
+        for <dmaengine@vger.kernel.org>; Sat, 30 Mar 2024 10:58:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711821519; x=1712426319; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QuHz7NbYphgsBERKb7Gi6jBAyiMkVdvzVzWkI73/WU8=;
+        b=kKaSRplxr4TSUYPNLjqHl4XCyJCVQfQyGkzLvNg+0dWI596k65bnjwXajEk6ovJFer
+         ueWceGhzRm2kmkvMxoBIghdPujTLKTqz9igOkbgQH0LAoOSGS63Fxi7MleO9Hfgt6tEz
+         TEaIcVg99h3wZLYxmTs7QmIRl6w15lXuD4i5je5bKDNRSUHEN2dNnn+x0TUOtoQFeTno
+         apoi8pj3EhHtxH9u6Hk99H0dNGkLMSkp0TEjD1NqAIu0zJZ2BCXVXV5fgceBt28pJ713
+         rSRdUCQXNd+nC5dKoENMe8aqN2uJzUk9DwXmw+qIvRzzDh5cQsm27HSkRzXXBwuwfUP4
+         GmxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711821519; x=1712426319;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QuHz7NbYphgsBERKb7Gi6jBAyiMkVdvzVzWkI73/WU8=;
+        b=EXPQ6KBnyGsLuvCYEC3KVIf0+g4iXsljHfJpBie/HRvao9vSN4bRhR8bk11bUocjyI
+         q/q1gvssFj2SdOy5/Y+kUHD7G5cB6uRcjhgEii1M8c6t4a92Yo+B3Z179t3fbqKP6Hno
+         DCYUBa0WjDFdeNJ8zWjTwwxRx4cjpzFD7scClLjG7lB2+QsmM3iP4i+OSFzanCdvFZv/
+         /LU2n7IAoVdyETl5D15sjYRkmcnRHc/KcAAu8LuBHDGQmDNLM191OlEXo+l0+lMcZhNW
+         0Og325iV/6WMRbR5m/LypwSTsFiqFMHNu+ke3vSYekP0TmoEHNBIBWVR4TJdrgCK+cAO
+         /o1w==
+X-Forwarded-Encrypted: i=1; AJvYcCW9VrOapMRnJRqD6Nf7L6TyUw1D9jCQfVe4B9enEIYBcR/rABeyWjF4rRcrqwqEw7CcLaPx9K/Nf5DVPp2dCkFf8sFCJz6rYEkj
+X-Gm-Message-State: AOJu0YxG9Ox95XW4ZDQZRcrtWKn/Xm84JjCeqOfBXsaqVGSowOzFIdAm
+	0lRxpg72pmriz6bhyHAqG215JkH6g6u37jDvC/i/Vr95o8tU6KRHzmIn90ly4r0=
+X-Google-Smtp-Source: AGHT+IGqlMz1alWRKxGaognRF10drFVQxV6mNURT1OgHL5DqwKDRbiiGAjlSz2Ygixur7KvLK2brog==
+X-Received: by 2002:a05:600c:5349:b0:414:8065:2d23 with SMTP id hi9-20020a05600c534900b0041480652d23mr3858145wmb.20.1711821519529;
+        Sat, 30 Mar 2024 10:58:39 -0700 (PDT)
+Received: from [127.0.1.1] ([178.197.223.16])
+        by smtp.gmail.com with ESMTPSA id o41-20020a05600c512900b004149536479esm9235312wms.12.2024.03.30.10.58.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 30 Mar 2024 10:58:38 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Russell King <linux@armlinux.org.uk>, 
+ Suzuki K Poulose <suzuki.poulose@arm.com>, 
+ Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Andi Shyti <andi.shyti@kernel.org>, Olivia Mackall <olivia@selenic.com>, 
+ Herbert Xu <herbert@gondor.apana.org.au>, Vinod Koul <vkoul@kernel.org>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ Miquel Raynal <miquel.raynal@bootlin.com>, 
+ Michal Simek <michal.simek@amd.com>, Eric Auger <eric.auger@redhat.com>, 
+ Alex Williamson <alex.williamson@redhat.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: linux-kernel@vger.kernel.org, coresight@lists.linaro.org, 
+ linux-arm-kernel@lists.infradead.org, 
+ linux-stm32@st-md-mailman.stormreply.com, linux-i2c@vger.kernel.org, 
+ linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org, 
+ linux-input@vger.kernel.org, kvm@vger.kernel.org
+In-Reply-To: <20240326-module-owner-amba-v1-0-4517b091385b@linaro.org>
+References: <20240326-module-owner-amba-v1-0-4517b091385b@linaro.org>
+Subject: Re: [PATCH 00/19] amba: store owner from modules with
+ amba_driver_register()
+Message-Id: <171182151736.34189.6433134738765363803.b4-ty@linaro.org>
+Date: Sat, 30 Mar 2024 18:58:37 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR02MB7237:EE_|AS2PR02MB9882:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9acbc5fe-8466-48f9-1e8e-08dc50cd6b02
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	0NDMjEXFprC93iWqdDdQmdOwbhO7dUUWI4Fy53P04p+iI2X9KbNPhax+RSVGi7Xj+oCtqXIVuj5zoE5qIDOSZGD92JElnhAjSKESydZk64BQVmxBFCPC82p6JuZgnLjQGZQghS56AIfmJCuxr0tDn5LEvjZOcApjg1DglqgfgCCfXfqloz6dtM3AFdr0BDbzk4U5OxZ06YE6apVaahIkjquOCan/RJQR6jZacCpjUWbXDqu9l15O5JTjVXHiAhJLM19ng8BfsZpyalgn86NBjrKXaYBHm2dDguireL2zVW0x0NUCaCg8sTa6jrD4Ol8eEN6vK69xJwu4t+LgtZeDd6NjS31Ihy8e3y/btSMeFleGSpqz8w2IfmUbmI0ENot/w5UEv2G0MJe+8K+DjO5sRMyU0JmmJrxGvcOqb75QEfLgm23B8axgJjMGMFdUeCPAeYyuVddpbmduSxtUGmv9+gHQdaU9ecbkv7g4Gxb4IKbbl/Z6PrvsM/vqWJDpln37WzM0cEWYk0tue6dwh8lujzAkMADnqnb8jTNqHb98tBizbuI/2fBnqJM34FdxC82e/fg90ryv0fAl8okphw1Q6Fr0Jk87sNcFg+JVG3WWNhOVRA9SetwRcS2i2XwnK2lxWCRQXY/Qz7MLPcqwe+nnzSsCt4+Dq1CmbQt7yMtdUrP+YUfRGprF7k7Gx0NMTawiva+prWIpnp6QjKByXzaB6g==
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?0HGE0KKMrerG8fW8ZVNVKakfgO/am0xbrrLhef+1jcscfzfb/L4P5xDDpLOI?=
- =?us-ascii?Q?D/Rhie2g0TkNtnC1daXV+LIM60rl0eGgwYzqAdxMsMYMPHAlSy1egDTVnrQe?=
- =?us-ascii?Q?VzED/E0GRovOGUCPNNzFE0LcnNRvRPK2C8PWp1Kawd2S4yyByEUF6ypidUl6?=
- =?us-ascii?Q?/QkeWKqe+TPamM9l3k2OlKb3tUWsVHiN1jfGFmkLKrpupDZH6JT5GQsWxacc?=
- =?us-ascii?Q?KT/oBMjtsVdpSY3Bk54gnBoI/MNzCcUgze1fxqzXvyVX1yfLaNiCOg+0yzWU?=
- =?us-ascii?Q?8fk2JAtwmKq637U16jkpogmYLI40X54FvYnQfO52vcAaRym2+LrAWAhQ1I6A?=
- =?us-ascii?Q?wV6Ku32nwp0Qig8+10ODiX+nyNQDa7TDw/7Kd01Zkg8uQiQvwxD9eI7ULh9H?=
- =?us-ascii?Q?O8OzO5KCrVwv6NbOZuWjV7UG3iWeeVH6ES4DMOvXE07tCFfP6xRN4oHSeYx9?=
- =?us-ascii?Q?j4WDurJLaJmEyORW2fsEeggwwuWPVKl58zsjBaChZjZRtxAhl3PcD7heUocL?=
- =?us-ascii?Q?rsGdaHBCZGDIYp91lPDUFZJ4D8okK0EG6/T10TASdU33//vaxjTupDLUdMVd?=
- =?us-ascii?Q?g7UjRs0RzqCs6rpTFIZFzX0dWZ8CGhbG8Okypo1YCwSBxJ7ZPpxi1b/CBI9I?=
- =?us-ascii?Q?lr2k7rNjs5O5GsQKS01Pun6s5yv+81ElDxZzJdi9xWLBPD2XstYJO0z2oVGe?=
- =?us-ascii?Q?yjH7MQAWBOsS6SlgoLWAa2X13/9ZKT1+Vl4m4i0oAsWurZb4qBwwSECY4oV8?=
- =?us-ascii?Q?EHahFCktkDftrGsLJ75UExvEw/Uln4zn4zYzE95XRMMSt+GZF9AcsQq5IB0u?=
- =?us-ascii?Q?KZNvmp9bVTtcT79fr2CZiEPk9jLPVfL6Fg0V6Ap0NaQGYhRojKUJfDr58Xf+?=
- =?us-ascii?Q?VGLsFa8l3VlloFPtm+XWosL5+CDvM4Vf0YcRKgqyKvPvyikkWTAqR+JEue3p?=
- =?us-ascii?Q?FepXxVFT0v8BvEce4cTBr+/t7OBb86L/5MsyvUqA74ui1Pf7NIyhCBFrb2az?=
- =?us-ascii?Q?+ggnqbtw8gqC2VzYvmropJ22awpdc2NVMI37AheHRaHhJs+I8EEyoc5wXL4q?=
- =?us-ascii?Q?uP9V9NgljEJt8SqOnmVOrWS+YOxzmzY5MSCbJwq6k2ems6iDj5NpN2BA7qan?=
- =?us-ascii?Q?xr9QuMMrowpoFNmfdjQbNosgE3A5sGrlHnoFbIqcnH/A43iSytp31rv5kr8B?=
- =?us-ascii?Q?i0t4P1Eb7LQfdhGfTVLjxSNDLwULUFSeIHXhUA0e60hXgq4VKFLe/+oSQwhE?=
- =?us-ascii?Q?lLBpDEdDlr0ZPRzYHb8t?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9acbc5fe-8466-48f9-1e8e-08dc50cd6b02
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR02MB7237.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Mar 2024 15:23:57.5121
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS2PR02MB9882
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-This is an effort to get rid of all multiplications from allocation
-functions in order to prevent integer overflows [1].
 
-Here the multiplication is obviously safe because the "channels"
-member can only be 8 or 2. This value is set when the "vendor_data"
-structs are initialized.
+On Tue, 26 Mar 2024 21:23:30 +0100, Krzysztof Kozlowski wrote:
+> Merging
+> =======
+> All further patches depend on the first amba patch, therefore please ack
+> and this should go via one tree.
+> 
+> Description
+> ===========
+> Modules registering driver with amba_driver_register() often forget to
+> set .owner field.
+> 
+> [...]
 
-static struct vendor_data vendor_pl080 = {
-	[...]
-	.channels = 8,
-	[...]
-};
+Applied, thanks!
 
-static struct vendor_data vendor_nomadik = {
-	[...]
-	.channels = 8,
-	[...]
-};
+[01/19] amba: store owner from modules with amba_driver_register()
+        (no commit info)
+[02/19] coresight: cti: drop owner assignment
+        (no commit info)
+[03/19] coresight: catu: drop owner assignment
+        (no commit info)
+[04/19] coresight: etm3x: drop owner assignment
+        (no commit info)
+[05/19] coresight: etm4x: drop owner assignment
+        (no commit info)
+[06/19] coresight: funnel: drop owner assignment
+        (no commit info)
+[07/19] coresight: replicator: drop owner assignment
+        (no commit info)
+[08/19] coresight: etb10: drop owner assignment
+        (no commit info)
+[09/19] coresight: stm: drop owner assignment
+        (no commit info)
+[10/19] coresight: tmc: drop owner assignment
+        (no commit info)
+[11/19] coresight: tpda: drop owner assignment
+        (no commit info)
+[12/19] coresight: tpdm: drop owner assignment
+        (no commit info)
+[13/19] coresight: tpiu: drop owner assignment
+        (no commit info)
+[14/19] i2c: nomadik: drop owner assignment
+        (no commit info)
+[15/19] hwrng: nomadik: drop owner assignment
+        (no commit info)
+[16/19] dmaengine: pl330: drop owner assignment
+        (no commit info)
+[17/19] Input: ambakmi - drop owner assignment
+        (no commit info)
+[18/19] memory: pl353-smc: drop owner assignment
+        (no commit info)
+[19/19] vfio: amba: drop owner assignment
+        (no commit info)
 
-static struct vendor_data vendor_pl080s = {
-	[...]
-	.channels = 8,
-	[...]
-};
-
-static struct vendor_data vendor_pl081 = {
-	[...]
-	.channels = 2,
-	[...]
-};
-
-However, using kcalloc() is more appropriate [1] and improves
-readability. This patch has no effect on runtime behavior.
-
-Link: https://github.com/KSPP/linux/issues/162 [1]
-Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-Signed-off-by: Erick Archer <erick.archer@outlook.com>
----
-Changes in v2:
-- Add the "Reviewed-by:" tag.
-- Rebase against linux-next.
-
-Previous versions:
-v1 -> https://lore.kernel.org/linux-hardening/20240128115236.4791-1-erick.archer@gmx.com/
-
-Hi everyone,
-
-This patch seems to be lost. Gustavo reviewed it on January 30, 2024
-but the patch has not been applied since.
-
-Thanks,
-Erick
----
- drivers/dma/amba-pl08x.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/dma/amba-pl08x.c b/drivers/dma/amba-pl08x.c
-index fbf048f432bf..73a5cfb4da8a 100644
---- a/drivers/dma/amba-pl08x.c
-+++ b/drivers/dma/amba-pl08x.c
-@@ -2855,8 +2855,8 @@ static int pl08x_probe(struct amba_device *adev, const struct amba_id *id)
- 	}
- 
- 	/* Initialize physical channels */
--	pl08x->phy_chans = kzalloc((vd->channels * sizeof(*pl08x->phy_chans)),
--			GFP_KERNEL);
-+	pl08x->phy_chans = kcalloc(vd->channels, sizeof(*pl08x->phy_chans),
-+				   GFP_KERNEL);
- 	if (!pl08x->phy_chans) {
- 		ret = -ENOMEM;
- 		goto out_no_phychans;
+Best regards,
 -- 
-2.25.1
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 

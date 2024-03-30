@@ -1,75 +1,75 @@
-Return-Path: <dmaengine+bounces-1673-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1674-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4ED4B892C46
-	for <lists+dmaengine@lfdr.de>; Sat, 30 Mar 2024 19:00:38 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C860F892C58
+	for <lists+dmaengine@lfdr.de>; Sat, 30 Mar 2024 19:18:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5C3651C21478
-	for <lists+dmaengine@lfdr.de>; Sat, 30 Mar 2024 18:00:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 248BC2824A5
+	for <lists+dmaengine@lfdr.de>; Sat, 30 Mar 2024 18:18:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 939483CF6E;
-	Sat, 30 Mar 2024 18:00:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3A303C6BA;
+	Sat, 30 Mar 2024 18:18:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MiLzFbm6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O6P/rB54"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B801A3C473
-	for <dmaengine@vger.kernel.org>; Sat, 30 Mar 2024 18:00:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E9CE3BBFC
+	for <dmaengine@vger.kernel.org>; Sat, 30 Mar 2024 18:18:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711821633; cv=none; b=JOAeX10wORzhgxSqigJ2EHOGR8HyS0kVJipEkaV4v1pecBAO+7+M65sbEu6DT233SuxYMxO31dz29CbdGP5npHoQontMlAkBWF8n78osQjltQZVhxNRG+VYEjdzCWrzuuVepU1sHoqNNxOumk5xI/xHUS0IDlAFSAo7+ovFoa+E=
+	t=1711822684; cv=none; b=Pltlnwqfls7+IseRcWXFqSNP28O7IwKHwkKIkEoo1Tkh4tPniqX7/5RPfoBXTK2XhXeDL4Jai5rV18YWntjjBJkXrWUyVIJQNUOAIUEuTlMDiRwsx2HhlaD3+19wZZXr7lbeDd3FhPtDWMT+vgu6m9zFmjl9Xn0cZUavyB0vRoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711821633; c=relaxed/simple;
-	bh=G3Q3ZYjxB9PZFnNxkThRR/H8PzG0UVJOFPo8sxKc9aA=;
+	s=arc-20240116; t=1711822684; c=relaxed/simple;
+	bh=jyBy+ghAmi7wVOjwqKwpCMBM6ZLkcus1csATf41+nC4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bZslmHQV9O2x5sYrBRSDkwE7VadMCziMO5uUaNS0p0dba0opjJbHh/W84bnVssHirpKvplWGEo1g3qYPdQku9/pqjcN7eE2Yud1v3tRtTo8VG7qsEWw+xm+1sOhYdsfe0MgkHtGBUo8yGp1IxHKPZTD4nlkoHlOtPnAUK0JkfKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MiLzFbm6; arc=none smtp.client-ip=209.85.128.43
+	 In-Reply-To:Content-Type; b=rtxwHjkVHr44r2HVWaFTzj4uP5nffNd5xwcpLeUTmIMVlyptEbOuHDWXeCFrBOEmbFjlOWvYUOC35VitVk4uR319DOwhexQPdSEoet5x4+KpAbp8+rtWIKP7VXKYhmX2GwgX8sRTDrCMdjDyZa3ZCT0aeJdWWM+c294HE62dcZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=O6P/rB54; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-415482308f8so15529175e9.1
-        for <dmaengine@vger.kernel.org>; Sat, 30 Mar 2024 11:00:31 -0700 (PDT)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4155b41b735so2756695e9.3
+        for <dmaengine@vger.kernel.org>; Sat, 30 Mar 2024 11:18:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711821630; x=1712426430; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1711822681; x=1712427481; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=r39j2D5BMTjv9agvH23NugKjyW42TUeZqGeGsZaMYf0=;
-        b=MiLzFbm6jTg9OMg81tqtPcO3ZZxAXYfhE1a0FxjkkVfSTmQvCYvlEz85sFLgSMgDYG
-         QYOsUjww1qV8s1/gpxRSotb0ZreFBgKuXg0aUKOZFat3OjJ7Fltx+K3xOz1SGIcQMsdc
-         sP9xhjDu++1LtUNCNCLQMszIAM+sjzEYnDiw2rj4uwO/C6x7X1BDnfJM4ZBtk4LeshRO
-         KJ2bJ5E+zjuOImLyGUJWwIeEjBD6MndqQi+z7BD8kyELzWGZwpX4z4/XBEUwAwJXoKYI
-         qiX8jE/Y3Ligv7+dFOBlkEcGl9opekAOysIKJVnKS+gbVF5awLBTht1CgSWR36XF0GPD
-         p2nA==
+        bh=9J+SmGm43SmAZ1IPKslxmdpdwaDd06Mo7C6gr6kK5kk=;
+        b=O6P/rB54ZnGPZFZ0hreoiez5hgAN9KdTKEgb96J15u1HqI5NBgktLxv9ldQwYmcgFS
+         fibFO4yjoSl8e6Zdm8ewEv3CnK5wgfYX2XfbxoS72MsMy8TBw4O7Hn1CBhR3IIBfZvaw
+         ba5R41IfIu8dSSd+oMeYDNRVAUMvKBT9J+ZSpEyx+4xnD9B3wtP2h7SX+qmgjFxILuX4
+         O0jPDHuE7jQqL4Yi2jHdU3d92tf4j4AAZy6RGWJtQ1SQc3MW9X5a9igbGUeHs1GYiE1R
+         mv0Syi/AjWb4wXSNjsChsIxU5eht1LNdsajtlpZZbemx1CAPoGSp++MegsTAwkvYqP73
+         F3cA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711821630; x=1712426430;
+        d=1e100.net; s=20230601; t=1711822681; x=1712427481;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=r39j2D5BMTjv9agvH23NugKjyW42TUeZqGeGsZaMYf0=;
-        b=Dk3xX8tAaaJVsCbq34s2ebuxOJxHa3BexUFEnxdW0MyAW2/rQri2mPTcwpEpTqMZGO
-         jYcbL/8NvoM7z8/MslioD9BBy87ghFfq5GEFbpBfc9kzxJxEPKjttGKwo0Q4LEuqkVqm
-         6sA5eYH7J4MHNn7Iwf2Enh0pR4NrhfW8/TqTlTq3AMW5f+2bwzdLSXPAR5Uw4kEp/ARV
-         XwgfLrE3vw9gNNGw5hAMOMG4gMV8KAef/xceddww7Ml2KOJEYn/Yh/0PP4a5uMEmrx8E
-         6FOeT1Wct5tOh/TAIcQ33jGFEzvHrpum7dUDebIpk0bcU6VVIDwdBSz3cqefl6G9d6O7
-         YBBA==
-X-Forwarded-Encrypted: i=1; AJvYcCU/jNumceHiWB0YQYLtp9VbiswJwwg+/uxxs7IHUSdQ217PEKWi+YT1h4/izBk1AUZcUVEBCVctvfjEjg8kBQWOIHkWw9kVx1zi
-X-Gm-Message-State: AOJu0YwgoZ5c8zzDeFUo/vq5BtXDY2zV6a6t86UodkCWA9hc7c7PQYQJ
-	Kfvzq4LSXp6HlcmmvX9ml9OXmp8WQDtoM6wHpP31K8YmFl3AGvUPpocQJcfMjEg=
-X-Google-Smtp-Source: AGHT+IF08e2/g7vun76NTerfx5th/Hnqzkh4SuYGxOXmBfdp04gFPw4kDsBu5Sb4XueCWxhfPG5L7g==
-X-Received: by 2002:a05:600c:450a:b0:413:2852:2835 with SMTP id t10-20020a05600c450a00b0041328522835mr3636994wmo.17.1711821630033;
-        Sat, 30 Mar 2024 11:00:30 -0700 (PDT)
+        bh=9J+SmGm43SmAZ1IPKslxmdpdwaDd06Mo7C6gr6kK5kk=;
+        b=wVvG9tNdClNVrUq8Mawl0NOMTL0LIvgvKRvBRCzXEfsbYfK7HGJkICO/fVrEs69/rV
+         CCYhBKDEK5Dj7iT/s/OvJNDrWSBnnPwZlNA28Anh73Yy89K6M003cDQasK/MaYy+5BV4
+         ysyTkdVb7sveW73dxtkTKEVIdCGa4vxKEF+zn+CKvjLQZHWk6/gEREauv0rh2fDeX7ro
+         MAb4nXWGJKSkv5GnlneEnWXOzaaVugfrp5Eqa8Mm3TMghke+e8fEhEHF6hkyEsO433bM
+         Q5ypjrNEy1sy1456OgJw5FSTdVZG22Zffv9hhWEuqyNlsQqlGdaKxELer7I8N6H8Gf1y
+         /xMg==
+X-Forwarded-Encrypted: i=1; AJvYcCWEemhl8B2E2jXEyJuTYhEf24FIBbCAkeHFVRMREaA49VINfUSpMRm52x2CzBcpumjXouYTFZb1fiKSO6ogGV1CjY0dRWzpQDjy
+X-Gm-Message-State: AOJu0YxLLy9k9SoMnpL7Pk7cbCSTKpRP+h62Ft7CHjYa+81dBSYsEqAc
+	W1V+e3L4+bQrKso/MUcepyGbjJJFrXGPqI8/Rzr4H3omi3czFQo6p8umjyh9Z7M=
+X-Google-Smtp-Source: AGHT+IGNmLzpEN9w8zDii8pb9jmCT+9tTum0cvh7rfEZIiEwNGrRzdfhYpAHimToutuliFwcV6H9AQ==
+X-Received: by 2002:a05:600c:6a87:b0:415:544b:3128 with SMTP id jl7-20020a05600c6a8700b00415544b3128mr3194236wmb.27.1711822681448;
+        Sat, 30 Mar 2024 11:18:01 -0700 (PDT)
 Received: from [192.168.1.20] ([178.197.223.16])
-        by smtp.gmail.com with ESMTPSA id n2-20020a056000170200b0034335e47102sm4988194wrc.113.2024.03.30.11.00.28
+        by smtp.gmail.com with ESMTPSA id bd18-20020a05600c1f1200b004155c2b8ce7sm1688414wmb.29.2024.03.30.11.17.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 30 Mar 2024 11:00:29 -0700 (PDT)
-Message-ID: <cfa5aa01-44ef-4eb1-9ca6-541ed5908db4@linaro.org>
-Date: Sat, 30 Mar 2024 19:00:27 +0100
+        Sat, 30 Mar 2024 11:18:00 -0700 (PDT)
+Message-ID: <1534f781-f7dc-487f-a28a-cd635c58f9d5@linaro.org>
+Date: Sat, 30 Mar 2024 19:17:59 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -77,28 +77,20 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/19] amba: store owner from modules with
- amba_driver_register()
-To: Russell King <linux@armlinux.org.uk>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
- <mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Linus Walleij <linus.walleij@linaro.org>, Andi Shyti
- <andi.shyti@kernel.org>, Olivia Mackall <olivia@selenic.com>,
- Herbert Xu <herbert@gondor.apana.org.au>, Vinod Koul <vkoul@kernel.org>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Michal Simek <michal.simek@amd.com>, Eric Auger <eric.auger@redhat.com>,
- Alex Williamson <alex.williamson@redhat.com>
-Cc: linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
- linux-arm-kernel@lists.infradead.org,
- linux-stm32@st-md-mailman.stormreply.com, linux-i2c@vger.kernel.org,
- linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
- linux-input@vger.kernel.org, kvm@vger.kernel.org
-References: <20240326-module-owner-amba-v1-0-4517b091385b@linaro.org>
- <171182151736.34189.6433134738765363803.b4-ty@linaro.org>
+Subject: Re: [PATCH v6 1/3] dt-bindings: dmaengine: Add dma multiplexer for
+ CV18XX/SG200X series SoC
+To: Inochi Amaoto <inochiama@outlook.com>, Vinod Koul <vkoul@kernel.org>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Chen Wang <unicorn_wang@outlook.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+Cc: Jisheng Zhang <jszhang@kernel.org>, Liu Gui <kenneth.liu@sophgo.com>,
+ Jingbao Qiu <qiujingbao.dlmu@gmail.com>, dlan@gentoo.org,
+ dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+References: <IA1PR20MB4953F0FAED4373660C7873A2BB3A2@IA1PR20MB4953.namprd20.prod.outlook.com>
+ <IA1PR20MB4953DDD8E89675650E0E2529BB3A2@IA1PR20MB4953.namprd20.prod.outlook.com>
 Content-Language: en-US
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
@@ -145,32 +137,23 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <171182151736.34189.6433134738765363803.b4-ty@linaro.org>
+In-Reply-To: <IA1PR20MB4953DDD8E89675650E0E2529BB3A2@IA1PR20MB4953.namprd20.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 30/03/2024 18:58, Krzysztof Kozlowski wrote:
+On 29/03/2024 03:04, Inochi Amaoto wrote:
+> The DMA IP of Sophgo CV18XX/SG200X is based on a DW AXI CORE, with
+> an additional channel remap register located in the top system control
+> area. The DMA channel is exclusive to each core.
 > 
-> On Tue, 26 Mar 2024 21:23:30 +0100, Krzysztof Kozlowski wrote:
->> Merging
->> =======
->> All further patches depend on the first amba patch, therefore please ack
->> and this should go via one tree.
->>
->> Description
->> ===========
->> Modules registering driver with amba_driver_register() often forget to
->> set .owner field.
->>
->> [...]
+> In addition, the DMA multiplexer is a subdevice of system controller,
+> so this binding only contains necessary properties for the multiplexer
+> itself.
 > 
-> Applied, thanks!
+> Add the dmamux binding for CV18XX/SG200X series SoC.
 > 
-> [01/19] amba: store owner from modules with amba_driver_register()
->         (no commit info)
 
-Patchset applied here:
-https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux-dt.git/log/?h=for-v6.10/module-owner-amba
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof

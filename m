@@ -1,139 +1,167 @@
-Return-Path: <dmaengine+bounces-1705-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1706-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D152A8954DE
-	for <lists+dmaengine@lfdr.de>; Tue,  2 Apr 2024 15:13:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6BC96895685
+	for <lists+dmaengine@lfdr.de>; Tue,  2 Apr 2024 16:25:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8B8AD284688
-	for <lists+dmaengine@lfdr.de>; Tue,  2 Apr 2024 13:13:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 21045283342
+	for <lists+dmaengine@lfdr.de>; Tue,  2 Apr 2024 14:25:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B4208625C;
-	Tue,  2 Apr 2024 13:11:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A37C86268;
+	Tue,  2 Apr 2024 14:25:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pLBmLWbF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vQOYY85c"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34D7B84A52;
-	Tue,  2 Apr 2024 13:11:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B1C84037
+	for <dmaengine@vger.kernel.org>; Tue,  2 Apr 2024 14:25:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712063487; cv=none; b=Ab+4DOG88HjoOiv4xBM47NxBmgiUFTY3Hy9u7A04HCzOSu5NaXU36utXhJrr9XqYteA58Vepp88PWfxm6gwz+AkPWWY6MSEYgos95d9h2owMCb5CDLtcG02ywQd3NJT2J8z8KmBjuZNtjiGNR8lguydLm74MZtOuQ/1o9cukWos=
+	t=1712067905; cv=none; b=GS4xGoNaIkAVj5DLuD/Vn4aXP2dGr/qn57T1i0aXrqCeuerxqQMPMZ1w4ETHQ7hH3vwIk7cGkTUClSmyAwSs/KJYs04G32zLIYQIy9hf+vvf/eqhKBxKMHyxgja4z8wugZe1AcA0fcv/8Q2iTdCNDqqIhihERgTyXyQYZPLBQis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712063487; c=relaxed/simple;
-	bh=9zAsnZKUtdaB+0oUBoSFWoiBkfOWRDSb/L5GPa9FOno=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YxBMH/vw9BRleuY+Tgiarjh9bwd72GPxFeu0mmPcJREbnWAJBZN/yKpfG4Kaaw+TbuiZXI9i0CP5GUV3A+mByQFFdOpijlcJdW5RjXrn4OVvBEWp4ZFd+dDZ7/Uk5W0BYB24fbqwaTmKHhiEhGZq2SnC/vrbfUdgjDel2Xq/w7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pLBmLWbF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECE50C433F1;
-	Tue,  2 Apr 2024 13:11:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712063486;
-	bh=9zAsnZKUtdaB+0oUBoSFWoiBkfOWRDSb/L5GPa9FOno=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pLBmLWbFq8b7R4iZ1CSvRnROpQc318dtdynLw3zTplx/2SSnxsPhnBaGB0KWLxJLw
-	 gtTVGsvy4tfXtBGJpBXwq9+p3MCPwkvK/hDkMvCwjFUh5usnZu6XFTibfhvcKn+2H6
-	 bNq+gdNLc+F4UpxqMWgGKmEwi+KPVyCSJwAIqsT2U4GGmN/LnMTaAplp/AjMnXlBu3
-	 Ft/ordeAQQOyjQYy8NAB2+7Nq/5pKWCsboYnCGnNR1VKTyBFWEf/lcch7254rsWnWE
-	 MLVvNT3x0cyP38rdvhtkwlombEcbUi6JLHcn3CjFq0MSnQTG+8Cf+UPPNEYFD7jwHP
-	 CjyG1mwKRgoUQ==
-Date: Tue, 2 Apr 2024 18:41:22 +0530
-From: Vinod Koul <vkoul@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Allen Pais <apais@linux.microsoft.com>, linux-kernel@vger.kernel.org,
-	tj@kernel.org, keescook@chromium.org, marcan@marcan.st,
-	sven@svenpeter.dev, florian.fainelli@broadcom.com,
-	rjui@broadcom.com, sbranden@broadcom.com, paul@crapouillou.net,
-	Eugeniy.Paltsev@synopsys.com, manivannan.sadhasivam@linaro.org,
-	vireshk@kernel.org, Frank.Li@nxp.com, leoyang.li@nxp.com,
-	zw@zh-kernel.org, wangzhou1@hisilicon.com, haijie1@huawei.com,
-	shawnguo@kernel.org, s.hauer@pengutronix.de, sean.wang@mediatek.com,
-	matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com,
-	afaerber@suse.de, logang@deltatee.com, daniel@zonque.org,
-	haojian.zhuang@gmail.com, robert.jarzmik@free.fr,
-	andersson@kernel.org, konrad.dybcio@linaro.org, orsonzhai@gmail.com,
-	baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com,
-	patrice.chotard@foss.st.com, wens@csie.org,
-	jernej.skrabec@gmail.com, peter.ujfalusi@gmail.com,
-	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, jassisinghbrar@gmail.com, mchehab@kernel.org,
-	maintainers@bluecherrydvr.com, aubin.constans@microchip.com,
-	ulf.hansson@linaro.org, manuel.lauss@gmail.com,
-	mirq-linux@rere.qmqm.pl, jh80.chung@samsung.com, oakad@yahoo.com,
-	hayashi.kunihiko@socionext.com, mhiramat@kernel.org,
-	brucechang@via.com.tw, HaraldWelte@viatech.com, pierre@ossman.eu,
-	duncan.sands@free.fr, stern@rowland.harvard.edu, oneukum@suse.com,
-	openipmi-developer@lists.sourceforge.net, dmaengine@vger.kernel.org,
-	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-rpi-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	imx@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
-	linux-mediatek@lists.infradead.org,
-	linux-actions@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-tegra@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-	linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org, linux-s390@vger.kernel.org,
-	netdev@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH 2/9] dma: Convert from tasklet to BH workqueue
-Message-ID: <ZgwD-iScEb9zzB8H@matsya>
-References: <20240327160314.9982-1-apais@linux.microsoft.com>
- <20240327160314.9982-3-apais@linux.microsoft.com>
- <CACRpkdaSBGe0EFm1gK-7qPK4e6T2H1dxFXjhJqO2hWCm1-bNdA@mail.gmail.com>
+	s=arc-20240116; t=1712067905; c=relaxed/simple;
+	bh=5wsKlMW6zuiZvmqCr9BLGY7yhgdT6UjqJaE2/GK7Dqw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dqNoiTJvM0/KrYwIzByYzQnGbHqa61LWxH5QruWp/DEn4lbse+UokW7BnJqcRbPrVotD6J++6GbVuaQ41umKvcMf0FFEtuMEruhelFWCGXGSgaaff6w61G4HRXif46iEgngdSJAHo4yrMMubFOQsP21upHz8CP6TZ6IZHUJRtYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vQOYY85c; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a46cca2a979so298655566b.3
+        for <dmaengine@vger.kernel.org>; Tue, 02 Apr 2024 07:25:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712067902; x=1712672702; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=4hWsU1/H1ichuozopazuwmACCLdHZgCpChahByKTRKc=;
+        b=vQOYY85c7GcsJT5xtHv6+xdsQgN0rDTZLGxAqvoK7T3MSzi8jvEbztR7Ior3IRz1me
+         OgiGjXathKQZP7Bt4yrBYtHC/W52bYsqloya5W6Wuxy9D6MchipMMFOwaWRvqbcrbOtk
+         3SgSON4lLauchGcCEbKQzOhYjzM6vywRBE0TxRTjm1aFiQXmVTWtQzH4blTJMRIjc114
+         s8zCdvF2d2vBdAc18ogTWyc1cgyrdAWJFCRmOw9YWluFD8ipSc0EtDZoukeiVXImv8fU
+         AF3qMe40/8vYJwk5XS8ZPoGf1HxlhBGr9Rg0ZU04v+Nc4IXo+2y17fKqTD1ItRq+Sieg
+         XycQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712067902; x=1712672702;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4hWsU1/H1ichuozopazuwmACCLdHZgCpChahByKTRKc=;
+        b=QnnvgMz+L2bkGG8Vl0xdeg26OYwlOD2mfbcZFCl+mZ9obX7RFc0PArXpZtX5HjA6Hj
+         /SS7t+P1/tvMlceEd0IxB/+61O4PNjHRcJusax5c3vOYog1wmiTB1Tpmy+td4/hJ5Utt
+         lYK1sFmgkCAaGwmko1u0T5eaRTrfNoKG1DjwtmDuGHEpI/Rmiiyd7UnH2IgGoHrro5Le
+         y5d7jjBDety02aq4aOKI3k+bjnTONRFb1rTcUZUQDgooCpFGFxCYsNQSNVoiuHf9X5fa
+         iynU63jySUvS8Bm8WTxSQZJWNmJOht5pTxfbXZ6Wk/iCl8aEAIP3gTSw2Upw0CPSi7P8
+         NBWg==
+X-Forwarded-Encrypted: i=1; AJvYcCWQkpPQY8JQWROhzJflEWZbFEf1yr8rb/pB1YoxcMef6WtIi0m1ELurTHI4aYlBJEJ3ASVaHWM2Ky8Mbqx3U7PVmY6ANAulNN28
+X-Gm-Message-State: AOJu0YwTPqWCpEio0F8HSF9ifo/SYXgxjP0zLvpIuogTQjtKcLRPcOF7
+	wL7/lEvIL0Vu43dWXznte9MjM9Njd97Rdz6wGRQt41uhLr71tbFgkGz9n4hw0xo=
+X-Google-Smtp-Source: AGHT+IE5yfHNcLZvYypEgIbF5cB/0sM4sPMsaHd89klD+N6G/0DtQYDrwwsOfaryz+F6DY+dpQM1Jg==
+X-Received: by 2002:a50:9fa7:0:b0:56c:995:5b with SMTP id c36-20020a509fa7000000b0056c0995005bmr1678629edf.11.1712067901982;
+        Tue, 02 Apr 2024 07:25:01 -0700 (PDT)
+Received: from [192.168.92.47] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
+        by smtp.gmail.com with ESMTPSA id y11-20020aa7c24b000000b0056bdec673c3sm6997639edo.38.2024.04.02.07.24.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Apr 2024 07:25:01 -0700 (PDT)
+Message-ID: <51c84af2-73f7-4af4-8676-2276b6c7786d@linaro.org>
+Date: Tue, 2 Apr 2024 16:24:58 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdaSBGe0EFm1gK-7qPK4e6T2H1dxFXjhJqO2hWCm1-bNdA@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] i2c: i2c-qcom-geni: Add support to share an I2C SE
+ from two subsystem
+To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>, andersson@kernel.org,
+ andi.shyti@kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+ dmaengine@vger.kernel.org
+Cc: quic_vdadhani@quicinc.com, Vinod Koul <vkoul@kernel.org>
+References: <20240402062131.9836-1-quic_msavaliy@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20240402062131.9836-1-quic_msavaliy@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 02-04-24, 14:25, Linus Walleij wrote:
-> Hi Allen,
+On 2.04.2024 8:21 AM, Mukesh Kumar Savaliya wrote:
+> Add feature to share an I2C serial engine between two subsystems(SS) so
+> that individual clients from different subsystems can access the same bus.
+> For example single i2c slave device can be accessed by Client driver from
+> APPS OR modem subsystem image. Same way we can have slave being accessed
+> between APPS and TZ subsystems.
 > 
-> thanks for your patch!
+> This is possible in GSI mode where driver queues the TREs with required
+> descriptors and ensures to execute TREs in an mutually exclusive way.
+> Issue a "Lock TRE" command at the start of the transfer and an "Unlock TRE"
+> command at the end of the transfer. This prevents other subsystems from
+> concurrently performing DMA transfers and avoids disturbance to data path.
+> Change MAX_TRE macro to 5 from 3 because of these two additional TREs.
 > 
-> On Wed, Mar 27, 2024 at 5:03 PM Allen Pais <apais@linux.microsoft.com> wrote:
+> Since the GPIOs are also shared for the i2c bus, do not touch GPIO
+> configuration while going to runtime suspend and only turn off the
+> clocks. This will allow other SS to continue to transfer the data.
 > 
-> > The only generic interface to execute asynchronously in the BH context is
-> > tasklet; however, it's marked deprecated and has some design flaws. To
-> > replace tasklets, BH workqueue support was recently added. A BH workqueue
-> > behaves similarly to regular workqueues except that the queued work items
-> > are executed in the BH context.
-> >
-> > This patch converts drivers/dma/* from tasklet to BH workqueue.
-> >
-> > Based on the work done by Tejun Heo <tj@kernel.org>
-> > Branch: git://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git for-6.10
-> >
-> > Signed-off-by: Allen Pais <allen.lkml@gmail.com>
-> (...)
-> > diff --git a/drivers/dma/ste_dma40.c b/drivers/dma/ste_dma40.c
-> (...)
-> >         if (d40c->pending_tx)
-> > -               tasklet_schedule(&d40c->tasklet);
-> > +               queue_work(system_bh_wq, &d40c->work);
+> This feature needs to be controlled by DTSI flag to make it flexible
+> based on the usecase, hence during probe check the same from i2c driver.
 > 
-> Why is "my" driver not allowed to use system_bh_highpri_wq?
+> Export function geni_se_clks_off() to call explicitly instead of
+> geni_se_resources_off() to not modify TLMM configuration as other SS might
+> perform the transfer while APPS SS can go to sleep.
 > 
-> I can't see the reasoning between some drivers using system_bh_wq
-> and others being highpri?
-> 
-> Given the DMA usecase I would expect them all to be high prio.
+> Signed-off-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+> ---
+> v1 -> v2:
+> - Addressed review comments.
 
-It didnt use tasklet_hi_schedule(), I guess Allen has done the
-conversion of tasklet_schedule -> system_bh_wq and tasklet_hi_schedule
--> system_bh_highpri_wq
+The biggest one ("too many changes across the board") is still not
+addressed and the patch will not be further reviewed until that is done.
 
-Anyway, we are going to use a dma queue so should be better performance
+Each subsystem has different owners and each change requires an explanation
+(maintainers always "expect your patch to be wrong" and you need to
+convince them otherwise through commit messages)
 
--- 
-~Vinod
+Konrad
 

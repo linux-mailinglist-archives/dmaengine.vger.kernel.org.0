@@ -1,155 +1,106 @@
-Return-Path: <dmaengine+bounces-1722-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1723-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D0178967F7
-	for <lists+dmaengine@lfdr.de>; Wed,  3 Apr 2024 10:13:10 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 11835896876
+	for <lists+dmaengine@lfdr.de>; Wed,  3 Apr 2024 10:25:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 40BBB1C26713
-	for <lists+dmaengine@lfdr.de>; Wed,  3 Apr 2024 08:13:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 268F9285982
+	for <lists+dmaengine@lfdr.de>; Wed,  3 Apr 2024 08:25:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7035C74C1B;
-	Wed,  3 Apr 2024 08:07:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFD14745EF;
+	Wed,  3 Apr 2024 08:15:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i9S2rWNS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ItNhRIO2"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D18966CDDB;
-	Wed,  3 Apr 2024 08:07:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72BBF6EB69;
+	Wed,  3 Apr 2024 08:15:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712131649; cv=none; b=OrVdOvuQ6DQgAmvRW7m9scyyOCHXwaIHOmcnd2DQOMg5SQ7Twn680BFmDm6/wHKBH3rqFV3Of27iJyYxO7ySndSOAMbTINo38YlGdqej+y4KzBo6NNB6RRaBXXU+Z6OahRTo64wLBXJT/NBWXF50VWbiYUIJGRkWLyjleMaOOYc=
+	t=1712132110; cv=none; b=cKM0lAb/YbKmpM02PmdE8w/7dalS1Znbs3B2jhsyDmFmBWOmJayTAdhJS/AR/0L767DKnXAA88++HVry0H1XlL22zwBeZlqTKL1qTgNUXltAbTgMumMT/bU013W3oDYXR2KSmlkXRZdEPAD4cLqHckabDu4hWbYdkGpoYzcbjaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712131649; c=relaxed/simple;
-	bh=K2ePQOaggCQbp9MAuVhX6tyGJTkfITqYlV3FRyD1b2w=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JezOO/nkq485blJcO79UI2aEI9pmImzeBT9+F0QISHITGX2lbHoyWngZsBhrxLqlLf1/v8KdNrbI+63WxzaC8C7nlJbNGVxW3jBzfjC6WZDiCzaiAyAGd1aofoT/DCmOrN6XeKiyofXkCo60Ys1R/bTTKUO0S5jayMBIONTg1TI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i9S2rWNS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9555FC433C7;
-	Wed,  3 Apr 2024 08:07:08 +0000 (UTC)
+	s=arc-20240116; t=1712132110; c=relaxed/simple;
+	bh=RuQRkHrQ9e3cp/Msr4bhBQotSNWJFjViuqNekUfGnHE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=A1XIq0QqLjiYe+2Pqd8hkejyTFFblv8pu8eNshjYZmWIxvh0BTO7yqwXkWBeEGPHOp8KBgBlm9sKd4HrNOYBc5mJdnB2A0vdODUkfnFO9mLsl+d9oFlTB6U0SJvDmkk4N7YqNln2XJ6hitN9as/OvDBmRgPPS1fnuDx1f3pZmAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ItNhRIO2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E04A9C43390;
+	Wed,  3 Apr 2024 08:14:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712131648;
-	bh=K2ePQOaggCQbp9MAuVhX6tyGJTkfITqYlV3FRyD1b2w=;
-	h=From:To:Cc:Subject:Date:From;
-	b=i9S2rWNSxBnVceX/PhEYHUL/8obuw7YBD3dJv3NpxgtqFmbZ6YmcytIk5F3iE5aJR
-	 I5RYRukVlaohxFlUlx3DoVo8ioTOKPq24ESuwErVo02d8QkqEyqWnOCLJPy3IIKQQU
-	 hPSJJJ28UFYnjJaOw9nBVZfRfW9z44J6zH3uuTF5it8w/Z071qPjEqTUM2WnMMrizN
-	 fO98GSAxPEoZV8r5mdONzcx9Bk+cWCKiyR3aI2XXY3Z1B5LcdC6almvWr6dDKTwDko
-	 dlyuak8JP+s7GrNn1iYACGO+Vywch0Qm7yXwZNXpNcwyBGG5wOlDd55NN/VlxGiFO6
-	 vEIx/q6HxkU2Q==
+	s=k20201202; t=1712132110;
+	bh=RuQRkHrQ9e3cp/Msr4bhBQotSNWJFjViuqNekUfGnHE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ItNhRIO25oVeA7GZkONi09iRrqNBHIydMSlFqXa22rbvpiOpF/t/5Zf0w1AP3mFo6
+	 O9Kzb/WTl2tJ4EjZFPzTm2IN46cCsU5xufjehvrzvGRB9VCVUMJdCeHMMTkG8eBTV9
+	 dpUfvhvhuL3MZ/Uvri9wE8FnVBM2zaSwt65z3teAtgNRm3atfXoTM1/I9dwIfXnw2m
+	 alDJkBocPoMKNGLVXN/wV7I9YT+4kmwrbOi0i+R+rIyddSYM2A45JFA2o2y4jA6NBq
+	 bdE1Ox/06zB7V1Qdugd0BsqMEj2MWn2Gg5AGnI/kD7I2blxByZ82zuDr76AyDfCX7s
+	 FY1DVZoMH/odg==
 From: Arnd Bergmann <arnd@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Jiri Kosina <jikos@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+To: linux-kernel@vger.kernel.org,
 	Corey Minyard <minyard@acm.org>,
 	Peter Huewe <peterhuewe@gmx.de>,
 	Jarkko Sakkinen <jarkko@kernel.org>,
-	Tero Kristo <kristo@kernel.org>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Ian Abbott <abbotti@mev.co.uk>,
-	H Hartley Sweeten <hsweeten@visionengravers.com>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	Len Brown <lenb@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	John Allen <john.allen@amd.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
 	Vinod Koul <vkoul@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
 	Moritz Fischer <mdf@kernel.org>,
-	Liviu Dudau <liviu.dudau@arm.com>,
+	Wu Hao <hao.wu@intel.com>,
+	Xu Yilun <yilun.xu@intel.com>,
+	Jiri Kosina <jikos@kernel.org>,
 	Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
 	Michael Hennerich <michael.hennerich@analog.com>,
 	Peter Rosin <peda@axentia.se>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Jonathan Cameron <jic23@kernel.org>,
 	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Markuss Broks <markuss.broks@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Lee Jones <lee@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
 	Iyappan Subramanian <iyappan@os.amperecomputing.com>,
+	Keyur Chudgar <keyur@os.amperecomputing.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
 	Yisen Zhuang <yisen.zhuang@huawei.com>,
-	Stanislaw Gruszka <stf_xl@wp.pl>,
-	Kalle Valo <kvalo@kernel.org>,
-	Sebastian Reichel <sre@kernel.org>,
+	Salil Mehta <salil.mehta@huawei.com>,
 	Tony Lindgren <tony@atomide.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
 	Mark Brown <broonie@kernel.org>,
 	Alexandre Belloni <alexandre.belloni@bootlin.com>,
 	Xiang Chen <chenxiang66@hisilicon.com>,
+	"James E.J. Bottomley" <jejb@linux.ibm.com>,
 	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Vaibhav Hiremath <hvaibhav.linux@gmail.com>,
-	Alex Elder <elder@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Russell King <linux@armlinux.org.uk>,
 	Jiri Slaby <jirislaby@kernel.org>,
 	Jacky Huang <ychuang3@nuvoton.com>,
-	Helge Deller <deller@gmx.de>,
-	Christoph Hellwig <hch@lst.de>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kees Cook <keescook@chromium.org>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Anna Schumaker <anna@kernel.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Takashi Iwai <tiwai@suse.com>,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-ide@vger.kernel.org,
+	Shan-Chun Hung <schung@nuvoton.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Tom Rix <trix@redhat.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Rob Herring <robh@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
 	openipmi-developer@lists.sourceforge.net,
 	linux-integrity@vger.kernel.org,
-	linux-omap@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-crypto@vger.kernel.org,
 	dmaengine@vger.kernel.org,
-	linux-efi@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
 	linux-fpga@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
 	linux-input@vger.kernel.org,
 	linux-i2c@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
 	netdev@vger.kernel.org,
-	linux-leds@vger.kernel.org,
-	linux-wireless@vger.kernel.org,
+	linux-omap@vger.kernel.org,
 	linux-rtc@vger.kernel.org,
 	linux-scsi@vger.kernel.org,
-	linux-spi@vger.kernel.org,
-	linux-amlogic@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org,
-	greybus-dev@lists.linaro.org,
 	linux-staging@lists.linux.dev,
 	linux-serial@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	linux-fbdev@vger.kernel.org,
-	iommu@lists.linux.dev,
-	linux-trace-kernel@vger.kernel.org,
-	kasan-dev@googlegroups.com,
-	linux-hardening@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	linux-kbuild@vger.kernel.org,
-	alsa-devel@alsa-project.org,
-	linux-sound@vger.kernel.org
-Subject: [PATCH 00/34] address all -Wunused-const warnings
-Date: Wed,  3 Apr 2024 10:06:18 +0200
-Message-Id: <20240403080702.3509288-1-arnd@kernel.org>
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 33/34] drivers: remove incorrect of_match_ptr/ACPI_PTR annotations
+Date: Wed,  3 Apr 2024 10:06:51 +0200
+Message-Id: <20240403080702.3509288-34-arnd@kernel.org>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240403080702.3509288-1-arnd@kernel.org>
+References: <20240403080702.3509288-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -160,250 +111,341 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-Compilers traditionally warn for unused 'static' variables, but not
-if they are constant. The reason here is a custom for C++ programmers
-to define named constants as 'static const' variables in header files
-instead of using macros or enums.
+When building with CONFIG_OF and/or CONFIG_ACPI disabled but W=1 extra
+warnings enabled, a lot of driver cause a warning about an unused
+ID table:
 
-In W=1 builds, we get warnings only static const variables in C
-files, but not in headers, which is a good compromise, but this still
-produces warning output in at least 30 files. These warnings are
-almost all harmless, but also trivial to fix, and there is no
-good reason to warn only about the non-const variables being unused.
+drivers/char/tpm/tpm_ftpm_tee.c:356:34: error: unused variable 'of_ftpm_tee_ids' [-Werror,-Wunused-const-variable]
+drivers/dma/img-mdc-dma.c:863:34: error: unused variable 'mdc_dma_of_match' [-Werror,-Wunused-const-variable]
+drivers/fpga/versal-fpga.c:62:34: error: unused variable 'versal_fpga_of_match' [-Werror,-Wunused-const-variable]
+drivers/i2c/muxes/i2c-mux-ltc4306.c:200:34: error: unused variable 'ltc4306_of_match' [-Werror,-Wunused-const-variable]
+drivers/i2c/muxes/i2c-mux-reg.c:242:34: error: unused variable 'i2c_mux_reg_of_match' [-Werror,-Wunused-const-variable]
+drivers/memory/pl353-smc.c:62:34: error: unused variable 'pl353_smc_supported_children' [-Werror,-Wunused-const-variable]
+drivers/regulator/pbias-regulator.c:136:34: error: unused variable 'pbias_of_match' [-Werror,-Wunused-const-variable]
+drivers/regulator/twl-regulator.c:552:34: error: unused variable 'twl_of_match' [-Werror,-Wunused-const-variable]
+drivers/regulator/twl6030-regulator.c:645:34: error: unused variable 'twl_of_match' [-Werror,-Wunused-const-variable]
+drivers/scsi/hisi_sas/hisi_sas_v2_hw.c:3635:36: error: unused variable 'sas_v2_acpi_match' [-Werror,-Wunused-const-variable]
+drivers/staging/pi433/pi433_if.c:1359:34: error: unused variable 'pi433_dt_ids' [-Werror,-Wunused-const-variable]
+drivers/tty/serial/amba-pl011.c:2945:34: error: unused variable 'sbsa_uart_of_match' [-Werror,-Wunused-const-variable]
 
-I've gone through all the files that I found using randconfig and
-allmodconfig builds and created patches to avoid these warnings,
-with the goal of retaining a clean build once the option is enabled
-by default.
+The fix is always to just remove the of_match_ptr() and ACPI_PTR() wrappers
+that remove the reference, rather than adding another #ifdef just for build
+testing for a configuration that doesn't matter in practice.
 
-Unfortunately, there is one fairly large patch ("drivers: remove
-incorrect of_match_ptr/ACPI_PTR annotations") that touches
-34 individual drivers that all need the same one-line change.
-If necessary, I can split it up by driver or by subsystem,
-but at least for reviewing I would keep it as one piece for
-the moment.
+I considered splitting up the large patch into per subsystem patches, but since
+it's really just the same thing everywhere it feels better to do it all at once.
 
-Please merge the individual patches through subsystem trees.
-I expect that some of these will have to go through multiple
-revisions before they are picked up, so anything that gets
-applied early saves me from resending.
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/char/ipmi/ipmb_dev_int.c          | 2 +-
+ drivers/char/tpm/tpm_ftpm_tee.c           | 2 +-
+ drivers/dma/img-mdc-dma.c                 | 2 +-
+ drivers/fpga/versal-fpga.c                | 2 +-
+ drivers/hid/hid-google-hammer.c           | 6 ++----
+ drivers/i2c/muxes/i2c-mux-ltc4306.c       | 2 +-
+ drivers/i2c/muxes/i2c-mux-reg.c           | 2 +-
+ drivers/input/touchscreen/wdt87xx_i2c.c   | 2 +-
+ drivers/mux/adg792a.c                     | 2 +-
+ drivers/net/ethernet/apm/xgene-v2/main.c  | 2 +-
+ drivers/net/ethernet/hisilicon/hns_mdio.c | 2 +-
+ drivers/regulator/pbias-regulator.c       | 2 +-
+ drivers/regulator/twl-regulator.c         | 2 +-
+ drivers/regulator/twl6030-regulator.c     | 2 +-
+ drivers/rtc/rtc-fsl-ftm-alarm.c           | 2 +-
+ drivers/scsi/hisi_sas/hisi_sas_v1_hw.c    | 2 +-
+ drivers/scsi/hisi_sas/hisi_sas_v2_hw.c    | 2 +-
+ drivers/staging/pi433/pi433_if.c          | 2 +-
+ drivers/tty/serial/amba-pl011.c           | 6 +++---
+ drivers/tty/serial/ma35d1_serial.c        | 2 +-
+ 20 files changed, 23 insertions(+), 25 deletions(-)
 
-        Arnd
-
-Arnd Bergmann (31):
-  powerpc/fsl-soc: hide unused const variable
-  ubsan: fix unused variable warning in test module
-  platform: goldfish: remove ACPI_PTR() annotations
-  i2c: pxa: hide unused icr_bits[] variable
-  3c515: remove unused 'mtu' variable
-  tracing: hide unused ftrace_event_id_fops
-  Input: synaptics: hide unused smbus_pnp_ids[] array
-  power: rt9455: hide unused rt9455_boost_voltage_values
-  efi: sysfb: don't build when EFI is disabled
-  clk: ti: dpll: fix incorrect #ifdef checks
-  apm-emulation: hide an unused variable
-  sisfb: hide unused variables
-  dma/congiguous: avoid warning about unused size_bytes
-  leds: apu: remove duplicate DMI lookup data
-  iio: ad5755: hook up of_device_id lookup to platform driver
-  greybus: arche-ctrl: move device table to its right location
-  lib: checksum: hide unused expected_csum_ipv6_magic[]
-  sunrpc: suppress warnings for unused procfs functions
-  comedi: ni_atmio: avoid warning for unused device_ids[] table
-  iwlegacy: don't warn for unused variables with DEBUG_FS=n
-  drm/komeda: don't warn for unused debugfs files
-  firmware: qcom_scm: mark qcom_scm_qseecom_allowlist as __maybe_unused
-  crypto: ccp - drop platform ifdef checks
-  usb: gadget: omap_udc: remove unused variable
-  isdn: kcapi: don't build unused procfs code
-  cpufreq: intel_pstate: hide unused intel_pstate_cpu_oob_ids[]
-  net: xgbe: remove extraneous #ifdef checks
-  Input: imagis - remove incorrect ifdef checks
-  sata: mv: drop unnecessary #ifdef checks
-  ASoC: remove incorrect of_match_ptr/ACPI_PTR annotations
-  spi: remove incorrect of_match_ptr annotations
-  drivers: remove incorrect of_match_ptr/ACPI_PTR annotations
-  kbuild: always enable -Wunused-const-variable
-
-Krzysztof Kozlowski (1):
-  Input: stmpe-ts - mark OF related data as maybe unused
-
- arch/powerpc/sysdev/fsl_msi.c                 |  2 +
- drivers/ata/sata_mv.c                         | 64 +++++++++----------
- drivers/char/apm-emulation.c                  |  5 +-
- drivers/char/ipmi/ipmb_dev_int.c              |  2 +-
- drivers/char/tpm/tpm_ftpm_tee.c               |  2 +-
- drivers/clk/ti/dpll.c                         | 10 ++-
- drivers/comedi/drivers/ni_atmio.c             |  2 +-
- drivers/cpufreq/intel_pstate.c                |  2 +
- drivers/crypto/ccp/sp-platform.c              | 14 +---
- drivers/dma/img-mdc-dma.c                     |  2 +-
- drivers/firmware/efi/Makefile                 |  3 +-
- drivers/firmware/efi/sysfb_efi.c              |  2 -
- drivers/firmware/qcom/qcom_scm.c              |  2 +-
- drivers/fpga/versal-fpga.c                    |  2 +-
- .../gpu/drm/arm/display/komeda/komeda_dev.c   |  8 ---
- drivers/hid/hid-google-hammer.c               |  6 +-
- drivers/i2c/busses/i2c-pxa.c                  |  2 +-
- drivers/i2c/muxes/i2c-mux-ltc4306.c           |  2 +-
- drivers/i2c/muxes/i2c-mux-reg.c               |  2 +-
- drivers/iio/dac/ad5755.c                      |  1 +
- drivers/input/mouse/synaptics.c               |  2 +
- drivers/input/touchscreen/imagis.c            |  4 +-
- drivers/input/touchscreen/stmpe-ts.c          |  2 +-
- drivers/input/touchscreen/wdt87xx_i2c.c       |  2 +-
- drivers/isdn/capi/Makefile                    |  3 +-
- drivers/isdn/capi/kcapi.c                     |  7 +-
- drivers/leds/leds-apu.c                       |  3 +-
- drivers/mux/adg792a.c                         |  2 +-
- drivers/net/ethernet/3com/3c515.c             |  3 -
- drivers/net/ethernet/amd/xgbe/xgbe-platform.c |  8 ---
- drivers/net/ethernet/apm/xgene-v2/main.c      |  2 +-
- drivers/net/ethernet/hisilicon/hns_mdio.c     |  2 +-
- drivers/net/wireless/intel/iwlegacy/4965-rs.c | 15 +----
- drivers/net/wireless/intel/iwlegacy/common.h  |  2 -
- drivers/platform/goldfish/goldfish_pipe.c     |  2 +-
- drivers/power/supply/rt9455_charger.c         |  2 +
- drivers/regulator/pbias-regulator.c           |  2 +-
- drivers/regulator/twl-regulator.c             |  2 +-
- drivers/regulator/twl6030-regulator.c         |  2 +-
- drivers/rtc/rtc-fsl-ftm-alarm.c               |  2 +-
- drivers/scsi/hisi_sas/hisi_sas_v1_hw.c        |  2 +-
- drivers/scsi/hisi_sas/hisi_sas_v2_hw.c        |  2 +-
- drivers/spi/spi-armada-3700.c                 |  2 +-
- drivers/spi/spi-img-spfi.c                    |  2 +-
- drivers/spi/spi-meson-spicc.c                 |  2 +-
- drivers/spi/spi-meson-spifc.c                 |  2 +-
- drivers/spi/spi-orion.c                       |  2 +-
- drivers/spi/spi-pic32-sqi.c                   |  2 +-
- drivers/spi/spi-pic32.c                       |  2 +-
- drivers/spi/spi-rockchip.c                    |  2 +-
- drivers/spi/spi-s3c64xx.c                     |  2 +-
- drivers/spi/spi-st-ssc4.c                     |  2 +-
- drivers/staging/greybus/arche-apb-ctrl.c      |  1 +
- drivers/staging/greybus/arche-platform.c      |  9 +--
- drivers/staging/pi433/pi433_if.c              |  2 +-
- drivers/tty/serial/amba-pl011.c               |  6 +-
- drivers/tty/serial/ma35d1_serial.c            |  2 +-
- drivers/usb/gadget/udc/omap_udc.c             | 10 +--
- drivers/video/fbdev/sis/init301.c             |  3 +-
- kernel/dma/contiguous.c                       |  2 +-
- kernel/trace/trace_events.c                   |  4 ++
- lib/checksum_kunit.c                          |  2 +
- lib/test_ubsan.c                              |  2 +-
- net/sunrpc/cache.c                            | 10 +--
- scripts/Makefile.extrawarn                    |  1 -
- sound/soc/atmel/sam9x5_wm8731.c               |  2 +-
- sound/soc/codecs/rt5514-spi.c                 |  2 +-
- sound/soc/qcom/lpass-sc7280.c                 |  2 +-
- sound/soc/samsung/aries_wm8994.c              |  2 +-
- 69 files changed, 121 insertions(+), 169 deletions(-)
-
+diff --git a/drivers/char/ipmi/ipmb_dev_int.c b/drivers/char/ipmi/ipmb_dev_int.c
+index 49100845fcb7..5e7bfc7c26e2 100644
+--- a/drivers/char/ipmi/ipmb_dev_int.c
++++ b/drivers/char/ipmi/ipmb_dev_int.c
+@@ -364,7 +364,7 @@ MODULE_DEVICE_TABLE(acpi, acpi_ipmb_id);
+ static struct i2c_driver ipmb_driver = {
+ 	.driver = {
+ 		.name = "ipmb-dev",
+-		.acpi_match_table = ACPI_PTR(acpi_ipmb_id),
++		.acpi_match_table = acpi_ipmb_id,
+ 	},
+ 	.probe = ipmb_probe,
+ 	.remove = ipmb_remove,
+diff --git a/drivers/char/tpm/tpm_ftpm_tee.c b/drivers/char/tpm/tpm_ftpm_tee.c
+index 2ea4882251cf..0c453f3f928d 100644
+--- a/drivers/char/tpm/tpm_ftpm_tee.c
++++ b/drivers/char/tpm/tpm_ftpm_tee.c
+@@ -362,7 +362,7 @@ MODULE_DEVICE_TABLE(of, of_ftpm_tee_ids);
+ static struct platform_driver ftpm_tee_plat_driver = {
+ 	.driver = {
+ 		.name = "ftpm-tee",
+-		.of_match_table = of_match_ptr(of_ftpm_tee_ids),
++		.of_match_table = of_ftpm_tee_ids,
+ 	},
+ 	.shutdown = ftpm_plat_tee_shutdown,
+ 	.probe = ftpm_plat_tee_probe,
+diff --git a/drivers/dma/img-mdc-dma.c b/drivers/dma/img-mdc-dma.c
+index 0532dd2640dc..6931c8a65415 100644
+--- a/drivers/dma/img-mdc-dma.c
++++ b/drivers/dma/img-mdc-dma.c
+@@ -1073,7 +1073,7 @@ static struct platform_driver mdc_dma_driver = {
+ 	.driver = {
+ 		.name = "img-mdc-dma",
+ 		.pm = &img_mdc_pm_ops,
+-		.of_match_table = of_match_ptr(mdc_dma_of_match),
++		.of_match_table = mdc_dma_of_match,
+ 	},
+ 	.probe = mdc_dma_probe,
+ 	.remove_new = mdc_dma_remove,
+diff --git a/drivers/fpga/versal-fpga.c b/drivers/fpga/versal-fpga.c
+index 3710e8f01be2..e6189106c468 100644
+--- a/drivers/fpga/versal-fpga.c
++++ b/drivers/fpga/versal-fpga.c
+@@ -69,7 +69,7 @@ static struct platform_driver versal_fpga_driver = {
+ 	.probe = versal_fpga_probe,
+ 	.driver = {
+ 		.name = "versal_fpga_manager",
+-		.of_match_table = of_match_ptr(versal_fpga_of_match),
++		.of_match_table = versal_fpga_of_match,
+ 	},
+ };
+ module_platform_driver(versal_fpga_driver);
+diff --git a/drivers/hid/hid-google-hammer.c b/drivers/hid/hid-google-hammer.c
+index c6bdb9c4ef3e..886cc5748b7d 100644
+--- a/drivers/hid/hid-google-hammer.c
++++ b/drivers/hid/hid-google-hammer.c
+@@ -275,21 +275,19 @@ static const struct acpi_device_id cbas_ec_acpi_ids[] = {
+ };
+ MODULE_DEVICE_TABLE(acpi, cbas_ec_acpi_ids);
+ 
+-#ifdef CONFIG_OF
+ static const struct of_device_id cbas_ec_of_match[] = {
+ 	{ .compatible = "google,cros-cbas" },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, cbas_ec_of_match);
+-#endif
+ 
+ static struct platform_driver cbas_ec_driver = {
+ 	.probe = cbas_ec_probe,
+ 	.remove = cbas_ec_remove,
+ 	.driver = {
+ 		.name = "cbas_ec",
+-		.acpi_match_table = ACPI_PTR(cbas_ec_acpi_ids),
+-		.of_match_table = of_match_ptr(cbas_ec_of_match),
++		.acpi_match_table = cbas_ec_acpi_ids,
++		.of_match_table = cbas_ec_of_match,
+ 		.pm = &cbas_ec_pm_ops,
+ 	},
+ };
+diff --git a/drivers/i2c/muxes/i2c-mux-ltc4306.c b/drivers/i2c/muxes/i2c-mux-ltc4306.c
+index 23766d853e76..c6d70788161a 100644
+--- a/drivers/i2c/muxes/i2c-mux-ltc4306.c
++++ b/drivers/i2c/muxes/i2c-mux-ltc4306.c
+@@ -303,7 +303,7 @@ static void ltc4306_remove(struct i2c_client *client)
+ static struct i2c_driver ltc4306_driver = {
+ 	.driver		= {
+ 		.name	= "ltc4306",
+-		.of_match_table = of_match_ptr(ltc4306_of_match),
++		.of_match_table = ltc4306_of_match,
+ 	},
+ 	.probe		= ltc4306_probe,
+ 	.remove		= ltc4306_remove,
+diff --git a/drivers/i2c/muxes/i2c-mux-reg.c b/drivers/i2c/muxes/i2c-mux-reg.c
+index 8489971babd3..0f1b39964743 100644
+--- a/drivers/i2c/muxes/i2c-mux-reg.c
++++ b/drivers/i2c/muxes/i2c-mux-reg.c
+@@ -250,7 +250,7 @@ static struct platform_driver i2c_mux_reg_driver = {
+ 	.remove_new = i2c_mux_reg_remove,
+ 	.driver	= {
+ 		.name	= "i2c-mux-reg",
+-		.of_match_table = of_match_ptr(i2c_mux_reg_of_match),
++		.of_match_table = i2c_mux_reg_of_match,
+ 	},
+ };
+ 
+diff --git a/drivers/input/touchscreen/wdt87xx_i2c.c b/drivers/input/touchscreen/wdt87xx_i2c.c
+index 32c7be54434c..9f3a4092e47c 100644
+--- a/drivers/input/touchscreen/wdt87xx_i2c.c
++++ b/drivers/input/touchscreen/wdt87xx_i2c.c
+@@ -1166,7 +1166,7 @@ static struct i2c_driver wdt87xx_driver = {
+ 		.name = WDT87XX_NAME,
+ 		.dev_groups = wdt87xx_groups,
+ 		.pm = pm_sleep_ptr(&wdt87xx_pm_ops),
+-		.acpi_match_table = ACPI_PTR(wdt87xx_acpi_id),
++		.acpi_match_table = wdt87xx_acpi_id,
+ 	},
+ };
+ module_i2c_driver(wdt87xx_driver);
+diff --git a/drivers/mux/adg792a.c b/drivers/mux/adg792a.c
+index 4da5aecb9fc6..a5afe29e3cf1 100644
+--- a/drivers/mux/adg792a.c
++++ b/drivers/mux/adg792a.c
+@@ -141,7 +141,7 @@ MODULE_DEVICE_TABLE(of, adg792a_of_match);
+ static struct i2c_driver adg792a_driver = {
+ 	.driver		= {
+ 		.name		= "adg792a",
+-		.of_match_table = of_match_ptr(adg792a_of_match),
++		.of_match_table = adg792a_of_match,
+ 	},
+ 	.probe		= adg792a_probe,
+ 	.id_table	= adg792a_id,
+diff --git a/drivers/net/ethernet/apm/xgene-v2/main.c b/drivers/net/ethernet/apm/xgene-v2/main.c
+index 9e90c2381491..64370057ba3d 100644
+--- a/drivers/net/ethernet/apm/xgene-v2/main.c
++++ b/drivers/net/ethernet/apm/xgene-v2/main.c
+@@ -731,7 +731,7 @@ MODULE_DEVICE_TABLE(acpi, xge_acpi_match);
+ static struct platform_driver xge_driver = {
+ 	.driver = {
+ 		   .name = "xgene-enet-v2",
+-		   .acpi_match_table = ACPI_PTR(xge_acpi_match),
++		   .acpi_match_table = xge_acpi_match,
+ 	},
+ 	.probe = xge_probe,
+ 	.remove_new = xge_remove,
+diff --git a/drivers/net/ethernet/hisilicon/hns_mdio.c b/drivers/net/ethernet/hisilicon/hns_mdio.c
+index ed73707176c1..f8caf59bd759 100644
+--- a/drivers/net/ethernet/hisilicon/hns_mdio.c
++++ b/drivers/net/ethernet/hisilicon/hns_mdio.c
+@@ -639,7 +639,7 @@ static struct platform_driver hns_mdio_driver = {
+ 	.driver = {
+ 		   .name = MDIO_DRV_NAME,
+ 		   .of_match_table = hns_mdio_match,
+-		   .acpi_match_table = ACPI_PTR(hns_mdio_acpi_match),
++		   .acpi_match_table = hns_mdio_acpi_match,
+ 		   },
+ };
+ 
+diff --git a/drivers/regulator/pbias-regulator.c b/drivers/regulator/pbias-regulator.c
+index cd5a0d7e4455..2eeb99e7b850 100644
+--- a/drivers/regulator/pbias-regulator.c
++++ b/drivers/regulator/pbias-regulator.c
+@@ -231,7 +231,7 @@ static struct platform_driver pbias_regulator_driver = {
+ 	.driver		= {
+ 		.name		= "pbias-regulator",
+ 		.probe_type	= PROBE_PREFER_ASYNCHRONOUS,
+-		.of_match_table = of_match_ptr(pbias_of_match),
++		.of_match_table = pbias_of_match,
+ 	},
+ };
+ 
+diff --git a/drivers/regulator/twl-regulator.c b/drivers/regulator/twl-regulator.c
+index 5bacfcebf59a..4ed91e88e1eb 100644
+--- a/drivers/regulator/twl-regulator.c
++++ b/drivers/regulator/twl-regulator.c
+@@ -656,7 +656,7 @@ static struct platform_driver twlreg_driver = {
+ 	.driver  = {
+ 		.name  = "twl4030_reg",
+ 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+-		.of_match_table = of_match_ptr(twl_of_match),
++		.of_match_table = twl_of_match,
+ 	},
+ };
+ 
+diff --git a/drivers/regulator/twl6030-regulator.c b/drivers/regulator/twl6030-regulator.c
+index 6eed0f6e0adb..8a84048a66d7 100644
+--- a/drivers/regulator/twl6030-regulator.c
++++ b/drivers/regulator/twl6030-regulator.c
+@@ -765,7 +765,7 @@ static struct platform_driver twlreg_driver = {
+ 	.driver  = {
+ 		.name  = "twl6030_reg",
+ 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+-		.of_match_table = of_match_ptr(twl_of_match),
++		.of_match_table = twl_of_match,
+ 	},
+ };
+ 
+diff --git a/drivers/rtc/rtc-fsl-ftm-alarm.c b/drivers/rtc/rtc-fsl-ftm-alarm.c
+index a72c4ad0cec6..12da7d36e520 100644
+--- a/drivers/rtc/rtc-fsl-ftm-alarm.c
++++ b/drivers/rtc/rtc-fsl-ftm-alarm.c
+@@ -320,7 +320,7 @@ static struct platform_driver ftm_rtc_driver = {
+ 	.driver		= {
+ 		.name	= "ftm-alarm",
+ 		.of_match_table = ftm_rtc_match,
+-		.acpi_match_table = ACPI_PTR(ftm_imx_acpi_ids),
++		.acpi_match_table = ftm_imx_acpi_ids,
+ 	},
+ };
+ 
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
+index 161feae3acab..c6f313c9605b 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
+@@ -1788,7 +1788,7 @@ static struct platform_driver hisi_sas_v1_driver = {
+ 	.driver = {
+ 		.name = DRV_NAME,
+ 		.of_match_table = sas_v1_of_match,
+-		.acpi_match_table = ACPI_PTR(sas_v1_acpi_match),
++		.acpi_match_table = sas_v1_acpi_match,
+ 	},
+ };
+ 
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
+index d89e97e8f5c2..ce3b5e1680f5 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
+@@ -3635,7 +3635,7 @@ static struct platform_driver hisi_sas_v2_driver = {
+ 	.driver = {
+ 		.name = DRV_NAME,
+ 		.of_match_table = sas_v2_of_match,
+-		.acpi_match_table = ACPI_PTR(sas_v2_acpi_match),
++		.acpi_match_table = sas_v2_acpi_match,
+ 	},
+ };
+ 
+diff --git a/drivers/staging/pi433/pi433_if.c b/drivers/staging/pi433/pi433_if.c
+index 81de98c0245a..30fd6da3e8d8 100644
+--- a/drivers/staging/pi433/pi433_if.c
++++ b/drivers/staging/pi433/pi433_if.c
+@@ -1367,7 +1367,7 @@ static struct spi_driver pi433_spi_driver = {
+ 	.driver = {
+ 		.name =		"pi433",
+ 		.owner =	THIS_MODULE,
+-		.of_match_table = of_match_ptr(pi433_dt_ids),
++		.of_match_table = pi433_dt_ids,
+ 	},
+ 	.probe =	pi433_probe,
+ 	.remove =	pi433_remove,
+diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
+index 2fa3fb30dc6c..dd1d1a2cc5f5 100644
+--- a/drivers/tty/serial/amba-pl011.c
++++ b/drivers/tty/serial/amba-pl011.c
+@@ -2948,7 +2948,7 @@ static const struct of_device_id sbsa_uart_of_match[] = {
+ };
+ MODULE_DEVICE_TABLE(of, sbsa_uart_of_match);
+ 
+-static const struct acpi_device_id __maybe_unused sbsa_uart_acpi_match[] = {
++static const struct acpi_device_id sbsa_uart_acpi_match[] = {
+ 	{ "ARMH0011", 0 },
+ 	{ "ARMHB000", 0 },
+ 	{},
+@@ -2961,8 +2961,8 @@ static struct platform_driver arm_sbsa_uart_platform_driver = {
+ 	.driver	= {
+ 		.name	= "sbsa-uart",
+ 		.pm	= &pl011_dev_pm_ops,
+-		.of_match_table = of_match_ptr(sbsa_uart_of_match),
+-		.acpi_match_table = ACPI_PTR(sbsa_uart_acpi_match),
++		.of_match_table = sbsa_uart_of_match,
++		.acpi_match_table = sbsa_uart_acpi_match,
+ 		.suppress_bind_attrs = IS_BUILTIN(CONFIG_SERIAL_AMBA_PL011),
+ 	},
+ };
+diff --git a/drivers/tty/serial/ma35d1_serial.c b/drivers/tty/serial/ma35d1_serial.c
+index 19f0a305cc43..e326d0fb06b2 100644
+--- a/drivers/tty/serial/ma35d1_serial.c
++++ b/drivers/tty/serial/ma35d1_serial.c
+@@ -798,7 +798,7 @@ static struct platform_driver ma35d1serial_driver = {
+ 	.resume     = ma35d1serial_resume,
+ 	.driver     = {
+ 		.name   = "ma35d1-uart",
+-		.of_match_table = of_match_ptr(ma35d1_serial_of_match),
++		.of_match_table = ma35d1_serial_of_match,
+ 	},
+ };
+ 
 -- 
 2.39.2
 
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Damien Le Moal <dlemoal@kernel.org>
-Cc: Jiri Kosina <jikos@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Corey Minyard <minyard@acm.org>
-Cc: Peter Huewe <peterhuewe@gmx.de>
-Cc: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: Tero Kristo <kristo@kernel.org>
-Cc: Stephen Boyd <sboyd@kernel.org>
-Cc: Ian Abbott <abbotti@mev.co.uk>
-Cc: H Hartley Sweeten <hsweeten@visionengravers.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: Len Brown <lenb@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: John Allen <john.allen@amd.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Vinod Koul <vkoul@kernel.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>
-Cc: Moritz Fischer <mdf@kernel.org>
-Cc: Liviu Dudau <liviu.dudau@arm.com>
-Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc: Andi Shyti <andi.shyti@kernel.org>
-Cc: Michael Hennerich <michael.hennerich@analog.com>
-Cc: Peter Rosin <peda@axentia.se>
-Cc: Lars-Peter Clausen <lars@metafoo.de>
-Cc: Jonathan Cameron <jic23@kernel.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Markuss Broks <markuss.broks@gmail.com>
-Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc: Lee Jones <lee@kernel.org>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Cc: Iyappan Subramanian <iyappan@os.amperecomputing.com>
-Cc: Yisen Zhuang <yisen.zhuang@huawei.com>
-Cc: Stanislaw Gruszka <stf_xl@wp.pl>
-Cc: Kalle Valo <kvalo@kernel.org>
-Cc: Sebastian Reichel <sre@kernel.org>
-Cc: Tony Lindgren <tony@atomide.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Xiang Chen <chenxiang66@hisilicon.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: Heiko Stuebner <heiko@sntech.de>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Vaibhav Hiremath <hvaibhav.linux@gmail.com>
-Cc: Alex Elder <elder@kernel.org>
-Cc: Jiri Slaby <jirislaby@kernel.org>
-Cc: Jacky Huang <ychuang3@nuvoton.com>
-Cc: Helge Deller <deller@gmx.de>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc: Anna Schumaker <anna@kernel.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-ide@vger.kernel.org
-Cc: openipmi-developer@lists.sourceforge.net
-Cc: linux-integrity@vger.kernel.org
-Cc: linux-omap@vger.kernel.org
-Cc: linux-clk@vger.kernel.org
-Cc: linux-pm@vger.kernel.org
-Cc: linux-crypto@vger.kernel.org
-Cc: dmaengine@vger.kernel.org
-Cc: linux-efi@vger.kernel.org
-Cc: linux-arm-msm@vger.kernel.org
-Cc: linux-fpga@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org
-Cc: linux-input@vger.kernel.org
-Cc: linux-i2c@vger.kernel.org
-Cc: linux-iio@vger.kernel.org
-Cc: linux-stm32@st-md-mailman.stormreply.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: netdev@vger.kernel.org
-Cc: linux-leds@vger.kernel.org
-Cc: linux-wireless@vger.kernel.org
-Cc: linux-rtc@vger.kernel.org
-Cc: linux-scsi@vger.kernel.org
-Cc: linux-spi@vger.kernel.org
-Cc: linux-amlogic@lists.infradead.org
-Cc: linux-rockchip@lists.infradead.org
-Cc: linux-samsung-soc@vger.kernel.org
-Cc: greybus-dev@lists.linaro.org
-Cc: linux-staging@lists.linux.dev
-Cc: linux-serial@vger.kernel.org
-Cc: linux-usb@vger.kernel.org
-Cc: linux-fbdev@vger.kernel.org
-Cc: iommu@lists.linux.dev
-Cc: linux-trace-kernel@vger.kernel.org
-Cc: kasan-dev@googlegroups.com
-Cc: linux-hardening@vger.kernel.org
-Cc: linux-nfs@vger.kernel.org
-Cc: linux-kbuild@vger.kernel.org
-Cc: alsa-devel@alsa-project.org
-Cc: linux-sound@vger.kernel.org
 

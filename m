@@ -1,157 +1,151 @@
-Return-Path: <dmaengine+bounces-1732-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1730-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C5E78971C8
-	for <lists+dmaengine@lfdr.de>; Wed,  3 Apr 2024 15:57:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id ED7328970D4
+	for <lists+dmaengine@lfdr.de>; Wed,  3 Apr 2024 15:27:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DFC5D1F231CA
-	for <lists+dmaengine@lfdr.de>; Wed,  3 Apr 2024 13:57:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8DD061F23390
+	for <lists+dmaengine@lfdr.de>; Wed,  3 Apr 2024 13:27:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E3E0148839;
-	Wed,  3 Apr 2024 13:57:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83AF2149E0D;
+	Wed,  3 Apr 2024 13:24:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="WL9AME1F"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BIll3WjV"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-m49253.qiye.163.com (mail-m49253.qiye.163.com [45.254.49.253])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65E2B147C78;
-	Wed,  3 Apr 2024 13:57:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.253
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C87514882E;
+	Wed,  3 Apr 2024 13:24:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712152638; cv=none; b=oRjSUejf9g9PDn12CwC7SMHLz92s6yAps/cQ2HNmyVqFuw774DyOeZXsbyiFCNgGOXcJlQaGSyrbwlO7SIIBVYh4mwUewhUPrDtIINfQHQeJTytpYLzQSYAlYKw4PDqPgtzXS6JOl+hzdwgX9rLm0dToricFUyVvOvtf2N8TtsU=
+	t=1712150664; cv=none; b=chwYPU+hXlMJ4TLUjLn3P1get4Bzvpfcti407jyJnBz4UUE8Q3EISk59TBVv5E1+xV7RRJ7F/G8DSIEmjQO5nGnB+uI8D81oZQbyJm9+FASzIC5PoG98qA7x58hwW+NWSpgXWMdLu/wyEcfXNQj6ZZapYlRuoxBndbjlDo07m7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712152638; c=relaxed/simple;
-	bh=Yi2rfy/c/FEfpMRtlXRZ23HDICk1lcPrg8Fy+0GTG60=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=VW9GNYaaB4R3EPQO8S0zPtg1XFfec1mN3MTSOYjnCs0uM0et6XrO6AK7qf/mEwmOMKFh4WH3ZtjxTyj9Ys1/li0PYSvN41lYZwhQFVFHlYBOQhV6EedZkXYjFQ3118XS6c2ShPdlDJMtmHMA3yHcUtmOEUrm85SLgh51c81GQZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=WL9AME1F; arc=none smtp.client-ip=45.254.49.253
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-DKIM-Signature: a=rsa-sha256;
-	b=WL9AME1FbN3qwG5Wk/f79Xhi/AskTVfgq4tjVjSPsooez9x8BryWqJeBNcj8nT7Cip+10fOlPiHqsHn8OL6mSsNN5q36mI+y2RXFwcfUM3ELmMp1gzB+DCuJ32O/rK9vlsmI9opkB5wX7NvQcY5vCQd4rypsKVxDSSE7JkQ2MLE=;
-	c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=hVhk+TI4SRZhbF4gUP3nkD3PWMY3UDprkFnGH1+J064=;
-	h=date:mime-version:subject:message-id:from;
-Received: from localhost.localdomain (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id C6D807C03A7;
-	Wed,  3 Apr 2024 21:18:44 +0800 (CST)
-From: Sugar Zhang <sugar.zhang@rock-chips.com>
-To: heiko@sntech.de,
-	vkoul@kernel.org
-Cc: linux-rockchip@lists.infradead.org,
-	Sugar Zhang <sugar.zhang@rock-chips.com>,
-	dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] dmaengine: Add support for audio interleaved transfer
-Date: Wed,  3 Apr 2024 21:18:22 +0800
-Message-Id: <20240403211810.v2.1.I502ea9c86c8403dc5b1f38abf40be8b6ee13c1dc@changeid>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1712150304-60832-1-git-send-email-sugar.zhang@rock-chips.com>
-References: <1712150304-60832-1-git-send-email-sugar.zhang@rock-chips.com>
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQ09IT1ZNHx0aTU8YHksfSh5VEwETFh
-	oSFyQUDg9ZV1kYEgtZQVlOQ1VJSVVMVUpKT1lXWRYaDxIVHRRZQVlPS0hVSk1PSUxOVUpLS1VKQk
-	tLWQY+
-X-HM-Tid: 0a8ea41ca76e09d2kunmc6d807c03a7
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NjY6CDo*DTMTATUZNTFJHhdD
-	LCoKCR1VSlVKTEpJSk5LSElOT09OVTMWGhIXVQgOHBoJVQETGhUcOwkUGBBWGBMSCwhVGBQWRVlX
-	WRILWUFZTkNVSUlVTFVKSk9ZV1kIAVlBSENJTDcG
+	s=arc-20240116; t=1712150664; c=relaxed/simple;
+	bh=I5RGyzMLJIXNupLdtHjUd2yPu3cEeEw2E/J4C1xPUx4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NkMBfmCGwMHrdR6zQu7Z0m4jpuBtcZMfXhvGbJyvE+Xde1y0LGudgrG093xF9qVwS1aRa1FsX8hncMyOXaIM5ssGO53qzcdulWUVSSfzgJJL45MOVhWNb5ouFpo+71Eu8sDj3oyzeVdwMucXfWxreoWAutcAb8goc7tviayO41w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BIll3WjV; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712150663; x=1743686663;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=I5RGyzMLJIXNupLdtHjUd2yPu3cEeEw2E/J4C1xPUx4=;
+  b=BIll3WjVgpfFcHVp7T9Pi6xrWhp5lxBR8uSu6h9l1Zf+/EKXP1GhBi7y
+   /ITTAEuYW5XNM+sj8o6F7ESKvSRpz6wzwrDRcexfi54slNjU31xEiNKfv
+   qAwmi/Ifd2yYoY1xEeQcGP4sgbbKml1fkkJP3rWMviVglP9Jp7oUftMB0
+   sivPUciTWnPh6ICRjv0kcTPm7RKnrL6w9LeDfOGZwxNXYiyxoyw6oe6Ps
+   JdwEoJvpTNGi7qKEtbxi8CUhjhvcU4o/7pFN6b5f5+NOt/YNWD5mxmuLt
+   kxvFO9/pSbLSO3xpbWYdDHBft4HuIdCIaiYLaJTTqy2UGLk2YyDXuZXMY
+   Q==;
+X-CSE-ConnectionGUID: fkEU17qARrOH0xT/nf4HTA==
+X-CSE-MsgGUID: l9ixA4vZT+azb+QJ8XDI2A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="7243739"
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="7243739"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 06:24:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="915183381"
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="915183381"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 06:23:53 -0700
+Received: from andy by smile with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rs0aj-0000000180g-2o4w;
+	Wed, 03 Apr 2024 16:23:49 +0300
+Date: Wed, 3 Apr 2024 16:23:49 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Corey Minyard <minyard@acm.org>
+Cc: Arnd Bergmann <arnd@kernel.org>, linux-kernel@vger.kernel.org,
+	Peter Huewe <peterhuewe@gmx.de>,
+	Jarkko Sakkinen <jarkko@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
+	Xu Yilun <yilun.xu@intel.com>, Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+	Michael Hennerich <michael.hennerich@analog.com>,
+	Peter Rosin <peda@axentia.se>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Iyappan Subramanian <iyappan@os.amperecomputing.com>,
+	Keyur Chudgar <keyur@os.amperecomputing.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Yisen Zhuang <yisen.zhuang@huawei.com>,
+	Salil Mehta <salil.mehta@huawei.com>,
+	Tony Lindgren <tony@atomide.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Xiang Chen <chenxiang66@hisilicon.com>,
+	"James E.J. Bottomley" <jejb@linux.ibm.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Jacky Huang <ychuang3@nuvoton.com>,
+	Shan-Chun Hung <schung@nuvoton.com>, Arnd Bergmann <arnd@arndb.de>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Tom Rix <trix@redhat.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	Randy Dunlap <rdunlap@infradead.org>, Rob Herring <robh@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	openipmi-developer@lists.sourceforge.net,
+	linux-integrity@vger.kernel.org, dmaengine@vger.kernel.org,
+	linux-fpga@vger.kernel.org, linux-input@vger.kernel.org,
+	linux-i2c@vger.kernel.org, netdev@vger.kernel.org,
+	linux-omap@vger.kernel.org, linux-rtc@vger.kernel.org,
+	linux-scsi@vger.kernel.org, linux-staging@lists.linux.dev,
+	linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 33/34] drivers: remove incorrect of_match_ptr/ACPI_PTR
+ annotations
+Message-ID: <Zg1YZVtM3CZWDYq1@smile.fi.intel.com>
+References: <20240403080702.3509288-1-arnd@kernel.org>
+ <20240403080702.3509288-34-arnd@kernel.org>
+ <Zg0hxMZGlwfXV2RA@smile.fi.intel.com>
+ <Zg1P9fpdwPot3Dxj@mail.minyard.net>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zg1P9fpdwPot3Dxj@mail.minyard.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-This patch add support for interleaved transfer which used
-for interleaved audio or 2d video data transfer.
+On Wed, Apr 03, 2024 at 07:47:49AM -0500, Corey Minyard wrote:
+> On Wed, Apr 03, 2024 at 12:30:44PM +0300, Andy Shevchenko wrote:
+> > On Wed, Apr 03, 2024 at 10:06:51AM +0200, Arnd Bergmann wrote:
+> > > From: Arnd Bergmann <arnd@arndb.de>
 
-for audio situation, we add 'nump' for number of period frames.
+...
 
-e.g. combine 2 stream into a union one by 2D dma.
+> > > I considered splitting up the large patch into per subsystem patches, but since
+> > > it's really just the same thing everywhere it feels better to do it all at once.
+> > 
+> > Can we split to three groups:
+> > - Dropping ACPI_PTR()
+> > - Dropping of_match_ptr() (which I won't review in depth, for example)
+> > - Dropping both
+> > ?
+> 
+> Why?
 
-DAI0: 16CH
-+-------------------------------------------------------------+
-| Frame-1 | Frame-2 | Frame-3 | Frame-4 | ...... Frame-'numf' |
-+-------------------------------------------------------------+
+Easy to review ACPI parts independently on the rest. I think I explained that
+in above. Besides that some patches might require additional work (don't remember
+if it is the case for _this_ patch).
 
-DAI1: 16CH
-+-------------------------------------------------------------+
-| Frame-1 | Frame-2 | Frame-3 | Frame-4 | ...... Frame-'numf' |
-+-------------------------------------------------------------+
-
-DAI0 + DAI1: 32CH
-
-+-------------------------------------------------------------+
-| DAI0-F1 | DAI1-F1 | DAI0-F2 | DAI1-F2 | ......              |
-+-------------------------------------------------------------+
-|      Frame-1      |      Frame-2      | ...... Frame-'numf' |
-
-For audio situation, we have buffer_size and period_size,
-the 'numf' is the buffer_size. so, we need another one for
-period_size, e.g. 'nump'.
-
-| Frame-1 | ~ | Frame-'nump' | ~ | Frame-'nump+1' | ~ |  Frame-'numf' |
-|
-
-As the above shown:
-
-each DAI0 transfer 1 Frame, should skip a gap size (DAI1-F1)
-each DAI1 transfer 1 Frame, should skip a gap size (DAI0-F1)
-
-So, the interleaved template describe as follows:
-
-DAI0:
-
-struct dma_interleaved_template *xt;
-
-xt->sgl[0].size = DAI0-F1;
-xt->sgl[0].icg =  DAI1-F1;
-xt->nump = nump; //the period_size in frames
-xt->numf = numf; //the buffer_size in frames
-
-DAI1:
-
-struct dma_interleaved_template *xt;
-
-xt->sgl[0].size = DAI1-F1;
-xt->sgl[0].icg =  DAI0-F1;
-xt->nump = nump; //the period_size in frames
-xt->numf = numf; //the buffer_size in frames
-
-Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
----
-
-Changes in v2:
-- Add the pl330 interleaved transfer
-
- include/linux/dmaengine.h | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index 752dbde..5263cde 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -144,6 +144,7 @@ struct data_chunk {
-  *		Otherwise, destination is filled contiguously (icg ignored).
-  *		Ignored if dst_inc is false.
-  * @numf: Number of frames in this template.
-+ * @nump: Number of period frames in this template.
-  * @frame_size: Number of chunks in a frame i.e, size of sgl[].
-  * @sgl: Array of {chunk,icg} pairs that make up a frame.
-  */
-@@ -156,6 +157,7 @@ struct dma_interleaved_template {
- 	bool src_sgl;
- 	bool dst_sgl;
- 	size_t numf;
-+	size_t nump;
- 	size_t frame_size;
- 	struct data_chunk sgl[];
- };
 -- 
-2.7.4
+With Best Regards,
+Andy Shevchenko
+
 
 

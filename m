@@ -1,107 +1,285 @@
-Return-Path: <dmaengine+bounces-1739-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1740-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36287898301
-	for <lists+dmaengine@lfdr.de>; Thu,  4 Apr 2024 10:18:50 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B1828899174
+	for <lists+dmaengine@lfdr.de>; Fri,  5 Apr 2024 00:39:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D2A571F2258D
-	for <lists+dmaengine@lfdr.de>; Thu,  4 Apr 2024 08:18:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B1A141C2282C
+	for <lists+dmaengine@lfdr.de>; Thu,  4 Apr 2024 22:39:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F10FD6BB46;
-	Thu,  4 Apr 2024 08:18:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14C1F6F505;
+	Thu,  4 Apr 2024 22:39:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MQe8ddn8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bddWIEn6"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4963679E1
-	for <dmaengine@vger.kernel.org>; Thu,  4 Apr 2024 08:18:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC1FD5479F;
+	Thu,  4 Apr 2024 22:39:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712218723; cv=none; b=cQD/3e1kKkLdrwxnYJmOuF4A+XD9N1D39Qu6OZx5YRxXmQ5VtsU79VKTc3URImaHYKOa+2Iya+gDfUARAZc8yiYBaRcZCCwhBcEhaD+QUFOEH2k+AAhhEHr4qGL9E0xSnatiZMIxtNs8psW+ILh1yVH7JtH4sMG3a5S2k1ZWRUE=
+	t=1712270394; cv=none; b=W9kNLsin0n9ocLYCu8Qk6mlLpBjQ/sHaU+l8WMdtUJ18QX6cWyljAl+88KGOV9+2H75DiYmjG+p/NSP+q2wx/zI/BJm/nq/L846IWX0kKDh1RLwbnSQbwdJkqKGoSTMxSQawhWO1vb4gtZ39UcAZnFHThy5Hjx+Y8/jc1kkwq+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712218723; c=relaxed/simple;
-	bh=eyAd8Fm3t44gc7qEKT0d4Zv8xoYimRNogrja13Iomu4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cpFbWsX0vtZzMOTz6ln5Bc6nZCjKz2qigecO8hGR11FivK2C3Q/8FEBtJejFeu5gSfArrbKlOp6rhN5cbDktdopbcz5UDk8XW4tnzLQd71kwMfjZsjwQu+fqOBC4pYSAABXrUrjO5YxHilwNJZtiKD35oGKS+iWJbTrSVrDPs94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MQe8ddn8; arc=none smtp.client-ip=209.85.219.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-dc745927098so736275276.3
-        for <dmaengine@vger.kernel.org>; Thu, 04 Apr 2024 01:18:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712218721; x=1712823521; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eyAd8Fm3t44gc7qEKT0d4Zv8xoYimRNogrja13Iomu4=;
-        b=MQe8ddn8hPCohkddiIdfjpxUkDgJfFcLgz578s90FL1abBGWq05W/lle5UAnhJLadA
-         EfqU4JIiFXsKnpC9HVNB227hiL69Yne4IdbsawEmjvi80kZuAtpopTdIccmEHVcXq+zD
-         Xz56eU0Wd1xhiuampa6zSfTZruO6Q+ePOgzKMeBqKYd90Ya1ygSjImtBE4Xud0KFnvpP
-         7WcL4GgiXD+SPPaH4OGUK9cdbdbMFFO9t1kK2UO2Hmp1gju0ScVA177lRivKSOCTlbl6
-         UTDva2eOtgb84bZJsHelg52wi5cOf7hiYaqx4E7SRGlWv405pZZEhby72I/YMxkfeWFQ
-         tauA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712218721; x=1712823521;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eyAd8Fm3t44gc7qEKT0d4Zv8xoYimRNogrja13Iomu4=;
-        b=Nk8mmEZOJsP5d6zInHPWIhmTc+FQaBCjMxuWTnZlXcm9f1OMTghNKJzIkypj+p8aJV
-         L4Ja7tiWeO2/Lk12gwp5xPUbPcJWsJ5i8lJ0lGZoSnm56jtNFJInSXK3PhyfRtO82o+U
-         h+NNHrCk/lTMWsHzj1HtPkJWJI3Fs3dtsHWMhmY/80nEkkl+KUkyAT8cgxB0eSBNuQ5R
-         oL38XeKJP5cf3mHCzWh/ztd0PAzEJIKB5yuDfLmVNtgBKZi8IdHif9WvYzLd9I9aCug6
-         1Tgv313FARJMrUvx3/NzOTHYYFklZJbkVy1NGnh+HFyGFz7u7SCjCkb/JzKcwJDBlcKw
-         Bv2w==
-X-Forwarded-Encrypted: i=1; AJvYcCVsVrAX9V5Xn2+rMuML6rgmvuJDYaTl3EG6XN45nyeRccS/0VaBeN2xJ06QPTYV/QcMwleantUFm7qk71Y3qLzO684EEOmu6juw
-X-Gm-Message-State: AOJu0YyvqOlNZ6Qo4tNm9AVUva6uLltqj+EahKuhn1X6Kg8g5/9C1Nfj
-	4fMHA7By/7LrT20ATZhLr7VayBBTn04Q3oRlYPRlmIPCAZt/G/yT7RBiCmWAcg8Ayv3F5WLfmvu
-	049uLzaS3/0BzEMG0cDJovgsOUVaYubcX4cCfdA==
-X-Google-Smtp-Source: AGHT+IF10RS0Ghp5cgYZUvg6PBzUDvxfLN9KgcqveP0TSNC3zgxigAL30JAOcgZTHb+RkMpEFaPK7ZHMMNnVTswBtzY=
-X-Received: by 2002:a5b:d06:0:b0:dd0:6f7:bc3b with SMTP id y6-20020a5b0d06000000b00dd006f7bc3bmr1651889ybp.10.1712218721029;
- Thu, 04 Apr 2024 01:18:41 -0700 (PDT)
+	s=arc-20240116; t=1712270394; c=relaxed/simple;
+	bh=ZW9ZUbKsIK1opfIGQ4iWZHRrIrsnI+gctGFHX7UTW4Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YlR8arZ4/0br+IluMEgZqbkrQKGyK+floWhspYylwed8eUcdepumxET6FxcESGT9ZIDpqwvnMdn3WGZOm1P2rdnsFKJlu/lZz8erVTq74oA75R1cQ+r6MOaGZESBfJyA5Re88PEwvIKUm9XICFi4QaaaAXCl5jYACaZrk1+kLpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bddWIEn6; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712270392; x=1743806392;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ZW9ZUbKsIK1opfIGQ4iWZHRrIrsnI+gctGFHX7UTW4Y=;
+  b=bddWIEn6MW9ASIhAQDhAXpBfgrsiTyKStW8GhmTfnXhbwDm1W20UhMot
+   PcSnAOrSn0DCQmRiJCs8f69+14AD55WSQIZ7/muku1IcfsMu9QaaQlEAl
+   /roWiAiQY5b8XqO+YPK+pJ9MDnE7MoTnQOPTmqtnykIqTA/IUBo5VxqGU
+   kE4jH+Kt5rLCoWgDeNdn9ybc0eKNU+FZqDrI9ThnydHf2sAts9hajqWQ9
+   I2jdNjhzxH4cqfz3QojYxkOIzOjOKwVxppr9EETf/hRhvvlJwN/rPDq6l
+   m6TlN1/k2JNH537O3f7vyuTRQZSQp9ny824IX3VLqtcqVis5evachH2sn
+   w==;
+X-CSE-ConnectionGUID: 7jSba1KoTb+yD11n5/mxWw==
+X-CSE-MsgGUID: svYeUgqeQciq9ZCt+HWm7g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11034"; a="25093104"
+X-IronPort-AV: E=Sophos;i="6.07,180,1708416000"; 
+   d="scan'208";a="25093104"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 15:39:43 -0700
+X-CSE-ConnectionGUID: 7f41T+tXQDypJWcc46SrlA==
+X-CSE-MsgGUID: wGeUfTnQS96AJNkAhiBxlg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,180,1708416000"; 
+   d="scan'208";a="19372594"
+Received: from fyu1.sc.intel.com ([172.25.103.126])
+  by orviesa007.jf.intel.com with ESMTP; 04 Apr 2024 15:39:43 -0700
+From: Fenghua Yu <fenghua.yu@intel.com>
+To: "Vinod Koul" <vkoul@kernel.org>,
+	"Dave Jiang" <dave.jiang@intel.com>
+Cc: dmaengine@vger.kernel.org,
+	"linux-kernel" <linux-kernel@vger.kernel.org>,
+	Rex Zhang <rex.zhang@intel.com>,
+	Fenghua Yu <fenghua.yu@intel.com>,
+	Lijun Pan <lijun.pan@intel.com>
+Subject: [PATCH v4] dmaengine: idxd: Convert spinlock to mutex to lock evl workqueue
+Date: Thu,  4 Apr 2024 15:39:49 -0700
+Message-Id: <20240404223949.2885604-1-fenghua.yu@intel.com>
+X-Mailer: git-send-email 2.37.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240326-module-owner-amba-v1-0-4517b091385b@linaro.org> <20240326-module-owner-amba-v1-15-4517b091385b@linaro.org>
-In-Reply-To: <20240326-module-owner-amba-v1-15-4517b091385b@linaro.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 4 Apr 2024 10:18:30 +0200
-Message-ID: <CACRpkdZa7mszi45M72qKPM=NJtou1A5DjVVUFzChFtZwzwVZyA@mail.gmail.com>
-Subject: Re: [PATCH 15/19] hwrng: nomadik: drop owner assignment
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Russell King <linux@armlinux.org.uk>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Andi Shyti <andi.shyti@kernel.org>, Olivia Mackall <olivia@selenic.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, Vinod Koul <vkoul@kernel.org>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Miquel Raynal <miquel.raynal@bootlin.com>, 
-	Michal Simek <michal.simek@amd.com>, Eric Auger <eric.auger@redhat.com>, 
-	Alex Williamson <alex.williamson@redhat.com>, linux-kernel@vger.kernel.org, 
-	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
-	linux-stm32@st-md-mailman.stormreply.com, linux-i2c@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org, 
-	linux-input@vger.kernel.org, kvm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 26, 2024 at 9:24=E2=80=AFPM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
+From: Rex Zhang <rex.zhang@intel.com>
 
-> Amba bus core already sets owner, so driver does not need to.
->
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+drain_workqueue() cannot be called safely in a spinlocked context due to
+possible task rescheduling. In the multi-task scenario, calling
+queue_work() while drain_workqueue() will lead to a Call Trace as
+pushing a work on a draining workqueue is not permitted in spinlocked
+context.
+    Call Trace:
+    <TASK>
+    ? __warn+0x7d/0x140
+    ? __queue_work+0x2b2/0x440
+    ? report_bug+0x1f8/0x200
+    ? handle_bug+0x3c/0x70
+    ? exc_invalid_op+0x18/0x70
+    ? asm_exc_invalid_op+0x1a/0x20
+    ? __queue_work+0x2b2/0x440
+    queue_work_on+0x28/0x30
+    idxd_misc_thread+0x303/0x5a0 [idxd]
+    ? __schedule+0x369/0xb40
+    ? __pfx_irq_thread_fn+0x10/0x10
+    ? irq_thread+0xbc/0x1b0
+    irq_thread_fn+0x21/0x70
+    irq_thread+0x102/0x1b0
+    ? preempt_count_add+0x74/0xa0
+    ? __pfx_irq_thread_dtor+0x10/0x10
+    ? __pfx_irq_thread+0x10/0x10
+    kthread+0x103/0x140
+    ? __pfx_kthread+0x10/0x10
+    ret_from_fork+0x31/0x50
+    ? __pfx_kthread+0x10/0x10
+    ret_from_fork_asm+0x1b/0x30
+    </TASK>
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+The current implementation uses a spinlock to protect event log workqueue
+and will lead to the Call Trace due to potential task rescheduling.
 
-Yours,
-Linus Walleij
+To address the locking issue, convert the spinlock to mutex, allowing
+the drain_workqueue() to be called in a safe mutex-locked context.
+
+This change ensures proper synchronization when accessing the event log
+workqueue, preventing potential Call Trace and improving the overall
+robustness of the code.
+
+Fixes: c40bd7d9737b ("dmaengine: idxd: process user page faults for completion record")
+Signed-off-by: Rex Zhang <rex.zhang@intel.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Fenghua Yu <fenghua.yu@intel.com>
+Reviewed-by: Lijun Pan <lijun.pan@intel.com>
+---
+Changlog:
+v4:
+- No functional changes. This patch was not picked up before. So rebase
+  the patch to the latest kernel version and resend it.
+- Update the commit message to provide more details on the issue and
+  the fix.
+- Fenghua Yu sends the patch to the dmaengine/lkml mailing lists.
+
+v3:
+https://lore.kernel.org/dmaengine/20240123034831.3020048-1-rex.zhang@intel.com/
+
+ drivers/dma/idxd/cdev.c    | 5 ++---
+ drivers/dma/idxd/debugfs.c | 4 ++--
+ drivers/dma/idxd/device.c  | 8 ++++----
+ drivers/dma/idxd/idxd.h    | 2 +-
+ drivers/dma/idxd/init.c    | 2 +-
+ drivers/dma/idxd/irq.c     | 4 ++--
+ 6 files changed, 12 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
+index 8078ab9acfbc..c095a2c8f659 100644
+--- a/drivers/dma/idxd/cdev.c
++++ b/drivers/dma/idxd/cdev.c
+@@ -342,7 +342,7 @@ static void idxd_cdev_evl_drain_pasid(struct idxd_wq *wq, u32 pasid)
+ 	if (!evl)
+ 		return;
+ 
+-	spin_lock(&evl->lock);
++	mutex_lock(&evl->lock);
+ 	status.bits = ioread64(idxd->reg_base + IDXD_EVLSTATUS_OFFSET);
+ 	t = status.tail;
+ 	h = status.head;
+@@ -354,9 +354,8 @@ static void idxd_cdev_evl_drain_pasid(struct idxd_wq *wq, u32 pasid)
+ 			set_bit(h, evl->bmap);
+ 		h = (h + 1) % size;
+ 	}
+-	spin_unlock(&evl->lock);
+-
+ 	drain_workqueue(wq->wq);
++	mutex_unlock(&evl->lock);
+ }
+ 
+ static int idxd_cdev_release(struct inode *node, struct file *filep)
+diff --git a/drivers/dma/idxd/debugfs.c b/drivers/dma/idxd/debugfs.c
+index f3f25ee676f3..ad4245cb301d 100644
+--- a/drivers/dma/idxd/debugfs.c
++++ b/drivers/dma/idxd/debugfs.c
+@@ -66,7 +66,7 @@ static int debugfs_evl_show(struct seq_file *s, void *d)
+ 	if (!evl || !evl->log)
+ 		return 0;
+ 
+-	spin_lock(&evl->lock);
++	mutex_lock(&evl->lock);
+ 
+ 	evl_status.bits = ioread64(idxd->reg_base + IDXD_EVLSTATUS_OFFSET);
+ 	t = evl_status.tail;
+@@ -87,7 +87,7 @@ static int debugfs_evl_show(struct seq_file *s, void *d)
+ 		dump_event_entry(idxd, s, i, &count, processed);
+ 	}
+ 
+-	spin_unlock(&evl->lock);
++	mutex_unlock(&evl->lock);
+ 	return 0;
+ }
+ 
+diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+index ecfdf4a8f1f8..c41ef195eeb9 100644
+--- a/drivers/dma/idxd/device.c
++++ b/drivers/dma/idxd/device.c
+@@ -775,7 +775,7 @@ static int idxd_device_evl_setup(struct idxd_device *idxd)
+ 		goto err_alloc;
+ 	}
+ 
+-	spin_lock(&evl->lock);
++	mutex_lock(&evl->lock);
+ 	evl->log = addr;
+ 	evl->dma = dma_addr;
+ 	evl->log_size = size;
+@@ -796,7 +796,7 @@ static int idxd_device_evl_setup(struct idxd_device *idxd)
+ 	gencfg.evl_en = 1;
+ 	iowrite32(gencfg.bits, idxd->reg_base + IDXD_GENCFG_OFFSET);
+ 
+-	spin_unlock(&evl->lock);
++	mutex_unlock(&evl->lock);
+ 	return 0;
+ 
+ err_alloc:
+@@ -819,7 +819,7 @@ static void idxd_device_evl_free(struct idxd_device *idxd)
+ 	if (!gencfg.evl_en)
+ 		return;
+ 
+-	spin_lock(&evl->lock);
++	mutex_lock(&evl->lock);
+ 	gencfg.evl_en = 0;
+ 	iowrite32(gencfg.bits, idxd->reg_base + IDXD_GENCFG_OFFSET);
+ 
+@@ -836,7 +836,7 @@ static void idxd_device_evl_free(struct idxd_device *idxd)
+ 	evl_dma = evl->dma;
+ 	evl->log = NULL;
+ 	evl->size = IDXD_EVL_SIZE_MIN;
+-	spin_unlock(&evl->lock);
++	mutex_unlock(&evl->lock);
+ 
+ 	dma_free_coherent(dev, evl_log_size, evl_log, evl_dma);
+ }
+diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
+index a4099a1e2340..7b98944135eb 100644
+--- a/drivers/dma/idxd/idxd.h
++++ b/drivers/dma/idxd/idxd.h
+@@ -293,7 +293,7 @@ struct idxd_driver_data {
+ 
+ struct idxd_evl {
+ 	/* Lock to protect event log access. */
+-	spinlock_t lock;
++	struct mutex lock;
+ 	void *log;
+ 	dma_addr_t dma;
+ 	/* Total size of event log = number of entries * entry size. */
+diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+index 4954adc6bb60..264c4e47d7cc 100644
+--- a/drivers/dma/idxd/init.c
++++ b/drivers/dma/idxd/init.c
+@@ -354,7 +354,7 @@ static int idxd_init_evl(struct idxd_device *idxd)
+ 	if (!evl)
+ 		return -ENOMEM;
+ 
+-	spin_lock_init(&evl->lock);
++	mutex_init(&evl->lock);
+ 	evl->size = IDXD_EVL_SIZE_MIN;
+ 
+ 	idxd_name = dev_name(idxd_confdev(idxd));
+diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
+index 348aa21389a9..8dc029c86551 100644
+--- a/drivers/dma/idxd/irq.c
++++ b/drivers/dma/idxd/irq.c
+@@ -363,7 +363,7 @@ static void process_evl_entries(struct idxd_device *idxd)
+ 	evl_status.bits = 0;
+ 	evl_status.int_pending = 1;
+ 
+-	spin_lock(&evl->lock);
++	mutex_lock(&evl->lock);
+ 	/* Clear interrupt pending bit */
+ 	iowrite32(evl_status.bits_upper32,
+ 		  idxd->reg_base + IDXD_EVLSTATUS_OFFSET + sizeof(u32));
+@@ -380,7 +380,7 @@ static void process_evl_entries(struct idxd_device *idxd)
+ 
+ 	evl_status.head = h;
+ 	iowrite32(evl_status.bits_lower32, idxd->reg_base + IDXD_EVLSTATUS_OFFSET);
+-	spin_unlock(&evl->lock);
++	mutex_unlock(&evl->lock);
+ }
+ 
+ irqreturn_t idxd_misc_thread(int vec, void *data)
+-- 
+2.37.1
+
 

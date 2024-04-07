@@ -1,227 +1,167 @@
-Return-Path: <dmaengine+bounces-1751-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1752-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB06389AF88
-	for <lists+dmaengine@lfdr.de>; Sun,  7 Apr 2024 10:19:11 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C41FD89AFF2
+	for <lists+dmaengine@lfdr.de>; Sun,  7 Apr 2024 11:07:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 60ED2282296
-	for <lists+dmaengine@lfdr.de>; Sun,  7 Apr 2024 08:19:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4FFC6283727
+	for <lists+dmaengine@lfdr.de>; Sun,  7 Apr 2024 09:07:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 350D810A26;
-	Sun,  7 Apr 2024 08:19:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 773E6208B4;
+	Sun,  7 Apr 2024 09:04:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bQL45DWu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Grbakf5Z"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F022911181;
-	Sun,  7 Apr 2024 08:19:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FE1038FB6
+	for <dmaengine@vger.kernel.org>; Sun,  7 Apr 2024 09:04:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712477946; cv=none; b=XJiZkaY4n3V0WZHEV1XviI6K4iscHG5y2dolkQLTwkCSU5ijA0WEhDWJUhAvHsbdzHxbSMOjH0e7BYeMUcAt8Wq3CK+bFcuP2yA62UCKX0RYKUgo1r7ODvQhIJlTTu8Dp3RLnRJ6Jq45NKvasTp4BV+a0vT7WaK4UCyv3UC3pfw=
+	t=1712480687; cv=none; b=I+OPe7MWI8Oaj3sbmYknqX0epzrS0uAEPAniFg5PiwsdWAoyDs7CSIm5jPioFWAlTRCzvgQrbOUvmFwHFpQ59S5eNGchgl18RbOwllkpfUe90xdAXvXj85k4vlswE8AXpNqFdRhOpYfinkjIWCsfNmRGDUJb5rOX8cCbn2uviZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712477946; c=relaxed/simple;
-	bh=e9UXYTAc5sFI75CK5XgqAQXmOoDPNUpaUP0KGJszuPQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JpJ5bzhQftrsakbUNkfUzf5EhcJGC3Ma6cIAEau8+6/BYp/oqghW+0N3jLzwt4nAtO6cKgDl3Grgh7RZJV9+6QeJkueIyPIvasQdRANJ5UGh6NijnLaDalSjZgoS3JBR95I/nb6qb8bDvPirgNRkirmVsLJGyLGym8r29qhcUwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bQL45DWu; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F29BC433F1;
-	Sun,  7 Apr 2024 08:19:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712477945;
-	bh=e9UXYTAc5sFI75CK5XgqAQXmOoDPNUpaUP0KGJszuPQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bQL45DWu0HxJomMb0clRFnENNm4bArAijal3EZ3qTPml9cdTdnQD/Jv+nZ6r4estn
-	 tdFm3p3nVi1vJ7RNY79r2A213/2M8AZsb3FfhENk6Agglm3lvLZmkpgMrH5L3HWAuU
-	 1mdfJp57B03c6ql4jqZ4OM6opBEQZTdC85Czud6bGKKwlGvmwv3roxGCrb88TvH02/
-	 TPIjgoqyRoHs4zvdtsgjgaUksKCcFJEmaIFG1lDVXc4m8ISrskkrOi2Hn/iIHyNQtI
-	 JNoPhQ3FBDp0yzYfHuEd/7iNzyF1QjxWLZZwhc+321A+Kax/Gni7nVcjqHjoPfQVAD
-	 +9J6be2H9OZHg==
-Date: Sun, 7 Apr 2024 13:49:00 +0530
-From: Vinod Koul <vkoul@kernel.org>
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Nuno Sa <nuno.sa@analog.com>,
-	Michael Hennerich <michael.hennerich@analog.com>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-iio@vger.kernel.org,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org
-Subject: Re: [PATCH v9 1/6] dmaengine: Add API function
- dmaengine_prep_peripheral_dma_vec()
-Message-ID: <ZhJW9JEqN2wrejvC@matsya>
-References: <20240310124836.31863-1-paul@crapouillou.net>
- <20240310124836.31863-2-paul@crapouillou.net>
- <ZgUM1LFEWs3lwoAU@matsya>
- <599394c0220079b7b42dc732be817ca8a1eb4214.camel@crapouillou.net>
+	s=arc-20240116; t=1712480687; c=relaxed/simple;
+	bh=NWmV/zVwYeDIUGVXbweL9v1eUvuMUKlVVU4WOstYh/M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AS5FZa9IYNV4znp75s/CRn00iEz6pwR7Hex6dZShwmncFRNeyjDnbafmb7vPLY6+Iwet9NKk4Uv71uBVHbG92eAfLXKqACFP2rESiJkomrlQbrNV91FBgy9jqrh7uQgXxMNCeLbpsbr1hO+uZA6lG4hnMtrcqBIj1wXms2xOOEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Grbakf5Z; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-41648df084eso4563295e9.3
+        for <dmaengine@vger.kernel.org>; Sun, 07 Apr 2024 02:04:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712480683; x=1713085483; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=SuU76zJ7LNrNz2801XBBYqK3yKOkIBoi96/o4wIa/WM=;
+        b=Grbakf5ZmUk4KmxBRUnOuL4cImUC0M410ar2l6xAeG/rbC0D8FeaB8Q6lBRfUGiVqt
+         f7s5Kk6Urqw86nf8K35G4sYH/WsldTE6XpXfXdKN/9oyMZfYAiauvgU2eWO8ARTZba6L
+         xjhVjTlAKiVJlXSACtVn+WOvlJiOG0CUjmWCre20dIVNKrXFyI+rDQ643rSh7/gJgMUB
+         L6UDdsEm5Ud1gbJK7PKgY0mpBKvIDlgDZLQoUmiDn1WRKwCI+jzTXBBtZ8jy5AaiqX8F
+         x/0fXIzMPRdAMSG715/6K8UAAJpEkGMpfW+qMw0n5Aiwji/FNdTvRCZIpgheToVPwzSS
+         uNqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712480683; x=1713085483;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SuU76zJ7LNrNz2801XBBYqK3yKOkIBoi96/o4wIa/WM=;
+        b=KHUK6hMEd6hA2I2gio6/QO2TMf2HpQRjtzuwY01udABmYej5oAdV6YHi5O00KhOqi5
+         Pptol6oGQQWHUJJ8XRlY8TncT9ERg0YQ3xcBrUcUGqPTmkyYCnLxEHhtDS401Ot1lfr9
+         MHC8/ukxNVNGGpkAjd+yXD+P4oWHPjVr2bMCh4PN0JA7yWkNOdFCW96MVdLJq/nSsVGb
+         VsBJGChuG4JmCIP6cRMaTAspokR8AR47i7NyYw9IV6VxrobchIavZvCNq1RcSh879eZE
+         pYmnptRf74FJb9KOTUylDModFuVFQyhvsFZmTf9ksqyP5vET1+RNANrOlg4ifuFFX6LG
+         ZK7A==
+X-Gm-Message-State: AOJu0YyhISo2wjlfxW32sNv9WupO9nfjw1R9hG4vb8uXPwyzgmqtUuRg
+	lJVBEiqg+fBgIx3PNEVmzKRTJwyPzleiHte8SNAbkFS1C1eEALeFzJwjNDmxl78=
+X-Google-Smtp-Source: AGHT+IH8LYv7KiDMFFMHVpdxcqk8gpP/AVlZ3rPu6c90GWsMzWUwZ6VJPlRolafwrSDLl9wlXMIHXQ==
+X-Received: by 2002:a05:600c:1f0f:b0:416:536b:b6bb with SMTP id bd15-20020a05600c1f0f00b00416536bb6bbmr920402wmb.23.1712480683633;
+        Sun, 07 Apr 2024 02:04:43 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.223.16])
+        by smtp.gmail.com with ESMTPSA id l10-20020a1c790a000000b0041622c5c5d6sm7831694wme.1.2024.04.07.02.04.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 07 Apr 2024 02:04:43 -0700 (PDT)
+Message-ID: <b3f9d98f-e9cd-492c-ac7a-5b6628fdf4cb@linaro.org>
+Date: Sun, 7 Apr 2024 11:04:41 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <599394c0220079b7b42dc732be817ca8a1eb4214.camel@crapouillou.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 4/5] dt-bindings: fsl-imx-sdma: Add I2C peripheral
+ types ID
+To: Frank Li <Frank.Li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Joy Zou <joy.zou@nxp.com>
+Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, imx@lists.linux.dev
+References: <20240329-sdma_upstream-v4-0-daeb3067dea7@nxp.com>
+ <20240329-sdma_upstream-v4-4-daeb3067dea7@nxp.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240329-sdma_upstream-v4-4-daeb3067dea7@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 02-04-24, 13:31, Paul Cercueil wrote:
-> Hi Vinod,
+On 29/03/2024 15:34, Frank Li wrote:
+> Add peripheral types ID 26 for I2C because sdma firmware (sdma-6q: v3.6,
+> sdma-7d: v4.6) support I2C DMA transfer.
 > 
-> Le jeudi 28 mars 2024 à 11:53 +0530, Vinod Koul a écrit :
-> > On 10-03-24, 13:48, Paul Cercueil wrote:
-> > > This function can be used to initiate a scatter-gather DMA
-> > > transfer,
-> > > where the address and size of each segment is located in one entry
-> > > of
-> > > the dma_vec array.
-> > > 
-> > > The major difference with dmaengine_prep_slave_sg() is that it
-> > > supports
-> > > specifying the lengths of each DMA transfer; as trying to override
-> > > the
-> > > length of the transfer with dmaengine_prep_slave_sg() is a very
-> > > tedious
-> > > process. The introduction of a new API function is also justified
-> > > by the
-> > > fact that scatterlists are on their way out.
-> > > 
-> > > Note that dmaengine_prep_interleaved_dma() is not helpful either in
-> > > that
-> > > case, as it assumes that the address of each segment will be higher
-> > > than
-> > > the one of the previous segment, which we just cannot guarantee in
-> > > case
-> > > of a scatter-gather transfer.
-> > > 
-> > > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> > > Signed-off-by: Nuno Sa <nuno.sa@analog.com>
-> > > 
-> > > ---
-> > > v3: New patch
-> > > 
-> > > v5: Replace with function dmaengine_prep_slave_dma_vec(), and
-> > > struct
-> > >     'dma_vec'.
-> > >     Note that at some point we will need to support cyclic
-> > > transfers
-> > >     using dmaengine_prep_slave_dma_vec(). Maybe with a new "flags"
-> > >     parameter to the function?
-> > > 
-> > > v7:
-> > >   - Renamed *device_prep_slave_dma_vec() ->
-> > > device_prep_peripheral_dma_vec();
-> > >   - Added a new flag parameter to the function as agreed between
-> > > Paul
-> > >     and Vinod. I renamed the first parameter to prep_flags as it's
-> > > supposed to
-> > >     be used (I think) with enum dma_ctrl_flags. I'm not really sure
-> > > how that API
-> > >     can grow but I was thinking in just having a bool cyclic
-> > > parameter (as the
-> > >     first intention of the flags is to support cyclic transfers)
-> > > but ended up
-> > >     "respecting" the previously agreed approach.
-> > > ---
-> > >  include/linux/dmaengine.h | 27 +++++++++++++++++++++++++++
-> > >  1 file changed, 27 insertions(+)
-> > > 
-> > > diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-> > > index 752dbde4cec1..856df8cd9a4e 100644
-> > > --- a/include/linux/dmaengine.h
-> > > +++ b/include/linux/dmaengine.h
-> > > @@ -160,6 +160,16 @@ struct dma_interleaved_template {
-> > >  	struct data_chunk sgl[];
-> > >  };
-> > >  
-> > > +/**
-> > > + * struct dma_vec - DMA vector
-> > > + * @addr: Bus address of the start of the vector
-> > > + * @len: Length in bytes of the DMA vector
-> > > + */
-> > > +struct dma_vec {
-> > > +	dma_addr_t addr;
-> > > +	size_t len;
-> > > +};
-> > > +
-> > >  /**
-> > >   * enum dma_ctrl_flags - DMA flags to augment operation
-> > > preparation,
-> > >   *  control completion, and communicate status.
-> > > @@ -910,6 +920,10 @@ struct dma_device {
-> > >  	struct dma_async_tx_descriptor
-> > > *(*device_prep_dma_interrupt)(
-> > >  		struct dma_chan *chan, unsigned long flags);
-> > >  
-> > > +	struct dma_async_tx_descriptor
-> > > *(*device_prep_peripheral_dma_vec)(
-> > > +		struct dma_chan *chan, const struct dma_vec *vecs,
-> > > +		size_t nents, enum dma_transfer_direction
-> > > direction,
-> > > +		unsigned long prep_flags, unsigned long flags);
-> > >  	struct dma_async_tx_descriptor *(*device_prep_slave_sg)(
-> > >  		struct dma_chan *chan, struct scatterlist *sgl,
-> > >  		unsigned int sg_len, enum dma_transfer_direction
-> > > direction,
-> > > @@ -973,6 +987,19 @@ static inline struct dma_async_tx_descriptor
-> > > *dmaengine_prep_slave_single(
-> > >  						  dir, flags,
-> > > NULL);
-> > >  }
-> > >  
-> > > +static inline struct dma_async_tx_descriptor
-> > > *dmaengine_prep_peripheral_dma_vec(
-> > > +	struct dma_chan *chan, const struct dma_vec *vecs, size_t
-> > > nents,
-> > > +	enum dma_transfer_direction dir, unsigned long prep_flags,
-> > > +	unsigned long flags)
-> > > +{
-> > > +	if (!chan || !chan->device || !chan->device-
-> > > >device_prep_peripheral_dma_vec)
-> > > +		return NULL;
-> > > +
-> > > +	return chan->device->device_prep_peripheral_dma_vec(chan,
-> > > vecs, nents,
-> > > +							    dir,
-> > > prep_flags,
-> > > +							   
-> > > flags);
-> > > +}
-> > 
-> > API looks good to me, thanks
-> > Few nits though:
-> > - Can we add kernel-doc for this new API please
-> > - Also update the documentation adding this new api
-> > - Lastly, we seem to have two flags, I know you have added a comment
-> > but
-> >   I dont seem to recall the discussion (looked at old threads for
-> > clue
-> >   as well), can you please remind me why we need both? And in your
-> > case,
-> >   what is the intended usage of these flags, i would prefer single
-> >   clean one...
-> > 
-> 
-> The "prep_flags" is a mask of "enum dma_ctrl_flags".
-> 
-> The second "flags" was supposed to be specific to this function, and
-> was to future-proof the API as we eventually want to have a "cyclic"
-> flag, which would emulate a cyclic transfer by linking the SG hardware
-> descriptors accordingly.
-> 
-> However - I think we can already do that with DMA_PREP_REPEAT and
-> DMA_PREP_LOAD_EOT, right? So we can probably drop the second "flags".
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-Yeah that could be done, we should add Documentation to clarify this
+This is a friendly reminder during the review process.
 
--- 
-~Vinod
+It looks like you received a tag and forgot to add it.
+
+If you do not know the process, here is a short explanation:
+Please add Acked-by/Reviewed-by/Tested-by tags when posting new
+versions, under or above your Signed-off-by tag. Tag is "received", when
+provided in a message replied to you on the mailing list. Tools like b4
+can help here. However, there's no need to repost patches *only* to add
+the tags. The upstream maintainer will do that for tags received on the
+version they apply.
+
+https://elixir.bootlin.com/linux/v6.5-rc3/source/Documentation/process/submitting-patches.rst#L577
+
+If a tag was not added on purpose, please state why and what changed.
+
+Best regards,
+Krzysztof
+
 

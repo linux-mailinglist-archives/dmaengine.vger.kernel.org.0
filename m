@@ -1,54 +1,60 @@
-Return-Path: <dmaengine+bounces-1772-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1773-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E70689B309
-	for <lists+dmaengine@lfdr.de>; Sun,  7 Apr 2024 18:39:30 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F65689B30D
+	for <lists+dmaengine@lfdr.de>; Sun,  7 Apr 2024 18:39:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3F82A1C220B0
-	for <lists+dmaengine@lfdr.de>; Sun,  7 Apr 2024 16:39:29 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 243AEB22A38
+	for <lists+dmaengine@lfdr.de>; Sun,  7 Apr 2024 16:39:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 530433BBCF;
-	Sun,  7 Apr 2024 16:38:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 550E83BB50;
+	Sun,  7 Apr 2024 16:39:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jHURN42e"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K/V892qu"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B40A3BB4D;
-	Sun,  7 Apr 2024 16:38:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D8D83B781;
+	Sun,  7 Apr 2024 16:39:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712507938; cv=none; b=sYabxQqEwQ93CsH609n/xeXxEyS1XvcnBIubUMtlX41+d+/baeJLMduxlucIcdZNMAis4VlsE0MddT6WJgxml2CaCP8x1Kz2ndFeGegNp8CTFHVDf2rPg3n3WqSAKAD5oHh8iNJUgS54PfmUzZ5fvwXyWvIMfEUI8K6fWvmgRME=
+	t=1712507942; cv=none; b=lrDDRFmg9bJjmi33AnD+XmVHgLeHfkcJx4MCeWRJfXRqDzGW/LDv8A60pYugqDrjzYY9JXBgoENfFn8lbUMiRGooCcUd5MANi1OJwGpJTvsMhPYRDoIWTHEtKjFuoDISz+PmvAsIyH/su6OArVLZWV68TnQHoqO2iy64pnbYsZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712507938; c=relaxed/simple;
-	bh=DZx1AWIYf4Xb3DOn6yperFnhbIP5Oxh22bdPAy+WT8Y=;
+	s=arc-20240116; t=1712507942; c=relaxed/simple;
+	bh=lR3fA0ZLEMf0cmBwQN6NPD/wYmo6JGFOWLAZy6B2+ME=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=o+5dI99//nUYeb8DOn7JOvNrqEKy6J5z5fZ/lcVgXDqtHz9eoMABlNYiMrpp+2igEMHUPvdhm4hB6qNIieyMcUM85rFsH0y1sIKaaa2aQ4VcO7JCxHZrC3ufWjzPVzgsJihen/eSI4Y173Hin5LgC8JkAfPVmtSNYgL00vkd2fo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jHURN42e; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A217C43399;
-	Sun,  7 Apr 2024 16:38:55 +0000 (UTC)
+	 MIME-Version:Content-Type; b=Mh7pgP6nfrkOIGkNRxQg8oE38sgXIYLaVJYb2oKXsOnWRA6to7Psw+mF25McYQt/J0xIzutKcslYVNqV3vnNgIv7jU25UWAm77XyRebL9YPn91Ddt3vSIpGM6ROBbvgxo32mQbRrmI4NFypChph8B/B2rMMMwXeEGKFzTzVbeB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K/V892qu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B04BC433A6;
+	Sun,  7 Apr 2024 16:38:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712507937;
-	bh=DZx1AWIYf4Xb3DOn6yperFnhbIP5Oxh22bdPAy+WT8Y=;
+	s=k20201202; t=1712507941;
+	bh=lR3fA0ZLEMf0cmBwQN6NPD/wYmo6JGFOWLAZy6B2+ME=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=jHURN42eE4I32rBhiVqjuC4F7eVpM3B/4psqeEgp8OJH0KgKQJBSeMyzfkjgmPeca
-	 zEWKVj+afPCRZjZU3i3CyDqGqmS6OFdMJP2AjdC54qktxlvwk/wfwwXzFYyWGTFRa4
-	 Ao8HsmdJQCftirD9+CqlrI0vNdbMJgL103PGAPZfg4PCzG/VqvBex3fzn4ZUoQju92
-	 zVRp43OLWIx2tq9pnOgWyVjsEvLlfNOfgdp75Fy02RfeB1g0aswQkmAPeOSdf8MbP8
-	 y2ac0arb2L7mwrQk9MZNzDkqIFfVjD3fhhwd7SsdvyvsqB0bTrTx1XYIN52KJN5zay
-	 3mHUL9T6aloIw==
+	b=K/V892quFgKEKE96KvvkyzpeO4gaknCiTzhEB3MORk8AiQZHenGJwVEuxkXhRh986
+	 ul6m5TylWeciuqIhTwRanHj9uPS0NyyaJTCD1Zp/ULVb+QYptJImMEmtzOsZMBV0pM
+	 CPvoAML/UGr2QpYdTFc2Evqj5OefIiOJ+uxJmKy5AYqxwmk1VjSzQbDZWQDUJsPNMv
+	 EA2+HGX4s/UWftpbX33DoT5/Pgvw8MgjUFIPYfBoUPTBi11LyNQ16gmBHykQk7v+9n
+	 6kf5pGn/xcB0gAaJyexmtNrHF+QVArEswXKgPgbV8V4oVTCErlXjATcdbErKk1JdGw
+	 WhjrNsnkdiZaQ==
 From: Vinod Koul <vkoul@kernel.org>
-To: andriy.shevchenko@linux.intel.com, Chen Ni <nichen@iscas.ac.cn>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240403024932.3342606-1-nichen@iscas.ac.cn>
-References: <20240403024932.3342606-1-nichen@iscas.ac.cn>
-Subject: Re: [PATCH] dmaengine: idma64: Add check for dma_set_max_seg_size
-Message-Id: <171250793580.435322.3147745413867845577.b4-ty@kernel.org>
-Date: Sun, 07 Apr 2024 22:08:55 +0530
+To: Viresh Kumar <vireshk@kernel.org>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, 
+ Serge Semin <fancer.lancer@gmail.com>, dmaengine@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240401204354.1691845-1-robh@kernel.org>
+References: <20240401204354.1691845-1-robh@kernel.org>
+Subject: Re: [PATCH v2] dt-bindings: dma: snps,dma-spear1340: Fix
+ data{-,_}width schema
+Message-Id: <171250793798.435322.4956287929359019593.b4-ty@kernel.org>
+Date: Sun, 07 Apr 2024 22:08:57 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -60,16 +66,17 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.12.3
 
 
-On Wed, 03 Apr 2024 02:49:32 +0000, Chen Ni wrote:
-> As the possible failure of the dma_set_max_seg_size(), it should be
-> better to check the return value of the dma_set_max_seg_size().
+On Mon, 01 Apr 2024 15:43:53 -0500, Rob Herring wrote:
+> 'data-width' and 'data_width' properties are defined as arrays, but the
+> schema is defined as a matrix. That works currently since everything gets
+> decoded in to matrices, but that is internal to dtschema and could change.
 > 
 > 
 
 Applied, thanks!
 
-[1/1] dmaengine: idma64: Add check for dma_set_max_seg_size
-      commit: 2b1c1cf08a0addb6df42f16b37133dc7a351de29
+[1/1] dt-bindings: dma: snps,dma-spear1340: Fix data{-,_}width schema
+      commit: 7eccb5a5b224be42431c8087c9c9e016636ff3b5
 
 Best regards,
 -- 

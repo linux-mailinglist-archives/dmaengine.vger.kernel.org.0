@@ -1,140 +1,108 @@
-Return-Path: <dmaengine+bounces-1748-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1749-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4DBD389A900
-	for <lists+dmaengine@lfdr.de>; Sat,  6 Apr 2024 07:20:37 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 61F1389AF75
+	for <lists+dmaengine@lfdr.de>; Sun,  7 Apr 2024 10:11:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7CFBC1C2161B
-	for <lists+dmaengine@lfdr.de>; Sat,  6 Apr 2024 05:20:36 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5DB32B21021
+	for <lists+dmaengine@lfdr.de>; Sun,  7 Apr 2024 08:11:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BD2F1EB5E;
-	Sat,  6 Apr 2024 05:20:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C80B210A16;
+	Sun,  7 Apr 2024 08:11:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HYazYNyp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dxnzVKhc"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94EB218E02;
-	Sat,  6 Apr 2024 05:20:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91E4C10A0E;
+	Sun,  7 Apr 2024 08:11:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712380829; cv=none; b=YzbEaLpkY1uVjsGwaQO1u+GcmshnUnFAxY+GcJB8z7/W6G5GIZGCcfBcDEjXLvGBv0crdz8VkQIxs2kmrhvOykKr6zmbeQjKDQT+1V+GgFc8+UV9n4BO280BecUa/nF1cCe8vrCw/5HIHacvrFdeEATQ6v+RiMCvinEcdNzAKq8=
+	t=1712477484; cv=none; b=KhAtX7y9vUGSOaBU2HFL/pP+6xYq7CKTNnT7iU9CI89IgS+LkBHvWcgJlsst7B7XEvc15otveYuY9irNgS2f+ojW9V6tgsBLbGQwaIOTWHLn7HQuIH8k0kdPaVUTfHeUZ/U0yhoUEptF3hLokZtM2kjnRQxp8f5FG9N/gSldkd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712380829; c=relaxed/simple;
-	bh=TBj/hcnPrvS19ZOluMZ12evt8AeDaDrUTBeM5kaTuKY=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=CZ8xfNFOwOwbOw+X7MQ2mypw2+89BHGbOVaiv57GMPQkzoP+kTI3Of0iGuMzFOUzREJ/5HG1uwWjOnb/738qFydKIOLZPWRcq+fRpVC2c83ScQZah+i6XKs06F3D3U/JknTPeBdxqgBUOHgAXMUknabfbbQJoG8FBKB5p8UrXSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HYazYNyp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3C5A9C433C7;
-	Sat,  6 Apr 2024 05:20:28 +0000 (UTC)
+	s=arc-20240116; t=1712477484; c=relaxed/simple;
+	bh=TVFe4OYH04o/5Ll/IX/zzUlK3mIhW7/Js8yZ/caVDnA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F2ixrRo3xWiipBpmjqUE/k/ON/MkPSGCPfsRqHcxOwg+JFeZ4nm0Alj3y3mfY5LpX5cJmuK/PPtwkEdWu2wd0vDe+/Ca8OKiBv91bbCDNUv7JRgOdLrRgrppJ6GxNiwm6t7f7SsOKXzJT5Yh7YemfEolEAT0tKGTQEXRCewbwMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dxnzVKhc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48048C43390;
+	Sun,  7 Apr 2024 08:11:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712380828;
-	bh=TBj/hcnPrvS19ZOluMZ12evt8AeDaDrUTBeM5kaTuKY=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=HYazYNypOS+iPe/PmwIZVgrP0OAjOmuWcCZaXmQBd5/DF3DU2Cm7HK1KTLKVM8W2j
-	 EfdrhznuDsHvbEh7NeV1r2EDMVkxTqo+hmKt5MdFIcqj68UTB4u7gvHG6geAe3ArfV
-	 cYxb7yc2nqhO3pPj8ToTFIgL78NntzPlzi3tNk1u8F7N5z7SqSGJ1Z/QhHbUaQaR1j
-	 GTv/7bDPNNXqFXoXNMGCl3bjIAtmML/lX++bgYkRjXumLNf6dEzpQPrpxdPeyVgSKh
-	 czfxRuHIWxcuBJ6wGSXEzVfHmRCYmRJdToESEDFulu3u4HF5IZUSSU3tkxxLhyQRAI
-	 TbkNIwkM8MMRA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 19C9BD84BAC;
-	Sat,  6 Apr 2024 05:20:28 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1712477484;
+	bh=TVFe4OYH04o/5Ll/IX/zzUlK3mIhW7/Js8yZ/caVDnA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dxnzVKhcyJZGeMpZKR5e0livkrh9a5YebkkXdvqdqhS0UCl6uabGw/gCPnziHNPe2
+	 2IE6uFxeCRaaHyxkhjO4UZknZOISONJUfZ+dtCTWtT/VCHk+JYzeBoh2H9hv16n6YR
+	 MTu6/6TpEuOt9tbK/Qk/2iJHmouMla6xdKL+1A1iQv55SO0brTK8Rx0w+oIVsSWriq
+	 7dFdJ+av1QKItIGCDpYbMjOLldaBh+KxfJsvUAZOVfogar6tPU/+R/LmDdKGa2DE6a
+	 dkHajcP7zuQna2ia59m/WMTNWmfvhJwJnEcGv0aa18oUUc1uI1tB1Sop9cc/OwanJ3
+	 5ythQznKwnZFQ==
+Date: Sun, 7 Apr 2024 13:41:19 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
+	Andi Shyti <andi.shyti@kernel.org>, konrad.dybcio@linaro.org,
+	andersson@kernel.org, wsa@kernel.org, linux-arm-msm@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-i2c@vger.kernel.org, quic_vdadhani@quicinc.com,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: Re: [PATCH v4] i2c: i2c-qcom-geni: Parse Error correctly in i2c GSI
+ mode
+Message-ID: <ZhJVJ-VU8S4wB9J9@matsya>
+References: <20240313052639.1747078-1-quic_msavaliy@quicinc.com>
+ <171161140136.2698925.4294566764047886777.b4-ty@kernel.org>
+ <ZgbwJAb7Ffktf554@matsya>
+ <c805ff2a-8056-49a8-90b7-814c7a973d72@quicinc.com>
+ <3dad8ee4-7d9d-4602-bb5e-f148d51d1fcf@kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 00/34] address all -Wunused-const warnings
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171238082809.31617.17365732495689756509.git-patchwork-notify@kernel.org>
-Date: Sat, 06 Apr 2024 05:20:28 +0000
-References: <20240403080702.3509288-1-arnd@kernel.org>
-In-Reply-To: <20240403080702.3509288-1-arnd@kernel.org>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: linux-kernel@vger.kernel.org, arnd@arndb.de, mpe@ellerman.id.au,
- christophe.leroy@csgroup.eu, dlemoal@kernel.org, jikos@kernel.org,
- gregkh@linuxfoundation.org, minyard@acm.org, peterhuewe@gmx.de,
- jarkko@kernel.org, kristo@kernel.org, sboyd@kernel.org, abbotti@mev.co.uk,
- hsweeten@visionengravers.com, srinivas.pandruvada@linux.intel.com,
- lenb@kernel.org, rafael@kernel.org, john.allen@amd.com,
- herbert@gondor.apana.org.au, vkoul@kernel.org, ardb@kernel.org,
- andersson@kernel.org, mdf@kernel.org, liviu.dudau@arm.com,
- benjamin.tissoires@redhat.com, andi.shyti@kernel.org,
- michael.hennerich@analog.com, peda@axentia.se, lars@metafoo.de,
- jic23@kernel.org, dmitry.torokhov@gmail.com, markuss.broks@gmail.com,
- alexandre.torgue@foss.st.com, lee@kernel.org, kuba@kernel.org,
- Shyam-sundar.S-k@amd.com, iyappan@os.amperecomputing.com,
- yisen.zhuang@huawei.com, stf_xl@wp.pl, kvalo@kernel.org, sre@kernel.org,
- tony@atomide.com, broonie@kernel.org, alexandre.belloni@bootlin.com,
- chenxiang66@hisilicon.com, martin.petersen@oracle.com,
- neil.armstrong@linaro.org, heiko@sntech.de, krzysztof.kozlowski@linaro.org,
- hvaibhav.linux@gmail.com, elder@kernel.org, jirislaby@kernel.org,
- ychuang3@nuvoton.com, deller@gmx.de, hch@lst.de, robin.murphy@arm.com,
- rostedt@goodmis.org, mhiramat@kernel.org, akpm@linux-foundation.org,
- keescook@chromium.org, trond.myklebust@hammerspace.com, anna@kernel.org,
- masahiroy@kernel.org, nathan@kernel.org, tiwai@suse.com,
- linuxppc-dev@lists.ozlabs.org, linux-ide@vger.kernel.org,
- openipmi-developer@lists.sourceforge.net, linux-integrity@vger.kernel.org,
- linux-omap@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-crypto@vger.kernel.org,
- dmaengine@vger.kernel.org, linux-efi@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-fpga@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-input@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
- linux-leds@vger.kernel.org, linux-wireless@vger.kernel.org,
- linux-rtc@vger.kernel.org, linux-scsi@vger.kernel.org,
- linux-spi@vger.kernel.org, linux-amlogic@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev,
- linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
- linux-fbdev@vger.kernel.org, iommu@lists.linux.dev,
- linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
- linux-hardening@vger.kernel.org, linux-nfs@vger.kernel.org,
- linux-kbuild@vger.kernel.org, alsa-devel@alsa-project.org,
- linux-sound@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3dad8ee4-7d9d-4602-bb5e-f148d51d1fcf@kernel.org>
 
-Hello:
-
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Wed,  3 Apr 2024 10:06:18 +0200 you wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+On 03-04-24, 11:14, Krzysztof Kozlowski wrote:
+> On 03/04/2024 08:46, Mukesh Kumar Savaliya wrote:
+> > Hi Vinod,
+> > 
+> > On 3/29/2024 10:15 PM, Vinod Koul wrote:
+> >> On 28-03-24, 08:36, Andi Shyti wrote:
+> >>> Hi
+> >>>
+> >>> On Wed, 13 Mar 2024 10:56:39 +0530, Mukesh Kumar Savaliya wrote:
+> >>>> I2C driver currently reports "DMA txn failed" error even though it's
+> >>>> NACK OR BUS_PROTO OR ARB_LOST. Detect NACK error when no device ACKs
+> >>>> on the bus instead of generic transfer failure which doesn't give any
+> >>>> specific clue.
+> >>>>
+> >>>> Make Changes inside i2c driver callback handler function
+> >>>> i2c_gpi_cb_result() to parse these errors and make sure GSI driver
+> >>>> stores the error status during error interrupt.
+> >>>>
+> >>>> [...]
+> >>>
+> >>> Applied to i2c/i2c-host-next on
+> >>>
+> >>> git://git.kernel.org/pub/scm/linux/kernel/git/local tree
+> >>
+> >> You applied changes to dmaengine driver without my ack! I dont agree to
+> >> the approach here, we could do better
+> >>
+> > Could you please suggest changes OR approach related comments ? So i can 
+> > make a new change which can clean the merged code ?  Hope that can 
+> > address the concerns.
 > 
-> Compilers traditionally warn for unused 'static' variables, but not
-> if they are constant. The reason here is a custom for C++ programmers
-> to define named constants as 'static const' variables in header files
-> instead of using macros or enums.
-> 
-> [...]
+> Can you address original comments?
 
-Here is the summary with links:
-  - [05/34] 3c515: remove unused 'mtu' variable
-    https://git.kernel.org/netdev/net-next/c/17b35355c2c6
-  - [19/34] sunrpc: suppress warnings for unused procfs functions
-    (no matching commit)
-  - [26/34] isdn: kcapi: don't build unused procfs code
-    https://git.kernel.org/netdev/net-next/c/91188544af06
-  - [28/34] net: xgbe: remove extraneous #ifdef checks
-    https://git.kernel.org/netdev/net-next/c/0ef416e045ad
-  - [33/34] drivers: remove incorrect of_match_ptr/ACPI_PTR annotations
-    (no matching commit)
+That is the best advice!
 
-You are awesome, thank you!
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+~Vinod
 

@@ -1,214 +1,155 @@
-Return-Path: <dmaengine+bounces-1814-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1815-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66A4B8A0703
-	for <lists+dmaengine@lfdr.de>; Thu, 11 Apr 2024 06:15:16 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 91D448A0A0E
+	for <lists+dmaengine@lfdr.de>; Thu, 11 Apr 2024 09:39:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1C4E8285279
-	for <lists+dmaengine@lfdr.de>; Thu, 11 Apr 2024 04:15:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 078001F220A7
+	for <lists+dmaengine@lfdr.de>; Thu, 11 Apr 2024 07:39:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74F0913BC1A;
-	Thu, 11 Apr 2024 04:15:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B232413FD92;
+	Thu, 11 Apr 2024 07:35:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="er5LZgN/"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="MIJFYhYj"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2040.outbound.protection.outlook.com [40.107.7.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B277C13BC10;
-	Thu, 11 Apr 2024 04:15:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712808912; cv=none; b=WH3xdjiuGlF5fjf/ga6R3HKZTMahTyZ22PE0IJZDCr5FDYeJrj/UPSA1eWu5ibkq0/STimnr01ymlcoBzcAidvsO1pMZ/JxPiw7rlLzwgfW7BZnV+SQ9zllO3bOxfHSj6wbIK8jj7caVkIKRY5gCzTVJtNY6TRwhuuv70wXKnQE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712808912; c=relaxed/simple;
-	bh=XpV+R2c0z4CAA3E0iveJbJWN8/bqkAicQ1JKilviGHQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LSEN1SEQdc3VqMC9k0JynMCJ4mjAvsoMFTe+/GFyIYeo2V3HPl+fm33FVfcsdUfu0eKHXIch1RIK42syrdhADcjKsyq/H2QsrisIASmm4iunx/ZZ385q4J928Eg7QYPfR53mIFQeRIj1EVwhdXfuAdrNFEg7csKw81p1F1kKSEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=er5LZgN/; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712808911; x=1744344911;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=XpV+R2c0z4CAA3E0iveJbJWN8/bqkAicQ1JKilviGHQ=;
-  b=er5LZgN/ICZVP9gU2hYOig7Y9Afkgty1e7WTZXb3ao/rhm45R2+5aYFE
-   g1ceI/0PdkZBjPJLRhPyB25FRBccV66TYNSAVfUbK2l/25oZm1de30P3Z
-   3dUSRUrCKvklRf8xP0/13VgJQWH0JEPQaR01FMx1BI741PzmbLEhn/ale
-   etQ3/yZIEPdV9y7W5QyeuH02KBV2gXk9ioPm0bARsAnkaQn+OpQ/7hdTq
-   xAwmDJ49pI1bqCkH8Q0Sb1N0g9+0ouj1HRqKJQARRDu2Qq3GxT3qqf2Zg
-   DVzx4ppGbe4VikPNqZahR8FkJzqgCjVFRCyqOFJD0yQAJvSElxYpaWwbb
-   g==;
-X-CSE-ConnectionGUID: P9vKhGugRSasow9Xa9nW5Q==
-X-CSE-MsgGUID: qts77Fi5Rk2yZz0cXBAPRQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="8310330"
-X-IronPort-AV: E=Sophos;i="6.07,192,1708416000"; 
-   d="scan'208";a="8310330"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 21:15:10 -0700
-X-CSE-ConnectionGUID: nHvTGs0qTWW7RD+6h+qcVA==
-X-CSE-MsgGUID: yYu7QXkYQoKNkQiTLPtS6A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,192,1708416000"; 
-   d="scan'208";a="25259613"
-Received: from lkp-server01.sh.intel.com (HELO e61807b1d151) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 10 Apr 2024 21:15:05 -0700
-Received: from kbuild by e61807b1d151 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rulq3-0008Cq-0S;
-	Thu, 11 Apr 2024 04:15:03 +0000
-Date: Thu, 11 Apr 2024 12:14:10 +0800
-From: kernel test robot <lkp@intel.com>
-To: Inochi Amaoto <inochiama@outlook.com>, Vinod Koul <vkoul@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Jisheng Zhang <jszhang@kernel.org>,
-	Liu Gui <kenneth.liu@sophgo.com>,
-	Jingbao Qiu <qiujingbao.dlmu@gmail.com>, dlan@gentoo.org,
-	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v7 3/3] dmaengine: add driver for Sophgo CV18XX/SG200X
- dmamux
-Message-ID: <202404111148.YVXpdPke-lkp@intel.com>
-References: <IA1PR20MB495310B8E4D7A6705A112004BB062@IA1PR20MB4953.namprd20.prod.outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CA7013FD8C;
+	Thu, 11 Apr 2024 07:35:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.7.40
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712820953; cv=fail; b=HzOPG41Jasi5JA0iTJJDS+m4qpKhvV3haRMMHOSlNOr9rqtxunVXMO3kyygCYYelYZ5ySGalccqdWP9HDsGHVmaxcMCG/BDCi/Ht2u8LZCY9RQQjGynKpVmgUWIXigUe2NhMdKQ6hjS76+iNSlsw3KUXfVISpyZu+CNvQ9y6tEk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712820953; c=relaxed/simple;
+	bh=vicBYEVcecbcuGVRoAQKMxKnDONvnWdCf/Tn/Mq+DxE=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=Gpe+xsKaN34ip97PA4bLY5iUxjed3eurDyKjIKuTmCBQhNzCgmMEtlvDAHe84MGxle7qHiQrdN/d3r/F265MnGHlp723a4klanOfTjgaHoh3eOAc3QRJjDFDH/yEt15JY4xZwCo4QHUvdPGjJrIhA/kfWUIn/ShiLat6ce417zU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=MIJFYhYj; arc=fail smtp.client-ip=40.107.7.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PMuqTanVsrkuXOZZLG0oWEMJ1IyLK7xS0XXQ0CiSybvcL/Bjw1u888oFlNfa2TM5WFR/CZvbSacAAKzcIVlWrcpDH7aU5DRNPLes0T/aKk5zrs0igjAvDpnqEknK/l7RymVu/AdfOvNUEY9VcrTwP7Ks64zUKmGkCIKNcRf+vj2YYGJRIHd92MYujE1an0ZiWUMWgTT5e8ArwahESUO6JMPJazqXudoiJEt9G44xuxiIRYjV2pi7rOMg1j99B/eGwZx4wpC1Wg6T9BJOh3wbcLH5vzPDcZv2M2lI0AmqpdgIqmSEQIceiLQV6XV2Da16pTsQE1Ct6mhAhgutL51k6Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=flLZExif4dTZLba4Ul1vXmL1nXdVCQn63Oy2pwjFo9Y=;
+ b=BYRDQmNylBrFK3Lez+ErgE8f7tH/xMvsDJS9oPnZCZCfu6s/csMhbqXrxkmpHw4IkapXYJxSo+u5K604VER3zLONSmWj1g1dFJxEHgKOJiQShHl8XcTzHcnOfpvYS9m6Egh5BavYBxnfxXvtXpY9v3SwEtthRacbbXbt4B3nD/lTt71+smy4chUoKAsjSA0n0cokMCl7ElWknT5MwZ4oxnPIQIhhza0piag99CwW1W4m2IHdrWler5frtnR1vLwBktpgKUalG4TuP2qq9YC41wn6QI4s4cvscU+dgN2vJKbfieqvxJjS8Ew6cThB9bWqsbH9MpB3Y0jRWcNx+SRwYA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=flLZExif4dTZLba4Ul1vXmL1nXdVCQn63Oy2pwjFo9Y=;
+ b=MIJFYhYjTCBYF7QF9yWvXDWuP/ko7bre8bstOGvYSphnoNse06rQmw3HEA+Ublo57VDopoUtp/tO10d1VyorbqkqERPcRYrChnde5EACQ0F2/EbIidymJScghlGdW9Q2LatjkhyFEMHs7n7lZxgeKkvGAlQzca/0cU7ZTipWRBc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AS4PR04MB9386.eurprd04.prod.outlook.com (2603:10a6:20b:4e9::8)
+ by AS8PR04MB9173.eurprd04.prod.outlook.com (2603:10a6:20b:448::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Thu, 11 Apr
+ 2024 07:35:47 +0000
+Received: from AS4PR04MB9386.eurprd04.prod.outlook.com
+ ([fe80::4f24:3f44:d5b1:70ba]) by AS4PR04MB9386.eurprd04.prod.outlook.com
+ ([fe80::4f24:3f44:d5b1:70ba%7]) with mapi id 15.20.7409.042; Thu, 11 Apr 2024
+ 07:35:45 +0000
+From: Joy Zou <joy.zou@nxp.com>
+To: frank.li@nxp.com,
+	peng.fan@nxp.com,
+	vkoul@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: imx@lists.linux.dev,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: [PATCH v2 0/2] clean up unused "fsl,imx8qm-adma" compatible string
+Date: Thu, 11 Apr 2024 15:43:24 +0800
+Message-Id: <20240411074326.2462497-1-joy.zou@nxp.com>
+X-Mailer: git-send-email 2.37.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR01CA0193.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:189::18) To AS4PR04MB9386.eurprd04.prod.outlook.com
+ (2603:10a6:20b:4e9::8)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <IA1PR20MB495310B8E4D7A6705A112004BB062@IA1PR20MB4953.namprd20.prod.outlook.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS4PR04MB9386:EE_|AS8PR04MB9173:EE_
+X-MS-Office365-Filtering-Correlation-Id: 41b8449a-c06e-4dac-5c5d-08dc59f9ffde
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	cF512UXqRpLpAevO1ZN0JkjBVEK+gpfkKGRsOnU3FVt2DnPkX5hwOhBXSPFHbdqfKuUqLpfccBtMRRLX2/83L5a81DSOYZKH2Jujy0bkplyk4UMQB6NFYPElffNRowBokqvtZHhDbv3bO//t/HyYrr7Hf3j1S4ZGggNMblZCFvP4CFiF/wtY2fz5+AzMyd/yI4bZwcq6o4fpFnTmxv2pM3YVhxTY3g1xqEqOb4SSyv6jC1UJu1jITwKgNFtzzrhQboNhD5Wrnna5OU9Q7ngb9uCO4dVEv46vikkbPDfEDgMv2PXPuE8bNwG3fGt+4ulguC5kzAn4tSs4ecS+g7GTqJjysaWB1vQ4WM2o7Tszs0q4DVjtKze9Mr29PhOqFelmaKfND9HyTpPI5cvKCFmn1yOYpa81t28Qd867HJLmPEksqS+lJ+isPyUKdHoOhRGvSmRB+x2TNUzmo9+PnrH125N4IXobSMirHyQD2t8b2VOzcEhG6wkbPVZ9GQUJq59fUWXqGk3vFF71Ut2H9fkmYAGl74R7ONwo5Ef9kdNM7GmiSXXgolqS1TbarV2jpiaOZyhdZYi3ZDqNLHy1Pn7GYsvhWeyui0B9HfOCacEZlZqNBzTF1HfeRIPCd0WNao4amPzS/kkUs8QAkn4KKUigKxK4rfvMqY7WgC97EqoXCEIdV+L0SlFUoQNjuZ0cOKVwCCml+FZgI6VBvMNZyZ5TWw==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR04MB9386.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015)(52116005)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?kgO1aqEKbdE+jw3BOPk+T3jTZrVO1otYWmQERXof1fO/Zs3UNvJ/YXwJpICd?=
+ =?us-ascii?Q?FR48nv2FKZz1/73xnsELZ3mWj1laKHaSH62VJEJ0WmG304VVJ5grokUAnbAw?=
+ =?us-ascii?Q?4JMUnmmSZWFLWi66k5MzH99QZ7PJQFo+FOHNotrcvKsdgGEunHWL+uqV9+nk?=
+ =?us-ascii?Q?KBMvqEO4MNWJcVNqadeS/BLQ8sgYsAC+lalkr5CZxj64l/XARvSHnU1jgFMp?=
+ =?us-ascii?Q?PXO/gXo3hh8nxFxAI9A+A2OZr/PLXttvRW9PfSaYauj+4zfYPUN5wpU4uwH7?=
+ =?us-ascii?Q?7q8m/YmFdBDLwY4Xs6t0KwJXbh3kjxOq/OAg7gVwO8qEOmjzgMa1GAWTgl/u?=
+ =?us-ascii?Q?DS+w99peiuFfkn9VQvv6r1Kpadp3zWDhq4OMrLS/uCKMxNSZzlt6n39hh8ZF?=
+ =?us-ascii?Q?ltnU8tQUs+MbMFHlUpYUE8PHuTjGThwgvyFBXiZZzhYAju8tWON6AxE/J2HK?=
+ =?us-ascii?Q?xibBRKZ4ZL1YgA+kKkceqm5l7u0OYx64Z/htAjQj6h7cZcMN0PuvlCgIY0W7?=
+ =?us-ascii?Q?k40YNOeKnk4Q8KvqS5yeAF23ssp6WoMppnx0b4gMA+WsS4RrtPLlM2lxzKxO?=
+ =?us-ascii?Q?2FIopYnZofoH9FVRt5PUPynBLslKuvWOHFcfCfgJ4De/ysF4X282blhtrz+l?=
+ =?us-ascii?Q?YMP7F1TTfksETWMGFZUG3NQ3qSDxtuv1pdW4wcNGrD5uoJw+TnvziKK2tMaz?=
+ =?us-ascii?Q?6HwCePVfWf5ZGgRtCTb5S3Miqq6J/cWOljMHago+KiJ8RPSxLyegZqLAdBI8?=
+ =?us-ascii?Q?ODpqReqc+kWWQXRID2J4Z37upsUO675AtOoscIRDw16tdZC83ren9BeUIqcB?=
+ =?us-ascii?Q?VHJ3iF/M1rn0uEwdQSbA0tPCGzc44TZRrBKu4z4QwgmZOJD+prCQuEY+aN+X?=
+ =?us-ascii?Q?LB0yTxipFxGpd5sBEey69/SFmo6HXVrpVpdYJfIwWfd8Dbj1IJkG+YR5g1sl?=
+ =?us-ascii?Q?nulzsQCqSMoQvv1lrgaY0EC77/pP0JQsGAPVHdJ8adIZdiioxBtpi/NgPt3o?=
+ =?us-ascii?Q?cSfVYwv1ixR+X2S9CmHPcMqedZfImah4n+l5sZtHL2g4RFyJmGTohLhKnOot?=
+ =?us-ascii?Q?HsWoBF25zKFLVB/SXd26hp3/4dKCaNqOsk9Oj/Nw7wBQZbmGt6wD0f9q9s9B?=
+ =?us-ascii?Q?r63o16GrgiYqaAV7aOG3SXH/Qng79UaN/V2hf61S+xMS6r2XLAM253uJSZSH?=
+ =?us-ascii?Q?7YjD/eMjr2uYaBT3MWBv7wDn9vsnGyeH58lxetGv6c3lnWLzz1QkcPXNdkcK?=
+ =?us-ascii?Q?zlXJH1i6IYKj59urXqu23r5b60lmZ5Sj7qi1y5xOUaqatParD+pjnl11Q6xf?=
+ =?us-ascii?Q?nOtB8q3z0ScgzPiP/SrhXsrJ9hvhb5q6COJkV8V+07Ey2A1o9QXQzGYFIvU4?=
+ =?us-ascii?Q?k3Y+2XVD+vG62Qd3oIZjr3y2ppqyTqaeZRtUh1EQhS7b2MJK/nTDMG+zrtk0?=
+ =?us-ascii?Q?23DjR0wOnBB6hNe9qpkrvsOflIpRrQzkkG1OSVLzm7y4Qez+H1T9W8WX2XJV?=
+ =?us-ascii?Q?6e5Xhyb2rmBE4/3z1ASxkz71dDhYNGcDSqTregczcz1uG43HTLibMWRofZnp?=
+ =?us-ascii?Q?FAoa2ZimbqAgISxceQIrjT6ehNdExdUrFKjaoH6z?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 41b8449a-c06e-4dac-5c5d-08dc59f9ffde
+X-MS-Exchange-CrossTenant-AuthSource: AS4PR04MB9386.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2024 07:35:45.7444
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: f1g17Tqdb5tBZhQTT/LY4vmZoFc82/MLmWheW0Iynw2eyOMJhME6QiUDyWPZEUW7
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB9173
 
-Hi Inochi,
+The patchset clean up "fsl,imx8qm-adma" compatible string.
+For the details, please check the patch commit log.
+---
+Changes for v2:
+1. Change the patchset subject.
+2. add bindings update.
 
-kernel test robot noticed the following build warnings:
+Joy Zou (2):
+  dmaengine: fsl-edma: Remove unused "fsl,imx8qm-adma" compatible string
+  dma: dt-bindings: fsl-edma: clean up unused "fsl,imx8qm-adma"
+    compatible string
 
-[auto build test WARNING on vkoul-dmaengine/next]
-[also build test WARNING on robh/for-next krzk-dt/for-next linus/master v6.9-rc3 next-20240410]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Inochi-Amaoto/dt-bindings-dmaengine-Add-dma-multiplexer-for-CV18XX-SG200X-series-SoC/20240410-092207
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git next
-patch link:    https://lore.kernel.org/r/IA1PR20MB495310B8E4D7A6705A112004BB062%40IA1PR20MB4953.namprd20.prod.outlook.com
-patch subject: [PATCH v7 3/3] dmaengine: add driver for Sophgo CV18XX/SG200X dmamux
-config: riscv-allyesconfig (https://download.01.org/0day-ci/archive/20240411/202404111148.YVXpdPke-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 8b3b4a92adee40483c27f26c478a384cd69c6f05)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240411/202404111148.YVXpdPke-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202404111148.YVXpdPke-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   In file included from drivers/dma/cv1800-dmamux.c:8:
-   In file included from include/linux/of_dma.h:14:
-   In file included from include/linux/dmaengine.h:12:
-   In file included from include/linux/scatterlist.h:8:
-   In file included from include/linux/mm.h:2208:
-   include/linux/vmstat.h:508:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     508 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     509 |                            item];
-         |                            ~~~~
-   include/linux/vmstat.h:515:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     515 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     516 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/vmstat.h:522:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     522 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
-   include/linux/vmstat.h:527:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     527 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     528 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/vmstat.h:536:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     536 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     537 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
->> drivers/dma/cv1800-dmamux.c:191:22: warning: unused variable 'dma_master' [-Wunused-variable]
-     191 |         struct device_node *dma_master;
-         |                             ^~~~~~~~~~
-   6 warnings generated.
-
-
-vim +/dma_master +191 drivers/dma/cv1800-dmamux.c
-
-   183	
-   184	static int cv1800_dmamux_probe(struct platform_device *pdev)
-   185	{
-   186		struct device *dev = &pdev->dev;
-   187		struct device_node *mux_node = dev->of_node;
-   188		struct cv1800_dmamux_data *data;
-   189		struct cv1800_dmamux_map *tmp;
-   190		struct device *parent = dev->parent;
- > 191		struct device_node *dma_master;
-   192		struct regmap *regmap = NULL;
-   193		unsigned int i;
-   194	
-   195		if (!parent)
-   196			return -ENODEV;
-   197	
-   198		regmap = device_node_to_regmap(parent->of_node);
-   199		if (IS_ERR(regmap))
-   200			return PTR_ERR(regmap);
-   201	
-   202		data = devm_kmalloc(dev, sizeof(*data), GFP_KERNEL);
-   203		if (!data)
-   204			return -ENOMEM;
-   205	
-   206		spin_lock_init(&data->lock);
-   207		init_llist_head(&data->free_maps);
-   208	
-   209		for (i = 0; i <= MAX_DMA_CH_ID; i++) {
-   210			tmp = devm_kmalloc(dev, sizeof(*tmp), GFP_KERNEL);
-   211			if (!tmp) {
-   212				/* It is OK for not allocating all channel */
-   213				dev_warn(dev, "can not allocate channel %u\n", i);
-   214				continue;
-   215			}
-   216	
-   217			init_llist_node(&tmp->node);
-   218			tmp->channel = i;
-   219			llist_add(&tmp->node, &data->free_maps);
-   220		}
-   221	
-   222		/* if no channel is allocated, the probe must fail */
-   223		if (llist_empty(&data->free_maps))
-   224			return -ENOMEM;
-   225	
-   226		data->regmap = regmap;
-   227		data->dmarouter.dev = dev;
-   228		data->dmarouter.route_free = cv1800_dmamux_free;
-   229	
-   230		platform_set_drvdata(pdev, data);
-   231	
-   232		return of_dma_router_register(mux_node,
-   233					      cv1800_dmamux_route_allocate,
-   234					      &data->dmarouter);
-   235	}
-   236	
+ .../devicetree/bindings/dma/fsl,edma.yaml        |  1 -
+ drivers/dma/fsl-edma-common.c                    | 16 ++++------------
+ drivers/dma/fsl-edma-main.c                      |  8 --------
+ 3 files changed, 4 insertions(+), 21 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.37.1
+
 

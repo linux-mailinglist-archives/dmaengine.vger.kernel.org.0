@@ -1,122 +1,130 @@
-Return-Path: <dmaengine+bounces-1843-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1844-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E63F68A68D1
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Apr 2024 12:43:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5EE078A6C06
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Apr 2024 15:19:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 22BBB1C20C5F
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Apr 2024 10:43:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1B6BE28181A
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Apr 2024 13:19:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7EEB127E38;
-	Tue, 16 Apr 2024 10:42:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 489A212C46C;
+	Tue, 16 Apr 2024 13:19:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hFbmB18r"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59D94127E32;
-	Tue, 16 Apr 2024 10:42:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 187E43BB30;
+	Tue, 16 Apr 2024 13:19:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713264126; cv=none; b=eWwmMfSM8c1L+W0X4q1TMXCDoT3k1u70MPR3Pl7X9dDHzDps1Ww36VJxSVa2nN1+wj7qOq/uKyfxqv1oMVSgwGhjbGBRhKLovTGjHV5R79il0D2FUKdKOwMCajBswXqdsOHy0lhhVotZIlElCan37ekwss/FUDEGYAeaGWE66d4=
+	t=1713273583; cv=none; b=C3BYylojKRcZjH2bE8YnxipoNydDLhaC4Sl61tsMSn+nBsYmy/Jw0Uv6XMFj2CDJAG2QRPy0M7PrIgrBt0MHNrqCMH9A3W+SFwKhB1HDZcb7dMBzTAV97K2Oxga6dueIsXGdZrBFICBwZg6b66EtAB8hlOGIj6u7dHV7k5Tz6QA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713264126; c=relaxed/simple;
-	bh=TwIS/5qzT8RE4E2MZ5uzzz88SHtKz+6BRPI2AbQnAYc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gNEe/bhCh3HT7HQbxDE5z4O/mKzo8nwgfS1mCFBIMmZdKX0ThJR0aQTfLkP7vmhbQ5OEiERa0wwVd31yodYOWnucdgLRrKYaju0Jlyc4BkpjeNcztdgHKozrGEllTs0Kf4fy+Koj/UJ5SWnVsi0L5AbE1IC+L/uFxqWkqIobg5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AB24D2F;
-	Tue, 16 Apr 2024 03:42:31 -0700 (PDT)
-Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 316C43F64C;
-	Tue, 16 Apr 2024 03:41:58 -0700 (PDT)
-Message-ID: <8a8a8e8b-8256-4d33-a39b-9e3cbc4ccff2@arm.com>
-Date: Tue, 16 Apr 2024 11:41:54 +0100
+	s=arc-20240116; t=1713273583; c=relaxed/simple;
+	bh=BPjpllDPHaBuORONW/QmDln6MN91/EoL0La9ZnXvYe0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rDNYOJmyV8ZJ49PuL2sM/Tj64KOOuswOck246x2/BfCthIsUX+/VtOj8yP2PVHM/Q+5Tz6N4smsznBqhkPf5+hNjgE1DBtVJfRK5EmfO/6QeqoLikF23yXadpViq1cH/af10Lr7s3Cr+ISosV39i1s5JScA6yAx5BJZ0V6Ng0Tg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hFbmB18r; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64FF6C113CE;
+	Tue, 16 Apr 2024 13:19:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713273582;
+	bh=BPjpllDPHaBuORONW/QmDln6MN91/EoL0La9ZnXvYe0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hFbmB18rIKIhsAmwQxX+oKqS+gZprFcE5OUMuuPiGpAT0tN6iKa8Lvu+cRbHJllcu
+	 mICK1UJzwOYVjG15lcogv6jNc2U1HQd6s91OgZ4qoTkgA4HBGULDkjYN33Z87QmF2E
+	 WFMcCzVyr1vgDqkwyAYVcTwcd4+qMOc+VPuuI34wcl0QS/2GE5qMx1GYpApCSsmIUg
+	 lVBzPLx1P25KVOMc0K1p4ZYI+23fWh3H8W8/X1m+prDM/MNSVsQ56952geE7eCBOHL
+	 /Dm3mZzP2t2mDXZf3i2hOHtpjeBYCJ6bRX/XKjNNO9kQKNqtqGzHK/BNZB7mV1lTwy
+	 2FF/YQsPzF04A==
+Date: Tue, 16 Apr 2024 08:19:40 -0500
+From: Rob Herring <robh@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: krzk@kernel.org, 20240409185416.2224609-1-Frank.Li@nxp.com,
+	conor+dt@kernel.org, devicetree@vger.kernel.org,
+	dmaengine@vger.kernel.org, imx@lists.linux.dev,
+	krzysztof.kozlowski+dt@linaro.org, linux-kernel@vger.kernel.org,
+	pankaj.gupta@nxp.com, peng.fan@nxp.com, shengjiu.wang@nxp.com,
+	shenwei.wang@nxp.com, vkoul@kernel.org, xu.yang_2@nxp.com
+Subject: Re: [PATCH v4 2/2] dt-bindings: dma: fsl-edma: allow 'power-domains'
+ property
+Message-ID: <20240416131940.GA2138646-robh@kernel.org>
+References: <20240412154208.881836-1-Frank.Li@nxp.com>
+ <20240412154208.881836-2-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/19] amba: store owner from modules with
- amba_driver_register()
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Russell King <linux@armlinux.org.uk>, Mike Leach <mike.leach@linaro.org>,
- James Clark <james.clark@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Linus Walleij <linus.walleij@linaro.org>, Andi Shyti
- <andi.shyti@kernel.org>, Olivia Mackall <olivia@selenic.com>,
- Herbert Xu <herbert@gondor.apana.org.au>, Vinod Koul <vkoul@kernel.org>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Michal Simek <michal.simek@amd.com>, Eric Auger <eric.auger@redhat.com>,
- Alex Williamson <alex.williamson@redhat.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
- linux-arm-kernel@lists.infradead.org,
- linux-stm32@st-md-mailman.stormreply.com, linux-i2c@vger.kernel.org,
- linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
- linux-input@vger.kernel.org, kvm@vger.kernel.org
-References: <20240326-module-owner-amba-v1-0-4517b091385b@linaro.org>
- <171182151736.34189.6433134738765363803.b4-ty@linaro.org>
- <cfa5aa01-44ef-4eb1-9ca6-541ed5908db4@linaro.org>
-Content-Language: en-US
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <cfa5aa01-44ef-4eb1-9ca6-541ed5908db4@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240412154208.881836-2-Frank.Li@nxp.com>
 
-+ Greg
-
-
-Hi Krzysztof,
-
-On 30/03/2024 18:00, Krzysztof Kozlowski wrote:
-> On 30/03/2024 18:58, Krzysztof Kozlowski wrote:
->>
->> On Tue, 26 Mar 2024 21:23:30 +0100, Krzysztof Kozlowski wrote:
->>> Merging
->>> =======
->>> All further patches depend on the first amba patch, therefore please ack
->>> and this should go via one tree.
->>>
->>> Description
->>> ===========
->>> Modules registering driver with amba_driver_register() often forget to
->>> set .owner field.
->>>
->>> [...]
->>
->> Applied, thanks!
->>
->> [01/19] amba: store owner from modules with amba_driver_register()
->>          (no commit info)
+On Fri, Apr 12, 2024 at 11:42:08AM -0400, Frank Li wrote:
+> Allow 'power-domains' property because i.MX8DXL i.MX8QM and i.MX8QXP need
+> it. EDMA supports each power-domain for each dma channel. So minItems and
+> maxItems align 'dma-channels'.
 > 
-> Patchset applied here:
-> https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux-dt.git/log/?h=for-v6.10/module-owner-amba
-
-How do you plan to push this ? Given this affects most of the drivers/, 
-do you plan to send this to Greg ? We have changes in the coresight
-tree that would conflict with this "tag" ( I haven't merged them yet, 
-but is in my local queue). I want to make sure we can avoid the
-conflicts. I am happy to merge this to my local tree and base the
-changes on this, if this is going in for v6.10 and all are in agreement.
-
-Kind regards
-Suzuki
-
-
-
-
+> Change fsl,imx93-edma3 example to fsl,imx8qm-edma to reflect this variants.
 > 
-> Best regards,
-> Krzysztof
+> Fixed below DTB_CHECK warning:
+>   dma-controller@599f0000: Unevaluated properties are not allowed ('power-domains' was unexpected)
 > 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+> 
+> Notes:
+>     Change from v3 to v4
+>     - Remove 'contains' change should be belong to first patch when rebase.
+>     
+>     make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j8  dt_binding_check DT_SCHEMA_FILES=fsl,edma.yaml
+>       LINT    Documentation/devicetree/bindings
+>       DTEX    Documentation/devicetree/bindings/dma/fsl,edma.example.dts
+>       CHKDT   Documentation/devicetree/bindings/processed-schema.json
+>       SCHEMA  Documentation/devicetree/bindings/processed-schema.json
+>       DTC_CHK Documentation/devicetree/bindings/dma/fsl,edma.example.dtb
+>     
+>     After this patch no warning for imx8dxl-evk.dtb.
+>     
+>     touch arch/arm64/boot/dts/freescale/imx8dxl.dtsi
+>     make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j8  CHECK_DTBS=y freescale/imx8dxl-evk.dtb
+>       DTC_CHK arch/arm64/boot/dts/freescale/imx8dxl-evk.dtb
+>     
+>     Change from v2 to v3
+>     - set 'power-domains' false for other compatitble string
+>     - change imx93 example to 8qm example to affect this change according to
+>     Krzysztof Kozlowski's suggestion, choose least channel number edma
+>     instance to reduce code copy. max channel number is 64.
+>     
+>     - Rebase to latest dmaengine/next, fixes conflicts.
+>     
+>     Change from v1 to v2
+>     - using maxitem: 64. Each channel have one power domain. Max 64 dmachannel.
+>     - add power-domains to 'required' when compatible string is fsl,imx8qm-adma
+>         or fsl,imx8qm-edma
+> 
+>  .../devicetree/bindings/dma/fsl,edma.yaml     | 77 ++++++++++---------
+>  1 file changed, 39 insertions(+), 38 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/fsl,edma.yaml b/Documentation/devicetree/bindings/dma/fsl,edma.yaml
+> index fb5fbe4b9f9d4..012522612dc96 100644
+> --- a/Documentation/devicetree/bindings/dma/fsl,edma.yaml
+> +++ b/Documentation/devicetree/bindings/dma/fsl,edma.yaml
+> @@ -71,6 +71,10 @@ properties:
+>      minItems: 1
+>      maxItems: 33
+>  
+> +  power-domains:
+> +    minItems: 1
+> +    maxItems: 64
 
+Please state here that number of power-domains are equal to number of 
+channels and in ascending order.
+
+Rob
 

@@ -1,60 +1,61 @@
-Return-Path: <dmaengine+bounces-1844-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1845-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5EE078A6C06
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Apr 2024 15:19:48 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C0DE48A6F48
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Apr 2024 17:05:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1B6BE28181A
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Apr 2024 13:19:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 320E7281CAF
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Apr 2024 15:05:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 489A212C46C;
-	Tue, 16 Apr 2024 13:19:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF20512FB02;
+	Tue, 16 Apr 2024 15:05:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hFbmB18r"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Evlue0WE"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 187E43BB30;
-	Tue, 16 Apr 2024 13:19:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFE3E12AACA;
+	Tue, 16 Apr 2024 15:05:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713273583; cv=none; b=C3BYylojKRcZjH2bE8YnxipoNydDLhaC4Sl61tsMSn+nBsYmy/Jw0Uv6XMFj2CDJAG2QRPy0M7PrIgrBt0MHNrqCMH9A3W+SFwKhB1HDZcb7dMBzTAV97K2Oxga6dueIsXGdZrBFICBwZg6b66EtAB8hlOGIj6u7dHV7k5Tz6QA=
+	t=1713279925; cv=none; b=sQCTTemznZKOb9/jzHv83/zGIWdDpskWnFnJtV+aCAweUufGuOSlzYJQH7R6cMjeZfB+RUdxxgK+ONtOnfZf1xquF/pHYG1iEYbiGh5DQ8ghsrkRliHHiO89pNI9FkoNVUaLXCI3T9Zq/33SvYc0gg09VuwcC6I4EnVIE2I/JrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713273583; c=relaxed/simple;
-	bh=BPjpllDPHaBuORONW/QmDln6MN91/EoL0La9ZnXvYe0=;
+	s=arc-20240116; t=1713279925; c=relaxed/simple;
+	bh=eoUEUNDDT3IISkVkLcQVShb7N8n4cu8oTCAwsjC3QRk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rDNYOJmyV8ZJ49PuL2sM/Tj64KOOuswOck246x2/BfCthIsUX+/VtOj8yP2PVHM/Q+5Tz6N4smsznBqhkPf5+hNjgE1DBtVJfRK5EmfO/6QeqoLikF23yXadpViq1cH/af10Lr7s3Cr+ISosV39i1s5JScA6yAx5BJZ0V6Ng0Tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hFbmB18r; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64FF6C113CE;
-	Tue, 16 Apr 2024 13:19:42 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=b1E/ddFx7XUE+VfrRIlokjI9OFNRCgMx2/D1Ur96YXwcsjDlPyh1wSvl58ZebqU47YHDyCkG1okS2SasYVXisxgzpb0IoaULikr/ojAK2AYmeRh5aa36uJGDAzIIF4wSGXzwZnchSJ9RWw9I4YJ7Zy3ytroeUj9U5stxObiSv2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Evlue0WE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72DACC113CE;
+	Tue, 16 Apr 2024 15:05:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713273582;
-	bh=BPjpllDPHaBuORONW/QmDln6MN91/EoL0La9ZnXvYe0=;
+	s=k20201202; t=1713279925;
+	bh=eoUEUNDDT3IISkVkLcQVShb7N8n4cu8oTCAwsjC3QRk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hFbmB18rIKIhsAmwQxX+oKqS+gZprFcE5OUMuuPiGpAT0tN6iKa8Lvu+cRbHJllcu
-	 mICK1UJzwOYVjG15lcogv6jNc2U1HQd6s91OgZ4qoTkgA4HBGULDkjYN33Z87QmF2E
-	 WFMcCzVyr1vgDqkwyAYVcTwcd4+qMOc+VPuuI34wcl0QS/2GE5qMx1GYpApCSsmIUg
-	 lVBzPLx1P25KVOMc0K1p4ZYI+23fWh3H8W8/X1m+prDM/MNSVsQ56952geE7eCBOHL
-	 /Dm3mZzP2t2mDXZf3i2hOHtpjeBYCJ6bRX/XKjNNO9kQKNqtqGzHK/BNZB7mV1lTwy
-	 2FF/YQsPzF04A==
-Date: Tue, 16 Apr 2024 08:19:40 -0500
-From: Rob Herring <robh@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: krzk@kernel.org, 20240409185416.2224609-1-Frank.Li@nxp.com,
-	conor+dt@kernel.org, devicetree@vger.kernel.org,
-	dmaengine@vger.kernel.org, imx@lists.linux.dev,
-	krzysztof.kozlowski+dt@linaro.org, linux-kernel@vger.kernel.org,
-	pankaj.gupta@nxp.com, peng.fan@nxp.com, shengjiu.wang@nxp.com,
-	shenwei.wang@nxp.com, vkoul@kernel.org, xu.yang_2@nxp.com
-Subject: Re: [PATCH v4 2/2] dt-bindings: dma: fsl-edma: allow 'power-domains'
- property
-Message-ID: <20240416131940.GA2138646-robh@kernel.org>
-References: <20240412154208.881836-1-Frank.Li@nxp.com>
- <20240412154208.881836-2-Frank.Li@nxp.com>
+	b=Evlue0WEIc8vjVKo7214wtqrJwG33LppDFpOSjHmzZdLCpH0Q5ZwKbIIiRdjODvRi
+	 io69mrj6mVB9dGbkDBmiNtGdXiX5X/SQ19kkg4C77i/9vZM0ArEnmYW3JquUAY7Y+D
+	 idxob1Z1DbnhbnMD+JG+/TXq45ba4+/JMMJ5RIJrNmsReWNyKb3tuBkk4R9hBh1+r4
+	 PU1VIJvEhcRnV5C4TUQ6vOasuo0TndKz0yClmR+lyJfUPdkO3zcH6vquhQnZ8dBksj
+	 KjL8P5Dt8rAVG30LcylEElB/LEjPH+JGka8otxNzGzv5QGpGiAIhE8xV1GR8wMZY3x
+	 0dZbj9gZT6ESw==
+Date: Tue, 16 Apr 2024 17:05:21 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Vinod Koul <vkoul@kernel.org>
+Cc: konrad.dybcio@linaro.org, andersson@kernel.org, wsa@kernel.org, 
+	linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>, 
+	quic_vdadhani@quicinc.com, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: Re: [PATCH v4] i2c: i2c-qcom-geni: Parse Error correctly in i2c GSI
+ mode
+Message-ID: <j3zupurwq5vtzfwby7ubl7ft75fqqhutk4vfqolihkcldfcesi@ywwfnkjcfhgu>
+References: <20240313052639.1747078-1-quic_msavaliy@quicinc.com>
+ <171161140136.2698925.4294566764047886777.b4-ty@kernel.org>
+ <ZgbwJAb7Ffktf554@matsya>
+ <a76mmz5xrfipqpmq2ltsyobwc54dyw2d55gb4vta5d746dwb3i@5mm2ew5uudi3>
+ <ZhJVgDVthhr4hISg@matsya>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -63,68 +64,62 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240412154208.881836-2-Frank.Li@nxp.com>
+In-Reply-To: <ZhJVgDVthhr4hISg@matsya>
 
-On Fri, Apr 12, 2024 at 11:42:08AM -0400, Frank Li wrote:
-> Allow 'power-domains' property because i.MX8DXL i.MX8QM and i.MX8QXP need
-> it. EDMA supports each power-domain for each dma channel. So minItems and
-> maxItems align 'dma-channels'.
-> 
-> Change fsl,imx93-edma3 example to fsl,imx8qm-edma to reflect this variants.
-> 
-> Fixed below DTB_CHECK warning:
->   dma-controller@599f0000: Unevaluated properties are not allowed ('power-domains' was unexpected)
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
-> 
-> Notes:
->     Change from v3 to v4
->     - Remove 'contains' change should be belong to first patch when rebase.
->     
->     make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j8  dt_binding_check DT_SCHEMA_FILES=fsl,edma.yaml
->       LINT    Documentation/devicetree/bindings
->       DTEX    Documentation/devicetree/bindings/dma/fsl,edma.example.dts
->       CHKDT   Documentation/devicetree/bindings/processed-schema.json
->       SCHEMA  Documentation/devicetree/bindings/processed-schema.json
->       DTC_CHK Documentation/devicetree/bindings/dma/fsl,edma.example.dtb
->     
->     After this patch no warning for imx8dxl-evk.dtb.
->     
->     touch arch/arm64/boot/dts/freescale/imx8dxl.dtsi
->     make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j8  CHECK_DTBS=y freescale/imx8dxl-evk.dtb
->       DTC_CHK arch/arm64/boot/dts/freescale/imx8dxl-evk.dtb
->     
->     Change from v2 to v3
->     - set 'power-domains' false for other compatitble string
->     - change imx93 example to 8qm example to affect this change according to
->     Krzysztof Kozlowski's suggestion, choose least channel number edma
->     instance to reduce code copy. max channel number is 64.
->     
->     - Rebase to latest dmaengine/next, fixes conflicts.
->     
->     Change from v1 to v2
->     - using maxitem: 64. Each channel have one power domain. Max 64 dmachannel.
->     - add power-domains to 'required' when compatible string is fsl,imx8qm-adma
->         or fsl,imx8qm-edma
-> 
->  .../devicetree/bindings/dma/fsl,edma.yaml     | 77 ++++++++++---------
->  1 file changed, 39 insertions(+), 38 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/fsl,edma.yaml b/Documentation/devicetree/bindings/dma/fsl,edma.yaml
-> index fb5fbe4b9f9d4..012522612dc96 100644
-> --- a/Documentation/devicetree/bindings/dma/fsl,edma.yaml
-> +++ b/Documentation/devicetree/bindings/dma/fsl,edma.yaml
-> @@ -71,6 +71,10 @@ properties:
->      minItems: 1
->      maxItems: 33
->  
-> +  power-domains:
-> +    minItems: 1
-> +    maxItems: 64
+Hi Vinod, Mukesh,
 
-Please state here that number of power-domains are equal to number of 
-channels and in ascending order.
+On Sun, Apr 07, 2024 at 01:42:48PM +0530, Vinod Koul wrote:
+> On 02-04-24, 18:44, Andi Shyti wrote:
+> > On Fri, Mar 29, 2024 at 10:15:24PM +0530, Vinod Koul wrote:
+> > > On 28-03-24, 08:36, Andi Shyti wrote:
+> > > > On Wed, 13 Mar 2024 10:56:39 +0530, Mukesh Kumar Savaliya wrote:
+> > > > > I2C driver currently reports "DMA txn failed" error even though it's
+> > > > > NACK OR BUS_PROTO OR ARB_LOST. Detect NACK error when no device ACKs
+> > > > > on the bus instead of generic transfer failure which doesn't give any
+> > > > > specific clue.
+> > > > > 
+> > > > > Make Changes inside i2c driver callback handler function
+> > > > > i2c_gpi_cb_result() to parse these errors and make sure GSI driver
+> > > > > stores the error status during error interrupt.
+> > > > > 
+> > > > > [...]
+> > > > 
+> > > > Applied to i2c/i2c-host-next on
+> > > > 
+> > > > git://git.kernel.org/pub/scm/linux/kernel/git/local tree
+> > > 
+> > > You applied changes to dmaengine driver without my ack! I dont agree to
+> > > the approach here, we could do better
+> > 
+> > this must be an error from b4 ty. The changes have been added to
+> > 
+> > pub/scm/linux/kernel/git/andi.shyti/linux.git
+> > 
+> > branch i2c/i2c-host, As it has been agreed from very long.
+> > 
+> > Anyway, the changes are in -next. What do we do now? Do I revert
+> > it? Mukesh, can you please agree with Vinod?
+> 
+> I dont apply patches to other subsystem without the ack. Either way you
+> can ask always! 
 
-Rob
+Yes, you are totally right; but please, keep in mind that this
+patch has some history and I would have loved to hear from you
+earlier. Anyway...
+
+> I will leave it upto you...
+
+... Mukesh, I'm sorry, but I'm going to revert this patch again
+until we address all the last minute issues from Vinod. The
+silence on this thread is worrying me more than reverting it.
+
+I hope this will be the last time I revert this patch.
+
+Moreover, in order to avoid maintainers' rumble (:)), please
+let's try to split patches that are touching more than one
+subsystems keeping the logical meainings intact.
+
+I hope this is fine with you, Vinod.
+
+Andi
 

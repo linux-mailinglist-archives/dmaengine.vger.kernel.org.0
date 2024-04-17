@@ -1,55 +1,82 @@
-Return-Path: <dmaengine+bounces-1871-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1872-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E65A68A8A1A
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Apr 2024 19:21:18 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 666AB8A8A29
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Apr 2024 19:28:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A0BA0285310
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Apr 2024 17:21:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 89AFA1C21BF9
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Apr 2024 17:28:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23208171673;
-	Wed, 17 Apr 2024 17:21:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A91BC171678;
+	Wed, 17 Apr 2024 17:28:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WpNWKtuV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q8J8Oi/J"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF6A916FF52;
-	Wed, 17 Apr 2024 17:21:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1CE316FF52;
+	Wed, 17 Apr 2024 17:28:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713374474; cv=none; b=VTnwNKxS0n0vUXbcGkB7W/9pWnMSsixT5svDwKWN1kstLUb1XnQ2KQNLBcEbEuAYP4z9uPwfVwCLXl7/j54c7M16WWEpj58zKvJIeiSEPBrKh8k1UnB1WmJObpnaUKBiPmkgrmtzJyAHa9EQz/AtlacD84S/vLEnyVCyz0zZngs=
+	t=1713374894; cv=none; b=o3f9m1ffl8gCMWmk+towI83xRoEBdQQKWIQArW0HsscNp1w2vhDhXo6IrjY4n6ocW09O0frS3taE4RPZ7A7lmgNtIc6vPAIUmrEJFN6Use1MnIZvYrR9Qn3tFn/2ZtuSMk0EEhdWa4Cfmx7T2Yo8Xndg3HGBTGTqx+k2aN0ETgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713374474; c=relaxed/simple;
-	bh=EgzLCuU8JOpiayA2khQEnnc6hPtWqr4k8f9F4Un16Dg=;
+	s=arc-20240116; t=1713374894; c=relaxed/simple;
+	bh=oPZxgfSsc9EeEBm+XEY2LfevwwdvWe2DRuzWIBF6D/4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r8Uaxg7BTCHooEwG6fglFC8bV0Ktqev/gsjWMXQGs5AylEygjD1gVZjb9jIIyjcnNoAeGPFTXsYq1IpOpodvmqJl+95LlfkwU0Os9VeG6k2bvt3jqZ708tVbs1bFRYMHKM7U/PMHRZX8V/mXhtrlBpuMz5csNa0OoGSbDTsqjRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WpNWKtuV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5596C072AA;
-	Wed, 17 Apr 2024 17:21:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713374473;
-	bh=EgzLCuU8JOpiayA2khQEnnc6hPtWqr4k8f9F4Un16Dg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WpNWKtuVdwHF8XFhFOhpHUv2ToXW1LSlqoX9UXyvKHG/A+BwVmOB/qd6wAfs7kVrG
-	 6j/aj2NqcnWAryWaGWOwVrQGNvFrAOEX6QALjanyWxUphqMGHVjzsTeNS6yliPMqf1
-	 WGoR68eM5bcZ+lEjvoAd/FIi33lYDvVArh8yivzlwZA43FJ0pJxN4VTji0+MEW1CRr
-	 Pp6YhrEFvkTe9fKyYSQKAbF5qkBulnkaz1oH1aH1Pg+2Oft7tZHkUErmmI6qBI/gXl
-	 vPguQ+DlZd8cFLVGrR7iQ8z0WZuxKkKbhGh9A6RyLaFekBeoL7Gdu1ufuoNp95M3V2
-	 visNhMIQAAYbw==
-Date: Wed, 17 Apr 2024 22:51:09 +0530
-From: Vinod Koul <vkoul@kernel.org>
-To: Michael Grzeschik <m.grzeschik@pengutronix.de>
-Cc: Michal Simek <michal.simek@amd.com>, dmaengine@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: zynqmp_dma: rework tasklet to threaded
- interrupt handler
-Message-ID: <ZiAFBaZLbQ8yj-dn@matsya>
-References: <20240226-zynqmp-dma-tasklet-irqthread-v1-1-2d154d6238fd@pengutronix.de>
+	 Content-Type:Content-Disposition:In-Reply-To; b=F+sGHkyx5ezi8V8zkCACu1n5wqyIKXtyjnGwtH8kUZMgq6fmOYcajfwSqA4ZEMfBTZ2CO+mvDyaIhiDKCM2nk8P8QZerhkbEuTfujllFIA8JF6Hqbw+nOCCJri/ydg5P7xG8hexi4S25Q/PKhrFBtAu0P5YbAXGv+2Lo6YYHQmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q8J8Oi/J; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713374893; x=1744910893;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=oPZxgfSsc9EeEBm+XEY2LfevwwdvWe2DRuzWIBF6D/4=;
+  b=Q8J8Oi/JHRZaV0QUZkeJ+05jpijUVgafaCl9Sz4QIvLmKyOg+spKVHVU
+   rojWaWvqvxN3X+270cEFNgEv7L8HVjFrQhQhu8V3O4inu/XVyFvtQTPPz
+   VyWbWf8GLSmMVWOBdRgmt8AkRViC+KY8RZ701X5At62Ct8O2vL9nO5nnG
+   mqzco1s905UAae/9Yx+OBsMgDeNPPARWUmGkNg7Vkjhshi8zZhS4neSK8
+   PTc//kJuEFBAfncXU2K/IuJ4ccQYezU7olmOOXVoxZtilzvz5uoawCKij
+   /8LjE9gCKUyMfFkUhKu7bFOAlEJTba0A8j+x8fiYu339pdcHCbvy4/Ynj
+   Q==;
+X-CSE-ConnectionGUID: a/pIwFouRnaUwOU3N9zbng==
+X-CSE-MsgGUID: FFUlY6zdQZeawYQcvGOjpg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="20031496"
+X-IronPort-AV: E=Sophos;i="6.07,209,1708416000"; 
+   d="scan'208";a="20031496"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 10:28:12 -0700
+X-CSE-ConnectionGUID: 7/REKtTHTn6s6/OznTIrdg==
+X-CSE-MsgGUID: RtWcpmSuSxWhnv+3UDAuKA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,209,1708416000"; 
+   d="scan'208";a="27329719"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 10:28:09 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rx94p-000000006zn-0RXK;
+	Wed, 17 Apr 2024 20:28:07 +0300
+Date: Wed, 17 Apr 2024 20:28:06 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Serge Semin <fancer.lancer@gmail.com>
+Cc: Viresh Kumar <vireshk@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>, dmaengine@vger.kernel.org,
+	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 2/4] dmaengine: dw: Add memory bus width verification
+Message-ID: <ZiAGpsldQMB-dKkn@smile.fi.intel.com>
+References: <20240416162908.24180-1-fancer.lancer@gmail.com>
+ <20240416162908.24180-3-fancer.lancer@gmail.com>
+ <Zh7Hpuo-TzSmlz69@smile.fi.intel.com>
+ <lzipslbrr4fkpqc3plfllltls2sy2mrlentp7clpjoppvgscoi@zlmysqym2kyb>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -58,163 +85,199 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240226-zynqmp-dma-tasklet-irqthread-v1-1-2d154d6238fd@pengutronix.de>
+In-Reply-To: <lzipslbrr4fkpqc3plfllltls2sy2mrlentp7clpjoppvgscoi@zlmysqym2kyb>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 26-02-24, 23:17, Michael Grzeschik wrote:
-> Since the tasklets are being scheduled with low priority the actual work
-> will be delayed for unseen time. Also this is a driver that probably
-> other drivers depend on its work to be done early. So we move the
-> actual work from an tasklet to an threaded interrupt handler and
-> therefor increase the priority for the scheduler.
+On Wed, Apr 17, 2024 at 08:13:59PM +0300, Serge Semin wrote:
+> On Tue, Apr 16, 2024 at 09:47:02PM +0300, Andy Shevchenko wrote:
+> > On Tue, Apr 16, 2024 at 07:28:56PM +0300, Serge Semin wrote:
+> > > Currently in case of the DEV_TO_MEM or MEM_TO_DEV DMA transfers the memory
+> > > data width (single transfer width) is determined based on the buffer
+> > > length, buffer base address or DMA master-channel max address width
+> > > capability. It isn't enough in case of the channel disabling prior the
+> > > block transfer is finished. Here is what DW AHB DMA IP-core databook says
+> > > regarding the port suspension (DMA-transfer pause) implementation in the
+> > > controller:
+> > > 
+> > > "When CTLx.SRC_TR_WIDTH < CTLx.DST_TR_WIDTH and the CFGx.CH_SUSP bit is
+> > > high, the CFGx.FIFO_EMPTY is asserted once the contents of the FIFO do not
+> > > permit a single word of CTLx.DST_TR_WIDTH to be formed. However, there may
+> > > still be data in the channel FIFO, but not enough to form a single
+> > > transfer of CTLx.DST_TR_WIDTH. In this scenario, once the channel is
+> > > disabled, the remaining data in the channel FIFO is not transferred to the
+> > > destination peripheral."
+> > > 
+> > > So in case if the port gets to be suspended and then disabled it's
+> > > possible to have the data silently discarded even though the controller
+> > > reported that FIFO is empty and the CTLx.BLOCK_TS indicated the dropped
+> > > data already received from the source device. This looks as if the data
+> > > somehow got lost on a way from the peripheral device to memory and causes
+> > > problems for instance in the DW APB UART driver, which pauses and disables
+> > > the DMA-transfer as soon as the recv data timeout happens. Here is the way
+> > > it looks:
+> > > 
+> > >  Memory <------- DMA FIFO <------ UART FIFO <---------------- UART
+> > >   DST_TR_WIDTH -+--------|       |         |
+> > >                 |        |       |         |                No more data
+> > >    Current lvl -+--------|       |---------+- DMA-burst lvl
+> > >                 |        |       |---------+- Leftover data
+> > >                 |        |       |---------+- SRC_TR_WIDTH
+> > >                -+--------+-------+---------+
+> > > 
+> > > In the example above: no more data is getting received over the UART port
+> > > and BLOCK_TS is not even close to be fully received; some data is left in
+> > > the UART FIFO, but not enough to perform a bursted DMA-xfer to the DMA
+> > > FIFO; some data is left in the DMA FIFO, but not enough to be passed
+> > > further to the system memory in a single transfer. In this situation the
+> > > 8250 UART driver catches the recv timeout interrupt, pauses the
+> > > DMA-transfer and terminates it completely, after which the IRQ handler
+> > > manually fetches the leftover data from the UART FIFO into the
+> > > recv-buffer. But since the DMA-channel has been disabled with the data
+> > > left in the DMA FIFO, that data will be just discarded and the recv-buffer
+> > > will have a gap of the "current lvl" size in the recv-buffer at the tail
+> > > of the lately received data portion. So the data will be lost just due to
+> > > the misconfigured DMA transfer.
+> > > 
+> > > Note this is only relevant for the case of the transfer suspension and
+> > > _disabling_. No problem will happen if the transfer will be re-enabled
+> > > afterwards or the block transfer is fully completed. In the later case the
+> > > "FIFO flush mode" will be executed at the transfer final stage in order to
+> > > push out the data left in the DMA FIFO.
+> > > 
+> > > In order to fix the denoted problem the DW AHB DMA-engine driver needs to
+> > > make sure that the _bursted_ source transfer width is greater or equal to
+> > > the single destination transfer (note the HW databook describes more
+> > > strict constraint than actually required). Since the peripheral-device
+> > > side is prescribed by the client driver logic, the memory-side can be only
+> > > used for that. The solution can be easily implemented for the DEV_TO_MEM
+> > > transfers just by adjusting the memory-channel address width. Sadly it's
+> > > not that easy for the MEM_TO_DEV transfers since the mem-to-dma burst size
+> > > is normally dynamically determined by the controller. So the only thing
+> > > that can be done is to make sure that memory-side address width can be
+> > > greater than the peripheral device address width.
 
-The tasklet have higer priority than threaded handler! So this should
-worsen the performance.
+...
 
-Btw there is work to move away from tasklet by Allen, so this is no
-longer valid now
+> > > +static int dwc_verify_m_buswidth(struct dma_chan *chan)
+> > > +{
+> > > +	struct dw_dma_chan *dwc = to_dw_dma_chan(chan);
+> > > +	struct dw_dma *dw = to_dw_dma(chan->device);
+> > > +	u32 reg_width, reg_burst, mem_width;
+> > > +
+> > > +	mem_width = dw->pdata->data_width[dwc->dws.m_master];
+> > > +
+> > > +	/* Make sure src and dst word widths are coherent */
+> > > +	if (dwc->dma_sconfig.direction == DMA_MEM_TO_DEV) {
+> > > +		reg_width = dwc->dma_sconfig.dst_addr_width;
+> > > +		if (mem_width < reg_width)
+> > > +			return -EINVAL;
+> > > +
+> > > +		dwc->dma_sconfig.src_addr_width = mem_width;
+> > > +	} else if (dwc->dma_sconfig.direction == DMA_DEV_TO_MEM) {
+> > > +		reg_width = dwc->dma_sconfig.src_addr_width;
+> > > +		reg_burst = rounddown_pow_of_two(dwc->dma_sconfig.src_maxburst);
+> > > +
+> > > +		dwc->dma_sconfig.dst_addr_width = min(mem_width, reg_width * reg_burst);
+> > 
+> 
+> > I understand the desire to go this way, but wouldn't be better to have
+> > a symmetrical check and return an error?
+> 
+> Sadly the situation isn't symmetrical.
+> 
+> The main idea of the solution proposed in this patch is to make sure
+> that the DMA transactions would fill in the DMA FIFO in a way so in
+> case of the suspension all the data would be delivered to the
+> destination with nothing left in the DMA FIFO and the CFGx.FIFO_EMPTY
+> flag would mean the real FIFO emptiness. It can be reached only if
+> (CTLx.SRC_TR_WIDTH * CTLx.SRC_MSIZE) >= CTLx.DST_TR_WIDTH
+> (calculated in the real values of course). But CTLx.SRC_MSIZE is only
+> relevant for the flow-control/non-memory peripherals. Thus the
 
+Oh, if it involves flow control, shouldn't you check for that as well?
+We have a (PPC? IIRC) hardware with this IP that can have peripheral
+as flow control.
+
+> conditions under which the problem can be avoided are:
 > 
-> Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
-> ---
->  drivers/dma/xilinx/zynqmp_dma.c | 36 +++++++++++-------------------------
->  1 file changed, 11 insertions(+), 25 deletions(-)
+> DMA_MEM_TO_DEV: CTLx.SRC_TR_WIDTH >= CTLx.DST_TR_WIDTH
+> DMA_DEV_TO_MEM: CTLx.SRC_TR_WIDTH * CTLx.SRC_MSIZE >= CTLx.DST_TR_WIDTH
 > 
-> diff --git a/drivers/dma/xilinx/zynqmp_dma.c b/drivers/dma/xilinx/zynqmp_dma.c
-> index f31631bef961a..09173ef6d24bc 100644
-> --- a/drivers/dma/xilinx/zynqmp_dma.c
-> +++ b/drivers/dma/xilinx/zynqmp_dma.c
-> @@ -204,7 +204,6 @@ struct zynqmp_dma_desc_sw {
->   * @dev: The dma device
->   * @irq: Channel IRQ
->   * @is_dmacoherent: Tells whether dma operations are coherent or not
-> - * @tasklet: Cleanup work after irq
->   * @idle : Channel status;
->   * @desc_size: Size of the low level descriptor
->   * @err: Channel has errors
-> @@ -228,7 +227,6 @@ struct zynqmp_dma_chan {
->  	struct device *dev;
->  	int irq;
->  	bool is_dmacoherent;
-> -	struct tasklet_struct tasklet;
->  	bool idle;
->  	size_t desc_size;
->  	bool err;
-> @@ -724,8 +722,7 @@ static irqreturn_t zynqmp_dma_irq_handler(int irq, void *data)
->  
->  	writel(isr, chan->regs + ZYNQMP_DMA_ISR);
->  	if (status & ZYNQMP_DMA_INT_DONE) {
-> -		tasklet_schedule(&chan->tasklet);
-> -		ret = IRQ_HANDLED;
-> +		ret = IRQ_WAKE_THREAD;
->  	}
->  
->  	if (status & ZYNQMP_DMA_DONE)
-> @@ -733,9 +730,8 @@ static irqreturn_t zynqmp_dma_irq_handler(int irq, void *data)
->  
->  	if (status & ZYNQMP_DMA_INT_ERR) {
->  		chan->err = true;
-> -		tasklet_schedule(&chan->tasklet);
->  		dev_err(chan->dev, "Channel %p has errors\n", chan);
-> -		ret = IRQ_HANDLED;
-> +		ret = IRQ_WAKE_THREAD;
->  	}
->  
->  	if (status & ZYNQMP_DMA_INT_OVRFL) {
-> @@ -748,19 +744,20 @@ static irqreturn_t zynqmp_dma_irq_handler(int irq, void *data)
->  }
->  
->  /**
-> - * zynqmp_dma_do_tasklet - Schedule completion tasklet
-> + * zynqmp_dma_irq_thread - Interrupt thread function
->   * @t: Pointer to the ZynqMP DMA channel structure
->   */
-> -static void zynqmp_dma_do_tasklet(struct tasklet_struct *t)
-> +static irqreturn_t zynqmp_dma_irq_thread(int irq, void *data)
->  {
-> -	struct zynqmp_dma_chan *chan = from_tasklet(chan, t, tasklet);
-> +	struct zynqmp_dma_chan *chan = (struct zynqmp_dma_chan *)data;
->  	u32 count;
->  	unsigned long irqflags;
->  
->  	if (chan->err) {
->  		zynqmp_dma_reset(chan);
->  		chan->err = false;
-> -		return;
-> +
-> +		return IRQ_HANDLED;
->  	}
->  
->  	spin_lock_irqsave(&chan->lock, irqflags);
-> @@ -778,6 +775,8 @@ static void zynqmp_dma_do_tasklet(struct tasklet_struct *t)
->  		zynqmp_dma_start_transfer(chan);
->  		spin_unlock_irqrestore(&chan->lock, irqflags);
->  	}
-> +
-> +	return IRQ_HANDLED;
->  }
->  
->  /**
-> @@ -796,17 +795,6 @@ static int zynqmp_dma_device_terminate_all(struct dma_chan *dchan)
->  	return 0;
->  }
->  
-> -/**
-> - * zynqmp_dma_synchronize - Synchronizes the termination of a transfers to the current context.
-> - * @dchan: DMA channel pointer
-> - */
-> -static void zynqmp_dma_synchronize(struct dma_chan *dchan)
-> -{
-> -	struct zynqmp_dma_chan *chan = to_chan(dchan);
-> -
-> -	tasklet_kill(&chan->tasklet);
-> -}
-> -
->  /**
->   * zynqmp_dma_prep_memcpy - prepare descriptors for memcpy transaction
->   * @dchan: DMA channel
-> @@ -876,7 +864,6 @@ static void zynqmp_dma_chan_remove(struct zynqmp_dma_chan *chan)
->  
->  	if (chan->irq)
->  		devm_free_irq(chan->zdev->dev, chan->irq, chan);
-> -	tasklet_kill(&chan->tasklet);
->  	list_del(&chan->common.device_node);
->  }
->  
-> @@ -921,7 +908,6 @@ static int zynqmp_dma_chan_probe(struct zynqmp_dma_device *zdev,
->  
->  	chan->is_dmacoherent =  of_property_read_bool(node, "dma-coherent");
->  	zdev->chan = chan;
-> -	tasklet_setup(&chan->tasklet, zynqmp_dma_do_tasklet);
->  	spin_lock_init(&chan->lock);
->  	INIT_LIST_HEAD(&chan->active_list);
->  	INIT_LIST_HEAD(&chan->pending_list);
-> @@ -936,7 +922,8 @@ static int zynqmp_dma_chan_probe(struct zynqmp_dma_device *zdev,
->  	chan->irq = platform_get_irq(pdev, 0);
->  	if (chan->irq < 0)
->  		return -ENXIO;
-> -	err = devm_request_irq(&pdev->dev, chan->irq, zynqmp_dma_irq_handler, 0,
-> +	err = devm_request_threaded_irq(&pdev->dev, chan->irq,
-> +			       zynqmp_dma_irq_handler, zynqmp_dma_irq_thread, 0,
->  			       "zynqmp-dma", chan);
->  	if (err)
->  		return err;
-> @@ -1071,7 +1058,6 @@ static int zynqmp_dma_probe(struct platform_device *pdev)
->  	p = &zdev->common;
->  	p->device_prep_dma_memcpy = zynqmp_dma_prep_memcpy;
->  	p->device_terminate_all = zynqmp_dma_device_terminate_all;
-> -	p->device_synchronize = zynqmp_dma_synchronize;
->  	p->device_issue_pending = zynqmp_dma_issue_pending;
->  	p->device_alloc_chan_resources = zynqmp_dma_alloc_chan_resources;
->  	p->device_free_chan_resources = zynqmp_dma_free_chan_resources;
+> In both cases the non-memory peripheral side parameters (DEV-side)
+> can't be changed because they are selected by the client drivers based
+> on their specific logic (Device FIFO depth, watermarks, CSR widths,
+> etc). But we can vary the memory-side transfer width as long as it's
+> within the permitted limits.
 > 
-> ---
-> base-commit: d206a76d7d2726f3b096037f2079ce0bd3ba329b
-> change-id: 20240226-zynqmp-dma-tasklet-irqthread-1540cfe2a1c2
+> In case of the DMA_MEM_TO_DEV transfers we can change the
+> CTLx.SRC_TR_WIDTH because it represents the memory side transfer
+> width. But if the maximum memory transfer width is smaller than the
+> specified destination register width, there is nothing we can do. Thus
+> returning the EINVAL error. Note this is mainly a hypothetical
+> situation since normally the max width of the memory master xfers is
+> greater than the peripheral master xfer max width (in my case it's 128
+> and 32 bits respectively).
 > 
-> Best regards,
-> -- 
-> Michael Grzeschik <m.grzeschik@pengutronix.de>
+> In case of the DMA_DEV_TO_MEM transfers we can change the CTLx.DST_TR_WIDTH
+> parameter because it's the memory side. Thus if the maximum
+> memory transfer width is smaller than the bursted source transfer,
+> then we can stick to the maximum memory transfer width. But if it's
+> greater than the bursted source transfer, we can freely reduce it
+> so to support the safe suspension+disable DMA-usage pattern.
+> 
+> > 
+> > > +	}
+> > > +
+> > > +	return 0;
+> > > +}
+> > 
+> 
+> > IIRC MEM side of the DMA channel will ignore those in HW, so basically you are
+> > (re-)using them purely for the __ffs() corrections.
+> 
+> No. DMAC ignores the _burst length_ parameters CTLx.SRC_MSIZE and
+> CTLx.DEST_MSIZE for the memory side (also see my comment above):
+> 
+> "The CTLx.SRC_MSIZE and CTLx.DEST_MSIZE are properties valid only for
+> peripherals with a handshaking interface; they cannot be used for
+> defining the burst length for memory peripherals.
+> 
+> When the peripherals are memory, the DW_ahb_dmac is always the flow
+> controller and uses DMA transfers to move blocks; thus the
+> CTLx.SRC_MSIZE and CTLx.DEST_MSIZE values are not used for memory
+> peripherals. The SRC_MSIZE/DEST_MSIZE limitations are used to
+> accommodate devices that have limited resources, such as a FIFO.
+> Memory does not normally have limitations similar to the FIFOs."
+> 
+> In my case the problem is in the CTLx.SRC_TR_WIDTH and
+> CTLx.DST_TR_WIDTH values misconfiguration. Here is the crucial comment
+> in the HW-manual about that (cited in the commit messages):
+> 
+> "When CTLx.SRC_TR_WIDTH < CTLx.DST_TR_WIDTH and the CFGx.CH_SUSP bit is
+> high, the CFGx.FIFO_EMPTY is asserted once the contents of the FIFO do not
+> permit a single word of CTLx.DST_TR_WIDTH to be formed. However, there may
+> still be data in the channel FIFO, but not enough to form a single
+> transfer of CTLx.DST_TR_WIDTH. In this scenario, once the channel is
+> disabled, the remaining data in the channel FIFO is not transferred to the
+> destination peripheral."
+> 
+> See Chapter 7.7 "Disabling a Channel Prior to Transfer Completion" of
+> the DW DMAC HW manual for more details.
+
+Got it. Maybe a little summary in the code to explain all this magic?
+
+...
+
+> > >  	dwc->dma_sconfig.src_maxburst =
+> > > -		clamp(dwc->dma_sconfig.src_maxburst, 0U, dwc->max_burst);
+> > > +		clamp(dwc->dma_sconfig.src_maxburst, 1U, dwc->max_burst);
+> > >  	dwc->dma_sconfig.dst_maxburst =
+> > > -		clamp(dwc->dma_sconfig.dst_maxburst, 0U, dwc->max_burst);
+> > > +		clamp(dwc->dma_sconfig.dst_maxburst, 1U, dwc->max_burst);
 
 -- 
-~Vinod
+With Best Regards,
+Andy Shevchenko
+
+
 

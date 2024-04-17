@@ -1,177 +1,199 @@
-Return-Path: <dmaengine+bounces-1858-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1859-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D47308A7B08
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Apr 2024 05:19:34 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C5CB68A84A3
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Apr 2024 15:30:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8EF8C2850C0
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Apr 2024 03:19:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E91F61C21425
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Apr 2024 13:30:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07E178BF3;
-	Wed, 17 Apr 2024 03:19:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1610A13F00A;
+	Wed, 17 Apr 2024 13:29:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="d6uhlPSi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qBeEsJnv"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2088.outbound.protection.outlook.com [40.107.6.88])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CB3B79FE;
-	Wed, 17 Apr 2024 03:19:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.88
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713323947; cv=fail; b=qqVvhncedblWwWVNjTM9YsU7kROue1pebVI5dB/tmk7cur4KRBkT+chjzNALRSrPCYn3ik1yA0qCBCPFPy2vbtqkBAua4JvoC3/4C4WNEaW9EV7VklI9Haq+Cn2lmcN2ijBu0oZ0Lv576jR1Kui/U4l2+AUVAKlobtcuEbkoTao=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713323947; c=relaxed/simple;
-	bh=X8I0NVkB5cPgM+ewO79bZ6bG1vv+v2RmfcQqyLHUJ+U=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hutbQgDWG6bngsnSaZa3ogr+EzLKljyxg3zReodj/owAYQ0V1JM1fNDzTqUzCeIr/Zjf+veEXEJjbdiqOcl+phGkBlYt4IsdugUN8jENLx6R4cu0DJznCZQfBZjr/DdOW/UzFLN2zaK+ZNVnw5nUoNVgoEaF0CW9sXyyQaKiBus=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=d6uhlPSi; arc=fail smtp.client-ip=40.107.6.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nbZueDS+rhYdJ83SWz9vQTqv7EOe94ogmQ48xPincR8DpDwX69BTCr1GBuA/YODV2d96/5C6CKcEbbrsedUSFo47roFBc6w2nMcCn7tpWBoUGyQ57O7qM5KGoMLeruyzAKW5F7SSWtoHZKfZ598Q9q7bpu9zZM4SkhVQfCBVOyocvNgkXWZgWyISVcwkBQiv2qs4qUSap+seEx2XC6usTYCIX0m4HoqWnckOjtvPYQqzQFsBTLxixFg1gNfIesr+U0hUr72P1cwK32sq93PKhDWYPbKTFRYtcp4eunDPJq2LXDHJcKqYfrBpwIBxnRL6Dxu/ZzAgAKbK4a+c73u/BA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JJ/A2kIA4eK09P3pYu6HqE7psf4Y4ahFHkWHIjim5VA=;
- b=UyRLbYDL5WV0nd0I34KWy8jBBooHlwN6xMDm5/iKKVPstaRTgoijA7QClOwC+FrmqB2hcngtRo6UmRPHXDxwfzrrMWzDQws4UeCgsEya60qCkBdyJsTfvHrWwvWgVj4Y3xduEQzu2U97uIcIz6jH8JheQIHBFQDzWmJr3Qz9kOEmTajTCKanRGSR1aG5yc8o4ov9VuIb7LgGIW64XDG5sNMoDKRjeVAoccKazQa9CXw3ayvpqgSUkNe3mROWAgjoD9r9w6DHGzVkTqS7u6BC3P/WrzqfG84LXfWcX5GV4a4BHCLOwQe4hqgyZLWM6SwaBPrrk4FZx5TtGadfzaM8rA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JJ/A2kIA4eK09P3pYu6HqE7psf4Y4ahFHkWHIjim5VA=;
- b=d6uhlPSiaGRLJya5y8NBl3hsDGspMm3RB3eDO3n97zXpzJEXh2DP0Kktbhq/fjJNzyZr5DOc1ks+/W4nK3VlKgFC+PRpE35FPfVhyQOMNV1JC8FGO/I3vhuSgDyngl/seBvIoNbmIep3TwmnFfWUtWUDpdwQ3OMHuceTSxaizL8=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AS4PR04MB9386.eurprd04.prod.outlook.com (2603:10a6:20b:4e9::8)
- by DB9PR04MB9305.eurprd04.prod.outlook.com (2603:10a6:10:36f::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.43; Wed, 17 Apr
- 2024 03:19:01 +0000
-Received: from AS4PR04MB9386.eurprd04.prod.outlook.com
- ([fe80::4f24:3f44:d5b1:70ba]) by AS4PR04MB9386.eurprd04.prod.outlook.com
- ([fe80::4f24:3f44:d5b1:70ba%7]) with mapi id 15.20.7452.049; Wed, 17 Apr 2024
- 03:19:01 +0000
-From: Joy Zou <joy.zou@nxp.com>
-To: frank.li@nxp.com,
-	peng.fan@nxp.com,
-	vkoul@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org
-Cc: imx@lists.linux.dev,
-	dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: [PATCH v4 2/2] dt-bindings: fsl-dma: fsl-edma: clean up unused "fsl,imx8qm-adma" compatible string
-Date: Wed, 17 Apr 2024 11:26:42 +0800
-Message-Id: <20240417032642.3178669-3-joy.zou@nxp.com>
-X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20240417032642.3178669-1-joy.zou@nxp.com>
-References: <20240417032642.3178669-1-joy.zou@nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI2PR02CA0004.apcprd02.prod.outlook.com
- (2603:1096:4:194::14) To AS4PR04MB9386.eurprd04.prod.outlook.com
- (2603:10a6:20b:4e9::8)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 190CC13F011
+	for <dmaengine@vger.kernel.org>; Wed, 17 Apr 2024 13:29:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713360572; cv=none; b=SWtcIvpM36Zq0XKaZzbP90IUCSr9vBoL/6LrK1aP8dacN4nVTJXu6CJ6AEu9397kwYSAkmk4CZz6X9dIxUc6w7WNdOV6IfKRNKK6KCyoVC+g8xxq22DExDv2Rkuri7dnhlEHH8oK6bV2TT1qGOgzBTfHfrPzg3NopGoHp4H9xh0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713360572; c=relaxed/simple;
+	bh=TeiTLJN/5okNpELe3ZA4zy7aqgMGfMFAywMokEL2gE0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lR1P+cbU/DJoG0goLtAUVxVfnQ3rmjRWWVinmMgZR1kQrj8SkAeIwyWyGphsFaHMiumSja7oztvpN/kA5cAoDsF+TjKdB0E4VfVT0L/Dqn6oYL1xR7SEeiDi5wIuaoVT2b7o1MrsDV0R4x2QP6x5FQKo9On2K+MHi3eteV3wSWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qBeEsJnv; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6ed01c63657so4996956b3a.2
+        for <dmaengine@vger.kernel.org>; Wed, 17 Apr 2024 06:29:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713360569; x=1713965369; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=U9yUjGy+KC3uZnAtPNkhuEl1+cCKcH9uusVMRUEMaAc=;
+        b=qBeEsJnvJxT3NtRa0AFvYJ25CjQnkTbG2cSrO7i/eZ6gKhqL5O75Xs+4nEcaNtc5jq
+         rQ+cKR441g8vZo4QBK+o3sG6+jenqQNBfQioH6zB9Bpc+YBPPt778oSgEKbly7XfZ23B
+         htrRLeUlUOi2iHrY2OitTROaopRrMGb/4sY5toMw3vkVYlNo+OP08ZdwiDbgyPBqUcD3
+         j4q4mY8caAa9LWfhruY5HMP+NPWmQ//+p2lMGgUYEoVize2LkvhwpnHBEWSdvex/Bxif
+         17zyi/WYrKQiWB4Tmh60oeBwxQsGK39VjZg5bSWDn4/w4cxA/YIHHMpccJb/ghcsPH1M
+         /xSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713360569; x=1713965369;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=U9yUjGy+KC3uZnAtPNkhuEl1+cCKcH9uusVMRUEMaAc=;
+        b=vrVk2dBCCq+ZhTeCzcFa3YaRz0wMkopz821wrsy5Km3pGk3ZGR11S19ATrtiHuoeGq
+         DIPFLM3qvXzp8oXY7SxtK18welBbSpH0mjxtMNJm7oODZtRMdJAHLnR+CQNndSTVjHR1
+         3CU53MQQQxiN0rdY7aAZEcvf/uUTqjqtjrgi5YMu2xGxVGDbCWypIGhW0X1fqT6G2gTq
+         QEyIgy+/wQ52ssMQVhFbcdzGOFWWWvAh8R3DrOpApV2vVftWEyYZUiW0LDzJrPihGriZ
+         0H/+7UTUvfk72roQRmm0WddoDhEhEBLq2IMD/OtkdjFkv2CEpTcaOYlZ9r2QoJcWtaIR
+         UKrg==
+X-Forwarded-Encrypted: i=1; AJvYcCXdT2ip7rNH4o4Ws3OA14x0k87yBd2i2e7BM+LNcVNAz6SDQ5HpVyqJKQcaF3Q4AKPUaRDyWRo8H5zFKkmZK0rkRit5clTJUcfy
+X-Gm-Message-State: AOJu0Yy3/j5OmdiatABhrtogjaWspFk+bC20nNN7Svg3Ij57j48swfSz
+	Ujic0WtM6n8TJUY6RY5ahA2yoo6zxzV6Wwq/NjyZov2EXmxzudt7fRjoM5KpUF4=
+X-Google-Smtp-Source: AGHT+IE6xQl1EcEphFdHM0huRf7JkAbzMW3ss8W6b4OgepYU2e+X7pEgHJyT8hN5oSrVdMtbpms3UA==
+X-Received: by 2002:a05:6a20:3cab:b0:1a9:97fb:40cc with SMTP id b43-20020a056a203cab00b001a997fb40ccmr16554938pzj.2.1713360569312;
+        Wed, 17 Apr 2024 06:29:29 -0700 (PDT)
+Received: from [172.20.9.36] ([209.37.221.130])
+        by smtp.gmail.com with ESMTPSA id i16-20020a17090332d000b001e2a43bafbasm11530447plr.216.2024.04.17.06.29.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Apr 2024 06:29:29 -0700 (PDT)
+Message-ID: <4e762eb1-864e-4bb5-ab5d-debeac19c8fa@linaro.org>
+Date: Wed, 17 Apr 2024 15:29:26 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS4PR04MB9386:EE_|DB9PR04MB9305:EE_
-X-MS-Office365-Filtering-Correlation-Id: f67c00fb-0087-497d-076c-08dc5e8d20e3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	/L0pJPtYUz1Xl3NucqQlvUNUXcBGdWmmd7mL/Q4DtTd83I9DeFF9t2jLoabHbSpKV+HZrDsTtRm35UNgRFYt4RmdyK8R6i/EJJcUzwy0xiLXZv1vMv3DtHDdESLx7o62LfUz3mpv7HkTbWBtBvgEbrYq7akQBwhRDGzTFpFP4ykQAITXwTSjkKDhtUTdPX8ySdSBmxCeyDrBh5nunpW+CJ2THdK1Vs8SKHFM/wt77AXc3Z8s19S/n3LVDk3jlbgtvujpwyaxE2bZZJRoh2iv8kL7B7E9JpjTdzBIASNB+tFLBx9HToluAuULBPEGS9yNzotsQOAFa8A9HbF7x/k0FAnjYvRVdsntlGFKMpK1LfMGk5/xe59yTQqI6jFygMrlLpFvYyBUtdgPWBRiECbcbZqGFDmIJPXmGLbX5uJdX4X0hDeYGObSHwQVZnxYZY1XPUNgC68g0GymgXx4CPT2SG31bJH843C2xXr7DeAEvr4EvxQ2BJFNBYYoUfhKIlslQ1cBd81q2X0d2An2QyHzrkQsvApbeXdlu3zgTF5g7mlSDxocIe126QDTBBt+vVwrdKUz8Oyb+rwZPHd6xFpHJTs5hVQEfPhjFbozi7SMR99ZjtppHk9BUmcQu00WHoky8Yrv9XX+5XvwzOyonazsnhlqKPGc8f6dnnE/lVO29nhSdquYBEyrQs8pk/7Jr1/WLygsTYnMBCCOLIxuS1ux+/l9pJ+P3XJwumIusf8eqqs=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR04MB9386.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(52116005)(366007)(1800799015)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?miwPTFFSv7wfgtL3ZzrU+iSsA8sD6R4ig/5pQdm949H+hZVWqRNi0l78CjLc?=
- =?us-ascii?Q?EMKR4VhQUVey4tWhrJWrRBg5cvitxy4kTif5NIdLBTx2vKb6Na0X5M/MqdwL?=
- =?us-ascii?Q?TarjLqmBmZa+5QiWUoBd8dSTCArQG1Zb253HIaeAh8EjKy5JERuWmdrRkmue?=
- =?us-ascii?Q?BRIIdxwdDV2eWZSUWEVQAVUrht/Xt/KR8OEa1CPC/hnNDx+ZDcLX/lMvtHXS?=
- =?us-ascii?Q?sMy+Z0xJLO5dXrseoJoJz1EhahcsuEI5Io6eCB3AlBOjJc4i3/QaMzbrB3HY?=
- =?us-ascii?Q?kDKTzIDDqRtNFUun2gKa2jyVJhy10s4Pt4p0eFVDyFKS+kIoDGeUIm8hAYSH?=
- =?us-ascii?Q?htQO93ktu7a9pCFit+EkLLYJYu1VTWya3BhKlZg81+k8YI7434eEomM/UgHP?=
- =?us-ascii?Q?QwD1b15/drSwKe3IYlIL0ZlknPegrdNEzEGGd2X10SeCexDUVyWgcN8FwuHs?=
- =?us-ascii?Q?NDGaFU8YZUkazfPGD0Ch1xYMXPE75NiNx8QcpiPkYotvPctRVGsHXHQHwSK4?=
- =?us-ascii?Q?q3Gzq22xeylo9mUtz9kKqdiLFzuIf3+wHjmW5PKj9aNxZIkTn3WvRb1au3rF?=
- =?us-ascii?Q?8WqNzW0nFPPzXp09pZdtJdI7yrXJPHT94Dc86U8i2Fo+osVIBnS38GBBSZsN?=
- =?us-ascii?Q?R0NnLRIjLksFU95krUTLbZhOA/7G5bdKC8rkE6QuajFXenseoezk9/t0He/T?=
- =?us-ascii?Q?XUM28VMypfSkSZX+4JEmrmVuJrDR2vOkiAzvoiK3feDgIqtrKsFmwri8WCrK?=
- =?us-ascii?Q?4bDPFOX4I5aqQjpGLvZowHQFQ9b4gTUNTpLJ8pTnrwEyIHf1hpAXrzomo6Xf?=
- =?us-ascii?Q?dln0fUvBG/OkJhpzwAhlQ988XHJ+V0sancmZL/ILKtVovy/mwfMLzzXKxRFj?=
- =?us-ascii?Q?95JblguCR2qmJYDu7x10xyW0DCkOK1qkIZm8fs0h5j+Vly5PUkzrsGNZz83/?=
- =?us-ascii?Q?1ZThZQNLSTV7ZvSdrjwkwbEeOGM99jSA5SzFpZ1SezNJnYu1nbvOoU23UbwN?=
- =?us-ascii?Q?Psj4i0APuPXO8YhyHMgKsWpneSQYpSbf+hEWGC6+Bn1/yJCK6W8PYTprE+AR?=
- =?us-ascii?Q?SO29Kd9ozgxBzHt1HG/47zKQl9tcvpEKXzk5iMU2ezB648I1mHz7uIJt6z5R?=
- =?us-ascii?Q?mhYlnQdq+fh1zreBF//25vGNTUkYSAfq1Qip9/+tSwcsaWUbueGga+zSzu/U?=
- =?us-ascii?Q?s6zznKNBblRkHQIcFI+pTH/VQFt7GzHkFGHTB5cbUG/xFYYQ+g2LMoFhycnE?=
- =?us-ascii?Q?Ultde1bgpxvF2/0SahHvYwolkTKCLawKZCKxwiIQfgpLmKtauOgSjngvnpn0?=
- =?us-ascii?Q?XCofbKXrS64fSGlS92AEBxhcAXzTEzFAfYqiH7hTlpM5Y0QtwTs52ieYn4dC?=
- =?us-ascii?Q?fGxyeBVWjKyG0Z/Qj3anEWFMs0Z5DdQ1ojNQpApwK2FRAyLWKeNq6GEZHgrg?=
- =?us-ascii?Q?5cKFlnxfLF0zMdJE53u2uOqEaZeqA+FdR5Xu65UtBz7+b5JyXgqajSqn1PnM?=
- =?us-ascii?Q?xnz4b4mzLOzCgfZ1ykjEddQm4uXw5brq8+M4Mc0wakVlItYAWTHr+FtzpJfc?=
- =?us-ascii?Q?blD1fAXTnZi92k6yCUfesLXsfb8xxd9Pamu1/+yl?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f67c00fb-0087-497d-076c-08dc5e8d20e3
-X-MS-Exchange-CrossTenant-AuthSource: AS4PR04MB9386.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2024 03:19:01.7712
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BHBseYmmr4Z5mfaOA60xVEvTq6Csfkx0g3OdJvguncXkNeX5QuCb6wqYG1RJYXRF
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB9305
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/19] amba: store owner from modules with
+ amba_driver_register()
+To: Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Russell King <linux@armlinux.org.uk>, Mike Leach <mike.leach@linaro.org>,
+ James Clark <james.clark@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Andi Shyti
+ <andi.shyti@kernel.org>, Olivia Mackall <olivia@selenic.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>, Vinod Koul <vkoul@kernel.org>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Michal Simek <michal.simek@amd.com>, Eric Auger <eric.auger@redhat.com>,
+ Alex Williamson <alex.williamson@redhat.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org,
+ linux-stm32@st-md-mailman.stormreply.com, linux-i2c@vger.kernel.org,
+ linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
+ linux-input@vger.kernel.org, kvm@vger.kernel.org
+References: <20240326-module-owner-amba-v1-0-4517b091385b@linaro.org>
+ <171182151736.34189.6433134738765363803.b4-ty@linaro.org>
+ <cfa5aa01-44ef-4eb1-9ca6-541ed5908db4@linaro.org>
+ <8a8a8e8b-8256-4d33-a39b-9e3cbc4ccff2@arm.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <8a8a8e8b-8256-4d33-a39b-9e3cbc4ccff2@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The eDMA hardware issue only exist imx8QM A0. A0 never mass production.
-The compatible string "fsl,imx8qm-adma" is unused. So remove the
-workaround safely.
+On 16/04/2024 12:41, Suzuki K Poulose wrote:
+> + Greg
+> 
+> 
+> Hi Krzysztof,
+> 
+> On 30/03/2024 18:00, Krzysztof Kozlowski wrote:
+>> On 30/03/2024 18:58, Krzysztof Kozlowski wrote:
+>>>
+>>> On Tue, 26 Mar 2024 21:23:30 +0100, Krzysztof Kozlowski wrote:
+>>>> Merging
+>>>> =======
+>>>> All further patches depend on the first amba patch, therefore please ack
+>>>> and this should go via one tree.
+>>>>
+>>>> Description
+>>>> ===========
+>>>> Modules registering driver with amba_driver_register() often forget to
+>>>> set .owner field.
+>>>>
+>>>> [...]
+>>>
+>>> Applied, thanks!
+>>>
+>>> [01/19] amba: store owner from modules with amba_driver_register()
+>>>          (no commit info)
+>>
+>> Patchset applied here:
+>> https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux-dt.git/log/?h=for-v6.10/module-owner-amba
+> 
+> How do you plan to push this ? Given this affects most of the drivers/, 
+> do you plan to send this to Greg ? We have changes in the coresight
+> tree that would conflict with this "tag" ( I haven't merged them yet, 
+> but is in my local queue). I want to make sure we can avoid the
+> conflicts. I am happy to merge this to my local tree and base the
+> changes on this, if this is going in for v6.10 and all are in agreement.
 
-Signed-off-by: Joy Zou <joy.zou@nxp.com>
----
-Changes for v4:
-1. adjust the subject to keep consistent with existing patches.
+I pushed it to arm-linux patches but it hasn't been picked up.
 
-Changes for v3:
-1. modify the commit message.
-2. remove the unused compatible string "fsl,imx8qm-adma" from allOf property.
----
- Documentation/devicetree/bindings/dma/fsl,edma.yaml | 2 --
- 1 file changed, 2 deletions(-)
+I propose you take entire set then.
 
-diff --git a/Documentation/devicetree/bindings/dma/fsl,edma.yaml b/Documentation/devicetree/bindings/dma/fsl,edma.yaml
-index 825f4715499e..cf97ea86a7a2 100644
---- a/Documentation/devicetree/bindings/dma/fsl,edma.yaml
-+++ b/Documentation/devicetree/bindings/dma/fsl,edma.yaml
-@@ -21,7 +21,6 @@ properties:
-       - enum:
-           - fsl,vf610-edma
-           - fsl,imx7ulp-edma
--          - fsl,imx8qm-adma
-           - fsl,imx8qm-edma
-           - fsl,imx8ulp-edma
-           - fsl,imx93-edma3
-@@ -92,7 +91,6 @@ allOf:
-         compatible:
-           contains:
-             enum:
--              - fsl,imx8qm-adma
-               - fsl,imx8qm-edma
-               - fsl,imx93-edma3
-               - fsl,imx93-edma4
--- 
-2.37.1
+Best regards,
+Krzysztof
 
 

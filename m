@@ -1,199 +1,156 @@
-Return-Path: <dmaengine+bounces-1859-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1860-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C5CB68A84A3
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Apr 2024 15:30:34 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE31C8A8547
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Apr 2024 15:51:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E91F61C21425
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Apr 2024 13:30:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1C0131C21022
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Apr 2024 13:51:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1610A13F00A;
-	Wed, 17 Apr 2024 13:29:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 921BD1411D2;
+	Wed, 17 Apr 2024 13:50:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qBeEsJnv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="fphK7jFf"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 190CC13F011
-	for <dmaengine@vger.kernel.org>; Wed, 17 Apr 2024 13:29:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9918A13E02D;
+	Wed, 17 Apr 2024 13:50:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713360572; cv=none; b=SWtcIvpM36Zq0XKaZzbP90IUCSr9vBoL/6LrK1aP8dacN4nVTJXu6CJ6AEu9397kwYSAkmk4CZz6X9dIxUc6w7WNdOV6IfKRNKK6KCyoVC+g8xxq22DExDv2Rkuri7dnhlEHH8oK6bV2TT1qGOgzBTfHfrPzg3NopGoHp4H9xh0=
+	t=1713361856; cv=none; b=jZEmiXcKqDfHtEoyvZP34At7bXAtp3t+nEYRhoLJtODCIvq4VtNzuwWoUsguJHj7WVlE31/gnTkT2sELxbuqt1pcREqwBA0P09wHOrDpNsuCQqTRGcYOiFWHBfSLnX3LmqqL89yivOTFvHiaWc/f0ICAC43bfXlviuI//OJGvfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713360572; c=relaxed/simple;
-	bh=TeiTLJN/5okNpELe3ZA4zy7aqgMGfMFAywMokEL2gE0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lR1P+cbU/DJoG0goLtAUVxVfnQ3rmjRWWVinmMgZR1kQrj8SkAeIwyWyGphsFaHMiumSja7oztvpN/kA5cAoDsF+TjKdB0E4VfVT0L/Dqn6oYL1xR7SEeiDi5wIuaoVT2b7o1MrsDV0R4x2QP6x5FQKo9On2K+MHi3eteV3wSWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qBeEsJnv; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6ed01c63657so4996956b3a.2
-        for <dmaengine@vger.kernel.org>; Wed, 17 Apr 2024 06:29:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713360569; x=1713965369; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=U9yUjGy+KC3uZnAtPNkhuEl1+cCKcH9uusVMRUEMaAc=;
-        b=qBeEsJnvJxT3NtRa0AFvYJ25CjQnkTbG2cSrO7i/eZ6gKhqL5O75Xs+4nEcaNtc5jq
-         rQ+cKR441g8vZo4QBK+o3sG6+jenqQNBfQioH6zB9Bpc+YBPPt778oSgEKbly7XfZ23B
-         htrRLeUlUOi2iHrY2OitTROaopRrMGb/4sY5toMw3vkVYlNo+OP08ZdwiDbgyPBqUcD3
-         j4q4mY8caAa9LWfhruY5HMP+NPWmQ//+p2lMGgUYEoVize2LkvhwpnHBEWSdvex/Bxif
-         17zyi/WYrKQiWB4Tmh60oeBwxQsGK39VjZg5bSWDn4/w4cxA/YIHHMpccJb/ghcsPH1M
-         /xSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713360569; x=1713965369;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=U9yUjGy+KC3uZnAtPNkhuEl1+cCKcH9uusVMRUEMaAc=;
-        b=vrVk2dBCCq+ZhTeCzcFa3YaRz0wMkopz821wrsy5Km3pGk3ZGR11S19ATrtiHuoeGq
-         DIPFLM3qvXzp8oXY7SxtK18welBbSpH0mjxtMNJm7oODZtRMdJAHLnR+CQNndSTVjHR1
-         3CU53MQQQxiN0rdY7aAZEcvf/uUTqjqtjrgi5YMu2xGxVGDbCWypIGhW0X1fqT6G2gTq
-         QEyIgy+/wQ52ssMQVhFbcdzGOFWWWvAh8R3DrOpApV2vVftWEyYZUiW0LDzJrPihGriZ
-         0H/+7UTUvfk72roQRmm0WddoDhEhEBLq2IMD/OtkdjFkv2CEpTcaOYlZ9r2QoJcWtaIR
-         UKrg==
-X-Forwarded-Encrypted: i=1; AJvYcCXdT2ip7rNH4o4Ws3OA14x0k87yBd2i2e7BM+LNcVNAz6SDQ5HpVyqJKQcaF3Q4AKPUaRDyWRo8H5zFKkmZK0rkRit5clTJUcfy
-X-Gm-Message-State: AOJu0Yy3/j5OmdiatABhrtogjaWspFk+bC20nNN7Svg3Ij57j48swfSz
-	Ujic0WtM6n8TJUY6RY5ahA2yoo6zxzV6Wwq/NjyZov2EXmxzudt7fRjoM5KpUF4=
-X-Google-Smtp-Source: AGHT+IE6xQl1EcEphFdHM0huRf7JkAbzMW3ss8W6b4OgepYU2e+X7pEgHJyT8hN5oSrVdMtbpms3UA==
-X-Received: by 2002:a05:6a20:3cab:b0:1a9:97fb:40cc with SMTP id b43-20020a056a203cab00b001a997fb40ccmr16554938pzj.2.1713360569312;
-        Wed, 17 Apr 2024 06:29:29 -0700 (PDT)
-Received: from [172.20.9.36] ([209.37.221.130])
-        by smtp.gmail.com with ESMTPSA id i16-20020a17090332d000b001e2a43bafbasm11530447plr.216.2024.04.17.06.29.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Apr 2024 06:29:29 -0700 (PDT)
-Message-ID: <4e762eb1-864e-4bb5-ab5d-debeac19c8fa@linaro.org>
-Date: Wed, 17 Apr 2024 15:29:26 +0200
+	s=arc-20240116; t=1713361856; c=relaxed/simple;
+	bh=Ct7mYtX/3didraJsnHzIV3XLyTwwaRWO8DPvNIVVRD4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IAmV8LO+GSv4nlzxPnUBF4YokMc9d0p1r0+MzuZIWx5n/f7vWF9O0KMTQTxmVnObu62f1Wjrd69tHBHUOFedsvcl2KiE+yXJMkHVi7srJwyMp6jvOgu/ezCb1rWofvaxPDuyRklDd1RZ2ua5P38hXiPm592G5nPIiszxXCe8YBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=fphK7jFf; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=UTuNyDC74aMGnpALnaMRzG0hlRkuyuTWVng3Ktfqx4k=; b=fphK7jFfOdWOFdlS8QMEUYrK21
+	zM/EuLgy7KpOwoiTXGNn3ntuLskQwCxS8ak+QSpfEngqmG5XEQcwW6xETWOMgBakoECI2fzWCEz+A
+	gDwl3kKuS189hFLPCxjyMmCQnqioD02G0m/iBEvZgpBqpIcWJVezU4u6l8/lyPa7lbtUpEMC32VpZ
+	+TbKirOE9Igb6/7A5kzeCgIZNzoXk6xtV4WhNTYyRE/NNtKMsFD4ptwd7BgL1w3UTxD0LOpj7CX9L
+	ENhVrEKvh00XSc03nP061krgyYLpdih4+rK392zB/cTj7b1hLYoameFGbVBdxZWDRmxPgIk+K0tw7
+	1UKHfcQA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:52554)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1rx5g7-0003JF-35;
+	Wed, 17 Apr 2024 14:50:24 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1rx5g1-00060W-Pa; Wed, 17 Apr 2024 14:50:17 +0100
+Date: Wed, 17 Apr 2024 14:50:17 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Olivia Mackall <olivia@selenic.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Vinod Koul <vkoul@kernel.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Michal Simek <michal.simek@amd.com>,
+	Eric Auger <eric.auger@redhat.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-stm32@st-md-mailman.stormreply.com, linux-i2c@vger.kernel.org,
+	linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
+	linux-input@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH 00/19] amba: store owner from modules with
+ amba_driver_register()
+Message-ID: <Zh/Tmarryr4TzHIA@shell.armlinux.org.uk>
+References: <20240326-module-owner-amba-v1-0-4517b091385b@linaro.org>
+ <171182151736.34189.6433134738765363803.b4-ty@linaro.org>
+ <cfa5aa01-44ef-4eb1-9ca6-541ed5908db4@linaro.org>
+ <8a8a8e8b-8256-4d33-a39b-9e3cbc4ccff2@arm.com>
+ <4e762eb1-864e-4bb5-ab5d-debeac19c8fa@linaro.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/19] amba: store owner from modules with
- amba_driver_register()
-To: Suzuki K Poulose <suzuki.poulose@arm.com>,
- Russell King <linux@armlinux.org.uk>, Mike Leach <mike.leach@linaro.org>,
- James Clark <james.clark@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Linus Walleij <linus.walleij@linaro.org>, Andi Shyti
- <andi.shyti@kernel.org>, Olivia Mackall <olivia@selenic.com>,
- Herbert Xu <herbert@gondor.apana.org.au>, Vinod Koul <vkoul@kernel.org>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Michal Simek <michal.simek@amd.com>, Eric Auger <eric.auger@redhat.com>,
- Alex Williamson <alex.williamson@redhat.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
- linux-arm-kernel@lists.infradead.org,
- linux-stm32@st-md-mailman.stormreply.com, linux-i2c@vger.kernel.org,
- linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
- linux-input@vger.kernel.org, kvm@vger.kernel.org
-References: <20240326-module-owner-amba-v1-0-4517b091385b@linaro.org>
- <171182151736.34189.6433134738765363803.b4-ty@linaro.org>
- <cfa5aa01-44ef-4eb1-9ca6-541ed5908db4@linaro.org>
- <8a8a8e8b-8256-4d33-a39b-9e3cbc4ccff2@arm.com>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <8a8a8e8b-8256-4d33-a39b-9e3cbc4ccff2@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4e762eb1-864e-4bb5-ab5d-debeac19c8fa@linaro.org>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On 16/04/2024 12:41, Suzuki K Poulose wrote:
-> + Greg
+On Wed, Apr 17, 2024 at 03:29:26PM +0200, Krzysztof Kozlowski wrote:
+> On 16/04/2024 12:41, Suzuki K Poulose wrote:
+> > + Greg
+> > 
+> > 
+> > Hi Krzysztof,
+> > 
+> > On 30/03/2024 18:00, Krzysztof Kozlowski wrote:
+> >> On 30/03/2024 18:58, Krzysztof Kozlowski wrote:
+> >>>
+> >>> On Tue, 26 Mar 2024 21:23:30 +0100, Krzysztof Kozlowski wrote:
+> >>>> Merging
+> >>>> =======
+> >>>> All further patches depend on the first amba patch, therefore please ack
+> >>>> and this should go via one tree.
+> >>>>
+> >>>> Description
+> >>>> ===========
+> >>>> Modules registering driver with amba_driver_register() often forget to
+> >>>> set .owner field.
+> >>>>
+> >>>> [...]
+> >>>
+> >>> Applied, thanks!
+> >>>
+> >>> [01/19] amba: store owner from modules with amba_driver_register()
+> >>>          (no commit info)
+> >>
+> >> Patchset applied here:
+> >> https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux-dt.git/log/?h=for-v6.10/module-owner-amba
+> > 
+> > How do you plan to push this ? Given this affects most of the drivers/, 
+> > do you plan to send this to Greg ? We have changes in the coresight
+> > tree that would conflict with this "tag" ( I haven't merged them yet, 
+> > but is in my local queue). I want to make sure we can avoid the
+> > conflicts. I am happy to merge this to my local tree and base the
+> > changes on this, if this is going in for v6.10 and all are in agreement.
 > 
+> I pushed it to arm-linux patches but it hasn't been picked up.
 > 
-> Hi Krzysztof,
-> 
-> On 30/03/2024 18:00, Krzysztof Kozlowski wrote:
->> On 30/03/2024 18:58, Krzysztof Kozlowski wrote:
->>>
->>> On Tue, 26 Mar 2024 21:23:30 +0100, Krzysztof Kozlowski wrote:
->>>> Merging
->>>> =======
->>>> All further patches depend on the first amba patch, therefore please ack
->>>> and this should go via one tree.
->>>>
->>>> Description
->>>> ===========
->>>> Modules registering driver with amba_driver_register() often forget to
->>>> set .owner field.
->>>>
->>>> [...]
->>>
->>> Applied, thanks!
->>>
->>> [01/19] amba: store owner from modules with amba_driver_register()
->>>          (no commit info)
->>
->> Patchset applied here:
->> https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux-dt.git/log/?h=for-v6.10/module-owner-amba
-> 
-> How do you plan to push this ? Given this affects most of the drivers/, 
-> do you plan to send this to Greg ? We have changes in the coresight
-> tree that would conflict with this "tag" ( I haven't merged them yet, 
-> but is in my local queue). I want to make sure we can avoid the
-> conflicts. I am happy to merge this to my local tree and base the
-> changes on this, if this is going in for v6.10 and all are in agreement.
+> I propose you take entire set then.
 
-I pushed it to arm-linux patches but it hasn't been picked up.
+You are again being, IMHO, abrasive with your attitude. So far, every
+interaction with you has been abrasive and bordering on abusive.
 
-I propose you take entire set then.
+You haven't asked me whether I will take them. I will - just not at the
+moment because 
 
-Best regards,
-Krzysztof
+I HAVE MEDICAL APPOINTMENTS LAST WEEK AND THIS WEEK WHICH MEAN I AM
+NOT SPENDING ALL MY TIME ON THE KERNEL.
 
+Have some bloody patience rather than behaving in your standard
+objectionable manner.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
 

@@ -1,111 +1,95 @@
-Return-Path: <dmaengine+bounces-1865-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1866-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8778F8A897E
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Apr 2024 18:58:50 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD52E8A89C2
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Apr 2024 19:04:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B4F121C2343C
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Apr 2024 16:58:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6DEB91F20CC4
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Apr 2024 17:04:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49720171092;
-	Wed, 17 Apr 2024 16:57:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 798E1171084;
+	Wed, 17 Apr 2024 17:03:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dnbu5ssb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hHChMN57"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18E0316FF3D;
-	Wed, 17 Apr 2024 16:57:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5207F171079;
+	Wed, 17 Apr 2024 17:03:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713373077; cv=none; b=aZasATVb4yogOfzB3v7NUIkWDzEsY/h7zBSya9xB8SKSNXTFEAvm2gDQL7DhNDcTR20FZh4hEycHDAG9RFfxI1diccvESktJFDhcal8THzhgfunW7D6FNcQdKg0JA0kyfRFurHAPwfbsX23WUSX26+n1l9Q1r2lse73t60nhwng=
+	t=1713373409; cv=none; b=djQswGIQfjyFbPKDSuHyzwS6SP8x0cprZ3n4TjKXqsYncV5IY3KVucRkZxX9Abuga0i5u8MiWk+/9z+loIZAGSKZWKK3l1hBCmMcHTZmg5BSaHR2aslEPn/4L3Kf8hj2wEythdM3WrBf6ccfwSxYGyPnEXDNEIMzfDYnH7HLJEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713373077; c=relaxed/simple;
-	bh=DYUL0m6ccXMv/otBInSaHCfYISs+21asH1HSW9U9wmA=;
+	s=arc-20240116; t=1713373409; c=relaxed/simple;
+	bh=QjtQ6V3Ehbk5LLxAr33UNMioxKiRpcYG4jFh+UYBzEE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NyQslIHxInv40StL1oJk/GL3vDhof7lzz7c7JtWDDA2fQAG5tuZezkRFsan41ThdXm18k7MelGFK9p6Uk4r1UtwYXX+YN38UWL3GUOFcP7W0s9GJ6tctvaGUzLS80OPi80XCmYDomIzHkeO2TZEZ3IIkjP0NBQ2CDnn3RhOd8ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dnbu5ssb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49A31C072AA;
-	Wed, 17 Apr 2024 16:57:55 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=HvD51BoGQgl5RI6+hbFXuZXr5kOJRsGUUooYfCmUeuhen6hGwhyqKMVYZzadF6JdhvlX1l4dJ/LKqukTyoLYKlYUEWRuyJSbL4fv12x+6ZEE/o4IO75YJFwz8E7sPAGrLTK58nkB6h23q6/thh3merdT9xrJv32PQ1ceuwnrbjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hHChMN57; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 504D6C072AA;
+	Wed, 17 Apr 2024 17:03:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713373076;
-	bh=DYUL0m6ccXMv/otBInSaHCfYISs+21asH1HSW9U9wmA=;
+	s=k20201202; t=1713373408;
+	bh=QjtQ6V3Ehbk5LLxAr33UNMioxKiRpcYG4jFh+UYBzEE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Dnbu5ssbBWDnom3G2bJwueLXnmecegCGIW0h9WuEX9pYC2KHup4tJbibQodXDgE0I
-	 oZK4CnQm2qCLiZistybAUph00C+tjx+zojJ4WQieH6oHI7bdDYC8sxp5CN/TgP0lG/
-	 Db3d5SP2QbxyqoQRMKp9q1JIe/u9ckVwSDkpi4Q2moS2rQHKxCryv3r6gbVwROo5Eb
-	 XJnEtvqHv0RQoK9mOmMpQh7ArjkPRFAzr5bO5hnsVmg4hQGXSpucU3mAbT4fTUnXRh
-	 r4XLT3DWoSaTClUb4SS4NY7P4oBAtomqb1Lv/L4BwZvMme9gE9Rhn4++8PaVpAT2jF
-	 eSJd/NpkQ1SWg==
-Date: Wed, 17 Apr 2024 22:27:52 +0530
+	b=hHChMN57kBOXbFM4QTwzgQyXPTNjbqinV6W7wCepAN0W6oYfeaCyE6dgKeTCTR9Xv
+	 G9gEj89fKjNhohGEO//tSrWYiXUTCgtUL61JfvkiXyV2qflbR+0Ju4n86LASM8Gklr
+	 +SYKoh/Yf160Uj7zpDeF/vPQnEA2Fv5pwxKYmY8Alo+/cv6LvvuWDJvCTvbqkdCiR+
+	 ctIWquCQr+S1e28UlSRsRzreoUOHkqDwxVp20LMc8VqBlaN6APWAr9UHoWtlRpq7B9
+	 DfKauiiui1p6RXPmALDG6N2WTI0W9lAOJhlx+HXi7wSDkfmilRwd2jZmRjkXkkGUhE
+	 vdQEAdyRcF6tw==
+Date: Wed, 17 Apr 2024 22:33:24 +0530
 From: Vinod Koul <vkoul@kernel.org>
-To: Andi Shyti <andi.shyti@kernel.org>
-Cc: konrad.dybcio@linaro.org, andersson@kernel.org, wsa@kernel.org,
-	linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-	Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
-	quic_vdadhani@quicinc.com,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Subject: Re: [PATCH v4] i2c: i2c-qcom-geni: Parse Error correctly in i2c GSI
- mode
-Message-ID: <Zh__kAdzU8a2DHLH@matsya>
-References: <20240313052639.1747078-1-quic_msavaliy@quicinc.com>
- <171161140136.2698925.4294566764047886777.b4-ty@kernel.org>
- <ZgbwJAb7Ffktf554@matsya>
- <a76mmz5xrfipqpmq2ltsyobwc54dyw2d55gb4vta5d746dwb3i@5mm2ew5uudi3>
- <ZhJVgDVthhr4hISg@matsya>
- <j3zupurwq5vtzfwby7ubl7ft75fqqhutk4vfqolihkcldfcesi@ywwfnkjcfhgu>
+To: Lizhi Hou <lizhi.hou@amd.com>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Nishad Saraf <nishads@amd.com>, nishad.saraf@amd.com,
+	sonal.santan@amd.com, max.zhen@amd.com
+Subject: Re: [PATCH V10 1/1] dmaengine: amd: qdma: Add AMD QDMA driver
+Message-ID: <ZiAA3C4wXaAHcJ1E@matsya>
+References: <1709675352-19564-1-git-send-email-lizhi.hou@amd.com>
+ <1709675352-19564-2-git-send-email-lizhi.hou@amd.com>
+ <ZhKd7CHXHB7FadY0@matsya>
+ <aa6a63c0-7cce-1f49-4ae5-3e5d93f98fe5@amd.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <j3zupurwq5vtzfwby7ubl7ft75fqqhutk4vfqolihkcldfcesi@ywwfnkjcfhgu>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aa6a63c0-7cce-1f49-4ae5-3e5d93f98fe5@amd.com>
 
-On 16-04-24, 17:05, Andi Shyti wrote:
+On 08-04-24, 11:06, Lizhi Hou wrote:
 
-> > > Anyway, the changes are in -next. What do we do now? Do I revert
-> > > it? Mukesh, can you please agree with Vinod?
-> > 
-> > I dont apply patches to other subsystem without the ack. Either way you
-> > can ask always! 
+> > > +static void *qdma_get_metadata_ptr(struct dma_async_tx_descriptor *tx,
+> > > +				   size_t *payload_len, size_t *max_len)
+> > > +{
+> > > +	struct qdma_mm_vdesc *vdesc;
+> > > +
+> > > +	vdesc = container_of(tx, typeof(*vdesc), vdesc.tx);
+> > > +	if (payload_len)
+> > > +		*payload_len = sizeof(vdesc->dev_addr);
+> > > +	if (max_len)
+> > > +		*max_len = sizeof(vdesc->dev_addr);
+> > > +
+> > > +	return &vdesc->dev_addr;
+> > Can you describe what metadata is being used here for?
 > 
-> Yes, you are totally right; but please, keep in mind that this
-> patch has some history and I would have loved to hear from you
-> earlier. Anyway...
-
-There was merge window, I dont look up during that. Then I had some
-family stuff and travel to take care... Things happen.
-
-When in doubt pls ask, a gentle reminder goes long way!
-
+> The metadata is the device address the dma request will transfer
 > 
-> > I will leave it upto you...
+> data to / from.  Please see the example usage here:
 > 
-> ... Mukesh, I'm sorry, but I'm going to revert this patch again
-> until we address all the last minute issues from Vinod. The
-> silence on this thread is worrying me more than reverting it.
+> https://github.com/houlz0507/XRT-1/blob/qdma_v1_usage/src/runtime_src/core/pcie/driver/linux/xocl/subdev/qdma.c#L311
 > 
-> I hope this will be the last time I revert this patch.
-> 
-> Moreover, in order to avoid maintainers' rumble (:)), please
-> let's try to split patches that are touching more than one
-> subsystems keeping the logical meainings intact.
+> Before dmaengine_submit(), it specifies the device address.
 
-That is best. Very rarely we have a situation where we add
-changes which break bisect and it has to be clubbed together. But for
-other cases, it should always be split!
-
-> I hope this is fine with you, Vinod.
-
-Thank you for understanding
+Hmmm, why is the vaddr passed like this, why not use slave_config for
+this
 
 -- 
 ~Vinod

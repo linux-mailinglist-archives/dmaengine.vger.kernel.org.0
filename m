@@ -1,129 +1,125 @@
-Return-Path: <dmaengine+bounces-1900-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1901-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B034F8AA26C
-	for <lists+dmaengine@lfdr.de>; Thu, 18 Apr 2024 21:02:09 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A49A8AA28A
+	for <lists+dmaengine@lfdr.de>; Thu, 18 Apr 2024 21:10:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DC9511C20B67
-	for <lists+dmaengine@lfdr.de>; Thu, 18 Apr 2024 19:02:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BB8591C20D91
+	for <lists+dmaengine@lfdr.de>; Thu, 18 Apr 2024 19:10:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0799616F843;
-	Thu, 18 Apr 2024 19:02:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2D7A17AD97;
+	Thu, 18 Apr 2024 19:10:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="W6J11maf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f52zaE4M"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A83E15CD47;
-	Thu, 18 Apr 2024 19:02:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55FDF177980;
+	Thu, 18 Apr 2024 19:10:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713466924; cv=none; b=hMxbf7urhTWszrSBC1kX/8wE04BwjXOU4swgsU6CoDVfz/K/FQo9ZQjiyFOiY2E5J+HtzZMK9jGJ6lt0+zhRBvC6+P1aV+klNld7z2CNx7TVMWdv358Zy+93oedrE3676VIqGCz0bjWTqHahucMrP4GiFlj0OvuhsJxNHfXEB+M=
+	t=1713467409; cv=none; b=gcpNszYRZFmIwP4nPLQh9vfs3eBrL64m7StT6B9xZnQ/MJeBlDeuAKp6yQIv55DQ4qWtp7Pdm87+d4JWbC/Ed+cIKcasukn8308mUjJHal6PtnkRM/Y91aF78buJTcpxTQv7wF2YiTJRmERn+kTbBvuoK+7/zdTAE1H1oABtF8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713466924; c=relaxed/simple;
-	bh=SpFE1kOMBBpcqTzZG1ZNlrJFy9DCEcrfGxK4uI34ipQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=N6nN8++Eiq+mKtTinNUu5Z71cRqTUkC625Q6jhY5Y0/p1e85pgUtu0AzxtwB3dM9N3/wfnY11bY1mi5aEq3wWoAHRCW1EBYYAYtb97QRNqLFov3nbpxo9oWIOI7cquzr/1b3P46AHOkhn2ebsn7LLz3j0sBraJ49t/aLjZcusHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=W6J11maf; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43IF0R0E021375;
-	Thu, 18 Apr 2024 19:02:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=+Mir++Ln2FLqixl+vlLlko21XetSHbEOEt/3RZvuAJQ=; b=W6
-	J11mafes8MQoI2heUKouENf1aCzTUOd77959urY3c88FRG+mMs1Ox+VcErkKb2Mt
-	9Qgc7ao8bvV0iFVf8yQrfQyHrkQVGwwS4YZAODs0iHofM9GQBlJmA4C4R2mcZPDk
-	3gyIV3jIVoYDQL6lkgRcdcQr37A+mum9uoQL6CMH0lxvwbIUtXOV1B9mQ55JJePU
-	t6T9Bn1gekryYqMvZWvl30hYPfgN3ccAk1+UEPirhvl2mUFEBqdq+y0fdCA9mW37
-	VulXpHYjzkqFjkZzFVbnXxktrDFAdwv45zgYGsyPe+cwulBtIeHhK2FubQ5Fy8yp
-	aPid+t//5VzPy6PbgT8Q==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xjx54hr1s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Apr 2024 19:01:59 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43IJ1xiT031867
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Apr 2024 19:01:59 GMT
-Received: from [10.216.42.77] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 18 Apr
- 2024 12:01:55 -0700
-Message-ID: <9a18b752-c13a-4b46-ae71-59b8372dd953@quicinc.com>
-Date: Fri, 19 Apr 2024 00:31:51 +0530
+	s=arc-20240116; t=1713467409; c=relaxed/simple;
+	bh=LNYSLafohNI3OcAPQLdlG1Op1X2KxPSSInkwWTm9e9k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i03DPz2NzCwqyIZ/lu+9TYK66QNBe8WcwJjJkRPcCqPux09rEiAlRL8g4W6Cr4FNRGodz0yNMpFIOGmFPYlFoeLvp83vliJHb8Z6yjDx98HvjhwWB4TPm0/1/vJjn34OhBt3BiGoxie9yWXuTNREKYkwBAhWHqyg8frp6x/ffcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f52zaE4M; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-518f8a69f82so1511055e87.2;
+        Thu, 18 Apr 2024 12:10:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713467406; x=1714072206; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=LFCOV5/FbvZyadb0eigbmic/UPzgGtARohnH/S7yn5M=;
+        b=f52zaE4MY0RS5TFgCrG79fG0RkfpF+xLXDYU0+/bYKXVbENGgdFdq6XagTqNarcHan
+         KpPkv7naSQ/lzIdOtZlaMUz+JdA/iO6luBGWC2CrUas78pQumhH4ouWBSRtvMzB+5tAf
+         M78YhkvOdRhKu0wjyp25Ji4LDTZaMtgW3DVsfsxLbfqerF9o06YomjjI2M+ChogwRZV7
+         Vo1YSUwoDTueBeeIS4AEaUkOjBMtnx81o8FluaflRbCLqJZYu54nx1jF0kjoWqJ5P90W
+         oaPxMrfVmWtJtULoLuZYMLs2CgFtDPjdJooDErfP38K6bWnu3WUNb3aPMckp3lA/77TF
+         lptQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713467406; x=1714072206;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LFCOV5/FbvZyadb0eigbmic/UPzgGtARohnH/S7yn5M=;
+        b=F9vAG/VnSmY7QZS25HusxlT1CE4c3NV1Bsmn8CzNpGKHe0xJDNuuDY4AMirBX7AlQ/
+         UHLs46eIxiZFoZnWi1hudeXsRsz1qFDr/U1Rj5JhhKYIhkSlgaKLFs/RzRUW1OEBer3j
+         aYA29PWowWlHAR9GH1A6at0szc7ZTmEOzrC0baYDdIL8DVfatDfB9IVUMfJDMUIntwgq
+         0qSX+nVYXwdOn6IF16YAcGt4EeBRodEp23bqMaUSHZvp9I1cXz66x07ZpelzW3FsdIGL
+         Jilse5DPaJA/YeGMsOxd6zU87VtCI1T4LipnHkVoSwRbOk51RVsbXLaRsVKgyJxFvfWw
+         7rYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVczPUEmJfiBPi9qyVY5qd2gWzEqpN6AYGAPtJeYZkFeUtOHlMIL08PSAw53ASs75ILhr74rtpdQ1LTlbnIyM1ZwUu6irzLBIPtmSzxQH4nJRelqwe8XZ/VJgOcEhdc0TlQfPSdba2vwsjR+Hjrrq5k09QCqep41YvTbDaec3vMz+kHiExa
+X-Gm-Message-State: AOJu0YyW0AjKU6jUhlp8cKvqldBlNnqSwYBIxfrIhihMqf0KNzQx/8Jj
+	cmz/KMorm8gezg/bhedz+jx8V7lmJWzwlNM0K/HKfmvqMGBeSf+v
+X-Google-Smtp-Source: AGHT+IHeGbZo3NR5cIAMrdyKdsxgouRoWv0Ml67OyFVx/dFz8bHvQmI84/kBwrtuR7IbXbEyjH6uzw==
+X-Received: by 2002:ac2:4836:0:b0:516:d3ba:5602 with SMTP id 22-20020ac24836000000b00516d3ba5602mr2273115lft.16.1713467406333;
+        Thu, 18 Apr 2024 12:10:06 -0700 (PDT)
+Received: from mobilestation.baikal.int (srv1.baikalchip.ru. [87.245.175.227])
+        by smtp.gmail.com with ESMTPSA id a22-20020a195f56000000b00518e16f8297sm352294lfj.55.2024.04.18.12.10.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Apr 2024 12:10:05 -0700 (PDT)
+Date: Thu, 18 Apr 2024 22:10:04 +0300
+From: Serge Semin <fancer.lancer@gmail.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Viresh Kumar <vireshk@kernel.org>, Vinod Koul <vkoul@kernel.org>, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, dmaengine@vger.kernel.org, linux-serial@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] dmaengine: dw: Simplify max-burst calculation
+ procedure
+Message-ID: <2htaobgfle7glf4t7v5vjlhx6hdzja6bbwn3fonhejs3dbxgij@puaipep4ycwp>
+References: <20240416162908.24180-1-fancer.lancer@gmail.com>
+ <20240416162908.24180-5-fancer.lancer@gmail.com>
+ <Zh7NfmffgSBSjVWv@smile.fi.intel.com>
+ <tez5uqt4lg2qf5nooxuqo2rqhkqzzzbpeysdcbljokznbztkhj@j5t7cy4gd4pd>
+ <ZiEIxq8dHxObrYZx@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] i2c: i2c-qcom-geni: Add support to share an I2C SE
- from two subsystem
-To: Konrad Dybcio <konrad.dybcio@linaro.org>, <andersson@kernel.org>,
-        <vkoul@kernel.org>, <andi.shyti@kernel.org>, <wsa@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
-CC: <quic_vdadhani@quicinc.com>
-References: <20240327101825.1142012-1-quic_msavaliy@quicinc.com>
- <ccb312aa-3c4c-41bb-a3f4-b94971edb346@linaro.org>
- <b7125064-4b20-438e-ac1d-7107d28b1bf9@quicinc.com>
- <f4cbacca-c2e7-42e7-8ed9-dbc6bb59f1ce@linaro.org>
-Content-Language: en-US
-From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-In-Reply-To: <f4cbacca-c2e7-42e7-8ed9-dbc6bb59f1ce@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: TpIUsx_2-9TYumIgcNyeAdW866jndCia
-X-Proofpoint-ORIG-GUID: TpIUsx_2-9TYumIgcNyeAdW866jndCia
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-18_17,2024-04-17_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
- suspectscore=0 malwarescore=0 phishscore=0 mlxlogscore=884 bulkscore=0
- impostorscore=0 spamscore=0 lowpriorityscore=0 priorityscore=1501
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404180137
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZiEIxq8dHxObrYZx@smile.fi.intel.com>
 
-Hi Konrad, Thanks for confirming your preferences.
+On Thu, Apr 18, 2024 at 02:49:26PM +0300, Andy Shevchenko wrote:
+> On Wed, Apr 17, 2024 at 11:35:39PM +0300, Serge Semin wrote:
+> > On Tue, Apr 16, 2024 at 10:11:58PM +0300, Andy Shevchenko wrote:
+> > > On Tue, Apr 16, 2024 at 07:28:58PM +0300, Serge Semin wrote:
+> 
+> ...
+> 
+> > > > +static void dwc_verify_maxburst(struct dma_chan *chan)
+> > 
+> > > It's inconsistent to the rest of _verify methods. It doesn't verify as it
+> > > doesn't return anything. Make it int or rename the function.
+> > 
+> > Making it int won't make much sense since currently the method doesn't
+> > imply returning an error status. IMO using "verify" was ok, but since
+> > you don't see it suitable please suggest a better alternative. mend,
+> > fix, align?
+> 
 
-On 4/16/2024 5:14 AM, Konrad Dybcio wrote:
+> My suggestion is (and was) to have it return 0 for now.
+
+Ok. Let's have it returning zero then.
+
+
+-Serge(y)
+
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
 > 
 > 
-> On 4/2/24 08:21, Mukesh Kumar Savaliya wrote:
->> Thanks Konrad for detailed review. For dt-bindings sending a separate 
->> patch soon, rest comments tried to address and updated patch V2.
-> 
-> [...]
-> 
->>>> +    if (of_property_read_bool(pdev->dev.of_node, "qcom,shared-se")) {
->>>> +        gi2c->is_shared = true;
->>>> +        dev_info(&pdev->dev, "Multi-EE usecase with shared SE\n");
->>>
->>> How would this line be useful in my kernel log?
->>>
->> It informs that particular SE is shared between SEs from two 
->> subsystems, hence respective debug can happen accordingly in case of 
->> the issue.
-> 
-> This amounts to "not very useful". As an end user, I couldn't care less
-> about the nitty-gritty of firmware-hardware interactions, so long as the
-> thing works. You must not spam the kernel log with debug messages, as it
-> slows things down and makes actually useful messages harder to spot. If
-> you want to keep it, use dev_dbg.
-> 
-Sure, will go with the dev_dbg. I am uploading a separate patches for 
-i2c and GSI DMA sub system.
-> Konrad
 

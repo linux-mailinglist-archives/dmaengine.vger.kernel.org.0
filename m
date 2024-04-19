@@ -1,161 +1,193 @@
-Return-Path: <dmaengine+bounces-1904-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1905-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id CB50B8AAB52
-	for <lists+dmaengine@lfdr.de>; Fri, 19 Apr 2024 11:20:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F1F48AB150
+	for <lists+dmaengine@lfdr.de>; Fri, 19 Apr 2024 17:08:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5C3C51F2258D
-	for <lists+dmaengine@lfdr.de>; Fri, 19 Apr 2024 09:20:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B20781C214C4
+	for <lists+dmaengine@lfdr.de>; Fri, 19 Apr 2024 15:08:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A9B67580B;
-	Fri, 19 Apr 2024 09:19:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E01E12F38D;
+	Fri, 19 Apr 2024 15:07:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B4jh+iEJ"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="kjKwEPjo"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR01-DB5-obe.outbound.protection.outlook.com (mail-db5eur01on2048.outbound.protection.outlook.com [40.107.15.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AE02F9CD;
-	Fri, 19 Apr 2024 09:19:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713518395; cv=none; b=H5Sx31SeEU57WWf7P9EFK0sgEma5ykirj1ZNBchBP/B1fylHUlHvCs9k3mQHvWJMVF9rPIDpV4tBNA+3IhslTgwsJn1Ni7MBOPbk5tae22KDYSXerRXjeZnvYhw15JYeI1VBhB6JKpuObQOjfC82k1qc2oQWoAAiDY/Ix9ha7I0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713518395; c=relaxed/simple;
-	bh=KlXQuKvGJywU3LD2CUoRhMvX72mjF+L+3E8OH1+cRzU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bLA3fsch3ryudgoS6sIszr0G5vo+InTUakt8KJrVo5FuMTOymwF1igyOCUdp0wBX/B51yLIXdYCMqz7PpANDuCTBryYGYAFdg8JXR83wTSRD8KOmj+amgeW0fgjz33ZsGIukEM1ZtmWqraEviQVFnV4l4wc5rlGvqk0hutGJzg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B4jh+iEJ; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-518f8a69f82so2178255e87.2;
-        Fri, 19 Apr 2024 02:19:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713518391; x=1714123191; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7uRz/nxbhPgcg3DGqznEbcQEDecYnCJi73IPin9pfrE=;
-        b=B4jh+iEJHa4KbbBJTt41vTtc7Cf+rbHqSV8rhoEFCgSc+xT1ZL9GgX3U56rwNSq9l3
-         l9y7DydEZFaofOLsCmkgG0VEmf5Bauuz8ZTOQMgQYBbchHDhtlWxUDEe1vnNXbtSHl/2
-         +AqW5mwX2nuDexKYYIDjGiiAd+vP6Vm9HlySy7lYReyn2TWP4LwIkE1rF7ELdpXhNp/C
-         blVKMym9gs7oZoWQ57H9O2dS8zEd1pjXXtmgsbrPOQJXSwQAYuXqWgoWNKRHWqTL6goa
-         bbtPKRfXT653/ebf6OMqRdPhxocwVdvFQprM4Rytn9FYN2YmP1jiricjtMeJIYEG0B8p
-         w/jA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713518391; x=1714123191;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7uRz/nxbhPgcg3DGqznEbcQEDecYnCJi73IPin9pfrE=;
-        b=aTIrauSN29zRxb3+NYNrgGP/WN6RZh2B36AKHjpIbohTvtb4nglDmgT25PnnZGE1Po
-         WL2oXjFDPAnrti2q1Vuzh1HmEY16bY0eGMbea8BIAgAHJEs3uWebhO8OkdKIRCvUd9A1
-         9/xkaeydiBh4R9lqGxy/i968m6Q8e3tPUSYqAGddxJbDGYlBbtUrPaU4vea9/ZPDB5Nn
-         rHKV1P36+1HUf68z6Gf0VQE8ZDQPyiDczfahZltC0wq4NwQWRprGXmODoE2/i0YD+7JH
-         us/d0o6Lkq/6Byvm7mKl+/bW0G+f6X+34U7bG5la54ry6ovn2SHWetLYZ28ej+L3S0a8
-         I/Vw==
-X-Forwarded-Encrypted: i=1; AJvYcCWx9FaKTeencCCRcecS6fUCBrmicC9Xtf47Ju1HHEhujZTFl9rhtq1/DCOiSFkAbIWrhKxDwDyRqoYPF1CckSOSue0QEq6TRC6YeQowqYC91IUsaQF/c8FZ3mQtwX8SEqiqWwBsFW6FRtL1fnbUx744dlE8jGLTWw6DqOCF+vuTvSSdeaSc
-X-Gm-Message-State: AOJu0YxaGPrpKzpyk/EIaR9jAAUm1SGArMzGwtK7dhl3uVh++rG33FXj
-	F3FvatAh1h/+jQGgS65KgyXjKk/l12CB3x6BxGNCVijRFdVbcUKjbra9hIXO
-X-Google-Smtp-Source: AGHT+IEE+c8XToG2LkLPH2w60EnuzxV5zLxI6Q2u6Y+2UULExfGeij1aufjjl9uW3OpE6g7MOIyzRQ==
-X-Received: by 2002:ac2:4e4a:0:b0:516:cc06:fa03 with SMTP id f10-20020ac24e4a000000b00516cc06fa03mr1033854lfr.56.1713518391302;
-        Fri, 19 Apr 2024 02:19:51 -0700 (PDT)
-Received: from mobilestation.baikal.int (srv1.baikalchip.ru. [87.245.175.227])
-        by smtp.gmail.com with ESMTPSA id p24-20020a056512329800b00519331d8b66sm626692lfe.110.2024.04.19.02.19.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Apr 2024 02:19:50 -0700 (PDT)
-Date: Fri, 19 Apr 2024 12:19:48 +0300
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Viresh Kumar <vireshk@kernel.org>, Vinod Koul <vkoul@kernel.org>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Jiri Slaby <jirislaby@kernel.org>, dmaengine@vger.kernel.org, linux-serial@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] dmaengine: dw: Simplify prepare CTL_LO methods
-Message-ID: <oqyz6fpdxzk5x4xr5rlqwnj3frakjnz24e6bx7mxngh5gm5jom@wsm7qvubqwn3>
-References: <20240416162908.24180-1-fancer.lancer@gmail.com>
- <20240416162908.24180-4-fancer.lancer@gmail.com>
- <Zh7LyszPd2sNfWRm@smile.fi.intel.com>
- <lzcgxh7trwoksd4bx2fsybellbngvpwhgq2a76ou2iufemockp@3dca4bfox2ps>
- <ZiEIRluj-50FMIgp@smile.fi.intel.com>
- <xfa7evanbrvdxdoq6473wpymvqogezspwkdoawu2dr6mnyxiwq@zx2schip66wj>
- <ZiGJ-DspJq5R6Dym@smile.fi.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1498712FB03;
+	Fri, 19 Apr 2024 15:07:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.15.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713539277; cv=fail; b=DCIRyIuKkHJrAY8gLX6RzL8ava3ApnEyqaaADZ3o39mXUfYPFdHJ/G1tfaz3X3la6ESG6aneqgYNdddxWgHGdVX2TuH2NLT1EjId6wK5VMVb0rUiqjo291llQxHmqvuPbiwBXHKYNPyNo5TLxgVFtcnTRB6/yUwuNnSEXRX3oyM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713539277; c=relaxed/simple;
+	bh=LezexKi/njf5WJzUJ5rLzvDGoE2jGYh71MApeI7QUb8=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=n+hDT3pdxi4tbcLFy/E7Nn4fxy5EeWnPANz8a7oRM0H0cCaPTcgHzXMMU3OTGBPedrsaLio/FNCrEFY+aevZBo5i0yQgkNEaxxvJKHe/MsuWzneABKDty8SN76KXTb+nQIAcqJrV7mBTPSOetDtT66sT/MI0drOp8iaVJ+WE8CA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=kjKwEPjo; arc=fail smtp.client-ip=40.107.15.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nrDBbXVBpXEH2OQJoGeWdAimNZfH0JQ+t47312AZAFb32Ln69vOR6opvmJYAczeNv2MOJ/BcBJ0Nn+2o/dNtMPChMwl4YhZZzrx93+MmAhS/rZepqHjdRUGnS2sbY3Ij2ze6DQsqo+zFen4oh1GIFypQWUNP5ce6DbuaHmOitgiEDXyDx7uV94GXJDgUI6xK2sK6eO23LOO9FNxdrGHaimkQmuSqZhWOa0+g1j98kFTW4kZozJrLIiLRua7wRUkJXGSRD9TCsdLnnOq/VT/hrncoFkfGlebhes1jauHcAr49qay9xVy2veWjfT8Nkg4fIcQ/VAe+mxRH7Dljl28MWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=48Y0BjVoxPxokN2MQq+QIxImoQoKWsrW7mlrMSDnp+Q=;
+ b=iQ5wzz4qUWMeq1YI3FMAhIHV6OD8JAFk0STYmlR91jSaX78/AX0kjnfyLub6WvHEzz6EuUhH47fxJ4j5nJXismWj5b+4EEvBNJ8GstkpV/CzsT8DsrxE58H0Ks7zH1HzshP+MsayPBbP3YOM/bNbfxYrmpSyLmNiOQj/YXTYrSNFkC9okH+5zARuAKhqnxBaDYHeCa0kBRQEC5tDf9t1gJeONIrBoPwQ3jAdcZs9CrX5DVCpNPnN5hTgN+XR8VvXaHmDFSQfoYaIpjUZZmdf3TqHDeKbRmNQN3DqyetgGlPfAXBMZVmRfmtif0LzLLOgb+U5bPbdojd08wOdB1ePuA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=48Y0BjVoxPxokN2MQq+QIxImoQoKWsrW7mlrMSDnp+Q=;
+ b=kjKwEPjo4gjvWvovGHvHK7jKH9u+XHXmZyYRYFkzIEI7mq57KSkh12Us5Xli2mBIiAfVhOc/z8o5I5HZQYc2+ljtexexQcT6Xt/fnHiulBVlssUGeOQ/HSIOewVX9LCHx/kjy5lSmb+E02oO2lM+mh1Ug0ahvu7I5FYsPJNI7Ro=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by GV1PR04MB10330.eurprd04.prod.outlook.com (2603:10a6:150:1cf::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.39; Fri, 19 Apr
+ 2024 15:07:47 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::1e67:dfc9:d0c1:fe58]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::1e67:dfc9:d0c1:fe58%7]) with mapi id 15.20.7472.037; Fri, 19 Apr 2024
+ 15:07:47 +0000
+From: Frank Li <Frank.Li@nxp.com>
+To: vkoul@kernel.org
+Cc: Frank.Li@nxp.com,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	dmaengine@vger.kernel.org,
+	festevam@gmail.com,
+	imx@lists.linux.dev,
+	joy.zou@nxp.com,
+	kernel@pengutronix.de,
+	krzysztof.kozlowski+dt@linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-imx@nxp.com,
+	linux-kernel@vger.kernel.org,
+	robh@kernel.org,
+	s.hauer@pengutronix.de,
+	shawnguo@kernel.org
+Subject: [PATCH v5 1/3] dt-bindings: fsl-imx-sdma: Add I2C peripheral types ID
+Date: Fri, 19 Apr 2024 11:07:27 -0400
+Message-Id: <20240419150729.1071904-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BYAPR21CA0008.namprd21.prod.outlook.com
+ (2603:10b6:a03:114::18) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZiGJ-DspJq5R6Dym@smile.fi.intel.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|GV1PR04MB10330:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9a9fec9b-d4e3-42a7-0d95-08dc6082792d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?KY9b3EULoIgwdXJWcM3lKa1aw4fbyJAA3bDoHYq2BtR4H8c36gmblaoPVUua?=
+ =?us-ascii?Q?oLBpGPk2LEiUiQRd0/XJdbT+tdcK5vtSvp4skYovgKWvm5eqSbRuCkn2mMPQ?=
+ =?us-ascii?Q?FEqSunmSw/XdOdWWrhGi1E3sIkQ7aCcBBnZ5QQrDN0rsE4ONDyaWgCIrPtKh?=
+ =?us-ascii?Q?erjq6PFas5X8ZyCChlUiT3IfSVZv025XeKtvzeu7Pdbzsyp3V/2mVRp8PMtA?=
+ =?us-ascii?Q?Be0oCyi98cd//FDaHKxJGUstdz59oAeLpFz3CU7hvjpoW8h2tW0M24C749Sg?=
+ =?us-ascii?Q?vtK8QSXIxWGXPdiCr5u3qUJHva14/ukDMksyg2co1L8/m9xhgvXYcQWy3n/F?=
+ =?us-ascii?Q?cIDcSsYv1zU9yBbyn6ZC4Z+dPpyWTrhDCHUMkHELxyqbi4XTWj4wDzsfsJ39?=
+ =?us-ascii?Q?P4BCZSETPjqbUmh2u28d9Ua/5enZm6xxQyg2w86QZoFEJY0NkygafbH8oGqQ?=
+ =?us-ascii?Q?r4DfUCWxfMy8UK1GeJfBYsSwtfX+IIsocJS7C202u61mEg/vuRJ0ZGTdkMOQ?=
+ =?us-ascii?Q?kaGiLU9fpKqczqOjYMu4S4c+Dxzpc4WuQUKmKa+8+9KGQLBmmit50ZQcaydO?=
+ =?us-ascii?Q?OAhtLrfn7ORyL5ZDrR0QgDVt4MnhyaSfTAVBCxSXId6Cixm6WdMtVtqMWO+w?=
+ =?us-ascii?Q?TUWgljt5Q/cI6yK7qjWLIxNXAd7/7U9+BSII9E1a+n+q2WkzYnYG/QVTmlfL?=
+ =?us-ascii?Q?JQPR5PXDmEkMF81Of8ylE8XySWbaL0dEIJmmdgyrRIgwl+ztntcVsc2FClDy?=
+ =?us-ascii?Q?rI5+K0Q+OleubPRpZBS+25HXGYvPw3PIpSUJ4MvZ/V1uHiApyodREgK5Myh7?=
+ =?us-ascii?Q?dR6TfSjbkb00kq/moI62abRR6QergYIkg8MS3nx/Fbs+cQCvsltt/9IbMfqj?=
+ =?us-ascii?Q?sDG3rRtnA1vXNYKputwCtQrEzCgcfWEAZW+WtdZd04GpZC2SzMeuaXMWEWRg?=
+ =?us-ascii?Q?aWXZMvNZrAVXnZJLw+C5GxuH8VFoXoVfCc99ZTKuUsYKAgYzMwyZek80Db/f?=
+ =?us-ascii?Q?OORcdsTGtT+AmM9/v9YpNB8pli7MIF6cINHV9HAgllc2SJjeIZy3p93uY1Pb?=
+ =?us-ascii?Q?TMc1FsaEXtzsnL3dyovd2ApDvS7eXZRu8o3c1X/rQ1M/ehO9qEpcaNCEbQWt?=
+ =?us-ascii?Q?LaNHJtxazUXV3LG3a2yU54MHkoG2JGd3S2rdUM++z/hrmAbNNdAGE0CPKgvA?=
+ =?us-ascii?Q?c0DzHtEso6Qxb7SVEuuGNc/oRh0B0TjGrJJn6vdyObcuacbbE8A4z4ytBukL?=
+ =?us-ascii?Q?wsNqNSpkGSqNw956wmQ+LIS73p65rYxeXfgam+OvYLAteE1OC8O1rt8QC3E3?=
+ =?us-ascii?Q?cF63wWfcgJ2wiIgbj8UpXn16n7Nsi11pCBxqDfoaw7xMLQ=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(376005)(52116005)(366007)(1800799015)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?dy6kwP7WrnRUag0v587PL20VM2QqG8irlDJgH1pT5CTF5a7fNCvDWqSLDFWv?=
+ =?us-ascii?Q?j1E1yyciAw7jgT3i1auqfqQw58njaL3GskglaFxLqjfgw4Jkqs+B1Pi4OhEl?=
+ =?us-ascii?Q?6ieICQbsJf2TYmT1kXFAe539ToHvioS/7hqPWcx87qQl0B+kk4kxlSmBIvSU?=
+ =?us-ascii?Q?J1VDpblxWoDrZ9fU85EplOwZwD7lYw3XesIp0bwOmty1ST14kL5Qcj+KxWWA?=
+ =?us-ascii?Q?Rwgme1vYVI6hiUBjudEYyBJX/+sUyFQJr2zIoweAj5jRyHhqE+w8mphSkNj6?=
+ =?us-ascii?Q?2w+NyjUns5R6gObV11TK9RvhyngcQp4u0L7UL7cLg4fSk46BFGF8Qd54upKA?=
+ =?us-ascii?Q?vOKxAz/1NT3Hk6Yd8MHldpRZHuX0KjOjcZbR7MB5DN4dCeNW9H8y0gd1vaxG?=
+ =?us-ascii?Q?gRvfbiEPKiW6PlP3LRCoIlYV17iwQUK32xLWRPMI1LWEOPAOSeNV1O/ETSZp?=
+ =?us-ascii?Q?mAONg8DxC0u5+ifeHiS/MCYiuWsJueJsJxhG6IFgLJEzp9k6zOqbr3lPp3/2?=
+ =?us-ascii?Q?kzDmu03I1B8yGhTofIQeB7RaoAFUNrRklaP2Ncze9zS3DQsKzqcAZoDlav4J?=
+ =?us-ascii?Q?zD4h+FJ82KT0CCxjBuqzOOn5KqFZoHPG3NYGgFHkNTPd1zbmSebAfM04Ir2Z?=
+ =?us-ascii?Q?oCThl99VDX9DNrgTjW6wCDXXfYf8bqkNjZP4GRpEgN/D0Znl9a70a0Q8Xpsx?=
+ =?us-ascii?Q?g1wFzb4/Vzj5L+zBFM6LEObgrIELzLlYvsMUW51w6tk9kZ4D1/nDdH0YXYGN?=
+ =?us-ascii?Q?r2epHH+ckFmZ0jwvE4z+DLv7WXxKSSHoyPw95g5N4jWqnE5HXGe4QPDIcZ3Z?=
+ =?us-ascii?Q?1ip5gPT75r4w9FYmtrO9RHj6o9wm9c4l1ZZHNtJ74vOFcZTkjoR08Nd//cu6?=
+ =?us-ascii?Q?+tVd8rPRhLQViB1R5hNqCdcXfaUKTTKIFnxD3T87Ql4fQF3+0bAkt0hT69Dn?=
+ =?us-ascii?Q?mxUd+p8HtJZu5JoSkNFH4v8fbDEA5SHdlf3E0/UO85ph91g30gExsEKZxhbD?=
+ =?us-ascii?Q?pHV4ne4Mcrn9NddFggbFrPlUjBLOgmLFdvnTku+YNRTIitmapKbZNmKiqX7T?=
+ =?us-ascii?Q?8SArdSwcoF0BEx8JwGIqCFtF+cgPkcb3muLRqBYMhPDTuJgwzC6+B49QBMpy?=
+ =?us-ascii?Q?7EBt3bN9vkOFQQ0XrA1VfgsHO/ld2JQU8Kj2s47zHB0b3B1LBurmntOPCdvF?=
+ =?us-ascii?Q?uxK6HgQUjC3N9FT1mPt4HYwQjjYebBj8ikZGg3ZA5A6FCXGBWepGi+R8Op+r?=
+ =?us-ascii?Q?Bi4nJalbY0nWxfrV98LWXu7lqnIqYhejEqGZAqPatkQKGPuRjyOd76HB1pFT?=
+ =?us-ascii?Q?E0Hi8fe5fc5wbkaxwzdIxO/ExDJyJA7kAVCy3R+B+6osftawLb97IOBtovsU?=
+ =?us-ascii?Q?f+jCB/d3PDUlFwgVY6yiORLqmDwU13wxC8UTawDNBnIv/FLISPUH+OpRUTtG?=
+ =?us-ascii?Q?CR3GZk4zV0CmKf3fcSl8hQQTvEcnfv6yVKOnBxR72TxygPw9FBxGWOqYqcxg?=
+ =?us-ascii?Q?ceHNlSt0MKsGBNO7wDbjSsh9NrL4H5IF0+4D6N3QQTHUMjH4K6a2Zbyb7EBd?=
+ =?us-ascii?Q?iuR+AwJcJlgNrP2m69fgI0gr9eRImC9yg/zPSQGG?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9a9fec9b-d4e3-42a7-0d95-08dc6082792d
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2024 15:07:47.7499
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: G2AtcNb7vMSY897hxDPygNCH/pcAgW2ncI+4wubts7pga+jK6ggifrbyqDWqwvsUdy1RkfKXw2if0vchaH9vsA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB10330
 
-On Fri, Apr 19, 2024 at 12:00:40AM +0300, Andy Shevchenko wrote:
-> On Thu, Apr 18, 2024 at 10:00:02PM +0300, Serge Semin wrote:
-> > On Thu, Apr 18, 2024 at 02:47:18PM +0300, Andy Shevchenko wrote:
-> > > On Wed, Apr 17, 2024 at 11:11:46PM +0300, Serge Semin wrote:
-> > > > On Tue, Apr 16, 2024 at 10:04:42PM +0300, Andy Shevchenko wrote:
-> > > > > On Tue, Apr 16, 2024 at 07:28:57PM +0300, Serge Semin wrote:
-> 
-> ...
-> 
-> > > > > > +	if (dwc->direction == DMA_MEM_TO_DEV) {
-> > > > > > +		sms = dwc->dws.m_master;
-> > > > > > +		smsize = 0;
-> > > > > > +		dms = dwc->dws.p_master;
-> > > > > > +		dmsize = sconfig->dst_maxburst;
-> > > > 
-> > > > > I would group it differently, i.e.
-> > > > > 
-> > > > > 		sms = dwc->dws.m_master;
-> > > > > 		dms = dwc->dws.p_master;
-> > > > > 		smsize = 0;
-> > > > > 		dmsize = sconfig->dst_maxburst;
-> > > > 
-> > > > Could you please clarify, why? From my point of view it was better to
-> > > > group the source master ID and the source master burst size inits
-> > > > together.
-> > 
-> > > Sure. The point here is that when you look at the DMA channel configuration
-> > > usually you operate with the semantically tied fields for source and
-> > > destination. At least this is my experience, I always check both sides
-> > > of the transfer for the same field, e.g., master setting, hence I want to
-> > > have them coupled.
-> > 
-> > Ok. I see. Thanks for clarification. I normally do that in another
-> > order: group the functionally related fields together - all
-> > source-related configs first, then all destination-related configs.
-> > Honestly I don't have strong opinion about this part, it's just my
-> > personal preference. Am I right to think that from your experience in
-> > kernel it's normally done in the order you described?
-> 
+Add peripheral types ID 27 for I2C because sdma firmware (sdma-6q: v3.6,
+sdma-7d: v4.6) support I2C DMA transfer.
 
-> In this driver I believe I have followed that one, yes.
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
 
-Agreed then. I'll change the order to the way you ask.
+Notes:
+    Change from v4 to v5
+    - Update I2C to number 27
+    - Add Krzysztof Kozlowski's ACK tag
 
--Serge(y)
+ Documentation/devicetree/bindings/dma/fsl,imx-sdma.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-> 
-> > > > > > +	} else if (dwc->direction == DMA_DEV_TO_MEM) {
-> > > > > > +		sms = dwc->dws.p_master;
-> > > > > > +		smsize = sconfig->src_maxburst;
-> > > > > > +		dms = dwc->dws.m_master;
-> > > > > > +		dmsize = 0;
-> > > > > > +	} else /* DMA_MEM_TO_MEM */ {
-> > > > > > +		sms = dwc->dws.m_master;
-> > > > > > +		smsize = 0;
-> > > > > > +		dms = dwc->dws.m_master;
-> > > > > > +		dmsize = 0;
-> > > > > > +	}
-> > > > > 
-> > > > > Ditto for two above cases.
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+diff --git a/Documentation/devicetree/bindings/dma/fsl,imx-sdma.yaml b/Documentation/devicetree/bindings/dma/fsl,imx-sdma.yaml
+index 37135fa024f9b..738b25b88b377 100644
+--- a/Documentation/devicetree/bindings/dma/fsl,imx-sdma.yaml
++++ b/Documentation/devicetree/bindings/dma/fsl,imx-sdma.yaml
+@@ -94,6 +94,7 @@ properties:
+           - SAI: 24
+           - Multi SAI: 25
+           - HDMI Audio: 26
++          - I2C: 27
+ 
+        The third cell: transfer priority ID
+          enum:
+-- 
+2.34.1
+
 

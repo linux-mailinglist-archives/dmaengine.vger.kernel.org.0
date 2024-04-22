@@ -1,247 +1,145 @@
-Return-Path: <dmaengine+bounces-1914-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1915-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3BC528AB4A6
-	for <lists+dmaengine@lfdr.de>; Fri, 19 Apr 2024 19:59:15 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 28A298AC6A7
+	for <lists+dmaengine@lfdr.de>; Mon, 22 Apr 2024 10:19:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A74431F22868
-	for <lists+dmaengine@lfdr.de>; Fri, 19 Apr 2024 17:59:14 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A3BC2B21A38
+	for <lists+dmaengine@lfdr.de>; Mon, 22 Apr 2024 08:19:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0166C13D287;
-	Fri, 19 Apr 2024 17:57:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fgKerGuS"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45F1F5103C;
+	Mon, 22 Apr 2024 08:18:50 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3461E13D25F;
-	Fri, 19 Apr 2024 17:57:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D7E8502B6;
+	Mon, 22 Apr 2024 08:18:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713549462; cv=none; b=Xiun+voCca57Y93ClHCZ3/5iKhjWg4TODw7qwG6F8/zruDbJubwm92LPpu4FWIxBMFBQPDcb8rf+k0wZX/4KVTZNYNDe5E+rY2BZZHQEIC+G/bZHWoiJL2BtSSzk6gGl6n13l6/embLI/PS5iUTQgJqAA+6DgxB7c4TeFAtc47s=
+	t=1713773930; cv=none; b=KTm7pF/s+L1x4s93exkltT3gtWTwvsrb5ODXQhDqV1rnnAEQ3cC/R1o07e8mV5kWKUt9/m0P52Y/SpCWQmj49+zfMhBkfvGYS8rXuoFDEqNLwia2T6OS19rsiHEZugkH98ZHKaimpuWC36p45qdtEJ9VWGvZGdRVj/5IXH1HAes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713549462; c=relaxed/simple;
-	bh=9trPxT7067agZJig5NFIevW79dFHtTF0XpemZk9R2eE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EmCK2dKHyzP4g0wAhvKn2WHpaoXV1QEdSABgFc09JQ6IijTDF8cpgwx/QV0HQJ4VXbuER+wXeM0eKcj8TjfOpp5zYFAaYOgI39pIS2ge4SFX8X1FbDym0ePsoVBUNC9JonF7nYpD1JCDs3yn18lwLf7RlEZCWpf9YlaMj3vYDhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fgKerGuS; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-516d2b9cd69so2815260e87.2;
-        Fri, 19 Apr 2024 10:57:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713549459; x=1714154259; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q8jv7DlUuWmwKBFAeDpE74984/WTEdS+lAt5ksO5mUc=;
-        b=fgKerGuScRGkpmuJwbYDNDsCadyzUbro4RVJHtxhUE8IVbSy5hsyQDjZiZNQIkKz0C
-         7MgWiH+IvIXgdIgUAFmxJVP5/A2cbpuPJWE1KhPCMVfifxTLKMLd4BrSBfKU1nzXBKVm
-         UUMjsofJXqxMX4lWqKhTBEGhz6fEL5esdX3tv1lNxhDIUqOlTx0m/b98bcCw/oqpOkcf
-         6+zIXy5lk84ecRX0popVtEzjXJBNjeZGTs1CW8GrkM2G9Dfj+YbYSDsE+4qNDXmJGbai
-         iEmh9MVR8Ye0WTJB1mFgOqJXM3LPdF9DYpynmlq5njzEDRYHD2DMR3jP71I+fd+Zrepl
-         IeZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713549459; x=1714154259;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Q8jv7DlUuWmwKBFAeDpE74984/WTEdS+lAt5ksO5mUc=;
-        b=kio/cpTpn8NgMa6vWvVQeBHXpOSgp1f2v023he4Q8gtaKeXlq3r/kQH1iC5XHP/NLg
-         QA+hyJf1ta0ra4AttakC57Ir1bRuBnfIgW+4pNWQrUTxJWQXPcnGZKShHt2GlS1Au098
-         IaNf6CD3Jip095g4hpN7nI99yLPmTPED5hqSQFxdop4vJFbsPVCiZ9mj+j9VGCJFs3gH
-         I6tGyezQIsQ5aKz7GW2ZrMT2SLCAzqJI2A8gPVcXNAjbjIUfZhQ43n/Oq12kzdpsjElr
-         uflNFKs4fCDns8DNCFCpSYW394isok81+MOpE8hTmL8J3rJ2TFRz3LCzbaQJ8K4psKx4
-         JeCA==
-X-Forwarded-Encrypted: i=1; AJvYcCXlFYE+j87xGlQypIYGg2TuQwJjkQlOJKps9sq49pdxdWqC4xOIdZrbT7KURP9EMg2yAaTrBdkgbYutInGqFdevvzwv4Up6fmMWtgWIM4DPjOa9x1A78hBS+VvcpK0Otff013JfvTS8SJ2QXSGQJN+JQX4d9iKtxkC3QUhAkDSXcgDc+4uL
-X-Gm-Message-State: AOJu0YxmTWeIOqCEsM+0xJbwU9ZQ9zpnWbhwoDfcCnm0JIdyJGT2J+Zs
-	FZzjTF4Q2v9stnv1NZimJ/egoAnCsbDv3Zqt9EA4qVlaMA+KpCTZs+L4Nw==
-X-Google-Smtp-Source: AGHT+IF8suakDMO3Xv4gfrfd+R0Kl8qG0Bk8QH9pxx2ndjDtkxg7LRPn+7a/YXWo5BezN6B4QexQBg==
-X-Received: by 2002:a05:6512:314e:b0:518:6d2:2a8f with SMTP id s14-20020a056512314e00b0051806d22a8fmr1628805lfi.24.1713549459060;
-        Fri, 19 Apr 2024 10:57:39 -0700 (PDT)
-Received: from localhost ([213.79.110.82])
-        by smtp.gmail.com with ESMTPSA id l29-20020ac2555d000000b0051929ed7b08sm794139lfk.140.2024.04.19.10.57.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Apr 2024 10:57:38 -0700 (PDT)
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Viresh Kumar <vireshk@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Vinod Koul <vkoul@kernel.org>
-Cc: Serge Semin <fancer.lancer@gmail.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	s=arc-20240116; t=1713773930; c=relaxed/simple;
+	bh=1R0QdiqBkh2lDI1KZWlD4yhHxXvFKtuxtuwBOw/ITOE=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=a+EoWro1vSYv/ZNn5sKp0LrXGEJL9PtjzaARAm/t9y97X+8es7AW8AXSONV2Xlw2Idw0f5RRs3eFRU0usNcj/3jgG7LtGO7qZ0wpNGQ6XH/onCZ8zFLmgWDArikSSFqCwco1GtxsJ9hEpRRlWDQsvNe7S4QvMQlAie6SNuX1T30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VNJ6g0Nzdz4x1R;
+	Mon, 22 Apr 2024 18:18:35 +1000 (AEST)
+From: Michael Ellerman <patch-notifications@ellerman.id.au>
+To: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Damien Le Moal <dlemoal@kernel.org>, Jiri Kosina <jikos@kernel.org>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	dmaengine@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 6/6] dmaengine: dw: Unify ret-val local variables naming
-Date: Fri, 19 Apr 2024 20:56:48 +0300
-Message-ID: <20240419175655.25547-7-fancer.lancer@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240419175655.25547-1-fancer.lancer@gmail.com>
-References: <20240419175655.25547-1-fancer.lancer@gmail.com>
+	Corey Minyard <minyard@acm.org>, Peter Huewe <peterhuewe@gmx.de>,
+	Jarkko Sakkinen <jarkko@kernel.org>, Tero Kristo <kristo@kernel.org>,
+	Stephen Boyd <sboyd@kernel.org>, Ian Abbott <abbotti@mev.co.uk>,
+	H Hartley Sweeten <hsweeten@visionengravers.com>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Len Brown <lenb@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+	John Allen <john.allen@amd.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Vinod Koul <vkoul@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Moritz Fischer <mdf@kernel.org>, Liviu Dudau <liviu.dudau@arm.com>,
+	Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Michael Hennerich <michael.hennerich@analog.com>,
+	Peter Rosin <peda@axentia.se>, Lars-Peter Clausen <lars@metafoo.de>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Markuss Broks <markuss.broks@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Lee Jones <lee@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Iyappan Subramanian <iyappan@os.amperecomputing.com>,
+	Yisen Zhuang <yisen.zhuang@huawei.com>,
+	Stanislaw Gruszka <stf_xl@wp.pl>, Kalle Valo <kvalo@kernel.org>,
+	Sebastian Reichel <sre@kernel.org>, Tony Lindgren <tony@atomide.com>,
+	Mark Brown <broonie@kernel.org>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Xiang Chen <chenxiang66@hisilicon.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Vaibhav Hiremath <hvaibhav.linux@gmail.com>,
+	Alex Elder <elder@kernel.org>, Jiri Slaby <jirislaby@kernel.org>,
+	Jacky Huang <ychuang3@nuvoton.com>, Helge Deller <deller@gmx.de>,
+	Christoph Hellwig <hch@lst.de>, Robin Murphy <robin.murphy@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Kees Cook <keescook@chromium.org>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Anna Schumaker <anna@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>, Takashi Iwai <tiwai@suse.com>,
+	linuxppc-dev@lists.ozlabs.org, linux-ide@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net,
+	linux-integrity@vger.kernel.org, linux-omap@vger.kernel.org,
+	linux-clk@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
+	linux-efi@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-fpga@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-input@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-iio@vger.kernel.org, linux-stm32@st-md-mailman.stormr,
+	eply.com@web.codeaurora.org, linux-arm-kernel@lists.infradead.org,
+	netdev@vger.kernel.org, linux-leds@vger.kernel.org,
+	linux-wireless@vger.kernel.org, linux-rtc@vger.kernel.org,
+	linux-scsi@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-amlogic@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org, greybus-dev@lists.linaro.org,
+	linux-staging@lists.linux.dev, linux-serial@vger.kernel.org,
+	linux-usb@vger.kernel.org, linux-fbdev@vger.kernel.org,
+	iommu@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
+	kasan-dev@googlegroups.com, linux-hardening@vger.kernel.org,
+	linux-nfs@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	alsa-devel@alsa-project.org, linux-sound@vger.kernel.org
+In-Reply-To: <20240403080702.3509288-1-arnd@kernel.org>
+References: <20240403080702.3509288-1-arnd@kernel.org>
+Subject: Re: (subset) [PATCH 00/34] address all -Wunused-const warnings
+Message-Id: <171377378377.1025456.1313405994816400451.b4-ty@ellerman.id.au>
+Date: Mon, 22 Apr 2024 18:16:23 +1000
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Currently there are two names utilized in the driver to keep the functions
-call status: ret and err. For the sake of unification convert to using the
-first version only.
+On Wed, 03 Apr 2024 10:06:18 +0200, Arnd Bergmann wrote:
+> Compilers traditionally warn for unused 'static' variables, but not
+> if they are constant. The reason here is a custom for C++ programmers
+> to define named constants as 'static const' variables in header files
+> instead of using macros or enums.
+> 
+> In W=1 builds, we get warnings only static const variables in C
+> files, but not in headers, which is a good compromise, but this still
+> produces warning output in at least 30 files. These warnings are
+> almost all harmless, but also trivial to fix, and there is no
+> good reason to warn only about the non-const variables being unused.
+> 
+> [...]
 
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+Applied to powerpc/next.
 
----
+[01/34] powerpc/fsl-soc: hide unused const variable
+        https://git.kernel.org/powerpc/c/01acaf3aa75e1641442cc23d8fe0a7bb4226efb1
 
-Changelog v2:
-- New patch created on v2 review stage. (Andy)
----
- drivers/dma/dw/core.c     | 20 ++++++++++----------
- drivers/dma/dw/platform.c | 20 ++++++++++----------
- 2 files changed, 20 insertions(+), 20 deletions(-)
-
-diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
-index 32a66f9effd9..dd75f97a33b3 100644
---- a/drivers/dma/dw/core.c
-+++ b/drivers/dma/dw/core.c
-@@ -1155,7 +1155,7 @@ int do_dma_probe(struct dw_dma_chip *chip)
- 	bool			autocfg = false;
- 	unsigned int		dw_params;
- 	unsigned int		i;
--	int			err;
-+	int			ret;
- 
- 	dw->pdata = devm_kzalloc(chip->dev, sizeof(*dw->pdata), GFP_KERNEL);
- 	if (!dw->pdata)
-@@ -1171,7 +1171,7 @@ int do_dma_probe(struct dw_dma_chip *chip)
- 
- 		autocfg = dw_params >> DW_PARAMS_EN & 1;
- 		if (!autocfg) {
--			err = -EINVAL;
-+			ret = -EINVAL;
- 			goto err_pdata;
- 		}
- 
-@@ -1191,7 +1191,7 @@ int do_dma_probe(struct dw_dma_chip *chip)
- 		pdata->chan_allocation_order = CHAN_ALLOCATION_ASCENDING;
- 		pdata->chan_priority = CHAN_PRIORITY_ASCENDING;
- 	} else if (chip->pdata->nr_channels > DW_DMA_MAX_NR_CHANNELS) {
--		err = -EINVAL;
-+		ret = -EINVAL;
- 		goto err_pdata;
- 	} else {
- 		memcpy(dw->pdata, chip->pdata, sizeof(*dw->pdata));
-@@ -1203,7 +1203,7 @@ int do_dma_probe(struct dw_dma_chip *chip)
- 	dw->chan = devm_kcalloc(chip->dev, pdata->nr_channels, sizeof(*dw->chan),
- 				GFP_KERNEL);
- 	if (!dw->chan) {
--		err = -ENOMEM;
-+		ret = -ENOMEM;
- 		goto err_pdata;
- 	}
- 
-@@ -1221,15 +1221,15 @@ int do_dma_probe(struct dw_dma_chip *chip)
- 					 sizeof(struct dw_desc), 4, 0);
- 	if (!dw->desc_pool) {
- 		dev_err(chip->dev, "No memory for descriptors dma pool\n");
--		err = -ENOMEM;
-+		ret = -ENOMEM;
- 		goto err_pdata;
- 	}
- 
- 	tasklet_setup(&dw->tasklet, dw_dma_tasklet);
- 
--	err = request_irq(chip->irq, dw_dma_interrupt, IRQF_SHARED,
-+	ret = request_irq(chip->irq, dw_dma_interrupt, IRQF_SHARED,
- 			  dw->name, dw);
--	if (err)
-+	if (ret)
- 		goto err_pdata;
- 
- 	INIT_LIST_HEAD(&dw->dma.channels);
-@@ -1341,8 +1341,8 @@ int do_dma_probe(struct dw_dma_chip *chip)
- 	 */
- 	dma_set_max_seg_size(dw->dma.dev, dw->chan[0].block_size);
- 
--	err = dma_async_device_register(&dw->dma);
--	if (err)
-+	ret = dma_async_device_register(&dw->dma);
-+	if (ret)
- 		goto err_dma_register;
- 
- 	dev_info(chip->dev, "DesignWare DMA Controller, %d channels\n",
-@@ -1356,7 +1356,7 @@ int do_dma_probe(struct dw_dma_chip *chip)
- 	free_irq(chip->irq, dw);
- err_pdata:
- 	pm_runtime_put_sync_suspend(chip->dev);
--	return err;
-+	return ret;
- }
- 
- int do_dma_remove(struct dw_dma_chip *chip)
-diff --git a/drivers/dma/dw/platform.c b/drivers/dma/dw/platform.c
-index 7d9d4c951724..47c58ad468cb 100644
---- a/drivers/dma/dw/platform.c
-+++ b/drivers/dma/dw/platform.c
-@@ -29,7 +29,7 @@ static int dw_probe(struct platform_device *pdev)
- 	struct dw_dma_chip_pdata *data;
- 	struct dw_dma_chip *chip;
- 	struct device *dev = &pdev->dev;
--	int err;
-+	int ret;
- 
- 	match = device_get_match_data(dev);
- 	if (!match)
-@@ -51,9 +51,9 @@ static int dw_probe(struct platform_device *pdev)
- 	if (IS_ERR(chip->regs))
- 		return PTR_ERR(chip->regs);
- 
--	err = dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
--	if (err)
--		return err;
-+	ret = dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
-+	if (ret)
-+		return ret;
- 
- 	if (!data->pdata)
- 		data->pdata = dev_get_platdata(dev);
-@@ -69,14 +69,14 @@ static int dw_probe(struct platform_device *pdev)
- 	chip->clk = devm_clk_get_optional(chip->dev, "hclk");
- 	if (IS_ERR(chip->clk))
- 		return PTR_ERR(chip->clk);
--	err = clk_prepare_enable(chip->clk);
--	if (err)
--		return err;
-+	ret = clk_prepare_enable(chip->clk);
-+	if (ret)
-+		return ret;
- 
- 	pm_runtime_enable(&pdev->dev);
- 
--	err = data->probe(chip);
--	if (err)
-+	ret = data->probe(chip);
-+	if (ret)
- 		goto err_dw_dma_probe;
- 
- 	platform_set_drvdata(pdev, data);
-@@ -90,7 +90,7 @@ static int dw_probe(struct platform_device *pdev)
- err_dw_dma_probe:
- 	pm_runtime_disable(&pdev->dev);
- 	clk_disable_unprepare(chip->clk);
--	return err;
-+	return ret;
- }
- 
- static void dw_remove(struct platform_device *pdev)
--- 
-2.43.0
-
+cheers
 

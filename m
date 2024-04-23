@@ -1,97 +1,103 @@
-Return-Path: <dmaengine+bounces-1941-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1942-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86D7C8AF3D0
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Apr 2024 18:23:20 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 208E88AF3F1
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Apr 2024 18:26:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 434232880BB
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Apr 2024 16:23:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C6AE01F25E27
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Apr 2024 16:26:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADB0C13CF9F;
-	Tue, 23 Apr 2024 16:23:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63ECB13D884;
+	Tue, 23 Apr 2024 16:24:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J9X85Q1S"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lJEQSKSg"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25E6F13BACF
-	for <dmaengine@vger.kernel.org>; Tue, 23 Apr 2024 16:23:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6F0213D258;
+	Tue, 23 Apr 2024 16:24:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713889396; cv=none; b=BTwBEheg9K4kOQj1higw8flpDZSRV/zS2OsJbCWHLmcjN1wSwBkxWmEoXAjJhwf+ZUoEXmSPaLgbLtbvlqIurVwGTrDvcMAilY0Zu7XfPPtp7/J2hkOztAJKqACnkTLSv9y3ffxdRRnY2jcPvL0uYKWuy6PlQSGrxfhnhvWwjbc=
+	t=1713889483; cv=none; b=UVuYJEqJulVdcotOBXWQH1HiLfR1Ab+rsobCLdewh/vYzEZyx0n+0AzmIN8SUMqjxUbmN9rABDaCAliAtBH2EC0/FJ0fP7B9f9t5xmna6HS397a5rHzNl2UIw9rkqQG7f0eQL6mb2iQ60E09pxbQsxJa4djGQcE2DjgxtmpYKpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713889396; c=relaxed/simple;
-	bh=di3fBEWaf3r4JLUJjdiQ27NJdTUJM55Vizjr1hVxt4M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CbG+9YUPv9jkmI0z3X03dMwo5XE6h6BCu/mJq3YSHuzzzcuH4tks7XWQy9OWYL8ka5oTDEEOc5OmvbUj4ow0ZHGR9tktPGbRrd87p/BfAMJh1G8CU3b1BSUTxVZVGJRiaaEW5/D08L4LkkCwLQKCkPT97D60iqOi+RTXDWKfJKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=J9X85Q1S; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2db6f5977e1so78375131fa.2
-        for <dmaengine@vger.kernel.org>; Tue, 23 Apr 2024 09:23:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713889393; x=1714494193; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=eV3JYQjvg7ps2tDw1BUY+qYafvfWNiGj6kHpWXZPB7M=;
-        b=J9X85Q1SCGqjEgx8+ytKq+l3Fo4gRU3extrqVg/EW4ZS21Rpr5MRa6dQwBqbzkxGHp
-         Pb4cePJpPECjcoq/mwbAP/O205/5qwcdpgbKPhejLW+3K2FfafmTh+hHGn1KhnDGlaQ4
-         gUorWi71SkrjvuXSsK/KzFFmHiTGb9obhZkCTmefBetw3afqTKy3cNApoEoqd31KzOhS
-         TOnKce16VYlxdc2qjx0tUn0e2jtYj3zYku50FU4+UgBQXl7LfvmHCuXTvTN8gTLaf7bb
-         AEYoj4rjxsVPkr23ezYdWxxPgNcW3a84/neDEpix4vlRIHOg7mzH/Tj9xRLPRimIWurh
-         qssg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713889393; x=1714494193;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eV3JYQjvg7ps2tDw1BUY+qYafvfWNiGj6kHpWXZPB7M=;
-        b=ldzOhZxQK1aLJwPE9GHwuZgfB/luqbi3yTN8AUO+6JiTnHcA0CH6QWg8WcCCb9IWXD
-         H3lXvKgyz+NrtMp9O9JbJeLr0SVsyTki93gub0VJvuuy5YRzkTxXVLXCnJjXx5pcVzwd
-         7lzcOTNZJjrNR0pcOFMDYDwYFjYxq2Lu6GdyDww8wzSnJX2egwII5tzoHwewP4FN3Rbx
-         rZPZ+t2gNfBFcTk/aHmPgAbEbC5DBA94j/a5e/QDtTeVX8xUh5z/yfmwNE9+AxpbY2Br
-         K9XEHlk3Mt94qZEagNcFnDbgnsuZjY35HRCw1FGjzFC1JKzU+laDV8zx2XAb9d426EXK
-         rTfg==
-X-Forwarded-Encrypted: i=1; AJvYcCXtZ5Yuz+dBIsoWh8owYHUQGPajVFATHmRCnQmRv10XRRCVULeZ34UGbxkDNmXgqLx9sTjfcQqavdpyCdVAMoqV6/IVQvNLyGcD
-X-Gm-Message-State: AOJu0YyQTMBm5OdRIQrv/qCaDpvMQnQ6wSdjZdYA6bQUWti/JJieXN7n
-	Axsb5TsUVdOgcLBxGRVDXDohvvGylaO87rqqpSONMisfXMw6douCN0UNgwDLXXg=
-X-Google-Smtp-Source: AGHT+IG6D6t4oovl9EKg9UPxHrmD6SGFGORMtpSatzoOpPt6wgyrSwG5hvAvInKw3kGGJ2qbs5jrQw==
-X-Received: by 2002:a2e:834b:0:b0:2d8:7363:ff36 with SMTP id l11-20020a2e834b000000b002d87363ff36mr7848169ljh.37.1713889393341;
-        Tue, 23 Apr 2024 09:23:13 -0700 (PDT)
-Received: from [172.30.205.0] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
-        by smtp.gmail.com with ESMTPSA id u15-20020a2e854f000000b002db706ec5f7sm1735182ljj.98.2024.04.23.09.23.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Apr 2024 09:23:13 -0700 (PDT)
-Message-ID: <2efd6856-0e20-4b0f-93d3-60926ba2e4f3@linaro.org>
-Date: Tue, 23 Apr 2024 18:23:08 +0200
+	s=arc-20240116; t=1713889483; c=relaxed/simple;
+	bh=MAGpx9DozhaxR+pcHxx1eWBRXHS2mWRCrlo0LiFryMA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ccRSZIk1/MvXlbL84DBp56HJimaaPfAKTXT1aYn+fUDZYnl6OU8BOQkbZ97YODzNrAiSV0In+3iIOsp9eKFv40/g2k1zu/Ni7scY0n6z7IIehs4Aig/5DACKtCu89k3rFQktMC53CWx6Lyfy+JnlK7qCSVa9/06+jYzmJMN+lEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lJEQSKSg; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43N5jDsY001776;
+	Tue, 23 Apr 2024 16:24:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=0N9q1LtPjXS8jdgyLRNVjTr/mQDPT35HYCrHX0jRjHw=; b=lJ
+	EQSKSgH57zPjZJaMf6OZevVK1eEHS70wlqQSVqUBYh2xAL2Rcu2h5DaxcCzBLAoU
+	zcKqP0IhIm7aZIAAOq6p1Gmd6vusyuqbKtTEMdTRh1cjvF4o93KvZVrXcWpbSYJw
+	gO8/sD1thw1gDRCu2G/yofJVJyFQtOE4CUBJqCJIX+LbgCpCsJFw5FBmPNDkHVKc
+	J1WdmpNmTmvxScFAXjpIoDt3YoW9ekcWnM3ii2aJJzolpuRotq6eaox2TxEp90h6
+	GTFJcyad/tRBPfQNC4D8dEDZgf7KCA+wEAuh5fAnY3BGF5SsehoooUyaXIHQEnVL
+	l0TeizMXBQQxT2B7L9+g==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xnvtnau3q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 23 Apr 2024 16:24:33 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43NGOWVM006056
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 23 Apr 2024 16:24:32 GMT
+Received: from [10.226.59.182] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 23 Apr
+ 2024 09:24:31 -0700
+Message-ID: <24cbf250-59a0-740d-78b3-8a2bca3e1695@quicinc.com>
+Date: Tue, 23 Apr 2024 10:24:31 -0600
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.0
 Subject: Re: [PATCH 1/2] dmaengine: qcom: Drop hidma DT support
-To: "Rob Herring (Arm)" <robh@kernel.org>, Sinan Kaya <okaya@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>, Vinod Koul <vkoul@kernel.org>
-Cc: Dan Carpenter <dan.carpenter@linaro.org>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
- dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240423161413.481670-1-robh@kernel.org>
 Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
+To: "Rob Herring (Arm)" <robh@kernel.org>, Sinan Kaya <okaya@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>
+CC: Dan Carpenter <dan.carpenter@linaro.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20240423161413.481670-1-robh@kernel.org>
+From: Jeffrey Hugo <quic_jhugo@quicinc.com>
 In-Reply-To: <20240423161413.481670-1-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: yW7VxkTxXnQ_jbTBpUWdeaWl7kgl_El7
+X-Proofpoint-ORIG-GUID: yW7VxkTxXnQ_jbTBpUWdeaWl7kgl_El7
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-23_14,2024-04-23_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011
+ lowpriorityscore=0 mlxlogscore=999 phishscore=0 priorityscore=1501
+ mlxscore=0 adultscore=0 bulkscore=0 spamscore=0 malwarescore=0
+ impostorscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2404010003 definitions=main-2404230037
 
-
-
-On 4/23/24 18:14, Rob Herring (Arm) wrote:
+On 4/23/2024 10:14 AM, Rob Herring (Arm) wrote:
 > The DT support in hidma has been broken since commit 37fa4905d22a
 > ("dmaengine: qcom_hidma: simplify DT resource parsing") in 2018. The
 > issue is the of_address_to_resource() calls bail out on success rather
@@ -101,9 +107,6 @@ On 4/23/24 18:14, Rob Herring (Arm) wrote:
 > 
 > Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
 > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-
-Konrad
+Reviewed-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
 

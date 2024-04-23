@@ -1,147 +1,132 @@
-Return-Path: <dmaengine+bounces-1916-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1917-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9223B8ADC4F
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Apr 2024 05:39:14 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1596D8ADE5D
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Apr 2024 09:38:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BA1001C218E1
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Apr 2024 03:39:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C60702815D1
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Apr 2024 07:38:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BD4218E1F;
-	Tue, 23 Apr 2024 03:39:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79E4E47796;
+	Tue, 23 Apr 2024 07:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g2nCNumm"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C20115E89;
-	Tue, 23 Apr 2024 03:39:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88F5F46441;
+	Tue, 23 Apr 2024 07:38:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713843550; cv=none; b=mb1snbxhwxNbt6l/56pSGc720iWiRBS4Ouh9DCYpGNOhKSBnUGmjQlbHqq4pNHyZvHTTLoheiV6UlnBpaPDXe7PR/fqJKW+cr+ce2GIDlMudjE9nJJYDEujwdXijk0Ar7LMRBCzGPreoARqTIWebgbwm3h52NvsiC9DDyAvB4DE=
+	t=1713857931; cv=none; b=auiBXftCscdy1v3JteyE6UXnPdDO023fsUB1RZrT0eJj5lV2XXQ6QbP+zXeaEOZ44AVWBEL0iCz7uz7rGedi0/ZODbdZJshyic8cKxewU4/L8JUzFqmk8ATaksWz1PQj5vNIH3QvGU7gWCamQaXqaBq0JwIx8wPT6V+MQ2AEBNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713843550; c=relaxed/simple;
-	bh=pNiBG+e9qgp5dz04/zKlKcKVo2+IvJWVJQw3C1VcUgQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=X8YLitB30h+YHptIduFWmxX4Cy3ZBpHhH85GUGEUGkg9jgVbCbyVySYM6hjZkkB07o84KdhN0Bet8vxnKJ9rg7LcVK+FhCawL4umcGnXKMaIlETrdOxqA/KznRdZzfUckFA+8LngqHyjYVruVZJtopPCg94yIgrlmvwxGpv07s8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4VNnrW2q2tz1HBjK;
-	Tue, 23 Apr 2024 11:38:03 +0800 (CST)
-Received: from kwepemf500004.china.huawei.com (unknown [7.202.181.242])
-	by mail.maildlp.com (Postfix) with ESMTPS id 58B4D1A016C;
-	Tue, 23 Apr 2024 11:39:03 +0800 (CST)
-Received: from [10.67.121.175] (10.67.121.175) by
- kwepemf500004.china.huawei.com (7.202.181.242) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Tue, 23 Apr 2024 11:39:02 +0800
-Message-ID: <d0ea4a88-900a-ad38-0580-017ae20c2fd4@huawei.com>
-Date: Tue, 23 Apr 2024 11:39:02 +0800
+	s=arc-20240116; t=1713857931; c=relaxed/simple;
+	bh=mjRkFfdBtZbVYBPrvsjPmWl58HkXWr16xgIBP3dQroM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=COuefhTOhK8DI4ss2fOuEjv8uAb0+mEcyP6subvAxUnwnFt4Xv/wA0S6q1dYcudFqWQs7E9pwGod0fmudnC0pU8PEWo9bLHx8OoSA/4XIUvV472TggvfkSVDmve/iE2brcMDUfSLkJuKQLMmq4XpcX09NUmVeRKEwaNGqwajEbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g2nCNumm; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713857929; x=1745393929;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=mjRkFfdBtZbVYBPrvsjPmWl58HkXWr16xgIBP3dQroM=;
+  b=g2nCNummvlRj+JVkPdJL1qOV+3rWgeywty2ipzANBbnJsXrpqJJhNC7x
+   dGhRdKrMZSNTTUv7zqboihF8yRIa41pCGR5wGmoqMRkgLsiM8PALfGbR1
+   QdhdVn+mJmY7z6GSblg/InVuNT9Rjr5AtxSwnZ3T6ufoZTK95L2gBnmWx
+   axZ/DlclZSuohycmHPNp5Se6llS/di/BlqDwFb3xVT7eUAq0rvYY2Du5K
+   lXp5pwMepesZQcGKV6qnCKNpwAwNpF8ae4EQ3zNICZrq10y2XAS9Y9ttD
+   omYiHR2SC0iie8sQ17O7EN5NbilH9cgNWuen1tOzmGrUrFS0yOTUm+Cb1
+   A==;
+X-CSE-ConnectionGUID: GvO6N5AUR2yId7/OmN5Dmw==
+X-CSE-MsgGUID: SWnKJNYuTzqKvj7J1LwpQg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11052"; a="31918033"
+X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
+   d="scan'208";a="31918033"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 00:38:48 -0700
+X-CSE-ConnectionGUID: s/KDoHdVTiSM0XnX3bJmkw==
+X-CSE-MsgGUID: mzxAigJiRoSRJZwbwrOibA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
+   d="scan'208";a="24332315"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa006.fm.intel.com with ESMTP; 23 Apr 2024 00:38:37 -0700
+Date: Tue, 23 Apr 2024 15:33:16 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Corey Minyard <minyard@acm.org>,
+	Peter Huewe <peterhuewe@gmx.de>,
+	Jarkko Sakkinen <jarkko@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
+	Xu Yilun <yilun.xu@intel.com>, Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+	Michael Hennerich <michael.hennerich@analog.com>,
+	Peter Rosin <peda@axentia.se>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Iyappan Subramanian <iyappan@os.amperecomputing.com>,
+	Keyur Chudgar <keyur@os.amperecomputing.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Yisen Zhuang <yisen.zhuang@huawei.com>,
+	Salil Mehta <salil.mehta@huawei.com>,
+	Tony Lindgren <tony@atomide.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Xiang Chen <chenxiang66@hisilicon.com>,
+	"James E.J. Bottomley" <jejb@linux.ibm.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Jacky Huang <ychuang3@nuvoton.com>,
+	Shan-Chun Hung <schung@nuvoton.com>, Arnd Bergmann <arnd@arndb.de>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Tom Rix <trix@redhat.com>,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Randy Dunlap <rdunlap@infradead.org>, Rob Herring <robh@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	openipmi-developer@lists.sourceforge.net,
+	linux-integrity@vger.kernel.org, dmaengine@vger.kernel.org,
+	linux-fpga@vger.kernel.org, linux-input@vger.kernel.org,
+	linux-i2c@vger.kernel.org, netdev@vger.kernel.org,
+	linux-omap@vger.kernel.org, linux-rtc@vger.kernel.org,
+	linux-scsi@vger.kernel.org, linux-staging@lists.linux.dev,
+	linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 33/34] drivers: remove incorrect of_match_ptr/ACPI_PTR
+ annotations
+Message-ID: <ZidkPHp27jz0t6t3@yilunxu-OptiPlex-7050>
+References: <20240403080702.3509288-1-arnd@kernel.org>
+ <20240403080702.3509288-34-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH] dmaengine: dmatest: fix timeout caused by kthread_stop
-To: Vinod Koul <vkoul@kernel.org>
-CC: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20230720114102.51053-1-haijie1@huawei.com>
- <ZiAEbOMxy9pBcOX5@matsya>
-From: Jie Hai <haijie1@huawei.com>
-In-Reply-To: <ZiAEbOMxy9pBcOX5@matsya>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemf500004.china.huawei.com (7.202.181.242)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240403080702.3509288-34-arnd@kernel.org>
 
-Hi, Vinod Koul,
+> diff --git a/drivers/fpga/versal-fpga.c b/drivers/fpga/versal-fpga.c
+> index 3710e8f01be2..e6189106c468 100644
+> --- a/drivers/fpga/versal-fpga.c
+> +++ b/drivers/fpga/versal-fpga.c
+> @@ -69,7 +69,7 @@ static struct platform_driver versal_fpga_driver = {
+>  	.probe = versal_fpga_probe,
+>  	.driver = {
+>  		.name = "versal_fpga_manager",
+> -		.of_match_table = of_match_ptr(versal_fpga_of_match),
+> +		.of_match_table = versal_fpga_of_match,
 
-Stop an ongoing test by
-"echo 0 > /sys/module/dmatest/parameters/run".
-If the current code is executed inside the while loop
-"while (!(kthread_should_stop() ||
-  (params->iterations &&
-  total_tests >= params->iterations)))"
-and before the call of "wait_event_freezable_timeout",
-the "wait_event_freezable_timeout" will be interrupted
-and result in  "time out" for the test even if the test
-is not completed.
+For this part
 
-
-
-Operations to the problem is as follows,
-and the failures are probabilistic:
-
-modprobe hisi_dma
-modprobe dmatest
-
-echo 0 > /sys/module/dmatest/parameters/iterations
-echo "dma0chan0" > /sys/module/dmatest/parameters/channel
-echo "dma0chan1" > /sys/module/dmatest/parameters/channel
-echo "dma0chan2" > /sys/module/dmatest/parameters/channel
-echo 1 > /sys/module/dmatest/parameters/run
-echo 0 > /sys/module/dmatest/parameters/run
-
-dmesg:
-
-[52575.636992] dmatest: Added 1 threads using dma0chan0
-[52575.637555] dmatest: Added 1 threads using dma0chan1
-[52575.638044] dmatest: Added 1 threads using dma0chan2
-[52581.020355] dmatest: Started 1 threads using dma0chan0
-[52581.020585] dmatest: Started 1 threads using dma0chan1
-[52581.020814] dmatest: Started 1 threads using dma0chan2
-[52587.705782] dmatest: dma0chan0-copy0: result #57691: 'test timed out' 
-with src_off=0xfe6 dst_off=0x89 len=0x1d9a (0)
-[52587.706527] dmatest: dma0chan0-copy0: summary 57691 tests, 1 failures 
-51179.98 iops 411323 KB/s (0)
-[52587.707028] dmatest: dma0chan1-copy0: result #63178: 'test timed out' 
-with src_off=0xdf dst_off=0x6ab len=0x389e (0)
-[52587.707767] dmatest: dma0chan1-copy0: summary 63178 tests, 1 failures 
-62851.60 iops 503835 KB/s (0)
-[52587.708376] dmatest: dma0chan2-copy0: result #60527: 'test timed out' 
-with src_off=0x10e dst_off=0x58 len=0x3ea4 (0)
-[52587.708951] dmatest: dma0chan2-copy0: summary 60527 tests, 1 failures 
-52403.78 iops 420014 KB/s (0)
-
-
-On 2024/4/18 1:18, Vinod Koul wrote:
-> On 20-07-23, 19:41, Jie Hai wrote:
->> The change introduced by commit a7c01fa93aeb ("signal: break
->> out of wait loops on kthread_stop()") causes dmatest aborts
->> any ongoing tests and possible failure on the tests. This patch
-> 
-> Have you see this failure? Any log of that..
-> 
->> use wait_event_timeout instead of wait_event_freezable_timeout
->> to avoid interrupting ongoing tests by signal brought by
->> kthread_stop().
->>
->> Signed-off-by: Jie Hai <haijie1@huawei.com>
->> ---
->>   drivers/dma/dmatest.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
->> index ffe621695e47..c06b8b16645a 100644
->> --- a/drivers/dma/dmatest.c
->> +++ b/drivers/dma/dmatest.c
->> @@ -827,7 +827,7 @@ static int dmatest_func(void *data)
->>   		} else {
->>   			dma_async_issue_pending(chan);
->>   
->> -			wait_event_freezable_timeout(thread->done_wait,
->> +			ret = wait_event_timeout(thread->done_wait,
->>   					done->done,
->>   					msecs_to_jiffies(params->timeout));
->>   
->> -- 
->> 2.33.0
-> 
+Acked-by: Xu Yilun <yilun.xu@intel.com>
 

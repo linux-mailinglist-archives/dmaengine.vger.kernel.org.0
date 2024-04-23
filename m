@@ -1,145 +1,147 @@
-Return-Path: <dmaengine+bounces-1915-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1916-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 28A298AC6A7
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Apr 2024 10:19:56 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9223B8ADC4F
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Apr 2024 05:39:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A3BC2B21A38
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Apr 2024 08:19:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BA1001C218E1
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Apr 2024 03:39:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45F1F5103C;
-	Mon, 22 Apr 2024 08:18:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BD4218E1F;
+	Tue, 23 Apr 2024 03:39:10 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D7E8502B6;
-	Mon, 22 Apr 2024 08:18:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C20115E89;
+	Tue, 23 Apr 2024 03:39:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713773930; cv=none; b=KTm7pF/s+L1x4s93exkltT3gtWTwvsrb5ODXQhDqV1rnnAEQ3cC/R1o07e8mV5kWKUt9/m0P52Y/SpCWQmj49+zfMhBkfvGYS8rXuoFDEqNLwia2T6OS19rsiHEZugkH98ZHKaimpuWC36p45qdtEJ9VWGvZGdRVj/5IXH1HAes=
+	t=1713843550; cv=none; b=mb1snbxhwxNbt6l/56pSGc720iWiRBS4Ouh9DCYpGNOhKSBnUGmjQlbHqq4pNHyZvHTTLoheiV6UlnBpaPDXe7PR/fqJKW+cr+ce2GIDlMudjE9nJJYDEujwdXijk0Ar7LMRBCzGPreoARqTIWebgbwm3h52NvsiC9DDyAvB4DE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713773930; c=relaxed/simple;
-	bh=1R0QdiqBkh2lDI1KZWlD4yhHxXvFKtuxtuwBOw/ITOE=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=a+EoWro1vSYv/ZNn5sKp0LrXGEJL9PtjzaARAm/t9y97X+8es7AW8AXSONV2Xlw2Idw0f5RRs3eFRU0usNcj/3jgG7LtGO7qZ0wpNGQ6XH/onCZ8zFLmgWDArikSSFqCwco1GtxsJ9hEpRRlWDQsvNe7S4QvMQlAie6SNuX1T30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VNJ6g0Nzdz4x1R;
-	Mon, 22 Apr 2024 18:18:35 +1000 (AEST)
-From: Michael Ellerman <patch-notifications@ellerman.id.au>
-To: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Damien Le Moal <dlemoal@kernel.org>, Jiri Kosina <jikos@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Corey Minyard <minyard@acm.org>, Peter Huewe <peterhuewe@gmx.de>,
-	Jarkko Sakkinen <jarkko@kernel.org>, Tero Kristo <kristo@kernel.org>,
-	Stephen Boyd <sboyd@kernel.org>, Ian Abbott <abbotti@mev.co.uk>,
-	H Hartley Sweeten <hsweeten@visionengravers.com>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	Len Brown <lenb@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
-	John Allen <john.allen@amd.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Vinod Koul <vkoul@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Moritz Fischer <mdf@kernel.org>, Liviu Dudau <liviu.dudau@arm.com>,
-	Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Michael Hennerich <michael.hennerich@analog.com>,
-	Peter Rosin <peda@axentia.se>, Lars-Peter Clausen <lars@metafoo.de>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Markuss Broks <markuss.broks@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Lee Jones <lee@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Iyappan Subramanian <iyappan@os.amperecomputing.com>,
-	Yisen Zhuang <yisen.zhuang@huawei.com>,
-	Stanislaw Gruszka <stf_xl@wp.pl>, Kalle Valo <kvalo@kernel.org>,
-	Sebastian Reichel <sre@kernel.org>, Tony Lindgren <tony@atomide.com>,
-	Mark Brown <broonie@kernel.org>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Xiang Chen <chenxiang66@hisilicon.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Vaibhav Hiremath <hvaibhav.linux@gmail.com>,
-	Alex Elder <elder@kernel.org>, Jiri Slaby <jirislaby@kernel.org>,
-	Jacky Huang <ychuang3@nuvoton.com>, Helge Deller <deller@gmx.de>,
-	Christoph Hellwig <hch@lst.de>, Robin Murphy <robin.murphy@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kees Cook <keescook@chromium.org>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Anna Schumaker <anna@kernel.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>, Takashi Iwai <tiwai@suse.com>,
-	linuxppc-dev@lists.ozlabs.org, linux-ide@vger.kernel.org,
-	openipmi-developer@lists.sourceforge.net,
-	linux-integrity@vger.kernel.org, linux-omap@vger.kernel.org,
-	linux-clk@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
-	linux-efi@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-fpga@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-input@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-iio@vger.kernel.org, linux-stm32@st-md-mailman.stormr,
-	eply.com@web.codeaurora.org, linux-arm-kernel@lists.infradead.org,
-	netdev@vger.kernel.org, linux-leds@vger.kernel.org,
-	linux-wireless@vger.kernel.org, linux-rtc@vger.kernel.org,
-	linux-scsi@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-amlogic@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org, greybus-dev@lists.linaro.org,
-	linux-staging@lists.linux.dev, linux-serial@vger.kernel.org,
-	linux-usb@vger.kernel.org, linux-fbdev@vger.kernel.org,
-	iommu@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
-	kasan-dev@googlegroups.com, linux-hardening@vger.kernel.org,
-	linux-nfs@vger.kernel.org, linux-kbuild@vger.kernel.org,
-	alsa-devel@alsa-project.org, linux-sound@vger.kernel.org
-In-Reply-To: <20240403080702.3509288-1-arnd@kernel.org>
-References: <20240403080702.3509288-1-arnd@kernel.org>
-Subject: Re: (subset) [PATCH 00/34] address all -Wunused-const warnings
-Message-Id: <171377378377.1025456.1313405994816400451.b4-ty@ellerman.id.au>
-Date: Mon, 22 Apr 2024 18:16:23 +1000
+	s=arc-20240116; t=1713843550; c=relaxed/simple;
+	bh=pNiBG+e9qgp5dz04/zKlKcKVo2+IvJWVJQw3C1VcUgQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=X8YLitB30h+YHptIduFWmxX4Cy3ZBpHhH85GUGEUGkg9jgVbCbyVySYM6hjZkkB07o84KdhN0Bet8vxnKJ9rg7LcVK+FhCawL4umcGnXKMaIlETrdOxqA/KznRdZzfUckFA+8LngqHyjYVruVZJtopPCg94yIgrlmvwxGpv07s8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4VNnrW2q2tz1HBjK;
+	Tue, 23 Apr 2024 11:38:03 +0800 (CST)
+Received: from kwepemf500004.china.huawei.com (unknown [7.202.181.242])
+	by mail.maildlp.com (Postfix) with ESMTPS id 58B4D1A016C;
+	Tue, 23 Apr 2024 11:39:03 +0800 (CST)
+Received: from [10.67.121.175] (10.67.121.175) by
+ kwepemf500004.china.huawei.com (7.202.181.242) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Tue, 23 Apr 2024 11:39:02 +0800
+Message-ID: <d0ea4a88-900a-ad38-0580-017ae20c2fd4@huawei.com>
+Date: Tue, 23 Apr 2024 11:39:02 +0800
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH] dmaengine: dmatest: fix timeout caused by kthread_stop
+To: Vinod Koul <vkoul@kernel.org>
+CC: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20230720114102.51053-1-haijie1@huawei.com>
+ <ZiAEbOMxy9pBcOX5@matsya>
+From: Jie Hai <haijie1@huawei.com>
+In-Reply-To: <ZiAEbOMxy9pBcOX5@matsya>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemf500004.china.huawei.com (7.202.181.242)
 
-On Wed, 03 Apr 2024 10:06:18 +0200, Arnd Bergmann wrote:
-> Compilers traditionally warn for unused 'static' variables, but not
-> if they are constant. The reason here is a custom for C++ programmers
-> to define named constants as 'static const' variables in header files
-> instead of using macros or enums.
+Hi, Vinod Koul,
+
+Stop an ongoing test by
+"echo 0 > /sys/module/dmatest/parameters/run".
+If the current code is executed inside the while loop
+"while (!(kthread_should_stop() ||
+  (params->iterations &&
+  total_tests >= params->iterations)))"
+and before the call of "wait_event_freezable_timeout",
+the "wait_event_freezable_timeout" will be interrupted
+and result in  "time out" for the test even if the test
+is not completed.
+
+
+
+Operations to the problem is as follows,
+and the failures are probabilistic:
+
+modprobe hisi_dma
+modprobe dmatest
+
+echo 0 > /sys/module/dmatest/parameters/iterations
+echo "dma0chan0" > /sys/module/dmatest/parameters/channel
+echo "dma0chan1" > /sys/module/dmatest/parameters/channel
+echo "dma0chan2" > /sys/module/dmatest/parameters/channel
+echo 1 > /sys/module/dmatest/parameters/run
+echo 0 > /sys/module/dmatest/parameters/run
+
+dmesg:
+
+[52575.636992] dmatest: Added 1 threads using dma0chan0
+[52575.637555] dmatest: Added 1 threads using dma0chan1
+[52575.638044] dmatest: Added 1 threads using dma0chan2
+[52581.020355] dmatest: Started 1 threads using dma0chan0
+[52581.020585] dmatest: Started 1 threads using dma0chan1
+[52581.020814] dmatest: Started 1 threads using dma0chan2
+[52587.705782] dmatest: dma0chan0-copy0: result #57691: 'test timed out' 
+with src_off=0xfe6 dst_off=0x89 len=0x1d9a (0)
+[52587.706527] dmatest: dma0chan0-copy0: summary 57691 tests, 1 failures 
+51179.98 iops 411323 KB/s (0)
+[52587.707028] dmatest: dma0chan1-copy0: result #63178: 'test timed out' 
+with src_off=0xdf dst_off=0x6ab len=0x389e (0)
+[52587.707767] dmatest: dma0chan1-copy0: summary 63178 tests, 1 failures 
+62851.60 iops 503835 KB/s (0)
+[52587.708376] dmatest: dma0chan2-copy0: result #60527: 'test timed out' 
+with src_off=0x10e dst_off=0x58 len=0x3ea4 (0)
+[52587.708951] dmatest: dma0chan2-copy0: summary 60527 tests, 1 failures 
+52403.78 iops 420014 KB/s (0)
+
+
+On 2024/4/18 1:18, Vinod Koul wrote:
+> On 20-07-23, 19:41, Jie Hai wrote:
+>> The change introduced by commit a7c01fa93aeb ("signal: break
+>> out of wait loops on kthread_stop()") causes dmatest aborts
+>> any ongoing tests and possible failure on the tests. This patch
 > 
-> In W=1 builds, we get warnings only static const variables in C
-> files, but not in headers, which is a good compromise, but this still
-> produces warning output in at least 30 files. These warnings are
-> almost all harmless, but also trivial to fix, and there is no
-> good reason to warn only about the non-const variables being unused.
+> Have you see this failure? Any log of that..
 > 
-> [...]
-
-Applied to powerpc/next.
-
-[01/34] powerpc/fsl-soc: hide unused const variable
-        https://git.kernel.org/powerpc/c/01acaf3aa75e1641442cc23d8fe0a7bb4226efb1
-
-cheers
+>> use wait_event_timeout instead of wait_event_freezable_timeout
+>> to avoid interrupting ongoing tests by signal brought by
+>> kthread_stop().
+>>
+>> Signed-off-by: Jie Hai <haijie1@huawei.com>
+>> ---
+>>   drivers/dma/dmatest.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
+>> index ffe621695e47..c06b8b16645a 100644
+>> --- a/drivers/dma/dmatest.c
+>> +++ b/drivers/dma/dmatest.c
+>> @@ -827,7 +827,7 @@ static int dmatest_func(void *data)
+>>   		} else {
+>>   			dma_async_issue_pending(chan);
+>>   
+>> -			wait_event_freezable_timeout(thread->done_wait,
+>> +			ret = wait_event_timeout(thread->done_wait,
+>>   					done->done,
+>>   					msecs_to_jiffies(params->timeout));
+>>   
+>> -- 
+>> 2.33.0
+> 
 

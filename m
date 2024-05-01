@@ -1,63 +1,63 @@
-Return-Path: <dmaengine+bounces-1976-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-1977-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 429CD8B911F
-	for <lists+dmaengine@lfdr.de>; Wed,  1 May 2024 23:46:43 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C18BB8B9123
+	for <lists+dmaengine@lfdr.de>; Wed,  1 May 2024 23:46:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EC8F12840A9
-	for <lists+dmaengine@lfdr.de>; Wed,  1 May 2024 21:46:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 617561F2399D
+	for <lists+dmaengine@lfdr.de>; Wed,  1 May 2024 21:46:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3BF8165FCA;
-	Wed,  1 May 2024 21:46:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48F1C168AF3;
+	Wed,  1 May 2024 21:46:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IdNHO6+q"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lvbBfk9R"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42D204F898;
-	Wed,  1 May 2024 21:46:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 978B4165FC7;
+	Wed,  1 May 2024 21:46:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714599995; cv=none; b=p/4QgMsPMYclWQMwvY8OPC+E7Lfxtqd1dOZtdnY+zSQ2dTJNk1nqTKnnprE12ihZMoTrN+A9mk3AqHY3kz28X9ldQy+C6TF5T6U6vSIFx/XUKjF+uoTX9w5sK+BqDaG3gyjuqN0UPYJ0qQ33upILwgKSL3VfrOa39bmZYjtXCuY=
+	t=1714599997; cv=none; b=P7o60ukJkLa3WNyFq1MeImwbhQ2P/mh/F4F9M6Nakfba/s/k3c9V7KXFmUI4ASJY8WaR+iaIw8ilKvv0cpjr9oDYud3NDcjU0aGKVH62zV1OZK0PfnmpUbk5dGt7jCDOUma+Rcg1KgbtK2F12fSEfP+voAep2g4KwNQH8HExMko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714599995; c=relaxed/simple;
-	bh=2f5vPdonutO4FVTDMf62pMfW1qZlAhqJA03iBuAYN+0=;
+	s=arc-20240116; t=1714599997; c=relaxed/simple;
+	bh=hACSXKwjUfbBQK1SZQtJKTIslnAmtEzEsEUXgKqVCk4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qAUZZxkTG2ibSUjLXyf45+8B/G1s7eRnOotHPVkvEEuAAYNeV3ku3WhyNgy4U1rDcOb+Ia7phmh4BvUNcHOk4jO2EstnZGyudHSy7hflw5ZMBWWz/4LicJT4hcGG8iPdULrEw5OQh19t90uNCqadTwATRFqTj3jndiysPhSZNew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IdNHO6+q; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version; b=NVRRfG5hGR3zazVBteedSlvVp3DM0vlY/M0QBCI2jNZ+7d033ydX3n/73xrSyWzOKzi23dZkjNC9P+xxTcsbN3wRnbcjnO9/oeFFCFhl6VwKR3fvctGakaIwQOkMjSuqXIykgONf4HZXbfgziXmzay/+9I/ubte+EFbGPzqcOMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lvbBfk9R; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714599995; x=1746135995;
+  t=1714599996; x=1746135996;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=2f5vPdonutO4FVTDMf62pMfW1qZlAhqJA03iBuAYN+0=;
-  b=IdNHO6+qi+uqqIflzkupDeX3hq0yh1YWWZ5vbDgwuhzUJ3GcFn0UPFca
-   ejxGb1sIVzN7GyeLlY7+5toZOAkV65v9i/gPG7mQlalFeNvYJs45jcRSr
-   dQeazzFBCVw28nxGTWqXXxgGeDs1EelTicV9oLHIHQZRUUYNwwGbvprO+
-   8em06jABLnEaAUqeB/7u3nLDKFGyTJoh9JT1FehGX0d8sClI0KtV+hwZd
-   hVsfWdbqLfhTyNlI+dRep0iK69F5EMIG4EMwwod7ApPl8sUdEX2QVX59C
-   KLxiR0fD9E51eczFog7Uay3G491MGQghcm9Gp1mGKcKd3x4n39uKMPosi
+  bh=hACSXKwjUfbBQK1SZQtJKTIslnAmtEzEsEUXgKqVCk4=;
+  b=lvbBfk9Rv6Bhu7FB1DUBePskz+2cgTawFWEvsrekd6dh6CFAZE5qQJFL
+   WJT8Jylv7shmt8n+L7eGMY7pJsufpqQCiO9syPCBHsR+EW9y/V/FxIY6U
+   n9JtzUOtiv/VS4iAUug/mC6Nw/vaGamP9TslTopDV2dHX2ATkEyCpDgc9
+   W3f02enOZO+g50W2qZ1ZQBPY0nom+L35FgshGR84eTEA9pQ+p233T0A4R
+   DHbPt49h02I/6ZyGFsipWrNqVnJogq5Nx0zNQjfkZEYFERocHa4YsNxI6
+   lizqQ0tQY2avGMdNYrtCHWQs5PZWESxHu5bDQxN+4m3NY9zZzi5GH53oS
    Q==;
-X-CSE-ConnectionGUID: Wn0Afj7iSh+Gq40NNwf3Ig==
-X-CSE-MsgGUID: juZmCfUwSiOBu1iHtW7+qQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11061"; a="14130147"
+X-CSE-ConnectionGUID: qBHbahdCSd20HCFPoWmzKQ==
+X-CSE-MsgGUID: MaMKSrQuSHCHEWM3IZUj3Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11061"; a="14130158"
 X-IronPort-AV: E=Sophos;i="6.07,246,1708416000"; 
-   d="scan'208";a="14130147"
+   d="scan'208";a="14130158"
 Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2024 14:46:34 -0700
-X-CSE-ConnectionGUID: vvcWl59ZSqq0x/bFRbB61g==
-X-CSE-MsgGUID: GO8/KGW5RUelpqqTZehRTg==
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2024 14:46:36 -0700
+X-CSE-ConnectionGUID: 11aTBIVSRM66jHJjDTB57Q==
+X-CSE-MsgGUID: fdwANjsYQoKoqEWm32GAbg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,246,1708416000"; 
-   d="scan'208";a="31726379"
+   d="scan'208";a="31726391"
 Received: from jf5300-b11a264t.jf.intel.com ([10.242.51.89])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2024 14:46:33 -0700
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2024 14:46:35 -0700
 From: Andre Glover <andre.glover@linux.intel.com>
 To: tom.zanussi@linux.intel.com,
 	minchan@kernel.org,
@@ -83,9 +83,9 @@ Cc: wajdi.k.feghali@intel.com,
 	ryan.roberts@arm.com,
 	linux-crypto@vger.kernel.org,
 	dmaengine@vger.kernel.org
-Subject: [RFC PATCH 1/3] crypto: Add pre_alloc and post_free callbacks for acomp algorithms
-Date: Wed,  1 May 2024 14:46:27 -0700
-Message-Id: <4f6ebdb42f3a999cc77e81dc1ceeb4ea46f615df.1714581792.git.andre.glover@linux.intel.com>
+Subject: [RFC PATCH 2/3] crypto: add by_n attribute to acomp_req
+Date: Wed,  1 May 2024 14:46:28 -0700
+Message-Id: <8fe04e86f0907588d210885ac91965960f97f450.1714581792.git.andre.glover@linux.intel.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <cover.1714581792.git.andre.glover@linux.intel.com>
 References: <cover.1714581792.git.andre.glover@linux.intel.com>
@@ -97,94 +97,34 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add callbacks to acomp crypto algorithms that facilitate the allocation and
-subsequent freeing of resources required by an acomp_req before and after
-a series of compress and/or decompress operations.
-
+Add the 'by_n' attribute to the acomp_req. The 'by_n' attribute can be
+used a directive by acomp crypto algorithms for splitting compress and
+decompress operations into "n" separate jobs.
+ 
 Signed-off-by: Andre Glover <andre.glover@linux.intel.com>
 ---
- crypto/acompress.c                  | 13 +++++++++++++
- include/crypto/acompress.h          |  2 ++
- include/crypto/internal/acompress.h |  6 ++++++
- 3 files changed, 21 insertions(+)
+ include/crypto/acompress.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/crypto/acompress.c b/crypto/acompress.c
-index 6fdf0ff9f3c0..873918be75cc 100644
---- a/crypto/acompress.c
-+++ b/crypto/acompress.c
-@@ -71,9 +71,13 @@ static int crypto_acomp_init_tfm(struct crypto_tfm *tfm)
- 
- 	acomp->compress = alg->compress;
- 	acomp->decompress = alg->decompress;
-+
- 	acomp->dst_free = alg->dst_free;
- 	acomp->reqsize = alg->reqsize;
- 
-+	acomp->pre_alloc = alg->pre_alloc;
-+	acomp->post_free = alg->post_free;
-+
- 	if (alg->exit)
- 		acomp->base.exit = crypto_acomp_exit_tfm;
- 
-@@ -129,6 +133,12 @@ struct acomp_req *acomp_request_alloc(struct crypto_acomp *acomp)
- 	struct acomp_req *req;
- 
- 	req = __acomp_request_alloc(acomp);
-+
-+	if (req && (acomp->pre_alloc && acomp->pre_alloc(req))) {
-+		__acomp_request_free(req);
-+		return NULL;
-+	}
-+
- 	if (req && (tfm->__crt_alg->cra_type != &crypto_acomp_type))
- 		return crypto_acomp_scomp_alloc_ctx(req);
- 
-@@ -144,6 +154,9 @@ void acomp_request_free(struct acomp_req *req)
- 	if (tfm->__crt_alg->cra_type != &crypto_acomp_type)
- 		crypto_acomp_scomp_free_ctx(req);
- 
-+	if (acomp->post_free)
-+		acomp->post_free(req);
-+
- 	if (req->flags & CRYPTO_ACOMP_ALLOC_OUTPUT) {
- 		acomp->dst_free(req->dst);
- 		req->dst = NULL;
 diff --git a/include/crypto/acompress.h b/include/crypto/acompress.h
-index 54937b615239..2b73cef2f430 100644
+index 2b73cef2f430..c687729e1966 100644
 --- a/include/crypto/acompress.h
 +++ b/include/crypto/acompress.h
-@@ -51,6 +51,8 @@ struct acomp_req {
- struct crypto_acomp {
- 	int (*compress)(struct acomp_req *req);
- 	int (*decompress)(struct acomp_req *req);
-+	int (*pre_alloc)(struct acomp_req *req);
-+	void (*post_free)(struct acomp_req *req);
- 	void (*dst_free)(struct scatterlist *dst);
- 	unsigned int reqsize;
- 	struct crypto_tfm base;
-diff --git a/include/crypto/internal/acompress.h b/include/crypto/internal/acompress.h
-index d00392d1988e..081e1cf5235f 100644
---- a/include/crypto/internal/acompress.h
-+++ b/include/crypto/internal/acompress.h
-@@ -29,6 +29,10 @@
-  * @exit:	Deinitialize the cryptographic transformation object. This is a
-  *		counterpart to @init, used to remove various changes set in
-  *		@init.
-+ * @pre_alloc:	Function that performs any pre-allocation and setup that an
-+ *		algorithm may require on a per req basis.
-+ * @post_free:	Function that performs any post freeing that an algorithm
-+ *		may require on a per req basis.
-  *
-  * @reqsize:	Context size for (de)compression requests
-  * @base:	Common crypto API algorithm data structure
-@@ -40,6 +44,8 @@ struct acomp_alg {
- 	void (*dst_free)(struct scatterlist *dst);
- 	int (*init)(struct crypto_acomp *tfm);
- 	void (*exit)(struct crypto_acomp *tfm);
-+	int (*pre_alloc)(struct acomp_req *req);
-+	void (*post_free)(struct acomp_req *req);
- 
- 	unsigned int reqsize;
+@@ -25,6 +25,7 @@
+  * @slen:	Size of the input buffer
+  * @dlen:	Size of the output buffer and number of bytes produced
+  * @flags:	Internal flags
++ * @by_n:	by_n setting used by acomp alg
+  * @__ctx:	Start of private context data
+  */
+ struct acomp_req {
+@@ -34,6 +35,7 @@ struct acomp_req {
+ 	unsigned int slen;
+ 	unsigned int dlen;
+ 	u32 flags;
++	u32 by_n;
+ 	void *__ctx[] CRYPTO_MINALIGN_ATTR;
+ };
  
 -- 
 2.27.0

@@ -1,59 +1,59 @@
-Return-Path: <dmaengine+bounces-2000-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2001-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF0298BE2D8
-	for <lists+dmaengine@lfdr.de>; Tue,  7 May 2024 14:59:23 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A72278BE2DA
+	for <lists+dmaengine@lfdr.de>; Tue,  7 May 2024 14:59:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 589B91F2180D
-	for <lists+dmaengine@lfdr.de>; Tue,  7 May 2024 12:59:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3834F282037
+	for <lists+dmaengine@lfdr.de>; Tue,  7 May 2024 12:59:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BEF415D5C8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 525F815D5DF;
 	Tue,  7 May 2024 12:58:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="OsgC3+o8"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="MjAKuWHr"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F03315B992;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C18D15CD52;
 	Tue,  7 May 2024 12:58:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715086703; cv=none; b=dvfzbDfCyVRhwHWTz5RZO0cyEbAwBlImSMnmMrBWZTNvAxCCcfEYRiy6Qjecuh7dV6fDcgjwUvdi0fTGOmoCrAAf+JVty62tQZq0DIHznpYUjco1f+ERsSXBnvA1XyuRei4LwscG8H/+FnqgaSD2r4ItRBbrYutiAZVNgQF+0/w=
+	t=1715086703; cv=none; b=TB7/xY/HILCfu2+tzfWCy5D0kecWG5CieZRxQw1aniqHDpycyv8uu9uf+2OBkL+pVOiBwcTvZLKH0GeYG4cFLU9by5iB2NtohVAehfQnDAxr8IWxt6Z3/3KWw8QXciswDnWfghy7wlHVoGUpWxqB/6IU92QWThd0DuKBSpBzIg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715086703; c=relaxed/simple;
-	bh=qad6qskwZYQn+D5N1xzwJq/c78GJYvm0C1sRMaB+DyM=;
+	bh=T8bslAKRqxJExlxgU1APuCZzGOWpiArPPHFegRwlIhU=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dYr6iixJjekuYn86hSpGSVkt2c2x9plJpPU8P/ksDVNTgOR+9jQs9dbprDmdVj/iJryFH1znueoZVle29enL/F4r7QKbC94tHPdqXeN52xSXwbT7euiMPtx4bxJwz9el9fJ3qzINJSKxG8pQhdVZXymYvmAijNJx/fAwRk1mSUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=OsgC3+o8; arc=none smtp.client-ip=91.207.212.93
+	 MIME-Version:Content-Type; b=iCcN3eux8hpv6F8xjiJFmbkw0P8rgExdF5AauqoyCN6gqy4OCD/aq499rHvcYz6kbujsMaqq2p4Cd6i54uPc7zU1N/CleyjjP5K7UrX1Y9RAnS+5887oPHNyYIadu2DB6jNBlhwQc1mFaKo6uthyFkKdr8GZIGO87DTeF4wGXTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=MjAKuWHr; arc=none smtp.client-ip=185.132.182.106
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4479aUlk023705;
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4479DQLK009471;
 	Tue, 7 May 2024 14:57:59 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
 	:mime-version:content-transfer-encoding:content-type; s=
-	selector1; bh=IOYWpx+7FTJlYFtMjUGlHKbBuJPgpevIoZcXKDKHnVE=; b=Os
-	gC3+o8MFDItTI4Ap6Oo4jaEz8M+wHrWN3OT+m1EERmsIy0HOZCUgU1rAtIsKqUxa
-	IZMMRutLVn0QalGrjcJAN9362WMJX3fVUlfQ4vsGtpZtJqg1QnLpVGtoEC6gWc4i
-	cxJaNMJymDkxd+Q64tmtELmwYsicg2npyW0IkL2gUDDL5HoaPsgr2yulr4FKDYsW
-	UJeVeQSWXlUDxwjM0c+SqBc0GIG+u6KjhLMdNNY825X8xCowyEQhuxCa1x3k5c9z
-	ifpPtU3CHltaMfhf/y+3D1gdeLw6++4xQiW1pZgg0H9EcX9a/uRQAhlRteqtfSj+
-	tJeZDO+AEHaa5qryi2Hw==
+	selector1; bh=3LWw0oi1+WnuQj6m27oXKk6NwtCESSjmCkn0shxu4NM=; b=Mj
+	AKuWHrfqbR5hFyL9SKXrp/sMFJhrYe+cbe6nhUr3VXgluNZF3z0D66Edr8rM7pVi
+	O/fLAoLTH/1/ceMNC59GlBmJ5W5m4NXJ5gbkRM6b4ooCIrkjrotUnCh6daK4l9Z/
+	0R6Xvo0ykJHAPHoXyeb2T5NuyJ0aH0JGTaZk78EiEM3rPZQqKqaPnCFnemH18fDf
+	WOJYlZnM+Ne8tsDFV4PI5i7DD9YaHHuxFbcp8uHWlBLIe7Sc/KFWShx7fllspq77
+	28w/9Q75wzRjF8lq4sSGCxp/AzfhpgMkvVC0PXr/H2UUVAIvyA/QNX+0N7QLKoy9
+	w2ybyxDVOXTeswfjYOtw==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xwyyk9wk2-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xwaegc64t-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Tue, 07 May 2024 14:57:59 +0200 (MEST)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id D025B40044;
-	Tue,  7 May 2024 14:57:54 +0200 (CEST)
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 18DE640045;
+	Tue,  7 May 2024 14:57:55 +0200 (CEST)
 Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 79A83216ECE;
-	Tue,  7 May 2024 14:57:09 +0200 (CEST)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 41626217B79;
+	Tue,  7 May 2024 14:57:10 +0200 (CEST)
 Received: from localhost (10.48.86.143) by SHFDAG1NODE3.st.com (10.75.129.71)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 7 May
@@ -73,9 +73,9 @@ CC: <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-hardening@vger.kernel.org>,
         Amelie Delaunay
 	<amelie.delaunay@foss.st.com>
-Subject: [PATCH v2 10/12] dmaengine: add channel device name to channel registration
-Date: Tue, 7 May 2024 14:54:40 +0200
-Message-ID: <20240507125442.3989284-11-amelie.delaunay@foss.st.com>
+Subject: [PATCH v2 11/12] dmaengine: stm32-dma3: defer channel registration to specify channel name
+Date: Tue, 7 May 2024 14:54:41 +0200
+Message-ID: <20240507125442.3989284-12-amelie.delaunay@foss.st.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240507125442.3989284-1-amelie.delaunay@foss.st.com>
 References: <20240507125442.3989284-1-amelie.delaunay@foss.st.com>
@@ -93,99 +93,63 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
  definitions=2024-05-07_06,2024-05-06_02,2023-05-22_02
 
-Channel device name is used for sysfs, but also by dmatest filter function.
+On STM32 DMA3, channels can be reserved, so they are non available for
+Linux. This non-availability creates a mismatch between dma_chan id and
+DMA3 channel id.
 
-With dynamic channel registration, channels can be registered after dma
-controller registration. Users may want to have specific channel names.
-
-If name is NULL, the channel name relies on previous implementation,
-dma<controller_device_id>chan<channel_device_id>.
+Use dma_async_device_channel_register() to register the channels
+after controller registration and change the default channel name, so that
+it can match the name in the Reference Manual and ease requesting a channel
+thanks to its name.
 
 Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
 ---
- drivers/dma/dmaengine.c   | 16 ++++++++++------
- drivers/dma/idxd/dma.c    |  2 +-
- include/linux/dmaengine.h |  3 ++-
- 3 files changed, 13 insertions(+), 8 deletions(-)
+ drivers/dma/stm32/stm32-dma3.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-index 491b22240221..c380a4dda77a 100644
---- a/drivers/dma/dmaengine.c
-+++ b/drivers/dma/dmaengine.c
-@@ -1037,7 +1037,8 @@ static int get_dma_id(struct dma_device *device)
- }
- 
- static int __dma_async_device_channel_register(struct dma_device *device,
--					       struct dma_chan *chan)
-+					       struct dma_chan *chan,
-+					       const char *name)
- {
- 	int rc;
- 
-@@ -1066,8 +1067,10 @@ static int __dma_async_device_channel_register(struct dma_device *device,
- 	chan->dev->device.parent = device->dev;
- 	chan->dev->chan = chan;
- 	chan->dev->dev_id = device->dev_id;
--	dev_set_name(&chan->dev->device, "dma%dchan%d",
--		     device->dev_id, chan->chan_id);
-+	if (!name)
-+		dev_set_name(&chan->dev->device, "dma%dchan%d", device->dev_id, chan->chan_id);
-+	else
-+		dev_set_name(&chan->dev->device, name);
- 	rc = device_register(&chan->dev->device);
- 	if (rc)
- 		goto err_out_ida;
-@@ -1087,11 +1090,12 @@ static int __dma_async_device_channel_register(struct dma_device *device,
- }
- 
- int dma_async_device_channel_register(struct dma_device *device,
--				      struct dma_chan *chan)
-+				      struct dma_chan *chan,
-+				      const char *name)
- {
- 	int rc;
- 
--	rc = __dma_async_device_channel_register(device, chan);
-+	rc = __dma_async_device_channel_register(device, chan, name);
- 	if (rc < 0)
- 		return rc;
- 
-@@ -1203,7 +1207,7 @@ int dma_async_device_register(struct dma_device *device)
- 
- 	/* represent channels in sysfs. Probably want devs too */
- 	list_for_each_entry(chan, &device->channels, device_node) {
--		rc = __dma_async_device_channel_register(device, chan);
-+		rc = __dma_async_device_channel_register(device, chan, NULL);
- 		if (rc < 0)
- 			goto err_out;
- 	}
-diff --git a/drivers/dma/idxd/dma.c b/drivers/dma/idxd/dma.c
-index cd835eabd31b..dbecd699237e 100644
---- a/drivers/dma/idxd/dma.c
-+++ b/drivers/dma/idxd/dma.c
-@@ -269,7 +269,7 @@ static int idxd_register_dma_channel(struct idxd_wq *wq)
- 		desc->txd.tx_submit = idxd_dma_tx_submit;
+diff --git a/drivers/dma/stm32/stm32-dma3.c b/drivers/dma/stm32/stm32-dma3.c
+index c7df5d4d34d6..bc6fa7fdcb07 100644
+--- a/drivers/dma/stm32/stm32-dma3.c
++++ b/drivers/dma/stm32/stm32-dma3.c
+@@ -1723,9 +1723,6 @@ static int stm32_dma3_probe(struct platform_device *pdev)
+ 		chan->fifo_size = get_chan_hwcfg(i, G_FIFO_SIZE(i), hwcfgr);
+ 		/* If chan->fifo_size > 0 then half of the fifo size, else no burst when no FIFO */
+ 		chan->max_burst = (chan->fifo_size) ? (1 << (chan->fifo_size + 1)) / 2 : 0;
+-		chan->vchan.desc_free = stm32_dma3_chan_vdesc_free;
+-
+-		vchan_init(&chan->vchan, dma_dev);
  	}
  
--	rc = dma_async_device_channel_register(dma, chan);
-+	rc = dma_async_device_channel_register(dma, chan, NULL);
- 	if (rc < 0) {
- 		kfree(idxd_chan);
- 		return rc;
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index 752dbde4cec1..73537fddbb52 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -1575,7 +1575,8 @@ int dma_async_device_register(struct dma_device *device);
- int dmaenginem_async_device_register(struct dma_device *device);
- void dma_async_device_unregister(struct dma_device *device);
- int dma_async_device_channel_register(struct dma_device *device,
--				      struct dma_chan *chan);
-+				      struct dma_chan *chan,
-+				      const char *name);
- void dma_async_device_channel_unregister(struct dma_device *device,
- 					 struct dma_chan *chan);
- void dma_run_dependencies(struct dma_async_tx_descriptor *tx);
+ 	ret = dmaenginem_async_device_register(dma_dev);
+@@ -1733,14 +1730,26 @@ static int stm32_dma3_probe(struct platform_device *pdev)
+ 		goto err_clk_disable;
+ 
+ 	for (i = 0; i < ddata->dma_channels; i++) {
++		char name[12];
++
+ 		if (chan_reserved & BIT(i))
+ 			continue;
+ 
++		chan = &ddata->chans[i];
++		snprintf(name, sizeof(name), "dma%dchan%d", ddata->dma_dev.dev_id, chan->id);
++
++		chan->vchan.desc_free = stm32_dma3_chan_vdesc_free;
++		vchan_init(&chan->vchan, dma_dev);
++
++		ret = dma_async_device_channel_register(&ddata->dma_dev, &chan->vchan.chan, name);
++		if (ret) {
++			dev_err_probe(&pdev->dev, ret, "Failed to register channel %s\n", name);
++			goto err_clk_disable;
++		}
++
+ 		ret = platform_get_irq(pdev, i);
+ 		if (ret < 0)
+ 			goto err_clk_disable;
+-
+-		chan = &ddata->chans[i];
+ 		chan->irq = ret;
+ 
+ 		ret = devm_request_irq(&pdev->dev, chan->irq, stm32_dma3_chan_irq, 0,
 -- 
 2.25.1
 

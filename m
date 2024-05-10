@@ -1,60 +1,61 @@
-Return-Path: <dmaengine+bounces-2015-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2016-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DAFE98C1F9B
-	for <lists+dmaengine@lfdr.de>; Fri, 10 May 2024 10:21:38 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 304278C1F9C
+	for <lists+dmaengine@lfdr.de>; Fri, 10 May 2024 10:21:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4CEDA1F21B9C
-	for <lists+dmaengine@lfdr.de>; Fri, 10 May 2024 08:21:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DB0FE282F40
+	for <lists+dmaengine@lfdr.de>; Fri, 10 May 2024 08:21:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA67C15FA66;
-	Fri, 10 May 2024 08:21:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7ED8114901F;
+	Fri, 10 May 2024 08:21:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="R4O2B5dF"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ykrTOj9z"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2066.outbound.protection.outlook.com [40.107.94.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA3D3C136
-	for <dmaengine@vger.kernel.org>; Fri, 10 May 2024 08:21:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6501C136
+	for <dmaengine@vger.kernel.org>; Fri, 10 May 2024 08:21:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.66
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715329296; cv=fail; b=UJgBvvler94xBW6vNJ9p+yssFsLxq98QgcRaQ6ZAZv3y7a52yfxskxB0RHvgiwApn4fEWAYA67twaj0loHx6Lzm9wTv0WNNNFj6DjdEQ8WVlMNmqytzCPVANLaxAYf62h8J3UiFxhfycvvjSL5CgDz5HgQSiBrZSq+XR1znQyVg=
+	t=1715329301; cv=fail; b=HTd0M/ASrNyr2mztsGVZDZc2iFyEf6gx6L8zmAnNruW5PumbViGTc5q4OZVrTs4k+eyISJujOXNDfXS8ZpqYzq3g8Kw4kSHzE9Dqo05T5mGKM2DX6CMgAtrGGz9U/kuE6zccYsJ39FwO68WNFzz10JNTp9JoZRlOpOFtdaQRiiY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715329296; c=relaxed/simple;
-	bh=2BuzoExnq5LWMpI7RLnJ1dL6SEAv0GsM0UZPR/LU3s0=;
+	s=arc-20240116; t=1715329301; c=relaxed/simple;
+	bh=bODVH4GyruJugOVuz5wKwMG+kfWViJ+14WImIcfaxA4=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OSH9j2MSVapifUSSgHyqmIDdPpgPrNYvT3VkwI2lTSd8jQz98qN5I3vPvIo+nCAoygK9gwt54Jkj9NQp6Jo/kxwcdni7FbT3ew+lmHRFQb8YiB/bLllFqr6vqVQ2Ks8CNukHiXoJQehHMNmqoMaV1d0Y1QtSFL0LrAhw6hp47rI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=R4O2B5dF; arc=fail smtp.client-ip=40.107.94.66
+	 MIME-Version:Content-Type; b=E4uhCpFlK3E2Wwvdwd0rrx6qxZk3KAfjDEhoSdwn45SpZD3XnPpFUAKwTNGJVkyrRvYQ4MUOcFn0vpZHR+d6xy8OeIX9AiMFAf5rvqcziCqIS/O+nxOPGDqjuwD9Pqz3nSw0FlDqbKcM3Qg1UYO9NNeVcl8w6k8qCxeMoPuwfL8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ykrTOj9z; arc=fail smtp.client-ip=40.107.94.66
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=V0O+qiggvXZezZp/BxBfTYUc8licfb1v4jUpJOSKIAHCLSkfs3mfTqUjMrs1WtlclDNvniqjqvv7OuTbAbkLsv4cIhFFMNnhF3UUcl0txHOE2waZRpMhiAR9H8MayOTgyKENgYB02sWBpchjAPwlbsSNi2tcPRADobi+sMa6fdG9up7aTDfcyWRlVQ1O4jGHa3flYf1F0zHlvYG1a8FR1kHiNRpEC0tFPWhFDUGLGaR8wosW/b43qTfoWqR+d/htIWUW78BtWFN4xlnQlEVELP/+ZJ+sngSIFQwB0zzN7RtV0XH08v4nLtz6Rvwdb3Wzm6PdzHYnEtW7Brttp4ebkw==
+ b=OPx2opYXRtGkB6QISFbs9NIIaMubhVXUbNAvcfjMV703C2h0usZcoPUYb8Mi6rRoRAf2UAayZWePTVWxg3t2+7F+Zf9NaMzh/ve2Y6ZEC6CWFoWFsG4STWecaeI5iAhQ8p+z/VXnGPrLcdrVP5spxaCe596i+Gy2dHjRfyCHc+9HRcP3KByd+Zqa8UZGsZBZjlncKdV+XyPMvQ1U7Bz3XVATVFAYMhojJbBvnXJm2vUKYIVQ2lAB5dG6ulE/GVgVwNvj/kOZ54SnM5hKKJ9oXqArQEwS3V5xxci4j+xemabGIlDJyPaDAgIMiBp3xv1RcZkn3rkZgiM24331X+VV8g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zWZ0NBoGnlHVsdqtMP2osNhqS0GmB78lRKLwt9eG9a4=;
- b=Y4QMHg+BkLt4oPn4bcyU65149c5eU4WligNtKgLZe9jKHHqs70OIVBmxlVaKDk1aQ0Wvi05on8K/JjkVQ1VE4pD05auYBt1WnVlj8AmTW2p3LSieB+gKTjw30VFYE2iphnxAUgqllNDOU8cpKxxvAED6VnVoqsCtyXOUoycw+QdQ2NuO6khfETpZtfubwhPBRX1K9swXAzyYFq1qM+rLRXeSPjHBgzbUDD8+Rh6hfEO2PD6FU93e7GJEGBlILrzFFEPdB2W8rPoJQm5JQ7956t16coEbcQeX/VjZi1FURZ/6q+Wj4WeS4O41XQTAGnN7pQ5XtjZriY+bjVu8a4Xk9w==
+ bh=1XDmgxS8cUH73dmR0RdtiO73D7g0lSIwkEuUQ7rCmAg=;
+ b=K0Dse2em2Om/VjSoLI+QCx9maD2+Hr+YaEH5UTwTNF5kcZAzBhScgmxzQFUd1OEq9yJt/YVWMFTtklk6iIQPdT9ixTqIpC04gSjh/E2LvKK01i4HHHDZDP+/fN0kNQB8ycj2lyBOL1F//mSlj814b5AVcm+b3TrvjXqcR4g2CZD0SlJ1D8XqggA1kn5GvLQil4CpzBhEmf7RckwfTC+gvrbUh83HaDuL3BE2IPRq2Uvo2HdSF3kHZ2q0J7w8T7cAt11sksxrXv0oUV33Qlez0ZtgBFJuctKa7T9/ONs36FJ1x77TcbQy04ebUlqZOWOCjfh3k0eI6JT/yDseE5JdNg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zWZ0NBoGnlHVsdqtMP2osNhqS0GmB78lRKLwt9eG9a4=;
- b=R4O2B5dFClFhm00JMSisnCLe527ZlD8a95tDRmg6Etf41MOSRZf86LwF7Ffp6Rj8X9l2R3pGqvCeVUmhEMXZnX59x4/eL8x91DgbAgzg8OvSOfvvh9Q9gkxQV/DbczZd8fx0kUrHnwAzkTypHXkUAmgpj+2pQaSfqkQCpQnae5o=
-Received: from CH2PR05CA0023.namprd05.prod.outlook.com (2603:10b6:610::36) by
- DS0PR12MB8444.namprd12.prod.outlook.com (2603:10b6:8:128::19) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7544.47; Fri, 10 May 2024 08:21:32 +0000
-Received: from DS3PEPF000099E1.namprd04.prod.outlook.com
- (2603:10b6:610:0:cafe::bc) by CH2PR05CA0023.outlook.office365.com
- (2603:10b6:610::36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.16 via Frontend
- Transport; Fri, 10 May 2024 08:21:32 +0000
+ bh=1XDmgxS8cUH73dmR0RdtiO73D7g0lSIwkEuUQ7rCmAg=;
+ b=ykrTOj9zHTB0npN1v08Lj+S8RY6h3MbjlwDViYHRg0WxZ3F+xfo+HvI4Y5+X5AhGx9S8FFR0ZnIAKM5LIZhU0MNiNaa9RuEMsQdHYt4SUVBtG2jGXnCP3udVy+4Al6oMgIV/ukaQT1iHvadfvIZtWkhxf87YkHEoGrgALXzKMw0=
+Received: from DM6PR11CA0014.namprd11.prod.outlook.com (2603:10b6:5:190::27)
+ by SJ2PR12MB9240.namprd12.prod.outlook.com (2603:10b6:a03:563::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.49; Fri, 10 May
+ 2024 08:21:34 +0000
+Received: from DS3PEPF000099E0.namprd04.prod.outlook.com
+ (2603:10b6:5:190:cafe::60) by DM6PR11CA0014.outlook.office365.com
+ (2603:10b6:5:190::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.51 via Frontend
+ Transport; Fri, 10 May 2024 08:21:34 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -62,19 +63,19 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS3PEPF000099E1.mail.protection.outlook.com (10.167.17.196) with Microsoft
+ DS3PEPF000099E0.mail.protection.outlook.com (10.167.17.203) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7544.18 via Frontend Transport; Fri, 10 May 2024 08:21:32 +0000
+ 15.20.7544.18 via Frontend Transport; Fri, 10 May 2024 08:21:34 +0000
 Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 10 May
- 2024 03:21:29 -0500
+ 2024 03:21:32 -0500
 From: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
 To: <vkoul@kernel.org>, <dmaengine@vger.kernel.org>
 CC: <Raju.Rangoju@amd.com>, Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-Subject: [PATCH 2/7] dmaengine: ae4dma: Add AMD ae4dma controller driver
-Date: Fri, 10 May 2024 13:50:48 +0530
-Message-ID: <20240510082053.875923-3-Basavaraj.Natikar@amd.com>
+Subject: [PATCH 3/7] dmaengine: ptdma: Move common functions to common code
+Date: Fri, 10 May 2024 13:50:49 +0530
+Message-ID: <20240510082053.875923-4-Basavaraj.Natikar@amd.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240510082053.875923-1-Basavaraj.Natikar@amd.com>
 References: <20240510082053.875923-1-Basavaraj.Natikar@amd.com>
@@ -90,649 +91,86 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099E1:EE_|DS0PR12MB8444:EE_
-X-MS-Office365-Filtering-Correlation-Id: 829e7683-1713-48d5-7c04-08dc70ca3333
+X-MS-TrafficTypeDiagnostic: DS3PEPF000099E0:EE_|SJ2PR12MB9240:EE_
+X-MS-Office365-Filtering-Correlation-Id: e0a32333-46dc-4cd3-5bf8-08dc70ca3436
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|1800799015|376005|36860700004|82310400017;
+	BCL:0;ARA:13230031|376005|1800799015|36860700004|82310400017;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?h4cMuKIhOcsI/ppaD+gaSFdpSTH00lHDeoo2cfNPCRaAxqRM9P4HjgT5ZGPz?=
- =?us-ascii?Q?yp6ox2Kqhf/RNdANSEjQdgnuf/f33ODhki3o9RpyXNi7ndaxSJrNdJ6ym5mu?=
- =?us-ascii?Q?i/BkUWrBBVN4R9824WYXgwcN1RihntvGgACAIMuoj7NcAEyRZ72U1jmbS1ss?=
- =?us-ascii?Q?42JN2i4cRtgc7yWWY3ibzTM7lxmIDpBiXvraeJXskXlFgSBdn9Gu5JnXVcK1?=
- =?us-ascii?Q?0j6fy7QHxY8+C7U+FyiGY96teChpNXx0XtFwltoK17dbhmdeW9X8sNo97L9n?=
- =?us-ascii?Q?YZHjASlkCgqFdXkoRo0LHRVyAArd10Tw6N/f06SUdr5hUYBZ0siI9vtzGCTY?=
- =?us-ascii?Q?dtQgMulkAQK0vOFSU0KOBkMRGEawoWuiwrjtk2ZfVpZ8CG43Qdm1aaafLwZY?=
- =?us-ascii?Q?/fXvbscmzpyrPJEPAvKC4l99BolaeayTsqQD6/dflK1xyamkvspvGgV25kFD?=
- =?us-ascii?Q?RoKPXi8F+JCzej00+t0LsnL2tBj25i5VjiWtOM9/uIViiXIsA33FNqvZ83V4?=
- =?us-ascii?Q?UmfXJcd0ZmZ58ERc7g34NYBQdEEjceeqyrIonR/rf0sXH0MCF1yTbanTolaH?=
- =?us-ascii?Q?JV2Jgw+nSpNxS+sIbqxuHD46VNnINx9pzWR403fYEbW4aYh5oeYmCS6lsY91?=
- =?us-ascii?Q?1lgra15Y8lFpjRbkaQuMV10PHPxQ/e7lPhhrtUxhKWztCm7O8CdMgWedk+Ji?=
- =?us-ascii?Q?MXnEWzVne9rMMuIkElAQy4vDjmBhoiz8+ScIUmSBjBPPkSYvcUhpYu2k2ecv?=
- =?us-ascii?Q?kJeEeR166PapSit31LBy4KZEdf/Uu1cJt9j12UDDKV+wHKEBi47haZWhwqvW?=
- =?us-ascii?Q?sK8HLfC69b70oWbykka/VP/wXX+fevWG+OjMHNqKPecFGpJfaXmiyEMuzODH?=
- =?us-ascii?Q?EQ9PRRDVPxjQaCMft4MkFl+rzlzOLGs4W79NPLr2yFOB1MFgSESwlBXMeXYD?=
- =?us-ascii?Q?00zDunp/+HvZqHNTK9pdBmZzXmKYWUbyXfR9ve16XjY+zdkJZDgpxfJnsWiF?=
- =?us-ascii?Q?tL0wiUK2KC3dFNEh6PBxJlXAopOkrfu101hnrBA6ZMvy6LvXKR6LzMd91FEG?=
- =?us-ascii?Q?cycGRRDxILoQvmZ7v/InPQGhV5jPKDFTuCqTM6tp9p+7whYYQS1C4m5D3diQ?=
- =?us-ascii?Q?MKfInd699wFHnBMj86Frvm3TnNrxr2DXPqkiZHL6AkmruAo9qbR5EsNdOsxa?=
- =?us-ascii?Q?D37ZThP84S+hCKDbYhfyEpJW5PkaslydxmswquUzn2fU7DXL3+cniEKWkmfB?=
- =?us-ascii?Q?cDB9BByekyBPg2FS8wWrgtQJKpJjMKYrN+pMB6c9w3QNYNABCGg8+s03mtyO?=
- =?us-ascii?Q?fSHl+BhnrWdwNhwPqE/kEFz3RGTfc11OSsbeHVQY031At9cvqGbLBKQ6p3Vq?=
- =?us-ascii?Q?t9XBAkQ=3D?=
+	=?us-ascii?Q?hOE/wscYrVswJ5xsTTnai0FvmQUtAwHEikOO2zqJ89CNFa24GkK6kZZGNLSn?=
+ =?us-ascii?Q?CEO7kjH2Krh9qSPoHsq0S9+RpFJmx/C+ytHH1e3dl4wGrX+2XA+dRPnyFj3m?=
+ =?us-ascii?Q?mK24eTv+M4lgrFZUcV+DJTslAkL7warTSg41vipdgUJ4EQi6a1kaTI9NO3s0?=
+ =?us-ascii?Q?Ovk3N0yWR0ZnKO4p9aOF52VdyXVz9L8fEG2dfghNHYIXvdqRrNHgsg5f2vVH?=
+ =?us-ascii?Q?uiqAt290KEwpE/CCLBPSrr/8ytC4HSJf6159OBrdC04ac2dHaBxU4YaK4RaH?=
+ =?us-ascii?Q?PZINvXGt6kET4FdPG3dUvW2kksFEE5OrmSUkpLkvCOb2KI9f+ijij+ILAEou?=
+ =?us-ascii?Q?Ro+0d15hPL4CuTI7qF8zQW3pchsakmpO2pk1Y5OdsC6Bnoo2rOr85Yyhlksg?=
+ =?us-ascii?Q?mUcqSaF7ZO8u2c38nUPejRSf14cqc/yGKGUBIhT18c/Vj0zrb6wPaiIIIiFp?=
+ =?us-ascii?Q?C/YXoJgNnRB++jgGU6ryK/rTgzkttRUqJbNh6i6XWlZk/jpSNKo0X2zip/Do?=
+ =?us-ascii?Q?7IkMeQaCQut0jBWkimwZmzOlE4ben4UyEQDKjOoL48rb1zdqnEJlpbed43zW?=
+ =?us-ascii?Q?2BkWG5QCEVWPOw/tiWIZ9ElVtdwRUQD1u19qazA3A/g1l27Mm5uMAYyO4wgs?=
+ =?us-ascii?Q?kIngqoflZKPrNCbWIj85vRmn87sXjRrXKJZyWTYIWB9mtJYVWd2E+4Oi6ZY0?=
+ =?us-ascii?Q?koCjgtkPVp/6lU7PhySmfxuROsmYGraK4nJGDGkbjqz/dKH1chTVC7N9/sx6?=
+ =?us-ascii?Q?3aeAz11HNUdIAAJzIIPzzQE3IyTEN+olwIe+dYF03W4mqoN6ER0cOOYWXfxz?=
+ =?us-ascii?Q?IXB1Yl1p+G8eqz1/rlrz5dMr/P5DChcnMhJz59MHtR1UDTjbMtZaVSAiiKfZ?=
+ =?us-ascii?Q?RA3Fs2bx+fXV1GrPTKAPQSuc8Z3H9vGlLERumWSHcu9MBtl+n7dr2vjTYiFw?=
+ =?us-ascii?Q?SMLaV/A88HHR55pux3sIafGIjZBLj/rOopBMjGABYyC/b4NEOMNyzih3MwOk?=
+ =?us-ascii?Q?czaUiBZ9vj7Dt3briYHG4/hq/dRJKY51sb1mk3Y9XpwMxYMLP4ucs7uZI4fJ?=
+ =?us-ascii?Q?42sjaAd619wrUkTFFOmFH5zq0VAF3W/m6JtWUgc+36PHyYeALj3Hms8ObnO6?=
+ =?us-ascii?Q?hXb6AF8/W6KRk91HgJNDEco/GjjEBZVyciqRnEAYF0tkcyTE/TnNw/6HPkXy?=
+ =?us-ascii?Q?xVDFqqzbennyM9wcuKfoPlVoNB3bDZs7tL7ljicqBiqmpk2r51scDCbQvVX1?=
+ =?us-ascii?Q?LFAioKeIIqaKk89BJzp4U6E8gTsJry6H5cdK2qoaH2/xolua9qCMTf41xfpf?=
+ =?us-ascii?Q?n1IhVGaOhhaej8XWT7U9+7UnNFkocv1REWW7BBANmpP+OK95hffg8xeIbZpi?=
+ =?us-ascii?Q?sFH/xxU=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(1800799015)(376005)(36860700004)(82310400017);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(376005)(1800799015)(36860700004)(82310400017);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 May 2024 08:21:32.3547
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 May 2024 08:21:34.0668
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 829e7683-1713-48d5-7c04-08dc70ca3333
+X-MS-Exchange-CrossTenant-Network-Message-Id: e0a32333-46dc-4cd3-5bf8-08dc70ca3436
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	DS3PEPF000099E1.namprd04.prod.outlook.com
+	DS3PEPF000099E0.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8444
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9240
 
-Add support for AMD AE4DMA controller. It performs high-bandwidth
-memory to memory and IO copy operation. Device commands are managed
-via a circular queue of 'descriptors', each of which specifies source
-and destination addresses for copying a single buffer of data.
+To focus on reusability of ptdma code across modules extract common
+functions into reusable modules.
 
 Reviewed-by: Raju Rangoju <Raju.Rangoju@amd.com>
 Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
 ---
- MAINTAINERS                         |   6 +
- drivers/dma/amd/Kconfig             |   1 +
- drivers/dma/amd/Makefile            |   1 +
- drivers/dma/amd/ae4dma/Kconfig      |  13 ++
- drivers/dma/amd/ae4dma/Makefile     |  10 ++
- drivers/dma/amd/ae4dma/ae4dma-dev.c | 206 ++++++++++++++++++++++++++++
- drivers/dma/amd/ae4dma/ae4dma-pci.c | 195 ++++++++++++++++++++++++++
- drivers/dma/amd/ae4dma/ae4dma.h     |  77 +++++++++++
- drivers/dma/amd/common/amd_dma.h    |  26 ++++
- 9 files changed, 535 insertions(+)
- create mode 100644 drivers/dma/amd/ae4dma/Kconfig
- create mode 100644 drivers/dma/amd/ae4dma/Makefile
- create mode 100644 drivers/dma/amd/ae4dma/ae4dma-dev.c
- create mode 100644 drivers/dma/amd/ae4dma/ae4dma-pci.c
- create mode 100644 drivers/dma/amd/ae4dma/ae4dma.h
- create mode 100644 drivers/dma/amd/common/amd_dma.h
+ MAINTAINERS                             |  1 +
+ drivers/dma/amd/common/amd_dma.c        | 23 +++++++++++++++++++++++
+ drivers/dma/amd/common/amd_dma.h        |  3 +++
+ drivers/dma/amd/ptdma/Makefile          |  2 +-
+ drivers/dma/amd/ptdma/ptdma-dev.c       | 14 +-------------
+ drivers/dma/amd/ptdma/ptdma-dmaengine.c |  3 +--
+ drivers/dma/amd/ptdma/ptdma.h           |  2 --
+ 7 files changed, 30 insertions(+), 18 deletions(-)
+ create mode 100644 drivers/dma/amd/common/amd_dma.c
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index b190efda33ba..45f2140093b6 100644
+index 45f2140093b6..177445348f4e 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -909,6 +909,12 @@ L:	linux-edac@vger.kernel.org
- S:	Supported
- F:	drivers/ras/amd/atl/*
+@@ -914,6 +914,7 @@ M:	Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+ L:	dmaengine@vger.kernel.org
+ S:	Maintained
+ F:	drivers/dma/amd/ae4dma/
++F:	drivers/dma/amd/common/
  
-+AMD AE4DMA DRIVER
-+M:	Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-+L:	dmaengine@vger.kernel.org
-+S:	Maintained
-+F:	drivers/dma/amd/ae4dma/
-+
  AMD AXI W1 DRIVER
  M:	Kris Chaplin <kris.chaplin@amd.com>
- R:	Thomas Delev <thomas.delev@amd.com>
-diff --git a/drivers/dma/amd/Kconfig b/drivers/dma/amd/Kconfig
-index 8246b463bcf7..8c25a3ed6b94 100644
---- a/drivers/dma/amd/Kconfig
-+++ b/drivers/dma/amd/Kconfig
-@@ -3,3 +3,4 @@
- # AMD DMA Drivers
- 
- source "drivers/dma/amd/ptdma/Kconfig"
-+source "drivers/dma/amd/ae4dma/Kconfig"
-diff --git a/drivers/dma/amd/Makefile b/drivers/dma/amd/Makefile
-index dd7257ba7e06..8049b06a9ff5 100644
---- a/drivers/dma/amd/Makefile
-+++ b/drivers/dma/amd/Makefile
-@@ -4,3 +4,4 @@
- #
- 
- obj-$(CONFIG_AMD_PTDMA) += ptdma/
-+obj-$(CONFIG_AMD_AE4DMA) += ae4dma/
-diff --git a/drivers/dma/amd/ae4dma/Kconfig b/drivers/dma/amd/ae4dma/Kconfig
+diff --git a/drivers/dma/amd/common/amd_dma.c b/drivers/dma/amd/common/amd_dma.c
 new file mode 100644
-index 000000000000..cf8db4dac98d
+index 000000000000..3552d36fa8b9
 --- /dev/null
-+++ b/drivers/dma/amd/ae4dma/Kconfig
-@@ -0,0 +1,13 @@
-+# SPDX-License-Identifier: GPL-2.0
-+config AMD_AE4DMA
-+	tristate  "AMD AE4DMA Engine"
-+	depends on X86_64 && PCI
-+	select DMA_ENGINE
-+	select DMA_VIRTUAL_CHANNELS
-+	help
-+	  Enable support for the AMD AE4DMA controller. This controller
-+	  provides DMA capabilities to perform high bandwidth memory to
-+	  memory and IO copy operations. It performs DMA transfer through
-+	  queue-based descriptor management. This DMA controller is intended
-+	  to be used with AMD Non-Transparent Bridge devices and not for
-+	  general purpose peripheral DMA.
-diff --git a/drivers/dma/amd/ae4dma/Makefile b/drivers/dma/amd/ae4dma/Makefile
-new file mode 100644
-index 000000000000..e918f85a80ec
---- /dev/null
-+++ b/drivers/dma/amd/ae4dma/Makefile
-@@ -0,0 +1,10 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# AMD AE4DMA driver
-+#
-+
-+obj-$(CONFIG_AMD_AE4DMA) += ae4dma.o
-+
-+ae4dma-objs := ae4dma-dev.o
-+
-+ae4dma-$(CONFIG_PCI) += ae4dma-pci.o
-diff --git a/drivers/dma/amd/ae4dma/ae4dma-dev.c b/drivers/dma/amd/ae4dma/ae4dma-dev.c
-new file mode 100644
-index 000000000000..fc33d2056af2
---- /dev/null
-+++ b/drivers/dma/amd/ae4dma/ae4dma-dev.c
-@@ -0,0 +1,206 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * AMD AE4DMA driver
-+ *
-+ * Copyright (c) 2024, Advanced Micro Devices, Inc.
-+ * All Rights Reserved.
-+ *
-+ * Author: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-+ */
-+
-+#include "ae4dma.h"
-+
-+static unsigned int max_hw_q = 1;
-+module_param(max_hw_q, uint, 0444);
-+MODULE_PARM_DESC(max_hw_q, "max hw queues supported by engine (any non-zero value, default: 1)");
-+
-+static char *ae4_error_codes[] = {
-+	"",
-+	"ERR 01: INVALID HEADER DW0",
-+	"ERR 02: INVALID STATUS",
-+	"ERR 03: INVALID LENGTH - 4 BYTE ALIGNMENT",
-+	"ERR 04: INVALID SRC ADDR - 4 BYTE ALIGNMENT",
-+	"ERR 05: INVALID DST ADDR - 4 BYTE ALIGNMENT",
-+	"ERR 06: INVALID ALIGNMENT",
-+	"ERR 07: INVALID DESCRIPTOR",
-+};
-+
-+static void ae4_log_error(struct pt_device *d, int e)
-+{
-+	if (e <= 7)
-+		dev_info(d->dev, "AE4DMA error: %s (0x%x)\n", ae4_error_codes[e], e);
-+	else if (e > 7 && e <= 15)
-+		dev_info(d->dev, "AE4DMA error: %s (0x%x)\n", "INVALID DESCRIPTOR", e);
-+	else if (e > 15 && e <= 31)
-+		dev_info(d->dev, "AE4DMA error: %s (0x%x)\n", "INVALID DESCRIPTOR", e);
-+	else if (e > 31 && e <= 63)
-+		dev_info(d->dev, "AE4DMA error: %s (0x%x)\n", "INVALID DESCRIPTOR", e);
-+	else if (e > 63 && e <= 127)
-+		dev_info(d->dev, "AE4DMA error: %s (0x%x)\n", "PTE ERROR", e);
-+	else if (e > 127 && e <= 255)
-+		dev_info(d->dev, "AE4DMA error: %s (0x%x)\n", "PTE ERROR", e);
-+	else
-+		dev_info(d->dev, "Unknown AE4DMA error");
-+}
-+
-+static void ae4_check_status_error(struct ae4_cmd_queue *ae4cmd_q, int idx)
-+{
-+	struct pt_cmd_queue *cmd_q = &ae4cmd_q->cmd_q;
-+	struct ae4dma_desc desc;
-+	u8 status;
-+
-+	memcpy(&desc, &cmd_q->qbase[idx], sizeof(struct ae4dma_desc));
-+	/* Synchronize ordering */
-+	mb();
-+	status = desc.dw1.status;
-+	if (status && status != AE4_DESC_COMPLETED) {
-+		cmd_q->cmd_error = desc.dw1.err_code;
-+		if (cmd_q->cmd_error)
-+			ae4_log_error(cmd_q->pt, cmd_q->cmd_error);
-+	}
-+}
-+
-+static void ae4_pending_work(struct work_struct *work)
-+{
-+	struct ae4_cmd_queue *ae4cmd_q = container_of(work, struct ae4_cmd_queue, p_work.work);
-+	struct pt_cmd_queue *cmd_q = &ae4cmd_q->cmd_q;
-+	struct pt_cmd *cmd;
-+	u32 cridx, dridx;
-+
-+	while (true) {
-+		wait_event_interruptible(ae4cmd_q->q_w,
-+					 ((atomic64_read(&ae4cmd_q->done_cnt)) <
-+					   atomic64_read(&ae4cmd_q->intr_cnt)));
-+
-+		atomic64_inc(&ae4cmd_q->done_cnt);
-+
-+		mutex_lock(&ae4cmd_q->cmd_lock);
-+
-+		cridx = readl(cmd_q->reg_control + 0x0C);
-+		dridx = atomic_read(&ae4cmd_q->dridx);
-+
-+		while ((dridx != cridx) && !list_empty(&ae4cmd_q->cmd)) {
-+			cmd = list_first_entry(&ae4cmd_q->cmd, struct pt_cmd, entry);
-+			list_del(&cmd->entry);
-+
-+			ae4_check_status_error(ae4cmd_q, dridx);
-+			cmd->pt_cmd_callback(cmd->data, cmd->ret);
-+
-+			atomic64_dec(&ae4cmd_q->q_cmd_count);
-+			dridx = (dridx + 1) % CMD_Q_LEN;
-+			atomic_set(&ae4cmd_q->dridx, dridx);
-+			/* Synchronize ordering */
-+			mb();
-+
-+			complete_all(&ae4cmd_q->cmp);
-+		}
-+
-+		mutex_unlock(&ae4cmd_q->cmd_lock);
-+	}
-+}
-+
-+static irqreturn_t ae4_core_irq_handler(int irq, void *data)
-+{
-+	struct ae4_cmd_queue *ae4cmd_q = data;
-+	struct pt_cmd_queue *cmd_q;
-+	struct pt_device *pt;
-+	u32 status;
-+
-+	cmd_q = &ae4cmd_q->cmd_q;
-+	pt = cmd_q->pt;
-+
-+	pt->total_interrupts++;
-+	atomic64_inc(&ae4cmd_q->intr_cnt);
-+
-+	wake_up(&ae4cmd_q->q_w);
-+
-+	status = readl(cmd_q->reg_control + 0x14);
-+	if (status & BIT(0)) {
-+		status &= GENMASK(31, 1);
-+		writel(status, cmd_q->reg_control + 0x14);
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+void ae4_destroy_work(struct ae4_device *ae4)
-+{
-+	struct ae4_cmd_queue *ae4cmd_q;
-+	int i;
-+
-+	for (i = 0; i < ae4->cmd_q_count; i++) {
-+		ae4cmd_q = &ae4->ae4cmd_q[i];
-+
-+		if (!ae4cmd_q->pws)
-+			break;
-+
-+		cancel_delayed_work(&ae4cmd_q->p_work);
-+		destroy_workqueue(ae4cmd_q->pws);
-+	}
-+}
-+
-+int ae4_core_init(struct ae4_device *ae4)
-+{
-+	struct pt_device *pt = &ae4->pt;
-+	struct ae4_cmd_queue *ae4cmd_q;
-+	struct device *dev = pt->dev;
-+	struct pt_cmd_queue *cmd_q;
-+	int i, ret = 0;
-+
-+	writel(max_hw_q, pt->io_regs);
-+
-+	for (i = 0; i < max_hw_q; i++) {
-+		ae4cmd_q = &ae4->ae4cmd_q[i];
-+		ae4cmd_q->id = ae4->cmd_q_count;
-+		ae4->cmd_q_count++;
-+
-+		cmd_q = &ae4cmd_q->cmd_q;
-+		cmd_q->pt = pt;
-+
-+		/* Preset some register values (Q size is 32byte (0x20)) */
-+		cmd_q->reg_control = pt->io_regs + ((i + 1) * 0x20);
-+
-+		ret = devm_request_irq(dev, ae4->ae4_irq[i], ae4_core_irq_handler, 0,
-+				       dev_name(pt->dev), ae4cmd_q);
-+		if (ret)
-+			return ret;
-+
-+		cmd_q->qsize = Q_SIZE(sizeof(struct ae4dma_desc));
-+
-+		cmd_q->qbase = dmam_alloc_coherent(dev, cmd_q->qsize, &cmd_q->qbase_dma,
-+						   GFP_KERNEL);
-+		if (!cmd_q->qbase)
-+			return -ENOMEM;
-+	}
-+
-+	for (i = 0; i < ae4->cmd_q_count; i++) {
-+		ae4cmd_q = &ae4->ae4cmd_q[i];
-+
-+		cmd_q = &ae4cmd_q->cmd_q;
-+
-+		/* Preset some register values (Q size is 32byte (0x20)) */
-+		cmd_q->reg_control = pt->io_regs + ((i + 1) * 0x20);
-+
-+		/* Update the device registers with queue information. */
-+		writel(CMD_Q_LEN, cmd_q->reg_control + 0x08);
-+
-+		cmd_q->qdma_tail = cmd_q->qbase_dma;
-+		writel(lower_32_bits(cmd_q->qdma_tail), cmd_q->reg_control + 0x18);
-+		writel(upper_32_bits(cmd_q->qdma_tail), cmd_q->reg_control + 0x1C);
-+
-+		INIT_LIST_HEAD(&ae4cmd_q->cmd);
-+		init_waitqueue_head(&ae4cmd_q->q_w);
-+
-+		ae4cmd_q->pws = alloc_ordered_workqueue("ae4dma_%d", WQ_MEM_RECLAIM, ae4cmd_q->id);
-+		if (!ae4cmd_q->pws) {
-+			ae4_destroy_work(ae4);
-+			return -ENOMEM;
-+		}
-+		INIT_DELAYED_WORK(&ae4cmd_q->p_work, ae4_pending_work);
-+		queue_delayed_work(ae4cmd_q->pws, &ae4cmd_q->p_work,  usecs_to_jiffies(100));
-+
-+		init_completion(&ae4cmd_q->cmp);
-+	}
-+
-+	return ret;
-+}
-diff --git a/drivers/dma/amd/ae4dma/ae4dma-pci.c b/drivers/dma/amd/ae4dma/ae4dma-pci.c
-new file mode 100644
-index 000000000000..4cd537af757d
---- /dev/null
-+++ b/drivers/dma/amd/ae4dma/ae4dma-pci.c
-@@ -0,0 +1,195 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * AMD AE4DMA driver
-+ *
-+ * Copyright (c) 2024, Advanced Micro Devices, Inc.
-+ * All Rights Reserved.
-+ *
-+ * Author: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-+ */
-+
-+#include "ae4dma.h"
-+
-+static int ae4_get_msi_irq(struct ae4_device *ae4)
-+{
-+	struct pt_device *pt = &ae4->pt;
-+	struct device *dev = pt->dev;
-+	struct pci_dev *pdev;
-+	int ret, i;
-+
-+	pdev = to_pci_dev(dev);
-+	ret = pci_enable_msi(pdev);
-+	if (ret)
-+		return ret;
-+
-+	for (i = 0; i < MAX_AE4_HW_QUEUES; i++)
-+		ae4->ae4_irq[i] = pdev->irq;
-+
-+	return 0;
-+}
-+
-+static int ae4_get_msix_irqs(struct ae4_device *ae4)
-+{
-+	struct ae4_msix *ae4_msix = ae4->ae4_msix;
-+	struct pt_device *pt = &ae4->pt;
-+	struct device *dev = pt->dev;
-+	struct pci_dev *pdev;
-+	int v, i, ret;
-+
-+	pdev = to_pci_dev(dev);
-+
-+	for (v = 0; v < ARRAY_SIZE(ae4_msix->msix_entry); v++)
-+		ae4_msix->msix_entry[v].entry = v;
-+
-+	ret = pci_enable_msix_range(pdev, ae4_msix->msix_entry, 1, v);
-+	if (ret < 0)
-+		return ret;
-+
-+	ae4_msix->msix_count = ret;
-+
-+	for (i = 0; i < MAX_AE4_HW_QUEUES; i++)
-+		ae4->ae4_irq[i] = ae4_msix->msix_entry[i].vector;
-+
-+	return 0;
-+}
-+
-+static int ae4_get_irqs(struct ae4_device *ae4)
-+{
-+	struct pt_device *pt = &ae4->pt;
-+	struct device *dev = pt->dev;
-+	int ret;
-+
-+	ret = ae4_get_msix_irqs(ae4);
-+	if (!ret)
-+		return 0;
-+
-+	/* Couldn't get MSI-X vectors, try MSI */
-+	dev_err(dev, "could not enable MSI-X (%d), trying MSI\n", ret);
-+	ret = ae4_get_msi_irq(ae4);
-+	if (!ret)
-+		return 0;
-+
-+	/* Couldn't get MSI interrupt */
-+	dev_err(dev, "could not enable MSI (%d)\n", ret);
-+
-+	return ret;
-+}
-+
-+static void ae4_free_irqs(struct ae4_device *ae4)
-+{
-+	struct ae4_msix *ae4_msix;
-+	struct pci_dev *pdev;
-+	struct pt_device *pt;
-+	struct device *dev;
-+	int i;
-+
-+	if (ae4) {
-+		pt = &ae4->pt;
-+		dev = pt->dev;
-+		pdev = to_pci_dev(dev);
-+
-+		ae4_msix = ae4->ae4_msix;
-+		if (ae4_msix && ae4_msix->msix_count)
-+			pci_disable_msix(pdev);
-+		else if (pdev->irq)
-+			pci_disable_msi(pdev);
-+
-+		for (i = 0; i < MAX_AE4_HW_QUEUES; i++)
-+			ae4->ae4_irq[i] = 0;
-+	}
-+}
-+
-+static void ae4_deinit(struct ae4_device *ae4)
-+{
-+	ae4_free_irqs(ae4);
-+}
-+
-+static int ae4_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct ae4_device *ae4;
-+	struct pt_device *pt;
-+	int bar_mask;
-+	int ret = 0;
-+
-+	ae4 = devm_kzalloc(dev, sizeof(*ae4), GFP_KERNEL);
-+	if (!ae4)
-+		return -ENOMEM;
-+
-+	ae4->ae4_msix = devm_kzalloc(dev, sizeof(struct ae4_msix), GFP_KERNEL);
-+	if (!ae4->ae4_msix)
-+		return -ENOMEM;
-+
-+	ret = pcim_enable_device(pdev);
-+	if (ret)
-+		goto ae4_error;
-+
-+	bar_mask = pci_select_bars(pdev, IORESOURCE_MEM);
-+	ret = pcim_iomap_regions(pdev, bar_mask, "ae4dma");
-+	if (ret)
-+		goto ae4_error;
-+
-+	pt = &ae4->pt;
-+	pt->dev = dev;
-+
-+	pt->io_regs = pcim_iomap_table(pdev)[0];
-+	if (!pt->io_regs) {
-+		ret = -ENOMEM;
-+		goto ae4_error;
-+	}
-+
-+	ret = ae4_get_irqs(ae4);
-+	if (ret)
-+		goto ae4_error;
-+
-+	pci_set_master(pdev);
-+
-+	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(48));
-+	if (ret) {
-+		ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
-+		if (ret)
-+			goto ae4_error;
-+	}
-+
-+	dev_set_drvdata(dev, ae4);
-+
-+	ret = ae4_core_init(ae4);
-+	if (ret)
-+		goto ae4_error;
-+
-+	return 0;
-+
-+ae4_error:
-+	ae4_deinit(ae4);
-+
-+	return ret;
-+}
-+
-+static void ae4_pci_remove(struct pci_dev *pdev)
-+{
-+	struct ae4_device *ae4 = dev_get_drvdata(&pdev->dev);
-+
-+	ae4_destroy_work(ae4);
-+	ae4_deinit(ae4);
-+}
-+
-+static const struct pci_device_id ae4_pci_table[] = {
-+	{ PCI_VDEVICE(AMD, 0x14C8), },
-+	{ PCI_VDEVICE(AMD, 0x14DC), },
-+	{ PCI_VDEVICE(AMD, 0x149B), },
-+	/* Last entry must be zero */
-+	{ 0, }
-+};
-+MODULE_DEVICE_TABLE(pci, ae4_pci_table);
-+
-+static struct pci_driver ae4_pci_driver = {
-+	.name = "ae4dma",
-+	.id_table = ae4_pci_table,
-+	.probe = ae4_pci_probe,
-+	.remove = ae4_pci_remove,
-+};
-+
-+module_pci_driver(ae4_pci_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("AMD AE4DMA driver");
-diff --git a/drivers/dma/amd/ae4dma/ae4dma.h b/drivers/dma/amd/ae4dma/ae4dma.h
-new file mode 100644
-index 000000000000..24b1253ad570
---- /dev/null
-+++ b/drivers/dma/amd/ae4dma/ae4dma.h
-@@ -0,0 +1,77 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * AMD AE4DMA driver
-+ *
-+ * Copyright (c) 2024, Advanced Micro Devices, Inc.
-+ * All Rights Reserved.
-+ *
-+ * Author: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-+ */
-+#ifndef __AE4DMA_H__
-+#define __AE4DMA_H__
-+
-+#include "../common/amd_dma.h"
-+
-+#define MAX_AE4_HW_QUEUES		16
-+
-+#define AE4_DESC_COMPLETED		0x3
-+
-+struct ae4_msix {
-+	int msix_count;
-+	struct msix_entry msix_entry[MAX_AE4_HW_QUEUES];
-+};
-+
-+struct ae4_cmd_queue {
-+	struct ae4_device *ae4;
-+	struct pt_cmd_queue cmd_q;
-+	struct list_head cmd;
-+	/* protect command operations */
-+	struct mutex cmd_lock;
-+	struct delayed_work p_work;
-+	struct workqueue_struct *pws;
-+	struct completion cmp;
-+	wait_queue_head_t q_w;
-+	atomic64_t intr_cnt;
-+	atomic64_t done_cnt;
-+	atomic64_t q_cmd_count;
-+	atomic_t dridx;
-+	unsigned int id;
-+};
-+
-+union dwou {
-+	u32 dw0;
-+	struct dword0 {
-+	u8	byte0;
-+	u8	byte1;
-+	u16	timestamp;
-+	} dws;
-+};
-+
-+struct dword1 {
-+	u8	status;
-+	u8	err_code;
-+	u16	desc_id;
-+};
-+
-+struct ae4dma_desc {
-+	union dwou dwouv;
-+	struct dword1 dw1;
-+	u32 length;
-+	u32 rsvd;
-+	u32 src_hi;
-+	u32 src_lo;
-+	u32 dst_hi;
-+	u32 dst_lo;
-+};
-+
-+struct ae4_device {
-+	struct pt_device pt;
-+	struct ae4_msix *ae4_msix;
-+	struct ae4_cmd_queue ae4cmd_q[MAX_AE4_HW_QUEUES];
-+	unsigned int ae4_irq[MAX_AE4_HW_QUEUES];
-+	unsigned int cmd_q_count;
-+};
-+
-+int ae4_core_init(struct ae4_device *ae4);
-+void ae4_destroy_work(struct ae4_device *ae4);
-+#endif
-diff --git a/drivers/dma/amd/common/amd_dma.h b/drivers/dma/amd/common/amd_dma.h
-new file mode 100644
-index 000000000000..31c35b3bc94b
---- /dev/null
-+++ b/drivers/dma/amd/common/amd_dma.h
-@@ -0,0 +1,26 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
++++ b/drivers/dma/amd/common/amd_dma.c
+@@ -0,0 +1,23 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
 +/*
 + * AMD DMA Driver common
 + *
@@ -742,22 +180,102 @@ index 000000000000..31c35b3bc94b
 + * Author: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
 + */
 +
-+#ifndef AMD_DMA_H
-+#define AMD_DMA_H
++#include "../common/amd_dma.h"
 +
-+#include <linux/device.h>
-+#include <linux/dmaengine.h>
-+#include <linux/pci.h>
-+#include <linux/spinlock.h>
-+#include <linux/mutex.h>
-+#include <linux/list.h>
-+#include <linux/wait.h>
-+#include <linux/dmapool.h>
++void pt_start_queue(struct pt_cmd_queue *cmd_q)
++{
++	/* Turn on the run bit */
++	iowrite32(cmd_q->qcontrol | CMD_Q_RUN, cmd_q->reg_control);
++}
 +
-+#include "../ptdma/ptdma.h"
-+#include "../../virt-dma.h"
++void pt_stop_queue(struct pt_cmd_queue *cmd_q)
++{
++	/* Turn off the run bit */
++	iowrite32(cmd_q->qcontrol & ~CMD_Q_RUN, cmd_q->reg_control);
++}
+diff --git a/drivers/dma/amd/common/amd_dma.h b/drivers/dma/amd/common/amd_dma.h
+index 31c35b3bc94b..c216a03b5161 100644
+--- a/drivers/dma/amd/common/amd_dma.h
++++ b/drivers/dma/amd/common/amd_dma.h
+@@ -23,4 +23,7 @@
+ #include "../ptdma/ptdma.h"
+ #include "../../virt-dma.h"
+ 
++void pt_start_queue(struct pt_cmd_queue *cmd_q);
++void pt_stop_queue(struct pt_cmd_queue *cmd_q);
 +
-+#endif
+ #endif
+diff --git a/drivers/dma/amd/ptdma/Makefile b/drivers/dma/amd/ptdma/Makefile
+index ce5410268a9a..42606d7302e6 100644
+--- a/drivers/dma/amd/ptdma/Makefile
++++ b/drivers/dma/amd/ptdma/Makefile
+@@ -5,6 +5,6 @@
+ 
+ obj-$(CONFIG_AMD_PTDMA) += ptdma.o
+ 
+-ptdma-objs := ptdma-dev.o ptdma-dmaengine.o ptdma-debugfs.o
++ptdma-objs := ptdma-dev.o ptdma-dmaengine.o ptdma-debugfs.o ../common/amd_dma.o
+ 
+ ptdma-$(CONFIG_PCI) += ptdma-pci.o
+diff --git a/drivers/dma/amd/ptdma/ptdma-dev.c b/drivers/dma/amd/ptdma/ptdma-dev.c
+index a2bf13ff18b6..506b3dfca549 100644
+--- a/drivers/dma/amd/ptdma/ptdma-dev.c
++++ b/drivers/dma/amd/ptdma/ptdma-dev.c
+@@ -17,7 +17,7 @@
+ #include <linux/module.h>
+ #include <linux/pci.h>
+ 
+-#include "ptdma.h"
++#include "../common/amd_dma.h"
+ 
+ /* Human-readable error strings */
+ static char *pt_error_codes[] = {
+@@ -54,18 +54,6 @@ static void pt_log_error(struct pt_device *d, int e)
+ 	dev_err(d->dev, "PTDMA error: %s (0x%x)\n", pt_error_codes[e], e);
+ }
+ 
+-void pt_start_queue(struct pt_cmd_queue *cmd_q)
+-{
+-	/* Turn on the run bit */
+-	iowrite32(cmd_q->qcontrol | CMD_Q_RUN, cmd_q->reg_control);
+-}
+-
+-void pt_stop_queue(struct pt_cmd_queue *cmd_q)
+-{
+-	/* Turn off the run bit */
+-	iowrite32(cmd_q->qcontrol & ~CMD_Q_RUN, cmd_q->reg_control);
+-}
+-
+ static int pt_core_execute_cmd(struct ptdma_desc *desc, struct pt_cmd_queue *cmd_q)
+ {
+ 	bool soc = FIELD_GET(DWORD0_SOC, desc->dw0);
+diff --git a/drivers/dma/amd/ptdma/ptdma-dmaengine.c b/drivers/dma/amd/ptdma/ptdma-dmaengine.c
+index a2e7c2cec15e..66ea10499643 100644
+--- a/drivers/dma/amd/ptdma/ptdma-dmaengine.c
++++ b/drivers/dma/amd/ptdma/ptdma-dmaengine.c
+@@ -9,8 +9,7 @@
+  * Author: Gary R Hook <gary.hook@amd.com>
+  */
+ 
+-#include "ptdma.h"
+-#include "../../dmaengine.h"
++#include "../common/amd_dma.h"
+ 
+ static inline struct pt_dma_chan *to_pt_chan(struct dma_chan *dma_chan)
+ {
+diff --git a/drivers/dma/amd/ptdma/ptdma.h b/drivers/dma/amd/ptdma/ptdma.h
+index 2690a32fc7cb..b4f9ee83b074 100644
+--- a/drivers/dma/amd/ptdma/ptdma.h
++++ b/drivers/dma/amd/ptdma/ptdma.h
+@@ -322,8 +322,6 @@ int pt_core_perform_passthru(struct pt_cmd_queue *cmd_q,
+ 			     struct pt_passthru_engine *pt_engine);
+ 
+ void pt_check_status_trans(struct pt_device *pt, struct pt_cmd_queue *cmd_q);
+-void pt_start_queue(struct pt_cmd_queue *cmd_q);
+-void pt_stop_queue(struct pt_cmd_queue *cmd_q);
+ 
+ static inline void pt_core_disable_queue_interrupts(struct pt_device *pt)
+ {
 -- 
 2.25.1
 

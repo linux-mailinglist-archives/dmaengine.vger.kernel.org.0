@@ -1,74 +1,65 @@
-Return-Path: <dmaengine+bounces-2050-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2051-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98FEE8C8314
-	for <lists+dmaengine@lfdr.de>; Fri, 17 May 2024 11:11:47 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id C534F8C840D
+	for <lists+dmaengine@lfdr.de>; Fri, 17 May 2024 11:44:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4D0051F2326A
-	for <lists+dmaengine@lfdr.de>; Fri, 17 May 2024 09:11:47 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 31A1BB21544
+	for <lists+dmaengine@lfdr.de>; Fri, 17 May 2024 09:44:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34A012561D;
-	Fri, 17 May 2024 09:11:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D40412260B;
+	Fri, 17 May 2024 09:43:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qg/Fr2OF"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="oT1IdblO"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39CB6219E1
-	for <dmaengine@vger.kernel.org>; Fri, 17 May 2024 09:11:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D31D2BD06;
+	Fri, 17 May 2024 09:43:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715937097; cv=none; b=lEVzfmNfK+dE69ZURcO0aL1hpO5x3tZeLBXoLwa79AhK6ZbJ7iBiC/aWV67i8kbYI381dxS0Tgt8r5TguWbPU2/PXABIM650YS2A7o5q44LdfCvZ/WI8LYUyG8oGJp9rxj1y6+tyt/haBlgUTsi++vnZsXef2QHjPxhXdc1t/mg=
+	t=1715939036; cv=none; b=XUEjICDwObjasGDUIlX5X5P6Ur8jXRuf7RSu5hXIKKoA9Kzc92OL9gdmhToSw8Ipnle+9NlIVuYVa3gG9N4LeaRnf2QU0i0PUVSzHmNBAQCf6WNB314iycwBCGYfYgHvxysfsvj4eVo3BscxIsAVk+fh4UVzV7GHkn/Va1n/3VU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715937097; c=relaxed/simple;
-	bh=DoLTsawHpeTfuB9cwiMX8gLog+phP2olzr7YENPNrxg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lTQMs4TzVCKRsOgRvevp5Pmq0FPQG4elOZlL8UkAUSy8d09kPrord6ZV2630xqVi0jaJFTM8VbMLCU0tf4Rc8AP/0mCrck30sLHDLndERctv3LtQ4UjauezmwGplT7t/jl1l0dSdaRyLOx+S2XEh1+dpXG9h7NGRAbT7QiVHL/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qg/Fr2OF; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a5a89787ea4so414064866b.2
-        for <dmaengine@vger.kernel.org>; Fri, 17 May 2024 02:11:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715937092; x=1716541892; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3wbo50xwb3HFwy2Js34OThKfA1hpUVathWWvMAHMruo=;
-        b=qg/Fr2OFlFQTT3Aol9ciNz8tsTHJM2U1dKVMIOqUlhQzbAOSrNKlNhTCX4anwSpxmN
-         rkA/jtsf5La4dmXoZfOo2NlVokOQIhd6SrRaI3sNjkWN9DVgaFjC4Q/uh8vDvBnh2ut1
-         fvGoKabouycpXWto8NWaYLuvZwv2f7hUfQwebBajG0T3QLPKD7U5nnMzeYZllPDfPUfs
-         YQpn8Vo3oPoPQ5/76amJO38E02xiB1Dmzvg44cZWB0qBQCS64DY6gypy7MPof5WhTJA8
-         Vzi/zem1SSANoyoqUEY5vOxaGsunwLx86pOXMnG3dMU1jgHWR/Bl7JS6mcO7WK+IYdff
-         TJwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715937092; x=1716541892;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3wbo50xwb3HFwy2Js34OThKfA1hpUVathWWvMAHMruo=;
-        b=UTUTs+EIoX5R/RhR+OtU83ovcP4V2CtMznRTzBJ9UIlHIkflFInzbb7dtjYXe+Hj4U
-         1zhyX4vflOT8hgM33dXb/FA4F7q4JraagvKgLDZay3IVKLs31ughw1kdvS5WTKq5oDgv
-         TIF5F3lTRossSUem58CeGq1iRUJK1UcyY5/6hXZ9CKrmbXTGEl569KovtB88rBX8fJam
-         Bh20/ojUkPZM/4eMobak76jqzVaTIiiQRevtaZI3wluBrjk2ToKCly+JrqvSxHcVoCyR
-         hCRTTjlJ9AA6DkkiWg4Hqumux3sKoVdanCWj3d/bf9I7k58QZv0ZZthFYTv3qORmUnGF
-         WuHA==
-X-Forwarded-Encrypted: i=1; AJvYcCWbi46vR/7Zvdaup5lRAxJzLYZYw7V5D3kmt+phMfoYZq4Dzbr3g7IoOfRTnVGC7TuUuo7tlP+VgA3gTgOgw28B3z90DX7h6q/c
-X-Gm-Message-State: AOJu0Yx023WImFEkK4EMdzKJCP1yV3Zs6mA9U6PiY7f+Elopq4pAfK1h
-	P1Eun6XSu4mIekrRYvF/3LUXYC+tgUNQd+RqNXIe9kAlGnLs1BmZADcU9sbvV7w=
-X-Google-Smtp-Source: AGHT+IFUuE27SOBRiwiM5jzv8pfjnHU4AIrW12/v2KmpB6rpAdGZVts7qvikNVwq4pSeqOpzntfyrg==
-X-Received: by 2002:a17:906:32d9:b0:a59:dd9d:6da5 with SMTP id a640c23a62f3a-a5a2d54c07amr1318225066b.3.1715937092597;
-        Fri, 17 May 2024 02:11:32 -0700 (PDT)
-Received: from [10.91.1.133] ([149.14.240.163])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17892471sm1096886566b.84.2024.05.17.02.11.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 May 2024 02:11:32 -0700 (PDT)
-Message-ID: <39b66355-f67e-49e9-a64b-fdd87340f787@linaro.org>
-Date: Fri, 17 May 2024 11:11:30 +0200
+	s=arc-20240116; t=1715939036; c=relaxed/simple;
+	bh=+GMra6jDu3JwTIF7tO5wt1UPjDvuqc0zIOgUmvGn3wQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=gNoFKmlt40a1bASDZA6bN1u7UeTAxWSbXYset33bneTgsqUevwbrwprh59ICsosQS1EI09WSMU7L+CFIyY+dpyXsEfOgN2PlvvPbJG/tevIVzVV9uyYpN6uToUg9L2Xrpe7xkHpILmufh4aauk22yVx+NJkb97ag4evmwAC3rvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=oT1IdblO; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44H7sYmA003246;
+	Fri, 17 May 2024 11:43:15 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	selector1; bh=49Oofd7OVqJE6dbAjzlQbaATsU5N+6q3xWdQnenuU+A=; b=oT
+	1IdblOVlFfOna/GBqAv2dF3B8g+eR9ujPXox07SDxToKAL/4cogI4VlrKLYKcLU9
+	kTnsYZTcoWQvJUDTGphejEFWedRdAbfrhhoJrwivhOMstDrW7JMcj4l1IlopcTja
+	QijDTduHdC4gABSXNooBeJSqgzebw2LZSD4iFbf4qYKcOfwfQoSgLSdgqAzE/wQm
+	ZLFcUtDApZCroIbiBnveoKrVBZp2Upwc92h+zZhF9o5VkiWTXeGC+SFGTmFBFr7I
+	/qHTQya+ma81pB5YSlgju4IHAMvwPs/l9SfQCoEq+6t8M+AtoVZtGE7Uo/rJiAFI
+	zfWzoiBt3yMNdXmboT7w==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3y4sxwhebg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 17 May 2024 11:43:14 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id E2C0C4002D;
+	Fri, 17 May 2024 11:43:08 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C36EE2138F8;
+	Fri, 17 May 2024 11:42:18 +0200 (CEST)
+Received: from [10.48.86.143] (10.48.86.143) by SHFDAG1NODE3.st.com
+ (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 17 May
+ 2024 11:42:17 +0200
+Message-ID: <2da93910-01dc-4cfe-994e-3a0d70d2bd19@foss.st.com>
+Date: Fri, 17 May 2024 11:42:17 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -76,50 +67,910 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] dmaengine: qcom: gpi: remove unused struct 'reg_info'
+Subject: Re: [PATCH 05/12] dmaengine: Add STM32 DMA3 support
+To: Frank Li <Frank.li@nxp.com>
+CC: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre
+ Torgue <alexandre.torgue@foss.st.com>,
+        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>
+References: <20240423123302.1550592-1-amelie.delaunay@foss.st.com>
+ <20240423123302.1550592-6-amelie.delaunay@foss.st.com>
+ <ZkUFYoRCOOpAoIus@lizhi-Precision-Tower-5810>
+ <408b4a20-680e-4bad-8971-ff98323ce04e@foss.st.com>
+ <ZkY9zIfvaiA8h7Oq@lizhi-Precision-Tower-5810>
 Content-Language: en-US
-To: linux@treblig.org, Frank.li@nxp.com, vkoul@kernel.org
-Cc: linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240516152537.262354-1-linux@treblig.org>
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20240516152537.262354-1-linux@treblig.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Amelie Delaunay <amelie.delaunay@foss.st.com>
+In-Reply-To: <ZkY9zIfvaiA8h7Oq@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-17_03,2024-05-17_01,2023-05-22_02
 
-On 16/05/2024 17:25, linux@treblig.org wrote:
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+On 5/16/24 19:09, Frank Li wrote:
+> On Thu, May 16, 2024 at 05:25:58PM +0200, Amelie Delaunay wrote:
+>> On 5/15/24 20:56, Frank Li wrote:
+>>> On Tue, Apr 23, 2024 at 02:32:55PM +0200, Amelie Delaunay wrote:
+>>>> STM32 DMA3 driver supports the 3 hardware configurations of the STM32 DMA3
+>>>> controller:
+> ...
+>>>> +	writel_relaxed(hwdesc->cdar, ddata->base + STM32_DMA3_CDAR(id));
+>>>> +	writel_relaxed(hwdesc->cllr, ddata->base + STM32_DMA3_CLLR(id));
+>>>> +
+>>>> +	/* Clear any pending interrupts */
+>>>> +	csr = readl_relaxed(ddata->base + STM32_DMA3_CSR(id));
+>>>> +	if (csr & CSR_ALL_F)
+>>>> +		writel_relaxed(csr, ddata->base + STM32_DMA3_CFCR(id));
+>>>> +
+>>>> +	stm32_dma3_chan_dump_reg(chan);
+>>>> +
+>>>> +	ccr = readl_relaxed(ddata->base + STM32_DMA3_CCR(id));
+>>>> +	writel_relaxed(ccr | CCR_EN, ddata->base + STM32_DMA3_CCR(id));
+>>>
+>>> This one should use writel instead of writel_relaxed because it need
+>>> dma_wmb() as barrier for preious write complete.
+>>>
+>>> Frank
+>>>
+>>
+>> ddata->base is Device memory type thanks to ioremap() use, so it is strongly
+>> ordered and non-cacheable.
+>> DMA3 is outside CPU cluster, its registers are accessible through AHB bus.
+>> dma_wmb() (in case of writel instead of writel_relaxed) is useless in that
+>> case: it won't ensure the propagation on the bus is complete, and it will
+>> have impacts on the system.
+>> That's why CCR register is written once,  then it is read before CCR_EN is
+>> set and being written again, with _relaxed(), because registers are behind a
+>> bus, and ioremapped with Device memory type which ensures it is strongly
+>> ordered and non-cacheable.
 > 
-> Remove unused struct 'reg_info'
+> regardless memory map, writel_relaxed() just make sure io write and read is
+> orderred, not necessary order with other memory access. only readl and
+> writel make sure order with other memory read/write.
 > 
-> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-> ---
->   drivers/dma/qcom/gpi.c | 6 ------
->   1 file changed, 6 deletions(-)
+> 1. Write src_addr to descriptor
+> 2. dma_wmb()
+> 3. Write "ready" to descriptor
+> 4. enable channel or doorbell by write a register.
 > 
-> diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
-> index 1c93864e0e4d..639ab304db9b 100644
-> --- a/drivers/dma/qcom/gpi.c
-> +++ b/drivers/dma/qcom/gpi.c
-> @@ -476,12 +476,6 @@ struct gpi_dev {
->   	struct gpii *gpiis;
->   };
->   
-> -struct reg_info {
-> -	char *name;
-> -	u32 offset;
-> -	u32 val;
-> -};
-> -
->   struct gchan {
->   	struct virt_dma_chan vc;
->   	u32 chid;
+> if 4 use writel_relaxe(). because 3 write to DDR, which difference place of
+> mmio, 4 may happen before 3.  Your can refer axi order model.
+> 
+> 4 have to use ONE writel(), to make sure 3 already write to DDR.
+> 
+> You need use at least one writel() to make sure all nornmal memory finish.
+> 
 
-More detail in the commit log please - is the structure unused ? What is 
-the provenance of it being added and becoming dead code.
++    writel_relaxed(chan->swdesc->ccr, ddata->base + STM32_DMA3_CCR(id));
++    writel_relaxed(hwdesc->ctr1, ddata->base + STM32_DMA3_CTR1(id));
++    writel_relaxed(hwdesc->ctr2, ddata->base + STM32_DMA3_CTR2(id));
++    writel_relaxed(hwdesc->cbr1, ddata->base + STM32_DMA3_CBR1(id));
++    writel_relaxed(hwdesc->csar, ddata->base + STM32_DMA3_CSAR(id));
++    writel_relaxed(hwdesc->cdar, ddata->base + STM32_DMA3_CDAR(id));
++    writel_relaxed(hwdesc->cllr, ddata->base + STM32_DMA3_CLLR(id));
 
-More detail required here.
+These writel_relaxed() are from descriptors to DMA3 registers 
+(descriptors being prepared "a long time ago" during _prep_).
+As I said previously, DMA3 registers are outside CPU cluster, accessible 
+through AHB bus, and ddata->base to address registers is ioremapped as 
+Device memory type, non-cacheable and strongly ordered.
 
----
-bod
+arch/arm/include/asm/io.h:
+/*
+* ioremap() and friends.
+*
+* ioremap() takes a resource address, and size.  Due to the ARM memory
+* types, it is important to use the correct ioremap() function as each
+* mapping has specific properties.
+*
+* Function		Memory type	Cacheability	Cache hint
+* *ioremap()*		*Device*		*n/a*		*n/a*
+* ioremap_cache()	Normal		Writeback	Read allocate
+* ioremap_wc()		Normal		Non-cacheable	n/a
+* ioremap_wt()		Normal		Non-cacheable	n/a
+*
+* All device mappings have the following properties:
+* - no access speculation
+* - no repetition (eg, on return from an exception)
+* - number, order and size of accesses are maintained
+* - unaligned accesses are "unpredictable"
+* - writes may be delayed before they hit the endpoint device
+
+On our platforms, we know that to ensure the writes have hit the 
+endpoint device (aka DMA3 registers), a read have to be done before.
+And that's what is done before enabling the channel:
+
++    ccr = readl_relaxed(ddata->base + STM32_DMA3_CCR(id));
++    writel_relaxed(ccr | CCR_EN, ddata->base + STM32_DMA3_CCR(id));
+
+If there was an issue in this part of the code, it means channel would 
+be started while it is wrongly programmed. In that case, DMA3 would 
+raise a User Setting Error interrupt and disable the channel. User 
+Setting Error is managed in this driver 
+(USEF/stm32_dma3_check_user_setting()). And we never had reached a 
+situation.
+
+>>
+>>>> +
+>>>> +	chan->dma_status = DMA_IN_PROGRESS;
+>>>> +
+>>>> +	dev_dbg(chan2dev(chan), "vchan %pK: started\n", &chan->vchan);
+>>>> +}
+>>>> +
+>>>> +static int stm32_dma3_chan_suspend(struct stm32_dma3_chan *chan, bool susp)
+>>>> +{
+>>>> +	struct stm32_dma3_ddata *ddata = to_stm32_dma3_ddata(chan);
+>>>> +	u32 csr, ccr = readl_relaxed(ddata->base + STM32_DMA3_CCR(chan->id)) & ~CCR_EN;
+>>>> +	int ret = 0;
+>>>> +
+>>>> +	if (susp)
+>>>> +		ccr |= CCR_SUSP;
+>>>> +	else
+>>>> +		ccr &= ~CCR_SUSP;
+>>>> +
+>>>> +	writel_relaxed(ccr, ddata->base + STM32_DMA3_CCR(chan->id));
+>>>> +
+>>>> +	if (susp) {
+>>>> +		ret = readl_relaxed_poll_timeout_atomic(ddata->base + STM32_DMA3_CSR(chan->id), csr,
+>>>> +							csr & CSR_SUSPF, 1, 10);
+>>>> +		if (!ret)
+>>>> +			writel_relaxed(CFCR_SUSPF, ddata->base + STM32_DMA3_CFCR(chan->id));
+>>>> +
+>>>> +		stm32_dma3_chan_dump_reg(chan);
+>>>> +	}
+>>>> +
+>>>> +	return ret;
+>>>> +}
+>>>> +
+>>>> +static void stm32_dma3_chan_reset(struct stm32_dma3_chan *chan)
+>>>> +{
+>>>> +	struct stm32_dma3_ddata *ddata = to_stm32_dma3_ddata(chan);
+>>>> +	u32 ccr = readl_relaxed(ddata->base + STM32_DMA3_CCR(chan->id)) & ~CCR_EN;
+>>>> +
+>>>> +	writel_relaxed(ccr |= CCR_RESET, ddata->base + STM32_DMA3_CCR(chan->id));
+>>>> +}
+>>>> +
+>>>> +static int stm32_dma3_chan_stop(struct stm32_dma3_chan *chan)
+>>>> +{
+>>>> +	struct stm32_dma3_ddata *ddata = to_stm32_dma3_ddata(chan);
+>>>> +	u32 ccr;
+>>>> +	int ret = 0;
+>>>> +
+>>>> +	chan->dma_status = DMA_COMPLETE;
+>>>> +
+>>>> +	/* Disable interrupts */
+>>>> +	ccr = readl_relaxed(ddata->base + STM32_DMA3_CCR(chan->id));
+>>>> +	writel_relaxed(ccr & ~(CCR_ALLIE | CCR_EN), ddata->base + STM32_DMA3_CCR(chan->id));
+>>>> +
+>>>> +	if (!(ccr & CCR_SUSP) && (ccr & CCR_EN)) {
+>>>> +		/* Suspend the channel */
+>>>> +		ret = stm32_dma3_chan_suspend(chan, true);
+>>>> +		if (ret)
+>>>> +			dev_warn(chan2dev(chan), "%s: timeout, data might be lost\n", __func__);
+>>>> +	}
+>>>> +
+>>>> +	/*
+>>>> +	 * Reset the channel: this causes the reset of the FIFO and the reset of the channel
+>>>> +	 * internal state, the reset of CCR_EN and CCR_SUSP bits.
+>>>> +	 */
+>>>> +	stm32_dma3_chan_reset(chan);
+>>>> +
+>>>> +	return ret;
+>>>> +}
+>>>> +
+>>>> +static void stm32_dma3_chan_complete(struct stm32_dma3_chan *chan)
+>>>> +{
+>>>> +	if (!chan->swdesc)
+>>>> +		return;
+>>>> +
+>>>> +	vchan_cookie_complete(&chan->swdesc->vdesc);
+>>>> +	chan->swdesc = NULL;
+>>>> +	stm32_dma3_chan_start(chan);
+>>>> +}
+>>>> +
+>>>> +static irqreturn_t stm32_dma3_chan_irq(int irq, void *devid)
+>>>> +{
+>>>> +	struct stm32_dma3_chan *chan = devid;
+>>>> +	struct stm32_dma3_ddata *ddata = to_stm32_dma3_ddata(chan);
+>>>> +	u32 misr, csr, ccr;
+>>>> +
+>>>> +	spin_lock(&chan->vchan.lock);
+>>>> +
+>>>> +	misr = readl_relaxed(ddata->base + STM32_DMA3_MISR);
+>>>> +	if (!(misr & MISR_MIS(chan->id))) {
+>>>> +		spin_unlock(&chan->vchan.lock);
+>>>> +		return IRQ_NONE;
+>>>> +	}
+>>>> +
+>>>> +	csr = readl_relaxed(ddata->base + STM32_DMA3_CSR(chan->id));
+>>>> +	ccr = readl_relaxed(ddata->base + STM32_DMA3_CCR(chan->id)) & CCR_ALLIE;
+>>>> +
+>>>> +	if (csr & CSR_TCF && ccr & CCR_TCIE) {
+>>>> +		if (chan->swdesc->cyclic)
+>>>> +			vchan_cyclic_callback(&chan->swdesc->vdesc);
+>>>> +		else
+>>>> +			stm32_dma3_chan_complete(chan);
+>>>> +	}
+>>>> +
+>>>> +	if (csr & CSR_USEF && ccr & CCR_USEIE) {
+>>>> +		dev_err(chan2dev(chan), "User setting error\n");
+>>>> +		chan->dma_status = DMA_ERROR;
+>>>> +		/* CCR.EN automatically cleared by HW */
+>>>> +		stm32_dma3_check_user_setting(chan);
+>>>> +		stm32_dma3_chan_reset(chan);
+>>>> +	}
+>>>> +
+>>>> +	if (csr & CSR_ULEF && ccr & CCR_ULEIE) {
+>>>> +		dev_err(chan2dev(chan), "Update link transfer error\n");
+>>>> +		chan->dma_status = DMA_ERROR;
+>>>> +		/* CCR.EN automatically cleared by HW */
+>>>> +		stm32_dma3_chan_reset(chan);
+>>>> +	}
+>>>> +
+>>>> +	if (csr & CSR_DTEF && ccr & CCR_DTEIE) {
+>>>> +		dev_err(chan2dev(chan), "Data transfer error\n");
+>>>> +		chan->dma_status = DMA_ERROR;
+>>>> +		/* CCR.EN automatically cleared by HW */
+>>>> +		stm32_dma3_chan_reset(chan);
+>>>> +	}
+>>>> +
+>>>> +	/*
+>>>> +	 * Half Transfer Interrupt may be disabled but Half Transfer Flag can be set,
+>>>> +	 * ensure HTF flag to be cleared, with other flags.
+>>>> +	 */
+>>>> +	csr &= (ccr | CCR_HTIE);
+>>>> +
+>>>> +	if (csr)
+>>>> +		writel_relaxed(csr, ddata->base + STM32_DMA3_CFCR(chan->id));
+>>>> +
+>>>> +	spin_unlock(&chan->vchan.lock);
+>>>> +
+>>>> +	return IRQ_HANDLED;
+>>>> +}
+>>>> +
+>>>> +static int stm32_dma3_alloc_chan_resources(struct dma_chan *c)
+>>>> +{
+>>>> +	struct stm32_dma3_chan *chan = to_stm32_dma3_chan(c);
+>>>> +	struct stm32_dma3_ddata *ddata = to_stm32_dma3_ddata(chan);
+>>>> +	u32 id = chan->id, csemcr, ccid;
+>>>> +	int ret;
+>>>> +
+>>>> +	ret = pm_runtime_resume_and_get(ddata->dma_dev.dev);
+>>>> +	if (ret < 0)
+>>>> +		return ret;
+>>>
+>>> It doesn't prefer runtime pm get at alloc dma chan, many client driver
+>>> doesn't actual user dma when allocate dma chan.
+>>>
+>>> Ideally, resume get when issue_pending. Please refer pl330.c.
+>>>
+>>> You may add runtime pm later after enablement patch.
+>>>
+>>> Frank
+>>>
+>>
+>> To well balance clock enable/disable, if pm_runtime_resume_and_get() (rather
+>> than pm_runtime_get_sync() which doesn't decrement the counter in case of
+>> error) is used when issue_pending, it means pm_runtime_put_sync() should be
+>> done when transfer ends.
+>>
+>> terminate_all is not always called, so put_sync can't be used only there, it
+>> should be conditionnally used in terminate_all, but also in interrupt
+>> handler, on error events and on transfer completion event, provided that it
+>> is the last transfer complete event (last item of the linked-list).
+>>
+>> For clients with high transfer rate, it means a lot of clock enable/disable.
+>> Moreover, DMA3 clock is managed by Secure OS. So it means a lot of
+>> non-secure/secure world transitions.
+>>
+>> I prefer to keep the implementation as it is for now, and possibly propose
+>> runtime pm improvement later, with autosuspend.
+> 
+> 
+> Autosuspend is perfered. we try to use pm_runtime_get/put at channel alloc
+> /free before, but this solution are rejected by community.
+> 
+> you can leave clock on for this enablement patch and add runtime pm later
+> time.
+> 
+> Frank
+> 
+
+Current implementation leaves the clock off if no channel is requested. 
+It also disables the clock if platform is suspended.
+I just took example from what is done in stm32 drivers.
+
+I have further patches, not proposed in this series which adds a basic 
+support of DMA3. There will be improvements, including runtime pm, in 
+next series.
+
+Amelie
+
+>>
+>> Amelie
+>>
+>>>> +
+>>>> +	/* Ensure the channel is free */
+>>>> +	if (chan->semaphore_mode &&
+>>>> +	    readl_relaxed(ddata->base + STM32_DMA3_CSEMCR(chan->id)) & CSEMCR_SEM_MUTEX) {
+>>>> +		ret = -EBUSY;
+>>>> +		goto err_put_sync;
+>>>> +	}
+>>>> +
+>>>> +	chan->lli_pool = dmam_pool_create(dev_name(&c->dev->device), c->device->dev,
+>>>> +					  sizeof(struct stm32_dma3_hwdesc),
+>>>> +					  __alignof__(struct stm32_dma3_hwdesc), 0);
+>>>> +	if (!chan->lli_pool) {
+>>>> +		dev_err(chan2dev(chan), "Failed to create LLI pool\n");
+>>>> +		ret = -ENOMEM;
+>>>> +		goto err_put_sync;
+>>>> +	}
+>>>> +
+>>>> +	/* Take the channel semaphore */
+>>>> +	if (chan->semaphore_mode) {
+>>>> +		writel_relaxed(CSEMCR_SEM_MUTEX, ddata->base + STM32_DMA3_CSEMCR(id));
+>>>> +		csemcr = readl_relaxed(ddata->base + STM32_DMA3_CSEMCR(id));
+>>>> +		ccid = FIELD_GET(CSEMCR_SEM_CCID, csemcr);
+>>>> +		/* Check that the channel is well taken */
+>>>> +		if (ccid != CCIDCFGR_CID1) {
+>>>> +			dev_err(chan2dev(chan), "Not under CID1 control (in-use by CID%d)\n", ccid);
+>>>> +			ret = -EPERM;
+>>>> +			goto err_pool_destroy;
+>>>> +		}
+>>>> +		dev_dbg(chan2dev(chan), "Under CID1 control (semcr=0x%08x)\n", csemcr);
+>>>> +	}
+>>>> +
+>>>> +	return 0;
+>>>> +
+>>>> +err_pool_destroy:
+>>>> +	dmam_pool_destroy(chan->lli_pool);
+>>>> +	chan->lli_pool = NULL;
+>>>> +
+>>>> +err_put_sync:
+>>>> +	pm_runtime_put_sync(ddata->dma_dev.dev);
+>>>> +
+>>>> +	return ret;
+>>>> +}
+>>>> +
+>>>> +static void stm32_dma3_free_chan_resources(struct dma_chan *c)
+>>>> +{
+>>>> +	struct stm32_dma3_chan *chan = to_stm32_dma3_chan(c);
+>>>> +	struct stm32_dma3_ddata *ddata = to_stm32_dma3_ddata(chan);
+>>>> +	unsigned long flags;
+>>>> +
+>>>> +	/* Ensure channel is in idle state */
+>>>> +	spin_lock_irqsave(&chan->vchan.lock, flags);
+>>>> +	stm32_dma3_chan_stop(chan);
+>>>> +	chan->swdesc = NULL;
+>>>> +	spin_unlock_irqrestore(&chan->vchan.lock, flags);
+>>>> +
+>>>> +	vchan_free_chan_resources(to_virt_chan(c));
+>>>> +
+>>>> +	dmam_pool_destroy(chan->lli_pool);
+>>>> +	chan->lli_pool = NULL;
+>>>> +
+>>>> +	/* Release the channel semaphore */
+>>>> +	if (chan->semaphore_mode)
+>>>> +		writel_relaxed(0, ddata->base + STM32_DMA3_CSEMCR(chan->id));
+>>>> +
+>>>> +	pm_runtime_put_sync(ddata->dma_dev.dev);
+>>>> +
+>>>> +	/* Reset configuration */
+>>>> +	memset(&chan->dt_config, 0, sizeof(chan->dt_config));
+>>>> +	memset(&chan->dma_config, 0, sizeof(chan->dma_config));
+>>>> +}
+>>>> +
+>>>> +static struct dma_async_tx_descriptor *stm32_dma3_prep_slave_sg(struct dma_chan *c,
+>>>> +								struct scatterlist *sgl,
+>>>> +								unsigned int sg_len,
+>>>> +								enum dma_transfer_direction dir,
+>>>> +								unsigned long flags, void *context)
+>>>> +{
+>>>> +	struct stm32_dma3_chan *chan = to_stm32_dma3_chan(c);
+>>>> +	struct stm32_dma3_swdesc *swdesc;
+>>>> +	struct scatterlist *sg;
+>>>> +	size_t len;
+>>>> +	dma_addr_t sg_addr, dev_addr, src, dst;
+>>>> +	u32 i, j, count, ctr1, ctr2;
+>>>> +	int ret;
+>>>> +
+>>>> +	count = sg_len;
+>>>> +	for_each_sg(sgl, sg, sg_len, i) {
+>>>> +		len = sg_dma_len(sg);
+>>>> +		if (len > STM32_DMA3_MAX_BLOCK_SIZE)
+>>>> +			count += DIV_ROUND_UP(len, STM32_DMA3_MAX_BLOCK_SIZE) - 1;
+>>>> +	}
+>>>> +
+>>>> +	swdesc = stm32_dma3_chan_desc_alloc(chan, count);
+>>>> +	if (!swdesc)
+>>>> +		return NULL;
+>>>> +
+>>>> +	/* sg_len and i correspond to the initial sgl; count and j correspond to the hwdesc LL */
+>>>> +	j = 0;
+>>>> +	for_each_sg(sgl, sg, sg_len, i) {
+>>>> +		sg_addr = sg_dma_address(sg);
+>>>> +		dev_addr = (dir == DMA_MEM_TO_DEV) ? chan->dma_config.dst_addr :
+>>>> +						     chan->dma_config.src_addr;
+>>>> +		len = sg_dma_len(sg);
+>>>> +
+>>>> +		do {
+>>>> +			size_t chunk = min_t(size_t, len, STM32_DMA3_MAX_BLOCK_SIZE);
+>>>> +
+>>>> +			if (dir == DMA_MEM_TO_DEV) {
+>>>> +				src = sg_addr;
+>>>> +				dst = dev_addr;
+>>>> +
+>>>> +				ret = stm32_dma3_chan_prep_hw(chan, dir, &swdesc->ccr, &ctr1, &ctr2,
+>>>> +							      src, dst, chunk);
+>>>> +
+>>>> +				if (FIELD_GET(CTR1_DINC, ctr1))
+>>>> +					dev_addr += chunk;
+>>>> +			} else { /* (dir == DMA_DEV_TO_MEM || dir == DMA_MEM_TO_MEM) */
+>>>> +				src = dev_addr;
+>>>> +				dst = sg_addr;
+>>>> +
+>>>> +				ret = stm32_dma3_chan_prep_hw(chan, dir, &swdesc->ccr, &ctr1, &ctr2,
+>>>> +							      src, dst, chunk);
+>>>> +
+>>>> +				if (FIELD_GET(CTR1_SINC, ctr1))
+>>>> +					dev_addr += chunk;
+>>>> +			}
+>>>> +
+>>>> +			if (ret)
+>>>> +				goto err_desc_free;
+>>>> +
+>>>> +			stm32_dma3_chan_prep_hwdesc(chan, swdesc, j, src, dst, chunk,
+>>>> +						    ctr1, ctr2, j == (count - 1), false);
+>>>> +
+>>>> +			sg_addr += chunk;
+>>>> +			len -= chunk;
+>>>> +			j++;
+>>>> +		} while (len);
+>>>> +	}
+>>>> +
+>>>> +	/* Enable Error interrupts */
+>>>> +	swdesc->ccr |= CCR_USEIE | CCR_ULEIE | CCR_DTEIE;
+>>>> +	/* Enable Transfer state interrupts */
+>>>> +	swdesc->ccr |= CCR_TCIE;
+>>>> +
+>>>> +	swdesc->cyclic = false;
+>>>> +
+>>>> +	return vchan_tx_prep(&chan->vchan, &swdesc->vdesc, flags);
+>>>> +
+>>>> +err_desc_free:
+>>>> +	stm32_dma3_chan_desc_free(chan, swdesc);
+>>>> +
+>>>> +	return NULL;
+>>>> +}
+>>>> +
+>>>> +static void stm32_dma3_caps(struct dma_chan *c, struct dma_slave_caps *caps)
+>>>> +{
+>>>> +	struct stm32_dma3_chan *chan = to_stm32_dma3_chan(c);
+>>>> +
+>>>> +	if (!chan->fifo_size) {
+>>>> +		caps->max_burst = 0;
+>>>> +		caps->src_addr_widths &= ~BIT(DMA_SLAVE_BUSWIDTH_8_BYTES);
+>>>> +		caps->dst_addr_widths &= ~BIT(DMA_SLAVE_BUSWIDTH_8_BYTES);
+>>>> +	} else {
+>>>> +		/* Burst transfer should not exceed half of the fifo size */
+>>>> +		caps->max_burst = chan->max_burst;
+>>>> +		if (caps->max_burst < DMA_SLAVE_BUSWIDTH_8_BYTES) {
+>>>> +			caps->src_addr_widths &= ~BIT(DMA_SLAVE_BUSWIDTH_8_BYTES);
+>>>> +			caps->dst_addr_widths &= ~BIT(DMA_SLAVE_BUSWIDTH_8_BYTES);
+>>>> +		}
+>>>> +	}
+>>>> +}
+>>>> +
+>>>> +static int stm32_dma3_config(struct dma_chan *c, struct dma_slave_config *config)
+>>>> +{
+>>>> +	struct stm32_dma3_chan *chan = to_stm32_dma3_chan(c);
+>>>> +
+>>>> +	memcpy(&chan->dma_config, config, sizeof(*config));
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +static int stm32_dma3_terminate_all(struct dma_chan *c)
+>>>> +{
+>>>> +	struct stm32_dma3_chan *chan = to_stm32_dma3_chan(c);
+>>>> +	unsigned long flags;
+>>>> +	LIST_HEAD(head);
+>>>> +
+>>>> +	spin_lock_irqsave(&chan->vchan.lock, flags);
+>>>> +
+>>>> +	if (chan->swdesc) {
+>>>> +		vchan_terminate_vdesc(&chan->swdesc->vdesc);
+>>>> +		chan->swdesc = NULL;
+>>>> +	}
+>>>> +
+>>>> +	stm32_dma3_chan_stop(chan);
+>>>> +
+>>>> +	vchan_get_all_descriptors(&chan->vchan, &head);
+>>>> +
+>>>> +	spin_unlock_irqrestore(&chan->vchan.lock, flags);
+>>>> +	vchan_dma_desc_free_list(&chan->vchan, &head);
+>>>> +
+>>>> +	dev_dbg(chan2dev(chan), "vchan %pK: terminated\n", &chan->vchan);
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +static void stm32_dma3_synchronize(struct dma_chan *c)
+>>>> +{
+>>>> +	struct stm32_dma3_chan *chan = to_stm32_dma3_chan(c);
+>>>> +
+>>>> +	vchan_synchronize(&chan->vchan);
+>>>> +}
+>>>> +
+>>>> +static void stm32_dma3_issue_pending(struct dma_chan *c)
+>>>> +{
+>>>> +	struct stm32_dma3_chan *chan = to_stm32_dma3_chan(c);
+>>>> +	unsigned long flags;
+>>>> +
+>>>> +	spin_lock_irqsave(&chan->vchan.lock, flags);
+>>>> +
+>>>> +	if (vchan_issue_pending(&chan->vchan) && !chan->swdesc) {
+>>>> +		dev_dbg(chan2dev(chan), "vchan %pK: issued\n", &chan->vchan);
+>>>> +		stm32_dma3_chan_start(chan);
+>>>> +	}
+>>>> +
+>>>> +	spin_unlock_irqrestore(&chan->vchan.lock, flags);
+>>>> +}
+>>>> +
+>>>> +static bool stm32_dma3_filter_fn(struct dma_chan *c, void *fn_param)
+>>>> +{
+>>>> +	struct stm32_dma3_chan *chan = to_stm32_dma3_chan(c);
+>>>> +	struct stm32_dma3_ddata *ddata = to_stm32_dma3_ddata(chan);
+>>>> +	struct stm32_dma3_dt_conf *conf = fn_param;
+>>>> +	u32 mask, semcr;
+>>>> +	int ret;
+>>>> +
+>>>> +	dev_dbg(c->device->dev, "%s(%s): req_line=%d ch_conf=%08x tr_conf=%08x\n",
+>>>> +		__func__, dma_chan_name(c), conf->req_line, conf->ch_conf, conf->tr_conf);
+>>>> +
+>>>> +	if (!of_property_read_u32(c->device->dev->of_node, "dma-channel-mask", &mask))
+>>>> +		if (!(mask & BIT(chan->id)))
+>>>> +			return false;
+>>>> +
+>>>> +	ret = pm_runtime_resume_and_get(ddata->dma_dev.dev);
+>>>> +	if (ret < 0)
+>>>> +		return false;
+>>>> +	semcr = readl_relaxed(ddata->base + STM32_DMA3_CSEMCR(chan->id));
+>>>> +	pm_runtime_put_sync(ddata->dma_dev.dev);
+>>>> +
+>>>> +	/* Check if chan is free */
+>>>> +	if (semcr & CSEMCR_SEM_MUTEX)
+>>>> +		return false;
+>>>> +
+>>>> +	/* Check if chan fifo fits well */
+>>>> +	if (FIELD_GET(STM32_DMA3_DT_FIFO, conf->ch_conf) != chan->fifo_size)
+>>>> +		return false;
+>>>> +
+>>>> +	return true;
+>>>> +}
+>>>> +
+>>>> +static struct dma_chan *stm32_dma3_of_xlate(struct of_phandle_args *dma_spec, struct of_dma *ofdma)
+>>>> +{
+>>>> +	struct stm32_dma3_ddata *ddata = ofdma->of_dma_data;
+>>>> +	dma_cap_mask_t mask = ddata->dma_dev.cap_mask;
+>>>> +	struct stm32_dma3_dt_conf conf;
+>>>> +	struct stm32_dma3_chan *chan;
+>>>> +	struct dma_chan *c;
+>>>> +
+>>>> +	if (dma_spec->args_count < 3) {
+>>>> +		dev_err(ddata->dma_dev.dev, "Invalid args count\n");
+>>>> +		return NULL;
+>>>> +	}
+>>>> +
+>>>> +	conf.req_line = dma_spec->args[0];
+>>>> +	conf.ch_conf = dma_spec->args[1];
+>>>> +	conf.tr_conf = dma_spec->args[2];
+>>>> +
+>>>> +	if (conf.req_line >= ddata->dma_requests) {
+>>>> +		dev_err(ddata->dma_dev.dev, "Invalid request line\n");
+>>>> +		return NULL;
+>>>> +	}
+>>>> +
+>>>> +	/* Request dma channel among the generic dma controller list */
+>>>> +	c = dma_request_channel(mask, stm32_dma3_filter_fn, &conf);
+>>>> +	if (!c) {
+>>>> +		dev_err(ddata->dma_dev.dev, "No suitable channel found\n");
+>>>> +		return NULL;
+>>>> +	}
+>>>> +
+>>>> +	chan = to_stm32_dma3_chan(c);
+>>>> +	chan->dt_config = conf;
+>>>> +
+>>>> +	return c;
+>>>> +}
+>>>> +
+>>>> +static u32 stm32_dma3_check_rif(struct stm32_dma3_ddata *ddata)
+>>>> +{
+>>>> +	u32 chan_reserved, mask = 0, i, ccidcfgr, invalid_cid = 0;
+>>>> +
+>>>> +	/* Reserve Secure channels */
+>>>> +	chan_reserved = readl_relaxed(ddata->base + STM32_DMA3_SECCFGR);
+>>>> +
+>>>> +	/*
+>>>> +	 * CID filtering must be configured to ensure that the DMA3 channel will inherit the CID of
+>>>> +	 * the processor which is configuring and using the given channel.
+>>>> +	 * In case CID filtering is not configured, dma-channel-mask property can be used to
+>>>> +	 * specify available DMA channels to the kernel.
+>>>> +	 */
+>>>> +	of_property_read_u32(ddata->dma_dev.dev->of_node, "dma-channel-mask", &mask);
+>>>> +
+>>>> +	/* Reserve !CID-filtered not in dma-channel-mask, static CID != CID1, CID1 not allowed */
+>>>> +	for (i = 0; i < ddata->dma_channels; i++) {
+>>>> +		ccidcfgr = readl_relaxed(ddata->base + STM32_DMA3_CCIDCFGR(i));
+>>>> +
+>>>> +		if (!(ccidcfgr & CCIDCFGR_CFEN)) { /* !CID-filtered */
+>>>> +			invalid_cid |= BIT(i);
+>>>> +			if (!(mask & BIT(i))) /* Not in dma-channel-mask */
+>>>> +				chan_reserved |= BIT(i);
+>>>> +		} else { /* CID-filtered */
+>>>> +			if (!(ccidcfgr & CCIDCFGR_SEM_EN)) { /* Static CID mode */
+>>>> +				if (FIELD_GET(CCIDCFGR_SCID, ccidcfgr) != CCIDCFGR_CID1)
+>>>> +					chan_reserved |= BIT(i);
+>>>> +			} else { /* Semaphore mode */
+>>>> +				if (!FIELD_GET(CCIDCFGR_SEM_WLIST_CID1, ccidcfgr))
+>>>> +					chan_reserved |= BIT(i);
+>>>> +				ddata->chans[i].semaphore_mode = true;
+>>>> +			}
+>>>> +		}
+>>>> +		dev_dbg(ddata->dma_dev.dev, "chan%d: %s mode, %s\n", i,
+>>>> +			!(ccidcfgr & CCIDCFGR_CFEN) ? "!CID-filtered" :
+>>>> +			ddata->chans[i].semaphore_mode ? "Semaphore" : "Static CID",
+>>>> +			(chan_reserved & BIT(i)) ? "denied" :
+>>>> +			mask & BIT(i) ? "force allowed" : "allowed");
+>>>> +	}
+>>>> +
+>>>> +	if (invalid_cid)
+>>>> +		dev_warn(ddata->dma_dev.dev, "chan%*pbl have invalid CID configuration\n",
+>>>> +			 ddata->dma_channels, &invalid_cid);
+>>>> +
+>>>> +	return chan_reserved;
+>>>> +}
+>>>> +
+>>>> +static const struct of_device_id stm32_dma3_of_match[] = {
+>>>> +	{ .compatible = "st,stm32-dma3", },
+>>>> +	{ /* sentinel */},
+>>>> +};
+>>>> +MODULE_DEVICE_TABLE(of, stm32_dma3_of_match);
+>>>> +
+>>>> +static int stm32_dma3_probe(struct platform_device *pdev)
+>>>> +{
+>>>> +	struct device_node *np = pdev->dev.of_node;
+>>>> +	struct stm32_dma3_ddata *ddata;
+>>>> +	struct reset_control *reset;
+>>>> +	struct stm32_dma3_chan *chan;
+>>>> +	struct dma_device *dma_dev;
+>>>> +	u32 master_ports, chan_reserved, i, verr;
+>>>> +	u64 hwcfgr;
+>>>> +	int ret;
+>>>> +
+>>>> +	ddata = devm_kzalloc(&pdev->dev, sizeof(*ddata), GFP_KERNEL);
+>>>> +	if (!ddata)
+>>>> +		return -ENOMEM;
+>>>> +	platform_set_drvdata(pdev, ddata);
+>>>> +
+>>>> +	dma_dev = &ddata->dma_dev;
+>>>> +
+>>>> +	ddata->base = devm_platform_ioremap_resource(pdev, 0);
+>>>> +	if (IS_ERR(ddata->base))
+>>>> +		return PTR_ERR(ddata->base);
+>>>> +
+>>>> +	ddata->clk = devm_clk_get(&pdev->dev, NULL);
+>>>> +	if (IS_ERR(ddata->clk))
+>>>> +		return dev_err_probe(&pdev->dev, PTR_ERR(ddata->clk), "Failed to get clk\n");
+>>>> +
+>>>> +	reset = devm_reset_control_get_optional(&pdev->dev, NULL);
+>>>> +	if (IS_ERR(reset))
+>>>> +		return dev_err_probe(&pdev->dev, PTR_ERR(reset), "Failed to get reset\n");
+>>>> +
+>>>> +	ret = clk_prepare_enable(ddata->clk);
+>>>> +	if (ret)
+>>>> +		return dev_err_probe(&pdev->dev, ret, "Failed to enable clk\n");
+>>>> +
+>>>> +	reset_control_reset(reset);
+>>>> +
+>>>> +	INIT_LIST_HEAD(&dma_dev->channels);
+>>>> +
+>>>> +	dma_cap_set(DMA_SLAVE, dma_dev->cap_mask);
+>>>> +	dma_cap_set(DMA_PRIVATE, dma_dev->cap_mask);
+>>>> +	dma_dev->dev = &pdev->dev;
+>>>> +	/*
+>>>> +	 * This controller supports up to 8-byte buswidth depending on the port used and the
+>>>> +	 * channel, and can only access address at even boundaries, multiple of the buswidth.
+>>>> +	 */
+>>>> +	dma_dev->copy_align = DMAENGINE_ALIGN_8_BYTES;
+>>>> +	dma_dev->src_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
+>>>> +				   BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
+>>>> +				   BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
+>>>> +				   BIT(DMA_SLAVE_BUSWIDTH_8_BYTES);
+>>>> +	dma_dev->dst_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
+>>>> +				   BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
+>>>> +				   BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
+>>>> +				   BIT(DMA_SLAVE_BUSWIDTH_8_BYTES);
+>>>> +	dma_dev->directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV) | BIT(DMA_MEM_TO_MEM);
+>>>> +
+>>>> +	dma_dev->descriptor_reuse = true;
+>>>> +	dma_dev->max_sg_burst = STM32_DMA3_MAX_SEG_SIZE;
+>>>> +	dma_dev->residue_granularity = DMA_RESIDUE_GRANULARITY_DESCRIPTOR;
+>>>> +	dma_dev->device_alloc_chan_resources = stm32_dma3_alloc_chan_resources;
+>>>> +	dma_dev->device_free_chan_resources = stm32_dma3_free_chan_resources;
+>>>> +	dma_dev->device_prep_slave_sg = stm32_dma3_prep_slave_sg;
+>>>> +	dma_dev->device_caps = stm32_dma3_caps;
+>>>> +	dma_dev->device_config = stm32_dma3_config;
+>>>> +	dma_dev->device_terminate_all = stm32_dma3_terminate_all;
+>>>> +	dma_dev->device_synchronize = stm32_dma3_synchronize;
+>>>> +	dma_dev->device_tx_status = dma_cookie_status;
+>>>> +	dma_dev->device_issue_pending = stm32_dma3_issue_pending;
+>>>> +
+>>>> +	/* if dma_channels is not modified, get it from hwcfgr1 */
+>>>> +	if (of_property_read_u32(np, "dma-channels", &ddata->dma_channels)) {
+>>>> +		hwcfgr = readl_relaxed(ddata->base + STM32_DMA3_HWCFGR1);
+>>>> +		ddata->dma_channels = FIELD_GET(G_NUM_CHANNELS, hwcfgr);
+>>>> +	}
+>>>> +
+>>>> +	/* if dma_requests is not modified, get it from hwcfgr2 */
+>>>> +	if (of_property_read_u32(np, "dma-requests", &ddata->dma_requests)) {
+>>>> +		hwcfgr = readl_relaxed(ddata->base + STM32_DMA3_HWCFGR2);
+>>>> +		ddata->dma_requests = FIELD_GET(G_MAX_REQ_ID, hwcfgr) + 1;
+>>>> +	}
+>>>> +
+>>>> +	/* G_MASTER_PORTS, G_M0_DATA_WIDTH_ENC, G_M1_DATA_WIDTH_ENC in HWCFGR1 */
+>>>> +	hwcfgr = readl_relaxed(ddata->base + STM32_DMA3_HWCFGR1);
+>>>> +	master_ports = FIELD_GET(G_MASTER_PORTS, hwcfgr);
+>>>> +
+>>>> +	ddata->ports_max_dw[0] = FIELD_GET(G_M0_DATA_WIDTH_ENC, hwcfgr);
+>>>> +	if (master_ports == AXI64 || master_ports == AHB32) /* Single master port */
+>>>> +		ddata->ports_max_dw[1] = DW_INVALID;
+>>>> +	else /* Dual master ports */
+>>>> +		ddata->ports_max_dw[1] = FIELD_GET(G_M1_DATA_WIDTH_ENC, hwcfgr);
+>>>> +
+>>>> +	ddata->chans = devm_kcalloc(&pdev->dev, ddata->dma_channels, sizeof(*ddata->chans),
+>>>> +				    GFP_KERNEL);
+>>>> +	if (!ddata->chans) {
+>>>> +		ret = -ENOMEM;
+>>>> +		goto err_clk_disable;
+>>>> +	}
+>>>> +
+>>>> +	chan_reserved = stm32_dma3_check_rif(ddata);
+>>>> +
+>>>> +	if (chan_reserved == GENMASK(ddata->dma_channels - 1, 0)) {
+>>>> +		ret = -ENODEV;
+>>>> +		dev_err_probe(&pdev->dev, ret, "No channel available, abort registration\n");
+>>>> +		goto err_clk_disable;
+>>>> +	}
+>>>> +
+>>>> +	/* G_FIFO_SIZE x=0..7 in HWCFGR3 and G_FIFO_SIZE x=8..15 in HWCFGR4 */
+>>>> +	hwcfgr = readl_relaxed(ddata->base + STM32_DMA3_HWCFGR3);
+>>>> +	hwcfgr |= ((u64)readl_relaxed(ddata->base + STM32_DMA3_HWCFGR4)) << 32;
+>>>> +
+>>>> +	for (i = 0; i < ddata->dma_channels; i++) {
+>>>> +		if (chan_reserved & BIT(i))
+>>>> +			continue;
+>>>> +
+>>>> +		chan = &ddata->chans[i];
+>>>> +		chan->id = i;
+>>>> +		chan->fifo_size = get_chan_hwcfg(i, G_FIFO_SIZE(i), hwcfgr);
+>>>> +		/* If chan->fifo_size > 0 then half of the fifo size, else no burst when no FIFO */
+>>>> +		chan->max_burst = (chan->fifo_size) ? (1 << (chan->fifo_size + 1)) / 2 : 0;
+>>>> +		chan->vchan.desc_free = stm32_dma3_chan_vdesc_free;
+>>>> +
+>>>> +		vchan_init(&chan->vchan, dma_dev);
+>>>> +	}
+>>>> +
+>>>> +	ret = dmaenginem_async_device_register(dma_dev);
+>>>> +	if (ret)
+>>>> +		goto err_clk_disable;
+>>>> +
+>>>> +	for (i = 0; i < ddata->dma_channels; i++) {
+>>>> +		if (chan_reserved & BIT(i))
+>>>> +			continue;
+>>>> +
+>>>> +		ret = platform_get_irq(pdev, i);
+>>>> +		if (ret < 0)
+>>>> +			goto err_clk_disable;
+>>>> +
+>>>> +		chan = &ddata->chans[i];
+>>>> +		chan->irq = ret;
+>>>> +
+>>>> +		ret = devm_request_irq(&pdev->dev, chan->irq, stm32_dma3_chan_irq, 0,
+>>>> +				       dev_name(chan2dev(chan)), chan);
+>>>> +		if (ret) {
+>>>> +			dev_err_probe(&pdev->dev, ret, "Failed to request channel %s IRQ\n",
+>>>> +				      dev_name(chan2dev(chan)));
+>>>> +			goto err_clk_disable;
+>>>> +		}
+>>>> +	}
+>>>> +
+>>>> +	ret = of_dma_controller_register(np, stm32_dma3_of_xlate, ddata);
+>>>> +	if (ret) {
+>>>> +		dev_err_probe(&pdev->dev, ret, "Failed to register controller\n");
+>>>> +		goto err_clk_disable;
+>>>> +	}
+>>>> +
+>>>> +	verr = readl_relaxed(ddata->base + STM32_DMA3_VERR);
+>>>> +
+>>>> +	pm_runtime_set_active(&pdev->dev);
+>>>> +	pm_runtime_enable(&pdev->dev);
+>>>> +	pm_runtime_get_noresume(&pdev->dev);
+>>>> +	pm_runtime_put(&pdev->dev);
+>>>> +
+>>>> +	dev_info(&pdev->dev, "STM32 DMA3 registered rev:%lu.%lu\n",
+>>>> +		 FIELD_GET(VERR_MAJREV, verr), FIELD_GET(VERR_MINREV, verr));
+>>>> +
+>>>> +	return 0;
+>>>> +
+>>>> +err_clk_disable:
+>>>> +	clk_disable_unprepare(ddata->clk);
+>>>> +
+>>>> +	return ret;
+>>>> +}
+>>>> +
+>>>> +static void stm32_dma3_remove(struct platform_device *pdev)
+>>>> +{
+>>>> +	pm_runtime_disable(&pdev->dev);
+>>>> +}
+>>>> +
+>>>> +static int stm32_dma3_runtime_suspend(struct device *dev)
+>>>> +{
+>>>> +	struct stm32_dma3_ddata *ddata = dev_get_drvdata(dev);
+>>>> +
+>>>> +	clk_disable_unprepare(ddata->clk);
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +static int stm32_dma3_runtime_resume(struct device *dev)
+>>>> +{
+>>>> +	struct stm32_dma3_ddata *ddata = dev_get_drvdata(dev);
+>>>> +	int ret;
+>>>> +
+>>>> +	ret = clk_prepare_enable(ddata->clk);
+>>>> +	if (ret)
+>>>> +		dev_err(dev, "Failed to enable clk: %d\n", ret);
+>>>> +
+>>>> +	return ret;
+>>>> +}
+>>>> +
+>>>> +static const struct dev_pm_ops stm32_dma3_pm_ops = {
+>>>> +	SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend, pm_runtime_force_resume)
+>>>> +	RUNTIME_PM_OPS(stm32_dma3_runtime_suspend, stm32_dma3_runtime_resume, NULL)
+>>>> +};
+>>>> +
+>>>> +static struct platform_driver stm32_dma3_driver = {
+>>>> +	.probe = stm32_dma3_probe,
+>>>> +	.remove_new = stm32_dma3_remove,
+>>>> +	.driver = {
+>>>> +		.name = "stm32-dma3",
+>>>> +		.of_match_table = stm32_dma3_of_match,
+>>>> +		.pm = pm_ptr(&stm32_dma3_pm_ops),
+>>>> +	},
+>>>> +};
+>>>> +
+>>>> +static int __init stm32_dma3_init(void)
+>>>> +{
+>>>> +	return platform_driver_register(&stm32_dma3_driver);
+>>>> +}
+>>>> +
+>>>> +subsys_initcall(stm32_dma3_init);
+>>>> +
+>>>> +MODULE_DESCRIPTION("STM32 DMA3 controller driver");
+>>>> +MODULE_AUTHOR("Amelie Delaunay <amelie.delaunay@foss.st.com>");
+>>>> +MODULE_LICENSE("GPL");
+>>>> -- 
+>>>> 2.25.1
+>>>>
 

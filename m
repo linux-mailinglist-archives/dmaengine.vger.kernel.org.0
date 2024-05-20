@@ -1,83 +1,78 @@
-Return-Path: <dmaengine+bounces-2109-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2110-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4305A8CA216
-	for <lists+dmaengine@lfdr.de>; Mon, 20 May 2024 20:42:08 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 89B7A8CA364
+	for <lists+dmaengine@lfdr.de>; Mon, 20 May 2024 22:39:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 662CD1C21059
-	for <lists+dmaengine@lfdr.de>; Mon, 20 May 2024 18:42:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 417C22813E7
+	for <lists+dmaengine@lfdr.de>; Mon, 20 May 2024 20:39:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9216F13848D;
-	Mon, 20 May 2024 18:42:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B852413957B;
+	Mon, 20 May 2024 20:39:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="kPC9uE3v"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="m+7GbhzC"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2056.outbound.protection.outlook.com [40.107.241.56])
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2059.outbound.protection.outlook.com [40.107.7.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00ED8FBF6;
-	Mon, 20 May 2024 18:42:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA5EDD27A;
+	Mon, 20 May 2024 20:39:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.7.59
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716230524; cv=fail; b=rOft/BIx2iodg9is4hCcRGhBJWMLqcGLYaRnYw3FprB9O78YKYa+z1tJ8lRdhfh5bGX5/Y+AXk1UPWAK+5pzLPK9VdIzzLOK3JHHUuwZS1Zszif8AL+/E7NtOleBcJlCItG3U24um9tvgoG4jtLnO0De4wFawEqPQAAYSubU0/E=
+	t=1716237569; cv=fail; b=MWlOemLtRg5qjmsyJk5wiWid4u82ddcl0YwflhcZVjtaJHCSEJqXctEEdizRGGab2wV6VeL9lbaXlCSAb17vqQWbXTRh8zFL1TvbzNnfiIsZiKB3m3DQfcz5iGh6FO5Vldo0N/dPLZn1krdMTfo4iwR9f2Ttmqy7+TNGc8hImtw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716230524; c=relaxed/simple;
-	bh=WQghg0P8E0tmvIMTMX7OfujOWHGsCXYJXKvVP7908as=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=gljHcUvUK3SSo+ioXCyZPUrgeMbVOZeAzgg4H0V85YgI+IxrOSBzJC/Q5aZMFNzvaS/gbwZ/fSjIxvyGzQx6Lw7IgBNlA5qwOMjxW2jI/mlKeBbrIEOy05uanooVS35my7arlDpHRNG67knxVJa+m0jeHOoJaQSDQ7m/ue/U1uc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=kPC9uE3v; arc=fail smtp.client-ip=40.107.241.56
+	s=arc-20240116; t=1716237569; c=relaxed/simple;
+	bh=FUBEZ3rmlB7WIMdzf+PYyLoc2mRka6Wf0NEQhKaq25I=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=ICY+froXNcc7trxdlV1i4nXcWK3y5lYs9/9Eo5atVUbv4V2/w4Gm9Kv1z6OyiTuyBrUxP7LZHFsqaTMs7rZVCs+fbEbsv3z7IakxvEvnlBGl+4OCC2kQM40V3hpc1Dm50thB6KxDQ473QI8G2vCdO0QjReD3ElbUNXFhZlABiPw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=m+7GbhzC; arc=fail smtp.client-ip=40.107.7.59
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ND3GolhKMFq6iHReELf+Kjhm+Ryv9p/EuXFFeJBhhb4me4jAYfbNWX9MCXsEEQ5zw3iwfO9GCWPnYKGi2Eq+WehzdaRcjSCwKXjVFby1k1ii/U1GY/IN1+dO6TZI9JoD94JpMVoxGxicLWdwNE6ziXghJbvPQgIm25Vu+v8kYfosQ1zFc30LNdguuLfS5ZQNJ7OVkD1K0MjooY3ohumFSr5O8P6UhBKsBAiRNApbmsWXgFU1qSda22PpRksmG8iW3CUd4HMli8eCa8hD+INKRPQ2jsCmwa5DCVRNtVYoveiQ3se2NWH+An76Fala2Ts417SLdlX0ykAanjKayrlHnA==
+ b=h/DoxJSO54WiiyfNOsHILF9pJOHpEGWW/r8IWOjAvhDecSypQVThJiS70FKUCBLiXmmVjLEWtOSnjqUQ8TLogfApkQTwgRoOBni3epQytewmauNGWHYhon4K/IUW8edbEUo1qE0P/wRmTLf4N7i1o53hMqjnJ+8OwKEcgqu/5hgFOp0URiPYeMG2XRT02V0cinnTH6OwcY92DSVf7JRBohfZhV/hFD72v9bruYTv81UfbPaBvvdwj3TKP/9NZgp7sRp/jjrCbfN+fqC2V6TAvt/qyfMpaDEIo/Zv8VYA93EU4BtJ4U44bqJRLznGTCw3RsKp+cdmNuV+R94pwbVJ1w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Rca1Z+Uz8bYbZnY9g1TGVGAl79smMRzHSPSMZabE24g=;
- b=ZclRCZv8uIy0BPxZ9pa1dyFfABLpqvFdzagcPqhDXT1p76bvjYbwr0gn+nxbcwolchwb31AY2aiNSvgl44AEz2tJQ1mqUVx688OOdbsyY/yUvvb5Rr9jeuAC0MFX6f59LZEhP8m73zH9DtcaeIKIEEi7SPwpOMT6vgG4kYWhOiL775wW2uBO+GENZbGfPMwkCVGtWDmrvBYmchr6Adw/OEeHqJSYE+xhEVodBxeQailta0+zWTq5SlsViJeVXy3njPFaEtxNk5fnV7Rh8MH8SW1U2iiFmLRhbQaY0rEdc9X6QxrXJNkgQeloWhKHPXa77svh9vJ8rOBLfRa87hWbtQ==
+ bh=UxEWyYzzWUkM3mq7Y36bvJfTBVhfDta0H4YqmBqUhw8=;
+ b=EgmDeIbMNyWTs/E+95ZC1WGHf4QJ5Bu3MaNc0TdWIEYcsSLWgTHZy2Gdyvtrm7rU/Ls/zz9bcsL7RtudsAroHj2YboxdaRmjP/uOgWp6K43DuXhc1f0R4wR6fS6jyr48yHGwWhry4Yfc0uZrOfuqdvfP1BO/jz8SYolHmQG0mWpcEXZv6jcaEPpMY50PPd+F4dGrSSWmbgYXbc7Iv4mRaK6KAJlkFZjoI4qxaWrtxTJS68XaWnfqC6hlsSqGtahp+zJK7iEARI7GwZvD9FKXRzTdrrvsigP001MCA3q6xL+zAGGmgk4Ku0S0ybdXMIBF5mEW2ZT/E/qdJu4C73LHXA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Rca1Z+Uz8bYbZnY9g1TGVGAl79smMRzHSPSMZabE24g=;
- b=kPC9uE3vBwLIPmcjz62njjY/Ah3NsAlzFLahMEsSq4WIJKGdhuFzG3d7sY6o5RyCTZvMeQyB9ksqo6b1pq17JEH0sTQzzRfF6T7/kpgXnLkdfof+iERNbBDenYDbxehus2534Nmhpvy8QWMLLyr1LvowqhEqIXHwRawEmVo3r/Q=
+ bh=UxEWyYzzWUkM3mq7Y36bvJfTBVhfDta0H4YqmBqUhw8=;
+ b=m+7GbhzCgAdibnBxBCKeN3oSGGW8TgJ7Y3SaFT/ZXNt1Ic+desnqlSPiItVt1CyIicB4ON5NYFLw1V0DxyEYNEJ8JtZB7lxYSuQWOYoWdDnP/TnLFd/Q4aLbIsIxBtFQLJMmY26K8Vano7rhtLnxLZRPV8VwF1y0+w2g32Fp6rU=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DB9PR04MB9626.eurprd04.prod.outlook.com (2603:10a6:10:309::18)
- by AS1PR04MB9285.eurprd04.prod.outlook.com (2603:10a6:20b:4df::13) with
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by PR3PR04MB7385.eurprd04.prod.outlook.com (2603:10a6:102:89::17) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.35; Mon, 20 May
- 2024 18:41:59 +0000
-Received: from DB9PR04MB9626.eurprd04.prod.outlook.com
- ([fe80::e81:b393:ebc5:bc3d]) by DB9PR04MB9626.eurprd04.prod.outlook.com
- ([fe80::e81:b393:ebc5:bc3d%4]) with mapi id 15.20.7587.035; Mon, 20 May 2024
- 18:41:59 +0000
-Date: Mon, 20 May 2024 14:41:51 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Amelie Delaunay <amelie.delaunay@foss.st.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ 2024 20:39:24 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::1e67:dfc9:d0c1:fe58]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::1e67:dfc9:d0c1:fe58%7]) with mapi id 15.20.7587.035; Mon, 20 May 2024
+ 20:39:24 +0000
+From: Frank Li <Frank.Li@nxp.com>
+To: Vinod Koul <vkoul@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 06/12] dmaengine: stm32-dma3: add DMA_CYCLIC capability
-Message-ID: <ZkuZb2I83Q29kW6s@lizhi-Precision-Tower-5810>
-References: <20240520154948.690697-1-amelie.delaunay@foss.st.com>
- <20240520154948.690697-7-amelie.delaunay@foss.st.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240520154948.690697-7-amelie.delaunay@foss.st.com>
-X-ClientProxiedBy: SJ0PR13CA0224.namprd13.prod.outlook.com
- (2603:10b6:a03:2c1::19) To DB9PR04MB9626.eurprd04.prod.outlook.com
- (2603:10a6:10:309::18)
+	dmaengine@vger.kernel.org (open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM),
+	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
+	linux-kernel@vger.kernel.org (open list)
+Cc: imx@lists.linux.dev
+Subject: [PATCH 1/1] dt-bindings: fsl-qdma: Convert to yaml format
+Date: Mon, 20 May 2024 16:39:06 -0400
+Message-Id: <20240520203907.749347-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR03CA0006.namprd03.prod.outlook.com
+ (2603:10b6:a03:33a::11) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -85,197 +80,284 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB9PR04MB9626:EE_|AS1PR04MB9285:EE_
-X-MS-Office365-Filtering-Correlation-Id: 18576f6c-68e2-41d7-861f-08dc78fc87fd
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PR3PR04MB7385:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8578412c-526f-4175-d628-08dc790cef27
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|366007|376005|1800799015|52116005|7416005|38350700005;
+	BCL:0;ARA:13230031|1800799015|52116005|376005|366007|38350700005;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?LYVLd0OuQCMqM6suF1M9oDRiaLSYqqNPU1FqAx7+6/aM9j7qm/3KVZGP83W1?=
- =?us-ascii?Q?48baq4/36Wzs1bfEzaohROMECg49bzQoEG0nD9+aJZ3WPIUzGPQ7nmFIlJaM?=
- =?us-ascii?Q?jEnjxJPv0kPmUJn8ZjCIG51YZWd0aTmiKSaVeO9/wB/zVa6fI9+ot2jZSZXW?=
- =?us-ascii?Q?YjRWU95Wb/zLRYtI0wO2+9mAeW9IauxwjsmMfsAt8DpJ4wlEOAaHT0QTSwEd?=
- =?us-ascii?Q?HpoW9X27jFyErptrHUB76a9ZYLTi/M77sgEgZeX4G5X21iHfQ9qWaXCB6D5D?=
- =?us-ascii?Q?7Me4vNW3f111guPFGzUbQu6AeJWlCwmZT0Lmh2aosvNSjpXIZSjYyvvC/Z/5?=
- =?us-ascii?Q?CsrUWe6tLTZwDBVleYp3fPg5dZ/GT3kZSa9yWolGpqNf2TnweM/tkCcvdfTM?=
- =?us-ascii?Q?KF0iKYNMT7Nv0UN8VWosq/DL8fVcl0+TcZJgNBPTMKkWf2hVRIGA1I/CLPDI?=
- =?us-ascii?Q?ko6sfMTEPOs/C7zrZw1a7SnGiJ3nTnipYyy2SJi/JimciRlTxFJdqQv+sBsC?=
- =?us-ascii?Q?OM04eiyGXT6MHT2W18DqHzeipx1jWiq6gauRMjyT7y6nsdV8icDolB8Ikp8t?=
- =?us-ascii?Q?WQnp5bVZdo6ChDd7I0TZsEY0z/vAIz6GCymYn/eRKbjQed7ZZGjWli4wW/YP?=
- =?us-ascii?Q?Fh1uRDtuBoJyJrfWUEEk3BhAh3YHdJuW16IRL4OrZ1VF4c8gy+AERzUyGbw4?=
- =?us-ascii?Q?sG3YtZu8n/y01bTkvebl64Ymce47NE9vHhTRuAjj6svUCdrQEhB1r1sGG/GR?=
- =?us-ascii?Q?bVejXaTs6KeWfQmDnDHtiYqHHLBdR0Tebb6KKi2IpeGX+2Onf2eStg1G1e43?=
- =?us-ascii?Q?uc917l/OcdqzXFfWO9g/j2M7VhmvCHoZAaQQuSLSNkMed1SKBqBJ3RroJP3r?=
- =?us-ascii?Q?OGaovCHZqrTmB02L0ETWrwFRaUpSLzPHSvcOoLi9+fyyNaxNHotR3L2itpG9?=
- =?us-ascii?Q?JgGzVkyfgz7+TBmcMWCZOGpMYsHUdNobKRmUW4gp3ePi0ODzmsciromv0G8E?=
- =?us-ascii?Q?Bv5mtwpdw5XUGQhPFkRiOJFE7TNJsXbdd2s+TGAMjaSDm6Yglv8YsG+cn3GE?=
- =?us-ascii?Q?sfnK6XXQgdNOumMc0ptL93tbA4c/SAj5pGoZctQZHcJHJXBPVipN28Bt+kB2?=
- =?us-ascii?Q?OZJleNK2BgoWHdit64sKU5y7aFmI36Y3egrlAv7UX9OZjq/AWK+kRJAhIDYj?=
- =?us-ascii?Q?AuiPI0RHr3vwrtXPbY9nuQ2RWyTUvUxe34ZlZ/XJVSDaLUcPbY+rvgp4Id+z?=
- =?us-ascii?Q?4vN7h3Q0K/G1G3STBweSoLi0Kl4c+HacObEAymOc0PYgrw6s8j4rN7D4Hp/f?=
- =?us-ascii?Q?QB1xbvtZw2/PQn3j9UMawH4gK6EFhcd/Z/9idFocckP6sA=3D=3D?=
+	=?us-ascii?Q?YKStVSB4iTQ1In+0xyDbENiVv1NhdVH/A8LGLzkeg73sNjr14D0FyPcYRrP1?=
+ =?us-ascii?Q?qTxe6E/bHTw34HZJi44JijJdzy5oKrmFP9MTEbWCWfXRvmGj5Kv4XD5aQ6a5?=
+ =?us-ascii?Q?Nd9XZiwAbwIeBTnG79EuWg0yl3C3qNAjo2xTt7ArQXGKVdUC+0JD05Plh5Uf?=
+ =?us-ascii?Q?0AOwD1YBI8dEraUMnRbFssq9rVgd/zAnmpEuhHtt20MGXZfT3e5wQdJq9izj?=
+ =?us-ascii?Q?6pgiocvwSLo3aH2ppMHZPXpE8xV/Dn6eNWqQzrTXiPxPh3OgPC1l/xlBVJgi?=
+ =?us-ascii?Q?2i2XAWezl5S6XPgUVO6hKjVnRl1dWmzJsASm2LBJe/4LQS8seoLYdzE5/FIs?=
+ =?us-ascii?Q?hwd0Bzfo8ZKgxpDPfOQGH4vFfaWlohyA2sKaOjpGEEJcGPcHBCjwmx4ncDEG?=
+ =?us-ascii?Q?jReVXgwlTCP5Jyv4YDi5oiHeQe6Z2gEYjf2ILR5wS7UBjCLFqqoiE3BJFAOe?=
+ =?us-ascii?Q?yeLfdYKtdy75zpt55R04vvLBFw0IPklcjk7hlS4BedumyOqmRXsT8lnkkH3M?=
+ =?us-ascii?Q?T9+ObxZzJ/o+380sXKazO0Qet0excUNFPJlggkLeQOWMcWu38JEfDe27rtvE?=
+ =?us-ascii?Q?gCdBxprZSgq/fVyIMgNcwO2ResAKtKwaU9fmrioKiNCK9T68kjX5UA6osii3?=
+ =?us-ascii?Q?vaS8Z8sBn0zncv1zFnO92DYGydrfAJKTG7fiTkOmVAX2f2S3WS72R1C+nWV1?=
+ =?us-ascii?Q?OdNXwTfayaGtUT4AUt2EVSmhtC4dCO4pYcM5qk7gimIx00wDi3N7f94xDOs9?=
+ =?us-ascii?Q?Se6iJ6hluxprjxmRd10QS07eViuyVyNZo3ZA5T6v5jl9FmoGGANd9T988dRa?=
+ =?us-ascii?Q?YZE4HdRd27Jqtk+fuZMgwremM136sTjNws0hFdMP6Q7Zp6gJz2VEx3d9KU69?=
+ =?us-ascii?Q?wUzmoYgJDr7LPctsno4BstZhWSDe+nohryfQ/Qm2XA6G+sRk4ISZ//bY9X+A?=
+ =?us-ascii?Q?Z1Vv44+xow4AWgCqk2FqyHfedWUDuufwQa9nuF2F2CnjaPZSy94FxGkgh3BP?=
+ =?us-ascii?Q?bsqBxGOr8xfWKCnnA/RyuOpid9FtKlW0/KQ5PpKf3pvicATYfOji3SkHwcdB?=
+ =?us-ascii?Q?1Br9SpF7OT5I8vsMs/UyWnSmGdxJAjdW/ptatFwn02DAZvdEta7z5XeBS4O7?=
+ =?us-ascii?Q?9xSqYtbfGIxK+waMd81pb5yNJjmWR12W5Xt3hxoGccC2+O6y8QUDL6pvbTBh?=
+ =?us-ascii?Q?ovY1rtzGJ60TEj2sZfUesiALaYtevJmXj5sfYkmN27M/eR1eDdsh2mfO6uj0?=
+ =?us-ascii?Q?12BPxJYS/mu1ZNwahrCqh2QPC01IwVAiDWaRBTgw9A=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB9626.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015)(52116005)(7416005)(38350700005);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(52116005)(376005)(366007)(38350700005);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?IT1UsjhHMF19dY+1HROma/C0/v0J2W+YBkY5LN6LaF98ly8Ng1KIu+24f5ZO?=
- =?us-ascii?Q?GDejg7Z/Dj4mNSHraagLyTtrngLyn0BtCg0p1M7vWjJQLrhHGeb7EM/ndMY3?=
- =?us-ascii?Q?e7btqq1G9HrcOo4ROalXGruBv/ve0Z1ifUWAjWbMVNfo6eduA1MzK6r4fIgT?=
- =?us-ascii?Q?OsmCOngurqXh+AyuLWOW5k8EkrLo9IUKTV+DnyAvFzlFBeqoy6iasOZiNtuy?=
- =?us-ascii?Q?Km8nIjWbjV9/pYoNwRDUwcx0ZDNgEqpEpzDJ/3R2OPilWX07bMp53MJmpYXo?=
- =?us-ascii?Q?6gCx5Li7s9NninGVzpPDK5mHveyzpfYtOvwwPgsjF9Fq/gWvdrM36hPgZGqQ?=
- =?us-ascii?Q?jopPNo8W55wrnvLD4J/upN6YOouufVcmDfJJuMYLL8k3G4jRabauNlvUrFXj?=
- =?us-ascii?Q?8eLRL7s8R1txFgnahRJarcR6s0IKv/D+VcUzQcjnHS40j2sKT2o6pfl9SZvt?=
- =?us-ascii?Q?Lwyq3lc64c4QATTpSgG2DPGNRVVhE4DXOmQsXwBLZSrgm6p2Tn9KwKHsrBxe?=
- =?us-ascii?Q?PPppwgSACIGuDGKub4jWz1wdbfXGuNBbJ9XENLJihupCF91WD2nKbE9R+8th?=
- =?us-ascii?Q?86KILXPYd98RUrfS/UPVIlu4cBqZpK0wMjyPLA14qJCpU8Jdkgm4Nvg82zLM?=
- =?us-ascii?Q?CiMu6TxsyMvsr6nxgol3aVrY4pcxD1pbX/bdG9NikL5KxJ3XvERNx8PGlPXH?=
- =?us-ascii?Q?yXXKaT9SjMYf5zVGzrsavl+XEu0+0V3yWBDrfFqRhCASzJNY7LQrEutWddV7?=
- =?us-ascii?Q?GQKF5s8gWLM9rFovJfNEB3D3UY7YwdLPZNGCS6MXA47IwtlapdXUv92AkhRo?=
- =?us-ascii?Q?D6mWDYwUmS5RH1MjTXBqs3RFgMxGFopk6Oym2BYUZRiOEpjVwg2Waw43TV+H?=
- =?us-ascii?Q?aJcKiEIsZF97KWDsF5xboryMih4lh0bwAEclrDJFBFWNnNmszQ4qGbiLSezd?=
- =?us-ascii?Q?vp3/ra9eZprjcybGXXnNC60O5gXec6hcHVHHLhKVmnebFXqqjql3kZTXSagY?=
- =?us-ascii?Q?8o7vje9N2XeiXeucIo2cBb3YmpKCFenKMkJAumeaFob3x1Ksmuj3FDBAmm6M?=
- =?us-ascii?Q?Amquz7+tZioDta0lOt9Ja9sYaDk25LvWPmpQiddC3s4GpnbD9ZPa2xP6J2W9?=
- =?us-ascii?Q?XB079nJtwYZwC9MnmCJaB7c39X2DNTglvbKJUnAsoFZOazGcqTQhxod/5afS?=
- =?us-ascii?Q?Btev7AreleB3hXkl5ogHeAaUgqGv1hhFASmLTkWn/pbjI+CtVjTBrQmcLLDD?=
- =?us-ascii?Q?IzrFSDUskwXsQvjbJtdYZ4YCxt4gPRx6h52kJf8uDnoJDxYgJQXlID/jidFD?=
- =?us-ascii?Q?3kvQN1BQadjhO+xh/5cBQKUgkfkcw45zSReydxqrfS4J+guWq/9jCG3ADmxz?=
- =?us-ascii?Q?j5CaMKZH9U406tKpM/yl0COlPRj8fNn3mWP3CtRcYFjffGqrSjqv4t3dA7io?=
- =?us-ascii?Q?PGzlPRGKoKU0pLHQoRn1s2Ah3gUKbZVBN9PHpjhF/vOVGSkT9WEhZetyhC1R?=
- =?us-ascii?Q?1a0GZgfLDbJKFZUvRPL3EB6SzVm84B3s/VxEFlRSF4r7TjNUG2Dzb7cwHhrE?=
- =?us-ascii?Q?o7Fu/KdCFCwZ1FaWltxx/QClRXTuI1fvaBLvIRZ9?=
+	=?us-ascii?Q?Ab5s7F1rwXOQ+L/BdTO6c9zuoB6aFgTw5+78ZVr2S6hXIimvsAmlIpk3mbQe?=
+ =?us-ascii?Q?oFqgGUBPjjErumKuruwK/W7swG5e6Ttx3m82HvkphYXiEHcG67++dQ2ZtWrM?=
+ =?us-ascii?Q?eutz7RSvUpzgwK0ks9L3vsWhzUfOMkGvDLZPSG769G70mnpkr6X612P9wtSQ?=
+ =?us-ascii?Q?genmyzY1aHf2PGf/lRF/j7LP4qurhCA5Gsi2M0E1AtyVn2T2k2rGrri2P9fR?=
+ =?us-ascii?Q?U8RSk3EvUgxH8ECNjWqv6W16DX/i08wZ2Yd1w3Tx8yofVJVD1wSEeJ+jkSMH?=
+ =?us-ascii?Q?KPwGfhl5SKT72DiNEB14zJf/CtNatL060KJkmDh1hEgxGvpwcOw8vcwunNIG?=
+ =?us-ascii?Q?ERPYiDvAjaHB6LvPZrapFPVm9BBxg2n8WkK62bWsGePtdEStAxsatsondPCd?=
+ =?us-ascii?Q?mcnV3kTBMHasnbdRRXDpRJhnjR6iO3USiYEMjFRT35hHlox+T604NUkg6yLh?=
+ =?us-ascii?Q?hFEeFMSsHiqZjeAdNm1sW5wwr7x9T/xNaEhwgv4lHGxMBTIQ3Xckn0PSCGhy?=
+ =?us-ascii?Q?RUon+M++3YCJNIrK2eIfmB6YV8p6igJRrJ99Lzy1tEEc2NfKnCO0jHTzlduI?=
+ =?us-ascii?Q?GZ6E112hvbcdsV15m2B+St7VwMbXcOty2WMj4Oqn7Sr8UnrV7LO8Im3nYQkJ?=
+ =?us-ascii?Q?J9qMvrbePn7tAL6ezvX0f68vMuiK6ZkR8cWHszfFqJckUyPjyJCj7OtqBmm8?=
+ =?us-ascii?Q?R8nK0RnBBiYqFeoohg0Nu2aHuATd5UA+Jp4u1TrfwgD0uHJ7DL+N8yX5RJcy?=
+ =?us-ascii?Q?Dzu88PpFZEbPrxkCLMEJeQoE3n8jnMWHiNNZuulDoJNNEBoJ6aNjFdW1Iztv?=
+ =?us-ascii?Q?qqNc+jD4ufa/W3UAGIgRYWQMT3fv4WYye4jyp3NHxC6G2JVRh3NnoQMXu774?=
+ =?us-ascii?Q?dH8eP10vf6hjK+pO0xG9CQn+k5fHlBqK0x5yQxqMkVrKegdRy4/3a2Uz/50d?=
+ =?us-ascii?Q?+hQuQDf05rL8gmBy1u/xsxXNisP/G+Y32e4SSwr3WkjpRCMLx82X2Ntu7kSp?=
+ =?us-ascii?Q?z3PqpmJLzdqLgq3THbWT8AVbXFc3TI6ds2cs+8E25vGw1xZHehxlz1v/YArU?=
+ =?us-ascii?Q?Fa8Hbs6b+x3ejefBqOnM6x29+Hcwphq0mv0V+1ATgkhzAkzMaXFxNQRInM+w?=
+ =?us-ascii?Q?z6TKnpuWdOO8Nujnd10JBV92dJTe1dXaT1EEMyPc5SP2jrEPWFT8F3tJKhMv?=
+ =?us-ascii?Q?gkehtIhQUpUspl6bHVd0sbqbcNMSNlr52dInWVWHntUn2mf024EL14d91Aaq?=
+ =?us-ascii?Q?zKm5AAQ88t8AGGTYxSrrMIWUUpiuQd4IR81XXFfmejLGvCb70KaPVr4Vzz5k?=
+ =?us-ascii?Q?y0rOJLQ2oG0IgNLVUsPn0WRV83PxcIhUEAHA/mQX82scbV7uGSvUvKGA1Sir?=
+ =?us-ascii?Q?VqddCXDN9CCi0TV9Z86s6TxelZnLwEUtGS2bDNAgGKL02Pj7vKnrrivmUzMI?=
+ =?us-ascii?Q?a7AdZDZG2hnP6iQMOvQyO8Cfkz9Ti5gFsy8h8e0mgwdBB6Y3wYqW8XtSBVWe?=
+ =?us-ascii?Q?hVTSnWPSjit2KCOTsUMaQxa2suF5gIa7chgrrzSa1oMTPDk6EYwIlvQf12sU?=
+ =?us-ascii?Q?oXuXsXEEuRyIs9+nyLNghO6ssW8nlAsRPZatLNrq?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 18576f6c-68e2-41d7-861f-08dc78fc87fd
-X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB9626.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8578412c-526f-4175-d628-08dc790cef27
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2024 18:41:59.0218
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2024 20:39:24.0103
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RDJBI44qz58m7PYizLyLi6HUc3VBRtdJTYw62XlnP4TgxjfVb5wzQkKWzD5y8XvtBMKzlkhbZ7du/uzmjaZP6w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS1PR04MB9285
+X-MS-Exchange-CrossTenant-UserPrincipalName: NCmLPXsa21WLwt6FG7/6NotT1CuJltOw95p4leHbC9yeRqu0TGNe1OCXguUtN6p/aEXzPbjornJ4kxjzMMhkWQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3PR04MB7385
 
-On Mon, May 20, 2024 at 05:49:42PM +0200, Amelie Delaunay wrote:
-> Add DMA_CYCLIC capability and relative device_prep_dma_cyclic ops with
-> stm32_dma3_prep_dma_cyclic(). It reuses stm32_dma3_chan_prep_hw() and
-> stm32_dma3_chan_prep_hwdesc() helpers.
-> 
-> Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
-> ---
->  drivers/dma/stm32/stm32-dma3.c | 77 ++++++++++++++++++++++++++++++++++
->  1 file changed, 77 insertions(+)
-> 
-> diff --git a/drivers/dma/stm32/stm32-dma3.c b/drivers/dma/stm32/stm32-dma3.c
-> index 134c08a7ee96..aae9fc018b1d 100644
-> --- a/drivers/dma/stm32/stm32-dma3.c
-> +++ b/drivers/dma/stm32/stm32-dma3.c
-> @@ -1021,6 +1021,81 @@ static struct dma_async_tx_descriptor *stm32_dma3_prep_slave_sg(struct dma_chan
->  	return NULL;
->  }
->  
-> +static struct dma_async_tx_descriptor *stm32_dma3_prep_dma_cyclic(struct dma_chan *c,
-> +								  dma_addr_t buf_addr,
-> +								  size_t buf_len, size_t period_len,
-> +								  enum dma_transfer_direction dir,
-> +								  unsigned long flags)
-> +{
-> +	struct stm32_dma3_chan *chan = to_stm32_dma3_chan(c);
-> +	struct stm32_dma3_swdesc *swdesc;
-> +	dma_addr_t src, dst;
-> +	u32 count, i, ctr1, ctr2;
-> +	int ret;
-> +
-> +	if (!buf_len || !period_len || period_len > STM32_DMA3_MAX_BLOCK_SIZE) {
-> +		dev_err(chan2dev(chan), "Invalid buffer/period length\n");
-> +		return NULL;
-> +	}
-> +
-> +	if (buf_len % period_len) {
-> +		dev_err(chan2dev(chan), "Buffer length not multiple of period length\n");
-> +		return NULL;
-> +	}
-> +
-> +	count = buf_len / period_len;
-> +	swdesc = stm32_dma3_chan_desc_alloc(chan, count);
-> +	if (!swdesc)
-> +		return NULL;
-> +
-> +	if (dir == DMA_MEM_TO_DEV) {
-> +		src = buf_addr;
-> +		dst = chan->dma_config.dst_addr;
-> +
-> +		ret = stm32_dma3_chan_prep_hw(chan, DMA_MEM_TO_DEV, &swdesc->ccr, &ctr1, &ctr2,
-> +					      src, dst, period_len);
-> +	} else if (dir == DMA_DEV_TO_MEM) {
-> +		src = chan->dma_config.src_addr;
-> +		dst = buf_addr;
-> +
-> +		ret = stm32_dma3_chan_prep_hw(chan, DMA_DEV_TO_MEM, &swdesc->ccr, &ctr1, &ctr2,
-> +					      src, dst, period_len);
-> +	} else {
-> +		dev_err(chan2dev(chan), "Invalid direction\n");
-> +		ret = -EINVAL;
-> +	}
-> +
-> +	if (ret)
-> +		goto err_desc_free;
-> +
-> +	for (i = 0; i < count; i++) {
-> +		if (dir == DMA_MEM_TO_DEV) {
-> +			src = buf_addr + i * period_len;
-> +			dst = chan->dma_config.dst_addr;
-> +		} else { /* (dir == DMA_DEV_TO_MEM || dir == DMA_MEM_TO_MEM) */
+Convert binding doc from txt to yaml.
 
-look like comment is wrong.
+Re-order interrupt-names to align example.
+Add #dma-cell in example.
+Change 'reg' in example to 32bit address.
 
-DMA_MEM_TO_MEM will return -EINVAL at previous check. 
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
 
-> +			src = chan->dma_config.src_addr;
-> +			dst = buf_addr + i * period_len;
-> +		}
-> +
-> +		stm32_dma3_chan_prep_hwdesc(chan, swdesc, i, src, dst, period_len,
-> +					    ctr1, ctr2, i == (count - 1), true);
-> +	}
-> +
-> +	/* Enable Error interrupts */
-> +	swdesc->ccr |= CCR_USEIE | CCR_ULEIE | CCR_DTEIE;
-> +	/* Enable Transfer state interrupts */
-> +	swdesc->ccr |= CCR_TCIE;
-> +
-> +	swdesc->cyclic = true;
-> +
-> +	return vchan_tx_prep(&chan->vchan, &swdesc->vdesc, flags);
-> +
-> +err_desc_free:
-> +	stm32_dma3_chan_desc_free(chan, swdesc);
-> +
-> +	return NULL;
-> +}
-> +
->  static void stm32_dma3_caps(struct dma_chan *c, struct dma_slave_caps *caps)
->  {
->  	struct stm32_dma3_chan *chan = to_stm32_dma3_chan(c);
-> @@ -1255,6 +1330,7 @@ static int stm32_dma3_probe(struct platform_device *pdev)
->  
->  	dma_cap_set(DMA_SLAVE, dma_dev->cap_mask);
->  	dma_cap_set(DMA_PRIVATE, dma_dev->cap_mask);
-> +	dma_cap_set(DMA_CYCLIC, dma_dev->cap_mask);
->  	dma_dev->dev = &pdev->dev;
->  	/*
->  	 * This controller supports up to 8-byte buswidth depending on the port used and the
-> @@ -1277,6 +1353,7 @@ static int stm32_dma3_probe(struct platform_device *pdev)
->  	dma_dev->device_alloc_chan_resources = stm32_dma3_alloc_chan_resources;
->  	dma_dev->device_free_chan_resources = stm32_dma3_free_chan_resources;
->  	dma_dev->device_prep_slave_sg = stm32_dma3_prep_slave_sg;
-> +	dma_dev->device_prep_dma_cyclic = stm32_dma3_prep_dma_cyclic;
->  	dma_dev->device_caps = stm32_dma3_caps;
->  	dma_dev->device_config = stm32_dma3_config;
->  	dma_dev->device_terminate_all = stm32_dma3_terminate_all;
-> -- 
-> 2.25.1
-> 
+Notes:
+    Pass dt_binding_check:
+    
+    make dt_binding_check DT_SCHEMA_FILES=fsl-qdma.yaml
+      SCHEMA  Documentation/devicetree/bindings/processed-schema.json
+      CHKDT   Documentation/devicetree/bindings
+      LINT    Documentation/devicetree/bindings
+      DTEX    Documentation/devicetree/bindings/dma/fsl-qdma.example.dts
+      DTC_CHK Documentation/devicetree/bindings/dma/fsl-qdma.example.dtb
+
+ .../devicetree/bindings/dma/fsl-qdma.txt      |  58 ---------
+ .../devicetree/bindings/dma/fsl-qdma.yaml     | 110 ++++++++++++++++++
+ 2 files changed, 110 insertions(+), 58 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/dma/fsl-qdma.txt
+ create mode 100644 Documentation/devicetree/bindings/dma/fsl-qdma.yaml
+
+diff --git a/Documentation/devicetree/bindings/dma/fsl-qdma.txt b/Documentation/devicetree/bindings/dma/fsl-qdma.txt
+deleted file mode 100644
+index da371c4d406ce..0000000000000
+--- a/Documentation/devicetree/bindings/dma/fsl-qdma.txt
++++ /dev/null
+@@ -1,58 +0,0 @@
+-NXP Layerscape SoC qDMA Controller
+-==================================
+-
+-This device follows the generic DMA bindings defined in dma/dma.txt.
+-
+-Required properties:
+-
+-- compatible:		Must be one of
+-			 "fsl,ls1021a-qdma": for LS1021A Board
+-			 "fsl,ls1028a-qdma": for LS1028A Board
+-			 "fsl,ls1043a-qdma": for ls1043A Board
+-			 "fsl,ls1046a-qdma": for ls1046A Board
+-- reg:			Should contain the register's base address and length.
+-- interrupts:		Should contain a reference to the interrupt used by this
+-			device.
+-- interrupt-names:	Should contain interrupt names:
+-			 "qdma-queue0": the block0 interrupt
+-			 "qdma-queue1": the block1 interrupt
+-			 "qdma-queue2": the block2 interrupt
+-			 "qdma-queue3": the block3 interrupt
+-			 "qdma-error":  the error interrupt
+-- fsl,dma-queues:	Should contain number of queues supported.
+-- dma-channels:	Number of DMA channels supported
+-- block-number:	the virtual block number
+-- block-offset:	the offset of different virtual block
+-- status-sizes:	status queue size of per virtual block
+-- queue-sizes:		command queue size of per virtual block, the size number
+-			based on queues
+-
+-Optional properties:
+-
+-- dma-channels:		Number of DMA channels supported by the controller.
+-- big-endian:		If present registers and hardware scatter/gather descriptors
+-			of the qDMA are implemented in big endian mode, otherwise in little
+-			mode.
+-
+-Examples:
+-
+-	qdma: dma-controller@8390000 {
+-			compatible = "fsl,ls1021a-qdma";
+-			reg = <0x0 0x8388000 0x0 0x1000>, /* Controller regs */
+-			      <0x0 0x8389000 0x0 0x1000>, /* Status regs */
+-			      <0x0 0x838a000 0x0 0x2000>; /* Block regs */
+-			interrupts = <GIC_SPI 185 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
+-			interrupt-names = "qdma-error",
+-				"qdma-queue0", "qdma-queue1";
+-			dma-channels = <8>;
+-			block-number = <2>;
+-			block-offset = <0x1000>;
+-			fsl,dma-queues = <2>;
+-			status-sizes = <64>;
+-			queue-sizes = <64 64>;
+-			big-endian;
+-		};
+-
+-DMA clients must use the format described in dma/dma.txt file.
+diff --git a/Documentation/devicetree/bindings/dma/fsl-qdma.yaml b/Documentation/devicetree/bindings/dma/fsl-qdma.yaml
+new file mode 100644
+index 0000000000000..e6d24670ff893
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/fsl-qdma.yaml
+@@ -0,0 +1,110 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/fsl-qdma.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: NXP Layerscape SoC qDMA Controller
++
++maintainers:
++  - Frank Li <Frank.Li@nxp.com>
++
++properties:
++  compatible:
++    enum:
++      - fsl,ls1021a-qdma
++      - fsl,ls1028a-qdma
++      - fsl,ls1043a-qdma
++      - fsl,ls1046a-qdma
++
++  reg:
++    items:
++      - description: Controller regs
++      - description: Status regs
++      - description: Block regs
++
++  interrupts:
++    minItems: 2
++    maxItems: 5
++
++  interrupt-names:
++    minItems: 2
++    items:
++      - const: qdma-error
++      - const: qdma-queue0
++      - const: qdma-queue1
++      - const: qdma-queue2
++      - const: qdma-queue3
++
++  dma-channels:
++    minItems: 1
++    maxItems: 64
++
++  fsl,dma-queues:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: Should contain number of queues supported.
++
++  block-number:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: the virtual block number
++
++  block-offset:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: the offset of different virtual block
++
++  status-sizes:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: status queue size of per virtual block
++
++  queue-sizes:
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    description:
++      command queue size of per virtual block, the size number
++      based on queues
++
++  big-endian:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      If present registers and hardware scatter/gather descriptors
++      of the qDMA are implemented in big endian mode, otherwise in little
++      mode.
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - interrupt-names
++  - fsl,dma-queues
++  - block-number
++  - block-offset
++  - status-sizes
++  - queue-sizes
++
++unevaluatedProperties: false
++
++allOf:
++  - $ref: dma-controller.yaml#
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    dma-controller@8390000 {
++        compatible = "fsl,ls1021a-qdma";
++        reg = <0x8388000 0x1000>, /* Controller regs */
++              <0x8389000 0x1000>, /* Status regs */
++              <0x838a000 0x2000>; /* Block regs */
++        interrupts = <GIC_SPI 185 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
++        interrupt-names = "qdma-error", "qdma-queue0", "qdma-queue1";
++        #dma-cells = <1>;
++        dma-channels = <8>;
++        block-number = <2>;
++        block-offset = <0x1000>;
++        status-sizes = <64>;
++        queue-sizes = <64 64>;
++        big-endian;
++        fsl,dma-queues = <2>;
++    };
++
+-- 
+2.34.1
+
 

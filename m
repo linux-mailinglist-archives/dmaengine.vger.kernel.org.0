@@ -1,103 +1,125 @@
-Return-Path: <dmaengine+bounces-2131-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2132-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 100158CB372
-	for <lists+dmaengine@lfdr.de>; Tue, 21 May 2024 20:22:32 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C5FC48CB388
+	for <lists+dmaengine@lfdr.de>; Tue, 21 May 2024 20:33:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 08B4D1C213FB
-	for <lists+dmaengine@lfdr.de>; Tue, 21 May 2024 18:22:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 80B26282D34
+	for <lists+dmaengine@lfdr.de>; Tue, 21 May 2024 18:33:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69BC114830C;
-	Tue, 21 May 2024 18:22:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4DEA147C73;
+	Tue, 21 May 2024 18:33:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="tGl1NN6/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uSNDHaLt"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E28D621105;
-	Tue, 21 May 2024 18:22:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB6DD2B9A7;
+	Tue, 21 May 2024 18:33:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716315747; cv=none; b=Q8TQpAA7waqMvpKd/46md4KeInYO0QLsakk7QMKvcs+LmnqUhsvdSp8c+vEgj9xaZ3Z4+NDIqm/X6UlG0LoVKdJJH1gMZ6hQNB06tURMqtPZNUIK81US6DS3pdVxC+/n66WKXAZOuC8GkfWEgVnigMGoDfME69Uuxc6WOlSXsnA=
+	t=1716316384; cv=none; b=KRi8c1m7qXGyX+yGuT4wy948QoFLNT5gsxZEDyg3c2fHFvGeUb6Pn+qH+u7x3oXwflQeRd2oCrNgmfI8uXv1xvYPO9PU3NTks1oWjSpJrd00bbjfdaigVLhCxhC0paMTlN0lF645luNp50f5/t/36Mp6bPTuWAwrcV5sXd9i5FE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716315747; c=relaxed/simple;
-	bh=c7B+5QE89M7OwcRDj+HTxHq9BmlfVneW2jXpR/gvwOY=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=MFZv4zoI0Of0KeEiw0J7Ls00tu/FqlOAJdklmk2u43Xm1+Pov2+Yv+gkd/9/VLAW5GSr8Rn89upHzwolmhsQiOAYMIaDimrDv5vvjs/1vHqWN7/iI79fQF6aJEtjuOF7Z4NAK3JKXAEcnTilqaUuBwrUryFEc147l5hSdSyvLQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=tGl1NN6/; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1716315730; x=1716920530; i=markus.elfring@web.de;
-	bh=c7B+5QE89M7OwcRDj+HTxHq9BmlfVneW2jXpR/gvwOY=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=tGl1NN6/+Lj6dQJSjtPeq0ACLT4/0kjhxlv4SAfnJa3HBhGkFsfAyNHPy35D759K
-	 t2hnICWy9MMyI5qu3HfgP+1o9NJYRgEk7h88qkgT6rJnhq+hTVMWydWbqeDSz9CRC
-	 Gz42JK0yXeTz9rsn4REc5e5rtu/h73k+Mq9EDNPrYLt1FE5l8sfjnD7UrWm9wvPX4
-	 hanKeSBR52WrFQrpqzp5up41s/zY6N5ghOe4ufbApJ6VoooeXuYyoup/FwqWPBeUH
-	 OMBMPIySMQ7F3pvwzJwCBQM2JGVRo4eSA63GyMh/japHw8xquDTm7NlMJugoTtap8
-	 mkAuSeDUBXc9f2NlnA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.82.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MECGX-1sHQDn2k21-000t2q; Tue, 21
- May 2024 20:22:10 +0200
-Message-ID: <b3c8457b-f652-4f1d-a02f-e5a7325b18bb@web.de>
-Date: Tue, 21 May 2024 20:22:09 +0200
+	s=arc-20240116; t=1716316384; c=relaxed/simple;
+	bh=9oN1+Qiu3ZjosqghZMHoJO8Wg1Ja4YbCGeqa01ozJAg=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XXJlkARTELFzaE6TS4qch71mTa7L3zhHMs5PQLGX1rk1rDBI/trZrF2lUuQ55M3C+98YhSdNxTPSVprOtAf8LWx515Jvlk8cVI6o/BqdkUeJJ9I8S6V5mTe4RYUEHQMXIDHRpu0DBMRTmSMLdqMUEXURVCe4V61P3Ukb0giCdwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uSNDHaLt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61784C2BD11;
+	Tue, 21 May 2024 18:33:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716316384;
+	bh=9oN1+Qiu3ZjosqghZMHoJO8Wg1Ja4YbCGeqa01ozJAg=;
+	h=Date:From:To:Subject:References:In-Reply-To:From;
+	b=uSNDHaLtNjHp2bjf1f3dSmtpezQrkutqJSil0Qx1MnHaq9gR0MBDVINkZ4iOz+En/
+	 BA35lwYMXxMvSg/Q/f8amERGWFDhPiKVcWoyAwEd5PRk/a3QiTt13iOBJRu06J3D4g
+	 YUxma3QKyESdLVXxaaJUcnNVuKQQuZvsvO4UsuzQAVlJycrFC9ZJsLgoN3n8aSGIIk
+	 8n+1kDQQxXTEoJ2E//iK82okve78UL/AIZUAyKm3NP/fvk8W9BzV0T3rnALo2sUtxz
+	 huX6UnzXbzV+YhlvxX+fAfWpuysU5m2Q3D3e30eI/95ULOdCsATVaDhY5uW/6lEozx
+	 J78PA6sv6sDmA==
+Date: Tue, 21 May 2024 19:32:59 +0100
+From: Mark Brown <broonie@kernel.org>
+To: linux-sound@vger.kernel.org, dmaengine@vger.kernel.org,
+	alsa-devel@alsa-project.org, miquel.raynal@bootlin.com,
+	perex@perex.cz, tiwai@suse.com, lars@metafoo.de,
+	lgirdwood@gmail.com
+Subject: Re: DMA Transfer Synchronization Issue in Out-of-Tree Sound Card
+ Driver
+Message-ID: <6e01c13f-2bc1-4e08-b50e-9f1307bda92d@sirena.org.uk>
+References: <Zkxb0FTzW6wlnYYO@localhost.localdomain>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>,
- dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Siddharth Vadapalli <s-vadapalli@ti.com>, Sriramakrishnan <srk@ti.com>,
- Vinod Koul <vkoul@kernel.org>
-References: <8b2e4b7f-50ae-4017-adf2-2e990cd45a25@gmail.com>
-Subject: Re: [PATCH] dmaengine: ti: k3-udma-glue: Fix
- of_k3_udma_glue_parse_chn_by_id()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <8b2e4b7f-50ae-4017-adf2-2e990cd45a25@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="xueZ6/gZSHePXE0a"
+Content-Disposition: inline
+In-Reply-To: <Zkxb0FTzW6wlnYYO@localhost.localdomain>
+X-Cookie: Eloquence is logic on fire.
+
+
+--xueZ6/gZSHePXE0a
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:xogqoaHaSC79ejr9VphriOgXBheNu5oGjdeP3q98+LPbRGOScjb
- ah39vJLunugdbRWObZhqvofD7vWsixMskB+NydYrYJVHWmiVajIflSd//iA6lfQGV90AKfZ
- bYbE0vBWa5Fgh5QLm09sLTGUOedv61U+vsq3bDltG7p16ZtssDOHQb6+hdRTSZyWnaVfLdy
- lR97VyR01Wsxw2gZ79vLg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:F6R05AOwJUs=;1LRb1GC4V/UJeqvCdATt8i1sVfQ
- 3CEjC3UO/Gt19d6M+D0Ajh+9Rydx9OjeCUTR7Htg/SenodM0hbQxJd2Kf9LrcOrVziDDUy5YT
- pBNDp889Py+a2Iu9hvrUSMzg9+KDmGCH2Df0v7SqeSmx06IywfSRiBA3uT+pNSJ3Ubz+eMfcQ
- vQ36f3+Dkvy8qqUsKqIzz921KlCHEXt57y5dhtjqxnU4vBqcEGWgFvT1oGTCv/Xu9Yc9WUtxT
- +QQon1stlORYYn1SOzgpQDA+vAqroWGxOTLUlR4jsH2Ojh3Ndy2SORgmzc403UBUT5bLvoYuF
- 986F8M9WnKfNgG/EHv5dUYEv6LP7RTXadGujP9sfOI4v8jO9jT0FLg8m3BZxRlkeutFiJSJcQ
- YOBTY6r4IHNkhgdFrMR7pQ3X26qgHmiIi8Zr1JercuuFyLf6QdbmtfyFHXsEHcZBZVlSMz2fj
- MEblPpK/b8VhuIkm4DxIKH7vFegq8Vpt/SB7bVQjT5JfyKIBX+fGRjeqSzHtyNQXaH/UqQYo/
- NQfBYpd9NM/3ot1WLlZRWjwvZU14APMg8zgjeUWyJERpJE/kmNTbPLgfka//tX+LDYSLdyyue
- jUSE1ZEbk3Iv2+CD1sYiit0sJsBEx+jJHtRbAohLiNQX9RYUgGivx5ofJsUcbuRgIhpu5dJfy
- TtQaF9NgtbFZX+n/erzhdK3yjggvYQUebi44IxnBASLi2je3gLcTEe5rUGDIeb+/4t/uQemu0
- UrhYc+gLqjeyGZGAaTadJ2A0MUky80UcshuCtqlEQUu0YSvY21UcI6j1gMhp5Vik7c2sAI+rm
- KD2iO9CagZDxHGuHp4bKLrPmElOhpgLzNvHTmCqDiAZCY=
 
-=E2=80=A6
-> > without having incremented its reference at any point. Fix it.
->
-> Acked-by: Peter Ujfalusi@gmail.com
+On Tue, May 21, 2024 at 10:31:12AM +0200, Louis Chauvet wrote:
 
-Please improve the data representation for this tag.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.9#n468
+> To address this DMA issue, I have created a patch [1] that guarantees the=
+=20
+> completion of the DMA transfer upon the return of xdma_synchronize. This=
+=20
+> means xdma_synchronize now sleeps, but looking at other drivers around it=
+=20
+> appears expected to be able to do so.
 
-Regards,
-Markus
+You need to set the nonatomic flag for the PCM to allow this, the
+default is that triggers run in atomic context.
+
+>=20
+> 		switch (command) {
+> 		case SNDRV_PCM_TRIGGER_START:
+> 			/* Synchronize on start, because the trigger stop is called from an IR=
+Q	context	*/
+> 			if (substream->stream =3D=3D SNDRV_PCM_STREAM_PLAYBACK)
+> 				dmaengine_synchronize(my_dev->playback_dma_chan);
+
+If any dmaengine work is needed put it in the generic dmaengine code and
+allow it to be configured there (ideally through discovery through the
+API).
+
+> The problem might be related to the sound driver. Should I avoid manually=
+=20
+> using dmaengine_synchronize? How to achieve the same effect in this case?=
+=20
+> Perhaps there is a more traditional way to properly clean the stream in=
+=20
+> the sound subsystem which I overlooked?
+
+If there's no way of resetting things without blocking then I'm not sure
+you can do much better though I might be forgetting something, it does
+seem like disappointing hardware design and application behaviour.
+
+--xueZ6/gZSHePXE0a
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZM6NoACgkQJNaLcl1U
+h9CQJgf/SoGgK5fxlN1tBFGIN5h4MwbX7Y5VNEDDebRPlp4d9xf84kvYAyqY83vL
+PJ0Ta78vJLPUxM8CeHXkn5duaLzUAsAtJsn5gtSCBdUy3rhlvMt4v2JkNYE2nZ16
+HilFrOejdfXGebjpHoPP4KocrUTQTSEuiHvOViuql2h4kqbt9PYaz9SATZii7QXT
+cbaLKt7YlY2M8X4FCvy3O782rx7CJRTpK9QMm9SYJ0BMhviRCom084r+dQkuqFn3
+V3MRZukP9UEMr7E8HrTU8NMOeQVoogf7ppb4h5xiQ/tZCAUfvoP4U6j/LZInc0NN
+bNEb/K9hJvM14U9yp/rsw5ub2jhcxQ==
+=Su6g
+-----END PGP SIGNATURE-----
+
+--xueZ6/gZSHePXE0a--
 

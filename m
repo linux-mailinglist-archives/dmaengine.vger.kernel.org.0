@@ -1,55 +1,55 @@
-Return-Path: <dmaengine+bounces-2130-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2131-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5B7BB8CB355
-	for <lists+dmaengine@lfdr.de>; Tue, 21 May 2024 20:12:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 100158CB372
+	for <lists+dmaengine@lfdr.de>; Tue, 21 May 2024 20:22:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7089E1C21AEB
-	for <lists+dmaengine@lfdr.de>; Tue, 21 May 2024 18:12:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 08B4D1C213FB
+	for <lists+dmaengine@lfdr.de>; Tue, 21 May 2024 18:22:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19D9A130A4D;
-	Tue, 21 May 2024 18:12:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69BC114830C;
+	Tue, 21 May 2024 18:22:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="POYSuY6x"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="tGl1NN6/"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from mout.web.de (mout.web.de [212.227.15.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A085723775;
-	Tue, 21 May 2024 18:12:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E28D621105;
+	Tue, 21 May 2024 18:22:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716315161; cv=none; b=enOuGY5r4LVU2N3AHAE07qCXPJ288Y11qxh8z+JMGUUX7VptFAyeWGthK9yiYPPBm87/Yy09Ty7/6aaHkyNcynQ3xVI/S5BFUbFN9CSumQb3LajznCvMf8rQ96cZGuFlmnXG+nVmtmOF9JTDTk60ld060XPDhDkEzXMiBecgaPM=
+	t=1716315747; cv=none; b=Q8TQpAA7waqMvpKd/46md4KeInYO0QLsakk7QMKvcs+LmnqUhsvdSp8c+vEgj9xaZ3Z4+NDIqm/X6UlG0LoVKdJJH1gMZ6hQNB06tURMqtPZNUIK81US6DS3pdVxC+/n66WKXAZOuC8GkfWEgVnigMGoDfME69Uuxc6WOlSXsnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716315161; c=relaxed/simple;
-	bh=lf82Yp3ydu6DM97xYh1vKVTtqdtWCK5RR12EMBbDS6Q=;
+	s=arc-20240116; t=1716315747; c=relaxed/simple;
+	bh=c7B+5QE89M7OwcRDj+HTxHq9BmlfVneW2jXpR/gvwOY=;
 	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=duaqneCmlMLy+4NlE34DyhuSWk7bQ/CnZ6gxFHx2eoKCraN63cFf04Yk3HMaHwBftovo16cjF9YLBQvzgv6vkKikKR+r/C7yIn23tX4Ciepe66FZAMHSdIMrL5QKYfQpBOqaol79f1cTbAlq3ue+KDe86RUhkOExYES6wEQ/wUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=POYSuY6x; arc=none smtp.client-ip=212.227.15.3
+	 In-Reply-To:Content-Type; b=MFZv4zoI0Of0KeEiw0J7Ls00tu/FqlOAJdklmk2u43Xm1+Pov2+Yv+gkd/9/VLAW5GSr8Rn89upHzwolmhsQiOAYMIaDimrDv5vvjs/1vHqWN7/iI79fQF6aJEtjuOF7Z4NAK3JKXAEcnTilqaUuBwrUryFEc147l5hSdSyvLQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=tGl1NN6/; arc=none smtp.client-ip=212.227.15.3
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1716315133; x=1716919933; i=markus.elfring@web.de;
-	bh=QXLk9GW3AZRa5cO2vjuK92/gTK3vLURS16p8QBvrT1g=;
+	s=s29768273; t=1716315730; x=1716920530; i=markus.elfring@web.de;
+	bh=c7B+5QE89M7OwcRDj+HTxHq9BmlfVneW2jXpR/gvwOY=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
 	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
 	 cc:content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=POYSuY6xYq1cK1SiW73JXtRSkU4sbUJRxe9OGzP4lDyY64O9jSb4J1nlcNirB/Vm
-	 vXJZlmmRGt7Fa3zGNWw+3bsU2jf2Zl1jKokHQwmAEe299h5puXfElDcjvO/j5A7MQ
-	 QEf/aUE7Ta9qZsARjy+jiVv1bzQo0T8JOKUDg367XGC56/W3xVlYw1QY2EuuKEUyM
-	 gsKhQKexWWmEVlF9yJeKZtR4eiwOMV9WsUh8NAVEactkCHaZZDupJ5ybdYCT+pBea
-	 O9ZevPxXexi+t1F1cVsXt9e/PTaUdoeDvk9W8GM6zafQ5ae4C+ZDyseeQrUBFFODS
-	 wh/D9SpiIyokBMXuZg==
+	b=tGl1NN6/+Lj6dQJSjtPeq0ACLT4/0kjhxlv4SAfnJa3HBhGkFsfAyNHPy35D759K
+	 t2hnICWy9MMyI5qu3HfgP+1o9NJYRgEk7h88qkgT6rJnhq+hTVMWydWbqeDSz9CRC
+	 Gz42JK0yXeTz9rsn4REc5e5rtu/h73k+Mq9EDNPrYLt1FE5l8sfjnD7UrWm9wvPX4
+	 hanKeSBR52WrFQrpqzp5up41s/zY6N5ghOe4ufbApJ6VoooeXuYyoup/FwqWPBeUH
+	 OMBMPIySMQ7F3pvwzJwCBQM2JGVRo4eSA63GyMh/japHw8xquDTm7NlMJugoTtap8
+	 mkAuSeDUBXc9f2NlnA==
 X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
 Received: from [192.168.178.21] ([94.31.82.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mpl4z-1ssi8G2c97-00gnPX; Tue, 21
- May 2024 20:12:13 +0200
-Message-ID: <22a66571-0a0c-46dd-899a-d24079372880@web.de>
-Date: Tue, 21 May 2024 20:12:10 +0200
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MECGX-1sHQDn2k21-000t2q; Tue, 21
+ May 2024 20:22:10 +0200
+Message-ID: <b3c8457b-f652-4f1d-a02f-e5a7325b18bb@web.de>
+Date: Tue, 21 May 2024 20:22:09 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -57,43 +57,47 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: Siddharth Vadapalli <s-vadapalli@ti.com>, dmaengine@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,
- =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>,
+To: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>,
+ dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Siddharth Vadapalli <s-vadapalli@ti.com>, Sriramakrishnan <srk@ti.com>,
  Vinod Koul <vkoul@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Sriramakrishnan <srk@ti.com>
-References: <20240518100556.2551788-1-s-vadapalli@ti.com>
+References: <8b2e4b7f-50ae-4017-adf2-2e990cd45a25@gmail.com>
 Subject: Re: [PATCH] dmaengine: ti: k3-udma-glue: Fix
  of_k3_udma_glue_parse_chn_by_id()
 Content-Language: en-GB
 From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240518100556.2551788-1-s-vadapalli@ti.com>
+In-Reply-To: <8b2e4b7f-50ae-4017-adf2-2e990cd45a25@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:9lmdupZcs3XCCJzzfHYI2egHuwYPLtyAA7qGq/AVpL+Zct3/2e1
- bee3fcCOSrHuejaoIpqUyRRytP/ZCG7C/HaVLr5DnjXeWMARWlRbBj68sFqGJelRDA5Ho28
- TGxZjZyFBVfMJBGyqrLsC2G9Tg8Gk68Arotc3+cXBNFAHQaaLfwUCywSDXqChhfcUkfXw5P
- FG/O775JoHGePDMGE39dA==
+X-Provags-ID: V03:K1:xogqoaHaSC79ejr9VphriOgXBheNu5oGjdeP3q98+LPbRGOScjb
+ ah39vJLunugdbRWObZhqvofD7vWsixMskB+NydYrYJVHWmiVajIflSd//iA6lfQGV90AKfZ
+ bYbE0vBWa5Fgh5QLm09sLTGUOedv61U+vsq3bDltG7p16ZtssDOHQb6+hdRTSZyWnaVfLdy
+ lR97VyR01Wsxw2gZ79vLg==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:HuWJkkP3hB8=;qiRgh3yaJibcIOkXQi0sPZwLSPk
- L3WzUhd8/0BIxZB9ODig8ZjqIHkKQgqkwhT0mAYL93maxQDFcs+eUDbpBPvH8PaBLUY1a0OTk
- kW3TyrkNPpz61O+KMlAcPF3ZuUiCsNNAO/8IXpCbB4GguuJGyInuS1r2eOCwFR0nnSSfYS5bB
- 4DqFrhUbtbRIFdgk/z/lzv++Bl6TufXtC+/fMb0xXcsPZiOWAQtWjzt0TnjmCll7uDigfeBD+
- RmP+7OgGycT/0ex5GDWtpkbE5YeadyExW1Kx6LER2+TjTFiYAwO9fLOavriFHgxXP66raQfCX
- GKJXeyyDpH7Jshl/njK0WAhSEdNyInBg6K5sP1g2AydY1QqS9a/r8wYuteDk27IuFfGa2SyM5
- QGNabfGQBl9njvy2udPgvPW68E3AuEVA7npvqL7R91iEqhMa7lgG2abG0qyq6XJX+rKjb/hvT
- VVQBe+gXsD5P6UUKW3DfevBss7eY3sUZIkw9e+SCcDBFwjPLk1JDv2vD0bH2tL5v+SorP9Wxp
- dJgNg8wwZkDOWGLB9h3nV69tlhGCcSwibLtdQ4010gZ6KhLnG3pPoFEDoKo25xF/Lrm+leVm6
- r3AIqPS5p57XjkOh7U/220iSsuitovp/FHldwJgxQF4tnV1EGaAzOhrxhgrSbSLwO1+pjnaOj
- ENxS2mlSkkhQWJqHfqpQFJhsbhzefKVE/RFtpNVKasKwI5I1wwhd4IFYbugLO4z8GYvOWr+n8
- qVnfMOT3EDVvxqIoWsrKe8aZw9OK3/Y0ucLyhamIHJSx2V77yD1XRGklDW8qMyUroGFx9vxDp
- CP74CcLsJjGkWJaDZKowp341uUmQqVQe4g8zc6I9oVp68=
+UI-OutboundReport: notjunk:1;M01:P0:F6R05AOwJUs=;1LRb1GC4V/UJeqvCdATt8i1sVfQ
+ 3CEjC3UO/Gt19d6M+D0Ajh+9Rydx9OjeCUTR7Htg/SenodM0hbQxJd2Kf9LrcOrVziDDUy5YT
+ pBNDp889Py+a2Iu9hvrUSMzg9+KDmGCH2Df0v7SqeSmx06IywfSRiBA3uT+pNSJ3Ubz+eMfcQ
+ vQ36f3+Dkvy8qqUsKqIzz921KlCHEXt57y5dhtjqxnU4vBqcEGWgFvT1oGTCv/Xu9Yc9WUtxT
+ +QQon1stlORYYn1SOzgpQDA+vAqroWGxOTLUlR4jsH2Ojh3Ndy2SORgmzc403UBUT5bLvoYuF
+ 986F8M9WnKfNgG/EHv5dUYEv6LP7RTXadGujP9sfOI4v8jO9jT0FLg8m3BZxRlkeutFiJSJcQ
+ YOBTY6r4IHNkhgdFrMR7pQ3X26qgHmiIi8Zr1JercuuFyLf6QdbmtfyFHXsEHcZBZVlSMz2fj
+ MEblPpK/b8VhuIkm4DxIKH7vFegq8Vpt/SB7bVQjT5JfyKIBX+fGRjeqSzHtyNQXaH/UqQYo/
+ NQfBYpd9NM/3ot1WLlZRWjwvZU14APMg8zgjeUWyJERpJE/kmNTbPLgfka//tX+LDYSLdyyue
+ jUSE1ZEbk3Iv2+CD1sYiit0sJsBEx+jJHtRbAohLiNQX9RYUgGivx5ofJsUcbuRgIhpu5dJfy
+ TtQaF9NgtbFZX+n/erzhdK3yjggvYQUebi44IxnBASLi2je3gLcTEe5rUGDIeb+/4t/uQemu0
+ UrhYc+gLqjeyGZGAaTadJ2A0MUky80UcshuCtqlEQUu0YSvY21UcI6j1gMhp5Vik7c2sAI+rm
+ KD2iO9CagZDxHGuHp4bKLrPmElOhpgLzNvHTmCqDiAZCY=
 
 =E2=80=A6
-> without having incremented its reference at any point. =E2=80=A6
-                                           counter?
+> > without having incremented its reference at any point. Fix it.
+>
+> Acked-by: Peter Ujfalusi@gmail.com
+
+Please improve the data representation for this tag.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?h=3Dv6.9#n468
 
 Regards,
 Markus
-
 

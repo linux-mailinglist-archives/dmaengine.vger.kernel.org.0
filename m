@@ -1,121 +1,154 @@
-Return-Path: <dmaengine+bounces-2113-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2114-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC2C08CA9EF
-	for <lists+dmaengine@lfdr.de>; Tue, 21 May 2024 10:30:37 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B72F08CA9F2
+	for <lists+dmaengine@lfdr.de>; Tue, 21 May 2024 10:31:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ED7791C20BBB
-	for <lists+dmaengine@lfdr.de>; Tue, 21 May 2024 08:30:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E876E1C20AFE
+	for <lists+dmaengine@lfdr.de>; Tue, 21 May 2024 08:31:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43A6C54BF9;
-	Tue, 21 May 2024 08:30:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4047946435;
+	Tue, 21 May 2024 08:31:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tMzcLzl5"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="LEFcgL/K"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 967A047A73
-	for <dmaengine@vger.kernel.org>; Tue, 21 May 2024 08:30:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F8254F89;
+	Tue, 21 May 2024 08:31:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716280231; cv=none; b=TzlC7NYH033an/HLol9+121DoVhIFWSAIL3luZZO/CMDLvHm2nYIjkuvSSCIjfDXVy/YV5XcpZkdUp8tjPyNB0YIqP0RmEzVvmM9+zFwQ0pof5QQvx2yzbiC68ECbarhVRsYpEl6NMDAlSB9H1GG6OkL7wjJeIjOhf0ZVdk8ZsU=
+	t=1716280282; cv=none; b=Z8U/BqUbcDSlR2mW6yVF3YfY65z027JT4TxLT/dxszBpQmJMKbT0oltPXPy6HIMAW6FYmyK0h23kmQ8lERhXFhqZWli+enxNzHP9WBx9BE6qqIkJM5ZCqsmPBCVT6kr+k9a/CdxVN4SVQtzLlxh5nxsFVnhDFUE6juiTiYjuAq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716280231; c=relaxed/simple;
-	bh=13gYofko46IZMmpvH5qkx1agAyFYwqb1N2f3GxAXerM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=m8RRjI+WjdEziPV+Ql2USQGdw4NCTzKyF+IauChlWwsduwXqfYMpiooaDelbVXhTIQ6j78O3BbNRDfrlcEbgWhLIl2CiU/fCHv0k1wlx0hyTms7nd7HHNGRMXaGxCLh1MM1+om2QPpfii1OVWvwU7HoaC1QBHOpxRKLeXbK1hsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tMzcLzl5; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-354b722fe81so2962232f8f.3
-        for <dmaengine@vger.kernel.org>; Tue, 21 May 2024 01:30:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716280228; x=1716885028; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wrA786U4KPavR4LnBySZw2GdS7HLYmlFSbgJ1uOdz/o=;
-        b=tMzcLzl5cu7NYEQg5pJPzYCI4K5OZDVcL16E/F3vL88fwZywPZt/ZrzrhI1r95+IgL
-         K4tFmaWw4OPhB8swgw/5moMKLe5ydhPfsrbkJccq+PS2CmwKULnRKY2Z7mouvqlPMZaP
-         DrO1EfGJ8KTsNChnrK83j7uIAYnyFZ64eZyK2SsqnFFgss9MberQ+Rp3MeR1hQMsRMez
-         5aEAYtQa6YEuIHpAZ3VCyHpTeWvp1L+OoqiRQ2itbOzQ1Bsgs03mMODbjgPfNvFcbP5N
-         e51HaHEbL4TOa3iYQlXVoGyGqxidSB+mAykYGhOp3QthJ+3C8nIsnodItIAQPTI4cZDL
-         nQ7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716280228; x=1716885028;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wrA786U4KPavR4LnBySZw2GdS7HLYmlFSbgJ1uOdz/o=;
-        b=BYXKBB2tlr2L5a9ilFEfeSdNu1o6+S0C9VV37kkVhA0YJ0I2CDmD6FV3hHUj7vng6S
-         q04zi3mrGfZcLExD9SP4tDIOTnDstlhp4+7PvL9Cokp/h4dgt7bhVAijydRZapnIpGu5
-         6I1auWqUYblVGFE+GXb4EMaVCJAZ191HOZmT9xu70VsdXpxtZVIaFxM0hjgF9Jj5UpAR
-         zYqt6S2jyYw5u/KzRiV65Xcx7CY792X5HFKh2TCeyPlAYGewLKZEzK5FPO/9qQmJP2g5
-         RW4QU42bQdlumjf2I6na3YQXIeAkEffaX33MJ9h18NQX6CfdRl67NkZAzT2k9ERXE/1F
-         e5LQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUdOydlvn6L12mIVdeLvWHbvJTpRwMEoZiNp1UaRGJF3KXfF6lyKE6BcCYxrcG+TymWhpIjteC3sUxXmojFB0nDAfSxlAlWLTQk
-X-Gm-Message-State: AOJu0YwDQrM0eZG0XSCJIWI6HMKCWWVgGMtbZXkYaBe32MbOGRdK1F+p
-	q6JcnAfmf/LPucXcPVRw8p3sSN/5ORL/8kkLos2AKpxwb2kIcoFk0eU0TimFlMQ=
-X-Google-Smtp-Source: AGHT+IHVWqYYv8hCOa92k+zWOJjeMXITMTd7bwD6mQcIHDreBv9G4RztpYp+KuIYeogkzXFxDXyW4Q==
-X-Received: by 2002:a05:6000:12d0:b0:34d:a719:4e09 with SMTP id ffacd0b85a97d-3504a96866cmr21533641f8f.45.1716280227892;
-        Tue, 21 May 2024 01:30:27 -0700 (PDT)
-Received: from krzk-bin.. ([178.197.206.169])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502b897e39sm31282433f8f.48.2024.05.21.01.30.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 May 2024 01:30:27 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Frank Li <Frank.Li@nxp.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Peng Fan <peng.fan@nxp.com>,
-	imx@lists.linux.dev,
-	dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	stable@vger.kernel.org
-Subject: [PATCH] dt-bindings: dma: fsl-edma: fix dma-channels constraints
-Date: Tue, 21 May 2024 10:30:02 +0200
-Message-ID: <20240521083002.23262-1-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1716280282; c=relaxed/simple;
+	bh=lpS4CuL1hfVfkN6UEIanZaVefK5M3mfjTRzD2Y1ov+k=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=K1yWmucss1erCNaiaO2eVrXiQynO08d7CiZYUbRFY5ti0R5pTWFua/V+pLwkHzrhGYQbjCnvvhJMy0FkxjETjkWfTuRrTQ6XHmwcez89A6nkFNGjvYwvUQH3xOaiAC2Y/Eo6MXUVz+tcb2KrgB4V3Hb3YPdo/HH08aGzcE9UtC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=LEFcgL/K; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 1FB12C0042;
+	Tue, 21 May 2024 08:31:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1716280274;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=JhKEEmuqIsp0pcO3xD1Io87gyKvYBy5SHr5INy2szoI=;
+	b=LEFcgL/KUyj0TFxT+Jq9QTLhHxatKQ+V+5MxvcoWaITwO8PYDebNzPnkvVanxdrkVemyzY
+	2W0UzX6rX2XZNc3DWZQ83uDLS+qD7sNAdO5AUgd3jUEl5UeG2X/ns/K/3V9v+qEO5MYOk5
+	qx10sRZFc+oT6FlZsLrHzMDYvHboQEhu6LAD/BupdldhthG7dSvl8N4UM8hjkKjZ46Q4iE
+	CgM1XIB2vvthuwymANPUaJVTple5HL9ZpYNZvvUVKVeO4AqNyPOwy/hRKyAxcaGVwWAClR
+	YkbIZLI0IoxbDTZDnvMWdAJPmh5bxvg73Ocbg7Zra9G/LJLUOD47tMQ9NzL5LQ==
+Date: Tue, 21 May 2024 10:31:12 +0200
+From: Louis Chauvet <louis.chauvet@bootlin.com>
+To: linux-sound@vger.kernel.org, dmaengine@vger.kernel.org,
+	alsa-devel@alsa-project.org
+Cc: miquel.raynal@bootlin.com, perex@perex.cz, tiwai@suse.com,
+	broonie@kernel.org, lars@metafoo.de, lgirdwood@gmail.com
+Subject: DMA Transfer Synchronization Issue in Out-of-Tree Sound Card Driver
+Message-ID: <Zkxb0FTzW6wlnYYO@localhost.localdomain>
+Mail-Followup-To: linux-sound@vger.kernel.org, dmaengine@vger.kernel.org,
+	alsa-devel@alsa-project.org, miquel.raynal@bootlin.com,
+	perex@perex.cz, tiwai@suse.com, broonie@kernel.org, lars@metafoo.de,
+	lgirdwood@gmail.com
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-GND-Sasl: louis.chauvet@bootlin.com
 
-dma-channels is a number, not a list.  Apply proper constraints on the
-actual number.
 
-Fixes: 6eb439dff645 ("dt-bindings: fsl-dma: fsl-edma: add edma3 compatible string")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- Documentation/devicetree/bindings/dma/fsl,edma.yaml | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Hello everyone,
 
-diff --git a/Documentation/devicetree/bindings/dma/fsl,edma.yaml b/Documentation/devicetree/bindings/dma/fsl,edma.yaml
-index 825f4715499e..9ef99eb54104 100644
---- a/Documentation/devicetree/bindings/dma/fsl,edma.yaml
-+++ b/Documentation/devicetree/bindings/dma/fsl,edma.yaml
-@@ -60,8 +60,8 @@ properties:
-       - 3
- 
-   dma-channels:
--    minItems: 1
--    maxItems: 64
-+    minimum: 1
-+    maximum: 64
- 
-   clocks:
-     minItems: 1
+I am currently developing an out-of-tree driver for a sound card that 
+utilizes XDMA for sample transfers. I am currently using a kernel 6.5 with 
+the latest xdma driver cherry-picked, but I don't think any changes since 
+6.5 is addressing my issue.
+
+My initial issue pertains to the completion of DMA transfers between a 
+start and a stop command in ALSA. If the interval is too brief, the 
+transfer does not conclude properly, leading to distorted samples. A 
+straightforward solution to this problem was to adequately wait for the 
+transfer to finish upon the stop, ie. sleeping until we know the hardware 
+is done with the transfert (the XDMA controller does not support stopping 
+in the middle of a transfer).
+
+To address this DMA issue, I have created a patch [1] that guarantees the 
+completion of the DMA transfer upon the return of xdma_synchronize. This 
+means xdma_synchronize now sleeps, but looking at other drivers around it 
+appears expected to be able to do so.
+
+Regarding the audio implementation, the following patch enforces the 
+synchronization:
+
+	int playback_trigger(struct snd_pcm_substream *substream, int command)
+	{
+		struct my_dev *my_dev =	snd_pcm_substream_chip(substream);
+
+		switch (command) {
+		case SNDRV_PCM_TRIGGER_START:
+			/* Synchronize on start, because the trigger stop is called from an IRQ	context	*/
+			if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+				dmaengine_synchronize(my_dev->playback_dma_chan);
+			pipe_start(&my_dev->playback, substream);
+			break;
+		case SNDRV_PCM_TRIGGER_STOP:
+			pipe_stop(&my_dev->playback, substream);
+			break;
+		default:
+			return -EINVAL;
+		}
+		return 0;
+	}
+
+In order for a sleepable function like dmaengine_synchronize() to work in 
+the trigger callbacks, the audio card nonatomic flag had to be set. It 
+basically leads the sound core towards the use of a mutex instead of a 
+spinlock.
+
+	static int probe([...])	{
+		struct snd_pcm *pcm;
+		[...]
+		/* This flag is needed to be able to sleep in start/stop callbacks */
+		pcm->nonatomic = true;
+                [...]
+		snd_pcm_set_managed_buffer_all(pcm, [...]);
+	}
+
+This approach generally works well, but leads to "scheduling while
+atomic" errors. Indeed, the IRQ handler from the XDMA driver invokes a
+function within the sound subsystem, which subsequently acquires a
+mutex...
+
+At the moment, the only solution I've found is to replace the 
+wait_for_completion() in the XDMA driver [2] with a busy wait loop. 
+However, this approach seems incorrect, as all other synchronization 
+functions in other DMA drivers are sleeping, which should not cause an 
+issue.
+
+The problem might be related to the sound driver. Should I avoid manually 
+using dmaengine_synchronize? How to achieve the same effect in this case? 
+Perhaps there is a more traditional way to properly clean the stream in 
+the sound subsystem which I overlooked?
+
+Could someone please provide guidance on how to resolve this issue?
+
+Thanks,
+Louis Chauvet
+
+[1]: https://lore.kernel.org/all/20240327-digigram-xdma-fixes-v1-2-45f4a52c0283@bootlin.com/
+[2]: https://elixir.bootlin.com/linux/latest/source/drivers/dma/xilinx/xdma.c#L550
+
 -- 
-2.43.0
-
+Louis Chauvet, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 

@@ -1,63 +1,63 @@
-Return-Path: <dmaengine+bounces-2138-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2139-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E24888CC105
-	for <lists+dmaengine@lfdr.de>; Wed, 22 May 2024 14:12:52 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 505AB8CC107
+	for <lists+dmaengine@lfdr.de>; Wed, 22 May 2024 14:12:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 204291C2301C
-	for <lists+dmaengine@lfdr.de>; Wed, 22 May 2024 12:12:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B6A871F24B15
+	for <lists+dmaengine@lfdr.de>; Wed, 22 May 2024 12:12:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9148613D63A;
-	Wed, 22 May 2024 12:12:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03AC57D3E0;
+	Wed, 22 May 2024 12:12:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digigram.com header.i=@digigram.com header.b="KICeH+Cw"
+	dkim=pass (1024-bit key) header.d=digigram.com header.i=@digigram.com header.b="ZaBdw0L5"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C741A13D624
-	for <dmaengine@vger.kernel.org>; Wed, 22 May 2024 12:12:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA85B13D602
+	for <dmaengine@vger.kernel.org>; Wed, 22 May 2024 12:12:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716379955; cv=none; b=qzrw0yH0lBjXBTuG2Z3MkPPmkrOv9+LyRSKf1oTKFrmHBjiILj9gqZKUdpaIEGlxq/MJNeFInLIDSjj/5lukGiGF5R7plI4+HynJpbYqEdoK1XCfiWGI/M79PAjkhJgz/HSm4XpPt4RyRtC2J9sSS5TLqNf05tGtnNQZ/Nxk4iQ=
+	t=1716379959; cv=none; b=Ei4Al6VeNHQZUkXTXy5aAD51z8204NlKG2x3DgjJ0G7ekrO1eQpsRg5xaL1VI3x28WqWpXpZCpz1Nl1gzagN304l4JiT3mT+KZ4V8xP8rAZho2Bnv0qYzXFdPjSdcO0wgxsoek9/5BBvPy0za+ph28jgAx0LpXy1jYzU+blRbs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716379955; c=relaxed/simple;
-	bh=T7qoSXgQVT0d/pBa7QHepJwk35mytwMiMW6199EZvmU=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=fREnW5DawV6fQtfEip4tv5ffMruo6ZF1obxSqhGFYfvXMxk8JAylXxLD5E7PL6mMrLxDKt8AAm+O97/JWNvi8wa/gIbNdJtGdxzzlNFB5aNkK63i+WuTbxw7jlK0x0oXoKv+gt0xi3Fcq7KqpxUmDaFrPZEBTCUyi2Wvlq0rDQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digigram.com; spf=pass smtp.mailfrom=digigram.com; dkim=pass (1024-bit key) header.d=digigram.com header.i=@digigram.com header.b=KICeH+Cw; arc=none smtp.client-ip=209.85.128.42
+	s=arc-20240116; t=1716379959; c=relaxed/simple;
+	bh=dMOvbRAJa5wZ9stnCajS/gdPE4E3YN4YZ6dG7fr2/bo=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=qlhAvQ9spynWs4abFyBp9uqnVlBd47Q+EemhHZHelR2AhRaQ8qbnwjnmU5KqRgeKx5Y9Fq87EEqKFyEWwaC+8ZWXr6kIgk7ogbqyXQnTBJBfrxBcAsBWYOsD/ZZLxxoDJ5Fc3ekUlhgT91ERduzo6Ni8fE8u1px+ULk2QOFh25M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digigram.com; spf=pass smtp.mailfrom=digigram.com; dkim=pass (1024-bit key) header.d=digigram.com header.i=@digigram.com header.b=ZaBdw0L5; arc=none smtp.client-ip=209.85.221.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digigram.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digigram.com
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4200ee47de7so41527745e9.2
-        for <dmaengine@vger.kernel.org>; Wed, 22 May 2024 05:12:33 -0700 (PDT)
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3504f34a086so3799403f8f.1
+        for <dmaengine@vger.kernel.org>; Wed, 22 May 2024 05:12:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=digigram.com; s=google; t=1716379952; x=1716984752; darn=vger.kernel.org;
+        d=digigram.com; s=google; t=1716379956; x=1716984756; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=1r5Pa3Vo7yQTIuSK4P+PIC/FKpd6kEGJ9bj8MHq8hNY=;
-        b=KICeH+CwR81KVQpN/QIE1KZRCSgPY7uV8mjsraF1Gj14g/G3yxM4jcyN0kod48VBGN
-         HRXMgtMNV4ltYIygS2hhBlkchhIrLsaFFbj+HUDUtV/qv4dJxo8epUhxXO8lT2z0ww6Z
-         fHfyJpiai/snxVsCurn2rx5JvSy8afXAvEzNM=
+        bh=L8DWJLRzs+3MrbohaLZolmh+hdHUUG22WY7jhC1OGDM=;
+        b=ZaBdw0L5q36C8Qxgcs59H/feom1bf+J90rYLidpfJ5jwcdQAUujJIzqhdZSGPc6UF+
+         0O8AWjEhnS/qyXCeQcS2bIk4GUIkQbuy21L2Q3FqndlMU1st/GwI8uH21bEcu3HjnWnm
+         Qie4Z0/PSJqFsyQyaudlnmIgy++Pf0aSDsxwI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716379952; x=1716984752;
+        d=1e100.net; s=20230601; t=1716379956; x=1716984756;
         h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=1r5Pa3Vo7yQTIuSK4P+PIC/FKpd6kEGJ9bj8MHq8hNY=;
-        b=jFzBdjvyHDMbP18GftwBG3ilapvp4W+gqwXBiN1c4kbc/SQGKxXYu67agCd7NTXpZy
-         P5J3e0o9Uti6KUcVhBctwfMmSITBeLyTEKrJ7Zfcj2Arb8dfnNXT5ykZiQi6Chla2Im2
-         +Up4Th7kCxuwW61GSJrp08HoAuZPi0MM22JjfVxEeaRfyyTztieziEttLWleVnu6rFhg
-         yRRABZV2anu5vVZJoQDDAKhVo/2uj0gfdZQ7wha2XtcAyc+4bq6u1wQFq8SpBo6+B2RG
-         S8k5/gkauzgIj0OJPtVkySIXtssmchKYTYCczD2u4WPYDT+pfwZMrK/SSUvcbbQdOYkD
-         mntw==
-X-Gm-Message-State: AOJu0YxcUR1LFG5jb791UrZvpKRbF//vZSaNM80Ei0zZBYxlBJ3EGDXA
-	flBeaHFjxC3CL7w9+uNcSiqevbKUadOjL54Q7fbX/0nYDo8J3NVVy0x3qMdx/eGxYoCMwAhGg9C
-	u2OWMEUK+s4STnMMfJu7FtdJlmR1T1m8Pa0SvqLTYfPUPwoibiDk=
-X-Google-Smtp-Source: AGHT+IHWJ0N8HDK1voZQ6blXSERrLd+jccs/sZsDk1pr0ykUOUmooscXVgxLd2tC1GcPYg1mLIrTuLvshXhxyaTnJfk=
-X-Received: by 2002:a05:600c:3b0a:b0:41d:7d76:ffd4 with SMTP id
- 5b1f17b1804b1-420fd2d7decmr13864585e9.8.1716379951836; Wed, 22 May 2024
- 05:12:31 -0700 (PDT)
+        bh=L8DWJLRzs+3MrbohaLZolmh+hdHUUG22WY7jhC1OGDM=;
+        b=MN5T+pLoht3sHfDGCEmDHYhIAsOF3POdMi+2acN9LPP22OpkYXQ2axrT3G6+wbUDOP
+         eQshac9RrRLJy3DdKCv+XkIj4Jd9t1JEj5ly2OQ559wa6w23MBL9j6ijxuR4rondkCz4
+         dtUw/7e10gbKg/gYMnGNz31A/1MEiU7QMfSVI23BYIRth5kJyIYK9Xcv01sNSpAtplUg
+         z8wJiSoM7DUC6meA2gOdF9uWKU3CwlLgVK3D695Z332Xs3C0KJKf44xYGAZ79eqDZyw/
+         5hyGThoCVa2fgl1twvZOmD4qfGxGKqcPck0ttKUVsslRZyMkIR6hArkMrRndV1d7LJJM
+         dKmw==
+X-Gm-Message-State: AOJu0YxC6m56HtAmiW9P/GKLWkU4+2VQtVpP93gc5fcJdDRSH3+HkEfv
+	Q40iiKTFRn3NwcGhcF9aKVPFmk98Q69qwMKnmV/qPvtIdaONvaSf8VbwfvAL3CBcuh4VVIpeVxZ
+	BwZrLdgn0STewjoea/8CYEVKgBo/HQ7qZzP3gWzlB12r18122uDc=
+X-Google-Smtp-Source: AGHT+IGVDhiBLpg89kLkxirpBkRxPC9qXtW1Qt4JDXb4mX+eD3LR917+gqEUQczdqTtre9hm763C8xkcjYxqFJZnG8k=
+X-Received: by 2002:a5d:558e:0:b0:34c:c1c:8413 with SMTP id
+ ffacd0b85a97d-354d8d9f738mr1404080f8f.58.1716379956081; Wed, 22 May 2024
+ 05:12:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -65,52 +65,160 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: Eric Debief <debief@digigram.com>
-Date: Wed, 22 May 2024 14:12:06 +0200
-Message-ID: <CALYqZ9=pVRtSY=w4hG0R3HEM_Y=bpLba2_jRcvcZX4eLX5Yw-A@mail.gmail.com>
-Subject: [RESEND PATCH 0/2] : dmaengine, xdma.c : NULL pointer check instead
- of IS_ERR() on devm_regmap_init_mmio() call
+Date: Wed, 22 May 2024 14:12:10 +0200
+Message-ID: <CALYqZ9myK4rD6gds3j2WeuFq52i6_wghnZ9BVQAaEcVvZ6RxZA@mail.gmail.com>
+Subject: [RESEND PATCH 1/2] : Fix DMAR Error NO_PASID when IOMMU is enabled
 To: dmaengine@vger.kernel.org
 Cc: lizhi.hou@amd.com
 Content-Type: text/plain; charset="UTF-8"
 
 Hi,
 
-Reading xdma.c, I've found that the error check of
-devm_regmap_init_mmio() is based on NULL pointer, but this function
-uses the IS_ERR() mechanism.
-I hope this helps.
+We had a "DMAR Error  NO PASID" error reported in the kernel's log
+when the IOMMU was enabled.
+
+This is due to the missing WriteBack area for the C2H stream.
+Below my patch.
+One point : I didn't compile it within the latest kernel's sources'
+tree as it is an extract of our backport of the XDMA support.
+Feel free to contact me on any issue with this.
+
+Hope this helps,
 Eric.
 
-Here is my patch (I hope corrected) :
+Below my patch (corrected).
 
-From 14fbbcb3425a5d0ee5e9ae92aef6f7ae4d1e3c8d Mon Sep 17 00:00:00 2001
+From b8d71851e6a146dcb448b01a671f455afb09ae90 Mon Sep 17 00:00:00 2001
 From: Eric DEBIEF <debief@digigram.com>
-Date: Wed, 22 May 2024 11:54:54 +0200
-Subject: FIX: devm_regmap_init_mmio() error is not a NULL pointer.
+Date: Wed, 22 May 2024 12:33:06 +0200
+Subject: FIX: DMAR Error with IO_MMU enabled.
 
-    This function returns an error code which
-    must be checked with the IS_ERR() macro.
+C2H write-back area was not allocated and set.
+This leads to the DMAR Error.
 
+Add the Writeback structure, allocate and set it as
+the descriptors's Src field.
+Done for all preps functions.
 
 Signed-off-by: Eric DEBIEF <debief@digigram.com>
 ---
- drivers/dma/xilinx/xdma.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/dma/xilinx/xdma.c | 44 +++++++++++++++++++++++++++++++++++----
+ 1 file changed, 40 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/dma/xilinx/xdma.c b/drivers/dma/xilinx/xdma.c
-index 313b217388fe..74d4a953b50f 100644
+index 74d4a953b50f..9ae615165cb6 100644
 --- a/drivers/dma/xilinx/xdma.c
 +++ b/drivers/dma/xilinx/xdma.c
-@@ -1240,7 +1240,8 @@ static int xdma_probe(struct platform_device *pdev)
+@@ -51,6 +51,20 @@ struct xdma_desc_block {
+     dma_addr_t    dma_addr;
+ };
 
-     xdev->rmap = devm_regmap_init_mmio(&pdev->dev, reg_base,
-                        &xdma_regmap_config);
--    if (!xdev->rmap) {
-+    if (IS_ERR(xdev->rmap)) {
-+        ret = PTR_ERR(xdev->rmap);
-         xdma_err(xdev, "config regmap failed: %d", ret);
-         goto failed;
++/**
++ * struct xdma_c2h_write_back  - Write back block , written by the XDMA.
++ * @magic_status_bit : magic (0x52B4) once written
++ * @length: effective transfer length (in bytes)
++ * @PADDING to be aligned on 32 bytes
++ * @associated dma address
++ */
++struct xdma_c2h_write_back {
++    __le32 magic_status_bit;
++    __le32 length;
++    u32 padding_1[6];
++    dma_addr_t dma_addr;
++};
++
+ /**
+  * struct xdma_chan - Driver specific DMA channel structure
+  * @vchan: Virtual channel
+@@ -61,6 +75,8 @@ struct xdma_desc_block {
+  * @dir: Transferring direction of the channel
+  * @cfg: Transferring config of the channel
+  * @irq: IRQ assigned to the channel
++ * @write_back : C2H meta data write back
++
+  */
+ struct xdma_chan {
+     struct virt_dma_chan        vchan;
+@@ -73,6 +89,7 @@ struct xdma_chan {
+     u32                irq;
+     struct completion        last_interrupt;
+     bool                stop_requested;
++    struct xdma_c2h_write_back *write_back;
+ };
+
+ /**
+@@ -628,7 +645,8 @@ xdma_prep_device_sg(struct dma_chan *chan, struct
+scatterlist *sgl,
+         src = &addr;
+         dst = &dev_addr;
+     } else {
+-        dev_addr = xdma_chan->cfg.src_addr;
++        dev_addr = xdma_chan->cfg.src_addr ?
++            xdma_chan->cfg.src_addr : xdma_chan->write_back->dma_addr;
+         src = &dev_addr;
+         dst = &addr;
      }
+@@ -705,7 +723,8 @@ xdma_prep_dma_cyclic(struct dma_chan *chan,
+dma_addr_t address,
+         src = &addr;
+         dst = &dev_addr;
+     } else {
+-        dev_addr = xdma_chan->cfg.src_addr;
++        dev_addr = xdma_chan->cfg.src_addr ?
++            xdma_chan->cfg.src_addr : xdma_chan->write_back->dma_addr;
+         src = &dev_addr;
+         dst = &addr;
+     }
+@@ -803,6 +822,9 @@ static void xdma_free_chan_resources(struct dma_chan *chan)
+     struct xdma_chan *xdma_chan = to_xdma_chan(chan);
+
+     vchan_free_chan_resources(&xdma_chan->vchan);
++    dma_pool_free(xdma_chan->desc_pool,
++                xdma_chan->write_back,
++               xdma_chan->write_back->dma_addr);
+     dma_pool_destroy(xdma_chan->desc_pool);
+     xdma_chan->desc_pool = NULL;
+ }
+@@ -816,6 +838,7 @@ static int xdma_alloc_chan_resources(struct dma_chan *chan)
+     struct xdma_chan *xdma_chan = to_xdma_chan(chan);
+     struct xdma_device *xdev = xdma_chan->xdev_hdl;
+     struct device *dev = xdev->dma_dev.dev;
++    dma_addr_t write_back_addr;
+
+     while (dev && !dev_is_pci(dev))
+         dev = dev->parent;
+@@ -824,13 +847,26 @@ static int xdma_alloc_chan_resources(struct
+dma_chan *chan)
+         return -EINVAL;
+     }
+
+-    xdma_chan->desc_pool = dma_pool_create(dma_chan_name(chan), dev,
+XDMA_DESC_BLOCK_SIZE,
+-                           XDMA_DESC_BLOCK_ALIGN, XDMA_DESC_BLOCK_BOUNDARY);
++    //Allocate the pool WITH the H2C write back
++    xdma_chan->desc_pool = dma_pool_create(dma_chan_name(chan),
++                            dev,
++                            XDMA_DESC_BLOCK_SIZE +
++                                sizeof(struct xdma_c2h_write_back),
++                            XDMA_DESC_BLOCK_ALIGN,
++                            XDMA_DESC_BLOCK_BOUNDARY);
+     if (!xdma_chan->desc_pool) {
+         xdma_err(xdev, "unable to allocate descriptor pool");
+         return -ENOMEM;
+     }
+
++    /* Allocate the C2H write back out of the pool*/
++    xdma_chan->write_back = dma_pool_alloc(xdma_chan->desc_pool,
+GFP_NOWAIT, &write_back_addr);
++    if (!xdma_chan->write_back) {
++        xdma_err(xdev, "unable to allocate C2H write back block");
++        return -ENOMEM;
++    }
++    xdma_chan->write_back->dma_addr = write_back_addr;
++
+     return 0;
+ }
+
 --
 2.34.1
 

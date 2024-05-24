@@ -1,52 +1,53 @@
-Return-Path: <dmaengine+bounces-2149-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2150-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A88AB8CE41E
-	for <lists+dmaengine@lfdr.de>; Fri, 24 May 2024 12:24:53 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A57468CE41F
+	for <lists+dmaengine@lfdr.de>; Fri, 24 May 2024 12:24:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 730F31C21AA2
-	for <lists+dmaengine@lfdr.de>; Fri, 24 May 2024 10:24:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 610142822EB
+	for <lists+dmaengine@lfdr.de>; Fri, 24 May 2024 10:24:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94A0C85268;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0C1685926;
 	Fri, 24 May 2024 10:24:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TE1XoAkJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RNvsIetB"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69A5353E31;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8FB485659;
 	Fri, 24 May 2024 10:24:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716546288; cv=none; b=kyt+wKAe8Vqd9zOpRNCNEGJ6GBCOjWWW1xCNau2TnR5SLUvm0Ro0EIuAQ5W064QKI6eVbiWlUn7Xs1d7dUZQqzI8estibGvmoHVHZ0nm3YTkxsX7vtQB/Gi8zklixRa6GoO3XeSuWycyv/mgrz4tZrXrf0lT7BhskzgVw86x4WA=
+	t=1716546288; cv=none; b=J1VZkwvKEZ4+wGnVNDUXR+hpmJDphJU9/LYzZRq9U4j0Iylvx0VX/L6OW1uZq/PPu5Hwx7Inu6mNr639W5rjpIX37WfaTzGMYocggJrkdMALJQf5Ow9aqbb02TVM5UAI0lRIfJcRgViTiSMn3y7sqIaLuxtweg7NeTa3FY+MglA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716546288; c=relaxed/simple;
-	bh=nKrlwxVQZ9JWwpGEnhgFrcVm0BXTkJ1KgeGuEWOqKj8=;
+	bh=+Xwg1obtahMG+OMmYPo9UZE7TNKBTAgy+LkWtie3B+M=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=MvWif52xNhz189Q6JFzVqKwg4ZI3J/eHFKiDc7iWh0CaXCPCtoQlCiFyz+sElMuB5DjvGMc+K3B2Ntd364yTECc7rBnDfqTMrZAg2fOyYszNuL8RSej7yfVGwGCBJ2FdAdv0C2aVsAHaHI3pHBs2NOpEImbnSTaNPGOM1qlgXp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TE1XoAkJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3D688C3277B;
+	 In-Reply-To:To:Cc; b=HUTXLCl1J/+AkKQXV3hcHUJdssyR9e+LFKeL7bVvYBzRAViM4Y+AeBeqwzuw0HHidfpozMBCSUh1e7mDO11OBg936KpYlW52GNpchjR41NuA8o+Ea5Na42tVozjlqpddtHEjF+p0UlqY+TQzY1WiRori9QGkzOWDq4JEW6ZIKh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RNvsIetB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 46FEAC32786;
 	Fri, 24 May 2024 10:24:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1716546288;
-	bh=nKrlwxVQZ9JWwpGEnhgFrcVm0BXTkJ1KgeGuEWOqKj8=;
+	bh=+Xwg1obtahMG+OMmYPo9UZE7TNKBTAgy+LkWtie3B+M=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=TE1XoAkJF3UIdueK/th6PTUq4JV6jvPJwopZ03Vmg96fqwJ0+ReUErbbR3Pr7+SAh
-	 SZqX3mbF3PxPwXQkKjf8YPx8AF+tZGT6LAo1sYYlDJ7TII0cS26MWjPyDPNRRkwUUq
-	 TdV/JJhD9kZznFw855k5413k67eHJHjEoEi9Rg7jJ6Qfho4R6UrnYHT74lhjdIWP7q
-	 N/w5wZ9B8zTVCC5+SmUEMybTOo+Qo3womMIDskFoAAND5gQ7gcMcKgJoynX5XoYY9R
-	 REeAmRzUijQDjRJMVycSLZJeqhq/97YLhMU5K8ooR+KjYP7916jRifU8FSBXhY1o0+
-	 6zzoxWirh8pjg==
+	b=RNvsIetBhbS+viIV06Po5VgAZE7gm86xqkeN/idpQnz82YJr3bvKMJG93ZLC8lOp8
+	 BLKa9FHWHlWyKMgo/d/cJNXLn3WtjL+eSWP2/wgQHI7dtrttMqmFbYkRlHls7St2BA
+	 LCpsG7naJXwbMpmsoHyJxraiK7qVqAGl/8ORxuExXD9PyGq+3cN7EWYvC+w/aIPgG/
+	 iAooaF6wq78yOhzK7/9NE+xCErkL00R4FgtrmVvzf5mJDPTt13Tuzpj1FDbLB6rlOJ
+	 iFhbqTCD3XMXBHFHjhDDsDlYJzMvGieZzyUlEPFHsNPrOQIRJd5Fdr/56bygAwR2Dy
+	 iQsLrbe1MIerw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDF6C25B7C;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B10C25B7D;
 	Fri, 24 May 2024 10:24:48 +0000 (UTC)
 From: Nikita Shubin via B4 Relay <devnull+n.shubin.yadro.com@kernel.org>
-Date: Fri, 24 May 2024 13:24:46 +0300
-Subject: [PATCH 1/3] dmaengine: ioatdma: Fix leaking on version mismatch
+Date: Fri, 24 May 2024 13:24:47 +0300
+Subject: [PATCH 2/3] dmaengine: ioatdma: Fix error path in
+ ioat3_dma_probe()
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -55,7 +56,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240524-ioatdma-fixes-v1-1-b785f1f7accc@yadro.com>
+Message-Id: <20240524-ioatdma-fixes-v1-2-b785f1f7accc@yadro.com>
 References: <20240524-ioatdma-fixes-v1-0-b785f1f7accc@yadro.com>
 In-Reply-To: <20240524-ioatdma-fixes-v1-0-b785f1f7accc@yadro.com>
 To: Vinod Koul <vkoul@kernel.org>, Dave Jiang <dave.jiang@intel.com>, 
@@ -64,11 +65,11 @@ Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
  Nikita Shubin <n.shubin@yadro.com>, 
  Andy Shevchenko <andy.shevchenko@gmail.com>
 X-Mailer: b4 0.12.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1716546287; l=1829;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1716546287; l=2339;
  i=n.shubin@yadro.com; s=20230718; h=from:subject:message-id;
- bh=ASVt6+nzAUVivKjUfhTrAzVsAPEzKEYVziXwIRDAuFU=;
- b=XdFjbO1C+F4RPvuUhl70SgRp5TAmjOw0er3PeydKwZ6a0TMrJ8hxcVT1EdTQ2Uay47pohcjT7bbf
- HH7eDqy+COYafUho+mNi7U9FxeznZlsBC8bgnV83ptzoYEG5Gpou
+ bh=1J9pYoSRMAKIsykWrRlecq2P2EWahYir9dwIgjGtL/M=;
+ b=3mT6Q6/jDE+ihQbicBccjH2ookRbsf79eAyo5qhgQRY3x09G5cdUiFCS5G0ehZku6VqBUNXvAfhc
+ OE+GrUPFDCAYwKViG88wlhcDrXOcB4rqSq1WRHJC+ewlktkGZXif
 X-Developer-Key: i=n.shubin@yadro.com; a=ed25519;
  pk=vqf5YIUJ7BJv3EJFaNNxWZgGuMgDH6rwufTLflwU9ac=
 X-Endpoint-Received: by B4 Relay for n.shubin@yadro.com/20230718 with
@@ -78,59 +79,84 @@ Reply-To: n.shubin@yadro.com
 
 From: Nikita Shubin <n.shubin@yadro.com>
 
-Fix leaking ioatdma_device if I/OAT version is less than IOAT_VER_3_0.
+Make sure we are disabling interrupts and destroying DMA pool if
+pcie_capability_read/write_word() failes.
 
-Fixes: bf453a0a18b2 ("dmaengine: ioat: Support in-use unbind")
+Fixes: 511deae0261c ("dmaengine: ioatdma: disable relaxed ordering for ioatdma")
 Signed-off-by: Nikita Shubin <n.shubin@yadro.com>
 ---
- drivers/dma/ioat/init.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ drivers/dma/ioat/init.c | 33 +++++++++++++++------------------
+ 1 file changed, 15 insertions(+), 18 deletions(-)
 
 diff --git a/drivers/dma/ioat/init.c b/drivers/dma/ioat/init.c
-index 9c364e92cb82..e76e507ae898 100644
+index e76e507ae898..26964b7c8cf1 100644
 --- a/drivers/dma/ioat/init.c
 +++ b/drivers/dma/ioat/init.c
-@@ -1350,6 +1350,7 @@ static int ioat_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	void __iomem * const *iomap;
- 	struct device *dev = &pdev->dev;
- 	struct ioatdma_device *device;
-+	u8 version;
- 	int err;
+@@ -534,18 +534,6 @@ static int ioat_probe(struct ioatdma_device *ioat_dma)
+ 	return err;
+ }
  
- 	err = pcim_enable_device(pdev);
-@@ -1363,6 +1364,10 @@ static int ioat_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	if (!iomap)
- 		return -ENOMEM;
+-static int ioat_register(struct ioatdma_device *ioat_dma)
+-{
+-	int err = dma_async_device_register(&ioat_dma->dma_dev);
+-
+-	if (err) {
+-		ioat_disable_interrupts(ioat_dma);
+-		dma_pool_destroy(ioat_dma->completion_pool);
+-	}
+-
+-	return err;
+-}
+-
+ static void ioat_dma_remove(struct ioatdma_device *ioat_dma)
+ {
+ 	struct dma_device *dma = &ioat_dma->dma_dev;
+@@ -1181,9 +1169,9 @@ static int ioat3_dma_probe(struct ioatdma_device *ioat_dma, int dca)
+ 		       ioat_chan->reg_base + IOAT_DCACTRL_OFFSET);
+ 	}
  
-+	version = readb(iomap[IOAT_MMIO_BAR] + IOAT_VER_OFFSET);
-+	if (version < IOAT_VER_3_0)
-+		return -ENODEV;
-+
- 	err = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
+-	err = ioat_register(ioat_dma);
++	err = dma_async_device_register(&ioat_dma->dma_dev);
  	if (err)
- 		return err;
-@@ -1373,16 +1378,14 @@ static int ioat_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	pci_set_master(pdev);
- 	pci_set_drvdata(pdev, device);
+-		return err;
++		goto err_disable_interrupts;
  
--	device->version = readb(device->reg_base + IOAT_VER_OFFSET);
-+	device->version = version;
- 	if (device->version >= IOAT_VER_3_4)
- 		ioat_dca_enabled = 0;
--	if (device->version >= IOAT_VER_3_0) {
--		if (is_skx_ioat(pdev))
--			device->version = IOAT_VER_3_2;
--		err = ioat3_dma_probe(device, ioat_dca_enabled);
--	} else
--		return -ENODEV;
+ 	ioat_kobject_add(ioat_dma, &ioat_ktype);
  
-+	if (is_skx_ioat(pdev))
-+		device->version = IOAT_VER_3_2;
+@@ -1192,20 +1180,29 @@ static int ioat3_dma_probe(struct ioatdma_device *ioat_dma, int dca)
+ 
+ 	/* disable relaxed ordering */
+ 	err = pcie_capability_read_word(pdev, PCI_EXP_DEVCTL, &val16);
+-	if (err)
+-		return pcibios_err_to_errno(err);
++	if (err) {
++		err = pcibios_err_to_errno(err);
++		goto err_disable_interrupts;
++	}
+ 
+ 	/* clear relaxed ordering enable */
+ 	val16 &= ~PCI_EXP_DEVCTL_RELAX_EN;
+ 	err = pcie_capability_write_word(pdev, PCI_EXP_DEVCTL, val16);
+-	if (err)
+-		return pcibios_err_to_errno(err);
++	if (err) {
++		err = pcibios_err_to_errno(err);
++		goto err_disable_interrupts;
++	}
+ 
+ 	if (ioat_dma->cap & IOAT_CAP_DPS)
+ 		writeb(ioat_pending_level + 1,
+ 		       ioat_dma->reg_base + IOAT_PREFETCH_LIMIT_OFFSET);
+ 
+ 	return 0;
 +
-+	err = ioat3_dma_probe(device, ioat_dca_enabled);
- 	if (err) {
- 		dev_err(dev, "Intel(R) I/OAT DMA Engine init failed\n");
- 		return -ENODEV;
++err_disable_interrupts:
++	ioat_disable_interrupts(ioat_dma);
++	dma_pool_destroy(ioat_dma->completion_pool);
++	return err;
+ }
+ 
+ static void ioat_shutdown(struct pci_dev *pdev)
 
 -- 
 2.43.2

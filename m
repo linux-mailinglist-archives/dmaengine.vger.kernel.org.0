@@ -1,86 +1,132 @@
-Return-Path: <dmaengine+bounces-2153-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2154-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 71F048CE57C
-	for <lists+dmaengine@lfdr.de>; Fri, 24 May 2024 14:47:59 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E33238CE884
+	for <lists+dmaengine@lfdr.de>; Fri, 24 May 2024 18:14:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A36CE1C20FA6
-	for <lists+dmaengine@lfdr.de>; Fri, 24 May 2024 12:47:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6D351B210BC
+	for <lists+dmaengine@lfdr.de>; Fri, 24 May 2024 16:14:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB83A8614D;
-	Fri, 24 May 2024 12:47:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A09A12E1E5;
+	Fri, 24 May 2024 16:14:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="FLV3Q36v";
-	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="wbJr74Oh"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ZZ65Bep8"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mta-04.yadro.com (mta-04.yadro.com [89.207.88.248])
+Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF2885640;
-	Fri, 24 May 2024 12:47:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.207.88.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD9E12E1CD;
+	Fri, 24 May 2024 16:14:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716554874; cv=none; b=eVJtwgVe1BAfBZR0sAgVEb+OhwD2yLPt8xbDacnPJUk6B5Wxuq9fYWG+t8h/1PNbHErqFc31wNKuhVQzjbGcmjJqlUSXRpi0YB/6fM+dsy2VWsbZgNgcJIEbLxDjVt5knm0ePwJfkCAn40EG6SOkKMR8yyiu+eSnfzBAA7JwD5c=
+	t=1716567255; cv=none; b=Hc2G1eGlXFjGFAYF2Rc/EWnLvEo4WuC9fMHuEpUewUZvf2+9HYA0t4J64NB71JMnnJecNEQpVqlI1qp9QfeH5JKzCWW7DtQPDxO+bCoAehSGg9NZMOXIm2iFWYglX21HOMhCho1aSV2dkB9pkN+xSRPL/QIoJViYTR79rodLVBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716554874; c=relaxed/simple;
-	bh=h18j4zkIKC8Gg9g6TPvXqT4oSF72Fked5LqoJ2Yo3q0=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=pXA5M9fFfip+l3CqHnNIXcadTRTSHRTbCAqlclJMEyEbr6aHdNWkql36mncotLNinfBedqQx2CA9SUBwQVv/WC86AEbpWnfpQoYVbzFuO7PqQsUfJQDX4ov20nB95R9qP+BwdkapOsEe3ok6FmWOaYvJM321mgc+fv0CixMwXOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yadro.com; spf=pass smtp.mailfrom=yadro.com; dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b=FLV3Q36v; dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b=wbJr74Oh; arc=none smtp.client-ip=89.207.88.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yadro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yadro.com
-DKIM-Filter: OpenDKIM Filter v2.11.0 mta-04.yadro.com B1B02C0003
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yadro.com; s=mta-04;
-	t=1716554861; bh=6XZhfA6k2ccaT2wZhfi+aUaDsmTZthBxNMxn3o6ZTpI=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version:From;
-	b=FLV3Q36vidSlXCdrMhbSpuxOWvzvoFS5iFWDS+oVXMUX8f4c8C3t8IQ5SbLdI+WaF
-	 pMn/HDhBIK8Mo0G6LpZbgjpbQ26ivDzZerIUcUk6OULzFz8vkwNn4F92CYwiCXeGld
-	 zJudRh2/WhU7zeGhbAwgitvx7Q8zuTIZFAm9FMPExYTg9NWyIbVSbA/M8CQyvSFtt5
-	 g3BjZLe8ZPMCMp+07wCAS2ZqmefxfFgABu9KtmtuaTZ4ah3ZTlM5eI+80POoUHekva
-	 MNsNIqnhbW9zHpcyRgvgMp9hbhBlUseotnyNk8G0eFdEF621EFO3jmovF2Ww4VGNnL
-	 PJDerpL6Ga/DQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yadro.com; s=mta-03;
-	t=1716554861; bh=6XZhfA6k2ccaT2wZhfi+aUaDsmTZthBxNMxn3o6ZTpI=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version:From;
-	b=wbJr74Oh8pn+xkhwuC62IHSeOC0eg6G5lYEFhTA3wWS6F86xg9JyiFMA87TpsKEQn
-	 ICoIQpwgQypan2RT3ZgF/ABQZt2q3qfqnxVn1Yeua9jWSo417az6kw6k8953DurWVy
-	 K/pSO+eaJ25/2E4v7mDfAeClYEkn7j8/LS27Ny2wh90WpNoBJfm1gv5LMAjcuv+2LN
-	 Ad6hoRBI2JwIKdGiGpbVyLkE7Y4F87iTJpmnnS9zNmKTQpzOcCEaJyty5Nbm9grCVm
-	 d7NS5KrTKcmcAcYWu9MYvuP3iEqakPsm1kWrWcHgeyOdIlDY85DGIti5DwbRWcdig9
-	 LdgefoIS4IezA==
-From: Nikita Shubin <n.shubin@yadro.com>
-To: Markus Elfring <Markus.Elfring@web.de>
-CC: LKML <linux-kernel@vger.kernel.org>, Andy Shevchenko
-	<andy.shevchenko@gmail.com>, "dmaengine@vger.kernel.org"
-	<dmaengine@vger.kernel.org>, Dave Jiang <dave.jiang@intel.com>, "Logan
- Gunthorpe" <logang@deltatee.com>, Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH 2/3] dmaengine: ioatdma: Fix error path in
- ioat3_dma_probe()
-Thread-Topic: [PATCH 2/3] dmaengine: ioatdma: Fix error path in
- ioat3_dma_probe()
-Thread-Index: AQHarcSgbAqef+G6mEmMgJhAnE2IlLGmGlCAgAA6ygw=
-Date: Fri, 24 May 2024 12:47:40 +0000
-Message-ID: <377b635e07164fd0ad5e176561450922@yadro.com>
-References: <20240524-ioatdma-fixes-v1-2-b785f1f7accc@yadro.com>,<48e4d18b-cef8-444e-8638-25b9c6fcaa40@web.de>
-In-Reply-To: <48e4d18b-cef8-444e-8638-25b9c6fcaa40@web.de>
-Accept-Language: ru-RU, en-US
-Content-Language: ru-RU
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-Content-Type: text/plain; charset="koi8-r"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1716567255; c=relaxed/simple;
+	bh=BdoTvVOPkbsKys5oa+9xW3Y4PkStppmaGSySwGyNJM8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ruAUP2lcDhEnD/UiiLYNy264xWghO9I2QSHf/EUtxeSSJK+48mVwJNjP1wSfwbicJGIVWo9tluVUPHb/kWtGNgq+gGYzx3pIsl3GuhooKfZy66fVAO07L4jn2kOzm7LrHDi2k+eQr55LFnyHVjuUL3dC3gBgbwBFKIVLIEJ3qvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ZZ65Bep8; arc=none smtp.client-ip=217.70.178.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: from relay3-d.mail.gandi.net (unknown [IPv6:2001:4b98:dc4:8::223])
+	by mslow1.mail.gandi.net (Postfix) with ESMTP id C8A4EC4F66;
+	Fri, 24 May 2024 16:13:26 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 1F40F60004;
+	Fri, 24 May 2024 16:13:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1716567198;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Huh/X722SjDzCcdLJbM0TZp8RM43bnA8UHc9vCXTgrM=;
+	b=ZZ65Bep8ZewGVgSU2IYuGeNI6iiP7/oPRLfjS9R7MpDNReqJPUgEvK/AiqJWgNegf/jZaf
+	cfgDw9w/ZRvW5ukDCxGVsPhW5VVTzBMYiAzesSmnfVHjc4bk1RDSJUpKTYDNv64UMBpXdC
+	bDIh61f4XcA/I6Y5LMRSdIe0sF7yloozN894wqQhgy/qKz3hc7N9w09joZWyG+3t7CYT3L
+	RHII0ZI262dwnefTs+6QZmLHuAimleAhSqtotwHTHMn6bxkjJoyzT1enFrfD8WhEThzo8B
+	EP1S89F5uqjrUASgIx6WBndJrxcA1C/oUCF5p24cXP+lk8WaQd+Lwg4Dy+TNaQ==
+Date: Fri, 24 May 2024 18:13:16 +0200
+From: Louis Chauvet <louis.chauvet@bootlin.com>
+To: Takashi Iwai <tiwai@suse.de>
+Cc: Mark Brown <broonie@kernel.org>, linux-sound@vger.kernel.org,
+	dmaengine@vger.kernel.org, alsa-devel@alsa-project.org,
+	miquel.raynal@bootlin.com, perex@perex.cz, tiwai@suse.com,
+	lars@metafoo.de, lgirdwood@gmail.com
+Subject: Re: DMA Transfer Synchronization Issue in Out-of-Tree Sound Card
+ Driver
+Message-ID: <ZlC8nG0Vzxg9HFT2@localhost.localdomain>
+Mail-Followup-To: Takashi Iwai <tiwai@suse.de>,
+	Mark Brown <broonie@kernel.org>, linux-sound@vger.kernel.org,
+	dmaengine@vger.kernel.org, alsa-devel@alsa-project.org,
+	miquel.raynal@bootlin.com, perex@perex.cz, tiwai@suse.com,
+	lars@metafoo.de, lgirdwood@gmail.com
+References: <Zkxb0FTzW6wlnYYO@localhost.localdomain>
+ <6e01c13f-2bc1-4e08-b50e-9f1307bda92d@sirena.org.uk>
+ <87msoiz94h.wl-tiwai@suse.de>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87msoiz94h.wl-tiwai@suse.de>
+X-GND-Sasl: louis.chauvet@bootlin.com
 
->> pcie_capability_read/write_word() failes.
->                                    call failed?
+Le 22/05/24 - 07:52, Takashi Iwai a écrit :
+> On Tue, 21 May 2024 20:32:59 +0200,
+> Mark Brown wrote:
+> > 
+> > On Tue, May 21, 2024 at 10:31:12AM +0200, Louis Chauvet wrote:
+> > 
+> > > To address this DMA issue, I have created a patch [1] that guarantees the 
+> > > completion of the DMA transfer upon the return of xdma_synchronize. This 
+> > > means xdma_synchronize now sleeps, but looking at other drivers around it 
+> > > appears expected to be able to do so.
+> > 
+> > You need to set the nonatomic flag for the PCM to allow this, the
+> > default is that triggers run in atomic context.
+> 
+> Right, that's a most straightforward solution.  It implies that the
+> period updates must be in non-atomic, i.e. use a threaded irq handler
+> in most cases.
+> 
+> If the synchronization is needed for assuring the hardware stop, there
+> is an alternative with PCM sync_stop callback, too.  The callback is
+> called at each time after a stream gets stopped before the next action
+> (that is, either prepare, hw_params or close).  It's only for
+> stopping, and there is no similar way for sync of a stream start,
+> though.
+> 
+> 
+> thanks,
+> 
+> Takashi
+> 
 
-Indeed - thank you.=
+Hi!
+
+Thank you for your prompt responses!
+
+I have currently implemented the solution with sync_stop, as it is 
+precisely what I need to do, and it works perfectly.
+
+As I may need to backport this driver up to 4.19, sync_stop was not yet 
+available, so I will look into the threaded IRQ solution, which sounds 
+promising.
+
+Thank you both very much!
+
+Best regards,
+Louis Chauvet
+
+-- 
+Louis Chauvet, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 

@@ -1,157 +1,165 @@
-Return-Path: <dmaengine+bounces-2172-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2174-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E14758CE9D4
-	for <lists+dmaengine@lfdr.de>; Fri, 24 May 2024 20:30:05 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B3A48CEF8F
+	for <lists+dmaengine@lfdr.de>; Sat, 25 May 2024 16:58:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1E6811C215BC
-	for <lists+dmaengine@lfdr.de>; Fri, 24 May 2024 18:30:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 171B11F211FB
+	for <lists+dmaengine@lfdr.de>; Sat, 25 May 2024 14:58:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2988874420;
-	Fri, 24 May 2024 18:28:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 408C55A109;
+	Sat, 25 May 2024 14:58:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="Nmvhk/tz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lYHCHhdH"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wm1-f97.google.com (mail-wm1-f97.google.com [209.85.128.97])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9105B5A0F5
-	for <dmaengine@vger.kernel.org>; Fri, 24 May 2024 18:28:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784EF3C08F;
+	Sat, 25 May 2024 14:58:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716575290; cv=none; b=QQXpiQ59XN01jL63F9u/SEENvU3XAq2G7tJlwXmym4E8zbJhSDt1F8lHhINiw+zb+CgP+HArkeb2vnt1DScE3g0nmr8wB+5gMzsF2/zPHvluGpQ9XBOrLjPUpWtkFu0MpPhfwgnq9t+kSIJOt++sIhRqq3gYf990DBP5J9ZkRGI=
+	t=1716649107; cv=none; b=LmMW4YGIle2fmKPktOo18bmSYysxeqhbKzOQM/4tXcRn/h9lMnAp/JN/yRm+chczC70oNNHknsZwBKeZ7LImgtapnaXxeIFgjtDVu6J4uczHEzARxWBX8rOd8APJ7QqUJ8b6IMLweg2rtcVcpn579u1jBr9yhvhtRo8Fyf/Jzl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716575290; c=relaxed/simple;
-	bh=+sLcs4QOO6S6PmRZbmAwV/bGLEFVH4urRpzSl6qADg8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=IUpj6IA2RzINEpQZtxE/7Wryd8POrL7CbmZ/+9DnyeXRq8fVmH72900EnH4eIVTDK9XCJrZwcFQQSsHnqAmuOjANeYH1iOtoa9KEW59yYCVHWFDWL8PUrNVdOmivkNY6HlqD31r4lDSzaD64+bRP5j/X0/K/6Z/Jp8mUSXyU5Ko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=Nmvhk/tz; arc=none smtp.client-ip=209.85.128.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raspberrypi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
-Received: by mail-wm1-f97.google.com with SMTP id 5b1f17b1804b1-4202959b060so65838745e9.2
-        for <dmaengine@vger.kernel.org>; Fri, 24 May 2024 11:28:05 -0700 (PDT)
+	s=arc-20240116; t=1716649107; c=relaxed/simple;
+	bh=y07DZNM/QDvEedbvvJlMHk1r5ZGYfBSPPra93Momo0s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hf0NAVTIQXXOXke/PmX5TA52y4qi+WoHmsDqGfw+tlx3D3WJr+a+H5yww4KkiCTdHsPs+J3woNylMrZGFU9WRW9Qvae5m5MDbbo0hHBs9tDmyQ4PNbFj3J96Qus4lg9BT0b0CGYS1oMwzgTrLhGrwGZnFh+T252Ufz/QddcTELY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lYHCHhdH; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a6265d3ccf7so213646766b.0;
+        Sat, 25 May 2024 07:58:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google; t=1716575282; x=1717180082; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1716649104; x=1717253904; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gaJ2/2ZC9xmhH/6MleK2a1l8XHvCRgt0iv2l1bIIm7k=;
-        b=Nmvhk/tzDQSX2UDe/IHZGuA20HUeVV6mdgNpw8qWHuAqivewQ4FGD/71Up1vrHDP7T
-         d5Hz36auZWV55kV9GaywU+sQMX/ovYLo3E8AAM4SxVNhI3uww0/PeLR8Yx6/P2ySdeEx
-         rNUST7NDHLGTizRbRYTBHzA3weELXzU3RaRj5zzZEk5zOETsdINCPnVK3xSS7LoaZnv7
-         E4CCuOT3C4uBfUQMvedSmTxKoXzWW7l8YpCYfFJ9podFut3VqpIFBGZpLQL2xr2IA0ce
-         ICWupmMAXOdQzNKhCom0S9F2cvqEFoFhoWHUXON6wLYmt31vIHC0rGblWvV1+Vg9yxPa
-         Qy4g==
+        bh=N5jpB4fiszoJDHewi5PTIYyY+d12c+mT7kvwJL6peD4=;
+        b=lYHCHhdHjptz2Pc2o7mb410suBMyeW0+9S+RyYL1FOsREfiM6PGTQOqTqFNGdeYK8K
+         RBamUhTl1vUFDcS+OfUq7Zjnna0pLlflI2k7O4lOhrSApQufLKW5r9hxW0PzoOovx/a1
+         +9IIBSXmON3dWKh0/gZPDNGeq2d6EGJQjlDT4K2PACPvvYC1pv2i9XiDjOIw+/F4actN
+         E/Ie250Egt/bm3is1wuPlxkjygkIrtO8U2iq/UqhYRv/aKW7kVPQjZpJ/rTGOA43I3mA
+         W8cdOCpUGQ+jba0MLV5BwNQF91FCvMgieNjTA1WvX7EhdrTTnweZivwZLKlwF1Urw1mD
+         1Sug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716575282; x=1717180082;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1716649104; x=1717253904;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gaJ2/2ZC9xmhH/6MleK2a1l8XHvCRgt0iv2l1bIIm7k=;
-        b=Bo9uJxsnW7PhpIQY60SjQJgQdqY7sP/iJHBvu5WCll75LDeA31HbC3jtPHIoXFhHcU
-         zWhxh8yvtf3/xsdlM4LIDJXzGQnAXEZtiABxO94WePZpHn8KUcb5YHA0JglRsyLnQjoo
-         ZVo+0fYF7WCN2d4futfFXkUHzFALHsjRKj8oIPy1oICEctQiuD9L+uHVLZoSNPdeCI5e
-         KNgiLG/h/f9OvPlAV93kmIY3wwXV8JhT1WhrDvGoStAJXT/0aTA0ylkeCJUfAyoNkB21
-         UOUR+aqODdiJqH51+tOGcxjAKijFYwLuVZ12Zg3gnDHBjwLWzFn7qN3mc4Baw4x5tEIK
-         kHtw==
-X-Forwarded-Encrypted: i=1; AJvYcCVguhJctboi5Vh6evp/Tnjril2WC9GGv0GraoPKoeQMOTXmT9e2ngo8Bc5qBu/7Z5MMyNQAVYXO87zuoENiP5/VFSF3Z6G5HMig
-X-Gm-Message-State: AOJu0YyrxuPESCOEC4IPR1fD7zlZm2mO40cpq4cKvHd7/Yj6Y8LckJIH
-	sSq8eU/bhrp+q5vK4GbV4yfhVhE2FVVHnUoy1D+9hvXTubODrmpSieEgtfsw1rwgDP3B5BdKrOU
-	5uHrgGV64wwvLSw3iPAK16Zh+lXYJqUKk
-X-Google-Smtp-Source: AGHT+IGW0tEBfx8ikBiBvNc7paeaC57bk88c6mQfl/2RM8CdfU5tVZ5vx+/JsN/a6nuR9BJ11cex+eTG9kUv
-X-Received: by 2002:a7b:cb8e:0:b0:420:2b5e:1808 with SMTP id 5b1f17b1804b1-421089d8182mr27055785e9.16.1716575282092;
-        Fri, 24 May 2024 11:28:02 -0700 (PDT)
-Received: from raspberrypi.com ([188.39.149.98])
-        by smtp-relay.gmail.com with ESMTPS id 5b1f17b1804b1-42100fbb0ffsm5433375e9.53.2024.05.24.11.28.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 May 2024 11:28:02 -0700 (PDT)
-X-Relaying-Domain: raspberrypi.com
-From: Dave Stevenson <dave.stevenson@raspberrypi.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>,
-	Scott Branden <sbranden@broadcom.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Maxime Ripard <mripard@kernel.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Mark Brown <broonie@kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Vladimir Murzin <vladimir.murzin@arm.com>,
-	Phil Elwell <phil@raspberrypi.com>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: devicetree@vger.kernel.org,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	dmaengine@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-mmc@vger.kernel.org,
-	linux-spi@vger.kernel.org,
-	iommu@lists.linux.dev,
-	linux-sound@vger.kernel.org,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>
-Subject: [PATCH 18/18] dmaengine: bcm2835: Revert the workaround for DMA addresses
-Date: Fri, 24 May 2024 19:27:02 +0100
-Message-Id: <20240524182702.1317935-19-dave.stevenson@raspberrypi.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240524182702.1317935-1-dave.stevenson@raspberrypi.com>
-References: <20240524182702.1317935-1-dave.stevenson@raspberrypi.com>
+        bh=N5jpB4fiszoJDHewi5PTIYyY+d12c+mT7kvwJL6peD4=;
+        b=KR+OWcMcduVaNxHyDAYZxTGIwqH+mTI8iZZTUKA7f7jKa2C6gys+JKZeqygr/d4spY
+         aEVTlAv/mUPcppN11YAhEE9nLT3Z87Ww2V/G6OO94sadjNHRLINC8f+I6r74jQMX8Hp4
+         sNuo+BzOh/pFD1eKrZmkKsszodOVLWUdLhH7eQ1SCScqozF0NoTrIZkKuJepC12mXnZe
+         PiJ2WkgZFVKD5Eam6XWLmL1GjF7Shgk1tgmIidOTppoLxo+0ezmMkiif0K/rERPb37fB
+         CfVXCy3TX27/3ewFnYr9rRQdTTJAmvSKsAQQ+gDY+eEX2VCFe7T24w8XO3umN7LCgaDm
+         F8xw==
+X-Forwarded-Encrypted: i=1; AJvYcCVBJ6WupDySnqFFqDP7xL7D0uhtZeaN3s5DMfLI80vnCrqicKN0GJC80Br9s87eky+vWT24g3273BwSLYG9UaCBiGmr9CtNYa6x5fhvg6dgEMDHz5kI1Tpc2xkbJ3/WTWUlxdg+YXMv
+X-Gm-Message-State: AOJu0YybB6zHMXCeIxbLNnbhEVTbSTDP/CSt3gxDsd4zhclMeav2BbM5
+	SdDM7DLdi8g23iDnq4JkV9u8M3Sft0XcfYVFpmDBchd4rCAT5KsGbiJZRcYzjw9EV7bEQI6aabG
+	4ksTGQShsCuUB178ibkh68BnF9HU=
+X-Google-Smtp-Source: AGHT+IFl9IYSmRIHAQ2JRUkfyUpWDshgscT9Icfine2tPalV0L8rIirAWlBF7oh28M86LpzfGNLAXACOy6Dx5O1utkY=
+X-Received: by 2002:a17:906:e84:b0:a62:404a:d0d0 with SMTP id
+ a640c23a62f3a-a62643e458cmr329166366b.42.1716649103717; Sat, 25 May 2024
+ 07:58:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240524-ioatdma-fixes-v1-0-b785f1f7accc@yadro.com> <20240524-ioatdma-fixes-v1-3-b785f1f7accc@yadro.com>
+In-Reply-To: <20240524-ioatdma-fixes-v1-3-b785f1f7accc@yadro.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Sat, 25 May 2024 17:57:47 +0300
+Message-ID: <CAHp75VePTCdWTSSH_Hdmn4nDX3LWRMvsQsfSHUrgJA2r1Qhf_Q@mail.gmail.com>
+Subject: Re: [PATCH 3/3] dmaengine: ioatdma: Fix kmemleak in ioat_pci_probe()
+To: n.shubin@yadro.com
+Cc: Vinod Koul <vkoul@kernel.org>, Dave Jiang <dave.jiang@intel.com>, 
+	Logan Gunthorpe <logang@deltatee.com>, dmaengine@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Now that all DMA clients are passing in CPU addresses, drop
-the workaround that would accept those and not try mapping
-them.
+On Fri, May 24, 2024 at 1:24=E2=80=AFPM Nikita Shubin via B4 Relay
+<devnull+n.shubin.yadro.com@kernel.org> wrote:
+>
+> From: Nikita Shubin <n.shubin@yadro.com>
+>
+> If probing fails we end up with leaking ioatdma_device and each
+> allocated channel.
+>
+> Following kmemleak is easy to be reproduced by injecting error in
 
-Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
----
- drivers/dma/bcm2835-dma.c | 11 -----------
- 1 file changed, 11 deletions(-)
+easy to reproduce
 
-diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
-index 06407691ef28..181f2c291109 100644
---- a/drivers/dma/bcm2835-dma.c
-+++ b/drivers/dma/bcm2835-dma.c
-@@ -405,17 +405,6 @@ static int bcm2835_dma_map_slave_addr(struct dma_chan *chan,
- 	struct bcm2835_chan *c = to_bcm2835_dma_chan(chan);
- 	struct bcm2835_dma_chan_map *map = &c->map;
- 
--	if ((dev_addr & 0xfe000000ULL) == 0x7e000000ULL) {
--		/*
--		 * Address is already in the 0x7e... peripherals range.
--		 * Assume this is an old client that hasn't been updated to
--		 * correctly pass a cpu phys_addr to the DMA subsystem.
--		 */
--		map->addr = dev_addr;
--
--		return 0;
--	}
--
- 	if (dev_size != DMA_SLAVE_BUSWIDTH_4_BYTES)
- 		return -EIO;
- 
--- 
-2.34.1
+an error
 
+> ioat_alloc_chan_resources() when doing ioat_dma_self_test().
+>
+> unreferenced object 0xffff888014ad5800 (size 1024):
+>   comm "modprobe", pid 73, jiffies 4294681749
+>   hex dump (first 32 bytes):
+>     00 10 00 13 80 88 ff ff 00 c0 3f 00 00 c9 ff ff  ..........?.....
+>     00 ce 76 13 80 88 ff ff 00 00 00 00 00 00 00 00  ..v.............
+>   backtrace (crc 1f353f55):
+>     [<ffffffff827692ca>] kmemleak_alloc+0x4a/0x80
+>     [<ffffffff81430600>] kmalloc_trace+0x270/0x2f0
+>     [<ffffffffa000b7d1>] ioat_pci_probe+0xc1/0x1c0 [ioatdma]
+>     [<ffffffff8199376a>] local_pci_probe+0x7a/0xe0
+>     [<ffffffff81995189>] pci_call_probe+0xd9/0x2c0
+>     [<ffffffff81995975>] pci_device_probe+0xa5/0x170
+>     [<ffffffff81f5f89b>] really_probe+0x14b/0x510
+>     [<ffffffff81f5fd4a>] __driver_probe_device+0xda/0x1f0
+>     [<ffffffff81f5febf>] driver_probe_device+0x4f/0x120
+>     [<ffffffff81f6028a>] __driver_attach+0x14a/0x2b0
+>     [<ffffffff81f5c56c>] bus_for_each_dev+0xec/0x160
+>     [<ffffffff81f5ee1b>] driver_attach+0x2b/0x40
+>     [<ffffffff81f5e0d3>] bus_add_driver+0x1a3/0x300
+>     [<ffffffff81f61db3>] driver_register+0xa3/0x1d0
+>     [<ffffffff8199325b>] __pci_register_driver+0xeb/0x100
+>     [<ffffffffa003009c>] 0xffffffffa003009c
+>
+> repeated for each ioatdma channel:
+>
+> unreferenced object 0xffff8880148e5c00 (size 512):
+>   comm "modprobe", pid 73, jiffies 4294681751
+>   hex dump (first 32 bytes):
+>     40 58 ad 14 80 88 ff ff 00 00 00 00 00 00 00 00  @X..............
+>     01 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00  ................
+>   backtrace (crc fbc62789):
+>     [<ffffffff827692ca>] kmemleak_alloc+0x4a/0x80
+>     [<ffffffff81430600>] kmalloc_trace+0x270/0x2f0
+>     [<ffffffffa0009641>] ioat_enumerate_channels+0x101/0x2d0 [ioatdma]
+>     [<ffffffffa000b266>] ioat3_dma_probe+0x4d6/0x970 [ioatdma]
+>     [<ffffffffa000b891>] ioat_pci_probe+0x181/0x1c0 [ioatdma]
+>     [<ffffffff8199376a>] local_pci_probe+0x7a/0xe0
+>     [<ffffffff81995189>] pci_call_probe+0xd9/0x2c0
+>     [<ffffffff81995975>] pci_device_probe+0xa5/0x170
+>     [<ffffffff81f5f89b>] really_probe+0x14b/0x510
+>     [<ffffffff81f5fd4a>] __driver_probe_device+0xda/0x1f0
+>     [<ffffffff81f5febf>] driver_probe_device+0x4f/0x120
+>     [<ffffffff81f6028a>] __driver_attach+0x14a/0x2b0
+>     [<ffffffff81f5c56c>] bus_for_each_dev+0xec/0x160
+>     [<ffffffff81f5ee1b>] driver_attach+0x2b/0x40
+>     [<ffffffff81f5e0d3>] bus_add_driver+0x1a3/0x300
+>     [<ffffffff81f61db3>] driver_register+0xa3/0x1d0
+
+Please, read
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html#back=
+traces-in-commit-messages
+and follow the advice given there.
+
+...
+
+> +       int err, i;
+
+Why signed?
+
+--=20
+With Best Regards,
+Andy Shevchenko
 

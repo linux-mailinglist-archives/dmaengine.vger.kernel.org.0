@@ -1,165 +1,74 @@
-Return-Path: <dmaengine+bounces-2174-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2175-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B3A48CEF8F
-	for <lists+dmaengine@lfdr.de>; Sat, 25 May 2024 16:58:32 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC2FD8CF907
+	for <lists+dmaengine@lfdr.de>; Mon, 27 May 2024 08:26:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 171B11F211FB
-	for <lists+dmaengine@lfdr.de>; Sat, 25 May 2024 14:58:32 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ED53B1C20ACA
+	for <lists+dmaengine@lfdr.de>; Mon, 27 May 2024 06:26:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 408C55A109;
-	Sat, 25 May 2024 14:58:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lYHCHhdH"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18827FC02;
+	Mon, 27 May 2024 06:26:07 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784EF3C08F;
-	Sat, 25 May 2024 14:58:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+Received: from njjs-sys-mailin01.njjs.baidu.com (mx311.baidu.com [180.101.52.76])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E54D184E
+	for <dmaengine@vger.kernel.org>; Mon, 27 May 2024 06:26:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=180.101.52.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716649107; cv=none; b=LmMW4YGIle2fmKPktOo18bmSYysxeqhbKzOQM/4tXcRn/h9lMnAp/JN/yRm+chczC70oNNHknsZwBKeZ7LImgtapnaXxeIFgjtDVu6J4uczHEzARxWBX8rOd8APJ7QqUJ8b6IMLweg2rtcVcpn579u1jBr9yhvhtRo8Fyf/Jzl0=
+	t=1716791167; cv=none; b=nhtqyyOhcinXCwSV1d8tm65wp2l3Kic8Lg7IBkCy6JWGFGXr601sHPQQQOjIzm4+5/B9JqgX6Kx4yDm9aTVmb0ZzQZ6fJK7UgCHyDuiZxH4Z5BSkNPm64An8Zm6YixAk9kAetXMsFEIH74ug6W3P7dM8Dj1S1sE+POgSukUoUC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716649107; c=relaxed/simple;
-	bh=y07DZNM/QDvEedbvvJlMHk1r5ZGYfBSPPra93Momo0s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hf0NAVTIQXXOXke/PmX5TA52y4qi+WoHmsDqGfw+tlx3D3WJr+a+H5yww4KkiCTdHsPs+J3woNylMrZGFU9WRW9Qvae5m5MDbbo0hHBs9tDmyQ4PNbFj3J96Qus4lg9BT0b0CGYS1oMwzgTrLhGrwGZnFh+T252Ufz/QddcTELY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lYHCHhdH; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a6265d3ccf7so213646766b.0;
-        Sat, 25 May 2024 07:58:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716649104; x=1717253904; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=N5jpB4fiszoJDHewi5PTIYyY+d12c+mT7kvwJL6peD4=;
-        b=lYHCHhdHjptz2Pc2o7mb410suBMyeW0+9S+RyYL1FOsREfiM6PGTQOqTqFNGdeYK8K
-         RBamUhTl1vUFDcS+OfUq7Zjnna0pLlflI2k7O4lOhrSApQufLKW5r9hxW0PzoOovx/a1
-         +9IIBSXmON3dWKh0/gZPDNGeq2d6EGJQjlDT4K2PACPvvYC1pv2i9XiDjOIw+/F4actN
-         E/Ie250Egt/bm3is1wuPlxkjygkIrtO8U2iq/UqhYRv/aKW7kVPQjZpJ/rTGOA43I3mA
-         W8cdOCpUGQ+jba0MLV5BwNQF91FCvMgieNjTA1WvX7EhdrTTnweZivwZLKlwF1Urw1mD
-         1Sug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716649104; x=1717253904;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=N5jpB4fiszoJDHewi5PTIYyY+d12c+mT7kvwJL6peD4=;
-        b=KR+OWcMcduVaNxHyDAYZxTGIwqH+mTI8iZZTUKA7f7jKa2C6gys+JKZeqygr/d4spY
-         aEVTlAv/mUPcppN11YAhEE9nLT3Z87Ww2V/G6OO94sadjNHRLINC8f+I6r74jQMX8Hp4
-         sNuo+BzOh/pFD1eKrZmkKsszodOVLWUdLhH7eQ1SCScqozF0NoTrIZkKuJepC12mXnZe
-         PiJ2WkgZFVKD5Eam6XWLmL1GjF7Shgk1tgmIidOTppoLxo+0ezmMkiif0K/rERPb37fB
-         CfVXCy3TX27/3ewFnYr9rRQdTTJAmvSKsAQQ+gDY+eEX2VCFe7T24w8XO3umN7LCgaDm
-         F8xw==
-X-Forwarded-Encrypted: i=1; AJvYcCVBJ6WupDySnqFFqDP7xL7D0uhtZeaN3s5DMfLI80vnCrqicKN0GJC80Br9s87eky+vWT24g3273BwSLYG9UaCBiGmr9CtNYa6x5fhvg6dgEMDHz5kI1Tpc2xkbJ3/WTWUlxdg+YXMv
-X-Gm-Message-State: AOJu0YybB6zHMXCeIxbLNnbhEVTbSTDP/CSt3gxDsd4zhclMeav2BbM5
-	SdDM7DLdi8g23iDnq4JkV9u8M3Sft0XcfYVFpmDBchd4rCAT5KsGbiJZRcYzjw9EV7bEQI6aabG
-	4ksTGQShsCuUB178ibkh68BnF9HU=
-X-Google-Smtp-Source: AGHT+IFl9IYSmRIHAQ2JRUkfyUpWDshgscT9Icfine2tPalV0L8rIirAWlBF7oh28M86LpzfGNLAXACOy6Dx5O1utkY=
-X-Received: by 2002:a17:906:e84:b0:a62:404a:d0d0 with SMTP id
- a640c23a62f3a-a62643e458cmr329166366b.42.1716649103717; Sat, 25 May 2024
- 07:58:23 -0700 (PDT)
+	s=arc-20240116; t=1716791167; c=relaxed/simple;
+	bh=9U+0lmhskMlFEImqoA7pWnnb+vkHur/ljTtC1s3mOaQ=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=dhEEY4OhNp6WX311/1qzRSVcN+r145i0vrg4u57RdrlrUXSnpSgdtqEwJ/+TPcT5SftlAvYllR+pzzqPIi5xHZY9Bw7njuG/4fwy9q49/PEYKiVP0ayeyz9TgghfMoXtdaDFkcJ8LJ3arAuwMMGSmLQtuWoxkwNRRxJBi5w7bUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com; spf=pass smtp.mailfrom=baidu.com; arc=none smtp.client-ip=180.101.52.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
+Received: from localhost (bjhw-sys-rpm015653cc5.bjhw.baidu.com [10.227.53.39])
+	by njjs-sys-mailin01.njjs.baidu.com (Postfix) with ESMTP id C79747F00058;
+	Mon, 27 May 2024 14:19:21 +0800 (CST)
+From: Li RongQing <lirongqing@baidu.com>
+To: fenghua.yu@intel.com,
+	dave.jiang@intel.com,
+	vkoul@kernel.org,
+	dmaengine@vger.kernel.org
+Cc: Li RongQing <lirongqing@baidu.com>
+Subject: [PATCH][RFC] dmaengine: idxd: Fix possible Use-After-Free in irq_process_work_list
+Date: Mon, 27 May 2024 14:19:20 +0800
+Message-Id: <20240527061920.48626-1-lirongqing@baidu.com>
+X-Mailer: git-send-email 2.9.4
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240524-ioatdma-fixes-v1-0-b785f1f7accc@yadro.com> <20240524-ioatdma-fixes-v1-3-b785f1f7accc@yadro.com>
-In-Reply-To: <20240524-ioatdma-fixes-v1-3-b785f1f7accc@yadro.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sat, 25 May 2024 17:57:47 +0300
-Message-ID: <CAHp75VePTCdWTSSH_Hdmn4nDX3LWRMvsQsfSHUrgJA2r1Qhf_Q@mail.gmail.com>
-Subject: Re: [PATCH 3/3] dmaengine: ioatdma: Fix kmemleak in ioat_pci_probe()
-To: n.shubin@yadro.com
-Cc: Vinod Koul <vkoul@kernel.org>, Dave Jiang <dave.jiang@intel.com>, 
-	Logan Gunthorpe <logang@deltatee.com>, dmaengine@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 24, 2024 at 1:24=E2=80=AFPM Nikita Shubin via B4 Relay
-<devnull+n.shubin.yadro.com@kernel.org> wrote:
->
-> From: Nikita Shubin <n.shubin@yadro.com>
->
-> If probing fails we end up with leaking ioatdma_device and each
-> allocated channel.
->
-> Following kmemleak is easy to be reproduced by injecting error in
+I think when the description is freed, it maybe used again because of
+race, then it's next maybe pointer a value that should not be freed
 
-easy to reproduce
+To prevent this, list_for_each_entry_safe should be used.
 
-an error
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+---
+ drivers/dma/idxd/irq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> ioat_alloc_chan_resources() when doing ioat_dma_self_test().
->
-> unreferenced object 0xffff888014ad5800 (size 1024):
->   comm "modprobe", pid 73, jiffies 4294681749
->   hex dump (first 32 bytes):
->     00 10 00 13 80 88 ff ff 00 c0 3f 00 00 c9 ff ff  ..........?.....
->     00 ce 76 13 80 88 ff ff 00 00 00 00 00 00 00 00  ..v.............
->   backtrace (crc 1f353f55):
->     [<ffffffff827692ca>] kmemleak_alloc+0x4a/0x80
->     [<ffffffff81430600>] kmalloc_trace+0x270/0x2f0
->     [<ffffffffa000b7d1>] ioat_pci_probe+0xc1/0x1c0 [ioatdma]
->     [<ffffffff8199376a>] local_pci_probe+0x7a/0xe0
->     [<ffffffff81995189>] pci_call_probe+0xd9/0x2c0
->     [<ffffffff81995975>] pci_device_probe+0xa5/0x170
->     [<ffffffff81f5f89b>] really_probe+0x14b/0x510
->     [<ffffffff81f5fd4a>] __driver_probe_device+0xda/0x1f0
->     [<ffffffff81f5febf>] driver_probe_device+0x4f/0x120
->     [<ffffffff81f6028a>] __driver_attach+0x14a/0x2b0
->     [<ffffffff81f5c56c>] bus_for_each_dev+0xec/0x160
->     [<ffffffff81f5ee1b>] driver_attach+0x2b/0x40
->     [<ffffffff81f5e0d3>] bus_add_driver+0x1a3/0x300
->     [<ffffffff81f61db3>] driver_register+0xa3/0x1d0
->     [<ffffffff8199325b>] __pci_register_driver+0xeb/0x100
->     [<ffffffffa003009c>] 0xffffffffa003009c
->
-> repeated for each ioatdma channel:
->
-> unreferenced object 0xffff8880148e5c00 (size 512):
->   comm "modprobe", pid 73, jiffies 4294681751
->   hex dump (first 32 bytes):
->     40 58 ad 14 80 88 ff ff 00 00 00 00 00 00 00 00  @X..............
->     01 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00  ................
->   backtrace (crc fbc62789):
->     [<ffffffff827692ca>] kmemleak_alloc+0x4a/0x80
->     [<ffffffff81430600>] kmalloc_trace+0x270/0x2f0
->     [<ffffffffa0009641>] ioat_enumerate_channels+0x101/0x2d0 [ioatdma]
->     [<ffffffffa000b266>] ioat3_dma_probe+0x4d6/0x970 [ioatdma]
->     [<ffffffffa000b891>] ioat_pci_probe+0x181/0x1c0 [ioatdma]
->     [<ffffffff8199376a>] local_pci_probe+0x7a/0xe0
->     [<ffffffff81995189>] pci_call_probe+0xd9/0x2c0
->     [<ffffffff81995975>] pci_device_probe+0xa5/0x170
->     [<ffffffff81f5f89b>] really_probe+0x14b/0x510
->     [<ffffffff81f5fd4a>] __driver_probe_device+0xda/0x1f0
->     [<ffffffff81f5febf>] driver_probe_device+0x4f/0x120
->     [<ffffffff81f6028a>] __driver_attach+0x14a/0x2b0
->     [<ffffffff81f5c56c>] bus_for_each_dev+0xec/0x160
->     [<ffffffff81f5ee1b>] driver_attach+0x2b/0x40
->     [<ffffffff81f5e0d3>] bus_add_driver+0x1a3/0x300
->     [<ffffffff81f61db3>] driver_register+0xa3/0x1d0
+diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
+index 8dc029c..0c7fed7 100644
+--- a/drivers/dma/idxd/irq.c
++++ b/drivers/dma/idxd/irq.c
+@@ -611,7 +611,7 @@ static void irq_process_work_list(struct idxd_irq_entry *irq_entry)
+ 
+ 	spin_unlock(&irq_entry->list_lock);
+ 
+-	list_for_each_entry(desc, &flist, list) {
++	list_for_each_entry_safe(desc, n, &flist, list) {
+ 		/*
+ 		 * Check against the original status as ABORT is software defined
+ 		 * and 0xff, which DSA_COMP_STATUS_MASK can mask out.
+-- 
+2.9.4
 
-Please, read
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html#back=
-traces-in-commit-messages
-and follow the advice given there.
-
-...
-
-> +       int err, i;
-
-Why signed?
-
---=20
-With Best Regards,
-Andy Shevchenko
 

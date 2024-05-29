@@ -1,48 +1,65 @@
-Return-Path: <dmaengine+bounces-2205-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2206-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9037D8D369D
-	for <lists+dmaengine@lfdr.de>; Wed, 29 May 2024 14:43:40 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 216738D3B93
+	for <lists+dmaengine@lfdr.de>; Wed, 29 May 2024 17:59:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2D533B2236B
-	for <lists+dmaengine@lfdr.de>; Wed, 29 May 2024 12:43:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B6CEE1F28BA2
+	for <lists+dmaengine@lfdr.de>; Wed, 29 May 2024 15:59:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BF8F181B8B;
-	Wed, 29 May 2024 12:43:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A0BA181BB3;
+	Wed, 29 May 2024 15:59:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="haXplEdo"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mbmVeews"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CAF3181B82;
-	Wed, 29 May 2024 12:43:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5586F180A92
+	for <dmaengine@vger.kernel.org>; Wed, 29 May 2024 15:59:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716986608; cv=none; b=ni3d+qVzXOHl5XpzzrqvJImyPEbS6to02DBnJOch0Q5b+aqP4PDgRP6AqGALFPP7Ad5yufKuvxjv82FiyZFQDXlbmTuKTNJEkthjqnPSjIeHysjG8N+SxDng/0PlxqLbguThK9tJydPLxHFeLkFSak8wTSoCdjrUJdORpTw10Bc=
+	t=1716998388; cv=none; b=OgHWKuitJm+4gQg0av7nbWvjfT3PDCEIJlPUPgstS9h9/DrSi315SvPLk+abv31fL0m5uUnj/vrJVwKIbz3GNtMV4sLeOFzksGt94L+eqYaGRC+ggrRIDr0XteiRRvr0u5toVmQZ0elJ5ggoSvAvSzhUV8imq50DcCv0gs4CTAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716986608; c=relaxed/simple;
-	bh=x7fxx2wAn5tcq/jOn+WYY1FaAla9wHnIEgSCbz76z8M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tInl8T6uB7f8fxkVHVXkZ7ZHAK+B5y1OaF37wG0joobkVEqCd8BPY/8oD12Uv8YvXI8UPEusBRSz/XcQEJqALv6lyOfCAqxQUN3VTfMO3cKQPAT9T93Ji47C5WegzcM8LopLhWqfRPGRykksMTs1wSMuRWs6KuZW3EV1bGKoZFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=haXplEdo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AE7FC2BD10;
-	Wed, 29 May 2024 12:43:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716986607;
-	bh=x7fxx2wAn5tcq/jOn+WYY1FaAla9wHnIEgSCbz76z8M=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=haXplEdod6jS7AFZF2sK/c3K6vS0KSAQFiWjBun17vQEr8irnXkxVgFHC4zO/7Rie
-	 s4rC9DAJ1EFahMaohYLyQ57TjbLZQ+/lRyHrxphD8sVnouCyMnIopIV0SaEzatfaVn
-	 hF1r9B1JUQUd+QauLPZkfmYvXWR4TL18e96Z5pER9TVMy+lr1Ofgs1xGfKaylb5Mw9
-	 V+9N3Yikbux5juAbnlL2B3AT6nOD9bsn1QANq8M9RZchxzZhUZ7kRcsrT9et+wE+Ii
-	 78CH8GvWxEx1e5cXMm1peHWeVCpn3z/45k6HGMhrAW992MQXsqS4vS2hEOzj0ES4n1
-	 VgwPgXMTF1Tag==
-Message-ID: <1c9c0d78-83c0-4055-83bf-6792b03b6df9@kernel.org>
-Date: Wed, 29 May 2024 14:43:21 +0200
+	s=arc-20240116; t=1716998388; c=relaxed/simple;
+	bh=ntTPRd1wPazSgVJYdTAmKqNELKCLlNfYcCG1CKdR140=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=cMN6QB0RTuiSaZkIkFhSVoQWOZ9PcHb/CmkqgwgIF7QJL/XAUQ5g97+45v/MXdmwYapPw3xS/u1SJfi0bDQeAOgN/4pU5WRfcfM5kFqeIwVOaxNT4/SZpVsv3XQnA5u9FBRqHIwLY5VMm+DwUgjBiYbIratkmJ/yh4JPWugCKDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mbmVeews; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716998386; x=1748534386;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=ntTPRd1wPazSgVJYdTAmKqNELKCLlNfYcCG1CKdR140=;
+  b=mbmVeewsnwWg1YSHucQTrx4VGXtopcasohKUl7JoeDj55Y1fdSgtCfbe
+   LBLONYlrPaaaZOR4baSPnsIU1kHrX2IFAx8m8uugUpiqku9E+Tj0WijIa
+   VWplKTIQemzYxQIYxj4hQshNJhVFDehwf1mi4kBXu1xJNEmvll7JK43Pz
+   4yW6hEMKVy5vdxGrJJmXsikILBhLUf0rkNaSEbGqRRL/DdSzSCUyHsdvU
+   CB3tcUrdRHURv3/2SDkV3srVhPtkhpcVftddNOUbCU+O3swXqw+23L+7u
+   g9/FJWh1/ILOia4GxjiHM4Sj8qL7MWMzSADyO4Et2Yc2LUkrwvU+MpIOr
+   Q==;
+X-CSE-ConnectionGUID: 7qjbs2JkSpaI/GmaIouNUg==
+X-CSE-MsgGUID: 9axgpq5/T22TKq21V/OENQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11087"; a="24067589"
+X-IronPort-AV: E=Sophos;i="6.08,198,1712646000"; 
+   d="scan'208";a="24067589"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2024 08:59:45 -0700
+X-CSE-ConnectionGUID: gN2DtPa1TfqyYHYNhRV7lA==
+X-CSE-MsgGUID: 29wg+MUzQYWc5DGQvdurag==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,198,1712646000"; 
+   d="scan'208";a="72940478"
+Received: from ldmartin-desk2.corp.intel.com (HELO [10.125.111.117]) ([10.125.111.117])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2024 08:59:45 -0700
+Message-ID: <a68ea6a3-848e-4e99-a58b-00f72b11d448@intel.com>
+Date: Wed, 29 May 2024 08:59:43 -0700
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -50,74 +67,60 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] dt-bindings: fsl-qdma: Convert to yaml format
-To: Frank Li <Frank.Li@nxp.com>
-Cc: conor+dt@kernel.org, devicetree@vger.kernel.org,
- dmaengine@vger.kernel.org, imx@lists.linux.dev, krzk+dt@kernel.org,
- linux-kernel@vger.kernel.org, robh@kernel.org, vkoul@kernel.org
-References: <20240528163734.2471268-1-Frank.Li@nxp.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH][v2] dmaengine: idxd: Fix possible Use-After-Free in
+ irq_process_work_list
+To: Li RongQing <lirongqing@baidu.com>, fenghua.yu@intel.com,
+ vkoul@kernel.org, dmaengine@vger.kernel.org
+References: <20240529091828.40774-1-lirongqing@baidu.com>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240528163734.2471268-1-Frank.Li@nxp.com>
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20240529091828.40774-1-lirongqing@baidu.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 28/05/2024 18:37, Frank Li wrote:
-> Convert binding doc from txt to yaml.
+
+
+On 5/29/24 2:18 AM, Li RongQing wrote:
+> list_for_each_entry_safe() should be used when the descriptor will be
+> freed in idxd_desc_complete(), Otherwise the freed descriptor will be
+> dereferenced to get its next, and always deletes freed descriptor from
+> list firstly
 > 
-> Re-order interrupt-names to align example.
-> Add #dma-cell in example.
-> Change 'reg' in example to 32bit address.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> Fixes: 16e19e11228b ("dmaengine: idxd: Fix list corruption in description completion")
+> Signed-off-by: Li RongQing <lirongqing@baidu.com>
 > ---
+>  drivers/dma/idxd/irq.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
+> index 8dc029c..5571de1 100644
+> --- a/drivers/dma/idxd/irq.c
+> +++ b/drivers/dma/idxd/irq.c
+> @@ -573,6 +573,8 @@ static void irq_process_pending_llist(struct idxd_irq_entry *irq_entry)
+>  			 * Check against the original status as ABORT is software defined
+>  			 * and 0xff, which DSA_COMP_STATUS_MASK can mask out.
+>  			 */
+> +			list_del(&desc->list);
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+I don't think this is needed. The iterator is working over a detached llist and nothing to do with 'struct list_head'. Otherwise everything else look ok.
 
-Best regards,
-Krzysztof
-
+> +
+>  			if (unlikely(desc->completion->status == IDXD_COMP_DESC_ABORT)) {
+>  				idxd_desc_complete(desc, IDXD_COMPLETE_ABORT, true);
+>  				continue;
+> @@ -611,11 +613,13 @@ static void irq_process_work_list(struct idxd_irq_entry *irq_entry)
+>  
+>  	spin_unlock(&irq_entry->list_lock);
+>  
+> -	list_for_each_entry(desc, &flist, list) {
+> +	list_for_each_entry_safe(desc, n, &flist, list) {
+>  		/*
+>  		 * Check against the original status as ABORT is software defined
+>  		 * and 0xff, which DSA_COMP_STATUS_MASK can mask out.
+>  		 */
+> +		list_del(&desc->list);
+> +
+>  		if (unlikely(desc->completion->status == IDXD_COMP_DESC_ABORT)) {
+>  			idxd_desc_complete(desc, IDXD_COMPLETE_ABORT, true);
+>  			continue;
 

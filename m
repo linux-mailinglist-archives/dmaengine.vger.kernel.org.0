@@ -1,162 +1,149 @@
-Return-Path: <dmaengine+bounces-2222-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2223-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D3088D5F74
-	for <lists+dmaengine@lfdr.de>; Fri, 31 May 2024 12:19:53 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B22A8D6064
+	for <lists+dmaengine@lfdr.de>; Fri, 31 May 2024 13:14:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 17E2D289D63
-	for <lists+dmaengine@lfdr.de>; Fri, 31 May 2024 10:19:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8F1981C20C8A
+	for <lists+dmaengine@lfdr.de>; Fri, 31 May 2024 11:14:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E5B5150997;
-	Fri, 31 May 2024 10:19:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9F72157466;
+	Fri, 31 May 2024 11:14:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gncuVOsA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G1KkYP+/"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D710150981;
-	Fri, 31 May 2024 10:19:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A632156F5F;
+	Fri, 31 May 2024 11:14:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717150787; cv=none; b=TKV1Z/6yMsgCxQoIm46zWOvBXT7rQ3UhUYXkj42IhoUwTSagJf+nzWBBmD6OkwxiayfkoxMnZhfmBDGD8eBVe6p/vnyEsEXbRatc5IsFL0Fs47K6B1+FLjTXMlV+Rku+cfEwUNxXiMhqKKjJWSnKzNm/iIPqM+mUEn+V2KdJrpQ=
+	t=1717154045; cv=none; b=luwsPJrNlthuFimRInWg4uYHlksbGIrsD7WgNUPjq0PIe5YPgmkTAFCTlWMt3RoJ58mxWjhFRHhI0JbdASRkMpP7gXiUop+LNAlZfCSJDIbjR3G+Bff/zyk5PMn15ea3iYI8Qzrjl/MoM9/UqtDxNI492KBB20qaZYkwVfJF6rs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717150787; c=relaxed/simple;
-	bh=jDQX/opuoq7GSS+Owl/RC7qj/dNISV5td2hHwBrIiIs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IfhwrqW5mMXHsS9jAxvofACk3ug4uWHWVHNMPE58E+02P5/MC09FExYlFIoluHXJAk9WuBPejCwjWHocs6Down434Jsy25iBFpd3bwehJo5zNAKloyUUuLWPtGiRLkSvvo0fQNbhUI1c7qKf1UQZRg3oeKwoPw94inwLBfLQrbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gncuVOsA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BD22C116B1;
-	Fri, 31 May 2024 10:19:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717150786;
-	bh=jDQX/opuoq7GSS+Owl/RC7qj/dNISV5td2hHwBrIiIs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gncuVOsAtRbQgRxsU84/voQtRgUWtq97AOosjLB1AYPK4e/QQhLQPX+iLho56qvIf
-	 ONgCjj4DHVoo2i48X9yU4uwN1WsbgMrpMrB+GYMOIS3Jn6xNeaziT7fv+MSblxQsAI
-	 U8XgUOvLzRfFFPIEobEUCuirMYPRqqtVzz7PzRtIXQamLYxv2pww4Ax3CsjYI3QnRx
-	 D3B5EHSzOT0pSSteXBtxQls+zFIgdEuQ1w+g8qBKhBWzziPRK+c1xv9IB3OGGki+bX
-	 1EVDfC69VKcoy5aTKUWIBrv6TBCcX0ZIrsSsblTEl8BBOATxE/2UCJpDtMDa4CNDlm
-	 yw1Nw3l1TKhvQ==
-Message-ID: <a472e8ba-bf54-4a62-9b05-ea265a83ef1b@kernel.org>
-Date: Fri, 31 May 2024 12:19:40 +0200
+	s=arc-20240116; t=1717154045; c=relaxed/simple;
+	bh=5JDD33qRorywNmQKPBbyh44Bl11dNVa+Lm3wUWF09Ic=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DZd+MB6AtS2EaA96VDKn+vbaVum8S4cqrc83ZvY38fDWxMjP01IoZnJWzTLM0Cl4DFRWcuvYZjesELSU+g+VC/SC1yqH8/5aW+olHRAuG0w4P0elUd2C0G4t7m3C6PRvXFWUavmADsZ1ToKQncwlcqcD/Rjq09LM0xea36F5ebs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G1KkYP+/; arc=none smtp.client-ip=209.85.160.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-25074a27485so771588fac.3;
+        Fri, 31 May 2024 04:14:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717154043; x=1717758843; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eXBg1IIKOFylKo+rkqsg8yzt/arKbmHAdUcO7p0ZR7c=;
+        b=G1KkYP+/GW4iy6fFCRqFaxAbKgrzreg6lhK6Sw0OS6cHiJ+AkGbZqAS1lFG43vx8Fi
+         TYjHPaWR83Jsdh3lwGxb8jGzPIGpzhmJ5ZqPODFNW5Aq67UOaBy6XmeQxZQAVx+Dlvku
+         Pvey8mty55ABDkq5HA7+rJA3ThVjqkQ9ETfu0DBIFgaQc6OxcIbNK4g8t+F7IRVNug7V
+         jLvUwW6E5qROPbl3s6CK3PFf8Y09YfkhL8plJQmfFS/xpNpt04eSxqjIRL9M0xJebosn
+         zhFp/MRrsDwC0cMXskhhJTwJ5LBZvzRx2/ZqBPmH0/ERrdOMeAKskccJ1jKXz+jGnuib
+         KV2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717154043; x=1717758843;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eXBg1IIKOFylKo+rkqsg8yzt/arKbmHAdUcO7p0ZR7c=;
+        b=nUGudwTvhOGphlDluRFtq04uzIz7yi3oqJ2FI5ejvQNuhsmqslF3ifYSltmNx6Kz5l
+         q4DuL2xnc+RtVZL26vfzXuHGsF0yNhjWh9IxLk0NewPCc1C+Q0qiw9nAj7unpsiaxovT
+         2a62u6jmpr1BZzRXYITgfG3lBqhRJTz7UhTYS7EtCtC4YfjmBideh0+3lL6gDhAHGhP9
+         fkWEiXQJcGRKWpBEV2FVEouKVym7fahpVRVCTOujXJFboN/ZXP2iScQhePcD90Ofp0dR
+         sprbLq0tf9gndmXVXod6/2j2I+4PQk3CZHd5QETendGknp9tAkPD5CF83g3cktuQcyT0
+         xk+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXJieifmFH2zBlqb164LfRQI4zqe/X8L8PkpKaaXwGyDPoVzSIndKBypgSOr/00k8ibxTl7Sw2oChpOsLNBPZnxHHMWXAMAvKTBeldzJVJV+zadhxckV+SyL/g2ctYx+Mi3nXvMg/i9ou+OJXS8JpKg36zSUTwtH/qGHg9ef1YmyHmfOw==
+X-Gm-Message-State: AOJu0YxtEzqeyvTKeYCWXuRh6fPB/+OxE8zylwslcM4NNjaXsyoNzkaq
+	wfPKNDRxRIdeB68xu11YbV0e665m3kLCcFyOhP1L84xEG7B0KNsa1E0z3A1muuasoOFLKadHXlU
+	I4ukjVeMdvCRFSkTKL+nvvjaqVos=
+X-Google-Smtp-Source: AGHT+IHxpK+grLpjn8RaNCKVuk2asXOqwaFS7gBD9s5FbqdCZLTtq7o51KMuQ/gD9ZSt6PBAA87mn9OqOkvS9K3F1PY=
+X-Received: by 2002:a05:6870:969e:b0:250:8141:9219 with SMTP id
+ 586e51a60fabf-2508b7f15f2mr1716934fac.18.1717154043442; Fri, 31 May 2024
+ 04:14:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+References: <20240531090458.99744-1-animeshagarwal28@gmail.com> <a472e8ba-bf54-4a62-9b05-ea265a83ef1b@kernel.org>
+In-Reply-To: <a472e8ba-bf54-4a62-9b05-ea265a83ef1b@kernel.org>
+From: Animesh Agarwal <animeshagarwal28@gmail.com>
+Date: Fri, 31 May 2024 16:43:52 +0530
+Message-ID: <CAE3Oz825RQg25PxEbnb=ui7+MtH0ssS=i2HAQK-yOJo+v8JMMw@mail.gmail.com>
 Subject: Re: [PATCH v2] dt-bindings: dma: fsl,imx-dma: Convert to dtschema
-To: Animesh Agarwal <animeshagarwal28@gmail.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, dmaengine@vger.kernel.org,
- devicetree@vger.kernel.org, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240531090458.99744-1-animeshagarwal28@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240531090458.99744-1-animeshagarwal28@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, dmaengine@vger.kernel.org, 
+	devicetree@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 31/05/2024 11:04, Animesh Agarwal wrote:
-> Convert the fsl i.MX DMA controller bindings to DT schema.
-> 
-> Signed-off-by: Animesh Agarwal <animeshagarwal28@gmail.com>
-> ---
->  .../devicetree/bindings/dma/fsl,imx-dma.yaml  | 56 +++++++++++++++++++
+On Fri, May 31, 2024 at 3:49=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.or=
+g> wrote:
+>
+> On 31/05/2024 11:04, Animesh Agarwal wrote:
+> > +  "#dma-cells":
+> > +    const: 1
+> > +
+> > +  dma-channels:
+> > +    maximum: 16
+>
+> maximum or const?
 
-Thank you for your patch. There is something to discuss/improve.
+The txt binding says it should always be 16. Datasheet says this
+device has 16 channels of DMA services. I thought specifying just the
+maximum implies maximum=3Dminimum=3D16. Sorry for missing the changelog in
+this version it was cost in the v1 of this patch.
 
+>
+> deprecated: true
+>
 
-> +  "#dma-cells":
-> +    const: 1
-> +
-> +  dma-channels:
-> +    maximum: 16
+Shall it not be
+"#dma-channels ":
+  deprecated: true
+?
 
-maximum or const?
+> > +
+> > +  dma-requests:
+> > +    description: Number of DMA requests supported.
+>
+> deprecated: true
+>
 
-deprecated: true
+Shall it not be
+"#dma-requests ":
+  deprecated: true
+?
 
-> +
-> +  dma-requests:
-> +    description: Number of DMA requests supported.
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +  - "#dma-cells"
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    dma-controller@10001000 {
+> > +      compatible =3D "fsl,imx27-dma";
+> > +      reg =3D <0x10001000 0x1000>;
+> > +      interrupts =3D <32 33>;
+> > +      #dma-cells =3D <1>;
+> > +      dma-channels =3D <16>;
+>
+> and drop it from here
 
-deprecated: true
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - "#dma-cells"
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    dma-controller@10001000 {
-> +      compatible = "fsl,imx27-dma";
-> +      reg = <0x10001000 0x1000>;
-> +      interrupts = <32 33>;
-> +      #dma-cells = <1>;
-> +      dma-channels = <16>;
-
-and drop it from here
-
-Best regards,
-Krzysztof
-
+Is this really a deprecated property?
 

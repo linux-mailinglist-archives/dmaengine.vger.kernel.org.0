@@ -1,173 +1,141 @@
-Return-Path: <dmaengine+bounces-2271-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2273-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26DA58FC9E3
-	for <lists+dmaengine@lfdr.de>; Wed,  5 Jun 2024 13:11:26 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 797018FCAF1
+	for <lists+dmaengine@lfdr.de>; Wed,  5 Jun 2024 13:50:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6E989B23793
-	for <lists+dmaengine@lfdr.de>; Wed,  5 Jun 2024 11:11:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 963FA1C227EB
+	for <lists+dmaengine@lfdr.de>; Wed,  5 Jun 2024 11:50:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37181193067;
-	Wed,  5 Jun 2024 11:09:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0696A194A70;
+	Wed,  5 Jun 2024 11:49:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="XzmtI09r"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lpYfVibj"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from aposti.net (aposti.net [89.234.176.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 990BC190490;
-	Wed,  5 Jun 2024 11:09:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.234.176.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE1201667C1;
+	Wed,  5 Jun 2024 11:49:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717585799; cv=none; b=kYRzDQEy+7Pch36wHbpGK/BIFS/ein9n52QkmKK7ZY9tlioT8Kh0eFFoGExrINALjgmWLmHJQZTLDiwYrV7ZnxBP95pXnmXldddXfyWx6mtROWD0nDBYSlF4fljvrEaoVKcCCvHKn60m6Gaq3+SIlSTUC+nN4DvkUs1Gzdd6nK4=
+	t=1717588179; cv=none; b=i+ZtiG7GzA4cO+K1r3MBAs1YFKhzYp8ujq8KI864K84y8dLOeFuQiUhf24WnOFs2fjQqoALBZyT0A9vf4hqQp54v2k+igs0bDPfQwj9eDYvlAIEn65+oTyTaNuz/Weuxqs4LsNnVfJOWabB9ug9sva13/oCx4vnNFumzp3BO0Nw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717585799; c=relaxed/simple;
-	bh=HzcPhbufi5cXlv2G7/7Dg+cEaQz53uXcRQczeDy0Lfs=;
+	s=arc-20240116; t=1717588179; c=relaxed/simple;
+	bh=Qvyyt+366pQ234kcpBr110DHz4Z632wKKoIYCqa/E88=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=V2vLPM1TAoDjBRts65zdi47U5vdEHkDq0192jk8mRR7OcAm6HvqOCYc4vntgM1SASXbzmP5kxSkupdoK2DIzI2oHY5868Md2YRQj0yyL1sUiXB1phorH/TMWKFEsGjDqYXDSVY8OMueDJYBuaVo/wuZ+tNaiYYzJSoU3Q7KhjFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=XzmtI09r; arc=none smtp.client-ip=89.234.176.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-	s=mail; t=1717585744;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zZ1Ob78ZjWlZgX+z9DrKajLPpBuBZCqRum8/eJrHWnI=;
-	b=XzmtI09rBY87MWojYhpPffNwV+tIMJP6oV+FTMNTTJFdgqd6aGorPN8QY9MEhjGs0p30GT
-	UDdqbOzhHbVGVhxE6bULS4PlV2hNYB8TNXt+MPSR3S/QMXX9ISC/bgsOfQE1l+Dn8t2dnY
-	BAIpk7/OcL7arzBDOyPGSrn5rpSGGuY=
-From: Paul Cercueil <paul@crapouillou.net>
-To: Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
+	 MIME-Version; b=E8eXOoMC3JVbYTs7gVhqkgKmuId1qhel8IzFZ/Q3N/xOiYuSjj8Z1HDT4E++0Ywk4t6v8Drvwmp7B6oGEli3cKLYBHula+3Ls6B7GeTSIU1AP1bOlqRA5/FOcQIjnqWtVgYoYNyeG3LuVrOmXM+60OnBRrdwKeIIJqeBlAb7Snc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lpYfVibj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA643C32786;
+	Wed,  5 Jun 2024 11:49:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717588179;
+	bh=Qvyyt+366pQ234kcpBr110DHz4Z632wKKoIYCqa/E88=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=lpYfVibjeHy0U5w49kZqWFw0DGXed1l5ysLNe5LditXuEupPgLqoM0zhGy/BOznHg
+	 BnTOIo5LPeZOElJiALsXhEso2sj/kqQhjzL/grRGNg9weHMCBkwsJA5ZdkJW2v9U2j
+	 V6pn1RnINqGzVUXGf3HgPvh2pfQ0qF8zz+IbkURDO06UOdJS90AeMRmWgkfjuOg2aW
+	 Ms/ajfmueo0GovbLkWG7OoMk7YoftWrPktO2RhGWxln3Hewqg02RHOkFuqHqERON30
+	 waVH+VAx2+ZZODNZ9xhi0kqi+RF3gYp329WjGVGBJBGU8WbzCJC+bVxSPWBrErTlqQ
+	 7cZs7sfdS6szQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Joao Pinto <Joao.Pinto@synopsys.com>,
+	Joao Pinto <jpinto@synopsys.com>,
 	Vinod Koul <vkoul@kernel.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Nuno Sa <nuno.sa@analog.com>,
-	linux-iio@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	dmaengine@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org,
-	Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v10 6/6] Documentation: iio: Document high-speed DMABUF based API
-Date: Wed,  5 Jun 2024 13:08:45 +0200
-Message-ID: <20240605110845.86740-7-paul@crapouillou.net>
-In-Reply-To: <20240605110845.86740-1-paul@crapouillou.net>
-References: <20240605110845.86740-1-paul@crapouillou.net>
+	Sasha Levin <sashal@kernel.org>,
+	Eugeniy.Paltsev@synopsys.com,
+	dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.9 06/28] Avoid hw_desc array overrun in dw-axi-dmac
+Date: Wed,  5 Jun 2024 07:48:35 -0400
+Message-ID: <20240605114927.2961639-6-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240605114927.2961639-1-sashal@kernel.org>
+References: <20240605114927.2961639-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.9.3
 Content-Transfer-Encoding: 8bit
 
-Document the new DMABUF based API.
+From: Joao Pinto <Joao.Pinto@synopsys.com>
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Signed-off-by: Nuno Sa <nuno.sa@analog.com>
+[ Upstream commit 333e11bf47fa8d477db90e2900b1ed3c9ae9b697 ]
 
+I have a use case where nr_buffers = 3 and in which each descriptor is composed by 3
+segments, resulting in the DMA channel descs_allocated to be 9. Since axi_desc_put()
+handles the hw_desc considering the descs_allocated, this scenario would result in a
+kernel panic (hw_desc array will be overrun).
+
+To fix this, the proposal is to add a new member to the axi_dma_desc structure,
+where we keep the number of allocated hw_descs (axi_desc_alloc()) and use it in
+axi_desc_put() to handle the hw_desc array correctly.
+
+Additionally I propose to remove the axi_chan_start_first_queued() call after completing
+the transfer, since it was identified that unbalance can occur (started descriptors can
+be interrupted and transfer ignored due to DMA channel not being enabled).
+
+Signed-off-by: Joao Pinto <jpinto@synopsys.com>
+Link: https://lore.kernel.org/r/1711536564-12919-1-git-send-email-jpinto@synopsys.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-v2: - Explicitly state that the new interface is optional and is
-      not implemented by all drivers.
-    - The IOCTLs can now only be called on the buffer FD returned by
-      IIO_BUFFER_GET_FD_IOCTL.
-    - Move the page up a bit in the index since it is core stuff and not
-      driver-specific.
+ drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c | 6 ++----
+ drivers/dma/dw-axi-dmac/dw-axi-dmac.h          | 1 +
+ 2 files changed, 3 insertions(+), 4 deletions(-)
 
-v3: Update the documentation to reflect the new API.
-
-v5: Use description lists for the documentation of the three new IOCTLs
-    instead of abusing subsections.
-
-v8: Renamed dmabuf_api.rst -> iio_dmabuf_api.rst, and updated index.rst
-    whose format changed in iio/togreg.
----
- Documentation/iio/iio_dmabuf_api.rst | 54 ++++++++++++++++++++++++++++
- Documentation/iio/index.rst          |  1 +
- 2 files changed, 55 insertions(+)
- create mode 100644 Documentation/iio/iio_dmabuf_api.rst
-
-diff --git a/Documentation/iio/iio_dmabuf_api.rst b/Documentation/iio/iio_dmabuf_api.rst
-new file mode 100644
-index 000000000000..1cd6cd51a582
---- /dev/null
-+++ b/Documentation/iio/iio_dmabuf_api.rst
-@@ -0,0 +1,54 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===================================
-+High-speed DMABUF interface for IIO
-+===================================
-+
-+1. Overview
-+===========
-+
-+The Industrial I/O subsystem supports access to buffers through a
-+file-based interface, with read() and write() access calls through the
-+IIO device's dev node.
-+
-+It additionally supports a DMABUF based interface, where the userspace
-+can attach DMABUF objects (externally created) to a IIO buffer, and
-+subsequently use them for data transfers.
-+
-+A userspace application can then use this interface to share DMABUF
-+objects between several interfaces, allowing it to transfer data in a
-+zero-copy fashion, for instance between IIO and the USB stack.
-+
-+The userspace application can also memory-map the DMABUF objects, and
-+access the sample data directly. The advantage of doing this vs. the
-+read() interface is that it avoids an extra copy of the data between the
-+kernel and userspace. This is particularly useful for high-speed devices
-+which produce several megabytes or even gigabytes of data per second.
-+It does however increase the userspace-kernelspace synchronization
-+overhead, as the DMA_BUF_SYNC_START and DMA_BUF_SYNC_END IOCTLs have to
-+be used for data integrity.
-+
-+2. User API
-+===========
-+
-+As part of this interface, three new IOCTLs have been added. These three
-+IOCTLs have to be performed on the IIO buffer's file descriptor,
-+obtained using the IIO_BUFFER_GET_FD_IOCTL() ioctl.
-+
-+  ``IIO_BUFFER_DMABUF_ATTACH_IOCTL(int)``
-+    Attach the DMABUF object, identified by its file descriptor, to the
-+    IIO buffer. Returns zero on success, and a negative errno value on
-+    error.
-+
-+  ``IIO_BUFFER_DMABUF_DETACH_IOCTL(int)``
-+    Detach the given DMABUF object, identified by its file descriptor,
-+    from the IIO buffer. Returns zero on success, and a negative errno
-+    value on error.
-+
-+    Note that closing the IIO buffer's file descriptor will
-+    automatically detach all previously attached DMABUF objects.
-+
-+  ``IIO_BUFFER_DMABUF_ENQUEUE_IOCTL(struct iio_dmabuf *iio_dmabuf)``
-+    Enqueue a previously attached DMABUF object to the buffer queue.
-+    Enqueued DMABUFs will be read from (if output buffer) or written to
-+    (if input buffer) as long as the buffer is enabled.
-diff --git a/Documentation/iio/index.rst b/Documentation/iio/index.rst
-index 4c13bfa2865c..9cb4c50cb20d 100644
---- a/Documentation/iio/index.rst
-+++ b/Documentation/iio/index.rst
-@@ -9,6 +9,7 @@ Industrial I/O
+diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+index a86a81ff0caa6..321446fdddbd7 100644
+--- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
++++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+@@ -302,6 +302,7 @@ static struct axi_dma_desc *axi_desc_alloc(u32 num)
+ 		kfree(desc);
+ 		return NULL;
+ 	}
++	desc->nr_hw_descs = num;
  
-    iio_configfs
-    iio_devbuf
-+   iio_dmabuf_api
-    iio_tools
+ 	return desc;
+ }
+@@ -328,7 +329,7 @@ static struct axi_dma_lli *axi_desc_get(struct axi_dma_chan *chan,
+ static void axi_desc_put(struct axi_dma_desc *desc)
+ {
+ 	struct axi_dma_chan *chan = desc->chan;
+-	int count = atomic_read(&chan->descs_allocated);
++	int count = desc->nr_hw_descs;
+ 	struct axi_dma_hw_desc *hw_desc;
+ 	int descs_put;
  
- Industrial I/O Kernel Drivers
+@@ -1139,9 +1140,6 @@ static void axi_chan_block_xfer_complete(struct axi_dma_chan *chan)
+ 		/* Remove the completed descriptor from issued list before completing */
+ 		list_del(&vd->node);
+ 		vchan_cookie_complete(vd);
+-
+-		/* Submit queued descriptors after processing the completed ones */
+-		axi_chan_start_first_queued(chan);
+ 	}
+ 
+ out:
+diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
+index 454904d996540..ac571b413b21c 100644
+--- a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
++++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
+@@ -104,6 +104,7 @@ struct axi_dma_desc {
+ 	u32				completed_blocks;
+ 	u32				length;
+ 	u32				period_len;
++	u32				nr_hw_descs;
+ };
+ 
+ struct axi_dma_chan_config {
 -- 
 2.43.0
 

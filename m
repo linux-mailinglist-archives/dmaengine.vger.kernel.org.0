@@ -1,235 +1,160 @@
-Return-Path: <dmaengine+bounces-2290-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2291-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 626738FD5BC
-	for <lists+dmaengine@lfdr.de>; Wed,  5 Jun 2024 20:29:03 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id C1C0D8FD671
+	for <lists+dmaengine@lfdr.de>; Wed,  5 Jun 2024 21:28:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DB2C828A2D2
-	for <lists+dmaengine@lfdr.de>; Wed,  5 Jun 2024 18:29:01 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5C633B209DE
+	for <lists+dmaengine@lfdr.de>; Wed,  5 Jun 2024 19:28:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70C69376E5;
-	Wed,  5 Jun 2024 18:28:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDAC914EC48;
+	Wed,  5 Jun 2024 19:28:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="VekqrrT7"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="T5dCY/Y+"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2041.outbound.protection.outlook.com [40.107.249.41])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C9DA5228;
-	Wed,  5 Jun 2024 18:28:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.249.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717612137; cv=fail; b=oTOcopNrtpb8VkLVDRZn3Y/9JxeblAQVih5NZBxn6ElW69mUqsz7314PIY0qfe0tEUdQxaNyg+QuORekVU9qfSiYujqVXe3P/rmYw8eqs4v2VR9jOmiOw36t2g9MFPoGAJwdBZYuTFwhYGCgfu2i+cgrrHP3iYpX47n5Zb/vcrI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717612137; c=relaxed/simple;
-	bh=exsVi7RISMNaMclnM6P4PO0kMFwSwF1InvjwHGNh3+0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=aQtrpFHfyiT9Tygtixhmd9JQg5Dw2sMZiBWiY8VsnVs/kyRutYS8ka0+o9jIRcKBoOnUG5ZPe6zC7/J22/aCrHrw2GWkETq1RsIQU34086UoQ3aUPTFObhCd3CJLJUd7i8OYs+3o4ANT7Eq8DA61sKnUYecGAWXEBBNmKa9Wdn8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=VekqrrT7; arc=fail smtp.client-ip=40.107.249.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=T2Q+Dfp/oF9f2LOsh5n+AC5CdXj2B5kkRSOyvZ+uBnulvEhPll79uCH+vQjn9Qcsm8o17KrsxdoQMael4/AoT0aEKU4esmlOVQuYbyTUFn/1Qce8Vw66Y4YnhdnjgjdP1NKN1WQa2wRSv/L2u7ddYQVPSdXVjGB4jKsJ+fJSWqP4KEO4I+2GhzfMAtD+JM+V4xXHMkS+5ND2xOdIEIok7eX7B/VDVMCsFH/VU/JmQU19blkZaYbXrl+Jzh23d8hga7Ji0X7br2edfWg71exeoS+09eBbX4B9uMGnScbZ1alezsUiHvZFb+xdYXuKTSwXWAvRRepr0kPanfyJeswkMQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BMBBYpg3mi7aWqlP2BbsF8b+pD8UEkhOSYYQQhsKTVU=;
- b=Ix/n4dd5JmLBCHuQmb8xvxulV4+BnmEJvSV5oQdkAetVQ1X+/9qzQPSwtZ/Fhm3qNJT/weAdxS/Bu6LaK3wnyMndrAitMAnsEGtifP2Ey2t1S4FBH7eYy6my4eUw3mr8DvC6UJcbdUGilK3JYiUgtdEc4nERahJnLECHh4EBCnQSDdfeYCvjX01N0tGlhvuKpdMoMbKv7U3ahIcThAr/u3eRYPozD4YjUMeWX7IVxAAcb65RGi16LjwOQlxXULCgyxsjoQFihxA5Y5TQpoXsRUHN9rXodh0EvXeEcl6xfCCnB+T1tUKcyLgp8VFZz62FiaOARr8HBSgToc6DIh4/9w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BMBBYpg3mi7aWqlP2BbsF8b+pD8UEkhOSYYQQhsKTVU=;
- b=VekqrrT7brUAPpgN2f7JgNhHSkxvTL3ypMsEZUQy1eVIgQgo+tE3M2hdZaYfp9oD5it96TSRxE1N8LTfJynMNjKjtNfmXvPURhTMw/bJtNxypJJWPkQqZ0+2JEXpPKBg1mXk2uQElNt7vWiibccD0UoKjF5EoWoetLzqpHhJgTw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AM8PR04MB7906.eurprd04.prod.outlook.com (2603:10a6:20b:24e::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.27; Wed, 5 Jun
- 2024 18:28:52 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.7633.021; Wed, 5 Jun 2024
- 18:28:51 +0000
-Date: Wed, 5 Jun 2024 14:28:38 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Vinod Koul <vkoul@kernel.org>, Maxime Ripard <mripard@kernel.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Mark Brown <broonie@kernel.org>, Christoph Hellwig <hch@lst.de>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Vladimir Murzin <vladimir.murzin@arm.com>,
-	Phil Elwell <phil@raspberrypi.com>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-mmc@vger.kernel.org, linux-spi@vger.kernel.org,
-	iommu@lists.linux.dev, linux-sound@vger.kernel.org
-Subject: Re: [PATCH 16/18] drm/vc4: Use phys addresses for slave DMA config
-Message-ID: <ZmCuVtXrwDxbkqAR@lizhi-Precision-Tower-5810>
-References: <20240524182702.1317935-1-dave.stevenson@raspberrypi.com>
- <20240524182702.1317935-17-dave.stevenson@raspberrypi.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240524182702.1317935-17-dave.stevenson@raspberrypi.com>
-X-ClientProxiedBy: BY5PR03CA0026.namprd03.prod.outlook.com
- (2603:10b6:a03:1e0::36) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4425EFBFD;
+	Wed,  5 Jun 2024 19:28:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717615721; cv=none; b=iWnyAI7PU6jjSDc9Svyc6O6J3hR7XQcNzFJdFPOQjnq0VN85ZEvKsKp+TEMK58dCXaaytjiKUXyM2odnEdG00ME/AkdqC+siuOEtx4ViZl7B48l+ZUulbUHK+gSna/rmb9LHp+B3DqkbtnV558r9BhVIvWaw1t1Bdq031YqrD3A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717615721; c=relaxed/simple;
+	bh=GD3iYdT5XOGRVE0Nem0zYe1P7mRbAjWzmTkIUhIrUvo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=fkcu6TmYunV5BvPCRN4AENxSCznLjRa+g129T1BIVUQ4PC7l3fyWYFPavFsInCkV7j+qwD8gAvALulGVPEhgToh7Q8PPLOhIojFFBY4LmPFuQdyBVS9S5BipHJu67TEfcUdXTCp4eYXFuQazvIzi5IfGl1j6GLpSKt7NDLnXFbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=T5dCY/Y+; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 455B1xFr007540;
+	Wed, 5 Jun 2024 19:28:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=jB4zfOV96DE2gLWkDr4+0m
+	sPz53+wnI51vMQ1wHOUds=; b=T5dCY/Y+Ol1Kx03LJRghiCPp6XMs0/cbn4FJ4C
+	yp3aUmxRQNen0SAptsY5/bKmwlyTbkW/vO9UMEvqmY8oIix7zPanITr5cQ7Z15yQ
+	stBJdfqRdFGfVu/k0WNZOA/eIlVlWSiSgB0EYaMhVqYdj1gmVgCCOe0kK5wPT/+n
+	wxuud1OjscUNP/Dm25RqIn6VlAJbjghROzNL4MIkZX/IH0RkrPpSG5xr6c2tqjtb
+	eSp01GWbfpWf87dCRlVCMpBBnPCh9BQneuUWhxHz2fNTkxynBvKQM4kIVsN4OzCD
+	06l+ElRjBlib4mzg5rtB0qlMqrmuL2/TqAhNaoO/8hMPp6Kg==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yj7urb3c9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Jun 2024 19:28:34 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 455JSXLT027353
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 5 Jun 2024 19:28:33 GMT
+Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 5 Jun 2024
+ 12:28:33 -0700
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+Date: Wed, 5 Jun 2024 12:28:31 -0700
+Subject: [PATCH] dmaengine: add missing MODULE_DESCRIPTION() macros
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM8PR04MB7906:EE_
-X-MS-Office365-Filtering-Correlation-Id: ef87de64-a382-48ab-ceb0-08dc858d594d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|376005|1800799015|366007|7416005|52116005|38350700005;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?6QKKJq3vF58VtTVeJV0e7TZMecz8CKSYxf9pT0wCspCG3tG8+M6OM8lAy86E?=
- =?us-ascii?Q?LEFjzhbxXXWQXOPRxJtoWpdq6yNqoDD6DiXxdW+599bz7iGdehYlOyzeTGmC?=
- =?us-ascii?Q?Zp+2xeVVZNOgqy9HMrPuoF1aTXL5nFNfwmnD7KMR3FbBoPhrxyUnfUMzBczU?=
- =?us-ascii?Q?ynHYFIm+x1/uNrLlGz4BrJRki4IC0+HhTVZxWDeI3dybGtqx+kKtNyQYR7D6?=
- =?us-ascii?Q?oio6MDb7CgliQ/5vf9q717vfTA+7nlKJiuDgvHV1pDrfYAY1p7Q4YAChqPz5?=
- =?us-ascii?Q?m250EVLrbqKl9WoWXi+aFB5WxBn4J1D+yVvUTcD3LbiX7ujL/v2D5ToiM0R2?=
- =?us-ascii?Q?rSsiqfImstoXXOxafq/2V3TXNDIB7nICWqSCvUU3rbX7ArUUWySrwgZ6e++q?=
- =?us-ascii?Q?EXSpZVVPEeyW1pzWzu99ire6+fBStDkKWSMtvI+Rk6n6TOXqeVGVR020USN2?=
- =?us-ascii?Q?s8O8F5nIdFTKfKnNw4zoFlhiH/lhAm2AIAs5f0i8R7ufQGfQM4zwPksK4VTi?=
- =?us-ascii?Q?sHYwCkfUzYMXbw+PEHROsbfygLqzQXplLbaGnuFJ3RVUIznwbMx6FhHkd3fn?=
- =?us-ascii?Q?w0IfZIQL3c3Te6dp1KfMIkze1Sv0/XowCt3S4/nqYkGQfQCzxmKq/WaPtBEG?=
- =?us-ascii?Q?io3Fv7UIyM3nyWq+gldTcym6VtbYRoeZi8veAu4s+y48nJph6M+p04EtDwsV?=
- =?us-ascii?Q?XRIUM9Y54j5rBzST8Ef4zAWMTWwBNJeEZqkZcDJHJ6T7drVbHHlAv3J2UWd4?=
- =?us-ascii?Q?frGjsfVwRkZcbc6GHsBgM7fEvFpsc7CxrLDE9TEOprIXZOn9J4zi0QcOnEkd?=
- =?us-ascii?Q?Xekw2PJysEyIbnHE0iq8Gi9KM2vs+ZW6ig6nmuTc7M8/d2Esdlm0Z5y44v5T?=
- =?us-ascii?Q?MeC0FJVMHiSIPEhzZUnhFfTncP6+fsalQbon3DLxKSUzv5udcfXYbfELuUQm?=
- =?us-ascii?Q?hqBNPtrqcSGSDFt+YVwwFNaiLO6qzr6nnmppj8WsPKWeRXiQfHklnWxiVrz5?=
- =?us-ascii?Q?5iYWUkPdu2AOnD8/e2dLQ4XvAX2FJH2m3wD+wLzDVqSS0R59m5QKSUS/RqMq?=
- =?us-ascii?Q?thTriX9+DMelQmXyZm+DE2hF7H2KMukBEXI2rqfPYdVbOfx+lrZaApcytJSm?=
- =?us-ascii?Q?V61PcHlBIWQf4DinF7eShK789mexxuTElauzeIwOF91qbM8drv73BL2/6Ypz?=
- =?us-ascii?Q?df9Ay6P9kIZrz0n6JeW7QTi/7Urh1rTsryjk1cfLZBeo4Nu2v1SryI6nSot+?=
- =?us-ascii?Q?ACvAa+prH+jbp6jzgvokCJMVJpBkTk7jA79bCJgl3vaSCzPKkfAKWlyYjdm2?=
- =?us-ascii?Q?EYf/6mwmvwBxRHwiPJ3x/3RehAHv6zLeQrwSICdOhbOl+w=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007)(7416005)(52116005)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?f4JppEpsVHNRidpszQ7pTvwzJRWL10VYJD2WmA8+GmMvyvWj2nn24Y4AB7QT?=
- =?us-ascii?Q?8rcHZU5p/St5todaDrdw6+afB/edd2RX0H++qhMWIOyytRNLp3GIOMqIZ66I?=
- =?us-ascii?Q?5eKwJbQOKR0+8ZRrEEEJFGQFL4vZzuts/m3zkhnoOWz+N47k1XwGpzAQfDA5?=
- =?us-ascii?Q?GgFCaXB4XvfhtbfnINrDjemoWIe6ZY3IFYelVNyodUvWFe7LS6ETmkO643Wn?=
- =?us-ascii?Q?v1PXF9OS6antgU9DJELqZJ1VuN6YwC6+Zs2LNIligCH+f+WbCLSBb0l4/v52?=
- =?us-ascii?Q?Qm2gkZzKnaE0izOU2jml5nUI+Whg2ajr7az87rp+xZZzvl54oULRonSJ1PLn?=
- =?us-ascii?Q?itEX1BDpqWNByR27s/4RnrP6DELosWA9JoaxYeeiW4+pgjQP6iYGxbtn0ouH?=
- =?us-ascii?Q?O0oKzQUGJeV8vw03o0hdJYKaZmTbJz2qIfzAT7RCfwNw1W5ULJ16jXKO2KZf?=
- =?us-ascii?Q?2RaLkr6bgFwfnx9Glz0sP+XTkVnUS58mVtizJzDWeY/Z92w5MEXnvtne0knH?=
- =?us-ascii?Q?h1UekqZvxBXz16gIpYxEkHJePFcOqQxBxiHeEASTUXv5on+MwsyKMrwbF+ud?=
- =?us-ascii?Q?lcNWmrDYkluh+wexotmY3ywOf0QRZOf3t+38Fv3KR3TSGxEOu7m0cJBYMOek?=
- =?us-ascii?Q?F3oKwAPV+vYcPyEEbJL1voA0R8FWmomm8xafFljnPMiMyUyA+GN6muU77upp?=
- =?us-ascii?Q?YCdKd2GXayj+5W5+YFcz7DFCdLEgW8XOVS5VUfjwyWogL1F9pOuBXjSNGKG4?=
- =?us-ascii?Q?5JXxqDiWMPGyU5bQpk3nQqo5SVBWPMjGRUAgwr0J8uvG6BuK5DMfVbCxy1DP?=
- =?us-ascii?Q?pSy767LctEB3+tGNQxrVEX1XA9NdZJPZLozSxmAKKhCl23BoIUBurCQeALGz?=
- =?us-ascii?Q?68wUPfaktJMQ1Ru9C0eJAUc0Mpd9PtE3R3cNZUpw3OtGHYpbit3zYN31WO3H?=
- =?us-ascii?Q?MgAQBWElE3Lqm2fhGPuZHxknxVvQFBsJ3d0aKlhPUmaXPavyH4iBdOnV9OFi?=
- =?us-ascii?Q?qXqKsdF2DJDxXtu77MCYDML/NtAY32+jluLvJR9U4pBuML7UIiBc2XjobN90?=
- =?us-ascii?Q?42yxq+hVEbVVNQhOyeFjvMXEqd5NXCcxixVKj+XUuDIvx1tNrnssWiTi2M8j?=
- =?us-ascii?Q?tqTMKd8ZYOc2m3+j7ty2qcu3aCmeik9dq6g8Y4XcK0egzEzWx7/AmIajmBpQ?=
- =?us-ascii?Q?tKg8TC0twXwyd+dYmBdpeUWL92DYpG8abdTALLBRXBsnDKX0HcXImzfPsZWh?=
- =?us-ascii?Q?vIswlZcXDyWz5WPAfzx6oTly1xVbLb3JKta/a1i5hEiN+IKspfLihvDv7Fym?=
- =?us-ascii?Q?N1LOCQywlr//dZka/CIAZOiarWp1JZrHswaGyWir2oow+heQaj9+BSa8jEMg?=
- =?us-ascii?Q?BBesC2gTljxtAs/m3jgS7nOGk//L9w65Hw7DiyJ0KkRYW7zMaRnOW6BjPGGh?=
- =?us-ascii?Q?ryoBDBYT1Phk8VQQdmGUH/l8quk0NjYNUqsryIcgaLf6QHTsmok0emXNxYMr?=
- =?us-ascii?Q?LVBzoK+0Vhh6NfXuGEM2qgncaOvBXmAnqs0LOoHJcrY0jValEfgp0JgeOXNS?=
- =?us-ascii?Q?hX0h0O73OPfcmvUlzf6BO8Y4HjDUudjOlw5pte4G?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ef87de64-a382-48ab-ceb0-08dc858d594d
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2024 18:28:51.5877
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jlDT/6XeYhA/R7WmhgCKJWO6H4F69joibEF5AOMLo+zd2LlAwdpoO+OCOYspKBL4D+mFbD55Ir0jy9zc10IWJA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7906
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240605-md-drivers-dma-v1-1-bcbcfd9ce706@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAF68YGYC/x3MTQqDQAxA4atI1g2M40+hV5EuMk6sgc5UEhVBv
+ HunXX6L904wVmGDR3WC8i4mn1xQ3yoYZ8ovRonF4J1vXe86TBGjys5qGBOhr10X7qGffNtAiRb
+ lSY7/cHgWBzLGoJTH+bd5S94OTGQrK1zXFwL6yPl/AAAA
+To: Vinod Koul <vkoul@kernel.org>, Fenghua Yu <fenghua.yu@intel.com>,
+        "Dave
+ Jiang" <dave.jiang@intel.com>,
+        Peter Ujfalusi <peter.ujfalusi@gmail.com>
+CC: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>,
+        Jeff Johnson <quic_jjohnson@quicinc.com>
+X-Mailer: b4 0.13.0
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: UG0TkUCYGWMH8kPhLlpoQy3M5oFk0U-h
+X-Proofpoint-GUID: UG0TkUCYGWMH8kPhLlpoQy3M5oFk0U-h
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-05_02,2024-06-05_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=999
+ malwarescore=0 mlxscore=0 bulkscore=0 clxscore=1011 priorityscore=1501
+ suspectscore=0 spamscore=0 impostorscore=0 lowpriorityscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
+ definitions=main-2406050147
 
-On Fri, May 24, 2024 at 07:27:00PM +0100, Dave Stevenson wrote:
-> From: Phil Elwell <phil@raspberrypi.com>
-> 
-> Slave addresses for DMA are meant to be supplied as physical addresses
-> (contrary to what struct snd_dmaengine_dai_dma_data does).
+make allmodconfig && make W=1 C=1 reports:
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dma/idxd/idxd.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dma/ti/omap-dma.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dma/dmatest.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dma/ioat/ioatdma.o
 
-Can you use the same content for patch 14-17?
+Add the missing invocations of the MODULE_DESCRIPTION() macro.
 
-Frank
+Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+---
+ drivers/dma/dmatest.c     | 1 +
+ drivers/dma/idxd/init.c   | 1 +
+ drivers/dma/ioat/init.c   | 1 +
+ drivers/dma/ti/omap-dma.c | 1 +
+ 4 files changed, 4 insertions(+)
 
-> 
-> Signed-off-by: Phil Elwell <phil@raspberrypi.com>
-> Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-> ---
->  drivers/gpu/drm/vc4/vc4_hdmi.c | 15 ++++-----------
->  1 file changed, 4 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-> index d30f8e8e8967..c2afd72bd96e 100644
-> --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
-> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-> @@ -2696,7 +2696,7 @@ static int vc4_hdmi_audio_init(struct vc4_hdmi *vc4_hdmi)
->  	struct snd_soc_card *card = &vc4_hdmi->audio.card;
->  	struct device *dev = &vc4_hdmi->pdev->dev;
->  	struct platform_device *codec_pdev;
-> -	const __be32 *addr;
-> +	struct resource *iomem;
->  	int index, len;
->  	int ret;
->  
-> @@ -2732,22 +2732,15 @@ static int vc4_hdmi_audio_init(struct vc4_hdmi *vc4_hdmi)
->  	}
->  
->  	/*
-> -	 * Get the physical address of VC4_HD_MAI_DATA. We need to retrieve
-> -	 * the bus address specified in the DT, because the physical address
-> -	 * (the one returned by platform_get_resource()) is not appropriate
-> -	 * for DMA transfers.
-> -	 * This VC/MMU should probably be exposed to avoid this kind of hacks.
-> +	 * Get the physical address of VC4_HD_MAI_DATA.
->  	 */
->  	index = of_property_match_string(dev->of_node, "reg-names", "hd");
->  	/* Before BCM2711, we don't have a named register range */
->  	if (index < 0)
->  		index = 1;
-> +	iomem = platform_get_resource(vc4_hdmi->pdev, IORESOURCE_MEM, index);
->  
-> -	addr = of_get_address(dev->of_node, index, NULL, NULL);
-> -	if (!addr)
-> -		return -EINVAL;
-> -
-> -	vc4_hdmi->audio.dma_data.addr = be32_to_cpup(addr) + mai_data->offset;
-> +	vc4_hdmi->audio.dma_data.addr = iomem->start + mai_data->offset;
->  	vc4_hdmi->audio.dma_data.addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
->  	vc4_hdmi->audio.dma_data.maxburst = 2;
->  
-> -- 
-> 2.34.1
-> 
+diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
+index a4f608837849..1f201a542b37 100644
+--- a/drivers/dma/dmatest.c
++++ b/drivers/dma/dmatest.c
+@@ -1372,4 +1372,5 @@ static void __exit dmatest_exit(void)
+ module_exit(dmatest_exit);
+ 
+ MODULE_AUTHOR("Haavard Skinnemoen (Atmel)");
++MODULE_DESCRIPTION("DMA Engine test module");
+ MODULE_LICENSE("GPL v2");
+diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+index a7295943fa22..cb5f9748f54a 100644
+--- a/drivers/dma/idxd/init.c
++++ b/drivers/dma/idxd/init.c
+@@ -22,6 +22,7 @@
+ #include "perfmon.h"
+ 
+ MODULE_VERSION(IDXD_DRIVER_VERSION);
++MODULE_DESCRIPTION("Intel Data Accelerators support");
+ MODULE_LICENSE("GPL v2");
+ MODULE_AUTHOR("Intel Corporation");
+ MODULE_IMPORT_NS(IDXD);
+diff --git a/drivers/dma/ioat/init.c b/drivers/dma/ioat/init.c
+index 9c364e92cb82..d84d95321f43 100644
+--- a/drivers/dma/ioat/init.c
++++ b/drivers/dma/ioat/init.c
+@@ -23,6 +23,7 @@
+ #include "../dmaengine.h"
+ 
+ MODULE_VERSION(IOAT_DMA_VERSION);
++MODULE_DESCRIPTION("Intel I/OAT DMA Linux driver");
+ MODULE_LICENSE("Dual BSD/GPL");
+ MODULE_AUTHOR("Intel Corporation");
+ 
+diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
+index b9e0e22383b7..5b994c325b41 100644
+--- a/drivers/dma/ti/omap-dma.c
++++ b/drivers/dma/ti/omap-dma.c
+@@ -1950,4 +1950,5 @@ static void __exit omap_dma_exit(void)
+ module_exit(omap_dma_exit);
+ 
+ MODULE_AUTHOR("Russell King");
++MODULE_DESCRIPTION("OMAP DMAengine support");
+ MODULE_LICENSE("GPL");
+
+---
+base-commit: a693b9c95abd4947c2d06e05733de5d470ab6586
+change-id: 20240605-md-drivers-dma-2105b7b6f243
+
 

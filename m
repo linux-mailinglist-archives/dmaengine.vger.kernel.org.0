@@ -1,46 +1,46 @@
-Return-Path: <dmaengine+bounces-2274-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2275-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0BEB08FCB60
-	for <lists+dmaengine@lfdr.de>; Wed,  5 Jun 2024 13:59:21 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 43DA88FCBBA
+	for <lists+dmaengine@lfdr.de>; Wed,  5 Jun 2024 14:05:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AFD0028B522
-	for <lists+dmaengine@lfdr.de>; Wed,  5 Jun 2024 11:59:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6A5CB1C21919
+	for <lists+dmaengine@lfdr.de>; Wed,  5 Jun 2024 12:05:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7218319E7FB;
-	Wed,  5 Jun 2024 11:51:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B69BE195989;
+	Wed,  5 Jun 2024 11:52:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MIEPzoZ4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VHUTjQbZ"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A13319E7F9;
-	Wed,  5 Jun 2024 11:51:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CF8C195986;
+	Wed,  5 Jun 2024 11:52:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717588273; cv=none; b=edKQcy2Iqt9cEm+SA6r8yIFp4HpNoajnK8L4uBt0yrtr9EK69X8l/KXnRnMhLVqv3vQ1tf8sePJoJk4thRYknkFKYSeRhmN0lw+pP5n4wVfN2mPBkS4Hm16GZvem/LcQrvl7ErkBA2zCnTixO6Pa1fRxuIiMgb0dLIL74iSNDm4=
+	t=1717588353; cv=none; b=WVQR2+vdf2e+Wg/jrfdfbck+iS4rETfKrB8JuxvEmiOnGgLhA3QKnfSboGxQvVUYZuhsnu4C8g09dxOVwHfb0LaEpRDgEyeVWtFKAl4clU8ZNDFwMRvbEYJ3SXjT8bOZqAhf1dGcmgFxuHKniePwoDpNKmsVmyGE9ljs9dQEyr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717588273; c=relaxed/simple;
-	bh=Qvyyt+366pQ234kcpBr110DHz4Z632wKKoIYCqa/E88=;
+	s=arc-20240116; t=1717588353; c=relaxed/simple;
+	bh=WSFEV7EqOZEm+4GY4b64xZ1PyCcWKV1DAGeXX1rrq3Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=t4Ecj+w15hvqOxkqLNpZdm5RnfhntpNuK3ZfIKLYRKymgJ9p1rNfA3MHrZRZJJoau7kD9WTswfAKv01h/N7wrIUNjBBjMhU6R9M8H6Yhk6ChZXExPO0U4C4yeXcCvz8D1oZ4MxljoKkUKxk9qvCUKhu9wO748CXvsJFgHRckjAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MIEPzoZ4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0620C32786;
-	Wed,  5 Jun 2024 11:51:11 +0000 (UTC)
+	 MIME-Version; b=Q6VDrvIKIl0nQy4bIFAMuSXSqliNF0NYnxb+hD7xbdxQfHCKPMURfn6IhS8W+mgghnfeWpozP4FBVQFUmELzf2VDJZTcxzf+ojbZKdx7Zk1QBkJtWRjMNMiYJJ/UAKzeZBmDSTRE5Y69zJlMVXrQnChARF5AZdXJY75mgykZIQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VHUTjQbZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87689C3277B;
+	Wed,  5 Jun 2024 11:52:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717588272;
-	bh=Qvyyt+366pQ234kcpBr110DHz4Z632wKKoIYCqa/E88=;
+	s=k20201202; t=1717588353;
+	bh=WSFEV7EqOZEm+4GY4b64xZ1PyCcWKV1DAGeXX1rrq3Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MIEPzoZ4lLP5oX1NpW9IK5VaDiGgTjafm9qj/Z9hbeLBaJVATKQDt6+lXLXg1r9Ds
-	 r8o73D/+RwGrf/vuWFL7ROqUuGpUPrTe4E0ExxvFi2rVM4J9mrDnsytZIMn+zW8Ajf
-	 ozKJ416HCCYBnqove4lPJeuJIBYrAKVWTQAT8+yB7015bW4BE1d7NrbJs7CEYVwT33
-	 KjHFro9mUhvdcqj8+k4z3bX7zSfOhvdCVJS7DGgaa5EZfvWXjFFIhd+IfSzsZWVxhP
-	 L6hdX2evChPUaUlBeBoGKjWEAFCfif/cSAcQ0FjWcLcZzPr3YACEGTv4b0WwdP/6Ri
-	 3GiUi6MStTkTg==
+	b=VHUTjQbZP0HZURTnuEWIOStZjNXwsYvmia5dQ4ePu4AlDim8dcXKmNh8xqEBrvj+3
+	 4KLz70akqkmND38y23d02XyO1BnI6qOsntxfrTAQBqIZ27BbmQW6aB0dHyVOk4YdAu
+	 NO9jL0cNU8fbao3IIxbB1zaV3Ai+Ffl3BgYQnPNfS1GGl/+HYnR4jGgIsRxLxP7Xw4
+	 e3s6wEBXlFO6jx7/xFC+yheOMLE2gDu4ko48MkDru+TAcdSXA+NyD1ZhO0RThH/iTk
+	 zOkEskjQSnSYxk+Q222teILEfeDnL5h58hIyYan7SJ/b70lew8E6OhTbzfdqlkbBBP
+	 KRDa+hPoy5Uyw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -50,12 +50,12 @@ Cc: Joao Pinto <Joao.Pinto@synopsys.com>,
 	Sasha Levin <sashal@kernel.org>,
 	Eugeniy.Paltsev@synopsys.com,
 	dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.8 05/24] Avoid hw_desc array overrun in dw-axi-dmac
-Date: Wed,  5 Jun 2024 07:50:15 -0400
-Message-ID: <20240605115101.2962372-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 04/20] Avoid hw_desc array overrun in dw-axi-dmac
+Date: Wed,  5 Jun 2024 07:51:47 -0400
+Message-ID: <20240605115225.2963242-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240605115101.2962372-1-sashal@kernel.org>
-References: <20240605115101.2962372-1-sashal@kernel.org>
+In-Reply-To: <20240605115225.2963242-1-sashal@kernel.org>
+References: <20240605115225.2963242-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -64,7 +64,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.8.12
+X-stable-base: Linux 6.6.32
 Content-Transfer-Encoding: 8bit
 
 From: Joao Pinto <Joao.Pinto@synopsys.com>
@@ -94,10 +94,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  2 files changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-index a86a81ff0caa6..321446fdddbd7 100644
+index dd02f84e404d0..72fb40de58b3f 100644
 --- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
 +++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-@@ -302,6 +302,7 @@ static struct axi_dma_desc *axi_desc_alloc(u32 num)
+@@ -256,6 +256,7 @@ static struct axi_dma_desc *axi_desc_alloc(u32 num)
  		kfree(desc);
  		return NULL;
  	}
@@ -105,7 +105,7 @@ index a86a81ff0caa6..321446fdddbd7 100644
  
  	return desc;
  }
-@@ -328,7 +329,7 @@ static struct axi_dma_lli *axi_desc_get(struct axi_dma_chan *chan,
+@@ -282,7 +283,7 @@ static struct axi_dma_lli *axi_desc_get(struct axi_dma_chan *chan,
  static void axi_desc_put(struct axi_dma_desc *desc)
  {
  	struct axi_dma_chan *chan = desc->chan;
@@ -114,7 +114,7 @@ index a86a81ff0caa6..321446fdddbd7 100644
  	struct axi_dma_hw_desc *hw_desc;
  	int descs_put;
  
-@@ -1139,9 +1140,6 @@ static void axi_chan_block_xfer_complete(struct axi_dma_chan *chan)
+@@ -1093,9 +1094,6 @@ static void axi_chan_block_xfer_complete(struct axi_dma_chan *chan)
  		/* Remove the completed descriptor from issued list before completing */
  		list_del(&vd->node);
  		vchan_cookie_complete(vd);
@@ -125,7 +125,7 @@ index a86a81ff0caa6..321446fdddbd7 100644
  
  out:
 diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
-index 454904d996540..ac571b413b21c 100644
+index eb267cb24f670..8521530a34ec4 100644
 --- a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
 +++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
 @@ -104,6 +104,7 @@ struct axi_dma_desc {

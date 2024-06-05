@@ -1,48 +1,48 @@
-Return-Path: <dmaengine+bounces-2260-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2261-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0B518FC469
-	for <lists+dmaengine@lfdr.de>; Wed,  5 Jun 2024 09:22:20 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6001A8FC46D
+	for <lists+dmaengine@lfdr.de>; Wed,  5 Jun 2024 09:22:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7FFBE1F26B3F
-	for <lists+dmaengine@lfdr.de>; Wed,  5 Jun 2024 07:22:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 905851C24BC7
+	for <lists+dmaengine@lfdr.de>; Wed,  5 Jun 2024 07:22:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D40421922D1;
-	Wed,  5 Jun 2024 07:22:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10BBD1922D1;
+	Wed,  5 Jun 2024 07:22:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cmaVUt7u"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FSn5srrF"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11891922CE;
-	Wed,  5 Jun 2024 07:22:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D214C1922CA;
+	Wed,  5 Jun 2024 07:22:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717572136; cv=none; b=qHzFKcic81Bwyp17jiGnsrkdxBnx62s0zlHDTutlqlQECqrlAcqqa1hjxw7kGzLwLgZ/Hcv+XFqpHOcPBk1C5CWf6TL3AHYMawKWq/GAAH8ACgfjktL2SISar2dO4iWodXZ3eDQKf2sNQVeJnKDMl+2Nts7VtgcIlId0I0pEY78=
+	t=1717572149; cv=none; b=K9j1WHgBNxVHpiM6KsB+mVhED5LyxWJl66anvetPSJJwWHxYphK6QwhMyQoDiX/h/nLnKzhqEDUsVKKdUgiohGcyCBHiwjY19V0WGj2oPUJ8nJx444tpspJQqvakJ5A5/SrEeIDT92GbeC0PUffBBarCWazUhAf49w8AozmhAYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717572136; c=relaxed/simple;
-	bh=qDGK3MtuSL/3DdOvmSJHlQ204iskQ4WNGV3A0CfIk2M=;
+	s=arc-20240116; t=1717572149; c=relaxed/simple;
+	bh=REW6UuuWF8IYkJVGx7NKvjFx4aeLfBvFhPQGKLgZLsQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MTWNJmmrsFClS3pMxh7xvwryeKmJy0ghDtC1dlWsnkZ5cJoXge/gLFNWnqFNscXd4YaewEBdeKPFqHHP8ADqxgM+nbzrK0/qbLA+pPF/JnUi3R+jPmWdxiZ+tBdhgbsibV2nsX/IMgeJ92VtfRNakfgcNshJR4mv8mlVjTWJbgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cmaVUt7u; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B151EC3277B;
-	Wed,  5 Jun 2024 07:22:11 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=uzh9RCnGaeJdzcT+Lip/+5IwQSB5zatBpBzgWu3ybHJEmVQzvR+WuQS5IWVaLNO33PUeYsE90iSiFQLdRv36QUYYVn3IPDOTO/3mR+FcXZamlhEVgHwPekMLk0+luPfHFMkkCGQxzcsRiKWuyas+kTytvFxjUzRvVKTpukby5nk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FSn5srrF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E0F8C32781;
+	Wed,  5 Jun 2024 07:22:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717572135;
-	bh=qDGK3MtuSL/3DdOvmSJHlQ204iskQ4WNGV3A0CfIk2M=;
+	s=k20201202; t=1717572149;
+	bh=REW6UuuWF8IYkJVGx7NKvjFx4aeLfBvFhPQGKLgZLsQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=cmaVUt7uhJqvZpZ/hp1CPAMxlv/YPeRpGZ3K5qLLvv5xqkt7eEhXnuTHoXRdea7qS
-	 DV3LvQQd7xBM8YdxspS2CD/dIR/QtIaYyFMPzgwUUVO8H7QdRmTIkzDBP9c0gijW/i
-	 Gs566tB52O24IDZFIZLLsHs4VPWrJKJvOYxs/SqcuHblG2eKZ7bo9bpvopY/jHdc+l
-	 Bh3sOjone7Lq1moFOxOsi2gSHXQ1Gx1NHDpruzStdozUcJjyFIlNaNwA/TJy1aKOhE
-	 2bzBwYpSEfl3pe5XCRPoNVlXNQYsDN7Qmg77Eo0LyVKeNnQ9Ar+rDwFH939hCGdLH+
-	 HiSKgAqX3O8sQ==
-Message-ID: <9b033ae8-db5f-491a-bf6c-86c0fe40079d@kernel.org>
-Date: Wed, 5 Jun 2024 09:22:09 +0200
+	b=FSn5srrFvXPiKOpaEYV1SzmzL+fCgyZU2dN5cprAV9+cpOk/59gc5N1Yuq4HMKu0Y
+	 I3ApQM26fClEXKcDgjK0iF2Q3tZhs/MvC+EqZ1KY0h/hXLvTKsKLfT3vsiIvMRa6pk
+	 oY9JVjN0Cd4scZaJ8Ca/5XNAL81h4aAsB9xZ89kOVjqgwjSUZ2aAagb2V8+OifvJKj
+	 Hy3QFCKaWtMisA1HDGFGwiV6/jONQPrODxoVAaYb5oXZFSd1vhFTxM+npCJ8sELUWQ
+	 vGzI9dfJ8i9VxHm9myHRTrI4q2pbpV2hLlaf7PAV7hB6GN0NIbwczoTy3VZ5GhqHGU
+	 htWegQRipyqVA==
+Message-ID: <c2ac58fa-5093-4eb3-bd75-4a1a838a8a04@kernel.org>
+Date: Wed, 5 Jun 2024 09:22:24 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -51,9 +51,8 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v3] dt-bindings: dma: fsl,imx-dma: Convert to dtschema
-To: Daniel Baluta <daniel.baluta@gmail.com>
-Cc: Animesh Agarwal <animeshagarwal28@gmail.com>,
- Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+To: Animesh Agarwal <animeshagarwal28@gmail.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
  <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
  Sascha Hauer <s.hauer@pengutronix.de>,
@@ -62,10 +61,8 @@ Cc: Animesh Agarwal <animeshagarwal28@gmail.com>,
  devicetree@vger.kernel.org, imx@lists.linux.dev,
  linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 References: <20240605003356.46458-1-animeshagarwal28@gmail.com>
- <1b98bb9a-8373-4858-b31b-37e6f9da453b@kernel.org>
- <CAEnQRZDWFN2Fwb5Kxn-TkP_uUah-dz-fSO7t0MJjXFgW+5hixQ@mail.gmail.com>
-Content-Language: en-US
 From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
  cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
@@ -109,35 +106,20 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <CAEnQRZDWFN2Fwb5Kxn-TkP_uUah-dz-fSO7t0MJjXFgW+5hixQ@mail.gmail.com>
+In-Reply-To: <20240605003356.46458-1-animeshagarwal28@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 05/06/2024 09:17, Daniel Baluta wrote:
-> Hi Krzysztof,
+On 05/06/2024 02:33, Animesh Agarwal wrote:
+> Convert the fsl i.MX DMA controller bindings to DT schema. Remove old
+> and deprecated properties #dma-channels and #dma-requests.
 > 
-> On Wed, Jun 5, 2024 at 10:07 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>
->> On 05/06/2024 02:33, Animesh Agarwal wrote:
->>> Convert the fsl i.MX DMA controller bindings to DT schema. Remove old
->>> and deprecated properties #dma-channels and #dma-requests.
->>
->> Where? I see them.
+> Signed-off-by: Animesh Agarwal <animeshagarwal28@gmail.com>
 > 
-> What you see is dma-channels which is the newer properties. We removed
-> the deprecated ones named '#dma-channels'
-> 
-> See the original txt file:
-> 
-> -- dma-requests : Number of DMA requests supported.
-> -- #dma-requests : deprecated
-> 
-> Funny or not there were two properties with similar names the only difference
-> was the '#' at the beginning.
-> 
-> We removed the deprecated property named '#dma-requests'.
+> ---
 
-Oh, I see now, thank you.
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof

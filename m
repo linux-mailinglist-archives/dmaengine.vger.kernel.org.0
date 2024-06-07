@@ -1,60 +1,58 @@
-Return-Path: <dmaengine+bounces-2314-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2315-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E486900B87
-	for <lists+dmaengine@lfdr.de>; Fri,  7 Jun 2024 19:47:57 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 39EBE900B88
+	for <lists+dmaengine@lfdr.de>; Fri,  7 Jun 2024 19:47:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 746681C22043
-	for <lists+dmaengine@lfdr.de>; Fri,  7 Jun 2024 17:47:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E0AB71F231D6
+	for <lists+dmaengine@lfdr.de>; Fri,  7 Jun 2024 17:47:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CCBF19B3D2;
-	Fri,  7 Jun 2024 17:47:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29E8F19B3E4;
+	Fri,  7 Jun 2024 17:47:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KoElxhXg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h13+vsKP"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4607819924F;
-	Fri,  7 Jun 2024 17:47:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F19BB19B3D4;
+	Fri,  7 Jun 2024 17:47:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717782441; cv=none; b=C7rLAyzMWX5J60uG9NcyLZE32C/2TWUMMNel8FrzZ8eNheRDNOBoRGg0PmoMb7TkO6unS27iX7trlggohVmkFzFqqRHGKEkuIjoLt0/iblHeA73rOfw9fJSg+xwAWqVkuYdT30Zre51JgZhGhlwB/ziF6ZO8A+QaMkbBtgNFpvo=
+	t=1717782444; cv=none; b=G1aXa092SOzt5XtnwAzkAjISqsx9+nMwo5bPPilf+3GMwwUS2GNvJzNp+cLbpzpiLRG9GBZTPLqX1TktdiM7eXV6YnRPZkmTJwobANEJoZvVdhlPCPtteSJ5scNHw0hOh+3NMT4DAXm3qw2vsUWV+6bBGCYIibKU2uv9Z24rSb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717782441; c=relaxed/simple;
-	bh=ByIEJK7RHrQ9tIuMX0t0w4IcM/VAF+vg+df90ADVd2s=;
+	s=arc-20240116; t=1717782444; c=relaxed/simple;
+	bh=lgjefLL5Z3rP/rbNsFuurSusuD9paPVfZo+z2mjiAtg=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=GtQpyXMF852c2wY8n9AgJz7N5HNb4cIBc+yz+Wx5CeFMp/1K7kThvyDRWmVbLdisaRkOb/dXyJ8Ix2B6u6byAFQnjjw3zqj1lF51+I3/84h8BFl+qGFKNDLrC/sqZtcQ0kOEUA95cGEUHiZJRkW+wYgnmru0tss5btC5MP7mcOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KoElxhXg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F147EC32786;
-	Fri,  7 Jun 2024 17:47:17 +0000 (UTC)
+	 MIME-Version:Content-Type; b=ZpOb7Ma8BCU+HSVAwNHvWAqqUSurJ7PBfjgAC+vnZVAOUSaUndsNEAEeKFH42PPeCpUrLZpJQvhTWBX2MfvUjpuz3kqRaafPDWuX7k/HVr1gXAjTNRjs0v0jjsC/4TyRUxWeDWU/o3dnH8UQ4QLuSV64Rf5ZyRUA+Yi1jq5Dflo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h13+vsKP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BAB2C2BBFC;
+	Fri,  7 Jun 2024 17:47:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717782440;
-	bh=ByIEJK7RHrQ9tIuMX0t0w4IcM/VAF+vg+df90ADVd2s=;
+	s=k20201202; t=1717782443;
+	bh=lgjefLL5Z3rP/rbNsFuurSusuD9paPVfZo+z2mjiAtg=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=KoElxhXgBNC8L8hyas0bPrJ7kcWuFc71AkdWIJk9uQMYjKAs9m8yoJnMT0RfYzTfc
-	 Iy8tAIEHqZKDluStdOUY/hVZlMDMw/YOTSfjA+OfZ4WEsLs8jwykcaz2Stzc2fXeZw
-	 PThGWz1rlXBRiRdprcmFm7yM5cGfM4wYe3DL8ltW9ySkivkGPytgXBxHhO0cDCA21d
-	 oOH27bXjqMm6T5sl3RLxGX7Qjo3QY4N/As9EU0QsM6LtIIDwF8/iqWjNPWIak1D1eN
-	 FODq3wQeKgHqvTquusGxw0NlHQDTeq08wEnTR/2BJ8i0ihSZ1F9LIuiM/pn5KPUbKP
-	 BQPqnDDmDVk+g==
+	b=h13+vsKPhK6RHc3TEny30zmTeVjF/hJx9ANEnLNPfBEz59J4vtrpKob1RgFjInvjH
+	 fHJsb+quuBnBrKuhxr/3IWzyFMa1fte7OfOXIv1M56dDSQYGwhX3eQW0B0azrXBvYd
+	 yp7M9q/e/6v85mA5t3P82oIWQ4uu0Q21CgRPy7tPgx4xZeF/aLvRVNPQYgrzVWbKic
+	 34W/HKTGLdT3LuTxC4cZzALaLkJ9E/YRGBW2Sx/w20K24+IgQsUkJh/1RcI7fWc+yw
+	 7I/M8adDzFVowGzTPvVa161ao/KzFSm925Q1s/YnQUXTYa1UB+OobZDoFtQrrONhpW
+	 AHQBarZbYO/Ng==
 From: Vinod Koul <vkoul@kernel.org>
-To: Luis Chamberlain <mcgrof@kernel.org>, 
- Russ Weight <russ.weight@linux.dev>, Lucas Stach <l.stach@pengutronix.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J . Wysocki" <rafael@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
- Fabio Estevam <festevam@gmail.com>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, dmaengine@vger.kernel.org, 
- imx@lists.linux.dev, patchwork-lst@pengutronix.de
-In-Reply-To: <20240516102532.213874-1-l.stach@pengutronix.de>
-References: <20240516102532.213874-1-l.stach@pengutronix.de>
-Subject: Re: [PATCH 1/2] firmware: add nowarn variant of
- request_firmware_nowait()
-Message-Id: <171778243763.276050.8365914486302926439.b4-ty@kernel.org>
-Date: Fri, 07 Jun 2024 23:17:17 +0530
+To: Sinan Kaya <okaya@kernel.org>, kernel@quicinc.com, 
+ Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, 
+ dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ kernel-janitors@vger.kernel.org
+In-Reply-To: <20240603-md-drivers-dma-qcom-v1-1-d1bd919352bf@quicinc.com>
+References: <20240603-md-drivers-dma-qcom-v1-1-d1bd919352bf@quicinc.com>
+Subject: Re: [PATCH] dmaengine: qcom: add missing MODULE_DESCRIPTION()
+ macros
+Message-Id: <171778244108.276050.8818140072679051239.b4-ty@kernel.org>
+Date: Fri, 07 Jun 2024 23:17:21 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -66,20 +64,20 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
 
-On Thu, 16 May 2024 12:25:31 +0200, Lucas Stach wrote:
-> Device drivers with optional firmware may still want to use the
-> asynchronous firmware loading interface. To avoid printing a
-> warning into the kernel log when the optional firmware is
-> absent, add a nowarn variant of this interface.
+On Mon, 03 Jun 2024 10:06:42 -0700, Jeff Johnson wrote:
+> make allmodconfig && make W=1 C=1 reports:
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dma/qcom/hdma_mgmt.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dma/qcom/hdma.o
 > 
+> Add the missing invocations of the MODULE_DESCRIPTION() macro, using
+> the descriptions from the associated Kconfig items.
 > 
+> [...]
 
 Applied, thanks!
 
-[1/2] firmware: add nowarn variant of request_firmware_nowait()
-      commit: 11c63e57404e538c5df91f732e5d505860edb660
-[2/2] dmaengine: imx-sdma: don't print warning when firmware is absent
-      commit: ea00def538eceda618b940fef757f55c1190e327
+[1/1] dmaengine: qcom: add missing MODULE_DESCRIPTION() macros
+      commit: 8e9d83d7228f663ef340ebb339eaffc677277bd4
 
 Best regards,
 -- 

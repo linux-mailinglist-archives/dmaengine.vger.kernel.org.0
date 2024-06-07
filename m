@@ -1,134 +1,156 @@
-Return-Path: <dmaengine+bounces-2305-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2307-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DEBE5900165
-	for <lists+dmaengine@lfdr.de>; Fri,  7 Jun 2024 13:01:09 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 073A5900319
+	for <lists+dmaengine@lfdr.de>; Fri,  7 Jun 2024 14:13:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 19712B2334D
-	for <lists+dmaengine@lfdr.de>; Fri,  7 Jun 2024 11:01:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1F0971C222FE
+	for <lists+dmaengine@lfdr.de>; Fri,  7 Jun 2024 12:13:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5897315DBA5;
-	Fri,  7 Jun 2024 11:01:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1639190682;
+	Fri,  7 Jun 2024 12:13:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="voYI5waC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AwrRI8y2"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8214152530;
-	Fri,  7 Jun 2024 11:00:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B5B187323;
+	Fri,  7 Jun 2024 12:13:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717758061; cv=none; b=nOE8tp52pUm0A/BbEqEfknUxU/gJ+cGfyfJET27NuNe+kLVvLc+ETP/Kyck83rxquMrbX+meEhpFLaY160KXZHbsxlVlU36Fb83bidSZsxgo4u0M/yWlBOPVgpaIAm0OsnTe1fvYTAXTmxJm7e78ELcdQUCbnNUfT+ecaN+xmzk=
+	t=1717762388; cv=none; b=aJ+3EZpd2zJkC/Ct7oBHnozauqDn1/ZQsXb5WGc2IH/cMoUTAMpwOzcmJJdhmh4LlY6NUVB2bzAmvuATpkkDOxx+RilR2mHRxlvfqS+9XTX89Eaa5lYkTarNfZedtycKsELM1EVgq2+yW4cUY08C0dKGMdQRE9+pkXAyy2YoUN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717758061; c=relaxed/simple;
-	bh=PYBDXW1bgAq8z8hyPZRjTK33dIFpn/74BViS5VSNeIo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ey9yvf1tV6WRQdFEm1tVTEvE1GyYpylHgPIy+brqoiQNxioMiiXiepSwS/+krH7B/wqNnsrUCENQWR14B7e1yt10f4sDIQNue2iLNWrNigcrHfKqadGhJuFoPqBWnMP78ms3KFT/gLqm4+IOSn+3f9yxo1Wg+apMeUUU/spGaZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=voYI5waC; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1717758021; x=1718362821; i=markus.elfring@web.de;
-	bh=IhW5vpsMEF6oM47c6btwxu3Ln8LJNCv3Ogz2x3bYGGY=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=voYI5waCAWK90Hkf6VsiDMqz3Q79jVJp46bqwaP7vzBhthOmcVdsR1tJv/fpxZqp
-	 7nCIIm4xYZTUmhoQ+1cNoEL1dTOIvDcHhTAAXUVAi9bDxfQm29k1oEqHRWg8jY+Vl
-	 zzUkgba45soV3mH9iSTr1CMR54gT0ZbmkyqkwCNVuhNFNC8arHi/XHZvMBsIPTM8I
-	 dow8SWx86aFHp5dfH3jUZKrxaGAzNvi1DqW3ibumgmDAq7kJrKXnTtqFyP2dKxwnx
-	 fkqb5lduq9kjV198HN2/7OJoDlwFXULysMr+ANiTy+dDXc/S8Dm2l9n0mC7DEk7dd
-	 NPt0NbWiT28uLZdJnQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mft7t-1svTvY2naj-00n9hn; Fri, 07
- Jun 2024 13:00:21 +0200
-Message-ID: <dd01cc26-5af5-45f6-a5b0-b5d29da3f01e@web.de>
-Date: Fri, 7 Jun 2024 13:00:20 +0200
+	s=arc-20240116; t=1717762388; c=relaxed/simple;
+	bh=gF5n+zRaU3uzxOxtiMM2LdGmFoHvX4eM2/oevn8fkbA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=JOtM1ay82FwtcASJ4nQQZciL5bacYED16mbGLnNElyO2A4VRMR80menS0VC3zssUKiOV7nLCPFMIUxDL0AgNT9hcKsI4BhGMxNijolH7SVIxsQztI3J4XnRakZtYIi9Pi2epc1DL9bMRancWMyYzlsonRm6cwCjrEBF+vRkiDfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AwrRI8y2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3F4C5C2BBFC;
+	Fri,  7 Jun 2024 12:13:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717762388;
+	bh=gF5n+zRaU3uzxOxtiMM2LdGmFoHvX4eM2/oevn8fkbA=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=AwrRI8y2rLlk70qtMvL0YNffuEVQsM70xtvUu7fwILFhRUaEHT3kPyhRwLqGJWTQq
+	 DLc86kxEfQBaTwcc+s9rcshNa3OP3MawgKl1Wbjenh2zFrFqg5Acmyem89amPieSbK
+	 eCBlgIhbuDvyRx4PSLZ9Bj4ReavD/jua4urMRie+u2xx6CttVoOO1OLnwhBXGlE522
+	 riH2NwzxRJY9kaVXP2nUAEz6meIBw6XNqUfTY84DMZPHiSzgTcrasxsa7XR+LFu8nj
+	 KiBzvfKAUBVJ/q0tGmE6BbBiifehmgK5tiDBjJTQNJxMf3Mcz0M1DED/WBTg6ycDD9
+	 rqhkTw3rSitEw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28096C27C55;
+	Fri,  7 Jun 2024 12:13:08 +0000 (UTC)
+From: Keguang Zhang via B4 Relay <devnull+keguang.zhang.gmail.com@kernel.org>
+Subject: [PATCH v8 0/2] Add support for Loongson1 APB DMA
+Date: Fri, 07 Jun 2024 20:12:22 +0800
+Message-Id: <20240607-loongson1-dma-v8-0-f9992d257250@gmail.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] dmaengine: xilinx: xdma: Fix data synchronisation in
- xdma_channel_isr()
-To: Louis Chauvet <louis.chauvet@bootlin.com>, Lizhi Hou <lizhi.hou@amd.com>,
- Brian Xu <brian.xu@amd.com>, Raj Kumar Rampelli
- <raj.kumar.rampelli@amd.com>, Vinod Koul <vkoul@kernel.org>,
- Michal Simek <michal.simek@amd.com>, dmaengine@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20240607-xdma-fixes-v2-1-0282319ce345@bootlin.com>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240607-xdma-fixes-v2-1-0282319ce345@bootlin.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:qMKv+pscBjHW9lTpGPCxoG4AtlhN/1w5uQrP4IcHwLCdyT9LaAF
- pxnwHOZ3kovQB+gMDFK1SPxvxAZOQV5KR3R3dZYB4U4+kYRQKcrR9y8xfBWl27pDf0Lv+Jh
- +lj2y835hfBopQGcVC81yHAErCkizTODlGzkGolloRlE3Lew1V72XG9ucswdxcIyBVV93Rj
- mvxIk/GKwUJNK5XuKDhJQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:ZGEkmf+aAVU=;Z3Ng3uPnW/ZXnqCjf23PD3CLyqQ
- Nw+YuHt0WkNK5QE+6h41+qD1gzH5KKWUxhmRNGOLPC5WzgUC8XXObf0Hllu4gsI8M1lUsCiyJ
- nveY7fGVDJXU3rENekbrIYjVBf+YS2QaOvK9ZwnMCYw9TvLBRnGPVK0ZZxs7SSvinTm7unOba
- qSe/y/U2Vilx20HNKFEa9iah90/xG3WWIPk1jdEnsfOvJ4J0oScibrxmOnpZ5BfaNpNMf7iVQ
- 1pMYrBpKjemvK4/5zyv37lZOMnCcxRedXkWtY7DCOxkrucLWyIRDwwXOHueAx92NpUG6eWC4w
- 6raqQpB9h0WUO2PL5Uqv7/aJkyob3aulBNXDLwjQrpBJb8FC076YIXA04w1LyZ8imZVcqyJqc
- je0cJ/1n4K6y5Hcx76KcMF7YRONDQYm37TRjejiLwVcRZ8ZlSd6j9JP7sVQr0yXFLtw7ZIP8h
- AsO0pgdM8qMYrHKNyHkgolIP++6daz/C3G9VT6LhFF1e/8U2IorS/IJykshYZgiRSidjucf8A
- 2f1jq9JtYCTynNPbWvlhpSmli0eBpES9ec13jcRHVcQWQMAhBBdIiTLpaPRAoNkNqYHRFjcps
- CnzPxfoo8lN/qCIdPQ6CRS02AdolWAznZhcDBUS+F/PBSrm6GDLnSbnd7GyZ7y3TSX7VW4uNR
- Ti1mzu9Ivsefr6XDg8s3yu0LoR9APmGSMhRpM1I5TfAo4xzFsK9/4ppeM54GqCrfrH1vm+6bj
- k9O0ApTQGjC+eaJ7E5dpHQp0w71OSG9DQrBL3w89U4jV3tK4sKUlmRHGy5YBKvrW6oPCsYIeX
- U4dMQikVc7aKkIXzuMgbO0yOpWJpKl4+hSEjmy7ZunTIc=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIACb5YmYC/12OzY7CIBRGX8WwntvwIxRczXsYFxRuWzK2TEAbt
+ em7D7iYNC6/xTnfWUnGFDCT02ElCZeQQ5zL0F8H4kY7DwjBl0045YIxTuEa4zzkODPwkwWmhO1
+ RtlR3hhTmN2EfHm/f+VJ2n+IEtzGh/bdQwzXjzEjRSH5UVAODHxzu5ax51cvvYbLh2rg4VeMY8
+ i2m5ztwUdVbLUcqmPpoWRRQMNQjd8K58rIT1Zal3dHcfNJtoUXrO6lLk0e5p7dt+wNv2zmPKgE
+ AAA==
+To: Keguang Zhang <keguang.zhang@gmail.com>, Vinod Koul <vkoul@kernel.org>, 
+ Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc: linux-mips@vger.kernel.org, dmaengine@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Conor Dooley <conor.dooley@microchip.com>, 
+ Jiaxun Yang <jiaxun.yang@flygoat.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1717762386; l=2538;
+ i=keguang.zhang@gmail.com; s=20231129; h=from:subject:message-id;
+ bh=gF5n+zRaU3uzxOxtiMM2LdGmFoHvX4eM2/oevn8fkbA=;
+ b=jhRwfB+vpFFBOmYUzSKsBu7OoBFlD0dWV9a6WDqY9cVvwsGut+NtK4HH/lnWannivrsr60YEF
+ EEilt2pYzBFBsDacigUIn5g+pbjy1zwbxhOtweHvvZLG6VWJcV4NRUu
+X-Developer-Key: i=keguang.zhang@gmail.com; a=ed25519;
+ pk=FMKGj/JgKll/MgClpNZ3frIIogsh5e5r8CeW2mr+WLs=
+X-Endpoint-Received: by B4 Relay for keguang.zhang@gmail.com/20231129 with
+ auth_id=102
+X-Original-From: Keguang Zhang <keguang.zhang@gmail.com>
+Reply-To: keguang.zhang@gmail.com
 
-> Requests the vchan lock before using xdma->stop_request.
+Add the driver and dt-binding document for Loongson1 APB DMA.
 
-Better wording alternative?:
-  A data synchronisation construct was missing in this function implementa=
-tion.
-  Thus apply the vchan lock before checking the data structure
-  member =E2=80=9Cxchan->stop_requested=E2=80=9D.
+Changes in v8:
+- Change 'interrupts' property to an items list
+- Link to v7: https://lore.kernel.org/r/20240329-loongson1-dma-v7-0-37db58608de5@gmail.com
+
+Changes in v7:
+- Change the comptible to 'loongson,ls1*-apbdma' (suggested by Huacai Chen)
+- Update the title and description part accordingly
+- Rename the file to loongson,ls1b-apbdma.yaml
+- Add a compatible string for LS1A
+- Delete minItems of 'interrupts'
+- Change patterns of 'interrupt-names' to const
+- Rename the file to loongson1-apb-dma.c to keep the consistency
+- Update Kconfig and Makefile accordingly
+- Link to v6: https://lore.kernel.org/r/20240316-loongson1-dma-v6-0-90de2c3cc928@gmail.com
+
+Changes in v6:
+- Change the compatible to the fallback
+- Implement .device_prep_dma_cyclic for Loongson1 sound driver,
+- as well as .device_pause and .device_resume.
+- Set the limitation LS1X_DMA_MAX_DESC and put all descriptors
+- into one page to save memory
+- Move dma_pool_zalloc() into ls1x_dma_alloc_desc()
+- Drop dma_slave_config structure
+- Use .remove_new instead of .remove
+- Use KBUILD_MODNAME for the driver name
+- Improve the debug information
+- Some minor fixes
+
+Changes in v5:
+- Add the dt-binding document
+- Add DT support
+- Use DT information instead of platform data
+- Use chan_id of struct dma_chan instead of own id
+- Use of_dma_xlate_by_chan_id() instead of ls1x_dma_filter()
+- Update the author information to my official name
+
+Changes in v4:
+- Use dma_slave_map to find the proper channel.
+- Explicitly call devm_request_irq() and tasklet_kill().
+- Fix namespace issue.
+- Some minor fixes and cleanups.
+
+Changes in v3:
+- Rename ls1x_dma_filter_fn to ls1x_dma_filter.
+
+Changes in v2:
+- Change the config from 'DMA_LOONGSON1' to 'LOONGSON1_DMA',
+- and rearrange it in alphabetical order in Kconfig and Makefile.
+- Fix comment style.
+
+---
+Keguang Zhang (2):
+      dt-bindings: dma: Add Loongson-1 APB DMA
+      dmaengine: Loongson1: Add Loongson-1 APB DMA driver
+
+ .../bindings/dma/loongson,ls1b-apbdma.yaml         |  67 +++
+ drivers/dma/Kconfig                                |   9 +
+ drivers/dma/Makefile                               |   1 +
+ drivers/dma/loongson1-apb-dma.c                    | 665 +++++++++++++++++++++
+ 4 files changed, 742 insertions(+)
+---
+base-commit: d35b2284e966c0bef3e2182a5c5ea02177dd32e4
+change-id: 20231120-loongson1-dma-163afe5708b9
+
+Best regards,
+-- 
+Keguang Zhang <keguang.zhang@gmail.com>
 
 
-> ---
->  drivers/dma/xilinx/xdma.c | 4 ++--
-
-How do think about to avoid a duplicate marker line?
-
-
-=E2=80=A6
-> +++ b/drivers/dma/xilinx/xdma.c
-> @@ -885,11 +885,11 @@ static irqreturn_t xdma_channel_isr(int irq, void =
-*dev_id)
->  	u32 st;
->  	bool repeat_tx;
->
-> +	spin_lock(&xchan->vchan.lock);
-> +
->  	if (xchan->stop_requested)
->  		complete(&xchan->last_interrupt);
->
-> -	spin_lock(&xchan->vchan.lock);
-> -
->  	/* get submitted request */
-=E2=80=A6
-
-Under which circumstances will development interests grow for the usage of
-a statement like =E2=80=9Cguard(raw_spinlock)(&xchan->vchan.lock);=E2=80=
-=9D?
-https://elixir.bootlin.com/linux/v6.10-rc2/source/include/linux/cleanup.h#=
-L124
-
-Regards,
-Markus
 

@@ -1,167 +1,250 @@
-Return-Path: <dmaengine+bounces-2301-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2302-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C3548FF59A
-	for <lists+dmaengine@lfdr.de>; Thu,  6 Jun 2024 22:00:23 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E1578FFD68
+	for <lists+dmaengine@lfdr.de>; Fri,  7 Jun 2024 09:44:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 26C84281993
-	for <lists+dmaengine@lfdr.de>; Thu,  6 Jun 2024 20:00:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1D40F286352
+	for <lists+dmaengine@lfdr.de>; Fri,  7 Jun 2024 07:44:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79C9461FE2;
-	Thu,  6 Jun 2024 20:00:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 803B1156997;
+	Fri,  7 Jun 2024 07:44:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="SVVG3Zkx"
+	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="YPjDmDk9"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from aposti.net (aposti.net [89.234.176.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C978347F6C;
-	Thu,  6 Jun 2024 20:00:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7BDB14F9DB;
+	Fri,  7 Jun 2024 07:44:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.234.176.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717704017; cv=none; b=X8C+2l3AWmUoV13C/ffZXv3qZ6en8sGnQsd1q8nHUc52mD2VHI5G4kNpJCSNupy/l3K/f+TRM5Pg0w5jpmJg50ZJoRJf1qZ6Mb/Zleho43/vPBYTBw9Fl3E0MG4USF+y/l+ceGdYxcxZcKt+7HCDtMPKrMnyU9TjhE2Qqhoo0uU=
+	t=1717746258; cv=none; b=ewBOVTBOEZ5JIQgbCfkNvR5uVMt8iRSAwx26ySAQVIl8Ovy1/+dsbRqKL3wtxthMy5EHmtOhTlOjYkhKA7BgO6FnDqAFXf9UGott+xkM4ulvUPSxwI8rh1b6b8rtSsrIfwjmw3uS08Z1KRkqy2SPdfhxBO8dEx89+6EHnw05kIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717704017; c=relaxed/simple;
-	bh=r0HycEYtsjvfDnG31XB6I1WnxKmQ18iLPI5NxGMDrHU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=hfggioW8uS6NuKocn3m7u7X3a8gHlLQ/m1/ANyfNyLyzUDO/LZqssxM0Vtn9+b/NXwrdfivrd4db82cPLni1hsE/SuZO43ZoLv8w2Me1r0j3o5s24dHnwIV9YxeqFdQJfFwK1SMlTmRN7Ioat/nUDv3v2XpqoODBWQWauGBnoYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=SVVG3Zkx; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 456Akb3J026749;
-	Thu, 6 Jun 2024 20:00:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=Km97lP73CsYhkQfOtqG4O7
-	VDuPXW2wmATbHUzQ//8iI=; b=SVVG3ZkxJ+vpP+ySoqlQ4fItnOnwOBjUXBi76Y
-	dLsrnQGS3pLdr2Y4yeZ09cruUOiURG9C7QHuJhSnPnKnCvXSD2N2r3hlcjX3R1ji
-	T64A8vnG6FpSkBvsAEgor3UOC1hc5VHB02bJqwloEAwWzpaVOhRGHtR4nTtMAfIk
-	QbuGsdGlpqawlQKp2w5qa/D6jyQK2k4WfI5hFA3AdwCyhzkuCJzyn79K1eqcSTPr
-	GJ2hZiYKY4gQSSVAhKKYEKVmvSxLuuORFUkgrqYuepPYSMHh2+RUDzLBpn7H+Xs7
-	0J/qxbWFb+tk7h9s2VwcJhJGzZzoZ/z+Ta5024/RtF5tlmfA==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yjq2tm1kf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Jun 2024 20:00:09 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 456K08WS001766
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 6 Jun 2024 20:00:08 GMT
-Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 6 Jun 2024
- 13:00:02 -0700
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Thu, 6 Jun 2024 13:00:01 -0700
-Subject: [PATCH v2] dmaengine: add missing MODULE_DESCRIPTION() macros
+	s=arc-20240116; t=1717746258; c=relaxed/simple;
+	bh=jg6y42A8tuanMkc0qiGHDqRmsY6EuDBjOBYeQQggbQA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=P2zlC66Pm4tx7tSIdW1ZLi/xaHSG01lJ8VZQQTJb9eZIKcx6/DKk5kABulFmoODqLS7ba9fZYn/Lb0Gv1xjWZ4CfjJOze1f5MY/Cbt30G+nFgLu064ijnSGKzeCJkhTqGsqGWNezfDk8LardMo1mbVg4DgR93VDlFL+Z63QhQ9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=YPjDmDk9; arc=none smtp.client-ip=89.234.176.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+	s=mail; t=1717746243;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=jg6y42A8tuanMkc0qiGHDqRmsY6EuDBjOBYeQQggbQA=;
+	b=YPjDmDk95H45K8usjyG/alYRZzUUfvo8CrQ3hxP2rTwW8bqre46UhwODogNPMxsNdhTeeb
+	2eaxZPZ88z2mrLo/Ci3nZpjdYdSY0zYo7yoAO7sBKrHxyAPw3Uww5HwknAvmX1BUiO9k91
+	s31N2OSNgeKKWr3CDXH0AOUmwI/B0bo=
+Message-ID: <14d802e84cbb8d3c9610386908706f264af34726.camel@crapouillou.net>
+Subject: Re: [PATCH v10 6/6] Documentation: iio: Document high-speed DMABUF
+ based API
+From: Paul Cercueil <paul@crapouillou.net>
+To: Randy Dunlap <rdunlap@infradead.org>, Jonathan Cameron
+ <jic23@kernel.org>,  Lars-Peter Clausen <lars@metafoo.de>, Vinod Koul
+ <vkoul@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>, Christian
+ =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Nuno Sa <nuno.sa@analog.com>, 
+	linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, 
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linaro-mm-sig@lists.linaro.org
+Date: Fri, 07 Jun 2024 09:44:01 +0200
+In-Reply-To: <5052adab-5b5e-4ac2-902c-bb373c00bbbb@infradead.org>
+References: <20240605110845.86740-1-paul@crapouillou.net>
+	 <20240605110845.86740-7-paul@crapouillou.net>
+	 <5052adab-5b5e-4ac2-902c-bb373c00bbbb@infradead.org>
+Autocrypt: addr=paul@crapouillou.net; prefer-encrypt=mutual;
+ keydata=mQENBF0KhcEBCADkfmrzdTOp/gFOMQX0QwKE2WgeCJiHPWkpEuPH81/HB2dpjPZNW03ZM
+ LQfECbbaEkdbN4YnPfXgcc1uBe5mwOAPV1MBlaZcEt4M67iYQwSNrP7maPS3IaQJ18ES8JJ5Uf5Uz
+ FZaUawgH+oipYGW+v31cX6L3k+dGsPRM0Pyo0sQt52fsopNPZ9iag0iY7dGNuKenaEqkYNjwEgTtN
+ z8dt6s3hMpHIKZFL3OhAGi88wF/21isv0zkF4J0wlf9gYUTEEY3Eulx80PTVqGIcHZzfavlWIdzhe
+ +rxHTDGVwseR2Y1WjgFGQ2F+vXetAB8NEeygXee+i9nY5qt9c07m8mzjABEBAAG0JFBhdWwgQ2VyY
+ 3VlaWwgPHBhdWxAY3JhcG91aWxsb3UubmV0PokBTgQTAQoAOBYhBNdHYd8OeCBwpMuVxnPua9InSr
+ 1BBQJdCoXBAhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEHPua9InSr1BgvIH/0kLyrI3V0f
+ 33a6D3BJwc1grbygPVYGuC5l5eMnAI+rDmLR19E2yvibRpgUc87NmPEQPpbbtAZt8On/2WZoE5OIP
+ dlId/AHNpdgAtGXo0ZX4LGeVPjxjdkbrKVHxbcdcnY+zzaFglpbVSvp76pxqgVg8PgxkAAeeJV+ET
+ 4t0823Gz2HzCL/6JZhvKAEtHVulOWoBh368SYdolp1TSfORWmHzvQiCCCA+j0cMkYVGzIQzEQhX7U
+ rf9N/nhU5/SGLFEi9DcBfXoGzhyQyLXflhJtKm3XGB1K/pPulbKaPcKAl6rIDWPuFpHkSbmZ9r4KF
+ lBwgAhlGy6nqP7O3u7q23hRW5AQ0EXQqFwQEIAMo+MgvYHsyjX3Ja4Oolg1Txzm8woj30ch2nACFC
+ qaO0R/1kLj2VVeLrDyQUOlXx9PD6IQI4M8wy8m0sR4wV2p/g/paw7k65cjzYYLh+FdLNyO7IWYXnd
+ JO+wDPi3aK/YKUYepqlP+QsmaHNYNdXEQDRKqNfJg8t0f5rfzp9ryxd1tCnbV+tG8VHQWiZXNqN70
+ 62DygSNXFUfQ0vZ3J2D4oAcIAEXTymRQ2+hr3Hf7I61KMHWeSkCvCG2decTYsHlw5Erix/jYWqVOt
+ X0roOOLqWkqpQQJWtU+biWrAksmFmCp5fXIg1Nlg39v21xCXBGxJkxyTYuhdWyu1yDQ+LSIUAEQEA
+ AYkBNgQYAQoAIBYhBNdHYd8OeCBwpMuVxnPua9InSr1BBQJdCoXBAhsMAAoJEHPua9InSr1B4wsH/
+ Az767YCT0FSsMNt1jkkdLCBi7nY0GTW+PLP1a4zvVqFMo/vD6uz1ZflVTUAEvcTi3VHYZrlgjcxmc
+ Gu239oruqUS8Qy/xgZBp9KF0NTWQSl1iBfVbIU5VV1vHS6r77W5x0qXgfvAUWOH4gmN3MnF01SH2z
+ McLiaUGF+mcwl15rHbjnT3Nu2399aSE6cep86igfCAyFUOXjYEGlJy+c6UyT+DUylpjQg0nl8MlZ/
+ 7Whg2fAU9+FALIbQYQzGlT4c71SibR9T741jnegHhlmV4WXXUD6roFt54t0MSAFSVxzG8mLcSjR2c
+ LUJ3NIPXixYUSEn3tQhfZj07xIIjWxAYZo=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-ID: <20240606-md-drivers-dma-v2-1-0770dfdf74dd@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAEAVYmYC/3WNyw6CMBBFf4V07ZhSeURX/odh0ccgk9iiU2gwh
- H+3sHd5knvPWUVEJoziVqyCMVGkMWRQp0LYQYcnArnMQklVyUbW4B04poQcwXkNqpS1aU3Tq+o
- i8unN2NNyCB9dZqMjgmEd7LBrXhTmBbyOE/I+HyhOI3+PfCr3099SKqEEY43t3dViK5v7ZyZLw
- Z7t6EW3bdsP2aB2Xs0AAAA=
-To: Vinod Koul <vkoul@kernel.org>, Fenghua Yu <fenghua.yu@intel.com>,
-        "Dave
- Jiang" <dave.jiang@intel.com>,
-        Peter Ujfalusi <peter.ujfalusi@gmail.com>
-CC: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>,
-        Jeff Johnson <quic_jjohnson@quicinc.com>
-X-Mailer: b4 0.13.0
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 6E180usvlq6nDlfgIwMRz4EmPFCT9INs
-X-Proofpoint-ORIG-GUID: 6E180usvlq6nDlfgIwMRz4EmPFCT9INs
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-06_16,2024-06-06_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- bulkscore=0 impostorscore=0 clxscore=1015 spamscore=0 malwarescore=0
- mlxlogscore=999 mlxscore=0 adultscore=0 lowpriorityscore=0 suspectscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406060138
 
-make allmodconfig && make W=1 C=1 reports:
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dma/idxd/idxd.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dma/ti/omap-dma.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dma/dmatest.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dma/ioat/ioatdma.o
+Hi Randy,
 
-Add the missing invocations of the MODULE_DESCRIPTION() macro.
+Le jeudi 06 juin 2024 =C3=A0 10:32 -0700, Randy Dunlap a =C3=A9crit=C2=A0:
+> Hi,
+>=20
+> On 6/5/24 4:08 AM, Paul Cercueil wrote:
+> > Document the new DMABUF based API.
+> >=20
+> > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> > Signed-off-by: Nuno Sa <nuno.sa@analog.com>
+> >=20
+> > ---
+> > v2: - Explicitly state that the new interface is optional and is
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 not implemented by all drivers.
+> > =C2=A0=C2=A0=C2=A0 - The IOCTLs can now only be called on the buffer FD=
+ returned
+> > by
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 IIO_BUFFER_GET_FD_IOCTL.
+> > =C2=A0=C2=A0=C2=A0 - Move the page up a bit in the index since it is co=
+re stuff
+> > and not
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 driver-specific.
+> >=20
+> > v3: Update the documentation to reflect the new API.
+> >=20
+> > v5: Use description lists for the documentation of the three new
+> > IOCTLs
+> > =C2=A0=C2=A0=C2=A0 instead of abusing subsections.
+> >=20
+> > v8: Renamed dmabuf_api.rst -> iio_dmabuf_api.rst, and updated
+> > index.rst
+> > =C2=A0=C2=A0=C2=A0 whose format changed in iio/togreg.
+> > ---
+> > =C2=A0Documentation/iio/iio_dmabuf_api.rst | 54
+> > ++++++++++++++++++++++++++++
+> > =C2=A0Documentation/iio/index.rst=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 |=C2=A0 1 +
+> > =C2=A02 files changed, 55 insertions(+)
+> > =C2=A0create mode 100644 Documentation/iio/iio_dmabuf_api.rst
+> >=20
+> > diff --git a/Documentation/iio/iio_dmabuf_api.rst
+> > b/Documentation/iio/iio_dmabuf_api.rst
+> > new file mode 100644
+> > index 000000000000..1cd6cd51a582
+> > --- /dev/null
+> > +++ b/Documentation/iio/iio_dmabuf_api.rst
+> > @@ -0,0 +1,54 @@
+> > +.. SPDX-License-Identifier: GPL-2.0
+> > +
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > +High-speed DMABUF interface for IIO
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > +
+> > +1. Overview
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > +
+> > +The Industrial I/O subsystem supports access to buffers through a
+> > +file-based interface, with read() and write() access calls through
+> > the
+> > +IIO device's dev node.
+> > +
+> > +It additionally supports a DMABUF based interface, where the
+> > userspace
+> > +can attach DMABUF objects (externally created) to a IIO buffer,
+> > and
+>=20
+> I would say/write:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 to an IIO buffer,
 
-Acked-by: Dave Jiang <dave.jiang@intel.com>
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
----
-Changes in v2:
-- Updated drivers/dma/idxd/init.c with description from Dave Jiang
-- Updated drivers/dma/ti/omap-dma.c with description from Péter Ujfalusi
-- Link to v1: https://lore.kernel.org/r/20240605-md-drivers-dma-v1-1-bcbcfd9ce706@quicinc.com
----
- drivers/dma/dmatest.c     | 1 +
- drivers/dma/idxd/init.c   | 1 +
- drivers/dma/ioat/init.c   | 1 +
- drivers/dma/ti/omap-dma.c | 1 +
- 4 files changed, 4 insertions(+)
+Right.
 
-diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
-index a4f608837849..1f201a542b37 100644
---- a/drivers/dma/dmatest.c
-+++ b/drivers/dma/dmatest.c
-@@ -1372,4 +1372,5 @@ static void __exit dmatest_exit(void)
- module_exit(dmatest_exit);
- 
- MODULE_AUTHOR("Haavard Skinnemoen (Atmel)");
-+MODULE_DESCRIPTION("DMA Engine test module");
- MODULE_LICENSE("GPL v2");
-diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index a7295943fa22..e37faa709d9b 100644
---- a/drivers/dma/idxd/init.c
-+++ b/drivers/dma/idxd/init.c
-@@ -22,6 +22,7 @@
- #include "perfmon.h"
- 
- MODULE_VERSION(IDXD_DRIVER_VERSION);
-+MODULE_DESCRIPTION("Intel Data Streaming Accelerator and In-Memory Analytics Accelerator common driver");
- MODULE_LICENSE("GPL v2");
- MODULE_AUTHOR("Intel Corporation");
- MODULE_IMPORT_NS(IDXD);
-diff --git a/drivers/dma/ioat/init.c b/drivers/dma/ioat/init.c
-index 9c364e92cb82..d84d95321f43 100644
---- a/drivers/dma/ioat/init.c
-+++ b/drivers/dma/ioat/init.c
-@@ -23,6 +23,7 @@
- #include "../dmaengine.h"
- 
- MODULE_VERSION(IOAT_DMA_VERSION);
-+MODULE_DESCRIPTION("Intel I/OAT DMA Linux driver");
- MODULE_LICENSE("Dual BSD/GPL");
- MODULE_AUTHOR("Intel Corporation");
- 
-diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
-index b9e0e22383b7..7e6c04afbe89 100644
---- a/drivers/dma/ti/omap-dma.c
-+++ b/drivers/dma/ti/omap-dma.c
-@@ -1950,4 +1950,5 @@ static void __exit omap_dma_exit(void)
- module_exit(omap_dma_exit);
- 
- MODULE_AUTHOR("Russell King");
-+MODULE_DESCRIPTION("Texas Instruments sDMA DMAengine support");
- MODULE_LICENSE("GPL");
+> > +subsequently use them for data transfers.
+> > +
+> > +A userspace application can then use this interface to share
+> > DMABUF
+> > +objects between several interfaces, allowing it to transfer data
+> > in a
+> > +zero-copy fashion, for instance between IIO and the USB stack.
+> > +
+> > +The userspace application can also memory-map the DMABUF objects,
+> > and
+> > +access the sample data directly. The advantage of doing this vs.
+> > the
+> > +read() interface is that it avoids an extra copy of the data
+> > between the
+> > +kernel and userspace. This is particularly useful for high-speed
+> > devices
+> > +which produce several megabytes or even gigabytes of data per
+> > second.
+> > +It does however increase the userspace-kernelspace synchronization
+> > +overhead, as the DMA_BUF_SYNC_START and DMA_BUF_SYNC_END IOCTLs
+> > have to
+> > +be used for data integrity.
+> > +
+> > +2. User API
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > +
+> > +As part of this interface, three new IOCTLs have been added. These
+> > three
+> > +IOCTLs have to be performed on the IIO buffer's file descriptor,
+> > +obtained using the IIO_BUFFER_GET_FD_IOCTL() ioctl.
+> > +
+> > +=C2=A0 ``IIO_BUFFER_DMABUF_ATTACH_IOCTL(int)``
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (int =
+fd)
+> ?
 
----
-base-commit: a693b9c95abd4947c2d06e05733de5d470ab6586
-change-id: 20240605-md-drivers-dma-2105b7b6f243
+Yes, I can change that. Although it's very obvious what the "int" is
+for, given the text above.
 
+>=20
+> > +=C2=A0=C2=A0=C2=A0 Attach the DMABUF object, identified by its file de=
+scriptor,
+> > to the
+> > +=C2=A0=C2=A0=C2=A0 IIO buffer. Returns zero on success, and a negative=
+ errno
+> > value on
+> > +=C2=A0=C2=A0=C2=A0 error.
+> > +
+> > +=C2=A0 ``IIO_BUFFER_DMABUF_DETACH_IOCTL(int)``
+>=20
+> ditto.
+>=20
+> > +=C2=A0=C2=A0=C2=A0 Detach the given DMABUF object, identified by its f=
+ile
+> > descriptor,
+> > +=C2=A0=C2=A0=C2=A0 from the IIO buffer. Returns zero on success, and a=
+ negative
+> > errno
+> > +=C2=A0=C2=A0=C2=A0 value on error.
+> > +
+> > +=C2=A0=C2=A0=C2=A0 Note that closing the IIO buffer's file descriptor =
+will
+> > +=C2=A0=C2=A0=C2=A0 automatically detach all previously attached DMABUF=
+ objects.
+> > +
+> > +=C2=A0 ``IIO_BUFFER_DMABUF_ENQUEUE_IOCTL(struct iio_dmabuf
+> > *iio_dmabuf)``
+> > +=C2=A0=C2=A0=C2=A0 Enqueue a previously attached DMABUF object to the =
+buffer
+> > queue.
+> > +=C2=A0=C2=A0=C2=A0 Enqueued DMABUFs will be read from (if output buffe=
+r) or
+> > written to
+> > +=C2=A0=C2=A0=C2=A0 (if input buffer) as long as the buffer is enabled.
+>=20
+> thanks.
+
+Cheers,
+-Paul
 

@@ -1,120 +1,125 @@
-Return-Path: <dmaengine+bounces-2318-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2319-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 485759011FB
-	for <lists+dmaengine@lfdr.de>; Sat,  8 Jun 2024 16:22:42 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3211E9013AB
+	for <lists+dmaengine@lfdr.de>; Sat,  8 Jun 2024 23:32:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D88F21F217DE
-	for <lists+dmaengine@lfdr.de>; Sat,  8 Jun 2024 14:22:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DED37282082
+	for <lists+dmaengine@lfdr.de>; Sat,  8 Jun 2024 21:32:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCDA3179647;
-	Sat,  8 Jun 2024 14:22:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C6AF1D531;
+	Sat,  8 Jun 2024 21:32:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EOjx4GtE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FG//4t7R"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A0AB27457
-	for <dmaengine@vger.kernel.org>; Sat,  8 Jun 2024 14:22:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE54EED9;
+	Sat,  8 Jun 2024 21:32:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717856557; cv=none; b=nBd9NBlvM7Pf+ESmKgdq2eo+AT0FgRyFv3yEsqk1FepxjvnCeYTGRKpYUZREjXzb7xvjTTOk2oLq+283t3Nuy2GmB6OmOv6Zsu+doQJJILfNXLyhkMl7f9FL8QCAXgCanmYBIpI4My3QWHR7mqpbhQmtb+Eappb9gQrVIcEMmS0=
+	t=1717882367; cv=none; b=pRFZE4RgAHVCYF7VthDX1HV+idE5sO/Bh0yFTMwWBOU6GpYp1htfnix+iuqx+wAIOx3oxTzbuTwGIDiCYq80YiVSPYSIYEyIpAE45RZ1NfCNx/1Qi0gF9ccZzmDaLqMjpNKaQ3TnP/C2FmfYI6OCODUo1Kpf4oO4ssDU9WeLOnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717856557; c=relaxed/simple;
-	bh=RSSH+YhJSm227YbuJs6YQCoN7W4xOz8yJZaPSOUZSEs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=JXp0h/EOjg2MRQaqKhQkwFXe6eTCKcftx0cJhxw+xBVEpWRJOmSqa3ehHVAD1mhL8EhbbSQXgTI+Zzxt4uRR7qyQ3Kg2BwaQ1uqYp1JJl31uM5iVycMz1L7JmsiG8R5+39aX1OCPAqcuG0nORojMiFvDQWuGTD8Wq45TB+9x65E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EOjx4GtE; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-421792aa955so7483655e9.1
-        for <dmaengine@vger.kernel.org>; Sat, 08 Jun 2024 07:22:35 -0700 (PDT)
+	s=arc-20240116; t=1717882367; c=relaxed/simple;
+	bh=zVflGiVL0wY9HCA+JTMHCw5+k5mGjuP8/ZU6BhUj2Ds=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VBwjFvbLE99IWWmgRXjgFsEhiiBF8w4y2mwYVXYqurRkzrLzswJu2fDKxhpftHGHLBQ8BD66RioKEYSTqQASu46jD1nbwLgopvBxAHFnYj//d3myCbUp7VSH3r5pCifvdxQgYEpbWq7Rsa/VugzkrsoiYXqJ5TVR9cyhj3ylj1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FG//4t7R; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-35f1c209893so418272f8f.2;
+        Sat, 08 Jun 2024 14:32:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717856554; x=1718461354; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kINEbRVv4zaJy/qjvFx+VwKp+LV0DZXAa+ALLU4d41o=;
-        b=EOjx4GtEr8hyDhF7obfhn+cvv6FX3HOzO/W9HR/dI0toC3Ovspjage5uyMcZnCZ+90
-         N2HhC2CSVUMyz62UOTA7I/2T9wGu3v4eIBgNQHS8V9ueUo/oskIrDFg+rR1wlusJQWJ1
-         fBKPohq2S3367YdvyRDAZvU7YdSeDPoZFNUFKlnz9LZe7cAd7zz5OU3gDFfo5YU2VKzf
-         QkChkLF1RJEhGkeA9eVbk/uLjfMokyy2IInV65eL1FtVsmJVkZLmiZOR3XeSOBnLeMvO
-         sh9b3lgGb2HIdls5cscoyNXcAdyJhKuMCkWbAnCu/z+TknqcRxGKjO8wiVrS+4Bu/EQv
-         4saQ==
+        d=gmail.com; s=20230601; t=1717882364; x=1718487164; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zWNPi1kJTrBS+pEUGE0/YU8V0dOXg4gzyeqJvrLnBPk=;
+        b=FG//4t7RUX+dC072mQiXgAq9iNjrupI2p1m5j8AwRzYyyzJrwaQ1RRKeL9W4I8XHHB
+         uEKKFo4yilr7rEfkYKs6mnloyzrIjr9VYWR46HzWib39LnQaA54t0BxJ515eeHf8Pcxl
+         YTEdq4xcd1uiAXusJNjoeqO0/2QPtooUTB2NGLo7Yt0pQR9jR2Briw+5be4Z9XU+fDn9
+         CsS6lyCJyqlpFhXOyJLiRfEW+sNvWzf7y8I8KKtyAS18YFCddkTTwekjjdTKxeM4apj5
+         Pl9o1bTkctOPcj7LWm2HEjjiF8wjiu1f7gtvn+mnDePYh/B0H6fWYNV/rGhKSE83ZHi3
+         nZcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717856554; x=1718461354;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kINEbRVv4zaJy/qjvFx+VwKp+LV0DZXAa+ALLU4d41o=;
-        b=g0y6RQrWOeo3voUCyslLVWeKZGZ+e0XjEg92nzTwBwsx0a2nfvSBAzPu+05Y1NbvK7
-         sSRLhhskSMy9wcgv9ZlQYQicgVqNjkT3Ddvf8IlH46ANGZfVJVzhLuChZMv+fX22Lk02
-         buvFlckCzEiRy5zGl/tfNB/NiblysidbFezXEoPUakstI2EoUVPC/Z8EqB2tU2+yoHKl
-         7VzuBJ+9MF1Wrxt4j063txq7Ur8pOeOsOIvq5NpU+jxRo3Px2aZDj+Jpljy3Tbl198tf
-         w/R4eQlUwu16lHXlthh80Imlaakzqhl4RXS6ztpUDp7EGfVMyMv4zUyepxzksGE5RX+x
-         k1lA==
-X-Gm-Message-State: AOJu0YzlJo+8plPwu/cI2OxVJFHVMPqrmfYSepdfn1wClnvI9K+C8a7M
-	0wGD2UiblnZaNa4SZypCq1NkTZusck1uNdWhjrjhfh27oKg9Ul6YSJ6paQlJLX0=
-X-Google-Smtp-Source: AGHT+IFbWUh/nE+DXtjyL3Qmz0NjYYhk4y/ud7hRmzwxQb65z7ganJ1GL4aXW/gD4wTDGjw6mm3IsQ==
-X-Received: by 2002:a05:600c:3149:b0:41b:aa11:29b3 with SMTP id 5b1f17b1804b1-42164a3710emr40887825e9.35.1717856554311;
-        Sat, 08 Jun 2024 07:22:34 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-421580fe37csm120878865e9.3.2024.06.08.07.22.33
+        d=1e100.net; s=20230601; t=1717882364; x=1718487164;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zWNPi1kJTrBS+pEUGE0/YU8V0dOXg4gzyeqJvrLnBPk=;
+        b=Hz9JCsXMP2gZm5uL+PSfcksD6IQPirybiXGRgifd8hQw0WbneDxHvqrdop1Cc5Xowz
+         e+PDlovpEjs4vJTom52tMGo4RZSmhUgC2Hce0CStpUHNu/Vl6QyWI6vXjPrw+/fhHISG
+         pzBFidLnh5pj0hfJvO/OAD/2FnigLI40movgsSuH4SdlpOhlyJJllBM2vIIrRyfDH85I
+         jsMqWNHxX0HJYqNIuZdoWVmIPWRqb8eKRufHDdrmbDvkj3ESOJcaK/15dR0A3B1+OrC4
+         r3CJskVQi3pD+M8xYZmJLdCu/C3Xv0Upyab+0Zd5FxINWYbR/ihsnMjfNDA9cWhkE9Ki
+         cK1w==
+X-Forwarded-Encrypted: i=1; AJvYcCW9ZWiCNk4SXPknrWq4yhagOrOeXXRq9gea6tQeZn0Pmy1kXgbTWHkG0gYd6hQUJiaab+tGU8zV++Cdutnkekt0KLbao5BEn2/w
+X-Gm-Message-State: AOJu0Yyt+WDI2mNh86gT6AKFGXkC2XzVnQoW9K3V2CFEbjFLKK6EXwDW
+	ypy/C1aqcoN4XmKACso3lSganDR+dnHp+zIpqzLpt3OebPVXXfaY
+X-Google-Smtp-Source: AGHT+IGrvNI123vWJSNjSF27urRRDGCSmw+7i51AIdkARWNrkjb3GUiXJCx8/xx+T6mbeU7KeYm7Bw==
+X-Received: by 2002:adf:ec4b:0:b0:35f:1aac:156f with SMTP id ffacd0b85a97d-35f1aac193amr1012237f8f.13.1717882363853;
+        Sat, 08 Jun 2024 14:32:43 -0700 (PDT)
+Received: from localhost.localdomain (oliv-cloud.duckdns.org. [78.196.47.215])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-35f116540d5sm2793247f8f.15.2024.06.08.14.32.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Jun 2024 07:22:33 -0700 (PDT)
-Date: Sat, 8 Jun 2024 17:22:30 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: dmaengine@vger.kernel.org
-Subject: [bug report] dmaengine: owl: Add Slave and Cyclic mode support for
- Actions Semi Owl S900 SoC
-Message-ID: <c3dba2df-999c-4ce6-b3f5-d7f75a843efe@moroto.mountain>
+        Sat, 08 Jun 2024 14:32:43 -0700 (PDT)
+From: Olivier Dautricourt <olivierdautricourt@gmail.com>
+To: Stefan Roese <sr@denx.de>,
+	Vinod Koul <vkoul@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	dmaengine@vger.kernel.org,
+	Eric Schwarz <eas@sw-optimization.com>,
+	Olivier Dautricourt <olivierdautricourt@gmail.com>
+Subject: [PATCH v2 1/3] dmaengine: altera-msgdma: use irq variant of spin_lock/unlock while invoking callbacks
+Date: Sat,  8 Jun 2024 23:31:46 +0200
+Message-ID: <20240608213216.25087-1-olivierdautricourt@gmail.com>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-Hello Manivannan Sadhasivam,
+As we first take the lock with spin_lock_irqsave in msgdma_tasklet, Lockdep
+might complain about this. Inspired by commit 9558cf4ad07e
+("dmaengine: zynqmp_dma: fix lockdep warning in tasklet")
 
-Commit d64e1b3f5cce ("dmaengine: owl: Add Slave and Cyclic mode
-support for Actions Semi Owl S900 SoC") from Sep 29, 2018
-(linux-next), leads to the following Smatch static checker warning:
+Signed-off-by: Olivier Dautricourt <olivierdautricourt@gmail.com>
+Tested-by: Olivier Dautricourt <olivierdautricourt@gmail.com>
+Suggested-by: Eric Schwarz <eas@sw-optimization.com>
+---
+ drivers/dma/altera-msgdma.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-	drivers/dma/owl-dma.c:764 owl_dma_resume()
-	error: we previously assumed 'vchan->pchan' could be null (see line 757)
+diff --git a/drivers/dma/altera-msgdma.c b/drivers/dma/altera-msgdma.c
+index a8e3615235b8..160a465b06dd 100644
+--- a/drivers/dma/altera-msgdma.c
++++ b/drivers/dma/altera-msgdma.c
+@@ -583,6 +583,7 @@ static void msgdma_issue_pending(struct dma_chan *chan)
+ static void msgdma_chan_desc_cleanup(struct msgdma_device *mdev)
+ {
+ 	struct msgdma_sw_desc *desc, *next;
++	unsigned long irqflags;
+ 
+ 	list_for_each_entry_safe(desc, next, &mdev->done_list, node) {
+ 		struct dmaengine_desc_callback cb;
+@@ -591,9 +592,9 @@ static void msgdma_chan_desc_cleanup(struct msgdma_device *mdev)
+ 
+ 		dmaengine_desc_get_callback(&desc->async_tx, &cb);
+ 		if (dmaengine_desc_callback_valid(&cb)) {
+-			spin_unlock(&mdev->lock);
++			spin_unlock_irqrestore(&mdev->lock, irqflags);
+ 			dmaengine_desc_callback_invoke(&cb, NULL);
+-			spin_lock(&mdev->lock);
++			spin_lock_irqsave(&mdev->lock, irqflags);
+ 		}
+ 
+ 		/* Run any dependencies, then free the descriptor */
+-- 
+2.45.0
 
-drivers/dma/owl-dma.c
-    752 static int owl_dma_resume(struct dma_chan *chan)
-    753 {
-    754         struct owl_dma_vchan *vchan = to_owl_vchan(chan);
-    755         unsigned long flags;
-    756 
-    757         if (!vchan->pchan && !vchan->txd)
-
-Presumably this should be || instead of &&?
-
-    758                 return 0;
-    759 
-    760         dev_dbg(chan2dev(chan), "vchan %p: resume\n", &vchan->vc);
-    761 
-    762         spin_lock_irqsave(&vchan->vc.lock, flags);
-    763 
---> 764         owl_dma_resume_pchan(vchan->pchan);
-                                     ^^^^^^^^^^^^
-If only ->pchan is NULL then it will crash here.
-
-    765 
-    766         spin_unlock_irqrestore(&vchan->vc.lock, flags);
-    767 
-    768         return 0;
-    769 }
-
-regards,
-dan carpenter
 

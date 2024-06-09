@@ -1,103 +1,98 @@
-Return-Path: <dmaengine+bounces-2326-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2327-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 83CC090168F
-	for <lists+dmaengine@lfdr.de>; Sun,  9 Jun 2024 17:50:55 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id D9FC2901704
+	for <lists+dmaengine@lfdr.de>; Sun,  9 Jun 2024 18:40:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 96C591C2080C
-	for <lists+dmaengine@lfdr.de>; Sun,  9 Jun 2024 15:50:54 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5B5DBB20F24
+	for <lists+dmaengine@lfdr.de>; Sun,  9 Jun 2024 16:40:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BDD5481B8;
-	Sun,  9 Jun 2024 15:50:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C080247A40;
+	Sun,  9 Jun 2024 16:40:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="QT+uXqe2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oXi8GwA5"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mout.web.de (mout.web.de [212.227.17.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDB2147796;
-	Sun,  9 Jun 2024 15:50:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FA1D1EA73;
+	Sun,  9 Jun 2024 16:40:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717948234; cv=none; b=NVdUIVvNSiEIIvk/N1eBG6nwDtV+gOz48dN+Lz9jTQVBoRsEshW5gz6YeY+uwlU+ug1Z8eCxBKC4xuuKo/3i8FKRwngABZ1mgtbsazjOPf8q7kmQPhnFLpJEnH9OrNEm3+AEgzmGBTuufGDlvZgbSnJUiSuF11uroYnSby6JJkE=
+	t=1717951227; cv=none; b=pFJauVqoWksFw71G3pcnlty3qDAmwpSKpipIEGHCGhOh6/cc7+TSgEOPc7iyX4jPSHhX0IpCKetCR6fD01ZWcjh5mkiIO58jblBEqSpb79xUGsd4efE7J/z5Vl3z7T7wCPue1fDaCT6U1Prt5jGygCtc96NPKigOQAM+THkenss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717948234; c=relaxed/simple;
-	bh=00hBOYAX+ECbeAdBZy5k4ZIDHwz2fGhyfX8O954VvDk=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=MDhl3vXSeEYQCYJk5AGan7/jXi7rhT5tg5ruV4/gSpz3QGLGbS5AsgcCwUPag+YO2Gh1kmh7mjkDd+NHZiiZc98ubU3MpLnT1pGZgOso/e8P537wyUrdutIGJYmgBNHLSz9oJj8r4BKTDdcSRTRD0WBHIlE56iXXjpva+CAWa80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=QT+uXqe2; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1717948221; x=1718553021; i=markus.elfring@web.de;
-	bh=00hBOYAX+ECbeAdBZy5k4ZIDHwz2fGhyfX8O954VvDk=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=QT+uXqe2cAP8JMsSwN+/EiMyV46T5I3LmlsQC4dovfBv13l/k+wGK0aNe36szcHu
-	 s+4fO03aaG05/noRttPQx758acxP4U2XHZITfAdeNVQd91EHEh2PubRW/EIXd0T71
-	 rUl4sqtjKZ4X1FcVI9uj7qqp6MWnJNLLp3JciwjElKsfNN14xk5W/OfWP2Oc43cWl
-	 XHja/9y536wKMbp3abKkAZtYxrzeWfM2HUL/JGJsFcYNwOXAgD/NbV6kKpl81zfWG
-	 vOhOxWLbcjcj0TMKo6aJ6LDr8NpIHS9fRX2zg8ac45ZVxVa45jsj/FrbkPi8jfo6V
-	 xpykBkVmN9to7MwGyg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1Mvsq5-1sWtac0b4x-018Di6; Sun, 09
- Jun 2024 17:50:21 +0200
-Message-ID: <4e68aa3b-5ada-45da-98b4-4d79d959b48a@web.de>
-Date: Sun, 9 Jun 2024 17:50:17 +0200
+	s=arc-20240116; t=1717951227; c=relaxed/simple;
+	bh=GvpgVeH8caYoRfUd4ZWG2IefcCP4XeyACLZHX1/PZ7w=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=OCXCn7u+6EPF8s9rz3k1WyIpFT4WTQoJnS6hUnIMOOJwwEQiN0B/R0QUEp3k0fgR0SOrA5p8sKy2ZWS/FzHM4UmWOouinyxrIarqUcsWcuhEosyuI8NdHw0tumpbfD78KpmvnQK2mlwewhUM7vm91rdY4T4OemzyXnEowaeVgSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oXi8GwA5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 073D0C3277B;
+	Sun,  9 Jun 2024 16:40:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717951227;
+	bh=GvpgVeH8caYoRfUd4ZWG2IefcCP4XeyACLZHX1/PZ7w=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=oXi8GwA5ckE4W47hzv0W37SEfcVCiCBzvuJZaUGn/EN3PIAdR6LtmAENaAGteT0PQ
+	 g5BvuR7+1U5RMFWAggXrmDfA3JfpwzUr/YKT5Rulcv0rpdB1qn2D+Dq12TiBCAKMg+
+	 FqsDpw9pIg6jpgIBzvGBFqnkcJ/qWME21G5QusJ/Yvz0eJZa9+ewmb9i3jQc2ClcpW
+	 4S5d6lxm+d6qeDy8xW0SqUOMUVggsRffHn/CBMW3KNJ2j2oAB9JMuSb6CZAA6lVEEl
+	 Ym2n5HM7jZXekhnMb4ZAknLzsVw+7HIzdQOw7BSRLLXvOD6IZHrVW2dpYOhLmyeuRn
+	 9zNXFA8/ZD6BQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E89EFCF3BAB;
+	Sun,  9 Jun 2024 16:40:26 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Olivier Dautricourt <olivierdautricourt@gmail.com>,
- dmaengine@vger.kernel.org, Stefan Roese <sr@denx.de>,
- Vinod Koul <vkoul@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Eric Schwarz <eas@sw-optimization.com>
-References: <20240608213216.25087-1-olivierdautricourt@gmail.com>
-Subject: Re: [PATCH v2 1/3] dmaengine: altera-msgdma: use irq variant of
- spin_lock/unlock while invoking callbacks
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240608213216.25087-1-olivierdautricourt@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:rVO8U2r4Eg9mhNW7fg6fA+4iQTndCwc9PmXVfnzaIMMRqJhADG6
- ITnbTNTMEffEBJ94jyFJCXipFlF/c8yRMpeSVnGn3SPSG0xTrE8ZBu0AAmG3WNy+IaPcKiC
- YNwO2O0jmZppQXgWzccBPPJPtXKkdm99Jw+tf5B7YgF5qLgJkHInnBJUYwEeVB5VtKObMTN
- yGmgE5wSbfuDsmft2G2qQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:JjeO/0DjZH8=;mKAUDol7iAv61TW1DGQ/Pj321tx
- e9onCja0JGlN1l5tuR4ro9VryKXUcWtrmcM7akPVzG1mtV+bX3YdNStT+LdFhjCGLOvROSy1d
- IYj1+/zTdTiD8NHAjxbUdEiG8iDfoEKUm32Wz4WmvkauedtesyI+Tulxkm334lpnuxWfYMXji
- Lpjl6NT0FnLm9XPSI66bF5A7PsFdjG1DbqwULfcQUx/y0NiNSyJhEW7oKXgme2wxarUrANf9q
- Jskbi5SudYyWTbaKGxZhRr5sCgNdeRHs/R0i5dzMnFSC8YGltDJeaW9MB/kwFLAjbhbhvA2+D
- jMJRb8fhd7Vjlp89hsFgIt5RL48xGJX7CN0fm8tqdxAEmyvcISuMppq096nkx4sHIiXZ5gg/i
- NdPpfjWfpeabZmsCoJldsMr3v5HmQG/nJVfmXFFqq+FW+i+MWR66VlcISE5k9TLfplbt0A9nI
- pQDTL4ZcCrom2oFRHqXMor//7D5QGUE1V10S9gyOR4gyOCu07j1SN2l2uppo8X0+McS0APFkK
- 2UIhXNiM7GpI8Ggiqoffy2o7Kqyj91ArmpWoLKOngCs3hhnhYjTOMF35162s0FnY72DZRaEtU
- j8LsWgDd3PzQsloiPL6cTfRFqwTp2I6NJyjiifpBn0l2smDscYDW9OHTNzuHRcwbyWDlcXXLC
- 7GvCWBj5aMFXEeoKp4tT+WgE0U9U0qcMPlbpN/MINvMrI/9X66QiA7u7mh//mTesS00IPE3Gg
- z7VPPIKl/UdsUTEA/eJvcBYeuVm4VukgjZMJ+IzYlGVNXdjBDTY3p+jyI7lXr771dc4lJZ7Xp
- EDgo+6EjBVA1Wwb+MsCBd02YrpnkEeuMA8xYBwjjluf3k=
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next] dmaengine: ti: k3-udma-glue: clean up return in
+ k3_udma_glue_rx_get_irq()
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171795122694.8829.8746227477977795348.git-patchwork-notify@kernel.org>
+Date: Sun, 09 Jun 2024 16:40:26 +0000
+References: <2f28f769-6929-4fc2-b875-00bf1d8bf3c4@kili.mountain>
+In-Reply-To: <2f28f769-6929-4fc2-b875-00bf1d8bf3c4@kili.mountain>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: peter.ujfalusi@gmail.com, vkoul@kernel.org, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, danishanwar@ti.com,
+ rogerq@kernel.org, grygorii.strashko@ti.com, jpanis@baylibre.com,
+ c-vankar@ti.com, diogo.ivo@siemens.com, horms@kernel.org,
+ dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ kernel-janitors@vger.kernel.org
 
-I find that a cover letter can be helpful for the presented patch series.
+Hello:
+
+This patch was applied to netdev/net-next.git (main)
+by David S. Miller <davem@davemloft.net>:
+
+On Thu, 6 Jun 2024 17:23:44 +0300 you wrote:
+> Currently the k3_udma_glue_rx_get_irq() function returns either negative
+> error codes or zero on error.  Generally, in the kernel, zero means
+> success so this be confusing and has caused bugs in the past.  Also the
+> "tx" version of this function only returns negative error codes.  Let's
+> clean this "rx" function so both functions match.
+> 
+> This patch has no effect on runtime.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net-next] dmaengine: ti: k3-udma-glue: clean up return in k3_udma_glue_rx_get_irq()
+    https://git.kernel.org/netdev/net-next/c/28f961f9d5b7
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
-> As we first take the lock with spin_lock_irqsave in msgdma_tasklet, Lock=
-dep
-=E2=80=A6
-
-I suggest to move the last word into the subsequent text line.
-
-Regards,
-Markus
 

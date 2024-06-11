@@ -1,55 +1,56 @@
-Return-Path: <dmaengine+bounces-2349-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2350-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 185089043A4
-	for <lists+dmaengine@lfdr.de>; Tue, 11 Jun 2024 20:31:55 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 52CBD9043A7
+	for <lists+dmaengine@lfdr.de>; Tue, 11 Jun 2024 20:32:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9AC6F2895E4
-	for <lists+dmaengine@lfdr.de>; Tue, 11 Jun 2024 18:31:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EE0D71F251BA
+	for <lists+dmaengine@lfdr.de>; Tue, 11 Jun 2024 18:32:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1732155C9F;
-	Tue, 11 Jun 2024 18:28:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BAC6156227;
+	Tue, 11 Jun 2024 18:28:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hFmXCG0G"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="snSiSNmC"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78BA4155C9B;
-	Tue, 11 Jun 2024 18:28:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D278680C03;
+	Tue, 11 Jun 2024 18:28:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718130507; cv=none; b=bjipZY1rwjBUXy3XG8x3UKIAe1hLLs7qbLXyyNfgXmxZPJqc4qPM64D/ZEamkTRLYnW01BhhQqo+oDIfkGfemHZOEgO4a7hNgWGBOX9aF5bxbwkIHzEX+tW+CC7jMl1aZ51kGse/ZbRmtvayYEP6HdOf2o9See1kUXKL/UFS3pQ=
+	t=1718130509; cv=none; b=fyGLF1gKtXjTiOCukhJqiOAKTWZ+hwc/TDi+EKBD2+nsES6ekqQ4X1F58BSSuK6ZKtxO0W3qNKOqZ1Wt8AJBCVSsMZb5hdD2jKvlQkqmjOu82jxbTS3uodWHNk6SDuQn0GgT+/txVCrZTNioJoSOVppiYNZJh5aOysJ4izTm0iM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718130507; c=relaxed/simple;
-	bh=pFaRxvBa1rx+go6y96e7lZS9Tc5FWfTPysEvklsbBTA=;
+	s=arc-20240116; t=1718130509; c=relaxed/simple;
+	bh=bPeE4jluIw13QwOYSdkGvUGAxzeLN+qD7fwRi95zID8=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=FAR3pjWEzLNfPYTOflXP9BHwZ3WaAwMCNZgSAJfx6pubxxhi98borjs7UXltxazCVJya0fMiKijeEqW/9zEdzPSWuDlmM/zMxwa9IR5jusveObEzf6ZApNo64sbsmWoz8+Z9cI/gGF8t3nQIxzpMHbzWCRZz5N5TXf8v8KLI3x4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hFmXCG0G; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6B88C32786;
-	Tue, 11 Jun 2024 18:28:25 +0000 (UTC)
+	 MIME-Version:Content-Type; b=RQH22Oh1mXJUVhDzMXJ5Me2G/pg8pegKlPbiJ79b/yqS6ga+mNsgh1tVfKAjhBB6QG++3pEHaSNSAfXGpZfp6fVDboGxBmc32oXld8t/yGOvInInc8U6w9NEJBWBF56DC2KEChMpyRw03pSaCeHT+rXp9JnXN4AalEl/kS6xY30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=snSiSNmC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93D09C4AF1C;
+	Tue, 11 Jun 2024 18:28:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718130507;
-	bh=pFaRxvBa1rx+go6y96e7lZS9Tc5FWfTPysEvklsbBTA=;
+	s=k20201202; t=1718130509;
+	bh=bPeE4jluIw13QwOYSdkGvUGAxzeLN+qD7fwRi95zID8=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=hFmXCG0GhuDjLri9HOYoN9aflew9Boz7kBHpbXQAhKZGH0RaPXTwEGS3+KbgbVWVp
-	 jSpWUvhDFQXuBY93RzgYeR1XEsFiHu7xz8cGlLeeo6V63OUoiQAhbxwk01EPK6Y2he
-	 Rwjaly+G9trxmyFU/+5SkQO+mP8hgFNE6VuMQXZFqyhHt6jneJDWf6PmN93MwIX5U2
-	 0i1Py0IOtBaiiXwqgDvWQBMOp/s/rloMm5WPBBWsIT1iO1Eark22/K7pidL/Ck+Uvr
-	 1s6ZLz6chrM3XgaOT5z55pAK53YFv7CaGulT1i5vlxExUOFdgOfZ08FLqUMSGqEAsU
-	 zmA3ibXbPr+Jg==
+	b=snSiSNmCEpnyYvucGnRjxdxbHVr20LKA6o/B3v2Chbz01wahttuUUpuL+LL5XdSdr
+	 uk0PzzjU+i+lQxBpMmUJiDauPoGF5lKf6HFvraFz+2meOp+YDCbzAY6afFt3kXPrMa
+	 MDrRPs/G3/Eno1pfSAHHky1+k05KWCrrOf5Sd+XXwZW44AqC1aq8xm3Fyq3PjNZBrr
+	 g4/CnF3SskjONUiaLhCF7PWstlA+ZLB3kM9RRXPg1Re2+nZl7eXk2362FIB1CF5Y1u
+	 iRR+2cmV2Wdv5/gcFiKtU5gTpK29da8rBzNXfEqpu0m8CEGQ9Nd+ZxSYUbob3sPHTI
+	 4zytIANS1bLHQ==
 From: Vinod Koul <vkoul@kernel.org>
-To: Frank.li@nxp.com, linux@treblig.org
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240516152825.262578-1-linux@treblig.org>
-References: <20240516152825.262578-1-linux@treblig.org>
-Subject: Re: [PATCH v2] dmaengine: moxart-dma: remove unused struct
- 'moxart_filter_data'
-Message-Id: <171813050536.475662.6409306451204375031.b4-ty@kernel.org>
-Date: Tue, 11 Jun 2024 23:58:25 +0530
+To: bryan.odonoghue@linaro.org, Frank.li@nxp.com, linux@treblig.org
+Cc: linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240517234024.231477-1-linux@treblig.org>
+References: <20240517234024.231477-1-linux@treblig.org>
+Subject: Re: [PATCH v3] dmaengine: qcom: gpi: remove unused struct
+ 'reg_info'
+Message-Id: <171813050721.475662.13719019207799425584.b4-ty@kernel.org>
+Date: Tue, 11 Jun 2024 23:58:27 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -61,15 +62,17 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
 
-On Thu, 16 May 2024 16:28:25 +0100, linux@treblig.org wrote:
-> Remove unused struct 'moxart_filter_data'
+On Sat, 18 May 2024 00:40:24 +0100, linux@treblig.org wrote:
+> 'reg_info' was never used since it's initial
+> commit 5d0c3533a19f ("dmaengine: qcom: Add GPI dma driver")
+> Remove it.
 > 
 > 
 
 Applied, thanks!
 
-[1/1] dmaengine: moxart-dma: remove unused struct 'moxart_filter_data'
-      commit: d1c6524e3ebe6bc1d0110e9dd85c84006f2c3289
+[1/1] dmaengine: qcom: gpi: remove unused struct 'reg_info'
+      commit: 7dcf9e82e0a05cf7b7abccd0ce1b4ca598d70f08
 
 Best regards,
 -- 

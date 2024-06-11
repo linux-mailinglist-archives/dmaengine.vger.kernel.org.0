@@ -1,56 +1,56 @@
-Return-Path: <dmaengine+bounces-2347-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2348-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24FE690439F
-	for <lists+dmaengine@lfdr.de>; Tue, 11 Jun 2024 20:31:29 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E37049043A1
+	for <lists+dmaengine@lfdr.de>; Tue, 11 Jun 2024 20:31:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9923DB27525
-	for <lists+dmaengine@lfdr.de>; Tue, 11 Jun 2024 18:31:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8C1291F24D1E
+	for <lists+dmaengine@lfdr.de>; Tue, 11 Jun 2024 18:31:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3C8E1553BF;
-	Tue, 11 Jun 2024 18:28:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C75F5155A43;
+	Tue, 11 Jun 2024 18:28:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qaDttzYO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S+hBWzQr"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A70D1553B4;
-	Tue, 11 Jun 2024 18:28:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95B277F7E3;
+	Tue, 11 Jun 2024 18:28:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718130501; cv=none; b=oMXl9OKIOT0SOtnv4V9e7eWHXmgV7ZBx1qhUHokyE4H7lUj+elmluM08XSXA8pem2wZeuiJved/B9YvO+Qfl21lNEoqSKAjgytk5EDZzEBGcNdzUrW7MJpeAm+uQjGJbce2nL//Waxnb30qYnJda7Pvz10XWELIqAnT2tPPkqxo=
+	t=1718130505; cv=none; b=V5pfr9GIO3A/T5pGyIsGD+2pkgrI5+hFqdyNNw194KCd48GRCwZjHT9AT6D/RVV/9UjWrETbYA+9TUHYthq2Sz71Yr1UMkNf/MPkr6Ux2K+yaGzMpR2CArEKajOzSb01bGLWrVT2bzMS18IIhZqG5erkTT787O6i4TWs9YJP398=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718130501; c=relaxed/simple;
-	bh=wfA1da30CmPTkWYaNNBASZzD3aUSgxiND7E14LbAT5M=;
+	s=arc-20240116; t=1718130505; c=relaxed/simple;
+	bh=ASTVQ3g9Rf3VqgMx9wDJe2koGCVSLXH24rsi7ZnRAT8=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=bzmxJ9NI3I97e+V0L85dPH4FtQcif4o0W5w9nYG9hZfDlae++ERW5J0WpnAATX/02Z4cpoHHXMBt/DiZlBFYfKA63pb7TPVnliqla2f6bBZFwBU20IEv6h8NW7dJpvZmZkMKqtAjNRFtsXOEyiZpLUpm+xqg3uk43YzaS98XLG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qaDttzYO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B6C5C4AF48;
-	Tue, 11 Jun 2024 18:28:19 +0000 (UTC)
+	 MIME-Version:Content-Type; b=dpqzgZHSE+LWQGHvm/wWiZNwMGlTwsu2z8lClfw+mFwR7leyk/yidZQus1Fc6UanZm6CmSaQ9RMgdwfUYNMKmFe4XYJcB7/5aqv4ff/vPiFlPnpztMVBYTaX+r0VZmQmDiwu9jrftlv3tuVwUurHRH2TZJyd9NIOa48B0dWuUIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S+hBWzQr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B0F7C4AF54;
+	Tue, 11 Jun 2024 18:28:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718130501;
-	bh=wfA1da30CmPTkWYaNNBASZzD3aUSgxiND7E14LbAT5M=;
+	s=k20201202; t=1718130505;
+	bh=ASTVQ3g9Rf3VqgMx9wDJe2koGCVSLXH24rsi7ZnRAT8=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=qaDttzYO8KhPqwi3yEvixBOU6k0bvmQG/aBYzGkDPxF7MQWh5QPvsSaZUTYVXQF8U
-	 EwUkINyZGtzrRuGtI6lsioR3lcFfws2smpC/06YTmk6Fh7Qk7LMe57xl0qVdcLHOwG
-	 0H802/Ffht7vphtDI8gIJMznYMiwSgWpbKIGLTZ3qywmHDjJWnMpaZ1MzkJUhK+M3/
-	 Zk30zjVkwqLxp3/VW3HvWXsyIs4vzX8gcUwTCh8XUfHmIjvoWmPJc3yLz2Ev4LjMFW
-	 cLvUJMxy7WhTuy1nvcS1GKJ4fgek/Gs8DAwYqtSOIKLP0DcsuhPFzvGlO6upy6q0VE
-	 jsQUtyM53CCdg==
+	b=S+hBWzQr1Sudx/3LF9FtyOg4syZNNYbEbchXihrKVy9i2edfgjA5vaMamJJp3/KoO
+	 seuDlC9bLA+cmQFCQLnRQKL6Sk0/HKu38cYe9DwlFnyUB0Pj1XZ4eJ7Yy0BX0fMEn5
+	 ThxSyOYtP2ataPsCR76IEonBA5aeaA3XqPE6DgfckpVNNPZbCb/rQkLjW1HHMREZHk
+	 HzAeCCnF5VqeBlfGAsJyoIBIu9u6LDFduIWChE2qZ8+rt7KBHlZraOGrUlSrn2sQHK
+	 7LeT6Aiq9ucQ5qEB99mc7N19jHu7UDGzsFx5XmvJLQVuWD7gLGZC0ofeol8rwuBxQC
+	 RBdI9pDBNPI5g==
 From: Vinod Koul <vkoul@kernel.org>
-To: imx@lists.linux.dev, dmaengine@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Frank Li <Frank.Li@nxp.com>
-Cc: imx@lists.linux.dev
-In-Reply-To: <20240603152317.69917-1-Frank.Li@nxp.com>
-References: <20240603152317.69917-1-Frank.Li@nxp.com>
-Subject: Re: [PATCH v2 1/2] dmaengine: fsl-edma: request per-channel IRQ
- only when channel is allocated
-Message-Id: <171813049980.475662.10470435420085877416.b4-ty@kernel.org>
-Date: Tue, 11 Jun 2024 23:58:19 +0530
+To: krzk@kernel.org, Frank Li <Frank.Li@nxp.com>
+Cc: conor+dt@kernel.org, devicetree@vger.kernel.org, 
+ dmaengine@vger.kernel.org, imx@lists.linux.dev, krzk+dt@kernel.org, 
+ linux-kernel@vger.kernel.org, robh@kernel.org
+In-Reply-To: <20240528163734.2471268-1-Frank.Li@nxp.com>
+References: <20240528163734.2471268-1-Frank.Li@nxp.com>
+Subject: Re: [PATCH v2 1/1] dt-bindings: fsl-qdma: Convert to yaml format
+Message-Id: <171813050173.475662.8322119332604104990.b4-ty@kernel.org>
+Date: Tue, 11 Jun 2024 23:58:21 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -62,23 +62,20 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
 
-On Mon, 03 Jun 2024 11:23:15 -0400, Frank Li wrote:
-> The edma feature individual IRQs for each DMA channel at some devices.
-> Given the presence of numerous eDMA instances, each with multiple channels,
-> IRQ request during probe results in an extensive list at /proc/interrupts.
-> However, a significant portion of these channels remains unused by the
-> system.
+On Tue, 28 May 2024 12:37:34 -0400, Frank Li wrote:
+> Convert binding doc from txt to yaml.
 > 
-> Request irq only when a DMA client driver requests a DMA channel.
+> Re-order interrupt-names to align example.
+> Add #dma-cell in example.
+> Change 'reg' in example to 32bit address.
+> 
 > 
 > [...]
 
 Applied, thanks!
 
-[1/2] dmaengine: fsl-edma: request per-channel IRQ only when channel is allocated
-      commit: 44eb827264de4f14d8317692441e13f5e2aadbf2
-[2/2] dmaengine: fsl-edma: remove redundant "idle" field from fsl_chan
-      commit: bb160502a45440d2b52c189d5a81365c01b8d494
+[1/1] dt-bindings: fsl-qdma: Convert to yaml format
+      commit: 671bc17fc4d14fed69ee86e1f7c2c972010c49ac
 
 Best regards,
 -- 

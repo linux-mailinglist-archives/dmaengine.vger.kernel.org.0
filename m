@@ -1,152 +1,150 @@
-Return-Path: <dmaengine+bounces-2355-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2356-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25CE3905314
-	for <lists+dmaengine@lfdr.de>; Wed, 12 Jun 2024 14:58:07 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4967906545
+	for <lists+dmaengine@lfdr.de>; Thu, 13 Jun 2024 09:36:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 981632861FF
-	for <lists+dmaengine@lfdr.de>; Wed, 12 Jun 2024 12:58:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9932A1F22196
+	for <lists+dmaengine@lfdr.de>; Thu, 13 Jun 2024 07:36:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45931176AA8;
-	Wed, 12 Jun 2024 12:58:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 181D0136997;
+	Thu, 13 Jun 2024 07:35:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Gtnv+UTA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SGFmsh5I"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C9AC16FF4B
-	for <dmaengine@vger.kernel.org>; Wed, 12 Jun 2024 12:58:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A16B713C3F0
+	for <dmaengine@vger.kernel.org>; Thu, 13 Jun 2024 07:35:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718197085; cv=none; b=HSE4sXbjTcTADfpnvGXuFHNfce0lqJ2pAafbFLvGqLl09rI05e+elydQKzyGWHSlHs2i3qg29qy/Ol272FZ+czRp+gBDl6httv2KKFYuEuOrWOlg8TmbaAO3/jW+Lh5rY9OOaBaGwp8IOQbAKk+93Bjb8qU3GQTfsY414oAvzuU=
+	t=1718264127; cv=none; b=FefNxaN+c/aNEZETQjOxDxFDLZ1vFnt/yvR+/6NO2nMrkiLrckDRYAB0pkDN+KUosvtkpGEEPA2OXnJQ9fAJy/vFxYKH6imXHKJsT4tzb8ps8GdMBfUb/eSUmd5+1F6cmEk/uCVnvhULgT2gOV1EHGY7EMfscrTW62Lh6ZER29Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718197085; c=relaxed/simple;
-	bh=MSIXF/BsX8Ykva/XEJfnvjZhA/5dwBPhZQ47OLBzzns=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=F/8pXHvR+sQLyQEjL2MvcxZvsYkzw8m9oWyqgAv+Ay2wrJKVREtiqycLkrQem7IzHofieWux6VYAssJIJFPN58L4UK0U2mUx/o0oRKmbi5qAhsf8FhvZLeW4Wx4PW5Y8OxmkJ1xPBUR5N/99LOjxd6Ne3hq1TGLKTRLC4wV4x7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Gtnv+UTA; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-421bb51d81aso17181245e9.3
-        for <dmaengine@vger.kernel.org>; Wed, 12 Jun 2024 05:58:03 -0700 (PDT)
+	s=arc-20240116; t=1718264127; c=relaxed/simple;
+	bh=hvFkWqgqjN3aIEgxJVhBxYCwDHO7XP728MlzAqv3QUY=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=E1cbphC0OuQcNiAns0owGxnpq6KmkeKzOPNs8WPizYcskVFGaDSm91nMuJMFGHhgFRGFvphwcc1U3bB7Iyq5E0vDZiASdOKg4xyYdOhzK1JLXj5glbbLdGcI8ISHlLZd2VRjQXu+3QPC3Uvk8x/cxTQoGYAukvatT+Fbs0VSmMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SGFmsh5I; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52b78ef397bso1640484e87.0
+        for <dmaengine@vger.kernel.org>; Thu, 13 Jun 2024 00:35:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718197081; x=1718801881; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=W48CiOUHVyxbdD27lMfcp1boY0Sj+/omwPyV/dCaGgM=;
-        b=Gtnv+UTALhsZabBEET81PhP4tD9nHPxdigR70niB0PK+1uh39v7kudgws/FfhK1kzG
-         KwuTyQtGJ6CWiZi0E/TR+c5fSOymlTFLh6alctfRD9IS0qAD/sjCv0X7Dl1Qqs0Hm9Tr
-         kU6DNNeXsHe7133O4HnCZjj6hobjPTy20DgCpbzpjC9f0mN54O0nIOExMAY/I2QVfRKG
-         0c6sJ/5UVjgSKLzG/mFE8CxANldDed8gvgjTf/qEJWK41saKcmlm0o4wkmwLPjyfnErX
-         sarOYmTP7Jxt+dMsyviPk973rM6qF8VdLD8c5tqjbeir+xJmy6LfCLnw8YACnDzC2ZfV
-         eYUQ==
+        d=gmail.com; s=20230601; t=1718264121; x=1718868921; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=KjtNF6q9FfDcy5+zoTC+FmH6coa/1b8KQLf3ofkGuno=;
+        b=SGFmsh5ITLWDek5SkY0vnkaRxJiJb/6i3qMgMYBrBn55sCpzs017VOB/1IQFqYkuM/
+         oHfjWcYEd4cXm1i7rP20Lp2wL5yCve3Tpr0hc0kHMLy4WHyrUpeX6uMoGC+VdwTUTTm8
+         hPsbn1SnYHTZ6LK7Lvbeos2oitz+neuiQnveILYfpZEN8QaJjYnvoQL4EbNzXKXCKgK3
+         5fg22mMcYW2to1PMXqDWZ7M/kpGL2Cuviasys+YfRWyH4UKa8DVSmVKYSeglMo4B8GT4
+         WEbpKBebbIoc/LC46f6QKU3gJbFYVCg5kRoaEuW6GOKG0eS12jTDq1uzHZvsb6T2tZNc
+         Ec6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718197082; x=1718801882;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=W48CiOUHVyxbdD27lMfcp1boY0Sj+/omwPyV/dCaGgM=;
-        b=Afam8MjeBv5rjFYv/CYD3RjDJc23/2FO7HK/WEeyu1IffCCT0fGcKJ7US3eQ1oJAIy
-         Jf7EjGZQdMb2GNMn4BTnA7VbtsoeD13uoXxabj0yCt+HOUIenStJmqovleU0eOpvL2AT
-         sjP+K8Z/YpFqnLb3EyqMWvm+XfTwtIfq2Pzf18FCxtWc93gYGap/Co/PNH5KtIQ/duVB
-         bMD8EXLdZqpdvwm7Ei7Z6WjEAEfXyildsKkD4CHFeDrJXtiMeODwdMBFtrbsBkkvacXU
-         FLrlfp9bXRGwN1uKun7r5G18exolx7Tb4ue100E06+44OTocQY/c75EohjkrNDo+FXDw
-         ykzA==
-X-Gm-Message-State: AOJu0Yzh9xBFJIJQ1WxqSwYkDVnQgZmXrv4ao0ct/INuULGZ9QMnu1Xu
-	PC7PKetLzU6GhWGg7g8KTQ+zQaUEojud/qRJxspwMpzYylQUk8t/6jwt/EQ12Ik=
-X-Google-Smtp-Source: AGHT+IEgFTHa8oy2T4rtWm6BAe6Ym3ELb9M9jJ5tE6NQuUHRFpwf0obrLG0ROdh3kP7+Zy3sSqKVAg==
-X-Received: by 2002:a05:600c:3848:b0:422:4c42:f804 with SMTP id 5b1f17b1804b1-422862a71dbmr16826145e9.10.1718197081432;
-        Wed, 12 Jun 2024 05:58:01 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422870ebb57sm26361765e9.25.2024.06.12.05.58.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jun 2024 05:58:00 -0700 (PDT)
-Date: Wed, 12 Jun 2024 15:57:56 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Vinod Koul <vkoul@kernel.org>
-Cc: dmaengine@vger.kernel.org
-Subject: [bug report] Merge branch 'fixes' into next
-Message-ID: <667b69f3-241e-45f7-965c-9bf50945560b@moroto.mountain>
+        d=1e100.net; s=20230601; t=1718264121; x=1718868921;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KjtNF6q9FfDcy5+zoTC+FmH6coa/1b8KQLf3ofkGuno=;
+        b=jNifIj04hpkLafCnOa5AZO/OCKALrXphhipO6Lz/6OOkyKGeyRT3ArmJE46UxD84w1
+         1EJAKnJNLnhuDblxbwFPRJztM1CcGUiRbJatJwwOCf4Lw+PKhciCelXrgzk5WsjSDAeA
+         Oddg0fowjRlH/knvQF9uOzRdgWzDUwmiO2uY539Mf4Q0rMyECfI1ynnlquyaQ3l2Qp3t
+         ay90m2y0Faj0beSFovkOkhZVpiwqCDriJuNwtZff1nf/IVxtiIqzK+jfkRMMBlsLvauS
+         HxNdS3FtCUkIh5IXAusN+9VOo/hLeyYHcaolBX8EXHdoFyAKyQ/7Geiwa8DvGgv4//4K
+         /wsg==
+X-Gm-Message-State: AOJu0YwLLnx0U3NEqcK3rKyy3IzWBxMqPw98mPrj0naMu8x3iO4EbXvf
+	BNFHhNb07iSTp5L+6gDjwIogDZo2/M7B8W+vxw8H1HDxu2kJmB7KagHXZknoImmiV+qYHv1rFYF
+	UuWNpouV3njr3+6IWqHGnWZ7e8ptLQ0FsBqI=
+X-Google-Smtp-Source: AGHT+IH0EdR5iGi0XabIRMQF8JOfge14zc+0lvjInhHsLteObpIQm2DwKJjChxB/vOnrdj616wAfJ28UDjtvh6gIJGc=
+X-Received: by 2002:ac2:5b9a:0:b0:52c:8372:9803 with SMTP id
+ 2adb3069b0e04-52ca022794fmr598304e87.12.1718264121411; Thu, 13 Jun 2024
+ 00:35:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+From: Anthony Clark <clark.anthony.g@gmail.com>
+Date: Thu, 13 Jun 2024 00:34:55 -0700
+Message-ID: <CALcKWQiZ8uhZrx2-MPpZJ_5zhF2YQRnNf_zDut9Xvg-EE28tCg@mail.gmail.com>
+Subject: Handling DMA completion timeouts
+To: dmaengine@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hello Vinod Koul,
+Hey all,
 
-Commit 5cb664fbeba0 ("Merge branch 'fixes' into next") from Jan 5,
-2022 (linux-next), leads to the following Smatch static checker
-warning:
+I sent nearly this same message to the "kernelnewbies" mailing list
+(kernelnewbies@kernelnewbies.org) in hopes to get some response there.
+I haven't heard anything back and I see this mailing list referenced
+in various documentation. I hope this message is appropriate for this
+audience.
 
-	drivers/dma/idxd/submit.c:141 llist_abort_desc()
-	error: we previously assumed 'found' could be null (see line 129)
+As a newbie, I'm trying to figure out how to properly deal with
+timeouts after dma_engine_submit(). My intent is to build a new
+"device" driver using Xilinx's AXIDMA driver linked below. Xilinx
+provides a couple references called "dma-proxy" and "axidmatest" that
+exercise the DMA Engine interop with their driver. I think I
+understand this layering correctly, but I'm pretty new to the DMA
+Engine framework.
 
-drivers/dma/idxd/submit.c
-    97 static void llist_abort_desc(struct idxd_wq *wq, struct idxd_irq_entry *ie,
-    98                              struct idxd_desc *desc)
-    99 {
-    100         struct idxd_desc *d, *t, *found = NULL;
-    101         struct llist_node *head;
-    102         LIST_HEAD(flist);
-    103 
-    104         desc->completion->status = IDXD_COMP_DESC_ABORT;
-    105         /*
-    106          * Grab the list lock so it will block the irq thread handler. This allows the
-    107          * abort code to locate the descriptor need to be aborted.
-    108          */
-    109         spin_lock(&ie->list_lock);
-    110         head = llist_del_all(&ie->pending_llist);
-    111         if (head) {
-    112                 llist_for_each_entry_safe(d, t, head, llnode) {
-    113                         if (d == desc) {
-    114                                 found = desc;
-    115                                 continue;
-    116                         }
-    117 
-    118                         if (d->completion->status)
-    119                                 list_add_tail(&d->list, &flist);
+xilinx dma driver:
+https://github.com/Xilinx/linux-xlnx/blob/master/drivers/dma/xilinx/xilinx_dma.c
+dma-proxy driver:
+https://github.com/Xilinx-Wiki-Projects/software-prototypes/blob/master/linux-user-space-dma/Software/Kernel/dma-proxy.c
+xilinx dmatest driver:
+https://github.com/Xilinx/linux-xlnx/blob/master/drivers/dma/xilinx/axidmatest.c
 
-Items added to flist here.
+Using the referenced "dma-proxy" as an example, I'm tracing the case
+where there is a timeout. In my "device" case, I want some data from a
+DMA slave (DEV_TO_MEM) but it may never come. I'm mentally treating
+this as a "socket" but I understand I may have retool my mental
+model...
 
-    120                         else
-    121                                 list_add_tail(&d->list, &ie->work_list);
-    122                 }
-    123         }
-    124 
-    125         if (!found)
-    126                 found = list_abort_desc(wq, ie, desc);
-    127         spin_unlock(&ie->list_lock);
-    128 
-    129         if (found)
+First, this chain eventually resolves into `dma_engine_submit()` via
+dma_device->device_prep_slave_sg():
+-----------------------------------------------------------------
 
-This code assumes found can be NULL
+(~ https://github.com/Xilinx-Wiki-Projects/software-prototypes/blob/master/linux-user-space-dma/Software/Kernel/dma-proxy.c#L198)
 
-    130                 idxd_dma_complete_txd(found, IDXD_COMPLETE_ABORT, false,
-    131                                       NULL, NULL);
-    132 
-    133         /*
-    134          * completing the descriptor will return desc to allocator and
-    135          * the desc can be acquired by a different process and the
-    136          * desc->list can be modified.  Delete desc from list so the
-    137          * list trasversing does not get corrupted by the other process.
-    138          */
-    139         list_for_each_entry_safe(d, t, &flist, list) {
-    140                 list_del_init(&d->list);
---> 141                 idxd_dma_complete_txd(found, IDXD_COMPLETE_ABORT, true,
-                                              ^^^^^
-NULL dereference if flist isn't empty but found is NULL
+sg_init_table(..., 1);
+sg_dma_address(... ) = foo.dma_handle;
+sg_dma_len(...) = foo.length;
+chan_desc = dma_device->device_prep_slave_sg(..., ..., 1, ..., ..., NULL);
 
-    142                                       NULL, NULL);
-    143         }
-    144 }
+if (! chan_desc) {
+     printk(KERN_ERR "dmaengine_prep*() error\n");
+else { ... }
 
-regards,
-dan carpenter
+
+Then, the driver waits for the completion and prints an error if it
+cannot complete:
+-------------------------------------------------------------------------------------------------------------------
+
+unsigned long timeout = msecs_to_jiffies(3000);
+timeout = wait_for_completion_timeout(foo.cmp, timeout);
+status = dma_async_is_tx_complete(..., ..., NULL, NULL);
+
+if (timeout == 0)  {
+     printk(KERN_ERR "DMA timed out\n");
+}
+else { ... }
+
+======
+
+I cannot figure out what to do in the case of a timeout. It appears
+descriptors (`chan_desc`) are being leaked when completion cannot be
+completed. I see some patches to make the list of descriptors larger
+but it appears the default/configured is 255. So if I sit and timeout
+for 3sec * 255, I run out of descriptors and that DMA engine instance
+is no longer usable. Both this dma-proxy and dmatest driver don't seem
+to handle any sort of failure cleanup.
+
+I hope someone can point me in the right direction so I can timeout
+nicely. Maybe I need to switch to polling or something like this. Any
+information is helpful.
+
+Thanks!
 

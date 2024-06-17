@@ -1,54 +1,54 @@
-Return-Path: <dmaengine+bounces-2394-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2395-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6290E90B6B0
-	for <lists+dmaengine@lfdr.de>; Mon, 17 Jun 2024 18:40:48 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A36590B706
+	for <lists+dmaengine@lfdr.de>; Mon, 17 Jun 2024 18:50:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 16C961F24451
-	for <lists+dmaengine@lfdr.de>; Mon, 17 Jun 2024 16:40:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E213728109F
+	for <lists+dmaengine@lfdr.de>; Mon, 17 Jun 2024 16:50:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFB0E1E529;
-	Mon, 17 Jun 2024 16:40:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A87D161904;
+	Mon, 17 Jun 2024 16:50:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fuyLilHj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="riPcL82k"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC42E1D9515
-	for <dmaengine@vger.kernel.org>; Mon, 17 Jun 2024 16:40:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA21E15A493
+	for <dmaengine@vger.kernel.org>; Mon, 17 Jun 2024 16:50:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718642443; cv=none; b=j2Wjy4/IVZXQve50BRkHwfvRQEqcHEMVf23cwmV8u3p7ouqfBRAZeItlNtRjiHIhJ+Azxi9plM8/clijc9msAyLXVDu900eCLGT/DK+wwrdIXCXgo9QJKe7QwZbsMwrQqE6FW62CFnaqRL4naWzkuSdlTeZ3p1OeLPrSFxcjbeM=
+	t=1718643051; cv=none; b=noOXEuAQJHse/L3XAHnXcH5GeHTYbegdiDIk9LlS6BHf08XziNfphUmmq7XVGifLnBFIFKVXloC9J9BGSlTnNC5t70q5UP23fQqxYlylKxK5wZ60YLZFI07LdQA6+xZskFsVZWxW5DBL8lIIdiICB44vo/mZ2GxXrd4YQ3BpwlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718642443; c=relaxed/simple;
-	bh=XKtWqI4bwRnnHfgF9xVHN2zZDlTendZ45NwaTmQG1Yw=;
+	s=arc-20240116; t=1718643051; c=relaxed/simple;
+	bh=TzMgCEkJsMJ3JH8uOrFDuoQvKCSH4RS+sLXrgOinoEU=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=WTWWwdH8W1BaoHFkwVg/SnDRmhY3bLvkgN2IN+TfsUUJP0bMGTi/CWrXOPRt8QEPnrbEl4HiUDeAZwfJGdRln6A4T417eOMz1KxYFsZMDAojCPu2RNy7TcZH2qLmW7hTaqsKYxzyDFK0iV00k7xqIBoMrBJefIjZOcQFk7Pw6G0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fuyLilHj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35157C2BD10;
-	Mon, 17 Jun 2024 16:40:43 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=SkfEmMq60Ma2MuN7IGoUmOgLkliG7vMXohPjEDBNdc9iPd4Xg4x3ubXn/UP64O+GpLLxVk/Q1ut5sYXBIpGP0pSTQTNi2wWenGGzlIg85oyzKGT/NJWx0I34VwoZi90OdW2UVI0b08gljFS9T83Hb56iT5/8UGD/02XYGoeczgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=riPcL82k; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 399DBC2BD10;
+	Mon, 17 Jun 2024 16:50:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718642443;
-	bh=XKtWqI4bwRnnHfgF9xVHN2zZDlTendZ45NwaTmQG1Yw=;
+	s=k20201202; t=1718643051;
+	bh=TzMgCEkJsMJ3JH8uOrFDuoQvKCSH4RS+sLXrgOinoEU=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=fuyLilHjStanrQGHdcbeS5ZnTk5z4G4En6wQ7JhLMumY5iWPdmkhX2o2gKf5vxJCC
-	 aHoT0pAmOnB2JbycLY1iOE1xUL2k6HbYTEqxcHccJP/MtHOoAtz9RIf/eD+gKid/eC
-	 voq9KSvKuTn7xReHWX00Pkk3UQvYjQKFKprJCx57ydTEuqVh/cEvbPI18xJwdxUCxi
-	 SBUe+Hl3mu2nZnkYLfYDGFkMmYw9nxhkgbwmjFj1xX9JVEWIIvwQJcB2wEJf3EQkhX
-	 GfoQuhL5f6nmxr88wNMYUY4ro8TyRDa71x9sZEr1bmReuVyBDlE4OKDHjcrGYbLZpB
-	 bONW8bdtOPz9g==
-Date: Mon, 17 Jun 2024 11:40:41 -0500
+	b=riPcL82k39UyYnuNe7rmP93+u536OSV4KAqT3f9twAlgIReqt8ikx211M1dHmKv7F
+	 Xyoff1H2oHD4zzuCAzTFyZ7pnhRnadvXAyDvK1t131plSy4hOuPQ8k8OQU5jzB6LmL
+	 tqjwNcqzevEh3ZIxZUGdt/hz8/Juqrynal19VU/KgiBfc+rrZmf3oK/FCHVfJ7Iduc
+	 +YhkuWMEc2yCkmaoy/HWrYhlW0wQsVebmLIVwFozC0j9XD1iXEwo2RCGhAS/mXJF7c
+	 vLWo8gpuktngIZ4KQpev2x4xAoOxz1GZC5GA2NLpEitYLauKHEcD4EyMHkUDhXw0o3
+	 WMNHzvMyeE6uA==
+Date: Mon, 17 Jun 2024 11:50:49 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
 Cc: vkoul@kernel.org, dmaengine@vger.kernel.org, Raju.Rangoju@amd.com,
 	Frank.li@nxp.com
 Subject: Re: [PATCH v2 2/7] dmaengine: ae4dma: Add AMD ae4dma controller
  driver
-Message-ID: <20240617164041.GA1217135@bhelgaas>
+Message-ID: <20240617165049.GA1217718@bhelgaas>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -65,38 +65,50 @@ On Mon, Jun 17, 2024 at 03:33:54PM +0530, Basavaraj Natikar wrote:
 > via a circular queue of 'descriptors', each of which specifies source
 > and destination addresses for copying a single buffer of data.
 
-> +++ b/drivers/dma/amd/ae4dma/Kconfig
-> @@ -0,0 +1,13 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +config AMD_AE4DMA
-> +	tristate  "AMD AE4DMA Engine"
-> +	depends on X86_64 && PCI
-
-Possible "(X86_64 || COMPILE_TEST)"?
-
-> +++ b/drivers/dma/amd/ae4dma/ae4dma-pci.c
-
-> +static int ae4_get_irqs(struct ae4_device *ae4)
+> +static void ae4_free_irqs(struct ae4_device *ae4)
 > +{
-> +	struct pt_device *pt = &ae4->pt;
-> +	struct device *dev = pt->dev;
-> +	int ret;
+> +	struct ae4_msix *ae4_msix;
+> +	struct pci_dev *pdev;
+> +	struct pt_device *pt;
+> +	struct device *dev;
+> +	int i;
 > +
-> +	ret = ae4_get_msix_irqs(ae4);
-> +	if (!ret)
-> +		return 0;
-> +
-> +	/* Couldn't get MSI-X vectors, try MSI */
-> +	dev_err(dev, "could not enable MSI-X (%d), trying MSI\n", ret);
-> +	ret = ae4_get_msi_irq(ae4);
-> +	if (!ret)
-> +		return 0;
+> +	if (ae4) {
 
-Consider pci_alloc_irq_vectors() and pci_free_irq_vectors() here.
+I don't think this test is necessary.  I don't think it's possible to
+get here with ae4==0.
 
-> +	/* Couldn't get MSI interrupt */
-> +	dev_err(dev, "could not enable MSI (%d)\n", ret);
+> +		pt = &ae4->pt;
+> +		dev = pt->dev;
+> +		pdev = to_pci_dev(dev);
 > +
-> +	return ret;
+> +		ae4_msix = ae4->ae4_msix;
+> +		if (ae4_msix && ae4_msix->msix_count)
+> +			pci_disable_msix(pdev);
+> +		else if (pdev->irq)
+> +			pci_disable_msi(pdev);
+> +
+> +		for (i = 0; i < MAX_AE4_HW_QUEUES; i++)
+> +			ae4->ae4_irq[i] = 0;
+
+Clearing ae4_irq[] also doesn't seem necessary, since this is only
+used in .remove(), and ae4 should never be used again.  If this path
+becomes used in some future path that depends on ae4_irq[] being
+cleared, perhaps the clearing could be moved to that patch.
+
+> +	}
+> +}
+> +
+> +static void ae4_deinit(struct ae4_device *ae4)
+> +{
+> +	ae4_free_irqs(ae4);
+> +}
+
+> +static void ae4_pci_remove(struct pci_dev *pdev)
+> +{
+> +	struct ae4_device *ae4 = dev_get_drvdata(&pdev->dev);
+> +
+> +	ae4_destroy_work(ae4);
+> +	ae4_deinit(ae4);
 > +}
 

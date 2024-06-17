@@ -1,176 +1,121 @@
-Return-Path: <dmaengine+bounces-2377-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2378-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6347090A582
-	for <lists+dmaengine@lfdr.de>; Mon, 17 Jun 2024 08:24:30 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2BEBA90A62D
+	for <lists+dmaengine@lfdr.de>; Mon, 17 Jun 2024 08:58:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 551FC1C242E3
-	for <lists+dmaengine@lfdr.de>; Mon, 17 Jun 2024 06:24:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BF84D1F211DB
+	for <lists+dmaengine@lfdr.de>; Mon, 17 Jun 2024 06:57:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1E3E184134;
-	Mon, 17 Jun 2024 06:24:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C027E1862BB;
+	Mon, 17 Jun 2024 06:57:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nhx7Z4yO"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="GCj5plbZ"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.17.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC7AD1822C2;
-	Mon, 17 Jun 2024 06:24:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8382819BC6;
+	Mon, 17 Jun 2024 06:57:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718605464; cv=none; b=g0rk7R+T4jhvjGJgSEehSkowznQJH+A5Nz8kW4CZPSWB8YjS8pa8sb1tVZCMi+5mCTM+vi0ZGLvmeh1Yn/x+MK6B27ZRY54w/VWEJMIdDiQK+IAgEjL/vIV+I3pL3kA2gmZurqkzt/+bbl/ponpk9BYW7Z0xIa/XnN75A7CKiLM=
+	t=1718607474; cv=none; b=InUUqv6VPwpyd+r9KVmTI8ZCfw7MBbHv4DJAqtgDiOQfrDNq+1MbdrpgDzOezyktoiRyXxVM+wYR1InQgpbkXkOym3o4D1OboNgLDTsBZXgqLYHv9uIrRkBU583wjg8uH2ow2C/9ehXTdULsfxadzIETNNZ/weXt6RZ9GxiWK3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718605464; c=relaxed/simple;
-	bh=5BA/TosT1CrxQE3NyCIfG5vCxzPOaTI0joE23Fx2Gqc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tms/TgXBIw1OSJx5lvQorZGvQrM/Wx9RUy7+vc2jDR+eatZojMstDT+ZwnkIZw+K6zD1sr1DGWWT+VcZ4rfClTeBncwDwpiAnABZCsJMxn2gFpIiUdlf3IppYvH0HXna4O1kowACmfezJAs6ozecPjm5/kwsfggnkl8+Fz0tgbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nhx7Z4yO; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a6f85f82ffeso80716866b.0;
-        Sun, 16 Jun 2024 23:24:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718605461; x=1719210261; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=5BA/TosT1CrxQE3NyCIfG5vCxzPOaTI0joE23Fx2Gqc=;
-        b=Nhx7Z4yOw3F3MGDZn5mu0NdH0OPM80B1d1mWj+xqI2VyRyNdGA1j0pwsmm4x/c/Yd7
-         BPZlzsht1k4P0pezqeRp3a16eErUJ4jg9QNAftMtE4iUe6wI51T4ME4OJV1MlOJOCvlF
-         bB160rUY3wwHs0iPDfI5Mi/NT93vDAfYmkh8CgdJDvsveNYEsqHrVSmpjOFird8XLYRC
-         OKBmXW2TJfP+jZZc4J/sfsmRs9cMNbKc3egsv35m0zOoP3uRRXSgp1KUKCHyzeUHxg04
-         +hz8mbHAnqZqR052L/0K1DxR6rau9bq23bcNp41a2ws3vs5kgua5YcsIfQhsyhsHoz2+
-         qMbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718605461; x=1719210261;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5BA/TosT1CrxQE3NyCIfG5vCxzPOaTI0joE23Fx2Gqc=;
-        b=VwcxIpgydbh4zeiqWzpt57lMK9OVy3ubvu8nS5gg34QPavW3ZeWPUhWYumQihSx7Zm
-         sDF52LZk2IOTReiBd4vkEqpoJGMgGrV0Vy8iwin8DYytIoeFXE2teKny/nBjtpLreu0V
-         LEN2gHXGykVVNEx4b3hZtICka+h2zCECUsRZiYKLQdcVr5Phfy/z9AQj7VTLPCvLtbUV
-         +VpdotM7mGEg1x01PEFjGpxCUtzATzfRbpJy1/vDWHItEo9e1Oe/BJH003hT4otfYR4Y
-         2yu9su+EDBb0PyUrcesMXJwIAz8gHuiKBr0LFjnLzBCv+4XMJZqe7wT5tFa0wIdmtBsM
-         z11w==
-X-Forwarded-Encrypted: i=1; AJvYcCVbcqmFb8dv74WH6IhdgGWPpUSGDc7h3j9t1jqtvvC206LRdc0peyarFtJyzr+27K4SCkbKV8S/eCGvOn3q+66Na9wyYg/spIXoXBEMC4QbIT1ZhakrsuShH460yGas0yr4SZGziTAz+ZJ33Z1SGurwusktd/ReMtwTcquThv+mWnKE0FBG0OTPy7A2Y51T0kYg+7A8Is81nEaH3rAlNSN8MkN6/PgEddHXTE1a0lJ36m3Ifzf2v9XcFuU=
-X-Gm-Message-State: AOJu0Ywx1RO0jnCu/JjVqEyzWSrFkglHgO4lEQBHrIPyfzcQE6+kJwFG
-	R3PDn6yyMIRCA7uXQ7JTGhNpv73+HalKHrwv5uvHUBpZF62pDtzy
-X-Google-Smtp-Source: AGHT+IGwPJh8PW95cQ3TUh8Rt+F4WZpn4rbG8t7MJQz99Y0NFynHP5+QpRL00FDtWKBhhin6up50sQ==
-X-Received: by 2002:a17:907:c003:b0:a6f:6b6a:e8d2 with SMTP id a640c23a62f3a-a6f6b6aec48mr560764166b.11.1718605460884;
-        Sun, 16 Jun 2024 23:24:20 -0700 (PDT)
-Received: from nsa.fritz.box ([2001:a61:35f9:9001:40df:88bb:5090:7ab6])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f7c12f7c0sm191184366b.198.2024.06.16.23.24.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Jun 2024 23:24:20 -0700 (PDT)
-Message-ID: <f0c709e3bf3f1ebfac29274b8f7182df9022376e.camel@gmail.com>
-Subject: Re: [PATCH v10 3/6] iio: core: Add new DMABUF interface
- infrastructure
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Paul Cercueil <paul@crapouillou.net>, Jonathan Cameron <jic23@kernel.org>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Vinod Koul <vkoul@kernel.org>, 
- Sumit Semwal <sumit.semwal@linaro.org>, Christian =?ISO-8859-1?Q?K=F6nig?=
- <christian.koenig@amd.com>,  Jonathan Corbet <corbet@lwn.net>, Nuno Sa
- <nuno.sa@analog.com>, linux-iio@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- dmaengine@vger.kernel.org, linux-media@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
-Date: Mon, 17 Jun 2024 08:24:19 +0200
-In-Reply-To: <0cdcf83a1ab7c199244d4a00157f6fa8979ef819.camel@crapouillou.net>
-References: <20240605110845.86740-1-paul@crapouillou.net>
-	 <20240605110845.86740-4-paul@crapouillou.net>
-	 <20240609105302.07de907a@jic23-huawei>
-	 <0cdcf83a1ab7c199244d4a00157f6fa8979ef819.camel@crapouillou.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 (3.52.2-1.fc40) 
+	s=arc-20240116; t=1718607474; c=relaxed/simple;
+	bh=cswSiNhzuIX+L0XOTRE4WAI/IsUzciePZm+xz0kFYY4=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=YeGZGS+vkjPko2CFrut0QqIqRETrO1I2XT6zpCvHz2CqKBx4hfeiJIU2onzN0ppipe5GJ8GE1J5G8j+ty/ANQl+mDh2f4wRLLv4oO0opA5/5fd4KoUwiqxKRyrHfDxcedPBYsfTwMc8IVoPvv01qZXWo9SauzRWSGPkM6d+UWIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=GCj5plbZ; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1718607423; x=1719212223; i=markus.elfring@web.de;
+	bh=xYrgvg9WCy9r9u5H7qn2mdlOD8NoWnHTZFUH9pAD1xQ=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=GCj5plbZrqt60p1OqOM56a4JCCTVsMe2MCHDuSnFcWd8H3SKEjRtvgUhpHPlFxr0
+	 AfNvgrBsAVU5VugDCyQjEqz/GpSYKBrvvNYHzyjM8/XCVMK60t6ckdPrCVZEx4SiP
+	 hID6uSohRtcOm6Iq4vpjEAWDBU7x4Jdr+X0AUchPul/0qrQy3o3ow1lhfeewTJHw1
+	 rdHz6GzEZexLUUEiQVYIqbaJqH+27pgbYSUCtFdX6jlPtdc2h1sUL1znF+GVfwCa4
+	 I8wvZiQLbnL/b3xoFHxRHDuPApPDbYO3891wggaB+v0sy78zV1jbgSSlrTfqgxXHq
+	 oVH5Nnt339gSg7nUoQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MEUS0-1sBxPZ0DKk-000iy7; Mon, 17
+ Jun 2024 08:57:03 +0200
+Message-ID: <6a41fd88-5496-462a-86d2-446c2990fcf7@web.de>
+Date: Mon, 17 Jun 2024 08:56:50 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+To: Paul Cercueil <paul@crapouillou.net>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, linux-iio@vger.kernel.org, dmaengine@vger.kernel.org,
+ linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linaro-mm-sig@lists.linaro.org, =?UTF-8?Q?Christian_K=C3=B6nig?=
+ <christian.koenig@amd.com>, Jonathan Cameron <jic23@kernel.org>,
+ Lars-Peter Clausen <lars@metafoo.de>, Sumit Semwal
+ <sumit.semwal@linaro.org>, Vinod Koul <vkoul@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org,
+ Jonathan Corbet <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>
+References: <20240605110845.86740-4-paul@crapouillou.net>
+Subject: Re: [PATCH v10 3/6] iio: core: Add new DMABUF interface
+ infrastructure
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240605110845.86740-4-paul@crapouillou.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:mUazHyeVCXYVnz6oK+LWMeQZXEK3hfSQQEB660iCeLwFYnqkjQ+
+ Ud585WwQdmOnvKsazfb+JBL625SKwogz20mU04M7cTelcw3J6jvrcay8aCvzIgt5Zo/u0tG
+ HA8BNYiVjjRu1Y+4OsPoPx6KQH/SZ/sPPYoYD8KqvEsuerJYNwyB4WIq2T3jsfm4PgHe3GT
+ 6DwW9Rzy0tHqw4LOWDrPA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:EpUgWLDuQOE=;TpqYd2BsYAhSrklupWm0bdGxi0w
+ k0gP4myeMywXz7z2416cAKfPZc+sozlXCm/dg03s156BdOSpNvAWLhscEVizpeQGJ02tGKcs+
+ gPpHtLG9/4DSygIbsZCwwGVPv2tYnhthrp5KD5bNINXFLg8ymCfDhgNDu1QiKmG0LiXN/kYTC
+ tyZia5fF2hlrZlk+Mp8kxXJgv9UgtBL/FmNNSPm6N7jOTR4Zcdgt0cJXiJEJ5aNLFfHYF1TED
+ sqA3TpJuSMnBqp6+Y27A4GFBqiMckBrfdUi+aB1w9Jo9aVv0/5sHHtuWD7Mufed2c3xZm8bFi
+ 6P/eXkYxEGfvYjuTun684PUf8EPFV0MxlSafXkax97B0gf7RMsDhoZ/57lr/LEPbYd5/MMGpo
+ 2FZcmWJJfumMFT/IEiEfiR4teoq7q4oHTPBre96PjFDkipfK0DXEysOlrBb+tFcfYbjIwlF3T
+ 6Y3XM6LdKz4qEO97XcWy/wPj8GbkMKxKFI1QJs0PRE79Kk587L8rJgWiHZKCZ80uvRyCzXJCI
+ /t6zPRNRF6ePoZIKc/44UiTxO/fQ1zMmlaRzVy56MQ8x2G3ANq75aaCd9qVNk4v0wRaTB5Lu0
+ uA43DJQ1ptxtQhryfZiI0B3NSnmo4fO95dmi7e1GlRXJk1Udd4JIcfjaeXw6fLTmobKBJAeQe
+ s3a1aiZESl6a5AD2Kc1QybZRvr4ec/TYMtpTSxix+F+QAvs4PwefO+Ljy+3Y6lEH5cgLdmGuZ
+ 6xuPuGo9iZgV77V+kDtZMkQ+soB22ssbAGAuVuIsUgYD7b72EPWZkPvIfjmmh3OCCEewBvW+R
+ CzKOponlPubLU84J17FFUB0n3ggAX9n0xY2QTca53XWm4=
 
-On Sat, 2024-06-15 at 13:07 +0200, Paul Cercueil wrote:
-> Le dimanche 09 juin 2024 =C3=A0 10:53 +0100, Jonathan Cameron a =C3=A9cri=
-t=C2=A0:
-> > On Wed,=C2=A0 5 Jun 2024 13:08:42 +0200
-> > Paul Cercueil <paul@crapouillou.net> wrote:
-> >=20
-> > > Add the necessary infrastructure to the IIO core to support a new
-> > > optional DMABUF based interface.
-> > >=20
-> > > With this new interface, DMABUF objects (externally created) can be
-> > > attached to a IIO buffer, and subsequently used for data transfer.
-> > >=20
-> > > A userspace application can then use this interface to share DMABUF
-> > > objects between several interfaces, allowing it to transfer data in
-> > > a
-> > > zero-copy fashion, for instance between IIO and the USB stack.
-> > >=20
-> > > The userspace application can also memory-map the DMABUF objects,
-> > > and
-> > > access the sample data directly. The advantage of doing this vs.
-> > > the
-> > > read() interface is that it avoids an extra copy of the data
-> > > between the
-> > > kernel and userspace. This is particularly userful for high-speed
-> > > devices which produce several megabytes or even gigabytes of data
-> > > per
-> > > second.
-> > >=20
-> > > As part of the interface, 3 new IOCTLs have been added:
-> > >=20
-> > > IIO_BUFFER_DMABUF_ATTACH_IOCTL(int fd):
-> > > =C2=A0Attach the DMABUF object identified by the given file descripto=
-r
-> > > to the
-> > > =C2=A0buffer.
-> > >=20
-> > > IIO_BUFFER_DMABUF_DETACH_IOCTL(int fd):
-> > > =C2=A0Detach the DMABUF object identified by the given file descripto=
-r
-> > > from
-> > > =C2=A0the buffer. Note that closing the IIO buffer's file descriptor
-> > > will
-> > > =C2=A0automatically detach all previously attached DMABUF objects.
-> > >=20
-> > > IIO_BUFFER_DMABUF_ENQUEUE_IOCTL(struct iio_dmabuf *):
-> > > =C2=A0Request a data transfer to/from the given DMABUF object. Its fi=
-le
-> > > =C2=A0descriptor, as well as the transfer size and flags are provided=
- in
-> > > the
-> > > =C2=A0"iio_dmabuf" structure.
-> > >=20
-> > > These three IOCTLs have to be performed on the IIO buffer's file
-> > > descriptor, obtained using the IIO_BUFFER_GET_FD_IOCTL() ioctl.
-> > >=20
-> > > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> > > Signed-off-by: Nuno Sa <nuno.sa@analog.com>
-> >=20
-> > Need a brief note on the sign off chain.
-> > What is Nuno's role in this series as he's not sending the emails and
-> > not
-> > marked with Co-developed-by=20
->=20
-> That's a good question. I think he sent one revision of the patchset
-> (v7 or something like that) so he added his SoB.
->=20
-> (Nuno: you confirm?)
+=E2=80=A6
+> +++ b/drivers/iio/industrialio-buffer.c
+=E2=80=A6
+>  static int iio_buffer_chrdev_release(struct inode *inode, struct file *=
+filep)
+>  {
+=E2=80=A6
+>  	wake_up(&buffer->pollq);
+>
+> +	mutex_lock(&buffer->dmabufs_mutex);
+> +
+> +	/* Close all attached DMABUFs */
+=E2=80=A6
+> +	mutex_unlock(&buffer->dmabufs_mutex);
+> +
+>  	kfree(ib);
+=E2=80=A6
 
-exactly...
+Would you become interested to apply a statement like =E2=80=9Cguard(mutex=
+)(&buffer->dmabufs_mutex);=E2=80=9D?
+https://elixir.bootlin.com/linux/v6.10-rc3/source/include/linux/mutex.h#L1=
+96
 
->=20
-> I'll add his Co-developed-by then.
-
-Not sure if that is really deserved :)... Maybe just remove my tag.
-
-- Nuno S=C3=A1
-
-
+Regards,
+Markus
 

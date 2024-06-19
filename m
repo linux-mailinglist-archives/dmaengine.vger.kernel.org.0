@@ -1,63 +1,67 @@
-Return-Path: <dmaengine+bounces-2424-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2425-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D97C90EAA6
-	for <lists+dmaengine@lfdr.de>; Wed, 19 Jun 2024 14:16:33 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E7F1890EAF6
+	for <lists+dmaengine@lfdr.de>; Wed, 19 Jun 2024 14:24:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 151E2285EC1
-	for <lists+dmaengine@lfdr.de>; Wed, 19 Jun 2024 12:16:32 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 66681B247CB
+	for <lists+dmaengine@lfdr.de>; Wed, 19 Jun 2024 12:23:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA5131422BC;
-	Wed, 19 Jun 2024 12:16:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8393A145B09;
+	Wed, 19 Jun 2024 12:22:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="hM0Ql3ON"
+	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="H5QlHj5b"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from aposti.net (aposti.net [89.234.176.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D084140364;
-	Wed, 19 Jun 2024 12:16:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B7D1411D5;
+	Wed, 19 Jun 2024 12:21:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.234.176.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718799376; cv=none; b=GWWQ2CJmCNLtOu/oP0SMEk4sD3bYZ/oSOQG/GOOUXg6SVlNnulTGdDhh2Ztwxp7UFEc8/LvbGsdICTe8azUPfCB5C/I17bruG8SJx2XBpItVdq8GvuirHJ98XngCFa5DeVa8BRkMz+YyetIl7xbYqEV0edGGNPgtk6B7YMs8bVM=
+	t=1718799720; cv=none; b=bMKqoGXaWc2xujqXMozBxN7r0zHWqezhnClYFU3lbtq4oFroiuTsw3bP/uz0RnAv2RmcwApDp/17eYFC1bGduZa7o2qG09JnyuNNGsBTN7vUaj7Snh9bSDsFH349UlV8eqcRZudfdHtAiXIEJ38qtPHofy3Ke/Dd6Mf2ZTNpLtQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718799376; c=relaxed/simple;
-	bh=C65RJNOJy4IpSk4nyi92NXOHTBXSxjQAth7IcDOtmrU=;
+	s=arc-20240116; t=1718799720; c=relaxed/simple;
+	bh=FVGqOE3wiRlvOnwpW+plbu90wTtSXAmdw/o00wdPQQk=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=B7HU7bLOzy3MNLkbFtKDt8J9+p3yGcMaDbUKxyFb2wyIyzzYTave4Is5JVt6uyarrPVbmX6j+2+ikqtePrpD6RqddzRsJt0qfBLgnqoTGaF32xYdd7yCTMYFcaR9ih5QmCqxtxOzy0986dNfkoPUtEKyCR4BpgWo+4Wtq/wfa3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=hM0Ql3ON; arc=none smtp.client-ip=89.234.176.197
+	 Content-Type:MIME-Version; b=OWeMMse9bid7nOt8X+XXbBwho5ejsFvmw5BrUU3afbrZdqyuVWhfc1rkYw1q7/RKwcJIIjCNIN8mu4679KUpIVugkXoN0NcNp3qSyJYb63mijWA3SLmvoSAcvTwuDKrVLGaHJF1xvDMhfG6KNhF+AgnCB9sUfZxydIB+Q3CfeYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=H5QlHj5b; arc=none smtp.client-ip=89.234.176.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-	s=mail; t=1718799368;
+	s=mail; t=1718799717;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=tTFt4SyFkUl5kwC5+SYzC9ZviZKxrb5Ez1o1J2dq9wo=;
-	b=hM0Ql3ONtfmO/COEkbO+8st7xAbaQK46Hai4ZerRynzZOlo/sQmHozGF9x8b8zdn2mpUa/
-	vCzfhQDqZFyIh/ozwqLf0LiFtWj9pU8PTLAl80+GTIoq5TkOrg5gjXWNXKyymgpFDUNg0D
-	mHDUssO8qePsFHYSj668VVppKoGbeIU=
-Message-ID: <8d536bb864c145340a15f496ad3b89e08a847718.camel@crapouillou.net>
-Subject: Re: [PATCH v11 3/7] iio: core: Add new DMABUF interface
- infrastructure
+	bh=FVGqOE3wiRlvOnwpW+plbu90wTtSXAmdw/o00wdPQQk=;
+	b=H5QlHj5b47jmWWPmYrEyBk2CLjfodSkuNO3iFqDQL3q9TAKryupn+V75JTiH8WmGI/eIFy
+	0Zjifr0r4dCWg3FWwIzaMp3bxyNBFP/hFECEP7HFZpj/jn85MK8NLAlzARSlcjHxvvWIqv
+	zj3xrSSMAXdnhmkQLs0rsmnmfWLPh7o=
+Message-ID: <15edbedcac80961ec9b7834041e54143657cd48b.camel@crapouillou.net>
+Subject: Re: [v11 3/7] iio: core: Add new DMABUF interface infrastructure
 From: Paul Cercueil <paul@crapouillou.net>
-To: Markus Elfring <Markus.Elfring@web.de>, Nuno =?ISO-8859-1?Q?S=E1?=
- <nuno.sa@analog.com>, linux-iio@vger.kernel.org, dmaengine@vger.kernel.org,
-  linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- linaro-mm-sig@lists.linaro.org, Christian =?ISO-8859-1?Q?K=F6nig?=
- <christian.koenig@amd.com>, Jonathan Cameron <jic23@kernel.org>, Lars-Peter
- Clausen <lars@metafoo.de>, Sumit Semwal <sumit.semwal@linaro.org>, Vinod
- Koul <vkoul@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org, Jonathan
- Corbet <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>
-Date: Wed, 19 Jun 2024 14:16:05 +0200
-In-Reply-To: <fc3045c5-d542-4a6c-906d-84f72e776e9c@web.de>
-References: <20240618100302.72886-4-paul@crapouillou.net>
-	 <fc3045c5-d542-4a6c-906d-84f72e776e9c@web.de>
+To: Markus Elfring <Markus.Elfring@web.de>, lkp@intel.com, Nuno
+ =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>, linux-iio@vger.kernel.org,
+ dmaengine@vger.kernel.org,  linux-media@vger.kernel.org,
+ dri-devel@lists.freedesktop.org,  linaro-mm-sig@lists.linaro.org, Christian
+ =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, Jonathan Cameron
+ <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Sumit Semwal
+ <sumit.semwal@linaro.org>, Vinod Koul <vkoul@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>, 
+	linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Randy Dunlap
+	 <rdunlap@infradead.org>
+Date: Wed, 19 Jun 2024 14:21:55 +0200
+In-Reply-To: <41fa9904-28a8-46fa-bf2a-014875409b83@web.de>
+References: <202406191014.9JAzwRV6-lkp@intel.com>
+	 <a4dd1d73-5af3-4d3d-8c0f-92dc439fa119@web.de>
+	 <d452ecc4fc703a1f98aa4f243c6ded7fbfe54b0e.camel@crapouillou.net>
+	 <cbcfb64a-e5c2-41a7-8847-227d4f6872de@web.de>
+	 <e948cd137da8e4f97bfbf7ef68a5450476aeee0c.camel@crapouillou.net>
+	 <41fa9904-28a8-46fa-bf2a-014875409b83@web.de>
 Autocrypt: addr=paul@crapouillou.net; prefer-encrypt=mutual;
  keydata=mQENBF0KhcEBCADkfmrzdTOp/gFOMQX0QwKE2WgeCJiHPWkpEuPH81/HB2dpjPZNW03ZM
  LQfECbbaEkdbN4YnPfXgcc1uBe5mwOAPV1MBlaZcEt4M67iYQwSNrP7maPS3IaQJ18ES8JJ5Uf5Uz
@@ -90,24 +94,40 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-Le mercredi 19 juin 2024 =C3=A0 13:43 +0200, Markus Elfring a =C3=A9crit=C2=
+Le mercredi 19 juin 2024 =C3=A0 13:56 +0200, Markus Elfring a =C3=A9crit=C2=
 =A0:
 > =E2=80=A6
-> > +++ b/drivers/iio/industrialio-buffer.c
-> =E2=80=A6
-> > +static void iio_buffer_dmabuf_release(struct kref *ref)
-> > +{
-> =E2=80=A6
-> > +	dma_resv_lock(dmabuf->resv, NULL);
-> > +	dma_buf_unmap_attachment(attach, priv->sgt, priv->dir);
-> > +	dma_resv_unlock(dmabuf->resv);
+> > https://lore.kernel.org/linux-iio/219abc43b4fdd4a13b307ed2efaa0e6869e68=
+e3f.camel@gmail.com/T/#eefd360069c4261aec9621fafde30924706571c94
+> >=20
+> > (and responses below)
+> >=20
+> > It's more nuanced than I remembered.
 > =E2=80=A6
 >=20
-> Under which circumstances will another lock guard become applicable?
+>=20
+> > > * Will the desire grow for further collateral evolution according
+> > > to
+> > > =C2=A0 affected software components?
+> >=20
+> > Not sure what you mean by that.
+>=20
+> Advanced programming interfaces were added a while ago.
+>=20
+> Example:
 > https://elixir.bootlin.com/linux/v6.10-rc4/source/include/linux/cleanup.h=
-#L179
+#L8
+>=20
+> Corresponding attempts for increasing API usage need to adapt to
+> remaining change reluctance,
+> don't they?
 
-As soon as "struct dma_resv" gets a DEFINE_GUARD().
+Sure, I guess.
 
+But that does not change the fact that I cannot use cleanup.h magic in
+this patchset, yet, as the required changes would have to be done in a
+separate one.
+
+Cheers,
 -Paul
 

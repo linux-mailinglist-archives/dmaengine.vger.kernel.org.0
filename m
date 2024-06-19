@@ -1,128 +1,113 @@
-Return-Path: <dmaengine+bounces-2423-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2424-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id ADB7790EA32
-	for <lists+dmaengine@lfdr.de>; Wed, 19 Jun 2024 13:57:33 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D97C90EAA6
+	for <lists+dmaengine@lfdr.de>; Wed, 19 Jun 2024 14:16:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 650AA1F22E9A
-	for <lists+dmaengine@lfdr.de>; Wed, 19 Jun 2024 11:57:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 151E2285EC1
+	for <lists+dmaengine@lfdr.de>; Wed, 19 Jun 2024 12:16:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D727A13E022;
-	Wed, 19 Jun 2024 11:57:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA5131422BC;
+	Wed, 19 Jun 2024 12:16:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="hDMCyS9P"
+	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="hM0Ql3ON"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mout.web.de (mout.web.de [217.72.192.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from aposti.net (aposti.net [89.234.176.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E59B13D242;
-	Wed, 19 Jun 2024 11:57:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D084140364;
+	Wed, 19 Jun 2024 12:16:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.234.176.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718798250; cv=none; b=WEipVHyt2fI8rkdfHHeJEGveWcj+MWpaSz9dsCf8BzzkLKMtnV5vN7IBB8x7dNO1oyrLf1snAhR2NlchbgpEtn3CB/8TMvFgjWE5/laRayqteBFRzslWy5Zksz7wbsOein/VT+6pvnYHP4n988svsINofljtA5oqWU9K13Prd+E=
+	t=1718799376; cv=none; b=GWWQ2CJmCNLtOu/oP0SMEk4sD3bYZ/oSOQG/GOOUXg6SVlNnulTGdDhh2Ztwxp7UFEc8/LvbGsdICTe8azUPfCB5C/I17bruG8SJx2XBpItVdq8GvuirHJ98XngCFa5DeVa8BRkMz+YyetIl7xbYqEV0edGGNPgtk6B7YMs8bVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718798250; c=relaxed/simple;
-	bh=XT72b7itPnzm1V+2+Xgf1kA9L0kMIcyaM91Blh2TMYE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sSnslf6MWdZNmKeiEEqf/sxSm/lkXRdFbmKEndK8Kw9jVHi3y7ReSB3GgeJbQzVhxnb0ftuj3AQ4Ak2r67O5yntLBJQkRmMoZ9b5+2UyRdygG+M7fEydo3ihFGDGLV+lHWy4qc5A+1TUN4j9h4JIdZEb1KyA1VEvnxQV5DuJAMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=hDMCyS9P; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1718798204; x=1719403004; i=markus.elfring@web.de;
-	bh=XT72b7itPnzm1V+2+Xgf1kA9L0kMIcyaM91Blh2TMYE=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=hDMCyS9PZcFIrqVgq01L8paMukJhaLbCZcezdnHssdReyhafT702yO/Y4f9OzL18
-	 1kxe/Wt2yCzYwSqIoPRHh0etdDBcuF9HsWSaNKxX59+MMLh05rTDJbaRBnbgdnCjQ
-	 uEKugkgEa8nQ59I/3ZnTGJeuKOqhLUOBaptl3c8+lR1C6Yz1zF1YBo2bKBD8x4OJR
-	 ob9JN10T2hRaSXpCVc+HMGpFRyR+MPpdilnGvPWTZ8REaSzrJ291VwcG7i7tq/2tX
-	 fGG7cFKFD0wFlgr5iPWSuP32+Wwv8WuO4i60LJ0B3mYUupO5LOqW1e+oGroqO193R
-	 D7773Gt2hnEg7ad/oA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MkVwi-1smwsM2Wsg-00b84i; Wed, 19
- Jun 2024 13:56:44 +0200
-Message-ID: <41fa9904-28a8-46fa-bf2a-014875409b83@web.de>
-Date: Wed, 19 Jun 2024 13:56:42 +0200
+	s=arc-20240116; t=1718799376; c=relaxed/simple;
+	bh=C65RJNOJy4IpSk4nyi92NXOHTBXSxjQAth7IcDOtmrU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=B7HU7bLOzy3MNLkbFtKDt8J9+p3yGcMaDbUKxyFb2wyIyzzYTave4Is5JVt6uyarrPVbmX6j+2+ikqtePrpD6RqddzRsJt0qfBLgnqoTGaF32xYdd7yCTMYFcaR9ih5QmCqxtxOzy0986dNfkoPUtEKyCR4BpgWo+4Wtq/wfa3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=hM0Ql3ON; arc=none smtp.client-ip=89.234.176.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+	s=mail; t=1718799368;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=tTFt4SyFkUl5kwC5+SYzC9ZviZKxrb5Ez1o1J2dq9wo=;
+	b=hM0Ql3ONtfmO/COEkbO+8st7xAbaQK46Hai4ZerRynzZOlo/sQmHozGF9x8b8zdn2mpUa/
+	vCzfhQDqZFyIh/ozwqLf0LiFtWj9pU8PTLAl80+GTIoq5TkOrg5gjXWNXKyymgpFDUNg0D
+	mHDUssO8qePsFHYSj668VVppKoGbeIU=
+Message-ID: <8d536bb864c145340a15f496ad3b89e08a847718.camel@crapouillou.net>
+Subject: Re: [PATCH v11 3/7] iio: core: Add new DMABUF interface
+ infrastructure
+From: Paul Cercueil <paul@crapouillou.net>
+To: Markus Elfring <Markus.Elfring@web.de>, Nuno =?ISO-8859-1?Q?S=E1?=
+ <nuno.sa@analog.com>, linux-iio@vger.kernel.org, dmaengine@vger.kernel.org,
+  linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ linaro-mm-sig@lists.linaro.org, Christian =?ISO-8859-1?Q?K=F6nig?=
+ <christian.koenig@amd.com>, Jonathan Cameron <jic23@kernel.org>, Lars-Peter
+ Clausen <lars@metafoo.de>, Sumit Semwal <sumit.semwal@linaro.org>, Vinod
+ Koul <vkoul@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org, Jonathan
+ Corbet <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>
+Date: Wed, 19 Jun 2024 14:16:05 +0200
+In-Reply-To: <fc3045c5-d542-4a6c-906d-84f72e776e9c@web.de>
+References: <20240618100302.72886-4-paul@crapouillou.net>
+	 <fc3045c5-d542-4a6c-906d-84f72e776e9c@web.de>
+Autocrypt: addr=paul@crapouillou.net; prefer-encrypt=mutual;
+ keydata=mQENBF0KhcEBCADkfmrzdTOp/gFOMQX0QwKE2WgeCJiHPWkpEuPH81/HB2dpjPZNW03ZM
+ LQfECbbaEkdbN4YnPfXgcc1uBe5mwOAPV1MBlaZcEt4M67iYQwSNrP7maPS3IaQJ18ES8JJ5Uf5Uz
+ FZaUawgH+oipYGW+v31cX6L3k+dGsPRM0Pyo0sQt52fsopNPZ9iag0iY7dGNuKenaEqkYNjwEgTtN
+ z8dt6s3hMpHIKZFL3OhAGi88wF/21isv0zkF4J0wlf9gYUTEEY3Eulx80PTVqGIcHZzfavlWIdzhe
+ +rxHTDGVwseR2Y1WjgFGQ2F+vXetAB8NEeygXee+i9nY5qt9c07m8mzjABEBAAG0JFBhdWwgQ2VyY
+ 3VlaWwgPHBhdWxAY3JhcG91aWxsb3UubmV0PokBTgQTAQoAOBYhBNdHYd8OeCBwpMuVxnPua9InSr
+ 1BBQJdCoXBAhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEHPua9InSr1BgvIH/0kLyrI3V0f
+ 33a6D3BJwc1grbygPVYGuC5l5eMnAI+rDmLR19E2yvibRpgUc87NmPEQPpbbtAZt8On/2WZoE5OIP
+ dlId/AHNpdgAtGXo0ZX4LGeVPjxjdkbrKVHxbcdcnY+zzaFglpbVSvp76pxqgVg8PgxkAAeeJV+ET
+ 4t0823Gz2HzCL/6JZhvKAEtHVulOWoBh368SYdolp1TSfORWmHzvQiCCCA+j0cMkYVGzIQzEQhX7U
+ rf9N/nhU5/SGLFEi9DcBfXoGzhyQyLXflhJtKm3XGB1K/pPulbKaPcKAl6rIDWPuFpHkSbmZ9r4KF
+ lBwgAhlGy6nqP7O3u7q23hRW5AQ0EXQqFwQEIAMo+MgvYHsyjX3Ja4Oolg1Txzm8woj30ch2nACFC
+ qaO0R/1kLj2VVeLrDyQUOlXx9PD6IQI4M8wy8m0sR4wV2p/g/paw7k65cjzYYLh+FdLNyO7IWYXnd
+ JO+wDPi3aK/YKUYepqlP+QsmaHNYNdXEQDRKqNfJg8t0f5rfzp9ryxd1tCnbV+tG8VHQWiZXNqN70
+ 62DygSNXFUfQ0vZ3J2D4oAcIAEXTymRQ2+hr3Hf7I61KMHWeSkCvCG2decTYsHlw5Erix/jYWqVOt
+ X0roOOLqWkqpQQJWtU+biWrAksmFmCp5fXIg1Nlg39v21xCXBGxJkxyTYuhdWyu1yDQ+LSIUAEQEA
+ AYkBNgQYAQoAIBYhBNdHYd8OeCBwpMuVxnPua9InSr1BBQJdCoXBAhsMAAoJEHPua9InSr1B4wsH/
+ Az767YCT0FSsMNt1jkkdLCBi7nY0GTW+PLP1a4zvVqFMo/vD6uz1ZflVTUAEvcTi3VHYZrlgjcxmc
+ Gu239oruqUS8Qy/xgZBp9KF0NTWQSl1iBfVbIU5VV1vHS6r77W5x0qXgfvAUWOH4gmN3MnF01SH2z
+ McLiaUGF+mcwl15rHbjnT3Nu2399aSE6cep86igfCAyFUOXjYEGlJy+c6UyT+DUylpjQg0nl8MlZ/
+ 7Whg2fAU9+FALIbQYQzGlT4c71SibR9T741jnegHhlmV4WXXUD6roFt54t0MSAFSVxzG8mLcSjR2c
+ LUJ3NIPXixYUSEn3tQhfZj07xIIjWxAYZo=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v11 3/7] iio: core: Add new DMABUF interface infrastructure
-To: Paul Cercueil <paul@crapouillou.net>, lkp@intel.com,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, linux-iio@vger.kernel.org,
- dmaengine@vger.kernel.org, linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
- Sumit Semwal <sumit.semwal@linaro.org>, Vinod Koul <vkoul@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>,
- linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
- Randy Dunlap <rdunlap@infradead.org>
-References: <202406191014.9JAzwRV6-lkp@intel.com>
- <a4dd1d73-5af3-4d3d-8c0f-92dc439fa119@web.de>
- <d452ecc4fc703a1f98aa4f243c6ded7fbfe54b0e.camel@crapouillou.net>
- <cbcfb64a-e5c2-41a7-8847-227d4f6872de@web.de>
- <e948cd137da8e4f97bfbf7ef68a5450476aeee0c.camel@crapouillou.net>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <e948cd137da8e4f97bfbf7ef68a5450476aeee0c.camel@crapouillou.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:JznLXOOrjHHjdQ/DvgHNKMl+mHWbtfwr9nCttlec4A/5RKvIavt
- 4n+CE8KRkg6ci+QqCtvyC6RYUk6aA6oxPkC51HrYbG2i41cMc//MGMP93+LzHxzocW10T6R
- +q1l/LN6bOPS4GMjyPPdFTpiCGel16Vcc7CBoHmM1GJxdWloElqFWhG5diwkrkSKHv8N3zV
- nOLsUHkwsQ9Yvs577/4Ww==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:yBz4OltUnbo=;2fpQBJSqjGM3IDnFAq+/OFA4RM2
- J9CSQLZFJGJBDaOD5fJv7Avj6U8Spt/xBDJi83VrQdfXzlW7DSFQeSpYxEqfvw/XAb+1hDiUl
- hlogL2PmlaL67u8rLXsumRtBqAEbw0T2emQg54nyM9GEiGmASg93tktB7toBenwdSHfAaBTbh
- jsFDGrwz5CNCF8WwKm7h/MD63ksX0NABFwTxObOiCv7qjNSukCouQMafmFF902eHiK61mG9dG
- WNGjzNnW/m/DXQEJiUkCKRoAP4Li+d/piFODeFuK2ZlFt1pnmKXmLDGa23AfdHS/NOG8Jf2d+
- IKEE2XgxjYjX5HmMkWRNNMqCR5rxaJE+eLIxmh9a3ENh/zO+70eiGqMf9hPZuSQImkShl5376
- ntEVQbhchDZE1+AHjaAVvDmiRC9a7LecXsbCdPBNWg29fVEt2QtD03Zh/TLgpSDUG8leMxLtC
- 0IAl6q+YRkfMRhRn9qVngBVTS6HDqurQlZaEiCmOZU5eIS1Xf5uKeVZ4yQxjqgrwast2yN3zX
- a3Cd4DL1dZSNNmWJFtrInA92d92kERWL9IndYa66N3dtdWVEcBd6WxTDE0RfiP2NKOJKlhMHQ
- IWkdfXR1PZQ8e/pYMNPDBW/QqhvPCVdy/AJhh6cPXzB9pjFS8sBz0iDHYPN9TNMtoFafjmZsC
- hhcugnYorWHfU3fcPmZPpNchV56arlpeEKKTweaS+BqamnBf07A1kvXFmiuO7esD8HVI6urzx
- IOdoOGqe5ao9xlzwisIidNYIA1o7F4692zJsoUIYdgQP+8cd+n/cnrKstOkObFliuzuQ//nrJ
- QyA2XXTSee9Dy1EbWpi9if9GejQRO5Y4RTou9Ysp1wrqd3SfH/pzJD8c8rgCdtSP+7
 
-=E2=80=A6
-> https://lore.kernel.org/linux-iio/219abc43b4fdd4a13b307ed2efaa0e6869e68e=
-3f.camel@gmail.com/T/#eefd360069c4261aec9621fafde30924706571c94
->
-> (and responses below)
->
-> It's more nuanced than I remembered.
-=E2=80=A6
+Le mercredi 19 juin 2024 =C3=A0 13:43 +0200, Markus Elfring a =C3=A9crit=C2=
+=A0:
+> =E2=80=A6
+> > +++ b/drivers/iio/industrialio-buffer.c
+> =E2=80=A6
+> > +static void iio_buffer_dmabuf_release(struct kref *ref)
+> > +{
+> =E2=80=A6
+> > +	dma_resv_lock(dmabuf->resv, NULL);
+> > +	dma_buf_unmap_attachment(attach, priv->sgt, priv->dir);
+> > +	dma_resv_unlock(dmabuf->resv);
+> =E2=80=A6
+>=20
+> Under which circumstances will another lock guard become applicable?
+> https://elixir.bootlin.com/linux/v6.10-rc4/source/include/linux/cleanup.h=
+#L179
 
+As soon as "struct dma_resv" gets a DEFINE_GUARD().
 
->> * Will the desire grow for further collateral evolution according to
->> =C2=A0 affected software components?
->
-> Not sure what you mean by that.
-
-Advanced programming interfaces were added a while ago.
-
-Example:
-https://elixir.bootlin.com/linux/v6.10-rc4/source/include/linux/cleanup.h#=
-L8
-
-Corresponding attempts for increasing API usage need to adapt to remaining=
- change reluctance,
-don't they?
-
-Regards,
-Markus
+-Paul
 

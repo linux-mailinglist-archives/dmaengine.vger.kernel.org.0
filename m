@@ -1,110 +1,116 @@
-Return-Path: <dmaengine+bounces-2418-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2419-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E30E90E7CC
-	for <lists+dmaengine@lfdr.de>; Wed, 19 Jun 2024 12:04:57 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9865690E7E1
+	for <lists+dmaengine@lfdr.de>; Wed, 19 Jun 2024 12:09:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 29ACE1F21D49
-	for <lists+dmaengine@lfdr.de>; Wed, 19 Jun 2024 10:04:57 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 21C9DB214D6
+	for <lists+dmaengine@lfdr.de>; Wed, 19 Jun 2024 10:09:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E84F8248C;
-	Wed, 19 Jun 2024 10:04:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62B408286A;
+	Wed, 19 Jun 2024 10:09:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="tBAdQpCN"
+	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="1h4vqr1K"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mout.web.de (mout.web.de [217.72.192.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from aposti.net (aposti.net [89.234.176.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988847EF10;
-	Wed, 19 Jun 2024 10:04:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54C3824A1;
+	Wed, 19 Jun 2024 10:09:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.234.176.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718791491; cv=none; b=gkOpkdhUnuW2EqzGPFdPXOZ1sC8B/BaqNxIF9ZYOXfBkQfAv/qFjKe4bszf4pgpE4eaXsfKTp/GAci2WJcQDlQ6QX3bvEeKtM2HCV2mC6ZA9vOfiTclEs0TnxsR0iwGZ/2l4A616iuVilMZhuWi+iwrXj+G0z8hVlysEKCd0lS0=
+	t=1718791781; cv=none; b=SfywH3Bd9tAyQ3lJXOzL4VlBhpNR1Ca+/3MjGK8SI7rdIZKlBfBOB+jebRK5MozKcQZuojiri4Unz9wYJLuK0ydxFuXm4x5P+sqUJ3yAFcFPgs64+7NijNJEIkYrdDN+XZUSqg3O2OcEakbf2LcwCHatsA3XuvjVwcWbL5cJysk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718791491; c=relaxed/simple;
-	bh=wJSNYI/8FwLtVjBEC26iAOL0Gmod4JIHE/mcdxAYPzo=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=CEbH8ddu/MFKyMLMa4TGxhqmran4BZB2zFEEAX2EejJVYhpUYbYgNflRCFxbt07xHxpnI9352bNkTGGbhayETgTm57E0sOtlGLRbHJ7M5OOLmGnvlAWcLDF46J4X61BMUtDx8r2vzi4mENZ+Uz1pgnnz57QWzgPN86Pim7GN958=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=tBAdQpCN; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1718791436; x=1719396236; i=markus.elfring@web.de;
-	bh=N0rZdlfAd7U6OxUe0j5Q0mo0zZ6C4FluWO5sXQFB2Dc=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=tBAdQpCN8CFb5NtfCXJgu+Lt2W52L0LKmKsv10BO6fyncLM5JIoSjryw69gnoCyo
-	 PET1DlYm6DhXVTzZMbfoTaGjuZGc5KSrNBi7cmCv9xz4hv9idbdiztOPO5mNI0VAD
-	 A7T8Yobei04pmZMwS/cscka/tTFWJeLQSh++jqKw0prAEMP6DAlStLpICPXjMFlxT
-	 +1xPevYVdUZnN1E/4P+h293DqGCJfr8/621c8gaBpRX29aY8keQgziCTC/MayqYfW
-	 ARJGez+KuiR0XVsunJDr0l6Ejh3fvDDmLEaLJs3YU21BLvt/EfsoXp+nFoeBFGYjs
-	 G6F1w0y3spB55fA3Kg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MnX5T-1slTA13Qov-00hEnj; Wed, 19
- Jun 2024 12:03:56 +0200
-Message-ID: <a4dd1d73-5af3-4d3d-8c0f-92dc439fa119@web.de>
-Date: Wed, 19 Jun 2024 12:03:54 +0200
+	s=arc-20240116; t=1718791781; c=relaxed/simple;
+	bh=14bX73tgmn/BA687/LvvfUIWNbL3RdKyEfzJPMxEJL4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=CZytc2tIiMXRn29Q9l0ot34QysdcjCvEhRl8kAZQ0Mf4gFpZx0mvhWqTABxMBkgrgosjl/oXrvsZjEKzhkTAPUBaTZevfpYtcxkDwtl+CdvIN/yXA6CcbCyy8mSzuEy9KC/BViHHRl4j0qNjwQDeXsjkncc3o5hnOrbkl7wfxdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=1h4vqr1K; arc=none smtp.client-ip=89.234.176.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+	s=mail; t=1718791771;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=14bX73tgmn/BA687/LvvfUIWNbL3RdKyEfzJPMxEJL4=;
+	b=1h4vqr1KRANPl05ZjHoyf2xpS1KYMGmytx2Oz+taxWQRpuzmLQ2t8bW+vuGysp/uCwJwk1
+	db5yPoHWwqfxTzamfzPhZI4O6/0oESkXRReHcC+sivV2vonQfUap2TIhnK2Ldo0EYgrOmr
+	/aYpULb30jruX1Au3Ew6CgxSNAJUWQg=
+Message-ID: <d452ecc4fc703a1f98aa4f243c6ded7fbfe54b0e.camel@crapouillou.net>
+Subject: Re: [v11 3/7] iio: core: Add new DMABUF interface infrastructure
+From: Paul Cercueil <paul@crapouillou.net>
+To: Markus Elfring <Markus.Elfring@web.de>, lkp@intel.com, Nuno
+ =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>, linux-iio@vger.kernel.org,
+ dmaengine@vger.kernel.org,  linux-media@vger.kernel.org,
+ dri-devel@lists.freedesktop.org,  linaro-mm-sig@lists.linaro.org, Christian
+ =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, Jonathan Cameron
+ <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Sumit Semwal
+ <sumit.semwal@linaro.org>, Vinod Koul <vkoul@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>, 
+	linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Randy Dunlap
+	 <rdunlap@infradead.org>
+Date: Wed, 19 Jun 2024 12:09:29 +0200
+In-Reply-To: <a4dd1d73-5af3-4d3d-8c0f-92dc439fa119@web.de>
+References: <202406191014.9JAzwRV6-lkp@intel.com>
+	 <a4dd1d73-5af3-4d3d-8c0f-92dc439fa119@web.de>
+Autocrypt: addr=paul@crapouillou.net; prefer-encrypt=mutual;
+ keydata=mQENBF0KhcEBCADkfmrzdTOp/gFOMQX0QwKE2WgeCJiHPWkpEuPH81/HB2dpjPZNW03ZM
+ LQfECbbaEkdbN4YnPfXgcc1uBe5mwOAPV1MBlaZcEt4M67iYQwSNrP7maPS3IaQJ18ES8JJ5Uf5Uz
+ FZaUawgH+oipYGW+v31cX6L3k+dGsPRM0Pyo0sQt52fsopNPZ9iag0iY7dGNuKenaEqkYNjwEgTtN
+ z8dt6s3hMpHIKZFL3OhAGi88wF/21isv0zkF4J0wlf9gYUTEEY3Eulx80PTVqGIcHZzfavlWIdzhe
+ +rxHTDGVwseR2Y1WjgFGQ2F+vXetAB8NEeygXee+i9nY5qt9c07m8mzjABEBAAG0JFBhdWwgQ2VyY
+ 3VlaWwgPHBhdWxAY3JhcG91aWxsb3UubmV0PokBTgQTAQoAOBYhBNdHYd8OeCBwpMuVxnPua9InSr
+ 1BBQJdCoXBAhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEHPua9InSr1BgvIH/0kLyrI3V0f
+ 33a6D3BJwc1grbygPVYGuC5l5eMnAI+rDmLR19E2yvibRpgUc87NmPEQPpbbtAZt8On/2WZoE5OIP
+ dlId/AHNpdgAtGXo0ZX4LGeVPjxjdkbrKVHxbcdcnY+zzaFglpbVSvp76pxqgVg8PgxkAAeeJV+ET
+ 4t0823Gz2HzCL/6JZhvKAEtHVulOWoBh368SYdolp1TSfORWmHzvQiCCCA+j0cMkYVGzIQzEQhX7U
+ rf9N/nhU5/SGLFEi9DcBfXoGzhyQyLXflhJtKm3XGB1K/pPulbKaPcKAl6rIDWPuFpHkSbmZ9r4KF
+ lBwgAhlGy6nqP7O3u7q23hRW5AQ0EXQqFwQEIAMo+MgvYHsyjX3Ja4Oolg1Txzm8woj30ch2nACFC
+ qaO0R/1kLj2VVeLrDyQUOlXx9PD6IQI4M8wy8m0sR4wV2p/g/paw7k65cjzYYLh+FdLNyO7IWYXnd
+ JO+wDPi3aK/YKUYepqlP+QsmaHNYNdXEQDRKqNfJg8t0f5rfzp9ryxd1tCnbV+tG8VHQWiZXNqN70
+ 62DygSNXFUfQ0vZ3J2D4oAcIAEXTymRQ2+hr3Hf7I61KMHWeSkCvCG2decTYsHlw5Erix/jYWqVOt
+ X0roOOLqWkqpQQJWtU+biWrAksmFmCp5fXIg1Nlg39v21xCXBGxJkxyTYuhdWyu1yDQ+LSIUAEQEA
+ AYkBNgQYAQoAIBYhBNdHYd8OeCBwpMuVxnPua9InSr1BBQJdCoXBAhsMAAoJEHPua9InSr1B4wsH/
+ Az767YCT0FSsMNt1jkkdLCBi7nY0GTW+PLP1a4zvVqFMo/vD6uz1ZflVTUAEvcTi3VHYZrlgjcxmc
+ Gu239oruqUS8Qy/xgZBp9KF0NTWQSl1iBfVbIU5VV1vHS6r77W5x0qXgfvAUWOH4gmN3MnF01SH2z
+ McLiaUGF+mcwl15rHbjnT3Nu2399aSE6cep86igfCAyFUOXjYEGlJy+c6UyT+DUylpjQg0nl8MlZ/
+ 7Whg2fAU9+FALIbQYQzGlT4c71SibR9T741jnegHhlmV4WXXUD6roFt54t0MSAFSVxzG8mLcSjR2c
+ LUJ3NIPXixYUSEn3tQhfZj07xIIjWxAYZo=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: lkp@intel.com, Paul Cercueil <paul@crapouillou.net>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, linux-iio@vger.kernel.org,
- dmaengine@vger.kernel.org, linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
- Sumit Semwal <sumit.semwal@linaro.org>, Vinod Koul <vkoul@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>,
- linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
- Randy Dunlap <rdunlap@infradead.org>
-References: <202406191014.9JAzwRV6-lkp@intel.com>
-Subject: Re: [v11 3/7] iio: core: Add new DMABUF interface infrastructure
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <202406191014.9JAzwRV6-lkp@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:YAzpBoCMArLdRHEgRCPpV8S7lP94BPtW9JKR3kpWt+GmrGyIyRO
- U0Ev6it/slccDxvjpdyWyNj+9DIpSAdZtEbIQXHql/tJCL+yWLZ0KfGf761wwYQJQLLx5LR
- 6D4L8HRgsSNHMxYyFWUp+wAqHQ7a4BONbf2v6ly5oiuFOnctW+n3o1UMZjRz4Igo+0B3CiQ
- r2Sdkv5oO1rbP9PxT1lcQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:olo0KHQ9exw=;A6YXTQReiRlIuBracnFZ2066hcQ
- TwmbZazQ72MXPkqjGLY2gFvpE3ZQILqJ2+GW1GO0+b8/gU+93ov1kDwoaOc60ZLCxG9mN6/C8
- v8q4xecOkiskrSFa/QC5AH08YhgTYcJb+IWCw7OYq/ajxD6DcCNDZDeVnnnz18Gd1FC3NHxqE
- cafyiRszpspb69bWnHMM8f2TiL8bfN3t5YMk8bpSO0cEzbkKkTRG/2t1X+t/OP4C8BB3P674I
- /z52o1lJxTyRWJXAUFMxK8kvZiXsf+vM4plSunJATqxARDjemlPpqM9nwV9xcGkQfxmWBDrF8
- ZWlX2+Y6vnh/dyUp7X9oAspf/2VxxLG3xi9RhvWV9rHj3XSZ8BamanWllPOWjMSvcvEBXUH/x
- foQPgaEh97fYESR7j4CRQm6GWdNB0fHdT3a7aaRz136nvcwMqps0WqjH0wtgRvwrH9xhKH00l
- eiOsH93uU5am+LCfOLTnSjJi9IygYA6WAVBL1S86wGgCss9fX089atVaw5lNHAiDRQq3NTytv
- GI9io9I3sZ7melM0AZyxfejRJ/C1uv9/3hhMTLBjMj7dRwYy5K5yASyqZN+y/Y6Ywb7nG2+Qi
- 1XETEQHlV+ETFl0AgCVRW1NqM5RAyE9HZbd2hEggoQnXnbr0Hmd0cyNjnnnAJjoiNxpNy137e
- Uu2pibBZ9Z0jltO1JmEa3kb61he6r9CfaJ2rahIqQHn4JIUNd0cyhswCzCO6HMSmfL/08HvdC
- KNWMFvP5EPc+UW+PYJzC7qQ9nnMobusiRdEF3lY+zQp2IWMCgcWms44Y1p1Ne378GSNQqxxZz
- DvgipFct6HuJ4O0Pfvk02nYVBOZx46aaE+MLNWcMcbfA3D4cG4QKgzUVRn7FatfvjH
 
-=E2=80=A6
-> All errors (new ones prefixed by >>):
->
-> >> drivers/iio/industrialio-buffer.c:1715:3: error: cannot jump from thi=
-s goto statement to its label
->     1715 |                 goto err_dmabuf_unmap_attachment;
-=E2=80=A6
+Hi Markus,
 
-Would you dare to transform the remaining goto chain into further applicat=
-ions
-of scope-based resource management?
+Le mercredi 19 juin 2024 =C3=A0 12:03 +0200, Markus Elfring a =C3=A9crit=C2=
+=A0:
+> =E2=80=A6
+> > All errors (new ones prefixed by >>):
+> >=20
+> > > > drivers/iio/industrialio-buffer.c:1715:3: error: cannot jump
+> > > > from this goto statement to its label
+> > =C2=A0=C2=A0=C2=A0 1715 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto err_dmabuf_unmap_a=
+ttachment;
+> =E2=80=A6
+>=20
+> Would you dare to transform the remaining goto chain into further
+> applications
+> of scope-based resource management?
 
-Regards,
-Markus
+We discussed this after v6 or v7, DRM/DMABUF maintainers were not keen
+on doing that *just yet*.
+
+Cheers,
+-Paul
 

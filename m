@@ -1,72 +1,72 @@
-Return-Path: <dmaengine+bounces-2463-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2464-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3CFE8911045
-	for <lists+dmaengine@lfdr.de>; Thu, 20 Jun 2024 20:11:32 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B471911079
+	for <lists+dmaengine@lfdr.de>; Thu, 20 Jun 2024 20:13:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E5A3F2877C6
-	for <lists+dmaengine@lfdr.de>; Thu, 20 Jun 2024 18:11:30 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B6BE0B2E8B1
+	for <lists+dmaengine@lfdr.de>; Thu, 20 Jun 2024 18:11:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C35182D61B;
-	Thu, 20 Jun 2024 18:00:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EB581BC061;
+	Thu, 20 Jun 2024 18:00:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b="U779fSr9"
+	dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b="O0Uira2h"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD5A71B29C3
-	for <dmaengine@vger.kernel.org>; Thu, 20 Jun 2024 18:00:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46F981B3F0E
+	for <dmaengine@vger.kernel.org>; Thu, 20 Jun 2024 18:00:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718906410; cv=none; b=GubgYXD50qV3okWB684lrinkTU+u0xAEUqTRZFClbmx/OL8ItUmk+3D/o1gZfi3YhkEF9lfhyunoVkhaDXhKrky14Al6L9I4ViLjSIGUCBJFZOkMpPRqYE0NcFUh9Uy5K+Pbz8LCUV+7LfawXe/8n0GdNG6hKF2Bkiiw6H8LH28=
+	t=1718906432; cv=none; b=uz5YVMrcI03iCEqR6+nQtG6XslWN3KwGCQmCivfMFVA3OlfsoQABQIn6DFV1z4lO5CZYtvoBr29d3HI7UaJUtAThF88OdSkbq2eeaUBc7ZTsgZ0xr7IZWBdGftHFRznsuWnte1u+LfNrysqh0eOu0pUgFaUx/hRgIcxjyufkitE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718906410; c=relaxed/simple;
-	bh=+MoA5T7a5GTI46GqiwhJRXiMixeE8zhFLC4/mfXz7cs=;
+	s=arc-20240116; t=1718906432; c=relaxed/simple;
+	bh=6sE8+DXCGSp6H4fp7z/fe9qbBtCAiv4r4DBp6uCAyRw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=f9Jr0HNMgpFJsOwfzm+dOwApubADgE5SweFp+L0PemcgwVIs/527Op8XGTLLdXNytozz3uqLBsdteBIS1X7ekGxsDQwpx6zhG4CU6gUdBY5abjROjtHNcFGSMXZKO0ScUpCzdIOXKDBF2Kqgw4vF1RGjr/BdYp464wI8pGnpKSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com; spf=pass smtp.mailfrom=timesys.com; dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b=U779fSr9; arc=none smtp.client-ip=209.85.167.48
+	 MIME-Version; b=szwTi0RLkWpdbi3XEzhcajMGldeCu3S28kjyq0kbvxbp+QR0hIDLLmS1tRoGKmX9CM1eeRR9NVeHNUPc2Upsf7pG+wIqDgdOSaSD9kQbLOm9GOjzrVGqWTFVk/ZXv1KE1NaoY5W4UgeL2XAHNxrLPHzepmyCMxIaszHDu9jQY4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com; spf=pass smtp.mailfrom=timesys.com; dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b=O0Uira2h; arc=none smtp.client-ip=209.85.167.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=timesys.com
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52c9034860dso1501115e87.2
-        for <dmaengine@vger.kernel.org>; Thu, 20 Jun 2024 11:00:08 -0700 (PDT)
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-52c85a7f834so1550384e87.0
+        for <dmaengine@vger.kernel.org>; Thu, 20 Jun 2024 11:00:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=timesys-com.20230601.gappssmtp.com; s=20230601; t=1718906407; x=1719511207; darn=vger.kernel.org;
+        d=timesys-com.20230601.gappssmtp.com; s=20230601; t=1718906428; x=1719511228; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SAbEFx8Qx1jb1E3qZFdMOF6RPU8ZJ7qI5KSjiERwRt4=;
-        b=U779fSr9541vkG8C2ICMoSHFxKHmnKTYWpKhjHNHHfjW1JYMSGWNQESrQz63pPSrMP
-         CY20QWHP9rmNIRUD1Yxe7qVMCKKEO2NVReBa9bARdyPufYNnA8bJGHH0MxAuvrGrC5sg
-         3/4gmScZ6ex4RNWpbDyp/V2Z7u84VV/BUZ+ysE3FjUxJy9JKfpVsF8nNKRe+EtHyTIgL
-         VhD4OK6PU3ZD9WV75hwDTaPPvHHi2Olg2TctUJECtTspd380jfMZeIolaZChe6qEaQo/
-         a4PqIKOEw/Ct4yh8A/ItaSBa+VnetqUXKJLSeFsShjJ+zH2a+rrVrX6V7nXVgVrExymu
-         x1tw==
+        bh=tVPBRJfKHWyc96AOmdAfEJ3BssO+zu7Jq4tEfUKaFJs=;
+        b=O0Uira2h/0BWoXwR/9PQl1ZPb3GhlNsGDHduq7IPiesCpqVtxGL62huQi3qKTwatE+
+         DK9xn6j4nST56aLrM083hG6trthFx53Omyy/RODp4FJlsEnPcxfE4NGXJ4C1fy8mt99x
+         M4GPKy9rkwKxyRGWuEKbtp/m1pKQdU14MD0GIS/ifHJGWw/cbtrgu+E5FKkB+ka0KazI
+         bcwuQDIg8ipxRXhCA0+pojtR3XXrsEtuhQ3lgqnzCIxVqB3iuBk2lmuOkCgNcvogsa/e
+         GpMMc9mWEvx1FQNHI66INd0jn72aQb/0aml/muX/vHBXMglBCrgJjpOCLR/oq7xp1sLu
+         clvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718906407; x=1719511207;
+        d=1e100.net; s=20230601; t=1718906428; x=1719511228;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=SAbEFx8Qx1jb1E3qZFdMOF6RPU8ZJ7qI5KSjiERwRt4=;
-        b=oSUvuQu7IXeZ8LKqhpJ6snQKv+xaXHD5yEwXd3on1LBpAPk4KMHSUpLXqIb18V2Gjc
-         jmc7SRYSROf2k87xtgcTt8fQ0+BmYcrZrVjykN6eu9xJQR5/Cn0IS78BP68crwNJ8WdB
-         CdVOw1ySz+fnZsKOOhbOMAdhC+ixu9sTzn+2WcovHptl2IfrUX+uur4wdR4F8mEu4WLU
-         97kNbLysBO0uh6N2Lt/9d975otw18OFxom2alOEy7NBZy8+wO2KELDm3DrXZvXyd1LEJ
-         Kc/huasFdN9VOkkksB9o3v6jSiht/tPvRkPYBapr99qGtQeN8ARQVtXryF2vNU7X1XYb
-         g0qA==
-X-Forwarded-Encrypted: i=1; AJvYcCXaK26en/R4qYv3lz+d8sXRuZDNkIh1+1j0Vt1uHs/4TLjLwYcS1ycY0S6C3HujLiuI6zuN06RtnZxfUmUWY4ETNMcRkphG4STm
-X-Gm-Message-State: AOJu0Yzp9yvWLcbXuOTa3JCl3WlumVZTCu7qUyBHKzor5QQ16rr3U1jc
-	jiKUECFjYFfK7C+2B2+gHZLcWQzYRkwHalAbFOo8oqR5x9LG6kbiYiHiA7OiIPs=
-X-Google-Smtp-Source: AGHT+IEtbhdQIpbe+lcjaI0rwKVV8L/00YnsN7rJtoUW3011krKwq3p0LrSXUUPIJeqY4Obo4tEkWw==
-X-Received: by 2002:a05:6512:3c97:b0:52c:a2e8:dc71 with SMTP id 2adb3069b0e04-52ccaa595eemr5990477e87.64.1718906406915;
-        Thu, 20 Jun 2024 11:00:06 -0700 (PDT)
+        bh=tVPBRJfKHWyc96AOmdAfEJ3BssO+zu7Jq4tEfUKaFJs=;
+        b=ULzVL/CBxrSAFT45Wj4d4MjKkOyPntmnDpoFYErWW2x9eg06Z8/5Z03ofKjcRr76U7
+         Qx5Jgre4/yds10IuUNM/1LryfQtRxbxv0XYpOlSMQAd5Mrf1KvzHppKZ1EUs/S7NMHO4
+         Xc3bjgNMC9C9c2jeCId1iJKLF7seobKxFI7Rcuav62jeX4hNm7sjM3KGZ7ROasNRtlz1
+         jJrdqXU6dHDWvUKHxT2KzOfepnIPAE6U2QCqxkUkQddMAeJw2VPAe6J7NKROmi04f7nh
+         Cr11r8WFRNPK5JXD7nP8V8E56sjK3bPK8BQNnOEc+uK/vpQ/nHY73fekvty4w0pBbjhL
+         0Z3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWo6pFXBLOvcsjRdpHlhed1b0SYSm4CihgGciq95o9LfWeHIVkFeCSf9Cs7v1XHwL8PIsWBhVrkOdO54eYKQbES+8Nh62F30Wnk
+X-Gm-Message-State: AOJu0Yx65hWpf2LNZy7YyVWCS9EK8qpa4DGMmTw3GwGeU9tsewQsyRvo
+	fX8UNx/7mCbdUAhOCUO84fFmjP+j5s2aX6dVEpvMQnuOBLH26KpXd4iTHVAChkU=
+X-Google-Smtp-Source: AGHT+IFVaUnSlA61/1PdUe+3ctCyCQUmvx5dNR8/UMkHsGGn+PNCWFlaBmoRzTkawVAPhFlr29t8ZQ==
+X-Received: by 2002:ac2:4466:0:b0:52b:f2ab:1303 with SMTP id 2adb3069b0e04-52ccaa5bd8dmr3307793e87.28.1718906428467;
+        Thu, 20 Jun 2024 11:00:28 -0700 (PDT)
 Received: from localhost.localdomain ([91.216.213.152])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56f42e80sm781370766b.186.2024.06.20.11.00.05
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56f42e80sm781370766b.186.2024.06.20.11.00.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jun 2024 11:00:06 -0700 (PDT)
+        Thu, 20 Jun 2024 11:00:28 -0700 (PDT)
 From: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
 To: Vinod Koul <vkoul@kernel.org>,
 	Rob Herring <robh@kernel.org>,
@@ -86,11 +86,11 @@ To: Vinod Koul <vkoul@kernel.org>,
 	Vignesh Raghavendra <vigneshr@ti.com>,
 	Jaroslav Kysela <perex@perex.cz>,
 	Takashi Iwai <tiwai@suse.com>,
-	Yangtao Li <frank.li@vivo.com>,
 	Arnd Bergmann <arnd@arndb.de>,
+	Yangtao Li <frank.li@vivo.com>,
 	Li Zetao <lizetao1@huawei.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
 	Chancel Liu <chancel.liu@nxp.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
 	dmaengine@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
@@ -102,9 +102,9 @@ To: Vinod Koul <vkoul@kernel.org>,
 	linux-i2c@vger.kernel.org,
 	linux-mtd@lists.infradead.org
 Cc: Markus Elfring <Markus.Elfring@web.de>
-Subject: [Patch v4 07/10] ARM: lpc32xx: Remove pl08x platform data in favor for device tree
-Date: Thu, 20 Jun 2024 19:56:38 +0200
-Message-Id: <20240620175657.358273-8-piotr.wojtaszczyk@timesys.com>
+Subject: [Patch v4 08/10] mtd: rawnand: lpx32xx: Request DMA channels using DT entries
+Date: Thu, 20 Jun 2024 19:56:39 +0200
+Message-Id: <20240620175657.358273-9-piotr.wojtaszczyk@timesys.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240620175657.358273-1-piotr.wojtaszczyk@timesys.com>
 References: <20240620175657.358273-1-piotr.wojtaszczyk@timesys.com>
@@ -116,87 +116,59 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-With the driver for nxp,lpc3220-dmamux we can remove the pl08x platform
-data and let pl08x driver to create peripheral channels from the DT
-properties.
+Move away from pl08x platform data towards device tree.
 
 Signed-off-by: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
 ---
 Changes for v4:
 - This patch is new in v4
 
- arch/arm/mach-lpc32xx/phy3250.c | 54 ---------------------------------
- 1 file changed, 54 deletions(-)
+ drivers/mtd/nand/raw/lpc32xx_mlc.c | 10 +---------
+ drivers/mtd/nand/raw/lpc32xx_slc.c | 10 +---------
+ 2 files changed, 2 insertions(+), 18 deletions(-)
 
-diff --git a/arch/arm/mach-lpc32xx/phy3250.c b/arch/arm/mach-lpc32xx/phy3250.c
-index 66701bf43248..0c7797a0e44e 100644
---- a/arch/arm/mach-lpc32xx/phy3250.c
-+++ b/arch/arm/mach-lpc32xx/phy3250.c
-@@ -16,64 +16,10 @@
- #include <asm/mach/arch.h>
- #include "common.h"
+diff --git a/drivers/mtd/nand/raw/lpc32xx_mlc.c b/drivers/mtd/nand/raw/lpc32xx_mlc.c
+index 677fcb03f9be..e504e3c5af11 100644
+--- a/drivers/mtd/nand/raw/lpc32xx_mlc.c
++++ b/drivers/mtd/nand/raw/lpc32xx_mlc.c
+@@ -574,15 +574,7 @@ static int lpc32xx_dma_setup(struct lpc32xx_nand_host *host)
+ 	struct mtd_info *mtd = nand_to_mtd(&host->nand_chip);
+ 	dma_cap_mask_t mask;
  
--static struct pl08x_channel_data pl08x_slave_channels[] = {
--	{
--		.bus_id = "nand-slc",
--		.min_signal = 1, /* SLC NAND Flash */
--		.max_signal = 1,
--		.periph_buses = PL08X_AHB1,
--	},
--	{
--		.bus_id = "nand-mlc",
--		.min_signal = 12, /* MLC NAND Flash */
--		.max_signal = 12,
--		.periph_buses = PL08X_AHB1,
--	},
--};
+-	if (!host->pdata || !host->pdata->dma_filter) {
+-		dev_err(mtd->dev.parent, "no DMA platform data\n");
+-		return -ENOENT;
+-	}
 -
--static int pl08x_get_signal(const struct pl08x_channel_data *cd)
--{
--	return cd->min_signal;
--}
--
--static void pl08x_put_signal(const struct pl08x_channel_data *cd, int ch)
--{
--}
--
--static struct pl08x_platform_data pl08x_pd = {
--	/* Some reasonable memcpy defaults */
--	.memcpy_burst_size = PL08X_BURST_SZ_256,
--	.memcpy_bus_width = PL08X_BUS_WIDTH_32_BITS,
--	.slave_channels = &pl08x_slave_channels[0],
--	.num_slave_channels = ARRAY_SIZE(pl08x_slave_channels),
--	.get_xfer_signal = pl08x_get_signal,
--	.put_xfer_signal = pl08x_put_signal,
--	.lli_buses = PL08X_AHB1,
--	.mem_buses = PL08X_AHB1,
--};
--
--static struct lpc32xx_slc_platform_data lpc32xx_slc_data = {
--	.dma_filter = pl08x_filter_id,
--};
--
--static struct lpc32xx_mlc_platform_data lpc32xx_mlc_data = {
--	.dma_filter = pl08x_filter_id,
--};
--
--static const struct of_dev_auxdata lpc32xx_auxdata_lookup[] __initconst = {
--	OF_DEV_AUXDATA("arm,pl080", 0x31000000, "pl08xdmac", &pl08x_pd),
--	OF_DEV_AUXDATA("nxp,lpc3220-slc", 0x20020000, "20020000.flash",
--		       &lpc32xx_slc_data),
--	OF_DEV_AUXDATA("nxp,lpc3220-mlc", 0x200a8000, "200a8000.flash",
--		       &lpc32xx_mlc_data),
--	{ }
--};
--
- static void __init lpc3250_machine_init(void)
- {
- 	lpc32xx_serial_init();
+-	dma_cap_zero(mask);
+-	dma_cap_set(DMA_SLAVE, mask);
+-	host->dma_chan = dma_request_channel(mask, host->pdata->dma_filter,
+-					     "nand-mlc");
++	host->dma_chan = dma_request_chan(mtd->dev.parent, "rx-tx");
+ 	if (!host->dma_chan) {
+ 		dev_err(mtd->dev.parent, "Failed to request DMA channel\n");
+ 		return -EBUSY;
+diff --git a/drivers/mtd/nand/raw/lpc32xx_slc.c b/drivers/mtd/nand/raw/lpc32xx_slc.c
+index 1c5fa855b9f2..f83a31411bde 100644
+--- a/drivers/mtd/nand/raw/lpc32xx_slc.c
++++ b/drivers/mtd/nand/raw/lpc32xx_slc.c
+@@ -721,15 +721,7 @@ static int lpc32xx_nand_dma_setup(struct lpc32xx_nand_host *host)
+ 	struct mtd_info *mtd = nand_to_mtd(&host->nand_chip);
+ 	dma_cap_mask_t mask;
  
--	of_platform_default_populate(NULL, lpc32xx_auxdata_lookup, NULL);
- }
- 
- static const char *const lpc32xx_dt_compat[] __initconst = {
+-	if (!host->pdata || !host->pdata->dma_filter) {
+-		dev_err(mtd->dev.parent, "no DMA platform data\n");
+-		return -ENOENT;
+-	}
+-
+-	dma_cap_zero(mask);
+-	dma_cap_set(DMA_SLAVE, mask);
+-	host->dma_chan = dma_request_channel(mask, host->pdata->dma_filter,
+-					     "nand-slc");
++	host->dma_chan = dma_request_chan(mtd->dev.parent, "rx-tx");
+ 	if (!host->dma_chan) {
+ 		dev_err(mtd->dev.parent, "Failed to request DMA channel\n");
+ 		return -EBUSY;
 -- 
 2.25.1
 

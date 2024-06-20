@@ -1,93 +1,114 @@
-Return-Path: <dmaengine+bounces-2456-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2457-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 93FFD910FE0
-	for <lists+dmaengine@lfdr.de>; Thu, 20 Jun 2024 20:02:08 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 68CE89110DC
+	for <lists+dmaengine@lfdr.de>; Thu, 20 Jun 2024 20:26:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9EBAD1C24306
-	for <lists+dmaengine@lfdr.de>; Thu, 20 Jun 2024 18:02:07 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 39339B23E98
+	for <lists+dmaengine@lfdr.de>; Thu, 20 Jun 2024 18:04:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 416991BE24C;
-	Thu, 20 Jun 2024 17:57:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E8691C2326;
+	Thu, 20 Jun 2024 17:58:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RW2+F/2z"
+	dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b="Z1WAPFAm"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFE521BE23F;
-	Thu, 20 Jun 2024 17:57:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 085151C2304
+	for <dmaengine@vger.kernel.org>; Thu, 20 Jun 2024 17:58:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718906259; cv=none; b=YvWy5ZD1oUhuxW4/xxUlbbVp8J4QGhGbIcFs8NXp5uEI7s0+qSafFQ4n8f4b+b3BZPPSKRDmbbPLke438mSqcPIQSsMXdJ/N+i42HMfWTQnbbY57SdQiTZ3iiU2RdN1OUSJ5N1K8VGTilwebqF7ZAb315VQkYsumMnhCPj4SXCc=
+	t=1718906284; cv=none; b=LoWUJxMAbrVwwWM0euc5kdaIMxC5hkxGlX8i+8N6XRProoloI5vpojNusOGHNCKLr+8cj6nwESh4wlPzVfyf2450oMi/huYkTldd60rX6P4LEmk1uyUtkKgE3/kXZivXqX0k18cM66y2Sg904OPNQ695B0ftNsfqOTT+nl7TnUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718906259; c=relaxed/simple;
-	bh=z4fUClb8dXuu+9jxRPnwJI/cA/pCMiUgLCw/o06uyx0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VeaeXwCBNs+AmV+3QgiTGNHEUMxIHJ7uureN6F2bcz66tI4eAUlvmYzFv7HRmraLXz7okCcrmJCbZkAXoFv+TwxPGwpgIUskSO7whD78T/TO0KqPY8RnbwF428vySx1VHgoj8y8imgPXwZfcHO8vNuvMthpy8zBBLnRoIZC+AEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RW2+F/2z; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1f9aa039327so10177265ad.2;
-        Thu, 20 Jun 2024 10:57:37 -0700 (PDT)
+	s=arc-20240116; t=1718906284; c=relaxed/simple;
+	bh=57mSqvK5F8icDZvtosz8MW5pSg98mK2P/IkbkOYFjBo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=bb9iFGhzjJ/QtTwCJ2XyU86nqALJQVubD5z4yJE5j7Gh/ryhDvOYHoyFOlj9JSSbckPsTjxshcuCPW7UOFWDHO7DpwMoOUkBoeLZW+SXmFpN1IfJt1LD2fAfcFdmA5F+V0pHh3hB0TdEXe6FCEg1NpOQhCkhbbZlKTX2qwUTB/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com; spf=pass smtp.mailfrom=timesys.com; dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b=Z1WAPFAm; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=timesys.com
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-57d1679ee83so1218902a12.2
+        for <dmaengine@vger.kernel.org>; Thu, 20 Jun 2024 10:58:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718906257; x=1719511057; darn=vger.kernel.org;
+        d=timesys-com.20230601.gappssmtp.com; s=20230601; t=1718906280; x=1719511080; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=S217yThdoIjU6QeboD3InxZjcbGcSzSpB5H/7IT54JI=;
-        b=RW2+F/2zWMGQqFszbWwyd3img/QWoXlD5hZNpcP4AlE7S8GcAo/Zu+fbnLrgL75OP3
-         sW6h7jSEp1Ja02h0b8YEo3PYYEwdMWjhHUyFyl16kUs5LU+vaykGzgCYIkd+Ie8vZJ21
-         zyYvUBj/RTmf2wDmDZx62ETIJkEh1Tmja0z8aHX+Yq/C+wszPPkmARTewHks+RGZv6/X
-         zu0XXgokWU+6zVjWqRaspMcGvgONFFDwy9YXQ9tMXzC3Kyj3BCHyDQ8UnyDkBj9XdBYk
-         3lfaMZ78uXIzCF+sEvSWfNHCVIH9pf/Mzs2oCZOKC4h+gHcjNnkPmWlnf/gSb/XH8sEL
-         wFiQ==
+        bh=LLJSsUsQJimHeyehvy4obxzFbfnPiiocs4Of944Xm3I=;
+        b=Z1WAPFAmggyZXgLQQ8xHRVLJyIdVqTm6EFiZQkqU98DYk6IGKMtR0IbCNv8eef7YzJ
+         4U5udbizQMs46zEqIFLLcbKD6EtEnSEv7giK2XYYh7iwjvYnoT/O3BVQt6wbbJy8D2jR
+         WvPVWf5OPR+9R73AdLBwFo6uXDNiyz4Q0GVRQbP4JgqR6vr1DSMg7WEOq3R+k69zaT5i
+         VDWjNunvXVyqv5ZGr2lZ8ZG4qGUrUJEnTdNpG1agdy5Rp1xak0eQNgAdsOXgyqale1hO
+         FHt1JdLhWZ4fm+JxXSREDbBVDzEf+viVWyUTEj8FpRgGHT6Fa0Ul950C885uZOllMtUi
+         WA6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718906257; x=1719511057;
+        d=1e100.net; s=20230601; t=1718906280; x=1719511080;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=S217yThdoIjU6QeboD3InxZjcbGcSzSpB5H/7IT54JI=;
-        b=OgOJJ+5Eer9yHAoJZLmKk65ka7B75LtRr1WbXZPxkIRQNkMd9dvbVnjwyKJGLLkFE5
-         VWr7iMqLwx8bQkGbuiPEcX+5xob8bH3nEBwZzgWZFWvuqf5duAIMGeywvsyN6hxmNDSe
-         PHpYLqx5I5K0RH1k5ydBn4yhHja6cU9bD0Ue/VS0JjCjK1D4NtaL2cSvOGApcwHwXNmI
-         T709gqOq7gyucPds/L1fyfWIaH6HSvhYZ4YDgOtCTuGyvr1ALJTDz5ANAscs0T7Exwxh
-         1mAoijHaeOieNI27TL1L94v6BbCpPOqLZQTXa2ruLYQGbwxndLlewmaaV1K+GQgFa5qP
-         o5Rg==
-X-Forwarded-Encrypted: i=1; AJvYcCV+aDMqmPmf8DRiZkrvONwCL8hjTqTi/Fq0FT6b6zilwlVZbfboNtxEc2D7z9YEgdw+NSZyGkgWG90Lb2f1q00JoCPsSpKHqTH/
-X-Gm-Message-State: AOJu0YyS4nyfMJ/ALdURHt5xLRs+5FcL5OQcoUz0norqAKXF1VqMCEIp
-	vBkdS9Zp1kzkixcCwIkxvrrY0kch9apgaCCDeeRqUERsRg3oG7IWZMWeVPmdmyw=
-X-Google-Smtp-Source: AGHT+IEsuBQgU5tFbCUFweOZuFt81ozFdug3U9h5V494KH6XT54Y5Mu4sLWTPUs8g0qHcojBfwlzTw==
-X-Received: by 2002:a17:902:ea01:b0:1f6:3445:3437 with SMTP id d9443c01a7336-1f9aa3de130mr63778435ad.27.1718906257091;
-        Thu, 20 Jun 2024 10:57:37 -0700 (PDT)
-Received: from localhost ([216.228.127.128])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855f5e72asm140359505ad.308.2024.06.20.10.57.36
+        bh=LLJSsUsQJimHeyehvy4obxzFbfnPiiocs4Of944Xm3I=;
+        b=Ry3r67sbNivC1eqlaHHCq9XUIHdPTM3FyIWJqjjfktaT5zV4EkNj61gKpm4bW8HOU+
+         Pi/rVlNqTkxrlGh+0izsKdIrwc+FvrkgyjVicV78brrqmFs4b1RN3jxTc8nIoZrIl+n2
+         APhmNUVfsSGeLBOTc6bmB1IQooc9HcMrMOiJmd/g2YpKDEKBN++DtAL6ZezwRsdoIeLP
+         IsSm1wtBT5AoiVKtEjhjby6w4DWnC04AFTnawgwUYJLdj6PeeZtxkxdsSOWoh0ZRsMUS
+         gU6nFAnvex01ofHSfxAJ3K62ooEadPs1MGke9c137l1ejPM9fDJ57SjXNk5ah2h24Mqd
+         eWNg==
+X-Forwarded-Encrypted: i=1; AJvYcCUeNjxrKUe2444UatrGOmUDNzP1M2s9cFWKnyiI505D4sVELrytwwYewgXka/XcKkNgZcYjnYVw2UJDatnfAQHBXXFkZQNoK560
+X-Gm-Message-State: AOJu0Yy71lby/dcclPrsaFlo/JCtCV2GDg01eYIyhgldPykTR1rCgLFv
+	ujOSAxaNWhJHXPlWYfWlbPtP6svpoIL+5iOAe14WNFdhGyy983fMGVckNlJtOIEX4u9I7zCL/g+
+	EpP4=
+X-Google-Smtp-Source: AGHT+IGXtwYdokrlfBxhK8FxTp2sWYE+r/rA8OXrz8ajsAvjdcVPMUue0BkFzpXPCbEPXWGLdile5Q==
+X-Received: by 2002:a17:907:8025:b0:a6f:147f:7d06 with SMTP id a640c23a62f3a-a6fab7de093mr273780966b.77.1718906280266;
+        Thu, 20 Jun 2024 10:58:00 -0700 (PDT)
+Received: from localhost.localdomain ([91.216.213.152])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56f42e80sm781370766b.186.2024.06.20.10.57.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jun 2024 10:57:36 -0700 (PDT)
-From: Yury Norov <yury.norov@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	Fenghua Yu <fenghua.yu@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	dmaengine@vger.kernel.org
-Cc: Yury Norov <yury.norov@gmail.com>,
-	Alexey Klimov <alexey.klimov@linaro.org>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Jan Kara <jack@suse.cz>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Shtylyov <s.shtylyov@omp.ru>
-Subject: [PATCH v4 10/40] dmaengine: idxd: optimize perfmon_assign_event()
-Date: Thu, 20 Jun 2024 10:56:33 -0700
-Message-ID: <20240620175703.605111-11-yury.norov@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240620175703.605111-1-yury.norov@gmail.com>
-References: <20240620175703.605111-1-yury.norov@gmail.com>
+        Thu, 20 Jun 2024 10:57:59 -0700 (PDT)
+From: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
+To: Vinod Koul <vkoul@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"J.M.B. Downing" <jonathan.downing@nautel.com>,
+	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
+	Vladimir Zapolskiy <vz@mleia.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Yangtao Li <frank.li@vivo.com>,
+	Li Zetao <lizetao1@huawei.com>,
+	Chancel Liu <chancel.liu@nxp.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	alsa-devel@alsa-project.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-sound@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	linux-mtd@lists.infradead.org
+Cc: Markus Elfring <Markus.Elfring@web.de>
+Subject: [Patch v4 01/10] dt-bindings: dma: pl08x: Add dma-cells description
+Date: Thu, 20 Jun 2024 19:56:32 +0200
+Message-Id: <20240620175657.358273-2-piotr.wojtaszczyk@timesys.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240620175657.358273-1-piotr.wojtaszczyk@timesys.com>
+References: <20240620175657.358273-1-piotr.wojtaszczyk@timesys.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -96,47 +117,35 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The function searches used_mask for a set bit in a for-loop bit by
-bit. Simplify it by using atomic find_and_set_bit(), and make a nice
-one-liner.
+Recover dma-cells description from the legacy DT binding.
 
-Signed-off-by: Yury Norov <yury.norov@gmail.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Acked-by: Vinod Koul <vkoul@kernel.org>
-Reviewed-by: Fenghua Yu <fenghua.yu@intel.com>
+Signed-off-by: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
 ---
- drivers/dma/idxd/perfmon.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+Changes for v4:
+- This patch is new in v4
 
-diff --git a/drivers/dma/idxd/perfmon.c b/drivers/dma/idxd/perfmon.c
-index 5e94247e1ea7..063ee78fb132 100644
---- a/drivers/dma/idxd/perfmon.c
-+++ b/drivers/dma/idxd/perfmon.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- /* Copyright(c) 2020 Intel Corporation. All rights rsvd. */
+ Documentation/devicetree/bindings/dma/arm-pl08x.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/dma/arm-pl08x.yaml b/Documentation/devicetree/bindings/dma/arm-pl08x.yaml
+index ab25ae63d2c3..191215d36c85 100644
+--- a/Documentation/devicetree/bindings/dma/arm-pl08x.yaml
++++ b/Documentation/devicetree/bindings/dma/arm-pl08x.yaml
+@@ -52,6 +52,13 @@ properties:
+   clock-names:
+     maxItems: 1
  
-+#include <linux/find_atomic.h>
- #include <linux/sched/task.h>
- #include <linux/io-64-nonatomic-lo-hi.h>
- #include "idxd.h"
-@@ -134,13 +135,9 @@ static void perfmon_assign_hw_event(struct idxd_pmu *idxd_pmu,
- static int perfmon_assign_event(struct idxd_pmu *idxd_pmu,
- 				struct perf_event *event)
- {
--	int i;
--
--	for (i = 0; i < IDXD_PMU_EVENT_MAX; i++)
--		if (!test_and_set_bit(i, idxd_pmu->used_mask))
--			return i;
-+	int i = find_and_set_bit(idxd_pmu->used_mask, IDXD_PMU_EVENT_MAX);
- 
--	return -EINVAL;
-+	return i < IDXD_PMU_EVENT_MAX ? i : -EINVAL;
- }
- 
- /*
++  "#dma-cells":
++    const: 2
++    description: |
++      First cell should contain the DMA request,
++      second cell should contain either 1 or 2 depending on
++      which AHB master that is used.
++
+   lli-bus-interface-ahb1:
+     type: boolean
+     description: if AHB master 1 is eligible for fetching LLIs
 -- 
-2.43.0
+2.25.1
 
 

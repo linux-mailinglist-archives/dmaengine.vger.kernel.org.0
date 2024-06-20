@@ -1,201 +1,92 @@
-Return-Path: <dmaengine+bounces-2468-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2469-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C4D8911133
-	for <lists+dmaengine@lfdr.de>; Thu, 20 Jun 2024 20:45:37 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E56889111DA
+	for <lists+dmaengine@lfdr.de>; Thu, 20 Jun 2024 21:12:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2DC7FB2613D
-	for <lists+dmaengine@lfdr.de>; Thu, 20 Jun 2024 18:44:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 98210281F56
+	for <lists+dmaengine@lfdr.de>; Thu, 20 Jun 2024 19:12:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA9F51BBBE3;
-	Thu, 20 Jun 2024 18:32:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B43C51B47BA;
+	Thu, 20 Jun 2024 19:11:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HzfBEEKn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n/sj23vs"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 869E31B5824;
-	Thu, 20 Jun 2024 18:32:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 831FC1B143E;
+	Thu, 20 Jun 2024 19:11:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718908347; cv=none; b=sgsg/2Qlu51p/wmW7yBRwd8Zr0ygIuJZhyvv5Y46zl/joF/qnLrbwiOdl1G4OtNgFoexI1h7yW87oVisWIM9tuuLNJIEdS/fEx7E2dmHDKbMV/hdTbSjcqcJ20JO12rIuC6vrJY80On/7oTT1JF8TaVbUHZPirlBiPo3ZaRCWF8=
+	t=1718910716; cv=none; b=aVZYRfcMG9OgvCwt5GFfLb5J/pTIIpDYoUwHy6OiNRMBJwQ2HP+BOT28fS43eSJur80Zs2PTIqSrQLqL9xibi3w45AQGM8juWJMygvznaNeYiRlA/IhTfvvRoab7Z0oSGtAh34kB0dKmBKqABm1jhXBqSjBKDKY002B4ykSS9E8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718908347; c=relaxed/simple;
-	bh=bcnNV5dpAp1ceLCDW/J9hztLgbbtYChtelB1u6t4YSQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qnd3fnhBfi4H87p5+0kk9tB+80VnxgTHwHf2Vzo7uPh/JSH1QvqMmhnBmfMKbXC7ASAlD02xzK2GeG6Av2SaCjZSp1spfKraMnNSJEHK6r3d+N5YkzvMscEf9VqwXpoF6Xyg6sOCAFzOLi/AddNfGics4+nozE7kzeU0MvqVM0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HzfBEEKn; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-6e40d54e4a3so920614a12.0;
-        Thu, 20 Jun 2024 11:32:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718908345; x=1719513145; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8iVi8v7MOsNpmY/+YQC9/JqsYXXSSMQtfI1oW5IIrXg=;
-        b=HzfBEEKnb7yMAtIc5pi9tlUmYi4AfFghtmFY1E+uM0IMwnBht3eJriKkN8NcNR7XVI
-         smfgFnp/9d8HBYzy5PhJisccqfDPtxDMPjwkclbQ1S6uEAq9wY15GK+MSBQif0TrsO8B
-         zbA+yRzNq7vYHOF2XXzjbO25SELOob70DWS35DMogw8ZmTKpvwHKWL70RyqrTriDopYr
-         HCJx5HkbWN3Emt1BC91boa3/B3Mkt+vswtjA05a4Z2Wx6f0KV7Y4kjvOrwnXGQo/MjIf
-         ZOiLdWIUEhyop6G/Yfk3tJw8QiW95Nc5KxUzQX6G3bK/X52BhrIiSMaWdINnEu7u17N4
-         mGHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718908345; x=1719513145;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8iVi8v7MOsNpmY/+YQC9/JqsYXXSSMQtfI1oW5IIrXg=;
-        b=C3ZlwU4hoHPLjNgIuYXG62Pp27j5nmaEfsNrLoCgmfz/tocAICKLPwpaKNaBY+kHyX
-         +VrrBQRTsFuswx7GCM2+XB/Y2eGuWGQOOSE8pWZQGLRlev/m//xv6jIvicbrq8bava7s
-         ZR9VTgy5mRpQtewslwIZybqpI4FVSSAiVIY50+45ApNrwPj0bb1xIdXhT83keJQvko7c
-         bckYIzOVUwVL2+qrgSZivKLe6g6JK0fwI1TgJIOnsNZD8iC+Yn3OaQlXSGv1KZl8lMVC
-         on+FotgLVFpBt2jqF7AK4wnuFofA9O2V1KJuyQ4mNPboXZZPrsro7Q10unE8qoKZ9FLx
-         xQLw==
-X-Forwarded-Encrypted: i=1; AJvYcCVOHoZ9qAgTmUNNpyljH5nCSrvXMKU/tYjPd7VK5kU8TSb9W3Tusy3600a1ufwKAq3VljcggSlWqcORpeqDG+X5kqHfklM5lA31mzWmFSQMbw1uXmQRXcuFs9YwOthoK9OuNRI3NdNCNapPD5iWxI2CBlTTUgF5FcLYPra1R/8xP2ogyc+2+qq1hAC9rNVEwrn+aA8/ibhbFOwTcA8pkBntxhh7vZrtmabSgiQEcV7gJC8S424cMt9nq6C51SsAS1dv8EoZRwGvUU+M5BetzEjOM7ulfcpOqFKyPgiQ+SZb9ia00Bj18KY5JxhIiFg/ZDhe+wT6UbKyQFB+I4SrBy35yy74C7iXncM7Z0Ub6JJz0+LqDqiv5hqxOIyyVjD/6L3o4czrsrcmgM+5dnpRBKvGfeK7K1wKwfYiisS/1d+AYgrEJE0Z47Q1dihizSj/CED/S7YTbo2T5a3esUTe7KV//WZxUflTU3YvnmOfSjns5eZ0NxvaFM3O7xJVFobHeRg2qjS/eFmS/GEnUq2fGvOfdE90zCZ8OSr0daEuqgkORdW34gGZhODRLK4PbFwfmaHM/59urbHiqiyMC2OO7Md0Z/2+wp0yBvhHlwqeK9PThd14BlscyM2RMwEdo4Yi+4hGZBABuHJlN6wmPyT60ZYPO5C2UTs4PBSL7AlBL/VCZ/s+GIcquQt2wvFD8y90Bt3pdZ1jrZrzOAw9Fr1wfKAUFkD21qMQAbdADw3leiKJTxiOp1OmpIoakAfTbjtmJtH5W4mq1Q==
-X-Gm-Message-State: AOJu0YwSVc+ntQF5icdUe82us6R41IQ282c8elg71bk7Dpzqkt9CE4b6
-	Jlfc/V/wjHffbEkwKLXhvJ8nYQ8uZ7lzEcd/N3Z6WYN3P/ovE/dz
-X-Google-Smtp-Source: AGHT+IGwYt1/AWmTgUMNjVMcs2dgiLwPkNhT8ZohuoeI/pLSbMfw85UksxqJbsocMe0+kY+O1HneTA==
-X-Received: by 2002:a17:903:230c:b0:1f9:bb35:f313 with SMTP id d9443c01a7336-1f9bb35f5b7mr46779535ad.30.1718908344747;
-        Thu, 20 Jun 2024 11:32:24 -0700 (PDT)
-Received: from localhost ([216.228.127.128])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855e80ef6sm140498555ad.115.2024.06.20.11.32.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jun 2024 11:32:23 -0700 (PDT)
-Date: Thu, 20 Jun 2024 11:32:21 -0700
-From: Yury Norov <yury.norov@gmail.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	"Md. Haris Iqbal" <haris.iqbal@ionos.com>,
-	Akinobu Mita <akinobu.mita@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Borislav Petkov <bp@alien8.de>, Chaitanya Kulkarni <kch@nvidia.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Disseldorp <ddiss@suse.de>,
-	Edward Cree <ecree.xilinx@gmail.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Fenghua Yu <fenghua.yu@intel.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Gregory Greenman <gregory.greenman@intel.com>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Hugh Dickins <hughd@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-	Jiri Pirko <jiri@resnulli.us>, Jiri Slaby <jirislaby@kernel.org>,
-	Kalle Valo <kvalo@kernel.org>, Karsten Graul <kgraul@linux.ibm.com>,
-	Karsten Keil <isdn@linux-pingi.de>,
-	Kees Cook <keescook@chromium.org>,
-	Leon Romanovsky <leon@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Martin Habets <habetsm.xilinx@gmail.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Michal Simek <monstr@monstr.eu>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Oliver Neukum <oneukum@suse.com>, Paolo Abeni <pabeni@redhat.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ping-Ke Shih <pkshih@realtek.com>, Rich Felker <dalias@libc.org>,
-	Rob Herring <robh@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Shuai Xue <xueshuai@linux.alibaba.com>,
-	Stanislaw Gruszka <stf_xl@wp.pl>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Wenjia Zhang <wenjia@linux.ibm.com>, Will Deacon <will@kernel.org>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	GR-QLogic-Storage-Upstream@marvell.com, alsa-devel@alsa-project.org,
-	ath10k@lists.infradead.org, dmaengine@vger.kernel.org,
-	iommu@lists.linux.dev, kvm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-	linux-hyperv@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-	linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
-	linux-net-drivers@amd.com, linux-pci@vger.kernel.org,
-	linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org,
-	linux-scsi@vger.kernel.org, linux-serial@vger.kernel.org,
-	linux-sh@vger.kernel.org, linux-sound@vger.kernel.org,
-	linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, mpi3mr-linuxdrv.pdl@broadcom.com,
-	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org,
-	Alexey Klimov <alexey.klimov@linaro.org>,
-	Bart Van Assche <bvanassche@acm.org>, Jan Kara <jack@suse.cz>,
-	Matthew Wilcox <willy@infradead.org>,
-	Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Shtylyov <s.shtylyov@omp.ru>
-Subject: Re: [PATCH v4 00/40] lib/find: add atomic find_bit() primitives
-Message-ID: <ZnR1tQN01kN97G_F@yury-ThinkPad>
-References: <20240620175703.605111-1-yury.norov@gmail.com>
- <CAHk-=wiUTXC452qbypG3jW6XCZGfc8d-iehSavxn5JkQ=sv0zA@mail.gmail.com>
+	s=arc-20240116; t=1718910716; c=relaxed/simple;
+	bh=PHJYBUwMx9MsppvbS5e3PTjqE/Je4d+7DMUX9BJflTM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YZx2+cvLTOvMmNAF/kVNA/WQucTBKuTqATNzb68hSc7DspyejSB5BR+a0U+A2w/HCE60PSTm6ew7dVBERqmr5CvoF+7XB/FhBNy3QKjqt/MkFmYfPmm+PxzYOql0InXN/SG/iGd++b4pRlAws9oZRJFwF8d3XCqQU7sscsFaYt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n/sj23vs; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D48AC2BD10;
+	Thu, 20 Jun 2024 19:11:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718910716;
+	bh=PHJYBUwMx9MsppvbS5e3PTjqE/Je4d+7DMUX9BJflTM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=n/sj23vsn1PWHoed17H0pABW4prh3E3LTezhve35uy3Sdmj0kFptQMqKyozm16g+A
+	 6idpJFvmOkQcOxtMGifHN0Pid1fCKQ1JyJXgushJhM4smjPvwB++4/IN0gjt1EtlWK
+	 JL/D1flZA/51Zf9CyXqQ+u9fz6+2AR9z2eaKb3JVawSD6YzNa1uqFYngRGgXnfUQoG
+	 9AULJwTpjghTEH3Y+h3oruJow/Oz5QdkaLVXbx0lHzAF1PYckOuQR+XIqQfgKhDy0C
+	 jTQF3ZVVzpd2cQKtt1BsWvPNzKm1hs4AgZHAVA8QBMxe7ZtWzr3RHMx5topRAqDciC
+	 XqS187DxFpadw==
+Date: Thu, 20 Jun 2024 20:11:50 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Paul Cercueil <paul@crapouillou.net>, Lars-Peter Clausen
+ <lars@metafoo.de>, Sumit Semwal <sumit.semwal@linaro.org>, Christian
+ =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>, Jonathan Corbet
+ <corbet@lwn.net>, Nuno Sa <nuno.sa@analog.com>, linux-iio@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ dmaengine@vger.kernel.org, linux-media@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
+Subject: Re: [PATCH v12 0/7] iio: new DMABUF based API v12
+Message-ID: <20240620201150.72c11599@jic23-huawei>
+In-Reply-To: <ZnRW2axOg7gtKzz0@matsya>
+References: <20240620122726.41232-1-paul@crapouillou.net>
+	<ZnRW2axOg7gtKzz0@matsya>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wiUTXC452qbypG3jW6XCZGfc8d-iehSavxn5JkQ=sv0zA@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 20, 2024 at 11:00:38AM -0700, Linus Torvalds wrote:
-> On Thu, 20 Jun 2024 at 10:57, Yury Norov <yury.norov@gmail.com> wrote:
-> >
-> >
-> > The typical lock-protected bit allocation may look like this:
-> 
-> If it looks like this, then nobody cares. Clearly the user in question
-> never actually cared about performance, and you SHOULD NOT then say
-> "let's optimize this that nobody cares about":.
-> 
-> Yury, I spend an inordinate amount of time just double-checking your
-> patches. I ended up having to basically undo one of them just days
-> ago.
+On Thu, 20 Jun 2024 21:50:41 +0530
+Vinod Koul <vkoul@kernel.org> wrote:
 
-Is that in master already? I didn't get any email, and I can't find
-anything related in the master branch.
+> On 20-06-24, 14:27, Paul Cercueil wrote:
+> > Hi Jonathan, =20
+>=20
+> Hey Jonathan,
+>=20
+> Assuming we are fine with this series, how would you like to proceed.
+> Would you be fine with me picking the dmaengine bits and providing a
+> signed tag for you to pull?
+>=20
 
-> New rule: before you send some optimization, you need to have NUMBERS.
+Hi Vinod,
 
-I tried to underline that it's not a performance optimization at my
-best. People notice some performance differences, but it's ~3%, no
-more.
-
-> Some kind of "look, this code is visible in profiles, so we actually care".
-
-The original motivation comes from a KCSAN report, so it's already
-visible in profiles. See [1] in cover letter. This series doesn't fix
-that particular issue, but it adds tooling that allow people to search
-and acquire bits in bitmaps without firing KCSAN warnings.
-
-This series fixes one real bug in the codebase - see #33, and
-simplifies bitmaps usage in many other places. Many people like
-it, and acked the patches.
-
-Again, this is NOT a performance series.
+Yes. That will work nicely.
+=46rom my side it all looks good.
 
 Thanks,
-Yury
 
-> Because without numbers, I'm just not going to pull anything from you.
-> These insane inlines for things that don't matter need to stop.
-> 
-> And if they *DO* matter, you need to show that they matter.
-> 
->                Linus
+Jonathan
+
+
 

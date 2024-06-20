@@ -1,46 +1,46 @@
-Return-Path: <dmaengine+bounces-2441-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2442-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87E2B910421
-	for <lists+dmaengine@lfdr.de>; Thu, 20 Jun 2024 14:30:33 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 78064910426
+	for <lists+dmaengine@lfdr.de>; Thu, 20 Jun 2024 14:30:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 008EAB230F0
-	for <lists+dmaengine@lfdr.de>; Thu, 20 Jun 2024 12:30:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 230A01F217FE
+	for <lists+dmaengine@lfdr.de>; Thu, 20 Jun 2024 12:30:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74CFA1ACE78;
-	Thu, 20 Jun 2024 12:28:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDE9D1ACE76;
+	Thu, 20 Jun 2024 12:28:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="znSCvmuP"
+	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="M26+S+ZB"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from aposti.net (aposti.net [89.234.176.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D06951AC458;
-	Thu, 20 Jun 2024 12:28:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E9601AC765;
+	Thu, 20 Jun 2024 12:28:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.234.176.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718886521; cv=none; b=MB1VQkNkM7+6Pu4yP84tpUXvK5ZFQ6Fb7/Pu/EtZ9zhoUOPUKYYZZh2HJixBT/CWMDUwzICIKHHcciBcBK1h2bp2Q8OlqtsHCgw/es1FQET0vOZjXvNdsLkXN0ky7PNVCGKsv9d4yvAySizMkce0j9vJHy99p2yj9XdabSOcNVU=
+	t=1718886529; cv=none; b=AmWl7n388rIK32GhbIVpPROir897tCBLrTfk/ht1HSBrGP5naPSyZrDfxwXKovopcMasg9d3iUPJxqg1VSnJrM0TTYkZNjl17DanWqPM9mCeXoUOcCbSZNYbjfe61q433CUgZsSp2JzI8dBX+sGVCsYP2Sc6yyIZHVJZUbvNpvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718886521; c=relaxed/simple;
-	bh=ysIUcShoZop2OQ+I1cYOP5AsJ+EGHVgeq5eH4J8BIlw=;
+	s=arc-20240116; t=1718886529; c=relaxed/simple;
+	bh=X7I9QTXjWXLV5adf+VLzAIKVei/MuLCImpBgdp5MFW0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S7QPSPeGyLLYZdYrI5zYNYyQ+aVMYIy1makV3aENQ3Ck9TUz7+TQEqwbFmSVOy1ewJFq9N+m2FeNOzqQ30L8kMdxhqGOBY6VxJltu6TzsWQtRC8jbjRhmStgkw0eD960Qtr5Fg/IyiauM0zBrHxESj58KBYJu+nDg7Nyd1UjbHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=znSCvmuP; arc=none smtp.client-ip=89.234.176.197
+	 MIME-Version; b=VJm4QqVvSbDSffl1kMYhJQ0ANJWaZX3IImdkQ9+W80V410nLF3KyZC4xmxws9TK0Dw5T4ZL15tTskCJGZX+BQ/NOz+CFwi5tMF2M4UMxVna6pjtW4A3TGnX/XgVAFlnFzcdN7au33Rze6kH4V5I3ndJqZbWZEk2NaZqwRvYjTvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=M26+S+ZB; arc=none smtp.client-ip=89.234.176.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-	s=mail; t=1718886468;
+	s=mail; t=1718886469;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=YPXLYwFrzAGA+us0gwq37ouAxM3z0rx257cuQIJnO9o=;
-	b=znSCvmuPMmiK7HgZiS1dnXrJAn9HqOcXWwuDKsJyRdUHB7KlbdZnL4AqUFXZnRSheuMl2f
-	x0POCTZ7av9s88TkeiMvXSysbDavv5TYO2WizXfmpqNroXkGKfwysl+I6BqK+k4chBj/WM
-	kxaiN8kWUwAWNHDzBzO/jS1LImtxYLE=
+	bh=3ohuxApLNdhOX7LZ/v+Xu3NNVbPIJcpf85Dd0wZ/o3s=;
+	b=M26+S+ZB7da4Tf54WshO20DXN4NdDv+ZKNPYgCJbP05fpECQBaQS+sxffHumo5a5Xd9qMC
+	G9142wxy8t61XicEf4R3sQHKLHGiLjHDjMniZjQLfiiAlQ1OUy5Uf6ay2EA46BBPV8ZUXi
+	zzC1qP6ig5jK22F+tbIrOI4l/Si+H8I=
 From: Paul Cercueil <paul@crapouillou.net>
 To: Jonathan Cameron <jic23@kernel.org>,
 	Lars-Peter Clausen <lars@metafoo.de>,
@@ -56,10 +56,11 @@ Cc: Jonathan Corbet <corbet@lwn.net>,
 	linux-media@vger.kernel.org,
 	dri-devel@lists.freedesktop.org,
 	linaro-mm-sig@lists.linaro.org,
-	Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v12 6/7] Documentation: iio: Document high-speed DMABUF based API
-Date: Thu, 20 Jun 2024 14:27:25 +0200
-Message-ID: <20240620122726.41232-7-paul@crapouillou.net>
+	Paul Cercueil <paul@crapouillou.net>,
+	Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: [PATCH v12 7/7] Documentation: dmaengine: Document new dma_vec API
+Date: Thu, 20 Jun 2024 14:27:26 +0200
+Message-ID: <20240620122726.41232-8-paul@crapouillou.net>
 In-Reply-To: <20240620122726.41232-1-paul@crapouillou.net>
 References: <20240620122726.41232-1-paul@crapouillou.net>
 Precedence: bulk
@@ -70,112 +71,75 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Document the new DMABUF based API.
+Document the dmaengine_prep_peripheral_dma_vec() API function, the
+device_prep_peripheral_dma_vec() backend function, and the dma_vec
+struct.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Co-developed-by: Nuno Sa <nuno.sa@analog.com>
-Signed-off-by: Nuno Sa <nuno.sa@analog.com>
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
 
 ---
-v2: - Explicitly state that the new interface is optional and is
-      not implemented by all drivers.
-    - The IOCTLs can now only be called on the buffer FD returned by
-      IIO_BUFFER_GET_FD_IOCTL.
-    - Move the page up a bit in the index since it is core stuff and not
-      driver-specific.
-
-v3: Update the documentation to reflect the new API.
-
-v5: Use description lists for the documentation of the three new IOCTLs
-    instead of abusing subsections.
-
-v8: Renamed dmabuf_api.rst -> iio_dmabuf_api.rst, and updated index.rst
-    whose format changed in iio/togreg.
-
-v11:
-- "a IIO buffer" -> "an IIO buffer"
-- Add variable name in IOCTL calls
-
-v12:
-- "obtained using..." -> "which can be obtained using..."
+v11: New patch
 ---
- Documentation/iio/iio_dmabuf_api.rst | 54 ++++++++++++++++++++++++++++
- Documentation/iio/index.rst          |  1 +
- 2 files changed, 55 insertions(+)
- create mode 100644 Documentation/iio/iio_dmabuf_api.rst
+ Documentation/driver-api/dmaengine/client.rst   |  9 +++++++++
+ Documentation/driver-api/dmaengine/provider.rst | 10 ++++++++++
+ 2 files changed, 19 insertions(+)
 
-diff --git a/Documentation/iio/iio_dmabuf_api.rst b/Documentation/iio/iio_dmabuf_api.rst
-new file mode 100644
-index 000000000000..2836cadbd495
---- /dev/null
-+++ b/Documentation/iio/iio_dmabuf_api.rst
-@@ -0,0 +1,54 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===================================
-+High-speed DMABUF interface for IIO
-+===================================
-+
-+1. Overview
-+===========
-+
-+The Industrial I/O subsystem supports access to buffers through a
-+file-based interface, with read() and write() access calls through the
-+IIO device's dev node.
-+
-+It additionally supports a DMABUF based interface, where the userspace
-+can attach DMABUF objects (externally created) to an IIO buffer, and
-+subsequently use them for data transfers.
-+
-+A userspace application can then use this interface to share DMABUF
-+objects between several interfaces, allowing it to transfer data in a
-+zero-copy fashion, for instance between IIO and the USB stack.
-+
-+The userspace application can also memory-map the DMABUF objects, and
-+access the sample data directly. The advantage of doing this vs. the
-+read() interface is that it avoids an extra copy of the data between the
-+kernel and userspace. This is particularly useful for high-speed devices
-+which produce several megabytes or even gigabytes of data per second.
-+It does however increase the userspace-kernelspace synchronization
-+overhead, as the DMA_BUF_SYNC_START and DMA_BUF_SYNC_END IOCTLs have to
-+be used for data integrity.
-+
-+2. User API
-+===========
-+
-+As part of this interface, three new IOCTLs have been added. These three
-+IOCTLs have to be performed on the IIO buffer's file descriptor, which
-+can be obtained using the IIO_BUFFER_GET_FD_IOCTL() ioctl.
-+
-+  ``IIO_BUFFER_DMABUF_ATTACH_IOCTL(int fd)``
-+    Attach the DMABUF object, identified by its file descriptor, to the
-+    IIO buffer. Returns zero on success, and a negative errno value on
-+    error.
-+
-+  ``IIO_BUFFER_DMABUF_DETACH_IOCTL(int fd)``
-+    Detach the given DMABUF object, identified by its file descriptor,
-+    from the IIO buffer. Returns zero on success, and a negative errno
-+    value on error.
-+
-+    Note that closing the IIO buffer's file descriptor will
-+    automatically detach all previously attached DMABUF objects.
-+
-+  ``IIO_BUFFER_DMABUF_ENQUEUE_IOCTL(struct iio_dmabuf *iio_dmabuf)``
-+    Enqueue a previously attached DMABUF object to the buffer queue.
-+    Enqueued DMABUFs will be read from (if output buffer) or written to
-+    (if input buffer) as long as the buffer is enabled.
-diff --git a/Documentation/iio/index.rst b/Documentation/iio/index.rst
-index 4c13bfa2865c..9cb4c50cb20d 100644
---- a/Documentation/iio/index.rst
-+++ b/Documentation/iio/index.rst
-@@ -9,6 +9,7 @@ Industrial I/O
+diff --git a/Documentation/driver-api/dmaengine/client.rst b/Documentation/driver-api/dmaengine/client.rst
+index ecf139f73da4..d491e385d61a 100644
+--- a/Documentation/driver-api/dmaengine/client.rst
++++ b/Documentation/driver-api/dmaengine/client.rst
+@@ -80,6 +80,10 @@ The details of these operations are:
  
-    iio_configfs
-    iio_devbuf
-+   iio_dmabuf_api
-    iio_tools
+   - slave_sg: DMA a list of scatter gather buffers from/to a peripheral
  
- Industrial I/O Kernel Drivers
++  - peripheral_dma_vec: DMA an array of scatter gather buffers from/to a
++    peripheral. Similar to slave_sg, but uses an array of dma_vec
++    structures instead of a scatterlist.
++
+   - dma_cyclic: Perform a cyclic DMA operation from/to a peripheral till the
+     operation is explicitly stopped.
+ 
+@@ -102,6 +106,11 @@ The details of these operations are:
+ 		unsigned int sg_len, enum dma_data_direction direction,
+ 		unsigned long flags);
+ 
++     struct dma_async_tx_descriptor *dmaengine_prep_peripheral_dma_vec(
++		struct dma_chan *chan, const struct dma_vec *vecs,
++		size_t nents, enum dma_data_direction direction,
++		unsigned long flags);
++
+      struct dma_async_tx_descriptor *dmaengine_prep_dma_cyclic(
+ 		struct dma_chan *chan, dma_addr_t buf_addr, size_t buf_len,
+ 		size_t period_len, enum dma_data_direction direction);
+diff --git a/Documentation/driver-api/dmaengine/provider.rst b/Documentation/driver-api/dmaengine/provider.rst
+index ceac2a300e32..3085f8b460fa 100644
+--- a/Documentation/driver-api/dmaengine/provider.rst
++++ b/Documentation/driver-api/dmaengine/provider.rst
+@@ -433,6 +433,12 @@ supported.
+     - residue: Provides the residue bytes of the transfer for those that
+       support residue.
+ 
++- ``device_prep_peripheral_dma_vec``
++
++  - Similar to ``device_prep_slave_sg``, but it takes a pointer to a
++    array of ``dma_vec`` structures, which (in the long run) will replace
++    scatterlists.
++
+ - ``device_issue_pending``
+ 
+   - Takes the first transaction descriptor in the pending queue,
+@@ -544,6 +550,10 @@ dma_cookie_t
+ - Not really relevant any more since the introduction of ``virt-dma``
+   that abstracts it away.
+ 
++dma_vec
++
++- A small structure that contains a DMA address and length.
++
+ DMA_CTRL_ACK
+ 
+ - If clear, the descriptor cannot be reused by provider until the
 -- 
 2.43.0
 

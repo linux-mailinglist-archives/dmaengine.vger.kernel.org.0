@@ -1,135 +1,112 @@
-Return-Path: <dmaengine+bounces-2488-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2489-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 81403911C94
-	for <lists+dmaengine@lfdr.de>; Fri, 21 Jun 2024 09:14:43 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 77A58911CBB
+	for <lists+dmaengine@lfdr.de>; Fri, 21 Jun 2024 09:28:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B2B0C1C22286
-	for <lists+dmaengine@lfdr.de>; Fri, 21 Jun 2024 07:14:42 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 02FACB21ACD
+	for <lists+dmaengine@lfdr.de>; Fri, 21 Jun 2024 07:28:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E128416A957;
-	Fri, 21 Jun 2024 07:14:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09EF4161937;
+	Fri, 21 Jun 2024 07:28:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OK5N6Zlg"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="u27pTbDD"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B49212D742;
-	Fri, 21 Jun 2024 07:14:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE8B42AA9;
+	Fri, 21 Jun 2024 07:28:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718954076; cv=none; b=nOC/1a3Fp2e+0cbkFJZqNftWDSN52f6ZUwrb4kKFS4Sz6wt2uRCCtMGPRR3OCh/rw/bD+FITESL7My7t+T/MkMWD6fFgBC71jPjx0IGUrP732V84DN+nxjUVXtMqO/knZH7ftGZa9BqCLJe8WnCn0i55l0Gv43YykujxhXSfS/0=
+	t=1718954917; cv=none; b=Gmml4G/y6Y9jsTGrvQEtMp84RvEQ+6XXSCOxgYPSWTlzjZKlViWKuLlUf8hCtyeblsJF+vZJrckQXVYgTkmKbZqjNMVb1VO8uXpu+KX/RY/GPt14GOslSMM+yfITkvzvFbH9ddSvdq8SJx7WcA9wDmMfvcDWL9z9vXTDd+Y3msE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718954076; c=relaxed/simple;
-	bh=I1d26+FYwmfD9Tc9dF0H8tsiQttz7MrvNQjmOX9mk7s=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hMM0GFO/UdNzOwr5ZMfzZV9DUdI+fEexb+mMdSXHQelcBKsbVv8lYwlUyCcbXCcXxyRpsU8k+wzXmXvdr/0l61jVgJfLIg193Azc8nEt9w4HA+AZ8TejAoMLYdPBSCR0DX7Zu1/IR/0YgtJ9/45mrL585pxBssQu1kkEfWH01Y0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OK5N6Zlg; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-57ccd1111aeso1968988a12.0;
-        Fri, 21 Jun 2024 00:14:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718954073; x=1719558873; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=I1d26+FYwmfD9Tc9dF0H8tsiQttz7MrvNQjmOX9mk7s=;
-        b=OK5N6ZlgNpyFNOORJZRwBMCpsCNLwvI18yVWo52fpDE0suypmbKCTy3ncALVmKk0zw
-         RwhysRvZlwmHUP7Jw2HiA/LpVzATOMz+2aAx0s3CmJC49vxRww0H3xlfCOzfX9w3H4lO
-         /vR9gCJ2JlAhhJuDWxjJP9X8uPnL/nNe9czTF/UqWdeoXqSEs9KRCvKCokbnLrjIrpYd
-         k1uuNjzaw040m5gV5AxSwmKwBFKYf6bM/ysIit95xnydsio4ub3DxrVi6Zjq9EMSjTMq
-         LnIFE3DsCJYOGSJAjPQ15zRtz7kgiVOqlRxi+FVMAgJC4BxSOLFO2U4QePftEF1Srlhk
-         /bNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718954073; x=1719558873;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=I1d26+FYwmfD9Tc9dF0H8tsiQttz7MrvNQjmOX9mk7s=;
-        b=iThCWaHMLvTOoqe1UhJk+gSZf3CytwTdLvGnKSHUeV9S3dHEUoWChew1VJLsl4Z2It
-         ZfV/Dz9WkPfV7SxRU68p0JnWU8H4ox4pTMuWLA7t6QXqN2D2QxDB2OV0Merz2ylXMa7F
-         XMunmQ5kLJNuWuAehQf5DkurABDdPId0xwkelIykbgu+TEulZZDv+ZsAefdoOmTExhhe
-         kiQRtI9RaYDvrpddVFCrSVcfsSB6uHn0LQW5FtxFYe7aoskAwNcTfeW9Of1UBsiFm6e9
-         UkBlx5YIV+d7rFKsA94VOHBWnhmMzghBGatTxJf8Kf7GaNf6IkF2tCdXXgPEzrnZywxb
-         55Pg==
-X-Forwarded-Encrypted: i=1; AJvYcCWHjnbniz7LbmcF9XRO+G4G5bj9g+ucKsw7wf0B2Ouzwo6zAiOrW4jsJk2M8cDNQySCGyNl0EqoniMK3b7XuJ5GLiG7zvM1TUIHIDfGME4GU/WuWLrnXyywOstMykyPUJdVn+0PwNa7SVg3bArW4gNPe1qhKReAVi7Lb9kFsr+D6ujju81zlc05TeaVgS+vyeyWVbhaxgOukZqmcF8aaFW6D3PT3raGyzzfeEGvh+fu3RZc7IM02lvMIkc=
-X-Gm-Message-State: AOJu0YwuchHEaJeiGExuTvtgHofCVXTeAecZM58QtgV7eIkeqHw51tvA
-	C3imSTGbp9DKMo30qxgIGTBB5++L49Im9L7zGkHbnz1w+wjwl2Hr
-X-Google-Smtp-Source: AGHT+IHJQ1yPK263/uUvL42ye22QYzUxYEagwPu/zDgRslXQjOwm4KteKF6Tb6SaGoGeiBRNCTcVaA==
-X-Received: by 2002:a50:c050:0:b0:57d:22ef:d055 with SMTP id 4fb4d7f45d1cf-57d22efd0e0mr2481140a12.24.1718954073269;
-        Fri, 21 Jun 2024 00:14:33 -0700 (PDT)
-Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57d305351dbsm527719a12.77.2024.06.21.00.14.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Jun 2024 00:14:32 -0700 (PDT)
-Message-ID: <b7283f9458047e63e7d8c8b80daf2bd6232403cb.camel@gmail.com>
-Subject: Re: [v11 3/7] iio: core: Add new DMABUF interface infrastructure
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Vinod Koul <vkoul@kernel.org>, Lee Jones <lee@kernel.org>
-Cc: Markus Elfring <Markus.Elfring@web.de>, lkp@intel.com, Paul Cercueil
- <paul@crapouillou.net>, Nuno =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>, 
- linux-iio@vger.kernel.org, dmaengine@vger.kernel.org, 
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- linaro-mm-sig@lists.linaro.org, Christian =?ISO-8859-1?Q?K=F6nig?=
- <christian.koenig@amd.com>, Jonathan Cameron <jic23@kernel.org>, Lars-Peter
- Clausen <lars@metafoo.de>, Sumit Semwal <sumit.semwal@linaro.org>,
- oe-kbuild-all@lists.linux.dev,  LKML <linux-kernel@vger.kernel.org>,
- linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Julia Lawall
- <julia.lawall@inria.fr>, Randy Dunlap <rdunlap@infradead.org>
-Date: Fri, 21 Jun 2024 09:18:23 +0200
-In-Reply-To: <ZnUnFeum1Z2ahm9M@matsya>
-References: <202406191014.9JAzwRV6-lkp@intel.com>
-	 <c25aab0d-48f6-4754-b514-d6caf8d51fd1@web.de> <ZnRUSaHJhz7XLcKa@matsya>
-	 <20240620170522.GU3029315@google.com> <ZnUnFeum1Z2ahm9M@matsya>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+	s=arc-20240116; t=1718954917; c=relaxed/simple;
+	bh=4Cqmd1Zslg6+GqTtuMMGzAPmoWX+sK/ndxWfnjmHO6Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ph1IZi2XHi9ZDEe+OGNQ29w8PiCXfjb6MMjYpvbYtB4bX1FSurhfMpKQH0K9DrqvRExUL3h+E3ezT0cjA5H2xJ2aHp9AcvjMrz+uT34vHrdiV8LdfwxJFRGi5r0M0//EQKCgnff39zT1d6Muc3796wdGJkIkfuXywcC22awvDKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=u27pTbDD; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1718954878; x=1719559678; i=markus.elfring@web.de;
+	bh=4Cqmd1Zslg6+GqTtuMMGzAPmoWX+sK/ndxWfnjmHO6Y=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=u27pTbDDtzyAG3eRqbn4MfYCio5UxmRS4aWUXnXp8OTfH3guRHsFQ6Q9+qLjzxtz
+	 M02tW3tzCfkxDp0M/6M35CuV71FjVcrKLPp669to2qQts1JRe4ankwxqXI9O1ty94
+	 /7BbvpLDi1rMn3SU8rHx7vA0GoJXejIjCPgIMbrgnLqt7VjWSdu6JoJIWVs4pA0Iu
+	 X0fuw+1PZhyxspK5NutBXp+K/sJF2YuTD/ed4KqY7vlsBwJoWIrMhBuDjSG1Bb40T
+	 mKCx8CNzKo3dkw0ruSn7359Volkl6OizeA5/RNJmvaNFNvKG0Z/2r800+8XhyyQUU
+	 P1guWgGc8BZz0Qmx2g==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MVJNT-1rtN170nRP-00KxkG; Fri, 21
+ Jun 2024 09:27:58 +0200
+Message-ID: <ebddd644-b9b1-4a87-a2e7-dcf255f4184d@web.de>
+Date: Fri, 21 Jun 2024 09:27:53 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v11 3/7] iio: core: Add new DMABUF interface infrastructure
+To: Vinod Koul <vkoul@kernel.org>, Lee Jones <lee@kernel.org>, lkp@intel.com,
+ linux-iio@vger.kernel.org, dmaengine@vger.kernel.org,
+ linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linaro-mm-sig@lists.linaro.org
+Cc: Paul Cercueil <paul@crapouillou.net>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, =?UTF-8?Q?Christian_K=C3=B6nig?=
+ <christian.koenig@amd.com>, Jonathan Cameron <jic23@kernel.org>,
+ Lars-Peter Clausen <lars@metafoo.de>, Sumit Semwal
+ <sumit.semwal@linaro.org>, oe-kbuild-all@lists.linux.dev,
+ LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org,
+ Jonathan Corbet <corbet@lwn.net>, Julia Lawall <julia.lawall@inria.fr>,
+ Randy Dunlap <rdunlap@infradead.org>
+References: <202406191014.9JAzwRV6-lkp@intel.com>
+ <c25aab0d-48f6-4754-b514-d6caf8d51fd1@web.de> <ZnRUSaHJhz7XLcKa@matsya>
+ <20240620170522.GU3029315@google.com> <ZnUnFeum1Z2ahm9M@matsya>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <ZnUnFeum1Z2ahm9M@matsya>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:J37COVk2XF7k8nqs/WJ4OC98gPL38IqMj6sP957DZk0HWuiah8F
+ 2tEs84osaFRb6N6fJcf1SbpSGA2KVPCX3MzmMU42+duV4bIxyA/2szcJY89TZZ1HWSRbqaX
+ +QrjOc9FBuANWIRpwoNnoToVCdpRkv7sA6jpWGGRUXueujw1o5Z48O/iVJN1KagPGkFvRyE
+ /+wIjw4xjBOXesASfg62A==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:5tNyWaEuA3A=;j/8jMQV9kiFVidscC+nHbxOQKKx
+ dA4551YJWSBmZkuYtYQMZDbeUV6U05hNoK2MuHlZW2y746kCpwv1Zs99zzsdADn3ICAdU8WJ5
+ ooLh9ZtCNusXGS8u/iSsHO/zqEzHWI0YlXR1mhfUwAi5JQ+QlWGakhh0PZ+M8EbiXlst3hmc2
+ u7gJJ0n9Afqob4U37CkdXMKyqhHWhglsQO1ecrqy2lo5Wm1NAlOxzC+DU+h3Sul0MxD0BTfj2
+ K4LuaRpr6RRkUXhSkcc+O/RSKMm1jIiJtE5bRR13l7c+3SNH2qs9JlsrUwJH+L4NAN4kg0g8a
+ Kd+MfUSD5UuEgd5a6nihghQxfCotOWV/OEzablJ3WkcuRvlfqAvUDqHgDUOLqfH6Fe8qqLfR3
+ g1vaJjDUebAVf0KT7Yfve0lK4DtUXdKCQzY+lXnVLjgdP3Z1exsNGvq6Q2Xdxvh4JgKXt0daj
+ 31a3L5BBZMqoZu9pzrAhvBuJlLvR96nQQtXAhB0zMmbWY+61OyqI/Ztke6YU8B6eaNmNHC/C0
+ lMwEC6nYjLGsrJ7ApR9r2v5+pTJ+rOM+VoczMfxJSNP7eoEvfZdt8zMsFgMuwdX378rJZUhik
+ 0cq27R7iiu3o+BOCnbxUW/uEGpBnVA1iaKzO03kqPzgdOZF9lfDnEdnt9GU1Xlr/BEpm6zqsa
+ 5eTLOHWtnT/k2O73NLu/J1dFULXx3ua1LmJxnXa831tc3ry4Ie4ODQvjQhEDCDiK/fokUtPlZ
+ JXMJBqVtRLyxYq2zrw28cFlgpdFhty1YbvLrHFXqU21jhCTIQ5gOtR0PGB3SdnIReic/Ylrv9
+ WYZpL5W4AiKeLeVoRttIltCOqFONA+ljfoF6ZKkiONhYE=
 
-On Fri, 2024-06-21 at 12:39 +0530, Vinod Koul wrote:
-> On 20-06-24, 18:05, Lee Jones wrote:
-> > On Thu, 20 Jun 2024, Vinod Koul wrote:
-> >=20
-> > > On 20-06-24, 12:45, Markus Elfring wrote:
-> > > > =E2=80=A6
-> > > > > All errors (new ones prefixed by >>):
-> > > > >=20
-> > > > > > > drivers/iio/industrialio-buffer.c:1715:3: error: cannot jump =
-from
-> > > > > > > this goto statement to its label
-> > > > > =C2=A0=C2=A0=C2=A0 1715 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto err_dmabuf_u=
-nmap_attachment;
-> > > > =E2=80=A6
-> > > >=20
-> > > > Which software design options would you like to try out next
-> > > > so that such a questionable compilation error message will be avoid=
-ed
-> > > > finally?
-> > >=20
-> > > The one where all emails from Markus go to dev/null
-> >=20
-> > Play nice please.
->=20
-> Would love to... but Markus has been repeat offender
->=20
 > Sadly, I am yet to see a constructive approach or even better a helpful
 > patch which improve something, rather than vague suggestions on the list
->=20
 
-Yeah, just look at how many automatic replies he get's from Greg pretty muc=
-h
-saying to ignore his comments.
+Can you get any more constructive impressions from another data representation?
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/?qt=author&q=Elfring
 
-- Nuno S=C3=A1
+Are you aware how many change suggestions (also from my selection) are still
+in various waiting queues?
+
+Regards,
+Markus
 

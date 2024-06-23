@@ -1,112 +1,150 @@
-Return-Path: <dmaengine+bounces-2508-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2509-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 89D4D913AD0
-	for <lists+dmaengine@lfdr.de>; Sun, 23 Jun 2024 15:24:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 49C6C913CD5
+	for <lists+dmaengine@lfdr.de>; Sun, 23 Jun 2024 18:46:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BC3231C20BB0
-	for <lists+dmaengine@lfdr.de>; Sun, 23 Jun 2024 13:24:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6C19D1C202F1
+	for <lists+dmaengine@lfdr.de>; Sun, 23 Jun 2024 16:46:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3FF534CE5;
-	Sun, 23 Jun 2024 13:24:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7C3B181311;
+	Sun, 23 Jun 2024 16:46:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="wN4/hwbs"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="etwslPjM"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 435DD2BB12;
-	Sun, 23 Jun 2024 13:24:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D38218BFA
+	for <dmaengine@vger.kernel.org>; Sun, 23 Jun 2024 16:46:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719149045; cv=none; b=BLIbz1ovIz4WtEYZHwjv0IonYMgvuUL+SKg659WvLlJTgdFYdrTbc+HeBquJn6o5FAhP82ZIaN6yTREqK0bcTH9yCf/8tyrO85WTVoY/nq+uJS3J7msFs5jZMTJGzNFENF2JBMsnsrHe0kdRbF48H1DW6WJbLikPoi6tQpCJ90w=
+	t=1719161169; cv=none; b=qIUvOkiBBIIPm4nEsHajU9jpBGB9PJy8i521M40Q6J+kIte7J2+xyd1BZsFEQpT4+EN3UV1zRYLKvdOMZMxYjIoidNX4uWDvND9xotaFzoLM7qfd3lwunfg3nmLLyzLKEHfVOWYlI6Eqqu7srNiCyzjLgwbo5BdoeO/E6Iu8N9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719149045; c=relaxed/simple;
-	bh=uIgRrYUXNDJDOrgYRkjHQ01AEspYqECWLXYq3Xcg63I=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=jRcRpfQVJPOdCSrbaaoZ8mtoDDQK3ZEl73uKMwORn82xrAyezCNJ3poKfIny0r+kA7MP4u1B0N8CkH+lS+Beq7bd2m/GZfWZyfyGQY2+g66mr8xnJ69ssiZrBj4tpYcickLI6eLL5NA4OxmN2smcP3Sw35y42Egoc8vpGqJhX/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=wN4/hwbs; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1719149021; x=1719753821; i=markus.elfring@web.de;
-	bh=Kr4f4rhX/zKNzyS3gsmrvMsM4ABjIpMgjRGdSS4sZlo=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=wN4/hwbsS/eN5wkizmcH86XbSR0P7RvhgpagZnKZY8i1tm2KM9HbAfi9DoO4HDmg
-	 1RJ0exCXAXw7jjLEqtkvUyqjhexure4Oc8nE9anzgtzuHuhLke4lzsSegdWU8b7Nt
-	 1WikChUwNswHkk/kPDSW4wVcEUMwT0kbTxMmN5DoAWNJRnLkYh23882dI9vahX8qK
-	 28KgPPHYkUvEm4O/tOjWwWEEHpzSRFRD6CKHgRnHkxCf5NZPR1KJWiUcHyHN+B4mA
-	 RwIX7F0ik95yt5s7XLbkJn2axSj/y/96VbSmfn61cykmYPzRGexW6P8y1u6i21eqQ
-	 nh8bfuMSF2ot9nIVwQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1N7gXO-1sQVsl1Cmg-00xryb; Sun, 23
- Jun 2024 15:23:41 +0200
-Message-ID: <eaf19171-ef94-4370-a774-1f67d0eb878d@web.de>
-Date: Sun, 23 Jun 2024 15:23:40 +0200
+	s=arc-20240116; t=1719161169; c=relaxed/simple;
+	bh=n3TDtP05+wle753FuNbbpJv6GnSdmJUBgE77Gjiccuc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lRpo2pgl4JyVA6jU+q8VzdkBIzsOslMAf2Gc0xQv4pLnYADfqI3/xRkbeDToUQowNmp8GPh8OZAf0//X5b3x8B+ROaER986TFotEgz3z1koJREInrsh9A03jfEFTS1NUAMIwpnMybze+tq6fo7X9mlo1k0iQdbv9s42GeY7sVkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=etwslPjM; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719161165; x=1750697165;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=n3TDtP05+wle753FuNbbpJv6GnSdmJUBgE77Gjiccuc=;
+  b=etwslPjMt/SeLK7ebfU+cpbmwbtThnYAhDn/kr8fF218yqfoGrydFGs0
+   H1gm9rGfGOsbw0VkITb0r4uoXELAPYx4RvKNF7H6w/oFdbeWZEnUFx/gr
+   8+5oTGxltQNImo8QbKO1UTzfvzarjW9UrnC75Y+FyFKYqVoewjZc6CTYH
+   nRmB45cdlQJ2qZPv3PFhs7BM9pzxvH8HoVolkj7DCLOdGX4TopHuskMRy
+   a3CWJUyuoVFWV8ltlNRq+hMk3XxjgOvkHXXN8DpVceC6TxiQ4xd/BGYmU
+   OxF4j1lyaQkVT++zLoUa04jnu+dRcMntVx3f5tuIV2VJz3ROjSnqT7e4V
+   A==;
+X-CSE-ConnectionGUID: VpHG/uooTluBSggDZ2REwQ==
+X-CSE-MsgGUID: o5bCbLxJRJaT/FHlAqR0Lg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11112"; a="15889541"
+X-IronPort-AV: E=Sophos;i="6.08,260,1712646000"; 
+   d="scan'208";a="15889541"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2024 09:46:04 -0700
+X-CSE-ConnectionGUID: f40WRws/QMmuo8NudKOt4w==
+X-CSE-MsgGUID: 4Z8j8rofSOm7kwQSi1O17Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,260,1712646000"; 
+   d="scan'208";a="43187871"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 23 Jun 2024 09:46:02 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sLQLo-000AhK-1R;
+	Sun, 23 Jun 2024 16:46:00 +0000
+Date: Mon, 24 Jun 2024 00:45:37 +0800
+From: kernel test robot <lkp@intel.com>
+To: Basavaraj Natikar <Basavaraj.Natikar@amd.com>, vkoul@kernel.org,
+	dmaengine@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Raju.Rangoju@amd.com, Frank.li@nxp.com,
+	Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+Subject: Re: [PATCH v2 5/7] dmaengine: ae4dma: Register AE4DMA using
+ pt_dmaengine_register
+Message-ID: <202406240021.ytiS3jV6-lkp@intel.com>
+References: <20240617100359.2550541-6-Basavaraj.Natikar@amd.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Ma Ke <make24@iscas.ac.cn>, dmaengine@vger.kernel.org,
- Lars-Peter Clausen <lars@metafoo.de>, Vinod Koul <vkoul@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <20240623081644.2089695-1-make24@iscas.ac.cn>
-Subject: Re: [PATCH] dmaengine: axi-dmac: Add check for dma_set_max_seg_size
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240623081644.2089695-1-make24@iscas.ac.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:HAs2hTH6TCuZkckIPYbOY9C8VnvxSIQzKB7ZHEBwEZfwRcfZteg
- K9DTFXFLw2UhfanRhha/XpJVlGu7XdTLurbqEUfkTIxt83QStHF3loiypsQoYGelVQW7Tqz
- Ygds/CoH2WifG91n4kUS0NiSKMvzZy4byGd1GeLGt3mQe0zlhvzKXT3fCgSRhv15QoCq77r
- fJAuCzFGN2GCx0emgEAJQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:AUb8ei8cn7k=;ahKl4M8bB7Zjbvzbwvj30hCXK5l
- pCP7qhrElxl2nnVvXSsvwO4KyXaND2Yexi+9zp4D1TYyru+WHutidHOl2wGM5ogG3bLbQTtVV
- SAeR08w8ZV8cfj9dt5taxtsppD2hnVYGfaru2IRmqHpTA5hN2gQiDLo11N/vGUusBvUflnX47
- mm4un7BTgDtKOcbKHChLS9AcLFhdqYH4hpNrZcBGiuh1I5Qd01IsVQaKOSx8pWQnWqgOIzJFd
- z4DyU3/FzXr9Zjjvmr5MA6S/Nj9Gdq9/snlbhNlI3G6jdmKsoh/cQyexWVKhjR51/FmfZMpnl
- YiOlI2WAfV5HDLD53/nIUJ22iroWvu8IcyhTSrYBOsBeRbBBFtYWLlv36VlSgFKp8b6XWsFw3
- QRU478L6WAW/WRz4LsaSZLAMtBU/shUQ0D0C72SYPsT032oYPDShea1gZOO1jX6fgcYfczqBv
- W5Xn56viKfvCBpEK+ttgxK41TCchNt9o7yc3xWYZdGfXTysGqI6ArB+uSlKNVB9FalZlwIAdE
- jITskAiPG2qc8j3Z8j9d1vPwxlbTbwIYErlLlMeqc2YFEzUwISy7pD7O6NGGVhYFzi6BYu2lp
- AUUjQu1Sl8D5Y8Pd94Mc1L/5oc9J78IDRsKp9i0tgDF/sav+Xw2bg2h4yCX/eC35OrqdZ83i/
- NO0q6yCxV02rbIebAzbS6iKPjWapoxOsx3D5Ujo+R4N/kEuW+SEfNovS+RpsT7+ePn/QFyT7t
- u5lgr+dBDfu3ovGr/MPy/L2ZN2xa5E58lJWTXq0Pu/PF1b79pjN17PGytZtnwTBDM1gl+ihRL
- iZtZ5dD/Qn26CSEsUIqWaP/6xVF74vc57I+W3o3iiXHjc=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240617100359.2550541-6-Basavaraj.Natikar@amd.com>
 
-> To avoid possible failure of the dma_set_max_seg_size(),
+Hi Basavaraj,
 
-Really?
+kernel test robot noticed the following build errors:
 
-It is desirable to detect a failed function call, isn't it?
+[auto build test ERROR on linus/master]
+[also build test ERROR on v6.10-rc4]
+[cannot apply to vkoul-dmaengine/next next-20240621]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
+url:    https://github.com/intel-lab-lkp/linux/commits/Basavaraj-Natikar/dmaengine-Move-AMD-DMA-driver-to-separate-directory/20240617-184320
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20240617100359.2550541-6-Basavaraj.Natikar%40amd.com
+patch subject: [PATCH v2 5/7] dmaengine: ae4dma: Register AE4DMA using pt_dmaengine_register
+config: x86_64-randconfig-103-20240623 (https://download.01.org/0day-ci/archive/20240624/202406240021.ytiS3jV6-lkp@intel.com/config)
+compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240624/202406240021.ytiS3jV6-lkp@intel.com/reproduce)
 
-> we should better check the return value of the dma_set_max_seg_size().
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406240021.ytiS3jV6-lkp@intel.com/
 
-1. Please choose an imperative wording for an improved change description.
-   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/Documentation/process/submitting-patches.rst?h=3Dv6.10-rc4#n94
+All errors (new ones prefixed by >>):
 
-2. Would you like to add any tags (like =E2=80=9CFixes=E2=80=9D and =E2=80=
-=9CCc=E2=80=9D) accordingly?
+>> ld.lld: error: duplicate symbol: pt_dmaengine_register
+   >>> defined at ptdma-dmaengine.c:364 (drivers/dma/amd/ae4dma/../ptdma/ptdma-dmaengine.c:364)
+   >>>            drivers/dma/amd/ptdma/ptdma-dmaengine.o:(pt_dmaengine_register) in archive vmlinux.a
+   >>> defined at ptdma-dmaengine.c:364 (drivers/dma/amd/ae4dma/../ptdma/ptdma-dmaengine.c:364)
+   >>>            drivers/dma/amd/ptdma/ptdma-dmaengine.o:(.text+0x0) in archive vmlinux.a
+--
+>> ld.lld: error: duplicate symbol: pt_dmaengine_unregister
+   >>> defined at ptdma-dmaengine.c:467 (drivers/dma/amd/ae4dma/../ptdma/ptdma-dmaengine.c:467)
+   >>>            drivers/dma/amd/ptdma/ptdma-dmaengine.o:(pt_dmaengine_unregister) in archive vmlinux.a
+   >>> defined at ptdma-dmaengine.c:467 (drivers/dma/amd/ae4dma/../ptdma/ptdma-dmaengine.c:467)
+   >>>            drivers/dma/amd/ptdma/ptdma-dmaengine.o:(.text+0x1ED0) in archive vmlinux.a
+--
+>> ld.lld: error: duplicate symbol: pt_start_queue
+   >>> defined at amd_dma.c:14 (drivers/dma/amd/ae4dma/../common/amd_dma.c:14)
+   >>>            drivers/dma/amd/common/amd_dma.o:(pt_start_queue) in archive vmlinux.a
+   >>> defined at amd_dma.c:14 (drivers/dma/amd/ae4dma/../common/amd_dma.c:14)
+   >>>            drivers/dma/amd/common/amd_dma.o:(.text+0x0) in archive vmlinux.a
+--
+>> ld.lld: error: duplicate symbol: pt_stop_queue
+   >>> defined at amd_dma.c:20 (drivers/dma/amd/ae4dma/../common/amd_dma.c:20)
+   >>>            drivers/dma/amd/common/amd_dma.o:(pt_stop_queue) in archive vmlinux.a
+   >>> defined at amd_dma.c:20 (drivers/dma/amd/ae4dma/../common/amd_dma.c:20)
+   >>>            drivers/dma/amd/common/amd_dma.o:(.text+0x70) in archive vmlinux.a
+--
+>> ld.lld: error: duplicate symbol: pt_check_status_trans
+   >>> defined at ptdma-dev.c:133 (drivers/dma/amd/ptdma/ptdma-dev.c:133)
+   >>>            drivers/dma/amd/ptdma/ptdma-dev.o:(pt_check_status_trans) in archive vmlinux.a
+   >>> defined at ae4dma-dev.c:64 (drivers/dma/amd/ae4dma/ae4dma-dev.c:64)
+   >>>            drivers/dma/amd/ae4dma/ae4dma-dev.o:(.text+0x0) in archive vmlinux.a
+--
+>> ld.lld: error: duplicate symbol: pt_core_perform_passthru
+   >>> defined at ptdma-dev.c:90 (drivers/dma/amd/ptdma/ptdma-dev.c:90)
+   >>>            drivers/dma/amd/ptdma/ptdma-dev.o:(pt_core_perform_passthru) in archive vmlinux.a
+   >>> defined at ae4dma-dev.c:172 (drivers/dma/amd/ae4dma/ae4dma-dev.c:172)
+   >>>            drivers/dma/amd/ae4dma/ae4dma-dev.o:(.text+0x350) in archive vmlinux.a
 
-3. How do you think about to append the text =E2=80=9C() in axi_dmac_probe=
-()=E2=80=9D
-   to the summary phrase?
-
-
-Regards,
-Markus
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 

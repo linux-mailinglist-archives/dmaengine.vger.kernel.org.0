@@ -1,231 +1,360 @@
-Return-Path: <dmaengine+bounces-2510-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2511-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B3399141D8
-	for <lists+dmaengine@lfdr.de>; Mon, 24 Jun 2024 07:17:28 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F78591422D
+	for <lists+dmaengine@lfdr.de>; Mon, 24 Jun 2024 07:39:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ED055280FA3
-	for <lists+dmaengine@lfdr.de>; Mon, 24 Jun 2024 05:17:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BCB491C21938
+	for <lists+dmaengine@lfdr.de>; Mon, 24 Jun 2024 05:39:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E15B612E5D;
-	Mon, 24 Jun 2024 05:17:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 360F317BD8;
+	Mon, 24 Jun 2024 05:39:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HcPTo2Gd"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sz4Qa+Wi"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE49376;
-	Mon, 24 Jun 2024 05:17:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0D118827;
+	Mon, 24 Jun 2024 05:39:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719206242; cv=none; b=YkpqJGA1dq7HUWNcvq/1or5Eapxa0YnqEarMJ+sG7faNzy/U12slxrU8V6WJmg31JPT3rbfugw/n/hYfEkliHWGW8ZuWt/5uh+LvZ978Gd+GSsoI+jbUokD8n/2fknjPZ+tDBGbZyOdtVOTVJvDR56sA8JIc2tYkpKCeYfao1/0=
+	t=1719207544; cv=none; b=PVvuKPkuqSUOCdOneczLD9jCVe/vrZy4RSVG3uBjgR0iUmpyEEdQv+dRa7BH8eLgiY6Z0r+z9UBuae5O+rTyVqg/Y8Cu0cyf1Crw9brfpwV35Af5HZic+siEIyDTzHztcTAQiWCK4YgdHr4vuvGNlCOqBBg63vGX+MnOnNUAh94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719206242; c=relaxed/simple;
-	bh=f3CSyQPnt4VQRDp0xyzNOTKzo6rzuItbewtSfQO1CQI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WGADFRq34XB8NNGcn7TZjdoNkukIBeGp9pFQgQfywYaFherG2wcyEU/ci5cbAhBkdGBKfgcLyGniZPAoG/pqrASHiX6rwTaDwx7/DT5p2pdcZCKr/pFQhud7OSpu6Fi59VgCY2d4H/ZjkoE28bwb7RMMrTTZP0LWA8nFPF316g8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HcPTo2Gd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAA84C2BBFC;
-	Mon, 24 Jun 2024 05:17:18 +0000 (UTC)
+	s=arc-20240116; t=1719207544; c=relaxed/simple;
+	bh=jJ/Xhogs+nACCcEGlLfB6HJx/oX5Us+Ij/qie1qauF4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FeygM/93ARaBVrO31SYqXilVODhwTKsvH6dPyBhUR1YHZXi3h1mKCbth4KVdXcEWIFQxfHJF9uboS6mFYlDDy6/T62rXqIRAQdv2Jfkj3wSSFREda2xKrlMugABTU2sdzdhStdzA5c40ycyf8cCHG5fx4YNA9Q0EKn7iDEbRqTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sz4Qa+Wi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B15F4C2BBFC;
+	Mon, 24 Jun 2024 05:39:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719206242;
-	bh=f3CSyQPnt4VQRDp0xyzNOTKzo6rzuItbewtSfQO1CQI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HcPTo2GdhUbcDmljHZjgg9Hghocna1EtYlxaV6n9blyLE6bpJt6bafuZSKFRhNj34
-	 VNGiyXqnmrFbDe0N/qOWWcOxXZcDw+i6M0QMmQ5pWgH+U7NAgTCNNo8BM+7GuWdf/7
-	 3+1Qb1eh8dLBU9PPAaPxodguH+wSORur2phWNP92deH9Lu8EdV0D0mWQtEfIh6/5KU
-	 7/VZquSqYRIMPFrJ9mIa1vTIUevBeT7b/pePFD/Mx4P1tlinVYi/5FDmwzxpVuVJKz
-	 RW4MuzUEJab+iQ4UFUrBcNhtJjrvqJlHRtqeG+P5iHegMNbxmJKW9/E4F8MaPillsy
-	 Ee3bhKnwgjM8Q==
-Message-ID: <62c05c34-0b69-4091-8c3a-d0b8befa9150@kernel.org>
-Date: Mon, 24 Jun 2024 07:17:16 +0200
+	s=k20201202; t=1719207543;
+	bh=jJ/Xhogs+nACCcEGlLfB6HJx/oX5Us+Ij/qie1qauF4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sz4Qa+WiiSVBfHghGys3is+d97crwImMZeX7km8DzqnirbEPwfFZiUsmg6QqCM+N6
+	 c3c9aY7v1tMgkJLVofzfYgrdifCkut9gb4NmvmjJRWjmnT6OYukYuIyWAQEhngcX4F
+	 O8/e/Z44xYgaTJz/QYq9RKcZvEoLmyQ3jf8pDlTBkg74DTdqTZnQoZsWorOW4NgJvh
+	 xvLb//6rdSGgcpcwEunLcd0qoLukSM6AWY9RA2dcg61pLa34v87nkJNg60bx1O9K6A
+	 Hwy8zWgE3SCaqvfHiFzOcl+K9aM7hfFXbQXNEPSrtRPKdZ/UjFUoVfxDApoXdr8U6V
+	 K+8UhvHhXxQsg==
+Date: Mon, 24 Jun 2024 11:08:59 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"J.M.B. Downing" <jonathan.downing@nautel.com>,
+	Vladimir Zapolskiy <vz@mleia.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Yangtao Li <frank.li@vivo.com>, Arnd Bergmann <arnd@arndb.de>,
+	Li Zetao <lizetao1@huawei.com>, Chancel Liu <chancel.liu@nxp.com>,
+	Michael Ellerman <mpe@ellerman.id.au>, dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
+	linuxppc-dev@lists.ozlabs.org, linux-sound@vger.kernel.org,
+	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-mtd@lists.infradead.org,
+	Markus Elfring <Markus.Elfring@web.de>
+Subject: Re: [Patch v4 06/10] dmaengine: Add dma router for pl08x in LPC32XX
+ SoC
+Message-ID: <ZnkGcwd8M1QFfmxl@matsya>
+References: <20240620175657.358273-1-piotr.wojtaszczyk@timesys.com>
+ <20240620175657.358273-7-piotr.wojtaszczyk@timesys.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: dma: mv-xor-v2: Convert to dtschema
-To: Shresth Prasad <shresthprasad7@gmail.com>, vkoul@kernel.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
-Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
- javier.carrasco.cruz@gmail.com
-References: <20240623124507.27297-2-shresthprasad7@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240623124507.27297-2-shresthprasad7@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240620175657.358273-7-piotr.wojtaszczyk@timesys.com>
 
-On 23/06/2024 14:45, Shresth Prasad wrote:
-> Convert txt bindings of Marvell XOR v2 engines to dtschema to allow
-> for validation.
+Hi Piotr,
+
+Any reason why dmaengine parts cant be sent separately, why are they
+clubbed together, I dont see any obvious dependencies...
+
+On 20-06-24, 19:56, Piotr Wojtaszczyk wrote:
+> LPC32XX connects few of its peripherals to pl08x DMA thru a multiplexer,
+> this driver allows to route a signal request line thru the multiplexer for
+> given peripheral.
+
+What is the difference b/w this and lpc18xx driver, why not reuse that
+one?
+
 > 
-> Signed-off-by: Shresth Prasad <shresthprasad7@gmail.com>
+> Signed-off-by: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
 > ---
-> Tested against `marvell/armada-7040-db.dtb`, `marvell/armada-7040-mochabin.dtb`
-> and `marvell/armada-8080-db.dtb`
+> Changes for v4:
+> - This patch is new in v4
 > 
->  .../bindings/dma/marvell,xor-v2.yaml          | 69 +++++++++++++++++++
->  .../devicetree/bindings/dma/mv-xor-v2.txt     | 28 --------
->  2 files changed, 69 insertions(+), 28 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/dma/marvell,xor-v2.yaml
->  delete mode 100644 Documentation/devicetree/bindings/dma/mv-xor-v2.txt
+>  MAINTAINERS                  |   1 +
+>  drivers/dma/Kconfig          |   9 ++
+>  drivers/dma/Makefile         |   1 +
+>  drivers/dma/lpc32xx-dmamux.c | 195 +++++++++++++++++++++++++++++++++++
+>  4 files changed, 206 insertions(+)
+>  create mode 100644 drivers/dma/lpc32xx-dmamux.c
 > 
-> diff --git a/Documentation/devicetree/bindings/dma/marvell,xor-v2.yaml b/Documentation/devicetree/bindings/dma/marvell,xor-v2.yaml
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index fadf1baafd89..5ffe988ee282 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -2403,6 +2403,7 @@ R:	Vladimir Zapolskiy <vz@mleia.com>
+>  L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+>  S:	Maintained
+>  F:	Documentation/devicetree/bindings/dma/nxp,lpc3220-dmamux.yaml
+> +F:	drivers/dma/lpc32xx-dmamux.c
+>  N:	lpc32xx
+>  
+>  ARM/Marvell Dove/MV78xx0/Orion SOC support
+> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+> index 002a5ec80620..aeace3d7e066 100644
+> --- a/drivers/dma/Kconfig
+> +++ b/drivers/dma/Kconfig
+> @@ -378,6 +378,15 @@ config LPC18XX_DMAMUX
+>  	  Enable support for DMA on NXP LPC18xx/43xx platforms
+>  	  with PL080 and multiplexed DMA request lines.
+>  
+> +config LPC32XX_DMAMUX
+> +	bool "NXP LPC32xx DMA MUX for PL080"
+> +	depends on ARCH_LPC32XX || COMPILE_TEST
+> +	depends on OF && AMBA_PL08X
+> +	select MFD_SYSCON
+> +	help
+> +	  Support for PL080 multiplexed DMA request lines on
+> +	  LPC32XX platrofm.
+> +
+>  config LS2X_APB_DMA
+>  	tristate "Loongson LS2X APB DMA support"
+>  	depends on LOONGARCH || COMPILE_TEST
+> diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
+> index 802ca916f05f..6f1350b62e7f 100644
+> --- a/drivers/dma/Makefile
+> +++ b/drivers/dma/Makefile
+> @@ -50,6 +50,7 @@ obj-$(CONFIG_INTEL_IOATDMA) += ioat/
+>  obj-y += idxd/
+>  obj-$(CONFIG_K3_DMA) += k3dma.o
+>  obj-$(CONFIG_LPC18XX_DMAMUX) += lpc18xx-dmamux.o
+> +obj-$(CONFIG_LPC32XX_DMAMUX) += lpc32xx-dmamux.o
+>  obj-$(CONFIG_LS2X_APB_DMA) += ls2x-apb-dma.o
+>  obj-$(CONFIG_MILBEAUT_HDMAC) += milbeaut-hdmac.o
+>  obj-$(CONFIG_MILBEAUT_XDMAC) += milbeaut-xdmac.o
+> diff --git a/drivers/dma/lpc32xx-dmamux.c b/drivers/dma/lpc32xx-dmamux.c
 > new file mode 100644
-> index 000000000000..3d7481c1917e
+> index 000000000000..4e6ce6026164
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/marvell,xor-v2.yaml
-> @@ -0,0 +1,69 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/marvell,xor-v2.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +++ b/drivers/dma/lpc32xx-dmamux.c
+> @@ -0,0 +1,195 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +//
+> +// Copyright 2024 Timesys Corporation <piotr.wojtaszczyk@timesys.com>
+> +//
+> +// Based on TI DMA Crossbar driver by:
+> +//   Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com
+> +//   Author: Peter Ujfalusi <peter.ujfalusi@ti.com>
 > +
-> +title: Marvell XOR v2 engines
+> +#include <linux/err.h>
+> +#include <linux/init.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/of.h>
+> +#include <linux/of_dma.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/spinlock.h>
 > +
-> +maintainers:
-> +  - Vinod Koul <vkoul@kernel.org>
-
-Should be rather platform maintainer.
-
+> +#define LPC32XX_SSP_CLK_CTRL 0x78
+> +#define LPC32XX_I2S_CLK_CTRL 0x7c
 > +
-> +properties:
-> +  compatible:
-> +    contains:
-
-This cannot be unspecific. Drop contains.
-
-> +      enum:
-> +        - marvell,armada-7k-xor
-> +        - marvell,xor-v2
+> +struct lpc32xx_dmamux {
+> +	int signal;
+> +	char *name_sel0;
+> +	char *name_sel1;
+> +	int muxval;
+> +	int muxreg;
+> +	int bit;
+> +	bool busy;
+> +};
 > +
-> +  reg:
-> +    items:
-> +      - description: DMA registers location and length
-> +      - description: global registers location and length
-
-Drop "location and length", redundant.
-
+> +/* From LPC32x0 User manual "3.2.1 DMA request signals" */
+> +static struct lpc32xx_dmamux lpc32xx_muxes[] = {
+> +	{
+> +		.signal = 3,
+> +		.name_sel0 = "spi2-rx-tx",
+> +		.name_sel1 = "ssp1-rx",
+> +		.muxreg = LPC32XX_SSP_CLK_CTRL,
+> +		.bit = 5,
+> +	},
+> +	{
+> +		.signal = 10,
+> +		.name_sel0 = "uart7-rx",
+> +		.name_sel1 = "i2s1-dma1",
+> +		.muxreg = LPC32XX_I2S_CLK_CTRL,
+> +		.bit = 4,
+> +	},
+> +	{
+> +		.signal = 11,
+> +		.name_sel0 = "spi1-rx-tx",
+> +		.name_sel1 = "ssp1-tx",
+> +		.muxreg = LPC32XX_SSP_CLK_CTRL,
+> +		.bit = 4,
+> +	},
+> +	{
+> +		.signal = 14,
+> +		.name_sel0 = "none",
+> +		.name_sel1 = "ssp0-rx",
+> +		.muxreg = LPC32XX_SSP_CLK_CTRL,
+> +		.bit = 3,
+> +	},
+> +	{
+> +		.signal = 15,
+> +		.name_sel0 = "none",
+> +		.name_sel1 = "ssp0-tx",
+> +		.muxreg = LPC32XX_SSP_CLK_CTRL,
+> +		.bit = 2,
+> +	},
+> +};
 > +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 2
+> +struct lpc32xx_dmamux_data {
+> +	struct dma_router dmarouter;
+> +	struct regmap *reg;
+> +	spinlock_t lock; /* protects busy status flag */
+> +};
 > +
-> +  clock-names:
-> +    items:
-> +      - const: core
-> +      - const: reg
-
-This does not match number of items in clocks:
-
+> +static void lpc32xx_dmamux_release(struct device *dev, void *route_data)
+> +{
+> +	struct lpc32xx_dmamux_data *dmamux = dev_get_drvdata(dev);
+> +	struct lpc32xx_dmamux *mux = route_data;
+> +	unsigned long flags;
 > +
-> +  msi-parent:
-> +    description:
-> +      Phandle to the MSI-capable interrupt controller used for
-> +      interrupts.
-> +    maxItems: 1
+> +	dev_dbg(dev, "releasing dma request signal %d routed to %s\n",
+> +		mux->signal, mux->muxval ? mux->name_sel1 : mux->name_sel1);
 > +
-> +  dma-coherent: true
-
-This was not present in the binding and commit msg did not explain why
-this is needed. Are devices really DMA coherent?
-
+> +	guard(spinlock)(&dmamux->lock);
 > +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - msi-parent
-> +  - dma-coherent
+> +	mux->busy = false;
+> +}
 > +
-> +if:
-
-Put it under allOf: in this place.
-
-> +  required:
-> +    - clocks
-
-This does not work and does not make much sense. Probably you want to
-list the items per variant?
-
-
-> +  properties:
-> +    clocks:
-> +      minItems: 2
-> +      maxItems: 2
-
-Instead list and describe the items.
-
-> +then:
-> +  required:
-> +    - clock-names
+> +static void *lpc32xx_dmamux_reserve(struct of_phandle_args *dma_spec,
+> +				    struct of_dma *ofdma)
+> +{
+> +	struct platform_device *pdev = of_find_device_by_node(ofdma->of_node);
+> +	struct device *dev = &pdev->dev;
+> +	struct lpc32xx_dmamux_data *dmamux = platform_get_drvdata(pdev);
+> +	unsigned long flags;
+> +	struct lpc32xx_dmamux *mux = NULL;
+> +	int i;
 > +
-> +additionalProperties: false
+> +	if (dma_spec->args_count != 3) {
+> +		dev_err(&pdev->dev, "invalid number of dma mux args\n");
+> +		return ERR_PTR(-EINVAL);
+> +	}
 > +
-> +examples:
-> +  - |
-> +    xor0@6a0000 {
-> +        compatible = "marvell,armada-7k-xor", "marvell,xor-v2";
+> +	for (i = 0; i < ARRAY_SIZE(lpc32xx_muxes); i++) {
+> +		if (lpc32xx_muxes[i].signal == dma_spec->args[0])
+> +			mux = &lpc32xx_muxes[i];
+> +	}
+> +	if (!mux) {
+> +		dev_err(&pdev->dev, "invalid mux request number: %d\n",
+> +			dma_spec->args[0]);
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+> +	if (dma_spec->args[2] > 1) {
+> +		dev_err(&pdev->dev, "invalid dma mux value: %d\n",
+> +			dma_spec->args[1]);
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+> +	/* The of_node_put() will be done in the core for the node */
+> +	dma_spec->np = of_parse_phandle(ofdma->of_node, "dma-masters", 0);
+> +	if (!dma_spec->np) {
+> +		dev_err(&pdev->dev, "can't get dma master\n");
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+> +	spin_lock_irqsave(&dmamux->lock, flags);
+> +	if (mux->busy) {
+> +		spin_unlock_irqrestore(&dmamux->lock, flags);
+> +		dev_err(dev, "dma request signal %d busy, routed to %s\n",
+> +			mux->signal, mux->muxval ? mux->name_sel1 : mux->name_sel1);
+> +		of_node_put(dma_spec->np);
+> +		return ERR_PTR(-EBUSY);
+> +	}
+> +
+> +	mux->busy = true;
+> +	mux->muxval = dma_spec->args[2] ? BIT(mux->bit) : 0;
+> +
+> +	regmap_update_bits(dmamux->reg, mux->muxreg, BIT(mux->bit), mux->muxval);
+> +	spin_unlock_irqrestore(&dmamux->lock, flags);
+> +
+> +	dma_spec->args[2] = 0;
+> +	dma_spec->args_count = 2;
+> +
+> +	dev_dbg(dev, "dma request signal %d routed to %s\n",
+> +		mux->signal, mux->muxval ? mux->name_sel1 : mux->name_sel1);
+> +
+> +	return mux;
+> +}
+> +
+> +static int lpc32xx_dmamux_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	struct lpc32xx_dmamux_data *dmamux;
+> +	int ret;
+> +
+> +	dmamux = devm_kzalloc(&pdev->dev, sizeof(*dmamux), GFP_KERNEL);
+> +	if (!dmamux)
+> +		return -ENOMEM;
+> +
+> +	dmamux->reg = syscon_node_to_regmap(np->parent);
+> +	if (IS_ERR(dmamux->reg)) {
+> +		dev_err(&pdev->dev, "syscon lookup failed\n");
+> +		return PTR_ERR(dmamux->reg);
+> +	}
+> +
+> +	spin_lock_init(&dmamux->lock);
+> +	platform_set_drvdata(pdev, dmamux);
+> +	dmamux->dmarouter.dev = &pdev->dev;
+> +	dmamux->dmarouter.route_free = lpc32xx_dmamux_release;
+> +
+> +	return of_dma_router_register(np, lpc32xx_dmamux_reserve,
+> +				      &dmamux->dmarouter);
+> +}
+> +
+> +static const struct of_device_id lpc32xx_dmamux_match[] = {
+> +	{ .compatible = "nxp,lpc3220-dmamux" },
+> +	{},
+> +};
+> +
+> +static struct platform_driver lpc32xx_dmamux_driver = {
+> +	.probe	= lpc32xx_dmamux_probe,
+> +	.driver = {
+> +		.name = "lpc32xx-dmamux",
+> +		.of_match_table = lpc32xx_dmamux_match,
+> +	},
+> +};
+> +
+> +static int __init lpc32xx_dmamux_init(void)
+> +{
+> +	return platform_driver_register(&lpc32xx_dmamux_driver);
+> +}
+> +arch_initcall(lpc32xx_dmamux_init);
+> -- 
+> 2.25.1
 
-This totally does not match your binding.
-
-Please, read example-schema, other bindings, my old talks and other
-resources before doing conversions, so we can avoid such trivial
-mistakes. You enumerated compatibles (enum), but here have a list. A
-list is not an enumeration, obviously...
-
-Best regards,
-Krzysztof
-
+-- 
+~Vinod
 

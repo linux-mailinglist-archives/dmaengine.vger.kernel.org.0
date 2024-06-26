@@ -1,143 +1,226 @@
-Return-Path: <dmaengine+bounces-2541-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2542-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B5AFB917BBF
-	for <lists+dmaengine@lfdr.de>; Wed, 26 Jun 2024 11:07:56 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 69E9A917DA4
+	for <lists+dmaengine@lfdr.de>; Wed, 26 Jun 2024 12:18:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3FA93285833
-	for <lists+dmaengine@lfdr.de>; Wed, 26 Jun 2024 09:07:55 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 873D31C235BD
+	for <lists+dmaengine@lfdr.de>; Wed, 26 Jun 2024 10:18:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 186E71684A2;
-	Wed, 26 Jun 2024 09:07:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5AC617798C;
+	Wed, 26 Jun 2024 10:18:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="MdI6eein"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FL/1rLlN"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 401F2168492
-	for <dmaengine@vger.kernel.org>; Wed, 26 Jun 2024 09:07:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5144176AD3
+	for <dmaengine@vger.kernel.org>; Wed, 26 Jun 2024 10:18:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719392869; cv=none; b=C7FK3MpO/6jMtc3rjLM5dfNBm6AfTx8A7suly8n4jtG9FvKFiDrzX/VfFnQwJ0jlm07b1kk+bdc3GMVCMlXYg5TbAb5FduM9domJUxF1xeBF7m5NOnzmPqhGpoqRGWDKKH7XeHiSR3b7XVJcbbM2dHyYgr6l0UVXBKOh0UiAQFY=
+	t=1719397097; cv=none; b=MF5PVuCvM/q4dVGEmEtY9vD8LMWO7fyrQs+8qJFMKEHsIUgmg9Ktdnj9Jx0iQwAKJfzddfLBlf+4Tk7UByGV/C41jpEiynxu29HHkQ7QPLKRBExW3+3X5YvxO2UlHf6AzkrvJNvoQK4dhh6htGhFTUj350gOUkmJ7mHA639RfKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719392869; c=relaxed/simple;
-	bh=ssH+6iURMN7zx64iT61gWIWA5rPqCh8kGeC+MevKIHU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IRetA+t+HBm7T1ABk1oy95GPykDsrDJ7C4xnww8h8N+54eZOn0wMFGPwn7U+WSTqk73+472UhgG+2V7f00kMWZHPvnnL8Q/KGhahq3rq6xYQpNGR+ESRzVJsrdf0CwHtl+3DALrl8AlRUDFr5iOAhjHPmFwmD9s1qarOeJYlNoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=MdI6eein; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-57d1782679fso7981433a12.0
-        for <dmaengine@vger.kernel.org>; Wed, 26 Jun 2024 02:07:47 -0700 (PDT)
+	s=arc-20240116; t=1719397097; c=relaxed/simple;
+	bh=HxFLn3EKFP9/3frs9V6iy9Q1+ai79dM4oSUWkrspkNY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HiRqYgAEsv5kIFktajmOzuEUU/EBSK1yyXNJKmwP/UKw8+yQB5strdHwOeeLZL9lyrCItB9HfV7+JoHYXjgCh3s8jt6BesGlj3rttif7nbuwIBs7CWWTQMghQxIWuxG57YAGzg4pQIK1U0KyOyTVC2MgWxDPqPjdVW/8qJ1QqOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FL/1rLlN; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-57d1d614049so37507a12.1
+        for <dmaengine@vger.kernel.org>; Wed, 26 Jun 2024 03:18:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google; t=1719392865; x=1719997665; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6lxJDkVp4n9+n100SOtMCWceyFBnjbdm10d/AO3Twck=;
-        b=MdI6eeinTKb5wFX6TVzWmfAtKWgiJC6nutanQfCgFhYFzKwnKkL7v/3pJLsznjKfBJ
-         iacqiS+EBV+oCwu8ShFQwZfNmgwB60BWrwndZfzDKYFY5o4b6vpMN73x9DHEzxH5rZpK
-         2XZFmeEribEfd9fSqP7EcxjL5WLNYI/Xe55F0=
+        d=linaro.org; s=google; t=1719397094; x=1720001894; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6bdjU3nE5ZipGzXPlrfx4tB5EjZjaLf/s1zAFQ4DTHQ=;
+        b=FL/1rLlN4StONzTTMqTS41LTLU5ZQTKm9+rF3c0+VuLgHk5lnbGed4BtNRiYSASwC+
+         kss4tFI1nBqblO7j2VR7x3C/FONV0as4aaMbL3Mb8qcT6DuYjjF+W1hKsMvMKwif1gU5
+         uGCQlNbraj668ebjVaqBAOR/CzOVkh8PSvOOta2lAm2aD7tduKtC1OM27OluSx1cOmt5
+         0M9ndOAlFoexzZY5Md2uKCRHAZy0X1CEI7AqNxHXlbRFk82I90ndUbrXQr5fdbdK5H3s
+         QWzlC9L/Ct9UUINI2RU6rIcLCl9oP7k5NGMBW6fL12WbboOioNw8hZSNNKqsDGogm7AE
+         uwzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719392865; x=1719997665;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6lxJDkVp4n9+n100SOtMCWceyFBnjbdm10d/AO3Twck=;
-        b=ri+355iR6VN+TcMU7jIckd7xrn3yaeFuGIO2jfHrPsyNXLTG30UVFg2rOgWzF2+EA7
-         sYl7mc9rK4gOnjlAfH+iC2e7eY5FQh1Q2r++d29i9sOn2PTOJW9oAsMpX2lY7Z0OKAmS
-         eywgxGdVhoHouJvBuHY0KjsLaeOyhMOdE9OSkomdrR4KRUwpeR3dsjuwMdLNYLP++fUq
-         XHNe1lKd1jdtons0C7aIWjGXdGnXdpYn24mbALrgUuL/iUoWi5mHPhHMxOJ5mVmLG5BS
-         Nj0//h3jlepaUbCipC5JtYEDvyw9r3FVRLNuBC5YUpAyd3n6pQDW1ganlozesjSiQ6gE
-         GPYw==
-X-Forwarded-Encrypted: i=1; AJvYcCXzPKpjtcwLVHZ7luybJdkCh3AVpJyL8D5jo0tsk7RsuCxvj8UaPHFkFd+GGKahtvBGzloSbQhOyPUCeg5QGdxqR6wF+11R4Xih
-X-Gm-Message-State: AOJu0YyZ1nu8mJRUrJnyIzpII8gCDKqhfucHc+ZCHky0rBAwVE7E/EZd
-	lT7U33MoDdyvaQbjW5Z2nqt3/FrYTv81xGb0OgQwfuFR5URNq9GICmj8QsrM+J3SvknmEQupdiH
-	dsMJk1VetC76CeuMZ0u8o1ZJT1ppftq5MmtlCAg==
-X-Google-Smtp-Source: AGHT+IHykAPt//reChktNIqv1b8u1tQWErhzQtFS2JSTQpUaKUXwg3goKPI4W/qQKafT4xUP3B30jIrlQPXEK6H9lgE=
-X-Received: by 2002:a50:9350:0:b0:57d:24ce:cbc8 with SMTP id
- 4fb4d7f45d1cf-57d4bdcedebmr6248778a12.31.1719392865433; Wed, 26 Jun 2024
- 02:07:45 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1719397094; x=1720001894;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6bdjU3nE5ZipGzXPlrfx4tB5EjZjaLf/s1zAFQ4DTHQ=;
+        b=Vq2tRcc0I+pR4kzBloLkwWCdeEl5IPZA8pmwtpyoYVsf5P1j/y7goPScs3xGvRAec8
+         i0rvTp4ggMZxozKVtvQt04limdakn+c/pi8mcVSyM78C82BLYMAP8o6Xl5SzlmUAvQqe
+         zWxcoiDT+UgIVujN+bdLCEVJeKyK2sIyVdvnpIfxoKIN+GVfxy2UmOa5QzgpuKU8bFR6
+         w68AcQW20EQxSSomZvyQbEzp+yq3HbWAg7TiTgfLCzPz4PmQNgUf6HIPtDNI+Cg549s2
+         keuVCqNYGm9AqgvFgvLlOEuSAnX34kTn4/xh3AD4gDm6esLOJ1GaxZ9/3FtpZqswYcNZ
+         U1/A==
+X-Forwarded-Encrypted: i=1; AJvYcCXpNesMq19p8WxVm72Wsk9TcldY5DxQ92L+ZqoaWB1ZFpIoRWM2oIfDc7xvu8yhSpzuWkHhYLTo6SaUSh719VCQOh/BzIr+K8yW
+X-Gm-Message-State: AOJu0Yw4d7pLvjhV/zkpkH4zLABQ23GYqmPVn2F5g/IMdOpbaqi/cYdj
+	ZPqUfOLYybDZiD1VcwPEdRgaNqG3Y0r6eKmsjLyoOfpGZnn0rB7ZHmjEKeyijOA=
+X-Google-Smtp-Source: AGHT+IFBNccWMI7NTYfI9iYETbbac/VKuBb+ZnQdRhtrnkDqFlLEVtbm0dPVcl4LOR3fqWpc0urpjg==
+X-Received: by 2002:a05:6402:340d:b0:582:5195:3a7a with SMTP id 4fb4d7f45d1cf-58251957777mr3714663a12.35.1719397094033;
+        Wed, 26 Jun 2024 03:18:14 -0700 (PDT)
+Received: from krzk-bin.. ([178.197.219.137])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57d3053558esm6965474a12.64.2024.06.26.03.18.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Jun 2024 03:18:13 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Pavel Machek <pavel@ucw.cz>,
+	Lee Jones <lee@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rahul Tanwar <rtanwar@maxlinear.com>,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	dmaengine@vger.kernel.org,
+	linux-leds@vger.kernel.org,
+	linux-mtd@lists.infradead.org,
+	linux-phy@lists.infradead.org,
+	linux-gpio@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] dt-bindings: intel,lgm: drop inactive maintainers from intel
+Date: Wed, 26 Jun 2024 12:18:09 +0200
+Message-ID: <20240626101809.25227-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240626084515.2829595-1-make24@iscas.ac.cn> <AM6PR04MB594141B66F1DEB2354ADDF7B88D62@AM6PR04MB5941.eurprd04.prod.outlook.com>
-In-Reply-To: <AM6PR04MB594141B66F1DEB2354ADDF7B88D62@AM6PR04MB5941.eurprd04.prod.outlook.com>
-From: Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
-Date: Wed, 26 Jun 2024 11:07:33 +0200
-Message-ID: <CAOf5uwkrGGPrfAcHO_hDQEZMvBHZ5JR9B=7=COSJLGjQV307SQ@mail.gmail.com>
-Subject: Re: [PATCH] dmaengine: mxs-dma: Add check for dma_set_max_seg_size in mxs_dma_probe()
-To: Peng Fan <peng.fan@nxp.com>
-Cc: Ma Ke <make24@iscas.ac.cn>, "vkoul@kernel.org" <vkoul@kernel.org>, 
-	"shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, 
-	"kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, 
-	"dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi
+Emails to chuanhua.lei@intel.com, mallikarjunax.reddy@intel.com,
+yixin.zhu@intel.com and vadivel.muruganx.ramuthevar@linux.intel.com
+bounce with the same message:
 
-On Wed, Jun 26, 2024 at 11:02=E2=80=AFAM Peng Fan <peng.fan@nxp.com> wrote:
->
-> > Subject: [PATCH] dmaengine: mxs-dma: Add check for
-> > dma_set_max_seg_size in mxs_dma_probe()
->
-> Please read
-> https://lore.kernel.org/all/ZiocjS6tbeTt2mPD@matsya/
->
-> Regards,
-> Peng.
->
-> >
-> > As the possible failure of the dma_set_max_seg_size(), we should
-> > better check the return value of the dma_set_max_seg_size().
-> >
-> > Fixes: a580b8c5429a ("dmaengine: mxs-dma: add dma support for
-> > i.MX23/28")
-> > Signed-off-by: Ma Ke <make24@iscas.ac.cn>
-> > ---
-> >  drivers/dma/mxs-dma.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/dma/mxs-dma.c b/drivers/dma/mxs-dma.c index
-> > cfb9962417ef..90cbb9b04b02 100644
-> > --- a/drivers/dma/mxs-dma.c
-> > +++ b/drivers/dma/mxs-dma.c
-> > @@ -798,7 +798,9 @@ static int mxs_dma_probe(struct
-> > platform_device *pdev)
-> >       mxs_dma->dma_device.dev =3D &pdev->dev;
-> >
-> >       /* mxs_dma gets 65535 bytes maximum sg size */
-> > -     dma_set_max_seg_size(mxs_dma->dma_device.dev,
-> > MAX_XFER_BYTES);
-> > +     ret =3D dma_set_max_seg_size(mxs_dma->dma_device.dev,
-> > MAX_XFER_BYTES);
-> > +     if (ret)
-> > +             return ret;
-> >
+  Your message wasn't delivered to Yixin.zhu@intel.com because the
+  address couldn't be found or is unable to receive email.
 
-If the function returns an error then you should check for it. If it's
-not logical to have it, then you could
-make void the function that is called and WARN_ON on an illogical situation
+The Intel LGM SoC was apparently part of Home Gateway division which was
+acquired by Maxlinear, so switch maintenance of affected bindings to the
+only known non-bouncing Maxlinear address: Rahul Tanwar.
 
-Michael
+I do not know if Rahul Tanwar or Maxlinear want to maintain the
+bindings, so regardless of this change we should consider bindings
+abandoned and probably drop soon.
 
-> >       mxs_dma->dma_device.device_alloc_chan_resources =3D
-> > mxs_dma_alloc_chan_resources;
-> >       mxs_dma->dma_device.device_free_chan_resources =3D
-> > mxs_dma_free_chan_resources;
-> > --
-> > 2.25.1
-> >
->
->
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ Documentation/devicetree/bindings/clock/intel,cgu-lgm.yaml    | 2 +-
+ Documentation/devicetree/bindings/dma/intel,ldma.yaml         | 3 +--
+ Documentation/devicetree/bindings/leds/leds-lgm.yaml          | 3 +--
+ Documentation/devicetree/bindings/mtd/intel,lgm-ebunand.yaml  | 2 +-
+ Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml | 2 +-
+ Documentation/devicetree/bindings/phy/intel,lgm-usb-phy.yaml  | 2 +-
+ Documentation/devicetree/bindings/pinctrl/intel,lgm-io.yaml   | 2 +-
+ 7 files changed, 7 insertions(+), 9 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/clock/intel,cgu-lgm.yaml b/Documentation/devicetree/bindings/clock/intel,cgu-lgm.yaml
+index 76609a390429..bd7f96515ab9 100644
+--- a/Documentation/devicetree/bindings/clock/intel,cgu-lgm.yaml
++++ b/Documentation/devicetree/bindings/clock/intel,cgu-lgm.yaml
+@@ -7,7 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ title: Intel Lightning Mountain SoC's Clock Controller(CGU)
+ 
+ maintainers:
+-  - Rahul Tanwar <rahul.tanwar@linux.intel.com>
++  - Rahul Tanwar <rtanwar@maxlinear.com>
+ 
+ description: |
+   Lightning Mountain(LGM) SoC's Clock Generation Unit(CGU) driver provides
+diff --git a/Documentation/devicetree/bindings/dma/intel,ldma.yaml b/Documentation/devicetree/bindings/dma/intel,ldma.yaml
+index d6bb553a2c6f..af96d52922f6 100644
+--- a/Documentation/devicetree/bindings/dma/intel,ldma.yaml
++++ b/Documentation/devicetree/bindings/dma/intel,ldma.yaml
+@@ -7,8 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ title: Lightning Mountain centralized DMA controllers.
+ 
+ maintainers:
+-  - chuanhua.lei@intel.com
+-  - mallikarjunax.reddy@intel.com
++  - Rahul Tanwar <rtanwar@maxlinear.com>
+ 
+ allOf:
+   - $ref: dma-controller.yaml#
+diff --git a/Documentation/devicetree/bindings/leds/leds-lgm.yaml b/Documentation/devicetree/bindings/leds/leds-lgm.yaml
+index 8b3b3bf1eaf2..4ea6cf0af836 100644
+--- a/Documentation/devicetree/bindings/leds/leds-lgm.yaml
++++ b/Documentation/devicetree/bindings/leds/leds-lgm.yaml
+@@ -7,8 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ title: Intel Lightning Mountain (LGM) SoC LED Serial Shift Output (SSO) Controller driver
+ 
+ maintainers:
+-  - Zhu, Yi Xin <Yixin.zhu@intel.com>
+-  - Amireddy Mallikarjuna reddy <mallikarjunax.reddy@intel.com>
++  - Rahul Tanwar <rtanwar@maxlinear.com>
+ 
+ properties:
+   compatible:
+diff --git a/Documentation/devicetree/bindings/mtd/intel,lgm-ebunand.yaml b/Documentation/devicetree/bindings/mtd/intel,lgm-ebunand.yaml
+index 07bc7e3efd3a..2582380bf657 100644
+--- a/Documentation/devicetree/bindings/mtd/intel,lgm-ebunand.yaml
++++ b/Documentation/devicetree/bindings/mtd/intel,lgm-ebunand.yaml
+@@ -10,7 +10,7 @@ allOf:
+   - $ref: nand-controller.yaml
+ 
+ maintainers:
+-  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
++  - Rahul Tanwar <rtanwar@maxlinear.com>
+ 
+ properties:
+   compatible:
+diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+index ca818f83579b..5af7e5f7e634 100644
+--- a/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
++++ b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+@@ -7,7 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ title: Intel Lightning Mountain(LGM) eMMC PHY
+ 
+ maintainers:
+-  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
++  - Rahul Tanwar <rtanwar@maxlinear.com>
+ 
+ description: |+
+   Bindings for eMMC PHY on Intel's Lightning Mountain SoC, syscon
+diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-usb-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-usb-phy.yaml
+index 653a12286637..823a5fabf749 100644
+--- a/Documentation/devicetree/bindings/phy/intel,lgm-usb-phy.yaml
++++ b/Documentation/devicetree/bindings/phy/intel,lgm-usb-phy.yaml
+@@ -7,7 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ title: Intel LGM USB PHY
+ 
+ maintainers:
+-  - Vadivel Murugan Ramuthevar <vadivel.muruganx.ramuthevar@linux.intel.com>
++  - Rahul Tanwar <rtanwar@maxlinear.com>
+ 
+ properties:
+   compatible:
+diff --git a/Documentation/devicetree/bindings/pinctrl/intel,lgm-io.yaml b/Documentation/devicetree/bindings/pinctrl/intel,lgm-io.yaml
+index 1144ca2896e3..1cd19db1aa50 100644
+--- a/Documentation/devicetree/bindings/pinctrl/intel,lgm-io.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/intel,lgm-io.yaml
+@@ -7,7 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ title: Intel Lightning Mountain SoC pinmux & GPIO controller
+ 
+ maintainers:
+-  - Rahul Tanwar <rahul.tanwar@linux.intel.com>
++  - Rahul Tanwar <rtanwar@maxlinear.com>
+ 
+ description: |
+   Pinmux & GPIO controller controls pin multiplexing & configuration including
+-- 
+2.43.0
+
 

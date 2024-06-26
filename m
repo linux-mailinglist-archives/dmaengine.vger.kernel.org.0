@@ -1,121 +1,97 @@
-Return-Path: <dmaengine+bounces-2535-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2536-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C03EA91731D
-	for <lists+dmaengine@lfdr.de>; Tue, 25 Jun 2024 23:13:15 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B430917AE7
+	for <lists+dmaengine@lfdr.de>; Wed, 26 Jun 2024 10:27:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 447511F23D04
-	for <lists+dmaengine@lfdr.de>; Tue, 25 Jun 2024 21:13:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0380B281832
+	for <lists+dmaengine@lfdr.de>; Wed, 26 Jun 2024 08:27:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53EE817E461;
-	Tue, 25 Jun 2024 21:12:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ArcIuk0u"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D3C614885C;
+	Wed, 26 Jun 2024 08:27:30 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 124C417DE2E;
-	Tue, 25 Jun 2024 21:12:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95621144D1D;
+	Wed, 26 Jun 2024 08:27:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719349938; cv=none; b=Db5z4zAG5THtvBE8Sbjgpk7Buk8k5WivILb93bEMkP++nXYYkUQBjStuQLOqthCx9ZUCfXgapOgnLqK8GJfrbbUVyPJLlaHpDAyBdxJ+JxqwnoNWUqYRWl+MTV+bMSd9v9qaplIh3Ffm9yRv/akWd56wKgrFWFMkWcI+hegn0R8=
+	t=1719390450; cv=none; b=dhN4l4i1lQ8QICfeTKFJLUCQL0ev2yImbjPsxvKBP+xRe2Nbl96mpIj+WHIi5POYYqhYvXroFYwLp83hT9hLm/Z4Ns6Ucq2OrLvNS0dZFge+2BIw2Xq+pml6LkGtimOzT8x4ltuSUL2zHd5laCED3ZCNNgpWcDmt/7ikJqRhbIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719349938; c=relaxed/simple;
-	bh=hyygwZzV0TA9MeTrczY+xfhnsSFmoluW/aMTxSPPF7g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rrsx3retKRTBVJTyM3S6vHK838RUV5hvPFphP1Gqr17eYJujvjIR5J7JcFM4n8gLXFMoRx0C1486VoYYLUauWvvCdzhTwn0Vzjol8SD1c3voUq0ajDCYRNGEVswIgHSVXgjLtoduOxeHFKbD2qDAMDUgDiGsju6urXTRgJFEazY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ArcIuk0u; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54F61C32781;
-	Tue, 25 Jun 2024 21:12:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719349937;
-	bh=hyygwZzV0TA9MeTrczY+xfhnsSFmoluW/aMTxSPPF7g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ArcIuk0uRfsESHfkGfkKUOWRPGGQRoYshDAKXgfL7RAidYC2yoPUOF4EOIWRth/zx
-	 ykHnbRshuPVKR4UsTmEqJpfbjR7Lxb1MgohaxTO7sN4G186OXUULYfjTSoMk/JACVy
-	 rDH4YFTTQFVhxEeWdIOOD5ronHyHYn5GlVnw+3JtZFiKhbLmGLU7w1aHq4GtR8VqXx
-	 zOrwlDLRr/Fxt5QON7ooh6qk8zgpeQFn4BGJ4f8p9B/da2ub1m3VU/0NxxHk78cBsC
-	 Ylf78UIPjF87TiTkhrpWjEAnrqweWrfQoiMdjHdFmTSchTgaZPSVi6dGjUTTadSf7V
-	 tnFI4Gu0p7ohg==
-Date: Tue, 25 Jun 2024 23:12:12 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	"J.M.B. Downing" <jonathan.downing@nautel.com>, Vladimir Zapolskiy <vz@mleia.com>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, 
-	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Yangtao Li <frank.li@vivo.com>, Li Zetao <lizetao1@huawei.com>, 
-	Chancel Liu <chancel.liu@nxp.com>, Michael Ellerman <mpe@ellerman.id.au>, dmaengine@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-sound@vger.kernel.org, linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-mtd@lists.infradead.org, Markus Elfring <Markus.Elfring@web.de>
-Subject: Re: [Patch v4 10/10] i2x: pnx: Use threaded irq to fix warning from
- del_timer_sync()
-Message-ID: <73yvglxha45d5ft74m3y5fdmkgatm2yftvhza2msg4ombjz42f@wz43pubhbpdz>
-References: <20240620175657.358273-1-piotr.wojtaszczyk@timesys.com>
- <20240620175657.358273-11-piotr.wojtaszczyk@timesys.com>
- <jgqhlnysuwajlfxjwetas53jzdk6nnmewead2xzyt3xngwpcvl@xbooed6cwlq4>
- <CAG+cZ04suU53wR5f0PhudgNmkxTRtwEXTS1cWH1o9_rTNM94Cg@mail.gmail.com>
+	s=arc-20240116; t=1719390450; c=relaxed/simple;
+	bh=mdv0TmLV1ze3/djWQYZsX5TiYv15RDFGrFFWQopYT80=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZQOwIMeio2lMUHGEDn9aPJMqxUPZpvXen/OqOiGTFKmvwyihiANdCuXDHVYrv8hM4TpPDiscxXCgBHjKhzTQuDyV9c03bM1mBw1vYoS9byyvXYs7RJxbKmayxArQE/CnZ/4Gzo+xfKDHn0bk8YVKv+R9ssbbRUwIsUXxTF0N7mc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
+	by APP-05 (Coremail) with SMTP id zQCowADnjRDg0HtmWzvfEg--.45984S2;
+	Wed, 26 Jun 2024 16:27:21 +0800 (CST)
+From: Ma Ke <make24@iscas.ac.cn>
+To: vkoul@kernel.org,
+	make24@iscas.ac.cn,
+	andriy.shevchenko@linux.intel.com
+Cc: dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] dmaengine: hsu: Add check for dma_set_max_seg_size in hsu_dma_probe()
+Date: Wed, 26 Jun 2024 16:27:11 +0800
+Message-Id: <20240626082711.2826915-1-make24@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAG+cZ04suU53wR5f0PhudgNmkxTRtwEXTS1cWH1o9_rTNM94Cg@mail.gmail.com>
+X-CM-TRANSID:zQCowADnjRDg0HtmWzvfEg--.45984S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Jw4xAF1DCr47JrW8Xw4Utwb_yoW3Kwb_KF
+	47urZ8Xrn8Gr48Aw10krWakr90vFWkXF1fWF97tan3t3y8CFnxXrWjvFn5Z3y8ZFW7ZFWD
+	G3s8ZrWS9r12gjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb48FF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6r1F6r1fM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+	64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8Jw
+	Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAG
+	YxC7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
+	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y
+	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
+	IxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUb0PfJUUUU
+	U==
+X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
 
-Hi Piotr,
+As the possible failure of the dma_set_max_seg_size(), we should better
+check the return value of the dma_set_max_seg_size().
 
-On Fri, Jun 21, 2024 at 02:08:03PM GMT, Piotr Wojtaszczyk wrote:
-> On Fri, Jun 21, 2024 at 12:57 AM Andi Shyti <andi.shyti@kernel.org> wrote:
-> > On Thu, Jun 20, 2024 at 07:56:41PM GMT, Piotr Wojtaszczyk wrote:
-> > > When del_timer_sync() is called in an interrupt context it throws a warning
-> > > because of potential deadlock. Threaded irq handler fixes the potential
-> > > problem.
-> > >
-> > > Signed-off-by: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
-> >
-> > did you run into a lockdep splat?
-> >
-> > Anything against using del_timer(), instead? Have you tried?
-> 
-> I didn't get a lockdep splat but console was flooded with warnings from
-> https://github.com/torvalds/linux/blob/v6.10-rc4/kernel/time/timer.c#L1655
-> In the linux kernel v5.15 I didn't see these warnings.
-> 
-> I'm not a maintainer of the driver and I didn't do any research on
-> what kind of impact
-> would have using del_timer() instad. Maybe Vladimir Zapolskiy will know that.
+Fixes: 17b3cf4233d7 ("dmaengine: hsu: set maximum allowed segment size for DMA")
+Signed-off-by: Ma Ke <make24@iscas.ac.cn>
+---
+ drivers/dma/hsu/hsu.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Your patch is definitely correct, no doubt about that.
+diff --git a/drivers/dma/hsu/hsu.c b/drivers/dma/hsu/hsu.c
+index af5a2e252c25..9d02277fa923 100644
+--- a/drivers/dma/hsu/hsu.c
++++ b/drivers/dma/hsu/hsu.c
+@@ -479,7 +479,9 @@ int hsu_dma_probe(struct hsu_dma_chip *chip)
+ 
+ 	hsu->dma.dev = chip->dev;
+ 
+-	dma_set_max_seg_size(hsu->dma.dev, HSU_CH_DxTSR_MASK);
++	ret = dma_set_max_seg_size(hsu->dma.dev, HSU_CH_DxTSR_MASK);
++	if (ret)
++		return ret;
+ 
+ 	ret = dma_async_device_register(&hsu->dma);
+ 	if (ret)
+-- 
+2.25.1
 
-And I don't have anything aginast changing irq handlers to
-threaded handlers. But I would be careful at doing that depending
-on the use of the controller and for accepting such change I
-would need an ack from someone who knows the device. Vladimir,
-perhaps?
-
-There are cases where using threaded handlers are not totally
-right, for example when the controller is used at early boot for
-power management handling. I don't think it's the case for this
-driver, but I can't be 100% sure.
-
-If you were able to see the flood of WARN_ON's, would be
-interesting to know how it behaves with del_timer(). Mind
-giving it a test?
-
-Thanks,
-Andi
 

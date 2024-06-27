@@ -1,72 +1,72 @@
-Return-Path: <dmaengine+bounces-2569-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2570-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF99491ADE6
-	for <lists+dmaengine@lfdr.de>; Thu, 27 Jun 2024 19:23:04 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D206A91ADE9
+	for <lists+dmaengine@lfdr.de>; Thu, 27 Jun 2024 19:23:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6422EB21D42
-	for <lists+dmaengine@lfdr.de>; Thu, 27 Jun 2024 17:23:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 87DC628685E
+	for <lists+dmaengine@lfdr.de>; Thu, 27 Jun 2024 17:23:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF47619AA47;
-	Thu, 27 Jun 2024 17:22:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B71819AA68;
+	Thu, 27 Jun 2024 17:22:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IVcuIahr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RtSv0QrV"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FA9C19A2A2;
-	Thu, 27 Jun 2024 17:22:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE80519AA41;
+	Thu, 27 Jun 2024 17:22:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719508967; cv=none; b=WeOSM8LXpbu9mT5uRGw+ih7z63wcBeL+DKTtdwJnU3KuI1XR7uUXiF7h9hMvS/NrwL55LrMtd+Fvt9DcIQQx75RYTB29Ko9VyNLlnMx+/ijDm8MttbwzDLwCpU9/lLYHbxMn5Gjnkp7EGGNrrxcK6e8EnFOmmHkr0av2io5yxYs=
+	t=1719508969; cv=none; b=Ng2A81CAbgy5HVNTjgVi5Vw4luNq2jTmE+4wRZwUfZUszZV7cG84I4G0zg0GC4Nuuevja1D0rrsXicMMFLadNr7gS1fkhIyxXCnabmKYBgjI+vBv4BuHhQ1Y1MAtusW2SJAnqNyUPduwhrx6amNQiyjoet1rSA4JwOoq/WNmwQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719508967; c=relaxed/simple;
-	bh=HE/gBLYoq3YOFcYSah+Q4/Z07EhWJT3vDtkUn+oRy0U=;
+	s=arc-20240116; t=1719508969; c=relaxed/simple;
+	bh=fpQL+2Ui54/50vZusa3FnI4hmiiTnnsXAfE1S+7AyMw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IXajP8RLkA45eQ1QIIXA4k1Hv7e1JCtz0kxdyJ8e99D8pG4ThthXGwUm0xUIiBzE2flWgPCXgBluPRMhfFPxLbGwNk16ukh+fV/quBZ+lEsEjrof7ckfpm2E0Yix4PHMEYn+Pb4tnw6LJwI6spMNtkjoeX6ZROUhsXOFF0tbRWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IVcuIahr; arc=none smtp.client-ip=209.85.208.176
+	 MIME-Version; b=eTKhPfAnejmP0G2FMxwzPCXwpYbZN1eLYcoI5p9Y7fC3UoLvi8U3vC39a/dwg572feRaJ2fq27c2BSEQc+Oc+5Q16fotce0jRfXcXfetHXhHnVInxAK1z+fyAUna9gFffo8DB5R0jOKc+a8Oc1ldb7yH/78nCg2MHJtTvSxtIDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RtSv0QrV; arc=none smtp.client-ip=209.85.208.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2ebe40673e8so92297121fa.3;
-        Thu, 27 Jun 2024 10:22:45 -0700 (PDT)
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2ec595d0acbso65157401fa.1;
+        Thu, 27 Jun 2024 10:22:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719508964; x=1720113764; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1719508966; x=1720113766; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0lS5bTkP1B6ljd2Myp+Kpm68dJUaLMTKGqzv1HIMuo8=;
-        b=IVcuIahrW5FysDwob8C3hqDFZxauvijI/uLRSeVKPfF32H587X3i28t3EduZyKqIaE
-         62JFHGciJrqPGDvjLhjD5sJ5xenniFI6uphySrhUrwwr66DB7Ne57AU+JUHkC6fX6e1g
-         2JviHeWQ6pDQW9yNzq/C2d7ukDOwXRPXl37/Lgo2T4u/GKLMJ1PFdjKKVUCesKt1y3Ka
-         daejJlPTkX6gU/zI41I3jSAuDnlj+BbNg54JAW0Ff4xtgskxg/XSDd79JEaN9LGYaF8Y
-         LtdSDi9wbl2TDPIzD6SCv4i6jKjB2V8kg5Rary72Fm/z3HN62Ck1J60Tj8W3/zLobcj7
-         epGg==
+        bh=qshpIny+GIJeG9aHZTifG+SU7u9xJlQ4LhmZoe7c33c=;
+        b=RtSv0QrVJJtSD8r49B4/JTxiQdWF6yJCOuSESwtGHbrvSNXuWvR8Qbu/zGr/WxGgBU
+         CLqMdpsQ0Wytk2h9+SDa1pGYoW3XgHT1qmL3B6+fAahgp9bfw8VThnI7tE8i1c2zFm7Z
+         BSeblUmqIzMby52vtalSEtjBeE7Xr5rr8LKO+OJ0h9IpFXLqfg34GPevBc0+KZBQmYU6
+         PWw8c0mrYE+r7XpO5DAOs6I7a55xldvHiqlOKRlx0QLEhnfj7i7xDP8A2A6TUrt94Uby
+         oUUf5miLXFzjqtY1fup1RxAolw2V8BVwE45eRk9WGAYiCWMxX1meLDUMz51UPm7OTmCo
+         deFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719508964; x=1720113764;
+        d=1e100.net; s=20230601; t=1719508966; x=1720113766;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0lS5bTkP1B6ljd2Myp+Kpm68dJUaLMTKGqzv1HIMuo8=;
-        b=QcEUC85jG65I8RXRxxgjzOlDbiFG2TF5Luc3ZvNATF7mQ/4gp79PkATsPMUwGHLgIy
-         aB0Z5bYY+vR8n+KuLW8+2UXGkw/ZUrg6L1s8KQOUJHXMXUsv3kgSW4RCXC3/SdZwp8T0
-         CdyTalJcN34eCf7WBDbtiIyutP1Ub+u5DnIt+7CuCrPK/cNyl2jAQUpG48475kZD2avT
-         KDCU6jBfv7xg36A1udGnrU3/V81Gm2jM/DD8KIJrrjtW2IlRUjbXsld99eIkqNkbGmjk
-         zKF/jTL809eLEIhuBWhCb/QXAuPb8AnaTc4TGHNO7xV+kLWXmSG9oTo5jtEKq4cxYoXk
-         fLAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW64ih6JJE7Q1QQ3If5RC53iHE4uvR78Vzb26CJJDfTsfdcX7r5s86nBV7h3YJ2X2VjRi3gd7Z9/p3zQ8qF47rGnkvJmFa+IhjMkAUFk386L5mZJDZMq/5rl/j3ZWM7z80RWtRT3JkDtvwizGSvdrtDhYw3kjbrByps0kHSmJsM5GChmnzJ
-X-Gm-Message-State: AOJu0Yzrnuhapu/jwMPvt9e3sERZrxWg2+50VJXBKUo9VvMkMgAL3jWy
-	Jrl/Fg5x9f0X7ohce3JfRnRbxjmJUsKITiXPlh0unsnEJmD8cmNL
-X-Google-Smtp-Source: AGHT+IFNXyS68nJnNNwmjV8K/ycrg0Vr3BgzCcFhyV7FSPm9Lg+BaOc1kIvM/q279/yI5ycWn1cAew==
-X-Received: by 2002:a2e:90d0:0:b0:2ec:541b:4b4e with SMTP id 38308e7fff4ca-2ec5b3d47c0mr83087041fa.32.1719508963802;
-        Thu, 27 Jun 2024 10:22:43 -0700 (PDT)
+        bh=qshpIny+GIJeG9aHZTifG+SU7u9xJlQ4LhmZoe7c33c=;
+        b=nknLjfd5k066rBrGx3yVvZgc4N/Yv4P4+XWfiq/m+Zl+gObScxUoGY/hcXklxo5f46
+         2N7uw+5ygr5pvsShyYXzZHBSVJeFLHicCACTYpDiHQlOp0Cst4C0/4qodojGSbwpBQGm
+         n7vRerI1l618cGqlSlpQ8IoslFCtaL13xK9nbnKwapANB/AXQcuxyUaVCe1E2prAsOM1
+         Yqd+c536SvY+44VqHr56+qARGUIUB6nj5rTtFCL0fdi0MwaPpeH65DVG2uXhZ0sPNRhC
+         Y7MRyTmAbIH8CbApBtMWxtNO1GZAYLIRxQtFNzhmsonjiFTck3Pk8GCdgEQHtNiawVXh
+         syow==
+X-Forwarded-Encrypted: i=1; AJvYcCXjgCibjoOsEVdH+KldWbA1cRb1mz7MCiesqDVSuw1sLdnFK/iO/3R0QKPukwsMQrd5+nR0aKCP4wDBG6u/75jN5hLfXoJ5JUDooDJh1vjoeyOoWTh/rifaMUijbwDUchlyRh1mTTZG5gnnqUp2ov+HT4bb4OTsv6E+Knboj5f/+ar0q7ck
+X-Gm-Message-State: AOJu0Yz8KfG+dD9fecGtlduA07lMhZ7cGys41nXyqJkAL6mQXo+rMQQd
+	pUx7rwB5la8z5G67S0kveAAAdfMV4j+y/z0i/PZEiIap/WIk5mrd
+X-Google-Smtp-Source: AGHT+IHx46h+d8fbVwKoHa+U98hTA2A4hQgJw2PrEQQzJfYoKJ34aUUvdUmXcD1626dI7Ee3kJTb+A==
+X-Received: by 2002:a2e:9596:0:b0:2ec:55b5:ed50 with SMTP id 38308e7fff4ca-2ec5b2fd2d0mr101924481fa.5.1719508965834;
+        Thu, 27 Jun 2024 10:22:45 -0700 (PDT)
 Received: from localhost ([213.79.110.82])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ee4a4bf077sm3182271fa.119.2024.06.27.10.22.42
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ee4a34f67fsm3253931fa.31.2024.06.27.10.22.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jun 2024 10:22:42 -0700 (PDT)
+        Thu, 27 Jun 2024 10:22:45 -0700 (PDT)
 From: Serge Semin <fancer.lancer@gmail.com>
 To: Viresh Kumar <vireshk@kernel.org>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -77,10 +77,11 @@ Cc: Serge Semin <fancer.lancer@gmail.com>,
 	Jiri Slaby <jirislaby@kernel.org>,
 	dmaengine@vger.kernel.org,
 	linux-serial@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND v3 1/6] dmaengine: dw: Add peripheral bus width verification
-Date: Thu, 27 Jun 2024 20:22:17 +0300
-Message-ID: <20240627172231.24856-2-fancer.lancer@gmail.com>
+	linux-kernel@vger.kernel.org,
+	Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH RESEND v3 2/6] dmaengine: dw: Add memory bus width verification
+Date: Thu, 27 Jun 2024 20:22:18 +0300
+Message-ID: <20240627172231.24856-3-fancer.lancer@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240627172231.24856-1-fancer.lancer@gmail.com>
 References: <20240627172231.24856-1-fancer.lancer@gmail.com>
@@ -92,87 +93,155 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Currently the src_addr_width and dst_addr_width fields of the
-dma_slave_config structure are mapped to the CTLx.SRC_TR_WIDTH and
-CTLx.DST_TR_WIDTH fields of the peripheral bus side in order to have the
-properly aligned data passed to the target device. It's done just by
-converting the passed peripheral bus width to the encoded value using the
-__ffs() function. This implementation has several problematic sides:
+Currently in case of the DEV_TO_MEM or MEM_TO_DEV DMA transfers the memory
+data width (single transfer width) is determined based on the buffer
+length, buffer base address or DMA master-channel max address width
+capability. It isn't enough in case of the channel disabling prior the
+block transfer is finished. Here is what DW AHB DMA IP-core databook says
+regarding the port suspension (DMA-transfer pause) implementation in the
+controller:
 
-1. __ffs() is undefined if no bit exist in the passed value. Thus if the
-specified addr-width is DMA_SLAVE_BUSWIDTH_UNDEFINED, __ffs() may return
-unexpected value depending on the platform-specific implementation.
+"When CTLx.SRC_TR_WIDTH < CTLx.DST_TR_WIDTH and the CFGx.CH_SUSP bit is
+high, the CFGx.FIFO_EMPTY is asserted once the contents of the FIFO do not
+permit a single word of CTLx.DST_TR_WIDTH to be formed. However, there may
+still be data in the channel FIFO, but not enough to form a single
+transfer of CTLx.DST_TR_WIDTH. In this scenario, once the channel is
+disabled, the remaining data in the channel FIFO is not transferred to the
+destination peripheral."
 
-2. DW AHB DMA-engine permits having the power-of-2 transfer width limited
-by the DMAH_Mk_HDATA_WIDTH IP-core synthesize parameter. Specifying
-bus-width out of that constraints scope will definitely cause unexpected
-result since the destination reg will be only partly touched than the
-client driver implied.
+So in case if the port gets to be suspended and then disabled it's
+possible to have the data silently discarded even though the controller
+reported that FIFO is empty and the CTLx.BLOCK_TS indicated the dropped
+data already received from the source device. This looks as if the data
+somehow got lost on a way from the peripheral device to memory and causes
+problems for instance in the DW APB UART driver, which pauses and disables
+the DMA-transfer as soon as the recv data timeout happens. Here is the way
+it looks:
 
-Let's fix all of that by adding the peripheral bus width verification
-method and calling it in dwc_config() which is supposed to be executed
-before preparing any transfer. The new method will make sure that the
-passed source or destination address width is valid and if undefined then
-the driver will just fallback to the 1-byte width transfer.
+ Memory <------- DMA FIFO <------ UART FIFO <---------------- UART
+  DST_TR_WIDTH -+--------|       |         |
+                |        |       |         |                No more data
+   Current lvl -+--------|       |---------+- DMA-burst lvl
+                |        |       |---------+- Leftover data
+                |        |       |---------+- SRC_TR_WIDTH
+               -+--------+-------+---------+
 
-Fixes: 029a40e97d0d ("dmaengine: dw: provide DMA capabilities")
+In the example above: no more data is getting received over the UART port
+and BLOCK_TS is not even close to be fully received; some data is left in
+the UART FIFO, but not enough to perform a bursted DMA-xfer to the DMA
+FIFO; some data is left in the DMA FIFO, but not enough to be passed
+further to the system memory in a single transfer. In this situation the
+8250 UART driver catches the recv timeout interrupt, pauses the
+DMA-transfer and terminates it completely, after which the IRQ handler
+manually fetches the leftover data from the UART FIFO into the
+recv-buffer. But since the DMA-channel has been disabled with the data
+left in the DMA FIFO, that data will be just discarded and the recv-buffer
+will have a gap of the "current lvl" size in the recv-buffer at the tail
+of the lately received data portion. So the data will be lost just due to
+the misconfigured DMA transfer.
+
+Note this is only relevant for the case of the transfer suspension and
+_disabling_. No problem will happen if the transfer will be re-enabled
+afterwards or the block transfer is fully completed. In the later case the
+"FIFO flush mode" will be executed at the transfer final stage in order to
+push out the data left in the DMA FIFO.
+
+In order to fix the denoted problem the DW AHB DMA-engine driver needs to
+make sure that the _bursted_ source transfer width is greater or equal to
+the single destination transfer (note the HW databook describes more
+strict constraint than actually required). Since the peripheral-device
+side is prescribed by the client driver logic, the memory-side can be only
+used for that. The solution can be easily implemented for the DEV_TO_MEM
+transfers just by adjusting the memory-channel address width. Sadly it's
+not that easy for the MEM_TO_DEV transfers since the mem-to-dma burst size
+is normally dynamically determined by the controller. So the only thing
+that can be done is to make sure that memory-side address width is greater
+than the peripheral device address width.
+
+Fixes: a09820043c9e ("dw_dmac: autoconfigure data_width or get it via platform data")
 Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 
 ---
 
 Changelog v2:
-- Add a note to the commit message about having the verification
-  method called in the dwc_config() function. (Andy)
-- Add hyphen to "1byte" in the in-situ comment. (Andy)
+- Add a in-situ comment regarding why the memory-side bus width
+  verification was required. (Andy)
 - Convert "err" to "ret" variable. (Andy)
 ---
- drivers/dma/dw/core.c | 38 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+ drivers/dma/dw/core.c | 51 +++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 44 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
-index 5f7d690e3dba..11e269a31a09 100644
+index 11e269a31a09..b341a6f1b043 100644
 --- a/drivers/dma/dw/core.c
 +++ b/drivers/dma/dw/core.c
-@@ -16,6 +16,7 @@
- #include <linux/init.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
-+#include <linux/log2.h>
- #include <linux/mm.h>
- #include <linux/module.h>
- #include <linux/slab.h>
-@@ -780,10 +781,43 @@ bool dw_dma_filter(struct dma_chan *chan, void *param)
- }
- EXPORT_SYMBOL_GPL(dw_dma_filter);
+@@ -622,12 +622,10 @@ dwc_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
+ 	struct dw_desc		*prev;
+ 	struct dw_desc		*first;
+ 	u32			ctllo, ctlhi;
+-	u8			m_master = dwc->dws.m_master;
+-	u8			lms = DWC_LLP_LMS(m_master);
++	u8			lms = DWC_LLP_LMS(dwc->dws.m_master);
+ 	dma_addr_t		reg;
+ 	unsigned int		reg_width;
+ 	unsigned int		mem_width;
+-	unsigned int		data_width = dw->pdata->data_width[m_master];
+ 	unsigned int		i;
+ 	struct scatterlist	*sg;
+ 	size_t			total_len = 0;
+@@ -661,7 +659,7 @@ dwc_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
+ 			mem = sg_dma_address(sg);
+ 			len = sg_dma_len(sg);
  
-+static int dwc_verify_p_buswidth(struct dma_chan *chan)
+-			mem_width = __ffs(data_width | mem | len);
++			mem_width = __ffs(sconfig->src_addr_width | mem | len);
+ 
+ slave_sg_todev_fill_desc:
+ 			desc = dwc_desc_get(dwc);
+@@ -721,7 +719,7 @@ dwc_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
+ 			lli_write(desc, sar, reg);
+ 			lli_write(desc, dar, mem);
+ 			lli_write(desc, ctlhi, ctlhi);
+-			mem_width = __ffs(data_width | mem);
++			mem_width = __ffs(sconfig->dst_addr_width | mem);
+ 			lli_write(desc, ctllo, ctllo | DWC_CTLL_DST_WIDTH(mem_width));
+ 			desc->len = dlen;
+ 
+@@ -813,6 +811,41 @@ static int dwc_verify_p_buswidth(struct dma_chan *chan)
+ 	return 0;
+ }
+ 
++static int dwc_verify_m_buswidth(struct dma_chan *chan)
 +{
 +	struct dw_dma_chan *dwc = to_dw_dma_chan(chan);
 +	struct dw_dma *dw = to_dw_dma(chan->device);
-+	u32 reg_width, max_width;
++	u32 reg_width, reg_burst, mem_width;
 +
-+	if (dwc->dma_sconfig.direction == DMA_MEM_TO_DEV)
++	mem_width = dw->pdata->data_width[dwc->dws.m_master];
++
++	/*
++	 * It's possible to have a data portion locked in the DMA FIFO in case
++	 * of the channel suspension. Subsequent channel disabling will cause
++	 * that data silent loss. In order to prevent that maintain the src and
++	 * dst transfer widths coherency by means of the relation:
++	 * (CTLx.SRC_TR_WIDTH * CTLx.SRC_MSIZE >= CTLx.DST_TR_WIDTH)
++	 * Look for the details in the commit message that brings this change.
++	 *
++	 * Note the DMA configs utilized in the calculations below must have
++	 * been verified to have correct values by this method call.
++	 */
++	if (dwc->dma_sconfig.direction == DMA_MEM_TO_DEV) {
 +		reg_width = dwc->dma_sconfig.dst_addr_width;
-+	else if (dwc->dma_sconfig.direction == DMA_DEV_TO_MEM)
++		if (mem_width < reg_width)
++			return -EINVAL;
++
++		dwc->dma_sconfig.src_addr_width = mem_width;
++	} else if (dwc->dma_sconfig.direction == DMA_DEV_TO_MEM) {
 +		reg_width = dwc->dma_sconfig.src_addr_width;
-+	else /* DMA_MEM_TO_MEM */
-+		return 0;
++		reg_burst = rounddown_pow_of_two(dwc->dma_sconfig.src_maxburst);
 +
-+	max_width = dw->pdata->data_width[dwc->dws.p_master];
-+
-+	/* Fall-back to 1-byte transfer width if undefined */
-+	if (reg_width == DMA_SLAVE_BUSWIDTH_UNDEFINED)
-+		reg_width = DMA_SLAVE_BUSWIDTH_1_BYTE;
-+	else if (!is_power_of_2(reg_width) || reg_width > max_width)
-+		return -EINVAL;
-+	else /* bus width is valid */
-+		return 0;
-+
-+	/* Update undefined addr width value */
-+	if (dwc->dma_sconfig.direction == DMA_MEM_TO_DEV)
-+		dwc->dma_sconfig.dst_addr_width = reg_width;
-+	else /* DMA_DEV_TO_MEM */
-+		dwc->dma_sconfig.src_addr_width = reg_width;
++		dwc->dma_sconfig.dst_addr_width = min(mem_width, reg_width * reg_burst);
++	}
 +
 +	return 0;
 +}
@@ -180,16 +249,21 @@ index 5f7d690e3dba..11e269a31a09 100644
  static int dwc_config(struct dma_chan *chan, struct dma_slave_config *sconfig)
  {
  	struct dw_dma_chan *dwc = to_dw_dma_chan(chan);
- 	struct dw_dma *dw = to_dw_dma(chan->device);
-+	int ret;
- 
+@@ -822,14 +855,18 @@ static int dwc_config(struct dma_chan *chan, struct dma_slave_config *sconfig)
  	memcpy(&dwc->dma_sconfig, sconfig, sizeof(*sconfig));
  
-@@ -792,6 +826,10 @@ static int dwc_config(struct dma_chan *chan, struct dma_slave_config *sconfig)
+ 	dwc->dma_sconfig.src_maxburst =
+-		clamp(dwc->dma_sconfig.src_maxburst, 0U, dwc->max_burst);
++		clamp(dwc->dma_sconfig.src_maxburst, 1U, dwc->max_burst);
  	dwc->dma_sconfig.dst_maxburst =
- 		clamp(dwc->dma_sconfig.dst_maxburst, 0U, dwc->max_burst);
+-		clamp(dwc->dma_sconfig.dst_maxburst, 0U, dwc->max_burst);
++		clamp(dwc->dma_sconfig.dst_maxburst, 1U, dwc->max_burst);
  
-+	ret = dwc_verify_p_buswidth(chan);
+ 	ret = dwc_verify_p_buswidth(chan);
+ 	if (ret)
+ 		return ret;
+ 
++	ret = dwc_verify_m_buswidth(chan);
 +	if (ret)
 +		return ret;
 +

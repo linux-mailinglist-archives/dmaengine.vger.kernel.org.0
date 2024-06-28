@@ -1,58 +1,68 @@
-Return-Path: <dmaengine+bounces-2576-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2577-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 30D7891B68E
-	for <lists+dmaengine@lfdr.de>; Fri, 28 Jun 2024 07:51:26 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7C61691B76D
+	for <lists+dmaengine@lfdr.de>; Fri, 28 Jun 2024 08:57:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D04621F246DB
-	for <lists+dmaengine@lfdr.de>; Fri, 28 Jun 2024 05:51:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B0BA21C22735
+	for <lists+dmaengine@lfdr.de>; Fri, 28 Jun 2024 06:57:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94A554500C;
-	Fri, 28 Jun 2024 05:51:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 819C613C674;
+	Fri, 28 Jun 2024 06:57:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L+C4pNvN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zp6CluUR"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5180323775;
-	Fri, 28 Jun 2024 05:51:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 400564D5BF;
+	Fri, 28 Jun 2024 06:57:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719553883; cv=none; b=gn4mEYG9Sg+ScjAHIOnkOYJb5j6Ogw24sv6uacLVYsejvuUXuSwl0wOIIjzvQwWz3ppm2DNLAz8rVL5NjD1EmKSkLS6UjWUgd89Stk6qgFQd3CRtrxGdRyok+EADrtIZnQpSUAEGg+3Dc/VVxPRINW7UzqxWOTLiJLGhJQXXYhw=
+	t=1719557870; cv=none; b=BacHx7tTUkJqV+R8B8hFBcWy/2Eis2hQ0t59KwySUfhuZp+X39hYt1l5VtGvH3wXcZWTHdSepla8dw2txCt4S53+3yCRdgCh1BNCmtfXId6Jh/MHw5F8iuVuUAWDwKwD5K3lF6R9dbFqZZo1pjUEaH9ur8ZhgN4jwmS/tqyLPGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719553883; c=relaxed/simple;
-	bh=UwG26qV1qLI4MCsZ+T917xmt7ZsZ35IoJK+u+Dm09BU=;
+	s=arc-20240116; t=1719557870; c=relaxed/simple;
+	bh=58lZCQAq4UI2kPsnIOyCJhEWm6AHR55RqFIhoOvy+cA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LY3h25IJfKwbC+lLz3jIFhfTpC77QYnN64Fi/LDa7JznlDAvHA08VVFGE3n09fhrpsybj0s5uuhrls5i8VkRAbqyXDGaFTeP6qc9eWXVgHVr0Jsp+f4jX7EiRbkM5eI1EbcIZa4M7nnrhMek0ruVioTx3e3d+w28nU3fGU7kOlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=L+C4pNvN; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=UwG26qV1qLI4MCsZ+T917xmt7ZsZ35IoJK+u+Dm09BU=; b=L+C4pNvNdHxAlz2lKuzY4+1C7h
-	qkOG6rgZze9D2Zjyn9ykZJEnBSvRGEyDAmMzx28fDfYPJ/5PS9si3qpOpCSN4hXDzKbbpu2Zwewnw
-	TnmpWe3Kf/QsXiBActNfgIqxCWCoFRw4br2pHoLRdF+wro+1TlDldnT+kQDrnpJ5BfsD36yudxBVJ
-	iuzooyRUYMupSzDeopYIGes+5GjnWSb+0O7cIzv7N/dQ9KzslOCB31KEki/JjS5eimVW9NZRxvxXv
-	xBJwl/qceCQKVnaotYmL613iwDLJjUtDqdQECP0Weher/bbo1xUAZj/xKrDtDu7IpJ+qgXem/R0lV
-	N4DheEqw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sN4Vz-0000000Cfad-3B4H;
-	Fri, 28 Jun 2024 05:51:19 +0000
-Date: Thu, 27 Jun 2024 22:51:19 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Ma Ke <make24@iscas.ac.cn>
-Cc: vkoul@kernel.org, andriy.shevchenko@linux.intel.com,
-	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: hsu: Add check for dma_set_max_seg_size in
- hsu_dma_probe()
-Message-ID: <Zn5PV3z27uXQBcJ0@infradead.org>
-References: <20240626082711.2826915-1-make24@iscas.ac.cn>
+	 Content-Type:Content-Disposition:In-Reply-To; b=aD42gtf+G17tbnurUPzJqchkg+J7t3wMj5EhVSdXubLZOT6u0nZG4t5+vh/cX2XufWUuRT/+rXYMJisWzjvCZPQD2PfErXCf8oJu4PAnifxlxmmEArp2EaFEoyCASwFELJWUDidoYQrCMEOqKCIa9pbHPlHNIwTChXdhb4W08/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zp6CluUR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF8CAC116B1;
+	Fri, 28 Jun 2024 06:57:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719557869;
+	bh=58lZCQAq4UI2kPsnIOyCJhEWm6AHR55RqFIhoOvy+cA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Zp6CluURowv+K0o/6F/MgxegIwLdBw2CY+SGJlzU3KpAFthCGzF5BdRqDhOX9fqA4
+	 6t4b9L4J09XsfQ9CJ+lFuJpKnCdsOjuvXVwRyHnP01vP9BLlw5o6QxJBiFMolGBdOV
+	 slZCTHTdDEmylt+etBWz6a3fIBVZBAWbN6PHcQjAC2NlCpNeIJISJn8bx3tparFCKS
+	 1hQ/eZI6WuJS5OlEtQb/0au/AZDl+wqO3YNyssROZqexkI3jDED6pT5dn6x3M/6I0A
+	 zuf07R+KZNWcUj3g8IyIPslcD3Fc30WwNBShmdFFG43vXx8MdIH+vY4RpRt8ZS5+jK
+	 dciT+YC/UsdFw==
+Date: Fri, 28 Jun 2024 12:27:45 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+	Lee Jones <lee@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rahul Tanwar <rtanwar@maxlinear.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-leds@vger.kernel.org,
+	linux-mtd@lists.infradead.org, linux-phy@lists.infradead.org,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: intel,lgm: drop inactive maintainers from
+ intel
+Message-ID: <Zn5e6fPR5UkbPhdQ@matsya>
+References: <20240626101809.25227-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -61,14 +71,37 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240626082711.2826915-1-make24@iscas.ac.cn>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20240626101809.25227-1-krzysztof.kozlowski@linaro.org>
 
-On Wed, Jun 26, 2024 at 04:27:11PM +0800, Ma Ke wrote:
-> As the possible failure of the dma_set_max_seg_size(), we should better
-> check the return value of the dma_set_max_seg_size().
+On 26-06-24, 12:18, Krzysztof Kozlowski wrote:
+> Emails to chuanhua.lei@intel.com, mallikarjunax.reddy@intel.com,
+> yixin.zhu@intel.com and vadivel.muruganx.ramuthevar@linux.intel.com
+> bounce with the same message:
+> 
+>   Your message wasn't delivered to Yixin.zhu@intel.com because the
+>   address couldn't be found or is unable to receive email.
+> 
+> The Intel LGM SoC was apparently part of Home Gateway division which was
+> acquired by Maxlinear, so switch maintenance of affected bindings to the
+> only known non-bouncing Maxlinear address: Rahul Tanwar.
+> 
+> I do not know if Rahul Tanwar or Maxlinear want to maintain the
+> bindings, so regardless of this change we should consider bindings
+> abandoned and probably drop soon.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/clock/intel,cgu-lgm.yaml    | 2 +-
+>  Documentation/devicetree/bindings/dma/intel,ldma.yaml         | 3 +--
 
-As I've told you before: no.
+Acked-by: Vinod Koul <vkoul@kernel.org>
 
-We'll remove the return value from dma_set_max_seg_size.
+>  Documentation/devicetree/bindings/mtd/intel,lgm-ebunand.yaml  | 2 +-
+>  Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml | 2 +-
+>  Documentation/devicetree/bindings/phy/intel,lgm-usb-phy.yaml  | 2 +-
+
+Acked-by: Vinod Koul <vkoul@kernel.org>
+
+-- 
+~Vinod
 

@@ -1,56 +1,56 @@
-Return-Path: <dmaengine+bounces-2589-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2590-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E8E691BC40
-	for <lists+dmaengine@lfdr.de>; Fri, 28 Jun 2024 12:10:57 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 004DD91BC43
+	for <lists+dmaengine@lfdr.de>; Fri, 28 Jun 2024 12:11:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7F7E01C2259E
-	for <lists+dmaengine@lfdr.de>; Fri, 28 Jun 2024 10:10:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A950C1F23C8B
+	for <lists+dmaengine@lfdr.de>; Fri, 28 Jun 2024 10:11:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A35B155C98;
-	Fri, 28 Jun 2024 10:10:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2084415667B;
+	Fri, 28 Jun 2024 10:10:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DsAkHsag"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lODX88X9"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60A1D154C0D;
-	Fri, 28 Jun 2024 10:10:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8BFB15666F;
+	Fri, 28 Jun 2024 10:10:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719569417; cv=none; b=Zx11gtGaGW6qDa1QSFN0A80FScnMeYaCYlixpPNy1M4rxVvZ+83jrgKkD23bWAQCWii2FHUWfgjyPquSJUW/Z9UtGRDKJg+bOX8ISPTfeYCAf/YeWbv8UwULALjX+8qNUvvd1rV38qLpaCoBeLYWCvoCVh5YvjIV/hNl35WnRz8=
+	t=1719569420; cv=none; b=B8I+Gw99Ud3uQL1ZXYx3ROgysYk0MQax0yX98Tumvofz91884Kg1pxBjDntTeUfSdE0qKkH1d9ixnoIyg2UX2WW8IrEPhuTnkM/142sD2E9IA+3o7+MC+EYhdevc7N8UrXPh3zW63vViD1iK/305JSPuMPSCkPP7iTQuqyW1ric=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719569417; c=relaxed/simple;
-	bh=r5yxHpvZWjXJLLBu9Egy6T8rKUemMj1f5NJWP0DFGfc=;
+	s=arc-20240116; t=1719569420; c=relaxed/simple;
+	bh=2Ezlsi7lSaId51E27Yp2/8I5MqLIwdfwgUVWoK8bKdU=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=T2jbYQJ7R7TRARK8Gn4gzqzTFYdY8DHEvfYuQ5FInHcYZB3Yg2l2Ybs/6XCE88MxDWKSYwsQXbNzPCQQfENxDgHno3YuFZvBbXJxw0pKq4rcOKqZ9wVZzr4NBywxRlgU4BKDav/1LVJZaK6hmG95LHw0VMaAYrhuegnjeQI0bp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DsAkHsag; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C91EC32781;
-	Fri, 28 Jun 2024 10:10:15 +0000 (UTC)
+	 MIME-Version:Content-Type; b=jRKsBvVXwDHoMQEbJhpNGVIBm52pgyxYc2pCr3x+uRI3i5EL0k7v8CwBdMEzF7Ol+gGmevYfgqdY+V9B2iXomlMGiL/eVCj4zdNdjueZ5htgN62mgZZhg1NC77ciBnid4VygP8sc7Qm3A6h0qTvqWADzO/6W8onEEnD90EHrXRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lODX88X9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8A0CC32781;
+	Fri, 28 Jun 2024 10:10:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719569417;
-	bh=r5yxHpvZWjXJLLBu9Egy6T8rKUemMj1f5NJWP0DFGfc=;
+	s=k20201202; t=1719569419;
+	bh=2Ezlsi7lSaId51E27Yp2/8I5MqLIwdfwgUVWoK8bKdU=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=DsAkHsagsGW70KoGQ721SpKCN39iB7gGgOHicJyphuLw8/O1DFTiEjphEa9vEddBm
-	 Zom4bX+ALiUUcJlp5ZQsMSoOK02jyEYvtncvhdjJFplrfW9qZRYwkvkuEKYmlJS1mt
-	 YmPEkaSiMF5l0lDTOSx0nKkMzt9X+SaVKz4saacOW2PiFA1ysIGz/jtR1H2NN3SusI
-	 GhvFS+0DhEmp+cPsBNAo7MYV7p+C4XgTG5DzoSZXOXg4E7PeD3zhqc91FNlTLYyoqL
-	 oiIUcHqwP+K7MKYs16pPRLT0vyNKOYJHF58nQsRpDWXXX4hIngf5KLv1vz0sgBK75g
-	 8iR/L4G8RJmKg==
+	b=lODX88X9ulXGoEqCxJjnVBoZ4La1imjLQIvPY+BFvIymRyIfH0I9vsI3VShaMzZT6
+	 kvkwHpR9LETNMy3mDxmshW7ckfUo521FZr45v689K59k1bzmDtjPjP8PhyzGXQy6VL
+	 1GSk5JFcze4Q24plywXmn9MtdVQbqllXM1j5MhDHMtOa2fsrk8DMrvWkz5TGuYMaKH
+	 zsSjdJ4FAc5T6aTnTb19dRTUKPryRGjqh6yxB6fU+joycvZdo9fXtKj+dPKWr5F6nZ
+	 kSkmX+Zy5AfD38/C5ruwiccsk2B43dMZiNihEwZWRmJzsmQ4CuN+NDCzKoIHJcnnpU
+	 NxVcuTZFKa8vA==
 From: Vinod Koul <vkoul@kernel.org>
-To: Peter Ujfalusi <peter.ujfalusi@gmail.com>, 
- Jeff Johnson <quic_jjohnson@quicinc.com>
+To: Jeff Johnson <quic_jjohnson@quicinc.com>
 Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
  kernel-janitors@vger.kernel.org
-In-Reply-To: <20240613-md-arm64-drivers-dma-ti-v1-1-b1154603f341@quicinc.com>
-References: <20240613-md-arm64-drivers-dma-ti-v1-1-b1154603f341@quicinc.com>
-Subject: Re: [PATCH] dmaengine: ti: add missing MODULE_DESCRIPTION() macros
-Message-Id: <171956941491.519169.6048682128414612902.b4-ty@kernel.org>
-Date: Fri, 28 Jun 2024 15:40:14 +0530
+In-Reply-To: <20240613-md-arm64-drivers-dma-fsl-dpaa2-qdma-v1-1-815d148740e6@quicinc.com>
+References: <20240613-md-arm64-drivers-dma-fsl-dpaa2-qdma-v1-1-815d148740e6@quicinc.com>
+Subject: Re: [PATCH] dmaengine: fsl-dpaa2-qdma: add missing
+ MODULE_DESCRIPTION() macro
+Message-Id: <171956941749.519169.18034339537628493813.b4-ty@kernel.org>
+Date: Fri, 28 Jun 2024 15:40:17 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -62,20 +62,18 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
 
-On Thu, 13 Jun 2024 12:27:22 -0700, Jeff Johnson wrote:
+On Thu, 13 Jun 2024 11:57:14 -0700, Jeff Johnson wrote:
 > With ARCH=arm64, make allmodconfig && make W=1 C=1 reports:
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dma/ti/k3-udma.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dma/ti/k3-udma-glue.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dma/ti/k3-psil-lib.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dma/fsl-dpaa2-qdma/dpdmai.o
 > 
-> Add the missing invocations of the MODULE_DESCRIPTION() macro.
+> Add the missing invocation of the MODULE_DESCRIPTION() macro.
 > 
-> [...]
+> 
 
 Applied, thanks!
 
-[1/1] dmaengine: ti: add missing MODULE_DESCRIPTION() macros
-      commit: 61879ffd6f6f72fe984ee343d2499e96bcf10e3c
+[1/1] dmaengine: fsl-dpaa2-qdma: add missing MODULE_DESCRIPTION() macro
+      commit: 316d1225b1126286952d1e1a3da9da911cc00dd6
 
 Best regards,
 -- 

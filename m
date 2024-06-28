@@ -1,58 +1,56 @@
-Return-Path: <dmaengine+bounces-2586-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2587-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 30D0091BC36
-	for <lists+dmaengine@lfdr.de>; Fri, 28 Jun 2024 12:10:13 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D21C191BC38
+	for <lists+dmaengine@lfdr.de>; Fri, 28 Jun 2024 12:10:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DEDFD284966
-	for <lists+dmaengine@lfdr.de>; Fri, 28 Jun 2024 10:10:11 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6AE2CB23021
+	for <lists+dmaengine@lfdr.de>; Fri, 28 Jun 2024 10:10:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9DBB15442F;
-	Fri, 28 Jun 2024 10:10:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 035ED155337;
+	Fri, 28 Jun 2024 10:10:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rxwYHr7a"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WYaVOtHV"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F551103;
-	Fri, 28 Jun 2024 10:10:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCB8D155301;
+	Fri, 28 Jun 2024 10:10:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719569410; cv=none; b=KJipzshKGgGy6KtituJzoHK+Fl1q3RYsO33EgNHFa0uwDdm3PwW4KJCN9thm/g+0EZga86yY6+wvVf7kWzrocoro97tICokUSnlbZWgCtSTJPMTpkX8cOPtXGBuFaAtTW0Rf88Yi1MUNBWKS2gH0piArZHTqrL88H6jUBXKPe0A=
+	t=1719569412; cv=none; b=FVuVc2zdNz0XEa5IBPD4LOe5RUOym1Bwp1FtMulRZOKyWb4VjPoAJlvPzh5inEah1DEEo3ndS1WYo36LrAtNvYfbVKM9nwfs0Bzn3sE7UgjZXJTOCpEuvzqgD0oheZgORRqe/EJ3IEEF0Q0tzogobtRfWOf6Av7fWXpW2SIqhdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719569410; c=relaxed/simple;
-	bh=t3fFLMO9wa79MnA4kRf3PafxT3Nw/pBZrccA9fGwYmY=;
+	s=arc-20240116; t=1719569412; c=relaxed/simple;
+	bh=OroG6pdH/6QXLAWN6YlD5OiJY99xV8IlY1RY26myn2M=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Y97RyfpiqBEHla/KKc/D1VuYhAKviF9k1HOA1AkXgyefSpJoTliMWm769v/Vq5WcenbgqJ0I8nH7zKkbUtsB+NHsL42XbDlNfFInP3b4ZFIAGvH8CKbLqmRnIISli1k0fbpLGZ4KAY3bsvh2IHvrt9pFYfrLxZ5leW1UalBgSEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rxwYHr7a; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C6CBC32786;
-	Fri, 28 Jun 2024 10:10:06 +0000 (UTC)
+	 MIME-Version:Content-Type; b=UvlqXUmid5sc3YRt5qVfI6lNWcc+i5BHlMrRtrmpVCay2M0yPQFBolhiSNeC5umfO011/dvqNzherNOTAp5OWxSpNG/0/KZWruXEvTHkEQycNM1yG0jWYn10a4ZcIiwMoohHur/SD2hFC9yxv1mjKas707X+sU3PTq+Rmm7/LHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WYaVOtHV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1DDAC116B1;
+	Fri, 28 Jun 2024 10:10:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719569410;
-	bh=t3fFLMO9wa79MnA4kRf3PafxT3Nw/pBZrccA9fGwYmY=;
+	s=k20201202; t=1719569412;
+	bh=OroG6pdH/6QXLAWN6YlD5OiJY99xV8IlY1RY26myn2M=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=rxwYHr7a/zfRY1U+DMK062c4SaPbPi2HI+brmCmSR0XnbWSBVSw9euawA1O2d/Zv+
-	 ZONbotwzECvkCuD6TwWSSJjNb8F9JNME0i7rDrT85jHsSGe1eV5wan5Q884MEyTugE
-	 4Q3tEkkKlj1Fta1swG7K+s9v+pc8vRT8cGNvUsJiDi/g+Bp53gfIVrX+k4Ve50mLIx
-	 nfzO3VaSUGVl15wEB3RjriA4wCfWrtdi+booVv4UznbGG7NoMOZ6Ad2koD3PO7LjiK
-	 JcfWOL+PyIbR5hn8oXSBaAn3kalzz2EmYU9FHGQ/ghagaBECf+QjLytIWISRPFdfbn
-	 d+3hHAFoCulfQ==
+	b=WYaVOtHVjBRFcyigiPm8K5/iV5AMZarYISrukxAjpPNDecik+dTmZwNdTD0nOZQXl
+	 qY8DzUWBDw00XjqyTKu5d0b2sx42+leSC8dO3a81fzVuD67t97LikrK81/1MdUGP59
+	 vMGkN+00o0T8lGYc/hU0/hwU08HrK8aMl6DZwKpmZGhFXbbfyl3CagfCY8inEJOOaY
+	 sM/lIakNpxwkoQBFmssK7BLaJNTmwauWOD+kySIzK7sf5B4IEeKZKsKS8LojGrGGZ9
+	 C6dIrhLzCnSlWL+OJCHW23BGHd+1U3j4Hv1Tdl4wPXhJxFx0/FqaW4nxr4fb2xkomF
+	 8MZMxGVmw5nmw==
 From: Vinod Koul <vkoul@kernel.org>
-To: Peter Ujfalusi <peter.ujfalusi@gmail.com>, Jai Luthra <j-luthra@ti.com>
+To: Jeff Johnson <quic_jjohnson@quicinc.com>
 Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, Devarsh Thakkar <devarsht@ti.com>, 
- Jayesh Choudhary <j-choudhary@ti.com>, 
- Vignesh Raghavendra <vigneshr@ti.com>
-In-Reply-To: <20240607-bcdma_chan_cnt-v2-1-bf1a55529d91@ti.com>
-References: <20240607-bcdma_chan_cnt-v2-1-bf1a55529d91@ti.com>
-Subject: Re: [PATCH v2] dmaengine: ti: k3-udma: Fix BCHAN count with UHC
- and HC channels
-Message-Id: <171956940678.519169.5815985134895413368.b4-ty@kernel.org>
-Date: Fri, 28 Jun 2024 15:40:06 +0530
+ kernel-janitors@vger.kernel.org
+In-Reply-To: <20240616-md-loongarch-drivers-dma-virt-dma-v1-1-70ed3dcbf8aa@quicinc.com>
+References: <20240616-md-loongarch-drivers-dma-virt-dma-v1-1-70ed3dcbf8aa@quicinc.com>
+Subject: Re: [PATCH] dmaengine: virt-dma: add missing MODULE_DESCRIPTION()
+ macro
+Message-Id: <171956941039.519169.6146310436484618615.b4-ty@kernel.org>
+Date: Fri, 28 Jun 2024 15:40:10 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -64,17 +62,18 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
 
-On Fri, 07 Jun 2024 23:41:03 +0530, Jai Luthra wrote:
-> Unlike other channel counts in CAPx registers, BCDMA BCHAN CNT doesn't
-> include UHC and HC BC channels. So include them explicitly to arrive at
-> total BC channel in the instance.
+On Sun, 16 Jun 2024 17:58:33 -0700, Jeff Johnson wrote:
+> With ARCH=loongarch, make allmodconfig && make W=1 C=1 reports:
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dma/virt-dma.o
+> 
+> Add the missing invocation of the MODULE_DESCRIPTION() macro.
 > 
 > 
 
 Applied, thanks!
 
-[1/1] dmaengine: ti: k3-udma: Fix BCHAN count with UHC and HC channels
-      commit: 372f8b3621294173f539b32976e41e6e12f5decf
+[1/1] dmaengine: virt-dma: add missing MODULE_DESCRIPTION() macro
+      commit: 4db6b030257283166a11de3731a39f4f7ab9656e
 
 Best regards,
 -- 

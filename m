@@ -1,129 +1,107 @@
-Return-Path: <dmaengine+bounces-2636-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2637-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E36D8928A6C
-	for <lists+dmaengine@lfdr.de>; Fri,  5 Jul 2024 16:12:54 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2D4B928D5E
+	for <lists+dmaengine@lfdr.de>; Fri,  5 Jul 2024 20:15:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9F3F52826A5
-	for <lists+dmaengine@lfdr.de>; Fri,  5 Jul 2024 14:12:53 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4F5A6B2225A
+	for <lists+dmaengine@lfdr.de>; Fri,  5 Jul 2024 18:15:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD56F14A62E;
-	Fri,  5 Jul 2024 14:12:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08915262A8;
+	Fri,  5 Jul 2024 18:15:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ItN222xh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k7VjPvaN"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0FB4166318
-	for <dmaengine@vger.kernel.org>; Fri,  5 Jul 2024 14:12:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 542BE224F2;
+	Fri,  5 Jul 2024 18:15:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720188768; cv=none; b=IwVLVjBTK1nod4acu0Y+kCHNpd86TlnU/unZ0a8qNJN9LUJvNGQ6CJaU4GGal8+FVqtYBF6WXyY7+7MW2q5aODPyrwF4gPeqN+v1dLyNwe4x3MvySZBgy9Sck/Vvlop7SaQL3cAHwOG2NZLp0Okpp+Q/0FP4LdpSza3wtyyo5KA=
+	t=1720203321; cv=none; b=a9PqHSfMVFCiQLVCHAQbZFSpMGaznAxTqpSJbdT0fD+OWW2cnPFQ+kHeNE8M2MurxeOJdogEHWseNTov6wSBcmqbGqjeuxbvvQKPEmH67f2067fAoW2lLFj/91hOHafEgy4FT4SLcoArLAGiPFvyU+4dE3GhRztz7yNMVAwkX88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720188768; c=relaxed/simple;
-	bh=L2jMgSNNDpYU705Lv93KSDM8EUW4k3nlnNnjPsrXYyQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SB+B+iR/aJdFVULiX2h4VRZ9XpXNkFolz8T0JnL5591BChIYC/L4RnVu6Mq5PniTTx+HZyl+8693mFZ0LD4D40t/6EgGz7KNRZiENFUDI73qBrF3BUDandDoRENjos1JwTwqT/+ToJa1Trgd7n4bQJnFlGpaPv/MkwU0Wz12z2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ItN222xh; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-70aff4e3f6dso1234519b3a.3
-        for <dmaengine@vger.kernel.org>; Fri, 05 Jul 2024 07:12:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720188766; x=1720793566; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=s3zt/R6s+CF8FDx0ZTAP6lqJlfiuIpUU0rsoTOnmk7Q=;
-        b=ItN222xhxCjZUqzjZuAY86z0zan0+1zoawI1YqE0D3CWcfmA6aMRSxfQZAWs6vOKfv
-         317OYQqQbzQqz+dkgxlY1uquZxrO/mzDcKlYt3ooKy3WP0Ggc1gB0kvqnb+bXhITl9xB
-         LNEsejleEpGvPbQVCmzdm3Ahs5JDArN5qyzHJRDzxmfQBRbLgX/C4tkHwdBZrIJkwEWp
-         vv8JomTjBTbrZyf7F4cT4vUB/bJWCUbaHKXpwDOaU6XnOrFCoHjnBqTwfp3+gtqstCSG
-         +LcnSHAQZJiaR2GStvXixbEo2MGipGP+ng5PHp9d7syWNaURvQKdnBveuDqNcQxQjSta
-         0jWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720188766; x=1720793566;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=s3zt/R6s+CF8FDx0ZTAP6lqJlfiuIpUU0rsoTOnmk7Q=;
-        b=bbLreW6eqscGkv0zKsPKHQ7cxsUHk/D6GSvgtW3ZTEoxFeCxAAE+pFFrO+ZbTgp+Zc
-         Juh3AI3MREeIxCGFAUuomcDn7dn4rQqgk2hdreBKZZBMtrDFwl+RaKUz2VOhs3dIuzul
-         zcwdJA4iz6H3WyGlCOkuWbKec7vqtVb6gg7db0SFIZau86Nwy+9WEfJyBAn0/UNaqP2T
-         WxRWzLmIK4WlGfpBNoMnn3kGYz7bmfTbbEEkpuTGwfp7wXhxCkutb1Ro5XEKy8c0phT/
-         kD2US/Qz1ooO6V4yysI8wBPn5tPnuKAbeDGZ9GSWn4mNgJArSKTpLEbaEE2R6mg3Kiz2
-         ZMeg==
-X-Forwarded-Encrypted: i=1; AJvYcCWjT8u4SaN0w8lDF/o0RTnTIAU/hZLKIcGgDabjT+tqmMnRzC36wY31bcfOgT+gMie/mmy3gMxEg0KaNnhhEoM5VmRqi4TexmN5
-X-Gm-Message-State: AOJu0Yw/pejFU+r4oLc21lVhxrB4TxyadE1bp/wDf1TFI7uTBhlLvekP
-	8y7DYzFfdqxrRwn/51eC30lYUxLyWzf5hOxxA5zIdYiV4omMtrrG/WHp9DZMZQ==
-X-Google-Smtp-Source: AGHT+IGs/uf/pNfHm5JUOHmh0UYGvkXU++HXpYgTdsLDX62zY+fKG9Gs8P7AKgo/IpGB8buR6oldtg==
-X-Received: by 2002:a05:6a00:4f8c:b0:70b:a97:de23 with SMTP id d2e1a72fcca58-70b0a97e129mr3265194b3a.25.1720188766007;
-        Fri, 05 Jul 2024 07:12:46 -0700 (PDT)
-Received: from thinkpad ([220.158.156.249])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70803ecf764sm14069678b3a.106.2024.07.05.07.12.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jul 2024 07:12:45 -0700 (PDT)
-Date: Fri, 5 Jul 2024 19:42:41 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: "zheng.dongxiong" <zheng.dongxiong@outlook.com>
-Cc: fancer.lancer@gmail.com, vkoul@kernel.org, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND 1/2] dmaengine: dw-edma: Move "Set consumer cycle"
- into first condition in dw_hdma_v0_core_start()
-Message-ID: <20240705141241.GB57780@thinkpad>
-References: <cover.1720176660.git.zheng.dongxiong@outlook.com>
- <SY4P282MB26240D98F157B616B3AA2E2EF9DF2@SY4P282MB2624.AUSP282.PROD.OUTLOOK.COM>
+	s=arc-20240116; t=1720203321; c=relaxed/simple;
+	bh=kS7EfrqmMLPCfTSA0oSje2k+PTqM8YIGfH6XLHRZNTE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oATixe1RXtoddIGJ0/rxDSNsFcwy7DBUL56DBdY0ot9L+R1Ypl1yHXz5yd8t2qAOXQfqtare5JVFMWezHuUFQXze4nChV7GvZcqwPN1iHupcQeMspRpswkDF6/tOnrFxjG+wAYzcUu0lIepTTwazhQgsaEnAwk890gFhOrP9RL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k7VjPvaN; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720203320; x=1751739320;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=kS7EfrqmMLPCfTSA0oSje2k+PTqM8YIGfH6XLHRZNTE=;
+  b=k7VjPvaNk7sXWsBCHM4SBV2VFZT2W8VFgh4Kjjl8ToiGhjmtlW4r1bbh
+   EXrnvXNThMurNoe5blrwPUhyrwxe6guPmzuOeFTDqjcXcUcsKtdbhgHNk
+   9yDAwHRMuy89roplc64oqRask9luL3+d7SNQ8vkzfIwK2W5X5V2XWHm7B
+   H7Wu8WwND+5ymaOlENHpOCs3QCh1nhRl814DWGhnlU5wXkF50xNilShRp
+   EvRLkIxPnQAZCiqqJyDr/55tHTPxwNSH5NgKIcqJyiWB5DV1CX2rNSRYf
+   vnch0qrfyA5/aMFLt5mny99/iMUnJEzf+ywVgeZuWxnRICEQW5piVC4Kc
+   g==;
+X-CSE-ConnectionGUID: bb7/KZNeRNOW5inUrM9vBA==
+X-CSE-MsgGUID: DclUgzYrQRWXw0YFCEDU6g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11123"; a="12410717"
+X-IronPort-AV: E=Sophos;i="6.09,185,1716274800"; 
+   d="scan'208";a="12410717"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2024 11:15:19 -0700
+X-CSE-ConnectionGUID: 19uZAlpaSQG9i/tZrWkXIQ==
+X-CSE-MsgGUID: Jq1TIjZuSsWlpPghVmxh2w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,185,1716274800"; 
+   d="scan'208";a="47672691"
+Received: from fyu1.sc.intel.com ([172.25.103.126])
+  by orviesa008.jf.intel.com with ESMTP; 05 Jul 2024 11:15:19 -0700
+From: Fenghua Yu <fenghua.yu@intel.com>
+To: "Vinod Koul" <vkoul@kernel.org>,
+	"Dave Jiang" <dave.jiang@intel.com>
+Cc: dmaengine@vger.kernel.org,
+	"linux-kernel" <linux-kernel@vger.kernel.org>,
+	Fenghua Yu <fenghua.yu@intel.com>
+Subject: [PATCH 0/5] Enable FLR for IDXD halt
+Date: Fri,  5 Jul 2024 11:15:13 -0700
+Message-Id: <20240705181519.4067507-1-fenghua.yu@intel.com>
+X-Mailer: git-send-email 2.37.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <SY4P282MB26240D98F157B616B3AA2E2EF9DF2@SY4P282MB2624.AUSP282.PROD.OUTLOOK.COM>
 
-On Fri, Jul 05, 2024 at 06:57:34PM +0800, zheng.dongxiong wrote:
-> Two or more chunks are used in a transfer,
-> Consumer cycle only needs to be set on the first transfer.
-> 
+When IDXD device hits hardware errors, it enters halt state and triggers
+an interrupt to IDXD driver. Currently IDXD driver just prints an error
+message in the interrupt handler.
 
-Can you please reference the section of the spec that mentions this behavior?
+A better way to handle the interrupt is to do Function Level Reset (FLR)
+and recover the device's hardware and software configurations to its
+previous working state. The device and software can continue to run after
+the interrupt.
 
-- Mani
+This series enables this FLR handling for IDXD device whose WQs are all
+user type. FLR handling for IDXD device whose WQs are kernel type
+will be implemented in a future series.
 
-> Signed-off-by: zheng.dongxiong <zheng.dongxiong@outlook.com>
-> ---
->  drivers/dma/dw-edma/dw-hdma-v0-core.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> index 10e8f0715..d77051d1e 100644
-> --- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> +++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> @@ -262,10 +262,10 @@ static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
->  			  lower_32_bits(chunk->ll_region.paddr));
->  		SET_CH_32(dw, chan->dir, chan->id, llp.msb,
->  			  upper_32_bits(chunk->ll_region.paddr));
-> +		/* Set consumer cycle */
-> +		SET_CH_32(dw, chan->dir, chan->id, cycle_sync,
-> +			HDMA_V0_CONSUMER_CYCLE_STAT | HDMA_V0_CONSUMER_CYCLE_BIT);
->  	}
-> -	/* Set consumer cycle */
-> -	SET_CH_32(dw, chan->dir, chan->id, cycle_sync,
-> -		  HDMA_V0_CONSUMER_CYCLE_STAT | HDMA_V0_CONSUMER_CYCLE_BIT);
->  
->  	dw_hdma_v0_sync_ll_data(chunk);
->  
-> -- 
-> 2.34.1
-> 
+Fenghua Yu (5):
+  dmaengine: idxd: Add idxd_pci_probe_alloc() helper
+  dmaengine: idxd: Binding and unbinding IDXD device and driver
+  dmaengine: idxd: Add idxd_device_config_save() and
+    idxd_device_config_restore() helpers
+  dmaengine: idxd: Refactor halt handler
+  dmaengine: idxd: Enable Function Level Reset (FLR) for halt
+
+ drivers/dma/idxd/idxd.h |  13 ++
+ drivers/dma/idxd/init.c | 478 ++++++++++++++++++++++++++++++++++++----
+ drivers/dma/idxd/irq.c  |  85 ++++---
+ 3 files changed, 506 insertions(+), 70 deletions(-)
 
 -- 
-மணிவண்ணன் சதாசிவம்
+2.37.1
+
 

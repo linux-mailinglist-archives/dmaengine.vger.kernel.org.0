@@ -1,144 +1,129 @@
-Return-Path: <dmaengine+bounces-2634-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2635-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 21997928A38
-	for <lists+dmaengine@lfdr.de>; Fri,  5 Jul 2024 15:56:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 206BE928A67
+	for <lists+dmaengine@lfdr.de>; Fri,  5 Jul 2024 16:11:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D14A2286EEC
-	for <lists+dmaengine@lfdr.de>; Fri,  5 Jul 2024 13:56:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CC1B42821DA
+	for <lists+dmaengine@lfdr.de>; Fri,  5 Jul 2024 14:11:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1881154BEE;
-	Fri,  5 Jul 2024 13:55:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D65D916A36E;
+	Fri,  5 Jul 2024 14:11:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gefagsm6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L5kfmgf1"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 179F315EFAA;
-	Fri,  5 Jul 2024 13:55:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4622214A62E
+	for <dmaengine@vger.kernel.org>; Fri,  5 Jul 2024 14:11:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720187753; cv=none; b=C+Xs3kCu3HQD8k5mdBrD9jeGw5G6PLJ9AMgFEel/X+51m7JgqTzXbbdmoyKu0gXNyHFKBCHkFsoeqzu4Pm5Fb5fTUMZwVqVC2Shb0FpuNmi9CCNVFhYWL2yOmtx0lMTflsLybjJXJAfTAzcz5h7Vi1pwW6fwHRABgCN6q7Iakm8=
+	t=1720188670; cv=none; b=L+s3F4uPzmTi440ACSfglGnZmpQn74PZiKzjMw3/YybUDIxSdS7j7/v1spGm2klSgGkbpT3ec3sD/VP9T3TcGQCRIEbMVQGn4xDVIc6u9t9pawyh1cvo860R+0ZKwLj8VIaxvw9/ePpYJBtjo7wUhdwrdj4aYM8isYi1G5PcwFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720187753; c=relaxed/simple;
-	bh=ONe2Io9zA6anNvzEJ7HXnYtdSbcXkw9iKrk4SRs4/aA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=cARRnIpKeBJEM+kQ3+A8OpS0bCCRKXqpUM+0O9iIwkixmdEClSzoRf1w1hecZ6Fr+KhtSOk6tvzPUogPDufs0W/USFwzMKUd4lKLcn9e5qF3RhBO2PqkcZVqf0+5cxmdcYBRHnJJaOV8aSfgAMwyYQeXXDo6qhWIk3VhKQ+ZMqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gefagsm6; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4657wwRY019819;
-	Fri, 5 Jul 2024 13:55:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:date:from:in-reply-to:message-id:references:subject:to; s=
-	qcppdkim1; bh=9rwoRY+YziQMgYzn0R1tmb6AOIowVXemGfCfHzN2K4k=; b=ge
-	fagsm6tCxjYTqqGkDqQh87MZ/4ghTIUVNKLKSNy3R7Ww0Kr90eyoaS2t+zpi3BhJ
-	PI+Jnb/Lqp5uK00PlZRWjmKgxt2K4DP9oc22pJy5uB4deVFeCwSeNfrO29I+ehZg
-	jAhqq4rRq+8wG20yX+7nQUztud2+29r96sjiCmOlg0yjAVXLtJAZtI92iEJqhey4
-	MvxNW+f+7oD0TJnvVidAuvs0oD3Z/t1dKUofIM9nsmv5CwrEOahsO2BilHPsh//T
-	mRxAT4emWqXfyvzBAp3BMZInLGD8ZVbtzipUCVytX9uk3zB1SnG+OAbQ56sTihW0
-	jWDYdSzZzgWyqsmniEaA==
-Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 406cww95et-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 05 Jul 2024 13:55:44 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTP id 465DtecZ002001;
-	Fri, 5 Jul 2024 13:55:41 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 402bbm4nnv-1;
-	Fri, 05 Jul 2024 13:55:41 +0000
-Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 465Dte00002002;
-	Fri, 5 Jul 2024 13:55:40 GMT
-Received: from hu-sgudaval-hyd.qualcomm.com (hu-msarkar-hyd.qualcomm.com [10.213.111.194])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 465Dte3K001999;
-	Fri, 05 Jul 2024 13:55:40 +0000
-Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 3891782)
-	id CD4D8DA8; Fri,  5 Jul 2024 19:25:39 +0530 (+0530)
-From: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-To: manivannan.sadhasivam@linaro.org, fancer.lancer@gmail.com,
-        vkoul@kernel.org
-Cc: quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
-        quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
-        quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
-        Mrinmay Sarkar <quic_msarkar@quicinc.com>, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1 2/2] dmaengine: dw-edma: Add change to remove watermark interrupt enablement
-Date: Fri,  5 Jul 2024 19:25:33 +0530
-Message-Id: <1720187733-5380-3-git-send-email-quic_msarkar@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1720187733-5380-1-git-send-email-quic_msarkar@quicinc.com>
-References: <1720187733-5380-1-git-send-email-quic_msarkar@quicinc.com>
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: oYrabfRwndClpqDvt_q8XNUmfPbyLvOK
-X-Proofpoint-GUID: oYrabfRwndClpqDvt_q8XNUmfPbyLvOK
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-05_09,2024-07-05_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 adultscore=0 mlxlogscore=767 lowpriorityscore=0 mlxscore=0
- clxscore=1015 suspectscore=0 impostorscore=0 malwarescore=0 bulkscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407050099
+	s=arc-20240116; t=1720188670; c=relaxed/simple;
+	bh=zuP+/htUq75qrtouhxbjufUQHe6tuVLRCfDQpICxGf8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O6FyzUvwI3LCqocScyYXb/tZUpkBZ80EiRl4BZ10BXMn2hh4Uc2MmGDcnFi1qCu8efHTHvqcytM2gNS0ZW64flf0fqesq63/ktRQICMcaTduF03LCys1kqFp6iB5HTMP4dNL+OB+clbYK9tesTP4iX4MCFn3jkChQVFhF00uxc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=L5kfmgf1; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-70b09cb7776so776719b3a.1
+        for <dmaengine@vger.kernel.org>; Fri, 05 Jul 2024 07:11:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720188666; x=1720793466; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=XM4HbvawPCBny+Eeb2JRLz0OMBw/Ulb/Z2EqXlrBEew=;
+        b=L5kfmgf1T6p1tliGIxtIvayFkEkqwf5KmcpHPN8yTPpstDizf8NCMGjAdzFXaw+Ktx
+         5L8z6dm5eeQ5mS4q/Ixg4YOC5RuU1MJCZKPumetyekM61SJiaC19wr4D6+RAaHxSGYST
+         ElFpXQO2z+MlvgmP25eT9mtfsLbLX8hNslAKUWiWjVAtxYmmzrdfvlU9Ee3fHz6WzTRm
+         g6HMFh9rlPpn008Kk0EkU3fjUYzyiogH42v8PGBtItX7bXrdDAqBN/W6RS9bC2J/qrK4
+         v4HF1FyzfFtMHmP+aHnKatgjYYRnHJ6oXScUEcYWd2CwN927URa9wwT3EMU0srAlr41H
+         L8kQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720188666; x=1720793466;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XM4HbvawPCBny+Eeb2JRLz0OMBw/Ulb/Z2EqXlrBEew=;
+        b=a38hZhRAFEgzLwaGBJhmIdSTz2h7mUn1TAk6oW5rXWzYmL07eJ6TLyDCfy+o9UUPEA
+         U2TvdCIhkRgToDNYOE1C2/NiCCOAQSwMmGGWUrYf/ajrWCARJTJWFojVcjp8Q92+EyYs
+         ZaZpqAn+C9YqLSsu7/OZoR2wE38vblipqH1tKn9mN1feQfCzTJVKyHXDJ/r/YzuJS4ok
+         GEddyggy+XIh4hXSPLwe81f7p9plUyXrHHkSQujdrErwMf5pByw8Qatp07Oq0MGDTj+6
+         5+xNyr6rgofXoOI2eKuGXKS2P/GT9RSTMvy7P2yqRsrr47kIQBc1Bk6uO9o9BjU2SGgk
+         ab6w==
+X-Forwarded-Encrypted: i=1; AJvYcCXvMRBkzEZCkqbmqjVVIHo8yo8wurp3d+7aOVAzxlVNZ1aPSp/kMpuAHlcac9gxtbEDDRrBaHODp6RfHkgKVhlwqlBRVxKXIc8t
+X-Gm-Message-State: AOJu0Ywpl1MqnG6dSH0nHjE5102w+3uzR6WAOZPr9epMD4BYjBnp/e3e
+	qDHp6qwgD2zU1W5ULm8P+877de7MHbMJoETHg/omOjupmrVyHvjAcX0qqhTk8Q==
+X-Google-Smtp-Source: AGHT+IFy25FHZc4IHUBbnmHPL1FZGIlfz/twkzh99J3sTQjp/rXEbOPYKNsKaz8hkfuePIxxixTx/w==
+X-Received: by 2002:a05:6a00:6c98:b0:706:34f3:7b60 with SMTP id d2e1a72fcca58-70b00b62171mr5118719b3a.23.1720188666491;
+        Fri, 05 Jul 2024 07:11:06 -0700 (PDT)
+Received: from thinkpad ([220.158.156.249])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-72c6afb8ef1sm11285704a12.40.2024.07.05.07.11.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jul 2024 07:11:06 -0700 (PDT)
+Date: Fri, 5 Jul 2024 19:41:01 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: "zheng.dongxiong" <zheng.dongxiong@outlook.com>
+Cc: fancer.lancer@gmail.com, vkoul@kernel.org, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND 2/2] damengine: dw-edma: Add msi wartermark
+ configuration
+Message-ID: <20240705141101.GA57780@thinkpad>
+References: <cover.1720176660.git.zheng.dongxiong@outlook.com>
+ <SY4P282MB26243F37A69E54C2B469DFB2F9DF2@SY4P282MB2624.AUSP282.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <SY4P282MB26243F37A69E54C2B469DFB2F9DF2@SY4P282MB2624.AUSP282.PROD.OUTLOOK.COM>
 
-DW_HDMA_V0_LIE and DW_HDMA_V0_RIE are initialized as BIT(3) and BIT(4)
-respectively in dw_hdma_control enum. But as per HDMA register these
-bits are corresponds to LWIE and RWIE bit i.e local watermark interrupt
-enable and remote watermarek interrupt enable. In linked list mode LWIE
-and RWIE bits only enable the local and remote watermark interrupt.
+On Fri, Jul 05, 2024 at 06:57:35PM +0800, zheng.dongxiong wrote:
+> HDMA trigger wartermark interrupt, When use the RIE flag.
+> PCIe RC will trigger AER, If msi wartermark addr is not configuration.
+> This patch fix it by add msi wartermark configuration
+> 
+> Signed-off-by: zheng.dongxiong <zheng.dongxiong@outlook.com>
 
-As we are not handling watermark interruprt so removing watermark
-interrupt enablement logic to avoid unnecessary watermark interrupt
-event.
+HDMA driver is not at all using watermark interrupts. So we should be disabling
+them altogether.
 
-Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
----
- drivers/dma/dw-edma/dw-hdma-v0-core.c | 12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
+See: https://lore.kernel.org/dmaengine/1720187733-5380-3-git-send-email-quic_msarkar@quicinc.com/
 
-diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-index 88bd652f..aaf2e27 100644
---- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
-+++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-@@ -197,23 +197,13 @@ static void dw_hdma_v0_core_write_chunk(struct dw_edma_chunk *chunk)
- 	struct dw_edma_burst *child;
- 	struct dw_edma_chan *chan = chunk->chan;
- 	u32 control = 0, i = 0;
--	int j;
- 
- 	if (chunk->cb)
- 		control = DW_HDMA_V0_CB;
- 
--	j = chunk->bursts_alloc;
--	list_for_each_entry(child, &chunk->burst->list, list) {
--		j--;
--		if (!j) {
--			control |= DW_HDMA_V0_LIE;
--			if (!(chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL))
--				control |= DW_HDMA_V0_RIE;
--		}
--
-+	list_for_each_entry(child, &chunk->burst->list, list)
- 		dw_hdma_v0_write_ll_data(chunk, i++, control, child->sz,
- 					 child->sar, child->dar);
--	}
- 
- 	control = DW_HDMA_V0_LLP | DW_HDMA_V0_TCB;
- 	if (!chunk->cb)
+- Mani
+
+> ---
+>  drivers/dma/dw-edma/dw-hdma-v0-core.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> index d77051d1e..c4d15a7a7 100644
+> --- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> +++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> @@ -280,6 +280,9 @@ static void dw_hdma_v0_core_ch_config(struct dw_edma_chan *chan)
+>  	/* MSI done addr - low, high */
+>  	SET_CH_32(dw, chan->dir, chan->id, msi_stop.lsb, chan->msi.address_lo);
+>  	SET_CH_32(dw, chan->dir, chan->id, msi_stop.msb, chan->msi.address_hi);
+> +	/* MSI watermark addr - low, high */
+> +	SET_CH_32(dw, chan->dir, chan->id, msi_watermark.lsb, chan->msi.address_lo);
+> +	SET_CH_32(dw, chan->dir, chan->id, msi_watermark.msb, chan->msi.address_hi);
+>  	/* MSI abort addr - low, high */
+>  	SET_CH_32(dw, chan->dir, chan->id, msi_abort.lsb, chan->msi.address_lo);
+>  	SET_CH_32(dw, chan->dir, chan->id, msi_abort.msb, chan->msi.address_hi);
+> -- 
+> 2.34.1
+> 
+
 -- 
-2.7.4
-
+மணிவண்ணன் சதாசிவம்
 

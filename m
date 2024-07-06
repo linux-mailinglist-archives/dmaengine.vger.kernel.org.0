@@ -1,167 +1,121 @@
-Return-Path: <dmaengine+bounces-2644-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2645-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9DC449291F6
-	for <lists+dmaengine@lfdr.de>; Sat,  6 Jul 2024 10:33:43 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id EA1149291FD
+	for <lists+dmaengine@lfdr.de>; Sat,  6 Jul 2024 10:41:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BA37C1C20ABE
-	for <lists+dmaengine@lfdr.de>; Sat,  6 Jul 2024 08:33:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 92B871F21E6F
+	for <lists+dmaengine@lfdr.de>; Sat,  6 Jul 2024 08:41:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 597F518040;
-	Sat,  6 Jul 2024 08:33:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SAuj91tl"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E8CA41A94;
+	Sat,  6 Jul 2024 08:41:05 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E94F4D8A3;
-	Sat,  6 Jul 2024 08:33:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49F411C69D;
+	Sat,  6 Jul 2024 08:40:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.16.166
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720254819; cv=none; b=ut3xtEC/tvOuxErpiPaXRrXYO5HXt4q5y6+vSDkQolFW8O+AiYEYYCk5twHyCSSxR72BED5U5V1/2XfsKWQL9P0SHxUr2ymjy1b+6igaPqnc8e9S+wDCZpnvLx78OvrpFPwU2dISnfKooHFy5pJis00pB86E1OEykocQAHNLuL8=
+	t=1720255265; cv=none; b=kuOafj1pVe0W2zf83JaASI81iSKRDNFYaLDJgx4ShvMoE3EEYXqVgDNupI8/+JxWWR0WJt29GO2VOo0f7SVBK8xWx3WJ78QJIrQcj8TsR6umopP6L0/xTIMlqKoNJi6aNnjrWWwFWUV7561A8GB4BbrWHPBIN2uJdAFWlRPQ6Us=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720254819; c=relaxed/simple;
-	bh=gweVUkEpsyKJeMAR+yP604+Q865gQcQV9BkPOORMKFc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IFf129TUfMMMQv27edqPUCL3SmQfJQN99sCv7okTCtu8IDIXoFKpyVEuloLv053E4Ztrf+UPgb1wUd3j0DkKLxZWyFZcjQBd9kRtTv+EFg8pbrkv19i2Oj4LkEiImkPfJBkta/9VvD2y08FcCu55dVarqtqlk0zrQNH7lGj4sIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SAuj91tl; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720254817; x=1751790817;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=gweVUkEpsyKJeMAR+yP604+Q865gQcQV9BkPOORMKFc=;
-  b=SAuj91tlNC1/MHIKYsVtdYdnXXIwXlbPSM/1p49q6UqSrUtuRAjAGDOx
-   9a7VceXeEx4XKhRbgmuy05ZHrtHo2XpRHR3/lXHKSbxzgkzLmRrXJS20b
-   ThwS1drNfgjbNsCnb5homK2CKsIjouCjD0+2+z3ZxVYDJzw8bSPCLQ3NO
-   y4c3qXfOzR+uFRuxjTLXctTJqRAdMvtsxz/s1AtZK4g4nAjRmIizOW455
-   UsX7fYfBgRM8V4Ics//iotLcqmbgStZ/ywPP6IRu//U8kouL5d1BEZgNc
-   nZ+eKnfJhSa98rTFkk6WTB/YMOCL+zXNn5cGLieYcZoFIKS+RQ8fEAQ9w
-   A==;
-X-CSE-ConnectionGUID: /1mpumi3SyG+Yo1Zweruow==
-X-CSE-MsgGUID: tGwOKKWbTsqdzXD/rr2nzA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11123"; a="34966871"
-X-IronPort-AV: E=Sophos;i="6.09,187,1716274800"; 
-   d="scan'208";a="34966871"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2024 01:33:37 -0700
-X-CSE-ConnectionGUID: +6MHJ8tASyijdlSEPfvsFQ==
-X-CSE-MsgGUID: tf2SDI7TS0CzyEzgmnh1ZA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,187,1716274800"; 
-   d="scan'208";a="47702042"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 06 Jul 2024 01:33:34 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sQ0rL-000TVw-1h;
-	Sat, 06 Jul 2024 08:33:31 +0000
-Date: Sat, 6 Jul 2024 16:33:17 +0800
-From: kernel test robot <lkp@intel.com>
-To: Mrinmay Sarkar <quic_msarkar@quicinc.com>,
-	manivannan.sadhasivam@linaro.org, fancer.lancer@gmail.com,
-	vkoul@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, quic_shazhuss@quicinc.com,
-	quic_nitegupt@quicinc.com, quic_ramkri@quicinc.com,
-	quic_nayiluri@quicinc.com, quic_krichai@quicinc.com,
-	quic_vbadigan@quicinc.com,
-	Mrinmay Sarkar <quic_msarkar@quicinc.com>,
-	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] dmaengine: dw-edma: Add change to remove
- watermark interrupt enablement
-Message-ID: <202407061620.Z6kfeKgF-lkp@intel.com>
-References: <1720187733-5380-3-git-send-email-quic_msarkar@quicinc.com>
+	s=arc-20240116; t=1720255265; c=relaxed/simple;
+	bh=SytcVlEMBmbjx58Bg5PMQV7NBdW2R9Yo25763l9T/2s=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NkV03HWYPEX0s+WSln24B78fXa29EwbDt00q57ao0LNsnrqsaxTjwfMrGORr5YLNnv83IQ1guy/Dd4Th8G1yxQwHWDM68j3aeTwL4id5ZGdArYpJGgC9akzqLCjM804hbWc+/l+JobLJJ1oupNvrADvd352bQ7V+wjn2IWPIP4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gxmicro.cn; spf=none smtp.mailfrom=gxmicro.cn; arc=none smtp.client-ip=54.206.16.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gxmicro.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=gxmicro.cn
+X-QQ-mid: bizesmtp79t1720255212t8yh5pqm
+X-QQ-Originating-IP: k9LwgqnLfTm1YJAF1ETMds3oFl38YFHKLM7iyWgsa00=
+Received: from zhengdongxiong.. ( [139.227.197.63])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Sat, 06 Jul 2024 16:40:10 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 10991724749373251913
+From: dongxiong zheng <zhengdongxiong@gxmicro.cn>
+To: manivannan.sadhasivam@linaro.org
+Cc: dmaengine@vger.kernel.org,
+	fancer.lancer@gmail.com,
+	linux-kernel@vger.kernel.org,
+	vkoul@kernel.org,
+	zhengdongxiong@gxmicro.cn
+Subject: Re: [PATCH RESEND 1/2] dmaengine: dw-edma: Move "Set consumer cycle" into first condition in dw_hdma_v0_core_start()
+Date: Sat,  6 Jul 2024 16:40:10 +0800
+Message-Id: <20240706084010.2094-1-zhengdongxiong@gxmicro.cn>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240705141241.GB57780@thinkpad>
+References: <20240705141241.GB57780@thinkpad>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1720187733-5380-3-git-send-email-quic_msarkar@quicinc.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:gxmicro.cn:qybglogicsvrgz:qybglogicsvrgz8a-0
 
-Hi Mrinmay,
+Hi, Manivannan Sadhasivam:
+	Thank you for your reply!
 
-kernel test robot noticed the following build errors:
+On Fri, Jul 05, 2024 at 19:42:41 +0530, Manivannan Sadhasivam wrote:
+> On Fri, Jul 05, 2024 at 06:57:34PM +0800, zheng.dongxiong wrote:
+> > Two or more chunks are used in a transfer,
+> > Consumer cycle only needs to be set on the first transfer.
+> >
+>
+> Can you please reference the section of the spec that mentions this behavior?
+>
+> - Mani
+>
 
-[auto build test ERROR on vkoul-dmaengine/next]
-[also build test ERROR on mani-mhi/mhi-next linus/master v6.10-rc6 next-20240703]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Reference:
+	Chapter 6.4.9.1 LL Operation Overview:
+	"Figure 6-23 Linked List Flow for Producer and Consumer" in
+	DesignWare Cores PCI Express Controller Databook (Version 6.00a June 2022)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Mrinmay-Sarkar/dmaengine-dw-edma-Add-fix-to-unmask-the-interrupt-bit-for-HDMA/20240706-040233
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git next
-patch link:    https://lore.kernel.org/r/1720187733-5380-3-git-send-email-quic_msarkar%40quicinc.com
-patch subject: [PATCH v1 2/2] dmaengine: dw-edma: Add change to remove watermark interrupt enablement
-config: mips-allyesconfig (https://download.01.org/0day-ci/archive/20240706/202407061620.Z6kfeKgF-lkp@intel.com/config)
-compiler: mips-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240706/202407061620.Z6kfeKgF-lkp@intel.com/reproduce)
+The CCS must be set when L1 is executed for the first time, After an interruption is
+triggered, CCS does not need to be configured again when L3 is executed.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202407061620.Z6kfeKgF-lkp@intel.com/
+> > Signed-off-by: zheng.dongxiong <zheng.dongxiong@outlook.com>
+> > ---
+> >  drivers/dma/dw-edma/dw-hdma-v0-core.c | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> > index 10e8f0715..d77051d1e 100644
+> > --- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> > +++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> > @@ -262,10 +262,10 @@ static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
+> >  			  lower_32_bits(chunk->ll_region.paddr));
+> >  		SET_CH_32(dw, chan->dir, chan->id, llp.msb,
+> >  			  upper_32_bits(chunk->ll_region.paddr));
+> > +		/* Set consumer cycle */
+> > +		SET_CH_32(dw, chan->dir, chan->id, cycle_sync,
+> > +			HDMA_V0_CONSUMER_CYCLE_STAT | HDMA_V0_CONSUMER_CYCLE_BIT);
+> >  	}
+> > -	/* Set consumer cycle */
+> > -	SET_CH_32(dw, chan->dir, chan->id, cycle_sync,
+> > -		  HDMA_V0_CONSUMER_CYCLE_STAT | HDMA_V0_CONSUMER_CYCLE_BIT);
+> >
+> >  	dw_hdma_v0_sync_ll_data(chunk);
+> >
+> > --
+> > 2.34.1
+> >
+>
 
-All error/warnings (new ones prefixed by >>):
+Test brief: hdma set chan->ll_max == 1,
+then user alloc two or more scatterlist, start transfer.
 
-   arch/mips/kernel/head.o: in function `__kernel_entry':
->> (.text+0x0): relocation truncated to fit: R_MIPS_26 against `kernel_entry'
-   arch/mips/kernel/head.o: in function `smp_bootstrap':
->> (.ref.text+0xd8): relocation truncated to fit: R_MIPS_26 against `start_secondary'
-   init/main.o: in function `set_reset_devices':
-   main.c:(.init.text+0x10): relocation truncated to fit: R_MIPS_26 against `_mcount'
-   main.c:(.init.text+0x18): relocation truncated to fit: R_MIPS_26 against `__sanitizer_cov_trace_pc'
-   init/main.o: in function `debug_kernel':
-   main.c:(.init.text+0x50): relocation truncated to fit: R_MIPS_26 against `_mcount'
-   main.c:(.init.text+0x58): relocation truncated to fit: R_MIPS_26 against `__sanitizer_cov_trace_pc'
-   init/main.o: in function `quiet_kernel':
-   main.c:(.init.text+0x90): relocation truncated to fit: R_MIPS_26 against `_mcount'
-   main.c:(.init.text+0x98): relocation truncated to fit: R_MIPS_26 against `__sanitizer_cov_trace_pc'
-   init/main.o: in function `warn_bootconfig':
-   main.c:(.init.text+0xd0): relocation truncated to fit: R_MIPS_26 against `_mcount'
-   main.c:(.init.text+0xd8): relocation truncated to fit: R_MIPS_26 against `__sanitizer_cov_trace_pc'
-   init/main.o: in function `init_setup':
-   main.c:(.init.text+0x108): additional relocation overflows omitted from the output
 --
-   drivers/dma/dw-edma/dw-hdma-v0-core.c: In function 'dw_hdma_v0_core_write_chunk':
->> drivers/dma/dw-edma/dw-hdma-v0-core.c:198:30: warning: unused variable 'chan' [-Wunused-variable]
-     198 |         struct dw_edma_chan *chan = chunk->chan;
-         |                              ^~~~
+Regards,
+dongxiong zheng
 
-
-vim +/chan +198 drivers/dma/dw-edma/dw-hdma-v0-core.c
-
-e74c39573d35e9 Cai Huoqing    2023-05-20  194  
-e74c39573d35e9 Cai Huoqing    2023-05-20  195  static void dw_hdma_v0_core_write_chunk(struct dw_edma_chunk *chunk)
-e74c39573d35e9 Cai Huoqing    2023-05-20  196  {
-e74c39573d35e9 Cai Huoqing    2023-05-20  197  	struct dw_edma_burst *child;
-e74c39573d35e9 Cai Huoqing    2023-05-20 @198  	struct dw_edma_chan *chan = chunk->chan;
-e74c39573d35e9 Cai Huoqing    2023-05-20  199  	u32 control = 0, i = 0;
-e74c39573d35e9 Cai Huoqing    2023-05-20  200  
-e74c39573d35e9 Cai Huoqing    2023-05-20  201  	if (chunk->cb)
-e74c39573d35e9 Cai Huoqing    2023-05-20  202  		control = DW_HDMA_V0_CB;
-e74c39573d35e9 Cai Huoqing    2023-05-20  203  
-882e8634dc8dd2 Mrinmay Sarkar 2024-07-05  204  	list_for_each_entry(child, &chunk->burst->list, list)
-e74c39573d35e9 Cai Huoqing    2023-05-20  205  		dw_hdma_v0_write_ll_data(chunk, i++, control, child->sz,
-e74c39573d35e9 Cai Huoqing    2023-05-20  206  					 child->sar, child->dar);
-e74c39573d35e9 Cai Huoqing    2023-05-20  207  
-e74c39573d35e9 Cai Huoqing    2023-05-20  208  	control = DW_HDMA_V0_LLP | DW_HDMA_V0_TCB;
-e74c39573d35e9 Cai Huoqing    2023-05-20  209  	if (!chunk->cb)
-e74c39573d35e9 Cai Huoqing    2023-05-20  210  		control |= DW_HDMA_V0_CB;
-e74c39573d35e9 Cai Huoqing    2023-05-20  211  
-e74c39573d35e9 Cai Huoqing    2023-05-20  212  	dw_hdma_v0_write_ll_link(chunk, i, control, chunk->ll_region.paddr);
-e74c39573d35e9 Cai Huoqing    2023-05-20  213  }
-e74c39573d35e9 Cai Huoqing    2023-05-20  214  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 

@@ -1,219 +1,130 @@
-Return-Path: <dmaengine+bounces-2648-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2649-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A1183929D54
-	for <lists+dmaengine@lfdr.de>; Mon,  8 Jul 2024 09:42:39 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 32C3D92A081
+	for <lists+dmaengine@lfdr.de>; Mon,  8 Jul 2024 12:51:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C48051C21951
-	for <lists+dmaengine@lfdr.de>; Mon,  8 Jul 2024 07:42:38 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B13C5B21FE7
+	for <lists+dmaengine@lfdr.de>; Mon,  8 Jul 2024 10:51:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8511B23774;
-	Mon,  8 Jul 2024 07:42:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 164FF7710F;
+	Mon,  8 Jul 2024 10:51:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b="VhLZU4xm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VkPXO6yQ"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from forward500d.mail.yandex.net (forward500d.mail.yandex.net [178.154.239.208])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 522F5381B9;
-	Mon,  8 Jul 2024 07:42:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D564D17721;
+	Mon,  8 Jul 2024 10:51:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720424534; cv=none; b=aCBRDhC+fQSIyKfGLvD9JovgMnyrTTrcT41pG4eHKAsC+PtnC9yiEwGk1TJGLyOHu9SPG8OE+8yUp0qBunhRnZeaJZabqH+nHO7A2lnyMB9+8ckJHPzSQbggwQD+A3SP+mVWLgZnR46JIl0sBGIf44o9j+s/n+JWVn/0V7Efhwg=
+	t=1720435897; cv=none; b=TEnMrW0x+lFNMMM7MJd0HCRUtXhmRDjhw2AZdjeNK7BGve+SfS7O15P/rAE2VuH0vK16YJpe20n8fHG3jOIdTXZLTcXeI+kdWsnd3fYnPIdUuKIHPo5RVS7oRjSBmhaIv9eyR+QrRwdpinV0xiuggGTwYhNlDjBqqGFuwyYKyRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720424534; c=relaxed/simple;
-	bh=O9RoOO9HvF5SuUCeDg6vUA4wVmtzSSul9Xm5/s61R6Y=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=GZvza9XF6nJILN6gLmoEHqQ9x8nje2HC//JgXX1onsz18q0bmZF87ZXtK401h6yLmsqZlTjYumbt54CpIWxqOvPMdhOIdd+9tu5rPaAtPegM8g7CQ2Z4dejZltQLbRzPUlvLaRHsYodxcKvQYCvqnD1gCliZs5P7kLaOUFGUk7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me; spf=pass smtp.mailfrom=maquefel.me; dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b=VhLZU4xm; arc=none smtp.client-ip=178.154.239.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maquefel.me
-Received: from mail-nwsmtp-smtp-production-main-24.klg.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-24.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:7dca:0:640:d4d9:0])
-	by forward500d.mail.yandex.net (Yandex) with ESMTPS id C5DDC60A3F;
-	Mon,  8 Jul 2024 10:34:32 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-24.klg.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id 6YW3mBQe3W20-qUQtuv72;
-	Mon, 08 Jul 2024 10:34:30 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail;
-	t=1720424070; bh=O9RoOO9HvF5SuUCeDg6vUA4wVmtzSSul9Xm5/s61R6Y=;
-	h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
-	b=VhLZU4xmXX2w4OBfMMBdLTuYfNHiVS81wr+5BeazZfJVOu+yyXSQdoaO60cjQziKc
-	 M0uTvIyCbbrFj9TBj/klf6qeczg17/a4YJiSE0dCEH6yKJCldgKqcd4qvfnukuaDOU
-	 WcbQbDv7ImiZUeCsbYrO017QDF3uXjKDnJWXQ9oc=
-Authentication-Results: mail-nwsmtp-smtp-production-main-24.klg.yp-c.yandex.net; dkim=pass header.i=@maquefel.me
-Message-ID: <663b1749afeb5cec281149fdb445ed36fdcbc68e.camel@maquefel.me>
-Subject: Re: [PATCH v10 00/38] ep93xx device tree conversion
-From: Nikita Shubin <nikita.shubin@maquefel.me>
-To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>, 
-	Arnd Bergmann
-	 <arnd@arndb.de>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Stephen Boyd
- <sboyd@kernel.org>,  Hartley Sweeten <hsweeten@visionengravers.com>,
- Alexander Sverdlin <alexander.sverdlin@gmail.com>, Russell King
- <linux@armlinux.org.uk>, Lukasz Majewski <lukma@denx.de>, Linus Walleij
- <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Andy
- Shevchenko <andy@kernel.org>, Michael Turquette <mturquette@baylibre.com>,
- Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
- <conor+dt@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter
- Roeck <linux@roeck-us.net>, Thierry Reding <thierry.reding@gmail.com>, Mark
- Brown <broonie@kernel.org>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- Damien Le Moal <dlemoal@kernel.org>, Sergey Shtylyov <s.shtylyov@omp.ru>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, Liam Girdwood
- <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>,  Takashi Iwai
- <tiwai@suse.com>, Ralf Baechle <ralf@linux-mips.org>, "Wu, Aaron"
- <Aaron.Wu@analog.com>, Lee Jones <lee@kernel.org>, Olof Johansson
- <olof@lixom.net>, Niklas Cassel <cassel@kernel.org>, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-pm@vger.kernel.org,  devicetree@vger.kernel.org,
- dmaengine@vger.kernel.org,  linux-watchdog@vger.kernel.org,
- linux-pwm@vger.kernel.org,  linux-spi@vger.kernel.org,
- netdev@vger.kernel.org, linux-mtd@lists.infradead.org, 
- linux-ide@vger.kernel.org, linux-input@vger.kernel.org, 
- linux-sound@vger.kernel.org, Bartosz Golaszewski
- <bartosz.golaszewski@linaro.org>,  Krzysztof Kozlowski
- <krzysztof.kozlowski@linaro.org>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Andrew Lunn <andrew@lunn.ch>, Vinod
- Koul <vkoul@kernel.org>
-Date: Mon, 08 Jul 2024 10:34:05 +0300
-In-Reply-To: <jyvlqfvqn5bp3jmvxvwyrcqmihjohuq3o757mfph7x37kbwvtq@gtgyh4fca4fq>
-References: <20240617-ep93xx-v10-0-662e640ed811@maquefel.me>
-	 <CAHp75VfSC9gAD9ipeWRPdQOxUp4FXqYYei-cJTs38nbz0cHpkg@mail.gmail.com>
-	 <48c242838c77034485a9e667dc0e867207c5beed.camel@maquefel.me>
-	 <241a4cf9830b0118f01e8fcf2853c62527636049.camel@maquefel.me>
-	 <jyvlqfvqn5bp3jmvxvwyrcqmihjohuq3o757mfph7x37kbwvtq@gtgyh4fca4fq>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 
+	s=arc-20240116; t=1720435897; c=relaxed/simple;
+	bh=8QRYzM0u/5HXTwmq0CVidY5WsmWBJI8L0d+wIyOw0vY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HpiK9T9yGW0PIFuD6ESlwjVORKWtuJp5oL5PsHYe8UJ0tnD6YQ9Yhi1DPmDlBRY0dndHoysjt2Zj/iUr0ZHbySnd5aE33nIWKTECT6u6Eb91oP2sZ/ZzPPA3Ud70rndLmHD/sQniUkxaeYInV5brIsD7kdwlRsqeIL1Gh5EMqdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VkPXO6yQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AAAFC116B1;
+	Mon,  8 Jul 2024 10:51:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720435896;
+	bh=8QRYzM0u/5HXTwmq0CVidY5WsmWBJI8L0d+wIyOw0vY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=VkPXO6yQBKuGOiCVr2JDSL2/NakwrAKN9kxzb91pTxUk2rxg+PKcLm8xTpnRUrAmb
+	 sHq/xcaTrQArpjExAaxpV+kLt1v02dwBfXTTAz7uf7rlPHbqAkdsvhoOjdwktX2+F+
+	 44e7AFUKxD8h8TrZNoYB0U9DU2syP7or7FhqX6CtAfagRvZUAnAjKGGbsyBGmBm9lX
+	 speWZskrMFDMaX+5SPxhCm8Fi0u8/+X4CS8XpSjl9rYyeTPstWlSXbh8ExBLm8192R
+	 1+Xxd4l4gV0h0j/aab4EGBtib526UJjB+iR5+id38ObbdNYlIsaPbtPkJIV74XlIOK
+	 5Ws4mq1yoCy+w==
+Message-ID: <1a6a12ac-0c94-4ebe-9d85-9fa673200e76@kernel.org>
+Date: Mon, 8 Jul 2024 12:51:30 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/1] dt-bindings: fsl-qdma: allow compatible string
+ fallback to fsl,ls1021a-qdma
+To: Frank Li <Frank.Li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM"
+ <dmaengine@vger.kernel.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Cc: imx@lists.linux.dev
+References: <20240704020802.3371203-1-Frank.Li@nxp.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240704020802.3371203-1-Frank.Li@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Arnd,=20
+On 04/07/2024 04:08, Frank Li wrote:
+> The IP of QDMA ls1028/ls1043/ls1046/ is same as ls1021. So allow compatible
+> string fallback to fsl,ls1021a-qdma.
+> 
+> The difference is that ls1021a-qdma have 3 irqs, and other have 5 irqs.
+> 
+> Fix below CHECK_DTB warning.
+> arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dtb: dma-controller@8380000: compatible: ['fsl,ls1046a-qdma', 'fsl,ls1021a-qdma'] is too long
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
 
-Are we continuing this patch series ?
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-You are silent since last version submit, which makes me a bit worried.
-
-If you suddenly changed your mind please let us know, cause anyway we
-have no possibility to merge these series without you.
-
-
-On Fri, 2024-07-05 at 11:21 +0200, Uwe Kleine-K=C3=B6nig wrote:
-> Hello,
->=20
-> On Thu, Jun 27, 2024 at 11:29:44AM +0300, Nikita Shubin wrote:
-> > On Tue, 2024-06-18 at 19:20 +0300, Nikita Shubin wrote:
-> > > Hello Andy!
-> > > On Mon, 2024-06-17 at 12:58 +0200, Andy Shevchenko wrote:
-> > > > On Mon, Jun 17, 2024 at 11:38=E2=80=AFAM Nikita Shubin via B4 Relay
-> > > > <devnull+nikita.shubin.maquefel.me@kernel.org> wrote:
-> > > > >=20
-> > > > > The goal is to recieve ACKs for all patches in series to
-> > > > > merge it
-> > > > > via Arnd branch.
-> > > >=20
-> > > > 'receive'
-> > > >=20
-> > > > > Unfortunately, CLK subsystem suddenly went silent on clk
-> > > > > portion
-> > > > > of
-> > > > > series V2 reroll,
-> > > > > tried to ping them for about a month but no luck.
-> > > > >=20
-> > > > > Link:
-> > > > > https://lore.kernel.org/r/20240408-ep93xx-clk-v2-1-adcd68c13753@m=
-aquefel.me
-> > > > >=20
-> > > > > Some changes since last version (v9) - see "Changes in v10",
-> > > > > mostly
-> > > > > cosmetic.
-> > > >=20
-> > > > ...
-> > > >=20
-> > > > > Patches should be formated with '--histogram'
-> > > >=20
-> > > > 'formatted'
-> > > >=20
-> > > > ...
-> > > >=20
-> > > > > Changes in v10:
-> > > > >=20
-> > > > > Reordered SoB tags to make sure they appear before Rb and
-> > > > > Acked
-> > > > > tags.
-> > > >=20
-> > > > This is not required. The importance is only the order of SoBs
-> > > > themselves. If they are interleaved with other tags, it's fine.
-> > >=20
-> > > Ah - ok. Just saw someone was complaining about b4 reordering
-> > > them.=20
-> > >=20
-> > > >=20
-> > > > ...
-> > > >=20
-> > > >=20
-> > > > Hopefully to see this series being eventually applied soon.
-> > > > Arnd? (Do we have all necessary subsystem maintainers' tags,
-> > > > btw?)
-> > > >=20
-> > > >=20
-> > >=20
-> > > As i see from my perspective only three left:
-> > >=20
-> > > Clk subsystem:
-> > >=20
-> > > - clk: ep93xx: add DT support for Cirrus EP93xx
-> > >=20
-> > > DMA subsystem (but the only request from Vinod, as far as i
-> > > remember,
-> > > was fixing commits titles):
-> > >=20
-> > > - dmaengine: cirrus: Convert to DT for Cirrus EP93xx
-> > > - dmaengine: cirrus: remove platform code
-> > >=20
-> > > Beside that tags missing on platform code removal (which can be
-> > > Acked
-> > > by Arnd himself i believe) and dtsi/dts files (same ?).
-> >=20
-> > Vinod acked the above two patches:
-> >=20
-> > https://lore.kernel.org/all/ZnkIp8bOcZK3yVKP@matsya/
-> > https://lore.kernel.org/all/ZnkImp8BtTdxl7O3@matsya/
-> >=20
-> > so only:
-> >=20
-> > - clk: ep93xx: add DT support for Cirrus EP93xx
-> >=20
-> > https://lore.kernel.org/all/20240617-ep93xx-v10-3-662e640ed811@maquefel=
-.me/
-> >=20
-> > left.
-> >=20
-> > Hope Stephen will find some time for this one.
->=20
-> As we're approaching the merge window and this is still unclear, I
-> applied the pwm bits (i.e. patches 12, 13). If I understand
-> correctly,
-> patch 33 isn't suitable for application yet as it has a dependency on
-> pinctrl changes in that series.
->=20
-> (side note: Your patches are signed, but that doesn't bring any
-> benefit
-> if the receivers don't have your key. I didn't find it neither on
-> keys.openpgp.org nor in the kernel pgp key collection.)
->=20
-> Best regards
-> Uwe
+Best regards,
+Krzysztof
 
 

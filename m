@@ -1,102 +1,156 @@
-Return-Path: <dmaengine+bounces-2672-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2673-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B1D392DE18
-	for <lists+dmaengine@lfdr.de>; Thu, 11 Jul 2024 03:42:57 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED0C192E530
+	for <lists+dmaengine@lfdr.de>; Thu, 11 Jul 2024 12:56:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 33EF9282682
-	for <lists+dmaengine@lfdr.de>; Thu, 11 Jul 2024 01:42:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2A76B1C22890
+	for <lists+dmaengine@lfdr.de>; Thu, 11 Jul 2024 10:56:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BA1B3D66;
-	Thu, 11 Jul 2024 01:42:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C110158A1E;
+	Thu, 11 Jul 2024 10:55:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="afjNT8fB"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42E9B23CE;
-	Thu, 11 Jul 2024 01:42:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18843155C8F;
+	Thu, 11 Jul 2024 10:55:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720662171; cv=none; b=aXUyxr/Mkt6t72TjzNirZYV1XFXtkAdccIlH5zU/Q0he3ZnNwa0GG+Q3D8/ylbLHGDNooOprRTMRFbEAud3RD/mE3IVh3jcyli+rMyrNfD07DktD/IGdYmD26W8hnREkK9A9vglUsy22E6LHFfKdgYR3wdTqZej+22xu32292Cs=
+	t=1720695355; cv=none; b=BWRvecGNvGRiSteuc3LQTstz6Ta53x7imgbhArghGE5x4UsMIsINQNL6dQN25aKMyJzHxu3yDi80OEK+g3Nuf/vba80dQ3yYqYI2jOg7gUf6DU9aAniscuRTNOwXy+UQ2FxlaggFzqu0WPPT/gCGvdA9O6zdoMG8W8nVbNtDq7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720662171; c=relaxed/simple;
-	bh=+hFiLHKKR4zOZDA5egQpf/ujQyKFEbbwJra9p30L0U0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hNSlWe+LmFrIXoATpXONHiOgaSjIdsQsWwCZsbAXhMPyGxSHvRbPye9LAb22ctbuTqmBJGDOlkPwvQAl41KS+PRgKzUmcXCqPiOuaS3zhPiv9cKGYuUYJSKccyKY5w0VWsPyRF2qZKa6Z00aAD7zebkwyoj9hAInFLa32mBcBIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-01 (Coremail) with SMTP id qwCowAAHDsqROI9moDm9Ag--.1206S2;
-	Thu, 11 Jul 2024 09:42:42 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: fenghua.yu@intel.com,
-	dave.jiang@intel.com,
-	vkoul@kernel.org
-Cc: dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH v2] dmaengine: idxd: Convert comma to semicolon
-Date: Thu, 11 Jul 2024 09:34:36 +0800
-Message-Id: <20240711013436.2655373-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1720695355; c=relaxed/simple;
+	bh=HwivC1YSyiPpQ5PwufJY8pxz6NX1ZCCTtPty8vus00c=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=KMb4vN4bxiZRBfwekc4a8tEHIu8HCBq8IHdtDoaogP9cgfxNIPBx0PWQuiNbGGuIsYHlNzO3kobMmPhO07cCIYJlqhH/YbyMxD+thxiUi5/woncSD57Eyh7RV1h3TYzILdpyREvnJBnxRTHALm+Tvact6c/kjYlzksNNIbrqt+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=afjNT8fB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 9937AC116B1;
+	Thu, 11 Jul 2024 10:55:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720695354;
+	bh=HwivC1YSyiPpQ5PwufJY8pxz6NX1ZCCTtPty8vus00c=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=afjNT8fB3zUOrdezvdow7e/Gmoa9sAkV8Re+lgNOhlo8naFYNYF3elo7ltW7HNi+q
+	 lN6zwZ1/5GIk7iVS1Rq0JZRtvw2IyXY6WnRi5O3q7HiFAR3JVG4ca3tnMJ+feQ/GVr
+	 WZdyUINN4gfEWUWd2wI8oh/5Y713rQT5VipByrl895aVy/1ddnlVPSjeU7TevFsMHu
+	 7R9eSldvRPvCBIwTlYb3/en4BZgvm0xOHgHgRdcwbdEB3fElj8aP6ums4Waad7nQsv
+	 1h/Uw+ymwnHjzv7i03Cw+exCpWDVkLpG0NA0bpmA2aYzM0rK4Yv85xpDxfRlBRyOsQ
+	 qZAinA3pQ/ETA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87715C3DA41;
+	Thu, 11 Jul 2024 10:55:54 +0000 (UTC)
+From: Keguang Zhang via B4 Relay <devnull+keguang.zhang.gmail.com@kernel.org>
+Subject: [PATCH RESEND v9 0/2] Add support for Loongson1 APB DMA
+Date: Thu, 11 Jul 2024 18:55:36 +0800
+Message-Id: <20240711-loongson1-dma-v9-0-5ce8b5e85a56@gmail.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowAAHDsqROI9moDm9Ag--.1206S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Jw4UZrWfWw1DXw15Xr17GFg_yoWkGFb_Xa
-	47JrZ8KF1qvwnIkF1Uur45Ary5Kw42q3WDWas3KrWIvrZ3Gr45ZryDZrZ3Gr9ru3yUKFyq
-	grWDZr9xury7XjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbc8FF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJV
-	WxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6w4l
-	42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJV
-	WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAK
-	I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r
-	4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY
-	6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU5oGQDUUUU
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+To: Keguang Zhang <keguang.zhang@gmail.com>, Vinod Koul <vkoul@kernel.org>, 
+ Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc: linux-mips@vger.kernel.org, dmaengine@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Conor Dooley <conor.dooley@microchip.com>, 
+ Jiaxun Yang <jiaxun.yang@flygoat.com>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1720695351; l=2719;
+ i=keguang.zhang@gmail.com; s=20231129; h=from:subject:message-id;
+ bh=HwivC1YSyiPpQ5PwufJY8pxz6NX1ZCCTtPty8vus00c=;
+ b=QyBxFrcnMjDaxOUrz7fmfRhMp+ZFmKh4f5TgsKWUwSDt4UQMt4kT+iskDLYQKaRyjP1g3rZEz
+ DfHCQxLL2PjDjMps93gf5zb1jhmrhpNB7234spPWRWOmmYB/WOoD1G3
+X-Developer-Key: i=keguang.zhang@gmail.com; a=ed25519;
+ pk=FMKGj/JgKll/MgClpNZ3frIIogsh5e5r8CeW2mr+WLs=
+X-Endpoint-Received: by B4 Relay for keguang.zhang@gmail.com/20231129 with
+ auth_id=102
+X-Original-From: Keguang Zhang <keguang.zhang@gmail.com>
+Reply-To: keguang.zhang@gmail.com
 
-Replace a comma between expression statements by a semicolon for
-more readability.
+Add the driver and dt-binding document for Loongson1 APB DMA.
 
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
 ---
-Changelog:
+Changes in v9:
+- Fix all the errors and warnings when building with W=1 and C=1
+- Link to v8: https://lore.kernel.org/r/20240607-loongson1-dma-v8-0-f9992d257250@gmail.com
 
-v1 -> v2:
+Changes in v8:
+- Change 'interrupts' property to an items list
+- Link to v7: https://lore.kernel.org/r/20240329-loongson1-dma-v7-0-37db58608de5@gmail.com
 
-1. Update commit message.
+Changes in v7:
+- Change the comptible to 'loongson,ls1*-apbdma' (suggested by Huacai Chen)
+- Update the title and description part accordingly
+- Rename the file to loongson,ls1b-apbdma.yaml
+- Add a compatible string for LS1A
+- Delete minItems of 'interrupts'
+- Change patterns of 'interrupt-names' to const
+- Rename the file to loongson1-apb-dma.c to keep the consistency
+- Update Kconfig and Makefile accordingly
+- Link to v6: https://lore.kernel.org/r/20240316-loongson1-dma-v6-0-90de2c3cc928@gmail.com
+
+Changes in v6:
+- Change the compatible to the fallback
+- Implement .device_prep_dma_cyclic for Loongson1 sound driver,
+- as well as .device_pause and .device_resume.
+- Set the limitation LS1X_DMA_MAX_DESC and put all descriptors
+- into one page to save memory
+- Move dma_pool_zalloc() into ls1x_dma_alloc_desc()
+- Drop dma_slave_config structure
+- Use .remove_new instead of .remove
+- Use KBUILD_MODNAME for the driver name
+- Improve the debug information
+- Some minor fixes
+
+Changes in v5:
+- Add the dt-binding document
+- Add DT support
+- Use DT information instead of platform data
+- Use chan_id of struct dma_chan instead of own id
+- Use of_dma_xlate_by_chan_id() instead of ls1x_dma_filter()
+- Update the author information to my official name
+
+Changes in v4:
+- Use dma_slave_map to find the proper channel.
+- Explicitly call devm_request_irq() and tasklet_kill().
+- Fix namespace issue.
+- Some minor fixes and cleanups.
+
+Changes in v3:
+- Rename ls1x_dma_filter_fn to ls1x_dma_filter.
+
+Changes in v2:
+- Change the config from 'DMA_LOONGSON1' to 'LOONGSON1_DMA',
+- and rearrange it in alphabetical order in Kconfig and Makefile.
+- Fix comment style.
+
 ---
- drivers/dma/idxd/perfmon.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Keguang Zhang (2):
+      dt-bindings: dma: Add Loongson-1 APB DMA
+      dmaengine: Loongson1: Add Loongson-1 APB DMA driver
 
-diff --git a/drivers/dma/idxd/perfmon.c b/drivers/dma/idxd/perfmon.c
-index 5e94247e1ea7..e596ea60ed3c 100644
---- a/drivers/dma/idxd/perfmon.c
-+++ b/drivers/dma/idxd/perfmon.c
-@@ -480,8 +480,8 @@ static void idxd_pmu_init(struct idxd_pmu *idxd_pmu)
- 	idxd_pmu->pmu.attr_groups	= perfmon_attr_groups;
- 	idxd_pmu->pmu.task_ctx_nr	= perf_invalid_context;
- 	idxd_pmu->pmu.event_init	= perfmon_pmu_event_init;
--	idxd_pmu->pmu.pmu_enable	= perfmon_pmu_enable,
--	idxd_pmu->pmu.pmu_disable	= perfmon_pmu_disable,
-+	idxd_pmu->pmu.pmu_enable	= perfmon_pmu_enable;
-+	idxd_pmu->pmu.pmu_disable	= perfmon_pmu_disable;
- 	idxd_pmu->pmu.add		= perfmon_pmu_event_add;
- 	idxd_pmu->pmu.del		= perfmon_pmu_event_del;
- 	idxd_pmu->pmu.start		= perfmon_pmu_event_start;
+ .../bindings/dma/loongson,ls1b-apbdma.yaml         |  67 +++
+ drivers/dma/Kconfig                                |   9 +
+ drivers/dma/Makefile                               |   1 +
+ drivers/dma/loongson1-apb-dma.c                    | 665 +++++++++++++++++++++
+ 4 files changed, 742 insertions(+)
+---
+base-commit: d35b2284e966c0bef3e2182a5c5ea02177dd32e4
+change-id: 20231120-loongson1-dma-163afe5708b9
+
+Best regards,
 -- 
-2.25.1
+Keguang Zhang <keguang.zhang@gmail.com>
+
 
 

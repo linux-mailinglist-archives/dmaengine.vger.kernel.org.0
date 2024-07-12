@@ -1,109 +1,105 @@
-Return-Path: <dmaengine+bounces-2686-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2687-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 364C892FBBC
-	for <lists+dmaengine@lfdr.de>; Fri, 12 Jul 2024 15:48:32 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B08092FCAB
+	for <lists+dmaengine@lfdr.de>; Fri, 12 Jul 2024 16:35:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 677CF1C2266B
-	for <lists+dmaengine@lfdr.de>; Fri, 12 Jul 2024 13:48:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4FCF0283923
+	for <lists+dmaengine@lfdr.de>; Fri, 12 Jul 2024 14:35:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16C7B16FF5A;
-	Fri, 12 Jul 2024 13:48:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41779171E5A;
+	Fri, 12 Jul 2024 14:35:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RCA9lVVX"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5823FC12;
-	Fri, 12 Jul 2024 13:48:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E8E6EAC7;
+	Fri, 12 Jul 2024 14:35:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720792107; cv=none; b=VL0H2yhZjWWUD4g72P9ZZKBmw8wAX+PgiAnTFCDhUBQc63aFLIWPFDZkbr9c+3Eow2mlOSe3sfa1UOmdp5cm/gxkdrUdSHlDIsR/jRrCDFATqDgfMo0loAZj9vVnYwyxt7Zz7gk/6rV15Jsde72olddsToFvHE9LVe/Rm6z99fo=
+	t=1720794915; cv=none; b=OOm+K7TQ+N3gOrt5oHbLrb4VBYjsTjpOIDEDYLwR5ezrP/wab+1ZWa7qKeTiCSMOwL9DoS3UIaFklz4QkC6zU79viPuc87U/n9Y8usG0f797HnSlxqKQpcuw/PbJcGbjf4/niLhTcLNEw7CnOEs9/24M/Y+MsZGQlLSICgxzUqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720792107; c=relaxed/simple;
-	bh=yYs7MkrW0+QU3QEsKi7sNmspymkEpf3TgBrnpt7kn1Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z+CMY4OwMKxp4Kfbs8j+f0yYND0sumq0iG/Y83k/LDT++ilZAmKbRf1/nbvSn3ZLI0hUXxjSfZFCH2kzQM40aVpdzOGWoaSfwmftRPEIVN1vou0ABHsJJ+03iirzh1NMe9x1NGzr6RUVgLiRP6xBuLZx2YYZc58VSASs1ullu5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-650469f59d7so20977387b3.2;
-        Fri, 12 Jul 2024 06:48:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720792103; x=1721396903;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=442BdvzCkNEPOCEKPQXbGDECLpFWinxKnjTci7pd9gM=;
-        b=ev01vbGDqCrS42q0fS7XeI9QU1v0GNoIcC7ezufc0Mbvdf/j709IowAZgh5EnnHdfw
-         0ChtM6uOKiFSzFG1zj/8VT5MfiAVxUxJ2aNldCKxq7FNYvIBcRj2mljF+9kH6QhIv4q7
-         btUZpOuRrm/eSwxh8T3H3gCR8Vxgj8guSFDSHRQHfPKdfyxs2s0H7Utl+Qq5jc7VyftW
-         F3OH91edlYW5ygHhFq5RBQ0uUx4tqrwUnDXk/UxqJviR5l5zIBnm9Tf2bHKwSGZvQK8J
-         SdPfF5cOlNCExv/Fk1r1rNaQz7biaM4WG9viOsIfyqsny1zUlelTmJ5NgkntYi1na4If
-         KDtw==
-X-Forwarded-Encrypted: i=1; AJvYcCVGsKZyywnLzmRNCBX63JhIdm0j/OAmktny1pnJgOWNJmqsXgsHx0aRAKTpzxk5JAPbrzKwGxZ1WF/jkF43s9yd+R5EoOrANVjdWgG4nsgJ9bbp8J1ljRyWserCUQBy1MbYQ3lFjhM3Tf/eIF3MJbZpo03si/lAuglQHAdZnkwI3PsvCSlBTefYrFa6VnSVV2SDUjoondM44ky979gIk35qMBQGL79679V6uZEb0tJcpYX2eVTdc4WI5U/lGgvkr7M9
-X-Gm-Message-State: AOJu0YzJOvO8hzC1Jbzok5o9lo4cdaISLiBx2R5vc97DPCRmFzn8LlFH
-	f5aSDxGC9V7acODwptOJ6JkIVS7BY64l/c7CkwDSxKSbGoGugsublgG5DfSS
-X-Google-Smtp-Source: AGHT+IFFB42VJP8fv6OfeFMKry7hjXAB/2QigIi6hGKgTuUFG4230MziGertmjharB1YUmo7HubHxg==
-X-Received: by 2002:a05:690c:45c5:b0:61b:3454:8941 with SMTP id 00721157ae682-658f07d74aamr152888327b3.43.1720792102817;
-        Fri, 12 Jul 2024 06:48:22 -0700 (PDT)
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com. [209.85.128.178])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-658e4d2ad85sm14943267b3.41.2024.07.12.06.48.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Jul 2024 06:48:22 -0700 (PDT)
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-650469f59d7so20977097b3.2;
-        Fri, 12 Jul 2024 06:48:22 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWiK/33p+YvTqqY7cX11H+cJjJGXSXa2erXOxErAa8HTvB/kGL03fKHu3ET5qn8U4ZFyT4r2qv/jSxyKC7XeDhCzTyMPYyzhHYS5LWJ34rglK2K493JLqZAXDOgME3Mo+FGAHbfnDeLbjKm0EN1RJemIZEQ7sR0Vy5Dmsj+aJG60DI9zRjGGwKo4mZ4KbHCcPFaZIHRZK9TSZWWJgYV+Wk1pRZl5hwrBzOg+Kb9bG4MZbA0Ya3lnOWwRxHOvWnG/pWC
-X-Received: by 2002:a05:690c:7442:b0:64b:9f5f:67b2 with SMTP id
- 00721157ae682-658ef24c009mr138713557b3.31.1720792101940; Fri, 12 Jul 2024
- 06:48:21 -0700 (PDT)
+	s=arc-20240116; t=1720794915; c=relaxed/simple;
+	bh=+CiVeB36WC3XhinXVvw3aBG/Q6TEMnuDcanTg5z9DXE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=toOsg+tMJpmRJBGaUH3XbM4mxnvsyvPbewK9RnzsfZ4RXdmkh7zpslioZ5VQzPfk6+2mA6Axj4wA1Lw0rAeoCNPwwZrwM9ZO6oPapAJia8TIYxla4Dwlqr1AkmQhKWHIReN9tjKouWdsqW910tNWwIHhV8efebSOEIPIBsSQmAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RCA9lVVX; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0858B6000B;
+	Fri, 12 Jul 2024 14:35:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1720794905;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+CiVeB36WC3XhinXVvw3aBG/Q6TEMnuDcanTg5z9DXE=;
+	b=RCA9lVVX1fd75spCVuVahSk1RoqL9eZbgexe3LnZmD+IsA7s0KLR4kU0QT6UQzVSQrcrPX
+	hRiL3pPLMNwY4j16hbLtdlG5J+BEEA1PW7OW7sjOjXbSeY14TvMoAj1mIPMbsItiZvowOQ
+	piShlvO2atXTdq/ISgShhl/xtRHkX+Z96RhtZHiU1TLZR7Gnw5w1RasNCG0SS+DHpspE3C
+	dZUPWp3bNqaTriRX3hgPZNbOHazHGNgNQK8n++DqtMVk37DB13EUCRlel7A9e3Q4Zwg3Ay
+	L9g8Ji7Nb82hIJNCnIwTjQT/ej4Az4/PbJYd7xyyek1Zmaaf4T3FbmlAXVsP/w==
+Date: Fri, 12 Jul 2024 16:35:03 +0200
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Frank Li <Frank.Li@nxp.com>, Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Han Xu <han.xu@nxp.com>, Vinod Koul
+ <vkoul@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Marek Vasut <marex@denx.de>
+Cc: linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 2/6] dt-bindings: dma: fsl-mxs-dma: Add compatible
+ string "fsl,imx8qxp-dma-apbh"
+Message-ID: <20240712163503.69dad6b1@xps-13>
+In-Reply-To: <20240527121836.178457-1-miquel.raynal@bootlin.com>
+References: <20240520-gpmi_nand-v2-2-e3017e4c9da5@nxp.com>
+	<20240527121836.178457-1-miquel.raynal@bootlin.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240711123405.2966302-1-claudiu.beznea.uj@bp.renesas.com> <20240711123405.2966302-2-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20240711123405.2966302-2-claudiu.beznea.uj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 12 Jul 2024 15:48:10 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdU1hqPeD91WhcY=JwUho6suwE1gRi6iWdOpYGvchioJLw@mail.gmail.com>
-Message-ID: <CAMuHMdU1hqPeD91WhcY=JwUho6suwE1gRi6iWdOpYGvchioJLw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] clk: renesas: r9a08g045-cpg: Add DMA clocks and resets
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: vkoul@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	magnus.damm@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, 
-	biju.das.jz@bp.renesas.com, dmaengine@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Thu, Jul 11, 2024 at 2:34=E2=80=AFPM Claudiu <claudiu.beznea@tuxon.dev> =
-wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->
-> Add the missing DMA clock and resets.
->
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Hi Vinod,
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-clk for v6.12.
+miquel.raynal@bootlin.com wrote on Mon, 27 May 2024 14:18:36 +0200:
 
-Gr{oetje,eeting}s,
+> On Mon, 2024-05-20 at 16:09:13 UTC, Frank Li wrote:
+> > Add compatible string "fsl,imx8qxp-dma-apbh". It requires power-domains
+> > compared with "fsl,imx28-dma-apbh".
+> >=20
+> > Allow 'power-domains' property because i.MX8DXL i.MX8QM and i.MX8QXP ne=
+ed
+> > it.
+> >=20
+> > Keep the same restriction about 'power-domains' for other compatible
+> > strings.
+> >=20
+> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > Reviewed-by: Rob Herring (Arm) <robh@kernel.org> =20
+>=20
+> Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git =
+nand/next, thanks.
 
-                        Geert
+I just realize now I picked this up whereas it was not intended to be
+merged through mtd. I'm fine keeping this patch for the next merge
+window if I get your explicit agreement otherwise I'll drop it.
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Thanks,
+Miqu=C3=A8l
 

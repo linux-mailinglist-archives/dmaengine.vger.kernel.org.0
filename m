@@ -1,80 +1,81 @@
-Return-Path: <dmaengine+bounces-2690-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2691-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D6026930757
-	for <lists+dmaengine@lfdr.de>; Sat, 13 Jul 2024 23:11:58 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 00121930807
+	for <lists+dmaengine@lfdr.de>; Sun, 14 Jul 2024 01:26:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 477BC1F21A09
-	for <lists+dmaengine@lfdr.de>; Sat, 13 Jul 2024 21:11:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9D9DF1F2155F
+	for <lists+dmaengine@lfdr.de>; Sat, 13 Jul 2024 23:26:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B8DF143C5F;
-	Sat, 13 Jul 2024 21:11:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E019149E1A;
+	Sat, 13 Jul 2024 23:25:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XXhYp/jk"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XIfAGHsU"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 560D413C838;
-	Sat, 13 Jul 2024 21:11:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9EE313E88B;
+	Sat, 13 Jul 2024 23:25:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720905112; cv=none; b=UmR6945R3F/XUACgWKgrE6bMOPSFVPsgtyHeu8TRR4vSrVEnyhovrMTVU3lSX3QRHbAub9cgEE3deI1hFQDTCJA3lJfRsV1nAFyDhoFQ0XRvjZAajGNX+gBdEuTiAcsXD5e15fGWZOmAWOAsCBrXrtC7tNSz8W4hJkquIsaXd0A=
+	t=1720913157; cv=none; b=lDgfdF1zUz7YpkRUjgs62ER50SltoUXgPDbsCmqvQRgbJSkYLpzEGDD8vg8sQtXCNl8fUOAXqnpkZdta+nsia/HCep262AlgwBqGY70W0eXbHMFsglrl893gqczntJkgiaCHkGpvhX5AguCJ1FDrTafqoD8P4UMlTi5kaQWIeno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720905112; c=relaxed/simple;
-	bh=oaFByJPL12+FUprAqJYDqhzErP7nO44Id9JmB2tyyXM=;
+	s=arc-20240116; t=1720913157; c=relaxed/simple;
+	bh=PImxgGKyVk7kPOsf77JMkli5keQyd7AsTSM8XarLkFI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G0mod2eymE9oxFl+vP8y1Dh2QchxyrF4gTkY6snyEo3UjqDzSPKKhBGY8NopV7bGmOeRCt8qSxbTfE6gPS5J6AQYiKjciPjmoPfBEsMVEl8WBi+gR6N6m91Kjpt/7FUSMl/3JDeQVTHZm1a3c9/0NwSzD8+Hd0vHtpWjtq+s1eA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XXhYp/jk; arc=none smtp.client-ip=198.175.65.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=GuWkZZ5Mz5wBfOJucIayYxOi3NOR1ThuZJe5iXpYRtUXOqhzbwV0dT76jWRsxZ9BZgT7z0YnPeWzhdWDTNLB/8b0C7qVxpsxJrCwqxEozTgq90/Q7GlDaEQ9+riQ7QZF0KPtmO5fi3nhiIcssnXxF3SGrIJeyuN52c8f8RIntnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XIfAGHsU; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720905110; x=1752441110;
+  t=1720913155; x=1752449155;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=oaFByJPL12+FUprAqJYDqhzErP7nO44Id9JmB2tyyXM=;
-  b=XXhYp/jkrAsXdtF8sCK0N9p7kA9P1SeSqH1j7kso9D2ljyViUdR9NMGX
-   8TT/JlSn1XhQQ18EvR/R/Xvss3utZ5eCcaXweji8+2TyLsgy8pwg33jaL
-   ThX1KFHK7Lqf2+CLOX+1t+Jye90HnmGy4tHRLr86KZhyfAaqTw3gFD2zF
-   EYxbCcSa99V9hWB5Myk7Ca45NWa+1huvPxAxrtrwaFrep/OR7eaaR6Cbn
-   qCg6LVI5UA5H/EtbfPLWbVVr1fOxu7DKycB9jzIutXuMoHXeU2dFfqpIX
-   rZSFrZrpj05U+FSA+53TN3Wb78yaMD2MEgLXBWLPtD1xsRr+der+9qGqu
-   w==;
-X-CSE-ConnectionGUID: OxayXOuVQCqghM2G8oXdXQ==
-X-CSE-MsgGUID: dS4b9Sm+T+K7+rteeWXmtg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11132"; a="18456490"
-X-IronPort-AV: E=Sophos;i="6.09,206,1716274800"; 
-   d="scan'208";a="18456490"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2024 14:11:49 -0700
-X-CSE-ConnectionGUID: WzhOHMcnS0euBvTBoE/FTA==
-X-CSE-MsgGUID: rvDBRUFGThm1yHvQDCddyw==
+  bh=PImxgGKyVk7kPOsf77JMkli5keQyd7AsTSM8XarLkFI=;
+  b=XIfAGHsUlR8Jk2873iNuk3zlEoa4PxNcEnQSQh4fkIOi4s24ha5n3ups
+   YFXTaZlGuP1lj4YljrVJ85Vy2Ih86B30KnmPw3ltnxPJ79EX6xQQtIS+r
+   5n40GoKUIW2Qn4/qFXEpK+3H/JhIg1GY0OPcpz3oOcnhfkyvpFoldjNfQ
+   GOC2WA1+sbXJr3KYR8oZpewbsNJo3emM3Dcyzhg0fqQnl2nxOy4FpAkSb
+   X2yKsjRRmX/ihka0qFF/EHUmLmAzXK/3P+WVN0NRkZFnAUFS49IwB7uwI
+   zDZPvUGay3LtF1EmfxX273Ut9HEcs1Rctiv3ZnNsqMLwijSjd7+SCpui6
+   g==;
+X-CSE-ConnectionGUID: wR5tpD9CR7KadXasfrftuA==
+X-CSE-MsgGUID: RxE7AoNYT0eIOi8K2mLXzw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11132"; a="22143508"
+X-IronPort-AV: E=Sophos;i="6.09,207,1716274800"; 
+   d="scan'208";a="22143508"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2024 16:25:54 -0700
+X-CSE-ConnectionGUID: 31244haTR72HJOvqgTZu5A==
+X-CSE-MsgGUID: IWY47mOpS06iLoo7usBlFA==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,206,1716274800"; 
-   d="scan'208";a="54173404"
+X-IronPort-AV: E=Sophos;i="6.09,207,1716274800"; 
+   d="scan'208";a="54434821"
 Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 13 Jul 2024 14:11:46 -0700
+  by orviesa004.jf.intel.com with ESMTP; 13 Jul 2024 16:25:51 -0700
 Received: from kbuild by 68891e0c336b with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1sSk1v-000ckQ-2f;
-	Sat, 13 Jul 2024 21:11:43 +0000
-Date: Sun, 14 Jul 2024 05:11:14 +0800
+	id 1sSm7g-000cqQ-1k;
+	Sat, 13 Jul 2024 23:25:48 +0000
+Date: Sun, 14 Jul 2024 07:24:57 +0800
 From: kernel test robot <lkp@intel.com>
 To: Keguang Zhang via B4 Relay <devnull+keguang.zhang.gmail.com@kernel.org>,
 	Keguang Zhang <keguang.zhang@gmail.com>,
 	Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-mips@vger.kernel.org,
-	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-mips@vger.kernel.org, dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>
 Subject: Re: [PATCH RESEND v9 2/2] dmaengine: Loongson1: Add Loongson-1 APB
  DMA driver
-Message-ID: <202407140536.iIizeGVy-lkp@intel.com>
+Message-ID: <202407140701.jQbPNAYb-lkp@intel.com>
 References: <20240711-loongson1-dma-v9-2-5ce8b5e85a56@gmail.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -96,57 +97,61 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Keguang-Zhang-via-B4-Rela
 base:   d35b2284e966c0bef3e2182a5c5ea02177dd32e4
 patch link:    https://lore.kernel.org/r/20240711-loongson1-dma-v9-2-5ce8b5e85a56%40gmail.com
 patch subject: [PATCH RESEND v9 2/2] dmaengine: Loongson1: Add Loongson-1 APB DMA driver
-config: i386-allmodconfig (https://download.01.org/0day-ci/archive/20240714/202407140536.iIizeGVy-lkp@intel.com/config)
-compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240714/202407140536.iIizeGVy-lkp@intel.com/reproduce)
+config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20240714/202407140701.jQbPNAYb-lkp@intel.com/config)
+compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240714/202407140701.jQbPNAYb-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202407140536.iIizeGVy-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202407140701.jQbPNAYb-lkp@intel.com/
 
 All warnings (new ones prefixed by >>):
 
-   In file included from include/linux/printk.h:598,
-                    from include/asm-generic/bug.h:22,
-                    from arch/x86/include/asm/bug.h:87,
-                    from include/linux/bug.h:5,
-                    from include/linux/fortify-string.h:6,
-                    from include/linux/string.h:374,
-                    from include/linux/scatterlist.h:5,
-                    from include/linux/dmapool.h:14,
-                    from drivers/dma/loongson1-apb-dma.c:8:
-   drivers/dma/loongson1-apb-dma.c: In function 'ls1x_dma_start':
->> drivers/dma/loongson1-apb-dma.c:137:34: warning: format '%x' expects argument of type 'unsigned int', but argument 5 has type 'dma_addr_t' {aka 'long long unsigned int'} [-Wformat=]
+>> drivers/dma/loongson1-apb-dma.c:138:18: warning: format specifies type 'unsigned int' but the argument has type 'dma_addr_t' (aka 'unsigned long long') [-Wformat]
      137 |         dev_dbg(chan2dev(dchan), "cookie=%d, starting hwdesc=%x\n",
-         |                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/dynamic_debug.h:224:29: note: in definition of macro '__dynamic_func_call_cls'
+         |                                                              ~~
+         |                                                              %llx
+     138 |                 dchan->cookie, *hwdesc_phys);
+         |                                ^~~~~~~~~~~~
+   include/linux/dev_printk.h:165:39: note: expanded from macro 'dev_dbg'
+     165 |         dynamic_dev_dbg(dev, dev_fmt(fmt), ##__VA_ARGS__)
+         |                                      ~~~     ^~~~~~~~~~~
+   include/linux/dynamic_debug.h:274:19: note: expanded from macro 'dynamic_dev_dbg'
+     274 |                            dev, fmt, ##__VA_ARGS__)
+         |                                 ~~~    ^~~~~~~~~~~
+   include/linux/dynamic_debug.h:250:59: note: expanded from macro '_dynamic_func_call'
+     250 |         _dynamic_func_call_cls(_DPRINTK_CLASS_DFLT, fmt, func, ##__VA_ARGS__)
+         |                                                                  ^~~~~~~~~~~
+   include/linux/dynamic_debug.h:248:65: note: expanded from macro '_dynamic_func_call_cls'
+     248 |         __dynamic_func_call_cls(__UNIQUE_ID(ddebug), cls, fmt, func, ##__VA_ARGS__)
+         |                                                                        ^~~~~~~~~~~
+   include/linux/dynamic_debug.h:224:15: note: expanded from macro '__dynamic_func_call_cls'
      224 |                 func(&id, ##__VA_ARGS__);                       \
          |                             ^~~~~~~~~~~
-   include/linux/dynamic_debug.h:250:9: note: in expansion of macro '_dynamic_func_call_cls'
+>> drivers/dma/loongson1-apb-dma.c:338:53: warning: format specifies type 'int' but the argument has type 'size_t' (aka 'unsigned long') [-Wformat]
+     338 |                 "buf_len=%d period_len=%zu flags=0x%lx dir=%s\n", buf_len,
+         |                          ~~                                       ^~~~~~~
+         |                          %zu
+   include/linux/dev_printk.h:165:39: note: expanded from macro 'dev_dbg'
+     165 |         dynamic_dev_dbg(dev, dev_fmt(fmt), ##__VA_ARGS__)
+         |                                      ~~~     ^~~~~~~~~~~
+   include/linux/dynamic_debug.h:274:19: note: expanded from macro 'dynamic_dev_dbg'
+     274 |                            dev, fmt, ##__VA_ARGS__)
+         |                                 ~~~    ^~~~~~~~~~~
+   include/linux/dynamic_debug.h:250:59: note: expanded from macro '_dynamic_func_call'
      250 |         _dynamic_func_call_cls(_DPRINTK_CLASS_DFLT, fmt, func, ##__VA_ARGS__)
-         |         ^~~~~~~~~~~~~~~~~~~~~~
-   include/linux/dynamic_debug.h:273:9: note: in expansion of macro '_dynamic_func_call'
-     273 |         _dynamic_func_call(fmt, __dynamic_dev_dbg,              \
-         |         ^~~~~~~~~~~~~~~~~~
-   include/linux/dev_printk.h:165:9: note: in expansion of macro 'dynamic_dev_dbg'
-     165 |         dynamic_dev_dbg(dev, dev_fmt(fmt), ##__VA_ARGS__)
-         |         ^~~~~~~~~~~~~~~
-   include/linux/dev_printk.h:165:30: note: in expansion of macro 'dev_fmt'
-     165 |         dynamic_dev_dbg(dev, dev_fmt(fmt), ##__VA_ARGS__)
-         |                              ^~~~~~~
-   drivers/dma/loongson1-apb-dma.c:137:9: note: in expansion of macro 'dev_dbg'
-     137 |         dev_dbg(chan2dev(dchan), "cookie=%d, starting hwdesc=%x\n",
-         |         ^~~~~~~
-   drivers/dma/loongson1-apb-dma.c:137:63: note: format string is defined here
-     137 |         dev_dbg(chan2dev(dchan), "cookie=%d, starting hwdesc=%x\n",
-         |                                                              ~^
-         |                                                               |
-         |                                                               unsigned int
-         |                                                              %llx
+         |                                                                  ^~~~~~~~~~~
+   include/linux/dynamic_debug.h:248:65: note: expanded from macro '_dynamic_func_call_cls'
+     248 |         __dynamic_func_call_cls(__UNIQUE_ID(ddebug), cls, fmt, func, ##__VA_ARGS__)
+         |                                                                        ^~~~~~~~~~~
+   include/linux/dynamic_debug.h:224:15: note: expanded from macro '__dynamic_func_call_cls'
+     224 |                 func(&id, ##__VA_ARGS__);                       \
+         |                             ^~~~~~~~~~~
+   2 warnings generated.
 
 
-vim +137 drivers/dma/loongson1-apb-dma.c
+vim +138 drivers/dma/loongson1-apb-dma.c
 
    130	
    131	static inline int ls1x_dma_start(struct ls1x_dma_chan *chan,
@@ -155,8 +160,8 @@ vim +137 drivers/dma/loongson1-apb-dma.c
    134		struct dma_chan *dchan = &chan->vchan.chan;
    135		int val, ret;
    136	
- > 137		dev_dbg(chan2dev(dchan), "cookie=%d, starting hwdesc=%x\n",
-   138			dchan->cookie, *hwdesc_phys);
+   137		dev_dbg(chan2dev(dchan), "cookie=%d, starting hwdesc=%x\n",
+ > 138			dchan->cookie, *hwdesc_phys);
    139	
    140		val = *hwdesc_phys & DMA_ADDR_MASK;
    141		val |= DMA_START;

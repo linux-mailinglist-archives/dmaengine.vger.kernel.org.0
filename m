@@ -1,151 +1,117 @@
-Return-Path: <dmaengine+bounces-2702-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2703-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3221932738
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Jul 2024 15:12:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E03C9333B1
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Jul 2024 23:38:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DEF931C21967
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Jul 2024 13:12:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4F0B71C22DD0
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Jul 2024 21:38:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E63919AD57;
-	Tue, 16 Jul 2024 13:12:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82C5273478;
+	Tue, 16 Jul 2024 21:38:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="WBVwwIMD";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FvlrSBVZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cUW+jcmq"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from fhigh5-smtp.messagingengine.com (fhigh5-smtp.messagingengine.com [103.168.172.156])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D4B1448ED;
-	Tue, 16 Jul 2024 13:12:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 511DF46522;
+	Tue, 16 Jul 2024 21:38:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721135572; cv=none; b=ow8YNo8rSP5Jmo/r3qpwEDW3sBt9DT87I8g6UQ3pee0JTz4ZM5I5RlTGTEnLPofPYn4u0bWtGY9iRa3sJEQBaDD7o+aZ0FdItfKyMKVYrl8aO9Ze2RL/UWEeazywg/NlKTagcZq32NpCxU8ansXKVOsX/0n4zW5MNWarrDz+Swc=
+	t=1721165915; cv=none; b=GhPRapftUDguQN0cfs70a5/7TnPk+uVxuPE6LnpTJb7yThLa4TxydA/gm3vhH6qjogGicWQ7X9K51EO54OWYOaNkFW7OG/9quQZggOrPi8e6TMw44VXw0CJM/A1qvhWo9NYaxuxmMgwWGSpRqZWCTX4gDoYirTdRVEt+vUHgSh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721135572; c=relaxed/simple;
-	bh=0pbFXYblsR3UKbqkbGTRgs8/Y3F6rLYSgnaif3v3QMM=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=l8bxk1AUky3Ti0QeZB+2YuT4AGxjvj6lVDVJxxUVcdgMB+g4VyDULxF16kyUZBoFrVN7hVBR64S8YvYDya650WLwp/54Dnv/hm1bLm2DxYUa6HjRfdwnSTnC2zeZf9VykwRjGadIe82kKlara/D1Wl0NGkOUeXVr0k4DfOKk9lw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=WBVwwIMD; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=FvlrSBVZ; arc=none smtp.client-ip=103.168.172.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id BF6001148052;
-	Tue, 16 Jul 2024 09:12:49 -0400 (EDT)
-Received: from imap44 ([10.202.2.94])
-  by compute3.internal (MEProxy); Tue, 16 Jul 2024 09:12:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1721135569;
-	 x=1721221969; bh=0pbFXYblsR3UKbqkbGTRgs8/Y3F6rLYSgnaif3v3QMM=; b=
-	WBVwwIMD8tfmGCPF0098lIEiTE+lQYK4hC0bV/URb6+ohG5p+AQ1eI4nY6BMPLKr
-	ckk0uSHS+yLi44MBR1sCmmxGVqzhee59pJKePiHQ0wqo/3W1bjbFkqWulCPX4IfU
-	AacUYIvfVmcQ2e376BxGYhkPTQ0wJw8hFJk4YyEqh00pH3sCVKoZEW4u9TTpqMCx
-	gb4dgsUKDS9HAkHcvALJRjilyodm+P6WdcGSM+AsU4qGDc3aLcEvt8ubLOdRMQCr
-	I3gOJhc+uIdWE3pfPCFmo9RPR+e1K7evdgxf0gJJBqtultJid0nw8KnIyJVzaSvH
-	pdsLiR8sYWnm6/6IyTxGVw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1721135569; x=
-	1721221969; bh=0pbFXYblsR3UKbqkbGTRgs8/Y3F6rLYSgnaif3v3QMM=; b=F
-	vlrSBVZIGhGDXGNDw5PI7qM4IJ15Ynh5BGogtppzPYkp6plzboubmx7niHEOQq6l
-	jBcvzxCjQIbLIyDqwqBhYJB1+Y1tnrh6WYfaFVhoba3XnbDui8IPD0puOmz5etNt
-	kF5BiMNmZ0EHrMIZziygj7fVaX71wlu39QrBZngFXhG9xvV5+mcO3+uuxb5kNi7r
-	fPV+l0D0djsjum52q2rk906yQxJawKw1DGUqPLNCx6fKSXli2ThF/3+PYmWvqxrM
-	QRvWEPVC/4I2Bqw/pa7EiXoJM9W1d3vukQiDTKD5RPVRI26qmzx4Qv7PkYxophvl
-	VkvH5rz2PLO/Y9tQrktlA==
-X-ME-Sender: <xms:0HGWZo4snpg3QYahBK24C7MCseiNHexn5Ke8SWQVcHfF3XErDenqng>
-    <xme:0HGWZp6oPpbtTJX2PjsCUJI_-DCSh7ZRbKIyTOJ54I9gijXEXjN6g-uMopQDGDjvw
-    HaxJKNpyVcgDg4LUG4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrgeeggdeitdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedflfhi
-    rgiguhhnucgjrghnghdfuceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
-    eqnecuggftrfgrthhtvghrnhepudefgeeftedugeehffdtheefgfevffelfefghefhjeeu
-    geevtefhudduvdeihefgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
-    hilhhfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
-X-ME-Proxy: <xmx:0HGWZncXNLHTnkXFVkCGAToKSPvwpH8A4nU_Ko6pdvGXwCFcq1hxCg>
-    <xmx:0HGWZtJT2lhgG2fAGM9c5cw4mJL8IzJSXi7vvao2H2jTO0LFIq0hfw>
-    <xmx:0HGWZsIgIJoPOkNzsM0-JHB2rXHRkT6dSibQIiXEoI32devFnUnpDg>
-    <xmx:0HGWZuza2mzzUmnbay7_yAwVsKHTwoGUq7f4vO3ytYI3TJLIodpFog>
-    <xmx:0XGWZqyAzUqnw-VT3wXadzDIeKiTs-UHlYFdLVZRBG9WMkW6eKOIOD5L>
-Feedback-ID: ifd894703:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 7B5F736A0075; Tue, 16 Jul 2024 09:12:48 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
+	s=arc-20240116; t=1721165915; c=relaxed/simple;
+	bh=s3argfT0bjT56iOArbsY0GzxvURpvlj8dSdXayAnGo8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=E1KnW5aQEoskmlx7+RKaiHXWgoWfKZCer8J68OXw5MjRpuAIQqv3U7P9Z1Qw7bvJJDTcaCL05wE11punpnBkGtrFn+nnCC2G/WhM64x1a6gpDkUeHGtCpxqktNnSuRqxq9jMyTobuO08kqY4mcwK+PaTbR7/nxRoyaHCyueQrik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cUW+jcmq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB571C116B1;
+	Tue, 16 Jul 2024 21:38:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721165914;
+	bh=s3argfT0bjT56iOArbsY0GzxvURpvlj8dSdXayAnGo8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=cUW+jcmqnCG0IrFlXrXiG5XfhplLdmPDpmoLC62qovl97ix3YhOwFUAj98ha2vL2A
+	 Dg6Uy+T+mG0v1w5TAr5cInRbJyKL5+9jEiE4QB5TY4erkqmkIfBYMGUDLukhJaGgGF
+	 tTOfTWKAafXrKk5MH9u/pdwX1/2nZRuMa9v55AEc2pTlzsuFiE/v982X/j4tOEDXUL
+	 eylO+JM4kJWwPnsKwsf1sEjgeN4CmPH9DGk7f98aFml5IqPC3cbfv1LHbwAqA0pg/I
+	 mMu1Zcnjulhn6AdDYLDMo1AMZFDj0yCaUpqb1OA/ka+7iHU5xYMHYawoxhBwQb0oBE
+	 1SeEAe1+diIYA==
+From: Kees Cook <kees@kernel.org>
+To: =?UTF-8?q?Am=C3=A9lie=20Delaunay?= <amelie.delaunay@foss.st.com>
+Cc: Kees Cook <kees@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	dmaengine@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] dmaengine: stm32-dma3: Set lli_size after allocation
+Date: Tue, 16 Jul 2024 14:38:33 -0700
+Message-Id: <20240716213830.work.951-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <54d9edd5-377e-4d9a-956f-8f2ba49d4295@app.fastmail.com>
-In-Reply-To: 
- <CAAhV-H5cDiwAWBgXx8fBohZMocfup3rbe-XjDjEzsLAUB+1BUQ@mail.gmail.com>
-References: <20240711-loongson1-dma-v9-0-5ce8b5e85a56@gmail.com>
- <CAAhV-H5OOXguNTvywykyJk3_ydyDiSnpc-kvERRiYggBt441tw@mail.gmail.com>
- <CAJhJPsXC-z+TS=qrXUT=iF_6-b5x-cr9EvcJNrmSL--RV6xVsQ@mail.gmail.com>
- <CAAhV-H5Um5HhbmcB1Se=Qeh2OOAeP34BAx+sNtLKge_pePiuiQ@mail.gmail.com>
- <b1a53515-068a-4f70-87a9-44b77d02d1d5@app.fastmail.com>
- <CAAhV-H5cDiwAWBgXx8fBohZMocfup3rbe-XjDjEzsLAUB+1BUQ@mail.gmail.com>
-Date: Tue, 16 Jul 2024 21:10:07 +0800
-From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To: "Huacai Chen" <chenhuacai@kernel.org>
-Cc: "Kelvin Cheung" <keguang.zhang@gmail.com>,
- "Vinod Koul" <vkoul@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
- "Conor Dooley" <conor+dt@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
- dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, "Conor Dooley" <conor.dooley@microchip.com>
-Subject: Re: [PATCH RESEND v9 0/2] Add support for Loongson1 APB DMA
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1753; i=kees@kernel.org; h=from:subject:message-id; bh=s3argfT0bjT56iOArbsY0GzxvURpvlj8dSdXayAnGo8=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmluhZjVuTZVY4VuNVA9HyBDrilOXfvC/bv0t4D 77IyyEHNQOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZpboWQAKCRCJcvTf3G3A Jj/0D/9PvSaesj4pRMPSiHXBTn/G/dt9EL9dWBSh2VkDcnpNnwHRa0MCb1KLQh+je5Tr27kb0en iQFv480u4YA/RKgn4DsO5czDWawVMnMcUK3v9DlFWhMdadEBzZYX/vyooYqIedRmwjg+qQVYQCS UCjHpsqGu3bgDvMTwHMZ1d0NVqXxdDK1DxWXiMdKem3bNLArIps5ic5WdCUTuDGK/AfTphwTnzW Ejybti4O6+eLNyj28ccYb724kuf5KYL0U2mktsSBn8nkP2H/ZolT4YNxgw72VnC2m13sMj0zz9e 2zwlZ34PzE7Ce8KKG2BEqAdZZYxh+HPPW0HQtmLqT3HEfP1v9wvrnaiEYSbRadMVdavcLXJfMSS RjoxqTou5N9PONYHLqhmuiqNwiE/kYKYN+Qtol5lXdasf1r7zitzs020sBI0BXH2rQHmei7aG4Z Fpxr8pCUQXU/DJJmIUhNRfI5FYK6jGN8mG3cLgZFhTxrZdzsJlICLSj9oV0tQE/dPuTcpnhAkpU Kokd76DCk4PQKu1X6F9iX8l99p0JPt4XNN/rSos3++hvRFbMaweJpcz/V+B6oxRRJfXChznHNir QItIsXDzAqqxAzTMs1S7TaMqXRGLGIhnF1d97O9zAzlMb02otRb19zZinSKmL9hKGWvuLX6ngdW HbGOqYVdMdTP7
+ Hw==
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
+With the new __counted_by annotation, the "lli_size" variable needs to
+valid for accesses to the "lli" array. This requirement is not met in
+stm32_dma3_chan_desc_alloc(), since "lli_size" starts at "0", so "lli"
+index "0" will not be considered valid during the initialization for loop.
 
+Fix this by setting lli_size immediately after allocation (similar to
+how this is handled in stm32_mdma_alloc_desc() for the node/count
+relationship).
 
-=E5=9C=A82024=E5=B9=B47=E6=9C=8816=E6=97=A5=E4=B8=83=E6=9C=88 =E4=B8=8B=E5=
-=8D=885:40=EF=BC=8CHuacai Chen=E5=86=99=E9=81=93=EF=BC=9A
-> On Mon, Jul 15, 2024 at 3:00=E2=80=AFPM Jiaxun Yang <jiaxun.yang@flygo=
-at.com> wrote:
->>
->>
->>
->> =E5=9C=A82024=E5=B9=B47=E6=9C=8815=E6=97=A5=E4=B8=83=E6=9C=88 =E4=B8=8B=
-=E5=8D=882:39=EF=BC=8CHuacai Chen=E5=86=99=E9=81=93=EF=BC=9A
->> [...]
->> >
->> >> You said that you've accepted my suggestion, which means you recog=
-nize
->> >> 'loongson' as the better name for the drivers.
->> > No, I don't think so, this is just a compromise to keep consistency.
->>
->> Folks, can we settle on this topic?
->>
->> Is this naming really important? As long as people can read actual ch=
-ip name from
->> kernel code & documents, I think both are acceptable.
->>
->> I suggest let this patch go as is. And if anyone want to unify the na=
-ming, they can
->> propose a treewide patch.
-> Renaming still breaks config files.
+Fixes: f561ec8b2b33 ("dmaengine: Add STM32 DMA3 support")
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: "Amélie Delaunay" <amelie.delaunay@foss.st.com>
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>
+Cc: dmaengine@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-arm-kernel@lists.infradead.org
+---
+ drivers/dma/stm32/stm32-dma3.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This is trival with treewide sed :-)
+diff --git a/drivers/dma/stm32/stm32-dma3.c b/drivers/dma/stm32/stm32-dma3.c
+index 4087e0263a48..0be6e944df6f 100644
+--- a/drivers/dma/stm32/stm32-dma3.c
++++ b/drivers/dma/stm32/stm32-dma3.c
+@@ -403,6 +403,7 @@ static struct stm32_dma3_swdesc *stm32_dma3_chan_desc_alloc(struct stm32_dma3_ch
+ 	swdesc = kzalloc(struct_size(swdesc, lli, count), GFP_NOWAIT);
+ 	if (!swdesc)
+ 		return NULL;
++	swdesc->lli_size = count;
+ 
+ 	for (i = 0; i < count; i++) {
+ 		swdesc->lli[i].hwdesc = dma_pool_zalloc(chan->lli_pool, GFP_NOWAIT,
+@@ -410,7 +411,6 @@ static struct stm32_dma3_swdesc *stm32_dma3_chan_desc_alloc(struct stm32_dma3_ch
+ 		if (!swdesc->lli[i].hwdesc)
+ 			goto err_pool_free;
+ 	}
+-	swdesc->lli_size = count;
+ 	swdesc->ccr = 0;
+ 
+ 	/* Set LL base address */
+-- 
+2.34.1
 
-Thanks
-- Jiaxun
-
---=20
-- Jiaxun
 

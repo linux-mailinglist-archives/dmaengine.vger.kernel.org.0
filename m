@@ -1,126 +1,119 @@
-Return-Path: <dmaengine+bounces-2713-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2714-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0207C933B01
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Jul 2024 12:13:54 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F3020933C4E
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Jul 2024 13:31:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 48E70B21B5C
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Jul 2024 10:13:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4FA322830F9
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Jul 2024 11:31:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E61817F390;
-	Wed, 17 Jul 2024 10:13:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA38217F393;
+	Wed, 17 Jul 2024 11:31:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eTry9gij"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ptGh7WWU"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC80F17F362
-	for <dmaengine@vger.kernel.org>; Wed, 17 Jul 2024 10:13:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FA5A12E48
+	for <dmaengine@vger.kernel.org>; Wed, 17 Jul 2024 11:31:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721211216; cv=none; b=OskmjlakZTosSSvKwiid9kOf1AjQRtiLyHKpdYTM2MIfLCjCfNuJ310mNlumFzthNYFfoGJz8hjirNPGzZuQydFdimvNTVd80Bjcb8j51ncPsopEtFZia4herkAe6Agw7pJ0GOBOVcoC+CeKa0C+5VGaXaoCr5crLe345QO14wI=
+	t=1721215869; cv=none; b=l9GPjGhKtAIxNobf6BZvmlwp8nI0VnJRoQN8vuk7EhQI1gcb0c7uFX4oDybavQHvWHkrcPrKKTISTs+L1zCm0amyLeSXDungyLOXXl+guIKohlsMnI7QQ60hzcHmxNiC9V1eKPQuGBb2QWDFTlqiVZPZW4+saopgfILuhfgNbIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721211216; c=relaxed/simple;
-	bh=hxNjZ66OWMZr/C2wZN8pEwfxToH7/kQfSytf/d2PWmE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CFqVgbqFsrjcsfX/JyH7WdbLWsLSmWECG2rzOgLOl0x7XEqtpFAkLLHj1DDst3HJG80R8bw3W77O5g3A6NJKShrjaeLBC8WMFt0JlKEaxzbr6Z/POAL+r62yVLThMEdRdg+DxUwt9+uJG12v8V1RlUVWY+j9ZlkuOV363bFFYDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eTry9gij; arc=none smtp.client-ip=209.85.167.52
+	s=arc-20240116; t=1721215869; c=relaxed/simple;
+	bh=j/YRQeImIPhUV+MS4tTrxYdWgyGt1EoYQBbNU/W/Bbc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kSAbh5JeVplQfhh8sJC2+iTfgiOrjB/3FIHZ0kXHexRvYGqkmVZ2+iR1efBs5zTtmdNh0nwl61Bf5YZoPcFQhhmYeRoHfSY2OPyLWYN5/7xj5HPXD1Ex7QdgpR57n4gIy01Mzo5K8xil154+wGAmYZ0HSIyFMvQaEDtZ7YY0T0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ptGh7WWU; arc=none smtp.client-ip=209.85.128.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-52e97e5a84bso9377596e87.2
-        for <dmaengine@vger.kernel.org>; Wed, 17 Jul 2024 03:13:32 -0700 (PDT)
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-65fc94099a6so39798087b3.1
+        for <dmaengine@vger.kernel.org>; Wed, 17 Jul 2024 04:31:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721211211; x=1721816011; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZMZYKLKt5nFd5HxKUlHRZ5jJLcFrY6yg4Rsgp9kmoAQ=;
-        b=eTry9gijch8j+EOLZTkQZOUnzQKoNg0mfK1Y9+lo+L5QSnhr2yw6gOT8UXcOBtDQXG
-         S5eeFriSKDbBJbLkjRMqGlZyTsVpNcEOo2QXA0S58jtpyuAWDtkBCOA31+fihBcF24Fe
-         ghFEkwPgkrJfLO6mpydx6GGK7KkbCg0nxZq3CvlZNDnLkW69qCb5AZNZZx+qhKdA0zj7
-         64vBP1fd9T8pVQEJFLF90GqFg4IGF/LidLUpEjYgSM+ecXLWQK09B1wy8cgijdn+7+FX
-         TW2OqYN9bRMRvLYcuNQjdB+aQqjgqB+uAShZlh4eFnIo75QIOZNk9WTu2JxV+Z7p+3Yi
-         wBug==
+        d=linaro.org; s=google; t=1721215866; x=1721820666; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=TjcbV6PRhjkqouO1Kr6u0vYUOeQPkLeQL8bm2L2+2n4=;
+        b=ptGh7WWUHmj90IJx0LwL0g0OhsggtUc8UvVjRW5ijcn7cjlDMdzYB0mzYMv3hWABAQ
+         XbKDgWBUFnBNU0JslpieEwuuMi61YADgV570z/uC11nOtb2/l/eYXrNA/Op0drjbjQQd
+         +49fdyJLUyRSnDdyE1RCXooSLKeitEFT+2dLHOcekvjoFEczv4S8Avk6ldGdJZh6XlTn
+         DK/HzueefrQ09gUVNqH+XlyxLsf+fZQnXmAP6HV7Ibz9w6yYe63KiJFdyFPJcIlTC26C
+         PDGc5aVxNKzyZVedxIpaeb53U4MY2FRRXcJEP6C0ZjLmEwxAx/SYphKO9DIYYGLlkG0R
+         rW1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721211211; x=1721816011;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZMZYKLKt5nFd5HxKUlHRZ5jJLcFrY6yg4Rsgp9kmoAQ=;
-        b=Pwjbz/Ql/s+Nf2LWpK1Ii5U0F/32mVE4/n0oofohuLiXlMDEox1Qw0DGUto08aXPdv
-         t74SMwK+ZB8bffiRI8jKpmIrtNCf4CJvszw6OaP2ORtcfSwp+fgDQs2duQkAXYNC/zZW
-         m1sesnCTGRLStwZ/15Hl1HLt/GOrl37+PiQovmzYo4hcgxNPjlQ/+qK+d57VzWqGNYLX
-         Jla+TVSjN1+EpA2qTN+iLyabi82TA5Ur+YUO6ytKBCkAKFs9Nj203qjkLO/C8dpj35IS
-         gG694thZDWtmRIU+t4BGwjwIYiN3YzTWwiBL6vo1KgMU1EpcjDPvt4aYWbS2Vmqoc5Mu
-         KzPw==
-X-Forwarded-Encrypted: i=1; AJvYcCWyGtnvLnNy2cQHI+U+8xxCVkKq7raO3KvH/U4B5jl9Y9DI741+plTdzlPn3BPQUF0O+zQDehgg5bZVky+pPYa7sYc38S8HGPIi
-X-Gm-Message-State: AOJu0Yzdt6vZ7u4H/KQqd4l09lV/cpE5h03hnDv4hF4JFX7RUFxYnrK1
-	82oNqMTcDvfdBKjJgY73ZOiVduV277/zARfgwkn4i22UH45UXiffkoBwu7JwmbcA/pXHryBRTkd
-	l
-X-Google-Smtp-Source: AGHT+IELOSsF1rgKjRha5ckjNRdafXsWAIxx9DRlMPjsOekcKMHphs3bL5kmZxENhMXZN90ppLOydA==
-X-Received: by 2002:a2e:8e8f:0:b0:2ee:d5c3:3217 with SMTP id 38308e7fff4ca-2eefd153332mr9815001fa.47.1721211210870;
-        Wed, 17 Jul 2024 03:13:30 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2eee17b1ccdsm14243311fa.54.2024.07.17.03.13.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jul 2024 03:13:30 -0700 (PDT)
-Date: Wed, 17 Jul 2024 13:13:29 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Chen Ni <nichen@iscas.ac.cn>
-Cc: vkoul@kernel.org, konrad.dybcio@linaro.org, gustavoars@kernel.org, 
-	u.kleine-koenig@pengutronix.de, kees@kernel.org, caleb.connolly@linaro.org, 
-	linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: qcom: bam_dma: Handle the return value of
- bam_dma_resume
-Message-ID: <nyt7tngjlglaksweiwgj3bfr4b2kbvbeejv32yrk6qv7rexlpw@fgl7v2iet3jh>
-References: <20240717073553.1821677-1-nichen@iscas.ac.cn>
+        d=1e100.net; s=20230601; t=1721215866; x=1721820666;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TjcbV6PRhjkqouO1Kr6u0vYUOeQPkLeQL8bm2L2+2n4=;
+        b=UTnucUMQDMlZD/Zo1xi745hQckzfYecYjYOAdyo8WuzwOOlW/B+AVMzPpKQPiN6Es1
+         E+V9iwG/DOOPKMdgsxwAmLAmcaTm8aK1HWJuk14aEnp8DJqnOyoGzCQ1p+xqPyW6jiXw
+         uK4fUEWnmtYwDej1xg+KeoN393s3UReYPmbkB7B/QQ9E120/AKRTuxgZd7zGcx8MvP48
+         XlDE0F341/Um4WjL1UxJCA+IMAgl2XZqg+7Y8PfIaZRvsNheua7ifix69CSrj09HSZNV
+         lAuKL8dIF3mG7MsB1kRbzfxc+xR3yEsoUwuDpBCtFONJONJuOxtO7yf6YEQ9rluO1Nhs
+         XKfg==
+X-Forwarded-Encrypted: i=1; AJvYcCWZ9azf0zwQoZd8YoHEVll4sMPa9NOyCwnNyu9tH18xsMRX1+0AlS3Igcnq0cknKrggF8B9uD5elsnCWLNiCTGYWTbsTGwPRVsZ
+X-Gm-Message-State: AOJu0Yzjw+/jwOQsZ4aMlTho2jO12qU0WkVbNsS1GkctLAjT9uXzhJF6
+	H8P92Mh0EL4p3DDu/2TurmYYjXL6mIQ6ZmZvGkIv4yMFBh4MmJpsdGCDeF4yMEw5ed1brFMETNK
+	uOREAUSTWMAgEGncKRYXdOIjIZWZ7hLF+Tbo6eA==
+X-Google-Smtp-Source: AGHT+IFe86geQlpQGKP7hmjpN4o42Eh67HJePPfk+Jd7pBA+Bpmq3c1TNuJm+qDK3OrLAQbeECL1dlE6i/C5QetSnf8=
+X-Received: by 2002:a05:6902:154b:b0:e03:a939:22be with SMTP id
+ 3f1490d57ef6-e05ed69b9e3mr1672804276.10.1721215866554; Wed, 17 Jul 2024
+ 04:31:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240717073553.1821677-1-nichen@iscas.ac.cn>
+References: <20240717072706.1821584-1-nichen@iscas.ac.cn>
+In-Reply-To: <20240717072706.1821584-1-nichen@iscas.ac.cn>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Wed, 17 Jul 2024 13:30:29 +0200
+Message-ID: <CAPDyKFrcGYocPKy-WB3EdB+Jx0=BztzXz1r=5y3JNTeXF84-7g@mail.gmail.com>
+Subject: Re: [PATCH] dmaengine: pl330: Handle the return value of pl330_resume
+To: Chen Ni <nichen@iscas.ac.cn>
+Cc: vkoul@kernel.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jul 17, 2024 at 03:35:53PM GMT, Chen Ni wrote:
+On Wed, 17 Jul 2024 at 09:29, Chen Ni <nichen@iscas.ac.cn> wrote:
+>
 > As pm_runtime_force_resume() can return error numbers, it should be
 > better to check the return value and deal with the exception.
-> 
-> Fixes: 0ac9c3dd0d6f ("dmaengine: qcom: bam_dma: fix runtime PM underflow")
+>
+> Fixes: a39cddc9e377 ("dmaengine: pl330: Drop boilerplate code for suspend/resume")
 > Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+
+Kind regards
+Uffe
+
 > ---
->  drivers/dma/qcom/bam_dma.c | 4 +---
+>  drivers/dma/pl330.c | 4 +---
 >  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
-> index 5e7d332731e0..d2f5a77dfade 100644
-> --- a/drivers/dma/qcom/bam_dma.c
-> +++ b/drivers/dma/qcom/bam_dma.c
-> @@ -1460,9 +1460,7 @@ static int __maybe_unused bam_dma_resume(struct device *dev)
->  	if (ret)
->  		return ret;
->  
-> -	pm_runtime_force_resume(dev);
+>
+> diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
+> index 60c4de8dac1d..624ab4eee156 100644
+> --- a/drivers/dma/pl330.c
+> +++ b/drivers/dma/pl330.c
+> @@ -2993,9 +2993,7 @@ static int __maybe_unused pl330_resume(struct device *dev)
+>         if (ret)
+>                 return ret;
+>
+> -       pm_runtime_force_resume(dev);
 > -
-> -	return 0;
-> +	return pm_runtime_force_resume(dev);
-
-Which function will unroll the earlier clk_prepare() if we return an
-error here?
-
+> -       return ret;
+> +       return pm_runtime_force_resume(dev);
 >  }
->  
->  static const struct dev_pm_ops bam_dma_pm_ops = {
-> -- 
+>
+>  static const struct dev_pm_ops pl330_pm = {
+> --
 > 2.25.1
-> 
-
--- 
-With best wishes
-Dmitry
+>
+>
 

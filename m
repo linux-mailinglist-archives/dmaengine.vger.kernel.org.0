@@ -1,144 +1,114 @@
-Return-Path: <dmaengine+bounces-2710-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2711-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E90D093391E
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Jul 2024 10:35:10 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7173A933930
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Jul 2024 10:39:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6CDD5B238EC
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Jul 2024 08:35:08 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D3B24B217C4
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Jul 2024 08:38:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B70610953;
-	Wed, 17 Jul 2024 08:35:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CF97383BF;
+	Wed, 17 Jul 2024 08:38:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bigItTj5"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="MsqqaVw5"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA4453A8CB
-	for <dmaengine@vger.kernel.org>; Wed, 17 Jul 2024 08:35:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2133A10953;
+	Wed, 17 Jul 2024 08:38:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721205306; cv=none; b=ohFRIQpqoC5XFLtAQ7Q3s4HQy9UneUtKNyLn3EMuomG5esLNLS79nJ182FDa5VyeRLS2LQRnkY2/z/ENtS0g2JKywGNZBoL4Py2YdWfw8VsU2VMk2i30AX3LpbgIE2XSMcFyJstS0vGFnfiLzg+7Xe+bkB/miA4GxRsY7f04UxE=
+	t=1721205533; cv=none; b=hoADjICKABThkg/FoUF7ZJtT0UzSqLVJlKV6861ePoJntnKAvxUr0YowgIYb/yknJ/+6pR0f4lWY/wiZBEbbyL8L2IrDIl4ELDG1Ku7Zaw/oT/fNf7AwxIMZdw7g/nYWOe0ORm1RJdvK5mmfkWm6PWszJydbu20ZK6qaKLnC3hg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721205306; c=relaxed/simple;
-	bh=7yWT9wGZeLIqjFls1Qiq/gphKhA3MEBdNOj7oVHIg3Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m4fI+beABKxT+alT5ioCSkpTbKGoMj6mtDTrzPJNaGCmSz2s0F3IUiif+jsi1ZBhhx4LfgELuSizIBtw6PdAX9s768/hV04khTrNTVm1iAHLPqIcfBAgBc2e6sOSu+G5nWqH5kNYm0CVg9W4/TRVIiQRmK3HGEpNa85EccJocEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bigItTj5; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1fc566ac769so19385ad.1
-        for <dmaengine@vger.kernel.org>; Wed, 17 Jul 2024 01:35:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721205304; x=1721810104; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=mNkMLlzIh0FRUMrqsEmjaMD7DKmMc/WtpJCzEXhD76s=;
-        b=bigItTj51EMhBldwnwgIA/LvPmUqdzn3f2dkoW026ssQPtOp4obtCgW0tIilMgcsQN
-         6TOpZHPyyI2PyyE1nBXBoj7ZmiJLdUFprO3J1d8MDgaNTITKyF8r4d14GP02IAmTzEWu
-         7wGjkm8z5RLX9UWhclvPYvdwB8MqFeMlKl6d3GmvbY3WGsbHs0J1KNjS9/KIys2B3kTW
-         NPjxrSOtIvPW3mfgZP5kjovYjPg2dpIN5A0x7uBWf6G5nTSdWJm/013uO8mv8Af4qTVc
-         36CmRXVNDpKoIwa1J2JrtofnT7PAEdO1xnqHv2UPBGMFWYnfDUB3/4iGDO30C8rxyCad
-         DwBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721205304; x=1721810104;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mNkMLlzIh0FRUMrqsEmjaMD7DKmMc/WtpJCzEXhD76s=;
-        b=rDWErRHg7wgyHpENq2IkUwQfPIDxxb9iaM/fiWzPcE+DO07jxohf08LrrhzeCPu23z
-         1t+kp5MpS8UxdGJkXto9l7SImFzClUAuq9Syx1Tx8GOuKzyaIPz5N0hjr6UjSpvSOR4V
-         w7DNjGmvcjuRPJaTsujb9tqRQmJM+B/aKCOvXn1n9BfNDgY4KOonBhTD4m03b7seyQId
-         9zcOIzZycrcgO1drFyF1InBlJgzlITrHRzl4WzQUmAMD2GDY0upCtB2fsGG3MpXIirq3
-         ETQvIfwh3uC6xVhumqT3P5PJ+G5dOODMaTelsRtAsxYjZBGgr3b3CyEbyJQ1ug6ttHrP
-         6pLA==
-X-Forwarded-Encrypted: i=1; AJvYcCWgOXrnxYCOIJDAd+Z84iwa9e31dUDpfPN1OODU6pDoHARQwc3MuJcPEqeNQ5tMZVfHce1XGHG5q6wCoclphZNnTxenlDkRobMD
-X-Gm-Message-State: AOJu0YzCMlvS1HQO5nE/gvLP/0i/0K5Od/49FauRumXM9M93AnBp1DSD
-	/haY4hyzP3Q+y+PmaZ/o2K36L08C6Zuw6jFscigTEneiPhL+WFWyhk/P5O+BsA==
-X-Google-Smtp-Source: AGHT+IGl2IJMzGLyoVjbWN3voJb+DI9d1XbG0jgZwcz3Yoiew4Ex5l2yrPzMBWFdANacOw+Nwc0rgw==
-X-Received: by 2002:a17:902:ce8f:b0:1fb:cf82:11b4 with SMTP id d9443c01a7336-1fc4e13590amr8333135ad.6.1721205304162;
-        Wed, 17 Jul 2024 01:35:04 -0700 (PDT)
-Received: from thinkpad ([220.158.156.207])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fc0bbc25d2sm70270675ad.100.2024.07.17.01.34.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jul 2024 01:35:02 -0700 (PDT)
-Date: Wed, 17 Jul 2024 14:04:58 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-Cc: fancer.lancer@gmail.com, vkoul@kernel.org, quic_shazhuss@quicinc.com,
-	quic_nitegupt@quicinc.com, quic_ramkri@quicinc.com,
-	quic_nayiluri@quicinc.com, quic_krichai@quicinc.com,
-	quic_vbadigan@quicinc.com, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] dmaengine: dw-edma: Add change to remove
- watermark interrupt enablement
-Message-ID: <20240717083458.GC2574@thinkpad>
-References: <1720187733-5380-1-git-send-email-quic_msarkar@quicinc.com>
- <1720187733-5380-3-git-send-email-quic_msarkar@quicinc.com>
+	s=arc-20240116; t=1721205533; c=relaxed/simple;
+	bh=n7bz61bqEd9Y7oOrUTLbk/i2ghWK5CvSfQaqdkPkn9s=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TywgzusIz1+qaIRPWfXKG+QbZfdQgAhD4N2w+5Sd0t2EGgU7tMtKl/Pzp/u7NQF9rAJsbtqE252wAFpS3SF+Tvm87VrDlJjaLMZx3U1VdjJ7SMw2fdn+ZivbGYtDgWDa4tYG+RO7vRiyOp0Jv1KMzAMz1+xnpOZ0umQYrGO8RRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=MsqqaVw5; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 9194BFF805;
+	Wed, 17 Jul 2024 08:38:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1721205528;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=54iksZJpA1HrffCxEFlTmd/giXr/VmfDqOO/3tGET84=;
+	b=MsqqaVw570YbZZU9+pYH05HWfQS7ZsoUuRsKejvXnoQxFPX/6Kbc5KVgBUMvhbn0vFMPRE
+	UOgKo95P1yRn/RBOs6PXPZ3nBf55CmyEJDhmhFev6+WazXjK2HZD0xA7wiK4uw82WZ9SQ0
+	kosH+5FCQlbGTHhWymZUf/ULSEAk/RPIzlcVPcfp9RUeIkk6WLuzZd4D6SFSiTOHzHofbf
+	pFG1sdkGWLCjXUofsiu4QSGMcFF3c3mpZ8Fuq+o41qzIfpkEE0GbAtUo58is0LskhcseSv
+	EWL+38XVkrgFc9vKQHYmX7+9tA1KrRzmsdDBRcTLZp5T8rtNmkSQtgWDqWzXjA==
+Date: Wed, 17 Jul 2024 10:38:46 +0200
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Frank Li <Frank.Li@nxp.com>, Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Han Xu <han.xu@nxp.com>, Vinod Koul
+ <vkoul@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Marek Vasut <marex@denx.de>
+Cc: linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 2/6] dt-bindings: dma: fsl-mxs-dma: Add compatible
+ string "fsl,imx8qxp-dma-apbh"
+Message-ID: <20240717103846.306bf9fd@xps-13>
+In-Reply-To: <20240712163503.69dad6b1@xps-13>
+References: <20240520-gpmi_nand-v2-2-e3017e4c9da5@nxp.com>
+	<20240527121836.178457-1-miquel.raynal@bootlin.com>
+	<20240712163503.69dad6b1@xps-13>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1720187733-5380-3-git-send-email-quic_msarkar@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Fri, Jul 05, 2024 at 07:25:33PM +0530, Mrinmay Sarkar wrote:
+Hi,
 
-Subject should be:
+miquel.raynal@bootlin.com wrote on Fri, 12 Jul 2024 16:35:03 +0200:
 
-dmaengine: dw-edma: Do not enable watermark interrupts for HDMA
+> Hi Vinod,
+>=20
+> miquel.raynal@bootlin.com wrote on Mon, 27 May 2024 14:18:36 +0200:
+>=20
+> > On Mon, 2024-05-20 at 16:09:13 UTC, Frank Li wrote: =20
+> > > Add compatible string "fsl,imx8qxp-dma-apbh". It requires power-domai=
+ns
+> > > compared with "fsl,imx28-dma-apbh".
+> > >=20
+> > > Allow 'power-domains' property because i.MX8DXL i.MX8QM and i.MX8QXP =
+need
+> > > it.
+> > >=20
+> > > Keep the same restriction about 'power-domains' for other compatible
+> > > strings.
+> > >=20
+> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > Reviewed-by: Rob Herring (Arm) <robh@kernel.org>   =20
+> >=20
+> > Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.gi=
+t nand/next, thanks. =20
+>=20
+> I just realize now I picked this up whereas it was not intended to be
+> merged through mtd. I'm fine keeping this patch for the next merge
+> window if I get your explicit agreement otherwise I'll drop it.
 
-> DW_HDMA_V0_LIE and DW_HDMA_V0_RIE are initialized as BIT(3) and BIT(4)
-> respectively in dw_hdma_control enum. But as per HDMA register these
-> bits are corresponds to LWIE and RWIE bit i.e local watermark interrupt
-> enable and remote watermarek interrupt enable. In linked list mode LWIE
-> and RWIE bits only enable the local and remote watermark interrupt.
-> 
+I need to send the PR to Linux, I will drop this patch which can anyway
+be taken in the next cycle.
 
-I guess you should also rename DW_HDMA_V0_LIE -> DW_HDMA_V0_LWIE and
-DW_HDMA_V0_RIE -> DW_HDMA_V0_RWIE in the code, unless the register name changes
-with mode.
-
-> As we are not handling watermark interruprt so removing watermark
-> interrupt enablement logic to avoid unnecessary watermark interrupt
-> event.
-> 
-
-How about,
-
-"Since the watermark interrupts are not used but enabled, this leads to
-spurious interrupts getting generated. So remove the code that enables them
-to avoid generating spurious watermark interrupts."
-
-> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-
-Again, please include Fixes tag and CC stable.
-
-> ---
->  drivers/dma/dw-edma/dw-hdma-v0-core.c | 12 +-----------
->  1 file changed, 1 insertion(+), 11 deletions(-)
-> 
-> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> index 88bd652f..aaf2e27 100644
-> --- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> +++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> @@ -197,23 +197,13 @@ static void dw_hdma_v0_core_write_chunk(struct dw_edma_chunk *chunk)
->  	struct dw_edma_burst *child;
->  	struct dw_edma_chan *chan = chunk->chan;
-
-This becomes unused as reported by bot.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+Thanks,
+Miqu=C3=A8l
 

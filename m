@@ -1,61 +1,61 @@
-Return-Path: <dmaengine+bounces-2740-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2741-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36A3E93CE1F
-	for <lists+dmaengine@lfdr.de>; Fri, 26 Jul 2024 08:27:11 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 96A2D93CE22
+	for <lists+dmaengine@lfdr.de>; Fri, 26 Jul 2024 08:27:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E595928172C
-	for <lists+dmaengine@lfdr.de>; Fri, 26 Jul 2024 06:27:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2042D1F2303F
+	for <lists+dmaengine@lfdr.de>; Fri, 26 Jul 2024 06:27:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7F4B176231;
-	Fri, 26 Jul 2024 06:26:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D46D176AA2;
+	Fri, 26 Jul 2024 06:27:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="BqIYpKfb"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NSxGqPc3"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2081.outbound.protection.outlook.com [40.107.236.81])
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2079.outbound.protection.outlook.com [40.107.102.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D114217556E;
-	Fri, 26 Jul 2024 06:26:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97151176255;
+	Fri, 26 Jul 2024 06:26:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.79
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721975217; cv=fail; b=igsgbPUpvLkMSuMXF/7NWu7AxDe/GRumdiP79nUzchKi2mctQvDiOpEDx10CdsnsCiftJGV43RyvLMRGomjdp7ElNhuMVcQ80hXnvgWWcT7nkD8uvOdf0nojN4fJegGvu6PRIoBNcRX4YII7J0WSHH72ulQqAy0phTkOI2N2iaM=
+	t=1721975221; cv=fail; b=luVES9A95gTAEh6a1uYghH9WfEWAHLSkGbaLWPXFWINTvlQaims9H1b6XZHpFCqomgwlp3W+P+LDD+MLVzPOU71NcHmaMVhPrbCGQ4kIrJoeZXM9aLCeW4D6em1aFHrJ8aI+kZUqf+WQ+jMhUOKZH3qBtr342tDGGKZoSzazk/8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721975217; c=relaxed/simple;
-	bh=LUm1/HxW/IdcfvkP9Byp+oPtMzjIt+po76kcO8Evps0=;
+	s=arc-20240116; t=1721975221; c=relaxed/simple;
+	bh=ohzNNItMRwmIPWvRkMGgghSpEUQT9P/0RBIIgcxtjSw=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EQvuH1z2T+9yU4oy+DgOrkKlGRuA9LH0mEt/ecks/oKBLs+uJKCbC1BW8BHqxNnaDX2hgqUP20a/J6Lh3xnCN94FoOffzCX1vb0wNwcUfDQxZb6hrbN9y0VK7G9GB3Q9yOxDFMKbaGEeLXGaGAMEKJhPDj7RUkzSYLOTaibEAq0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=BqIYpKfb; arc=fail smtp.client-ip=40.107.236.81
+	 MIME-Version:Content-Type; b=ZiWj+Z8HHTClwPYkVyB7kM/DeVpFe3saE6IH+8x1+VfT55gtW2zPLW2xdiIpDx1WMEQfHRa86y52ZHZCP+ZXnpFhAGwd+SUzBYib6893QGFiAaSOxaGOQayRLKmNVIJsybXnpaj943lS79o2LBQmcElJZLDBjxX+TVXivSlJlCg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NSxGqPc3; arc=fail smtp.client-ip=40.107.102.79
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=SdIKo+eGUO2+BxpnfmawI25WzIJiehPL8p4X6mD1Mvvl3IU2oxNH4O1kpEWbPYixIlqfyWJC0ZTASwQz/xPROr2PcHwyAYb0E14P7wd8eZkpDnrUa+1tg8ogjay5KDMsYK9rAEmKJYwGU0bvt0rWlsLc3XnMgihbmrAVPAlACD8DMnbVSmneVbw5eKsD+W4gWfPfR0V7BBIfzZHqfemS3+aaLxAa5hpo+gD8d2a4clmBAXWcky/813Wm5S5VJUU8VAEhYV357V+txqZb/EA89iSssCMGrk86JjV9DGejUs6EQ75hM5nJMqKWFswTkrH7AEHKPU2w1qz6df85WDWVmw==
+ b=NXzlWePQqfrXZxKExBGUsVqfAw7xjRyfX8OB+DXD2KB7GZ5ZSlA0xATCy4e+ReB+RnrvGw08WUj6RhksfdyATHUZgB+RML3i3AcD/tmeH9gq1UUfbtb81NJot/jq5GprYxwJ0XUdV49t2TP6SZrQfE+sQRX+9xtunhTeVgwv3evtkNTPB4RdJEbocNZWWfOyNxZIQ+CJOOMag6Z9jjeSlq+t/u7QenX+hgqZBb2P48DArsJN4VlOQxPhkIK8uz2a+qFBzmYn8KutfhH8mJrBO3WlHYg+0fsgt5UqSGdWbaR1ElxonKbysPfzqF7A3d+flnNB65CF/AwZ9CQOzNy9Sg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jQQs2D5QEhvfB9NPCvT5CVn9f09oD8CZeoXEwyJ5asY=;
- b=F1FuedcxCDNa77H5Yd06XiUnbfgK/jtuIl9IgiBl18HiD7HC/l470Sd2ddkWdFSGm5+JTX2qaLBXvpZdEhZBXSWtBNLmdSlWoTS2BfitBnldzJ6o8h5ZNcGZdSTMyUAjvWCRR5wqLS1oRsMipb/8Rx9dcWXv+gde3FBfaBtbBJ4CYnI/gVbRyZhZN+YrVu2ha0q1RuXNOjD8FxH9axUn5oDVHiRQNwv0g8sV2wfdwdD2BXcQtdCj+ikWl15vcA4pobJuUje+M8clrRsEVHUAdpOCA1RuFxxYwEQ8qvl4qM2k2VcC1Ko+BdyjnlHseFtr+QsTV4Qs2I/xvM4hgvEWNA==
+ bh=MkF8tMqG9rcX9LES/G1M4qlMugBcZo+yog47nzfE4ag=;
+ b=erWp/a3srdEsdWhv0RyFHs/J105jla3sQsJslhXzkfXvYaOfsFOmnDebrZgRxqk2KpQgzWQ7W+7C+lQjGxHDTJYrjiYFmCNvDALSLF/pod68IvU465uG6KOuvlUwXrWopIay8ihRqv1NkekaEMClxhLF2j7sVbr94XKY7X3xdfwTDPZlwd1jb8TIjKaTyPeKo2i6X3uzuCZDKAvwobVryJ19HgHGwZ8NvPl20fg24wkB8DJUXKqDkrgtb94Q5y+OJild+v/wph8LnD2aEllfkJAWFN8+Ohl4HLTO5mgjvCNFoIh6EyfipgcbmeD4zzAVQ8e9zXo9M6lh5GSVYrWpmA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jQQs2D5QEhvfB9NPCvT5CVn9f09oD8CZeoXEwyJ5asY=;
- b=BqIYpKfbYCxD9C1f/spMNZnjQStJwKox9YPM5A/p/Cn92YIxJuZHB4WMbrwQuHEVTAoX35fHZtCbeZd0wDN1aluK4yn6qVFjnfxCeqevbuCv2LycprfXFDJFTtZtMe0rk5GTIgrPVb4YBvyWVCPkUk0X8RrWhguSM2hEFhqKQp8=
-Received: from BL1PR13CA0072.namprd13.prod.outlook.com (2603:10b6:208:2b8::17)
- by PH7PR12MB7235.namprd12.prod.outlook.com (2603:10b6:510:206::14) with
+ bh=MkF8tMqG9rcX9LES/G1M4qlMugBcZo+yog47nzfE4ag=;
+ b=NSxGqPc3N9xhSiiF56sfNgskVNrXkt2gKWiUjRVLxWq/nzRgv/n/Ewquq8fwvDvXgA5BkW+uGXROvomCzaKP5hU4TTcN9/XqREhBFtu893RWsuSbBAVp3GeKsWHVvEc1cY/XcTj/M4es1uWqOXgkspNOLS241OWat7esZNPaZic=
+Received: from MN2PR07CA0030.namprd07.prod.outlook.com (2603:10b6:208:1a0::40)
+ by CY5PR12MB6407.namprd12.prod.outlook.com (2603:10b6:930:3c::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.20; Fri, 26 Jul
- 2024 06:26:52 +0000
-Received: from MN1PEPF0000ECD7.namprd02.prod.outlook.com
- (2603:10b6:208:2b8:cafe::31) by BL1PR13CA0072.outlook.office365.com
- (2603:10b6:208:2b8::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.20 via Frontend
- Transport; Fri, 26 Jul 2024 06:26:52 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.29; Fri, 26 Jul
+ 2024 06:26:56 +0000
+Received: from MN1PEPF0000ECDB.namprd02.prod.outlook.com
+ (2603:10b6:208:1a0:cafe::8d) by MN2PR07CA0030.outlook.office365.com
+ (2603:10b6:208:1a0::40) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.28 via Frontend
+ Transport; Fri, 26 Jul 2024 06:26:56 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -63,20 +63,20 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- MN1PEPF0000ECD7.mail.protection.outlook.com (10.167.242.136) with Microsoft
+ MN1PEPF0000ECDB.mail.protection.outlook.com (10.167.242.139) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7784.11 via Frontend Transport; Fri, 26 Jul 2024 06:26:51 +0000
+ 15.20.7784.11 via Frontend Transport; Fri, 26 Jul 2024 06:26:55 +0000
 Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 26 Jul
- 2024 01:26:50 -0500
+ 2024 01:26:54 -0500
 Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB06.amd.com
  (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 26 Jul
- 2024 01:26:50 -0500
+ 2024 01:26:54 -0500
 Received: from xhdsneeli40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Fri, 26 Jul 2024 01:26:46 -0500
+ Transport; Fri, 26 Jul 2024 01:26:50 -0500
 From: Abin Joseph <abin.joseph@amd.com>
 To: <vkoul@kernel.org>, <michal.simek@amd.com>, <robh@kernel.org>,
 	<u.kleine-koenig@pengutronix.de>, <krzk+dt@kernel.org>,
@@ -85,9 +85,9 @@ To: <vkoul@kernel.org>, <michal.simek@amd.com>, <robh@kernel.org>,
 CC: <git@amd.com>, <abin.joseph@amd.com>, <dmaengine@vger.kernel.org>,
 	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
 	<linux-kernel@vger.kernel.org>
-Subject: [PATCH 1/2] dt-bindings: dmaengine: zynqmp_dma: Add a new compatible string
-Date: Fri, 26 Jul 2024 11:56:38 +0530
-Message-ID: <20240726062639.2609974-2-abin.joseph@amd.com>
+Subject: [PATCH 2/2] dmaengine: zynqmp_dma: Add support for AMD Versal Gen 2 DMA IP
+Date: Fri, 26 Jul 2024 11:56:39 +0530
+Message-ID: <20240726062639.2609974-3-abin.joseph@amd.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240726062639.2609974-1-abin.joseph@amd.com>
 References: <20240726062639.2609974-1-abin.joseph@amd.com>
@@ -101,105 +101,125 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN1PEPF0000ECD7:EE_|PH7PR12MB7235:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1595868e-ef9d-4097-ce8d-08dcad3befee
+X-MS-TrafficTypeDiagnostic: MN1PEPF0000ECDB:EE_|CY5PR12MB6407:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7fb355c8-e860-4db5-9b76-08dcad3bf264
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|376014|82310400026;
+	BCL:0;ARA:13230040|1800799024|376014|36860700013|82310400026;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?IYzDivfo4uudG0q7r3m+FXWa3SHiTIn1WaKboVjpwVPagZavNvfh0nPBbh9P?=
- =?us-ascii?Q?kjCuFlw9n5/d4yAmX/3Mjs1Al21lLMGHw1OM97o3lM4LYTU1aQeHaeSAwfxE?=
- =?us-ascii?Q?g0kuWRC7X6upAEytgG47YG18ocPNZZlytePP4KRGsqPdBHJi7ic5VtH/QWXp?=
- =?us-ascii?Q?F0mpA+fap0oFmrze24VvUeiRcdb61YdG4fpbFi2zRiM0Odbio5DdNjl1LEJm?=
- =?us-ascii?Q?jsfmw3G5noy0u+QSsi9G0usJob3aOthLtumrLP/L6Ca3XGf962kaDEd8nWT3?=
- =?us-ascii?Q?wOG1phfUAl2sjdz9uHVtCXr3yDX4XYjLgILXtyKfL+qHIGHMbTrNiZSmI6za?=
- =?us-ascii?Q?K2w+IVjUDcV2WHoww+wTD2rp2BdS6ioM4m4IGqkBvuKeGxcGQT00F9hRt0xk?=
- =?us-ascii?Q?VMDEP3k/nZpRT7UJh4NGPDWtksFW/7tTdjSfrZvz29thuEAcpa2KqGZvS8Qw?=
- =?us-ascii?Q?LMMBF95YMj4EZLk/GKf1kEwphULFxL46/9jVWYB3HhyE4Ksrltjen8xw5VfY?=
- =?us-ascii?Q?14A5SX2ccGfhv+uzwqMO0Kai3RL7C6FG3Byzkfrph+jNRtXJW5p2nv7nOf0T?=
- =?us-ascii?Q?9G9zLCWm6GTKjSaFB5AjnF7wKvmuUbj1pSKknZuNFiNpiqbsHDc5yEaQiHjA?=
- =?us-ascii?Q?IJ7/G4AgZZG8Nn4cGsKq7jP1HmOgLByGOr8/CgmVSG46lExyrEX9MMc4/GPS?=
- =?us-ascii?Q?Kv4ewlkB7ugbCr9ycV5hp+9PxO8RpUqBxwXLMqH6Zau2VcW3rMxiU2QlVIXm?=
- =?us-ascii?Q?OKF6j5Ypva10Tg+SoUV4S2aD/gluUoNsuUAZS9QeiqyOg13MokRVnoQnmibs?=
- =?us-ascii?Q?mvhPvOvCMT18rwLhqp2qYKf+yg+16qGvz7qfSpaokgjMObFVjds/nF1wz2TB?=
- =?us-ascii?Q?/CzGksovz3/KcvJg6nfVW5Q5x4GxqJdg5KMZxHrGODh7l5Cd5Vcf31kVrVjk?=
- =?us-ascii?Q?DV8CJOKbWQLco3jHoAvU0kWaazLGwrZFqR7bDRAirQLr7vr5k6ghZnbkt+UI?=
- =?us-ascii?Q?zCWYLBw+deU7t5QVJLGeYH/klY0obB236ToeYObNJ82RPzFFl9vSW0U5ezNu?=
- =?us-ascii?Q?uO0oZH4QjUtundEQwei8LdtBcaiJQj94SNVzhyvg3stnD8DRlXbe7PMnXq8W?=
- =?us-ascii?Q?tBh0AWZHiY1c9o+7bDhLsnzPCbm+ALzGmd5twbviALkaKorrC3OeFYvzE8Kf?=
- =?us-ascii?Q?+/3e6vsQASdMoEiNyCcsAjAk77N5KCb4WU3AGNmN+Aup29bzis0CH8nsJ99T?=
- =?us-ascii?Q?ioW6riyYUUpXqJ4qxd+pzM1Vw3BDcJXBl7ijdJ/DWB8p5BrA+b+cQrfNFkSq?=
- =?us-ascii?Q?6ZykSGwuQ+9b/U4LpqELdXCuTLY7iJW6xnVedrCnBHFjGWx5YHqhxEQN/e+9?=
- =?us-ascii?Q?AHeVKNJyOLUauLlC/DKO/bxwY+UpnClyKJtfynXorc+2KO5HNodaGhnAGPrJ?=
- =?us-ascii?Q?adwxpwO+0Sfe9uQ/u6KBoqvTEJpeAzE7?=
+	=?us-ascii?Q?Hxp5PXY2gQt8HEdfRUnFRFo9ZFcU50afphu2mHDlfuDZu+GunfcCWb0F6ItN?=
+ =?us-ascii?Q?KF7mKZRrWWcVi0cQHb3z1NzBXNiZfZdAb+tqte4S04axiV74UOtprX/DvTrF?=
+ =?us-ascii?Q?V6r9AuyzAOfInBc1jXucbv4HpzsTTwEWvPSGT794cmdCn51WyCNGNLaJAROw?=
+ =?us-ascii?Q?QHnzhf/NwtD0Wpphn8MohTKXhzY3C/fn43AkLrYfk5WqQQ/uB7+oKZud0OW4?=
+ =?us-ascii?Q?QLAaUmzKB4tyE24YenMd26Aa7xp+YkGHo9hZ5IW4r+2fW+W8NyyR/gTJXV+N?=
+ =?us-ascii?Q?soN47qcfqZbQs+FJs5c6yoRFuk4bEbWLmYUK8ZhJsPObp/b7VOOtGPifCEgJ?=
+ =?us-ascii?Q?x5ziZT6BsNPf12yeIy/6mG58hLjzS2qB4cWpPy4hcbGkhqZQG5DJIjbs/uJ7?=
+ =?us-ascii?Q?rEzfYjlxb4/S1jM5ERcuv0ItKwiEDq8M1rO2L0xRNeVKJ4T4tSnI2wkrXyre?=
+ =?us-ascii?Q?SMtVXU0HezydNzAA4lubx12ZvkkFhwcB0zXWIvl7XwCLFTtFR9LPhZ7knHGk?=
+ =?us-ascii?Q?tA4tei/7Smluy8TEEVjFwO2BV7E7fsYTQU2BrrI2bDifAie1Y/okSi7yQnQ+?=
+ =?us-ascii?Q?6ZGE4ogoYF1cQsTw81iUISub9o+Y3LtOUH6ouaJZl/TNxkWrN3fk6+bffZ0D?=
+ =?us-ascii?Q?Rzn1R6s98gZDwoLpn6sVNt2+8XZQMN+HCza2EHPVLM8OiH3/i3h1Wz/ZtsQ3?=
+ =?us-ascii?Q?tSo/n8iXL0SEGKtPSlSgea2JhT5+XqaeNjJhT7JjB3MBAFX8kxtw/rftUjYI?=
+ =?us-ascii?Q?qdSGm2BK4MZSNiJrk2o5szpoTUaBD32MbkBRr6OmQrUUXgX/tMPzTjOaMKih?=
+ =?us-ascii?Q?VrVJqIt4Ytknk9fIZXNyenuVzXmTjrzziyqflt3VV2ZGB49UaiDpgR/p4L9u?=
+ =?us-ascii?Q?u8NmO7NqZyBOfErV6lAk5rr8nRJt+LF/c3/EtpLn6+qR0iKA1iJbPa1pMfQS?=
+ =?us-ascii?Q?jMwnc4UIwIAL76GlMaDOt2bNiumCk5iDtaU19HEbBzPEw7RJ8wZtbrkbt27v?=
+ =?us-ascii?Q?ZD2gifc84alZ9aZhDIq5KN/OyGvzhGF9j/A44onrBDqLuI6XLfzsCa10lJFU?=
+ =?us-ascii?Q?xKihg8FgzwOX+dT45uSCTbXgqYeTedZji3Kad3bgUy1WdWdws5v7Hi3APsuW?=
+ =?us-ascii?Q?cco1oM95o9WsQV/FG+pIdMaZDiHo57MPhHdCT2U7GMuU4RhrT4l0enWsiFlM?=
+ =?us-ascii?Q?w/FwaflYqMDXxJFg2jvp57AISkb7irVGBv+mZ45DfDSXn05+nhhJC8dLzd+n?=
+ =?us-ascii?Q?Mgd9lcbNg06U30Ipw5I0+WwbpWgtkm2GfW/5Ni3y86ynWC/Q9H9JLKDtf+Hv?=
+ =?us-ascii?Q?cQUYeNuqnepk5Y0pxySjvhCmBO4UKwMl9rUXzQR0hNjELBBwqd1+HcSk+HPM?=
+ =?us-ascii?Q?el19k9+T0Gk7bYYhiRfxHZeoeSmwTC8rgBIla77WKxITJRPDBYJ9y5KpJuyB?=
+ =?us-ascii?Q?ZfIOka9evGgUoUcbD9cu/VSN2WF3MZT7?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(376014)(82310400026);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(36860700013)(82310400026);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jul 2024 06:26:51.6567
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jul 2024 06:26:55.8623
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1595868e-ef9d-4097-ce8d-08dcad3befee
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7fb355c8-e860-4db5-9b76-08dcad3bf264
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	MN1PEPF0000ECD7.namprd02.prod.outlook.com
+	MN1PEPF0000ECDB.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7235
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6407
 
-Add compatible string "amd,versal2-dma-1.0" to support AMD Versal Gen 2
-platform.
-
-AMD Versal Gen 2 has 8 LPD DMA IPs in PS that can be used as general
-purpose DMAs which is designed to support memory to memory and memory to
-IO buffer transfer. Versal Gen 2 DMA IP has different interrupt register
-offset. Add example binding documentation for the newly added compatible
-string.
+ZynqMp DMA IP and AMD Versal Gen 2 DMA IP are similar but have different
+interrupt register offset. Create a dedicated compatible string to
+support Versal Gen 2 DMA IP with Irq register offset for interrupt
+Enable/Disable/Status/Mask functionality.
 
 Signed-off-by: Abin Joseph <abin.joseph@amd.com>
 ---
- .../dma/xilinx/xlnx,zynqmp-dma-1.0.yaml         | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+ drivers/dma/xilinx/zynqmp_dma.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dma-1.0.yaml b/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dma-1.0.yaml
-index 769ce23aaac2..17f16ae7e42b 100644
---- a/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dma-1.0.yaml
-+++ b/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dma-1.0.yaml
-@@ -24,7 +24,9 @@ properties:
-     const: 1
+diff --git a/drivers/dma/xilinx/zynqmp_dma.c b/drivers/dma/xilinx/zynqmp_dma.c
+index f31631bef961..a5d84d746929 100644
+--- a/drivers/dma/xilinx/zynqmp_dma.c
++++ b/drivers/dma/xilinx/zynqmp_dma.c
+@@ -22,10 +22,10 @@
+ #include "../dmaengine.h"
  
-   compatible:
--    const: xlnx,zynqmp-dma-1.0
-+    enum:
-+      - xlnx,zynqmp-dma-1.0
-+      - amd,versal2-dma-1.0
+ /* Register Offsets */
+-#define ZYNQMP_DMA_ISR			0x100
+-#define ZYNQMP_DMA_IMR			0x104
+-#define ZYNQMP_DMA_IER			0x108
+-#define ZYNQMP_DMA_IDS			0x10C
++#define ZYNQMP_DMA_ISR			(chan->irq_offset + 0x100)
++#define ZYNQMP_DMA_IMR			(chan->irq_offset + 0x104)
++#define ZYNQMP_DMA_IER			(chan->irq_offset + 0x108)
++#define ZYNQMP_DMA_IDS			(chan->irq_offset + 0x10C)
+ #define ZYNQMP_DMA_CTRL0		0x110
+ #define ZYNQMP_DMA_CTRL1		0x114
+ #define ZYNQMP_DMA_DATA_ATTR		0x120
+@@ -145,6 +145,9 @@
+ #define tx_to_desc(tx)		container_of(tx, struct zynqmp_dma_desc_sw, \
+ 					     async_tx)
  
-   reg:
-     description: memory map for gdma/adma module access
-@@ -74,6 +76,7 @@ additionalProperties: false
- examples:
-   - |
-     #include <dt-bindings/clock/xlnx-zynqmp-clk.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
- 
-     fpd_dma_chan1: dma-controller@fd500000 {
-       compatible = "xlnx,zynqmp-dma-1.0";
-@@ -86,3 +89,15 @@ examples:
-       xlnx,bus-width = <128>;
-       dma-coherent;
-     };
++/* IRQ Register offset for VersalGen2 */
++#define IRQ_REG_OFFSET			0x308
 +
-+    fpd_dma_chan2: dma-controller@ebd00000 {
-+      compatible = "amd,versal2-dma-1.0";
-+      reg = <0xebd00000 0x1000>;
-+      interrupt-parent = <&gic>;
-+      interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
-+      #dma-cells = <1>;
-+      clock-names = "clk_main", "clk_apb";
-+      clocks = <&zynqmp_clk GDMA_REF>, <&zynqmp_clk LPD_LSBUS>;
-+      xlnx,bus-width = <128>;
-+      dma-coherent;
-+    };
+ /**
+  * struct zynqmp_dma_desc_ll - Hw linked list descriptor
+  * @addr: Buffer address
+@@ -211,6 +214,7 @@ struct zynqmp_dma_desc_sw {
+  * @bus_width: Bus width
+  * @src_burst_len: Source burst length
+  * @dst_burst_len: Dest burst length
++ * @irq_offset: Irq register offset
+  */
+ struct zynqmp_dma_chan {
+ 	struct zynqmp_dma_device *zdev;
+@@ -235,6 +239,7 @@ struct zynqmp_dma_chan {
+ 	u32 bus_width;
+ 	u32 src_burst_len;
+ 	u32 dst_burst_len;
++	u32 irq_offset;
+ };
+ 
+ /**
+@@ -919,6 +924,9 @@ static int zynqmp_dma_chan_probe(struct zynqmp_dma_device *zdev,
+ 		return -EINVAL;
+ 	}
+ 
++	if (of_device_is_compatible(node, "amd,versal2-dma-1.0"))
++		chan->irq_offset = IRQ_REG_OFFSET;
++
+ 	chan->is_dmacoherent =  of_property_read_bool(node, "dma-coherent");
+ 	zdev->chan = chan;
+ 	tasklet_setup(&chan->tasklet, zynqmp_dma_do_tasklet);
+@@ -1162,6 +1170,7 @@ static void zynqmp_dma_remove(struct platform_device *pdev)
+ 
+ static const struct of_device_id zynqmp_dma_of_match[] = {
+ 	{ .compatible = "xlnx,zynqmp-dma-1.0", },
++	{ .compatible = "amd,versal2-dma-1.0", },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, zynqmp_dma_of_match);
 -- 
 2.25.1
 

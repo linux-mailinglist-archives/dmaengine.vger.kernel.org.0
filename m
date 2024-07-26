@@ -1,48 +1,48 @@
-Return-Path: <dmaengine+bounces-2742-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2743-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35B0793D037
-	for <lists+dmaengine@lfdr.de>; Fri, 26 Jul 2024 11:13:04 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2984793D039
+	for <lists+dmaengine@lfdr.de>; Fri, 26 Jul 2024 11:13:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EA9E6283001
-	for <lists+dmaengine@lfdr.de>; Fri, 26 Jul 2024 09:13:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D292528307A
+	for <lists+dmaengine@lfdr.de>; Fri, 26 Jul 2024 09:13:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA3BD176FC9;
-	Fri, 26 Jul 2024 09:12:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45A78177981;
+	Fri, 26 Jul 2024 09:13:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sjFUizX1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oCcYy6p9"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 893256116;
-	Fri, 26 Jul 2024 09:12:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16AD9176FA7;
+	Fri, 26 Jul 2024 09:13:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721985178; cv=none; b=BOn2MLmJ2zez09r6nipfkofTG6D2NNNJkl/qXpA0ktxuvgeRr5AQ/UhPUB+7FlvyVjvFj6Ic5Lg5GtCSY1oqC3NGkjwLPWd7cJtB8mcmb2yO7gG6h0mvnoWru2bbAjJt4qUeKrhh9/A5QUhFRnxjtiJKpWyqc41AQY3JvNdpVKk=
+	t=1721985209; cv=none; b=SPpbeyX3qsUkEhC13uToZWd/JjPIKaWriCRoEb6sKhbKK1f7lKgFE2z7cpMtBXWokKUN1dFgnOKL854joc3LovkMW7Co5TmSTZ166kr6/5b9JGIaMtcuRecPzd24tI4GO/YXrbiKFoXMjI2uPG1FjBhdJ5abiJ/y/yCsC/iO4is=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721985178; c=relaxed/simple;
-	bh=5705W+I4dHfIJ1O0W1ZY1hdsJqEm6hGD71/hr+HEdvE=;
+	s=arc-20240116; t=1721985209; c=relaxed/simple;
+	bh=OlkcOzBlGZRYua9zXK7SaugLIaFYISEG//Wb3HKY/kM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TVe04NlBoUPVXvu3oxS+KMb1Fj0y/eAnUU8grPfu3h5hPsn5JBuQcED1tod7/qEMKaQHwxXvUElvabWIb5IHzt8jDc0/r5YMMj5oZTRORprxor3Y4YSRlm4rCA7fsyZJWbAjgFHsCQPe/OCsgTlApwUp557eN7yhsWrL7u3j9bM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sjFUizX1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17CACC32782;
-	Fri, 26 Jul 2024 09:12:52 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=gixzj1Aqqd/azWlEggoh1ti3Ul5haZjtHRlaElYJh0THGOMmt+ze6CRTGvobDjbc2giVdTuLBZz4vZeDaqpQ56WAA87WY7cWNskRKPu68MYPJ3wAubdtmVNcjowLlNIPoOfbMXDX4fZgeN927TqHEnpgo39/z3vgTq69oSam5M8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oCcYy6p9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC050C32782;
+	Fri, 26 Jul 2024 09:13:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721985178;
-	bh=5705W+I4dHfIJ1O0W1ZY1hdsJqEm6hGD71/hr+HEdvE=;
+	s=k20201202; t=1721985208;
+	bh=OlkcOzBlGZRYua9zXK7SaugLIaFYISEG//Wb3HKY/kM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=sjFUizX1+NH1guknBwdWUu71iHgztJUq4fMKFZ4jYQORobwdzzA4nRe81lA8y9BlG
-	 Q4fvCp7zf383TJFsIgHtqsw+C8g0Skg3JQmEC/JP7ns4YDZafg2Ea6kNYTZtOQrCiM
-	 VOAyNYuwhe3GjCqwDNM1BQlvjtNyKUJE1jDM6vkTSZ7dmWNFDCEKj/J1DCELDWiag8
-	 owiFXIfL6qKlpzb6BGc/W/gGZZZN+dD236jxD4oCeksa8Gb2xaLyccPtYCflt/Y1t5
-	 zzDI1l77Ocj2IJcvCfylpSi2cZ6deIuAEuuNsRArCZf3ddBY3o4L1KFfu6lqSBHzpL
-	 uCfT4kslGID5w==
-Message-ID: <6947bdc7-cbcc-4a5b-a6f4-8d213f1cda4d@kernel.org>
-Date: Fri, 26 Jul 2024 11:12:50 +0200
+	b=oCcYy6p9HICzu5FKE4qozYtPgcdQ6S4EZ3bMcWh/mhgRgKBlm4qI5HvoRN7OefZG4
+	 qlVUUqly88gadZr/oK6IlmmiLKXakDBWW8Uzsp0jwsjNd/12Lbq+ok3PSkg9OMbCAJ
+	 tOPLEd3ztuSetQ+XtJZBybYjso0W7G4sPAJxPtk2DnBfJgqa6P5PtXG1PEr8Lbpch3
+	 KqcAq9qMR7+B0l9j8+O2l26oZ6APO/krZAjVFmMiNi+HhZty+OKeq0P/zgU7Pcu9qy
+	 ijDXylwz0cB3rVxnTPsmDyOSai1VImbtq8ObzqeGYn/kA3IBKyqgqCVZ6SxGPk5kQW
+	 7I80Jh9TisNOA==
+Message-ID: <c36db187-0779-4424-b3e9-2b96c4076d29@kernel.org>
+Date: Fri, 26 Jul 2024 11:13:21 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] dmaengine: zynqmp_dma: Add support for AMD Versal Gen
- 2 DMA IP
+Subject: Re: [PATCH 1/2] dt-bindings: dmaengine: zynqmp_dma: Add a new
+ compatible string
 To: Abin Joseph <abin.joseph@amd.com>, vkoul@kernel.org,
  michal.simek@amd.com, robh@kernel.org, u.kleine-koenig@pengutronix.de,
  krzk+dt@kernel.org, conor+dt@kernel.org, radhey.shyam.pandey@amd.com,
@@ -59,7 +59,7 @@ To: Abin Joseph <abin.joseph@amd.com>, vkoul@kernel.org,
 Cc: git@amd.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 References: <20240726062639.2609974-1-abin.joseph@amd.com>
- <20240726062639.2609974-3-abin.joseph@amd.com>
+ <20240726062639.2609974-2-abin.joseph@amd.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -105,26 +105,61 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240726062639.2609974-3-abin.joseph@amd.com>
+In-Reply-To: <20240726062639.2609974-2-abin.joseph@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 26/07/2024 08:26, Abin Joseph wrote:
-> ZynqMp DMA IP and AMD Versal Gen 2 DMA IP are similar but have different
-> interrupt register offset. Create a dedicated compatible string to
-> support Versal Gen 2 DMA IP with Irq register offset for interrupt
-> Enable/Disable/Status/Mask functionality.
+> Add compatible string "amd,versal2-dma-1.0" to support AMD Versal Gen 2
+> platform.
 > 
+> AMD Versal Gen 2 has 8 LPD DMA IPs in PS that can be used as general
+> purpose DMAs which is designed to support memory to memory and memory to
+> IO buffer transfer. Versal Gen 2 DMA IP has different interrupt register
+> offset. Add example binding documentation for the newly added compatible
+> string.
+> 
+> Signed-off-by: Abin Joseph <abin.joseph@amd.com>
+> ---
+>  .../dma/xilinx/xlnx,zynqmp-dma-1.0.yaml         | 17 ++++++++++++++++-
+>  1 file changed, 16 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dma-1.0.yaml b/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dma-1.0.yaml
+> index 769ce23aaac2..17f16ae7e42b 100644
+> --- a/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dma-1.0.yaml
+> +++ b/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dma-1.0.yaml
+> @@ -24,7 +24,9 @@ properties:
+>      const: 1
 >  
->  /**
-> @@ -919,6 +924,9 @@ static int zynqmp_dma_chan_probe(struct zynqmp_dma_device *zdev,
->  		return -EINVAL;
->  	}
->  
-> +	if (of_device_is_compatible(node, "amd,versal2-dma-1.0"))
-> +		chan->irq_offset = IRQ_REG_OFFSET;
+>    compatible:
+> -    const: xlnx,zynqmp-dma-1.0
+> +    enum:
+> +      - xlnx,zynqmp-dma-1.0
+> +      - amd,versal2-dma-1.0
 
-Do not sprinkle compatibles, but use match data.
+Keep the list ordered.
+
+>  
+>    reg:
+>      description: memory map for gdma/adma module access
+> @@ -74,6 +76,7 @@ additionalProperties: false
+>  examples:
+>    - |
+>      #include <dt-bindings/clock/xlnx-zynqmp-clk.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  
+>      fpd_dma_chan1: dma-controller@fd500000 {
+>        compatible = "xlnx,zynqmp-dma-1.0";
+> @@ -86,3 +89,15 @@ examples:
+>        xlnx,bus-width = <128>;
+>        dma-coherent;
+>      };
+> +
+> +    fpd_dma_chan2: dma-controller@ebd00000 {
+
+That's the same example. Xilinx already received such comments, so
+finally please learn them. Drop the example.
+
 
 Best regards,
 Krzysztof

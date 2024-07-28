@@ -1,133 +1,122 @@
-Return-Path: <dmaengine+bounces-2747-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2748-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF20E93E0AA
-	for <lists+dmaengine@lfdr.de>; Sat, 27 Jul 2024 21:11:47 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 35CA793E451
+	for <lists+dmaengine@lfdr.de>; Sun, 28 Jul 2024 11:40:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 051CD1C20C11
-	for <lists+dmaengine@lfdr.de>; Sat, 27 Jul 2024 19:11:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DE45D1F216C6
+	for <lists+dmaengine@lfdr.de>; Sun, 28 Jul 2024 09:40:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D72A1186E59;
-	Sat, 27 Jul 2024 19:11:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33CAF1BF37;
+	Sun, 28 Jul 2024 09:40:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QGqh6HkN"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="vzEeJJFr"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mout.web.de (mout.web.de [212.227.15.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C57580C09;
-	Sat, 27 Jul 2024 19:11:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866951877;
+	Sun, 28 Jul 2024 09:40:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722107502; cv=none; b=Wz0qPvUBxgsFLGST39sQMQp3b83MDIvVJkU7R6BJke5KLAQhMK1ai+UuQWwOX5f2Q460S3akb2CFaZyAdirIncuzPM+Hc/E7zvkj/6Oz+zN6M896yRHcgt5bhrzseFwLvuCtg6lgCk/YWfRUKca1OSIj5KGaZbrMcaeqCwlnlWI=
+	t=1722159651; cv=none; b=rtWCR5MnRnXILJ5U2Mq8bP4230QIJOJ/M5mi5QmC02zRRiu22JAya5SQpo3vvUEuFAhfYrurUv2XMfvlW0uiHoVimrhBcs95Mav/dTMKx+DsDwkiwcIskRtpJAly5+GIJcIMIZQmWj/VPdLiOFYjbJHCWDisnQmKnIdSIPH7XUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722107502; c=relaxed/simple;
-	bh=M8mrct+fcXWf4dQP4IR3e4KiOgK+DHB5K7VgHM1qCDM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TuxIBcqyPCBwvmWEy5XkpkPrLeg+Lix+w6zUoodxUkXFVWW/x6/WhrLc29hnHYHOIWMb7fgIi2KgzH7FQ47evlhc6q51SV7otxgmvb2huh7pwJ0kzqdSW8FN1CrcitrnI2SeJFuhCE+IuVi9EJ4hn/dCYcCyVwpdwOLuPS4Kkic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QGqh6HkN; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1722107500; x=1753643500;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=M8mrct+fcXWf4dQP4IR3e4KiOgK+DHB5K7VgHM1qCDM=;
-  b=QGqh6HkNaLLN6pwjbKizC3hee9tPHzyCIJY2Ejh0RrUMJmgp3uguS9c+
-   XxBBr4ltNUMUB0gYkX3K9owYvSRKBR1z9emzGTlXu0PiBpGaBv0OTS+za
-   HDKGLHpMNdHK6Txsxpek6fwG8BbtXAhpui8G6AUUg1/7Pj7MKCZUfRKo4
-   wRxtK9UU6Modgse+4bDYnAhulFBixAd80rHuK+e6+kPiwNB455GiFvCsv
-   CPo/bNhXp4hhKMmSGO9XSeKD/FuDMioxoD/qorhBcmNhJ/ZNNZw6w4mrG
-   KuOShxYussF0W2bGWINGMM4IptX3b/LkghuyA6kAerp5N2oJgPy5IxxIt
-   Q==;
-X-CSE-ConnectionGUID: rD8YJziURpCzS8cVtIjoOw==
-X-CSE-MsgGUID: uW4GXKzASl2YiIHga0qfIw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11146"; a="23737250"
-X-IronPort-AV: E=Sophos;i="6.09,242,1716274800"; 
-   d="scan'208";a="23737250"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2024 12:11:39 -0700
-X-CSE-ConnectionGUID: 2Ao0g3xGS8qfccCuivH2mA==
-X-CSE-MsgGUID: QhoqwShcSuSMVXNuVVxAXA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,242,1716274800"; 
-   d="scan'208";a="76793712"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 27 Jul 2024 12:11:37 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sXmpK-000qAq-1F;
-	Sat, 27 Jul 2024 19:11:34 +0000
-Date: Sun, 28 Jul 2024 03:11:03 +0800
-From: kernel test robot <lkp@intel.com>
-To: Keguang Zhang via B4 Relay <devnull+keguang.zhang.gmail.com@kernel.org>,
-	Keguang Zhang <keguang.zhang@gmail.com>,
-	Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-mips@vger.kernel.org, dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: Re: [PATCH v10 2/2] dmaengine: Loongson1: Add Loongson-1 APB DMA
- driver
-Message-ID: <202407280250.YTVHsCYs-lkp@intel.com>
-References: <20240726-loongson1-dma-v10-2-31bf095a6fa6@gmail.com>
+	s=arc-20240116; t=1722159651; c=relaxed/simple;
+	bh=EXcK3Bit/zJbF5FFNhIJyAliX82cCKj798f/pZPgAlU=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=WZvws+t0E1rcKeeaR/2nxBFfo56HofJCe41gbxVa3ghmL0oYtCkJfAO7MgJWSCy8ZYyvDM2eV/uis1WnHYQEzhABRc4xeZBm80wxsKMURbnqD+eM0oDqqphbS9eX0/jESJ0xykV6b0p0XfdcjqHT+1qNW85pmNfKLkB6ct1uLnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=vzEeJJFr; arc=none smtp.client-ip=212.227.15.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1722159627; x=1722764427; i=markus.elfring@web.de;
+	bh=+pIgS+e9JSh9ALc2y7z8EVfK9KqYIRU+dVlJTa5wImw=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=vzEeJJFrdYO0Z7gepnNEXWUPldetGOb/5WUqQXGlktmQ+JA3BCV3dkRn0CRE+Hn/
+	 fMtD7/P9/Hgr5nmtgAeOsi8kSIM6a1kp5vvdGYtkDj0zJ+4RflGoo0l64evijOtfy
+	 MF/bUuizkPxRX1gOJg5yCms7/kVEbDJybXo1L/k2YZsa/ED1TGEAb+EdhHyeYKRLy
+	 6jnhRoS+twghHdyE65mS8dwo4iE1xyVMuIwkKoAfxlpBUem33KRg8DxUWDJ2hIfJ0
+	 1rkjnz2wO8Va1gEzFL7FTcJ7MMfCnz4pnw959KoJ6HdMrmZUnij9EOcM4sId46E2C
+	 gEAAHhouJDoF6O1AHg==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MUlDJ-1shBUI0aBd-00NJfD; Sun, 28
+ Jul 2024 11:40:27 +0200
+Message-ID: <624be618-1a1a-422c-85e9-be3e1d182adf@web.de>
+Date: Sun, 28 Jul 2024 11:40:12 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+To: Keguang Zhang <keguang.zhang@gmail.com>, dmaengine@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
+ Conor Dooley <conor+dt@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+ Vinod Koul <vkoul@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <20240726-loongson1-dma-v10-2-31bf095a6fa6@gmail.com>
+Subject: Re: [PATCH v10 2/2] dmaengine: Loongson1: Add Loongson-1 APB DMA
+ driver
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
 In-Reply-To: <20240726-loongson1-dma-v10-2-31bf095a6fa6@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:vKdYf3+VVL8lUjs0NnYPuuZGf0jwH3HnMk4HXP2F2E/BhGMrNLA
+ rMxItCDPm2VSc86myDMzMtR48kNQ/unwWe2yQ6liTiPtq3kwtw9dDLAluTD/u0zIp1E/Azd
+ NPJ17efnNhN8am2AvwntAb8ynndyGPeU18yFYkixb/Eb2j5XWOyELAQfEnhLCR4P8ImpVWl
+ N2CX8Knw4QOhJbxZBMBmQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:vdhynPY24B8=;islEhC1vUb9Jjgtp5vF+hzhTZOD
+ c0L/a/RL8NqzHjJL92VzYimNs62q6Ugsoj1kuloXNtvHnGxb6S25fRcOlVCF9cpheV7IX5IE1
+ jJ5ETAxg4C9zrVRXRhlliIjsOISOnNxZDUAqiYdTPLogkR6xBu+m+fSF9gb2bHxOm20OV4zVU
+ OvrWl3W/gPP9ywWUK3RIYCfTjjlvLKmt4VJb2+sOcm5DB+C3Chu7uRJcTCquMUndT9XCHAj/N
+ 0MLvPM9MWHX4Fbc4R6aw2K+ElLj5pkufKW+5Q96Br3S9dUCe37aH/vFYbnmp0+xM6eS/gkYWL
+ 6CNLwhB0WfwPNDtak7OAnPsqhaT13xjJoWeKy8aGTZI7Bs8hgITlLvMT2VEQD3VbZrdal6jd9
+ tAUpnkcrHiYwSYPheJZZWldHMAqSlQUTn158tsW5Q5XS0o2CFB0PJdQRsk+LUzKQV8/0HCrLA
+ JxGCu6Wd4Wcr/eTdSiZjCz/fcgSR2KI2CgUaeLyZ7IjYFjHXEkF4eeVuSOAhRQAno7fIqfXI8
+ m6xp3woy7iamU24g5G6OmonJ/KSJoC1R9OP0i8GXyKSWzz3P50hTHI0shVCxn8A3d2WkCKCHk
+ bsEQbrTIwwTmOxnOgOsvpj1t0Y4ivUQ6Ugvg7Ld0Ssw0g10cViRZ8KOEKqzHffMy2QD/8p3fK
+ o6w/CjtRvRcq1SB7cGIygFMDaspt7rmZ/n93+NRI0B6BqUruRZ6V2oj1MY+9TGjCcic+GGB0I
+ dlswdtO6rnNK4vsaJXaqxw4jH5Ez7fIX3qqLWbYkac30rU6Fc5gWfsBUwlkBETZi0ydl98pO2
+ fZObadqMfnnO6wKOoXnKJXp/f3ObripWYbJVnF6vSKTNU=
 
-Hi Keguang,
+> This patch adds =E2=80=A6
 
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on 668d33c9ff922c4590c58754ab064aaf53c387dd]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Keguang-Zhang-via-B4-Relay/dt-bindings-dma-Add-Loongson-1-APB-DMA/20240726-212659
-base:   668d33c9ff922c4590c58754ab064aaf53c387dd
-patch link:    https://lore.kernel.org/r/20240726-loongson1-dma-v10-2-31bf095a6fa6%40gmail.com
-patch subject: [PATCH v10 2/2] dmaengine: Loongson1: Add Loongson-1 APB DMA driver
-config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20240728/202407280250.YTVHsCYs-lkp@intel.com/config)
-compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240728/202407280250.YTVHsCYs-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202407280250.YTVHsCYs-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> drivers/dma/loongson1-apb-dma.c:58:3: error: requested alignment must be 4294967296 bytes or smaller
-      58 | } __aligned(LS1X_DMA_LLI_ALIGNMENT);
-         |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/compiler_attributes.h:33:56: note: expanded from macro '__aligned'
-      33 | #define __aligned(x)                    __attribute__((__aligned__(x)))
-         |                                                        ^           ~
-   1 error generated.
+See also:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?h=3Dv6.10#n94
 
 
-vim +58 drivers/dma/loongson1-apb-dma.c
+=E2=80=A6
+> +++ b/drivers/dma/loongson1-apb-dma.c
+> @@ -0,0 +1,675 @@
+=E2=80=A6
+> +static int ls1x_dma_resume(struct dma_chan *dchan)
+> +{
+=E2=80=A6
+> +	spin_lock_irqsave(&chan->vchan.lock, flags);
+> +	ret =3D ls1x_dma_start(chan, &chan->curr_lli->phys);
+> +	spin_unlock_irqrestore(&chan->vchan.lock, flags);
+> +
+> +	return ret;
+> +}
+=E2=80=A6
 
-    53	
-    54	struct ls1x_dma_lli {
-    55		unsigned int hw[LS1X_DMADESC_SIZE];
-    56		dma_addr_t phys;
-    57		struct list_head node;
-  > 58	} __aligned(LS1X_DMA_LLI_ALIGNMENT);
-    59	
+Under which circumstances would you become interested to apply a statement
+like =E2=80=9Cguard(spinlock_irqsave)(&chan->vchan.lock);=E2=80=9D?
+https://elixir.bootlin.com/linux/v6.10.2/source/include/linux/spinlock.h#L=
+574
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Regards,
+Markus
 

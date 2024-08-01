@@ -1,123 +1,134 @@
-Return-Path: <dmaengine+bounces-2766-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2767-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 02DC594508F
-	for <lists+dmaengine@lfdr.de>; Thu,  1 Aug 2024 18:29:40 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 33E87945181
+	for <lists+dmaengine@lfdr.de>; Thu,  1 Aug 2024 19:30:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 26CD81C20F63
-	for <lists+dmaengine@lfdr.de>; Thu,  1 Aug 2024 16:29:39 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C53F2B235D4
+	for <lists+dmaengine@lfdr.de>; Thu,  1 Aug 2024 17:30:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2376D1B3F27;
-	Thu,  1 Aug 2024 16:29:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7268A182D8;
+	Thu,  1 Aug 2024 17:30:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="UH8cbPIT"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BC523A1DA;
-	Thu,  1 Aug 2024 16:29:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754581B4C25
+	for <dmaengine@vger.kernel.org>; Thu,  1 Aug 2024 17:30:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722529774; cv=none; b=Yb/3nbkqLlgVKCzDhlX5XuPk2NUG5F5vAQii+qAH3OaXIsHBcG1t9W0yxPgmDK43MSfVKAcC9n/psuMYODC4AyJm2Pp7zWOALjGdFAz4UiMaibQeWi+27K7sa3XbCbT+PNSrAmMJ552hR7mCOeR3oDKszc+cMZO4gKRdGhVRjW0=
+	t=1722533427; cv=none; b=eQHEau8WecX49LBLDhr6bhXU+htcFmSzNT2DyM6b6obPn8kpo1wCFjjM8pW+GFcPJxPzjHG51oogAg0cJa9gKIKaJavOFSUfVCS4WogP6cUR4L2JslmuyRbMv3PdmxjO1CGPKMPQ2jxoSs42mboS4yYzDdGySpluLpRXXUzAAAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722529774; c=relaxed/simple;
-	bh=QsvCNio+3zzxchq5fzKn3o83VQzC4bk3D+jsQv4Z/4w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rdkYI+yg51ORQPfie+h4rs+2PGB3qcpMO64r+Dxmt/grJ033zeAlOGPt+2L+/A5pmnBYNzhJDDG5K2sJ4hFVrIqPZAGHzbYyJyGg1SAx+W/9H9JmNxvkzjmi40bpAHeRJsSxV1Kh0TBVTbYOZWxtH24z+KFZN0w2xt26MLAkV1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e0b286b922eso5228284276.1;
-        Thu, 01 Aug 2024 09:29:32 -0700 (PDT)
+	s=arc-20240116; t=1722533427; c=relaxed/simple;
+	bh=/fUgmK9Gu4vJ7gtf9Uwd95qIKPDXf8jzzp6n2YLhY1g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=je+4aM0fZ1xIkSDUBw9hmFR9sVSQymRAHKMLtrhgY3K/Lvn9EJlnoZB4vjgc8qZbqj5O9x9BjBpyvBxfqDo2DqBgBkNd2fn0eB19u31sixz9QOtvvTuAwwI4D1/N5LOBQ7qqc4EpJoj9NR67bd3ovwiQQaZifKeELx8Ud0MyZnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=UH8cbPIT; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-42816ca797fso43390525e9.2
+        for <dmaengine@vger.kernel.org>; Thu, 01 Aug 2024 10:30:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1722533424; x=1723138224; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=c1S/NlVwEFkZswb6EjZlJWrnVb2z/0QNSVhH+7F6wi4=;
+        b=UH8cbPITQAJcH+25OYzB3QPkJVO5LcU8lJxWpD42Nd+THfyBF8l3l0wrg8YFg2qpHz
+         eMB5bjocbDdQLJEqJ6nTRufuNsebaShpPXqdM7xtC8s434V+C1BbjierqO4N9imBANoT
+         Ja3TNvua5bape0ZbRv8yk9HLRpmTOpXioMRHQzT8iqsQ07lV3k39j90r/FRFEK+KjQsr
+         gespgsj6YLqA9os4JXzSXXMKSnrw1I+3AQiegThIqNryJ5FeXCzoxLbzhOMmJAWZROXL
+         qau7l+f8rLdwFfhdu4VON+AtoSuS8z2KrIZH1qRfGkx1H862UVh8uNFjZR7ZxraEdPjV
+         FGvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722529770; x=1723134570;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Y8+kc5F3GMejqWVlpNJDpHQgkOH2t0JJ464cT8v7PXs=;
-        b=PJ2GCsINKBJER2I3Pa2e2kP9qwVeHr5P/xwq2G1IjIKN+WMxoNzPKLtx3Py0e+cRma
-         0wsbYhhR4auV8q+fqehg6ubDqfHXfkY7uXmmWDUxHMnhPnRI8FpCPSMwtePzBtE+FEhe
-         OtX6Fi4Tt4u5NX/W4ahlY13RJpw7SYAKZoKPkrLPwJal22U67s8apRoS/eD8Y2HzbuIS
-         waujHmox2aVvdXNqEbkj+5udmNK4q9yVyUavNZTc28zZo/Hu16SRnAyVlHla8XKWhKJu
-         EpXEORK8dCa8jcdWs3eZHCbdTPbzPHq4p0Dm0d6i89+zurOh2rliXF2zHGos48mzv0pQ
-         IH4A==
-X-Forwarded-Encrypted: i=1; AJvYcCVn5PRKZYauBmo37CtEfehoUspKtXHSQoAFqWzuNf1YFipxUMV3G6qUvfWhBiYWJgFozbqQoJGM1X2CjrCsU7ihd6KOI4FTX01jqesNFmhCK0gUqr0X7lSEApEHUhvscZQBR73Yk1uWQHVBiy4+zUYZ1xhuw5N+d+PI33mHO/0T3e+HRAfIRqN47odHkZ3TVucgMRg6TGt7vE2jmAujf0XvwgG+r16DfDkKW5UdS8b0c+oGj8U+IeMvypbNyxXgfC7d
-X-Gm-Message-State: AOJu0YzrrOSZRgplx/ee5SMYurH2kf1PBeBm8bCHLG57f+xOXHOJTU5X
-	fScLjAcBgOMeXsGK+NkWyS6wOqo2OxnKTa8SrA2EXZz6uP3PXqjnZa/x0Pti
-X-Google-Smtp-Source: AGHT+IF3UR4ctJqF4dv1x5CADGAyHth2iWUQp0VMFhr+jpA7GGfWdUhdF8HSTvzfymvymsO0ACuNTQ==
-X-Received: by 2002:a25:183:0:b0:e08:5791:4864 with SMTP id 3f1490d57ef6-e0bde465acfmr843983276.51.1722529769878;
-        Thu, 01 Aug 2024 09:29:29 -0700 (PDT)
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com. [209.85.128.182])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e0be0e45cafsm8071276.36.2024.08.01.09.29.29
+        d=1e100.net; s=20230601; t=1722533424; x=1723138224;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=c1S/NlVwEFkZswb6EjZlJWrnVb2z/0QNSVhH+7F6wi4=;
+        b=Yd99/zPFkhkVy1DhTVd/HTtqAGv5N+X57U8UKc7JOVjvBKuBh41zO2HljSypU9VVc9
+         tAywUVDNzoTdYE7MhmmPS6HdxOmfjJrd6lOo1J1Y+KBAdbpCOaz9aQCpleHNP0dVIY9d
+         KhQjTzRP3mfOgpcRMZr/M1Yp6xkwgP4hZFrzX90eYYSIurtgNfzvG1qpVW6ZC6q1vkbc
+         QYUk/ijJFCCz6pcdcFaaTlJKZc0zM5Pt9Br0Z7paQhvlZx1tAX5yR0V6xmbQJj4BebtR
+         m2bQRhxxwuZhXpkuwJQd5Z5vSi7OHr3xoHGXQJxWi1rDMn1HMFut5SG4J97rEsH1m9kw
+         ABDg==
+X-Forwarded-Encrypted: i=1; AJvYcCUPFGArXbdWhaW7dI7khZHKbrB4GcNbqVQQj7NQhPCIy+Vcdu4NNHF6jEN9vQBX3wfmZNevAIJfAax+TtzO4FbpRNNWdjGDUehK
+X-Gm-Message-State: AOJu0YxvK21YJMxTfezWzalH+xYWW3x/vyreU+gBmnqbt33Zx4alJUwG
+	H49brRX/R3JL31IJ3feIrgYn7KE57M3F7GV3emWutTOWXiVpN0IkuYPO2DYDuNc=
+X-Google-Smtp-Source: AGHT+IG94ZE4tjZfrkwC8a7+TJTJGffEWVrCsNnStDS6gDpPa28xGx43QNeVDk0gNocTArRCz6CJ5g==
+X-Received: by 2002:a05:600c:524f:b0:428:17b6:bcf1 with SMTP id 5b1f17b1804b1-428e6b0a2bcmr4750555e9.22.1722533423582;
+        Thu, 01 Aug 2024 10:30:23 -0700 (PDT)
+Received: from [192.168.50.4] ([82.78.167.44])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4282bb6405csm65736205e9.34.2024.08.01.10.30.21
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Aug 2024 09:29:29 -0700 (PDT)
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-65f9708c50dso63085747b3.2;
-        Thu, 01 Aug 2024 09:29:29 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUfPj7FCPOdJVi8VgeeHmStiZQgTXcdwl8IP8ajoeKF5TracoY2xSleOR6e1paCxws/eq5D+ZTMmJE/omWST8lGSDw1rkvKpwbXKvK0tSP4lVsi+I5hKMRdSUeKBlL9HW/S+k1PzUgdrxZ1SKbLinu4wyMGjCP7jfA0X36bb91UpZKXArTcC4GY0NaEMiF02u6tt3l5G0wzQSYSrXWfeIeKUJHvlljf5qvOtvDvh2SHLt5Bv25bG632Ez8FqrQ00iCQ
-X-Received: by 2002:a81:8a02:0:b0:627:88fc:61c5 with SMTP id
- 00721157ae682-689608712bemr5781657b3.14.1722529769028; Thu, 01 Aug 2024
- 09:29:29 -0700 (PDT)
+        Thu, 01 Aug 2024 10:30:23 -0700 (PDT)
+Message-ID: <1145bd6f-fee4-4c3a-bd71-543127f89fc8@tuxon.dev>
+Date: Thu, 1 Aug 2024 20:30:21 +0300
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240711123405.2966302-1-claudiu.beznea.uj@bp.renesas.com> <20240711123405.2966302-4-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20240711123405.2966302-4-claudiu.beznea.uj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 1 Aug 2024 18:29:15 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXjTw1NFaZhNiskiA+BQV68B61H=iwZbeV1qpVdKCjTjw@mail.gmail.com>
-Message-ID: <CAMuHMdXjTw1NFaZhNiskiA+BQV68B61H=iwZbeV1qpVdKCjTjw@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH 3/3] arm64: dts: renesas: r9a08g045: Add DMAC node
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: vkoul@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	magnus.damm@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, 
-	biju.das.jz@bp.renesas.com, dmaengine@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: vkoul@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, magnus.damm@gmail.com, mturquette@baylibre.com,
+ sboyd@kernel.org, biju.das.jz@bp.renesas.com, dmaengine@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+ Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20240711123405.2966302-1-claudiu.beznea.uj@bp.renesas.com>
+ <20240711123405.2966302-4-claudiu.beznea.uj@bp.renesas.com>
+ <CAMuHMdXjTw1NFaZhNiskiA+BQV68B61H=iwZbeV1qpVdKCjTjw@mail.gmail.com>
+From: claudiu beznea <claudiu.beznea@tuxon.dev>
+In-Reply-To: <CAMuHMdXjTw1NFaZhNiskiA+BQV68B61H=iwZbeV1qpVdKCjTjw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Claudiu,
+Hi, Geert,
 
-On Thu, Jul 11, 2024 at 2:34=E2=80=AFPM Claudiu <claudiu.beznea@tuxon.dev> =
-wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->
-> Add DMAC node.
->
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+On 01.08.2024 19:29, Geert Uytterhoeven wrote:
+> Hi Claudiu,
+> 
+> On Thu, Jul 11, 2024 at 2:34 PM Claudiu <claudiu.beznea@tuxon.dev> wrote:
+>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>
+>> Add DMAC node.
+>>
+>> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> 
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> i.e. will queue in renesas-devel for v6.12.
+> 
+>> --- a/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
+>> +++ b/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
+>> @@ -363,6 +363,44 @@ irqc: interrupt-controller@11050000 {
+>>                         resets = <&cpg R9A08G045_IA55_RESETN>;
+>>                 };
+>>
+>> +               dmac: dma-controller@11820000 {
+> 
+>> +                       power-domains = <&cpg>;
+> 
+> Updating to " <&cpg R9A08G045_PD_DMAC>" while applying.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v6.12.
+FTR: please don't as the watchdog fixes are still under discussion. Only
+RZ/G3S watchdog support was merged.
 
-> --- a/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
-> @@ -363,6 +363,44 @@ irqc: interrupt-controller@11050000 {
->                         resets =3D <&cpg R9A08G045_IA55_RESETN>;
->                 };
->
-> +               dmac: dma-controller@11820000 {
+Thank you,
+Claudiu Beznea
 
-> +                       power-domains =3D <&cpg>;
-
-Updating to " <&cpg R9A08G045_PD_DMAC>" while applying.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
 

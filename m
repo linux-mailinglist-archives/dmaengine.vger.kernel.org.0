@@ -1,247 +1,185 @@
-Return-Path: <dmaengine+bounces-2778-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2779-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A0BF945944
-	for <lists+dmaengine@lfdr.de>; Fri,  2 Aug 2024 09:52:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 77427945999
+	for <lists+dmaengine@lfdr.de>; Fri,  2 Aug 2024 10:09:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5B371B228F5
-	for <lists+dmaengine@lfdr.de>; Fri,  2 Aug 2024 07:52:41 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D7C26B225B2
+	for <lists+dmaengine@lfdr.de>; Fri,  2 Aug 2024 08:09:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 169341C379C;
-	Fri,  2 Aug 2024 07:51:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0D261C3F14;
+	Fri,  2 Aug 2024 08:08:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HIZ2Xqyj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RdpaKsdS"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FCB31C3784;
-	Fri,  2 Aug 2024 07:51:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E45971C37BC;
+	Fri,  2 Aug 2024 08:08:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722585095; cv=none; b=NyFsPTnkQ0Ww4BD94BCsOlzQ+yAmMhiGPgWuUO7n56In5s8VzjOCgZPyElIZuwh5aLllVTdEApBW3MI6S8Us+8+50iuEjY8xFJ4iIPiciuOtOvPljPj76/B/6/7/3M6nWH1VxY2t5bBl2z0BpVj7koC6fK/5GKRySFJ4RNq1kn8=
+	t=1722586085; cv=none; b=KBqX3Gw/R8crYUzSJOPtxQUnzlHiaMyDlCEmwnYffTTUilcynxV7IluF6qGy5+wTiYzUNNKu+DQmjSQORHTWRjtLzlgCVYPf/HEavb9rSIBDi0BsDE2e+r0bxfu7Jlyg8ZtiCITr4DyFc6ZWgSwJZSUV9d8mOVN5nKQmILFLXvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722585095; c=relaxed/simple;
-	bh=fes4+PALn4aJD0RUIggf2YkD7O8aHh0ck1WvSCbST4Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mSGaXiYIOCS8w1tGPQ4bJ7WTc0EN7rFwajjOupQ9nzCsrB0IG5ZxHDbTg301H3yOpujQS6VfVNbQbXfBX8vVDcJqS+Wap7YtdYc/PpxkvUR5x4xYjdVYgYc71Z/rf6Xs2C1ckWhKQu+tXNbePMHSlbra2XMsAzjDjXDeQ6Sg3dI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HIZ2Xqyj; arc=none smtp.client-ip=209.85.167.46
+	s=arc-20240116; t=1722586085; c=relaxed/simple;
+	bh=1eIISpZQkPPv2bNTH8sY8k7lXTjpMWMXMPBkf/xtonY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ndPpIsPSPmV0DoO4C8yaYq981oTAB90QnxzqZcx/j9uxoA6KikSn/BL9yLH9djt6+/C707dBM1TNTcFxfoAQyFSmwMFXJvbxj5zTWNHBrJz4NgSICKhaVL9YPC+cQlrnsCRMlUSBBS5CLK6Cky7dLiBxbTY4P3cPUj5S1akHF1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RdpaKsdS; arc=none smtp.client-ip=209.85.208.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-52fc4388a64so13002528e87.1;
-        Fri, 02 Aug 2024 00:51:32 -0700 (PDT)
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2eeb1051360so86983121fa.0;
+        Fri, 02 Aug 2024 01:08:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1722585091; x=1723189891; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lHiD9v1JsXXcE41UkTPqhgsLCw9iYgVEo+i0Dc9T+lk=;
-        b=HIZ2XqyjBcrLbc3nMyw1EC1Tw5HxCaJzM8M4wKpyE/nFWZ6/70UDRog+90VYyRV0fS
-         MBlsdzk+Ebo9af+5ElX6TbdHmecK34Zm7BxYhkShyJIe8Sdyfcs/6apgXoOBTKifrOL9
-         1Sdp3quPw6DXVu+hzWuCikO6azgjRE0n/tsV/glbCQYTBL4Uh+NUYMYgXg4IH7yQCYKZ
-         Ba3hSEWHNHYk28GFoCqaKE5BuNmexjiQHEMce7GWFK4UFqyE4TeXg23KCqIamrm/vQMA
-         /S/aCxsH8KF0ciHtq0wiugbuxAYHv9Ea7jjzp5OTaa6hEyiJ4LN33CzJQDWPwnyLZyAz
-         mKmg==
+        d=gmail.com; s=20230601; t=1722586082; x=1723190882; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jIsZedcHbhSfV0oPWdGCw2Uv/CXrxcxWydVHUH21W4Q=;
+        b=RdpaKsdSpSKf+YSz4+mFpvsmbaILhcmP44bt88HDw2n25nK9xzE9n0u1P3kWVI8xxT
+         H+Y2qSi3zgkbX2ouX1Q6CKH+KFHlluwMqcx1yDHcEK4eXsLwHLvpjrkTehhO++O+q/B8
+         uaqgR1J+XuG4D7Jhofnzv84ZurBRUirHJDfXVqELHQ5BU6sTAk21yeSxKM6Tp1a7g64p
+         NX3BBfZumDjHauu6RPwXlbHnivQQpMrWfkp5T9BFaicMTubIJ4z6NDh04aS5QqbfZeuq
+         azFJDoDunooTh1LBVq8/ySoX+pqQVLERDmwDyhDvu/P3e3F3ql1goXCFSvp7iEQTWzpN
+         Lfdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722585091; x=1723189891;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lHiD9v1JsXXcE41UkTPqhgsLCw9iYgVEo+i0Dc9T+lk=;
-        b=sxQki1E9Tw9oFcqoZl2MvR77lMw8pAnDTJ3AdbhEWW/w/aI2Nh4O/hRAh1rpiLk8XL
-         cXJQulwkJwaP6sOt4dUbFJ8s2xnbwgPACyqtV7cNrjQEyxphERZuxIg4dGIiUuHsAF3/
-         OR5RW5CKnaCp+G8wauy8gp+0y9x4A0ZiSab42RvpFbOrvEZGE6RlFME2241ADxPQsZSB
-         D9o8A9Dz1DzBE82jq9pJc4kYI/Zj7mQN0HAb620Wsvs+XnH5FBcbYzdXsLo5SCAlJUBk
-         ROBPAr/7qc7dGdRiwt6gYoHSiF69yPW91/QgAkCzXJxvTWgaxEBRNWtaEpetjrkvtR0i
-         Ouuw==
-X-Forwarded-Encrypted: i=1; AJvYcCVj7uTfP1h+cwlj2Uip54oCsrWJI67LX0vV3x4ZD8TPW3pFiaNwDglYI1zRkeCWveuUdloQ3G/pY88vOJNpFLbP6mguhim93qfr8qsw56OUhvbbg4I9VbkXUF87gmmfYzgUzmE8050uUAiePl45Gbz+fTZ5SHLbzSwOdgFB7gS/MKP9QB4W
-X-Gm-Message-State: AOJu0YzxrzS+VBenR4cC84ISANeX6wsIe1aIMstw6Y7apsxhi3+ktIvG
-	qgYIDgFMd/0wf9f1sVTIjqDSwJs//+MK1hrvq0QUpUbnxOACKaAB
-X-Google-Smtp-Source: AGHT+IEMxf4N4s3xFraxbRmN9YP31vVSJKb9vVw4lnrxgYP2s4t4P5fTafWSGlWROhVsyRlaGnRdOA==
-X-Received: by 2002:a05:6512:685:b0:52f:c2fa:b213 with SMTP id 2adb3069b0e04-530bb3b1210mr1771229e87.55.1722585091141;
-        Fri, 02 Aug 2024 00:51:31 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1722586082; x=1723190882;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jIsZedcHbhSfV0oPWdGCw2Uv/CXrxcxWydVHUH21W4Q=;
+        b=fzqKZGWxX2pEQOo3M+ETO7FQK2HqBDzetBmBRQf98bwE6cf6tJ4B+jDYPG0tEJhdz/
+         /QbAMwepbeC66iP1nXbK3BuP0Csfc62yQ8MVIij08VCwB15ZJN4LODPWOPC9bTtdg9Fz
+         e0gWjf1dCeXs6ZG7Gtq/orl6DJ8FkwniustPbpmXUceCZcDWLVSel1xNIs0CkKytr28W
+         LidXM2U/z5Q5yIAWkXYw2vASgiy16KEYy4SgwJvtjcKeOU/1OTbaqg+Ho8vTyNTgp2vm
+         qiGHwdxGSiT7030GlAbA+vUcZagsmfm+k0dd+POhfqoKJkJ2SnISH9goyAre/B5o2axY
+         YB6A==
+X-Forwarded-Encrypted: i=1; AJvYcCVoSXdeLRjLx5hf4eoPYLZbUFmKheP8UsENT6QMUrVJhdyLWJWX3eEAbbiQo1z0zVqi6m5Q+8pftpVZLrDV99oB4wIgY45/hkgm+MP61kp6W6BkRehcPATA6NZsykFQtiu4Bbr4vV7XlG0I/EmxripmGvSa/YYOAa8VDihP22quRAsan43q
+X-Gm-Message-State: AOJu0YzS5bbSik+R/sIewZHcpdMq7Ym+mfeqbQ7hvfKVpaEMd/CdXC/d
+	TkCtEgAc6pwAHI2hpaorMz0cI+/evWMyzuycZGJh7TpovqPwXRNL
+X-Google-Smtp-Source: AGHT+IEr++3k1GJni0e4Zdm7gvqLjSiKEGIIqFnldvWyCljIE9dxKwglw212lsgP5uXjLlcOFhaiBQ==
+X-Received: by 2002:a2e:9805:0:b0:2ef:392e:e45 with SMTP id 38308e7fff4ca-2f15aafdc08mr18299641fa.33.1722586081659;
+        Fri, 02 Aug 2024 01:08:01 -0700 (PDT)
 Received: from localhost ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-530bba29fd9sm158725e87.122.2024.08.02.00.51.30
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2f15e17e802sm1049511fa.14.2024.08.02.01.08.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Aug 2024 00:51:30 -0700 (PDT)
+        Fri, 02 Aug 2024 01:08:01 -0700 (PDT)
 From: Serge Semin <fancer.lancer@gmail.com>
-To: Viresh Kumar <vireshk@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
 	Andy Shevchenko <andy@kernel.org>,
+	Viresh Kumar <vireshk@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	Vinod Koul <vkoul@kernel.org>
 Cc: Serge Semin <fancer.lancer@gmail.com>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
 	dmaengine@vger.kernel.org,
 	linux-serial@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND v4 6/6] dmaengine: dw: Unify ret-val local variables naming
-Date: Fri,  2 Aug 2024 10:50:51 +0300
-Message-ID: <20240802075100.6475-7-fancer.lancer@gmail.com>
+Subject: [PATCH RFC] dmaengine: dw: Prevent tx-status calling desc callback (Fix UART deadlock!)
+Date: Fri,  2 Aug 2024 11:07:51 +0300
+Message-ID: <20240802080756.7415-1-fancer.lancer@gmail.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240802075100.6475-1-fancer.lancer@gmail.com>
-References: <20240802075100.6475-1-fancer.lancer@gmail.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Currently there are two names utilized in the driver to keep the functions
-call status: ret and err. For the sake of unification convert to using the
-first version only.
+The dmaengine_tx_status() method updating the DMA-descriptors state and
+eventually calling the Tx-descriptors callback may potentially cause
+problems. In particular the deadlock was discovered in DW UART 8250 device
+interacting with DW DMA controller channels. The call-trace causing the
+deadlock is:
 
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+serial8250_handle_irq()
+  uart_port_lock_irqsave(port); ----------------------+
+  handle_rx_dma()                                     |
+    serial8250_rx_dma_flush()                         |
+      __dma_rx_complete()                             |
+        dmaengine_tx_status()                         |
+          dwc_scan_descriptors()                      |
+            dwc_complete_all()                        |
+              dwc_descriptor_complete()               |
+                dmaengine_desc_callback_invoke()      |
+                  cb->callback(cb->callback_param);   |
+                  ||                                  |
+                  dma_rx_complete();                  |
+                    uart_port_lock_irqsave(port); ----+ <- Deadlock!
+
+So in case if the DMA-engine finished working at some point before the
+serial8250_rx_dma_flush() invocation and the respective tasklet hasn't
+been executed yet, then calling the dmaengine_tx_status() will cause the
+DMA-descriptors status update and the Tx-descriptor callback invocation.
+Generalizing the case up: if the dmaengine_tx_status() method callee and
+the Tx-descriptor callback refer to the related critical section, then
+calling dmaengine_tx_status() from the Tx-descriptor callback will
+inevitably cause a deadlock around the guarding lock as it happens in the
+Serial 8250 DMA implementation above. (Note the deadlock doesn't happen
+very often, but can be eventually discovered if the being received data
+size is greater than the Rx DMA-buffer size defined in the 8250_dma.c
+driver. In my case reducing the Rx DMA-buffer size increased the deadlock
+probability.)
+
+The easiest way to fix the deadlock was to just remove the Tx-descriptors
+state update from the DW DMA-engine Tx-descriptor status method
+implementation, as the most of the DMA-engine drivers imply. After this
+fix is applied the Tx-descriptors status will be only updated in the
+framework of the dwc_scan_descriptors() method called from the tasklet
+handling the deferred DMA-controller IRQ.
+
+Signed-off-by: Serge Semin <fancer.lancer@gmail.com
 
 ---
 
-Changelog v2:
-- New patch created on v2 review stage. (Andy)
+Note I have doubts whether it's the best possible solution of the problem
+since the client-driver deadlock is resolved here by fixing the DMA-engine
+provider code. But I failed to find any reasonable solution in the 8250
+DMA implementation.
+
+Moreover the suggested fix cause a weird outcome - under the high-speed
+and heavy serial transfers the next error is printed to the log sometimes:
+
+> dma dma0chan0: BUG: XFER bit set, but channel not idle!
+
+That's why the patch submitted as RFC. Do you have any better idea in mind
+to prevent the nested lock?
+
+Cc: Viresh Kumar <vireshk@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC: Andy Shevchenko <andy@kernel.org>
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jiri Slaby <jirislaby@kernel.org>
+Cc: "Ilpo Järvinen" <ilpo.jarvinen@linux.intel.com>
+Cc: dmaengine@vger.kernel.org
+Cc: linux-serial@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 ---
- drivers/dma/dw/core.c     | 20 ++++++++++----------
- drivers/dma/dw/platform.c | 20 ++++++++++----------
- 2 files changed, 20 insertions(+), 20 deletions(-)
+ drivers/dma/dw/core.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
 diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
-index c696d79b911a..602f1208ab9b 100644
+index 5f7d690e3dba..4b3402156eae 100644
 --- a/drivers/dma/dw/core.c
 +++ b/drivers/dma/dw/core.c
-@@ -1149,7 +1149,7 @@ int do_dma_probe(struct dw_dma_chip *chip)
- 	bool			autocfg = false;
- 	unsigned int		dw_params;
- 	unsigned int		i;
--	int			err;
-+	int			ret;
+@@ -925,12 +925,6 @@ dwc_tx_status(struct dma_chan *chan,
+ 	struct dw_dma_chan	*dwc = to_dw_dma_chan(chan);
+ 	enum dma_status		ret;
  
- 	dw->pdata = devm_kzalloc(chip->dev, sizeof(*dw->pdata), GFP_KERNEL);
- 	if (!dw->pdata)
-@@ -1165,7 +1165,7 @@ int do_dma_probe(struct dw_dma_chip *chip)
- 
- 		autocfg = dw_params >> DW_PARAMS_EN & 1;
- 		if (!autocfg) {
--			err = -EINVAL;
-+			ret = -EINVAL;
- 			goto err_pdata;
- 		}
- 
-@@ -1185,7 +1185,7 @@ int do_dma_probe(struct dw_dma_chip *chip)
- 		pdata->chan_allocation_order = CHAN_ALLOCATION_ASCENDING;
- 		pdata->chan_priority = CHAN_PRIORITY_ASCENDING;
- 	} else if (chip->pdata->nr_channels > DW_DMA_MAX_NR_CHANNELS) {
--		err = -EINVAL;
-+		ret = -EINVAL;
- 		goto err_pdata;
- 	} else {
- 		memcpy(dw->pdata, chip->pdata, sizeof(*dw->pdata));
-@@ -1197,7 +1197,7 @@ int do_dma_probe(struct dw_dma_chip *chip)
- 	dw->chan = devm_kcalloc(chip->dev, pdata->nr_channels, sizeof(*dw->chan),
- 				GFP_KERNEL);
- 	if (!dw->chan) {
--		err = -ENOMEM;
-+		ret = -ENOMEM;
- 		goto err_pdata;
- 	}
- 
-@@ -1215,15 +1215,15 @@ int do_dma_probe(struct dw_dma_chip *chip)
- 					 sizeof(struct dw_desc), 4, 0);
- 	if (!dw->desc_pool) {
- 		dev_err(chip->dev, "No memory for descriptors dma pool\n");
--		err = -ENOMEM;
-+		ret = -ENOMEM;
- 		goto err_pdata;
- 	}
- 
- 	tasklet_setup(&dw->tasklet, dw_dma_tasklet);
- 
--	err = request_irq(chip->irq, dw_dma_interrupt, IRQF_SHARED,
-+	ret = request_irq(chip->irq, dw_dma_interrupt, IRQF_SHARED,
- 			  dw->name, dw);
--	if (err)
-+	if (ret)
- 		goto err_pdata;
- 
- 	INIT_LIST_HEAD(&dw->dma.channels);
-@@ -1335,8 +1335,8 @@ int do_dma_probe(struct dw_dma_chip *chip)
- 	 */
- 	dma_set_max_seg_size(dw->dma.dev, dw->chan[0].block_size);
- 
--	err = dma_async_device_register(&dw->dma);
--	if (err)
-+	ret = dma_async_device_register(&dw->dma);
-+	if (ret)
- 		goto err_dma_register;
- 
- 	dev_info(chip->dev, "DesignWare DMA Controller, %d channels\n",
-@@ -1350,7 +1350,7 @@ int do_dma_probe(struct dw_dma_chip *chip)
- 	free_irq(chip->irq, dw);
- err_pdata:
- 	pm_runtime_put_sync_suspend(chip->dev);
--	return err;
-+	return ret;
- }
- 
- int do_dma_remove(struct dw_dma_chip *chip)
-diff --git a/drivers/dma/dw/platform.c b/drivers/dma/dw/platform.c
-index 7d9d4c951724..47c58ad468cb 100644
---- a/drivers/dma/dw/platform.c
-+++ b/drivers/dma/dw/platform.c
-@@ -29,7 +29,7 @@ static int dw_probe(struct platform_device *pdev)
- 	struct dw_dma_chip_pdata *data;
- 	struct dw_dma_chip *chip;
- 	struct device *dev = &pdev->dev;
--	int err;
-+	int ret;
- 
- 	match = device_get_match_data(dev);
- 	if (!match)
-@@ -51,9 +51,9 @@ static int dw_probe(struct platform_device *pdev)
- 	if (IS_ERR(chip->regs))
- 		return PTR_ERR(chip->regs);
- 
--	err = dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
--	if (err)
--		return err;
-+	ret = dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
-+	if (ret)
-+		return ret;
- 
- 	if (!data->pdata)
- 		data->pdata = dev_get_platdata(dev);
-@@ -69,14 +69,14 @@ static int dw_probe(struct platform_device *pdev)
- 	chip->clk = devm_clk_get_optional(chip->dev, "hclk");
- 	if (IS_ERR(chip->clk))
- 		return PTR_ERR(chip->clk);
--	err = clk_prepare_enable(chip->clk);
--	if (err)
--		return err;
-+	ret = clk_prepare_enable(chip->clk);
-+	if (ret)
-+		return ret;
- 
- 	pm_runtime_enable(&pdev->dev);
- 
--	err = data->probe(chip);
--	if (err)
-+	ret = data->probe(chip);
-+	if (ret)
- 		goto err_dw_dma_probe;
- 
- 	platform_set_drvdata(pdev, data);
-@@ -90,7 +90,7 @@ static int dw_probe(struct platform_device *pdev)
- err_dw_dma_probe:
- 	pm_runtime_disable(&pdev->dev);
- 	clk_disable_unprepare(chip->clk);
--	return err;
-+	return ret;
- }
- 
- static void dw_remove(struct platform_device *pdev)
+-	ret = dma_cookie_status(chan, cookie, txstate);
+-	if (ret == DMA_COMPLETE)
+-		return ret;
+-
+-	dwc_scan_descriptors(to_dw_dma(chan->device), dwc);
+-
+ 	ret = dma_cookie_status(chan, cookie, txstate);
+ 	if (ret == DMA_COMPLETE)
+ 		return ret;
 -- 
 2.43.0
 

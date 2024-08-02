@@ -1,186 +1,102 @@
-Return-Path: <dmaengine+bounces-2770-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2771-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F57A945576
-	for <lists+dmaengine@lfdr.de>; Fri,  2 Aug 2024 02:36:12 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 71D089456BA
+	for <lists+dmaengine@lfdr.de>; Fri,  2 Aug 2024 05:46:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 80129B22B15
-	for <lists+dmaengine@lfdr.de>; Fri,  2 Aug 2024 00:36:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A3F3C1C23CC9
+	for <lists+dmaengine@lfdr.de>; Fri,  2 Aug 2024 03:46:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FD26FC11;
-	Fri,  2 Aug 2024 00:34:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J6Q0NI7M"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BD0917BB7;
+	Fri,  2 Aug 2024 03:46:06 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7298D520;
-	Fri,  2 Aug 2024 00:34:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76098256D;
+	Fri,  2 Aug 2024 03:46:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722558888; cv=none; b=h0Rd/B8HGN9QEBKthX0vDaPaa+9h+IE2BlXcGLHbgE4L3IzwDaOX4SKGLSBJyoAoVk8wRGbRD2AWcmEPAizokGfMJodI45zI8++Ve8heKdwcZstLPLk+hf5Yy9E0Fu3jbYCkWjYtqnhY+62Lx1k+Isyoztyv2YpsD3QG2lcsVaM=
+	t=1722570366; cv=none; b=E3RMeBw0fT6J5EXYPY1OUElFinLZt/cHzOytGYocOowG6JdL/ZaRwrYM5wlL8y3dq6Bxqvl+FJ1qW3eQjqjYl40YlMdWhGZkKHgLWtaMdMnZe3FiOKIWfeTaeht+6EIuLFzZLwcXHwsyjJQs/xsJpA290xaGWRT0EZ9SVE97Bp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722558888; c=relaxed/simple;
-	bh=ZVhOko/Es2Cy0eD/eIbDqzj6uBX2CIFzIfGTkRBHbXw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mOLHwzO1wj6YLlUH64sIfVz03hJ+rEXZZV+YI3Uf0Sh+p38ZAxMG731Bx4rdbF9p6dJ0Zk/0ENLhu3n1R91zQLmRta9QGBOiLOppQ4jHld00h9all09zqrMT6KttYUpabEDTg9z7eX4ZUph1L+rInGsFvlSP2bhQZwtP8HikYMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J6Q0NI7M; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2f035ae0fe0so87855071fa.3;
-        Thu, 01 Aug 2024 17:34:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1722558885; x=1723163685; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=r4TxVSYutmdmVBr6Vm91nJQyTFo86VmYkWwujCrGEo4=;
-        b=J6Q0NI7MS46sCeDNXH9iwPZF4u1qCCoIutMnrdP00mgqhFI8nxTBdrmx9zaMbIaH2/
-         1wHBfBPZZ1f8kAjFDEhwQQz30Orwe3EXcQZJ8fFS3xQ06so442LfwGJtvAYTLgNXsMVW
-         4oICNHs04/ouXPYpSN8DprgxXAr3AFvNR89XeLoOA4TjKZSiVM214hSMJCS+7aBH+QOp
-         Uh+AXoDoe1BDs/PApApDDyIQKPozMOxXEPZ/U6zkT9lGnlP9ZmPqdmMZAjFAyeBeE/9/
-         qFbD9/CFekvxOP5/cGF7IgMovlPOqzcJXcP+Z3YuKdqkiGFynwOfiRQUviFJE+Hlongw
-         JwjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722558885; x=1723163685;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r4TxVSYutmdmVBr6Vm91nJQyTFo86VmYkWwujCrGEo4=;
-        b=oHnYFzBlLrzgkhduq91smi0EFizPL2DpPev9VxDCj/7v3b2INnQ4wwfas6TZqqEbhB
-         zQi8IHlllN7OeW5BaMSC2V0j9MvUoEZsbZoReSu0DAV7koocLH6AmEJ1M/hMxX8eZKWo
-         y+tv3w7MIdkthohWWy/TBp30U77bD75MwerLo+yK1ZMm91Gljwe0BV5Jt+L3x8cwsztG
-         tK4JhGF/bIpni1BUJpXOZVIw8LYDnDrpqZDjMlyqIhyHhH5xAM7Hp4JRFPIupVkG6RsA
-         fojWImollCYdP2oeYEqwtDwFEkLa7klYHv8ULuqk9zuAx0JUaDQO9c+/ZDv0bzrh38NK
-         T1QA==
-X-Forwarded-Encrypted: i=1; AJvYcCXoik333iOg6RI5XyqNmXCnUl4nMktO1mRmwPm0jKXKc1SFPq05TKWlGvB5uZCZr5G8zNrV+XU5GNQJkuVuv5gYWTYHiOdO4oBCJJtf79YjS6MGybkTmQVUDMuIfAMBox8sHnYos3hMmMqe24ttWn6jLDFO8CjsGKuLevv4/LWs
-X-Gm-Message-State: AOJu0YyfRt4Ux7J9+q8m6Bm+8Ofi1NJgCdj+e60zHdsDDUqsBaJvBpMR
-	Q/3ndwDVY4r79jG5E80eDr2TscXmV2wMd0BaCkIlqf8k3aUeMUw2
-X-Google-Smtp-Source: AGHT+IG/FMK3bNVlrP15HVAL29rwgIgSr3VJBp7bNTiL3KfUs6zHWiqpafjB1eMUpCtsYUlpQ6PkVw==
-X-Received: by 2002:a05:651c:104d:b0:2ee:494c:c3d3 with SMTP id 38308e7fff4ca-2f15ab395afmr11770781fa.43.1722558884154;
-        Thu, 01 Aug 2024 17:34:44 -0700 (PDT)
-Received: from mobilestation ([176.213.10.205])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2f15e250619sm362831fa.79.2024.08.01.17.34.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Aug 2024 17:34:43 -0700 (PDT)
-Date: Fri, 2 Aug 2024 03:34:41 +0300
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-Cc: manivannan.sadhasivam@linaro.org, vkoul@kernel.org, 
-	quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com, quic_ramkri@quicinc.com, 
-	quic_nayiluri@quicinc.com, quic_krichai@quicinc.com, quic_vbadigan@quicinc.com, 
-	stable@vger.kernel.org, Cai Huoqing <cai.huoqing@linux.dev>, dmaengine@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] dmaengine: dw-edma: Do not enable watermark
- interrupts for HDMA
-Message-ID: <mhfcw7yuv55me2d7kf6jh3eggzebq6riv5im4nbvx6qrzsg2mr@xpq3srpzemkb>
-References: <1721740773-23181-1-git-send-email-quic_msarkar@quicinc.com>
- <1721740773-23181-3-git-send-email-quic_msarkar@quicinc.com>
+	s=arc-20240116; t=1722570366; c=relaxed/simple;
+	bh=HqMyy66LHQV6gSj10sZaDnxWJrqtK+uKA3sR+t8lYVk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WRpUxSKv3DPCi41+3RuqVWNeIZWzVv2Emq1XhpaIm/21wUzpFi9LnS03ySz74u/IakXdFiaCpymCpVlkYUqqgevhtwPMNrkA1a3ttENwOSYHBSpmhCP9Ms8E9FSvt43aBrRNK/xwZ04wUK29+ySPCl/+UhmMzAFSs9QpPp2ovZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
+	by APP-03 (Coremail) with SMTP id rQCowACnzQBvVqxmQiLqAg--.51161S2;
+	Fri, 02 Aug 2024 11:45:59 +0800 (CST)
+From: Ma Ke <make24@iscas.ac.cn>
+To: vkoul@kernel.org,
+	arnd@arndb.de
+Cc: dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ma Ke <make24@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH v2 RESEND] dmaengine: moxart: handle irq_of_parse_and_map() errors
+Date: Fri,  2 Aug 2024 11:45:49 +0800
+Message-Id: <20240802034549.1561123-1-make24@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1721740773-23181-3-git-send-email-quic_msarkar@quicinc.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:rQCowACnzQBvVqxmQiLqAg--.51161S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7JrWfuF17Kr4DCryUJw47urg_yoWfWrgEk3
+	WI9FWfZr1DJF1j9w15AwsavFy0kF1rWrsa9Fn0q3sIkryUJF1avrWxZFn3JryDWF1v9rW2
+	kryq9ryfuFW7GjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb3kFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+	Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
+	1j6F4UJwAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40E
+	FcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr
+	0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8v
+	x2IErcIFxwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+	67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1x
+	MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
+	VFxhVjvjDU0xZFpf9x0JUvAp5UUUUU=
+X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
 
-On Tue, Jul 23, 2024 at 06:49:32PM +0530, Mrinmay Sarkar wrote:
-> DW_HDMA_V0_LIE and DW_HDMA_V0_RIE are initialized as BIT(3) and BIT(4)
-> respectively in dw_hdma_control enum. But as per HDMA register these
-> bits are corresponds to LWIE and RWIE bit i.e local watermark interrupt
-> enable and remote watermarek interrupt enable. In linked list mode LWIE
-> and RWIE bits only enable the local and remote watermark interrupt.
-> 
-> Since the watermark interrupts are not used but enabled, this leads to
-> spurious interrupts getting generated. So remove the code that enables
-> them to avoid generating spurious watermark interrupts.
-> 
-> And also rename DW_HDMA_V0_LIE to DW_HDMA_V0_LWIE and DW_HDMA_V0_RIE to
-> DW_HDMA_V0_RWIE as there is no LIE and RIE bits in HDMA and those bits
-> are corresponds to LWIE and RWIE bits.
-> 
-> Fixes: e74c39573d35 ("dmaengine: dw-edma: Add support for native HDMA")
-> cc: stable@vger.kernel.org
-> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-> ---
->  drivers/dma/dw-edma/dw-hdma-v0-core.c | 17 +++--------------
->  1 file changed, 3 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> index fa89b3a..9ad2e28 100644
-> --- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> +++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> @@ -17,8 +17,8 @@ enum dw_hdma_control {
->  	DW_HDMA_V0_CB					= BIT(0),
->  	DW_HDMA_V0_TCB					= BIT(1),
->  	DW_HDMA_V0_LLP					= BIT(2),
-> -	DW_HDMA_V0_LIE					= BIT(3),
-> -	DW_HDMA_V0_RIE					= BIT(4),
-> +	DW_HDMA_V0_LWIE					= BIT(3),
-> +	DW_HDMA_V0_RWIE					= BIT(4),
->  	DW_HDMA_V0_CCS					= BIT(8),
->  	DW_HDMA_V0_LLE					= BIT(9),
->  };
-> @@ -195,25 +195,14 @@ static void dw_hdma_v0_write_ll_link(struct dw_edma_chunk *chunk,
->  static void dw_hdma_v0_core_write_chunk(struct dw_edma_chunk *chunk)
->  {
->  	struct dw_edma_burst *child;
-> -	struct dw_edma_chan *chan = chunk->chan;
->  	u32 control = 0, i = 0;
-> -	int j;
->  
->  	if (chunk->cb)
->  		control = DW_HDMA_V0_CB;
->  
-> -	j = chunk->bursts_alloc;
-> -	list_for_each_entry(child, &chunk->burst->list, list) {
-> -		j--;
-> -		if (!j) {
-> -			control |= DW_HDMA_V0_LIE;
-> -			if (!(chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL))
-> -				control |= DW_HDMA_V0_RIE;
-> -		}
-> -
-> +	list_for_each_entry(child, &chunk->burst->list, list)
->  		dw_hdma_v0_write_ll_data(chunk, i++, control, child->sz,
->  					 child->sar, child->dar);
-> -	}
+Zero and negative number is not a valid IRQ for in-kernel code and the
+irq_of_parse_and_map() function returns zero on error.  So this check for
+valid IRQs should only accept values > 0.
 
-Hm, in case of DW EDMA the LIE/RIE flags of the LL entries gets to be
-moved to the LIE/RIE flags of the channel context register by the
-DMA-engine. In its turn the context register LIE/RIE flags determine
-whether the Local and Remote Done/Abort IRQs being raised. So without
-the LIE/RIE flags being set in the LL-entries the IRQs won't be raised
-and the whole procedure won't work. I have doubts it works differently
-in case of HDMA because changing the semantics would cause
-implementing additional logic in the DW HDMA RTL-model. Seeing the DW
-HDMA IP-core supports the eDMA compatibility mode it would needlessly
-expand the controller size. What are the rest of the CONTROL1 register
-fields? There must be LIE/RIE flags someplace there for the non-LL
-transfers and to preserve the values retrieved from the LL-entries.
+Cc: stable@vger.kernel.org
+Fixes: 2d9e31b9412c ("dmaengine: moxart: remove NO_IRQ")
+Signed-off-by: Ma Ke <make24@iscas.ac.cn>
+---
+Changes in v2:
+- added Cc stable line;
+- added Fixes line.
+---
+ drivers/dma/moxart-dma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Moreover the DW eDMA HW manual has a dedicated chapter called
-"Interrupts and Error Handling" with a very demonstrative figures
-describing the way the flags work. Does the DW HDMA databook have
-something like that?
+diff --git a/drivers/dma/moxart-dma.c b/drivers/dma/moxart-dma.c
+index 66dc6d31b603..16dd3c5aba4d 100644
+--- a/drivers/dma/moxart-dma.c
++++ b/drivers/dma/moxart-dma.c
+@@ -568,7 +568,7 @@ static int moxart_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	irq = irq_of_parse_and_map(node, 0);
+-	if (!irq) {
++	if (irq <= 0) {
+ 		dev_err(dev, "no IRQ resource\n");
+ 		return -EINVAL;
+ 	}
+-- 
+2.25.1
 
-Please also note, the DW _EDMA_ LIE and RIE flags can be also utilized
-for the intermediate IRQ raising, to implement the runtime LL-entries
-recycling pattern. The IRQ in that case is called as "watermark" IRQ
-in the DW EDMA HW databook, but the flags are still called as just
-LIE/RIE.
-
--Serge(y)
-
->  
->  	control = DW_HDMA_V0_LLP | DW_HDMA_V0_TCB;
->  	if (!chunk->cb)
-> -- 
-> 2.7.4
-> 
 

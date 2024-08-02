@@ -1,72 +1,72 @@
-Return-Path: <dmaengine+bounces-2777-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2778-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 43C71945940
-	for <lists+dmaengine@lfdr.de>; Fri,  2 Aug 2024 09:52:31 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A0BF945944
+	for <lists+dmaengine@lfdr.de>; Fri,  2 Aug 2024 09:52:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E5F302877E6
-	for <lists+dmaengine@lfdr.de>; Fri,  2 Aug 2024 07:52:29 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5B371B228F5
+	for <lists+dmaengine@lfdr.de>; Fri,  2 Aug 2024 07:52:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42BE31C3788;
-	Fri,  2 Aug 2024 07:51:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 169341C379C;
+	Fri,  2 Aug 2024 07:51:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BokOp7sQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HIZ2Xqyj"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FA661C2329;
-	Fri,  2 Aug 2024 07:51:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FCB31C3784;
+	Fri,  2 Aug 2024 07:51:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722585093; cv=none; b=Qd4LhePmNIhC4PeKNGBHIZQP6XZl6d6ct2Fw5CjsCCBwfkM+i3yHu8EoCJ2G7/aNQ2f475nC5KRc0AAVVS1rilz8m5FdIqt62oq/W5oMfEi/nc4WaR+fIgKrK7CiaWIhc7ABhcfi8otoxuH72rrVkYzWy5BebrGi0of+mZaksQk=
+	t=1722585095; cv=none; b=NyFsPTnkQ0Ww4BD94BCsOlzQ+yAmMhiGPgWuUO7n56In5s8VzjOCgZPyElIZuwh5aLllVTdEApBW3MI6S8Us+8+50iuEjY8xFJ4iIPiciuOtOvPljPj76/B/6/7/3M6nWH1VxY2t5bBl2z0BpVj7koC6fK/5GKRySFJ4RNq1kn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722585093; c=relaxed/simple;
-	bh=vF0Vhv+v5SwKA7KbjlHJJ6tPkr3ieurZ5WbmugaNlGU=;
+	s=arc-20240116; t=1722585095; c=relaxed/simple;
+	bh=fes4+PALn4aJD0RUIggf2YkD7O8aHh0ck1WvSCbST4Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HtQrDN+D2DEjXuxuJ6t78wJ5Zh/T6ex4g4IoOKjZfftfwtEPo1fjsb9I+mFnS0w/5CXxXhxXOkN7/xMGx0lu8LZ9nhwm2PUBGxj+SsAUSuGkk0rQMwVzZwyXfYOtYOgXBsA7U41D9QvFF5kI1wbaEEdCQrLxRd9dZDABV8WLb3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BokOp7sQ; arc=none smtp.client-ip=209.85.208.179
+	 MIME-Version; b=mSGaXiYIOCS8w1tGPQ4bJ7WTc0EN7rFwajjOupQ9nzCsrB0IG5ZxHDbTg301H3yOpujQS6VfVNbQbXfBX8vVDcJqS+Wap7YtdYc/PpxkvUR5x4xYjdVYgYc71Z/rf6Xs2C1ckWhKQu+tXNbePMHSlbra2XMsAzjDjXDeQ6Sg3dI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HIZ2Xqyj; arc=none smtp.client-ip=209.85.167.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2ef2c56da6cso88444321fa.1;
-        Fri, 02 Aug 2024 00:51:31 -0700 (PDT)
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-52fc4388a64so13002528e87.1;
+        Fri, 02 Aug 2024 00:51:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1722585090; x=1723189890; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1722585091; x=1723189891; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tsGqL85+hlOeWrRTeP1bSIlASOT8eH3Xsl5jRTGABhY=;
-        b=BokOp7sQIvjJOEkhq1OYHzMAdwu7Z0rBR/tFEhlpSR3XOiZR1jcVmBKB+VYHkejENQ
-         sd4FQzh5pftS5BzWcafrrtr5/Hts5nY/2eieMXEP+4QRF54nvCDklN7OZugd3LypW4gH
-         lcBo6s52XtrwUYaVDLbSCjjLiE2suWauOLWaL6QtD0LiJyWOFX7m4bvbLv/o9hCMPEOo
-         mZRmqJSkDaJcauVEH2eJ3Abx7vu+tjlcHAg/1Fknn1ivcsGJAhYjyQqG0pjDQcnmakO8
-         /fhVypOReZ+s/QEXRPV9IR14GDHs9VwSrj5U6B7P5A8ZdYzxsSPGqOcA3BG0G+++elMb
-         WF+w==
+        bh=lHiD9v1JsXXcE41UkTPqhgsLCw9iYgVEo+i0Dc9T+lk=;
+        b=HIZ2XqyjBcrLbc3nMyw1EC1Tw5HxCaJzM8M4wKpyE/nFWZ6/70UDRog+90VYyRV0fS
+         MBlsdzk+Ebo9af+5ElX6TbdHmecK34Zm7BxYhkShyJIe8Sdyfcs/6apgXoOBTKifrOL9
+         1Sdp3quPw6DXVu+hzWuCikO6azgjRE0n/tsV/glbCQYTBL4Uh+NUYMYgXg4IH7yQCYKZ
+         Ba3hSEWHNHYk28GFoCqaKE5BuNmexjiQHEMce7GWFK4UFqyE4TeXg23KCqIamrm/vQMA
+         /S/aCxsH8KF0ciHtq0wiugbuxAYHv9Ea7jjzp5OTaa6hEyiJ4LN33CzJQDWPwnyLZyAz
+         mKmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722585090; x=1723189890;
+        d=1e100.net; s=20230601; t=1722585091; x=1723189891;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=tsGqL85+hlOeWrRTeP1bSIlASOT8eH3Xsl5jRTGABhY=;
-        b=dWGCzvjyXkJaeBpej59hr40opqTj/qbyzhtl0GKIFhTfyQHqxhhFfLAg0C0yrIy6p5
-         SqGQjcquDN/1jzFbZmwJ8CJDlQaXsCNc2xSTlHpFju0crk75l6aAukqsE3cx4l6H7Jw/
-         zfFJELCx9F1EdmtVsBY4ZekCJhNM4llqk3gscW03k5srem7v5ecq/Ori2rjjWtMI6CK/
-         QLkXmtzfeJrfHLTcdbh+rEwBuNwjTquqRYQT2FeAY4Y5aAy63bO6GuugaowzmPInCCRu
-         CEsFDKs6a60o4ABU57//KU6mzQmkxTnXw7zh0y2OE8BV9t5qn6FSsEqWVYFNJ+XB9kNI
-         x8Bw==
-X-Forwarded-Encrypted: i=1; AJvYcCWWuuYjBsGFJllBXK4W1s97j8/MOwQv28SOwnZJmHwQ97qMSlrrcelxEaEAiqA9W29j5nzRNw/8ZjGtJf1WSeZPCWTopK+e//MnhQQ3nQddLrpjqQDaUCY5axHqrlIAH10OOmVv306YJxvnLWD9V68dht+A/KUdRb58YZ81sRQBifLgVquU
-X-Gm-Message-State: AOJu0Yz75bhosY2KWyfXcr4ZF9nmhUx7QtcqFzdKaxEX0ZgZWsiLR8ck
-	ZywYi14MnPD0mVQ49hzpgVX5LwU/NKfD9JTRIIhzvhocFTYA1e+7
-X-Google-Smtp-Source: AGHT+IE4aulBZj0DE9AR93I5wTi4RMBE5LZcXJGK6Rohp5AFRNpPS4dw5cjxGSThdsxcp6bGSt2GHA==
-X-Received: by 2002:a2e:320c:0:b0:2ef:2e1c:79b5 with SMTP id 38308e7fff4ca-2f15aa95c88mr18317791fa.14.1722585089365;
-        Fri, 02 Aug 2024 00:51:29 -0700 (PDT)
+        bh=lHiD9v1JsXXcE41UkTPqhgsLCw9iYgVEo+i0Dc9T+lk=;
+        b=sxQki1E9Tw9oFcqoZl2MvR77lMw8pAnDTJ3AdbhEWW/w/aI2Nh4O/hRAh1rpiLk8XL
+         cXJQulwkJwaP6sOt4dUbFJ8s2xnbwgPACyqtV7cNrjQEyxphERZuxIg4dGIiUuHsAF3/
+         OR5RW5CKnaCp+G8wauy8gp+0y9x4A0ZiSab42RvpFbOrvEZGE6RlFME2241ADxPQsZSB
+         D9o8A9Dz1DzBE82jq9pJc4kYI/Zj7mQN0HAb620Wsvs+XnH5FBcbYzdXsLo5SCAlJUBk
+         ROBPAr/7qc7dGdRiwt6gYoHSiF69yPW91/QgAkCzXJxvTWgaxEBRNWtaEpetjrkvtR0i
+         Ouuw==
+X-Forwarded-Encrypted: i=1; AJvYcCVj7uTfP1h+cwlj2Uip54oCsrWJI67LX0vV3x4ZD8TPW3pFiaNwDglYI1zRkeCWveuUdloQ3G/pY88vOJNpFLbP6mguhim93qfr8qsw56OUhvbbg4I9VbkXUF87gmmfYzgUzmE8050uUAiePl45Gbz+fTZ5SHLbzSwOdgFB7gS/MKP9QB4W
+X-Gm-Message-State: AOJu0YzxrzS+VBenR4cC84ISANeX6wsIe1aIMstw6Y7apsxhi3+ktIvG
+	qgYIDgFMd/0wf9f1sVTIjqDSwJs//+MK1hrvq0QUpUbnxOACKaAB
+X-Google-Smtp-Source: AGHT+IEMxf4N4s3xFraxbRmN9YP31vVSJKb9vVw4lnrxgYP2s4t4P5fTafWSGlWROhVsyRlaGnRdOA==
+X-Received: by 2002:a05:6512:685:b0:52f:c2fa:b213 with SMTP id 2adb3069b0e04-530bb3b1210mr1771229e87.55.1722585091141;
+        Fri, 02 Aug 2024 00:51:31 -0700 (PDT)
 Received: from localhost ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2f15e250624sm1001461fa.87.2024.08.02.00.51.28
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-530bba29fd9sm158725e87.122.2024.08.02.00.51.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Aug 2024 00:51:28 -0700 (PDT)
+        Fri, 02 Aug 2024 00:51:30 -0700 (PDT)
 From: Serge Semin <fancer.lancer@gmail.com>
 To: Viresh Kumar <vireshk@kernel.org>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -79,9 +79,9 @@ Cc: Serge Semin <fancer.lancer@gmail.com>,
 	dmaengine@vger.kernel.org,
 	linux-serial@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND v4 5/6] dmaengine: dw: Simplify max-burst calculation procedure
-Date: Fri,  2 Aug 2024 10:50:50 +0300
-Message-ID: <20240802075100.6475-6-fancer.lancer@gmail.com>
+Subject: [PATCH RESEND v4 6/6] dmaengine: dw: Unify ret-val local variables naming
+Date: Fri,  2 Aug 2024 10:50:51 +0300
+Message-ID: <20240802075100.6475-7-fancer.lancer@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240802075100.6475-1-fancer.lancer@gmail.com>
 References: <20240802075100.6475-1-fancer.lancer@gmail.com>
@@ -93,207 +93,155 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In order to have a more coherent DW AHB DMA slave configuration method -
-dwc_config() - let's simplify the source and destination channel max-burst
-calculation procedure:
-
-1. Create the max-burst verification method as it has been just done for
-the memory and peripheral address widths. Thus the dwc_config() method
-will turn to a set of the verification methods execution.
-
-2. Since both the generic DW AHB DMA and Intel iDMA 32-bit engines support
-the power-of-2 bursts only, then the specified by the client driver
-max-burst values can be converted to being power-of-2 right in the
-max-burst verification method.
-
-3. Since max-burst encoded value is required on the CTL_LO fields
-calculation stage, the encode_maxburst() callback can be easily dropped
-from the dw_dma structure meanwhile the encoding procedure will be
-executed right in the CTL_LO register value calculation.
-
-Thus the update will provide the next positive effects: the internal
-DMA-slave config structure will contain only the real DMA-transfer config
-values, which will be encoded to the DMA-controller register fields only
-when it's required on the buffer mapping; the redundant encode_maxburst()
-callback will be dropped simplifying the internal HW-abstraction API;
-dwc_config() will look more readable executing the verification functions
-one-by-one.
+Currently there are two names utilized in the driver to keep the functions
+call status: ret and err. For the sake of unification convert to using the
+first version only.
 
 Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 
 ---
 
 Changelog v2:
-- Refer to dwc_config() in the commit message. (Andy)
-- Convert dwc_verify_maxburst() to returning zero. (Andy)
-- Add a comment regarding the values utilized in the
-  dwc_verify_p_buswidth() being verified before the method is called.
-  (Andy, see patch 2)
-- Detach the dw_dma_encode_maxburst() and idma32_encode_maxburst()
-  movement to a preparatory patch. (Andy)
+- New patch created on v2 review stage. (Andy)
 ---
- drivers/dma/dw/core.c   | 30 +++++++++++++++++++++---------
- drivers/dma/dw/dw.c     |  9 ++++-----
- drivers/dma/dw/idma32.c |  9 ++++-----
- drivers/dma/dw/regs.h   |  1 -
- 4 files changed, 29 insertions(+), 20 deletions(-)
+ drivers/dma/dw/core.c     | 20 ++++++++++----------
+ drivers/dma/dw/platform.c | 20 ++++++++++----------
+ 2 files changed, 20 insertions(+), 20 deletions(-)
 
 diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
-index 4987bfa10461..c696d79b911a 100644
+index c696d79b911a..602f1208ab9b 100644
 --- a/drivers/dma/dw/core.c
 +++ b/drivers/dma/dw/core.c
-@@ -779,6 +779,23 @@ bool dw_dma_filter(struct dma_chan *chan, void *param)
- }
- EXPORT_SYMBOL_GPL(dw_dma_filter);
+@@ -1149,7 +1149,7 @@ int do_dma_probe(struct dw_dma_chip *chip)
+ 	bool			autocfg = false;
+ 	unsigned int		dw_params;
+ 	unsigned int		i;
+-	int			err;
++	int			ret;
  
-+static int dwc_verify_maxburst(struct dma_chan *chan)
-+{
-+	struct dw_dma_chan *dwc = to_dw_dma_chan(chan);
-+
-+	dwc->dma_sconfig.src_maxburst =
-+		clamp(dwc->dma_sconfig.src_maxburst, 1U, dwc->max_burst);
-+	dwc->dma_sconfig.dst_maxburst =
-+		clamp(dwc->dma_sconfig.dst_maxburst, 1U, dwc->max_burst);
-+
-+	dwc->dma_sconfig.src_maxburst =
-+		rounddown_pow_of_two(dwc->dma_sconfig.src_maxburst);
-+	dwc->dma_sconfig.dst_maxburst =
-+		rounddown_pow_of_two(dwc->dma_sconfig.dst_maxburst);
-+
-+	return 0;
-+}
-+
- static int dwc_verify_p_buswidth(struct dma_chan *chan)
- {
- 	struct dw_dma_chan *dwc = to_dw_dma_chan(chan);
-@@ -838,7 +855,7 @@ static int dwc_verify_m_buswidth(struct dma_chan *chan)
- 		dwc->dma_sconfig.src_addr_width = mem_width;
- 	} else if (dwc->dma_sconfig.direction == DMA_DEV_TO_MEM) {
- 		reg_width = dwc->dma_sconfig.src_addr_width;
--		reg_burst = rounddown_pow_of_two(dwc->dma_sconfig.src_maxburst);
-+		reg_burst = dwc->dma_sconfig.src_maxburst;
+ 	dw->pdata = devm_kzalloc(chip->dev, sizeof(*dw->pdata), GFP_KERNEL);
+ 	if (!dw->pdata)
+@@ -1165,7 +1165,7 @@ int do_dma_probe(struct dw_dma_chip *chip)
  
- 		dwc->dma_sconfig.dst_addr_width = min(mem_width, reg_width * reg_burst);
+ 		autocfg = dw_params >> DW_PARAMS_EN & 1;
+ 		if (!autocfg) {
+-			err = -EINVAL;
++			ret = -EINVAL;
+ 			goto err_pdata;
+ 		}
+ 
+@@ -1185,7 +1185,7 @@ int do_dma_probe(struct dw_dma_chip *chip)
+ 		pdata->chan_allocation_order = CHAN_ALLOCATION_ASCENDING;
+ 		pdata->chan_priority = CHAN_PRIORITY_ASCENDING;
+ 	} else if (chip->pdata->nr_channels > DW_DMA_MAX_NR_CHANNELS) {
+-		err = -EINVAL;
++		ret = -EINVAL;
+ 		goto err_pdata;
+ 	} else {
+ 		memcpy(dw->pdata, chip->pdata, sizeof(*dw->pdata));
+@@ -1197,7 +1197,7 @@ int do_dma_probe(struct dw_dma_chip *chip)
+ 	dw->chan = devm_kcalloc(chip->dev, pdata->nr_channels, sizeof(*dw->chan),
+ 				GFP_KERNEL);
+ 	if (!dw->chan) {
+-		err = -ENOMEM;
++		ret = -ENOMEM;
+ 		goto err_pdata;
  	}
-@@ -849,15 +866,13 @@ static int dwc_verify_m_buswidth(struct dma_chan *chan)
- static int dwc_config(struct dma_chan *chan, struct dma_slave_config *sconfig)
- {
- 	struct dw_dma_chan *dwc = to_dw_dma_chan(chan);
--	struct dw_dma *dw = to_dw_dma(chan->device);
- 	int ret;
  
- 	memcpy(&dwc->dma_sconfig, sconfig, sizeof(*sconfig));
+@@ -1215,15 +1215,15 @@ int do_dma_probe(struct dw_dma_chip *chip)
+ 					 sizeof(struct dw_desc), 4, 0);
+ 	if (!dw->desc_pool) {
+ 		dev_err(chip->dev, "No memory for descriptors dma pool\n");
+-		err = -ENOMEM;
++		ret = -ENOMEM;
+ 		goto err_pdata;
+ 	}
  
--	dwc->dma_sconfig.src_maxburst =
--		clamp(dwc->dma_sconfig.src_maxburst, 1U, dwc->max_burst);
--	dwc->dma_sconfig.dst_maxburst =
--		clamp(dwc->dma_sconfig.dst_maxburst, 1U, dwc->max_burst);
-+	ret = dwc_verify_maxburst(chan);
+ 	tasklet_setup(&dw->tasklet, dw_dma_tasklet);
+ 
+-	err = request_irq(chip->irq, dw_dma_interrupt, IRQF_SHARED,
++	ret = request_irq(chip->irq, dw_dma_interrupt, IRQF_SHARED,
+ 			  dw->name, dw);
+-	if (err)
++	if (ret)
+ 		goto err_pdata;
+ 
+ 	INIT_LIST_HEAD(&dw->dma.channels);
+@@ -1335,8 +1335,8 @@ int do_dma_probe(struct dw_dma_chip *chip)
+ 	 */
+ 	dma_set_max_seg_size(dw->dma.dev, dw->chan[0].block_size);
+ 
+-	err = dma_async_device_register(&dw->dma);
+-	if (err)
++	ret = dma_async_device_register(&dw->dma);
++	if (ret)
+ 		goto err_dma_register;
+ 
+ 	dev_info(chip->dev, "DesignWare DMA Controller, %d channels\n",
+@@ -1350,7 +1350,7 @@ int do_dma_probe(struct dw_dma_chip *chip)
+ 	free_irq(chip->irq, dw);
+ err_pdata:
+ 	pm_runtime_put_sync_suspend(chip->dev);
+-	return err;
++	return ret;
+ }
+ 
+ int do_dma_remove(struct dw_dma_chip *chip)
+diff --git a/drivers/dma/dw/platform.c b/drivers/dma/dw/platform.c
+index 7d9d4c951724..47c58ad468cb 100644
+--- a/drivers/dma/dw/platform.c
++++ b/drivers/dma/dw/platform.c
+@@ -29,7 +29,7 @@ static int dw_probe(struct platform_device *pdev)
+ 	struct dw_dma_chip_pdata *data;
+ 	struct dw_dma_chip *chip;
+ 	struct device *dev = &pdev->dev;
+-	int err;
++	int ret;
+ 
+ 	match = device_get_match_data(dev);
+ 	if (!match)
+@@ -51,9 +51,9 @@ static int dw_probe(struct platform_device *pdev)
+ 	if (IS_ERR(chip->regs))
+ 		return PTR_ERR(chip->regs);
+ 
+-	err = dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
+-	if (err)
+-		return err;
++	ret = dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
 +	if (ret)
 +		return ret;
  
- 	ret = dwc_verify_p_buswidth(chan);
- 	if (ret)
-@@ -867,9 +882,6 @@ static int dwc_config(struct dma_chan *chan, struct dma_slave_config *sconfig)
- 	if (ret)
- 		return ret;
+ 	if (!data->pdata)
+ 		data->pdata = dev_get_platdata(dev);
+@@ -69,14 +69,14 @@ static int dw_probe(struct platform_device *pdev)
+ 	chip->clk = devm_clk_get_optional(chip->dev, "hclk");
+ 	if (IS_ERR(chip->clk))
+ 		return PTR_ERR(chip->clk);
+-	err = clk_prepare_enable(chip->clk);
+-	if (err)
+-		return err;
++	ret = clk_prepare_enable(chip->clk);
++	if (ret)
++		return ret;
  
--	dw->encode_maxburst(dwc, &dwc->dma_sconfig.src_maxburst);
--	dw->encode_maxburst(dwc, &dwc->dma_sconfig.dst_maxburst);
--
- 	return 0;
+ 	pm_runtime_enable(&pdev->dev);
+ 
+-	err = data->probe(chip);
+-	if (err)
++	ret = data->probe(chip);
++	if (ret)
+ 		goto err_dw_dma_probe;
+ 
+ 	platform_set_drvdata(pdev, data);
+@@ -90,7 +90,7 @@ static int dw_probe(struct platform_device *pdev)
+ err_dw_dma_probe:
+ 	pm_runtime_disable(&pdev->dev);
+ 	clk_disable_unprepare(chip->clk);
+-	return err;
++	return ret;
  }
  
-diff --git a/drivers/dma/dw/dw.c b/drivers/dma/dw/dw.c
-index 628ee1e77505..6766142884b6 100644
---- a/drivers/dma/dw/dw.c
-+++ b/drivers/dma/dw/dw.c
-@@ -64,13 +64,13 @@ static size_t dw_dma_block2bytes(struct dw_dma_chan *dwc, u32 block, u32 width)
- 	return DWC_CTLH_BLOCK_TS(block) << width;
- }
- 
--static void dw_dma_encode_maxburst(struct dw_dma_chan *dwc, u32 *maxburst)
-+static inline u8 dw_dma_encode_maxburst(u32 maxburst)
- {
- 	/*
- 	 * Fix burst size according to dw_dmac. We need to convert them as:
- 	 * 1 -> 0, 4 -> 1, 8 -> 2, 16 -> 3.
- 	 */
--	*maxburst = *maxburst > 1 ? fls(*maxburst) - 2 : 0;
-+	return maxburst > 1 ? fls(maxburst) - 2 : 0;
- }
- 
- static u32 dw_dma_prepare_ctllo(struct dw_dma_chan *dwc)
-@@ -82,11 +82,11 @@ static u32 dw_dma_prepare_ctllo(struct dw_dma_chan *dwc)
- 	if (dwc->direction == DMA_MEM_TO_DEV) {
- 		sms = dwc->dws.m_master;
- 		dms = dwc->dws.p_master;
--		dmsize = sconfig->dst_maxburst;
-+		dmsize = dw_dma_encode_maxburst(sconfig->dst_maxburst);
- 	} else if (dwc->direction == DMA_DEV_TO_MEM) {
- 		sms = dwc->dws.p_master;
- 		dms = dwc->dws.m_master;
--		smsize = sconfig->src_maxburst;
-+		smsize = dw_dma_encode_maxburst(sconfig->src_maxburst);
- 	} else /* DMA_MEM_TO_MEM */ {
- 		sms = dwc->dws.m_master;
- 		dms = dwc->dws.m_master;
-@@ -125,7 +125,6 @@ int dw_dma_probe(struct dw_dma_chip *chip)
- 	dw->suspend_chan = dw_dma_suspend_chan;
- 	dw->resume_chan = dw_dma_resume_chan;
- 	dw->prepare_ctllo = dw_dma_prepare_ctllo;
--	dw->encode_maxburst = dw_dma_encode_maxburst;
- 	dw->bytes2block = dw_dma_bytes2block;
- 	dw->block2bytes = dw_dma_block2bytes;
- 
-diff --git a/drivers/dma/dw/idma32.c b/drivers/dma/dw/idma32.c
-index 493fcbafa2b8..dac617c183e6 100644
---- a/drivers/dma/dw/idma32.c
-+++ b/drivers/dma/dw/idma32.c
-@@ -199,9 +199,9 @@ static size_t idma32_block2bytes(struct dw_dma_chan *dwc, u32 block, u32 width)
- 	return IDMA32C_CTLH_BLOCK_TS(block);
- }
- 
--static void idma32_encode_maxburst(struct dw_dma_chan *dwc, u32 *maxburst)
-+static inline u8 idma32_encode_maxburst(u32 maxburst)
- {
--	*maxburst = *maxburst > 1 ? fls(*maxburst) - 1 : 0;
-+	return maxburst > 1 ? fls(maxburst) - 1 : 0;
- }
- 
- static u32 idma32_prepare_ctllo(struct dw_dma_chan *dwc)
-@@ -210,9 +210,9 @@ static u32 idma32_prepare_ctllo(struct dw_dma_chan *dwc)
- 	u8 smsize = 0, dmsize = 0;
- 
- 	if (dwc->direction == DMA_MEM_TO_DEV)
--		dmsize = sconfig->dst_maxburst;
-+		dmsize = idma32_encode_maxburst(sconfig->dst_maxburst);
- 	else if (dwc->direction == DMA_DEV_TO_MEM)
--		smsize = sconfig->src_maxburst;
-+		smsize = idma32_encode_maxburst(sconfig->src_maxburst);
- 
- 	return DWC_CTLL_LLP_D_EN | DWC_CTLL_LLP_S_EN |
- 	       DWC_CTLL_DST_MSIZE(dmsize) | DWC_CTLL_SRC_MSIZE(smsize);
-@@ -274,7 +274,6 @@ int idma32_dma_probe(struct dw_dma_chip *chip)
- 	dw->suspend_chan = idma32_suspend_chan;
- 	dw->resume_chan = idma32_resume_chan;
- 	dw->prepare_ctllo = idma32_prepare_ctllo;
--	dw->encode_maxburst = idma32_encode_maxburst;
- 	dw->bytes2block = idma32_bytes2block;
- 	dw->block2bytes = idma32_block2bytes;
- 
-diff --git a/drivers/dma/dw/regs.h b/drivers/dma/dw/regs.h
-index 76654bd13c1a..5969d9cc8d7a 100644
---- a/drivers/dma/dw/regs.h
-+++ b/drivers/dma/dw/regs.h
-@@ -327,7 +327,6 @@ struct dw_dma {
- 	void	(*suspend_chan)(struct dw_dma_chan *dwc, bool drain);
- 	void	(*resume_chan)(struct dw_dma_chan *dwc, bool drain);
- 	u32	(*prepare_ctllo)(struct dw_dma_chan *dwc);
--	void	(*encode_maxburst)(struct dw_dma_chan *dwc, u32 *maxburst);
- 	u32	(*bytes2block)(struct dw_dma_chan *dwc, size_t bytes,
- 			       unsigned int width, size_t *len);
- 	size_t	(*block2bytes)(struct dw_dma_chan *dwc, u32 block, u32 width);
+ static void dw_remove(struct platform_device *pdev)
 -- 
 2.43.0
 

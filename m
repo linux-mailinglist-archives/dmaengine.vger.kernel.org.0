@@ -1,58 +1,59 @@
-Return-Path: <dmaengine+bounces-2780-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2781-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E9F39459F3
-	for <lists+dmaengine@lfdr.de>; Fri,  2 Aug 2024 10:32:42 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A29039459F5
+	for <lists+dmaengine@lfdr.de>; Fri,  2 Aug 2024 10:33:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D156D1F25994
-	for <lists+dmaengine@lfdr.de>; Fri,  2 Aug 2024 08:32:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 597AD28440C
+	for <lists+dmaengine@lfdr.de>; Fri,  2 Aug 2024 08:33:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E65501BF32B;
-	Fri,  2 Aug 2024 08:32:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69F4A1BF33B;
+	Fri,  2 Aug 2024 08:33:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="VUhjbLoy"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Aca8uXbG"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11olkn2074.outbound.protection.outlook.com [40.92.19.74])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11olkn2065.outbound.protection.outlook.com [40.92.20.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC1E1CAB3;
-	Fri,  2 Aug 2024 08:32:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.19.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E0D01CAB3;
+	Fri,  2 Aug 2024 08:33:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.20.65
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722587556; cv=fail; b=Hdkk+uvS/Q7wfetoQFhywMFdjrOtn5JaQt1RqWgFGOOpQ8D8sI5YhPW9PediV+dLHU9IKcQQa9U+M1MMxZ9pISveLjNHRalqXKaBZ+eH5l/AG046prLnH73dNCzEZY2SVsDtQzE5jwkBKI98taUKQ1PKfY4kCDHySNaWAE/7yoQ=
+	t=1722587604; cv=fail; b=jjHuqOARocFsejBIA8RJ06crxpyxYz9TljiK3ur8BaWrTTFb+fJISM0/ykwR8PsE/DlGGLS+r3ZnyEkA6ShIWOrnkFPxtADK1B4CiBLzHHb8emr/4xCls4y7I6mhh6rWMtxC75GsXc+8gIY7Jcuhj1GOSXwZ3Jml/8yfEDdiKXc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722587556; c=relaxed/simple;
-	bh=O0D5bQ0+LP3yBq/eF4DGlcTAEPaAI7TlXn+CVxKO+CY=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=pvNaSPrsLAUhNEGHJ5ang+j+g9giL+ypfio6fSlGI2n+PgKF+Ryc91hQXIJ88EN89SmPCidlDAjKZ+ig313sUZ+eG1UvD5/rszapOQixbiHsy1HGizgIAYyX6up6rjC86/HdaWUN8xxN7PrTP38pTSQUvQ2RaVauUt6xwC96mfA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=VUhjbLoy; arc=fail smtp.client-ip=40.92.19.74
+	s=arc-20240116; t=1722587604; c=relaxed/simple;
+	bh=1JX8yJYWIna0IfjzP+fthjUHLncE7sJjW/MahHa7XyM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=lcT2OfMz9KQNLxHDmL7cuNhhUEQfDxmIgGp/qco06r3/vwET3Fr56yttkWuydtyTmxgmr9+o2x3G6FvDtC3kD8w0XQYFlPUKCPmeXNravVdPkjqHsKLuItUkwOJSyZepi4Y7wM0M18jrDblrIE4FgsoYxytxTvS3hcKNf28TV+E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Aca8uXbG; arc=fail smtp.client-ip=40.92.20.65
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=C7IwuYOrkaUZxgGhVjL9sAs6ejuUrpoWBDE/U5BMdNVvM/oCtVSt3IWEneNtWar5489hLaDkdP8tVtJ7MMdvcg+YAICuK+ip84ISBrwXJC3IZhuMd92Js0OpcDzfjg/I44mtB+xG95FUPYo++EwK2ryx++kTWcHfsbAYBGzGbqDITs/YdEEbn2kvOV0QkdJHjJuifZTYWy/ztGgFBDHWilooWMP+w6uTjyjGsfP3y+/PiKwySpcY61FZbZV2kw/Xsu1ql1g25Nmmstut3mLY48NUDnjmgpMGncNVG3VNmXbJzhrOvbLZILO5hQ/QGmcoRsHmttNT6whM3ije+MRbQQ==
+ b=O/Gg6whb8jM7MjAEzpuibgypIIPjzYoV5jjNVPuLdZlitD5Cki0xYSeHBiF3WcdZ+IH6JPgwKSBwq1ZsECnv7aL2kVOp67pJnyEArHaPiw4BIi8mfsxvK4BXL1eBIqFbKYqFMsaqf/+Uj3Gh/fE5LVGEcrYiFVvJRlfPbLBG5QbCNSfAoNkGB4FqJJQYQM2eAGk58rHbiygswb6CeI3jngO/uwFkKQsDgvK+Da/ZycYdbVv+VaUMDz762mdI6RExxWY0rWiqc8+3oiG+J+KUVaH9l4m1z2Top/Ri3hxhSDk3a2NED6bnm8oRt8hnFVTBLuFzeWcovoZc0lgP82ULFQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/pextPI+wqNmLsc0K/svaxd7L0mRDUMAtpOQf+6CsfA=;
- b=qP5sUO72rUmPlRjW1/cJtngQOwLUL8JxaDtj74TpKhdXOv0A7Wgf2OdQme/ky3eMNCTBbiSdtPX0xgl8OJikVRPHje7oRgVhT9O/b1G5eC1nVpmtLy8dsT3NRrVcVhmwAAZNwu1j+mqQDtHhcjaz35reCoMNSrmfwEv0APplhojrTRwCDfRNSVkzcPCHBSM0biYAw+gXBimC9HuB8rM11qR2+63aStmq21/nTok51tM3oqhgfljdWFsTtugHjIWmH6WPb0bdSJNRbfwOvz8z5puAnitKZvasfgEuQMBegt9r2lShjRsmTtp8aWjAILso+T+rf6S7Rs90dGOyK2PKDg==
+ bh=0ZtwLfEAIwX5DWr6vytg9ubmmdOMsaDag4kdisGTopI=;
+ b=EAiWYFAeAtki0XkaqXa9u5e58pGajK5sXlFEDkK+fr3qZiEjy3yxWOZV/E451gqhY2dJPSOJyfKPR/nQqA9KK5lQ2yx2y/Rel2KW+OuUSsrTBuFq3ibA2C2exikPG0KpU/dqob44I+Fb5yw9NFv4X1//JI8ok5cpyYH3bJ/LBVTTecmBw8+iBtYYyE6goLyxYyOS/FfUlnQ/DKDx82rKbA31UFxYsZY5979rcwi3X6IMmYwW2tWj2X15kraquOuPQ9WfX8wm1vzLZ48YKyENelMKT4znpv1o2deU0H2H2+t3LrmrJjEfywLxF8AXWFZ/neaYbSl4+P5dLUCN9OLrFA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/pextPI+wqNmLsc0K/svaxd7L0mRDUMAtpOQf+6CsfA=;
- b=VUhjbLoy5sSpDSu2wOHNhhp+v9FkVvt5cY/11oJP7sZR/Jdss0oaKKhL7/2FXsO1dXq/Cm9EeUXYxV/hv/+6ptjx4Rj4YrEuBMWckpeRVM5vHNDiusXWe902v6OsXnsBw9oSxyNxqXJ/vslNvkvAvY1GyzAoIRXXYVZnqCzFgf1Ol56Bo8BdLcc1mpYpjDrSeZdp146lIq2AVfo3AypbzP7XVieXObcjjUTv8D3Wy6fvn2zlgbYiLfrpg6e3YO/sveGTei4f1+1HoSTkZIRo4GdEaccXkKshwwuVnNLkfhRAoeEnP5HGCNf+ACM1bCIz9uaPamB7HMNZGHtBsXnjDQ==
+ bh=0ZtwLfEAIwX5DWr6vytg9ubmmdOMsaDag4kdisGTopI=;
+ b=Aca8uXbGb5idyIYv2MgsamQN9VhSLF8GDV+lPvdDQGqhAENUq0QHecKONxO8asHO07s+BbedKwU2SrNZfuGX/IQiEocRyVQzhPfX+h8rLUZaGrFBns9MXoo0b8JPLPPcgF57aZZ7ywSqWVUYcbh36TFMtYhvwiiL3OitbVEGrA8T6e4v+zwgkfzUEwkO4SJDsl9CDsbjbRP5EOOPvixb3/73fPRLCOxWopN1rfyOinlI/vB7sVzyUe9jWFvqhVeiYsk1AlX1QRui94FMnvh6alGcrv4MQ9e4iFOmCz1eCtHn83TYpQxElm6I08sgk7dvJ2eH6CyxRM6dZe3CzC0HyA==
 Received: from IA1PR20MB4953.namprd20.prod.outlook.com (2603:10b6:208:3af::19)
  by CH3PR20MB7441.namprd20.prod.outlook.com (2603:10b6:610:1e5::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7828.23; Fri, 2 Aug
- 2024 08:32:32 +0000
+ 2024 08:33:20 +0000
 Received: from IA1PR20MB4953.namprd20.prod.outlook.com
  ([fe80::ab0b:c0d3:1f91:d149]) by IA1PR20MB4953.namprd20.prod.outlook.com
  ([fe80::ab0b:c0d3:1f91:d149%4]) with mapi id 15.20.7828.023; Fri, 2 Aug 2024
- 08:32:32 +0000
+ 08:33:20 +0000
 From: Inochi Amaoto <inochiama@outlook.com>
 To: Vinod Koul <vkoul@kernel.org>,
 	Rob Herring <robh@kernel.org>,
@@ -67,19 +68,21 @@ Cc: dmaengine@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-riscv@lists.infradead.org
-Subject: [PATCH v9 0/3] riscv: sophgo: add dmamux support for Sophgo CV1800/SG2000 SoCs
-Date: Fri,  2 Aug 2024 16:31:59 +0800
+Subject: [PATCH v9 1/3] dt-bindings: dmaengine: Add dma multiplexer for CV18XX/SG200X series SoC
+Date: Fri,  2 Aug 2024 16:32:47 +0800
 Message-ID:
- <IA1PR20MB495332ACF71E3E8D631508B2BBB32@IA1PR20MB4953.namprd20.prod.outlook.com>
+ <IA1PR20MB495360B076BE4DA4E66B48BABBB32@IA1PR20MB4953.namprd20.prod.outlook.com>
 X-Mailer: git-send-email 2.46.0
+In-Reply-To: <IA1PR20MB495332ACF71E3E8D631508B2BBB32@IA1PR20MB4953.namprd20.prod.outlook.com>
+References: <IA1PR20MB495332ACF71E3E8D631508B2BBB32@IA1PR20MB4953.namprd20.prod.outlook.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-TMN: [Y2GrmuNqxRsTNGpBW9QLSg4nEXt73RUWBAqnOVrJgvA=]
-X-ClientProxiedBy: TY2PR06CA0023.apcprd06.prod.outlook.com
- (2603:1096:404:42::35) To IA1PR20MB4953.namprd20.prod.outlook.com
+X-TMN: [kHe9WPqGnajXVyxl2gDOnIbPzlbgtgD5rty97HWOwEc=]
+X-ClientProxiedBy: TYWPR01CA0049.jpnprd01.prod.outlook.com
+ (2603:1096:400:17f::20) To IA1PR20MB4953.namprd20.prod.outlook.com
  (2603:10b6:208:3af::19)
 X-Microsoft-Original-Message-ID:
- <20240802083200.1286151-1-inochiama@outlook.com>
+ <20240802083252.1286244-1-inochiama@outlook.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -89,40 +92,40 @@ MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: IA1PR20MB4953:EE_|CH3PR20MB7441:EE_
-X-MS-Office365-Filtering-Correlation-Id: 87503412-5d33-409b-f8d5-08dcb2cda65d
+X-MS-Office365-Filtering-Correlation-Id: ca88e89a-c136-45c8-806c-08dcb2cdc386
 X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199028|5072599009|8060799006|19110799003|3412199025|440099028|1710799026;
+	BCL:0;ARA:14566002|461199028|5072599009|8060799006|19110799003|3412199025|4302099013|440099028|1602099012|1710799026;
 X-Microsoft-Antispam-Message-Info:
-	oxTy0w0jnPhmSFNEAZtJZOE2FLooTG0KBfthd1IyWaCgO06Xjz+IVAvNrFHYx3AdXsG4wZFCkY7Yl7CrQmFNrg4Y8UFR36YutmuLKOJvVr4lEjKGsH+XFPrFLDbwj9vlmOV5kJo7kOpQJfG6lyUiW25FujlfFMAmOxb6w/4u3ct5efFuL7ln3TmClm7XGF9aD097BoaViLDn+peZNBERPBfZ87ZcNLtr0XLssi9SuxfJLTAMZshxyzNFqeWeWF9k4Ye0hL2N1ecsDiTAm+XkXlAkuPscaVDOEo+/7YbOTPQ7ig33QspTbMIOg7xZwjcbGEFhI6pDjBuS/3gCOU2bh/y178yny9xBdvgRWV3nfkiA05jNo/V4H6mIMDymgkeqD/2Hu3crzWX5Yozr/ASq4Eh2cXHRL6iIKxxR4V3aQ6Q/jF6o/FkDMA9EL59WDatNL7+M3Ul5PhsINICoMDkI/PTaUKMl2sP6VqLmp7M4NZob6FEEfvDNX7XMMRYtBCnwnVYaTZNJbZCQ4LTiKrIgYFQOILbIIKFTOXDFyUlgeNtcGFJTNP93UL2+xon2VDvPnrw6tiWFMpF0hssy+YsbKMv1HFsv4cXI6A7n51P+Mh1P2E5qVoY2+9aMBc3iv1wg/PL527sOOoUrWKQq2+LCqQm4UXTr2y0u/F4DJU9Y4T9FatEnHpKn273uOvwBUPytqREp4z0Y8gIcg4L63pJ0zg==
+	okCd0o1X6w2NRq839hG9xtf6gxTpltWLW6ffjf1JFa932d6Dgwka5IjVRTMnY6BrA31OByvBzLv8x7ibftiYQyt9vBKFK9JJ9WB9gt7rbRcZf4vaNfQKFS0BjKRCT/cHCMviagjnVaMGLbvFC7FFva9uXoEeu+eXGRXCRnkXtlH74v453gX1jX4lnFmtwsgwWg6/LbTYr1H/zTUcHAza7RRmhnSqAUi3E8TGRvRceDXE98LEDBPJCrS4oTsRlutyHVsAafCNDL7lBNS4Nzr4zEE3JxaEqhutLfZaHeGMoiVQqXD00GbP8opZvNTzOQD4xopIHKK8RHhIonDrRRcJ/qxdyiDnbrGmSRm/sQ0uRBwKr3fyq8alTsYPt4zu6w/Q2B3VxQwJGL6IxbKOsmGbNXWsGbM/sGG90/NaUsSp511pDDn6XUneMt2IMua6SM97SnCi4TXWc9L4SDBFizkl4YXVriMpWOkb3fDEUqLjTpZW3Cv21gCZu4T+FMxI4C/ksfIpGl2jkt3rXk76h7nSj+4MepLmobH8ECfRleSOpqidtRbwiSAsm5osGndOmmQwZdWnbq6mbKUPV1RGjeXH/XNESFR7wWvH9fq3fU4dj6oKeDxV/So72WfxXAPtqlkzf4fJxRL/CqNzZv6wp8kWEBepqA5qZnWuHC7iXrA9ay2MX30Fhj9Vz5RHWFC/LhkoDC2XgDEp3lIX4ADfr0nAMIwYsdzWYfF/wx+9q2Fksa0ot9rDoWxrvvxiJO0z4rJ8+6kYKLLZqzzvW7NpBFqVhr7XCgix0nkpMFYHjCS8wiHAgNVgVDtZ3fjV8idCb0yd
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?EW83OqwYNNkOM+g1jUqxmbjydw9duqg5SUrOtPIqvBvBFQmpaSCQwM6DKS4Q?=
- =?us-ascii?Q?zTa4LaUuq618qGmRaJYP4uK3w5/6icXR1RjAzXboT6awvRrh4cPHf5lWVAz/?=
- =?us-ascii?Q?Ld1/QrF9DHXQGCPeP46EsZv4w0xnysCpN3panWaPl29tjr2H4C+XZ2PVsj7S?=
- =?us-ascii?Q?hCYdc73vq/O2hRUco5kcGO7I3Gh1QQuRiSvWgCG0Kc6HJn8NUXBYG9txDJ7i?=
- =?us-ascii?Q?aF/kpwXPR1BCz9wLvvjmvYoPbpzD35Mf5fTYlBckS2Pw529ajDiI4oCQwkNp?=
- =?us-ascii?Q?YL7ir+sTtSUlIZ0ab8gMG62/Dkx06lHC1QYGCB7KWGyFEQesDZeyvu8UWx0p?=
- =?us-ascii?Q?RGVJnOwk2STOEg4P5TVG4mdPcWKEVFSE3/V7oPa/zPKo2jBFXRRwAF2uix95?=
- =?us-ascii?Q?c1w6Nw+cewCUTN/fWG3QLO70gldjqnzZX8pzdTczLXH226VjF8etArVTxouH?=
- =?us-ascii?Q?k80fz9NFeiG1F8oSV0mxpw4DzxTwIIF9L7maqHLmcxSLi+cObfbUaOQcYrRy?=
- =?us-ascii?Q?h5B0Z6JIsKLg/kfd8fibQ1pnhK4Su/cBqFiIRiVOt9zsTCzwxW4eSl3oGVIK?=
- =?us-ascii?Q?Of5+hkG3dUHGRWohJazvA49GiX6XXUTayXlzPtSuF8lzNf3DlEXsgCuWKBFm?=
- =?us-ascii?Q?HyhsSulJGSWelR/PyvZFRtGvan8CUIsmi9yveYK2w0LoU/gt5ntcwGn+VO2Z?=
- =?us-ascii?Q?BiWtLBfgLDp9vv4NgzVBkTnhkZYNWw6Yn42/kMSO9OXsXiVjFbxWCpe4YZwi?=
- =?us-ascii?Q?2TUdcPjMDCH9zWsRPTXX+qtTX80NPQ3qlUeTZuw4SAq9GagXWcjZcuR6yzpT?=
- =?us-ascii?Q?0PmGQOUtR6RJLPQhYI2UshKN1Pd96N2+tzcOTqKpj5tw1RYjYG6/3AC1zSjh?=
- =?us-ascii?Q?DUc9odGSkNRREL5yhWLOqSFlFhAZG+uD/Vqm3/GI7zvBm9OPE+kRvrl0y9a9?=
- =?us-ascii?Q?IgfJjGnpjmY5FyWyi1TyP4atjaoWQDKdp1K8KYsiQHfiz8rBfpdRBpHLtiaN?=
- =?us-ascii?Q?/OdX+yHz9iN8VxGcveJLQ91fA8t7+KElPHIfR2deVJ5s3D8JhAOQ0qKAhFaO?=
- =?us-ascii?Q?VNieucSBUR5d2PNvYEKpGWuFQs0NSvD3owZ78KI4l66UwMuvaKWYOkiokjuh?=
- =?us-ascii?Q?HMK76h+7ahMn9kXnzuQtfpvEpt8eqTC+Vl7AZFgSTFSNb+OvnZCX/jOM0fTm?=
- =?us-ascii?Q?m1EoBKcvBthlalt1TpnmWoUdhwMqDwEE21OlkxwDTpD8QV2CAiaHRNFmGISL?=
- =?us-ascii?Q?mky+s7u9ALhCvh0bklhu?=
+	=?us-ascii?Q?fPP2HKmBmVn3Vm2dby3oFbrWX5mI2GRsBdqICExgEVDPHIB0MAA5QNS32ZDX?=
+ =?us-ascii?Q?5+wHreDkMNVGXxPzKpDnOSiKTsT0Ac2GN/6F3JRnDx0wGwgUi3miq7gLAMzc?=
+ =?us-ascii?Q?I11DYBa1BTyN75XADWKfkaIhhGeyy+FxdKQDoDE+GJ94feMq/3MfflhASvOf?=
+ =?us-ascii?Q?HuGe4EkM2T3DocXRCC6ndxQF4WIR9PLYKO/Xl2GRf7NG33+fzH1BtiXI4dOR?=
+ =?us-ascii?Q?ikD6KEE7fonJgFOtZ5cFOhynyBnDBkdSMjoXhg/24j82whS56Q6mcA38FdTD?=
+ =?us-ascii?Q?ml9sFgCbL+Dnp9cM2UWb/jzuwPI/8Y3kVvivXbLCwicb5FqclRgDkpPS9JgR?=
+ =?us-ascii?Q?pHmcqMFs+fByJ+qCCDeCZC4Ilap+kQDGOYyjXnW4UXcvEu8EZuDS3eeJFp6Z?=
+ =?us-ascii?Q?ilkfDHMiBcR+zrInjRIpfdA3IX5ySuX9JnrvpLEaW2aUYR3ECKcbs+WVG8MB?=
+ =?us-ascii?Q?nDAGFHd8282FSkF6vHETHf+zTnFrfc845Ey/BV0a6WfxLWiG8L5XoJG7AopZ?=
+ =?us-ascii?Q?epQzpX1PoQBKM+/DJHO5Tut9rn7DqCazvm8JGYdwy4CYsYlBRDTOPWZHVIZj?=
+ =?us-ascii?Q?PNeq8UGaQJA+XWMeb57Y2uIh2ZG4+SZ/k9POTGO1cRLSZW2dHf/9W5mDSA/S?=
+ =?us-ascii?Q?1TCEJozDsV8NuxGnYvOl24eHy5tXnVceUT2YnQNv/9+9mhrxdUR0fmrjQ8l4?=
+ =?us-ascii?Q?2MHNszONyDhzsmWSgha8JBu8XYJNbAGgY+k14PoW7KRz1puU/dCtN1MuOIpj?=
+ =?us-ascii?Q?+k1vw/57im6n2++gG7SdRtDEOerI4alCpQMpTiOZSRgFvaM1ohDYZxECWo8s?=
+ =?us-ascii?Q?cib1TF0Hzpe4QFsjjUBuPTZZyraZThSsW7atX0cmdUWcs2egUQaKBU0YKM5r?=
+ =?us-ascii?Q?QWdqs4YiIWheHWH4JKsFbMsUhLBd46Mzh2/ctcCEcXPxlS5ZL8eqq3sHK491?=
+ =?us-ascii?Q?ILzOlxqkXm3sbq2e+Gno/qa2WYfwmpS9FSIkN72vLqgSRrIS9bKfIhMUqenC?=
+ =?us-ascii?Q?vXBOCnnVoPSV9eu4frEBiiKIw8Vxs8ztxFpzsEitX6eWI5UFFpRZ/u8ZX500?=
+ =?us-ascii?Q?YocFWzNbqO4w41JrFUKuUhhmULxw5fRwnGhHMPQA3ZI6nOMR/yjAxRooBxsm?=
+ =?us-ascii?Q?octjop/oQQ/ds9SCHyfKbSsCacELesgVhfXJYz0AnuEWMT0UFMwBQ87kg51Z?=
+ =?us-ascii?Q?cFS75TO5SrmnkvPGyMDD3SoSv5C059natjjZEYkCd5dQtB9ZGW8JaqCLtTyt?=
+ =?us-ascii?Q?zTRZUyjis7bZu0FxxDg7?=
 X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 87503412-5d33-409b-f8d5-08dcb2cda65d
+X-MS-Exchange-CrossTenant-Network-Message-Id: ca88e89a-c136-45c8-806c-08dcb2cdc386
 X-MS-Exchange-CrossTenant-AuthSource: IA1PR20MB4953.namprd20.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Aug 2024 08:32:32.1533
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Aug 2024 08:33:20.0107
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
@@ -130,65 +133,79 @@ X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
 	00000000-0000-0000-0000-000000000000
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR20MB7441
 
-Add dma multiplexer support for the Sophgo CV1800/SG2000 SoCs.
+The DMA IP of Sophgo CV18XX/SG200X is based on a DW AXI CORE, with
+an additional channel remap register located in the top system control
+area. The DMA channel is exclusive to each core.
 
-As the syscon device of CV1800 have a usb phy subdevices. The
-binding of the syscon can not be complete without the usb phy
-is finished. As a result, the binding of syscon is removed
-and will be evolved in its original series after the usb phy
-binding is fully explored.
+In addition, the DMA multiplexer is a subdevice of system controller,
+so this binding only contains necessary properties for the multiplexer
+itself.
 
-Changed from v8:
-1. change compatible name from cv1800-dmamux to cv1800b-dmamux
-2. use guard to simpify spinlock process.
+Add the dmamux binding for CV18XX/SG200X series SoC.
 
-Changed from v7:
-1. remove unused variable
-
-Changed from v6:
-1. fix copyright time.
-2. driver only output mapping info in when debugging.
-3. remove dma-master check in the driver init since the binding
-always require it.
-
-Changed from v5:
-1. remove dead binding header.
-2. make "reg" required so the syscon binding can have the same
-example node of the dmamux binding.
-
-Changed from v4:
-1. remove the syscon binding since it can not be complete (still
-lack some subdevices)
-2. add reg description for the binding,
-3. remove the fixed channel assign for dmamux binding
-3. driver adopt to the binding change. Now the driver allocates all the
-channel when initing and maps the request chan to the channel dynamicly.
-
-Changed from v3:
-1. fix dt-binding address issue.
-
-Changed from v2:
-1. add reg property of dmamux node in the binding of patch 2
-
-Changed from v1:
-1. fix wrong title of patch 2.
-
-Inochi Amaoto (3):
-  dt-bindings: dmaengine: Add dma multiplexer for CV18XX/SG200X series
-    SoC
-  soc/sophgo: add top sysctrl layout file for CV18XX/SG200X
-  dmaengine: add driver for Sophgo CV18XX/SG200X dmamux
-
- .../bindings/dma/sophgo,cv1800-dmamux.yaml    |  51 ++++
- drivers/dma/Kconfig                           |   9 +
- drivers/dma/Makefile                          |   1 +
- drivers/dma/cv1800-dmamux.c                   | 257 ++++++++++++++++++
- include/soc/sophgo/cv1800-sysctl.h            |  30 ++
- 5 files changed, 348 insertions(+)
+Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
+---
+ .../bindings/dma/sophgo,cv1800-dmamux.yaml    | 51 +++++++++++++++++++
+ 1 file changed, 51 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/dma/sophgo,cv1800-dmamux.yaml
- create mode 100644 drivers/dma/cv1800-dmamux.c
- create mode 100644 include/soc/sophgo/cv1800-sysctl.h
 
+diff --git a/Documentation/devicetree/bindings/dma/sophgo,cv1800-dmamux.yaml b/Documentation/devicetree/bindings/dma/sophgo,cv1800-dmamux.yaml
+new file mode 100644
+index 000000000000..11a098ed138a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/sophgo,cv1800-dmamux.yaml
+@@ -0,0 +1,51 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/sophgo,cv1800-dmamux.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Sophgo CV1800/SG200 Series DMA multiplexer
++
++maintainers:
++  - Inochi Amaoto <inochiama@outlook.com>
++
++description: |
++  The DMA multiplexer of CV1800 is a subdevice of the system
++  controller. It support mapping 8 channels, but each channel
++  can be mapped only once.
++
++allOf:
++  - $ref: dma-router.yaml#
++
++properties:
++  compatible:
++    const: sophgo,cv1800b-dmamux
++
++  reg:
++    items:
++      - description: DMA channal remapping register
++      - description: DMA channel interrupt mapping register
++
++  '#dma-cells':
++    const: 2
++    description:
++      The first cells is device id. The second one is the cpu id.
++
++  dma-masters:
++    maxItems: 1
++
++required:
++  - reg
++  - '#dma-cells'
++  - dma-masters
++
++additionalProperties: false
++
++examples:
++  - |
++    dma-router@154 {
++      compatible = "sophgo,cv1800b-dmamux";
++      reg = <0x154 0x8>, <0x298 0x4>;
++      #dma-cells = <2>;
++      dma-masters = <&dmac>;
++    };
 --
 2.46.0
 

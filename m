@@ -1,214 +1,330 @@
-Return-Path: <dmaengine+bounces-2794-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2795-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97D19947C74
-	for <lists+dmaengine@lfdr.de>; Mon,  5 Aug 2024 16:05:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 402F9947E58
+	for <lists+dmaengine@lfdr.de>; Mon,  5 Aug 2024 17:40:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4D6462870F4
-	for <lists+dmaengine@lfdr.de>; Mon,  5 Aug 2024 14:05:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E81AC280988
+	for <lists+dmaengine@lfdr.de>; Mon,  5 Aug 2024 15:40:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1276D7710C;
-	Mon,  5 Aug 2024 14:05:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE489155743;
+	Mon,  5 Aug 2024 15:40:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Obax5ydv"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dElN2tmZ"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 571507E111;
-	Mon,  5 Aug 2024 14:05:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E0292E3E5;
+	Mon,  5 Aug 2024 15:40:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722866709; cv=none; b=tcXXJkkcgQ6tT7oBzGFGRQS653BWD/12x9vzQr1aizK61bolsNnahH5axxOrfVnVj7S9xK7+cdaJhAcmTaYeuvO7UPabFQE0dzb3VM+77jl4cVJUYeS3b6EpPna1rD0Tt7Zq/kG2YNzmMdVSvnZpULzO0iy3I016niTNwClM958=
+	t=1722872427; cv=none; b=BxruzZ8gHE8+h1tDZ2aPKqA10XBooDMe4K9UafDHvH7o0VqIUy8J/WnumJdGtH2wvxuFzvv4Go8/yi9b6pfHQOdE7khHpzHxrfewgLnecjhwQW7SD0Hl9KkDRgExpWmnEddukPsMBMjm4X+fvM/StLu/+TR1UyBebYKMrk4reIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722866709; c=relaxed/simple;
-	bh=BjePA2AumzeQ2TLYhYHG4psY9v3MizraF/wucVMIA8s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=qV3EVl7Cz/xdA4TofPJLMuDWENujKIHDAa7XO+zzOocQ9k+be9Q2hFww1KTLrvur1DJo+RSnw84HYQ+rX0Ly+GpF5jq3UMJGMMoIOKmbyhqhJuf6f1wKSqsuZdCMc6vcb9w/dUJb6P/Fkwf5siBC7crWXqhWPuT+CDjnwexbeVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Obax5ydv; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 475BnESh012547;
-	Mon, 5 Aug 2024 14:05:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	v+NbPHwCe66lLJYavIiC+igOHVE6p4ONkno/jcBSnAI=; b=Obax5ydv7rtK83kx
-	akuRF5/UsukpBdXNuAmuqX8DVpBJzMUs5N3FqtnEMuoHIHDx0QZTk7ti0PxIavxs
-	5vL3ZBBqYlQeaCcx0E4+J386IV+DZ1Oh5Gm7h3oTK6EX/CecOGOjy6B5pkCivNs2
-	9CDvPwr63zaGES/vYztqbpN1LDNyPtI5PWFBNiBJ4MF5rRMOM4OLKK1ENf5X1ckd
-	ZFhYZYWHa3/c+Mz2BImX16/1He4qrle0+rwP70xxchPzgxO3oWYHKEz/tPteaN0c
-	go/RsJ6oj4xBqXEk5zYbmiQ5Q/ahrrzrKgGw5zLx3l+c3e6X+N4zZ2c02dMbn2O/
-	D3NODA==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40sbj6m82w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 05 Aug 2024 14:04:59 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 475E4wo3013376
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 5 Aug 2024 14:04:58 GMT
-Received: from [10.217.219.66] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 5 Aug 2024
- 07:04:54 -0700
-Message-ID: <4f7dafa5-ba2a-f06f-0fff-8251969b283a@quicinc.com>
-Date: Mon, 5 Aug 2024 19:34:46 +0530
+	s=arc-20240116; t=1722872427; c=relaxed/simple;
+	bh=ke4iNq0W8AS/IfPvCncb9N64BUn7bmtEWe8JskxEy58=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NmVFton/cmUpxdVbI7evzUDRMv9AFzju6FgijCgh6GOAoW9NI17KMGcHn5F4O9Co8vfwRhZ7ugVH/kVYb5mH//hXNe713dMRPDP0oVxhYo6w6arZzxqnIU9inBz5mLOyRJHOj7PuD6u8mgwCjmdPgOzyjodOeP7XCGH16VeA/fk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dElN2tmZ; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1722872425; x=1754408425;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ke4iNq0W8AS/IfPvCncb9N64BUn7bmtEWe8JskxEy58=;
+  b=dElN2tmZfMbbb7CScTH7zwrC2iap4nt1Y8vifOSJIOzWBzuHC1XtJyTM
+   rE8i0ErewDxGmNhbB2HgIhlTHNX+vy0VX0IGDlYlb5usaThZMRd05wqKu
+   AY0JEoSKC9cW2Sv8NVpB2Kw6synsfPwL66NZtgjH5ZWlJeCulLayEbvHz
+   mKhFhgXPrcxG28wxkY3HSnbFmOE8cbCvAlz2mZmQAmEgHc90/EAWT2FgI
+   2HR0ekNLXDIEcWtgNV5bOuAfUvHOYha00P0NSm0BhMk1O90aruJwYbh7y
+   1jKxl/CEFf3sR/9tpAfnarpwQo/XNmmdMXVfk6I4xzthNe/gphUGChkuC
+   w==;
+X-CSE-ConnectionGUID: fYyWKpPPR2O3A/hNJ8FIqA==
+X-CSE-MsgGUID: kmCjGVFjRlefA4xOByV0gg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11155"; a="20698573"
+X-IronPort-AV: E=Sophos;i="6.09,265,1716274800"; 
+   d="scan'208";a="20698573"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2024 08:40:25 -0700
+X-CSE-ConnectionGUID: JJc4dSmZRMiFXQOP3SoJCQ==
+X-CSE-MsgGUID: uQ774wfgTE+ZqtFGE5UTGw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,265,1716274800"; 
+   d="scan'208";a="86781647"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.125.110.223]) ([10.125.110.223])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2024 08:40:24 -0700
+Message-ID: <d6ff1070-4f60-4699-bdc4-11bd72249d96@intel.com>
+Date: Mon, 5 Aug 2024 08:40:22 -0700
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v2 2/2] dmaengine: dw-edma: Do not enable watermark
- interrupts for HDMA
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/7] dmaengine: idxd: Clean up cpumask and hotplug for
+ perfmon
+To: kan.liang@linux.intel.com, peterz@infradead.org, mingo@redhat.com,
+ acme@kernel.org, namhyung@kernel.org, irogers@google.com,
+ linux-kernel@vger.kernel.org
+Cc: Fenghua Yu <fenghua.yu@intel.com>, Vinod Koul <vkoul@kernel.org>,
+ dmaengine@vger.kernel.org, "Zanussi, Tom" <tom.zanussi@intel.com>
+References: <20240802151643.1691631-1-kan.liang@linux.intel.com>
+ <20240802151643.1691631-6-kan.liang@linux.intel.com>
 Content-Language: en-US
-To: Serge Semin <fancer.lancer@gmail.com>
-CC: <manivannan.sadhasivam@linaro.org>, <vkoul@kernel.org>,
-        <quic_shazhuss@quicinc.com>, <quic_nitegupt@quicinc.com>,
-        <quic_ramkri@quicinc.com>, <quic_nayiluri@quicinc.com>,
-        <quic_krichai@quicinc.com>, <quic_vbadigan@quicinc.com>,
-        <stable@vger.kernel.org>, Cai Huoqing <cai.huoqing@linux.dev>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1721740773-23181-1-git-send-email-quic_msarkar@quicinc.com>
- <1721740773-23181-3-git-send-email-quic_msarkar@quicinc.com>
- <mhfcw7yuv55me2d7kf6jh3eggzebq6riv5im4nbvx6qrzsg2mr@xpq3srpzemkb>
-From: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-In-Reply-To: <mhfcw7yuv55me2d7kf6jh3eggzebq6riv5im4nbvx6qrzsg2mr@xpq3srpzemkb>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20240802151643.1691631-6-kan.liang@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: A8sJ_MWOcyKDLGf5Q8p9ZmlE_Ido2mbv
-X-Proofpoint-GUID: A8sJ_MWOcyKDLGf5Q8p9ZmlE_Ido2mbv
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-05_02,2024-08-02_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
- priorityscore=1501 adultscore=0 mlxscore=0 lowpriorityscore=0 bulkscore=0
- phishscore=0 mlxlogscore=764 clxscore=1015 malwarescore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2407110000
- definitions=main-2408050100
 
 
-On 8/2/2024 6:04 AM, Serge Semin wrote:
-> On Tue, Jul 23, 2024 at 06:49:32PM +0530, Mrinmay Sarkar wrote:
->> DW_HDMA_V0_LIE and DW_HDMA_V0_RIE are initialized as BIT(3) and BIT(4)
->> respectively in dw_hdma_control enum. But as per HDMA register these
->> bits are corresponds to LWIE and RWIE bit i.e local watermark interrupt
->> enable and remote watermarek interrupt enable. In linked list mode LWIE
->> and RWIE bits only enable the local and remote watermark interrupt.
->>
->> Since the watermark interrupts are not used but enabled, this leads to
->> spurious interrupts getting generated. So remove the code that enables
->> them to avoid generating spurious watermark interrupts.
->>
->> And also rename DW_HDMA_V0_LIE to DW_HDMA_V0_LWIE and DW_HDMA_V0_RIE to
->> DW_HDMA_V0_RWIE as there is no LIE and RIE bits in HDMA and those bits
->> are corresponds to LWIE and RWIE bits.
->>
->> Fixes: e74c39573d35 ("dmaengine: dw-edma: Add support for native HDMA")
->> cc: stable@vger.kernel.org
->> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
->> ---
->>   drivers/dma/dw-edma/dw-hdma-v0-core.c | 17 +++--------------
->>   1 file changed, 3 insertions(+), 14 deletions(-)
->>
->> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
->> index fa89b3a..9ad2e28 100644
->> --- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
->> +++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
->> @@ -17,8 +17,8 @@ enum dw_hdma_control {
->>   	DW_HDMA_V0_CB					= BIT(0),
->>   	DW_HDMA_V0_TCB					= BIT(1),
->>   	DW_HDMA_V0_LLP					= BIT(2),
->> -	DW_HDMA_V0_LIE					= BIT(3),
->> -	DW_HDMA_V0_RIE					= BIT(4),
->> +	DW_HDMA_V0_LWIE					= BIT(3),
->> +	DW_HDMA_V0_RWIE					= BIT(4),
->>   	DW_HDMA_V0_CCS					= BIT(8),
->>   	DW_HDMA_V0_LLE					= BIT(9),
->>   };
->> @@ -195,25 +195,14 @@ static void dw_hdma_v0_write_ll_link(struct dw_edma_chunk *chunk,
->>   static void dw_hdma_v0_core_write_chunk(struct dw_edma_chunk *chunk)
->>   {
->>   	struct dw_edma_burst *child;
->> -	struct dw_edma_chan *chan = chunk->chan;
->>   	u32 control = 0, i = 0;
->> -	int j;
->>   
->>   	if (chunk->cb)
->>   		control = DW_HDMA_V0_CB;
->>   
->> -	j = chunk->bursts_alloc;
->> -	list_for_each_entry(child, &chunk->burst->list, list) {
->> -		j--;
->> -		if (!j) {
->> -			control |= DW_HDMA_V0_LIE;
->> -			if (!(chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL))
->> -				control |= DW_HDMA_V0_RIE;
->> -		}
->> -
->> +	list_for_each_entry(child, &chunk->burst->list, list)
->>   		dw_hdma_v0_write_ll_data(chunk, i++, control, child->sz,
->>   					 child->sar, child->dar);
->> -	}
-> Hm, in case of DW EDMA the LIE/RIE flags of the LL entries gets to be
-> moved to the LIE/RIE flags of the channel context register by the
-> DMA-engine. In its turn the context register LIE/RIE flags determine
-> whether the Local and Remote Done/Abort IRQs being raised. So without
-> the LIE/RIE flags being set in the LL-entries the IRQs won't be raised
-> and the whole procedure won't work. I have doubts it works differently
-> in case of HDMA because changing the semantics would cause
-> implementing additional logic in the DW HDMA RTL-model. Seeing the DW
-> HDMA IP-core supports the eDMA compatibility mode it would needlessly
-> expand the controller size. What are the rest of the CONTROL1 register
-> fields? There must be LIE/RIE flags someplace there for the non-LL
-> transfers and to preserve the values retrieved from the LL-entries.
->
-> Moreover the DW eDMA HW manual has a dedicated chapter called
-> "Interrupts and Error Handling" with a very demonstrative figures
-> describing the way the flags work. Does the DW HDMA databook have
-> something like that?
->
-> Please also note, the DW _EDMA_ LIE and RIE flags can be also utilized
-> for the intermediate IRQ raising, to implement the runtime LL-entries
-> recycling pattern. The IRQ in that case is called as "watermark" IRQ
-> in the DW EDMA HW databook, but the flags are still called as just
-> LIE/RIE.
->
-> -Serge(y)
-Yes, you are right LIE/RIE flags need to be set without that the IRQs
-won't be raised in case of DW EDMA.
-But in DW HDMA case there in no such LIE/RIE flags and these particular
-bits has been mapped to LWIE and RWIE flags and these are used to enable
-watermark interrupt only.
-There is no LIE/RIE fields in HDMA_CONTROL1_OFF_WRCH register fields
-the same is present in EDMA CONTROL1 register.
 
-DW HDMA has INT_SETUP register and it has LSIE/RSIE, LAIE/RAIE fields
-those are enabling Local and Remote Stop/Abort IRQs in LL mode.
+On 8/2/24 8:16 AM, kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
+> 
+> The idxd PMU is system-wide scope, which is supported by the generic
+> perf_event subsystem now.
+> 
+> Set the scope for the idxd PMU and remove all the cpumask and hotplug
+> codes.
+> 
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> Cc: Fenghua Yu <fenghua.yu@intel.com>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Cc: dmaengine@vger.kernel.org
 
-yes DW HDMA data book also have figures in "Interrupts and Error Handling"
-section and there is no LIE/RIE flags and it is replaced with LWIE/RWIE 
-flags
-as I mentioned above.
+Cc: Tom Zanussi <tom.zanussi@intel.com>
 
-Thanks,
-Mrinmay
-
->>   
->>   	control = DW_HDMA_V0_LLP | DW_HDMA_V0_TCB;
->>   	if (!chunk->cb)
->> -- 
->> 2.7.4
->>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>  drivers/dma/idxd/idxd.h    |  7 ---
+>  drivers/dma/idxd/init.c    |  3 --
+>  drivers/dma/idxd/perfmon.c | 98 +-------------------------------------
+>  3 files changed, 1 insertion(+), 107 deletions(-)
+> 
+> diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
+> index 868b724a3b75..d84e21daa991 100644
+> --- a/drivers/dma/idxd/idxd.h
+> +++ b/drivers/dma/idxd/idxd.h
+> @@ -124,7 +124,6 @@ struct idxd_pmu {
+>  
+>  	struct pmu pmu;
+>  	char name[IDXD_NAME_SIZE];
+> -	int cpu;
+>  
+>  	int n_counters;
+>  	int counter_width;
+> @@ -135,8 +134,6 @@ struct idxd_pmu {
+>  
+>  	unsigned long supported_filters;
+>  	int n_filters;
+> -
+> -	struct hlist_node cpuhp_node;
+>  };
+>  
+>  #define IDXD_MAX_PRIORITY	0xf
+> @@ -803,14 +800,10 @@ void idxd_user_counter_increment(struct idxd_wq *wq, u32 pasid, int index);
+>  int perfmon_pmu_init(struct idxd_device *idxd);
+>  void perfmon_pmu_remove(struct idxd_device *idxd);
+>  void perfmon_counter_overflow(struct idxd_device *idxd);
+> -void perfmon_init(void);
+> -void perfmon_exit(void);
+>  #else
+>  static inline int perfmon_pmu_init(struct idxd_device *idxd) { return 0; }
+>  static inline void perfmon_pmu_remove(struct idxd_device *idxd) {}
+>  static inline void perfmon_counter_overflow(struct idxd_device *idxd) {}
+> -static inline void perfmon_init(void) {}
+> -static inline void perfmon_exit(void) {}
+>  #endif
+>  
+>  /* debugfs */
+> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+> index 21f6905b554d..5725ea82c409 100644
+> --- a/drivers/dma/idxd/init.c
+> +++ b/drivers/dma/idxd/init.c
+> @@ -878,8 +878,6 @@ static int __init idxd_init_module(void)
+>  	else
+>  		support_enqcmd = true;
+>  
+> -	perfmon_init();
+> -
+>  	err = idxd_driver_register(&idxd_drv);
+>  	if (err < 0)
+>  		goto err_idxd_driver_register;
+> @@ -928,7 +926,6 @@ static void __exit idxd_exit_module(void)
+>  	idxd_driver_unregister(&idxd_drv);
+>  	pci_unregister_driver(&idxd_pci_driver);
+>  	idxd_cdev_remove();
+> -	perfmon_exit();
+>  	idxd_remove_debugfs();
+>  }
+>  module_exit(idxd_exit_module);
+> diff --git a/drivers/dma/idxd/perfmon.c b/drivers/dma/idxd/perfmon.c
+> index 5e94247e1ea7..f511cf15845b 100644
+> --- a/drivers/dma/idxd/perfmon.c
+> +++ b/drivers/dma/idxd/perfmon.c
+> @@ -6,29 +6,6 @@
+>  #include "idxd.h"
+>  #include "perfmon.h"
+>  
+> -static ssize_t cpumask_show(struct device *dev, struct device_attribute *attr,
+> -			    char *buf);
+> -
+> -static cpumask_t		perfmon_dsa_cpu_mask;
+> -static bool			cpuhp_set_up;
+> -static enum cpuhp_state		cpuhp_slot;
+> -
+> -/*
+> - * perf userspace reads this attribute to determine which cpus to open
+> - * counters on.  It's connected to perfmon_dsa_cpu_mask, which is
+> - * maintained by the cpu hotplug handlers.
+> - */
+> -static DEVICE_ATTR_RO(cpumask);
+> -
+> -static struct attribute *perfmon_cpumask_attrs[] = {
+> -	&dev_attr_cpumask.attr,
+> -	NULL,
+> -};
+> -
+> -static struct attribute_group cpumask_attr_group = {
+> -	.attrs = perfmon_cpumask_attrs,
+> -};
+> -
+>  /*
+>   * These attributes specify the bits in the config word that the perf
+>   * syscall uses to pass the event ids and categories to perfmon.
+> @@ -67,16 +44,9 @@ static struct attribute_group perfmon_format_attr_group = {
+>  
+>  static const struct attribute_group *perfmon_attr_groups[] = {
+>  	&perfmon_format_attr_group,
+> -	&cpumask_attr_group,
+>  	NULL,
+>  };
+>  
+> -static ssize_t cpumask_show(struct device *dev, struct device_attribute *attr,
+> -			    char *buf)
+> -{
+> -	return cpumap_print_to_pagebuf(true, buf, &perfmon_dsa_cpu_mask);
+> -}
+> -
+>  static bool is_idxd_event(struct idxd_pmu *idxd_pmu, struct perf_event *event)
+>  {
+>  	return &idxd_pmu->pmu == event->pmu;
+> @@ -217,7 +187,6 @@ static int perfmon_pmu_event_init(struct perf_event *event)
+>  		return -EINVAL;
+>  
+>  	event->hw.event_base = ioread64(PERFMON_TABLE_OFFSET(idxd));
+> -	event->cpu = idxd->idxd_pmu->cpu;
+>  	event->hw.config = event->attr.config;
+>  
+>  	if (event->group_leader != event)
+> @@ -488,6 +457,7 @@ static void idxd_pmu_init(struct idxd_pmu *idxd_pmu)
+>  	idxd_pmu->pmu.stop		= perfmon_pmu_event_stop;
+>  	idxd_pmu->pmu.read		= perfmon_pmu_event_update;
+>  	idxd_pmu->pmu.capabilities	= PERF_PMU_CAP_NO_EXCLUDE;
+> +	idxd_pmu->pmu.scope		= PERF_PMU_SCOPE_SYS_WIDE;
+>  	idxd_pmu->pmu.module		= THIS_MODULE;
+>  }
+>  
+> @@ -496,59 +466,17 @@ void perfmon_pmu_remove(struct idxd_device *idxd)
+>  	if (!idxd->idxd_pmu)
+>  		return;
+>  
+> -	cpuhp_state_remove_instance(cpuhp_slot, &idxd->idxd_pmu->cpuhp_node);
+>  	perf_pmu_unregister(&idxd->idxd_pmu->pmu);
+>  	kfree(idxd->idxd_pmu);
+>  	idxd->idxd_pmu = NULL;
+>  }
+>  
+> -static int perf_event_cpu_online(unsigned int cpu, struct hlist_node *node)
+> -{
+> -	struct idxd_pmu *idxd_pmu;
+> -
+> -	idxd_pmu = hlist_entry_safe(node, typeof(*idxd_pmu), cpuhp_node);
+> -
+> -	/* select the first online CPU as the designated reader */
+> -	if (cpumask_empty(&perfmon_dsa_cpu_mask)) {
+> -		cpumask_set_cpu(cpu, &perfmon_dsa_cpu_mask);
+> -		idxd_pmu->cpu = cpu;
+> -	}
+> -
+> -	return 0;
+> -}
+> -
+> -static int perf_event_cpu_offline(unsigned int cpu, struct hlist_node *node)
+> -{
+> -	struct idxd_pmu *idxd_pmu;
+> -	unsigned int target;
+> -
+> -	idxd_pmu = hlist_entry_safe(node, typeof(*idxd_pmu), cpuhp_node);
+> -
+> -	if (!cpumask_test_and_clear_cpu(cpu, &perfmon_dsa_cpu_mask))
+> -		return 0;
+> -
+> -	target = cpumask_any_but(cpu_online_mask, cpu);
+> -	/* migrate events if there is a valid target */
+> -	if (target < nr_cpu_ids) {
+> -		cpumask_set_cpu(target, &perfmon_dsa_cpu_mask);
+> -		perf_pmu_migrate_context(&idxd_pmu->pmu, cpu, target);
+> -	}
+> -
+> -	return 0;
+> -}
+> -
+>  int perfmon_pmu_init(struct idxd_device *idxd)
+>  {
+>  	union idxd_perfcap perfcap;
+>  	struct idxd_pmu *idxd_pmu;
+>  	int rc = -ENODEV;
+>  
+> -	/*
+> -	 * perfmon module initialization failed, nothing to do
+> -	 */
+> -	if (!cpuhp_set_up)
+> -		return -ENODEV;
+> -
+>  	/*
+>  	 * If perfmon_offset or num_counters is 0, it means perfmon is
+>  	 * not supported on this hardware.
+> @@ -624,11 +552,6 @@ int perfmon_pmu_init(struct idxd_device *idxd)
+>  	if (rc)
+>  		goto free;
+>  
+> -	rc = cpuhp_state_add_instance(cpuhp_slot, &idxd_pmu->cpuhp_node);
+> -	if (rc) {
+> -		perf_pmu_unregister(&idxd->idxd_pmu->pmu);
+> -		goto free;
+> -	}
+>  out:
+>  	return rc;
+>  free:
+> @@ -637,22 +560,3 @@ int perfmon_pmu_init(struct idxd_device *idxd)
+>  
+>  	goto out;
+>  }
+> -
+> -void __init perfmon_init(void)
+> -{
+> -	int rc = cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN,
+> -					 "driver/dma/idxd/perf:online",
+> -					 perf_event_cpu_online,
+> -					 perf_event_cpu_offline);
+> -	if (WARN_ON(rc < 0))
+> -		return;
+> -
+> -	cpuhp_slot = rc;
+> -	cpuhp_set_up = true;
+> -}
+> -
+> -void __exit perfmon_exit(void)
+> -{
+> -	if (cpuhp_set_up)
+> -		cpuhp_remove_multi_state(cpuhp_slot);
+> -}
 

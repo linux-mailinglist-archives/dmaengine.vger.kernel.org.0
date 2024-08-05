@@ -1,60 +1,58 @@
-Return-Path: <dmaengine+bounces-2802-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2803-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 590DA94806B
-	for <lists+dmaengine@lfdr.de>; Mon,  5 Aug 2024 19:38:25 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id ECE1794806D
+	for <lists+dmaengine@lfdr.de>; Mon,  5 Aug 2024 19:38:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D30D4B22C65
-	for <lists+dmaengine@lfdr.de>; Mon,  5 Aug 2024 17:38:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 96E321F23A7A
+	for <lists+dmaengine@lfdr.de>; Mon,  5 Aug 2024 17:38:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1416C165EFB;
-	Mon,  5 Aug 2024 17:37:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4250215EFA6;
+	Mon,  5 Aug 2024 17:38:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vvivqelm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jIGmDgCi"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC4A215F30D;
-	Mon,  5 Aug 2024 17:37:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1122D15ECFB;
+	Mon,  5 Aug 2024 17:38:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722879467; cv=none; b=C4Iv2VAaFlHAhIwhCPE3DxfXNv1dXUcWh8ifyhv3sUstek4TvwEHcplo9HGkLVGl7odiWc3EKQmXOP1XfSEskjrusGzC9lfa80fqAkW/QK24IWvXsD2B3Vj5+fF1e4UyDxMcEiy6c4BaDpqgclh3iHpWtGEvdx6Oy/zVgSgDvQY=
+	t=1722879485; cv=none; b=tCfPiYXzPohHgtKUGAY6koUEZRnrU77ZfJba7hCq70taU6lfUtu3MftFcQzs9gKFwuD3zSVQu58GeBqKKm+zjk1RwudvtjDncK3xbr/pt24OEpzn7/ijXE4i6uE2s3yIS4Q16BR4liS4Pmp4FZfUfSwcKAZYTlV0o7i1sNWRId8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722879467; c=relaxed/simple;
-	bh=JIGgOS2dCgTDrX3lTsYGuJfpVwJU61RQ1OJxNXDBCYg=;
+	s=arc-20240116; t=1722879485; c=relaxed/simple;
+	bh=KFH4+hoD9XuYSQpXUgYBPFSN1NDPjp3nh1R+qPccr9w=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=i+ZlNuMw+9v2/crO+HTpOzITec9dl5tZgFnM2aM0xClpit3m+c7W/NzjkZMp/v1ZhBrqap51JACfCgVt0eVlM3rH0RI8jbIYkA38xanU9bgWEIjR8vJ9m1Qfpp4Mq0sXc303BPr4AT/opHquAZqTucqrLY4d2+abYPCmiMv7L1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vvivqelm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0263C4AF0E;
-	Mon,  5 Aug 2024 17:37:42 +0000 (UTC)
+	 MIME-Version:Content-Type; b=qdpTp+rrvKb81mQXriAtOgdyFJfoWV3g9pNyJDCyvYGDh6ioJF2LetAHZPygj78gp+vx7X22OX4Wpt3B/XmM95+LlM3FSUX1fKASssVKeYA2V5sb6/PWNxPzRp3G7HbofgXjjCO8T4sI1TvTyW9GTlHUQgPs/XAcUwiv01g0BfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jIGmDgCi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72B01C32782;
+	Mon,  5 Aug 2024 17:38:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722879465;
-	bh=JIGgOS2dCgTDrX3lTsYGuJfpVwJU61RQ1OJxNXDBCYg=;
+	s=k20201202; t=1722879484;
+	bh=KFH4+hoD9XuYSQpXUgYBPFSN1NDPjp3nh1R+qPccr9w=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=Vvivqelms7v+wTRT/e57tNZXSagGa2ZZBLXLYVZEy5f7k+onoJOPxiy1A2tCz2P17
-	 Sqd5bATwstmvw16c4hn4ffAx+GlnmC55UIvtqmiM7uuo5+cLWZMCvV4lOkjcIVhMfw
-	 D5SVNWigi5owMO1ZuQuQi0Ak4CLfKbdWEX9k3UoA5rbUzsnjNnUy5y1SDPQjd2F1eM
-	 wqBOfPgV2D6tmoaJkfzURtur14sqJut3eRlDFx9HDMUo3IIW7p1gCVF6NFFsbQmROB
-	 XeHpkmcz8uZcycHZRNEuDQkcbsn1K/8b+nrWuIAnFWgvQ4QVhKAwxwd3Fxi8qwXGfk
-	 qraozYsu5cpBw==
+	b=jIGmDgCifmHgJgnRpBfH4w9R5n0wDfJF2iHBQXhKzD/NUckY7Ug9GOTEjeStfHqmo
+	 pPMS8TQ5S7vxijcva8OVzRZuDQ6TAeOufjhjOscnESj8lgi3nTmPo2GJUlqFF9ao7z
+	 IEEvixYAR/tJ/AH+FmwlPcMSa9xVfchG3hloDGBVtKVZn1VBbFxNDEkyXgI8BhGUQb
+	 j+ZnwIoO3YxcJMwEJpo48Mg0qZoyodsKwEvr3tEKN7XxLfulLpclUR4/dhdq7T+y+S
+	 F6PL2mmjLLrBc/CyRItE/eu6gIXaah3bDXl1QrOzGPmQrhzLlu5SL2I+5fv3MmqfBY
+	 08rLiKCkvUQYw==
 From: Vinod Koul <vkoul@kernel.org>
-To: =?utf-8?q?Am=C3=A9lie_Delaunay?= <amelie.delaunay@foss.st.com>, 
- Kees Cook <kees@kernel.org>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, dmaengine@vger.kernel.org, 
- linux-stm32@st-md-mailman.stormreply.com, 
- linux-arm-kernel@lists.infradead.org, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-kernel@vger.kernel.org, 
- linux-hardening@vger.kernel.org
-In-Reply-To: <20240716213830.work.951-kees@kernel.org>
-References: <20240716213830.work.951-kees@kernel.org>
-Subject: Re: [PATCH] dmaengine: stm32-dma3: Set lli_size after allocation
-Message-Id: <172287946248.489034.17199555217262087392.b4-ty@kernel.org>
-Date: Mon, 05 Aug 2024 23:07:42 +0530
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, dmaengine@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Frank Li <Frank.Li@nxp.com>
+Cc: imx@lists.linux.dev
+In-Reply-To: <20240704020802.3371203-1-Frank.Li@nxp.com>
+References: <20240704020802.3371203-1-Frank.Li@nxp.com>
+Subject: Re: [PATCH v3 1/1] dt-bindings: fsl-qdma: allow compatible string
+ fallback to fsl,ls1021a-qdma
+Message-Id: <172287948210.489137.3448026012813865082.b4-ty@kernel.org>
+Date: Mon, 05 Aug 2024 23:08:02 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -66,22 +64,21 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
 
-On Tue, 16 Jul 2024 14:38:33 -0700, Kees Cook wrote:
-> With the new __counted_by annotation, the "lli_size" variable needs to
-> valid for accesses to the "lli" array. This requirement is not met in
-> stm32_dma3_chan_desc_alloc(), since "lli_size" starts at "0", so "lli"
-> index "0" will not be considered valid during the initialization for loop.
+On Wed, 03 Jul 2024 22:08:02 -0400, Frank Li wrote:
+> The IP of QDMA ls1028/ls1043/ls1046/ is same as ls1021. So allow compatible
+> string fallback to fsl,ls1021a-qdma.
 > 
-> Fix this by setting lli_size immediately after allocation (similar to
-> how this is handled in stm32_mdma_alloc_desc() for the node/count
-> relationship).
+> The difference is that ls1021a-qdma have 3 irqs, and other have 5 irqs.
+> 
+> Fix below CHECK_DTB warning.
+> arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dtb: dma-controller@8380000: compatible: ['fsl,ls1046a-qdma', 'fsl,ls1021a-qdma'] is too long
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] dmaengine: stm32-dma3: Set lli_size after allocation
-      commit: b53b831919a0dc4e6631ebe0497ab2a4d8bef014
+[1/1] dt-bindings: fsl-qdma: allow compatible string fallback to fsl,ls1021a-qdma
+      commit: 0204485c5a1e2de00acfd83c3931bd9dc6493c64
 
 Best regards,
 -- 

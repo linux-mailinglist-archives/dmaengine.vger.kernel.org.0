@@ -1,164 +1,102 @@
-Return-Path: <dmaengine+bounces-2799-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2800-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0D5394805C
-	for <lists+dmaengine@lfdr.de>; Mon,  5 Aug 2024 19:32:35 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE0A2948066
+	for <lists+dmaengine@lfdr.de>; Mon,  5 Aug 2024 19:37:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9AC8428423A
-	for <lists+dmaengine@lfdr.de>; Mon,  5 Aug 2024 17:32:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5135A1F239EF
+	for <lists+dmaengine@lfdr.de>; Mon,  5 Aug 2024 17:37:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C482715ECFB;
-	Mon,  5 Aug 2024 17:32:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80EF715FA67;
+	Mon,  5 Aug 2024 17:37:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XxBPmuxE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S/y3KsG8"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95F6515ECD5;
-	Mon,  5 Aug 2024 17:32:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 535A215C14D;
+	Mon,  5 Aug 2024 17:37:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722879145; cv=none; b=FTCTFqV3A5TrydADpHHQrre3PJavTTp0qPItiyMFEdYxxC+4xOmYGFYfcTjcuNpejfL28iNGHubp2wnsXmWpDc1bHelu2MAv56JAMgkq3NHYZBk93wIMqFqr9bgJlL6A8Lb3wMh4ypSDAfJZqN8QcARCgfigHGXOGvtbHJHfE0Q=
+	t=1722879460; cv=none; b=MaXuTMVnZqUlELZiGf/hmCH/EFR1EPuRuXq/vIs2PrCsjS6So9Ru5BzVvySZkX9cagoWf3S3haJZH3qK6SzJSkHAogsMV8UJvqXGgjZKAdUXJkADWPaOvhAzXAR+zrG4wKn/hJmsLZNE3hyU9hUoGeUDGZimMrkHexxsJo9ICTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722879145; c=relaxed/simple;
-	bh=pMAkXiNbBUmsuPlSu/xi41ZF0X3OiKy0+INh3KDU/Lw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ghiVzmUgimQBgs9UxYMNxc15orj9ayPwOh5p/S6d5OI9z6c0dsjIQkbVNF43gcZ2cG2MdCKV5m+nVyF8TYnv5H9hTnHf0IL5EH3upIsQxHZEZZJlIM7lXZfH8rzseYOaA1QGMNMKrljtTDKcgathy9Xz/HlRzDLOcA78ry3dE58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XxBPmuxE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 294BCC32782;
-	Mon,  5 Aug 2024 17:32:19 +0000 (UTC)
+	s=arc-20240116; t=1722879460; c=relaxed/simple;
+	bh=aAT3ToTfxN4rnDt8ZcG/lgetUAeevb0J77TFliPQzz4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=jsvzGuo3N/Xb8D3Tgbz06YyqkdSTGN6u1S0EkDSCDA2Hy7cvesWWnpxXYqe4FrFNp5/BSCygB2DNGiII656hDMdUIMfEtyFn2w/i/3AkO+2HxHLKvnzqzr1noxsZ5GcrDburENoz5dcC2pXEofzSTfblBzCGD1yyy90Z9YogsH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S/y3KsG8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2742DC4AF0E;
+	Mon,  5 Aug 2024 17:37:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722879144;
-	bh=pMAkXiNbBUmsuPlSu/xi41ZF0X3OiKy0+INh3KDU/Lw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=XxBPmuxEpxjPm487FIPXynKk9dZV0VROU8jCszqfA7/+lwLNkzINHU8MLpKpdz91L
-	 s/YVhU1aRAAh/3MnZfwxwpcYjvf6aDpYNFpFLBQMRAJAgVfDkBxmQdQbJCii8X+6fl
-	 2KR+SBlrJyfr8ZEUvqg4BmqJ2JwJsq1fjkytTPlJBzfEisnHzKu8WoWh/jWuVrm8HP
-	 V73yA21RckElcmXs5JyTkJSq5aRIuzFp7kzkBqeJxaH2y4UwHlfKMCNoCtljmD9OvG
-	 igq8RX7G1+jFpqNaZl11jWWuiZiQTYUzzdJnGQDD3F4IolpuPGrSGTd5peJRPObEp3
-	 HliJ6kQukPU5w==
-Message-ID: <e0f7ee39-69e4-4a03-9908-96e383586800@kernel.org>
-Date: Mon, 5 Aug 2024 19:32:17 +0200
+	s=k20201202; t=1722879459;
+	bh=aAT3ToTfxN4rnDt8ZcG/lgetUAeevb0J77TFliPQzz4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=S/y3KsG8Tw/MOKSzrV8ymDNJN0LP/9sahwibeJh4VW+Hym9EkhuaRsXDQPzf0Sk7z
+	 fQnVLA+yiG+jOa0WDfSlY9uIh1CiyFG0JfyBjB8jPrlRuQeZjC5DjFV2Fn0Z8ysu4B
+	 dYkSXpwdH8lFMY+PTq62CQqUF2u/YL9+zqPV688+fb7NR2298vZSuazMfpptirbSQj
+	 Q+gRL/vrLzrUZolhWPxA0dYyylM7bIaWvmEYnTRAJnqd8TAGdUi40GKLFm+cJizOd2
+	 YN8vHAI/wHIjyVxmqiwRGhhOwoR8c2HwI/Y3buy6Udjy9tGAjtXRV4GAPuNcxREWRu
+	 cZrPMmkcTm0pg==
+From: Vinod Koul <vkoul@kernel.org>
+To: Viresh Kumar <vireshk@kernel.org>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Andy Shevchenko <andy@kernel.org>, Serge Semin <fancer.lancer@gmail.com>
+Cc: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Jiri Slaby <jirislaby@kernel.org>, dmaengine@vger.kernel.org, 
+ linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240802075100.6475-1-fancer.lancer@gmail.com>
+References: <20240802075100.6475-1-fancer.lancer@gmail.com>
+Subject: Re: [PATCH RESEND v4 0/6] dmaengine: dw: Fix src/dst addr width
+ misconfig
+Message-Id: <172287945675.489034.12734066497571580143.b4-ty@kernel.org>
+Date: Mon, 05 Aug 2024 23:07:36 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 1/3] dt-bindings: dmaengine: Add dma multiplexer for
- CV18XX/SG200X series SoC
-To: Inochi Amaoto <inochiama@outlook.com>, Vinod Koul <vkoul@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Chen Wang <unicorn_wang@outlook.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
-Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-References: <IA1PR20MB495332ACF71E3E8D631508B2BBB32@IA1PR20MB4953.namprd20.prod.outlook.com>
- <IA1PR20MB495360B076BE4DA4E66B48BABBB32@IA1PR20MB4953.namprd20.prod.outlook.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <IA1PR20MB495360B076BE4DA4E66B48BABBB32@IA1PR20MB4953.namprd20.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On 02/08/2024 10:32, Inochi Amaoto wrote:
-> The DMA IP of Sophgo CV18XX/SG200X is based on a DW AXI CORE, with
-> an additional channel remap register located in the top system control
-> area. The DMA channel is exclusive to each core.
+
+On Fri, 02 Aug 2024 10:50:45 +0300, Serge Semin wrote:
+> The main goal of this series is to fix the data disappearance in case of
+> the DW UART handled by the DW AHB DMA engine. The problem happens on a
+> portion of the data received when the pre-initialized DEV_TO_MEM
+> DMA-transfer is paused and then disabled. The data just hangs up in the
+> DMA-engine FIFO and isn't flushed out to the memory on the DMA-channel
+> suspension (see the second commit log for details). On a way to find the
+> denoted problem fix it was discovered that the driver doesn't verify the
+> peripheral device address width specified by a client driver, which in its
+> turn if unsupported or undefined value passed may cause DMA-transfer being
+> misconfigured. It's fixed in the first patch of the series.
 > 
-> In addition, the DMA multiplexer is a subdevice of system controller,
-> so this binding only contains necessary properties for the multiplexer
-> itself.
-> 
-> Add the dmamux binding for CV18XX/SG200X series SoC.
-> 
-> Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
-> ---
->  .../bindings/dma/sophgo,cv1800-dmamux.yaml    | 51 +++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/sophgo,cv1800-dmamux.yaml
+> [...]
 
-Filename should match compatible.
+Applied, thanks!
 
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/sophgo,cv1800-dmamux.yaml b/Documentation/devicetree/bindings/dma/sophgo,cv1800-dmamux.yaml
-> new file mode 100644
-> index 000000000000..11a098ed138a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/sophgo,cv1800-dmamux.yaml
-> @@ -0,0 +1,51 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/sophgo,cv1800-dmamux.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Sophgo CV1800/SG200 Series DMA multiplexer
-> +
-> +maintainers:
-> +  - Inochi Amaoto <inochiama@outlook.com>
-> +
-> +description: |
-
-Do not need '|' unless you need to preserve formatting.
-
-> +  The DMA multiplexer of CV1800 is a subdevice of the system
-> +  controller. It support mapping 8 channels, but each channel
-> +  can be mapped only once.
-> +
-
-
+[1/6] dmaengine: dw: Add peripheral bus width verification
+      commit: b336268dde75cb09bd795cb24893d52152a9191f
+[2/6] dmaengine: dw: Add memory bus width verification
+      commit: d04b21bfa1c50a2ade4816cab6fdc91827b346b1
+[3/6] dmaengine: dw: Simplify prepare CTL_LO methods
+      commit: 1fd6fe89055e6dbb4be8f16b8dcab8602e3603d6
+[4/6] dmaengine: dw: Define encode_maxburst() above prepare_ctllo() callbacks
+      commit: 3acb301d33749a8974e61ecda16a5f5441fc9628
+[5/6] dmaengine: dw: Simplify max-burst calculation procedure
+      commit: d8fa0802f63502c0409d02c6b701d51841a6f1bd
+[6/6] dmaengine: dw: Unify ret-val local variables naming
+      commit: 2ebc36b9581df31eed271e5de61fc8a8b66dbc56
 
 Best regards,
-Krzysztof
+-- 
+Vinod Koul <vkoul@kernel.org>
 
 

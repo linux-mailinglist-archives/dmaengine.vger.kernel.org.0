@@ -1,330 +1,107 @@
-Return-Path: <dmaengine+bounces-2795-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2796-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 402F9947E58
-	for <lists+dmaengine@lfdr.de>; Mon,  5 Aug 2024 17:40:30 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 629EC947F7D
+	for <lists+dmaengine@lfdr.de>; Mon,  5 Aug 2024 18:40:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E81AC280988
-	for <lists+dmaengine@lfdr.de>; Mon,  5 Aug 2024 15:40:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9CF9A1C21A6E
+	for <lists+dmaengine@lfdr.de>; Mon,  5 Aug 2024 16:40:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE489155743;
-	Mon,  5 Aug 2024 15:40:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9576715C14C;
+	Mon,  5 Aug 2024 16:40:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dElN2tmZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SChB3d5J"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E0292E3E5;
-	Mon,  5 Aug 2024 15:40:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5833C3E479;
+	Mon,  5 Aug 2024 16:40:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722872427; cv=none; b=BxruzZ8gHE8+h1tDZ2aPKqA10XBooDMe4K9UafDHvH7o0VqIUy8J/WnumJdGtH2wvxuFzvv4Go8/yi9b6pfHQOdE7khHpzHxrfewgLnecjhwQW7SD0Hl9KkDRgExpWmnEddukPsMBMjm4X+fvM/StLu/+TR1UyBebYKMrk4reIc=
+	t=1722876013; cv=none; b=cxPCkVGf0xFA/Nkq+kAYBmLmC31O0WweeftCLML4pUWoSO6oCBnjgoCe+N7buNDozdgXIYxBPPQVGuQ1eKfw6JUPpnsIAWEg6bCNia4WrvClEBcJvGvVWzzIzSU/KaZSXRobLF9el1Nm5C8BwGtsJ5U6DVVpdfPsrQNozwDQT1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722872427; c=relaxed/simple;
-	bh=ke4iNq0W8AS/IfPvCncb9N64BUn7bmtEWe8JskxEy58=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NmVFton/cmUpxdVbI7evzUDRMv9AFzju6FgijCgh6GOAoW9NI17KMGcHn5F4O9Co8vfwRhZ7ugVH/kVYb5mH//hXNe713dMRPDP0oVxhYo6w6arZzxqnIU9inBz5mLOyRJHOj7PuD6u8mgwCjmdPgOzyjodOeP7XCGH16VeA/fk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dElN2tmZ; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1722872425; x=1754408425;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ke4iNq0W8AS/IfPvCncb9N64BUn7bmtEWe8JskxEy58=;
-  b=dElN2tmZfMbbb7CScTH7zwrC2iap4nt1Y8vifOSJIOzWBzuHC1XtJyTM
-   rE8i0ErewDxGmNhbB2HgIhlTHNX+vy0VX0IGDlYlb5usaThZMRd05wqKu
-   AY0JEoSKC9cW2Sv8NVpB2Kw6synsfPwL66NZtgjH5ZWlJeCulLayEbvHz
-   mKhFhgXPrcxG28wxkY3HSnbFmOE8cbCvAlz2mZmQAmEgHc90/EAWT2FgI
-   2HR0ekNLXDIEcWtgNV5bOuAfUvHOYha00P0NSm0BhMk1O90aruJwYbh7y
-   1jKxl/CEFf3sR/9tpAfnarpwQo/XNmmdMXVfk6I4xzthNe/gphUGChkuC
-   w==;
-X-CSE-ConnectionGUID: fYyWKpPPR2O3A/hNJ8FIqA==
-X-CSE-MsgGUID: kmCjGVFjRlefA4xOByV0gg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11155"; a="20698573"
-X-IronPort-AV: E=Sophos;i="6.09,265,1716274800"; 
-   d="scan'208";a="20698573"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2024 08:40:25 -0700
-X-CSE-ConnectionGUID: JJc4dSmZRMiFXQOP3SoJCQ==
-X-CSE-MsgGUID: uQ774wfgTE+ZqtFGE5UTGw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,265,1716274800"; 
-   d="scan'208";a="86781647"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.125.110.223]) ([10.125.110.223])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2024 08:40:24 -0700
-Message-ID: <d6ff1070-4f60-4699-bdc4-11bd72249d96@intel.com>
-Date: Mon, 5 Aug 2024 08:40:22 -0700
+	s=arc-20240116; t=1722876013; c=relaxed/simple;
+	bh=iOLUluY5An/v5NUsmhvgSEoNjYlEKm9MqBVeCIp+V5E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kufm0ctr3XTbzrF19WLCkACOfJ8/XznIdLwvqSE3ImjY05403IuWv75FX0ThT0OMBgO5DA8wu3dtVdQBKcDTWBLcIKb+5fJl0C/tHhjN0lqb/MTsDnHg29M2HbGgcM6Y2s0uFPIgSITyjjFPZIgEZt3CVEF8xA70fLmCT7LHq2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SChB3d5J; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3050AC32782;
+	Mon,  5 Aug 2024 16:40:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722876013;
+	bh=iOLUluY5An/v5NUsmhvgSEoNjYlEKm9MqBVeCIp+V5E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SChB3d5J9h4l8uw17ZrW5gk7a9QaS3yzKU0RZ9RfahroRTz7qfv9HGwLK+b5mD0Sc
+	 Ox6+wFqtDhtUvS+JO6JNL2vw/TBUXrH8g8hqqFzJBFRBNq40ih1hpRmo7j739yaZ3e
+	 o6Bln0tIoJ6iGQMrTuqkIOMdvM0hNiamlNivhHnjZ7ewg6k0X64XFPAArADbReXC6C
+	 TZZThGp1y+mJ/6iNzAkimRC06/PqcbfOMlCaHbJ0mFZ1oOkK9lWLd2pButThIG9w9b
+	 8nckuSMcUXw8LLSc/GSBAWbgMuV/BAH4nKOEDIwPeWVCf0Z+np74xWfYbUrmKNPjw6
+	 EvbZjRSDiZh9A==
+Date: Mon, 5 Aug 2024 22:10:08 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: kernel test robot <lkp@intel.com>
+Cc: Keguang Zhang via B4 Relay <devnull+keguang.zhang.gmail.com@kernel.org>,
+	Keguang Zhang <keguang.zhang@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, oe-kbuild-all@lists.linux.dev,
+	linux-mips@vger.kernel.org, dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: Re: [PATCH v11 2/2] dmaengine: Loongson1: Add Loongson-1 APB DMA
+ driver
+Message-ID: <ZrEAaB_I1S2vM2EE@matsya>
+References: <20240802-loongson1-dma-v11-2-85392357d4e0@gmail.com>
+ <202408051242.8kGK28W7-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/7] dmaengine: idxd: Clean up cpumask and hotplug for
- perfmon
-To: kan.liang@linux.intel.com, peterz@infradead.org, mingo@redhat.com,
- acme@kernel.org, namhyung@kernel.org, irogers@google.com,
- linux-kernel@vger.kernel.org
-Cc: Fenghua Yu <fenghua.yu@intel.com>, Vinod Koul <vkoul@kernel.org>,
- dmaengine@vger.kernel.org, "Zanussi, Tom" <tom.zanussi@intel.com>
-References: <20240802151643.1691631-1-kan.liang@linux.intel.com>
- <20240802151643.1691631-6-kan.liang@linux.intel.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20240802151643.1691631-6-kan.liang@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202408051242.8kGK28W7-lkp@intel.com>
 
-
-
-On 8/2/24 8:16 AM, kan.liang@linux.intel.com wrote:
-> From: Kan Liang <kan.liang@linux.intel.com>
+On 05-08-24, 12:58, kernel test robot wrote:
+> Hi Keguang,
 > 
-> The idxd PMU is system-wide scope, which is supported by the generic
-> perf_event subsystem now.
+> kernel test robot noticed the following build warnings:
 > 
-> Set the scope for the idxd PMU and remove all the cpumask and hotplug
-> codes.
+> [auto build test WARNING on 048d8cb65cde9fe7534eb4440bcfddcf406bb49c]
 > 
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Fenghua Yu <fenghua.yu@intel.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: dmaengine@vger.kernel.org
+> url:    https://github.com/intel-lab-lkp/linux/commits/Keguang-Zhang-via-B4-Relay/dt-bindings-dma-Add-Loongson-1-APB-DMA/20240803-111220
+> base:   048d8cb65cde9fe7534eb4440bcfddcf406bb49c
+> patch link:    https://lore.kernel.org/r/20240802-loongson1-dma-v11-2-85392357d4e0%40gmail.com
+> patch subject: [PATCH v11 2/2] dmaengine: Loongson1: Add Loongson-1 APB DMA driver
+> config: sparc64-randconfig-r063-20240804 (https://download.01.org/0day-ci/archive/20240805/202408051242.8kGK28W7-lkp@intel.com/config)
+> compiler: sparc64-linux-gcc (GCC) 14.1.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240805/202408051242.8kGK28W7-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202408051242.8kGK28W7-lkp@intel.com/
+> 
+> All warnings (new ones prefixed by >>):
+> 
+>    drivers/dma/loongson1-apb-dma.c: In function 'ls1x_dma_chan_probe':
+> >> drivers/dma/loongson1-apb-dma.c:520:34: warning: '%u' directive writing between 1 and 10 bytes into a region of size 2 [-Wformat-overflow=]
+>      520 |         sprintf(pdev_irqname, "ch%u", chan_id);
+>          |                                  ^~
+>    drivers/dma/loongson1-apb-dma.c:520:31: note: directive argument in the range [0, 2147483646]
+>      520 |         sprintf(pdev_irqname, "ch%u", chan_id);
+>          |                               ^~~~~~
+>    drivers/dma/loongson1-apb-dma.c:520:9: note: 'sprintf' output between 4 and 13 bytes into a destination of size 4
+>      520 |         sprintf(pdev_irqname, "ch%u", chan_id);
+>          |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Cc: Tom Zanussi <tom.zanussi@intel.com>
+Pls fix these warnings!
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  drivers/dma/idxd/idxd.h    |  7 ---
->  drivers/dma/idxd/init.c    |  3 --
->  drivers/dma/idxd/perfmon.c | 98 +-------------------------------------
->  3 files changed, 1 insertion(+), 107 deletions(-)
-> 
-> diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-> index 868b724a3b75..d84e21daa991 100644
-> --- a/drivers/dma/idxd/idxd.h
-> +++ b/drivers/dma/idxd/idxd.h
-> @@ -124,7 +124,6 @@ struct idxd_pmu {
->  
->  	struct pmu pmu;
->  	char name[IDXD_NAME_SIZE];
-> -	int cpu;
->  
->  	int n_counters;
->  	int counter_width;
-> @@ -135,8 +134,6 @@ struct idxd_pmu {
->  
->  	unsigned long supported_filters;
->  	int n_filters;
-> -
-> -	struct hlist_node cpuhp_node;
->  };
->  
->  #define IDXD_MAX_PRIORITY	0xf
-> @@ -803,14 +800,10 @@ void idxd_user_counter_increment(struct idxd_wq *wq, u32 pasid, int index);
->  int perfmon_pmu_init(struct idxd_device *idxd);
->  void perfmon_pmu_remove(struct idxd_device *idxd);
->  void perfmon_counter_overflow(struct idxd_device *idxd);
-> -void perfmon_init(void);
-> -void perfmon_exit(void);
->  #else
->  static inline int perfmon_pmu_init(struct idxd_device *idxd) { return 0; }
->  static inline void perfmon_pmu_remove(struct idxd_device *idxd) {}
->  static inline void perfmon_counter_overflow(struct idxd_device *idxd) {}
-> -static inline void perfmon_init(void) {}
-> -static inline void perfmon_exit(void) {}
->  #endif
->  
->  /* debugfs */
-> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-> index 21f6905b554d..5725ea82c409 100644
-> --- a/drivers/dma/idxd/init.c
-> +++ b/drivers/dma/idxd/init.c
-> @@ -878,8 +878,6 @@ static int __init idxd_init_module(void)
->  	else
->  		support_enqcmd = true;
->  
-> -	perfmon_init();
-> -
->  	err = idxd_driver_register(&idxd_drv);
->  	if (err < 0)
->  		goto err_idxd_driver_register;
-> @@ -928,7 +926,6 @@ static void __exit idxd_exit_module(void)
->  	idxd_driver_unregister(&idxd_drv);
->  	pci_unregister_driver(&idxd_pci_driver);
->  	idxd_cdev_remove();
-> -	perfmon_exit();
->  	idxd_remove_debugfs();
->  }
->  module_exit(idxd_exit_module);
-> diff --git a/drivers/dma/idxd/perfmon.c b/drivers/dma/idxd/perfmon.c
-> index 5e94247e1ea7..f511cf15845b 100644
-> --- a/drivers/dma/idxd/perfmon.c
-> +++ b/drivers/dma/idxd/perfmon.c
-> @@ -6,29 +6,6 @@
->  #include "idxd.h"
->  #include "perfmon.h"
->  
-> -static ssize_t cpumask_show(struct device *dev, struct device_attribute *attr,
-> -			    char *buf);
-> -
-> -static cpumask_t		perfmon_dsa_cpu_mask;
-> -static bool			cpuhp_set_up;
-> -static enum cpuhp_state		cpuhp_slot;
-> -
-> -/*
-> - * perf userspace reads this attribute to determine which cpus to open
-> - * counters on.  It's connected to perfmon_dsa_cpu_mask, which is
-> - * maintained by the cpu hotplug handlers.
-> - */
-> -static DEVICE_ATTR_RO(cpumask);
-> -
-> -static struct attribute *perfmon_cpumask_attrs[] = {
-> -	&dev_attr_cpumask.attr,
-> -	NULL,
-> -};
-> -
-> -static struct attribute_group cpumask_attr_group = {
-> -	.attrs = perfmon_cpumask_attrs,
-> -};
-> -
->  /*
->   * These attributes specify the bits in the config word that the perf
->   * syscall uses to pass the event ids and categories to perfmon.
-> @@ -67,16 +44,9 @@ static struct attribute_group perfmon_format_attr_group = {
->  
->  static const struct attribute_group *perfmon_attr_groups[] = {
->  	&perfmon_format_attr_group,
-> -	&cpumask_attr_group,
->  	NULL,
->  };
->  
-> -static ssize_t cpumask_show(struct device *dev, struct device_attribute *attr,
-> -			    char *buf)
-> -{
-> -	return cpumap_print_to_pagebuf(true, buf, &perfmon_dsa_cpu_mask);
-> -}
-> -
->  static bool is_idxd_event(struct idxd_pmu *idxd_pmu, struct perf_event *event)
->  {
->  	return &idxd_pmu->pmu == event->pmu;
-> @@ -217,7 +187,6 @@ static int perfmon_pmu_event_init(struct perf_event *event)
->  		return -EINVAL;
->  
->  	event->hw.event_base = ioread64(PERFMON_TABLE_OFFSET(idxd));
-> -	event->cpu = idxd->idxd_pmu->cpu;
->  	event->hw.config = event->attr.config;
->  
->  	if (event->group_leader != event)
-> @@ -488,6 +457,7 @@ static void idxd_pmu_init(struct idxd_pmu *idxd_pmu)
->  	idxd_pmu->pmu.stop		= perfmon_pmu_event_stop;
->  	idxd_pmu->pmu.read		= perfmon_pmu_event_update;
->  	idxd_pmu->pmu.capabilities	= PERF_PMU_CAP_NO_EXCLUDE;
-> +	idxd_pmu->pmu.scope		= PERF_PMU_SCOPE_SYS_WIDE;
->  	idxd_pmu->pmu.module		= THIS_MODULE;
->  }
->  
-> @@ -496,59 +466,17 @@ void perfmon_pmu_remove(struct idxd_device *idxd)
->  	if (!idxd->idxd_pmu)
->  		return;
->  
-> -	cpuhp_state_remove_instance(cpuhp_slot, &idxd->idxd_pmu->cpuhp_node);
->  	perf_pmu_unregister(&idxd->idxd_pmu->pmu);
->  	kfree(idxd->idxd_pmu);
->  	idxd->idxd_pmu = NULL;
->  }
->  
-> -static int perf_event_cpu_online(unsigned int cpu, struct hlist_node *node)
-> -{
-> -	struct idxd_pmu *idxd_pmu;
-> -
-> -	idxd_pmu = hlist_entry_safe(node, typeof(*idxd_pmu), cpuhp_node);
-> -
-> -	/* select the first online CPU as the designated reader */
-> -	if (cpumask_empty(&perfmon_dsa_cpu_mask)) {
-> -		cpumask_set_cpu(cpu, &perfmon_dsa_cpu_mask);
-> -		idxd_pmu->cpu = cpu;
-> -	}
-> -
-> -	return 0;
-> -}
-> -
-> -static int perf_event_cpu_offline(unsigned int cpu, struct hlist_node *node)
-> -{
-> -	struct idxd_pmu *idxd_pmu;
-> -	unsigned int target;
-> -
-> -	idxd_pmu = hlist_entry_safe(node, typeof(*idxd_pmu), cpuhp_node);
-> -
-> -	if (!cpumask_test_and_clear_cpu(cpu, &perfmon_dsa_cpu_mask))
-> -		return 0;
-> -
-> -	target = cpumask_any_but(cpu_online_mask, cpu);
-> -	/* migrate events if there is a valid target */
-> -	if (target < nr_cpu_ids) {
-> -		cpumask_set_cpu(target, &perfmon_dsa_cpu_mask);
-> -		perf_pmu_migrate_context(&idxd_pmu->pmu, cpu, target);
-> -	}
-> -
-> -	return 0;
-> -}
-> -
->  int perfmon_pmu_init(struct idxd_device *idxd)
->  {
->  	union idxd_perfcap perfcap;
->  	struct idxd_pmu *idxd_pmu;
->  	int rc = -ENODEV;
->  
-> -	/*
-> -	 * perfmon module initialization failed, nothing to do
-> -	 */
-> -	if (!cpuhp_set_up)
-> -		return -ENODEV;
-> -
->  	/*
->  	 * If perfmon_offset or num_counters is 0, it means perfmon is
->  	 * not supported on this hardware.
-> @@ -624,11 +552,6 @@ int perfmon_pmu_init(struct idxd_device *idxd)
->  	if (rc)
->  		goto free;
->  
-> -	rc = cpuhp_state_add_instance(cpuhp_slot, &idxd_pmu->cpuhp_node);
-> -	if (rc) {
-> -		perf_pmu_unregister(&idxd->idxd_pmu->pmu);
-> -		goto free;
-> -	}
->  out:
->  	return rc;
->  free:
-> @@ -637,22 +560,3 @@ int perfmon_pmu_init(struct idxd_device *idxd)
->  
->  	goto out;
->  }
-> -
-> -void __init perfmon_init(void)
-> -{
-> -	int rc = cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN,
-> -					 "driver/dma/idxd/perf:online",
-> -					 perf_event_cpu_online,
-> -					 perf_event_cpu_offline);
-> -	if (WARN_ON(rc < 0))
-> -		return;
-> -
-> -	cpuhp_slot = rc;
-> -	cpuhp_set_up = true;
-> -}
-> -
-> -void __exit perfmon_exit(void)
-> -{
-> -	if (cpuhp_set_up)
-> -		cpuhp_remove_multi_state(cpuhp_slot);
-> -}
+-- 
+~Vinod
 

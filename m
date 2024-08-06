@@ -1,78 +1,78 @@
-Return-Path: <dmaengine+bounces-2811-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2812-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B1EE194875A
-	for <lists+dmaengine@lfdr.de>; Tue,  6 Aug 2024 04:09:58 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 859CF948765
+	for <lists+dmaengine@lfdr.de>; Tue,  6 Aug 2024 04:17:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 689C31F2399B
-	for <lists+dmaengine@lfdr.de>; Tue,  6 Aug 2024 02:09:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 07D221F23DD2
+	for <lists+dmaengine@lfdr.de>; Tue,  6 Aug 2024 02:17:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A100CBA20;
-	Tue,  6 Aug 2024 02:09:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F333115D1;
+	Tue,  6 Aug 2024 02:17:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HWGMqRWx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iIr0hF27"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D901B665
-	for <dmaengine@vger.kernel.org>; Tue,  6 Aug 2024 02:09:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DA1CF9DF
+	for <dmaengine@vger.kernel.org>; Tue,  6 Aug 2024 02:17:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722910144; cv=none; b=hoh9hrFNaNBp3YyQNVGioG04cRFg90W47OwfWjmGi7dK35hXzKUatkQ/jNzCcvi/Hn9Zk6wCdlEBHOBvFQDGNpTIeHAP+PClEF7CTdLpK2ylYuMiSXGqkEuo9P0lx0mXeMCp8NpqJnbq//E9JPYCxUFR6+66JgAVj655J7SBYFw=
+	t=1722910673; cv=none; b=AFVZ9WhWXyV5X5UZIOmM1+uSmxmHq4AAhIsLrFznOHIfJ7pHsrehGMD1OJjToavwaXkXwDWW+cITEP8hb4stLyV+uTBay7+SlgRR5ildWOmpx6kzl2wAQAJeB+a0x4cebKiwj0TfxmhYwO2BygBL/dVTZ9X1OsF/cM9P5M4k13c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722910144; c=relaxed/simple;
-	bh=Ca+d0ODx2xoiiM6ESfjF4cXQlY7wYJydrvzYpinB3Io=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ILahgbpbSwuYY+oRsnucztpmrm/X5RG1SR7r35MppXxvqBtzrWCdifLKjO5shbHVCAc/xsMeVOETeAELd8gWosg9UF5mgUtj3fc64RqCmjTCs34ZsZJhLsB5PWDaQb/5sK+UdwwOaOb6yHD5Ge6haNHvAU057ODb0eOSNAUOhf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HWGMqRWx; arc=none smtp.client-ip=209.85.210.175
+	s=arc-20240116; t=1722910673; c=relaxed/simple;
+	bh=JRhQfo/ztHvpjlrb+wxSoTmiRBUjOuL3IDj6gu4IOT4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tizjZux1aqD76sprGonpzbYdTG/4lDeJ16owPewbgQouP3EBmhJPns3/E1wfBMf7mD/FTZwspjuuSczoInDVfHHhbF2L0UjAxQ7jZp4Wjscr9bOoCOK+yB0Hsw+tY5lvzuXBy9K+GXdOkSkWI+qDekSwg4yolpWOxw+/6QbrluI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iIr0hF27; arc=none smtp.client-ip=209.85.167.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-70d1876e748so83082b3a.1
-        for <dmaengine@vger.kernel.org>; Mon, 05 Aug 2024 19:09:03 -0700 (PDT)
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3db1d48083dso52918b6e.3
+        for <dmaengine@vger.kernel.org>; Mon, 05 Aug 2024 19:17:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1722910142; x=1723514942; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1722910671; x=1723515471; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ITxmvtMqI6oEXAlVIFKQnzOzb4QRVO0KBmpIZf0cbRg=;
-        b=HWGMqRWxRIsKg+3lYI5aIngb7AFgMq7Nriv67nTrYszjvtoeiaBZ7H0/FEVR3AaAGZ
-         nsV9HEH0opJx1ZIOn0P+HH32+Jrbf+YfMEcUAkqT2izf+p4yQLkz1IU0nfj0nHfCsyJI
-         cJNblTAGgzGsQGUMHelmOp6oH4tCRsfa7ECHtJocqNITuNudNg08cNExRvNTz/57tWpP
-         dV6xgkN/Rw/vtsWu37uIcKLyr8BMyL7uVnWC1SneBV+cvKpAsSWQ798sP73JCKnAypqM
-         7JPmwMriaBOKYNQit8GvhI2OK+xRQspHbHx8F3EShOCMkJ0uN2TL/kqeuhd68tKx9LM5
-         sjow==
+        bh=f+ehD75BWluQoZLMCLsE4DRj4fPkWd2bPdDlGv/84Is=;
+        b=iIr0hF27Tq/MmZtLtGdJOf89pNdL817eV5Xxt54JB9z+SxwzX/En2t4VC/z3E88QCd
+         eTChQeYB4rYlTj3/czyPxN2I/q/5Wa7ujNXaFr1aPC19wvZPCa9JIzB7umqbXWWa9qnm
+         6KWlKJp8Paj1fznSQs9RSBbt8GgabG3tykHQSNFTHUf1/JcIDVwf63JvN/CTcMdSsyeS
+         FiLuXS8y3STb5Bj8eSurKmZLJyxXfYeZodOBaUVQ0VW1EDWXZJczqU9WHqdfpcATy7tM
+         HhCWfynWuBjU4s98xrXnLjGF004ORghNOg6aijurGuZF0qlvx05lKLG6FL8YeBjEeo9S
+         QzLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722910142; x=1723514942;
+        d=1e100.net; s=20230601; t=1722910671; x=1723515471;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ITxmvtMqI6oEXAlVIFKQnzOzb4QRVO0KBmpIZf0cbRg=;
-        b=r7rQKlnGvXre75fAbm1U73f5/f8vXKRvDincsLqy7P8O93D/fYejTmSafhULHPLsmm
-         r053KGlmx/DfMkANy6vu3hpdv6z+RP5xANzWDYJxkDNvRVzGlXZIan3zQtD5WE0ptMgV
-         /IyrkfmAHieyMG8IUJSfYavk1TZmF/wdhlf/Sh+48EyVRn4rUqQhaJWuZzrdPXOP32iy
-         8ym93INjl5Su6LdnTpYSqdziyTLKOLbnrwHyRs/YhaUUI//fDp5ZGC8m623hyLq2iOjQ
-         8MzXFs0nF4WI2jGsZDRDCeo375oQXk4Op8kxelhOkbx8MW1dbaXByJCA7Ft8M8Xx+GWj
-         fP8w==
-X-Forwarded-Encrypted: i=1; AJvYcCVuVK44ZK2TvkhYnJqQLaiK29ts+ju8HtcSdTtH7tBBxNMSOiWRowZaalw/CBPR27JV8w7FRxzNBJI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxf1oYdxw1XmKtiMFuw54dm+nYUJXHuvt7tbctHL5Y7pm+hau6J
-	I3bdoSvbxesXp/Gww2VqwhfYulL8ib1QjvpUJoJpSgrynIxgCdHC
-X-Google-Smtp-Source: AGHT+IGm86BtUIgU/4uwcrMKoqg2zL00hi5XcphKLl3E77gl9tqQQi0vo/VbarUVUzbq3MWwHzxx1w==
-X-Received: by 2002:a05:6a00:21ce:b0:70d:2c09:45ff with SMTP id d2e1a72fcca58-7106d0927eemr10616080b3a.4.1722910142369;
-        Mon, 05 Aug 2024 19:09:02 -0700 (PDT)
+        bh=f+ehD75BWluQoZLMCLsE4DRj4fPkWd2bPdDlGv/84Is=;
+        b=L6SmuLVr384B67Y9dth30LoWlL2vz5dRalo5g031rxWHnquVBl091GJ7Tilb6mf897
+         WJAFTcsYsWPWsfzfKH7BbuWSn1it8oBRQ7DMdXpx1u5iLWql8Cp0VK3yajMVmzyMC+Om
+         aiNAP2B2a2i26IvKqGbVCPGlimnZnaXc9saubJN6w5H7XiatJdROZqgyk+5PyuMTisqH
+         eNOg1a/7ezxQ3iT3s0GHBA7LkKehuuR3Dn4XAd6RYxzzT59f0gyXOTOQ/gqr4MLGeZBj
+         Lz7FMIdTqnrnM/Kb8Na4ZsqOEZ2EDW6tuMcviNKoMmBCCT2r3etFgbn4J9edAI4WwGa2
+         Zo6w==
+X-Forwarded-Encrypted: i=1; AJvYcCXgrJdNqCPLqdfaRQJ/cct8yyACyM7KUDU+8px3KLE7HM5rPAniFSfw8WJXaxNGtaIqWod0PBUPgHR5ulfMICDCnhLiK9bljH/p
+X-Gm-Message-State: AOJu0YwZRAPQ8oveDhhxHScBS9MuRUzuR9amvAHNv4K3+bQkU9smEYlv
+	Ss8QYWzV4LkdhdgceKCvXD+cKNwnyjzMHwjQow3ejVF1g2hpr261Rs4sCQ==
+X-Google-Smtp-Source: AGHT+IGipj1l5BHjyuJ8T+rj9N2QAzB76ZmbF3UgMJBLoPA5tI9PQ/S7wtGfIv+QxEGplcX38KeNUQ==
+X-Received: by 2002:a05:6808:1811:b0:3d9:402e:4d17 with SMTP id 5614622812f47-3db557f613emr8289854b6e.2.1722910671397;
+        Mon, 05 Aug 2024 19:17:51 -0700 (PDT)
 Received: from fabio-Precision-3551.. ([2804:14c:485:4b61:3668:14ca:30e:638f])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7106ecfc344sm6058092b3a.151.2024.08.05.19.09.00
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7b764fb50ccsm6087006a12.71.2024.08.05.19.17.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Aug 2024 19:09:01 -0700 (PDT)
+        Mon, 05 Aug 2024 19:17:50 -0700 (PDT)
 From: Fabio Estevam <festevam@gmail.com>
 To: vkoul@kernel.org
 Cc: imx@lists.linux.dev,
 	dmaengine@vger.kernel.org,
 	Fabio Estevam <festevam@denx.de>
-Subject: [PATCH] dmaengine: imx-dma: Remove i.MX21 support
-Date: Mon,  5 Aug 2024 23:08:54 -0300
-Message-Id: <20240806020854.2522412-1-festevam@gmail.com>
+Subject: [PATCH v2] dmaengine: imx-dma: Remove i.MX21 support
+Date: Mon,  5 Aug 2024 23:17:44 -0300
+Message-Id: <20240806021744.2524233-1-festevam@gmail.com>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -87,10 +87,13 @@ From: Fabio Estevam <festevam@denx.de>
 i.MX21 support has been removed since commit 4b563a066611 ("ARM: imx:
 Remove imx21 support").
 
-Remove the i.MX21 support inside th imx-dma driver.
+Remove the i.MX21 support inside the imx-dma driver.
 
 Signed-off-by: Fabio Estevam <festevam@denx.de>
 ---
+Changes since v1:
+- Fix typo in commit log (th --> the)
+
  drivers/dma/imx-dma.c | 3 ---
  1 file changed, 3 deletions(-)
 

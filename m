@@ -1,129 +1,200 @@
-Return-Path: <dmaengine+bounces-2824-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2825-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 956A294BA8C
-	for <lists+dmaengine@lfdr.de>; Thu,  8 Aug 2024 12:12:39 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E4CA94C5B7
+	for <lists+dmaengine@lfdr.de>; Thu,  8 Aug 2024 22:28:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CB5B91C20B05
-	for <lists+dmaengine@lfdr.de>; Thu,  8 Aug 2024 10:12:38 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D1C65B23F26
+	for <lists+dmaengine@lfdr.de>; Thu,  8 Aug 2024 20:28:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DCC8189F39;
-	Thu,  8 Aug 2024 10:12:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5560A158D96;
+	Thu,  8 Aug 2024 20:28:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PgdJfuFH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gXPweJ3p"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ABB81891BD;
-	Thu,  8 Aug 2024 10:12:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E49C7E1;
+	Thu,  8 Aug 2024 20:28:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723111955; cv=none; b=jl67Usc6zA5XL1221TKrn87JoVK6vjkufeInAIG/X1sK5QzsRCfvVv0b/7piyCNglLPiyPzfGsnbRo0FsDfB/ClO41pcX8k3INRS3ebflRt3j7lOjSglSXCdgLAvle0au0Z2JEJqEv3qUpOGK+dyw3FtXcL2K/ei+pUCh82n7WI=
+	t=1723148887; cv=none; b=WGVhBPTELYFv7gVCgL29cRi9qWaPZxFF0gDbCzcy1e/1he9GuA5hVKwM4BHi7wmm3c51NHgppZu2QchdwM9AnkI9eDiiujgVnFAz+VbrPoa/piaiRJNYV81s9mQBHXznxJ1R2vy0TY2ETr8fbFkNjYfjhKTjRwjBCP6Dt9CtnHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723111955; c=relaxed/simple;
-	bh=UE231iugHPUW/3bgRFxzB7CNPnl7ZIKI0d+HIKbhipc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sYQyP33q5JBFEtyUAU8/SBIjoGtKJiKpMBUq8zrgIocA4ZeF2VGnSerDQfE3+LzP/zkx/gJLQZjd72Q9P/P8+Lp9GdWSUQ7Dp38KDP4C2v4Ct+Qn3uMBrbPJtcVfXTHmxFTwDp641zeutRYoI/+VJcwyMikKhN6HrzahCk0Huac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PgdJfuFH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92F27C32782;
-	Thu,  8 Aug 2024 10:12:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723111955;
-	bh=UE231iugHPUW/3bgRFxzB7CNPnl7ZIKI0d+HIKbhipc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=PgdJfuFHvbuVlMSiUhVZMyxnPRI1Y3yXZbtj9xbjdLCJnTRFqGZtwWFeCD7UHfZdv
-	 dXuPbJDZ+6cEYSClORIp3hJFIRrBcfhvWiHMVkFeGUywDmjTiw8Epel3X1VktDpnsB
-	 FAlnQ2+uJpMtu9YiKXdYbId8FRgr9q/A9Mb9DdEVexokCEWJ7aaHrunaWXHdHQLaoI
-	 mGgjXHBXfmmt6TlfT977UblTQ6kHH+VCm/fB7pQ6kBw9q13T3ZbpxyyXKPMEvhtTbt
-	 12V/3wj55pWlUoZICV65a4Qw4Oqd+Ix0z4r5R5sGk9ulsYDqdH+mX8vpA7TcniU/Ub
-	 O+v72ZkDu1brQ==
-Message-ID: <82c52a82-2d20-4ad9-9319-b1eb5ba4bbf5@kernel.org>
-Date: Thu, 8 Aug 2024 12:12:28 +0200
+	s=arc-20240116; t=1723148887; c=relaxed/simple;
+	bh=luR+kUrPWlxUmYKCbA8iZ3L51l1iEb4oO4WjMPt0Bo8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I/P9m1TxuElBpknFa0P4M+Hs7sVPED646/zyT8MIrq3EEVDAg0jR09OGVgX248oXpUm3hmOIH9X3OGD4ckNllH5wBGDBSvc5DlesummKyGCSuT+xWDpScPfOBip7F+0lhPzrvx0a9tu2u7IbYKOBibTUJuS+D4+UFMjNWE9Wjdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gXPweJ3p; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-52efd8807aaso1615450e87.3;
+        Thu, 08 Aug 2024 13:28:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1723148883; x=1723753683; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=c80j+4TiY904umyDCcnZLR5uaPsGqlXuL9z9M9m3hw4=;
+        b=gXPweJ3pw52OPhRP1Ui505pUhdMt6lNN5Es3G+UkPNsUhnp0B9MvOdP5vD4aFMcjiM
+         tHvzx8BlM8O1SHx7UXZ4DLBBBHuemkdqiqHkW2NA+FuSI5A6KSGE0WXwJYAP+FbtGhIU
+         +AGF6yEMNKQnCMqLRu4fMTonXfXeeqeZUGd0pFmuLEoPGmwZ2HEmG7YUhTTuaCzsObF5
+         h6VbAEBv7IHhmZ7BpAHTWEj41mjcQR8ugZE7potM+EQwfry1AreNDN7q41cW527q7JnF
+         3Ca7nqdn8mnjOTRgo/f255jxbUIskm2g+hBAao5UIXKkumrqimkwYUtSiAaqWzfYmBvC
+         uq0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723148883; x=1723753683;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=c80j+4TiY904umyDCcnZLR5uaPsGqlXuL9z9M9m3hw4=;
+        b=qZGZ4PY6Rx/wFUep/HQxb8bG2b7/SarzduBZzPY8xbW9M//1spnBG2c3ssD42Jy7+x
+         ToLYpdue+p0eN1T4lpFDrjZa4ebiq/U3nDCJT9dnkKg6MTFdgpLUrehHMbpz6AgQiPjH
+         Ku99LDwFqlFK4M/m8vxKfoJLTUs6HU60YPE9ibOuO8qmMoL77Ci+/TRuCwdHrK760CLT
+         NxKv43uY52JO/FPzD78ZeucdsPNjPxpgidf7Oa9PunBYB2vsT9L20z3KKDRNMyU/ktxh
+         pHgQzn9XO/7273c/aLthtq8D52G6s849DYldPxE1sgPyJvoCiR3duPKydG1gq83MNQq9
+         gWbg==
+X-Forwarded-Encrypted: i=1; AJvYcCX3lSFx1VKXXfVdGlMhq/xSwT8cPoJroQXtmyEOQLzwJJedQJ9egvsXQ72XhvGZYrkd6Omnrz0XvJunr7kogxAAAJ3l7wkdTBxExDNKd95R/QsIS14OnHBQVFUJvQWTKb0mMr2JmwDV7HnsoL7r6l6fQSvUgBG9hlGCMmAPnHKz
+X-Gm-Message-State: AOJu0YwOnjVu2vSQWvUILEQY83g3UH7jU0aZ1SGPl4b9ZD0IiNdqzpcq
+	6f8JijMU/MhPDIrDvnkZNl/7ync6X8dzg86aGZ9UNHOAufRB9ClxyLsHZQ==
+X-Google-Smtp-Source: AGHT+IH8ZkJy2U5DH9ldfUkSLOGVb/+9yGdqvzJjDqqY7Krb2ZBUR9X328T65O7D6dCJvMwBd16kmg==
+X-Received: by 2002:a05:6512:304f:b0:52f:6f49:3593 with SMTP id 2adb3069b0e04-530e588a9b3mr2000282e87.34.1723148882995;
+        Thu, 08 Aug 2024 13:28:02 -0700 (PDT)
+Received: from mobilestation ([95.79.225.241])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-530de47a486sm751255e87.262.2024.08.08.13.28.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Aug 2024 13:28:02 -0700 (PDT)
+Date: Thu, 8 Aug 2024 23:28:00 +0300
+From: Serge Semin <fancer.lancer@gmail.com>
+To: Mrinmay Sarkar <quic_msarkar@quicinc.com>
+Cc: manivannan.sadhasivam@linaro.org, vkoul@kernel.org, 
+	quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com, quic_ramkri@quicinc.com, 
+	quic_nayiluri@quicinc.com, quic_krichai@quicinc.com, quic_vbadigan@quicinc.com, 
+	stable@vger.kernel.org, Cai Huoqing <cai.huoqing@linux.dev>, dmaengine@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dmaengine: dw-edma: Fix unmasking STOP and ABORT
+ interrupts for HDMA
+Message-ID: <n6l5kuuyrmwe7n3ehelf45axhzxo7hfbpzbmjuua3rt2gibd7d@baxj3xxpykcu>
+References: <1721740773-23181-1-git-send-email-quic_msarkar@quicinc.com>
+ <1721740773-23181-2-git-send-email-quic_msarkar@quicinc.com>
+ <dnvoktjxx2m5oy2m5ocrgyd4veypnjbjnth364hl32ou4gm3t2@tjxrsowsabgr>
+ <6faa27be-54eb-ca00-f2a8-de3eb6fa7547@quicinc.com>
+ <by7uqtmnx4jjxigbm3lrpp2b3eqcrq3byqrrmexmkkigtjxdir@o7ahdlhpgzjl>
+ <b7fd3fac-77e4-7aad-e97a-c210aeb53773@quicinc.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt-bindings: dmaengine: zynqmp_dma: Add a new
- compatible string
-To: Abin Joseph <abin.joseph@amd.com>, vkoul@kernel.org,
- michal.simek@amd.com, robh@kernel.org, conor+dt@kernel.org,
- krzk+dt@kernel.org, u.kleine-koenig@pengutronix.de,
- radhey.shyam.pandey@amd.com, harini.katakam@amd.com
-Cc: git@amd.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240808100024.317497-1-abin.joseph@amd.com>
- <20240808100024.317497-2-abin.joseph@amd.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240808100024.317497-2-abin.joseph@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b7fd3fac-77e4-7aad-e97a-c210aeb53773@quicinc.com>
 
-On 08/08/2024 12:00, Abin Joseph wrote:
-> Add compatible string "amd,versal2-dma-1.0" to support AMD Versal Gen 2
-> platform.
+On Wed, Aug 07, 2024 at 10:49:42PM +0530, Mrinmay Sarkar wrote:
 > 
-> AMD Versal Gen 2 has 8 LPD DMA IPs in PS that can be used as general
-> purpose DMAs which is designed to support memory to memory and memory to
-> IO buffer transfer. Versal Gen 2 DMA IP has different interrupt register
-> offset.
+> On 8/7/2024 4:26 AM, Serge Semin wrote:
+> > On Mon, Aug 05, 2024 at 07:30:14PM +0530, Mrinmay Sarkar wrote:
+> > > On 8/2/2024 5:12 AM, Serge Semin wrote:
+> > > > On Tue, Jul 23, 2024 at 06:49:31PM +0530, Mrinmay Sarkar wrote:
+> > > > > The current logic is enabling both STOP_INT_MASK and ABORT_INT_MASK
+> > > > > bit. This is apparently masking those particular interrupts rather than
+> > > > > unmasking the same. If the interrupts are masked, they would never get
+> > > > > triggered.
+> > > > > 
+> > > > > So fix the issue by unmasking the STOP and ABORT interrupts properly.
+> > > > > 
+> > > > > Fixes: e74c39573d35 ("dmaengine: dw-edma: Add support for native HDMA")
+> > > > > cc: stable@vger.kernel.org
+> > > > > Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
+> > > > > ---
+> > > > >    drivers/dma/dw-edma/dw-hdma-v0-core.c | 9 +++++----
+> > > > >    1 file changed, 5 insertions(+), 4 deletions(-)
+> > > > > 
+> > > > > diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> > > > > index 10e8f07..fa89b3a 100644
+> > > > > --- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> > > > > +++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> > > > > @@ -247,10 +247,11 @@ static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
+> > > > >    	if (first) {
+> > > > >    		/* Enable engine */
+> > > > >    		SET_CH_32(dw, chan->dir, chan->id, ch_en, BIT(0));
+> > > > > -		/* Interrupt enable&unmask - done, abort */
+> > > > > -		tmp = GET_CH_32(dw, chan->dir, chan->id, int_setup) |
+> > > > > -		      HDMA_V0_STOP_INT_MASK | HDMA_V0_ABORT_INT_MASK |
+> > > > > -		      HDMA_V0_LOCAL_STOP_INT_EN | HDMA_V0_LOCAL_ABORT_INT_EN;
+> > > > Just curious, if all the interrupts were actually masked, how has this
+> > > > been even working?.. In other words if it affected both local and
+> > > > remote interrupts, then the HDMA driver has never actually worked,
+> > > > right?
+> > > Agreed, it should not work as interrupts were masked.
+> > > 
+> > > But as we are enabling LIE/RIE bits (LWIE/RWIE) that eventually enabling
+> > > watermark
+> > > interrupt in HDMA case and somehow on device I could see interrupt was
+> > > generating with watermark and stop bit set and it was working.
+> > > Since we were not clearing watermark interrupt, it was also causing storm of
+> > > interrupt.
+> > Is it possible that the HDMA_V0_STOP_INT_MASK and
+> > HDMA_V0_ABORT_INT_MASK masks affect the local IRQs only? If so than
+> > that shall explain why for instance Kory hasn't met the problem.
+> > 
+> > Based on the "Interrupts and Error Handling" figures of the DW EDMA
+> > databook the DMA_READ_INT_MASK_OFF/DMA_WRITE_INT_MASK_OFF CSRs mask of
+> > the IRQ delivered via the edma_int[] wire. Meanwhile the IMWr TLPs
+> > generation depend on the RIE/LLRAIE flags state only.
+> Ideally HDMA_V0_STOP_INT_MASK and HDMA_V0_ABORT_INT_MASK masks affect
+> both local and remote IRQs.
 > 
-> Signed-off-by: Abin Joseph <abin.joseph@amd.com>
-> ---
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> As per DW HDMA "Interrupts and Error Handling" figure
+> HDMA_INT_SETUP_OFF_[WR|
+> RD] mask of the IRQ delivered via the edma_int[] wire.
 
-Best regards,
-Krzysztof
+So it means they indeed affect the Local IRQs only, since the
+edma_int[] wire is the line locally connected to the host IRQ
+controller. From that perspective the semantics is the same as of
+the DMA_READ_INT_MASK_OFF/DMA_WRITE_INT_MASK_OFF CSR masks.
 
+Thanks for clarification.
+
+> And IMWr TLPs generation depend on 3 flags i.e HDMA_INT_SETUP_OFF_[WR|
+> RD].RSIE flag for stop IMWr, RWIE flag for watermark IMWr and
+> HDMA_INT_SETUP_OFF_[WR|R
+> D].RAIE flag for abort IMWr generation.
+> 
+> Thanks,
+> Mrinmay
+> > > > > +		/* Interrupt unmask - STOP, ABORT */
+> > > > > +		tmp = GET_CH_32(dw, chan->dir, chan->id, int_setup) &
+> > > > > +		      ~HDMA_V0_STOP_INT_MASK & ~HDMA_V0_ABORT_INT_MASK;
+> > > > Please convert this to:
+> > > > +		/* Interrupt unmask - stop, abort */
+> > > > +		tmp = GET_CH_32(dw, chan->dir, chan->id, int_setup);
+> > > > +		tmp &= ~(HDMA_V0_STOP_INT_MASK | HDMA_V0_ABORT_INT_MASK);
+> > > > 
+> > > > -Serge(y)
+> > > Sure. Will do
+
+I'll wait v3 to finish up the review.
+
+-Serge(y)
+
+> > Thanks.
+> > 
+> > -Serge(y)
+> > 
+> > > Thanks,
+> > > Mrinmay
+> > > 
+> > > > > +		/* Interrupt enable - STOP, ABORT */
+> > > > > +		tmp |= HDMA_V0_LOCAL_STOP_INT_EN | HDMA_V0_LOCAL_ABORT_INT_EN;
+> > > > >    		if (!(dw->chip->flags & DW_EDMA_CHIP_LOCAL))
+> > > > >    			tmp |= HDMA_V0_REMOTE_STOP_INT_EN | HDMA_V0_REMOTE_ABORT_INT_EN;
+> > > > >    		SET_CH_32(dw, chan->dir, chan->id, int_setup, tmp);
+> > > > > -- 
+> > > > > 2.7.4
+> > > > > 
 

@@ -1,200 +1,185 @@
-Return-Path: <dmaengine+bounces-2825-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2826-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E4CA94C5B7
-	for <lists+dmaengine@lfdr.de>; Thu,  8 Aug 2024 22:28:16 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 81F7F94CE9E
+	for <lists+dmaengine@lfdr.de>; Fri,  9 Aug 2024 12:31:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D1C65B23F26
-	for <lists+dmaengine@lfdr.de>; Thu,  8 Aug 2024 20:28:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A9FD71C2163A
+	for <lists+dmaengine@lfdr.de>; Fri,  9 Aug 2024 10:31:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5560A158D96;
-	Thu,  8 Aug 2024 20:28:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52202190490;
+	Fri,  9 Aug 2024 10:31:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gXPweJ3p"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CD8tFFN6"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E49C7E1;
-	Thu,  8 Aug 2024 20:28:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2616DBA41;
+	Fri,  9 Aug 2024 10:31:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723148887; cv=none; b=WGVhBPTELYFv7gVCgL29cRi9qWaPZxFF0gDbCzcy1e/1he9GuA5hVKwM4BHi7wmm3c51NHgppZu2QchdwM9AnkI9eDiiujgVnFAz+VbrPoa/piaiRJNYV81s9mQBHXznxJ1R2vy0TY2ETr8fbFkNjYfjhKTjRwjBCP6Dt9CtnHI=
+	t=1723199498; cv=none; b=st5/4CdDCJedm2YGnL37hx+lrRoHuNO6FveVHV/PSMbGEDP4qsDFovF6I2c+sYLEwJdyHKnTnpvgII9FoXiPojCaT5u40rDWYPeCdm4uEtQzpOqLAVcdKfP/aeM5LZZm7Hrm1LJSDQXVcX5KXJdFwTYnO1An45VKwtdFs/BBDHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723148887; c=relaxed/simple;
-	bh=luR+kUrPWlxUmYKCbA8iZ3L51l1iEb4oO4WjMPt0Bo8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I/P9m1TxuElBpknFa0P4M+Hs7sVPED646/zyT8MIrq3EEVDAg0jR09OGVgX248oXpUm3hmOIH9X3OGD4ckNllH5wBGDBSvc5DlesummKyGCSuT+xWDpScPfOBip7F+0lhPzrvx0a9tu2u7IbYKOBibTUJuS+D4+UFMjNWE9Wjdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gXPweJ3p; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-52efd8807aaso1615450e87.3;
-        Thu, 08 Aug 2024 13:28:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723148883; x=1723753683; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=c80j+4TiY904umyDCcnZLR5uaPsGqlXuL9z9M9m3hw4=;
-        b=gXPweJ3pw52OPhRP1Ui505pUhdMt6lNN5Es3G+UkPNsUhnp0B9MvOdP5vD4aFMcjiM
-         tHvzx8BlM8O1SHx7UXZ4DLBBBHuemkdqiqHkW2NA+FuSI5A6KSGE0WXwJYAP+FbtGhIU
-         +AGF6yEMNKQnCMqLRu4fMTonXfXeeqeZUGd0pFmuLEoPGmwZ2HEmG7YUhTTuaCzsObF5
-         h6VbAEBv7IHhmZ7BpAHTWEj41mjcQR8ugZE7potM+EQwfry1AreNDN7q41cW527q7JnF
-         3Ca7nqdn8mnjOTRgo/f255jxbUIskm2g+hBAao5UIXKkumrqimkwYUtSiAaqWzfYmBvC
-         uq0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723148883; x=1723753683;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=c80j+4TiY904umyDCcnZLR5uaPsGqlXuL9z9M9m3hw4=;
-        b=qZGZ4PY6Rx/wFUep/HQxb8bG2b7/SarzduBZzPY8xbW9M//1spnBG2c3ssD42Jy7+x
-         ToLYpdue+p0eN1T4lpFDrjZa4ebiq/U3nDCJT9dnkKg6MTFdgpLUrehHMbpz6AgQiPjH
-         Ku99LDwFqlFK4M/m8vxKfoJLTUs6HU60YPE9ibOuO8qmMoL77Ci+/TRuCwdHrK760CLT
-         NxKv43uY52JO/FPzD78ZeucdsPNjPxpgidf7Oa9PunBYB2vsT9L20z3KKDRNMyU/ktxh
-         pHgQzn9XO/7273c/aLthtq8D52G6s849DYldPxE1sgPyJvoCiR3duPKydG1gq83MNQq9
-         gWbg==
-X-Forwarded-Encrypted: i=1; AJvYcCX3lSFx1VKXXfVdGlMhq/xSwT8cPoJroQXtmyEOQLzwJJedQJ9egvsXQ72XhvGZYrkd6Omnrz0XvJunr7kogxAAAJ3l7wkdTBxExDNKd95R/QsIS14OnHBQVFUJvQWTKb0mMr2JmwDV7HnsoL7r6l6fQSvUgBG9hlGCMmAPnHKz
-X-Gm-Message-State: AOJu0YwOnjVu2vSQWvUILEQY83g3UH7jU0aZ1SGPl4b9ZD0IiNdqzpcq
-	6f8JijMU/MhPDIrDvnkZNl/7ync6X8dzg86aGZ9UNHOAufRB9ClxyLsHZQ==
-X-Google-Smtp-Source: AGHT+IH8ZkJy2U5DH9ldfUkSLOGVb/+9yGdqvzJjDqqY7Krb2ZBUR9X328T65O7D6dCJvMwBd16kmg==
-X-Received: by 2002:a05:6512:304f:b0:52f:6f49:3593 with SMTP id 2adb3069b0e04-530e588a9b3mr2000282e87.34.1723148882995;
-        Thu, 08 Aug 2024 13:28:02 -0700 (PDT)
-Received: from mobilestation ([95.79.225.241])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-530de47a486sm751255e87.262.2024.08.08.13.28.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Aug 2024 13:28:02 -0700 (PDT)
-Date: Thu, 8 Aug 2024 23:28:00 +0300
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-Cc: manivannan.sadhasivam@linaro.org, vkoul@kernel.org, 
-	quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com, quic_ramkri@quicinc.com, 
-	quic_nayiluri@quicinc.com, quic_krichai@quicinc.com, quic_vbadigan@quicinc.com, 
-	stable@vger.kernel.org, Cai Huoqing <cai.huoqing@linux.dev>, dmaengine@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dmaengine: dw-edma: Fix unmasking STOP and ABORT
- interrupts for HDMA
-Message-ID: <n6l5kuuyrmwe7n3ehelf45axhzxo7hfbpzbmjuua3rt2gibd7d@baxj3xxpykcu>
-References: <1721740773-23181-1-git-send-email-quic_msarkar@quicinc.com>
- <1721740773-23181-2-git-send-email-quic_msarkar@quicinc.com>
- <dnvoktjxx2m5oy2m5ocrgyd4veypnjbjnth364hl32ou4gm3t2@tjxrsowsabgr>
- <6faa27be-54eb-ca00-f2a8-de3eb6fa7547@quicinc.com>
- <by7uqtmnx4jjxigbm3lrpp2b3eqcrq3byqrrmexmkkigtjxdir@o7ahdlhpgzjl>
- <b7fd3fac-77e4-7aad-e97a-c210aeb53773@quicinc.com>
+	s=arc-20240116; t=1723199498; c=relaxed/simple;
+	bh=Pyn9R7CbJk7AzCg1pklE2Ub+hkwoAnfgt2o4mUVn1Vk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=mhLBspRbjT43zhiWtkLhDe4XqcCT7DI7eyEEBtkHfCu5hwzcxBF0NouUM4+0EJeUG21NYODgZJ3bucT2M2bRllqeTVS44ZqKBYAFBEls/TgLbnVuHGdTPXNkNVHEUm4wkRBBh+/MeXuJ4rM4HZgmpjtJmc4JKmR0xtHpJ3LNr3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CD8tFFN6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 9DC01C32782;
+	Fri,  9 Aug 2024 10:31:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723199497;
+	bh=Pyn9R7CbJk7AzCg1pklE2Ub+hkwoAnfgt2o4mUVn1Vk=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=CD8tFFN6LHhrM2NTgk7YtGS/7v28M7++MeGWSrBbfHhbOs7ekHy7a3aD/kurb9sPP
+	 ZB6zYgs/gw4r6F07CC2jb4OFymVmPGgxYYePxegI+tmPcqJjCAdRfb5yKI0POOgxNO
+	 UYpy5gy8wEoux5S/V8A6qvYVNX7Yg5cSPJkl67itGNsqADXV/gfI2HDcR7gE3Gp/cG
+	 grX/fSHmbZy3EnxhVf5UhCyYY+jO8xsriyI695SvDgAIPDAQldFwcxN9ikhx238dDL
+	 HrazhnJMSXtM3PfZInjNVHxoOtT4Cxp2DklHUO7om94qHgxgmhzKtdLsO54e0WEVZ3
+	 KDmwXHFCTgZ6Q==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 898DAC3DA4A;
+	Fri,  9 Aug 2024 10:31:37 +0000 (UTC)
+From: Keguang Zhang via B4 Relay <devnull+keguang.zhang.gmail.com@kernel.org>
+Subject: [PATCH v12 0/2] Add support for Loongson1 APB DMA
+Date: Fri, 09 Aug 2024 18:30:57 +0800
+Message-Id: <20240809-loongson1-dma-v12-0-d9469a4a6b85@gmail.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b7fd3fac-77e4-7aad-e97a-c210aeb53773@quicinc.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOHvtWYC/2XPTU7DMBAF4KtUWeNqZlz/seIeiIVrj1OLJkZJi
+ YCqd8fpghZ3OZa+957P3cxT5rl73py7iZc85zLWA+lp04WDH3sWOdaHjoAkIoE4ljL2cxlRxME
+ L1NInVgbs3nXVfEyc8tc18PWt3mkqgzgdJvZ/KeDIIqFTcqtop8EKFO/cf9ay7c9a+dIPPh+3o
+ Qxr4iHPpzJ9Xxcues1dU3YgUTdbFi1AOIhMQYZQW+6C1i2LudPkWm2qlibula2bIqtW25vWYFp
+ tq07OOYqkDClotbvTKFvtqtZoMVEwkQO3GuHGDT18HGHdjvsETnmdvH7wePMW6MFj9VZJR1KZu
+ ON/6y+Xyy/5SKoLJwIAAA==
+To: Keguang Zhang <keguang.zhang@gmail.com>, Vinod Koul <vkoul@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-mips@vger.kernel.org, dmaengine@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Conor Dooley <conor.dooley@microchip.com>, 
+ Jiaxun Yang <jiaxun.yang@flygoat.com>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1723199495; l=3921;
+ i=keguang.zhang@gmail.com; s=20231129; h=from:subject:message-id;
+ bh=Pyn9R7CbJk7AzCg1pklE2Ub+hkwoAnfgt2o4mUVn1Vk=;
+ b=y23OmK3eYx48ro7Gjodr0rifohygfq4gBEa5U9XhQFBKIN3fjy5zJ6PtyYCqK6BE827HWNxqh
+ FRD+loTt6c6DWn0sVu7mcehRF80/YCEI6g2yJCH+SBrAmVBSo3tx55n
+X-Developer-Key: i=keguang.zhang@gmail.com; a=ed25519;
+ pk=FMKGj/JgKll/MgClpNZ3frIIogsh5e5r8CeW2mr+WLs=
+X-Endpoint-Received: by B4 Relay for keguang.zhang@gmail.com/20231129 with
+ auth_id=102
+X-Original-From: Keguang Zhang <keguang.zhang@gmail.com>
+Reply-To: keguang.zhang@gmail.com
 
-On Wed, Aug 07, 2024 at 10:49:42PM +0530, Mrinmay Sarkar wrote:
-> 
-> On 8/7/2024 4:26 AM, Serge Semin wrote:
-> > On Mon, Aug 05, 2024 at 07:30:14PM +0530, Mrinmay Sarkar wrote:
-> > > On 8/2/2024 5:12 AM, Serge Semin wrote:
-> > > > On Tue, Jul 23, 2024 at 06:49:31PM +0530, Mrinmay Sarkar wrote:
-> > > > > The current logic is enabling both STOP_INT_MASK and ABORT_INT_MASK
-> > > > > bit. This is apparently masking those particular interrupts rather than
-> > > > > unmasking the same. If the interrupts are masked, they would never get
-> > > > > triggered.
-> > > > > 
-> > > > > So fix the issue by unmasking the STOP and ABORT interrupts properly.
-> > > > > 
-> > > > > Fixes: e74c39573d35 ("dmaengine: dw-edma: Add support for native HDMA")
-> > > > > cc: stable@vger.kernel.org
-> > > > > Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-> > > > > ---
-> > > > >    drivers/dma/dw-edma/dw-hdma-v0-core.c | 9 +++++----
-> > > > >    1 file changed, 5 insertions(+), 4 deletions(-)
-> > > > > 
-> > > > > diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> > > > > index 10e8f07..fa89b3a 100644
-> > > > > --- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> > > > > +++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> > > > > @@ -247,10 +247,11 @@ static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
-> > > > >    	if (first) {
-> > > > >    		/* Enable engine */
-> > > > >    		SET_CH_32(dw, chan->dir, chan->id, ch_en, BIT(0));
-> > > > > -		/* Interrupt enable&unmask - done, abort */
-> > > > > -		tmp = GET_CH_32(dw, chan->dir, chan->id, int_setup) |
-> > > > > -		      HDMA_V0_STOP_INT_MASK | HDMA_V0_ABORT_INT_MASK |
-> > > > > -		      HDMA_V0_LOCAL_STOP_INT_EN | HDMA_V0_LOCAL_ABORT_INT_EN;
-> > > > Just curious, if all the interrupts were actually masked, how has this
-> > > > been even working?.. In other words if it affected both local and
-> > > > remote interrupts, then the HDMA driver has never actually worked,
-> > > > right?
-> > > Agreed, it should not work as interrupts were masked.
-> > > 
-> > > But as we are enabling LIE/RIE bits (LWIE/RWIE) that eventually enabling
-> > > watermark
-> > > interrupt in HDMA case and somehow on device I could see interrupt was
-> > > generating with watermark and stop bit set and it was working.
-> > > Since we were not clearing watermark interrupt, it was also causing storm of
-> > > interrupt.
-> > Is it possible that the HDMA_V0_STOP_INT_MASK and
-> > HDMA_V0_ABORT_INT_MASK masks affect the local IRQs only? If so than
-> > that shall explain why for instance Kory hasn't met the problem.
-> > 
-> > Based on the "Interrupts and Error Handling" figures of the DW EDMA
-> > databook the DMA_READ_INT_MASK_OFF/DMA_WRITE_INT_MASK_OFF CSRs mask of
-> > the IRQ delivered via the edma_int[] wire. Meanwhile the IMWr TLPs
-> > generation depend on the RIE/LLRAIE flags state only.
-> Ideally HDMA_V0_STOP_INT_MASK and HDMA_V0_ABORT_INT_MASK masks affect
-> both local and remote IRQs.
-> 
+Add the driver and dt-binding document for Loongson1 APB DMA.
 
-> As per DW HDMA "Interrupts and Error Handling" figure
-> HDMA_INT_SETUP_OFF_[WR|
-> RD] mask of the IRQ delivered via the edma_int[] wire.
+Changes in v12:
+- Delete superfluous blank lines in the examples section.
+- Move the call to devm_request_irq() into ls1x_dma_alloc_chan_resources()
+  to use dma_chan_name() as a parameter.
+- Move the call to devm_free_irq() into ls1x_dma_free_chan_resources() accordingly.
+- Rename ls1x_dma_alloc_llis() to ls1x_dma_prep_lli().
+- Merge ls1x_dma_free_lli() into ls1x_dma_free_desc().
+- Add ls1x_dma_synchronize().
+- Fix the error handling of ls1x_dma_probe().
+- Some minor fixes and improvements.
+- Link to v11: https://lore.kernel.org/r/20240802-loongson1-dma-v11-0-85392357d4e0@gmail.com
 
-So it means they indeed affect the Local IRQs only, since the
-edma_int[] wire is the line locally connected to the host IRQ
-controller. From that perspective the semantics is the same as of
-the DMA_READ_INT_MASK_OFF/DMA_WRITE_INT_MASK_OFF CSR masks.
+Changes in v11:
+- Use guard notation to acquire the spinlock.
+- Fix the build error of LS1X_DMA_LLI_ALIGNMENT.
+- Some minor fixes.
+- Link to v10: https://lore.kernel.org/r/20240726-loongson1-dma-v10-0-31bf095a6fa6@gmail.com
 
-Thanks for clarification.
+Changes in v10:
+- Implement the hwdescs by link list to eliminate the limitation of the desc number.
+- Add the prefix 'LS1X_' for all registers and their bits.
+- Drop the macros: chan_readl() and chan_writel().
+- Use %pad for printing a dma_addr_t type.
+- Some minor fixes.
+- Link to v9: https://lore.kernel.org/r/20240613-loongson1-dma-v9-0-6181f2c7dece@gmail.com
 
-> And IMWr TLPs generation depend on 3 flags i.e HDMA_INT_SETUP_OFF_[WR|
-> RD].RSIE flag for stop IMWr, RWIE flag for watermark IMWr and
-> HDMA_INT_SETUP_OFF_[WR|R
-> D].RAIE flag for abort IMWr generation.
-> 
-> Thanks,
-> Mrinmay
-> > > > > +		/* Interrupt unmask - STOP, ABORT */
-> > > > > +		tmp = GET_CH_32(dw, chan->dir, chan->id, int_setup) &
-> > > > > +		      ~HDMA_V0_STOP_INT_MASK & ~HDMA_V0_ABORT_INT_MASK;
-> > > > Please convert this to:
-> > > > +		/* Interrupt unmask - stop, abort */
-> > > > +		tmp = GET_CH_32(dw, chan->dir, chan->id, int_setup);
-> > > > +		tmp &= ~(HDMA_V0_STOP_INT_MASK | HDMA_V0_ABORT_INT_MASK);
-> > > > 
-> > > > -Serge(y)
-> > > Sure. Will do
+Changes in v9:
+- Fix all the errors and warnings when building with W=1 and C=1
+- Link to v8: https://lore.kernel.org/r/20240607-loongson1-dma-v8-0-f9992d257250@gmail.com
 
-I'll wait v3 to finish up the review.
+Changes in v8:
+- Change 'interrupts' property to an items list
+- Link to v7: https://lore.kernel.org/r/20240329-loongson1-dma-v7-0-37db58608de5@gmail.com
 
--Serge(y)
+Changes in v7:
+- Change the comptible to 'loongson,ls1*-apbdma' (suggested by Huacai Chen)
+- Update the title and description part accordingly
+- Rename the file to loongson,ls1b-apbdma.yaml
+- Add a compatible string for LS1A
+- Delete minItems of 'interrupts'
+- Change patterns of 'interrupt-names' to const
+- Rename the file to loongson1-apb-dma.c to keep the consistency
+- Update Kconfig and Makefile accordingly
+- Link to v6: https://lore.kernel.org/r/20240316-loongson1-dma-v6-0-90de2c3cc928@gmail.com
 
-> > Thanks.
-> > 
-> > -Serge(y)
-> > 
-> > > Thanks,
-> > > Mrinmay
-> > > 
-> > > > > +		/* Interrupt enable - STOP, ABORT */
-> > > > > +		tmp |= HDMA_V0_LOCAL_STOP_INT_EN | HDMA_V0_LOCAL_ABORT_INT_EN;
-> > > > >    		if (!(dw->chip->flags & DW_EDMA_CHIP_LOCAL))
-> > > > >    			tmp |= HDMA_V0_REMOTE_STOP_INT_EN | HDMA_V0_REMOTE_ABORT_INT_EN;
-> > > > >    		SET_CH_32(dw, chan->dir, chan->id, int_setup, tmp);
-> > > > > -- 
-> > > > > 2.7.4
-> > > > > 
+Changes in v6:
+- Change the compatible to the fallback
+- Implement .device_prep_dma_cyclic for Loongson1 sound driver,
+  as well as .device_pause and .device_resume.
+- Set the limitation LS1X_DMA_MAX_DESC and put all descriptors
+  into one page to save memory
+- Move dma_pool_zalloc() into ls1x_dma_alloc_desc()
+- Drop dma_slave_config structure
+- Use .remove_new instead of .remove
+- Use KBUILD_MODNAME for the driver name
+- Improve the debug information
+- Some minor fixes
+
+Changes in v5:
+- Add the dt-binding document
+- Add DT support
+- Use DT information instead of platform data
+- Use chan_id of struct dma_chan instead of own id
+- Use of_dma_xlate_by_chan_id() instead of ls1x_dma_filter()
+- Update the author information to my official name
+
+Changes in v4:
+- Use dma_slave_map to find the proper channel.
+- Explicitly call devm_request_irq() and tasklet_kill().
+- Fix namespace issue.
+- Some minor fixes and cleanups.
+
+Changes in v3:
+- Rename ls1x_dma_filter_fn to ls1x_dma_filter.
+
+Changes in v2:
+- Change the config from 'DMA_LOONGSON1' to 'LOONGSON1_DMA',
+- and rearrange it in alphabetical order in Kconfig and Makefile.
+- Fix comment style.
+
+---
+Keguang Zhang (2):
+      dt-bindings: dma: Add Loongson-1 APB DMA
+      dmaengine: Loongson1: Add Loongson-1 APB DMA driver
+
+ .../bindings/dma/loongson,ls1b-apbdma.yaml         |  65 ++
+ drivers/dma/Kconfig                                |   9 +
+ drivers/dma/Makefile                               |   1 +
+ drivers/dma/loongson1-apb-dma.c                    | 660 +++++++++++++++++++++
+ 4 files changed, 735 insertions(+)
+---
+base-commit: 61c01d2e181adfba02fe09764f9fca1de2be0dbe
+change-id: 20231120-loongson1-dma-163afe5708b9
+
+Best regards,
+-- 
+Keguang Zhang <keguang.zhang@gmail.com>
+
+
 

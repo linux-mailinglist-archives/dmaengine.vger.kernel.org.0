@@ -1,861 +1,616 @@
-Return-Path: <dmaengine+bounces-2828-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2829-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C6C994CEA5
-	for <lists+dmaengine@lfdr.de>; Fri,  9 Aug 2024 12:31:49 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0FBF294D0A0
+	for <lists+dmaengine@lfdr.de>; Fri,  9 Aug 2024 14:55:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 712111C21C2A
-	for <lists+dmaengine@lfdr.de>; Fri,  9 Aug 2024 10:31:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 348011C20A08
+	for <lists+dmaengine@lfdr.de>; Fri,  9 Aug 2024 12:55:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C79E1922F5;
-	Fri,  9 Aug 2024 10:31:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1891D194AEB;
+	Fri,  9 Aug 2024 12:55:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ilFBZ0JE"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NJAZmRLV"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2081.outbound.protection.outlook.com [40.107.93.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2622A16D337;
-	Fri,  9 Aug 2024 10:31:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723199498; cv=none; b=Ka67xAp2twcqqxK63qrd2OOWcvi6RbvJ+CKp0Oj9k+T70V8sMkIAoD1vtnp5w1vndqe7wA7re4i7USJgVqq0vGR55XQ8Zxu48lNQX/Rpywu8hfRDzJKllnUa3FIbXKKSSmNph2LUDtXENvaRCqGWi4404roA/+mceuuXy/wncZY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723199498; c=relaxed/simple;
-	bh=gcxoYp6IROnQqIxSWLpU0bNctqW5y1HgukdqLB8USoA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IPzxG1LILV6Ke+eKbjpMq9CUvUKPjU/rFIw+gIxc0gEQ7p6mB5LF7C7w/Q/Ufyco6CwAYIeV+semJfw2GGmvS614v1BeLRs6DDdVirT07wX4Ro5Z2cxg6oW1TPY3YIAwzLFOh4lf9pLWxJwkHn4BOhXJxocFmmGEP7xP1Qh+jkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ilFBZ0JE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id BB3B7C4AF0E;
-	Fri,  9 Aug 2024 10:31:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723199497;
-	bh=gcxoYp6IROnQqIxSWLpU0bNctqW5y1HgukdqLB8USoA=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=ilFBZ0JEv5Su2+lstN4ZU2t/qXE0evYELrpW+p0BSXEND//uRUqyHLyCTVyl7yPyb
-	 e0v0OsqgxK+bkDZ3dIiNSJP7CfKgQfY/wCSoCbrQLyjaNEnvsGI3ptF2i+fxV606H3
-	 PXXI2lpALV7zs6MlmirVOFGiuiWWntxETFN6hxiciakfnOQlCpCyDLa4lvD3GXDcc+
-	 ENbtQpqI7tPnPNBEfp7AT+hHsah/97BZ3iMqWPAa8D1HGgiFqtB84ud7nA396RSbD6
-	 AByLaYG7tEHF1F6iLNekbqvrTnbPpMub994zhIlowHo1FX6xDE404I0xOBW3jpL8v/
-	 2rBFxqZkox1aw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A589FC52D71;
-	Fri,  9 Aug 2024 10:31:37 +0000 (UTC)
-From: Keguang Zhang via B4 Relay <devnull+keguang.zhang.gmail.com@kernel.org>
-Date: Fri, 09 Aug 2024 18:30:59 +0800
-Subject: [PATCH v12 2/2] dmaengine: Loongson1: Add Loongson-1 APB DMA
- driver
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BE71194ACC
+	for <dmaengine@vger.kernel.org>; Fri,  9 Aug 2024 12:55:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.81
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1723208127; cv=fail; b=BOZ3SieR1eeUjj8qPvogTmdSmertjvqt8DhxSd+yZhwTPGygwlMVmzpdRWmGcUTNllR5TWzrn61HTQTlt0btxbgbVeO0mdlMkqFUo2lMhXmEep9xuxzf+aFbA6q4llRXkV/3fVffSbvWY47pBQ2N4nymxiz7KPb7kFTQACqa5Bw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1723208127; c=relaxed/simple;
+	bh=tp0tXjW5EztBx7PW/pVgyjujRGOTOzjYcJycv/qmBpQ=;
+	h=Content-Type:From:To:CC:Subject:Date:Message-ID:References:
+	 In-Reply-To:MIME-Version; b=n6fPxMm7HhnRvgbfqI68MmIoLldY5SulNkVF45yHKsyr/B1pZEObVSU2VwQ38l4czEws1eC+pfnSZ/TQHJ4oog3NbC+2c+C08ido0PNx1urtNrPKvOWSWdaxO7LNRHWTkCkvxC3l7nH77zQRzuEhk5GEnVYwdKJXAeHa1mjG3w0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NJAZmRLV; arc=fail smtp.client-ip=40.107.93.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nXAW6iBSEDbxxW4XaOKHahRXH0zwM3aDyqp9z1sPvWoG8Rfd30chv+T2IsaiQC/vAINmWTfk0BHWSmMfQzQHFXq0yFv4ghymopwaIpXq3CEXxDBPxnkBmzulCijz+DHc7G1hFhEkSOO0gMZiIFiAWZY7I7xl9EZe/MQ3lkQrKMgSt83X+AsXi5yrN+Z4aKbFB4E/1vllpu6K0axATfW8Z0eRYSNzxOSA7TfGpjG+fz01d1qxS6ixT6vsROuscg1GNZsuSi7xoVtnSDtAgjnEOBuGBTlSyCKyrwZnsDusUp2uan+0E0qwRNOXplArizSnAid0oFgw4k5jmRx8mSZ77w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9wSZyAaVay7m8P3HM1sLl2+xmJQ3QsdpV3R0YAuGBcU=;
+ b=hjuOL35Q8aBa/Bt2+gYurPh7P/HxIzfPyW1LO8eBN1P9xYAM7TtR01TmfCvgejvYVgLW1aHMzKHIKxJT46NulzJmSNIBf9c/Ji+mdamdvYsU812A17t5MOkVuFEx3woxyYGIZamR5gv31S5eQHmN5/ajhfO4zvNelLcA4JsrjyrssezlVJKq8jHzT3KWkIHIsJz13sdcmzSiL/tcqiuceSD2f2nWw8snL7tIdOux8jKz6WrGp8ppr4euJBZIziWx08Xkh4oMI2buHPj88Q8TeF5w9O2BLLQr5fdQCEoaMAkYXbQBUXobbW0uS52sUEZdI9Vu8CaU2SeU6AKpSpfpOw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9wSZyAaVay7m8P3HM1sLl2+xmJQ3QsdpV3R0YAuGBcU=;
+ b=NJAZmRLVhDGrh0d8D4sYe+4lfxWWLLamOc8iawBppt8AA8ze86xSZkPo4zvSILY+8ndSTu5YtXDOkF/wKfiDRWXhkUwrX9Jnw/9ucAAfoc/ttf8Jm3fkrTM0LrWsJzOJZNzkoyR6oujc34xTu4v8OxYmrmjK1nU2RYDhq9lUiH4=
+Received: from MN0PR12MB5953.namprd12.prod.outlook.com (2603:10b6:208:37c::15)
+ by CY8PR12MB7562.namprd12.prod.outlook.com (2603:10b6:930:95::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7849.12; Fri, 9 Aug
+ 2024 12:55:21 +0000
+Received: from MN0PR12MB5953.namprd12.prod.outlook.com
+ ([fe80::6798:13c6:d7ba:e01c]) by MN0PR12MB5953.namprd12.prod.outlook.com
+ ([fe80::6798:13c6:d7ba:e01c%5]) with mapi id 15.20.7828.031; Fri, 9 Aug 2024
+ 12:55:20 +0000
+Content-Type: multipart/mixed;
+	boundary="_000_MN0PR12MB5953A0E2C79E6CE5B473AA94B7BA2MN0PR12MB5953namp_"
+From: "Pandey, Radhey Shyam" <radhey.shyam.pandey@amd.com>
+To: "Joseph, Abin" <Abin.Joseph@amd.com>, "vkoul@kernel.org"
+	<vkoul@kernel.org>, "Simek, Michal" <michal.simek@amd.com>, "robh@kernel.org"
+	<robh@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "u.kleine-koenig@pengutronix.de"
+	<u.kleine-koenig@pengutronix.de>, "Katakam, Harini" <harini.katakam@amd.com>
+CC: "git (AMD-Xilinx)" <git@amd.com>, "Joseph, Abin" <Abin.Joseph@amd.com>,
+	"dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 2/2] dmaengine: zynqmp_dma: Add support for AMD Versal
+ Gen 2 DMA IP
+Thread-Topic: [PATCH v2 2/2] dmaengine: zynqmp_dma: Add support for AMD Versal
+ Gen 2 DMA IP
+Thread-Index: AQHa6XniS27yBABMvUCRe8enndedBbIe4x0w
+Date: Fri, 9 Aug 2024 12:55:20 +0000
+Message-ID:
+ <MN0PR12MB5953A0E2C79E6CE5B473AA94B7BA2@MN0PR12MB5953.namprd12.prod.outlook.com>
+References: <20240808100024.317497-1-abin.joseph@amd.com>
+ <20240808100024.317497-3-abin.joseph@amd.com>
+In-Reply-To: <20240808100024.317497-3-abin.joseph@amd.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+ <MN0PR12MB5953A0E2C79E6CE5B473AA94B7BA2@MN0PR12MB5953.namprd12.prod.outlook.com>
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MN0PR12MB5953:EE_|CY8PR12MB7562:EE_
+x-ms-office365-filtering-correlation-id: 4f739706-ea32-4b5a-384d-08dcb87286cf
+x-ld-processed: 3dd8961f-e488-4e60-8e11-a82d994e183d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|366016|1800799024|921020|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?dj1ok15YEkXl/J7kZC9cJ04CJ6CcnPsl3bp38YjzuzmRKw3DfBqbeYXD2xJK?=
+ =?us-ascii?Q?06cnSIvqIWzzri5q2J1eDU3h3U58ziwGLpozs4APRqlAVdS8P8vsCDIIc8Af?=
+ =?us-ascii?Q?/kRFwUopumGmXBrLgM/PMjGxc2yupTNiBYycbuV56XvKuvwHGIlmRNubFJ2R?=
+ =?us-ascii?Q?Wn1r3qxBoiVYlp3Fv/a6k+UsjJ+9+uZGvMr1Xm/J/MuEUtU1ZT3xa05yhwo6?=
+ =?us-ascii?Q?FpdnYgSb5fJEhaJJP7M9Kjt7jcjMJ4CKXwvN61T4nJyb9ic3w/pbeM0qZsIF?=
+ =?us-ascii?Q?KTAPUbC15gG3haS2iiLTZAbE1pvIt3nZa1NeqN3P4IK/hcVy216Bjb2LAe5I?=
+ =?us-ascii?Q?u0DBv07jtydad6HhNJe/Fha81LFYuqnaB5BHsogdPnbprbYjKV2HbEQP2xP3?=
+ =?us-ascii?Q?agUvNRe+nBWfn/xshDqWDPwm+oWWtVVJg2BuvgC2Xfifr6iYdXD998f1PxGn?=
+ =?us-ascii?Q?Vao5t0D9xTdI0+BVfxrG7DDEixchpRhb4hVEXNtnYguzeFs3QGYGvbTje782?=
+ =?us-ascii?Q?EZvSSRetk+4Yz1gsON+2preyJEDj4J0szziXG5EeJxXaUKQdg3HqXH2n6RqY?=
+ =?us-ascii?Q?W+C+eju3nNbG+IRQZvSbht0VD3/YXPCw+OrzFeC983TY9RRdAdsuqrVbZfaa?=
+ =?us-ascii?Q?/Ggtc4daHWR7A/Tk2gzwYWo9OhjbOV0AwbNQHFHPrIe4YsIZHzEN07OD7xfe?=
+ =?us-ascii?Q?cXc3WXLv5gi4TCivp2KanGjdN6CqrEnpjbbV+k2UxsYHFHQuqA4UZ5FFzC+t?=
+ =?us-ascii?Q?d7M9Hs9vuvNqOQ68IwLOn694rklZLddL6WEyWJgtnQz8lN0Mq96R9ghkaO/+?=
+ =?us-ascii?Q?SCm7+FUcqd7TgLQJEg9g+Hyul/O94N2s/SinigJ+k9u2l6r4VOPbIke1t1MG?=
+ =?us-ascii?Q?G3Bt+j7LPZ/KVOTbFk0KJSwWVeKfifz4mPiVfEBCVrh55rEjOQqa8yi+clIw?=
+ =?us-ascii?Q?fHK55lKZkMCGEcWHqtppFUW2IuZUnoh3WRMoQkR9wbM0c6Bvb6fARPGhmO9W?=
+ =?us-ascii?Q?KJ2i9coOgg6FMnSDr7bqYX+tPKxeb1cRaKIg2gG2vVidwv1gjvZdzSm7wkLp?=
+ =?us-ascii?Q?NUGu8IjZ+DwrqnOTdgTbqZYnG62+FdaMjk5wjb4soqc/XSRnTWXawdk3aCSU?=
+ =?us-ascii?Q?xnpq90DgRzWFBJ7mqCct5YKLVaUscNTz2uMmy/9pf44ug9HP/AktZ2/FFHWm?=
+ =?us-ascii?Q?F09PaBg4TqB5Vwz1c6fhfje/4d+AF0QEl6ce7vUyBlFiJ9aUaWve7Ky/qzg7?=
+ =?us-ascii?Q?HOjsYWAZ+C6KZSSpElnJpPWTOsaGXj7Hf1bkmZuNubtjPvqn6R5Lu2m+e++i?=
+ =?us-ascii?Q?MNRgkMUbiSqDnlIA6O0yEeiKRIgOfRMokS6qc/RTD/Rbkxvz4XDJyY53BfdI?=
+ =?us-ascii?Q?BTQC5o0GTyJUVASXobxbUEgiHQRMqhbfXtp2tJp21SlFoNV2XASv/GztC2uD?=
+ =?us-ascii?Q?exaFjYI+WCM=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB5953.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(921020)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?juqn5lDhrPfhlPRVdSXcPRKhDMdHVocCLFogx9V9VYfP6eFYDX2KwhXYe6bq?=
+ =?us-ascii?Q?RYnkGUShOUVO/AkTKI89DlFo5d9SNmMsTRS7WtwpPwoHumbOx3qKNW/cmI6M?=
+ =?us-ascii?Q?U4zV//oBio060B5EF+eiPe9kdnAqppj6gnfNEiK5hPMC1KBAavqIXrox4WnQ?=
+ =?us-ascii?Q?6R4GXXdRLeKOlCqF1BuvFmbRNOVxYEQDLQ+5nWYVqEK+aaeaTd/5SmqJvVcV?=
+ =?us-ascii?Q?sW608FJD4gfJivWkbHjhec49vd42xAXybYerbqrFk7fS1Y4HzmtxUqYiOiYA?=
+ =?us-ascii?Q?G2boPPdaOjJC2e1uGlgH/WiBD/5p4pIK1yzVhhaq9b1mcR5jj1VZ6GDnBu0b?=
+ =?us-ascii?Q?FBinedlHOAlaFD656GpW3poyAw4J9maSADg5F1UiJGu/6ShJr3d5fR79F2G2?=
+ =?us-ascii?Q?h6Fw7BvV6NN1NtgBbs87icl4z+ROqynoWrXjesiL2JOf7ghbnotfkp+0Aj90?=
+ =?us-ascii?Q?+8cMr0ngNs4T21apuuLcCjOPaGianhRegbWPdIPGx07n3pD0m7v1Ajyir4Pw?=
+ =?us-ascii?Q?2LOyCfqM0d9pGlgawIiFSdHL8WWSQL+GBO8wNh1sKq/231GxE5N96e9XAADt?=
+ =?us-ascii?Q?5I8AfGzU9rCnK72+wyboyOoNqJiMhA1Dxs25XW301n4kLZK0nlPOAB95kgoT?=
+ =?us-ascii?Q?UmJhJYLF0tJpi+Ocu8lvLKEVKAWxloFWhuTD0j4tV+U0jyPEvkePMsf+ZKue?=
+ =?us-ascii?Q?2v7Nj1fIpVanvtfVxdA2b1shcdOL6MaO03BOnZ6qPOQwd9NYd0hoZJfiRSkF?=
+ =?us-ascii?Q?7e/nPxsx/Yf79BI75mX8U/GrlgtKRWI2TU2BzV0Y9FgE3EWVkgWp0Uk2v8E7?=
+ =?us-ascii?Q?sAXGcy9ayOsBXZyCKth1q6/hCoPO7i5kfsHJYxYdW2ermGVhBOlH0sMt7Izh?=
+ =?us-ascii?Q?oKeAKDmxpbhfYumtKcHkGzv3GFpgTDRSYpsx29dtFgvPxnzMLHk6Gj5w6oO9?=
+ =?us-ascii?Q?z7uq3afxgSndfF9GhjH9XmSwTfYDbC4IAODx8nYjmPvI/bSJMP07/5Qfk5fw?=
+ =?us-ascii?Q?Y3Ico22wlL2+fXVoIS/yZTnfl9hAJBqvqlCn9UGnU6bW8MTjPlSn0RTdmSzS?=
+ =?us-ascii?Q?yfR7xg/S4+VnDz6BtvIxMFGv8MhwtEY1y4RW4Ix76QLZc5Y27wyWYRj/3EWm?=
+ =?us-ascii?Q?laSeP1HKYvP3iFCeof2pcosDDOvp5OtziMDHY69ZOxgyEuNwfMiSuTl2Qar7?=
+ =?us-ascii?Q?LfS/Tsy9SklCcX5uux3ACzlMA5zVq4ynp5sr3LtO7m5LUFePuD4YgG/hYUEz?=
+ =?us-ascii?Q?WHB/5CgiIx/QrYbeSfqFAmXC8T/6gz9ePedry0XnG/JvQTOcIlO4LIT0GKjH?=
+ =?us-ascii?Q?LY3T0epa31qXvy0WkTSRlTTOv4yCRb2WK4ouzIa2hn8oyxwCrg+iQvWRNt+S?=
+ =?us-ascii?Q?YVitIEpPmpEeZYuCVsL/9VVvw2/qS5KGWflWMHZdtF5n0+NQWrGr457bgIHf?=
+ =?us-ascii?Q?BOup09m8dCYYa+T4QpCKDqla4ojZTWuUdWItBRjIQOD5KJV+/RXm6OUwE5lM?=
+ =?us-ascii?Q?r2q94QoxznTt7NyN2OM9dchzfwZTYlJxF7d8pst0/84KvlKOyt154J3X+jd7?=
+ =?us-ascii?Q?F/A/pGRurbJHN3VvATo=3D?=
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240809-loongson1-dma-v12-2-d9469a4a6b85@gmail.com>
-References: <20240809-loongson1-dma-v12-0-d9469a4a6b85@gmail.com>
-In-Reply-To: <20240809-loongson1-dma-v12-0-d9469a4a6b85@gmail.com>
-To: Keguang Zhang <keguang.zhang@gmail.com>, Vinod Koul <vkoul@kernel.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-mips@vger.kernel.org, dmaengine@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Jiaxun Yang <jiaxun.yang@flygoat.com>
-X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1723199495; l=21910;
- i=keguang.zhang@gmail.com; s=20231129; h=from:subject:message-id;
- bh=C5vA9bWN8qr/Y7GiLi7Rv5vKqwczG+tAwslw6hS4HU8=;
- b=8qilKNA+GTbPO9Zzwp7n0GBW/VDoxkN9AyNyuhPz1a9AnK/JFyzSjFxKcIzu/TY4x9ud8Aub0
- 62MV1YSPe2dBx73/krA75W7aC9JqVxrzL+S9NUO+qhyEEUPVFgb8G/e
-X-Developer-Key: i=keguang.zhang@gmail.com; a=ed25519;
- pk=FMKGj/JgKll/MgClpNZ3frIIogsh5e5r8CeW2mr+WLs=
-X-Endpoint-Received: by B4 Relay for keguang.zhang@gmail.com/20231129 with
- auth_id=102
-X-Original-From: Keguang Zhang <keguang.zhang@gmail.com>
-Reply-To: keguang.zhang@gmail.com
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB5953.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4f739706-ea32-4b5a-384d-08dcb87286cf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Aug 2024 12:55:20.6645
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: hqjpAdHuiamSyh8i3+NsDZVXfLPmsFBa2iIklKckH//VEPCzs83Dh5D6fAlxVf+2
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7562
 
-From: Keguang Zhang <keguang.zhang@gmail.com>
+--_000_MN0PR12MB5953A0E2C79E6CE5B473AA94B7BA2MN0PR12MB5953namp_
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-Add APB DMA driver for Loongson-1 SoCs.
+> -----Original Message-----
+> From: Abin Joseph <abin.joseph@amd.com>
+> Sent: Thursday, August 8, 2024 3:30 PM
+> To: vkoul@kernel.org; Simek, Michal <michal.simek@amd.com>;
+> robh@kernel.org; conor+dt@kernel.org; krzk+dt@kernel.org; u.kleine-
+> koenig@pengutronix.de; Pandey, Radhey Shyam
+> <radhey.shyam.pandey@amd.com>; Katakam, Harini
+> <harini.katakam@amd.com>
+> Cc: git (AMD-Xilinx) <git@amd.com>; Joseph, Abin
+> <Abin.Joseph@amd.com>; dmaengine@vger.kernel.org;
+> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> kernel@vger.kernel.org
+> Subject: [PATCH v2 2/2] dmaengine: zynqmp_dma: Add support for AMD
+> Versal Gen 2 DMA IP
+>=20
+> ZynqMP DMA IP and AMD Versal Gen 2 DMA IP are similar but have different
+> interrupt register offset. Create a dedicated compatible string to
+> support Versal Gen 2 DMA IP with Irq register offset for interrupt
+> Enable/Disable/Status/Mask functionality.
+>=20
+> Signed-off-by: Abin Joseph <abin.joseph@amd.com>
 
-Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Signed-off-by: Keguang Zhang <keguang.zhang@gmail.com>
----
-Changes in v12:
-- Move the call to devm_request_irq() into ls1x_dma_alloc_chan_resources()
-  to use dma_chan_name() as a parameter.
-- Move the call to devm_free_irq() into ls1x_dma_free_chan_resources() accordingly.
-- Rename ls1x_dma_alloc_llis() to ls1x_dma_prep_lli().
-- Merge ls1x_dma_free_lli() into ls1x_dma_free_desc().
-- Add ls1x_dma_synchronize().
-- Fix the error handling of ls1x_dma_probe().
-- Some minor fixes and improvements.
-
-Changes in v11:
-- Use guard notation to acquire the spinlock.
-- Fix the build error of LS1X_DMA_LLI_ALIGNMENT.
-- Some minor fixes.
-
-Changes in v10:
-- Implement the hwdescs by link list to eliminate the limitation of the desc number.
-- Add the prefix 'LS1X_' for all registers and their bits.
-- Drop the macros: chan_readl() and chan_writel().
-- Use %pad for printing a dma_addr_t type.
-- Some minor fixes.
-
-Changes in v9:
-- Fix all the errors and warnings when building with W=1 and C=1
-
-Changes in v8:
-- None
-
-Changes in v7:
-- Change the comptible to 'loongson,ls1*-apbdma'
-- Update Kconfig and Makefile accordingly
-- Rename the file to loongson1-apb-dma.c to keep the consistency
-
-Changes in v6:
-- Implement .device_prep_dma_cyclic for Loongson1 audio driver,
-  as well as .device_pause and .device_resume.
-- Set the limitation LS1X_DMA_MAX_DESC and put all descriptors
-  into one page to save memory
-- Move dma_pool_zalloc() into ls1x_dma_alloc_desc()
-- Drop dma_slave_config structure
-- Use .remove_new instead of .remove
-- Use KBUILD_MODNAME for the driver name
-- Improve the debug information
-
-Changes in v5:
-- Add DT support
-- Use DT data instead of platform data
-- Use chan_id of struct dma_chan instead of own id
-- Use of_dma_xlate_by_chan_id() instead of ls1x_dma_filter()
-- Update the author information to my official name
-
-Changes in v4:
-- Use dma_slave_map to find the proper channel.
-- Explicitly call devm_request_irq() and tasklet_kill().
-- Fix namespace issue.
-- Some minor fixes and cleanups.
-
-Changes in v3:
-- Rename ls1x_dma_filter_fn to ls1x_dma_filter.
-
-Changes in v2:
-- Change the config from 'DMA_LOONGSON1' to 'LOONGSON1_DMA',
-- and rearrange it in alphabetical order in Kconfig and Makefile.
-- Fix comment style.
----
- drivers/dma/Kconfig             |   9 +
- drivers/dma/Makefile            |   1 +
- drivers/dma/loongson1-apb-dma.c | 660 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 670 insertions(+)
-
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index cc0a62c34861..4a1912744c45 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -369,6 +369,15 @@ config K3_DMA
- 	  Support the DMA engine for Hisilicon K3 platform
- 	  devices.
- 
-+config LOONGSON1_APB_DMA
-+	tristate "Loongson1 APB DMA support"
-+	depends on MACH_LOONGSON32 || COMPILE_TEST
-+	select DMA_ENGINE
-+	select DMA_VIRTUAL_CHANNELS
-+	help
-+	  This selects support for the APB DMA controller in Loongson1 SoCs,
-+	  which is required by Loongson1 NAND and audio support.
-+
- config LPC18XX_DMAMUX
- 	bool "NXP LPC18xx/43xx DMA MUX for PL080"
- 	depends on ARCH_LPC18XX || COMPILE_TEST
-diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
-index 374ea98faf43..c3180f4800a6 100644
---- a/drivers/dma/Makefile
-+++ b/drivers/dma/Makefile
-@@ -49,6 +49,7 @@ obj-$(CONFIG_INTEL_IDMA64) += idma64.o
- obj-$(CONFIG_INTEL_IOATDMA) += ioat/
- obj-y += idxd/
- obj-$(CONFIG_K3_DMA) += k3dma.o
-+obj-$(CONFIG_LOONGSON1_APB_DMA) += loongson1-apb-dma.o
- obj-$(CONFIG_LPC18XX_DMAMUX) += lpc18xx-dmamux.o
- obj-$(CONFIG_LS2X_APB_DMA) += ls2x-apb-dma.o
- obj-$(CONFIG_MILBEAUT_HDMAC) += milbeaut-hdmac.o
-diff --git a/drivers/dma/loongson1-apb-dma.c b/drivers/dma/loongson1-apb-dma.c
-new file mode 100644
-index 000000000000..ca43c67a8203
---- /dev/null
-+++ b/drivers/dma/loongson1-apb-dma.c
-@@ -0,0 +1,660 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Driver for Loongson-1 APB DMA Controller
-+ *
-+ * Copyright (C) 2015-2024 Keguang Zhang <keguang.zhang@gmail.com>
-+ */
-+
-+#include <linux/dmapool.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/iopoll.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_dma.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+
-+#include "dmaengine.h"
-+#include "virt-dma.h"
-+
-+/* Loongson-1 DMA Control Register */
-+#define LS1X_DMA_CTRL		0x0
-+
-+/* DMA Control Register Bits */
-+#define LS1X_DMA_STOP		BIT(4)
-+#define LS1X_DMA_START		BIT(3)
-+#define LS1X_DMA_ASK_VALID	BIT(2)
-+
-+/* DMA Next Field Bits */
-+#define LS1X_DMA_NEXT_VALID	BIT(0)
-+
-+/* DMA Command Field Bits */
-+#define LS1X_DMA_RAM2DEV	BIT(12)
-+#define LS1X_DMA_INT		BIT(1)
-+#define LS1X_DMA_INT_MASK	BIT(0)
-+
-+#define LS1X_DMA_LLI_ALIGNMENT	64
-+#define LS1X_DMA_LLI_ADDR_MASK	GENMASK(31, __ffs(LS1X_DMA_LLI_ALIGNMENT))
-+#define LS1X_DMA_MAX_CHANNELS	3
-+
-+enum ls1x_dmadesc_offsets {
-+	LS1X_DMADESC_NEXT = 0,
-+	LS1X_DMADESC_SADDR,
-+	LS1X_DMADESC_DADDR,
-+	LS1X_DMADESC_LENGTH,
-+	LS1X_DMADESC_STRIDE,
-+	LS1X_DMADESC_CYCLES,
-+	LS1X_DMADESC_CMD,
-+	LS1X_DMADESC_SIZE
-+};
-+
-+struct ls1x_dma_lli {
-+	unsigned int hw[LS1X_DMADESC_SIZE];
-+	dma_addr_t phys;
-+	struct list_head node;
-+} __aligned(LS1X_DMA_LLI_ALIGNMENT);
-+
-+struct ls1x_dma_desc {
-+	struct virt_dma_desc vd;
-+	struct list_head lli_list;
-+};
-+
-+struct ls1x_dma_chan {
-+	struct virt_dma_chan vc;
-+	struct dma_pool *lli_pool;
-+	phys_addr_t src_addr;
-+	phys_addr_t dst_addr;
-+	enum dma_slave_buswidth src_addr_width;
-+	enum dma_slave_buswidth dst_addr_width;
-+	unsigned int bus_width;
-+	void __iomem *reg_base;
-+	int irq;
-+	bool is_cyclic;
-+	struct ls1x_dma_lli *curr_lli;
-+};
-+
-+struct ls1x_dma {
-+	struct dma_device ddev;
-+	unsigned int nr_chans;
-+	struct ls1x_dma_chan chan[];
-+};
-+
-+static irqreturn_t ls1x_dma_irq_handler(int irq, void *data);
-+
-+#define to_ls1x_dma_chan(dchan)		\
-+	container_of(dchan, struct ls1x_dma_chan, vc.chan)
-+
-+#define to_ls1x_dma_desc(d)		\
-+	container_of(d, struct ls1x_dma_desc, vd)
-+
-+static inline struct device *chan2dev(struct dma_chan *chan)
-+{
-+	return &chan->dev->device;
-+}
-+
-+static inline int ls1x_dma_query(struct ls1x_dma_chan *chan,
-+				 dma_addr_t *lli_phys)
-+{
-+	struct dma_chan *dchan = &chan->vc.chan;
-+	int val, ret;
-+
-+	val = *lli_phys & LS1X_DMA_LLI_ADDR_MASK;
-+	val |= LS1X_DMA_ASK_VALID;
-+	val |= dchan->chan_id;
-+	writel(val, chan->reg_base + LS1X_DMA_CTRL);
-+	ret = readl_poll_timeout_atomic(chan->reg_base + LS1X_DMA_CTRL, val,
-+					!(val & LS1X_DMA_ASK_VALID), 0, 3000);
-+	if (ret)
-+		dev_err(chan2dev(dchan), "failed to query DMA\n");
-+
-+	return ret;
-+}
-+
-+static inline int ls1x_dma_start(struct ls1x_dma_chan *chan,
-+				 dma_addr_t *lli_phys)
-+{
-+	struct dma_chan *dchan = &chan->vc.chan;
-+	struct device *dev = chan2dev(dchan);
-+	int val, ret;
-+
-+	val = *lli_phys & LS1X_DMA_LLI_ADDR_MASK;
-+	val |= LS1X_DMA_START;
-+	val |= dchan->chan_id;
-+	writel(val, chan->reg_base + LS1X_DMA_CTRL);
-+	ret = readl_poll_timeout(chan->reg_base + LS1X_DMA_CTRL, val,
-+				 !(val & LS1X_DMA_START), 0, 1000);
-+	if (!ret)
-+		dev_dbg(dev, "start DMA with lli_phys=%pad\n", lli_phys);
-+	else
-+		dev_err(dev, "failed to start DMA\n");
-+
-+	return ret;
-+}
-+
-+static inline void ls1x_dma_stop(struct ls1x_dma_chan *chan)
-+{
-+	int val = readl(chan->reg_base + LS1X_DMA_CTRL);
-+
-+	writel(val | LS1X_DMA_STOP, chan->reg_base + LS1X_DMA_CTRL);
-+}
-+
-+static void ls1x_dma_free_chan_resources(struct dma_chan *dchan)
-+{
-+	struct ls1x_dma_chan *chan = to_ls1x_dma_chan(dchan);
-+	struct device *dev = chan2dev(dchan);
-+
-+	dma_free_coherent(dev, sizeof(struct ls1x_dma_lli),
-+			  chan->curr_lli, chan->curr_lli->phys);
-+	dma_pool_destroy(chan->lli_pool);
-+	chan->lli_pool = NULL;
-+	devm_free_irq(dev, chan->irq, chan);
-+	vchan_free_chan_resources(&chan->vc);
-+}
-+
-+static int ls1x_dma_alloc_chan_resources(struct dma_chan *dchan)
-+{
-+	struct ls1x_dma_chan *chan = to_ls1x_dma_chan(dchan);
-+	struct device *dev = chan2dev(dchan);
-+	dma_addr_t phys;
-+	int ret;
-+
-+	ret = devm_request_irq(dev, chan->irq, ls1x_dma_irq_handler,
-+			       IRQF_SHARED, dma_chan_name(dchan), chan);
-+	if (ret) {
-+		dev_err(dev, "failed to request IRQ %d\n", chan->irq);
-+		return ret;
-+	}
-+
-+	chan->lli_pool = dma_pool_create(dma_chan_name(dchan), dev,
-+					 sizeof(struct ls1x_dma_lli),
-+					 __alignof__(struct ls1x_dma_lli), 0);
-+	if (!chan->lli_pool)
-+		return -ENOMEM;
-+
-+	/* allocate memory for querying the current lli */
-+	dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
-+	chan->curr_lli = dma_alloc_coherent(dev, sizeof(struct ls1x_dma_lli),
-+					    &phys, GFP_KERNEL);
-+	if (!chan->curr_lli) {
-+		dma_pool_destroy(chan->lli_pool);
-+		return -ENOMEM;
-+	}
-+	chan->curr_lli->phys = phys;
-+
-+	return 0;
-+}
-+
-+static void ls1x_dma_free_desc(struct virt_dma_desc *vd)
-+{
-+	struct ls1x_dma_desc *desc = to_ls1x_dma_desc(vd);
-+	struct ls1x_dma_chan *chan = to_ls1x_dma_chan(vd->tx.chan);
-+	struct ls1x_dma_lli *lli, *_lli;
-+
-+	list_for_each_entry_safe(lli, _lli, &desc->lli_list, node) {
-+		list_del(&lli->node);
-+		dma_pool_free(chan->lli_pool, lli, lli->phys);
-+	}
-+
-+	kfree(desc);
-+}
-+
-+static struct ls1x_dma_desc *ls1x_dma_alloc_desc(void)
-+{
-+	struct ls1x_dma_desc *desc;
-+
-+	desc = kzalloc(sizeof(*desc), GFP_NOWAIT);
-+	if (!desc)
-+		return NULL;
-+
-+	INIT_LIST_HEAD(&desc->lli_list);
-+
-+	return desc;
-+}
-+
-+static int ls1x_dma_prep_lli(struct dma_chan *dchan, struct ls1x_dma_desc *desc,
-+			     struct scatterlist *sgl, unsigned int sg_len,
-+			     enum dma_transfer_direction dir, bool is_cyclic)
-+{
-+	struct ls1x_dma_chan *chan = to_ls1x_dma_chan(dchan);
-+	struct ls1x_dma_lli *lli, *prev = NULL, *first = NULL;
-+	struct device *dev = chan2dev(dchan);
-+	struct list_head *pos = NULL;
-+	struct scatterlist *sg;
-+	unsigned int dev_addr, cmd, i;
-+
-+	switch (dir) {
-+	case DMA_MEM_TO_DEV:
-+		dev_addr = chan->dst_addr;
-+		chan->bus_width = chan->dst_addr_width;
-+		cmd = LS1X_DMA_RAM2DEV | LS1X_DMA_INT;
-+		break;
-+	case DMA_DEV_TO_MEM:
-+		dev_addr = chan->src_addr;
-+		chan->bus_width = chan->src_addr_width;
-+		cmd = LS1X_DMA_INT;
-+		break;
-+	default:
-+		dev_err(dev, "unsupported DMA direction: %s\n",
-+			dmaengine_get_direction_text(dir));
-+		return -EINVAL;
-+	}
-+
-+	for_each_sg(sgl, sg, sg_len, i) {
-+		dma_addr_t buf_addr = sg_dma_address(sg);
-+		size_t buf_len = sg_dma_len(sg);
-+		dma_addr_t phys;
-+
-+		if (!is_dma_copy_aligned(dchan->device, buf_addr, 0, buf_len)) {
-+			dev_err(dev, "buffer is not aligned\n");
-+			return -EINVAL;
-+		}
-+
-+		/* allocate HW descriptors */
-+		lli = dma_pool_zalloc(chan->lli_pool, GFP_NOWAIT, &phys);
-+		if (!lli) {
-+			dev_err(dev, "failed to alloc lli %u\n", i);
-+			return -ENOMEM;
-+		}
-+
-+		/* setup HW descriptors */
-+		lli->phys = phys;
-+		lli->hw[LS1X_DMADESC_SADDR] = buf_addr;
-+		lli->hw[LS1X_DMADESC_DADDR] = dev_addr;
-+		lli->hw[LS1X_DMADESC_LENGTH] = buf_len / chan->bus_width;
-+		lli->hw[LS1X_DMADESC_STRIDE] = 0;
-+		lli->hw[LS1X_DMADESC_CYCLES] = 1;
-+		lli->hw[LS1X_DMADESC_CMD] = cmd;
-+
-+		if (prev)
-+			prev->hw[LS1X_DMADESC_NEXT] =
-+			    lli->phys | LS1X_DMA_NEXT_VALID;
-+		prev = lli;
-+
-+		if (!first)
-+			first = lli;
-+
-+		list_add_tail(&lli->node, &desc->lli_list);
-+	}
-+
-+	if (is_cyclic) {
-+		lli->hw[LS1X_DMADESC_NEXT] = first->phys | LS1X_DMA_NEXT_VALID;
-+		chan->is_cyclic = is_cyclic;
-+	}
-+
-+	list_for_each(pos, &desc->lli_list) {
-+		lli = list_entry(pos, struct ls1x_dma_lli, node);
-+		print_hex_dump_debug("LLI: ", DUMP_PREFIX_OFFSET, 16, 4,
-+				     lli, sizeof(*lli), false);
-+	}
-+
-+	return 0;
-+}
-+
-+static struct dma_async_tx_descriptor *
-+ls1x_dma_prep_slave_sg(struct dma_chan *dchan, struct scatterlist *sgl,
-+		       unsigned int sg_len, enum dma_transfer_direction dir,
-+		       unsigned long flags, void *context)
-+{
-+	struct ls1x_dma_desc *desc;
-+
-+	dev_dbg(chan2dev(dchan), "sg_len=%u flags=0x%lx dir=%s\n",
-+		sg_len, flags, dmaengine_get_direction_text(dir));
-+
-+	desc = ls1x_dma_alloc_desc();
-+	if (!desc)
-+		return NULL;
-+
-+	if (ls1x_dma_prep_lli(dchan, desc, sgl, sg_len, dir, false)) {
-+		ls1x_dma_free_desc(&desc->vd);
-+		return NULL;
-+	}
-+
-+	return vchan_tx_prep(to_virt_chan(dchan), &desc->vd, flags);
-+}
-+
-+static struct dma_async_tx_descriptor *
-+ls1x_dma_prep_dma_cyclic(struct dma_chan *dchan, dma_addr_t buf_addr,
-+			 size_t buf_len, size_t period_len,
-+			 enum dma_transfer_direction dir, unsigned long flags)
-+{
-+	struct ls1x_dma_desc *desc;
-+	struct scatterlist *sgl;
-+	unsigned int sg_len;
-+	unsigned int i;
-+	int ret;
-+
-+	dev_dbg(chan2dev(dchan),
-+		"buf_len=%zu period_len=%zu flags=0x%lx dir=%s\n",
-+		buf_len, period_len, flags, dmaengine_get_direction_text(dir));
-+
-+	desc = ls1x_dma_alloc_desc();
-+	if (!desc)
-+		return NULL;
-+
-+	/* allocate the scatterlist */
-+	sg_len = buf_len / period_len;
-+	sgl = kmalloc_array(sg_len, sizeof(*sgl), GFP_NOWAIT);
-+	if (!sgl)
-+		return NULL;
-+
-+	sg_init_table(sgl, sg_len);
-+	for (i = 0; i < sg_len; ++i) {
-+		sg_set_page(&sgl[i], pfn_to_page(PFN_DOWN(buf_addr)),
-+			    period_len, offset_in_page(buf_addr));
-+		sg_dma_address(&sgl[i]) = buf_addr;
-+		sg_dma_len(&sgl[i]) = period_len;
-+		buf_addr += period_len;
-+	}
-+
-+	ret = ls1x_dma_prep_lli(dchan, desc, sgl, sg_len, dir, true);
-+	kfree(sgl);
-+	if (ret) {
-+		ls1x_dma_free_desc(&desc->vd);
-+		return NULL;
-+	}
-+
-+	return vchan_tx_prep(to_virt_chan(dchan), &desc->vd, flags);
-+}
-+
-+static int ls1x_dma_slave_config(struct dma_chan *dchan,
-+				 struct dma_slave_config *config)
-+{
-+	struct ls1x_dma_chan *chan = to_ls1x_dma_chan(dchan);
-+
-+	chan->src_addr = config->src_addr;
-+	chan->src_addr_width = config->src_addr_width;
-+	chan->dst_addr = config->dst_addr;
-+	chan->dst_addr_width = config->dst_addr_width;
-+
-+	return 0;
-+}
-+
-+static int ls1x_dma_pause(struct dma_chan *dchan)
-+{
-+	struct ls1x_dma_chan *chan = to_ls1x_dma_chan(dchan);
-+	int ret;
-+
-+	guard(spinlock_irqsave)(&chan->vc.lock);
-+	/* save the current lli */
-+	ret = ls1x_dma_query(chan, &chan->curr_lli->phys);
-+	if (!ret)
-+		ls1x_dma_stop(chan);
-+
-+	return ret;
-+}
-+
-+static int ls1x_dma_resume(struct dma_chan *dchan)
-+{
-+	struct ls1x_dma_chan *chan = to_ls1x_dma_chan(dchan);
-+
-+	guard(spinlock_irqsave)(&chan->vc.lock);
-+
-+	return ls1x_dma_start(chan, &chan->curr_lli->phys);
-+}
-+
-+static int ls1x_dma_terminate_all(struct dma_chan *dchan)
-+{
-+	struct ls1x_dma_chan *chan = to_ls1x_dma_chan(dchan);
-+	struct virt_dma_desc *vd;
-+	LIST_HEAD(head);
-+
-+	ls1x_dma_stop(chan);
-+
-+	scoped_guard(spinlock_irqsave, &chan->vc.lock) {
-+		vd = vchan_next_desc(&chan->vc);
-+		if (vd)
-+			vchan_terminate_vdesc(vd);
-+
-+		vchan_get_all_descriptors(&chan->vc, &head);
-+	}
-+
-+	vchan_dma_desc_free_list(&chan->vc, &head);
-+
-+	return 0;
-+}
-+
-+static void ls1x_dma_synchronize(struct dma_chan *dchan)
-+{
-+	vchan_synchronize(to_virt_chan(dchan));
-+}
-+
-+static enum dma_status ls1x_dma_tx_status(struct dma_chan *dchan,
-+					  dma_cookie_t cookie,
-+					  struct dma_tx_state *state)
-+{
-+	struct ls1x_dma_chan *chan = to_ls1x_dma_chan(dchan);
-+	struct virt_dma_desc *vd;
-+	enum dma_status status;
-+	size_t bytes = 0;
-+
-+	status = dma_cookie_status(dchan, cookie, state);
-+	if (status == DMA_COMPLETE)
-+		return status;
-+
-+	scoped_guard(spinlock_irqsave, &chan->vc.lock) {
-+		vd = vchan_find_desc(&chan->vc, cookie);
-+		if (vd) {
-+			struct ls1x_dma_desc *desc = to_ls1x_dma_desc(vd);
-+			struct ls1x_dma_lli *lli;
-+			dma_addr_t next_phys;
-+
-+			/* get the current lli */
-+			if (ls1x_dma_query(chan, &chan->curr_lli->phys))
-+				return status;
-+
-+			/* locate the current lli */
-+			next_phys = chan->curr_lli->hw[LS1X_DMADESC_NEXT];
-+			list_for_each_entry(lli, &desc->lli_list, node)
-+				if (lli->hw[LS1X_DMADESC_NEXT] == next_phys)
-+					break;
-+
-+			dev_dbg(chan2dev(dchan), "current lli_phys=%pad",
-+				&lli->phys);
-+
-+			/* count the residues */
-+			list_for_each_entry_from(lli, &desc->lli_list, node)
-+				bytes += lli->hw[LS1X_DMADESC_LENGTH] *
-+					 chan->bus_width;
-+		}
-+	}
-+
-+	dma_set_residue(state, bytes);
-+
-+	return status;
-+}
-+
-+static void ls1x_dma_issue_pending(struct dma_chan *dchan)
-+{
-+	struct ls1x_dma_chan *chan = to_ls1x_dma_chan(dchan);
-+
-+	guard(spinlock_irqsave)(&chan->vc.lock);
-+
-+	if (vchan_issue_pending(&chan->vc)) {
-+		struct virt_dma_desc *vd = vchan_next_desc(&chan->vc);
-+
-+		if (vd) {
-+			struct ls1x_dma_desc *desc = to_ls1x_dma_desc(vd);
-+			struct ls1x_dma_lli *lli;
-+
-+			lli = list_first_entry(&desc->lli_list,
-+					       struct ls1x_dma_lli, node);
-+			ls1x_dma_start(chan, &lli->phys);
-+		}
-+	}
-+}
-+
-+static irqreturn_t ls1x_dma_irq_handler(int irq, void *data)
-+{
-+	struct ls1x_dma_chan *chan = data;
-+	struct dma_chan *dchan = &chan->vc.chan;
-+	struct device *dev = chan2dev(dchan);
-+	struct virt_dma_desc *vd;
-+
-+	scoped_guard(spinlock, &chan->vc.lock) {
-+		vd = vchan_next_desc(&chan->vc);
-+		if (!vd) {
-+			dev_warn(dev,
-+				 "IRQ %d with no active desc on channel %d\n",
-+				 irq, dchan->chan_id);
-+			return IRQ_NONE;
-+		}
-+
-+		if (chan->is_cyclic) {
-+			vchan_cyclic_callback(vd);
-+		} else {
-+			list_del(&vd->node);
-+			vchan_cookie_complete(vd);
-+		}
-+	}
-+
-+	dev_dbg(dev, "DMA IRQ %d on channel %d\n", irq, dchan->chan_id);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int ls1x_dma_chan_probe(struct platform_device *pdev,
-+			       struct ls1x_dma *dma)
-+{
-+	void __iomem *reg_base;
-+	int id;
-+
-+	reg_base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(reg_base))
-+		return PTR_ERR(reg_base);
-+
-+	for (id = 0; id < dma->nr_chans; id++) {
-+		struct ls1x_dma_chan *chan = &dma->chan[id];
-+		char pdev_irqname[4];
-+
-+		sprintf(pdev_irqname, "ch%d", id);
-+		chan->irq = platform_get_irq_byname(pdev, pdev_irqname);
-+		if (chan->irq < 0)
-+			return dev_err_probe(&pdev->dev, chan->irq,
-+					     "failed to get IRQ for ch%d\n",
-+					     id);
-+
-+		chan->reg_base = reg_base;
-+		chan->vc.desc_free = ls1x_dma_free_desc;
-+		vchan_init(&chan->vc, &dma->ddev);
-+	}
-+
-+	return 0;
-+}
-+
-+static void ls1x_dma_chan_remove(struct ls1x_dma *dma)
-+{
-+	int id;
-+
-+	for (id = 0; id < dma->nr_chans; id++) {
-+		struct ls1x_dma_chan *chan = &dma->chan[id];
-+
-+		if (chan->vc.chan.device == &dma->ddev) {
-+			list_del(&chan->vc.chan.device_node);
-+			tasklet_kill(&chan->vc.task);
-+		}
-+	}
-+}
-+
-+static int ls1x_dma_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct dma_device *ddev;
-+	struct ls1x_dma *dma;
-+	int ret;
-+
-+	ret = platform_irq_count(pdev);
-+	if (ret <= 0 || ret > LS1X_DMA_MAX_CHANNELS)
-+		return dev_err_probe(dev, -EINVAL,
-+				     "Invalid number of IRQ channels: %d\n",
-+				     ret);
-+
-+	dma = devm_kzalloc(dev, struct_size(dma, chan, ret), GFP_KERNEL);
-+	if (!dma)
-+		return -ENOMEM;
-+	dma->nr_chans = ret;
-+
-+	/* initialize DMA device */
-+	ddev = &dma->ddev;
-+	ddev->dev = dev;
-+	ddev->copy_align = DMAENGINE_ALIGN_4_BYTES;
-+	ddev->src_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
-+				BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
-+				BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
-+	ddev->dst_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
-+				BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
-+				BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
-+	ddev->directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
-+	ddev->residue_granularity = DMA_RESIDUE_GRANULARITY_SEGMENT;
-+	ddev->device_alloc_chan_resources = ls1x_dma_alloc_chan_resources;
-+	ddev->device_free_chan_resources = ls1x_dma_free_chan_resources;
-+	ddev->device_prep_slave_sg = ls1x_dma_prep_slave_sg;
-+	ddev->device_prep_dma_cyclic = ls1x_dma_prep_dma_cyclic;
-+	ddev->device_config = ls1x_dma_slave_config;
-+	ddev->device_pause = ls1x_dma_pause;
-+	ddev->device_resume = ls1x_dma_resume;
-+	ddev->device_terminate_all = ls1x_dma_terminate_all;
-+	ddev->device_synchronize = ls1x_dma_synchronize;
-+	ddev->device_tx_status = ls1x_dma_tx_status;
-+	ddev->device_issue_pending = ls1x_dma_issue_pending;
-+	dma_cap_set(DMA_SLAVE, ddev->cap_mask);
-+	INIT_LIST_HEAD(&ddev->channels);
-+
-+	/* initialize DMA channels */
-+	ret = ls1x_dma_chan_probe(pdev, dma);
-+	if (ret)
-+		goto err;
-+
-+	ret = dmaenginem_async_device_register(ddev);
-+	if (ret) {
-+		dev_err(dev, "failed to register DMA device\n");
-+		goto err;
-+	}
-+
-+	ret = of_dma_controller_register(dev->of_node, of_dma_xlate_by_chan_id,
-+					 ddev);
-+	if (ret) {
-+		dev_err(dev, "failed to register DMA controller\n");
-+		goto err;
-+	}
-+
-+	platform_set_drvdata(pdev, dma);
-+	dev_info(dev, "Loongson1 DMA driver registered\n");
-+
-+	return 0;
-+
-+err:
-+	ls1x_dma_chan_remove(dma);
-+
-+	return ret;
-+}
-+
-+static void ls1x_dma_remove(struct platform_device *pdev)
-+{
-+	struct ls1x_dma *dma = platform_get_drvdata(pdev);
-+
-+	of_dma_controller_free(pdev->dev.of_node);
-+	ls1x_dma_chan_remove(dma);
-+}
-+
-+static const struct of_device_id ls1x_dma_match[] = {
-+	{ .compatible = "loongson,ls1b-apbdma" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, ls1x_dma_match);
-+
-+static struct platform_driver ls1x_dma_driver = {
-+	.probe = ls1x_dma_probe,
-+	.remove = ls1x_dma_remove,
-+	.driver = {
-+		.name = KBUILD_MODNAME,
-+		.of_match_table = ls1x_dma_match,
-+	},
-+};
-+
-+module_platform_driver(ls1x_dma_driver);
-+
-+MODULE_AUTHOR("Keguang Zhang <keguang.zhang@gmail.com>");
-+MODULE_DESCRIPTION("Loongson-1 APB DMA Controller driver");
-+MODULE_LICENSE("GPL");
-
--- 
-2.43.0
+Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+Thanks!
+> ---
+>=20
+> Changes in v2:
+> - Update the logic to use of_device_get_match_data
+> instead of of_device_is_compatible.
+> - Use lower case hexa decimal value for macros.
+>=20
+> ---
+>  drivers/dma/xilinx/zynqmp_dma.c | 27 +++++++++++++++++++++++----
+>  1 file changed, 23 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/dma/xilinx/zynqmp_dma.c
+> b/drivers/dma/xilinx/zynqmp_dma.c
+> index f31631bef961..9ae46f1198fe 100644
+> --- a/drivers/dma/xilinx/zynqmp_dma.c
+> +++ b/drivers/dma/xilinx/zynqmp_dma.c
+> @@ -22,10 +22,10 @@
+>  #include "../dmaengine.h"
+>=20
+>  /* Register Offsets */
+> -#define ZYNQMP_DMA_ISR			0x100
+> -#define ZYNQMP_DMA_IMR			0x104
+> -#define ZYNQMP_DMA_IER			0x108
+> -#define ZYNQMP_DMA_IDS			0x10C
+> +#define ZYNQMP_DMA_ISR			(chan->irq_offset + 0x100)
+> +#define ZYNQMP_DMA_IMR			(chan->irq_offset + 0x104)
+> +#define ZYNQMP_DMA_IER			(chan->irq_offset + 0x108)
+> +#define ZYNQMP_DMA_IDS			(chan->irq_offset + 0x10c)
+>  #define ZYNQMP_DMA_CTRL0		0x110
+>  #define ZYNQMP_DMA_CTRL1		0x114
+>  #define ZYNQMP_DMA_DATA_ATTR		0x120
+> @@ -145,6 +145,9 @@
+>  #define tx_to_desc(tx)		container_of(tx, struct
+> zynqmp_dma_desc_sw, \
+>  					     async_tx)
+>=20
+> +/* IRQ Register offset for Versal Gen 2 */
+> +#define IRQ_REG_OFFSET			0x308
+> +
+>  /**
+>   * struct zynqmp_dma_desc_ll - Hw linked list descriptor
+>   * @addr: Buffer address
+> @@ -211,6 +214,7 @@ struct zynqmp_dma_desc_sw {
+>   * @bus_width: Bus width
+>   * @src_burst_len: Source burst length
+>   * @dst_burst_len: Dest burst length
+> + * @irq_offset: Irq register offset
+>   */
+>  struct zynqmp_dma_chan {
+>  	struct zynqmp_dma_device *zdev;
+> @@ -235,6 +239,7 @@ struct zynqmp_dma_chan {
+>  	u32 bus_width;
+>  	u32 src_burst_len;
+>  	u32 dst_burst_len;
+> +	u32 irq_offset;
+>  };
+>=20
+>  /**
+> @@ -253,6 +258,14 @@ struct zynqmp_dma_device {
+>  	struct clk *clk_apb;
+>  };
+>=20
+> +struct zynqmp_dma_config {
+> +	u32 offset;
+> +};
+> +
+> +static const struct zynqmp_dma_config versal2_dma_config =3D {
+> +	.offset =3D IRQ_REG_OFFSET,
+> +};
+> +
+>  static inline void zynqmp_dma_writeq(struct zynqmp_dma_chan *chan, u32
+> reg,
+>  				     u64 value)
+>  {
+> @@ -892,6 +905,7 @@ static int zynqmp_dma_chan_probe(struct
+> zynqmp_dma_device *zdev,
+>  {
+>  	struct zynqmp_dma_chan *chan;
+>  	struct device_node *node =3D pdev->dev.of_node;
+> +	const struct zynqmp_dma_config *match_data;
+>  	int err;
+>=20
+>  	chan =3D devm_kzalloc(zdev->dev, sizeof(*chan), GFP_KERNEL);
+> @@ -919,6 +933,10 @@ static int zynqmp_dma_chan_probe(struct
+> zynqmp_dma_device *zdev,
+>  		return -EINVAL;
+>  	}
+>=20
+> +	match_data =3D of_device_get_match_data(&pdev->dev);
+> +	if (match_data)
+> +		chan->irq_offset =3D match_data->offset;
+> +
+>  	chan->is_dmacoherent =3D  of_property_read_bool(node, "dma-
+> coherent");
+>  	zdev->chan =3D chan;
+>  	tasklet_setup(&chan->tasklet, zynqmp_dma_do_tasklet);
+> @@ -1161,6 +1179,7 @@ static void zynqmp_dma_remove(struct
+> platform_device *pdev)
+>  }
+>=20
+>  static const struct of_device_id zynqmp_dma_of_match[] =3D {
+> +	{ .compatible =3D "amd,versal2-dma-1.0", .data =3D &versal2_dma_config
+> },
+>  	{ .compatible =3D "xlnx,zynqmp-dma-1.0", },
+>  	{}
+>  };
+> --
+> 2.34.1
 
 
+--_000_MN0PR12MB5953A0E2C79E6CE5B473AA94B7BA2MN0PR12MB5953namp_
+Content-Disposition: attachment; filename="winmail.dat"
+Content-Transfer-Encoding: base64
+Content-Type: application/ms-tnef; name="winmail.dat"
+
+eJ8+IicoAQaQCAAEAAAAAAABAAEAAQeQBgAIAAAA5AQAAAAAAADoAAEJgAEAIQAAADI1NjNGOUNB
+MUUwQTIxNDk4OUNGNzBFN0MwRDI3RkQyAEMHAQ2ABAACAAAAAgACAAEFgAMADgAAAOgHCAAJAAwA
+NwAUAAUAXAEBIIADAA4AAADoBwgACQAMADcAFAAFAFwBAQiABwAYAAAASVBNLk1pY3Jvc29mdCBN
+YWlsLk5vdGUAMQgBBIABAFIAAABSRTogW1BBVENIIHYyIDIvMl0gZG1hZW5naW5lOiB6eW5xbXBf
+ZG1hOiBBZGQgc3VwcG9ydCBmb3IgQU1EIFZlcnNhbCBHZW4gMiBETUEgSVAAsxkBA5AGAERBAABq
+AAAAAgF/AAEAAABRAAAAPE1OMFBSMTJNQjU5NTNBMEUyQzc5RTZDRTVCNDczQUE5NEI3QkEyQE1O
+MFBSMTJNQjU5NTMubmFtcHJkMTIucHJvZC5vdXRsb29rLmNvbT4AAAAACwAfDgAAAAACAQkQAQAA
+AHkJAAB1CQAA0BUAAExaRnUoAV8ZYQAKZmJpZAQAAGNjwHBnMTI1MgD+A0PwdGV4dAH3AqQD4wIA
+BGNoCsBzZXQwIO8HbQKDAFARTTIKgAa0AoCWfQqACMg7CWIxOQ7AvwnDFnIKMhZxAoAVYioJsHMJ
+8ASQYXQFsg5QA2Bzom8BgCBFeBHBbhgwXQZSdgSQF7YCEHIAwHR9CFBuGjEQIAXABaAbZGSaIANS
+IBAiF7JcdgiQ5HdrC4BkNR1TBPAHQA0XcDAKcRfyYmttawZzAZAAICBCTV9C4EVHSU59CvwB8Qvw
+oDIgPiAtIcJPBRCeZwuAB0AF0AeQc2EYMGkhw1xsC4BlCoAhoEaxA2E6IEENwAOgShkQYGVwaCA8
+AaALgC6CaiSzQGFtZC4FoDxtPiNnBmACMCQwVGhBCHBzZGF5LCRAdWRndR9gIDgn0AHQMiA0IDM6
+MxIwUE1JI2dUbyQwdmsIYGxEQGsEkWVsLgWwZ/Y7BgAHcWsn0BjREdADIPQ8bSvDLgCQK2El1xYg
+eyN2A2BiJcAqihvhBbArhGR0KntrcnprL474dS5rHnAjgSNYKjAJ8NkiMEBwCfAoEHQDYAMA7Hgu
+AQArIFAAcAEAJ8EwUmFkaDSQBgBoeXsl4CNnPBhwNPIskDVSLicKsDRyLPggSxiAYWv7JeAn0EgK
+wAuAAKA1pxHRjzjRMdA4JCXfIENjJDADIkAFQChBTUQtWPMDEAuAeCklADvhN2kkpG8n0SRhNZgk
+Ui4kpDdpZKcAwDNhI4FAdhgwcjHQ7yqYI2cBAB1gYxIQCdFBPyIgI3F1eC0KwG0tzSqEQCNwH2Bz
+LguAA1D9NOBlNOBEOjJYRURBTSZoGHViagWQJyFbUEEYVENIKhAhgDIvMgZdQJgkMHp5bnFtLHBf
+QKEkMWQcYHN1fHBwCREccAWxPDEjZ1Y3BJAi0AMgRwnwKIAgRGBNQSBJUCNnI2da6UwRTVBPRSA0
+YU2yTn+/UXMJcEzwB3ADEArBYjOQ3iAR0BowQJAGkGYEkCcB9yNnC4AboXJNEAVACXAiQN8fYBux
+GTAD0BIQLjuQCXD7GIAZ4GFCwQ3gHlAcQiYheQqwdGkCYFORM6ALgGd9HMBvI2dNBlI/UYED8HTx
+JPBJcnFWfk1zVecjZ2ZFImBZMS9EBABfY1MFAZB0KCAvTWFza+kccHVuSiBpAiAHQDvwlzaAT78r
+MWcYUGQtVxF4LWJ5JD8lTyZWI2VS/0LhB9BjMWOiNNo0RTYfNyvvI2UnUABwH1AhI2cjOjsYLxmj
+BCBkAUrQOmuYIFV+cCegV9FccBngCQAiQGO/WdExsBIAVwFMYELjXxgw/HRfGxERwExgOCFVWVbB
+7zTgVwFweQQAX1jIYchu4X9wUQkAZyAbwWCwGeA1AHjtWAJjB3AicXYHQApQTXP/AMEZAWHPbAxA
+kAUQGjFggGlAoS94PIMvTAgmECDifCiANyArfI984yMrvCAxHHADEBngGZRkKHEOM3KCG4FhQXMo
+KymfJ9AowAEAHnCAVC0peE9/VLMhsTvietB6P3tMI2diL4O/hM9VdwEAeBxwMzEKNolQYgEQOTYx
+LmQuOUDANDYAQBZwOMdU8H7AHqA2NDR42oOfP4dPI2d84YY/jS8jZ0BA+yGwIXAsHpB8cJHkkaB5
+mJojC4BjCkABACAiigBjj5JA1C5oIoHfehAvNioH8FaWT1cjBCAqLx142CMBASOBUMBZTlGFURBf
+T1FfSVNSDIRxmbQgMHgekZefmKtNXZmPMItJm1+ZQUWcrzCmOJ3fmKtEU5/fQ444j6GfmU88EBmS
+LT5pXLD+X111juCaY4HIpK+cX6bP/afXNKh/nt+qn6uvoMGs7++h/68PsB8ekGOByJNgsh/gX0NU
+UkwBQJnpHpB/td+27gBQuAqLSLlvpbFE/0qApcBKgLewmdoMAZEqu7DYNSw2fHC/4jmSrLyF3QzQ
+XxiQcKEE8CgM0IHA75nmG+EBkCOBcqeBwpEn0L1ZcXVKICNnTAjCQ18D4P0n0FzGoHmnovqZ18ij
+YLAvTBDGQMKilR8rljFJUn5RllhdeVsbl3mx98rxXwJSIABfT0ZGU0XuVKL9KQCg6CuVmhgQeae3
+l2DEZcVfbAMgbuBIB+D/I3EqgBxgRaJCwQT0BbDR+8s6gEzQcmPAQnVU4lGgP9cBIrGRHIqAwBLZ
+ADQs/3xgkaHSz8YGAzAAANYrVDD3c/AD8C+QaNcyBCDc49YcfHNyxkBUMBHwcUAecG79Y8BTCGFD
+EFQh3yFEgDNh7d3OZN8x3wlEB5AFQOAv/46D1rK0qGPAXK8SENH6l4j/2f/F8BmS25uaE+gPcKWX
+YG56QtEtiJGjM8ADf9A559mv6L/pynUzIYDcpy2I//Bo3svxn/DR4cstiNEQ8IY7tKjzqn0tiNEv
+kVg1M/3ZMzUoYLuw7g/rWu+/+7ULk6Bg0Cr+wV9hcGL/95/Jzvu/dAFGECIw25r2WP/3PtEQAEnR
+GAGBWQFv8BvhXygxAZ8Cpo9SHmAyAmo9vQMfICrgXYQKgM6MLATv39DOBvUg4CNyKhBv3PDaauZ3
+1bAboHEoB8/vVP8A/xmhJ9DwwS2YlnANOMdfyKQ+dYsgdyS1ydupkaI4OfOR8MAhOTDAAO31D3UR
+//RfcC4hZRGVxN/rfRR6//1fEb8SyPOuH+VwtS9Qk9H+KiODCoBvEELgtIBC0Qux7yNz9b4HbwJM
+KnFo864aIj9WEQBfH2YSwwqAQtFtX/xremFwdbDCgOwiJJPEUThpemXEARMTgMFHRoWlgEufsE5F
+TCnsbPY5ipAY4zP6wJKDGa8av/8bzxzfHe7INkNAYGBD8HlQwEVJTlZBTCkOADA/Ko/2RXFoCnFw
+j3GVKCb/JFcvifZUgwC0IHFosVnC2P+0XgqAcWi0gAR/Kx+0Y3Pwf3vRanBpIFUSCnE7cjMxcCmA
+MXlfV6Fk3vBvb+xsKCOCxoAie9F+KEWW/iIvif30LUQsBSFvmjHIMO9gwIExxlA3QXA9AEDkTKX/
+xoDaesIwTKUvjYqAieDAEzwxN+3XBxMQPhRAbW/zj1AzjnBsYFDMMSyg66b/JFIXGjkvDygma3NJ
+EGs7gdlxY1tdCn844nsLoHQY1VthImoxLAlVLUgiifBUMCLGgC47FSYJX2edVth9Nf1cn5PweGx7
+MP4se2ReeWFv25JWyAArfhngMi4zNC664Fbk1hUMfX3WYGnwAAAAHwBCAAEAAAAqAAAAUABhAG4A
+ZABlAHkALAAgAFIAYQBkAGgAZQB5ACAAUwBoAHkAYQBtAAAAAAAfAGUAAQAAADgAAAByAGEAZABo
+AGUAeQAuAHMAaAB5AGEAbQAuAHAAYQBuAGQAZQB5AEAAYQBtAGQALgBjAG8AbQAAAB8AZAABAAAA
+CgAAAFMATQBUAFAAAAAAAAIBQQABAAAAhAAAAAAAAACBKx+kvqMQGZ1uAN0BD1QCAAAAgFAAYQBu
+AGQAZQB5ACwAIABSAGEAZABoAGUAeQAgAFMAaAB5AGEAbQAAAFMATQBUAFAAAAByAGEAZABoAGUA
+eQAuAHMAaAB5AGEAbQAuAHAAYQBuAGQAZQB5AEAAYQBtAGQALgBjAG8AbQAAAB8AAl0BAAAAOAAA
+AHIAYQBkAGgAZQB5AC4AcwBoAHkAYQBtAC4AcABhAG4AZABlAHkAQABhAG0AZAAuAGMAbwBtAAAA
+HwDlXwEAAABAAAAAcwBpAHAAOgByAGEAZABoAGUAeQAuAHMAaAB5AGEAbQAuAHAAYQBuAGQAZQB5
+AEAAYQBtAGQALgBjAG8AbQAAAAIBLgwBAAAAEAAAAPhsypJ0RUdLo6JCog4YOCEfABoMAQAAACoA
+AABQAGEAbgBkAGUAeQAsACAAUgBhAGQAaABlAHkAIABTAGgAeQBhAG0AAAAAAB8AHwwBAAAAOAAA
+AHIAYQBkAGgAZQB5AC4AcwBoAHkAYQBtAC4AcABhAG4AZABlAHkAQABhAG0AZAAuAGMAbwBtAAAA
+HwAeDAEAAAAKAAAAUwBNAFQAUAAAAAAAAgEZDAEAAACEAAAAAAAAAIErH6S+oxAZnW4A3QEPVAIA
+AACAUABhAG4AZABlAHkALAAgAFIAYQBkAGgAZQB5ACAAUwBoAHkAYQBtAAAAUwBNAFQAUAAAAHIA
+YQBkAGgAZQB5AC4AcwBoAHkAYQBtAC4AcABhAG4AZABlAHkAQABhAG0AZAAuAGMAbwBtAAAAHwAB
+XQEAAAA4AAAAcgBhAGQAaABlAHkALgBzAGgAeQBhAG0ALgBwAGEAbgBkAGUAeQBAAGEAbQBkAC4A
+YwBvAG0AAAACAS0MAQAAABAAAAD4bMqSdEVHS6OiQqIOGDghCwBAOgEAAAAfABoAAQAAABIAAABJ
+AFAATQAuAE4AbwB0AGUAAAAAAAMA8T8JBAAACwBAOgEAAAADAP0/5AQAAAIBCzABAAAAEAAAACVj
++coeCiFJic9w58DSf9IDABcAAQAAAEAAOQAALOljW+raAUAACDDRq0tkW+raAQsAKQAAAAAAHwDZ
+PwEAAAAAAgAAPgAgAC0ALQAtAC0ALQBPAHIAaQBnAGkAbgBhAGwAIABNAGUAcwBzAGEAZwBlAC0A
+LQAtAC0ALQANAAoAPgAgAEYAcgBvAG0AOgAgAEEAYgBpAG4AIABKAG8AcwBlAHAAaAAgADwAYQBi
+AGkAbgAuAGoAbwBzAGUAcABoAEAAYQBtAGQALgBjAG8AbQA+AA0ACgA+ACAAUwBlAG4AdAA6ACAA
+VABoAHUAcgBzAGQAYQB5ACwAIABBAHUAZwB1AHMAdAAgADgALAAgADIAMAAyADQAIAAzADoAMwAw
+ACAAUABNAA0ACgA+ACAAVABvADoAIAB2AGsAbwB1AGwAQABrAGUAcgBuAGUAbAAuAG8AcgBnADsA
+IABTAGkAbQBlAGsALAAgAE0AaQBjAGgAYQBsACAAPABtAGkAYwBoAGEAbAAuAHMAaQBtAGUAawBA
+AGEAbQBkAC4AYwBvAG0APgA7AA0ACgA+ACAAcgBvAGIAaABAAGsAZQByAG4AZQBsAC4AbwByAGcA
+OwAgAGMAbwBuAG8AcgArAGQAdABAAGsAZQByAG4AZQBsAC4AbwByAGcAOwAgAGsAcgB6AGsAKwBk
+AHQAQABrAGUAcgBuAGUAbAAuAG8AcgBnADsAIAB1AC4AawBsAGUAaQBuAGUALQANAAoAPgAgAGsA
+bwBlAG4AAAALAACACCAGAAAAAADAAAAAAAAARgAAAAAUhQAAAAAAAAsAIwAAAAAAHwAAgIYDAgAA
+AAAAwAAAAAAAAEYBAAAAHgAAAGEAYwBjAGUAcAB0AGwAYQBuAGcAdQBhAGcAZQAAAAAAAQAAAAwA
+AABlAG4ALQBVAFMAAAADAACACCAGAAAAAADAAAAAAAAARgEAAAAyAAAARQB4AGMAaABhAG4AZwBl
+AEEAcABwAGwAaQBjAGEAdABpAG8AbgBGAGwAYQBnAHMAAAAAACAAAABIAACACCAGAAAAAADAAAAA
+AAAARgEAAAAiAAAATgBlAHQAdwBvAHIAawBNAGUAcwBzAGEAZwBlAEkAZAAAAAAABpdzTzLqWks4
+TQjcuHKGzx8AAIATj/JB9IMUQaWE7ttaawv/AQAAABYAAABDAGwAaQBlAG4AdABJAG4AZgBvAAAA
+AAABAAAAKgAAAEMAbABpAGUAbgB0AD0ATQBTAEUAeABjAGgAYQBuAGcAZQBSAFAAQwAAAAAAHwD6
+PwEAAAAqAAAAUABhAG4AZABlAHkALAAgAFIAYQBkAGgAZQB5ACAAUwBoAHkAYQBtAAAAAAALAACA
+CCAGAAAAAADAAAAAAAAARgAAAAAGhQAAAAAAAB8ANwABAAAApAAAAFIARQA6ACAAWwBQAEEAVABD
+AEgAIAB2ADIAIAAyAC8AMgBdACAAZABtAGEAZQBuAGcAaQBuAGUAOgAgAHoAeQBuAHEAbQBwAF8A
+ZABtAGEAOgAgAEEAZABkACAAcwB1AHAAcABvAHIAdAAgAGYAbwByACAAQQBNAEQAIABWAGUAcgBz
+AGEAbAAgAEcAZQBuACAAMgAgAEQATQBBACAASQBQAAAAHwA9AAEAAAAKAAAAUgBFADoAIAAAAAAA
+AwA2AAAAAAADAC4AAAAAAB8AQhABAAAAXAAAADwAMgAwADIANAAwADgAMAA4ADEAMAAwADAAMgA0
+AC4AMwAxADcANAA5ADcALQAzAC0AYQBiAGkAbgAuAGoAbwBzAGUAcABoAEAAYQBtAGQALgBjAG8A
+bQA+AAAAAgFxAAEAAAAbAAAAAQHa6XniS27yBABMvUCRe8enndedBbIe4x0wAB8AcAABAAAAnAAA
+AFsAUABBAFQAQwBIACAAdgAyACAAMgAvADIAXQAgAGQAbQBhAGUAbgBnAGkAbgBlADoAIAB6AHkA
+bgBxAG0AcABfAGQAbQBhADoAIABBAGQAZAAgAHMAdQBwAHAAbwByAHQAIABmAG8AcgAgAEEATQBE
+ACAAVgBlAHIAcwBhAGwAIABHAGUAbgAgADIAIABEAE0AQQAgAEkAUAAAAB8ANRABAAAAogAAADwA
+TQBOADAAUABSADEAMgBNAEIANQA5ADUAMwBBADAARQAyAEMANwA5AEUANgBDAEUANQBCADQANwAz
+AEEAQQA5ADQAQgA3AEIAQQAyAEAATQBOADAAUABSADEAMgBNAEIANQA5ADUAMwAuAG4AYQBtAHAA
+cgBkADEAMgAuAHAAcgBvAGQALgBvAHUAdABsAG8AbwBrAC4AYwBvAG0APgAAAAAAHwA5EAEAAAC4
+AAAAPAAyADAAMgA0ADAAOAAwADgAMQAwADAAMAAyADQALgAzADEANwA0ADkANwAtADEALQBhAGIA
+aQBuAC4AagBvAHMAZQBwAGgAQABhAG0AZAAuAGMAbwBtAD4AIAA8ADIAMAAyADQAMAA4ADAAOAAx
+ADAAMAAwADIANAAuADMAMQA3ADQAOQA3AC0AMwAtAGEAYgBpAG4ALgBqAG8AcwBlAHAAaABAAGEA
+bQBkAC4AYwBvAG0APgAAAAMA3j+fTgAACwAAgAggBgAAAAAAwAAAAAAAAEYAAAAAA4UAAAAAAAAD
+AACACCAGAAAAAADAAAAAAAAARgAAAAABhQAAAAAAAAMAgBD/////AwATEgAAAAACAQCAE4/yQfSD
+FEGlhO7bWmsL/wEAAAAuAAAASABlAGEAZABlAHIAQgBvAGQAeQBGAHIAYQBnAG0AZQBuAHQATABp
+AHMAdAAAAAAAAQAAADYAAAABAAoAAAAEAAAAAQAAABQAAAAAAAAAAAAAAAAAAAAAAAAAFAAAAAAA
+AAD5AAAA/////wAAAAAAAAsAAIATj/JB9IMUQaWE7ttaawv/AQAAABwAAABIAGEAcwBRAHUAbwB0
+AGUAZABUAGUAeAB0AAAAAQAAAAsAAIATj/JB9IMUQaWE7ttaawv/AQAAACgAAABJAHMAUQB1AG8A
+dABlAGQAVABlAHgAdABDAGgAYQBuAGcAZQBkAAAAAQAAAAIBAIATj/JB9IMUQaWE7ttaawv/AQAA
+AEAAAABDAG8AbgB2AGUAcgBzAGEAdABpAG8AbgBUAHIAZQBlAFAAYQByAGUAbgB0AFIAZQBjAG8A
+cgBkAEsAZQB5AAAAAQAAAC4AAAAAAAAAeW1/IJ8uCUq32TjvGGYlpgEA35mvI4bRCkCent0aQSJz
+pgACcJuktgAAAABAAAcwX3LiY1vq2gELAAIAAQAAAAMAJgAAAAAACwArAAAAAAALAAYMAAAAAAIB
+EDABAAAARgAAAAAAAAB5bX8gny4JSrfZOO8YZiWmBwDfma8jhtEKQJ6e3RpBInOmAAAAAAELAADf
+ma8jhtEKQJ6e3RpBInOmAAEhD7xUAAAAAAIBEzABAAAAEAAAAEtu8gQATL1AkXvHp53XnQUCARQw
+AQAAAAwAAAB8AQAAVENBoT4AAAADAFszAQAAAAMAWjYAAAAAAwBoNg0AAAALAPo2AQAAAB8A+D8B
+AAAAKgAAAFAAYQBuAGQAZQB5ACwAIABSAGEAZABoAGUAeQAgAFMAaAB5AGEAbQAAAAAAHwAiQAEA
+AAAGAAAARQBYAAAAAAAfACNAAQAAAAIBAAAvAE8APQBFAFgAQwBIAEEATgBHAEUATABBAEIAUwAv
+AE8AVQA9AEUAWABDAEgAQQBOAEcARQAgAEEARABNAEkATgBJAFMAVABSAEEAVABJAFYARQAgAEcA
+UgBPAFUAUAAgACgARgBZAEQASQBCAE8ASABGADIAMwBTAFAARABMAFQAKQAvAEMATgA9AFIARQBD
+AEkAUABJAEUATgBUAFMALwBDAE4APQA2ADEANgBEADEAMwAxADcAMgA3ADYAQgA0ADgAOABBADkA
+QgBFADAANAA5AEIAOQAyADkAMQAxADYARQBBADUALQBQAEEATgBEAEUAWQAsACAAUgBBAEQAAAAA
+AB8AJEABAAAABgAAAEUAWAAAAAAAHwAlQAEAAAACAQAALwBPAD0ARQBYAEMASABBAE4ARwBFAEwA
+QQBCAFMALwBPAFUAPQBFAFgAQwBIAEEATgBHAEUAIABBAEQATQBJAE4ASQBTAFQAUgBBAFQASQBW
+AEUAIABHAFIATwBVAFAAIAAoAEYAWQBEAEkAQgBPAEgARgAyADMAUwBQAEQATABUACkALwBDAE4A
+PQBSAEUAQwBJAFAASQBFAE4AVABTAC8AQwBOAD0ANgAxADYARAAxADMAMQA3ADIANwA2AEIANAA4
+ADgAQQA5AEIARQAwADQAOQBCADkAMgA5ADEAMQA2AEUAQQA1AC0AUABBAE4ARABFAFkALAAgAFIA
+QQBEAAAAAAAfADBAAQAAACoAAABQAGEAbgBkAGUAeQAsACAAUgBhAGQAaABlAHkAIABTAGgAeQBh
+AG0AAAAAAB8AMUABAAAAKgAAAFAAYQBuAGQAZQB5ACwAIABSAGEAZABoAGUAeQAgAFMAaAB5AGEA
+bQAAAAAAHwA4QAEAAAAqAAAAUABhAG4AZABlAHkALAAgAFIAYQBkAGgAZQB5ACAAUwBoAHkAYQBt
+AAAAAAAfADlAAQAAACoAAABQAGEAbgBkAGUAeQAsACAAUgBhAGQAaABlAHkAIABTAGgAeQBhAG0A
+AAAAAAMAWUAAAAAAAwBaQAAAAAADADdQAQAAAAMACVkBAAAAHwAKXQEAAAA4AAAAcgBhAGQAaABl
+AHkALgBzAGgAeQBhAG0ALgBwAGEAbgBkAGUAeQBAAGEAbQBkAC4AYwBvAG0AAAAfAAtdAQAAADgA
+AAByAGEAZABoAGUAeQAuAHMAaAB5AGEAbQAuAHAAYQBuAGQAZQB5AEAAYQBtAGQALgBjAG8AbQAA
+AAIBFV0BAAAAEgAAAAIfltg9iORgTo4RqC2ZThg9AQAAAgEWXQEAAAASAAAAAh+W2D2I5GBOjhGo
+LZlOGD0BAAADAACAUONjC8yc0BG82wCAX8zOBAEAAAAkAAAASQBuAGQAZQB4AGkAbgBnAEUAcgBy
+AG8AcgBDAG8AZABlAAAAGwAAAB8AAIBQ42MLzJzQEbzbAIBfzM4EAQAAACoAAABJAG4AZABlAHgA
+aQBuAGcARQByAHIAbwByAE0AZQBzAHMAYQBnAGUAAAAAAAEAAABwAAAASQBuAGQAZQB4AGkAbgBn
+ACAAUABlAG4AZABpAG4AZwAgAHcAaABpAGwAZQAgAEIAaQBnAEYAdQBuAG4AZQBsAFAATwBJAEkA
+cwBVAHAAVABvAEQAYQB0AGUAIABpAHMAIABmAGEAbABzAGUALgAAAAsAAIBQ42MLzJzQEbzbAIBf
+zM4EAQAAACYAAABJAHMAUABlAHIAbQBhAG4AZQBuAHQARgBhAGkAbAB1AHIAZQAAAAAAAAAAAB8A
+AIAfpOszqHouQr57eeGpjlSzAQAAADgAAABDAG8AbgB2AGUAcgBzAGEAdABpAG8AbgBJAG4AZABl
+AHgAVAByAGEAYwBrAGkAbgBnAEUAeAAAAAEAAADYAQAASQBJAD0AWwBDAEkARAA9ADAANABmADIA
+NgBlADQAYgAtADQAYwAwADAALQA0ADAAYgBkAC0AOQAxADcAYgAtAGMANwBhADcAOQBkAGQANwA5
+AGQAMAA1ADsASQBEAFgASABFAEEARAA9ADAAMQBEAEEARQA5ADcAOQBFADIAOwBJAEQAWABDAE8A
+VQBOAFQAPQAyAF0AOwBTAEIATQBJAEQAPQA1ADAAOwBTADEAPQA8ADIAMAAyADQAMAA4ADAAOAAx
+ADAAMAAwADIANAAuADMAMQA3ADQAOQA3AC0AMwAtAGEAYgBpAG4ALgBqAG8AcwBlAHAAaABAAGEA
+bQBkAC4AYwBvAG0APgA7AFIAVABQAD0ARABpAHIAZQBjAHQAQwBoAGkAbABkADsAVABGAFIAPQBU
+AGgAcgBlAGEAZABGAG8AcgBrAGkAbgBnAEkAcwBEAGkAcwBhAGIAbABlAGQAOwBWAGUAcgBzAGkA
+bwBuAD0AVgBlAHIAcwBpAG8AbgAgADEANQAuADIAMAAgACgAQgB1AGkAbABkACAANwA4ADIAOAAu
+ADAAKQAsACAAUwB0AGEAZwBlAD0ASAAxADsAVQBQAD0AMQAwADsARABQAD0AMQAAAAMAAIAIIAYA
+AAAAAMAAAAAAAABGAAAAABCFAAAAAAAAAgEAgAggBgAAAAAAwAAAAAAAAEYBAAAANgAAAEkAbgBU
+AHIAYQBuAHMAaQB0AE0AZQBzAHMAYQBnAGUAQwBvAHIAcgBlAGwAYQB0AG8AcgAAAAAAAQAAABAA
+AACBZ/KO1YvDToxiepPoBVHWCwAAgAggBgAAAAAAwAAAAAAAAEYAAAAAgoUAAAAAAAAfAACACCAG
+AAAAAADAAAAAAAAARgAAAADYhQAAAQAAABIAAABJAFAATQAuAE4AbwB0AGUAAAAAAAMAAIAIIAYA
+AAAAAMAAAAAAAABGAAAAABiFAAAAAAAACwAAgAggBgAAAAAAwAAAAAAAAEYAAAAADoUAAAAAAAAD
+AA00AAAAAB8AAICGAwIAAAAAAMAAAAAAAABGAQAAAC4AAABhAHUAdABoAGUAbgB0AGkAYwBhAHQA
+aQBvAG4ALQByAGUAcwB1AGwAdABzAAAAAAABAAAAsgAAAGQAawBpAG0APQBuAG8AbgBlACAAKABt
+AGUAcwBzAGEAZwBlACAAbgBvAHQAIABzAGkAZwBuAGUAZAApACAAaABlAGEAZABlAHIALgBkAD0A
+bgBvAG4AZQA7AGQAbQBhAHIAYwA9AG4AbwBuAGUAIABhAGMAdABpAG8AbgA9AG4AbwBuAGUAIABo
+AGUAYQBkAGUAcgAuAGYAcgBvAG0APQBhAG0AZAAuAGMAbwBtADsAAAAAAB8AAICGAwIAAAAAAMAA
+AAAAAABGAQAAACAAAAB4AC0AbQBzAC0AaABhAHMALQBhAHQAdABhAGMAaAAAAAEAAAACAAAAAAAA
+AB8AAICGAwIAAAAAAMAAAAAAAABGAQAAAC4AAAB4AC0AbQBzAC0AcAB1AGIAbABpAGMAdAByAGEA
+ZgBmAGkAYwB0AHkAcABlAAAAAAABAAAADAAAAEUAbQBhAGkAbAAAAB8AAICGAwIAAAAAAMAAAAAA
+AABGAQAAADYAAAB4AC0AbQBzAC0AdAByAGEAZgBmAGkAYwB0AHkAcABlAGQAaQBhAGcAbgBvAHMA
+dABpAGMAAAAAAAEAAABIAAAATQBOADAAUABSADEAMgBNAEIANQA5ADUAMwA6AEUARQBfAHwAQwBZ
+ADgAUABSADEAMgBNAEIANwA1ADYAMgA6AEUARQBfAAAAHwAAgIYDAgAAAAAAwAAAAAAAAEYBAAAA
+UAAAAHgALQBtAHMALQBvAGYAZgBpAGMAZQAzADYANQAtAGYAaQBsAHQAZQByAGkAbgBnAC0AYwBv
+AHIAcgBlAGwAYQB0AGkAbwBuAC0AaQBkAAAAAQAAAEoAAAA0AGYANwAzADkANwAwADYALQBlAGEA
+MwAyAC0ANABiADUAYQAtADMAOAA0AGQALQAwADgAZABjAGIAOAA3ADIAOAA2AGMAZgAAAAAAHwAA
+gIYDAgAAAAAAwAAAAAAAAEYBAAAAHgAAAHgALQBsAGQALQBwAHIAbwBjAGUAcwBzAGUAZAAAAAAA
+AQAAAFoAAAAzAGQAZAA4ADkANgAxAGYALQBlADQAOAA4AC0ANABlADYAMAAtADgAZQAxADEALQBh
+ADgAMgBkADkAOQA0AGUAMQA4ADMAZAAsAEUAeAB0AEEAZABkAHIAAAAAAB8AAICGAwIAAAAAAMAA
+AAAAAABGAQAAADgAAAB4AC0AbQBzAC0AZQB4AGMAaABhAG4AZwBlAC0AcwBlAG4AZABlAHIAYQBk
+AGMAaABlAGMAawAAAAEAAAAEAAAAMQAAAB8AAICGAwIAAAAAAMAAAAAAAABGAQAAADoAAAB4AC0A
+bQBzAC0AZQB4AGMAaABhAG4AZwBlAC0AYQBuAHQAaQBzAHAAYQBtAC0AcgBlAGwAYQB5AAAAAAAB
+AAAABAAAADAAAAAfAACAhgMCAAAAAADAAAAAAAAARgEAAAAqAAAAeAAtAG0AaQBjAHIAbwBzAG8A
+ZgB0AC0AYQBuAHQAaQBzAHAAYQBtAAAAAAABAAAAgAAAAEIAQwBMADoAMAA7AEEAUgBBADoAMQAz
+ADIAMwAwADAANAAwAHwAMwA3ADYAMAAxADQAfAAzADYANgAwADEANgB8ADEAOAAwADAANwA5ADkA
+MAAyADQAfAA5ADIAMQAwADIAMAB8ADMAOAAwADcAMAA3ADAAMAAwADEAOAA7AAAAHwAAgIYDAgAA
+AAAAwAAAAAAAAEYBAAAARAAAAHgALQBtAGkAYwByAG8AcwBvAGYAdAAtAGEAbgB0AGkAcwBwAGEA
+bQAtAG0AZQBzAHMAYQBnAGUALQBpAG4AZgBvAAAAAQAAAFoLAABkAGoAMQBvAGsAMQA1AFkARQBr
+AFgAbAAvAEoANwBrAFoAQwA5AGMASgAwADQAQwBKADYAQwBjAG4AUABzAGwAMwBiAHAAMwA4AFkA
+agB6AHUAegBtAFIASwB3ADMARABmAEIAcQBiAGUAWQBYAEQAMgB4AEoASwAwADYAYwBuAFMASQB2
+AHEASQBXAHoAegByAGkANQBxADIASgAxAGUARABVADMAaAAzAFUANQA4AHoAaQB3AEcATABwAG8A
+egBzADQAQQBQAFIAcQBsAEEAVgBkAFMAOABQADgAdgBzAEMARABJAEkAYwA4AEEAZgAvAGsAUgBG
+AHcAVQBvAHAAdQBtAEcAbQBYAEIAcgBMAGcATQAvAFAATQBqAEcAeABjADIAeQB1AHAAVABOAGkA
+QgBZAHkAYwBiAHUAVgA1ADYAWAB2AEsAdQB2AHcASABHAEkAbABtAFIATgB1AGIARgBKADIAUgBX
+AG4AMQByADMAcQB4AEIAbwBpAFYAWQBsAHAAMwBGAHYALwBhADYAawArAFUAcwBqAEoAKwA5ACsA
+dQBaAEcAdgBNAHIAMQBYAG0ALwBKAC8ATQB1AEUAVQB0AFUAMQBaAFQAMwB4AGEAMAA1AHkAaAB3
+AG8ANgBGAHAAZABuAFkAZwBTAGIANQBmAEoARQBoAGEASgBKAFAANwBNADkASwBqAHQANwBqAGMA
+agBNAEoANABDAEsAWAB3AHYATgA2ADEAVAA0AG4ASgB5AGIAOQBpAGMAMwB3AC8AcABiAGUATQAw
+AHEAWgBzAEkARgBLAFQAQQBQAFUAYgBDADEANQBnAEcAMwBoAGEAUwAyAGkAaQBMAFQAWgBBAGIA
+RQAxAHAAdgBJAHQAMwBuAFoAYQAxAE4AZQBxAE4AMwBQADQASQBLAC8AaABjAFYAeQAyADEANgBC
+AGoAYgAyAEwAQQBlADUASQB1ADAARABCAHYAMAA3AGoAdAB5AGQAYQBkADYASABoAE4ASgBlAC8A
+RgBoAGEAOAAxAEwARgBZAHUAcQBuAGEAQgA1AEIASABzAG8AZwBkAFAAbgBiAHAAcgBiAFkAagBL
+AFYAMgBIAGIARQBRAFAAMgB4AFAAMwBhAGcAVQB2AE4AUgBlACsAbgBCAFcAZgBuAC8AeABzAGgA
+RABxAFcARABQAHcAbQArAG8AVwBXAHQAVgBWAEoAZwAyAEIAdQB2AGcAQwAyAFgAZgBpAGYAcgA2
+AGkAWQBkAFgARAA5ADkAOABmADEAUAB4AEcAbgBWAGEAbwA1AHQAMABEADkAeABUAGQASQAwACsA
+QgBWAGYAeAByAEcANwBEAEQARQBpAHgAYwBoAHAAUgBoAGIANABoAFYARQBYAE4AdABuAFkAZwB1
+AHoAZQBGAHMAMwBRAEcAWQBHAHYAYgBUAGoAZQA3ADgAMgBFAFoAdgBTAFMAUgBlAHQAawArADQA
+WQB6ADEAZwBzAE8ATgArADIAcAByAGUAeQBKAEUARABqADQASgAwAHMAegB6AGkAWABHADUARQBl
+AEoAeABYAGEAVQBLAFEAZABnADMASABxAFgASAAyAG4ANgBSAHEAWQBXACsAQwArAGUAagB1ADMA
+bgBOAGIARwArAEkAUgBRAFoAdgBTAGIAaAB0ADAAVgBEADMALwBZAFgAUABDAHcAKwBPAHIAegBG
+AGUAQwA5ADgAMwBUAFkAOQBSAFIAZABBAGQAcwB1AHEAcgBWAGIAWgBmAGEAYQAvAEcAZwB0AGMA
+NABkAGEASABXAFIANwBBAC8AVABrADIAZwB6AHcAWQBXAG8AOQBPAGgAagBiAE8AVgAwAEEAdwBi
+AE4AUQBIAEYASABQAHIASQBlADQAWQBzAEkAWgBIAHoARQBOADAANwBPAEQANwB4AGYAZQBjAFgA
+YwAzAFcAWABMAHYANQBnAGkANABUAEMAaQB2AHAAMgBLAGEAbgBHAGoAZABOADYAQwBxAHIARQBu
+AHAAagBiAGIAVgArAGsAMgBVAHgAcwBZAEgARgBIAFEAdQBxAEEANABVAFoANQBGAEYAegBDACsA
+dABkADcATQA5AEgAcwA5AHYAdQB2AE4AcQBPAFEANgA4AEkAdwBMAE8AbgA2ADkANAByAGsAbABa
+AEwAZABkAEwANgBXAEUAeQBXAEoAZwB0AG4AUQB6ADgAbABOADAATQBxADkANgBSADkAZwBoAGsA
+YQBPAC8AKwBTAEMAbQA3ACsARgBVAGMAcQBkADcAVABnAEwAUQBKAEUAZwA5AGcAKwBIAHkAdQBs
+AC8ATwA5ADQATgAyAHMALwBTAGkAbgBpAGcASgArAGsAOQB1ADIAbAA2AHIANABWAE8AUABiAEkA
+awBlADEAdAAxAE0ARwBHADMAQgB0ACsAagA3AEwAUABaAC8ASwBWAE8AVABiAEYAawAwAEsASgBT
+AHcAVwBWAGUASwBmAGkAZgB6ADQAbQBQAGkAVgBmAEUAQgBDAFYAcgBoADUANQByAEUAagBPAFEA
+cQBhADgAeQBpACsAYwBsAEkAdwBmAEgASwA1ADUAbABLAFoAawBNAEMARwBFAGMAVwBIAHEAdABw
+AHAARgBVAFcAMgBJAHUAWgBVAG4AbwBoADMAVwBSAE0AbwBRAGsAUgA5AHcAYgBNADAAYwA2AEIA
+dgBiADYAZgBBAFIAUABHAGgAbQBPADkAVwBLAEoAMgBpADkAYwBvAE8AZwBnADYARgBNAG4AUwBE
+AHIANwBiAHEAWQBYACsAdABQAEsAeABlAGIAMQBjAFIAYQBLAEkAZwAyAGcARwAyAHYAVgBpAGQA
+dwB2ADEAZwBqAHYAWgBkAHoAUwBtADcAdwBrAEwAcABOAFUARwB1ADgASQBqAFoAKwBEAHcAcgBx
+AG4ATwBUAGQAZwBUAGIAcQBaAFkAbgBHADYAMgArAEYAZABhAE0AagBrADUAdwBqAGIANABzAG8A
+cQBjAC8AWABTAFIAbgBUAFcAWABhAHcAZABrADMAYQBDAFMAVQB4AG4AcABxADkAMABEAGcAUgB6
+AFcARgBCAEoANwBtAHEAQwBjAHQANQBZAEsATABWAGEAVQBzAGMATgBUAHoAMgB1AE0AbQB5AC8A
+OQBwAGYANAA0AHUAZwA5AEgAUAAvAEEAawB0AFoAMgAvAEYARgBIAFcAbQBGADAAOQBQAGEAQgBn
+ADQAVABxAEIANQBWAHcAegAxAGMANgBmAGgAZgBqAGUALwA0AGQAKwBBAEYAMABRAEUAbAA2AGMA
+ZQA3AHYAVQB5AEIAbABGAGkASgA5AGEAVQBhAFcAdgBlADcASwB5AC8AcQB6AGcANwBIAE8AagBz
+AFkAVwBBAFoAKwBDADYASwBaAFMAUwBwAEUAbABuAEoAcABQAFcAVABPAHMAYQBHAFgAagA3AEgA
+ZgAxAGIAawBtAFoAdQBOAHUAYgB0AGoAUAB2AHEAbgA2AFIANQBMAHUAMgBtACsAZQArACsAaQBN
+AE4AUgBnAGsATQBVAGIAaQBTAHEARABuAGwASQBBADYATwAwAHkARQBlAGkASwBSAEkAZwBPAGYA
+UgBNAG8AawBTADYAcQBjAC8AUgBUAEQALwBSAGIAawB4AHYAegA0AFgARABKAHkAWQA1ADMAQgBm
+AGQASQBCAFQAUQBDADUAbwAwAEcAVAB5AEoAVQBWAEEAUwBYAG8AYgB4AGIAVQBFAGcAaQBIAFEA
+UgBNAHEAaABiAGYAWAB0AHAAMgB0AEoAcAAyADEAUwBsAEYAbwBOAFYAMgBYAEEAUwB2AC8ARwB6
+AHQAQwAyAHUARABlAHgAYQBGAGoAWQBJACsAVwBDAE0APQAAAAAAHwAAgIYDAgAAAAAAwAAAAAAA
+AEYBAAAAOAAAAHgALQBmAG8AcgBlAGYAcgBvAG4AdAAtAGEAbgB0AGkAcwBwAGEAbQAtAHIAZQBw
+AG8AcgB0AAAAAQAAAJABAABDAEkAUAA6ADIANQA1AC4AMgA1ADUALgAyADUANQAuADIANQA1ADsA
+QwBUAFIAWQA6ADsATABBAE4ARwA6AGUAbgA7AFMAQwBMADoAMQA7AFMAUgBWADoAOwBJAFAAVgA6
+AE4ATABJADsAUwBGAFYAOgBOAFMAUABNADsASAA6AE0ATgAwAFAAUgAxADIATQBCADUAOQA1ADMA
+LgBuAGEAbQBwAHIAZAAxADIALgBwAHIAbwBkAC4AbwB1AHQAbABvAG8AawAuAGMAbwBtADsAUABU
+AFIAOgA7AEMAQQBUADoATgBPAE4ARQA7AFMARgBTADoAKAAxADMAMgAzADAAMAA0ADAAKQAoADMA
+NwA2ADAAMQA0ACkAKAAzADYANgAwADEANgApACgAMQA4ADAAMAA3ADkAOQAwADIANAApACgAOQAy
+ADEAMAAyADAAKQAoADMAOAAwADcAMAA3ADAAMAAwADEAOAApADsARABJAFIAOgBPAFUAVAA7AFMA
+RgBQADoAMQAxADAAMQA7AAAAHwAAgIYDAgAAAAAAwAAAAAAAAEYBAAAAXAAAAHgALQBtAHMALQBl
+AHgAYwBoAGEAbgBnAGUALQBhAG4AdABpAHMAcABhAG0ALQBtAGUAcwBzAGEAZwBlAGQAYQB0AGEA
+LQBjAGgAdQBuAGsAYwBvAHUAbgB0AAAAAQAAAAQAAAAxAAAAHwAAgIYDAgAAAAAAwAAAAAAAAEYB
+AAAASgAAAHgALQBtAHMALQBlAHgAYwBoAGEAbgBnAGUALQBhAG4AdABpAHMAcABhAG0ALQBtAGUA
+cwBzAGEAZwBlAGQAYQB0AGEALQAwAAAAAAABAAAAWgwAAGoAdQBxAG4ANQBsAEQAaAByAFAAZgBo
+AGwAUABSAFYAZABTAFgAYwBQAFIASwBoAEQATQBkAEgAVgBvAGMAQwBMAEYAbwBnAHgAOQBWADkA
+VgBZAGYAUAA2AGUARgBZAEQAWAAyAEsAdwBoAFgAWQBlADYAYgBxAFIAWQBuAGsARwBVAFMAaABP
+AFUAVgBPAC8AQQBrAFQASwBJADgAOQBEAGwARgBvADUAZAA5AFMATgBtAE0AcwBUAFIAUwA3AFcA
+dAB3AHAAUAB3AG8ASAB1AG0AYgBPAHgAMwBxAEsATgBXAC8AYwBtAEkANgBNAFUANAB6AFYALwAv
+AG8AQgBpAG8AMAA2ADAAQgA1AEUARgArAGUAaQBQAGUAOQBrAGQAbgBBAHEAcABwAGoANgBnAG4A
+ZgBOAEUAaQBLADUAaABQAE0AQwAxAEsAQgBBAGEAdgBxAEkAWAByAG8AeAA0AFcAbgBRADYAUgA0
+AEcAWABYAGQAUgBMAGUASwBPAGwAQwBxAEYAMQBCAHUAdgBGAG0AYgBSAE4ATwBWAHgAWQBFAFEA
+RABMAFEAKwA1AG4AVwBZAFYAcQBFAEsAKwBhAGEAZQBhAFQAZAAvADUAUwBtAHEASgB2AFYAYwBW
+AHMAVwA2ADAAOABGAEoARAA0AGcAZgBKAGkAdgBXAGsAYgBIAGoAaABlAGMANAA5AHYAZAA0ADIA
+eABBAFgAeQBiAFkAZQByAGIAcQByAEYAawA3AGYAUwAxAFkANABIAHoAbQB0AHgAVQBxAFkAaQBP
+AGkAWQBBAEcAMgBiAG8AUABQAGQAYQBPAGoASgBDADIAZQAxAHUARwBsAGcASAAvAFcAaQBCAEQA
+LwA1AHAANABwAEkASwAxAHkAegBWAGgAaABhAHEAOQBiADEAbQBjAFIANQBqAGoAMQBWAFoANgBH
+AEQAbgBCAHUAMABiAEYAQgBpAG4AZQBkAGwASABPAEEAbABhAEYARAA2ADUANgBHAHAAVwAzAHAA
+bwB5AEEAdwA0AEoAOQBtAGEAUwBBAEQAZwA1AEYAMQBVAGkASgBHAHUALwA2AFMAaABKAHIAMwBk
+ADUAZgBSADcAOQBGADIARwAyAGgANgBGAHcANwBCAHYAVgA2AE4ATgAxAE4AdABnAEIAYgBzADgA
+NwBpAGMAbAA0AHoAKwBSAE8AcQB5AG4AbwBXAHIAWABqAGUAcwBpAEwAMgBKAE8AZgA3AGcAaABi
+AG4AbwB0AGYAawBwACsAMABBAGoAOQAwACsAOABjAE0AcgAwAG4AZwBOAHMANABUADIAMQBhAHAA
+dQB1AEwAYwBDAGoATwBQAGEARwBpAGEAbgBoAFIAZQBnAGIAVwBQAGQASQBQAEcAeAAwADcAbgAz
+AHAARAAwAG0ANwB2ADEAQQBqAHkAaQByADQAUAB3ADIATABPAHkAQwBmAHEATQAwAGQAOQBwAEcA
+bABnAGEAdwBJAGkARgBTAGQASABMADgAVwBXAFMAUQBMACsARwBCAE8AOAB3AE4AaAAxAHMASwBx
+AC8AMgAzADEARwB4AEUANQBOADkANgBlADkAWABBAEEARAB0ADUASQA4AEEAZgBHAHoAVQA5AHIA
+QwBuAEsANwAyACsAdwB5AGIAbwB5AE8AbwBOAHEASgBpAE0AaABBADEARAB4AHMAMgA1AFgAVwAz
+ADAAMQBuADQAawBMAFoASwAwAG4AbABQAE8AQQBCADkANQBrAGcAbwBUAFUAbQBKAGgASgBZAEwA
+RgAwAHQASgBwAGkAKwBPAGMAdQA4AGwAdgBMAEsARQBWAEsAQQBXAHgAbABvAEYAVwBoAHUAVABE
+ADAAagA0AHQAVgArAFUAMABqAHkAUABFAHYAawBlAFAATQBzAGYAKwBaAEsAdQBlADIAdgA3AE4A
+agAxAGYASQBwAFYAYQBuAHYAdABmAFYAeABkAEEAMgBiADEAcwBoAGMAZABPAEwANgBNAGEATwAw
+ADMAQgBPAG4AWgA2AHEAUABPAFEAdwBkADkATgBZAGQAMABoAG8AWgBKAGYAaQBSAFMAawBGADcA
+ZQAvAG4AUAB4AHMAeAAvAFkAZgA3ADkAQgBJADcANQBtAFgAOABVAC8ARwByAGwAZwB0AEsAUgBX
+AEkAMgBUAFUAMgBCAHoAVgAwAFkAOQBGAGcARQAzAEUAVwBWAGsAZwBXAHAAMABVAGsAMgB2ADgA
+RQA3AHMAQQBYAEcAYwB5ADkAYQB5AE8AcwBCAFgAWgB5AEMASwB0AGgAMQBxADYALwBoAEMAbwBQ
+AE8ANwBpADUAawBmAHMASABKAFkAeABZAGQAVwAyAGUAcgBtAEcAVgBoAEIATwBsAEgAMABzAE0A
+dAA3AEkAegBoAG8ASwBlAEEASwBEAG0AeABwAGIAaABmAFkAdQBtAHQASwBjAEgAawBHAHoAdgAz
+AEcARgBwAGcAVABEAFIAUwBZAHAAcwB4ADIAOQBkAHQARgBnAHYAUAB4AG4AegBNAEwASABrADYA
+RwBqADUAdwA2AG8ATwA5AHoANwB1AHEAMwBhAGYAeABnAFMAbgBkAGYARgA5AEcAaABqAEgAOQBY
+AG0AUwB3AFQAZgBZAEQAYgBDADQASQBBAE8ARAB4ADgAbgBZAGoAbQBQAHYASQAvAGIAUwBKAE0A
+UAAwADcALwA1AFEAZgBrADUAZgB3AFkAMwBJAGMAbwAyADIAdwBsAEwAMgArAGYAWABWAG8ASQBT
+AC8AeQBaAFQAbgBmAGwAOQBoAEEASgBCAHEAdgBxAGwAQwBuADkAVQBHAG4AVQA2AGIAVwA4AE0A
+VABqAFAAbABTAG4AMABSAFQAZABtAFMAegBTAHkAZgBSADcAeABnAC8AUwA0ACsAVgBuAEQAegA2
+AEIAdAB2AEkAeABNAEYARwB2ADgATQBoAHcAdABFAFkAMQB5ADQAUgBXADQASQB4ADcANgBRAEwA
+WgBjADUAWQAyADcAdwB5AFcAWQBSAGoALwAzAEUAVwBtAGwAYQBTAGUAUAAxAEgASwBZAHYAUAAz
+AGkARgBDAGUAbwBmADIAcABjAG8AcwBEAEQATwB2AHAANQBPAHQAegBpAE0ARABIAFkANgA5AFoA
+TwB4AGcAeQBFAHUATgB3AGYATQBpAFMAdQBUAGwAMgBRAGEAcgA3AEwAZgBTAC8AVABzAHkAOQBT
+AGsAbABDAGMAWAA1AHUAdQB4ADMAQQBDAHoAbABNAEEANQB6AFYAcQA0AHkAbgBwADUAcwByADMA
+TAB0AE8ANwBtADUATABVAEYAZQBQAHUARAA0AFkAZwBHAC8AaABZAFUARQB6AFcASABCAC8ANQBD
+AGcAaQBJAHgALwBRAHIAWQBiAGUAUwBmAHEARgBBAG0AWABDADgAVAAvADYAZwB6ADkAZQBQAGUA
+ZAByAHkAMABYAG4ARwAvAEoAdgBRAFQATwBjAEkAbABPADQATABJAFQAMABHAEsAagBIAEwAWQAz
+AFQAMABlAHAAYQAzADEAcQBYAHYAeQAwAFcAawBUAFMAUgBsAFQAVABPAHYANAB5AEMAUgBiADIA
+VwBLADQAbwB1AHoASQBhADIAaABuADgAbwB5AHgAdwBDAHIAZwArAGkAUQB2AFcAUgBOAHQAKwBT
+AFkAVgBpAHQASQBFAHAAUABtAHAARQBlAFoAWQB1AEMAVgBzAEwALwA5AFYAVgB2AHcAMgAvAHEA
+UwA1AEsARwBXAGYAbABXAE0ASABaAGQAdABGADUAbgAwACsATgBRAFcAcgBHAHIANAA1ADcAYgBn
+AEkASABmAEIATwB1AHAAMAA5AG0AOABkAEMAWQBZAGEAKwBUADQAUQBwAEMASwBEAHEAbABhADQA
+bwBqAFoAVABXAHUAVQBkAFcASQB0AEIAUgBqAEkAUQBPAEQANQBLAEoAVgArAC8AUgBYAG0ANgBP
+AFUAdwBFADUAbABNAHIAMgBxADkANABRAG8AeAB6AG4AVAB0ADcATgB5AE4AMgBPAE0AOQBkAGMA
+aAB6AGYAdwBaAFQAWQBsAEoAeABGADcAZAA4AHAAcwB0ADAALwA4ADQASwB2AGwASwBPAHkAdAAx
+ADUANABKADMAWAArAGoAZAA3AEYALwBBAC8AcABHAFIAdQByAGIASgBIAE4AMwBWAHYAQQBUAG8A
+PQAAAAAATKM=
+
+--_000_MN0PR12MB5953A0E2C79E6CE5B473AA94B7BA2MN0PR12MB5953namp_--
 

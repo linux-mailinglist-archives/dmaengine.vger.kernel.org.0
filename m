@@ -1,115 +1,98 @@
-Return-Path: <dmaengine+bounces-2834-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2835-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0F0094DBEF
-	for <lists+dmaengine@lfdr.de>; Sat, 10 Aug 2024 11:22:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 898B394DC15
+	for <lists+dmaengine@lfdr.de>; Sat, 10 Aug 2024 11:48:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1F9D51C209CE
-	for <lists+dmaengine@lfdr.de>; Sat, 10 Aug 2024 09:22:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 37A03281CD5
+	for <lists+dmaengine@lfdr.de>; Sat, 10 Aug 2024 09:48:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DFFA14D715;
-	Sat, 10 Aug 2024 09:22:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uWc8zMTK"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3316F14AD3D;
+	Sat, 10 Aug 2024 09:48:16 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5257D4436E;
-	Sat, 10 Aug 2024 09:22:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E5D914A4F3;
+	Sat, 10 Aug 2024 09:48:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723281743; cv=none; b=SndlVpxMHD+BHtL5uleHQbHaLjU9Buym/rETiYZCZ2NLMID7kq3heMi3aktMC4kZQmIFIo2787D8dZecc1yCf4XACXdnMsPT7kB48BWfqnhJZ55R13Vo9dPB6tgG8hABE6WB2NCFKJmBSUqXC+APeHiSutqdFH1Ld5Hv8PxrTcQ=
+	t=1723283296; cv=none; b=FPPkNctYWMD+2Gfl8CbmZKwEK3I8Wn2FzAnaoT0HCrAVAB/WNl9M6O7zimkg5Fj4ZglEgdfCSPH8IRs7fADmxmQqe5f3v9xPegi46g8GEDazt/gWeW2BPat6uyVIOPgERPNBrpHvk65JgqDEM5IIxpQUN8LGYUPaiRS45gzdi+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723281743; c=relaxed/simple;
-	bh=Wggb/KQ1jKzObVCEvDWxIY7sWLOyIi04ajTFUixFNFk=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=o7iMdn1jizzViI3+N1xfX5fl9nSgViiXCkhW0YivsOmGNfTzdwvZv8WwvXH4LTM5BvJv5plOJRmCqdw76clJdzO5s7nOsWOvHagepWol2rhkSIjgc3xJaiPJxhO+NBS14ZNRSTuD15JaRkZT+/N1q0IEU/wYghkTUcYPQB9aHnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uWc8zMTK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F99FC32781;
-	Sat, 10 Aug 2024 09:22:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723281742;
-	bh=Wggb/KQ1jKzObVCEvDWxIY7sWLOyIi04ajTFUixFNFk=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=uWc8zMTK3+JFSfRE4Upg+8OwemqhRtOApSPiIGfMsxKKNajedEje03C/BxPMpMlek
-	 fUdIesxdzg2OD0Y7oJFKxYGIU/FJcf6QsoApcw3eiqSzUVjk8QlAXDi4GBoaqTgZaK
-	 nR8IY6MskxFW1JH44tJQ1W5Pd6VMFGiXpMGCxu2b0EVssNkWnjYuxbhdZC62ke7qOa
-	 pMAQGMBVDNXpu0Y9B1NNIFUFMK2L0ncp1ZJTO+i0hiNIBd8R7NIH3n7d7BzNzvjxec
-	 mfh1b/XaO2VBiRH76hPIbA5QtspnIk1CtBz+Eqd8eI7UkmxGgwXqGXl2D2KylBKu1+
-	 CAanTqeZMfr1A==
-Date: Sat, 10 Aug 2024 03:22:21 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1723283296; c=relaxed/simple;
+	bh=H/TI4d/I5AjRBE7OwQgTZOyiWIX6fJXl5eHm0V45UsI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XDeUMo6wVMFTQN0dv3GKVrLBIGHeznvbsO9lslfKd4rYunn1D3OyxgkD3zV5oIcecg85RY+DymiM6o4wZ+C9X/vjv4Nvpkf3VkiAeov5NdL/zNeWXF4C2jwXVbQT6btWRxOLCceiLGEmw1zYm4qfhgAUcTQ0/VcCYCLFHeSBc9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Wgwnd2dtMz1j6Pj;
+	Sat, 10 Aug 2024 17:43:17 +0800 (CST)
+Received: from dggpemf500002.china.huawei.com (unknown [7.185.36.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id 00DDC1A0188;
+	Sat, 10 Aug 2024 17:48:04 +0800 (CST)
+Received: from huawei.com (10.175.101.6) by dggpemf500002.china.huawei.com
+ (7.185.36.57) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sat, 10 Aug
+ 2024 17:48:03 +0800
+From: Yue Haibing <yuehaibing@huawei.com>
+To: <peter.ujfalusi@gmail.com>, <vkoul@kernel.org>, <yuehaibing@huawei.com>,
+	<s-vadapalli@ti.com>
+CC: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] dmaengine: ti: k3-udma: Remove unused declarations
+Date: Sat, 10 Aug 2024 17:45:40 +0800
+Message-ID: <20240810094540.2589310-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Inochi Amaoto <inochiama@outlook.com>
-Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
- Palmer Dabbelt <palmer@dabbelt.com>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Chen Wang <unicorn_wang@outlook.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-riscv@lists.infradead.org, 
- Vinod Koul <vkoul@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
- linux-kernel@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>
-In-Reply-To: 
- <IA1PR20MB4953DBA230FF57B2F78F7283BBBB2@IA1PR20MB4953.namprd20.prod.outlook.com>
-References: <IA1PR20MB49530ABC137B465548817077BBBB2@IA1PR20MB4953.namprd20.prod.outlook.com>
- <IA1PR20MB4953DBA230FF57B2F78F7283BBBB2@IA1PR20MB4953.namprd20.prod.outlook.com>
-Message-Id: <172328174147.2924175.10204174788649625539.robh@kernel.org>
-Subject: Re: [PATCH v10 1/3] dt-bindings: dmaengine: Add dma multiplexer
- for CV18XX/SG200X series SoC
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpemf500002.china.huawei.com (7.185.36.57)
 
+Commit d70241913413 ("dmaengine: ti: k3-udma: Add glue layer for non DMAengine users")
+declared but never implemented these.
 
-On Sat, 10 Aug 2024 16:38:53 +0800, Inochi Amaoto wrote:
-> The DMA IP of Sophgo CV18XX/SG200X is based on a DW AXI CORE, with
-> an additional channel remap register located in the top system control
-> area. The DMA channel is exclusive to each core.
-> 
-> In addition, the DMA multiplexer is a subdevice of system controller,
-> so this binding only contains necessary properties for the multiplexer
-> itself.
-> 
-> Add the dmamux binding for CV18XX/SG200X series SoC.
-> 
-> Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
-> ---
->  .../bindings/dma/sophgo,cv1800b-dmamux.yaml   | 51 +++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/sophgo,cv1800b-dmamux.yaml
-> 
+Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
+Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+---
+ drivers/dma/ti/k3-udma.h         | 1 -
+ include/linux/dma/k3-udma-glue.h | 2 --
+ 2 files changed, 3 deletions(-)
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/dma/sophgo,cv1800b-dmamux.yaml: $id: Cannot determine base path from $id, relative path/filename doesn't match actual path or filename
- 	 $id: http://devicetree.org/schemas/dma/sophgo,cv1800-dmamux.yaml
- 	file: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/dma/sophgo,cv1800b-dmamux.yaml
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/IA1PR20MB4953DBA230FF57B2F78F7283BBBB2@IA1PR20MB4953.namprd20.prod.outlook.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+diff --git a/drivers/dma/ti/k3-udma.h b/drivers/dma/ti/k3-udma.h
+index d349c6d482ae..9062a237cd16 100644
+--- a/drivers/dma/ti/k3-udma.h
++++ b/drivers/dma/ti/k3-udma.h
+@@ -131,7 +131,6 @@ int xudma_navss_psil_unpair(struct udma_dev *ud, u32 src_thread,
+ struct udma_dev *of_xudma_dev_get(struct device_node *np, const char *property);
+ struct device *xudma_get_device(struct udma_dev *ud);
+ struct k3_ringacc *xudma_get_ringacc(struct udma_dev *ud);
+-void xudma_dev_put(struct udma_dev *ud);
+ u32 xudma_dev_get_psil_base(struct udma_dev *ud);
+ struct udma_tisci_rm *xudma_dev_get_tisci_rm(struct udma_dev *ud);
+ 
+diff --git a/include/linux/dma/k3-udma-glue.h b/include/linux/dma/k3-udma-glue.h
+index 1e491c5dcac2..2dea217629d0 100644
+--- a/include/linux/dma/k3-udma-glue.h
++++ b/include/linux/dma/k3-udma-glue.h
+@@ -136,8 +136,6 @@ u32 k3_udma_glue_rx_flow_get_fdq_id(struct k3_udma_glue_rx_channel *rx_chn,
+ u32 k3_udma_glue_rx_get_flow_id_base(struct k3_udma_glue_rx_channel *rx_chn);
+ int k3_udma_glue_rx_get_irq(struct k3_udma_glue_rx_channel *rx_chn,
+ 			    u32 flow_num);
+-void k3_udma_glue_rx_put_irq(struct k3_udma_glue_rx_channel *rx_chn,
+-			     u32 flow_num);
+ void k3_udma_glue_reset_rx_chn(struct k3_udma_glue_rx_channel *rx_chn,
+ 		u32 flow_num, void *data,
+ 		void (*cleanup)(void *data, dma_addr_t desc_dma),
+-- 
+2.34.1
 
 

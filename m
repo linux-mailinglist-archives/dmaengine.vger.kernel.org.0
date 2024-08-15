@@ -1,68 +1,68 @@
-Return-Path: <dmaengine+bounces-2867-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2863-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 57198952BB3
-	for <lists+dmaengine@lfdr.de>; Thu, 15 Aug 2024 12:11:13 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3DC0A952B8B
+	for <lists+dmaengine@lfdr.de>; Thu, 15 Aug 2024 12:04:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E773F2837FD
-	for <lists+dmaengine@lfdr.de>; Thu, 15 Aug 2024 10:06:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BBB191F21666
+	for <lists+dmaengine@lfdr.de>; Thu, 15 Aug 2024 10:04:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3C0F1D362B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39F131D0DEA;
 	Thu, 15 Aug 2024 08:58:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pxBLBTDJ"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fqIivhDf"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB9921D0DE2;
-	Thu, 15 Aug 2024 08:57:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25CB91CB317;
+	Thu, 15 Aug 2024 08:57:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723712280; cv=none; b=GBXozdqodsxYt2vb+SAy5wTGnKHxHKNZ1MxpxxR/qM1QXPkdJZ1OlK7vzAhuvkZ9YZLilAZgCgvx0kj5gXBfrcquVZob3VZroZ+xYuj/odqpPwaiLveL62lTDycf7SHUH2kWxkYERw2tyLzQLv23sPmD0a7jzNnYMgRNKa8gPf4=
+	t=1723712280; cv=none; b=pEpsWiGWaiFLOMVuPb3yEwYf9Idq86DUC3jNKJ7P/tbIyf3DueCHDEyjiwAqkpktlZUjdF60PBNx/Hc/zJEq1Wmz0CkEnGbzqt7uBUgsxCASQ1IQmn8gL55HKiIMNOWPyy1IKP0HvPE7sDk66V66g+zkG9vVQTROtvYdK8O1j0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1723712280; c=relaxed/simple;
-	bh=0ngC/alJ+J1Sxb6tXL7vn3OkkPEwCyv6JsExc8TbW0w=;
+	bh=pokFx3iE2uzWqBS+9baOYI/yB/dletXtHSHiwYh0Z5c=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HfpbF1bKmsq/hB4E14CRDqepIePnNT9aUztp/gcmtwADFkUdHJoXy/NFiO5suqRBq6kHPEXUe7CMgh/2kB5fX9Fm+FCKfvY6KPeWFjJOC2LGuHdgLPWZ6fEfeq12oCal22lRAnC1oD8sW7a+CFyPnXhJfaFEE4DWhG+52IwGXIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pxBLBTDJ; arc=none smtp.client-ip=205.220.180.131
+	 MIME-Version; b=fPwVGhw5KYqiAoDiUXODsxwTn+GYH6mqDyKv2Cc/lMHB0Aw+EybJN8H/vtCD9SzdGlxg6FuetQoaHanEEhvnTcdULABg6ia031q3Xr9/NavqQyFA6AHMDP3OGhq9shxFptfa1limN1L4vEYDCy4IGacEaRdDDbXwqCFhXv+ki/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fqIivhDf; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47F7GioX027115;
-	Thu, 15 Aug 2024 08:57:32 GMT
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47EJQAUJ001575;
+	Thu, 15 Aug 2024 08:57:33 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=x4Xm1vn22af
-	ZxHExhEhC/0zPsxUObxVsPJM5mAj68ro=; b=pxBLBTDJ2OH2ABmNHjt5YmBA5sA
-	P0jXs/9MPxw24f63xkTZ/rX2Wf+gAi2Y2aFMxPRNCM6gux+66h/suTDBdKUFEZoT
-	nV0WvIrRzEA5BEZcQrYQsA7R/iFBbWja83Yob+bGqlgwaV0fImw/wf99wHBsbqft
-	HK7Nxo0+KyP5nhMTe7v9ElEd3eJhOvvz0n8Ic/Di2pSjKoA8+oMq34fca8gyef56
-	LhbiWmF7vvDMnPcc6cdDWdL/HaL2vCovGHSbrga8yLrTrC3CuIo5Qgkf5SYhfDNE
-	3OfePWBmla0OJ9qHXOUnD47rxN+pT7X6p1uzoaS0ZRZEsFT4Tzq3HIRiJmA==
+	:mime-version:references:subject:to; s=qcppdkim1; bh=+Ypau/TIxoH
+	KQDayEclcirf54heBzC3twP34iTwtGeM=; b=fqIivhDfmzrVXl4a9DN8EvzMy4O
+	2upZzAKzHAyGJoZqSGTTGNtRNJE73wOi9PEpVJqjKqVNjFS+xchnCrH9lmUS6jXY
+	eqYIzBlvIAaTIUI9vsvC841piYkkaH0I5N1pElm3A3/pI/+jy2iaNG/YvrbXAuX6
+	pFRbBhWfVZBNc9pLUCQanGCuWWbFRCTreymYtg7Cc5iVlrah/1GYHl0Yh+C5wfnS
+	zmFFohoqRT35s7wJhg70NCfMYM9AmdCEFGMshLdfsp84po70bgdhLfhyUsNttj2q
+	V53lBmOb3mh3ut9zRKxeRXusLNGkJGzq9nwr09Q2smOJ6P1uXkpN4/uMk/w==
 Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 411d5688p9-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4112r3sfgm-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Thu, 15 Aug 2024 08:57:32 +0000 (GMT)
 Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 47F8rhVj024223;
+	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 47F8vTmX029674;
 	Thu, 15 Aug 2024 08:57:29 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 40xkmhenmn-1
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 40xkmhenmk-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Thu, 15 Aug 2024 08:57:29 +0000
 Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 47F8vSF4029646;
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 47F8vSWL029645;
 	Thu, 15 Aug 2024 08:57:28 GMT
 Received: from hu-devc-blr-u22-a.qualcomm.com (hu-mdalam-blr.qualcomm.com [10.131.36.157])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 47F8vSe4029644
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 47F8vSOU029643
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Thu, 15 Aug 2024 08:57:28 +0000
 Received: by hu-devc-blr-u22-a.qualcomm.com (Postfix, from userid 466583)
-	id 932D3411EE; Thu, 15 Aug 2024 14:27:27 +0530 (+0530)
+	id 96F6041254; Thu, 15 Aug 2024 14:27:27 +0530 (+0530)
 From: Md Sadre Alam <quic_mdalam@quicinc.com>
 To: vkoul@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
         andersson@kernel.org, konradybcio@kernel.org, thara.gopinath@gmail.com,
@@ -73,9 +73,9 @@ To: vkoul@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
         linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
 Cc: quic_srichara@quicinc.com, quic_varada@quicinc.com,
         quic_mdalam@quicinc.com, quic_utiwari@quicinc.com
-Subject: [PATCH v2 02/16] dmaengine: qcom: bam_dma: add bam_pipe_lock dt property
-Date: Thu, 15 Aug 2024 14:27:11 +0530
-Message-Id: <20240815085725.2740390-3-quic_mdalam@quicinc.com>
+Subject: [PATCH v2 03/16] dmaengine: qcom: bam_dma: add LOCK & UNLOCK flag support
+Date: Thu, 15 Aug 2024 14:27:12 +0530
+Message-Id: <20240815085725.2740390-4-quic_mdalam@quicinc.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240815085725.2740390-1-quic_mdalam@quicinc.com>
 References: <20240815085725.2740390-1-quic_mdalam@quicinc.com>
@@ -90,66 +90,100 @@ X-QCInternal: smtphost
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: CkHHe18vFuWjsd4YAquZKZTbAof_vVln
-X-Proofpoint-ORIG-GUID: CkHHe18vFuWjsd4YAquZKZTbAof_vVln
+X-Proofpoint-GUID: BCo9da2oaL2nPsP4y9QAtOnGpzMarqE-
+X-Proofpoint-ORIG-GUID: BCo9da2oaL2nPsP4y9QAtOnGpzMarqE-
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-08-15_01,2024-08-13_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- malwarescore=0 impostorscore=0 mlxscore=0 lowpriorityscore=0 spamscore=0
- suspectscore=0 bulkscore=0 clxscore=1011 phishscore=0 priorityscore=1501
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2408150064
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ lowpriorityscore=0 phishscore=0 bulkscore=0 mlxscore=0 suspectscore=0
+ clxscore=1015 priorityscore=1501 malwarescore=0 impostorscore=0
+ mlxlogscore=916 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2407110000 definitions=main-2408150064
 
-bam having locking and unlocking mechanism of bam pipes.
-Upon encountering a descriptor with Lock bit set, the
-BAM will lock all other pipes not related to the current
-pipe group, and keep handling the current pipe only until
-it sees the Un-Lock set , then it will release all locked
-pipes. The actual locking is done on the new descriptor
-fetching for publishing, i.e. locked pipe will not fetch
-new descriptors even if it got event/events adding more
-descriptors for this pipe.
+Add lock and unlock flag support on command descriptor.
+Once lock set in requester pipe, then the bam controller
+will lock all others pipe and process the request only
+from requester pipe. Unlocking only can be performed from
+the same pipe.
 
-Adding the bam_pipe_lock flag in bam driver to handle
-Lock and Un-Lock bit set on command descriptor.
+If DMA_PREP_LOCK flag passed in command descriptor then requester
+of this transaction wanted to lock the BAM controller for this
+transaction so BAM driver should set LOCK bit for the HW descriptor.
+
+If DMA_PREP_UNLOCK flag passed in command descriptor then requester
+of this transaction wanted to unlock the BAM controller.so BAM driver
+should set UNLOCK bit for the HW descriptor.
 
 Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
 ---
 
 Change in [v2]
 
-* Added bam_pipe_lock dt property
+* Added LOCK and UNLOCK flag in bam driver
 
 Change in [v1]
 
 * This patch was not included in [v1]
 
- drivers/dma/qcom/bam_dma.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/dma/qcom/bam_dma.c | 10 +++++++++-
+ include/linux/dmaengine.h  |  6 ++++++
+ 2 files changed, 15 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
-index 5e7d332731e0..1ac7e250bdaa 100644
+index 1ac7e250bdaa..ab3b5319aa68 100644
 --- a/drivers/dma/qcom/bam_dma.c
 +++ b/drivers/dma/qcom/bam_dma.c
-@@ -389,6 +389,7 @@ struct bam_device {
- 	u32 ee;
- 	bool controlled_remotely;
- 	bool powered_remotely;
-+	bool bam_pipe_lock;
- 	u32 active_channels;
+@@ -58,6 +58,8 @@ struct bam_desc_hw {
+ #define DESC_FLAG_EOB BIT(13)
+ #define DESC_FLAG_NWD BIT(12)
+ #define DESC_FLAG_CMD BIT(11)
++#define DESC_FLAG_LOCK BIT(10)
++#define DESC_FLAG_UNLOCK BIT(9)
  
- 	const struct reg_offset_data *layout;
-@@ -1272,6 +1273,9 @@ static int bam_dma_probe(struct platform_device *pdev)
- 	bdev->powered_remotely = of_property_read_bool(pdev->dev.of_node,
- 						"qcom,powered-remotely");
+ struct bam_async_desc {
+ 	struct virt_dma_desc vd;
+@@ -692,9 +694,15 @@ static struct dma_async_tx_descriptor *bam_prep_slave_sg(struct dma_chan *chan,
+ 		unsigned int curr_offset = 0;
  
-+	bdev->bam_pipe_lock = of_property_read_bool(pdev->dev.of_node,
-+						    "qcom,bam_pipe_lock");
+ 		do {
+-			if (flags & DMA_PREP_CMD)
++			if (flags & DMA_PREP_CMD) {
+ 				desc->flags |= cpu_to_le16(DESC_FLAG_CMD);
+ 
++				if (bdev->bam_pipe_lock && flags & DMA_PREP_LOCK)
++					desc->flags |= cpu_to_le16(DESC_FLAG_LOCK);
++				else if (bdev->bam_pipe_lock && flags & DMA_PREP_UNLOCK)
++					desc->flags |= cpu_to_le16(DESC_FLAG_UNLOCK);
++			}
 +
- 	if (bdev->controlled_remotely || bdev->powered_remotely)
- 		bdev->bamclk = devm_clk_get_optional(bdev->dev, "bam_clk");
- 	else
+ 			desc->addr = cpu_to_le32(sg_dma_address(sg) +
+ 						 curr_offset);
+ 
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index b137fdb56093..70f23068bfdc 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -200,6 +200,10 @@ struct dma_vec {
+  *  transaction is marked with DMA_PREP_REPEAT will cause the new transaction
+  *  to never be processed and stay in the issued queue forever. The flag is
+  *  ignored if the previous transaction is not a repeated transaction.
++ *  @DMA_PREP_LOCK: tell the driver that there is a lock bit set on command
++ *  descriptor.
++ *  @DMA_PREP_UNLOCK: tell the driver that there is a un-lock bit set on command
++ *  descriptor.
+  */
+ enum dma_ctrl_flags {
+ 	DMA_PREP_INTERRUPT = (1 << 0),
+@@ -212,6 +216,8 @@ enum dma_ctrl_flags {
+ 	DMA_PREP_CMD = (1 << 7),
+ 	DMA_PREP_REPEAT = (1 << 8),
+ 	DMA_PREP_LOAD_EOT = (1 << 9),
++	DMA_PREP_LOCK = (1 << 10),
++	DMA_PREP_UNLOCK = (1 << 11),
+ };
+ 
+ /**
 -- 
 2.34.1
 

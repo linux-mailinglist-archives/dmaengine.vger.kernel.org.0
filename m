@@ -1,68 +1,67 @@
-Return-Path: <dmaengine+bounces-2855-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2871-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C5E5952B66
-	for <lists+dmaengine@lfdr.de>; Thu, 15 Aug 2024 12:01:07 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E93B0952BC5
+	for <lists+dmaengine@lfdr.de>; Thu, 15 Aug 2024 12:17:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 92FCF1C20F9B
-	for <lists+dmaengine@lfdr.de>; Thu, 15 Aug 2024 10:01:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A6995281D5F
+	for <lists+dmaengine@lfdr.de>; Thu, 15 Aug 2024 10:17:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 942BF1C9ED6;
-	Thu, 15 Aug 2024 08:57:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1FBF19AD87;
+	Thu, 15 Aug 2024 09:02:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gsadlT0X"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="YeCrQwzQ"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD59F199234;
-	Thu, 15 Aug 2024 08:57:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FEF21684AC;
+	Thu, 15 Aug 2024 09:02:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723712277; cv=none; b=JQw7SFeQOhwFdkVMDoAqntoMB5YQqNlqZyoILg5kqw6PxO7EpqAztCFJWea2fimWNNtwHQDtw7Osyv2QeFhT5/ClyOL0YtT+arfOCzFh6vsdUekz4iqRHJ2gZmIDtD4xBW6+WmZ8FuM35dFO5lrLlqEhyPF6hQUC0niwaw+SVKo=
+	t=1723712566; cv=none; b=rGBBfQEWyjdQt2WlHBvW2OEY/dICfejAKl0aW3hik9Gw/0++LMaFwNeLaaq64U5ye0/dWcyjsv9Y5OLH2kAsF04GEljBlClswAuBXewZbEwie4dEmgQl3Y1XKzh8fJi1oBI1UeBDW3KmKWsRj/Z6spAo4QlIMbzlgG2wV2uC4sU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723712277; c=relaxed/simple;
-	bh=ACVo5OWStIqgFdM6sn7gLVlTFjG4+1XTG5FjzeFH4Aw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ou7m98VfiQzUCyLrdTfhYo2Z9J+vQ8CFEB3xyVHD4AQMfs4S6+Ix3x+6ku/wnzJtdwtUMKp5ttw1XZHmub2CxQ/Pl5YDsMmTmn+fKI/lIH+yq9/iDynE0azQ1pnTkJJd5V743MtSCSPKuoumPwq87J0ym1TZeGQYR+9klnJMQzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gsadlT0X; arc=none smtp.client-ip=205.220.180.131
+	s=arc-20240116; t=1723712566; c=relaxed/simple;
+	bh=YjSqiA7/QVLf25LwcJfb9dB8HqlVkkV9IyQB9ZLnEGc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LM6vUmwBsqKTb8PF/NfTcQBbfaedc6lzBIOSggYtNE7XwyTVZoKcQcPTqzyqt4MAbLeLaUi5IkmPbogUPVIMLaMCAxcJaXFypxQu/LNDV8hGpuvna1nQoClSEV/vvJzJfQuY25uBA7hwXcMeQgW9Gy2IDDzPs34YuB2tAtepum8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=YeCrQwzQ; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47EN9r1u027657;
-	Thu, 15 Aug 2024 08:57:34 GMT
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47ENHGbN001557;
+	Thu, 15 Aug 2024 08:57:33 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=EsJzdxY5TD9
-	Tu11lUd/NrWvoGWjrrwsvM1K+TrsqEiA=; b=gsadlT0XUqu5K/u7dlxmU3W+5Ic
-	VU4n2vaVx8VbdNOECG5ag5yJd27RLaxQxZdltqTkoApHLvHn69puXn+r1JA44AE5
-	4y+DAewkidct+QaxN1vtAKsrJnpyYIkEek2yM8C3xnP9u6OCq6EJaGLuOGJmyBq1
-	bzvaUTaC69zMrrksGHko1hlC1vp5MJucpSB8uUml6IVelFpGvsPvQFAMi+4fZUBc
-	2L24TcC+BRnW+7bXtoTdxHHAe95KEzsPuu5pFgV9S/nxVGeVFrLKGUVuo/phFBbX
-	wGNxYcH61aWGPDKdKWr7AqOMHba/ekxqaOo/1BMnJZN5fIRmsGaNcnw14TQ==
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=IjbkWi5kX00E+MSOryd9RKDwP/mZ52uqdmY
+	550VUK4s=; b=YeCrQwzQuBbkaTD01WChDrtFoM166clfvjukRBaWAAso/CKRLOo
+	vY9RgDYwup/bWd6/w+axGdpdvhjyJAaa2Qc0OqAXsxeUPOKi7H9NDo0+YM2R8rcH
+	4Jm1EzdCv+bWGWRbq+dlvaIevCZh7peOkyqp5FI+H20LLs+rtHc1KjwMwxYo+q7n
+	VVuEsQuqcxIzqzVPiT2zYljp2d75w6ulsXTBdHr0NutXQ7r23hmbUjEXr1pQZyrD
+	BEiXwotc7Gr/ARK6yPNzjTFd52uZYvNHcO/QNUhUt73O3lO6IUeUuLMnY3hPV0tQ
+	QgyT0K6QZ4/zxekImldpfLcGbLg8Tp3DlLg==
 Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40x3etdq41-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 410437xysa-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 15 Aug 2024 08:57:34 +0000 (GMT)
+	Thu, 15 Aug 2024 08:57:32 +0000 (GMT)
 Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 47F8vTmZ029674;
-	Thu, 15 Aug 2024 08:57:31 GMT
+	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 47F8sTNQ025255;
+	Thu, 15 Aug 2024 08:57:29 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 40xkmhenp7-1
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 40xkmhenmq-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 15 Aug 2024 08:57:31 +0000
+	Thu, 15 Aug 2024 08:57:29 +0000
 Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 47F8un7E028821;
-	Thu, 15 Aug 2024 08:57:31 GMT
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 47F8vSMr029648;
+	Thu, 15 Aug 2024 08:57:28 GMT
 Received: from hu-devc-blr-u22-a.qualcomm.com (hu-mdalam-blr.qualcomm.com [10.131.36.157])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 47F8vUIN029806
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 47F8vSUK029642
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 15 Aug 2024 08:57:31 +0000
+	Thu, 15 Aug 2024 08:57:28 +0000
 Received: by hu-devc-blr-u22-a.qualcomm.com (Postfix, from userid 466583)
-	id C2F7D417FE; Thu, 15 Aug 2024 14:27:27 +0530 (+0530)
+	id 8BB644117A; Thu, 15 Aug 2024 14:27:27 +0530 (+0530)
 From: Md Sadre Alam <quic_mdalam@quicinc.com>
 To: vkoul@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
         andersson@kernel.org, konradybcio@kernel.org, thara.gopinath@gmail.com,
@@ -73,12 +72,10 @@ To: vkoul@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
         linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
 Cc: quic_srichara@quicinc.com, quic_varada@quicinc.com,
         quic_mdalam@quicinc.com, quic_utiwari@quicinc.com
-Subject: [PATCH v2 16/16] arm64: dts: qcom: ipq6018: enable bam pipe locking/unlocking
-Date: Thu, 15 Aug 2024 14:27:25 +0530
-Message-Id: <20240815085725.2740390-17-quic_mdalam@quicinc.com>
+Subject: [PATCH v2 00/16] Add cmd descriptor support
+Date: Thu, 15 Aug 2024 14:27:09 +0530
+Message-Id: <20240815085725.2740390-1-quic_mdalam@quicinc.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240815085725.2740390-1-quic_mdalam@quicinc.com>
-References: <20240815085725.2740390-1-quic_mdalam@quicinc.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -90,45 +87,81 @@ X-QCInternal: smtphost
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 88iKNRdhGA3sWGvC1dMlMndmu4yUWMy2
-X-Proofpoint-ORIG-GUID: 88iKNRdhGA3sWGvC1dMlMndmu4yUWMy2
+X-Proofpoint-ORIG-GUID: df4jEv_9SsajWUuB6skBt_37TqV9FpTa
+X-Proofpoint-GUID: df4jEv_9SsajWUuB6skBt_37TqV9FpTa
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-08-15_01,2024-08-13_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- suspectscore=0 impostorscore=0 phishscore=0 clxscore=1015 mlxlogscore=929
- lowpriorityscore=0 priorityscore=1501 spamscore=0 adultscore=0 mlxscore=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1015
+ mlxlogscore=850 malwarescore=0 lowpriorityscore=0 phishscore=0 spamscore=0
+ bulkscore=0 suspectscore=0 adultscore=0 mlxscore=0 priorityscore=1501
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2407110000
  definitions=main-2408150064
 
-enable bam pipe locking/unlocking for ipq6018 SoC.
+This series of patches will add command descriptor
+support to read/write crypto engine register via
+BAM/DMA
 
-Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
----
+We need this support because if there is multiple EE's
+(Execution Environment) accessing the same CE then there
+will be race condition. To avoid this race condition
+BAM HW hsving LOC/UNLOCK feature on BAM pipes and this
+LOCK/UNLOCK will be set via command descriptor only.
 
-Change in [v2]
+Since each EE's having their dedicated BAM pipe, BAM allows
+Locking and Unlocking on BAM pipe. So if one EE's requesting
+for CE5 access then that EE's first has to LOCK the BAM pipe
+while setting LOCK bit on command descriptor and then access
+it. After finishing the request EE's has to UNLOCK the BAM pipe
+so in this way we race condition will not happen.
 
-* enabled locking/unlocking support for ipq6018
+tested with "tcrypt.ko" and "kcapi" tool.
 
-Change in [v1]
+Need help to test these all the patches on msm platform
 
-* This patch was not included in [v1]
+v2:
+ * Addressed all the comments from v1
+ * Added the dt-binding
+ * Added locking/unlocking mechanism in bam driver
 
- arch/arm64/boot/dts/qcom/ipq6018.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+v1:
+ * https://lore.kernel.org/lkml/20231214114239.2635325-1-quic_mdalam@quicinc.com/
+ * Initial set of patches for cmd descriptor support
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-index e1e45da7f787..652c2bbf5e99 100644
---- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-@@ -354,6 +354,7 @@ cryptobam: dma-controller@704000 {
- 			#dma-cells = <1>;
- 			qcom,ee = <1>;
- 			qcom,controlled-remotely;
-+			qcom,bam_pipe_lock;
- 		};
- 
- 		crypto: crypto@73a000 {
+Md Sadre Alam (16):
+  dt-bindings: dma: qcom,bam: Add bam pipe lock
+  dmaengine: qcom: bam_dma: add bam_pipe_lock dt property
+  dmaengine: qcom: bam_dma: add LOCK & UNLOCK flag support
+  crypto: qce - Add support for crypto address read
+  crypto: qce - Add bam dma support for crypto register r/w
+  crypto: qce - Convert register r/w for skcipher via BAM/DMA
+  crypto: qce - Convert register r/w for sha via BAM/DMA
+  crypto: qce - Convert register r/w for aead via BAM/DMA
+  crypto: qce - Add LOCK and UNLOCK flag support
+  crypto: qce - Add support for lock aquire,lock release api.
+  crypto: qce - Add support for lock/unlock in skcipher
+  crypto: qce - Add support for lock/unlock in sha
+  crypto: qce - Add support for lock/unlock in aead
+  arm64: dts: qcom: ipq9574: enable bam pipe locking/unlocking
+  arm64: dts: qcom: ipq8074: enable bam pipe locking/unlocking
+  arm64: dts: qcom: ipq6018: enable bam pipe locking/unlocking
+
+ .../devicetree/bindings/dma/qcom,bam-dma.yaml |   8 +
+ arch/arm64/boot/dts/qcom/ipq6018.dtsi         |   1 +
+ arch/arm64/boot/dts/qcom/ipq8074.dtsi         |   1 +
+ arch/arm64/boot/dts/qcom/ipq9574.dtsi         |   1 +
+ drivers/crypto/qce/aead.c                     |   4 +
+ drivers/crypto/qce/common.c                   | 142 +++++++----
+ drivers/crypto/qce/core.c                     |  13 +-
+ drivers/crypto/qce/core.h                     |  12 +
+ drivers/crypto/qce/dma.c                      | 232 ++++++++++++++++++
+ drivers/crypto/qce/dma.h                      |  26 +-
+ drivers/crypto/qce/sha.c                      |   4 +
+ drivers/crypto/qce/skcipher.c                 |   4 +
+ drivers/dma/qcom/bam_dma.c                    |  14 +-
+ include/linux/dmaengine.h                     |   6 +
+ 14 files changed, 424 insertions(+), 44 deletions(-)
+
 -- 
 2.34.1
 

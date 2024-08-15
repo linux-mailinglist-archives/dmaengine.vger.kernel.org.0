@@ -1,68 +1,68 @@
-Return-Path: <dmaengine+bounces-2857-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2858-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 92FA3952B6F
-	for <lists+dmaengine@lfdr.de>; Thu, 15 Aug 2024 12:01:59 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id BAE60952B74
+	for <lists+dmaengine@lfdr.de>; Thu, 15 Aug 2024 12:02:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3BD701F22127
-	for <lists+dmaengine@lfdr.de>; Thu, 15 Aug 2024 10:01:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ED2C61C20E3F
+	for <lists+dmaengine@lfdr.de>; Thu, 15 Aug 2024 10:02:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 876EC1D0DC7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDA331D0DE8;
 	Thu, 15 Aug 2024 08:57:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RugxU8Ad"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="NsHluea8"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD6A21BB683;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD6471BA89D;
 	Thu, 15 Aug 2024 08:57:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723712278; cv=none; b=Nm/VQubBe7wqjDaKuPYWCV8T/wiKQob4f0PVilkyIEVnq4B2r4aWk3BmMlHVGsvJlbcYt0ZU+xQA/NwDFHuFnA7WH0seCXFfv30i421XVB8DZT4s3vUf7vvJyIFqOdX2dO7BhN6/14nbjqQScBS4Ly4sN05/9m0aE/LZDwaw8x4=
+	t=1723712278; cv=none; b=HjINI6pV9GftLjfToRSH6b66yuPnSlwn2ds92PTtT0YTodxZa5vg/hLtXRJ3McrSteLl8KqRHI1njgJS+4egv0oWTXjWTn1Wl9lXrbfYbxMoynq8J1SZcXWxztr1TI34H2ENdI8KQrxhzFArW5I2T6lwRnYU0K/w6Dpj/CpEOeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1723712278; c=relaxed/simple;
-	bh=OPWgLXnFMo3Ha0NyeKVSeilVeGTz/IRmR01gyl2TTyI=;
+	bh=+aLCS4kElQBN3LlVeH1Gr1iQCF0zr8Ll7ij202LGpuk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gHUSmVeKImETQW1MRc0OBvpyEjZksT3FPpEy9jcxD8a3plxdTJvBK+Xlb5wLqTaM4UwTjvbgsq8MzNxt32+c8K1usBMsqVry62y3tv4V6OBzEZQyZdKDaePdZHkJ0gCtaKhw3Ig4YY3CkjWDzMzQ11dzQvmu6jTtaFZl9CZViF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RugxU8Ad; arc=none smtp.client-ip=205.220.180.131
+	 MIME-Version; b=X3jNVlg0jqtzpBm/VnelcDHi4uQUhosUAtbizGuB9teS3MTJrGEHMhd2P6ATvlWOMt1ph5CRYbgi2wy4mnXqxOdhpdAXXv3hHf/zwM/vvRvQYpdT2iYGyI6C3/ABvk0P0UWUzX6mXnFbhWrlrLvbq5JIJg7Y+zu9rLoKO+sfg9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=NsHluea8; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47ENl118000361;
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47EJR0dW003215;
 	Thu, 15 Aug 2024 08:57:34 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=O+tyqXT0f1n
-	3f8f5Wfa3C4NPFqH2XEudA9LBRwUX8Bg=; b=RugxU8AdJ/vBe1DTleY2R3i+qnM
-	UINTh7fXmlvKnSXhF69P+bw7NxABN0XVix/LkznNmOX1D6FHe1oj/0kEEBJ60aAt
-	tt83k+uTEwvdG/Fk7Z/Hkc0FtMsXp/nPT8VQJvZRcYzEXEHj5v9c8fqb0Xl7gGrd
-	bQVoBTKAqvd/wKF+eKSeby8KKMmnvLYh/42ZrMtLirhuqk2hwW7I77CfHFBcemBs
-	DjZwSbyNY6iXGAnuJOkM1hjoOCOLnlTVq8WDWmvP72bstPw5RZ0rpyXzQ3Nw7DyO
-	2uRuGBjNqNaJ6c7Cf2tbot3pgi/IuKJ6/PRLIWABeGIXffiHjWhEBj87Gzw==
+	:mime-version:references:subject:to; s=qcppdkim1; bh=up/UmxSnR+P
+	XppWGbf1OYH3yF91HHSaWvlzDco8ETik=; b=NsHluea84RIi0H1uSdxD+O1YTqE
+	sqQ4sMZMbu/AFge1f75IWXW0bwUAlDMR8kpN1rkBGs2KUOQOPvbFV6Ph7MCTfpdK
+	MF+DClRLORkGNsHX8pDTeMZysPRNDFZ2e7JOTH5fiTa+9DBbUqJ11T42SbIP5DAZ
+	LD0cgH8HGytIPgYHyvxAeW1HbEC46mskkrjHskTXQ9tFBqvs1Y9okByFdXm8oihg
+	kqOBEvoAWGTB6thiuN2QjZ8kSE4cmI4yd7bzrVmN96oHC7Ufl4tGkSxo3vWvV6Z6
+	5yBDdB3mbqDRJxF5npYBNoI91Ipm2EKpcsN4tFccTRl0b3CXq2pOOkHZYuQ==
 Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 410437xysj-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4112r3sfgq-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Thu, 15 Aug 2024 08:57:33 +0000 (GMT)
 Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 47F8u8eD028285;
+	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 47F8vU44029773;
 	Thu, 15 Aug 2024 08:57:30 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 40xkmhenns-1
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 40xkmhennt-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Thu, 15 Aug 2024 08:57:30 +0000
 Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 47F8vSMt029648;
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 47F8vSWN029645;
 	Thu, 15 Aug 2024 08:57:30 GMT
 Received: from hu-devc-blr-u22-a.qualcomm.com (hu-mdalam-blr.qualcomm.com [10.131.36.157])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 47F8vT3L029699
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 47F8vTGh029702
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Thu, 15 Aug 2024 08:57:30 +0000
 Received: by hu-devc-blr-u22-a.qualcomm.com (Postfix, from userid 466583)
-	id B2B50417F9; Thu, 15 Aug 2024 14:27:27 +0530 (+0530)
+	id BC7AD417FC; Thu, 15 Aug 2024 14:27:27 +0530 (+0530)
 From: Md Sadre Alam <quic_mdalam@quicinc.com>
 To: vkoul@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
         andersson@kernel.org, konradybcio@kernel.org, thara.gopinath@gmail.com,
@@ -73,9 +73,9 @@ To: vkoul@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
         linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
 Cc: quic_srichara@quicinc.com, quic_varada@quicinc.com,
         quic_mdalam@quicinc.com, quic_utiwari@quicinc.com
-Subject: [PATCH v2 11/16] crypto: qce - Add support for lock/unlock in skcipher
-Date: Thu, 15 Aug 2024 14:27:20 +0530
-Message-Id: <20240815085725.2740390-12-quic_mdalam@quicinc.com>
+Subject: [PATCH v2 14/16] arm64: dts: qcom: ipq9574: enable bam pipe locking/unlocking
+Date: Thu, 15 Aug 2024 14:27:23 +0530
+Message-Id: <20240815085725.2740390-15-quic_mdalam@quicinc.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240815085725.2740390-1-quic_mdalam@quicinc.com>
 References: <20240815085725.2740390-1-quic_mdalam@quicinc.com>
@@ -90,62 +90,45 @@ X-QCInternal: smtphost
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: uW0nZIsmkxrr0mlTT4SxummasRjZlRMe
-X-Proofpoint-GUID: uW0nZIsmkxrr0mlTT4SxummasRjZlRMe
+X-Proofpoint-GUID: 8jli6eJ9Dg6KgG9A_onDxLTPvt2whJPs
+X-Proofpoint-ORIG-GUID: 8jli6eJ9Dg6KgG9A_onDxLTPvt2whJPs
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-08-15_01,2024-08-13_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1015
- mlxlogscore=999 malwarescore=0 lowpriorityscore=0 phishscore=0 spamscore=0
- bulkscore=0 suspectscore=0 adultscore=0 mlxscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2407110000
- definitions=main-2408150064
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ lowpriorityscore=0 phishscore=0 bulkscore=0 mlxscore=0 suspectscore=0
+ clxscore=1015 priorityscore=1501 malwarescore=0 impostorscore=0
+ mlxlogscore=929 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2407110000 definitions=main-2408150064
 
-Add support for lock/unlock on bam pipe in skcipher.
-If multiple EE's(Execution Environment) try to access
-the same crypto engine then before accessing the crypto
-engine EE's has to lock the bam pipe and then submit the
-request to crypto engine. Once request done then EE's has
-to unlock the bam pipe so that others EE's can access the
-crypto engine.
+enable bam pipe locking/unlocking for ipq9507 SoC.
 
 Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
 ---
 
 Change in [v2]
 
-* Removed unmap_sg() from crypto done api
+* enabled locking/unlocking support for ipq9574
 
 Change in [v1]
 
-* Added qce_bam_acquire_lock and qce_bam_release_lock 
-  api in skcipher
+* This patch was not included in [v1]
 
- drivers/crypto/qce/skcipher.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/boot/dts/qcom/ipq9574.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/crypto/qce/skcipher.c b/drivers/crypto/qce/skcipher.c
-index 5b493fdc1e74..a4e09562b5f4 100644
---- a/drivers/crypto/qce/skcipher.c
-+++ b/drivers/crypto/qce/skcipher.c
-@@ -52,6 +52,8 @@ static void qce_skcipher_done(void *data)
+diff --git a/arch/arm64/boot/dts/qcom/ipq9574.dtsi b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
+index 48dfafea46a7..dacaec62ec39 100644
+--- a/arch/arm64/boot/dts/qcom/ipq9574.dtsi
++++ b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
+@@ -262,6 +262,7 @@ cryptobam: dma-controller@704000 {
+ 			#dma-cells = <1>;
+ 			qcom,ee = <1>;
+ 			qcom,controlled-remotely;
++			qcom,bam_pipe_lock;
+ 		};
  
- 	sg_free_table(&rctx->dst_tbl);
- 
-+	qce_bam_release_lock(qce);
-+
- 	error = qce_check_status(qce, &status);
- 	if (error < 0)
- 		dev_dbg(qce->dev, "skcipher operation error (%x)\n", status);
-@@ -82,6 +84,8 @@ qce_skcipher_async_req_handle(struct crypto_async_request *async_req)
- 	dir_src = diff_dst ? DMA_TO_DEVICE : DMA_BIDIRECTIONAL;
- 	dir_dst = diff_dst ? DMA_FROM_DEVICE : DMA_BIDIRECTIONAL;
- 
-+	qce_bam_acquire_lock(qce);
-+
- 	rctx->src_nents = sg_nents_for_len(req->src, req->cryptlen);
- 	if (diff_dst)
- 		rctx->dst_nents = sg_nents_for_len(req->dst, req->cryptlen);
+ 		crypto: crypto@73a000 {
 -- 
 2.34.1
 

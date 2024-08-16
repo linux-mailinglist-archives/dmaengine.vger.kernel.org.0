@@ -1,146 +1,167 @@
-Return-Path: <dmaengine+bounces-2880-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2881-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3826695512F
-	for <lists+dmaengine@lfdr.de>; Fri, 16 Aug 2024 21:05:08 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3541A955340
+	for <lists+dmaengine@lfdr.de>; Sat, 17 Aug 2024 00:21:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E28FF1F2304B
-	for <lists+dmaengine@lfdr.de>; Fri, 16 Aug 2024 19:05:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E2C3C28359F
+	for <lists+dmaengine@lfdr.de>; Fri, 16 Aug 2024 22:21:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 652101C0DE1;
-	Fri, 16 Aug 2024 19:05:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DB4714533C;
+	Fri, 16 Aug 2024 22:21:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gxFWzbqI"
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="G5jYwPPe"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 975F3824BB;
-	Fri, 16 Aug 2024 19:05:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E75D91448E0;
+	Fri, 16 Aug 2024 22:21:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723835103; cv=none; b=gPvsxvGusN9SkWfzasz+9tt7cE5QI/5wHyZYuKkfp6hsr6++RvvfxiLtKb23QCDRoadFik5dZoWjzInxVvOc42Pqa2tB9coRBEwGHbkgfANdiWi9nml7h/OhJ5SbcPt6JqE4AbGmpVgkYfXGyeVgVK3v4twnic3IfSkhedDYITI=
+	t=1723846881; cv=none; b=oE43X/3o4WYaFUPgTNdvhe4BtC0zb4jMXv/e4tnElCflrShj0kHksmHfnOsgrmQ5e/k2FBp4Nu1OLd4CcTrd3uHKAczap94/KRIZB+/UXOFR4e2cHAKdsJBCT96jP8sjL+yZF5TWJQvxJHT7CswCpat1pnzpb8LJ5On5NPl+f2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723835103; c=relaxed/simple;
-	bh=U3bFOsb86tX1INchCfns3wQ//3TtYTMM8Cd5pNlux1o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C+vW+TDJJA7A/GPISyTQ2ECnNSAn18fvQZL7qMh2Bfzt0rF2C35yjFdnTC7ZlwSeF03moYOH862wZGEV+P1HVHSll3Ie8vWTrNmydBu1Iv3hP+6oc7GBlTV9pGwuxa4wj40NyXh9ER0Jp3C8dFQ+ObUj1d0v3IEVcbpo9k/1PvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gxFWzbqI; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2f149845d81so22874181fa.0;
-        Fri, 16 Aug 2024 12:05:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723835100; x=1724439900; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0BiaYWGKCbYOSrA4O/Mp9//Ct813gtEjKVKXKN3IFtw=;
-        b=gxFWzbqI86eAHmWVPQuiXi/sJIuKl7QeVsGaCRYqf8ex24xvl4tqtti7FyWycRfgyG
-         hFGl9kAI0N1hbOiuaAuG6PHZKpFzWFUSH0tEswTxgmnTt0HIg9fB7IJV3NHkwS5J7KeA
-         NlbBFxxi5DBcz+qFtvmrQiaggIID3BV5wEiSZ9bkX0TmxfcAdXoamSAq4yFtGN10vL4v
-         zIfgbPGCdHJgCBLOsjwc6cM2G7lBoo8OY68m+RjQ6qNyIM6CXG2AvWe+lmP1hUUCDAuz
-         XgQbjkPczD6zQT2bGzAGFm6BGCdUne+CFUUESB5JjJR2ACz0FGKd7y01/NPa+oETCO8U
-         ucHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723835100; x=1724439900;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0BiaYWGKCbYOSrA4O/Mp9//Ct813gtEjKVKXKN3IFtw=;
-        b=qoF6x/0OJ+K2RiZ1J5GV9MGJc2B2LjBA778WnIW9MdVOCfNz8lSGZqXuwgWbFBqnm3
-         ybKyWO0X0aqIdBj9LHLSvHlwr6FCrGwSUGju0Yf8Yj+s8GHLzvwCUZiPJyCr8AYq2lUU
-         Y1Opn/V9yROZx5sQWoc0a1d9L8BpaeVsErytPdd9I4DPVOTSwJthbVotNWS0tBmfmj8a
-         wtvuK2pTWH6SAsBYtew64IUqjU1dcaZxgsrn/KExbNnSEn+R/E07Ahc4v9zbk5ZYSmEo
-         CvOfUzns3saBShFB5817OoOZwRKVhB5+I4n3jg1MjJ4kS2iP0nCk33otF3PcTEOTGnws
-         WjOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUtFdxlPCu+lDnot4g9dyHjzSzjAu65pSArZ8fiQNJD59GK5H3JuMU2HB8ldtsrhzXumPPn97IZFOi9TYb1ofS7wFo1ufVQDSmD6eS9WCiJQkkpNBf+qJ/MjiQKQJRdQ9U5cs4osqudnZhwwTCMqOHlnOIp++O18TdPlv4dS9UO
-X-Gm-Message-State: AOJu0Ywo4moGIS8HDTNgirn0pJr4SbOewGinjl1SYoad1UvivU+0XNw1
-	L2XikGmOtpcAez2jcdRkSquQv97CqMhFqozZpjJnZX9XeAAVbVkzXC2CCA==
-X-Google-Smtp-Source: AGHT+IFhelxmEPpQ2yAPk4N6UzSc/vAmHOdcCm144whUB788vgz8OCGV+VCxJhTkegxp1jzRJzVN3w==
-X-Received: by 2002:a05:651c:1506:b0:2ef:265e:bb93 with SMTP id 38308e7fff4ca-2f3be578483mr29616821fa.3.1723835099056;
-        Fri, 16 Aug 2024 12:04:59 -0700 (PDT)
-Received: from mobilestation ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2f3b74b28b3sm6264011fa.66.2024.08.16.12.04.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Aug 2024 12:04:58 -0700 (PDT)
-Date: Fri, 16 Aug 2024 22:04:55 +0300
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-Cc: manivannan.sadhasivam@linaro.org, vkoul@kernel.org, 
-	quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com, quic_ramkri@quicinc.com, 
-	quic_nayiluri@quicinc.com, quic_krichai@quicinc.com, quic_vbadigan@quicinc.com, 
-	stable@vger.kernel.org, Cai Huoqing <cai.huoqing@linux.dev>, dmaengine@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] dmaengine: dw-edma: Fix unmasking STOP and ABORT
- interrupts for HDMA
-Message-ID: <k4kies4zeeda3nqse7ok5nxlg6nymznkktpalf2bx6wvegvhjo@s7breuqvbnq6>
-References: <1723554938-23852-1-git-send-email-quic_msarkar@quicinc.com>
- <1723554938-23852-2-git-send-email-quic_msarkar@quicinc.com>
+	s=arc-20240116; t=1723846881; c=relaxed/simple;
+	bh=dwQBZTO//U58E3kwzyvZ1HNQknjkE/A/sZ1qbVlA38c=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=VGFL6B5tULmeaT5HPEjRTKca6e4RejZeug7v3P6sUMKSipD7PXmWvWzSFyaC2gRjnk/9M0fvr3xfF43OLfx0qQEaOhDRI1qWTuafNDVZhfmbkDSKvX/f4Jf+5lK1xy8T2saD/t3t6I+LJindZxcsJt2chIy77EnbyedOO5cfU4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=G5jYwPPe; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 03142418AB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1723846872; bh=DDlzN91pqXetBWEzbxhP44nWK82/0rSseDZiI/Y4Umc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=G5jYwPPeNcNFIy3YNcuiJ4LAI0kkXtuup5gU3UeKBjoTDqzOcvYZr6a1FwxSwa3CQ
+	 4ZD4O2m3jKu1hmB9ZAUe3RUNAI7JiuczHk7KoxgLrpG1E6+sdiYYQwx/AweUhCAM4l
+	 BWRd/+eh+8XR60LcHuSDyYbSJNCo7e359kfLkGsCMDOyHQYsyrWZsL0I3I4UNOZ9en
+	 NwGhKdHedKCwPuztjKUhSnk8YqNOD7KkujA0hRhv5mJ7C2OiO36I7mignBfWY3Dl+I
+	 CtKwZEp4OMfEotN/irzGcvmRZcPVuKpgKtT6rnX4GVAwmEzHi2Jz5gIWEiPJTa21Q1
+	 f1hCwg9+4X7xg==
+Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 03142418AB;
+	Fri, 16 Aug 2024 22:21:12 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Amit Vadhavana <av2082000@gmail.com>, linux-doc@vger.kernel.org,
+ ricardo@marliere.net
+Cc: av2082000@gmail.com, linux-kernel-mentees@lists.linux.dev,
+ skhan@linuxfoundation.org, amelie.delaunay@foss.st.com,
+ mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
+ catalin.marinas@arm.com, will@kernel.org, mpe@ellerman.id.au,
+ npiggin@gmail.com, christophe.leroy@csgroup.eu, naveen@kernel.org,
+ paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+ tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ bhelgaas@google.com, conor.dooley@microchip.com, costa.shul@redhat.com,
+ dmaengine@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, workflows@vger.kernel.org
+Subject: Re: [PATCH] Documentation: Fix spelling mistakes
+In-Reply-To: <20240810183238.34481-1-av2082000@gmail.com>
+References: <20240810183238.34481-1-av2082000@gmail.com>
+Date: Fri, 16 Aug 2024 16:21:11 -0600
+Message-ID: <87y14whzxk.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1723554938-23852-2-git-send-email-quic_msarkar@quicinc.com>
+Content-Type: text/plain
 
-Hi Mrinmay
+Now that I have looked at these, I have a couple of comments...
 
-On Tue, Aug 13, 2024 at 06:45:37PM +0530, Mrinmay Sarkar wrote:
-> The current logic is enabling both STOP_INT_MASK and ABORT_INT_MASK
-> bit. This is apparently masking those particular interrupts rather than
-> unmasking the same. If the interrupts are masked, they would never get
-> triggered.
-> 
-> So fix the issue by unmasking the STOP and ABORT interrupts properly.
-> 
-> Fixes: e74c39573d35 ("dmaengine: dw-edma: Add support for native HDMA")
-> cc: stable@vger.kernel.org
-> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Amit Vadhavana <av2082000@gmail.com> writes:
+
+> Corrected spelling mistakes in the documentation to improve readability.
+
+Normal form for a changelog is to use the imperative mode; some
+maintainers are insistent about that.  So "Correct spelling ... "
+
+> Signed-off-by: Amit Vadhavana <av2082000@gmail.com>
 > ---
->  drivers/dma/dw-edma/dw-hdma-v0-core.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> index 10e8f07..a0aabdd 100644
-> --- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> +++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> @@ -247,10 +247,11 @@ static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
->  	if (first) {
->  		/* Enable engine */
->  		SET_CH_32(dw, chan->dir, chan->id, ch_en, BIT(0));
-> -		/* Interrupt enable&unmask - done, abort */
-> -		tmp = GET_CH_32(dw, chan->dir, chan->id, int_setup) |
-> -		      HDMA_V0_STOP_INT_MASK | HDMA_V0_ABORT_INT_MASK |
-> -		      HDMA_V0_LOCAL_STOP_INT_EN | HDMA_V0_LOCAL_ABORT_INT_EN;
-> +		/* Interrupt unmask - stop, abort */
+>  Documentation/arch/arm/stm32/stm32-dma-mdma-chaining.rst | 4 ++--
+>  Documentation/arch/arm64/cpu-hotplug.rst                 | 2 +-
+>  Documentation/arch/powerpc/ultravisor.rst                | 2 +-
+>  Documentation/arch/riscv/vector.rst                      | 2 +-
+>  Documentation/arch/sparc/oradax/oracle-dax.rst           | 2 +-
+>  Documentation/arch/x86/mds.rst                           | 2 +-
+>  Documentation/arch/x86/x86_64/fsgs.rst                   | 4 ++--
+>  Documentation/process/backporting.rst                    | 6 +++---
+>  8 files changed, 12 insertions(+), 12 deletions(-)
 
-> +		tmp = GET_CH_32(dw, chan->dir, chan->id, int_setup) &
-> +		      ~HDMA_V0_STOP_INT_MASK & ~HDMA_V0_ABORT_INT_MASK;
+[...]
 
-The gist of my v2 comment was to convert the chunk above to:
-		tmp = GET_CH_32(dw, chan->dir, chan->id, int_setup);
-		tmp &= ~(HDMA_V0_STOP_INT_MASK | HDMA_V0_ABORT_INT_MASK);
+> diff --git a/Documentation/arch/riscv/vector.rst b/Documentation/arch/riscv/vector.rst
+> index 75dd88a62e1d..e4a28def318a 100644
+> --- a/Documentation/arch/riscv/vector.rst
+> +++ b/Documentation/arch/riscv/vector.rst
+> @@ -15,7 +15,7 @@ status for the use of Vector in userspace. The intended usage guideline for
+>  these interfaces is to give init systems a way to modify the availability of V
+>  for processes running under its domain. Calling these interfaces is not
+>  recommended in libraries routines because libraries should not override policies
+> -configured from the parant process. Also, users must noted that these interfaces
+> +configured from the parent process. Also, users must noted that these interfaces
 
-This is a clearer representation of the IRQs _unmasking_. Moreover the
-code will turn to looking a bit more like what is implemented in the
-similar part of the dw-edma-v0-core.c driver.
+As long as you are fixing this line, s/noted/note/
 
--Serge(y)
+>  are not portable to non-Linux, nor non-RISC-V environments, so it is discourage
+>  to use in a portable code. To get the availability of V in an ELF program,
+>  please read :c:macro:`COMPAT_HWCAP_ISA_V` bit of :c:macro:`ELF_HWCAP` in the
+> diff --git a/Documentation/arch/sparc/oradax/oracle-dax.rst b/Documentation/arch/sparc/oradax/oracle-dax.rst
+> index d1e14d572918..54ccb35ed51d 100644
+> --- a/Documentation/arch/sparc/oradax/oracle-dax.rst
+> +++ b/Documentation/arch/sparc/oradax/oracle-dax.rst
+> @@ -197,7 +197,7 @@ Memory Constraints
+>  ==================
+>  
+>  The DAX hardware operates only on physical addresses. Therefore, it is
+> -not aware of virtual memory mappings and the discontiguities that may
+> +not aware of virtual memory mappings and the discontinuities that may
 
+Whether "discontiguities" is recognized by a spelling checker or not, I
+expect that is the word that was intended by the author of this
+document.  I would not change it.
 
-> +		/* Interrupt enable - stop, abort */
-> +		tmp |= HDMA_V0_LOCAL_STOP_INT_EN | HDMA_V0_LOCAL_ABORT_INT_EN;
->  		if (!(dw->chip->flags & DW_EDMA_CHIP_LOCAL))
->  			tmp |= HDMA_V0_REMOTE_STOP_INT_EN | HDMA_V0_REMOTE_ABORT_INT_EN;
->  		SET_CH_32(dw, chan->dir, chan->id, int_setup, tmp);
-> -- 
-> 2.7.4
-> 
+>  exist in the physical memory that a virtual buffer maps to. There is
+>  no I/O TLB or any scatter/gather mechanism. All buffers, whether input
+>  or output, must reside in a physically contiguous region of memory.
+> diff --git a/Documentation/arch/x86/mds.rst b/Documentation/arch/x86/mds.rst
+> index c58c72362911..5a2e6c0ef04a 100644
+> --- a/Documentation/arch/x86/mds.rst
+> +++ b/Documentation/arch/x86/mds.rst
+> @@ -162,7 +162,7 @@ Mitigation points
+>     3. It would take a large number of these precisely-timed NMIs to mount
+>        an actual attack.  There's presumably not enough bandwidth.
+>     4. The NMI in question occurs after a VERW, i.e. when user state is
+> -      restored and most interesting data is already scrubbed. Whats left
+> +      restored and most interesting data is already scrubbed. What's left
+>        is only the data that NMI touches, and that may or may not be of
+>        any interest.
+>  
+> diff --git a/Documentation/arch/x86/x86_64/fsgs.rst b/Documentation/arch/x86/x86_64/fsgs.rst
+> index 50960e09e1f6..d07e445dac5c 100644
+> --- a/Documentation/arch/x86/x86_64/fsgs.rst
+> +++ b/Documentation/arch/x86/x86_64/fsgs.rst
+> @@ -125,7 +125,7 @@ FSGSBASE instructions enablement
+>  FSGSBASE instructions compiler support
+>  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>  
+> -GCC version 4.6.4 and newer provide instrinsics for the FSGSBASE
+> +GCC version 4.6.4 and newer provide intrinsics for the FSGSBASE
+>  instructions. Clang 5 supports them as well.
+
+Note that current kernels require rather newer versions of both
+compilers than this, so this information does not need to be here at
+all.  If you do not want to edit at that level, though, the change is an
+improvement.
+
+Thanks,
+
+jon
 

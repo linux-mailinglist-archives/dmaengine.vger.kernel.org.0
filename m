@@ -1,47 +1,47 @@
-Return-Path: <dmaengine+bounces-2878-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2879-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 09EA4954EFE
-	for <lists+dmaengine@lfdr.de>; Fri, 16 Aug 2024 18:38:35 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 33D8B954F07
+	for <lists+dmaengine@lfdr.de>; Fri, 16 Aug 2024 18:40:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1DD34B21ECB
-	for <lists+dmaengine@lfdr.de>; Fri, 16 Aug 2024 16:38:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E362D28457F
+	for <lists+dmaengine@lfdr.de>; Fri, 16 Aug 2024 16:40:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 022B91BCA1C;
-	Fri, 16 Aug 2024 16:38:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B14671BE85F;
+	Fri, 16 Aug 2024 16:40:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mwiPTZ2V"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bx8PDUEW"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB9C76F2F0;
-	Fri, 16 Aug 2024 16:38:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 755621BDA82;
+	Fri, 16 Aug 2024 16:40:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723826306; cv=none; b=IAW3AgoY2SBDdYk3UY9wfyxpItg7B0rXRwdU9WxWIS9+YQTferK60MM+kG9Zy6Vo61xeWO+ODwbBh/sde0BotxAa91UNgpGHa2AyYHx+OsHSdmJlJiZI127p12YDc2kSY2TdjJEvj95VLFDCvl8xfzaaRiSXo5YljfoGjr6Gj54=
+	t=1723826442; cv=none; b=D6iQMBXOa1HqchvNoxeLJfOf2tQjQW9AOFEvqA5K41hk+BLKvWMW4UAPXlH9cHvLKMuk3GtIUzIiN8yZjFr1IhcLF8xXKadzIMRHph4PiT3RZ8TUjLHuFV8GYPYrT7+AR66TT3LuiNDmvJ1rkwlb/8k39gpRd4EFXejZDkV+kVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723826306; c=relaxed/simple;
-	bh=yN7uSPMNWaqA5XsiTCjzR7XxYl6sedkSD2fLgGmfhkQ=;
+	s=arc-20240116; t=1723826442; c=relaxed/simple;
+	bh=BGu9Em/D4e6K7dXhfPgKpkjZwmJfH6pzeSu5bH6pCAE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kAYf5hXQuvTnxWLHtIVz3KmQHGX1FsZXkGmCUPpfjsrWA1a+0Dl33TSKCoyZWOYvTZyMDsklElF2q+MK9P4OaW7CKzoirTgc10oq6Sh4WPH1EUBKujK7fVtaOn3JoE72R+vmpuEIqvlBwynqPGAaP9z8xZqoZZyqGYiekCEkw4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mwiPTZ2V; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB2DAC32782;
-	Fri, 16 Aug 2024 16:38:24 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=t8cmQqBNMyXsDjMgfvsaBT2lRsZbfhRo/RX7lhwHpeF9qiK8QDFzka/tEzqyJU05kZ03gO3FgMSAVplSE7DIHqh8HnnfpqvuGWg7WlGjXb/usrc3MgzlmYpfS38qOap/AxrJiIJnEXDntiGQlSOjjMc1zX4awNwGPomFPTg9pGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bx8PDUEW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B70FC32782;
+	Fri, 16 Aug 2024 16:40:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723826306;
-	bh=yN7uSPMNWaqA5XsiTCjzR7XxYl6sedkSD2fLgGmfhkQ=;
+	s=k20201202; t=1723826442;
+	bh=BGu9Em/D4e6K7dXhfPgKpkjZwmJfH6pzeSu5bH6pCAE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mwiPTZ2VFkUHm50EbfKLXSN8r5etmTBCgdQSCf3Q+z6aYaDTbCijy0WNCuRAXtsOl
-	 CzaFIMZeFQ7TNkDH5wsf+ARFZdyAK1K3XVjCEF1+aH8nfUelje0ef44FliRoGEW7eK
-	 4F9nEAEAYgHozV1WWpt67xu77GzEa8Hu0ORImKDKIOTwNvazobCCBJJwAPtdqoXfGb
-	 zIxkVf3sI0ZrwDfoXb+r4IaIvKGgKVxgXfcuUXq5oUA/cffJKAmpmchobqlbOGAlFa
-	 t7pI3MnLOtgqKcHBJ4YEWKimkhrrFyL2dxxmvlvbnfoydAsUqf4Tb7IRy5al/iIcq+
-	 Yf79xJq8FdIRg==
-Date: Fri, 16 Aug 2024 11:38:22 -0500
+	b=bx8PDUEWSBbiXN+J/oaqDxDOwNEu/sWGaL/5CKpETphOZte+boC0QMPsfc9cdAqNG
+	 HZOPq27/wfPB3GKiOcypObakigPyl1rAc+5uKcyrXycyvUQTuJSU/z4MHfKsWHsIF2
+	 25EVk14M4OyjOSYyaBe43JtPH/mQIuDk9jvHTLbCOdvfsAYMSlVnGk+BnVuoHsA0+T
+	 yAFcqa7LrnNkSbXimbM/LReSglZBz2Dp8ja9c2xLxugHZcnOVE1xyNd9L80owvRaDy
+	 zVwfO5fy/kLANyaTJBa6LPEUjDW9Ww1SMTomhVscX7wV7sphD9QrIZ1N1f7xCQJ5ae
+	 GCaGCcPa7J0VQ==
+Date: Fri, 16 Aug 2024 11:40:38 -0500
 From: Bjorn Andersson <andersson@kernel.org>
 To: Md Sadre Alam <quic_mdalam@quicinc.com>
 Cc: vkoul@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
@@ -51,11 +51,11 @@ Cc: vkoul@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
 	linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, quic_srichara@quicinc.com, 
 	quic_varada@quicinc.com, quic_utiwari@quicinc.com
-Subject: Re: [PATCH v2 10/16] crypto: qce - Add support for lock aquire,lock
- release api.
-Message-ID: <n625hyjcbiidnlskzlubrmrflguwyurq5rp4l2hsnqf2g2wzik@ftz4wvvifft5>
+Subject: Re: [PATCH v2 14/16] arm64: dts: qcom: ipq9574: enable bam pipe
+ locking/unlocking
+Message-ID: <lr53irikxjjoiks2utckyt5bsflxm52r2nlospkv3id6qwkfih@pycrjkeibx4g>
 References: <20240815085725.2740390-1-quic_mdalam@quicinc.com>
- <20240815085725.2740390-11-quic_mdalam@quicinc.com>
+ <20240815085725.2740390-15-quic_mdalam@quicinc.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -64,117 +64,51 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240815085725.2740390-11-quic_mdalam@quicinc.com>
+In-Reply-To: <20240815085725.2740390-15-quic_mdalam@quicinc.com>
 
-On Thu, Aug 15, 2024 at 02:27:19PM GMT, Md Sadre Alam wrote:
-> Add support for lock acquire and lock release api.
-> When multiple EE's(Execution Environment) want to access
-> CE5 then there will be race condition b/w multiple EE's.
-> 
-> Since each EE's having their dedicated BAM pipe, BAM allows
-> Locking and Unlocking on BAM pipe. So if one EE's requesting
-> for CE5 access then that EE's first has to LOCK the BAM pipe
-> while setting LOCK bit on command descriptor and then access
-> it. After finishing the request EE's has to UNLOCK the BAM pipe
-> so in this way we race condition will not happen.
+On Thu, Aug 15, 2024 at 02:27:23PM GMT, Md Sadre Alam wrote:
+> enable bam pipe locking/unlocking for ipq9507 SoC.
 
-Does the lock/unlock need to happen on a dummy access before and after
-the actual sequence? Is it not sufficient to lock/unlock on the first
-and last operation?
+Note that the commit messages for the other non-dts commits will not
+show up in the git history for this file. So, please follow
+https://docs.kernel.org/process/submitting-patches.html#describe-your-changes
+and give some indication of "problem description", to give future
+readers an idea why this is here.
 
-Please squash this with the previous commit, if kept as explicit
-operations, please squash it with the previous patch that introduces the
-flags.
-
-> 
-> Added these two API qce_bam_acquire_lock() and qce_bam_release_lock()
-> for the same.
 > 
 > Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
 > ---
 > 
 > Change in [v2]
 > 
-> * No chnage
+> * enabled locking/unlocking support for ipq9574
 > 
 > Change in [v1]
 > 
-> * Added initial support for lock_acquire and lock_release
->   api.
+> * This patch was not included in [v1]
 > 
->  drivers/crypto/qce/common.c | 36 ++++++++++++++++++++++++++++++++++++
->  drivers/crypto/qce/core.h   |  2 ++
->  2 files changed, 38 insertions(+)
+>  arch/arm64/boot/dts/qcom/ipq9574.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/crypto/qce/common.c b/drivers/crypto/qce/common.c
-> index ff96f6ba1fc5..a8eaffe41101 100644
-> --- a/drivers/crypto/qce/common.c
-> +++ b/drivers/crypto/qce/common.c
-> @@ -617,3 +617,39 @@ void qce_get_version(struct qce_device *qce, u32 *major, u32 *minor, u32 *step)
->  	*minor = (val & CORE_MINOR_REV_MASK) >> CORE_MINOR_REV_SHIFT;
->  	*step = (val & CORE_STEP_REV_MASK) >> CORE_STEP_REV_SHIFT;
->  }
-> +
-> +int qce_bam_acquire_lock(struct qce_device *qce)
-> +{
-> +	int ret;
-> +
-> +	qce_clear_bam_transaction(qce);
+> diff --git a/arch/arm64/boot/dts/qcom/ipq9574.dtsi b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
+> index 48dfafea46a7..dacaec62ec39 100644
+> --- a/arch/arm64/boot/dts/qcom/ipq9574.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
+> @@ -262,6 +262,7 @@ cryptobam: dma-controller@704000 {
+>  			#dma-cells = <1>;
+>  			qcom,ee = <1>;
+>  			qcom,controlled-remotely;
+> +			qcom,bam_pipe_lock;
 
-It's not entirely obvious that a "lock" operation will invalidate any
-pending operations.
-
-> +
-> +	/* This is just a dummy write to acquire lock on bam pipe */
-> +	qce_write_reg_dma(qce, REG_AUTH_SEG_CFG, 0, 1);
-> +
-> +	ret = qce_submit_cmd_desc(qce, QCE_DMA_DESC_FLAG_LOCK);
-> +	if (ret) {
-> +		dev_err(qce->dev, "Error in Locking cmd descriptor\n");
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +int qce_bam_release_lock(struct qce_device *qce)
-
-What would be a reasonable response from the caller if this release
-operation returns a failure? How do you expect it to recover?
-
-> +{
-> +	int ret;
-> +
-> +	qce_clear_bam_transaction(qce);
-> +
-
-In particularly not on "unlock".
+Per the question before about what does this actually lock. Is this a
+property of the BAM controller, or the crypto channel?
 
 Regards,
 Bjorn
 
-> +	/* This just dummy write to release lock on bam pipe*/
-> +	qce_write_reg_dma(qce, REG_AUTH_SEG_CFG, 0, 1);
-> +
-> +	ret = qce_submit_cmd_desc(qce, QCE_DMA_DESC_FLAG_UNLOCK);
-> +	if (ret) {
-> +		dev_err(qce->dev, "Error in Un-Locking cmd descriptor\n");
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> diff --git a/drivers/crypto/qce/core.h b/drivers/crypto/qce/core.h
-> index bf28dedd1509..d01d810b60ad 100644
-> --- a/drivers/crypto/qce/core.h
-> +++ b/drivers/crypto/qce/core.h
-> @@ -68,4 +68,6 @@ int qce_read_reg_dma(struct qce_device *qce, unsigned int offset, void *buff,
->  void qce_clear_bam_transaction(struct qce_device *qce);
->  int qce_submit_cmd_desc(struct qce_device *qce, unsigned long flags);
->  struct qce_bam_transaction *qce_alloc_bam_txn(struct qce_dma_data *dma);
-> +int qce_bam_acquire_lock(struct qce_device *qce);
-> +int qce_bam_release_lock(struct qce_device *qce);
->  #endif /* _CORE_H_ */
+>  		};
+>  
+>  		crypto: crypto@73a000 {
 > -- 
 > 2.34.1
 > 

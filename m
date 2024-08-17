@@ -1,48 +1,48 @@
-Return-Path: <dmaengine+bounces-2888-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2889-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B0D195569B
-	for <lists+dmaengine@lfdr.de>; Sat, 17 Aug 2024 11:09:03 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B26429556A3
+	for <lists+dmaengine@lfdr.de>; Sat, 17 Aug 2024 11:11:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A8CE91F201A0
-	for <lists+dmaengine@lfdr.de>; Sat, 17 Aug 2024 09:09:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 689EE282AC6
+	for <lists+dmaengine@lfdr.de>; Sat, 17 Aug 2024 09:11:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F2B3145B10;
-	Sat, 17 Aug 2024 09:08:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03ADF145FEE;
+	Sat, 17 Aug 2024 09:11:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IZZW93K4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o3cCfnO+"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AA5CBA2D;
-	Sat, 17 Aug 2024 09:08:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE789145B10;
+	Sat, 17 Aug 2024 09:11:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723885738; cv=none; b=rBU5L49imRYe3zCY8Nb9l/prnc3A+Ard3YDPq1WKm3Taoxsc58tm8XL8LzNxF4oMP8kiTVI5n3Hp5z4oDABk8mhnjmfKl/iCvS4AWOOrdEUfcIGONMLZyHG1JVjqrBxATfy5fU4RjxsBfJIok3hUSt3rA38osq8xPX0sPVbADHc=
+	t=1723885866; cv=none; b=ij6+ZMLkuJXo1fw5aZi2HnIcKRZKng9MwxQUaCrDVwCeLnIesAs08jkuU3rKPm1UpzuzuYuO6Ag8RMEtpeJDiYv4rxX07+LGoED7feOQ1ZIe3Nwpc8Zl/EJy8iGA1PyOQ3558Vb2VGXbzr4beJqCCy5pQ+AZrOFNgxWyF0qmvl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723885738; c=relaxed/simple;
-	bh=DhGqdmzdo2eqxFAVi7zdQylExnP4Ym9vjsWOcUmOsGY=;
+	s=arc-20240116; t=1723885866; c=relaxed/simple;
+	bh=URvB4JCVzwXoQzNY8U7d4UZOKGZ9b6mGU5yBRP2B/iw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eUEe2Wm0qpiOYxqITuN0lXJlne6j5K/2eal1Jo0EsW+Qp3fcV3BASS7kLqaKRopLGvSzzog9h9ICNJcPKNqB/KxiXcz2r1v1Np8WFidFaO7RpCQSwYt7rvr1y8NvwSlRj1bs8sp3DMKKQ3unzKay+CGAs06UwX7W1K5k6Xy5/ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IZZW93K4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40B89C116B1;
-	Sat, 17 Aug 2024 09:08:51 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=clZdykJrKBfVoB+SiBzP7JL0NJzZ9N8ze+sh4iO+RTscl9yCRhYNIwCSq0Qlz2XwZ8g2YSXMM1Yz/yoXlkfcIrr9K/0TV+KkbvtpyARjL8n8mRNeefvr/FONdjlcqerKBgtUklwIa+GVhltzr808BAMLfhNnPlumRHmCuMycy1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o3cCfnO+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF7ADC116B1;
+	Sat, 17 Aug 2024 09:10:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723885737;
-	bh=DhGqdmzdo2eqxFAVi7zdQylExnP4Ym9vjsWOcUmOsGY=;
+	s=k20201202; t=1723885866;
+	bh=URvB4JCVzwXoQzNY8U7d4UZOKGZ9b6mGU5yBRP2B/iw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IZZW93K4159BD9tfUS571Q4Rv3aua3HLL7xhopx9VbTV3BHOejAXRsd5/zpdz5GhY
-	 QEG3lHe/4CY8YsnaCkXfZhxPEkkpfKs/fIBuslLrF5FijZZCPVPRqgzK6zIzsXwhYn
-	 Hd5If93koITV+LKV+iDCIS1rdsBprsFJxxcUO/GE4kIcorOzUmr3Qxm6qJB7xJCE1v
-	 XsrsfyRcejWlImJ0+XftMqehUi9ES9Yt9oj3Hil4Mm0g9hf5zBV+656w15MihUuSdM
-	 1L8puIJgJP9t6j7JVDBGqdwYuSLRwwi/lU2A5SCbulxpuEg3J4kkjjJUSU24RHn5kj
-	 h7PqYBbKqYYDg==
-Message-ID: <9271efb2-db9a-4f45-bdb1-724ce6dbcbf1@kernel.org>
-Date: Sat, 17 Aug 2024 11:08:49 +0200
+	b=o3cCfnO+qplvhZJPrkyXFi9rca7iF/+ZIA6Kw4qSDDCWbHNDqXGpNp8BqNklRihdH
+	 YHD1PR3SiKc9BurSEAvQw9R7HhgmzoOaR4Qdv1tF/Rz1qDKG6Yz0BGKBTAPhxByMQi
+	 8ZIT4BE7DfHAA8z/t5znVnG2Sk+rr0eCCJO+tQG47nCzKpeEO0zoQ9bua9eYRyhXuG
+	 VGnAO5Z5g2b9Bhg2hjw+gvkE6Yk1tDC06vl7NSxELh2edJWqly+Z+CUOdiH0XXJyWG
+	 FsVpyPF7ftPHxr4yl8nf6xSreqo+6iJZHOp1JwZfCYu7ishTYGOSeU8Oct0gJU2lQq
+	 0UkEs3ZcsAvGw==
+Message-ID: <72cef34a-acb0-4278-984c-dadd53817b5d@kernel.org>
+Date: Sat, 17 Aug 2024 11:10:57 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 02/16] dmaengine: qcom: bam_dma: add bam_pipe_lock dt
- property
+Subject: Re: [PATCH v2 04/16] crypto: qce - Add support for crypto address
+ read
 To: Md Sadre Alam <quic_mdalam@quicinc.com>, vkoul@kernel.org,
  robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
  andersson@kernel.org, konradybcio@kernel.org, thara.gopinath@gmail.com,
@@ -63,7 +63,7 @@ To: Md Sadre Alam <quic_mdalam@quicinc.com>, vkoul@kernel.org,
 Cc: quic_srichara@quicinc.com, quic_varada@quicinc.com,
  quic_utiwari@quicinc.com
 References: <20240815085725.2740390-1-quic_mdalam@quicinc.com>
- <20240815085725.2740390-3-quic_mdalam@quicinc.com>
+ <20240815085725.2740390-5-quic_mdalam@quicinc.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -109,52 +109,85 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240815085725.2740390-3-quic_mdalam@quicinc.com>
+In-Reply-To: <20240815085725.2740390-5-quic_mdalam@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 15/08/2024 10:57, Md Sadre Alam wrote:
-> bam having locking and unlocking mechanism of bam pipes.
-> Upon encountering a descriptor with Lock bit set, the
-> BAM will lock all other pipes not related to the current
-> pipe group, and keep handling the current pipe only until
-> it sees the Un-Lock set , then it will release all locked
-> pipes. The actual locking is done on the new descriptor
-> fetching for publishing, i.e. locked pipe will not fetch
-> new descriptors even if it got event/events adding more
-> descriptors for this pipe.
-> 
-> Adding the bam_pipe_lock flag in bam driver to handle
-> Lock and Un-Lock bit set on command descriptor.
+> Get crypto base address from DT. This will use for
+> command descriptor support for crypto register r/w
+> via BAM/DMA
+
+All your commit messages are oddly wrapped. This does not make reading
+it easy...
+
 > 
 > Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
 > ---
-> 
 > Change in [v2]
 > 
-> * Added bam_pipe_lock dt property
+> * Addressed all comments from v1
 > 
 > Change in [v1]
 > 
-> * This patch was not included in [v1]
+> * Added support to read crypto base address from dt
 > 
->  drivers/dma/qcom/bam_dma.c | 4 ++++
->  1 file changed, 4 insertions(+)
+>  drivers/crypto/qce/core.c | 13 ++++++++++++-
+>  drivers/crypto/qce/core.h |  1 +
+>  2 files changed, 13 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
-> index 5e7d332731e0..1ac7e250bdaa 100644
-> --- a/drivers/dma/qcom/bam_dma.c
-> +++ b/drivers/dma/qcom/bam_dma.c
-> @@ -389,6 +389,7 @@ struct bam_device {
->  	u32 ee;
->  	bool controlled_remotely;
->  	bool powered_remotely;
-> +	bool bam_pipe_lock;
+> diff --git a/drivers/crypto/qce/core.c b/drivers/crypto/qce/core.c
+> index 28b5fd823827..9b23a948078a 100644
+> --- a/drivers/crypto/qce/core.c
+> +++ b/drivers/crypto/qce/core.c
+> @@ -192,6 +192,7 @@ static int qce_crypto_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+>  	struct qce_device *qce;
+> +	struct resource *res;
+>  	int ret;
+>  
+>  	qce = devm_kzalloc(dev, sizeof(*qce), GFP_KERNEL);
+> @@ -201,10 +202,16 @@ static int qce_crypto_probe(struct platform_device *pdev)
+>  	qce->dev = dev;
+>  	platform_set_drvdata(pdev, qce);
+>  
+> -	qce->base = devm_platform_ioremap_resource(pdev, 0);
+> +	qce->base = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
+>  	if (IS_ERR(qce->base))
+>  		return PTR_ERR(qce->base);
+>  
+> +	qce->base_dma = dma_map_resource(dev, res->start,
+> +					 resource_size(res),
+> +					 DMA_BIDIRECTIONAL, 0);
+> +	if (dma_mapping_error(dev, qce->base_dma))
+> +		return -ENXIO;
+> +
+>  	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
+>  	if (ret < 0)
+>  		return ret;
 
-There is no user of this property. It's just no-op. Split your code into
-logical chunks, but logical chunk is not "I add field to structure which
-is not used".
+And how do you handle error paths?
 
+
+> @@ -280,6 +287,7 @@ static int qce_crypto_probe(struct platform_device *pdev)
+>  static void qce_crypto_remove(struct platform_device *pdev)
+>  {
+>  	struct qce_device *qce = platform_get_drvdata(pdev);
+> +	struct resource *res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  
+>  	tasklet_kill(&qce->done_tasklet);
+>  	qce_unregister_algs(qce);
+> @@ -287,6 +295,9 @@ static void qce_crypto_remove(struct platform_device *pdev)
+>  	clk_disable_unprepare(qce->bus);
+>  	clk_disable_unprepare(qce->iface);
+>  	clk_disable_unprepare(qce->core);
+> +
+> +	dma_unmap_resource(&pdev->dev, qce->base_dma, resource_size(res),
+> +			   DMA_BIDIRECTIONAL, 0);
+
+If you add code to the remove callback, not adding it to error paths is
+suspicious by itself...
 
 Best regards,
 Krzysztof

@@ -1,127 +1,120 @@
-Return-Path: <dmaengine+bounces-2914-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2915-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A48C69573FE
-	for <lists+dmaengine@lfdr.de>; Mon, 19 Aug 2024 20:53:43 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7BC9995748B
+	for <lists+dmaengine@lfdr.de>; Mon, 19 Aug 2024 21:37:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D6DAD1C21B10
-	for <lists+dmaengine@lfdr.de>; Mon, 19 Aug 2024 18:53:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 384B6285BB6
+	for <lists+dmaengine@lfdr.de>; Mon, 19 Aug 2024 19:37:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2170C1411E0;
-	Mon, 19 Aug 2024 18:53:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 229A0186E56;
+	Mon, 19 Aug 2024 19:37:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YcFp9DTe"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iyT8C1zi"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B191EB3D;
-	Mon, 19 Aug 2024 18:53:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 873D99460;
+	Mon, 19 Aug 2024 19:36:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724093619; cv=none; b=UVgty659HUNzhZdeAgZgRU7pn+ZIIUVlpuJWKQMjlkHXnoJuF+us3RFU209tfIttmGUHo7KiL5HjBgFrnqM9EUzFN2WKkCjAPN6GA6WVgTWK8YmaFQAa7bcAwgeyzbRiRLj4YkcAkAcUZd8MUjOS9HNMp+mc26WJDmxuIEn15pY=
+	t=1724096220; cv=none; b=h8sQFvLKsD2++8XUXWDMlfXnaWJjy1WMDW4Erie63+o8TaOayR7ESn7yFQdvquE31W3Dlnp/c4IExt2rv0M7bTzdBT2y/mp26hV2MxcrrWh3wl1il2VEwLkTSV6FaL1JmLn0KHCIW4VK95xZHmbPcB+3XXS2v7PttcSUvt74oNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724093619; c=relaxed/simple;
-	bh=hk958LZG7P46VYbKlMNN/p9l+ikVk6K4JM3yoYkCjck=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=cgoGnjkMIk9l9JYgwqPAvbff0rtRAzvclGYgbefI/LfjUhw61QPWH4Ugq9R3tFzk/7N96v3rGgW/+TeePOjK0yQ8CGoXcJZ8LBZyM+sUz0/NgB+0yIEo4kqAtrg+s87M81s+n0aMjw2pej7760CaZDoYsUOsIdx/gue+aGMzYtM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YcFp9DTe; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2d3c5f769d6so3186059a91.3;
-        Mon, 19 Aug 2024 11:53:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724093617; x=1724698417; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=hk958LZG7P46VYbKlMNN/p9l+ikVk6K4JM3yoYkCjck=;
-        b=YcFp9DTeb1Ownasojn9f4a++ShYaCb8iCjQx5Jx9tmu9V18E2kkppkdV3PKV/ixI+W
-         rZvy7CB2ySlDmAhyvVe0pWjVtVfX8Dr41jmvAb3FG7TeDaoYXyND5t+jxRtrqbU4X/bX
-         zDlGrtM9rLptvpSfYpVtvMchqymaXtShRVp/PagEKmtpzNp2XpDk3/zjEE1ItSEHpov/
-         onC126gIBYYeHoh6YcBEOzJmGEiyH6weRtnyHZbVs2KhtXyjtOfWSxP8PUllE+eLtEos
-         xXp8O+t/ICuo+xx7LZfJTTA4o8LtNEDP5J8R6k38KZSmpkRJ5156MFCq90tfFiasGfL7
-         3Oiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724093617; x=1724698417;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hk958LZG7P46VYbKlMNN/p9l+ikVk6K4JM3yoYkCjck=;
-        b=YW3GBL59Gh/TjALp1QDPr4HplsrZKVFEy1aR5RTuqYUtuqLUH1nPdhU1AzPBU4Kn2G
-         WdjHRD1rrrmfMWkCJIJS+WJ3Sb3eYO2K7gMSs90Fv2dJhbTvkHWGT+pLdyqUMml8KH/X
-         kr7tgQlMZVwSQwl2s0uXF2+IlnZOY7rxqaTRadbg8/kzw80kxJ/4cJkYAz0XU/L2UUwN
-         q/1JeEkYHsgDGQdnsmzI8ilsJ8tVlgzamFrRUxPD+x9NxAbFiXfDYnWe7zT48TEPl+9b
-         G6vezSkPg9zvu447su+5uiXzSB5sK3cZ7c6WlVbC15lep9m3OVU2M1qt0h5kzJj7hwJT
-         +bRA==
-X-Forwarded-Encrypted: i=1; AJvYcCWjOXapDXhQeAOl1o7ckAz8T2IXbayGpuzUGKCVf4sD8cfWebWfDwdpn9/b+C+dKUQ0D84ou8x1F0oJ3rD4t7/iGczPZ/cj8ka90zuF
-X-Gm-Message-State: AOJu0YypjPburZOlR3ahLQSbSCXBy24ReFk4GR6mqz03IGVffDd4b84W
-	wRxlpvEWU2P8PRMSUCuhjp1Ncz8pOoq+wgAKBL7jR5LDQfxw5zO+iVZwJLl3SSwinWVx22HNZIp
-	0uovIYi+Jr5Wxkq4sgN9XQ/PdisQ=
-X-Google-Smtp-Source: AGHT+IE18Ezwozf0x2m4Q9qqvdaKGHFxfMrkNJDcv1NeOMhW8QxFPaRvb3hLvtgjAWMsKzJldyL+lC7RKVLbTG+w2xE=
-X-Received: by 2002:a17:90a:fb0d:b0:2c7:e46e:f8b7 with SMTP id
- 98e67ed59e1d1-2d3dfc3a592mr10456961a91.4.1724093616249; Mon, 19 Aug 2024
- 11:53:36 -0700 (PDT)
+	s=arc-20240116; t=1724096220; c=relaxed/simple;
+	bh=uaT8W2cHmWPSMhnMFf+mMks8PU0cfLZOZSsqLBMc8Ps=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qAq0wYy/oNAIhk8jIbvr3eCnel+y6b3JL4xF2wL00NLwy0Y0cYY+IbvONgoyj1w1RONfc5UsRcZLxHs8WJb6W6rOZTOeJCqWdWp945dZjXekMdvaVXIQAyjApGF5kMr4uH+0vKqUjNZx8Z4kzzeG5gXyEBZTyfiIjSrp6+Qoe4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=iyT8C1zi; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47JIJvXc011235;
+	Mon, 19 Aug 2024 19:36:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding; s=corp-2023-11-20; bh=WfSDpCVRbLP2gF
+	yi+ViQVJY/cDfBP//dv0SZ/0dh2Ew=; b=iyT8C1zioEdqJU1S0f2AT8UnAExgef
+	xOIQqk18ORGGSyFwycSO0E9GwVsNEi5gCSMDJnmum2oC/Am82/hivFobk6zV8w3H
+	x5yfthR5GiId40c5h4njPzV5Mtiovnnzh+YlMcX+CSOT3vVXAnxVAGWy+vYJzD1d
+	ENDkS16xMBBBzygvK14JmMxGcFDNGk4qS/WgWtfb47IiMa3oToCHJfuu4VGHmk3M
+	KuiDQeJlUeWMEuEO30Yheul4LZJG9ggTYzY4wl6XjInbDXIUqLsyxgrf/jgWk7kY
+	t4ln1zWI4zqmf59FyDIsJMtoQeCRR4T7R447DF7QMtexRcwib6reOLIQ==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 412m67bdry-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 19 Aug 2024 19:36:47 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 47JI1BoD037641;
+	Mon, 19 Aug 2024 19:36:46 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 413h5shynh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 19 Aug 2024 19:36:46 +0000
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 47JJajjU028358;
+	Mon, 19 Aug 2024 19:36:45 GMT
+Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 413h5shym6-1;
+	Mon, 19 Aug 2024 19:36:45 +0000
+From: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+To: Lizhi Hou <lizhi.hou@amd.com>, Brian Xu <brian.xu@amd.com>,
+        Raj Kumar Rampelli <raj.kumar.rampelli@amd.com>,
+        Vinod Koul <vkoul@kernel.org>, Michal Simek <michal.simek@amd.com>,
+        Sonal Santan <sonal.santan@amd.com>, Max Zhen <max.zhen@amd.com>,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc: dan.carpenter@linaro.org, kernel-janitors@vger.kernel.org,
+        error27@gmail.com, harshit.m.mogalapalli@oracle.com
+Subject: [PATCH] dmaengine: xilinx: xdma: Fix IS_ERR() vs NULL bug in xdma_probe()
+Date: Mon, 19 Aug 2024 12:36:40 -0700
+Message-ID: <20240819193641.600176-1-harshit.m.mogalapalli@oracle.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Haoyu Li <lihaoyu499@gmail.com>
-Date: Mon, 19 Aug 2024 11:53:23 -0700
-Message-ID: <CAPbMC74cxADGEd2bc8wYA4iUwkP2f-Uywf=V1aMYs4iSiqh1sg@mail.gmail.com>
-Subject: [drivers/dma/ti] Question about `struct omap_desc`: misuse of __counted_by
-To: Peter Ujfalusi <peter.ujfalusi@gmail.com>, Vinod Koul <vkoul@kernel.org>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-08-19_16,2024-08-19_03,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0 mlxscore=0
+ spamscore=0 adultscore=0 phishscore=0 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2407110000
+ definitions=main-2408190133
+X-Proofpoint-ORIG-GUID: nuWlg6L4e4M8i_2_jREaf2qEeNzMUwkQ
+X-Proofpoint-GUID: nuWlg6L4e4M8i_2_jREaf2qEeNzMUwkQ
 
-Dear Linux Developers for TEXAS INSTRUMENTS DMA DRIVERS,
+devm_regmap_init_mmio() returns error pointers on error, it doesn't
+return NULL. Update the error check.
 
-We are curious about the use of `struct omap_desc`. Its definition is
-at https://elixir.bootlin.com/linux/v6.10.6/source/drivers/dma/ti/omap-dma.c#L111.
-```
-struct omap_desc {
-struct virt_dma_desc vd;
-bool using_ll;
-enum dma_transfer_direction dir;
-dma_addr_t dev_addr;
-bool polled;
+Fixes: 17ce252266c7 ("dmaengine: xilinx: xdma: Add xilinx xdma driver")
+Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+---
+This is based on static analysis with smatch, only compile tested.
+---
+ drivers/dma/xilinx/xdma.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-int32_t fi; /* for OMAP_DMA_SYNC_PACKET / double indexing */
-int16_t ei; /* for double indexing */
-uint8_t es; /* CSDP_DATA_TYPE_xxx */
-uint32_t ccr; /* CCR value */
-uint16_t clnk_ctrl; /* CLNK_CTRL value */
-uint16_t cicr; /* CICR value */
-uint32_t csdp; /* CSDP value */
+diff --git a/drivers/dma/xilinx/xdma.c b/drivers/dma/xilinx/xdma.c
+index 718842fdaf98..44fae351f0a0 100644
+--- a/drivers/dma/xilinx/xdma.c
++++ b/drivers/dma/xilinx/xdma.c
+@@ -1240,7 +1240,8 @@ static int xdma_probe(struct platform_device *pdev)
+ 
+ 	xdev->rmap = devm_regmap_init_mmio(&pdev->dev, reg_base,
+ 					   &xdma_regmap_config);
+-	if (!xdev->rmap) {
++	if (IS_ERR(xdev->rmap)) {
++		ret = PTR_ERR(xdev->rmap);
+ 		xdma_err(xdev, "config regmap failed: %d", ret);
+ 		goto failed;
+ 	}
+-- 
+2.39.3
 
-unsigned sglen;
-struct omap_sg sg[] __counted_by(sglen);
-};
-```
-
-Our question is: The `sg` member of `struct omap_desc` is annotated
-with "__counted_by", which means the size of the array is indicated by
-`sglen`. Only if we set `sglen` before accessing `sg[0]`, the flexible
-member `item` can be properly bounds-checked at run-time when enabling
-CONFIG_UBSAN_BOUNDS and CONFIG_FORTIFY_SOURCE. Or there will be a
-warning from each array access that is prior to the initialization
-because the number of elements is zero.
-
-So we think relocating `d->sglen = 1` before accessing `d->sg[0]` is
-needed in the following three positions:
-- https://elixir.bootlin.com/linux/v6.10.6/source/drivers/dma/ti/omap-dma.c#L1192
-- https://elixir.bootlin.com/linux/v6.10.6/source/drivers/dma/ti/omap-dma.c#L1264
-- https://elixir.bootlin.com/linux/v6.10.6/source/drivers/dma/ti/omap-dma.c#L1319
-Perhaps we can set `d->sglen = 1` right after `d = kzalloc(...)` operation.
-
-Here is a fix example of a similar situation :
-https://lore.kernel.org/stable/20240613113225.898955993@linuxfoundation.org/.
-
-Please kindly correct us if we missed any key information. Looking
-forward to your response!
-
-Best,
-Haoyu Li
 

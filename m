@@ -1,299 +1,240 @@
-Return-Path: <dmaengine+bounces-2927-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2928-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73984959EE5
-	for <lists+dmaengine@lfdr.de>; Wed, 21 Aug 2024 15:41:00 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1094595A2D5
+	for <lists+dmaengine@lfdr.de>; Wed, 21 Aug 2024 18:32:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DE7241F21CCC
-	for <lists+dmaengine@lfdr.de>; Wed, 21 Aug 2024 13:40:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BBDC5282D24
+	for <lists+dmaengine@lfdr.de>; Wed, 21 Aug 2024 16:32:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C08671A7ACA;
-	Wed, 21 Aug 2024 13:40:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22F3314EC5C;
+	Wed, 21 Aug 2024 16:32:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="mAeZURDQ"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="SM6nODZP"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2064.outbound.protection.outlook.com [40.107.220.64])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D6D91A4B98;
-	Wed, 21 Aug 2024 13:40:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724247656; cv=fail; b=Sm26O+nN1rwcJlVd/oAw2rBM+MPH3TjVfaaJcCorqv70g6nODFFZTZNiGI5KJEtK9KdLRdcXEqJwCGu2fWNVctvHTBlCmhHquusmMu2yUR2Hype7zboixNq+KiiI5i7weiDTasGXmcvUmjLzbOs8RKRbUHmRwDNExWhUwvfbjsk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724247656; c=relaxed/simple;
-	bh=/ree/yEnVNNDnz82YfhRbvfe7o67yEWnDw3JFDFL+Vc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Y42b5hXnK69ONBYVXmDegU2gs9yC8lsXQJpbp/OWWClyM1Jjd+Yha6XjwxmjjmzQyzn+wjs+/0awFB9kQEr+yqdwsnb2RvJ0V12V3CscI5lU1fvE8rc1VVs1uT8R09Xc+BmWDhHzlLo1NXIw6M9L3+AYeEVH/MEDjwCLmopqONs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=mAeZURDQ; arc=fail smtp.client-ip=40.107.220.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=y3zhpCiUGBY3lxMbeHMhiynLJyvbQk70CyM6O4bR3iFpzxu0gnfSNIKCHQY9nDy++yW9qAs1ptLmqg032YzV0NBbMfxePzURIxkXatlwLhk5rluuDbt11R5UZuX5wkHMNpH1RWBj5+EUWvroxxdByGpjomioU50y5T74lvwNDpCfcinXhv/wufHUiA2kw0epzx2S1gN+bDqM85rs9GkOl4LaXRMqmGx6rVZHQU+yTTrhQIy9iIHldS/FDNVHIWGOCVjqmv0JHk3NGsR+UEa8U1J8dr2sw0KAWV7uGfVJovFMwa26t9qDUK7JGSivX4v8rKsct9nmwU3C2pmKLP0QIA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pkq60Vswh5YghXxNNO/NyBf/0xieb+q0DRK6whcAT/Y=;
- b=xNYFLr2cBMIUyiCTo3ei+awSfl3B7XK3cEFJvtAgHt1kvT8rVOiomiUsw6yeLzCiAE/VYLB0LnwvB3TQhXrYcy1jPeWB9z25aT22KW4kzw0z5nz15RI6KTSdRXaxB0bs7Jb80rusPxMIlBm2Ns5eKtWJG7kPpnyr6MgbC7BmHtNkbZpGLmTJPmTrkjYGNtJBfE/mfgkmCwGDsgyfULi5gk/kIsyTTxqfQ9K4dqx5ZZTT8Ev8UKiin5StzQSnefzHVBOuSPO+h27xvV4knugIJ4IHevdWDulvEEa03vM9CoXKy4xwx0b1+K8OPDu42QisLErBLGDBKvcsnGh7jxuzcQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=ideasonboard.com smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pkq60Vswh5YghXxNNO/NyBf/0xieb+q0DRK6whcAT/Y=;
- b=mAeZURDQOtwlC1TeFe3DJPrvc2jWFPyjH9P3vgtok5MHOa2u0xACcEMrkcX9Jnj7UQx66yEKno0pJYeNggMr92FFCDv07MBTEyAc5t3aikXihqrhheHYJ2nvj0yyjMuwZM3X5Lhr05/+QI7Orj9UPsOCksEfY+awWmcWtjQ0WqQ=
-Received: from SJ0PR13CA0239.namprd13.prod.outlook.com (2603:10b6:a03:2c1::34)
- by PH7PR12MB9204.namprd12.prod.outlook.com (2603:10b6:510:2e7::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.19; Wed, 21 Aug
- 2024 13:40:49 +0000
-Received: from SJ5PEPF000001EC.namprd05.prod.outlook.com
- (2603:10b6:a03:2c1:cafe::88) by SJ0PR13CA0239.outlook.office365.com
- (2603:10b6:a03:2c1::34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.13 via Frontend
- Transport; Wed, 21 Aug 2024 13:40:49 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ5PEPF000001EC.mail.protection.outlook.com (10.167.242.200) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7897.11 via Frontend Transport; Wed, 21 Aug 2024 13:40:49 +0000
-Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 21 Aug
- 2024 08:40:45 -0500
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB06.amd.com
- (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 21 Aug
- 2024 08:40:44 -0500
-Received: from xsjssw-mmedia3.xilinx.com (10.180.168.240) by
- SATLEXMB03.amd.com (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39
- via Frontend Transport; Wed, 21 Aug 2024 08:40:44 -0500
-From: Vishal Sagar <vishal.sagar@amd.com>
-To: <laurent.pinchart@ideasonboard.com>, <tomi.valkeinen@ideasonboard.com>,
-	<vkoul@kernel.org>
-CC: <dmaengine@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <michal.simek@amd.com>,
-	<varunkumar.allagadapa@amd.com>
-Subject: [PATCH v3] dmaengine: xilinx: dpdma: Add support for cyclic dma mode
-Date: Wed, 21 Aug 2024 06:40:43 -0700
-Message-ID: <20240821134043.2885506-1-vishal.sagar@amd.com>
-X-Mailer: git-send-email 2.25.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13E9F5D8F0;
+	Wed, 21 Aug 2024 16:32:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1724257936; cv=none; b=mluTmibCt3G8BlsKpgUBPRMzgk4d/J30V2eIwpGrHT+M2WBWS0CnhVS3yH60iFHM0SPdsPGn/77GVo/xYga9NcCqsrKLvXghQ2erIIDvKnoBoONTniwd+DM0F/c8o7JJKTJkEvh+nBQ4+8JNxAFhZjT07od9tDkAvqFYALVbzm4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1724257936; c=relaxed/simple;
+	bh=ydiATV2XuDjT4P4uEWGX77NmnCuMdVJf/U8IfiMU7MQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=A+zZbejwSyIpDdyvjw7g9C9Ahfq5rynO1jjm6DKVLgT6c7sWBgeCTBtLhiObofLGQVpukMA7ztjjVxCyirORrAfMMC3Iuh7G9UuTvCfSQOeq4ml7m8HdNiZ0FlI/Hi35Tt/8dvZ/uiUGnsz6rlsWfFPAsDju47MolaoQuxszcL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=SM6nODZP; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47LCIJ13022390;
+	Wed, 21 Aug 2024 16:32:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	C3Kgh+kP9eI1LhPm7yyGDpHjNiyatM6aYOhcljr30h8=; b=SM6nODZP7/zcbk6j
+	yFZ/+jzMikfhtjXrW1NmTNE27frmV9KJS50iyCo62pCHfH0LA9IVrcEZxsGZOs+N
+	b/Q7pc58YVPya+1yEsXbafQOvuGnmXnFqy0eb1Zex4MeWRGXWgTbE0fAh/RKrdK4
+	+ZMMtc5yx5gAeCaG4TBgfC3qWg8PfZCPzzuMVGyaYTvPRD3Hs3snbyhqb0+8kazO
+	STEO26TpCkPYGXAfsue4o7fJ0gAOZdjuHDIArWDdv7dntsrl1dOPgI+RKLhlf1h9
+	v2CVPca8w6EI5cXvspRX8nkODev+mAzkb3L5Oa5xRwDEDhLPON9GK4IiA1td7XSw
+	70Nk4Q==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 414pdmdda1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 21 Aug 2024 16:32:02 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 47LGW1a9025563
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 21 Aug 2024 16:32:01 GMT
+Received: from [10.216.59.247] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 21 Aug
+ 2024 09:31:54 -0700
+Message-ID: <24909c0b-ad83-e33b-e11f-22d0fb2ec979@quicinc.com>
+Date: Wed, 21 Aug 2024 22:01:51 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001EC:EE_|PH7PR12MB9204:EE_
-X-MS-Office365-Filtering-Correlation-Id: 45aaf7d0-6fe3-4e7d-849f-08dcc1e6de2d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|376014|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?CFqOStvKSWU8WOw0mWYRaAzLdNB8k66+CEhbpY+3T/rSSIPjLOjP2fGy/pRP?=
- =?us-ascii?Q?PDg3TAvMV4CI0uGYwOPsJQgdtH8TL2OEL1CYFsLscJXTn25iyxlKPUQ6Y8JQ?=
- =?us-ascii?Q?VRQ7xW5J/14IgE+xxTbF42haamyLFhek5C9LfpG27Iiby68oqZdnoNA8C+Tk?=
- =?us-ascii?Q?CpNxuGKS39nWwaKDunWiUUxdxOpkGaQWUO9BCqmBlYNRUokgATKbYdunTNAE?=
- =?us-ascii?Q?yIw6bLLDCFjBlW/PgyHmgukgf4PTltuLdyPRpqOh6LCvxItN8khXdM1JwS20?=
- =?us-ascii?Q?tDinCUVynptPUivpFZhFPC6x+vt/2IBm9nu9socgBOy4dmVLZwVXsVQcb190?=
- =?us-ascii?Q?c4FMO2aDNk/EANaFiq4paL2gXfdfmwPomG24icFVnJkkQKA1EqxshDYJZiYf?=
- =?us-ascii?Q?HI35ictqMZRHUjxn/NJiTvF9wKXeVj2fy9jyUsEj1CMNf08JcXiTDLz0wcUw?=
- =?us-ascii?Q?jMejP+U4OCfmkxcZ0AsalUPsN1E1pV45mxi/bQtuz1bg0RP+7OLbBHwtA2rM?=
- =?us-ascii?Q?B25WbG4BgSWgWYxSlSOk4w8OXfT7UbnhIJ1I5NOVoIvX+fdXi5gJLBXwtVQa?=
- =?us-ascii?Q?5tnV+m3Jad0zRxgPiqaELnVIEtIuDi/2yx2fcJWIl+m6SPpuyOaXHZKlu9i9?=
- =?us-ascii?Q?epIogfpFap5gzuFsg/wtYvvk6xMky2xQ2l1HQRW/bmqdil1n3D6zp3+IvAWc?=
- =?us-ascii?Q?RaZV9hbXFRub7i5y6Dq+t/JOLvcBBYi/AOxr3YVt5ZIyNs5PHX2ec6xsR9Lu?=
- =?us-ascii?Q?69Ffy8cgSI7teY8dBUOa/iBD833igvM8n/noJAD0u0spgg5R1xNVCtkQMuky?=
- =?us-ascii?Q?afSH+wO0zcY2Bv3/sDyoJMAGix6xPqYJ26WmSUlRJq0UkHHlGuFbdNrn6i+2?=
- =?us-ascii?Q?Ri0pBwqoU9TA/HJCzx4sdx6ruaKP1bp2f713pUA86FCom/TBaTnjVK+LoixD?=
- =?us-ascii?Q?o23NvUqu60f/oWzMOGIYmjk+1ZPTFH8WI5x06wFFSiYi4KkBAXOi2plhivtj?=
- =?us-ascii?Q?nzQuQAflW95Af0sKhM3UR9zEn7Ow2wwLLKOjws38pD6QDZwP1hDa8Zp7tT1u?=
- =?us-ascii?Q?Uq3PYZ5QyfcdvjzWhsbdUY9zQkrBP64S8WtFixaNeQOVfjaZml8JbMVG+xQu?=
- =?us-ascii?Q?bnv4FwpatujdSwkro2+bqmaevN2eAAsreCbcJRzqaqFlyPJaZu1hqxd/j6au?=
- =?us-ascii?Q?UkYy518xRPx/G3BqtrBf5y/ZCkfUImHGTmBPx0HeFNz+feuTkTKY2OpC2S3R?=
- =?us-ascii?Q?Ep6rmy3iOhCi5YlIkIIcMC6aIz/0cwQK6nSW8cGeoUO8JW4S37APbjaTeqSO?=
- =?us-ascii?Q?JQJ98Xv2I3c5SUoa+80H3rNVRfQEXdRnSMxhj7Do5urV6XrszcsCe7j1fRLP?=
- =?us-ascii?Q?dYlj+iM7ATHcqc2ZO79U4OR9PIMLbw4iidIW3nnhR12sCVvG1Y0wv/vghEEA?=
- =?us-ascii?Q?Ews7tfjfNsM9aAJt2ChnizH2aigB8yJq?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(376014)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2024 13:40:49.2525
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 45aaf7d0-6fe3-4e7d-849f-08dcc1e6de2d
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001EC.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB9204
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Subject: Re: [PATCH v2 03/16] dmaengine: qcom: bam_dma: add LOCK & UNLOCK flag
+ support
+Content-Language: en-US
+To: Bjorn Andersson <andersson@kernel.org>
+CC: <vkoul@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <konradybcio@kernel.org>,
+        <thara.gopinath@gmail.com>, <herbert@gondor.apana.org.au>,
+        <davem@davemloft.net>, <gustavoars@kernel.org>,
+        <u.kleine-koenig@pengutronix.de>, <kees@kernel.org>,
+        <agross@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
+        <quic_srichara@quicinc.com>, <quic_varada@quicinc.com>,
+        <quic_utiwari@quicinc.com>
+References: <20240815085725.2740390-1-quic_mdalam@quicinc.com>
+ <20240815085725.2740390-4-quic_mdalam@quicinc.com>
+ <knhqbj2pyluwrvr2f4h6zgpfosa6o2qgnhtl4qltadpuyfexgu@kk5knurc4v7h>
+From: Md Sadre Alam <quic_mdalam@quicinc.com>
+In-Reply-To: <knhqbj2pyluwrvr2f4h6zgpfosa6o2qgnhtl4qltadpuyfexgu@kk5knurc4v7h>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: tW-EWFCvrONGIKhLXnMMyZtjIn5U73n4
+X-Proofpoint-ORIG-GUID: tW-EWFCvrONGIKhLXnMMyZtjIn5U73n4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-08-21_11,2024-08-19_03,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=859 spamscore=0
+ suspectscore=0 malwarescore=0 phishscore=0 priorityscore=1501 mlxscore=0
+ impostorscore=0 bulkscore=0 lowpriorityscore=0 adultscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2407110000
+ definitions=main-2408210121
 
-From: Rohit Visavalia <rohit.visavalia@xilinx.com>
 
-This patch adds support for DPDMA cyclic dma mode,
-DMA cyclic transfers are required by audio streaming.
 
-Signed-off-by: Rohit Visavalia <rohit.visavalia@amd.com>
-Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
-Signed-off-by: Vishal Sagar <vishal.sagar@amd.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-
----
-
-Change in [v3]
-- Fixed cosmetic changes as suggested by Tomi
-- Added Reviewed-by Tomi
-
-Previous version is 2/2
-https://lore.kernel.org/linux-kernel/20240228042124.3074044-3-vishal.sagar@amd.com/
-
- drivers/dma/xilinx/xilinx_dpdma.c | 97 +++++++++++++++++++++++++++++++
- 1 file changed, 97 insertions(+)
-
-diff --git a/drivers/dma/xilinx/xilinx_dpdma.c b/drivers/dma/xilinx/xilinx_dpdma.c
-index 36bd4825d389..77b5f7da7f1d 100644
---- a/drivers/dma/xilinx/xilinx_dpdma.c
-+++ b/drivers/dma/xilinx/xilinx_dpdma.c
-@@ -670,6 +670,84 @@ static void xilinx_dpdma_chan_free_tx_desc(struct virt_dma_desc *vdesc)
- 	kfree(desc);
- }
- 
-+/**
-+ * xilinx_dpdma_chan_prep_cyclic - Prepare a cyclic dma descriptor
-+ * @chan: DPDMA channel
-+ * @buf_addr: buffer address
-+ * @buf_len: buffer length
-+ * @period_len: number of periods
-+ * @flags: tx flags argument passed in to prepare function
-+ *
-+ * Prepare a tx descriptor incudling internal software/hardware descriptors
-+ * for the given cyclic transaction.
-+ *
-+ * Return: A dma async tx descriptor on success, or NULL.
-+ */
-+static struct dma_async_tx_descriptor *
-+xilinx_dpdma_chan_prep_cyclic(struct xilinx_dpdma_chan *chan,
-+			      dma_addr_t buf_addr, size_t buf_len,
-+			      size_t period_len, unsigned long flags)
-+{
-+	struct xilinx_dpdma_tx_desc *tx_desc;
-+	struct xilinx_dpdma_sw_desc *sw_desc, *last = NULL;
-+	unsigned int periods = buf_len / period_len;
-+	unsigned int i;
-+
-+	tx_desc = xilinx_dpdma_chan_alloc_tx_desc(chan);
-+	if (!tx_desc)
-+		return NULL;
-+
-+	for (i = 0; i < periods; i++) {
-+		struct xilinx_dpdma_hw_desc *hw_desc;
-+
-+		if (!IS_ALIGNED(buf_addr, XILINX_DPDMA_ALIGN_BYTES)) {
-+			dev_err(chan->xdev->dev,
-+				"buffer should be aligned at %d B\n",
-+				XILINX_DPDMA_ALIGN_BYTES);
-+			goto error;
-+		}
-+
-+		sw_desc = xilinx_dpdma_chan_alloc_sw_desc(chan);
-+		if (!sw_desc)
-+			goto error;
-+
-+		xilinx_dpdma_sw_desc_set_dma_addrs(chan->xdev, sw_desc, last,
-+						   &buf_addr, 1);
-+		hw_desc = &sw_desc->hw;
-+		hw_desc->xfer_size = period_len;
-+		hw_desc->hsize_stride =
-+			FIELD_PREP(XILINX_DPDMA_DESC_HSIZE_STRIDE_HSIZE_MASK,
-+				   period_len) |
-+			FIELD_PREP(XILINX_DPDMA_DESC_HSIZE_STRIDE_STRIDE_MASK,
-+				   period_len);
-+		hw_desc->control = XILINX_DPDMA_DESC_CONTROL_PREEMBLE |
-+				   XILINX_DPDMA_DESC_CONTROL_IGNORE_DONE |
-+				   XILINX_DPDMA_DESC_CONTROL_COMPLETE_INTR;
-+
-+		list_add_tail(&sw_desc->node, &tx_desc->descriptors);
-+
-+		buf_addr += period_len;
-+		last = sw_desc;
-+	}
-+
-+	sw_desc = list_first_entry(&tx_desc->descriptors,
-+				   struct xilinx_dpdma_sw_desc, node);
-+	last->hw.next_desc = lower_32_bits(sw_desc->dma_addr);
-+	if (chan->xdev->ext_addr)
-+		last->hw.addr_ext |=
-+			FIELD_PREP(XILINX_DPDMA_DESC_ADDR_EXT_NEXT_ADDR_MASK,
-+				   upper_32_bits(sw_desc->dma_addr));
-+
-+	last->hw.control |= XILINX_DPDMA_DESC_CONTROL_LAST_OF_FRAME;
-+
-+	return vchan_tx_prep(&chan->vchan, &tx_desc->vdesc, flags);
-+
-+error:
-+	xilinx_dpdma_chan_free_tx_desc(&tx_desc->vdesc);
-+
-+	return NULL;
-+}
-+
- /**
-  * xilinx_dpdma_chan_prep_interleaved_dma - Prepare an interleaved dma
-  *					    descriptor
-@@ -1189,6 +1267,23 @@ static void xilinx_dpdma_chan_handle_err(struct xilinx_dpdma_chan *chan)
- /* -----------------------------------------------------------------------------
-  * DMA Engine Operations
-  */
-+static struct dma_async_tx_descriptor *
-+xilinx_dpdma_prep_dma_cyclic(struct dma_chan *dchan, dma_addr_t buf_addr,
-+			     size_t buf_len, size_t period_len,
-+			     enum dma_transfer_direction direction,
-+			     unsigned long flags)
-+{
-+	struct xilinx_dpdma_chan *chan = to_xilinx_chan(dchan);
-+
-+	if (direction != DMA_MEM_TO_DEV)
-+		return NULL;
-+
-+	if (buf_len % period_len)
-+		return NULL;
-+
-+	return xilinx_dpdma_chan_prep_cyclic(chan, buf_addr, buf_len,
-+					     period_len, flags);
-+}
- 
- static struct dma_async_tx_descriptor *
- xilinx_dpdma_prep_interleaved_dma(struct dma_chan *dchan,
-@@ -1672,6 +1767,7 @@ static int xilinx_dpdma_probe(struct platform_device *pdev)
- 
- 	dma_cap_set(DMA_SLAVE, ddev->cap_mask);
- 	dma_cap_set(DMA_PRIVATE, ddev->cap_mask);
-+	dma_cap_set(DMA_CYCLIC, ddev->cap_mask);
- 	dma_cap_set(DMA_INTERLEAVE, ddev->cap_mask);
- 	dma_cap_set(DMA_REPEAT, ddev->cap_mask);
- 	dma_cap_set(DMA_LOAD_EOT, ddev->cap_mask);
-@@ -1679,6 +1775,7 @@ static int xilinx_dpdma_probe(struct platform_device *pdev)
- 
- 	ddev->device_alloc_chan_resources = xilinx_dpdma_alloc_chan_resources;
- 	ddev->device_free_chan_resources = xilinx_dpdma_free_chan_resources;
-+	ddev->device_prep_dma_cyclic = xilinx_dpdma_prep_dma_cyclic;
- 	ddev->device_prep_interleaved_dma = xilinx_dpdma_prep_interleaved_dma;
- 	/* TODO: Can we achieve better granularity ? */
- 	ddev->device_tx_status = dma_cookie_status;
--- 
-2.25.1
-
+On 8/16/2024 9:52 PM, Bjorn Andersson wrote:
+> On Thu, Aug 15, 2024 at 02:27:12PM GMT, Md Sadre Alam wrote:
+>> Add lock and unlock flag support on command descriptor.
+>> Once lock set in requester pipe, then the bam controller
+>> will lock all others pipe and process the request only
+>> from requester pipe. Unlocking only can be performed from
+>> the same pipe.
+>>
+> 
+> Is the lock per channel, or for the whole BAM instance?
+   This lock is for whole BAM instance. Once LOCK bit will
+   set on initiator CMD descriptor BAM will lock all pipes
+   which belongs to other EE's and Pipes not in the current
+   group.
+> 
+>> If DMA_PREP_LOCK flag passed in command descriptor then requester
+>> of this transaction wanted to lock the BAM controller for this
+>> transaction so BAM driver should set LOCK bit for the HW descriptor.
+> 
+> You use the expression "this transaction" here, but if I understand the
+> calling code the lock is going to be held over multiple DMA operations
+> and even across asynchronous operations in the crypto driver.
+   Yes its correct.
+> 
+> DMA_PREP_LOCK indicates that this is the beginning of a transaction,
+> consisting of multiple operations that needs to happen while other EEs
+> are being locked out, and DMA_PREP_UNLOCK marks the end of the
+> transaction.
+   Yes its correct.
+> 
+> That said, I'm not entirely fond of the fact that these flags are not
+> just used on first and last operation in one sequence, but spread out.
+   Yes its correct.
+> 
+> Locking is hard, when you spread the responsibility of locking and
+> unlocking across different entities it's made harder...
+   The locking/unlocking always synchronous because unlocking happening
+   in the dma callback.
+> 
+>>
+>> If DMA_PREP_UNLOCK flag passed in command descriptor then requester
+>> of this transaction wanted to unlock the BAM controller.so BAM driver
+>> should set UNLOCK bit for the HW descriptor.
+>>
+>> Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
+>> ---
+>>
+>> Change in [v2]
+>>
+>> * Added LOCK and UNLOCK flag in bam driver
+>>
+>> Change in [v1]
+>>
+>> * This patch was not included in [v1]
+> 
+> v1 can be found here:
+> https://lore.kernel.org/all/20231214114239.2635325-7-quic_mdalam@quicinc.com/
+> 
+> And it was also posted once before that:
+> https://lore.kernel.org/all/1608215842-15381-1-git-send-email-mdalam@codeaurora.org/
+> 
+> In particular during the latter (i.e. first post) we had a rather long
+> discussion about this feature, so that's certainly worth linking to.
+> 
+> Looks like this series provides some answers to the questions we had
+> back then.
+   Will add the link in next post
+> 
+> Regards,
+> Bjorn
+> 
+>>
+>>   drivers/dma/qcom/bam_dma.c | 10 +++++++++-
+>>   include/linux/dmaengine.h  |  6 ++++++
+>>   2 files changed, 15 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
+>> index 1ac7e250bdaa..ab3b5319aa68 100644
+>> --- a/drivers/dma/qcom/bam_dma.c
+>> +++ b/drivers/dma/qcom/bam_dma.c
+>> @@ -58,6 +58,8 @@ struct bam_desc_hw {
+>>   #define DESC_FLAG_EOB BIT(13)
+>>   #define DESC_FLAG_NWD BIT(12)
+>>   #define DESC_FLAG_CMD BIT(11)
+>> +#define DESC_FLAG_LOCK BIT(10)
+>> +#define DESC_FLAG_UNLOCK BIT(9)
+>>   
+>>   struct bam_async_desc {
+>>   	struct virt_dma_desc vd;
+>> @@ -692,9 +694,15 @@ static struct dma_async_tx_descriptor *bam_prep_slave_sg(struct dma_chan *chan,
+>>   		unsigned int curr_offset = 0;
+>>   
+>>   		do {
+>> -			if (flags & DMA_PREP_CMD)
+>> +			if (flags & DMA_PREP_CMD) {
+>>   				desc->flags |= cpu_to_le16(DESC_FLAG_CMD);
+>>   
+>> +				if (bdev->bam_pipe_lock && flags & DMA_PREP_LOCK)
+>> +					desc->flags |= cpu_to_le16(DESC_FLAG_LOCK);
+>> +				else if (bdev->bam_pipe_lock && flags & DMA_PREP_UNLOCK)
+>> +					desc->flags |= cpu_to_le16(DESC_FLAG_UNLOCK);
+>> +			}
+>> +
+>>   			desc->addr = cpu_to_le32(sg_dma_address(sg) +
+>>   						 curr_offset);
+>>   
+>> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+>> index b137fdb56093..70f23068bfdc 100644
+>> --- a/include/linux/dmaengine.h
+>> +++ b/include/linux/dmaengine.h
+>> @@ -200,6 +200,10 @@ struct dma_vec {
+>>    *  transaction is marked with DMA_PREP_REPEAT will cause the new transaction
+>>    *  to never be processed and stay in the issued queue forever. The flag is
+>>    *  ignored if the previous transaction is not a repeated transaction.
+>> + *  @DMA_PREP_LOCK: tell the driver that there is a lock bit set on command
+>> + *  descriptor.
+>> + *  @DMA_PREP_UNLOCK: tell the driver that there is a un-lock bit set on command
+>> + *  descriptor.
+>>    */
+>>   enum dma_ctrl_flags {
+>>   	DMA_PREP_INTERRUPT = (1 << 0),
+>> @@ -212,6 +216,8 @@ enum dma_ctrl_flags {
+>>   	DMA_PREP_CMD = (1 << 7),
+>>   	DMA_PREP_REPEAT = (1 << 8),
+>>   	DMA_PREP_LOAD_EOT = (1 << 9),
+>> +	DMA_PREP_LOCK = (1 << 10),
+>> +	DMA_PREP_UNLOCK = (1 << 11),
+>>   };
+>>   
+>>   /**
+>> -- 
+>> 2.34.1
+>>
 

@@ -1,279 +1,196 @@
-Return-Path: <dmaengine+bounces-2932-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2933-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 938FA95A31C
-	for <lists+dmaengine@lfdr.de>; Wed, 21 Aug 2024 18:46:49 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F05395AD6E
+	for <lists+dmaengine@lfdr.de>; Thu, 22 Aug 2024 08:28:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B62EF1C21A36
-	for <lists+dmaengine@lfdr.de>; Wed, 21 Aug 2024 16:46:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 34BC0281B88
+	for <lists+dmaengine@lfdr.de>; Thu, 22 Aug 2024 06:28:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71A12192D99;
-	Wed, 21 Aug 2024 16:46:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7D02139CF6;
+	Thu, 22 Aug 2024 06:27:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="OI5nBATW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Od+2+EEe"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.smtpout.orange.fr (smtp-23.smtpout.orange.fr [80.12.242.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7331613635E;
-	Wed, 21 Aug 2024 16:46:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E38A137C2A;
+	Thu, 22 Aug 2024 06:27:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724258803; cv=none; b=Zh4JfbICRib7lMupYwzOQLcg/VYUEg+N8U2Ba1kBfv1eT7VyxDvIiW17NHxTVwJeC0NQpS4hTLNyxn+ZYGXgngMI/cI/agX+Uv5LKaNMIohBNgK6miyzSUo9fi0/QaaWocMs/tJDAfmr93QPPP7DrSc5t//vj7WI2Qj16vjiatY=
+	t=1724308075; cv=none; b=nkh2hqimWo/GynS8LHsLzjOISTZp2MJlxS1WvSfmkXRH0nhwdMkIcnJyBFgdONTSRvRUgc7Ey1fYMGzn+I1hIh0s3xvNc0bT2KGy4+PAwH3tOKvSVw6xWe6HkxCd+Qer5w2phNNy7ZdLcRlArsuyB2PIBAooUE28kFw6FmYp1aU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724258803; c=relaxed/simple;
-	bh=iMZObZERm4fJJ8crxvfeNEVv8zkTt+E2Sabqsr00by8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=m7mjvJpFavxkqdInBedkbBWANT1C0FmPsDOUdmo3B6N0jYxf4yoRNKpb53yzuDGzgIrzkaTEV3J3y8BA9wcgy2hnEP316ABSyjGG067UwPxVuteRofm5E+y9lQHvozokEipXPyxroziP3GUHLEcJsBHypyox+1d5+Z/OCrf3Ml8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=OI5nBATW; arc=none smtp.client-ip=80.12.242.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
-Received: from fedora.home ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id goTksgXNgS3tRgoTlsOuWT; Wed, 21 Aug 2024 18:46:37 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1724258797;
-	bh=VF5cX0senQLhld6HFUuwDuqB5R9U72LTGbLDKI77h1g=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=OI5nBATW1v1jnqi+ktVbRB12xo0MTD2GhllHXDWyLFIKAqeSArMoZ4OgeosnA2Mm3
-	 H/a0JTA+6xxLhgYN6RACPNCx9l9U18mw7wKg9d4vS01nFEN94sELtvO1iz7k4XIB7M
-	 pcuFoJqi2oFaEQmMlWnN6gPeyoTsGWUAHQH4sdaiHEnhTdsPZbOLRsZCUNllXWp+Gg
-	 L8UGYWKQN6Wdq3MNgxpssNlO6oat9132SIQQtySxRYkLsBMxfT2nH5aM5BdWqpVBIS
-	 qijCOf907gOmUxvad33VtvM4L0cYeH+H17KSP/nbLyswqaw9yhang9zcfolJWjyC9d
-	 GaWieot2Aj8QQ==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Wed, 21 Aug 2024 18:46:37 +0200
-X-ME-IP: 90.11.132.44
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Vinod Koul <vkoul@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	dmaengine@vger.kernel.org
-Subject: [PATCH] dma: ipu: Remove include/linux/dma/ipu-dma.h
-Date: Wed, 21 Aug 2024 18:46:33 +0200
-Message-ID: <532e7e2816ccf226f3ab1fa76ec7873bc09299d0.1724258714.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.46.0
+	s=arc-20240116; t=1724308075; c=relaxed/simple;
+	bh=Uj8lzzLoP45JzCD1zqt3qSj6l3BlWmsYEzoccHcMGQE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G6QAKGWvG4/7snZXC7l8hjOfMZ+qCfjU+0x4S30aRMQggdLUShXG+hukPTc76qc24ygGrxNzjIH/qRCW9JLl5CwhgJJXtqxHl7Guo6XbcyXj+pUYhODlV6gX+FkbSlIYyY5+4KBIlo5CT41G2rooOPCKubIUncBk9OWOl0wDbnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Od+2+EEe; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98779C4AF0B;
+	Thu, 22 Aug 2024 06:27:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724308075;
+	bh=Uj8lzzLoP45JzCD1zqt3qSj6l3BlWmsYEzoccHcMGQE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Od+2+EEeUbpxYry9/eiIWxc0ef7yY3IGKtR1ni/yReYhO75eVN6oBW4E8vu1tRVVi
+	 HNc0f84X9y0Zqzm/+n8Vay5y+47jqgIZLH4PC9Ue4yLFjnYeCA+qB7nf9wHXacehL+
+	 8Dnktag0KbkCgfXYNNK0AKZ1tV339AphYmbpZQn5rIjdkl0noH++dkX2iLUxKjCOhz
+	 syPHquTZ6pnR1/G1viHy9QOYlytE0r3sKDRFmdjILMD00tBP4s4l7XLBGo5dvLl8Qn
+	 fUAQhlycGNR7l5T54Bt3PsM68nAuIov5PNS03GBB+yIxPyfhrf6YCnadTOr9eQ+NAR
+	 lkYdd9Tu27EkQ==
+Message-ID: <c2292ef2-e93e-4ca3-bcd3-542bd27526ad@kernel.org>
+Date: Thu, 22 Aug 2024 08:27:44 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 01/16] dt-bindings: dma: qcom,bam: Add bam pipe lock
+To: Md Sadre Alam <quic_mdalam@quicinc.com>, vkoul@kernel.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ andersson@kernel.org, konradybcio@kernel.org, thara.gopinath@gmail.com,
+ herbert@gondor.apana.org.au, davem@davemloft.net, gustavoars@kernel.org,
+ u.kleine-koenig@pengutronix.de, kees@kernel.org, agross@kernel.org,
+ linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-crypto@vger.kernel.org
+Cc: quic_srichara@quicinc.com, quic_varada@quicinc.com,
+ quic_utiwari@quicinc.com
+References: <20240815085725.2740390-1-quic_mdalam@quicinc.com>
+ <20240815085725.2740390-2-quic_mdalam@quicinc.com>
+ <0a2b884b-bd28-428e-be12-8fef4fdfd278@kernel.org>
+ <c8b7c2f0-9de1-1787-2f1b-2aa0102f347c@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <c8b7c2f0-9de1-1787-2f1b-2aa0102f347c@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-When this file was renamed in commit b8a6d9980f75 ("dma: ipu: rename
-mach/ipu.h to include/linux/dma/ipu-dma.h"), 4 .c files have been modified
-accordingly:
+On 21/08/2024 18:34, Md Sadre Alam wrote:
+> 
+> 
+> On 8/17/2024 2:38 PM, Krzysztof Kozlowski wrote:
+>> On 15/08/2024 10:57, Md Sadre Alam wrote:
+>>> BAM having pipe locking mechanism. The Lock and Un-Lock bit
+>>> should be set on CMD descriptor only. Upon encountering a
+>>> descriptor with Lock bit set, the BAM will lock all other
+>>> pipes not related to the current pipe group, and keep
+>>> handling the current pipe only until it sees the Un-Lock
+>>> set.
+>>
+>> Please wrap commit message according to Linux coding style / submission
+>> process (neither too early nor over the limit):
+>> https://elixir.bootlin.com/linux/v6.4-rc1/source/Documentation/process/submitting-patches.rst#L597
+>    Ok , will update in next patch.
+>>
+>>>
+>>> Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
+>>> ---
+>>>
+>>> Change in [v2]
+>>>
+>>> * Added initial support for dt-binding
+>>>
+>>> Change in [v1]
+>>>
+>>> * This patch was not included in [v1]
+>>>
+>>>   Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml | 8 ++++++++
+>>>   1 file changed, 8 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml b/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
+>>> index 3ad0d9b1fbc5..91cc2942aa62 100644
+>>> --- a/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
+>>> +++ b/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
+>>> @@ -77,6 +77,12 @@ properties:
+>>>         Indicates that the bam is powered up by a remote processor but must be
+>>>         initialized by the local processor.
+>>>   
+>>> +  qcom,bam_pipe_lock:
+>>
+>> Please follow DTS coding style.
+>    Ok
+>>
+>>> +    type: boolean
+>>> +    description:
+>>> +      Indicates that the bam pipe needs locking or not based on client driver
+>>> +      sending the LOCK or UNLOK bit set on command descriptor.
+>>
+>> You described the desired Linux feature or behavior, not the actual
+>> hardware. The bindings are about the latter, so instead you need to
+>> rephrase the property and its description to match actual hardware
+>> capabilities/features/configuration etc.
+>    Ok, will update in next patch.
+>>
+>>> +
+>>>     reg:
+>>>       maxItems: 1
+>>>   
+>>> @@ -92,6 +98,8 @@ anyOf:
+>>>         - qcom,powered-remotely
+>>>     - required:
+>>>         - qcom,controlled-remotely
+>>> +  - required:
+>>> +      - qcom,bam_pipe_lock
+>>
+>> Why is it here? What do you want to achieve?
+>    This property added to achieve locking/unlocking
+>    of BAM pipe groups for mutual exclusion of resources
+>    that can be used across multiple EE's
 
-  drivers/dma/ipu/ipu_idmac.c
-  drivers/dma/ipu/ipu_irq.c
-  --> removed in commit f1de55ff7c70 ("dmaengine: ipu: Remove the driver")
-      in 2023-08
+This explains me nothing. I am questioning the anyOf block. Why this is
+the fourth method of controlling BAM? Anyway, if it is, then explain
+this in commit msg.
 
-  drivers/media/platform/soc_camera/mx3_camera.c
-  --> removed in commit c93cc61475eb ("[media] staging/media: remove
-      deprecated mx3 driver") in 2016-06
-
-  drivers/video/mx3fb.c
-  --> removed in commit bfac19e239a7 ("fbdev: mx3fb: Remove the driver")
-      in 2023-08
-
-Now include/linux/dma/ipu-dma.h is unused and can be removed as-well.
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-$ git grep ipu-dma
-returns nothing
----
- include/linux/dma/ipu-dma.h | 174 ------------------------------------
- 1 file changed, 174 deletions(-)
- delete mode 100644 include/linux/dma/ipu-dma.h
-
-diff --git a/include/linux/dma/ipu-dma.h b/include/linux/dma/ipu-dma.h
-deleted file mode 100644
-index 6969391580d2..000000000000
---- a/include/linux/dma/ipu-dma.h
-+++ /dev/null
-@@ -1,174 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-only */
--/*
-- * Copyright (C) 2008
-- * Guennadi Liakhovetski, DENX Software Engineering, <lg@denx.de>
-- *
-- * Copyright (C) 2005-2007 Freescale Semiconductor, Inc.
-- */
--
--#ifndef __LINUX_DMA_IPU_DMA_H
--#define __LINUX_DMA_IPU_DMA_H
--
--#include <linux/types.h>
--#include <linux/dmaengine.h>
--
--/* IPU DMA Controller channel definitions. */
--enum ipu_channel {
--	IDMAC_IC_0 = 0,		/* IC (encoding task) to memory */
--	IDMAC_IC_1 = 1,		/* IC (viewfinder task) to memory */
--	IDMAC_ADC_0 = 1,
--	IDMAC_IC_2 = 2,
--	IDMAC_ADC_1 = 2,
--	IDMAC_IC_3 = 3,
--	IDMAC_IC_4 = 4,
--	IDMAC_IC_5 = 5,
--	IDMAC_IC_6 = 6,
--	IDMAC_IC_7 = 7,		/* IC (sensor data) to memory */
--	IDMAC_IC_8 = 8,
--	IDMAC_IC_9 = 9,
--	IDMAC_IC_10 = 10,
--	IDMAC_IC_11 = 11,
--	IDMAC_IC_12 = 12,
--	IDMAC_IC_13 = 13,
--	IDMAC_SDC_0 = 14,	/* Background synchronous display data */
--	IDMAC_SDC_1 = 15,	/* Foreground data (overlay) */
--	IDMAC_SDC_2 = 16,
--	IDMAC_SDC_3 = 17,
--	IDMAC_ADC_2 = 18,
--	IDMAC_ADC_3 = 19,
--	IDMAC_ADC_4 = 20,
--	IDMAC_ADC_5 = 21,
--	IDMAC_ADC_6 = 22,
--	IDMAC_ADC_7 = 23,
--	IDMAC_PF_0 = 24,
--	IDMAC_PF_1 = 25,
--	IDMAC_PF_2 = 26,
--	IDMAC_PF_3 = 27,
--	IDMAC_PF_4 = 28,
--	IDMAC_PF_5 = 29,
--	IDMAC_PF_6 = 30,
--	IDMAC_PF_7 = 31,
--};
--
--/* Order significant! */
--enum ipu_channel_status {
--	IPU_CHANNEL_FREE,
--	IPU_CHANNEL_INITIALIZED,
--	IPU_CHANNEL_READY,
--	IPU_CHANNEL_ENABLED,
--};
--
--#define IPU_CHANNELS_NUM 32
--
--enum pixel_fmt {
--	/* 1 byte */
--	IPU_PIX_FMT_GENERIC,
--	IPU_PIX_FMT_RGB332,
--	IPU_PIX_FMT_YUV420P,
--	IPU_PIX_FMT_YUV422P,
--	IPU_PIX_FMT_YUV420P2,
--	IPU_PIX_FMT_YVU422P,
--	/* 2 bytes */
--	IPU_PIX_FMT_RGB565,
--	IPU_PIX_FMT_RGB666,
--	IPU_PIX_FMT_BGR666,
--	IPU_PIX_FMT_YUYV,
--	IPU_PIX_FMT_UYVY,
--	/* 3 bytes */
--	IPU_PIX_FMT_RGB24,
--	IPU_PIX_FMT_BGR24,
--	/* 4 bytes */
--	IPU_PIX_FMT_GENERIC_32,
--	IPU_PIX_FMT_RGB32,
--	IPU_PIX_FMT_BGR32,
--	IPU_PIX_FMT_ABGR32,
--	IPU_PIX_FMT_BGRA32,
--	IPU_PIX_FMT_RGBA32,
--};
--
--enum ipu_color_space {
--	IPU_COLORSPACE_RGB,
--	IPU_COLORSPACE_YCBCR,
--	IPU_COLORSPACE_YUV
--};
--
--/*
-- * Enumeration of IPU rotation modes
-- */
--enum ipu_rotate_mode {
--	/* Note the enum values correspond to BAM value */
--	IPU_ROTATE_NONE = 0,
--	IPU_ROTATE_VERT_FLIP = 1,
--	IPU_ROTATE_HORIZ_FLIP = 2,
--	IPU_ROTATE_180 = 3,
--	IPU_ROTATE_90_RIGHT = 4,
--	IPU_ROTATE_90_RIGHT_VFLIP = 5,
--	IPU_ROTATE_90_RIGHT_HFLIP = 6,
--	IPU_ROTATE_90_LEFT = 7,
--};
--
--/*
-- * Enumeration of DI ports for ADC.
-- */
--enum display_port {
--	DISP0,
--	DISP1,
--	DISP2,
--	DISP3
--};
--
--struct idmac_video_param {
--	unsigned short		in_width;
--	unsigned short		in_height;
--	uint32_t		in_pixel_fmt;
--	unsigned short		out_width;
--	unsigned short		out_height;
--	uint32_t		out_pixel_fmt;
--	unsigned short		out_stride;
--	bool			graphics_combine_en;
--	bool			global_alpha_en;
--	bool			key_color_en;
--	enum display_port	disp;
--	unsigned short		out_left;
--	unsigned short		out_top;
--};
--
--/*
-- * Union of initialization parameters for a logical channel. So far only video
-- * parameters are used.
-- */
--union ipu_channel_param {
--	struct idmac_video_param video;
--};
--
--struct idmac_tx_desc {
--	struct dma_async_tx_descriptor	txd;
--	struct scatterlist		*sg;	/* scatterlist for this */
--	unsigned int			sg_len;	/* tx-descriptor. */
--	struct list_head		list;
--};
--
--struct idmac_channel {
--	struct dma_chan		dma_chan;
--	dma_cookie_t		completed;	/* last completed cookie	   */
--	union ipu_channel_param	params;
--	enum ipu_channel	link;	/* input channel, linked to the output	   */
--	enum ipu_channel_status	status;
--	void			*client;	/* Only one client per channel	   */
--	unsigned int		n_tx_desc;
--	struct idmac_tx_desc	*desc;		/* allocated tx-descriptors	   */
--	struct scatterlist	*sg[2];	/* scatterlist elements in buffer-0 and -1 */
--	struct list_head	free_list;	/* free tx-descriptors		   */
--	struct list_head	queue;		/* queued tx-descriptors	   */
--	spinlock_t		lock;		/* protects sg[0,1], queue	   */
--	struct mutex		chan_mutex; /* protects status, cookie, free_list  */
--	bool			sec_chan_en;
--	int			active_buffer;
--	unsigned int		eof_irq;
--	char			eof_name[16];	/* EOF IRQ name for request_irq()  */
--};
--
--#define to_tx_desc(tx) container_of(tx, struct idmac_tx_desc, txd)
--#define to_idmac_chan(c) container_of(c, struct idmac_channel, dma_chan)
--
--#endif /* __LINUX_DMA_IPU_DMA_H */
--- 
-2.46.0
+Best regards,
+Krzysztof
 
 

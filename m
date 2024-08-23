@@ -1,209 +1,194 @@
-Return-Path: <dmaengine+bounces-2936-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-2937-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8FBB95C8D5
-	for <lists+dmaengine@lfdr.de>; Fri, 23 Aug 2024 11:08:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id EBB9895C992
+	for <lists+dmaengine@lfdr.de>; Fri, 23 Aug 2024 11:49:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 13FFAB21BCA
-	for <lists+dmaengine@lfdr.de>; Fri, 23 Aug 2024 09:08:14 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2D737B22253
+	for <lists+dmaengine@lfdr.de>; Fri, 23 Aug 2024 09:49:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19CC1149C7C;
-	Fri, 23 Aug 2024 09:08:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 043DC183CAB;
+	Fri, 23 Aug 2024 09:48:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lMDsO8Xk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fVUxILv3"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5FE4149C43;
-	Fri, 23 Aug 2024 09:08:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE35152196;
+	Fri, 23 Aug 2024 09:48:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724404089; cv=none; b=mUHeiY3RWHEvXR7ysmO7zY7qmkiPKs+VV5wzFiCx9rEYHrHfsv13WOjMESGzOmlU2cNUouOfgYwpK6bdxHglvxl2/ieCTrLdxkbbRxRaVEPbN82Ynseo9sdYeBmn7VK5rjRkmL0wLojCC/az4Sj5OdNfSvhq4BZpa3XunpL2A/w=
+	t=1724406537; cv=none; b=AXKbO8EP/ZJW2VPi/FiuniugQic2H9zYK9zOr5n0B4qepW3EgiTQrH8pjzH9/V4lyvANEumq9ZZ9F28rC5y7cmViEV31cWYzKFXfV3wVHcC2newTO1Uyhx96nJG+xP5DwJna3pRvazvW6l3SK4bCtHnYr+wwLOH6WHR1rM5jKHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724404089; c=relaxed/simple;
-	bh=Ve2sqD6iFM1UKf+rloPpgtAo7gWk9UfkFY95e3//i/s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RJ+RgM9SpbDkDEGKdbvIiG4qlHC+9+nXzWnP00e5mxr8o+QPPg08hg7qW/7RT6Y0yoeyQ9h+gHTqHgETjDWHyc4KpLfTkkfFFaW/t+uV89fHe4LtS4es88Lb0s07AT+1S1+QEOFmQfU5v5NvlTiFZsyjN34BJU8F+G/2J4as9XI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lMDsO8Xk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53A5FC4AF0B;
-	Fri, 23 Aug 2024 09:08:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724404088;
-	bh=Ve2sqD6iFM1UKf+rloPpgtAo7gWk9UfkFY95e3//i/s=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lMDsO8Xkg+vjG2uP+6H2ZjIIT3JzFHH1ZwI1nqWbcVlzEOIsVzDIk88LYoxB0z2xa
-	 UgZZizGqAlJfQ3b5mNUN3+sw5oU04G9i/Dj4Nygsz9/P7O6sW1B0H9VDJCOrWIUoqX
-	 x9zix5JZ1n59sCQr/gsMEFrXCCwmPulHb9y98TsG4sgv4LZMHmF3mJlMG8MUxwlu0u
-	 job095Z+DEmA5ZV2ZZEs+wHQ57yUUKsCoQzmZ3dEHzb1ArxKsH/hQeaCHEcgsXtHzq
-	 ndXd3kv/xo+uX8jPtsp5+hPllBmgjfHDgzQdNvMU+HnX9O2OWJOxGmbn7YA1eVrSZh
-	 b4os0KwMC/EUA==
-Message-ID: <bf49738a-6979-41f2-a8d3-e36ac634102f@kernel.org>
-Date: Fri, 23 Aug 2024 11:07:59 +0200
+	s=arc-20240116; t=1724406537; c=relaxed/simple;
+	bh=W9N89YhzqvlO0fBSKWIJYkTsvxbbQ36GoRSXjAKhz9Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mIbjK4mBfRsqhHL4E1Gog+wgxg105jhIHbCohJimNBqaz2jZGmR/R/ixSebi0OX2yhxKpd6i2cYOwUphbfvxCT2lCfHhxCFovzriiIoY96k9E/z8zuQTZ92uHAl57Z7T1o4F3uhW0Uxm5vZV8oil0sJd2FW/KFi7yA6ZhViN4B4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fVUxILv3; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5334c018913so1634045e87.0;
+        Fri, 23 Aug 2024 02:48:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724406534; x=1725011334; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=6Jsp3qoUY0PJ8j/IbtdYraEvZfGixWFqo2ZZSn6+8oE=;
+        b=fVUxILv3gKk8QsGfN4+duWWvwDB0BkZoNJA3IFzb099hYKf0FwhYei88xY61dJk6An
+         Sxn7YDoIwUpjeEkf9LZ2lMzOd3+UCiVYyEFAP2j2sffxdqGSiuP6lLBb/qaPg4FJ6fbI
+         ghEMS28ev5v4c1jyVEz13oRGEJKBlHRxRsJfXTKgnO2hRiZUz/3ePy2ctEFSnqULzHP5
+         VHnDFn1J1nvssh4FewWcP0llQp4a1xyZ3oQb2e2cQyqWRvdwvju5TXLWnCxyfFtvgT2s
+         GFB9dje/DyNBDX5fkeBRdwYu9MMguIyoxC3woJ9l8HCX5gcCJD+EzWxL7Nks5FTQcEDD
+         T6tA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724406534; x=1725011334;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6Jsp3qoUY0PJ8j/IbtdYraEvZfGixWFqo2ZZSn6+8oE=;
+        b=kRxPvdpKw2ZUo7plaEOl3eBjAk+KUXdtlNnAUCv0YVDynjeqcZTnXzbCGTpy2M3W41
+         E1nWs7CbaiQn70ISglO/ecF9U8npIUDhhxaN505wDMHRizfoucyqCww8Dg6LJD6f5ah1
+         Wnsrw7Ur72wHpXh8scD/o8M7KXoibBrvjqQkIeHeno/kSLXNDvaPG9YIyoOq+ldqjQ3c
+         N9JU2l/A+YwhxuMdIjrHfTaZwUqVf8CkioRcmU0GHYHd2M4iiN1J8CsMGwUG78XZ0OIa
+         xoUVWoYNnV3fHYRz9CErX19szEixp20CzVQRV070q9EVtF0KhJcW7VaZstkQ/QWpqBxK
+         hcSA==
+X-Forwarded-Encrypted: i=1; AJvYcCUGgYzNlOsEq2h+5OaEkvN/Ko55VtvogSQvzeGr9ro+LVlsn2nMHC9NTW7WjUqjZ1k0F+bDIJYjn0I=@vger.kernel.org, AJvYcCVpdA1bkhxM1vb4ZtB3EnCC8lWj6uWWni8zs4wxd78g+96bmULmXL55baAMOLPfqchEcazrzXBN8mS8+32Z@vger.kernel.org, AJvYcCWXyFLL7nHRF0QTmvQzBGFl4ygBYvyK3S+4XVKW5uuw28Zk/jySHOwM2YcmdOQyAOnoo+8y4MtGIUC4y7pe@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw40JLNKdILcUbIOi4IgYuw0ApCwsvfu5wS8oAUC6x4795XI/tY
+	zav7uylXH9ZTZ2+xE7YwMydYadXvaRzefhUt9NzSki2hl96gMi9V
+X-Google-Smtp-Source: AGHT+IHjqD9ADGMDqCbXuDoNVCBR4+c0OlGiu6DxZ5/6/LUZy5PHClJ6h01k/aOd7tphvITAso+ZJg==
+X-Received: by 2002:a05:6512:3ba1:b0:530:dab8:7dde with SMTP id 2adb3069b0e04-5343883b42amr1117363e87.34.1724406533405;
+        Fri, 23 Aug 2024 02:48:53 -0700 (PDT)
+Received: from mobilestation ([178.176.56.174])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5343a58d473sm83862e87.62.2024.08.23.02.48.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Aug 2024 02:48:52 -0700 (PDT)
+Date: Fri, 23 Aug 2024 12:48:50 +0300
+From: Serge Semin <fancer.lancer@gmail.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Andy Shevchenko <andy@kernel.org>, 
+	Viresh Kumar <vireshk@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Vinod Koul <vkoul@kernel.org>
+Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	dmaengine@vger.kernel.org, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC] dmaengine: dw: Prevent tx-status calling desc
+ callback (Fix UART deadlock!)
+Message-ID: <n6grskuq722vnogwp5obiwzv4pxs5bbqddadesffezhvba5cjh@d6shcrvpxujg>
+References: <20240802080756.7415-1-fancer.lancer@gmail.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 01/16] dt-bindings: dma: qcom,bam: Add bam pipe lock
-To: Md Sadre Alam <quic_mdalam@quicinc.com>, vkoul@kernel.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- andersson@kernel.org, konradybcio@kernel.org, thara.gopinath@gmail.com,
- herbert@gondor.apana.org.au, davem@davemloft.net, gustavoars@kernel.org,
- u.kleine-koenig@pengutronix.de, kees@kernel.org, agross@kernel.org,
- linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-crypto@vger.kernel.org
-Cc: quic_srichara@quicinc.com, quic_varada@quicinc.com,
- quic_utiwari@quicinc.com
-References: <20240815085725.2740390-1-quic_mdalam@quicinc.com>
- <20240815085725.2740390-2-quic_mdalam@quicinc.com>
- <0a2b884b-bd28-428e-be12-8fef4fdfd278@kernel.org>
- <c8b7c2f0-9de1-1787-2f1b-2aa0102f347c@quicinc.com>
- <c2292ef2-e93e-4ca3-bcd3-542bd27526ad@kernel.org>
- <6365b444-f552-4b13-c73b-00ba04ec1e62@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <6365b444-f552-4b13-c73b-00ba04ec1e62@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240802080756.7415-1-fancer.lancer@gmail.com>
 
-On 22/08/2024 13:45, Md Sadre Alam wrote:
+Hi folks
+
+Any comments or suggestion about the change? The kernel occasionally
+_deadlocks_ without it for the DW UART + DW DMAC hardware setup.
+
+-Serge(y)
+
+On Fri, Aug 02, 2024 at 11:07:51AM +0300, Serge Semin wrote:
+> The dmaengine_tx_status() method updating the DMA-descriptors state and
+> eventually calling the Tx-descriptors callback may potentially cause
+> problems. In particular the deadlock was discovered in DW UART 8250 device
+> interacting with DW DMA controller channels. The call-trace causing the
+> deadlock is:
 > 
+> serial8250_handle_irq()
+>   uart_port_lock_irqsave(port); ----------------------+
+>   handle_rx_dma()                                     |
+>     serial8250_rx_dma_flush()                         |
+>       __dma_rx_complete()                             |
+>         dmaengine_tx_status()                         |
+>           dwc_scan_descriptors()                      |
+>             dwc_complete_all()                        |
+>               dwc_descriptor_complete()               |
+>                 dmaengine_desc_callback_invoke()      |
+>                   cb->callback(cb->callback_param);   |
+>                   ||                                  |
+>                   dma_rx_complete();                  |
+>                     uart_port_lock_irqsave(port); ----+ <- Deadlock!
 > 
-> On 8/22/2024 11:57 AM, Krzysztof Kozlowski wrote:
->> On 21/08/2024 18:34, Md Sadre Alam wrote:
->>>
->>>
->>> On 8/17/2024 2:38 PM, Krzysztof Kozlowski wrote:
->>>> On 15/08/2024 10:57, Md Sadre Alam wrote:
->>>>> BAM having pipe locking mechanism. The Lock and Un-Lock bit
->>>>> should be set on CMD descriptor only. Upon encountering a
->>>>> descriptor with Lock bit set, the BAM will lock all other
->>>>> pipes not related to the current pipe group, and keep
->>>>> handling the current pipe only until it sees the Un-Lock
->>>>> set.
->>>>
->>>> Please wrap commit message according to Linux coding style / submission
->>>> process (neither too early nor over the limit):
->>>> https://elixir.bootlin.com/linux/v6.4-rc1/source/Documentation/process/submitting-patches.rst#L597
->>>     Ok , will update in next patch.
->>>>
->>>>>
->>>>> Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
->>>>> ---
->>>>>
->>>>> Change in [v2]
->>>>>
->>>>> * Added initial support for dt-binding
->>>>>
->>>>> Change in [v1]
->>>>>
->>>>> * This patch was not included in [v1]
->>>>>
->>>>>    Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml | 8 ++++++++
->>>>>    1 file changed, 8 insertions(+)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml b/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
->>>>> index 3ad0d9b1fbc5..91cc2942aa62 100644
->>>>> --- a/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
->>>>> +++ b/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
->>>>> @@ -77,6 +77,12 @@ properties:
->>>>>          Indicates that the bam is powered up by a remote processor but must be
->>>>>          initialized by the local processor.
->>>>>    
->>>>> +  qcom,bam_pipe_lock:
->>>>
->>>> Please follow DTS coding style.
->>>     Ok
->>>>
->>>>> +    type: boolean
->>>>> +    description:
->>>>> +      Indicates that the bam pipe needs locking or not based on client driver
->>>>> +      sending the LOCK or UNLOK bit set on command descriptor.
->>>>
->>>> You described the desired Linux feature or behavior, not the actual
->>>> hardware. The bindings are about the latter, so instead you need to
->>>> rephrase the property and its description to match actual hardware
->>>> capabilities/features/configuration etc.
->>>     Ok, will update in next patch.
->>>>
->>>>> +
->>>>>      reg:
->>>>>        maxItems: 1
->>>>>    
->>>>> @@ -92,6 +98,8 @@ anyOf:
->>>>>          - qcom,powered-remotely
->>>>>      - required:
->>>>>          - qcom,controlled-remotely
->>>>> +  - required:
->>>>> +      - qcom,bam_pipe_lock
->>>>
->>>> Why is it here? What do you want to achieve?
->>>     This property added to achieve locking/unlocking
->>>     of BAM pipe groups for mutual exclusion of resources
->>>     that can be used across multiple EE's
->>
->> This explains me nothing. I am questioning the anyOf block. Why this is
->> the fourth method of controlling BAM? Anyway, if it is, then explain
->> this in commit msg.
->    This is the BAM property for locking/unlocking the BAM pipes.That's
->    why I kept in anyOf block.
-
-You keep repeating the same. It's like poking me with the same comment
-till I agree. I am done with this.
-
-NAK. Provide proper rationale.
-
-Best regards,
-Krzysztof
-
+> So in case if the DMA-engine finished working at some point before the
+> serial8250_rx_dma_flush() invocation and the respective tasklet hasn't
+> been executed yet, then calling the dmaengine_tx_status() will cause the
+> DMA-descriptors status update and the Tx-descriptor callback invocation.
+> Generalizing the case up: if the dmaengine_tx_status() method callee and
+> the Tx-descriptor callback refer to the related critical section, then
+> calling dmaengine_tx_status() from the Tx-descriptor callback will
+> inevitably cause a deadlock around the guarding lock as it happens in the
+> Serial 8250 DMA implementation above. (Note the deadlock doesn't happen
+> very often, but can be eventually discovered if the being received data
+> size is greater than the Rx DMA-buffer size defined in the 8250_dma.c
+> driver. In my case reducing the Rx DMA-buffer size increased the deadlock
+> probability.)
+> 
+> The easiest way to fix the deadlock was to just remove the Tx-descriptors
+> state update from the DW DMA-engine Tx-descriptor status method
+> implementation, as the most of the DMA-engine drivers imply. After this
+> fix is applied the Tx-descriptors status will be only updated in the
+> framework of the dwc_scan_descriptors() method called from the tasklet
+> handling the deferred DMA-controller IRQ.
+> 
+> Signed-off-by: Serge Semin <fancer.lancer@gmail.com
+> 
+> ---
+> 
+> Note I have doubts whether it's the best possible solution of the problem
+> since the client-driver deadlock is resolved here by fixing the DMA-engine
+> provider code. But I failed to find any reasonable solution in the 8250
+> DMA implementation.
+> 
+> Moreover the suggested fix cause a weird outcome - under the high-speed
+> and heavy serial transfers the next error is printed to the log sometimes:
+> 
+> > dma dma0chan0: BUG: XFER bit set, but channel not idle!
+> 
+> That's why the patch submitted as RFC. Do you have any better idea in mind
+> to prevent the nested lock?
+> 
+> Cc: Viresh Kumar <vireshk@kernel.org>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> CC: Andy Shevchenko <andy@kernel.org>
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Jiri Slaby <jirislaby@kernel.org>
+> Cc: "Ilpo Järvinen" <ilpo.jarvinen@linux.intel.com>
+> Cc: dmaengine@vger.kernel.org
+> Cc: linux-serial@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  drivers/dma/dw/core.c | 6 ------
+>  1 file changed, 6 deletions(-)
+> 
+> diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
+> index 5f7d690e3dba..4b3402156eae 100644
+> --- a/drivers/dma/dw/core.c
+> +++ b/drivers/dma/dw/core.c
+> @@ -925,12 +925,6 @@ dwc_tx_status(struct dma_chan *chan,
+>  	struct dw_dma_chan	*dwc = to_dw_dma_chan(chan);
+>  	enum dma_status		ret;
+>  
+> -	ret = dma_cookie_status(chan, cookie, txstate);
+> -	if (ret == DMA_COMPLETE)
+> -		return ret;
+> -
+> -	dwc_scan_descriptors(to_dw_dma(chan->device), dwc);
+> -
+>  	ret = dma_cookie_status(chan, cookie, txstate);
+>  	if (ret == DMA_COMPLETE)
+>  		return ret;
+> -- 
+> 2.43.0
+> 
 

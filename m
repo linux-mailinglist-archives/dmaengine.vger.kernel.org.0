@@ -1,208 +1,123 @@
-Return-Path: <dmaengine+bounces-3014-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3015-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB740963FFB
-	for <lists+dmaengine@lfdr.de>; Thu, 29 Aug 2024 11:27:35 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 652A69640AB
+	for <lists+dmaengine@lfdr.de>; Thu, 29 Aug 2024 11:56:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4077AB21B5E
-	for <lists+dmaengine@lfdr.de>; Thu, 29 Aug 2024 09:27:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9018D1C21AA9
+	for <lists+dmaengine@lfdr.de>; Thu, 29 Aug 2024 09:56:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32A3A18E37D;
-	Thu, 29 Aug 2024 09:26:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDB5418CC18;
+	Thu, 29 Aug 2024 09:56:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="idA4KpHX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GOTOS+/L"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73B5118DF94;
-	Thu, 29 Aug 2024 09:26:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1742A166F01
+	for <dmaengine@vger.kernel.org>; Thu, 29 Aug 2024 09:56:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724923579; cv=none; b=buMhjukQncQuUgiC52F/5XQT7ZZoktjI6axUsRHW9dHhhzJTCvbS2E4zj2pCvj91ZKA2kv3gcWTpLly0anCKPKpdtZK7ppESvUKEN6UCp482CLOJJ9/riI0d9Dqz5FGeHbyPUSdncWEunDerPtv1KFjXBsEDl06/0zyuYYQR7Ss=
+	t=1724925389; cv=none; b=hI56spHIG961RBkaXYM1OzHMKz7mSgO0U4qPtkvEcI53jIVAKV5Ss8j/uUMtxJrN5CGdHqoW0JDXDtyfFZSJeTpZgDf2I4fCSsPwkUPBcCm3jExJGyahuFWme6VGcoyc0g/Xg/ZUKOVzgTGdL87JBa0VtunHjxIC6/RHoP3mYmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724923579; c=relaxed/simple;
-	bh=P9bp+kuK45uZZSN3cpkVtEACd9ZvSOCvJtQ1RH40zPA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FMXey5xyWqTsU4eYRwa2hAx50zUlFkzdzzlmvKl+SsSjaVQzwhOYVq2kg6Tl3jeyisQ3XFa6N/Y3yppBBvs8KTsupDsKJjTHGOx8AfmfCOtGoy7+X1IiZJJsSUMWhrgAS3YDMUcZ7ZOj5kySZKEVd1NHkAWvMdaqYdjbAR1vjik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=idA4KpHX; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47T8Oggj010887;
-	Thu, 29 Aug 2024 09:26:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=yuNVYZ9hfDi
-	5n3vRZsFzMDLctazYKEOldnRMnjkS1N4=; b=idA4KpHXUElhLgJzEECHCg0+sop
-	wtiDaIUHDisO2YuDnsXOyRDB7X7YmHefPiSz7lsoutWHazy4sfi9PTdXcgpIgAeJ
-	4FbvibGJYx9wps3tMVX2DLg9hndTbzszajn95ARmeblO1rBfd/G+sGIT7CXywEMu
-	9WXJA4BoGp5fn7MzeW5xbHw+Ik+HzE4VIp9sKFqorkO1pLvG8AWYUgYZloEn6lPz
-	yJj6MTXCXmostDlKj3QI6nm9t2zlfD+MYE8KHp3jZtvvBNOQqbnLkoyFC+z+pnmg
-	5ROZNjd5se1OVVksFlhmKnOYX6VadYfyYaCrLd6j+KaB74ZKhzKyUXRjh0g==
-Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 419pv0mqfc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 29 Aug 2024 09:26:13 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 47T9QAtr019440;
-	Thu, 29 Aug 2024 09:26:10 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 4178kmcgmm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 29 Aug 2024 09:26:10 +0000
-Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 47T9Q2X5019351;
-	Thu, 29 Aug 2024 09:26:10 GMT
-Received: from hu-maiyas-hyd.qualcomm.com (hu-msavaliy-hyd.qualcomm.com [10.213.110.207])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 47T9Q9Br019426
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 29 Aug 2024 09:26:10 +0000
-Received: by hu-maiyas-hyd.qualcomm.com (Postfix, from userid 429934)
-	id DAEEF242FD; Thu, 29 Aug 2024 14:56:08 +0530 (+0530)
-From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-To: konrad.dybcio@linaro.org, andersson@kernel.org, andi.shyti@kernel.org,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
-Cc: quic_vdadhani@quicinc.com,
-        Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-Subject: [PATCH v1 4/4] i2c: i2c-qcom-geni: Enable i2c controller sharing between two subsystems
-Date: Thu, 29 Aug 2024 14:54:18 +0530
-Message-Id: <20240829092418.2863659-5-quic_msavaliy@quicinc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240829092418.2863659-1-quic_msavaliy@quicinc.com>
-References: <20240829092418.2863659-1-quic_msavaliy@quicinc.com>
+	s=arc-20240116; t=1724925389; c=relaxed/simple;
+	bh=z/jroExPu4YiG7hYt2JF3nZu8rG4QlkWnpSlweE7RM4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IIY6W+uUR6suGUoWyyoMIiHkSfnRZJHCDOp3SAUKV04euYN7b8OHWiUU1Bq+1LpgwsfCJqwHXXsWIXXX+v5gBtBio1TcqnwJl1b7cxFnux8IB9KJS3EbNwt9lsy53vcNzo20VvH5Hw9ACxgkMHpQsAJ9mbAQqWazxnZWe5tuDTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GOTOS+/L; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5c0ba23a5abso425283a12.3
+        for <dmaengine@vger.kernel.org>; Thu, 29 Aug 2024 02:56:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1724925386; x=1725530186; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GPwwTaDN9yKO85WUsV52EH69A6ZWar7hV1r+9P2rJyw=;
+        b=GOTOS+/Ljok9CZ6LFWNbEH4QxDpf9oYkkbonGFy7WXqSQ6C9O1UQlZ35q00OqqOKFL
+         Fo/5bj5LUUlMbCCtjH/TuXpxFBPNsqyZ47xB40tzoeKeQkbwvCxBtgQM+j7ZrZrdTcp7
+         ZYkR1XnVY3PhGlJbPixsWV5kbSxV9PnR+uNUTrhrFdM249I0TWywr0ezEo3QjbchzipU
+         y44Gp1eHsk2no1so/6YFwvmoOvF5HGTBI0s4C2n65SUVTZoBLu3pSyfJ9FnjEGS29McM
+         a/LqXvNpmmpXV3EKcwT8uKTQAPOswUAbHHJt0qJrwdOm6aRg8ArODVk+Vd+8H/wo9MGB
+         +Hlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724925386; x=1725530186;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GPwwTaDN9yKO85WUsV52EH69A6ZWar7hV1r+9P2rJyw=;
+        b=bblQdvuqbT8w68Dw871SdR0tBP4YDMKFZvwD9hHuNA8G2iS1yAH7kg353/nJbeYYpz
+         sIbhZxb4MsVbsd1QXb4lKb7UglL82ODjXSc4p2fylZ7RAyTAHElaun+bH7yr4zBSoQ+k
+         eTUUdJSfQzEji4vJcXZZxiRNRmsVwnmLdlQ5INX2vunlVBu5eACEKGWpyEhq+n4uy9Fc
+         UOXCFZT2cU33F/g8MMj1neOaBLLpxUT5MleYTxh218wto2JRnI4eBiuWrvUIRLVxeB2m
+         qt8O1Cf1nWm1hiq4oJyjNNQVPe/xW1QRfR7RLj3vwQNcWhtm+AgFUI9OfodAPcNRnDOF
+         1wPg==
+X-Forwarded-Encrypted: i=1; AJvYcCUdwLZvKF4omtBj7tr4xRhogaRqctf/9cnicz4CrMmw/MrIwyriRlAArzZhtU49gbVq78k7f97QOfs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDg7jeTlLL4pv0LSWbOd+GUCxw41NMU5Bk0LNNRlaw0U9HAqGO
+	t3MNQjGKZQWxirwn0EvmJHROPEwqI4XnaJe5f+GWOTbceug7VD+zxM3tnrSLfe8=
+X-Google-Smtp-Source: AGHT+IGr0oeGiZdteJWxwu1jGClZTGeR0UcOOGLomISMDiee6bl0lKq9+ap6M1FyMmpePXIzgF709w==
+X-Received: by 2002:a17:907:2cc3:b0:a77:dde0:d669 with SMTP id a640c23a62f3a-a897fa6bb24mr167808066b.45.1724925386185;
+        Thu, 29 Aug 2024 02:56:26 -0700 (PDT)
+Received: from [192.168.0.25] ([176.61.106.227])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a89891d698bsm58087766b.145.2024.08.29.02.56.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 Aug 2024 02:56:25 -0700 (PDT)
+Message-ID: <9eed39f3-baf3-41cb-bd19-361d76207b09@linaro.org>
+Date: Thu, 29 Aug 2024 10:56:24 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: hyrKRq-Nfoh8TtgE-h8UfBcCI7jn7QTC
-X-Proofpoint-ORIG-GUID: hyrKRq-Nfoh8TtgE-h8UfBcCI7jn7QTC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-29_02,2024-08-29_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- mlxlogscore=999 bulkscore=0 impostorscore=0 phishscore=0 clxscore=1015
- mlxscore=0 spamscore=0 suspectscore=0 malwarescore=0 adultscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2408290069
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 0/4] Enable shared SE support over I2C
+To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
+ konrad.dybcio@linaro.org, andersson@kernel.org, andi.shyti@kernel.org,
+ linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
+Cc: quic_vdadhani@quicinc.com
+References: <20240829092418.2863659-1-quic_msavaliy@quicinc.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20240829092418.2863659-1-quic_msavaliy@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Add support to share I2C SE by two Subsystems in a mutually exclusive way.
-Use  "qcom,shared-se" flag in a particular i2c instance node if the
-usecase requires i2c controller to be shared.
+On 29/08/2024 10:24, Mukesh Kumar Savaliya wrote:
+> This Series adds support to share QUP based I2C SE between subsystems.
+> Each subsystem should have its own GPII which interacts between SE and
+> GSI DMA HW engine.
 
-I2C driver just need to mark first_msg and last_msg flag to help indicate
-GPI driver to  take lock and unlock TRE there by protecting from concurrent
-access from other EE or Subsystem.
+What is SE ?
 
-gpi_create_i2c_tre() function at gpi.c will take care of adding Lock and
-Unlock TRE for the respective transfer operations.
+GPII - general purpose interrupt ... ?
 
-Since the GPIOs are also shared for the i2c bus between two SS, do not
-touch GPIO configuration during runtime suspend and only turn off the
-clocks. This will allow other SS to continue to transfer the data
-without any disturbance over the IO lines.
+You have too many acronyms here, which makes reading and understanding 
+your cover letter a bit hard.
 
-Signed-off-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+Please define at least the term SE in your cover letter and in your patch.
+
+In the patch you use the term TRE which without diving into the code I 
+vaguely remember is a register..
+
+- GPII
+- GSI
+- SE
+- TRE
+
+Need to be defined to make what's going on in this series more "grokable".
+
+A cover letter should assume a reviewer is familiar with the basics of a 
+system - no need to define what I2C is but, similarly shouldn't assume a 
+reviewer is numerate in the taxonomy of vendor specific architecture 
+e.g. whats SE ?
+
 ---
- drivers/i2c/busses/i2c-qcom-geni.c | 29 ++++++++++++++++++++++-------
- 1 file changed, 22 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
-index eebb0cbb6ca4..ee2e431601a6 100644
---- a/drivers/i2c/busses/i2c-qcom-geni.c
-+++ b/drivers/i2c/busses/i2c-qcom-geni.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- // Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
-+// Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
- 
- #include <linux/acpi.h>
- #include <linux/clk.h>
-@@ -99,6 +100,7 @@ struct geni_i2c_dev {
- 	struct dma_chan *rx_c;
- 	bool gpi_mode;
- 	bool abort_done;
-+	bool is_shared;
- };
- 
- struct geni_i2c_desc {
-@@ -602,6 +604,7 @@ static int geni_i2c_gpi_xfer(struct geni_i2c_dev *gi2c, struct i2c_msg msgs[], i
- 	peripheral.clk_div = itr->clk_div;
- 	peripheral.set_config = 1;
- 	peripheral.multi_msg = false;
-+	peripheral.shared_se = gi2c->is_shared;
- 
- 	for (i = 0; i < num; i++) {
- 		gi2c->cur = &msgs[i];
-@@ -612,6 +615,8 @@ static int geni_i2c_gpi_xfer(struct geni_i2c_dev *gi2c, struct i2c_msg msgs[], i
- 		if (i < num - 1)
- 			peripheral.stretch = 1;
- 
-+		peripheral.first_msg = (i == 0);
-+		peripheral.last_msg = (i == num - 1);
- 		peripheral.addr = msgs[i].addr;
- 
- 		ret =  geni_i2c_gpi(gi2c, &msgs[i], &config,
-@@ -631,8 +636,11 @@ static int geni_i2c_gpi_xfer(struct geni_i2c_dev *gi2c, struct i2c_msg msgs[], i
- 		dma_async_issue_pending(gi2c->tx_c);
- 
- 		time_left = wait_for_completion_timeout(&gi2c->done, XFER_TIMEOUT);
--		if (!time_left)
-+		if (!time_left) {
-+			dev_err(gi2c->se.dev, "I2C timeout gpi flags:%d addr:0x%x\n",
-+						gi2c->cur->flags, gi2c->cur->addr);
- 			gi2c->err = -ETIMEDOUT;
-+		}
- 
- 		if (gi2c->err) {
- 			ret = gi2c->err;
-@@ -800,6 +808,11 @@ static int geni_i2c_probe(struct platform_device *pdev)
- 		gi2c->clk_freq_out = KHZ(100);
- 	}
- 
-+	if (of_property_read_bool(pdev->dev.of_node, "qcom,shared-se")) {
-+		gi2c->is_shared = true;
-+		dev_dbg(&pdev->dev, "Shared SE Usecase\n");
-+	}
-+
- 	if (has_acpi_companion(dev))
- 		ACPI_COMPANION_SET(&gi2c->adap.dev, ACPI_COMPANION(dev));
- 
-@@ -962,14 +975,16 @@ static int __maybe_unused geni_i2c_runtime_suspend(struct device *dev)
- 	struct geni_i2c_dev *gi2c = dev_get_drvdata(dev);
- 
- 	disable_irq(gi2c->irq);
--	ret = geni_se_resources_off(&gi2c->se);
--	if (ret) {
--		enable_irq(gi2c->irq);
--		return ret;
--
-+	if (gi2c->is_shared) {
-+		geni_se_clks_off(&gi2c->se);
- 	} else {
--		gi2c->suspended = 1;
-+		ret = geni_se_resources_off(&gi2c->se);
-+		if (ret) {
-+			enable_irq(gi2c->irq);
-+			return ret;
-+		}
- 	}
-+	gi2c->suspended = 1;
- 
- 	clk_disable_unprepare(gi2c->core_clk);
- 
--- 
-2.25.1
-
+bod
 

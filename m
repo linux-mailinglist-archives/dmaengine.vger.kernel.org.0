@@ -1,113 +1,102 @@
-Return-Path: <dmaengine+bounces-3022-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3023-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3EA12964C90
-	for <lists+dmaengine@lfdr.de>; Thu, 29 Aug 2024 19:05:04 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D73BB964CC2
+	for <lists+dmaengine@lfdr.de>; Thu, 29 Aug 2024 19:30:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DA48F1F210D2
-	for <lists+dmaengine@lfdr.de>; Thu, 29 Aug 2024 17:05:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 934FA2854AB
+	for <lists+dmaengine@lfdr.de>; Thu, 29 Aug 2024 17:30:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9685A1B6539;
-	Thu, 29 Aug 2024 17:03:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E28771B142A;
+	Thu, 29 Aug 2024 17:30:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZhGXw6ZI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XukKEq6r"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E381B5327;
-	Thu, 29 Aug 2024 17:03:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FF5640870;
+	Thu, 29 Aug 2024 17:30:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724951011; cv=none; b=KHYkRU9wGZoYgcHxC/I69bq5hUtVQ8P/Ohh89eUkhUbAxfilf48XvSP9/eHZhthv7KYyPEP7xQtOhEKitU5z1TeN9++1QYGeYEsFTi1555Iq4eEsT4ETZZFV0Rd6cV0p5RYGxyQqJgEWhVSVmjZAim2Wpt7Ht+kK5a758RZBU2I=
+	t=1724952627; cv=none; b=iB74GBGERT9QfZK9M99vNOrjEP6kk/nhvcPwfpdLBJC7NAt2B7O+JJ3WeXkmBNduEQXYasMnSK8lDtTkRgajHmnIxlu2kAuetqzzEA+5TOM3GRIhO9YHhwa+lcvbJfzeO3G8FyOSJ2Faecm1FQigPdQeRnu7pKmtdpToSWEFb2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724951011; c=relaxed/simple;
-	bh=fF3MZfjWlsFpCSUK05YMBeA2C4rmrtnhmYrTtq1uU0Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WW63gZSVoprUKRSAaRWq8wrvyvH1unqnO4Rkiiq1olTpHkM615AEqYVw+fpJ1tRR84EqUeoaHlfpKrWvfMahw+sCm86bPkhiAOJsh/tmz70KJL9hk1+9Ep+mAPacEqFQv1eRk9wf5HYQY2/sTAdh9j2oWKoakIy3GM6Oks8mXDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZhGXw6ZI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1892C4CEC1;
-	Thu, 29 Aug 2024 17:03:30 +0000 (UTC)
+	s=arc-20240116; t=1724952627; c=relaxed/simple;
+	bh=kWuFHoupUeoLMSNjGVbiL4lpeHmH38kYHoBuArnwaN0=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=m+N5VvOkUSLg5jRkSWa8jNPsWgBiphluAKYl9x5ejCuVtGYXkdwvQPJPl8o8Gocn0JiY2Zv38LUV29WZS+3Z5H1L+56iROctAfo6BoFCGHnNWcJTd76SoNwj9Cw8EKlKkpY+RsxgTvWK8HN7EuLhAKJ51jpmLs/yQy0DSkZglIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XukKEq6r; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40616C4CEC5;
+	Thu, 29 Aug 2024 17:30:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724951011;
-	bh=fF3MZfjWlsFpCSUK05YMBeA2C4rmrtnhmYrTtq1uU0Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZhGXw6ZIpHaX7JtJXKxC+GfEC1uwdjGFdHd4u3KBEKsgNEMlsfLwY28AzyzstIyy2
-	 wuRnpC5FDa2d7QrnJCgninVC5chkrb2PVaVhnfIvb3ITaIJEqj/nH41BFD3ZSz9VM/
-	 SoSSYsOc81eMJWqMVcXpC1l24NfFd5ZNrHcib6NsTv+4+4ikTu7YF7mT4InIucpw0u
-	 48htY7e+QOgDMhcG62bBjp321l+7fdxiYxcVWLFLbPPFchXxQ2qNUbwdxUQMFbggO5
-	 I51KzR4bHsNR2nB0gU3r4wKJouSCitIS7TWi7J8KGrBLKvr2QwjU6oS0u0Dwx8KZ+u
-	 T9Wera6VSKTkg==
-Date: Thu, 29 Aug 2024 22:33:27 +0530
+	s=k20201202; t=1724952627;
+	bh=kWuFHoupUeoLMSNjGVbiL4lpeHmH38kYHoBuArnwaN0=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=XukKEq6rmbwer+gAM2hmk7PLHsNHFve0Qwe270Q5CSsT7IXjwB8BJved+AhZtpNgZ
+	 tAgxvr4SeWS2yfqRBj9dSsMFEZcd90OiBqQJZEJu5Vm3v7r1cKhRrEcFOyXcgQaYml
+	 cMhsneue2jS/4xeO8PHk7UWD7fme7sdsIG1YPVHzqDVBwfUkt/hzUK9ocPvIsdaReW
+	 PGCn+UsOT/cAqOsx5f07vahH8fhM+KOacZ0Rxiucs3DY2BNTDgizahi/6yuU4bEWm2
+	 CTMwRdFzsrthPc0+nV9EFO8eh8VBeEC08143R/XY6FOEdCBTkNbklmXoxpWNIjhGnf
+	 QA8X4Fa6wxQKg==
 From: Vinod Koul <vkoul@kernel.org>
-To: Inochi Amaoto <inochiama@outlook.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v12 2/3] soc/sophgo: add top sysctrl layout file for
- CV18XX/SG200X
-Message-ID: <ZtCp346ucJq/V1kP@vaman>
-References: <IA1PR20MB495396729244074C36E51E11BB942@IA1PR20MB4953.namprd20.prod.outlook.com>
- <IA1PR20MB4953E0D56CE4010C470E4A71BB942@IA1PR20MB4953.namprd20.prod.outlook.com>
- <Zs9kUAeapWeN/4GS@vaman>
- <IA1PR20MB4953572077286AF23A747507BB962@IA1PR20MB4953.namprd20.prod.outlook.com>
+To: Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Keguang Zhang <keguang.zhang@gmail.com>
+Cc: linux-mips@vger.kernel.org, dmaengine@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Conor Dooley <conor.dooley@microchip.com>, 
+ Jiaxun Yang <jiaxun.yang@flygoat.com>
+In-Reply-To: <20240607-loongson1-dma-v8-0-f9992d257250@gmail.com>
+References: <20240607-loongson1-dma-v8-0-f9992d257250@gmail.com>
+Subject: Re: [PATCH v8 0/2] Add support for Loongson1 APB DMA
+Message-Id: <172495262390.385951.6697848658942844877.b4-ty@kernel.org>
+Date: Thu, 29 Aug 2024 23:00:23 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <IA1PR20MB4953572077286AF23A747507BB962@IA1PR20MB4953.namprd20.prod.outlook.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On 29-08-24, 09:38, Inochi Amaoto wrote:
-> On Wed, Aug 28, 2024 at 11:24:24PM GMT, Vinod Koul wrote:
-> > On 27-08-24, 14:49, Inochi Amaoto wrote:
-> > > The "top" system controller of CV18XX/SG200X exposes control
-> > > register access for various devices. Add soc header file to
-> > > describe it.
-> > 
-> > I dont think I am full onboard this idea, 
-> 
-> Feel free to share your idea. I just added this file for
-> convenience to access the offset of the syscon device. 
-> In fact, I am not sure whether it is better to use reg
-> offset. Using reg adds some unncessary complexity, but
-> can avoid use this offset file. If you prefer this way,
-> it is OK for me to change.
 
-I would just add the offsets that I need in local driver header and move
-on...
+On Fri, 07 Jun 2024 20:12:22 +0800, Keguang Zhang wrote:
+> Add the driver and dt-binding document for Loongson1 APB DMA.
+> 
+> Changes in v8:
+> - Change 'interrupts' property to an items list
+> - Link to v7: https://lore.kernel.org/r/20240329-loongson1-dma-v7-0-37db58608de5@gmail.com
+> 
+> Changes in v7:
+> - Change the comptible to 'loongson,ls1*-apbdma' (suggested by Huacai Chen)
+> - Update the title and description part accordingly
+> - Rename the file to loongson,ls1b-apbdma.yaml
+> - Add a compatible string for LS1A
+> - Delete minItems of 'interrupts'
+> - Change patterns of 'interrupt-names' to const
+> - Rename the file to loongson1-apb-dma.c to keep the consistency
+> - Update Kconfig and Makefile accordingly
+> - Link to v6: https://lore.kernel.org/r/20240316-loongson1-dma-v6-0-90de2c3cc928@gmail.com
+> 
+> [...]
 
-> 
-> > but still need someone to ack it
-> 
-> I am not sure there will be someone to ack it. If this patch
-> is kept.
-> 
-> > > 
-> > > Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
-> > > ---
-> > >  include/soc/sophgo/cv1800-sysctl.h | 30 ++++++++++++++++++++++++++++++
-> > 
-> > is soc/sophgo/ right path? why not include/soc/sifive/... (sorry dont
-> > know much about this here...)
-> > 
-> 
-> CV1800 is a SoC from Sophgo, it is not from SiFive.
+Applied, thanks!
 
-As I said I am not sure, someone who is from this world should ack this
-header
+[1/2] dt-bindings: dma: Add Loongson-1 APB DMA
+      commit: 7ea270bb93e4ce165bb4f834c29c05e9815b6ca8
+[2/2] dmaengine: Loongson1: Add Loongson-1 APB DMA driver
+      commit: e06c432312148ddb550ec55b004e32671657ea23
 
+Best regards,
 -- 
 ~Vinod
+
+
 

@@ -1,74 +1,74 @@
-Return-Path: <dmaengine+bounces-3018-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3019-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01EAC9640E3
-	for <lists+dmaengine@lfdr.de>; Thu, 29 Aug 2024 12:05:41 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C7CA89640FA
+	for <lists+dmaengine@lfdr.de>; Thu, 29 Aug 2024 12:10:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ADA3D2835F3
-	for <lists+dmaengine@lfdr.de>; Thu, 29 Aug 2024 10:05:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 72B8C1F232FF
+	for <lists+dmaengine@lfdr.de>; Thu, 29 Aug 2024 10:10:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABC4F18C90F;
-	Thu, 29 Aug 2024 10:05:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71D6018E028;
+	Thu, 29 Aug 2024 10:10:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sGsC3Ayc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N80c+WHA"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EA2318CC1E
-	for <dmaengine@vger.kernel.org>; Thu, 29 Aug 2024 10:05:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF06918DF67
+	for <dmaengine@vger.kernel.org>; Thu, 29 Aug 2024 10:10:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724925930; cv=none; b=NsuAvL+d/Nk620rlARX87/ZW+KayZwhSJ0yNV8NsRHgVh39ZppvCvL2naK54NQ1wM9YErGuW2pcpeeMLcIKsicw5NB3QJoEG2MjQSrzEvT4lNikcFwl4HukFYM6Ukalht+2CAk8CB5C9GRn7YPcc5iwJtKPI7Q6CBqSjzcMmIqU=
+	t=1724926227; cv=none; b=hNoszAr2UPgS6MlPH9F2H5/T6EdFzN+ofBX/rYNLJJcupkVl7UDW3ua/JSfF2TXRZ7n+rLHbRIQvR3CI0z/Dji/p6PifDj73AIQa5gS7h3SaB56OK7bJZYdJApLeWUn1d2mu59rAF3XdBd99Rpuc+qA44V4zDU4fIIIc2tPNXjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724925930; c=relaxed/simple;
-	bh=Ll1+M8kjnAXBCB6IW45yQ7ozY7I48GpvsA0aFZU7zHI=;
+	s=arc-20240116; t=1724926227; c=relaxed/simple;
+	bh=Lt/9ND4lk2gsg2G4bm2hpuneDuZWchDQV3zw1+AFHoo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B3ihhs5F5fOi6fxTGeasInUFdGlDjolxLA2xU2f3G1cE+L7QNrzQ41/2G+pJv2EVjo3k07TEE4j8UYPQfRVkyPIGzIdgXVD76MonkxLtTAgeyxC+MKkkKQ5asUoodCb9NimWU5PMQbrfvVLGYJ7zUlkacHm8J+C1PcCY/CFSuJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sGsC3Ayc; arc=none smtp.client-ip=209.85.218.42
+	 In-Reply-To:Content-Type; b=iiHCc5loaoIAV6NduTPSjYvGXg7AGwT3saPtLnJnECWSjarsMmOrbRBKkozGgcYBiyEaeElLGisTTmm95MmAWKtSJpW/yPUmZ3iymhiSqZRwoVKnHTtkW6F9XvbloNTvjWK8pUZjEeCZ0aPZ3Y3icRWK+85i30Fpb3lK2cwEXEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=N80c+WHA; arc=none smtp.client-ip=209.85.208.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a86b64ebd8aso27896366b.1
-        for <dmaengine@vger.kernel.org>; Thu, 29 Aug 2024 03:05:27 -0700 (PDT)
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5bebd3b7c22so2711814a12.0
+        for <dmaengine@vger.kernel.org>; Thu, 29 Aug 2024 03:10:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1724925926; x=1725530726; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1724926224; x=1725531024; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=xM8rYU3tE2lpxGZJEIS21zgA8p56lenKtVo6rnRCh0E=;
-        b=sGsC3AycMYBqLfJKgZCQRJvagKj5Q5g2+AF6TNHIV1GTlX4D8N3A5cKom2Xdp+QA9H
-         4YOPXtX6tP0aXkLypSlDMoOlBFlZsfrTiAdarApzkuoG+dOw1bJpB02+NclthS8DB5oM
-         9DH2cJ3FbCJ+NP2ZrjJpm6L6DOl/V9gvbXWjp6TVHtyXduvJIL4aVJl9LTwJBEAVUnxz
-         8AUEy14NiN98vcFgTN9vp8DbakCA08Kx53T8qbBNWwy6CgskJoWM9C9BI+LSN7fj9suP
-         PJEaSo+suY5AezIZwQFXnS7y4HL7i15/JXQjnwJzIPZT72r97w4GGoFaS2zoBycRJMVZ
-         32ug==
+        bh=x88YAxOWPM6Vm2Gaxr6swuFJGR/lRbnBdiJSpLORFsA=;
+        b=N80c+WHAPfZQua9L7jxqTPEQYmzuAn/Me3xpn/usPwy99sFXFU/IBtiNmtZV9OjVwi
+         NKJgUABSWjP/OQkfRiuoob1elcgffh3GEI8XohAKehZ0ErmKsbKwl1l2afVFruKVE/Sz
+         9gCTxO12KDcTIbTHEwNJ7zlfZHsVxU+hsJy7QJ8F7fsoSrcR+ikwbU/ZGYT3MzqtplfS
+         yflhLxdoPXgJA9/+OMmDSdA9ntdVPp+BIraeU3ybB8+qP9MHulXgIgv11dekIYssPt0F
+         2R3yq4up4X9dw1rS3QOSo5xVms+1r3o7qkopBZtfNdFmk8FfrMGNFUYJql1gx3XRCo2E
+         +snw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724925926; x=1725530726;
+        d=1e100.net; s=20230601; t=1724926224; x=1725531024;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xM8rYU3tE2lpxGZJEIS21zgA8p56lenKtVo6rnRCh0E=;
-        b=vujs84V4wSiPHhoq7jWxluWOgagZyD99EM5e7n9i1TEs2qdD1du0TKNUgmhZB/m8Q6
-         f0SE8YyZAL5L17W4EG8qQq1LTff6Day3PDA4aeDPe8BsrbG20MORDBrVR6UFGNX/7ZbF
-         q+uqpAxkuwlQdVCkuEpK/A8+JUi1Pq/QStYC9Ar+GtWDtXyxVk9E9a4seslSy7Hp0Ysn
-         1MOlGrDZAI8ohpeyAZbzcfCtFc9g5nNj687jD6VdMoEwmJGcxfLjr59QW3X+eJvJKVXE
-         Ops/Lpp5zKvXnH0fNZzJjvj14dLQ0QL8AOObrBXysb+U9cxfOIyeN/9blCwua/DRGYTB
-         SVJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWpCSXlUv8c2e3Gsp7fTumDb/iQYSGcwVZmEmP55lHG63DgwkhvS1v3Jj8DmNZhO49lZgg/kRlgxsw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUOASLZ0/xUw5bHqTyTlPVniK3fO9OX3lcpfdPqywa1Qs+Tkis
-	T5iqpbiT+CIP67r/o8NEyE8LvlIcy5E1HSm1byc4R7CpGfCIAlt9eHOZ4Y2j4tk=
-X-Google-Smtp-Source: AGHT+IGSUfZpTd7tILZlx/OBRQ7plqFZwr9j3Mrz/+Gjk3UT0oEI7amwjzPMo6e1G8TGbzJkBYchKg==
-X-Received: by 2002:a05:6402:2353:b0:5c0:8f7c:ad9e with SMTP id 4fb4d7f45d1cf-5c21ed3e3e3mr2579605a12.15.1724925926410;
-        Thu, 29 Aug 2024 03:05:26 -0700 (PDT)
+        bh=x88YAxOWPM6Vm2Gaxr6swuFJGR/lRbnBdiJSpLORFsA=;
+        b=CD9ZWhqIEdNXv7f15e7HCMXe+LUSSeP18KK88F9GUPLi9tJY6RGfZDVygP25EIeJ9n
+         uncz8eT586N1bt7bpZPax/8NRDNTDe/kqxWHSF3dPT2wc6gXnXiAAaUy/RAP+g6MGeoF
+         NM6KxpW2iCTHn0Mxzr9xD4iJ2JYpdNExaX2xwWMFVgRV6EPghkUH/m9IolXE3JcPrsuE
+         BusrEQDiimwEQbbgCznD2nhZpkhbMahQZw+E7ScHdDdHbUFAb82CvRwNPMPPy8c2ks4j
+         dd/r41FySWYiX6hLeBNVBGGvNigy6/5WCtKXHHOLnqXLXO2CJ6hei6u+J47M4sBtpf12
+         dJxw==
+X-Forwarded-Encrypted: i=1; AJvYcCUffYxDGKmM/8JSp4/DyNo8m7H6jgzTyMe8MFYF3AFt8MfzfEazeozXdwdwdWpy1B9l9lJjDOyO834=@vger.kernel.org
+X-Gm-Message-State: AOJu0YycjN8+x6HkQQ9pMrye5Hb4K7GhDNd2efWe6shlaK1I5tQfuT4T
+	ArT4uyeiNq2fBz1+6lLn6QBL66zejqzGDScIdDAcaVbqoOWge9HDrq2YpYOsTcU=
+X-Google-Smtp-Source: AGHT+IFNZz/FqMD/n7Lr2gtCtPCnz6hc+vHB01WkC69OIprExbTP7zO8xXE9q+kqD8YaMxA/hnBEXg==
+X-Received: by 2002:a17:907:9407:b0:a6f:5609:954f with SMTP id a640c23a62f3a-a898c41445bmr156461566b.12.1724926223712;
+        Thu, 29 Aug 2024 03:10:23 -0700 (PDT)
 Received: from [192.168.0.25] ([176.61.106.227])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c226c7cfdasm519947a12.58.2024.08.29.03.05.25
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8988feb32asm58908166b.23.2024.08.29.03.10.22
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 Aug 2024 03:05:26 -0700 (PDT)
-Message-ID: <0712caf4-568f-4c7c-b319-ccdbba37142a@linaro.org>
-Date: Thu, 29 Aug 2024 11:05:25 +0100
+        Thu, 29 Aug 2024 03:10:23 -0700 (PDT)
+Message-ID: <c3ee4cd4-a4a6-421c-9114-fba5ecc365da@linaro.org>
+Date: Thu, 29 Aug 2024 11:10:22 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -76,119 +76,54 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/4] dma: gpi: Add Lock and Unlock TRE support to
- access SE exclusively
+Subject: Re: [PATCH v1 0/4] Enable shared SE support over I2C
 To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
  konrad.dybcio@linaro.org, andersson@kernel.org, andi.shyti@kernel.org,
  linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
 Cc: quic_vdadhani@quicinc.com
 References: <20240829092418.2863659-1-quic_msavaliy@quicinc.com>
- <20240829092418.2863659-3-quic_msavaliy@quicinc.com>
 Content-Language: en-US
 From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20240829092418.2863659-3-quic_msavaliy@quicinc.com>
+In-Reply-To: <20240829092418.2863659-1-quic_msavaliy@quicinc.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 On 29/08/2024 10:24, Mukesh Kumar Savaliya wrote:
-> GSI DMA provides specific TREs namely Lock and Unlock TRE, which
-> provides mutual exclusive access to SE from any of the subsystem
-> (E.g. Apps, TZ, ADSP etc). Lock prevents other subsystems from
-> concurrently performing DMA transfers and avoids disturbance to
-> data path. Basically lock the SE for particular subsystem, complete
-> the transfer, unlock the SE.
+> This Series adds support to share QUP based I2C SE between subsystems.
+> Each subsystem should have its own GPII which interacts between SE and
+> GSI DMA HW engine.
 > 
-> Apply Lock TRE for the first transfer of shared SE and Apply Unlock
-> TRE for the last transfer.
+> Subsystem must acquire Lock over the SE on GPII channel so that it
+> gets uninterrupted control till it unlocks the SE. It also makes sure
+> the commonly shared TLMM GPIOs are not touched which can impact other
+> subsystem or cause any interruption. Generally, GPIOs are being
+> unconfigured during suspend time.
 > 
-> Also change MAX_TRE macro to 5 from 3 because of the two additional TREs.
+> GSI DMA engine is capable to perform requested transfer operations
+> from any of the SE in a seamless way and its transparent to the
+> subsystems. Make sure to enable “qcom,shared-se” flag only while
+> enabling this feature. I2C client should add in its respective parent
+> node.
 > 
-> Signed-off-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
 > ---
->   drivers/dma/qcom/gpi.c           | 37 +++++++++++++++++++++++++++++++-
->   include/linux/dma/qcom-gpi-dma.h |  6 ++++++
->   2 files changed, 42 insertions(+), 1 deletion(-)
+> Mukesh Kumar Savaliya (4):
+>    dt-bindindgs: i2c: qcom,i2c-geni: Document shared flag
+>    dma: gpi: Add Lock and Unlock TRE support to access SE exclusively
+>    soc: qcom: geni-se: Export function geni_se_clks_off()
+>    i2c: i2c-qcom-geni: Enable i2c controller sharing between two
+>      subsystems
 > 
-> diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
-> index e6ebd688d746..ba11b2641ab6 100644
-> --- a/drivers/dma/qcom/gpi.c
-> +++ b/drivers/dma/qcom/gpi.c
-> @@ -2,6 +2,7 @@
->   /*
->    * Copyright (c) 2017-2020, The Linux Foundation. All rights reserved.
->    * Copyright (c) 2020, Linaro Limited
-> + * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
->    */
->   
->   #include <dt-bindings/dma/qcom-gpi.h>
-> @@ -65,6 +66,14 @@
->   /* DMA TRE */
->   #define TRE_DMA_LEN		GENMASK(23, 0)
->   
-> +/* Lock TRE */
-> +#define TRE_I2C_LOCK		BIT(0)
-> +#define TRE_MINOR_TYPE		GENMASK(19, 16)
-> +#define TRE_MAJOR_TYPE		GENMASK(23, 20)
-> +
-> +/* Unlock TRE */
-> +#define TRE_I2C_UNLOCK		BIT(8)
-> +
->   /* Register offsets from gpi-top */
->   #define GPII_n_CH_k_CNTXT_0_OFFS(n, k)	(0x20000 + (0x4000 * (n)) + (0x80 * (k)))
->   #define GPII_n_CH_k_CNTXT_0_EL_SIZE	GENMASK(31, 24)
-> @@ -516,7 +525,7 @@ struct gpii {
->   	bool ieob_set;
->   };
->   
-> -#define MAX_TRE 3
-> +#define MAX_TRE 5
->   
->   struct gpi_desc {
->   	struct virt_dma_desc vd;
-> @@ -1637,6 +1646,19 @@ static int gpi_create_i2c_tre(struct gchan *chan, struct gpi_desc *desc,
->   	struct gpi_tre *tre;
->   	unsigned int i;
->   
-> +	/* create lock tre for first tranfser */
-> +	if (i2c->shared_se && i2c->first_msg) {
-> +		tre = &desc->tre[tre_idx];
-> +		tre_idx++;
-> +
-> +		tre->dword[0] = 0;
-> +		tre->dword[1] = 0;
-> +		tre->dword[2] = 0;
-> +		tre->dword[3] = u32_encode_bits(1, TRE_I2C_LOCK);
-> +		tre->dword[3] |= u32_encode_bits(0, TRE_MINOR_TYPE);
-> +		tre->dword[3] |= u32_encode_bits(3, TRE_MAJOR_TYPE);
-> +	}
-> +
->   	/* first create config tre if applicable */
->   	if (i2c->set_config) {
->   		tre = &desc->tre[tre_idx];
-> @@ -1695,6 +1717,19 @@ static int gpi_create_i2c_tre(struct gchan *chan, struct gpi_desc *desc,
->   		tre->dword[3] |= u32_encode_bits(1, TRE_FLAGS_IEOT);
->   	}
->   
-> +	/* Unlock tre for last transfer */
-> +	if (i2c->shared_se && i2c->last_msg && i2c->op != I2C_READ) {
-> +		tre = &desc->tre[tre_idx];
-> +		tre_idx++;
-> +
-> +		tre->dword[0] = 0;
-> +		tre->dword[1] = 0;
-> +		tre->dword[2] = 0;
-> +		tre->dword[3] = u32_encode_bits(1, TRE_I2C_UNLOCK);
-> +		tre->dword[3] |= u32_encode_bits(1, TRE_MINOR_TYPE);
-> +		tre->dword[3] |= u32_encode_bits(3, TRE_MAJOR_TYPE);
-> +	}
-> +
+>   .../bindings/i2c/qcom,i2c-geni-qcom.yaml      |  4 ++
+>   drivers/dma/qcom/gpi.c                        | 37 ++++++++++++++++++-
+>   drivers/i2c/busses/i2c-qcom-geni.c            | 29 +++++++++++----
+>   drivers/soc/qcom/qcom-geni-se.c               |  4 +-
+>   include/linux/dma/qcom-gpi-dma.h              |  6 +++
+>   include/linux/soc/qcom/geni-se.h              |  3 ++
+>   6 files changed, 74 insertions(+), 9 deletions(-)
+> 
 
-What happens if the first transfer succeeds => bus lock but the last 
-transfer fails => !unlock ?
+In the cover letter please give an example of Serial Engine sharing.
 
-Is the SE left in a locked state ?
 
----
-bod
 

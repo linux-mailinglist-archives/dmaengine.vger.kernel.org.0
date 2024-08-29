@@ -1,113 +1,112 @@
-Return-Path: <dmaengine+bounces-3021-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3022-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 16268964C8B
-	for <lists+dmaengine@lfdr.de>; Thu, 29 Aug 2024 19:04:39 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3EA12964C90
+	for <lists+dmaengine@lfdr.de>; Thu, 29 Aug 2024 19:05:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C773C2845CF
-	for <lists+dmaengine@lfdr.de>; Thu, 29 Aug 2024 17:04:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DA48F1F210D2
+	for <lists+dmaengine@lfdr.de>; Thu, 29 Aug 2024 17:05:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E224F1B6545;
-	Thu, 29 Aug 2024 17:02:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9685A1B6539;
+	Thu, 29 Aug 2024 17:03:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RSyj7Njj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZhGXw6ZI"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD8601B151C;
-	Thu, 29 Aug 2024 17:02:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E381B5327;
+	Thu, 29 Aug 2024 17:03:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724950920; cv=none; b=M3aDYJc+eZWfRJJlBIm45m1uxeoTaMoFd5HrJD4K+tYyJzlfAmj4Vi02lqn2fRZkPyjcOfHFR5Amtvak8oUJh885Mtxmqneq6Udx867EjtHRAQHP0UXwj6laBORW5WxsEQZWFqQS/NNT+1Yt9879kR76dBQGrhPx0LtExWbE8LY=
+	t=1724951011; cv=none; b=KHYkRU9wGZoYgcHxC/I69bq5hUtVQ8P/Ohh89eUkhUbAxfilf48XvSP9/eHZhthv7KYyPEP7xQtOhEKitU5z1TeN9++1QYGeYEsFTi1555Iq4eEsT4ETZZFV0Rd6cV0p5RYGxyQqJgEWhVSVmjZAim2Wpt7Ht+kK5a758RZBU2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724950920; c=relaxed/simple;
-	bh=RJBfIbkiW7TN/v+WigG9LTCZysSAl3Gpt7zlyd7Izms=;
+	s=arc-20240116; t=1724951011; c=relaxed/simple;
+	bh=fF3MZfjWlsFpCSUK05YMBeA2C4rmrtnhmYrTtq1uU0Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KQHmuhPkrBlYhaK2GxYt047Ci9jPylFLM6xtQLxnoidlhX60LvG5DLd9ifas6SowTHLxDhiJ4WTGy0Gi6L6iPLUOSpwlIgnUFnxc6EDszh1HffXP465T38NBsFhz/KBJV8OUdZEfe8BvBC9D6lp3Lnxy45LW1Lh2RQwtV70zbBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RSyj7Njj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D31DC4CEC1;
-	Thu, 29 Aug 2024 17:01:59 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=WW63gZSVoprUKRSAaRWq8wrvyvH1unqnO4Rkiiq1olTpHkM615AEqYVw+fpJ1tRR84EqUeoaHlfpKrWvfMahw+sCm86bPkhiAOJsh/tmz70KJL9hk1+9Ep+mAPacEqFQv1eRk9wf5HYQY2/sTAdh9j2oWKoakIy3GM6Oks8mXDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZhGXw6ZI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1892C4CEC1;
+	Thu, 29 Aug 2024 17:03:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724950920;
-	bh=RJBfIbkiW7TN/v+WigG9LTCZysSAl3Gpt7zlyd7Izms=;
+	s=k20201202; t=1724951011;
+	bh=fF3MZfjWlsFpCSUK05YMBeA2C4rmrtnhmYrTtq1uU0Q=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RSyj7NjjcVbLlXlQ2Sdc0Im7sEu5rfFbFbMCx6LDBgU09J5wkKh8ur2t1D6mlumFj
-	 Gt/nYmGVY71Io1lWD6hs7T1A/ZuK7rdasdnOs8OlV0cXmgbgEUAv+7pWtMPGiKYrVM
-	 gZSE04vBYyr1aQ6YkzVocL06apGlZVnID9VGMWwbkLppHXRJ7qMFy0dX0DzLjnqoWP
-	 6rhB+A0EsxqqDuJA9oE9OptA7AcuRy+cTrFfCv/63/Zl8a1wgBu6dciVPXDOnxOZU9
-	 lsd40uOxv6vIAUhp5r82VWMfGfcJoQsLmPO4e0lFCQ1O742t0MSnVoLTNFN/Q5D1rZ
-	 +Fd7WXENuYj3A==
-Date: Thu, 29 Aug 2024 22:31:56 +0530
+	b=ZhGXw6ZIpHaX7JtJXKxC+GfEC1uwdjGFdHd4u3KBEKsgNEMlsfLwY28AzyzstIyy2
+	 wuRnpC5FDa2d7QrnJCgninVC5chkrb2PVaVhnfIvb3ITaIJEqj/nH41BFD3ZSz9VM/
+	 SoSSYsOc81eMJWqMVcXpC1l24NfFd5ZNrHcib6NsTv+4+4ikTu7YF7mT4InIucpw0u
+	 48htY7e+QOgDMhcG62bBjp321l+7fdxiYxcVWLFLbPPFchXxQ2qNUbwdxUQMFbggO5
+	 I51KzR4bHsNR2nB0gU3r4wKJouSCitIS7TWi7J8KGrBLKvr2QwjU6oS0u0Dwx8KZ+u
+	 T9Wera6VSKTkg==
+Date: Thu, 29 Aug 2024 22:33:27 +0530
 From: Vinod Koul <vkoul@kernel.org>
-To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-Cc: konrad.dybcio@linaro.org, andersson@kernel.org, andi.shyti@kernel.org,
-	linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-	quic_vdadhani@quicinc.com
-Subject: Re: [PATCH v1 0/4] Enable shared SE support over I2C
-Message-ID: <ZtCphFX+4hXMNFPG@vaman>
-References: <20240829092418.2863659-1-quic_msavaliy@quicinc.com>
+To: Inochi Amaoto <inochiama@outlook.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v12 2/3] soc/sophgo: add top sysctrl layout file for
+ CV18XX/SG200X
+Message-ID: <ZtCp346ucJq/V1kP@vaman>
+References: <IA1PR20MB495396729244074C36E51E11BB942@IA1PR20MB4953.namprd20.prod.outlook.com>
+ <IA1PR20MB4953E0D56CE4010C470E4A71BB942@IA1PR20MB4953.namprd20.prod.outlook.com>
+ <Zs9kUAeapWeN/4GS@vaman>
+ <IA1PR20MB4953572077286AF23A747507BB962@IA1PR20MB4953.namprd20.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240829092418.2863659-1-quic_msavaliy@quicinc.com>
+In-Reply-To: <IA1PR20MB4953572077286AF23A747507BB962@IA1PR20MB4953.namprd20.prod.outlook.com>
 
-On 29-08-24, 14:54, Mukesh Kumar Savaliya wrote:
-> This Series adds support to share QUP based I2C SE between subsystems.
-> Each subsystem should have its own GPII which interacts between SE and
-> GSI DMA HW engine.
+On 29-08-24, 09:38, Inochi Amaoto wrote:
+> On Wed, Aug 28, 2024 at 11:24:24PM GMT, Vinod Koul wrote:
+> > On 27-08-24, 14:49, Inochi Amaoto wrote:
+> > > The "top" system controller of CV18XX/SG200X exposes control
+> > > register access for various devices. Add soc header file to
+> > > describe it.
+> > 
+> > I dont think I am full onboard this idea, 
 > 
-> Subsystem must acquire Lock over the SE on GPII channel so that it
-> gets uninterrupted control till it unlocks the SE. It also makes sure
-> the commonly shared TLMM GPIOs are not touched which can impact other
-> subsystem or cause any interruption. Generally, GPIOs are being
-> unconfigured during suspend time. 
+> Feel free to share your idea. I just added this file for
+> convenience to access the offset of the syscon device. 
+> In fact, I am not sure whether it is better to use reg
+> offset. Using reg adds some unncessary complexity, but
+> can avoid use this offset file. If you prefer this way,
+> it is OK for me to change.
 
-Most of the use case it is either I2C using it or some other peripheral
-using it, so who are you protecting the channel with this locking
-mechanism?
-
-> GSI DMA engine is capable to perform requested transfer operations
-> from any of the SE in a seamless way and its transparent to the
-> subsystems. Make sure to enable “qcom,shared-se” flag only while
-> enabling this feature. I2C client should add in its respective parent
-> node.
-
-Why should this be expose to peripheral drivers and not handled
-internally inside dma driver, you lock, submit the txn to engine and
-then unlock when txn is processed, why should this be exposed to
-clients?
+I would just add the offsets that I need in local driver header and move
+on...
 
 > 
-> ---
-> Mukesh Kumar Savaliya (4):
->   dt-bindindgs: i2c: qcom,i2c-geni: Document shared flag
->   dma: gpi: Add Lock and Unlock TRE support to access SE exclusively
->   soc: qcom: geni-se: Export function geni_se_clks_off()
->   i2c: i2c-qcom-geni: Enable i2c controller sharing between two
->     subsystems
+> > but still need someone to ack it
 > 
->  .../bindings/i2c/qcom,i2c-geni-qcom.yaml      |  4 ++
->  drivers/dma/qcom/gpi.c                        | 37 ++++++++++++++++++-
->  drivers/i2c/busses/i2c-qcom-geni.c            | 29 +++++++++++----
->  drivers/soc/qcom/qcom-geni-se.c               |  4 +-
->  include/linux/dma/qcom-gpi-dma.h              |  6 +++
->  include/linux/soc/qcom/geni-se.h              |  3 ++
->  6 files changed, 74 insertions(+), 9 deletions(-)
+> I am not sure there will be someone to ack it. If this patch
+> is kept.
 > 
-> -- 
-> 2.25.1
+> > > 
+> > > Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
+> > > ---
+> > >  include/soc/sophgo/cv1800-sysctl.h | 30 ++++++++++++++++++++++++++++++
+> > 
+> > is soc/sophgo/ right path? why not include/soc/sifive/... (sorry dont
+> > know much about this here...)
+> > 
 > 
+> CV1800 is a SoC from Sophgo, it is not from SiFive.
+
+As I said I am not sure, someone who is from this world should ack this
+header
 
 -- 
 ~Vinod

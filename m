@@ -1,48 +1,48 @@
-Return-Path: <dmaengine+bounces-3048-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3049-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C5D87966840
-	for <lists+dmaengine@lfdr.de>; Fri, 30 Aug 2024 19:45:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BB1D19668BC
+	for <lists+dmaengine@lfdr.de>; Fri, 30 Aug 2024 20:12:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 02AAB1C2418F
-	for <lists+dmaengine@lfdr.de>; Fri, 30 Aug 2024 17:45:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EDD8B1C22570
+	for <lists+dmaengine@lfdr.de>; Fri, 30 Aug 2024 18:12:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C23D1B81CB;
-	Fri, 30 Aug 2024 17:45:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E6B61BBBEB;
+	Fri, 30 Aug 2024 18:12:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P+Ml2QmW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e7EdwN+p"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FA721C6A5;
-	Fri, 30 Aug 2024 17:45:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EA0C1BB69B;
+	Fri, 30 Aug 2024 18:12:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725039901; cv=none; b=rBubLL+zZSGHEmipRkq2rjRqtVPf8GvkR27XqgKj3xlHKmP1Z7dXDYFcifWRUOMGJ1YaOgO61ZE2pEBnBrFft/3zepOLcwAj6E+me5JYdeJ8L8licscUBQ61dKz8q9VKCTMR4VW0NbKMubUl4JNRJL7NE5C8eSV0gBsXIF/c7MU=
+	t=1725041521; cv=none; b=pu66y0xIC+mebkAXmpAP/ZTPU7uoa5AD5qbWrUtvt5qYTnYccfyzgd0DxBfQDGEbyUpADq3b9a4U3v12Mx0z6dO27kqhuhJ8SQmn2/QAtuq/2cbGQkmJbBIJY2lhhFRZFS/QXUiWth6A3v+bWteKqtIigchwdIHtQ70hMKeCTRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725039901; c=relaxed/simple;
-	bh=R/i2mAxYkQp9313zx0X+jNdP5jgkKxXoja5Y4TesLp0=;
+	s=arc-20240116; t=1725041521; c=relaxed/simple;
+	bh=xpYyuX0+gUF5Mr4Gy27M6rUHT7DG7qFpyaRUFs1fINQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DorKZx0XQjt/QXrtA++boRWkPq+QArQtCz3CTBRfd9umtN0ZgNpfZHA4B8M4hNbqDA9xYolvB1vkKNC+I2rrlqV5+ipSFz+eIGiqTTTJ+4bcB0XQ2A5w5pXkvtKTQGg0tJttz0RMWQdrlaXbP4ujObYuXGuSGPZ4vqgAed3viMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P+Ml2QmW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 061C0C4CEC2;
-	Fri, 30 Aug 2024 17:44:58 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=eAnlL7bWQdTfuj2BiF+nqHzEm75hCMJ2tU71c82zynPGN8WddEK4V4f7Q+dVhlESvm0Esw2H8SQk/jtR9HwbLICqogLBT57lwt30+fMy0wXtJ/VLBnQV9EEWpjGZ5qVjqLMczVaOwuezLyntmQS9gP11CujiTi9GAwaJIRupJD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e7EdwN+p; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B71CC4CEC2;
+	Fri, 30 Aug 2024 18:11:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725039900;
-	bh=R/i2mAxYkQp9313zx0X+jNdP5jgkKxXoja5Y4TesLp0=;
+	s=k20201202; t=1725041521;
+	bh=xpYyuX0+gUF5Mr4Gy27M6rUHT7DG7qFpyaRUFs1fINQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=P+Ml2QmWlG4wRtYbt+x0PfApJymjuYVy2WVqgpL0SCZ7S3q7DzEsl5F9EvhWcLC36
-	 tHSaTNQiC+8Z/a5TcSEWW0n9tcIFjKs2c3DXAHZk2JjeAwTXF1cs3YpK0j2kfDKJt8
-	 T42wIBpK4nkAciQZRnOpcD/U6onOB3py0bB3UpqZ5I/ATz8EPsJBvjfFp3eGWmWxCW
-	 FUG7i02LNOVvmZ9KLLJg5tOO91mA2S68MSUrYTSOZNNKQIU6D+pYgqPq95scCJ0x9C
-	 08jam2YiC4nwCzsej7bjtQPeSmhRSwOp4AwBws18edK//d7JWaUmRYmthLlO6ynoHK
-	 AfVS6VqjXmDpg==
-Message-ID: <cb1b68be-f551-40f2-b2c4-c31425e57688@kernel.org>
-Date: Fri, 30 Aug 2024 19:44:56 +0200
+	b=e7EdwN+pkhzNHUcwqv8wfZVevDEJBapJcmzG6Jk1rAJLxf9LrH3YUM2RY9MbUF5ei
+	 yW0uVBlMM5yzW2UwridP296ef7R0Os0aVWDAqF3NEZALie1VMFYHl93eyUwchzRs/C
+	 0oaDMxA1Q2Wej3GelQTGD3zFzqdS6W/SKNFm/zDZBLVSBpl95AeILPHnwHQQrYJz9S
+	 CT/iit1wc6eNQzc+xgFjvKWpaY1/FAEPqEXtfBb+y07lPDvqXtfYPm7zLeMYGp9hjf
+	 tn84tTZFSMR4SqSWUKVr5vo6dospqjNURGkNOs3IlOvjuhK6DmbziqqCO4vTmiWnKP
+	 nJ0l2QyiwAZ+g==
+Message-ID: <6829a2e4-f7e0-4f34-8702-e00b005e9e0c@kernel.org>
+Date: Fri, 30 Aug 2024 20:11:56 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -50,12 +50,12 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/7] dmaengine:Add COMPILE_TEST for easy testing
-To: Liao Yuanhong <liaoyuanhong@vivo.com>, vkoul@kernel.org
-Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, imx@lists.linux.dev
+Subject: Re: [PATCH v2 0/7] dmaengine:Use devm_clk_get_enabled() helpers
+To: vkoul@kernel.org
+Cc: Liao Yuanhong <liaoyuanhong@vivo.com>, dmaengine@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev
 References: <20240830094118.15458-1-liaoyuanhong@vivo.com>
- <20240830094118.15458-2-liaoyuanhong@vivo.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -101,21 +101,30 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240830094118.15458-2-liaoyuanhong@vivo.com>
+In-Reply-To: <20240830094118.15458-1-liaoyuanhong@vivo.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 30/08/2024 11:41, Liao Yuanhong wrote:
-> Add COMPILE_TEST configuration for at-hdmac, imx-dma, imx-sdma
-> devices for easy debugging.
+> The devm_clk_get_enabled() helpers:
+>     - call devm_clk_get()
+>     - call clk_prepare_enable() and register what is needed in order to
+>      call clk_disable_unprepare() when needed, as a managed resource.
 > 
-> Signed-off-by: Liao Yuanhong <liaoyuanhong@vivo.com>
+> This simplifies the code and avoids the calls to clk_disable_unprepare().
 > ---
->  drivers/dma/Kconfig | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> v2:remove inappropriate modifications, configure COMPILE_TEST for easy
+> testing, add devm_clk_getprepaed() for imx sdma device.
+> ---
 > 
 
-I don't think this was really tested. It should fail on some platforms.
+Vinod,
+
+Since ~2 weeks there is tremendous amount of trivial patches coming from
+vivo.com. I identified at least 6 buggy, where the contributor did not
+understand the code. Not sure about intention, but I advise extra
+carefulness
+when dealing with these "trivial" improvements.
 
 Best regards,
 Krzysztof

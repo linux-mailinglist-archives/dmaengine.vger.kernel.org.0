@@ -1,133 +1,192 @@
-Return-Path: <dmaengine+bounces-3034-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3035-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id BED05965547
-	for <lists+dmaengine@lfdr.de>; Fri, 30 Aug 2024 04:34:37 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA6D7965907
+	for <lists+dmaengine@lfdr.de>; Fri, 30 Aug 2024 09:47:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4A0EAB21336
-	for <lists+dmaengine@lfdr.de>; Fri, 30 Aug 2024 02:34:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 545231F2683B
+	for <lists+dmaengine@lfdr.de>; Fri, 30 Aug 2024 07:47:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22A2B38DD6;
-	Fri, 30 Aug 2024 02:34:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAE3C15C143;
+	Fri, 30 Aug 2024 07:47:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MqTsl9jB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qazfL5dO"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75DCA1D1315;
-	Fri, 30 Aug 2024 02:34:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD55913E3F5
+	for <dmaengine@vger.kernel.org>; Fri, 30 Aug 2024 07:47:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724985270; cv=none; b=fBfJuwL3tW+IQULllC+ZSUewybQtp90ypOy8vnVpQQhGLmnkxo4RLc9SeJcLfsH2QdJlnw06yyRtvtT0d5CsoohYxjFELSZdyvAS+DpXYl2z2zrlDnRpZKy4YRq4CPkicJHJlUStgVZshTvRtheLDtSRPCUBxSeevmK6pxJNp+4=
+	t=1725004034; cv=none; b=Z3gXtHHHM1xqXr/o61KDjkbjz0HWlHvxmJD4BUJ5uWEY4HeEVs0PBoqBYGWweUEpYI0jQe7qGaF/p2sYFMzkozpfwlDd9TUCkGE3DaOrXImssSBqwpeB8+6vbIfAunlvMfzdZg6o7yWC8WM8cZdHoVolf8ANcfVW76mp5rfZ8hk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724985270; c=relaxed/simple;
-	bh=LOof/t2NUWiTeBa2AsgWfvL+WqDqQ6X+dghfFyiWXTI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F+QwXQUL0f74LJMKHquoh1tH8i+ZOIydkzJy4zTj/Rr3yoLlhynp7W+f7dvdYe+PHtpqMQnXb1nv9hvf2yTfbT4ykW2K7B0NRpm/Fve53RF2hMjK+lAZCQX+M5anlyA+oibAKHMqjrBwqa/Ee6+y/u+mqCf1Xm3PKpcLp99TLkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MqTsl9jB; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5c218866849so1614546a12.0;
-        Thu, 29 Aug 2024 19:34:28 -0700 (PDT)
+	s=arc-20240116; t=1725004034; c=relaxed/simple;
+	bh=VSiORfFqwbMU54hiZwB1d3ZojmwfIK/Qol4tPF7c/rc=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Xy3SgvkK6ywKlUVcuWmpTMeCParpnkenDDFFaCbLQrTY7NOhyW76+xQpU8TNXgJ620n6IMP3rlrbfEYvvEeyywAW9ee0+Ihrqes/ks26hM+blZE00SbZzEsvZX2XJedABkoB9JqOXX/9OaFNHmjs2MHptxVlpGntCVwvHo0ssdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qazfL5dO; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-42bbe908380so680955e9.2
+        for <dmaengine@vger.kernel.org>; Fri, 30 Aug 2024 00:47:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724985267; x=1725590067; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h8Ad0vhCQH1uXxmJFwkA6/WDAbjLvvOwQmA263Zu0vg=;
-        b=MqTsl9jB22+wLsu8CWlHTeTdVqWUdDxjg1ois4E/Lba2haGI+4rR00c0d+KR5DBtQf
-         NkBJdq5JxDo4AtqXNGN20fI5wlePDBVl71EX7lEBn3MDaJ2bTWZr5QhSKLu3GhbuBm1i
-         Q+ipM0I7zOUxiyS5idubYhSSVTXKD5NkTQ+tlXTgjjIPsZMgfI9yLLyf4+4EeJ5wlD9T
-         czSa3phJBwNFqacdthAvMACwvafhz4EVrM9rQmEdL2vfC3WxNeyxfK61LSalmWnyJOY0
-         ZiiitQdbTWtxnlxvSyzDzFjiCok0nO8gd9Dn8jIR8mVVlmjjop7MYsfO7/DjfVKuNNch
-         VcMw==
+        d=linaro.org; s=google; t=1725004030; x=1725608830; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=25wikd69ZUkkr5ycvweR6XCBMtXqdYbsu8TrXjjukv4=;
+        b=qazfL5dORWWqOYfiwI0R5dz/FQJYosfGn2YVhSFRa0ipa8xnW34SNbGeR6H8ZomZAZ
+         vF5A8YJnXWKztJZHyMDTBvWX/u0qsVZtUYD8hzW37A2DGQcrZLgVc+yXyAf6Srrjyrua
+         fyDeyuxaXWYwIQiWuDAhRUB02Faetj+LuxmnWJGze96/qGTu6x7yWVHhjHi62h775uWh
+         JvuaF2VSP5GVkUlCHgq1aQUo50C1cLa7qC3dsehwen3H1CdtuQtckakJz+pijsJQ3+cZ
+         w8V332D57vTsCuwDOAgDlm7tRwWXNQupPPdSZfNhsldyvjj9XKFeiUu4z7AtKHUgVp0B
+         iIMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724985267; x=1725590067;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=h8Ad0vhCQH1uXxmJFwkA6/WDAbjLvvOwQmA263Zu0vg=;
-        b=Ku2r8MqpNEoJx9FuYizdU2smTfSa/EKGKN1FyAeDPMQA7rYtTRRFDQ37BOVISz6Cjf
-         O2Kwf02cbQ9XieIcUnPU1nXuLLM8s9AEvx2bB3iLGGueORbtOUAif4E6jiV6sMWa+ChS
-         bQdE/BhMwSuOEegXQfPs4fGq2tVzlEJuCcRurkzRr6RleVImS5aqCjgsdm10upzgKod0
-         E40OhBBafUCduNPrRrN1gGgQvhokP/bTmqbJc3dAtGqqYkyT72oo2D3I+z1gx6LJyykF
-         Pio8WfiSY3Jd5ntzbp9B8uwgQnAC7LXWNs/iO67Ag7/GogSkmHCxBGv0G8WCdKpG0ia7
-         VoDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU/+rKLGCGCHST40bQKQQb3fO3WHI7i5a1qcIRe2Kp7OHnMEKyd9H9erZIMYc884ecUZyKVO7hbqUMRnfoi@vger.kernel.org, AJvYcCUv+1QlSmKsXPs0O/bcC+R2Qcqf8tSwcwhxD1f58nt30ErYsX0dnKNVO5IFs+fk9FPgdasLEPcuA9RC@vger.kernel.org, AJvYcCVUMoLFAdC5mpAylzKKq2CkRbPJdVIRcfxLarvUVLILkjYSFxRxCBhwTEEnh3J+QCTd2l981pKCqemo@vger.kernel.org, AJvYcCX/Bb6qoRsOrQZwiLZP4cwLy05iVIhDJBuSS1npoAq/KEFxx816QB+HvHDHEXAgaGsGN5PPO9zkGi5Jpg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YygAqk6RFzKVf8l/E3+yvJFFNQvDW7fxJZlFb6KFeZ2wWhjD6Dz
-	uC8z4thxonXvdggdAXjCaPmNERdUap70K5/GO6eLUgcRr2pgBh7GX9Gt0HVGGagc5FhRIlsy2TW
-	FsirAUY1v7VBf7K4C2XfB9uvJJn0=
-X-Google-Smtp-Source: AGHT+IFQrNg75kF7kiJPUlYxIIiKf55yBoI6UVMLJgvVyo5i04fsIpAbiwR+z3ZW+wSuT9d0rrkbPaENP1uLevEziZQ=
-X-Received: by 2002:a05:6402:3201:b0:5be:e01c:6b5f with SMTP id
- 4fb4d7f45d1cf-5c21ed9feb2mr4182113a12.33.1724985266036; Thu, 29 Aug 2024
- 19:34:26 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1725004030; x=1725608830;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=25wikd69ZUkkr5ycvweR6XCBMtXqdYbsu8TrXjjukv4=;
+        b=Vyw0dTKMILa+ldjDcoU1yXuKBYyxqOyI4S8N4ZM2mD+qxDGaJv7lQtbiDZE6u05a0d
+         tUf34iY600nrJtwcNTs/lpMOuWTL9awR3+XZ9v6wc+njaj95FVawJrABSufg8yGfx1hi
+         VoQnn32rXCFuLcIv4oNN7HYqli/rUnX+D89xmbMTjO9iK6iwZLJunim8A+2E2olTyXgU
+         sZngzqFSKDzBAE8i1XwFHQ/KO57thGW1hBS9dQqLfjx54KQOnCB3s2sVltMacKxPtpCN
+         HayMusUsJPmvlCOLEPzABd192Sz8Ver2vH1NEprsSz3QmKD8sqFVxx5XUeiSQPWF29wR
+         KtUA==
+X-Forwarded-Encrypted: i=1; AJvYcCVDTOfVsq3ZSRYOoygF2znCpIDla51YE43ZNM275W3SYLJdY38mZNDPVaMnfmC+CKVxIuWXRPzu1BE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJqKieBNdmcXkGgkgRXkdyj52akrCB7JTot9pctBVSVYWS1eqC
+	DCp5YwKW/mUeoHm720R6gfH52ne9cg4OHf6SyzvYFt26zIENe44I0NqMYKUdMYs=
+X-Google-Smtp-Source: AGHT+IF6QuMgE0Qpt5xvvURSWNcFFsHwHxW5+gCKscPEUBfHGSOw2gWJKaA138vKn+BaqPUisECt5w==
+X-Received: by 2002:a5d:60c1:0:b0:367:980a:6af with SMTP id ffacd0b85a97d-3749b58841emr3646647f8f.59.1725004029586;
+        Fri, 30 Aug 2024 00:47:09 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:982:cbb0:5001:8e1b:dd18:1d3? ([2a01:e0a:982:cbb0:5001:8e1b:dd18:1d3])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3749ee99d6dsm3272538f8f.48.2024.08.30.00.47.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 30 Aug 2024 00:47:09 -0700 (PDT)
+Message-ID: <d1ceab6e-907a-4939-8be4-6b460d6c594f@linaro.org>
+Date: Fri, 30 Aug 2024 09:47:06 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240809-loongson1-dma-v12-0-d9469a4a6b85@gmail.com> <172495263311.385951.8113964072819506950.b4-ty@kernel.org>
-In-Reply-To: <172495263311.385951.8113964072819506950.b4-ty@kernel.org>
-From: Keguang Zhang <keguang.zhang@gmail.com>
-Date: Fri, 30 Aug 2024 10:33:49 +0800
-Message-ID: <CAJhJPsVVSCnhS0dMXu-e0XTc-eHounx9RX7MZnCogJx-tBRerw@mail.gmail.com>
-Subject: Re: [PATCH v12 0/2] Add support for Loongson1 APB DMA
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, linux-mips@vger.kernel.org, dmaengine@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Conor Dooley <conor.dooley@microchip.com>, Jiaxun Yang <jiaxun.yang@flygoat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+From: neil.armstrong@linaro.org
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH v1 0/4] Enable shared SE support over I2C
+To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
+ konrad.dybcio@linaro.org, andersson@kernel.org, andi.shyti@kernel.org,
+ linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
+Cc: quic_vdadhani@quicinc.com
+References: <20240829092418.2863659-1-quic_msavaliy@quicinc.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20240829092418.2863659-1-quic_msavaliy@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Aug 30, 2024 at 1:30=E2=80=AFAM Vinod Koul <vkoul@kernel.org> wrote=
-:
->
->
-> On Fri, 09 Aug 2024 18:30:57 +0800, Keguang Zhang wrote:
-> > Add the driver and dt-binding document for Loongson1 APB DMA.
-> >
-> > Changes in v12:
-> > - Delete superfluous blank lines in the examples section.
-> > - Move the call to devm_request_irq() into ls1x_dma_alloc_chan_resource=
-s()
-> >   to use dma_chan_name() as a parameter.
-> > - Move the call to devm_free_irq() into ls1x_dma_free_chan_resources() =
-accordingly.
-> > - Rename ls1x_dma_alloc_llis() to ls1x_dma_prep_lli().
-> > - Merge ls1x_dma_free_lli() into ls1x_dma_free_desc().
-> > - Add ls1x_dma_synchronize().
-> > - Fix the error handling of ls1x_dma_probe().
-> > - Some minor fixes and improvements.
-> > - Link to v11: https://lore.kernel.org/r/20240802-loongson1-dma-v11-0-8=
-5392357d4e0@gmail.com
-> >
-> > [...]
->
-> Applied, thanks!
->
-Great!
-Thanks very much!
+Hi,
 
-> [1/2] dt-bindings: dma: Add Loongson-1 APB DMA
->       commit: 7ea270bb93e4ce165bb4f834c29c05e9815b6ca8
-> [2/2] dmaengine: Loongson1: Add Loongson-1 APB DMA driver
->       commit: e06c432312148ddb550ec55b004e32671657ea23
->
-> Best regards,
-> --
-> ~Vinod
->
->
+On 29/08/2024 11:24, Mukesh Kumar Savaliya wrote:
+> This Series adds support to share QUP based I2C SE between subsystems.
+> Each subsystem should have its own GPII which interacts between SE and
+> GSI DMA HW engine.
+> 
+> Subsystem must acquire Lock over the SE on GPII channel so that it
+> gets uninterrupted control till it unlocks the SE. It also makes sure
+> the commonly shared TLMM GPIOs are not touched which can impact other
+> subsystem or cause any interruption. Generally, GPIOs are being
+> unconfigured during suspend time.
+> 
+> GSI DMA engine is capable to perform requested transfer operations
+> from any of the SE in a seamless way and its transparent to the
+> subsystems. Make sure to enable “qcom,shared-se” flag only while
+> enabling this feature. I2C client should add in its respective parent
+> node.
+> 
+> ---
+> Mukesh Kumar Savaliya (4):
+>    dt-bindindgs: i2c: qcom,i2c-geni: Document shared flag
+>    dma: gpi: Add Lock and Unlock TRE support to access SE exclusively
+>    soc: qcom: geni-se: Export function geni_se_clks_off()
+>    i2c: i2c-qcom-geni: Enable i2c controller sharing between two
+>      subsystems
+> 
+>   .../bindings/i2c/qcom,i2c-geni-qcom.yaml      |  4 ++
+>   drivers/dma/qcom/gpi.c                        | 37 ++++++++++++++++++-
+>   drivers/i2c/busses/i2c-qcom-geni.c            | 29 +++++++++++----
+>   drivers/soc/qcom/qcom-geni-se.c               |  4 +-
+>   include/linux/dma/qcom-gpi-dma.h              |  6 +++
+>   include/linux/soc/qcom/geni-se.h              |  3 ++
+>   6 files changed, 74 insertions(+), 9 deletions(-)
+> 
 
+I see in downstream that this flag is used on the SM8650 qupv3_se6_i2c,
+and that on the SM8650-HDK this i2c is shared between the aDSP battmgr and
+the linux to access the HDMI controller.
 
---=20
-Best regards,
+Is this is the target use-case ?
 
-Keguang Zhang
+We have some issues on this platform that crashes the system when Linux
+does some I2C transfers while battmgr does some access at the same time,
+the problem is that on the Linux side the i2c uses the SE DMA and not GPI
+because fifo_disable=0 so by default this bypasses GPI.
+
+A temporary fix has been merged:
+https://lore.kernel.org/all/20240605-topic-sm8650-upstream-hdk-iommu-fix-v1-1-9fd7233725fa@linaro.org/
+but it's clearly not a real solution
+
+What would be the solution to use the shared i2c with on one side battmgr
+using GPI and the kernel using SE DMA ?
+
+In this case, shouldn't we force using GPI on linux with:
+==============><=====================================================================
+diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
+index ee2e431601a6..a15825ea56de 100644
+--- a/drivers/i2c/busses/i2c-qcom-geni.c
++++ b/drivers/i2c/busses/i2c-qcom-geni.c
+@@ -885,7 +885,7 @@ static int geni_i2c_probe(struct platform_device *pdev)
+         else
+                 fifo_disable = readl_relaxed(gi2c->se.base + GENI_IF_DISABLE_RO) & FIFO_IF_DISABLE;
+
+-       if (fifo_disable) {
++       if (gi2c->is_shared || fifo_disable) {
+                 /* FIFO is disabled, so we can only use GPI DMA */
+                 gi2c->gpi_mode = true;
+                 ret = setup_gpi_dma(gi2c);
+==============><=====================================================================
+
+Neil
 

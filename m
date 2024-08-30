@@ -1,61 +1,61 @@
-Return-Path: <dmaengine+bounces-3039-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3040-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0BFEF965D32
-	for <lists+dmaengine@lfdr.de>; Fri, 30 Aug 2024 11:42:06 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 47696965D34
+	for <lists+dmaengine@lfdr.de>; Fri, 30 Aug 2024 11:42:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6A591B24A3F
-	for <lists+dmaengine@lfdr.de>; Fri, 30 Aug 2024 09:42:03 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 67720B24DA2
+	for <lists+dmaengine@lfdr.de>; Fri, 30 Aug 2024 09:42:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF1E416DED6;
-	Fri, 30 Aug 2024 09:41:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 972C417B428;
+	Fri, 30 Aug 2024 09:41:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="nDl8bTys"
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="pM5Q+5Of"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2078.outbound.protection.outlook.com [40.107.117.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC49017A931;
-	Fri, 30 Aug 2024 09:41:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0505817B4E1;
+	Fri, 30 Aug 2024 09:41:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.78
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725010901; cv=fail; b=Q2lfYCgEnojVX4KN4lKUzL+TwF3JL4dIWb+tCoLkRxLSV86Dc/R5KKWBWjxk+jkywAcUvqFpGaQa+pN+COzsFEwIlrt/3kSPZltJff/YOfOPNib0XK3rXjeYTYN0V/imZuia8K7wgX9SnInwMgwVuX1Cz2sfeFsURPttihIYUZ4=
+	t=1725010903; cv=fail; b=UACONf/J4bOOtys8ohJYC8DBk1p5yNdoDH/th35PTbYHOaULAyFl5PnJ55xz2WTdCdpQg5nst7VSE7QTvoK7sX7+/3agdfsmhXZ6PrIdcBfVx/7WXVkIxsIjcjwJZTatsxGJqJ5EqXdjhdgG+Ntq7SqPTGbNc03UcMnyQ9YcUAQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725010901; c=relaxed/simple;
-	bh=jfi+PYlezXIYdcXyXSsJ3qi3KooHAW9FCaDEaPD+Gls=;
+	s=arc-20240116; t=1725010903; c=relaxed/simple;
+	bh=Qh7j9wmhX5g2OIvoFF7BzUrtY5MnqnRCX/Ycy2UFfJo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZM7tkPDjzpj+xzdoeBDHYH+dNkoypNjBD6T858+MhVzaim39dtpNGAc/Hz6ygWffF/SfhwFT/RTA7yNaV5w9tn7p9KAifxmPBEnDwCpm3fToQb3xLBC92YUYUGQCzvMRkHgSc4OJJmzFQljWsgG6X1oxmvCZnGmq2JRoYfh0M88=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=nDl8bTys; arc=fail smtp.client-ip=40.107.117.78
+	 Content-Type:MIME-Version; b=PPmzJZ1H0fi7ee4uYdjZmZ2GFbTd07RhpdkT+Y1mVYJRTLDv4rfod6Opif3R3iyHDQPI+XleV+lIYWDAgNgGX5bOmU0xN+o9yH0qAtG6ScU32G+v4rgTEVawc4bsPtM8MRwPcdCgXs2AR0wzy58SmH34QPzPLLo/b7QNlZioBZ4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=pM5Q+5Of; arc=fail smtp.client-ip=40.107.117.78
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Vp5nH/1aBwoHZf2baCn9WQIe8Usx5WKXii/LOE91VHX6I1rPV2fw4SiUyzKuuhLXbV9q2iRfnkKQaDKcRI0H6DRWsRck/rTLw0kb07Ayg7VySChpnIF76kvduGIHIHEioP2vZruLU3XzYeYL+v/gyrBvddDqNAcGNWdorzZsI1uWjksNGl8fUFOoAlNzJn5Q7m7N3EWIh0skhVF1IXWyoWhHu4h6x1IcV3/W9HFsRdp2jx4gsAv+Jhgb5YiVOH+zT0IkqU6ktec8kUNMf6WC9tueeU3+HCGFElzyuMHTdHxUYESohDiARU0AfCR+5REisA8GchR9WM8ZFlDYnUkk3w==
+ b=OD0HRwYPDa4EzguXEqEjtNmzCkDaJK4kXfcZDo6ryj9t1xlHhRT52D1nh1LfSyaTPoGMck2ExWJD8xGPxUVcrLgWa3A8dvm8E1iI6tGLZkOK4aAkBCgWq9lJTUlT4/TheMr60adWvrAtaLm+i7dv7a+MgLmi0gDUM1igVRVHZuLAX0CVFgpkoCxtxzjnpg1XP0g1B/+hIGnn8IZxId3qw4aoSzZwnllzZH9L9J5oaBrwZpPDU7JPKowQbvTuWOFhvC8+caC26abFc5sD23YpHveBwzth6z3CUkGteA0loa9fjH1acdiu1EHhkylVk/vh7OK+kCTk0ouFn+uikbW6gQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Xs7ILw0SU9agNB/gUeCNtevHvf0OowZW0mDlK9ZWENI=;
- b=giwRc4IjJu5NrgSuIwkoRweyvOw64Rfl/Vv6V/YytwB62w1DvuvALiGV6/B/TjsxZQ1bX5b9TEQ/HeGawMLkyumHwlIczga56auHSEp2HlogK+1hVr7AOhZnHSvW/RmZ7DtAvkdrvQnWPgaVtUqhwLnj/MGVO5xIy7Km+fSxo08X70mWO5ckCje7otq2qR0X9mzACErSLWHyGKzDHiPmNNpRI6TzsKZDysRCHzC1kw1HdM7c+FilmSGHnD9MDCEKto9WxRC+FU7FYaAZ3oHhz+/7cn7c/H7Pwqo7ePaxPksOkOnCVCsWgtC8gNyW6hq7YsUXGoDbM/tGsPWisp3DLA==
+ bh=jSflPk0BFm/B9lDS+zKq7lNbv3OAyQZkdwzDG4lbNz8=;
+ b=vAyN7CDlUK+/x0damW0hkpoLYU5sxnkmk2NPUTRKbog3pKo2hx28fhixrqdO7ANJP/l9RfgeMr1nmnrVJzcavMoeN06k6iKPNhgaTuVBh1RvXjjLgbTRAbOm6Ehqt7K7h5pWibUST7JKldTaZJXfCXIhlXHic+anPZ9ecEI7cZDDsW/vlCRdyxt8EtPTtRwShvw8Yw/wz5d6ppOyUkHIIEj5N06G+bTHDXwbmUgtj47u9fqarmj+uEwnieGS0MO0fkv+Ds34/NUDZs6y7dSKxi62UobEn/RHIm7TbaOtoPthk7X3Xd7VKtmNnuP344w6AOqrO1ZJTZIKSmcK0nRiNg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
  dkim=pass header.d=vivo.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Xs7ILw0SU9agNB/gUeCNtevHvf0OowZW0mDlK9ZWENI=;
- b=nDl8bTysnaroF+G2Z4B64cygNv1O44LUD6SXy98uDIvC9KizL8sTwlutOj7+Q4E+OIEQ/WNE/aygvlmMPO2GKESKowMnO6WedhLf5B28y68wIi9j7OI1EDFMdstsyPbXSZF+kIBuQa9+PhMRhSyVQMaugne4z46/KCnrcxtczjRhfHJ+APRhrPMx0NJqqPXwMunrp4wEZ+DT3NygEm7eg2o54+EOinSpi0IxDUSStpXutfsID7y/pG77RqfPwPFwoom3rFZIh40ntrFoU1kOH0W7tMBNChtNqtctOeL3CO0Et20A6oLiEURgV0+81kDioz/tjjHApVWsputgPV/k9g==
+ bh=jSflPk0BFm/B9lDS+zKq7lNbv3OAyQZkdwzDG4lbNz8=;
+ b=pM5Q+5OfSDpkiNeRasec7Tdl26B0qGI075GhVEh06LsFXnHOupTL1XXt0WOJS1vFwlaLgRG7S7kGSGFZEBlzlJAP1vpitls0cBe9JSvPLLyEnM1jqL+aHfSwZvcST9w5LfexS1x+e9U+EDxeo0Z1uSap7/fs1E9tcC/ABTU7evQdxZTyKbFvuVj6c4kUabAuR14OduOT0SjExKoj6nOCFIHlYWTaDJquXRPYcplEB0h8E6iqnUBHLxDDzQ9zmPEqLNgrDoNv2o9rrSPTttrqiH6f5UtMA3VsT+K96pD4I3Z0QGmUl0Zl2IsDwzxkoE69TPyiJsN4QOx071A+rIMdBw==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=vivo.com;
 Received: from SEZPR06MB5576.apcprd06.prod.outlook.com (2603:1096:101:c9::14)
  by TYZPR06MB5203.apcprd06.prod.outlook.com (2603:1096:400:1f9::9) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.25; Fri, 30 Aug
- 2024 09:41:37 +0000
+ 2024 09:41:39 +0000
 Received: from SEZPR06MB5576.apcprd06.prod.outlook.com
  ([fe80::5c0a:2748:6a72:99b6]) by SEZPR06MB5576.apcprd06.prod.outlook.com
  ([fe80::5c0a:2748:6a72:99b6%4]) with mapi id 15.20.7918.019; Fri, 30 Aug 2024
- 09:41:37 +0000
+ 09:41:39 +0000
 From: Liao Yuanhong <liaoyuanhong@vivo.com>
 To: vkoul@kernel.org
 Cc: dmaengine@vger.kernel.org,
@@ -63,9 +63,9 @@ Cc: dmaengine@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	imx@lists.linux.dev,
 	Liao Yuanhong <liaoyuanhong@vivo.com>
-Subject: [PATCH v2 2/7] dmaengine:at_hdmac:Use devm_clk_get_enabled() helpers
-Date: Fri, 30 Aug 2024 17:41:13 +0800
-Message-Id: <20240830094118.15458-3-liaoyuanhong@vivo.com>
+Subject: [PATCH v2 3/7] dmaengine:dma-jz4780:Use devm_clk_get_enabled() helpers
+Date: Fri, 30 Aug 2024 17:41:14 +0800
+Message-Id: <20240830094118.15458-4-liaoyuanhong@vivo.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240830094118.15458-1-liaoyuanhong@vivo.com>
 References: <20240830094118.15458-1-liaoyuanhong@vivo.com>
@@ -81,149 +81,161 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: SEZPR06MB5576:EE_|TYZPR06MB5203:EE_
-X-MS-Office365-Filtering-Correlation-Id: 70b3775d-4135-40a8-ecb0-08dcc8d7f12f
+X-MS-Office365-Filtering-Correlation-Id: 26d5a50e-d530-44e9-93bd-08dcc8d7f27c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|1800799024|376014|52116014|366016|38350700014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?/fMZ/H4liln4i8WU6KPPL4MvtXgLwULoFsWE5fChkIq1Ou+ByZfiGY9FbKCy?=
- =?us-ascii?Q?y8NujH5UerBCLpG9AfvrNQ9X+b1BhaHgBVWmiW77VhYd1gzAqZIOsdekRJwN?=
- =?us-ascii?Q?YfmK2E2nMjrV/6Ce+SMJ5gBrv+x1hMz6m4r6yHKsZrc1oZ+BJrqeF2z5GsmE?=
- =?us-ascii?Q?dtfC9u75LKUFQG1rCTY2cWKtUypkE9EefJrcbRGDlX5fIErJeQkSTBdMijHo?=
- =?us-ascii?Q?aiLYxxVH4oY1cCreX3zxicNKZqE1xvbuPUqfwCoPAnmfY0zGW6Wnm4T43Wcf?=
- =?us-ascii?Q?QIA5MGhnEHAx+uWguQZ3DxmtmyPJdbdQ32r6EroYtI4HTriGJaw/O4HzSZFC?=
- =?us-ascii?Q?LsiCDQfGiuIzlei+0AFyDvN+zRY/x4Y4iGum267s8Ga6F5srByZjSdBR2MFf?=
- =?us-ascii?Q?nD5KfXxWurUwDY/nbMKt2fmuv7pxGtGxBbqNu2laio2SCFjOZINmUYtuAAWs?=
- =?us-ascii?Q?5jMVDO58Sqj1RlxMtSQFB6Lm1VvT4Z1qoeOXanXab3ExVmJhTZntED0kJuwp?=
- =?us-ascii?Q?3CgtNk/dA1u5rSCQWPPanBfxVgf9NoMdmboPKi/fSdFBF0FUyR0E/THjM2Lg?=
- =?us-ascii?Q?K9BS3Mr+jx/aO3BGI7JsNb0AUTv2iOvGYIk2g/J5I41Tk+yNP3MdWJmHsgWv?=
- =?us-ascii?Q?q8JiQCN4c1JzsWPrsUXvWE4QHc+NKG+SsNzG/Aizhvpma2mlsIEu4tlEUL3I?=
- =?us-ascii?Q?FRnXFz1u/Da/2OKmHPJa91Mwypu6sVIPb2qH05DQkOsHkNhRO2tFqh6yXE2w?=
- =?us-ascii?Q?U9vAb8eSHV0NjS2M5prEAgFkFBHkxrIXDyJSnytK7pMz0qVkxPwu2RnHGyMI?=
- =?us-ascii?Q?AyFSBrcP/TnNX6FQwLl6m0Q+raJA+Xv2vEUBBUo4kYlhfB+WDcM5qF3ZzdeB?=
- =?us-ascii?Q?JZ+YyJcIry74SKkdwhs8/NOUumkWkL1E+HeepA8LBJsBbfGlwfJMoybgyMTL?=
- =?us-ascii?Q?auBxH8dqJr+x5JM7bHzuyyIf7Vf1fmfwNuEe6/1wi5p0WFMUcMlBNC61HK1v?=
- =?us-ascii?Q?veKIXjmIylCiQFELAHGTZxNEr5M7A7JCIEjb/2Tu7+QHQe/BuL2E7Ua5kAfh?=
- =?us-ascii?Q?PMlZ7ut2uWQJKkph4PYXfRyIsG52Mlgn/om66lhChQksW5Efsldc5DqrCa+f?=
- =?us-ascii?Q?65HOvSGASaD7eBqiRqW+JpzWUbXam+v6gu5E8UGOM/IfGxVbH3xhMziT8sQL?=
- =?us-ascii?Q?+cQbxQlgdn3HakmYqKe0InNQNtROruUm0se6VuB+lFCTlKLmK5MRZ1s/2Mb5?=
- =?us-ascii?Q?uKyvJcViV7CCD4n4uajjAK5P34BsAO3O46U7W4nGWoS8ClvK09bvQbf9bZz1?=
- =?us-ascii?Q?F10q9P0EmxVWVSGjMU/Nq0cfLUsvjP4mGAkjb3KNxi8zhOcMImpnbQwwKU4S?=
- =?us-ascii?Q?yqtBPMJs60zVy1kij8sFL9Nt6nPNAsdVC6OdZ59kwrrvadFRqQ=3D=3D?=
+	=?us-ascii?Q?kmbDlkjnze4i4scuK5McV3Zh/AR0O45hr3HxGVaIKNpQn8vZ73khYI65TMeo?=
+ =?us-ascii?Q?yzUxDYpOimTUIoMgX9/FCvEl1XOgka9zthE8q/euZlH8ZanK2LPu1Am6wT1W?=
+ =?us-ascii?Q?gh2Iafn/AODJ/Pbd+ul+HhdUfkSup4xZRu8Q5XVzNaMMIh2ptsT3XP9aAumJ?=
+ =?us-ascii?Q?1wfIU5lvVhy3e93FtDyVrBn+mv8FUa5kmsfFnVq/0ikqrfpZG0Wqjg0n83tA?=
+ =?us-ascii?Q?kKsLPw/y5Pr4I+lLU9IfUxXjHoXWhzijXmvSG69umlh36HeuptX+cXmbLz84?=
+ =?us-ascii?Q?qI26K20Vb4omW85ydwnMPMgdRapTMBs7NcqAy0F8654JKfuMsKHDx1FFGn4T?=
+ =?us-ascii?Q?BBfhixhTNlhnBOWO0CWzzeyafcziALIfUX8o150w/uz5OWi+qqp1s4VOpOXK?=
+ =?us-ascii?Q?0BC+Mq/F1k3pGj1XjsFropVwfxk51PXnuzQx2NAT0mq6KqwWMtj3nlMEMpIg?=
+ =?us-ascii?Q?rPoOy252MKUTNsLqj2wh18atPVQj7LZ0kijzMhgDUvOBU1WYBLJZ0legerk4?=
+ =?us-ascii?Q?kpwpDzu3s4mOy8PCidT3Ig9GV4Xl7eN4y/Bhj+PHbLNxg5GOJMOJiuLsnNX6?=
+ =?us-ascii?Q?fLMkYOH9vaZbH8Aw/zuB+/QriLCzDy/1MQ8+iGNrfuX2RWcoSnmpL5ISV0mE?=
+ =?us-ascii?Q?BuFOGahn7kMLfgx1F1sd8H7iySy4D6p+KaWx8fXzoE7lIk5sGYLtfYrCOHNq?=
+ =?us-ascii?Q?Zj5bqr3EOZo2+q86b+pWqS9/9YeqFMOh7BusETasYOzynxAwB3/Nw3QFOkHB?=
+ =?us-ascii?Q?jWE1/le1c77Td9p3Th9vmaBZ4lpicFCGDxUf4mB6X5x6qMkl1XJPktQESDVh?=
+ =?us-ascii?Q?8uuHlONYbQr/gLETP+EWHo0rHuBG+ucrmu/u83/36DUCL+xhxLsqu/edn/rk?=
+ =?us-ascii?Q?YK+tNFfKxaC+99M5Ppog2FGhPXZ5dzC9iZpxRFd8RmohgJEP4Bj7SDSKncEP?=
+ =?us-ascii?Q?kEYyhMdCBzDQwg6Hp+uYoLBhgjMGaaI6yLUmgcYAH/JAI24TnuOBLmliaDAL?=
+ =?us-ascii?Q?wKz+Tmmcr8vio5AVAUbYHyj13nCdCIkK/LtRg4p8NxeVtrEwfwVapJi8OZz9?=
+ =?us-ascii?Q?fyqEDEbJMwfSpknVb9rdgqGeVH9nIZACbRD2ed9bb50oAUFjGJipbGtGNUSL?=
+ =?us-ascii?Q?pBulvmHI/Bu1wFYDoEUsApAbGdD7AXFJ4q+naJunPSzSDZdOzqrAdlJmeGqb?=
+ =?us-ascii?Q?0Z9mNbxTziZdX0SQgvDYKlAjyJy32AzUuYGd6457xyndEES1Ds8X9ILyhxcQ?=
+ =?us-ascii?Q?azY7uM37/iCkZpEnSlm4/ducgvCucFom/BsfjXlJX+9ICLo13NDwJxOr9hvP?=
+ =?us-ascii?Q?RObIBUmRZgtcMs4wXT/IpyStRdtufPg3OfTiA1PumP8pEaPavG0tZrOIUf0c?=
+ =?us-ascii?Q?25ME4pjwlCdD3x1oV+gY2RQWcEDYZiS92p2C9ZqFPwNY7xJ+uA=3D=3D?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5576.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(52116014)(366016)(38350700014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?dTdyAZosUHjMnsdEFb6i+8ApzamNBWH/bKY+buGF6xhIeMu5ykgnDJQ1maiW?=
- =?us-ascii?Q?FWPhfGTSW0KMBxv6y0FFeACVRXXqN4foYNfAD9x4LBh8mqNC2SLjvavWtOdM?=
- =?us-ascii?Q?2LcpjGH8D7VgRP3E+kD8N84JYRAzpMQyFjNt+BnXRhc1CD9wznz82kc0b4iA?=
- =?us-ascii?Q?I7yP2eEETqggJdpEZDv/NxRLPN9E+vQEZV2BxSq/mpW36td0UVowbS3j6b1Z?=
- =?us-ascii?Q?QIZkXfntP/W4NBmUr/83pPZej5OsvFvAPJksEbrhw7GNBMCvkOeHP0i6XxGK?=
- =?us-ascii?Q?LkISXMZ4ONXQGDoHT805SvmZZRgTA6xXuTAM4xRNsYHiF1n9aWlaoG/8os7S?=
- =?us-ascii?Q?SDPsFQd9Tqqv1cbpYgcmXAI3OAnvI5h/dbgL73vSq9czggXwbx2Hg1+EHLb6?=
- =?us-ascii?Q?gtXpjGuQkZ1qYTlYg4KQvBaUlEHkgHFMQuAO+GMDKnbzmTUHfNj5PzOTZYqw?=
- =?us-ascii?Q?bmyuZyBb3YC9YrMiCTUgp/cDcHlNWT0SUXu37v0MyLek0Bxa/0IYmrzzrf16?=
- =?us-ascii?Q?00IDMyJcteuPMUMtYAuF+LQkSXtdHDO47BaH59e0YctHdhsXeqGmOK5QgkFN?=
- =?us-ascii?Q?Rwyl6AnW8jNSbMqx2BXFPT1PMc4c0+Ne1/2EoJlrflfJ5Cak/I3roDMQ2zWm?=
- =?us-ascii?Q?xX8+ZIxxpstKdMOAP2Kapc29gYBZSw3M+xNYRZjbzWkDU5nmRU1k4ejLbqZ7?=
- =?us-ascii?Q?3W/0oDoorPyGDINoQbNiuVe/ALEF1fuVRgCa7dywY5E0sF8tQFMa0uLzvUvU?=
- =?us-ascii?Q?hMqP0uj8Cm8y5Qc1KazWUJlJmiH7MdOcUfItDOeAp5oF6VGRndZLAElxV3fh?=
- =?us-ascii?Q?EDt5zI9wBfG/g+Q9gPOF0seXihtnLjKcEgOQK0CHIxfDrWaFYAzj5uw3JPpk?=
- =?us-ascii?Q?A6vJ7/yH8EDK66g8vcA3bI03L7Jj6cP20JZOLsK3sqbEpvsIH+rmFI1Srxgp?=
- =?us-ascii?Q?yCXwip3O3wWO6BIL8ABaOEN24a5Mlug11ZCcUAWLNB1r2eDU5gwAC1DDktQ9?=
- =?us-ascii?Q?yzA8WcNkmmpoBsCS6YumUrmNyu60EhmVq4hPNGV7cg9RN9Jw4u8tZVa/txil?=
- =?us-ascii?Q?P7myGPN4+tMrm3RAunZRLumRysyg//jeeGehPdidX1KfiIDdD1eDtA3EkPz8?=
- =?us-ascii?Q?T9JWqYv+Efn3b+MN/O1k9e1UdnnifukL2uzpKSO4DPPeLDSZYa+lDR0cYuy2?=
- =?us-ascii?Q?KnM2iU7jjHhV3BFbm5Yy2Mc0/kjL7Sa448eBw3SmwhEZ9mAWKmofDhvoGypA?=
- =?us-ascii?Q?X0dPp0VpM0cUyuecBkiPfHqXcfO0ERdS0pHRU/S7dBXz1ssWIcyk7WKvQbpy?=
- =?us-ascii?Q?Ynawo7Joq5tTFiWsjyxc39IXIal7rsAAbk1GiHfpZ7xRZEBwmavEo9uH/tiZ?=
- =?us-ascii?Q?vPZ3/32tjvXcBI7UK2H/i7rCTpTPKE6K5qKx0RoiF+EmeAMgvrwPpSms8Tf9?=
- =?us-ascii?Q?+63n49CXJD8Jv51ATyelkhlVEzyq4g/Fb8FmBDWwbZusIaeZnidej7xJsgJq?=
- =?us-ascii?Q?Q15hHHK7qRwcs9tNMK1ac6ixTBJRH7DGeMlMzAKplv98LGRbxTX4pgYRQu/r?=
- =?us-ascii?Q?FAOl28pVA+/15VrKCWe++5INmzJtSBuIDa8J5ZRE?=
+	=?us-ascii?Q?5DBK/pjBI6M5XI7/HAkUn9Qj1QVTelcPj3iTbHZfBqiWddrLxRDKfbn6KpaK?=
+ =?us-ascii?Q?Pg2U3LUMwveqT9J/0k8/k30bOAhS5opM+syfpoDeq0pqQxelHfRG8+u4UaN8?=
+ =?us-ascii?Q?nmJs4AMR2RrY6aLzTz45dshRxczGhgiDLSN00KK8I3RJIb+4K7Ec4oJRiFKB?=
+ =?us-ascii?Q?kJolGQ3KakJD4/y2xtvLD4H1tcnzT0cnLzn2O6n/nwAMNht5+fglZjk95nRp?=
+ =?us-ascii?Q?RkXrR95Z77pPpma8WO/+hg2QdvcmcVC051idtTpqNpNlLuQknhWKjBzEk9L0?=
+ =?us-ascii?Q?idI/7szdrGdldeEcMxC4N+2h9XhwVSw/i0ZlINw+qtXKDWqgkuMAmfD1A1Zw?=
+ =?us-ascii?Q?cZ0LnTX3olVtcgi2u2Xn0dZfS8KjjtrO6FBOX6SbnDIn8iUB1IhV/XPDjYX2?=
+ =?us-ascii?Q?hCKwinMANdaEp7qcQa/QyjP/SgWiqu39uVs1m9QLcfBJK13engl0AZ5z3gwL?=
+ =?us-ascii?Q?zhRW6qHODTCZNu/Bljag+RNtzjnmrWARRc1GRKvEoDJ6H2V9+ll85lM1DtfK?=
+ =?us-ascii?Q?iVq1JXjBgbIzt+/UNgguG0a7sajW05pEgtM6UYHZLboJl9IPplzm5slW/SJ3?=
+ =?us-ascii?Q?LVAxXvj22tcG64TgpJCu2wt+CzeqJ9gnbW3JWLj9nvKqKh2Xc9/38qIk3gFf?=
+ =?us-ascii?Q?CGXyHChY0BRnqjzqMhC9SMPZbbSJ6TxoaxBwha95heafuN6pj242Y0Aj3fMc?=
+ =?us-ascii?Q?SAk+GrBd1y8GGq2+IKcYKes0mtieeJyWakM9wMy/CDpVg6ADQT5aN4rQviP8?=
+ =?us-ascii?Q?S60hNXCyFKURL7jPLW8tScG53ijI1ueXf/gj0aZJ3FhK8DhhL2Y1wo59igiN?=
+ =?us-ascii?Q?F0kQJx47+OC+XHI7CtBQ95/nMjZXrb+qmPJsXI68Wpt4S3d32OjXLYOwhZD+?=
+ =?us-ascii?Q?F7j6wJdJ5iU0D6rdSr7jeEDm4c7wzlD7zQbem8m8moZ7wKaeRyRvsJEkq1Bz?=
+ =?us-ascii?Q?87kpVHykkhmJFhd/EJzo76XkytbXPhd+1n35TP1N+rtYuqT/87xnmAUTGiuU?=
+ =?us-ascii?Q?FvodXo4nKXWu3wXsJQhYyDzWoMr0wCfALGo1QJWzqgL+c5wFUmlU00T/vvCK?=
+ =?us-ascii?Q?8de2DM85B4pX+p4oOaOVVI1xT3aIiC3DcoouV6QJ2BG656LFgaoiP23FFe/M?=
+ =?us-ascii?Q?Lh9oxwVtHoFXVF8kyWooG2EBnUIgonuaX47MS56M/y60h1Y4kNnJP37RFr4R?=
+ =?us-ascii?Q?DNSuYpfSrEVJxvpv+t9HND2YILmvuMen5vQpMcd3mPrdhfOb3b7thaIrWceG?=
+ =?us-ascii?Q?+UXQZ6JEQ9Fqqbn59NUDDE7Gr0gHEiEDxshTMacpGco0/VjqSmzNWhtMvCTV?=
+ =?us-ascii?Q?bswk99VXcR4tG1oOxAiLb8fgmfCV0nltHbx5upyBzatZ9YfH82j8Wjl0iM0Q?=
+ =?us-ascii?Q?G47K5ZftcN/vdjunk5I7NJv2EHEfFK7q39ndJrnRpOGTYvypym7ZfsNKKVx/?=
+ =?us-ascii?Q?ZYqaEMmqP3ZbI0+dZ15HWvITbYY3jR+CX2IB2zS76BjuzJGmI6UpER5kFx0e?=
+ =?us-ascii?Q?SgD9tGNmuLqzz7MaqDM7MsEVGt51lgOx9QwdfjIPo7kbduAvOWa2WX0qpKYW?=
+ =?us-ascii?Q?Smgx0wWxnP9koOUMMHPnwm9RLsP0j3io7Fx89+jg?=
 X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 70b3775d-4135-40a8-ecb0-08dcc8d7f12f
+X-MS-Exchange-CrossTenant-Network-Message-Id: 26d5a50e-d530-44e9-93bd-08dcc8d7f27c
 X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5576.apcprd06.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Aug 2024 09:41:37.1321
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Aug 2024 09:41:39.3339
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: itNxbKJ8YjB6J7XNXMBX4RLR76wvwjIQsJEUKOLkKTuLt8w2E+qJt+nieHy7CXOGNBkMD0nTw2U/Mm60Rf4sYQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7TuISufff5lBeq9ZVZIkTuHqmS38Q7RPgIP0CZ8Gcv+gL/ZzbeD8qqI6qOqEufhDkGOP8EBRGe0IQ7NTeBLTuA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR06MB5203
 
-Use devm_clk_get_enabled() instead of clk functions in at_hdmac.
+Use devm_clk_get_enabled() instead of clk functions in dma-jz4780.
 
 Signed-off-by: Liao Yuanhong <liaoyuanhong@vivo.com>
 ---
-v2:remove modifications related to the resume operation.
----
- drivers/dma/at_hdmac.c | 16 ++--------------
- 1 file changed, 2 insertions(+), 14 deletions(-)
+ drivers/dma/dma-jz4780.c | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/dma/at_hdmac.c b/drivers/dma/at_hdmac.c
-index 40052d1bd0b5..2274aeb58271 100644
---- a/drivers/dma/at_hdmac.c
-+++ b/drivers/dma/at_hdmac.c
-@@ -1975,20 +1975,16 @@ static int __init at_dma_probe(struct platform_device *pdev)
- 	atdma->dma_device.cap_mask = plat_dat->cap_mask;
- 	atdma->all_chan_mask = (1 << plat_dat->nr_channels) - 1;
+diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
+index c9cfa341db51..151a85516419 100644
+--- a/drivers/dma/dma-jz4780.c
++++ b/drivers/dma/dma-jz4780.c
+@@ -149,7 +149,6 @@ struct jz4780_dma_dev {
+ 	struct dma_device dma_device;
+ 	void __iomem *chn_base;
+ 	void __iomem *ctrl_base;
+-	struct clk *clk;
+ 	unsigned int irq;
+ 	const struct jz4780_dma_soc_data *soc_data;
  
--	atdma->clk = devm_clk_get(&pdev->dev, "dma_clk");
-+	atdma->clk = devm_clk_get_enabled(&pdev->dev, "dma_clk");
- 	if (IS_ERR(atdma->clk))
- 		return PTR_ERR(atdma->clk);
+@@ -857,6 +856,7 @@ static int jz4780_dma_probe(struct platform_device *pdev)
+ 	struct dma_device *dd;
+ 	struct resource *res;
+ 	int i, ret;
++	struct clk *clk;
  
--	err = clk_prepare_enable(atdma->clk);
--	if (err)
--		return err;
--
- 	/* force dma off, just in case */
- 	at_dma_off(atdma);
- 
- 	err = request_irq(irq, at_dma_interrupt, 0, "at_hdmac", atdma);
- 	if (err)
--		goto err_irq;
-+		return err;
- 
- 	platform_set_drvdata(pdev, atdma);
- 
-@@ -2105,8 +2101,6 @@ static int __init at_dma_probe(struct platform_device *pdev)
- 	dma_pool_destroy(atdma->lli_pool);
- err_desc_pool_create:
- 	free_irq(platform_get_irq(pdev, 0), atdma);
--err_irq:
--	clk_disable_unprepare(atdma->clk);
- 	return err;
- }
- 
-@@ -2130,16 +2124,11 @@ static void at_dma_remove(struct platform_device *pdev)
- 		atc_disable_chan_irq(atdma, chan->chan_id);
- 		list_del(&chan->device_node);
+ 	if (!dev->of_node) {
+ 		dev_err(dev, "This driver must be probed from devicetree\n");
+@@ -896,15 +896,13 @@ static int jz4780_dma_probe(struct platform_device *pdev)
+ 		return -EINVAL;
  	}
+ 
+-	jzdma->clk = devm_clk_get(dev, NULL);
+-	if (IS_ERR(jzdma->clk)) {
++	clk = devm_clk_get_enabled(dev, NULL);
++	if (IS_ERR(clk)) {
+ 		dev_err(dev, "failed to get clock\n");
+-		ret = PTR_ERR(jzdma->clk);
++		ret = PTR_ERR(clk);
+ 		return ret;
+ 	}
+ 
+-	clk_prepare_enable(jzdma->clk);
 -
--	clk_disable_unprepare(atdma->clk);
- }
+ 	/* Property is optional, if it doesn't exist the value will remain 0. */
+ 	of_property_read_u32_index(dev->of_node, "ingenic,reserved-channels",
+ 				   0, &jzdma->chan_reserved);
+@@ -972,7 +970,7 @@ static int jz4780_dma_probe(struct platform_device *pdev)
  
- static void at_dma_shutdown(struct platform_device *pdev)
- {
--	struct at_dma	*atdma = platform_get_drvdata(pdev);
+ 	ret = platform_get_irq(pdev, 0);
+ 	if (ret < 0)
+-		goto err_disable_clk;
++		return ret;
+ 
+ 	jzdma->irq = ret;
+ 
+@@ -980,7 +978,7 @@ static int jz4780_dma_probe(struct platform_device *pdev)
+ 			  jzdma);
+ 	if (ret) {
+ 		dev_err(dev, "failed to request IRQ %u!\n", jzdma->irq);
+-		goto err_disable_clk;
++		return ret;
+ 	}
+ 
+ 	ret = dmaenginem_async_device_register(dd);
+@@ -1002,9 +1000,6 @@ static int jz4780_dma_probe(struct platform_device *pdev)
+ 
+ err_free_irq:
+ 	free_irq(jzdma->irq, jzdma);
 -
- 	at_dma_off(platform_get_drvdata(pdev));
--	clk_disable_unprepare(atdma->clk);
+-err_disable_clk:
+-	clk_disable_unprepare(jzdma->clk);
+ 	return ret;
  }
  
- static int at_dma_prepare(struct device *dev)
-@@ -2194,7 +2183,6 @@ static int at_dma_suspend_noirq(struct device *dev)
+@@ -1015,7 +1010,6 @@ static void jz4780_dma_remove(struct platform_device *pdev)
  
- 	/* disable DMA controller */
- 	at_dma_off(atdma);
--	clk_disable_unprepare(atdma->clk);
- 	return 0;
- }
+ 	of_dma_controller_free(pdev->dev.of_node);
  
+-	clk_disable_unprepare(jzdma->clk);
+ 	free_irq(jzdma->irq, jzdma);
+ 
+ 	for (i = 0; i < jzdma->soc_data->nb_channels; i++)
 -- 
 2.25.1
 

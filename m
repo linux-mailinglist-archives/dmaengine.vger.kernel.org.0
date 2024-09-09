@@ -1,225 +1,251 @@
-Return-Path: <dmaengine+bounces-3101-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3102-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6FA1797132B
-	for <lists+dmaengine@lfdr.de>; Mon,  9 Sep 2024 11:18:55 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A44597136C
+	for <lists+dmaengine@lfdr.de>; Mon,  9 Sep 2024 11:27:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F0A9F1F2577F
-	for <lists+dmaengine@lfdr.de>; Mon,  9 Sep 2024 09:18:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 04B4228367A
+	for <lists+dmaengine@lfdr.de>; Mon,  9 Sep 2024 09:27:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0BBE1AF4FB;
-	Mon,  9 Sep 2024 09:18:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B43A41B1D4E;
+	Mon,  9 Sep 2024 09:27:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Pq9sWnfm"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="P39saU1m"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C21F1B253B;
-	Mon,  9 Sep 2024 09:18:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC4D41B253B;
+	Mon,  9 Sep 2024 09:27:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725873505; cv=none; b=txRuRz1JjJHMrZibdYP0JRbanT1fk7U3sCrT0EC05vl4ikXGTkbtapYLOJN2Yta04JPvaSCS/U11qtuOfeR2zYn+zOyc4/ljerD8VbVPfL9t+XNu2uOFPvteL7hqCYWhy/l/ZbwRcrrWIM9hbiPjS5LhIn16Lzl/FUMVKr6Ffl0=
+	t=1725874042; cv=none; b=KGex9dvp4RME+ntObldiUHqd6S72rI2bah58MIFTqgFk8JRIpwQQm9DIDPazJn6KyxmCIhufbax9LWlWiuGaKWnBVy9IPTBx21CMWdlTouSdyKRPuM1v8RGrW9+lh8liz63tghRXlbhBXntfRaEwmSeldOgqrp4McvPuHiK2FGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725873505; c=relaxed/simple;
-	bh=bvfjSC5phQoKuCouGkBJTQXwhIYeaiEJfkF1aQTCjb4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=M1EXABbdXcPEHP7J2irOdf/43uqky70CmFAfOkhcK01mAqG5CqDOs+Pt/7F1mKxVbkeiDeoi0C8Cc7S2k9SUM5Zh7KIMtLZZr4D1pqAwykeHicbSfFTpeqdHWAHRH9GMdIgvgaqchMYrn2uJ/5iK3TafExb/3MEwiAcBjhO9fDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Pq9sWnfm; arc=none smtp.client-ip=205.220.168.131
+	s=arc-20240116; t=1725874042; c=relaxed/simple;
+	bh=yDoPmLCnCybyZ7A3gv5Lv3MJrFtkoX2IzAFJpJ2kHbE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nqGUhAVd9rbLlBLN0uoTjkBk6aZljncy2XpVgyhKhfhU32lrazZ6d/yAMSZ12G/wWf5cc5tn1812XJ36dHxROb0mQmDIAxjCh0H0XLtCDLAvEZ+7er3NGfVO38mfg7PDddG1ZnWpd0Dl6aOOVMnYSVzcd9ZNHmoZXXNbwbbfd5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=P39saU1m; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 488Nm1Oh021078;
-	Mon, 9 Sep 2024 09:18:13 GMT
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4899Jp5e029465;
+	Mon, 9 Sep 2024 09:27:11 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	L/IJrSHy7E4FooCJHAm7B+K/qE7+a22FjpwLDSTK1Oc=; b=Pq9sWnfmUITZXqz3
-	Ye4QsQ+bm4x4i+5JpJrfN4CXjtOE6b/e5HSx6JoX9Nd8l8/mEVb+K1QDo4MVMhPX
-	N+ikxXhdi6G+etu5jNs5zWow//AvcOOV1W39t5K3voCJUORjiq70v8hUk7P8v+gL
-	mrZNSmQQ8envru54tNdbq/VoOrshtFnmeD5c36FYSSKrNbqHLinza2RPTJALxqRv
-	mNsFzQi8gK0ozuzvBOx2byIx5aNhOVdhGwG46hlzEjCqdsbnFij8zLdttuNoTRRp
-	4FeC2wQ3lkHqruwq0RSChVRsHq3mukme8wlZVA/qCg5nKTyFRPpadjVF3A2ZNL6R
-	tBetZw==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 41gy6p2afs-1
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=qCCinfRtNM54jw0zl8XhWZ
+	ZM1vgdqqVxKRZXgWHxe6A=; b=P39saU1mHXsbexsjwJr+rWKCMcLPlN9kiTFh52
+	m557wowH16x1obrvTYYYXptcPw7rrdyTcieN26SmWZXJywtAUutI+V6MUcevoGlb
+	80PTzLKwo3l+2NxRNcY6Qr3YnJpVQvhpXg5b0WPwckGZbZO5Q4U84MYn993uQ33R
+	/ytwv1Ljs2I7kB3l9YXp+xsQxv5gTL11ZZ5fbEXL4JH0ihzQDms3T7qwpfrvMr7y
+	emf5m5GZ9pr2oEqPKI6EK02ZDWCIY/FaLAl50fwC/DS+0eBIVskSlbwMGbVZ6q5d
+	GLfPJTD/cG7A/kcXxGS0VxX9BL5NZJGCECrY/v3M7CYJMLFQ==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 41gybpjbe0-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 09 Sep 2024 09:18:13 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4899ICIm007772
+	Mon, 09 Sep 2024 09:27:10 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4899R9g2002701
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 9 Sep 2024 09:18:12 GMT
-Received: from [10.217.219.207] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 9 Sep 2024
- 02:18:07 -0700
-Message-ID: <3bd27b6d-74b8-4f7b-b3eb-64682442bbda@quicinc.com>
-Date: Mon, 9 Sep 2024 14:48:04 +0530
+	Mon, 9 Sep 2024 09:27:10 GMT
+Received: from hu-mdalam-blr.qualcomm.com (10.80.80.8) by
+ nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Mon, 9 Sep 2024 02:27:04 -0700
+From: Md Sadre Alam <quic_mdalam@quicinc.com>
+To: <thara.gopinath@gmail.com>, <herbert@gondor.apana.org.au>,
+        <davem@davemloft.net>, <vkoul@kernel.org>, <kees@kernel.org>,
+        <robin.murphy@arm.com>, <fenghua.yu@intel.com>, <av2082000@gmail.com>,
+        <u.kleine-koenig@pengutronix.d>, <linux-crypto@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dmaengine@vger.kernel.org>, <quic_varada@quicinc.com>,
+        <quic_srichara@quicinc.com>
+CC: <quic_mdalam@quicinc.com>
+Subject: [PATCH v4 00/11] dmaengine: qcom: bam_dma: add cmd descriptor support
+Date: Mon, 9 Sep 2024 14:56:21 +0530
+Message-ID: <20240909092632.2776160-1-quic_mdalam@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/4] i2c: i2c-qcom-geni: Enable i2c controller sharing
- between two subsystems
-To: <neil.armstrong@linaro.org>, <konrad.dybcio@linaro.org>,
-        <andersson@kernel.org>, <andi.shyti@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
-        <conor+dt@kernel.org>, <agross@kernel.org>,
-        <devicetree@vger.kernel.org>, <vkoul@kernel.org>, <linux@treblig.org>,
-        <dan.carpenter@linaro.org>, <Frank.Li@nxp.com>,
-        <konradybcio@kernel.org>
-CC: <quic_vdadhani@quicinc.com>
-References: <20240906191438.4104329-1-quic_msavaliy@quicinc.com>
- <20240906191438.4104329-5-quic_msavaliy@quicinc.com>
- <b3a5dd54-90ba-4d75-9650-efbff12cddeb@linaro.org>
-Content-Language: en-US
-From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-In-Reply-To: <b3a5dd54-90ba-4d75-9650-efbff12cddeb@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: -sJyNF0Pcpq-AtjnklkLCs46O_uGJGZ0
-X-Proofpoint-GUID: -sJyNF0Pcpq-AtjnklkLCs46O_uGJGZ0
+X-Proofpoint-ORIG-GUID: DTp1EuqobhqAe_07Gx8USIunGAUM-k7J
+X-Proofpoint-GUID: DTp1EuqobhqAe_07Gx8USIunGAUM-k7J
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
  definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
- bulkscore=0 lowpriorityscore=0 mlxlogscore=999 spamscore=0 phishscore=0
- impostorscore=0 suspectscore=0 mlxscore=0 malwarescore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2408220000 definitions=main-2409090073
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 spamscore=0 adultscore=0
+ lowpriorityscore=0 mlxlogscore=999 clxscore=1011 bulkscore=0
+ impostorscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2408220000 definitions=main-2409090074
 
-Hi Neil,
+Requirements:
+  In QCE crypto driver we are accessing the crypto engine registers 
+  directly via CPU read/write. Trust Zone could possibly to perform some
+  crypto operations simultaneously, a race condition will be created and
+  this could result in undefined behavior.
 
-On 9/9/2024 2:24 PM, neil.armstrong@linaro.org wrote:
-> Hi,
-> 
-> On 06/09/2024 21:14, Mukesh Kumar Savaliya wrote:
->> Add support to share I2C SE by two Subsystems in a mutually exclusive 
->> way.
->> Use  "qcom,shared-se" flag in a particular i2c instance node if the
->> usecase requires i2c controller to be shared.
->>
->> I2C driver just need to mark first_msg and last_msg flag to help indicate
->> GPI driver to  take lock and unlock TRE there by protecting from 
->> concurrent
->> access from other EE or Subsystem.
->>
->> gpi_create_i2c_tre() function at gpi.c will take care of adding Lock and
->> Unlock TRE for the respective transfer operations.
->>
->> Since the GPIOs are also shared for the i2c bus between two SS, do not
->> touch GPIO configuration during runtime suspend and only turn off the
->> clocks. This will allow other SS to continue to transfer the data
->> without any disturbance over the IO lines.
-> 
-> This doesn't answer my question about what would be the behavior if one
-> use uses, for example, GPI DMA, and the Linux kernel FIFO mode or SE DMA ?
-> 
-Shared usecase is not supported for non GSI mode (FIFO and DMA), it 
-should be static usecase. Dynamic sharing from two clients of two 
-subsystems is only for GSI mode. Hope this helps ?
-> Because it seems to "fix" only the GPI DMA shared case.
-> 
-> Neil
-> 
->>
->> Signed-off-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
->> ---
->>   drivers/i2c/busses/i2c-qcom-geni.c | 29 ++++++++++++++++++++++-------
->>   1 file changed, 22 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c 
->> b/drivers/i2c/busses/i2c-qcom-geni.c
->> index eebb0cbb6ca4..ee2e431601a6 100644
->> --- a/drivers/i2c/busses/i2c-qcom-geni.c
->> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
->> @@ -1,5 +1,6 @@
->>   // SPDX-License-Identifier: GPL-2.0
->>   // Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
->> +// Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights 
->> reserved.
->>   #include <linux/acpi.h>
->>   #include <linux/clk.h>
->> @@ -99,6 +100,7 @@ struct geni_i2c_dev {
->>       struct dma_chan *rx_c;
->>       bool gpi_mode;
->>       bool abort_done;
->> +    bool is_shared;
->>   };
->>   struct geni_i2c_desc {
->> @@ -602,6 +604,7 @@ static int geni_i2c_gpi_xfer(struct geni_i2c_dev 
->> *gi2c, struct i2c_msg msgs[], i
->>       peripheral.clk_div = itr->clk_div;
->>       peripheral.set_config = 1;
->>       peripheral.multi_msg = false;
->> +    peripheral.shared_se = gi2c->is_shared;
->>       for (i = 0; i < num; i++) {
->>           gi2c->cur = &msgs[i];
->> @@ -612,6 +615,8 @@ static int geni_i2c_gpi_xfer(struct geni_i2c_dev 
->> *gi2c, struct i2c_msg msgs[], i
->>           if (i < num - 1)
->>               peripheral.stretch = 1;
->> +        peripheral.first_msg = (i == 0);
->> +        peripheral.last_msg = (i == num - 1);
->>           peripheral.addr = msgs[i].addr;
->>           ret =  geni_i2c_gpi(gi2c, &msgs[i], &config,
->> @@ -631,8 +636,11 @@ static int geni_i2c_gpi_xfer(struct geni_i2c_dev 
->> *gi2c, struct i2c_msg msgs[], i
->>           dma_async_issue_pending(gi2c->tx_c);
->>           time_left = wait_for_completion_timeout(&gi2c->done, 
->> XFER_TIMEOUT);
->> -        if (!time_left)
->> +        if (!time_left) {
->> +            dev_err(gi2c->se.dev, "I2C timeout gpi flags:%d 
->> addr:0x%x\n",
->> +                        gi2c->cur->flags, gi2c->cur->addr);
->>               gi2c->err = -ETIMEDOUT;
->> +        }
->>           if (gi2c->err) {
->>               ret = gi2c->err;
->> @@ -800,6 +808,11 @@ static int geni_i2c_probe(struct platform_device 
->> *pdev)
->>           gi2c->clk_freq_out = KHZ(100);
->>       }
->> +    if (of_property_read_bool(pdev->dev.of_node, "qcom,shared-se")) {
->> +        gi2c->is_shared = true;
->> +        dev_dbg(&pdev->dev, "Shared SE Usecase\n");
->> +    }
->> +
->>       if (has_acpi_companion(dev))
->>           ACPI_COMPANION_SET(&gi2c->adap.dev, ACPI_COMPANION(dev));
->> @@ -962,14 +975,16 @@ static int __maybe_unused 
->> geni_i2c_runtime_suspend(struct device *dev)
->>       struct geni_i2c_dev *gi2c = dev_get_drvdata(dev);
->>       disable_irq(gi2c->irq);
->> -    ret = geni_se_resources_off(&gi2c->se);
->> -    if (ret) {
->> -        enable_irq(gi2c->irq);
->> -        return ret;
->> -
->> +    if (gi2c->is_shared) {
->> +        geni_se_clks_off(&gi2c->se);
->>       } else {
->> -        gi2c->suspended = 1;
->> +        ret = geni_se_resources_off(&gi2c->se);
->> +        if (ret) {
->> +            enable_irq(gi2c->irq);
->> +            return ret;
->> +        }
->>       }
->> +    gi2c->suspended = 1;
->>       clk_disable_unprepare(gi2c->core_clk);
-> 
-> 
+  To avoid this behavior we need to use BAM HW LOCK/UNLOCK feature on BAM 
+  pipes, and this LOCK/UNLOCK will be set via sending a command descriptor,
+  where the HLOS/TZ QCE crypto driver prepares a command descriptor with a
+  dummy write operation on one of the QCE crypto engine register and pass
+  the LOCK/UNLOCK flag along with it.
+
+  This feature tested with tcrypt.ko and "libkcapi" with all the AES 
+  algorithm supported by QCE crypto engine. Tested on IPQ9574 and 
+  qcm6490.LE chipset.
+
+  insmod tcrypt.ko mode=101
+  insmod tcrypt.ko mode=102
+  insmod tcrypt.ko mode=155
+  insmod tcrypt.ko mode=180
+  insmod tcrypt.ko mode=181
+  insmod tcrypt.ko mode=182
+  insmod tcrypt.ko mode=185
+  insmod tcrypt.ko mode=186
+  insmod tcrypt.ko mode=212
+  insmod tcrypt.ko mode=216
+  insmod tcrypt.ko mode=403
+  insmod tcrypt.ko mode=404
+  insmod tcrypt.ko mode=500
+  insmod tcrypt.ko mode=501
+  insmod tcrypt.ko mode=502
+  insmod tcrypt.ko mode=600
+  insmod tcrypt.ko mode=601
+  insmod tcrypt.ko mode=602
+
+  Encryption command line:
+ ./kcapi -x 1 -e -c "cbc(aes)" -k
+ 8d7dd9b0170ce0b5f2f8e1aa768e01e91da8bfc67fd486d081b28254c99eb423 -i
+ 7fbc02ebf5b93322329df9bfccb635af -p 48981da18e4bb9ef7e2e3162d16b1910
+ * 8b19050f66582cb7f7e4b6c873819b71
+ *
+ Decryption command line:
+ * $ ./kcapi -x 1 -c "cbc(aes)" -k
+ 3023b2418ea59a841757dcf07881b3a8def1c97b659a4dad -i
+ 95aa5b68130be6fcf5cabe7d9f898a41 -q c313c6b50145b69a77b33404cb422598
+ * 836de0065f9d6f6a3dd2c53cd17e33a
+
+ * $ ./kcapi -x 3 -c sha256 -p 38f86d
+ * cc42f645c5aa76ac3154b023359b665375fc3ae42f025fe961fb0f65205ad70e
+ * $ ./kcapi -x 3 -c sha256 -p bbb300ac5eda9d
+ * 61f7b48577a613fbdfe0d6d90b49985e07a42c99e7a439b6efb76d5ec71b3d30
+
+ ./kcapi -x 12 -c "hmac(sha256)" -k
+ 0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b -i
+ 000102030405060708090a0b0c -p f0f1f2f3f4f5f6f7f8f9 -b 42
+ *
+ 3cb25f25faacd57a90434f64d0362f2a2d2d0a90cf1a5a4c5db02d56ecc4c5bf3400720
+ 8d5b887185865
+
+ Paraller test with two different EE's (Execution Environment)
+
+ EE1 (Trust Zone)                          EE2 (HLOS)
+
+ There is a TZ application which    "libkcapi" or "tcrypt.ko" will run in 
+ will do continuous enc/dec with     continuous loop to do enc/dec with 
+ different AES algorithm supported   different algorithm supported QCE
+ by QCE crypto engine.     	     crypto engine. 
+
+1) dummy write with LOCK bit set    1) dummy write with LOCK bit set                        
+2) bam will lock all other pipes    2) bam will lock all other pipes which
+   which not belongs to current	       not belongs to current EE's, i.e tz 
+   EE's, i.e HLOS pipe and keep        pipe and keep handling current
+   handling current pipe only.         pipe only. 
+                                    3) hlos prepare data descriptor and               
+3) tz prepare data descriptor          submit to CE5
+   and submit to CE5                4) dummy write with UNLOCK bit set
+4) dummy write with UNLOCK bit      5) bam will release all the locked 
+   set                                 pipes
+5) bam will release all the locked
+   pipes                   
+
+ Upon encountering a descriptor with Lock bit set, the BAM will lock all
+ other pipes not related to the current pipe group, and keep handling the 
+ current pipe only until it sees the Un-Lock set (then it will release all
+ locked pipes). The actual locking is done on the new descriptor fetching
+ for publishing, i.e. locked pipe will not fetch new descriptors even if 
+ it got event/events adding more descriptors for this pipe.
+
+
+v4:
+  * Added feature description and test hardware
+    with test command
+  * Fixed patch version numbering
+  * Dropped dt-binding patch
+  * Dropped device tree changes
+  * Added BAM_SW_VERSION register read
+  * Handled the error path for the api dma_map_resource()
+    in probe
+  * updated the commit messages for batter redability
+  * Squash the change where qce_bam_acquire_lock() and
+    qce_bam_release_lock() api got introduce to the change where
+    the lock/unlock flag get introced
+  * changed cover letter subject heading to
+    "dmaengine: qcom: bam_dma: add cmd descriptor support"
+  * Added the very initial post for BAM lock/unlock patch link
+    as v1 to track this feature
+
+v3:
+  * https://lore.kernel.org/lkml/183d4f5e-e00a-8ef6-a589-f5704bc83d4a@quicinc.com/
+  * Addressed all the comments from v2
+  * Added the dt-binding
+  * Fix alignment issue
+  * Removed type casting from qce_write_reg_dma()
+    and qce_read_reg_dma()
+  * Removed qce_bam_txn = dma->qce_bam_txn; line from
+    qce_alloc_bam_txn() api and directly returning
+    dma->qce_bam_txn
+
+v2:
+  * https://lore.kernel.org/lkml/20231214114239.2635325-1-quic_mdalam@quicinc.com/
+  * Initial set of patches for cmd descriptor support
+  * Add client driver to use BAM lock/unlock feature
+  * Added register read/write via BAM in QCE Crypto driver
+    to use BAM lock/unlock feature
+
+v1:
+  * https://lore.kernel.org/all/1608215842-15381-1-git-send-email-mdalam@codeaurora.org/
+  * Initial support for LOCK/UNLOCK in bam_dma driver
+
+
+Md Sadre Alam (11):
+  dmaengine: qcom: bam_dma: Add bam_sw_version register read
+  dmaengine: qcom: bam_dma: add LOCK & UNLOCK flag support
+  crypto: qce - Add support for crypto address read
+  crypto: qce - Add bam dma support for crypto register r/w
+  crypto: qce - Convert register r/w for skcipher via BAM/DMA
+  crypto: qce - Convert register r/w for sha via BAM/DMA
+  crypto: qce - Convert register r/w for aead via BAM/DMA
+  crypto: qce - Add LOCK and UNLOCK flag support
+  crypto: qce - Add support for lock/unlock in skcipher
+  crypto: qce - Add support for lock/unlock in sha
+  crypto: qce - Add support for lock/unlock in aead
+
+ drivers/crypto/qce/aead.c     |   4 +
+ drivers/crypto/qce/common.c   | 141 +++++++++++++++------
+ drivers/crypto/qce/core.c     |  14 +-
+ drivers/crypto/qce/core.h     |  12 ++
+ drivers/crypto/qce/dma.c      | 232 ++++++++++++++++++++++++++++++++++
+ drivers/crypto/qce/dma.h      |  26 +++-
+ drivers/crypto/qce/sha.c      |   4 +
+ drivers/crypto/qce/skcipher.c |   4 +
+ drivers/dma/qcom/bam_dma.c    |  33 ++++-
+ include/linux/dmaengine.h     |   6 +
+ 10 files changed, 431 insertions(+), 45 deletions(-)
+
+-- 
+2.34.1
+
 

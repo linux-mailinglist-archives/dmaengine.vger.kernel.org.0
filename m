@@ -1,77 +1,72 @@
-Return-Path: <dmaengine+bounces-3147-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3148-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D678975B2A
-	for <lists+dmaengine@lfdr.de>; Wed, 11 Sep 2024 21:57:09 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B229975C05
+	for <lists+dmaengine@lfdr.de>; Wed, 11 Sep 2024 22:46:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F2718B213CD
-	for <lists+dmaengine@lfdr.de>; Wed, 11 Sep 2024 19:57:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4B6451C21DAB
+	for <lists+dmaengine@lfdr.de>; Wed, 11 Sep 2024 20:46:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C77D1B9B57;
-	Wed, 11 Sep 2024 19:57:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 486F01B5808;
+	Wed, 11 Sep 2024 20:44:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JoB8s6Hp"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kIynpaYu"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A71C21885A8
-	for <dmaengine@vger.kernel.org>; Wed, 11 Sep 2024 19:57:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88E8F14F13E;
+	Wed, 11 Sep 2024 20:44:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726084623; cv=none; b=JQrfQn4/kNZazLrdNtTPwlmHlh8GaZTWQMVSzv5uf3AqDcXYjOiRiBuch40yVY4g2G6a5Y4s/LmjiPJ4/tYxVHgxkwv6bA8koYBg4S+AHw9rS2m+ql8RCwJg52tHJ0NQdgg9dT8klyKgu+VpVi5+sdJDj+heAKUAT3qg1x5q4Tc=
+	t=1726087494; cv=none; b=eSuzIaDJ15EEWYMAk7gHX5mV8v8+CNDnbdi2FtbwbiVOCzE2Z5Ky4SYkIOfwf3c4LQQj7PrhznPjbIOm/U8/YY/fMkVSN6Y6crGxZNZeq6mh7HPQ7YbuzQqV7XRgwmupEhTILt9fkOhHpgXkul8/Rx27YjFIllerkECERoofcTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726084623; c=relaxed/simple;
-	bh=9Huow7Tj44jIpm1K66CWk6R90M02ofeuIPz/Y4iNXwU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JvdDmkkwE7j6rTYIrGaM5eAjeCuKfnTXGvv5ElKub04ZCT/xDtNWAiF5fd1rvUc+gM8YhEudjwGirnsAy2N/l07i8wwAyqv4/j7xM7aR73iDuTynWK8etYWj8N5v1Tq+i8gEBqCabljLqI5sPlRGMQ9YPW7DZXO2FOK2R7Ejq2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JoB8s6Hp; arc=none smtp.client-ip=209.85.219.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e1a74ee4c75so238881276.3
-        for <dmaengine@vger.kernel.org>; Wed, 11 Sep 2024 12:57:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1726084620; x=1726689420; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7XsJ3DCARnjSIN2XBSTxPFxwScX/3QXEvSqqigmPW88=;
-        b=JoB8s6Hp20k5sxQqyY+ubvdV43+25gKitUFG302/sJ71bg658o0nXpHZt5hjkqBUiJ
-         WbJvY25tdmnct4wEVbq7FJi5YMHEYbvrckDA23lm0oWeiYACO8tr7EGEsN5WaHZqS5ny
-         Tv8EVh55KfMSUPQ65mN2lPtabgtOGak5xDrdsgIwgkoYRQPm4kOeE8SZF3JmBazF99Fd
-         +CcJdflU7BBr+zEqrkHZbedbolap+CMXZ5on7ayHG/IluitseogLSYIK4woj+iRlWVy5
-         Uc++ZdUAir1W36hW/zRDt43T7pu4zdijJd/c4u4pRsmQupHNwwthHqJjbP1csY6Bhe/R
-         AlGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726084620; x=1726689420;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7XsJ3DCARnjSIN2XBSTxPFxwScX/3QXEvSqqigmPW88=;
-        b=CcSusNkuE86jzbdQuAxn6SUC525+Mipt8n0fEnyx9s0TQDDebfX3chUszHc1ihE7mt
-         1VUXGVYAc6k+yTH8NxcpuYicCFXW50S7HlHm8kizDEKVGfs4sMLX9rGvFfLCFr3vekML
-         n8FvqNbM3ehowwsSYFtcPjbZ/SA58DRQXRrVGArnfkHrkS9/MXocvgoU1VfQvAIQ5Zl/
-         4S2QMHGs0KZNoDd1ITPN6rQZ8em+lh6AYGBZ5iVSVWofbt9CkjpDkkmcEaELMB7X5cJC
-         +P6vfqm9ppu5VLJxsYZBb7Xtj8diMohz3XHGWqNk9fFpWrQ/qzXnGWiMG1tkY0WjIwiF
-         +jeA==
-X-Gm-Message-State: AOJu0YyfUBHCl0xNLfwXzcTnlnDPIgbdwecLc2dDjFuNO5KIq9tTrl+2
-	gpqPTx2I9b+5ADI3EJGRadAafasf/0wfsien3tOXd4nSOU6lXjF5
-X-Google-Smtp-Source: AGHT+IHvi+WaLA5de21FasJuYj99QuggUPU377u/LkBvcK+NzEunGfMHrmV/8609YXzFAEdIklrT2Q==
-X-Received: by 2002:a05:6902:e0a:b0:e1a:a580:e1dc with SMTP id 3f1490d57ef6-e1d9dc787d8mr556000276.57.1726084620436;
-        Wed, 11 Sep 2024 12:57:00 -0700 (PDT)
-Received: from kendra-linux.. ([64.234.79.138])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e1d7b9e3088sm808446276.13.2024.09.11.12.56.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Sep 2024 12:56:59 -0700 (PDT)
-From: kendra.j.moore3443@gmail.com
-To: gustavoars@kernel.org
+	s=arc-20240116; t=1726087494; c=relaxed/simple;
+	bh=6vNFb7HWgfUgk50jvJhXChPC/H6FA227ImHnku7m1oU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oDLGqQHxfiC3nSqdTeNKCMUSWbQYCoiaW6TE5eTvh7Zbm9cM7MBt3BTn3rrgnuBuToaE9r4JdmRURD7Qzql1jUgPYf+xpBlrOwsQ3ExFAUwZpEd8EtHw1WctRX9G2XxfprHX+q36g/gRI5TcrNL3vaq3vQOd+HxVIqqiK2/VpVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kIynpaYu; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1726087493; x=1757623493;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=6vNFb7HWgfUgk50jvJhXChPC/H6FA227ImHnku7m1oU=;
+  b=kIynpaYux+zxBiRb+iZAJ8UymfJ/fRLbVFp7giKPtw7+ahBEe7MWwT+V
+   xGUjyJbBOo5WFJ5/V4qyeM4jsa2KGwLhgTproKhNJtkKNz/Hu3WRsvjHa
+   O0raE7RIavFF66+gcZTqZifJ2KUisjBz4PV8hJoXC+fI8yM+6CAQgh7/S
+   H2/2KcO81NcEjMTWe13y2b9Gm3HutcmGrQ9MAEWF8GcDWajnb01zbSwiT
+   2m+CRjbvTacup6bnBgLL9i0BjJecOe277qSUtiDR128zXFRYbqBp0hJrY
+   bRRAZow0TL66qvqgMn0VvsJ9pBLkE5H+NHJnxhIQ2LcjVWdayLCJcO4VC
+   A==;
+X-CSE-ConnectionGUID: ksXcyAOpQxCdiZf+LwCFEw==
+X-CSE-MsgGUID: QOUrIyYjS2iTrQ7hwEDdog==
+X-IronPort-AV: E=McAfee;i="6700,10204,11192"; a="36048673"
+X-IronPort-AV: E=Sophos;i="6.10,221,1719903600"; 
+   d="scan'208";a="36048673"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2024 13:44:53 -0700
+X-CSE-ConnectionGUID: ivmzS7tgTH2/ypVd3DzZAQ==
+X-CSE-MsgGUID: lwBwUDeOQcSWdypnDOqqjg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,221,1719903600"; 
+   d="scan'208";a="67992557"
+Received: from fyu1.sc.intel.com ([172.25.103.126])
+  by orviesa007.jf.intel.com with ESMTP; 11 Sep 2024 13:44:52 -0700
+From: Fenghua Yu <fenghua.yu@intel.com>
+To: "Vinod Koul" <vkoul@kernel.org>,
+	"Dave Jiang" <dave.jiang@intel.com>
 Cc: dmaengine@vger.kernel.org,
-	Kendra Moore <kendra.j.moore3443@gmail.com>
-Subject: [PATCH] Fix typo in drivers/dma/qcom/bam_dma.c
-Date: Wed, 11 Sep 2024 15:56:18 -0400
-Message-ID: <20240911195618.94973-1-kendra.j.moore3443@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	"linux-kernel" <linux-kernel@vger.kernel.org>,
+	Fenghua Yu <fenghua.yu@intel.com>
+Subject: [PATCH] dmaengine: idxd: Add a new IAA device ID on Panther Lake family platforms
+Date: Wed, 11 Sep 2024 13:45:12 -0700
+Message-Id: <20240911204512.1521789-1-fenghua.yu@intel.com>
+X-Mailer: git-send-email 2.37.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -80,38 +75,51 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Kendra Moore <kendra.j.moore3443@gmail.com>
+A new IAA device ID, 0xb02d, is introduced across all Panther Lake family
+platforms. Add the device ID to the IDXD driver.
 
-This patch corrects two spelling errors in this file.
-
-Signed-off-by: Kendra Moore <kendra.j.moore3443@gmail.com>
+Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
 ---
- drivers/dma/qcom/bam_dma.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Hi, Vinod,
 
-diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
-index 5e7d332731e0..2d7550b8e03e 100644
---- a/drivers/dma/qcom/bam_dma.c
-+++ b/drivers/dma/qcom/bam_dma.c
-@@ -440,7 +440,7 @@ static void bam_reset(struct bam_device *bdev)
- 	val |= BAM_EN;
- 	writel_relaxed(val, bam_addr(bdev, 0, BAM_CTRL));
- 
--	/* set descriptor threshhold, start with 4 bytes */
-+	/* set descriptor threshold, start with 4 bytes */
- 	writel_relaxed(DEFAULT_CNT_THRSHLD,
- 			bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
- 
-@@ -667,7 +667,7 @@ static struct dma_async_tx_descriptor *bam_prep_slave_sg(struct dma_chan *chan,
- 	for_each_sg(sgl, sg, sg_len, i)
- 		num_alloc += DIV_ROUND_UP(sg_dma_len(sg), BAM_FIFO_SIZE);
- 
--	/* allocate enough room to accomodate the number of entries */
-+	/* allocate enough room to accommodate the number of entries */
- 	async_desc = kzalloc(struct_size(async_desc, desc, num_alloc),
- 			     GFP_NOWAIT);
- 
+This patch is applied cleanly on the next branch in the dmaengine repo.
+
+The next branch already includes a few new DSA/IAA device IDs in IDXD
+driver.
+
+Please check the patches and the reasons why the new IDs should be added:
+https://lore.kernel.org/lkml/20240828233401.186007-1-fenghua.yu@intel.com/
+
+ drivers/dma/idxd/init.c | 2 ++
+ include/linux/pci_ids.h | 1 +
+ 2 files changed, 3 insertions(+)
+
+diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+index 0f693b27879c..3ae494a7a706 100644
+--- a/drivers/dma/idxd/init.c
++++ b/drivers/dma/idxd/init.c
+@@ -78,6 +78,8 @@ static struct pci_device_id idxd_pci_tbl[] = {
+ 	{ PCI_DEVICE_DATA(INTEL, IAX_SPR0, &idxd_driver_data[IDXD_TYPE_IAX]) },
+ 	/* IAA on DMR platforms */
+ 	{ PCI_DEVICE_DATA(INTEL, IAA_DMR, &idxd_driver_data[IDXD_TYPE_IAX]) },
++	/* IAX PTL platforms */
++	{ PCI_DEVICE_DATA(INTEL, IAX_PTL, &idxd_driver_data[IDXD_TYPE_IAX]) },
+ 	{ 0, }
+ };
+ MODULE_DEVICE_TABLE(pci, idxd_pci_tbl);
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 8139231d0e86..e598d6ff58bf 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -3117,6 +3117,7 @@
+ #define PCI_DEVICE_ID_INTEL_HDA_CNL_H	0xa348
+ #define PCI_DEVICE_ID_INTEL_HDA_CML_S	0xa3f0
+ #define PCI_DEVICE_ID_INTEL_HDA_LNL_P	0xa828
++#define PCI_DEVICE_ID_INTEL_IAX_PTL	0xb02d
+ #define PCI_DEVICE_ID_INTEL_S21152BB	0xb152
+ #define PCI_DEVICE_ID_INTEL_HDA_BMG	0xe2f7
+ #define PCI_DEVICE_ID_INTEL_HDA_PTL	0xe428
 -- 
-2.43.0
+2.37.1
 
 

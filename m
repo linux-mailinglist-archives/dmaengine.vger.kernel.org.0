@@ -1,93 +1,77 @@
-Return-Path: <dmaengine+bounces-3146-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3147-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD0CA975A85
-	for <lists+dmaengine@lfdr.de>; Wed, 11 Sep 2024 20:47:47 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D678975B2A
+	for <lists+dmaengine@lfdr.de>; Wed, 11 Sep 2024 21:57:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3A8A41F237D6
-	for <lists+dmaengine@lfdr.de>; Wed, 11 Sep 2024 18:47:47 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F2718B213CD
+	for <lists+dmaengine@lfdr.de>; Wed, 11 Sep 2024 19:57:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6F4C1BA291;
-	Wed, 11 Sep 2024 18:47:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C77D1B9B57;
+	Wed, 11 Sep 2024 19:57:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m78bhn4H"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JoB8s6Hp"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD0021B9B58;
-	Wed, 11 Sep 2024 18:47:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A71C21885A8
+	for <dmaengine@vger.kernel.org>; Wed, 11 Sep 2024 19:57:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726080448; cv=none; b=Prul6UFsR71TxhoTjKMhfb9Ge8dbCUln+lXKRUK294Vtv4LLv3R85kHAOG8UyoYs1t0mosoZ3ZR0bnMo84cMyBRP5qp5hO8rKalNiQpdxgDYZietuwt6SdJTUFExgz3oA2j5j9T3aZA06ZTyeXhawXIipy8QhmhuyDV1LMVx20A=
+	t=1726084623; cv=none; b=JQrfQn4/kNZazLrdNtTPwlmHlh8GaZTWQMVSzv5uf3AqDcXYjOiRiBuch40yVY4g2G6a5Y4s/LmjiPJ4/tYxVHgxkwv6bA8koYBg4S+AHw9rS2m+ql8RCwJg52tHJ0NQdgg9dT8klyKgu+VpVi5+sdJDj+heAKUAT3qg1x5q4Tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726080448; c=relaxed/simple;
-	bh=g1wKLq6EZVzIY+jjtq31yNBD0OEGVAAlGiGuJ4FjodA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VY+tezW6uHGhTAkcC60RDls9o9V0SmmEnDME68FBLX2sEN5y9AoyMuJTU0M3XUbOKoRUI6/zgR7QSPfSi9l+gQFXQapxN9dU9SULr0Xlo4DPof2Zwx5JGLRr3fJHaupiVMKYsfLxuNi8YLzhhKjKNlS2zQbqumrroV/bxyVemx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m78bhn4H; arc=none smtp.client-ip=209.85.167.54
+	s=arc-20240116; t=1726084623; c=relaxed/simple;
+	bh=9Huow7Tj44jIpm1K66CWk6R90M02ofeuIPz/Y4iNXwU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JvdDmkkwE7j6rTYIrGaM5eAjeCuKfnTXGvv5ElKub04ZCT/xDtNWAiF5fd1rvUc+gM8YhEudjwGirnsAy2N/l07i8wwAyqv4/j7xM7aR73iDuTynWK8etYWj8N5v1Tq+i8gEBqCabljLqI5sPlRGMQ9YPW7DZXO2FOK2R7Ejq2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JoB8s6Hp; arc=none smtp.client-ip=209.85.219.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5356bb55224so167735e87.0;
-        Wed, 11 Sep 2024 11:47:25 -0700 (PDT)
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e1a74ee4c75so238881276.3
+        for <dmaengine@vger.kernel.org>; Wed, 11 Sep 2024 12:57:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1726080444; x=1726685244; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9fewwl+lFoaJ2FBbeLyQj39EYVP4HCmDCuF5Re12r5s=;
-        b=m78bhn4Huuc3RghchgacuBDhvpXroLJlb88RMjyJjMFnOHIu3UztD82B5Z4pRL65Pn
-         PlVGbY7jhrPspaunB+adv+1nENe4z/+78UmPZT28eFuaZPH3xp2hv9UQelUk9IfrbVHW
-         8/XTfc0oX3PLoRxkK+XdNa2g8cHQZAeH7vVrKuxRcdlGOEY0rDXpTb4sLr0t75dvm5R2
-         0vYB8iVN5KOobH4WYLgoaz/8AhIh4sS2K8jyKTMJ0D2KD+BJiSyRbd6NuTUkj9ZLPnBO
-         PWYYsl5GUkmlDQ3v8sZPAAb6DX1WRmK9bbdZ1AzmhSHMrggI0EWj+HIdz1VAQESVA5Cy
-         0xwA==
+        d=gmail.com; s=20230601; t=1726084620; x=1726689420; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7XsJ3DCARnjSIN2XBSTxPFxwScX/3QXEvSqqigmPW88=;
+        b=JoB8s6Hp20k5sxQqyY+ubvdV43+25gKitUFG302/sJ71bg658o0nXpHZt5hjkqBUiJ
+         WbJvY25tdmnct4wEVbq7FJi5YMHEYbvrckDA23lm0oWeiYACO8tr7EGEsN5WaHZqS5ny
+         Tv8EVh55KfMSUPQ65mN2lPtabgtOGak5xDrdsgIwgkoYRQPm4kOeE8SZF3JmBazF99Fd
+         +CcJdflU7BBr+zEqrkHZbedbolap+CMXZ5on7ayHG/IluitseogLSYIK4woj+iRlWVy5
+         Uc++ZdUAir1W36hW/zRDt43T7pu4zdijJd/c4u4pRsmQupHNwwthHqJjbP1csY6Bhe/R
+         AlGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726080444; x=1726685244;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9fewwl+lFoaJ2FBbeLyQj39EYVP4HCmDCuF5Re12r5s=;
-        b=KOLJ/4SnzdDr0lH9KisONdKXcrZUqBc9vj6hXuJFPXnSyGiklefabQinC0+Ln6nQlT
-         ySp1u8WcKsglbRhs0DNXizi5UBMHLGJwKGpdgYwp78IAAJnIoAyKuT4DFgpuKWEYKMot
-         m3Hk7UPg/kAfmthAHacGjsik+DBPciG8DaMhfS2VPXi6hM7Eq9cub250TZO+qh6rruAm
-         CWpXABOmrgyGUSiHqNcfF5WvB0Xz/X+pqd/8scP2Sd/JCBwM0XHArQ5spNovxRl6kZ2v
-         g99TrbUBs3cKIIbwiHTy+6UicD0uU4ZwhhSr9D+XARfaaC3jbG4UsrE9yr7U8Al1DXjQ
-         5Znw==
-X-Forwarded-Encrypted: i=1; AJvYcCUoyPI5YnPzJ0Vu+MGyXz0088nU7xfTwVikkIwE+dHF6Y+rWKoeQYUpjO0VniJDPblYOhLNfKbFGsOrz0I2@vger.kernel.org, AJvYcCUye04XOStBEnjdLM2EVzem/GYAKM8+a/vFPCELc+q1xaJH/ERLpeoNQr1jQVfEupoC1IidNuLX+wfTUQdC@vger.kernel.org, AJvYcCXiYoheGawCWH2z4L+9cOES6nNzrPlDz5q2e+Vza2Ynm4JV+LkHrc/h/eEJDeXNLHMuf1BlLht+OjQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCCiimecGBVS04QiQBB3KEb248QwwX6lOCX/2wL1N3L0NK3Iu7
-	k15Zq7XXVPW+tocSSgrnTW6qFUll51tj2uZn8g4ZpdEHjE0xumtA
-X-Google-Smtp-Source: AGHT+IEmC7BC2TuOTOPFoYXjgiONufb+BKVRN5oCB9gLhz95XL5udTn4Yjj2M7EVU/OSD0jfXkKRRg==
-X-Received: by 2002:a05:6512:12c8:b0:533:46cc:a71e with SMTP id 2adb3069b0e04-53678fec522mr210325e87.54.1726080443614;
-        Wed, 11 Sep 2024 11:47:23 -0700 (PDT)
-Received: from localhost ([185.195.191.165])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5365f90d531sm1671429e87.267.2024.09.11.11.47.22
+        d=1e100.net; s=20230601; t=1726084620; x=1726689420;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7XsJ3DCARnjSIN2XBSTxPFxwScX/3QXEvSqqigmPW88=;
+        b=CcSusNkuE86jzbdQuAxn6SUC525+Mipt8n0fEnyx9s0TQDDebfX3chUszHc1ihE7mt
+         1VUXGVYAc6k+yTH8NxcpuYicCFXW50S7HlHm8kizDEKVGfs4sMLX9rGvFfLCFr3vekML
+         n8FvqNbM3ehowwsSYFtcPjbZ/SA58DRQXRrVGArnfkHrkS9/MXocvgoU1VfQvAIQ5Zl/
+         4S2QMHGs0KZNoDd1ITPN6rQZ8em+lh6AYGBZ5iVSVWofbt9CkjpDkkmcEaELMB7X5cJC
+         +P6vfqm9ppu5VLJxsYZBb7Xtj8diMohz3XHGWqNk9fFpWrQ/qzXnGWiMG1tkY0WjIwiF
+         +jeA==
+X-Gm-Message-State: AOJu0YyfUBHCl0xNLfwXzcTnlnDPIgbdwecLc2dDjFuNO5KIq9tTrl+2
+	gpqPTx2I9b+5ADI3EJGRadAafasf/0wfsien3tOXd4nSOU6lXjF5
+X-Google-Smtp-Source: AGHT+IHvi+WaLA5de21FasJuYj99QuggUPU377u/LkBvcK+NzEunGfMHrmV/8609YXzFAEdIklrT2Q==
+X-Received: by 2002:a05:6902:e0a:b0:e1a:a580:e1dc with SMTP id 3f1490d57ef6-e1d9dc787d8mr556000276.57.1726084620436;
+        Wed, 11 Sep 2024 12:57:00 -0700 (PDT)
+Received: from kendra-linux.. ([64.234.79.138])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e1d7b9e3088sm808446276.13.2024.09.11.12.56.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Sep 2024 11:47:23 -0700 (PDT)
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Viresh Kumar <vireshk@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	Maciej Sosnowski <maciej.sosnowski@intel.com>,
-	Haavard Skinnemoen <haavard.skinnemoen@atmel.com>,
-	Dan Williams <dan.j.williams@intel.com>
-Cc: Serge Semin <fancer.lancer@gmail.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	dmaengine@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] dmaengine: dw: Fix XFER bit set, but channel not idle error
-Date: Wed, 11 Sep 2024 21:46:10 +0300
-Message-ID: <20240911184710.4207-3-fancer.lancer@gmail.com>
+        Wed, 11 Sep 2024 12:56:59 -0700 (PDT)
+From: kendra.j.moore3443@gmail.com
+To: gustavoars@kernel.org
+Cc: dmaengine@vger.kernel.org,
+	Kendra Moore <kendra.j.moore3443@gmail.com>
+Subject: [PATCH] Fix typo in drivers/dma/qcom/bam_dma.c
+Date: Wed, 11 Sep 2024 15:56:18 -0400
+Message-ID: <20240911195618.94973-1-kendra.j.moore3443@gmail.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240911184710.4207-1-fancer.lancer@gmail.com>
-References: <20240911184710.4207-1-fancer.lancer@gmail.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -96,130 +80,36 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-If a client driver gets to use the DW DMAC engine device tougher
-than usual, with occasional DMA-transfers termination and restart, then
-the next error can be randomly spotted in the system log:
+From: Kendra Moore <kendra.j.moore3443@gmail.com>
 
-> dma dma0chan0: BUG: XFER bit set, but channel not idle!
+This patch corrects two spelling errors in this file.
 
-For instance that happens in case of the 8250 UART port driver handling
-the looped back high-speed traffic (in my case > 1.5Mbaud) by means of the
-DMA-engine interface.
-
-The error happens due to the two-staged nature of the DW DMAC IRQs
-handling procedure and due to the critical section break in the meantime.
-In particular in case if the DMA-transfer is terminated and restarted:
-1. after the IRQ-handler submitted the tasklet but before the tasklet
-   started handling the DMA-descriptors in dwc_scan_descriptors();
-2. after the XFER completion flag was detected in the
-   dwc_scan_descriptors() method, but before the dwc_complete_all() method
-   is called
-the error denoted above is printed due to the overlap of the last transfer
-completion and the new transfer execution stages.
-
-There are two places need to be altered in order to fix the problem.
-1. Clear the IRQs in the dwc_chan_disable() method. That will prevent the
-   dwc_scan_descriptors() method call in case if the DMA-transfer is
-   restarted in the middle of the two-staged IRQs-handling procedure.
-2. Move the dwc_complete_all() code to being executed inseparably (in the
-   same atomic section) from the DMA-descriptors scanning procedure. That
-   will prevent the DMA-transfer restarts after the DMA-transfer completion
-   was spotted but before the actual completion is executed.
-
-Fixes: 69cea5a00d31 ("dmaengine/dw_dmac: Replace spin_lock* with irqsave variants and enable submission from callback")
-Fixes: 3bfb1d20b547 ("dmaengine: Driver for the Synopsys DesignWare DMA controller")
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+Signed-off-by: Kendra Moore <kendra.j.moore3443@gmail.com>
 ---
- drivers/dma/dw/core.c | 54 ++++++++++++++++++++-----------------------
- 1 file changed, 25 insertions(+), 29 deletions(-)
+ drivers/dma/qcom/bam_dma.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
-index af1871646eb9..fbc46cbfe259 100644
---- a/drivers/dma/dw/core.c
-+++ b/drivers/dma/dw/core.c
-@@ -143,6 +143,12 @@ static inline void dwc_chan_disable(struct dw_dma *dw, struct dw_dma_chan *dwc)
- 	channel_clear_bit(dw, CH_EN, dwc->mask);
- 	while (dma_readl(dw, CH_EN) & dwc->mask)
- 		cpu_relax();
-+
-+	dma_writel(dw, CLEAR.XFER, dwc->mask);
-+	dma_writel(dw, CLEAR.BLOCK, dwc->mask);
-+	dma_writel(dw, CLEAR.SRC_TRAN, dwc->mask);
-+	dma_writel(dw, CLEAR.DST_TRAN, dwc->mask);
-+	dma_writel(dw, CLEAR.ERROR, dwc->mask);
- }
+diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
+index 5e7d332731e0..2d7550b8e03e 100644
+--- a/drivers/dma/qcom/bam_dma.c
++++ b/drivers/dma/qcom/bam_dma.c
+@@ -440,7 +440,7 @@ static void bam_reset(struct bam_device *bdev)
+ 	val |= BAM_EN;
+ 	writel_relaxed(val, bam_addr(bdev, 0, BAM_CTRL));
  
- /*----------------------------------------------------------------------*/
-@@ -259,34 +265,6 @@ dwc_descriptor_complete(struct dw_dma_chan *dwc, struct dw_desc *desc,
- 	dmaengine_desc_callback_invoke(&cb, NULL);
- }
+-	/* set descriptor threshhold, start with 4 bytes */
++	/* set descriptor threshold, start with 4 bytes */
+ 	writel_relaxed(DEFAULT_CNT_THRSHLD,
+ 			bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
  
--static void dwc_complete_all(struct dw_dma *dw, struct dw_dma_chan *dwc)
--{
--	struct dw_desc *desc, *_desc;
--	LIST_HEAD(list);
--	unsigned long flags;
--
--	spin_lock_irqsave(&dwc->lock, flags);
--	if (dma_readl(dw, CH_EN) & dwc->mask) {
--		dev_err(chan2dev(&dwc->chan),
--			"BUG: XFER bit set, but channel not idle!\n");
--
--		/* Try to continue after resetting the channel... */
--		dwc_chan_disable(dw, dwc);
--	}
--
--	/*
--	 * Submit queued descriptors ASAP, i.e. before we go through
--	 * the completed ones.
--	 */
--	list_splice_init(&dwc->active_list, &list);
--	dwc_dostart_first_queued(dwc);
--
--	spin_unlock_irqrestore(&dwc->lock, flags);
--
--	list_for_each_entry_safe(desc, _desc, &list, desc_node)
--		dwc_descriptor_complete(dwc, desc, true);
--}
--
- /* Returns how many bytes were already received from source */
- static inline u32 dwc_get_sent(struct dw_dma_chan *dwc)
- {
-@@ -303,6 +281,7 @@ static void dwc_scan_descriptors(struct dw_dma *dw, struct dw_dma_chan *dwc)
- 	struct dw_desc *child;
- 	u32 status_xfer;
- 	unsigned long flags;
-+	LIST_HEAD(list);
+@@ -667,7 +667,7 @@ static struct dma_async_tx_descriptor *bam_prep_slave_sg(struct dma_chan *chan,
+ 	for_each_sg(sgl, sg, sg_len, i)
+ 		num_alloc += DIV_ROUND_UP(sg_dma_len(sg), BAM_FIFO_SIZE);
  
- 	spin_lock_irqsave(&dwc->lock, flags);
- 	status_xfer = dma_readl(dw, RAW.XFER);
-@@ -341,9 +320,26 @@ static void dwc_scan_descriptors(struct dw_dma *dw, struct dw_dma_chan *dwc)
- 			clear_bit(DW_DMA_IS_SOFT_LLP, &dwc->flags);
- 		}
- 
-+		/*
-+		 * No more active descriptors left to handle. So submit the
-+		 * queued descriptors and finish up the already handled ones.
-+		 */
-+		if (dma_readl(dw, CH_EN) & dwc->mask) {
-+			dev_err(chan2dev(&dwc->chan),
-+				"BUG: XFER bit set, but channel not idle!\n");
-+
-+			/* Try to continue after resetting the channel... */
-+			dwc_chan_disable(dw, dwc);
-+		}
-+
-+		list_splice_init(&dwc->active_list, &list);
-+		dwc_dostart_first_queued(dwc);
-+
- 		spin_unlock_irqrestore(&dwc->lock, flags);
- 
--		dwc_complete_all(dw, dwc);
-+		list_for_each_entry_safe(desc, _desc, &list, desc_node)
-+			dwc_descriptor_complete(dwc, desc, true);
-+
- 		return;
- 	}
+-	/* allocate enough room to accomodate the number of entries */
++	/* allocate enough room to accommodate the number of entries */
+ 	async_desc = kzalloc(struct_size(async_desc, desc, num_alloc),
+ 			     GFP_NOWAIT);
  
 -- 
 2.43.0

@@ -1,164 +1,133 @@
-Return-Path: <dmaengine+bounces-3153-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3154-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id D12269761CC
-	for <lists+dmaengine@lfdr.de>; Thu, 12 Sep 2024 08:46:39 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 92E0F976A0D
+	for <lists+dmaengine@lfdr.de>; Thu, 12 Sep 2024 15:10:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 31E1FB20D8B
-	for <lists+dmaengine@lfdr.de>; Thu, 12 Sep 2024 06:46:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 435B31F24672
+	for <lists+dmaengine@lfdr.de>; Thu, 12 Sep 2024 13:10:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DD4318A6BB;
-	Thu, 12 Sep 2024 06:46:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6278B1AB6C3;
+	Thu, 12 Sep 2024 13:10:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="YCxhWq+I"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F8DtkmgN"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2407188929
-	for <dmaengine@vger.kernel.org>; Thu, 12 Sep 2024 06:46:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AADA91A7AF0;
+	Thu, 12 Sep 2024 13:10:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726123595; cv=none; b=oGxYBX6dTaoUkgPi0C+L5U35umCieMAzi8csUaS0ly4ZjhQuFWps0UCFAJHS69g4K8/FgbneDjvUVjlZDdmN6sIE1huwfMBoC0rn5e7pNrkQMSMIS2/BkBiqgau0/eO+7z3iDolURUhWxTWRptLD2buWx1z0o29cbx4NFaSY32k=
+	t=1726146622; cv=none; b=VJ5eFE6i8st2jCZx4TMi/chOhsbGGamIKm4K+SgcIzhdzsfQVGNFEZ/FIR/djM6zppuisUGCklPhOgqhvq7FhTuwysgw8LsygPz7wsaj/yjlzlasejMUSUTA71YZOujBH7iVWTKgv92RraZ+n0RtmpDl3GZ21XtKNfwT6sN0t0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726123595; c=relaxed/simple;
-	bh=Z/m1fPRB4s0veA37AXYi/a1clTstrhIQGO/B9ZW/F28=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p7l9IFUr1Sq59XEnyS8Op6++WyhTY4R1iKDfSWVEFAFRrFNETK1jlLR+HcVBLSnXqRRVDDFdu0hFuWo7YUiHf8udr63JMFppzbd9E9t/r6oXAZLLQIUoIgO+8lfuDcoUCKMP0Mow1WEBO4fyQlGOBPUKVxkKwuml04CVJKbytBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=YCxhWq+I; arc=none smtp.client-ip=35.89.44.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
-Received: from eig-obgw-6010a.ext.cloudfilter.net ([10.0.30.248])
-	by cmsmtp with ESMTPS
-	id oKADs6fP1umtXodb6sQP0M; Thu, 12 Sep 2024 06:46:32 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id odb5s6pVlAfxyodb5scaAu; Thu, 12 Sep 2024 06:46:31 +0000
-X-Authority-Analysis: v=2.4 cv=fvfaZk4f c=1 sm=1 tr=0 ts=66e28e48
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=rpUMG24A1zG+UrzXDtAMsg==:17
- a=IkcTkHD0fZMA:10 a=EaEq8P2WXUwA:10 a=7T7KSl7uo7wA:10 a=pGLkceISAAAA:8
- a=VwQbUJbxAAAA:8 a=1TAzRpJlmNrmrX52BtgA:9 a=QEXdDO2ut3YA:10
- a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=SBZtRbN1+Ney3Bl9aK163TZL9TFwtrPsR0MLojQA1Lo=; b=YCxhWq+I/2zVyuD8LSI3U/xsXk
-	D05AjbPXHUKeDug4iHa+jTa6Q+7d/jRFfeAIqGKUHCMhghbQdOZAY/8RHo7xN7Omp+v74z5YdUqLk
-	jOSSpqmbkCre2kzf0dDZpEL+MOgX+ztZxi4ZSvJKX4LWoayPgxU/xs0PBYpiKcSE2zmYwRr7gdwQA
-	W53GOuJaVEGWJ97Vuh7jgOdEY5w1ZW5eY1uFxl9pJA36HxAyQaLGE4OvZrsLX/qwcdpR66oeHPoo6
-	Hpjw9NZxwW+f2/h8Sr/u6GMnx0MBv1lnA3NThxlDksK145at6luVOc9BjEdqZTasCrFimazeAV0kz
-	v6pNQ2oA==;
-Received: from [185.44.53.103] (port=42394 helo=[192.168.1.187])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1sodb4-000W5K-17;
-	Thu, 12 Sep 2024 01:46:31 -0500
-Message-ID: <c9535f84-e354-4c93-ad6f-6ca15b3ea5b7@embeddedor.com>
-Date: Thu, 12 Sep 2024 08:46:23 +0200
+	s=arc-20240116; t=1726146622; c=relaxed/simple;
+	bh=YQGtkVY1orJH2WVfTKflWZP/90r9WvrbC+Ne4huJ70E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=B6qeqlSLNWJwhMKEo2sRNKd8cCA4h/u22B+QZce6oKkBwmkpUSnPIBISRA2cwzaDOmZ9Hr79Tj4JTpNXKdjTUeh8y+LJ+v+FH+MEuQPUQ9jWxsbWk3Q7jTbmcPQWoA94A5LpCRW3MDbnNEh5tn0kmMG9/pvCu6onqom3al57mjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F8DtkmgN; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-374cacf18b1so690802f8f.2;
+        Thu, 12 Sep 2024 06:10:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1726146619; x=1726751419; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=U8JQOeJOkNWzk5hF7kdBbJfmcbjNOYJyTlSnkrngbv8=;
+        b=F8DtkmgNQgKKtvue38o+D9aRzbcq1WPyMabKhC3vUQY7R+S//HHUDFCXLZDUOLXCi6
+         MJ4OdEjezLvGK9Du/FHyPenijmKV13jEEzyQpRmuF0jnkUn8H9GbyTG54yVvAkf2t45v
+         vtWYTxyt+7oprRf40X7Qu5z+oPxfBHkljvGz7wHlovzo/LgwCnNLW0LASTOVMJHD8GS5
+         8L48Ophk9bIPEDvNBCSmTdrvrFODQ7OJ2s4mVnYruOAlpfvjB1nS4Y9ihoZVWwJQ7GlI
+         W1t5wWIHS05bsm08UTNGxAuKZjJOEMkbsh3KlYdy9hlM2R/Z+lZn7iKiPs57iJkotp0j
+         5Rag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726146619; x=1726751419;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=U8JQOeJOkNWzk5hF7kdBbJfmcbjNOYJyTlSnkrngbv8=;
+        b=LURuF7ogyyp6EbOhWvY88//CwCCmlLO5z53VNPkFPjLfMpZYrqD1Uv5eTfZ48GONwL
+         mWc522W21ju5mUE4+usojvTJR7kaXkVWWjvvFtEzdimuYgLCxPJQ7P/efEXakVQGbQqc
+         50rVxHc2FbEvy6TvbdQ9+XSxedp736C2QWE7vcPjfhP5BpOCyUX4dWKdWq2IwpV0cz6F
+         tntgEJFnmqWuazz1a/F/vRDiXTEym3WuLB5RI03Yg2nh8PA/wrAUGpUmfbSBCf6ZzY5T
+         /9CbgPQtj/6LKn0CvKbbH5Nd9XTUJ82CbljFdAEwilz+qA6bzrVvPiBQCtWqKj3/zRug
+         HAEg==
+X-Forwarded-Encrypted: i=1; AJvYcCUFl6qg2HhHZ96WJ32+j4uGEjrCmEq+5ThycKBsLn0E3ljBX2qnNxuskOffJf8iDw3Cd0wqabCw4fcIxlDm@vger.kernel.org, AJvYcCWQtKWWysABGa4aSATGbTYOIbnh0ebwulPun3izQ2HzLhttsTNwlqrsR+E0+2Ze6qveGsVbhS7gPdw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxpn6/NpaRzZjQBA9j42J22tSVUCselS5Kbmuwb11WIazv35dbw
+	vfwIjz+JMb9ndGy1BmV/6ZNArYHwOreLhZGHCFL22UNOUxlFQZ0y
+X-Google-Smtp-Source: AGHT+IGctPJ+ZKxq4ZLB6qdJLoKPvcS3oXjmyhA8DvW7ar/5awAjITqMWam/yxTvaCY3cBuBCuYUKA==
+X-Received: by 2002:a5d:6443:0:b0:374:bf97:ba10 with SMTP id ffacd0b85a97d-378c2d047e6mr1551574f8f.25.1726146618581;
+        Thu, 12 Sep 2024 06:10:18 -0700 (PDT)
+Received: from localhost (craw-09-b2-v4wan-169726-cust2117.vm24.cable.virginm.net. [92.238.24.70])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3789564a067sm14346787f8f.13.2024.09.12.06.10.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Sep 2024 06:10:18 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Nishad Saraf <nishads@amd.com>,
+	Lizhi Hou <lizhi.hou@amd.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	dmaengine@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] dmaengine: amd: qdma: make read-only arrays h2c_types and c2h_types static const
+Date: Thu, 12 Sep 2024 14:10:17 +0100
+Message-Id: <20240912131017.588141-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Fix typo in drivers/dma/qcom/bam_dma.c
-To: kendra.j.moore3443@gmail.com, gustavoars@kernel.org
-Cc: dmaengine@vger.kernel.org
-References: <20240911195618.94973-1-kendra.j.moore3443@gmail.com>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240911195618.94973-1-kendra.j.moore3443@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 185.44.53.103
-X-Source-L: No
-X-Exim-ID: 1sodb4-000W5K-17
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.187]) [185.44.53.103]:42394
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfKz3uuq2MejFEpHLqnMmsvpxGJVKLaRi9s1BDRRaPZ+u6ZAJyVfP3FrjHp3I2OXYk+V8K1QMpgYHtcO2stSxComxjVR2//1jjWO+sz0XLwr/onZvrT63
- VV/sNT+wJAJ1/irheqbRi1Ey+m2O0Ikvmcc9aCcz/K0FWIQGIk0PSI4adaEM4H7UKE0rU2gny75KaVWg1m+rMcbuRAORa32inwA=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
+Don't populate the read-only arrays h2c_types and c2h_types on the
+stack at run time, instead make them static const.
 
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ drivers/dma/amd/qdma/qdma.c | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
-On 11/09/24 13:56, kendra.j.moore3443@gmail.com wrote:
-> From: Kendra Moore <kendra.j.moore3443@gmail.com>
-> 
-> This patch corrects two spelling errors in this file.
-> 
-> Signed-off-by: Kendra Moore <kendra.j.moore3443@gmail.com>
+diff --git a/drivers/dma/amd/qdma/qdma.c b/drivers/dma/amd/qdma/qdma.c
+index b0a1f3ad851b..17a876df9fb3 100644
+--- a/drivers/dma/amd/qdma/qdma.c
++++ b/drivers/dma/amd/qdma/qdma.c
+@@ -283,16 +283,20 @@ static int qdma_check_queue_status(struct qdma_device *qdev,
+ 
+ static int qdma_clear_queue_context(const struct qdma_queue *queue)
+ {
+-	enum qdma_ctxt_type h2c_types[] = { QDMA_CTXT_DESC_SW_H2C,
+-					    QDMA_CTXT_DESC_HW_H2C,
+-					    QDMA_CTXT_DESC_CR_H2C,
+-					    QDMA_CTXT_PFTCH, };
+-	enum qdma_ctxt_type c2h_types[] = { QDMA_CTXT_DESC_SW_C2H,
+-					    QDMA_CTXT_DESC_HW_C2H,
+-					    QDMA_CTXT_DESC_CR_C2H,
+-					    QDMA_CTXT_PFTCH, };
++	static const enum qdma_ctxt_type h2c_types[] = {
++		QDMA_CTXT_DESC_SW_H2C,
++		QDMA_CTXT_DESC_HW_H2C,
++		QDMA_CTXT_DESC_CR_H2C,
++		QDMA_CTXT_PFTCH,
++	};
++	static const enum qdma_ctxt_type c2h_types[] = {
++		QDMA_CTXT_DESC_SW_C2H,
++		QDMA_CTXT_DESC_HW_C2H,
++		QDMA_CTXT_DESC_CR_C2H,
++		QDMA_CTXT_PFTCH,
++	};
+ 	struct qdma_device *qdev = queue->qdev;
+-	enum qdma_ctxt_type *type;
++	const enum qdma_ctxt_type *type;
+ 	int ret, num, i;
+ 
+ 	if (queue->dir == DMA_MEM_TO_DEV) {
+-- 
+2.39.2
 
-Not sure why this was sent to me and not to the maintainers of this
-code, but it looks correct, so here you go:
-
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-To get the list of people and mailing lists your patches should be
-sent to, run the following command on your patches:
-
-scripts/get_maintainer.pl --nokeywords --nogit --nogit-fallback <path-to-your-patch>
-
-In this case, I ran:
-
-$ scripts/get_maintainer.pl --nokeywords --nogit --nogit-fallback -f drivers/dma/qcom/bam_dma.c
-Vinod Koul <vkoul@kernel.org> (maintainer:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM)
-linux-arm-msm@vger.kernel.org (open list:ARM/QUALCOMM MAILING LIST)
-dmaengine@vger.kernel.org (open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM)
-linux-kernel@vger.kernel.org (open list)
-
-These are all the people and lists you have to send this changes to.
-
-You can also create an alias to avoid typing the script name and
-options every time.
-
-I hope this helps.
---
-Gustavo
-
-> ---
->   drivers/dma/qcom/bam_dma.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
-> index 5e7d332731e0..2d7550b8e03e 100644
-> --- a/drivers/dma/qcom/bam_dma.c
-> +++ b/drivers/dma/qcom/bam_dma.c
-> @@ -440,7 +440,7 @@ static void bam_reset(struct bam_device *bdev)
->   	val |= BAM_EN;
->   	writel_relaxed(val, bam_addr(bdev, 0, BAM_CTRL));
->   
-> -	/* set descriptor threshhold, start with 4 bytes */
-> +	/* set descriptor threshold, start with 4 bytes */
->   	writel_relaxed(DEFAULT_CNT_THRSHLD,
->   			bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
->   
-> @@ -667,7 +667,7 @@ static struct dma_async_tx_descriptor *bam_prep_slave_sg(struct dma_chan *chan,
->   	for_each_sg(sgl, sg, sg_len, i)
->   		num_alloc += DIV_ROUND_UP(sg_dma_len(sg), BAM_FIFO_SIZE);
->   
-> -	/* allocate enough room to accomodate the number of entries */
-> +	/* allocate enough room to accommodate the number of entries */
->   	async_desc = kzalloc(struct_size(async_desc, desc, num_alloc),
->   			     GFP_NOWAIT);
->   
 

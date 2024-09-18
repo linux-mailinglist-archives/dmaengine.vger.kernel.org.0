@@ -1,301 +1,236 @@
-Return-Path: <dmaengine+bounces-3182-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3183-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1FB1C97BC0E
-	for <lists+dmaengine@lfdr.de>; Wed, 18 Sep 2024 14:20:58 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F370897BCE7
+	for <lists+dmaengine@lfdr.de>; Wed, 18 Sep 2024 15:17:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D15422844E9
-	for <lists+dmaengine@lfdr.de>; Wed, 18 Sep 2024 12:20:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1EE421C21432
+	for <lists+dmaengine@lfdr.de>; Wed, 18 Sep 2024 13:17:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C85B217837E;
-	Wed, 18 Sep 2024 12:20:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6408818A95D;
+	Wed, 18 Sep 2024 13:17:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QMLdsj/m"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mIissUwI"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 846102E64B;
-	Wed, 18 Sep 2024 12:20:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2745E18A6D3
+	for <dmaengine@vger.kernel.org>; Wed, 18 Sep 2024 13:17:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726662052; cv=none; b=is0VPNqmLQtpNXknV006v/P7r9tMiwFM2OFeMDpzeLLM6UawtJHEs1e0IxTeig2+JkqdXVF4WTHsjmslVgQXePxRlkOGvZyDivwHjacN5RXXCQ+X9SibeSvMWPjXfYJjvzRJc4BAXs+gON4LHhLaQz4JsPExq/Yp1ccGR0lm59k=
+	t=1726665449; cv=none; b=mfjfRW3yjfck9whL7BY0PhCLuwDSp2Dzwcyz4o7r4QARqeEOK7Gv1BFfK1K79Wzvk6WCi40KY+tntlC7I4uhcW3cKI5hPASMqMyDP1DAZ5FQ7R8rTCe1aS1Q49PpVVcvHosed/jn5tyISGH2Q1B127mcS8/Y35Yf/KOd5Mq7qh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726662052; c=relaxed/simple;
-	bh=YReHkWzoW90cu/Ao3EPUTSj1YiN0NQwCGDLLvtaUMZs=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
-	 In-Reply-To:Content-Type; b=ft5ItMqdCFft2m6IWAggx/D4HYkKk0eUOyyNyNX5/AtizBkKyjg7jNzbSYb0L6UYb4d9WTZTzklBD8s0hrki6tasVvtABrtQr4PkL0j5MOG1Q8GUlJWYrhjyOal6VXU1hT/+btEjEkE1E9+tEW870Vr6Im8nQjXZbROvoJtPayQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QMLdsj/m; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48I6lLrn002533;
-	Wed, 18 Sep 2024 12:20:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	y49ljK7hhswfxyQq8jRavd0/ztkz3NCyaDreEvf3yzY=; b=QMLdsj/muGPPF5rr
-	ygvoxHb3GnfgoBBW2eJK76zQE0q1EixKzCJN4rtLP1YARM7TBt/uxf55ETNHvmVe
-	+QBTzir+Eh3yex6V2Gdu9xO1/3JCGF+M3D+idrD5YFE8xlGOkalD41JO6zJ9Hjgd
-	YRvA2mhNj1Vqhs9gYGpM85reWsFAffO/BmMtun3UkQe5G+S6JmdsYYB8POimF0lc
-	THe7cylO0h3QmNATNQePjrhIPZ5/uoS3A5m70mu+mPdbR/lK3ql3ZD5j8AkqBukk
-	iJg+AjLD+z74cMdyOXPmt4iMOlfqczDUAFaO2gzH3Uew07Lp6jNXBv9yQ+hBp7CN
-	X7ubCg==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 41n4hfhwbr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Sep 2024 12:20:39 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 48ICKcOx015988
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Sep 2024 12:20:38 GMT
-Received: from [10.216.13.254] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 18 Sep
- 2024 05:20:32 -0700
-Message-ID: <77ce3d16-9e56-4ed3-89bd-e4d26d88eae2@quicinc.com>
-Date: Wed, 18 Sep 2024 17:50:27 +0530
+	s=arc-20240116; t=1726665449; c=relaxed/simple;
+	bh=6Vylgkwi2XRLm6vu1hISot4+x5h/VxupX0P7v+5OR1w=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=DEMXf+jRKJF0JITIYQwhCI3NFKMyoIeBrCBk2sH+WiV4nDSP3WzqbVFDXk7ow/zrEcoEzNDuxw7Qd6MLJUXu589egbfF48WYl2XZj9qjiXwQPthRIKHq3d8o/xomTeaIaJDYrXfn2r5GYCMO6XH9Vik0e4Cs6bamocwKbpB8YuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mIissUwI; arc=none smtp.client-ip=95.215.58.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1726665440;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=oRaY/hVaVkdY+wxG/AOYN6Y51TdyznGDSjMoavpo0T4=;
+	b=mIissUwIFVOBJq9xT+tFoQ0uFfxx+38WKFwVY2ahT1lg0NYV1JVMXPrDsPOh7V4sIHP99t
+	0kJzy6RlQTcaofhxUIbllaOC2bDGDXnGtcn+jYtxA9Ga8cyiu3xeY4zWWTP0z5di5n0toP
+	eqz6YffiZQPMrjidWC9ljBuiPsq8f90=
+From: Jai Luthra <jai.luthra@linux.dev>
+Date: Wed, 18 Sep 2024 18:46:55 +0530
+Subject: [PATCH] dmaengine: ti: k3-udma: Fix teardown for cyclic PDMA
+ transfers
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-Subject: Re: [PATCH v2 4/4] i2c: i2c-qcom-geni: Enable i2c controller sharing
- between two subsystems
-To: <neil.armstrong@linaro.org>, <konrad.dybcio@linaro.org>,
-        <andersson@kernel.org>, <andi.shyti@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
-        <conor+dt@kernel.org>, <agross@kernel.org>,
-        <devicetree@vger.kernel.org>, <vkoul@kernel.org>, <linux@treblig.org>,
-        <dan.carpenter@linaro.org>, <Frank.Li@nxp.com>,
-        <konradybcio@kernel.org>
-CC: <quic_vdadhani@quicinc.com>
-References: <20240906191438.4104329-1-quic_msavaliy@quicinc.com>
- <20240906191438.4104329-5-quic_msavaliy@quicinc.com>
- <b3a5dd54-90ba-4d75-9650-efbff12cddeb@linaro.org>
- <3bd27b6d-74b8-4f7b-b3eb-64682442bbda@quicinc.com>
- <3dddd226-c726-434e-8828-c12f76a71752@linaro.org>
- <687db538-1a41-4353-89fd-d1869d960a12@quicinc.com>
- <ed0c3d9c-82d8-47db-938c-4e60e8ebed77@linaro.org>
-Content-Language: en-US
-In-Reply-To: <ed0c3d9c-82d8-47db-938c-4e60e8ebed77@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: udEkeV9OS7ClIy2BFO3gv_FICQsEvsUd
-X-Proofpoint-ORIG-GUID: udEkeV9OS7ClIy2BFO3gv_FICQsEvsUd
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- clxscore=1015 phishscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0
- impostorscore=0 adultscore=0 suspectscore=0 lowpriorityscore=0 spamscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2408220000 definitions=main-2409180080
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240918-z_cnt-v1-1-2c58fbfb07d6@linux.dev>
+X-B4-Tracking: v=1; b=H4sIAMbS6mYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDS0ML3ar45LwSXePkRNOUxNRkc7OkNCWg2oKi1LTMCrA50bG1tQCoxqM
+ pVwAAAA==
+To: Peter Ujfalusi <peter.ujfalusi@gmail.com>, 
+ Vinod Koul <vkoul@kernel.org>
+Cc: Vignesh Raghavendra <vigneshr@ti.com>, 
+ Francesco Dolcini <francesco.dolcini@toradex.com>, 
+ Devarsh Thakkar <devarsht@ti.com>, Rishikesh Donadkar <r-donadkar@ti.com>, 
+ dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Jai Luthra <j-luthra@ti.com>, Jai Luthra <jai.luthra@linux.dev>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5543; i=jai.luthra@linux.dev;
+ h=from:subject:message-id; bh=fTpXpCUpiB900Brzxzj7Zv/lHJjbWeyy//oQHtB/u40=;
+ b=owEBbQKS/ZANAwAIAUPekfkkmnFFAcsmYgBm6tLbkEn2tvW138QObUJN6CL1NoaaXRoDrPeQ+
+ ybo8F8mUOOJAjMEAAEIAB0WIQRN4NgY5dV16NRar8VD3pH5JJpxRQUCZurS2wAKCRBD3pH5JJpx
+ Re6lEACk3O8jRJNBzEAPZFnriefUQ3VjqYZcqSUtv7lfV6o/Yr6bT3zmP9YsDSYUo8teBEx9W6a
+ qoVIySMrClpRAqXyNiXSMccXgmPz4MwqKGqW5WaW8/QeIzZRh8SYL/QgYtU/6eBzLOjd6XWD8co
+ 2vjUcPMCncz/pwxkZXExaatBna4ds+vKFKgttmTOK55VDyYON/ixWZTmnxDv4raAKzCTra1kqqL
+ 4ASOgu5grpn/sFy81RPulit5MPoxhI+dfiTzxIM8Y40u3eW/Wkd3PpV47W1bTQOSipaz1bS8RO5
+ cp/7gBnNAaT5mzBb96uKN/T36a3ajWr/eAYe+iEzPTvJ5UdSEDO6jhztsqFRdDIhkCYi+ZGCxH4
+ IACDuwrvRB3T222Lxsr56/Lu+uXp4qlhZQ2714tAWQJkan1GpJ7LG6gWy/CkLUxR63BDEHiUgOo
+ L9OTx6P1chZruk6BkuuUJ37bbbYLhq/WNMmPl0V5w0GCpybWj52kKjMAT25Nnq1mvrQuWXnassH
+ o7Njym1tby1n1JT5hlDIQk+/uynTikyM7wrvQH1gIl8LNdopZXpIJRNjDmpIVPBA4ujUL/DYKiW
+ TQUXsswUo9qepcy2F8Mp/CN6C0wxT+JFYNHOVbNowoD1ufCLZkBbgGMTtutpsgcSRA3Sda7aVIB
+ n5NoW19jRHup+MQ==
+X-Developer-Key: i=jai.luthra@linux.dev; a=openpgp;
+ fpr=4DE0D818E5D575E8D45AAFC543DE91F9249A7145
+X-Migadu-Flow: FLOW_OUT
 
-Thanks Neil for the review !
+From: Jai Luthra <j-luthra@ti.com>
 
-On 9/10/2024 3:22 PM, neil.armstrong@linaro.org wrote:
-> On 10/09/2024 11:15, Mukesh Kumar Savaliya wrote:
->> Hi Neil,
->>
->> On 9/9/2024 6:34 PM, neil.armstrong@linaro.org wrote:
->>> On 09/09/2024 11:18, Mukesh Kumar Savaliya wrote:
->>>> Hi Neil,
->>>>
->>>> On 9/9/2024 2:24 PM, neil.armstrong@linaro.org wrote:
->>>>> Hi,
->>>>>
->>>>> On 06/09/2024 21:14, Mukesh Kumar Savaliya wrote:
->>>>>> Add support to share I2C SE by two Subsystems in a mutually 
->>>>>> exclusive way.
->>>>>> Use  "qcom,shared-se" flag in a particular i2c instance node ifthe
->>>>>> usecase requires i2c controller to be shared.
->>>>>>
->>>>>> I2C driver just need to mark first_msg and last_msg flag to help 
->>>>>> indicate
->>>>>> GPI driver to  take lock and unlock TRE there by protecting from 
->>>>>> concurrent
->>>>>> access from other EE or Subsystem.
->>>>>>
->>>>>> gpi_create_i2c_tre() function at gpi.c will take care of adding 
->>>>>> Lock and
->>>>>> Unlock TRE for the respective transfer operations.
->>>>>>
->>>>>> Since the GPIOs are also shared for the i2c bus between two SS, do 
->>>>>> not
->>>>>> touch GPIO configuration during runtime suspend and only turn off the
->>>>>> clocks. This will allow other SS to continue to transfer the data
->>>>>> without any disturbance over the IO lines.
->>>>>
->>>>> This doesn't answer my question about what would be the behavior if 
->>>>> one
->>>>> use uses, for example, GPI DMA, and the Linux kernel FIFO mode or 
->>>>> SE DMA ?
->>>>>
->>>> Shared usecase is not supported for non GSI mode (FIFO and DMA), it 
->>>> should be static usecase. Dynamic sharing from two clients of two 
->>>> subsystems is only for GSI mode. Hope this helps ?
->>>
->>> Sure, this is why I proposed on v1 cover letter reply to add:
->> Sure, i will add in cover letter and code check combining with 
->> fifo_disable check.
->>> ==============><=====================================================================
->>> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c 
->>> b/drivers/i2c/busses/i2c-qcom-geni.c
->>> index ee2e431601a6..a15825ea56de 100644
->>> --- a/drivers/i2c/busses/i2c-qcom-geni.c
->>> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
->>> @@ -885,7 +885,7 @@ static int geni_i2c_probe(struct platform_device 
->>> *pdev)
->>>           else
->>>                   fifo_disable = readl_relaxed(gi2c->se.base + 
->>> GENI_IF_DISABLE_RO) & FIFO_IF_DISABLE;
->>>
->>> -       if (fifo_disable) {
->>> +       if (gi2c->is_shared || fifo_disable) {
->>   Should be ANDING logically, as we need to combine both check. Shared
->>   usecase possible only for fifo_disable.
-> 
-> Could you elaborate on that ? GPI DMA is totally usable even if FIFO is 
-> enabled,
-> it's a decision took in the driver to _not_ use GPI when FIFO is enabled.
-> 
-Yes, Neil, you are right. Its actually reverse condition from HW 
-configuration.
+When receiving data in cyclic mode from PDMA peripherals, where reload
+count is set to infinite, any TR in the set can potentially be the last
+one of the overall transfer. In such cases, the EOP flag needs to be set
+in each TR and PDMA's Static TR "Z" parameter should be set, matching
+the size of the TR.
 
-if fifo_disable = true, then FIFO registers will not be accessible, 
-meaning its GPI mode only. And SW should decide use GPI DMA mode only.
+This is required for the teardown to function properly and cleanup the
+internal state memory. This only affects platforms using BCDMA and not
+those using UDMA-P, which could set EOP flag in the teardown TR
+automatically.
 
-if fifo_disable = false, it can still use GPI DMA/CPU_DMA. we need to 
-restrict from SW side.
+Similarly when transmitting data in cyclic mode to PDMA peripherals, the
+EOP flag needs to be set to get the teardown completion signal
+correctly.
 
-Provided above, i suggest to keep conditional check with ANDING.
-We want only GSI mode to be supported with shared SE. Because GSI mode 
-only has GPII channel allocated to each EE. if not, then it will be 
-misused between EEs and no way to prevent concurrency at HW level.(E.g. 
-we use lock/unlock in GSI mode)
+Fixes: 017794739702 ("dmaengine: ti: k3-udma: Initial support for K3 BCDMA")
+Signed-off-by: Jai Luthra <j-luthra@ti.com>
+Signed-off-by: Jai Luthra <jai.luthra@linux.dev>
+---
+ drivers/dma/ti/k3-udma.c | 61 ++++++++++++++++++++++++++++++++++++------------
+ 1 file changed, 46 insertions(+), 15 deletions(-)
 
-If so, hope you agree with the conditional check of ANDing both flags?
-> Neil
-> 
->>
->>   if(gi2c->is_shared && fifo_disable) {
->>>                   /* FIFO is disabled, so we can only use GPI DMA */
->>>                   gi2c->gpi_mode = true;
->>>                   ret = setup_gpi_dma(gi2c);
->>> ==============><=====================================================================
->>>
->>> Thanks,
->>> Neil
->>>
->>>>> Because it seems to "fix" only the GPI DMA shared case.
->>>>>
->>>>> Neil
->>>>>
->>>>>>
->>>>>> Signed-off-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
->>>>>> ---
->>>>>>   drivers/i2c/busses/i2c-qcom-geni.c | 29 
->>>>>> ++++++++++++++++++++++-------
->>>>>>   1 file changed, 22 insertions(+), 7 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c 
->>>>>> b/drivers/i2c/busses/i2c-qcom-geni.c
->>>>>> index eebb0cbb6ca4..ee2e431601a6 100644
->>>>>> --- a/drivers/i2c/busses/i2c-qcom-geni.c
->>>>>> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
->>>>>> @@ -1,5 +1,6 @@
->>>>>>   // SPDX-License-Identifier: GPL-2.0
->>>>>>   // Copyright (c) 2017-2018, The Linux Foundation. All rights 
->>>>>> reserved.
->>>>>> +// Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights 
->>>>>> reserved.
->>>>>>   #include <linux/acpi.h>
->>>>>>   #include <linux/clk.h>
->>>>>> @@ -99,6 +100,7 @@ struct geni_i2c_dev {
->>>>>>       struct dma_chan *rx_c;
->>>>>>       bool gpi_mode;
->>>>>>       bool abort_done;
->>>>>> +    bool is_shared;
->>>>>>   };
->>>>>>   struct geni_i2c_desc {
->>>>>> @@ -602,6 +604,7 @@ static int geni_i2c_gpi_xfer(struct 
->>>>>> geni_i2c_dev *gi2c, struct i2c_msg msgs[], i
->>>>>>       peripheral.clk_div = itr->clk_div;
->>>>>>       peripheral.set_config = 1;
->>>>>>       peripheral.multi_msg = false;
->>>>>> +    peripheral.shared_se = gi2c->is_shared;
->>>>>>       for (i = 0; i < num; i++) {
->>>>>>           gi2c->cur =&msgs[i];
->>>>>> @@ -612,6 +615,8 @@ static int geni_i2c_gpi_xfer(struct 
->>>>>> geni_i2c_dev *gi2c, struct i2c_msg msgs[], i
->>>>>>           if (i < num -1)
->>>>>>               peripheral.stretch = 1;
->>>>>> +        peripheral.first_msg =(i == 0);
->>>>>> +        peripheral.last_msg = (i == num - 1);
->>>>>>           peripheral.addr = msgs[i].addr;
->>>>>>           ret = geni_i2c_gpi(gi2c, &msgs[i], &config,
->>>>>> @@ -631,8 +636,11 @@ static int geni_i2c_gpi_xfer(struct 
->>>>>> geni_i2c_dev *gi2c, struct i2c_msg msgs[], i
->>>>>>           dma_async_issue_pending(gi2c->tx_c);
->>>>>>           time_left =wait_for_completion_timeout(&gi2c->done, 
->>>>>> XFER_TIMEOUT);
->>>>>> -        if (!time_left)
->>>>>> +        if (!time_left) {
->>>>>> +            dev_err(gi2c->se.dev, "I2C timeout gpi flags:%d 
->>>>>> addr:0x%x\n",
->>>>>> +                        gi2c->cur->flags, gi2c->cur->addr);
->>>>>>               gi2c->err = -ETIMEDOUT;
->>>>>> +        }
->>>>>>           if (gi2c->err) {
->>>>>>               ret = gi2c->err;
->>>>>> @@ -800,6 +808,11 @@ static int geni_i2c_probe(struct 
->>>>>> platform_device *pdev)
->>>>>>           gi2c->clk_freq_out = KHZ(100);
->>>>>>       }
->>>>>> +    if (of_property_read_bool(pdev->dev.of_node, 
->>>>>> "qcom,shared-se")) {
->>>>>> +        gi2c->is_shared = true;
->>>>>> +        dev_dbg(&pdev->dev, "Shared SE Usecase\n");
->>>>>> +    }
->>>>>> +
->>>>>>       if (has_acpi_companion(dev))
->>>>>>           ACPI_COMPANION_SET(&gi2c->adap.dev, ACPI_COMPANION(dev));
->>>>>> @@ -962,14 +975,16 @@ static int __maybe_unused 
->>>>>> geni_i2c_runtime_suspend(struct device *dev)
->>>>>>       struct geni_i2c_dev *gi2c = dev_get_drvdata(dev);
->>>>>>       disable_irq(gi2c->irq);
->>>>>> -    ret = geni_se_resources_off(&gi2c->se);
->>>>>> -    if (ret) {
->>>>>> -        enable_irq(gi2c->irq);
->>>>>> -        return ret;
->>>>>> -
->>>>>> +    if (gi2c->is_shared) {
->>>>>> +        geni_se_clks_off(&gi2c->se);
->>>>>>       } else {
->>>>>> -        gi2c->suspended = 1;
->>>>>> +        ret = geni_se_resources_off(&gi2c->se);
->>>>>> +        if (ret) {
->>>>>> +            enable_irq(gi2c->irq);
->>>>>> +            return ret;
->>>>>> +        }
->>>>>>       }
->>>>>> +    gi2c->suspended = 1;
->>>>>>       clk_disable_unprepare(gi2c->core_clk);
->>>>>
->>>>>
->>>
->>>
-> 
+diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+index 406ee199c2ac..5a900b63dae5 100644
+--- a/drivers/dma/ti/k3-udma.c
++++ b/drivers/dma/ti/k3-udma.c
+@@ -3185,27 +3185,39 @@ static int udma_configure_statictr(struct udma_chan *uc, struct udma_desc *d,
+ 
+ 	d->static_tr.elcnt = elcnt;
+ 
+-	/*
+-	 * PDMA must to close the packet when the channel is in packet mode.
+-	 * For TR mode when the channel is not cyclic we also need PDMA to close
+-	 * the packet otherwise the transfer will stall because PDMA holds on
+-	 * the data it has received from the peripheral.
+-	 */
+ 	if (uc->config.pkt_mode || !uc->cyclic) {
++		/*
++		 * PDMA must close the packet when the channel is in packet mode.
++		 * For TR mode when the channel is not cyclic we also need PDMA
++		 * to close the packet otherwise the transfer will stall because
++		 * PDMA holds on the data it has received from the peripheral.
++		 */
+ 		unsigned int div = dev_width * elcnt;
+ 
+ 		if (uc->cyclic)
+ 			d->static_tr.bstcnt = d->residue / d->sglen / div;
+ 		else
+ 			d->static_tr.bstcnt = d->residue / div;
++	} else if (uc->ud->match_data->type == DMA_TYPE_BCDMA &&
++		   uc->config.dir == DMA_DEV_TO_MEM && !uc->config.pkt_mode &&
++		   uc->cyclic) {
++		/*
++		 * For cyclic TR mode PDMA must close the packet after every TR
++		 * transfer, as we have to set EOP in each TR to prevent short
++		 * packet errors seen on channel teardown.
++		 */
++		struct cppi5_tr_type1_t *tr_req = d->hwdesc[0].tr_req_base;
+ 
+-		if (uc->config.dir == DMA_DEV_TO_MEM &&
+-		    d->static_tr.bstcnt > uc->ud->match_data->statictr_z_mask)
+-			return -EINVAL;
++		d->static_tr.bstcnt =
++			(tr_req->icnt0 * tr_req->icnt1) / dev_width;
+ 	} else {
+ 		d->static_tr.bstcnt = 0;
+ 	}
+ 
++	if (uc->config.dir == DMA_DEV_TO_MEM &&
++	    d->static_tr.bstcnt > uc->ud->match_data->statictr_z_mask)
++		return -EINVAL;
++
+ 	return 0;
+ }
+ 
+@@ -3450,8 +3462,9 @@ udma_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
+ 	/* static TR for remote PDMA */
+ 	if (udma_configure_statictr(uc, d, dev_width, burst)) {
+ 		dev_err(uc->ud->dev,
+-			"%s: StaticTR Z is limited to maximum 4095 (%u)\n",
+-			__func__, d->static_tr.bstcnt);
++			"%s: StaticTR Z is limited to maximum %u (%u)\n",
++			__func__, uc->ud->match_data->statictr_z_mask,
++			d->static_tr.bstcnt);
+ 
+ 		udma_free_hwdesc(uc, d);
+ 		kfree(d);
+@@ -3476,6 +3489,7 @@ udma_prep_dma_cyclic_tr(struct udma_chan *uc, dma_addr_t buf_addr,
+ 	u16 tr0_cnt0, tr0_cnt1, tr1_cnt0;
+ 	unsigned int i;
+ 	int num_tr;
++	u32 period_csf = 0;
+ 
+ 	num_tr = udma_get_tr_counters(period_len, __ffs(buf_addr), &tr0_cnt0,
+ 				      &tr0_cnt1, &tr1_cnt0);
+@@ -3498,6 +3512,20 @@ udma_prep_dma_cyclic_tr(struct udma_chan *uc, dma_addr_t buf_addr,
+ 		period_addr = buf_addr |
+ 			((u64)uc->config.asel << K3_ADDRESS_ASEL_SHIFT);
+ 
++	/*
++	 * For BCDMA <-> PDMA transfers, the EOP flag needs to be set on the
++	 * last TR of a descriptor, to mark the packet as complete.
++	 * This is required for getting the teardown completion message in case
++	 * of TX, and to avoid short-packet error in case of RX.
++	 *
++	 * As we are in cyclic mode, we do not know which period might be the
++	 * last one, so set the flag for each period.
++	 */
++	if (uc->config.ep_type == PSIL_EP_PDMA_XY &&
++	    uc->ud->match_data->type == DMA_TYPE_BCDMA) {
++		period_csf = CPPI5_TR_CSF_EOP;
++	}
++
+ 	for (i = 0; i < periods; i++) {
+ 		int tr_idx = i * num_tr;
+ 
+@@ -3525,8 +3553,10 @@ udma_prep_dma_cyclic_tr(struct udma_chan *uc, dma_addr_t buf_addr,
+ 		}
+ 
+ 		if (!(flags & DMA_PREP_INTERRUPT))
+-			cppi5_tr_csf_set(&tr_req[tr_idx].flags,
+-					 CPPI5_TR_CSF_SUPR_EVT);
++			period_csf |= CPPI5_TR_CSF_SUPR_EVT;
++
++		if (period_csf)
++			cppi5_tr_csf_set(&tr_req[tr_idx].flags, period_csf);
+ 
+ 		period_addr += period_len;
+ 	}
+@@ -3655,8 +3685,9 @@ udma_prep_dma_cyclic(struct dma_chan *chan, dma_addr_t buf_addr, size_t buf_len,
+ 	/* static TR for remote PDMA */
+ 	if (udma_configure_statictr(uc, d, dev_width, burst)) {
+ 		dev_err(uc->ud->dev,
+-			"%s: StaticTR Z is limited to maximum 4095 (%u)\n",
+-			__func__, d->static_tr.bstcnt);
++			"%s: StaticTR Z is limited to maximum %u (%u)\n",
++			__func__, uc->ud->match_data->statictr_z_mask,
++			d->static_tr.bstcnt);
+ 
+ 		udma_free_hwdesc(uc, d);
+ 		kfree(d);
+
+---
+base-commit: 8400291e289ee6b2bf9779ff1c83a291501f017b
+change-id: 20240918-z_cnt-3ca5daec76bf
+
+Best regards,
+-- 
+Jai Luthra <jai.luthra@linux.dev>
+
 

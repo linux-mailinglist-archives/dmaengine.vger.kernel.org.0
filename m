@@ -1,169 +1,127 @@
-Return-Path: <dmaengine+bounces-3188-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3189-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3978697CA93
-	for <lists+dmaengine@lfdr.de>; Thu, 19 Sep 2024 15:59:12 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF87E97CAAA
+	for <lists+dmaengine@lfdr.de>; Thu, 19 Sep 2024 16:04:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 90BDFB231F4
-	for <lists+dmaengine@lfdr.de>; Thu, 19 Sep 2024 13:59:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 82E8C283F4C
+	for <lists+dmaengine@lfdr.de>; Thu, 19 Sep 2024 14:04:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1B5C19E83E;
-	Thu, 19 Sep 2024 13:59:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B818919E7FA;
+	Thu, 19 Sep 2024 14:04:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ccOWF4xC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Arl24N4M"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EE9E19D8BB;
-	Thu, 19 Sep 2024 13:59:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0060519B59D;
+	Thu, 19 Sep 2024 14:04:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726754344; cv=none; b=K9yGfMmxS8PpN5tnJ2ob5RzT+EmhPBQMpSLPFhM4Rz/6bRMBUst1N7pjh9AqhKOzISX+xQQqiMeR6Kj+1pBLGOqsm7ZZmLmrFs60b/yVq4C/5RpAbi8mZgl0CGG9OQTlaNPcGIdcLZ6S5wOveExgGE4EvDJQuUu6IzFxZviTqCU=
+	t=1726754650; cv=none; b=ReDc5zASLMIFQY2TJXXRqg0IRT+p7jt9ZqlC+0LWq+PJxMR+jNf92lEAJ5cbVvvmGFmAsU75bw3RSC4olJ/AvSFL/dLY93lwzue7pTe6Fjc5KalJZUZ38DdA4tjUppvBvHNjgnnxDadHxDE37JVojKqrH2ifP36ODTZ0S6r4eXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726754344; c=relaxed/simple;
-	bh=srnK6yLEvtox5NfJs7v7fOjIgfyIoFIDJY/8Rw2mEJQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=konf8KYGeQV+j0imBRIa/FP5eQu0OE0/Y3jVWm9afKebCctu/61FegIgrl9ZbVBeHfAOYQ8lm1Ox7MX9KmyH6nWd5PheabdY0q2Tx8fvMBpSfnaP8eka3XR4TItV7cUaxowDvNqryOz7ZLFJ2B+IVOpu9nmsbxRpa8RAzMHec4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ccOWF4xC; arc=none smtp.client-ip=209.85.208.182
+	s=arc-20240116; t=1726754650; c=relaxed/simple;
+	bh=JbCykuO6u4vJ7p18eSR0Qpq0Y5JftAjdVM8Uovg9S+U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I4NGpXGMUQeRw7FNx/1oSfQ+3kjmQDlP/S0V8s4VqZh1CAGl9EDf46gSRf1x2RcFgCKSvtl3WS/dyrlH4orZB+r6+Sw+siFAR8EixIvwG71at5UTeSc+GXxK5jxeaPK4T7eer9h8D+ostVOol8I+SVt6EW87H9hU135a5zp8FbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Arl24N4M; arc=none smtp.client-ip=209.85.208.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2f75c6ed397so9864761fa.2;
-        Thu, 19 Sep 2024 06:59:02 -0700 (PDT)
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2f752d9ab62so9010291fa.3;
+        Thu, 19 Sep 2024 07:04:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1726754341; x=1727359141; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/dl3OjrsVMZv+aA568NjTJEOVVfeESkGFa9253qsbzQ=;
-        b=ccOWF4xCiRG41JY8JUrPPWx73cSdIQb8ShOO71rSVOFFxAyqx7PVbk2ObvBxMK1fin
-         tkzvVRL3kw5XuHpPVJ4OzK9ymmpuxJZkmwzcFdOX+4JpcYtu/tE+E/Lek0iua7W0Ird4
-         nP4n+g51uPOVJm4MjKypeHIlYGHGRmg/cVXpWEVuzuQLyDCbMOMLktdio+hPwJp/cmSw
-         I7+lkdeZBF5L2oMdmOifna6+oiDLsyQGG2WQjVkVaXrqTUHmxzs5fErPgWRRqEPhF4AS
-         kFCRJzjpACmSlcKOiXe0Xgl+WXmpWvJR3foicF9Z/qBIvyNHJmLAoVfqhJIENJGqz8Oz
-         /Zzg==
+        d=gmail.com; s=20230601; t=1726754647; x=1727359447; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=eaMKXN8S5mdEgXcU+DcNkbVwT8O5pkxCLbzD3WHX46o=;
+        b=Arl24N4MxaSSmwreg+2M1zUmj0lHz0P/X617McUIfLWubjiTwi2w2sjW9exKFosPnl
+         H64VHHyAQMxD4I+EVCXGWz0GHCmb5l+XejomU0lPd3AYde/Ymo8phPMiI35N7kUUCghx
+         04sd5mzs2e9I4njOWKxBCQvAbgZxi6oRXEp9YZa/Pe3+XF7fQ3PKn/U9DJpg8ObwBPW0
+         LiA85svxdMJnQEuFvipkWntdBjpwM6bwQz19YvqQs9UAjomatAngMjYvrN/nZon0F7pP
+         UA0Cd+mscVTZRfpbNYZZ30pbvsY+Vhq7h3gxUypaW4RxpxXblp0UHlqUVSuP4dc63Xfi
+         rPaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726754341; x=1727359141;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/dl3OjrsVMZv+aA568NjTJEOVVfeESkGFa9253qsbzQ=;
-        b=uMlsKVFLW/OY/cBmgPK3zaiAMZrRfpBzm0668K14armMVK9nxi0lLEvU9VRtLi8ofj
-         nSqCPIB6Iodj4gzHqFwE8C5JuiT8IcpVHHFPCqRZd644lyo4THNw/MbFCdPPF/ZKDtw2
-         n3dGrRSoWzQCmnABRRbYrs3LuGkv1vuxcq2SUI7B/4Dh7yuACStKHrRsAN3yNiiI0jnU
-         ljyyBBvYYTeAUkgTwMRXbz2u1rs51vh1VHGacPpJsLBhxSIKilS76BjATrCCWpEJhF+9
-         ObBEscmF+JxHLpk6nbbFQhhod28xhdbPHzY4wyuqCdBtFCzcg+B4ewbLtI0n4NAXbGao
-         g2aA==
-X-Forwarded-Encrypted: i=1; AJvYcCVHUp7sIIUndT73iFeXjAg9UqllL9x2y66vPve/OVhB4ghsYpFZ1cbisdOfFEeedmhn74R496nyef40YDQ3@vger.kernel.org, AJvYcCWAmYTP8d+C+RNyQk0hujXQXR0cdsEf6+AM6TQvlqqnvwCufwRqyucIwY3g6N6TLmNZXvh1X4ym@vger.kernel.org, AJvYcCXwJfHOr/Iuu6mqym0wqg5ykJkusCt04wCoEdTcAh8LBHsbt7Xen8p7LYWHvRCbJhR9T05mxpT0CUw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhN62NPLBO0x8BzmU6Z3dwzXsyWrzCqQMtsvwbuiUj6HL4NLc0
-	x+Oro89UzKPoiy9IFwuqs5OfoxGLPtayjg7qsDQBEaD/w2LbkAy4
-X-Google-Smtp-Source: AGHT+IH/PH5CDFn2ze7amXvKo4RYRc0NY7vDJsTWy5InZjVmIkrJ03PVI3LDq/+/zAU6zVIBsrYcNw==
-X-Received: by 2002:a05:651c:504:b0:2ef:2555:e52f with SMTP id 38308e7fff4ca-2f787f2e66fmr153794481fa.35.1726754340638;
-        Thu, 19 Sep 2024 06:59:00 -0700 (PDT)
-Received: from localhost ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2f79d4861f5sm16359541fa.119.2024.09.19.06.58.58
+        d=1e100.net; s=20230601; t=1726754647; x=1727359447;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eaMKXN8S5mdEgXcU+DcNkbVwT8O5pkxCLbzD3WHX46o=;
+        b=FpKRgmrAA3YJ+Ni9lB3QlIS3SgIwupXGtmgwNf/4jJeFM3xOryLY/pKr7knRSmzzpd
+         +HmfnuOsCJK9qqWOA7O2534bC+hTWuosKJ9fzAme9PPcsJPnPaD/MM9VigBZfYZK+z1m
+         KQA2QKLH+kr1HES7irL2bqcWEF1n+RUh80X2+Ec6zAvtKcfIg0qz8/1vgxe6pzIPvByn
+         q+gx1exd0cvAWV6ThqC3HPq7Bgr2rs4KwmBe2IMrTtBdRUlOLLGG0devaPGaVxr87cxR
+         vdcZtPRFUolkfz157jAmLsksMJK6NIkCVOdKogVq6udJF4bQYWjgH2h1z9ab3POli6z1
+         Cebw==
+X-Forwarded-Encrypted: i=1; AJvYcCU/aNWus1VewOrWBZ00veqd0nuEQ6XttAG1LkJL6NRaYMIBwWB7ghhalygUVRXqCFPc0kSojaEBcxkQVsnt@vger.kernel.org, AJvYcCUgT4PZJGw4OWhJCCu7Mn+FXtbgpnh2xyI/FgtlI7EKl4l884OvlrdB4xPM752g5dCn5t9Gg36wD8c=@vger.kernel.org, AJvYcCXAvUHMmA6hu+ouGGBSOXFiYhXF+JNsSdQ19M8RK/zvRRPZGDi7b8q7np3+ExA6nIBnXPKdlFAngUwb4eal@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwDna1R7HtcN6B50KvezeFlyXrpKOMKje8UZfPgjrr2AY/OK96
+	0gtUfxW3APnfoIPzuOVDWgJOTQvNV4UUfiX373WU5cjCJtMWIgpueZ/HaA==
+X-Google-Smtp-Source: AGHT+IGDuYOPk1ULsZO8+xgTnGrHWCVFUW6m4V3dBHVAZRbWSxKIMfeydVFsFfLwTOVGQtt2SFhfYQ==
+X-Received: by 2002:a05:651c:154a:b0:2ef:1b1f:4b4f with SMTP id 38308e7fff4ca-2f791a5845amr111022471fa.34.1726754646680;
+        Thu, 19 Sep 2024 07:04:06 -0700 (PDT)
+Received: from mobilestation ([178.176.56.174])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2f79d3018bfsm16395391fa.50.2024.09.19.07.04.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2024 06:58:59 -0700 (PDT)
+        Thu, 19 Sep 2024 07:04:05 -0700 (PDT)
+Date: Thu, 19 Sep 2024 17:04:01 +0300
 From: Serge Semin <fancer.lancer@gmail.com>
-To: Viresh Kumar <vireshk@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	Ferry Toth <fntoth@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Serge Semin <fancer.lancer@gmail.com>,
-	dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH] dmaengine: dw: Select only supported masters for ACPI devices
-Date: Thu, 19 Sep 2024 16:58:14 +0300
-Message-ID: <20240919135854.16124-1-fancer.lancer@gmail.com>
-X-Mailer: git-send-email 2.43.0
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Ferry Toth <ftoth@exalondelft.nl>, Ferry Toth <fntoth@gmail.com>
+Cc: Ferry Toth <ftoth@exalondelft.nl>, Viresh Kumar <vireshk@kernel.org>, 
+	Vinod Koul <vkoul@kernel.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, dmaengine@vger.kernel.org, 
+	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND v4 1/6] dmaengine: dw: Add peripheral bus width
+ verification
+Message-ID: <s35lzbqfogeaoog4yhqki2b6hkpuepkhd6w5ln7w3e2y5h6uzy@5qdy4tpi4evb>
+References: <20240802075100.6475-1-fancer.lancer@gmail.com>
+ <20240802075100.6475-2-fancer.lancer@gmail.com>
+ <ZuXgI-VcHpMgbZ91@black.fi.intel.com>
+ <wghwkx6xbkwxff5wbi2erdl2z3fmjdl54qqb3rfty7oiabvk7h@3vpzlkjataor>
+ <ZugZ9NcnPMNTH_ZQ@smile.fi.intel.com>
+ <ZugaZbSIFqUujD5r@smile.fi.intel.com>
+ <ZugdQyQNhxzaDZpV@smile.fi.intel.com>
+ <ZugotKRM7_zIoMKI@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZugotKRM7_zIoMKI@smile.fi.intel.com>
 
-The recently submitted fix-commit revealed a problem in the iDMA32
-platform code. Even though the controller supported only a single master
-the dw_dma_acpi_filter() method hard-coded two master interfaces with IDs
-0 and 1. As a result the sanity check implemented in the commit
-b336268dde75 ("dmaengine: dw: Add peripheral bus width verification") got
-incorrect interface data width and thus prevented the client drivers
-from configuring the DMA-channel with the EINVAL error returned. E.g. the
-next error was printed for the PXA2xx SPI controller driver trying to
-configure the requested channels:
+Hi Andy, Ferry
 
-> [  164.525604] pxa2xx_spi_pci 0000:00:07.1: DMA slave config failed
-> [  164.536105] pxa2xx_spi_pci 0000:00:07.1: failed to get DMA TX descriptor
-> [  164.543213] spidev spi-SPT0001:00: SPI transfer failed: -16
+On Mon, Sep 16, 2024 at 03:46:44PM +0300, Andy Shevchenko wrote:
+> On Mon, Sep 16, 2024 at 02:57:56PM +0300, Andy Shevchenko wrote:
+> > On Mon, Sep 16, 2024 at 02:45:41PM +0300, Andy Shevchenko wrote:
+> 
+> ...
+> 
+> > Okay that was the theory, now I made a hack patch, i.e. supply 0 in acpi.c in
+> > the filter function and everything starts to work. So, my theory is correct.
+> 
+> FWIW, I have reapplied the whole series and it seems fine, so the only regression
+> is that I described in the previous replies.
 
-The problem would have been spotted much earlier if the iDMA32 controller
-supported more than one master interfaces. But since it supports just a
-single master and the iDMA32-specific code just ignores the master IDs in
-the CTLLO preparation method, the issue has been gone unnoticed so far.
+Just submitted a fix of the issue based on the Andy' and my problem
+investigation. You've been Cc'ed. Please test the patch out on your
+hardware:
+https://lore.kernel.org/dmaengine/20240919135854.16124-1-fancer.lancer@gmail.com
 
-Fix the problem by specifying a single master ID for both memory and
-peripheral devices on the ACPI-based platforms if there is only one master
-available on the controller. Thus the issue noticed for the iDMA32
-controllers will be eliminated and the ACPI-probed DW DMA controllers will
-be configured with the correct master ID by default.
+Hope it works.
 
-Cc: stable@vger.kernel.org
-Fixes: b336268dde75 ("dmaengine: dw: Add peripheral bus width verification")
-Fixes: 199244d69458 ("dmaengine: dw: add support of iDMA 32-bit hardware")
-Reported-by: Ferry Toth <fntoth@gmail.com>
-Closes: https://lore.kernel.org/dmaengine/ZuXbCKUs1iOqFu51@black.fi.intel.com/
-Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Closes: https://lore.kernel.org/dmaengine/ZuXgI-VcHpMgbZ91@black.fi.intel.com/
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+-Serge(y)
 
----
-
-Note I haven't got any device with the Intel Merrifield iDMA32 + SPI
-PXA2xx pair to test out the solution. So any tests are very welcome. But
-based on Andy' (see the reported-by links) and my investigations the fix
-seems correct.
----
- drivers/dma/dw/acpi.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/dma/dw/acpi.c b/drivers/dma/dw/acpi.c
-index c510c109d2c3..efbe8baeccbc 100644
---- a/drivers/dma/dw/acpi.c
-+++ b/drivers/dma/dw/acpi.c
-@@ -8,15 +8,25 @@
- 
- static bool dw_dma_acpi_filter(struct dma_chan *chan, void *param)
- {
-+	struct dw_dma *dw = to_dw_dma(chan->device);
- 	struct acpi_dma_spec *dma_spec = param;
- 	struct dw_dma_slave slave = {
- 		.dma_dev = dma_spec->dev,
- 		.src_id = dma_spec->slave_id,
- 		.dst_id = dma_spec->slave_id,
- 		.m_master = 0,
--		.p_master = 1,
- 	};
- 
-+	/*
-+	 * Fallback to using a single interface for both memory and peripheral
-+	 * device if there is only one master I/F supported (e.g. iDMA32)
-+	 */
-+	if (dw->pdata->nr_masters == 0)
-+		slave.p_master = 0;
-+	else
-+		slave.p_master = 1;
-+
-+
- 	return dw_dma_filter(chan, &slave);
- }
- 
--- 
-2.43.0
-
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
 

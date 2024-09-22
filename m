@@ -1,268 +1,245 @@
-Return-Path: <dmaengine+bounces-3201-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3202-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38CFB97DEB8
-	for <lists+dmaengine@lfdr.de>; Sat, 21 Sep 2024 22:13:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E379A97E3DE
+	for <lists+dmaengine@lfdr.de>; Mon, 23 Sep 2024 00:01:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 361AF1C20A7B
-	for <lists+dmaengine@lfdr.de>; Sat, 21 Sep 2024 20:13:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 63B3F1C20E6F
+	for <lists+dmaengine@lfdr.de>; Sun, 22 Sep 2024 22:01:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A07D73D556;
-	Sat, 21 Sep 2024 20:13:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E26B11E885;
+	Sun, 22 Sep 2024 22:01:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H7m/cTuc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HXRyo+dD"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A08D321345;
-	Sat, 21 Sep 2024 20:12:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB4F8BA27;
+	Sun, 22 Sep 2024 22:01:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726949581; cv=none; b=tas88V47A6IpR2yMD52uAtzAjhCldrvFyg/zCyjYngN6UCZbAo68JOlkpbQQMlMW4kWGyuVMyTa2qFUfpr00a+JQepM/pAZ6s/RtuYtQdBo4T5O0/BrR5N0h/8qd93c0a+4Y265Sk+xjExzT17YsQFNkwIxjgUx5R6HzzluZ4vk=
+	t=1727042476; cv=none; b=sLR7LIqnSt3CfvajpvdYTOt7jHKnJjsUdOWJJGtOZtMWfm6PEqo7+cp920xjtgFTeeZ1yJ0GGzkDQxsX53ZbnfR7ass5TLkcB42c2/NOCL0ty2KSWOQzTsPj5jJiz40Vg6NPnMBUGZvjSMohoJdX/P7G4EQVOF5NgUi7gqmSG8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726949581; c=relaxed/simple;
-	bh=5js/bALrxSh0YpF9WmcJ9AJcsjQ9CI745MwF9u5Zh8c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X2UCO6nVDH1aCCudk40DJC5z2MpS0l8fA7ADnfBE3QfIt3v2o76mQO1+PUKc2SOMnEO1MGieCIOYMcfGIhanYyo6X4deTGWycfC03Jq3YxV8Nt9oMFscR0ZftMOVQUA4rrypLuxc7QDS27SmU/r7ds0GjTTglrKELh6hZIe/O6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H7m/cTuc; arc=none smtp.client-ip=209.85.167.51
+	s=arc-20240116; t=1727042476; c=relaxed/simple;
+	bh=p/soAmu2RO/C/tIiPLNsU9CGkT9SOqHWOAcgrtxrKUs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GxUBnRe5X9MDTaUxAvfcPqi7ougnbST7JL5HO/rjFPvbUwYkLxg/tVxy6JRtBchWWRKxgX8ugKIKb+l7GE3x9u+9fBEno4Fo5DRniDr4t75n2nq7M5ELUB4j5BYjl9tigto5Aog7nU+ATez57kMhuMgkj8b/JI0769FMtBl90ps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HXRyo+dD; arc=none smtp.client-ip=209.85.208.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-53661ac5ba1so3256455e87.2;
-        Sat, 21 Sep 2024 13:12:59 -0700 (PDT)
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2f7ba97ebaaso33147161fa.2;
+        Sun, 22 Sep 2024 15:01:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1726949578; x=1727554378; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0Bj8muE25OTXvwpLML8EXalQtJOhNwhGoVHFPEFrTzY=;
-        b=H7m/cTuclmjLhJk6GjEFO9SAA1CDAHeM0/nxXhRXgnck5nhWPAFW6OiADt9NEm0S3g
-         WNkhZuYqHgh1NWC7D48SVzmF9RdsfS8qxQ1cPzSoAo78pojt1MULFa88cmqvZke8bzHX
-         CcdtrRISJyFWcK/tYYPqkqyWuYupowQcbw3aTpt5LMdkOD5ChM1RYfaPBQYBs54/3Xy/
-         An617IA4zn3K/cOt53gMgjxJtgSkZvYvJzt6yeIs+ND9bXmxBCEPwK97zP9KpUCLw76C
-         qOwewqdEg/LP60W5QEWvoEIAb+6Xl1F8GTxTV9DQ2f5kLp/G7oDZarADfuBCdNqVCCRQ
-         WWdg==
+        d=gmail.com; s=20230601; t=1727042473; x=1727647273; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2F11MlRDxchXHUfNoGUmT3jqqaQlLJ0vF51YAc/EHvI=;
+        b=HXRyo+dDrcBxnQRXNWNHXmk3z806/trLjMxWUWWqCyNVh41ymn4FOo1XBzV2cA+1Wv
+         LqPoqCD/042ovTdKBlMoo+/bDtdIeO2LVk2B9SBMC26Jq4aOckX0TybNC97F/PvZOYgi
+         tZ7mULqk07/W4PhHRt8AspEqiDKyWawrfZAUzvXrEhmrYF6ZEjlhK61Ri6oJpuqqLqt3
+         EwoXmCz1DVp9VjTlfL7yMbVJ2qO4jih6p9tbra9k+MR0YvvuNtFPpOacsSd7W4eyc9z+
+         uvNZWIhsmjsQ68MPXAaaDj8/Lfi+hJRlMBYjlzLZlWegUodkObxkwkUJpfTjTtGkVH7b
+         ySZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726949578; x=1727554378;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0Bj8muE25OTXvwpLML8EXalQtJOhNwhGoVHFPEFrTzY=;
-        b=tk8SkroGfcur1aGElugo4TekNZzKazVYDhtWzvvkkOIaWgRJ/1cI4xVAi/t2ioVloF
-         /uwzACvR0wfLS4aIJjn9SQjUE0cDU3UjqZwx8BG2pdaEeO45eUzewtW670ESDItYu39p
-         2zDmBqwp9zmisJqVnjgcEwTmXLZLqNL+BHGnQNh7QtCr3kQao161x88wv3Ise4EvzECp
-         y5C4RuNwah2tBZPEH386JwurpVzTdrWIU3wiEVPs4kQL93kHU4xCY2XmtWkCA3CHN+Bp
-         qRHjFPBsOJbs4a0cjG3wENsOXeAZ4aJYdikKwKqgttaD2I+s30LG8b8XUZzj/e3qu8Mn
-         QV0w==
-X-Forwarded-Encrypted: i=1; AJvYcCUeFvSBloQPVmh9zwDyoNQZUpoD1a1xyBuD4d/JH83Xjy9Ht7xzlcTwPtdE6pHnOto9fDhfsZyHbXMBsW7Z@vger.kernel.org, AJvYcCXYk61f0Ib3rZII4tW13LSAdMOlxlhn5n7C/1LbaapffC4m7PEdGB8HFX813h6ld9Ufb0UZko0f/iE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlD2t/lwLv3WR6jOFm1obildcc43uLp2F3SgsuQOgb/zTe4Uw1
-	rT5CuV7Hxfvo8DYWXmyW5I2buJKkABXEHFssvQAv8T+1iJaWmTJidmz43+v5
-X-Google-Smtp-Source: AGHT+IGf6SyoGi6wftBjr0SjSSuusqwoVRRwbwBdYjUfDLiNxO/VScrpOB7xf1d+lyH+iGEcaN39iA==
-X-Received: by 2002:a05:6512:10d5:b0:536:53f0:2f8e with SMTP id 2adb3069b0e04-536ac31efe7mr3996189e87.37.1726949577367;
-        Sat, 21 Sep 2024 13:12:57 -0700 (PDT)
-Received: from [10.0.0.100] (host-85-29-124-88.kaisa-laajakaista.fi. [85.29.124.88])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5368704defcsm2689586e87.97.2024.09.21.13.12.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 21 Sep 2024 13:12:56 -0700 (PDT)
-Message-ID: <39190cdd-46e8-4c8f-a2e4-608e9ea19ac4@gmail.com>
-Date: Sat, 21 Sep 2024 23:13:31 +0300
+        d=1e100.net; s=20230601; t=1727042473; x=1727647273;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2F11MlRDxchXHUfNoGUmT3jqqaQlLJ0vF51YAc/EHvI=;
+        b=M3KEEJPAGxFjufQjXWYQ83MnRKZOAk9hbHrKRCZCDm8AUX8tnMlx0FML+7+SloX3n0
+         KAA1lgFkg+xGt/+zY4l4pRwlxsewP9UsjXGy5vLbN7YOM11SwjlyzRl9zydYzFakbk03
+         1+kdlSA4hUqS10fle+qhq8sK6TZUBFs0RIN/d4knxEzuv+TgMxcXJD/rZhzfexp5bJr4
+         wpjQ6ybmRVFoMvYr+HxjHZ34UGkKm3cfc2JP9vCzvQD30I8FvSlCj75aGUi6Bt7cCRTu
+         LalMUv5R0DChXU672aPuCdt5kIRQ1PDjLFYci3yXxqwdiW3H5MBV1IEAeFhjYZeMgNH3
+         Ix7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW+/K3UZvHfA+/6m+n7jce52r777YzojY9ltYoT86+H4IehfpJd3eDMP2f5wqrY5A68tK/MH95GP10ud5s=@vger.kernel.org, AJvYcCXeI6rR9h9IeHm8QxhW4lKxi4WmvBPUjEhgeT+zpOR3wE6aLrxCbYydcSCUL3psRmDGvRdt01XQ@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFd/Fjxq4RE2bptBj7Amp4TP1A9vFChWkVAwz5yk2dUmZZqjjl
+	f/qivSX+Rm1d5df3++8ApBvvmZAyMSggMQHfKRlbr4A3fCByunIW
+X-Google-Smtp-Source: AGHT+IHoMN+jbmkGmsI79k6tPTCnxW9JGzS5bl8JjwANPmEVlA9q1UNuJg8M6/Th+aIbrGdfopLxrw==
+X-Received: by 2002:a2e:1312:0:b0:2f5:839:2982 with SMTP id 38308e7fff4ca-2f7cc36597fmr33254601fa.12.1727042472462;
+        Sun, 22 Sep 2024 15:01:12 -0700 (PDT)
+Received: from mobilestation ([95.79.225.241])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2f79d3007basm27545231fa.32.2024.09.22.15.01.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Sep 2024 15:01:10 -0700 (PDT)
+Date: Mon, 23 Sep 2024 01:01:08 +0300
+From: Serge Semin <fancer.lancer@gmail.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Viresh Kumar <vireshk@kernel.org>, Vinod Koul <vkoul@kernel.org>, stable@vger.kernel.org, 
+	Ferry Toth <fntoth@gmail.com>
+Subject: Re: [PATCH v3 1/1] dmaengine: dw: Select only supported masters for
+ ACPI devices
+Message-ID: <ajcqxw6in7364m6bp2wncym65mlqf57fxr6pc4aor3xbokx2cu@2wve6fdtu3vz>
+References: <20240920155820.3340081-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dmaengine: ti: k3-udma: Fix teardown for cyclic PDMA
- transfers
-To: Jai Luthra <jai.luthra@linux.dev>, Vinod Koul <vkoul@kernel.org>
-Cc: Vignesh Raghavendra <vigneshr@ti.com>,
- Francesco Dolcini <francesco.dolcini@toradex.com>,
- Devarsh Thakkar <devarsht@ti.com>, Rishikesh Donadkar <r-donadkar@ti.com>,
- dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
- Jai Luthra <j-luthra@ti.com>
-References: <20240918-z_cnt-v1-1-2c58fbfb07d6@linux.dev>
-From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
-Content-Language: en-US
-In-Reply-To: <20240918-z_cnt-v1-1-2c58fbfb07d6@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240920155820.3340081-1-andriy.shevchenko@linux.intel.com>
 
-Hi Jai,
+Hi Andy
 
-I only have couple of suggestions, mainly for the comments and commit
-message, otherwise looks good.
-
-On 18/09/2024 16:16, Jai Luthra wrote:
-> From: Jai Luthra <j-luthra@ti.com>
+On Fri, Sep 20, 2024 at 06:56:17PM +0300, Andy Shevchenko wrote:
+> From: Serge Semin <fancer.lancer@gmail.com>
 > 
-> When receiving data in cyclic mode from PDMA peripherals, where reload
-> count is set to infinite, any TR in the set can potentially be the last
-> one of the overall transfer. In such cases, the EOP flag needs to be set
-> in each TR and PDMA's Static TR "Z" parameter should be set, matching
-> the size of the TR.
+> The recently submitted fix-commit revealed a problem in the iDMA 32-bit
+> platform code. Even though the controller supported only a single master
+> the dw_dma_acpi_filter() method hard-coded two master interfaces with IDs
+> 0 and 1. As a result the sanity check implemented in the commit
+> b336268dde75 ("dmaengine: dw: Add peripheral bus width verification")
+> got incorrect interface data width and thus prevented the client drivers
+> from configuring the DMA-channel with the EINVAL error returned. E.g.,
+> the next error was printed for the PXA2xx SPI controller driver trying
+> to configure the requested channels:
 > 
-> This is required for the teardown to function properly and cleanup the
-> internal state memory. This only affects platforms using BCDMA and not
-> those using UDMA-P, which could set EOP flag in the teardown TR
-> automatically.
-
-Since this only affects BCDMA, I would clarify the commit title to
-something:
-dmaengine: ti: k3-udma: Set EOP flag for all TRs in cyclic BCDMA transfer
-
-And adjust the commit message accordingly.
-
-Basically we kind of emulate PacketMode with this on BCDMA, right?
-
-> Similarly when transmitting data in cyclic mode to PDMA peripherals, the
-> EOP flag needs to be set to get the teardown completion signal
-> correctly.
+> > [  164.525604] pxa2xx_spi_pci 0000:00:07.1: DMA slave config failed
+> > [  164.536105] pxa2xx_spi_pci 0000:00:07.1: failed to get DMA TX descriptor
+> > [  164.543213] spidev spi-SPT0001:00: SPI transfer failed: -16
 > 
-> Fixes: 017794739702 ("dmaengine: ti: k3-udma: Initial support for K3 BCDMA")
-> Signed-off-by: Jai Luthra <j-luthra@ti.com>
-> Signed-off-by: Jai Luthra <jai.luthra@linux.dev>
+> The problem would have been spotted much earlier if the iDMA 32-bit
+> controller supported more than one master interfaces. But since it
+> supports just a single master and the iDMA 32-bit specific code just
+> ignores the master IDs in the CTLLO preparation method, the issue has
+> been gone unnoticed so far.
+> 
+> Fix the problem by specifying the default master ID for both memory
+> and peripheral devices in the driver data. Thus the issue noticed for
+> the iDMA 32-bit controllers will be eliminated and the ACPI-probed
+> DW DMA controllers will be configured with the correct master ID by
+> default.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: b336268dde75 ("dmaengine: dw: Add peripheral bus width verification")
+> Fixes: 199244d69458 ("dmaengine: dw: add support of iDMA 32-bit hardware")
+> Reported-by: Ferry Toth <fntoth@gmail.com>
+> Closes: https://lore.kernel.org/dmaengine/ZuXbCKUs1iOqFu51@black.fi.intel.com/
+> Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Closes: https://lore.kernel.org/dmaengine/ZuXgI-VcHpMgbZ91@black.fi.intel.com/
+> Co-developed-by: Serge Semin <fancer.lancer@gmail.com>
+> Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > ---
->  drivers/dma/ti/k3-udma.c | 61 ++++++++++++++++++++++++++++++++++++------------
->  1 file changed, 46 insertions(+), 15 deletions(-)
+> v3: rewrote to use driver_data
+> v2: https://lore.kernel.org/r/20240919185151.7331-1-fancer.lancer@gmail.com
+
+IMO v2 looked better for me. I am sure you know, but Master IDs is a
+platform-specific thing specific for each slave/peripheral device
+connected to the DMA controller. Depending on the chip design one
+peripheral device can be accessed over the one master IDs, another
+device/memory may have another master connected (can be up to four
+master IDs in general). That's why the master IDs have been declared
+in the dw_dma_slave structure. So adding them to struct
+dw_dma_chip_pdata doesn't seem like a good idea seeing it contains the
+generic DW DMA controller info. On the contrary my implementation
+seems a bit more coherent since it just changes the default slave IDs
+defined in the dw_dma_acpi_filter() method and initialized in the
+dw_dma_slave instance without adding slave-specific fields to the
+generic controller data.
+
+What seems like a much better alternative to the both approaches, is
+to use the dw_dma_slave instance defined in the mrfld_spi_setup()
+method for the Intel Merrifield SPI PXA2xx DMA-interface in
+drivers/spi/spi-pxa2xx-pci.c. But AFAICT that data is left unused
+since the DMA-engine handle and connection parameters are determined
+by the channel name. Right? Is it possible to make use of the
+filter-function specified to the dma_request_slave_channel_compat()
+method?
+
+-Serge(y)
+
 > 
-> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-> index 406ee199c2ac..5a900b63dae5 100644
-> --- a/drivers/dma/ti/k3-udma.c
-> +++ b/drivers/dma/ti/k3-udma.c
-> @@ -3185,27 +3185,39 @@ static int udma_configure_statictr(struct udma_chan *uc, struct udma_desc *d,
+>  drivers/dma/dw/acpi.c     | 6 ++++--
+>  drivers/dma/dw/internal.h | 8 ++++++++
+>  drivers/dma/dw/pci.c      | 4 ++--
+>  3 files changed, 14 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/dma/dw/acpi.c b/drivers/dma/dw/acpi.c
+> index c510c109d2c3..b6452fffa657 100644
+> --- a/drivers/dma/dw/acpi.c
+> +++ b/drivers/dma/dw/acpi.c
+> @@ -8,13 +8,15 @@
 >  
->  	d->static_tr.elcnt = elcnt;
+>  static bool dw_dma_acpi_filter(struct dma_chan *chan, void *param)
+>  {
+> +	struct dw_dma *dw = to_dw_dma(chan->device);
+> +	struct dw_dma_chip_pdata *data = dev_get_drvdata(dw->dma.dev);
+>  	struct acpi_dma_spec *dma_spec = param;
+>  	struct dw_dma_slave slave = {
+>  		.dma_dev = dma_spec->dev,
+>  		.src_id = dma_spec->slave_id,
+>  		.dst_id = dma_spec->slave_id,
+> -		.m_master = 0,
+> -		.p_master = 1,
+> +		.m_master = data->m_master,
+> +		.p_master = data->p_master,
+>  	};
 >  
-> -	/*
-> -	 * PDMA must to close the packet when the channel is in packet mode.
-> -	 * For TR mode when the channel is not cyclic we also need PDMA to close
-> -	 * the packet otherwise the transfer will stall because PDMA holds on
-> -	 * the data it has received from the peripheral.
-> -	 */
->  	if (uc->config.pkt_mode || !uc->cyclic) {
-> +		/*
-> +		 * PDMA must close the packet when the channel is in packet mode.
-> +		 * For TR mode when the channel is not cyclic we also need PDMA
-> +		 * to close the packet otherwise the transfer will stall because
-> +		 * PDMA holds on the data it has received from the peripheral.
-> +		 */
->  		unsigned int div = dev_width * elcnt;
+>  	return dw_dma_filter(chan, &slave);
+> diff --git a/drivers/dma/dw/internal.h b/drivers/dma/dw/internal.h
+> index 779b3cbcf30d..99d9f61b2254 100644
+> --- a/drivers/dma/dw/internal.h
+> +++ b/drivers/dma/dw/internal.h
+> @@ -51,11 +51,15 @@ struct dw_dma_chip_pdata {
+>  	int (*probe)(struct dw_dma_chip *chip);
+>  	int (*remove)(struct dw_dma_chip *chip);
+>  	struct dw_dma_chip *chip;
+> +	u8 m_master;
+> +	u8 p_master;
+>  };
 >  
->  		if (uc->cyclic)
->  			d->static_tr.bstcnt = d->residue / d->sglen / div;
->  		else
->  			d->static_tr.bstcnt = d->residue / div;
-> +	} else if (uc->ud->match_data->type == DMA_TYPE_BCDMA &&
-> +		   uc->config.dir == DMA_DEV_TO_MEM && !uc->config.pkt_mode &&
-> +		   uc->cyclic) {
-
-BCDMA and pkt_mode cannot be true at the same time, the check for
-!uc->config.pkt_mode can be dropped.
-
-> +		/*
-> +		 * For cyclic TR mode PDMA must close the packet after every TR
-
-This is only valid for BCDMA, the comment should mention this.
-
-> +		 * transfer, as we have to set EOP in each TR to prevent short
-> +		 * packet errors seen on channel teardown.
-> +		 */
-> +		struct cppi5_tr_type1_t *tr_req = d->hwdesc[0].tr_req_base;
+>  static __maybe_unused const struct dw_dma_chip_pdata dw_dma_chip_pdata = {
+>  	.probe = dw_dma_probe,
+>  	.remove = dw_dma_remove,
+> +	.m_master = 0,
+> +	.p_master = 1,
+>  };
 >  
-> -		if (uc->config.dir == DMA_DEV_TO_MEM &&
-> -		    d->static_tr.bstcnt > uc->ud->match_data->statictr_z_mask)
-> -			return -EINVAL;
-> +		d->static_tr.bstcnt =
-> +			(tr_req->icnt0 * tr_req->icnt1) / dev_width;
->  	} else {
->  		d->static_tr.bstcnt = 0;
->  	}
+>  static const struct dw_dma_platform_data idma32_pdata = {
+> @@ -72,6 +76,8 @@ static __maybe_unused const struct dw_dma_chip_pdata idma32_chip_pdata = {
+>  	.pdata = &idma32_pdata,
+>  	.probe = idma32_dma_probe,
+>  	.remove = idma32_dma_remove,
+> +	.m_master = 0,
+> +	.p_master = 0,
+>  };
 >  
-> +	if (uc->config.dir == DMA_DEV_TO_MEM &&
-> +	    d->static_tr.bstcnt > uc->ud->match_data->statictr_z_mask)
-> +		return -EINVAL;
+>  static const struct dw_dma_platform_data xbar_pdata = {
+> @@ -88,6 +94,8 @@ static __maybe_unused const struct dw_dma_chip_pdata xbar_chip_pdata = {
+>  	.pdata = &xbar_pdata,
+>  	.probe = idma32_dma_probe,
+>  	.remove = idma32_dma_remove,
+> +	.m_master = 0,
+> +	.p_master = 0,
+>  };
+>  
+>  int dw_dma_fill_pdata(struct device *dev, struct dw_dma_platform_data *pdata);
+> diff --git a/drivers/dma/dw/pci.c b/drivers/dma/dw/pci.c
+> index adf2d69834b8..a3aae3d1c093 100644
+> --- a/drivers/dma/dw/pci.c
+> +++ b/drivers/dma/dw/pci.c
+> @@ -56,10 +56,10 @@ static int dw_pci_probe(struct pci_dev *pdev, const struct pci_device_id *pid)
+>  	if (ret)
+>  		return ret;
+>  
+> -	dw_dma_acpi_controller_register(chip->dw);
+> -
+>  	pci_set_drvdata(pdev, data);
+>  
+> +	dw_dma_acpi_controller_register(chip->dw);
 > +
 >  	return 0;
 >  }
 >  
-> @@ -3450,8 +3462,9 @@ udma_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
->  	/* static TR for remote PDMA */
->  	if (udma_configure_statictr(uc, d, dev_width, burst)) {
->  		dev_err(uc->ud->dev,
-> -			"%s: StaticTR Z is limited to maximum 4095 (%u)\n",
-> -			__func__, d->static_tr.bstcnt);
-> +			"%s: StaticTR Z is limited to maximum %u (%u)\n",
-> +			__func__, uc->ud->match_data->statictr_z_mask,
-> +			d->static_tr.bstcnt);
->  
->  		udma_free_hwdesc(uc, d);
->  		kfree(d);
-> @@ -3476,6 +3489,7 @@ udma_prep_dma_cyclic_tr(struct udma_chan *uc, dma_addr_t buf_addr,
->  	u16 tr0_cnt0, tr0_cnt1, tr1_cnt0;
->  	unsigned int i;
->  	int num_tr;
-> +	u32 period_csf = 0;
->  
->  	num_tr = udma_get_tr_counters(period_len, __ffs(buf_addr), &tr0_cnt0,
->  				      &tr0_cnt1, &tr1_cnt0);
-> @@ -3498,6 +3512,20 @@ udma_prep_dma_cyclic_tr(struct udma_chan *uc, dma_addr_t buf_addr,
->  		period_addr = buf_addr |
->  			((u64)uc->config.asel << K3_ADDRESS_ASEL_SHIFT);
->  
-> +	/*
-> +	 * For BCDMA <-> PDMA transfers, the EOP flag needs to be set on the
-> +	 * last TR of a descriptor, to mark the packet as complete.
-> +	 * This is required for getting the teardown completion message in case
-> +	 * of TX, and to avoid short-packet error in case of RX.
-> +	 *
-> +	 * As we are in cyclic mode, we do not know which period might be the
-> +	 * last one, so set the flag for each period.
-> +	 */
-> +	if (uc->config.ep_type == PSIL_EP_PDMA_XY &&
-> +	    uc->ud->match_data->type == DMA_TYPE_BCDMA) {
-> +		period_csf = CPPI5_TR_CSF_EOP;
-> +	}
-> +
->  	for (i = 0; i < periods; i++) {
->  		int tr_idx = i * num_tr;
->  
-> @@ -3525,8 +3553,10 @@ udma_prep_dma_cyclic_tr(struct udma_chan *uc, dma_addr_t buf_addr,
->  		}
->  
->  		if (!(flags & DMA_PREP_INTERRUPT))
-> -			cppi5_tr_csf_set(&tr_req[tr_idx].flags,
-> -					 CPPI5_TR_CSF_SUPR_EVT);
-> +			period_csf |= CPPI5_TR_CSF_SUPR_EVT;
-> +
-> +		if (period_csf)
-> +			cppi5_tr_csf_set(&tr_req[tr_idx].flags, period_csf);
->  
->  		period_addr += period_len;
->  	}
-> @@ -3655,8 +3685,9 @@ udma_prep_dma_cyclic(struct dma_chan *chan, dma_addr_t buf_addr, size_t buf_len,
->  	/* static TR for remote PDMA */
->  	if (udma_configure_statictr(uc, d, dev_width, burst)) {
->  		dev_err(uc->ud->dev,
-> -			"%s: StaticTR Z is limited to maximum 4095 (%u)\n",
-> -			__func__, d->static_tr.bstcnt);
-> +			"%s: StaticTR Z is limited to maximum %u (%u)\n",
-> +			__func__, uc->ud->match_data->statictr_z_mask,
-> +			d->static_tr.bstcnt);
->  
->  		udma_free_hwdesc(uc, d);
->  		kfree(d);
+> -- 
+> 2.43.0.rc1.1336.g36b5255a03ac
 > 
-> ---
-> base-commit: 8400291e289ee6b2bf9779ff1c83a291501f017b
-> change-id: 20240918-z_cnt-3ca5daec76bf
-> 
-> Best regards,
-
--- 
-Péter
-
 

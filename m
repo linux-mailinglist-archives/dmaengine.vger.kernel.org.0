@@ -1,118 +1,131 @@
-Return-Path: <dmaengine+bounces-3204-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3205-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26D3B97E874
-	for <lists+dmaengine@lfdr.de>; Mon, 23 Sep 2024 11:20:25 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 156B297E8A9
+	for <lists+dmaengine@lfdr.de>; Mon, 23 Sep 2024 11:28:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 583891C211DD
-	for <lists+dmaengine@lfdr.de>; Mon, 23 Sep 2024 09:20:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CBA3B2810AF
+	for <lists+dmaengine@lfdr.de>; Mon, 23 Sep 2024 09:28:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7048B194C6E;
-	Mon, 23 Sep 2024 09:20:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB54B195F04;
+	Mon, 23 Sep 2024 09:28:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="Y2ptN+Jk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RBAqoSIx"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA9661946B9;
-	Mon, 23 Sep 2024 09:20:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B46B8194A73
+	for <dmaengine@vger.kernel.org>; Mon, 23 Sep 2024 09:28:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727083206; cv=none; b=GF75a7FYJWovwAx9+MmId+p7XkfHJG0ze4a1ZFg+HOTWpLWHCjWEQVhR/fuS1d7McFUWUTTARwws0ZrL9mQDwn9d8iY5Rw581vwmEbWwjGihWmobPas9XVQlEBb6TPacvYcZ8aXu3qzVnrLXtlmi7AEQLG5b2llG6/dOl8thwUM=
+	t=1727083690; cv=none; b=eANtN/QjwDzwG80mtJNoztyfys6tjqXenCE7CyjRTI5Ooff96iD+968WTIl66PShthgfMxtGJXcKpTbifZ3XYmBGTzX+G8rNPyHowUim9RAq4NphXChYJIMfLXwySkOVvT59KK2yYcWTft4HBuV8mFW2uGGrpNipL3/Jawjvxps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727083206; c=relaxed/simple;
-	bh=Jwe2rfxMroRh47QxbHBmU9rQiX81nZ12xNBj0ZV9nyA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ciw2rd5g4lB5SicXcMIUxHX93kR8EhVTqPZVXtgTStRRA29wEd7loQh4RryDQoPGuqg+W7vwWLCxxjieY3NR3XCk3HkS4sS2Z0bC8oDB2Sx0wnFfhf2G7LDpRX/HJoJsOZCEfD33JVHK1AIxNL2NU8ZcVxvkmpmunJRoHY18pAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=Y2ptN+Jk; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
-Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 2BD631FC52;
-	Mon, 23 Sep 2024 11:14:15 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1727082855;
-	bh=At81ypCxxPBo+FE40G+JP3sqUBPMoZlfXvpciUyJ4DE=; h=From:To:Subject;
-	b=Y2ptN+JkZ22J3kjH82uFPUbId73FVYPoCg93XYNoE76ztZ7sk4+FQUV14mPXwtwZo
-	 DF9vVnVbzCLLMmE250JMKEZuHJwdDzYR43GzBkL4HfglfdbFWvETicGIYy/We7uD6x
-	 Rl1w5jyL+w96AFZanbbo6jbR0Do1/XWXmeOgLiAG3tAsKzDC5yei3z3MGIVXQHlySh
-	 6mkqIvP+QeOmh5G4IrBd1gXMHVjyP94og0b9IMIG0ldsiq8vsVWMlPiIdJItTVbTeI
-	 mYSHG3ktaY6UlASzMT1/ydMJRrlv0XcucNujHQq9UvqIzgNbGl32SB4VfzkP60rBVw
-	 LnBXNo55cI9pA==
-Date: Mon, 23 Sep 2024 11:14:10 +0200
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Jai Luthra <jai.luthra@linux.dev>
-Cc: Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Francesco Dolcini <francesco.dolcini@toradex.com>,
-	Devarsh Thakkar <devarsht@ti.com>,
-	Rishikesh Donadkar <r-donadkar@ti.com>, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Jai Luthra <j-luthra@ti.com>
-Subject: Re: [PATCH] dmaengine: ti: k3-udma: Fix teardown for cyclic PDMA
- transfers
-Message-ID: <20240923091410.GA120879@francesco-nb>
-References: <20240918-z_cnt-v1-1-2c58fbfb07d6@linux.dev>
+	s=arc-20240116; t=1727083690; c=relaxed/simple;
+	bh=Y2H3lLogo29T09ZIg4O5267APGx1T56CgiRzH2uFGiY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RqPfbnRyXg8RKRVq2yJx+RjLIGbwjsFsiE7cySTCrvQUt/1/NnOur27b/ftH5RQxoD+9v9Fm6R0g+B/ZhBTRv3qAiXs+bLSbnb7ykW/o7LkoLw5/vmAtIQCjsocjpxEK5IKq70TEwbZsZ4WCO5i38U/VsMgaAdau29Oy60T40Qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RBAqoSIx; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5365a9574b6so5571565e87.1
+        for <dmaengine@vger.kernel.org>; Mon, 23 Sep 2024 02:28:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1727083686; x=1727688486; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Y2H3lLogo29T09ZIg4O5267APGx1T56CgiRzH2uFGiY=;
+        b=RBAqoSIx+RVn8QLjrhgFcTEvyiTWLGut/hdny5rdecWBShI5CYoOtYoyb+Mu/QLt58
+         zKkdIKr2KQrBZXg1+yxkSQ9h42jobYliJrNsBifx6q/H8TeCNLQqWOcOmUL8u2qSKIsN
+         8sywRZq/Rkvf+gb3AxVYacBLhjcqeexz5IFs6L1aEU0cwr9fj4k7LmmeBUUnOgxRrp4h
+         vh0VTUAbPalneuV1+T8yHKardhv/jzSsKGdJQ9DCn42SPiPZtf1w19oy5JUql3ktBGMp
+         P+XBkaQUVmIeWOkiEqcPiLnZdiIHLEQe62A8uau7Pu5z6kEtdn3k0JAJhdLhS2hZHxDf
+         8YnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727083686; x=1727688486;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Y2H3lLogo29T09ZIg4O5267APGx1T56CgiRzH2uFGiY=;
+        b=Z3Ro+AvrguYI+GTncByRVnR17KFBdzTJ51MmdVFg+jiCJXyRuIYOtuJbDyLVNV3JzJ
+         CDyPz30xj1NfdMGXf0rQwYP+4AYU50l2C9pmTjNOt0A6R+sett7ogtXKM7FFWOKBdGM9
+         LXYYa38VBas8DuuKIm7uMXzl1y/IOvDcoIOLyemdB3rcUUnA5VCEehNWB/MkxoQJAG/H
+         FvKDGN2RFz4pQD0lLQHCK4pjMhJWozFKyED1JDYwbuve7Dr58U021FKSJHiqZ/tt35lG
+         C0D+IcHAVR2ctSRhqYdLqNWwVhhvflDzp0W3I/43PpOYz8bC8kTIVgXj6uL53lk8hPX/
+         VZTA==
+X-Forwarded-Encrypted: i=1; AJvYcCVmqwu9JUi9o8ticEcOlGFk9uJcp4m5/cDYaIjqNg/VBasJyCgxmXJGulH7JU63GhdIoYbb58NzYjE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUCpaPwOJZJWmvWiiNLTksSSB3NjDvL1Hk8sqIN+h5nFOJ326+
+	9/ebaSrvIr4Kr/b5fBKPo4X7ekAjGk7pkZQ+OCXCD8AEaw3jzUki42YBeQ4M3WgizXu9Gl2R0eR
+	Dcovi26SSyRsdS9NS76A/NwfMcqHbflqWL7oJLw==
+X-Google-Smtp-Source: AGHT+IFqcb5VcpmKktw95t64Q/tONZlUY5uMG8agXKVRR1VFK+H/O2baR3jHivWHjY41tZ/ZQZoJrQNpCocxjyIuWM4=
+X-Received: by 2002:ac2:4c4d:0:b0:533:45c9:67fe with SMTP id
+ 2adb3069b0e04-536ac32ef59mr6887747e87.48.1727083685755; Mon, 23 Sep 2024
+ 02:28:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240918-z_cnt-v1-1-2c58fbfb07d6@linux.dev>
+References: <20240909-ep93xx-v12-0-e86ab2423d4b@maquefel.me>
+ <CAHp75Veusv=f6Xf9-gL3ctoO5Njn7wiWMw-aMN45KbZ=YB=mQw@mail.gmail.com>
+ <0e3902c9a42b05b0227e767b227624c6fe8fd2bb.camel@maquefel.me> <cff6b9b6-6ede-435a-9271-829fde82550d@app.fastmail.com>
+In-Reply-To: <cff6b9b6-6ede-435a-9271-829fde82550d@app.fastmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Mon, 23 Sep 2024 11:27:54 +0200
+Message-ID: <CACRpkda7Kef-buHQ3ou3q_xq+OD9-cONh1Ynu-KjvQf=Qx5S_Q@mail.gmail.com>
+Subject: Re: [PATCH v12 00/38] ep93xx device tree conversion
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Nikita Shubin <nikita.shubin@maquefel.me>, Andy Shevchenko <andy.shevchenko@gmail.com>, 
+	Hartley Sweeten <hsweeten@visionengravers.com>, 
+	Alexander Sverdlin <alexander.sverdlin@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	Lukasz Majewski <lukma@denx.de>, Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Vinod Koul <vkoul@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, 
+	Guenter Roeck <linux@roeck-us.net>, Thierry Reding <thierry.reding@gmail.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Mark Brown <broonie@kernel.org>, "David S . Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, 
+	Vignesh Raghavendra <vigneshr@ti.com>, Damien Le Moal <dlemoal@kernel.org>, 
+	Sergey Shtylyov <s.shtylyov@omp.ru>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Ralf Baechle <ralf@linux-mips.org>, Aaron Wu <Aaron.Wu@analog.com>, Lee Jones <lee@kernel.org>, 
+	Olof Johansson <olof@lixom.net>, Niklas Cassel <cassel@kernel.org>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, 
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-clk@vger.kernel.org, 
+	linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
+	dmaengine@vger.kernel.org, linux-watchdog@vger.kernel.org, 
+	linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org, 
+	Netdev <netdev@vger.kernel.org>, linux-mtd@lists.infradead.org, 
+	linux-ide@vger.kernel.org, linux-input@vger.kernel.org, 
+	linux-sound@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andrew Lunn <andrew@lunn.ch>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello Jai,
+On Wed, Sep 11, 2024 at 5:13=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> wrote=
+:
 
-On Wed, Sep 18, 2024 at 06:46:55PM +0530, Jai Luthra wrote:
-> From: Jai Luthra <j-luthra@ti.com>
-> 
-> When receiving data in cyclic mode from PDMA peripherals, where reload
-> count is set to infinite, any TR in the set can potentially be the last
-> one of the overall transfer. In such cases, the EOP flag needs to be set
-> in each TR and PDMA's Static TR "Z" parameter should be set, matching
-> the size of the TR.
-> 
-> This is required for the teardown to function properly and cleanup the
-> internal state memory. This only affects platforms using BCDMA and not
-> those using UDMA-P, which could set EOP flag in the teardown TR
-> automatically.
-> 
-> Similarly when transmitting data in cyclic mode to PDMA peripherals, the
-> EOP flag needs to be set to get the teardown completion signal
-> correctly.
-> 
-> Fixes: 017794739702 ("dmaengine: ti: k3-udma: Initial support for K3 BCDMA")
-> Signed-off-by: Jai Luthra <j-luthra@ti.com>
-> Signed-off-by: Jai Luthra <jai.luthra@linux.dev>
+> I've merged the series into the for-next branch of the arm-soc
+> tree now. The timing isn't great as I was still waiting for
+> that final Ack, but it seem better to have it done than to keep
+> respinning the series.
+>
+> I won't send it with the initial pull requests this week
+> but hope to send this one once I get beck from LPC, provided
+> there are no surprises that require a rebase.
 
-Thanks for this, really appreciated!
+Thanks for picking it up! This is a long awaited patch set.
 
-I did test this patch on top of v6.11, before I had errors every
-time I was doing some recording, (e.g. `arecord -D hw:0,0 -c 2 -f S16_LE
--r 44100 -t wav -d 16 /tmp/a.wav`)
-
-[   63.906602] ti-udma 485c0100.dma-controller: chan2 teardown timeout!
-[   64.090472] davinci-mcasp 2b00000.audio-controller: Receive buffer overflow
-[   65.409909] ti-udma 485c0100.dma-controller: chan2 teardown timeout!
-
-In addition to that I used to have system crashes afterward, but today
-it seems that this is not happening with v6.11.
-
-I think that this should go explicitly to stable, so I would add
-Cc:stable in your v2 (that I assume you need to send to address some
-review comment from Péter).
-
-With all of that said
-
-Tested-by: Francesco Dolcini <francesco.dolcini@toradex.com # Toradex Verdin AM62
-
-Francesco
-
+Yours,
+Linus Walleij
 

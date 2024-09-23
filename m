@@ -1,158 +1,122 @@
-Return-Path: <dmaengine+bounces-3209-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3210-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 957B197EBF7
-	for <lists+dmaengine@lfdr.de>; Mon, 23 Sep 2024 15:02:30 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 50B4497F14B
+	for <lists+dmaengine@lfdr.de>; Mon, 23 Sep 2024 21:39:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3EEEE1F21FE5
-	for <lists+dmaengine@lfdr.de>; Mon, 23 Sep 2024 13:02:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8276C1C217BF
+	for <lists+dmaengine@lfdr.de>; Mon, 23 Sep 2024 19:39:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4EED8198A05;
-	Mon, 23 Sep 2024 13:02:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15D9519F413;
+	Mon, 23 Sep 2024 19:39:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H1zGM78N"
+	dkim=pass (1024-bit key) header.d=rosa.ru header.i=@rosa.ru header.b="kSWnXuKf"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.rosa.ru (mail.rosa.ru [176.109.80.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 740F4198A10;
-	Mon, 23 Sep 2024 13:02:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB73319FA8C;
+	Mon, 23 Sep 2024 19:39:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.109.80.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727096544; cv=none; b=p5NlGXp3S0Mud+iJkfnuE1AMQBY0uaSv14Ti1pH4XdyI6NZp1qcSnCyJaQuejPtPgW1sRPXMuLbZ6KaCj/D45R5hid2qgl8pV9ZUjDTy1kh0LIkI1G53/7wDRkBGHfd+pliGiLUdrIcQv3qJz4VacBI1Rdk5S0DZxMaZiAAespE=
+	t=1727120376; cv=none; b=iKcueNmc0qUxtw7mjl+CheywimKP2JI5z9ndR/BLNezyvT9nnEjAzFm+/bVVoLOpKXNjwARLfQWqtjphkSft7szkdcpbSCEEaNZj6+DG04Q/aIvV72SU4qN0a6Ic9Lk46bHAr0xMFZOiirqdUmq11qTq7bYEvqUvonGuaqpOeCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727096544; c=relaxed/simple;
-	bh=g66APNyY+apsUeoTdGyh09zrCNpmxNDntcexfqQ7y88=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RK0aNyqLbr14Tf2c90mmXzn3dTl0+u/meuqwhkyTQ+QSYKs3pqKZrJBaAZOoji4Wv3A1vRdvH8P4/cBWnEtBgf/b8CAGuaDZsoAOAofm4sCbCQUOOWWom809n4bFWEuFd/rn5TlVjMZNxwX+1VOSikH0AEBLCsaxeSJa0H3c650=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H1zGM78N; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1727096542; x=1758632542;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=g66APNyY+apsUeoTdGyh09zrCNpmxNDntcexfqQ7y88=;
-  b=H1zGM78NIm4afY/SSYkKoeSWvR8SVIjP9NcDmG8m2pSA/zGI+CEqvXm4
-   15jXRYQy8bkIwYPwDGhpS8F9exescqzYSs4zwGDGJXRg06th34f7ctKSt
-   WxESOSkha5JCkJIN6YXSEiDukL24NQLpk+gaWZ0lvfYNLdiKx2hc4o7sE
-   lJeQeZ2qM5V4Je1fqPzy6Bmkmx0q220PJZam69Uovrx4JDrg50TteKnlv
-   J1xdS2KaGotOQMKXHxPCRsW4s3gOdv9/JMTo00PCQac+MCsPLq/YuJrAJ
-   atnq/yDIjhq35E5dj9BoeWQg2tAdGgp3P883Nja9N9TRu5WqnBvSGwMiQ
-   A==;
-X-CSE-ConnectionGUID: fCXQrHVaRhO/MTb/S2DDuQ==
-X-CSE-MsgGUID: pEf0syRQRwaP4Ni2aPi1Fw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11204"; a="29827100"
-X-IronPort-AV: E=Sophos;i="6.10,251,1719903600"; 
-   d="scan'208";a="29827100"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2024 06:02:22 -0700
-X-CSE-ConnectionGUID: 45rcmCbpRAmjR69Hr55KTw==
-X-CSE-MsgGUID: uASOnsfySV+hHK6rrUSe0Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,251,1719903600"; 
-   d="scan'208";a="75832396"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2024 06:02:20 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1ssihl-0000000BzyR-39VX;
-	Mon, 23 Sep 2024 16:02:17 +0300
-Date: Mon, 23 Sep 2024 16:02:17 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Serge Semin <fancer.lancer@gmail.com>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Viresh Kumar <vireshk@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-	stable@vger.kernel.org, Ferry Toth <fntoth@gmail.com>
-Subject: Re: [PATCH v3 1/1] dmaengine: dw: Select only supported masters for
- ACPI devices
-Message-ID: <ZvFm2TOGGPa7W4rF@smile.fi.intel.com>
-References: <20240920155820.3340081-1-andriy.shevchenko@linux.intel.com>
- <ajcqxw6in7364m6bp2wncym65mlqf57fxr6pc4aor3xbokx2cu@2wve6fdtu3vz>
- <ZvElEesYTX-89u_g@smile.fi.intel.com>
- <7cy2ho5lysh4tqk3vqz6rv67dadsi33bszx234vpu7bvslnddp@ed6zxezx7nwf>
- <ZvFecC6u0rFczFR9@smile.fi.intel.com>
- <onfkegjjn7psbhc44fhjmp5ttbuthiscpccywaxxwabalpmudo@xhfdlxi762o6>
+	s=arc-20240116; t=1727120376; c=relaxed/simple;
+	bh=tzm/q3aWH4wPB6/rBkgg14lkdoRUR4sjEwuuMwDzRm8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aFHVU6PBpjPFymRpAEifOnjqzK3B7dA80pKbX7Z2G1At94gMGTCSYvGrnBVPT+Jez3RN47EdwNFJgxUsCvkuB2c/6FzAKMTdrVA9iaUZryDzeYdMLMGjtwoDxRePyveR7Xi0Bj23hRuP0AqycK0ZFxiM9mnBjACQLM37Bvu46VE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rosa.ru; spf=pass smtp.mailfrom=rosa.ru; dkim=pass (1024-bit key) header.d=rosa.ru header.i=@rosa.ru header.b=kSWnXuKf; arc=none smtp.client-ip=176.109.80.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rosa.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosa.ru
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=simple/simple; d=rosa.ru; s=mail;
+	bh=tzm/q3aWH4wPB6/rBkgg14lkdoRUR4sjEwuuMwDzRm8=;
+	h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject:Cc:To:From;
+	b=kSWnXuKfl54EsINi+Og56HIPy4zfBpiMqUagpVewetvL6PdRYYNjTh8J7sHroq7CcjCTSyvOR9u
+	Y+RvIoP+KdQR8f7b+S853UQ3Hy7Q6lpbImv1EMLODjCJXOf/ZkCJ0IDP2IUK/GmIuAfDadXg/Lgd/
+	Cq385XTe3s5GPjPB3Pk=
+Received: from [194.9.26.89] (account m.arhipov@rosa.ru HELO localhost.localdomain)
+  by mail.rosa.ru (CommuniGate Pro SMTP 6.4.1j)
+  with ESMTPSA id 135295; Mon, 23 Sep 2024 22:39:19 +0300
+From: Mikhail Arkhipov <m.arhipov@rosa.ru>
+To: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+Cc: Mikhail Arkhipov <m.arhipov@rosa.ru>,
+	Vinod Koul <vkoul@kernel.org>,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org
+Subject: [PATCH] dmaengine: ti: edma: Check return value of of_dma_controller_register
+Date: Mon, 23 Sep 2024 22:37:03 +0300
+Message-Id: <20240923193703.36645-1-m.arhipov@rosa.ru>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <onfkegjjn7psbhc44fhjmp5ttbuthiscpccywaxxwabalpmudo@xhfdlxi762o6>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Mon, Sep 23, 2024 at 03:46:04PM +0300, Serge Semin wrote:
-> On Mon, Sep 23, 2024 at 03:26:24PM +0300, Andy Shevchenko wrote:
-> > On Mon, Sep 23, 2024 at 02:57:27PM +0300, Serge Semin wrote:
-> > > On Mon, Sep 23, 2024 at 11:21:37AM +0300, Andy Shevchenko wrote:
-> > > > On Mon, Sep 23, 2024 at 01:01:08AM +0300, Serge Semin wrote:
-> > > > > On Fri, Sep 20, 2024 at 06:56:17PM +0300, Andy Shevchenko wrote:
+If of_dma_controller_register() fails within the edma_probe() function,
+the driver does not check the return value or log the failure. This
+oversight can cause other drivers that rely on this DMA controller to fail
+during their probe phase. Specifically, when other drivers call
+of_dma_request_slave_channel(), they may receive an error code
+-EPROBE_DEFER, causing their initialization to be delayed or fail without
+clear logging of the root cause.
 
-...
+Add a check for the return value of of_dma_controller_register() in the
+edma_probe() function. If the function returns an error, log an appropriate
+error message and handle the failure by cleaning up resources and returning
+the error code. This ensures that the failure is properly reported, which
+aids in debugging and maintains system stability.
 
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-> > Yes, I still prefer mine.
-> > 
-> > > But, again IMO, it seems to be
-> > > better to add the default_{m,p}_master/d{p,m}_master/etc fields to the
-> > > dw_dma_platform_data structure since the platform-specific controller
-> > > settings have been consolidated in there. The dw_dma_chip_pdata
-> > > structure looks as more like generic driver data storage.
-> > 
-> > I don't think that is correct place for it. The platform data is specific
-> > to the DMA controller as a whole and having there the master configuration
-> > will mean to have the arrays of them. This OTOH will break the OF setup
-> > where this comes from the slave descriptions and may not be provided with
-> > DMA controller, making it imbalanced. Yes, I may agree with you that chip data
-> > is not a good place either, but at least it isolates the case to PCI + ACPI /
-> > pure ACPI devices (and in particular we won't need to alter Intel Quark case).
-> 
-> > Ideally, we should parse the additional properties from ACPI for this kind
-> > of DMA controllers to get this from the _slave_ resources. Currently this is
-> > not done, but anyone may propose a such
-> 
-> I guess it would also mean to fix all the firmware as well, wouldn't it?
+Fixes: dc9b60552f6a ("ARM/dmaengine: edma: Move of_dma_controller_register to the dmaengine driver")
+Signed-off-by: Mikhail Arkhipov <m.arhipov@rosa.ru>
+---
+ drivers/dma/ti/edma.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-Nope, legacy will use current defaults. Only new will be more flexible.
+diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
+index 5f8d2e93ff3f..9fcbd97d346f 100644
+--- a/drivers/dma/ti/edma.c
++++ b/drivers/dma/ti/edma.c
+@@ -2529,18 +2529,27 @@ static int edma_probe(struct platform_device *pdev)
+ 		if (ret) {
+ 			dev_err(dev, "memcpy ddev registration failed (%d)\n",
+ 				ret);
+-			dma_async_device_unregister(&ecc->dma_slave);
+-			goto err_reg1;
++			goto err_unregister_dma_slave;
+ 		}
+ 	}
+ 
+-	if (node)
+-		of_dma_controller_register(node, of_edma_xlate, ecc);
++	if (node) {
++		ret = of_dma_controller_register(node, of_edma_xlate, ecc);
++		if (ret) {
++			dev_err(dev, "Failed to register DMA controller (%d)\n", ret);
++			goto err_unregister_dma_memcpy;
++		}
++	}
 
-> Do the Intel/AMD/etc ACPI firmware currently provide such a data?
-
-I can't tell for AMD for sure, neither for Intel as a whole (not
-a product related engineer). I can tell only for my experience and
-I haven't known any of Intel devices with such IP that has it different.
-
-> In anyway it would be inapplicable for the legacy hardware anyway.
-
-Exactly!
-
-> > (would you like to volunteer?).
-> 
-> not really.) Maybe in some long-distance future when I get to meet a
-> device on the ACPI-based platform with the DW DMAC + some peripheral
-> experiencing the denoted problem, I'll think about implementing what
-> we've discussed here.
-
-Something is telling me that this will never be needed IRL.
-
-...
-
-> > TL;DR: If you are okay with your authorship in v3, I prefer it over other
-> > versions with the explanations given in this email thread.
-> 
-> Ok. Let's leave it as of your preference.
-
-Thanks!
-
+ 	dev_info(dev, "TI EDMA DMA engine driver\n");
+ 
+ 	return 0;
+ 
++err_unregister_dma_memcpy:
++	if (ecc->dma_memcpy)
++		dma_async_device_unregister(ecc->dma_memcpy);
++err_unregister_dma_slave:
++	dma_async_device_unregister(&ecc->dma_slave);
+ err_reg1:
+ 	edma_free_slot(ecc, ecc->dummy_slot);
+ err_disable_pm:
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.39.3 (Apple Git-146)
 
 

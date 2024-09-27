@@ -1,215 +1,179 @@
-Return-Path: <dmaengine+bounces-3222-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3223-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D842987E77
-	for <lists+dmaengine@lfdr.de>; Fri, 27 Sep 2024 08:32:42 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5169A988101
+	for <lists+dmaengine@lfdr.de>; Fri, 27 Sep 2024 11:02:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 806DA1C21959
-	for <lists+dmaengine@lfdr.de>; Fri, 27 Sep 2024 06:32:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 729501C208A5
+	for <lists+dmaengine@lfdr.de>; Fri, 27 Sep 2024 09:02:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC009185E7B;
-	Fri, 27 Sep 2024 06:31:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="NozVlKm1"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A646A183CB4;
+	Fri, 27 Sep 2024 09:02:00 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C50D176AA1;
-	Fri, 27 Sep 2024 06:31:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23A45178CD9;
+	Fri, 27 Sep 2024 09:01:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727418705; cv=none; b=kNJ9xZh1Ojm30JiUv5Sz4r/FlGlAEMo+MIW5QTr0lMWWkzA2++4c/dfVabVt8ZtNu0eKjR8+isyE9xxwKY+An3K/170VW6LM9sp9jfPBPikJJmqZeMqXNPQDBDEhApHfjn/li5yWLOy6orBvxEpLv2hSLZ29QGGAF2p+zn9t9a8=
+	t=1727427720; cv=none; b=QQNL8JbP9guJmr63s0eNNuFNcTDe6JHdhq+3qsrya8gjWaD9JiQzDCAG3xugzns9e4JffWF1cvq0eM/bUX36RzOAG9nHe0t3lQiLXWUb64Eennv2BvvqaNtBxxS1uvJF5Lbd+xchNL8YdMPbiwc4fEt3KGPoTRJjvpFCoVVnaSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727418705; c=relaxed/simple;
-	bh=t5m1ts4KMc9ermPpzmK3GJrBaOZoiQCEmfd2DDsLKRw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nKMebPBunAY+hIcDwEqGcsIYYwk+XN/Nkuv7N9vu5+vAsKmF6rTdtivZYH0XnOEc7ehxHnGvVzk7YU6WHguTCNOfk/9pcnytX6GESuW4neSUOtuSmSLtKl8eQ+5dUcU4wLKpMeNWP+EXJ3xcQPe/eW+/Y5LHNVRkFmwHtPKs0X4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=NozVlKm1; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48QGA5mp017002;
-	Fri, 27 Sep 2024 06:31:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=L00z7e0O60Y
-	gFZVx5jzYcYW7lIjzqwFE9ZJamjuzbps=; b=NozVlKm1EAx1hBF6E9zoUoB7x21
-	zwaI5O3XmdQISi/a+YTgC4S8Wk7B64z2u1P59atqm+ju5vSV5z44zlyzvftyjhHp
-	tjfhTAGiE42wqsfu7TH6QnpFwaDVUOdWuUOcYUAmA5H84CWq9+qIzY9wscvdyds2
-	NBK8Ye2JV2+elZ2L+1FlEhI6grW8PkeFe8Re/ttST9jI+TmaEJra+dGIE5Kjk44H
-	PiHq/OrgN9YmOEmqdAqiJ6BwhU4S+0hRXI+CeZ4HO16g0R3xGT4Bke1pvSvhtrNk
-	jIx93r0D43txrxOPUL4rZWgqxZ4xcGnwrNW+W6q/tG6KYfS0T1nURmCglvw==
-Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 41spc31vhy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Sep 2024 06:31:35 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 48R6VJ4P001845;
-	Fri, 27 Sep 2024 06:31:32 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 41sq7mnbnr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Sep 2024 06:31:32 +0000
-Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 48R6UGGT000896;
-	Fri, 27 Sep 2024 06:31:31 GMT
-Received: from hu-maiyas-hyd.qualcomm.com (hu-msavaliy-hyd.qualcomm.com [10.213.110.207])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 48R6VVU3001911
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Sep 2024 06:31:31 +0000
-Received: by hu-maiyas-hyd.qualcomm.com (Postfix, from userid 429934)
-	id 8F5702408B; Fri, 27 Sep 2024 12:01:30 +0530 (+0530)
-From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-To: konrad.dybcio@linaro.org, andersson@kernel.org, andi.shyti@kernel.org,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        conor+dt@kernel.org, agross@kernel.org, devicetree@vger.kernel.org,
-        vkoul@kernel.org, linux@treblig.org, dan.carpenter@linaro.org,
-        Frank.Li@nxp.com, konradybcio@kernel.org, bryan.odonoghue@linaro.org,
-        krzk+dt@kernel.org, robh@kernel.org
-Cc: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-Subject: [PATCH v3 4/4] i2c: i2c-qcom-geni: Enable i2c controller sharing between two subsystems
-Date: Fri, 27 Sep 2024 12:01:08 +0530
-Message-Id: <20240927063108.2773304-5-quic_msavaliy@quicinc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240927063108.2773304-1-quic_msavaliy@quicinc.com>
-References: <20240927063108.2773304-1-quic_msavaliy@quicinc.com>
+	s=arc-20240116; t=1727427720; c=relaxed/simple;
+	bh=IqkBHRxr7d1fBDVzmvw2gdcNOT/C68E7RcyAI5Sqa7k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bwf5Yt/kXERbyCy1UjGMvuQ1qBOqSYsa4NYWd0I7uEtawR40OpeCA/4Git0cxxJUB25wBVPrkiJJ0fcaeZDFWVfsVD7CKFka67WhhczhXOo0DVuLoI2bWsbgrwHA7wKjWAdG9rAS/M+8CQL+BUyQtf7/futI0oE/p10n+C0IRC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-6dbbe7e51bbso16076267b3.3;
+        Fri, 27 Sep 2024 02:01:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727427716; x=1728032516;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EYpGlPebM2Nqa2sukOeuZlgj4MxBo1H7Y96fl9yBVfE=;
+        b=lJLvVuEVGyPkPMvBt2z/QfIqyhqcICKV/ezG5VQyksZoSSNT9KPHpyju8xULswTiIT
+         jqJPO0yPNMx5z0/PchKbmEux6TVM5xfD25Bi+Megajdbln6B4F9gN5bp7bG5bJB6cjtS
+         m/WENyllmlWfwSSTIaZpqHBez6LpK5ugPW6KodbM490Msqwz3mxUAnqfDblnPKcI9EmF
+         2UQV4UXamqYj1XgSBhN+hcAXPgv6jb7tYTjjurhSgCVxdhzQBBTw2dvx0L0QVZefsmjC
+         lOQgVNrTFG/8lFysnyfjL+Kf5G4bVDnG+DynTtyDpIasC7+gW5XMJURPXIW2gcJVpkSK
+         h3qg==
+X-Forwarded-Encrypted: i=1; AJvYcCU84HI49b4HfIkTRU758j+yTWrkM3ZICtsoIUchkAhIcWR2LkfLsIfWiDIfo4jCFVwppwo3G4mOnMfj+lhH@vger.kernel.org, AJvYcCUbDhg0NJ9xgNYFB2F2ApOxWe3AqbNyrom6xK3TGzOVHoxwfrt6ZerwSYu5q3WRU36dvaqEMTVgxbY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyvz412U7dd18NbWAJXC1NY4e4LP89fBwZErpAF9pVliQvZfqgG
+	E5oOhsFKsDDpLfuoeZBV99limxn3UDQzkoc3h6tnQGV2y9osBLmen9dbz+Ki
+X-Google-Smtp-Source: AGHT+IFZ+5aPs8sH2R+9V8w8GVDpa1UFFcbtEEy7SkaF14w1Od5x4dq+ixTnuHQFY7qdZcpkvGARGg==
+X-Received: by 2002:a05:690c:fd1:b0:6db:e52f:69f4 with SMTP id 00721157ae682-6e24757f28bmr16389447b3.20.1727427716464;
+        Fri, 27 Sep 2024 02:01:56 -0700 (PDT)
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com. [209.85.128.172])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6e24548f81fsm2465387b3.129.2024.09.27.02.01.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Sep 2024 02:01:56 -0700 (PDT)
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-6de15eefdd3so17058197b3.0;
+        Fri, 27 Sep 2024 02:01:56 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUNi6vP/wfx502fY6EU1UOhLhGMhEk+sWz+e01Kav7O+H+ty5bms2/o480aFXMVVAnbDRxF0FsSN/s=@vger.kernel.org, AJvYcCWNYmDJW+WSHE1rWv2BRnjmsQsDOZAGW4r/SOfaRjv4Yh8lCMF05mTjpvLFfrbo84U4LgLsyxrYstTXhl/H@vger.kernel.org
+X-Received: by 2002:a05:690c:638a:b0:6b1:3bf8:c161 with SMTP id
+ 00721157ae682-6e247544fa8mr19544927b3.13.1727427715792; Fri, 27 Sep 2024
+ 02:01:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: JariQnbP7zQRv1c1fJDDlSZeMFFk3ycI
-X-Proofpoint-ORIG-GUID: JariQnbP7zQRv1c1fJDDlSZeMFFk3ycI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 suspectscore=0 lowpriorityscore=0 spamscore=0
- impostorscore=0 malwarescore=0 adultscore=0 phishscore=0 mlxlogscore=999
- bulkscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2408220000 definitions=main-2409270043
+References: <1713462643-11781-1-git-send-email-lizhi.hou@amd.com>
+ <1713462643-11781-2-git-send-email-lizhi.hou@amd.com> <CAMuHMdXVoTx8K+Vppt07s06OE6R=4BxoBbgtp1WWkCi8DwqgSA@mail.gmail.com>
+ <e2a37bb6-3353-1c2f-3841-d63748756df1@amd.com>
+In-Reply-To: <e2a37bb6-3353-1c2f-3841-d63748756df1@amd.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 27 Sep 2024 11:01:43 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVChqbMLN2vdc4iZ7iZ8+dz07k4pVOM_SfZarHWV93JqQ@mail.gmail.com>
+Message-ID: <CAMuHMdVChqbMLN2vdc4iZ7iZ8+dz07k4pVOM_SfZarHWV93JqQ@mail.gmail.com>
+Subject: Re: [PATCH V12 1/1] dmaengine: amd: qdma: Add AMD QDMA driver
+To: Lizhi Hou <lizhi.hou@amd.com>
+Cc: nishad.saraf@amd.com, vkoul@kernel.org, dmaengine@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Nishad Saraf <nishads@amd.com>, sonal.santan@amd.com, 
+	max.zhen@amd.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add support to share I2C SE by two Subsystems in a mutually exclusive way.
-Use "qcom,shared-se" flag in a particular i2c instance node if the usecase
-requires i2c controller to be shared.
+Hi Lizhi,
 
-Sharing of SE(Serial engine) is possible only for GSI mode as each
-subsystem(SS) can queue transfers over its own GPII Channel. For non GSI
-mode, we should force disable this feature even if set by user from DT by
-mistake.
+On Tue, Sep 3, 2024 at 6:50=E2=80=AFPM Lizhi Hou <lizhi.hou@amd.com> wrote:
+> On 9/3/24 02:20, Geert Uytterhoeven wrote:
+> > On Thu, Apr 18, 2024 at 7:51=E2=80=AFPM Lizhi Hou <lizhi.hou@amd.com> w=
+rote:
+> >> From: Nishad Saraf <nishads@amd.com>
+> >>
+> >> Adds driver to enable PCIe board which uses AMD QDMA (the Queue-based
+> >> Direct Memory Access) subsystem. For example, Xilinx Alveo V70 AI
+> >> Accelerator devices.
+> >>      https://www.xilinx.com/applications/data-center/v70.html
+> >>
+> >> The QDMA subsystem is used in conjunction with the PCI Express IP bloc=
+k
+> >> to provide high performance data transfer between host memory and the
+> >> card's DMA subsystem.
+> >>
+> >>              +-------+       +-------+       +-----------+
+> >>     PCIe     |       |       |       |       |           |
+> >>     Tx/Rx    |       |       |       |  AXI  |           |
+> >>   <=3D=3D=3D=3D=3D=3D=3D>  | PCIE  | <=3D=3D=3D> | QDMA  | <=3D=3D=3D=
+=3D>| User Logic|
+> >>              |       |       |       |       |           |
+> >>              +-------+       +-------+       +-----------+
+> >>
+> >> The primary mechanism to transfer data using the QDMA is for the QDMA
+> >> engine to operate on instructions (descriptors) provided by the host
+> >> operating system. Using the descriptors, the QDMA can move data in bot=
+h
+> >> the Host to Card (H2C) direction, or the Card to Host (C2H) direction.
+> >> The QDMA provides a per-queue basis option whether DMA traffic goes
+> >> to an AXI4 memory map (MM) interface or to an AXI4-Stream interface.
+> >>
+> >> The hardware detail is provided by
+> >>      https://docs.xilinx.com/r/en-US/pg302-qdma
+> >>
+> >> Implements dmaengine APIs to support MM DMA transfers.
+> >> - probe the available DMA channels
+> >> - use dma_slave_map for channel lookup
+> >> - use virtual channel to manage dmaengine tx descriptors
+> >> - implement device_prep_slave_sg callback to handle host scatter gathe=
+r
+> >>    list
+> >>
+> >> Signed-off-by: Nishad Saraf <nishads@amd.com>
+> >> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
+> > Thanks for your patch, which is now commit 73d5fc92a11cacb7
+> > ("dmaengine: amd: qdma: Add AMD QDMA driver") in dmaengine/next.
+> >
+> >> --- /dev/null
+> >> +++ b/drivers/dma/amd/Kconfig
+> >> @@ -0,0 +1,14 @@
+> >> +# SPDX-License-Identifier: GPL-2.0-only
+> >> +
+> >> +config AMD_QDMA
+> >> +       tristate "AMD Queue-based DMA"
+> >> +       depends on HAS_IOMEM
+> > Any other subsystem or platform dependencies, to prevent asking the
+> > user about this driver when configuring a kernel for a system which
+> > cannot possibly have this hardware?
+> > E.g. depends on PCI, or can this be used with other transports than PCI=
+e?
+>
+> No, this driver does not have other dependencies. It can be used with
+> other transports.
+>
+> It is similar with dmaengine/xilinx/xdma
 
-I2C driver just need to mark first_msg and last_msg flag to help indicate
-GPI driver to take lock and unlock TRE there by protecting from concurrent
-access from other EE or Subsystem.
+OK.
 
-gpi_create_i2c_tre() function at gpi.c will take care of adding Lock and
-Unlock TRE for the respective transfer operations.
+> >> --- /dev/null
+> >> +++ b/drivers/dma/amd/qdma/qdma-comm-regs.c
+> >> +static struct platform_driver amd_qdma_driver =3D {
+> >> +       .driver         =3D {
+> >> +               .name =3D "amd-qdma",
+> > Which code is responsible for creating "amd-qdma" platform devices?
 
-Since the GPIOs are also shared between two SS, do not unconfigure them
-during runtime suspend. This will allow other SS to continue to transfer
-the data without any disturbance over the IO lines.
+I still would like to receive an answer to this question?
+Thanks!
 
-Signed-off-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
----
- drivers/i2c/busses/i2c-qcom-geni.c | 24 ++++++++++++++++++++----
- 1 file changed, 20 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
-index 212336f724a6..479fa8e1c33f 100644
---- a/drivers/i2c/busses/i2c-qcom-geni.c
-+++ b/drivers/i2c/busses/i2c-qcom-geni.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- // Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
-+// Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
- 
- #include <linux/acpi.h>
- #include <linux/clk.h>
-@@ -602,6 +603,7 @@ static int geni_i2c_gpi_xfer(struct geni_i2c_dev *gi2c, struct i2c_msg msgs[], i
- 	peripheral.clk_div = itr->clk_div;
- 	peripheral.set_config = 1;
- 	peripheral.multi_msg = false;
-+	peripheral.shared_se = gi2c->se.shared_geni_se;
- 
- 	for (i = 0; i < num; i++) {
- 		gi2c->cur = &msgs[i];
-@@ -612,6 +614,8 @@ static int geni_i2c_gpi_xfer(struct geni_i2c_dev *gi2c, struct i2c_msg msgs[], i
- 		if (i < num - 1)
- 			peripheral.stretch = 1;
- 
-+		peripheral.first_msg = (i == 0);
-+		peripheral.last_msg = (i == num - 1);
- 		peripheral.addr = msgs[i].addr;
- 
- 		ret =  geni_i2c_gpi(gi2c, &msgs[i], &config,
-@@ -631,8 +635,11 @@ static int geni_i2c_gpi_xfer(struct geni_i2c_dev *gi2c, struct i2c_msg msgs[], i
- 		dma_async_issue_pending(gi2c->tx_c);
- 
- 		time_left = wait_for_completion_timeout(&gi2c->done, XFER_TIMEOUT);
--		if (!time_left)
-+		if (!time_left) {
-+			dev_dbg(gi2c->se.dev, "I2C timeout gpi flags:%d addr:0x%x\n",
-+						gi2c->cur->flags, gi2c->cur->addr);
- 			gi2c->err = -ETIMEDOUT;
-+		}
- 
- 		if (gi2c->err) {
- 			ret = gi2c->err;
-@@ -800,6 +807,11 @@ static int geni_i2c_probe(struct platform_device *pdev)
- 		gi2c->clk_freq_out = KHZ(100);
- 	}
- 
-+	if (of_property_read_bool(pdev->dev.of_node, "qcom,shared-se")) {
-+		gi2c->se.shared_geni_se = true;
-+		dev_dbg(&pdev->dev, "I2C is shared between subsystems\n");
-+	}
-+
- 	if (has_acpi_companion(dev))
- 		ACPI_COMPANION_SET(&gi2c->adap.dev, ACPI_COMPANION(dev));
- 
-@@ -870,8 +882,10 @@ static int geni_i2c_probe(struct platform_device *pdev)
- 	else
- 		fifo_disable = readl_relaxed(gi2c->se.base + GENI_IF_DISABLE_RO) & FIFO_IF_DISABLE;
- 
--	if (fifo_disable) {
--		/* FIFO is disabled, so we can only use GPI DMA */
-+	if (fifo_disable || gi2c->se.shared_geni_se) {
-+		/* FIFO is disabled, so we can only use GPI DMA.
-+		 * SE can be shared in GSI mode between subsystems, each SS owns a GPII.
-+		 **/
- 		gi2c->gpi_mode = true;
- 		ret = setup_gpi_dma(gi2c);
- 		if (ret) {
-@@ -883,6 +897,9 @@ static int geni_i2c_probe(struct platform_device *pdev)
- 		dev_dbg(dev, "Using GPI DMA mode for I2C\n");
- 	} else {
- 		gi2c->gpi_mode = false;
-+
-+		/* Force disable shared SE case for non GSI mode */
-+		gi2c->se.shared_geni_se = false;
- 		tx_depth = geni_se_get_tx_fifo_depth(&gi2c->se);
- 
- 		/* I2C Master Hub Serial Elements doesn't have the HW_PARAM_0 register */
-@@ -964,7 +981,6 @@ static int __maybe_unused geni_i2c_runtime_suspend(struct device *dev)
- 	if (ret) {
- 		enable_irq(gi2c->irq);
- 		return ret;
--
- 	} else {
- 		gi2c->suspended = 1;
- 	}
--- 
-2.25.1
+Gr{oetje,eeting}s,
 
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 

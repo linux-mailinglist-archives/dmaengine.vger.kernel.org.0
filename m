@@ -1,117 +1,122 @@
-Return-Path: <dmaengine+bounces-3224-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3225-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9DAD9988144
-	for <lists+dmaengine@lfdr.de>; Fri, 27 Sep 2024 11:24:57 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 073A598821D
+	for <lists+dmaengine@lfdr.de>; Fri, 27 Sep 2024 12:01:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C4C151C21975
-	for <lists+dmaengine@lfdr.de>; Fri, 27 Sep 2024 09:24:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BD70E288F82
+	for <lists+dmaengine@lfdr.de>; Fri, 27 Sep 2024 10:01:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 335D81BA29B;
-	Fri, 27 Sep 2024 09:24:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 062FB1BB686;
+	Fri, 27 Sep 2024 10:01:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oMUAkxCS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D82GEd8y"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF3F616D9B8;
-	Fri, 27 Sep 2024 09:24:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C842217C232;
+	Fri, 27 Sep 2024 10:01:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727429092; cv=none; b=IqXhLaehsUajQlpFMEQOoRJ9E5JCqR8QuT1x6JEeGHUzxakXdzXuoA+lUI7OIMRbn4hkRikkudIoNZRj1hywF7oMjtz6nn9fIPcLp5cdroTPwljG84XK+N0vPqteFf2CpNoU4qZph664TSW+7ZwCkkf0Xa+RVCh4F40Ac0JFAIA=
+	t=1727431297; cv=none; b=RBCsD+qkSiYgf797xW6/MvF6tXKeOUfAVDANduV43IgTSHhfTc5MBPVPG5t0Y+7eCwUgLRx7FcDjULL2PxVEswrE2mN+3ehdmt8r0GGcOPsqziL9WNpmOAo+CTVxLN0+JIrD/cak4XjffxUcv0/CTO4y71Vyvbzi/m4S3TW0KNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727429092; c=relaxed/simple;
-	bh=prAV8NCYOXfLCw33iIj+Y+TwoCH1xT9xCcNBQqqbOkc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lHD7vVQooNA+dqYIm9KgdszjLmLncj9tjHU5KfG2UqobjEmKyHm0NHsMB/uiHLqFOxgAQPjq4sr5DgyfO/2hbzb2rhStfEeNCKjfYGn0KBD0YD+iFYomjdeSPL+G7ZnPamHHemewPz2PGlPPCzoPHw5kQKNt59lWOoHBh9XmX/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oMUAkxCS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCBE2C4CEC4;
-	Fri, 27 Sep 2024 09:24:50 +0000 (UTC)
+	s=arc-20240116; t=1727431297; c=relaxed/simple;
+	bh=CDBixAICxzs+mU9T2I8esFJWwZz2NZGhx08sz+Ugl+k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=YQFs9X2WcOxucHaQlWigHz03iPnbosnGG3NcgsTOyOn8owrAFKVnvOpe+d1zJA22fjwL6AE7pUcl0SqJJak0efkK2m6f2JVkF4dCnOasMW1HAsxa/Tb4qNT2sFpw/uEMvSpErPfYWw10Iio/464jzm95OV+fiYqbnCv/5058tf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D82GEd8y; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFF93C4CEC4;
+	Fri, 27 Sep 2024 10:01:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727429091;
-	bh=prAV8NCYOXfLCw33iIj+Y+TwoCH1xT9xCcNBQqqbOkc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oMUAkxCSLaU9i4prSJ7nT57Jkiga3+cl+WYzt/9EmzVRfFWc2aE/UT5XJ5ngNGcKp
-	 1YX7SyjNVQjn89/i6aX/nBi8tBWDkEMVtuCT6OIQlm26DiszXybLfImFi6l8a0M3C0
-	 BaPEHOg6UK2vLtbfGXeOTvPiVx+4GrRE1Iqia02nDfyx3fPUkSnmiHkau3q5YH+xr0
-	 7USfHSngAvUNm+IVnyYaYNNvG+HxNXLCdo6TnYYqi9vAlSqcxeEjfaCAt4rtvHkRKC
-	 W+0bitPV2wB66aVbctVsn2vY+9AR2QEttgTvaNH3IjA0yjs7x9LK7qGCjl9ccUmnHe
-	 Odxn+Yex3Pc2g==
-Date: Fri, 27 Sep 2024 11:24:48 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-Cc: konrad.dybcio@linaro.org, andersson@kernel.org, andi.shyti@kernel.org, 
-	linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, conor+dt@kernel.org, agross@kernel.org, 
-	devicetree@vger.kernel.org, vkoul@kernel.org, linux@treblig.org, dan.carpenter@linaro.org, 
-	Frank.Li@nxp.com, konradybcio@kernel.org, bryan.odonoghue@linaro.org, 
-	krzk+dt@kernel.org, robh@kernel.org
-Subject: Re: [PATCH v3 1/4] dt-bindindgs: i2c: qcom,i2c-geni: Document shared
- flag
-Message-ID: <we3wmw6e25y6e4443ndrduurwvkkpvuw7ozrizuys6pwxppwfy@2uq7uda4evhd>
-References: <20240927063108.2773304-1-quic_msavaliy@quicinc.com>
- <20240927063108.2773304-2-quic_msavaliy@quicinc.com>
+	s=k20201202; t=1727431297;
+	bh=CDBixAICxzs+mU9T2I8esFJWwZz2NZGhx08sz+Ugl+k=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=D82GEd8ydABwB5sHV0+9Yvf+kS/ItpINtHzofY7clRrjKKQzEdWFfVCyKKzav5u5o
+	 /pHrU7K5093Erj+apO1451VBUa//bp1puZdfMEp0FAQDDbuv2He59MLXjjcxxMAQpE
+	 O9/8+ANE0wtoNXe9IDMeYfeQrU3UvlEApyOUZv2yVBWAzn0wXn79KVlprenc30i1ZS
+	 QXcJ2Opx3bhrR5mjl0WmcZ26pKawoM3P4cOnKN0oy/sX4AyDaMlGoO99tB1c4rA8Ll
+	 2+LlxzTs67aoquIqv06ciAmyHZmZahze8hvdAD5ra2VHNytdR0y0Sg4A2H1lVujT2e
+	 EbFgEMfDAojTw==
+Message-ID: <34dc6392-e90c-4512-b5d7-10247a3c0f29@kernel.org>
+Date: Fri, 27 Sep 2024 12:01:29 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/4] dt-bindindgs: i2c: qcom,i2c-geni: Document shared
+ flag
+To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
+ konrad.dybcio@linaro.org, andersson@kernel.org, andi.shyti@kernel.org,
+ linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+ conor+dt@kernel.org, agross@kernel.org, devicetree@vger.kernel.org,
+ vkoul@kernel.org, linux@treblig.org, dan.carpenter@linaro.org,
+ Frank.Li@nxp.com, konradybcio@kernel.org, bryan.odonoghue@linaro.org,
+ krzk+dt@kernel.org, robh@kernel.org
+References: <20240927063108.2773304-1-quic_msavaliy@quicinc.com>
+ <20240927063108.2773304-2-quic_msavaliy@quicinc.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
 In-Reply-To: <20240927063108.2773304-2-quic_msavaliy@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Sep 27, 2024 at 12:01:05PM +0530, Mukesh Kumar Savaliya wrote:
+On 27/09/2024 08:31, Mukesh Kumar Savaliya wrote:
 > Adds qcom,shared-se flag usage. Use this when particular I2C serial
 > controller needs to be shared between two subsystems.
 > 
-> SE = Serial Engine, meant for I2C controller here.
-> TRE = Transfer Ring Element, refers to Queued Descriptor.
-> SS = Subsystems (APPS processor, Modem, TZ, ADSP etc).
-> 
-> Example :
-> Two clients from different SS can share an I2C SE for same slave device
-> OR their owned slave devices.
-> Assume I2C Slave EEPROM device connected with I2C controller.
-> Each client from ADSP SS and APPS Linux SS can perform i2c transactions.
-> This gets serialized by lock TRE + DMA Transfers + Unlock TRE at HW level.
-> 
-> Signed-off-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-> ---
->  Documentation/devicetree/bindings/i2c/qcom,i2c-geni-qcom.yaml | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/qcom,i2c-geni-qcom.yaml b/Documentation/devicetree/bindings/i2c/qcom,i2c-geni-qcom.yaml
-> index 9f66a3bb1f80..3b9b20a0edff 100644
-> --- a/Documentation/devicetree/bindings/i2c/qcom,i2c-geni-qcom.yaml
-> +++ b/Documentation/devicetree/bindings/i2c/qcom,i2c-geni-qcom.yaml
-> @@ -60,6 +60,10 @@ properties:
->    power-domains:
->      maxItems: 1
->  
-> +  qcom,shared-se:
-> +    description: True if I2C needs to be shared between two or more subsystems(SS).
 
-The "SS" and subsystem should be explained in the binding. Please do not
-use some qcom-specific abbreviations here, but explain exactly, e.g.
-processors like application processor and DSP.
-
-"se" is also not explained in the binding - please open it and look for
-such explanation.
-
-This all should be rephrased to make it clear... We talked about this
-and I do not see much of improvements except commit msg, so we are
-making circles. I don't know, get someone internally to help you in
-upstreaming this.
-
-Is sharing of IP blocks going to be also for other devices? If yes, then
-this should be one property for all Qualcomm devices. If not, then be
-sure that this is the case because I will bring it up if you come with
-one more solution for something else.
+Also, fix the typo in subject prefix. It is dt-bindings.
 
 Best regards,
 Krzysztof

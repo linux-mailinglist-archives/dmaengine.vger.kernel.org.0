@@ -1,137 +1,97 @@
-Return-Path: <dmaengine+bounces-3235-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3236-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3606298A5CF
-	for <lists+dmaengine@lfdr.de>; Mon, 30 Sep 2024 15:48:30 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 63EE198A802
+	for <lists+dmaengine@lfdr.de>; Mon, 30 Sep 2024 17:00:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EBD08281CBE
-	for <lists+dmaengine@lfdr.de>; Mon, 30 Sep 2024 13:48:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 140EA1F24B02
+	for <lists+dmaengine@lfdr.de>; Mon, 30 Sep 2024 15:00:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6375B18F2CF;
-	Mon, 30 Sep 2024 13:48:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA73F191F74;
+	Mon, 30 Sep 2024 15:00:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b2cyVsTN"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="CW6XFPid"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38BF91EA91;
-	Mon, 30 Sep 2024 13:48:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBF971CFA9
+	for <dmaengine@vger.kernel.org>; Mon, 30 Sep 2024 14:59:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727704105; cv=none; b=SOe5HSmcxSe7USxRoOb826cZLhrFkWXmVW9RO0kFogoMFEiU4SmFayrrRaDG+FC0Sv+3jZw3GXVYgaQl9Bx+jJFTaF43tGXbWh0RzDJX5yBFf+aLJ8kxerwyecAoukdeFTJd77vjCOA5ti13lUSZ6KlnjpCtto2QU4Mgft5kHJ8=
+	t=1727708400; cv=none; b=Tdjp/ExVMgNx9xx4bu+fhRlJlXT9dDSZaKSVhCUJyimgbUEML5QdDo4xcdIVnY7+MsCXo5CEay/s0GV/+IxmWZ8oOHjNpkP72zzxqqR1QlmnufPA6zXlscSnxPwVQ9TtzRPqithWsoeLILDYAJBBM+2QH8rgQQwNmbwe9CofMjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727704105; c=relaxed/simple;
-	bh=WktLtpIrIbL+8YQi45Eu421zppugfrAet1EeAKU5Yek=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YfubR0whLyVBKrRiQNX9hcSLd7cZx9mhJ2bASyEZQE3jzF+HgZ7+zCapNSX9PCRiGjmJwSxF/4v/abxzwdSivUES3PIAm3Psi/FamkbvRChuILw3smfA+9b+lruIzUJEwJf/S3mako5dT5uAWD4aLkDolpz1Wnyksis5ehoulAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b2cyVsTN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58E9AC4CEC7;
-	Mon, 30 Sep 2024 13:48:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727704105;
-	bh=WktLtpIrIbL+8YQi45Eu421zppugfrAet1EeAKU5Yek=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=b2cyVsTNf4bbUUD18lBqL3KujTz48JtFWJHEqtKTtGkfCid+6N/bTN/kFdnx1cqh0
-	 Ugd0tHZaz5dYUs3FB4SfqDfW5p+/pyeb2WLgSXmybF3eHyFD4joBmRKnjxOGDw9oyx
-	 Zr91TvNGJRU5sU8P97Dxmk7le3N1Mkvk4ZbZrgCISBpw/ubfFfBLRaTp7lxPfwYjVw
-	 ENQbIqCb2udkvnBXjMqr0cbhCMgAtAL0+++wNBcBB8z/fnjEq+UkERh841oNvJCBk/
-	 kYViHx9Uz0VBs//snbktFr04trOnr0s38BJU93Yjjrg5ONhfaPqjNBKt3bbYcdQszW
-	 QleBtjmL4EiwA==
-Date: Mon, 30 Sep 2024 14:48:20 +0100
-From: Conor Dooley <conor@kernel.org>
-To: pierre-henry.moussay@microchip.com
-Cc: Linux4Microchip@microchip.com, Vinod Koul <vkoul@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	s=arc-20240116; t=1727708400; c=relaxed/simple;
+	bh=xinIHUprBI52PsIRaJ4JZcTeZPje0snSfpYXu/fggQk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jjvi492twErw7MLyMtCgUbBGWFlWEjTZtoYgIXYXtN9PVRYueX51fuDXzDTOa8IgSndlFayl+L46eMQiCOcE905TeithnTPa4WtzHBXVTTzXpqT3dMjbtkDL2s3fUpgoxfSKWGhlO65Tfvhn1zrxBy7PHxAeu+4BTnCZjv8rRDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=CW6XFPid; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=from:to:cc:subject:date:message-id
+	:mime-version:content-transfer-encoding; s=k1; bh=Zh1yObY8WHow/K
+	ijC4LeeBHtkdQnh8DwECG6Q2RxrFk=; b=CW6XFPidi8bt7iDwyc7Fh+ufYrIZQ2
+	CIBpMeW9F+jcanYCIGt7S7N4ViCgCNV6NvI5fP0DMl4B4+HgZtmF+2gGYFjcGEyI
+	vhM0wL1fHEwxA+AHCePHVH9fI80za3GRwps9XVWlYBFft3B0jCd6aMMsKrntJq2E
+	gJ1wK2vpl6sjXAeONadfQ+cv7x1vHjZ+w7L2WfVHPaHJNnW9/plFrvTUZT8lQXQe
+	pBGtgCNGGk6FR80HGyDIbt269ssy7KhixqH7r9jtAqJpKXQZz3tQmRNGTAvP5TKX
+	/us73NGEvAHrQJ94X2yLqu5fLj4HVzBpb74kTOCoVGJ9qHRNOldMDQmA==
+Received: (qmail 2222573 invoked from network); 30 Sep 2024 16:59:56 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 30 Sep 2024 16:59:56 +0200
+X-UD-Smtp-Session: l3s3148p1@eSVCdVcj3uYujnsJ
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: linux-renesas-soc@vger.kernel.org
+Cc: Biju Das <biju.das.jz@bp.renesas.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Green Wan <green.wan@sifive.com>,
-	Palmer Debbelt <palmer@sifive.com>, dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [linux][PATCH v2 09/20] dt-bindings: dma: sifive pdma: Add
- PIC64GX to compatibles
-Message-ID: <20240930-mammogram-prison-d87615f0d05a@spud>
-References: <20240930095449.1813195-1-pierre-henry.moussay@microchip.com>
- <20240930095449.1813195-10-pierre-henry.moussay@microchip.com>
+	devicetree@vger.kernel.org,
+	dmaengine@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 0/3] dmaengine: sh: rz-dmac: add r7s72100 support
+Date: Mon, 30 Sep 2024 16:59:51 +0200
+Message-ID: <20240930145955.4248-1-wsa+renesas@sang-engineering.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="kqrZppaxEGOPTo9H"
-Content-Disposition: inline
-In-Reply-To: <20240930095449.1813195-10-pierre-henry.moussay@microchip.com>
+Content-Transfer-Encoding: 8bit
 
+When activating good old Genmai board for regression testing, I found
+out that not much is needed to activate the DMA controller for A1L.
+Which makes sense, because the driver was initially written for this
+SoC. Let it come home ;)
 
---kqrZppaxEGOPTo9H
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Patch 1 is a generic fix. The other patches are the actual enablement.
+A branch with DTS additions for MMCIF can be found here:
 
-On Mon, Sep 30, 2024 at 10:54:38AM +0100, pierre-henry.moussay@microchip.co=
-m wrote:
-> From: Pierre-Henry Moussay <pierre-henry.moussay@microchip.com>
->=20
-> PIC64GX is compatible as out of order DMA capable, just like the MPFS
-> version, therefore we add it with microchip,mpfs-pdma as a fallback
->=20
-> Signed-off-by: Pierre-Henry Moussay <pierre-henry.moussay@microchip.com>
+git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git renesas/genmai-upstreaming
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+These will be upstreamed once the driver parts are in next. Adding SDHI
+is still WIP because RZ/A1L usage exposes a SDHI driver bug. So much for
+the value of regression testing...
 
-> ---
->  .../bindings/dma/sifive,fu540-c000-pdma.yaml      | 15 ++++++++++-----
->  1 file changed, 10 insertions(+), 5 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma=
-=2Eyaml b/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
-> index 3b22183a1a37..609e38901434 100644
-> --- a/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
-> +++ b/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
-> @@ -27,11 +27,16 @@ allOf:
-> =20
->  properties:
->    compatible:
-> -    items:
-> -      - enum:
-> -          - microchip,mpfs-pdma
-> -          - sifive,fu540-c000-pdma
-> -      - const: sifive,pdma0
-> +    oneOf:
-> +      - items:
-> +          - const: microchip,pic64gx-pdma
-> +          - const: microchip,mpfs-pdma
-> +          - const: sifive,pdma0
-> +      - items:
-> +          - enum:
-> +              - microchip,mpfs-pdma
-> +              - sifive,fu540-c000-pdma
-> +          - const: sifive,pdma0
->      description:
->        Should be "sifive,<chip>-pdma" and "sifive,pdma<version>".
->        Supported compatible strings are -
-> --=20
-> 2.30.2
->=20
+Wolfram Sang (3):
+  dmaengine: sh: rz-dmac: handle configs where one address is zero
+  dt-bindings: dma: rz-dmac: Document RZ/A1L SoC
+  dmaengine: sh: rz-dmac: add r7s72100 support
 
---kqrZppaxEGOPTo9H
-Content-Type: application/pgp-signature; name="signature.asc"
+ .../bindings/dma/renesas,rz-dmac.yaml         | 27 +++++++++++++------
+ drivers/dma/sh/Kconfig                        |  6 ++---
+ drivers/dma/sh/rz-dmac.c                      | 27 ++++++++++---------
+ 3 files changed, 37 insertions(+), 23 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+-- 
+2.45.2
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZvqsJAAKCRB4tDGHoIJi
-0q4lAQDZPsQK4xWA8TDpp1IyybDgTSbASEUfhv0mp/GHVtbjPgEAs01gUWp4evXk
-RGUyGxzDcN6h/L65uyGvteqNXGG5lwM=
-=6KCM
------END PGP SIGNATURE-----
-
---kqrZppaxEGOPTo9H--
 

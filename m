@@ -1,246 +1,245 @@
-Return-Path: <dmaengine+bounces-3242-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3243-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id ABF5898AA04
-	for <lists+dmaengine@lfdr.de>; Mon, 30 Sep 2024 18:41:24 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DA63498AA83
+	for <lists+dmaengine@lfdr.de>; Mon, 30 Sep 2024 19:04:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D2CC31C22AE3
-	for <lists+dmaengine@lfdr.de>; Mon, 30 Sep 2024 16:41:23 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 31E2BB254A2
+	for <lists+dmaengine@lfdr.de>; Mon, 30 Sep 2024 17:04:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36E4E194138;
-	Mon, 30 Sep 2024 16:40:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAFDD126C03;
+	Mon, 30 Sep 2024 17:03:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="BazMM9Qb"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lxUdhQY1"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from OS0P286CU011.outbound.protection.outlook.com (mail-japanwestazon11010023.outbound.protection.outlook.com [52.101.228.23])
+Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BAD4194080;
-	Mon, 30 Sep 2024 16:40:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.228.23
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727714459; cv=fail; b=VNxQbr+B86fijNMk9pL4yuuvnFx73XqdXzgtQSfBy9HVj3wmUX6PvnN3TvmW1d7Cx+RklkJcqoYTq76/DPuCP8GvCnegx5pjbFZI6m8taC+iAaY7ahtqzbjD1W6j9k3UqCj2wSIYIczVOkFh7Ytz03nsGtGrIUt55XKaCu9iGmE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727714459; c=relaxed/simple;
-	bh=sEIH4MvFG2uwIw4EYIJm+UjOLAcARFtX1/O+MkovAbQ=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=f8EBBGjT3jnIr+j7zoGN/4EQaHKPGgAzAb6WNnbrYqvi2D5/rWyb099r9rVRaY1OoZTqvEd5LPeFFnzdMy5Z0/MxchlBtqoTbXx4/GJtXMTl8LNgM3ewnhNPSDJiX2CbERCgQeS/CMcPQT9ra4J1YO8dxAYT46awNnbXyFWIxos=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=BazMM9Qb; arc=fail smtp.client-ip=52.101.228.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UYTAX0NNQ1YlZqxKtwdJeNsQ1WQPdu9kICxoW6z6KozXvSgJ64B+eNBsFW2QhR8wsj+amyXtaB0OMbJ3TEMnR0w3Vr0twAnnt4zOTQug3Rqi5yV90HWgPAN+QnwKDWKOroOlg0aUBHDabwj/JJ1xVrC9IhmZMulVYOX89HyCGtIgO0KatQffHZRO4kEswsc7lKYwbLDFM1uETa6+SYMzvgLZ6ZUMRAJ+PVbRNVqhzuLOjjKnyugC7qCrTPo5oIEXjRODHkWWzGXsZqSz/gBj1DA7HuKyGyoo/4Ik0UpQmS2EAFvdl4ikIAdBxE8A/Bv9b3UPsL3u36F2sXdGNGRFfw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FrdMrQDXwTIJQqU97DHA02rS4EKZtY2z47oKfAUKoyw=;
- b=dnHh+XNkMZis7/mg8XB2/QB5BgNCzqd5w0msYsYBmDharvxh52/8ruS9J74OxrtSG6xbAVYxK780tMJwkYdvliaU+qlk5luepsDYgwowimqgUT2pc7MxZk2VNxTjnWf3iO25wY0Icq0uXjbJ4N8CeK7HdlFGDimfodXNsp5XPdJV+LgeDm+V1azsaLvf8ljrGxE2Grk6Gq7xG1MJCc+h0v20WYxoqdp8uLP/nN7ykoKK+wC+rOqpVn0Zrm01O8TyuNgv3xt3yASvdsUsLhK7NuG2vOzMSxIiMQ/Tt9TSqdfPSypMxOlGkBMYmKEHDNEb8vx5H4gpf7TKP+eovuvflg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FrdMrQDXwTIJQqU97DHA02rS4EKZtY2z47oKfAUKoyw=;
- b=BazMM9QbzYzGyB6z0HYfCEbQ03Tul9ENDeEoYtZEanS0Xj7yqgX4tyS/+h5A/4W0CprO7iBLVQl7dvhYW+WY1X+AvfhREXGq5Y8zTig1yruLUhIS/3WPbwNFvLuIEY0alDOaPLIYpUkaoiWE4gEZcI8YUBuTz9ngEB4aFLeBe3M=
-Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com (2603:1096:400:3d0::7)
- by TYAPR01MB5945.jpnprd01.prod.outlook.com (2603:1096:404:8052::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8005.26; Mon, 30 Sep
- 2024 16:40:53 +0000
-Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com
- ([fe80::86ef:ca98:234d:60e1]) by TY3PR01MB11346.jpnprd01.prod.outlook.com
- ([fe80::86ef:ca98:234d:60e1%5]) with mapi id 15.20.8005.026; Mon, 30 Sep 2024
- 16:40:53 +0000
-From: Biju Das <biju.das.jz@bp.renesas.com>
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
-CC: Vinod Koul <vkoul@kernel.org>, Prabhakar Mahadev Lad
-	<prabhakar.mahadev-lad.rj@bp.renesas.com>, "dmaengine@vger.kernel.org"
-	<dmaengine@vger.kernel.org>
-Subject: RE: [PATCH 1/3] dmaengine: sh: rz-dmac: handle configs where one
- address is zero
-Thread-Topic: [PATCH 1/3] dmaengine: sh: rz-dmac: handle configs where one
- address is zero
-Thread-Index: AQHbE0lvnPRDT4hCO0iu7LLD2KS6vrJwiB3w
-Date: Mon, 30 Sep 2024 16:40:52 +0000
-Message-ID:
- <TY3PR01MB11346F2C786FD343B7B382CF386762@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-References: <20240930145955.4248-1-wsa+renesas@sang-engineering.com>
- <20240930145955.4248-2-wsa+renesas@sang-engineering.com>
-In-Reply-To: <20240930145955.4248-2-wsa+renesas@sang-engineering.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=bp.renesas.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TY3PR01MB11346:EE_|TYAPR01MB5945:EE_
-x-ms-office365-filtering-correlation-id: 37029763-ac7d-46f8-c750-08dce16ea623
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|376014|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?LJnPrAkutIrnA0THvDi8bwqnWq9vrG55Fxtczucb719kOTdeQnLdI0iDSMCg?=
- =?us-ascii?Q?MiuKmONJh/maWMeemELO2q6WNNbJsqxXZ0AFlekELb4vXvyICwqVmSajx0CL?=
- =?us-ascii?Q?LnRNMWMOM/wfnEnAcypV+InIgXOh3EgOTk3NEW6LDtsPdPvX231t3zFrG+Ss?=
- =?us-ascii?Q?989yuP75ije8p9PHLvqK+tsOWYnxXULYgm4LgJfAZBYKLzLnfihXYwUPeNYk?=
- =?us-ascii?Q?A6Lge/9fQ6s7/SjV1qbamDhyc4UOK4/5dx3kNh/RPE5VL/e34etDgn0h9XLx?=
- =?us-ascii?Q?nxMiP2ml6+HDDpLfZ0pBW0S8xM1jAoktvZy0EVwmgAS/SGgfXC+ZC36y4uo0?=
- =?us-ascii?Q?8iiO9xROSkJCPPhiEGpVJa3p0frhsFosWrEqeVKiVxT67pHKotqTgMMrYOaE?=
- =?us-ascii?Q?mApMwIla6a5Z6IaduAx3TcckJHgUyCPLOp5hCZw23kdjEYhRZTOD7PdLcBXK?=
- =?us-ascii?Q?nrBtZMa+EZazGUiqM152V8GCb4Kn4uOd7xcAnC0bF+oj847/zNajptMyN8mB?=
- =?us-ascii?Q?WNfoVvVc7oS9jdc7OponcQUk2Jex77EGW9W7MUlnlf6NYhuY/AhwlHBADRsW?=
- =?us-ascii?Q?Hm/rdAzxNRIRXGYDX/3SzSPhpWsvYvq26UdOzFMK481QuL/s8qc7ievushwE?=
- =?us-ascii?Q?PJORW3KnSPEGSiXVT27UgAu7cf/0bqAnfx7MzSFBQnhUQt7eiyyRemDFj4UW?=
- =?us-ascii?Q?5lq46eHT6gwvB8pdzGpcyA849i5smi0EchYitvgs8s3/z4SUDlqdFkxx8s9R?=
- =?us-ascii?Q?k7prI2bcD82MTd3CPnwBra7PvI62KMakDam791IfPgoMlXEH5cb1JrrOLMHF?=
- =?us-ascii?Q?hrZ8uR2kMk9UEgZ+qDrQN925MHfgCU7ypKUYpiGTzty1kiSugYOT+NZV1D3N?=
- =?us-ascii?Q?g3HC4L64qKdT06TRUN16/HLHEiuBS+c7zWSDt49Ljw1AXFL54vPvW/lvbQYK?=
- =?us-ascii?Q?6Rb2FfltQgYgh4+/ig8wvCVRNJPy2Wt+NSMIItYRqDF+u66R+rgoED81fq3Y?=
- =?us-ascii?Q?PccC7DLBR7Em/SlfOCrg6OsByRNuxFiN4lnwCNljuL2OY9cD+673RbGsR3a8?=
- =?us-ascii?Q?S88HWIEUxqKMUP/StaRpjeLLOtlT4Z5CfKlm9Q9L0qZ6mkKzN1SZuL1o/xeU?=
- =?us-ascii?Q?E0Q5YndkLW2Fu6Wsszwq4lyI/L4sEE7Qy9ygjAU2E4SYXHinmjjbxNLgXVWW?=
- =?us-ascii?Q?xEayDz5JaSbuuZw7Dtrks4ARBMR9PSrQaYbqKa2vVfOs3rf+JSpChcdyCufO?=
- =?us-ascii?Q?g3ShR1hfFaqiyh34R8FW4mjXUjUg1Hbrx7z2Z2CH1VqeqqFT4NUC/xHaS9dU?=
- =?us-ascii?Q?OGfNYA0NxxYkyJfShs5qWA+GOUTDpKOzbY++OSXNrAJGw2d3stecZHmEK9Mg?=
- =?us-ascii?Q?D1hrj95DB7glnVonU81f0R3Wj2x3Si6i1zsH6N+/KRC6Pavhew=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY3PR01MB11346.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?IXtlBQcjbYfXibE2x2t2PsLxLHn0PM2ND1UrCxgGHK/GFcn7GUx0WpZ2ZEvR?=
- =?us-ascii?Q?dts60RIB3DQBbIOSbEm4Vf+DseYcgvc/w4r4TA5iUySDjeIIFP7K/TEka+eO?=
- =?us-ascii?Q?oma785D38BZgtrEDt2xPcnK+QaBmAyBg0w3Ws/WU9h0MTexYmmbTg3PP+yl9?=
- =?us-ascii?Q?xHjmAxAKc+LqN479boj/eHBF51gKqDvlbbmXSVtztnZhgPhqSQ6AQA3lwwbp?=
- =?us-ascii?Q?s6RUUQZriI0lsQlFSuc+SgaygnDwpSV5Hfl2RosthG6kss9T+9pMQOGJrLWj?=
- =?us-ascii?Q?Guzsnv6S9dQvOXu9HCncKaPpDv31Vgp2/Da5+F4THKpYoBKrLRaaa8hwT1pp?=
- =?us-ascii?Q?x8AMuY7bJi1wx1DqPvDHb6bOymWvYHZRrK2ZWxvsZTtbvg802wyc/ArvJLUa?=
- =?us-ascii?Q?t5WRmqQdsq7rHVkQUHn1BeTt+kZfZGPV06mrl73f8jdH7sWUorCU2oN9p5Zu?=
- =?us-ascii?Q?Uhfwcofq/pAnaXW18CCQBv2fu3KL30ds8cpKE79VJX4kaFAdUlM3rtah9x1O?=
- =?us-ascii?Q?vEpLzhdiCjsquHv8h8m3ir63aQZzA34OFWxPXM0gM5Z2n5e2XyCeI/t3VTWW?=
- =?us-ascii?Q?X546ZFdvX0M992w7q9KLzOh8muiaYID9muJYaIeR50F5/HVAP0mpWR4n7cvy?=
- =?us-ascii?Q?mD4IgNkYUaYnYlzKNDPpMkLAmdAS3nZdYENiF2gf+JbhbN57IvcVd1+94WeZ?=
- =?us-ascii?Q?7lnpeOlP+IkPeb1//9ZQwegxUWyXQftrOS4kyXNQ7toye2gsiPmQB4RdZHiY?=
- =?us-ascii?Q?ohMe+EWjigx+jBSjHxl1mo8xk5Ntc5GDnHBfPfRuyffdydq93r4rcJ09CKE3?=
- =?us-ascii?Q?XtHcsFVM2ilf/hP929v6uoroBj1LnUdEnleNMxB8WOnf86uQdTi2NNlIAcw0?=
- =?us-ascii?Q?EAzPzDABMAxbZFnZn+PfqiqW/ahM4KdT+g8hJSltZ2LS9CF9P/QzejIaeTuz?=
- =?us-ascii?Q?G1bH2VuNBzeefmz7vOZovvX+xro8KyAPeWdDgt5NVXliQKrSkV6Wm6Zu0eTF?=
- =?us-ascii?Q?kU/4y0yI+7jpcQChsPckVI6F+IfC2QimQbkhnDF7rbOweAz+bLFFKZotliET?=
- =?us-ascii?Q?3WnVo7DAtKq33J90U+o7jw22QQE2TWLnci4354yT3uC0H8mdF6n/jQz5TCTD?=
- =?us-ascii?Q?KyFjRBzScgP+/Ru4PYYkr6PN7aTXrTT1CD3vgEzzs5g8sWGT/E3ohvjk3VXr?=
- =?us-ascii?Q?hGLM8QUZvdMODhhxPOnu2b4rl/o86cq15WaGr5sEnC2pgLGdXmK7WTi9cXF1?=
- =?us-ascii?Q?wvJg4Ue0NEtOeMCM3/gv2kf4SCsUb4kIYWNF+N/zoUgWNqhTfKeRCYrpl8AF?=
- =?us-ascii?Q?41may7wC2GttpHCVuf0lQovGEVMGw2kjy0eoRX2jWr31qRW3Xvv99aC8ft6z?=
- =?us-ascii?Q?tIok3yO0vQsWnWQRe1kq/ptfgueWmz/d0+MxJh0qJE+6M7UXnQV+ZaCglBIU?=
- =?us-ascii?Q?qasdeQcRxTvmEesYn5yaizKkpdc06UwmuoGQR4bphl3CGxE/ZfpFpjLZTf+k?=
- =?us-ascii?Q?atmMiwEtU/+WRHJiqcX6Tji5Dt4J7R7WJqKgo6ZihyHe1/6IV3qmNfjwAqqd?=
- =?us-ascii?Q?e/i2F2bahjtEHI1bFvtoPlYcdSMGhU4ukqQIZJYwEl9sR5/DyGvRdi3pHP4i?=
- =?us-ascii?Q?4A=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 488A317DFFD
+	for <dmaengine@vger.kernel.org>; Mon, 30 Sep 2024 17:03:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1727715811; cv=none; b=lusVdsoKLrcnrYgaAvq/PON38P9TPco8ZVGUniRBjtsOBRzy2uPcN+xs0YYZncqLIT9CCNAY6fe0pFYXvBRXyst12pVj4KZpy18RUjQk2BOMV/6RZTjfAfP0WVuivD+O09K4B1KZQpqmA4jc7nGNSSOTlRAVyARlIxKa1mLZomQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1727715811; c=relaxed/simple;
+	bh=AYG6mKT39KJDy8WIIaejnpebZV5LnzE0BUOjr6OOjqo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Lr6pTVeGg4RlqOVDjD4xikjiPVGnuC08M/kveohw53zzQIHY0Ah7sTAO7UC1rEUw1WyIpNv3Aj7aNEbWsptqyJuq6tUBwrmV+wHioE0d21AJ4ndANEsQrVTIrfZhCkdfogEXqfQVb59mX239IOo8ed6CQ2UWAnAnsVGDJQ4Ngjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lxUdhQY1; arc=none smtp.client-ip=91.218.175.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1727715807;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=LW2icFXcZTQf0XeMDyw+/f1SXM7/Ac7aqFGfwE9/Rpw=;
+	b=lxUdhQY1pzwKKkTOF+ISTKyFoRB4zpATWiLkbr1Yd6z4Vk25jaBtebYXa+nXoAVHZc+H+Y
+	16aYIaVdBFq7HDFJ3BYzwF8UjM34zwpVr2hFpMhsuq8qaC0X9NYWHi9zOUTYFDWguTmGJs
+	zi8+39Zu55HnC67XmZq2NQjOqoRjVE0=
+From: Jai Luthra <jai.luthra@linux.dev>
+Date: Mon, 30 Sep 2024 13:02:54 -0400
+Subject: [PATCH v2] dmaengine: ti: k3-udma: Set EOP for all TRs in cyclic
+ BCDMA transfer
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY3PR01MB11346.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 37029763-ac7d-46f8-c750-08dce16ea623
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2024 16:40:52.9543
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: J3HvjHk1Z31iLscZQmUN3HOWqsWQxOfmQ2p/Cv0hGFcI8eJcPXqknItj/2f7zU4LQ8sT76VuycIeC9+OEe3pY+0WEwgh4E7Cu9xg4YlQF4I=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB5945
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240930-z_cnt-v2-1-9d38aba149a2@linux.dev>
+X-B4-Tracking: v=1; b=H4sIAL3Z+mYC/13MSwrCMBSF4a2UOzaSpPahI/dRiuRxYy9IKkkN1
+ ZK9Gzt0+B8O3wYRA2GES7VBwESRZl9CHiowk/J3ZGRLg+TyxM+iZ5+b8QurjWqsQtO12kH5PgM
+ 6WndnGEtPFJc5vHc2id/6LyTBBJOm6Z12mne2vT7Iv9ajxQRjzvkLtZzuQpoAAAA=
+X-Change-ID: 20240918-z_cnt-3ca5daec76bf
+To: Peter Ujfalusi <peter.ujfalusi@gmail.com>, 
+ Vinod Koul <vkoul@kernel.org>
+Cc: Vignesh Raghavendra <vigneshr@ti.com>, 
+ Francesco Dolcini <francesco.dolcini@toradex.com>, 
+ Devarsh Thakkar <devarsht@ti.com>, Rishikesh Donadkar <r-donadkar@ti.com>, 
+ dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Jai Luthra <jai.luthra@linux.dev>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5981; i=jai.luthra@linux.dev;
+ h=from:subject:message-id; bh=bKQmJJGbCxqbNiNFO/8G/J9sCgM79F2SWOAfyfxVQpQ=;
+ b=owEBbQKS/ZANAwAIAUPekfkkmnFFAcsmYgBm+tnWp+xOwf94y4ObpsFAhk+ZM8phVdmaIfs+V
+ 0aebYC0u8+JAjMEAAEIAB0WIQRN4NgY5dV16NRar8VD3pH5JJpxRQUCZvrZ1gAKCRBD3pH5JJpx
+ RY2VD/0YJmq7A+FxU2KxJlDB/xiMchcXozDkJG5hOadNu6SFKfw0/yFg2PtlRI3rK+EoPkVSjI0
+ p6CrxT/1sc83jiL8JjZLwnK4UT8YcBYy9Pdbez51dvqsXCtBvBx5emVH2P00bXUcFKGXJRTZAb+
+ BVIs0DFhj6HLB5hI6IZE5VXEipn7rmnqLORI17n2KV1svDzMO6z82S5JzY/avLi1qQr+pgKYqe+
+ f8gWM/sfp03RkVLkVNseofmfGWyny26k4IcmjvEqPTVchsdKwtfrMAYrWz6+xKb4+QlWiQtCwSe
+ 7RCvr/ool3NKcF1lyKFh4ZrKKHu9gKHdTMFkem/DbI+5vxjd8+h9vSzVyEAayi3018YS7s9T2SI
+ 98fDCcsDHYbyfB8T2S6pSCIkw7eRmZHScLtLmDe24rJuCNBzF+nAoLBz6gAdqzZxGWW2i8ApvGc
+ l50JOJHHsOI+NA/Vgvmt0VeL+58xsVVISVOnheiW6KU+8hj/9QuZ5DgnLgC9E2ASVdjoXUfjPGX
+ JVNqVn8GrqUGhCzotYRYndadKLaoX+DmH4Y1uvLJcT+DaJOAqlu/B/PAbFpbEDZGZhH10QmC9l8
+ Iwl5n44DYzRQp2aqpuEb/A8Ap69IusunC1wOzUJpOzaug2P1WIdgM8ddwHvZOZ5h/x3tK2kQ9bc
+ DP7GpJKcQxBL2GA==
+X-Developer-Key: i=jai.luthra@linux.dev; a=openpgp;
+ fpr=4DE0D818E5D575E8D45AAFC543DE91F9249A7145
+X-Migadu-Flow: FLOW_OUT
 
-Hi Wolfram Sang,
+From: Jai Luthra <j-luthra@ti.com>
 
-Thanks for the patch.
+When receiving data in cyclic mode from PDMA peripherals, where reload
+count is set to infinite, any TR in the set can potentially be the last
+one of the overall transfer. In such cases, the EOP flag needs to be set
+in each TR and PDMA's Static TR "Z" parameter should be set, matching
+the size of the TR.
 
-> -----Original Message-----
-> From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> Sent: Monday, September 30, 2024 4:00 PM
-> Subject: [PATCH 1/3] dmaengine: sh: rz-dmac: handle configs where one add=
-ress is zero
->=20
-> Configs like the ones coming from the MMC subsystem will have either 'src=
-' or 'dst' zeroed, resulting
-> in an unknown bus width. This will bail out on the RZ DMA driver because =
-of the sanity check for a
-> valid bus width. Reorder the code, so that the check will only be applied=
- when the corresponding
-> address is non-zero.
->=20
-> Fixes: 5000d37042a6 ("dmaengine: sh: Add DMAC driver for RZ/G2L SoC")
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> ---
->  drivers/dma/sh/rz-dmac.c | 25 ++++++++++++++-----------
->  1 file changed, 14 insertions(+), 11 deletions(-)
->=20
-> diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c index 65=
-a27c5a7bce..811389fc9cb8
-> 100644
-> --- a/drivers/dma/sh/rz-dmac.c
-> +++ b/drivers/dma/sh/rz-dmac.c
-> @@ -601,22 +601,25 @@ static int rz_dmac_config(struct dma_chan *chan,
->  	struct rz_dmac_chan *channel =3D to_rz_dmac_chan(chan);
->  	u32 val;
->=20
-> -	channel->src_per_address =3D config->src_addr;
->  	channel->dst_per_address =3D config->dst_addr;
-> -
-> -	val =3D rz_dmac_ds_to_val_mapping(config->dst_addr_width);
-> -	if (val =3D=3D CHCFG_DS_INVALID)
-> -		return -EINVAL;
-> -
->  	channel->chcfg &=3D ~CHCFG_FILL_DDS_MASK;
-> -	channel->chcfg |=3D FIELD_PREP(CHCFG_FILL_DDS_MASK, val);
-> +	if (channel->dst_per_address) {
-> +		val =3D rz_dmac_ds_to_val_mapping(config->dst_addr_width);
-> +		if (val =3D=3D CHCFG_DS_INVALID)
-> +			return -EINVAL;
->=20
-> -	val =3D rz_dmac_ds_to_val_mapping(config->src_addr_width);
-> -	if (val =3D=3D CHCFG_DS_INVALID)
-> -		return -EINVAL;
-> +		channel->chcfg |=3D FIELD_PREP(CHCFG_FILL_DDS_MASK, val);
-> +	}
->=20
-> +	channel->src_per_address =3D config->src_addr;
->  	channel->chcfg &=3D ~CHCFG_FILL_SDS_MASK;
-> -	channel->chcfg |=3D FIELD_PREP(CHCFG_FILL_SDS_MASK, val);
-> +	if (channel->src_per_address) {
-> +		val =3D rz_dmac_ds_to_val_mapping(config->src_addr_width);
-> +		if (val =3D=3D CHCFG_DS_INVALID)
-> +			return -EINVAL;
-> +
-> +		channel->chcfg |=3D FIELD_PREP(CHCFG_FILL_SDS_MASK, val);
-> +	}
+This is required for the teardown to function properly and cleanup the
+internal state memory. This only affects platforms using BCDMA and not
+those using UDMA-P, which could set EOP flag in the teardown TR
+automatically.
 
-Now both code paths are identical, not sure may be introducing a helper
-by passing channel, CHCFG_FILL_*_MASK and *_addr_width
-will save some code??
+Similarly when transmitting data in cyclic mode to PDMA peripherals, the
+EOP flag needs to be set to get the teardown completion signal
+correctly.
 
-Anyway, current code LGTM. So,
+Fixes: 017794739702 ("dmaengine: ti: k3-udma: Initial support for K3 BCDMA")
+Tested-by: Francesco Dolcini <francesco.dolcini@toradex.com> # Toradex Verdin AM62
+Signed-off-by: Jai Luthra <j-luthra@ti.com>
+Signed-off-by: Jai Luthra <jai.luthra@linux.dev>
+---
+Changes in v2:
+- Fix commit message and comments to make it clear that this change is
+  only needed for BCDMA
+- Drop the redundant pkt_mode check
+- Link to v1: https://lore.kernel.org/r/20240918-z_cnt-v1-1-2c58fbfb07d6@linux.dev
+---
+ drivers/dma/ti/k3-udma.c | 62 ++++++++++++++++++++++++++++++++++++------------
+ 1 file changed, 47 insertions(+), 15 deletions(-)
 
-Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+index 406ee199c2ac1cffc29edb475df574cf9f0cf222..b3f27b3f92098a65afe9656ca31f9b8027294c16 100644
+--- a/drivers/dma/ti/k3-udma.c
++++ b/drivers/dma/ti/k3-udma.c
+@@ -3185,27 +3185,40 @@ static int udma_configure_statictr(struct udma_chan *uc, struct udma_desc *d,
+ 
+ 	d->static_tr.elcnt = elcnt;
+ 
+-	/*
+-	 * PDMA must to close the packet when the channel is in packet mode.
+-	 * For TR mode when the channel is not cyclic we also need PDMA to close
+-	 * the packet otherwise the transfer will stall because PDMA holds on
+-	 * the data it has received from the peripheral.
+-	 */
+ 	if (uc->config.pkt_mode || !uc->cyclic) {
++		/*
++		 * PDMA must close the packet when the channel is in packet mode.
++		 * For TR mode when the channel is not cyclic we also need PDMA
++		 * to close the packet otherwise the transfer will stall because
++		 * PDMA holds on the data it has received from the peripheral.
++		 */
+ 		unsigned int div = dev_width * elcnt;
+ 
+ 		if (uc->cyclic)
+ 			d->static_tr.bstcnt = d->residue / d->sglen / div;
+ 		else
+ 			d->static_tr.bstcnt = d->residue / div;
++	} else if (uc->ud->match_data->type == DMA_TYPE_BCDMA &&
++		   uc->config.dir == DMA_DEV_TO_MEM &&
++		   uc->cyclic) {
++		/*
++		 * For cyclic mode with BCDMA we have to set EOP in each TR to
++		 * prevent short packet errors seen on channel teardown. So the
++		 * PDMA must close the packet after every TR transfer by setting
++		 * burst count equal to the number of bytes transferred.
++		 */
++		struct cppi5_tr_type1_t *tr_req = d->hwdesc[0].tr_req_base;
+ 
+-		if (uc->config.dir == DMA_DEV_TO_MEM &&
+-		    d->static_tr.bstcnt > uc->ud->match_data->statictr_z_mask)
+-			return -EINVAL;
++		d->static_tr.bstcnt =
++			(tr_req->icnt0 * tr_req->icnt1) / dev_width;
+ 	} else {
+ 		d->static_tr.bstcnt = 0;
+ 	}
+ 
++	if (uc->config.dir == DMA_DEV_TO_MEM &&
++	    d->static_tr.bstcnt > uc->ud->match_data->statictr_z_mask)
++		return -EINVAL;
++
+ 	return 0;
+ }
+ 
+@@ -3450,8 +3463,9 @@ udma_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
+ 	/* static TR for remote PDMA */
+ 	if (udma_configure_statictr(uc, d, dev_width, burst)) {
+ 		dev_err(uc->ud->dev,
+-			"%s: StaticTR Z is limited to maximum 4095 (%u)\n",
+-			__func__, d->static_tr.bstcnt);
++			"%s: StaticTR Z is limited to maximum %u (%u)\n",
++			__func__, uc->ud->match_data->statictr_z_mask,
++			d->static_tr.bstcnt);
+ 
+ 		udma_free_hwdesc(uc, d);
+ 		kfree(d);
+@@ -3476,6 +3490,7 @@ udma_prep_dma_cyclic_tr(struct udma_chan *uc, dma_addr_t buf_addr,
+ 	u16 tr0_cnt0, tr0_cnt1, tr1_cnt0;
+ 	unsigned int i;
+ 	int num_tr;
++	u32 period_csf = 0;
+ 
+ 	num_tr = udma_get_tr_counters(period_len, __ffs(buf_addr), &tr0_cnt0,
+ 				      &tr0_cnt1, &tr1_cnt0);
+@@ -3498,6 +3513,20 @@ udma_prep_dma_cyclic_tr(struct udma_chan *uc, dma_addr_t buf_addr,
+ 		period_addr = buf_addr |
+ 			((u64)uc->config.asel << K3_ADDRESS_ASEL_SHIFT);
+ 
++	/*
++	 * For BCDMA <-> PDMA transfers, the EOP flag needs to be set on the
++	 * last TR of a descriptor, to mark the packet as complete.
++	 * This is required for getting the teardown completion message in case
++	 * of TX, and to avoid short-packet error in case of RX.
++	 *
++	 * As we are in cyclic mode, we do not know which period might be the
++	 * last one, so set the flag for each period.
++	 */
++	if (uc->config.ep_type == PSIL_EP_PDMA_XY &&
++	    uc->ud->match_data->type == DMA_TYPE_BCDMA) {
++		period_csf = CPPI5_TR_CSF_EOP;
++	}
++
+ 	for (i = 0; i < periods; i++) {
+ 		int tr_idx = i * num_tr;
+ 
+@@ -3525,8 +3554,10 @@ udma_prep_dma_cyclic_tr(struct udma_chan *uc, dma_addr_t buf_addr,
+ 		}
+ 
+ 		if (!(flags & DMA_PREP_INTERRUPT))
+-			cppi5_tr_csf_set(&tr_req[tr_idx].flags,
+-					 CPPI5_TR_CSF_SUPR_EVT);
++			period_csf |= CPPI5_TR_CSF_SUPR_EVT;
++
++		if (period_csf)
++			cppi5_tr_csf_set(&tr_req[tr_idx].flags, period_csf);
+ 
+ 		period_addr += period_len;
+ 	}
+@@ -3655,8 +3686,9 @@ udma_prep_dma_cyclic(struct dma_chan *chan, dma_addr_t buf_addr, size_t buf_len,
+ 	/* static TR for remote PDMA */
+ 	if (udma_configure_statictr(uc, d, dev_width, burst)) {
+ 		dev_err(uc->ud->dev,
+-			"%s: StaticTR Z is limited to maximum 4095 (%u)\n",
+-			__func__, d->static_tr.bstcnt);
++			"%s: StaticTR Z is limited to maximum %u (%u)\n",
++			__func__, uc->ud->match_data->statictr_z_mask,
++			d->static_tr.bstcnt);
+ 
+ 		udma_free_hwdesc(uc, d);
+ 		kfree(d);
 
+---
+base-commit: 8400291e289ee6b2bf9779ff1c83a291501f017b
+change-id: 20240918-z_cnt-3ca5daec76bf
 
-Cheers,
-Biju
-
->=20
->  	return 0;
->  }
-> --
-> 2.45.2
+Best regards,
+-- 
+Jai Luthra <jai.luthra@linux.dev>
 
 

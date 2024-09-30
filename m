@@ -1,64 +1,59 @@
-Return-Path: <dmaengine+bounces-3238-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3239-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 526AB98A807
-	for <lists+dmaengine@lfdr.de>; Mon, 30 Sep 2024 17:00:15 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8AC5398A80B
+	for <lists+dmaengine@lfdr.de>; Mon, 30 Sep 2024 17:00:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F23A31F249D7
-	for <lists+dmaengine@lfdr.de>; Mon, 30 Sep 2024 15:00:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B064E1C233D6
+	for <lists+dmaengine@lfdr.de>; Mon, 30 Sep 2024 15:00:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B00DE19259D;
-	Mon, 30 Sep 2024 15:00:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 426BF126C07;
+	Mon, 30 Sep 2024 15:00:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="ecP2nFxG"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="DgyRxzxK"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9D321925A0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65F3019259E
 	for <dmaengine@vger.kernel.org>; Mon, 30 Sep 2024 15:00:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727708404; cv=none; b=PMIlvtXoTpU3WJGIioPTGjhcNb/ipyek9qHspop5zO+bQr0/tJmWfLVqVjY9e2ww4nBrG/kFtblPMieKuCU6G8gpEV+heahPSF7nDJ6IrOcz6QRD7LSWYibcSjzAv0jQrB9Ab7behBEZ0qZKIN7SchAOJd2F07A5SO0pECP8qcs=
+	t=1727708405; cv=none; b=R2Wo7T4SAVH22qU01aSgXHHXDzv7MolvtT3EFRcmQCD531qwPLETIwFzJmY3Tt4v3lajSOGgg3xa34RwAi5aq3oAa4cuZALagO1r6efVcGT9bhoHOWvDRmKpuUzNubFOyNjyyvkmuiEzTUSRa4SIEzdXtpOCBQ6r+AC3ltPYBWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727708404; c=relaxed/simple;
-	bh=tWVxh+mDiRso8hgcEW2YIjqsBCKAyFAz4gGQZ6URW5M=;
+	s=arc-20240116; t=1727708405; c=relaxed/simple;
+	bh=uDkerb6KGipRUZ7UYAb411KLuQ1UEZb6wnjIEHvrh/s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JngbtEQpRgk0u1235G/My6nuQivt5SISQtaraCfF3RfUZ2v++JvEucx1efJ68fYc+4YHoihaCGUCujO3jseXECeBbLbc2xDqF6gimfZUkhbpkRgNi2z5wGrSS5OD2C4mq9JDQQRXWhQ8buzoQ8Lz2BTCuJgxFBLVAB5wOUnW4vA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=ecP2nFxG; arc=none smtp.client-ip=194.117.254.33
+	 MIME-Version; b=VkMyxdJHi8TRGwtanqjc6jtSqCiDhzcxak9YBVigE5lYbeRT+VG9atuC4vNjoIz0PoPQJ2oQGg8B/uq7v1V5KT99Bb4pIKBn2E/Jp564EX8crBaTNkaICi4tq1HElWklAG0+cMPxZo+Dm9K10JVLKuKMC6n/mqmw82IpV5wI068=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=DgyRxzxK; arc=none smtp.client-ip=194.117.254.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	sang-engineering.com; h=from:to:cc:subject:date:message-id
 	:in-reply-to:references:mime-version:content-transfer-encoding;
-	 s=k1; bh=M/Y4Kc2EyplrNxJF8txEuGgV7c5bIUCEU73p6krr4TE=; b=ecP2nF
-	xGP38W1UfsRCXewzCWYJwQzK+Y/CbqxbdODIgFsMuhiI17BPj3wDw2LIQn13m80e
-	VUe2lnC9PR5sADxYPAx96CmjKTZpxD4gnLtYIJ5XgwxFg9MCpWq+grfiewjh59kO
-	PeZksctFXDc7K14oQyx9ssznI91d5loXJUNGCm62Iwta65pQ+1ZattTNMl9w40Mt
-	WmZA0rS6zPjRnjEx+ipf1Nju0lidjyiDkOB+pkMwC0z9bbq2mgLp1ZojVjoIgHV0
-	KwyX5AF35MNXIAyCQ7aTWftrU06YWZOVqLIDlAriES9T9HzzY/vXQhyTNECYgP20
-	cPs7waT3ETdwdmMg==
-Received: (qmail 2222667 invoked from network); 30 Sep 2024 16:59:58 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 30 Sep 2024 16:59:58 +0200
-X-UD-Smtp-Session: l3s3148p1@NrtZdVcj6OYujnsJ
+	 s=k1; bh=Curcrtbkv6miXmdKoCuAek1GcGgbfQ6RkuxTtIFbBwc=; b=DgyRxz
+	xKLL5NJZJYLV8YCRd8PJJ0+gWqa0dol1ytrvBGR0QxrgZhCMW6S9Q598WEq0f71Y
+	0utpiYu9/ryKLJG+J05x5Tn8nt4Thn3+Xd7i3P40OvzuDVy7sma4mEj0zN77wYg6
+	ImbOLr2wZsPvseYSWnDvX7BjeD7giR1PdzdA2E7ewuxSoLVcGYi9VbmZN4ij4xAV
+	02QkQkTec9PiFaBwxVpJiioTHMdAeLNYifpb3EhKCP3pCg5megfBvIRUMjP1rYWI
+	x5yEYZO5KrhytbJ8LAJStmOZwdwavXRdAyYuSO901jMVPA+RsB44a5q27YPL+Kvg
+	TjSg/sdlCKDc8G6g==
+Received: (qmail 2222706 invoked from network); 30 Sep 2024 16:59:59 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 30 Sep 2024 16:59:59 +0200
+X-UD-Smtp-Session: l3s3148p1@qvFmdVcj6uYujnsJ
 From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 To: linux-renesas-soc@vger.kernel.org
 Cc: Biju Das <biju.das.jz@bp.renesas.com>,
 	Wolfram Sang <wsa+renesas@sang-engineering.com>,
 	Vinod Koul <vkoul@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: [PATCH 2/3] dt-bindings: dma: rz-dmac: Document RZ/A1L SoC
-Date: Mon, 30 Sep 2024 16:59:53 +0200
-Message-ID: <20240930145955.4248-3-wsa+renesas@sang-engineering.com>
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	dmaengine@vger.kernel.org
+Subject: [PATCH 3/3] dmaengine: sh: rz-dmac: add r7s72100 support
+Date: Mon, 30 Sep 2024 16:59:54 +0200
+Message-ID: <20240930145955.4248-4-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240930145955.4248-1-wsa+renesas@sang-engineering.com>
 References: <20240930145955.4248-1-wsa+renesas@sang-engineering.com>
@@ -70,70 +65,45 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Document the Renesas RZ/A1L DMAC block. This one does not require clocks
-and resets, so update the bindings accordingly.
+Update descriptions and make getting resets optional.
 
 Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 ---
- .../bindings/dma/renesas,rz-dmac.yaml         | 27 +++++++++++++------
- 1 file changed, 19 insertions(+), 8 deletions(-)
+ drivers/dma/sh/Kconfig   | 6 +++---
+ drivers/dma/sh/rz-dmac.c | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml b/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
-index ca24cf48769f..e05aaf24eb64 100644
---- a/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
-+++ b/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
-@@ -4,18 +4,16 @@
- $id: http://devicetree.org/schemas/dma/renesas,rz-dmac.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/dma/sh/Kconfig b/drivers/dma/sh/Kconfig
+index c0b2997ab7fd..2b2e8ca257f5 100644
+--- a/drivers/dma/sh/Kconfig
++++ b/drivers/dma/sh/Kconfig
+@@ -49,10 +49,10 @@ config RENESAS_USB_DMAC
+ 	  SoCs.
  
--title: Renesas RZ/{G2L,G2UL,V2L} DMA Controller
-+title: Renesas RZ/{A1L,G2L,G2UL,V2L} DMA Controller
+ config RZ_DMAC
+-	tristate "Renesas RZ/{G2L,V2L} DMA Controller"
+-	depends on ARCH_RZG2L || COMPILE_TEST
++	tristate "Renesas RZ/{A1,G2L,V2L} DMA Controller"
++	depends on ARCH_R7S72100 || ARCH_RZG2L || COMPILE_TEST
+ 	select RENESAS_DMA
+ 	select DMA_VIRTUAL_CHANNELS
+ 	help
+ 	  This driver supports the general purpose DMA controller found in the
+-	  Renesas RZ/{G2L,V2L} SoC variants.
++	  Renesas RZ/{A1,G2L,V2L} SoC variants.
+diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c
+index 811389fc9cb8..03f3f99f0f4a 100644
+--- a/drivers/dma/sh/rz-dmac.c
++++ b/drivers/dma/sh/rz-dmac.c
+@@ -893,7 +893,7 @@ static int rz_dmac_probe(struct platform_device *pdev)
+ 	/* Initialize the channels. */
+ 	INIT_LIST_HEAD(&dmac->engine.channels);
  
- maintainers:
-   - Biju Das <biju.das.jz@bp.renesas.com>
- 
--allOf:
--  - $ref: dma-controller.yaml#
--
- properties:
-   compatible:
-     items:
-       - enum:
-+          - renesas,r7s72100-dmac # RZ/A1L
-           - renesas,r9a07g043-dmac # RZ/G2UL and RZ/Five
-           - renesas,r9a07g044-dmac # RZ/G2{L,LC}
-           - renesas,r9a07g054-dmac # RZ/V2L
-@@ -93,13 +91,26 @@ required:
-   - reg
-   - interrupts
-   - interrupt-names
--  - clocks
--  - clock-names
-   - '#dma-cells'
-   - dma-channels
-   - power-domains
--  - resets
--  - reset-names
-+
-+allOf:
-+  - $ref: dma-controller.yaml#
-+
-+  - if:
-+      not:
-+        properties:
-+          compatible:
-+            contains:
-+              enum:
-+                - renesas,r7s72100-dmac
-+    then:
-+      required:
-+        - clocks
-+        - clock-names
-+        - resets
-+        - reset-names
- 
- additionalProperties: false
- 
+-	dmac->rstc = devm_reset_control_array_get_exclusive(&pdev->dev);
++	dmac->rstc = devm_reset_control_array_get_optional_exclusive(&pdev->dev);
+ 	if (IS_ERR(dmac->rstc))
+ 		return dev_err_probe(&pdev->dev, PTR_ERR(dmac->rstc),
+ 				     "failed to get resets\n");
 -- 
 2.45.2
 

@@ -1,58 +1,70 @@
-Return-Path: <dmaengine+bounces-3311-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3312-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C64289966EE
-	for <lists+dmaengine@lfdr.de>; Wed,  9 Oct 2024 12:20:48 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B8CF996743
+	for <lists+dmaengine@lfdr.de>; Wed,  9 Oct 2024 12:28:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2B28DB24B29
-	for <lists+dmaengine@lfdr.de>; Wed,  9 Oct 2024 10:20:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 21DA01F228DE
+	for <lists+dmaengine@lfdr.de>; Wed,  9 Oct 2024 10:28:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21ADF18FC7E;
-	Wed,  9 Oct 2024 10:20:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09B1218FDCC;
+	Wed,  9 Oct 2024 10:28:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sypaa8E4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R/IUZLiG"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC02518F2EA;
-	Wed,  9 Oct 2024 10:20:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C0E618E030
+	for <dmaengine@vger.kernel.org>; Wed,  9 Oct 2024 10:28:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728469230; cv=none; b=En8kxkFTI1iN4fMB2IWKZtR53jXGMJUjF6VDggxbfh9PZO7ZLESvtKzVHF/wbhRh0JXkqsqDvKG4NHLY6HuGi2TIqRRPbv/wqmF3/vYLz+kxoDzRKl5C44dsIJis3S34z40LaOQYK+HDEnHwNldEg1rxQ88uGdi4s07xsd3V130=
+	t=1728469705; cv=none; b=AGrC5aJ5RmsF1skt//fLFb/Az70cXvFf7UeEtZ02ApUdPb0fwQ193jYSnjc1hWAK9noW8D4GiaTnnYw4kfKu9q7ChzeyvXWaJWjhmnRjvcROIPtftOVZ8QAJxViZsAn9J66ZtEwl2l+GMh1s0WpGQB7XpiZ70jBA04OLLTeoy8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728469230; c=relaxed/simple;
-	bh=ImAK0CpUwm+JPbTzbW7azTUBVNfLGbvl7aS7sfbdp0E=;
+	s=arc-20240116; t=1728469705; c=relaxed/simple;
+	bh=/fIjIpUdHAzWUFceihGJMz4qHHzjyT7pvRboVHLIXt8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EFU4Eg0EVpfIPO32qoWIZJJiYtqmAbbq5v8BUboN4WK4Eh0I5SR4RjkU3G4wKbmh6MRr+L2zQBvcPzN0OOKD7tkdLbfAOyyiQ+wPoNLcIgdtP7o64QXcGMdo/S4kErcaA8qgPLEeeNIiwO8rTCrzi1p2WcZKu30z5IKI9uOhYPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sypaa8E4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D816C4CED5;
-	Wed,  9 Oct 2024 10:20:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728469229;
-	bh=ImAK0CpUwm+JPbTzbW7azTUBVNfLGbvl7aS7sfbdp0E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Sypaa8E4XTR2h+6vO973S9djHACjIXek0KLq783ADF8tNtOe1bMZrJFf0zlt8+zSs
-	 OLRAtppFEIb5Ic0mWDNDYNRaI6e9/Z7vBQGyOQ8guZklNp3J6lYVvOJPY0Nte+XhtF
-	 xT1b91GGI33rYAt7gxwLcB1d3y1SBKs6bb4MxTTF1y6tGBweQi8zO12oDVI1/KpONI
-	 bOJQtQv0XV690wHla57wDR2aHvoM6Up16kaIYdw6AVyfMWDvtpnERh2dLqJ6WBvkYw
-	 EhkKXnH7yqObLqkMathJ5jYncRSwZXMHxI2dTYJuZPN1g66Yyks/L1YgZFWJ7ipDTo
-	 JPDgtbBAM36Bg==
-Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-5e5d0a80db4so3555289eaf.3;
-        Wed, 09 Oct 2024 03:20:29 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU7z+7jIIjC2P1U0jY1OGCX8+52+FZTOCeeDTZNMmoAY3h4n928OdSmCrC5aDF5xKtuEfbpzftJh1QELJLcCaU=@vger.kernel.org, AJvYcCU8FbU8leUEnj022ykj0ZJaI3x461l+mWVwkX91+D++0TlkjLj2X7WXN9VOvyqnoGEo6J2nIfboYVSi@vger.kernel.org, AJvYcCUFVzm7V+C/Z2wSNGBm2S7yFIrEKci5qFXJ74V7VvZrHIs40oEmmpA62Fid35+RKGjnRYEYniDNjhahhf6/@vger.kernel.org, AJvYcCUHkDTQSCsIevhis5JW7CtlUW/zSE8GUFzgQV8wgUkcj7R1dGC850kApuYWMap2qK9pkKdjDqd85npi@vger.kernel.org, AJvYcCUjipJwam9lVqW71OhF9ej/sFfsxKaDCcqX2yRJ12nen4tyZ1ylp8EkwVT2IkYHQ2yXubsnRUQADHo6@vger.kernel.org, AJvYcCUp1QUsl/llHp9Ud9boh8PVzlIzPEovDn6qsX2tj5cnhe5ejTspBgpmFA6QswLaWJUEitT0RBdDH6qnBRY=@vger.kernel.org, AJvYcCUz1nO7xw83bSHa2WHLdL190FWS4/lZhUivQqcT6WPr1TeztHSKURzx4boWh9zTFdRcA075MBHLlbtS@vger.kernel.org, AJvYcCV8K4bhWy20QNldimSqcIdlv+Z7uEsvWNbuS8qPJMJc0AlpLEMRn4BMMTIKAS7wAAqPGXSKKY1Ch80m@vger.kernel.org, AJvYcCVKbDbNlbCvq8f0d+SkA3r9bSKuRxLWgH38IaHbP2x7tR23/GT1y13SgxX4CO3yU31TS/mjKXraXGlwnNlY@vger.kernel.org, AJvYcCVWj0XSWFMzZAgH0b8PtTvwutQ0
- JquorXUhjwLOLkxX25FcIQS0vLm6v+V4I5lZDCUI9bwrmRt10RTW2A==@vger.kernel.org, AJvYcCVb5Xfd8I1wHNySBxd4ISZJHauEqZKNHqtL3alZ9MsSRoNiaCrgT8GvhoZg6T/JIvqzD5EcTaLtLdi6@vger.kernel.org, AJvYcCVlvSujGGmMVPSMGxuROjTXqi5k/dBNPZ+dppj4+Bv7E7yUecAVJYPyu/dOc3pQJOciMbVi3EcdEogQ@vger.kernel.org, AJvYcCWKFQeoEmjqbAOYjHpLG3t3SVXyhEATWl2KOIrGF/ZvSqOsbbC3bTM1CNnycGXZmw0et/M75BZhR+RMjvS2@vger.kernel.org, AJvYcCWPwk/6y0Rtp78PWIdFytLoq6bqb9z641B4psA+7cT67sNS3kcAUQJHCJlxG1rvqaTXzIzZy2lE9ys=@vger.kernel.org, AJvYcCWVGb5O/51e1C2pDl0FlYealE8S8mXXcYJ6swTSzz/IHAALH6YhAdHAxKyf1OoQLgTRTbt3hRPGCKerT74=@vger.kernel.org, AJvYcCWk4P26oKArraNo66o+ELkqBOeXRORrnUSYKaDjO+f7T+3WKZtv2sEOAA3LMth7S9emWrlF+Dvh@vger.kernel.org, AJvYcCWt8Onq29KmSvnAZR6jobjdVavcYrkGNIdioXxuTbxigWK3WGIyOgpUT42xXoRyXdCwlLH+mlc6FaNcnfhvP5TfEQ==@vger.kernel.org, AJvYcCWuTi/EGEOQdGj7HrqM1EaX1Ktwi4KECFYb61NcoeAIFgO1rYWfj/xV3KN5wUQm043pFaT5A26p+wSH@vger.kernel.org, AJvYcCXi2BIQFD6ExeE55giEfIgb/YEg8T5HaID11SO9vzydHSj3oFku8fBERyEtFgkQkRes3lf2xdIEkRXApbNptgV
- h@vger.kernel.org, AJvYcCXipGIO4LNa4qTjapDFOw/1tWG0euUmbwpm2bQLe2FI/xp6C1hy4+VjqY+/NF0Sox/8uzhVElGb+6Qjrzg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUbrkwaL51zZQK6WHOki32c8LpB3QVpB6nuZ6zFxZaG5w652B6
-	2ob98S9sUoN7bUPBaMWN1CA5LChdYNCq7sQF8tPZVgbsy3RPL5+hXBLZPsa8w6s5/bf8zdhkdEK
-	2tIC/E6zieSkniDmlY7fXaBbTzjY=
-X-Google-Smtp-Source: AGHT+IF28e1A9mtOEy4wCWwLUrfMAFq/4+DT8Vi41Eljnp8AjlauSlJofg4NJprxAH2sFsPScvE36aWo6OHCPjXQ49c=
-X-Received: by 2002:a05:6820:270f:b0:5e7:c925:b05 with SMTP id
- 006d021491bc7-5e987aadf58mr1212364eaf.2.1728469228716; Wed, 09 Oct 2024
- 03:20:28 -0700 (PDT)
+	 To:Cc:Content-Type; b=fZNmncSppgmuBMPavI9D/gPFjr68L2tjQf5ePe5rKVw2AQiAixUeAp70EKSiIBGs8tYO6xAzVrWQcUBc67FgzHvqOj/z+JsoqKxzIzqaW7KCQEKmzwKh830uW8XoNTNbFpWgTFj27G2EN3q3tK0N2WYraZD+ttKaZ8qD/wLJxwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=R/IUZLiG; arc=none smtp.client-ip=209.85.219.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e2904ce7e14so325190276.0
+        for <dmaengine@vger.kernel.org>; Wed, 09 Oct 2024 03:28:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1728469702; x=1729074502; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/fIjIpUdHAzWUFceihGJMz4qHHzjyT7pvRboVHLIXt8=;
+        b=R/IUZLiGTVMjm+vz/itDZc9wmAPVMljxmRitpZEJud1G0u3w5i1YUFXS5nVV3WYoz8
+         ubvhh9K122Gjzldf8MIilxZWJIq+pHQJNBlZFum0GVuFc1MEaHETL5T008QXAFwPq1ot
+         kitLFU3/SkC2aWezlO4OguLTOZSf+tA1tyYrfik4ykoNQkvXAj6c52HeG1Ysmw2AI238
+         HsY2f3tX4OKHncsdhEvf1LEfHqNJ6jQgUxWv1stM9PG3qos2FQm71ynZckctR1C4pJwx
+         vtDImDcHsDnvehucXFysFeu2BI8sfq7nFQW1sE+ns0FrP0/6loH6Z+NZH4YNYSRSMgNb
+         7/VA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728469702; x=1729074502;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/fIjIpUdHAzWUFceihGJMz4qHHzjyT7pvRboVHLIXt8=;
+        b=qh/uURAiQ+POigMCzkzKyPIQBu9dr7xeAhGYA8oFFcnrS8IR6YFicdX7Ml/iQLPIvQ
+         kdIhKmUu05uNpJo2tIlF7PhgH2cShQx2c86y38m1abl/06QPdzSsGiR1CnHx6jcJ3TCQ
+         DEFy9Ez34g/vw/OW+u8aHQ7F3bgTrS+senUg3CZsSnwTFLO/DHkkwnjxZvk6T6SvJWh9
+         hJ9t6xxmaeFd5ZEcUstbaGDDFMmnimzb/X+TpvdMk7fM3Ira8/eWFEQHzmlWCLT2GGKi
+         085RpecI2bdHV8b6fLlixyL18QNwJnvF33904acWkTQN8aK7dNnTkDixSCQ0FSThyvvC
+         QrXg==
+X-Forwarded-Encrypted: i=1; AJvYcCUlJd+JDO+m2IzzbzMjp98NrHRQ9Q9qH6qz/0ADIiYRgiPhMsrIwXmtDoL/qTUzJ0LKJQo2jlC4bew=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyl/UAd65eQ9BewW9rkZzcLQNQLyDjt1m13v8u3j3XE7jdNORVD
+	fWklgiHZcpoVNlnLXxufysHh9nosHXnpXh08E1pc5Q7i+DsH9ZXEo/sm0Do495yp8mRXHckF37/
+	5oMhIVGl5MwExgZiOuOixL8Xba2fMwsnFXVu+3Q==
+X-Google-Smtp-Source: AGHT+IHNaU3Z3+DDKTWwqyhccdWy6KGvX0jRFFJtFda2WTvGLlJcpHA53hhWZp12VBznxD4kUpVSZMoh/Lgesk7avnk=
+X-Received: by 2002:a25:eb02:0:b0:e25:96a4:1706 with SMTP id
+ 3f1490d57ef6-e28fe43f3d1mr1744852276.19.1728469701975; Wed, 09 Oct 2024
+ 03:28:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -65,19 +77,18 @@ References: <20241004094101.113349-1-sakari.ailus@linux.intel.com>
  <20241007222502.GG30699@pendragon.ideasonboard.com> <CAPDyKFrGNwna6Y2pqSRaBbRYHKRaD2ayqQHLtoqLPOu9Et7qTg@mail.gmail.com>
  <CAJZ5v0jvJyS7D5-wURi2kyWN-rmNa+YqupeQJ000pQRVd9VBcQ@mail.gmail.com>
 In-Reply-To: <CAJZ5v0jvJyS7D5-wURi2kyWN-rmNa+YqupeQJ000pQRVd9VBcQ@mail.gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 9 Oct 2024 12:20:16 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0htLbrFeby43Ycqpaihqd4x56MokC9sTVRBmTTQSX7vmQ@mail.gmail.com>
-Message-ID: <CAJZ5v0htLbrFeby43Ycqpaihqd4x56MokC9sTVRBmTTQSX7vmQ@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Wed, 9 Oct 2024 12:27:45 +0200
+Message-ID: <CAPDyKFqh_BS=6eN4tQzZ20sWCHL3kdnrY=1Mgd7B9gfBamm8bw@mail.gmail.com>
 Subject: Re: [PATCH 00/51] treewide: Switch to __pm_runtime_put_autosuspend()
-To: Ulf Hansson <ulf.hansson@linaro.org>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	linux-bluetooth@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, amd-gfx@lists.freedesktop.org, 
-	nouveau@lists.freedesktop.org, linux-stm32@st-md-mailman.stormreply.com, 
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org, 
+	dmaengine@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	amd-gfx@lists.freedesktop.org, nouveau@lists.freedesktop.org, 
+	linux-stm32@st-md-mailman.stormreply.com, 
 	linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, 
 	linux-i3c@lists.infradead.org, linux-iio@vger.kernel.org, 
 	linux-input@vger.kernel.org, patches@opensource.cirrus.com, 
@@ -94,8 +105,7 @@ Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 8, 2024 at 8:24=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.org=
-> wrote:
+On Tue, 8 Oct 2024 at 20:25, Rafael J. Wysocki <rafael@kernel.org> wrote:
 >
 > On Tue, Oct 8, 2024 at 12:35=E2=80=AFAM Ulf Hansson <ulf.hansson@linaro.o=
 rg> wrote:
@@ -185,6 +195,15 @@ rs
 > .runtime_idle() callback bothers with using this special
 > pm_runtime_put_autosuspend() thing, which really means "do a
 > runtime_put(), but skip my .runtime_idle() callback".
+
+My guess is that it's in most cases a legacy pattern that is being
+followed. Also note that rpm_idle() didn't "always" tag on the
+RPM_AUTO flag, even if it's quite a while ago (2013) since we added
+it.
+
+Unless there is some actual optimization involved, as it also allows
+us to skip calling rpm_idle() and go directly for rpm_suspend().
+
 >
 > > >
 > > > >
@@ -202,6 +221,13 @@ d
 >
 > What really is needed appears to be a combination of
 > pm_runtime_mark_last_busy() with pm_runtime_put().
+
+This makes sense to me too, but I don't think we should limit it to this.
+
+Making pm_runtime_put_autosuspend (or if the name
+"pm_runtime_put_suspend" is better?) to do the similar thing, is
+probably a good idea too. At least in my opinion.
+
 >
 > Granted, pm_runtime_put() could do the pm_runtime_mark_last_busy()
 > thing automatically if autosuspend is enabled and the only consequence
@@ -209,12 +235,11 @@ d
 > timer expires, which should not be a problem in the vast majority of
 > cases.
 
-That said, it is likely better to avoid surprising the current users
-of pm_runtime_put() and define something like
+Right.
 
-static inline void pm_runtime_touch_and_put(struct device *dev)
-{
-        pm_runtime_mark_last_busy(dev);
-        pm_runtime_put(dev);
-}
+I guess we should expect the *sync* variants to be used, if the timer
+really needs to be overridden.
+
+Kind regards
+Uffe
 

@@ -1,65 +1,67 @@
-Return-Path: <dmaengine+bounces-3315-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3323-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D6949989F8
-	for <lists+dmaengine@lfdr.de>; Thu, 10 Oct 2024 16:41:43 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99AAC998A0D
+	for <lists+dmaengine@lfdr.de>; Thu, 10 Oct 2024 16:43:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7E8C41C24491
-	for <lists+dmaengine@lfdr.de>; Thu, 10 Oct 2024 14:41:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 410FD1F270D9
+	for <lists+dmaengine@lfdr.de>; Thu, 10 Oct 2024 14:43:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9D961E5034;
-	Thu, 10 Oct 2024 14:31:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FA611F8F0F;
+	Thu, 10 Oct 2024 14:31:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="169sq+2K"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="pVhB0R01"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F0EB1E5019;
-	Thu, 10 Oct 2024 14:31:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993A81F892A;
+	Thu, 10 Oct 2024 14:31:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728570698; cv=none; b=oKdWoLeEl0RZfjtOhrMldTMiaE/ZNDsQocTehN/vwM6eZVlp8D125KvL/KU2a4QxA4nzg0ygEPoy16l0eEzmm8pAzwqrGqUC2NXO4EkB+MpsVsXIZA0fMSYn50dK6aBUET/k/orWvO714ddti9h2RJJiqFkxp1ecDj0Y565xTVI=
+	t=1728570710; cv=none; b=bw2st9MZhiAbgHd+cVmo7PVKm0YHRD0lQIHWe4cZQ/bV76T6clIiYetaouqpFqCqjv4v8CDz33cKsFzVQXaYC6dI2tgHcvxjTWzF2mNF4xykpbnmDaDe669Z3LxtvHf/eJsiHCfKmXBN92OaZzAVkU2eyGu0Q6Z2jVp5vCvl8Xs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728570698; c=relaxed/simple;
-	bh=zX/y3KjVM7XZ1/fA2LM2GqE67loJgY+qwscuZ4oeK4A=;
-	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=NOI3SpSNvYgMhtvHKhapkvVqLvlkTODX4pbfMnwRxaoIyqRhVHJ/OLacguSuvEcV3LD9pJTKkgvTm3uLi1u+17Uboy+pxUTFsbf2vENiQs9eALFNpcHpOSIbBjSlaFLVcSkC2nvM71fFyE6BFv5lmOBGnC7Ss5yxwCK7s/iJGVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=169sq+2K; arc=none smtp.client-ip=185.132.182.106
+	s=arc-20240116; t=1728570710; c=relaxed/simple;
+	bh=5b5rfrygcx7Qo9y6A9GF0vdCRsrnMPdtDmlEDViOX1s=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=AVPNqLMeYr24YRHqmOR0awO/1xUpmCfHFaWpTC5dlqjcAlZ+zBzWcaFROtVGs4Kelvy6gdJIQwE0Y7IL4KcEewGhrk1VCCG+tVqQ+6XSkLQVrexqXACFVp/0LHgL/CaA7a+r3T+TVacVVuEr7cLd+/AEXmAgcct/ojCo+zmEwe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=pVhB0R01; arc=none smtp.client-ip=91.207.212.93
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49AE3d0V028646;
-	Thu, 10 Oct 2024 16:31:16 +0200
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49AEMAQA014760;
+	Thu, 10 Oct 2024 16:31:33 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=selector1; bh=5Wa1hO62y0JRJXVgsIkzCN
-	ugxFg4hqAuzrDxJki9j+0=; b=169sq+2KQR2Av+gIn5Gdd0QA5BEmV9yU+Sdf+T
-	ecVwlqDvfTFn5R8URk+SKvcOr6beiHs5vQSzcws6sQGTpUHOam3xhWx/qccAsbix
-	VA77RN6lVJqMpN104yjjzadlq1oTnaRu8NtYSmmDgHJkXG4JKizd2uW4jCVrARTQ
-	YGODFe0TcbeN76mOYoSGQhaSRv3+eia26KglJTTEicqyZRI62wG0Hsq1v73eDaNt
-	ssmvrdybv+H60B28OO1xGYkQ1uO/Nj1W6dO/TWylTztrxz/cyffm/1hu+ST2U2Ry
-	Jh7IpGM93+yjjScSgInYztjHBabRl1mJ1LxlYAnXpucZKLdw==
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	8zvSJPaOxFyx6iKmFarEMp7/qdMh7rTZXLJBCgsAQ4g=; b=pVhB0R01g1VunsM7
+	vmZThmKunyzqYZk7aV16FlLXg4imz4TEuz0xxLJ7s2+FeN2uDyQWhA1rW7c8YkrO
+	6t3sxtH96U5OhtHWFK8OXhIPoJ40VkZuBz9I6W1lXxhNCODOga6PvP2G8qxHzkbm
+	VIo7rSPsRY1u8EEPvfJkMQii2WP6TLi0FXPazeY4zntqkxyNVn6KbybjMz3q8wLA
+	8W2G15DzxX6LxQeJWmn3XiEubR1Y2Q/2eYSgQ0HMvZtwjBKbuNnWGblvspJ9RwD1
+	GmRqj28CflRGlTka8FT5jY3i7HLB8ZUT9tdw+wp4OuoiTEqvs8C5jJ298RlAGVO7
+	suXOWA==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4263434121-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 425q97xxb5-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Oct 2024 16:31:16 +0200 (MEST)
+	Thu, 10 Oct 2024 16:31:33 +0200 (MEST)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id C9B0B4008A;
-	Thu, 10 Oct 2024 16:30:17 +0200 (CEST)
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 5486940069;
+	Thu, 10 Oct 2024 16:30:21 +0200 (CEST)
 Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 514BF289A51;
-	Thu, 10 Oct 2024 16:28:06 +0200 (CEST)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2464D2954A5;
+	Thu, 10 Oct 2024 16:28:07 +0200 (CEST)
 Received: from localhost (10.252.31.182) by SHFDAG1NODE3.st.com (10.75.129.71)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Thu, 10 Oct
  2024 16:28:06 +0200
 From: Amelie Delaunay <amelie.delaunay@foss.st.com>
-Subject: [PATCH 00/11] STM32 DMA3 updates for STM32MP25
-Date: Thu, 10 Oct 2024 16:27:50 +0200
-Message-ID: <20241010-dma3-mp25-updates-v1-0-adf0633981ea@foss.st.com>
+Date: Thu, 10 Oct 2024 16:27:51 +0200
+Subject: [PATCH 01/11] dt-bindings: dma: stm32-dma3: prevent
+ packing/unpacking mode
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -68,10 +70,9 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAGbkB2cC/x2MywqAIBAAfyX23ILai/qV6KC51R4s0YpA+vek4
- 8DMJIgUmCIMRYJAN0c+9gyyLGDe9L4Sss0MSqhaCinQOl2h86rBy1t9UsS6NT11WeiFgdz5QAs
- //3Oc3vcDzqPYRGMAAAA=
-X-Change-ID: 20241010-dma3-mp25-updates-46b9e720290b
+Message-ID: <20241010-dma3-mp25-updates-v1-1-adf0633981ea@foss.st.com>
+References: <20241010-dma3-mp25-updates-v1-0-adf0633981ea@foss.st.com>
+In-Reply-To: <20241010-dma3-mp25-updates-v1-0-adf0633981ea@foss.st.com>
 To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
         Krzysztof
  Kozlowski <krzk+dt@kernel.org>,
@@ -91,47 +92,43 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
  definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
 
-The HW version of STM32 DMA3 inside STM32MP25 requires some tunings to
-meet the needs of the interconnect. This series adds the linked list
-refactoring feature to have optimal performance when addressing the
-memory, and it adds the use of two new bits in the third cell specifying
-the DMA transfer requirements:
-- bit[16] to prevent packing/unpacking mode to avoid bytes loss in case
-of interrupting an ongoing transfer (e.g. UART RX)i,
-- bit[17] to prevent linked-list refactoring because some peripherals
-(e.g. FMC ECC) require a one-shot transfer, they trigger the DMA only
-once.
-It also adds a new property, st,axi-max-burst-len, to clamp the burst
-length when AXI port is used.
-Finally this series also contains STM32MP25 device tree updates, to add
-DMA support on SPI, I2C, UART and apply the tunings introduced.
+When source data width/burst and destination data width/burst are
+different, data are packed or unpacked in DMA3 channel FIFO.
+Data are pushed out from DMA3 channel FIFO when the destination burst
+length (= data width * burst) is reached.
+If the channel is stopped before the transfer end, and if some bytes are
+packed/unpacked in the DMA3 channel FIFO, these bytes are lost.
+Indeed, DMA3 channel FIFO has no flush capability, only reset.
+To avoid potential bytes lost, pack/unpack must be prevented by setting
+memory data width/burst equal to peripheral data width/burst.
+Memory accesses will be penalized. But it is the only way to avoid bytes
+lost.
+
+Some devices (e.g. cyclic RX like UART) need this, so add the possibility
+to prevent pack/unpack feature, by setting bit 16 of the 'DMA transfer
+requirements' bit mask.
 
 Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
 ---
-Amelie Delaunay (11):
-      dt-bindings: dma: stm32-dma3: prevent packing/unpacking mode
-      dmaengine: stm32-dma3: prevent pack/unpack thanks to DT configuration
-      dmaengine: stm32-dma3: refactor HW linked-list to optimize memory accesses
-      dt-bindings: dma: stm32-dma3: prevent linked-list refactoring
-      dmaengine: stm32-dma3: prevent LL refactoring thanks to DT configuration
-      dt-bindings: dma: stm32-dma3: introduce st,axi-max-burst-len property
-      dmaengine: stm32-dma3: clamp AXI burst using st,axi-max-burst-len
-      arm64: dts: st: limit axi burst length in dma nodes of stm32mp25
-      arm64: dts: st: add DMA support on U(S)ART instances of stm32mp25
-      arm64: dts: st: add DMA support on I2C instances of stm32mp25
-      arm64: dts: st: add DMA support on SPI instances of stm32mp25
+ Documentation/devicetree/bindings/dma/stm32/st,stm32-dma3.yaml | 3 +++
+ 1 file changed, 3 insertions(+)
 
- .../bindings/dma/stm32/st,stm32-dma3.yaml          |  17 ++++
- arch/arm64/boot/dts/st/stm32mp251.dtsi             |  78 +++++++++++++++
- arch/arm64/boot/dts/st/stm32mp257f-ev1.dts         |   2 +
- drivers/dma/stm32/stm32-dma3.c                     | 107 +++++++++++++++++----
- 4 files changed, 185 insertions(+), 19 deletions(-)
----
-base-commit: 9852d85ec9d492ebef56dc5f229416c925758edc
-change-id: 20241010-dma3-mp25-updates-46b9e720290b
+diff --git a/Documentation/devicetree/bindings/dma/stm32/st,stm32-dma3.yaml b/Documentation/devicetree/bindings/dma/stm32/st,stm32-dma3.yaml
+index 7fdc44b2e6467928622a5bb25d9e0c74bb1790ae..5484848735f8ac3d2050104bbab1d986e82ba6a7 100644
+--- a/Documentation/devicetree/bindings/dma/stm32/st,stm32-dma3.yaml
++++ b/Documentation/devicetree/bindings/dma/stm32/st,stm32-dma3.yaml
+@@ -96,6 +96,9 @@ properties:
+                including the update of the LLI if any
+           0x3: at channel level, the transfer complete event is generated at the
+                end of the last LLI
++        -bit 16: Prevent packing/unpacking mode
++          0x0: pack/unpack enabled when source data width/burst != destination data width/burst
++          0x1: memory data width/burst forced to peripheral data width/burst to prevent pack/unpack
+ 
+ required:
+   - compatible
 
-Best regards,
 -- 
-Amelie Delaunay <amelie.delaunay@foss.st.com>
+2.25.1
 
 

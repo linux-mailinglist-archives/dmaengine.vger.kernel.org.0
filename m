@@ -1,176 +1,150 @@
-Return-Path: <dmaengine+bounces-3331-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3332-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 95BA9999270
-	for <lists+dmaengine@lfdr.de>; Thu, 10 Oct 2024 21:36:33 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA73E999FB1
+	for <lists+dmaengine@lfdr.de>; Fri, 11 Oct 2024 11:03:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1A7651F229A0
-	for <lists+dmaengine@lfdr.de>; Thu, 10 Oct 2024 19:36:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 79890287E6F
+	for <lists+dmaengine@lfdr.de>; Fri, 11 Oct 2024 09:03:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1781B1CDFC2;
-	Thu, 10 Oct 2024 19:36:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5471820C46D;
+	Fri, 11 Oct 2024 09:03:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dPvaLoCl"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="3R75dh2+"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4475A199E9B;
-	Thu, 10 Oct 2024 19:36:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F8B20ADE4;
+	Fri, 11 Oct 2024 09:03:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728588988; cv=none; b=aP76y1T7xaxqSWHK9xLcDPKGrt1Sfu2nkqEDcKOXqNSljmHfM6MqcgY/2/G5Nk9Bi2z8efJOil8UcpsRZkrr2WTLP/bAiUsdEjPxSetAviujiHWNBvxnDUnlnMXMFuwWgRApoeAgnqkuWVSKFIYSQ8Pqic7qdqqU3Ll24/b+PpU=
+	t=1728637415; cv=none; b=X2BowGoxjACNfPmHbYiRjLnK+dkpQg6LScClY8BR6WZnHyPhiGL0Ku2hYlt6V7fXRdZGW6SLE83aGkZblFCwihnRTRRqbR+/ZNUPyan58gtOREEY+zSsCmotrjzF++p5XhvqmN5hbsbssksqGut1jkxVeb7puwVpXZQp0NqPrp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728588988; c=relaxed/simple;
-	bh=V1FBsKi8p2h+u02jp8A26jsOKSKbITtx6QiKC0rMHyU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gO4YUYvguzQi6KJqMPLTh1AZrCn2E+Zze7g1TOArOJ991SXqAFpe5tAoZBuGYFNLIzu7zjQ2OhApjL2j+hOKX9D6b2GaY0B4iTWX0qJXA3Q3ndm5AYcAHfR3V+of9M8yBB9k9VCoFSeoCu5eRMmIymdOhU/hezZ4iCsmVzX/8SU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dPvaLoCl; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2fad100dd9eso14146651fa.3;
-        Thu, 10 Oct 2024 12:36:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728588984; x=1729193784; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sCZwKZXicxFc7OhOZXCMaFWfzpYZ6T6Z1WpwxTO5gBc=;
-        b=dPvaLoCl2Jl04SADfjr+5EpHSU6waz2+2K2t2tT6rWBn58P5Bj0TCNbYWBDJMBV/5v
-         vTOXKHDTcv8ekWSRcSp+Qov8e+FYVd2l5Af+y7GVnfSBFxj/K9tTFRk20ChbGXZ2lM5h
-         mIakOAE+7I6lq8t8aZEBZ00nofrdoCv9yK1wOQzYNUoZcwwTj3owTVlVqCP7BWCvbjZH
-         uUAMPlnoGmjUBrxXvoC/NpsQCErWkk5AxMj76DdNZJ6ZS8SyNm2Sk5WMFVK8ucE2twRH
-         gGoinb2W8BO12m4jMzE6GHZONMspjDAxjReX2UQ/zUOJZ7/HcgGHZtj9LH8IZAZstyxK
-         9/Jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728588984; x=1729193784;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sCZwKZXicxFc7OhOZXCMaFWfzpYZ6T6Z1WpwxTO5gBc=;
-        b=VYzPSi/VLwmz5VhqiCvBa1sRX1XpDFnKXR0Wptag0bHYnHzaR24UdSbzPq0L44KDds
-         SBk8FL9hr08cyAzODpjgpPIeKI4MhrkrMfKKlBM+vt51ek6LYSKY0IY/cwNMd6LzYQ+y
-         FjZdH6XxVmmWRDLMh3AUnMZw/dZdNtKRIg9aeqD5+MUszbmEBDo3tLrL/yB2VhJhPi6J
-         UEFLTutHnbt+yeezGz+tPLGfJr3rvzZp7/7t6/pQVWFk+NdmwofiqewcuSpvVUXU5xb6
-         LGsinwWf3y0DyTSgkV4B61XQbcg+COQtIuBsixNwaJOuVIXHMCCdnJv3mQnsJFfG0Txg
-         GvMg==
-X-Forwarded-Encrypted: i=1; AJvYcCUuMPZYJYffomVTjiFcrJZXBrizjfmTukUCX8XFIMsXisoU2YyqLu9ncmuGx+wak37AN+x44M4j5ncDjzA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzgRucrLxKkeXv9jHu/Fajmn0KLezC4W5PPvtlKDMLERFhvib3
-	B66sviuCvSTpl7EL7ufMcbSGjhLhqvNrRJzXtFoGERlCVHXSgZ/n
-X-Google-Smtp-Source: AGHT+IHVmzYRX3C1DeLNjIW8k0ByRI/oRBSbBG/kBdedX4hnOk5riP21cnFr14H1noAhf1FSwE0lVA==
-X-Received: by 2002:a05:651c:4ca:b0:2fb:dc2:21ea with SMTP id 38308e7fff4ca-2fb24edb97emr14476201fa.19.1728588983854;
-        Thu, 10 Oct 2024 12:36:23 -0700 (PDT)
-Received: from mobilestation ([85.249.18.22])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2fb24772be8sm3067291fa.137.2024.10.10.12.36.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2024 12:36:22 -0700 (PDT)
-Date: Thu, 10 Oct 2024 22:36:18 +0300
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Viresh Kumar <vireshk@kernel.org>, Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH v1 1/1] dmaengine: dw: Switch to LATE_SIMPLE_DEV_PM_OPS()
-Message-ID: <kg3uelu7772lk74p7rwxs72qo6pvzny2mkyxgocamcc2b4delr@x3qll3y3vhhz>
-References: <20241007150912.2183805-1-andriy.shevchenko@linux.intel.com>
+	s=arc-20240116; t=1728637415; c=relaxed/simple;
+	bh=Ha/AF5v+viIStrFAcTTJyf/v+jRRHbq4Sk/R278Ki44=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=iDVyz5xrYKlHH0+sJ4Lkkd1U2krriH3xBQX30SDY1PPFrp3hf9VGS6UCno3+yn1OqNmK1qrMgqsIcupuAjyL3hxnTVdMLpN5yqxVhrAa4Du7mtp9V8OOnocqY4w5dWqjq4IW3f7xcCgArIpWnU4nDH6EOQBdyWjNY2pzKgwqU7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=3R75dh2+; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49B82WQq014668;
+	Fri, 11 Oct 2024 11:03:11 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	W32014r5y3QWUubB7ejNQ9RucL4lQCYgXfxr9DFI93s=; b=3R75dh2+n959fKbq
+	+QQvxFOLciVR6SRNVBS4EZ3HqkbkSd6f5qRqAkI/AE2cAf6VyTPtc/OSY1MWLYXX
+	CnLrDrcQQVEAiuAoZkOdkvDZnoVv0maRtUVEVZtqWOfICN0N3hqEL9QuC9RYl4af
+	L1xZM67augvNz2FbiPvUSf5xZBMAh22MxQ9LmVF71WosnwRyJo/xoCsxQegEDfWN
+	gYkt+9cc4qMRlqvEdmfVRWsZi0SLkY1vziFKBt9a2f42sbNE3MBeA3jeQaGebyod
+	Ng+KlZQxLGq3bDQTempsZgwiVnb4KCIs+Fv+k+FNaAGEEU5FsMKkfHBEpmCbGUG+
+	Enm9ug==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 425w9xgt74-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 11 Oct 2024 11:03:11 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 93C594004B;
+	Fri, 11 Oct 2024 11:02:13 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id BD55626D0AD;
+	Fri, 11 Oct 2024 11:01:33 +0200 (CEST)
+Received: from [10.48.87.35] (10.48.87.35) by SHFDAG1NODE3.st.com
+ (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Fri, 11 Oct
+ 2024 11:01:33 +0200
+Message-ID: <3b7b46ca-426c-44a9-b4f2-ce104e0d3b1c@foss.st.com>
+Date: Fri, 11 Oct 2024 11:01:32 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241007150912.2183805-1-andriy.shevchenko@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 04/11] dt-bindings: dma: stm32-dma3: prevent linked-list
+ refactoring
+To: Rob Herring <robh@kernel.org>
+CC: Vinod Koul <vkoul@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        <dmaengine@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20241010-dma3-mp25-updates-v1-0-adf0633981ea@foss.st.com>
+ <20241010-dma3-mp25-updates-v1-4-adf0633981ea@foss.st.com>
+ <20241010181426.GA2107926-robh@kernel.org>
+Content-Language: en-US
+From: Amelie Delaunay <amelie.delaunay@foss.st.com>
+In-Reply-To: <20241010181426.GA2107926-robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
 
-On Mon, Oct 07, 2024 at 06:09:12PM GMT, Andy Shevchenko wrote:
-> SET_LATE_SYSTEM_SLEEP_PM_OPS is deprecated, replace it with
-> LATE_SYSTEM_SLEEP_PM_OPS() and use pm_sleep_ptr() for setting
-> the driver's pm routines. We can now remove the ifdeffery
-> in the suspend and resume functions.
-
-Nice clean up. Thanks!
-Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
-
--Serge(y)
-
+On 10/10/24 20:14, Rob Herring wrote:
+> On Thu, Oct 10, 2024 at 04:27:54PM +0200, Amelie Delaunay wrote:
+>> stm32-dma3 driver refactors the linked-list in order to address the memory
+>> with the highest possible data width.
+>> It means that it can introduce up to 2 linked-list items. One with a
+>> transfer length multiple of channel maximum burst length and so with the
+>> highest possible data width. And an extra one with the latest bytes, with
+>> lower data width.
+>> Some devices (e.g. FMC ECC) don't support having several transfers instead
+>> of only one.
+>> So add the possibility to prevent linked-list refactoring, by setting bit
+>> 17 of the 'DMA transfer requirements' bit mask.
+>>
+>> Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
+>> ---
+>>   Documentation/devicetree/bindings/dma/stm32/st,stm32-dma3.yaml | 3 +++
+>>   1 file changed, 3 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/dma/stm32/st,stm32-dma3.yaml b/Documentation/devicetree/bindings/dma/stm32/st,stm32-dma3.yaml
+>> index 5484848735f8ac3d2050104bbab1d986e82ba6a7..38c30271f732e0c8da48199a224a88bb647eeca7 100644
+>> --- a/Documentation/devicetree/bindings/dma/stm32/st,stm32-dma3.yaml
+>> +++ b/Documentation/devicetree/bindings/dma/stm32/st,stm32-dma3.yaml
+>> @@ -99,6 +99,9 @@ properties:
+>>           -bit 16: Prevent packing/unpacking mode
+>>             0x0: pack/unpack enabled when source data width/burst != destination data width/burst
+>>             0x1: memory data width/burst forced to peripheral data width/burst to prevent pack/unpack
+>> +        -bit 17: Prevent linked-list refactoring
+>> +          0x0: don't prevent driver to refactor the linked-list for optimal performance
+>> +          0x1: prevent driver to refactor the linked-list, despite not optimal performance
 > 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/dma/dw/pci.c      | 8 ++------
->  drivers/dma/dw/platform.c | 8 ++------
->  2 files changed, 4 insertions(+), 12 deletions(-)
+> Driver settings don't belong in DT. Perhaps reword it in terms of h/w
+> constraints (i.e. single transfer limitation).
 > 
-> diff --git a/drivers/dma/dw/pci.c b/drivers/dma/dw/pci.c
-> index e8a0eb81726a..a3aae3d1c093 100644
-> --- a/drivers/dma/dw/pci.c
-> +++ b/drivers/dma/dw/pci.c
-> @@ -76,8 +76,6 @@ static void dw_pci_remove(struct pci_dev *pdev)
->  		dev_warn(&pdev->dev, "can't remove device properly: %d\n", ret);
->  }
->  
-> -#ifdef CONFIG_PM_SLEEP
-> -
->  static int dw_pci_suspend_late(struct device *dev)
->  {
->  	struct dw_dma_chip_pdata *data = dev_get_drvdata(dev);
-> @@ -94,10 +92,8 @@ static int dw_pci_resume_early(struct device *dev)
->  	return do_dw_dma_enable(chip);
->  };
->  
-> -#endif /* CONFIG_PM_SLEEP */
-> -
->  static const struct dev_pm_ops dw_pci_dev_pm_ops = {
-> -	SET_LATE_SYSTEM_SLEEP_PM_OPS(dw_pci_suspend_late, dw_pci_resume_early)
-> +	LATE_SYSTEM_SLEEP_PM_OPS(dw_pci_suspend_late, dw_pci_resume_early)
->  };
->  
->  static const struct pci_device_id dw_pci_id_table[] = {
-> @@ -136,7 +132,7 @@ static struct pci_driver dw_pci_driver = {
->  	.probe		= dw_pci_probe,
->  	.remove		= dw_pci_remove,
->  	.driver	= {
-> -		.pm	= &dw_pci_dev_pm_ops,
-> +		.pm	= pm_sleep_ptr(&dw_pci_dev_pm_ops),
->  	},
->  };
->  
-> diff --git a/drivers/dma/dw/platform.c b/drivers/dma/dw/platform.c
-> index 47c58ad468cb..bf86c34285f3 100644
-> --- a/drivers/dma/dw/platform.c
-> +++ b/drivers/dma/dw/platform.c
-> @@ -157,8 +157,6 @@ static const struct acpi_device_id dw_dma_acpi_id_table[] = {
->  MODULE_DEVICE_TABLE(acpi, dw_dma_acpi_id_table);
->  #endif
->  
-> -#ifdef CONFIG_PM_SLEEP
-> -
->  static int dw_suspend_late(struct device *dev)
->  {
->  	struct dw_dma_chip_pdata *data = dev_get_drvdata(dev);
-> @@ -183,10 +181,8 @@ static int dw_resume_early(struct device *dev)
->  	return do_dw_dma_enable(chip);
->  }
->  
-> -#endif /* CONFIG_PM_SLEEP */
-> -
->  static const struct dev_pm_ops dw_dev_pm_ops = {
-> -	SET_LATE_SYSTEM_SLEEP_PM_OPS(dw_suspend_late, dw_resume_early)
-> +	LATE_SYSTEM_SLEEP_PM_OPS(dw_suspend_late, dw_resume_early)
->  };
->  
->  static struct platform_driver dw_driver = {
-> @@ -195,7 +191,7 @@ static struct platform_driver dw_driver = {
->  	.shutdown       = dw_shutdown,
->  	.driver = {
->  		.name	= DRV_NAME,
-> -		.pm	= &dw_dev_pm_ops,
-> +		.pm	= pm_sleep_ptr(&dw_dev_pm_ops),
->  		.of_match_table = of_match_ptr(dw_dma_of_id_table),
->  		.acpi_match_table = ACPI_PTR(dw_dma_acpi_id_table),
->  	},
-> -- 
-> 2.43.0.rc1.1336.g36b5255a03ac
-> 
+
+Thanks for the review and suggestion. I'll reword it in V2. Indeed, it 
+is due to single transfer limitation, e.g. for ECC status registers 
+transfer.
+
+-bit 17: Prevent additional transfers due to linked-list refactoring
+   0x0: don't prevent additional transfers for optimal performance
+   0x1: prevent additional transfers to accommodate user constraints 
+such as single transfer
+
+
+Regards,
+Amelie
+
+>>   
+>>   required:
+>>     - compatible
+>>
+>> -- 
+>> 2.25.1
+>>
 

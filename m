@@ -1,90 +1,98 @@
-Return-Path: <dmaengine+bounces-3341-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3342-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF6F399CBDB
-	for <lists+dmaengine@lfdr.de>; Mon, 14 Oct 2024 15:49:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E3E6B99D63E
+	for <lists+dmaengine@lfdr.de>; Mon, 14 Oct 2024 20:16:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2C8DE1C22B2B
-	for <lists+dmaengine@lfdr.de>; Mon, 14 Oct 2024 13:49:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 21EDD1C2144E
+	for <lists+dmaengine@lfdr.de>; Mon, 14 Oct 2024 18:16:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45B4E18E1F;
-	Mon, 14 Oct 2024 13:49:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB9181AC8AE;
+	Mon, 14 Oct 2024 18:16:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="HDHwkhyT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gPcYicls"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9BEA18638;
-	Mon, 14 Oct 2024 13:49:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B18CE1AA79A;
+	Mon, 14 Oct 2024 18:16:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728913759; cv=none; b=RhG0eiOpE4f9LBAcTd1tAIV/r7d/+Iw5NEoI3GAowTdP7HLSGh8Wm9pwoTxu8xch3WKzAIyoKstD3sDmzFhGPZfS26kBbjhik/3fwz+hu2jpmBpyWqe/Yt4xRC2Qchzt3FlE46rnz50wRUX69eKHLRYdBCU2BKb/cFK7R+ZZd/E=
+	t=1728929792; cv=none; b=nPSB5jUjAF7cuDiqLtYBoS/aXIqTtHZGJD+KwzsVw9mREtnmMx5/U5TfdqqBgV14Wkgba2VErhUCJS0FKQ5PlEx8ev7aE0RNY4a5wo91F/nKaAlltBVPRkMal617DZqibAD3owzdPoBezQMKCA9fXicxx2vYrreZ0xZG44OQMAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728913759; c=relaxed/simple;
-	bh=oPkmE0aNJR2zZY61xEXGvtbgSlAweUgRLOYeDwL02EA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tEL9RZYinjpVbiBgw8EXKAdyy9tuvHcqws7J5mti4WF4j1TOveaJ8hUKpk3IH8b5jU/w/I+EHN5VXcjZeSMd5VxA2NsfKgxNNYIRMy08fKl+Gm8bWkuzFNKzQENVsA7oYbR2DdF3gupYYrWFnAOGP2kFSsGx4g0xKMF0qcFTxiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=HDHwkhyT; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=S8rTG
-	iq7SnFK4SfAjJXmtENG0UkwLoAYhI6EzKbcjzg=; b=HDHwkhyTPUMb50KbpibDr
-	uWTIjm4C9PM0tBNOuBorWvxBqgIoScZAGllcq0JS1udehugcwNV3NjPtpoDbe0+O
-	TLKTYw8FCLyagzygmv63+jfMos9knvWQFYXqqhM+fUnSp6HsXVWf3xzKG+4mDHMG
-	dUHUJHppgJ/4OltdGMVnC4=
-Received: from tcy.localdomain (unknown [120.136.174.178])
-	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wD3vaA1IQ1nMAVNBA--.5990S2;
-	Mon, 14 Oct 2024 21:48:51 +0800 (CST)
-From: ChunyouTang <tangchunyou@163.com>
-To: manivannan.sadhasivam@linaro.org,
-	fancer.lancer@gmail.com,
-	vkoul@kernel.org
-Cc: dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	tangchunyou@163.com
-Subject: [PATCH] dma/dw-edma: chip regs base should add the offset
-Date: Mon, 14 Oct 2024 21:48:32 +0800
-Message-Id: <20241014134832.4505-1-tangchunyou@163.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1728929792; c=relaxed/simple;
+	bh=or/9n08L+r2SABq92t68DUSRRGWy7/LVH1rEDc0EUWI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Yz8SaGkhsKJPmp2WDMlJrK4+B/b/CzrAaeRHveDgTJwLfoUD3RdDr8VuKqPVAgns+2ZWR55xkItln1HLQWJIgo/545zMtItJ7D2Jm64o15IR4wVL7YiFPX6dHXrc3wCQnBMYUnowBRmlft62B36yF3Y7BVu/LczTPACHAeL2xXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gPcYicls; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB251C4CEC3;
+	Mon, 14 Oct 2024 18:16:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728929792;
+	bh=or/9n08L+r2SABq92t68DUSRRGWy7/LVH1rEDc0EUWI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gPcYicls39vMcuFBiXJL6KRWsMx7FtrVHF41K9xQ/H/8bDe2ikLmvVpb158lvyySi
+	 C6fM528gm3lcYB8+1tpko9Nn1gs0U5wCbMfuS5wUx24Ubpmhvm4rhqVmCM4BSQZnKG
+	 sAWn9c36rQ3H/ZFXh5IYTMouykwZF2KsAGhObcUuc2Vk1WEJ9e2M52FNrhZcOhA1cn
+	 o+YgulxJozGPOiXsUtfud5pY1wo+WtMNGbElgjDDndUJG2S8s1N0Uun2lkcHiVtjqb
+	 L8VJAvWlx/qdefDgo2nuCaRNYGq4G3M8ftira90XnBQUJH9+X61S8x88luFVyugZPZ
+	 7y1bevdj5IZow==
+Date: Mon, 14 Oct 2024 23:46:28 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Advait Dhamorikar <advaitdhamorikar@gmail.com>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org, anupnewsmail@gmail.com
+Subject: Re: [PATCH] drivers/dma: Fix unsigned compared against 0
+Message-ID: <Zw1f/OviOSJ9eqJE@vaman>
+References: <20241005093436.27728-1-advaitdhamorikar@gmail.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3vaA1IQ1nMAVNBA--.5990S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrtFyrtrWxuFW8KFyftr15twb_yoW3Crb_C3
-	s8XrWxXrZ8tFnxAF9rCrsxZr98u3s7Zr4fuF18tF90qF43ZF909r4UZrnrZr12g347GF9x
-	AF45Zr48Zr4UKjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sRWT5dJUUUUU==
-X-CM-SenderInfo: 5wdqwu5kxq50rx6rljoofrz/1tbiZQx4UWcNEzXYngAAsK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241005093436.27728-1-advaitdhamorikar@gmail.com>
 
-From: tangchunyou <tangchunyou@163.com>
+On 05-10-24, 15:04, Advait Dhamorikar wrote:
+> An unsigned value can never be negative,
+> so this test will always evaluate the same way.
+> In ep93xx_dma_alloc_chan_resources: An unsigned dma_cfg.port's
+> value is checked against EP93XX_DMA_I2S1 which is 0.
 
-fix the regs base with offset.
+Please use subject line dmaengine: ... git log will tell you the tags to
+use
 
-Signed-off-by: tangchunyou <tangchunyou@163.com>
----
- drivers/dma/dw-edma/dw-edma-pcie.c | 2 ++
- 1 file changed, 2 insertions(+)
+I am fixing it up and applying
 
-diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-index 1c6043751dc9..2918b64708f9 100644
---- a/drivers/dma/dw-edma/dw-edma-pcie.c
-+++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-@@ -234,6 +234,8 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 	if (!chip->reg_base)
- 		return -ENOMEM;
- 
-+	chip->reg_base += vsec_data.rg.off;
-+
- 	for (i = 0; i < chip->ll_wr_cnt; i++) {
- 		struct dw_edma_region *ll_region = &chip->ll_region_wr[i];
- 		struct dw_edma_region *dt_region = &chip->dt_region_wr[i];
+> 
+> Signed-off-by: Advait Dhamorikar <advaitdhamorikar@gmail.com>
+> ---
+>  drivers/dma/ep93xx_dma.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/dma/ep93xx_dma.c b/drivers/dma/ep93xx_dma.c
+> index 995427afe077..6d7f6bd12d76 100644
+> --- a/drivers/dma/ep93xx_dma.c
+> +++ b/drivers/dma/ep93xx_dma.c
+> @@ -929,8 +929,7 @@ static int ep93xx_dma_alloc_chan_resources(struct dma_chan *chan)
+>  
+>  	/* Sanity check the channel parameters */
+>  	if (!edmac->edma->m2m) {
+> -		if (edmac->dma_cfg.port < EP93XX_DMA_I2S1 ||
+> -		    edmac->dma_cfg.port > EP93XX_DMA_IRDA)
+> +		if (edmac->dma_cfg.port > EP93XX_DMA_IRDA)
+>  			return -EINVAL;
+>  		if (edmac->dma_cfg.dir != ep93xx_dma_chan_direction(chan))
+>  			return -EINVAL;
+> -- 
+> 2.34.1
+
 -- 
-2.25.1
-
+~Vinod
 

@@ -1,205 +1,92 @@
-Return-Path: <dmaengine+bounces-3344-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3345-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E005599D684
-	for <lists+dmaengine@lfdr.de>; Mon, 14 Oct 2024 20:32:06 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E7EAA99D687
+	for <lists+dmaengine@lfdr.de>; Mon, 14 Oct 2024 20:32:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1E7351C24530
-	for <lists+dmaengine@lfdr.de>; Mon, 14 Oct 2024 18:32:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9B2101F211FB
+	for <lists+dmaengine@lfdr.de>; Mon, 14 Oct 2024 18:32:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FFE919E7ED;
-	Mon, 14 Oct 2024 18:32:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2B4213BC0D;
+	Mon, 14 Oct 2024 18:32:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fluyp9CN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wpd4GmnL"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C96231C95;
-	Mon, 14 Oct 2024 18:32:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BB06231C95;
+	Mon, 14 Oct 2024 18:32:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728930721; cv=none; b=JHQfqxjkIBY08ju5G7HVn8c6i6FOSgnqx1FRiKGBDSu1ZjRsaE5L9aOCV15QIYARWjfrVpEOdkbERANc1/K+OwSkCuY15uomZ5meogZio+fWf91MTqd9vYZYJrCkaMYSPiQbe8QIYwwYX3g5nG7xGysBoBqcLSDD4DOlS29yaiM=
+	t=1728930755; cv=none; b=G2Y6y0k8oXgeJVpEdREA7zjBH4SAwdWhfi905lllzJCwlnGp0iTIK1Ta74qhzABGgmwW984qlEkCu2kkKbsORLB9DlZs48ZIQ6ovhTIbBa7J5hTxjTknZ9k00f8cd7L1UphAMIcwbAwoM7gGQKVx+uUXTxlE3zPHM9HSlrRO3p4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728930721; c=relaxed/simple;
-	bh=RG4/nDT46kycXXQKtFYWQNbSP+F0U/tnpGLCt1EZXhw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DRXJ4T99hk1lm1fg6D3TnoVHtjupGUguaXJbRfYHtsSOWXNn8CWMldJaL27tiI0s/rOtLSd65+NgcRe3SAv4Bz2kSX3fSZsIcCo4cxl2uuSfbjDkgEzwVLnL7vWB7oFvr4iWw8SwsmRR0Y4kmc+6ExZA1aa/BektsTPIxO/O3aI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fluyp9CN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7D02C4CEC3;
-	Mon, 14 Oct 2024 18:31:59 +0000 (UTC)
+	s=arc-20240116; t=1728930755; c=relaxed/simple;
+	bh=3fsaV5CvX3cLmJSdgeCPLfOI3HAupGcliKAGMyZq3bk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=dDArEP4gLwLtoWvW8+Tm3Ej7DS2IoPlHDxy7WraOZtbeGzlZU77+MspSv8iksUBchlziwjq3kY0HdpcSv6hptimWm75hjFW0qAWvtHpFMdOGajl7n4ekV3NEi01JBpkKk23Gvl4u+xD9JeyoeP7ntapzt4NW5nuIT5vMkmlAl90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wpd4GmnL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EE09C4CEC3;
+	Mon, 14 Oct 2024 18:32:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728930720;
-	bh=RG4/nDT46kycXXQKtFYWQNbSP+F0U/tnpGLCt1EZXhw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fluyp9CNWo9lkTUnVwuUWcKwKSsWc0do/2EMgp7oEH14PzVufeX9YLuwv8fCBi/yv
-	 2+AqjFB6phy9haKvIbR4W9q9Bt4z7AaJe0OQXiHJVWmS7vuPy7ADz8IvBks+6u8RDh
-	 9qtKk1xdmedY7uHuA8sDAlvCPGR1ZFPWtB3bkv3O3wJyle3bOkiyN/NLeOkPuATZ28
-	 bgMxU+hExBbp7EZHpmzeWuwaFRsk8zMNI3f6rkDUJ78+ztSFUEo9iXagIpe+csX3cA
-	 5Nu9vZFyEXsGFwt5PLjvkTwQf8DeG5l1CouxBmDvO3W9yxmbeXkzC73P+gFaemxO3P
-	 /x1b3n77ZWToQ==
-Date: Tue, 15 Oct 2024 00:01:55 +0530
+	s=k20201202; t=1728930755;
+	bh=3fsaV5CvX3cLmJSdgeCPLfOI3HAupGcliKAGMyZq3bk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=Wpd4GmnLk9hx4OxHN/ciqsN/Ct7oEUlbV9E3RcFTD7y8AGs68h/Oz3Z5h7A2aO/5L
+	 H6RXd2Gf/HtQ1SVMqXwUqKXDAkywcUIXzSoktPxtGu2eLd0FoEK87smG5ktDThyG53
+	 wmj1ABTifAvRXtyX8SSSltGbNP43ymB2ymTaHFxm4pCniU2p1CwToTK0bSahaFiyQ4
+	 txnHa8SsihLet05+J/KgZUuw5C/vNBQzC9c9JGALwYtprKPRI2vZ/iFxSIhkdJ6dEk
+	 qUw3v8pOFjdujOG+9xjaIlynGtgzgOueGSROPckaviSQhF292LPMad3VDF/vKc+Flg
+	 bYXiMYuLsEeCg==
 From: Vinod Koul <vkoul@kernel.org>
-To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-Cc: konrad.dybcio@linaro.org, andersson@kernel.org, andi.shyti@kernel.org,
-	linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-	conor+dt@kernel.org, agross@kernel.org, devicetree@vger.kernel.org,
-	linux@treblig.org, dan.carpenter@linaro.org, Frank.Li@nxp.com,
-	konradybcio@kernel.org, bryan.odonoghue@linaro.org,
-	krzk+dt@kernel.org, robh@kernel.org
-Subject: Re: [PATCH v3 2/4] dma: gpi: Add Lock and Unlock TRE support to
- access SE exclusively
-Message-ID: <Zw1jm+cVpwz0xhGp@vaman>
-References: <20240927063108.2773304-1-quic_msavaliy@quicinc.com>
- <20240927063108.2773304-3-quic_msavaliy@quicinc.com>
+To: Peter Ujfalusi <peter.ujfalusi@gmail.com>, 
+ Jai Luthra <jai.luthra@linux.dev>
+Cc: Vignesh Raghavendra <vigneshr@ti.com>, 
+ Francesco Dolcini <francesco.dolcini@toradex.com>, 
+ Devarsh Thakkar <devarsht@ti.com>, Rishikesh Donadkar <r-donadkar@ti.com>, 
+ dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240930-z_cnt-v2-1-9d38aba149a2@linux.dev>
+References: <20240930-z_cnt-v2-1-9d38aba149a2@linux.dev>
+Subject: Re: [PATCH v2] dmaengine: ti: k3-udma: Set EOP for all TRs in
+ cyclic BCDMA transfer
+Message-Id: <172893075181.75950.15122834753763958777.b4-ty@kernel.org>
+Date: Tue, 15 Oct 2024 00:02:31 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240927063108.2773304-3-quic_msavaliy@quicinc.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-On 27-09-24, 12:01, Mukesh Kumar Savaliya wrote:
-> GSI DMA provides specific TREs namely Lock and Unlock TRE, which
-> provides mutual exclusive access to SE from any of the subsystem
-> (E.g. Apps, TZ, ADSP etc). Lock prevents other subsystems from
-> concurrently performing DMA transfers and avoids disturbance to
-> data path. Basically for shared SE usecase, lock the SE for
-> particular subsystem, complete the transfer, unlock the SE.
 
-it is dmaengine: xxx so please update that
-
+On Mon, 30 Sep 2024 13:02:54 -0400, Jai Luthra wrote:
+> When receiving data in cyclic mode from PDMA peripherals, where reload
+> count is set to infinite, any TR in the set can potentially be the last
+> one of the overall transfer. In such cases, the EOP flag needs to be set
+> in each TR and PDMA's Static TR "Z" parameter should be set, matching
+> the size of the TR.
 > 
-> Apply Lock TRE for the first transfer of shared SE and Apply Unlock
-> TRE for the last transfer.
+> This is required for the teardown to function properly and cleanup the
+> internal state memory. This only affects platforms using BCDMA and not
+> those using UDMA-P, which could set EOP flag in the teardown TR
+> automatically.
 > 
-> Also change MAX_TRE macro to 5 from 3 because of the two additional TREs.
-> 
-> TRE = Transfer Ring Element, refers to the queued descriptor.
-> SE = Serial Engine
-> SS = Subsystems (Apps processor, TZ, ADSP, Modem)
-> 
-> Signed-off-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-> ---
->  drivers/dma/qcom/gpi.c           | 37 +++++++++++++++++++++++++++++++-
->  include/linux/dma/qcom-gpi-dma.h |  6 ++++++
->  2 files changed, 42 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
-> index 52a7c8f2498f..120d91234442 100644
-> --- a/drivers/dma/qcom/gpi.c
-> +++ b/drivers/dma/qcom/gpi.c
-> @@ -2,6 +2,7 @@
->  /*
->   * Copyright (c) 2017-2020, The Linux Foundation. All rights reserved.
->   * Copyright (c) 2020, Linaro Limited
-> + * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
->   */
->  
->  #include <dt-bindings/dma/qcom-gpi.h>
-> @@ -65,6 +66,14 @@
->  /* DMA TRE */
->  #define TRE_DMA_LEN		GENMASK(23, 0)
->  
-> +/* Lock TRE */
-> +#define TRE_I2C_LOCK		BIT(0)
-> +#define TRE_MINOR_TYPE		GENMASK(19, 16)
-> +#define TRE_MAJOR_TYPE		GENMASK(23, 20)
-> +
-> +/* Unlock TRE */
-> +#define TRE_I2C_UNLOCK		BIT(8)
-> +
->  /* Register offsets from gpi-top */
->  #define GPII_n_CH_k_CNTXT_0_OFFS(n, k)	(0x20000 + (0x4000 * (n)) + (0x80 * (k)))
->  #define GPII_n_CH_k_CNTXT_0_EL_SIZE	GENMASK(31, 24)
-> @@ -516,7 +525,7 @@ struct gpii {
->  	bool ieob_set;
->  };
->  
-> -#define MAX_TRE 3
-> +#define MAX_TRE 5
->  
->  struct gpi_desc {
->  	struct virt_dma_desc vd;
-> @@ -1637,6 +1646,19 @@ static int gpi_create_i2c_tre(struct gchan *chan, struct gpi_desc *desc,
->  	struct gpi_tre *tre;
->  	unsigned int i;
->  
-> +	/* create lock tre for first tranfser */
-> +	if (i2c->shared_se && i2c->first_msg) {
-> +		tre = &desc->tre[tre_idx];
-> +		tre_idx++;
-> +
-> +		tre->dword[0] = 0;
-> +		tre->dword[1] = 0;
-> +		tre->dword[2] = 0;
-> +		tre->dword[3] = u32_encode_bits(1, TRE_I2C_LOCK);
-> +		tre->dword[3] |= u32_encode_bits(0, TRE_MINOR_TYPE);
-> +		tre->dword[3] |= u32_encode_bits(3, TRE_MAJOR_TYPE);
-> +	}
-> +
->  	/* first create config tre if applicable */
->  	if (i2c->set_config) {
->  		tre = &desc->tre[tre_idx];
-> @@ -1695,6 +1717,19 @@ static int gpi_create_i2c_tre(struct gchan *chan, struct gpi_desc *desc,
->  		tre->dword[3] |= u32_encode_bits(1, TRE_FLAGS_IEOT);
->  	}
->  
-> +	/* Unlock tre for last transfer */
-> +	if (i2c->shared_se && i2c->last_msg && i2c->op != I2C_READ) {
-> +		tre = &desc->tre[tre_idx];
-> +		tre_idx++;
-> +
-> +		tre->dword[0] = 0;
-> +		tre->dword[1] = 0;
-> +		tre->dword[2] = 0;
-> +		tre->dword[3] = u32_encode_bits(1, TRE_I2C_UNLOCK);
-> +		tre->dword[3] |= u32_encode_bits(1, TRE_MINOR_TYPE);
-> +		tre->dword[3] |= u32_encode_bits(3, TRE_MAJOR_TYPE);
-> +	}
-> +
->  	for (i = 0; i < tre_idx; i++)
->  		dev_dbg(dev, "TRE:%d %x:%x:%x:%x\n", i, desc->tre[i].dword[0],
->  			desc->tre[i].dword[1], desc->tre[i].dword[2], desc->tre[i].dword[3]);
-> diff --git a/include/linux/dma/qcom-gpi-dma.h b/include/linux/dma/qcom-gpi-dma.h
-> index 6680dd1a43c6..8589c711afae 100644
-> --- a/include/linux/dma/qcom-gpi-dma.h
-> +++ b/include/linux/dma/qcom-gpi-dma.h
-> @@ -65,6 +65,9 @@ enum i2c_op {
->   * @rx_len: receive length for buffer
->   * @op: i2c cmd
->   * @muli-msg: is part of multi i2c r-w msgs
-> + * @shared_se: bus is shared between subsystems
-> + * @bool first_msg: use it for tracking multimessage xfer
-> + * @bool last_msg: use it for tracking multimessage xfer
->   */
->  struct gpi_i2c_config {
->  	u8 set_config;
-> @@ -78,6 +81,9 @@ struct gpi_i2c_config {
->  	u32 rx_len;
->  	enum i2c_op op;
->  	bool multi_msg;
-> +	bool shared_se;
-> +	bool first_msg;
-> +	bool last_msg;
+> [...]
 
-Looking at the usage in following patches, why cant this be handled
-internally as part of prep call?
+Applied, thanks!
 
+[1/1] dmaengine: ti: k3-udma: Set EOP for all TRs in cyclic BCDMA transfer
+      commit: d35f40642904b017d1301340734b91aef69d1c0c
 
->  };
->  
->  #endif /* QCOM_GPI_DMA_H */
-> -- 
-> 2.25.1
-
+Best regards,
 -- 
 ~Vinod
+
+
 

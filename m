@@ -1,89 +1,90 @@
-Return-Path: <dmaengine+bounces-3340-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3341-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD73699C726
-	for <lists+dmaengine@lfdr.de>; Mon, 14 Oct 2024 12:29:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id EF6F399CBDB
+	for <lists+dmaengine@lfdr.de>; Mon, 14 Oct 2024 15:49:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0AE4F1C22762
-	for <lists+dmaengine@lfdr.de>; Mon, 14 Oct 2024 10:29:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2C8DE1C22B2B
+	for <lists+dmaengine@lfdr.de>; Mon, 14 Oct 2024 13:49:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 212E715CD64;
-	Mon, 14 Oct 2024 10:29:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45B4E18E1F;
+	Mon, 14 Oct 2024 13:49:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ikZEIJ/q"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="HDHwkhyT"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4CBA156C69;
-	Mon, 14 Oct 2024 10:29:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9BEA18638;
+	Mon, 14 Oct 2024 13:49:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728901745; cv=none; b=BlllqkqbXk0EUHG/GBaLOPUlvqEef/9euzpzwAIqwIcyLVHDMElhBdxPGsAKkY+96lCZdQdJ/eKVy5MljuLuvDJ5hQxniF8NsGGVKclR9ik8r5Lu3KhY0gwMAXtb6IPCHkkSVbqtcc8IyXOHm2gDaMJGr/AXeCP8LCYMJmm/3/o=
+	t=1728913759; cv=none; b=RhG0eiOpE4f9LBAcTd1tAIV/r7d/+Iw5NEoI3GAowTdP7HLSGh8Wm9pwoTxu8xch3WKzAIyoKstD3sDmzFhGPZfS26kBbjhik/3fwz+hu2jpmBpyWqe/Yt4xRC2Qchzt3FlE46rnz50wRUX69eKHLRYdBCU2BKb/cFK7R+ZZd/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728901745; c=relaxed/simple;
-	bh=sV4Rp0TPVdzNhXz3lQhbAY5z63glc6lEzRRa41dAlHM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r+UffQVTqSpXYtYP+TZvHKeKr4VHO0c00KdVY7Bz0ZkmKX+HXbZz1N/pJVngID3hlO1skqNnn5ZBekWaTWVK5P5EtV5tplZqdK+6Wp4STveRM2FmRDIeQ7xzUgbpj7O6+83rIOHaF/PFmlNE7wov7CB/hEdwy0ROcfa1rI3Umnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ikZEIJ/q; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30349C4CEC6;
-	Mon, 14 Oct 2024 10:29:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728901744;
-	bh=sV4Rp0TPVdzNhXz3lQhbAY5z63glc6lEzRRa41dAlHM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ikZEIJ/q02U0sgjPnYZhDgFSO09fOvHPApoO/qznd/NsKTgq3fuYKg+kXdQTGNoEZ
-	 ZdFP15gv+6ZSyxLOY2vpWe0MBh7ZPpkBcKv3Tb8GreZmO9kMzaoI9uwelL2IjjNl1K
-	 jD+ZzMqTMRAlNrfljDijm7JGdgsjeAji5YeZ9YYpK5UaHToAZIvGR693yNbzd9d0Xr
-	 QPawXFjCLH4+C1hfbNJuxRoa1chGFiuBxqD4qAa77jUYwF+rR5fGD54Qx8MvXtm6j5
-	 uHpxIbm+YJW4fX2DBOBHsPjR/Q7mpg942cp4wID2LsxrsUMfgq1PY70kbK8DN5Fjbn
-	 Hdfns0E4XIb0A==
-Date: Mon, 14 Oct 2024 11:29:00 +0100
-From: Simon Horman <horms@kernel.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, dmaengine@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: Re: Build regressions/improvements in v6.12-rc3
-Message-ID: <20241014102900.GS77519@kernel.org>
-References: <CAHk-=wg061j_0+a0wen8E-wxSzKx_TGCkKw-r1tvsp5fLeT0pA@mail.gmail.com>
- <20241014072731.3807160-1-geert@linux-m68k.org>
- <711d7f6d-b785-7560-f4dc-c6aad2cce99@linux-m68k.org>
- <20241014085819.GO77519@kernel.org>
- <CAMuHMdWedOgc4S12FwQR8_80aqgRJ2pwrKWsNb5Svt6776ti3Q@mail.gmail.com>
+	s=arc-20240116; t=1728913759; c=relaxed/simple;
+	bh=oPkmE0aNJR2zZY61xEXGvtbgSlAweUgRLOYeDwL02EA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tEL9RZYinjpVbiBgw8EXKAdyy9tuvHcqws7J5mti4WF4j1TOveaJ8hUKpk3IH8b5jU/w/I+EHN5VXcjZeSMd5VxA2NsfKgxNNYIRMy08fKl+Gm8bWkuzFNKzQENVsA7oYbR2DdF3gupYYrWFnAOGP2kFSsGx4g0xKMF0qcFTxiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=HDHwkhyT; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=S8rTG
+	iq7SnFK4SfAjJXmtENG0UkwLoAYhI6EzKbcjzg=; b=HDHwkhyTPUMb50KbpibDr
+	uWTIjm4C9PM0tBNOuBorWvxBqgIoScZAGllcq0JS1udehugcwNV3NjPtpoDbe0+O
+	TLKTYw8FCLyagzygmv63+jfMos9knvWQFYXqqhM+fUnSp6HsXVWf3xzKG+4mDHMG
+	dUHUJHppgJ/4OltdGMVnC4=
+Received: from tcy.localdomain (unknown [120.136.174.178])
+	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wD3vaA1IQ1nMAVNBA--.5990S2;
+	Mon, 14 Oct 2024 21:48:51 +0800 (CST)
+From: ChunyouTang <tangchunyou@163.com>
+To: manivannan.sadhasivam@linaro.org,
+	fancer.lancer@gmail.com,
+	vkoul@kernel.org
+Cc: dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	tangchunyou@163.com
+Subject: [PATCH] dma/dw-edma: chip regs base should add the offset
+Date: Mon, 14 Oct 2024 21:48:32 +0800
+Message-Id: <20241014134832.4505-1-tangchunyou@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMuHMdWedOgc4S12FwQR8_80aqgRJ2pwrKWsNb5Svt6776ti3Q@mail.gmail.com>
+X-CM-TRANSID:_____wD3vaA1IQ1nMAVNBA--.5990S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWrtFyrtrWxuFW8KFyftr15twb_yoW3Crb_C3
+	s8XrWxXrZ8tFnxAF9rCrsxZr98u3s7Zr4fuF18tF90qF43ZF909r4UZrnrZr12g347GF9x
+	AF45Zr48Zr4UKjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sRWT5dJUUUUU==
+X-CM-SenderInfo: 5wdqwu5kxq50rx6rljoofrz/1tbiZQx4UWcNEzXYngAAsK
 
-On Mon, Oct 14, 2024 at 11:18:14AM +0200, Geert Uytterhoeven wrote:
-> Hi Simon,
-> 
-> On Mon, Oct 14, 2024 at 10:58 AM Simon Horman <horms@kernel.org> wrote:
-> > On Mon, Oct 14, 2024 at 10:38:20AM +0200, Geert Uytterhoeven wrote:
-> > >   + /kisskb/src/drivers/net/ethernet/freescale/fs_enet/mii-bitbang.c: error: format '%x' expects argument of type 'unsigned int', but argument 4 has type 'resource_size_t {aka long long unsigned int}' [-Werror=format=]:  => 126:37
-> > >   + /kisskb/src/drivers/net/ethernet/freescale/fs_enet/mii-bitbang.c: error: format '%x' expects argument of type 'unsigned int', but argument 4 has type 'resource_size_t' {aka 'long long unsigned int'} [-Werror=format=]:  => 126:46
-> >
-> > I wonder what the correct string format is in these cases?
-> > I didn't have a good idea the last time I looked.
-> 
-> "%pa" + taking the address of the resource_size_t object.
-> 
-> https://elixir.bootlin.com/linux/v6.11.3/source/Documentation/core-api/printk-formats.rst#L229
+From: tangchunyou <tangchunyou@163.com>
 
-Thanks,
+fix the regs base with offset.
 
-These format problems seem to have been introduced quite some time ago
-by commit 9d9326d3bc0e ("phy: Change mii_bus id field to a string").
-I'll send some patches to address the ones introduced by that patch
-that I was able to still find in-tree.
+Signed-off-by: tangchunyou <tangchunyou@163.com>
+---
+ drivers/dma/dw-edma/dw-edma-pcie.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
+index 1c6043751dc9..2918b64708f9 100644
+--- a/drivers/dma/dw-edma/dw-edma-pcie.c
++++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+@@ -234,6 +234,8 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+ 	if (!chip->reg_base)
+ 		return -ENOMEM;
+ 
++	chip->reg_base += vsec_data.rg.off;
++
+ 	for (i = 0; i < chip->ll_wr_cnt; i++) {
+ 		struct dw_edma_region *ll_region = &chip->ll_region_wr[i];
+ 		struct dw_edma_region *dt_region = &chip->dt_region_wr[i];
+-- 
+2.25.1
+
 

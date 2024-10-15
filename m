@@ -1,191 +1,126 @@
-Return-Path: <dmaengine+bounces-3364-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3370-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6322099E970
-	for <lists+dmaengine@lfdr.de>; Tue, 15 Oct 2024 14:17:26 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD2C499ED6E
+	for <lists+dmaengine@lfdr.de>; Tue, 15 Oct 2024 15:27:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DC50C1F21F0D
-	for <lists+dmaengine@lfdr.de>; Tue, 15 Oct 2024 12:17:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 64CA31F24E8D
+	for <lists+dmaengine@lfdr.de>; Tue, 15 Oct 2024 13:27:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CDBD1F4731;
-	Tue, 15 Oct 2024 12:16:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C03001FC7DC;
+	Tue, 15 Oct 2024 13:26:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="52s9tmuG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BEe1tpbR"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACB561EBFED;
-	Tue, 15 Oct 2024 12:16:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 853211FC7D4;
+	Tue, 15 Oct 2024 13:26:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728994601; cv=none; b=m1xjv028dldGQYNlMiEUmG44Vm+13B3uEgL0cCilno6hwRr4B1+Md9mW1qVor1d2F1K4p2QO7B8hqLkxR46qaYH/h5jfk7HtZYwsLSwlpRb2bJHBrZ3e/Dr5DTYkrlrPXmIQiGaajSKOyAj2YvwekP6uNuHUKhOJtnHFLpWP7DM=
+	t=1728998778; cv=none; b=Kx5ji8a9zVjTb4U5FEvQvFLxCr4pjQt2E7HlbUNfcmwzJOD9dJFd+WBYkmiuVsYeRdeTW6MmcnOR1BUW6cAOSYOhmyTtrhpRJZ78lOsm6fl4sGSSXwo2pbJ/gc9fR5ONH1bm32vvgYSFQchpqtH1vJs6XTn1qgLWHTUZjEvQsqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728994601; c=relaxed/simple;
-	bh=UbN/dByhvTSbSeoPfBiRX/vO2M0WLylvxyBrvYKBvzs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=p7lmezbzMb9bY/AkaE+epwOC9csPTD6EDghRfYjnIv+YDITvch1UX5HCAbOUHMzVFSYF1qwrsoJ8V8yCKo3eHzJSGMqnHcoDW7qWzwlbjcFHbHsrxy9Tx6fdEbX2Klhcuq5jzqTja/+rD6EctJ5KWMJzcXjJ35XQNeXozOV0LAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=52s9tmuG; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49FBiwtO005347;
-	Tue, 15 Oct 2024 14:16:29 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	QY3+4yFvEuS+q43fMZ7qPJn6kolc7ne5LyE/5i7vFNg=; b=52s9tmuGj8abU43/
-	oTP7FRFUUra1thMLNHHD2Y2eRIdSVECVlpixIehNVWqDwUA0uW0EziZ5/Lwpt+zc
-	Pf8WLiIgkasl+H3lu7BNnJjGCi6UnJ/UIYmCglBRAp18KapAYS4FMRa1QHBeBtY0
-	22DpWcISt966FCV5ifjIRKHLlLw1nTpQ/cLvVWfXl/ziylT+dZUniMVAyxWjj+Ng
-	l5dCNTOv0yTypeI13YDQkT5qTRsGlknz0y5IN8KgiKgM/utcQo4Mv/+kKAwIQXHS
-	mlt8wldgUHe3KSMMZy4IguVNcOAMXgUgO9zainHPY/wZoqYemqMiyYgmm7KWnN2d
-	HoG3+g==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 427ehg5n9e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 15 Oct 2024 14:16:29 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 4FBBF4006F;
-	Tue, 15 Oct 2024 14:15:32 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id F074B223F34;
-	Tue, 15 Oct 2024 14:14:52 +0200 (CEST)
-Received: from localhost (10.48.87.35) by SHFDAG1NODE3.st.com (10.75.129.71)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Tue, 15 Oct
- 2024 14:14:52 +0200
-From: Amelie Delaunay <amelie.delaunay@foss.st.com>
-Date: Tue, 15 Oct 2024 14:14:45 +0200
-Subject: [PATCH v2 9/9] arm64: dts: st: add DMA support on SPI instances of
- stm32mp25
+	s=arc-20240116; t=1728998778; c=relaxed/simple;
+	bh=UpHokupAtjlDauqa70fE2fQJZrcfyQZ3EvXkwOwsheY=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=ZvXfQxTPi2Qs3WSp8nJNVTsKUgn63m7Mxm1oJkAX0N+DwKJzV0o8OCQYRQwbUdqL8CJ1tC/sppsZSK3i07DMGDdn2/pPR4fXE1NsBOVu/vuR5LbN7aRoiUWpxHa8z1sO+makPTwfoU3ngVPklni3V1MBclEsFsLkoDKqv/96XgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BEe1tpbR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BBC9C4CECF;
+	Tue, 15 Oct 2024 13:26:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728998778;
+	bh=UpHokupAtjlDauqa70fE2fQJZrcfyQZ3EvXkwOwsheY=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=BEe1tpbRQRTtSRuN4OXaCHRF+kwB/JEnlK1e/0lPAhiN0YN4QMigvsa2wPcYIuu0y
+	 5Z4fF/34tOfOcT+q8jRDPt8zcbw+sZmcoSmA3bn+SpVELbN1S/HbIJ4BRENhzmJUQE
+	 ZRUjsqs8i0l3XL1Pr9TJG0ib8x8fQOJpzC9Nj9UX+slS1Yjq6MYT+sUBmac5f2A37t
+	 CZy4AMcw1F2wea9wIJNRv9tFdITShoS5V+0AodawCMRFnfiT5MuDecr2D+r2SwJ39L
+	 kAUce5JOBmW7mvu80X7v3iUmv1kXciem1B3RyORsAjONhurY1RBBtDKBzQ62oUSSmB
+	 3DuPKnnx8D0gw==
+Date: Tue, 15 Oct 2024 08:26:14 -0500
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20241015-dma3-mp25-updates-v2-9-b63e21556ec8@foss.st.com>
-References: <20241015-dma3-mp25-updates-v2-0-b63e21556ec8@foss.st.com>
-In-Reply-To: <20241015-dma3-mp25-updates-v2-0-b63e21556ec8@foss.st.com>
-To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime
- Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>
-CC: <dmaengine@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
-        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Amelie Delaunay <amelie.delaunay@foss.st.com>
-X-Mailer: b4 0.14.2
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, linux-i2c@vger.kernel.org, 
+ =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+ Sumit Semwal <sumit.semwal@linaro.org>, quic_vtanuku@quicinc.com, 
+ Bjorn Andersson <andersson@kernel.org>, dmaengine@vger.kernel.org, 
+ Andi Shyti <andi.shyti@kernel.org>, linaro-mm-sig@lists.linaro.org, 
+ linux-media@vger.kernel.org, quic_msavaliy@quicinc.com, 
+ devicetree@vger.kernel.org, cros-qcom-dts-watchers@chromium.org, 
+ Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org, 
+ Vinod Koul <vkoul@kernel.org>
+In-Reply-To: <20241015120750.21217-2-quic_jseerapu@quicinc.com>
+References: <20241015120750.21217-1-quic_jseerapu@quicinc.com>
+ <20241015120750.21217-2-quic_jseerapu@quicinc.com>
+Message-Id: <172899877472.523926.14548368912530185631.robh@kernel.org>
+Subject: Re: [PATCH v1 1/5] dt-bindings: dmaengine: qcom: gpi: Add
+ additional arg to dma-cell property
 
-Add dmas and dma-names properties in spi nodes of stm32mp251.dtsi to
-enable DMA support.
 
-Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
----
- arch/arm64/boot/dts/st/stm32mp251.dtsi | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+On Tue, 15 Oct 2024 17:37:46 +0530, Jyothi Kumar Seerapu wrote:
+> When high performance with multiple i2c messages in a single transfer
+> is required, employ Block Event Interrupt (BEI) to trigger interrupts
+> after specific messages transfer and the last message transfer,
+> thereby reducing interrupts.
+> 
+> For each i2c message transfer, a series of Transfer Request Elements(TREs)
+> must be programmed, including config tre for frequency configuration,
+> go tre for holding i2c address and dma tre for holding dma buffer address,
+> length as per the hardware programming guide. For transfer using BEI,
+> multiple I2C messages may necessitate the preparation of config, go,
+> and tx DMA TREs. However, a channel TRE size of 64 is often insufficient,
+> potentially leading to failures due to inadequate memory space.
+> 
+> Add additional argument to dma-cell property for channel TRE size.
+> With this, adjust the channel TRE size via the device tree.
+> The default size is 64, but clients can modify this value based on
+> their specific requirements.
+> 
+> Signed-off-by: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
+> ---
+>  Documentation/devicetree/bindings/dma/qcom,gpi.yaml | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
 
-diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
-index e166e2f1f1400faf7fb56ed07c5779c26cf80cdd..ed1d778ab441be3ebf2e53dea9fef484d41ab31a 100644
---- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
-+++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
-@@ -245,6 +245,9 @@ spi2: spi@400b0000 {
- 				interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&rcc CK_KER_SPI2>;
- 				resets = <&rcc SPI2_R>;
-+				dmas = <&hpdma 51 0x20 0x3012>,
-+				       <&hpdma 52 0x20 0x3021>;
-+				dma-names = "rx", "tx";
- 				access-controllers = <&rifsc 23>;
- 				status = "disabled";
- 			};
-@@ -257,6 +260,9 @@ spi3: spi@400c0000 {
- 				interrupts = <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&rcc CK_KER_SPI3>;
- 				resets = <&rcc SPI3_R>;
-+				dmas = <&hpdma 53 0x20 0x3012>,
-+				       <&hpdma 54 0x20 0x3021>;
-+				dma-names = "rx", "tx";
- 				access-controllers = <&rifsc 24>;
- 				status = "disabled";
- 			};
-@@ -441,6 +447,9 @@ spi1: spi@40230000 {
- 				interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&rcc CK_KER_SPI1>;
- 				resets = <&rcc SPI1_R>;
-+				dmas = <&hpdma 49 0x20 0x3012>,
-+				       <&hpdma 50 0x20 0x3021>;
-+				dma-names = "rx", "tx";
- 				access-controllers = <&rifsc 22>;
- 				status = "disabled";
- 			};
-@@ -453,6 +462,9 @@ spi4: spi@40240000 {
- 				interrupts = <GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&rcc CK_KER_SPI4>;
- 				resets = <&rcc SPI4_R>;
-+				dmas = <&hpdma 55 0x20 0x3012>,
-+				       <&hpdma 56 0x20 0x3021>;
-+				dma-names = "rx", "tx";
- 				access-controllers = <&rifsc 25>;
- 				status = "disabled";
- 			};
-@@ -465,6 +477,9 @@ spi5: spi@40280000 {
- 				interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&rcc CK_KER_SPI5>;
- 				resets = <&rcc SPI5_R>;
-+				dmas = <&hpdma 57 0x20 0x3012>,
-+				       <&hpdma 58 0x20 0x3021>;
-+				dma-names = "rx", "tx";
- 				access-controllers = <&rifsc 26>;
- 				status = "disabled";
- 			};
-@@ -501,6 +516,9 @@ spi6: spi@40350000 {
- 				interrupts = <GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&rcc CK_KER_SPI6>;
- 				resets = <&rcc SPI6_R>;
-+				dmas = <&hpdma 59 0x20 0x3012>,
-+				       <&hpdma 60 0x20 0x3021>;
-+				dma-names = "rx", "tx";
- 				access-controllers = <&rifsc 27>;
- 				status = "disabled";
- 			};
-@@ -513,6 +531,9 @@ spi7: spi@40360000 {
- 				interrupts = <GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&rcc CK_KER_SPI7>;
- 				resets = <&rcc SPI7_R>;
-+				dmas = <&hpdma 61 0x20 0x3012>,
-+				       <&hpdma 62 0x20 0x3021>;
-+				dma-names = "rx", "tx";
- 				access-controllers = <&rifsc 28>;
- 				status = "disabled";
- 			};
-@@ -549,6 +570,9 @@ spi8: spi@46020000 {
- 				interrupts = <GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&rcc CK_KER_SPI8>;
- 				resets = <&rcc SPI8_R>;
-+				dmas = <&hpdma 171 0x20 0x3012>,
-+				       <&hpdma 172 0x20 0x3021>;
-+				dma-names = "rx", "tx";
- 				access-controllers = <&rifsc 29>;
- 				status = "disabled";
- 			};
+My bot found errors running 'make dt_binding_check' on your patch:
 
--- 
-2.25.1
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/dma/qcom,gpi.yaml: properties:#dma-cells: 'minItems' is not one of ['description', 'deprecated', 'const', 'enum', 'minimum', 'maximum', 'multipleOf', 'default', '$ref', 'oneOf']
+	from schema $id: http://devicetree.org/meta-schemas/core.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/dma/qcom,gpi.yaml: properties:#dma-cells: 'maxItems' is not one of ['description', 'deprecated', 'const', 'enum', 'minimum', 'maximum', 'multipleOf', 'default', '$ref', 'oneOf']
+	from schema $id: http://devicetree.org/meta-schemas/core.yaml#
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20241015120750.21217-2-quic_jseerapu@quicinc.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
 

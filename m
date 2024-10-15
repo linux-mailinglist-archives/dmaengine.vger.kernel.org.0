@@ -1,185 +1,140 @@
-Return-Path: <dmaengine+bounces-3353-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3354-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD03099E470
-	for <lists+dmaengine@lfdr.de>; Tue, 15 Oct 2024 12:46:29 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D76099E8A8
+	for <lists+dmaengine@lfdr.de>; Tue, 15 Oct 2024 14:08:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 374C11F2142C
-	for <lists+dmaengine@lfdr.de>; Tue, 15 Oct 2024 10:46:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 210A828308E
+	for <lists+dmaengine@lfdr.de>; Tue, 15 Oct 2024 12:08:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04EB316A92D;
-	Tue, 15 Oct 2024 10:46:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABB241EB9EC;
+	Tue, 15 Oct 2024 12:08:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ZPoAjnUx"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="baSMsM2m"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BAB033F9;
-	Tue, 15 Oct 2024 10:46:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 062D01D4154;
+	Tue, 15 Oct 2024 12:08:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728989184; cv=none; b=oxJyd57bLEZ/XeW0BazdyVSA25I0jEfMgAMrULrn31ENMIP8G6EeDaMpN4yaqWD1tySJ2xySOBxhyPPrpHYFJXtEPm80kLfPONhjjrIxikyHlvV3rEcjRtKy7PsqNxGxgq0TRXVYWXs3cq8hTyMJoh/Biz5kCDVm7YPutsQ8KhE=
+	t=1728994101; cv=none; b=GbnHmG+XVbMhB+j801+qGdbKNsCPZ6DKOAH3LSvt+Y+CzETZZWs2+cqwyIQ8MfzOmwmkGqBPRU7Cs5Qhnb3KwiGsvDMmgL8KmeecpAplr1RHVXdp1BcnVwPyt+1AYq627fVreCdl7Dn6NgEuv8mQAcOJvo2xBOCCz2CXaXifY9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728989184; c=relaxed/simple;
-	bh=EuXnCWIiQhRFrjL6fPApbKY2jvd/nDnfoACXtAi5qLI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=e3ScVNPMIGGBNHVx2ezbar9ByKFnHmZgxfWVCeNGABmPbMA27O9YuEu/+QrSC/xiSwKMcK8lboba9vHnw/c0x4t3Z8bCYTXAE+uSaZ0a/XnKBHFThg4UYeudUW7mjb2aAFQQcRxrpL8Vwf4cYki0LLvrXYV5Zv6OsWcVDNynZmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ZPoAjnUx; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=tPUOEplHUhN44pHUebHBM8RtOCgVVbYiugLiJbJxvlQ=; b=Z
-	PoAjnUxWOn3ofUhWzD4qieMGNGW2syqR43RzHB6LR7CFq5gHS3rPE9BGT76bfUfp
-	IbPhErPNcxY35E/VfDVJwC6P1xMtUjQWPAAEmtuzYdYrDDgUkSrltfjJYPsbEJJY
-	MBjNCQdJdxB/kYOvN5ofOLd1l7gN+i5g/VzYPB/cfU=
-Received: from tangchunyou$163.com ( [120.136.174.178] ) by
- ajax-webmail-wmsvr-40-123 (Coremail) ; Tue, 15 Oct 2024 18:45:29 +0800
- (CST)
-Date: Tue, 15 Oct 2024 18:45:29 +0800 (CST)
-From: =?UTF-8?B?5ZSQ5pil5pyJ?= <tangchunyou@163.com>
-To: "Manivannan Sadhasivam" <manivannan.sadhasivam@linaro.org>
-Cc: fancer.lancer@gmail.com, vkoul@kernel.org, dmaengine@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re:Re: [PATCH] dma/dw-edma: chip regs base should add the offset
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2024 www.mailtech.cn 163com
-In-Reply-To: <20241015053608.h2avloxfak5yagyd@thinkpad>
-References: <20241014134832.4505-1-tangchunyou@163.com>
- <20241015053608.h2avloxfak5yagyd@thinkpad>
-X-NTES-SC: AL_Qu2ZCvWTtkkp7yWYZ+kfm0cXjuc3X8ewvvsv1IBTP5h+jAnpxgcYRG5SEF7bwse0DyOomgmGdRln7/RWcpJBX4IaIcXI2E2fnJubZnX6K05UOg==
-Content-Type: multipart/mixed; 
-	boundary="----=_Part_164458_1235785359.1728989129506"
+	s=arc-20240116; t=1728994101; c=relaxed/simple;
+	bh=m5786o8hDirP/0X352phnGyaNCXxjkqXYh0KZhUayf4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hkKF3bjIdIpUA6nWYIfQ5AHAe6S43lCY2c7JAC6KkufxyyfrD88gf0FSi82La58XkRVIwPJ/fZsDEnZ5fuD0EX9T9dtDXyLLltTL+ckmqIeYDMwtduotbtn/kCs9PnSmFNhv65pgDkmJ7A8ZCzXZu3FrcHTJiE3eXDMpvhJlN2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=baSMsM2m; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49F1fBeq028132;
+	Tue, 15 Oct 2024 12:08:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:message-id:mime-version:subject:to; s=
+	qcppdkim1; bh=cOb2D1xZISSQDWqXPYO06kPKB8aeAQW4UEJymP8ZKWw=; b=ba
+	SMsM2mBlE2+tsZkyLadIT1tkucf4FDqQA9dmzdH3qZ1inQ8nMvwpqM1Dx8NnrX2Z
+	kS4HnU5aQJpp9fLE1e9GiLrnFOuCUYZs0UotbQO/kXnKxVORAxHrPMfk9wlyMz/W
+	4YUcdpfd/dVxD2e++IoTb/bQNXP+rX/BbrXHN8pmPxMcoJzPQ5R+UUwE3CTXDJ4K
+	ex9z9PF1ySxreW9l3/en2iosQl775q9JLD9nxrcBV9WR9CDF9LMvWuSoM1cUGfg2
+	Ep3jvsagujg/a7hJzpUQltDqj+CR5lyYlitR6aamaUNVtw1bsxuOZ3vcsRWi7th/
+	52qJF/X/jsxAtPR3Q+3A==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 429exw1ce0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 15 Oct 2024 12:08:11 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 49FC8ABS025421
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 15 Oct 2024 12:08:10 GMT
+Received: from hu-jseerapu-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 15 Oct 2024 05:08:05 -0700
+From: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
+To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "Bjorn
+ Andersson" <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Andi Shyti <andi.shyti@kernel.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
+CC: <cros-qcom-dts-watchers@chromium.org>, <linux-arm-msm@vger.kernel.org>,
+        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <linaro-mm-sig@lists.linaro.org>, <quic_msavaliy@quicinc.com>,
+        <quic_vtanuku@quicinc.com>
+Subject: [PATCH v1 0/5] Add Block event interrupt support for I2C protocol
+Date: Tue, 15 Oct 2024 17:37:45 +0530
+Message-ID: <20241015120750.21217-1-quic_jseerapu@quicinc.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <7100a983.a923.1928fc86b23.Coremail.tangchunyou@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:eygvCgD3H5DPRw5nJLgOAA--.22434W
-X-CM-SenderInfo: 5wdqwu5kxq50rx6rljoofrz/1tbiYxp5UWcOC7eCMQACs1
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: kn6zcNgNnPYCCNO7GWlDuduX0UPko3Lj
+X-Proofpoint-GUID: kn6zcNgNnPYCCNO7GWlDuduX0UPko3Lj
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=999
+ bulkscore=0 malwarescore=0 spamscore=0 impostorscore=0 mlxscore=0
+ clxscore=1011 adultscore=0 lowpriorityscore=0 suspectscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2409260000 definitions=main-2410150083
 
-------=_Part_164458_1235785359.1728989129506
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_164460_915974015.1728989129506"
+The I2C driver gets an interrupt upon transfer completion.
+For multiple messages in a single transfer, N interrupts will be
+received for N messages, leading to significant software interrupt
+latency. To mitigate this latency, utilize Block Event Interrupt (BEI)
+only when an interrupt is necessary. This means large transfers can be
+split into multiple chunks of 64 messages internally, without expecting
+interrupts for the first 63 transfers, only the last one will trigger
+an interrupt indicating 64 transfers completed.
 
-------=_Part_164460_915974015.1728989129506
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+By implementing BEI, multi-message transfers can be divided into
+chunks of 64 messages, improving overall transfer time.
+This optimization reduces transfer time from 168 ms to 48 ms for a
+series of 200 I2C write messages in a single transfer, with a
+clock frequency support of 100 kHz.
 
-aGkgTWFuaToKCnNvcnJ5LCBJIGFtIGEgbm92aWNlIGluIHN1Ym1pdHRpbmcgcGF0Y2hlcy4gRG8g
-eW91IHRoaW5rIG15IG1vZGlmaWNhdGlvbnMgbWVldCB0aGUgcmVxdWlyZW1lbnRzPyBJZiBub3Qs
-IHBsZWFzZSBoZWxwIHBvaW50IG91dCB0aGUgcHJvYmxlbSwgcHJlZmVyYWJseSB3aXRoIGFuIGV4
-YW1wbGUuIFRoYW5rIHlvdSEKCkkgaGFkIG1vZGlmeSBpdCBpbiB0aGUgYXR0YWNobWVudC4KCgoK
-CmNodW55b3UKCgoKCgoKCgoKCgoKCgpBdCAyMDI0LTEwLTE1IDEzOjM2OjA4LCAiTWFuaXZhbm5h
-biBTYWRoYXNpdmFtIiA8bWFuaXZhbm5hbi5zYWRoYXNpdmFtQGxpbmFyby5vcmc+IHdyb3RlOgo+
-T24gTW9uLCBPY3QgMTQsIDIwMjQgYXQgMDk6NDg6MzJQTSArMDgwMCwgQ2h1bnlvdVRhbmcgd3Jv
-dGU6Cj4+IEZyb206IHRhbmdjaHVueW91IDx0YW5nY2h1bnlvdUAxNjMuY29tPgo+PiAKPj4gZml4
-IHRoZSByZWdzIGJhc2Ugd2l0aCBvZmZzZXQuCj4+IAo+Cj5Jbml0aWFsbHkgSSB0aG91Z2h0IHRo
-YXQgdGhpcyBwYXRjaCBpcyBhIHNwYW0sIGJ1dCBpdCBpcyBub3QuIEl0IGlzIGluZGVlZAo+Zml4
-aW5nIGEgcmVhbCBidWcgaW4gdGhlIGRyaXZlci4gQnV0IHRoZSBzdWJqZWN0IGFuZCBkZXNjcmlw
-dGlvbiBtYWRlIGl0IGxvb2sKPmxpa2UgYSBzcGFtLiBQbGVhc2UgZm9sbG93IHRoZSBwcm9jZXNz
-IGRlZmluZWQgaW46Cj5Eb2N1bWVudGF0aW9uL3Byb2Nlc3MvNS5Qb3N0aW5nLnJzdCB0byBzZW5k
-IHRoZSBwYXRjaGVzLgo+Cj5Fc3NlbnRpYWxseSB5b3UgbmVlZCB0byBwcm9wZXJseSBkZXNjcmli
-ZSB3aGF0IHRoZSBwYXRjaCBkb2VzIGFuZCBob3cgaXQgaW1wYWN0cwo+dGhlIGRyaXZlciBldGMu
-Li4gVGhlbiB0aGVyZSBuZWVkcyB0byBiZSBhIHZhbGlkICdGaXhlcycgdGFnIGFuZCBzdGFibGUg
-bGlzdAo+c2hvdWxkIGJlIENDZWQgdG8gYmFja3BvcnQgdG8gc3RhYmxlIGtlcm5lbHMuCj4KPi0g
-TWFuaQo+Cj4+IFNpZ25lZC1vZmYtYnk6IHRhbmdjaHVueW91IDx0YW5nY2h1bnlvdUAxNjMuY29t
-Pgo+PiAtLS0KPj4gIGRyaXZlcnMvZG1hL2R3LWVkbWEvZHctZWRtYS1wY2llLmMgfCAyICsrCj4+
-ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspCj4+IAo+PiBkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9kbWEvZHctZWRtYS9kdy1lZG1hLXBjaWUuYyBiL2RyaXZlcnMvZG1hL2R3LWVkbWEvZHct
-ZWRtYS1wY2llLmMKPj4gaW5kZXggMWM2MDQzNzUxZGM5Li4yOTE4YjY0NzA4ZjkgMTAwNjQ0Cj4+
-IC0tLSBhL2RyaXZlcnMvZG1hL2R3LWVkbWEvZHctZWRtYS1wY2llLmMKPj4gKysrIGIvZHJpdmVy
-cy9kbWEvZHctZWRtYS9kdy1lZG1hLXBjaWUuYwo+PiBAQCAtMjM0LDYgKzIzNCw4IEBAIHN0YXRp
-YyBpbnQgZHdfZWRtYV9wY2llX3Byb2JlKHN0cnVjdCBwY2lfZGV2ICpwZGV2LAo+PiAgCWlmICgh
-Y2hpcC0+cmVnX2Jhc2UpCj4+ICAJCXJldHVybiAtRU5PTUVNOwo+PiAgCj4+ICsJY2hpcC0+cmVn
-X2Jhc2UgKz0gdnNlY19kYXRhLnJnLm9mZjsKPj4gKwo+PiAgCWZvciAoaSA9IDA7IGkgPCBjaGlw
-LT5sbF93cl9jbnQ7IGkrKykgewo+PiAgCQlzdHJ1Y3QgZHdfZWRtYV9yZWdpb24gKmxsX3JlZ2lv
-biA9ICZjaGlwLT5sbF9yZWdpb25fd3JbaV07Cj4+ICAJCXN0cnVjdCBkd19lZG1hX3JlZ2lvbiAq
-ZHRfcmVnaW9uID0gJmNoaXAtPmR0X3JlZ2lvbl93cltpXTsKPj4gLS0gCj4+IDIuMjUuMQo+PiAK
-Pgo+LS0gCj7grq7grqPgrr/grrXgrqPgr43grqPgrqngr40g4K6a4K6k4K6+4K6a4K6/4K614K6u
-4K+NCg==
-------=_Part_164460_915974015.1728989129506
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: base64
+BEI optimizations are currently implemented for I2C write transfers only,
+as there is no use case for multiple I2C read messages in a single transfer
+at this time.
 
-PGRpdiBkYXRhLW50ZXM9Im50ZXNfbWFpbF9ib2R5X3Jvb3QiIHN0eWxlPSJsaW5lLWhlaWdodDox
-Ljc7Y29sb3I6IzAwMDAwMDtmb250LXNpemU6MTRweDtmb250LWZhbWlseTpBcmlhbCI+PGRpdiBp
-ZD0ic3BuRWRpdG9yQ29udGVudCI+PHAgc3R5bGU9Im1hcmdpbjogMDsiPmhpIE1hbmk6PC9wPjxw
-IHN0eWxlPSJtYXJnaW46IDA7Ij5zb3JyeSwgSSBhbSBhIG5vdmljZSBpbiBzdWJtaXR0aW5nIHBh
-dGNoZXMuIERvIHlvdSB0aGluayBteSBtb2RpZmljYXRpb25zIG1lZXQgdGhlIHJlcXVpcmVtZW50
-cz8gSWYgbm90LCBwbGVhc2UgaGVscCBwb2ludCBvdXQgdGhlIHByb2JsZW0sIHByZWZlcmFibHkg
-d2l0aCBhbiBleGFtcGxlLiBUaGFuayB5b3UhPC9wPjxwIHN0eWxlPSJtYXJnaW46IDA7Ij5JIGhh
-ZCBtb2RpZnkgaXQgaW4gdGhlIGF0dGFjaG1lbnQuPC9wPjxwIHN0eWxlPSJtYXJnaW46IDA7Ij48
-YnI+PC9wPjxwIHN0eWxlPSJtYXJnaW46IDA7Ij5jaHVueW91PC9wPjxwIHN0eWxlPSJtYXJnaW46
-IDA7Ij48YnI+PC9wPjxwIHN0eWxlPSJtYXJnaW46IDA7Ij48YnI+PC9wPjxwIHN0eWxlPSJtYXJn
-aW46IDA7Ij48YnI+PC9wPjwvZGl2PjxkaXYgc3R5bGU9InBvc2l0aW9uOnJlbGF0aXZlO3pvb206
-MSI+PC9kaXY+PGRpdiBpZD0iZGl2TmV0ZWFzZU1haWxDYXJkIj48L2Rpdj48cCBzdHlsZT0ibWFy
-Z2luOiAwOyI+PGJyPjwvcD48cHJlPjxicj5BdCAyMDI0LTEwLTE1IDEzOjM2OjA4LCAiTWFuaXZh
-bm5hbiBTYWRoYXNpdmFtIiAmbHQ7bWFuaXZhbm5hbi5zYWRoYXNpdmFtQGxpbmFyby5vcmcmZ3Q7
-IHdyb3RlOgomZ3Q7T24gTW9uLCBPY3QgMTQsIDIwMjQgYXQgMDk6NDg6MzJQTSArMDgwMCwgQ2h1
-bnlvdVRhbmcgd3JvdGU6CiZndDsmZ3Q7IEZyb206IHRhbmdjaHVueW91ICZsdDt0YW5nY2h1bnlv
-dUAxNjMuY29tJmd0OwomZ3Q7Jmd0OyAKJmd0OyZndDsgZml4IHRoZSByZWdzIGJhc2Ugd2l0aCBv
-ZmZzZXQuCiZndDsmZ3Q7IAomZ3Q7CiZndDtJbml0aWFsbHkgSSB0aG91Z2h0IHRoYXQgdGhpcyBw
-YXRjaCBpcyBhIHNwYW0sIGJ1dCBpdCBpcyBub3QuIEl0IGlzIGluZGVlZAomZ3Q7Zml4aW5nIGEg
-cmVhbCBidWcgaW4gdGhlIGRyaXZlci4gQnV0IHRoZSBzdWJqZWN0IGFuZCBkZXNjcmlwdGlvbiBt
-YWRlIGl0IGxvb2sKJmd0O2xpa2UgYSBzcGFtLiBQbGVhc2UgZm9sbG93IHRoZSBwcm9jZXNzIGRl
-ZmluZWQgaW46CiZndDtEb2N1bWVudGF0aW9uL3Byb2Nlc3MvNS5Qb3N0aW5nLnJzdCB0byBzZW5k
-IHRoZSBwYXRjaGVzLgomZ3Q7CiZndDtFc3NlbnRpYWxseSB5b3UgbmVlZCB0byBwcm9wZXJseSBk
-ZXNjcmliZSB3aGF0IHRoZSBwYXRjaCBkb2VzIGFuZCBob3cgaXQgaW1wYWN0cwomZ3Q7dGhlIGRy
-aXZlciBldGMuLi4gVGhlbiB0aGVyZSBuZWVkcyB0byBiZSBhIHZhbGlkICdGaXhlcycgdGFnIGFu
-ZCBzdGFibGUgbGlzdAomZ3Q7c2hvdWxkIGJlIENDZWQgdG8gYmFja3BvcnQgdG8gc3RhYmxlIGtl
-cm5lbHMuCiZndDsKJmd0Oy0gTWFuaQomZ3Q7CiZndDsmZ3Q7IFNpZ25lZC1vZmYtYnk6IHRhbmdj
-aHVueW91ICZsdDt0YW5nY2h1bnlvdUAxNjMuY29tJmd0OwomZ3Q7Jmd0OyAtLS0KJmd0OyZndDsg
-IGRyaXZlcnMvZG1hL2R3LWVkbWEvZHctZWRtYS1wY2llLmMgfCAyICsrCiZndDsmZ3Q7ICAxIGZp
-bGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspCiZndDsmZ3Q7IAomZ3Q7Jmd0OyBkaWZmIC0tZ2l0
-IGEvZHJpdmVycy9kbWEvZHctZWRtYS9kdy1lZG1hLXBjaWUuYyBiL2RyaXZlcnMvZG1hL2R3LWVk
-bWEvZHctZWRtYS1wY2llLmMKJmd0OyZndDsgaW5kZXggMWM2MDQzNzUxZGM5Li4yOTE4YjY0NzA4
-ZjkgMTAwNjQ0CiZndDsmZ3Q7IC0tLSBhL2RyaXZlcnMvZG1hL2R3LWVkbWEvZHctZWRtYS1wY2ll
-LmMKJmd0OyZndDsgKysrIGIvZHJpdmVycy9kbWEvZHctZWRtYS9kdy1lZG1hLXBjaWUuYwomZ3Q7
-Jmd0OyBAQCAtMjM0LDYgKzIzNCw4IEBAIHN0YXRpYyBpbnQgZHdfZWRtYV9wY2llX3Byb2JlKHN0
-cnVjdCBwY2lfZGV2ICpwZGV2LAomZ3Q7Jmd0OyAgCWlmICghY2hpcC0mZ3Q7cmVnX2Jhc2UpCiZn
-dDsmZ3Q7ICAJCXJldHVybiAtRU5PTUVNOwomZ3Q7Jmd0OyAgCiZndDsmZ3Q7ICsJY2hpcC0mZ3Q7
-cmVnX2Jhc2UgKz0gdnNlY19kYXRhLnJnLm9mZjsKJmd0OyZndDsgKwomZ3Q7Jmd0OyAgCWZvciAo
-aSA9IDA7IGkgJmx0OyBjaGlwLSZndDtsbF93cl9jbnQ7IGkrKykgewomZ3Q7Jmd0OyAgCQlzdHJ1
-Y3QgZHdfZWRtYV9yZWdpb24gKmxsX3JlZ2lvbiA9ICZhbXA7Y2hpcC0mZ3Q7bGxfcmVnaW9uX3dy
-W2ldOwomZ3Q7Jmd0OyAgCQlzdHJ1Y3QgZHdfZWRtYV9yZWdpb24gKmR0X3JlZ2lvbiA9ICZhbXA7
-Y2hpcC0mZ3Q7ZHRfcmVnaW9uX3dyW2ldOwomZ3Q7Jmd0OyAtLSAKJmd0OyZndDsgMi4yNS4xCiZn
-dDsmZ3Q7IAomZ3Q7CiZndDstLSAKJmd0O+CuruCuo+Cuv+CuteCuo+CvjeCuo+CuqeCvjSDgrprg
-rqTgrr7grprgrr/grrXgrq7gr40KPC9wcmU+PC9kaXY+
-------=_Part_164460_915974015.1728989129506--
+Jyothi Kumar Seerapu (5):
+  dt-bindings: dmaengine: qcom: gpi: Add additional arg to dma-cell
+    property
+  arm64: dts: qcom: Add support for configuring channel TRE size
+  dmaengine: qcom: gpi: Add provision to support TRE size as the fourth
+    argument of dma-cells property
+  dmaengine: qcom: gpi: Add GPI Block event interrupt support
+  i2c: i2c-qcom-geni: Add Block event interrupt support
 
-------=_Part_164458_1235785359.1728989129506
-Content-Type: application/octet-stream; 
-	name=0001-dma-dw-edma-chip-regs-base-should-add-the-offset.patch
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment;
- filename="0001-dma-dw-edma-chip-regs-base-should-add-the-offset.patch"
+ .../devicetree/bindings/dma/qcom,gpi.yaml     |   6 +-
+ arch/arm64/boot/dts/qcom/sc7280.dtsi          | 132 +++++------
+ drivers/dma/qcom/gpi.c                        |  74 ++++++-
+ drivers/i2c/busses/i2c-qcom-geni.c            | 205 ++++++++++++++++--
+ include/linux/dma/qcom-gpi-dma.h              |  37 ++++
+ 5 files changed, 355 insertions(+), 99 deletions(-)
 
-RnJvbSA4YTE4YjJiMDVhNmIwYzkxODIyODhmNTU0OWY1NjRiNjFiYjJlMWUzIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiB0YW5nY2h1bnlvdSA8dGFuZ2NodW55b3VAMTYzLmNvbT4KRGF0
-ZTogTW9uLCAxNCBPY3QgMjAyNCAxOToxNTowOSArMDgwMApTdWJqZWN0OiBbUEFUQ0hdIGRtYS9k
-dy1lZG1hOiBjaGlwIHJlZ3MgYmFzZSBzaG91bGQgYWRkIHRoZSBvZmZzZXQKCjEuIHRoZSByZWdz
-IGJhc2UgaW4gdGhlIGJhciBoYXZlIGFuIG9mZnNldCByZy5vZmYKMi4gYWRkIHRoZSBvZmZzZXQg
-dG8gb2J0YWluIHRoZSByZWFsIHJlZ19iYXNlCgpTaWduZWQtb2ZmLWJ5OiB0YW5nY2h1bnlvdSA8
-dGFuZ2NodW55b3VAMTYzLmNvbT4KLS0tCiBkcml2ZXJzL2RtYS9kdy1lZG1hL2R3LWVkbWEtcGNp
-ZS5jIHwgMiArKwogMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvZG1hL2R3LWVkbWEvZHctZWRtYS1wY2llLmMgYi9kcml2ZXJzL2RtYS9kdy1lZG1h
-L2R3LWVkbWEtcGNpZS5jCmluZGV4IDFjNjA0Mzc1MWRjOS4uMjkxOGI2NDcwOGY5IDEwMDY0NAot
-LS0gYS9kcml2ZXJzL2RtYS9kdy1lZG1hL2R3LWVkbWEtcGNpZS5jCisrKyBiL2RyaXZlcnMvZG1h
-L2R3LWVkbWEvZHctZWRtYS1wY2llLmMKQEAgLTIzNCw2ICsyMzQsOCBAQCBzdGF0aWMgaW50IGR3
-X2VkbWFfcGNpZV9wcm9iZShzdHJ1Y3QgcGNpX2RldiAqcGRldiwKIAlpZiAoIWNoaXAtPnJlZ19i
-YXNlKQogCQlyZXR1cm4gLUVOT01FTTsKIAorCWNoaXAtPnJlZ19iYXNlICs9IHZzZWNfZGF0YS5y
-Zy5vZmY7CisKIAlmb3IgKGkgPSAwOyBpIDwgY2hpcC0+bGxfd3JfY250OyBpKyspIHsKIAkJc3Ry
-dWN0IGR3X2VkbWFfcmVnaW9uICpsbF9yZWdpb24gPSAmY2hpcC0+bGxfcmVnaW9uX3dyW2ldOwog
-CQlzdHJ1Y3QgZHdfZWRtYV9yZWdpb24gKmR0X3JlZ2lvbiA9ICZjaGlwLT5kdF9yZWdpb25fd3Jb
-aV07Ci0tIAoyLjI1LjEKCg==
-------=_Part_164458_1235785359.1728989129506--
+
+base-commit: 55bcd2e0d04c1171d382badef1def1fd04ef66c5
+-- 
+2.17.1
 
 

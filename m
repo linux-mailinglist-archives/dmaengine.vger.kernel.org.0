@@ -1,145 +1,95 @@
-Return-Path: <dmaengine+bounces-3376-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3377-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 179919A0060
-	for <lists+dmaengine@lfdr.de>; Wed, 16 Oct 2024 06:57:05 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9049C9A0406
+	for <lists+dmaengine@lfdr.de>; Wed, 16 Oct 2024 10:18:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B67571F25E0C
-	for <lists+dmaengine@lfdr.de>; Wed, 16 Oct 2024 04:57:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5293628179E
+	for <lists+dmaengine@lfdr.de>; Wed, 16 Oct 2024 08:18:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B05FB18A6B8;
-	Wed, 16 Oct 2024 04:56:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4FAB1D1F7B;
+	Wed, 16 Oct 2024 08:18:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cINXcgBH"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="PeZO7kSb"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84CED189F57;
-	Wed, 16 Oct 2024 04:56:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F22F018B473;
+	Wed, 16 Oct 2024 08:18:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729054615; cv=none; b=nz2WMldWbwyZz3XySsobPsCJPlL/1+g4jQDNVI0dBAI5QtfDm8BqWgmn5HeiJRmB931iADjZaGDFMOVvjWtdcUFkDZQ7REp9Mxq0PKoOr3RzeqqYIK2UsIf8/SHeZBI+DgodfQZrCfu04yg8h3VehANjeMHCYBgdPx7FeUX7zsk=
+	t=1729066691; cv=none; b=q53zOX/Z5fxj4q8Gbuatj7Daahtw09qxwGLlseNFL75jGcWEpfZSbBq8n6G8t9dOuFrOU305QEkjPFKkvKc+eyZbPjAMJx1Tb4JNjvES0b8mE4LhgbJd5lcJRij4QQgaFVzDuDisBnUJKwSMJ+JciqmlvOx37hkt9Jwu1vVbDb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729054615; c=relaxed/simple;
-	bh=wj4cIxs+tZA29hqkjcBUsro7NGxLsN9hei0/lnBpqrA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ir7RFSv4lFYnog1quUcfBIOOpyJWpnyfh7vW/303VIGGrQhe6Ju3gNem9IwCYSk+LSNQA+guAZd958rcQpPzJMNy5shbKnl3A1U4jd2iiIVGE+GUf9SPP7idLplyKwkEeY6Ej+QoexCOS0FBUsKi0aZ3h9f+FnDntNrph4hIMpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cINXcgBH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9621EC4CEC5;
-	Wed, 16 Oct 2024 04:56:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729054615;
-	bh=wj4cIxs+tZA29hqkjcBUsro7NGxLsN9hei0/lnBpqrA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cINXcgBH0zhFdguWrEgq/pkBpHyUCnxxTCdrFi7ovG1V3Aarc8UErxybywDCMG8XB
-	 RkNN4SaJ8RdxQI+zdaLU6F6NolnvnuOqVUPgoR13vW95LBVbEaBiQoEmev0fsWb3+n
-	 svP57G1Sumrm30XOJQcZd4f+hqAXLByLdezlK8zl0g+4pdK0kLRTkFYqIRVgfrL32l
-	 mmtSQcsLwKn7pZqVwhvp1gw62Dy3OHcWP7+Q3p8WL8V0l5M5Sb1e46ubk/OOli5F2F
-	 YGmtF6SN5mKVjd0WixAv8gLByMF1L6N/AN5lkU1cCYEMeUjx3GMz6TECMk/3cRrmPt
-	 yjWfnS3YfI1Ng==
-Date: Wed, 16 Oct 2024 10:26:50 +0530
-From: Vinod Koul <vkoul@kernel.org>
-To: =?utf-8?B?5ZSQ5pil5pyJ?= <tangchunyou@163.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	fancer.lancer@gmail.com, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: Re: [PATCH] dma/dw-edma: chip regs base should add the offset
-Message-ID: <Zw9Hkv9y92GErmhZ@vaman>
-References: <20241014134832.4505-1-tangchunyou@163.com>
- <20241015053608.h2avloxfak5yagyd@thinkpad>
- <7100a983.a923.1928fc86b23.Coremail.tangchunyou@163.com>
+	s=arc-20240116; t=1729066691; c=relaxed/simple;
+	bh=xI48V4uaf7WNRnRroeQxnAc8CSneyiagKYO7a9v3N6Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RhVqNIR5TG0FJMswdfSK1zbMgVMUbvLl9UpffZMKlm3jVL4qjdoez2CFCB78SmyWFrhGuQf0+wF/YMxjuXgLAzJxl38Q7iKOfKVL0LSoD66dACCmSVyVS5BNQE84xgU3lqz61QFIRc/Cm8NZRtBw22FdqKkEC6zfaHppL05DYDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=PeZO7kSb; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=eBbmj
+	21XgonUcOT4wp+Yah0im4baIQBv4z8A+lspO1s=; b=PeZO7kSb90vG5FgSA0sF/
+	QhMCxXYjnk4MP2atpGco6ofvlnYStjK4D2KWJX/Hb/0dyrE7jCQB+JhU5hYzk3Xx
+	Wa1N48iOniWYiTfIIbGxafCGyLtvacrc/uyG8b71bhfNQgYZTGd+OCEeqboMxljf
+	VlV1GS0V/1s/rtZGaXbKe8=
+Received: from tcy.localdomain (unknown [120.136.174.178])
+	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wD3H4+Ydg9nyVWiBQ--.45712S2;
+	Wed, 16 Oct 2024 16:17:33 +0800 (CST)
+From: ChunyouTang <tangchunyou@163.com>
+To: manivannan.sadhasivam@linaro.org,
+	fancer.lancer@gmail.com,
+	vkoul@kernel.org
+Cc: dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	tangchunyou@163.com
+Subject: [PATCH] dma/dw-edma: chip regs base should add the offset
+Date: Wed, 16 Oct 2024 16:17:25 +0800
+Message-Id: <20241016081725.4810-1-tangchunyou@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <7100a983.a923.1928fc86b23.Coremail.tangchunyou@163.com>
+X-CM-TRANSID:_____wD3H4+Ydg9nyVWiBQ--.45712S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWrKrW3trykKrW7Wr1DCFW5GFg_yoWfuFb_C3
+	s8XrWxWrZ8tFnxCF9rCrs8Zr9xuwn7Zr4xuF1UtF9Fqr45XFn09r48Zrn7Zr1jgw17GF9x
+	AFs8Zr48Zr4UKjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sRAcTm3UUUUU==
+X-CM-SenderInfo: 5wdqwu5kxq50rx6rljoofrz/1tbiYwl6UWcPb6OnqQAAsr
 
-On 15-10-24, 18:45, 唐春有 wrote:
-> hi Mani:
-> 
-> sorry, I am a novice in submitting patches. Do you think my modifications meet the requirements? If not, please help point out the problem, preferably with an example. Thank you!
+From: tangchunyou <tangchunyou@163.com>
 
-Please do NOT top post
-> 
-> I had modify it in the attachment.
+1. the regs base in the bar havd en offset rg.off
+	.rg.bar		= BAR0,
+	.rg.off		= 0x00001000,	/* 4 Kbytes */
+	.rg.sz		= 0x00002000,	/* 8 Kbytes */
 
-Please read again the Documentation/process/development-process.rst on
-how to follow up on comments and post an update and how to describe your
-changes
+2. add the rg.off to obtain the real regs base.
 
-> 
-> 
-> 
-> 
-> chunyou
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> At 2024-10-15 13:36:08, "Manivannan Sadhasivam" <manivannan.sadhasivam@linaro.org> wrote:
-> >On Mon, Oct 14, 2024 at 09:48:32PM +0800, ChunyouTang wrote:
-> >> From: tangchunyou <tangchunyou@163.com>
-> >> 
-> >> fix the regs base with offset.
-> >> 
-> >
-> >Initially I thought that this patch is a spam, but it is not. It is indeed
-> >fixing a real bug in the driver. But the subject and description made it look
-> >like a spam. Please follow the process defined in:
-> >Documentation/process/5.Posting.rst to send the patches.
-> >
-> >Essentially you need to properly describe what the patch does and how it impacts
-> >the driver etc... Then there needs to be a valid 'Fixes' tag and stable list
-> >should be CCed to backport to stable kernels.
-> >
-> >- Mani
-> >
-> >> Signed-off-by: tangchunyou <tangchunyou@163.com>
-> >> ---
-> >>  drivers/dma/dw-edma/dw-edma-pcie.c | 2 ++
-> >>  1 file changed, 2 insertions(+)
-> >> 
-> >> diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-> >> index 1c6043751dc9..2918b64708f9 100644
-> >> --- a/drivers/dma/dw-edma/dw-edma-pcie.c
-> >> +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-> >> @@ -234,6 +234,8 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
-> >>  	if (!chip->reg_base)
-> >>  		return -ENOMEM;
-> >>  
-> >> +	chip->reg_base += vsec_data.rg.off;
-> >> +
-> >>  	for (i = 0; i < chip->ll_wr_cnt; i++) {
-> >>  		struct dw_edma_region *ll_region = &chip->ll_region_wr[i];
-> >>  		struct dw_edma_region *dt_region = &chip->dt_region_wr[i];
-> >> -- 
-> >> 2.25.1
-> >> 
-> >
-> >-- 
-> >மணிவண்ணன் சதாசிவம்
+Signed-off-by: tangchunyou <tangchunyou@163.com>
+---
+ drivers/dma/dw-edma/dw-edma-pcie.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-
-
+diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
+index 1c6043751dc9..2918b64708f9 100644
+--- a/drivers/dma/dw-edma/dw-edma-pcie.c
++++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+@@ -234,6 +234,8 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+ 	if (!chip->reg_base)
+ 		return -ENOMEM;
+ 
++	chip->reg_base += vsec_data.rg.off;
++
+ 	for (i = 0; i < chip->ll_wr_cnt; i++) {
+ 		struct dw_edma_region *ll_region = &chip->ll_region_wr[i];
+ 		struct dw_edma_region *dt_region = &chip->dt_region_wr[i];
 -- 
-~Vinod
+2.25.1
+
 

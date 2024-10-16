@@ -1,67 +1,67 @@
-Return-Path: <dmaengine+bounces-3385-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3380-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 934CB9A0A97
-	for <lists+dmaengine@lfdr.de>; Wed, 16 Oct 2024 14:46:59 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id D74119A0A8A
+	for <lists+dmaengine@lfdr.de>; Wed, 16 Oct 2024 14:46:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 541282837D7
-	for <lists+dmaengine@lfdr.de>; Wed, 16 Oct 2024 12:46:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 362EBB22F47
+	for <lists+dmaengine@lfdr.de>; Wed, 16 Oct 2024 12:46:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C66592144BA;
-	Wed, 16 Oct 2024 12:43:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E021D20B204;
+	Wed, 16 Oct 2024 12:43:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="WMLdCqP5"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="dpUC5h3P"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E58CA20B208;
-	Wed, 16 Oct 2024 12:43:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C64208D78;
+	Wed, 16 Oct 2024 12:43:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729082598; cv=none; b=h3ooa5GpHaIErg0tzYrS6Hq31MSa7oCU+GIGgFd4uf0FaYtIWVnYoKRERi49fXM9w0OFwBt1+rKky6Xvuzq1RWAg6a74hehQyT8WpSitoaId35zgzafiDS+S0xFmdjTahmAVKR7m36VnycOXnDCQ54nWGhXw3rT2+r44WxyIrd8=
+	t=1729082596; cv=none; b=tQgyxQRSd0qpgDfGJ7ue4nIyp4Eqp2+wIU8M5aGZ2IyUYJGWZQWOwdWa2Npxr/CQeXyptAAyqEx/p1oSKRjWG3qBL3iRTu181RCQFza5FdQxxNNgNSRQ8sRRekoQ9NEBVXQrwn8YeckwfUoj59M705GFbkFquQT+BQHzx55LoFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729082598; c=relaxed/simple;
-	bh=ZbRJjkFZ5jgtGlpROPX2viy+J2b/GpN84Rz+FWIgnfw=;
+	s=arc-20240116; t=1729082596; c=relaxed/simple;
+	bh=0wMZjBiKbeWlkn1SVGWn4ELdfYW09IWr4QPh1pal+X8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=tnCf6eF79f2WIMb5QlypRGnuqH1WWauW00CMANIRwxy8DBl16MwRA/L76CWUle3nlZi2Jx+cSsQLKBrUZhMM87VNVuvw1m/HsZgznTtwscrEcCyTOHSyrbzuR5sJmJ5IiZdqbsHdOOf8eORPtGQvCTk+tulbpPiYON+aWWftL5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=WMLdCqP5; arc=none smtp.client-ip=91.207.212.93
+	 In-Reply-To:To:CC; b=ULwCYwapiGUuJs2y8mM7oBd+mkqiS4zAOEbwGJ83r1Tg34Jx/xm4BvlL8D7qUFkDsdJiy9ipzYrMqNZT4OcPckp60dvJEINlM0UV411IjnKo6cxapOX8ZivujrarObebQmmS/HOcIt1mTFm8gyzc6ZPHyT0+HtLa0ZcmpdO3YSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=dpUC5h3P; arc=none smtp.client-ip=91.207.212.93
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49G8etGR018119;
-	Wed, 16 Oct 2024 14:43:07 +0200
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49G8rQLF011450;
+	Wed, 16 Oct 2024 14:43:04 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	AywPOgFsLqijDHgfXc1Tq2E7o/XJRJw4qqNyoZ8Ff4A=; b=WMLdCqP5JdsaBQOn
-	dQ5k9ez75pztdY8LXLnTQ3k7rpxIpDtapNsaR3FQn8WNNY5wUsWZSdiiMjlVVAZl
-	SXiGkGkh31h7cF5AHp+0hss92v5OGk8PqF9NlaIB8H6zjYEiWBX8cA6uybrzyImJ
-	FmNE9MQwxxQ4WV6CTVkpsJq07tCHRkUEiBpLzI6ML6sGWvznfqZ9zO6WN2Amc/R3
-	MWUvX6IsdMOXDJ3UPOxCzfH4XpM5kQIbCEU7/kw9N0ufVjH92QHoXqFYh7ST0TDO
-	IjNaGxbDxRYLtSTDnLHJutJ65p6Dxp3qVw4HggApvJ59HFt0wx/3mwqyvF23gY7z
-	dpwh0Q==
+	UZRhPTOG/vhlw4ceqD6czRH3HdQz/01xNzvZSqz2geU=; b=dpUC5h3P7EyVu2aB
+	+ihq1KZC/41CRDOBSVheiCx5Dthd0usx84iCxBa64vwgyvNXuA7AG3dWegyfwAq6
+	8dMOi3Glhe1jgJZElz2XMrspSHHtvnIYNM8PJAP5is6y0yeVZdZrxUm62dfNGMwt
+	5e6hDrRpEXSEks96PVnOmX9ArN3tugRfI2T1lIKmAfyTvc6K4fdiPj5iGzAz8GYS
+	sJ1RgRPQx/PobvYsYp9ZPkv7W2i4T8KO841Q1pjjIOSkTFSo27bn8aRnnXsHLwgB
+	rJ3aEUKOTYtKeqGvVjnfd6RbH9kBfcWZpBg5h3t9ngx1jaGdgEFouGQ3/FOBYrtN
+	3LxUXQ==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 42842jfv6n-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 429qybdjcj-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Oct 2024 14:43:07 +0200 (MEST)
+	Wed, 16 Oct 2024 14:43:04 +0200 (MEST)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id D6E0C4004B;
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id E247040052;
 	Wed, 16 Oct 2024 14:41:24 +0200 (CEST)
 Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 572F123CB4E;
-	Wed, 16 Oct 2024 14:40:23 +0200 (CEST)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 277C723CB55;
+	Wed, 16 Oct 2024 14:40:24 +0200 (CEST)
 Received: from localhost (10.252.17.239) by SHFDAG1NODE3.st.com (10.75.129.71)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Wed, 16 Oct
  2024 14:40:23 +0200
 From: Amelie Delaunay <amelie.delaunay@foss.st.com>
-Date: Wed, 16 Oct 2024 14:39:56 +0200
-Subject: [PATCH v3 4/9] dt-bindings: dma: stm32-dma3: prevent additional
- transfers
+Date: Wed, 16 Oct 2024 14:39:57 +0200
+Subject: [PATCH v3 5/9] dmaengine: stm32-dma3: prevent LL refactoring
+ thanks to DT configuration
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -70,7 +70,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20241016-dma3-mp25-updates-v3-4-8311fe6f228d@foss.st.com>
+Message-ID: <20241016-dma3-mp25-updates-v3-5-8311fe6f228d@foss.st.com>
 References: <20241016-dma3-mp25-updates-v3-0-8311fe6f228d@foss.st.com>
 In-Reply-To: <20241016-dma3-mp25-updates-v3-0-8311fe6f228d@foss.st.com>
 To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
@@ -92,35 +92,99 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
  definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
 
-Some devices require a single transfer. For example, reading FMC ECC status
-registers does not support multiple transfers.
-Add the possibility to prevent additional transfers, by setting bit 17 of
-the 'DMA transfer requirements' bit mask.
+stm32-dma3 driver refactors the linked-list in order to address the memory
+with the highest possible data width.
+It means that it can introduce up to 2 linked-list items. One with a
+transfer length multiple of channel maximum burst length and so with the
+highest possible data width. And an extra one with the latest bytes, with
+lower data width.
+Some devices (e.g. FMC ECC) don't support having several transfers instead
+of only one.
+So add the possibility to prevent linked-list refactoring, when bit 17 of
+the 'DMA transfer requirements' bit mask is set in device tree.
+When NOPACK feature is used (bit 16 pf the 'DMA transfer requirements' bit
+mask in device tree), linked-list refactoring can be avoided, since the
+memory data width and burst will be aligned with the device ones.
 
 Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
 ---
-Changes in v3:
-- Refine commit description as per Rob's suggestion.
-Changes in v2:
-- Reword commit title/message/content as per Rob's suggestion.
----
- Documentation/devicetree/bindings/dma/stm32/st,stm32-dma3.yaml | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/dma/stm32/stm32-dma3.c | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/dma/stm32/st,stm32-dma3.yaml b/Documentation/devicetree/bindings/dma/stm32/st,stm32-dma3.yaml
-index 5484848735f8ac3d2050104bbab1d986e82ba6a7..36f9fe860eb990e6caccedd31460ee6993772a35 100644
---- a/Documentation/devicetree/bindings/dma/stm32/st,stm32-dma3.yaml
-+++ b/Documentation/devicetree/bindings/dma/stm32/st,stm32-dma3.yaml
-@@ -99,6 +99,9 @@ properties:
-         -bit 16: Prevent packing/unpacking mode
-           0x0: pack/unpack enabled when source data width/burst != destination data width/burst
-           0x1: memory data width/burst forced to peripheral data width/burst to prevent pack/unpack
-+        -bit 17: Prevent additional transfers due to linked-list refactoring
-+          0x0: don't prevent additional transfers for optimal performance
-+          0x1: prevent additional transfer to accommodate user constraints such as single transfer
+diff --git a/drivers/dma/stm32/stm32-dma3.c b/drivers/dma/stm32/stm32-dma3.c
+index 1d961f5935f935e3855467318cdcde6e6173e43c..fc874fec729df733fd8a6b4362fe1a937e9443c7 100644
+--- a/drivers/dma/stm32/stm32-dma3.c
++++ b/drivers/dma/stm32/stm32-dma3.c
+@@ -222,6 +222,7 @@ enum stm32_dma3_port_data_width {
+ #define STM32_DMA3_DT_PFREQ		BIT(9) /* CTR2_PFREQ */
+ #define STM32_DMA3_DT_TCEM		GENMASK(13, 12) /* CTR2_TCEM */
+ #define STM32_DMA3_DT_NOPACK		BIT(16) /* CTR1_PAM */
++#define STM32_DMA3_DT_NOREFACT		BIT(17)
  
- required:
-   - compatible
+ /* struct stm32_dma3_chan .config_set bitfield */
+ #define STM32_DMA3_CFG_SET_DT		BIT(0)
+@@ -1126,10 +1127,13 @@ static void stm32_dma3_free_chan_resources(struct dma_chan *c)
+ 	chan->config_set = 0;
+ }
+ 
+-static u32 stm32_dma3_get_ll_count(struct stm32_dma3_chan *chan, size_t len)
++static u32 stm32_dma3_get_ll_count(struct stm32_dma3_chan *chan, size_t len, bool prevent_refactor)
+ {
+ 	u32 count;
+ 
++	if (prevent_refactor)
++		return DIV_ROUND_UP(len, STM32_DMA3_MAX_BLOCK_SIZE);
++
+ 	count = len / STM32_DMA3_MAX_BLOCK_SIZE;
+ 	len -= (len / STM32_DMA3_MAX_BLOCK_SIZE) * STM32_DMA3_MAX_BLOCK_SIZE;
+ 
+@@ -1179,8 +1183,10 @@ static struct dma_async_tx_descriptor *stm32_dma3_prep_dma_memcpy(struct dma_cha
+ 	struct stm32_dma3_swdesc *swdesc;
+ 	size_t next_size, offset;
+ 	u32 count, i, ctr1, ctr2;
++	bool prevent_refactor = !!FIELD_GET(STM32_DMA3_DT_NOPACK, chan->dt_config.tr_conf) ||
++				!!FIELD_GET(STM32_DMA3_DT_NOREFACT, chan->dt_config.tr_conf);
+ 
+-	count = stm32_dma3_get_ll_count(chan, len);
++	count = stm32_dma3_get_ll_count(chan, len, prevent_refactor);
+ 
+ 	swdesc = stm32_dma3_chan_desc_alloc(chan, count);
+ 	if (!swdesc)
+@@ -1196,7 +1202,8 @@ static struct dma_async_tx_descriptor *stm32_dma3_prep_dma_memcpy(struct dma_cha
+ 		remaining = len - offset;
+ 		next_size = min_t(size_t, remaining, STM32_DMA3_MAX_BLOCK_SIZE);
+ 
+-		if (next_size < STM32_DMA3_MAX_BLOCK_SIZE && next_size >= chan->max_burst)
++		if (!prevent_refactor &&
++		    (next_size < STM32_DMA3_MAX_BLOCK_SIZE && next_size >= chan->max_burst))
+ 			next_size = chan->max_burst * (remaining / chan->max_burst);
+ 
+ 		ret = stm32_dma3_chan_prep_hw(chan, DMA_MEM_TO_MEM, &swdesc->ccr, &ctr1, &ctr2,
+@@ -1235,11 +1242,13 @@ static struct dma_async_tx_descriptor *stm32_dma3_prep_slave_sg(struct dma_chan
+ 	size_t len;
+ 	dma_addr_t sg_addr, dev_addr, src, dst;
+ 	u32 i, j, count, ctr1, ctr2;
++	bool prevent_refactor = !!FIELD_GET(STM32_DMA3_DT_NOPACK, chan->dt_config.tr_conf) ||
++				!!FIELD_GET(STM32_DMA3_DT_NOREFACT, chan->dt_config.tr_conf);
+ 	int ret;
+ 
+ 	count = 0;
+ 	for_each_sg(sgl, sg, sg_len, i)
+-		count += stm32_dma3_get_ll_count(chan, sg_dma_len(sg));
++		count += stm32_dma3_get_ll_count(chan, sg_dma_len(sg), prevent_refactor);
+ 
+ 	swdesc = stm32_dma3_chan_desc_alloc(chan, count);
+ 	if (!swdesc)
+@@ -1256,7 +1265,8 @@ static struct dma_async_tx_descriptor *stm32_dma3_prep_slave_sg(struct dma_chan
+ 		do {
+ 			size_t chunk = min_t(size_t, len, STM32_DMA3_MAX_BLOCK_SIZE);
+ 
+-			if (chunk < STM32_DMA3_MAX_BLOCK_SIZE && chunk >= chan->max_burst)
++			if (!prevent_refactor &&
++			    (chunk < STM32_DMA3_MAX_BLOCK_SIZE && chunk >= chan->max_burst))
+ 				chunk = chan->max_burst * (len / chan->max_burst);
+ 
+ 			if (dir == DMA_MEM_TO_DEV) {
 
 -- 
 2.25.1

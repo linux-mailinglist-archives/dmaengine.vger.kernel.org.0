@@ -1,124 +1,144 @@
-Return-Path: <dmaengine+bounces-3375-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3376-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id B2E149A0057
-	for <lists+dmaengine@lfdr.de>; Wed, 16 Oct 2024 06:55:08 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 179919A0060
+	for <lists+dmaengine@lfdr.de>; Wed, 16 Oct 2024 06:57:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3F18BB244A6
-	for <lists+dmaengine@lfdr.de>; Wed, 16 Oct 2024 04:55:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B67571F25E0C
+	for <lists+dmaengine@lfdr.de>; Wed, 16 Oct 2024 04:57:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 189BD187872;
-	Wed, 16 Oct 2024 04:55:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B05FB18A6B8;
+	Wed, 16 Oct 2024 04:56:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="spKCuFxq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cINXcgBH"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF2E721E3BA;
-	Wed, 16 Oct 2024 04:54:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84CED189F57;
+	Wed, 16 Oct 2024 04:56:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729054500; cv=none; b=R/U1RA+RSOM/hjg+ugWdK8rCiZqACf3vhB8AqvLeBrPJkpdnh1NfHVa8BPDUYpoKzs0NJ+tPMKQ5TvZDVetkb/wIJDpqxp204Fjm6M9ccoUCo+lhiEIe5vZnfZvbSfRipQX8oc6KmlGA3N5hXkhTPg7PqOORkxvPbQLZJFUkxgI=
+	t=1729054615; cv=none; b=nz2WMldWbwyZz3XySsobPsCJPlL/1+g4jQDNVI0dBAI5QtfDm8BqWgmn5HeiJRmB931iADjZaGDFMOVvjWtdcUFkDZQ7REp9Mxq0PKoOr3RzeqqYIK2UsIf8/SHeZBI+DgodfQZrCfu04yg8h3VehANjeMHCYBgdPx7FeUX7zsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729054500; c=relaxed/simple;
-	bh=ZAbZqueFOhysiBh+zQ8zwnfD/RNSp46lSmK1+1nFQxk=;
+	s=arc-20240116; t=1729054615; c=relaxed/simple;
+	bh=wj4cIxs+tZA29hqkjcBUsro7NGxLsN9hei0/lnBpqrA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E2nKnZ0ZW7kgTf9iPjmYb02Zbg6gH8Scq0L1RUEhuMBUZaDMqX00HFpSUMzimhM1aI+CchiNT+YmHlJiZ8DJADbx/A8ukstmP+AlP7PwMys4gnG3QXGGszYhLHkz6pvWSOaluFQkKLPyK13rwDrC7yRj7eQsnNTRyXyBnUA4+PE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=spKCuFxq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7F35C4CEC5;
-	Wed, 16 Oct 2024 04:54:57 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=ir7RFSv4lFYnog1quUcfBIOOpyJWpnyfh7vW/303VIGGrQhe6Ju3gNem9IwCYSk+LSNQA+guAZd958rcQpPzJMNy5shbKnl3A1U4jd2iiIVGE+GUf9SPP7idLplyKwkEeY6Ej+QoexCOS0FBUsKi0aZ3h9f+FnDntNrph4hIMpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cINXcgBH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9621EC4CEC5;
+	Wed, 16 Oct 2024 04:56:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729054498;
-	bh=ZAbZqueFOhysiBh+zQ8zwnfD/RNSp46lSmK1+1nFQxk=;
+	s=k20201202; t=1729054615;
+	bh=wj4cIxs+tZA29hqkjcBUsro7NGxLsN9hei0/lnBpqrA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=spKCuFxqFYLLRQaxwItjw18wjF6ni0fsOJovIA8hgE4lrkgpkYgjzKY0wjP/EGaDI
-	 jijnGKTjmD+iHWPVwoq9gaoAPwZgjxXL68dYv5XWsGOOM+k8nbmNR2z/OBymU47+pV
-	 FoMpooWFZ8WadAoq4BHTPMz2KQvGET8A+3V0MPjN8cxeiLpfJUy62PGmBgo9WUyV9g
-	 Ykfp6rp2RraUcyHXpNN5P4rqEIRuAu6GKrVFfOZ0btOGa1h0PMW3/3bvb7AQX1xtm7
-	 N3gqVNPp/BcJnazGbHRJIsQMPSXfH8QL26VuvrnaX07u8fP/Hd7GgAMiczDfD1/AY0
-	 dTPItXhMLpQ6Q==
-Date: Wed, 16 Oct 2024 10:24:53 +0530
+	b=cINXcgBH0zhFdguWrEgq/pkBpHyUCnxxTCdrFi7ovG1V3Aarc8UErxybywDCMG8XB
+	 RkNN4SaJ8RdxQI+zdaLU6F6NolnvnuOqVUPgoR13vW95LBVbEaBiQoEmev0fsWb3+n
+	 svP57G1Sumrm30XOJQcZd4f+hqAXLByLdezlK8zl0g+4pdK0kLRTkFYqIRVgfrL32l
+	 mmtSQcsLwKn7pZqVwhvp1gw62Dy3OHcWP7+Q3p8WL8V0l5M5Sb1e46ubk/OOli5F2F
+	 YGmtF6SN5mKVjd0WixAv8gLByMF1L6N/AN5lkU1cCYEMeUjx3GMz6TECMk/3cRrmPt
+	 yjWfnS3YfI1Ng==
+Date: Wed, 16 Oct 2024 10:26:50 +0530
 From: Vinod Koul <vkoul@kernel.org>
-To: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
-	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, quic_msavaliy@quicinc.com,
-	quic_vtanuku@quicinc.com
-Subject: Re: [PATCH v1 1/5] dt-bindings: dmaengine: qcom: gpi: Add additional
- arg to dma-cell property
-Message-ID: <Zw9HHRyvfd66Qn4a@vaman>
-References: <20241015120750.21217-1-quic_jseerapu@quicinc.com>
- <20241015120750.21217-2-quic_jseerapu@quicinc.com>
+To: =?utf-8?B?5ZSQ5pil5pyJ?= <tangchunyou@163.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	fancer.lancer@gmail.com, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: Re: [PATCH] dma/dw-edma: chip regs base should add the offset
+Message-ID: <Zw9Hkv9y92GErmhZ@vaman>
+References: <20241014134832.4505-1-tangchunyou@163.com>
+ <20241015053608.h2avloxfak5yagyd@thinkpad>
+ <7100a983.a923.1928fc86b23.Coremail.tangchunyou@163.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241015120750.21217-2-quic_jseerapu@quicinc.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7100a983.a923.1928fc86b23.Coremail.tangchunyou@163.com>
 
-On 15-10-24, 17:37, Jyothi Kumar Seerapu wrote:
-> When high performance with multiple i2c messages in a single transfer
-> is required, employ Block Event Interrupt (BEI) to trigger interrupts
-> after specific messages transfer and the last message transfer,
-> thereby reducing interrupts.
+On 15-10-24, 18:45, 唐春有 wrote:
+> hi Mani:
 > 
-> For each i2c message transfer, a series of Transfer Request Elements(TREs)
-> must be programmed, including config tre for frequency configuration,
-> go tre for holding i2c address and dma tre for holding dma buffer address,
-> length as per the hardware programming guide. For transfer using BEI,
-> multiple I2C messages may necessitate the preparation of config, go,
-> and tx DMA TREs. However, a channel TRE size of 64 is often insufficient,
-> potentially leading to failures due to inadequate memory space.
-> 
-> Add additional argument to dma-cell property for channel TRE size.
-> With this, adjust the channel TRE size via the device tree.
-> The default size is 64, but clients can modify this value based on
-> their specific requirements.
-> 
-> Signed-off-by: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
-> ---
->  Documentation/devicetree/bindings/dma/qcom,gpi.yaml | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
-> index 4df4e61895d2..002495921643 100644
-> --- a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
-> +++ b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
-> @@ -54,14 +54,16 @@ properties:
->      maxItems: 13
->  
->    "#dma-cells":
-> -    const: 3
-> +    minItems: 3
-> +    maxItems: 4
->      description: >
->        DMA clients must use the format described in dma.txt, giving a phandle
-> -      to the DMA controller plus the following 3 integer cells:
-> +      to the DMA controller plus the following 4 integer cells:
->        - channel: if set to 0xffffffff, any available channel will be allocated
->          for the client. Otherwise, the exact channel specified will be used.
->        - seid: serial id of the client as defined in the SoC documentation.
->        - client: type of the client as defined in dt-bindings/dma/qcom-gpi.h
-> +      - channel-tre-size: size of the channel TRE (transfer ring element)
+> sorry, I am a novice in submitting patches. Do you think my modifications meet the requirements? If not, please help point out the problem, preferably with an example. Thank you!
 
-This is a firmware /software property, why should this be in hardware
-description?
+Please do NOT top post
+> 
+> I had modify it in the attachment.
+
+Please read again the Documentation/process/development-process.rst on
+how to follow up on comments and post an update and how to describe your
+changes
+
+> 
+> 
+> 
+> 
+> chunyou
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> At 2024-10-15 13:36:08, "Manivannan Sadhasivam" <manivannan.sadhasivam@linaro.org> wrote:
+> >On Mon, Oct 14, 2024 at 09:48:32PM +0800, ChunyouTang wrote:
+> >> From: tangchunyou <tangchunyou@163.com>
+> >> 
+> >> fix the regs base with offset.
+> >> 
+> >
+> >Initially I thought that this patch is a spam, but it is not. It is indeed
+> >fixing a real bug in the driver. But the subject and description made it look
+> >like a spam. Please follow the process defined in:
+> >Documentation/process/5.Posting.rst to send the patches.
+> >
+> >Essentially you need to properly describe what the patch does and how it impacts
+> >the driver etc... Then there needs to be a valid 'Fixes' tag and stable list
+> >should be CCed to backport to stable kernels.
+> >
+> >- Mani
+> >
+> >> Signed-off-by: tangchunyou <tangchunyou@163.com>
+> >> ---
+> >>  drivers/dma/dw-edma/dw-edma-pcie.c | 2 ++
+> >>  1 file changed, 2 insertions(+)
+> >> 
+> >> diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
+> >> index 1c6043751dc9..2918b64708f9 100644
+> >> --- a/drivers/dma/dw-edma/dw-edma-pcie.c
+> >> +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+> >> @@ -234,6 +234,8 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+> >>  	if (!chip->reg_base)
+> >>  		return -ENOMEM;
+> >>  
+> >> +	chip->reg_base += vsec_data.rg.off;
+> >> +
+> >>  	for (i = 0; i < chip->ll_wr_cnt; i++) {
+> >>  		struct dw_edma_region *ll_region = &chip->ll_region_wr[i];
+> >>  		struct dw_edma_region *dt_region = &chip->dt_region_wr[i];
+> >> -- 
+> >> 2.25.1
+> >> 
+> >
+> >-- 
+> >மணிவண்ணன் சதாசிவம்
+
+
 
 -- 
 ~Vinod

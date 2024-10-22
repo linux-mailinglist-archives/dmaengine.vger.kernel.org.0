@@ -1,107 +1,145 @@
-Return-Path: <dmaengine+bounces-3413-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3414-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 370D99AB7E8
-	for <lists+dmaengine@lfdr.de>; Tue, 22 Oct 2024 22:47:01 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 04D6C9AB9B0
+	for <lists+dmaengine@lfdr.de>; Wed, 23 Oct 2024 00:52:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D6FE21F23D4C
-	for <lists+dmaengine@lfdr.de>; Tue, 22 Oct 2024 20:47:00 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A43C7B21998
+	for <lists+dmaengine@lfdr.de>; Tue, 22 Oct 2024 22:52:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99D451CC886;
-	Tue, 22 Oct 2024 20:46:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 178C01CDFA4;
+	Tue, 22 Oct 2024 22:52:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FoQvUNkg"
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="BoaNCIs5"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 541B11C9ED6;
-	Tue, 22 Oct 2024 20:46:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 271511CCEE9;
+	Tue, 22 Oct 2024 22:52:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729630014; cv=none; b=od9VTBsWwN0+PufRYrSxtE9wCeL4wCYOsPQ+IU0DIqeiF69DDja6bBZqgivzluZOINciv1mXdKvLIE4zRYqrQHYQDXbBOjo/UB2HwKR7wucEugekg087PaITh9gq1+IfLqS2AOYCQSRAj+b6E9Ske7rM5KXgjOz/+3peGu6ydpg=
+	t=1729637543; cv=none; b=r9MisWzM217L04JgWxpe9fBn6OScQDOMxTyLv7pqRYrccIbmMtEMWYcdD/37tldC4bCsT0hR4B2lCdCNuDezKQ+HIxByLQP9ogE9phtcBjC7rDfSI4ljFhfzFilzKibVsvK0zFppNMj5y25HHHK8Sb+vICVg+iraOejTzG++Nss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729630014; c=relaxed/simple;
-	bh=Zn3g/rsmjAnDQhjuWlSialZd2N8hudka0aK2MD88RIg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kHLuVUN+PHAEG8t623G1tGnknG/CSFQ5WxmIJCrta3uwFh6T/IJdGuPNm3gckgt0TV0JiMV6tbV+TKkLKxWWRrVGQReuEz8WUT6nCgzdSt5WPrE38Knrc//vkKtgrAe8yGVrhXTX5G+xqC4Pew2yG/W0qgaNFhSd0pni5PJw/O0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FoQvUNkg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7513C4CEC7;
-	Tue, 22 Oct 2024 20:46:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729630013;
-	bh=Zn3g/rsmjAnDQhjuWlSialZd2N8hudka0aK2MD88RIg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=FoQvUNkgYJcOW5aPFEgdSrDVeXvX5QcUiGgnKevOhRdl3cNmPrn8ubp46XbOvqgfY
-	 QjWYO88wvIF3OgeYOej7ecpGDpjy7WQYJ2lvkxRz6lQgCE59gcF/ge/hm8ljPYMfZG
-	 v7XqG8cT3Ls/cbgeBTHnVXQzkrflXBIBnNq0DG8CL3jgtuXx23Q9zz/ytvSjuGqoAQ
-	 IWa1fhVHoidaozPgTKOI+v+vP81b6lJ1CipGte11Ybl+WqSWYxAkJ8MTChZQj1+1bt
-	 Q+VWPk4QEYqc8/V6YFBoDfXQqtJ4+gy8KmNpU0ng224ha7fZuAmH7tywyI1s3BHxju
-	 kfx2+Fq2MT/ag==
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-539f0f9ee49so6646839e87.1;
-        Tue, 22 Oct 2024 13:46:53 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUbRuLP37VMhVERUiWt5oSroqsH64ocxcyNDz9Hpl1Qqgo0JE0CxT7KD4DdR/27ICdznPJFtu0oc5O/@vger.kernel.org, AJvYcCUwg63QGyNDHgdCVqDY1TO4S1BFGvjyRyngtsQEFCUAsmFjgYyYf9x5dJCsxfVa8EZaJUfXHBenBYgFM3I=@vger.kernel.org, AJvYcCV8X+sso+g7uFk3wt90y7kYJMgBBN3NkI5/QCULw2KjxK6nsrbUzYXV0gidjcwx1SSTzKzR/C61+kVrFHQUEA==@vger.kernel.org, AJvYcCVKArYRELoVRJOWeDItt9EPd/fONZcYkTXCh+sqLxBGzGXYQCf+xMYzEIDgBDRNP1HhUnRvkRKhlwC3@vger.kernel.org, AJvYcCWldbjeKtzMV8SIJg8micS/MAzVu/shDoooDC071SQpZoJ2PMUfMUQ6fJaCeor2yR6zCIc7GgMeDyjg@vger.kernel.org, AJvYcCXnH271UrCHmvQb/ce3LtSkUhFngm39QdrfL36iC8/X9Qm88h0PrlHqm4cLyRydRCliTMFd0Gn/yaeoARJj@vger.kernel.org, AJvYcCXtdn3jg+2K1jxPV2hFXSnQCctA76746pWJWfRpoU4xD/oLjAmO1OuSHuH96LWwz7/hShpVElvBqAvcEME9/OH3mII=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+LYsU/6cVRS+IZSoazOWJGsW0F50Ecm2MfLBOD7zdwCBHQrkK
-	RjbGxl1cDJ01uB6jPRbQTFwTPnTFvFQWh/kRMVvTyOltbdgkUsWbgdZ2LEYuzgLfFY/zauoBYGE
-	1wmZxJ0b93avkLyjVP2wa5baYWA==
-X-Google-Smtp-Source: AGHT+IEO+TmoJNpkBRko2njnTuoGDOOp8xk5cA0fj0xWt4Uui7DHRbRD3cGMhGi7Qb+vFtNs4gUNwWTLEMBa9HTb5QA=
-X-Received: by 2002:a05:6512:1109:b0:539:9524:92bc with SMTP id
- 2adb3069b0e04-53b1a37ce3fmr102061e87.55.1729630012208; Tue, 22 Oct 2024
- 13:46:52 -0700 (PDT)
+	s=arc-20240116; t=1729637543; c=relaxed/simple;
+	bh=VQrpKREvli+uQgQBCCF3h70saTVIC9tipcVecmoLowE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=YdPKh8B8oFrUE2eC5dljoaft+vQFsDbkVUYRN9ZdUML8EM2yMkB8kPgW1U+UugVQn5x6PM70/Kh8zVtbQJKrg/8MV1nAhCiwSQTr2/uOlv4Xgz9XKNnQfIbFoyym/tkb0bqIGSpKBsqR3AKNXZKTuJ61MD8n+TxpMPGJktWiQxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=BoaNCIs5; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 29A1FA041A;
+	Wed, 23 Oct 2024 00:52:11 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=mail; bh=o+6vI2iAgKwV5VmRn04r
+	SP3ACb8gAm2vQTCmx1chAik=; b=BoaNCIs57WLzSNjaN7xZCnp7eLPFowP0lhHI
+	gpCRAKZXPRuckip+Zd4PAOqzwHsmqjtG4H2fFD2qav4fmhRq7dVSyH5dDCSk4/8x
+	aJ9kIcbDy3znhJMP6pMZFId4VXiN0rpfruigA1QFFacwvzgZ5bpRXPPU9cxEAhrB
+	erbkMLR+41QoxlXhJymEReKtienr8fO1WZHxq9Fg3oYnTuSbrsuqKIkOPHB6eRaR
+	wr04IJ5gI8R0wXXT4d+fyzeKPk05uDwnoXl3rF6GAwhKExRrnb85gAcmq1kfU2ct
+	LxLrDauM3hvmYzxvux3g3rwVBNd5YG2muq8dyI2pJYnaWgPl15tiIDpRomvI1AMd
+	9b7N3fqxU03kaQfaMVzzedeRCf7fNgpOP2UQkIiA2NjVE/nJJ4GPDOkkOysMV+ch
+	jLe1YHJrLYSKNFL21LMPB8vr9aU5RHIVVLjAmT6d7BNHgH9i+oecT/05ceATdC2N
+	HWWlTrNeFbQh4L/IqKWB64zzTu3okcNkMVCBfAjUBufsyfhb8h6I/Trj3Ph0LdW+
+	h7X7nbo6RDyTFON0mb5gv7ALxMDWPsW76ZEQGO9AHJosIQLpOitrFyUAHh6VNmfU
+	wZHMSUGzr7sCoeRPsLIyEr7jDXrqVlPqO4jGmXTOlaizEli8yOaPnYiocONuQR7e
+	ZWnI2YI=
+Message-ID: <13ab5cec-25e5-4e82-b956-5c154641d7ab@prolan.hu>
+Date: Wed, 23 Oct 2024 00:52:06 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240925232409.2208515-1-robh@kernel.org> <172957518656.489113.4975806367588166309.b4-ty@kernel.org>
-In-Reply-To: <172957518656.489113.4975806367588166309.b4-ty@kernel.org>
-From: Rob Herring <robh@kernel.org>
-Date: Tue, 22 Oct 2024 15:46:39 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+=_9prwcGvM4-sKKNgq6QSsJ=bqfKcVqnbepj1i_2q4w@mail.gmail.com>
-Message-ID: <CAL_Jsq+=_9prwcGvM4-sKKNgq6QSsJ=bqfKcVqnbepj1i_2q4w@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: Fix array property constraints
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Conor Dooley <conor@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Marc Zyngier <maz@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Paul Elder <paul.elder@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Alim Akhtar <alim.akhtar@samsung.com>, Jim Quinlan <jim2101024@gmail.com>, 
-	Nicolas Saenz Julienne <nsaenz@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Andy Gross <agross@kernel.org>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Jim Quinlan <james.quinlan@broadcom.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, 
-	linux-samsung-soc@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
-	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 00/10] Add support for DMA and audio codec of F1C100s
+To: Mesih Kilinc <mesihkilinc@gmail.com>, <dmaengine@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+	<linux-sunxi@googlegroups.com>
+CC: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, "Mark
+ Rutland" <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>,
+	Chen-Yu Tsai <wens@csie.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
+	<broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai
+	<tiwai@suse.com>
+References: <cover.1543782328.git.mesihkilinc@gmail.com>
+Content-Language: en-US
+From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
+In-Reply-To: <cover.1543782328.git.mesihkilinc@gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
+ ATLAS.intranet.prolan.hu (10.254.0.229)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A2980D94855677163
 
-On Tue, Oct 22, 2024 at 12:33=E2=80=AFAM Vinod Koul <vkoul@kernel.org> wrot=
-e:
->
->
-> On Wed, 25 Sep 2024 18:24:06 -0500, Rob Herring (Arm) wrote:
-> > Schemas for array properties should only have 1 level of array
-> > constraints (e.g. items, maxItems, minItems). Sometimes the old
-> > encoding of all properties into a matrix leaked into the schema, and
-> > didn't matter for validation. Now the inner constraints are just
-> > silently ignored as json-schema array keywords are ignored on scalar
-> > values.
-> >
-> > [...]
->
-> Applied, thanks!
->
-> [1/1] dt-bindings: Fix array property constraints
->       commit: 72c65390c61fc96cebfb91c300ca774925565383
+Hi,
+I was trying to get audio on the F1C200s, but so far had no luck, and I 
+came across this series.
 
-Why? It is already in my tree and not just dma bindings.
+On 2018. 12. 02. 22:23, Mesih Kilinc wrote:
+> This is RFC patchset for Allwinner suniv F1C100s to support DMA and
+> audio codec.
+> 
+> Allwinner F1C100s has a audio codec that has necessary digital and
+> analog parts. It has r-l headphone output and microphone, line, r-l
+> FM inputs. ADC can capture any inputs and also output channels via mux.
+> Any input channels or DAC samples can feed output channels.
+> 
+> Add support for this audio codec.
+> 
+> F1C100s utilizes DMA channels to send and receive ADC-DAC samples. So
+> DMA support needed. Patch 1~5 adds support for DMA. Suniv F1C100s has
+> very similar DMA to sun4i. But there is some dissimilarities also.
+> Suniv features a DMA reset bit in clock  control unit. It has smaller
+> number of DMA channels. Several registers has different addresses.
+> It's max burst size is 4 instead of 8. Also DMA endpoint numbers are
+> different.
+> 
+> Patch 6 adds DMA max burst option to sun4i-codec.
+> 
+> Patch 7~8 Add support for suniv F1C100s audio codec.
+> 
+> Patch 9 adds audio codec to suniv-f1c100s.dtsi
+> 
+> Patch 10 adds audio codec support to Lichee Pi Nano board.
+>   
+> Thanks!
+> 
+> Mesih Kilinc (10):
+>    dma-engine: sun4i: Add a quirk to support different chips
+>    dma-engine: sun4i: Add has_reset option to quirk
+>    dt-bindings: dmaengine: Add Allwinner suniv F1C100s DMA
+>    dma-engine: sun4i: Add support for Allwinner suniv F1C100s
+>    ARM: dts: suniv: f1c100s: Add support for DMA
+>    ASoC: sun4i-codec: Add DMA Max Burst field
+>    dt-bindigs: sound: Add Allwinner suniv F1C100s Audio Codec
+>    ASoC: sun4i-codec: Add support for Allwinner suniv F1C100s
+>    ARM: dts: suniv: f1c100s: Add support for Audio Codec
+>    ARM: dts: suniv: f1c100s: Activate Audio Codec for Lichee Pi Nano
+> 
+>   .../devicetree/bindings/dma/sun4i-dma.txt          |   4 +-
+>   .../devicetree/bindings/sound/sun4i-codec.txt      |   5 +
+>   arch/arm/boot/dts/suniv-f1c100s-licheepi-nano.dts  |   8 +
+>   arch/arm/boot/dts/suniv-f1c100s.dtsi               |  25 ++
+>   drivers/dma/Kconfig                                |   4 +-
+>   drivers/dma/sun4i-dma.c                            | 221 ++++++++++--
+>   sound/soc/sunxi/sun4i-codec.c                      | 371 ++++++++++++++++++++-
+>   7 files changed, 601 insertions(+), 37 deletions(-)
 
-Rob
+What's the status of this series? I see that it was not merged, despite 
+getting a few ACKs and only a few minor comments. Ripard's comments make 
+me believe that the sun4i DMA driver should be able to handle the suniv 
+family with minimal adjustments, have those not been added? Or is it 
+that the DMA support is ready but the ALSA/ASoC support is missing?
+
+Bence
+
 

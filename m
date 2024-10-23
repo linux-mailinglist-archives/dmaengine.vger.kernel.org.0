@@ -1,224 +1,112 @@
-Return-Path: <dmaengine+bounces-3427-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3428-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B5CEA9AC6D4
-	for <lists+dmaengine@lfdr.de>; Wed, 23 Oct 2024 11:39:36 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D73109AC6F2
+	for <lists+dmaengine@lfdr.de>; Wed, 23 Oct 2024 11:51:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D65B91C2135F
-	for <lists+dmaengine@lfdr.de>; Wed, 23 Oct 2024 09:39:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 98B59282A25
+	for <lists+dmaengine@lfdr.de>; Wed, 23 Oct 2024 09:51:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3189519AA46;
-	Wed, 23 Oct 2024 09:39:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85E8819CC27;
+	Wed, 23 Oct 2024 09:50:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="R40Q7z4T"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QUtm3nJ6"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A9C915CD52;
-	Wed, 23 Oct 2024 09:39:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.16.166
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED0015CD52;
+	Wed, 23 Oct 2024 09:50:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729676372; cv=none; b=jMunbkB9M3yVMX4yANDkS7T4/7XFGus0pUElH2dgcPvo0A4wOexuf9Q+AvMMclQOXvcKo6n83cNeY9VolvIUmnXS6oS7aOxcsrPhG5DAotWgEb56jxtlu3qf0V5fV+Y5UmyaQdRvVjeA36lrcOKLpfqIe/mrAQmiXY2xL/xm7go=
+	t=1729677031; cv=none; b=fq3hFqNdKAkppMG2ycxv/MxikqeZUFTHJForIQuDzNoYJm1DBqxIT6QqruxlYXIwTV1SlIMFtUjSnPEClIOuS9MJBUzIAwSuYJPDNCOv6ispAOvjRl0KjHXaUAo0XYekxp6dzK5hgsrT7nPxODolsrpYYWuYavBwjql8zNcCadI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729676372; c=relaxed/simple;
-	bh=QF/jaXhx5/NNBI1uZEY/Y3g3zYWwoUvRzmIALicrljo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Jhrz7CfSAHOLUI4ha7U2jRLmJIkuxV/xyvQtLaWWlLwofTPn1RdTQQpSN5oAd3TpSONgxWjaAv0qbSsOzHjo3jlECmto4c5ioiXJ/BwCrIiVSboBs/DCuAmSGx+zq0CZKw+5LQNAJu2kYxQM4jjN4e/xfcUK/qoMHKE2ck3W0n0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=R40Q7z4T; arc=none smtp.client-ip=54.206.16.166
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1729676311;
-	bh=QF/jaXhx5/NNBI1uZEY/Y3g3zYWwoUvRzmIALicrljo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=R40Q7z4TMR6QysGPZMc4BsJPggQ2G7NA6xxgCc8xYKIrVGdIekOK+YyxzZJV44Qb6
-	 6wE3J6JlTjNnqlCSerK98GXlzf2nti+I0xOZk0QgmWxSzBbzLQgajKugioJ1lQFOYz
-	 XNjXcolt2BULS2oYGQDMxfmvuQiwnX82qRGJFq08=
-X-QQ-mid: bizesmtp77t1729676302tfw4pc5r
-X-QQ-Originating-IP: j4Uoxci2RtnVTGsTNP/gQfdQgd0owTwx3inBP/hx8jA=
-Received: from [10.20.53.22] ( [113.57.152.160])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 23 Oct 2024 17:38:18 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 17180917475525741311
-Message-ID: <1E6A0B26DC871B50+d97424c4-29ab-4bb2-b1df-8f04f8b865ca@uniontech.com>
-Date: Wed, 23 Oct 2024 17:38:17 +0800
+	s=arc-20240116; t=1729677031; c=relaxed/simple;
+	bh=nALBb1S+YRbc8EW/CONgUpvGQ1smNeFejUFFKudXFE0=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=pcQjGX3nmh8ZEMiYZ1ACRWQClUMNhSZKRtaPNVMXgDVdzq0tF0UvUs09DK+NFyUQ2HDEOXE032lr2a5+7AmOxsBmPPWEFiYKMCMRYmRaSOWprZ2AlHXZFbUxrfk9LftGo4cApOP6BzKct8k0lN5ZtR/m13JdV+SqxIAHDpLSxYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QUtm3nJ6; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2fb587d0436so64094931fa.2;
+        Wed, 23 Oct 2024 02:50:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1729677028; x=1730281828; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=nALBb1S+YRbc8EW/CONgUpvGQ1smNeFejUFFKudXFE0=;
+        b=QUtm3nJ6hpTKalj3aby8q5FemqhoXU+1beXggms+TkNTCMsWtScxw0eV9BhW1CLT8t
+         m4AWCUZphwFTHWuwfop3vV8JZyQ98J9R0moJY6uCYZXAndbuYxNDzmoPsaIoqNnURciE
+         oUaaKreAA8LMq+7+iRchIh2W+0W4MR4ueEfLAbfCW5llPWavuPpDFZqcYUFahvClxT+i
+         10t3oi1+29gqCwSoQbW5bdCvdfa2lF9/VThB4o03WwBWSN9CHs8G6yRZAUdadyctD+EF
+         dUD5MEFyaYv5qpvBAiwQuuMrCXqqDR/WntOpr/bev+6crQjqSr0Nue8VYR3mQOwwYz/P
+         7cHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729677028; x=1730281828;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nALBb1S+YRbc8EW/CONgUpvGQ1smNeFejUFFKudXFE0=;
+        b=Bg32cN/zKuSRuSSjEdmG8wOo0ovc8aWwpm8PzLGpvSt4QAKMyVVtlvKVTHtYHVtoV/
+         Vk8Sc1mXyAbX5tWmtJ9tjmffCzXZxMsyEVCHZVn8KTMcsDEBvW8yF9C1rOs4wJHoixYu
+         TZTHmkUl7jBsR0bTqyiDqy0woi5KloNvxA0D5hqmqlrpnnJ5Nn1lLaohuMNYmIpKstMB
+         5z/3vzFOdgOzz84GoNMLVacZsaMWgnKoSHJG/zP3JBdJvBKv4pVgMi9AxoEPsKm5dqrR
+         G9Zwi74WVUktDH2sUppZafkJ6ERE+LxfV4QEqc/y8pfcCDG9l/bnGhQ5f9sbugK6oqZ3
+         PHoA==
+X-Forwarded-Encrypted: i=1; AJvYcCUXRoeN2+ehzE7q5SI4pxQA6nRQ9z6zbrFmJFZthdsJwjVcklRTUYTrqQTAESyQ6DH80lnooKF7tu8lqQ==@vger.kernel.org, AJvYcCUadxWcNqdQi5EXGzv0bZauTudrhX9sAV+R4olxD2zlidw4OJOcyiAeb63iAj/vPbktf27cBsTXg1bWIUs=@vger.kernel.org, AJvYcCUsU31fobyL8WdzCWQAfXcRuMGm2lDQrY7Mz2qamFnr1blSsdZy3lXZ+n7Zdb9xVl/MBJ87NQ1ZI8WJYw==@vger.kernel.org, AJvYcCVA10D5BfaJyHRaFnCQHZIvZERsGjUcVX4jT/h8+4WKYcidF0qsZ8DcgmggV/FEqFwpzZ+jjOO8yrz71A==@vger.kernel.org, AJvYcCVS7cONRSha40RB7nyyBt8uDSEpnGJFAfxLncUSrRDePPNcJ4CpqyYS9ie+8rJ6w7S2YFh7fmDpqIRM@vger.kernel.org, AJvYcCVZvrcIHyTelXrgZ545k4KTf9+pXgRwEQhS0mIDRwP7qkjxU924XlrKgAsZ/Zf0bh7qomB9ih7clc/x@vger.kernel.org, AJvYcCVfcLT8Op3m5XJkKylkVtMkmJpUj+VndG/HBap2o3NIN1lcP2Q5SFOf/B0YKLqUDzM9WSTWMQMVY5cQ@vger.kernel.org, AJvYcCVogkVwGgOpj/uIbP7F7+8UJqgwIBVEuJ7E7zzy8GzDpi2fSjlZZBEhox5FZz8BXrpAq/5H3R/zeonumxI=@vger.kernel.org, AJvYcCVqhNkiJ+0HjsoBNHP3kGhj6h6MJM7Zhc4YGtV3QW8poDGl64A9PFlxI4XOlb2rlMhbkrmEcnR/@vger.kernel.org, AJvYcCWZWgCJ6TVY+h785yzUeJ31j1vHQJkr
+ VZ6Q8baZZc8+TWAqpEMuzSK6hrg75yoWWo/ui14ziQdYNM4=@vger.kernel.org, AJvYcCXHnSr8MA3EbSx9j7WcS0T8r5k3xFuNMPuKCD0Z7086MExlngN5qY7ozVm6tj7ToMAS98J82+3yyk1WYXIiTuwWt5U=@vger.kernel.org, AJvYcCXSOKs/OXD6sEQps8/xkdKWZ9SXiP0EyEQnIWjBM2992AbXJ70QgVHg3Tr1O/ZxOVZD0xyHJlm0d/4Ji3w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzdAQ66m+AKSgi9jlhbJlUihHAIcJ2xCloDvueyL2rRD1VBWc7G
+	K8dnCZuNHZOkkrVC+B9JCoZcWI3W3iZ19TOU0Y+squ6wzF92s4sAf62tZ49SoecWKeGeBSKk/w1
+	ob6uNTYTU/wrqAg13VpqBN7kZkLM=
+X-Google-Smtp-Source: AGHT+IHNhDNmIBEoWNfMDJkh8nwS8VXu0N87NYNLSWFW58MV9yZik6opYGCLTnx0VgKlf8IbL1v8MSDrZvR16S8jqgo=
+X-Received: by 2002:a2e:9010:0:b0:2fb:3e01:b2bd with SMTP id
+ 38308e7fff4ca-2fc9d35a589mr7818271fa.21.1729677027463; Wed, 23 Oct 2024
+ 02:50:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+From: Anna Antonenko <portasynthinca3@gmail.com>
+Date: Wed, 23 Oct 2024 12:50:16 +0300
+Message-ID: <CAG72VMfSwMitWSyBYHF7a3DCJtc_awO4fw=rJkuvcxh-qeqqNQ@mail.gmail.com>
 Subject: Re: [PATCH] MAINTAINERS: Remove some entries due to various
  compliance requirements.
-To: Mingcong Bai <jeffbai@aosc.io>
-Cc: gregkh@linuxfoundation.org, patches@lists.linux.dev, nikita@trvn.ru,
- ink@jurassic.park.msu.ru, shc_work@mail.ru, richard.henderson@linaro.org,
- mattst88@gmail.com, linux-alpha@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, fancer.lancer@gmail.com,
- linux-hwmon@vger.kernel.org, dmaengine@vger.kernel.org, xeb@mail.ru,
- netdev@vger.kernel.org, s.shtylyov@omp.ru, linux-ide@vger.kernel.org,
- serjk@netup.ru, aospan@netup.ru, linux-media@vger.kernel.org,
- ddrokosov@sberdevices.ru, linux-iio@vger.kernel.org, v.georgiev@metrotek.ru,
- linux-mips@vger.kernel.org, ntb@lists.linux.dev,
- linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-spi@vger.kernel.org, dushistov@mail.ru,
- manivannan.sadhasivam@linaro.org, conor.dooley@microchip.com,
- linux-fpga@vger.kernel.org, tsbogend@alpha.franken.de,
- hoan@os.amperecomputing.com, geert@linux-m68k.org,
- wsa+renesas@sang-engineering.com, mchehab+huawei@kernel.org,
- xiangxia.m.yue@gmail.com
-References: <2024101835-tiptop-blip-09ed@gregkh>
- <A74519B4332040FA+20241023063058.223139-1-wangyuli@uniontech.com>
- <a08dc31ab773604d8f206ba005dc4c7a@aosc.io>
- <444fa53bdfdee75522a1af41655a99b0@aosc.io>
-Content-Language: en-US
-From: WangYuli <wangyuli@uniontech.com>
-Autocrypt: addr=wangyuli@uniontech.com; keydata=
- xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSKP+nX39DN
- IVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAxFiEEa1GMzYeuKPkg
- qDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMBAAAKCRDF2h8wRvQL7g0UAQCH
- 3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfPbwD/SrncJwwPAL4GiLPEC4XssV6FPUAY
- 0rA68eNNI9cJLArOOARmgSyJEgorBgEEAZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7
- VTL0dvPDofBTjFYDAQgHwngEGBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIb
- DAAKCRDF2h8wRvQL7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkU
- o9ERi7qS/hbUdUgtitI89efbY0TVetgDsyeQiwU=
-In-Reply-To: <444fa53bdfdee75522a1af41655a99b0@aosc.io>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------r97sG9xHlL94zbsyZpdQWneg"
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: MytpMCCBBwXiQTqlzmOtOiyKab7iKEOcUkdUwE8xo/3sPqfa9mFgZUhc
-	Noq9QcWvF48dcyyZs5jQuZnRxTzb5hdxuTHzS5XAx04gxp3xjyvngFJJt1WMnvf2yzehGW/
-	43VRC83KkH2eJUSqMbo/HLmM0OwuOiWD9G3u5gQvwXckFqjpdV+k5RVjt3RY8zVmTJ/C0A6
-	Mj+yM1xtGD5htv+e2yypFAJhaNYSXb1/KWgFuDV2qAdVq6j3nu43Cnj8iv8zczmLvwvIPNG
-	7lGr5jtSyzsYc0NzTqJHJrHB0DXKw3+UaMdb3CM4EfdVe6tsD5CJHELkRoi/6/IGVxHoup1
-	JMlkh6BP2HC/6h/WsNu4BM2iwqZldIBauy9j0wgV17oZYTcLOFGrK9NRRx3UoN8eDZagguV
-	D3oUWyUVazNi91biWQuVsDGKPuqe+oSrpQKBUmGAew3PJKJiebtVsCX6fBn6Wj0dtv3Zv8g
-	XyzXLFUzpsdRWF5DYRdFpJRPElP74dfISscIubZeELPEBL39gdcKjd3LGInYV0Qr/U4cyhx
-	tOPqM0h2RJW9cgH0owXZw+I/asYSDoScQMJHAq7mTzOAuX7/jdOCJQPgsfqvcpQWpC/ns0C
-	5bLIq1PGfsnLHGbwHDPBjY+xGSkNVSFePoxbWJMHVi944WFW9CmiM5DXSvuQMDrwFa7PjlG
-	RJ9nXLn48icA1n1aA+gWzjq694AMasDxw2juG+7xmFcCyIg0kcBU+HHASPLCKSeD39zoZwR
-	RpsN0tk5wzDFT95owLon7WLvKGLxsbns3tvq8jrAkrdbZfSAS27YQjA3K/hQAthR24NN5zj
-	dICIT4okBYWbhDlSOtgMzdgrD/bE+qUddLqZR7hAvozxHyQVIwae/ZzCxqK+3ylTmN/LGp7
-	s+wV0Yoc4hxtn3mb0Axrw0nqfJQEl/XxcQvFp1TPubID73njPotKM4GzJHPfZQ6e0xcafi1
-	mLNHveRIRsxVlKxqUbDfibDVCf3GMlNMGF7m1jJaUpg6u44Ld0vL6/i6Dk5pXKb+vC5HTa8
-	OSzKDtPg==
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-X-QQ-RECHKSPAM: 0
+To: jeffbai@aosc.io
+Cc: aospan@netup.ru, conor.dooley@microchip.com, ddrokosov@sberdevices.ru, 
+	dmaengine@vger.kernel.org, dushistov@mail.ru, fancer.lancer@gmail.com, 
+	geert@linux-m68k.org, gregkh@linuxfoundation.org, hoan@os.amperecomputing.com, 
+	ink@jurassic.park.msu.ru, linux-alpha@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-fpga@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-ide@vger.kernel.org, linux-iio@vger.kernel.org, 
+	linux-media@vger.kernel.org, linux-mips@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-spi@vger.kernel.org, 
+	manivannan.sadhasivam@linaro.org, Matt Turner <mattst88@gmail.com>, 
+	netdev@vger.kernel.org, nikita@trvn.ru, ntb@lists.linux.dev, 
+	patches@lists.linux.dev, richard.henderson@linaro.org, s.shtylyov@omp.ru, 
+	serjk@netup.ru, shc_work@mail.ru, tsbogend@alpha.franken.de, 
+	v.georgiev@metrotek.ru, wangyuli@uniontech.com, 
+	wsa+renesas@sang-engineering.com, xeb@mail.ru
+Content-Type: text/plain; charset="UTF-8"
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------r97sG9xHlL94zbsyZpdQWneg
-Content-Type: multipart/mixed; boundary="------------JzXTUjOcl4RCqRode5kxglom";
- protected-headers="v1"
-From: WangYuli <wangyuli@uniontech.com>
-To: Mingcong Bai <jeffbai@aosc.io>
-Cc: gregkh@linuxfoundation.org, patches@lists.linux.dev, nikita@trvn.ru,
- ink@jurassic.park.msu.ru, shc_work@mail.ru, richard.henderson@linaro.org,
- mattst88@gmail.com, linux-alpha@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, fancer.lancer@gmail.com,
- linux-hwmon@vger.kernel.org, dmaengine@vger.kernel.org, xeb@mail.ru,
- netdev@vger.kernel.org, s.shtylyov@omp.ru, linux-ide@vger.kernel.org,
- serjk@netup.ru, aospan@netup.ru, linux-media@vger.kernel.org,
- ddrokosov@sberdevices.ru, linux-iio@vger.kernel.org, v.georgiev@metrotek.ru,
- linux-mips@vger.kernel.org, ntb@lists.linux.dev,
- linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-spi@vger.kernel.org, dushistov@mail.ru,
- manivannan.sadhasivam@linaro.org, conor.dooley@microchip.com,
- linux-fpga@vger.kernel.org, tsbogend@alpha.franken.de,
- hoan@os.amperecomputing.com, geert@linux-m68k.org,
- wsa+renesas@sang-engineering.com, mchehab+huawei@kernel.org,
- xiangxia.m.yue@gmail.com
-Message-ID: <d97424c4-29ab-4bb2-b1df-8f04f8b865ca@uniontech.com>
-Subject: Re: [PATCH] MAINTAINERS: Remove some entries due to various
- compliance requirements.
-References: <2024101835-tiptop-blip-09ed@gregkh>
- <A74519B4332040FA+20241023063058.223139-1-wangyuli@uniontech.com>
- <a08dc31ab773604d8f206ba005dc4c7a@aosc.io>
- <444fa53bdfdee75522a1af41655a99b0@aosc.io>
-In-Reply-To: <444fa53bdfdee75522a1af41655a99b0@aosc.io>
+> > Although this commit has been merged, it's still important to know the
+> > specific reason (or even an example) that triggered this change for
+> > everyone here, right?
+> >
+> > And those maintainers who have been removed should be notified.
+>
+> Seconded
+>
+> <...omitted...>
+>
+> So I repeat - call the decision-makers out and ask for their
+> explanation.
 
---------------JzXTUjOcl4RCqRode5kxglom
-Content-Type: multipart/mixed; boundary="------------scTKQpIAgv93yoqxUNnHojEI"
-
---------------scTKQpIAgv93yoqxUNnHojEI
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
-
-SGFoYSwgSSByZWNlaXZlZCBhIHNpbWlsYXIgb2ZmLWxpc3QgcmVwbHkuDQoNCkkgZGVlcGx5
-IHN5bXBhdGhpemUgd2l0aCBHcmVnLWtoJ3Mgc2l0dWF0aW9uIGFuZCBoaXMgdW5zcG9rZW4g
-DQpkaWZmaWN1bHRpZXMsIGFsdGhvdWdoIEkgZG9uJ3QgdW5kZXJzdGFuZCB3aHkgdGhlIE1B
-SU5UQUlORVJTIGZpbGUsIGFzIA0KcGFydCBvZiB0aGUga2VybmVsIGNvZGUsIHNob3VsZCBi
-ZSBvZmYtbGltaXRzIHRvIG5vbi1tYWludGFpbmVyIA0KZGV2ZWxvcGVycywgZXNwZWNpYWxs
-eSB3aGVuIHRoaXMgY2xlYXJseSBpc24ndCBqdXN0IGFib3V0ICdtb2RpZnlpbmcgdGhlIA0K
-TUFJTlRBSU5FUlMgZmlsZS4nDQoNCklmIGFueSBMaW51eCBkZXZlbG9wZXIgdGFjaXRseSBh
-cHByb3ZlcyBvZiB0aGlzLCB0aGV5J3JlIGVzc2VudGlhbGx5IA0KZ2l2aW5nIGEgZ3JlZW4g
-bGlnaHQgdG8gc29tZSBzaGFkeSBwb2xpdGljYWwgYWN0b3JzIGZyb20gYSBjZXJ0YWluIA0K
-Y291bnRyeSB0byBjb2VyY2UgcGVvcGxlIGludG8gYmV0cmF5aW5nIGl0J3MgY29uc3RpdHV0
-aW9uLg0KDQpUaGF0J3MgYWJzdXJkLiBBZ2FpbiwgbXkgaGVhcnQgZ29lcyBvdXQgdG8gYWxs
-IChpbmNsdWRpbmcgR3JlZy1raCkgdGhhdCANCmFmZmVjdGVkIGJ5IHRoaXMuDQoNCkkgbWVh
-biBubyBvZmZlbnNlIHRvIGFueW9uZSwgYnV0IHRoaXMgYWN0aW9uIHdpbGwgY29tcGxldGVs
-eSBkZXN0cm95IHRoZSANCnRydXN0IHRoYXQgZGV2ZWxvcGVycyB3b3JsZHdpZGUgaGF2ZSBp
-biB0aGUgTGludXgga2VybmVsIHByb2plY3QgYW5kIHRoZSANCmVudGlyZSBMaW51eCBGb3Vu
-ZGF0aW9uLCBhbmQgdGhlIHBvbGl0aWNpYW5zIGZvcmNpbmcgeW91IHRvIGRvIHRoaXMgDQpj
-bGVhcmx5IGRvbid0IGNhcmUgYWJvdXQgdGhhdC4NCg0KVG8gYXZvaWQgYmVjb21pbmcgcGF3
-bnMgaW4gYSBwb2xpdGljYWwgZ2FtZSBhbmQgdG8gcHJldmVudCBhbGllbmF0aW5nIA0KYWxs
-IHRoZSBkZXZlbG9wZXJzIHdobyBoYXZlIGNvbnRyaWJ1dGVkIHRvIHRoZSBMaW51eCBrZXJu
-ZWwsIEkgc2luY2VyZWx5IA0Kc3VnZ2VzdCB0aGF0IHlvdSBtYWludGFpbmVycyByZXZlcnQg
-dGhpcyBjb21taXQgYW5kIHByb21pc2Ugbm90IHRvIGRvIA0Kc29tZXRoaW5nIGxpa2UgdGhp
-cyBhZ2Fpbi4NCg0KQW5kIEkgdXJnZSBldmVyeW9uZSB3aG8gYWdyZWVzIHRoYXQgdGhpcyBp
-cyB1bnJlYXNvbmFibGUgdG8gcmVwbHkgdG8gDQoiW1BBVENIXSBSZXZlcnQgIk1BSU5UQUlO
-RVJTOiBSZW1vdmUgc29tZSBlbnRyaWVzIGR1ZSB0byB2YXJpb3VzIA0KY29tcGxpYW5jZSBy
-ZXF1aXJlbWVudHMuIiB3aXRoIHRoZWlyIG93biAiUmV2aWV3ZWQtYnkiLg0KDQpSZW1lbWJl
-cjogV2hhdCBzZXRzIGh1bWFucyBhcGFydCBmcm9tIGFuaW1hbHMgaXMgb3VyIHVuZHlpbmcg
-c3Bpcml0IG9mIA0KcmVzaXN0YW5jZS4gV2UgY2Fubm90IGJlIGRvbWVzdGljYXRlZCBvciB0
-YW1lZCBieSBvdGhlcnMuDQoNCkZpbmFsbHksIEknZCBsaWtlIHRvIHNoYXJlIGEgcXVvdGUg
-ZnJvbSBOb3JzZSBteXRob2xvZ3k6IE9ubHkgd2FycmlvcnMgDQp3aG8gZGllIGluIGJhdHRs
-ZSBhcmUgd29ydGh5IG9mIGVudGVyaW5nIFZhbGhhbGxhLg0KDQotLSANCldhbmdZdWxpDQo=
-
---------------scTKQpIAgv93yoqxUNnHojEI
-Content-Type: application/pgp-keys; name="OpenPGP_0xC5DA1F3046F40BEE.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xC5DA1F3046F40BEE.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
-
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSK
-P+nX39DNIVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAx
-FiEEa1GMzYeuKPkgqDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMB
-AAAKCRDF2h8wRvQL7g0UAQCH3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfP
-bwD/SrncJwwPAL4GiLPEC4XssV6FPUAY0rA68eNNI9cJLArOOARmgSyJEgorBgEE
-AZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7VTL0dvPDofBTjFYDAQgHwngE
-GBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIbDAAKCRDF2h8wRvQL
-7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkUo9ERi7qS
-/hbUdUgtitI89efbY0TVetgDsyeQiwU=3D
-=3DBlkq
------END PGP PUBLIC KEY BLOCK-----
-
---------------scTKQpIAgv93yoqxUNnHojEI--
-
---------------JzXTUjOcl4RCqRode5kxglom--
-
---------------r97sG9xHlL94zbsyZpdQWneg
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wnsEABYIACMWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZxjECQUDAAAAAAAKCRDF2h8wRvQL7kjt
-APwI7fd1226UgOd7cRVAf8ZOTwbN8jQ1fJQ8MgqEad3U9wD9EIMXUDfMpotDS9T8MXgx3FH68pyV
-elWfHTzpUpxMGw4=
-=Mkes
------END PGP SIGNATURE-----
-
---------------r97sG9xHlL94zbsyZpdQWneg--
+Seconded. I'm no Linux kernel developer, but as a user, I would still like
+to know the reason behind a bunch of maintainers getting erased. I wouldn't
+go as far as to claim that I sense malice, but there's definitely something
+fishy. I would like a proper, public statement about what happened and why.
 

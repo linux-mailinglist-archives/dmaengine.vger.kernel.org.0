@@ -1,167 +1,180 @@
-Return-Path: <dmaengine+bounces-3481-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3482-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9C8CB9AEC05
-	for <lists+dmaengine@lfdr.de>; Thu, 24 Oct 2024 18:28:10 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0095A9AEC20
+	for <lists+dmaengine@lfdr.de>; Thu, 24 Oct 2024 18:31:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C007D1C21E02
-	for <lists+dmaengine@lfdr.de>; Thu, 24 Oct 2024 16:28:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ABE21282F65
+	for <lists+dmaengine@lfdr.de>; Thu, 24 Oct 2024 16:31:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F29F1F8191;
-	Thu, 24 Oct 2024 16:28:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 902E71F666C;
+	Thu, 24 Oct 2024 16:31:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="aZbVPBF+";
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="aZbVPBF+"
+	dkim=pass (2048-bit key) header.d=typeblog.net header.i=@typeblog.net header.b="idHoZKpO"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from bedivere.hansenpartnership.com (bedivere.hansenpartnership.com [96.44.175.130])
+Received: from mail.typeblog.net (mail.typeblog.net [88.151.33.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56ADF1F80CC;
-	Thu, 24 Oct 2024 16:28:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.44.175.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0ABB16F910;
+	Thu, 24 Oct 2024 16:31:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=88.151.33.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729787282; cv=none; b=Gr08zSQa2Blv2Pyya4mLgd0CPu6X1zm3xJs716T1/cxAiuiD85d3l38xxswzQi/gCjnh53AC8inMAtqbivNb9kEhobmo8V0xUQdsU74uPWtE0t2dE3Wk/Z2EpbYg2UhpP+kKJzb+KiIC/GoouZGMHwspl+q8eGS3sz7fQL3l7W4=
+	t=1729787487; cv=none; b=fe07fEj3Yq1K6J5cyE5J3QPaqPJWFJAjwehuPDWiV8rV1Fz2W0406Z2L2j5cCt/0l4bVw/AKeQ3CCG6WViGw4FwAZuv3ZGjzpveZabN2DOjcHqy4c4/ftdLh8e4T3g1gBo46nAt4NcFKpWdJVmGYYe/6ufb6rENgxi7WvnGeF88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729787282; c=relaxed/simple;
-	bh=Rrc56uTnfRNdC1bewUry4Xfnxz5KZpPPiUjQQRJFyU4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=exSJziHCvDcGAShmvavdK84vxeyXyu/bsi5V4p6DgWk5vbDt9LTr86LoG3+DbPbbzGV5w6i+KhSiOJSUBcFZsRi7WcSnun5Vj93LSHoc62f3weUIHcyEIwpXiW591rEPSqfsBRS9isgvNjGgE3PKn+q5iQnw/BoroG9CCVfzNWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=aZbVPBF+; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=aZbVPBF+; arc=none smtp.client-ip=96.44.175.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1729787275;
-	bh=Rrc56uTnfRNdC1bewUry4Xfnxz5KZpPPiUjQQRJFyU4=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=aZbVPBF+axigjMKsw1msqICxBnjDWBRgdI0ct3T7Kf898m8kTzL9UA31mp7dLLOSJ
-	 XQ+g2sskTIVJyy2D6A2dXk/UjRYJdzh9N93DjRLWJ26LHk3xkGPAy6W90rYsfsqPEr
-	 cQdcwBMYVVqDWYQLGCFWkS6heSDbavxlERDs9lgI=
-Received: from localhost (localhost [127.0.0.1])
-	by bedivere.hansenpartnership.com (Postfix) with ESMTP id C319B128799E;
-	Thu, 24 Oct 2024 12:27:55 -0400 (EDT)
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
- by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavis, port 10024)
- with ESMTP id FlqUVcMmUqoz; Thu, 24 Oct 2024 12:27:55 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1729787275;
-	bh=Rrc56uTnfRNdC1bewUry4Xfnxz5KZpPPiUjQQRJFyU4=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=aZbVPBF+axigjMKsw1msqICxBnjDWBRgdI0ct3T7Kf898m8kTzL9UA31mp7dLLOSJ
-	 XQ+g2sskTIVJyy2D6A2dXk/UjRYJdzh9N93DjRLWJ26LHk3xkGPAy6W90rYsfsqPEr
-	 cQdcwBMYVVqDWYQLGCFWkS6heSDbavxlERDs9lgI=
-Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::a774])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 731B41287956;
-	Thu, 24 Oct 2024 12:27:51 -0400 (EDT)
-Message-ID: <f90bba20e86dac698472d686be7ec565736adca0.camel@HansenPartnership.com>
-Subject: Re: linux: Goodbye from a Linux community volunteer
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>, Serge Semin
- <fancer.lancer@gmail.com>,  Jon Mason <jdmason@kudzu.us>, Dave Jiang
- <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>, 
- ntb@lists.linux.dev, Andy Shevchenko <andy@kernel.org>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Kory Maincent
- <kory.maincent@bootlin.com>,  Cai Huoqing <cai.huoqing@linux.dev>,
- dmaengine@vger.kernel.org, Mark Brown <broonie@kernel.org>, 
- linux-spi@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>, 
- linux-ide@vger.kernel.org, "paulburton@kernel.org" <paulburton@kernel.org>,
-  Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Arnd Bergmann
- <arnd@arndb.de>, "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,  Manivannan Sadhasivam
- <manivannan.sadhasivam@linaro.org>, Yoshihiro Shimoda
- <yoshihiro.shimoda.uh@renesas.com>, linux-pci <linux-pci@vger.kernel.org>,
- "David S . Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>, Russell King
- <linux@armlinux.org.uk>, Vladimir Oltean <olteanv@gmail.com>, Kelvin Cheung
- <keguang.zhang@gmail.com>, Yanteng Si <siyanteng@loongson.cn>, 
- netdev@vger.kernel.org, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk@kernel.org>, Guenter Roeck <linux@roeck-us.net>, 
- linux-hwmon@vger.kernel.org, Borislav Petkov <bp@alien8.de>, 
- linux-edac@vger.kernel.org, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>,  linux-serial@vger.kernel.org
-Cc: Andrew Halaney <ajhalaney@gmail.com>, Nikita Travkin <nikita@trvn.ru>, 
- Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Alexander Shiyan
- <shc_work@mail.ru>, Dmitry Kozlov <xeb@mail.ru>,  Sergey Shtylyov
- <s.shtylyov@omp.ru>, Evgeniy Dushistov <dushistov@mail.ru>, Geert
- Uytterhoeven <geert@linux-m68k.org>, Sergio Paracuellos
- <sergio.paracuellos@gmail.com>,  Nikita Shubin <nikita.shubin@maquefel.me>,
- linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 24 Oct 2024 12:27:49 -0400
-In-Reply-To: <753d203a-a008-4cd3-b053-38b5ce31281b@app.fastmail.com>
-References: 
-	<2m53bmuzemamzc4jzk2bj7tli22ruaaqqe34a2shtdtqrd52hp@alifh66en3rj>
-	 <e7d548a7fc835f9f3c9cb2e5ed97dfdfa164813f.camel@HansenPartnership.com>
-	 <753d203a-a008-4cd3-b053-38b5ce31281b@app.fastmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 
+	s=arc-20240116; t=1729787487; c=relaxed/simple;
+	bh=krlFgLM5X1BjmsbFwpT05sBfUJhQUHemV0lI+b/qrjA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d1DZ63Mmrftipj2UaHCfd1SFGJZSxSpHovRrFoaVJbuqRjziNDKNH7PPnzrfpN1vrEeCzUguG6unKt/FlqivVUel8Oy0HAvk6lt6ONKIQOpK+WdMN6kehwWfueP25f3gAYgjwqWXHgHisE9QYvuqs6fTiekUzQbeQFjovV9swLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=typeblog.net; spf=pass smtp.mailfrom=typeblog.net; dkim=pass (2048-bit key) header.d=typeblog.net header.i=@typeblog.net header.b=idHoZKpO; arc=none smtp.client-ip=88.151.33.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=typeblog.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=typeblog.net
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 94CFCD05CE1;
+	Thu, 24 Oct 2024 18:31:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=typeblog.net;
+	s=mailcow; t=1729787480;
+	h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:content-language:in-reply-to:references;
+	bh=kMTah/UXmnPbON83Ojlj5WVOo5L4UfCvnmalZ3LtOOs=;
+	b=idHoZKpOWIq6BPcZ1jKvD+DCsA+fRuNlkXab1lpqPLW8AY+uSzO9pT9e1otWet0Cb5SXdO
+	JPAW91Q4kK/T/DLwbPUYx0r9YaaivsCbfUlNLoOK2AbxLAB1u3HkayLvstcEmmS/uiStEn
+	oHNGKBvFNUlPbF/5zkc913SQrZudAqpfcQpXLtAXNdFi0LsUS1CdKgi11yMuXNH2wgoCl6
+	c+OfuWSVAlY0xL5cPxoxxgaCiu50Jjof5J2hij9PPSRKL/JIAeRp7XR41H2P8URFa9ivGw
+	CKO4NoZ72zhQbsN9ECCPm3tANcCHiVq7uqz8VmxM2gYt21mwOnVGOon/u2jjcg==
+Message-ID: <6beb4070-1946-4387-bd0e-34608a76b19e@typeblog.net>
+Date: Thu, 24 Oct 2024 12:30:59 -0400
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux: Goodbye from a Linux community volunteer
+To: James Bottomley <James.Bottomley@HansenPartnership.com>,
+ Serge Semin <fancer.lancer@gmail.com>, Jon Mason <jdmason@kudzu.us>,
+ Dave Jiang <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>,
+ ntb@lists.linux.dev, Andy Shevchenko <andy@kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Kory Maincent <kory.maincent@bootlin.com>,
+ Cai Huoqing <cai.huoqing@linux.dev>, dmaengine@vger.kernel.org,
+ Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+ Damien Le Moal <dlemoal@kernel.org>, linux-ide@vger.kernel.org,
+ Paul Burton <paulburton@kernel.org>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Arnd Bergmann <arnd@arndb.de>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ linux-mips@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+ linux-pci@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Andrew Lunn <andrew@lunn.ch>, Russell King <linux@armlinux.org.uk>,
+ Vladimir Oltean <olteanv@gmail.com>, Keguang Zhang
+ <keguang.zhang@gmail.com>, Yanteng Si <siyanteng@loongson.cn>,
+ netdev@vger.kernel.org, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk@kernel.org>, Guenter Roeck <linux@roeck-us.net>,
+ linux-hwmon@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+ linux-edac@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ linux-serial@vger.kernel.org
+Cc: Andrew Halaney <ajhalaney@gmail.com>, Nikita Travkin <nikita@trvn.ru>,
+ Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+ Alexander Shiyan <shc_work@mail.ru>, Dmitry Kozlov <xeb@mail.ru>,
+ Sergey Shtylyov <s.shtylyov@omp.ru>, Evgeniy Dushistov <dushistov@mail.ru>,
+ Geert Uytterhoeven <geert@linux-m68k.org>,
+ Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+ Nikita Shubin <nikita.shubin@maquefel.me>,
+ linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Kexy Biscuit <kexybiscuit@aosc.io>, jeffbai@aosc.io,
+ Linus Torvalds <torvalds@linux-foundation.org>
+References: <2m53bmuzemamzc4jzk2bj7tli22ruaaqqe34a2shtdtqrd52hp@alifh66en3rj>
+ <e7d548a7fc835f9f3c9cb2e5ed97dfdfa164813f.camel@HansenPartnership.com>
+Content-Language: en-US
+From: Peter Cai <peter@typeblog.net>
+In-Reply-To: <e7d548a7fc835f9f3c9cb2e5ed97dfdfa164813f.camel@HansenPartnership.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Thu, 2024-10-24 at 16:59 +0100, Jiaxun Yang wrote:
-> 
-> 
-> 在2024年10月24日十月 下午3:50，James Bottomley写道：
-> > On Thu, 2024-10-24 at 07:27 +0300, Serge Semin wrote:
-> > > Hello Linux-kernel community,
-> [...]
-> 
-> Hi James,
-> 
-> Sorry to chime in here, and thanks for making things clear.
-> 
-> However, I have some questions regarding this statement, please see
-> below:
-> 
-> > Please accept all of our apologies for the way this was handled.  A
-> > summary of the legal advice the kernel is operating under is
-> 
-> In what capacity this statement was made, i.e, who is "our" here and
-> "we" below? Are you representing any formal group in this case?
+Hi James,
 
-It's Linux, so no official capacity at all.  However, I am expressing
-the views of a number of people I talked to but it's not fair of me to
-name them.
+Thanks for your clarification. This sort of non-provocative 
+clarifications of the regulations you need to comply to has always been 
+what the community wants to see. _This_ should have been the first 
+official statement when anyone raised the concern, instead of Greg's 
+attempt to "defuse" the situation over private correspondence, or Linus 
+Torvald's outright defamation and accusing anyone who dares to disagree 
+of being a "Russian troll". This is not even to mention the _complete 
+ignorance_ and arrogance shown by his statement on what sending a revert 
+patch means.
 
-> >    If your company is on the U.S. OFAC SDN lists, subject to an
-> > OFAC
-> >    sanctions program, or owned/controlled by a company on the list,
-> > our
-> >    ability to collaborate with you will be subject to restrictions,
-> > and
-> >    you cannot be in the MAINTAINERS file.
-> > 
-> > Anyone who wishes to can query the list here:
-> > 
-> > https://sanctionssearch.ofac.treas.gov/
+With sanctions in place, there is no reasonable person who will demand 
+the LF or the Linux Kernel maintainers to do otherwise. However, as 
+someone who does rely on Linux for daily work, and as someone who has 
+contributed to the Linux project and its community, I think seeing the 
+following should be the minimum:
+
+1. Linus Torvalds (+Cc) send an apology letter to **everyone** who he 
+accused of being a Russian troll;
+2. Linus Torvalds need to **unconditionally retract** his personal 
+attack on Kexy Biscuit, the person who sent the revert patch in protest 
+(+Cc), and acknowledge that people who work with AOSC.io aren't 
+"state-sponsored paid actors";
+3. This type of statement should be included somewhere public as soon as 
+practically possible should sanction compliance affect kernel 
+development again in the future;
+4. No personal attacks should be allowed based on tinfoil-hat reasoning.
+
+Thanks,
+Peter.
+
+On 10/24/24 10:50 AM, James Bottomley wrote:
+> On Thu, 2024-10-24 at 07:27 +0300, Serge Semin wrote:
+>> Hello Linux-kernel community,
+>>
+>> I am sure you have already heard the news caused by the recent Greg'
+>> commit 6e90b675cf942e ("MAINTAINERS: Remove some entries due to
+>> various compliance requirements."). As you may have noticed the
+>> change concerned some of the Ru-related developers removal from the
+>> list of the official kernel maintainers, including me.
+>>
+>> The community members rightly noted that the _quite_ short commit log
+>> contained very vague terms with no explicit change justification. No
+>> matter how hard I tried to get more details about the reason, alas
+>> the senior maintainer I was discussing the matter with haven't given
+>> an explanation to what compliance requirements that was.
 > 
-> I did a quick search and found the following entry:
+> Please accept all of our apologies for the way this was handled.  A
+> summary of the legal advice the kernel is operating under is
 > 
-> HUAWEI TECHNOLOGIES CO., LTD. Under CMIC-EO13959 sanction program.
+>     If your company is on the U.S. OFAC SDN lists, subject to an OFAC
+>     sanctions program, or owned/controlled by a company on the list, our
+>     ability to collaborate with you will be subject to restrictions, and
+>     you cannot be in the MAINTAINERS file.
 > 
-> Although it's a Non-SDN sanction, it can still be interpreted as
-> "subject to an OFAC sanctions program".
+> Anyone who wishes to can query the list here:
 > 
-> How should we handle it?
-
-A big chunk of the reason it's taken so long just to get the above is
-that the Lawyers (of which I'm not one) are still discussing the
-specifics and will produce a much longer policy document later, so they
-don't want to be drawn into questions like this.  However, my non-
-legal-advice rule of thumb that I'm applying until I hear otherwise is
-not on the SDN list, not a problem.
-
-James
-
-
+> https://sanctionssearch.ofac.treas.gov/
+> 
+> In your specific case, the problem is your employer is on that list.
+> If there's been a mistake and your employer isn't on the list, that's
+> the documentation Greg is looking for.
+> 
+> I would also like to thank you for all your past contributions and if
+> you (or anyone else) would like an entry in the credit file, I'm happy
+> to shepherd it for you if you send me what you'd like.
+> 
+> Again, we're really sorry it's come to this, but all of the Linux
+> infrastructure and a lot of its maintainers are in the US and we can't
+> ignore the requirements of US law.  We are hoping that this action
+> alone will be sufficient to satisfy the US Treasury department in
+> charge of sanctions and we won't also have to remove any existing
+> patches.
+> 
+> Regards,
+> 
+> James Bottomley
+> 
 
 

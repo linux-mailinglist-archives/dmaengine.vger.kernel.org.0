@@ -1,232 +1,423 @@
-Return-Path: <dmaengine+bounces-3457-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3460-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C46A9ADC8C
-	for <lists+dmaengine@lfdr.de>; Thu, 24 Oct 2024 08:51:11 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE05C9ADCD4
+	for <lists+dmaengine@lfdr.de>; Thu, 24 Oct 2024 08:57:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7B970B21AFD
-	for <lists+dmaengine@lfdr.de>; Thu, 24 Oct 2024 06:51:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 63A9F1F2168E
+	for <lists+dmaengine@lfdr.de>; Thu, 24 Oct 2024 06:57:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F9D9189BAE;
-	Thu, 24 Oct 2024 06:51:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18180189BA0;
+	Thu, 24 Oct 2024 06:57:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="lJfHRNt2"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=reimar.doeffinger@gmx.de header.b="tzP19X4m"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A54B189B97;
-	Thu, 24 Oct 2024 06:51:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9201662F4;
+	Thu, 24 Oct 2024 06:56:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729752662; cv=none; b=LJZoMmBjTVZwnLjVCk5b4j1DIiIbK5g50AauZ3UrNf2CiYhsDnU2MEsAtLF7rMWf6r5RgQ8cpKzvCqmhd8J6BFgjYmHrD2BkIYqyRKcBucZqFJXeGB3smBQsZOYgHOT4sn9qBwf03kJngtKxHaJnJ6zusn0T04A4W3kwmVYlAKU=
+	t=1729753021; cv=none; b=TQFaOSPYz3vpjaHp/DeX6agbi9/vPWdhOkVefIkZ0K5hQnPrToGvpKFxZWix0e8e/pfIiHikePcmb94BmQZFzy6nOrGTB8OF/Vo1aD/gRYeuKQVTgsHW7x+ZcUla3k1Das9nftzvB6nSSbjOZvlpZs4mr4fESJj1Y4Q/6vXw9D8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729752662; c=relaxed/simple;
-	bh=PJWR+CZIGa0P6PEQdchIJleLyEnonKlBSBJjjMKwbJY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QUE/gNgOmZFCShV7lah7CKKKg0vGzlbY6Dj50vKXVH2z67e7IVKFqeuRihCQAdLdGCs2Ew3tb2Sn9yGrm0kP6n3WV5xKyZDXSfoihhnGxCatoGVFS2KD7jYtj98KpXDeJ+gh4wZ6RcbB46zg2S8PCIFvIxw17EazGOayR1usgU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=lJfHRNt2; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 0EAD8A0748;
-	Thu, 24 Oct 2024 08:50:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=mail; bh=bCOr7HBIDtYy/EPAaUt7
-	c9PayAvfuOB03DwDU0g3UPM=; b=lJfHRNt2gV+vLdQHCvrRxzwzyWw5YofL0NdD
-	kFUJ6J+duzj9cIn2Eqou78Kyvq0XSUdZrQzbkppjhIsTXQafzgFCubN0VhyUe60R
-	rJsqACo8V9HIMRWGhUdncEGEjyHT9Z0TI91fK/9sc1aP5kPL3AUOH85ukL/tsud/
-	X5kyTqblHNx8fAadAqb1yHc9NWrhrBuRtynz62ja432THexTYnnpqwONxNrvMozS
-	54WCI/SaAXdAJyevQIAtho2t5S6iO7QUoM/4Dk6IcLFW4P3rgRZeFIUzOYJ8Uvzj
-	77pzd0YqIauuQRO/ZB1aEtjzep3DHKMQEJ3DaCOd51/R5DeMHDuAE1Ol58ptAUpJ
-	mbbghC3dmwHgQPPy++s6JzsQE0uG+7kTl+A8BO1wY6b96iyGuRWkzLRMj8PX2O3R
-	Kl2OEYqU3h9hOMucvJyZCe81UrdnjISJn8FZK6rQq9bV6//3SZycioO3gFw272sv
-	o8SsyHY0iVUR2bwn9Io4+4RLCAO18v6iedZERkNBD1xhpXEoQ50yiJ/ryM/cTKQl
-	ajNNfOs7j9Kz3/IOQ2ReFqGThnTS/c+749ckZtpPRx4hoLizpVaJNrAZfad5LYXH
-	KL9JXmbvy0zOCLMW+UkYkHak0I5pccaPahl0v8yHl18Vc/oDhtQPKGZ++SK92Rtu
-	TIsGifc=
-From: =?UTF-8?q?Cs=C3=B3k=C3=A1s=2C=20Bence?= <csokas.bence@prolan.hu>
-To: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-sunxi@lists.linux.dev>
-CC: Mesih Kilinc <mesihkilinc@gmail.com>, Vinod Koul <vkoul@kernel.org>,
-	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>
-Subject: [PATCH 04/10] dma-engine: sun4i: Add support for Allwinner suniv F1C100s
-Date: Thu, 24 Oct 2024 08:49:25 +0200
-Message-ID: <20241024064931.1144605-5-csokas.bence@prolan.hu>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <13ab5cec-25e5-4e82-b956-5c154641d7ab@prolan.hu>
-References:
+	s=arc-20240116; t=1729753021; c=relaxed/simple;
+	bh=wdgD6qvXSVO8H0q9V3v24HaTgfvhkQIOWPYzBuOxHw8=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=crP+5+ds7LXYvoYhk4hoCXwqffJ3lF3lB8egIakW5VhVEMeoo0JEAjzokwjSIIT7gJn/TVAbwEwpuOIm7ZdbwtuclwUYxFQQA6LLUVZw7MJqTW6guMPrGrhiqfwrXbYI0nUOIcu7gp1tbr9rwMRwHvv3fgzYvUQjSH9LzNehaPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=reimar.doeffinger@gmx.de header.b=tzP19X4m; arc=none smtp.client-ip=212.227.17.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1729752930; x=1730357730;
+	i=reimar.doeffinger@gmx.de;
+	bh=dbq90nrq8LfkX1Ug149kdQ8PEHRPGRI4rzHx8hOaEss=;
+	h=X-UI-Sender-Class:Content-Type:Mime-Version:Subject:From:
+	 In-Reply-To:Date:Cc:Content-Transfer-Encoding:Message-Id:
+	 References:To:cc:content-transfer-encoding:content-type:date:from:
+	 message-id:mime-version:reply-to:subject:to;
+	b=tzP19X4mYfx99tlCYHElzIncUINmjJmY64Tvzhy+puX0CUzTnpXtaEFP3En+UVSW
+	 Im89H+yOxexeu/ER0tskm6M+g5FXhTgNuy9PgEyxPszxM+XXsU3rtubJEuo66VR6b
+	 Gt4vbmF3OnPk7HedzlokO8v5wr69CC/kRspI+/8vQr+6rNTyJehsV+FR6Waz3wJfb
+	 4HHDb1/43DKfrPaTFpvT8ez05Uu0bsh0FpWWvXVHGwdwjM5hvy8j3cxJ3lQ8RSTD6
+	 3VwCl3sjRXSsS6HJvJrZQyrf2Cuy40/MMgo8V5chzJFcsc3D7lqXjDxiKIlSTby1c
+	 FGzmM/YA+oOsOGL0bw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from smtpclient.apple ([155.4.74.59]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1McYCb-1tbXPo3PDR-00m2mo; Thu, 24
+ Oct 2024 08:55:29 +0200
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1729752652;VERSION=7978;MC=3421499292;ID=135551;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
-X-ESET-Antispam: OK
-X-EsetResult: clean, is OK
-X-EsetId: 37303A29ACD94855677065
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3818.100.11.1.3\))
+Subject: Re: linux: Goodbye from a Linux community volunteer
+From: =?utf-8?Q?Reimar_D=C3=B6ffinger?= <Reimar.Doeffinger@gmx.de>
+In-Reply-To: <2m53bmuzemamzc4jzk2bj7tli22ruaaqqe34a2shtdtqrd52hp@alifh66en3rj>
+Date: Thu, 24 Oct 2024 08:55:05 +0200
+Cc: Jon Mason <jdmason@kudzu.us>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Allen Hubbe <allenbh@gmail.com>,
+ ntb@lists.linux.dev,
+ Andy Shevchenko <andy@kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Kory Maincent <kory.maincent@bootlin.com>,
+ Cai Huoqing <cai.huoqing@linux.dev>,
+ dmaengine@vger.kernel.org,
+ Mark Brown <broonie@kernel.org>,
+ linux-spi@vger.kernel.org,
+ Damien Le Moal <dlemoal@kernel.org>,
+ linux-ide@vger.kernel.org,
+ Paul Burton <paulburton@kernel.org>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ linux-mips@vger.kernel.org,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+ linux-pci@vger.kernel.org,
+ "David S. Miller" <davem@davemloft.net>,
+ Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>,
+ Andrew Lunn <andrew@lunn.ch>,
+ Russell King <linux@armlinux.org.uk>,
+ Vladimir Oltean <olteanv@gmail.com>,
+ Keguang Zhang <keguang.zhang@gmail.com>,
+ Yanteng Si <siyanteng@loongson.cn>,
+ netdev@vger.kernel.org,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk@kernel.org>,
+ Guenter Roeck <linux@roeck-us.net>,
+ linux-hwmon@vger.kernel.org,
+ Borislav Petkov <bp@alien8.de>,
+ linux-edac@vger.kernel.org,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ linux-serial@vger.kernel.org,
+ Andrew Halaney <ajhalaney@gmail.com>,
+ Nikita Travkin <nikita@trvn.ru>,
+ Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+ Alexander Shiyan <shc_work@mail.ru>,
+ Dmitry Kozlov <xeb@mail.ru>,
+ Sergey Shtylyov <s.shtylyov@omp.ru>,
+ Evgeniy Dushistov <dushistov@mail.ru>,
+ Geert Uytterhoeven <geert@linux-m68k.org>,
+ Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+ Nikita Shubin <nikita.shubin@maquefel.me>,
+ linux-renesas-soc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <D454EE83-DFB9-4A2D-821E-EF709350D5BB@gmx.de>
+References: <2m53bmuzemamzc4jzk2bj7tli22ruaaqqe34a2shtdtqrd52hp@alifh66en3rj>
+To: Serge Semin <fancer.lancer@gmail.com>
+X-Mailer: Apple Mail (2.3818.100.11.1.3)
+X-Provags-ID: V03:K1:k3CVh5UwL8Pr/QS58KpuV8k33BndHnbC3H+BIpo/1DJWFypIkuS
+ N/hzcr7X8i2LvFoAEfWjMCcex7w3EYtjq2rYvFLATE7ycsPjRqZZ4VMdu0mv4o6o2XPEV6f
+ qG5/X5qwYvrM0UlAeg26MiHfER5UCJzK7uI5qY+nWXMqmQL1YyNU4yLTagqVf9pDO4vDvxt
+ 98ZLb+QsQUf5paugVVstQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:92UNTiVAadM=;4dqRgDg6n4gLXT6FjhukD/0b6+W
+ cAxvAWlthP+w/cgMg25Gt0gR4wH+rWwx+h1AiMjjme5RKv++iqKL0xjNBp5BM/7/Hwnpe3UYm
+ o8Vkwq66DyBaEqk3xacLhdkpkdGKTXtG++OgKShHJt3uhBdBq41d9crk8vRrBbPwKPTMbswSm
+ J6OzXOOOmi+01thCwy4mlqNnVeoifHAPabt8eX7s/0hNffoJNhFjHa1NUsWFkSrQAoNOU0E8+
+ NEtxofXAieUtzVvocrNDFaWTgCbEGhbXjHYQ3AcMPHDkJfTEC4wfl7lJIUa2xbOtqifTqzeTj
+ aF7XzVjxoVihSzQeGztEynTuma4d8SK3cNYpQ12c6/EH0NtEdhH0qYuPfDYq0JPvY9eoosSPj
+ ASljvkH7D/Xfxdu+kJ88aWu7TBbUF2oVE11gSTi6u0ZrDSYQFf2lvinhldkIIOLKw1tuDui3X
+ 5XB0CjikMWKr8iOtmdUjBbD9wAc64IQw2BPOny3Meon+nVUTZXQGvwHGvY83O0tDNepZgceyQ
+ /Nw6RoeWqH26gkVfxV28vRjfpvCfgOL+2T5gj8nuMHdEqL8yvjUA0x133sFmvA90DfsE8tij5
+ wMUerleYmMgeDpxf2+C3zNNYAXEfCtrTuTQ3hOW4fkaRq3+qsRj7twmFyNzyRugmvBmDB02Il
+ cYnFmPdNFN8VYURjGdOce1sIKREajABwRlfLyt0wBKTxhKvHTEjo25YHlURfWakMUMsPBDNw2
+ p0sdYF3h6d8d2Rq7tFGONj5aO+BbeVqqnW/hM9zNatKsA6yIpDC8E6t1oVfp/Thkl7XbYEpBs
+ 9bvjbNbLISJBRd0RxLlRiGog==
 
-From: Mesih Kilinc <mesihkilinc@gmail.com>
+Hello Serge!
+I do not have many contributions to show to give it extra weight nor do
+I actually know you.
+Nevertheless I still wanted to say thank you for your nice message even =
+if
+it is for a sad occasion, and share your sentiment of hoping
+for more pleasant circumstances.
 
-DMA of Allwinner suniv F1C100s is similar to sun4i. It has 4 NDMA, 4
-DDMA channels and endpoints are different. Also F1C100s has reset bit
-for DMA in CCU. Add support for it.
+Best regards,
+Reimar
 
-Signed-off-by: Mesih Kilinc <mesihkilinc@gmail.com>
----
- drivers/dma/Kconfig     |  4 +--
- drivers/dma/sun4i-dma.c | 60 +++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 62 insertions(+), 2 deletions(-)
+(and apologies if anyone is annoyed by the wide CC list, but I think =
+it's
+important for at least some thank yous to be public and nobody else =
+seems
+to have written one yet)
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index d9ec1e69e428..fc25bfc356f3 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -162,8 +162,8 @@ config DMA_SA11X0
- 
- config DMA_SUN4I
- 	tristate "Allwinner A10 DMA SoCs support"
--	depends on MACH_SUN4I || MACH_SUN5I || MACH_SUN7I
--	default (MACH_SUN4I || MACH_SUN5I || MACH_SUN7I)
-+	depends on MACH_SUN4I || MACH_SUN5I || MACH_SUN7I || MACH_SUNIV
-+	default (MACH_SUN4I || MACH_SUN5I || MACH_SUN7I || MACH_SUNIV)
- 	select DMA_ENGINE
- 	select DMA_VIRTUAL_CHANNELS
- 	help
-diff --git a/drivers/dma/sun4i-dma.c b/drivers/dma/sun4i-dma.c
-index 0b99b3884971..2ffc19d93c14 100644
---- a/drivers/dma/sun4i-dma.c
-+++ b/drivers/dma/sun4i-dma.c
-@@ -33,7 +33,11 @@
- #define SUN4I_DMA_CFG_SRC_ADDR_MODE(mode)	((mode) << 5)
- #define SUN4I_DMA_CFG_SRC_DRQ_TYPE(type)	(type)
- 
-+#define SUNIV_DMA_CFG_DST_DATA_WIDTH(width)	((width) << 24)
-+#define SUNIV_DMA_CFG_SRC_DATA_WIDTH(width)	((width) << 8)
-+
- #define SUN4I_MAX_BURST	8
-+#define SUNIV_MAX_BURST	4
- 
- /** Normal DMA register values **/
- 
-@@ -41,6 +45,9 @@
- #define SUN4I_NDMA_DRQ_TYPE_SDRAM		0x16
- #define SUN4I_NDMA_DRQ_TYPE_LIMIT		(0x1F + 1)
- 
-+#define SUNIV_NDMA_DRQ_TYPE_SDRAM		0x11
-+#define SUNIV_NDMA_DRQ_TYPE_LIMIT		(0x17 + 1)
-+
- /** Normal DMA register layout **/
- 
- /* Dedicated DMA source/destination address mode values */
-@@ -54,6 +61,9 @@
- #define SUN4I_NDMA_CFG_BYTE_COUNT_MODE_REMAIN	BIT(15)
- #define SUN4I_NDMA_CFG_SRC_NON_SECURE		BIT(6)
- 
-+#define SUNIV_NDMA_CFG_CONT_MODE		BIT(29)
-+#define SUNIV_NDMA_CFG_WAIT_STATE(n)		((n) << 26)
-+
- /** Dedicated DMA register values **/
- 
- /* Dedicated DMA source/destination address mode values */
-@@ -66,6 +76,9 @@
- #define SUN4I_DDMA_DRQ_TYPE_SDRAM		0x1
- #define SUN4I_DDMA_DRQ_TYPE_LIMIT		(0x1F + 1)
- 
-+#define SUNIV_DDMA_DRQ_TYPE_SDRAM		0x1
-+#define SUNIV_DDMA_DRQ_TYPE_LIMIT		(0x9 + 1)
-+
- /** Dedicated DMA register layout **/
- 
- /* Dedicated DMA configuration register layout */
-@@ -119,6 +132,11 @@
- #define SUN4I_DMA_NR_MAX_VCHANS						\
- 	(SUN4I_NDMA_NR_MAX_VCHANS + SUN4I_DDMA_NR_MAX_VCHANS)
- 
-+#define SUNIV_NDMA_NR_MAX_CHANNELS	4
-+#define SUNIV_DDMA_NR_MAX_CHANNELS	4
-+#define SUNIV_NDMA_NR_MAX_VCHANS	(24 * 2 - 1)
-+#define SUNIV_DDMA_NR_MAX_VCHANS	10
-+
- /* This set of SUN4I_DDMA timing parameters were found experimentally while
-  * working with the SPI driver and seem to make it behave correctly */
- #define SUN4I_DDMA_MAGIC_SPI_PARAMETERS \
-@@ -243,6 +261,16 @@ static void set_src_data_width_a10(u32 *p_cfg, s8 data_width)
- 	*p_cfg |= SUN4I_DMA_CFG_SRC_DATA_WIDTH(data_width);
- }
- 
-+static void set_dst_data_width_f1c100s(u32 *p_cfg, s8 data_width)
-+{
-+	*p_cfg |= SUNIV_DMA_CFG_DST_DATA_WIDTH(data_width);
-+}
-+
-+static void set_src_data_width_f1c100s(u32 *p_cfg, s8 data_width)
-+{
-+	*p_cfg |= SUNIV_DMA_CFG_SRC_DATA_WIDTH(data_width);
-+}
-+
- static int convert_burst_a10(u32 maxburst)
- {
- 	if (maxburst > 8)
-@@ -252,6 +280,15 @@ static int convert_burst_a10(u32 maxburst)
- 	return (maxburst >> 2);
- }
- 
-+static int convert_burst_f1c100s(u32 maxburst)
-+{
-+	if (maxburst > 4)
-+		return -EINVAL;
-+
-+	/* 1 -> 0, 4 -> 1 */
-+	return (maxburst >> 2);
-+}
-+
- static int convert_buswidth(enum dma_slave_buswidth addr_width)
- {
- 	if (addr_width > DMA_SLAVE_BUSWIDTH_4_BYTES)
-@@ -1381,8 +1418,31 @@ static struct sun4i_dma_config sun4i_a10_dma_cfg = {
- 	.has_reset		= false,
- };
- 
-+static struct sun4i_dma_config suniv_f1c100s_dma_cfg = {
-+	.ndma_nr_max_channels	= SUNIV_NDMA_NR_MAX_CHANNELS,
-+	.ndma_nr_max_vchans	= SUNIV_NDMA_NR_MAX_VCHANS,
-+
-+	.ddma_nr_max_channels	= SUNIV_DDMA_NR_MAX_CHANNELS,
-+	.ddma_nr_max_vchans	= SUNIV_DDMA_NR_MAX_VCHANS,
-+
-+	.dma_nr_max_channels	= SUNIV_NDMA_NR_MAX_CHANNELS +
-+		SUNIV_DDMA_NR_MAX_CHANNELS,
-+
-+	.set_dst_data_width	= set_dst_data_width_f1c100s,
-+	.set_src_data_width	= set_src_data_width_f1c100s,
-+	.convert_burst		= convert_burst_f1c100s,
-+
-+	.ndma_drq_sdram		= SUNIV_NDMA_DRQ_TYPE_SDRAM,
-+	.ddma_drq_sdram		= SUNIV_DDMA_DRQ_TYPE_SDRAM,
-+
-+	.max_burst		= SUNIV_MAX_BURST,
-+	.has_reset		= true,
-+};
-+
- static const struct of_device_id sun4i_dma_match[] = {
- 	{ .compatible = "allwinner,sun4i-a10-dma", .data = &sun4i_a10_dma_cfg },
-+	{ .compatible = "allwinner,suniv-f1c100s-dma",
-+		.data = &suniv_f1c100s_dma_cfg },
- 	{ /* sentinel */ },
- };
- MODULE_DEVICE_TABLE(of, sun4i_dma_match);
--- 
-2.34.1
-
+> On 24 Oct 2024, at 06:27, Serge Semin <fancer.lancer@gmail.com> wrote:
+>=20
+> Hello Linux-kernel community,
+>=20
+> I am sure you have already heard the news caused by the recent Greg' =
+commit
+> 6e90b675cf942e ("MAINTAINERS: Remove some entries due to various =
+compliance
+> requirements."). As you may have noticed the change concerned some of =
+the
+> Ru-related developers removal from the list of the official kernel =
+maintainers,
+> including me.
+>=20
+> The community members rightly noted that the _quite_ short commit log =
+contained
+> very vague terms with no explicit change justification. No matter how =
+hard I
+> tried to get more details about the reason, alas the senior maintainer =
+I was
+> discussing the matter with haven't given an explanation to what =
+compliance
+> requirements that was. I won't cite the exact emails text since it was =
+a private
+> messaging, but the key words are "sanctions", "sorry", "nothing I can =
+do", "talk
+> to your (company) lawyer"... I can't say for all the guys affected by =
+the
+> change, but my work for the community has been purely _volunteer_ for =
+more than
+> a year now (and less than half of it had been payable before that). =
+For that
+> reason I have no any (company) lawyer to talk to, and honestly after =
+the way the
+> patch has been merged in I don't really want to now. Silently, behind =
+everyone's
+> back, _bypassing_ the standard patch-review process, with no affected
+> developers/subsystem notified - it's indeed the worse way to do what =
+has been
+> done. No gratitude, no credits to the developers for all these years =
+of the
+> devoted work for the community. No matter the reason of the situation =
+but
+> haven't we deserved more than that? Adding to the GREDITS file at =
+least, no?..
+>=20
+> I can't believe the kernel senior maintainers didn't consider that the =
+patch
+> wouldn't go unnoticed, and the situation might get out of control with
+> unpredictable results for the community, if not straight away then in =
+the middle
+> or long term perspective. I am sure there have been plenty ways to =
+solve the
+> problem less harmfully, but they decided to take the easiest path. =
+Alas what's
+> done is done. A bifurcation point slightly initiated a year ago has =
+just been
+> fully implemented. The reason of the situation is obviously in the =
+political
+> ground which in this case surely shatters a basement the community has =
+been built
+> on in the first place. If so then God knows what might be next (who =
+else might
+> be sanctioned...), but the implemented move clearly sends a bad signal =
+to the
+> Linux community new comers, to the already working volunteers and =
+hobbyists like
+> me.
+>=20
+> Thus even if it was still possible for me to send patches or perform =
+some
+> reviews, after what has been done my motivation to do that as a =
+volunteer has
+> simply vanished. (I might be doing a commercial upstreaming in future =
+though).
+> But before saying goodbye I'd like to express my gratitude to all the =
+community
+> members I have been lucky to work with during all these years. =
+Specifically:
+>=20
+> NTB-folks, Jon, Dave, Allen. NTB was my starting point in the kernel =
+upstream
+> work. Thanks for the initial advices and despite of very-very-very =
+tough reviews
+> with several complete patchset refactorings, I learned a lot back =
+then. That
+> experience helped me afterwards. Thanks a lot for that. BTW since then =
+I've got
+> several thank-you letters for the IDT NTB and IDT EEPROM drivers. If =
+not for you
+> it wouldn't have been possible.
+>=20
+> Andy, it's hard to remember who else would have given me more on my =
+Linux kernel
+> journey as you have. We first met in the I2C subsystem review of my DW =
+I2C
+> driver patches. Afterwards we've got to be frequently meeting here and =
+there -
+> GPIO, SPI, TTY, DMA, NET, etc, clean/fixes/features patch(set)s. Quite =
+heat
+> discussions in your first reviews drove me crazy really. But all the =
+time we
+> managed to come up with some consensus somehow. And you never quit the
+> discussions calmly explaining your point over and over. You never =
+refused to
+> provide more detailed justification to your requests/comments even =
+though you
+> didn't have to. Thanks to that I learned how to be patient to =
+reviewers
+> and reviewees. And of course thank you for the Linux-kernel knowledges =
+and all
+> the tips and tricks you shared.
+>=20
+> * Andy, please note due to the situation I am not going to work on my =
+DW DMAC
+> fixes patchset anymore. So if you ever wish to have DW UART stably =
+working with the
+> DW DMA-engine driver, then feel free to pick the series up:
+> Link: =
+https://lore.kernel.org/dmaengine/20240911184710.4207-1-fancer.lancer@gmai=
+l.com/
+>=20
+> Linus (Walleij), after you merged one of my pretty much heavy patchset =
+in you
+> suggested to me to continue the DW APB GPIO driver maintaining. It was =
+a first
+> time I was asked to maintain a not-my driver. Thank you for the trust. =
+I'll
+> never forget that.
+>=20
+> Mark, thank you very much for entrusting the DW APB SSI driver =
+maintenance to
+> me. I've put a lot of efforts into making it more generic and less =
+errors-prune,
+> especially when it comes working under a DMA-engine control or working =
+in the
+> mem-ops mode. I am sure the results have been beneficial to a lot of =
+DW
+> SPI-controller users since then.
+>=20
+> Damien, our first and last meeting was at my generic AHCI-platform and =
+DW AHCI
+> SATA driver patches review. You didn't make it a quick and easy path. =
+But still
+> all the reviews comments were purely on the technical basis, and the =
+patches
+> were eventually merged in. Thank you for your time and experience I've =
+got from
+> the reviews.
+>=20
+> Paul, Thomas, Arnd, Jiaxun, we met several times in the mailing list =
+during my
+> MIPS P5600 patches and just generic MIPS patches review. It was always =
+a
+> pleasure to discuss the matters with such brilliant experts in the =
+field. Alas
+> I've spent too much time working on the patches for another subsystems =
+and
+> failed to submit all the MIPS-related bits. Sorry I didn't keep my =
+promise, but
+> as you can see the circumstances have suddenly drawn its own deadline.
+>=20
+> Bjorn, Mani, we were working quite a lot with you in the framework of =
+the DW
+> PCIe RC drivers. You reviewed my patches. I helped you to review =
+another patches
+> for some time. Despite of some arguing it was always a pleasure to =
+work with
+> you.  Mani, special thanks for the cooperative DW eDMA driver =
+maintenance. I
+> think we were doing a great work together.
+>=20
+> Paolo, Jakub, David, Andrew, Vladimir, Russell. The network subsystem =
+and
+> particularly the STMMAC driver (no doubt the driver sucks) have turned =
+to be a
+> kind of obstacle on which my current Linux-kernel activity has =
+stopped. I really
+> hope that at least in some way my help with the incoming STMMAC and DW =
+XPCS
+> patches reviews lightened up your maintainance duty. I know Russell =
+might
+> disagree, but I honestly think that all our discussions were useful =
+after all,
+> at least for me. I also think we did a great work working together =
+with Russell
+> on the DW GMAC/QoS ETH PCS patches. Hopefully you'll find a time to =
+finish it up
+> after all.=20
+>=20
+> Rob, Krzysztof, from your reviews I've learned a lot about the most =
+hardwary part
+> of the kernel - DT sources and DT-bindings. All your comments have =
+been laconic
+> and straight to the point. That made reviews quick and easy. Thank you =
+very
+> much for that.
+>=20
+> Guenter, special thanks for reviewing and accepting my patches to the =
+hwmon and
+> watchdog subsystems. It was pleasure to be working with you.
+>=20
+> Borislav, we disagreed and argued a lot. So my DW uMCTL2 DDRC EDAC =
+patches even
+> got stuck in limbo for quite a long time. Anyway thank you for the =
+time
+> you spent reviewing my patches and trying to explain your point.
+>=20
+> * Borislav, it looks like I won't be able to work on my Synopsys EDAC =
+patchsets
+> anymore. If you or somebody else could pick them up and finish up the =
+work it
+> would be great (you can find it in the lore archive). The patches =
+convert the
+> mainly Zynq(MP)-specific Synopsys EDAC driver to supporting the =
+generic DW
+> uMCTL2 DDRC. It would be very beneficial for each platform based on =
+that
+> controller.
+>=20
+> Greg, we met several times in the mailing lists. You reviewed my =
+patches sent
+> for the USB and TTY subsystems, and all the time the process was =
+straight,
+> highly professional, and simpler than in the most of my other case.
+> Thank you very much for that.
+>=20
+> Yoshihiro, Keguang, Yanteng, Kory, Cai and everybody I was lucky to =
+meet in the
+> kernel mailing lists, but forgot to mention here. Thank you for the =
+time spent
+> for our cooperative work on making the Linux kernel better. It was a =
+pleasure to
+> meet you here.
+>=20
+> I also wish to say huge thanks to the community members trying to
+> defend the kicked off maintainers and for support you expressed in
+> these days. It means a lot.
+>=20
+> A little bit statics of my kernel-work at the end:
+>=20
+> Signed-off patches: 518
+> Reviewed and Acked patches: 253
+> Tested patches: 80
+>=20
+> You might say not the greatest achievement for seven years comparing =
+to some
+> other developers. Perhaps. But I meant each of these tags, be sure.
+>=20
+> I guess that's it. If you ever need some info or consultation =
+regarding the
+> drivers I used to maintain or the respective hardware or the Synopsys =
+IP-cores
+> (about which I've got quite comprehensive knowledge by this time), =
+feel free to
+> reach me out via this email. I am always willing to help to the =
+community
+> members.
+>=20
+> Hope we'll meet someday in more pleasant circumstances and drink a
+> couple or more beers together. But now it's time to say good bye.
+> Sorry for a long-read text. I wish good luck on your Linux-way.
+>=20
+> Best Regards,
+> -Serge(y)
+>=20
 
 

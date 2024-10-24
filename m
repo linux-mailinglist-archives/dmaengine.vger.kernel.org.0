@@ -1,53 +1,53 @@
-Return-Path: <dmaengine+bounces-3554-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3550-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9EA899AF380
-	for <lists+dmaengine@lfdr.de>; Thu, 24 Oct 2024 22:19:31 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 268549AF375
+	for <lists+dmaengine@lfdr.de>; Thu, 24 Oct 2024 22:19:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D0BE11C238AF
-	for <lists+dmaengine@lfdr.de>; Thu, 24 Oct 2024 20:19:30 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BC2BFB214B3
+	for <lists+dmaengine@lfdr.de>; Thu, 24 Oct 2024 20:19:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CECF12170D9;
-	Thu, 24 Oct 2024 20:19:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F018419CC3A;
+	Thu, 24 Oct 2024 20:19:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="UgcDTyOU"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="FWZYMB4i"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8394022B650;
-	Thu, 24 Oct 2024 20:19:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94233185920;
+	Thu, 24 Oct 2024 20:19:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729801148; cv=none; b=bSJHej7MnP39QTfh1IgSk4+fx8o/sTrMcY4GMOVXbDM8rf2NjnA994Lej9snTpgjNuKjOudZgy1hOwielEmkt+bV7di9hq3iPE8AOwMDkNkES6zPCQ4kVo3Y3tZbf1lzZZ7Ni1Lib4j4hyyI7ifYYef1EjkjPqRyDm+Sz5DA2i0=
+	t=1729801146; cv=none; b=C0nkYmiwR+qwCCGHY4B50IlH0Ji7usFuKfhdC/4z1fzb5eXCGYyuVk/H8xslHPz5T3nRmd6Qo2YKBTSmnyr17i5Lh5gvJGJh5C6nMpmC110SrlSLl85qI48CeF89Tuv2gHGtb0wzSj9ShpC5xaiKJe7tVG5fmmtKpyfDX76wx/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729801148; c=relaxed/simple;
-	bh=M2oHeB+WOJwn9JLMEYWUmv8S51I4OUTUIuKP3pPKzws=;
+	s=arc-20240116; t=1729801146; c=relaxed/simple;
+	bh=V9/4Nd+sWme/u2mCmc2sE127qiJQZgk7dOc5mUf2E6c=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OIhwUAO2x/512pGAqUyJbUodihYM7GEGrBr0/qC3O5eCz7rSAvfSZ6LN3kXKygF4eaYNw3TDTnas3KP150lQQJEw0xLbeTtJQ3HpjCvO6fdzLyAs1IO+7NKRtCf+vDMJO0KTJjoaN8cXie+kr+IpiYnPdfuLLhvejO6TCoDlZ3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=UgcDTyOU; arc=none smtp.client-ip=212.227.15.18
+	 MIME-Version; b=To0rLQGV46J+DzNdBvDDyeIiLa7XNT2fdtoq0AU/Z/NIAR3iodev/tH0vq/pduZ51E6LnFkXh541lrJDYTADzzDgHwhSw7O6cotnuPgt7sAXmRTPwwtF2wm5EgNWtSMP+vMn0t9wlJ1okhQPbCAQdSDFrTQMHWnXaUksXQhlKD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=FWZYMB4i; arc=none smtp.client-ip=212.227.15.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
 	s=s31663417; t=1729801125; x=1730405925; i=wahrenst@gmx.net;
-	bh=v+14rsoDnpAU5TPVahAWZNaZb+eP4NYQnwXlsAb9tek=;
+	bh=KTdkJ5P6J2KL4Qt0vXA0RPNETkbTyLxenzCZPLKwNyw=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
 	 References:MIME-Version:Content-Transfer-Encoding:cc:
 	 content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=UgcDTyOU5bSh/Of79AnlYW2C8G6v/KE/0uWp3LwaS+2sqDjpsumWPc1ecW20OIax
-	 hHzduJZHohBslNz6BdvpvcK4W7qpIptZIMKMxo4sq1mpFodYQnzt8f/Ibe3D5owFl
-	 OwYmfZGZEOVtfXT/lFQxy/+CkCg8jm0zPlV0waE5jHxjFLfycWr2Bga76xhFpkcWy
-	 9w3bUncR87f7knGrWygBhXOoKY639eSmDMjX2poe0/crWdFdmBeN3u6EVKFT5ILZ0
-	 sAQrsVY8T8lkxHM0eYqnQefxySVZ9F8dr4cio4TqeUvO4ntN9U6rvsUyJnQt46i0l
-	 amzgo/brHTx8pWC2Bg==
+	b=FWZYMB4i6pII+5Cu3Z5TKjNhZw3OeczRSY9NS1oKV+6nCpO5qBxWkFSMzQy3ryjy
+	 sTBPl6mymi8N8pfcjQTGHeixmz1FlytcthQTMKfUKj6lj84V+VBjLmBq3UgalJkva
+	 JEaQFMRjgNbNbdMEaPmK+wAshzpYPXvTCn17cGjSsKzmWYik3rbrkKHlLo1ybXYgw
+	 nmpXqDpNELx0KrelSEq2Bs+U+6YillRq8IJ0viD5X7COpWmtluzO7vibsakKMu5Bg
+	 Ozx3pTFWgU0KSPGK/Rcz7+ZbUURtla0EhwLwSQm4nJlNpYgFvArJgR7y1qypvMbPj
+	 CC9yErUmZ94S0rAR6w==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from stefanw-SCHENKER ([37.4.248.43]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1N63Vi-1twyC43LRo-010j8C; Thu, 24
- Oct 2024 22:18:44 +0200
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MacSe-1taMqF1UCo-00fMm2; Thu, 24
+ Oct 2024 22:18:45 +0200
 From: Stefan Wahren <wahrenst@gmx.net>
 To: Russell King <linux@armlinux.org.uk>,
 	Florian Fainelli <florian.fainelli@broadcom.com>,
@@ -66,9 +66,9 @@ Cc: Lukas Wunner <lukas@wunner.de>,
 	linux-mmc@vger.kernel.org,
 	linux-usb@vger.kernel.org,
 	Stefan Wahren <wahrenst@gmx.net>
-Subject: [PATCH 1/9] Revert "usb: dwc2: Skip clock gating on Broadcom SoCs"
-Date: Thu, 24 Oct 2024 22:18:29 +0200
-Message-Id: <20241024201837.79927-2-wahrenst@gmx.net>
+Subject: [PATCH 2/9] dmaengine: bcm2835-dma: add suspend/resume pm support
+Date: Thu, 24 Oct 2024 22:18:30 +0200
+Message-Id: <20241024201837.79927-3-wahrenst@gmx.net>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20241024201837.79927-1-wahrenst@gmx.net>
 References: <20241024201837.79927-1-wahrenst@gmx.net>
@@ -79,50 +79,83 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:PoFhx6WkBPUO7pLARqsqywTbLY7iieU0MH5b7d0DdfFeMyOazVo
- Mu56Lc1LhP+2/40RmxDhm0iBfV4aj2TJaNQdfgZCBspp9FgEHwaA7cUDn2tWA4ak5i9qNuA
- Rn1Fzj45z2VgnIuahh4hiksqiW9DaE/bxVdC6RB4z89CtXfzfZ9pu/wZX/yxxB03AQL21AF
- jk25RXvuolTepHkR+oNiA==
+X-Provags-ID: V03:K1:uurm7aNTi5uMv/4ThSbmO9f2OZgP0MZnWhjwfJlbBd5reY0RN+4
+ IAVrERajL/SXD91WlaaM5YamNsh/dSKucmU55D5SaAEEQkoqZBY/JHgqNxRpe0I5XTRShXL
+ 3u/VkDO3dMzYYk6cWKJTvkzd/3tQ0Ng04QCY6SWoGEJClobXZpUdzZj1vDLuxu1P9YxyRx2
+ DKKtsV1iGb8R5B/hQ1oVQ==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:I8zVc3auTtg=;cId+YZnZj+DctB2DlOUivtlkeoa
- ducXA7FUpTt0qSb2hc9U6KaZToeZhHSNStRCCMf1Cye1+c08UFvOpPa4wPj8aExUhmSzA4R44
- 0vRxuTayMSDIy+BMxp+LO8xCYemeOK1LTOq24TELfudNbwMV2NJRoK+O4/JTAJ5RJ9msAt9r/
- 80/Qn/H74CcArXtceabruOXR/mBIldWMm5VdcQ9yIacwatdoqkmVLn8XDXc1gQrOA294BXeOw
- y9arKXpEgB3Q4MTxqg5R0FfQetMjR6OhfI/69JYz0xOSy/sAJcFyHrW50kZt2KvG0EmQWCjKr
- roknfVV4Tz02lH1pFj4s2mvp8Z4l73eDWL56LF2RWRk2knT33iNcIYWFzwKbCRYRkRJ1DUiUY
- LLWpIA3hLYFvfsj2f1oSrh2+BwgGShutOafeGXHy8/+wuMe/a6jtnjMwoTzLmULWPF6Sv90Dx
- 127L1SNJq02h0dOeb0uno78azOCDngx/Wp3ZnvnlqdB0FvNTbsWaC/OXE15FV4/Vvd8VtMUsM
- kNJQOvmn1YqPa2mkWVV7nhaMRC7g/AssBXjYX7ob+qM4T7WWjARm4WTptbp+d/BUo62RS40dN
- i0YiU1dyIbxIV5vb3NwAUjx/Q/tLLFKliS+jCPNaew9dv3TvtgGgKYJT6eP8rE3Xc1bybD5z1
- 304Dcr13+RulTZ05w3YkilQ3ZIeUpWFrMU1aQJo3Mq4gaPa6lYu9fEbM/g4ky2nGGoBfJ2FBx
- 63mjKnGCcnCQxX/zrxTNsg7eXkdLUD/TDdzOnIlXmR35OKaGE0bsBSF8Q6mO9MZxGNkJQw7hq
- BxPPXRpw/eCjR8O0nt8IVPYA==
+UI-OutboundReport: notjunk:1;M01:P0:+I6/p0Kc/ug=;MnMyC57laSsmSHRtvqZJ29mp/Nb
+ ePBEqIpKuQ7RKFK7KACh+NKHeayIpTFmIwoSOdWHe1XRErBmYkSoLGDQhOKUpPUTsWVcFue/i
+ rUMTicPtvX9cqyD1KQ4eJvQvH+nWcurtOmNmBXo+bi0dofmvddlAj5McAgWtBvMG6GYIFIrN9
+ oE16Y/uJh2Hd/R/euG0xJDULNTZbEw6tgfXATdhS3kFFfnSNUfV4EWSyfW73EmSIF6hrN2Hk5
+ B6gS5N/IdG7wtL26mujzFnpR0JNUP+xJ/bCsn3e7pHmNOgrGvsZ5FHx/uxVu6hoJ8/LLOsp5j
+ X+dXXB6VOjJHgV8mQD2mmBETQaZkP/A3mECb8xigYDHAL85umvvilsWxnTpQs2NnS/8PKYT73
+ 0S8ZqdPMEymxnWMvafKsHgo4IIj9k9pCTXc7kg0U8jtrowurSIYRfvqmvwEKjXAVFqD04rQbr
+ gfwFAg3nzhPJqQEmiypB8qeicZn4Fn1nGB6b3OByUjjwQJahLl+n4qPrB+H0dTnj1lw5pvP0f
+ g+HpQXexssH1UuWRKnCBu2LY8DUUjarhkvk34n9DmeqFB3hLOm0VwBw6b0rSLCnkgcbEgh3my
+ l8rtV8v9UH6OZMRY3/p2p/6fD4jBiWfNovx09+EJx5dbyFPaDmTlL0e2VnLWbWhJVmLq4yGwo
+ abyowlcPDncsKoUBF/ywor+7bT9STzwNIpIAC8BLXDpYwUCNWiSG5k6O1K5XdwOpwMRWObVyi
+ j3obmgQUA3H0m1j5dleEczNfwxENYHJo8t1h3CMl/C6Zq2F8/ZEAicuhUFBP8n3BEBQWB/B8P
+ qcoHpZmtzh6PglEjii4PGTrQ==
 
-The commit d483f034f032 ("usb: dwc2: Skip clock gating on Broadcom SoCs")
-introduced a regression on Raspberry Pi 3 B Plus, which prevents
-enumeration of the onboard Microchip LAN7800 in case no external USB devic=
-e
-is connected during boot.
+bcm2835-dma provides the service to others, so it should
+suspend late and resume early.
 
-Fixes: d483f034f032 ("usb: dwc2: Skip clock gating on Broadcom SoCs")
 Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
 =2D--
- drivers/usb/dwc2/params.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/dma/bcm2835-dma.c | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
-index 68226defdc60..4d73fae80b12 100644
-=2D-- a/drivers/usb/dwc2/params.c
-+++ b/drivers/usb/dwc2/params.c
-@@ -23,7 +23,6 @@ static void dwc2_set_bcm_params(struct dwc2_hsotg *hsotg=
-)
- 	p->max_transfer_size =3D 65535;
- 	p->max_packet_count =3D 511;
- 	p->ahbcfg =3D 0x10;
--	p->no_clock_gating =3D true;
+diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
+index e1b92b4d7b05..647dda9f3376 100644
+=2D-- a/drivers/dma/bcm2835-dma.c
++++ b/drivers/dma/bcm2835-dma.c
+@@ -875,6 +875,35 @@ static struct dma_chan *bcm2835_dma_xlate(struct of_p=
+handle_args *spec,
+ 	return chan;
  }
 
- static void dwc2_set_his_params(struct dwc2_hsotg *hsotg)
++static int bcm2835_dma_suspend_late(struct device *dev)
++{
++	struct bcm2835_dmadev *od =3D dev_get_drvdata(dev);
++	struct bcm2835_chan *c, *next;
++
++	list_for_each_entry_safe(c, next, &od->ddev.channels,
++				 vc.chan.device_node) {
++		void __iomem *chan_base =3D c->chan_base;
++
++		if (readl(chan_base + BCM2835_DMA_ADDR)) {
++			dev_warn(dev, "Suspend is prevented by chan %d\n",
++				 c->ch);
++			return -EBUSY;
++		}
++	}
++
++	return 0;
++}
++
++static int bcm2835_dma_resume_early(struct device *dev)
++{
++	return 0;
++}
++
++static const struct dev_pm_ops bcm2835_dma_pm_ops =3D {
++	SET_LATE_SYSTEM_SLEEP_PM_OPS(bcm2835_dma_suspend_late,
++				     bcm2835_dma_resume_early)
++};
++
+ static int bcm2835_dma_probe(struct platform_device *pdev)
+ {
+ 	struct bcm2835_dmadev *od;
+@@ -1033,6 +1062,7 @@ static struct platform_driver bcm2835_dma_driver =3D=
+ {
+ 	.driver =3D {
+ 		.name =3D "bcm2835-dma",
+ 		.of_match_table =3D of_match_ptr(bcm2835_dma_of_match),
++		.pm =3D pm_ptr(&bcm2835_dma_pm_ops),
+ 	},
+ };
+
 =2D-
 2.34.1
 

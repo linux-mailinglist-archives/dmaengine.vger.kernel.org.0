@@ -1,148 +1,176 @@
-Return-Path: <dmaengine+bounces-3560-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3561-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0A549AF398
-	for <lists+dmaengine@lfdr.de>; Thu, 24 Oct 2024 22:22:45 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC6979AF47E
+	for <lists+dmaengine@lfdr.de>; Thu, 24 Oct 2024 23:13:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3DD78B2169A
-	for <lists+dmaengine@lfdr.de>; Thu, 24 Oct 2024 20:22:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5D8651F224BA
+	for <lists+dmaengine@lfdr.de>; Thu, 24 Oct 2024 21:13:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9501D1AE006;
-	Thu, 24 Oct 2024 20:22:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FF0721832A;
+	Thu, 24 Oct 2024 21:12:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="A6QuAwzx"
+	dkim=pass (2048-bit key) header.d=rosalinux.ru header.i=@rosalinux.ru header.b="JvCI2bpf"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from mail.rosalinux.ru (mail.rosalinux.ru [195.19.76.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2933922B645;
-	Thu, 24 Oct 2024 20:22:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C862178E9;
+	Thu, 24 Oct 2024 21:12:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.19.76.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729801357; cv=none; b=OqBUvXHu0ILfmz7kYOUDzMsSFo+b3vZN9qhgUh+9IP9e18edsRut4CxKj8OGX4iLVv94/A5RukiHh/CQmprhvWmgTT3eLpqcbs+FPCqdL9Nhn7E9hBHyudJC6o1V0HNly2wna4WrQ8jyGQ7GxOs8XvHbKNvq0+yBs6cJNHfO2vI=
+	t=1729804341; cv=none; b=NEzwkx2PCM7PmjcwXpipaKAsF2AMXLCCFacgKSWbJ2JBA+KC2Af/0n+ZpYjlFBzH0TVwuNvBXTH9bEqVSG4CAfgpFFXZVEcpZ2ofL2Y3P8J9yqlVWQR5zz7FZcH1Hm6KyQ8LCkulDwxZt21/CdAsS3REHMBJhxY/ElGK9T4TrJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729801357; c=relaxed/simple;
-	bh=vABJavO4pEiQ96+vgr7qfTrEw4MrUnKuz6oyeSkd6As=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XLOWpN6gcbHT7Ftn3CKdN2ymRynJghOLInQ+KSgD3DZ9BQHo2sb8kxBIlpocyWUPs7cFGmc9/iIrDyu0CdS934YkPQR9XCxcQXEPFHth2f0LImvwIoG8NT90RkUp9O1VnLjJIXzRFdQlZnGqLPG2PTkLEGPz+pIVX46/jtwhEvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=A6QuAwzx; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1729801322; x=1730406122; i=wahrenst@gmx.net;
-	bh=37AVnEl12mgQ2AzGMtku37GRus5QseHOCkvfk6gJraw=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=A6QuAwzxCLx8Tm4nUJPVYlsaw7UFQRiLHV4oDIRi7Hgy701QL2FVHegjH9Gs3dBF
-	 tMfFIg+Kcz7NveWEvcZz/xmuEePxJOg87JEgem776OzwTmNHQbOUtFNhZc8htpeIA
-	 ymsWzBSJpmB/4SkEA2CsMl2I187zvm7seIvO/1h2owlB9Ww7JwzzW1PNIFPQaK4a2
-	 cTKYChhk803qoAdteJWwIu6/uX5yidGyEY1nn6/uUtMr/JwDilk/+d/pmJ8RZxjoh
-	 RkxC3VJyxWPCnroPMxln0s1UA7riIIw/vWffXI8f2WcuW0IaLzdvTQSAubwAcY2z1
-	 xfTyXdbvuiEGhxhFrQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.105] ([37.4.248.43]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MnJlc-1tmzT32o7w-00fEad; Thu, 24
- Oct 2024 22:22:02 +0200
-Message-ID: <66100833-88a1-454a-9061-282a91fd559b@gmx.net>
-Date: Thu, 24 Oct 2024 22:21:57 +0200
+	s=arc-20240116; t=1729804341; c=relaxed/simple;
+	bh=YFSCR7IfY9tTJHnomR8IWpjA3ksgmVsEmuV7YWqhDac=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UAz074Jej2xpDozq+lxHweZgbI/KAwMmgJ7+9U1eeZdBLDu8ICdqG2b65PEs2nqNFcH40vxrbCg/I1XX/pAaFG5OMjesHHaUn7qTjsD5GdHhjucjCZ6fNeDgC9pshnAnS5ijijDsVy6ZLcFlA4v4O+2sVTRxeeSwEEmSvyleSgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosalinux.ru; spf=pass smtp.mailfrom=rosalinux.ru; dkim=pass (2048-bit key) header.d=rosalinux.ru header.i=@rosalinux.ru header.b=JvCI2bpf; arc=none smtp.client-ip=195.19.76.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosalinux.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosalinux.ru
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rosalinux.ru (Postfix) with ESMTP id 7D26B1CE86E68;
+	Fri, 25 Oct 2024 00:01:25 +0300 (MSK)
+Received: from mail.rosalinux.ru ([127.0.0.1])
+	by localhost (mail.rosalinux.ru [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id 9oq4DAnOWm9h; Fri, 25 Oct 2024 00:01:25 +0300 (MSK)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rosalinux.ru (Postfix) with ESMTP id 291291CEA7786;
+	Fri, 25 Oct 2024 00:01:25 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rosalinux.ru 291291CEA7786
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosalinux.ru;
+	s=1D4BB666-A0F1-11EB-A1A2-F53579C7F503; t=1729803685;
+	bh=YFSCR7IfY9tTJHnomR8IWpjA3ksgmVsEmuV7YWqhDac=;
+	h=From:To:Date:Message-Id:MIME-Version;
+	b=JvCI2bpfYn6dddRZiFpXBEzWeMaIIIutw82nrEpFKELoHPE6QGlusc8ot6Pz2qsRl
+	 xgHZlg0ZN4qSjNTvX61QWUAB7GUVXTPMjDh1akMWR7Bv4mMuo14u26B5xrIwAhP7XR
+	 Zhx7eK353znte05A8c+mxDcOLCydBtTG2ls2w5c9/Mo4C87hbpDNzyXbRsAchC7Ks5
+	 XLwSg/4N1t2FVpz/nBcGXLz3qFrQp8PdasmrTypM0817oCh9kImIJI7nLBMD++8mIh
+	 k/jBTljV5jxoD21CpoJ1X8V5EyMSn2YqMYMoH55SN7eGLDRMqD3tW7zwRTBXHwT4Xf
+	 C3mBvJUzpSmNA==
+X-Virus-Scanned: amavisd-new at rosalinux.ru
+Received: from mail.rosalinux.ru ([127.0.0.1])
+	by localhost (mail.rosalinux.ru [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id DcLkSC7j36Ww; Fri, 25 Oct 2024 00:01:25 +0300 (MSK)
+Received: from hp-xfce (unknown [89.189.111.209])
+	by mail.rosalinux.ru (Postfix) with ESMTPSA id 21D671CE86E68;
+	Fri, 25 Oct 2024 00:01:24 +0300 (MSK)
+Received: from localhost (hp-xfce [local])
+	by hp-xfce (OpenSMTPD) with ESMTPA id eeebd703;
+	Thu, 24 Oct 2024 21:01:23 +0000 (UTC)
+From: Mikhail Novosyolov <m.novosyolov@rosalinux.ru>
+To: torvalds@linux-foundation.org
+Cc: aospan@netup.ru,
+	conor.dooley@microchip.com,
+	ddrokosov@sberdevices.ru,
+	dmaengine@vger.kernel.org,
+	dushistov@mail.ru,
+	fancer.lancer@gmail.com,
+	geert@linux-m68k.org,
+	gregkh@linuxfoundation.org,
+	hoan@os.amperecomputing.com,
+	ink@jurassic.park.msu.ru,
+	jeffbai@aosc.io,
+	kexybiscuit@aosc.io,
+	linux-alpha@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-fpga@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-ide@vger.kernel.org,
+	linux-iio@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-spi@vger.kernel.org,
+	manivannan.sadhasivam@linaro.org,
+	mattst88@gmail.com,
+	netdev@vger.kernel.org,
+	nikita@trvn.ru,
+	ntb@lists.linux.dev,
+	patches@lists.linux.dev,
+	peter@typeblog.net,
+	richard.henderson@linaro.org,
+	s.shtylyov@omp.ru,
+	serjk@netup.ru,
+	shc_work@mail.ru,
+	torvic9@mailbox.org,
+	tsbogend@alpha.franken.de,
+	v.georgiev@metrotek.ru,
+	wangyuli@uniontech.com,
+	wsa+renesas@sang-engineering.com,
+	xeb@mail.ru,
+	m.novosyolov@rosalinux.ru
+Subject: Re: [PATCH] Revert "MAINTAINERS: Remove some entries due to various compliance requirements."
+Date: Fri, 25 Oct 2024 00:01:20 +0300
+Message-Id: <20241024210120.4126-1-m.novosyolov@rosalinux.ru>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <CAHk-=wjw0i-95S_3Wgk+rGu0TUs8r1jVyBv0L8qfsz+TJR8XTQ@mail.gmail.com>
+References: <CAHk-=wjw0i-95S_3Wgk+rGu0TUs8r1jVyBv0L8qfsz+TJR8XTQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V4 0/9] ARM: bcm2835: Implement initial S2Idle for
- Raspberry Pi
-To: Russell King <linux@armlinux.org.uk>,
- Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui
- <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
- Vinod Koul <vkoul@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
- Minas Harutyunyan <hminas@synopsys.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Lukas Wunner <lukas@wunner.de>, Peter Robinson <pbrobinson@gmail.com>,
- linux-arm-kernel@lists.infradead.org, kernel-list@raspberrypi.com,
- bcm-kernel-feedback-list@broadcom.com, dmaengine@vger.kernel.org,
- linux-mmc@vger.kernel.org, linux-usb@vger.kernel.org
-References: <20241024201837.79927-1-wahrenst@gmx.net>
-Content-Language: en-US
-From: Stefan Wahren <wahrenst@gmx.net>
-In-Reply-To: <20241024201837.79927-1-wahrenst@gmx.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:DH/WV2iyssAhp5fvEKSNmCmbV0Rro6NffSfwVliXmQZ2N4I74VO
- rJSBTwAyuJLHriIw12l59ZRhJTb8Nj5TaQMykVpzBc8aqGgOZ3VXv2OjRNHeAzWJL9Epzsc
- fF1e8UwqgdLFQ/5Bs0Z7xjGoIsqLyjn+R72mpTOzLOmzgGmhzS2Rb9EOqICa1lMduYj9Jxo
- rBV1OlJmT7VQIY71n1ZQg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:a7NpCfSQrp0=;ngjzFUvKBoHYBM+wvyDWmtYF1sB
- hpUW158gUOLGTKHP3h7apQyVcxOTU5npUhf5vRITrjbd93o0/CTQI5fL1Ret5UPn9pu78RVr1
- sdCQR50ebMBn+0jhMVUvslfurn+DuP4GoXipjYn9lJ5Vx+Vtwh4OF8GBQUKR5AbcDxdjHhWFi
- i2HUxk5HIlLGlNM08ns3K/sIsrMGi38JMkcCNdvzlHg32mY19innX5H/VCTDHdZLNMBWHE1rT
- dyo5V3/lzK88vf1dzop1obRa4Ur+ytu/jkXGtJxy1VVFB85q+Y/TZtutIJND0B6iiaWwysPs+
- 9b7L4s84lrJtx4njt/4g7FUstJXKhj1v1JaPMCap3XRehtn+HHH9rqSJU4zqQJscfB6KCbgwV
- FoDKc80ebdLuQebbwp3rc5BateQCPLBI9zbOE+xPNIulORDFqeqtuP0jfOf1c86letyVXzetu
- rxBozt5uHuSDZE71AtGXySfA7MALq4trTuq7CoTvPzyZZGSvyZkuGuxb+COdi2bEO9F2DKUAn
- dRmaLgc83x1t3c7kYEX5WpAaSFqIxnjF+v1QyPZ8cBQv0lb5WpaKiq/NyC5rD1cXMHjXu/GXO
- Vvsi3HRaq54Q3Ws1faj0WqxwzdWRx4rJJCgsXXKF5yg0EgkQZJZf1sqtw4Qa679LXcZqT9nyz
- VLuTWAh+tP6N7/qoPFlAYMrhpdphMhaso1tiTYepl0iCMabZH7tRpWUn18Ugm2ynDSVDPCxY8
- XrrqjCXpWQVxP/WOJUo5Q1t3eQqyxCZ2Ica/x0hZECdpOMhggNy2oYv9OcG6fT6Uc/F5DjHmi
- 1+12oYxaUboF7Mdg/WwB79VA==
+Content-Type: text/plain; charset=y
+Content-Transfer-Encoding: quoted-printable
 
-Am 24.10.24 um 22:18 schrieb Stefan Wahren:
-> This series implement the initial S2Idle support for
-> the Raspberry Pi, which was a long time on my TODO list [1]. The
-> changes allow to suspend and resume the Raspberry Pi via debug UART.
-> The focus is on the BCM2835 SoC, because it's less complex than its
-> successors and have enough documentation.
->
-> Now the VC4 part has been split from the series [4], because of some issues
-> in that part.
->
-> Cherry-picking of patches should be fine.
->
-> Test steps:
-> - configure debug console (pl011 or mini UART) as wakeup source
-> - send system to idle state
->
->    echo freeze > /sys/power/state
->
-> - wakeup system by console traffic
->
-> The clock gating must be restored, because otherwise we have a
-> regression on Raspberry Pi 3 B+ . Luckily the disabling of clock gating
-> isn't necessary anymore. Thanks to the rest of the DWC2 patches which
-> based on an idea of Doug Anderson. The USB domain is now powered down
-> and the USB devices are still usable after resume. There might be room
-> for improvements, but at least the system won't freeze forever as before.
->
-> Here are some figures for the Raspberry Pi 1 (without any
-> devices connected except of a debug UART):
->
-> running but CPU idle = 1.67 W
-> S2Idle               = 1.33 W
->
-> In comparison with HDMI & USB keyboard connected (but neither active
-> nor wakeup source):
->
-> running but CPU idle = 1.82 W
-> S2Idle               = 1.33 W
->
-> The series has been successfully tested on the following platforms:
-> Raspberry Pi 1 B
-> Raspberry Pi 3 B+
->
-> Changes in V4:
-> - added Reviewed-by from Doug
-> - dropped applied VC4 improvement patches
-> - fix DWC2 register backup
-> - add revert because of Raspberry Pi 3B+ regression
-> - add suspend/resume support for DMA & eMMC to be on the safe side
-Sorry, i missed the version in the other patches :-(
+Linus, Greg,
+
+First of all thanks to you for taking by far not the most harmful actions=
+ to achieve what your lawyers very kindly asked you to do.
+
+Unfortunately, already a lot of highly qualified people have started thin=
+king that you acted very badly. Of course, there are questions like why r=
+emoved maintainers were not properly notified and did not receive any add=
+itional explanations, but, to my mind, it is useless to try to find 100% =
+justice -- it is not possible. Overton windows has been opened a bit more=
+.
+
+Usually the first contribution is much harder to make then the following =
+ones. A big problem here is that now many people even will not try to con=
+tribute to the Linux kernel and other open source projects: their pride f=
+or themselves, their homeland, their colleagues has been severely hurt (w=
+e are ready to fight for all that).
+
+It is not clear what to do with this problem. Any ideas?
+
+I am sure that people from any country and of any nationality will have s=
+imilar feelings if you act with them or their colleagues in a similar way=
+.
+
+Thanks to people who were not afraid to say something against this action=
+. Chinese, Latin American, African and other people probably understand t=
+hat they may be the next ones to be dropped from maintainers. Hope that w=
+e will not have to form another Linux kernel upstream one day...
+
+I am sorry that you have to read a lot of text from people who you call t=
+rolls -- it is hard to keep calm.
+
+You know, you have really made it much harder to motivate people to contr=
+ibute into the kernel. There is such problem among developers of hardware=
+ that they do not feel comfortable enough to show their code, for example=
+ because they think that it is not perfect. Let=E2=80=99s take Baikal Ele=
+ctronics. They do publish their kernel code, but in a form of tarballs wi=
+thout git. They slowly, but constantly worked on contributing support of =
+their hardware into the upstream kernel, fixing not Baikal-related bugs b=
+y the way. One day someone told them that =E2=80=9Cwe are not comfortable=
+ with accepting your patches=E2=80=9D. And they stopped their work on ups=
+tream. Now that man has been removed from maintainers of previously contr=
+ibuted code (code for not Russian hardware, by the way).
+
+What do I suggest to do? Well, I don=E2=80=99t know, but I do not see dir=
+ect legal reasons why doing this was required and why patches from Baikal=
+ could not be accepted (the fact that I do not see does not mean that the=
+y do not exist, but please show them). Politicians and activists can be s=
+hown a finger in some places, by both developers and lawyers, at least to=
+ prevent them from being too ambitious, when they decide to break somethi=
+ng working next time... But maybe I do not know something about truly dem=
+ocratic regimes :-)
+
+Thanks for reading.
 

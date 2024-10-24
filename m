@@ -1,205 +1,131 @@
-Return-Path: <dmaengine+bounces-3491-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3492-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BB12F9AEE2F
-	for <lists+dmaengine@lfdr.de>; Thu, 24 Oct 2024 19:34:17 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D74E39AEE45
+	for <lists+dmaengine@lfdr.de>; Thu, 24 Oct 2024 19:37:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2FD05B23CF3
-	for <lists+dmaengine@lfdr.de>; Thu, 24 Oct 2024 17:34:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9C31228129F
+	for <lists+dmaengine@lfdr.de>; Thu, 24 Oct 2024 17:37:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F6D01FE0E1;
-	Thu, 24 Oct 2024 17:33:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95F501FBF4F;
+	Thu, 24 Oct 2024 17:37:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="A653jBtp";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mfphsDF2"
+	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="H5+5c1nz"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from flow-a2-smtp.messagingengine.com (flow-a2-smtp.messagingengine.com [103.168.172.137])
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AF3B1FE0E4;
-	Thu, 24 Oct 2024 17:33:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.137
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 694F21F941A
+	for <dmaengine@vger.kernel.org>; Thu, 24 Oct 2024 17:37:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729791239; cv=none; b=S/K8q7noEjWYw0Rr9B+GyZOHHGL7+I/dWhmzkZ45yvv+75/f0ehmTWpK4ydFectH1fVzjBp14Dxz6Mcp2gNPBvNLLfBSO2HFyDM9NeBQQoJ/bICFfv7qWInD102P1gZYMQnj1e5JBkjpX/E+4fC9m9HCc1Ep4o44yKs+uQdyRNI=
+	t=1729791456; cv=none; b=Pk0e0xRudAGVpnch7gHG1qsAmCLtYd9JPOtp/5xYBmEVThwkIJNUKDVz6c1GLDKh3IMIFKbC4c6lbMvmNu0RQxxrxz5fTslXrzy9Lm8xVeAD2WNTcv5MF3NdYpBGldzCI4rQx59F4HcUBEcYcG8IqW8G9PLLJO52FVW0EAdy6AA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729791239; c=relaxed/simple;
-	bh=wdsXoO9P+4ECG9k3lEz3ZPdv+OvACR6i5MKXmbG89RU=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=qKiVEoLTprVrZukD5wmJBv3NmCzSKC/Rd1XplPeURqYTqhcLtTZauZuPeux2FtHQAR6xL0i4juKQfFreqDLNd7asZBK9QVmXE/FO5nILd3CBc2zkpE//mbkMOelJbwOCh0qCDyQkaLiseHoRSl/d/LXVfzXBQnahfB3+BZGi8rA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=A653jBtp; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=mfphsDF2; arc=none smtp.client-ip=103.168.172.137
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
-Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
-	by mailflow.phl.internal (Postfix) with ESMTP id 68323200757;
-	Thu, 24 Oct 2024 13:33:56 -0400 (EDT)
-Received: from phl-imap-12 ([10.202.2.86])
-  by phl-compute-09.internal (MEProxy); Thu, 24 Oct 2024 13:33:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1729791236;
-	 x=1729798436; bh=wdsXoO9P+4ECG9k3lEz3ZPdv+OvACR6i5MKXmbG89RU=; b=
-	A653jBtpYs4OYjapx+bzgWYnT6uOu/7nZTm0Mt8fK4PwW0YrR2Y99Ce4VIniJjXb
-	nULP39sqpiOa1y9pYbz7Z9giVKFEJulzwNb8z+kpcTZt8hmlM7qtttkis4187DxN
-	l8OAD0OhCWYRZBj3GpkGFBSAwh+LWwb0F1M8mHbNnq7sDpe9ZOPOQ4egagzGyrPH
-	Rs5m+gD9WS9vU/brG6Abr0O6xgDsYqic9zfcsmzyD3/sNHaGQypsZyVpsLNfEVFX
-	J4HQBFzghG+1AnJj6sgVTtcKUGC7sz/fMeGSo4FXkn40AlJYwHXX+u+ae9CstghG
-	gW1stHjFeixKD98DCWTV3A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1729791236; x=
-	1729798436; bh=wdsXoO9P+4ECG9k3lEz3ZPdv+OvACR6i5MKXmbG89RU=; b=m
-	fphsDF2MwtjWRloIZIP3ohejJ7qBok4lndfX3KcFv58SdsrNfBiIhN3BV5ZD9JTT
-	QE9JHFdyLBsM75oIGx03MnQ4LCFxwDb4yESYsbLK/o2djPIItBqm5wlkL+bCFRuE
-	wBQ4yjXqXvNhZAjJgyCHoeGmMZh/XM0kTkICe3YFnPfENeEe2gKDKa/gcgNC8evW
-	+HLGZV0LGDHKFDAstO/wjBBKB1WJGuomIMvEly8GZc8CW5fEN08mX3kHjXQQymcL
-	yG7/BioaGFBEL9b4MRkN6QcCb3RcXTUtTFQv7utW6BZivHhAN7N8SnGLQGGcRE4R
-	5kS33iYrfhMhiSfdymjUQ==
-X-ME-Sender: <xms:_4QaZ8ZBCd9PBpW4mRLELE74lcpDhMBzx9KY9kLyHMNql4FUdPfBNQ>
-    <xme:_4QaZ3YBh-YhPTO6MIpDNCRO8vg1UsZ3JirXbxlBRjXaEGhIiNTaHzh68ryRGsL5p
-    CcyCEiNU7Ife8r081A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdejtddgkeekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdej
-    necuhfhrohhmpedflfhirgiguhhnucgjrghnghdfuceojhhirgiguhhnrdihrghnghesfh
-    hlhihgohgrthdrtghomheqnecuggftrfgrthhtvghrnhepffekveettdeuveefhfekhfdu
-    gfegteejffejudeuheeujefgleduveekuddtueehnecuffhomhgrihhnpehkvghrnhgvlh
-    drohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhm
-    pehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmpdhnsggprhgtphhtthhope
-    ehtddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepsghpsegrlhhivghnkedruggv
-    pdhrtghpthhtohepthhssghoghgvnhgusegrlhhphhgrrdhfrhgrnhhkvghnrdguvgdprh
-    gtphhtthhopehjvghffhgsrghisegrohhstgdrihhopdhrtghpthhtohepkhgvgiihsghi
-    shgtuhhithesrghoshgtrdhiohdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugi
-    drohhrghdruhhkpdhrtghpthhtoheprghrnhgusegrrhhnuggsrdguvgdprhgtphhtthho
-    pehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepug
-    grvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegrjhhhrghlrghnvgih
-    sehgmhgrihhlrdgtohhm
-X-ME-Proxy: <xmx:_4QaZ2_78xaC45wErcVUnp3_D4c87ZxU8-oasJa6s1RMbbYtMz8ygQ>
-    <xmx:_4QaZ2o0_0ptPdsgX0kr_PGecgY39eaUUWX3O3N6d6K5YDPFTcb_tg>
-    <xmx:_4QaZ3pRvLGJJ0nBTP8ha_v38X4iuQF_Y7cR9NbPcTu_gCSEE8gBiw>
-    <xmx:_4QaZ0TpwEeYRCi8ld1dDQqgBbhkTzzFVOy1VRq6Ob82egrkY5GZZw>
-    <xmx:BIUaZ16n4_6Yh1lK-Nzrf1LSszdyaZYjd0RGlT4OktU7Q_my_e2m3Jup>
-Feedback-ID: ifd894703:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id C0DD41C20066; Thu, 24 Oct 2024 13:33:51 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1729791456; c=relaxed/simple;
+	bh=dxDEy3Ofp3BOYT0Im+CkYgv7qvt95bsEmjU7sRJ9nQY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nE6hgKiIFdvXfmzKXwoofmYHRlIKSVgwTAl0PZccBFKdSgFFg+rv5vnleD9L3eU0ne+3rg7c2ionPY5p7tm+W/S/r8MSY1bzien72g/65SeZPxKufaX1KeefAwX8HfLWLWVLI3kzmgCaMLr//zzYJgERnyzXbn28htS7a2fWL5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=H5+5c1nz; arc=none smtp.client-ip=18.9.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+Received: from cwcc.thunk.org (pool-173-48-115-113.bstnma.fios.verizon.net [173.48.115.113])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 49OHZ5Xp029615
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 24 Oct 2024 13:35:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
+	t=1729791314; bh=THgZTjgepZWEIghS4JPw/+y40a1os2Kh9HRPApjh/t0=;
+	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
+	b=H5+5c1nz8qQcBOu6Yq+I9JpYGU0PLIIDZ1fI8MyXdgzX6KvKCEczuIh1r4vYi2QxH
+	 JN3w7+mhIYuzQVXP8mpgjhr4u/7KMBEohk8/ahuZAf436k2nrTKPt8hPm6heqPcYTl
+	 cUzQVWu+CAP7K3lLia6dyCMjLBJg7AwT0jYN+05ONt2UBdgpnRIlDPsRFSqig9msoS
+	 stV6j/YONLQ22emCmxDQNZnFf9J7aGnWwW3AqBbrx9xfeNGiBwbvDJ8XGMtIebXRqq
+	 pcq1uV0PpIjR/gQLwvLeg4fUzf1dCZ45mw4tKGsldAedtZzXMOu4gif+UsRV1QppNu
+	 GvJdkab9n6N4A==
+Received: by cwcc.thunk.org (Postfix, from userid 15806)
+	id E584815C0329; Thu, 24 Oct 2024 13:35:04 -0400 (EDT)
+Date: Thu, 24 Oct 2024 13:35:04 -0400
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: Hantong Chen <cxwdyx620@gmail.com>
+Cc: james.bottomley@hansenpartnership.com, ajhalaney@gmail.com,
+        allenbh@gmail.com, andrew@lunn.ch, andriy.shevchenko@linux.intel.com,
+        andy@kernel.org, arnd@arndb.de, bhelgaas@google.com, bp@alien8.de,
+        broonie@kernel.org, cai.huoqing@linux.dev, dave.jiang@intel.com,
+        davem@davemloft.net, dlemoal@kernel.org, dmaengine@vger.kernel.org,
+        dushistov@mail.ru, fancer.lancer@gmail.com, geert@linux-m68k.org,
+        gregkh@linuxfoundation.org, ink@jurassic.park.msu.ru, jdmason@kudzu.us,
+        jiaxun.yang@flygoat.com, keguang.zhang@gmail.com,
+        kory.maincent@bootlin.com, krzk@kernel.org, kuba@kernel.org,
+        linux-edac@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux@armlinux.org.uk, linux@roeck-us.net,
+        manivannan.sadhasivam@linaro.org, netdev@vger.kernel.org,
+        nikita.shubin@maquefel.me, nikita@trvn.ru, ntb@lists.linux.dev,
+        olteanv@gmail.com, pabeni@redhat.com, paulburton@kernel.org,
+        robh@kernel.org, s.shtylyov@omp.ru, sergio.paracuellos@gmail.com,
+        shc_work@mail.ru, siyanteng@loongson.cn, tsbogend@alpha.franken.de,
+        xeb@mail.ru, yoshihiro.shimoda.uh@renesas.com
+Subject: Re: linux: Goodbye from a Linux community volunteer
+Message-ID: <20241024173504.GN3204734@mit.edu>
+References: <e7d548a7fc835f9f3c9cb2e5ed97dfdfa164813f.camel@HansenPartnership.com>
+ <20241024165650.174-1-cxwdyx620@gmail.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Thu, 24 Oct 2024 18:33:31 +0100
-From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To: "Peter Cai" <peter@typeblog.net>,
- "James Bottomley" <James.Bottomley@hansenpartnership.com>,
- "Serge Semin" <fancer.lancer@gmail.com>, "Jon Mason" <jdmason@kudzu.us>,
- "Dave Jiang" <dave.jiang@intel.com>, "Allen Hubbe" <allenbh@gmail.com>,
- ntb@lists.linux.dev, "Andy Shevchenko" <andy@kernel.org>,
- "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
- "Kory Maincent" <kory.maincent@bootlin.com>,
- "Cai Huoqing" <cai.huoqing@linux.dev>, dmaengine@vger.kernel.org,
- "Mark Brown" <broonie@kernel.org>, linux-spi@vger.kernel.org,
- "Damien Le Moal" <dlemoal@kernel.org>, linux-ide@vger.kernel.org,
- "paulburton@kernel.org" <paulburton@kernel.org>,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- "Arnd Bergmann" <arnd@arndb.de>,
- "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
- "Bjorn Helgaas" <bhelgaas@google.com>,
- "Manivannan Sadhasivam" <manivannan.sadhasivam@linaro.org>,
- "Yoshihiro Shimoda" <yoshihiro.shimoda.uh@renesas.com>,
- linux-pci <linux-pci@vger.kernel.org>,
- "David S . Miller" <davem@davemloft.net>,
- "Jakub Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>,
- "Andrew Lunn" <andrew@lunn.ch>, "Russell King" <linux@armlinux.org.uk>,
- "Vladimir Oltean" <olteanv@gmail.com>,
- "Kelvin Cheung" <keguang.zhang@gmail.com>,
- "Yanteng Si" <siyanteng@loongson.cn>, netdev@vger.kernel.org,
- "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk@kernel.org>,
- "Guenter Roeck" <linux@roeck-us.net>, linux-hwmon@vger.kernel.org,
- "Borislav Petkov" <bp@alien8.de>, linux-edac@vger.kernel.org,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- linux-serial@vger.kernel.org
-Cc: "Andrew Halaney" <ajhalaney@gmail.com>, "Nikita Travkin" <nikita@trvn.ru>,
- "Ivan Kokshaysky" <ink@jurassic.park.msu.ru>,
- "Alexander Shiyan" <shc_work@mail.ru>, "Dmitry Kozlov" <xeb@mail.ru>,
- "Sergey Shtylyov" <s.shtylyov@omp.ru>,
- "Evgeniy Dushistov" <dushistov@mail.ru>,
- "Geert Uytterhoeven" <geert@linux-m68k.org>,
- "Sergio Paracuellos" <sergio.paracuellos@gmail.com>,
- "Nikita Shubin" <nikita.shubin@maquefel.me>,
- linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
- "Kexy Biscuit" <kexybiscuit@aosc.io>, jeffbai@aosc.io,
- "Linus Torvalds" <torvalds@linux-foundation.org>
-Message-Id: <88bd4b6e-d744-4f50-a3ab-34433bbd0ad9@app.fastmail.com>
-In-Reply-To: <6beb4070-1946-4387-bd0e-34608a76b19e@typeblog.net>
-References: <2m53bmuzemamzc4jzk2bj7tli22ruaaqqe34a2shtdtqrd52hp@alifh66en3rj>
- <e7d548a7fc835f9f3c9cb2e5ed97dfdfa164813f.camel@HansenPartnership.com>
- <6beb4070-1946-4387-bd0e-34608a76b19e@typeblog.net>
-Subject: Re: linux: Goodbye from a Linux community volunteer
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241024165650.174-1-cxwdyx620@gmail.com>
 
+On Thu, Oct 24, 2024 at 04:56:50PM +0000, Hantong Chen wrote:
+> 
+> For People???s Republic of China, there are about 500 entities that
+> are on the U.S. OFAC SDN / non-SDN lists, especially HUAWEI, which
+> is one of the most active employers from versions 5.16 through 6.1,
+> according to statistics. This is unacceptable, and we must take
+> immediate action to address it, with the **same** reason.
 
+There are multiple sanctions programs, and at least in the US, for the
+sanctions program which Huawei is in, there is an exception for
+conversations and patches that take place in a public mailing list,
+such as LKML.  As a result, as the ext4 maintainer, I am comfortable
+taking patches from engineers employed by Huawei, and I consider them
+valued members of the ext4 development community.
 
-=E5=9C=A82024=E5=B9=B410=E6=9C=8824=E6=97=A5=E5=8D=81=E6=9C=88 =E4=B8=8B=
-=E5=8D=885:30=EF=BC=8CPeter Cai=E5=86=99=E9=81=93=EF=BC=9A
-> Hi James,
->
-> Thanks for your clarification. This sort of non-provocative=20
-> clarifications of the regulations you need to comply to has always bee=
-n=20
-> what the community wants to see. _This_ should have been the first=20
-> official statement when anyone raised the concern, instead of Greg's=20
-> attempt to "defuse" the situation over private correspondence, or Linu=
-s=20
-> Torvald's outright defamation and accusing anyone who dares to disagre=
-e=20
-> of being a "Russian troll". This is not even to mention the _complete=20
-> ignorance_ and arrogance shown by his statement on what sending a reve=
-rt=20
-> patch means.
->
-> With sanctions in place, there is no reasonable person who will demand=20
-> the LF or the Linux Kernel maintainers to do otherwise. However, as=20
-> someone who does rely on Linux for daily work, and as someone who has=20
-> contributed to the Linux project and its community, I think seeing the=20
-> following should be the minimum:
->
-> 1. Linus Torvalds (+Cc) send an apology letter to **everyone** who he=20
-> accused of being a Russian troll;
-> 2. Linus Torvalds need to **unconditionally retract** his personal=20
-> attack on Kexy Biscuit, the person who sent the revert patch in protes=
-t=20
-> (+Cc), and acknowledge that people who work with AOSC.io aren't=20
-> "state-sponsored paid actors";
-> 3. This type of statement should be included somewhere public as soon =
-as=20
-> practically possible should sanction compliance affect kernel=20
-> development again in the future;
-> 4. No personal attacks should be allowed based on tinfoil-hat reasonin=
-g.
+However, note that China is *not* actively attacking Taiwai
+militarily, while there are Russian missiles and drones, some of which
+may controlled by embedded Linux systems, that are being used against
+Ukraine even as we speak.  Hence, it should not be surprising that the
+rules imposed by the US Government might be different for Huawei
+compared to other sanctioned entities that are directly or indirectly
+controlled by the Russian Military-Industrial complex.
 
-I agree those actions and IMHO this should be addressed under Linux's
-Code of Conduct enforcement [1] framework.
+There are also other sanctions regimes imposed by Japan, European
+Countries, etc., which might be more or less strict.  So in general,
+if you are not sure what you need to do as an US, European, Japanese,
+etc. citizen who might be subject to civil or criminal penalties ----
+talk to a lawyer.
 
-I also look forward to a formal investigation report on the entire event.
-It may eventually result in an overhaul of our governance model.
+The bottom line is that it is a false equivalence to claim that
+sanctions involving China and Russia are the same.  They very much
+aren't; one country is engaging in an active shooting war (or if you
+prefer, "special military operation"), and the other is not.
 
-[1]: https://docs.kernel.org/process/code-of-conduct.html
+Of course, if China were to militarily attack Taiwan or some other
+country in Asia, circumstances might change at some point in the
+future.  Hopefully Chinese leaders will pursue a path of wisdom and
+those consequences won't come to pass.  Ultimately, though, that's not
+up to any of us on this mail thread.
 
-Thanks
->
-> Thanks,
-> Peter.
-[...]
---=20
-- Jiaxun
+Cheers,
+
+					- Ted
 

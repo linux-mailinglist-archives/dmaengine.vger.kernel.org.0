@@ -1,157 +1,107 @@
-Return-Path: <dmaengine+bounces-3547-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3548-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40C8D9AF2D7
-	for <lists+dmaengine@lfdr.de>; Thu, 24 Oct 2024 21:47:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 827729AF2E7
+	for <lists+dmaengine@lfdr.de>; Thu, 24 Oct 2024 21:51:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 656731C2188C
-	for <lists+dmaengine@lfdr.de>; Thu, 24 Oct 2024 19:47:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8292A1C21445
+	for <lists+dmaengine@lfdr.de>; Thu, 24 Oct 2024 19:51:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 942C9189F47;
-	Thu, 24 Oct 2024 19:47:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BE26198826;
+	Thu, 24 Oct 2024 19:51:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RQjevexA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ep1wi1et"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 919E81CF96;
-	Thu, 24 Oct 2024 19:47:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5BD322B67F;
+	Thu, 24 Oct 2024 19:51:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729799232; cv=none; b=FHSB3aP/mpmu/eAdxlv300Q5qXZlHLwv/WDy7q+08gKKqmboH58MrUt7xNvltjWAWDsr1Q2H8PHlBbw3hyDfsllXtflqqTLsKAql9HQAdZJK2sshavXZOh/ZjA9Ya4dy4qSCcIA8XVkulxq8CxKPE+4tq21x0PC0G3NrQ9dBvFg=
+	t=1729799484; cv=none; b=uQnK48KURck/ztB1AKVfo87dO+WBw12bnV//dE3v0XnsuLQ8TrF7CKGbiOmkOXhxj64ju4BT4PeFAqr8HGoKtylqLGiG1jLvXp7JNtPaphVDsVChxHIvIuHUo9sUkzhn2qC6Q8klMbp1u/Rsb1hrKnes97E/82O4I3YFtzbXnGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729799232; c=relaxed/simple;
-	bh=lIMOl16Oc+gkmljkhXJFmkCvewir3f7Gjx9L1UYJb1g=;
+	s=arc-20240116; t=1729799484; c=relaxed/simple;
+	bh=hDZLP8PRZ/QWIIhqrw8i0QlBmFDEwE7SofCdl0cHI94=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SJVoo2mzBn3T/OKggFGQXk+tMh0g6cuDoFp1PIlSBPoRJ1JCPvmofhyU+HswAxyyONbzQeIUKvwUA6Z0r6mXe4faAjMwtoe04s3BC8f9I14laupZV5t/58oElSVocOvQ4TTwq5NJuYdAyHHeRvyQLUA0RsiTpb8hlQYIHXlrsp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RQjevexA; arc=none smtp.client-ip=209.85.216.44
+	 To:Cc:Content-Type; b=l6hw1Q7M0yjwfme4JBk/M1qbdYt8mLWyRzG5fYW65180go8eXtje05g2xA+xigFHTWLckvxNsX04YYvNl04QE/Je5a1GFmqN+TAlP9X3t8ccqkS8g+j3JhTIl5kmNJYbnoCW048UFsQYZFofWStEokP5h8ALS6XXTk6F9L1sKoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ep1wi1et; arc=none smtp.client-ip=209.85.216.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2e3c0d1ccc6so215582a91.3;
-        Thu, 24 Oct 2024 12:47:10 -0700 (PDT)
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2e2b720a0bbso240640a91.1;
+        Thu, 24 Oct 2024 12:51:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729799230; x=1730404030; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1729799482; x=1730404282; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=lIMOl16Oc+gkmljkhXJFmkCvewir3f7Gjx9L1UYJb1g=;
-        b=RQjevexAYGo4XdaqFinIYW7Kwo45vQqwDxBklimIeDDp8zrYeYpy72/LTe0DVBWyWd
-         WriqnivJ+RY69cLwJdjy3xklHZ/9B8Va0EEKYlOZZhuzS3ypSFlc22yDZO7IpL2c3EMw
-         Ip7jFavnFw0jA43+MnV6NeD+UWnqA9dghwxbYPA2tXPNVGa3/m/CM1h8cifeidAD1EFN
-         Z/UYj1aOOKkxHemHAJNM0deN4jjml9ru1z/+a8rQoOFwAbYrk2BL8R4B2rzKFeiwpzX6
-         uX6ac85L4lS9zqb9nutLJGAsUBbnAjLBlnR8An+HFNOxLYE3lsRfgZeeGsUFMasyawYc
-         Fc1g==
+        bh=hDZLP8PRZ/QWIIhqrw8i0QlBmFDEwE7SofCdl0cHI94=;
+        b=ep1wi1eta+l+PYvFNy/JYBui3GRMGZuXJguftfCpdBtgh/1GJTCsPQABlVCW7iao67
+         +bjvTlAUVrYJNfoLBmuNqPJI7TDvMAt79VtX86DuiSi4TG0d353v5YnZpO/YuIbNWfZ9
+         NZzXYJu7A9Z1YqqP+A9UUZAXEKQwNq6Q0Kf+UpvfFZmSfoYsDXWiTtiLlNU6gGBeuU46
+         tea2fUKSe6DrH36BiDgRjz1qXNRlpkwYC+eqpZsXBmLRTxud0bYmVzB8HRllef7IkYFk
+         Ozez585n1U3TEKPI7S3Bv8DDqDd8WB4VFbdt61p5AJQPXmHmZnUrSFyzOVIyeyTNfH6m
+         q82Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729799230; x=1730404030;
+        d=1e100.net; s=20230601; t=1729799482; x=1730404282;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=lIMOl16Oc+gkmljkhXJFmkCvewir3f7Gjx9L1UYJb1g=;
-        b=VFWp5OUgsmFYJ7gabna6LVM5YKwLS/vTloPu2WI5yHzrn2RaFjcORQZkYxxFJwjJnq
-         pHobEa21OyoocHewqYa2eZhAIbdr7k0ygNtkBRJ8l1DC90aP75to27m0yz97n/3Q1WuX
-         Cs0rk/QR8tlMj9IUyA+iPFY2aSfM0gXtRITW7xqcLvfp5CSxAsxxpVsloiAqrJyVCEii
-         8WO/en5X8kYiafeZiRStBVL9rLXtPexMt/IWfq8P/HAc0y9weZifVHRWjBm3wTIfz3sm
-         wa6t164QXfdUZYhgrA70ugLEporM26ttHsCVvnMrbCDxZ3VWL3gWybiutopafS2LSED9
-         H6QA==
-X-Forwarded-Encrypted: i=1; AJvYcCU8HyLAeflvOVxyBRRvKSGdjp2Z2egKhj2Eb4ft6qbCejiZnGPV7jcdlu5RqeaKatnfjWJGEw6QnIiz@vger.kernel.org, AJvYcCUxDz8rJKxbNMGquuSyae7WQvRmbbbAEJVyduLUukzsDpMzE+bSOe8oLqW98pyBQUa3AWetfe1TTui1qsIA@vger.kernel.org, AJvYcCVE/RdsvZq4OjSeDcp2OGWilmP+uyVAek/GAaHdab4KR1g7YKxk4K3PJdErxQipSWFLH87aQR42JAhzZ0XMQdwnA9U=@vger.kernel.org, AJvYcCVMXKfrpiurityyeLA/o1IpW0vyt6wCrgbJ6SHhe4081ZfT/9yjzN2wYjbLlTjx/hKVKoE+GrBArfgNyw==@vger.kernel.org, AJvYcCW36kTMsp8bbh6XvKQ2Qiz413lNraxrW5KYu/YXOSRNWTEQgvMMHQdW8G4hg072LEz0crqaliaIVgA=@vger.kernel.org, AJvYcCW85/cEXYARmFXTrr6o70T4wpd8nOw0z+V5MjtONRbYXonX6AlQg4k83r/Jpppd4KdfwyFv+9ae@vger.kernel.org, AJvYcCW9fmwZZXnDyUyOroM71M3NxmbygTpKLvTRQRBHLRNS4H3h8DsjOjbQEc3KrNGb855GoM/E7ZN0ul0c2jL4@vger.kernel.org, AJvYcCWKvJ/KG0jW91h6vUDwUgFC+77Ib2fMiH0FuVF6zPBz+lLN4oJcCTQtK9HVEwOu8RNyt1fl5MLVBzNj@vger.kernel.org, AJvYcCWRg/9ggIzDeKreAvZWeTkesSDK6FEAMxsdG+q6lgB0grccmIiubEu+mRlW8pAnHqYkKGHjfmRKqv8NpT4=@vger.kernel.org, AJvYcCWsIVVozFQ5fB27keACV9QU
- MqlFdGRD/0+Nc/OOck4Hy8OWF1OpVQXOZoPC52XKv9fQvOrorYDd8yoj3g==@vger.kernel.org, AJvYcCX3T0psBBSkVHpxQCIzzUSCr55w0wfGPXf676HTDcZ04OkZqL+yWpniAeaDrXFdgpyn6mNQSh/D9yTk@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHsm624rjmSOe8Y3b7N3Fg9XMdgvCXb4yh1L8GeV8632CEI1G1
-	65h4a9crDs9iXADmzZ9xe+p2VsLpq3ZUYsxlsSlgMWp+LJq/IQHV9iLwoTYx+UBaRiIQs0kVjCV
-	1bwiYVp0dMku8x39aklTZ5VUoC8o=
-X-Google-Smtp-Source: AGHT+IGNwTEvTbFWLMloYKQZCr/zKAp0DdNKMjGQfdnRQjfPBj0mdcky5TmmQt/Pc5lbMRaat58vPrZb6iSfoQeDocM=
-X-Received: by 2002:a17:90a:474f:b0:2e2:9026:8bee with SMTP id
- 98e67ed59e1d1-2e76b84f393mr3469899a91.9.1729799229802; Thu, 24 Oct 2024
- 12:47:09 -0700 (PDT)
+        bh=hDZLP8PRZ/QWIIhqrw8i0QlBmFDEwE7SofCdl0cHI94=;
+        b=Hbyp81VfVDreNAAjGK9/niURO/d8Rz4XNlLJWQArYxti2heR8jUT2171I5QexCxCyg
+         X97NPf3jmC2uxvhwVzD/B3gBzaEtYZLaA+91CpWSpFjexLqtxvmN97duS8eNyiv6H2ga
+         Z4T7ydkpW4BlTAS4MBsRarF5j0rfrQOfn+g7llgkTOFlcpw/PgePoZEHPfL99oMsE0Dt
+         cHb01MuTCsA4oGo3b1b4ge3ixkhQs41E2IIN7cJAJYxqq/9GzZHAlKRfoHZUnyB0Qg1R
+         CjNi96sn6bREamgQ6cPwEJ58zGe7rn/Wdok/A2pPG3u8xOuLllllNrn3CA2P+GP6hhN/
+         Yhcw==
+X-Forwarded-Encrypted: i=1; AJvYcCUBWbiL/8jZs5Ovu4DLmqj/gJwfSdyB4lPpD7ne1bppRkVzwgZkzUQj6fbc7HlzNxBA3qshxLYHMHY=@vger.kernel.org, AJvYcCUPDxHNQ9ubQU8CYry1xcRPWYSqFdohbWpmf5mXj99sjLxBJzs66lYyqwdAXRYIuTMFQCgvilM0AipJvQ==@vger.kernel.org, AJvYcCUZqEZam9zLHfLFng7dAl2YgzsXF24dboGobLhYxYsLV5HIQ26jE0WgQDoF4q9fOtDNuLLZyvwuBQh2Mkg=@vger.kernel.org, AJvYcCVBRDoscOkpbAc1WQq3uG0XetnkEUY1BxWHsA3UgfX1JeAXxRoOH1PRGM8SP3qSQgRWIHiXfabo@vger.kernel.org, AJvYcCVKskCkYrSLzI6Tagu6TWjdeLN+7AMfDXn9AKiagXVZuidzRIvDQ4BzTPtD6XOXAD/Joha2C86H5aHm@vger.kernel.org, AJvYcCVM5214y1bsTeE06g4SdunCf7DR+uq9ZoCnFdV2bSRm9a4QoLyebx5D2GBHoOwMGMFvUknCLpdWyvFNhcSA8IBNw1o=@vger.kernel.org, AJvYcCVY+uffYgR0/r0o6Ai6i04387SWOKv/wZdsRSVx3VB4IY0sCpVhfZxiIx5Lgkfwot7jm5O5Q6YzrEoN@vger.kernel.org, AJvYcCVZ5YVhGhxdaRFEIZC3HpPR1KHVNdNyQYMst+x4msPEdM3kjjbg9NunMEWSqc4GGaukhG3Yrvuvxbzcv946@vger.kernel.org, AJvYcCWvh1dzfEKfqhen2zHpIlwafrNIkBfwWkNeY/cYJekLlGH7xiIBFjnz3mxIgc4QEUFiyIVFslKv08JR@vger.kernel.org, AJvYcCXN0ziCfta1Wss7n6p5cLWq41eJ
+ dEpELSW7H+6WbZ/LeK9u537tRnDXrSrpibtQhJOOWFZrWlLMTUBOTg==@vger.kernel.org, AJvYcCXlbuzLXP32lw9P06EqGsIWzyRonanmYYFyE9D5RhBcglEzeBwEUunGWvhbQiCwOYFEzkLPB9oBGXWggQr7@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAB3sDOH706QuuKPx+UJsNjoXlUj5RDl1F17yMwGA8CV+elIl4
+	TJKzxnuPJ9jqeeNMs+VSiy1GW8HwwWcjzxqVZQkz3ktu1dGc7QhHw0l2AtjK8cNBS83YiKzJpci
+	K0H+o0ctUcv48jVDir6vonYKJ2do=
+X-Google-Smtp-Source: AGHT+IFLn362eXA2alAIz2ois1hme8vmMzAr/A4Q67tgGIjhwo4c/Uwrf7x2Y1gjJusyhIkVGgJ2HbVgUBZrDoJcR7M=
+X-Received: by 2002:a17:90b:4a83:b0:2e2:e929:e8d2 with SMTP id
+ 98e67ed59e1d1-2e76b6c3194mr3396949a91.4.1729799482088; Thu, 24 Oct 2024
+ 12:51:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2m53bmuzemamzc4jzk2bj7tli22ruaaqqe34a2shtdtqrd52hp@alifh66en3rj>
- <e7d548a7fc835f9f3c9cb2e5ed97dfdfa164813f.camel@HansenPartnership.com>
- <6beb4070-1946-4387-bd0e-34608a76b19e@typeblog.net> <CALtW_agj1rurb3DRrPd9o2mkfku5fq_M3CEKY5sW+Zz7shKYHA@mail.gmail.com>
- <ZxqK75WdFBod0rZ9@smile.fi.intel.com>
-In-Reply-To: <ZxqK75WdFBod0rZ9@smile.fi.intel.com>
+References: <2m53bmuzemamzc4jzk2bj7tli22ruaaqqe34a2shtdtqrd52hp@alifh66en3rj> <20241024185246.315631-1-elfy.ua@gmail.com>
+In-Reply-To: <20241024185246.315631-1-elfy.ua@gmail.com>
 From: =?UTF-8?Q?Dragan_Milivojevi=C4=87?= <d.milivojevic@gmail.com>
-Date: Thu, 24 Oct 2024 21:46:58 +0200
-Message-ID: <CALtW_ajKAYYwYVGnEArPWz_XaCkEiMFwpoCtzeiO1OLbAk77Sw@mail.gmail.com>
+Date: Thu, 24 Oct 2024 21:51:10 +0200
+Message-ID: <CALtW_ahkg9W0wm09cxkJxiSQCH=42smeK=fqh5cQ9sRSNsjeXA@mail.gmail.com>
 Subject: Re: linux: Goodbye from a Linux community volunteer
-To: Andy Shevchenko <andy@kernel.org>
-Cc: Peter Cai <peter@typeblog.net>, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, 
-	Serge Semin <fancer.lancer@gmail.com>, Jon Mason <jdmason@kudzu.us>, 
-	Dave Jiang <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>, ntb@lists.linux.dev, 
-	Kory Maincent <kory.maincent@bootlin.com>, Cai Huoqing <cai.huoqing@linux.dev>, 
-	dmaengine@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, 
-	Damien Le Moal <dlemoal@kernel.org>, linux-ide@vger.kernel.org, 
-	Paul Burton <paulburton@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Arnd Bergmann <arnd@arndb.de>, Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mips@vger.kernel.org, 
-	Bjorn Helgaas <bhelgaas@google.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, linux-pci@vger.kernel.org, 
-	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Andrew Lunn <andrew@lunn.ch>, Russell King <linux@armlinux.org.uk>, 
-	Vladimir Oltean <olteanv@gmail.com>, Keguang Zhang <keguang.zhang@gmail.com>, 
-	Yanteng Si <siyanteng@loongson.cn>, netdev@vger.kernel.org, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Guenter Roeck <linux@roeck-us.net>, 
-	linux-hwmon@vger.kernel.org, Borislav Petkov <bp@alien8.de>, linux-edac@vger.kernel.org, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-serial@vger.kernel.org, 
-	Andrew Halaney <ajhalaney@gmail.com>, Nikita Travkin <nikita@trvn.ru>, 
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Alexander Shiyan <shc_work@mail.ru>, Dmitry Kozlov <xeb@mail.ru>, 
-	Sergey Shtylyov <s.shtylyov@omp.ru>, Evgeniy Dushistov <dushistov@mail.ru>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Sergio Paracuellos <sergio.paracuellos@gmail.com>, 
-	Nikita Shubin <nikita.shubin@maquefel.me>, linux-renesas-soc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Kexy Biscuit <kexybiscuit@aosc.io>, jeffbai@aosc.io, 
-	Linus Torvalds <torvalds@linux-foundation.org>
+To: Oleksiy Protas <elfy.ua@gmail.com>
+Cc: fancer.lancer@gmail.com, ajhalaney@gmail.com, allenbh@gmail.com, 
+	andrew@lunn.ch, andriy.shevchenko@linux.intel.com, andy@kernel.org, 
+	arnd@arndb.de, bhelgaas@google.com, bp@alien8.de, broonie@kernel.org, 
+	cai.huoqing@linux.dev, dave.jiang@intel.com, davem@davemloft.net, 
+	dlemoal@kernel.org, dmaengine@vger.kernel.org, dushistov@mail.ru, 
+	geert@linux-m68k.org, gregkh@linuxfoundation.org, ink@jurassic.park.msu.ru, 
+	jdmason@kudzu.us, jiaxun.yang@flygoat.com, keguang.zhang@gmail.com, 
+	kory.maincent@bootlin.com, krzk@kernel.org, kuba@kernel.org, 
+	linux-edac@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mips@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-serial@vger.kernel.org, 
+	linux-spi@vger.kernel.org, linux@armlinux.org.uk, linux@roeck-us.net, 
+	manivannan.sadhasivam@linaro.org, netdev@vger.kernel.org, 
+	nikita.shubin@maquefel.me, nikita@trvn.ru, ntb@lists.linux.dev, 
+	olteanv@gmail.com, pabeni@redhat.com, paulburton@kernel.org, robh@kernel.org, 
+	s.shtylyov@omp.ru, sergio.paracuellos@gmail.com, shc_work@mail.ru, 
+	siyanteng@loongson.cn, tsbogend@alpha.franken.de, xeb@mail.ru, 
+	yoshihiro.shimoda.uh@renesas.com
 Content-Type: text/plain; charset="UTF-8"
 
-> Yeah, with my hat of the person whose home town is under (Russian) attack for
-> the 10+ years (don't be surprised, please, the war lasts more than a decade
-> already) on I am fully understand Linus' arguments about history and being not
-> very friendly about Russians.
-
-How about your hat off to the people in the Donbas,
-~12K of them that had died from Ukrainian artillery fire,
-that were under imminent threat of being overrun by
-the Ukrainian forces in February 2022? Are you going
-to scream about Russian propaganda when I link
-the OSCE reports about a 10 fold increase in attacks
-at that same time?
-
-BTW can I be racist towards Germans and Croats since
-their ancestors exterminated my kin in their death camps?
-
+> It's quite apalling that this needs to be broken down to adult people.
 >
-> As you showed above seems like you also will benefit from digging to the
-> history a bit. The nice questions to be answered (but not limited to) are:
-> 1) What had happened to Finland in 1939?
-> 2) Has Finland territory been changed (occupied by another country) in time?
-> 2a) (bonus Q) How many times and by which countries / empires?
-> 3) (speaking of WW II) How many Jews were killed by Finland?
+> Take care and consider rethinking your life choices.
 
-Maybe you should look up the Finnish concentration camps
- (they called them work camps), that had death percentages
-similar to some of Nazi death camps, where Russians, Roma,
-Serbs and plenty of other E.Europeans perished, including children?
-
-The fact that they fought alongside Nazis and that they were allowed
-to remain independent (and neutral) after the war is, I hope, common
-knowledge.
-
-How TF in this day and age is it considered acceptable to be openly
-racist towards some people
-because you hold historical grievances from 70 years ago?
-
-And for those of you doubting my words, here is a test: Replace the
-statements from various
-prominent figures, including USA officials, about Russians and Russia
-with Jews and Israel and post
-them on your social media accounts. See how fast you will be denounced
-as a racist.
-
-To paraphrase Noam Chomsky: Approved racism.
+Does the same apply for Raytheon, Boeing etc employees?
 

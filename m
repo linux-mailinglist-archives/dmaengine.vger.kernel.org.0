@@ -1,52 +1,52 @@
-Return-Path: <dmaengine+bounces-3553-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3557-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9FE379AF37B
-	for <lists+dmaengine@lfdr.de>; Thu, 24 Oct 2024 22:19:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A75F99AF387
+	for <lists+dmaengine@lfdr.de>; Thu, 24 Oct 2024 22:19:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 04556B22455
-	for <lists+dmaengine@lfdr.de>; Thu, 24 Oct 2024 20:19:24 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0971EB22B4F
+	for <lists+dmaengine@lfdr.de>; Thu, 24 Oct 2024 20:19:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6747216A3E;
-	Thu, 24 Oct 2024 20:19:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CFA621733C;
+	Thu, 24 Oct 2024 20:19:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="KZLSTsDx"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="ph1S/yzx"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88460189F5E;
-	Thu, 24 Oct 2024 20:19:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 990F2200BB6;
+	Thu, 24 Oct 2024 20:19:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729801147; cv=none; b=C+rHZKqWybBfd0rWic0AlaN6bEmK4dZcaC0rOGhQZYorJQ+sr4IRQarxn67aCSpPoWdZLXjZStBgEqJ6tV09yTDCL6Pj/c8IauhS4QIf82U/SmVI/0kQn6mdeuyjc4l52rZ9FSdSCOKpdJhVwZz306mR/MS4SZJtvZyMf98OG7o=
+	t=1729801150; cv=none; b=ls0tQyb9UdGwPNBrNCrgCtHNf7o7KS6tTniDik0QY+E0YZt6OYHWbeLSFjVr3yYlR8hiE4Q/mpMahQ+q+Tro5/D85uZpGCX7L1+9dZrMuRgtW6eSrFEhSAkHfutBp2S9O66K/k9MTgiqhs5oKsSPN0zJL5VGSiv0g3hz8L3JQFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729801147; c=relaxed/simple;
-	bh=nDW0JkC5oOVw3y6HyHxt9mKYcZxpXMokS2HNemOLjZ4=;
+	s=arc-20240116; t=1729801150; c=relaxed/simple;
+	bh=NLJhKND256gSjgqz5+jXNVwCkHAy7Lhhbara7R1G0Sk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oeIf5HhsnqOGMZu4HcqcL/Tm/jGIXvPbc9wmhX0dqSAfjSOAD8MyndoIlV6wjghOZFzkpJRROu0lrKzetYwYRbabzbUns9zAWEJvuPSaUoinKLVFH2srNz0uPNVOKPH5Zr32HNSEHndSPxHI9ZGybluILfzHtpnqIerr25JdzRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=KZLSTsDx; arc=none smtp.client-ip=212.227.15.15
+	 MIME-Version; b=qNm+mXYuGXFjLwPYC1zaiqCF7P7mh+7aGeFoss67T1wvATM+4jhTC6MJ1rUAEzVl19Io77KrU+wd5fbVOMPiPTRYyC/qLH+fy1+almNyTT32I0bTFytxp18bY65dD1PnF/ezlHVbUx8GJwzCcn6E9DkvxutG0CgjOfAIzkEEINQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=ph1S/yzx; arc=none smtp.client-ip=212.227.15.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
 	s=s31663417; t=1729801127; x=1730405927; i=wahrenst@gmx.net;
-	bh=7SJXJq2uX1cxKxMjslAAHJO+ZqjPnNq4UxpqnQBoZXU=;
+	bh=JRrp6JLKk7ZewfhLxhmIMUVWuQ9FaYJ7taL+ewhOlow=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
 	 References:MIME-Version:Content-Transfer-Encoding:cc:
 	 content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=KZLSTsDxZihnlXirdBa0AQQu2DSslmDJlLNVopdqTNhQm9XMLk63uuEmJ43pIIQw
-	 wkf0+C/y3POcLDf2xE+Gj6SGf0JmoK8Spt7IJfZKEWkiEZOY3/J3c+zlKWTFXdG36
-	 RxB4CnL2KZV3xvuSqw9PRCkEfetAKS6zoli0N5k/w6G6GoaPPxk41m2ywLTKIWQw3
-	 aRGTkIqDoSZ+h1mtDD4utQAwEtY6YImjihsQyEcciR4vWYrs19aOOpGc+TzqRWBcR
-	 pxr4JC7WMp+hsiqaXV5mPT+nq83ExA80OH2+i3ZOsD9KugyiW3Aq4vHghBCTL3H6k
-	 PnfjK7K8zt5hv6TEnw==
+	b=ph1S/yzxaSFMuUMjJULTbbm+fsL+wECSBxU56vEZvnETgFB+vq+2R0WCmBVU8Yi6
+	 k6zzyp950Q+YXdcOLDZ5VoszNaOFSBPQgkcUaeaKbQiY6XWlG4B94CMNRbCGv1RAi
+	 IUBW3HrVGrtPWUb+UYTnTgNaue6GBkjgfoBIQO0hq66zb9t7TDyfFq6yMWarqHEG6
+	 U/gtNnWNQNRIhu/xt0CB03HB1YY4lonltbw2f1lsYTmLjLpL8S08b8FuHo1nRMQg8
+	 KaB6oYgyzphWEplATpMD8LM4cJrNKVlCLD1N2ukly5CA1Og9i2nDOnZWSnFf3VIl1
+	 bKRykL/6LjR6SvE1vQ==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from stefanw-SCHENKER ([37.4.248.43]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MPXhA-1tGnkz0Eny-00Le1q; Thu, 24
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1Ml6qM-1tkmxX2UY8-00mTVU; Thu, 24
  Oct 2024 22:18:47 +0200
 From: Stefan Wahren <wahrenst@gmx.net>
 To: Russell King <linux@armlinux.org.uk>,
@@ -66,9 +66,9 @@ Cc: Lukas Wunner <lukas@wunner.de>,
 	linux-mmc@vger.kernel.org,
 	linux-usb@vger.kernel.org,
 	Stefan Wahren <wahrenst@gmx.net>
-Subject: [PATCH 5/9] mmc: bcm2835: add suspend/resume pm support
-Date: Thu, 24 Oct 2024 22:18:33 +0200
-Message-Id: <20241024201837.79927-6-wahrenst@gmx.net>
+Subject: [PATCH 6/9] usb: dwc2: gadget: Introduce register restore flags
+Date: Thu, 24 Oct 2024 22:18:34 +0200
+Message-Id: <20241024201837.79927-7-wahrenst@gmx.net>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20241024201837.79927-1-wahrenst@gmx.net>
 References: <20241024201837.79927-1-wahrenst@gmx.net>
@@ -79,76 +79,144 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:9TmHXDC8x1toKmQj5TL/zr1r9VxVKXQInUCA3JeqWfeBotHSHp8
- wLE1AA0+kLRoWZpFnsyE4ypCh+VDSSwImsj9NpzVERhwNkskidZqyV6e/pwYvPgtjXqqPIN
- dKF5Cw/6ZqzyERKBCWYhADUJLiDKe+wT6MTyi6A5+uNIl6WlpGZ+RY+ZFRdnWqfhJ1IdpNP
- J6BA6SqMbLqZ8lwtJFtow==
+X-Provags-ID: V03:K1:CqgYeeZNUwYzTJ4GE0juj9SGPyyOYxIPFyKOUz1FCHoELlxSPBO
+ uCLm65+qf767P9c8nkrvo5VhNJ7oPFi4WFKbWl3AseMCGXpBsR/KLyp1MCdLM+nMMpNRV9T
+ /pnK0vR8LoRYHBV2HlLfMXf+44c7VWxKOP19k6KPCJG3KnWLT1eF+bRkJMlQYx3ZO3OC3BV
+ mioA28LqtZbvj1VyXmTZA==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:bPTh4IaJ1/s=;DvZyp+ul50m2MoJpgBSYoErzoer
- AbfbZynkrtkr/VN3ylQefl5asCMF01gq+igg96KF6o8g7jl7bfNo8d0xBpVQ05s8QpmOLM2Oy
- CnmuA+QE+SRGFAhwFRd4+17v5FHfxOcbok9OczzdUDVdosuNY5hsVXa+cQ5o+tqdW1uY69ViY
- 3/PbVKf8MBtIRQiyJmCOybn87kxd4kgM3Hj4YY4cEcncWh+WpLB3O+xj6kSbzeddMx+Dm2qC4
- yW02bi2qa/uOli5uTteIeCdNS5+1ULuFUPZ0bONegz0m/CaE4VRG/pA6N9J1gs0ncIpjE7qLM
- XQMHBcBkSiD5FNdqO886NQleDowz5/JkDVIKj5732IaAZdjGuPPgXwiUb1NtBLYh5Yiz3Gi3V
- K+jA+NDX7rAsrq2cVtEZGK8FL8ZEhW3DR4unOGEDHHpJE0FoVT8KUPwrDDGahIbK4r0RZChoq
- PN5FRDMXc8XjRy3GUEq5HK6oIgJ/tMpoeXoVOv1CKYuii67fvypFxO/7kg/XK94EsoD3wsD9K
- eCyW7ggaqih3cg5DiQ8CY3ea8zlGVe0FBl+enBhSKObYJF3oqVI/gJtIZZzcBf6HDgl1gr8MK
- 6vmKR4Qh+bu9Uo0ulgIDyxCic49QrET8p9bPtTTGEkfoFI6pLvwq1mrioVtlp7NjI5RJUl49R
- KtPDKUgHARqf9J4m89h53uezA1DbUS0qdD1VukTzLZIl4QRch6HLpaDMGud7zwADQMTJ2Saj4
- 6ZjmHrYPUTgnBSHLAQF+IyNbNX/xzkbdtfrM0yPqG3kGbkTmlQlAIexAgMQYUroEMbJjDCDEd
- PK8Alhu0VddmoeusWHwUv0mA==
+UI-OutboundReport: notjunk:1;M01:P0:hZar9UeG20M=;j9ZFZy0OgPtqao0NNzl58dNPiZt
+ EpetYR4ISrhIiTBcgszQxelh4/1CiqikfvXspNioGdzClbIku0Ca1slnzFl7p4gMzTnZzyGXD
+ WspSwVPO2xQq13VhQorPUu2G0Ugx3T720iQsHjk96uMR5O1EDfZurG0DpLGPIrSV2A30r8gw5
+ KnYXZsm/siTlVMeAapnw3wCinkgXGrFs38airnjTltCGbjOvTXdLNla3j5TR+ASk+biUDEfUB
+ y9hsFE/rFoYqVAqZv+dRHaIXzr6wv0nR51lzYvIUkcCl2+zZ7aDSTLHaHKi/hnua5R63omMbR
+ wVZsWXvBxvUAKlgnHufIXU13+aRm9Z+oeB140OsochtcJsuY6NpQOMBnJJV04lT7JhIVXCnUE
+ saiVnVyWl77MWY5cLDLJduPA3uKZ4A4lF3FcInPJV6H2sc4GPk4+DvJ/TFmiAH0KkHPAourcH
+ gl0Sw2LjYjWR2uSuwJeIeIoU2jdNyhiSRa3DtW94Eh4/i0M5gF4RZgCfrOdcyrOtk90rIIrbd
+ 31oWHzbscthVEFo3TT+RhKrXo8P6lT4Kl8Rle7kHIr8k66brM+Y2+fLHji/B6gh9/1379BRhZ
+ CjIkp2jrIIbfBUSmHP7DoMCFWGmrTto/1iUonxGlDoZaqOnh50mVEt079FecoxfDzfxymvJyW
+ HA28UYhsdQb9Y8xkyxblKuwSvMjirFIcPfwrFJ0wW81KGjNiedDQ8D1bguartUg84+eHpIFQQ
+ 6SkHFnL0XQrTcQA9UTnVr/0gYOSrYvQAWzQngQhZ8zsaW7uJsSc5PcGEh3sXakkdNH0G4GDHj
+ g3gsx4tQHeVpU1JuMO6gSz/Q==
 
-Add a minimalistic suspend/resume PM support.
+dwc2_restore_device_registers() use a single boolean
+to decide about the register restoring behavior.
+So replace this with a flags parameter, which can
+be extended later.
+
+No functional change intended.
 
 Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
 =2D--
- drivers/mmc/host/bcm2835.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ drivers/usb/dwc2/core.h   |  6 ++++--
+ drivers/usb/dwc2/gadget.c | 12 +++++++-----
+ 2 files changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/mmc/host/bcm2835.c b/drivers/mmc/host/bcm2835.c
-index 107666b7c1c8..17c327b7b5cc 100644
-=2D-- a/drivers/mmc/host/bcm2835.c
-+++ b/drivers/mmc/host/bcm2835.c
-@@ -1343,6 +1343,30 @@ static int bcm2835_add_host(struct bcm2835_host *ho=
-st)
- 	return 0;
- }
+diff --git a/drivers/usb/dwc2/core.h b/drivers/usb/dwc2/core.h
+index 2bd74f3033ed..48f4b639ca2f 100644
+=2D-- a/drivers/usb/dwc2/core.h
++++ b/drivers/usb/dwc2/core.h
+@@ -1127,6 +1127,8 @@ struct dwc2_hsotg {
+ #define DWC2_FS_IOT_ID		0x55310000
+ #define DWC2_HS_IOT_ID		0x55320000
 
-+static int bcm2835_suspend(struct device *dev)
-+{
-+	struct bcm2835_host *host =3D dev_get_drvdata(dev);
++#define DWC2_RESTORE_DCTL BIT(0)
 +
-+	if (!host->data_complete) {
-+		dev_warn(dev, "Suspend is prevented\n");
-+		return -EBUSY;
-+	}
-+
-+	clk_disable_unprepare(host->clk);
-+
-+	return 0;
-+}
-+
-+static int bcm2835_resume(struct device *dev)
-+{
-+	struct bcm2835_host *host =3D dev_get_drvdata(dev);
-+
-+	return clk_prepare_enable(host->clk);
-+}
-+
-+static DEFINE_SIMPLE_DEV_PM_OPS(bcm2835_pm_ops, bcm2835_suspend,
-+				bcm2835_resume);
-+
- static int bcm2835_probe(struct platform_device *pdev)
+ #if IS_ENABLED(CONFIG_USB_DWC2_HOST) || IS_ENABLED(CONFIG_USB_DWC2_DUAL_R=
+OLE)
+ 	union dwc2_hcd_internal_flags {
+ 		u32 d32;
+@@ -1420,7 +1422,7 @@ int dwc2_hsotg_set_test_mode(struct dwc2_hsotg *hsot=
+g, int testmode);
+ #define dwc2_is_device_connected(hsotg) (hsotg->connected)
+ #define dwc2_is_device_enabled(hsotg) (hsotg->enabled)
+ int dwc2_backup_device_registers(struct dwc2_hsotg *hsotg);
+-int dwc2_restore_device_registers(struct dwc2_hsotg *hsotg, int remote_wa=
+keup);
++int dwc2_restore_device_registers(struct dwc2_hsotg *hsotg, unsigned int =
+flags);
+ int dwc2_gadget_enter_hibernation(struct dwc2_hsotg *hsotg);
+ int dwc2_gadget_exit_hibernation(struct dwc2_hsotg *hsotg,
+ 				 int rem_wakeup, int reset);
+@@ -1459,7 +1461,7 @@ static inline int dwc2_hsotg_set_test_mode(struct dw=
+c2_hsotg *hsotg,
+ static inline int dwc2_backup_device_registers(struct dwc2_hsotg *hsotg)
+ { return 0; }
+ static inline int dwc2_restore_device_registers(struct dwc2_hsotg *hsotg,
+-						int remote_wakeup)
++						unsigned int flags)
+ { return 0; }
+ static inline int dwc2_gadget_enter_hibernation(struct dwc2_hsotg *hsotg)
+ { return 0; }
+diff --git a/drivers/usb/dwc2/gadget.c b/drivers/usb/dwc2/gadget.c
+index e7bf9cc635be..96d703f4c509 100644
+=2D-- a/drivers/usb/dwc2/gadget.c
++++ b/drivers/usb/dwc2/gadget.c
+@@ -5203,11 +5203,11 @@ int dwc2_backup_device_registers(struct dwc2_hsotg=
+ *hsotg)
+  * if controller power were disabled.
+  *
+  * @hsotg: Programming view of the DWC_otg controller
+- * @remote_wakeup: Indicates whether resume is initiated by Device or Hos=
+t.
++ * @flags: Defines which registers should be restored.
+  *
+  * Return: 0 if successful, negative error code otherwise
+  */
+-int dwc2_restore_device_registers(struct dwc2_hsotg *hsotg, int remote_wa=
+keup)
++int dwc2_restore_device_registers(struct dwc2_hsotg *hsotg, unsigned int =
+flags)
  {
- 	struct device *dev =3D &pdev->dev;
-@@ -1471,6 +1495,7 @@ static struct platform_driver bcm2835_driver =3D {
- 		.name		=3D "sdhost-bcm2835",
- 		.probe_type	=3D PROBE_PREFER_ASYNCHRONOUS,
- 		.of_match_table	=3D bcm2835_match,
-+		.pm =3D pm_ptr(&bcm2835_pm_ops),
- 	},
- };
- module_platform_driver(bcm2835_driver);
+ 	struct dwc2_dregs_backup *dr;
+ 	int i;
+@@ -5223,7 +5223,7 @@ int dwc2_restore_device_registers(struct dwc2_hsotg =
+*hsotg, int remote_wakeup)
+ 	}
+ 	dr->valid =3D false;
+
+-	if (!remote_wakeup)
++	if (flags & DWC2_RESTORE_DCTL)
+ 		dwc2_writel(hsotg, dr->dctl, DCTL);
+
+ 	dwc2_writel(hsotg, dr->daintmsk, DAINTMSK);
+@@ -5414,6 +5414,7 @@ int dwc2_gadget_exit_hibernation(struct dwc2_hsotg *=
+hsotg,
+ 	u32 gpwrdn;
+ 	u32 dctl;
+ 	int ret =3D 0;
++	unsigned int flags =3D 0;
+ 	struct dwc2_gregs_backup *gr;
+ 	struct dwc2_dregs_backup *dr;
+
+@@ -5476,6 +5477,7 @@ int dwc2_gadget_exit_hibernation(struct dwc2_hsotg *=
+hsotg,
+ 		dctl =3D dwc2_readl(hsotg, DCTL);
+ 		dctl |=3D DCTL_PWRONPRGDONE;
+ 		dwc2_writel(hsotg, dctl, DCTL);
++		flags |=3D DWC2_RESTORE_DCTL;
+ 	}
+ 	/* Wait for interrupts which must be cleared */
+ 	mdelay(2);
+@@ -5491,7 +5493,7 @@ int dwc2_gadget_exit_hibernation(struct dwc2_hsotg *=
+hsotg,
+ 	}
+
+ 	/* Restore device registers */
+-	ret =3D dwc2_restore_device_registers(hsotg, rem_wakeup);
++	ret =3D dwc2_restore_device_registers(hsotg, flags);
+ 	if (ret) {
+ 		dev_err(hsotg->dev, "%s: failed to restore device registers\n",
+ 			__func__);
+@@ -5619,7 +5621,7 @@ int dwc2_gadget_exit_partial_power_down(struct dwc2_=
+hsotg *hsotg,
+ 		/* Restore DCFG */
+ 		dwc2_writel(hsotg, dr->dcfg, DCFG);
+
+-		ret =3D dwc2_restore_device_registers(hsotg, 0);
++		ret =3D dwc2_restore_device_registers(hsotg, DWC2_RESTORE_DCTL);
+ 		if (ret) {
+ 			dev_err(hsotg->dev, "%s: failed to restore device registers\n",
+ 				__func__);
 =2D-
 2.34.1
 

@@ -1,74 +1,75 @@
-Return-Path: <dmaengine+bounces-3470-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3471-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EDD3D9AE3F1
-	for <lists+dmaengine@lfdr.de>; Thu, 24 Oct 2024 13:33:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E45609AE4DB
+	for <lists+dmaengine@lfdr.de>; Thu, 24 Oct 2024 14:34:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 642B2B22AD9
-	for <lists+dmaengine@lfdr.de>; Thu, 24 Oct 2024 11:33:20 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2752AB219ED
+	for <lists+dmaengine@lfdr.de>; Thu, 24 Oct 2024 12:34:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC9DE1D1729;
-	Thu, 24 Oct 2024 11:33:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4306A1D5ADD;
+	Thu, 24 Oct 2024 12:34:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iLWGWnyF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QY5nFZuD"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pl1-f195.google.com (mail-pl1-f195.google.com [209.85.214.195])
+Received: from mail-oa1-f66.google.com (mail-oa1-f66.google.com [209.85.160.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 635991C726D;
-	Thu, 24 Oct 2024 11:32:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62D911D173E;
+	Thu, 24 Oct 2024 12:34:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729769580; cv=none; b=q3eesvRmosBtWG1vsB89aYMoF6ZgRCSESdyim232jqRqQgu2s1J13i5+a8n4vpd0RQ46pGmlHTOeCed/ln/htIMuozztcuD/KtWGdboTbgfcaciG2vW0sm22yHzbDzRftwUqUvfsB+SR8KO8GVWlS1FwQG2DCzDdPlILxR61zLk=
+	t=1729773278; cv=none; b=ofj3/KFHwOwb+B8IxQqJAXH6wO9t32aYBE3psdMxfuLnAhX9ha3nr4ML3VcCv6wmB5HIPZfi0tPHr5GvSsQ8vBV1EM6kIclr2U4OZWvfog9gwYaMiPqB2qyI/bgQ9a0tVARiCqsYCDYDBUUOxqjhk0sKj4YCkP/RbT0OER98HdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729769580; c=relaxed/simple;
-	bh=jaOLrmAOgefAgbtZ2Lh4kHXHkgV6DCOo2suKobuzSjk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IOAZy1f2QbkM9oJ2XyuQdZDNdbSftTH8DfC/kS2B3DdNXgCSjjRT5MRDZtuyc9TlXglYsmmrQKr3wDtL/XfbqjpYVNwLPWn/fHwWoJt2x8ASvyVbgdgNgqyLhbSOzC3ttp45Hx5hooE+bPFV4RQVY5YF8pUyUG1kuxjXh98xfX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iLWGWnyF; arc=none smtp.client-ip=209.85.214.195
+	s=arc-20240116; t=1729773278; c=relaxed/simple;
+	bh=WqKO+VQufYnnSQGNsjJoV9pHpcM4NLycUTcWyfMcgg8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=AfFby7ktPfaM8Je8ZJnyk8skBpp7XZRTCl0OqQC88l6642lhOF7FcfDcgJd+zNUZQ4rB4108yO0VyGZYa3CXHToQZTItxSK0bg1D3Ns8W0bPHGykElhta433X8w+U3+LcLnK5c7UnAkc7FMM5uLjQqkkZ8uIj86y+CtQTwkIUPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QY5nFZuD; arc=none smtp.client-ip=209.85.160.66
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f195.google.com with SMTP id d9443c01a7336-20cdda5cfb6so6426175ad.3;
-        Thu, 24 Oct 2024 04:32:57 -0700 (PDT)
+Received: by mail-oa1-f66.google.com with SMTP id 586e51a60fabf-288d4da7221so473930fac.1;
+        Thu, 24 Oct 2024 05:34:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729769577; x=1730374377; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=tv6O+TghCU2f9mC++4kG9WDH4zCondacLVwevpdizzo=;
-        b=iLWGWnyFsPBsVi4R06t+mGR0ow0oKN/SOxv2hG/GR60jbOw2l7QqWbo1DVv0IPTro3
-         uWIuXEoAb6pF0hjXnnSN5uNBnbefoJXWBPSqryvo9R9pET87W1KaFVBo32JJtyCeFzsC
-         BbU6pNekE+9pkt1Su+64d9gRcFpiTfMsgX4gYP8JQNNnoEP+Y0ogwYuoXZfgEfbmy2i/
-         IiZSY4rpSDRBWzon/sN18VltdgduKKtl0rQS4WNerN/ATJ5yMgz3HBIEMdAMyQI35wJX
-         FzZy84AP4JPS9TCKcHVNZPjtm1j9RqRqQWtMlQSvaYzcr1/DrDstj5sYFd6iQJ3Uq0wM
-         ynGA==
+        d=gmail.com; s=20230601; t=1729773275; x=1730378075; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WqKO+VQufYnnSQGNsjJoV9pHpcM4NLycUTcWyfMcgg8=;
+        b=QY5nFZuDXaIz7hz38L7u08qLHJU9QTkiHyR4KBf6myTWmCmHp27MKIhJecgns2o+4V
+         4p4Nh6WlL+7dPV+cor4kUZf/tz9KonupNS9HApE8oeYnBpxR4aCnHZMtz9ocPaZmToG1
+         iPR0aRPRA5Uoao8soXfnmCQotbfG3008Y4YhjhCn4TNW9TG4zuGCAZpCmnucgTKms2qQ
+         RekgoDPsB2rCltMDzuo/5YQqvkIQv+olENuHTCpkkXryQGKu3KHLQU0aJUkQlQ2Y1XjZ
+         4SLGPgeP+ce4YflOV5yjLxVo6xE+cXGe3RdLDd3qzy1d7pHauEowpkeyCx6/lZdQPcTE
+         AvaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729769577; x=1730374377;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tv6O+TghCU2f9mC++4kG9WDH4zCondacLVwevpdizzo=;
-        b=u/MLFD1pL6qMiLP4NMDPvnJs6oCBllZPrjXNJ5DYS8RXFyxWnYX62K3UFuXXIWmcau
-         SFme8FqqnbKAdppTWkKYdOo9qMOHMiYsq5W1dyQT/pdAiiTIB1W8GG13T1AgqTTydT1L
-         eX3CgjmvpBVqz/wxPqQ7ZJKYlFcHzGWfVuCM/0N9pG7NIjA8OHnrBgUgl98hvgH1D2uR
-         1HqDulEbAWefNT1MiiU/jjM3dr7Unhhhve4h++oXuZJt/AZ15DKE+OkNu6yUQPmTArGg
-         EBTNKg9j7Y8ONTC0Qqlcnn5yozAqcQQsuVqwPWemBl/2nIzz758M+AHFHJ3FePduUKDc
-         08RQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUkWgc5gm4UiyzmY4/PLKLX8cQtKekK8FiEuvS6v+G7hINamxv7J5dM4g3BX3vczjqn6NqI7/XyFjK7JA==@vger.kernel.org, AJvYcCV+PKaWBqgSyVdy4vtZjwhCcjPbuzoiMdShSgZ+hdfKb1kx1WE4ckHsBRknAxACFs6fjNOyqp/LTBar@vger.kernel.org, AJvYcCVLwkSW60YTS0QyZvhvMYu8G4iN2tocv7D0rxiTAB5H/An6h4YdeCb1p95XHBCYAQFKd4V9DbJFkXtmsLs=@vger.kernel.org, AJvYcCVYJx3KuHEGTxXinf0Vf0Wrw5cf5jkUHFydigs/IRdiXWHwLWdw+R4oslcedUxYXOV5ZT6AP9ib@vger.kernel.org, AJvYcCVabQ1V5qOpTs9atHFd1E3ba/LlyPNiteGBNrSXJW7DMFO1e6CRaXHUM2gaTSwmv+T3l7l9nhchygkg@vger.kernel.org, AJvYcCVkFhSCc4LDtt+mF79R8IFdR7kNolg1rRKR2Z4kDjVE8u9ZucgoMl/wDJzwlRpcL6HvZXOsuYGsa80pVPg=@vger.kernel.org, AJvYcCVtU3mCAPPl07cj2YNeliKqIcxz69bDYob/OplIPn/aKail7mD9vfC0zrn5j8MTnQ+t6G0tsyMti7kc@vger.kernel.org, AJvYcCWakYHTt4t+K9TOql8I7dG1N3cF4D8c70kr+liWzVdhjxBhzky6LJpaJ010TBnUotbum/3MJf8fweVG2GgjGDCn36s=@vger.kernel.org, AJvYcCX55RlZou2yniR2m/aLR23gSxf+nkfLH4hC1KKDz+JNu0OPsox/CdtotQSop0b1En3Vbf9WOcfH28Xbxw==@vger.kernel.org, AJvYcCXHN+oh8GVE1UN53MYJouFz
- FL4/j/VNA3ONir7/pgSZK9TnKhd3SohMF818pwdz7mpWdfZz7vnXFcY=@vger.kernel.org, AJvYcCXOX+6Moi7o0LjdeOPO+b8e7OfuURi/6ng8uyu/ZqTuBusyaOa1YVeXXrRpxQDXHpDw8poVAUjSwH/XVnc=@vger.kernel.org, AJvYcCXdrhdwIzegOpRuKQGEt69P2TkPZQ9O5qDMT3OR8Q0NeHQ2p1+100KxKaj1aSffe381DzOsdOcosn5gSA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvPP/E7DuDUsdNswickcY60EGl2fjxcPzoMmqJWKp51ZT5qYOt
-	sG/US391zNvbl0UfGkBKLysnq8/NkJPegJnwQO4anTNZp8yTj3u2
-X-Google-Smtp-Source: AGHT+IGnX8BAozTq7iV5Cfb4iMWgUhRXOngKBX3V0+lNlRioh+e/fyzPpLUXG8x8OAUIikKgPta+wg==
-X-Received: by 2002:a17:902:e80c:b0:20c:e5b5:608a with SMTP id d9443c01a7336-20fa9de92a8mr80789405ad.5.1729769576555;
-        Thu, 24 Oct 2024 04:32:56 -0700 (PDT)
-Received: from codespaces-a350b5.m2fxbej512jepnsor2itp05j3d.ix.internal.cloudapp.net ([23.97.62.143])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20e7f0f364bsm70916385ad.264.2024.10.24.04.32.49
+        d=1e100.net; s=20230601; t=1729773275; x=1730378075;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WqKO+VQufYnnSQGNsjJoV9pHpcM4NLycUTcWyfMcgg8=;
+        b=qTiGzFVrMt1EyMsjVxDe4G6XcIKZiDN2rXhI4tpF9MZaLPkuv9FI542kmZAIZPk0Zb
+         jmrdSdlLgmS2W6BV8iGiWcF8Nv6od4eQ5lHPL95OdHT46dPUWsUZfsOJ6bMzJZVLs+Jl
+         HpZrjW7XS1pW/Gd5MlP3raddszk/0SHshJaL6ctTeMe3F6DyMxs5hIqTNL2mkNBCCufv
+         OtrGcxhzYx3J/a6VaJrHsTI41msitnrcSBq2pfEA3gZ7XTN8R6IhUIVDB4dHwNQHJQbR
+         Var78HkJSF30nIIMExYAhjlUB9KMS6msvLH7DnW9FGzDl1A5LewYy3cTpg1vKoUalS0G
+         UkDA==
+X-Forwarded-Encrypted: i=1; AJvYcCU2vvn5noWPlY4iJCBdY9lxNNnYJLqu/IM8Kcd13tGz8snuXTzQFjYhV+9zmYUa8Rl+i2rmkagw@vger.kernel.org, AJvYcCUZsUwqSRJp8CS0WbEEM5aG+2xmLL2xcqFXmR6BH0puZxe9JnnY05HCgAkpDqJZL6A5NUf2HxfpxM0YsA==@vger.kernel.org, AJvYcCUbRy9XuQJFui5oX48VThIyGx4Km9w+KzajCAPMTgzA2JF6ISU7c5B4bn7v7NG0chT9RKV/PDorlmYANw==@vger.kernel.org, AJvYcCV6L293Bp2qTrY+a86NaOdNRC3SGt9y6jeL+9CggvQATYPPGYR5X5yEWF5qvNdo/iLilJObNG1zLPGM@vger.kernel.org, AJvYcCVNAwFpNXUtlp58uCjGEorQWmXFUTf9ezrQRW5AzzVxXS8IPN1W2sV/cHQYwIovHf3KxQ8aq2xpsFo=@vger.kernel.org, AJvYcCVe0wHAc9zlluGKuixl3o0a+io5bdY/JyIaQA8TTRk7u/rIuD85cfznqglOulVb6FmF9v2EiPYHpZNUSw==@vger.kernel.org, AJvYcCVhBRQ/qFqZQz+XhQJXwRWCjrq4YW44Rklq/Yto5cxD7v59BKnrjgjSOe8+SW7uXncDBA6/J5MOZgYU@vger.kernel.org, AJvYcCVuE0txY9BBBIkJgJbv1bcnq/8Ir+eZTNzATDiGHnKB2lXyEMV3cCLJrqUVxnh53Ls0R5i3Sero6qx9rbI=@vger.kernel.org, AJvYcCW27sOniGN1zgpb4M9bDiUYEFc6n8VqBFteaFnAXhmgkvFeHzdLqZzlqjEvW09aR8VRb2bfw30UZUZ1itUc/ZKCkEg=@vger.kernel.org, AJvYcCXCJZv/W+xQ0nGI+Ghuf6oP
+ o+pjp6yfzM5+3PYbZcRzbMJtIsKhav+JFtVJdOiIhTfjjxv+GtIuib187QE=@vger.kernel.org, AJvYcCXtXgWsXO4huUUJqnOP4ex9X/XOFIMAfYNpfUYg7FUKFnNXn5c3kshqwaON/OdiwV7N7er/rABDxT6viS0=@vger.kernel.org, AJvYcCXuF1n7iMtbLMswFc+x39qg3hS6vTaTzhPnR9GvDD35bX9zF+2XZg2OhU79Lbdpf/xs0IpZFr54zaqF@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMSe76u5tzX4N+ZthQZ0PmmSB32k0KFWPzwBqERw+TJKiPP/bv
+	I5wZQzuUvK4oWfLPSe9dm7/fNYXm0onruHPVbc3HOO7Pd4hwnhNo
+X-Google-Smtp-Source: AGHT+IGNbdDr4bWOuekBU0ohovYD+u0SLmOKefBPtfh2fzqlR42/5wZYBu+ZqeJfv789Y4nUSEsYRQ==
+X-Received: by 2002:a05:6870:218a:b0:277:fb59:b74c with SMTP id 586e51a60fabf-28ced48efd0mr1364818fac.40.1729773275318;
+        Thu, 24 Oct 2024 05:34:35 -0700 (PDT)
+Received: from localhost.localdomain ([114.246.193.69])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7eaeab48f62sm8534093a12.42.2024.10.24.05.34.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2024 04:32:56 -0700 (PDT)
-From: Jensen Huang <jensenhuangnvdia@gmail.com>
-X-Google-Original-From: Jensen Huang <JensenHuangNVDIA@gmail.com>
-To: torvalds@linux-foundation.org
+        Thu, 24 Oct 2024 05:34:34 -0700 (PDT)
+From: =?UTF-8?q?=E9=99=88=E5=AF=92=E5=BD=A4?= <cxwdyx620@gmail.com>
+To: jensenhuangnvdia@gmail.com
 Cc: aospan@netup.ru,
 	conor.dooley@microchip.com,
 	ddrokosov@sberdevices.ru,
@@ -102,68 +103,27 @@ Cc: aospan@netup.ru,
 	s.shtylyov@omp.ru,
 	serjk@netup.ru,
 	shc_work@mail.ru,
+	torvalds@linux-foundation.org,
 	torvic9@mailbox.org,
 	tsbogend@alpha.franken.de,
 	v.georgiev@metrotek.ru,
 	wangyuli@uniontech.com,
 	wsa+renesas@sang-engineering.com,
-	xeb@mail.ru,
-	Jensen Huang <JensenHuangNVDIA@gmail.com>
-Subject: [PATCH] MAINTAINERS: Remove some entries due to various compliance requirements.
-Date: Thu, 24 Oct 2024 11:32:46 +0000
-Message-ID: <20241024113246.22901-1-JensenHuangNVDIA@gmail.com>
-X-Mailer: git-send-email 2.46.2
+	xeb@mail.ru
+Subject: Re: [PATCH] MAINTAINERS: Remove some entries due to various compliance requirements.
+Date: Thu, 24 Oct 2024 20:34:03 +0800
+Message-ID: <20241024123403.154-1-cxwdyx620@gmail.com>
+X-Mailer: git-send-email 2.47.0.windows.1
+In-Reply-To: <20241024113246.22901-1-JensenHuangNVDIA@gmail.com>
+References: <20241024113246.22901-1-JensenHuangNVDIA@gmail.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 
-Remove some entries due to various compliance requirements. They can come
-back in the future if sufficient documentation is provided.
-
-Signed-off-by: Jensen Huang <JensenHuangNVDIA@gmail.com>
-
----
-
-Follow 6e90b67
-
----
-
-Linus Torvalds said
-
-"I'm Finnish. Did you think I'd be supporting Russian
-aggression? Apparently it's not just lack of real news, it's lack of
-history knowledge too."
-
-So we should remove Israeli developers too, because Israel is committing aggression and genocide.
-
-Link: https://lore.kernel.org/all/CAHk-=whNGNVnYHHSXUAsWds_MoZ-iEgRMQMxZZ0z-jY4uHT+Gg@mail.gmail.com/
----
- MAINTAINERS | 7 -------
- 1 file changed, 7 deletions(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e9659a5a7..9ce642d40 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2275,13 +2275,6 @@ S:	Maintained
- T:	git git://git.armlinux.org.uk/~rmk/linux-arm.git clkdev
- F:	drivers/clk/clkdev.c
- 
--ARM/CONEXANT DIGICOLOR MACHINE SUPPORT
--M:	Baruch Siach <baruch@tkos.co.il>
--L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
--S:	Maintained
--F:	arch/arm/boot/dts/cnxt/
--N:	digicolor
--
- ARM/CORESIGHT FRAMEWORK AND DRIVERS
- M:	Suzuki K Poulose <suzuki.poulose@arm.com>
- R:	Mike Leach <mike.leach@linaro.org>
--- 
-2.46.2
-
+Well, the fact is that Linus Torvalds, our leader of Linux, is not **Palest=
+inian** but **Finnish**.=0D
 

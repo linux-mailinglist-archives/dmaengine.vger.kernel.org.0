@@ -1,82 +1,63 @@
-Return-Path: <dmaengine+bounces-3595-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3596-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46A329B0CF8
-	for <lists+dmaengine@lfdr.de>; Fri, 25 Oct 2024 20:17:18 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 018439B0D39
+	for <lists+dmaengine@lfdr.de>; Fri, 25 Oct 2024 20:29:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AE57B1F2187F
-	for <lists+dmaengine@lfdr.de>; Fri, 25 Oct 2024 18:17:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 244FC1C21639
+	for <lists+dmaengine@lfdr.de>; Fri, 25 Oct 2024 18:28:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAFB020C30B;
-	Fri, 25 Oct 2024 18:17:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D5E4200BA0;
+	Fri, 25 Oct 2024 18:26:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ZABtq7Sz"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LJO9NhRf"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C7E37E792
-	for <dmaengine@vger.kernel.org>; Fri, 25 Oct 2024 18:17:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 469DF1534E9;
+	Fri, 25 Oct 2024 18:26:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729880231; cv=none; b=bY90EGQSnr0uC/3D05AIZ8vFgOxXhqrSNyuaxIkoqaDl4dken5NosirnbWJIZg5g0CFdkDI4M3fOtfkMfa7z9aGdxiGhnXXGfpRUnMCUKn7KjVBK5NKcCvrJ4u15FaUdv2crlebL6xIsPDo5WMRPpLglsEo0eiGj1leFJIbv5oY=
+	t=1729880778; cv=none; b=LBptr8Ulah+1VOXFzILw2Rn+JZCgh69CCjQa8ydSoKX11eeI5GF6P3s8uMFAuy+m8LXUIavLPilYL0U5vay3Fk7ky6ar86VH4fVcBJHI+Mf3KjSpHf0vqtFi/z3K0Bo11fKasgzlDTfKiZgPgqQvPP6iEDUfE2iJ6VTY5a6rkV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729880231; c=relaxed/simple;
-	bh=CLS/iIPGDJE60av5udYuI/xjQzJ7unxdzp+4M0UFoyU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZRy8/VdgnUqNoKQYlAnfMDuV+uhqbiUAYEse/yxfT5zmbzhh8nAeTBrj7HBb74ccsjFmSiSg0rrULRgc2oJo59bsvAtyM+TQjPSKzg3Ivq1yzcgWskYbTbocp3D85XsW5TGb9BBqaoD5v5FCbLk+d9Nwg4Yi/yyU7Ama/jriARk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=fail smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ZABtq7Sz; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49PG3Igm020204
-	for <dmaengine@vger.kernel.org>; Fri, 25 Oct 2024 18:17:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	s=arc-20240116; t=1729880778; c=relaxed/simple;
+	bh=A5sjD/WSqJ94Co3OsPk7FUMxfEBbXh0GDMQyJ/OcNNw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=cVYv5iraTvVEaN1bJMrCSTHwL50o59f2bRC4RdtfzpHqljn37UyjHP/BTqZRXmgwZK0POgi72bUIiO/DCie+extCr5vpNglxKl/Dv5nIvX+IUiKewTY/QMbpNqw+0pUlhim0Yy+b98owKsdaoZ2GELxiq+WmbhDB1wt1Pekv4JM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=LJO9NhRf; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49PAvlqd008859;
+	Fri, 25 Oct 2024 18:26:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	FSJlO0TfoNk3Ycf8qBZrvMLnGxcnluZFEUKQHGyj/j8=; b=ZABtq7SzlRm1k9EV
-	uprK+tTiR6xL0H49FF6vgr4ymQ6KhebJC4QgT1Vp/WBkutonRsik3ozfKeVpEPw/
-	lS+QZGBx0M1NSIB3noFVYletL3I1eGj75kXptq63yr1kCytujaos+BlGK56i7u1O
-	fRMN2W6KKXukNjmYNHfcFsaVdrl6ybPZUnaEslp/qtu1SFXNgaJOTH74M7azW600
-	aNKSY7Pty/c7XIaeyCFC8xUBdMdhdvY0Q6pKVrN4ptyhCUqkEF8mBTFAjBBVml0W
-	dVlJTWAi6xK+IItBi5uH/t71j3dSVIV0bJP/9qgqbtpb03B1NigNnBcNuB21UMqV
-	GEzVWA==
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 42g6y91w1y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <dmaengine@vger.kernel.org>; Fri, 25 Oct 2024 18:17:09 +0000 (GMT)
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6cbf4770c18so6835986d6.2
-        for <dmaengine@vger.kernel.org>; Fri, 25 Oct 2024 11:17:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729880227; x=1730485027;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FSJlO0TfoNk3Ycf8qBZrvMLnGxcnluZFEUKQHGyj/j8=;
-        b=tDxNavof52nzit0zY1IPyHD8h1H/a4Fe9eOfDUOMrKYjQQZzSzoR801NAity4evxtl
-         mWNXtbRMhHxDS+A5qUqxR99jZaAgYlTbqOX7bCtjvAZezaM93jzNkmg0QBf1C+WE4sx9
-         cIvETABGmX8FDWZKUpo/n8RUMxSlSIqCaVocoDAfQAI1wtmx5xWPlFBGEkEpW1JMTvLY
-         KA45LHW+cJJq+vXnPSNgsPHthLEgMOMFh/qC38Ks05FvMJYakjw1Rln3LWjR/ITsW1tF
-         XY423OZ5IFZdnq9ryWhlo6ntuGZntG1XD7xe3zORfHcmQka6OcMqFgCqQllqkXh5Bnln
-         Z15w==
-X-Forwarded-Encrypted: i=1; AJvYcCWkL2gvqwD4biOSGBNfvyTovDRvhsjF7xM11PsyEHcX6rU3dC7lw2CTza+j0OeegW4z34RRWErdl/g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrSQe0s03QTQqjk46UH0VgIdKI+nIr2W3fjFYyE5PVjR0jLqHz
-	g2QFGYU0v5A74G/E4RJXIeHGzYaZsY8DS8FtWr0xPoGl/1i372hqzYG6XzDysqUpwm1TwLPYzwE
-	zLMaQSmvYYgAJd/84mM4pBHkHKm5eUPU9E7v6oQG8gN01+jfZ9UJGzwOc7oc=
-X-Received: by 2002:a05:6214:d45:b0:6cb:c6da:5fe3 with SMTP id 6a1803df08f44-6d18567a31cmr2484936d6.1.1729880227489;
-        Fri, 25 Oct 2024 11:17:07 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF8+KqX0qE5evxjRaHUn806H0k1eImIZc7s/QW9fbWd1DSEaL/b0S3oNWR+qh1FZINISLpdqQ==
-X-Received: by 2002:a05:6214:d45:b0:6cb:c6da:5fe3 with SMTP id 6a1803df08f44-6d18567a31cmr2484616d6.1.1729880227230;
-        Fri, 25 Oct 2024 11:17:07 -0700 (PDT)
-Received: from [192.168.212.120] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9b3a081d59sm95061466b.189.2024.10.25.11.17.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Oct 2024 11:17:06 -0700 (PDT)
-Message-ID: <333948f0-44ff-424a-8d38-5fba719d2aeb@oss.qualcomm.com>
-Date: Fri, 25 Oct 2024 20:17:03 +0200
+	o2hGL4RB0OKMSkFRgRQWPdvsJ1RPbEk7v//UEoZR3bc=; b=LJO9NhRf+RuvgoEV
+	QTwGzPVuBBi2zipFaOFTgi7g0fkZpMdZZHg7W500638krolkmO+YXoUcDHc/+Rnx
+	+MYwTiUq7K1mOHZJ462rnDCXE/4VbFMvlehHs6quq4p5sSMDRhnXF9jUQup7QHLX
+	9g2JyNqBlMxeF1T57on0F8KkERIHdt2aV1Fb6w9LsAKq7FyS673i+ws7JlUXDmvZ
+	ptkLP9ABnbtOnWllw84EjMS176sGmqQTuF2L0+OBXPLZ+vjO7mHYGSJjmrBY2cQ7
+	ADuHX70e15d7fV+STOYddBUZlH7KM2eTXqhlPSUYmlJN2amwn6VY+1PHXyxao6cE
+	T/qClA==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 42fk52myp9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 25 Oct 2024 18:26:07 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 49PIQ6NL013702
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 25 Oct 2024 18:26:06 GMT
+Received: from [10.216.38.148] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 25 Oct
+ 2024 11:25:55 -0700
+Message-ID: <5f36903a-e21f-4f5b-bc59-ab2bd7cbfb30@quicinc.com>
+Date: Fri, 25 Oct 2024 23:55:51 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -84,69 +65,105 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 3/5] dmaengine: qcom: gpi: Add provision to support TRE
- size as the fourth argument of dma-cells property
-To: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>,
-        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
+Subject: Re: [PATCH v1 1/5] dt-bindings: dmaengine: qcom: gpi: Add additional
+ arg to dma-cell property
+To: Vinod Koul <vkoul@kernel.org>
+CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
         Bjorn Andersson <andersson@kernel.org>,
         Konrad Dybcio <konradybcio@kernel.org>,
         Andi Shyti <andi.shyti@kernel.org>,
         Sumit Semwal <sumit.semwal@linaro.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, quic_msavaliy@quicinc.com,
-        quic_vtanuku@quicinc.com
+        =?UTF-8?Q?Christian_K=C3=B6nig?=
+	<christian.koenig@amd.com>,
+        <cros-qcom-dts-watchers@chromium.org>, <linux-arm-msm@vger.kernel.org>,
+        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <linaro-mm-sig@lists.linaro.org>, <quic_msavaliy@quicinc.com>,
+        <quic_vtanuku@quicinc.com>
 References: <20241015120750.21217-1-quic_jseerapu@quicinc.com>
- <20241015120750.21217-4-quic_jseerapu@quicinc.com>
+ <20241015120750.21217-2-quic_jseerapu@quicinc.com> <Zw9HHRyvfd66Qn4a@vaman>
 Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20241015120750.21217-4-quic_jseerapu@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
+From: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
+In-Reply-To: <Zw9HHRyvfd66Qn4a@vaman>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: merV3EcNAvFCfXa3WWJpdhTqGTYPhYq0
-X-Proofpoint-ORIG-GUID: merV3EcNAvFCfXa3WWJpdhTqGTYPhYq0
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: Inpzn3t538ZY9e6nNhzik-q58ptW8QM4
+X-Proofpoint-ORIG-GUID: Inpzn3t538ZY9e6nNhzik-q58ptW8QM4
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
  definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
- spamscore=0 adultscore=0 suspectscore=0 mlxlogscore=999 clxscore=1011
- lowpriorityscore=0 priorityscore=1501 mlxscore=0 malwarescore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 mlxscore=0
+ lowpriorityscore=0 malwarescore=0 impostorscore=0 phishscore=0
+ adultscore=0 mlxlogscore=999 priorityscore=1501 spamscore=0 bulkscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2409260000 definitions=main-2410250140
 
-On 15.10.2024 2:07 PM, Jyothi Kumar Seerapu wrote:
-> The current GPI driver hardcodes the channel TRE (Transfer Ring Element)
-> size to 64. For scenarios requiring high performance with multiple
-> messages in a transfer, use Block Event Interrupt (BEI).
-> This method triggers interrupt after specific message transfers and
-> the last message transfer, effectively reducing the number of interrupts.
-> For multiple transfers utilizing BEI, a channel TRE size of 64 is
-> insufficient and may lead to transfer failures, indicated by errors
-> related to unavailable memory space.
-> 
-> Added provision to modify the channel TRE size via the device tree.
-> The Default channel TRE size is set to 64, but this value can update
-> in the device tree which will then be parsed by the GPI driver.
-> 
-> Signed-off-by: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
-> ---
 
-1. Is the total memory pool for these shared?
+On 10/16/2024 10:24 AM, Vinod Koul wrote:
+> On 15-10-24, 17:37, Jyothi Kumar Seerapu wrote:
+>> When high performance with multiple i2c messages in a single transfer
+>> is required, employ Block Event Interrupt (BEI) to trigger interrupts
+>> after specific messages transfer and the last message transfer,
+>> thereby reducing interrupts.
+>>
+>> For each i2c message transfer, a series of Transfer Request Elements(TREs)
+>> must be programmed, including config tre for frequency configuration,
+>> go tre for holding i2c address and dma tre for holding dma buffer address,
+>> length as per the hardware programming guide. For transfer using BEI,
+>> multiple I2C messages may necessitate the preparation of config, go,
+>> and tx DMA TREs. However, a channel TRE size of 64 is often insufficient,
+>> potentially leading to failures due to inadequate memory space.
+>>
+>> Add additional argument to dma-cell property for channel TRE size.
+>> With this, adjust the channel TRE size via the device tree.
+>> The default size is 64, but clients can modify this value based on
+>> their specific requirements.
+>>
+>> Signed-off-by: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
+>> ---
+>>   Documentation/devicetree/bindings/dma/qcom,gpi.yaml | 6 ++++--
+>>   1 file changed, 4 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
+>> index 4df4e61895d2..002495921643 100644
+>> --- a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
+>> +++ b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
+>> @@ -54,14 +54,16 @@ properties:
+>>       maxItems: 13
+>>   
+>>     "#dma-cells":
+>> -    const: 3
+>> +    minItems: 3
+>> +    maxItems: 4
+>>       description: >
+>>         DMA clients must use the format described in dma.txt, giving a phandle
+>> -      to the DMA controller plus the following 3 integer cells:
+>> +      to the DMA controller plus the following 4 integer cells:
+>>         - channel: if set to 0xffffffff, any available channel will be allocated
+>>           for the client. Otherwise, the exact channel specified will be used.
+>>         - seid: serial id of the client as defined in the SoC documentation.
+>>         - client: type of the client as defined in dt-bindings/dma/qcom-gpi.h
+>> +      - channel-tre-size: size of the channel TRE (transfer ring element)
+> This is a firmware /software property, why should this be in hardware
+> description?
 
-2. Is there any scenario where we want TRE size to be lower and
-   not higher? Are there any drawbacks to always keeping them at
-   SOME_MAX_VALUE?
+This is a software property and here trying to add channel tre size as a 
+4th argument of dma-cells property.
 
-3. Is this something we should configure at boot time (in firmware)?
-   Perhaps this could be decided based on client device settings (which
-   may or may not require adding some field in the i2c framework)
+In V2, i have reverted the DT and binding changes related to adding new 
+argument for dma-cells property and used GPI driver defined value.
 
 
-Konrad
+Regards,
+
+JyothiKumar
+
+
+>
 

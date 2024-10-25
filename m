@@ -1,241 +1,178 @@
-Return-Path: <dmaengine+bounces-3566-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3567-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3BB7E9AFBBB
-	for <lists+dmaengine@lfdr.de>; Fri, 25 Oct 2024 10:00:14 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5AA599AFCF2
+	for <lists+dmaengine@lfdr.de>; Fri, 25 Oct 2024 10:46:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B700E1F23612
-	for <lists+dmaengine@lfdr.de>; Fri, 25 Oct 2024 08:00:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1B04A283248
+	for <lists+dmaengine@lfdr.de>; Fri, 25 Oct 2024 08:46:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 066871C6F55;
-	Fri, 25 Oct 2024 08:00:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FECB1CF7BE;
+	Fri, 25 Oct 2024 08:46:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Q3bpuJkx";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="iSm5PcWT";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Q3bpuJkx";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="iSm5PcWT"
+	dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b="ZYJ0YyU6"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from IND01-MAX-obe.outbound.protection.outlook.com (mail-maxind01olkn2021.outbound.protection.outlook.com [40.92.102.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D153170A1C;
-	Fri, 25 Oct 2024 08:00:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729843206; cv=none; b=Z0/HCLoboPmDTFXc4UYOP9EtiJl+NxxJNwJpFcJjQFjDxsq5ozrZElkXqj0QlLzinMo8TAYKos5LwoSotfvqls1TQAxViqXOU+LpFVBC8EZFmNDPmTHLkhh52qZK3zgiYyLC0CVm5ZVGP0JPjsTsOxf+oRAWYVJBbiFaJ2bQyms=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729843206; c=relaxed/simple;
-	bh=pDKoYNWc5esSfmM2VKEvc47EU0gOkj8FOL8qQDFJZYk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M3yUSWnigy60bFbw7c6IRgfHlXshTyd+aONOTTjV3D1AbMfwNKn0aQb2NHlMtGeQctlI7kpE9ubJuzrLZF7HqKOHOhkHuLUw03rkIrlWFsAIiBC0c5ZS+2bng8wJeEfmMvrE9x1td4JrOkqiFV6t8pqJWbe/GUXp8AG3qhP0VLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Q3bpuJkx; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=iSm5PcWT; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Q3bpuJkx; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=iSm5PcWT; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 6FE8821E1F;
-	Fri, 25 Oct 2024 08:00:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1729843202; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gt4eKGHTaDKGDIpEe7BbcCU3OPOhB5+NbtQhvob/2u0=;
-	b=Q3bpuJkxSkOVve5uvDfli9jz2KlAsWAiPZucR6NpoGrjTSqrlZ9/qm3XU/eT9vQVnbET3I
-	TTAAXXZP+7z0PHH0dA3MZuiTGQ2TFSNvfRJuCAYA+pc5kGIbuwT5wE/GSeonj4dnHxaqqc
-	Fg6YV45j4Ieg70gSybwep693JDKmHFw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1729843202;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gt4eKGHTaDKGDIpEe7BbcCU3OPOhB5+NbtQhvob/2u0=;
-	b=iSm5PcWTohwwYs+NwSceqzvMUzvEepB2n1+Qq0val4EWG9nqyrd/iHlwKVqznKHhda8xxm
-	Jc1ZYwjEHHsRlQDQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1729843202; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gt4eKGHTaDKGDIpEe7BbcCU3OPOhB5+NbtQhvob/2u0=;
-	b=Q3bpuJkxSkOVve5uvDfli9jz2KlAsWAiPZucR6NpoGrjTSqrlZ9/qm3XU/eT9vQVnbET3I
-	TTAAXXZP+7z0PHH0dA3MZuiTGQ2TFSNvfRJuCAYA+pc5kGIbuwT5wE/GSeonj4dnHxaqqc
-	Fg6YV45j4Ieg70gSybwep693JDKmHFw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1729843202;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gt4eKGHTaDKGDIpEe7BbcCU3OPOhB5+NbtQhvob/2u0=;
-	b=iSm5PcWTohwwYs+NwSceqzvMUzvEepB2n1+Qq0val4EWG9nqyrd/iHlwKVqznKHhda8xxm
-	Jc1ZYwjEHHsRlQDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C94FB132D3;
-	Fri, 25 Oct 2024 07:59:59 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 1OmFJ/9PG2coWQAAD6G6ig
-	(envelope-from <aherrmann@suse.de>); Fri, 25 Oct 2024 07:59:59 +0000
-Date: Fri, 25 Oct 2024 09:59:53 +0200
-From: Andreas Herrmann <aherrmann@suse.de>
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Serge Semin <fancer.lancer@gmail.com>, Jon Mason <jdmason@kudzu.us>,
-	Dave Jiang <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>,
-	ntb@lists.linux.dev, Andy Shevchenko <andy@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Kory Maincent <kory.maincent@bootlin.com>,
-	Cai Huoqing <cai.huoqing@linux.dev>, dmaengine@vger.kernel.org,
-	Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-	Damien Le Moal <dlemoal@kernel.org>, linux-ide@vger.kernel.org,
-	"paulburton@kernel.org" <paulburton@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Arnd Bergmann <arnd@arndb.de>,
-	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	linux-pci <linux-pci@vger.kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Andrew Lunn <andrew@lunn.ch>, Russell King <linux@armlinux.org.uk>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	Kelvin Cheung <keguang.zhang@gmail.com>,
-	Yanteng Si <siyanteng@loongson.cn>, netdev@vger.kernel.org,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org,
-	Borislav Petkov <bp@alien8.de>, linux-edac@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-serial@vger.kernel.org, Andrew Halaney <ajhalaney@gmail.com>,
-	Nikita Travkin <nikita@trvn.ru>,
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-	Alexander Shiyan <shc_work@mail.ru>, Dmitry Kozlov <xeb@mail.ru>,
-	Sergey Shtylyov <s.shtylyov@omp.ru>,
-	Evgeniy Dushistov <dushistov@mail.ru>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-	Nikita Shubin <nikita.shubin@maquefel.me>,
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: linux: Goodbye from a Linux community volunteer
-Message-ID: <20241025075953.GA3559@alberich>
-References: <2m53bmuzemamzc4jzk2bj7tli22ruaaqqe34a2shtdtqrd52hp@alifh66en3rj>
- <e7d548a7fc835f9f3c9cb2e5ed97dfdfa164813f.camel@HansenPartnership.com>
- <753d203a-a008-4cd3-b053-38b5ce31281b@app.fastmail.com>
- <f90bba20e86dac698472d686be7ec565736adca0.camel@HansenPartnership.com>
- <2f203b14-be13-4eef-bcb1-743dd9e9e9bd@app.fastmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B6918DF6E;
+	Fri, 25 Oct 2024 08:46:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.102.21
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729845991; cv=fail; b=M1XDVWLxie4wvewvoQ7Xrs+yZHaA/09hIQMjTSvVqQWHG3wo+GlMm+NbsS6XuUV33Rn/f4tvFKMoIjJWvHRni1SZ7IjWIGAU5ZJK2FguikXfULw41SR2+aKFWnMc9lSmDSs74ky/7VWzgZHiNU1hc5O3wYv72b8zR4q74HAgIIg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729845991; c=relaxed/simple;
+	bh=JKFPQmfZw1+qgzIKVcYl2RISQNf/So9eCTL264nq6H4=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=KHxa9rrjR219/nsHtSYMZPmGcut+fOs/+CImHBhC15+JUsEG2VYSTscFjZJQO2GoWpASsMH9q7TX8sZbOYrfF1Yasja8grFbzjSwOPkeQVCRufRrRmLDLktILt/tKT2ZQ8DWaLLYcRfhkv80AnARh5kt2dtoFNSXMpQjII8VQ9k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com; spf=pass smtp.mailfrom=hotmail.com; dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b=ZYJ0YyU6; arc=fail smtp.client-ip=40.92.102.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hotmail.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=BDAoMGyCgUZIwfGp1VVFQ8J7SFaP79hPXEmy9QmvHbIrQk3VuXIC/IFr5tw/aoO4YpbxpW7xuuk9bSmeewyBmToGjbC3sPEf1MkIhIrq2qYkbHl+ZV0ntKtUXPoel/Ak/4tkYTpn6Long61dK6vCL2i5GhfmQyrU+m4wzm5A/5zf/DusXXm57jtlVNQ2UB1GqCl2nFrqmTWdgyMSI8rG4IXUl4zDk4Q6qtUfR0ZWlvlsldoBIpdeGrIRpfJ+d5t43EXOdZs3KoySWjf4NCrdkcrQlvm1axwm1h6kKKezD8evEQ1MQlI1YVmhtBgt8++/BDng76puGeh8Kg2YCIZXCg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JKFPQmfZw1+qgzIKVcYl2RISQNf/So9eCTL264nq6H4=;
+ b=WQgSnT5T0De1KhZ7K79pw+b7FE8nXJRY5PLrq+waFSX2qjO8cVHZ/EVXO+tEbs2YIO2LlAeeRu0XwNDv4AbJdQ4AXnEsgtBodnuWo+1f9QIV1cPxtF5sFsCKYEkSYyLUGw+jdhSs2SXm9nYVkwA45c4xiOX98z0g0x8Jbg01RXOPxl/stqPuBH47cJQVJ1CCS29ERdHrYNFXAjgGMphndj2bI5d93VBnFbW1Bn4cGo730aFxtwRBumSsy0EZLPe68xwjdGyzP/JOXAp0Jw32SOAI+akEmNEt/7nlGlsviSd/sssc7yNRxZea9PH7qIH+zXOEjMRc6EDuYLScQ66FEg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JKFPQmfZw1+qgzIKVcYl2RISQNf/So9eCTL264nq6H4=;
+ b=ZYJ0YyU6g0k5Rhl/d5NmYEel5UDbFx9nQAeCD+qpVoypryFORYUXOF8pfYaqJP+i26LTMGUIukJUOC9tHoVXv2JfThTShSLNF8qYNfga0C0hkd726PwwA39I9esZ6KtIpfcVcEGDTmftVQGmRnrDkX547RGCbDmg5TL/AbgZVejHs+oAXD8pIKK5H99yFLO78ZnjEASAa/RAc+1X+ZyLFNHx/sruwdZevyE002ORYuUGh9iHv43WkLqaZl80aXxLuE7JQE2lNJAbBb8ke+/6SEWAXsiV8G9RoETCwsdwBXLIRLs0w2bJLoquin8dF2BK1JfGm7GKRlIlIIU89z/ncg==
+Received: from MA0P287MB0594.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:119::13)
+ by MAYP287MB3581.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:149::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.18; Fri, 25 Oct
+ 2024 08:46:11 +0000
+Received: from MA0P287MB0594.INDP287.PROD.OUTLOOK.COM
+ ([fe80::621d:8529:f377:8921]) by MA0P287MB0594.INDP287.PROD.OUTLOOK.COM
+ ([fe80::621d:8529:f377:8921%3]) with mapi id 15.20.8093.018; Fri, 25 Oct 2024
+ 08:46:09 +0000
+From: thomas superb <thomasdeutsch123@hotmail.com>
+To: "nikolay@oldum.net" <nikolay@oldum.net>
+CC: "aospan@netup.ru" <aospan@netup.ru>, "campaigns@fsf.org"
+	<campaigns@fsf.org>, "conor.dooley@microchip.com"
+	<conor.dooley@microchip.com>, "ddrokosov@sberdevices.ru"
+	<ddrokosov@sberdevices.ru>, "dmaengine@vger.kernel.org"
+	<dmaengine@vger.kernel.org>, "dushistov@mail.ru" <dushistov@mail.ru>,
+	"fancer.lancer@gmail.com" <fancer.lancer@gmail.com>, "geert@linux-m68k.org"
+	<geert@linux-m68k.org>, "gregkh@linuxfoundation.org"
+	<gregkh@linuxfoundation.org>, "hoan@os.amperecomputing.com"
+	<hoan@os.amperecomputing.com>, "ink@jurassic.park.msu.ru"
+	<ink@jurassic.park.msu.ru>, "jeffbai@aosc.io" <jeffbai@aosc.io>,
+	"kexybiscuit@aosc.io" <kexybiscuit@aosc.io>, "linux-alpha@vger.kernel.org"
+	<linux-alpha@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-fpga@vger.kernel.org"
+	<linux-fpga@vger.kernel.org>, "linux-gpio@vger.kernel.org"
+	<linux-gpio@vger.kernel.org>, "linux-hwmon@vger.kernel.org"
+	<linux-hwmon@vger.kernel.org>, "linux-ide@vger.kernel.org"
+	<linux-ide@vger.kernel.org>, "linux-iio@vger.kernel.org"
+	<linux-iio@vger.kernel.org>, "linux-media@vger.kernel.org"
+	<linux-media@vger.kernel.org>, "linux-mips@vger.kernel.org"
+	<linux-mips@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org"
+	<linux-renesas-soc@vger.kernel.org>, "linux-spi@vger.kernel.org"
+	<linux-spi@vger.kernel.org>, "m.novosyolov@rosalinux.ru"
+	<m.novosyolov@rosalinux.ru>, "manivannan.sadhasivam@linaro.org"
+	<manivannan.sadhasivam@linaro.org>, "mattst88@gmail.com"
+	<mattst88@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"nikita@trvn.ru" <nikita@trvn.ru>, "ntb@lists.linux.dev"
+	<ntb@lists.linux.dev>, "patches@lists.linux.dev" <patches@lists.linux.dev>,
+	"peter@typeblog.net" <peter@typeblog.net>, "richard.henderson@linaro.org"
+	<richard.henderson@linaro.org>, "rms@gnu.org" <rms@gnu.org>,
+	"s.shtylyov@omp.ru" <s.shtylyov@omp.ru>, "serjk@netup.ru" <serjk@netup.ru>,
+	"shc_work@mail.ru" <shc_work@mail.ru>, "torvalds@linux-foundation.org"
+	<torvalds@linux-foundation.org>, "torvic9@mailbox.org" <torvic9@mailbox.org>,
+	"tsbogend@alpha.franken.de" <tsbogend@alpha.franken.de>,
+	"v.georgiev@metrotek.ru" <v.georgiev@metrotek.ru>, "wangyuli@uniontech.com"
+	<wangyuli@uniontech.com>, "wsa+renesas@sang-engineering.com"
+	<wsa+renesas@sang-engineering.com>, "xeb@mail.ru" <xeb@mail.ru>
+Subject: Re: [PATCH] Revert "MAINTAINERS: Remove some entries due to various
+ compliance requirements."
+Thread-Topic: [PATCH] Revert "MAINTAINERS: Remove some entries due to various
+ compliance requirements."
+Thread-Index: AQHbJrmTO2m52qT8oUye+I/sF+SUew==
+Date: Fri, 25 Oct 2024 08:46:09 +0000
+Message-ID:
+ <MA0P287MB05942920747924ABB7B0365C8B4F2@MA0P287MB0594.INDP287.PROD.OUTLOOK.COM>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MA0P287MB0594:EE_|MAYP287MB3581:EE_
+x-ms-office365-filtering-correlation-id: 6d727a70-1eac-4a40-f14e-08dcf4d178b6
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|7092599003|15080799006|461199028|15030799003|19110799003|8062599003|8060799006|3430499032|4295299021|102099032|440099028|3412199025;
+x-microsoft-antispam-message-info:
+ HDbMVXnnTopariHKmrNZ9Uw6miA/2ffBqzuKLZqtIQLj5TODNdaEmY9LIOQK+bcwEjX9j2aWB0fIeK3QkE4LYVLQZ7nP8dC1/iJy52Mk3Ea2SnTkcF9Z5Ai5QalgYrtjaeZoZ+FVsB6RX1i15qkwhrQHLjjOQwrXUIHTanFYq83umVI8XSxkYbOUEzY+7ryb74uHiHH57Ah7sRebjUNIjlQ6c4isWolr/ZHW5pLKbs0SuBCfBVeFtCZILUyt2Nk0cGZ4AGbD9YaixKVJrqA4ftJcLH6eJBxPo3bSGlRgBK0Itvf9qlHyZEuFK5NbrE/fF8WIXMZ88BMZ+PzJLlTSdl7Ebx6YYR9bD5NjtXPR2gkU0qYxjlG8r1FFzngEwZLGln9b0a4Bij7wWjHucDQjdqSPkcCZKOHm4oQIDQRXdQLdh+uiyT7yFmzgI7bwHrAeioDVGKYZPUAx3LCPlCVvW8+aDP69umbR9PnZBs2PG2FfGJkE+Km5JmkTYvvpUUTzMUDZ/7caKTOFIqbQbD5yjsXrwhzdP0jaypn7ZXssH0gsh8sbgq2xJOk5nRhwqu6zeL52JK4+73tbn9lR2xCOwffj+lyVvZVeWW/vrVf6qQUjRjgk3fyU3qOB3AlKaOWN7lcHy+dzhC3n2Ac4rpibuBA6/ewQk0ZClqb4G//eGeybOVc4epB7wY8AfPyDSDK2xeyPj7toH7qhqkMH2X37d/gZrwHXi0w9bTbdgOHwdWM6P5n5XJoiG89HqyFuHOjxl39w6rtSDh2Yud1tpDSoQw==
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?Windows-1252?Q?L9WFzDji0RbJrCBg+TK72DF+9CEeEys3VnbQZubdBF+A/gRFYLjTAFFS?=
+ =?Windows-1252?Q?OQvwc4DirfTw0aIR8rJay5GQUtDZOdmMHvrbuzwq7Y6VK0xLNfDc/rtV?=
+ =?Windows-1252?Q?IN5YKifb3GVCopS8Dj4tJSTUoB2mThQoDXNxORmFZ+YqUS9jYy+sNmD5?=
+ =?Windows-1252?Q?YcX7Qy3FWxiD7Fem851MZy5jM2kEVB048vm5OyEvOYsfZH+/l/MnzGXV?=
+ =?Windows-1252?Q?z4i/SfZWe122kFRxpete3xsTB+ke1Lo7vngXbKqfx/i1RAjLnvUwVTAT?=
+ =?Windows-1252?Q?5NW5VzFsd8+Qm4HElctYMDLeo61sKwm8BZF3ET57XJYB6+ua3GbVd47f?=
+ =?Windows-1252?Q?PUpuX3btSqYizZUHbg99WJYiWwjM+jDSKaedK9FiK4vcWo/PWsnrjq2Z?=
+ =?Windows-1252?Q?zgf4xt3Yx5nbB6dgCuh3jLMX15ZW1r8El+a6uHrFNbp7IDeSijV2Uuq+?=
+ =?Windows-1252?Q?PNZYRocScZsUamuo3TMenMxoi0HOjiscbcxumx/90+HCQh/680/dBXM3?=
+ =?Windows-1252?Q?UKqb4eavf8js7OT3o0qoHzlBXoE0Ark8Vmtkz2NLHTvlWRqPopddUyM0?=
+ =?Windows-1252?Q?QIq8gJKoWVYCCfgWVUpYzI/aOQEtQlDfGEWHH3oH3or04Nn33MiRn1oG?=
+ =?Windows-1252?Q?blWoaQmFkEf51iiox9VuzAnjxZjttNNryf5sRD+iOy5BPdUfXV5fTRan?=
+ =?Windows-1252?Q?g7AtrjIQPbsX/0aPZkHVx6DJzQ/Ie2shllpO4KylRTsFE/TLhJMsS9kY?=
+ =?Windows-1252?Q?F+kRx0j10AOJjeQ1UnSaWLCnEqI3FsbL9GyGpPx5V9y120mNZu0LKgLf?=
+ =?Windows-1252?Q?M5+J8RJIgKpgXKAEjT2RVtXtHASa1wuY6FIQDUV2oxhxr+ZLtJLRoH7k?=
+ =?Windows-1252?Q?phQffGTDH3cKZymdnOlgyK4PvBq9l/gFEWjj7VGzXTu65fmfxOv09OKC?=
+ =?Windows-1252?Q?K8LK6Cx2+nQe1EgOQLYTJnr0PSSOy/bmANLS6AY3fRDQuwmq0ZGgsIsg?=
+ =?Windows-1252?Q?4aPRm9hhZeW/WIv83fmMXRo1ME5V9dFD0NE5eTTQVPN3KkflTpxG+tln?=
+ =?Windows-1252?Q?Ho47Zz4p6FmFautLhT0cJJvgxJz+spTD+Tu7IoYAEdfpqad7X/O9mdn8?=
+ =?Windows-1252?Q?kslmXcDAokbAgEsNOg8PPuq6ROG+EcTRk6On9NHhzVIyM8X6ZxLbc8l3?=
+ =?Windows-1252?Q?KN3gj5jLMbVZjgBrfp96hX9oIYsD4NplJ6DYHnuHasfR/aq6RyyxFHOp?=
+ =?Windows-1252?Q?x3d4yJwVgnQik0BX7RDyiKAcVe9RBap6NLXOCqXMS3dzj7tmtc7xOWPX?=
+ =?Windows-1252?Q?/CBobQmf2GhMjH+0j8aQOLcFg14=3D?=
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2f203b14-be13-4eef-bcb1-743dd9e9e9bd@app.fastmail.com>
-X-Spam-Score: -2.30
-X-Spamd-Result: default: False [-2.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,mail.ru];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[hansenpartnership.com,gmail.com,kudzu.us,intel.com,lists.linux.dev,kernel.org,linux.intel.com,bootlin.com,linux.dev,vger.kernel.org,alpha.franken.de,arndb.de,google.com,linaro.org,renesas.com,davemloft.net,redhat.com,lunn.ch,armlinux.org.uk,loongson.cn,roeck-us.net,alien8.de,linuxfoundation.org,trvn.ru,jurassic.park.msu.ru,mail.ru,omp.ru,linux-m68k.org,maquefel.me];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[53];
-	R_RATELIMIT(0.00)[to_ip_from(RL9za9u4kxnfaar3549n6tyhyx)]
-X-Spam-Flag: NO
-X-Spam-Level: 
+X-OriginatorOrg: sct-15-20-7719-20-msonline-outlook-24072.templateTenant
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MA0P287MB0594.INDP287.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6d727a70-1eac-4a40-f14e-08dcf4d178b6
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Oct 2024 08:46:09.0290
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MAYP287MB3581
 
-On Thu, Oct 24, 2024 at 05:58:45PM +0100, Jiaxun Yang wrote:
-> 
-> 
-> 在2024年10月24日十月 下午5:27，James Bottomley写道：
-> > On Thu, 2024-10-24 at 16:59 +0100, Jiaxun Yang wrote:
-> [...]
-> 
-> Hi James,
-> 
-> >
-> > It's Linux, so no official capacity at all.  However, I am expressing
-> > the views of a number of people I talked to but it's not fair of me to
-> > name them.
-> 
-> Fair enough, I was hoping that it's from Linux Foundation but it's still
-> good news to me that it do represent some respectful individuals.
-> 
-> >
-> [...]
-> >> How should we handle it?
-> >
-> > A big chunk of the reason it's taken so long just to get the above is
-> > that the Lawyers (of which I'm not one) are still discussing the
-> > specifics and will produce a much longer policy document later, so they
-> > don't want to be drawn into questions like this.  However, my non-
-> > legal-advice rule of thumb that I'm applying until I hear otherwise is
-> > not on the SDN list, not a problem.
-> 
-> Thank you for sharing your insights. I'm looking forward to the document.
-
-+1
-
-> While I remain quite upset about how things were handled, your message has
-> helped restore some of my confidence in the community.
-
-+1
-
-> I agree with Peter Cai's earlier comment that steps should be taken to address
-> the harm caused by the initial reckless actions, particularly to those who were
-> humiliated.
-
-+1
-
-> It is also important to put measures in place to prevent such drama from recurring.
-> A formal procedure for handling urgent compliance requests may be a sensible step
-> forward.
-
-+1
-
-> I hold our community in high regard and would be heartbreaking to see the reputation
-> of the Linux Kernel undermined in such an unfortunate manner. I would appreciate it
-> if you could convey those thoughts to the relevant individuals.
-
-+1
-
--- 
-Regards,
-Andreas
-
-PS: What people also tend to forget. No matter how worse it gets in
-world affairs there always will come a time after a conflict. And
-people with brains should look forward to such times and how they can
-continue to work together then.
+=0A=
+Hi folks,=0A=
+it is very sad for me to see so many political nonsenses=A0here, therefore =
+I need to express my view as a newbie here and a long time Linux user.=0A=
+I understand the standing of Linus, but sanction against a certain group of=
+ people is unbeneficial for open-source projects: at one hand it is technic=
+ally impossible to stop them effectively from obtaining the new code and ke=
+eping =93hitchhiking=94 the ecosystem(think how North Korea develop their o=
+wn distribution and produce smartphones which probably also use Linux kerne=
+l), on the other hand the upstream repo and community will probably permane=
+ntly lost their contribution.=0A=
+I think Linus and Greg need to reestablish the trust that their own politic=
+al standing won=92t jeopardize the free essence of the Kernel, and the comm=
+unity need to start considering how to defend the critical elements like Ke=
+rnel of the digital world from political pressures (whoever do it) and keep=
+ them free as the air.=0A=
+Thanks,=0A=
+A Linux user=0A=
 

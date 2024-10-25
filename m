@@ -1,128 +1,138 @@
-Return-Path: <dmaengine+bounces-3583-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3586-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C93079B004A
-	for <lists+dmaengine@lfdr.de>; Fri, 25 Oct 2024 12:37:33 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 889C09B0387
+	for <lists+dmaengine@lfdr.de>; Fri, 25 Oct 2024 15:13:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 06C241C2236F
-	for <lists+dmaengine@lfdr.de>; Fri, 25 Oct 2024 10:37:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4CF2728677D
+	for <lists+dmaengine@lfdr.de>; Fri, 25 Oct 2024 13:13:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 418F11FCC7E;
-	Fri, 25 Oct 2024 10:36:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="q/qrI706"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 558451F754B;
+	Fri, 25 Oct 2024 13:12:29 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1EFD1F76DA;
-	Fri, 25 Oct 2024 10:36:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 473291E7660;
+	Fri, 25 Oct 2024 13:12:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729852617; cv=none; b=DLJUC6/3KjdWO660bW+jexgDkD9MZH8V9hYNyfuutQ0wiOF0Q7uq4qyYmdSvxMGxRCsWJaeHBIV0F4wNLB8cne5bDdj7c2FU9G2HD5zw5V+duvJ3FXxUR5erMkubVTwaun1PG7csPYnG4FswXETgk+3Wz8ogtp0zhzRt4213DJM=
+	t=1729861949; cv=none; b=Ffk2EfF+aBWfD1t8jNRigw6xRLySGBFZobA4pB5fW9y3jtQmETZT94jzOKHmXDdFjMr/7J2K8+gfRtlZDJZhQGRs3dBdv5sqV2rbUFlsbGkaT/pR7qrO1RDi91goSPZgRF0ktJIaSjQrfwRUSP7kRtBROeeLrl1ugLZNoAeSSoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729852617; c=relaxed/simple;
-	bh=EIb/0BVQLAIWTGsSf2exEUrI6S97uVc10LsFQOB7HdM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Wi1j7ZMwZgRN62g9cTnfJC6EkWlZh6VEMyM7Z6r4LbRXfXCg1YV9tn3iasFGamXv9cG7sOVAbe7DjTB8NVoS4BgInrPYFILoHKw0dkFDt66I9dFW+bX0xXobJfPxmuzX9qQljqcTk0B5IKa+rjctVO0U71AcqVGC6XNNZyxJxwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=q/qrI706; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1729852596; x=1730457396; i=wahrenst@gmx.net;
-	bh=EIb/0BVQLAIWTGsSf2exEUrI6S97uVc10LsFQOB7HdM=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
-	 References:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=q/qrI70695V/9bTDqyidpR3DqN7SvtuI9udN3qlYdVTHhjTe3pdXukCgXVr4eSZT
-	 oVpVSWvm9Ht8gJZWw6h3QFcW/FmIZvn6x1IdOeioU5edI3X9axkQUaZ7MR3YgJWAr
-	 zx6prtedcexgJh39RlANFrBey61daP9eSO6kyYmiDdSpdYj3E5KxY+EI3YfqL0qCf
-	 B5FAXvAWQc6+wmANqG2oK83TG/NapT1C7OwePVWRlDh4bK5uvTLsWMsEUJJDdI42e
-	 PDpB87erwL4DhJEMrtWAEMgZV2OmisPUU2T9IXxSzIhyeJimpVfAFdK0+1uGor7M9
-	 lIyWrRTn32WWWWA19w==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from stefanw-SCHENKER ([37.4.248.43]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1McH5Q-1tcWVM2Kx2-00mIdc; Fri, 25
- Oct 2024 12:36:36 +0200
-From: Stefan Wahren <wahrenst@gmx.net>
-To: Russell King <linux@armlinux.org.uk>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>,
-	Scott Branden <sbranden@broadcom.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Minas Harutyunyan <hminas@synopsys.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Lukas Wunner <lukas@wunner.de>,
-	Peter Robinson <pbrobinson@gmail.com>,
-	"Ivan T . Ivanov" <iivanov@suse.de>,
-	linux-arm-kernel@lists.infradead.org,
-	kernel-list@raspberrypi.com,
-	bcm-kernel-feedback-list@broadcom.com,
-	dmaengine@vger.kernel.org,
-	linux-mmc@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	Stefan Wahren <wahrenst@gmx.net>
-Subject: [PATCH V5 9/9] ARM: bcm2835_defconfig: Enable SUSPEND
-Date: Fri, 25 Oct 2024 12:36:21 +0200
-Message-Id: <20241025103621.4780-10-wahrenst@gmx.net>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20241025103621.4780-1-wahrenst@gmx.net>
-References: <20241025103621.4780-1-wahrenst@gmx.net>
+	s=arc-20240116; t=1729861949; c=relaxed/simple;
+	bh=DyZekcekX3RtD9pX7NDF9lTJOHreJBPcOIWwl++T12A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pvf/bJ3wygRBqbWdvTMehUBMFoREG4pRNgX762FD/uylbyWIGk1XIVlOxuKXi0NOl8UkV1j5qj3H3YqF7ZhSWGcKhP7dSF531Dg9T3aVT2o99XIOPnQX3G4w8Y+Bqe1eyN1eqfIpNaUC0vWf/B4Wd89+hwegrUMUAbi5/S+Bvw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: +MippmjcS7GiCHxfKD/FPQ==
+X-CSE-MsgGUID: YqiQFwgNQ2urN4bdSLfTEg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="29474401"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="29474401"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2024 06:12:27 -0700
+X-CSE-ConnectionGUID: YBODLHiKRmKI4N2x3UePrA==
+X-CSE-MsgGUID: ORNpoHttQRiMH14+J3yUxg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,231,1725346800"; 
+   d="scan'208";a="81073104"
+Received: from smile.fi.intel.com ([10.237.72.154])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2024 06:12:15 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andy@kernel.org>)
+	id 1t4K6r-00000006v8Q-1Pfa;
+	Fri, 25 Oct 2024 16:12:09 +0300
+Date: Fri, 25 Oct 2024 16:12:09 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Dragan =?utf-8?Q?Milivojevi=C4=87?= <d.milivojevic@gmail.com>
+Cc: Peter Cai <peter@typeblog.net>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	Serge Semin <fancer.lancer@gmail.com>, Jon Mason <jdmason@kudzu.us>,
+	Dave Jiang <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>,
+	ntb@lists.linux.dev, Kory Maincent <kory.maincent@bootlin.com>,
+	Cai Huoqing <cai.huoqing@linux.dev>, dmaengine@vger.kernel.org,
+	Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+	Damien Le Moal <dlemoal@kernel.org>, linux-ide@vger.kernel.org,
+	Paul Burton <paulburton@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mips@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	linux-pci@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Andrew Lunn <andrew@lunn.ch>, Russell King <linux@armlinux.org.uk>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	Keguang Zhang <keguang.zhang@gmail.com>,
+	Yanteng Si <siyanteng@loongson.cn>, netdev@vger.kernel.org,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org,
+	Borislav Petkov <bp@alien8.de>, linux-edac@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-serial@vger.kernel.org, Andrew Halaney <ajhalaney@gmail.com>,
+	Nikita Travkin <nikita@trvn.ru>,
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+	Alexander Shiyan <shc_work@mail.ru>, Dmitry Kozlov <xeb@mail.ru>,
+	Sergey Shtylyov <s.shtylyov@omp.ru>,
+	Evgeniy Dushistov <dushistov@mail.ru>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+	Nikita Shubin <nikita.shubin@maquefel.me>,
+	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Kexy Biscuit <kexybiscuit@aosc.io>, jeffbai@aosc.io,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: linux: Goodbye from a Linux community volunteer
+Message-ID: <ZxuZKcTafSVXLcIe@smile.fi.intel.com>
+References: <2m53bmuzemamzc4jzk2bj7tli22ruaaqqe34a2shtdtqrd52hp@alifh66en3rj>
+ <e7d548a7fc835f9f3c9cb2e5ed97dfdfa164813f.camel@HansenPartnership.com>
+ <6beb4070-1946-4387-bd0e-34608a76b19e@typeblog.net>
+ <CALtW_agj1rurb3DRrPd9o2mkfku5fq_M3CEKY5sW+Zz7shKYHA@mail.gmail.com>
+ <ZxqK75WdFBod0rZ9@smile.fi.intel.com>
+ <CALtW_ajKAYYwYVGnEArPWz_XaCkEiMFwpoCtzeiO1OLbAk77Sw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:SXjQg6GNw0ZSmSHqCIeG/A2AkVfM9T0ww/zGck0+NtQOedM3JmX
- nhvnTRKK+Jjft6MtlKRLW/DprsGs2O6qwPDtcV7LmsT3VHJU2mvgDnoWKG0zD4F9S4r+ID5
- y96ms+DyCXFaM6Gi5sBPfDPI5dY2bBqgdan7D2XSLY4t6Tqe5hKlJ7GM/BV2pqsol2Vd6nF
- UVibuxzjEiygkJgZnD+RQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:l56zcNjiEFw=;7BA/2Q97vKnLVe4tWhxMXYjl5WO
- Vf2oL5llpTDWf8MMu9SWofNzQf00yjoNfDRWjsvmbB2kSd2mfqFBGvWS+jobK6SYQENAU1GFv
- E7gqHgJAGhKJAt/rRfh6ye7918d1iY+U6vWOnntYrG3EZa5tPHeHrSf7NOrxPicSds48iRbLp
- vlODfPnpmOxdJ0i0zGVig/ePbLUQq4bgCKTofjkbvSLQ6B8a89bskm6TAF27lav+yDu0/Q274
- 7IRz8Lmqengc83zCrSgBNXGVMhF8hicywRZGtIFwLkowDcLV9wVLgSabxW7Vo7cJNviWWK6IY
- TcH4MpqCX7elZEHVdQQpkvxhaKq/l6hcKalsfVKs8dDzEverWVdhnY4WZDw+9mKOxmpLVLvI2
- IP/wpO0YsYmsB2LIq3zJwHMZNOeab8EJmmK+pBwpBHovOFIETtV5zv/xvwbwctN78nw/MkIGY
- Y+twbeMLVUmzBNKzW3aicYfxswcjucU/Q1+wvb6wy7wTsEWWwq3cNI6aEc+T0vUHwIxIhZsvh
- qm/l3gQD/KHna78N7aKm6eXugMekG5JxmkqplrP5q2dhDf8esJgup8JnyqknyBtw8ICJc6+57
- qmpk3EZ2ul6gZ6Rooe7wpwFQJ0/BMTkfcE3YtaJBZ4gAo2ibh5ysM1SP/qLaJ0a534K7ago3R
- 66F+hWNXMva7K2+GU0V6jDxSMGEG18oGYRQtP9scz74H1ctu7pbv2aib6pFZlsIxrWvc5MI49
- QKF+weCWt7mRfrAUZex0E8GSHrQ0BaI80FgHvdi06pu4LAWmj82B98YdVIJGMIAxjmhTm8UgU
- iSWTw800/7Xf2LzAuNtCGITg==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CALtW_ajKAYYwYVGnEArPWz_XaCkEiMFwpoCtzeiO1OLbAk77Sw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Since the Raspberry Pi supports Suspend-To-Idle now, this option
-should be enabled. This should make power management testing easier.
+On Thu, Oct 24, 2024 at 09:46:58PM +0200, Dragan Milivojević wrote:
+> > Yeah, with my hat of the person whose home town is under (Russian) attack for
+> > the 10+ years (don't be surprised, please, the war lasts more than a decade
+> > already) on I am fully understand Linus' arguments about history and being not
+> > very friendly about Russians.
+> 
+> How about your hat off to the people in the Donbas,
+> ~12K of them that had died from Ukrainian artillery fire,
+> that were under imminent threat of being overrun by
+> the Ukrainian forces in February 2022? Are you going
+> to scream about Russian propaganda when I link
+> the OSCE reports about a 10 fold increase in attacks
+> at that same time?
 
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
-=2D--
- arch/arm/configs/bcm2835_defconfig | 2 --
- 1 file changed, 2 deletions(-)
+Yeah, yeah, no point to discuss with you "Russian state-sponsored spam".
+Btw, are you from Serbia?
 
-diff --git a/arch/arm/configs/bcm2835_defconfig b/arch/arm/configs/bcm2835=
-_defconfig
-index b5f0bd8dd536..97632dee1ab3 100644
-=2D-- a/arch/arm/configs/bcm2835_defconfig
-+++ b/arch/arm/configs/bcm2835_defconfig
-@@ -38,8 +38,6 @@ CONFIG_CPU_FREQ_GOV_ONDEMAND=3Dy
- CONFIG_CPUFREQ_DT=3Dy
- CONFIG_ARM_RASPBERRYPI_CPUFREQ=3Dy
- CONFIG_VFP=3Dy
--# CONFIG_SUSPEND is not set
--CONFIG_PM=3Dy
- CONFIG_JUMP_LABEL=3Dy
- CONFIG_MODULES=3Dy
- CONFIG_MODULE_UNLOAD=3Dy
-=2D-
-2.34.1
+> BTW can I be racist towards Germans and Croats since
+> their ancestors exterminated my kin in their death camps?
+
+You should answer your question yourself.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
 

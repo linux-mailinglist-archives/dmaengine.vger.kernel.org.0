@@ -1,60 +1,61 @@
-Return-Path: <dmaengine+bounces-3570-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3569-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ABA969AFF5A
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F0599AFF59
 	for <lists+dmaengine@lfdr.de>; Fri, 25 Oct 2024 12:02:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CE6991C212A3
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E85781F22B82
 	for <lists+dmaengine@lfdr.de>; Fri, 25 Oct 2024 10:02:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C08A51D4359;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DA1C1D90A2;
 	Fri, 25 Oct 2024 10:00:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="TyYoJFdw"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="SiroUPhm"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2088.outbound.protection.outlook.com [40.107.100.88])
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2044.outbound.protection.outlook.com [40.107.212.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8088E1D5ADD
-	for <dmaengine@vger.kernel.org>; Fri, 25 Oct 2024 10:00:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.88
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9BC61D4359
+	for <dmaengine@vger.kernel.org>; Fri, 25 Oct 2024 10:00:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.44
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729850443; cv=fail; b=uAfRd6vKXJGTR6GsZMWHn1TTb6QiX67hYNH+FJ5f9Nz10aQWKjhXBzlmiDQp1MzefTBJZ2+fuSuIKNvAHfS2peao9MAo6DSicuFiBaFnuN3fmBLyIdX9g1c+c95eCMzgE+cDNhTSf3VR1TZXdT0bKLRfAhAbTvteDz4cWxFl50s=
+	t=1729850443; cv=fail; b=mwMiI/Wx4kdtJZx8djrub2K5HVHZFDeFz0voNobTUromiDXKVWO5rfPq6a5dsKfh69J9ga/u7PeDHkyMKqp6jGBf47bF3+w27LrRjqoQ4g2g3ajeGxqjohtrl22aL5b/DO1W9uPEn+yLwTTXsWHzLgLks8Lv256q16ompkp+Hz0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1729850443; c=relaxed/simple;
-	bh=NPTaYp31yiBlsdnKjKGAUHcxzh+DxEAe1RmFYH1Q8lM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QFICyo5BFCQUbEavRi0sIElDl8mLUT/CygiRdsqJQ6Zzi4Mn9n0GAkLxxZgROW9R4CQKUsVjacYvxH4t15HKvOyAXZhCakzane+QzH1jOAWRHfjtDudw4JRK62Wok1AiWXPlgvM1sqJy8y/hK+LU7nAG211PDVsTXXnHj3oG45c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=TyYoJFdw; arc=fail smtp.client-ip=40.107.100.88
+	bh=PGMTrp3Rs1oRR3cltCPMp7ajS7ZBWoVCIb6jvnxoF4E=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oItaFjylpL6sFTQvxMtAVN6QoyZRQU4SPWzHnIQNo+bmVHKxiKtCRS4cXVPxq1oVStfEeacAG2M7VzwbeNM+X/LIyhtXNrdxLIYCy0M6oXYtG54qwiPUgkZJf+az+Vy2YJppZS89+9RHvy3i/BpCMsj8ljQkdmC6WM4AC3CzFi4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=SiroUPhm; arc=fail smtp.client-ip=40.107.212.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=SI70td1dQ6TzcJBYtKao/enlk1y5jbLETgo1gfXhZ+30/8ureNF1TenhhIFA+XYHBueb5/aDZ27vAaDxMzQsim4GkeMv3Itdz9htg29V1jAn3/OUDSqlfrWZpIftV3d8gLYIh5ZaRUujN4k4k5cA+rRYBB8NMlHc5tDmZLH6vrUQVKRgWjfe84WnvvdyWQ/oqrB5w3gglD/JvOwQcrtpKqDCOzecTuOCTiA/q6yCH2gvIX55Wl9K7xPZY0hkkODjD45mYq0zqBQ8v74AtXwyijmgWvErRoeLtpj0LTJBIdYLgNybUZWCKdHOKFoYZBLuX4H1nipLm0CiIRiJUIOasQ==
+ b=K8kPQoiynW56wsYe3qbpE+3coSvBI71HBTPt9nrS6sBGO2BMniDqPkfxCEyE4xdq2NfT0O+uIevpXuVu+TDYfmKlZkw+M5maqQicioIa3wsZnjtIUPX9Rag7lcoJ7wnifWEnS9wPPizFikWvGfCDnjsalYfRvOShCbGgQ4aeTNnFRZh6i4YPoB95wsdaTwcG1FHsdRsDLTPF+fV4a8Mw/fifGr5q3cqXXAiSCSGS7GwprlShiksn/wfenr9Kha06kEOZTXSZhsfSTuSAqieLYbot9FOOQ+mKYaNQXTrvelgO3Rp+RPzIXITgie25oeqNiYFqQD2pRR3GZBHeF5NC5A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zmylXibVB01tVDeFqU/SkkgOz7j9DqDP6pX/RROEez4=;
- b=CldwtDEeT3sd7iQRq3Hl6lesqpdSMJDmZQwumacdGagnKdLKkQFdolXvMQkk54ifZ8A3Sy/Be7IAINCXp5pfmbOVWV3SjvpWwAAvq/W2lI1dSnXkpgduPqkHcODCBTpfAnv+KEq+gzsgpXJ4VZbEKFlGzPgh2uQDD19G8cEj6L2yO1cmuntJH/u/sbsWDRBkiFNZing53j2DxT+Q5EENWkt3MDoj71xOZm/FSYfyozx1abSQm7cYToO3my852bKVX+q2I6mqsOsx1CQpg7JGzRNVX/U7287HiEbSbueQN4K1Fz6m6BdsZajz08zb6rqpfl949bEeHauUjwnbwBewSA==
+ bh=c1CiifwjZ8RD0pQKnqrkoXfIy6IQTg8+RKlSq3gSqVw=;
+ b=eQdbHqSkUlf5+5bYd2GyvBW5ANaMR9LtGOmrf8UlaRzRspqWZodPWYFe5rxFUwDcRJ74rJLM3Id7LefH5nyj3xNQjrZLj6WLaso3/1ZhReEtW/wiw5yPuYYBj7C8vMp+UpVOUFueO0FnS0llSM/z1IOCEdX0QvASGV/PBEPiwAyX/XENG9xpX6VqePK5dDeek9v60VG7pWk69OqArSTQusrVVyIhS6ISd5wiCsN1cDSpDSBJX8uyYVVn+JEXG6yyEAhAIHBJFLqFOSSZdHc1OGGzxk14VJQhC7JByj8YsF4S5yOruJ73S8hZicwndNUYI3eGACUUI10WbAzx7f4UuQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zmylXibVB01tVDeFqU/SkkgOz7j9DqDP6pX/RROEez4=;
- b=TyYoJFdwzJL2d+v+LoAipVN4TStUM1pKg1oA4TLPZiv335hRPS+iyxsJ3mRJIg3NjFGEDsUoLWAMcotk0BKR0ujS13PSGxfQVe9u0OEChNwR3/lLRg5QmZKjvnY/fVfm5Ed3HbWwW8s96kAwkLv8gJLpcM3qElbF7qnzukiAnMk=
-Received: from BN0PR07CA0005.namprd07.prod.outlook.com (2603:10b6:408:141::20)
- by LV2PR12MB5821.namprd12.prod.outlook.com (2603:10b6:408:17a::8) with
+ bh=c1CiifwjZ8RD0pQKnqrkoXfIy6IQTg8+RKlSq3gSqVw=;
+ b=SiroUPhmNY13pOrwgZlbFJ/0YaxaHdjiqJbyMh/vm4riJI8/emp5uju61lQzaOXgEU4TtgHqBjFyyTARVIfEW0y5A/hTmGNl88PH1o1Oqcc+GG+kpVdzUfqH4RNl6cFbesSpWuww6AdK/yg6fZJ1UENFj0HECY0STs9cJWsjdXE=
+Received: from BN0PR07CA0022.namprd07.prod.outlook.com (2603:10b6:408:141::14)
+ by IA1PR12MB6554.namprd12.prod.outlook.com (2603:10b6:208:3a2::15) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.21; Fri, 25 Oct
- 2024 10:00:35 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.20; Fri, 25 Oct
+ 2024 10:00:38 +0000
 Received: from BN3PEPF0000B076.namprd04.prod.outlook.com
- (2603:10b6:408:141:cafe::77) by BN0PR07CA0005.outlook.office365.com
- (2603:10b6:408:141::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.20 via Frontend
- Transport; Fri, 25 Oct 2024 10:00:35 +0000
+ (2603:10b6:408:141:cafe::6c) by BN0PR07CA0022.outlook.office365.com
+ (2603:10b6:408:141::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.21 via Frontend
+ Transport; Fri, 25 Oct 2024 10:00:38 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -64,19 +65,21 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
  BN3PEPF0000B076.mail.protection.outlook.com (10.167.243.121) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8093.14 via Frontend Transport; Fri, 25 Oct 2024 10:00:35 +0000
+ 15.20.8093.14 via Frontend Transport; Fri, 25 Oct 2024 10:00:37 +0000
 Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 25 Oct
- 2024 05:00:32 -0500
+ 2024 05:00:34 -0500
 From: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
 To: <vkoul@kernel.org>, <dmaengine@vger.kernel.org>
 CC: <Raju.Rangoju@amd.com>, <Frank.li@nxp.com>, <helgaas@kernel.org>,
 	<pstanner@redhat.com>, Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-Subject: [PATCH v8 0/6] Add support of AMD AE4DMA DMA Engine
-Date: Fri, 25 Oct 2024 15:29:25 +0530
-Message-ID: <20241025095931.726018-1-Basavaraj.Natikar@amd.com>
+Subject: [PATCH v8 1/6] dmaengine: Move AMD PTDMA driver to amd directory
+Date: Fri, 25 Oct 2024 15:29:26 +0530
+Message-ID: <20241025095931.726018-2-Basavaraj.Natikar@amd.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20241025095931.726018-1-Basavaraj.Natikar@amd.com>
+References: <20241025095931.726018-1-Basavaraj.Natikar@amd.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -89,134 +92,219 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN3PEPF0000B076:EE_|LV2PR12MB5821:EE_
-X-MS-Office365-Filtering-Correlation-Id: 78f68ed3-1feb-436e-9244-08dcf4dbdef3
+X-MS-TrafficTypeDiagnostic: BN3PEPF0000B076:EE_|IA1PR12MB6554:EE_
+X-MS-Office365-Filtering-Correlation-Id: c41898dc-e00e-4d01-6d24-08dcf4dbe073
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|36860700013|82310400026;
+	BCL:0;ARA:13230040|376014|36860700013|82310400026|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?rXbYwLvlOKUhE5nlbbHkbXCAM8JyFI1kPiNOX8CvCWsOgfBsHdbmdU3aSvSv?=
- =?us-ascii?Q?lPKB+Ium9ii5jeTEWCZ3SGm8Uv9YlxMsoGnQPr7GRXK5l6v/+/bh/FAIRdF7?=
- =?us-ascii?Q?ZTA/kwXXdLTzDbUfq2gV0ZU1lPys627BJZL5CvriPjzo3Kzimz4NwlqSr/HI?=
- =?us-ascii?Q?oBfj5+DKGG51E84IwBN+wna3UyR1LWGZlz6hWRiHEWA4XrNPUSH55lupN4Ja?=
- =?us-ascii?Q?Ves15vTh6xHdVGY2i9tUz+aJJCccqXw/Rz8d4ph1zwPixf3OZ8z74aEBcegR?=
- =?us-ascii?Q?N0An2i1WgEAtt48Sgh9AvllQudQrQ6ddlMS1V0ntWJSVi0UBk+WqA82lE8Qs?=
- =?us-ascii?Q?gYegjJyWUpkH/N9J86XKw0Wf6ftzbZyG8+ekBBr5Y6SphQ07ThJIKevut4mL?=
- =?us-ascii?Q?/n8e1ZfnPVblhFLw2m6MQVejgiNsUDZF2d9voWdg9+1RXrmxuQCzBovG8m6U?=
- =?us-ascii?Q?MBw+cDvyXSIg2R/s7Os6o2vLQSB2O1ls6Mv7aTIVDMxqgaor365JQcmMB1j6?=
- =?us-ascii?Q?lDNu6NWaNBa/R16rT6zO0RCB9VtfWRqsO6zZYyJV/O8hVJ37Zp8sEHrHrDbl?=
- =?us-ascii?Q?or/Yrcwh2M5aJSGpIvIvXuS6wY8ndWt9QelWKhK8R70jHU2vf/RtvYbiIGIE?=
- =?us-ascii?Q?yIWD/9uNsPTZpE3aD8nFLBq9gXwMTGsjg+9WoC1MViJ7KetFUyBvRLrcI9p0?=
- =?us-ascii?Q?LGnw+8p5fuOFUTXLdyzW6LZNBhl28O6OLJbVhmThlczKWgD+Wrdw8ND+9FFE?=
- =?us-ascii?Q?8wRH/Ps3/F9ZXwkH87zWPpBrbyukINsWbOmjJa0LSICzrmFeQ52naArL8You?=
- =?us-ascii?Q?9x+sAJGdgNDUjjdL2HsNQisLOufdu9eGOFaFO/LnXUS6hP28YLVvP0VHRFQh?=
- =?us-ascii?Q?Uxb5/2tCLtZISNj5sB/4wqGCsF+pOoQ3szCAPELzOSTQmllhVERn5U0kilxg?=
- =?us-ascii?Q?kZiAb9GK4vLqyJIjOs/7x0olISmv67EmWa2ddSYekxj61UdlT2nQSFh+VrhI?=
- =?us-ascii?Q?VCsor6qaAMNMorSI5Mv++XMsak0oWgvYH/s+hu9QL0qNgA8Kf4HWvlrX6TdW?=
- =?us-ascii?Q?0Lka8W9WTE+xbyqkBrSWEj/lbZYwFbs6bE708MAe3ahxN4HOi2K87EJH4Sml?=
- =?us-ascii?Q?THf/u3JoDX3vRm8LJeMvmFYYaJgdqqtgOJNCHolBh0HN8nZ2D5tlDD+PM4Bi?=
- =?us-ascii?Q?Z2sxhX9BxoAr4DoyjDbG9KY76q7z8chmzhy15Tyj9OT4p++ns6EEiy0IJ1Xn?=
- =?us-ascii?Q?X2+3Y9dQDypkVumBGfEjiZzcIBkMg21eWuB8TrlmUWXgn0Cv1YOKglDK1yZN?=
- =?us-ascii?Q?eGK0fiKr9gwm7to0CP04VWNURSHxpRztxbphBOSSGCLFbjnJ5nMK/MRz8JHB?=
- =?us-ascii?Q?H7fI5RTJDTALHYzeQ4jdCAQMYuNXHViwbkD/FuXwMQB3Lf+ssx8OrcFqM1VD?=
- =?us-ascii?Q?So4kh72uBIc=3D?=
+	=?us-ascii?Q?hOfdgw/lKLqevyv12pifC/AtOiX3cVGAgo5IAEV/OVQ63pQGahLJnO5XodfP?=
+ =?us-ascii?Q?y7VTuPWl7rhEEKNyaoH7+lwxlAAj6b36zaLO79nRGjeCFWlawAIxfQqCwLX6?=
+ =?us-ascii?Q?ZkoexyW8JSUtW6W/0qdW2QCt5DzBpgKGthwiJ48ix8pFy97ulGwfvc9y9A4E?=
+ =?us-ascii?Q?/6hFSHGodM4fvqMMsElm4/JbJQ0knJScn906BFHiyhGKWzZUvXNza/vVhipi?=
+ =?us-ascii?Q?VFuHEUmTOFKvLBGEloBBrePVreiMKLPTdfkHm2uoVMllieZoYW2biqrG+Nkh?=
+ =?us-ascii?Q?xlMNCsLB8n9J/MRAy6scLRI4BK6qMccVLWIkmASDeNb7OJ8QAZZ3pdVeB5I2?=
+ =?us-ascii?Q?sGX7UjMv4TkkSqUIq4UbyYCmtZ196vmeR84cxTA1THCdIAzadMLpTiHH+hgu?=
+ =?us-ascii?Q?OhEkX+EmkyGAsOgI+t89fqGeg50p5psl0mDcZ6+hGq+sqPxsmhZukHfKfCKO?=
+ =?us-ascii?Q?Eck+p2XKnxMTld5UgcxLeymhEked6Nm/K8tPX6jqe11HVZEcM/mgGpQPTvA2?=
+ =?us-ascii?Q?05nKpfQYKgbAWqs/XVAVQL/QwoFOYBbJI2ZNqnh45n+XGs52EBxI16RJx66J?=
+ =?us-ascii?Q?WVdoUqy9MuhwP1f0E3r7CkvtzVzhVhaqD/i/aipjHvbA4zw0S2JFZE1aEWSf?=
+ =?us-ascii?Q?WdpyxRv8bAzysypJTL1I73XxAwPYoiQ9xTYnjrS2lrD9Tnpyu+NqrLRifqhP?=
+ =?us-ascii?Q?vatD2wtZO0P77ABZuxlvIa7T02Gp751cJ6bsmA+bTzjhlclntSBeUB7koIbo?=
+ =?us-ascii?Q?B8EQoZkdIyqyMwOY4jwmMO+LeDpkrJl+Syx1LnWJB5EokTekXujco/WF+JPJ?=
+ =?us-ascii?Q?hR5qjCyQtL82LMktWS9oytyzrCR1b0r3MaX5pfrO5NfwthIs/DeiZ4jROV+F?=
+ =?us-ascii?Q?kdPC66r5OYVli3CtO/uifeL4BPOcGhUo5yMrMhYauNRfBRyii4pnKYBKE/7g?=
+ =?us-ascii?Q?D7DRVCHHFlmEHynbE1hA+IrckDVMSPbavXQRw6yUxELoAq3vthiyg4q0ew7s?=
+ =?us-ascii?Q?uMWoyURglpNms4tDiCRwkykUDMbonyu5csumWCVOFDHCXP2OZQOtg9z7daXe?=
+ =?us-ascii?Q?XrZ8wbq948lROhsybAHUlH1HV6EBAan1ABVL+CJJCKNLWh/lwDWEthEr4CYu?=
+ =?us-ascii?Q?NpM4ifmW4iIv+jeZT0VAKGpRmD4O9lz8EdCcvTSeT3E1PjpFNqYS6jrUxHrw?=
+ =?us-ascii?Q?FCrbe0oCvAyD3kcxEKrQJbQKDl0O841N9zyh63tlpXUwQzvsFSe7n63/7MaK?=
+ =?us-ascii?Q?fbQ51mZz2RAPCAhYgJQeldnoAOg7CL9aN8PCc06pI+sEJjisvV3TVLBA0je8?=
+ =?us-ascii?Q?33DEkkBEg626ZYiJjr+bdTegoRt37svxj4fZnJaYKwkZ0RLzd0sG+gyjNMHK?=
+ =?us-ascii?Q?4YQ4sJG7H0XqbIQsXldCqwtEC2LRe5EDlCjWAIBlA5yxBSuHRQ=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(36860700013)(82310400026);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700013)(82310400026)(1800799024);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Oct 2024 10:00:35.3881
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Oct 2024 10:00:37.9193
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 78f68ed3-1feb-436e-9244-08dcf4dbdef3
+X-MS-Exchange-CrossTenant-Network-Message-Id: c41898dc-e00e-4d01-6d24-08dcf4dbe073
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	BN3PEPF0000B076.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5821
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6554
 
-AMD AE4DMA Controller is a multi-queue DMA controller. Its design differs
-significantly from PTDMA controller, although some functionalities
-overlap. All functionalities similar to PTDMA are extended and merged
-within PTDMA code to support both PTDMA and AE4DMA for code reuse. A new
-AE4DMA driver directory is created to house unique AE4DMA code, ensuring
-efficient handling of AE4DMA functionalities.
+PTDMA driver is the AMD DMA driver, and newer AMD platforms support newer
+DMA engines. Hence, move the current drivers to the AMD directory. This
+would also mean that future driver submissions to the AMD DMA driver will
+also land in the AMD-specific directory.
 
-Changes in v8:
-	-Addressed warnings reported by the kernel test robot.
-Link: https://lore.kernel.org/all/202410250904.txsoe5RZ-lkp@intel.com/
-
-Changes in v7:
-        - Changed the subject line to reflect the driver name.
-        - Moved the code to reflect the changes in the first place.
-
-Changes in v6:
-        - Moved the wake_up call just before the return statement.
-        - Changed hex values to lowercase.
-        - Removed the common directory and added header files directly
-          into the C files.
-
-Changes in v5:
-        - Initialized the buffer to zero before using snprintf.
-        - Changed the function name to avoid a duplicate symbol error,
-          as pointed out in the link below.
-Link: https://lore.kernel.org/all/202407040547.MfCINdp6-lkp@intel.com/
-
-Changes in v4:
-        - Removed blank lines and grouped the mutexes into a single block.
-        - Replaced all magic numbers with #define macros.
-        - Added short comment for error codes.
-        - Replaced the while loop with a for loop.
-
-Changes in v3:
-        - Added COMPILE_TEST to the Kconfig.
-        - Considered using pci_alloc_irq_vectors and pci_free_irq_vectors.
-        - Removed mb() and atomic variables where applicable.
-Link: https://lore.kernel.org/oe-kbuild-all/202406240021.ytiS3jV6-lkp@intel.com/
-
-Changes in v2:
-        - Changed all variants of "mb" to "dma_mb.
-        - Changed cancel_delayed_work to cancel_delayed_work_sync.
-        - Removed 32bit dma_set_mask_and_coherent.
-        - Rearrange the order of the #include directives alphabetically
-
-Basavaraj Natikar (6):
-  dmaengine: Move AMD PTDMA driver to amd directory
-  dmaengine: ae4dma: Add AMD ae4dma controller driver
-  dmaengine: ptdma: Extend ptdma to support multi-channel and version
-  dmaengine: ae4dma: Register AE4DMA using pt_dmaengine_register
-  dmaengine: ptdma: Extend ptdma-debugfs to support multi-queue
-  dmaengine: ae4dma: Register debugfs using ptdma_debugfs_setup
-
- MAINTAINERS                                   |  10 +-
- drivers/dma/Kconfig                           |   2 -
- drivers/dma/Makefile                          |   1 -
- drivers/dma/amd/Kconfig                       |  28 +++
- drivers/dma/amd/Makefile                      |   2 +
- drivers/dma/amd/ae4dma/Makefile               |  10 +
- drivers/dma/amd/ae4dma/ae4dma-dev.c           | 157 ++++++++++++
- drivers/dma/amd/ae4dma/ae4dma-pci.c           | 158 ++++++++++++
- drivers/dma/amd/ae4dma/ae4dma.h               | 100 ++++++++
- drivers/dma/{ => amd}/ptdma/Makefile          |   0
- drivers/dma/{ => amd}/ptdma/ptdma-debugfs.c   |  79 ++++--
- drivers/dma/{ => amd}/ptdma/ptdma-dev.c       |   0
- drivers/dma/{ => amd}/ptdma/ptdma-dmaengine.c | 226 ++++++++++++++++--
- drivers/dma/{ => amd}/ptdma/ptdma-pci.c       |   0
- drivers/dma/{ => amd}/ptdma/ptdma.h           |   4 +-
- drivers/dma/ptdma/Kconfig                     |  13 -
- 16 files changed, 726 insertions(+), 64 deletions(-)
- create mode 100644 drivers/dma/amd/ae4dma/Makefile
- create mode 100644 drivers/dma/amd/ae4dma/ae4dma-dev.c
- create mode 100644 drivers/dma/amd/ae4dma/ae4dma-pci.c
- create mode 100644 drivers/dma/amd/ae4dma/ae4dma.h
+Reviewed-by: Raju Rangoju <Raju.Rangoju@amd.com>
+Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+---
+ MAINTAINERS                                   |  4 ++--
+ drivers/dma/Kconfig                           |  2 --
+ drivers/dma/Makefile                          |  1 -
+ drivers/dma/amd/Kconfig                       | 13 +++++++++++++
+ drivers/dma/amd/Makefile                      |  1 +
+ drivers/dma/{ => amd}/ptdma/Makefile          |  0
+ drivers/dma/{ => amd}/ptdma/ptdma-debugfs.c   |  0
+ drivers/dma/{ => amd}/ptdma/ptdma-dev.c       |  0
+ drivers/dma/{ => amd}/ptdma/ptdma-dmaengine.c |  3 +--
+ drivers/dma/{ => amd}/ptdma/ptdma-pci.c       |  0
+ drivers/dma/{ => amd}/ptdma/ptdma.h           |  2 +-
+ drivers/dma/ptdma/Kconfig                     | 13 -------------
+ 12 files changed, 18 insertions(+), 21 deletions(-)
  rename drivers/dma/{ => amd}/ptdma/Makefile (100%)
- rename drivers/dma/{ => amd}/ptdma/ptdma-debugfs.c (52%)
+ rename drivers/dma/{ => amd}/ptdma/ptdma-debugfs.c (100%)
  rename drivers/dma/{ => amd}/ptdma/ptdma-dev.c (100%)
- rename drivers/dma/{ => amd}/ptdma/ptdma-dmaengine.c (59%)
+ rename drivers/dma/{ => amd}/ptdma/ptdma-dmaengine.c (99%)
  rename drivers/dma/{ => amd}/ptdma/ptdma-pci.c (100%)
  rename drivers/dma/{ => amd}/ptdma/ptdma.h (99%)
  delete mode 100644 drivers/dma/ptdma/Kconfig
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 6880a8fac74c..1d9f5a5c471f 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1149,8 +1149,8 @@ F:	tools/power/x86/amd_pstate_tracer/amd_pstate_trace.py
+ AMD PTDMA DRIVER
+ M:	Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+ L:	dmaengine@vger.kernel.org
+-S:	Maintained
+-F:	drivers/dma/ptdma/
++S:	Supported
++F:	drivers/dma/amd/ptdma/
+ 
+ AMD QDMA DRIVER
+ M:	Nishad Saraf <nishads@amd.com>
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index d9ec1e69e428..7852f8f78567 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -740,8 +740,6 @@ source "drivers/dma/bestcomm/Kconfig"
+ 
+ source "drivers/dma/mediatek/Kconfig"
+ 
+-source "drivers/dma/ptdma/Kconfig"
+-
+ source "drivers/dma/qcom/Kconfig"
+ 
+ source "drivers/dma/dw/Kconfig"
+diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
+index ad6a03c052ec..a0bcfeef0e7e 100644
+--- a/drivers/dma/Makefile
++++ b/drivers/dma/Makefile
+@@ -16,7 +16,6 @@ obj-$(CONFIG_DMATEST) += dmatest.o
+ obj-$(CONFIG_ALTERA_MSGDMA) += altera-msgdma.o
+ obj-$(CONFIG_AMBA_PL08X) += amba-pl08x.o
+ obj-$(CONFIG_AMCC_PPC440SPE_ADMA) += ppc4xx/
+-obj-$(CONFIG_AMD_PTDMA) += ptdma/
+ obj-$(CONFIG_APPLE_ADMAC) += apple-admac.o
+ obj-$(CONFIG_AT_HDMAC) += at_hdmac.o
+ obj-$(CONFIG_AT_XDMAC) += at_xdmac.o
+diff --git a/drivers/dma/amd/Kconfig b/drivers/dma/amd/Kconfig
+index 7d1f51d69675..a09517d51449 100644
+--- a/drivers/dma/amd/Kconfig
++++ b/drivers/dma/amd/Kconfig
+@@ -1,4 +1,17 @@
+ # SPDX-License-Identifier: GPL-2.0-only
++#
++config AMD_PTDMA
++	tristate  "AMD PassThru DMA Engine"
++	depends on X86_64 && PCI
++	select DMA_ENGINE
++	select DMA_VIRTUAL_CHANNELS
++	help
++	  Enable support for the AMD PTDMA controller. This controller
++	  provides DMA capabilities to perform high bandwidth memory to
++	  memory and IO copy operations. It performs DMA transfer through
++	  queue-based descriptor management. This DMA controller is intended
++	  to be used with AMD Non-Transparent Bridge devices and not for
++	  general purpose peripheral DMA.
+ 
+ config AMD_QDMA
+ 	tristate "AMD Queue-based DMA"
+diff --git a/drivers/dma/amd/Makefile b/drivers/dma/amd/Makefile
+index 37212be9364f..fb12f2f9e7b7 100644
+--- a/drivers/dma/amd/Makefile
++++ b/drivers/dma/amd/Makefile
+@@ -1,3 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
++obj-$(CONFIG_AMD_PTDMA) += ptdma/
+ obj-$(CONFIG_AMD_QDMA) += qdma/
+diff --git a/drivers/dma/ptdma/Makefile b/drivers/dma/amd/ptdma/Makefile
+similarity index 100%
+rename from drivers/dma/ptdma/Makefile
+rename to drivers/dma/amd/ptdma/Makefile
+diff --git a/drivers/dma/ptdma/ptdma-debugfs.c b/drivers/dma/amd/ptdma/ptdma-debugfs.c
+similarity index 100%
+rename from drivers/dma/ptdma/ptdma-debugfs.c
+rename to drivers/dma/amd/ptdma/ptdma-debugfs.c
+diff --git a/drivers/dma/ptdma/ptdma-dev.c b/drivers/dma/amd/ptdma/ptdma-dev.c
+similarity index 100%
+rename from drivers/dma/ptdma/ptdma-dev.c
+rename to drivers/dma/amd/ptdma/ptdma-dev.c
+diff --git a/drivers/dma/ptdma/ptdma-dmaengine.c b/drivers/dma/amd/ptdma/ptdma-dmaengine.c
+similarity index 99%
+rename from drivers/dma/ptdma/ptdma-dmaengine.c
+rename to drivers/dma/amd/ptdma/ptdma-dmaengine.c
+index f79240734807..a2e7c2cec15e 100644
+--- a/drivers/dma/ptdma/ptdma-dmaengine.c
++++ b/drivers/dma/amd/ptdma/ptdma-dmaengine.c
+@@ -10,8 +10,7 @@
+  */
+ 
+ #include "ptdma.h"
+-#include "../dmaengine.h"
+-#include "../virt-dma.h"
++#include "../../dmaengine.h"
+ 
+ static inline struct pt_dma_chan *to_pt_chan(struct dma_chan *dma_chan)
+ {
+diff --git a/drivers/dma/ptdma/ptdma-pci.c b/drivers/dma/amd/ptdma/ptdma-pci.c
+similarity index 100%
+rename from drivers/dma/ptdma/ptdma-pci.c
+rename to drivers/dma/amd/ptdma/ptdma-pci.c
+diff --git a/drivers/dma/ptdma/ptdma.h b/drivers/dma/amd/ptdma/ptdma.h
+similarity index 99%
+rename from drivers/dma/ptdma/ptdma.h
+rename to drivers/dma/amd/ptdma/ptdma.h
+index 39bc37268235..7a8ca8e239e0 100644
+--- a/drivers/dma/ptdma/ptdma.h
++++ b/drivers/dma/amd/ptdma/ptdma.h
+@@ -22,7 +22,7 @@
+ #include <linux/wait.h>
+ #include <linux/dmapool.h>
+ 
+-#include "../virt-dma.h"
++#include "../../virt-dma.h"
+ 
+ #define MAX_PT_NAME_LEN			16
+ #define MAX_DMAPOOL_NAME_LEN		32
+diff --git a/drivers/dma/ptdma/Kconfig b/drivers/dma/ptdma/Kconfig
+deleted file mode 100644
+index b430edd709f9..000000000000
+--- a/drivers/dma/ptdma/Kconfig
++++ /dev/null
+@@ -1,13 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0-only
+-config AMD_PTDMA
+-	tristate  "AMD PassThru DMA Engine"
+-	depends on X86_64 && PCI
+-	select DMA_ENGINE
+-	select DMA_VIRTUAL_CHANNELS
+-	help
+-	  Enable support for the AMD PTDMA controller. This controller
+-	  provides DMA capabilities to perform high bandwidth memory to
+-	  memory and IO copy operations. It performs DMA transfer through
+-	  queue-based descriptor management. This DMA controller is intended
+-	  to be used with AMD Non-Transparent Bridge devices and not for
+-	  general purpose peripheral DMA.
 -- 
 2.25.1
 

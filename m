@@ -1,53 +1,53 @@
-Return-Path: <dmaengine+bounces-3582-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3576-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D6EA9B0046
-	for <lists+dmaengine@lfdr.de>; Fri, 25 Oct 2024 12:37:26 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 816079B0036
+	for <lists+dmaengine@lfdr.de>; Fri, 25 Oct 2024 12:36:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B12001C2277F
-	for <lists+dmaengine@lfdr.de>; Fri, 25 Oct 2024 10:37:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B36B01C20AFA
+	for <lists+dmaengine@lfdr.de>; Fri, 25 Oct 2024 10:36:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF96F1FBF75;
-	Fri, 25 Oct 2024 10:36:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 038F11DD0DD;
+	Fri, 25 Oct 2024 10:36:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="nimaA2Ha"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="tbVyV4xm"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 869E01EF943;
-	Fri, 25 Oct 2024 10:36:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7848C1D54C7;
+	Fri, 25 Oct 2024 10:36:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729852616; cv=none; b=uRBJzvRngcYizmeyWnfYKzE/mrzbNdgqM/HFdbhcdiMM1KC2sO7mRGadE0PYq90UGqxDzRdEWOIaueBXR4LkcFkltabBUTNtyms90tmxrLsv7pxVDE7zoiUv54NFHtaooB6o4OIkLmiyAWF5+MBlZsROIYKJFOcilytlTG0rmic=
+	t=1729852613; cv=none; b=M0LD5ShFUKpM5IVvFaSqd774KiBHBNA3vRNf2klaqbMQprSQX8SMjLxBCHgca+VaW2BviSoF8zLB8hz1duAhRhbJYTl04/JnzfA0Szbz5yJQQ4DOt4Fa5+TervVRVIVSppgUrX74RMHitLNEtNn0kO32rBrhx4SQchiqfkEq0So=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729852616; c=relaxed/simple;
-	bh=YB9sep2oCN35bAcGfSErLNH5swAiXAI0QKrxaK1mf2A=;
+	s=arc-20240116; t=1729852613; c=relaxed/simple;
+	bh=W/Eol3PGqBkVJnzoyfSd/OIVp/8l/BiqcbjtDTzoD5A=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=sla3dZNNS9LcgHojHRQI4b7bJ52/9NII7T5BYp/V2GmaY7KH65WYTu/u7s6ANAGJy3olWKEM6OXUVpV3cvQEu9SH8fyLWUxYeC9UDeSARHo7xFHBNr/JxsceULAjkyLqyPzJUhxxvV+EHUuDgS+IJCvHnu9XRGymPvtXEUOTG04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=nimaA2Ha; arc=none smtp.client-ip=212.227.17.20
+	 MIME-Version; b=tMQ8Nius3mjtDtM8c7Udn3Bp05de4fnwgbG+HkRMy2eNdB7dyB3NcVYNtphQAAe2IQyFBZvrhX4aQfpdbvDnxW6niJfkD5PyB7lrnGnU4281gPziU8ovMOZ2TSE4ON2z481Wt8+iEe0p3dm+sob2R8A1uILnuqX3xZelExqWkDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=tbVyV4xm; arc=none smtp.client-ip=212.227.17.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1729852592; x=1730457392; i=wahrenst@gmx.net;
-	bh=kE9FPbtpN1gptfSk3BViKriGQyJtWlX0djOx3GlUBlw=;
+	s=s31663417; t=1729852593; x=1730457393; i=wahrenst@gmx.net;
+	bh=TppAUiDXkUFwSrv2A2knMxXHQkH96XkM3sjE1E2labc=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
 	 References:MIME-Version:Content-Transfer-Encoding:cc:
 	 content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=nimaA2HazKryFAo61mBKF14k6YYiPaV7xQ1fZV9RdxaU30jeL9pwWRcjUVBnVhwr
-	 HEPyanwkh25JNv/mqUtom6TV/ZHQfInbegDHUMAbLGSF0jNL7ufWSjB0R7G7cwnUM
-	 40tyyHPgRYJxX7Dv8Asdo+2bjr3mPXAWg+tfd9MoIp5311149n8dfiJFis3hdRcE0
-	 woWCsBJPmK6vQaoXSWpDweXkNrQbNmnXyIp+M26Isw40KiIeOzH/JXQraqhin+LTa
-	 PPIV1EO3MFJOqR078ZlUj0ZJPFBJuuU5RSeh5xUnbm3ozhCujZ8KKG5XDRLh3/RoP
-	 4YnEV50qeFQuL9zvvA==
+	b=tbVyV4xmtEPMhA3DvUpg0Jw/N1a4F2X2KKzCpHgsSj0xDUxTLDBFMKCSfoFwlIy2
+	 vDtGZgSHpvDtOK2dL6OcZ2ICIUzLZeS+ljjRJxsTp/AqOLKTqNE/FuiPB6mwlSd8X
+	 HCGBwNca9R2fvYbyEyZz2OSkz/thjqc9bkz5kZ2FabEcJi3OiQ73vgLOZRIkRvb0j
+	 njph056umZyVHkLBcYHnalBxHNPvnKKsOtqhNla1xaT308YMVXCQGJQiYtcyBtyLM
+	 NHqJcaC6UqMoWjYsvgNwd9KWRgtpG143MovBAzOMrNOTzAkWv0Q+cBP3NsW4sWrf7
+	 hy13a76cRP4mUQ1UOA==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from stefanw-SCHENKER ([37.4.248.43]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MMXUN-1tM5Y72BwV-00RcC3; Fri, 25
- Oct 2024 12:36:32 +0200
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MXXyJ-1tOFGY0ryZ-00POCJ; Fri, 25
+ Oct 2024 12:36:33 +0200
 From: Stefan Wahren <wahrenst@gmx.net>
 To: Russell King <linux@armlinux.org.uk>,
 	Florian Fainelli <florian.fainelli@broadcom.com>,
@@ -67,9 +67,9 @@ Cc: Lukas Wunner <lukas@wunner.de>,
 	linux-mmc@vger.kernel.org,
 	linux-usb@vger.kernel.org,
 	Stefan Wahren <wahrenst@gmx.net>
-Subject: [PATCH V5 3/9] mmc: bcm2835: Fix type of current clock speed
-Date: Fri, 25 Oct 2024 12:36:15 +0200
-Message-Id: <20241025103621.4780-4-wahrenst@gmx.net>
+Subject: [PATCH V5 4/9] mmc: bcm2835: Introduce proper clock handling
+Date: Fri, 25 Oct 2024 12:36:16 +0200
+Message-Id: <20241025103621.4780-5-wahrenst@gmx.net>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20241025103621.4780-1-wahrenst@gmx.net>
 References: <20241025103621.4780-1-wahrenst@gmx.net>
@@ -80,48 +80,120 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:unuppcKVWCelo/CPxApDW+wIc1GUoX5LJis6Za5+ejJZaHISsel
- IrRzfjqFWcMwDfIXZpLa+5lFhoBUfSvGs+EAIPExq8Swhcg/G+lOKK+sCLeIOlj3cDjrA9h
- IjTu4RRYIfyAfpffgtfG55gnPNU5ri2ZIGBLzasCgjtpy3YjxCWxikUpJ8x+bOOQ1ay58pn
- VLYdTXA8JOHka4KiQFdBw==
+X-Provags-ID: V03:K1:+Di2pOcsa3c3E/0JQDbVqLTw7ySipdBClQ9F/jLlbeQzzRxZ232
+ yDWxEVys72iA6MJRo1mUc7mW//tb7EZO5x8R8vS4QVuCdF0xUENqvAZX4ThVdfxDA3kMxg9
+ FgzpKa9DTwgbt9nE3gAkaOXKsz/MQTt48lCSrId6nhTj+44oURFGsMXI8iN3zDfQMu/LewP
+ k6bEWQhIR5AMhkuISMu9w==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Mki8rbRtU9I=;jGGeBqmE9YrFESl0962y8sxY9+4
- KRxp3OeEGgrFfERPShzSLCn4CQi73c6JOoQqGjCmjnaBso+sSd3JekCaBRULbxdNRGcI42LJV
- vW3ORJVwGYYiSRE6Lj9MUSOaLtFMQ0LbpP8Ek1GzChGPM0f+FOHQzGBEVXKYFZqrLHucy4OYC
- LKYHX43b5+1pILA4Vm9G34ZhfTGgj9KvUKt56wU15CQIp3oeJVF4mWVytFey+Ac0ZMZy+P9SQ
- S9HYLjSr8XuPE5Q3vqWm2NY8b6LtErxRPV8/9wgsOGkJVsuODydkZGXmE6um+lVGc0CaJZENf
- vhIInz5m+vSloowgZ41EDsFxVcKhcy2L5eOFt9p420KiWqtj/gK7btr3tJqgNOOhCV0jUEBh0
- jTI4068OPO1zPMSPchXJg7XVLYLuzPCUVdANo8xe0R26xwepxG8YyQahYiaptvwC+qZ0Non1E
- kUpeyeSMioJJtCX2KMuEMdr5XTW1AP/teLvE71Rnq6JLeNJEWmZdwiaS5hey9sz9TiZ396vC3
- 4FJq4lZbsZ153EflsJoCAv+NSEywJ+3dcSsz4z+6E9oOh8EIMqLy4f9dQpa+p1u95v16CT7o3
- QcTRfUW/zkXdCjCmF8LBMNszXBGXuE9Grhfq2v7xExy3y9LDzdBUILZLAF6uVSs+gJ0vBTNAx
- 3Pdoo25rcA3ponjBezNsunRlDQFkSrdWOtRdBu/Dp4s07w+trqJfAwF/JZTDrTqvGyObWiOgZ
- MQKZ4HPSF+9gjHuLKmeWvxH7+/A6DcRdJia1uxwJ/L6DlrTW8n1+uxzsLJZ/f0vGJaiKU6ogE
- o8sFCbk2+OAgqFZZ7nOBx/ng==
+UI-OutboundReport: notjunk:1;M01:P0:DeStJdH3WkU=;dl+pokVxqHve1DeFpO1IWkIos7B
+ NL9bIHQWsfHyBrcFpODuMX0BfcrTLC7ylSEQegr93PrtNRzhiY+MwDnff6soAJEJP5FpBad+L
+ pRil+1xmSn80iEi64hXM2iCFi65CBDZItjTqanf5RnArzPLSveAWnecA81mJUmh6fHaIuLojr
+ +8SA8vURLGQdQP124dyYLb9QtMkGctEm5YIPtNrHqfWKAqS4EbbIYwZseS2QCb8NFH0rQ7+sH
+ M/kJ/ndEZ3qiaXS3TKkvn8jCO/1Sn+4+eBLr7Ajr1BOAaO2xpsLdCIC7gH3wPWwPAYzXwnyPT
+ Ov7v/THpazrlFXYtaXkX07A5acBWslOtgsnxjuxtl4hxvhy+s5TESFBj8qEp7cHdlf3EyHSqV
+ FATAFz576Yx9HSFppvyiXxeakkKG8VY3D0F4eLUOFq5R3gFMKPLU5DwSbhMubgK+uui+26Wwr
+ VQvQ5QIgALtjOeP36fbaA88gXg9Ih1jasBRmTQKDK8oS3bOdN6+yCKW8ohe3Gwy3r3XAft9bm
+ F0goiucGyEl2zhm8LRQ1Tn0FFMvPJ/umMvzXd9Mz3c5X5TilrxG0rHvxBU8HUIIbRTmHkVtZr
+ 2nkh9jLlZfzbRLer9knyKe2VEkJXO67GIXWOlvcD63JusVA2TdWLSsqIqvUstRkdQGAuPdH4x
+ AGThr7nrm1d2DmyZmLW77dpB24ODzdUWze3TNtSh8SDEI5IqBdDxqK9HWnL24sYOEV9Ehlmu7
+ g9hU9CblYCC15244Tmksr3wK3f2NFBP4MmlFNXwK4zBn2HJu4BSTZngZBaCor9wJYgS6So2jo
+ RpN6WurQEWJSd0Ob16hmls8A==
 
-The type of mmc_ios.clock is unsigned int, so the cached value
-should be of the same type.
+The custom sdhost controller on BCM2835 is feed by the critical VPU clock.
+In preparation for PM suspend/resume support, add a proper clock handling
+to the driver like in the other clock consumers (e.g. I2C).
 
-Fixes: 660fc733bd74 ("mmc: bcm2835: Add new driver for the sdhost controll=
-er.")
+Move the clock handling behind mmc_of_parse(), because it could return
+with -EPROBE_DEFER and we want to minimize potential clock operation durin=
+g
+boot phase.
+
 Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
 =2D--
- drivers/mmc/host/bcm2835.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mmc/host/bcm2835.c | 29 ++++++++++++++++++-----------
+ 1 file changed, 18 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/mmc/host/bcm2835.c b/drivers/mmc/host/bcm2835.c
-index 35d8fdea668b..3d3eda5a337c 100644
+index 3d3eda5a337c..107666b7c1c8 100644
 =2D-- a/drivers/mmc/host/bcm2835.c
 +++ b/drivers/mmc/host/bcm2835.c
-@@ -150,7 +150,7 @@ struct bcm2835_host {
+@@ -148,6 +148,7 @@ struct bcm2835_host {
+ 	void __iomem		*ioaddr;
+ 	u32			phys_addr;
 
++	struct clk		*clk;
  	struct platform_device	*pdev;
 
--	int			clock;		/* Current clock speed */
-+	unsigned int		clock;		/* Current clock speed */
- 	unsigned int		max_clk;	/* Max possible freq */
- 	struct work_struct	dma_work;
- 	struct delayed_work	timeout_work;	/* Timer for timeouts */
+ 	unsigned int		clock;		/* Current clock speed */
+@@ -1345,7 +1346,6 @@ static int bcm2835_add_host(struct bcm2835_host *hos=
+t)
+ static int bcm2835_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev =3D &pdev->dev;
+-	struct clk *clk;
+ 	struct bcm2835_host *host;
+ 	struct mmc_host *mmc;
+ 	const __be32 *regaddr_p;
+@@ -1393,15 +1393,6 @@ static int bcm2835_probe(struct platform_device *pd=
+ev)
+ 		/* Ignore errors to fall back to PIO mode */
+ 	}
+
+-
+-	clk =3D devm_clk_get(dev, NULL);
+-	if (IS_ERR(clk)) {
+-		ret =3D dev_err_probe(dev, PTR_ERR(clk), "could not get clk\n");
+-		goto err;
+-	}
+-
+-	host->max_clk =3D clk_get_rate(clk);
+-
+ 	host->irq =3D platform_get_irq(pdev, 0);
+ 	if (host->irq < 0) {
+ 		ret =3D host->irq;
+@@ -1412,16 +1403,30 @@ static int bcm2835_probe(struct platform_device *p=
+dev)
+ 	if (ret)
+ 		goto err;
+
+-	ret =3D bcm2835_add_host(host);
++	host->clk =3D devm_clk_get(dev, NULL);
++	if (IS_ERR(host->clk)) {
++		ret =3D dev_err_probe(dev, PTR_ERR(host->clk), "could not get clk\n");
++		goto err;
++	}
++
++	ret =3D clk_prepare_enable(host->clk);
+ 	if (ret)
+ 		goto err;
+
++	host->max_clk =3D clk_get_rate(host->clk);
++
++	ret =3D bcm2835_add_host(host);
++	if (ret)
++		goto err_clk;
++
+ 	platform_set_drvdata(pdev, host);
+
+ 	dev_dbg(dev, "%s -> OK\n", __func__);
+
+ 	return 0;
+
++err_clk:
++	clk_disable_unprepare(host->clk);
+ err:
+ 	dev_dbg(dev, "%s -> err %d\n", __func__, ret);
+ 	if (host->dma_chan_rxtx)
+@@ -1445,6 +1450,8 @@ static void bcm2835_remove(struct platform_device *p=
+dev)
+ 	cancel_work_sync(&host->dma_work);
+ 	cancel_delayed_work_sync(&host->timeout_work);
+
++	clk_disable_unprepare(host->clk);
++
+ 	if (host->dma_chan_rxtx)
+ 		dma_release_channel(host->dma_chan_rxtx);
+
 =2D-
 2.34.1
 

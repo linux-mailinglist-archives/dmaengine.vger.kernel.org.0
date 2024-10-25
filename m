@@ -1,176 +1,157 @@
-Return-Path: <dmaengine+bounces-3561-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3562-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CC6979AF47E
-	for <lists+dmaengine@lfdr.de>; Thu, 24 Oct 2024 23:13:54 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 709E99AF6CD
+	for <lists+dmaengine@lfdr.de>; Fri, 25 Oct 2024 03:25:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5D8651F224BA
-	for <lists+dmaengine@lfdr.de>; Thu, 24 Oct 2024 21:13:54 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 02E20B233E8
+	for <lists+dmaengine@lfdr.de>; Fri, 25 Oct 2024 01:25:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FF0721832A;
-	Thu, 24 Oct 2024 21:12:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E72852AEE3;
+	Fri, 25 Oct 2024 01:24:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rosalinux.ru header.i=@rosalinux.ru header.b="JvCI2bpf"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EoAb7KeX"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail.rosalinux.ru (mail.rosalinux.ru [195.19.76.54])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C862178E9;
-	Thu, 24 Oct 2024 21:12:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.19.76.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EF00433D9
+	for <dmaengine@vger.kernel.org>; Fri, 25 Oct 2024 01:24:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729804341; cv=none; b=NEzwkx2PCM7PmjcwXpipaKAsF2AMXLCCFacgKSWbJ2JBA+KC2Af/0n+ZpYjlFBzH0TVwuNvBXTH9bEqVSG4CAfgpFFXZVEcpZ2ofL2Y3P8J9yqlVWQR5zz7FZcH1Hm6KyQ8LCkulDwxZt21/CdAsS3REHMBJhxY/ElGK9T4TrJs=
+	t=1729819475; cv=none; b=O5Cjq3ajXH3MbxdTJeEN2xq/eLphZ1rR64wOSxe4zyl7hOXOXPQWFinOQ9PpIxMVYEJEBl2kt63yEWpNjVOme6NyWGzW1BJ19I5oQi8MUPO1bl9flvZ2JmamlOr4t8YB3WTaN7ay6zPgPD2YSRHwHhqe5RbKqNF/wiU/jzHCdJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729804341; c=relaxed/simple;
-	bh=YFSCR7IfY9tTJHnomR8IWpjA3ksgmVsEmuV7YWqhDac=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UAz074Jej2xpDozq+lxHweZgbI/KAwMmgJ7+9U1eeZdBLDu8ICdqG2b65PEs2nqNFcH40vxrbCg/I1XX/pAaFG5OMjesHHaUn7qTjsD5GdHhjucjCZ6fNeDgC9pshnAnS5ijijDsVy6ZLcFlA4v4O+2sVTRxeeSwEEmSvyleSgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosalinux.ru; spf=pass smtp.mailfrom=rosalinux.ru; dkim=pass (2048-bit key) header.d=rosalinux.ru header.i=@rosalinux.ru header.b=JvCI2bpf; arc=none smtp.client-ip=195.19.76.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosalinux.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosalinux.ru
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rosalinux.ru (Postfix) with ESMTP id 7D26B1CE86E68;
-	Fri, 25 Oct 2024 00:01:25 +0300 (MSK)
-Received: from mail.rosalinux.ru ([127.0.0.1])
-	by localhost (mail.rosalinux.ru [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id 9oq4DAnOWm9h; Fri, 25 Oct 2024 00:01:25 +0300 (MSK)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rosalinux.ru (Postfix) with ESMTP id 291291CEA7786;
-	Fri, 25 Oct 2024 00:01:25 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rosalinux.ru 291291CEA7786
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosalinux.ru;
-	s=1D4BB666-A0F1-11EB-A1A2-F53579C7F503; t=1729803685;
-	bh=YFSCR7IfY9tTJHnomR8IWpjA3ksgmVsEmuV7YWqhDac=;
-	h=From:To:Date:Message-Id:MIME-Version;
-	b=JvCI2bpfYn6dddRZiFpXBEzWeMaIIIutw82nrEpFKELoHPE6QGlusc8ot6Pz2qsRl
-	 xgHZlg0ZN4qSjNTvX61QWUAB7GUVXTPMjDh1akMWR7Bv4mMuo14u26B5xrIwAhP7XR
-	 Zhx7eK353znte05A8c+mxDcOLCydBtTG2ls2w5c9/Mo4C87hbpDNzyXbRsAchC7Ks5
-	 XLwSg/4N1t2FVpz/nBcGXLz3qFrQp8PdasmrTypM0817oCh9kImIJI7nLBMD++8mIh
-	 k/jBTljV5jxoD21CpoJ1X8V5EyMSn2YqMYMoH55SN7eGLDRMqD3tW7zwRTBXHwT4Xf
-	 C3mBvJUzpSmNA==
-X-Virus-Scanned: amavisd-new at rosalinux.ru
-Received: from mail.rosalinux.ru ([127.0.0.1])
-	by localhost (mail.rosalinux.ru [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id DcLkSC7j36Ww; Fri, 25 Oct 2024 00:01:25 +0300 (MSK)
-Received: from hp-xfce (unknown [89.189.111.209])
-	by mail.rosalinux.ru (Postfix) with ESMTPSA id 21D671CE86E68;
-	Fri, 25 Oct 2024 00:01:24 +0300 (MSK)
-Received: from localhost (hp-xfce [local])
-	by hp-xfce (OpenSMTPD) with ESMTPA id eeebd703;
-	Thu, 24 Oct 2024 21:01:23 +0000 (UTC)
-From: Mikhail Novosyolov <m.novosyolov@rosalinux.ru>
-To: torvalds@linux-foundation.org
-Cc: aospan@netup.ru,
-	conor.dooley@microchip.com,
-	ddrokosov@sberdevices.ru,
-	dmaengine@vger.kernel.org,
-	dushistov@mail.ru,
-	fancer.lancer@gmail.com,
-	geert@linux-m68k.org,
-	gregkh@linuxfoundation.org,
-	hoan@os.amperecomputing.com,
-	ink@jurassic.park.msu.ru,
-	jeffbai@aosc.io,
-	kexybiscuit@aosc.io,
-	linux-alpha@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-fpga@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-ide@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	linux-mips@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-spi@vger.kernel.org,
-	manivannan.sadhasivam@linaro.org,
-	mattst88@gmail.com,
-	netdev@vger.kernel.org,
-	nikita@trvn.ru,
-	ntb@lists.linux.dev,
-	patches@lists.linux.dev,
-	peter@typeblog.net,
-	richard.henderson@linaro.org,
-	s.shtylyov@omp.ru,
-	serjk@netup.ru,
-	shc_work@mail.ru,
-	torvic9@mailbox.org,
-	tsbogend@alpha.franken.de,
-	v.georgiev@metrotek.ru,
-	wangyuli@uniontech.com,
-	wsa+renesas@sang-engineering.com,
-	xeb@mail.ru,
-	m.novosyolov@rosalinux.ru
-Subject: Re: [PATCH] Revert "MAINTAINERS: Remove some entries due to various compliance requirements."
-Date: Fri, 25 Oct 2024 00:01:20 +0300
-Message-Id: <20241024210120.4126-1-m.novosyolov@rosalinux.ru>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <CAHk-=wjw0i-95S_3Wgk+rGu0TUs8r1jVyBv0L8qfsz+TJR8XTQ@mail.gmail.com>
-References: <CAHk-=wjw0i-95S_3Wgk+rGu0TUs8r1jVyBv0L8qfsz+TJR8XTQ@mail.gmail.com>
+	s=arc-20240116; t=1729819475; c=relaxed/simple;
+	bh=FVDNq14EOZUAPVTR4UJ7HWA3O/emKnfVI/klyQ5hmLU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ABVgMe4fpg3EbeRD9COMy4pmVLZ/yJYRm5I5pl6/IhlYeUqOaub3HkmC2dtnjylpayDPR+lV2EEmvQXvwh3mrw8xsuCUho0rw0e5m50LcRtNIxROG9Mz5uJzVrTaZsDQx/VvFGaSll+acU8eBznarDjpM58Mgrf8aXgijO08Wzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EoAb7KeX; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729819474; x=1761355474;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=FVDNq14EOZUAPVTR4UJ7HWA3O/emKnfVI/klyQ5hmLU=;
+  b=EoAb7KeXRSJtk5ralGXMcCehElKgmKfH6ciNakYdFxVxDEXkQn9HMTeE
+   XAPx9+VvvtNmMX1bPEq3zFlMu7jQVnE9UtxKFWl6oNJGReQvU+Yz37eO+
+   MwZGBDgEe8QpVRiJ1OSejzKbO4zfSQ8CGDLcX8QtIW8VUWDf09PnUSHXH
+   ZC+fX0Ke8+RBK1k3KWO53hPDfrVReW2oIu11pxF3+QmfBYd20S8Y7FO84
+   oczBWIgbZvAUeY3L2YwTvrD1JVgpSYWMHAPySNQjNz1Brq5oFAkTtQAQw
+   u01LhjQAX1jQJrYCA1a8TmyacJ6rMNDpq/Lsa9AMBriM4zC7UD3V9DJsJ
+   Q==;
+X-CSE-ConnectionGUID: NoYsl9VaQRezfJ4hRfa3nA==
+X-CSE-MsgGUID: kz25KkojSomNfwprAxzXgw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="52031164"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="52031164"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2024 18:24:34 -0700
+X-CSE-ConnectionGUID: qvBRMzlmSmuTKbEfm8r/7g==
+X-CSE-MsgGUID: JR2d6RFKRaGrtTx9ixUEJw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,230,1725346800"; 
+   d="scan'208";a="85564525"
+Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
+  by orviesa005.jf.intel.com with ESMTP; 24 Oct 2024 18:24:31 -0700
+Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1t4940-000XMp-1u;
+	Fri, 25 Oct 2024 01:24:28 +0000
+Date: Fri, 25 Oct 2024 09:24:27 +0800
+From: kernel test robot <lkp@intel.com>
+To: Basavaraj Natikar <Basavaraj.Natikar@amd.com>, vkoul@kernel.org,
+	dmaengine@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Raju.Rangoju@amd.com, Frank.li@nxp.com, helgaas@kernel.org,
+	pstanner@redhat.com, Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+Subject: Re: [PATCH v7 4/6] dmaengine: ae4dma: Register AE4DMA using
+ pt_dmaengine_register
+Message-ID: <202410250904.txsoe5RZ-lkp@intel.com>
+References: <20241023123613.710671-5-Basavaraj.Natikar@amd.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=y
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241023123613.710671-5-Basavaraj.Natikar@amd.com>
 
-Linus, Greg,
+Hi Basavaraj,
 
-First of all thanks to you for taking by far not the most harmful actions=
- to achieve what your lawyers very kindly asked you to do.
+kernel test robot noticed the following build errors:
 
-Unfortunately, already a lot of highly qualified people have started thin=
-king that you acted very badly. Of course, there are questions like why r=
-emoved maintainers were not properly notified and did not receive any add=
-itional explanations, but, to my mind, it is useless to try to find 100% =
-justice -- it is not possible. Overton windows has been opened a bit more=
-.
+[auto build test ERROR on vkoul-dmaengine/next]
+[also build test ERROR on linus/master v6.12-rc4 next-20241024]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Usually the first contribution is much harder to make then the following =
-ones. A big problem here is that now many people even will not try to con=
-tribute to the Linux kernel and other open source projects: their pride f=
-or themselves, their homeland, their colleagues has been severely hurt (w=
-e are ready to fight for all that).
+url:    https://github.com/intel-lab-lkp/linux/commits/Basavaraj-Natikar/dmaengine-Move-AMD-PTDMA-driver-to-amd-directory/20241023-203903
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git next
+patch link:    https://lore.kernel.org/r/20241023123613.710671-5-Basavaraj.Natikar%40amd.com
+patch subject: [PATCH v7 4/6] dmaengine: ae4dma: Register AE4DMA using pt_dmaengine_register
+config: x86_64-buildonly-randconfig-003-20241025 (https://download.01.org/0day-ci/archive/20241025/202410250904.txsoe5RZ-lkp@intel.com/config)
+compiler: clang version 19.1.2 (https://github.com/llvm/llvm-project 7ba7d8e2f7b6445b60679da826210cdde29eaf8b)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241025/202410250904.txsoe5RZ-lkp@intel.com/reproduce)
 
-It is not clear what to do with this problem. Any ideas?
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202410250904.txsoe5RZ-lkp@intel.com/
 
-I am sure that people from any country and of any nationality will have s=
-imilar feelings if you act with them or their colleagues in a similar way=
-.
+All errors (new ones prefixed by >>):
 
-Thanks to people who were not afraid to say something against this action=
-. Chinese, Latin American, African and other people probably understand t=
-hat they may be the next ones to be dropped from maintainers. Hope that w=
-e will not have to form another Linux kernel upstream one day...
+   In file included from drivers/dma/amd/ptdma/ptdma-dmaengine.c:12:
+   In file included from drivers/dma/amd/ptdma/ptdma.h:17:
+   In file included from include/linux/dmaengine.h:12:
+   In file included from include/linux/scatterlist.h:8:
+   In file included from include/linux/mm.h:2213:
+   include/linux/vmstat.h:518:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     518 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+>> drivers/dma/amd/ptdma/ptdma-dmaengine.c:115:13: error: call to undeclared function 'FIELD_GET'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     115 |         bool soc = FIELD_GET(DWORD0_SOC, desc->dwouv.dw0);
+         |                    ^
+>> drivers/dma/amd/ptdma/ptdma-dmaengine.c:119:22: error: call to undeclared function 'FIELD_PREP'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     119 |                 desc->dwouv.dw0 |= FIELD_PREP(DWORD0_IOC, desc->dwouv.dw0);
+         |                                    ^
+   1 warning and 2 errors generated.
 
-I am sorry that you have to read a lot of text from people who you call t=
-rolls -- it is hard to keep calm.
 
-You know, you have really made it much harder to motivate people to contr=
-ibute into the kernel. There is such problem among developers of hardware=
- that they do not feel comfortable enough to show their code, for example=
- because they think that it is not perfect. Let=E2=80=99s take Baikal Ele=
-ctronics. They do publish their kernel code, but in a form of tarballs wi=
-thout git. They slowly, but constantly worked on contributing support of =
-their hardware into the upstream kernel, fixing not Baikal-related bugs b=
-y the way. One day someone told them that =E2=80=9Cwe are not comfortable=
- with accepting your patches=E2=80=9D. And they stopped their work on ups=
-tream. Now that man has been removed from maintainers of previously contr=
-ibuted code (code for not Russian hardware, by the way).
+vim +/FIELD_GET +115 drivers/dma/amd/ptdma/ptdma-dmaengine.c
 
-What do I suggest to do? Well, I don=E2=80=99t know, but I do not see dir=
-ect legal reasons why doing this was required and why patches from Baikal=
- could not be accepted (the fact that I do not see does not mean that the=
-y do not exist, but please show them). Politicians and activists can be s=
-hown a finger in some places, by both developers and lawyers, at least to=
- prevent them from being too ambitious, when they decide to break somethi=
-ng working next time... But maybe I do not know something about truly dem=
-ocratic regimes :-)
+   112	
+   113	static int ae4_core_execute_cmd(struct ae4dma_desc *desc, struct ae4_cmd_queue *ae4cmd_q)
+   114	{
+ > 115		bool soc = FIELD_GET(DWORD0_SOC, desc->dwouv.dw0);
+   116		struct pt_cmd_queue *cmd_q = &ae4cmd_q->cmd_q;
+   117	
+   118		if (soc) {
+ > 119			desc->dwouv.dw0 |= FIELD_PREP(DWORD0_IOC, desc->dwouv.dw0);
+   120			desc->dwouv.dw0 &= ~DWORD0_SOC;
+   121		}
+   122	
+   123		mutex_lock(&ae4cmd_q->cmd_lock);
+   124		memcpy(&cmd_q->qbase[ae4cmd_q->tail_wi], desc, sizeof(struct ae4dma_desc));
+   125		ae4cmd_q->q_cmd_count++;
+   126		ae4cmd_q->tail_wi = (ae4cmd_q->tail_wi + 1) % CMD_Q_LEN;
+   127		writel(ae4cmd_q->tail_wi, cmd_q->reg_control + AE4_WR_IDX_OFF);
+   128		mutex_unlock(&ae4cmd_q->cmd_lock);
+   129	
+   130		wake_up(&ae4cmd_q->q_w);
+   131	
+   132		return 0;
+   133	}
+   134	
 
-Thanks for reading.
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 

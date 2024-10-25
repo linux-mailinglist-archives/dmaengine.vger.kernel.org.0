@@ -1,216 +1,162 @@
-Return-Path: <dmaengine+bounces-3597-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3598-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E99B9B0DA4
-	for <lists+dmaengine@lfdr.de>; Fri, 25 Oct 2024 20:45:57 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A47019B0DB9
+	for <lists+dmaengine@lfdr.de>; Fri, 25 Oct 2024 20:49:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3B84D1C228CB
-	for <lists+dmaengine@lfdr.de>; Fri, 25 Oct 2024 18:45:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C67431C22C00
+	for <lists+dmaengine@lfdr.de>; Fri, 25 Oct 2024 18:49:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CB4918B499;
-	Fri, 25 Oct 2024 18:45:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5732C20D503;
+	Fri, 25 Oct 2024 18:49:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="gdBTGg9q"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ktaqYIdY"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A656107A0;
-	Fri, 25 Oct 2024 18:45:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AEEF18C01A
+	for <dmaengine@vger.kernel.org>; Fri, 25 Oct 2024 18:49:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729881950; cv=none; b=qt7qI9WWxkJ7pkgFioFWaH/9wVwv2LDyG0NyFwQvGYaK4vnEup4xiHgmISkGGqXwbNfh1mOGmsToc6kgrCkRoqiEdP1W9B/85qNbvCouB0/uyPdNGPHPB3Jff8u6PFDYyLyNn+J/Votl6GIAICgHnuBYqPX9+DOKJ+H65hPYlP0=
+	t=1729882145; cv=none; b=QMzOTjwEppe8tMt02wCb9f6yNSetfv9P4Yv6b3rxW7SWVZ0NeOGqH91b1bRg6PLATK+L2kYAfHpBc2AuUsVban3N2c0zl1Tpsiux2GP030RwTx8BvVFfxQuo2F0zgzl7Y7TrwlWeQjVl0aLVLjka5qA8Ty59SOCCzHiK5ZsfdNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729881950; c=relaxed/simple;
-	bh=eoe/fP8YHFbJUGJWPDVWR2pm8bdAzVvuYmLMkOvFUCc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s5Ld4AF2zg5xfBatop7nXqenoaZYeXvlebP509Wab0KC1SkTmqDR7J3bmPgMQm0WoYQlN+eSbt33GZ/YckryYrmL5I29wYpm8jeOaq4NHc4txpvZHwmxxT00yAm2FMVNwsgkIeIhuVHIcOsYXGJXtjQydZqOb1ZY6K24mPhlxUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=gdBTGg9q; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4XZs5L3sP6z9snx;
-	Fri, 25 Oct 2024 20:39:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1729881574;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lSojNFdw8ftg3T7NakOd4AZhT9UMaiDwBHmwcORfhmk=;
-	b=gdBTGg9qaBnIiiH6XUTjeUDIpm/w19h2mJ2NxyWek4JBdbfHEfy1l85WLscQ4teM7X3Y8E
-	SzmAWuY6Tiv8TrbprFm973WyyZ+4RlCRZSgfEyQVNqd0vqp4fkqFnrWEBZthKLrpibPdn8
-	zOUeUEpcyhLgwtmKEbx1GfoJj+wV9qWVvuN6kVStn1ig/Bghe328CY4APIAqqMM1/M6DTp
-	Oi88jdSqZLP4fc+Ctf69KIG1PcmVc9Uqx7eoBdxCRl/yvszGacX3FksxcbsLOSr1RTVZ7U
-	RwAHePsvYqanhR6nADNx5z06lDr7cIO+uU+cHTctUfx45NWDJnFzydXg0RISPg==
-Message-ID: <872c8823-f62b-42f8-8bf3-86342374aa84@mailbox.org>
-Date: Fri, 25 Oct 2024 20:39:19 +0200
+	s=arc-20240116; t=1729882145; c=relaxed/simple;
+	bh=1e4QZ/PUFOOSBcANS1rgp/gSszfy5I4/YP+hrdVJQlE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=AbbeD3IrR/YcCRbPynJvpjBqpnS+Us9ZMtvNQWmlqu+Snfo+7kxe/Q8oyLAHF+NOiyapHv0HgOF3bQpVIRiojt+W8VTQH10DIwXvpMGWMOyl0Ebw3N8KqiF7X4occLxyhHZX99vHhZjhrD2Rr+3/wPBUupACDxtWbMmzDP/2e/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=fail smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ktaqYIdY; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49PBaxDc003726
+	for <dmaengine@vger.kernel.org>; Fri, 25 Oct 2024 18:49:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	0dRXIoZRyz7BX4rjRO0hxUatsl7ImMO+PcbNbU30XTc=; b=ktaqYIdYyBz5m34s
+	vnbAdS5GqzVKBc4FGLeGuEcalijtkVjkJg+Zv6KvZYffknJUSs3X6atD/ovY/5Ok
+	MgSvfiriZpK8gnf6N4lqf9ZwQ96ow/8tSq+27z1u0jB+QhGCuJC07MnFZc7FZa4M
+	QfTa2PGixfqJEbfr4KGXfxHnuzU/3MMhMsTxNmeMaZNRe0pKGbV7Lv39FbTb9b8t
+	Z4FOcdWSxh2cn+DfuUte8AtLoIjRnqMHwlxkfK0bixmtuEwjnKXe+SzR3AWLt5Nc
+	VoHLyPTHAxVnPnyBppVT9Uxz8c8ab0VPjl+M7AkGPBjRU2ZYCBBTF44JdxMOSr5T
+	Oxq11w==
+Received: from mail-ot1-f70.google.com (mail-ot1-f70.google.com [209.85.210.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 42em68a3ys-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <dmaengine@vger.kernel.org>; Fri, 25 Oct 2024 18:49:02 +0000 (GMT)
+Received: by mail-ot1-f70.google.com with SMTP id 46e09a7af769-7180cdce4cbso393632a34.2
+        for <dmaengine@vger.kernel.org>; Fri, 25 Oct 2024 11:49:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729882141; x=1730486941;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0dRXIoZRyz7BX4rjRO0hxUatsl7ImMO+PcbNbU30XTc=;
+        b=RutFTgxafVw0U3kxP4OdOj0HGdAZeLyF3CrOy3lvTK+W2nrmpFiAqoZW5jLX3fTurS
+         j7camT5vw8Pli4EdoWjayq0F2rvhP531GcM0jNTdwfxUkrYh4CuXRaPX/0dxD/PRU99H
+         1FJhDQk1sG6+pYWA1gMcsA1I6zX9DsndrvzXtdZrnjLLvix58psUtCscVN0TOZDY1STB
+         16UcwbTGAHGUWiSSgiXQmx7cr4YnydkFVca9gTWyy/I+4/FrNsACP4/983CqhKZgUVMc
+         oFlT3P7Xg3FdTrWOsUf81UB9cpJ6kyGYehGdE68Qsm5OKs2oOZlyXu7ZAzm7fE2OHdbg
+         aKIg==
+X-Forwarded-Encrypted: i=1; AJvYcCVRGKaMc1OrWPXrGv214syNc/zfR2cupyKxY0ImgZFsQkBySXTrOCTC2CG+OjOZ9e+ycc4fXMsgOR0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhAyMASwIUVz7iSzBL9cVQQ5qE38OP/6mIr1uUXW6Clg1piXrq
+	5ntVgDR2qL2pgt4UrGTbR3amJ1xvFV0mQuQFP791FJnWjHPb7l2wD3n6c9iqAXQmVSiDk8pE1k+
+	iTPRJJm00VkSwCyeVLqmDD0xEbKRDwPujXSRetNi814/UjOZHIJTY+XjKmP4=
+X-Received: by 2002:a05:6830:2b11:b0:718:441b:d4b2 with SMTP id 46e09a7af769-71867e662afmr187861a34.0.1729882141493;
+        Fri, 25 Oct 2024 11:49:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGBOtJHjP6vBeR6dZ2mAieltA5knGghyYXY97vdIOQ6hJNu7Y4lOvaQ31Y9M0odcsMFI3l5BA==
+X-Received: by 2002:a05:6830:2b11:b0:718:441b:d4b2 with SMTP id 46e09a7af769-71867e662afmr187853a34.0.1729882140990;
+        Fri, 25 Oct 2024 11:49:00 -0700 (PDT)
+Received: from [192.168.212.120] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9b1f0298cfsm97396166b.74.2024.10.25.11.48.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 25 Oct 2024 11:48:59 -0700 (PDT)
+Message-ID: <8fb9af47-b675-4fbf-bf66-5a273dd20261@oss.qualcomm.com>
+Date: Fri, 25 Oct 2024 20:48:56 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] Revert "MAINTAINERS: Remove some entries due to various
- compliance requirements."
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/4] dma: gpi: Add Lock and Unlock TRE support to
+ access SE exclusively
+To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
+        konrad.dybcio@linaro.org, andersson@kernel.org, andi.shyti@kernel.org,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        conor+dt@kernel.org, agross@kernel.org, devicetree@vger.kernel.org,
+        vkoul@kernel.org, linux@treblig.org, dan.carpenter@linaro.org,
+        Frank.Li@nxp.com, konradybcio@kernel.org, bryan.odonoghue@linaro.org,
+        krzk+dt@kernel.org, robh@kernel.org
+References: <20240927063108.2773304-1-quic_msavaliy@quicinc.com>
+ <20240927063108.2773304-3-quic_msavaliy@quicinc.com>
 Content-Language: en-US
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Kexy Biscuit <kexybiscuit@aosc.io>, jeffbai@aosc.io,
- gregkh@linuxfoundation.org, wangyuli@uniontech.com, aospan@netup.ru,
- conor.dooley@microchip.com, ddrokosov@sberdevices.ru,
- dmaengine@vger.kernel.org, dushistov@mail.ru, fancer.lancer@gmail.com,
- geert@linux-m68k.org, hoan@os.amperecomputing.com, ink@jurassic.park.msu.ru,
- linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-fpga@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-hwmon@vger.kernel.org, linux-ide@vger.kernel.org,
- linux-iio@vger.kernel.org, linux-media@vger.kernel.org,
- linux-mips@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- linux-spi@vger.kernel.org, manivannan.sadhasivam@linaro.org,
- mattst88@gmail.com, netdev@vger.kernel.org, nikita@trvn.ru,
- ntb@lists.linux.dev, patches@lists.linux.dev, richard.henderson@linaro.org,
- s.shtylyov@omp.ru, serjk@netup.ru, shc_work@mail.ru,
- tsbogend@alpha.franken.de, v.georgiev@metrotek.ru,
- wsa+renesas@sang-engineering.com, xeb@mail.ru
-References: <a08dc31ab773604d8f206ba005dc4c7a@aosc.io>
- <20241023080935.2945-2-kexybiscuit@aosc.io>
- <124c1b03-24c9-4f19-99a9-6eb2241406c2@mailbox.org>
- <CAHk-=whNGNVnYHHSXUAsWds_MoZ-iEgRMQMxZZ0z-jY4uHT+Gg@mail.gmail.com>
-From: Tor Vic <torvic9@mailbox.org>
-In-Reply-To: <CAHk-=whNGNVnYHHSXUAsWds_MoZ-iEgRMQMxZZ0z-jY4uHT+Gg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20240927063108.2773304-3-quic_msavaliy@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-MBO-RS-META: fcapfso3xo4bfkqbzachb4s163eexrjr
-X-MBO-RS-ID: 80e4fa8c609ea0e1360
+X-Proofpoint-ORIG-GUID: 5zktqe7UV8jpgOQC2wVNFlAQVpwMWxsS
+X-Proofpoint-GUID: 5zktqe7UV8jpgOQC2wVNFlAQVpwMWxsS
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 malwarescore=0
+ priorityscore=1501 adultscore=0 bulkscore=0 phishscore=0 mlxscore=0
+ lowpriorityscore=0 mlxlogscore=999 impostorscore=0 suspectscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2409260000 definitions=main-2410250144
 
-
-
-On 10/23/24 19:45, Linus Torvalds wrote:
-> Ok, lots of Russian trolls out and about.
-
-I was a little bit sick when I wrote my previous comment, but I wanted 
-to elaborate, so here we go:
+On 27.09.2024 8:31 AM, Mukesh Kumar Savaliya wrote:
+> GSI DMA provides specific TREs namely Lock and Unlock TRE, which
+> provides mutual exclusive access to SE from any of the subsystem
+> (E.g. Apps, TZ, ADSP etc). Lock prevents other subsystems from
+> concurrently performing DMA transfers and avoids disturbance to
+> data path. Basically for shared SE usecase, lock the SE for
+> particular subsystem, complete the transfer, unlock the SE.
 > 
-> It's entirely clear why the change was done, it's not getting
-> reverted, and using multiple random anonymous accounts to try to
-> "grass root" it by Russian troll factories isn't going to change
-> anything.
+> Apply Lock TRE for the first transfer of shared SE and Apply Unlock
+> TRE for the last transfer.
 > 
-
-Of course it's not going to be reverted, and I don't mind.
-
-I do however mind about the fact that you accuse contributors (however 
-minimal their contributions were, like in my case) of being "Russian 
-trolls" using "multiple accounts".
-
-I would have thought that a man of your stature, knowledge and 
-publicity, wrote a more sensible, neutral comment than that childish 
-gibberish you produced.
-Such comments can be seen in the hundreds on every major news website's 
-comment section.
-Unfortunately, this is now common discussion standard at least in the 
-Western world:
-
-"You don't agree with X? You must be a Y!"
-
-There is no doubt that there are Russian troll factories - but there is 
-equally no doubt that there are Western troll factories. Without them, 
-this "game" wouldn't work.
-
-You could just have done a simple 'git log --grep="Name"' to find out 
-that most of those people who you accused of being trolls are actually 
-not trolls. Because trolls do not contribute.
-
-> And FYI for the actual innocent bystanders who aren't troll farm
-> accounts - the "various compliance requirements" are not just a US
-> thing.
-
-Of course not. It's a USUKEU thing. Or, dare I say, a thing of the 
-unipolar anglo-american empire. There is no way around a multipolar 
-world order if we as humans want to progress.
-
-Why didn't you (or Greg) elaborate on the "various compliance 
-requirements" in the first place?
-You could just have said:
-
-"Due to the sanctions against Russia, we as a US-based foundation are 
-required to abide and therefore we have to remove some maintainers that 
-are thought to be directly collaborating with the current regime" (I 
-specifically used a "Western" language).
-That, at least, would have been somewhat honest, though still hypocrite.
-
-And I did read through (most of) these EU compliance requirements 
-because of my job (not IT), so I'm not *that* clueless.
-
-The sanctions are absurd anyway - I don't remember that the US had been 
-sanctioned because of their illegal invasion of [insert country of your 
-choice]. US athletes excluded from the Olympics?? How dare you?
-
-I also don't remember that France or UK had been sanctioned because they 
-abused their UN mandate to get rid of Gaddafi.
-
-The "country" Kosovo, created by a war, isn't even recognized by all EU 
-member states!
-
-And don't even get me started on that Eastern Mediterranian country that 
-can commit the worst atrocities without ever getting seriously sanctioned.
-
-Meanwhile, we sanction Iran (hasn't started a war in ages), Cuba (hasn't 
-started a war in ages), North Korea (hasn't started a war in ages) etc.
-
-The Western arrogance and decadence is disgusting, and I say that as a 
-born and bred Western European.
-
+> Also change MAX_TRE macro to 5 from 3 because of the two additional TREs.
 > 
-> If you haven't heard of Russian sanctions yet, you should try to read
-> the news some day.  And by "news", I don't mean Russian
-> state-sponsored spam.
-
-I'm already more than fed up with the state-sponsored spam on German TV 
-- and I even have to pay for that BS!
-Now, I don't know how it is in Finland because I don't follow Finnish 
-news due to a total lack of language knowledge.
-
-I wish my country would quit NATO, and then I see that Finland *joined*. 
-Sorry, but I don't understand. No NATO, no war in Ukraine.
-Even as late as 2013, Russia and Ukraine did naval manoevers in the 
-Black Sea - together!
-
-This war is sooo totally unnecessary. Maybe you should ask Vicky "F!ck 
-the EU" Newland why this all happened.
-
+> TRE = Transfer Ring Element, refers to the queued descriptor.
+> SE = Serial Engine
+> SS = Subsystems (Apps processor, TZ, ADSP, Modem)
 > 
-> As to sending me a revert patch - please use whatever mush you call
-> brains. I'm Finnish. Did you think I'd be *supporting* Russian
-> aggression? Apparently it's not just lack of real news, it's lack of
-> history knowledge too.
-
-Why do you even mention your nationality?
-Just a few weeks ago, I read about the role of Finland in (and before) WW2.
-I don't think there is a big lack of history knowledge on my side.
-
-My country was occupied by Germany twice, in 1914 and in 1940.
-And yet, I have absolutely no bad feelings about either Germany as a 
-country nor Germans as a people. OK, their government is the worst since 
-1945, but that's a different matter.
-
-Wasn't Mannerheim married to a Russian? Eh?
-
-The former German Minister of Foreign Affairs, Guido Westerwelle, once 
-talked about "late Roman decadence", albeit in a different context.
-
-And yet, he was totally right even in other contexts. The Western world 
-is actually in the state of "late Roman decadence".
-And what follows after that decadence? Right, the downfall. And it might 
-be a huge chance to create a better, more equitable world.
-
+> Signed-off-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+> ---
+>  drivers/dma/qcom/gpi.c           | 37 +++++++++++++++++++++++++++++++-
+>  include/linux/dma/qcom-gpi-dma.h |  6 ++++++
+>  2 files changed, 42 insertions(+), 1 deletion(-)
 > 
->                        Linus
+> diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
+> index 52a7c8f2498f..120d91234442 100644
+> --- a/drivers/dma/qcom/gpi.c
+> +++ b/drivers/dma/qcom/gpi.c
+> @@ -2,6 +2,7 @@
+>  /*
+>   * Copyright (c) 2017-2020, The Linux Foundation. All rights reserved.
+>   * Copyright (c) 2020, Linaro Limited
+> + * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+>   */
+>  
+>  #include <dt-bindings/dma/qcom-gpi.h>
+> @@ -65,6 +66,14 @@
+>  /* DMA TRE */
+>  #define TRE_DMA_LEN		GENMASK(23, 0)
+>  
+> +/* Lock TRE */
+> +#define TRE_I2C_LOCK		BIT(0)
+> +#define TRE_MINOR_TYPE		GENMASK(19, 16)
+> +#define TRE_MAJOR_TYPE		GENMASK(23, 20)
 
-Tor Vic
+Is this solely I2C specific?
+
+Konrad
 

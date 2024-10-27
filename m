@@ -1,68 +1,68 @@
-Return-Path: <dmaengine+bounces-3606-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3607-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 43B5C9B1FD7
-	for <lists+dmaengine@lfdr.de>; Sun, 27 Oct 2024 20:13:34 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E0049B202F
+	for <lists+dmaengine@lfdr.de>; Sun, 27 Oct 2024 21:05:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B23B71F21344
-	for <lists+dmaengine@lfdr.de>; Sun, 27 Oct 2024 19:13:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4B8F228152D
+	for <lists+dmaengine@lfdr.de>; Sun, 27 Oct 2024 20:05:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D4401714B4;
-	Sun, 27 Oct 2024 19:13:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE0501741CB;
+	Sun, 27 Oct 2024 20:05:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mLGEv9rX"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Vq7oBWyb"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EB421BF37;
-	Sun, 27 Oct 2024 19:13:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE94D3A8CB;
+	Sun, 27 Oct 2024 20:05:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730056408; cv=none; b=EcPRglF9J6vw5K57CCcBAvnQZwnskwz1o1biZqIfDqQowIy27tMbNEDa+6fmu1tDlfNnmlN1YJ4oqasV7F3yu1wneRhKb7nX7EVNna4Ggn+dGcZPRRhb1eICcx/A1dkaQaXx9/EEOIC/esDGXAtLLGKJjjur6LSaxdSIZYK/SGI=
+	t=1730059536; cv=none; b=BS0eh0LGTPRkXTvV8UxoK59WYX5PN5LoqA1H6LYb31Kr2PxswsIDQ4F9f9GrokrWYYfqsyYXMHEVIcoXMGL+OyRpyeS+zQV6ILYY597BjtKbSuFFEqyef/x/mrUYTWLsU0NH2Iqx74aRbBZEj0HSTSmb6I1a8QauDcr0cv9G/nc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730056408; c=relaxed/simple;
-	bh=UOBtR7avR4LJi9ncivSqNFYPGG3xDXyQQ8t6Oyigaus=;
+	s=arc-20240116; t=1730059536; c=relaxed/simple;
+	bh=oqFW2VxOVGvgIGKy5VVtVslqsTTBny7YWCNT4mqdRxQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DyRsp85PxiLpX/l3p2pCD70GUf3PmlaLOKgFsPl9adzwEefM6Maz+y0OfZ7hMtMLeawKNXJh836YWUIOTbJEzrv9QYXNBw4nsYNM0JOl/CAmZEGPyedhXDb3xNsVFc3ycSOWO86LTYNyGrrEG6GXQb4vHe/cslfZECdio4wAwjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mLGEv9rX; arc=none smtp.client-ip=198.175.65.14
+	 Content-Type:Content-Disposition:In-Reply-To; b=syuSDZu8AXUTZJWcfBj25dpy08jh5DK2VwsL/1lttD/lGgsPlpuxGFunX+AlrYrYblyrY2J/WPNJ3N8ISwV5xeqBFndi2bEYNDbVxH9EVOuG7Y8b7BFfhWwCCE4MpIboftg/u3N+ywaexRNAwLVctG7uEvErLnxWeJmgiWRbAtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Vq7oBWyb; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730056405; x=1761592405;
+  t=1730059534; x=1761595534;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=UOBtR7avR4LJi9ncivSqNFYPGG3xDXyQQ8t6Oyigaus=;
-  b=mLGEv9rXac1mY5n6zDvFIyiXB0ZEKomTd7dVd/IofC3lfB8IYsrhN6ny
-   ge1E0loiMM3ttCcOiNuGY8hlkIX/QCWArWXSaVLZZ0OiNEA6CF4GITlMd
-   RJBfH+yW6+OXRlg+LcxximqFQ7Bq1+CN+UXprCgY4SK0eaMdr2PIcvqfm
-   6zm2qmk7s/xFDei6OB8w8MAbC7lMayk5Ke6DQoqBtnDr/Y/3VcXqPD+kc
-   LctMU0nobpGCXFovngStp2LQoXaSrqtho7kmy40kGUHP1JuZ14JuNjnpC
-   Bx462YTcYspd3cVT7/jwun2dWSPcwP/tkEmBAnsK2tp99uafF54EVsQR8
-   A==;
-X-CSE-ConnectionGUID: ehkuWjfMTnKOWup07UIVMA==
-X-CSE-MsgGUID: xavNRLF+Q76dNdq0R37MvQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11238"; a="33454094"
+  bh=oqFW2VxOVGvgIGKy5VVtVslqsTTBny7YWCNT4mqdRxQ=;
+  b=Vq7oBWybOZkKqU415KDF6Sa8jyaYoql2/gL5u5UIdNvxNpEs4A2y/36T
+   zUwkWqdw7qPexjJOw+4ZgRL9zou8U8qO3j6ybDanPM4Ok0WzUay0O2etu
+   1XuFeaCqHjxB2gfrepMSAonpfKlloWUCWF83GFv7U4LVKP/CFJjgZfO+s
+   1CSqBtnFwXprrrUzCgq++hkFkMIHdop8+4deyoCK74eo/Q0mGprdXYCtn
+   P/L/y/VUuhqJVKa6go574dNIsN2CynTDe01Tf8BrgsH+c3pVKX4cKKqLD
+   RUXN66txRgG+Dxqh8v88ZxW3deP05Mgoc2k9JqUEksvSJ34RQ+I0zTL4Z
+   w==;
+X-CSE-ConnectionGUID: 0XUOAVL8S/Wy4H2Crk6Icw==
+X-CSE-MsgGUID: vQ0yTN0PTqa158eCDmlOCg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11238"; a="32521611"
 X-IronPort-AV: E=Sophos;i="6.11,237,1725346800"; 
-   d="scan'208";a="33454094"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2024 12:13:25 -0700
-X-CSE-ConnectionGUID: EmkVCLkfRJqj4ztNf3jeUQ==
-X-CSE-MsgGUID: 50isPq14Ty+074B2ysi87g==
+   d="scan'208";a="32521611"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2024 13:05:33 -0700
+X-CSE-ConnectionGUID: unMkF5qyQOuoKxpmhf3UUw==
+X-CSE-MsgGUID: veCkSTGiRiOyHz/WmDKz1g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.11,237,1725346800"; 
-   d="scan'208";a="81854668"
+   d="scan'208";a="104745381"
 Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 27 Oct 2024 12:13:22 -0700
+  by fmviesa002.fm.intel.com with ESMTP; 27 Oct 2024 13:05:30 -0700
 Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1t58hT-000avQ-25;
-	Sun, 27 Oct 2024 19:13:19 +0000
-Date: Mon, 28 Oct 2024 03:12:53 +0800
+	id 1t59Vw-000ax6-16;
+	Sun, 27 Oct 2024 20:05:28 +0000
+Date: Mon, 28 Oct 2024 04:05:15 +0800
 From: kernel test robot <lkp@intel.com>
 To: =?iso-8859-1?B?Q3Pza+FzLA==?= Bence <csokas.bence@prolan.hu>,
 	dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
@@ -74,7 +74,7 @@ Cc: oe-kbuild-all@lists.linux.dev, Mesih Kilinc <mesihkilinc@gmail.com>,
 	Samuel Holland <samuel@sholland.org>,
 	Philipp Zabel <p.zabel@pengutronix.de>
 Subject: Re: [PATCH v2 02/10] dma-engine: sun4i: Add has_reset option to quirk
-Message-ID: <202410280225.baqFmTsa-lkp@intel.com>
+Message-ID: <202410280330.S1S4TKbz-lkp@intel.com>
 References: <20241027091440.1913863-2-csokas.bence@prolan.hu>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -100,19 +100,19 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Cs-k-s-Bence/dma-engine-s
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/sunxi/linux.git sunxi/for-next
 patch link:    https://lore.kernel.org/r/20241027091440.1913863-2-csokas.bence%40prolan.hu
 patch subject: [PATCH v2 02/10] dma-engine: sun4i: Add has_reset option to quirk
-config: arm-multi_v7_defconfig (https://download.01.org/0day-ci/archive/20241028/202410280225.baqFmTsa-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 13.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241028/202410280225.baqFmTsa-lkp@intel.com/reproduce)
+config: arm-sunxi_defconfig (https://download.01.org/0day-ci/archive/20241028/202410280330.S1S4TKbz-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 14.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241028/202410280330.S1S4TKbz-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202410280225.baqFmTsa-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202410280330.S1S4TKbz-lkp@intel.com/
 
-All error/warnings (new ones prefixed by >>):
+All errors (new ones prefixed by >>):
 
    drivers/dma/sun4i-dma.c: In function 'sun4i_dma_probe':
->> drivers/dma/sun4i-dma.c:1225:51: warning: passing argument 2 of 'dev_err_probe' makes integer from pointer without a cast [-Wint-conversion]
+>> drivers/dma/sun4i-dma.c:1225:51: error: passing argument 2 of 'dev_err_probe' makes integer from pointer without a cast [-Wint-conversion]
     1225 |                         dev_err_probe(&pdev->dev, "Failed to get reset control\n");
          |                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
          |                                                   |
@@ -123,7 +123,7 @@ All error/warnings (new ones prefixed by >>):
    include/linux/dev_printk.h:278:64: note: expected 'int' but argument is of type 'char *'
      278 | __printf(3, 4) int dev_err_probe(const struct device *dev, int err, const char *fmt, ...);
          |                                                            ~~~~^~~
->> drivers/dma/sun4i-dma.c:1225:25: error: too few arguments to function 'dev_err_probe'
+   drivers/dma/sun4i-dma.c:1225:25: error: too few arguments to function 'dev_err_probe'
     1225 |                         dev_err_probe(&pdev->dev, "Failed to get reset control\n");
          |                         ^~~~~~~~~~~~~
    include/linux/dev_printk.h:278:20: note: declared here

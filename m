@@ -1,60 +1,58 @@
-Return-Path: <dmaengine+bounces-3608-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3609-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6AE4D9B2075
-	for <lists+dmaengine@lfdr.de>; Sun, 27 Oct 2024 21:41:03 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3724E9B207A
+	for <lists+dmaengine@lfdr.de>; Sun, 27 Oct 2024 21:42:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 303DE281D29
-	for <lists+dmaengine@lfdr.de>; Sun, 27 Oct 2024 20:41:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 71DE51C2099D
+	for <lists+dmaengine@lfdr.de>; Sun, 27 Oct 2024 20:42:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36FE517E004;
-	Sun, 27 Oct 2024 20:40:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D128317DFEB;
+	Sun, 27 Oct 2024 20:42:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LnEcATsv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yp4LVjva"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 078C4558BB;
-	Sun, 27 Oct 2024 20:40:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B7317B433;
+	Sun, 27 Oct 2024 20:42:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730061658; cv=none; b=VB5r1uJtxAp0UOCEeZkxE0N7DCPOKhPEjrKnIXee/UZc+QPrNNdMVNYb/pyDvkOoCHfQfXYxuP2Xsdc51tVnRtfEj7BW8Uu6odZCmmGMXKGuL7mZ4kVa3Q6lvwHwsOeX1REeF5/JdHz54dic8gu+zLP5u1karETOobjMy8THeG8=
+	t=1730061732; cv=none; b=jnDS3eCUyRn9EKdyjptJah7LZwnLbYZE1Rn3BMuSKi5biPRmn24QaPcrjmn2EtWG1/fj3+Z3KDFjXpzb7Aq7hmkORpCaY3e+ylfZXKMBzxAJGw7fFSs5hrESdVuW4nS0DoVSNOXCN1MDnSQUJEIpr0CxX00VNGB+3XbOqKF6kX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730061658; c=relaxed/simple;
-	bh=CbXmtdv3IjeDBQxB55AZf9jmxsHSvyuvWmObEhgds4Q=;
+	s=arc-20240116; t=1730061732; c=relaxed/simple;
+	bh=TlirieVOeoCI7ASR7CcbZmiCUaE3lt5vbX64fy8rlco=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BSkCVXSAqWyiyuhQg1WuWAxFOd3MP/ijhVaMaCXxct/wBIreIzfF7uzSAvN7alxGBLcbxd9AcGd/XPvZKLPwXc7ixY5gF2QMCQIbKDtHMX/+jg6f+WCKtFrVhFXlybYlC/A4U821sRZ+4qmrA+MLVPUCdE0Mcp65Kv5dr4YYNNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LnEcATsv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFB30C4CEC3;
-	Sun, 27 Oct 2024 20:40:56 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ze1sEwqeUO0Nj87PmCawPFmRXaoHOYJTDGk7Ef+ck9RjrbLf2OkU7vtvv1o3dxguYUqYQ12z6yD1Pb6CmNgZGQVSHLXo7R+UP7JBEdR4ESktjD0SSlAeAil4NSdGKAXbTgYxogS5ZWnZ4p9qn5Pm7yzBLzo6gssxx9rdb3+V51Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yp4LVjva; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 878AFC4CEC7;
+	Sun, 27 Oct 2024 20:42:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730061657;
-	bh=CbXmtdv3IjeDBQxB55AZf9jmxsHSvyuvWmObEhgds4Q=;
+	s=k20201202; t=1730061732;
+	bh=TlirieVOeoCI7ASR7CcbZmiCUaE3lt5vbX64fy8rlco=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LnEcATsv4UT/1vK5R7I5/K9/vJjlyku4VD0Cz9tTzKxg/1okqaOmGYhSQzEAM6V4p
-	 Bqgb03IVNIqiJq6KW0v26HYIxTMTCWGjAgfHLP7db7WReBwc8ueZRCGXOE7hDBT3cJ
-	 EdzATkwXfLrdUZ7w5WKD7j28Vz3F49GEQpVxGh4QDN6MJYqgAovHUBTd1vRHq3acqE
-	 4tLI2AJtTNOOtFN2/MJ97OIuaLQwHvO/BIRjct6GUkBM7CTtzLW4g5Wks0Cbg6w1Pj
-	 JnM5fmvSBY/n132MaqDfC7WKLFaBSRvfHCaV8xuUmVawSfjDwbKAhP0K/KlY92wRuJ
-	 qH7pT4pOKG7zQ==
-Date: Sun, 27 Oct 2024 21:40:53 +0100
+	b=Yp4LVjvaUZS3b8aTxrtglH2gFy/HjfkX+6t6JlasaRbx/nm/b5n+rY6wfMjl1YR9E
+	 Z4zQaQf9/MmBWWRy5iKi3gy0s4alRlVX88ko70636P9+YL4bb4hvgedX2lBaOPLFqx
+	 tuxmVG6TPvGLXafUJj3hVKDsCIjHidHEbjX9up7l5ev9PEyYPINYU7T9pl1JR5+wZe
+	 +dNDcMWN9UkvgtI4jD3FztgIZ2aIVwZH4yFZIHIXOkM4lUI5ZxcYj20UqyHlbBeBzP
+	 B4FDlxKonncinwwKCrPhtqUxq5eBdQfn8Upi8p38+LHEfjswAnH97iD2XLV3gEE78D
+	 a3hzmGYzUrwqw==
+Date: Sun, 27 Oct 2024 21:42:08 +0100
 From: Krzysztof Kozlowski <krzk@kernel.org>
 To: =?utf-8?B?Q3PDs2vDoXMs?= Bence <csokas.bence@prolan.hu>
-Cc: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>, 
-	dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
 	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Conor Dooley <conor.dooley@microchip.com>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>
-Subject: Re: [PATCH v2 03/10] dt-bindings: dmaengine: Add Allwinner suniv
- F1C100s DMA
-Message-ID: <b44xrgwi3swuvliaxzzk5tvanxrmik5zm4tcqzavl32wbgce3e@yb4eerrluanv>
+	Mesih Kilinc <mesihkilinc@gmail.com>, Vinod Koul <vkoul@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v2 02/10] dma-engine: sun4i: Add has_reset option to quirk
+Message-ID: <nlhsxigg3rbfvua76ekmub4p6df2asps2ihueouuk6zkbn56zl@xdj6jzzt4gfb>
 References: <20241027091440.1913863-1-csokas.bence@prolan.hu>
- <20241027091440.1913863-3-csokas.bence@prolan.hu>
+ <20241027091440.1913863-2-csokas.bence@prolan.hu>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -64,18 +62,28 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20241027091440.1913863-3-csokas.bence@prolan.hu>
+In-Reply-To: <20241027091440.1913863-2-csokas.bence@prolan.hu>
 
-On Sun, Oct 27, 2024 at 10:14:34AM +0100, Cs=C3=B3k=C3=A1s, Bence wrote:
-> Add compatible string for Allwinner suniv F1C100s DMA.
+On Sun, Oct 27, 2024 at 10:14:32AM +0100, Cs=C3=B3k=C3=A1s, Bence wrote:
+> From: Mesih Kilinc <mesihkilinc@gmail.com>
 >=20
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> Link: https://lore.kernel.org/linux-kernel/20241024-recycler-borrowing-5d=
-4296fd4a56@spud/
-> [ csokas.bence: Reimplemented Mesih Kilinc's binding in YAML ]
-> Signed-off-by: Cs=C3=B3k=C3=A1s, Bence <csokas.bence@prolan.hu>
+> Allwinner suniv F1C100s has a reset bit for DMA in CCU. Sun4i do not
+> has this bit but in order to support suniv we need to add it. So add
+> support for reset bit.
+> =20
+>  static struct sun4i_dma_dev *to_sun4i_dma_dev(struct dma_device *dev)
+> @@ -1215,6 +1218,15 @@ static int sun4i_dma_probe(struct platform_device =
+*pdev)
+>  		return PTR_ERR(priv->clk);
+>  	}
+> =20
+> +	if (priv->cfg->has_reset) {
+> +		priv->rst =3D devm_reset_control_get_exclusive(&pdev->dev,
+> +							     NULL);
+> +		if (IS_ERR(priv->rst)) {
+> +			dev_err_probe(&pdev->dev, "Failed to get reset control\n");
 
-Missing quotes? Are you sure this passes checkpatch?
+syntax is: return dev_err_probe()
 
 Best regards,
 Krzysztof

@@ -1,48 +1,48 @@
-Return-Path: <dmaengine+bounces-3624-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3625-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8026B9B29ED
-	for <lists+dmaengine@lfdr.de>; Mon, 28 Oct 2024 09:10:06 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9CB899B29F9
+	for <lists+dmaengine@lfdr.de>; Mon, 28 Oct 2024 09:11:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E4041B210B1
-	for <lists+dmaengine@lfdr.de>; Mon, 28 Oct 2024 08:10:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CDC581C21B71
+	for <lists+dmaengine@lfdr.de>; Mon, 28 Oct 2024 08:11:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97F0C190667;
-	Mon, 28 Oct 2024 08:08:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53B2F18D64F;
+	Mon, 28 Oct 2024 08:11:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FPWtDfAn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="edHFUOFE"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A8F71474DA;
-	Mon, 28 Oct 2024 08:08:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27BCA8472;
+	Mon, 28 Oct 2024 08:11:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730102921; cv=none; b=Jg4csXp4gDDK9NL4noSUnzeg0wfXPR1XNfpw1UBBsis8CvKin+EF/Zfu2LFOnuFIjTOXUEOK5HeGJ+MYvYK+9RG5AF1r/+pTKHsFP/ubzh45pTudtFkZoryCIrOs4L6irNoLC1EdtXMiTXQAGU4yowjw0VD8tXyE8Tjk1Bgm+wU=
+	t=1730103091; cv=none; b=gCb+VkiG0vnmn4YhjjLRzyViSbgNHBjNrGlcGSAgkDFfA25aMn3srP+7BfKe3kh2zS4k0ZZMOFJ8V/hbDBCBfNKz5ZcHvGymigXNg7Fk57z8us1Go0YsHVIvsh95Z0WT9v55SGtqKxIzVpG8pnB0ba25KhoOPC0gJJzN/PHDTko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730102921; c=relaxed/simple;
-	bh=qvFtQfpBbLGFZI3KArfCP7mQmMreBDHLeG901dppUjE=;
+	s=arc-20240116; t=1730103091; c=relaxed/simple;
+	bh=alsw3yJpSQ1A0ld5PJXCLEDJBezhPSKuihy6m5Jpnzk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=vF9iew84fMoOpbXV/P/D7C+/PcGVMz5SDcm74DNkw6jbjuEYhp0y9TVXax1pu+t43bu7soiRCTVtIAsWSBpprM9U/edRJy8pExL20rLJmsvSe6lt7+4gyN6fe86/JqXnr4I17bQw+FNPyW1xYtmkE4ejfDbjpoSTE4nBXicfI/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FPWtDfAn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5D0AC4CEC3;
-	Mon, 28 Oct 2024 08:08:36 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=DpjAw7kLJCL2oRuX4Td38rC2XJ26i2yz1F0Ce0sgA4Ld5NEaTL3WHnDSwZtPNkS7ibZ6dZdTO+lZv4OVskVgRUc0iBxPnMRzvapyl4na2tisoPKSXnNnY1LzvkVrLY2+DGApOawhTMCLmza0Oe96Ezx1daenArPQOXVHiHjX/lI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=edHFUOFE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0311C4CEC3;
+	Mon, 28 Oct 2024 08:11:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730102921;
-	bh=qvFtQfpBbLGFZI3KArfCP7mQmMreBDHLeG901dppUjE=;
+	s=k20201202; t=1730103090;
+	bh=alsw3yJpSQ1A0ld5PJXCLEDJBezhPSKuihy6m5Jpnzk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FPWtDfAnbCaRirfonwMQuCjhLtPKn5kkSkxXGz5jtkzn0UlNbdfytm37IiiC4z2l7
-	 7EcHLSFBXHY4oZoafpBK6/8NBY4ZbUSOfA4d4uckJjjuez3ZeVSwErIHcCGkk+G5m/
-	 tvHj9wlpyf8ae5DyUNMdP5SHdEZofBa4ywFgbhSk4QM9e0KiPxfxJA1jtHBlQzo8Ct
-	 2yX5nAvgYNqoqD4jhLZcdOhm8mtVEAAITCDY1x+STQwCxlnVLh9CpOR2CevHxNZ5+9
-	 wsfTDDUIlWoIuWy0dz1Ca5Iud0LjOgf4THoJFRW117+f2PVaDltEEp47SL7Ii+38Vv
-	 ZZZm1T+YlaCJA==
-Message-ID: <5fa06b0c-a420-41a4-97ce-b6e5055ab397@kernel.org>
-Date: Mon, 28 Oct 2024 09:08:33 +0100
+	b=edHFUOFE6sgjP2ny5KgPkmY8Ohq4HfpEPJYG008XsnGr/hk0pwk4ZXuvVcnjWaq0H
+	 ylvIw4lZzTWhaLub0wbhwesN+MZyCsI+vu/z2cx99rITjeuCTl03fhFjF09uPxyWbk
+	 a+v6dKj/raEp/z40xcKvVVe++MY59gzJ30VczVQqRsyEsDi93DZmM3flj2lAM9OXSR
+	 lAY05vLiUAs+ArOVj5oP3Ci1OO2gkpdZda8sBY1dZ+Qm/GDhY99bTfxRDD320UlLJB
+	 B7hVfWgoiOVzQu5IWPQ3cfID+6M+Zs4dZhG0bRtPszAjKJg/uOpbvSQpFEvM9tPrHQ
+	 9cTfhaax3mTsQ==
+Message-ID: <748346c6-56e0-4d70-b86b-edd75c8060ed@kernel.org>
+Date: Mon, 28 Oct 2024 09:11:23 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -50,17 +50,17 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 02/10] dma-engine: sun4i: Add has_reset option to quirk
+Subject: Re: [PATCH v3 02/10] dma-engine: sun4i: Add has_reset option to quirk
 To: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
 Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
  Mesih Kilinc <mesihkilinc@gmail.com>, Vinod Koul <vkoul@kernel.org>,
  Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>,
  Samuel Holland <samuel@sholland.org>, Philipp Zabel <p.zabel@pengutronix.de>
-References: <20241027091440.1913863-1-csokas.bence@prolan.hu>
- <20241027091440.1913863-2-csokas.bence@prolan.hu>
- <nlhsxigg3rbfvua76ekmub4p6df2asps2ihueouuk6zkbn56zl@xdj6jzzt4gfb>
- <b74dafed-197a-4644-a546-54c7a1639484@prolan.hu>
+References: <4b614d6c-6b46-438a-b5c3-de1e69f0feb8@prolan.hu>
+ <20241027180903.2035820-2-csokas.bence@prolan.hu>
+ <dsuadjqzybikpnuyr7q2fbq5jdzev33rqqhnehh3ns2lgfvdlb@bdmib46vlxt3>
+ <5eedfe71-7a8d-4b91-ab49-e09352e7d6f3@prolan.hu>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -106,46 +106,41 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <b74dafed-197a-4644-a546-54c7a1639484@prolan.hu>
+In-Reply-To: <5eedfe71-7a8d-4b91-ab49-e09352e7d6f3@prolan.hu>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 28/10/2024 08:37, Csókás Bence wrote:
+On 28/10/2024 08:31, Csókás Bence wrote:
 > Hi,
 > 
-> On 2024. 10. 27. 21:42, Krzysztof Kozlowski wrote:
->> On Sun, Oct 27, 2024 at 10:14:32AM +0100, Csókás, Bence wrote:
->>> From: Mesih Kilinc <mesihkilinc@gmail.com>
->>>
->>> Allwinner suniv F1C100s has a reset bit for DMA in CCU. Sun4i do not
->>> has this bit but in order to support suniv we need to add it. So add
->>> support for reset bit.
->>>   
->>>   static struct sun4i_dma_dev *to_sun4i_dma_dev(struct dma_device *dev)
->>> @@ -1215,6 +1218,15 @@ static int sun4i_dma_probe(struct platform_device *pdev)
->>>   		return PTR_ERR(priv->clk);
->>>   	}
->>>   
->>> +	if (priv->cfg->has_reset) {
->>> +		priv->rst = devm_reset_control_get_exclusive(&pdev->dev,
->>> +							     NULL);
->>> +		if (IS_ERR(priv->rst)) {
->>> +			dev_err_probe(&pdev->dev, "Failed to get reset control\n");
+> On 2024. 10. 27. 21:43, Krzysztof Kozlowski wrote:
+>> You did not build v2. Then you send v3... which you also did not build.
 >>
->> syntax is: return dev_err_probe()
->>
->> Best regards,
->> Krzysztof
+>> Please start at least compiling your own code. Then start testing it,
+>> but without building it cannot obviously be even tested.
 > 
-> Thanks! And regarding v3 of this patch, I have `clk_disable_unprepare()` 
+> I forgot to rebase an amend! before sending v2, which I corrected in v3. 
+> I *did* in fact build v3 (after the aforementioned correction) rebased 
+> on top of Linux 6.5, which is what I have available for my board. And I 
 
-No, you do not. Read your code correctly.
+We cannot take patches based on v6.5. That's some close to ancient
+kernel nowadays.
 
-+			dev_err_probe(&pdev->dev, "Failed to get reset control\n");
-+			return PTR_ERR(priv->rst);
+> also *did* test with aplay and confirmed to have working audio. If you 
+> believe there are differences between 6.5 and master that break v3 of 
 
-Where is here clk_disable_unprepare()?
+Yes, there are thousands of changes with possible impact.
 
+All your patches must be prepared on latest mainline tree. All your SoC
+code must be tested on *latest mainline tree*.
+
+> the patch, then please point those out as opposed to making accusations.
+
+First, your code does not build. Your code might not even apply. I do
+not have to point patches causing it, because your job is to work on
+mainline. But if you ask about patches causing issues, then I also do
+not have to go through 50 000 commits which could have possible impact,
+because you are supposed to work on mainline kernel.
 
 Best regards,
 Krzysztof

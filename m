@@ -1,81 +1,81 @@
-Return-Path: <dmaengine+bounces-3627-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3628-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 795509B2E41
-	for <lists+dmaengine@lfdr.de>; Mon, 28 Oct 2024 12:12:25 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 571B39B2F19
+	for <lists+dmaengine@lfdr.de>; Mon, 28 Oct 2024 12:44:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 25FB11F20FEF
-	for <lists+dmaengine@lfdr.de>; Mon, 28 Oct 2024 11:12:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8FE421C2164C
+	for <lists+dmaengine@lfdr.de>; Mon, 28 Oct 2024 11:44:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D38AA1DD865;
-	Mon, 28 Oct 2024 10:57:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 074FF1D86ED;
+	Mon, 28 Oct 2024 11:44:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WHbvzbmw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rlBi5E3o"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E5971D7E4A
-	for <dmaengine@vger.kernel.org>; Mon, 28 Oct 2024 10:57:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC8821D63F9
+	for <dmaengine@vger.kernel.org>; Mon, 28 Oct 2024 11:44:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730113038; cv=none; b=pxkyOFmJRybqfleL4Z8yKeSAXb8pvw+QsUnmjVWfWZaLqJY/tg2LP3ugluP5dPhWtQyWUWn8NgHTk2Z6FxTolZeNACf5yQnj3/vZHf9ZrAaWGLyxgjIImI4Av8ZXVk0pmPOM4jqsZL2J5hYzBp59SYC85NNEXZ2kzi6vU6Hn3yQ=
+	t=1730115872; cv=none; b=CoF5nr8N8qua0jwajda5PeOHggox9naUFiiD/lGRaRw0jT+sorMYmZYZtDMV5NYskap6m+1ZF2bKMqB7lh81CioPjrkDDYqAYxTqoe35HL7nqCUOOgjlvGY+T8KjsZ7VoY4ybFuDv5FGlIgWlQyW+XYeoC9+zhB70nbONw0cQ+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730113038; c=relaxed/simple;
-	bh=ACRaOUj1WOVfpWuhZEMw7VYY4sp45JSXpzq4OnInkZg=;
+	s=arc-20240116; t=1730115872; c=relaxed/simple;
+	bh=v3yjuR/if/Qk08YvHm7Za9TOJuneF2XX7j+JN5TSp+M=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WTzvm9FefYhjtMBv/JnOTsRw0OR7ioVvd19FkZS+DKKohZIiEyVEiCi2M60POjzhhsYQ64mUeiH4IErkkr1s4J0RJEFO+dU7S+geLq3DBBjgMpB79u57NzxloP0c9UJEBQnHg1LYrrwrZCz5/mnYcantkc/APH1+U8MoPf3kzHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WHbvzbmw; arc=none smtp.client-ip=209.85.128.169
+	 To:Cc:Content-Type; b=gdRAc55i5KGgae38iqIw8M4Mlw2xE2IrFUE7NfDNZ5CYVyJSysT54I+DQZnoK8zyhOOSgJ/fAKo+AOvqvaj2ySkqvBXSjdKo1nIkhQ7PlSt70XVRju795QtFc2eRvcTc3bbSBnlYfKF7SGbPjaV8hGzVaYNsy2E6uojdA43lfcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rlBi5E3o; arc=none smtp.client-ip=209.85.128.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-6e5b7cd1ef5so36927727b3.1
-        for <dmaengine@vger.kernel.org>; Mon, 28 Oct 2024 03:57:16 -0700 (PDT)
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-6ea02c39211so909077b3.2
+        for <dmaengine@vger.kernel.org>; Mon, 28 Oct 2024 04:44:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1730113035; x=1730717835; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1730115870; x=1730720670; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=48Mqgz0yoPcTn42M0JioJyjAgLLTyWy+bgFbYFVMpQY=;
-        b=WHbvzbmw7l1r2ZG7BL3KVSyHXykcGwjuarvHb5RWaPKS709EGyoLHGPwhZKfVPecNH
-         zympayYcjvrU0BiN2acYrvRLCDOgdiX99bCJsrY5YGh6d6A6qKRH32/imJcwyVzcp+5+
-         4Vq7y9di3iLgTtzzCsv0TRgMm8yELz+51VWVkQRlpGETLIlBGpXva+a6R01Z4hcSMBbe
-         mfFXbhCFdHiYveosWl1Z+9c+h5G4z4NKVO/m/EMA2fnmihZ/L76zVEffteu+qkDWAlx8
-         pPn5m/2ai9GENpUQpKL2Mt2ntiuCchdkwKmqeKdcj7caHBBNcduT8dPKbfvvbAlSrU3+
-         XG+g==
+        bh=w67vg9M/PUfllFizpdXiSM7HQlThvR5jg0fvSeOpX5U=;
+        b=rlBi5E3o8u6RF9xXcM4Z/PtRZdaq6cPNZhPayq1E2gt/1SBrbUzkzRoVDp3HmUkQe9
+         vBSDU1dflKbs5F7uE83P3kQBgD3gCmemVfpeF2QA0n8DObk8UAcNMuckD5hUNIsz7B/B
+         8sEOyuGs00Cku/0OePjAwlu2DI2lFoTYF6SkiyjEGFxvRLM4aJOHD/ZRnNuSjOvx4D6Z
+         C1stew0KywHJnQFMXouD83txW8tqiFxBvNKGjmeSy3t+BX7TLEwPGJZDt61/wBUg0cOp
+         42YDZ1HSs97BAeFaCZ0tXvzJeVgZnW9fuzpR6LWJDkSV7Y0naOWaJ3ZUv083naGlTfPv
+         OOMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730113035; x=1730717835;
+        d=1e100.net; s=20230601; t=1730115870; x=1730720670;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=48Mqgz0yoPcTn42M0JioJyjAgLLTyWy+bgFbYFVMpQY=;
-        b=atb+0uitv8DfbhxZPGj3v/tuDZlvx7YSgoJoUXhE51LgY/e59NKoq4SZ+BD4YPxSSX
-         C/ddNZbb7PFfyhK5RHavJAtjyebh4hmftRAlJlVrWkcAXXY38o1wd7y+D8Xj2T9uFZgP
-         HuLIWN2yqMY5VX/7nTRU/iV2ZQV4U3tCHV07zewrzumGuicYMRakNzrIxrQMKFQPN9vJ
-         RvGnbLrva7fdbXhh3IEzh0OFk5N29qouafU5k3IO1gaB8QhspbCcplpobfJYAjXepSab
-         LCPf8nBgAozzARZBzIDEtuLIehcxh3LVW2mdfm69dec7F18Qta0LWlG5XaifWOKIe66w
-         v18g==
-X-Forwarded-Encrypted: i=1; AJvYcCXftVgZ44Mzq9vUwZDs9oR+0WrhukYiWrK5jC0B3eugLhfoDbhUTZ7Dq7kGXR1aSUAywzfvnJBCqlk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHOSjgkBIEtOGbsHwvZab+NUd2b/xrTQFNzI0lCbaeSeHJna3+
-	2S43CvR0Obs6Jd28t0uT1XcgpsSEg3fO+2r53uZQaf+2bGZaej/4lhVW3tuDHLBgg8N13K5LWvz
-	XVPNmUaIo/K6/y9atRGWhUDJHE44Wi9BYNfbMuw==
-X-Google-Smtp-Source: AGHT+IHA0r4lmbXa1zcBrKWmUfLUZyXRw9N6lNM3hTgpKMnZRgAzGlVS4oP7yDvcJkxKm4/yuGEHcyAWNjCtADPWGf0=
-X-Received: by 2002:a05:690c:3809:b0:6e3:1063:91ca with SMTP id
- 00721157ae682-6e9d8ad3e88mr72127657b3.40.1730113035192; Mon, 28 Oct 2024
- 03:57:15 -0700 (PDT)
+        bh=w67vg9M/PUfllFizpdXiSM7HQlThvR5jg0fvSeOpX5U=;
+        b=gNkC5hO+KusJOKjKCxKSYsSg1SMG3/IVVf7NkjKW5HUov8jcMbzBp+bHmOAABjSIjb
+         iJkh8TNe7E8xY175PJ57K+9u4wyYwFuLVH4jFhBnTa+HnCNFxiUG5O/nIKMHJBRDXDSp
+         GGHEk9foRddQfOjh5U0tR0T+I5Vtqn0jcv+9JPtKGfPzyJrjYptUWw/GTfnkkB2af5LP
+         1MTfhnDy8RAJNsrR/BMTz+ZSTvhDt1u7GAIYnGq9t9FHKYmNA6pdjOg48SvDlakUpnLl
+         twiGRVZhKMIkXl+0ebGRJT4gdOy0dnzUZEuB2b5arG7a3zqUGZHIum+waJq1QIBr9iRA
+         8/UQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV1SGHg7mQHR5PuQ4B5vB9NWvgsW36dvQPu0XHCXp5WN2z0JWjqBJPmSJowo2AyYEXA/m+C4KdOKUU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzI7VwWEos4YkOH7Cr4p75Fh8R8Ra1hbLxvaSnpMzcZV7H/qDew
+	uV6EHBHrCFiYpNQyY81GiOzJPEZmNgUKQLtnpQ+MTwO0Sx7QUsrMRF5ycnIw056054IirC109Si
+	N9eIpDNr0sFBq2QwZgE8iwSQQnpIMNRSiBxtKlQ==
+X-Google-Smtp-Source: AGHT+IF26G/KW53BnVmsufrZN4oEUN/Y3tFfc1+XSv54Nwo/CrFvFba9ljoAEAfzBRZISL4FpyAIkN8L5k8Ymwv2dPg=
+X-Received: by 2002:a05:690c:46c6:b0:6e5:a431:af41 with SMTP id
+ 00721157ae682-6e9d8ad6cf4mr74632897b3.38.1730115869914; Mon, 28 Oct 2024
+ 04:44:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241025103621.4780-1-wahrenst@gmx.net> <20241025103621.4780-6-wahrenst@gmx.net>
-In-Reply-To: <20241025103621.4780-6-wahrenst@gmx.net>
+References: <20241025103621.4780-1-wahrenst@gmx.net> <20241025103621.4780-4-wahrenst@gmx.net>
+In-Reply-To: <20241025103621.4780-4-wahrenst@gmx.net>
 From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Mon, 28 Oct 2024 11:56:38 +0100
-Message-ID: <CAPDyKFoKuZD596mVNeV5VszU8ncQ8cPda1fbktb3UQQiv+67GQ@mail.gmail.com>
-Subject: Re: [PATCH V5 5/9] mmc: bcm2835: add suspend/resume pm support
+Date: Mon, 28 Oct 2024 12:43:54 +0100
+Message-ID: <CAPDyKFr7mJPWPkTrtB9ORdQw0TtBDKM=B9g6QsKvUHRx1zDNxQ@mail.gmail.com>
+Subject: Re: [PATCH V5 3/9] mmc: bcm2835: Fix type of current clock speed
 To: Stefan Wahren <wahrenst@gmx.net>
 Cc: Russell King <linux@armlinux.org.uk>, Florian Fainelli <florian.fainelli@broadcom.com>, 
 	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Vinod Koul <vkoul@kernel.org>, 
@@ -89,63 +89,36 @@ Content-Type: text/plain; charset="UTF-8"
 
 On Fri, 25 Oct 2024 at 12:36, Stefan Wahren <wahrenst@gmx.net> wrote:
 >
-> Add a minimalistic suspend/resume PM support.
+> The type of mmc_ios.clock is unsigned int, so the cached value
+> should be of the same type.
 >
+> Fixes: 660fc733bd74 ("mmc: bcm2835: Add new driver for the sdhost controller.")
 > Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-> ---
->  drivers/mmc/host/bcm2835.c | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
->
-> diff --git a/drivers/mmc/host/bcm2835.c b/drivers/mmc/host/bcm2835.c
-> index 107666b7c1c8..17c327b7b5cc 100644
-> --- a/drivers/mmc/host/bcm2835.c
-> +++ b/drivers/mmc/host/bcm2835.c
-> @@ -1343,6 +1343,30 @@ static int bcm2835_add_host(struct bcm2835_host *host)
->         return 0;
->  }
->
-> +static int bcm2835_suspend(struct device *dev)
-> +{
-> +       struct bcm2835_host *host = dev_get_drvdata(dev);
-> +
-> +       if (!host->data_complete) {
-> +               dev_warn(dev, "Suspend is prevented\n");
-> +               return -EBUSY;
-> +       }
 
-This should not be needed.
-
-The mmc core makes sure all outstanding requests have been flushed,
-before the host controller becomes suspended.
-
-> +
-> +       clk_disable_unprepare(host->clk);
-> +
-> +       return 0;
-> +}
-> +
-> +static int bcm2835_resume(struct device *dev)
-> +{
-> +       struct bcm2835_host *host = dev_get_drvdata(dev);
-> +
-> +       return clk_prepare_enable(host->clk);
-> +}
-> +
-> +static DEFINE_SIMPLE_DEV_PM_OPS(bcm2835_pm_ops, bcm2835_suspend,
-> +                               bcm2835_resume);
-> +
->  static int bcm2835_probe(struct platform_device *pdev)
->  {
->         struct device *dev = &pdev->dev;
-> @@ -1471,6 +1495,7 @@ static struct platform_driver bcm2835_driver = {
->                 .name           = "sdhost-bcm2835",
->                 .probe_type     = PROBE_PREFER_ASYNCHRONOUS,
->                 .of_match_table = bcm2835_match,
-> +               .pm = pm_ptr(&bcm2835_pm_ops),
->         },
->  };
->  module_platform_driver(bcm2835_driver);
+Applied for next, thanks!
 
 Kind regards
 Uffe
+
+
+> ---
+>  drivers/mmc/host/bcm2835.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/mmc/host/bcm2835.c b/drivers/mmc/host/bcm2835.c
+> index 35d8fdea668b..3d3eda5a337c 100644
+> --- a/drivers/mmc/host/bcm2835.c
+> +++ b/drivers/mmc/host/bcm2835.c
+> @@ -150,7 +150,7 @@ struct bcm2835_host {
+>
+>         struct platform_device  *pdev;
+>
+> -       int                     clock;          /* Current clock speed */
+> +       unsigned int            clock;          /* Current clock speed */
+>         unsigned int            max_clk;        /* Max possible freq */
+>         struct work_struct      dma_work;
+>         struct delayed_work     timeout_work;   /* Timer for timeouts */
+> --
+> 2.34.1
+>
 

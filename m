@@ -1,96 +1,116 @@
-Return-Path: <dmaengine+bounces-3610-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3611-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76BDE9B2082
-	for <lists+dmaengine@lfdr.de>; Sun, 27 Oct 2024 21:43:29 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E9B029B230D
+	for <lists+dmaengine@lfdr.de>; Mon, 28 Oct 2024 03:42:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F376FB20EB4
-	for <lists+dmaengine@lfdr.de>; Sun, 27 Oct 2024 20:43:26 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 79F9DB223C9
+	for <lists+dmaengine@lfdr.de>; Mon, 28 Oct 2024 02:42:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C76117D354;
-	Sun, 27 Oct 2024 20:43:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GQ7XnWoF"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8E58188CB1;
+	Mon, 28 Oct 2024 02:40:18 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7099C558BB;
-	Sun, 27 Oct 2024 20:43:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1AB418C333
+	for <dmaengine@vger.kernel.org>; Mon, 28 Oct 2024 02:40:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730061800; cv=none; b=kp71PKGVSSZgysUHdWu2VmlCF+HXD3W9ENWSkOiCXde/dla80Avq9ZHAZlek5Bh9ehplliHfsPHYnwxhIymdWcSXGUzoLiY+uOLMy48HgU3M0hWEeiUo8ilr+9zHLlMANJOtS001dMhDMb0PEaPff1CTryRovw/19+FdEpCBjTg=
+	t=1730083218; cv=none; b=VXk1TiRA0TyCvAx1tmGwSy77G3ZB2BAgVWG36g+8TrxohauTeNKj/p3WngLWr4QQ39dOaR7EIffb4VXgb+28WlAS8pE2mT5Q49ZyiLeT8oyK5qLSXza4zYT13gW3cPcveOrrB9NJRWY9LoQCMFkFli+lAGHZkgvWW5pI/hQ0D3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730061800; c=relaxed/simple;
-	bh=qvujWRAqdpKJn304U7F5jeDAVb+FedOCfe/qiEKOYTw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IUhRFVXn34+fWxU7aZfhflwq8fzOJ4vnuGEXZwQ74okjU7vUo/t6WvXdu6v1PAdt8kEDspleLAK29JCLKPy1R8ogoC40OX2f8j3wY4xMF4R1We97La5N1BBvsKZmKBKyvTmodQqtX+a4q3ca4ekPb+LdKkkfA2YhNfuqkvqzUp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GQ7XnWoF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51DB9C4CEC3;
-	Sun, 27 Oct 2024 20:43:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730061800;
-	bh=qvujWRAqdpKJn304U7F5jeDAVb+FedOCfe/qiEKOYTw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GQ7XnWoFLsKwXIdsVWpeNEua6b7zNYi8q+Ferq/6ckQ7pnWD/E0KLmXwzGWVihUwU
-	 JKlSjOC32M/g8Kwqgi5Mm+v7OoyfIadYdlLzs6d8if8xXvwjTl+bub2X0aKr9m0jSF
-	 Uj9dG0Z20+lpisHeSTLqiE/e9iCqTHc45uYkhgDBUig+oQU4lIPAHnb2FfdjEITbcw
-	 dFpm8Azg35ZUO+M0FH2MOaEfT/toHBXEWTE5cBh9UpT8MnHacQAH/RUf4L45kZL2fi
-	 HNYuS7FGibaqWP7KJcorc+NKsAd9WqMWF8ooZIO5e6Xmo1jGb2hMlmw6HMWHClV1RS
-	 ho/a9qwQmMjWQ==
-Date: Sun, 27 Oct 2024 21:43:17 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: =?utf-8?B?Q3PDs2vDoXMs?= Bence <csokas.bence@prolan.hu>
-Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Mesih Kilinc <mesihkilinc@gmail.com>, Vinod Koul <vkoul@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v3 02/10] dma-engine: sun4i: Add has_reset option to quirk
-Message-ID: <dsuadjqzybikpnuyr7q2fbq5jdzev33rqqhnehh3ns2lgfvdlb@bdmib46vlxt3>
-References: <4b614d6c-6b46-438a-b5c3-de1e69f0feb8@prolan.hu>
- <20241027180903.2035820-2-csokas.bence@prolan.hu>
+	s=arc-20240116; t=1730083218; c=relaxed/simple;
+	bh=Od1p9eFiEoNUEhnW+sccDNX/y7TBvaNvnIcWV3Vwcic=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PYoAdeaIAzt15CnpEifkJM+nbokWIVU8Gj51t/+raXb7H7/4rW0/Kh1o8DqJ+mISBoejuzVgADscCDh3BWH+JsNNC/bXeSJlGUPn5/AhZ2JF7AvwyVPX9WBrrMqLMMaiTWO6u6K/owGpc2fYzEgb8JW9wwInKQUr63xJBwObE38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.202])
+	by gateway (Coremail) with SMTP id _____8CxieGO+R5nlM0XAA--.50208S3;
+	Mon, 28 Oct 2024 10:40:14 +0800 (CST)
+Received: from [192.168.100.223] (unknown [223.64.68.202])
+	by front1 (Coremail) with SMTP id qMiowMAxDEeL+R5n1_wgAA--.13205S3;
+	Mon, 28 Oct 2024 10:40:13 +0800 (CST)
+Message-ID: <89738377-d752-4d23-8fe9-928dd4e3440f@loongson.cn>
+Date: Mon, 28 Oct 2024 10:40:10 +0800
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20241027180903.2035820-2-csokas.bence@prolan.hu>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [bug report] dmaengine: ls2x-apb: New driver for the Loongson
+ LS2X APB DMA controller
+To: Dan Carpenter <dan.carpenter@linaro.org>,
+ Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+ zhoubb.aaron@gmail.com
+Cc: dmaengine@vger.kernel.org
+References: <87cdc025-7246-4548-85ca-3d36fdc2be2d@stanley.mountain>
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+In-Reply-To: <87cdc025-7246-4548-85ca-3d36fdc2be2d@stanley.mountain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:qMiowMAxDEeL+R5n1_wgAA--.13205S3
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj9xXoW7XFy7Xw18CF4DCF13Xr1xXrc_yoWkurbEva
+	ykWw42grWDJFySvFWjvry5AF1DXaykXr1Fk3ZYgFyjqa4ftws5uFW8Gas5Gw17Zr48WFyY
+	9w10gryfAryI9osvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbzkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41l42xK82IYc2Ij64vIr4
+	1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
+	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI
+	8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAv
+	wI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14
+	v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j0FALUUUUU=
 
-On Sun, Oct 27, 2024 at 07:08:55PM +0100, Cs=C3=B3k=C3=A1s, Bence wrote:
-> From: Mesih Kilinc <mesihkilinc@gmail.com>
->=20
-> Allwinner suniv F1C100s has a reset bit for DMA in CCU. Sun4i do not
-> has this bit but in order to support suniv we need to add it. So add
-> support for reset bit.
->=20
-> Signed-off-by: Mesih Kilinc <mesihkilinc@gmail.com>
-> [ csokas.bence: Rebased and addressed comments ]
-> Signed-off-by: Cs=C3=B3k=C3=A1s, Bence <csokas.bence@prolan.hu>
-> ---
->=20
-> Notes:
->     Changes in v2:
->     * Call reset_control_deassert() unconditionally, as it supports optio=
-nal resets
->     * Use dev_err_probe()
->     * Whitespace
->     Changes in v3:
->     * More dev_err_probe()
+Hi Dan:
 
-You did not build v2. Then you send v3... which you also did not build.
+Thanks for your report.
 
-Please start at least compiling your own code. Then start testing it,
-but without building it cannot obviously be even tested.
+On 2024/10/25 16:59, Dan Carpenter wrote:
+> Hello Binbin Zhou,
+>
+> Commit 71e7d3cb6e55 ("dmaengine: ls2x-apb: New driver for the
+> Loongson LS2X APB DMA controller") from Dec 18, 2023 (linux-next),
+> leads to the following Smatch static checker warning:
+>
+> 	drivers/dma/loongson2-apb-dma.c:189 ls2x_dma_write_cmd()
+> 	warn: was expecting a 64 bit value instead of '~(((0)) + (((~((0))) - (((1)) << (0)) + 1) & (~((0)) >> ((8 * 4) - 1 - (4)))))'
+>
+> drivers/dma/loongson2-apb-dma.c
+>      184 static void ls2x_dma_write_cmd(struct ls2x_dma_chan *lchan, bool cmd)
+>      185 {
+>      186         struct ls2x_dma_priv *priv = to_ldma_priv(lchan->vchan.chan.device);
+>      187         u64 val;
+>      188
+> --> 189         val = lo_hi_readq(priv->regs + LDMA_ORDER_ERG) & ~LDMA_CONFIG_MASK;
+>
+> On a 32bit build the ~LDMA_CONFIG_MASK will zero out the high 32 bits.  Should
+> LDMA_CONFIG_MASK be defined with GENMASK_ULL()?
+Indeed, it is more appropriate to define it as GENMASK_ULL().
 
-Best regards,
-Krzysztof
+I'll submit a patch to redefine it.
+
+
+Thanks.
+
+Binbin
+
+>
+>      190         val |= LDMA_64BIT_EN | cmd;
+>      191         lo_hi_writeq(val, priv->regs + LDMA_ORDER_ERG);
+>      192 }
+>
+> regards,
+> dan carpenter
 
 

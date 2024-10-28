@@ -1,192 +1,106 @@
-Return-Path: <dmaengine+bounces-3629-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3630-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 071C39B2F1D
-	for <lists+dmaengine@lfdr.de>; Mon, 28 Oct 2024 12:45:09 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 491289B3167
+	for <lists+dmaengine@lfdr.de>; Mon, 28 Oct 2024 14:12:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5BE3DB226F2
-	for <lists+dmaengine@lfdr.de>; Mon, 28 Oct 2024 11:45:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0C88C282D59
+	for <lists+dmaengine@lfdr.de>; Mon, 28 Oct 2024 13:12:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A1D91D8E01;
-	Mon, 28 Oct 2024 11:44:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7795B1DA309;
+	Mon, 28 Oct 2024 13:12:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Hdf2SnIu"
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="UQseZHBF"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA351D7989
-	for <dmaengine@vger.kernel.org>; Mon, 28 Oct 2024 11:44:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001301E48A;
+	Mon, 28 Oct 2024 13:12:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730115878; cv=none; b=G2Ai+iUUNdXLNbyLWVqvjOs1v80T5mO/1ecC/ZSkGLzxz0bwXhg0+Ep7gD8M6cwoVMV4aA56y/GC9C7LPNkxWO/K7Bm1xG12bAAKT0rX6IXbDmAWBofRwhifuk7ZgVdckPZnMoyEDEOwD/Fxf1gwPyxTJCAYsAOh0cTOsgFMyqI=
+	t=1730121154; cv=none; b=P8c1sWASSG8XigbIERnao9hyv5NhkcXpOOABHzfarl+DPGPpqnQF3ffhboI+xEHaoYvQKtDcvZy2V2Hsk993OS5nvQ5cZPXXkB1dtWNivKHcqm0LBqfuo/Lnf88mxYl3ACk/zZFlBK7f72irUizLcMmomXa8DOKv/dTin75wk9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730115878; c=relaxed/simple;
-	bh=sIrBYg66hmwWk7TsDy2bhP4Kq6hK7NxiK4s3ASUWf5Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jgjClxomLuRhAYH8IPyQgSH0cB2fZj+tV4OJapD5GrowBVsXDPfpmBJuzbjjByFnqv4jRKJnP4fFJ5vzdE5R5VJCWqwhsaJVUGlqhSNfDM12Rj9fGPN6SwVjFShvyhWIXdhkZgcuyFukUBQlNOuPlCNr4XOsgRv6YA86ll78IsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Hdf2SnIu; arc=none smtp.client-ip=209.85.128.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-6ea07d119b7so6354167b3.0
-        for <dmaengine@vger.kernel.org>; Mon, 28 Oct 2024 04:44:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1730115875; x=1730720675; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=sZVio8cvkxkCAcUKP0pXIkXjIVgnIaUFuCYZiRy+dgw=;
-        b=Hdf2SnIu1EwafM/87KxO2k/ifP8fMS0KNIvY9KdHeyCpKTjlL72xsCb7Xbyc1xzImy
-         kO4aIE9jfVwJUNj2VXiDQt4L5K6hHqd8R/OGschD7SVoSCrLvVXHJpy6U9dRQXxhLna2
-         wC60ZMoNcv85TPc4z54N3PWgpyr2JeeJ9Ze5/Xjv9mxxQa1+4/BQqD4oK598IMnQNGFE
-         5LrJuOMa4AEqQdOvx1qkCYndMGC3ijCkLhvGTOQINCVcPdxy8YsTUGQ8ROtDQKkzX1Qm
-         hl6+UfhukwqOzLzRf2Ic5eJ7Ia7OY0KFVB/k9l7BY8wasX0ccyGupkqx3BRWtSCHiIQq
-         y1Gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730115875; x=1730720675;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sZVio8cvkxkCAcUKP0pXIkXjIVgnIaUFuCYZiRy+dgw=;
-        b=w7DZxBhETZmoxU9jyxKryOCIc4Tp/8J44YZv6J7YlYHSK2YN3rB3RnkrcBUeg85awm
-         snkYNthcqKJkhEH5Cn7feqOTvdtWzr7el5j621NnFI5GSEUfBMAxFHXrRyhomMhvAwQa
-         IMLAs3CPYYhRBbfEmI9QL651iK2fiuzW8mD8qN4d9XtpTe8WnJvwfWWOCuRGHUgLBy13
-         eBfCgTAgxgKtKhP5euBHujhyf4gBo59Q//6wiiKeZvxX0Q79Do8f8TWtkBcQFPGKBz7Z
-         JCeiKXgGyRioS3P7aK/7rQlXZj0uQnm/VoL5y4dEfV7rL1uvJtiS3E0dlVpS6nFEklM9
-         8Ltg==
-X-Forwarded-Encrypted: i=1; AJvYcCUTJ5yNzIT25mU5/MFhk5goOQ/baoLZUkP5eJkLLXO2+/UEloS/Fz25eK6vf1n+cI+/8O+VL3Zptpk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwO/ABZYyed3SMoX8ur/N/ksE4NpwgDSySde/RJp6otxmLTo/4W
-	eoF6Zq5oEWwNl3jcwWCSdtD5+lyw/b82zqFUeXGuY0ua2fDL30SYKR4ndgRx8DTawnKbgE2q+32
-	KI0RM9ls8ObD5k9bCzJipLzHQXUuHH9GgGB5Bdw==
-X-Google-Smtp-Source: AGHT+IHLKeKx9NpqZxAGiLQJMaILqzRYuWQfYpYj/MQf6dPo+SbTGqn7EpjJInbFkjakb3I2ccTD9UYXD8f0NCsex7M=
-X-Received: by 2002:a05:690c:3804:b0:6e3:6467:f46c with SMTP id
- 00721157ae682-6e9d89f3b5emr75751517b3.14.1730115875249; Mon, 28 Oct 2024
- 04:44:35 -0700 (PDT)
+	s=arc-20240116; t=1730121154; c=relaxed/simple;
+	bh=KgZ8HaWvNp4BAfTHvrXH0/8Skj751PewZrW2Mn65rI8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=lJMZBMBgDLA9OMqVvzhTcC/WAHCI810jGqqiqlCBEGnb7uxwG495UqcHNjF/yN/Qx5zQcO1tLhD6X/OHwgg2c8A7ExTaPI/KxD/LJmhXr2H6XyDizHQ/Q9fsrS2YI9aEamP8nV9xQYJBkPG90htX+a93nlWYLqrQwOfXPxoIJD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=UQseZHBF; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 998F7A09F1;
+	Mon, 28 Oct 2024 14:12:28 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=mail; bh=a/Km0duaUxN9zrPZeOy2
+	RJQXZwW6MUMmomrvB9hLoAo=; b=UQseZHBFhaIAsUXZ58dfmX3kXyOr9KsCgXPS
+	SvuPoNSgAFOOUl0/qNd3141M6WDsLsFoSJC9JjZn4ivvS5+kBpqngIkhOaMwCNQA
+	KF9fqHW8dSodcN9PKeBElOXmZ/Cc9XR6fMS5zYOp5eHGprkGKm4+JYL3TKRv1lrV
+	IwDjMqW9TiEPX0ROUTWXUUgXhaBee6TuaOxGoh/QkJaHcxRuuWJvRPFEhCrghNU3
+	Wmluxl01SWWNsb4JT/xp7OFcnmbzEhMchUJRKB4xfmoKwe86k6Zr4UvuR9fQE52x
+	o9dUohQCkaQCuvxubzo5yxWjXUvMzYgs0h8fdtf2wbXcpj2KuaXiHt9chN4011Kg
+	NyV1Rb9pbRzbTl3NPDdb3A422KwNadY7u65YL7tPNavAz6HP0cvMXeoi6OE9Tufs
+	TJbMGsiTimrxoP2HPth+1UadXhZcoCG3nBiDXgBzuhnM0c8l+5azFD68+TMHYDUo
+	vCKaiXeak4hGeMKvtkia51+se47Rj1vf6CmQSb/RSwyL/A4vVMK7IPCMDa/rXCfe
+	z3uleYY5GPW2+FT9T3fw/Akugxsk0c6hfBFdpIxDBkoLy8ej+oP+cQVpJRvZaE30
+	L72tb6TkN9X+9ZNPRyl9r+AilBTLusns99Yctynj3xNHUPEaSjZ5SMoNVVdF4C7P
+	JdnmnSo=
+Message-ID: <1811aa2a-3d19-4ce4-83c5-863aa0f4daab@prolan.hu>
+Date: Mon, 28 Oct 2024 14:12:27 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241025103621.4780-1-wahrenst@gmx.net> <20241025103621.4780-5-wahrenst@gmx.net>
-In-Reply-To: <20241025103621.4780-5-wahrenst@gmx.net>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Mon, 28 Oct 2024 12:43:58 +0100
-Message-ID: <CAPDyKFqwozGppFLJhjTc86nW1rodZymBbVZr+VpN4e2J3VowMQ@mail.gmail.com>
-Subject: Re: [PATCH V5 4/9] mmc: bcm2835: Introduce proper clock handling
-To: Stefan Wahren <wahrenst@gmx.net>
-Cc: Russell King <linux@armlinux.org.uk>, Florian Fainelli <florian.fainelli@broadcom.com>, 
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Vinod Koul <vkoul@kernel.org>, 
-	Minas Harutyunyan <hminas@synopsys.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Lukas Wunner <lukas@wunner.de>, Peter Robinson <pbrobinson@gmail.com>, 
-	"Ivan T . Ivanov" <iivanov@suse.de>, linux-arm-kernel@lists.infradead.org, 
-	kernel-list@raspberrypi.com, bcm-kernel-feedback-list@broadcom.com, 
-	dmaengine@vger.kernel.org, linux-mmc@vger.kernel.org, 
-	linux-usb@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-
-On Fri, 25 Oct 2024 at 12:36, Stefan Wahren <wahrenst@gmx.net> wrote:
->
-> The custom sdhost controller on BCM2835 is feed by the critical VPU clock.
-> In preparation for PM suspend/resume support, add a proper clock handling
-> to the driver like in the other clock consumers (e.g. I2C).
->
-> Move the clock handling behind mmc_of_parse(), because it could return
-> with -EPROBE_DEFER and we want to minimize potential clock operation during
-> boot phase.
->
-> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-
-Applied for next, thanks!
-
-Kind regards
-Uffe
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 02/10] dma-engine: sun4i: Add has_reset option to quirk
+To: <wens@kernel.org>
+CC: Krzysztof Kozlowski <krzk@kernel.org>, <dmaengine@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-sunxi@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, Mesih Kilinc <mesihkilinc@gmail.com>, "Vinod
+ Koul" <vkoul@kernel.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, "Samuel
+ Holland" <samuel@sholland.org>, Philipp Zabel <p.zabel@pengutronix.de>
+References: <20241027091440.1913863-1-csokas.bence@prolan.hu>
+ <20241027091440.1913863-2-csokas.bence@prolan.hu>
+ <nlhsxigg3rbfvua76ekmub4p6df2asps2ihueouuk6zkbn56zl@xdj6jzzt4gfb>
+ <b74dafed-197a-4644-a546-54c7a1639484@prolan.hu>
+ <CAGb2v65ZXftjrG9+f1_88=EsU7rM8vnOPZCszWfWYFQ+Do9Xsg@mail.gmail.com>
+Content-Language: en-US
+From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
+In-Reply-To: <CAGb2v65ZXftjrG9+f1_88=EsU7rM8vnOPZCszWfWYFQ+Do9Xsg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
+ ATLAS.intranet.prolan.hu (10.254.0.229)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A2980D94855677C6B
 
 
-> ---
->  drivers/mmc/host/bcm2835.c | 29 ++++++++++++++++++-----------
->  1 file changed, 18 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/mmc/host/bcm2835.c b/drivers/mmc/host/bcm2835.c
-> index 3d3eda5a337c..107666b7c1c8 100644
-> --- a/drivers/mmc/host/bcm2835.c
-> +++ b/drivers/mmc/host/bcm2835.c
-> @@ -148,6 +148,7 @@ struct bcm2835_host {
->         void __iomem            *ioaddr;
->         u32                     phys_addr;
->
-> +       struct clk              *clk;
->         struct platform_device  *pdev;
->
->         unsigned int            clock;          /* Current clock speed */
-> @@ -1345,7 +1346,6 @@ static int bcm2835_add_host(struct bcm2835_host *host)
->  static int bcm2835_probe(struct platform_device *pdev)
->  {
->         struct device *dev = &pdev->dev;
-> -       struct clk *clk;
->         struct bcm2835_host *host;
->         struct mmc_host *mmc;
->         const __be32 *regaddr_p;
-> @@ -1393,15 +1393,6 @@ static int bcm2835_probe(struct platform_device *pdev)
->                 /* Ignore errors to fall back to PIO mode */
->         }
->
-> -
-> -       clk = devm_clk_get(dev, NULL);
-> -       if (IS_ERR(clk)) {
-> -               ret = dev_err_probe(dev, PTR_ERR(clk), "could not get clk\n");
-> -               goto err;
-> -       }
-> -
-> -       host->max_clk = clk_get_rate(clk);
-> -
->         host->irq = platform_get_irq(pdev, 0);
->         if (host->irq < 0) {
->                 ret = host->irq;
-> @@ -1412,16 +1403,30 @@ static int bcm2835_probe(struct platform_device *pdev)
->         if (ret)
->                 goto err;
->
-> -       ret = bcm2835_add_host(host);
-> +       host->clk = devm_clk_get(dev, NULL);
-> +       if (IS_ERR(host->clk)) {
-> +               ret = dev_err_probe(dev, PTR_ERR(host->clk), "could not get clk\n");
-> +               goto err;
-> +       }
-> +
-> +       ret = clk_prepare_enable(host->clk);
->         if (ret)
->                 goto err;
->
-> +       host->max_clk = clk_get_rate(host->clk);
-> +
-> +       ret = bcm2835_add_host(host);
-> +       if (ret)
-> +               goto err_clk;
-> +
->         platform_set_drvdata(pdev, host);
->
->         dev_dbg(dev, "%s -> OK\n", __func__);
->
->         return 0;
->
-> +err_clk:
-> +       clk_disable_unprepare(host->clk);
->  err:
->         dev_dbg(dev, "%s -> err %d\n", __func__, ret);
->         if (host->dma_chan_rxtx)
-> @@ -1445,6 +1450,8 @@ static void bcm2835_remove(struct platform_device *pdev)
->         cancel_work_sync(&host->dma_work);
->         cancel_delayed_work_sync(&host->timeout_work);
->
-> +       clk_disable_unprepare(host->clk);
-> +
->         if (host->dma_chan_rxtx)
->                 dma_release_channel(host->dma_chan_rxtx);
->
-> --
-> 2.34.1
->
+
+On 2024. 10. 28. 8:44, Chen-Yu Tsai wrote:
+> I suggest adding a patch to switch the clk API calls to devm_clk_get_enabled()
+> which handles all the cleanup. Similarly you can switch to
+> 
+>      devm_reset_control_get_exclusive_deasserted()
+> 
+> for this patch.
+> 
+> 
+> ChenYu
+
+Huh, that's a new API! Thanks, I'll switch to that then.
+
+Regarding the change to devm_clk_get_enabled(), I think that should be a 
+separate patch from this series, where all the pre-existing dev_err()'s 
+get changed as well. If someone wants to work on that, go ahead, but if 
+no one does then after this series is merged I might get around to that too.
+
+Bence
+
 

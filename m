@@ -1,166 +1,106 @@
-Return-Path: <dmaengine+bounces-3632-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3633-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8682B9B39E8
-	for <lists+dmaengine@lfdr.de>; Mon, 28 Oct 2024 20:03:53 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 69E629B445A
+	for <lists+dmaengine@lfdr.de>; Tue, 29 Oct 2024 09:37:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A84431C21AC8
-	for <lists+dmaengine@lfdr.de>; Mon, 28 Oct 2024 19:03:52 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C6DDAB213BB
+	for <lists+dmaengine@lfdr.de>; Tue, 29 Oct 2024 08:37:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D47171DE2D2;
-	Mon, 28 Oct 2024 19:03:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UTITOVI0"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42BB81F7565;
+	Tue, 29 Oct 2024 08:37:38 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961A718FC7F;
-	Mon, 28 Oct 2024 19:03:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C3662038B2
+	for <dmaengine@vger.kernel.org>; Tue, 29 Oct 2024 08:37:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730142228; cv=none; b=pgLIj/gshWPHXMRv2TmoCyfcZYoHO1fdZ3pjuBf43wNjvWPIbB0Q/E6bfc9YeJeoW/BYnpjjcSzf5yU4P4yTexJpMeS4bOOhOQh0u6x4KxZ7UTbIW24BPxQjHIWV851Of4ma5i0rEw4ydzacVD1wOMmJ0RfSAvKqzwFcaPTlESE=
+	t=1730191058; cv=none; b=Us+xeWFebgIFeSwzK+REd2hQEZATCRgvnKDF8UODXyVcoFtLQlXV8D8nSvuwGN52l0L4PrHT4O0xws7d6FQMH9zPzlwTSpAGMxxYXTNjUj55tuEpccUWqVAidnohMvBj/XCN+g1Mfg3pYPMzSfT+LO29ulNjUmRXbwcukpLYlwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730142228; c=relaxed/simple;
-	bh=ulUP69L6OJ8qwxELaCLyAPm0tpDL3q8IauoU40wSzPA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=tQE3feCc6B3y1J9Z/Kx2LFx9mGCChcBvg9r31s2j7qAv7WGgGxfKeTb8Xk4n077ieNzsKIJn1M3T6BobGvVptw0ssNE6P/CL7jkzPtRIJ5XYJzWY2v26tvKKiruJApeM+cThjLxACnLdaS48JK39OlYCt001j690A6nfyf4Fq3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UTITOVI0; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3807dd08cfcso619480f8f.1;
-        Mon, 28 Oct 2024 12:03:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730142224; x=1730747024; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=EumjPlqo/OwaKuDLCplZJLv7GsAu7zXdwCFO9fyVbt0=;
-        b=UTITOVI0PL0n6ijwqZaumOlfolqdcRVCpCR2/YpFOp5nm+gj6q+MNuDhmWhmegMTZy
-         Y2+vT3VpJlrcCG1SzwaDUod/8PLsMIqpz7t3ZTFmw3eGlM8BDo751k2G0/ZpQL84QCF/
-         5K5OpW/q3C2OqnRe56v6JTFDU85RqeCJtAZ0LeM8y/ivU2AqKJRZO8+rB7fFlqKQEaht
-         /IZMKHKaohIpfKqMmyo+qbLVU61VdcreAZx1L4gYfAQmCCaR44WMdh4IL5huRHt5yG35
-         HfN02qgTjyfKG3OxuaqjNrh78tyrYjaMOMPo3i5/MyMVdmt0ET3whTEuaw3ayMLQ/R1O
-         Zgqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730142224; x=1730747024;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EumjPlqo/OwaKuDLCplZJLv7GsAu7zXdwCFO9fyVbt0=;
-        b=pAJoIbCk/QF9nhCrsQ5aN45YRCfw8z1KJXiKfbbtpwC3+xp3dwUX6h8RsN4i2SMmyA
-         gXnN030tfG/ZfHdUCETwS1tHLSHp08a1oBBzABSj1zICGf83YFmM0o9833eKN6h2HiCg
-         PjdZ3xwrZdcmou2VNTrLgG2svJCEr50YlYkNyemBi0NltsV31Vlhf9Hv4MxRi0BNKBOR
-         2atHrbx+Tm+sPWRGkSTb/hAeOS2ndWM49HiJ9PvtpuCR4mwxz7dh4phZ88R6VagXylfU
-         OICpVoB0nuau9PyUEZ0wu3ucnFP2J3tMKFwWbFuimblb8o1Oc3+mJY20mDvZ1WAJvhoK
-         J4yw==
-X-Forwarded-Encrypted: i=1; AJvYcCVgXDLd9wWXXpiNRcK+0/FtAbeuLRgd380DTZUVCLvJUj2YX9vY7v/Lb44Ap1RtdR6MGlRTHV2EMSps5xbu@vger.kernel.org, AJvYcCWGIGc5tHJI3Wp1Ijn6+a03Eo9S3QjckqkupyXzKPJGQNt69waD6ziAfV7ObHvkPapbyDbFxJrs9t8=@vger.kernel.org, AJvYcCWWjfyNwX6/fzujiz4dyxiBM7CH9pLpgpFylVRuwdU38Y+HeibIG0pf+E95g9X+DTVlG+U9jHRF@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2oYsbM8BPUQRJo5YUjXhYyEvfqNIJCorulc7L8bB5G/R3ufrw
-	0zVz6bQQZGP7IitHnwciS95J14vkDZw0mHWoRVyvBHamUy1kitm0HQw8jQ==
-X-Google-Smtp-Source: AGHT+IGXMqBBwhHc8UxZfuRc6tyRsx0ixk0d4f9PJQ9ZvmIEwc9xwdFe62Q4Pnz6/UXgK5gbabDlsQ==
-X-Received: by 2002:a5d:61d2:0:b0:37c:cc4b:d1d6 with SMTP id ffacd0b85a97d-380611a495cmr8773753f8f.27.1730142224350;
-        Mon, 28 Oct 2024 12:03:44 -0700 (PDT)
-Received: from [127.0.1.1] (2a02-8389-41cf-e200-b273-88b2-f83b-5936.cable.dynamic.v6.surfer.at. [2a02:8389:41cf:e200:b273:88b2:f83b:5936])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38058b93006sm10275161f8f.93.2024.10.28.12.03.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2024 12:03:43 -0700 (PDT)
-From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-Date: Mon, 28 Oct 2024 20:03:36 +0100
-Subject: [PATCH] dmaengine: ti: dma-crossbar: Add missing put_device in
- ti_am335x_xbar_route_allocate
+	s=arc-20240116; t=1730191058; c=relaxed/simple;
+	bh=ZvXJXmUzbLC7p2/8RE0yukQUHWbt+zqG0zOIKagpZao=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ff6O1JBQoJ2nMFIoGWkN1AWf8agPwhCrC+H35vaGwvyXYIqnVbJNd/Y8hkaQeuLwqhkAkyXY9wJhuRiaHK3JNug2kbiqP8tL8jrly/uZG7k/jFvps6/xSomXnhR23XN51ymSGgUGnKRudMHrcrvVFesgEYtbyIxetFoR1OoXNSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Xd3XY5sdfz4f3jqF
+	for <dmaengine@vger.kernel.org>; Tue, 29 Oct 2024 16:37:17 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 5E13E1A0568
+	for <dmaengine@vger.kernel.org>; Tue, 29 Oct 2024 16:37:30 +0800 (CST)
+Received: from hulk-vt.huawei.com (unknown [10.67.174.121])
+	by APP4 (Coremail) with SMTP id gCh0CgDnwobAniBn3SoNAQ--.16672S2;
+	Tue, 29 Oct 2024 16:37:30 +0800 (CST)
+From: Chen Ridong <chenridong@huaweicloud.com>
+To: ludovic.desroches@microchip.com,
+	vkoul@kernel.org,
+	mripard@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org,
+	dmaengine@vger.kernel.org,
+	chenridong@huawei.com,
+	wangweiyang2@huawei.com
+Subject: [PATCH] dmaengine: at_xdmac: avoid null_prt_deref in at_xdmac_prep_dma_memset
+Date: Tue, 29 Oct 2024 08:28:45 +0000
+Message-Id: <20241029082845.1185380-1-chenridong@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20241028-ti-dma-crossbar-put_device-v1-1-e8087e1f0a59@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAAfgH2cC/x3MOwqFQAxA0a1IagMzo4W6lcdD5hM1hR8SFUHcu
- 4PlKe69QUmYFLriBqGTldclw5YFxMkvIyGnbHDG1da4BnfGNHuMsqoGL7gde59yGAmrloIPdds
- YayEPNqGBr2/++z/PC1oqTadsAAAA
-To: Peter Ujfalusi <peter.ujfalusi@gmail.com>, 
- Vinod Koul <vkoul@kernel.org>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, dmaengine@vger.kernel.org, 
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
- Javier Carrasco <javier.carrasco.cruz@gmail.com>
-X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1730142223; l=2313;
- i=javier.carrasco.cruz@gmail.com; s=20240312; h=from:subject:message-id;
- bh=ulUP69L6OJ8qwxELaCLyAPm0tpDL3q8IauoU40wSzPA=;
- b=umrO+fvsT+aAbUufuLU+hzw3p1mvIrcGEdKUvl7A8J4BhzH4rv1wfFkRHojpXfw4y8zXcyFv9
- nxWOM3V9x1oA8Vtj1TDG67/YyfeNu/d8myMyhEXOzWpznvB3bKxG2CY
-X-Developer-Key: i=javier.carrasco.cruz@gmail.com; a=ed25519;
- pk=lzSIvIzMz0JhJrzLXI0HAdPwsNPSSmEn6RbS+PTS9aQ=
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgDnwobAniBn3SoNAQ--.16672S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrZFW7Cr45AFWkWw17KrW7Arb_yoWDGrX_GF
+	yxur1xXrn8GF17Cws2kr1fZrWYkFy7Xr1a9w1Fqa43CFZ8ZrnrZr47tr95C345u3y7CFy5
+	Cr90qFZ5Wr1UAjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbzAYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20E
+	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
+	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x02
+	67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij
+	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
+	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE
+	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42
+	xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF
+	7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUwxhLUUUUU
+X-CM-SenderInfo: hfkh02xlgr0w46kxt4xhlfz01xgou0bp/
 
-The refcount of the device obtained with of_find_device_by_node() must
-be decremented when the device is no longer required. Add the missing
-calls to put_device(&pdev->dev) in the error paths of
-ti_am335x_xbar_route_allocate().
+From: Chen Ridong <chenridong@huawei.com>
 
-Cc: stable@vger.kernel.org
-Fixes: 42dbdcc6bf96 ("dmaengine: ti-dma-crossbar: Add support for crossbar on AM33xx/AM43xx")
-Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+The at_xdmac_memset_create_desc may return NULL, which will lead to a
+null pointer dereference. For example, the len input is error, or the
+atchan->free_descs_list is empty and memory is exhausted. Therefore, add
+check to avoid this.
+
+Fixes: b206d9a23ac7 ("dmaengine: xdmac: Add memset support")
+Signed-off-by: Chen Ridong <chenridong@huawei.com>
 ---
-Similar to what commit 615a4bfc426e ("dmaengine: ti: Add missing
-put_device in ti_dra7_xbar_route_allocate") did for dra7, where the
-calls to put_device were also missing in the error paths.
----
- drivers/dma/ti/dma-crossbar.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/dma/at_xdmac.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/dma/ti/dma-crossbar.c b/drivers/dma/ti/dma-crossbar.c
-index 7f17ee87a6dc..ae596b3fc636 100644
---- a/drivers/dma/ti/dma-crossbar.c
-+++ b/drivers/dma/ti/dma-crossbar.c
-@@ -81,18 +81,22 @@ static void *ti_am335x_xbar_route_allocate(struct of_phandle_args *dma_spec,
- 	struct ti_am335x_xbar_data *xbar = platform_get_drvdata(pdev);
- 	struct ti_am335x_xbar_map *map;
+diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
+index 299396121e6d..e847ad66dc0b 100644
+--- a/drivers/dma/at_xdmac.c
++++ b/drivers/dma/at_xdmac.c
+@@ -1363,6 +1363,8 @@ at_xdmac_prep_dma_memset(struct dma_chan *chan, dma_addr_t dest, int value,
+ 		return NULL;
  
--	if (dma_spec->args_count != 3)
-+	if (dma_spec->args_count != 3) {
-+		put_device(&pdev->dev);
- 		return ERR_PTR(-EINVAL);
-+	}
+ 	desc = at_xdmac_memset_create_desc(chan, atchan, dest, len, value);
++	if (!desc)
++		return NULL;
+ 	list_add_tail(&desc->desc_node, &desc->descs_list);
  
- 	if (dma_spec->args[2] >= xbar->xbar_events) {
- 		dev_err(&pdev->dev, "Invalid XBAR event number: %d\n",
- 			dma_spec->args[2]);
-+		put_device(&pdev->dev);
- 		return ERR_PTR(-EINVAL);
- 	}
- 
- 	if (dma_spec->args[0] >= xbar->dma_requests) {
- 		dev_err(&pdev->dev, "Invalid DMA request line number: %d\n",
- 			dma_spec->args[0]);
-+		put_device(&pdev->dev);
- 		return ERR_PTR(-EINVAL);
- 	}
- 
-@@ -100,12 +104,14 @@ static void *ti_am335x_xbar_route_allocate(struct of_phandle_args *dma_spec,
- 	dma_spec->np = of_parse_phandle(ofdma->of_node, "dma-masters", 0);
- 	if (!dma_spec->np) {
- 		dev_err(&pdev->dev, "Can't get DMA master\n");
-+		put_device(&pdev->dev);
- 		return ERR_PTR(-EINVAL);
- 	}
- 
- 	map = kzalloc(sizeof(*map), GFP_KERNEL);
- 	if (!map) {
- 		of_node_put(dma_spec->np);
-+		put_device(&pdev->dev);
- 		return ERR_PTR(-ENOMEM);
- 	}
- 
-
----
-base-commit: dec9255a128e19c5fcc3bdb18175d78094cc624d
-change-id: 20241028-ti-dma-crossbar-put_device-39ebab498011
-
-Best regards,
+ 	desc->tx_dma_desc.cookie = -EBUSY;
 -- 
-Javier Carrasco <javier.carrasco.cruz@gmail.com>
+2.34.1
 
 

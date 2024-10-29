@@ -1,106 +1,174 @@
-Return-Path: <dmaengine+bounces-3633-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3634-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 69E629B445A
-	for <lists+dmaengine@lfdr.de>; Tue, 29 Oct 2024 09:37:44 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC5189B45D4
+	for <lists+dmaengine@lfdr.de>; Tue, 29 Oct 2024 10:37:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C6DDAB213BB
-	for <lists+dmaengine@lfdr.de>; Tue, 29 Oct 2024 08:37:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CF7BC1C2141A
+	for <lists+dmaengine@lfdr.de>; Tue, 29 Oct 2024 09:37:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42BB81F7565;
-	Tue, 29 Oct 2024 08:37:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3D9A2038A3;
+	Tue, 29 Oct 2024 09:37:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="MFpph/jB";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Aq9To5J4";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="MFpph/jB";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Aq9To5J4"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C3662038B2
-	for <dmaengine@vger.kernel.org>; Tue, 29 Oct 2024 08:37:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC652036F4;
+	Tue, 29 Oct 2024 09:37:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730191058; cv=none; b=Us+xeWFebgIFeSwzK+REd2hQEZATCRgvnKDF8UODXyVcoFtLQlXV8D8nSvuwGN52l0L4PrHT4O0xws7d6FQMH9zPzlwTSpAGMxxYXTNjUj55tuEpccUWqVAidnohMvBj/XCN+g1Mfg3pYPMzSfT+LO29ulNjUmRXbwcukpLYlwc=
+	t=1730194667; cv=none; b=FVPzxgv6yWbm0W3SVNS25NOhoST3O+WgClRxP/rkMVPHBXPPPto8cd5mQjlBduXZ4mr8Huw/V9QYSNtgMVBnUP1CRbqmM+EqRnlydFkf1cZZl2p88td02hzNAONGBgL+ni1rxuPL1ytitn5h8YdxBBlbSyWAvfiW5V1lxkLuA1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730191058; c=relaxed/simple;
-	bh=ZvXJXmUzbLC7p2/8RE0yukQUHWbt+zqG0zOIKagpZao=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ff6O1JBQoJ2nMFIoGWkN1AWf8agPwhCrC+H35vaGwvyXYIqnVbJNd/Y8hkaQeuLwqhkAkyXY9wJhuRiaHK3JNug2kbiqP8tL8jrly/uZG7k/jFvps6/xSomXnhR23XN51ymSGgUGnKRudMHrcrvVFesgEYtbyIxetFoR1OoXNSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Xd3XY5sdfz4f3jqF
-	for <dmaengine@vger.kernel.org>; Tue, 29 Oct 2024 16:37:17 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 5E13E1A0568
-	for <dmaengine@vger.kernel.org>; Tue, 29 Oct 2024 16:37:30 +0800 (CST)
-Received: from hulk-vt.huawei.com (unknown [10.67.174.121])
-	by APP4 (Coremail) with SMTP id gCh0CgDnwobAniBn3SoNAQ--.16672S2;
-	Tue, 29 Oct 2024 16:37:30 +0800 (CST)
-From: Chen Ridong <chenridong@huaweicloud.com>
-To: ludovic.desroches@microchip.com,
-	vkoul@kernel.org,
-	mripard@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org,
-	dmaengine@vger.kernel.org,
-	chenridong@huawei.com,
-	wangweiyang2@huawei.com
-Subject: [PATCH] dmaengine: at_xdmac: avoid null_prt_deref in at_xdmac_prep_dma_memset
-Date: Tue, 29 Oct 2024 08:28:45 +0000
-Message-Id: <20241029082845.1185380-1-chenridong@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1730194667; c=relaxed/simple;
+	bh=hhTbhQy5WqBCVGKga+NQ+/BK9Sfjhrxqz0X4EmpeUrg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Fr5fikzOucsicRJDGUh/U4XFYe9BBjkJgtnXDv8fpYN+GXi0Om9FuvcRQz1SVnR1PiAzy4Kw8tp2KrcXqhbDQTZJFn0qftFN0qopBWZoFcQ8WF3AcsemjycPgr6CbsQ7QX1cCYnT9SauZAsI42IhV6uRKUGxlhEkeoueq91nCXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=MFpph/jB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Aq9To5J4; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=MFpph/jB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Aq9To5J4; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 04DC821CB5;
+	Tue, 29 Oct 2024 09:37:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1730194664; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0axVOqoMls//Wk+pvC5XHfu4g+8K4S/uESA90ZpiSro=;
+	b=MFpph/jBB1J/ISr6NeT9WLZmTaOCpka/EFPFi79RpcQDXvUb6gXFq2uiaw9Znyk9eyFz3H
+	ReVfuHyJDoUtN4FNxVwYSXTY9xburM0eD3Qxpfz59mKLKgamQMVHy7RqBu1hs5/SFFJPLw
+	DRRSdlBNDz7zfFGhJ+J9+C59ZyUJtp0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1730194664;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0axVOqoMls//Wk+pvC5XHfu4g+8K4S/uESA90ZpiSro=;
+	b=Aq9To5J4OyWv9MZ1wXaqA99S23W+n2hHs6LsWZOc48A04RFALqgDjs6OHKARjcxMxsOhZx
+	5NEMh2sW95cAg9CQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1730194664; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0axVOqoMls//Wk+pvC5XHfu4g+8K4S/uESA90ZpiSro=;
+	b=MFpph/jBB1J/ISr6NeT9WLZmTaOCpka/EFPFi79RpcQDXvUb6gXFq2uiaw9Znyk9eyFz3H
+	ReVfuHyJDoUtN4FNxVwYSXTY9xburM0eD3Qxpfz59mKLKgamQMVHy7RqBu1hs5/SFFJPLw
+	DRRSdlBNDz7zfFGhJ+J9+C59ZyUJtp0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1730194664;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0axVOqoMls//Wk+pvC5XHfu4g+8K4S/uESA90ZpiSro=;
+	b=Aq9To5J4OyWv9MZ1wXaqA99S23W+n2hHs6LsWZOc48A04RFALqgDjs6OHKARjcxMxsOhZx
+	5NEMh2sW95cAg9CQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D170C136A5;
+	Tue, 29 Oct 2024 09:37:43 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id JKDMMuesIGc+HwAAD6G6ig
+	(envelope-from <iivanov@suse.de>); Tue, 29 Oct 2024 09:37:43 +0000
+Date: Tue, 29 Oct 2024 11:44:45 +0200
+From: "Ivan T . Ivanov" <iivanov@suse.de>
+To: Stefan Wahren <wahrenst@gmx.net>
+Cc: Russell King <linux@armlinux.org.uk>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Vinod Koul <vkoul@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
+	Minas Harutyunyan <hminas@synopsys.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Lukas Wunner <lukas@wunner.de>,
+	Peter Robinson <pbrobinson@gmail.com>,
+	linux-arm-kernel@lists.infradead.org, kernel-list@raspberrypi.com,
+	bcm-kernel-feedback-list@broadcom.com, dmaengine@vger.kernel.org,
+	linux-mmc@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH V5 1/9] Revert "usb: dwc2: Skip clock gating on Broadcom
+ SoCs"
+Message-ID: <20241029094445.hsporitxkv2q45c5@localhost.localdomain>
+References: <20241025103621.4780-1-wahrenst@gmx.net>
+ <20241025103621.4780-2-wahrenst@gmx.net>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDnwobAniBn3SoNAQ--.16672S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrZFW7Cr45AFWkWw17KrW7Arb_yoWDGrX_GF
-	yxur1xXrn8GF17Cws2kr1fZrWYkFy7Xr1a9w1Fqa43CFZ8ZrnrZr47tr95C345u3y7CFy5
-	Cr90qFZ5Wr1UAjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbzAYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20E
-	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
-	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x02
-	67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij
-	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE
-	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42
-	xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF
-	7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUwxhLUUUUU
-X-CM-SenderInfo: hfkh02xlgr0w46kxt4xhlfz01xgou0bp/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241025103621.4780-2-wahrenst@gmx.net>
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_TO(0.00)[gmx.net];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.net];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[armlinux.org.uk,broadcom.com,kernel.org,linaro.org,synopsys.com,linuxfoundation.org,wunner.de,gmail.com,lists.infradead.org,raspberrypi.com,vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-From: Chen Ridong <chenridong@huawei.com>
+Hi Stefan,
 
-The at_xdmac_memset_create_desc may return NULL, which will lead to a
-null pointer dereference. For example, the len input is error, or the
-atchan->free_descs_list is empty and memory is exhausted. Therefore, add
-check to avoid this.
+On 10-25 12:36, Stefan Wahren wrote:
+> 
+> The commit d483f034f032 ("usb: dwc2: Skip clock gating on Broadcom SoCs")
+> introduced a regression on Raspberry Pi 3 B Plus, which prevents
+> enumeration of the onboard Microchip LAN7800 in case no external USB device
+> is connected during boot.
+> 
+> Fixes: d483f034f032 ("usb: dwc2: Skip clock gating on Broadcom SoCs")
+> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+> ---
+>  drivers/usb/dwc2/params.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
+> index 68226defdc60..4d73fae80b12 100644
+> --- a/drivers/usb/dwc2/params.c
+> +++ b/drivers/usb/dwc2/params.c
+> @@ -23,7 +23,6 @@ static void dwc2_set_bcm_params(struct dwc2_hsotg *hsotg)
+>  	p->max_transfer_size = 65535;
+>  	p->max_packet_count = 511;
+>  	p->ahbcfg = 0x10;
+> -	p->no_clock_gating = true;
+>  }
+> 
 
-Fixes: b206d9a23ac7 ("dmaengine: xdmac: Add memset support")
-Signed-off-by: Chen Ridong <chenridong@huawei.com>
----
- drivers/dma/at_xdmac.c | 2 ++
- 1 file changed, 2 insertions(+)
+Thanks, this makes RPi3 Ethernet operational again.
 
-diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
-index 299396121e6d..e847ad66dc0b 100644
---- a/drivers/dma/at_xdmac.c
-+++ b/drivers/dma/at_xdmac.c
-@@ -1363,6 +1363,8 @@ at_xdmac_prep_dma_memset(struct dma_chan *chan, dma_addr_t dest, int value,
- 		return NULL;
- 
- 	desc = at_xdmac_memset_create_desc(chan, atchan, dest, len, value);
-+	if (!desc)
-+		return NULL;
- 	list_add_tail(&desc->desc_node, &desc->descs_list);
- 
- 	desc->tx_dma_desc.cookie = -EBUSY;
--- 
-2.34.1
+Tested-by: Ivan T. Ivanov <iivanov@suse.de>
+
+Regards.
 
 

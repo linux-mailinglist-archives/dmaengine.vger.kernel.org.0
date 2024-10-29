@@ -1,47 +1,47 @@
-Return-Path: <dmaengine+bounces-3639-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3640-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1F529B544C
-	for <lists+dmaengine@lfdr.de>; Tue, 29 Oct 2024 21:46:21 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4FB09B544E
+	for <lists+dmaengine@lfdr.de>; Tue, 29 Oct 2024 21:46:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A75A82857E4
-	for <lists+dmaengine@lfdr.de>; Tue, 29 Oct 2024 20:46:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9B7F21F217A3
+	for <lists+dmaengine@lfdr.de>; Tue, 29 Oct 2024 20:46:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A117C20C02F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A127120C035;
 	Tue, 29 Oct 2024 20:42:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fbUjgBv4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GpjY7B7c"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754662076DE;
-	Tue, 29 Oct 2024 20:42:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754073207;
+	Tue, 29 Oct 2024 20:42:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730234560; cv=none; b=ryj33mhuZ31Xsdh74lOt43RJIJSGOhAd7TT57kxeuJn+LxE1DE8euoePDINsPKSAfBB8KssTRwtmqy5t3i65OewtYYmb+VVWVOe4FGmZjw+oCQsE53SLYPMgMvZXJtOAbWi4e0V1GQQwg3+oOxGZ9chw1BVC4KXLWtHtF6onYV4=
+	t=1730234560; cv=none; b=DF9nt9/cR86Un/W78FpEZap3gLitr3sAZois+ZSpBMrxjakzRfipn6sk3W+3vaBUaBkHkXIobifycdJzjzFD1hJrYXukGHrF2ckPDdO9u5ZIzcS3O546MMHI+i8O+8C4L/9DrT5k+N4y5ZV4fnsxv0WXh/5E/qPp3+7b5HUBj+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1730234560; c=relaxed/simple;
-	bh=HcHPYKJzVMGol5SkJjwz2YHmnwXp2odjeLVoF6z6SOA=;
+	bh=9fvuPkywl8HW3/QOWTp7Q5krfZOi18PJayiTTRq3EZ8=;
 	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=cDkWlqfFuY2vm+NE5P/x9f/4i27WhSEizIjDTDFnBQbW1eEdN6u9TLwt4dfejpMEJd/5L9ysqvbkIjSJnNZLn/nSbhCNgWY8qbm3PduzgpZxeSyxM+vojCxqtPY/4pHAorCuUewDcDO8cVlRujkcf5lKcAJTQRjzD37BQcXHX1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fbUjgBv4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6A4AC4CECD;
-	Tue, 29 Oct 2024 20:42:37 +0000 (UTC)
+	 Message-Id:Subject; b=VnDVNMqBxbOsm5GT5los6IbEdMEjeavsZfr/P9OaWmbuCjnNso+zUATfTgtLHxMBYzg+GTK86+c2UYnaK5ZshNKOeuGcTFZRGZ+79tJzjYSMt23EkycJMO5wyy5tVv8K6ILGvEUSuaYNfDsnpcIbCb0cxqQlajsIevuPXSHoa+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GpjY7B7c; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C53A0C4CEE4;
+	Tue, 29 Oct 2024 20:42:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730234558;
-	bh=HcHPYKJzVMGol5SkJjwz2YHmnwXp2odjeLVoF6z6SOA=;
+	s=k20201202; t=1730234560;
+	bh=9fvuPkywl8HW3/QOWTp7Q5krfZOi18PJayiTTRq3EZ8=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=fbUjgBv4L9WFnFZv7YvkOF/T3zEeCiZXonMSPGkUYJ/WZQUmR9GIzW/QOS8lDUADN
-	 TynNTbWg2K8NOnDu2wG6TOvi3UiFs5uRTsu/UebmGWSfWDOV1TZ+wV5b1Y/PREkJIO
-	 yIsFkshMc/2gWzcmQjT/SAK9Bv2O2xE2WKVAWv4tot8RBRBpjSycxQcD7jA6re25nJ
-	 XF4gw1jeo4mHM6EYERVjMu1fG9VPtFgKrJvkZvRRuVzip/qdwugfNyMNLulNW6nRqk
-	 2UjIWIQpmv25aZYQtXznwlcbx+yIEipw5IJt5aYoZDvAbedZ8wwukGgcAcWdPFapjJ
-	 YHg7fiBBU2jgA==
-Date: Tue, 29 Oct 2024 15:42:36 -0500
+	b=GpjY7B7cJLvaKIh32sIg7v4ch9K1WrUS/26SMj9EutuKBkFN4EqbeU2wyK06YHDVh
+	 RQnAlWz65NoKtgYkGNTlRg7Bjz37LsyAeS+LYe6X0wuQnnSxpIGcg2VMP6oh/WWFSs
+	 WdNb02U1hymHiUKyYBhslc/rGgV3IiZskhbf6j0/lFegzBZG6rkHwSA5TwvP7VXwV1
+	 fjSIIvh9bwbLPjyFlfSVOIkKEhFciE8Y8HvgGqY9fCwNuXLq2/qrGFy1fMQ8NFZ+5E
+	 qhmAiIVgPW2O/Lv4nx8JFZ1eVrc2PUhzJX32VAVgnORBRvi19sK/OkveqcW3LDiQy0
+	 vn6VhN2bFFB2A==
+Date: Tue, 29 Oct 2024 15:42:38 -0500
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -52,44 +52,35 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
 To: David Lechner <dlechner@baylibre.com>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Nuno Sa <nuno.sa@analog.com>, 
- linux-kernel@vger.kernel.org, Vinod Koul <vkoul@kernel.org>, 
- Lars-Peter Clausen <lars@metafoo.de>, dmaengine@vger.kernel.org, 
- devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>
-In-Reply-To: <20241029-axi-dma-dt-yaml-v2-1-52a6ec7df251@baylibre.com>
+Cc: linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>, 
+ devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, 
+ Nuno Sa <nuno.sa@analog.com>
+In-Reply-To: <20241029-axi-dma-dt-yaml-v2-2-52a6ec7df251@baylibre.com>
 References: <20241029-axi-dma-dt-yaml-v2-0-52a6ec7df251@baylibre.com>
- <20241029-axi-dma-dt-yaml-v2-1-52a6ec7df251@baylibre.com>
-Message-Id: <173023455539.1620834.4844843662866954288.robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: dma: adi,axi-dmac: convert to yaml
- schema
+ <20241029-axi-dma-dt-yaml-v2-2-52a6ec7df251@baylibre.com>
+Message-Id: <173023455618.1620887.12454823992375368491.robh@kernel.org>
+Subject: Re: [PATCH v2 2/2] dt-bindings: dma: adi,axi-dmac: deprecate
+ adi,channels node
 
 
-On Tue, 29 Oct 2024 14:29:14 -0500, David Lechner wrote:
-> Convert the AXI DMAC bindings from .txt to .yaml.
+On Tue, 29 Oct 2024 14:29:15 -0500, David Lechner wrote:
+> Deprecate the adi,channels node in the adi,axi-dmac binding. Prior to
+> IP version 4.3.a, this information was required. Since then, there are
+> memory-mapped registers that can be read to get the same information.
 > 
 > Acked-by: Nuno Sa <nuno.sa@analog.com>
 > Signed-off-by: David Lechner <dlechner@baylibre.com>
 > ---
 > 
-> For the maintainer, Lars is the original author, but isn't really
-> active with ADI anymore, so I have added Nuno instead since he is the
-> most active ADI representative currently and is knowledgeable about this
-> hardware.
+> For context, the adi,channels node has not been required in the Linux
+> kernel since [1].
 > 
-> As in v1, the rob-bot is likely to complain with the following:
-> 
-> 	Documentation/devicetree/bindings/dma/adi,axi-dmac.yaml: properties:adi,channels:type: 'boolean' was expected
-> 		hint: A vendor boolean property can use "type: boolean"
-> 		from schema $id: http://devicetree.org/meta-schemas/vendor-props.yaml#
-> 	DTC [C] Documentation/devicetree/bindings/dma/adi,axi-dmac.example.dtb
-> 
-> This is due to the fact that we have a vendor prefix on an object node.
-> We can't change that since it is an existing binding. Rob said he will
-> fix this in dtschema.
+> [1]: https://lore.kernel.org/all/20200825151950.57605-7-alexandru.ardelean@analog.com/
 > ---
->  .../devicetree/bindings/dma/adi,axi-dmac.txt       |  61 ---------
->  .../devicetree/bindings/dma/adi,axi-dmac.yaml      | 139 +++++++++++++++++++++
->  2 files changed, 139 insertions(+), 61 deletions(-)
+>  .../devicetree/bindings/dma/adi,axi-dmac.yaml         | 19 +++++--------------
+>  1 file changed, 5 insertions(+), 14 deletions(-)
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
@@ -97,13 +88,12 @@ My bot found errors running 'make dt_binding_check' on your patch:
 yamllint warnings/errors:
 
 dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/dma/adi,axi-dmac.yaml: properties:adi,channels:type: 'boolean' was expected
-	hint: A vendor boolean property can use "type: boolean"
-	from schema $id: http://devicetree.org/meta-schemas/vendor-props.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/dma/adi,axi-dmac.example.dtb: dma-controller@7c420000: 'adi,channels' is a required property
+	from schema $id: http://devicetree.org/schemas/dma/adi,axi-dmac.yaml#
 
 doc reference errors (make refcheckdocs):
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20241029-axi-dma-dt-yaml-v2-1-52a6ec7df251@baylibre.com
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20241029-axi-dma-dt-yaml-v2-2-52a6ec7df251@baylibre.com
 
 The base for the series is generally the latest rc1. A different dependency
 should be noted in *this* patch.

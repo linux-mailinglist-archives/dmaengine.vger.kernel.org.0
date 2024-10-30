@@ -1,167 +1,155 @@
-Return-Path: <dmaengine+bounces-3646-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3647-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6DD569B66D4
-	for <lists+dmaengine@lfdr.de>; Wed, 30 Oct 2024 16:03:00 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9ED939B66E7
+	for <lists+dmaengine@lfdr.de>; Wed, 30 Oct 2024 16:03:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 90A9C1C21758
-	for <lists+dmaengine@lfdr.de>; Wed, 30 Oct 2024 15:02:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C20E31C217C6
+	for <lists+dmaengine@lfdr.de>; Wed, 30 Oct 2024 15:03:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 569E81F4FCC;
-	Wed, 30 Oct 2024 15:02:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41D9520ADF2;
+	Wed, 30 Oct 2024 15:03:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=odyss3us.net header.i=@odyss3us.net header.b="LGzKhVKJ"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=metux@gmx.de header.b="qomTIikI"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-relay.contabo.net (mail-relay.contabo.net [207.180.195.6])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65D8212D1FA;
-	Wed, 30 Oct 2024 15:02:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.180.195.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2009F200CA2;
+	Wed, 30 Oct 2024 15:03:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730300563; cv=none; b=RO8EaBEOJB32X2ara0vszYm5sdhIJkV0smNx2SpDLzkyu13FAllpRBZHzSvPmJgtHnWoZSQ+lr80Z8neB+jWJoBrcWHvL/Va53TqnI08Xyidemb53o5927xQcKbzYKA8KaA7Q4O0ge7StmLRjZA5bsFO7Bu8iLCMxdVdNAga4ag=
+	t=1730300611; cv=none; b=fSLnKluJDFy8cQ5uINPhoHsKjosiiOTeF6XdRmLU/BB5HZ7On6Tto8iPB2AXUMJizjICbB/tfMHL/a8XKleFweHtFz4876vlwDvxfH7QLFP6wg1tOvRaQi+WtJwBF3pR6F4d9bRXMcsoAoiv2tdtLxDBBByIiQBGZXf2516TNkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730300563; c=relaxed/simple;
-	bh=tisj9MRLY8sAb+Wz9LAPF3LrcExkszWJ6y5pi5FUEUg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=WmRDqYp4zOoQ8jXcxiisBIzEj8e4PGgEcDRmvcrxMOT0NoI1g1cBVy227xHaAqkQmz9oZ9g/Kz8N8oaQLO/WC+FlW9nNeWLmzJdBsy4JwV3aZLtSrV9iYEE1ISlNRSM7O0+BuOBdpBFgtSzMuq6BnaC/kGUZxsquBhuF/39i9hE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=odyss3us.net; spf=pass smtp.mailfrom=odyss3us.net; dkim=pass (2048-bit key) header.d=odyss3us.net header.i=@odyss3us.net header.b=LGzKhVKJ; arc=none smtp.client-ip=207.180.195.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=odyss3us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=odyss3us.net
-Received: from pxmg2.contabo.net (localhost.localdomain [127.0.0.1])
-	by mail-relay.contabo.net (Proxmox) with ESMTP id 2BAE07C26B8;
-	Wed, 30 Oct 2024 15:55:02 +0100 (CET)
-Received: from m2712.contaboserver.net (m2712.contaboserver.net [91.194.91.201])
-	by mail-relay.contabo.net (Proxmox) with ESMTPS id F388F7C26D0;
-	Wed, 30 Oct 2024 15:55:01 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=odyss3us.net; s=default; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=tisj9MRLY8sAb+Wz9LAPF3LrcExkszWJ6y5pi5FUEUg=; b=LGzKhVKJ5E2qTIXPvO+Pt4seOR
-	v+FRvs0g0Qs78tpmUIZK5XJUU+aFPDvgMok5z3MHHEkVlym2rq9GGMj8lt3JAPYm4LZs2a7B3A3LU
-	pDngWut3rfZqE9TT4h6b820cX46qywqsBAQTe7RmLUD7w9suHpIagp95n99Xxms17hHknJ+i2rXhe
-	NVxE6Yv3fqQUcL+sdJrQjmBCi2UG86TI9jFo0pkgYp79YPYUahXhhrmyKs5BgkePtk5GcB+z2rX0M
-	248ZHTmFnKH3cf80A+cYxgyHvMQc9M74bVMRM/R76AFcuQ20JKMfFE6sLid7yCieAoOY6G9Z0cFYM
-	Gox1s9bA==;
-Received: from pd95ebe22.dip0.t-ipconnect.de ([217.94.190.34]:53344 helo=void-3.local)
-	by m2712.contaboserver.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <g@odyss3us.net>)
-	id 1t6A67-002j6X-1C;
-	Wed, 30 Oct 2024 15:55:01 +0100
-Message-ID: <47b0f9fe0038baabb3b0c2d489a66a554a021e92.camel@odyss3us.net>
-Subject: Re: Kernel maintainer *CENSORED* on LKML [WAS: linux: Goodbye from
- a Linux community volunteer]
-From: Goran <g@odyss3us.net>
-To: metux <metux@gmx.de>, Dragan =?UTF-8?Q?Milivojevi=C4=87?=
- <d.milivojevic@gmail.com>, "Enrico Weigelt, metux IT consult"
- <info@metux.net>
-Cc: Peter Cai <peter@typeblog.net>, phoronix@phoronix.com, James Bottomley
- <James.Bottomley@hansenpartnership.com>, Serge Semin
- <fancer.lancer@gmail.com>,  Jon Mason <jdmason@kudzu.us>, Dave Jiang
- <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>, 
- ntb@lists.linux.dev, Andy Shevchenko <andy@kernel.org>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Kory Maincent
- <kory.maincent@bootlin.com>,  Cai Huoqing <cai.huoqing@linux.dev>,
- dmaengine@vger.kernel.org, Mark Brown <broonie@kernel.org>, 
- linux-spi@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>, 
- linux-ide@vger.kernel.org, Paul Burton <paulburton@kernel.org>, Thomas
- Bogendoerfer <tsbogend@alpha.franken.de>, Arnd Bergmann <arnd@arndb.de>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>,  linux-mips@vger.kernel.org, Bjorn
- Helgaas <bhelgaas@google.com>, Manivannan Sadhasivam
- <manivannan.sadhasivam@linaro.org>, Yoshihiro Shimoda
- <yoshihiro.shimoda.uh@renesas.com>,  linux-pci@vger.kernel.org, "David S.
- Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>, Russell King
- <linux@armlinux.org.uk>, Vladimir Oltean <olteanv@gmail.com>, Keguang Zhang
- <keguang.zhang@gmail.com>, Yanteng Si <siyanteng@loongson.cn>, 
- netdev@vger.kernel.org, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk@kernel.org>, Guenter Roeck <linux@roeck-us.net>, 
- linux-hwmon@vger.kernel.org, Borislav Petkov <bp@alien8.de>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Halaney
- <ajhalaney@gmail.com>, Nikita Travkin <nikita@trvn.ru>, Ivan Kokshaysky
- <ink@jurassic.park.msu.ru>, Alexander Shiyan <shc_work@mail.ru>, Dmitry
- Kozlov <xeb@mail.ru>, Sergey Shtylyov <s.shtylyov@omp.ru>, Evgeniy
- Dushistov <dushistov@mail.ru>, Geert Uytterhoeven <geert@linux-m68k.org>,
- Sergio Paracuellos <sergio.paracuellos@gmail.com>,  Nikita Shubin
- <nikita.shubin@maquefel.me>, linux-renesas-soc@vger.kernel.org,
- linux-kernel@vger.kernel.org,  Kexy Biscuit <kexybiscuit@aosc.io>,
- jeffbai@aosc.io, Linus Torvalds <torvalds@linux-foundation.org>, "[DNG]"
- <dng@lists.dyne.org>, redaktion@golem.de, dev mail list <dev@suckless.org>
-Date: Wed, 30 Oct 2024 15:54:57 +0100
-In-Reply-To: <b410a7fb-58c0-4d17-b818-54ec3476833a@gmx.de>
-References: 
-	<2m53bmuzemamzc4jzk2bj7tli22ruaaqqe34a2shtdtqrd52hp@alifh66en3rj>
-	 <e7d548a7fc835f9f3c9cb2e5ed97dfdfa164813f.camel@HansenPartnership.com>
-	 <6beb4070-1946-4387-bd0e-34608a76b19e@typeblog.net>
-	 <CALtW_agj1rurb3DRrPd9o2mkfku5fq_M3CEKY5sW+Zz7shKYHA@mail.gmail.com>
-	 <6d37175d-1b0b-4b82-80f0-c5b4e61badbf@metux.net>
-	 <2f12ee89-af9f-4af1-8ec8-ede1d5256592@metux.net>
-	 <CALtW_agiJyX3sTaBKgwPF7X920=+fFrRgXMPt4x_GCDOMfZy_w@mail.gmail.com>
-	 <CALtW_aimN531aZKSSG4hVLeQDk6bUoujopkhCh57xsaxfJrYgA@mail.gmail.com>
-	 <b410a7fb-58c0-4d17-b818-54ec3476833a@gmx.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+	s=arc-20240116; t=1730300611; c=relaxed/simple;
+	bh=NAJDFpr9nmdU19C3JKcxMzbLsCujnceVqhZ/RKnEwwg=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Af+TFKHbaNb+31NyYomIGXM73EbTT6cTqSu98SsoWPf9nOox0LZkrVYTYwFp+I+wNaLYmJk8frvjgX/RPZmzBKdUFVwnUGYm49zXP0bFaKHdfny3PyILmseqRbzytFLMMDTu/p8ax9QRp+1oc96YfhX0b314DFEoItACsgBOMu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=metux@gmx.de header.b=qomTIikI; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1730300534; x=1730905334; i=metux@gmx.de;
+	bh=NAJDFpr9nmdU19C3JKcxMzbLsCujnceVqhZ/RKnEwwg=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
+	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=qomTIikI/OgfmxAbFKh1e8iCRJShu7EnlgU5G434TkB+7QieI60zcRnRQmNHY7mL
+	 26XECiyiNu12zXTWRy2asSgHeF6VwbBHM3aDnQ3uox6d+N5j3vyz2V29nf9ZEHI/7
+	 qUlSXTqxVipxXZ1JSehQTzpHDHQPSPiL/eaweFb8E7BUCEPOvfqCWNoLR7qjkN1j/
+	 p49vWpG4avdBGfWZrfUUn1QQPJYBKupzAA27zZiM0BrIysUJtE3I4oi18t2KU2Jgp
+	 NR5BKuTzLj4AssNq/jcoRi8JEym9/1eHXVRmJDUQ/Hacah+zbe10IoOhncuicwk4Q
+	 B7fK/ijaayh5nLVM0A==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.178] ([77.2.112.201]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1M5wPh-1tCUne2tcR-003w9y; Wed, 30
+ Oct 2024 16:02:13 +0100
+Message-ID: <0369c687-db33-4665-b3dc-143000ef2e47@gmx.de>
+Date: Wed, 30 Oct 2024 16:02:48 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - m2712.contaboserver.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - odyss3us.net
-X-Get-Message-Sender-Via: m2712.contaboserver.net: authenticated_id: g@odyss3us.net
-X-Authenticated-Sender: m2712.contaboserver.net: g@odyss3us.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+User-Agent: Mozilla Thunderbird
+Subject: Re: Maintainers now blocked from kernel.org mail access [WAS Re:
+ linux: Goodbye from a Linux community volunteer]
+From: metux <metux@gmx.de>
+To: Hantong Chen <cxwdyx620@gmail.com>, tytso@mit.edu
+Cc: ajhalaney@gmail.com, allenbh@gmail.com, andrew@lunn.ch,
+ andriy.shevchenko@linux.intel.com, andy@kernel.org, arnd@arndb.de,
+ bhelgaas@google.com, bp@alien8.de, broonie@kernel.org,
+ cai.huoqing@linux.dev, dave.jiang@intel.com, davem@davemloft.net,
+ dlemoal@kernel.org, dmaengine@vger.kernel.org, dushistov@mail.ru,
+ fancer.lancer@gmail.com, geert@linux-m68k.org, gregkh@linuxfoundation.org,
+ ink@jurassic.park.msu.ru, james.bottomley@hansenpartnership.com,
+ jdmason@kudzu.us, jiaxun.yang@flygoat.com, keguang.zhang@gmail.com,
+ kory.maincent@bootlin.com, krzk@kernel.org, kuba@kernel.org,
+ linux-edac@vger.kernel.org, linux-hwmon@vger.kernel.org,
+ linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mips@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org, linux-serial@vger.kernel.org,
+ linux-spi@vger.kernel.org, linux@armlinux.org.uk, linux@roeck-us.net,
+ manivannan.sadhasivam@linaro.org, netdev@vger.kernel.org,
+ nikita.shubin@maquefel.me, nikita@trvn.ru, ntb@lists.linux.dev,
+ olteanv@gmail.com, pabeni@redhat.com, paulburton@kernel.org,
+ robh@kernel.org, s.shtylyov@omp.ru, sergio.paracuellos@gmail.com,
+ shc_work@mail.ru, siyanteng@loongson.cn, tsbogend@alpha.franken.de,
+ xeb@mail.ru, yoshihiro.shimoda.uh@renesas.com
+References: <20241024173504.GN3204734@mit.edu>
+ <20241024181917.1119-1-cxwdyx620@gmail.com>
+ <e3559794-ab4a-48f2-8c28-52ef46258051@metux.net>
+Content-Language: tl
+In-Reply-To: <e3559794-ab4a-48f2-8c28-52ef46258051@metux.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:jSWmplSFQgV90c2A0bkkvj2t8ExnIUMHHQD7NlbYYqtnVH71j/A
+ Pj4uZIi6YPufmEMjudXa4dJHIygmTV1wIFJJkHGM+GIBFRAfnlev+sgkCZr+MF54lQRidxS
+ bkG2HCXJq0essmv69s27h4WdycA0Rnb+4K1fnTHuD/qBR+mEDSBS53MElG91weJLYtaeg5k
+ OTPFgaQ3fak8gIXNj4JDQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:WLKWUYisdM4=;2yNj/laS7SIY5FYvJFi4MhOmvxZ
+ pHFbD0J1kye994bqbqLhdCTnBHW8Ug5JybvfzVUSlvhHAACTecoQE51xKKnV5hpKkUhCo8yLr
+ /EvJ6VglOAgdSAY02WiKyUBPuOArNFiBamR/Fukdo2XJTgsXt550Q9Uu3s0mVOwxlXCMnWMns
+ Fn7g+nMUVDwZg2peIk913PvjXMFh4d9Lkvh3kvC90QEiN4qogLfcOyB8IyykJPV3DQeeXp5hf
+ +MrDjTpn28aqOi4W0rgu+IoyVD3neDdXwidld0Di4C2B0Xjeof79KSNCRhE6HCopzETXFL3/P
+ Eq20+VJdDS4NGHO7dtKR96RqKlqckwmu3AywKAhNuZLL3xf4qG/GG7lFzucn1PmOwB9qzuDQ0
+ T83E1gkoEctHd2TIp9iZslkwtRvZoLEaBVqlMchJ2WhOacIxu0B7j2GBH/lqButUW3kxkamyr
+ QKLpEtwiYtP4mMfbOjHeKNuT587VBOcJ0soGtjcr5abLWdDOKEep1at+A6hNDrbBSP1f6/IBo
+ BK+2+hzwJ3piZW/Yn1eaXBx6/3MBI0Lr+ftdHokUiS61Mp+GLxSd3NlP9E5Ud6tWQlNEOE+TO
+ 3A3+h1iPb9qNj+J4fjqMCG2p0nA6l58zMiSBfI4P0CjndwksOOuTcigJ6T1hzsfD+NMuWWKR6
+ sAOmiaHvt7qnuiw6srIxEdbhvlRklDpq1Rv8Lrce6Ts8Z8qBYDnh7sqT0QOx+5KI9Lsu5iX3q
+ 5le4iVFFC4QhG4eqQ5l+1SnoJ0wgVAVlJ5k6YKhwZo8jzqS56dXAir9zu5tn+DGzJFsWUTgbd
+ rbwM2pncFYXiGznL6foV5OhA==
 
-Widely accepted spam lists are few and once on one it will get hard to
-get cleared.
+Resending with another address, since the other one is
+hard-blocked / censored by kernel.org mail server.
 
-Maybe Devuan has no clue that your domain is on one or multiple spam
-list. They are just using spam lists to block.
-
-Spam lists can be used for such nasty things.
-
-Am Mittwoch, dem 30.10.2024 um 14:48 +0100 schrieb metux:
-> On 29.10.24 20:33, Dragan Milivojevi=C4=87 wrote:
->=20
-> Hi,
->=20
-> > > > First I've thought it's just when replying specific mails, but
-> > > > now
-> > > > turned out *all* my mails are blocked, even totally unrelated
-> > > > things.
-> > > > I can confirm it's not by the message content, but my mail
-> > > > address or
-> > > > domain. I'm blocked from whole kernel.org
-> > >=20
-> > > Same thing on my end, partial sample: https://imgur.com/a/l4Jcfhk
-> >=20
-> > And it is spreading, previous message to dng@lists.dyne.org=C2=A0was
-> > rejected with:
-> >=20
-> > "Message rejected by filter rule match"
->=20
-> Do you have some evidence that Devuan's mail server is really
-> blocking
-> us ?
->=20
-> If so, I'd be exceptionally surprised.
->=20
->=20
+On 30.10.24 15:33, Enrico Weigelt, metux IT consult wrote:
+> On 24.10.24 20:19, Hantong Chen wrote:
+>
+>> What LF and Linus done will inevitably create a climate of fear where
+>> contributors and maintainers from the *Countries of Particular Concern*
+>> feels endangered.
+>
+> And it's getting worse:
+>
+> They're now blocking mail traffic on kernel.org, even from maintainers.
+> (my whole company is hard-marked as "spam"). Anything @kernel.org -
+> lists as well as invidual inboxes.
+>
+> Still in the process of compiling evidence report. Anybody out there
+> who's affected too, let me know - will be added to the report.
+>
+> I wonder when this one will be blocked, too. (I've still got many more
+> left).
+>
+>> This is clearly NOT what contributors truly want. People from around
+>> the world
+>> once firmly believed that Linux was a free and open-source project.
+>> However,
+>> Greg's commit and Linus' response deeply disappoint them.
+>
+> Indeed. The trust that had been bulit up in decades is now finally
+> destroyed - just by a few mails.
+>
+> Linux has been turned into POSS, politware.
+>
+>> Open-source projects might be international, but the people or
+>> organizations
+>> controlling them are not. This is the source of concern and
+>> disappointment.
+>
+> That's why those projects should never depend on just a few individuals
+> or organisations in one specific country.
+>
+>
+>
 > --mtx
-
-
+>
 

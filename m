@@ -1,122 +1,102 @@
-Return-Path: <dmaengine+bounces-3655-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3656-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F1589B7003
-	for <lists+dmaengine@lfdr.de>; Wed, 30 Oct 2024 23:51:24 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CF8259B792A
+	for <lists+dmaengine@lfdr.de>; Thu, 31 Oct 2024 11:57:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 085381C213E4
-	for <lists+dmaengine@lfdr.de>; Wed, 30 Oct 2024 22:51:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 86C581F21650
+	for <lists+dmaengine@lfdr.de>; Thu, 31 Oct 2024 10:57:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AB4F213EF6;
-	Wed, 30 Oct 2024 22:51:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA900199E81;
+	Thu, 31 Oct 2024 10:57:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BwXp4agm"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hKvZ12SP"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 626401F4288;
-	Wed, 30 Oct 2024 22:51:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F016813A25F;
+	Thu, 31 Oct 2024 10:57:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730328678; cv=none; b=SVKOQW/DH2RNiVSP64rrHslUJuaPesL3+s1wEjbj8kqev+7WZLg9JsRyBCZ3ye57v8dPiwW4ikxB5c8dGuBNyN7Ge8bHBqp9+K7FJm6lVrQyplpuoCw2La4IX3sn0LQXrdrq5sOr5yh964cEqR1vCMe62cHDManKJ3s06auXKTA=
+	t=1730372231; cv=none; b=Z2NBAoHy4Iwk2WbmK4S9lXPkuKDUHRGoF3tk4z53RJOospX+AQsu47sqBPARcbl9bxV5RWTT3u+eDu79WKrDaoORCWKtApafuGPo0mqKUy0myJpYvLmOhlbsc95weaWj7TROW3tlaB/W8M33v4YQ4O7f2nziFNrcNjvhrT8Oi7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730328678; c=relaxed/simple;
-	bh=6984DWiiZS6tpY28qzM6kzD89hg0yELFs+RNJQ8Wu9Q=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=I/B2bi8G4Y2R8vkji4n6wCIPoR0DmPTScMJkDQ99g5KvDMNkSvVLqcbZWM+g93zq6Xui+zPiwKBIDrYfH5bHx1mbXEgc0Bvv3VAzBHH8JN9Q1sEcJ3Egz5uRTxUwsQK9NooxqSultVltdNYu/Kv8NQyizjs6jPL+4hOjEBy2Q/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BwXp4agm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AD72C4CECE;
-	Wed, 30 Oct 2024 22:51:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730328676;
-	bh=6984DWiiZS6tpY28qzM6kzD89hg0yELFs+RNJQ8Wu9Q=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=BwXp4agmfVWQmJf6zrYQmWhunGpiG4KNBmdIhywjHM7ULS6RWwE+jKOYGJyR/uoHi
-	 WtWPh1dSm1BJYOxpJ4eRN/rgGQU9BQjTYx7nLCO2lZvvOcrjT+2IOl1Ag0muixkKLK
-	 aH6CT1e90ckLNGB9fhofWECC7jbB5s6Xae65l4fo5cuH5GgzqtnVvLAWiZStwfIp54
-	 YHNG2wVPQY6So6ShwY5IkgYdysN3T3uMpAppb1CTkBgK3yy102SPar02WnqAv0FEVz
-	 9Hn3S+sAc+PpGCkrPhJN+OTMATpXL6ao3YEcPEtNy4neNQg4LlXoiNpryhcbKT4H5d
-	 qSe5oJ1BE2xGQ==
-Date: Wed, 30 Oct 2024 17:51:14 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1730372231; c=relaxed/simple;
+	bh=tVuyw/2mK57aTALxTRXWhHaWAaydpe9xSAAGsUudOsk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g8mcBEidC/fWo9v/mFv4jruXdOK+w+muiGjNbNf3AwppIYOrGluw+eIfDR8k7AzDIC2MhvJaQgVp7Tf3hDJITFmxqLcYybQojUxnGhk3Gy2hAkToRpwT1OXjqzMfA0uJbdZXA5KGuGIFclwshiMfLSLW/R75Y6TN3musbBB0Nl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hKvZ12SP; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730372230; x=1761908230;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=tVuyw/2mK57aTALxTRXWhHaWAaydpe9xSAAGsUudOsk=;
+  b=hKvZ12SPrlf9Jouyf2UaWC89vO9Dw4G44ZkjBfavM5n3m3Yb6rNtRog+
+   TS9AhKEHYGt+789f8adKj81euFUe668bGbcIp3x8GdoXoemPtjoPvispj
+   9UKRPzMGK5On4IPtahZZc2Jw1wYWo+jlQ1yyROqHTF89ErD8JvLUDarqk
+   lCVtp/EDM6JMoaMFrtXc/DWKX2PhAH6GvLgk/pade0aWVF8ydiGXUSKYa
+   MwUR8cvrA/IClzmhHQWgG/o1+DL5MLY/qnIhEhKEUzMjijhjG9U3qbzxg
+   JIkEfppT3eOFJ2Adcfy1NF8Y6rJlFFbFYYhIur9sE8I8iDA8v6aVEB7O/
+   g==;
+X-CSE-ConnectionGUID: qMJ5SdrLSPKx4U+vbBT4jw==
+X-CSE-MsgGUID: XG2wDP0aTbOZfYHBr9Swmw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11241"; a="40714318"
+X-IronPort-AV: E=Sophos;i="6.11,247,1725346800"; 
+   d="scan'208";a="40714318"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2024 03:57:09 -0700
+X-CSE-ConnectionGUID: H+bgwwtSSsiF/gliVd+ZGw==
+X-CSE-MsgGUID: 7CjK28aHSzCapN3igqZRyw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,247,1725346800"; 
+   d="scan'208";a="82698733"
+Received: from smile.fi.intel.com ([10.237.72.154])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2024 03:57:07 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1t6SrQ-00000009cBm-2eBN;
+	Thu, 31 Oct 2024 12:57:04 +0200
+Date: Thu, 31 Oct 2024 12:57:04 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Vinod Koul <vkoul@kernel.org>, Paul Cercueil <paul@crapouillou.net>,
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v2 0/4] dmaengine: dma_request_chan*() amendments
+Message-ID: <ZyNigG_hoFFArNii@smile.fi.intel.com>
+References: <20241008173351.2246796-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
- Vinod Koul <vkoul@kernel.org>, Nuno Sa <nuno.sa@analog.com>, 
- devicetree@vger.kernel.org, dmaengine@vger.kernel.org
-In-Reply-To: <20241030-axi-dma-dt-yaml-v3-1-d3a9b506f96c@baylibre.com>
-References: <20241030-axi-dma-dt-yaml-v3-0-d3a9b506f96c@baylibre.com>
- <20241030-axi-dma-dt-yaml-v3-1-d3a9b506f96c@baylibre.com>
-Message-Id: <173032867487.2384864.2184195071332557080.robh@kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: dma: adi,axi-dmac: convert to yaml
- schema
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241008173351.2246796-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-
-On Wed, 30 Oct 2024 16:33:56 -0500, David Lechner wrote:
-> Convert the AXI DMAC bindings from .txt to .yaml.
+On Tue, Oct 08, 2024 at 08:27:43PM +0300, Andy Shevchenko wrote:
+> Reduce the scope of the use of some rarely used DMA request channel APIs
+> in order to make the step of their removal or making static in the
+> future. No functional changes intended.
 > 
-> Acked-by: Nuno Sa <nuno.sa@analog.com>
-> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-> ---
-> 
-> For the maintainer, Lars is the original author, but isn't really
-> active with ADI anymore, so I have added Nuno instead since he is the
-> most active ADI representative currently and is knowledgeable about this
-> hardware.
-> 
-> As in v1, the rob-bot is likely to complain with the following:
-> 
-> 	Documentation/devicetree/bindings/dma/adi,axi-dmac.yaml: properties:adi,channels:type: 'boolean' was expected
-> 		hint: A vendor boolean property can use "type: boolean"
-> 		from schema $id: http://devicetree.org/meta-schemas/vendor-props.yaml#
-> 	DTC [C] Documentation/devicetree/bindings/dma/adi,axi-dmac.example.dtb
-> 
-> This is due to the fact that we have a vendor prefix on an object node.
-> We can't change that since it is an existing binding. Rob said he will
-> fix this in dtschema.
-> ---
->  .../devicetree/bindings/dma/adi,axi-dmac.txt       |  61 ---------
->  .../devicetree/bindings/dma/adi,axi-dmac.yaml      | 139 +++++++++++++++++++++
->  2 files changed, 139 insertions(+), 61 deletions(-)
-> 
+> In v2:
+> - updated the commit messages (Frank)
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Hmm, any comments on this?
 
-yamllint warnings/errors:
+-- 
+With Best Regards,
+Andy Shevchenko
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/dma/adi,axi-dmac.yaml: properties:adi,channels:type: 'boolean' was expected
-	hint: A vendor boolean property can use "type: boolean"
-	from schema $id: http://devicetree.org/meta-schemas/vendor-props.yaml#
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20241030-axi-dma-dt-yaml-v3-1-d3a9b506f96c@baylibre.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
 
 

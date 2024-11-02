@@ -1,119 +1,166 @@
-Return-Path: <dmaengine+bounces-3678-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3679-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98E259B9F7C
-	for <lists+dmaengine@lfdr.de>; Sat,  2 Nov 2024 12:46:32 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4FA2D9BA1D2
+	for <lists+dmaengine@lfdr.de>; Sat,  2 Nov 2024 18:45:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C00A21C20C8F
-	for <lists+dmaengine@lfdr.de>; Sat,  2 Nov 2024 11:46:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 142AB2820A3
+	for <lists+dmaengine@lfdr.de>; Sat,  2 Nov 2024 17:45:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0321B15A85E;
-	Sat,  2 Nov 2024 11:46:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="ZndRLKwS"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F830188721;
+	Sat,  2 Nov 2024 17:45:45 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.smtpout.orange.fr (smtp-24.smtpout.orange.fr [80.12.242.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E02C7F6;
-	Sat,  2 Nov 2024 11:46:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.24
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6821815688C;
+	Sat,  2 Nov 2024 17:45:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730547987; cv=none; b=lciJr9Z6oMiQUPzAifAaz7aJ1KEjPkruJUmpAn6KstIW0yOmxmXl0GLwXUxrSm1W9LjEIvkqXKYW/3QIrLExYOBAx+W0pjWfYE0RVQnYaUz1ubszwALRUvuY53T+qa/S27yMslGwNVqi7CGrh30RCwun2neJiarZpjFgHM35jBM=
+	t=1730569545; cv=none; b=DQcuntE86XRMDX6Kyq/P3Jz/gJJ+a/j8bnPvhtlVLcq1PukE8XxExpHhViTfgp80or3Xs4HppHICrUMup1G1thJd1WSwkrPkUlyc9vwcmd/TQ3+Y4tHdRzVODc6R/ODlttWKEvgBhHf1DdbEdrnclWMB9SvP0a1e6Sq8lEoxKzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730547987; c=relaxed/simple;
-	bh=2Ch3mP6U6sjfW2K87+WL0YUv5Re7tuO/62D8H6hhe30=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LGn9xf5ZaErWwbtOhrn5jP5YcAG1QgRHooPswJSTFUSnEdJ3IzxqVLiR29BNRWka3msZg3Bq8aVm0CW7J0GPdQq5AKfjX0F9rukkLyqayO8Y0kxv0JKVYQcIJpr5WY30wMsbkrf2g7YsUYT+pTDk8hOOKYXtttKpKERwvt9KaME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=ZndRLKwS; arc=none smtp.client-ip=80.12.242.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
-Received: from localhost.localdomain ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id 7Ca5tfi7F2ppn7Ca5tOdOL; Sat, 02 Nov 2024 12:46:17 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1730547977;
-	bh=GmDq1W3IPmHPr4pL6L0e60EmGNxPvUXw6zQ0gx+le0I=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=ZndRLKwSv8qUNLQDZlLTcJ3yU6wpBzMHRlcRX6QZCNfPQDHqvSEzpcbQ+DErFQj53
-	 nmiQ6ZepqfXYRRkWTUxTkFPxA0OPFqJJ5kA1OhpOUCKiyLsoT4sEoHQCZMAzr85VKj
-	 YzXf1TaOdxGVACM5cwWrQM8TCcD26M4hymSB8Pur5yDvFduHoCV+g0xa4hGZEmyNM/
-	 EeUeg94r6rVfSQm2DJuDiXt3tSwiu7DGGWpjJ+yGQDJzzdBShsGFM2729prx2/VKVu
-	 2UPrhzM3u0gDke04gdbOIYTLJN3r6rkjjp5j5SNIRrNRdB/vmbDCjI1e2Q/IxBQItO
-	 xgxlOhhXEiT3Q==
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 02 Nov 2024 12:46:17 +0100
-X-ME-IP: 90.11.132.44
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Fenghua Yu <fenghua.yu@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Vinod Koul <vkoul@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	dmaengine@vger.kernel.org
-Subject: [PATCH] dmaengine: idxd: Remove a useless mutex
-Date: Sat,  2 Nov 2024 12:46:04 +0100
-Message-ID: <e08df764e7046178ada4ec066852c0ce65410373.1730547933.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.47.0
+	s=arc-20240116; t=1730569545; c=relaxed/simple;
+	bh=6WrhZWAJgavrSKkvG6AR5CqzWMmZYIaV6d20Lx0RzVg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=u2n0Hp1kbUMeD8uoAl3F4IBNpvGKPEg95bePueQcNxh/77W7+MDZQbUg+ADuBTPIRsrF+1LxSVTZg4AwF8MZ/+j2vxVj35PAGuE8ojtLKfiIZQNGRSm0faOVFL6pAI2UBH7qT8D7YTXdklxc5tZMLazIPLQKMy4wGM/5nqDGamc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 68869FEC;
+	Sat,  2 Nov 2024 10:46:04 -0700 (PDT)
+Received: from minigeek.lan (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 06EB03F66E;
+	Sat,  2 Nov 2024 10:45:32 -0700 (PDT)
+Date: Sat, 2 Nov 2024 17:45:16 +0000
+From: Andre Przywara <andre.przywara@arm.com>
+To: "=?UTF-8?B?Q3PDs2vDoXMs?= Bence" <csokas.bence@prolan.hu>
+Cc: <dmaengine@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+ <linux-sunxi@lists.linux.dev>, <linux-kernel@vger.kernel.org>, Mesih Kilinc
+ <mesihkilinc@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, Vinod Koul
+ <vkoul@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec
+ <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, Philipp
+ Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v5 2/5] dma-engine: sun4i: Add has_reset option to quirk
+Message-ID: <20241102174516.02d124d6@minigeek.lan>
+In-Reply-To: <20241102093140.2625230-3-csokas.bence@prolan.hu>
+References: <20241102093140.2625230-1-csokas.bence@prolan.hu>
+	<20241102093140.2625230-3-csokas.bence@prolan.hu>
+Organization: Arm Ltd.
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.31; x86_64-slackware-linux-gnu)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-ida_alloc()/ida_free() don't need any mutex, so remove this one.
+On Sat, 2 Nov 2024 10:31:41 +0100
+"Cs=C3=B3k=C3=A1s, Bence" <csokas.bence@prolan.hu> wrote:
 
-It was introduced by commit e6fd6d7e5f0f ("dmaengine: idxd: add a device to
-represent the file opened").
+Hi,
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-See:
-https://elixir.bootlin.com/linux/v6.11.2/source/lib/idr.c#L375
-https://elixir.bootlin.com/linux/v6.11.2/source/lib/idr.c#L484
----
- drivers/dma/idxd/cdev.c | 5 -----
- 1 file changed, 5 deletions(-)
+> From: Mesih Kilinc <mesihkilinc@gmail.com>
+>=20
+> Allwinner suniv F1C100s has a reset bit for DMA in CCU. Sun4i do not
+> has this bit but in order to support suniv we need to add it. So add
+> support for reset bit.
+>=20
+> Signed-off-by: Mesih Kilinc <mesihkilinc@gmail.com>
+> [ csokas.bence: Rebased and addressed comments ]
+> Signed-off-by: Cs=C3=B3k=C3=A1s, Bence <csokas.bence@prolan.hu>
+> ---
+>=20
+> Notes:
+>     Changes in v2:
+>     * Call reset_control_deassert() unconditionally, as it supports optio=
+nal resets
+>     * Use dev_err_probe()
+>     * Whitespace
+>     Changes in v3:
+>     * More dev_err_probe() fixes
+>     Changes in v4:
+>     * Use return value of dev_err_probe()
+>     Changes in v5:
+>     * More whitespace
+>=20
+>  drivers/dma/sun4i-dma.c | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+>=20
+> diff --git a/drivers/dma/sun4i-dma.c b/drivers/dma/sun4i-dma.c
+> index b2c1e4b9f696..9d1e3c51342d 100644
+> --- a/drivers/dma/sun4i-dma.c
+> +++ b/drivers/dma/sun4i-dma.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/of_dma.h>
+>  #include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/reset.h>
+>  #include <linux/slab.h>
+>  #include <linux/spinlock.h>
+> =20
+> @@ -159,6 +160,7 @@ struct sun4i_dma_config {
+>  	u8 ddma_drq_sdram;
+> =20
+>  	u8 max_burst;
+> +	bool has_reset;
+>  };
+> =20
+>  struct sun4i_dma_pchan {
+> @@ -208,6 +210,7 @@ struct sun4i_dma_dev {
+>  	int				irq;
+>  	spinlock_t			lock;
+>  	const struct sun4i_dma_config *cfg;
+> +	struct reset_control *rst;
+>  };
+> =20
+>  static struct sun4i_dma_dev *to_sun4i_dma_dev(struct dma_device *dev)
+> @@ -1215,6 +1218,13 @@ static int sun4i_dma_probe(struct platform_device =
+*pdev)
+>  		return PTR_ERR(priv->clk);
+>  	}
+> =20
+> +	if (priv->cfg->has_reset) {
+> +		priv->rst =3D devm_reset_control_get_exclusive(&pdev->dev, NULL);
 
-diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
-index 57f1bf2ab20b..ff94ee892339 100644
---- a/drivers/dma/idxd/cdev.c
-+++ b/drivers/dma/idxd/cdev.c
-@@ -28,7 +28,6 @@ struct idxd_cdev_context {
-  * global to avoid conflict file names.
-  */
- static DEFINE_IDA(file_ida);
--static DEFINE_MUTEX(ida_lock);
- 
- /*
-  * ictx is an array based off of accelerator types. enum idxd_type
-@@ -123,9 +122,7 @@ static void idxd_file_dev_release(struct device *dev)
- 	struct idxd_device *idxd = wq->idxd;
- 	int rc;
- 
--	mutex_lock(&ida_lock);
- 	ida_free(&file_ida, ctx->id);
--	mutex_unlock(&ida_lock);
- 
- 	/* Wait for in-flight operations to complete. */
- 	if (wq_shared(wq)) {
-@@ -284,9 +281,7 @@ static int idxd_cdev_open(struct inode *inode, struct file *filp)
- 	}
- 
- 	idxd_cdev = wq->idxd_cdev;
--	mutex_lock(&ida_lock);
- 	ctx->id = ida_alloc(&file_ida, GFP_KERNEL);
--	mutex_unlock(&ida_lock);
- 	if (ctx->id < 0) {
- 		dev_warn(dev, "ida alloc failure\n");
- 		goto failed_ida;
--- 
-2.47.0
+Can't we use devm_reset_control_get_optional_exclusive(), and then save
+this whole has_reset bit?
+
+> +		if (IS_ERR(priv->rst))
+> +			return dev_err_probe(&pdev->dev, PTR_ERR(priv->rst),
+> +					     "Failed to get reset control\n");
+> +	}
+> +
+>  	platform_set_drvdata(pdev, priv);
+>  	spin_lock_init(&priv->lock);
+> =20
+> @@ -1287,6 +1297,14 @@ static int sun4i_dma_probe(struct platform_device =
+*pdev)
+>  		return ret;
+>  	}
+> =20
+> +	/* Deassert the reset control */
+> +	ret =3D reset_control_deassert(priv->rst);
+> +	if (ret) {
+> +		dev_err_probe(&pdev->dev, ret,
+> +			      "Failed to deassert the reset control\n");
+> +		goto err_clk_disable;
+> +	}
+> +
+>  	/*
+>  	 * Make sure the IRQs are all disabled and accounted for. The bootloader
+>  	 * likes to leave these dirty
+> @@ -1355,6 +1373,7 @@ static struct sun4i_dma_config sun4i_a10_dma_cfg =
+=3D {
+>  	.ddma_drq_sdram		=3D SUN4I_DDMA_DRQ_TYPE_SDRAM,
+> =20
+>  	.max_burst		=3D SUN4I_MAX_BURST,
+> +	.has_reset		=3D false,
+>  };
+> =20
+>  static const struct of_device_id sun4i_dma_match[] =3D {
 
 

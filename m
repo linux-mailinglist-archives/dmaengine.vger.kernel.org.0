@@ -1,68 +1,69 @@
-Return-Path: <dmaengine+bounces-3676-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3677-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 422009B9E4A
-	for <lists+dmaengine@lfdr.de>; Sat,  2 Nov 2024 10:36:22 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 39F619B9EC4
+	for <lists+dmaengine@lfdr.de>; Sat,  2 Nov 2024 11:16:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 018FA281666
-	for <lists+dmaengine@lfdr.de>; Sat,  2 Nov 2024 09:36:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 00407280F58
+	for <lists+dmaengine@lfdr.de>; Sat,  2 Nov 2024 10:15:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9309F166302;
-	Sat,  2 Nov 2024 09:36:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62DA4171E4F;
+	Sat,  2 Nov 2024 10:10:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="Zmni2bUr"
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="XgKiC9le"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D937F155336;
-	Sat,  2 Nov 2024 09:36:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C28B1714C9;
+	Sat,  2 Nov 2024 10:10:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730540174; cv=none; b=oz6fAldfn/rxf/HGdZZ1cgZVtZ4pxpxVyjYTJF0PUWM1T3XdFZeMzE7teyjrZa52zpTbetw26okqJFjgbJiu5rkqi+lMyRRM5sVOoOsiMAhBej+i9diERgVOY394Ii1LZZ01CNOofWI0phOqj1gBP8gdYdaxrb5I+d4+QQawoKY=
+	t=1730542235; cv=none; b=rl0b3ratusmzWct3n7aFTL7bGlT3d6E97mX3ibgw4i2/XfAPRSTQqxhVBHckONDrIeepQ0aRw/SQmwmyTanqMaopoU6x1wlGixEb9cu6iRrmm6JIYjqVfKXEERFovfTouIDfb5hNxfrCxkdoL0Ro0yZzisiYh1ycVNXvzGozAVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730540174; c=relaxed/simple;
-	bh=zeXAIEsFUMmuU1POixTf74LalJUYReBKcOOBpIxkTIw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gTs/i8sfFSLM7n08ZRpiTRmpv1oe9I7k21KhzFkY/h2znR6yqBDObWJMO7ssrgzGD3BQxUFy/Yp9BXNlU0/iSi0qr61Vbmwkc4FlK9i5sKUZYjrTK/YyQ35Axnz4/PzhLjPtgYjw1IJp5CVozs2paiRh9jnJSml27FcToHqv1ls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=Zmni2bUr; arc=none smtp.client-ip=193.68.50.107
+	s=arc-20240116; t=1730542235; c=relaxed/simple;
+	bh=msZfN1vlHTTQkwq03Xyv0w1GgK6cVJfBoFs08qoycKU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=U6iq2C2XloqEcuU/vPylnnK8VHrw5Q5OVrMp9V6/ibMA4S38Q8D/Yssy/A4j4EyImsgYu1pcKOXZgTmExjoPA2Llqr7vq0cIwt7cEfffMOgGV+tnd+lrEy7fkxm2yAeXxQ2NJX6P9VodoNGkgt3Ssmy6C9dIHiZpEPo9BaOUmCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=XgKiC9le; arc=none smtp.client-ip=193.68.50.107
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
 Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 5E4E8A0B13;
-	Sat,  2 Nov 2024 10:36:11 +0100 (CET)
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id C8941A09BA;
+	Sat,  2 Nov 2024 11:10:28 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
 	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=mail; bh=R+s79tNU1qd1nw+H4G/Q
-	NlTSgR+QCMq5J2qciEy4mHk=; b=Zmni2bUr6o3F2ZEUehyEYpcfRGqeiTVWHpEL
-	YECTREMh0iY3uaujQwwpw64TDhcr1T9YUtJzwlangm1FbrFscFJuisrJRlQByePb
-	5yrLvtyTtLkqM8By8kEFHRk3RLSfCXbT5+ph9Au0RiRhT8i4svqP3NEAWRUD54ML
-	CX2TlKD4FtYC0CJuen2ggz5C8l4jYILepX0+cP2kxLutuxZ8fYhRrt51wfDuehRb
-	w1+83xGIJ+PEeMHPuQIpY1SGYiUi/bBwvLL4JbL5WCmJOvI6WowT4UMPtu9J8Sg3
-	kfC1H7UUAnudiQI9sevYQYojHkOsqJ0vuPzxZHi0fcmD+dyserR2/SkTThFnqOCD
-	cfl1DawDGC2VzWHghiVQXQGgrbgKDmXLo5t8h0KtVcIOfkBpG9lAFFHHw8czFpnc
-	BGIlK7lehDChDTotixTA1AMT4BEaHb7S1fWJKpVpEantHWQzokyocKeCi1YQHufU
-	LUZPsxlhzKGLeT6lZ57+Jm1E/qVoiWTqM+iRDY+rgGnpVk18x1uhFZbFM0ZCGCwg
-	voMg37SNZ1rBoQuJ8J55P0f66ouVTv404li8ELQQ1B+d7NJ1xZ0YmgMSfvL4k7FE
-	hynFnaxok2H5Kr3ygvpy0N6WI+j3uB8xpRzGJ+JlBtcbeJhN988jEQEMoj2Xh4e7
-	wNChgQ4=
+	:from:from:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=mail; bh=dC+s2x2zpsTUqYLdynlJ3f94YiheKXfponBNvdNMjDQ=; b=
+	XgKiC9leoIhXmEAbZVWSBFsTDdg50PyWu8AvvLrkfT79/2cypQocCu0/JVzHzxCo
+	FX9gFnIlOWM7C1GWp7tiaeNGmF3NMZUX9Na5G4NuHSzMB7LQRhxB+THIGQ3vHhrx
+	EDKACzlA/6rvuklZxCoyXHRayFy5gtKxFQvFvCecArlhB4bTrvG1uWoCGt+7v0yW
+	IN6j12Exu+LTCuYz6g1h6QzRnOot9Iq5oWJ4B/rq6Dx95iBoL8ZN0xSC+BDEUrii
+	3XAlKVkg68RsnCofGSM5czpirf4EJKe0lrOCzUDtfnltBW1VCQ0aHQYoNzyqNUCE
+	RLBlDY0vzTRfGg2fUbnHi6Ao5UDVxJG/mccJd3d2dyYNQJRLqfjVEVgPIFWA6Bk5
+	JUfdtdfKQwDlGlrSSMut4vNjU+ZCTyGiUskcPWkhssQcFr5Idm4zplXOortqkU5n
+	q4NZDHMmo9OTXMcF/5seugSlZGK2vnotl3Dp/hI/fWf3tDVYFCg6Z0zxeznl9H4c
+	IJDj3EgwjUUzA33prma/x4WpFhx978xItF7aeikUun7jcU6NqAgNjdSjKY6aJzXn
+	mMb0ahFyoYnOg42RteikoZt3TVuHlji2oB0ONDFc/TZpDk0xmHcy5aDeZL4KQ2mL
+	SsfkKTyg/82fs7KZ2ZDnTkb6rBkuyoqQiLE7g0JaULE=
 From: =?UTF-8?q?Cs=C3=B3k=C3=A1s=2C=20Bence?= <csokas.bence@prolan.hu>
-To: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-sunxi@lists.linux.dev>
-CC: Mesih Kilinc <mesihkilinc@gmail.com>,
-	=?UTF-8?q?Cs=C3=B3k=C3=A1s=2C=20Bence?= <csokas.bence@prolan.hu>, Vinod Koul
+To: <dmaengine@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-sunxi@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+	<devicetree@vger.kernel.org>
+CC: =?UTF-8?q?Cs=C3=B3k=C3=A1s=2C=20Bence?= <csokas.bence@prolan.hu>, "Mark
+ Brown" <broonie@kernel.org>, Mesih Kilinc <mesihkilinc@gmail.com>, Vinod Koul
 	<vkoul@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec
-	<jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>
-Subject: [PATCH v5 4/5] dma-engine: sun4i: Add support for Allwinner suniv F1C100s
-Date: Sat, 2 Nov 2024 10:31:43 +0100
-Message-ID: <20241102093140.2625230-5-csokas.bence@prolan.hu>
+	<jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, "Chen-Yu
+ Tsai" <wens@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Philipp Zabel
+	<p.zabel@pengutronix.de>, Conor Dooley <conor.dooley@microchip.com>, "Rob
+ Herring" <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, "Conor
+ Dooley" <conor+dt@kernel.org>, Amit Singh Tomar <amitsinght@marvell.com>
+Subject: [PATCH v5 0/5] Add support for DMA of F1C100s
+Date: Sat, 2 Nov 2024 11:10:17 +0100
+Message-ID: <20241102101017.2636558-1-csokas.bence@prolan.hu>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20241102093140.2625230-1-csokas.bence@prolan.hu>
-References: <20241102093140.2625230-1-csokas.bence@prolan.hu>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -71,163 +72,39 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1730540170;VERSION=7979;MC=1301189787;ID=220021;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
+X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1730542228;VERSION=7979;MC=3166311018;ID=220060;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
 X-ESET-Antispam: OK
 X-EsetResult: clean, is OK
 X-EsetId: 37303A2980D94855667067
 
-From: Mesih Kilinc <mesihkilinc@gmail.com>
+Support for Allwinner F1C100s/200s series audio was
+submitted in 2018 as an RFC series, but was not merged,
+despite having only minor errors. However, this is
+essential for having audio on these SoCs.
+This series was forward-ported/rebased to the best of
+my abilities, on top of Linus' tree as of now:
+commit c2ee9f594da8 ("KVM: selftests: Fix build on on non-x86 architectures")
 
-DMA of Allwinner suniv F1C100s is similar to sun4i. It has 4 NDMA, 4
-DDMA channels and endpoints are different. Also F1C100s has reset bit
-for DMA in CCU. Add support for it.
+Link: https://lore.kernel.org/all/cover.1543782328.git.mesihkilinc@gmail.com/
 
-Signed-off-by: Mesih Kilinc <mesihkilinc@gmail.com>
-[ csokas.bence: Rebased on current master ]
-Signed-off-by: Csókás, Bence <csokas.bence@prolan.hu>
----
- drivers/dma/Kconfig     |  4 +--
- drivers/dma/sun4i-dma.c | 60 +++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 62 insertions(+), 2 deletions(-)
+As requested by many, this series will now be split in 2, the DMA and the
+ALSA/ASoC codec driver. This is the DMA part of the series.
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index d9ec1e69e428..fc25bfc356f3 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -162,8 +162,8 @@ config DMA_SA11X0
- 
- config DMA_SUN4I
- 	tristate "Allwinner A10 DMA SoCs support"
--	depends on MACH_SUN4I || MACH_SUN5I || MACH_SUN7I
--	default (MACH_SUN4I || MACH_SUN5I || MACH_SUN7I)
-+	depends on MACH_SUN4I || MACH_SUN5I || MACH_SUN7I || MACH_SUNIV
-+	default (MACH_SUN4I || MACH_SUN5I || MACH_SUN7I || MACH_SUNIV)
- 	select DMA_ENGINE
- 	select DMA_VIRTUAL_CHANNELS
- 	help
-diff --git a/drivers/dma/sun4i-dma.c b/drivers/dma/sun4i-dma.c
-index 9d1e3c51342d..e8c656f0ac63 100644
---- a/drivers/dma/sun4i-dma.c
-+++ b/drivers/dma/sun4i-dma.c
-@@ -33,7 +33,11 @@
- #define SUN4I_DMA_CFG_SRC_ADDR_MODE(mode)	((mode) << 5)
- #define SUN4I_DMA_CFG_SRC_DRQ_TYPE(type)	(type)
- 
-+#define SUNIV_DMA_CFG_DST_DATA_WIDTH(width)	((width) << 24)
-+#define SUNIV_DMA_CFG_SRC_DATA_WIDTH(width)	((width) << 8)
-+
- #define SUN4I_MAX_BURST	8
-+#define SUNIV_MAX_BURST	4
- 
- /** Normal DMA register values **/
- 
-@@ -41,6 +45,9 @@
- #define SUN4I_NDMA_DRQ_TYPE_SDRAM		0x16
- #define SUN4I_NDMA_DRQ_TYPE_LIMIT		(0x1F + 1)
- 
-+#define SUNIV_NDMA_DRQ_TYPE_SDRAM		0x11
-+#define SUNIV_NDMA_DRQ_TYPE_LIMIT		(0x17 + 1)
-+
- /** Normal DMA register layout **/
- 
- /* Dedicated DMA source/destination address mode values */
-@@ -54,6 +61,9 @@
- #define SUN4I_NDMA_CFG_BYTE_COUNT_MODE_REMAIN	BIT(15)
- #define SUN4I_NDMA_CFG_SRC_NON_SECURE		BIT(6)
- 
-+#define SUNIV_NDMA_CFG_CONT_MODE		BIT(29)
-+#define SUNIV_NDMA_CFG_WAIT_STATE(n)		((n) << 26)
-+
- /** Dedicated DMA register values **/
- 
- /* Dedicated DMA source/destination address mode values */
-@@ -66,6 +76,9 @@
- #define SUN4I_DDMA_DRQ_TYPE_SDRAM		0x1
- #define SUN4I_DDMA_DRQ_TYPE_LIMIT		(0x1F + 1)
- 
-+#define SUNIV_DDMA_DRQ_TYPE_SDRAM		0x1
-+#define SUNIV_DDMA_DRQ_TYPE_LIMIT		(0x9 + 1)
-+
- /** Dedicated DMA register layout **/
- 
- /* Dedicated DMA configuration register layout */
-@@ -119,6 +132,11 @@
- #define SUN4I_DMA_NR_MAX_VCHANS						\
- 	(SUN4I_NDMA_NR_MAX_VCHANS + SUN4I_DDMA_NR_MAX_VCHANS)
- 
-+#define SUNIV_NDMA_NR_MAX_CHANNELS	4
-+#define SUNIV_DDMA_NR_MAX_CHANNELS	4
-+#define SUNIV_NDMA_NR_MAX_VCHANS	(24 * 2 - 1)
-+#define SUNIV_DDMA_NR_MAX_VCHANS	10
-+
- /* This set of SUN4I_DDMA timing parameters were found experimentally while
-  * working with the SPI driver and seem to make it behave correctly */
- #define SUN4I_DDMA_MAGIC_SPI_PARAMETERS \
-@@ -243,6 +261,16 @@ static void set_src_data_width_a10(u32 *p_cfg, s8 data_width)
- 	*p_cfg |= SUN4I_DMA_CFG_SRC_DATA_WIDTH(data_width);
- }
- 
-+static void set_dst_data_width_f1c100s(u32 *p_cfg, s8 data_width)
-+{
-+	*p_cfg |= SUNIV_DMA_CFG_DST_DATA_WIDTH(data_width);
-+}
-+
-+static void set_src_data_width_f1c100s(u32 *p_cfg, s8 data_width)
-+{
-+	*p_cfg |= SUNIV_DMA_CFG_SRC_DATA_WIDTH(data_width);
-+}
-+
- static int convert_burst_a10(u32 maxburst)
- {
- 	if (maxburst > 8)
-@@ -252,6 +280,15 @@ static int convert_burst_a10(u32 maxburst)
- 	return (maxburst >> 2);
- }
- 
-+static int convert_burst_f1c100s(u32 maxburst)
-+{
-+	if (maxburst > 4)
-+		return -EINVAL;
-+
-+	/* 1 -> 0, 4 -> 1 */
-+	return (maxburst >> 2);
-+}
-+
- static int convert_buswidth(enum dma_slave_buswidth addr_width)
- {
- 	if (addr_width > DMA_SLAVE_BUSWIDTH_4_BYTES)
-@@ -1376,8 +1413,31 @@ static struct sun4i_dma_config sun4i_a10_dma_cfg = {
- 	.has_reset		= false,
- };
- 
-+static struct sun4i_dma_config suniv_f1c100s_dma_cfg = {
-+	.ndma_nr_max_channels	= SUNIV_NDMA_NR_MAX_CHANNELS,
-+	.ndma_nr_max_vchans	= SUNIV_NDMA_NR_MAX_VCHANS,
-+
-+	.ddma_nr_max_channels	= SUNIV_DDMA_NR_MAX_CHANNELS,
-+	.ddma_nr_max_vchans	= SUNIV_DDMA_NR_MAX_VCHANS,
-+
-+	.dma_nr_max_channels	= SUNIV_NDMA_NR_MAX_CHANNELS +
-+		SUNIV_DDMA_NR_MAX_CHANNELS,
-+
-+	.set_dst_data_width	= set_dst_data_width_f1c100s,
-+	.set_src_data_width	= set_src_data_width_f1c100s,
-+	.convert_burst		= convert_burst_f1c100s,
-+
-+	.ndma_drq_sdram		= SUNIV_NDMA_DRQ_TYPE_SDRAM,
-+	.ddma_drq_sdram		= SUNIV_DDMA_DRQ_TYPE_SDRAM,
-+
-+	.max_burst		= SUNIV_MAX_BURST,
-+	.has_reset		= true,
-+};
-+
- static const struct of_device_id sun4i_dma_match[] = {
- 	{ .compatible = "allwinner,sun4i-a10-dma", .data = &sun4i_a10_dma_cfg },
-+	{ .compatible = "allwinner,suniv-f1c100s-dma",
-+		.data = &suniv_f1c100s_dma_cfg },
- 	{ /* sentinel */ },
- };
- MODULE_DEVICE_TABLE(of, sun4i_dma_match);
+Csókás, Bence (1):
+  dt-bindings: dmaengine: Add Allwinner suniv F1C100s DMA
+
+Mesih Kilinc (4):
+  dma-engine: sun4i: Add a quirk to support different chips
+  dma-engine: sun4i: Add has_reset option to quirk
+  dma-engine: sun4i: Add support for Allwinner suniv F1C100s
+  ARM: dts: suniv: f1c100s: Add support for DMA
+
+ .../bindings/dma/allwinner,sun4i-a10-dma.yaml |   4 +-
+ .../arm/boot/dts/allwinner/suniv-f1c100s.dtsi |  10 +
+ drivers/dma/Kconfig                           |   4 +-
+ drivers/dma/sun4i-dma.c                       | 217 +++++++++++++++---
+ 4 files changed, 200 insertions(+), 35 deletions(-)
+
 -- 
 2.34.1
 

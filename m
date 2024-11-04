@@ -1,113 +1,207 @@
-Return-Path: <dmaengine+bounces-3683-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3684-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A30719BAD5A
-	for <lists+dmaengine@lfdr.de>; Mon,  4 Nov 2024 08:42:16 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id D79229BB041
+	for <lists+dmaengine@lfdr.de>; Mon,  4 Nov 2024 10:51:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E2174B20956
-	for <lists+dmaengine@lfdr.de>; Mon,  4 Nov 2024 07:42:13 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2C8ACB21353
+	for <lists+dmaengine@lfdr.de>; Mon,  4 Nov 2024 09:51:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6566419993E;
-	Mon,  4 Nov 2024 07:42:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA2F51AF0A0;
+	Mon,  4 Nov 2024 09:51:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="UjAozkVg"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PDRihWz7"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8999B1917C4;
-	Mon,  4 Nov 2024 07:42:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CAA21ABEDC;
+	Mon,  4 Nov 2024 09:51:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730706130; cv=none; b=lomGJM31zczkZYsbjIHg5588wMjh7WO4g3Wq5kZWvyvqJLnJpm9Etu9sfbaspmFTgnoTL3YtLla/nXaMMkLGY5i/N5MDpkMZbHxX/8w+OM1LB2LyfWvYJNCJDUxTTV4pxlV5n465dpFkC4CBKM3coRJbFXVIKzAz3XbgN2TX6Iw=
+	t=1730713909; cv=none; b=lf0vQ5LC+yB7ysZrBHab52ZAwpmQ6N/XwpHlJmgc1DG6nYNK9Fh18S3+dfTU2hk9vkkW6x2RGvZ1x0iNXL3J/s88vVJo8Aba+yUd3y0zA7ToGk19OnSkEPgH1gMLGyhoBI6xXCzO0TeN7KBNTUENVABhbNbfuW+TiEkborafcd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730706130; c=relaxed/simple;
-	bh=qMok5bTyC6I0n09Kq6tGo/rOCJ3udHa3x/VGuqvBrUs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=dfceEqqG2mWAAfkvaUL3LDwywFl11vYEfsaKXCQvf7FUo2RtlNin2xyv7dmSafkUpccx5hr2rEJjiUEtr2pBaF1xY5LBwYesIMyu/rcHWiEIcCwqZBe+HE0AaSTC+94YIaclIWwONt4W4DQvpvKIbM6ghuxRCj8rSIJeL8jZuUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=UjAozkVg; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 9F2F4A03A7;
-	Mon,  4 Nov 2024 08:41:58 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=mail; bh=xv5bUFMxs4KAHpxzUJns
-	OpeLi4TFFl07AzHMQZEr5RI=; b=UjAozkVggqW7Pn76P3FQKyuO1H3QhUzKCKYG
-	MXPGw/eeO+RT3nzUhFoQww6cJYUhECAu0iFRc66fHZG2pPfoMgFHWfRR7mAkgnd6
-	tqvzdWluQ2BCtaPBInFwCA3LQ9cXcMpBFo1hv92cARW8sIYOz3OZPfWKrOOGRbR1
-	OLbxrn0RJhp7yVl5QJuBtUk/Ao7uu4hrRHFXsFONq93aMs2l2JPikLZG3/EKPQSa
-	tiSG6Oaoctb86Fnea2mE8+8+broZ1SdCvqRUBf/+cRLC/M1/QKhT3H3WacZyCU48
-	ViPwCTZKybSK/WEVoiBB2QZykK4UDM6pAIpanlaPl/5bjSDbfNrURQiYSg6xBJLG
-	ui1lCNRghhAk8JDqkxhZT7vUu+WazarSDyZcpIIXuNhkTPOKG8EVLjY/p14yukJ4
-	0zpZ5ILtEC0U4oneBRww62WoFibPhvK1Ky/hOERdtKazEBfFZ6O2FXJpwd8I8Nrs
-	TYKb0iKDMIxX8CtcmdiFfoQQNISwAg06LyBJOOqsLvlukQ6zoY3bbaN0CoXhl95H
-	dXhwlmsx14UbGUp7II0uUk9kwf6yr39SjAjR2b3dPgEWQbsnid1r+D3Y/rS3ILic
-	qb8inFrxASzV4CRmz1hldWWRMBvXcBIR8LWvWQGaAa2OSvcbKYizEv45MOUO88g8
-	uZiOEJ4=
-Message-ID: <656fab96-b326-4721-9b55-2b5e3d652703@prolan.hu>
-Date: Mon, 4 Nov 2024 08:41:56 +0100
+	s=arc-20240116; t=1730713909; c=relaxed/simple;
+	bh=ahGyIshc8FNCbmySdQOO1svr5ucdSpcHZk1Nk2dWoqg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KqS4+uBdl1CdBLTT/uOH5zGPRMCuq9FhjhYJB8E0Fqlpo81zx/nHlQmL92y36pMkjOOp/fEsAfCMIQe/2GOT1oxU/mdlpe8oyniM6zxhdtd6He7rJzStc0+rcvVgceVapiKL8ik08Oi8KGpCH4FzQUToHpfHafsVAvWJozzN5bg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PDRihWz7; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730713907; x=1762249907;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ahGyIshc8FNCbmySdQOO1svr5ucdSpcHZk1Nk2dWoqg=;
+  b=PDRihWz7jxWuOOezJ6i686YfbkeGM+0945QYW9aSVnYvx6Bv/GRgmz81
+   KpRvgSRT4gefYjjVHsQKRpMMjGxqXHjjXJWA1v/64dz6OJMdvlWZR8mr6
+   uARVdwI1iZOp/kDRoYx1Q2+OCvoHkcVjFy2la/mdlHOVaf1CQVyqn4mqk
+   8mMUuXGq6FXGNOqssD0Zk+ZpstMsrdvZUNOYupUlxyBtx9EZzSQ6ze7sN
+   8bSn5q+azPaZZ5xNwa3xzc9CVnqZNW3RhwaTtLcjFufunexWVpAR7nB0q
+   DlbWlV8LPNaeEVUUPe0LPTH1RT72MOIwq81yzFkZePZIVj0WhMOZNFKIY
+   g==;
+X-CSE-ConnectionGUID: HxIfwBOoSTCnGtRvNgamWw==
+X-CSE-MsgGUID: Eks0lRvFTm+aQKsXFE0ZYg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11245"; a="47908571"
+X-IronPort-AV: E=Sophos;i="6.11,256,1725346800"; 
+   d="scan'208";a="47908571"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2024 01:51:47 -0800
+X-CSE-ConnectionGUID: Pn0mpa4YSQeLt4fQQd9r4w==
+X-CSE-MsgGUID: ghOYaXyWTU+x+1k/Rp85kA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,256,1725346800"; 
+   d="scan'208";a="83282586"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa007.fm.intel.com with ESMTP; 04 Nov 2024 01:51:45 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 2E7CA1C4; Mon, 04 Nov 2024 11:51:44 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Viresh Kumar <vireshk@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	stable@vger.kernel.org,
+	Ferry Toth <fntoth@gmail.com>
+Subject: [PATCH v5 1/1] dmaengine: dw: Select only supported masters for ACPI devices
+Date: Mon,  4 Nov 2024 11:50:50 +0200
+Message-ID: <20241104095142.157925-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/5] dma-engine: sun4i: Add has_reset option to quirk
-To: Andre Przywara <andre.przywara@arm.com>
-CC: <dmaengine@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-sunxi@lists.linux.dev>, <linux-kernel@vger.kernel.org>, Mesih Kilinc
-	<mesihkilinc@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, Vinod Koul
-	<vkoul@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec
-	<jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, "Philipp
- Zabel" <p.zabel@pengutronix.de>
-References: <20241102093140.2625230-1-csokas.bence@prolan.hu>
- <20241102093140.2625230-3-csokas.bence@prolan.hu>
- <20241102174516.02d124d6@minigeek.lan>
-Content-Language: en-US
-From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
-In-Reply-To: <20241102174516.02d124d6@minigeek.lan>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
- ATLAS.intranet.prolan.hu (10.254.0.229)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A2980D94855667261
 
-Hi!
+The recently submitted fix-commit revealed a problem in the iDMA 32-bit
+platform code. Even though the controller supported only a single master
+the dw_dma_acpi_filter() method hard-coded two master interfaces with IDs
+0 and 1. As a result the sanity check implemented in the commit
+b336268dde75 ("dmaengine: dw: Add peripheral bus width verification")
+got incorrect interface data width and thus prevented the client drivers
+from configuring the DMA-channel with the EINVAL error returned. E.g.,
+the next error was printed for the PXA2xx SPI controller driver trying
+to configure the requested channels:
 
-On 2024. 11. 02. 18:45, Andre Przywara wrote:
-> On Sat, 2 Nov 2024 10:31:41 +0100
-> "Csókás, Bence" <csokas.bence@prolan.hu> wrote:
-> 
-> Hi,
-> 
->> From: Mesih Kilinc <mesihkilinc@gmail.com>
->>
->>   static struct sun4i_dma_dev *to_sun4i_dma_dev(struct dma_device *dev)
->> @@ -1215,6 +1218,13 @@ static int sun4i_dma_probe(struct platform_device *pdev)
->>   		return PTR_ERR(priv->clk);
->>   	}
->>   
->> +	if (priv->cfg->has_reset) {
->> +		priv->rst = devm_reset_control_get_exclusive(&pdev->dev, NULL);
-> 
-> Can't we use devm_reset_control_get_optional_exclusive(), and then save
-> this whole has_reset bit?
+> [  164.525604] pxa2xx_spi_pci 0000:00:07.1: DMA slave config failed
+> [  164.536105] pxa2xx_spi_pci 0000:00:07.1: failed to get DMA TX descriptor
+> [  164.543213] spidev spi-SPT0001:00: SPI transfer failed: -16
 
-For suniv, reset is REQUIRED. For sun4i, reset DOES NOT EXIST.
+The problem would have been spotted much earlier if the iDMA 32-bit
+controller supported more than one master interfaces. But since it
+supports just a single master and the iDMA 32-bit specific code just
+ignores the master IDs in the CTLLO preparation method, the issue has
+been gone unnoticed so far.
 
-has_reset does not mean that whether this instance has a reset control 
-or not, that is handled by checking priv->rst for NULL. has_reset means 
-whether reset is REQUIRED by this type of DMA, specified by the DT match 
-data.
+Fix the problem by specifying the default master ID for both memory
+and peripheral devices in the driver data. Thus the issue noticed for
+the iDMA 32-bit controllers will be eliminated and the ACPI-probed
+DW DMA controllers will be configured with the correct master ID by
+default.
 
-Bence
+Cc: stable@vger.kernel.org
+Fixes: b336268dde75 ("dmaengine: dw: Add peripheral bus width verification")
+Fixes: 199244d69458 ("dmaengine: dw: add support of iDMA 32-bit hardware")
+Reported-by: Ferry Toth <fntoth@gmail.com>
+Closes: https://lore.kernel.org/dmaengine/ZuXbCKUs1iOqFu51@black.fi.intel.com/
+Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Closes: https://lore.kernel.org/dmaengine/ZuXgI-VcHpMgbZ91@black.fi.intel.com/
+Tested-by: Ferry Toth <fntoth@gmail.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+v5: rebranded to follow the compliances
+
+Vinod, please apply this for v6.12-rcX as we have a problem to fix.
+
+ drivers/dma/dw/acpi.c     | 6 ++++--
+ drivers/dma/dw/internal.h | 8 ++++++++
+ drivers/dma/dw/pci.c      | 4 ++--
+ 3 files changed, 14 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/dma/dw/acpi.c b/drivers/dma/dw/acpi.c
+index c510c109d2c3..b6452fffa657 100644
+--- a/drivers/dma/dw/acpi.c
++++ b/drivers/dma/dw/acpi.c
+@@ -8,13 +8,15 @@
+ 
+ static bool dw_dma_acpi_filter(struct dma_chan *chan, void *param)
+ {
++	struct dw_dma *dw = to_dw_dma(chan->device);
++	struct dw_dma_chip_pdata *data = dev_get_drvdata(dw->dma.dev);
+ 	struct acpi_dma_spec *dma_spec = param;
+ 	struct dw_dma_slave slave = {
+ 		.dma_dev = dma_spec->dev,
+ 		.src_id = dma_spec->slave_id,
+ 		.dst_id = dma_spec->slave_id,
+-		.m_master = 0,
+-		.p_master = 1,
++		.m_master = data->m_master,
++		.p_master = data->p_master,
+ 	};
+ 
+ 	return dw_dma_filter(chan, &slave);
+diff --git a/drivers/dma/dw/internal.h b/drivers/dma/dw/internal.h
+index 563ce73488db..f1bd06a20cd6 100644
+--- a/drivers/dma/dw/internal.h
++++ b/drivers/dma/dw/internal.h
+@@ -51,11 +51,15 @@ struct dw_dma_chip_pdata {
+ 	int (*probe)(struct dw_dma_chip *chip);
+ 	int (*remove)(struct dw_dma_chip *chip);
+ 	struct dw_dma_chip *chip;
++	u8 m_master;
++	u8 p_master;
+ };
+ 
+ static __maybe_unused const struct dw_dma_chip_pdata dw_dma_chip_pdata = {
+ 	.probe = dw_dma_probe,
+ 	.remove = dw_dma_remove,
++	.m_master = 0,
++	.p_master = 1,
+ };
+ 
+ static const struct dw_dma_platform_data idma32_pdata = {
+@@ -72,6 +76,8 @@ static __maybe_unused const struct dw_dma_chip_pdata idma32_chip_pdata = {
+ 	.pdata = &idma32_pdata,
+ 	.probe = idma32_dma_probe,
+ 	.remove = idma32_dma_remove,
++	.m_master = 0,
++	.p_master = 0,
+ };
+ 
+ static const struct dw_dma_platform_data xbar_pdata = {
+@@ -88,6 +94,8 @@ static __maybe_unused const struct dw_dma_chip_pdata xbar_chip_pdata = {
+ 	.pdata = &xbar_pdata,
+ 	.probe = idma32_dma_probe,
+ 	.remove = idma32_dma_remove,
++	.m_master = 0,
++	.p_master = 0,
+ };
+ 
+ #endif /* _DMA_DW_INTERNAL_H */
+diff --git a/drivers/dma/dw/pci.c b/drivers/dma/dw/pci.c
+index ad2d4d012cf7..e8a0eb81726a 100644
+--- a/drivers/dma/dw/pci.c
++++ b/drivers/dma/dw/pci.c
+@@ -56,10 +56,10 @@ static int dw_pci_probe(struct pci_dev *pdev, const struct pci_device_id *pid)
+ 	if (ret)
+ 		return ret;
+ 
+-	dw_dma_acpi_controller_register(chip->dw);
+-
+ 	pci_set_drvdata(pdev, data);
+ 
++	dw_dma_acpi_controller_register(chip->dw);
++
+ 	return 0;
+ }
+ 
+-- 
+2.43.0.rc1.1336.g36b5255a03ac
 
 

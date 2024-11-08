@@ -1,49 +1,49 @@
-Return-Path: <dmaengine+bounces-3693-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3694-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 314F69C2713
-	for <lists+dmaengine@lfdr.de>; Fri,  8 Nov 2024 22:41:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 47AD99C2717
+	for <lists+dmaengine@lfdr.de>; Fri,  8 Nov 2024 22:41:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6327A1C2129B
-	for <lists+dmaengine@lfdr.de>; Fri,  8 Nov 2024 21:41:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7952A1C21603
+	for <lists+dmaengine@lfdr.de>; Fri,  8 Nov 2024 21:41:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC7C91C1F2B;
-	Fri,  8 Nov 2024 21:41:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B6F11F26FA;
+	Fri,  8 Nov 2024 21:41:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GUXaO3hr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GP9U93N3"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 958D329CF4;
-	Fri,  8 Nov 2024 21:41:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC06229CF4;
+	Fri,  8 Nov 2024 21:41:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731102083; cv=none; b=YpjCb+bP+pGApuW12mTsQ3jKC1ntYKUMK/KFdnZv8dT4UnII4vatFHEc+p3Iyt3MY3n8Yed15bEHPHCBVcb4S6M8iLbtM2HUTAv94RJjxsOM3/zFLMkRa70fkjcDY8dpJXZjRLax4lLWtRSLFGXlW9jcT0zv+42d0f/V21Vpb2Q=
+	t=1731102089; cv=none; b=Ajy/h9k9+k/85DPSildla8gsg8P/QX+Un5DECblje7/3hJVn+2ytyjCOHyvb5IIdI9F10DBeJGV4tL6ZFP/L/ZnOSmQgLJ6WAxngTR/FWVpICLAIGilI0uINwcGi7/BRi0mvh0R8epuhKmZgeZG+ZxT7X0G6JtLJ+wDhu+6vz6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731102083; c=relaxed/simple;
-	bh=Fc7x2e49eRNe2PcnnAqLpxs6d9cdEu0pLWh8RwaMBfo=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=XJ8pfjv1zdUVSIG9nkC1YmhZUjEeaBw0EP1PR1ploMrlpbvszoLbUuTW+rFh3+e2bIdnU2OZe1hHvMOSygqojmFvIxRaJ/0S79e8PZ8asIasKL1mEbFyrLx4UwHFIzHRSaQpTqgehJtdtpE1laNY97eP5SGc8pXs32krhfSUjRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GUXaO3hr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47066C4CED7;
-	Fri,  8 Nov 2024 21:41:20 +0000 (UTC)
+	s=arc-20240116; t=1731102089; c=relaxed/simple;
+	bh=IoKztgWbNOoL7KlRiSF19oXjotrVWn+kGWq92CRe58g=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=atuTG1aq7u1Ku5Z0zYaV0M+75gqIXwgrVjZEG8m3bpkNoa0SNQMk6MiN2wCd/3YH5UBByLwL2zKX6RY7r8CSq7kxR64lt3C7NxTV1Mi3fLp1EbODSd6VUCEijOoFGu9PA6Ycf5nrsk1AM0yokealUbw969GQmgsT4c+wvESPv9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GP9U93N3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E96FC4CED3;
+	Fri,  8 Nov 2024 21:41:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731102083;
-	bh=Fc7x2e49eRNe2PcnnAqLpxs6d9cdEu0pLWh8RwaMBfo=;
-	h=From:Subject:Date:To:Cc:From;
-	b=GUXaO3hrUddhIbiP209FXXBqdYiUnp3m3f758LE+F5JFiUiDzbyrjWofAHvl9/92c
-	 yN+vajjmmDiq+ADvDDBPUz/DGSmU2NZ9gcN/rCf4qzfaCyYZ/dM6aq6uR5eSvUVCCx
-	 Qclqgut4uU/XcIfITTcXniwbGst6oDAr4BAi1rBwJkKvnWiy1vBacTaJ8zja7442AB
-	 lIE5eqdkwYFRH+flvHjCd3F1fkpp/NtJoIJTQbFXmFi2SU9Lcx5rbXlC03gilXNjEl
-	 0oM4K19M/Lemo6Yf3NDvlzgYeVkm+D9IZKafYsXW0pe3TfwKyG/3LF6eHEzfhjNI7M
-	 qIrueaOU+Clwg==
+	s=k20201202; t=1731102086;
+	bh=IoKztgWbNOoL7KlRiSF19oXjotrVWn+kGWq92CRe58g=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=GP9U93N3DdwWPo5O4NSQuhP0TqSV+4tj1H8uYg9YZwVYtfCKMwvDg1Vt0jP60vbV9
+	 TEnSHPAyUL2otwS83PavMUtfCweLeahQCaotBADcgKksV1Dp+CnAANWNeSUVurzwJr
+	 oC6qfvgGQXyd9lNphzhC+W0YYWGNDhXQzL7Nj8HTWjv/Oq5YeA1o2OhyAXvLvQz2ae
+	 mglFZ/TXBkwpaPMC5yM7bHk9LVhGbdoEkoHu0HVSGrkD2dAoTsQ/QPI65fC+FiVElp
+	 aktIVqYFy+J/6B4DPR555H/Bj9Emm7lPLG4hVnWisq3zGlo6Vt0sYakuktXKDgGtwl
+	 9HsbBggf2o8hw==
 From: Konrad Dybcio <konradybcio@kernel.org>
-Subject: [PATCH 0/2] Add SA8775P GPI DMA compatible
-Date: Fri, 08 Nov 2024 22:41:16 +0100
-Message-Id: <20241108-topic-sa8775_dma2-v1-0-1d3b0d08d153@oss.qualcomm.com>
+Date: Fri, 08 Nov 2024 22:41:17 +0100
+Subject: [PATCH 1/2] dt-bindings: dma: qcom,gpi: Add SA8775P compatible
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -52,11 +52,9 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAHyFLmcC/2WNywrCMBBFf6VkbWSSPiZ25X+IyCSZasBa22lFE
- P/d+Ng5iwvnwj3zUMJTYlFt8VAT35Kk4ZLBrAoVTnQ5sk4xs7JgK2PA6Xm4pqCFHGJ9iD1ZbR1
- Y33WdCxRU3l0n7tL949ztvzzxuGT1/C1VzyL0UbfFT4x/Yn0z2mj2TVkyoAfA7SCyHhc6h6Hv1
- zne3zwJ63eR5rbACitDUIPHTSxNdNFyPmMDIpZNvWkiUOOt2j+fL3TdMCj7AAAA
-X-Change-ID: 20241108-topic-sa8775_dma2-2802bfff8cac
+Message-Id: <20241108-topic-sa8775_dma2-v1-1-1d3b0d08d153@oss.qualcomm.com>
+References: <20241108-topic-sa8775_dma2-v1-0-1d3b0d08d153@oss.qualcomm.com>
+In-Reply-To: <20241108-topic-sa8775_dma2-v1-0-1d3b0d08d153@oss.qualcomm.com>
 To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
@@ -67,33 +65,37 @@ Cc: Marijn Suijten <marijn.suijten@somainline.org>,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1731102079; l=791;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1731102079; l=855;
  i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
- bh=Fc7x2e49eRNe2PcnnAqLpxs6d9cdEu0pLWh8RwaMBfo=;
- b=PRZIDdsEil2u0ih14ylgtr8AgvXPzinOh7j2IGgR4mj3QA9CpbmL3f3ZQDVXhXpwKEcXz6Bt5
- 2GcB90QlSQlCBBd8MAy3+4QLyiSnVd7lgVhXv2ze9P7QKlGaPrUlpDL
+ bh=r2jtRxYU4022/w2i/eF+lTpYIrVvypLb14IpDahmeJc=;
+ b=UX/jqy9aRUBJAKozQ/15OAJ9+JKrNOTgMl3luYUhKHLzJMelbatKSWy19PXt/P49ZfstA4UNd
+ G09+/fUdM5uA0CS6O9sO7xwTU3/oGZaPDeSEPazqaiBjZ/wJJIwS9hH
 X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
  pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 
-Fill in the missing parts of the initial submission
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+
+Add a compatible for the GPI DMA controller on SA8775P.
 
 Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 ---
-Konrad Dybcio (2):
-      dt-bindings: dma: qcom,gpi: Add SA8775P compatible
-      arm64: dts: qcom: sa8775p: Use a SoC-specific compatible for GPI DMA
-
  Documentation/devicetree/bindings/dma/qcom,gpi.yaml | 1 +
- arch/arm64/boot/dts/qcom/sa8775p.dtsi               | 8 ++++----
- 2 files changed, 5 insertions(+), 4 deletions(-)
----
-base-commit: 74741a050b79d31d8d2eeee12c77736596d0a6b2
-change-id: 20241108-topic-sa8775_dma2-2802bfff8cac
-prerequisite-message-id: 20241107-topic-sa8775_dma-v1-1-eb633e07b007@oss.qualcomm.com
-prerequisite-patch-id: f4eea36e64f43f421b6f1bae15d802f7dd514768
+ 1 file changed, 1 insertion(+)
 
-Best regards,
+diff --git a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
+index 4ad56a409b9cace94a3a4c4ec94d3ad16232f5a1..b5b815519c6c1b248110a55139571a12cfd94f5d 100644
+--- a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
++++ b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
+@@ -26,6 +26,7 @@ properties:
+           - enum:
+               - qcom,qcm2290-gpi-dma
+               - qcom,qdu1000-gpi-dma
++              - qcom,sa8775p-gpi-dma
+               - qcom,sar2130p-gpi-dma
+               - qcom,sc7280-gpi-dma
+               - qcom,sdx75-gpi-dma
+
 -- 
-Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+2.47.0
 
 

@@ -1,49 +1,50 @@
-Return-Path: <dmaengine+bounces-3694-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3695-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47AD99C2717
-	for <lists+dmaengine@lfdr.de>; Fri,  8 Nov 2024 22:41:46 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 95C659C271C
+	for <lists+dmaengine@lfdr.de>; Fri,  8 Nov 2024 22:41:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7952A1C21603
-	for <lists+dmaengine@lfdr.de>; Fri,  8 Nov 2024 21:41:45 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3D090B22CC3
+	for <lists+dmaengine@lfdr.de>; Fri,  8 Nov 2024 21:41:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B6F11F26FA;
-	Fri,  8 Nov 2024 21:41:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D7BD1F582B;
+	Fri,  8 Nov 2024 21:41:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GP9U93N3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LpBzAIux"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC06229CF4;
-	Fri,  8 Nov 2024 21:41:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD2E21F4FB6;
+	Fri,  8 Nov 2024 21:41:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731102089; cv=none; b=Ajy/h9k9+k/85DPSildla8gsg8P/QX+Un5DECblje7/3hJVn+2ytyjCOHyvb5IIdI9F10DBeJGV4tL6ZFP/L/ZnOSmQgLJ6WAxngTR/FWVpICLAIGilI0uINwcGi7/BRi0mvh0R8epuhKmZgeZG+ZxT7X0G6JtLJ+wDhu+6vz6M=
+	t=1731102090; cv=none; b=MFS9/fCFQfK056T9P62IFMt9KozFwacnTaU2E+zSTrwu7vLThmxT+4p652yGjckN5ih9hhMiLPan83Nr4APnbW/UruQF2A8LxkrCT844LBxjEaNZPcHcrtYKO42Xy//oOUKGam3vo5dkZV0oRGa/oDTY38GOjVSbbKSHguq9Twg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731102089; c=relaxed/simple;
-	bh=IoKztgWbNOoL7KlRiSF19oXjotrVWn+kGWq92CRe58g=;
+	s=arc-20240116; t=1731102090; c=relaxed/simple;
+	bh=XC1oBE+/8s+hMkWru/3TnQAGvSGZE4ay9tNeo7gN8Dw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=atuTG1aq7u1Ku5Z0zYaV0M+75gqIXwgrVjZEG8m3bpkNoa0SNQMk6MiN2wCd/3YH5UBByLwL2zKX6RY7r8CSq7kxR64lt3C7NxTV1Mi3fLp1EbODSd6VUCEijOoFGu9PA6Ycf5nrsk1AM0yokealUbw969GQmgsT4c+wvESPv9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GP9U93N3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E96FC4CED3;
-	Fri,  8 Nov 2024 21:41:23 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=r5NbyXwyUoMi4PIi+Ow5Ve4/0dkfv+GpnDhuWQFEI1L0KN6bvtJ1lgkM4iR6pmn9diYrQmwvO4dUWPXqJpx9ZcYA5AW3gfMjXqRufcoG3XrgtCxtMiVerT/RrMjX2eaH/y8qQuZFQpNmMY4ilnV+YnVq/DWkmpuu6NFCponkn3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LpBzAIux; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E327EC4CED2;
+	Fri,  8 Nov 2024 21:41:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731102086;
-	bh=IoKztgWbNOoL7KlRiSF19oXjotrVWn+kGWq92CRe58g=;
+	s=k20201202; t=1731102089;
+	bh=XC1oBE+/8s+hMkWru/3TnQAGvSGZE4ay9tNeo7gN8Dw=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=GP9U93N3DdwWPo5O4NSQuhP0TqSV+4tj1H8uYg9YZwVYtfCKMwvDg1Vt0jP60vbV9
-	 TEnSHPAyUL2otwS83PavMUtfCweLeahQCaotBADcgKksV1Dp+CnAANWNeSUVurzwJr
-	 oC6qfvgGQXyd9lNphzhC+W0YYWGNDhXQzL7Nj8HTWjv/Oq5YeA1o2OhyAXvLvQz2ae
-	 mglFZ/TXBkwpaPMC5yM7bHk9LVhGbdoEkoHu0HVSGrkD2dAoTsQ/QPI65fC+FiVElp
-	 aktIVqYFy+J/6B4DPR555H/Bj9Emm7lPLG4hVnWisq3zGlo6Vt0sYakuktXKDgGtwl
-	 9HsbBggf2o8hw==
+	b=LpBzAIux41ykPNnKzDyHp2j1eamNnE5o7U94nakNR+NmERh0/7+PeoF3KUSXQYKm2
+	 zetuUwcytcbLZIpME8CU12P8y8JZC7XoFf7ZJC261tRDdFkQqL4Ow9OKR+A/2XRGrp
+	 jLNIDrC/ywabAyRxJRoGLeLZM8tKVK7yyTxim+K8qyQwju4riTJOCxElV5fYdwT9Bi
+	 cgw/Y0CuM+v9EADwU75enxSuxfZspHtbljNiq/ki2Cea9s6kxQH16CiQtDyz2SIAnE
+	 9WYAFKOlo5PK/Lx1ylnmO5jlsQA8Aak87cIKBQSu24F/xbrfAEH2nD4TM94z8UOYeq
+	 B/K1qa1tJIFog==
 From: Konrad Dybcio <konradybcio@kernel.org>
-Date: Fri, 08 Nov 2024 22:41:17 +0100
-Subject: [PATCH 1/2] dt-bindings: dma: qcom,gpi: Add SA8775P compatible
+Date: Fri, 08 Nov 2024 22:41:18 +0100
+Subject: [PATCH 2/2] arm64: dts: qcom: sa8775p: Use a SoC-specific
+ compatible for GPI DMA
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -52,7 +53,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241108-topic-sa8775_dma2-v1-1-1d3b0d08d153@oss.qualcomm.com>
+Message-Id: <20241108-topic-sa8775_dma2-v1-2-1d3b0d08d153@oss.qualcomm.com>
 References: <20241108-topic-sa8775_dma2-v1-0-1d3b0d08d153@oss.qualcomm.com>
 In-Reply-To: <20241108-topic-sa8775_dma2-v1-0-1d3b0d08d153@oss.qualcomm.com>
 To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -65,35 +66,65 @@ Cc: Marijn Suijten <marijn.suijten@somainline.org>,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1731102079; l=855;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1731102079; l=1998;
  i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
- bh=r2jtRxYU4022/w2i/eF+lTpYIrVvypLb14IpDahmeJc=;
- b=UX/jqy9aRUBJAKozQ/15OAJ9+JKrNOTgMl3luYUhKHLzJMelbatKSWy19PXt/P49ZfstA4UNd
- G09+/fUdM5uA0CS6O9sO7xwTU3/oGZaPDeSEPazqaiBjZ/wJJIwS9hH
+ bh=SXMXA8JLFw+Ep7/JwUsd3TgXMmVTVSwYZFpkJtR6VWo=;
+ b=lB4YU3B87LMEqngP1I5M8r5qygxJFztkOXiYFIKRLjFnkX8S0SGng46QpGGo76NfsMXdHT+Nf
+ zKAkzysnkECCOwZkVJjz0wPBFiHyCIt9i0lfqDJ8/kxc3cN1Nnu7Z4k
 X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
  pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 
 From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-Add a compatible for the GPI DMA controller on SA8775P.
+The commit adding these nodes did not use a SoC-specific node, fix that
+to comply with bindings guidelines.
 
+Fixes: 34d17ccb5db8 ("arm64: dts: qcom: sa8775p: Add GPI configuration")
 Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 ---
- Documentation/devicetree/bindings/dma/qcom,gpi.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/qcom/sa8775p.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
-index 4ad56a409b9cace94a3a4c4ec94d3ad16232f5a1..b5b815519c6c1b248110a55139571a12cfd94f5d 100644
---- a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
-+++ b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
-@@ -26,6 +26,7 @@ properties:
-           - enum:
-               - qcom,qcm2290-gpi-dma
-               - qcom,qdu1000-gpi-dma
-+              - qcom,sa8775p-gpi-dma
-               - qcom,sar2130p-gpi-dma
-               - qcom,sc7280-gpi-dma
-               - qcom,sdx75-gpi-dma
+diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
+index ebfa049515c63a0f1a333315dd370e6f78501129..f99edbdd8314af20283e206e1228052a060f7d34 100644
+--- a/arch/arm64/boot/dts/qcom/sa8775p.dtsi
++++ b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
+@@ -855,7 +855,7 @@ ipcc: mailbox@408000 {
+ 		};
+ 
+ 		gpi_dma2: dma-controller@800000  {
+-			compatible = "qcom,sm6350-gpi-dma";
++			compatible = "qcom,sa8775p-gpi-dma", "qcom,sm6350-gpi-dma";
+ 			reg = <0x0 0x00800000 0x0 0x60000>;
+ 			#dma-cells = <3>;
+ 			interrupts = <GIC_SPI 588 IRQ_TYPE_LEVEL_HIGH>,
+@@ -1346,7 +1346,7 @@ &clk_virt SLAVE_QUP_CORE_2 QCOM_ICC_TAG_ALWAYS>,
+ 		};
+ 
+ 		gpi_dma0: dma-controller@900000  {
+-			compatible = "qcom,sm6350-gpi-dma";
++			compatible = "qcom,sa8775p-gpi-dma", "qcom,sm6350-gpi-dma";
+ 			reg = <0x0 0x00900000 0x0 0x60000>;
+ 			#dma-cells = <3>;
+ 			interrupts = <GIC_SPI 244 IRQ_TYPE_LEVEL_HIGH>,
+@@ -1771,7 +1771,7 @@ &clk_virt SLAVE_QUP_CORE_0 QCOM_ICC_TAG_ALWAYS>,
+ 		};
+ 
+ 		gpi_dma1: dma-controller@a00000  {
+-			compatible = "qcom,sm6350-gpi-dma";
++			compatible = "qcom,sa8775p-gpi-dma", "qcom,sm6350-gpi-dma";
+ 			reg = <0x0 0x00a00000 0x0 0x60000>;
+ 			#dma-cells = <3>;
+ 			interrupts = <GIC_SPI 279 IRQ_TYPE_LEVEL_HIGH>,
+@@ -2226,7 +2226,7 @@ &config_noc SLAVE_QUP_1 QCOM_ICC_TAG_ALWAYS>,
+ 		};
+ 
+ 		gpi_dma3: dma-controller@b00000  {
+-			compatible = "qcom,sm6350-gpi-dma";
++			compatible = "qcom,sa8775p-gpi-dma", "qcom,sm6350-gpi-dma";
+ 			reg = <0x0 0x00b00000 0x0 0x58000>;
+ 			#dma-cells = <3>;
+ 			interrupts = <GIC_SPI 368 IRQ_TYPE_LEVEL_HIGH>,
 
 -- 
 2.47.0

@@ -1,76 +1,116 @@
-Return-Path: <dmaengine+bounces-3718-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3719-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 28E8C9C61D1
-	for <lists+dmaengine@lfdr.de>; Tue, 12 Nov 2024 20:49:37 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6A129C7837
+	for <lists+dmaengine@lfdr.de>; Wed, 13 Nov 2024 17:07:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EE857BC6F1F
-	for <lists+dmaengine@lfdr.de>; Tue, 12 Nov 2024 17:24:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9D6431F257B9
+	for <lists+dmaengine@lfdr.de>; Wed, 13 Nov 2024 16:07:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9937213145;
-	Tue, 12 Nov 2024 17:24:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC7131632E2;
+	Wed, 13 Nov 2024 16:06:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J89+Z5J8"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="CAZI+eeb"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C63321315D;
-	Tue, 12 Nov 2024 17:24:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295811632DB;
+	Wed, 13 Nov 2024 16:06:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731432250; cv=none; b=kvmVxkrW4AXLhPMAYKpuyWDTryGm+hW4hKzkaDqngQPFJiGPwp76hOwbfa21qPbjVtcNPks7c36E1cshq9vCDagDN+442zFgFKCgWXLWgJhiyjycriB0Ke+ERv/d5dBCbFqIGZ0wSQIjHMceqTMhlquKXfg/rT0eKDSo2/+Laj4=
+	t=1731514007; cv=none; b=szVBl7T6SWHtuMw3pv86j8hyB9igUrxuJ+howfmBlVZ8xSBaBvd/DUcy1KDR6a90lGINazX9R/1RdN3UftRSi9bKc15y+8S0+knGbxCTMBszS0wR6sJXrxzkUWLJDfnoiDdSrGyhQqsHT1G1xVz1b/42ToiERwKMtdHwB3rBuWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731432250; c=relaxed/simple;
-	bh=0c/hWbR9TrYecZamdGS1Vyc0xM0lDaU6Ufv3l/ajAOY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G+OzO9wHyjnW0kzPvGvT0gSKbSk7i4i6BQJPF80G04axruHJmS3ZNa2zDACqR/33me4wsEP1VYSVUDArbKvexk6Aoj/IliFITNQ+jmy8BoPTzG0EfRhFMzvW8vGH5DMD2zH3HuVbb9lKJei83AVG+Q531Fy3tm2ShiKsuAC78fU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J89+Z5J8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0205AC4CECD;
-	Tue, 12 Nov 2024 17:24:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731432250;
-	bh=0c/hWbR9TrYecZamdGS1Vyc0xM0lDaU6Ufv3l/ajAOY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=J89+Z5J8JSKL+nOLSnpYl/m0aD/abEhx5hGgAJlwXs5f5vjSQS5gjyDI0dk8CMiK5
-	 0Cf1PnsERATRhfkL43G5O4Sqqd3IX/ownNzu6DM7Bm6VDndLu9Ekq9OKe7lo7byPlw
-	 nA4OTA3mh5zkio/FGcRgPzzJ+NriOQIIm6sa4jnETx38ZcWf9URWjsKbd25Nm1WMy1
-	 jfC4sy0IryD2KII1Z1uLjFnrtN5i/Syy5oyX9FU5p2EeDMyFcaMpOCLc6D4oSSt3mG
-	 8GrSP5iloWdPVgW6fMusF1WNIzQgRKLcMvPlDo41Y+8iS7UcE2oHCCM04ctFQMadGA
-	 3j1HTWyml3T8A==
-Date: Tue, 12 Nov 2024 11:24:08 -0600
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Viken Dadhaniya <quic_vdadhani@quicinc.com>
-Cc: quic_anupkulk@quicinc.com, vkoul@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, devicetree@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	quic_msavaliy@quicinc.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] dt-bindings: dma: qcom,gpi: Add QCS8300 compatible
-Message-ID: <173143224769.1393359.18393815958875552790.robh@kernel.org>
-References: <20241112041252.351266-1-quic_vdadhani@quicinc.com>
+	s=arc-20240116; t=1731514007; c=relaxed/simple;
+	bh=BCXuXOpixphOFtcRJkSlub1GGiYVlksBP7cnJHXukQ8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=PSj8r2V8RyUpKpMTF+zgGqtdf/81Qgif8KefXUx7maNMUvmrwXBSVGDxI7eLTzkkZKkrLnz7g7oKNfakcWKFshKsBmUgzKxxd1d/3BvwsefNYaY7wzV/mzVNtb5S38U3xVStqYOmaNtRZDn18A8cBSW6RbZXe4yoRI9zYslXeHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=CAZI+eeb; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4ADA55m9015535;
+	Wed, 13 Nov 2024 16:06:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	4GV0mkOpXi8oM+Az+cni/vtxeKvmP84jlYSbIPu5yTA=; b=CAZI+eebtvHKvu99
+	3+/vTMHxFFkjgSn1pISWe+lYHUDZqRzdhlvK4znl6YswnTIJ0YhxIG/PErLx7R4a
+	E/U4eZTDt6YCj175nQ9NvHaDbX+ULJr1EuLIvRmYHoJb253fMtK6jYk73w3N7rTt
+	gQyHzfY0877RBUSAK9xjp3TtUwQI6foeR/KNUT97FhhHZ/sKBon1qlOG44KCnVoR
+	CgN1SLA7LKhPW6HeSiU5K8VakBA53slJigjKkBZfWGgVV1DCSNIVeX+FrUWUVboU
+	4U3eacsvt81IAXg7tfJVfLQUijkiCqe44YG46J3AhmJCsxJ5LqbvY3E9mphKJ+Yg
+	YCDGGg==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 42v1vfw0kh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 13 Nov 2024 16:06:38 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4ADG6boc030603
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 13 Nov 2024 16:06:37 GMT
+Received: from [10.217.219.207] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 13 Nov
+ 2024 08:06:32 -0800
+Message-ID: <cde88b1d-c9b4-4dbd-bf1d-45233a78daca@quicinc.com>
+Date: Wed, 13 Nov 2024 21:36:29 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241112041252.351266-1-quic_vdadhani@quicinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/4] dt-bindindgs: i2c: qcom,i2c-geni: Document shared
+ flag
+To: Krzysztof Kozlowski <krzk@kernel.org>, <konrad.dybcio@linaro.org>,
+        <andersson@kernel.org>, <andi.shyti@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+        <conor+dt@kernel.org>, <agross@kernel.org>,
+        <devicetree@vger.kernel.org>, <vkoul@kernel.org>, <linux@treblig.org>,
+        <dan.carpenter@linaro.org>, <Frank.Li@nxp.com>,
+        <konradybcio@kernel.org>, <bryan.odonoghue@linaro.org>,
+        <krzk+dt@kernel.org>, <robh@kernel.org>
+References: <20240927063108.2773304-1-quic_msavaliy@quicinc.com>
+ <20240927063108.2773304-2-quic_msavaliy@quicinc.com>
+ <34dc6392-e90c-4512-b5d7-10247a3c0f29@kernel.org>
+Content-Language: en-US
+From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+In-Reply-To: <34dc6392-e90c-4512-b5d7-10247a3c0f29@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: coLG-uUQBRyAHT-LpbrQl0HozHqFHL1X
+X-Proofpoint-ORIG-GUID: coLG-uUQBRyAHT-LpbrQl0HozHqFHL1X
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ suspectscore=0 spamscore=0 clxscore=1011 phishscore=0 bulkscore=0
+ mlxlogscore=845 malwarescore=0 priorityscore=1501 lowpriorityscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2409260000 definitions=main-2411130135
 
+Thanks Krzysztof!
 
-On Tue, 12 Nov 2024 09:42:51 +0530, Viken Dadhaniya wrote:
-> Document compatible for GPI DMA controller on QCS8300 platform.
+On 9/27/2024 3:31 PM, Krzysztof Kozlowski wrote:
+> On 27/09/2024 08:31, Mukesh Kumar Savaliya wrote:
+>> Adds qcom,shared-se flag usage. Use this when particular I2C serial
+>> controller needs to be shared between two subsystems.
+>>
 > 
-> Signed-off-by: Viken Dadhaniya <quic_vdadhani@quicinc.com>
-> ---
->  Documentation/devicetree/bindings/dma/qcom,gpi.yaml | 1 +
->  1 file changed, 1 insertion(+)
+> Also, fix the typo in subject prefix. It is dt-bindings.
+Sure, Done.
 > 
-
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
-
+> Best regards,
+> Krzysztof
+> 
 

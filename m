@@ -1,126 +1,114 @@
-Return-Path: <dmaengine+bounces-3751-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3752-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id F17839D3406
-	for <lists+dmaengine@lfdr.de>; Wed, 20 Nov 2024 08:16:09 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5634D9D4C46
+	for <lists+dmaengine@lfdr.de>; Thu, 21 Nov 2024 12:52:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9C0411F22B82
-	for <lists+dmaengine@lfdr.de>; Wed, 20 Nov 2024 07:16:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0DEC41F219A3
+	for <lists+dmaengine@lfdr.de>; Thu, 21 Nov 2024 11:52:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B0A0158DD8;
-	Wed, 20 Nov 2024 07:16:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 575EB1D173F;
+	Thu, 21 Nov 2024 11:52:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="g7s66ngb"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="AkIwMhHw"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8352E156F20;
-	Wed, 20 Nov 2024 07:16:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA6871C728F;
+	Thu, 21 Nov 2024 11:52:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732086962; cv=none; b=tBh3grUcaKq6KlWtjXG+rwxpd7dnnAlx6ECkJKnj9pBuG9pTVQKSkN60JbLsxSVrxc2jYa5UK30eEdWuwmuBpFm0+2labN9WZejr7EIaTjqqnDV8Qp9/pGDOLCLVyDX/qMRqvDg+lnBb4XH4ViheqSq7ZlU/naScey+ePakd+sc=
+	t=1732189945; cv=none; b=E3xJ4LiXRWlNgvNsqEpafKwL/8pOC9jWvGwfe+FYI3WTMeF/GI8OOdCDRb62J3veSSvlt9TL+ftIzjJYyRb09h66lZVrbvGLOkWuFjCpQLWkHSLA4K7ZFy+V/IIUT0DGVCUI9cvXWghOn9Nl5MuzqkNHc2maCYJep2tJcvydEn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732086962; c=relaxed/simple;
-	bh=O+5EW+kYgMZHMUvAUtqH+rsPKYUp62KkGmPwmRdo3mI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=kF1A2mMvMnwNeTAFyAayKk82NLR8FgHPT66+sWjRTAzc2LOKTca+0sf8TchRESyisMlygu298DhLfBJV44Nmqf2dL8Nr1lDYSyv13I1WThS3EFeadHAEVlaIfOq8JowAdgZSlGwQw67aXXgYc1YdND600f8BZunQmwKlzfWhCbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=g7s66ngb; arc=none smtp.client-ip=205.220.168.131
+	s=arc-20240116; t=1732189945; c=relaxed/simple;
+	bh=TtFwO5nvC1CV1vzYzPGD9fp+JZW1DS9qinQDsXCKHeY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=r5RXNGO60xdAjTMoPi5vmdqQuGEaiyA7E5+UQlBnty7JwXgDjY6o8K6EEN7OsX0mrIaiUuWpinzDMeOD9l73nSc5Royg2Bi/8p/jVQgvdHPyOEd/vTKf4J/EnOXqmAmtZ/qRlLAb8X0MOsqm0rlQnkoyEcuYBcL3ndlypWOwr3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=AkIwMhHw; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4AJIJlpJ006450;
-	Wed, 20 Nov 2024 07:15:48 GMT
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4AL8rmWh025914;
+	Thu, 21 Nov 2024 11:52:20 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	w6f/FBJ+DYPJOf1vHAnZkatNodRxfvfgrInCPH1jYcs=; b=g7s66ngb+16fQ7Rj
-	EX4VcYVXL2vSnZcFLEdZCNURtXL3KRIqc87m7hTSzgsHQHBD2PKxWFiFcGrtLpQA
-	4XA5l16f/nXmVotOf7utFgi7rA9dSX4YKi07E8i0ODwdR2t8lGe355PB0LykylhO
-	b9r3BaGF6FxzcPqDlwXGBV063nuiZ+idyRZarkRGzCBsaMOr5VFUQh8xD7/uNf5v
-	qJi2BIyONM5YNen0d23vLaAPi3FN1XjPMuPgB+KO3S+0ikLuO3TUX2JRpyysRgt/
-	oI+eH6U0fZH7UoVTb/iPeRGK19EpF5d+tWFdUG5KH1Nb9dt3nvqFssDxv1ZSG0ie
-	5knsVA==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4308y8n1yu-1
+	cc:content-type:date:from:message-id:mime-version:subject:to; s=
+	qcppdkim1; bh=KYG/1y47n/aZuEYR8VkXo3MghMJwMawIer5RSHUyT4E=; b=Ak
+	IwMhHwOfbHftLKodJnegCtnES4T9yzwl8rLhc3d0m7wZqGCFvwu2s6IssmzT0QhB
+	9BQN/shuc4xQxRl5HIJkhLfiXPUYFkCsxRrYHpNEME3+zD3vS3bYKjmeRzwaIivx
+	6uyra/v1acUuHH6XxQ4mQW0BrScFsMZAgJfeJGi0x7eomnUx8UlGSgxpsVkHOKzO
+	Bptc49UUDNUi+Bs/50tDdXER41PFuSZ0z1uhX91aW+mrg8CQOw/ot0NusCGkzPAd
+	NV9FihFM0+rkRGtmN4ouGlx7ikN3zGSrWBTIQkLlF2x6NnY4mYliONfID7r+1j6S
+	maG7qiAW3kfEjuh+XANw==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 431byjm0fw-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 20 Nov 2024 07:15:47 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4AK7Fljl019460
+	Thu, 21 Nov 2024 11:52:20 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4ALBqJLH001010
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 20 Nov 2024 07:15:47 GMT
-Received: from [10.152.197.144] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 19 Nov
- 2024 23:15:41 -0800
-Message-ID: <ad5dcd6c-1dbf-d682-024a-d4093611388f@quicinc.com>
-Date: Wed, 20 Nov 2024 12:45:14 +0530
+	Thu, 21 Nov 2024 11:52:19 GMT
+Received: from hu-jseerapu-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 21 Nov 2024 03:52:16 -0800
+From: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
+To: Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <quic_msavaliy@quicinc.com>, <quic_vtanuku@quicinc.com>
+Subject: [PATCH v1 0/1] Add immediate DMA support
+Date: Thu, 21 Nov 2024 17:22:00 +0530
+Message-ID: <20241121115201.2191-1-quic_jseerapu@quicinc.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: [PATCH v4 00/11] dmaengine: qcom: bam_dma: add cmd descriptor
- support
-To: <thara.gopinath@gmail.com>, <herbert@gondor.apana.org.au>,
-        <davem@davemloft.net>, <vkoul@kernel.org>, <kees@kernel.org>,
-        <robin.murphy@arm.com>, <fenghua.yu@intel.com>, <av2082000@gmail.com>,
-        <u.kleine-koenig@pengutronix.d>, <linux-crypto@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dmaengine@vger.kernel.org>, <quic_varada@quicinc.com>,
-        <quic_srichara@quicinc.com>
-References: <20240909092632.2776160-1-quic_mdalam@quicinc.com>
-Content-Language: en-US
-From: Md Sadre Alam <quic_mdalam@quicinc.com>
-In-Reply-To: <20240909092632.2776160-1-quic_mdalam@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: KP8Vcm6gV2KAGptVFxVFtFXNUdHum8Kz
-X-Proofpoint-GUID: KP8Vcm6gV2KAGptVFxVFtFXNUdHum8Kz
+X-Proofpoint-GUID: iMooJ3F5V7cNcWPk6dT7iy5TP-PmSOdF
+X-Proofpoint-ORIG-GUID: iMooJ3F5V7cNcWPk6dT7iy5TP-PmSOdF
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
  definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- mlxlogscore=648 lowpriorityscore=0 clxscore=1011 malwarescore=0
- adultscore=0 impostorscore=0 mlxscore=0 spamscore=0 phishscore=0
- suspectscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2411200052
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1011
+ suspectscore=0 phishscore=0 lowpriorityscore=0 impostorscore=0
+ malwarescore=0 priorityscore=1501 bulkscore=0 adultscore=0 mlxlogscore=849
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2409260000 definitions=main-2411210093
+
+The DMA TRE(Transfer ring element) buffer contains the DMA
+buffer address. Accessing data from this address can cause
+significant delays in SPI transfers, which can be mitigated to
+some extent by utilizing immediate DMA support.
+
+QCOM GPI DMA hardware supports an immediate DMA feature for data
+up to 8 bytes, storing the data directly in the DMA TRE buffer
+instead of the DMA buffer address. This enhancement enables faster
+SPI data transfers.
+
+This optimization reduces the average transfer time from 25 us to
+16 us for a single SPI transfer of 8 bytes length, with a clock
+frequency of 50 MHz.
 
 
+Jyothi Kumar Seerapu (1):
+  spi: spi-geni-qcom: Add immediate DMA support
 
-On 9/9/2024 2:56 PM, Md Sadre Alam wrote:
-> Requirements:
->    In QCE crypto driver we are accessing the crypto engine registers
->    directly via CPU read/write. Trust Zone could possibly to perform some
->    crypto operations simultaneously, a race condition will be created and
->    this could result in undefined behavior.
-> 
->    To avoid this behavior we need to use BAM HW LOCK/UNLOCK feature on BAM
->    pipes, and this LOCK/UNLOCK will be set via sending a command descriptor,
->    where the HLOS/TZ QCE crypto driver prepares a command descriptor with a
->    dummy write operation on one of the QCE crypto engine register and pass
->    the LOCK/UNLOCK flag along with it.
-> 
->    This feature tested with tcrypt.ko and "libkcapi" with all the AES
->    algorithm supported by QCE crypto engine. Tested on IPQ9574 and
->    qcm6490.LE chipset.
+ drivers/dma/qcom/gpi.c           | 32 +++++++++++++++++++++++++++-----
+ drivers/spi/spi-geni-qcom.c      |  7 +++++++
+ include/linux/dma/qcom-gpi-dma.h |  7 +++++++
+ 3 files changed, 41 insertions(+), 5 deletions(-)
 
-Hi,
-
-Could you please provide feedback for this patch series.
-
-Thanks
-Alam.
-
+-- 
+2.17.1
 
 

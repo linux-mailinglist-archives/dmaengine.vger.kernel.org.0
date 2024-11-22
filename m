@@ -1,34 +1,34 @@
-Return-Path: <dmaengine+bounces-3776-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3778-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B25749D665A
-	for <lists+dmaengine@lfdr.de>; Sat, 23 Nov 2024 00:30:58 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC99C9D665D
+	for <lists+dmaengine@lfdr.de>; Sat, 23 Nov 2024 00:31:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0509DB22684
-	for <lists+dmaengine@lfdr.de>; Fri, 22 Nov 2024 23:30:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 92B7D28235C
+	for <lists+dmaengine@lfdr.de>; Fri, 22 Nov 2024 23:31:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25A061D319B;
-	Fri, 22 Nov 2024 23:30:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E4711DEFF5;
+	Fri, 22 Nov 2024 23:30:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RnUSRLow"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BDRKxVw2"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B55D1C7B8D;
-	Fri, 22 Nov 2024 23:30:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 561D31C9DCB;
+	Fri, 22 Nov 2024 23:30:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732318239; cv=none; b=R3buPoxBmobyA+fvRAU16mRae1+DJjTjI/GBFnCCwlYuvDxRWu4dSqMiIEAkA5xXeTlHJ/2TIrVEH/gJg0npWaVx8Kutgge0AU1AGlPdLSZ7isUBcMVPT7tnP1FmQ0SEOpH956g+/gqX6pyxf+Yq+p2cwlD4Hq8M4YNURCtPbew=
+	t=1732318241; cv=none; b=YLUn5Kvgi2wgGFE8W7w/6xWEcx/8Oz0UpFoVT6M/+GqGwzSNZnUIo4y7ODhc3VDWk2eOLIQ72ohHaSmAJ154/a0q4X5rGtn+bkv16IBf3uoQ/mzfePrTRriT7F0NWB0eORU0TuS/5iDI0AYk6pm81b5ThqUWz+D9uvVkSYHnRM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732318239; c=relaxed/simple;
-	bh=jph7/J8vvzqNTj1B4WjL2EGHusaNaMb73zYHAHYJN6Y=;
+	s=arc-20240116; t=1732318241; c=relaxed/simple;
+	bh=lKegD691mBFS3bQxcyUvsTDpQBfCiZd+eZcTdkQier0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nEDsCIC43zxteT3CELPS7ArnLiAUJuRYnzpLKDjlUAG2oBksFH3HElBvs6v5Y8dds5nkLGKxivLTs+XkFKgnYmqwL5KpLlZ+6SQvHmVMDbBDT17qFOpb3oew4iYTJc3f6eS4Ke/1OJSJSNwQsvuk/JOIMYaVW1D3Dd6BFrcoeSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RnUSRLow; arc=none smtp.client-ip=192.198.163.9
+	 MIME-Version; b=pgz3ffkfwAHbutw9Q26oLEPYwNNIiKrC7Iu8jii3IlG7+mtPm6BUDd4qhCqBbOZb13kolvkNiuH6wVlhm/M3TwAME26hGNRKnBVw+jxqpWQld3rjwJqj1kVo80IlsJl4nDx2Je6+kmR1GJTSYupE/c1EsWgCr4uwz51q2VnVqb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BDRKxVw2; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
@@ -36,26 +36,26 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   t=1732318237; x=1763854237;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=jph7/J8vvzqNTj1B4WjL2EGHusaNaMb73zYHAHYJN6Y=;
-  b=RnUSRLowSaZqjCdiKfiIs0OndQPdnBFK+v7hiuj+WWG26xAvbaBEsaWv
-   WCOikTiW+gXf505W9Gn4GIkQnR5mH+Cex/YMmy9kfBDipfy6SIc26TIDE
-   1wWEiHQORv2uDCsY0Du9uxuSLB486fyfff6RaU9IGf/tYNy63RLEMNXXL
-   n5UwLzHzJxnhE8gCxgyiifUhbKs5KHR43CPYlqhMih9h9+gLA8c1Tb9RH
-   5X1UPBvePhYH68YOkicl8G00WvL4YmHe71nfe26B0e/NyMiwGhrpZ9iZ9
-   jkNNbU1UGWkFySLBnyV7M788cVJrbObZ8SL/Y4iPWZjsdlAkG8xSM6M//
+  bh=lKegD691mBFS3bQxcyUvsTDpQBfCiZd+eZcTdkQier0=;
+  b=BDRKxVw28ioN4DBwNvP8X5R1vVXIm2yJbluOUtxqUtw9s8yh57vDDUGW
+   0CBj8FkB7xUSmDmusqSpABzrdG6rw6YKZeHI3TmF/+YwwOth7vhpud0qu
+   eEVzg2hZfXatRjGBVNZQ5qICfrmc1lLAzV6Tq3R6X/D4Z5CxkcGpggJuk
+   rxeNlwlYCBpWOZHk7Opi7/J+r2UliFboQAV7zKJrXTw6gSns/D3BmWU1y
+   FLXl5x/jyBqs/rvsxXYwN6cWXARyvNWhmifhHDeyjL5DupryOHISXvO33
+   Kvl5IRJjC3vkgqU4tcHh2lEA+zEsWzYvhnIroXLl3joTO2PVR5F5ETYDl
    g==;
-X-CSE-ConnectionGUID: WG+a+b3mRTegSPHCECfjzg==
-X-CSE-MsgGUID: Z2U1tfXQQICohpCEAnQhMQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11264"; a="43134423"
+X-CSE-ConnectionGUID: Cew2i9RFT8Wa4qvysAaXyA==
+X-CSE-MsgGUID: PEYfV/vBQmqDRIU8uH4Ukw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11264"; a="43134425"
 X-IronPort-AV: E=Sophos;i="6.12,177,1728975600"; 
-   d="scan'208";a="43134423"
+   d="scan'208";a="43134425"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
   by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2024 15:30:35 -0800
-X-CSE-ConnectionGUID: q/hsHCvaT2OmoHFpfFR4UA==
-X-CSE-MsgGUID: EUG5wKEpQIGNSzHd1XtxZw==
+X-CSE-ConnectionGUID: NS/4vwCUTou5SDHTT0uQag==
+X-CSE-MsgGUID: N7CxQGoWQ76ACypRl/9n7g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,177,1728975600"; 
-   d="scan'208";a="95127797"
+   d="scan'208";a="95127801"
 Received: from fyu1.sc.intel.com ([172.25.103.126])
   by fmviesa005.fm.intel.com with ESMTP; 22 Nov 2024 15:30:35 -0800
 From: Fenghua Yu <fenghua.yu@intel.com>
@@ -64,9 +64,9 @@ To: "Vinod Koul" <vkoul@kernel.org>,
 Cc: dmaengine@vger.kernel.org,
 	"linux-kernel" <linux-kernel@vger.kernel.org>,
 	Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH v2 3/5] dmaengine: idxd: Add idxd_device_config_save() and idxd_device_config_restore() helpers
-Date: Fri, 22 Nov 2024 15:30:26 -0800
-Message-Id: <20241122233028.2762809-4-fenghua.yu@intel.com>
+Subject: [PATCH v2 4/5] dmaengine: idxd: Refactor halt handler
+Date: Fri, 22 Nov 2024 15:30:27 -0800
+Message-Id: <20241122233028.2762809-5-fenghua.yu@intel.com>
 X-Mailer: git-send-email 2.37.1
 In-Reply-To: <20241122233028.2762809-1-fenghua.yu@intel.com>
 References: <20241122233028.2762809-1-fenghua.yu@intel.com>
@@ -78,279 +78,119 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add the helpers to save and restore IDXD device configurations.
+Define a halt handling helper idxd_halt(). Refactor the halt interrupt
+handler to call the helper. This will simplify the Function Level
+Reset (FLR) code.
 
-These helpers will be called during Function Level Reset (FLR) processing.
+No functional change.
 
 Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
 ---
-Change log:
-v2:
-- Call a helper idxd_free_saved() to free all saved configs (Dave Jiang).
-- Replace defined bitmap free function with existing bitmpa_free().
+ drivers/dma/idxd/irq.c | 63 +++++++++++++++++++++---------------------
+ 1 file changed, 31 insertions(+), 32 deletions(-)
 
- drivers/dma/idxd/idxd.h |  11 ++
- drivers/dma/idxd/init.c | 225 ++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 236 insertions(+)
-
-diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index 1f93dd6db28f..8b381a1fb259 100644
---- a/drivers/dma/idxd/idxd.h
-+++ b/drivers/dma/idxd/idxd.h
-@@ -374,6 +374,17 @@ struct idxd_device {
- 	struct dentry *dbgfs_evl_file;
- 
- 	bool user_submission_safe;
-+
-+	struct idxd_saved_states *idxd_saved;
-+};
-+
-+struct idxd_saved_states {
-+	struct idxd_device saved_idxd;
-+	struct idxd_evl saved_evl;
-+	struct idxd_engine **saved_engines;
-+	struct idxd_wq **saved_wqs;
-+	struct idxd_group **saved_groups;
-+	unsigned long *saved_wq_enable_map;
- };
- 
- static inline unsigned int evl_ent_size(struct idxd_device *idxd)
-diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index a76ec4312a94..da5b76a1e208 100644
---- a/drivers/dma/idxd/init.c
-+++ b/drivers/dma/idxd/init.c
-@@ -756,6 +756,231 @@ static void idxd_unbind(struct device_driver *drv, const char *buf)
- 	put_device(dev);
+diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
+index fc049c9c9892..a46e58b756a5 100644
+--- a/drivers/dma/idxd/irq.c
++++ b/drivers/dma/idxd/irq.c
+@@ -383,15 +383,43 @@ static void process_evl_entries(struct idxd_device *idxd)
+ 	mutex_unlock(&evl->lock);
  }
  
-+#define idxd_free_saved_configs(saved_configs, count)	\
-+	do {						\
-+		int i;					\
-+							\
-+		for (i = 0; i < (count); i++)		\
-+			kfree(saved_configs[i]);	\
-+	} while (0)
-+
-+static void idxd_free_saved(struct idxd_group **saved_groups,
-+			    struct idxd_engine **saved_engines,
-+			    struct idxd_wq **saved_wqs,
-+			    struct idxd_device *idxd)
++static irqreturn_t idxd_halt(struct idxd_device *idxd)
 +{
-+	if (saved_groups)
-+		idxd_free_saved_configs(saved_groups, idxd->max_groups);
-+	if (saved_engines)
-+		idxd_free_saved_configs(saved_engines, idxd->max_engines);
-+	if (saved_wqs)
-+		idxd_free_saved_configs(saved_wqs, idxd->max_wqs);
++	union gensts_reg gensts;
++
++	gensts.bits = ioread32(idxd->reg_base + IDXD_GENSTATS_OFFSET);
++	if (gensts.state == IDXD_DEVICE_STATE_HALT) {
++		idxd->state = IDXD_DEV_HALTED;
++		if (gensts.reset_type == IDXD_DEVICE_RESET_SOFTWARE) {
++			/*
++			 * If we need a software reset, we will throw the work
++			 * on a system workqueue in order to allow interrupts
++			 * for the device command completions.
++			 */
++			INIT_WORK(&idxd->work, idxd_device_reinit);
++			queue_work(idxd->wq, &idxd->work);
++		} else {
++			idxd->state = IDXD_DEV_HALTED;
++			idxd_wqs_quiesce(idxd);
++			idxd_wqs_unmap_portal(idxd);
++			idxd_device_clear_state(idxd);
++			dev_err(&idxd->pdev->dev,
++				"idxd halted, need %s.\n",
++				gensts.reset_type == IDXD_DEVICE_RESET_FLR ?
++				"FLR" : "system reset");
++		}
++	}
++
++	return IRQ_HANDLED;
 +}
 +
-+/*
-+ * Save IDXD device configurations including engines, groups, wqs etc.
-+ * The saved configurations can be restored when needed.
-+ */
-+static int idxd_device_config_save(struct idxd_device *idxd,
-+				   struct idxd_saved_states *idxd_saved)
-+{
-+	struct device *dev = &idxd->pdev->dev;
-+	int i;
-+
-+	memcpy(&idxd_saved->saved_idxd, idxd, sizeof(*idxd));
-+
-+	if (idxd->evl) {
-+		memcpy(&idxd_saved->saved_evl, idxd->evl,
-+		       sizeof(struct idxd_evl));
-+	}
-+
-+	struct idxd_group **saved_groups __free(kfree) =
-+			kcalloc_node(idxd->max_groups,
-+				     sizeof(struct idxd_group *),
-+				     GFP_KERNEL, dev_to_node(dev));
-+	if (!saved_groups)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < idxd->max_groups; i++) {
-+		struct idxd_group *saved_group __free(kfree) =
-+			kzalloc_node(sizeof(*saved_group), GFP_KERNEL,
-+				     dev_to_node(dev));
-+
-+		if (!saved_group) {
-+			/* Free saved groups */
-+			idxd_free_saved(saved_groups, NULL, NULL, idxd);
-+
-+			return -ENOMEM;
-+		}
-+
-+		memcpy(saved_group, idxd->groups[i], sizeof(*saved_group));
-+		saved_groups[i] = no_free_ptr(saved_group);
-+	}
-+
-+	struct idxd_engine **saved_engines =
-+			kcalloc_node(idxd->max_engines,
-+				     sizeof(struct idxd_engine *),
-+				     GFP_KERNEL, dev_to_node(dev));
-+	if (!saved_engines) {
-+		/* Free saved groups */
-+		idxd_free_saved(saved_groups, NULL, NULL, idxd);
-+
-+		return -ENOMEM;
-+	}
-+	for (i = 0; i < idxd->max_engines; i++) {
-+		struct idxd_engine *saved_engine __free(kfree) =
-+				kzalloc_node(sizeof(*saved_engine), GFP_KERNEL,
-+					     dev_to_node(dev));
-+		if (!saved_engine) {
-+			/* Free saved groups and engines */
-+			idxd_free_saved(saved_groups, saved_engines, NULL,
-+					idxd);
-+
-+			return -ENOMEM;
-+		}
-+
-+		memcpy(saved_engine, idxd->engines[i], sizeof(*saved_engine));
-+		saved_engines[i] = no_free_ptr(saved_engine);
-+	}
-+
-+	unsigned long *saved_wq_enable_map __free(bitmap) =
-+			bitmap_zalloc_node(idxd->max_wqs, GFP_KERNEL,
-+					   dev_to_node(dev));
-+	if (!saved_wq_enable_map) {
-+		/* Free saved groups and engines */
-+		idxd_free_saved(saved_groups, saved_engines, NULL, idxd);
-+
-+		return -ENOMEM;
-+	}
-+
-+	bitmap_copy(saved_wq_enable_map, idxd->wq_enable_map, idxd->max_wqs);
-+
-+	struct idxd_wq **saved_wqs __free(kfree) =
-+			kcalloc_node(idxd->max_wqs, sizeof(struct idxd_wq *),
-+				     GFP_KERNEL, dev_to_node(dev));
-+	if (!saved_wqs) {
-+		/* Free saved groups and engines */
-+		idxd_free_saved(saved_groups, saved_engines, NULL, idxd);
-+
-+		return -ENOMEM;
-+	}
-+
-+	for (i = 0; i < idxd->max_wqs; i++) {
-+		struct idxd_wq *saved_wq __free(kfree) =
-+			kzalloc_node(sizeof(*saved_wq), GFP_KERNEL,
-+				     dev_to_node(dev));
-+		struct idxd_wq *wq;
-+
-+		if (!saved_wq) {
-+			/* Free saved groups, engines, and wqs */
-+			idxd_free_saved(saved_groups, saved_engines, saved_wqs,
-+					idxd);
-+
-+			return -ENOMEM;
-+		}
-+
-+		if (!test_bit(i, saved_wq_enable_map))
-+			continue;
-+
-+		wq = idxd->wqs[i];
-+		mutex_lock(&wq->wq_lock);
-+		memcpy(saved_wq, wq, sizeof(*saved_wq));
-+		saved_wqs[i] = no_free_ptr(saved_wq);
-+		mutex_unlock(&wq->wq_lock);
-+	}
-+
-+	/* Save configurations */
-+	idxd_saved->saved_groups = no_free_ptr(saved_groups);
-+	idxd_saved->saved_engines = no_free_ptr(saved_engines);
-+	idxd_saved->saved_wq_enable_map = no_free_ptr(saved_wq_enable_map);
-+	idxd_saved->saved_wqs = no_free_ptr(saved_wqs);
-+
-+	return 0;
-+}
-+
-+/*
-+ * Restore IDXD device configurations including engines, groups, wqs etc
-+ * that were saved before.
-+ */
-+static void idxd_device_config_restore(struct idxd_device *idxd,
-+				       struct idxd_saved_states *idxd_saved)
-+{
-+	struct idxd_evl *saved_evl = &idxd_saved->saved_evl;
-+	int i;
-+
-+	idxd->rdbuf_limit = idxd_saved->saved_idxd.rdbuf_limit;
-+
-+	if (saved_evl)
-+		idxd->evl->size = saved_evl->size;
-+
-+	for (i = 0; i < idxd->max_groups; i++) {
-+		struct idxd_group *saved_group, *group;
-+
-+		saved_group = idxd_saved->saved_groups[i];
-+		group = idxd->groups[i];
-+
-+		group->rdbufs_allowed = saved_group->rdbufs_allowed;
-+		group->rdbufs_reserved = saved_group->rdbufs_reserved;
-+		group->tc_a = saved_group->tc_a;
-+		group->tc_b = saved_group->tc_b;
-+		group->use_rdbuf_limit = saved_group->use_rdbuf_limit;
-+
-+		kfree(saved_group);
-+	}
-+	kfree(idxd_saved->saved_groups);
-+
-+	for (i = 0; i < idxd->max_engines; i++) {
-+		struct idxd_engine *saved_engine, *engine;
-+
-+		saved_engine = idxd_saved->saved_engines[i];
-+		engine = idxd->engines[i];
-+
-+		engine->group = saved_engine->group;
-+
-+		kfree(saved_engine);
-+	}
-+	kfree(idxd_saved->saved_engines);
-+
-+	bitmap_copy(idxd->wq_enable_map, idxd_saved->saved_wq_enable_map,
-+		    idxd->max_wqs);
-+	bitmap_free(idxd_saved->saved_wq_enable_map);
-+
-+	for (i = 0; i < idxd->max_wqs; i++) {
-+		struct idxd_wq *saved_wq, *wq;
-+		size_t len;
-+
-+		if (!test_bit(i, idxd->wq_enable_map))
-+			continue;
-+
-+		saved_wq = idxd_saved->saved_wqs[i];
-+		wq = idxd->wqs[i];
-+
-+		mutex_lock(&wq->wq_lock);
-+
-+		wq->group = saved_wq->group;
-+		wq->flags = saved_wq->flags;
-+		wq->threshold = saved_wq->threshold;
-+		wq->size = saved_wq->size;
-+		wq->priority = saved_wq->priority;
-+		wq->type = saved_wq->type;
-+		len = strlen(saved_wq->name) + 1;
-+		strscpy(wq->name, saved_wq->name, len);
-+		wq->max_xfer_bytes = saved_wq->max_xfer_bytes;
-+		wq->max_batch_size = saved_wq->max_batch_size;
-+		wq->enqcmds_retries = saved_wq->enqcmds_retries;
-+		wq->descs = saved_wq->descs;
-+		wq->idxd_chan = saved_wq->idxd_chan;
-+		len = strlen(saved_wq->driver_name) + 1;
-+		strscpy(wq->driver_name, saved_wq->driver_name, len);
-+
-+		mutex_unlock(&wq->wq_lock);
-+
-+		kfree(saved_wq);
-+	}
-+
-+	kfree(idxd_saved->saved_wqs);
-+}
-+
- /*
-  * Probe idxd PCI device.
-  * If idxd is not given, need to allocate idxd and set up its data.
+ irqreturn_t idxd_misc_thread(int vec, void *data)
+ {
+ 	struct idxd_irq_entry *irq_entry = data;
+ 	struct idxd_device *idxd = ie_to_idxd(irq_entry);
+ 	struct device *dev = &idxd->pdev->dev;
+-	union gensts_reg gensts;
+ 	u32 val = 0;
+ 	int i;
+-	bool err = false;
+ 	u32 cause;
+ 
+ 	cause = ioread32(idxd->reg_base + IDXD_INTCAUSE_OFFSET);
+@@ -401,7 +429,7 @@ irqreturn_t idxd_misc_thread(int vec, void *data)
+ 	iowrite32(cause, idxd->reg_base + IDXD_INTCAUSE_OFFSET);
+ 
+ 	if (cause & IDXD_INTC_HALT_STATE)
+-		goto halt;
++		return idxd_halt(idxd);
+ 
+ 	if (cause & IDXD_INTC_ERR) {
+ 		spin_lock(&idxd->dev_lock);
+@@ -435,7 +463,6 @@ irqreturn_t idxd_misc_thread(int vec, void *data)
+ 		for (i = 0; i < 4; i++)
+ 			dev_warn_ratelimited(dev, "err[%d]: %#16.16llx\n",
+ 					     i, idxd->sw_err.bits[i]);
+-		err = true;
+ 	}
+ 
+ 	if (cause & IDXD_INTC_INT_HANDLE_REVOKED) {
+@@ -480,34 +507,6 @@ irqreturn_t idxd_misc_thread(int vec, void *data)
+ 		dev_warn_once(dev, "Unexpected interrupt cause bits set: %#x\n",
+ 			      val);
+ 
+-	if (!err)
+-		goto out;
+-
+-halt:
+-	gensts.bits = ioread32(idxd->reg_base + IDXD_GENSTATS_OFFSET);
+-	if (gensts.state == IDXD_DEVICE_STATE_HALT) {
+-		idxd->state = IDXD_DEV_HALTED;
+-		if (gensts.reset_type == IDXD_DEVICE_RESET_SOFTWARE) {
+-			/*
+-			 * If we need a software reset, we will throw the work
+-			 * on a system workqueue in order to allow interrupts
+-			 * for the device command completions.
+-			 */
+-			INIT_WORK(&idxd->work, idxd_device_reinit);
+-			queue_work(idxd->wq, &idxd->work);
+-		} else {
+-			idxd->state = IDXD_DEV_HALTED;
+-			idxd_wqs_quiesce(idxd);
+-			idxd_wqs_unmap_portal(idxd);
+-			idxd_device_clear_state(idxd);
+-			dev_err(&idxd->pdev->dev,
+-				"idxd halted, need %s.\n",
+-				gensts.reset_type == IDXD_DEVICE_RESET_FLR ?
+-				"FLR" : "system reset");
+-		}
+-	}
+-
+-out:
+ 	return IRQ_HANDLED;
+ }
+ 
 -- 
 2.37.1
 

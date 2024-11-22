@@ -1,141 +1,166 @@
-Return-Path: <dmaengine+bounces-3764-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3765-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46B739D5539
-	for <lists+dmaengine@lfdr.de>; Thu, 21 Nov 2024 23:10:52 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD59E9D59D3
+	for <lists+dmaengine@lfdr.de>; Fri, 22 Nov 2024 08:17:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E731B1F22B6B
-	for <lists+dmaengine@lfdr.de>; Thu, 21 Nov 2024 22:10:51 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 17AC4B22267
+	for <lists+dmaengine@lfdr.de>; Fri, 22 Nov 2024 07:17:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E00341DDA34;
-	Thu, 21 Nov 2024 22:10:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2224170A03;
+	Fri, 22 Nov 2024 07:17:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H9P1RY7q"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="O5+jcSI+"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2AD21DC1BA
-	for <dmaengine@vger.kernel.org>; Thu, 21 Nov 2024 22:10:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 466F81632CB;
+	Fri, 22 Nov 2024 07:17:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732227043; cv=none; b=ZHfNYcSTXCqDOzrXQtFH08E/+P2wzA4vniA8TnuRXDZ63PYDqXUOQAUPwnHTQkW8unF6VXj7eeddGrVxaqDNyFOX7KJPGhnZ/K+GiA9G85r0mKZ5SpdMIN6zRCF/DEa4qL8cvsRfJc3X3w9jy3ooMcSf/LdR0SRpfZgc8RCDS+E=
+	t=1732259838; cv=none; b=m6JJL84FiGREj92Wwo+zELifSFmOPT2eRNzQLhBTThU59msEVVVT093jU8N9uVGa9a45VIEXf22sR3tfWHzdQZoqvP0AAUy+pFbC/03kl6dqJMgh2o0qDCEtnF+OzZIy30emG0irMzcWxkRgRdHIeAslhdc8p/BbbU1Cidl6tzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732227043; c=relaxed/simple;
-	bh=yeWBaZyskmHQQzGoYf4eQzjnS5JlEV8qt70IgjYzCIE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lTLN57Rra1uuPz3f4u5GYK+VX3HysGqSRCYnJ5UcjLp4w0NJDPnCYSta6xvKyHEHKXxh4mh1cycTtlE/naAh3EnKHjrtmxIXdwp6blbuAu7CR0QTL1faEv50o9iT/WXH12n/uJRprl+eC/JDPYsyOl4vNjs2Zys5M7LLppOF17M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=H9P1RY7q; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2ffa12ad18cso11223161fa.2
-        for <dmaengine@vger.kernel.org>; Thu, 21 Nov 2024 14:10:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1732227040; x=1732831840; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gFDuP7IjDwDMv6NR+DnprUqGpxBiP59fQ/sq6qPsJrg=;
-        b=H9P1RY7qOTOzBIoE9oqgJcctr5IqJ9f3UvXdpcBOJrQ+nVf0lLCpWjh477uvHWFek6
-         GyU8h2ELHq2Z3bMc47zDNEd79WT3cBbSUGXDV2djQlMm65J/kXFUkNlg1wU3Dtz0R5Wd
-         5G2b8/aIRkJFmuwAcotlk1VyuJ43aCcl8b1nlQ4Ly3nfcfIOaJfMO3YoP0vw/xNJbElc
-         QFw9qUhPOH90ZGVpph3XJiYDtXcUrUsjVEa14Ug9bKk2KoiaYzPUdsaTNxfvMfdH7FoT
-         +qwyDMnMDRRcVGZIpqyT8K+DLrUUCIIGpgsYuv1UkA/0jSSNliFxe1LGWb4EtXbxVsFQ
-         eT+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732227040; x=1732831840;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gFDuP7IjDwDMv6NR+DnprUqGpxBiP59fQ/sq6qPsJrg=;
-        b=jQDjbJjGJB36iiaOf6094cci1HxPHB9BEAdlaagtb1ttiEzwJGovxfEeN3ayCmFM3S
-         sHOEOzBdO5+IL9M45WGfV8cS87Vf5r8NQ7eFchL5LlBYxpPhZFUwH9WjWN8gjRMaV4c2
-         1RDw+UMHfe4jqATQSQ62eJIExnCxGXVTBPzweGDFe2LxKDkBRRBq+8aRGLJwBhakK2DH
-         u2ViqXqmvSbzF1wGYdLFM/N4RgArZwhswDytllslwhkC9sJxBFIJH//2TtxMzXRa+/HS
-         Lu9ZE0MmhV9BIKbXZlUZVH8hPXZNv5sO4cn5vytLavYQ2gZy4Z6kXnwm4sRCrGGwgmXG
-         ioZA==
-X-Forwarded-Encrypted: i=1; AJvYcCVi5pTnRdI517qvTmms6cLAi4IzRpMufvAae4MscGEnveoWx+fqXGyOed5nYzSWM5+Rv/CUJ9utZoU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyv8Sjantz/VKhBUh0LR8aBqZnjwz5BGASLZQ1i/WHuy72oHwha
-	UrO5mSkZxwEoiJVubZgJWZoZgsPPojCh8ZmhY97TC6cS8xEFtWxRa1ZgICPJFpc=
-X-Gm-Gg: ASbGncvO8aEHGWompZIJcFg9Mme9URYj/cfWLXhtnvgWdb2ezhA8atrJ7tbw3XloAeq
-	Wh395VYd248ou5wYVaiJgakxs+EG9RPvyzFcT/RlwIh82dxTNjp+AqAx1qGgRjrt3nVp8NWSSZm
-	XYPDYeRCwrXWpg/NL8l3k/TemqZVcWQ6mv9lCeuUVQZQydxEJwdjf52I+v0fhxGK3MeU84Og0gt
-	TjHl6xeORuy00affftQG/RWPvDxooefJXUrJqTbWhzMrwphVRLjajt3Olw8VACWoVJ96faxW+tf
-	kFfFJMQdMjonfya94uG/ZRobR1LVOg==
-X-Google-Smtp-Source: AGHT+IF5UEvVH8EwlVFvDbA8yqDXP2EnIvz85XTHp+jyVxMS03tfkpla0bwll8dc1ETCUfCWi+KKfg==
-X-Received: by 2002:a05:651c:2208:b0:2f4:3de7:ac4c with SMTP id 38308e7fff4ca-2ffa70f0968mr1996351fa.8.1732227039935;
-        Thu, 21 Nov 2024 14:10:39 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--b8c.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ffa538f100sm593151fa.103.2024.11.21.14.10.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2024 14:10:38 -0800 (PST)
-Date: Fri, 22 Nov 2024 00:10:36 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, 
-	linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linaro-mm-sig@lists.linaro.org, quic_msavaliy@quicinc.com, quic_vtanuku@quicinc.com
-Subject: Re: [PATCH v3 3/3] i2c: i2c-qcom-geni: Update compile dependenices
- for I2C GENI driver
-Message-ID: <zfkhbjm6wrmcocqcvluov3nbrpb2ozbo52c6nlwxro44gublcw@5645ksz4cfm2>
-References: <20241121130134.29408-1-quic_jseerapu@quicinc.com>
- <20241121130134.29408-4-quic_jseerapu@quicinc.com>
+	s=arc-20240116; t=1732259838; c=relaxed/simple;
+	bh=03q8x0T4YMfvc/y9zbKTatkjaIUa2oNwQs36cihLW9U=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hSQGv0gL7KnvVfQoj5LZKi28A1wKRZigHHglzYfQy2O4s4O6Bu6yX3dFO+a4lyMA9mTg1jLAPPATDjFzPJd1eOvRa+D4eKHMwrX/tn9/a4B3vxE8m6+KwPZgRPp5nqytelGhlSrFREJVk/GHCG0WD7+jEjZIBqpJJvQtjqbaD7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=O5+jcSI+; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4AM4r26A019750;
+	Fri, 22 Nov 2024 07:17:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=1WSLi8/TexQOViF37dsphX
+	xWgVVPRLEY8lsL7FaNLlA=; b=O5+jcSI+aWkFfEFRs7IGHV0kbwgzxXOLImkx6F
+	mcDDqohBCeUmwWuK6RjpaDVOvTWG5M8t8EAHkE9HfFgDasCR5v932ZBPS9D0KXKb
+	HLnQiFEpdxw5QwF0Qc3DRheruVKe1HZXiLmOzuuwWC0jpnHtg5XMgh7jM3tfaMiq
+	TnibRRLofJT4y98RsIRoeZcmn2vGMm+VZxl0CijpmnD6C7hKoFK0IKXgS5GBWUDa
+	DPmSaZTNP8GuaMXf1KtotxysX0+ldjEb1XPiokAWP0mbqpYFa7jW2iL7b0sNd65g
+	lPGbnvjgQ+yZL6X1+koXPKBv1mXWEJymBbrAZtdRE/Cijmhg==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4326ata8bu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 22 Nov 2024 07:17:08 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4AM7H8Rv018108
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 22 Nov 2024 07:17:08 GMT
+Received: from hu-mdalam-blr.qualcomm.com (10.80.80.8) by
+ nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 21 Nov 2024 23:17:04 -0800
+From: Md Sadre Alam <quic_mdalam@quicinc.com>
+To: <vkoul@kernel.org>, <ulf.hansson@linaro.org>, <martin.petersen@oracle.com>,
+        <kees@kernel.org>, <dave.jiang@intel.com>, <av2082000@gmail.com>,
+        <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC: <quic_mdalam@quicinc.com>, <quic_srichara@quicinc.com>,
+        <quic_varada@quicinc.com>
+Subject: [PATCH] dmaengine: qcom: bam_dma: Avoid writing unavailable register
+Date: Fri, 22 Nov 2024 12:46:49 +0530
+Message-ID: <20241122071649.2618320-1-quic_mdalam@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241121130134.29408-4-quic_jseerapu@quicinc.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 3QQ_BYHg-4WVXikjik-i_HYpdRXT9GWr
+X-Proofpoint-GUID: 3QQ_BYHg-4WVXikjik-i_HYpdRXT9GWr
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 clxscore=1011 mlxlogscore=999 lowpriorityscore=0
+ phishscore=0 adultscore=0 priorityscore=1501 bulkscore=0 spamscore=0
+ mlxscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2409260000 definitions=main-2411220059
 
-On Thu, Nov 21, 2024 at 06:31:34PM +0530, Jyothi Kumar Seerapu wrote:
-> I2C functionality has dependencies on the GPI driver.
-> Ensure that the GPI driver is enabled when using the I2C
-> driver functionality.
-> Therefore, update the I2C GENI driver to depend on the GPI driver.
-> 
-> Signed-off-by: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
-> ---
-> v2 -> v3:
->    - Moved this change to patch3.
->    - Updated commit description.
-> 
-> v1 -> v2:
->    -  This patch is added in v2 to address the kernel test robot
->       reported compilation error.
->       ERROR: modpost: "gpi_multi_desc_process" [drivers/i2c/busses/i2c-qcom-geni.ko] undefined!
-> 
->  drivers/i2c/busses/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-> index 0aa948014008..87634a682855 100644
-> --- a/drivers/i2c/busses/Kconfig
-> +++ b/drivers/i2c/busses/Kconfig
-> @@ -1049,6 +1049,7 @@ config I2C_QCOM_GENI
->  	tristate "Qualcomm Technologies Inc.'s GENI based I2C controller"
->  	depends on ARCH_QCOM || COMPILE_TEST
->  	depends on QCOM_GENI_SE
-> +	depends on QCOM_GPI_DMA
+Avoid writing unavailable register in BAM-Lite mode.
+BAM_DESC_CNT_TRSHLD register is unavailable in BAM-Lite
+mode. Its only available in BAM-NDP mode. So avoid writing
+this register for clients who is using BAM-Lite mode.
 
-So... without this change the previous patch is broken, which is a
-no-go. And anyway, adding dependency onto a particular DMA driver is a
-bad idea. Please make use of the DMA API instead.
+Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
+---
+ drivers/dma/qcom/bam_dma.c | 22 ++++++++++++++--------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
 
->  	help
->  	  This driver supports GENI serial engine based I2C controller in
->  	  master mode on the Qualcomm Technologies Inc.'s SoCs. If you say
-> -- 
-> 2.17.1
-> 
-
+diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
+index d43a881e43b9..13a08c03746b 100644
+--- a/drivers/dma/qcom/bam_dma.c
++++ b/drivers/dma/qcom/bam_dma.c
+@@ -59,6 +59,9 @@ struct bam_desc_hw {
+ #define DESC_FLAG_NWD BIT(12)
+ #define DESC_FLAG_CMD BIT(11)
+ 
++#define BAM_LITE	0x13
++#define BAM_NDP		0x20
++
+ struct bam_async_desc {
+ 	struct virt_dma_desc vd;
+ 
+@@ -398,6 +401,7 @@ struct bam_device {
+ 
+ 	/* dma start transaction tasklet */
+ 	struct tasklet_struct task;
++	u32 bam_revision;
+ };
+ 
+ /**
+@@ -441,8 +445,9 @@ static void bam_reset(struct bam_device *bdev)
+ 	writel_relaxed(val, bam_addr(bdev, 0, BAM_CTRL));
+ 
+ 	/* set descriptor threshold, start with 4 bytes */
+-	writel_relaxed(DEFAULT_CNT_THRSHLD,
+-			bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
++	if (bdev->bam_revision >= BAM_LITE && bdev->bam_revision < BAM_NDP)
++		writel_relaxed(DEFAULT_CNT_THRSHLD,
++			       bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
+ 
+ 	/* Enable default set of h/w workarounds, ie all except BAM_FULL_PIPE */
+ 	writel_relaxed(BAM_CNFG_BITS_DEFAULT, bam_addr(bdev, 0, BAM_CNFG_BITS));
+@@ -1000,9 +1005,9 @@ static void bam_apply_new_config(struct bam_chan *bchan,
+ 			maxburst = bchan->slave.src_maxburst;
+ 		else
+ 			maxburst = bchan->slave.dst_maxburst;
+-
+-		writel_relaxed(maxburst,
+-			       bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
++		if (bdev->bam_revision >= BAM_LITE && bdev->bam_revision < BAM_NDP)
++			writel_relaxed(maxburst,
++				       bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
+ 	}
+ 
+ 	bchan->reconfigure = 0;
+@@ -1192,10 +1197,11 @@ static int bam_init(struct bam_device *bdev)
+ 	u32 val;
+ 
+ 	/* read revision and configuration information */
+-	if (!bdev->num_ees) {
+-		val = readl_relaxed(bam_addr(bdev, 0, BAM_REVISION));
++	val = readl_relaxed(bam_addr(bdev, 0, BAM_REVISION));
++	if (!bdev->num_ees)
+ 		bdev->num_ees = (val >> NUM_EES_SHIFT) & NUM_EES_MASK;
+-	}
++
++	bdev->bam_revision = val & 0xff;
+ 
+ 	/* check that configured EE is within range */
+ 	if (bdev->ee >= bdev->num_ees)
 -- 
-With best wishes
-Dmitry
+2.34.1
+
 

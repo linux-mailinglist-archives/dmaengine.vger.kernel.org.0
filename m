@@ -1,52 +1,48 @@
-Return-Path: <dmaengine+bounces-3785-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3786-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id D6A809D7B84
-	for <lists+dmaengine@lfdr.de>; Mon, 25 Nov 2024 07:20:36 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD0A79D7C98
+	for <lists+dmaengine@lfdr.de>; Mon, 25 Nov 2024 09:11:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4B411B21BE4
-	for <lists+dmaengine@lfdr.de>; Mon, 25 Nov 2024 06:20:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9DC63281F94
+	for <lists+dmaengine@lfdr.de>; Mon, 25 Nov 2024 08:11:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B9F22AE8B;
-	Mon, 25 Nov 2024 06:20:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D7C11684AE;
+	Mon, 25 Nov 2024 08:11:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kx1K2Y0C"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CsGIwaDe"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CFD42500D4;
-	Mon, 25 Nov 2024 06:20:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C508827;
+	Mon, 25 Nov 2024 08:11:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732515629; cv=none; b=fXGUs04q9ecw6eb8Jmiol+eyu+Oe0cCecsnT3y5h0hTQ6wi2cK/74cTyzHuiDNGT5kfcZStkbBdCm6oUZ7Tm5lcMpnF4hQyRYjayu2eHRx4LG7/KsH158Mz9MosyiVrS0OrUB2mhpqUQrbsYBAttrmwrSGjkLAhvF2wSK52EI0w=
+	t=1732522280; cv=none; b=LJZ5aPn+lAUKEgRDj3VrR6h2SRI70mkPZFGiBmfek87tIOZkZB0GGkSmVsenXlBuxkIAGvljtq8/ukqEhOP3H0LQCDPfItjjZIGLuEpMJODK+cYxkcSXSXuPOoi2w5dtI2vXQlf7v0nFvn1Qo4IBHab1cFMQNWL4YyPz5ugN6qY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732515629; c=relaxed/simple;
-	bh=H0hIHo+j7tFERzCwMpOSZLAL0avY/bF56wggpRA1N+M=;
+	s=arc-20240116; t=1732522280; c=relaxed/simple;
+	bh=zV+uPzFR4jgxt9py0AYoazJ5UUZncuWxs2GK2HxNutI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=K4xFqLBDQ6XZ1R4EuIijlLdK3O2gvgoFQTyiPU+7HunZ21lrnYpUNP7dn8wiY16hpnvqoD84Bf1f3XZYczjOC4BIfg/b3V5SSccse/q7d9u9kUnaxJDmuTisOSFhhOcufSSFrGE8Q00i9WqlCNwo98wgs+Z5Mtac+TdBOg08roQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=kx1K2Y0C; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=3yY5NzRkkDBzt2qTYPlQ4oirItUStfq2fgaKZBugjpU=; b=kx1K2Y0C0owOQ53aJ4TafJBGgi
-	JozvLZW/pcspd/xpc2dJxXZF6VFGn9ylFpoa+GogWartGkYoiHSwTMu3QjphMYXc39TQFi5at9X67
-	iXtDI1HVzIf4ystiqRTYHLl2dq2QNKl8bCYfO1XWZpUgmMp8ACZmuSZmcqFeP48d2KDh8eJEmBlwu
-	tU7YY24N3rDAgeLiW5vt9QYafKyz6aSB9UQlkQ/JDekEEEdlwiISPcEUXiknAGOM9Jyhur6n+7zD0
-	dCy732FZgc+urNu4Z3W1O0/yzsjsSO2jXwcrgcdwdinqsvx96lYvWsdQ1ktTpKB976NRA2HBmcTL5
-	HShcXOjA==;
-Received: from [50.53.2.24] (helo=[192.168.254.17])
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tFSSN-000000013RY-44UR;
-	Mon, 25 Nov 2024 06:20:24 +0000
-Message-ID: <1dcee6d5-761b-4fa2-a336-c23d3aaadcb9@infradead.org>
-Date: Sun, 24 Nov 2024 22:20:19 -0800
+	 In-Reply-To:Content-Type; b=cTCzRTX0I7DxUKed5wU8CR/OiQrTAvV8/0em1zx36vd0SESelOe3JbuNdLqQUceakM83nQmytVsxkdwS/yMEk0lQ7fNEk1ugG4amLtd/xY84EVLMwWd5BrConfo1YEgMMiTJHlKDemtXk/UN3t2sOQDWuRvHXddYkALgDeycK2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CsGIwaDe; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32E55C4CECE;
+	Mon, 25 Nov 2024 08:11:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732522279;
+	bh=zV+uPzFR4jgxt9py0AYoazJ5UUZncuWxs2GK2HxNutI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=CsGIwaDeYx4LhwxV2uAj7ROqK8UrTWCwCP0EnMS7IiQDDNGEvn9J+lWHecXU8Y0Fn
+	 uw4JmJYqcxa/5aGub3L0IbUzVco3s7ATcw51J+p0qjA70Tskj8KTUyDVqGT9GOYR9S
+	 Eo6LKpxe67ISRVUi8ogB11i06n5YGeA4OU6psF01IXsUMx9RVlGgL2z/9chJJzdZSY
+	 Kc0d5cIwn35e2OwJAQKgAQh+VKwJUpSFn8N5zwrA7g4FWrV2sF0xoJvB1E5aqbxQzD
+	 +qfDtiNpGtWgEyvtRwoCUWQ0ouj0hDDdQxNxY1QmDnUszIkJqrTrK44cE3fD6aweOs
+	 JRmX1//XF8ieQ==
+Message-ID: <e1a7d9d6-c382-48f6-bf7f-145290d214d1@kernel.org>
+Date: Mon, 25 Nov 2024 09:11:10 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -54,62 +50,133 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] linux/dmaengine.h: fix a few kernel-doc warnings
-To: linux-kernel@vger.kernel.org
-Cc: Dan Williams <dan.j.williams@intel.com>, Dave Jiang
- <dave.jiang@intel.com>, Paul Cercueil <paul@crapouillou.net>,
- Nuno Sa <nuno.sa@analog.com>, Vinod Koul <vkoul@kernel.org>,
- dmaengine@vger.kernel.org
-References: <20241125061508.165099-1-rdunlap@infradead.org>
+Subject: Re: [PATCH v4 1/4] dt-bindindgs: i2c: qcom,i2c-geni: Document shared
+ flag
+To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
+ Rob Herring <robh@kernel.org>
+Cc: konrad.dybcio@linaro.org, andersson@kernel.org, andi.shyti@kernel.org,
+ linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+ conor+dt@kernel.org, agross@kernel.org, devicetree@vger.kernel.org,
+ vkoul@kernel.org, linux@treblig.org, dan.carpenter@linaro.org,
+ Frank.Li@nxp.com, konradybcio@kernel.org, bryan.odonoghue@linaro.org,
+ krzk+dt@kernel.org, quic_vdadhani@quicinc.com
+References: <20241113161413.3821858-1-quic_msavaliy@quicinc.com>
+ <20241113161413.3821858-2-quic_msavaliy@quicinc.com>
+ <20241115173156.GA3432253-robh@kernel.org>
+ <ff20d185-4db4-482b-b6dd-06e46124b8ab@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20241125061508.165099-1-rdunlap@infradead.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <ff20d185-4db4-482b-b6dd-06e46124b8ab@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-
-
-On 11/24/24 10:15 PM, Randy Dunlap wrote:
-> The comment block for "Interleaved Transfer Request" should not begin
-> with "/**" since it is not in kernel-doc format.
+On 17/11/2024 18:45, Mukesh Kumar Savaliya wrote:
+> Thanks Rob for your review and comments !
 > 
-> Fix doc name for enum sum_check_flags.
+> On 11/15/2024 11:01 PM, Rob Herring wrote:
+>> On Wed, Nov 13, 2024 at 09:44:10PM +0530, Mukesh Kumar Savaliya wrote:
+>>> Adds qcom,is-shared flag usage. Use this flag when I2C serial controller
+>>
+>> Doesn't match the property name.
+> Sure, i need to change the name here as qcom,shared-se, will upload a 
+> new patch.
+>>
+>>> needs to be shared in multiprocessor system(APPS,Modem,ADSP) environment.
+>>>
+>>> Two clients from different processors can share an I2C controller for same
+>>> slave device OR their owned slave devices. Assume I2C Slave EEPROM device
+>>> connected with I2C controller. Each client from ADSP SS and APPS Linux SS
+>>> can perform i2c transactions.
+>>>
+>>> Transfer gets serialized by Lock TRE + DMA xfer + Unlock TRE at HW level.
+>>>
+>>> Signed-off-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+>>> ---
+>>>   Documentation/devicetree/bindings/i2c/qcom,i2c-geni-qcom.yaml | 4 ++++
+>>>   1 file changed, 4 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/i2c/qcom,i2c-geni-qcom.yaml b/Documentation/devicetree/bindings/i2c/qcom,i2c-geni-qcom.yaml
+>>> index 9f66a3bb1f80..fe36938712f7 100644
+>>> --- a/Documentation/devicetree/bindings/i2c/qcom,i2c-geni-qcom.yaml
+>>> +++ b/Documentation/devicetree/bindings/i2c/qcom,i2c-geni-qcom.yaml
+>>> @@ -60,6 +60,10 @@ properties:
+>>>     power-domains:
+>>>       maxItems: 1
+>>>   
+>>> +  qcom,shared-se:
+>>
+>> What is 'se'? Is that defined somewhere?
+>>
+> SE is Serial Engine acting as I2C controller. Let me add second line for 
+> SE here also.
 > 
-> Fix all (4) missing struct member warnings.
-> 
-> Use "Warning:" for one "Note:" in enum dma_desc_metadata_mode since
-> scripts/kernel-doc does not allow more than one Note:
-> per function or identifier description.
-> 
-> This leaves around 49 kernel-doc warnings like:
->   include/linux/dmaengine.h:43: warning: Enum value 'DMA_OUT_OF_ORDER' not described in enum 'dma_status'
-> 
-> and another scripts/kernel-doc problem with it not being able to parse
-> some typedefs.
-> 
-> Fixes: b14dab792dee ("DMAEngine: Define interleaved transfer request api"), Jassi Brar
+> It's mentioned in source code in Patch 3 where it's used.
+>  >>> True if serial engine is shared between multiprocessors OR 
+> Execution Environment.
+You already got this comment:
+https://lore.kernel.org/lkml/20240927063108.2773304-4-quic_msavaliy@quicinc.com/T/#m79efdd1172631aca99a838b4bfe57943755701e3
 
-Oops, I left a note in the line above. I'll fix it for v2 after comments.
+""se" is also not explained in the binding - please open it and look for
+such explanation."
 
-> Fixes: ad283ea4a3ce ("async_tx: add sum check flags")
-> Fixes: 272420214d26 ("dmaengine: Add DMA_CTRL_REUSE")
-> Fixes: f067025bc676 ("dmaengine: add support to provide error result from a DMA transation")
-> Fixes: d38a8c622a1b ("dmaengine: prepare for generic 'unmap' data")
-> Fixes: 5878853fc938 ("dmaengine: Add API function dmaengine_prep_peripheral_dma_vec()")
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Jassi Brar <jaswinder.singh@linaro.org>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Paul Cercueil <paul@crapouillou.net>
-> Cc: Nuno Sa <nuno.sa@analog.com>
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: dmaengine@vger.kernel.org
-> ---
->  include/linux/dmaengine.h |   13 ++++++++++---
->  1 file changed, 10 insertions(+), 3 deletions(-)
+Further comments asked you to rephrase it. Did anything improve? No,
+nothing.
 
+You got comments, you ignore them and send the same.
 
--- 
-~Randy
+But most important: I keep repeating this over and over - NAK for some
+specific "shared-se" flag, different for each of your IP blocks. Come
+with something generic for entire qualcomm. There are few of such flags
+already and there are some patches adding it in different flavors.
 
+Get this consistent.
+
+NAK for this and v5 doing exactly theh same.
+
+Best regards,
+Krzysztof
 

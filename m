@@ -1,154 +1,117 @@
-Return-Path: <dmaengine+bounces-3802-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3803-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C631D9DA3D4
-	for <lists+dmaengine@lfdr.de>; Wed, 27 Nov 2024 09:24:16 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8214A9DA587
+	for <lists+dmaengine@lfdr.de>; Wed, 27 Nov 2024 11:16:55 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4C2B8B21317
-	for <lists+dmaengine@lfdr.de>; Wed, 27 Nov 2024 08:24:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 302081641D4
+	for <lists+dmaengine@lfdr.de>; Wed, 27 Nov 2024 10:16:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DC071494C2;
-	Wed, 27 Nov 2024 08:24:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A98C1957E7;
+	Wed, 27 Nov 2024 10:16:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ux0J972R"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vdvXHjit"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F08A29CF2
-	for <dmaengine@vger.kernel.org>; Wed, 27 Nov 2024 08:24:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66109193439;
+	Wed, 27 Nov 2024 10:16:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732695850; cv=none; b=T5eBJTb2N2QTievCxuIqWLurieFSh4/MKgzbp4WgO96srfUgZ+j+4MMsG1p1MbaITKO8pnrky+jUE9p50ho6hK8qtslyc2wlPLMqjBP6D6qIMwWICKUIFDbwhRFvZyh69svaOWb+TkOmSJ3Amrt/c2zs5P94pRrhrGOaoBvtmvA=
+	t=1732702610; cv=none; b=Ub/KOlt9646LWPYpw0SIp2PT4TzDmYYYrdKkBj6v5PQIQ20cBsgVi8dZnnZdHgLox06O5b0KbKvV9M/UYZWoWgiqV74l6rlEJ6rioHvnpfXm/ORiXPs/9vdVaiu0OIJO3oHlz6WoAg+WetudnqLKrUi7wbGGVr6dZKH5ZWm4zcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732695850; c=relaxed/simple;
-	bh=D2zCNvv6RwYiCqPdzLthSS1rvZf7x6Pd4PMS/3lR1SA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=mGcIUee26pJSZXrSZwjvZ/eWuCswDJ4y9eqquPPjrLMenV692n/L045XUAJXEvP99KC9Marn0mykN33dUDPQ0Y0dqeRXusvQTtetfnjC5ziDu7l7og+sDhtOr/CAR2BMl5rYesgN3VdlrM38bfBbKmLHq1xNaQ12irYAgtHg7Qo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ux0J972R; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1732695847;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=DLdQSuBYZn4bZL0sD7tkxRgW+8xJC7aPjWdDJFdluR8=;
-	b=Ux0J972RTlud/oF1bZN6uo0XVPe3yA/zuwCVgFABRyi7C6/T0RJFETeG06dVGfeB5lys+9
-	fC3s+w0QvfYtM0HBtpzK2svySYPKSjg/x0jkAHEgSl3p01+M865V5OsVOfzXJ1+1vxDZDT
-	PQm4tVHNH1yjoVgLQiVsOcoRPFsWNzQ=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-607-53Gv5x88MPu2o2SztX1QfQ-1; Wed, 27 Nov 2024 03:24:06 -0500
-X-MC-Unique: 53Gv5x88MPu2o2SztX1QfQ-1
-X-Mimecast-MFC-AGG-ID: 53Gv5x88MPu2o2SztX1QfQ
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-38233403611so216301f8f.1
-        for <dmaengine@vger.kernel.org>; Wed, 27 Nov 2024 00:24:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732695845; x=1733300645;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DLdQSuBYZn4bZL0sD7tkxRgW+8xJC7aPjWdDJFdluR8=;
-        b=xLFzj9p/wDFhKsOOfKNgd+WKmyXxCXAd8AmV/8nv7pvYHmF+ghDqj9yIQYYp83MU/C
-         3nN1bVSEKpP+88qRQ5sCKn394eOYNFBDyzzcwRzyOSP6e88q8T0G0H6jPhBiv+mpxRvg
-         DVaSVJ6e800gyW7LC0jN3YYYnUpJpeTYVXo/3E30yr/9dleY1HQlGY3aRG/hbAvTpHVn
-         S3l5hN6X41hcomk74rY9Rf2kTDULP5XgN7HLaqgDu8x55kP0yNUnQQWdRSyyGh4dJl7G
-         EuO6NnvsYWj1jCxNIBj8XONUICkkJR723wGPBVmUk7mquzBlmK/pgyEYhGuynyFrJ03y
-         abFg==
-X-Gm-Message-State: AOJu0YyM+NRHs1cVobn+ok/6296z66//c03nadpKA0onLAKKZl58/vuW
-	IwW79XUVlB8UWFlhWMDWQqBHgFFgIjarJmZ5ZxZn7CnUePE+jmKoDXBB67OqUad7eVLHPAkEnBA
-	hK+N9zAjU5rTBrc8DNR4bFYXaXnZKFOrflaKQ4r6k4Rc6bbSbMTr7nLJPxg==
-X-Gm-Gg: ASbGncvGC9XqWm8r32mBvXeb0nhB5BVk+SKAgbA2BwrivkVXsEpOZ7LSQEtdxiTcT3L
-	kVhtSIpzI3i4j8BBpqQnBwQEth6EhM/O++v/bCZGaKYlppjFiFmArIb2RUsmK1bHoH3kwAfrlDD
-	SvM331RxGcrPcTCy3/eVYjbwpU/oXrV3QGBAgfJGyZ8oE06XmIMtWpHC8JjNZzQwYXYdckpsAWH
-	EL2wcIKhNRB1R4Ceb9qndC9TpnokVVyJhffGpS2b00xy4CUjq6lExJX2eS3yUYW43PaiM0pnW0a
-	4jjo+SL/qOx+yEMDUVc=
-X-Received: by 2002:a05:600c:1d1e:b0:42c:aeee:da86 with SMTP id 5b1f17b1804b1-434a9e1ce8emr6680165e9.8.1732695845283;
-        Wed, 27 Nov 2024 00:24:05 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF7GbyJq6Op0/kUh8of8dCHY9qLEVFtAu4wzuAcMAOzg4JRz58ZFg7QoPddZ13kWOBq1Symeg==
-X-Received: by 2002:a05:600c:1d1e:b0:42c:aeee:da86 with SMTP id 5b1f17b1804b1-434a9e1ce8emr6680045e9.8.1732695844985;
-        Wed, 27 Nov 2024 00:24:04 -0800 (PST)
-Received: from [192.168.1.51] (200.red-83-45-89.dynamicip.rima-tde.net. [83.45.89.200])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-434aa78007dsm13105145e9.19.2024.11.27.00.24.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Nov 2024 00:24:04 -0800 (PST)
-From: Enric Balletbo i Serra <eballetb@redhat.com>
-Date: Wed, 27 Nov 2024 09:23:51 +0100
-Subject: [PATCH] dmaengine: dma_request_chan_by_mask() defer probing
- unconditionally
+	s=arc-20240116; t=1732702610; c=relaxed/simple;
+	bh=XvxKCLYDY+Inutay6x+JwSdqLrc74m6ShyrsolokXDY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=McZZZSAkCYOEIf6H/4ajDy8t7r+cAuv4uHRhJ4N5KfY9d4ns9mc9ZRAL04XHlYIsZ7itQPKWnMvv2qn7griyBQhYtbfXnFI5SA/oIxTky8T7nCxkM5pvWVEfvf09rxM7zTuVe07Pryi4VWOa1f2XaK6/FLw78IiLfO5WVejoofk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=vdvXHjit; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4ARAGVO6063741;
+	Wed, 27 Nov 2024 04:16:31 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1732702591;
+	bh=BxWCdFqn68UVfyk6swddq5DsS2ruANygdfVr1uWB7To=;
+	h=From:To:CC:Subject:Date;
+	b=vdvXHjit2C1Ym7Nklg+6Wdp9qVfaIF48LVfPgxhIti1XKPIB92kfI7sSfizXDU7fx
+	 wsLGCeacIowU+zqxMQLS74gspi8OVqn0MqZ8U7t5IPcbJe3CoRJMQDR26U6I1pMOQ1
+	 Odv91A7lHvEnwKdadtm6fwaXsCRtQwTfK4iy9DuI=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4ARAGVbn026741
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 27 Nov 2024 04:16:31 -0600
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 27
+ Nov 2024 04:16:31 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 27 Nov 2024 04:16:31 -0600
+Received: from uda0490681.. ([10.24.69.142])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4ARAGRoK104602;
+	Wed, 27 Nov 2024 04:16:28 -0600
+From: Vaishnav Achath <vaishnav.a@ti.com>
+To: <peter.ujfalusi@gmail.com>, <vkoul@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <u-kumar1@ti.com>, <j-choudhary@ti.com>,
+        <vigneshr@ti.com>, <vaishnav.a@ti.com>
+Subject: [PATCH v3 0/2] Add support for J722S CSI BCDMA
+Date: Wed, 27 Nov 2024 15:46:25 +0530
+Message-ID: <20241127101627.617537-1-vaishnav.a@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20241127-defer-dma-request-chan-v1-1-203db7baf470@redhat.com>
-X-B4-Tracking: v=1; b=H4sIABbXRmcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxNDQyNz3ZTUtNQi3ZTcRN2i1MLS1OISXZA6XZM0I7NkM6NkCzNLQyWg5oK
- i1LTMCrDB0bG1tQDXiOkqaAAAAA==
-X-Change-ID: 20241127-defer-dma-request-chan-4f26c62c8691
-To: Vinod Koul <vkoul@kernel.org>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, u-kumar1@ti.com, vigneshr@ti.com, 
- nm@ti.com, Enric Balletbo i Serra <eballetb@redhat.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1732695844; l=1509;
- i=eballetb@redhat.com; s=20241113; h=from:subject:message-id;
- bh=D2zCNvv6RwYiCqPdzLthSS1rvZf7x6Pd4PMS/3lR1SA=;
- b=d6wKUqj3cMQazozorTN/arh1KBjFhAOsX/bo5B/+yX16/O3xEFZDPS9LxlOHt5vht7alVetvp
- xFILBftgKA+CalsReYgGnL7FBDHKW0w9RGtqrFjTXoQ/tTKeMyzrop2
-X-Developer-Key: i=eballetb@redhat.com; a=ed25519;
- pk=xAM6APjLnjm98JkE7JdP1GytrxFUrcDLr+fvzW1Dlyw=
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Having no DMA devices registered is not a guarantee that the device
-doesn't exist, it could be that is not registered yet, so return
-EPROBE_DEFER unconditionally so the caller can wait for the required
-DMA device registered.
+This series adds support for CSI Block Copy DMA (BCDMA) instance on J722S,
+the BCDMA instance is similar to other CSI BCDMA found in rest of TI
+devices like J721S2, AM62A. It supports both RX (CSI2RX) and TX (CSITX)
+channels and is identical to J721S2 CSIRX BCDMA but has slight integration
+difference in the PSIL base thread ID which is currently handled in the 
+k3-udma driver from the match_data, introduce a new compatible to support
+J722S BCDMA.
 
-Signed-off-by: Enric Balletbo i Serra <eballetb@redhat.com>
----
-This patch fixes the following error on TI AM69-SK
+Changelog:
+  V2->V3:
+    * Added missing compatible entry missed in v2.
+    * Address Krzysztof's review comments to not wrap commit
+    message too early.
 
-[    2.854501] cadence-qspi 47040000.spi: error -ENODEV: No Rx DMA available
+  V1->V2:
+    * Address review from Conor to add new J722S compatible
+    * J722S BCDMA is more similar to J721S2 in terms of RX/TX support,
+    add an entry alongside J721S2 instead of modifying AM62A.
 
-The DMA device is probed after cadence-qspi driver, so deferring it
-solves the problem.
----
- drivers/dma/dmaengine.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+V1: https://lore.kernel.org/all/20241125083914.2934815-1-vaishnav.a@ti.com/
+V2: https://lore.kernel.org/all/20241126125158.37744-1-vaishnav.a@ti.com/
 
-diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-index c1357d7f3dc6ca7899c4d68a039567e73b0f089d..57f07b477a5d9ad8f2656584b8c0d6dffb2ab469 100644
---- a/drivers/dma/dmaengine.c
-+++ b/drivers/dma/dmaengine.c
-@@ -889,10 +889,10 @@ struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask)
- 	chan = __dma_request_channel(mask, NULL, NULL, NULL);
- 	if (!chan) {
- 		mutex_lock(&dma_list_mutex);
--		if (list_empty(&dma_device_list))
--			chan = ERR_PTR(-EPROBE_DEFER);
--		else
--			chan = ERR_PTR(-ENODEV);
-+		/* If the required DMA device is not registered yet,
-+		 * return EPROBE_DEFER
-+		 */
-+		chan = ERR_PTR(-EPROBE_DEFER);
- 		mutex_unlock(&dma_list_mutex);
- 	}
- 
+CSI2RX capture test results on J722S EVM with 4 x IMX219:
+https://gist.github.com/vaishnavachath/e2eaed62ee8f53428ee9b830aaa02cc3
 
----
-base-commit: 43fb83c17ba2d63dfb798f0be7453ed55ca3f9c2
-change-id: 20241127-defer-dma-request-chan-4f26c62c8691
+Branch with all the DT changes on top of this integrated:
+https://github.com/vaishnavachath/linux/tree/j722scsi
 
-Best regards,
+Vaishnav Achath (2):
+  dt-bindings: dma: ti: k3-bcdma: Add J722S CSI BCDMA
+  dmaengine: ti: k3-udma: Add support for J722S CSI BCDMA
+
+ .../devicetree/bindings/dma/ti/k3-bcdma.yaml     |  5 ++++-
+ drivers/dma/ti/k3-udma.c                         | 16 ++++++++++++++++
+ 2 files changed, 20 insertions(+), 1 deletion(-)
+
 -- 
-Enric Balletbo i Serra <eballetb@redhat.com>
+2.34.1
 
 

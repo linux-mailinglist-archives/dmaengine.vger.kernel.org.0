@@ -1,71 +1,70 @@
-Return-Path: <dmaengine+bounces-3805-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3804-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7FEC29DA58F
-	for <lists+dmaengine@lfdr.de>; Wed, 27 Nov 2024 11:17:19 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 025E19DA58A
+	for <lists+dmaengine@lfdr.de>; Wed, 27 Nov 2024 11:16:59 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F2094B23407
-	for <lists+dmaengine@lfdr.de>; Wed, 27 Nov 2024 10:17:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8D451162C22
+	for <lists+dmaengine@lfdr.de>; Wed, 27 Nov 2024 10:16:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32FFF198E92;
-	Wed, 27 Nov 2024 10:16:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 020D6194C6F;
+	Wed, 27 Nov 2024 10:16:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="A2sfmo8P"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="H5UnbwW+"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE2F8196C6C;
-	Wed, 27 Nov 2024 10:16:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22DB2192D6A;
+	Wed, 27 Nov 2024 10:16:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732702613; cv=none; b=IBrjKFjpXh/gUBAHCijMk17TWWHFt3+Z1j2452QQae5UbXPEFK0/JYXOwlc3eQmorU4wV5gQefM7RrVELpFzw4cL0ZzjlcDI9f7VE08LTjJCppCxY+kSRzLzBFPvfKG0mp73rfK62VVvJ2mCeHxAs2ZdOwZlJdpPFatP0+ZAc8k=
+	t=1732702610; cv=none; b=vCL/qwxR8kIrcP5v9rUvuQkSjJJPbPO9MqmV7os6h2h2w0mJ5H4G55z7Ct3WJAJQ4Zwaqv+y0XVOAnSOJH/mVjnTUwQZ55wnGmm6G68rTqQukaEYqv5v8Nvz2LMrKF1bnuvTfh77CLbUqtVCYY40zA9cav4PF1Hvm8KiX/QPrrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732702613; c=relaxed/simple;
-	bh=IEZYFq7ZA0bJavu0NuORPkZdBxRIAAOqrzKUTb6QUyY=;
+	s=arc-20240116; t=1732702610; c=relaxed/simple;
+	bh=qfCyvtY99DfDmPqgaQS+U84tT5eant8410Ojc4A6OEI=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=n5MEpiqZn/7LWNcZ8U004svPnTsMvXH7NAzmd7ItW1+ZpIR7LWOKbPn/L/F1M5HxxxnTdY0TMAO8nRkoTP2lidHIfWVEaMOexnLGUtmJYzegTrRXnjRWmu3k5G2PaAROKE6Xdl/7iKpMi7FuWK+GAtIFKg4EOn8H7Zi0q2Y1Z9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=A2sfmo8P; arc=none smtp.client-ip=198.47.23.235
+	 MIME-Version:Content-Type; b=huo7yCsFHY7Le0//xVSH4oZI4EWGZVBO+xrkuGLeDVaY/LuheGmNnpcFYfNusbJ7RTA5d7hxBOHMSUgRZKQwX86OLbcl1GqoS7fBH3P7HRc93UD2Pc9AZp7zLg8hx/QzFhY5nYeO2NFB2tie0ZLVAyFW5ie2r/WUy37B77oPip0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=H5UnbwW+; arc=none smtp.client-ip=198.47.23.249
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 4ARAGZ5V984414
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 27 Nov 2024 04:16:35 -0600
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4ARAGd5V012437;
+	Wed, 27 Nov 2024 04:16:39 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1732702595;
-	bh=q/nYmdCTz44+JCFZUJpD+tY0QDH07BMbYOzhqdwiOqE=;
+	s=ti-com-17Q1; t=1732702599;
+	bh=ZY7nVrJb3L8ZPeALxkMls6WK7R1jRQchtAmQWRa5Ebs=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=A2sfmo8PZ3zEjuyIN8D6hvV2kNyJFkJvTj1dLEp1JwXxhieKX+E1cT3FvUbRV3DwW
-	 /tIx9lVkF97UKrrClkDUOn3wMxrTZLgCEewIFKZv1sHHhSOnItlAVmIGsKZKx3qZLd
-	 AIwCywKwbPGPjYZKV84qBK6JXDE6oZsTQRvI8Wb0=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4ARAGZYY026756
+	b=H5UnbwW+p2TsTaVNIKdL+fGor0prhdi9Yz6AMNOQcsT48gO1snu2PGugyhdXbcNjk
+	 VfAzD2pVXoI/SbZ1PeaUTTcipLwu8tVOIotwi+F7P/0wJXdA5j0J1QsaqP4JO8ckHR
+	 YZ8uZM1P0duKDoJ6y97+NRZ2wBQxm7ynXERPUGmE=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4ARAGd6V038509
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 27 Nov 2024 04:16:35 -0600
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+	Wed, 27 Nov 2024 04:16:39 -0600
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 27
- Nov 2024 04:16:35 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ Nov 2024 04:16:38 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 27 Nov 2024 04:16:35 -0600
+ Frontend Transport; Wed, 27 Nov 2024 04:16:38 -0600
 Received: from uda0490681.. ([10.24.69.142])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4ARAGRoL104602;
-	Wed, 27 Nov 2024 04:16:32 -0600
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4ARAGRoM104602;
+	Wed, 27 Nov 2024 04:16:35 -0600
 From: Vaishnav Achath <vaishnav.a@ti.com>
 To: <peter.ujfalusi@gmail.com>, <vkoul@kernel.org>, <robh@kernel.org>,
         <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
         <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>
 CC: <linux-kernel@vger.kernel.org>, <u-kumar1@ti.com>, <j-choudhary@ti.com>,
         <vigneshr@ti.com>, <vaishnav.a@ti.com>
-Subject: [PATCH v3 1/2] dt-bindings: dma: ti: k3-bcdma: Add J722S CSI BCDMA
-Date: Wed, 27 Nov 2024 15:46:26 +0530
-Message-ID: <20241127101627.617537-2-vaishnav.a@ti.com>
+Subject: [PATCH v3 2/2] dmaengine: ti: k3-udma: Add support for J722S CSI BCDMA
+Date: Wed, 27 Nov 2024 15:46:27 +0530
+Message-ID: <20241127101627.617537-3-vaishnav.a@ti.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20241127101627.617537-1-vaishnav.a@ti.com>
 References: <20241127101627.617537-1-vaishnav.a@ti.com>
@@ -79,49 +78,56 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-J722S CSI BCDMA is similar to J721S2 CSI BCDMA and supports both RX and TX
-channels but has a different PSIL thread base ID which is currently
-handled in k3-udma driver. Add an entry for J722S CSIRX BCDMA.
+J722S CSI BCDMA is similar to J721S2 CSI BCDMA but there are slight
+integration differences like different PSIL thread base ID which is
+currently handled in the driver based on udma_of_match data. Add an
+entry to support J722S CSIRX.
 
 Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
 ---
 
-V2->V3:
-  * Added missing compatible entry missed in v2.
-  * Address Krzysztof's review comments to not wrap commit
-  message too early.
+V2->V3 : Minor edit in commit message.
 
 V1->V2:
-  * Address review from Conor to add new J722S compatible
-  * J722S BCDMA is more similar to J721S2 in terms of RX/TX support,
-  add an entry alongside J721S2 instead of modifying AM62A.
+	* Add new compatible for J722S instead of modifying AM62A
 
- Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/dma/ti/k3-udma.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml b/Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml
-index 27b8e1636560..b5bc842c5a0e 100644
---- a/Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml
-+++ b/Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml
-@@ -34,6 +34,7 @@ properties:
-       - ti,am62a-dmss-bcdma-csirx
-       - ti,am64-dmss-bcdma
-       - ti,j721s2-dmss-bcdma-csi
-+      - ti,j722s-dmss-bcdma-csi
+diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+index b3f27b3f9209..7ed1956b4642 100644
+--- a/drivers/dma/ti/k3-udma.c
++++ b/drivers/dma/ti/k3-udma.c
+@@ -4404,6 +4404,18 @@ static struct udma_match_data j721s2_bcdma_csi_data = {
+ 	.soc_data = &j721s2_bcdma_csi_soc_data,
+ };
  
-   reg:
-     minItems: 3
-@@ -196,7 +197,9 @@ allOf:
-       properties:
-         compatible:
-           contains:
--            const: ti,j721s2-dmss-bcdma-csi
-+            enum:
-+              - ti,j721s2-dmss-bcdma-csi
-+              - ti,j722s-dmss-bcdma-csi
-     then:
-       properties:
-         ti,sci-rm-range-bchan: false
++static struct udma_match_data j722s_bcdma_csi_data = {
++	.type = DMA_TYPE_BCDMA,
++	.psil_base = 0x3100,
++	.enable_memcpy_support = false,
++	.burst_size = {
++		TI_SCI_RM_UDMAP_CHAN_BURST_SIZE_64_BYTES, /* Normal Channels */
++		0, /* No H Channels */
++		0, /* No UH Channels */
++	},
++	.soc_data = &j721s2_bcdma_csi_soc_data,
++};
++
+ static const struct of_device_id udma_of_match[] = {
+ 	{
+ 		.compatible = "ti,am654-navss-main-udmap",
+@@ -4435,6 +4447,10 @@ static const struct of_device_id udma_of_match[] = {
+ 		.compatible = "ti,j721s2-dmss-bcdma-csi",
+ 		.data = &j721s2_bcdma_csi_data,
+ 	},
++	{
++		.compatible = "ti,j722s-dmss-bcdma-csi",
++		.data = &j722s_bcdma_csi_data,
++	},
+ 	{ /* Sentinel */ },
+ };
+ MODULE_DEVICE_TABLE(of, udma_of_match);
 -- 
 2.34.1
 

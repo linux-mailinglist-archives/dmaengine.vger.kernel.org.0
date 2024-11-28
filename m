@@ -1,151 +1,155 @@
-Return-Path: <dmaengine+bounces-3807-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3808-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 22D319DB291
-	for <lists+dmaengine@lfdr.de>; Thu, 28 Nov 2024 06:42:59 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CD8B5161199
-	for <lists+dmaengine@lfdr.de>; Thu, 28 Nov 2024 05:42:18 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C48CB13B780;
-	Thu, 28 Nov 2024 05:42:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=inbox.ru header.i=@inbox.ru header.b="UKiIRcXo";
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=inbox.ru header.i=@inbox.ru header.b="sa9rMu8q";
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=inbox.ru header.i=@inbox.ru header.b="Jc4vdLq8"
-X-Original-To: dmaengine@vger.kernel.org
-Received: from fallback20.i.mail.ru (fallback20.i.mail.ru [79.137.243.76])
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C09D9DB531
+	for <lists+dmaengine@lfdr.de>; Thu, 28 Nov 2024 11:01:16 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0CA412C7FD;
-	Thu, 28 Nov 2024 05:42:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.137.243.76
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E28A2B2677E
+	for <lists+dmaengine@lfdr.de>; Thu, 28 Nov 2024 10:01:13 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8501D15854A;
+	Thu, 28 Nov 2024 10:01:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XcXYQsDO"
+X-Original-To: dmaengine@vger.kernel.org
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 042E284E1C
+	for <dmaengine@vger.kernel.org>; Thu, 28 Nov 2024 10:01:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732772538; cv=none; b=hDiKLE0UqImeogumVfl2oKbRzP+2XkgbCCOsaziFzWuUep9zeH+Qj0fQzwkSl2gRcR6CRDH1J6P98gQBHIIq9zQQ0jo/5GcrNJOx2j2rE/DSuUwoHv1E09WuTBLhKF0QrhvLH+kyqa2rITmVVIIgtR5k9r5pBzTcZSzNEt94ySU=
+	t=1732788071; cv=none; b=hYf4qO86Hrz6Kq4XKCmUKr6ogTBJUF71PPCEwU1CF5p8PgnZsD1K75kvKMXzslp+mZMbP1VH4MffFADNkWOSxPurPTexy4Hkpx202cEK5fDqyTEYbpm8tUUfLAAFiB0G4fMLvZTKCW+3+8bDhkDz2XjnYmwrg4UYokHkn3zbIA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732772538; c=relaxed/simple;
-	bh=g8a48EcM+AVuU9Vx36qEdEsD9fWzzqOPqTFCMFku50w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mLikBbmZ0A/2RoUUtecxEJgKHHcGn5AfBYSNgutkAWnDYTwrgZmo+GqQMrs/I0aUieLFhya1qlXSi+kQ7gwQ3rTVc9EvwS7n06EIObgFk+LkxVfR7KFNq4wqjEvvovYLkD/WvbSaicjr44kHv7y8zIJJGQTv6xgo21yVkpKEWJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=inbox.ru; spf=pass smtp.mailfrom=inbox.ru; dkim=pass (2048-bit key) header.d=inbox.ru header.i=@inbox.ru header.b=UKiIRcXo; dkim=pass (2048-bit key) header.d=inbox.ru header.i=@inbox.ru header.b=sa9rMu8q; dkim=pass (2048-bit key) header.d=inbox.ru header.i=@inbox.ru header.b=Jc4vdLq8; arc=none smtp.client-ip=79.137.243.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=inbox.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inbox.ru
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=inbox.ru; s=mail4;
-	h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:To:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=8000Jc4EcpgBD3+O+zLd4SjqEGa0myYfCDXx9OG36/o=;
-	t=1732772533;x=1732862533; 
-	b=UKiIRcXoTPvpLca7Vc8BqgsoimPeAx4rK5MX9hqkUR90L6gg+GG9TkFRhgyqAW9ereVcqLEeiP23zfFSJQ0rRrItMa7irfCi4Blz+MRpeD7mki4C4nVihtQRZIKM84VWOWV85MKgAF+cfIdNuM7vQROWyR9YO8W3KOwBqCgKY9k+64MlpWf27BwDELGmYJGyR8PyL1HAwCwaAkGK8d+dmLKBrD+fFiUf+ag7wi+bXy39N5p9mc4K2nriDH+T4OpkeRNOO7rJOr5RKwfalZtGuZTwTkgInP9wUVoR8O+1LWsu0bdBB15ud5BstHs39bGWzFBDOrLO6or2EZy6JS27DA==;
-Received: from [10.113.244.107] (port=56470 helo=send55.i.mail.ru)
-	by fallback20.i.mail.ru with esmtp (envelope-from <fido_max@inbox.ru>)
-	id 1tGWgd-007Wcm-3e; Thu, 28 Nov 2024 08:03:31 +0300
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=inbox.ru;
-	s=mail4; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:
-	To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive:X-Cloud-Ids;
-	bh=8000Jc4EcpgBD3+O+zLd4SjqEGa0myYfCDXx9OG36/o=; t=1732770211; x=1732860211; 
-	b=sa9rMu8qCjGkqyLFXep4UVTP2rJoCxh7EpGbGaH1JfpB187kivs8Z90eOymlDeCrA0hIZ4O4PkU
-	EYClE9SZ2sPEFavYu6DdKfU5u848fBDIiAYQKSnMb6eEuFkXy1nMfK3X8oCEJDGpRJbgJdd1pwgFI
-	nzLzsWJKX0fBrvYxspMijviCpJKxgRmbyKlT63KvIx3EEFmhdTzwiy5JwS/qOKTZEdDBvoPKVlcWF
-	i9N6oJ0qC2VvEdxaD5YCbHrzACSPi4jZcYf1PnIYgM9Vbrk+uUt1HeFzwmQ7j153Ed8oO1C6iktJt
-	prxm3b3qxB6dgSfRgfmk8k+Q0ro2bJnTMfyQ==;
-Received: from [10.113.87.111] (port=54244 helo=send103.i.mail.ru)
-	by exim-fallback-8c87c6976-nf69c with esmtps  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(envelope-from <fido_max@inbox.ru>)
-	id 1tGWgU-00000000P0P-1Yx7; Thu, 28 Nov 2024 08:03:22 +0300
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=inbox.ru;
-	s=mail4; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:
-	To:From:From:Sender:Reply-To:To:Cc:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive:
-	X-Cloud-Ids:Disposition-Notification-To;
-	bh=8000Jc4EcpgBD3+O+zLd4SjqEGa0myYfCDXx9OG36/o=; t=1732770202; x=1732860202; 
-	b=Jc4vdLq8T23zNwF7QbIenByu0Vj5KxkJBAP6NIkY4ZMrVMLi6lNuKEV3feIoKz0X8+nTnDdnLM+
-	sUuFqzNP4TIUgoK2AheURs/49sfEotJEKdRwuwvWjY4mVGtMZ+XEwqZrAD/YUTjiRAQBQAb6za6Ow
-	Hyp45ifb8AJeUktpE4gV467iyRGUXTc9ibwRqEgW/v3/cXcvwVmx2Hs6rZ/ahPe34rRsGKfYVoPR3
-	STYDa59a6MmXBfutXwtSCPtIdDJa/F6P1An7zwtM8ZNrd6CLY+9F5/muEcvEyVL2nRGHxRP84dqEg
-	vh/n/DLDtAiLKm7JWPZx6PvG3WMawNQB5Wdw==;
-Received: by exim-smtp-78d78789c6-mlnkw with esmtpa (envelope-from <fido_max@inbox.ru>)
-	id 1tGWgE-000000003d6-0AzY; Thu, 28 Nov 2024 08:03:06 +0300
-From: Maxim Kochetkov <fido_max@inbox.ru>
-To: Eugeniy.Paltsev@synopsys.com,
-	vkoul@kernel.org,
-	pandith.n@intel.com,
-	dmaengine@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	kris.pan@intel.com,
-	Maxim Kochetkov <fido_max@inbox.ru>
-Subject: [PATCH 1/1] dmaengine: dw-axi-dmac: fix snps,axi-max-burst-len settings
-Date: Thu, 28 Nov 2024 08:02:59 +0300
-Message-ID: <20241128050259.879263-1-fido_max@inbox.ru>
-X-Mailer: git-send-email 2.45.2
+	s=arc-20240116; t=1732788071; c=relaxed/simple;
+	bh=sr3m4q8NQ+yWL/GM/aZn5V9dc0T5vWuPfLus3LYfktY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NgyPrMsOesoQkIgRTgx/StkorCLzNu+iQihCKRz1/Ui1HwaAUY1aVza3Rld9/qg4WO4wp49VAzuFD1RpZcmIWaVvy7ujCipZZfcl7fOmxTD8naky16YChaPEgghXurAZ6JG4RqSbf3xCWHodDZAZ/ll3wgI67z4PCGBIlEPOKUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XcXYQsDO; arc=none smtp.client-ip=209.85.167.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3ea55a2a38bso356016b6e.1
+        for <dmaengine@vger.kernel.org>; Thu, 28 Nov 2024 02:01:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1732788068; x=1733392868; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=JSLLTaqyAduW2ArQyIX+tknhwh7psIKkLCezIRIcTH8=;
+        b=XcXYQsDOVnb5OSSZRZLXmh31hn3L6YyBR2PD/2RPec60zcwpDj7AsJFMikOmPsI4GI
+         LAnZoIZODfViqK4ZaoRj4fSCyzSYvvGoEGme98f75LL3WYAB9bO1TWIJE/yjKiLJxnJy
+         4DhXdV6LqwUJbHC6NW+QvTfP1/DXZBbBnfdxczJHYvaVDxGKh4EJjfSoyKsn3PmNI4Gp
+         gKYnoLC6MESdtHXfGcVqAd9Ct3yH8g6PDS7gAPcgpVGMw81SJu+QkF28kJ9+Hy0va7/q
+         c/anAN8ucdsXaO965M/Ulf9BxYqhqo6XI50wE/JUFxDeO3AW6isHdtWmWjtHB0F7aneS
+         BLTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732788068; x=1733392868;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JSLLTaqyAduW2ArQyIX+tknhwh7psIKkLCezIRIcTH8=;
+        b=qeonfniG8X3BCqTqsq2ZeJqp2eSJQsuaKxChHp2KiFo2fYtKsjuR8qUMFjjVCt7kFF
+         0OLvvYDr9UKG4v9Q7sa2nhIcS5v7JRqw3lgI5KTqbQ6zHGTPEzLq1tSS9xHxeXzlqgKc
+         9E/MTkzFu66bUhj+X+uDsSetrs83L2s2cg+DXf+2F1Y2tOzWcjoM1uSFXO3OCg5n+98y
+         W3F7zZcFNf7UNSABE6advHFZjrtTfapKaw0BZzML0NJKyGIxk7mwUl4ShlIqnhGfSg4K
+         wUr18L0TjMn8KUoBqRubdc5vSfWINvRo6uk59g0CGQsdHBDhyzZoWnGFvpILXBisGktq
+         bokA==
+X-Forwarded-Encrypted: i=1; AJvYcCXV+3PqjxeMgZ/4ABP/BwU2yrOMl/Af6V/zlCW1pBl28/f044DAZwa1kQEf154sSJ40TNOVkdT8iOU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxASBal/BUbGldSVs3NkxZbCRfKVAA7zanvE+3VqkucTOj9xTBQ
+	nhMTk/6qoLFCF7n/axgiwpnv9jsPqLxVMExTOgnAw8r+J1EPl0oD8/LJL4a9OQbjsknPSjuV6EL
+	u61TSDVDh7xy38zz7dVh7LsuTVF5tP4ZruMjdiw==
+X-Gm-Gg: ASbGncusbm44YIQTHVDVF2L/9py3pwO3ECIRLQIcSrpffPW7hDB0WNZZzf3XRNROuvv
+	+WsbqZGmT/kDvAFDLwcr9THi/G50gC36yTA==
+X-Google-Smtp-Source: AGHT+IFQJ2vqlwir+TVj8VrxIEsFkK/0glqr+WYlo4RXfaelhJ1mOeWad0OAsfuEv05eXPQ6Wfy96mNVzfuVmE7f838=
+X-Received: by 2002:a05:6808:d51:b0:3e5:cf3b:4fc5 with SMTP id
+ 5614622812f47-3ea6dbd5d8dmr6480398b6e.15.1732788068001; Thu, 28 Nov 2024
+ 02:01:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Mailru-Src: smtp
-X-7564579A: 646B95376F6C166E
-X-77F55803: 4F1203BC0FB41BD97DF634AB044F3A907E3AE3D432875EDC98B7E504FBBB9CF100894C459B0CD1B9F2389BC223EBEECCA6D5EE0DB6E1EC8D778098BE51C57FFBC3FDFF10E9E3586C16B550D20AEFFB87
-X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE75909A206F8DB96D1EA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F7900637B323FE155BC226618638F802B75D45FF36EB9D2243A4F8B5A6FCA7DBDB1FC311F39EFFDF887939037866D6147AF826D8511CB73ECB8387D4A3C56C9BD60E2DA31729AB5A020325C720879F7C8C5043D14489FFFB0AA5F4BF176DF2183F8FC7C06FD1C55BDD38FC3FD2E47CDBA5A96583C09775C1D3CA48CF4964A708C60C975A117882F4460429724CE54428C33FAD30A8DF7F3B2552694AC26CFBAC0749D213D2E47CDBA5A9658378DA827A17800CE77A825AB47F0FC8649FA2833FD35BB23DF004C906525384302BEBFE083D3B9BA73A03B725D353964B0B7D0EA88DDEDAC722CA9DD8327EE4930A3850AC1BE2E735F43AACC0BCEB2632C4224003CC83647689D4C264860C145E
-X-C1DE0DAB: 0D63561A33F958A5AB0348031C4ABE225002B1117B3ED6968B3F5479DDFBFA7ACCE9A60C8CB01D7C823CB91A9FED034534781492E4B8EEADC0A73878EBD0941BC79554A2A72441328621D336A7BC284946AD531847A6065A535571D14F44ED41
-X-C8649E89: 1C3962B70DF3F0ADE00A9FD3E00BEEDF77DD89D51EBB7742D3581295AF09D3DF87807E0823442EA2ED31085941D9CD0AF7F820E7B07EA4CF3C5E3F1247E737A5DFEA82B927694E7C9FCD021FC4F069547077FF5214860E40AE7801A017AB3E4ABDCC763D930D6EFA9E152F28BD9B98AF4BBC8D017325D0A05D9E2B9A2E7C2EC036DDF96CB8D31E6A913E6812662D5F2A17D6C1CDD2003EB8E03787203701020945C72C348FB7EED3
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojA97iaBGbkJ2BoKPW3HTZ9w==
-X-Mailru-Sender: 689FA8AB762F739381B31377CF4CA219D67F144E7FFDE5B54C17F37CF7F6C09E7AFCCA499703051D90DE4A6105A3658D481B2AED7BCCC0A49AE3A01A4DD0D55C6C99E19F044156F45FEEDEB644C299C0ED14614B50AE0675
-X-Mras: Ok
-X-Mailru-Src: fallback
-X-7564579A: 646B95376F6C166E
-X-77F55803: 6242723A09DB00B4935A4DD83856F5F2FB468968E2A111388496A54F7D82D744049FFFDB7839CE9EA045B0A3CAF751E280511A1B5114F691CAC4C43CF70E4315F756D43522314BB4C7E3406AFA4B58FF
-X-7FA49CB5: 0D63561A33F958A5DA64E6732EDB1ADE5002B1117B3ED6965AB0D2348C84F6E90CC8CF6E17EE77BC02ED4CEA229C1FA827C277FBC8AE2E8B54F520D093A0DF28
-X-87b9d050: 1
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5+wYjsrrSY/u6NqYXWMR0/V85CnFjCYTu9APdQH0PvpnP5qz8aO2mjTJzjHGC4ogvVuzB3zfVUBtENeZ6b5av1fnCBE34JUDkWdM6QxE+Ga5d8voMtmXfSommBmn3M0hsgyxHfUpwjuv
-X-Mras: Ok
-X-7564579A: 646B95376F6C166E
-X-77F55803: 6242723A09DB00B4935A4DD83856F5F2FB468968E2A11138CD10D46885EE5561049FFFDB7839CE9EA045B0A3CAF751E2DE0FEEF2F7CB6B306D74EC5E8ECF97947E0E5435BEC6C054
-X-7FA49CB5: 0D63561A33F958A5FD4D3890BB6E8DE32D1DA6AD6FF8CF8BB1E2BE012B91DE2DCACD7DF95DA8FC8BD5E8D9A59859A8B6A096F61ED9298604
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5+wYjsrrSY/u6NqYXWMR0/V85CnFjCYTu9APdQH0PvpnP5qz8aO2mjTJzjHGC4ogvVuzB3zfVUBtENeZ6b5av1fnCBE34JUDkWdM6QxE+Ga5d8voMtmXfSrdw9YFAmD7Q3vnsmttD4RG
-X-Mailru-MI: 20000000000000800
-X-Mras: Ok
+References: <CA+G9fYuaWJYQcxQ=3UqQbbuD_YNdOS_KB46N=mh47rxE049f-Q@mail.gmail.com>
+ <20241125162354.GD2067874@thelio-3990X>
+In-Reply-To: <20241125162354.GD2067874@thelio-3990X>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 28 Nov 2024 15:30:56 +0530
+Message-ID: <CA+G9fYuf6A+3gjNfifnd5cRL5oOU6HA2j-KXaaP90mskNVrV9Q@mail.gmail.com>
+Subject: Re: korg-clang-19-lkftconfig-hardening: TI x15 board - PC is at
+ edma_probe (drivers/dma/ti/edma.c
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: open list <linux-kernel@vger.kernel.org>, clang-built-linux <llvm@lists.linux.dev>, 
+	dmaengine@vger.kernel.org, lkft-triage@lists.linaro.org, 
+	peter.ujfalusi@gmail.com, Vinod Koul <vkoul@kernel.org>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
+	Arnd Bergmann <arnd@arndb.de>, kees@kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-axi_rw_burst_len allowed values range is 1..256. Then this value
-goes to ARLEN/AWLEN 8-bit fields of lli->ctl_hi. So writing 256
-leads to overflow and overwrites another fields in LLI. More over
-ARLEN/AWLEN are zero based (0 - 1, 256 - 255).
+On Mon, 25 Nov 2024 at 21:53, Nathan Chancellor <nathan@kernel.org> wrote:
+>
+> Hi Naresh,
+>
+> + Kees and linux-hardening, since this is a hardening configuration.
+>
+> On Mon, Nov 25, 2024 at 07:34:22PM +0530, Naresh Kamboju wrote:
+> > The arm TI x15 board boot has failed with the Linux next, mainline
+> > and the Linux stable. Please find boot log and build links.
+> >
+> > The boot failed with clang tool chain and PASS with gcc-13.
+> >
+> > Device: TI x15 device
+> > Boot pass: gcc-13
+>
+> Are the UBSAN options getting enabled with GCC as well? I am somewhat
+> surprised that they are not agreeing here, unless this is a __counted_by
+> related issue? Does this not happen with GCC 14 as well? It would be
+> nice if we could get a copy of GCC 15 with __counted_by into TuxMake for
+> validation of __counted_by between the two compilers easily. I did not
+> see any obvious instances of __counted_by in edma_probe() but
+> admittedly, I did not look too hard.
+>
+> > Boot failed: clang-19
+> > Configs: korg-clang-19-lkftconfig-hardening
+> > Boot pass: qemu-armv7 (Additional info)
+> >
+> > This is always reproducible.
+> >
+> > x15 beagleboard:
+> >   boot:
+> >     * clang-nightly-lkftconfig-hardening
+> >     * korg-clang-19-lkftconfig-hardening
+> >
+> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> >
+> > Log details:
+> > ------------
+> > [    0.000000] Booting Linux on physical CPU 0x0
+> > [    0.000000] Linux version 6.12.0 (tuxmake@tuxmake) (ClangBuiltLinux
+> > clang version 19.1.4 (https://github.com/llvm/llvm-project.git
+> > aadaa00de76ed0c4987b97450dd638f63a385bed), ClangBuiltLinux LLD 19.1.4
+> > (https://github.com/llvm/llvm-project.git
+> > aadaa00de76ed0c4987b97450dd638f63a385bed)) #1 SMP @1732428891
+> > [    0.000000] CPU: ARMv7 Processor [412fc0f2] revision 2 (ARMv7), cr=30c5387d
+> > <>
+> > [    3.543395] pcieport 0000:00:00.0: PME: Signaling with IRQ 136
+> > [    3.556976] Internal error: Oops - undefined instruction: 0 [#1] SMP ARM
+>
+> Can you turn off UBSAN_TRAP and see if that gives us any indication as
+> to where exactly UBSAN_BOUNDS is triggering here? It is not entirely
+> clear because we do not seem to have a line number in edma.c from
+> decoding the stacktrace.
 
-Fixes: c454d16a7d5a ("dmaengine: dw-axi-dmac: Burst length settings")
-Signed-off-by: Maxim Kochetkov <fido_max@inbox.ru>
----
- drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Anders made a new build with UBSAN_TRAP turn off and the boot pass
+ CONFIG_UBSAN_TRAP=n
+on arm TI x15 device.
 
-diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-index b23536645ff7..9aa79e9b49ca 100644
---- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-+++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-@@ -1437,7 +1437,7 @@ static int parse_device_properties(struct axi_dma_chip *chip)
- 			return -EINVAL;
- 
- 		chip->dw->hdata->restrict_axi_burst_len = true;
--		chip->dw->hdata->axi_rw_burst_len = tmp;
-+		chip->dw->hdata->axi_rw_burst_len = tmp - 1;
- 	}
- 
- 	return 0;
-@@ -1550,7 +1550,7 @@ static int dw_probe(struct platform_device *pdev)
- 	dma_cap_set(DMA_CYCLIC, dw->dma.cap_mask);
- 
- 	/* DMA capabilities */
--	dw->dma.max_burst = hdata->axi_rw_burst_len;
-+	dw->dma.max_burst = hdata->axi_rw_burst_len + 1;
- 	dw->dma.src_addr_widths = AXI_DMA_BUSWIDTHS;
- 	dw->dma.dst_addr_widths = AXI_DMA_BUSWIDTHS;
- 	dw->dma.directions = BIT(DMA_MEM_TO_MEM);
--- 
-2.45.2
+Link Log:
+--------
+ - https://lkft.validation.linaro.org/scheduler/job/8008096#L1846
+ - https://storage.tuxsuite.com/public/linaro/anders/builds/2pR6MSNK0MqztHMe45eAqWYlIaf/
 
+- Naresh
 

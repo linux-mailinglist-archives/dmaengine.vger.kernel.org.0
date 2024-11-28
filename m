@@ -1,85 +1,55 @@
-Return-Path: <dmaengine+bounces-3816-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3817-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4ED159DB938
-	for <lists+dmaengine@lfdr.de>; Thu, 28 Nov 2024 15:07:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3F1709DBA69
+	for <lists+dmaengine@lfdr.de>; Thu, 28 Nov 2024 16:23:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D7792281708
-	for <lists+dmaengine@lfdr.de>; Thu, 28 Nov 2024 14:07:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F2D0E28169E
+	for <lists+dmaengine@lfdr.de>; Thu, 28 Nov 2024 15:23:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7A541AB6F1;
-	Thu, 28 Nov 2024 14:07:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E4C71A9B2F;
+	Thu, 28 Nov 2024 15:23:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m2/C9GvZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l4rq1DpD"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 205EF145A0F
-	for <dmaengine@vger.kernel.org>; Thu, 28 Nov 2024 14:07:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB4A847B;
+	Thu, 28 Nov 2024 15:23:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732802833; cv=none; b=C6fiEt3cahLhwYi9GUKgUjIdMw6Y3K/q6UenNpq1iHom6cviWg9khUboD4GJgCLsK1cDF9l8Dy5hOn6vRa+kyu1eTdCKCsQSV5tvkhaxUuoWGYq1Dvsi4UQsu1xp6G144qx6GfcwOVVOTuGNoxno4rxTmcC7VHCPIMpH3i4qJAM=
+	t=1732807415; cv=none; b=TbYWK7Y6N8ZLd+4exg7cFwQATEkUzlQfhMMv+/vQm2QYKInbuI5PAW90GotmnTZet+edzLj+kdddCdOPEAzvq0tvrsQm1bPMhOCt4My7rlY0+EAgujCOHEY8Ibammtu4e1Cohxq4L6cgyGdyp0xgOBy5FqEug1WB0H+zjjaQ4iI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732802833; c=relaxed/simple;
-	bh=pT5jSZqDvkrdjh+q3rMAuuDFxNI3q0d0Yr08Mj3Z93g=;
+	s=arc-20240116; t=1732807415; c=relaxed/simple;
+	bh=zf3XI+duCmZMKJdMWvONc/8e5U+UV5sJ/cIMEjqAU74=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=stnHarMPGrOJoVbE2decnpBtryRkI7xPDBb8SDUoM6xaxvT+B++OMKOmQ7nSZXgL/B1LcRbOUN8Cys2XUin7IJW+UOXJf+1oE6TB1F/2IAFN0pHnZfWzsXbQTs/fOYRmvZ/5LGb88svLDZtc0xfAjOlV9NlEzLC+l6PVo/U3T8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=m2/C9GvZ; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-53df67d6659so1221046e87.3
-        for <dmaengine@vger.kernel.org>; Thu, 28 Nov 2024 06:07:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1732802829; x=1733407629; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fbeGv6UaRD4uMpdkGqweyQuTufuHdg0lb79N9dKK5ls=;
-        b=m2/C9GvZGEPXfaJbaW20D7/LYiZMojhrSjdo9Vtz8FbnsPjsEJle2x4vuENLXPWw9r
-         qRZUIEGrTqtLu6UqQlkKMEZdJAZ17iPxEbrDgt/AlRQ5EYEiBVXyHpR6vabY791h2HPp
-         q8IdKxGJznCOwY9Wzn/+GKD7CUz5lJCxOrD+SbpzMwzu24z5u/VdY3QqBJVeXUUavkkL
-         5y1UgZwFAeMNolh6lrPlip6Ecpj25Nr1NP9zBf1k06DisROq6u+sWXZnypr/i96/rvCW
-         GK+KKhSmevYrsx4pBHztpbSSgOD9q4qwRt52QzECav377eyFDUR0yJO7XlY3OH64gFby
-         sv8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732802829; x=1733407629;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fbeGv6UaRD4uMpdkGqweyQuTufuHdg0lb79N9dKK5ls=;
-        b=lPXH34K5Gfjg/PDIf+ewczt876lSIts60sVF6M/FeLK5O6YACwImobfLHQI3kAjj5d
-         6Emb6s/3jaY4hUrH5B/G3/dAye12D/+05IVNaT4AJMieNV2/ynfzuXgjsKOdrtZM/7Qb
-         I4cJi45rq0SY+EHzrm4OEoq6krNsCzM6Hp6GgExbzDsO3SQai0LSCVF7ubhYK64yMtZS
-         psTcLjoTiMg+gO+MrJFhenSusfYYlywBkYc4WJJf3VF7zXdq9d2a0M2EkQicQ6uYWHrX
-         JV576X2Hph6ipp9VTqV5UKN68OQ03l1rqiPvPkw2N5nXouJXvDgdcAhmBwMCXRbK0hmL
-         lm4g==
-X-Forwarded-Encrypted: i=1; AJvYcCUhOueN+42nrP7ta6cagVFPHu6W7opjKMMdroQNOgEvqaJUlJ5tTTP6rTK21V5tqr+Yf6PZMtCP6TI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3pgKEfQ3KwYEzGjTSCPhPRJwftSvqs0O5QWhgIJiGYmOv5NnZ
-	W9cuKSnx9sGEh8GhQ7k7bNqs/s/OAtxuxSnlmEHGteiVJFU0vtVI2RRl9wWTbeM=
-X-Gm-Gg: ASbGncuPl/HSFuQ92op20H8mjBHvizo4V6iehPRaWX6KE0crBhq7zFHYtafm0B0mgfC
-	rzbfjEZ3MyoiRO8uX4HADoodo2E5ZQIUFHv7HPtuKR/EAXGswYaD0571iB0SDz46UANlcyeGc0+
-	QlemONFX5QkrHBbFkNqH/y0L9j1foCDBMVgfi8bu08Oj75irH5M9JYSzcAvJ4dJiupH25vC+sip
-	JAEEwK+y37ZB5TV/jYwKyXSZQyFTdawUE8aZJqb7nPa6F3tC3fdrpUdhV70UKWDxyJq3ONhcmRy
-	AiKYpmM8frOWfuKc2msYj2i3xdhufg==
-X-Google-Smtp-Source: AGHT+IHudcPrxOXg52IUNG3JRLPxmA9gUb+mUF9hUF9mSvRpLmyJ6XAURRHhdJgDc0ZDHiHrd1Gg5w==
-X-Received: by 2002:a05:6512:1249:b0:53d:ed47:3017 with SMTP id 2adb3069b0e04-53df00a9743mr6573311e87.12.1732802829171;
-        Thu, 28 Nov 2024 06:07:09 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--b8c.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-53df649ffc8sm186022e87.260.2024.11.28.06.07.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2024 06:07:08 -0800 (PST)
-Date: Thu, 28 Nov 2024 16:07:07 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=oUniJQS5nE+B9QaZNPgo5TTUqUlgQwyOx3OZRZbzCsPkf2qzPqg6B7AUMYVXv7hVHmD2sXeggf0+DhUgt0IaBGkwzpuQzlqqF4d8xXwjl0L5QD/P/lhngLOAKCVgN/cx/a+EFX9+uXz0zj5e0SCSpEYaJNcnGFJfdKMT0gc9DvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l4rq1DpD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8385C4CECE;
+	Thu, 28 Nov 2024 15:23:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732807414;
+	bh=zf3XI+duCmZMKJdMWvONc/8e5U+UV5sJ/cIMEjqAU74=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=l4rq1DpDtIbHWYYkNQEIAaoVPCAMmMAlUk7mxdtgJHGryaJgMGceMCBy23NEdrp0c
+	 MZeyqSKoZiGYYtc9NzFNcxa/nCokl03aKmERt1+cc9N8aOB/WeiRvz4LwK+2+FXPnB
+	 SvmSi9dRO2IID778GIIGr9+uHP2m07epiFHmqXFZ4II8v4fn38C3JhbieUbSGUEPt+
+	 AcM2UUrBqI96qDByhzZtBPr7kKTKaOVPXx8lYnv/Owpj6DppWQ+oIsRNIUrXvQXFPl
+	 yd/L7qjbOPH+QRAp+IMjaLthMdQO6/gCkez90Net1yzgUkDsPO9f6oNssE6nxEXEz6
+	 NZfr6WQQYZeJw==
+Date: Thu, 28 Nov 2024 09:23:21 -0600
+From: Bjorn Andersson <andersson@kernel.org>
 To: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
 Cc: Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>, 
 	linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-spi@vger.kernel.org, quic_msavaliy@quicinc.com, quic_vtanuku@quicinc.com
 Subject: Re: [PATCH v2 1/2] dmaengine: qcom: gpi: Add GPI immediate DMA
  support
-Message-ID: <b2awih7g7wq2o7546qfpnf5ft27n6zzial7w35jvwpcjlrg5qm@tqrbl7wueiks>
+Message-ID: <obv72hhaqvremd7b4c4efpqv6vy7blz54upwc7jqx3pvrzg24t@zebke7igb3nl>
 References: <20241128133351.24593-1-quic_jseerapu@quicinc.com>
  <20241128133351.24593-2-quic_jseerapu@quicinc.com>
 Precedence: bulk
@@ -145,6 +115,10 @@ On Thu, Nov 28, 2024 at 07:03:50PM +0530, Jyothi Kumar Seerapu wrote:
 >  	unsigned int i;
 > +	u8 *buf;
 > +	int len = 0;
+
+First use of "len" is an assignment, so you shouldn't zero-initialize it
+here.
+
 >  
 >  	/* first create config tre if applicable */
 >  	if (direction == DMA_MEM_TO_DEV && spi->set_config) {
@@ -158,21 +132,69 @@ On Thu, Nov 28, 2024 at 07:03:50PM +0530, Jyothi Kumar Seerapu wrote:
 >  
 > -	tre->dword[2] = u32_encode_bits(sg_dma_len(sgl), TRE_DMA_LEN);
 > +	/* Support Immediate dma for write transfers for data length up to 8 bytes */
+
+And what happens if the developer writing the SPI driver forgets to read
+this comment and sets QCOM_GPI_IMMEDIATE_DMA for a 9 byte transfer?
+
 > +	if ((spi->flags & QCOM_GPI_IMMEDIATE_DMA) && direction == DMA_MEM_TO_DEV) {
 
-Please defer applying the patch until the discussion on v1 comes to
-conclusion.
+Why is this flag introduced?
+
+If I understand the next patch, all DMA_MEM_TO_DEV transfers of <=
+QCOM_GPI_IMMEDIATE_DMA_LEN can use the immediate mode, so why not move
+the condition here?
+
+Also ordering[1].
+
+	if (direction == DMA_MEM_TO_DEV && len <= 2 * sizeof(tre->dword[0]))
+
+
+[1] Compare "all transfers of length 8 or less, which are mem to device"
+vs "all transfers which are mem to device, with a length of 8 or less".
+The bigger "selection criteria" is the direction, then that's fine tuned
+by the length query.
 
 > +		buf = sg_virt(sgl);
+
+It's a question of style, but I think you could just put the sg_virt()
+directly in the memcpy() call and avoid the extra variable.
+
 >  
 > -	tre->dword[3] = u32_encode_bits(TRE_TYPE_DMA, TRE_FLAGS_TYPE);
 > -	if (direction == DMA_MEM_TO_DEV)
 > +		/* memcpy may not always be length of 8, hence pre-fill both dword's with 0 */
+
+The implementation of memcpy() is always more than 8 bytes, it's buf
+that might be less than 8 bytes ;)
+
+Also you're not "pre-filling", you're "zero-initializing", or just
+"initialize".
+
+
+That said, does it matter? Will the QUP read beyond the
+TRE_DMA_IMMEDIATE_LEN bytes? If so, please put _that_ in the comment
+("QUP reads beyond the provided len, so additional content needs to be
+cleared", or similar)
+
 > +		tre->dword[0] = 0;
 > +		tre->dword[1] = 0;
 > +		memcpy(&tre->dword[0], buf, len);
 > +
 > +		tre->dword[2] = u32_encode_bits(len, TRE_DMA_IMMEDIATE_LEN);
+
+Does the format of tre->dword[2] really change when
+TRE_FLAGS_IMMEDIATE_DMA is set, or is TRE_DMA_IMMEDIATE_LEN just a
+mask to highlight that len can't be more than 4 bits?
+
+It seems like you could drop TRE_DMA_IMMEDIATE_LEN and just use
+TRE_DMA_LEN here? (But it should match what the hardware programming
+guide states)
+
+
+Perhaps you could reduce the scope of this if/else then as well, as the
+assignment of of dword[2] and dword[3] is mostly the same with and
+without immediate mode (just the one bit to enable it)
+
 > +
 > +		tre->dword[3] = u32_encode_bits(TRE_TYPE_DMA, TRE_FLAGS_TYPE);
 >  		tre->dword[3] |= u32_encode_bits(1, TRE_FLAGS_IEOT);
@@ -210,6 +232,14 @@ conclusion.
 >   * @set_config: set peripheral config
 >   * @rx_len: receive length for buffer
 > + * @flags: true for immediate dma support
+
+Per above I think you can remove this flag, but "true for immediate DMA
+support" doesn't match what you have written in the code. (Also in
+general u8 shouldn't be "true")
+
+Regards,
+Bjorn
+
 >   */
 >  struct gpi_spi_config {
 >  	u8 set_config;
@@ -224,8 +254,5 @@ conclusion.
 > -- 
 > 2.17.1
 > 
-
--- 
-With best wishes
-Dmitry
+> 
 

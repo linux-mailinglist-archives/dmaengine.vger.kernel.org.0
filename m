@@ -1,48 +1,40 @@
-Return-Path: <dmaengine+bounces-3829-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3830-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 903F49DE923
-	for <lists+dmaengine@lfdr.de>; Fri, 29 Nov 2024 16:15:06 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D23109DEB40
+	for <lists+dmaengine@lfdr.de>; Fri, 29 Nov 2024 17:44:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D4D63B20C77
-	for <lists+dmaengine@lfdr.de>; Fri, 29 Nov 2024 15:15:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8E20D281693
+	for <lists+dmaengine@lfdr.de>; Fri, 29 Nov 2024 16:44:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8370613D8B4;
-	Fri, 29 Nov 2024 15:14:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yxnx/jgB"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC20214A098;
+	Fri, 29 Nov 2024 16:44:48 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A0D028691;
-	Fri, 29 Nov 2024 15:14:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BA121537AA;
+	Fri, 29 Nov 2024 16:44:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732893299; cv=none; b=IEuCAcbRJcPg/XYtLJATVmkWu+09Her5i6ejUMVFI31hKmO3pbg/bhd1kLB1KgnvRfL5wbSRzkUyFfuPrNgzP3ywtxZOzInIroT1ZTW+DCa9kOFVTax5N8XJSmVLQOlYF6+y2/YlXWxNoO3Lh00cLcq2ytuMgfkva/S7QkACHms=
+	t=1732898688; cv=none; b=ko4Id7vIl4O//Pk3zmx2/EQY666AkovfypmnpxroIStKASxCMNBsDIPETuOe0AKmiZf43aQQ/XQewKufdD5D4CvZIgKNRSRQB/I5dctBegV+2CSYdBbrV8F1a3VC3KubloGCTMVn0flbuyL0VK0C8ZlfVBSvdXWgRCawUiwdUGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732893299; c=relaxed/simple;
-	bh=Fu73ZvJQgwTOaD6ZnCdF4NOgkna/X4Iq7KcREPusr1g=;
+	s=arc-20240116; t=1732898688; c=relaxed/simple;
+	bh=LwiGdIJ+UE/ViD9rxTYJPRrt2Uwfhvvj4O0hqbwaEHE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZWWCVUatBNT7LVDwEnQ/4hlg8Cbceo+cBVVJJ5QNVvdNIVUxMJ6wJDk+TmF3x9VONGRWXl4iEKo7336zU56XzOSFSmo75TQ6qxVZYeMikB3+8WcsHn/+mQ27n/RI/gQujr2Dwis/iYuS4pO7oy56C8AtucKoexsSGbhdk+X12K8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yxnx/jgB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6BA1C4CECF;
-	Fri, 29 Nov 2024 15:14:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732893298;
-	bh=Fu73ZvJQgwTOaD6ZnCdF4NOgkna/X4Iq7KcREPusr1g=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Yxnx/jgBSYGoc8uegwkEdA/UNg2znGgJ7Z8uUwfauf2YZSwlbKtYJfE8LMcmA7Q6A
-	 wCcqHqQWpcUUDMdwOXGl6oq6ALKd+ea8RMybphpEIUsWwc22PEkqn5gIqrvp8ZjOvC
-	 LaJzhoBcIYq7xOuanXy5vwzChP49kF0h6fdztOnAVIPLY+KleUyY2nUCLNJBRcVzsk
-	 IAqPgVi8vNGfWbSwz8w4zfRwOCgnfTwiMTLKPkjRl7p9afc3Tlvsk9GeqrYRwJcj/V
-	 O8nFh01SiXEMqiJurAsDZZ4+sPIUtx4mYxuc/RrdaYx6vt8WozjlBTLwyt5xXXoiXU
-	 1LsK7KUhuAZzA==
-Message-ID: <db428697-a9dc-46e1-abbe-73341306403f@kernel.org>
-Date: Fri, 29 Nov 2024 16:14:50 +0100
+	 In-Reply-To:Content-Type; b=SzMFe5JHeNP+Y734+Yhj20Nrq4eTCOfRwLgfdAuBPH5iV16NXaa36+gqDxVYbkdTPzuJWi3XmUyH3A7Vq8avZFH0BBoZgTug+XrtSqq8OESDPPKzrqNCPiWA1F7YlDACSNw2qvtix1NP3VE/sbCRPkjlrkBhqc8fCmpiIsnhuNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3316312FC;
+	Fri, 29 Nov 2024 08:45:15 -0800 (PST)
+Received: from [10.57.90.216] (unknown [10.57.90.216])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E72903F5A1;
+	Fri, 29 Nov 2024 08:44:43 -0800 (PST)
+Message-ID: <4dd1caa7-4b95-4e06-a5ac-e2d33ce88d04@arm.com>
+Date: Fri, 29 Nov 2024 16:44:36 +0000
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -50,117 +42,74 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/4] dt-bindindgs: i2c: qcom,i2c-geni: Document shared
- flag
-To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
- konrad.dybcio@linaro.org, andersson@kernel.org, andi.shyti@kernel.org,
- linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
- conor+dt@kernel.org, agross@kernel.org, devicetree@vger.kernel.org,
- vkoul@kernel.org, linux@treblig.org, dan.carpenter@linaro.org,
- Frank.Li@nxp.com, konradybcio@kernel.org, bryan.odonoghue@linaro.org,
- krzk+dt@kernel.org, robh@kernel.org
-Cc: quic_vdadhani@quicinc.com
-References: <20241129144357.2008465-1-quic_msavaliy@quicinc.com>
- <20241129144357.2008465-2-quic_msavaliy@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20241129144357.2008465-2-quic_msavaliy@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH] dmaengine: dma_request_chan_by_mask() defer probing
+ unconditionally
+To: Enric Balletbo i Serra <eballetb@redhat.com>,
+ Vinod Koul <vkoul@kernel.org>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, u-kumar1@ti.com, vigneshr@ti.com,
+ nm@ti.com
+References: <20241127-defer-dma-request-chan-v1-1-203db7baf470@redhat.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20241127-defer-dma-request-chan-v1-1-203db7baf470@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 29/11/2024 15:43, Mukesh Kumar Savaliya wrote:
-> Adds qcom,shared-se flag usage. Use this flag when I2C serial controller
-> needs to be shared in multiprocessor system(APPS,Modem,ADSP) environment.
+On 2024-11-27 8:23 am, Enric Balletbo i Serra wrote:
+> Having no DMA devices registered is not a guarantee that the device
+> doesn't exist, it could be that is not registered yet, so return
+> EPROBE_DEFER unconditionally so the caller can wait for the required
+> DMA device registered.
 > 
-> SE(Serial Engine HW controller acting as protocol master controller) is an
-> I2C controller. Basically a programmable SERDES(serializer/deserializer)
-> coupled with data DMA entity, capable in handling a bus protocol, and data
-> moves to/from system memory.
-> 
-> Two clients from different processors can share an I2C controller for same
-> slave device OR their owned slave devices. Assume I2C Slave EEPROM device
-> connected with I2C controller. Each client from ADSP SS and APPS Linux SS
-> can perform i2c transactions.
-> 
-> Transfer gets serialized by Lock TRE + DMA xfer + Unlock TRE at HW level.
-> 
-> Signed-off-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+> Signed-off-by: Enric Balletbo i Serra <eballetb@redhat.com>
 > ---
->  .../devicetree/bindings/i2c/qcom,i2c-geni-qcom.yaml       | 8 ++++++++
->  1 file changed, 8 insertions(+)
+> This patch fixes the following error on TI AM69-SK
 > 
-> diff --git a/Documentation/devicetree/bindings/i2c/qcom,i2c-geni-qcom.yaml b/Documentation/devicetree/bindings/i2c/qcom,i2c-geni-qcom.yaml
-> index 9f66a3bb1f80..88682a333399 100644
-> --- a/Documentation/devicetree/bindings/i2c/qcom,i2c-geni-qcom.yaml
-> +++ b/Documentation/devicetree/bindings/i2c/qcom,i2c-geni-qcom.yaml
-> @@ -60,6 +60,14 @@ properties:
->    power-domains:
->      maxItems: 1
->  
-> +  qcom,shared-se:
-> +    description: True if I2C controller is shared between two or more system processors.
-> +        SE(Serial Engine HW controller working as protocol master controller) is an
-> +        I2C controller. Basically, a programmable SERDES(serializer/deserializer)
-> +        coupled with data DMA entity, capable in handling a bus protocol, and data
-> +        moves to/from system memory.
-I replied why I NAK it. You did not really address my concerns, but
-replied with some generic statement. After that generic statement you
-gave me exactly 0 seconds to react and you sent v5.
+> [    2.854501] cadence-qspi 47040000.spi: error -ENODEV: No Rx DMA available
+> 
+> The DMA device is probed after cadence-qspi driver, so deferring it
+> solves the problem.
 
-Really 0 seconds to respond to your comment, while you give yourself
-days to respond to my comments.
+Conversely, though, it does carry some risk that if there really is no 
+DMA device/driver, other callers (e.g. spi-ti-qspi) may now get stuck 
+deferring forever where the -ENODEV would have let them proceed with a 
+fallback to non-DMA operation. driver_deferred_probe_check_state() is 
+typically a good tool for these situations, but I guess it's a bit 
+tricky in a context where we don't actually have the dependent device to 
+hand :/
 
-This is not how it works.
+Thanks,
+Robin.
 
-NAK
+> ---
+>   drivers/dma/dmaengine.c | 8 ++++----
+>   1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+> index c1357d7f3dc6ca7899c4d68a039567e73b0f089d..57f07b477a5d9ad8f2656584b8c0d6dffb2ab469 100644
+> --- a/drivers/dma/dmaengine.c
+> +++ b/drivers/dma/dmaengine.c
+> @@ -889,10 +889,10 @@ struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask)
+>   	chan = __dma_request_channel(mask, NULL, NULL, NULL);
+>   	if (!chan) {
+>   		mutex_lock(&dma_list_mutex);
+> -		if (list_empty(&dma_device_list))
+> -			chan = ERR_PTR(-EPROBE_DEFER);
+> -		else
+> -			chan = ERR_PTR(-ENODEV);
+> +		/* If the required DMA device is not registered yet,
+> +		 * return EPROBE_DEFER
+> +		 */
+> +		chan = ERR_PTR(-EPROBE_DEFER);
+>   		mutex_unlock(&dma_list_mutex);
+>   	}
+>   
+> 
+> ---
+> base-commit: 43fb83c17ba2d63dfb798f0be7453ed55ca3f9c2
+> change-id: 20241127-defer-dma-request-chan-4f26c62c8691
+> 
+> Best regards,
 
-Implement previous feedback. Don't send any new versions before you
-understand what you have to do and get some agreement with reviewers.
-
-Best regards,
-Krzysztof
 

@@ -1,63 +1,63 @@
-Return-Path: <dmaengine+bounces-3835-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3836-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0F4C9DFA33
-	for <lists+dmaengine@lfdr.de>; Mon,  2 Dec 2024 06:31:44 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC0149DFAC5
+	for <lists+dmaengine@lfdr.de>; Mon,  2 Dec 2024 07:37:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 727112817D4
-	for <lists+dmaengine@lfdr.de>; Mon,  2 Dec 2024 05:31:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 81FC5281A1E
+	for <lists+dmaengine@lfdr.de>; Mon,  2 Dec 2024 06:37:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D93691D63E0;
-	Mon,  2 Dec 2024 05:31:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7B931F8AF6;
+	Mon,  2 Dec 2024 06:37:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="B2tmiWGz"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="IN572+JB"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C24BBF9E4;
-	Mon,  2 Dec 2024 05:31:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C19ED33F6;
+	Mon,  2 Dec 2024 06:37:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733117499; cv=none; b=CT8AlPI/dHiZhdefUqlyV1T2sAs8LKH596wSqZYiZWcYYfgQ2sJXxW7KQ3mwj7kilWs/1wpbjvQ3PnKixVLHxuBAZF0qd0TzDBqsRQrvIPzPM6w9nvvcKkeOfE0Ap+PmDT0nC0TEZtgWk2qPzUlyjivZZBsJw0UGkj0ETagXJZU=
+	t=1733121459; cv=none; b=Kp2c8TksHc7XXDWwzdqXb56DzqRxCukjZWvpZ3YswDa0uM73B+477gZd6Tlmj9QWGcZjr+/hdEH3YZFBQdQiQSZl7UL7CXez0lRSH+0mRNhQ6U7wpRDIDRJmt0cHpRGp+Ou8OnKthSSj6QYbRuS6bFFxYrnw+Eq1PnjlcIxcbJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733117499; c=relaxed/simple;
-	bh=R5KY/VIlUNB+iUNIkIB9U4SLzJmN/Q0t2sHVnuILFQA=;
+	s=arc-20240116; t=1733121459; c=relaxed/simple;
+	bh=QQvQXaEOUqSto30dPrEV3btJuInxXZtM/Il0NXgo70s=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=iSyfyh9XnMt0YcQK8TWRrLEGXkYHAFRx9YVcvEbZR4QcbA5vqRjtS0X31z3qHE82vV/rTbactuuP+ZKs3N/wNmDuWMgPb3m3TPofqsEfei0NN+lJmqJAUjfnnNq8TfM2FWohNgZsJa2eP2FCcgVXBM1Iz9KNQG/AsoudmwowPAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=B2tmiWGz; arc=none smtp.client-ip=205.220.168.131
+	 In-Reply-To:Content-Type; b=MaL8/CDj2wqbJMfoLMm3jh8/irpJzTapwjMqKNdNalLvj+cgTyixd129rxBTm3YZO+wYT04nQRvXu9F7AxNhVbCqVPZquI/lFOPA51xMNWtqGEdNZVPB/QLT+qk0YndHsZZ9MZs/VyX9x8SfN4/Ty8D1YBqgC3+UwCKJRnGdJdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=IN572+JB; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4B1NMueR002804;
-	Mon, 2 Dec 2024 05:31:34 GMT
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4B1LfmnG016179;
+	Mon, 2 Dec 2024 06:37:33 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	n0AOzN6heIttX0rfAMYApCYx+LN1oHWWYAzh6AqoBUw=; b=B2tmiWGzOSKzurQZ
-	py2BXJcrCwNbHSDRkxMWxwv7SVqDdWEHORLvdK0BkPSqzCzTvJOSC8Vi1OCpepqR
-	LxK9l5rrqRt+0qESEERMrqu4S31IBUtIun4bWKYoH95k+DqanmO/jx5dNUEHj+iT
-	bX+5Fx4BVhMtWJ8ue9X5rQ4wJQhWOF2cy5a4dd/F7C6dJ2HXytnmsGOKyZNLbEFJ
-	MgcI8jCZnsnCRWZKvVMxo6mSYovtD7+N8PjuUK4ZNDhnD/FbDcyL0gLLm4ioo+V5
-	kFYz6c6p/UFwLyvUUcWS/zUskmtxZh7XrlUv/0z8NnMI1dqBprOgFYaYQwi8VEj5
-	Hh9Kbw==
+	YbdM9GSYDLg+fxz5al7QnCRK8heQ4yWSX4Wnum8fndQ=; b=IN572+JBEBcaArNs
+	GMYZ2g7orjm2yUALWEdrmt8wMAjl4vV9YjvQk5Kjtuk0s8vk+z/8am8aFWPrvBaz
+	GuETNbTs53vCt/hP2nVCIQeEdtNjrkrF08yRb/db44FHMIPBRenPA41Wd/sWp4t7
+	+GQdUegALRjIFOkcxPuVEnvmY1YI9lM1kRews3dJ7uWfwo/jTLxe/mPsm3yStv+0
+	jjJ9ISo8QXV3rKZsSVfLTOE4DHT2SSXjrvOF3SP1T+Mj3/7mSgbpNofSvg6H1tJN
+	5dCDAWxq5e6edz4aPjMJ1Axt8KtO/n12xkb4IEqgW9B6Nve3KTirj1gbWi79zEZX
+	HV4oHw==
 Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 437uvjubfq-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 437r2mutjt-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 02 Dec 2024 05:31:34 +0000 (GMT)
+	Mon, 02 Dec 2024 06:37:33 +0000 (GMT)
 Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4B25VXhn010224
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4B26bW57030823
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 2 Dec 2024 05:31:33 GMT
+	Mon, 2 Dec 2024 06:37:32 GMT
 Received: from [10.217.219.62] (10.80.80.8) by nasanex01b.na.qualcomm.com
  (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 1 Dec 2024
- 21:31:31 -0800
-Message-ID: <d1e3e1ad-2f00-4697-a3fc-4da671d6b4cb@quicinc.com>
-Date: Mon, 2 Dec 2024 11:01:28 +0530
+ 22:37:29 -0800
+Message-ID: <f1cf0dd1-06f5-4633-b2c3-fd3666911f07@quicinc.com>
+Date: Mon, 2 Dec 2024 12:07:26 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -65,127 +65,100 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dmaengine: qcom: gpi: Add GPI immediate DMA
- support
-To: Bjorn Andersson <andersson@kernel.org>
+Subject: Re: [PATCH v2 2/2] spi: spi-geni-qcom: Add immediate DMA support
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 CC: Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>,
         <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
         <quic_msavaliy@quicinc.com>, <quic_vtanuku@quicinc.com>
 References: <20241128133351.24593-1-quic_jseerapu@quicinc.com>
- <20241128133351.24593-2-quic_jseerapu@quicinc.com>
- <obv72hhaqvremd7b4c4efpqv6vy7blz54upwc7jqx3pvrzg24t@zebke7igb3nl>
- <1666035c-d674-43dd-bc33-83231d64e5f7@quicinc.com>
- <fbpdzrwmlmqhyblchgaq6etmnc5wjd3ierwmtrer5hnwjf7qb3@axgwdegmbs6z>
+ <20241128133351.24593-3-quic_jseerapu@quicinc.com>
+ <dou77hbrpdqsdlzx3ymco6fgbbmimimt6rrzzezghzmc3a2hle@fgdnpbmg6xsb>
 Content-Language: en-US
 From: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
-In-Reply-To: <fbpdzrwmlmqhyblchgaq6etmnc5wjd3ierwmtrer5hnwjf7qb3@axgwdegmbs6z>
+In-Reply-To: <dou77hbrpdqsdlzx3ymco6fgbbmimimt6rrzzezghzmc3a2hle@fgdnpbmg6xsb>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: hXGaRC-Q06tnn-UXAo9KOEDRbK5hYeBk
-X-Proofpoint-ORIG-GUID: hXGaRC-Q06tnn-UXAo9KOEDRbK5hYeBk
+X-Proofpoint-ORIG-GUID: GQiqpaFxE34VedGeo7zq2zQaSrcO2m5C
+X-Proofpoint-GUID: GQiqpaFxE34VedGeo7zq2zQaSrcO2m5C
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
  definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- suspectscore=0 mlxlogscore=999 impostorscore=0 adultscore=0 phishscore=0
- bulkscore=0 priorityscore=1501 clxscore=1015 spamscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2412020047
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
+ bulkscore=0 priorityscore=1501 suspectscore=0 lowpriorityscore=0
+ phishscore=0 mlxlogscore=999 clxscore=1015 mlxscore=0 adultscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2412020056
 
 
 
-On 11/30/2024 9:35 AM, Bjorn Andersson wrote:
-> On Fri, Nov 29, 2024 at 05:02:22PM +0530, Jyothi Kumar Seerapu wrote:
->> On 11/28/2024 8:53 PM, Bjorn Andersson wrote:
->>> On Thu, Nov 28, 2024 at 07:03:50PM +0530, Jyothi Kumar Seerapu wrote:
->>>> diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
-> [..]
->>>
->>>>    	/* first create config tre if applicable */
->>>>    	if (direction == DMA_MEM_TO_DEV && spi->set_config) {
->>>> @@ -1763,14 +1767,32 @@ static int gpi_create_spi_tre(struct gchan *chan, struct gpi_desc *desc,
->>>>    	tre_idx++;
->>>>    	address = sg_dma_address(sgl);
->>>> -	tre->dword[0] = lower_32_bits(address);
->>>> -	tre->dword[1] = upper_32_bits(address);
->>>> +	len = sg_dma_len(sgl);
->>>> -	tre->dword[2] = u32_encode_bits(sg_dma_len(sgl), TRE_DMA_LEN);
->>>> +	/* Support Immediate dma for write transfers for data length up to 8 bytes */
->>>
->>> And what happens if the developer writing the SPI driver forgets to read
->>> this comment and sets QCOM_GPI_IMMEDIATE_DMA for a 9 byte transfer?
->> In V2 patch, QCOM_GPI_IMMEDIATE_DMA is set based on
->> QCOM_GPI_IMMEDIATE_DMA_LEN only.
+On 11/28/2024 7:36 PM, Dmitry Baryshkov wrote:
+> On Thu, Nov 28, 2024 at 07:03:51PM +0530, Jyothi Kumar Seerapu wrote:
+>> The DMA TRE(Transfer ring element) buffer contains the DMA
+>> buffer address. Accessing data from this address can cause
+>> significant delays in SPI transfers, which can be mitigated to
+>> some extent by utilizing immediate DMA support.
 >>
-> 
-> I assume you mean "patch 2/2". So, what happens if someone refactors the
-> SPI driver in the future, will they read this comment?
-> 
->> As per Hardware programming guide, immediate dma support is for up to 8
->> bytes only.
->> Need to check what is the behavior if we want to handle 9 bytes using
->> immediate dma feature support.
+>> QCOM GPI DMA hardware supports an immediate DMA feature for data
+>> up to 8 bytes, storing the data directly in the DMA TRE buffer
+>> instead of the DMA buffer address. This enhancement enables faster
+>> SPI data transfers.
 >>
-> 
-> I'm saying that you have a comment here which says that the caller must
-> not pass len > 8. Write that comment in code to avoid mistakes - either
-> now or in the future.
-
-Sure, i will update the comment in V3.
-> 
->>>
->>>> +	if ((spi->flags & QCOM_GPI_IMMEDIATE_DMA) && direction == DMA_MEM_TO_DEV) {
->>>
->>> Why is this flag introduced?
->>>
->>> If I understand the next patch, all DMA_MEM_TO_DEV transfers of <=
->>> QCOM_GPI_IMMEDIATE_DMA_LEN can use the immediate mode, so why not move
->>> the condition here?
->>>
->>> Also ordering[1].
->>>
->>> 	if (direction == DMA_MEM_TO_DEV && len <= 2 * sizeof(tre->dword[0]))
->>>
->>>
->> Sure, thanks for the suggestion.
->> so, instead using "QCOM_GPI_IMMEDIATE_DMA_LEN" need to use " 2 *
->> sizeof(tre->dword[0])" for 8 bytes length check.
+>> This optimization reduces the average transfer time from 25 us to
+>> 16 us for a single SPI transfer of 8 bytes length, with a clock
+>> frequency of 50 MHz.
 >>
-> 
-> Either one works, but I'm guessing that while 8 is the right number the
-> reason for 8 is that the data is passed in 2 * dword.
-Okay, i will use "2 * sizeof(tre->dword[0]" which gives 8 only.
-> 
-> 
-> The important thing is that you're encoding the length check here, so
-> that the client can't by mistake trigger immediate mode with > 8 bytes.
-> As a side effect, you no longer need the QCOM_GPI_IMMEDIATE_DMA flag and
-> should be able to drop patch 2.
-
-Sure thanks, will update the changes in V3.
-> 
->>> [1] Compare "all transfers of length 8 or less, which are mem to device"
->>> vs "all transfers which are mem to device, with a length of 8 or less".
->>> The bigger "selection criteria" is the direction, then that's fine tuned
->>> by the length query.
->>>
->>>> +		buf = sg_virt(sgl);
->>>
->>> It's a question of style, but I think you could just put the sg_virt()
->>> directly in the memcpy() call and avoid the extra variable.
+>> Signed-off-by: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
+>> ---
 >>
->> Okay, i will directly put sg_virt() in memcpy().
+>> v1 -> v2:
+>>     - Moved the spi changes as patch2.
+>>
+>>   drivers/spi/spi-geni-qcom.c | 7 +++++++
+>>   1 file changed, 7 insertions(+)
+>>
+>> diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
+>> index 768d7482102a..53c8f6b7f3c5 100644
+>> --- a/drivers/spi/spi-geni-qcom.c
+>> +++ b/drivers/spi/spi-geni-qcom.c
+>> @@ -472,11 +472,18 @@ static int setup_gsi_xfer(struct spi_transfer *xfer, struct spi_geni_master *mas
+>>   		mas->cur_speed_hz = xfer->speed_hz;
+>>   	}
+>>   
+>> +	/*
+>> +	 * Set QCOM_GPI_IMMEDIATE_DMA flag if transfer length up to 8 bytes.
+>> +	 */
+>>   	if (xfer->tx_buf && xfer->rx_buf) {
+>>   		peripheral.cmd = SPI_DUPLEX;
+>> +		if (xfer->len <= QCOM_GPI_IMMEDIATE_DMA_LEN)
+>> +			peripheral.flags |= QCOM_GPI_IMMEDIATE_DMA;
+>>   	} else if (xfer->tx_buf) {
+>>   		peripheral.cmd = SPI_TX;
+>>   		peripheral.rx_len = 0;
+>> +		if (xfer->len <= QCOM_GPI_IMMEDIATE_DMA_LEN)
+>> +			peripheral.flags |= QCOM_GPI_IMMEDIATE_DMA;
 > 
-> Try it out, pick the option that look the best.
-Yes, will do it in V3.
+> NAK. Please finish discussions in the previous iteration before posting
+> new revision. Sending your responses together with sending next
+> iteration is a bad practice and is frowned upon (unless one agrees to
+> all the comments).
+> 
+> There was an open question here and your answer doesn't sound convincing
+> enough. Please continue discussion in v1.
 
+Sure Dmitry, thanks for the guidance.
+I will make sure that post the new revisions after all the comments are 
+sorted out.
 > 
-> Regards,
-> Bjorn
+>>   	} else if (xfer->rx_buf) {
+>>   		peripheral.cmd = SPI_RX;
+>>   		if (!(mas->cur_bits_per_word % MIN_WORD_LEN)) {
+>> -- 
+>> 2.17.1
+>>
 > 
 

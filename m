@@ -1,158 +1,153 @@
-Return-Path: <dmaengine+bounces-3854-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3865-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 594879E0C67
-	for <lists+dmaengine@lfdr.de>; Mon,  2 Dec 2024 20:42:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1269B9E0CFA
+	for <lists+dmaengine@lfdr.de>; Mon,  2 Dec 2024 21:25:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0D874B47B23
-	for <lists+dmaengine@lfdr.de>; Mon,  2 Dec 2024 17:20:14 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 18900B2A70B
+	for <lists+dmaengine@lfdr.de>; Mon,  2 Dec 2024 18:52:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EE941D61A2;
-	Mon,  2 Dec 2024 17:20:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 873D61DE2AD;
+	Mon,  2 Dec 2024 18:51:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="yrppKEqj"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="d1+850v/"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C00101D90B3;
-	Mon,  2 Dec 2024 17:20:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A2E5381C4;
+	Mon,  2 Dec 2024 18:51:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733160010; cv=none; b=pO/cdT1/IUUTZJALKTH70mNdwy47DeCDlLFOEtWwPDSqsl5uTBtm3+dGqnc0IxfPwYAFNYegGj6O2uKpu2PLaC1shIl48tJqm0FQq42RzLKWRcKPvNoLspWh2diFrTziwssYXxeTug2p2N3FdGeFFlq/MNqqOa20m1OYAxtgNag=
+	t=1733165518; cv=none; b=JzSjEjGJCFY/s2hdt6GhnevIRuPNJYjl0kdu8KXOOm8X8FRi+kRP/SUr+eUqhU14WMHGRhnYmf7qZXFeDrazFoxZ5dtwDKvD9r5TNtlIEQvSNLftkpMKgQrue2gAXgBRuzJQHXpaUIQj834dzY+eCt9Mw48JRn4LJiLJ1N64DwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733160010; c=relaxed/simple;
-	bh=v+f54fpLaQL8rTOv4FoBlBj13ULgxn3OJ8Sel2teQqg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rcdGe9xlKHHkcQnFob2xiYuvMI8yYTWi3VI3NbYgbTJlR3LzXjBPsP4JW4+vtqBk2gT8D5B8N5LiiBDw6fGmdCRBcdwDQcFKjqbKvs7GvkAltC2YW8VvATMpZ5ddaUQz6XHrR6XyqZqD1NcP3UhxXNBjKm6zPZ9ZdlFe9lkW1/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=yrppKEqj; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=EgOfwhcvCW9bcLzd0M9yQx5qoL3sNtqxGVsT84DfwBQ=; b=yrppKEqj1zeoN1nSXyY9dJfPXm
-	khMCf66sivKMa97z52e9Lamtv7I0O4AZddxKautnbZ2hOa1gQd3bTjBoxCFua4qafDpLXILK8esih
-	ca9FyM79NL/E2zS6RVqNeKJfPNi8xQzUxFrY+AOtP7V52UVfFUOmZbmB8aqJVlaPXSaoBRRNFGX2f
-	zxYg4LV1GuV9cexiMCz5W8OpRn5zTkjo+iqoDcSksfed/J1CORKZtO8sPubpyw1Vn8EGfJ9zu/aTM
-	aUV4MrKlyJ0cixxIe5DGPThLPrfAbMGT0RILaTv8+UgFJ68mgQLW7kn5BzN9L81sejCXJhtL85STw
-	tL1TKChw==;
-Received: from [50.53.2.24] (helo=bombadil.infradead.org)
-	by bombadil.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tIA5f-00000006zlD-0ijO;
-	Mon, 02 Dec 2024 17:20:07 +0000
-From: Randy Dunlap <rdunlap@infradead.org>
-To: linux-kernel@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Paul Cercueil <paul@crapouillou.net>,
-	Nuno Sa <nuno.sa@analog.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	dmaengine@vger.kernel.org
-Subject: [PATCH v2] linux/dmaengine.h: fix a few kernel-doc warnings
-Date: Mon,  2 Dec 2024 09:20:04 -0800
-Message-ID: <20241202172004.76020-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1733165518; c=relaxed/simple;
+	bh=n24wWnsvKSEhSnkWZ3SQ2qlUtbn8L5c/kgAuqA70Ock=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JJnmFvyG5z2cC92y41TI/IEYhO7ed98rizWTvttbN/uVbAPMTDh70nPJQ6YS25+0PATgPHLd/Njr48NisIbFYAkpkFfGKmT3dixnjlAFCp3o59WgV0DuYz9FQDlJ/QnJAsYTYqPnq2f8NI16+dNKoGNf4xojYWKi5aWwA6JKwAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=d1+850v/; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1733165494; x=1733770294; i=wahrenst@gmx.net;
+	bh=ZgB/0b4DRUYfPuTkx30gmOcph3LtRPAAxoRoTJ+aweo=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=d1+850v/UjxK7V8+HZxecukwNyaInPHNRcoDefqRUjy9+ZdpDd+sAKJ92HDeKkaH
+	 Ydlrz0Pa+y4aS2BwCL8BqHlrXJYHIbmDPDYzo9Jp2e5nDHCMro8kSopd/zvBw/xoP
+	 GAhEdQvcO9aAhpaG3HXuJzo68/jfkNzxsZxFOnzMD/2EuBF1xBQUYxmxvB8uYyrvO
+	 8pzhVWqLwm1TV8HzWSxUNiqoBRb0Mzg+rghtO1XrT0kMOCEmdgN4Tx7H4vo45EOPo
+	 FP2RDPJP1UpwOUAsga8//6/14iZT5hLLeyP30ifrRuvDWwl6koEdW5QEAqyh/TpFf
+	 +cIGeF5yaBkQPbZXew==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.105] ([37.4.251.153]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MYeMt-1tDdDR35xj-00WWt9; Mon, 02
+ Dec 2024 19:51:34 +0100
+Message-ID: <d418a30d-f0b0-49c5-8f2a-ddda9a7eeb07@gmx.net>
+Date: Mon, 2 Dec 2024 19:51:28 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V5 2/9] dmaengine: bcm2835-dma: add suspend/resume pm
+ support
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Russell King <linux@armlinux.org.uk>,
+ Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui
+ <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+ Ulf Hansson <ulf.hansson@linaro.org>, Minas Harutyunyan
+ <hminas@synopsys.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Lukas Wunner <lukas@wunner.de>, Peter Robinson <pbrobinson@gmail.com>,
+ "Ivan T . Ivanov" <iivanov@suse.de>, linux-arm-kernel@lists.infradead.org,
+ kernel-list@raspberrypi.com, bcm-kernel-feedback-list@broadcom.com,
+ dmaengine@vger.kernel.org, linux-mmc@vger.kernel.org,
+ linux-usb@vger.kernel.org
+References: <20241025103621.4780-1-wahrenst@gmx.net>
+ <20241025103621.4780-3-wahrenst@gmx.net> <Z03l308ur7xuE1SB@vaman>
+Content-Language: en-US
+From: Stefan Wahren <wahrenst@gmx.net>
+In-Reply-To: <Z03l308ur7xuE1SB@vaman>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:JFDPQWC/iWpVzlUOkBhNid0hdinoSmvzk39ECSz5KjcFNJzYYLQ
+ bBJMN8vYMo8K65/OG7nxKZi2ufJFsPLlUks4fTHwBgeG5A6u58gKNWajQ3rbJDbo69Q86rS
+ RtZNPwoSGajeAVR+DOZiOCxm/H1bdwtbTF6N9RzFTSM5ECdql2Jx3a1XcD0+mDFkL8hSQvM
+ A7RwEWwiFuPMe2lQdAq/g==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:HAeP/ZkyvB4=;PI/pDBlpVI/bM72GS5GvEQE1UE8
+ SKq+3RgesVtT2pv+9/2xfw+yP78CjWdpPe5yI9KVb7dkz4sIfpfmCOTWLNzTAS9F/qVhzn6xW
+ HrqPuHyJVT/YEmcKwoANZMOOYoPmPpy9EtA4WpZU1Q0H5mCjWiM64ss1dM18TpohYmEA9shsX
+ oPWAC9l0ksfyx5wQgXdG+815rPT11ve4dPBjIAJLH9xoKdVZ70OKTfMKxyc0zh09tP7MqdHCh
+ 8dAUwyzYVPKpcuyqoCTHlbVgs/2UPsNTS7pPOD+0DrL0dHC5o1xQbV7BYIhLLtoNTXkdIAPZl
+ Joe0hw2nk1rUyWb5Uki0nJrNjVoNn2bUOVFd+wV1E2EbzRNOFBO6qMWIA5zxcywFv1zssKDBU
+ 8FJaldSzveeB8JY5hI3u3buV57t0sGzaHNzpiTY2fHqVStBzVrQ8eWgJtW9LmHM7IwyYyAfeo
+ cr5FJ2bDtt9mIRn92X//m1rcSuoO9749wbPCi9+U389Z2/ZztyyfI0TsrfJfNuIjBzn/NtGj4
+ XvOEAxzRSBFqJc1TR1PRrBjaCF3mYwMhy6groxUWSHKsrPaJ4a9ftYYWh5+VgVFRLlj7f8MAQ
+ Sg92jkCl3N9fpW1yitEOfgNey/NGxTw7YFFU1iPAijVR9jgbVZJ3+nucM/U0Iu7GVmO0a1xzQ
+ kpm/0eoFWNc1SX7hSSfiqCgbPDBrPxk7QS2DrsqKYhUNQlfVD//cWEj/PeWhP1NwEibciYC0+
+ Jw19uT9aM412Gl/k5JtTl5GkBkqj7W7+4+nhL+vhfXp0MEMn/gzx0ckpQTQ561LJtnZnWidg/
+ SA0LsUg1H2BFAR2V7lWDFe2kdTLQKisTyHn+70lAQ3rt8bRjL8W1nzL1Xe4Upw9Ad9KPSqB7U
+ LHp7odcaeJqLLSATuOWSucCg4iJGFppwihygh8f0lcb37uGQ1OSrgNw/tBnD1ZIZc540i3IEF
+ rrrxqKfio4YpH+u3rPfrMDnJblgubSmKTkaXGnJ2dofZOFlNklo5QHGBicf5N7oInPK/A1hVK
+ xjD3Nz10ndbDDBdtiIB8jbdIP+34RC+c7C3NFE0F/5m61+PGIt8pfZb3KJAir9y7ekYerfQUa
+ 9wwDlmugDl457aIlAYHr3UmCetY4z8
 
-The comment block for "Interleaved Transfer Request" should not begin
-with "/**" since it is not in kernel-doc format.
+Hi Vinod,
 
-Fix doc name for enum sum_check_flags.
+Am 02.12.24 um 17:52 schrieb Vinod Koul:
+> On 25-10-24, 12:36, Stefan Wahren wrote:
+>> bcm2835-dma provides the service to others, so it should
+>> suspend late and resume early.
+>>
+>> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+>> ---
+>>   drivers/dma/bcm2835-dma.c | 30 ++++++++++++++++++++++++++++++
+>>   1 file changed, 30 insertions(+)
+>>
+>> diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
+>> index e1b92b4d7b05..647dda9f3376 100644
+>> --- a/drivers/dma/bcm2835-dma.c
+>> +++ b/drivers/dma/bcm2835-dma.c
+>> @@ -875,6 +875,35 @@ static struct dma_chan *bcm2835_dma_xlate(struct o=
+f_phandle_args *spec,
+>>   	return chan;
+>>   }
+>>
+>> +static int bcm2835_dma_suspend_late(struct device *dev)
+>> +{
+>> +	struct bcm2835_dmadev *od =3D dev_get_drvdata(dev);
+>> +	struct bcm2835_chan *c, *next;
+>> +
+>> +	list_for_each_entry_safe(c, next, &od->ddev.channels,
+>> +				 vc.chan.device_node) {
+>> +		void __iomem *chan_base =3D c->chan_base;
+>> +
+>> +		if (readl(chan_base + BCM2835_DMA_ADDR)) {
+>> +			dev_warn(dev, "Suspend is prevented by chan %d\n",
+>> +				 c->ch);
+>> +			return -EBUSY;
+>> +		}
+> Can you help understand how this helps by logging... we are not adding
+> anything except checking this and resume is NOP as well!
+My intention of this patch is just to make sure, that no DMA transfer is
+in progress during late_suspend. So i followed the implementation of
+fsldma.c
 
-Fix all (4) missing struct member warnings.
+Additionally i added this warning mostly to know if this ever occurs.
+But i wasn't able to trigger.
 
-Use "Warning:" for one "Note:" in enum dma_desc_metadata_mode since
-scripts/kernel-doc does not allow more than one Note:
-per function or identifier description.
+Should i drop the warning and make resume callback =3D NULL?
 
-This leaves around 49 kernel-doc warnings like:
-  include/linux/dmaengine.h:43: warning: Enum value 'DMA_OUT_OF_ORDER' not described in enum 'dma_status'
+Best regards
 
-and another scripts/kernel-doc problem with it not being able to parse
-some typedefs.
 
-Fixes: b14dab792dee ("DMAEngine: Define interleaved transfer request api")
-Fixes: ad283ea4a3ce ("async_tx: add sum check flags")
-Fixes: 272420214d26 ("dmaengine: Add DMA_CTRL_REUSE")
-Fixes: f067025bc676 ("dmaengine: add support to provide error result from a DMA transation")
-Fixes: d38a8c622a1b ("dmaengine: prepare for generic 'unmap' data")
-Fixes: 5878853fc938 ("dmaengine: Add API function dmaengine_prep_peripheral_dma_vec()")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Paul Cercueil <paul@crapouillou.net>
-Cc: Nuno Sa <nuno.sa@analog.com>
-Cc: Vinod Koul <vkoul@kernel.org>
-Cc: dmaengine@vger.kernel.org
----
-v2: Fix an improper Fixes: line.
-    Drop Jassi Brar from Cc: list (bounces).
-
- include/linux/dmaengine.h |   13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
-
---- linux-next-20241122.orig/include/linux/dmaengine.h
-+++ linux-next-20241122/include/linux/dmaengine.h
-@@ -84,7 +84,7 @@ enum dma_transfer_direction {
- 	DMA_TRANS_NONE,
- };
- 
--/**
-+/*
-  * Interleaved Transfer Request
-  * ----------------------------
-  * A chunk is collection of contiguous bytes to be transferred.
-@@ -223,7 +223,7 @@ enum sum_check_bits {
- };
- 
- /**
-- * enum pq_check_flags - result of async_{xor,pq}_zero_sum operations
-+ * enum sum_check_flags - result of async_{xor,pq}_zero_sum operations
-  * @SUM_CHECK_P_RESULT - 1 if xor zero sum error, 0 otherwise
-  * @SUM_CHECK_Q_RESULT - 1 if reed-solomon zero sum error, 0 otherwise
-  */
-@@ -286,7 +286,7 @@ typedef struct { DECLARE_BITMAP(bits, DM
-  *	pointer to the engine's metadata area
-  *   4. Read out the metadata from the pointer
-  *
-- * Note: the two mode is not compatible and clients must use one mode for a
-+ * Warning: the two modes are not compatible and clients must use one mode for a
-  * descriptor.
-  */
- enum dma_desc_metadata_mode {
-@@ -594,9 +594,13 @@ struct dma_descriptor_metadata_ops {
-  * @phys: physical address of the descriptor
-  * @chan: target channel for this operation
-  * @tx_submit: accept the descriptor, assign ordered cookie and mark the
-+ * @desc_free: driver's callback function to free a resusable descriptor
-+ *	after completion
-  * descriptor pending. To be pushed on .issue_pending() call
-  * @callback: routine to call after this operation is complete
-+ * @callback_result: error result from a DMA transaction
-  * @callback_param: general parameter to pass to the callback routine
-+ * @unmap: hook for generic DMA unmap data
-  * @desc_metadata_mode: core managed metadata mode to protect mixed use of
-  *	DESC_METADATA_CLIENT or DESC_METADATA_ENGINE. Otherwise
-  *	DESC_METADATA_NONE
-@@ -827,6 +831,9 @@ struct dma_filter {
-  * @device_prep_dma_memset: prepares a memset operation
-  * @device_prep_dma_memset_sg: prepares a memset operation over a scatter list
-  * @device_prep_dma_interrupt: prepares an end of chain interrupt operation
-+ * @device_prep_peripheral_dma_vec: prepares a scatter-gather DMA transfer,
-+ *	where the address and size of each segment is located in one entry of
-+ *	the dma_vec array.
-  * @device_prep_slave_sg: prepares a slave dma operation
-  * @device_prep_dma_cyclic: prepare a cyclic dma operation suitable for audio.
-  *	The function takes a buffer of size buf_len. The callback function will
 

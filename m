@@ -1,56 +1,65 @@
-Return-Path: <dmaengine+bounces-3865-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3866-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1269B9E0CFA
-	for <lists+dmaengine@lfdr.de>; Mon,  2 Dec 2024 21:25:22 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 29A809E0EC1
+	for <lists+dmaengine@lfdr.de>; Mon,  2 Dec 2024 23:15:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 18900B2A70B
-	for <lists+dmaengine@lfdr.de>; Mon,  2 Dec 2024 18:52:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BF4EF28788E
+	for <lists+dmaengine@lfdr.de>; Mon,  2 Dec 2024 22:15:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 873D61DE2AD;
-	Mon,  2 Dec 2024 18:51:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87F191DD0F8;
+	Mon,  2 Dec 2024 22:15:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="d1+850v/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nkrBMTB3"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A2E5381C4;
-	Mon,  2 Dec 2024 18:51:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC9991DE3AF;
+	Mon,  2 Dec 2024 22:15:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733165518; cv=none; b=JzSjEjGJCFY/s2hdt6GhnevIRuPNJYjl0kdu8KXOOm8X8FRi+kRP/SUr+eUqhU14WMHGRhnYmf7qZXFeDrazFoxZ5dtwDKvD9r5TNtlIEQvSNLftkpMKgQrue2gAXgBRuzJQHXpaUIQj834dzY+eCt9Mw48JRn4LJiLJ1N64DwI=
+	t=1733177721; cv=none; b=WEe+HsvokW63xuODx3hkQoZu74MbXZ2FV0NDbWsfS8BN/59I8Jt841Vb6S6zhFrupD2ApVD8sjYgY3TkI/j4AFGSpoblVp3fZjt6aW0uS+7KeKOyoBIYlXA9UPItz3dVobS6JdtEInpteBfDBM3TtGPBaTHDIMf2YxYC+xC/qqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733165518; c=relaxed/simple;
-	bh=n24wWnsvKSEhSnkWZ3SQ2qlUtbn8L5c/kgAuqA70Ock=;
+	s=arc-20240116; t=1733177721; c=relaxed/simple;
+	bh=KrjLs/JSvL6Ff2dE1q85dhEmEBCfXHRQ38VSfHrJDjs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JJnmFvyG5z2cC92y41TI/IEYhO7ed98rizWTvttbN/uVbAPMTDh70nPJQ6YS25+0PATgPHLd/Njr48NisIbFYAkpkFfGKmT3dixnjlAFCp3o59WgV0DuYz9FQDlJ/QnJAsYTYqPnq2f8NI16+dNKoGNf4xojYWKi5aWwA6JKwAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=d1+850v/; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1733165494; x=1733770294; i=wahrenst@gmx.net;
-	bh=ZgB/0b4DRUYfPuTkx30gmOcph3LtRPAAxoRoTJ+aweo=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=d1+850v/UjxK7V8+HZxecukwNyaInPHNRcoDefqRUjy9+ZdpDd+sAKJ92HDeKkaH
-	 Ydlrz0Pa+y4aS2BwCL8BqHlrXJYHIbmDPDYzo9Jp2e5nDHCMro8kSopd/zvBw/xoP
-	 GAhEdQvcO9aAhpaG3HXuJzo68/jfkNzxsZxFOnzMD/2EuBF1xBQUYxmxvB8uYyrvO
-	 8pzhVWqLwm1TV8HzWSxUNiqoBRb0Mzg+rghtO1XrT0kMOCEmdgN4Tx7H4vo45EOPo
-	 FP2RDPJP1UpwOUAsga8//6/14iZT5hLLeyP30ifrRuvDWwl6koEdW5QEAqyh/TpFf
-	 +cIGeF5yaBkQPbZXew==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.105] ([37.4.251.153]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MYeMt-1tDdDR35xj-00WWt9; Mon, 02
- Dec 2024 19:51:34 +0100
-Message-ID: <d418a30d-f0b0-49c5-8f2a-ddda9a7eeb07@gmx.net>
-Date: Mon, 2 Dec 2024 19:51:28 +0100
+	 In-Reply-To:Content-Type; b=Mv4t7cFJlruThfLYN6+U+uoS8bc1jSQrEXFUrv0HgTrv3bK4PoKo2+lGT1oRZEvvpid31hJKgmopfuI6EyXJJC+hDtPygnranw9KSHUItwksek9E1qTGnucGYkF2fDhUaL3RLCzpqFbodIOjii8HbPMzBnQzIpXSBxKrz9qb+9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nkrBMTB3; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1733177720; x=1764713720;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=KrjLs/JSvL6Ff2dE1q85dhEmEBCfXHRQ38VSfHrJDjs=;
+  b=nkrBMTB3SVCqVfzO1nsOKjjFXNB9o6TvvRTaw0rB0UQqlbQtXr5K0mE3
+   x3fhTv11aRf52qorDCt0E742vFgU2b2PaQFpOfWhoPw8YjR2gk2eAiR5v
+   O3FXANlSf+/7I6PN3yBjNWiM4QiL0KyguYWPU4Sc5cdG68VAbCExgshOr
+   Gb8jPD1gLkk2Yt9gaUJmOP2QGryTIJhtJYLr+k9Ly9Zzw29hsCbR2q9g3
+   nfUggRpbAqGMGCamOOcAPt5H15voQbM7NNg8dyby9UBqxJyOCo+bz0rja
+   i4IZEbK4Ep+iqT8vq2GvJkReABgVhWJ469mjoEdLFmmDm/rKH+1Dd8ky9
+   g==;
+X-CSE-ConnectionGUID: 3AxtQ4GGQWalszruG4V1bg==
+X-CSE-MsgGUID: 8kvvlxUUQFij8gP4ni2wrQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11274"; a="44037764"
+X-IronPort-AV: E=Sophos;i="6.12,203,1728975600"; 
+   d="scan'208";a="44037764"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2024 14:15:19 -0800
+X-CSE-ConnectionGUID: us5R2suqSZC0HC1KcViJXA==
+X-CSE-MsgGUID: 77FODGr6S9Wew4bFAyCgaA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,203,1728975600"; 
+   d="scan'208";a="93703727"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO [10.125.111.153]) ([10.125.111.153])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2024 14:15:18 -0800
+Message-ID: <0dd14adb-4dfb-462e-8e35-81982c519a61@intel.com>
+Date: Mon, 2 Dec 2024 15:15:17 -0700
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -58,96 +67,58 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V5 2/9] dmaengine: bcm2835-dma: add suspend/resume pm
- support
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Russell King <linux@armlinux.org.uk>,
- Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui
- <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
- Ulf Hansson <ulf.hansson@linaro.org>, Minas Harutyunyan
- <hminas@synopsys.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Lukas Wunner <lukas@wunner.de>, Peter Robinson <pbrobinson@gmail.com>,
- "Ivan T . Ivanov" <iivanov@suse.de>, linux-arm-kernel@lists.infradead.org,
- kernel-list@raspberrypi.com, bcm-kernel-feedback-list@broadcom.com,
- dmaengine@vger.kernel.org, linux-mmc@vger.kernel.org,
- linux-usb@vger.kernel.org
-References: <20241025103621.4780-1-wahrenst@gmx.net>
- <20241025103621.4780-3-wahrenst@gmx.net> <Z03l308ur7xuE1SB@vaman>
+Subject: Re: [PATCH v2 0/5] Enable FLR for IDXD halt
+To: Fenghua Yu <fenghua.yu@intel.com>, Vinod Koul <vkoul@kernel.org>
+Cc: dmaengine@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
+References: <20241122233028.2762809-1-fenghua.yu@intel.com>
 Content-Language: en-US
-From: Stefan Wahren <wahrenst@gmx.net>
-In-Reply-To: <Z03l308ur7xuE1SB@vaman>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:JFDPQWC/iWpVzlUOkBhNid0hdinoSmvzk39ECSz5KjcFNJzYYLQ
- bBJMN8vYMo8K65/OG7nxKZi2ufJFsPLlUks4fTHwBgeG5A6u58gKNWajQ3rbJDbo69Q86rS
- RtZNPwoSGajeAVR+DOZiOCxm/H1bdwtbTF6N9RzFTSM5ECdql2Jx3a1XcD0+mDFkL8hSQvM
- A7RwEWwiFuPMe2lQdAq/g==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:HAeP/ZkyvB4=;PI/pDBlpVI/bM72GS5GvEQE1UE8
- SKq+3RgesVtT2pv+9/2xfw+yP78CjWdpPe5yI9KVb7dkz4sIfpfmCOTWLNzTAS9F/qVhzn6xW
- HrqPuHyJVT/YEmcKwoANZMOOYoPmPpy9EtA4WpZU1Q0H5mCjWiM64ss1dM18TpohYmEA9shsX
- oPWAC9l0ksfyx5wQgXdG+815rPT11ve4dPBjIAJLH9xoKdVZ70OKTfMKxyc0zh09tP7MqdHCh
- 8dAUwyzYVPKpcuyqoCTHlbVgs/2UPsNTS7pPOD+0DrL0dHC5o1xQbV7BYIhLLtoNTXkdIAPZl
- Joe0hw2nk1rUyWb5Uki0nJrNjVoNn2bUOVFd+wV1E2EbzRNOFBO6qMWIA5zxcywFv1zssKDBU
- 8FJaldSzveeB8JY5hI3u3buV57t0sGzaHNzpiTY2fHqVStBzVrQ8eWgJtW9LmHM7IwyYyAfeo
- cr5FJ2bDtt9mIRn92X//m1rcSuoO9749wbPCi9+U389Z2/ZztyyfI0TsrfJfNuIjBzn/NtGj4
- XvOEAxzRSBFqJc1TR1PRrBjaCF3mYwMhy6groxUWSHKsrPaJ4a9ftYYWh5+VgVFRLlj7f8MAQ
- Sg92jkCl3N9fpW1yitEOfgNey/NGxTw7YFFU1iPAijVR9jgbVZJ3+nucM/U0Iu7GVmO0a1xzQ
- kpm/0eoFWNc1SX7hSSfiqCgbPDBrPxk7QS2DrsqKYhUNQlfVD//cWEj/PeWhP1NwEibciYC0+
- Jw19uT9aM412Gl/k5JtTl5GkBkqj7W7+4+nhL+vhfXp0MEMn/gzx0ckpQTQ561LJtnZnWidg/
- SA0LsUg1H2BFAR2V7lWDFe2kdTLQKisTyHn+70lAQ3rt8bRjL8W1nzL1Xe4Upw9Ad9KPSqB7U
- LHp7odcaeJqLLSATuOWSucCg4iJGFppwihygh8f0lcb37uGQ1OSrgNw/tBnD1ZIZc540i3IEF
- rrrxqKfio4YpH+u3rPfrMDnJblgubSmKTkaXGnJ2dofZOFlNklo5QHGBicf5N7oInPK/A1hVK
- xjD3Nz10ndbDDBdtiIB8jbdIP+34RC+c7C3NFE0F/5m61+PGIt8pfZb3KJAir9y7ekYerfQUa
- 9wwDlmugDl457aIlAYHr3UmCetY4z8
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20241122233028.2762809-1-fenghua.yu@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Vinod,
 
-Am 02.12.24 um 17:52 schrieb Vinod Koul:
-> On 25-10-24, 12:36, Stefan Wahren wrote:
->> bcm2835-dma provides the service to others, so it should
->> suspend late and resume early.
->>
->> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
->> ---
->>   drivers/dma/bcm2835-dma.c | 30 ++++++++++++++++++++++++++++++
->>   1 file changed, 30 insertions(+)
->>
->> diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
->> index e1b92b4d7b05..647dda9f3376 100644
->> --- a/drivers/dma/bcm2835-dma.c
->> +++ b/drivers/dma/bcm2835-dma.c
->> @@ -875,6 +875,35 @@ static struct dma_chan *bcm2835_dma_xlate(struct o=
-f_phandle_args *spec,
->>   	return chan;
->>   }
->>
->> +static int bcm2835_dma_suspend_late(struct device *dev)
->> +{
->> +	struct bcm2835_dmadev *od =3D dev_get_drvdata(dev);
->> +	struct bcm2835_chan *c, *next;
->> +
->> +	list_for_each_entry_safe(c, next, &od->ddev.channels,
->> +				 vc.chan.device_node) {
->> +		void __iomem *chan_base =3D c->chan_base;
->> +
->> +		if (readl(chan_base + BCM2835_DMA_ADDR)) {
->> +			dev_warn(dev, "Suspend is prevented by chan %d\n",
->> +				 c->ch);
->> +			return -EBUSY;
->> +		}
-> Can you help understand how this helps by logging... we are not adding
-> anything except checking this and resume is NOP as well!
-My intention of this patch is just to make sure, that no DMA transfer is
-in progress during late_suspend. So i followed the implementation of
-fsldma.c
 
-Additionally i added this warning mostly to know if this ever occurs.
-But i wasn't able to trigger.
+On 11/22/24 4:30 PM, Fenghua Yu wrote:
+> When IDXD device hits hardware errors, it enters halt state and triggers
+> an interrupt to IDXD driver. Currently IDXD driver just prints an error
+> message in the interrupt handler.
+> 
+> A better way to handle the interrupt is to do Function Level Reset (FLR)
+> and recover the device's hardware and software configurations to its
+> previous working state. The device and software can continue to run after
+> the interrupt.
+> 
+> This series enables this FLR handling for IDXD device whose WQs are all
+> user type. FLR handling for IDXD device whose WQs are kernel type
+> will be implemented in a future series.
 
-Should i drop the warning and make resume callback =3D NULL?
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-Best regards
+For the series.
 
+> 
+> Change log:
+> v2:
+> - Patch 3: Call a free helper to free all saved configs (Dave Jiang).
+> - Patch 3: Replace defined bitmap free function with existing
+>   bitmpa_free().
+> 
+> v1:
+> https://lore.kernel.org/lkml/20240705181519.4067507-1-fenghua.yu@intel.com/
+> 
+> Fenghua Yu (5):
+>   dmaengine: idxd: Add idxd_pci_probe_alloc() helper
+>   dmaengine: idxd: Binding and unbinding IDXD device and driver
+>   dmaengine: idxd: Add idxd_device_config_save() and
+>     idxd_device_config_restore() helpers
+>   dmaengine: idxd: Refactor halt handler
+>   dmaengine: idxd: Enable Function Level Reset (FLR) for halt
+> 
+>  drivers/dma/idxd/idxd.h |  13 ++
+>  drivers/dma/idxd/init.c | 479 ++++++++++++++++++++++++++++++++++++----
+>  drivers/dma/idxd/irq.c  |  85 ++++---
+>  3 files changed, 507 insertions(+), 70 deletions(-)
+> 
 
 

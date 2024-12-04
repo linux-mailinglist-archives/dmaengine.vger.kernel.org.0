@@ -1,193 +1,198 @@
-Return-Path: <dmaengine+bounces-3873-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3874-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA8EC9E2417
-	for <lists+dmaengine@lfdr.de>; Tue,  3 Dec 2024 16:46:06 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B34A9E3A3F
+	for <lists+dmaengine@lfdr.de>; Wed,  4 Dec 2024 13:46:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9FCAD28240B
-	for <lists+dmaengine@lfdr.de>; Tue,  3 Dec 2024 15:46:05 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 72231B2415B
+	for <lists+dmaengine@lfdr.de>; Wed,  4 Dec 2024 12:21:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1052B20124F;
-	Tue,  3 Dec 2024 15:43:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0420B1B4137;
+	Wed,  4 Dec 2024 12:21:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oDHeXaVq"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="C9nPCmhr"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBEA0200B98;
-	Tue,  3 Dec 2024 15:43:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C0131ABEDC;
+	Wed,  4 Dec 2024 12:21:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733240586; cv=none; b=f0vz6w40BsNMay+dNFjN5GoeWd8CFwitcVdHc4CLzYhdU8awNUbdu3bRcA5zyE1I82GvTnn0wTWPOO9x4T875c8cq8NjXUoefxC7KEE02f2JknJr2w41NR6Z/oFIw06qjwUgC55Xv+2/RKPh9amIlLJtbXtaA1dZD4cWinnoFXE=
+	t=1733314891; cv=none; b=e9jer4l2JLiQi3SaoX274d1bgGz/Emp7so31R87Ko/vinp4i76fARL9oMbLNzdXem259DUkkLiwN2OO2fvMcQusr9fe0GxZ7qUjAwrnmXHigaL3llq7v7whBTaoaRZRbCOIyw6g2hjBvzy3wHzlsrpmioNFblM2efJ5tavDncis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733240586; c=relaxed/simple;
-	bh=9OLNoWfbJ/fSHk/eblFi6t1yYGWqojnjJocz0fyfeCM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oxOHNalYzfGLaH3XgoXrzppKAs6whlLx+4HVHM57GD0Za/W0YuI2PUNZlBM/lEmm8mD5maqTgvmHg9TrGNVnm+Olc+RtWIiQlLXXbuUYqWW3cPSWgcEVLFAU3yoG1VmUJBn09cUOHEIxeDdT2RXZldQ0+0hYNAgFGAZAxe3muKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oDHeXaVq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32F78C4CEDE;
-	Tue,  3 Dec 2024 15:43:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733240585;
-	bh=9OLNoWfbJ/fSHk/eblFi6t1yYGWqojnjJocz0fyfeCM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oDHeXaVqQtDhhOJjv110b09VHj0jTOPpq3Pg4h0PNQs61hgZPsrKmE4W/DEi7VxTr
-	 GclUxKd2QAnPrw8wkzAaTM9Y5n60me86sR2yTMiTvmSH3fEJBs7t01lTF2D4Vt/rWO
-	 Yu3NMzpsLcY+qxNqzxJZMYqRiHbl7u5mnIytJrP8AO6GK+KOV0xz2c4pROkGVmIqDT
-	 BCYfIddcWSdmhHTFTreCGuCq8GKjsSIagqAbJOMq1utgCV88lrGHdcE8R8ddwaTqG0
-	 ZbPYwglEFysH9h+zOUC0Usf4TbFllMHRCiEU+TC2ACTe7nd+ryEx+SCJrNEnKWBx5Y
-	 Ntp0VShw9d2Sg==
-Date: Tue, 3 Dec 2024 09:43:02 -0600
-From: Bjorn Andersson <andersson@kernel.org>
-To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-Cc: konrad.dybcio@linaro.org, andi.shyti@kernel.org, 
-	linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, conor+dt@kernel.org, agross@kernel.org, 
-	devicetree@vger.kernel.org, vkoul@kernel.org, linux@treblig.org, dan.carpenter@linaro.org, 
-	Frank.Li@nxp.com, konradybcio@kernel.org, bryan.odonoghue@linaro.org, 
-	krzk+dt@kernel.org, robh@kernel.org, quic_vdadhani@quicinc.com
-Subject: Re: [PATCH v5 1/4] dt-bindindgs: i2c: qcom,i2c-geni: Document shared
- flag
-Message-ID: <2axyig3yi6tftuhjxwgj6paga2ail2bhzccfipdvjhf7fvkc5b@3mvifuylj3yz>
-References: <20241129144357.2008465-1-quic_msavaliy@quicinc.com>
- <20241129144357.2008465-2-quic_msavaliy@quicinc.com>
- <5gy5gldcybby53irzyu6lejbwb6wcorb2k4qpd4j7yrijemehu@wmj3tgvxvhdy>
- <c870f63a-3beb-4364-a993-880736d4bbe0@quicinc.com>
+	s=arc-20240116; t=1733314891; c=relaxed/simple;
+	bh=cx1zk1S4kBjz7p7iMCUMuBxe7po4tlT5K+ooJ/xdCPk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qhcbegMJNO3ouQSjxzEGWlEPH4W29yQMAYOW6Vc9aXBj2DkSqC3f0vkC0LPzRxLvKkC8EzJd96X2X1XKhskqrIRmJVNr6DlIxcTVNd4dMHDFvwOEan+2rYe4wjzq2vgGwgDwMV4N6ZTfBSMufLjMHPN5SGEJE7OBfotrQTnSY5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=C9nPCmhr; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4B47UrJP024918;
+	Wed, 4 Dec 2024 12:21:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:message-id:mime-version:subject:to; s=
+	qcppdkim1; bh=XoiDwtSPaT4a7qV9ALXMR5OyLUjnVqX8oDegnmI+ftY=; b=C9
+	nPCmhrBCCyyDd834bCf3903APXrIg65KHR+UYBXCUDr9ocIYstbUNLoeu0+OGnPB
+	5qQ6TeFO0GzgFLLDbS/Gf70Z6a8llsEkTUB+jncOt4ApXvZ87xl5QoyBgcBpWfL8
+	L5iY1O9HBuu+AZBYepn6okdQe6ruglL5gN3aB1k4HtFpOzbEm73kGZ422MH/CnfG
+	60nVDwZjO2mtYFvazCLwJQxyPxrrYNsdOEGi9tsv+WRKsGZI1fEDifbl+B8AW7ij
+	Wx6fWSJpGYyleHHIRi+PTgIVkz754UcuQxUb36Yes6lwcKhvSX6cEMPmUd+v2NJ4
+	IU7VlrRsLXX9emmx+YKg==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 439vnyv6c9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 04 Dec 2024 12:21:26 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4B4CLHtn031571
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 4 Dec 2024 12:21:17 GMT
+Received: from hu-jseerapu-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Wed, 4 Dec 2024 04:21:15 -0800
+From: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
+To: Vinod Koul <vkoul@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <quic_msavaliy@quicinc.com>,
+        <quic_vtanuku@quicinc.com>
+Subject: [PATCH v3] dmaengine: qcom: gpi: Add GPI immediate DMA support for SPI protocol
+Date: Wed, 4 Dec 2024 17:50:59 +0530
+Message-ID: <20241204122059.24239-1-quic_jseerapu@quicinc.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c870f63a-3beb-4364-a993-880736d4bbe0@quicinc.com>
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: VUlr-eGl2JDHEmj4L5o_BCpMeLYNShKp
+X-Proofpoint-GUID: VUlr-eGl2JDHEmj4L5o_BCpMeLYNShKp
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
+ mlxlogscore=999 bulkscore=0 impostorscore=0 mlxscore=0 suspectscore=0
+ spamscore=0 priorityscore=1501 lowpriorityscore=0 phishscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2412040096
 
-On Mon, Dec 02, 2024 at 04:08:32PM +0530, Mukesh Kumar Savaliya wrote:
-> Hi Bjorn, Thanks for the review !
-> 
-> On 11/30/2024 10:15 AM, Bjorn Andersson wrote:
-> > On Fri, Nov 29, 2024 at 08:13:54PM +0530, Mukesh Kumar Savaliya wrote:
-> > > Adds qcom,shared-se flag usage. Use this flag when I2C serial controller
-> > > needs to be shared in multiprocessor system(APPS,Modem,ADSP) environment.
-> > > 
-> > 
-> > Per https://docs.kernel.org/process/submitting-patches.html#describe-your-changes
-> > your commit message should start with a description of your problem.
-> > "Add" isn't the right word to start a problem description with.
-> Problem statement i have explained in cover letter, let me add here too in
-> V6. I thought same story gets repeated here. Will not start with Add, but
-> problem statement and need of this flag.
+The DMA TRE(Transfer ring element) buffer contains the DMA
+buffer address. Accessing data from this address can cause
+significant delays in SPI transfers, which can be mitigated to
+some extent by utilizing immediate DMA support.
 
-The cover-letter is generally not included in the git history, so that
-explanation would be lost on future readers.
+QCOM GPI DMA hardware supports an immediate DMA feature for data
+up to 8 bytes, storing the data directly in the DMA TRE buffer
+instead of the DMA buffer address. This enhancement enables faster
+SPI data transfers.
 
-> > > SE(Serial Engine HW controller acting as protocol master controller) is an
-> > > I2C controller. Basically a programmable SERDES(serializer/deserializer)
-> > 
-> > "Basically"?
-> will remove this.
-> > 
-> > > coupled with data DMA entity, capable in handling a bus protocol, and data
-> > > moves to/from system memory.
-> > > 
-> > > Two clients from different processors can share an I2C controller for same
-> > > slave device OR their owned slave devices. Assume I2C Slave EEPROM device
-> > > connected with I2C controller. Each client from ADSP SS and APPS Linux SS
-> > > can perform i2c transactions.
-> > > 
-> > 
-> > The DeviceTree binding describes properties used to describe the
-> > hardware; your commit message describes what a SE is and that it can
-> > exist can exist in a configuration with multiple client etc etc.
-> > 
-> I have explained the use of flag, and background surrounding to the feature.
-> See the V4 and V5 and earlier, where i was required to explain and open up
-> about "what is SE" ?
-> Because of the SE word in flag name, i had to expand with explanation.
-> > > Transfer gets serialized by Lock TRE + DMA xfer + Unlock TRE at HW level.
-> > > 
-> > 
-> > This isn't what this patch implements. It defines a property which when
-> > specified means to the OS that any DMA transfers should be performed
-> > using TRE lock/unlock operations.
-> I agree, it adds onto understanding about the flag feature. I can remove
-> this statement in V6. Let me get complete agreement.
+This optimization reduces the average transfer time from 25 us to
+16 us for a single SPI transfer of 8 bytes length, with a clock
+frequency of 50 MHz.
 
-I think the understanding is necessary, but that the wording should be
-different. Imaging you're implementing MukeshOS and reading this binding
-document to understand what you're expected to do in your I2C driver
-when you see this property. 
+Signed-off-by: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
+---
 
+v2-> v3:
+   - When to enable Immediate DMA support, control is moved to GPI driver
+     from SPI driver. 
+   - Optimizations are done in GPI driver related to immediate dma changes.
+   - Removed the immediate dma supported changes in qcom-gpi-dma.h file
+     and handled in GPI driver. 
 
-Similarly, the binding document should be sufficiently clear such that a
-newly hired colleague of ours would understand if they should put this
-property or not in the dts file they are writing.
+   Link to v2: 
+	https://lore.kernel.org/all/20241128133351.24593-2-quic_jseerapu@quicinc.com/
+	https://lore.kernel.org/all/20241128133351.24593-3-quic_jseerapu@quicinc.com/ 
 
-> > 
-> > > Signed-off-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-> > > ---
-> > >   .../devicetree/bindings/i2c/qcom,i2c-geni-qcom.yaml       | 8 ++++++++
-> > >   1 file changed, 8 insertions(+)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/i2c/qcom,i2c-geni-qcom.yaml b/Documentation/devicetree/bindings/i2c/qcom,i2c-geni-qcom.yaml
-> > > index 9f66a3bb1f80..88682a333399 100644
-> > > --- a/Documentation/devicetree/bindings/i2c/qcom,i2c-geni-qcom.yaml
-> > > +++ b/Documentation/devicetree/bindings/i2c/qcom,i2c-geni-qcom.yaml
-> > > @@ -60,6 +60,14 @@ properties:
-> > >     power-domains:
-> > >       maxItems: 1
-> > > +  qcom,shared-se:
-> > > +    description: True if I2C controller is shared between two or more system processors.
-> > 
-> > This attempts to describe the property.
-> I agree, thats why i limited but there was an ask to understand what is SE ?
-> hence i added below.
-> > 
-> > > +        SE(Serial Engine HW controller working as protocol master controller) is an
-> > > +        I2C controller. Basically, a programmable SERDES(serializer/deserializer)
-> > > +        coupled with data DMA entity, capable in handling a bus protocol, and data
-> > > +        moves to/from system memory.
-> > 
-> > But this is basically just 4 lines of text expanding the acronym "se",
-> > but while it might give some insight into what this binding (the whole
-> > binding) is about, I'm afraid it doesn't add value to the understanding
-> > of the property...
-> > 
-> ""se" is also not explained in the binding - please open it and look for
-> such explanation."
-> 
-> It was required to explain based on comment on V4, V5 hence i did. Please
-> let me know if one line is enough to explain flag usage OR we need exact
-> description from the hardware programming guide ?
-> 
+v1 -> v2:
+   - Separated the patches to dmaengine and spi subsystems
+   - Removed the changes which are not required for this feature from
+     qcom-gpi-dma.h file.
+   - Removed the type conversions used in gpi_create_spi_tre.
+  
+   Link to v1:
+	https://lore.kernel.org/lkml/20241121115201.2191-2-quic_jseerapu@quicinc.com/ 
 
-What I'm saying is that this binding is for the serial engine, if you
-need to describe what SE or a serial engine is you should do that in the
-top-level description, not within one of the properties (or in a
-possible future repeat that explanation in multiple different
-properties).
+ drivers/dma/qcom/gpi.c | 32 +++++++++++++++++++++++++++-----
+ 1 file changed, 27 insertions(+), 5 deletions(-)
 
-> I will need to get agreement on this patch first and then upload V6.
-> 
+diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
+index 52a7c8f2498f..35451d5a81f7 100644
+--- a/drivers/dma/qcom/gpi.c
++++ b/drivers/dma/qcom/gpi.c
+@@ -27,6 +27,7 @@
+ #define TRE_FLAGS_IEOT		BIT(9)
+ #define TRE_FLAGS_BEI		BIT(10)
+ #define TRE_FLAGS_LINK		BIT(11)
++#define TRE_FLAGS_IMMEDIATE_DMA	BIT(16)
+ #define TRE_FLAGS_TYPE		GENMASK(23, 16)
+ 
+ /* SPI CONFIG0 WD0 */
+@@ -64,6 +65,7 @@
+ 
+ /* DMA TRE */
+ #define TRE_DMA_LEN		GENMASK(23, 0)
++#define TRE_DMA_IMMEDIATE_LEN	GENMASK(3, 0)
+ 
+ /* Register offsets from gpi-top */
+ #define GPII_n_CH_k_CNTXT_0_OFFS(n, k)	(0x20000 + (0x4000 * (n)) + (0x80 * (k)))
+@@ -1711,6 +1713,8 @@ static int gpi_create_spi_tre(struct gchan *chan, struct gpi_desc *desc,
+ 	dma_addr_t address;
+ 	struct gpi_tre *tre;
+ 	unsigned int i;
++	int len;
++	u8 immediate_dma;
+ 
+ 	/* first create config tre if applicable */
+ 	if (direction == DMA_MEM_TO_DEV && spi->set_config) {
+@@ -1763,14 +1767,32 @@ static int gpi_create_spi_tre(struct gchan *chan, struct gpi_desc *desc,
+ 	tre_idx++;
+ 
+ 	address = sg_dma_address(sgl);
+-	tre->dword[0] = lower_32_bits(address);
+-	tre->dword[1] = upper_32_bits(address);
++	len = sg_dma_len(sgl);
+ 
+-	tre->dword[2] = u32_encode_bits(sg_dma_len(sgl), TRE_DMA_LEN);
++	immediate_dma = (direction == DMA_MEM_TO_DEV) && len <= 2 * sizeof(tre->dword[0]);
++
++	/* Support Immediate dma for write transfers for data length up to 8 bytes */
++	if (immediate_dma) {
++		/*
++		 * For Immediate dma, data length may not always be length of 8 bytes,
++		 * it can be length less than 8, hence initialize both dword's with 0
++		 */
++		tre->dword[0] = 0;
++		tre->dword[1] = 0;
++		memcpy(&tre->dword[0], sg_virt(sgl), len);
++
++		tre->dword[2] = u32_encode_bits(len, TRE_DMA_IMMEDIATE_LEN);
++	} else {
++		tre->dword[0] = lower_32_bits(address);
++		tre->dword[1] = upper_32_bits(address);
++
++		tre->dword[2] = u32_encode_bits(len, TRE_DMA_LEN);
++	}
+ 
+ 	tre->dword[3] = u32_encode_bits(TRE_TYPE_DMA, TRE_FLAGS_TYPE);
+-	if (direction == DMA_MEM_TO_DEV)
+-		tre->dword[3] |= u32_encode_bits(1, TRE_FLAGS_IEOT);
++	tre->dword[3] |= u32_encode_bits(!!immediate_dma, TRE_FLAGS_IMMEDIATE_DMA);
++	tre->dword[3] |= u32_encode_bits(!!(direction == DMA_MEM_TO_DEV),
++					 TRE_FLAGS_IEOT);
+ 
+ 	for (i = 0; i < tre_idx; i++)
+ 		dev_dbg(dev, "TRE:%d %x:%x:%x:%x\n", i, desc->tre[i].dword[0],
+-- 
+2.17.1
 
-Sounds good.
-
-Regards,
-Bjorn
-
-> > Regards,
-> > Bjorn
-> > 
-> > > +    type: boolean
-> > > +
-> > >     reg:
-> > >       maxItems: 1
-> > > -- 
-> > > 2.25.1
-> > > 
 

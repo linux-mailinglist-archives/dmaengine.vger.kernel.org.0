@@ -1,59 +1,58 @@
-Return-Path: <dmaengine+bounces-3877-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3878-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A2D459E39F2
-	for <lists+dmaengine@lfdr.de>; Wed,  4 Dec 2024 13:29:26 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E25E79E3A07
+	for <lists+dmaengine@lfdr.de>; Wed,  4 Dec 2024 13:32:27 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7F810164DF8
-	for <lists+dmaengine@lfdr.de>; Wed,  4 Dec 2024 12:29:23 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5045DB36A0D
+	for <lists+dmaengine@lfdr.de>; Wed,  4 Dec 2024 12:30:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2897D1B4F3A;
-	Wed,  4 Dec 2024 12:28:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27F951B21B9;
+	Wed,  4 Dec 2024 12:30:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yk+pX1ey"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YLHP9E1i"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F27AF5103F
-	for <dmaengine@vger.kernel.org>; Wed,  4 Dec 2024 12:28:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2C5919F475;
+	Wed,  4 Dec 2024 12:30:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733315302; cv=none; b=FZogaz/W5tD5BXQirAuj6XCiHDbCzmHTbgVfieCIluFoWpEnrpdqdIY3pYcMekNOB6LTx0V9J9lYWIYNYWS/+DgEx/XEE+elj6rguIllF+JZL+1Js3jihlQM+/srWCn81kL+u7kAh2SbpYuut1+xbZXrKFsDX9JzwjgRgEWZUG8=
+	t=1733315422; cv=none; b=Hbhk4jgd9trE8RdgkJbQG6K1RnBzCfKN6mnu58VcP5G0DufHWBE4MFCkG3sGBUMre72XfE5dtyAnemuc8E5yxFtnjmmJoIpRF0XJDmAA14leBXWgRy3E7pIS6I6WcOoLpX884V33xRo3+ITyfiWElmt9R0Dbv7Djqp/pWfyhFbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733315302; c=relaxed/simple;
-	bh=0esWkB65X/oo0wpPGn1s8FVihkOj05L6lVwMoKq7XrU=;
+	s=arc-20240116; t=1733315422; c=relaxed/simple;
+	bh=9eXfoMW90qUkMCd8PB4s1IZLPRKdwA5Uo9N7wSUezic=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=INSsI3lY4XoGUTZlaZgNS14iFrxgPd58VONxVcMoV+AdrrJoZStia6zd+pzk94PkZoxk1IGjrOxQk7mkxtq/FAny25QjgRebI7eaVCboKWoLbQ53O+iiuLo7o95Lpy7PNAezCMEdngilRI+ujJ7a0wNDXyT/msh3DzDmJJsccn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yk+pX1ey; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13AFAC4CED1;
-	Wed,  4 Dec 2024 12:28:20 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=DkQ5tQZkK8nIO6eoSxaI1PzsuJvT1L3BtMAPqIXLrEpB8ZJA7+cBUxiiGy2NjLLCvha0gKGTW8yj/8FIosvDBmGH9ltfSM/VBBnOMLE0RQvM3stJPVMnAQe3rh1rwFjyjME8yLkmA/B2a1CWgVpe8SO5z4h6sEmKq6sq4II/OI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YLHP9E1i; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3203C4CED1;
+	Wed,  4 Dec 2024 12:30:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733315301;
-	bh=0esWkB65X/oo0wpPGn1s8FVihkOj05L6lVwMoKq7XrU=;
+	s=k20201202; t=1733315421;
+	bh=9eXfoMW90qUkMCd8PB4s1IZLPRKdwA5Uo9N7wSUezic=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Yk+pX1eynZsmc8x6Om6FhATvU+rnJ3HzRRDV8nLnRNp3YCikYOz61K8XJJt+j38je
-	 izYAQPK6L88Rm4VDrJsbVCrFczn4lu50bTVSEXJmKwcMn/8thHdnGdyP09uUJIJC66
-	 9/eBrGJXLqDYUbo5a4Ik/fN/JuDJHOWxmFCxrjaZjoWoRVtNJDQTJAB9LJsPg58BTc
-	 ctP1ANau81fwy28kpPuAgFJL0JB41Rnn3SOYPLgQR1xlcDZUH5wl6c4V0jgXFVqfrp
-	 b44PTGu9uUFc8NHglcM7xgQIFN5sbD0qJou7kg7lo7kgk5LOop9E3Niq31ujjyhuQs
-	 MCJGdrOKE9eag==
-Date: Wed, 4 Dec 2024 17:58:18 +0530
+	b=YLHP9E1ilKkb5b/js9GkK+0QO4RJKJy7Ie06FdBX7VxDg7v6fAtdqaY1Xa7tRsb9K
+	 S1gGNgvoI+uqFINbRzwCbnwrPMh2THSOnD8R6SmSe1CG8ZrIqptKE+LV8ufhRFrDiA
+	 5AaJcWSksLaj0fimhuM8fkOumVJjzdNhYbhCIvjnIPPjVdXcsve3nkqRzYv66D/bkS
+	 oiy43qe5c8K5piLHora63ZD1cpjQWIrlRUDNVRZi18hgsotZEaasbTDUQ/J2dAY3P8
+	 rmWxlj+W7f3RVMzz5bHzCLVTDXYHylQcsKTglDbdyY8qgvhvRsXGtRK6cOKl0NK6oi
+	 KNijLrrJHWJyA==
+Date: Wed, 4 Dec 2024 18:00:17 +0530
 From: Vinod Koul <vkoul@kernel.org>
-To: Stefan Wahren <wahrenst@gmx.net>
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Peter Robinson <pbrobinson@gmail.com>,
-	"Ivan T . Ivanov" <iivanov@suse.de>,
-	linux-arm-kernel@lists.infradead.org,
-	bcm-kernel-feedback-list@broadcom.com, dmaengine@vger.kernel.org
-Subject: Re: [PATCH V6] dmaengine: bcm2835-dma: add suspend/resume pm support
-Message-ID: <Z1BK4rcOvCoA+xdH@vaman>
-References: <20241202114627.33401-1-wahrenst@gmx.net>
+To: Vaishnav Achath <vaishnav.a@ti.com>
+Cc: peter.ujfalusi@gmail.com, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	u-kumar1@ti.com, j-choudhary@ti.com, vigneshr@ti.com
+Subject: Re: [PATCH v3 2/2] dmaengine: ti: k3-udma: Add support for J722S CSI
+ BCDMA
+Message-ID: <Z1BLWYY8/eVXZxVu@vaman>
+References: <20241127101627.617537-1-vaishnav.a@ti.com>
+ <20241127101627.617537-3-vaishnav.a@ti.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -62,72 +61,63 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241202114627.33401-1-wahrenst@gmx.net>
+In-Reply-To: <20241127101627.617537-3-vaishnav.a@ti.com>
 
-On 02-12-24, 12:46, Stefan Wahren wrote:
-> bcm2835-dma provides the service to others, so it should
-> suspend late and resume early.
-
-Expecting v7 with updated title and changelog and dropping resume
-
+On 27-11-24, 15:46, Vaishnav Achath wrote:
+> J722S CSI BCDMA is similar to J721S2 CSI BCDMA but there are slight
+> integration differences like different PSIL thread base ID which is
+> currently handled in the driver based on udma_of_match data. Add an
+> entry to support J722S CSIRX.
 > 
-> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+> Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
 > ---
->  drivers/dma/bcm2835-dma.c | 30 ++++++++++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
 > 
->  Changes in V6:
->  - split out of series because there is no dependency
+> V2->V3 : Minor edit in commit message.
 > 
-> diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
-> index 7ba52dee40a9..cf8a01a5b884 100644
-> --- a/drivers/dma/bcm2835-dma.c
-> +++ b/drivers/dma/bcm2835-dma.c
-> @@ -875,6 +875,35 @@ static struct dma_chan *bcm2835_dma_xlate(struct of_phandle_args *spec,
->  	return chan;
->  }
+> V1->V2:
+> 	* Add new compatible for J722S instead of modifying AM62A
 > 
-> +static int bcm2835_dma_suspend_late(struct device *dev)
-> +{
-> +	struct bcm2835_dmadev *od = dev_get_drvdata(dev);
-> +	struct bcm2835_chan *c, *next;
-> +
-> +	list_for_each_entry_safe(c, next, &od->ddev.channels,
-> +				 vc.chan.device_node) {
-> +		void __iomem *chan_base = c->chan_base;
-> +
-> +		if (readl(chan_base + BCM2835_DMA_ADDR)) {
-> +			dev_warn(dev, "Suspend is prevented by chan %d\n",
-> +				 c->ch);
-> +			return -EBUSY;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int bcm2835_dma_resume_early(struct device *dev)
-> +{
-> +	return 0;
-> +}
-> +
-> +static const struct dev_pm_ops bcm2835_dma_pm_ops = {
-> +	SET_LATE_SYSTEM_SLEEP_PM_OPS(bcm2835_dma_suspend_late,
-> +				     bcm2835_dma_resume_early)
+>  drivers/dma/ti/k3-udma.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+> index b3f27b3f9209..7ed1956b4642 100644
+> --- a/drivers/dma/ti/k3-udma.c
+> +++ b/drivers/dma/ti/k3-udma.c
+> @@ -4404,6 +4404,18 @@ static struct udma_match_data j721s2_bcdma_csi_data = {
+>  	.soc_data = &j721s2_bcdma_csi_soc_data,
+>  };
+>  
+> +static struct udma_match_data j722s_bcdma_csi_data = {
+> +	.type = DMA_TYPE_BCDMA,
+> +	.psil_base = 0x3100,
+> +	.enable_memcpy_support = false,
+> +	.burst_size = {
+> +		TI_SCI_RM_UDMAP_CHAN_BURST_SIZE_64_BYTES, /* Normal Channels */
+> +		0, /* No H Channels */
+> +		0, /* No UH Channels */
+
+Why are these zeros? we expect valid size...
+
+> +	},
+> +	.soc_data = &j721s2_bcdma_csi_soc_data,
 > +};
 > +
->  static int bcm2835_dma_probe(struct platform_device *pdev)
->  {
->  	struct bcm2835_dmadev *od;
-> @@ -1033,6 +1062,7 @@ static struct platform_driver bcm2835_dma_driver = {
->  	.driver = {
->  		.name = "bcm2835-dma",
->  		.of_match_table = of_match_ptr(bcm2835_dma_of_match),
-> +		.pm = pm_ptr(&bcm2835_dma_pm_ops),
+>  static const struct of_device_id udma_of_match[] = {
+>  	{
+>  		.compatible = "ti,am654-navss-main-udmap",
+> @@ -4435,6 +4447,10 @@ static const struct of_device_id udma_of_match[] = {
+>  		.compatible = "ti,j721s2-dmss-bcdma-csi",
+>  		.data = &j721s2_bcdma_csi_data,
 >  	},
+> +	{
+> +		.compatible = "ti,j722s-dmss-bcdma-csi",
+> +		.data = &j722s_bcdma_csi_data,
+> +	},
+>  	{ /* Sentinel */ },
 >  };
-> 
-> --
+>  MODULE_DEVICE_TABLE(of, udma_of_match);
+> -- 
 > 2.34.1
 
 -- 

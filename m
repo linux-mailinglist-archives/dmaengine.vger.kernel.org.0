@@ -1,198 +1,133 @@
-Return-Path: <dmaengine+bounces-3874-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3875-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B34A9E3A3F
-	for <lists+dmaengine@lfdr.de>; Wed,  4 Dec 2024 13:46:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E203A9E39F5
+	for <lists+dmaengine@lfdr.de>; Wed,  4 Dec 2024 13:29:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 72231B2415B
-	for <lists+dmaengine@lfdr.de>; Wed,  4 Dec 2024 12:21:35 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6D896B29B32
+	for <lists+dmaengine@lfdr.de>; Wed,  4 Dec 2024 12:21:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0420B1B4137;
-	Wed,  4 Dec 2024 12:21:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34F3B1B87DB;
+	Wed,  4 Dec 2024 12:21:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="C9nPCmhr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mLV5R26i"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C0131ABEDC;
-	Wed,  4 Dec 2024 12:21:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEC7C1B87CE;
+	Wed,  4 Dec 2024 12:21:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733314891; cv=none; b=e9jer4l2JLiQi3SaoX274d1bgGz/Emp7so31R87Ko/vinp4i76fARL9oMbLNzdXem259DUkkLiwN2OO2fvMcQusr9fe0GxZ7qUjAwrnmXHigaL3llq7v7whBTaoaRZRbCOIyw6g2hjBvzy3wHzlsrpmioNFblM2efJ5tavDncis=
+	t=1733314894; cv=none; b=fIbWdgTfnn2r5V3GGJuG0kkyctS5HIrLElIVTFRX96T+B0r9GaZFcXFE52f2ISEleyDjHSXYaEkPqFthMDJ7xKOUzYe8CkgRajl6hjFhNAWLoS/Bjnfx9pB+iFf4myiuhN4IkX8GpzZHekis9FRiYBIi0yqehBl19pKLrhLOnCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733314891; c=relaxed/simple;
-	bh=cx1zk1S4kBjz7p7iMCUMuBxe7po4tlT5K+ooJ/xdCPk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qhcbegMJNO3ouQSjxzEGWlEPH4W29yQMAYOW6Vc9aXBj2DkSqC3f0vkC0LPzRxLvKkC8EzJd96X2X1XKhskqrIRmJVNr6DlIxcTVNd4dMHDFvwOEan+2rYe4wjzq2vgGwgDwMV4N6ZTfBSMufLjMHPN5SGEJE7OBfotrQTnSY5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=C9nPCmhr; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4B47UrJP024918;
-	Wed, 4 Dec 2024 12:21:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:message-id:mime-version:subject:to; s=
-	qcppdkim1; bh=XoiDwtSPaT4a7qV9ALXMR5OyLUjnVqX8oDegnmI+ftY=; b=C9
-	nPCmhrBCCyyDd834bCf3903APXrIg65KHR+UYBXCUDr9ocIYstbUNLoeu0+OGnPB
-	5qQ6TeFO0GzgFLLDbS/Gf70Z6a8llsEkTUB+jncOt4ApXvZ87xl5QoyBgcBpWfL8
-	L5iY1O9HBuu+AZBYepn6okdQe6ruglL5gN3aB1k4HtFpOzbEm73kGZ422MH/CnfG
-	60nVDwZjO2mtYFvazCLwJQxyPxrrYNsdOEGi9tsv+WRKsGZI1fEDifbl+B8AW7ij
-	Wx6fWSJpGYyleHHIRi+PTgIVkz754UcuQxUb36Yes6lwcKhvSX6cEMPmUd+v2NJ4
-	IU7VlrRsLXX9emmx+YKg==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 439vnyv6c9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 04 Dec 2024 12:21:26 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4B4CLHtn031571
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 4 Dec 2024 12:21:17 GMT
-Received: from hu-jseerapu-hyd.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 4 Dec 2024 04:21:15 -0800
-From: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
-To: Vinod Koul <vkoul@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <quic_msavaliy@quicinc.com>,
-        <quic_vtanuku@quicinc.com>
-Subject: [PATCH v3] dmaengine: qcom: gpi: Add GPI immediate DMA support for SPI protocol
-Date: Wed, 4 Dec 2024 17:50:59 +0530
-Message-ID: <20241204122059.24239-1-quic_jseerapu@quicinc.com>
-X-Mailer: git-send-email 2.17.1
+	s=arc-20240116; t=1733314894; c=relaxed/simple;
+	bh=CpfXi8+GcBXZJHASZTxcwS5ANDADqkwfWGAthG+eM44=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CprNqoUwzwbuzqoqVDJBisO5qWGMsuD9TMibJEA5+PyYeagvxmz1rP4rnwwt3VRfYll37pVJGptRqdncg8sJDb35uAsNVL9avXAHCdZq8WeIuDZe8CfaFoXHPD8t3LN2MjfYh7h+zTeXYYcx21y5iZ2ElZ47pBzDzv8jKpgtQ4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mLV5R26i; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE3BBC4CEDD;
+	Wed,  4 Dec 2024 12:21:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733314893;
+	bh=CpfXi8+GcBXZJHASZTxcwS5ANDADqkwfWGAthG+eM44=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mLV5R26ihbzKBZha/3jRUl8Z0KzQPCH8EI4jo2y19+u9sFezSb/9EQgYFgs122wPT
+	 0n7UnK2bY67YByQfehwa6AlWOmOZGaWeq2g2rMoZbV3nnl4+wwV3n1/WzuM0AXD5lL
+	 JmjVS78+BUHq9t71sdV5Hd8rRAF8JOGRkAJMzRaIbF55MXUHkwmqNSzS8eK4uebocl
+	 npsgFoWyC/Nag+wFqQqNIrs2Kei9aZcIz5CIQTali8WpMWyJISjUrmGWvzeIwHjT2E
+	 03vJ/rtEjYk3ediEmPZIJgX1tuEJPr36puZdo2aJ+dpFHCrbwyrxKTsd/9yt8xWi5T
+	 FMD/uIyA28Nvw==
+Date: Wed, 4 Dec 2024 17:51:29 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+Cc: konrad.dybcio@linaro.org, andersson@kernel.org, andi.shyti@kernel.org,
+	linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+	conor+dt@kernel.org, agross@kernel.org, devicetree@vger.kernel.org,
+	linux@treblig.org, dan.carpenter@linaro.org, Frank.Li@nxp.com,
+	konradybcio@kernel.org, bryan.odonoghue@linaro.org,
+	krzk+dt@kernel.org, robh@kernel.org, quic_vdadhani@quicinc.com
+Subject: Re: [PATCH v5 2/4] dmaengine: gpi: Add Lock and Unlock TRE support
+ to access I2C exclusively
+Message-ID: <Z1BJSbf+1G8ojTib@vaman>
+References: <20241129144357.2008465-1-quic_msavaliy@quicinc.com>
+ <20241129144357.2008465-3-quic_msavaliy@quicinc.com>
+ <Z01YBLcxDXI2UwXR@vaman>
+ <d49b16b2-95e5-42b4-9bc1-40cb0bfa15b1@quicinc.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: VUlr-eGl2JDHEmj4L5o_BCpMeLYNShKp
-X-Proofpoint-GUID: VUlr-eGl2JDHEmj4L5o_BCpMeLYNShKp
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
- mlxlogscore=999 bulkscore=0 impostorscore=0 mlxscore=0 suspectscore=0
- spamscore=0 priorityscore=1501 lowpriorityscore=0 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2412040096
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d49b16b2-95e5-42b4-9bc1-40cb0bfa15b1@quicinc.com>
 
-The DMA TRE(Transfer ring element) buffer contains the DMA
-buffer address. Accessing data from this address can cause
-significant delays in SPI transfers, which can be mitigated to
-some extent by utilizing immediate DMA support.
+On 02-12-24, 16:13, Mukesh Kumar Savaliya wrote:
+> Thanks for the review comments Vinod !
+> 
+> On 12/2/2024 12:17 PM, Vinod Koul wrote:
+> > On 29-11-24, 20:13, Mukesh Kumar Savaliya wrote:
+> > > GSI DMA provides specific TREs(Transfer ring element) namely Lock and
+> > > Unlock TRE. It provides mutually exclusive access to I2C controller from
+> > > any of the processor(Apps,ADSP). Lock prevents other subsystems from
+> > > concurrently performing DMA transfers and avoids disturbance to data path.
+> > > Basically for shared I2C usecase, lock the SE(Serial Engine) for one of
+> > > the processor, complete the transfer, unlock the SE.
+> > > 
+> > > Apply Lock TRE for the first transfer of shared SE and Apply Unlock
+> > > TRE for the last transfer.
+> > > 
+> > > Also change MAX_TRE macro to 5 from 3 because of the two additional TREs.
+> > > 
+> > 
+> > ...
+> > 
+> > > @@ -65,6 +65,9 @@ enum i2c_op {
+> > >    * @rx_len: receive length for buffer
+> > >    * @op: i2c cmd
+> > >    * @muli-msg: is part of multi i2c r-w msgs
+> > > + * @shared_se: bus is shared between subsystems
+> > > + * @bool first_msg: use it for tracking multimessage xfer
+> > > + * @bool last_msg: use it for tracking multimessage xfer
+> > >    */
+> > >   struct gpi_i2c_config {
+> > >   	u8 set_config;
+> > > @@ -78,6 +81,9 @@ struct gpi_i2c_config {
+> > >   	u32 rx_len;
+> > >   	enum i2c_op op;
+> > >   	bool multi_msg;
+> > > +	bool shared_se;
+> > 
+> > Looking at this why do you need this field? It can be internal to your
+> > i2c driver... Why not just set an enum for lock and use the values as
+> > lock/unlock/dont care and make the interface simpler. I see no reason to
+> > use three variables to communicate the info which can be handled in
+> > simpler way..?
+> > 
+> Below was earlier reply to [PATCH V3, 2/4], please let me know if you have
+> any additional comment and need further clarifications.
 
-QCOM GPI DMA hardware supports an immediate DMA feature for data
-up to 8 bytes, storing the data directly in the DMA TRE buffer
-instead of the DMA buffer address. This enhancement enables faster
-SPI data transfers.
+Looks like you misunderstood, the question is why do you need three
+variables to convey this info..? Use a single variable please
 
-This optimization reduces the average transfer time from 25 us to
-16 us for a single SPI transfer of 8 bytes length, with a clock
-frequency of 50 MHz.
+> --
+> > Looking at the usage in following patches, why cant this be handled
+> > internally as part of prep call?
+> >
+> As per design, i2c driver iterates over each message and submits to GPI
+> where it creates TRE. Since it's per transfer, we need to create Lock and
+> Unlock TRE based on first or last message.
+> --
+> > > +	bool first_msg;
+> > > +	bool last_msg;
+> > 
 
-Signed-off-by: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
----
-
-v2-> v3:
-   - When to enable Immediate DMA support, control is moved to GPI driver
-     from SPI driver. 
-   - Optimizations are done in GPI driver related to immediate dma changes.
-   - Removed the immediate dma supported changes in qcom-gpi-dma.h file
-     and handled in GPI driver. 
-
-   Link to v2: 
-	https://lore.kernel.org/all/20241128133351.24593-2-quic_jseerapu@quicinc.com/
-	https://lore.kernel.org/all/20241128133351.24593-3-quic_jseerapu@quicinc.com/ 
-
-v1 -> v2:
-   - Separated the patches to dmaengine and spi subsystems
-   - Removed the changes which are not required for this feature from
-     qcom-gpi-dma.h file.
-   - Removed the type conversions used in gpi_create_spi_tre.
-  
-   Link to v1:
-	https://lore.kernel.org/lkml/20241121115201.2191-2-quic_jseerapu@quicinc.com/ 
-
- drivers/dma/qcom/gpi.c | 32 +++++++++++++++++++++++++++-----
- 1 file changed, 27 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
-index 52a7c8f2498f..35451d5a81f7 100644
---- a/drivers/dma/qcom/gpi.c
-+++ b/drivers/dma/qcom/gpi.c
-@@ -27,6 +27,7 @@
- #define TRE_FLAGS_IEOT		BIT(9)
- #define TRE_FLAGS_BEI		BIT(10)
- #define TRE_FLAGS_LINK		BIT(11)
-+#define TRE_FLAGS_IMMEDIATE_DMA	BIT(16)
- #define TRE_FLAGS_TYPE		GENMASK(23, 16)
- 
- /* SPI CONFIG0 WD0 */
-@@ -64,6 +65,7 @@
- 
- /* DMA TRE */
- #define TRE_DMA_LEN		GENMASK(23, 0)
-+#define TRE_DMA_IMMEDIATE_LEN	GENMASK(3, 0)
- 
- /* Register offsets from gpi-top */
- #define GPII_n_CH_k_CNTXT_0_OFFS(n, k)	(0x20000 + (0x4000 * (n)) + (0x80 * (k)))
-@@ -1711,6 +1713,8 @@ static int gpi_create_spi_tre(struct gchan *chan, struct gpi_desc *desc,
- 	dma_addr_t address;
- 	struct gpi_tre *tre;
- 	unsigned int i;
-+	int len;
-+	u8 immediate_dma;
- 
- 	/* first create config tre if applicable */
- 	if (direction == DMA_MEM_TO_DEV && spi->set_config) {
-@@ -1763,14 +1767,32 @@ static int gpi_create_spi_tre(struct gchan *chan, struct gpi_desc *desc,
- 	tre_idx++;
- 
- 	address = sg_dma_address(sgl);
--	tre->dword[0] = lower_32_bits(address);
--	tre->dword[1] = upper_32_bits(address);
-+	len = sg_dma_len(sgl);
- 
--	tre->dword[2] = u32_encode_bits(sg_dma_len(sgl), TRE_DMA_LEN);
-+	immediate_dma = (direction == DMA_MEM_TO_DEV) && len <= 2 * sizeof(tre->dword[0]);
-+
-+	/* Support Immediate dma for write transfers for data length up to 8 bytes */
-+	if (immediate_dma) {
-+		/*
-+		 * For Immediate dma, data length may not always be length of 8 bytes,
-+		 * it can be length less than 8, hence initialize both dword's with 0
-+		 */
-+		tre->dword[0] = 0;
-+		tre->dword[1] = 0;
-+		memcpy(&tre->dword[0], sg_virt(sgl), len);
-+
-+		tre->dword[2] = u32_encode_bits(len, TRE_DMA_IMMEDIATE_LEN);
-+	} else {
-+		tre->dword[0] = lower_32_bits(address);
-+		tre->dword[1] = upper_32_bits(address);
-+
-+		tre->dword[2] = u32_encode_bits(len, TRE_DMA_LEN);
-+	}
- 
- 	tre->dword[3] = u32_encode_bits(TRE_TYPE_DMA, TRE_FLAGS_TYPE);
--	if (direction == DMA_MEM_TO_DEV)
--		tre->dword[3] |= u32_encode_bits(1, TRE_FLAGS_IEOT);
-+	tre->dword[3] |= u32_encode_bits(!!immediate_dma, TRE_FLAGS_IMMEDIATE_DMA);
-+	tre->dword[3] |= u32_encode_bits(!!(direction == DMA_MEM_TO_DEV),
-+					 TRE_FLAGS_IEOT);
- 
- 	for (i = 0; i < tre_idx; i++)
- 		dev_dbg(dev, "TRE:%d %x:%x:%x:%x\n", i, desc->tre[i].dword[0],
 -- 
-2.17.1
-
+~Vinod
 

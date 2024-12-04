@@ -1,63 +1,68 @@
-Return-Path: <dmaengine+bounces-3875-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3876-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E203A9E39F5
-	for <lists+dmaengine@lfdr.de>; Wed,  4 Dec 2024 13:29:53 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F9249E3A4D
+	for <lists+dmaengine@lfdr.de>; Wed,  4 Dec 2024 13:49:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6D896B29B32
-	for <lists+dmaengine@lfdr.de>; Wed,  4 Dec 2024 12:21:45 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F0316B34330
+	for <lists+dmaengine@lfdr.de>; Wed,  4 Dec 2024 12:29:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34F3B1B87DB;
-	Wed,  4 Dec 2024 12:21:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6055A1BD032;
+	Wed,  4 Dec 2024 12:27:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mLV5R26i"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YDOl4K0/"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEC7C1B87CE;
-	Wed,  4 Dec 2024 12:21:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C0B1BC08B;
+	Wed,  4 Dec 2024 12:27:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733314894; cv=none; b=fIbWdgTfnn2r5V3GGJuG0kkyctS5HIrLElIVTFRX96T+B0r9GaZFcXFE52f2ISEleyDjHSXYaEkPqFthMDJ7xKOUzYe8CkgRajl6hjFhNAWLoS/Bjnfx9pB+iFf4myiuhN4IkX8GpzZHekis9FRiYBIi0yqehBl19pKLrhLOnCI=
+	t=1733315256; cv=none; b=N/oOhsZNzFZaOEUs73pRtPV/jK6ZtjLanejTDPCfUrEz7b4ySi7UtS2y+IGtMmYvn8PP6j7vWdp74Qfwcz1i9kzweJerwHjA1WSasZncPM7hT+HO8wprJT3EQaZsm6lZAfI2QsgvvUUv2xqaAtIxGjn9eZ4BCAY7DHh8/HXasmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733314894; c=relaxed/simple;
-	bh=CpfXi8+GcBXZJHASZTxcwS5ANDADqkwfWGAthG+eM44=;
+	s=arc-20240116; t=1733315256; c=relaxed/simple;
+	bh=Tf2N6u4X8T3vx9X8/GSCe+wHISQSsJpRIqZ4jdWOQhs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CprNqoUwzwbuzqoqVDJBisO5qWGMsuD9TMibJEA5+PyYeagvxmz1rP4rnwwt3VRfYll37pVJGptRqdncg8sJDb35uAsNVL9avXAHCdZq8WeIuDZe8CfaFoXHPD8t3LN2MjfYh7h+zTeXYYcx21y5iZ2ElZ47pBzDzv8jKpgtQ4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mLV5R26i; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE3BBC4CEDD;
-	Wed,  4 Dec 2024 12:21:32 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=aGlsLM0gMW7nxxhvPm7oL2Wlf+2U1erWMkLA2ksY4UfdGC56/jlvjorlYCrCawkFvDQNYB09lLoB7vIawKKW/dmIkrrNc4nO7wp5FhRJNA69aqoio/gP0W7G7KUxm8jLxJb7X8yDszdZAavnTBPvSP6LlO5SqNDnoR02JomB7o4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YDOl4K0/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41900C4CED1;
+	Wed,  4 Dec 2024 12:27:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733314893;
-	bh=CpfXi8+GcBXZJHASZTxcwS5ANDADqkwfWGAthG+eM44=;
+	s=k20201202; t=1733315255;
+	bh=Tf2N6u4X8T3vx9X8/GSCe+wHISQSsJpRIqZ4jdWOQhs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mLV5R26ihbzKBZha/3jRUl8Z0KzQPCH8EI4jo2y19+u9sFezSb/9EQgYFgs122wPT
-	 0n7UnK2bY67YByQfehwa6AlWOmOZGaWeq2g2rMoZbV3nnl4+wwV3n1/WzuM0AXD5lL
-	 JmjVS78+BUHq9t71sdV5Hd8rRAF8JOGRkAJMzRaIbF55MXUHkwmqNSzS8eK4uebocl
-	 npsgFoWyC/Nag+wFqQqNIrs2Kei9aZcIz5CIQTali8WpMWyJISjUrmGWvzeIwHjT2E
-	 03vJ/rtEjYk3ediEmPZIJgX1tuEJPr36puZdo2aJ+dpFHCrbwyrxKTsd/9yt8xWi5T
-	 FMD/uIyA28Nvw==
-Date: Wed, 4 Dec 2024 17:51:29 +0530
+	b=YDOl4K0/L3XsCDjL2mHnFZZjDG0k3XFNtrRIAMxEGvSfdqy8jckhtbl1MtBS/aqth
+	 ZM1imGjRPctJZuFJmVJVsM+CclByUFIxt8BwlUXyWWT+jCW0QWy3cMpxOszYsvVfra
+	 IE8X0egYx5puCN0hCXnHTV+PZcfigGbItA2UjOV4GbU34uv3M44W0Zv7+XrUDRM668
+	 RwztyBG54VEeXir6p93oOZCNI6x4nhcCs1AwjKIWFYHxSIhelpBYifmorF47xI1H65
+	 FC3hcIz09kR3LEB61ZbTBAGTzNWm4k7Ihz5fJq7Sep2k2aYjUUuChGyLEi2CqeSDt1
+	 paANWv7fZpMzw==
+Date: Wed, 4 Dec 2024 17:57:32 +0530
 From: Vinod Koul <vkoul@kernel.org>
-To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-Cc: konrad.dybcio@linaro.org, andersson@kernel.org, andi.shyti@kernel.org,
-	linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-	conor+dt@kernel.org, agross@kernel.org, devicetree@vger.kernel.org,
-	linux@treblig.org, dan.carpenter@linaro.org, Frank.Li@nxp.com,
-	konradybcio@kernel.org, bryan.odonoghue@linaro.org,
-	krzk+dt@kernel.org, robh@kernel.org, quic_vdadhani@quicinc.com
-Subject: Re: [PATCH v5 2/4] dmaengine: gpi: Add Lock and Unlock TRE support
- to access I2C exclusively
-Message-ID: <Z1BJSbf+1G8ojTib@vaman>
-References: <20241129144357.2008465-1-quic_msavaliy@quicinc.com>
- <20241129144357.2008465-3-quic_msavaliy@quicinc.com>
- <Z01YBLcxDXI2UwXR@vaman>
- <d49b16b2-95e5-42b4-9bc1-40cb0bfa15b1@quicinc.com>
+To: Stefan Wahren <wahrenst@gmx.net>
+Cc: Russell King <linux@armlinux.org.uk>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Minas Harutyunyan <hminas@synopsys.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Lukas Wunner <lukas@wunner.de>,
+	Peter Robinson <pbrobinson@gmail.com>,
+	"Ivan T . Ivanov" <iivanov@suse.de>,
+	linux-arm-kernel@lists.infradead.org, kernel-list@raspberrypi.com,
+	bcm-kernel-feedback-list@broadcom.com, dmaengine@vger.kernel.org,
+	linux-mmc@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH V5 2/9] dmaengine: bcm2835-dma: add suspend/resume pm
+ support
+Message-ID: <Z1BKtHPN+2qiveHJ@vaman>
+References: <20241025103621.4780-1-wahrenst@gmx.net>
+ <20241025103621.4780-3-wahrenst@gmx.net>
+ <Z03l308ur7xuE1SB@vaman>
+ <d418a30d-f0b0-49c5-8f2a-ddda9a7eeb07@gmx.net>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -66,67 +71,61 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d49b16b2-95e5-42b4-9bc1-40cb0bfa15b1@quicinc.com>
+In-Reply-To: <d418a30d-f0b0-49c5-8f2a-ddda9a7eeb07@gmx.net>
 
-On 02-12-24, 16:13, Mukesh Kumar Savaliya wrote:
-> Thanks for the review comments Vinod !
+On 02-12-24, 19:51, Stefan Wahren wrote:
+> Hi Vinod,
 > 
-> On 12/2/2024 12:17 PM, Vinod Koul wrote:
-> > On 29-11-24, 20:13, Mukesh Kumar Savaliya wrote:
-> > > GSI DMA provides specific TREs(Transfer ring element) namely Lock and
-> > > Unlock TRE. It provides mutually exclusive access to I2C controller from
-> > > any of the processor(Apps,ADSP). Lock prevents other subsystems from
-> > > concurrently performing DMA transfers and avoids disturbance to data path.
-> > > Basically for shared I2C usecase, lock the SE(Serial Engine) for one of
-> > > the processor, complete the transfer, unlock the SE.
+> Am 02.12.24 um 17:52 schrieb Vinod Koul:
+> > On 25-10-24, 12:36, Stefan Wahren wrote:
+> > > bcm2835-dma provides the service to others, so it should
+> > > suspend late and resume early.
 > > > 
-> > > Apply Lock TRE for the first transfer of shared SE and Apply Unlock
-> > > TRE for the last transfer.
+> > > Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+> > > ---
+> > >   drivers/dma/bcm2835-dma.c | 30 ++++++++++++++++++++++++++++++
+> > >   1 file changed, 30 insertions(+)
 > > > 
-> > > Also change MAX_TRE macro to 5 from 3 because of the two additional TREs.
+> > > diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
+> > > index e1b92b4d7b05..647dda9f3376 100644
+> > > --- a/drivers/dma/bcm2835-dma.c
+> > > +++ b/drivers/dma/bcm2835-dma.c
+> > > @@ -875,6 +875,35 @@ static struct dma_chan *bcm2835_dma_xlate(struct of_phandle_args *spec,
+> > >   	return chan;
+> > >   }
 > > > 
-> > 
-> > ...
-> > 
-> > > @@ -65,6 +65,9 @@ enum i2c_op {
-> > >    * @rx_len: receive length for buffer
-> > >    * @op: i2c cmd
-> > >    * @muli-msg: is part of multi i2c r-w msgs
-> > > + * @shared_se: bus is shared between subsystems
-> > > + * @bool first_msg: use it for tracking multimessage xfer
-> > > + * @bool last_msg: use it for tracking multimessage xfer
-> > >    */
-> > >   struct gpi_i2c_config {
-> > >   	u8 set_config;
-> > > @@ -78,6 +81,9 @@ struct gpi_i2c_config {
-> > >   	u32 rx_len;
-> > >   	enum i2c_op op;
-> > >   	bool multi_msg;
-> > > +	bool shared_se;
-> > 
-> > Looking at this why do you need this field? It can be internal to your
-> > i2c driver... Why not just set an enum for lock and use the values as
-> > lock/unlock/dont care and make the interface simpler. I see no reason to
-> > use three variables to communicate the info which can be handled in
-> > simpler way..?
-> > 
-> Below was earlier reply to [PATCH V3, 2/4], please let me know if you have
-> any additional comment and need further clarifications.
+> > > +static int bcm2835_dma_suspend_late(struct device *dev)
+> > > +{
+> > > +	struct bcm2835_dmadev *od = dev_get_drvdata(dev);
+> > > +	struct bcm2835_chan *c, *next;
+> > > +
+> > > +	list_for_each_entry_safe(c, next, &od->ddev.channels,
+> > > +				 vc.chan.device_node) {
+> > > +		void __iomem *chan_base = c->chan_base;
+> > > +
+> > > +		if (readl(chan_base + BCM2835_DMA_ADDR)) {
+> > > +			dev_warn(dev, "Suspend is prevented by chan %d\n",
+> > > +				 c->ch);
+> > > +			return -EBUSY;
+> > > +		}
+> > Can you help understand how this helps by logging... we are not adding
+> > anything except checking this and resume is NOP as well!
+> My intention of this patch is just to make sure, that no DMA transfer is
+> in progress during late_suspend. So i followed the implementation of
+> fsldma.c
+> 
+> Additionally i added this warning mostly to know if this ever occurs.
+> But i wasn't able to trigger.
 
-Looks like you misunderstood, the question is why do you need three
-variables to convey this info..? Use a single variable please
+Okay in the case I dont think it is a abd idea. But the patch
+description should mention that add a warning while suspending if
+channels are active or something like that.
+Patch title and description should mention this..
 
-> --
-> > Looking at the usage in following patches, why cant this be handled
-> > internally as part of prep call?
-> >
-> As per design, i2c driver iterates over each message and submits to GPI
-> where it creates TRE. Since it's per transfer, we need to create Lock and
-> Unlock TRE based on first or last message.
-> --
-> > > +	bool first_msg;
-> > > +	bool last_msg;
-> > 
+> 
+> Should i drop the warning and make resume callback = NULL?
+
+Yes that would be better as well, no point in having dummy code
 
 -- 
 ~Vinod

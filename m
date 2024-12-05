@@ -1,253 +1,176 @@
-Return-Path: <dmaengine+bounces-3901-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3902-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8BFF9E5202
-	for <lists+dmaengine@lfdr.de>; Thu,  5 Dec 2024 11:21:49 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC24F9E54C7
+	for <lists+dmaengine@lfdr.de>; Thu,  5 Dec 2024 13:00:47 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 73C6E28402B
-	for <lists+dmaengine@lfdr.de>; Thu,  5 Dec 2024 10:21:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8A7A41883843
+	for <lists+dmaengine@lfdr.de>; Thu,  5 Dec 2024 12:00:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E6ED2066D3;
-	Thu,  5 Dec 2024 09:57:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A59BB217673;
+	Thu,  5 Dec 2024 12:00:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="NWNqnhFF"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="F4UMYirt"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6187E2066CD;
-	Thu,  5 Dec 2024 09:57:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 116FA217649;
+	Thu,  5 Dec 2024 12:00:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733392637; cv=none; b=tAdZgUH/E0oLilmitDgWTvgrqelX2Qd2LERRPYcZD6yJ8KwrlvlRpEnwp89WN6EvclaRVXyV/HFNDSX7DyYXxNm0/u8ElRqoGHnZ7s+oTsyWLxcfOol0sTVJezmho5Z0AOs4R73bzG4ZQC5FYXtHa3xLGtNKOBDZq8p261SUCuY=
+	t=1733400045; cv=none; b=HqSFFDy2FKimCDS2NB/702pk6WTR6PfxxW40K72WKTY62DJ0RYLxzVKJLi1bdGty0GrtDRxHpGHsiRyGlf1PqIu+sDOVyBUSj2EFk9wUCGvnX6Tzd+C+jCaXc0VpyzzQwpK4QkjolHKovO9Kk1MTLxNEKROhB+ktB1oJ288ZQ80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733392637; c=relaxed/simple;
-	bh=miV+lFMFVzAaAvt8JNrBIkbBUgixoMAJpy4otndSQqI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=UrrNpYb3HsrddqVLIvxcV4YTV1yBg80XrqLYEpF5gufcjrT/mF83wB34yURPklwa+ZLf7r2CcO8GEowRTI6rrU1p/lWL68sOUgZfJfUFoyJIuvjy5E/pNYxvQi5lCFVzNbRca9OJGX3NCATiai6+Gz+KJFz0QVfxVF0VXLbnEDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=NWNqnhFF; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1733392636; x=1764928636;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:to:cc;
-  bh=miV+lFMFVzAaAvt8JNrBIkbBUgixoMAJpy4otndSQqI=;
-  b=NWNqnhFFgAYe+sGR8L3TnlvIeu4ExwPAZEP344wblbWjsPHq7jXRGiCY
-   h31tpspC1W07QWvATfMpCl+t3vqQ+1m7qWV2rXRhpeIZvHAOQHd3JfOFE
-   NoWTEDvEY87ugRf81rPrZxeueZveQ+PCgxdVcm8MZLfosz6LpVeqKVzGs
-   1A+l8Di3VURhUOHgXEFkabkxqrkwSolwateHZ0twyZH7WKjLcBYyWw3Kb
-   ij/rOITE+9IFBzToTYIWculddjNAqFQDXc93hC8I+qU3/AfALeOdv1b9A
-   eg5xPKX7QSsl2RqCwwmbg33tohUIRn4xZ0HAKQrIcLByOajINU3KZxXjR
-   w==;
-X-CSE-ConnectionGUID: TKbBYKFISlCTYliYBZMdug==
-X-CSE-MsgGUID: B/i8g4eKSlyJ517PbZMMSg==
-X-IronPort-AV: E=Sophos;i="6.12,209,1728975600"; 
-   d="scan'208";a="266366333"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 05 Dec 2024 02:57:14 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 5 Dec 2024 02:56:23 -0700
-Received: from [127.0.0.1] (10.10.85.11) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Thu, 5 Dec 2024 02:56:19 -0700
-From: Charan Pedumuru <charan.pedumuru@microchip.com>
-Date: Thu, 5 Dec 2024 15:26:18 +0530
-Subject: [PATCH] dt-bindings: dma: atmel: Convert to json schema
+	s=arc-20240116; t=1733400045; c=relaxed/simple;
+	bh=wENGL2+tKFj2g36FEcjLIdH7PlNn8qxutB+84PPmxyg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ADmRw+5L/+1tylDMwaagEaZXNJjYjx75qzQjr5oZORnbhs0cSrl92P7n7sY6MWT9pYJpAS6dVp4OPWEPlfIXxcn6vExt+6PSGpIR4ZT7J1DoV2WHTsnK1Qsq1DYktQdOemIMA04EK5EaHLceNpfpfwzHH5kQbiHmWBZee+sjx84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=F4UMYirt; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4B5BomrG029397;
+	Thu, 5 Dec 2024 12:00:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=T6JAKjEVtMlYzBixygCl0j
+	wi/qQ4OMSQPTiERtHDNtU=; b=F4UMYirtwq1+65K3jjauePV0b0kabYI1Vne4JB
+	zpyNB/b+XdeyESbauabzY/9efI99Mlc41oHsEkfIf4WS/fCdb4SjUzaufvclXjnd
+	nLzmymchTcDZG3hnpy0LR6E4GgDpbUr43d6FlF4OzwKhnioEV7wOiOEiLqGI/CQR
+	La0e0ray5X9S0F+Rwok7WpKMGJK5+iAnRBY4HAWkStx6BZccGCWpOxe9hN8NAVbe
+	hsfW3riq9RUioRon+YKHyIs395wLelHz/l4CxhS0Rie8ljbXTLf+3SwLrprPIS38
+	Dj/fTM1Lb26PLpdv8ALH118yH96Jj/nHcZr1DM/tfNXY3juQ==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43bbnj00pg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 05 Dec 2024 12:00:36 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4B5C0ZXU015791
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 5 Dec 2024 12:00:35 GMT
+Received: from hu-mdalam-blr.qualcomm.com (10.80.80.8) by
+ nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 5 Dec 2024 04:00:31 -0800
+From: Md Sadre Alam <quic_mdalam@quicinc.com>
+To: <vkoul@kernel.org>, <martin.petersen@oracle.com>, <kees@kernel.org>,
+        <av2082000@gmail.com>, <fenghua.yu@intel.com>,
+        <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC: <quic_mdalam@quicinc.com>, <quic_varada@quicinc.com>,
+        <quic_srichara@quicinc.com>
+Subject: [PATCH v2] dmaengine: qcom: bam_dma: Avoid writing unavailable register
+Date: Thu, 5 Dec 2024 17:30:16 +0530
+Message-ID: <20241205120016.948960-1-quic_mdalam@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20241205-xdma-v1-1-76a4a44670b5@microchip.com>
-X-B4-Tracking: v=1; b=H4sIAMF4UWcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxNDQyNT3YqU3ERdSwvTZLNkE4vUpBRTJaDSgqLUtMwKsDHRsbW1ACEYSFR
- WAAAA
-To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, "Nicolas
- Ferre" <nicolas.ferre@microchip.com>, Alexandre Belloni
-	<alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>
-CC: <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	Charan Pedumuru <charan.pedumuru@microchip.com>
-X-Mailer: b4 0.14.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: R06QbIe8DXYg5_5aUFGC01q4XpFE3-ct
+X-Proofpoint-ORIG-GUID: R06QbIe8DXYg5_5aUFGC01q4XpFE3-ct
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
+ clxscore=1015 priorityscore=1501 mlxscore=0 phishscore=0 impostorscore=0
+ malwarescore=0 mlxlogscore=999 lowpriorityscore=0 spamscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
+ definitions=main-2412050086
 
-Convert old text based binding to json schema.
-Changes during conversion:
-- Add the required properties `clock` and `clock-names`, which were
-  missing in the original binding.
-- Add a fallback for `microchip,sam9x7-dma` and `microchip,sam9x60-dma`
-  as they are compatible with the dma IP core on `atmel,sama5d4-dma`.
-- Update examples and include appropriate file directives to resolve
-  errors identified by `dt_binding_check` and `dtbs_check`.
+Avoid writing unavailable register in BAM-Lite mode.
+BAM_DESC_CNT_TRSHLD register is unavailable in BAM-Lite
+mode. Its only available in BAM-NDP mode. So avoid writing
+this register for clients who is using BAM-Lite mode.
 
-Signed-off-by: Charan Pedumuru <charan.pedumuru@microchip.com>
+Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
 ---
- .../devicetree/bindings/dma/atmel,sama5d4-dma.yaml | 79 ++++++++++++++++++++++
- .../devicetree/bindings/dma/atmel-xdma.txt         | 54 ---------------
- 2 files changed, 79 insertions(+), 54 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/dma/atmel,sama5d4-dma.yaml b/Documentation/devicetree/bindings/dma/atmel,sama5d4-dma.yaml
-new file mode 100644
-index 000000000000..9ca1c5d1f00f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/atmel,sama5d4-dma.yaml
-@@ -0,0 +1,79 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dma/atmel,sama5d4-dma.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Microchip AT91 Extensible Direct Memory Access Controller
-+
-+maintainers:
-+  - Nicolas Ferre <nicolas.ferre@microchip.com>
-+  - Charan Pedumuru <charan.pedumuru@microchip.com>
-+
-+description:
-+  The DMA Controller (XDMAC) is a AHB-protocol central direct memory access
-+  controller. It performs peripheral data transfer and memory move operations
-+  over one or two bus ports through the unidirectional communication
-+  channel. Each channel is fully programmable and provides both peripheral
-+  or memory-to-memory transfers. The channel features are configurable at
-+  implementation.
-+
-+allOf:
-+  - $ref: dma-controller.yaml#
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - enum:
-+          - atmel,sama5d4-dma
-+          - microchip,sama7g5-dma
-+      - items:
-+          - enum:
-+              - microchip,sam9x60-dma
-+              - microchip,sam9x7-dma
-+          - const: atmel,sama5d4-dma
-+
-+  "#dma-cells":
-+    description: |
-+      Represents the number of integer cells in the `dmas` property of client
-+      devices. The single cell specifies the channel configuration register:
-+        - bit 13: SIF (Source Interface Identifier) for memory interface.
-+        - bit 14: DIF (Destination Interface Identifier) for peripheral interface.
-+        - bit 30-24: PERID (Peripheral Identifier).
-+    const: 1
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: dma_clk
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - "#dma-cells"
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/at91.h>
-+    #include <dt-bindings/dma/at91.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    dma-controller@f0008000 {
-+        compatible = "atmel,sama5d4-dma";
-+        reg = <0xf0008000 0x1000>;
-+        interrupts = <20 IRQ_TYPE_LEVEL_HIGH 0>;
-+        #dma-cells = <1>;
-+        clocks = <&pmc PMC_TYPE_PERIPHERAL 20>;
-+        clock-names = "dma_clk";
-+    };
-diff --git a/Documentation/devicetree/bindings/dma/atmel-xdma.txt b/Documentation/devicetree/bindings/dma/atmel-xdma.txt
-deleted file mode 100644
-index 76d649b3a25d..000000000000
---- a/Documentation/devicetree/bindings/dma/atmel-xdma.txt
-+++ /dev/null
-@@ -1,54 +0,0 @@
--* Atmel Extensible Direct Memory Access Controller (XDMAC)
--
--* XDMA Controller
--Required properties:
--- compatible: Should be "atmel,sama5d4-dma", "microchip,sam9x60-dma" or
--  "microchip,sama7g5-dma" or
--  "microchip,sam9x7-dma", "atmel,sama5d4-dma".
--- reg: Should contain DMA registers location and length.
--- interrupts: Should contain DMA interrupt.
--- #dma-cells: Must be <1>, used to represent the number of integer cells in
--the dmas property of client devices.
--  - The 1st cell specifies the channel configuration register:
--    - bit 13: SIF, source interface identifier, used to get the memory
--    interface identifier,
--    - bit 14: DIF, destination interface identifier, used to get the peripheral
--    interface identifier,
--    - bit 30-24: PERID, peripheral identifier.
--
--Example:
--
--dma1: dma-controller@f0004000 {
--	compatible = "atmel,sama5d4-dma";
--	reg = <0xf0004000 0x200>;
--	interrupts = <50 4 0>;
--	#dma-cells = <1>;
--};
--
--
--* DMA clients
--DMA clients connected to the Atmel XDMA controller must use the format
--described in the dma.txt file, using a one-cell specifier for each channel.
--The two cells in order are:
--1. A phandle pointing to the DMA controller.
--2. Channel configuration register. Configurable fields are:
--    - bit 13: SIF, source interface identifier, used to get the memory
--    interface identifier,
--    - bit 14: DIF, destination interface identifier, used to get the peripheral
--    interface identifier,
--  - bit 30-24: PERID, peripheral identifier.
--
--Example:
--
--i2c2: i2c@f8024000 {
--	compatible = "atmel,at91sam9x5-i2c";
--	reg = <0xf8024000 0x4000>;
--	interrupts = <34 4 6>;
--	dmas = <&dma1
--		(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
--		 | AT91_XDMAC_DT_PERID(6))>,
--	       <&dma1
--		(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
--		| AT91_XDMAC_DT_PERID(7))>;
--	dma-names = "tx", "rx";
--};
+Change in [v2]
 
----
-base-commit: 85a2dd7d7c8152cb125712a1ecae1d0a6ccac250
-change-id: 20241125-xdma-985c6c48ebd5
+* Replace 0xff with REVISION_MASK in the statement
+  bdev->bam_revision = val & REVISION_MASK
 
-Best regards,
+Change in [v1]
+
+* Added initial patch
+
+ drivers/dma/qcom/bam_dma.c | 22 ++++++++++++++--------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
+index d43a881e43b9..27c5b3b58f92 100644
+--- a/drivers/dma/qcom/bam_dma.c
++++ b/drivers/dma/qcom/bam_dma.c
+@@ -59,6 +59,9 @@ struct bam_desc_hw {
+ #define DESC_FLAG_NWD BIT(12)
+ #define DESC_FLAG_CMD BIT(11)
+ 
++#define BAM_LITE	0x13
++#define BAM_NDP		0x20
++
+ struct bam_async_desc {
+ 	struct virt_dma_desc vd;
+ 
+@@ -398,6 +401,7 @@ struct bam_device {
+ 
+ 	/* dma start transaction tasklet */
+ 	struct tasklet_struct task;
++	u32 bam_revision;
+ };
+ 
+ /**
+@@ -441,8 +445,9 @@ static void bam_reset(struct bam_device *bdev)
+ 	writel_relaxed(val, bam_addr(bdev, 0, BAM_CTRL));
+ 
+ 	/* set descriptor threshold, start with 4 bytes */
+-	writel_relaxed(DEFAULT_CNT_THRSHLD,
+-			bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
++	if (bdev->bam_revision >= BAM_LITE && bdev->bam_revision < BAM_NDP)
++		writel_relaxed(DEFAULT_CNT_THRSHLD,
++			       bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
+ 
+ 	/* Enable default set of h/w workarounds, ie all except BAM_FULL_PIPE */
+ 	writel_relaxed(BAM_CNFG_BITS_DEFAULT, bam_addr(bdev, 0, BAM_CNFG_BITS));
+@@ -1000,9 +1005,9 @@ static void bam_apply_new_config(struct bam_chan *bchan,
+ 			maxburst = bchan->slave.src_maxburst;
+ 		else
+ 			maxburst = bchan->slave.dst_maxburst;
+-
+-		writel_relaxed(maxburst,
+-			       bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
++		if (bdev->bam_revision >= BAM_LITE && bdev->bam_revision < BAM_NDP)
++			writel_relaxed(maxburst,
++				       bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
+ 	}
+ 
+ 	bchan->reconfigure = 0;
+@@ -1192,10 +1197,11 @@ static int bam_init(struct bam_device *bdev)
+ 	u32 val;
+ 
+ 	/* read revision and configuration information */
+-	if (!bdev->num_ees) {
+-		val = readl_relaxed(bam_addr(bdev, 0, BAM_REVISION));
++	val = readl_relaxed(bam_addr(bdev, 0, BAM_REVISION));
++	if (!bdev->num_ees)
+ 		bdev->num_ees = (val >> NUM_EES_SHIFT) & NUM_EES_MASK;
+-	}
++
++	bdev->bam_revision = val & REVISION_MASK;
+ 
+ 	/* check that configured EE is within range */
+ 	if (bdev->ee >= bdev->num_ees)
 -- 
-Charan Pedumuru <charan.pedumuru@microchip.com>
+2.34.1
 
 

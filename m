@@ -1,176 +1,120 @@
-Return-Path: <dmaengine+bounces-3902-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3903-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id DC24F9E54C7
-	for <lists+dmaengine@lfdr.de>; Thu,  5 Dec 2024 13:00:47 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CDE669E5582
+	for <lists+dmaengine@lfdr.de>; Thu,  5 Dec 2024 13:29:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8A7A41883843
-	for <lists+dmaengine@lfdr.de>; Thu,  5 Dec 2024 12:00:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B40691698A5
+	for <lists+dmaengine@lfdr.de>; Thu,  5 Dec 2024 12:29:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A59BB217673;
-	Thu,  5 Dec 2024 12:00:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8697218831;
+	Thu,  5 Dec 2024 12:28:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="F4UMYirt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AstnWdgY"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 116FA217649;
-	Thu,  5 Dec 2024 12:00:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D901521882D
+	for <dmaengine@vger.kernel.org>; Thu,  5 Dec 2024 12:28:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733400045; cv=none; b=HqSFFDy2FKimCDS2NB/702pk6WTR6PfxxW40K72WKTY62DJ0RYLxzVKJLi1bdGty0GrtDRxHpGHsiRyGlf1PqIu+sDOVyBUSj2EFk9wUCGvnX6Tzd+C+jCaXc0VpyzzQwpK4QkjolHKovO9Kk1MTLxNEKROhB+ktB1oJ288ZQ80=
+	t=1733401711; cv=none; b=pzUMuliqDRJXHQqAT+y4pun/NnuV78LH7l/sLPWKfzaHG06fWLKRKAsyhWbAS6pSRBwetHG0HAncI7qw3wZH6Fhb/WIjPaIsrM2O3eQWdq6UhjH4Vy4vuXimK97luvg5ORquLL54Y342cBFfW62QGBzCRuUiTTZs1hQNcWlVAQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733400045; c=relaxed/simple;
-	bh=wENGL2+tKFj2g36FEcjLIdH7PlNn8qxutB+84PPmxyg=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ADmRw+5L/+1tylDMwaagEaZXNJjYjx75qzQjr5oZORnbhs0cSrl92P7n7sY6MWT9pYJpAS6dVp4OPWEPlfIXxcn6vExt+6PSGpIR4ZT7J1DoV2WHTsnK1Qsq1DYktQdOemIMA04EK5EaHLceNpfpfwzHH5kQbiHmWBZee+sjx84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=F4UMYirt; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4B5BomrG029397;
-	Thu, 5 Dec 2024 12:00:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=T6JAKjEVtMlYzBixygCl0j
-	wi/qQ4OMSQPTiERtHDNtU=; b=F4UMYirtwq1+65K3jjauePV0b0kabYI1Vne4JB
-	zpyNB/b+XdeyESbauabzY/9efI99Mlc41oHsEkfIf4WS/fCdb4SjUzaufvclXjnd
-	nLzmymchTcDZG3hnpy0LR6E4GgDpbUr43d6FlF4OzwKhnioEV7wOiOEiLqGI/CQR
-	La0e0ray5X9S0F+Rwok7WpKMGJK5+iAnRBY4HAWkStx6BZccGCWpOxe9hN8NAVbe
-	hsfW3riq9RUioRon+YKHyIs395wLelHz/l4CxhS0Rie8ljbXTLf+3SwLrprPIS38
-	Dj/fTM1Lb26PLpdv8ALH118yH96Jj/nHcZr1DM/tfNXY3juQ==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43bbnj00pg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 05 Dec 2024 12:00:36 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4B5C0ZXU015791
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 5 Dec 2024 12:00:35 GMT
-Received: from hu-mdalam-blr.qualcomm.com (10.80.80.8) by
- nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 5 Dec 2024 04:00:31 -0800
-From: Md Sadre Alam <quic_mdalam@quicinc.com>
-To: <vkoul@kernel.org>, <martin.petersen@oracle.com>, <kees@kernel.org>,
-        <av2082000@gmail.com>, <fenghua.yu@intel.com>,
-        <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: <quic_mdalam@quicinc.com>, <quic_varada@quicinc.com>,
-        <quic_srichara@quicinc.com>
-Subject: [PATCH v2] dmaengine: qcom: bam_dma: Avoid writing unavailable register
-Date: Thu, 5 Dec 2024 17:30:16 +0530
-Message-ID: <20241205120016.948960-1-quic_mdalam@quicinc.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1733401711; c=relaxed/simple;
+	bh=18bpV5A/4haIrWRQJEDM74qxWf1ybq3kSy/rlI4CMR4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HjFC35AMl6suNyf1gq83Fn+KmgJwJW0rP8FQ/Ws5/vjObsXeeO61ymNfjTCrpDJ6AZUlHIXdGVtg9Dtrmljm9wm8x0hsAFL/OF8ovDZDa7Fm9eGUv3Z2J/0VJr8n/GC2j1D+AApa4jbz93t6CrVOVBZJOYeRlwstI889Oz3jmnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AstnWdgY; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-434a742481aso8571635e9.3
+        for <dmaengine@vger.kernel.org>; Thu, 05 Dec 2024 04:28:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1733401708; x=1734006508; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0/z0Y/or6wVIG3eV60xxWRF95SZcxwisFQI5iGbciCs=;
+        b=AstnWdgYcF9rIfZ3krtwW4N0xjeEtGWuj0/s1/pcO4jloTNUI9BNPUo1MsaDCkRDFZ
+         x+kofT7OIEWH6OE4wtjfPDdwy6vaW1ahRVdpyITI0DDMFm3BUmUys67l0B1piUismqBD
+         RAJ1+uh56N+YE6+NdIftuokYVEg8qK9sBGTTfaNcwjBaJ5QBs4iJGKuMLB91fiw+LJI7
+         o2PM4LWC4NB1XUrFEvcUX3JpeOVh8+se3FG+bHc1XYonNTfKOSnVPbbmwfWTRnzzZu/q
+         OaYZOhmv9xrauN8o+6gRNJCxhNMQgJqHVejoGJp5Sgq1ZnksEA/AiMJ4QHdY6YaaQwQz
+         pPFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733401708; x=1734006508;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0/z0Y/or6wVIG3eV60xxWRF95SZcxwisFQI5iGbciCs=;
+        b=S59BdALNjApXXeBtPHetAMsA7JurNAFHG6J1kHu9aqPZI1a+WfRLh+zoZVmsHSBt2A
+         YfSW8tJwInadPJalyFis7BrOvF69y0XawB2evUZIIATCuMV/AVuxpXtxY3FJX+renAv4
+         3wDGAAUinZUcD1epYezEd0PQ824zKL5VryhJ7+fQgUqqfo1AizncyqF8KRpFwSJDQ7wk
+         bS7T/eOcjdGT13mkbeEjVwrwHFmqNhkGRpZq94BgWGQktlNVDQ+YpgStbtHMfyRRjixv
+         lvuoav/3wwSFPGRgQj4sjPRPPmkm3QAEAXXREDctF+UsJEQzn9V2SlKzuWdgk9VCbXF0
+         xGEw==
+X-Forwarded-Encrypted: i=1; AJvYcCU7IxOhiNchG7tFn5o/XzMN3I+2oXTtLkAGKQGXqaAbMAvSAYbscTOME1rUbK9zq2JaN/gWMxjJwyQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxI6Q1FKVurY9JxaeKUc9tJWqCS6I0cdpxHox0Nr7fgTOZ15vn7
+	ougke1NKlpGcXiB/Vq3J7ZPgTv/qF6GhW9fgOy1RU3GMARv+NSodRzxxE43gSHo=
+X-Gm-Gg: ASbGncvhb6ogohYoLbe1E4jrFXJFKNVfT/8ZJDnHIb+cNqVuM6zMfrQUdDI2e7tsoSm
+	fz9VlcDGW8PozwOB1lC6ySOFpvLGLZKhaZP0OUjTH7/twjYrO1D+fq67x1jvRrNSUCwvNKdGUuW
+	6XKz+aAUrkaNp1LFTbb/VJDasrIQIOOqB3RkjSDYaJsXgqe7CHugpQLadFzD5JzVOP0nxafBbNd
+	hlMrJC/BJqmt2zgrhh25V6aX317NZza+fdWFTRDfEU0opu8mgbM0s090y4LhLY=
+X-Google-Smtp-Source: AGHT+IFhSy7QZi+I3R64sZovAcTtAbg/HjBABy5kQ0+6tHCowzlGyLUtEVz4AzlfM38dgl84SsqQ3A==
+X-Received: by 2002:a05:600c:4f12:b0:434:a962:2a8c with SMTP id 5b1f17b1804b1-434d0a03abfmr84962955e9.22.1733401708213;
+        Thu, 05 Dec 2024 04:28:28 -0800 (PST)
+Received: from [192.168.0.40] ([176.61.106.227])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-434da0d2698sm22267365e9.8.2024.12.05.04.28.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Dec 2024 04:28:27 -0800 (PST)
+Message-ID: <2afca6ca-10eb-43b3-8730-386d6ca84b60@linaro.org>
+Date: Thu, 5 Dec 2024 12:28:26 +0000
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: R06QbIe8DXYg5_5aUFGC01q4XpFE3-ct
-X-Proofpoint-ORIG-GUID: R06QbIe8DXYg5_5aUFGC01q4XpFE3-ct
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
- clxscore=1015 priorityscore=1501 mlxscore=0 phishscore=0 impostorscore=0
- malwarescore=0 mlxlogscore=999 lowpriorityscore=0 spamscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
- definitions=main-2412050086
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] dmaengine: qcom: bam_dma: Avoid writing unavailable
+ register
+To: Md Sadre Alam <quic_mdalam@quicinc.com>, vkoul@kernel.org,
+ martin.petersen@oracle.com, kees@kernel.org, av2082000@gmail.com,
+ fenghua.yu@intel.com, linux-arm-msm@vger.kernel.org,
+ dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: quic_varada@quicinc.com, quic_srichara@quicinc.com
+References: <20241205120016.948960-1-quic_mdalam@quicinc.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20241205120016.948960-1-quic_mdalam@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Avoid writing unavailable register in BAM-Lite mode.
-BAM_DESC_CNT_TRSHLD register is unavailable in BAM-Lite
-mode. Its only available in BAM-NDP mode. So avoid writing
-this register for clients who is using BAM-Lite mode.
+On 05/12/2024 12:00, Md Sadre Alam wrote:
 
-Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
+The commit log:
+
+> Avoid writing unavailable register in BAM-Lite mode.
+> BAM_DESC_CNT_TRSHLD register is unavailable in BAM-Lite
+> mode. Its only available in BAM-NDP mode. So avoid writing
+
+and the action taken in the code:
+
+> +	if (bdev->bam_revision >= BAM_LITE && bdev->bam_revision < BAM_NDP)
+> +		writel_relaxed(DEFAULT_CNT_THRSHLD,
+
+Really don't match up. You've said in your commit log 
+BAM_DESC_CNT_TRSHLD is unavailable to the LITE module but, then you say 
+if (bam_revision >= BAM_LITE...)
+
+How can checking if the revision == BAM_LITE match up with the stated 
+objective in your commit log => _not_ writing to DEFAULT_CNT_THRSHLD in 
+lite mode ... ?
+
 ---
-
-Change in [v2]
-
-* Replace 0xff with REVISION_MASK in the statement
-  bdev->bam_revision = val & REVISION_MASK
-
-Change in [v1]
-
-* Added initial patch
-
- drivers/dma/qcom/bam_dma.c | 22 ++++++++++++++--------
- 1 file changed, 14 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
-index d43a881e43b9..27c5b3b58f92 100644
---- a/drivers/dma/qcom/bam_dma.c
-+++ b/drivers/dma/qcom/bam_dma.c
-@@ -59,6 +59,9 @@ struct bam_desc_hw {
- #define DESC_FLAG_NWD BIT(12)
- #define DESC_FLAG_CMD BIT(11)
- 
-+#define BAM_LITE	0x13
-+#define BAM_NDP		0x20
-+
- struct bam_async_desc {
- 	struct virt_dma_desc vd;
- 
-@@ -398,6 +401,7 @@ struct bam_device {
- 
- 	/* dma start transaction tasklet */
- 	struct tasklet_struct task;
-+	u32 bam_revision;
- };
- 
- /**
-@@ -441,8 +445,9 @@ static void bam_reset(struct bam_device *bdev)
- 	writel_relaxed(val, bam_addr(bdev, 0, BAM_CTRL));
- 
- 	/* set descriptor threshold, start with 4 bytes */
--	writel_relaxed(DEFAULT_CNT_THRSHLD,
--			bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
-+	if (bdev->bam_revision >= BAM_LITE && bdev->bam_revision < BAM_NDP)
-+		writel_relaxed(DEFAULT_CNT_THRSHLD,
-+			       bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
- 
- 	/* Enable default set of h/w workarounds, ie all except BAM_FULL_PIPE */
- 	writel_relaxed(BAM_CNFG_BITS_DEFAULT, bam_addr(bdev, 0, BAM_CNFG_BITS));
-@@ -1000,9 +1005,9 @@ static void bam_apply_new_config(struct bam_chan *bchan,
- 			maxburst = bchan->slave.src_maxburst;
- 		else
- 			maxburst = bchan->slave.dst_maxburst;
--
--		writel_relaxed(maxburst,
--			       bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
-+		if (bdev->bam_revision >= BAM_LITE && bdev->bam_revision < BAM_NDP)
-+			writel_relaxed(maxburst,
-+				       bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
- 	}
- 
- 	bchan->reconfigure = 0;
-@@ -1192,10 +1197,11 @@ static int bam_init(struct bam_device *bdev)
- 	u32 val;
- 
- 	/* read revision and configuration information */
--	if (!bdev->num_ees) {
--		val = readl_relaxed(bam_addr(bdev, 0, BAM_REVISION));
-+	val = readl_relaxed(bam_addr(bdev, 0, BAM_REVISION));
-+	if (!bdev->num_ees)
- 		bdev->num_ees = (val >> NUM_EES_SHIFT) & NUM_EES_MASK;
--	}
-+
-+	bdev->bam_revision = val & REVISION_MASK;
- 
- 	/* check that configured EE is within range */
- 	if (bdev->ee >= bdev->num_ees)
--- 
-2.34.1
-
+bod
 

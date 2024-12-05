@@ -1,161 +1,122 @@
-Return-Path: <dmaengine+bounces-3908-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3909-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7648A9E5987
-	for <lists+dmaengine@lfdr.de>; Thu,  5 Dec 2024 16:15:46 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7489216B222
-	for <lists+dmaengine@lfdr.de>; Thu,  5 Dec 2024 15:15:36 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52F0A21A45F;
-	Thu,  5 Dec 2024 15:15:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I3dC++Sd"
-X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 81E5F9E59BD
+	for <lists+dmaengine@lfdr.de>; Thu,  5 Dec 2024 16:32:35 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D37EBE49;
-	Thu,  5 Dec 2024 15:15:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 416AB282001
+	for <lists+dmaengine@lfdr.de>; Thu,  5 Dec 2024 15:32:34 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0EC5218E8B;
+	Thu,  5 Dec 2024 15:32:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cornersoftsolutions.com header.i=@cornersoftsolutions.com header.b="Xu36Xfcp"
+X-Original-To: dmaengine@vger.kernel.org
+Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2686E1DA10C
+	for <dmaengine@vger.kernel.org>; Thu,  5 Dec 2024 15:32:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733411735; cv=none; b=Ldu1MHpdQec3va0IOyDRtanIHTdMCTOgTD1LDb7Kafw6gJRV7t9ca1rNquWKm/WnyewwnThsbKU/q+mbV9X9cSIMQ4alTjy2mFadOgqglY8O4dc0zsQHJJVb7NK6rDdCLFrXn22mUXQDFhmj+2MVsyktTyHFL0KGGLbzhakhWXw=
+	t=1733412751; cv=none; b=qDzLr1RthQWFgDTnNteKJDDpIidsoOfmxZ8WaekzxeCjzG/mNWb6koLXPfh1A5JZKAfCEBy8+WnxfMK4qSDYP3FeqtgPq+bpaHTicIFmX9qHhSWHdzwXo1xAgvBbvXLDN5wWn8Vqz2tsdcVnDfEWRbVukiIzh+zcYc/1Pa6QkNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733411735; c=relaxed/simple;
-	bh=4jA9YpjHgfQvrKB6Vqn7QorM5f0B56a1tvvFaqzk9jA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OX7qo/MIoHVOkpLDOrStqb3OaXUlfhSoi0rEIOcL9uyKlMgrumDvSIy7K+UB6jMd9KJbRmMdLrucaW7hzQ0A0Z2qkU4iGOPK+omvBs0V5MDFhFfja2RxLo94M4GOjiBvO+RYMtaYYAYJhWLpelspFlN6hSwuTsRRP56wNwsSd3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I3dC++Sd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 542B3C4CED1;
-	Thu,  5 Dec 2024 15:15:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733411734;
-	bh=4jA9YpjHgfQvrKB6Vqn7QorM5f0B56a1tvvFaqzk9jA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=I3dC++Sd7ENPX7l4pixbN3rbjREGfnVXgLaKyeCFI7lUk7gEzV5I7n5MXb+nxBKl7
-	 O85l+JGlwR2c4k+5So/Ub5UjJ24cp7+Vf8S8PjuwNkIqZq4xht4bpDaHBI9YbDd5SP
-	 RG1IkBmPRsGkYZhXlmcT/HOweGxFRHu4FSmAwCy3y0jwaFFWoXofElNs5E17c3tx6T
-	 7TTqR07a13fqUZSSehQ/4B+XTU6R1LK31hS1aLz3j7MFhTHr04EDPWilTOCiYiaAYN
-	 IFgHn8e1BaXUJQMU3tSSoxhRya41Luzvdzh1HDOcI1OraNtKpVkIeXqS9GBshULQ9z
-	 NeEE8LZzyv41A==
-Message-ID: <aa7eef93-6948-453c-8eb8-d7f4f7572808@kernel.org>
-Date: Thu, 5 Dec 2024 16:15:27 +0100
+	s=arc-20240116; t=1733412751; c=relaxed/simple;
+	bh=RbLc9FFR8wF5vdi7GcDZl88v758ckVMZlXxdmckY0ts=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=PuLPnYFZp4JJXIocNzI5uAloKzvYGDhGHTeCYaIPYhtFUeBkCerAV0TtF9vUYZL8hMCeTD3cPntRe6hLKyp0wtiTkX1mbNzZ2+DXBHzHMosVKp5Gg4i5mlQA4+iMDzdH9DcrcdJhpjZLTKKS84f+62mie5JCkbhlqBh0TzGcvmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cornersoftsolutions.com; spf=pass smtp.mailfrom=cornersoftsolutions.com; dkim=pass (2048-bit key) header.d=cornersoftsolutions.com header.i=@cornersoftsolutions.com header.b=Xu36Xfcp; arc=none smtp.client-ip=209.85.160.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cornersoftsolutions.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cornersoftsolutions.com
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-29e65257182so647286fac.2
+        for <dmaengine@vger.kernel.org>; Thu, 05 Dec 2024 07:32:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cornersoftsolutions.com; s=google; t=1733412749; x=1734017549; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=mSVWv3kzGyP7Ixr3DcJKWQ/Cs0NKKVxGUdtaJxvtNOU=;
+        b=Xu36XfcpVRRV/h73WFcs2W1seMy/Plmi46O0rOsIZdXEqEX8eiejQMtMZWBMoVD+5M
+         4HsR+/rN3KDMauytsqMFzo+aAipi1guI/Qyqm/2zaBICtkqAX45FF7690UqzUQDlbqQE
+         Svy+iH7nUS8ezrBLnU/2+h/Z1BHd3Z8Ejp5MStzvcODrFd0MRKsl7zlEcLPPIU3K0/AI
+         IjM8goce/YBwxGnXmOm/HPT9T2bzLXp/CvbtadwWDS5Hf9KsSpEfFvtFEU9ZtpaSPHNz
+         0DTotzdCmMV+THSpvouedwhve+0b64cnzYEcOiln51hT/7cLxsO+Q1e9/Hki7NHYnoHH
+         qxTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733412749; x=1734017549;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mSVWv3kzGyP7Ixr3DcJKWQ/Cs0NKKVxGUdtaJxvtNOU=;
+        b=SngaNEt5E42M4mcpTo5RQZgEJukOmAQygpR/JJT21b+08AXIsfYzNIQQAMqMKLLhSL
+         TJxlllDyBB3y4AnXWBRyVsQNT+dP6RIv9zw+awwkhfVV+vx57JjMuTj9rdN2BHl7rYGx
+         SEw8yw5s4tvCtvyzlqtNSvzvgbbSMpKL377IeJcfHf/q3lrKoM6JLUGWSmtn6NVJG+DU
+         RcdQUaiJUaEMSbr2KRrXFUpU4UQ9YnY9dmHtQhsvAWRjfnKZ2JuoxMAuw1V6H7fxhwC7
+         EhUSTFECnhN4+QSlabnoehcnPJnb1pEpyojmBCrrp5g/ewY13VGNQS9Ns7MiSYL+X+w+
+         IYgw==
+X-Forwarded-Encrypted: i=1; AJvYcCUh+pmsR98DxprJX9yLD4wbL5x3HNakVVs8ZJ60Q9j0dJI1HL8s/Iy6SXhkoc/vLIrc5TQNwpo5UkY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxpk8bR1wfjS0WeKmrNGd1cDxP+jkZ6LUyVx3iexWrVmTNTSPFb
+	ztQYK+x/dG4na+cvXTc4W1rP078a9ATvWqB9IU+P0/9rv5CUEIo1XKsGZwt2vcPy345bzJaOJvV
+	gWZnAvqgOXbaKeXmeRMzwoxN70fFVuy1BpaLbOQ==
+X-Gm-Gg: ASbGncuSRiM4iBxso9lVNbs/Qp+LfD26gMOMYbnQ7RKz2mueAQ9avDLqhjN5PDt4Z3Z
+	UXjDiAzhFplj+1iNcUsfzoPQp0EDoQv43
+X-Google-Smtp-Source: AGHT+IEXh3wkarBLzAyKqYC0kT/Y8r28C1neLlKp6rQpRD5NvnZVxaGgz+SOmihpuXwnZlzhFMNga5hrHKjeRZiwzUg=
+X-Received: by 2002:a05:6871:606:b0:296:ee2e:a23c with SMTP id
+ 586e51a60fabf-29e88560c9bmr11677702fac.5.1733412749132; Thu, 05 Dec 2024
+ 07:32:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: dma: Support channel page to
- nvidia,tegra210-adma
-To: Mohan Kumar D <mkumard@nvidia.com>, vkoul@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org
-Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, spujar@nvidia.com,
- dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
- linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20241205145859.2331691-1-mkumard@nvidia.com>
- <20241205145859.2331691-2-mkumard@nvidia.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20241205145859.2331691-2-mkumard@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Ken Sloat <ksloat@cornersoftsolutions.com>
+Date: Thu, 5 Dec 2024 10:32:17 -0500
+Message-ID: <CADRqkYAaCYvo3ybGdKO1F_y9jFEcwTBxZzRN-Av-adq_4fVu6g@mail.gmail.com>
+Subject: [PATCH v1] dt-bindings: dma: st-stm32-dmamux: Add description for
+ dma-cell values
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	dmaengine@vger.kernel.org, alexandre.torgue@foss.st.com, 
+	mcoquelin.stm32@gmail.com, conor+dt@kernel.org, krzk+dt@kernel.org, 
+	robh@kernel.org, vkoul@kernel.org, amelie.delaunay@foss.st.com
+Cc: Ken Sloat <ksloat@cornersoftsolutions.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 05/12/2024 15:58, Mohan Kumar D wrote:
-> Multiple ADMA Channel page hardware support has been added from
-> TEGRA186 and onwards. Update the DT binding to use any of the
-> ADMA channel page address space region.
-> 
-> Signed-off-by: Mohan Kumar D <mkumard@nvidia.com>
-> ---
->  .../bindings/dma/nvidia,tegra210-adma.yaml    | 19 ++++++++++++++++++-
->  1 file changed, 18 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/nvidia,tegra210-adma.yaml b/Documentation/devicetree/bindings/dma/nvidia,tegra210-adma.yaml
-> index 877147e95ecc..8c76c98560c5 100644
-> --- a/Documentation/devicetree/bindings/dma/nvidia,tegra210-adma.yaml
-> +++ b/Documentation/devicetree/bindings/dma/nvidia,tegra210-adma.yaml
-> @@ -29,7 +29,24 @@ properties:
->            - const: nvidia,tegra186-adma
->  
->    reg:
-> -    maxItems: 1
-> +    description: |
+The dma-cell values for the stm32-dmamux are used to craft the DMA spec
+for the actual controller. These values are currently undocumented
+leaving the user to reverse engineer the driver in order to determine
+their meaning. Add a basic description, while avoiding duplicating
+information by pointing the user to the associated DMA docs that
+describe the fields in depth.
 
-Do not need '|' unless you need to preserve formatting.
+Signed-off-by: Ken Sloat <ksloat@cornersoftsolutions.com>
+---
+.../bindings/dma/stm32/st,stm32-dmamux.yaml | 11 +++++++++++
+1 file changed, 11 insertions(+)
 
-> +     The 'page' region describes the address space of the page
-> +     used for accessing the DMA channel registers. The 'global'
-> +     region describes the address space of the global DMA registers.
-> +     In the absence of the 'reg-names' property, there must be a
-> +     single entry that covers the address space of the global DMA
-> +     registers and the DMA channel registers.
-
-Rather oneOf listing the items with description.
-
-> +     minItems: 1
-> +     maxItems: 2
-> +
-> +  reg-names:
-> +    oneOf:
-> +      - enum:
-> +          - page
-> +          - global
-
-This is not correct. You said it covers both.
-
-
-You also need allOf:if:then: block restricting it per each variant/device.
-
-
-
-Best regards,
-Krzysztof
+diff --git a/Documentation/devicetree/bindings/dma/stm32/st,stm32-dmamux.yaml
+b/Documentation/devicetree/bindings/dma/stm32/st,stm32-dmamux.yaml
+index f26c914a3a9a..aa2e52027ee6 100644
+--- a/Documentation/devicetree/bindings/dma/stm32/st,stm32-dmamux.yaml
++++ b/Documentation/devicetree/bindings/dma/stm32/st,stm32-dmamux.yaml
+@@ -15,6 +15,17 @@ allOf:
+properties:
+"#dma-cells":
+const: 3
++ description: |
++ Should be set to <3> with each cell representing the following:
++ 1. The mux input number/line for the request
++ 2. Bitfield representing DMA channel configuration that is passed
++ to the real DMA controller
++ 3. Bitfield representing device dependent DMA features passed to
++ the real DMA controller
++
++ For bitfield definitions of cells 2 and 3, see the associated
++ bindings doc for the actual DMA controller the mux is connected
++ to.
+compatible:
+const: st,stm32h7-dmamux
+-- 
+2.34.1
 

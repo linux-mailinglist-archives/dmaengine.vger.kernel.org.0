@@ -1,122 +1,156 @@
-Return-Path: <dmaengine+bounces-3909-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3910-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 81E5F9E59BD
-	for <lists+dmaengine@lfdr.de>; Thu,  5 Dec 2024 16:32:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F59B9E5A94
+	for <lists+dmaengine@lfdr.de>; Thu,  5 Dec 2024 17:01:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 416AB282001
-	for <lists+dmaengine@lfdr.de>; Thu,  5 Dec 2024 15:32:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2ED67284B17
+	for <lists+dmaengine@lfdr.de>; Thu,  5 Dec 2024 16:01:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0EC5218E8B;
-	Thu,  5 Dec 2024 15:32:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78931221475;
+	Thu,  5 Dec 2024 15:59:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cornersoftsolutions.com header.i=@cornersoftsolutions.com header.b="Xu36Xfcp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aEnFd6hF"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2686E1DA10C
-	for <dmaengine@vger.kernel.org>; Thu,  5 Dec 2024 15:32:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B35521D595;
+	Thu,  5 Dec 2024 15:59:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733412751; cv=none; b=qDzLr1RthQWFgDTnNteKJDDpIidsoOfmxZ8WaekzxeCjzG/mNWb6koLXPfh1A5JZKAfCEBy8+WnxfMK4qSDYP3FeqtgPq+bpaHTicIFmX9qHhSWHdzwXo1xAgvBbvXLDN5wWn8Vqz2tsdcVnDfEWRbVukiIzh+zcYc/1Pa6QkNU=
+	t=1733414356; cv=none; b=Ia02eAwrIiXlS9lNyKLpfIYYH6LSBZRZVfPwghu9bVCAdR5KNKgGKO97kuXuA+e+gYZIPx186kRhTHa7LHSqblfPRFSr4QsEtzWLEU6ZKq1gNpgErwfUJglCC3QWY/jiH5raE4ITZK+VpxlqknU48MvzvasYQzN+K0/Wt0ArFBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733412751; c=relaxed/simple;
-	bh=RbLc9FFR8wF5vdi7GcDZl88v758ckVMZlXxdmckY0ts=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=PuLPnYFZp4JJXIocNzI5uAloKzvYGDhGHTeCYaIPYhtFUeBkCerAV0TtF9vUYZL8hMCeTD3cPntRe6hLKyp0wtiTkX1mbNzZ2+DXBHzHMosVKp5Gg4i5mlQA4+iMDzdH9DcrcdJhpjZLTKKS84f+62mie5JCkbhlqBh0TzGcvmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cornersoftsolutions.com; spf=pass smtp.mailfrom=cornersoftsolutions.com; dkim=pass (2048-bit key) header.d=cornersoftsolutions.com header.i=@cornersoftsolutions.com header.b=Xu36Xfcp; arc=none smtp.client-ip=209.85.160.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cornersoftsolutions.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cornersoftsolutions.com
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-29e65257182so647286fac.2
-        for <dmaengine@vger.kernel.org>; Thu, 05 Dec 2024 07:32:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cornersoftsolutions.com; s=google; t=1733412749; x=1734017549; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=mSVWv3kzGyP7Ixr3DcJKWQ/Cs0NKKVxGUdtaJxvtNOU=;
-        b=Xu36XfcpVRRV/h73WFcs2W1seMy/Plmi46O0rOsIZdXEqEX8eiejQMtMZWBMoVD+5M
-         4HsR+/rN3KDMauytsqMFzo+aAipi1guI/Qyqm/2zaBICtkqAX45FF7690UqzUQDlbqQE
-         Svy+iH7nUS8ezrBLnU/2+h/Z1BHd3Z8Ejp5MStzvcODrFd0MRKsl7zlEcLPPIU3K0/AI
-         IjM8goce/YBwxGnXmOm/HPT9T2bzLXp/CvbtadwWDS5Hf9KsSpEfFvtFEU9ZtpaSPHNz
-         0DTotzdCmMV+THSpvouedwhve+0b64cnzYEcOiln51hT/7cLxsO+Q1e9/Hki7NHYnoHH
-         qxTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733412749; x=1734017549;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mSVWv3kzGyP7Ixr3DcJKWQ/Cs0NKKVxGUdtaJxvtNOU=;
-        b=SngaNEt5E42M4mcpTo5RQZgEJukOmAQygpR/JJT21b+08AXIsfYzNIQQAMqMKLLhSL
-         TJxlllDyBB3y4AnXWBRyVsQNT+dP6RIv9zw+awwkhfVV+vx57JjMuTj9rdN2BHl7rYGx
-         SEw8yw5s4tvCtvyzlqtNSvzvgbbSMpKL377IeJcfHf/q3lrKoM6JLUGWSmtn6NVJG+DU
-         RcdQUaiJUaEMSbr2KRrXFUpU4UQ9YnY9dmHtQhsvAWRjfnKZ2JuoxMAuw1V6H7fxhwC7
-         EhUSTFECnhN4+QSlabnoehcnPJnb1pEpyojmBCrrp5g/ewY13VGNQS9Ns7MiSYL+X+w+
-         IYgw==
-X-Forwarded-Encrypted: i=1; AJvYcCUh+pmsR98DxprJX9yLD4wbL5x3HNakVVs8ZJ60Q9j0dJI1HL8s/Iy6SXhkoc/vLIrc5TQNwpo5UkY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxpk8bR1wfjS0WeKmrNGd1cDxP+jkZ6LUyVx3iexWrVmTNTSPFb
-	ztQYK+x/dG4na+cvXTc4W1rP078a9ATvWqB9IU+P0/9rv5CUEIo1XKsGZwt2vcPy345bzJaOJvV
-	gWZnAvqgOXbaKeXmeRMzwoxN70fFVuy1BpaLbOQ==
-X-Gm-Gg: ASbGncuSRiM4iBxso9lVNbs/Qp+LfD26gMOMYbnQ7RKz2mueAQ9avDLqhjN5PDt4Z3Z
-	UXjDiAzhFplj+1iNcUsfzoPQp0EDoQv43
-X-Google-Smtp-Source: AGHT+IEXh3wkarBLzAyKqYC0kT/Y8r28C1neLlKp6rQpRD5NvnZVxaGgz+SOmihpuXwnZlzhFMNga5hrHKjeRZiwzUg=
-X-Received: by 2002:a05:6871:606:b0:296:ee2e:a23c with SMTP id
- 586e51a60fabf-29e88560c9bmr11677702fac.5.1733412749132; Thu, 05 Dec 2024
- 07:32:29 -0800 (PST)
+	s=arc-20240116; t=1733414356; c=relaxed/simple;
+	bh=I0pA0LIVOtMR1rdK5y5+lGusd/6Von4ontGZrXx9GoY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=GM5EkSxPedRtUzk48DFwuDiIcTkvs5uwU2cVF2BjjBJPkG9DLFZRNlzF5VK/O+q2uE0wxW9KxEalT4PgCTCblzgrnJETzF1JJqOGBJ1U0M9SU6qRRlEMHjqHldDy+gbfTeVEGU2LivtnaJhKWuouT0clVgvfgCgJZ3R9dC7rx+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aEnFd6hF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C90BCC4CED1;
+	Thu,  5 Dec 2024 15:59:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733414355;
+	bh=I0pA0LIVOtMR1rdK5y5+lGusd/6Von4ontGZrXx9GoY=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=aEnFd6hFAmSmK2pHhN6Vvrznhdk2WNpck3AkX6V8tnag3Yd9SjKXwt4j7otb8wAhh
+	 rJb6ZEY1qjEFPhIDBJS2Qu0YeTfij7aQWxB0fumEUZENJCz0a5NYrETQF8RdygNQM+
+	 CPhPPiOR+m8+9IO4L8/UG3aBq9zVTnxRDKB6jdmHulOVMdvFRx44sBrUBVr/27mGED
+	 sK0357KDwaWutMpw9FTjLRjSxQOuWVxK8uo4dRi0OvAZcbqqvg+CPoLjLPMt/rUdlN
+	 JNfNX5GYvy2cd/e77MS8NwcN2i+FTJlRLgVjLCWufpMobGsh+ff42RBtmA7/91ahgs
+	 SagHO3VBpPrbw==
+Message-ID: <d53538ea-f846-4a6a-bc14-22ec7ee57e53@kernel.org>
+Date: Thu, 5 Dec 2024 16:59:09 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Ken Sloat <ksloat@cornersoftsolutions.com>
-Date: Thu, 5 Dec 2024 10:32:17 -0500
-Message-ID: <CADRqkYAaCYvo3ybGdKO1F_y9jFEcwTBxZzRN-Av-adq_4fVu6g@mail.gmail.com>
-Subject: [PATCH v1] dt-bindings: dma: st-stm32-dmamux: Add description for
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] dt-bindings: dma: st-stm32-dmamux: Add description for
  dma-cell values
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	dmaengine@vger.kernel.org, alexandre.torgue@foss.st.com, 
-	mcoquelin.stm32@gmail.com, conor+dt@kernel.org, krzk+dt@kernel.org, 
-	robh@kernel.org, vkoul@kernel.org, amelie.delaunay@foss.st.com
-Cc: Ken Sloat <ksloat@cornersoftsolutions.com>
-Content-Type: text/plain; charset="UTF-8"
+To: Ken Sloat <ksloat@cornersoftsolutions.com>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com, dmaengine@vger.kernel.org,
+ alexandre.torgue@foss.st.com, mcoquelin.stm32@gmail.com,
+ conor+dt@kernel.org, krzk+dt@kernel.org, robh@kernel.org, vkoul@kernel.org,
+ amelie.delaunay@foss.st.com
+References: <CADRqkYAaCYvo3ybGdKO1F_y9jFEcwTBxZzRN-Av-adq_4fVu6g@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <CADRqkYAaCYvo3ybGdKO1F_y9jFEcwTBxZzRN-Av-adq_4fVu6g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The dma-cell values for the stm32-dmamux are used to craft the DMA spec
-for the actual controller. These values are currently undocumented
-leaving the user to reverse engineer the driver in order to determine
-their meaning. Add a basic description, while avoiding duplicating
-information by pointing the user to the associated DMA docs that
-describe the fields in depth.
+On 05/12/2024 16:32, Ken Sloat wrote:
+> The dma-cell values for the stm32-dmamux are used to craft the DMA spec
+> for the actual controller. These values are currently undocumented
+> leaving the user to reverse engineer the driver in order to determine
+> their meaning. Add a basic description, while avoiding duplicating
+> information by pointing the user to the associated DMA docs that
+> describe the fields in depth.
+> 
+> Signed-off-by: Ken Sloat <ksloat@cornersoftsolutions.com>
+> ---
+> .../bindings/dma/stm32/st,stm32-dmamux.yaml | 11 +++++++++++
+> 1 file changed, 11 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/stm32/st,stm32-dmamux.yaml
+> b/Documentation/devicetree/bindings/dma/stm32/st,stm32-dmamux.yaml
+> index f26c914a3a9a..aa2e52027ee6 100644
+> --- a/Documentation/devicetree/bindings/dma/stm32/st,stm32-dmamux.yaml
+> +++ b/Documentation/devicetree/bindings/dma/stm32/st,stm32-dmamux.yaml
+> @@ -15,6 +15,17 @@ allOf:
+> properties:
+> "#dma-cells":
+> const: 3
 
-Signed-off-by: Ken Sloat <ksloat@cornersoftsolutions.com>
----
-.../bindings/dma/stm32/st,stm32-dmamux.yaml | 11 +++++++++++
-1 file changed, 11 insertions(+)
+Your patch is corrupted. Please use git send-email or b4 or b4+relay.
 
-diff --git a/Documentation/devicetree/bindings/dma/stm32/st,stm32-dmamux.yaml
-b/Documentation/devicetree/bindings/dma/stm32/st,stm32-dmamux.yaml
-index f26c914a3a9a..aa2e52027ee6 100644
---- a/Documentation/devicetree/bindings/dma/stm32/st,stm32-dmamux.yaml
-+++ b/Documentation/devicetree/bindings/dma/stm32/st,stm32-dmamux.yaml
-@@ -15,6 +15,17 @@ allOf:
-properties:
-"#dma-cells":
-const: 3
-+ description: |
-+ Should be set to <3> with each cell representing the following:
-+ 1. The mux input number/line for the request
-+ 2. Bitfield representing DMA channel configuration that is passed
-+ to the real DMA controller
-+ 3. Bitfield representing device dependent DMA features passed to
-+ the real DMA controller
-+
-+ For bitfield definitions of cells 2 and 3, see the associated
-+ bindings doc for the actual DMA controller the mux is connected
-+ to.
-compatible:
-const: st,stm32h7-dmamux
--- 
-2.34.1
+> + description: |
+> + Should be set to <3> with each cell representing the following:
+
+Drop this part, const says this.
+
+> + 1. The mux input number/line for the request
+> + 2. Bitfield representing DMA channel configuration that is passed
+> + to the real DMA controller
+> + 3. Bitfield representing device dependent DMA features passed to
+> + the real DMA controller
+> +
+> + For bitfield definitions of cells 2 and 3, see the associated
+> + bindings doc for the actual DMA controller the mux is connected
+
+This does not sound right. This is the binding for DMA controller, so
+you are saying "please look at itself". I suggest to drop this as well.
+
+
+Best regards,
+Krzysztof
 

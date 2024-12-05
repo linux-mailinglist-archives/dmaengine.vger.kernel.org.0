@@ -1,263 +1,253 @@
-Return-Path: <dmaengine+bounces-3900-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3901-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AABC79E4D46
-	for <lists+dmaengine@lfdr.de>; Thu,  5 Dec 2024 06:40:40 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 82224166DB0
-	for <lists+dmaengine@lfdr.de>; Thu,  5 Dec 2024 05:40:37 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65B9918FC72;
-	Thu,  5 Dec 2024 05:40:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Xc5fh/Oa"
-X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8BFF9E5202
+	for <lists+dmaengine@lfdr.de>; Thu,  5 Dec 2024 11:21:49 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5900212E5D;
-	Thu,  5 Dec 2024 05:40:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 73C6E28402B
+	for <lists+dmaengine@lfdr.de>; Thu,  5 Dec 2024 10:21:48 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E6ED2066D3;
+	Thu,  5 Dec 2024 09:57:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="NWNqnhFF"
+X-Original-To: dmaengine@vger.kernel.org
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6187E2066CD;
+	Thu,  5 Dec 2024 09:57:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733377237; cv=none; b=idTcigrnEDyYquaK99Zg9RW3xyTWToiFQ8Sk3aGkRk3a2+iEHqZhMEw+zMSRXvvq51D426Jdk0ufEx7qc7++H1s2QLMYzCVfZnQYEWd8mWQawS2MITzqXKeKZVDF5c7r+J6rzlwNknQ16yA9XhTEH8U2fMMAfwoNbJdhvWtQwHI=
+	t=1733392637; cv=none; b=tAdZgUH/E0oLilmitDgWTvgrqelX2Qd2LERRPYcZD6yJ8KwrlvlRpEnwp89WN6EvclaRVXyV/HFNDSX7DyYXxNm0/u8ElRqoGHnZ7s+oTsyWLxcfOol0sTVJezmho5Z0AOs4R73bzG4ZQC5FYXtHa3xLGtNKOBDZq8p261SUCuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733377237; c=relaxed/simple;
-	bh=NP1zZ7XIIedYM8KiFX12kyRxIwcvwU2WDdo0gOJdRsk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=i06EjLR3s6pADajkU7ulXk1NnUF1v8m791FvS75I+RSIPrwVNE4Rd22CYqXeR0qNHXSV2lSqkGt6BR+UTbu7Pf5NW5g1woWsZZQUd6OpKOQGlONOgyXTU3TSnJkCYQ0weu3iwTf6a6CykFQ7Y36bGwDG2y5dMr5x3A2PC8p2aFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Xc5fh/Oa; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4B557anA020051;
-	Thu, 5 Dec 2024 05:40:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	M2VDEL1ICrdsryjdIWKUOL10bx8/yShHzmpadPZFBXc=; b=Xc5fh/OaRwjqGYp+
-	paMTx5GpDQMneBMEkbBtQkLa7adQ0XqBhxYs3fDfA8dIATisCbjZfaHUVYcGhckX
-	ptlZB04E/M7XHUJJYXt0fJlVcS6k/oSaxI0OCzKc+BzZW+h3d/onL7iFsxninPIB
-	cSMANHVjeI47nc7UOtmdiw35LfpRBEOwI0RwCbngIJtQx8nfQY9ZXU5rjbpdZi9G
-	KFEZwlMTe3QvL06XuQc0IhMjY+pVnCm1Ugi12H7k0b2gDlVRyCXu5vnsm77U1T3/
-	KBwuZtI5Trrc25KxdfJXbHyuheVpWGhTH9lQpKD4A9q+CuvOkvQu7Y5dlEpOLtSj
-	LHVrvw==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43a3exdck7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 05 Dec 2024 05:40:24 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4B55eOc4032161
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 5 Dec 2024 05:40:24 GMT
-Received: from [10.217.219.62] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 4 Dec 2024
- 21:40:21 -0800
-Message-ID: <fd7ea0d7-6e08-4000-b840-03e2da837e8d@quicinc.com>
-Date: Thu, 5 Dec 2024 11:10:18 +0530
+	s=arc-20240116; t=1733392637; c=relaxed/simple;
+	bh=miV+lFMFVzAaAvt8JNrBIkbBUgixoMAJpy4otndSQqI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=UrrNpYb3HsrddqVLIvxcV4YTV1yBg80XrqLYEpF5gufcjrT/mF83wB34yURPklwa+ZLf7r2CcO8GEowRTI6rrU1p/lWL68sOUgZfJfUFoyJIuvjy5E/pNYxvQi5lCFVzNbRca9OJGX3NCATiai6+Gz+KJFz0QVfxVF0VXLbnEDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=NWNqnhFF; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1733392636; x=1764928636;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:to:cc;
+  bh=miV+lFMFVzAaAvt8JNrBIkbBUgixoMAJpy4otndSQqI=;
+  b=NWNqnhFFgAYe+sGR8L3TnlvIeu4ExwPAZEP344wblbWjsPHq7jXRGiCY
+   h31tpspC1W07QWvATfMpCl+t3vqQ+1m7qWV2rXRhpeIZvHAOQHd3JfOFE
+   NoWTEDvEY87ugRf81rPrZxeueZveQ+PCgxdVcm8MZLfosz6LpVeqKVzGs
+   1A+l8Di3VURhUOHgXEFkabkxqrkwSolwateHZ0twyZH7WKjLcBYyWw3Kb
+   ij/rOITE+9IFBzToTYIWculddjNAqFQDXc93hC8I+qU3/AfALeOdv1b9A
+   eg5xPKX7QSsl2RqCwwmbg33tohUIRn4xZ0HAKQrIcLByOajINU3KZxXjR
+   w==;
+X-CSE-ConnectionGUID: TKbBYKFISlCTYliYBZMdug==
+X-CSE-MsgGUID: B/i8g4eKSlyJ517PbZMMSg==
+X-IronPort-AV: E=Sophos;i="6.12,209,1728975600"; 
+   d="scan'208";a="266366333"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 05 Dec 2024 02:57:14 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 5 Dec 2024 02:56:23 -0700
+Received: from [127.0.0.1] (10.10.85.11) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
+ Transport; Thu, 5 Dec 2024 02:56:19 -0700
+From: Charan Pedumuru <charan.pedumuru@microchip.com>
+Date: Thu, 5 Dec 2024 15:26:18 +0530
+Subject: [PATCH] dt-bindings: dma: atmel: Convert to json schema
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] dmaengine: qcom: gpi: Add GPI immediate DMA support
- for SPI protocol
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-CC: Vinod Koul <vkoul@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_msavaliy@quicinc.com>, <quic_vtanuku@quicinc.com>
-References: <20241204122059.24239-1-quic_jseerapu@quicinc.com>
- <higpzg6b4e66zpykuu3wlcmaxzplzz3qasoycfytidunp7yqbn@nunjmucxkjbe>
- <052c98ab-1ba4-4665-8b45-3e5ad4fa553b@quicinc.com>
- <CAA8EJppynecscUbUW7Ue=+oYyhFzftiYVgTc6rEuXbUhpxF7iQ@mail.gmail.com>
- <07f627cd-e5ea-4491-8c3e-2693554e6032@quicinc.com>
- <CAA8EJppsya+mav+-e6uUmdehk+CEV5vXN3iDaY0kW0sT-243aw@mail.gmail.com>
-Content-Language: en-US
-From: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
-In-Reply-To: <CAA8EJppsya+mav+-e6uUmdehk+CEV5vXN3iDaY0kW0sT-243aw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: ua83y2zKZAuDwdq6ophIKyvp29-LqEk4
-X-Proofpoint-GUID: ua83y2zKZAuDwdq6ophIKyvp29-LqEk4
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- mlxlogscore=999 clxscore=1015 phishscore=0 adultscore=0 suspectscore=0
- malwarescore=0 spamscore=0 priorityscore=1501 impostorscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
- definitions=main-2412050043
+Message-ID: <20241205-xdma-v1-1-76a4a44670b5@microchip.com>
+X-B4-Tracking: v=1; b=H4sIAMF4UWcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxNDQyNT3YqU3ERdSwvTZLNkE4vUpBRTJaDSgqLUtMwKsDHRsbW1ACEYSFR
+ WAAAA
+To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, "Nicolas
+ Ferre" <nicolas.ferre@microchip.com>, Alexandre Belloni
+	<alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>
+CC: <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	Charan Pedumuru <charan.pedumuru@microchip.com>
+X-Mailer: b4 0.14.1
 
+Convert old text based binding to json schema.
+Changes during conversion:
+- Add the required properties `clock` and `clock-names`, which were
+  missing in the original binding.
+- Add a fallback for `microchip,sam9x7-dma` and `microchip,sam9x60-dma`
+  as they are compatible with the dma IP core on `atmel,sama5d4-dma`.
+- Update examples and include appropriate file directives to resolve
+  errors identified by `dt_binding_check` and `dtbs_check`.
 
+Signed-off-by: Charan Pedumuru <charan.pedumuru@microchip.com>
+---
+ .../devicetree/bindings/dma/atmel,sama5d4-dma.yaml | 79 ++++++++++++++++++++++
+ .../devicetree/bindings/dma/atmel-xdma.txt         | 54 ---------------
+ 2 files changed, 79 insertions(+), 54 deletions(-)
 
-On 12/5/2024 3:53 AM, Dmitry Baryshkov wrote:
-> On Wed, 4 Dec 2024 at 15:54, Jyothi Kumar Seerapu
-> <quic_jseerapu@quicinc.com> wrote:
->>
->>
->>
->> On 12/4/2024 7:09 PM, Dmitry Baryshkov wrote:
->>> On Wed, 4 Dec 2024 at 15:25, Jyothi Kumar Seerapu
->>> <quic_jseerapu@quicinc.com> wrote:
->>>>
->>>>
->>>>
->>>> On 12/4/2024 6:15 PM, Dmitry Baryshkov wrote:
->>>>> On Wed, Dec 04, 2024 at 05:50:59PM +0530, Jyothi Kumar Seerapu wrote:
->>>>>> The DMA TRE(Transfer ring element) buffer contains the DMA
->>>>>> buffer address. Accessing data from this address can cause
->>>>>> significant delays in SPI transfers, which can be mitigated to
->>>>>> some extent by utilizing immediate DMA support.
->>>>>>
->>>>>> QCOM GPI DMA hardware supports an immediate DMA feature for data
->>>>>> up to 8 bytes, storing the data directly in the DMA TRE buffer
->>>>>> instead of the DMA buffer address. This enhancement enables faster
->>>>>> SPI data transfers.
->>>>>>
->>>>>> This optimization reduces the average transfer time from 25 us to
->>>>>> 16 us for a single SPI transfer of 8 bytes length, with a clock
->>>>>> frequency of 50 MHz.
->>>>>>
->>>>>> Signed-off-by: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
->>>>>> ---
->>>>>>
->>>>>> v2-> v3:
->>>>>>       - When to enable Immediate DMA support, control is moved to GPI driver
->>>>>>         from SPI driver.
->>>>>>       - Optimizations are done in GPI driver related to immediate dma changes.
->>>>>>       - Removed the immediate dma supported changes in qcom-gpi-dma.h file
->>>>>>         and handled in GPI driver.
->>>>>>
->>>>>>       Link to v2:
->>>>>>        https://lore.kernel.org/all/20241128133351.24593-2-quic_jseerapu@quicinc.com/
->>>>>>        https://lore.kernel.org/all/20241128133351.24593-3-quic_jseerapu@quicinc.com/
->>>>>>
->>>>>> v1 -> v2:
->>>>>>       - Separated the patches to dmaengine and spi subsystems
->>>>>>       - Removed the changes which are not required for this feature from
->>>>>>         qcom-gpi-dma.h file.
->>>>>>       - Removed the type conversions used in gpi_create_spi_tre.
->>>>>>
->>>>>>       Link to v1:
->>>>>>        https://lore.kernel.org/lkml/20241121115201.2191-2-quic_jseerapu@quicinc.com/
->>>>>>
->>>>>>     drivers/dma/qcom/gpi.c | 32 +++++++++++++++++++++++++++-----
->>>>>>     1 file changed, 27 insertions(+), 5 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
->>>>>> index 52a7c8f2498f..35451d5a81f7 100644
->>>>>> --- a/drivers/dma/qcom/gpi.c
->>>>>> +++ b/drivers/dma/qcom/gpi.c
->>>>>> @@ -27,6 +27,7 @@
->>>>>>     #define TRE_FLAGS_IEOT             BIT(9)
->>>>>>     #define TRE_FLAGS_BEI              BIT(10)
->>>>>>     #define TRE_FLAGS_LINK             BIT(11)
->>>>>> +#define TRE_FLAGS_IMMEDIATE_DMA     BIT(16)
->>>>>>     #define TRE_FLAGS_TYPE             GENMASK(23, 16)
->>>>>>
->>>>>>     /* SPI CONFIG0 WD0 */
->>>>>> @@ -64,6 +65,7 @@
->>>>>>
->>>>>>     /* DMA TRE */
->>>>>>     #define TRE_DMA_LEN                GENMASK(23, 0)
->>>>>> +#define TRE_DMA_IMMEDIATE_LEN       GENMASK(3, 0)
->>>>>>
->>>>>>     /* Register offsets from gpi-top */
->>>>>>     #define GPII_n_CH_k_CNTXT_0_OFFS(n, k)     (0x20000 + (0x4000 * (n)) + (0x80 * (k)))
->>>>>> @@ -1711,6 +1713,8 @@ static int gpi_create_spi_tre(struct gchan *chan, struct gpi_desc *desc,
->>>>>>        dma_addr_t address;
->>>>>>        struct gpi_tre *tre;
->>>>>>        unsigned int i;
->>>>>> +    int len;
->>>>>> +    u8 immediate_dma;
->>>>>>
->>>>>>        /* first create config tre if applicable */
->>>>>>        if (direction == DMA_MEM_TO_DEV && spi->set_config) {
->>>>>> @@ -1763,14 +1767,32 @@ static int gpi_create_spi_tre(struct gchan *chan, struct gpi_desc *desc,
->>>>>>        tre_idx++;
->>>>>>
->>>>>>        address = sg_dma_address(sgl);
->>>>>> -    tre->dword[0] = lower_32_bits(address);
->>>>>> -    tre->dword[1] = upper_32_bits(address);
->>>>>> +    len = sg_dma_len(sgl);
->>>>>>
->>>>>> -    tre->dword[2] = u32_encode_bits(sg_dma_len(sgl), TRE_DMA_LEN);
->>>>>> +    immediate_dma = (direction == DMA_MEM_TO_DEV) && len <= 2 * sizeof(tre->dword[0]);
->>>>>
->>>>> inline this condition, remove extra brackets and split the line after &&.
->>>> Hi Dmitry Baryshkov, thanks for the review.
->>>> Sure, i will make the changes mentioned below. Please let me know otherwise.
->>>>
->>>> immediate_dma = direction == DMA_MEM_TO_DEV &&
->>>>                    len <= 2 * sizeof(tre->dword[0]);
->>>
->>> I was suggesting to _inline_ this condition rather than having a
->>> separate variable for it.
->>
->> I can directly use the condition as follows:
->> if (direction == DMA_MEM_TO_DEV && len <= 2 * sizeof(tre->dword[0]))
->>
->> However, this condition also needs to account for the
->> "TRE_FLAGS_IMMEDIATE_DMA" update. Therefore, I introduced a separate
->> variable.
->>
->> tre->dword[3] |= u32_encode_bits(!!immediate_dma, TRE_FLAGS_IMMEDIATE_DMA);
->>
->> Please let me know if it's acceptable to mention the entire condition in
->> both places instead of using a separate variable.
-> 
-> Move the flag setting under the if() too.
-Sure thanks. I will make use of this condition directly instead using 
-separate variable all over the applicable places.
-> 
->>
->>
->>>
->>>>>> +
->>>>>> +    /* Support Immediate dma for write transfers for data length up to 8 bytes */
->>>>>> +    if (immediate_dma) {
->>>>>> +            /*
->>>>>> +             * For Immediate dma, data length may not always be length of 8 bytes,
->>>>>> +             * it can be length less than 8, hence initialize both dword's with 0
->>>>>> +             */
->>>>>> +            tre->dword[0] = 0;
->>>>>> +            tre->dword[1] = 0;
->>>>>> +            memcpy(&tre->dword[0], sg_virt(sgl), len);
->>>>>> +
->>>>>> +            tre->dword[2] = u32_encode_bits(len, TRE_DMA_IMMEDIATE_LEN);
->>>>>> +    } else {
->>>>>> +            tre->dword[0] = lower_32_bits(address);
->>>>>> +            tre->dword[1] = upper_32_bits(address);
->>>>>> +
->>>>>> +            tre->dword[2] = u32_encode_bits(len, TRE_DMA_LEN);
->>>>>> +    }
->>>>>>
->>>>>>        tre->dword[3] = u32_encode_bits(TRE_TYPE_DMA, TRE_FLAGS_TYPE);
->>>>>> -    if (direction == DMA_MEM_TO_DEV)
->>>>>> -            tre->dword[3] |= u32_encode_bits(1, TRE_FLAGS_IEOT);
->>>>>> +    tre->dword[3] |= u32_encode_bits(!!immediate_dma, TRE_FLAGS_IMMEDIATE_DMA);
->>>>>> +    tre->dword[3] |= u32_encode_bits(!!(direction == DMA_MEM_TO_DEV),
->>>>>> +                                     TRE_FLAGS_IEOT);
->>>>>>
->>>>>>        for (i = 0; i < tre_idx; i++)
->>>>>>                dev_dbg(dev, "TRE:%d %x:%x:%x:%x\n", i, desc->tre[i].dword[0],
->>>>>> --
->>>>>> 2.17.1
->>>>>>
->>>>>
->>>
->>>
->>>
-> 
-> 
-> 
+diff --git a/Documentation/devicetree/bindings/dma/atmel,sama5d4-dma.yaml b/Documentation/devicetree/bindings/dma/atmel,sama5d4-dma.yaml
+new file mode 100644
+index 000000000000..9ca1c5d1f00f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/atmel,sama5d4-dma.yaml
+@@ -0,0 +1,79 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/atmel,sama5d4-dma.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Microchip AT91 Extensible Direct Memory Access Controller
++
++maintainers:
++  - Nicolas Ferre <nicolas.ferre@microchip.com>
++  - Charan Pedumuru <charan.pedumuru@microchip.com>
++
++description:
++  The DMA Controller (XDMAC) is a AHB-protocol central direct memory access
++  controller. It performs peripheral data transfer and memory move operations
++  over one or two bus ports through the unidirectional communication
++  channel. Each channel is fully programmable and provides both peripheral
++  or memory-to-memory transfers. The channel features are configurable at
++  implementation.
++
++allOf:
++  - $ref: dma-controller.yaml#
++
++properties:
++  compatible:
++    oneOf:
++      - enum:
++          - atmel,sama5d4-dma
++          - microchip,sama7g5-dma
++      - items:
++          - enum:
++              - microchip,sam9x60-dma
++              - microchip,sam9x7-dma
++          - const: atmel,sama5d4-dma
++
++  "#dma-cells":
++    description: |
++      Represents the number of integer cells in the `dmas` property of client
++      devices. The single cell specifies the channel configuration register:
++        - bit 13: SIF (Source Interface Identifier) for memory interface.
++        - bit 14: DIF (Destination Interface Identifier) for peripheral interface.
++        - bit 30-24: PERID (Peripheral Identifier).
++    const: 1
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    const: dma_clk
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - "#dma-cells"
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/at91.h>
++    #include <dt-bindings/dma/at91.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++    dma-controller@f0008000 {
++        compatible = "atmel,sama5d4-dma";
++        reg = <0xf0008000 0x1000>;
++        interrupts = <20 IRQ_TYPE_LEVEL_HIGH 0>;
++        #dma-cells = <1>;
++        clocks = <&pmc PMC_TYPE_PERIPHERAL 20>;
++        clock-names = "dma_clk";
++    };
+diff --git a/Documentation/devicetree/bindings/dma/atmel-xdma.txt b/Documentation/devicetree/bindings/dma/atmel-xdma.txt
+deleted file mode 100644
+index 76d649b3a25d..000000000000
+--- a/Documentation/devicetree/bindings/dma/atmel-xdma.txt
++++ /dev/null
+@@ -1,54 +0,0 @@
+-* Atmel Extensible Direct Memory Access Controller (XDMAC)
+-
+-* XDMA Controller
+-Required properties:
+-- compatible: Should be "atmel,sama5d4-dma", "microchip,sam9x60-dma" or
+-  "microchip,sama7g5-dma" or
+-  "microchip,sam9x7-dma", "atmel,sama5d4-dma".
+-- reg: Should contain DMA registers location and length.
+-- interrupts: Should contain DMA interrupt.
+-- #dma-cells: Must be <1>, used to represent the number of integer cells in
+-the dmas property of client devices.
+-  - The 1st cell specifies the channel configuration register:
+-    - bit 13: SIF, source interface identifier, used to get the memory
+-    interface identifier,
+-    - bit 14: DIF, destination interface identifier, used to get the peripheral
+-    interface identifier,
+-    - bit 30-24: PERID, peripheral identifier.
+-
+-Example:
+-
+-dma1: dma-controller@f0004000 {
+-	compatible = "atmel,sama5d4-dma";
+-	reg = <0xf0004000 0x200>;
+-	interrupts = <50 4 0>;
+-	#dma-cells = <1>;
+-};
+-
+-
+-* DMA clients
+-DMA clients connected to the Atmel XDMA controller must use the format
+-described in the dma.txt file, using a one-cell specifier for each channel.
+-The two cells in order are:
+-1. A phandle pointing to the DMA controller.
+-2. Channel configuration register. Configurable fields are:
+-    - bit 13: SIF, source interface identifier, used to get the memory
+-    interface identifier,
+-    - bit 14: DIF, destination interface identifier, used to get the peripheral
+-    interface identifier,
+-  - bit 30-24: PERID, peripheral identifier.
+-
+-Example:
+-
+-i2c2: i2c@f8024000 {
+-	compatible = "atmel,at91sam9x5-i2c";
+-	reg = <0xf8024000 0x4000>;
+-	interrupts = <34 4 6>;
+-	dmas = <&dma1
+-		(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
+-		 | AT91_XDMAC_DT_PERID(6))>,
+-	       <&dma1
+-		(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
+-		| AT91_XDMAC_DT_PERID(7))>;
+-	dma-names = "tx", "rx";
+-};
+
+---
+base-commit: 85a2dd7d7c8152cb125712a1ecae1d0a6ccac250
+change-id: 20241125-xdma-985c6c48ebd5
+
+Best regards,
+-- 
+Charan Pedumuru <charan.pedumuru@microchip.com>
+
 

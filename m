@@ -1,236 +1,164 @@
-Return-Path: <dmaengine+bounces-3919-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3920-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 45A1B9E6C40
-	for <lists+dmaengine@lfdr.de>; Fri,  6 Dec 2024 11:30:38 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F7079E6C6A
+	for <lists+dmaengine@lfdr.de>; Fri,  6 Dec 2024 11:40:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id ECEA91888FD1
-	for <lists+dmaengine@lfdr.de>; Fri,  6 Dec 2024 10:29:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C413B1882F3B
+	for <lists+dmaengine@lfdr.de>; Fri,  6 Dec 2024 10:40:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A15C21FCCE3;
-	Fri,  6 Dec 2024 10:26:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 876FC1FBC80;
+	Fri,  6 Dec 2024 10:40:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="cxogOW9y"
+	dkim=pass (2048-bit key) header.d=cornersoftsolutions.com header.i=@cornersoftsolutions.com header.b="DRIDXevY"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF4561FC7CB;
-	Fri,  6 Dec 2024 10:26:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95BA1F8AF1
+	for <dmaengine@vger.kernel.org>; Fri,  6 Dec 2024 10:40:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733480768; cv=none; b=t9PruW1OjeSNYh0BH1e+bEpVmZgAh5gVNgV+WGtGSFQhiHur2gZAvM9nW2feBj82MBG12AC/Fzc9l5HMYhRijKaa3WSikItByTbRBTGIGSBLlQuSJmKSnk0WI93eI48QCPs/xeG6tklhDp+f/jMcYhRvJfXpRCrJF7j2Wu24IZk=
+	t=1733481630; cv=none; b=EZYchb1lMXCzFCCJ7Hs13UG8a3YQa6pbwb0wEVMrpZ9YZRQW3WcflP37MH8+bZOh1fFWlP6xd+ot3Xamg+cs7iZbf5M8fMMX1RNsLAgOXlnx0Wp6n+A9xnKO3RIVa1/UyPjDQs1Mj/sY3UZQ90PLlsbdOZU0hh5100VmQ40Z9jE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733480768; c=relaxed/simple;
-	bh=mtX0rO0v9Qr5tY9AyUhwOp5NS4mAz7OpQ/6YiP6Xj38=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=l8r5u3oKYYHEozSZhiK/9qwcKc3RgUkZvnweRiowwRFAL0H9WDXv1ywEPnG3quWm5INJofgvbsbQpvQUTQuK07TVThanrhZqUc0BBjRoZz7nPSb+6HXSiIf5PBkhCVwQONMWnwh3OX5jgXyxUHf5cQ2F5SAUzZnZx4FTcSdc7+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=cxogOW9y; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4B67YSVt016410;
-	Fri, 6 Dec 2024 10:26:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	eLUqCUSJcdvzLlfkVoGdNf59nixxVLQSqU8fZf7JFY4=; b=cxogOW9ydgKqUY+I
-	SRh5BwXsSxM+ljKN3MpHl44gAfogxrYEzlrg0x4s05MDbu6j222G4boTsfWkLg3q
-	Xn2D8/OQYT94KzkdM+9sjT2N3qjCv23gKiWjq5KaKihukR5bpGo993EuvfCvdW3D
-	YLxVDSa/tU3zkdBjyxVLZkgw+1oDkU3uk+yFId9WySMSi4BPxYFr4qJ9fKZlgSJT
-	LXEhxV2xJzkGuiRpZTP3LR7eCR6/Co9h2CGsDHNC5Mqr8dhihWHKjOrwhTrukUxw
-	zGvM3i0BHDyTQyFb+FyCIg/xQLrcwwZ0bD1WyWjS6ga5g2ENtLQQ1vgDMfRmp301
-	DGD0fw==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43bbnmk8gn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 06 Dec 2024 10:26:02 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4B6AQ1YA006516
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 6 Dec 2024 10:26:01 GMT
-Received: from [10.217.219.62] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 6 Dec 2024
- 02:25:58 -0800
-Message-ID: <09f4bb30-eec6-410d-9516-cd23f4ab79c8@quicinc.com>
-Date: Fri, 6 Dec 2024 15:55:55 +0530
+	s=arc-20240116; t=1733481630; c=relaxed/simple;
+	bh=g8IFaUOB4P3I43rGs+nQsOp0ozchV1oKjUnIOr2vrKY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=e0Q0OtcFW1gSfnKn3qlYqoDxPL3nTaXmw8D0Xfk+pMC1MQRF44eOGto73x66hXMJdhoNV5oMX2cz5Y0gHxbN07TuA1Bhwt5St10aZUvukSbcs9giEIRjU7lpnE3IyXiFWjBKHG/DQXZKGOy2Y3oZkNZSUU0PsM5fuDiP9nW34ZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cornersoftsolutions.com; spf=pass smtp.mailfrom=cornersoftsolutions.com; dkim=pass (2048-bit key) header.d=cornersoftsolutions.com header.i=@cornersoftsolutions.com header.b=DRIDXevY; arc=none smtp.client-ip=209.85.160.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cornersoftsolutions.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cornersoftsolutions.com
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-29e783392bfso1011250fac.3
+        for <dmaengine@vger.kernel.org>; Fri, 06 Dec 2024 02:40:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cornersoftsolutions.com; s=google; t=1733481628; x=1734086428; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5dpoHhnnSqF1AlwYKD5E4gHGT3XutAgIPGhaNKW/0HU=;
+        b=DRIDXevYclBLvFbQOjWGLyq3N9ANzBIrkJu8pxUClP5qmcNpj4BXJo02yQ8kAu7VGX
+         bcfZhBSZLqOel/sQqc6xcC24kq8u69ZJdj3oBDn9KrLMSfdaQo7qQffhOHx9gTWn4ls2
+         2Acdwslm8rxG0czrHP+CZfP3X86fzfEZBHH0nNnm4lFO4TnrBcVRksoZwjFkeTuTZ+oj
+         KMyYPfpvcx/p/zo6zxMREw9kLd02r32xb8JWztm6YYRq3euAcEEy56NKWt9KuZOEDXqm
+         GTVUeprHyYLTPHERcaJdrcichVx8SLY5fzt5oXvDg7z7xmPa8vF1HSw+LI0GCIX4AOUJ
+         +Aog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733481628; x=1734086428;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5dpoHhnnSqF1AlwYKD5E4gHGT3XutAgIPGhaNKW/0HU=;
+        b=lXyxDSbw9doUhJrIgy+zN2RDxwebNii7qcUnHdDPA3Hozr8NcvxeyzyuQnZifCU5cp
+         ZLh5O/tJFzVmwRk3g0GF12LpchOxnrCUgbcOC4BCwfCDooUQJjsmq6EWLvAdI0L5OAp/
+         tQRMwvJuwYzJz70j2UYAG9INWRLcwv5YSaS0r8/0786qwI3adJcz3sFV2NOJ8TPwwtD2
+         ITAX82YjJkGWnyv3TmtRD4zZUO0+6Z54Gr+oIm4BJG/kK5Bjz6vj95FXVQkiAjgBpYfF
+         3DXKDS+MZL4NrMxmWDAiYjqJ91rS7TuEyHfYAwgR8dZ/btpuHRtV5vEf8nqxL+FO8XpR
+         U1cw==
+X-Forwarded-Encrypted: i=1; AJvYcCVduWozeZABnJEd8HV5QYwBxn3sOhOrcItt41gkcVq8YrW6r+WdPbzSoGIMG3Q20PpFi5kSDx2E/J0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUXZGtKO/e5l5OC28EB//XlgvEDAkpRLIud3fO2E9aGswh6qgw
+	G3RwQuPfHheutpgXOb7EhVG5nCq1kcUQH3maF0V/rG3rHFJLfRicFHMMR5y8pBsVsWDjs8xS+oR
+	IzGyHiA4DAe58NLX0+o9/rSG3MZ2uXRo6QvOHTQ==
+X-Gm-Gg: ASbGnctjkZpMHc/9t+Cy8a6eFmWz4flPqZOTWUgYEcGFX84YHKVStJyRCOq0SFbNRfF
+	ImfLkLpG6WmEfzTc+FyjQhIfO4oXAOBhV
+X-Google-Smtp-Source: AGHT+IEEgtCpiEfKyepoSM+/D8HoOWbGc7v8g0uhiFB/aNLSdUw6Ym7nLZpksS0y4DeVwr2P94N5ssZLKnJh8nBacmA=
+X-Received: by 2002:a05:6870:c69a:b0:29d:c832:7ef6 with SMTP id
+ 586e51a60fabf-29f735d53damr1234503fac.39.1733481627713; Fri, 06 Dec 2024
+ 02:40:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] dmaengine: qcom: gpi: Add GPI immediate DMA support
- for SPI protocol
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-CC: Vinod Koul <vkoul@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_msavaliy@quicinc.com>, <quic_vtanuku@quicinc.com>
-References: <20241205170611.18566-1-quic_jseerapu@quicinc.com>
- <d74ibj74mrluovh3ylok3dyctf3r4iimoosegdair5acvpre6c@w5xfl6adtfto>
-Content-Language: en-US
-From: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
-In-Reply-To: <d74ibj74mrluovh3ylok3dyctf3r4iimoosegdair5acvpre6c@w5xfl6adtfto>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: QL-7P0X3knFbBj-PdpO4wgJhWnQu0DQ3
-X-Proofpoint-GUID: QL-7P0X3knFbBj-PdpO4wgJhWnQu0DQ3
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- mlxlogscore=999 priorityscore=1501 spamscore=0 impostorscore=0 bulkscore=0
- suspectscore=0 adultscore=0 clxscore=1015 phishscore=0 mlxscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2412060075
+References: <CADRqkYAaCYvo3ybGdKO1F_y9jFEcwTBxZzRN-Av-adq_4fVu6g@mail.gmail.com>
+ <d53538ea-f846-4a6a-bc14-22ec7ee57e53@kernel.org> <CADRqkYDnDNL_H2CzxjsPOdM++iYp-9Ak3PVFBw2qcjR_M=GeBA@mail.gmail.com>
+ <28d1bb46-ab18-42da-9ca2-ff498c888d66@kernel.org> <bdfeceb6-962a-4f20-b76c-4fe5e5ff80c3@foss.st.com>
+In-Reply-To: <bdfeceb6-962a-4f20-b76c-4fe5e5ff80c3@foss.st.com>
+From: Ken Sloat <ksloat@cornersoftsolutions.com>
+Date: Fri, 6 Dec 2024 05:40:16 -0500
+Message-ID: <CADRqkYAg5k3xM81-qBBiiLsvVdJCGdCVyAJgEexMw4s-1PeQkQ@mail.gmail.com>
+Subject: Re: [PATCH v1] dt-bindings: dma: st-stm32-dmamux: Add description for
+ dma-cell values
+To: Amelie Delaunay <amelie.delaunay@foss.st.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
+	linux-stm32@st-md-mailman.stormreply.com, dmaengine@vger.kernel.org, 
+	alexandre.torgue@foss.st.com, mcoquelin.stm32@gmail.com, conor+dt@kernel.org, 
+	krzk+dt@kernel.org, robh@kernel.org, vkoul@kernel.org, 
+	Ken Sloat <ksloat@cornersoftsolutions.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Amelie,
 
+Thanks for reviewing
 
-On 12/5/2024 10:46 PM, Dmitry Baryshkov wrote:
-> On Thu, Dec 05, 2024 at 10:36:11PM +0530, Jyothi Kumar Seerapu wrote:
->> The DMA TRE(Transfer ring element) buffer contains the DMA
->> buffer address. Accessing data from this address can cause
->> significant delays in SPI transfers, which can be mitigated to
->> some extent by utilizing immediate DMA support.
->>
->> QCOM GPI DMA hardware supports an immediate DMA feature for data
->> up to 8 bytes, storing the data directly in the DMA TRE buffer
->> instead of the DMA buffer address. This enhancement enables faster
->> SPI data transfers.
->>
->> This optimization reduces the average transfer time from 25 us to
->> 16 us for a single SPI transfer of 8 bytes length, with a clock
->> frequency of 50 MHz.
->>
->> Signed-off-by: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
->> ---
->>
->> v3 -> v4:
->>     - Instead using extra variable(immediate_dma) for Immediate dma
->>       condition check, made it to inlined.
->>     - Removed the extra brackets around Immediate dma condition check.
->>
->>     Link to v3:
->> 	https://lore.kernel.org/lkml/20241204122059.24239-1-quic_jseerapu@quicinc.com/
->>
->> v2 -> v3:
->>     - When to enable Immediate DMA support, control is moved to GPI driver
->>       from SPI driver.
->>     - Optimizations are done in GPI driver related to immediate dma changes.
->>     - Removed the immediate dma supported changes in qcom-gpi-dma.h file
->>       and handled in GPI driver.
->>
->>     Link to v2:
->> 	https://lore.kernel.org/all/20241128133351.24593-2-quic_jseerapu@quicinc.com/
->> 	https://lore.kernel.org/all/20241128133351.24593-3-quic_jseerapu@quicinc.com/
->>
->> v1 -> v2:
->>     - Separated the patches to dmaengine and spi subsystems
->>     - Removed the changes which are not required for this feature from
->>       qcom-gpi-dma.h file.
->>     - Removed the type conversions used in gpi_create_spi_tre.
->>
->>     Link to v1:
->> 	https://lore.kernel.org/lkml/20241121115201.2191-2-quic_jseerapu@quicinc.com/
->>
->>   drivers/dma/qcom/gpi.c | 31 ++++++++++++++++++++++++++-----
->>   1 file changed, 26 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
->> index 52a7c8f2498f..9d4fc760bbe6 100644
->> --- a/drivers/dma/qcom/gpi.c
->> +++ b/drivers/dma/qcom/gpi.c
->> @@ -27,6 +27,7 @@
->>   #define TRE_FLAGS_IEOT		BIT(9)
->>   #define TRE_FLAGS_BEI		BIT(10)
->>   #define TRE_FLAGS_LINK		BIT(11)
->> +#define TRE_FLAGS_IMMEDIATE_DMA	BIT(16)
->>   #define TRE_FLAGS_TYPE		GENMASK(23, 16)
->>   
->>   /* SPI CONFIG0 WD0 */
->> @@ -64,6 +65,7 @@
->>   
->>   /* DMA TRE */
->>   #define TRE_DMA_LEN		GENMASK(23, 0)
->> +#define TRE_DMA_IMMEDIATE_LEN	GENMASK(3, 0)
->>   
->>   /* Register offsets from gpi-top */
->>   #define GPII_n_CH_k_CNTXT_0_OFFS(n, k)	(0x20000 + (0x4000 * (n)) + (0x80 * (k)))
->> @@ -1711,6 +1713,7 @@ static int gpi_create_spi_tre(struct gchan *chan, struct gpi_desc *desc,
->>   	dma_addr_t address;
->>   	struct gpi_tre *tre;
->>   	unsigned int i;
->> +	int len;
->>   
->>   	/* first create config tre if applicable */
->>   	if (direction == DMA_MEM_TO_DEV && spi->set_config) {
->> @@ -1763,14 +1766,32 @@ static int gpi_create_spi_tre(struct gchan *chan, struct gpi_desc *desc,
->>   	tre_idx++;
->>   
->>   	address = sg_dma_address(sgl);
->> -	tre->dword[0] = lower_32_bits(address);
->> -	tre->dword[1] = upper_32_bits(address);
->> +	len = sg_dma_len(sgl);
->>   
->> -	tre->dword[2] = u32_encode_bits(sg_dma_len(sgl), TRE_DMA_LEN);
->> +	/* Support Immediate dma for write transfers for data length up to 8 bytes */
->> +	if (direction == DMA_MEM_TO_DEV && len <= 2 * sizeof(tre->dword[0])) {
->> +		/*
->> +		 * For Immediate dma, data length may not always be length of 8 bytes,
->> +		 * it can be length less than 8, hence initialize both dword's with 0
->> +		 */
->> +		tre->dword[0] = 0;
->> +		tre->dword[1] = 0;
->> +		memcpy(&tre->dword[0], sg_virt(sgl), len);
->> +
->> +		tre->dword[2] = u32_encode_bits(len, TRE_DMA_IMMEDIATE_LEN);
->> +	} else {
->> +		tre->dword[0] = lower_32_bits(address);
->> +		tre->dword[1] = upper_32_bits(address);
->> +
->> +		tre->dword[2] = u32_encode_bits(len, TRE_DMA_LEN);
->> +	}
->>   
->>   	tre->dword[3] = u32_encode_bits(TRE_TYPE_DMA, TRE_FLAGS_TYPE);
->> -	if (direction == DMA_MEM_TO_DEV)
->> -		tre->dword[3] |= u32_encode_bits(1, TRE_FLAGS_IEOT);
->> +	tre->dword[3] |= u32_encode_bits(direction == DMA_MEM_TO_DEV &&
->> +					 len <= 2 * sizeof(tre->dword[0]),
->> +					 TRE_FLAGS_IMMEDIATE_DMA);
-> 
-> Don't repeat the condition, put it inside if.
-Moving logic of setting "TRE_FLAGS_IMMEDIATE_DMA" to inside 'if' causes 
-this flag(16th bit) to overwrite due to "u32_encode_bits(TRE_TYPE_DMA, 
-TRE_FLAGS_TYPE)" operation.
+On Thu, Dec 5, 2024 at 1:06=E2=80=AFPM Amelie Delaunay
+<amelie.delaunay@foss.st.com> wrote:
+>
+>
+> On 12/5/24 17:09, Krzysztof Kozlowski wrote:
+> > On 05/12/2024 17:07, Ken Sloat wrote:
+> >>>> + 1. The mux input number/line for the request
+> >>>> + 2. Bitfield representing DMA channel configuration that is passed
+> >>>> + to the real DMA controller
+> >>>> + 3. Bitfield representing device dependent DMA features passed to
+> >>>> + the real DMA controller
+> >>>> +
+> >>>> + For bitfield definitions of cells 2 and 3, see the associated
+> >>>> + bindings doc for the actual DMA controller the mux is connected
+> >>>
+> >>> This does not sound right. This is the binding for DMA controller, so
+> >>> you are saying "please look at itself". I suggest to drop this as wel=
+l.
+> >>>
+> >>
+> >> While logically it is the DMA controller, this doc is specifically for
+> >> the mux - the DMA controller has its own driver and binding docs in
+> >> Documentation/devicetree/bindings/dma/stm32/st,stm32-dma.yaml
+> >>
+> >> I can reference st,stm32-dma.yaml directly, but I was unsure if this
+> >> mux IP was used with another DMA controller from ST on a different
+> >> SoC.
+> >>
+> >> What do you suggest here?
+> >
+> > Thanks for explanation, I think it is fine.
+> >
+> > Best regards,
+> > Krzysztof
+>
+> This description was lost when STM32 DMAMUX binding txt file was
+> converted to yaml:
+> 0b7c446fa9f7 ("dt-bindings: dma: Convert stm32 DMAMUX bindings to
+> json-schema")
+>
+> -- #dma-cells:  Should be set to <3>.
+> -               First parameter is request line number.
+> -               Second is DMA channel configuration
+> -               Third is Fifo threshold
 
-And so, instead using "TRE_TYPE_DMA" + "TRE_FLAGS_IMMEDIATE_DMA" for 
-immediate dma type, will define separate macro "TRE_TYPE_IMMEDIATE_DMA" 
-with type 0x11 and use it for immediate dma operation and existing 
-"TRE_TYPE_DMA" for non-immediate dma operation.
-As per hardware programming guide, type 0x11 for immediate dma.
+Thanks for the info, this aligns with what I have
 
-#define TRE_TYPE_DMA            0x10
-#define TRE_TYPE_IMMEDIATE_DMA  0x11
+> -               For more details about the three cells, please see
+> -               stm32-dma.txt documentation binding file
+>
+>
+> stm32-dmamux exclusively muxes stm32-dma channels. It is not used with
+> other ST DMA controllers (STM32 MDMA, STM32 DMA3).
+>
+> So it is fine to refer to st,stm32-dma.yaml.
 
-Please let me know if it is fine or any improvements/suggestions here.
+Ok, I can add that on v2
 
-> 
->> +	tre->dword[3] |= u32_encode_bits(direction == DMA_MEM_TO_DEV,
->> +					 TRE_FLAGS_IEOT);
->>   
->>   	for (i = 0; i < tre_idx; i++)
->>   		dev_dbg(dev, "TRE:%d %x:%x:%x:%x\n", i, desc->tre[i].dword[0],
->> -- 
->> 2.17.1
->>
-> 
+>
+> Regards,
+> Amelie
+
+--=20
+Sincerely,
+Ken Sloat
 

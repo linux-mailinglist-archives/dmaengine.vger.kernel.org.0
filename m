@@ -1,134 +1,158 @@
-Return-Path: <dmaengine+bounces-3924-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3925-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E51B9E8985
-	for <lists+dmaengine@lfdr.de>; Mon,  9 Dec 2024 04:29:17 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8AEAA9E8A4C
+	for <lists+dmaengine@lfdr.de>; Mon,  9 Dec 2024 05:29:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 41E45164AA0
-	for <lists+dmaengine@lfdr.de>; Mon,  9 Dec 2024 03:29:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EE96A1884C6B
+	for <lists+dmaengine@lfdr.de>; Mon,  9 Dec 2024 04:29:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 839021487DC;
-	Mon,  9 Dec 2024 03:29:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0B4115B122;
+	Mon,  9 Dec 2024 04:29:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bMXbkevV"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A60E213C9B3;
-	Mon,  9 Dec 2024 03:29:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.178.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D534158534;
+	Mon,  9 Dec 2024 04:29:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733714953; cv=none; b=N5Nk7q0NDUstlH4SokBKeDeT8lOnxdYHaxdnaNOPq5QN5NX+26pZg9nx7oL29FDM7P2+d/34sQFCJ5P3oFTfw6h2WuSdo0EB5KH9PZ4Yrt/f5T23dURUerMpjKs43Spuk5N+bZUQ/BoV75ZwErhs2hGCSbqOoBlKiM12PKJnzng=
+	t=1733718591; cv=none; b=IrUOjQJiOxgWhAaRfMA4JKiRbb6wtcZmpojtOaPhvE8gBRTzCRUhjrBQEkq8VOkLP3lnrQFAn11R3RHerRy4GSWUQBoONsUwlFikVOfO9ZE+0jE8aO9EDaFc0KuERa6YYQ/a1JKxQ8QZfykRW2u+rkmwDHhzOb5Ri9K1iYpFzzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733714953; c=relaxed/simple;
-	bh=UoJ6uBPaZ1DKSdoDtMa9yhagX8+MqXBgqPofD+3nzTs=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=d1p/eff53UAALvN3M80pPb2UZ569Eoae5lTMXzJEaj3JhnFbVt37KeQyDZ7uJBiBlEHYS+hriRpwskelYDk+RtLLZ817EAC1E6dLKPlsM7DBH+2oQQKE1UVSyBgfm+6gjnmY9qXC5l6qsATQ4ILGWeeH7/ZaNaquhe4+cXj8tWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.178.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250811.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4B93K3K2021272;
-	Mon, 9 Dec 2024 03:28:58 GMT
-Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 43cx4x8x2e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Mon, 09 Dec 2024 03:28:57 +0000 (GMT)
-Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.43; Sun, 8 Dec 2024 19:28:56 -0800
-Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
- 15.1.2507.43 via Frontend Transport; Sun, 8 Dec 2024 19:28:54 -0800
-From: <jianqi.ren.cn@windriver.com>
-To: <kory.maincent@bootlin.com>, <gregkh@linuxfoundation.org>
-CC: <stable@vger.kernel.org>, <gustavo.pimentel@synopsys.com>,
-        <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH 6.1.y] dmaengine: dw-edma: eDMA: Add sync read before starting the DMA transfer in remote setup
-Date: Mon, 9 Dec 2024 12:26:47 +0800
-Message-ID: <20241209042647.3426260-1-jianqi.ren.cn@windriver.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1733718591; c=relaxed/simple;
+	bh=8wOwAXU2F/nyxGG2by6ki7uPGENf2of8aDoylsljgVw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ZM8GdkjBWJrgC9plZxgnHKy5+hoXksFdL5Qwqy6Dv5RjffPyozPCVPzhi4B2s5JE48vk3yryvtaiDQ71/E3JZjfSnZRWLogpawxGeBTyo0R3OxVpbZs8EPoLI4/f5NPwfIAdrLGjN1forqzhxiVRY15gxxgPoXSvJn0VDxwRqJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=bMXbkevV; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 4B94TWdf2251515
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 8 Dec 2024 22:29:32 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1733718572;
+	bh=BJNrJJLNwAXr6x0VrIFFCHP4wB2iiBaTAcH1RnvbheA=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=bMXbkevVKAw4sy5L0Gk1I+xdPikVvkgtK6trzuQuG3e1jjl//1gJ6i2EtOfcxbWrU
+	 SSg1n09Cc2CK4W6gDOzRoYIgm3Ljfa4O7mrVnYun056NSXm1//PcpanTwToSjcTpHo
+	 LVfEvhrJJYyffLYLARoA7eHABNh98kGWkXh+HOFc=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4B94TWHe117987
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Sun, 8 Dec 2024 22:29:32 -0600
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sun, 8
+ Dec 2024 22:29:31 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Sun, 8 Dec 2024 22:29:31 -0600
+Received: from [10.24.69.142] ([10.24.69.142])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4B94TSR2007661;
+	Sun, 8 Dec 2024 22:29:28 -0600
+Message-ID: <a6a4805c-3983-4514-84cf-a1f0a4356b74@ti.com>
+Date: Mon, 9 Dec 2024 09:59:27 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: HUaOVYIDlH7dh5-YkeIkTt3JRD3DVOte
-X-Proofpoint-ORIG-GUID: HUaOVYIDlH7dh5-YkeIkTt3JRD3DVOte
-X-Authority-Analysis: v=2.4 cv=Y/UCsgeN c=1 sm=1 tr=0 ts=675663f9 cx=c_pps a=/ZJR302f846pc/tyiSlYyQ==:117 a=/ZJR302f846pc/tyiSlYyQ==:17 a=RZcAm9yDv7YA:10 a=VwQbUJbxAAAA:8 a=P-IC7800AAAA:8 a=pGLkceISAAAA:8 a=KKAkSRfTAAAA:8 a=t7CeM3EgAAAA:8
- a=UiR0G8JrladZec7fDzYA:9 a=d3PnA9EDa4IxuAV0gXij:22 a=cvBusfyB2V15izCimMoJ:22 a=FdTzh2GWekK77mhwV6Dw:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2024-12-08_11,2024-12-06_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 mlxscore=0 clxscore=1011 malwarescore=0 priorityscore=1501
- phishscore=0 suspectscore=0 adultscore=0 mlxlogscore=999 spamscore=0
- impostorscore=0 classifier=spam authscore=0 adjust=0 reason=mlx
- scancount=1 engine=8.21.0-2411120000 definitions=main-2412090027
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] dmaengine: ti: k3-udma: Add support for J722S CSI
+ BCDMA
+To: Vinod Koul <vkoul@kernel.org>
+CC: <peter.ujfalusi@gmail.com>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <dmaengine@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <u-kumar1@ti.com>, <j-choudhary@ti.com>, <vigneshr@ti.com>
+References: <20241127101627.617537-1-vaishnav.a@ti.com>
+ <20241127101627.617537-3-vaishnav.a@ti.com> <Z1BLWYY8/eVXZxVu@vaman>
+Content-Language: en-US
+From: Vaishnav Achath <vaishnav.a@ti.com>
+In-Reply-To: <Z1BLWYY8/eVXZxVu@vaman>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-From: Kory Maincent <kory.maincent@bootlin.com>
+Hi Vinod,
 
-[ Upstream commit bbcc1c83f343e580c3aa1f2a8593343bf7b55bba ]
+On 04/12/24 18:00, Vinod Koul wrote:
+> On 27-11-24, 15:46, Vaishnav Achath wrote:
+>> J722S CSI BCDMA is similar to J721S2 CSI BCDMA but there are slight
+>> integration differences like different PSIL thread base ID which is
+>> currently handled in the driver based on udma_of_match data. Add an
+>> entry to support J722S CSIRX.
+>>
+>> Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
+>> ---
+>>
+>> V2->V3 : Minor edit in commit message.
+>>
+>> V1->V2:
+>> 	* Add new compatible for J722S instead of modifying AM62A
+>>
+>>   drivers/dma/ti/k3-udma.c | 16 ++++++++++++++++
+>>   1 file changed, 16 insertions(+)
+>>
+>> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+>> index b3f27b3f9209..7ed1956b4642 100644
+>> --- a/drivers/dma/ti/k3-udma.c
+>> +++ b/drivers/dma/ti/k3-udma.c
+>> @@ -4404,6 +4404,18 @@ static struct udma_match_data j721s2_bcdma_csi_data = {
+>>   	.soc_data = &j721s2_bcdma_csi_soc_data,
+>>   };
+>>   
+>> +static struct udma_match_data j722s_bcdma_csi_data = {
+>> +	.type = DMA_TYPE_BCDMA,
+>> +	.psil_base = 0x3100,
+>> +	.enable_memcpy_support = false,
+>> +	.burst_size = {
+>> +		TI_SCI_RM_UDMAP_CHAN_BURST_SIZE_64_BYTES, /* Normal Channels */
+>> +		0, /* No H Channels */
+>> +		0, /* No UH Channels */
+> 
+> Why are these zeros? we expect valid size...
+> 
 
-The Linked list element and pointer are not stored in the same memory as
-the eDMA controller register. If the doorbell register is toggled before
-the full write of the linked list a race condition error will occur.
-In remote setup we can only use a readl to the memory to assure the full
-write has occurred.
+Sorry for the delay in response, this instance does not have High 
+capacity/Ultra high capacity channels, the burst_size for normal 
+channels is non-zero in the above, this is done similar to other 
+instances supported in the driver:
 
-Fixes: 7e4b8a4fbe2c ("dmaengine: Add Synopsys eDMA IP version 0 support")
-Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
-Link: https://lore.kernel.org/r/20240129-b4-feature_hdma_mainline-v7-6-8e8c1acb7a46@bootlin.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
----
- drivers/dma/dw-edma/dw-edma-v0-core.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/dma/ti/k3-udma.c#n4363
 
-diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.c b/drivers/dma/dw-edma/dw-edma-v0-core.c
-index a3816ba63285..aeaae28fab85 100644
---- a/drivers/dma/dw-edma/dw-edma-v0-core.c
-+++ b/drivers/dma/dw-edma/dw-edma-v0-core.c
-@@ -357,6 +357,20 @@ static void dw_edma_v0_core_write_chunk(struct dw_edma_chunk *chunk)
- 	#endif /* CONFIG_64BIT */
- }
- 
-+static void dw_edma_v0_sync_ll_data(struct dw_edma_chunk *chunk)
-+{
-+	/*
-+	 * In case of remote eDMA engine setup, the DW PCIe RP/EP internal
-+	 * configuration registers and application memory are normally accessed
-+	 * over different buses. Ensure LL-data reaches the memory before the
-+	 * doorbell register is toggled by issuing the dummy-read from the remote
-+	 * LL memory in a hope that the MRd TLP will return only after the
-+	 * last MWr TLP is completed
-+	 */
-+	if (!(chunk->chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL))
-+		readl(chunk->ll_region.vaddr);
-+}
-+
- void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
- {
- 	struct dw_edma_chan *chan = chunk->chan;
-@@ -423,6 +437,9 @@ void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
- 		SET_CH_32(dw, chan->dir, chan->id, llp.msb,
- 			  upper_32_bits(chunk->ll_region.paddr));
- 	}
-+
-+	dw_edma_v0_sync_ll_data(chunk);
-+
- 	/* Doorbell */
- 	SET_RW_32(dw, chan->dir, doorbell,
- 		  FIELD_PREP(EDMA_V0_DOORBELL_CH_MASK, chan->id));
--- 
-2.39.4
+Please let me know if something need to be fixed.
 
+Thanks and Regards,
+Vaishnav
+
+>> +	},
+>> +	.soc_data = &j721s2_bcdma_csi_soc_data,
+>> +};
+>> +
+>>   static const struct of_device_id udma_of_match[] = {
+>>   	{
+>>   		.compatible = "ti,am654-navss-main-udmap",
+>> @@ -4435,6 +4447,10 @@ static const struct of_device_id udma_of_match[] = {
+>>   		.compatible = "ti,j721s2-dmss-bcdma-csi",
+>>   		.data = &j721s2_bcdma_csi_data,
+>>   	},
+>> +	{
+>> +		.compatible = "ti,j722s-dmss-bcdma-csi",
+>> +		.data = &j722s_bcdma_csi_data,
+>> +	},
+>>   	{ /* Sentinel */ },
+>>   };
+>>   MODULE_DEVICE_TABLE(of, udma_of_match);
+>> -- 
+>> 2.34.1
+> 
 

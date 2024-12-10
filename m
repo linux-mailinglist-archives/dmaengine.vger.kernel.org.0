@@ -1,72 +1,101 @@
-Return-Path: <dmaengine+bounces-3944-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3945-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 345EE9EB574
-	for <lists+dmaengine@lfdr.de>; Tue, 10 Dec 2024 16:56:41 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 74C739EB8B1
+	for <lists+dmaengine@lfdr.de>; Tue, 10 Dec 2024 18:52:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B3F2B28323C
-	for <lists+dmaengine@lfdr.de>; Tue, 10 Dec 2024 15:56:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 092FA2833D7
+	for <lists+dmaengine@lfdr.de>; Tue, 10 Dec 2024 17:52:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB38422FDFE;
-	Tue, 10 Dec 2024 15:56:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FC381BD9C2;
+	Tue, 10 Dec 2024 17:52:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sJok4Q0E"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="juteAGYA"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70F0B22FDF6;
-	Tue, 10 Dec 2024 15:56:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1555320468B
+	for <dmaengine@vger.kernel.org>; Tue, 10 Dec 2024 17:52:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733846196; cv=none; b=pYjKjZlrCBzDf2/ZJdm3/hjIUxFlIak753hb7M+IQmt7N1TGkkCAvTVT6Ujz2wZekctTJqHpAUNiBcOoFiidSszfij/FzfA3g0f85Qeft65WCmLDVs1BdHsTke2yQUkhflHqJjCi5bjyr1hUDtvT9L79FbU59DWLUM40OvLlRyk=
+	t=1733853134; cv=none; b=T6vNxVYgKnNfodaeuLhwS+kEkjebr6yr/1LmmX4mi0gFVfpnif9B/7ElETnQWB6gp/elRRT+FD6iS849DMtkolyH0oMo4pl1xd4dSzBXkWWXcl9PDPypiT8MoH9mJpSvD0hXhjyRuKEodprHHombEHcqIYUTfHQeeMAtKVFY8qk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733846196; c=relaxed/simple;
-	bh=K0Hp3vj1oNggak521PkVammo4vyZpQr9K+Iic5eeY+g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qKgDEHIMCOJKpEhvNL9SV8uj8yDtQD2qqbRDxwq/fxbFNrBXfbdYcmxAfR01iBVWC6clC+2J2RFoAKx0zq9WInErxuyAcU/fC6tgYakcWaGIfgQhtuKWulQNopl6rcQ/9NeKsY+O0mjkHCbx2XQTQJVhVBrsvr04LAblWXisMMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sJok4Q0E; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8904AC4CED6;
-	Tue, 10 Dec 2024 15:56:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733846195;
-	bh=K0Hp3vj1oNggak521PkVammo4vyZpQr9K+Iic5eeY+g=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=sJok4Q0EK0Cb65YN/3g0uAJD54ySjw5k5eWDU8KSELLB+I4/Eblb95T21w5+W6/Sh
-	 enR5q+/UicEDwZq7baVlIdYGSuIA+ZL8Yo1rcU/2jRU1w//sQozFzQMSrNXeTIYpNt
-	 f1jBNCe0JPaoAbVfRiGtiAttv+vTcoZvgZR+Uae+jlZc4ENh7IMRPgskSP8E5DlCh/
-	 UYhfE2ncCB25hZGBb+EWFo7ew0bqCcuc6cQ/Q+58Ju2bDixuAKbv+8gx7zbpJGLskW
-	 M4tdgtNEFZ+AcasJsA2vdk5tYWJYYuGyRiX0rgpDOiDJotxl9YdX4s4vwrxSNUJlFX
-	 9i37GDFK/t+hw==
-Message-ID: <c55d8212-9b7e-4ede-a15d-3fbeeb95f956@kernel.org>
-Date: Tue, 10 Dec 2024 16:56:26 +0100
-Precedence: bulk
-X-Mailing-List: dmaengine@vger.kernel.org
-List-Id: <dmaengine.vger.kernel.org>
-List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
-List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+	s=arc-20240116; t=1733853134; c=relaxed/simple;
+	bh=lLbLE1tKKDfeDdO+nD84XWjzeIie3h7aVvVDlDRciV8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YT6CD7UlbNlZSZdyb7tW4FtZrG5MBkPsvDSgspptGl7stDpG9mHOcxFITwuYfFvWgtTPQtWOqHimUqmFrw4ljPKovkoMsPRAieCQSsdwND6uUSLScwh6it6sWJSuCGdZfetBdSPn/3n84BZdbin8Y1tVTs5j1FqT+wgBbuMGjiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=juteAGYA; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BACYGpW006932
+	for <dmaengine@vger.kernel.org>; Tue, 10 Dec 2024 17:52:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=ege3SlIBABNYQBfJL/StIBqQ
+	Q+7IZD3RScF6Axrafug=; b=juteAGYAt8FC8DoBSBGM2MPvg6n2crWeIjqMgMyJ
+	Vynt9dOSCdk149k6U/9E9j+4RfSx/VlOQciRABFgG9rbZpM5bRPwM0OnHaTTWMa+
+	HhTaSFp5Ik62QLaLN5rzmW5CZAyjkTCkSNN7qmxdlRzhWdb0+efzFgtOKX+hxWuj
+	zTr4wjIKYXBsOwrfPtYVKA0JWabm9FRJN6RVCDFDixYk6HLUsBwhPFq8lPMy5FuV
+	H3bdrH1uWsXpi+WQx6xtNdkr2D8Ore1CQNNELAtZlZm14BQ9GUICkaf8ni69jLoN
+	PYq3mmSbFC1quAFbkbZbjGEG5DlX85B7F982LXIFUHqxxA==
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43e21bmaca-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <dmaengine@vger.kernel.org>; Tue, 10 Dec 2024 17:52:12 +0000 (GMT)
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-216717543b7so17092545ad.0
+        for <dmaengine@vger.kernel.org>; Tue, 10 Dec 2024 09:52:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733853131; x=1734457931;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ege3SlIBABNYQBfJL/StIBqQQ+7IZD3RScF6Axrafug=;
+        b=Z7wAXuScHKGqcI2f+WwyVHmJd+/3Ozc4dNHvqblNENtn568vNtgtKmgwUZEnYOWdFu
+         GwY/QjE9DM7zIF79MjfHWx6Pct6NAssjxASVE0CVC9+zMbUKMtT8eKA8mdPGivANvKmt
+         4uMx3DZboOOPcO8EpnkA9gkbPDo6V3C4f9r3d+CdJvDIQA9+Ly1LAQXOq7l6d6a9vi57
+         Qhi/NGvPpkJnUuDAYrVU57Y7m9aUyQGGfVeI7TNQzng3rp+H++S5nZXtVA/we06i8KZp
+         DPRrtBEFi2AN04m9spY73tR10u41hPuNZwZD2qsJ3sj+Bm3InQQGuEsLmkcO9uJYJNbc
+         shnA==
+X-Forwarded-Encrypted: i=1; AJvYcCUSXrc6UZbUXQhTU0BUIkTYQKRd3Cc5wJBamhfKDH1BsJXC8SJW2ETLNtQS8JWcjncb4CPTW4qUoKk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUFBfbTxzYWlc1mmTSd+spbqcSfDwE6p+mfz8Vk8J/3Y7dPJBB
+	fshI1ffajl2r3fuODSsKAvTpZACvXd7qQ702gXne/nwwBYgKZG3IugRkknggbdGm0inhWaKh6gc
+	ujjzvjnjgo1L4xfudH3TIFsr1iCDfJRDiudYTGCemazGzACTEmBdu2+IRBPE=
+X-Gm-Gg: ASbGnct3Qe0X0hHtMeazRvS+852IGfJmLvaWJOFAVcxvOOBd5iWwvl2ZPo+lHT3uUhB
+	2mE3fAlrGvS7mehuz5F9Y5a9jeWxCosJ6oUFgL0YOGammTEjLZitXjKtYVUF57pJkaQZGn1+N3a
+	aLYf0vDM+VyWKAX7kgnAHLFr5VGRt/aGP6INoqzIf3HBT5NIuHkBBL7/XpS9TOlL6z1/g0uCi/x
+	wDyoZZHIkZu8V3ImqKNZbx1UBi9M0ohTISCzc11ZxoIHMV9TwNbB/NKiErMNofgiJLSgkd1vBOy
+	ADvpMlURO4HF6l+C/eLxS1+APZkj00rSSMKlOw==
+X-Received: by 2002:a17:902:d54a:b0:216:45b9:43ad with SMTP id d9443c01a7336-2177854b79dmr294655ad.34.1733853131322;
+        Tue, 10 Dec 2024 09:52:11 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHxQAT1KyS2RYreNEX6eE08vhGpymLqRJuMeKy20p+JsymYi0fZ8cLbEJRWiRwWdl0yi3dYjw==
+X-Received: by 2002:a17:902:d54a:b0:216:45b9:43ad with SMTP id d9443c01a7336-2177854b79dmr294315ad.34.1733853130888;
+        Tue, 10 Dec 2024 09:52:10 -0800 (PST)
+Received: from hu-bjorande-lv.qualcomm.com (Global_NAT1.qualcomm.com. [129.46.96.20])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21680814d6bsm5989185ad.157.2024.12.10.09.52.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2024 09:52:10 -0800 (PST)
+Date: Tue, 10 Dec 2024 09:52:07 -0800
+From: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+To: Konrad Dybcio <konradybcio@gmail.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
+        konrad.dybcio@linaro.org, andersson@kernel.org, andi.shyti@kernel.org,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        conor+dt@kernel.org, agross@kernel.org, devicetree@vger.kernel.org,
+        vkoul@kernel.org, linux@treblig.org, dan.carpenter@linaro.org,
+        Frank.Li@nxp.com, konradybcio@kernel.org, bryan.odonoghue@linaro.org,
+        krzk+dt@kernel.org, robh@kernel.org, quic_vdadhani@quicinc.com
 Subject: Re: [PATCH v5 1/4] dt-bindindgs: i2c: qcom,i2c-geni: Document shared
  flag
-To: Konrad Dybcio <konradybcio@gmail.com>,
- Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, konrad.dybcio@linaro.org,
- andersson@kernel.org, andi.shyti@kernel.org, linux-arm-msm@vger.kernel.org,
- dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-i2c@vger.kernel.org, conor+dt@kernel.org, agross@kernel.org,
- devicetree@vger.kernel.org, vkoul@kernel.org, linux@treblig.org,
- dan.carpenter@linaro.org, Frank.Li@nxp.com, konradybcio@kernel.org,
- bryan.odonoghue@linaro.org, krzk+dt@kernel.org, robh@kernel.org
-Cc: quic_vdadhani@quicinc.com
-References: <20241129144357.2008465-1-quic_msavaliy@quicinc.com>
- <20241129144357.2008465-2-quic_msavaliy@quicinc.com>
- <db428697-a9dc-46e1-abbe-73341306403f@kernel.org>
- <a8b1ccd2-c37b-4a6f-b592-caf1a53be02c@quicinc.com>
- <fc33c4ed-32e5-46cc-87d6-921f2e58b4ff@kernel.org>
+Message-ID: <Z1h/x+QJD5Uob8GZ@hu-bjorande-lv.qualcomm.com>
+References: <fc33c4ed-32e5-46cc-87d6-921f2e58b4ff@kernel.org>
  <75f2cc08-e3ab-41fb-aa94-22963c4ffd82@quicinc.com>
  <904ae8ea-d970-4b4b-a30a-cd1b65296a9b@kernel.org>
  <da2ba3df-eb47-4b55-a0c9-e038a3b9da30@quicinc.com>
@@ -76,80 +105,149 @@ References: <20241129144357.2008465-1-quic_msavaliy@quicinc.com>
  <f1fa2bde-95ce-45e9-ad2d-f1d82ec6303c@kernel.org>
  <8b33f935-04a9-48df-8ea1-f6b98efecb9d@kernel.org>
  <422e6a1e-e76a-4ebc-a0a5-64c47ea57823@gmail.com>
- <aad3c217-a6f6-4415-8e08-8fc113504756@quicinc.com>
- <1035d5c0-7034-4797-8a89-d0d92811c0ef@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <1035d5c0-7034-4797-8a89-d0d92811c0ef@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Precedence: bulk
+X-Mailing-List: dmaengine@vger.kernel.org
+List-Id: <dmaengine.vger.kernel.org>
+List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <422e6a1e-e76a-4ebc-a0a5-64c47ea57823@gmail.com>
+X-Proofpoint-GUID: iyuV8pGtOLOgR05H4BMAWHjL0JB-xW0K
+X-Proofpoint-ORIG-GUID: iyuV8pGtOLOgR05H4BMAWHjL0JB-xW0K
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1011
+ malwarescore=0 lowpriorityscore=0 mlxlogscore=999 priorityscore=1501
+ spamscore=0 impostorscore=0 adultscore=0 bulkscore=0 phishscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2412100132
 
->> There would be spare register but i think it should be in sync with hardware team. let me check with them and update back if any bit can be repurposed for this feature. I agree, if any register is available, it can programmed prior to kernel.
->>> It would need to be reserved on all SoCs though (future and
->>> past), to make sure the contract is always held up, but I
->>> think finding a persistent bit that has never been used
->>> shouldn't be impossible.
->>>
->> Yes, let me check it with hardware and firmware team and update back. Does this mean, there can't be a such software sharing mechanism (purely software decision) based on DTSI flag ?
+On Tue, Dec 10, 2024 at 01:38:28PM +0100, Konrad Dybcio wrote:
 > 
-> I suppose that depends on our needs. If we can set that bit
-> before Linux starts (i.e. in UEFI), we can avoid touching
-> the pinctrl state regardless of whether the other entities
-> have started up yet to avoid overcomplicating it.
 > 
-> If we need Linux to set that bit, we would still need some
-> mechanism like a dt property. But I really think that the
-> bootloader should be burdened with this instead, given it
-> has a better understanding of the hardware due to it being
-> well, the bootloader).
+> On 12/10/24 13:05, Krzysztof Kozlowski wrote:
+> > On 10/12/2024 12:53, Krzysztof Kozlowski wrote:
+> > > > > > I'm not sure a single property name+description can fit all possible
+> > > > > > cases here. The hardware being "shared" can mean a number of different
+> > > > > 
+> > > > > Existing property does not explain anything more, either. To recap -
+> > > > > this block is SE and property is named "se-shared", so basically it is
+> > > > > equal to just "shared". "shared" is indeed quite vague, so I was
+> > > > > expecting some wider work here.
+> > > > > 
+> > > > > 
+> > > > > > things, with some blocks having hardware provisions for that, while
+> > > > > > others may have totally none and rely on external mechanisms (e.g.
+> > > > > > a shared memory buffer) to indicate whether an external entity
+> > > > > > manages power to them.
+> > > > > 
+> > > > > We have properties for that too. Qualcomm SoCs need once per year for
+> > > > > such shared properties. BAM has two or three. IPA has two. There are
+> > > > > probably even more blocks which I don't remember now.
+> > > > 
+> > > > So, the problem is "driver must not toggle GPIO states", because
+> > > > "the bus controller must not be muxed away from the endpoint".
+> > > > You can come up with a number of similar problems by swapping out
+> > > > the quoted text.
+> > > > 
+> > > > We can either describe what the driver must do (A), or what the
+> > > > reason for it is (B).
+> > > > 
+> > > > 
+> > > > If we go with A, we could have a property like:
+> > > > 
+> > > > &i2c1 {
+> > > > 	externally-handled-resources = <(EHR_PINCTRL_STATE | EHR_CLOCK_RATE)>
+> > > > };
+> > > > 
+> > > > which would be a generic list of things that the OS would have to
+> > > > tiptoe around, fitting Linux's framework split quite well
+> > > > 
+> > > > 
+> > > > 
+> > > > or if we go with B, we could add a property like:
+> > > > 
+> > > > &i2c1 {
+> > > > 	qcom,shared-controller;
+> > > > };
+> > > > 
+> > > > which would hide the implementation details into the driver
+> > > > 
+> > > > I could see both approaches having their place, but in this specific
+> > > > instance I think A would be more fitting, as the problem is quite
+> > > > simple.
+> > > 
+> > > 
+> > > The second is fine with me, maybe missing information about "whom" do
+> > > you share it with. Or maybe we get to the point that all this is
+> > > specific to SoC, thus implied by compatible and we do not need
+> > > downstream approach (another discussion in USB pushed by Qcom: I want
+> > > one compatible and 1000 properties).
+> > > 
+> > > I really wished Qualcomm start reworking their bindings before they are
+> > > being sent upstream to match standard DT guidelines, not downstream
+> > > approach. Somehow these hundreds reviews we give could result in new
+> > > patches doing things better, not just repeating the same issues.
+> > 
+> > This is BTW v5, with all the same concerns from v1 and still no answers
+> > in commit msg about these concerns. Nothing explained in commit msg
+> > which hardware needs it or why the same SoC have it once shared, once
+> > not (exclusive). Basically there is nothing here corresponding to any
+> > real product, so since five versions all this for me is just copy-paste
+> > from downstream approach.
 > 
-> Krzysztof, I'm assuming that sounds sane from your
-> perspective too?
-Yes, sound okay.
+> So since this is a software contract and not a hardware
+> feature, this is not bound to any specific SoC or "firmware",
+> but rather to what runs on other cores (e.g. DSPs, MCUs spread
+> across the SoC or in a different software world, like TZ).
+> 
 
-Best regards,
-Krzysztof
+I don't think this is a reasonable distinction, the DeviceTree must
+describe the interfaces/environment that the OS is to operate in.
+Claiming that certain properties of that world directly or indirectly
+comes from (static) "software choices" would make the whole concept of
+DeviceTree useless.
+
+The fact that a serial engine is shared, or not, is a static property of
+the firmware for a given board, no different from "i2c1 being accessible
+by this OS or not" or the fact that i2c1 is actually implement I2C and
+not SPI (i.e. should this node be enabled in the DeviceTree passed to
+the OS or not).
+
+
+That said, the commit message still doesn't clearly describe the system
+design or when this property should be set or not, which is what
+Krzysztof has been asking for multiple times.
+
+Let's circle back and help Mukesh rewrite the commit message such that
+it clearly documents the problem being solved.
+
+> Specifying the specific intended use would be helpful though,
+> indeed.
+> 
+> Let's see if we can somehow make this saner.
+> 
+> 
+> Mukesh, do we have any spare registers that we could use to
+> indicate that a given SE is shared? Preferably within the
+> SE's register space itself. The bootloader or another entity
+> (DSP or what have you) would then set that bit before Linux
+> runs and we could skip the bindings story altogether.
+> 
+> It would need to be reserved on all SoCs though (future and
+> past), to make sure the contract is always held up, but I
+> think finding a persistent bit that has never been used
+> shouldn't be impossible.
+> 
+
+Let's not invent a custom one-off "hardware description" passing
+interface.
+
+Regards,
+Bjorn
+
+> Konrad
 

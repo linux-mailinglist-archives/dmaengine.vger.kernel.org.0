@@ -1,62 +1,62 @@
-Return-Path: <dmaengine+bounces-3976-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3977-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4EB039F2B4A
-	for <lists+dmaengine@lfdr.de>; Mon, 16 Dec 2024 09:00:08 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BE4589F2B4C
+	for <lists+dmaengine@lfdr.de>; Mon, 16 Dec 2024 09:00:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DD02C188717D
-	for <lists+dmaengine@lfdr.de>; Mon, 16 Dec 2024 08:00:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ED4D7161AEA
+	for <lists+dmaengine@lfdr.de>; Mon, 16 Dec 2024 08:00:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4288B200B8C;
-	Mon, 16 Dec 2024 07:58:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75A81200BAA;
+	Mon, 16 Dec 2024 07:58:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="VuVn1tm9"
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="qVQmPqYO"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2070.outbound.protection.outlook.com [40.107.20.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 454DF20010C;
-	Mon, 16 Dec 2024 07:58:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66131200B9B;
+	Mon, 16 Dec 2024 07:58:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.70
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734335923; cv=fail; b=Dm9j4Bsh6LjXNCTyHm66DhyVzwD1/jX/0NtutWk2GAPC+MDyE9Q2CBsGdYStebZaMuUw6XCtCPpoJLtHdgNVAklt1ekLE1E+x3Dd4sdB/mOpHiq5r4acKH3pwJYCBA2rREUn9BZS9g4lw0mR6gxSQWPVFRrS3laeBZa7rZaxAyo=
+	t=1734335925; cv=fail; b=qPSzbSpfqEnFYU57EwFBFN2DJKKjDw3dhO9OUPhZERHsJS66Ya8BXnGGwKH8topzb6GPEYdG2Jh61KERdslJe0aAKXa/ErgolPzyKmWDc/nRhG4W6rr4zmpcuZXDm/g2o9noOITc8DngPreXpqX/TtleqKd/Q2Z+dxMUd0t6/44=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734335923; c=relaxed/simple;
-	bh=7P8iy+1K7O+WsqldVxSfHKaqm9+AtvwDcCl6yXl8WmI=;
+	s=arc-20240116; t=1734335925; c=relaxed/simple;
+	bh=NBoQw/AdDf2L/90aAfoyiXpqnbBFwZm7q+nVg3ewCjo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=No8OG1XiAHaW7us0g8BWqFjSCJymHUl9wrMrY3PssGskWu0lA4/RtSoiq3OB3FvrSDUXQ7vg7Lshtki8BzMrRThzRjB5vbJyi1jGZZGhANDJbvqRLFM5GnXZbC/iPDC//3uVQqJae4wDJA+cTvyFebsUKQFyuA+Q6ORK9EH86Oc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=VuVn1tm9; arc=fail smtp.client-ip=40.107.20.70
+	 Content-Type:MIME-Version; b=q11GaZ1+y43DKAn/Ygm7vgP1Xs2kmogNYJh8IVsXWUncv8YNkWuvK/iFsfk3HjkZ9ZmT+ER5Jpyp9QWt68urX7vpkw3laGV6Kmt3yVyrvbGWiIqQByN57Hbw/S7l7TqSvoekxA1fVgBPw9gG80B5Zxz2Nzo9a9w74nCfdSDttUY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=qVQmPqYO; arc=fail smtp.client-ip=40.107.20.70
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jG6kWGHZ/RQas0ELCmWPym6evuW27g3P8KIlDwNdgf8Jh8no75UTOsVK5cIo6E+El+l16SMx3rUeSLFa3rIDHMpcVXH0W+9oKzawKIj986QdrxrgmPJ/2qJjMGzI9+dNIsfFy/ZbkOJbnfEt5By8gMV+CgP58+KPltaFpokZlGBKr0Ur5nz3DdnKzbMKyPN0ZRD0qomk9+3orixQS8kbZdFiCLWE8pMAeRCgFVkCMRnf3CGlMVT7iPNNxPHRfuxC64g1pe9SqWIHld7kQCi6sJk56eqbEMogsLu02sE+5ypwQp67/V9Jxt0oF79gz+EcHY+yP10GsF/Val3wmLGzqg==
+ b=zQlcc7mHUo/kzF2ZQrCfkYQo6PQye1k+npgKVKA43ubGKfPW9xQlkgEAhZgyl/fC+wEvlx7nnM+Yx5mTLu1E1hH093PHrTAehyDnYMG/FFne59ybeYR4TBbztMfS4lofV0xngwwp8v+NHeV4czQ65s17PCuT6s8LGaycNOW7+4B5s7Cl1wR7g8U+9L0dSqYsHsu059GIAsIyl00dVOvUPADJH/1Tzw1R3pj/nPRDo37J8RbuNpEzw8tTi4gnYDuq9VZ77vx0aeVbiNjIREgnSm0tpfdjuhCuWaikbZAsciQv0QAMLT/2rTHIm09KKapFjcviPQIz6I9qFwONqrw4eA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Mt0jsr+pIJWqbLu1JPSusncKOHpHouhnLY8gLp53tRo=;
- b=SJaPNFbUvEWGIbdOJeVclWrppl+hB01jrLSOcPBnRUcxDoi+Wn0iSGgeT5e/lNvIzCMy5CTPxf8PWcoM9CDcAOiNVsv2Y1TqV2OL2nZ0GWk9lptO32tQ5sQvPhEE2tONda0FPL6Yj448CsjQq1ryWDPzUCjfH6g2BSFG7ewYvMwE2yq5zlaKeXMPWjT8jFsLFkYo+R4CJ1cyVt+Mg0MuZSI5+vbRc+5lizjM2zdVub6gi4/kwIO/11SWOmcY3q4CHumEPiDHrjwUJQjC3mJXDBI1O1a0KNTXYqHmubVgTrfQOjf6rJpse2FJOvlqeSRU+EQipaaqrprxPEd5Z4GRbg==
+ bh=wHxEgU9gLnV0LuycV1V4GglatHZ7PT7InM7xeDPyKQc=;
+ b=SYyY82VzoVYN2JQRtIg77eaLBK8AL4ZPGeYx7qzS72b/dKBqWu5kGQ0bguX5yisCesvoy0lAzy1yoVXF6K0+S86u4s233SL2/FhUbnuUnvM5ZQvjViBLtzskDGEg4ubXSkirLr4yEL4UyuAtuw6ZIP46Fu9UCkn72/J2RfEv/aPGwMJ5BXqIBvvI9R7QDC9xIwFBa9+uXlS9HWt2k2eggshoHC1pwAfjq4tkqmvaaKMuPAwqVgRKZCTYqDesvZRohiLTOh82JyQ/05MpJy7PFzBxS3mTYR0/0WkqAVZnyRJ9RPyHt3EPejz0jqyuFx1FyUH2axAer3MBnJPtgGwE0w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
  dkim=pass header.d=oss.nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
  s=selector1-NXP1-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Mt0jsr+pIJWqbLu1JPSusncKOHpHouhnLY8gLp53tRo=;
- b=VuVn1tm9lcK7MUBOyHlBx+xcy+xBUUduDNtbxwbQzRYfUyWdSgMxqx1LmsAWMSPcw0sDxV5TDKCsB3M2V4dHcytuJsg4qoRfheeWHgQdlbmthhNAHJCxiYIC0sN4OSujzNl5gML5eF5eyOTckf+N9pFM+oVF7RdJr9zbmyTNccdyKnjHCu7gSK4npyhKIaiI/oIoOiK+Y0pLEVKmpQVwDO+IqLPmWgyiPoKM5zFbG56KWWx90pdjX9+yB2C2Db417IaScEMl95rCnVcPw6HEfKFxKZIut1qVmiT9BpiXoGXEiFsqDMmb7/dkpGUNA2Ljw0yzOY80GNGs+3cy4j1xlA==
+ bh=wHxEgU9gLnV0LuycV1V4GglatHZ7PT7InM7xeDPyKQc=;
+ b=qVQmPqYO+I/u8FZqOMz6t04QHhDyb3j+ckqtmZ0jfthZb071Z8aeMmbdEUvlj2ZcZT0Ge2MPiDUcuG4wxXGpNKLDQk6I0iBS4npqrYnCWIL3fsjPD2hauWCVhJQ/yTdwgUgNzmiQzkBQTx2qqVeGhZ1oVkv1KdAMqoMBZ75w1ajfWkESZx5IYu4nd+zEZ9bPDq8Hj6nJjWPX1rsoaTpyfsnEyHG7GPdo21MUA4yh9/6zVECUkBbs6vQ9JLYLneSU3t+NWbG95nyLUsGn3OGzUiIjnM0fLQN0aaDikKUqFIjOZ2AU9iYUk0pB2dmJCahCRovojpKC+4oXzP6/oMMXkw==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=oss.nxp.com;
 Received: from AS4PR04MB9550.eurprd04.prod.outlook.com (2603:10a6:20b:4f9::17)
  by DU4PR04MB10361.eurprd04.prod.outlook.com (2603:10a6:10:55d::10) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8251.21; Mon, 16 Dec
- 2024 07:58:34 +0000
+ 2024 07:58:36 +0000
 Received: from AS4PR04MB9550.eurprd04.prod.outlook.com
  ([fe80::e28d:10f8:289:baf7]) by AS4PR04MB9550.eurprd04.prod.outlook.com
  ([fe80::e28d:10f8:289:baf7%6]) with mapi id 15.20.8251.015; Mon, 16 Dec 2024
- 07:58:33 +0000
+ 07:58:36 +0000
 From: Larisa Grigore <larisa.grigore@oss.nxp.com>
 To: Frank.Li@nxp.com
 Cc: dmaengine@vger.kernel.org,
@@ -66,17 +66,18 @@ Cc: dmaengine@vger.kernel.org,
 	Christophe Lizzi <clizzi@redhat.com>,
 	Alberto Ruiz <aruizrui@redhat.com>,
 	Enric Balletbo <eballetb@redhat.com>,
-	Larisa Grigore <larisa.grigore@oss.nxp.com>
-Subject: [PATCH 5/8] dt-bindings: dma: fsl-edma: add nxp,s32g2-edma compatible string
-Date: Mon, 16 Dec 2024 09:58:15 +0200
-Message-ID: <20241216075819.2066772-6-larisa.grigore@oss.nxp.com>
+	Larisa Grigore <larisa.grigore@oss.nxp.com>,
+	Ciprian Marian Costea <ciprianmarian.costea@nxp.com>
+Subject: [PATCH 6/8] dmaengine: fsl-edma: add support for S32G based platforms
+Date: Mon, 16 Dec 2024 09:58:16 +0200
+Message-ID: <20241216075819.2066772-7-larisa.grigore@oss.nxp.com>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241216075819.2066772-1-larisa.grigore@oss.nxp.com>
 References: <20241216075819.2066772-1-larisa.grigore@oss.nxp.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: AM0PR04CA0080.eurprd04.prod.outlook.com
- (2603:10a6:208:be::21) To AS4PR04MB9550.eurprd04.prod.outlook.com
+X-ClientProxiedBy: AM0PR04CA0076.eurprd04.prod.outlook.com
+ (2603:10a6:208:be::17) To AS4PR04MB9550.eurprd04.prod.outlook.com
  (2603:10a6:20b:4f9::17)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -87,167 +88,284 @@ MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: AS4PR04MB9550:EE_|DU4PR04MB10361:EE_
-X-MS-Office365-Filtering-Correlation-Id: e3414a4d-dfb2-4583-a055-08dd1da77007
+X-MS-Office365-Filtering-Correlation-Id: 394d6c98-f0cd-48be-5d20-08dd1da771bb
 X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?aGIrS3pUTGFJcTRSMHlvM0c1RGR0YnRlKzVXM1VLY3d2VXlyNkovSXNna2x4?=
- =?utf-8?B?VjR3ZW9GaGVzaUJVVDV1WDF6NDArN2xEUGk0OWhXWko5QStsYVM5TFNEZmtY?=
- =?utf-8?B?WlNFMTVKZlV4Skd0TnIwUWl4NmprM0gvVVZVbUVnVDZaaDdrZVh3NU9tcy9B?=
- =?utf-8?B?WmRHMjFsSWs3S0IxbnZkS1c3NytZVENXc2RTVE92RGxBZG9URnJZdS9ndWdG?=
- =?utf-8?B?UjAxMm5LdTNtT1RhOFJSc3NLQklnQ3RDSXFGQjd6Qmx5RW1heFVXR1h1dUdY?=
- =?utf-8?B?cmo4OVZCM0ZSOVc4SFhYZFhWMG40ZU1zTmNpRVVuMEhMT1F4aTg1aElyaysz?=
- =?utf-8?B?MGp6UTU1cTI3dDRZS2ZYSGY3ME9YSWRqNTZqKzN1azE0VU56ZDZodnpsWHA5?=
- =?utf-8?B?eHJ6M2w1Zmp2cG05WnhuWC9yMHFJZkpiRzUvN2RIQU5aeGhZZkpNanYrWGxQ?=
- =?utf-8?B?RHhTTDd3Z2l5aHJRRnZXMlcrUEtDaC9GMXFRMFhYdmtYV3VmdSszN1o2NmRY?=
- =?utf-8?B?QVFFV0trVWh6OU4zazBxdzhSditEcVlrNTBvRzQzVStER25aTjgyUGtiVktX?=
- =?utf-8?B?TXhONy9Id1l6SE41V1ByT0FrQXc0TEJMenNGaGxZdXlmdW9hTjJpRWZiQ3pF?=
- =?utf-8?B?ZjVxQnFLcGZnTnJNdXNBYUF3dFNBbWV2blgyOXJDYzM2bmlFci9LTmpPb1lY?=
- =?utf-8?B?ZVhVajVtanJDZmxoTndmenZPZC8rMnl2cWVrbzlBRXNNTjBEMVZuc1V5QzZF?=
- =?utf-8?B?MXRqRkRXU2xOUXZtMVdvNDlGU0U1Wnc3cUhmRzUwWllhaVFRRjFLUzkxNm9G?=
- =?utf-8?B?dC9GR1Y4VGhqMFlDaG1OeDByTm5IVnJzeGdqajNRMTF5WE1acHArZmVJWUdW?=
- =?utf-8?B?dDlDblRkemRjZlEwem44MWIzaW8wYlJyTlNKWGdINmZ2YlExZ2xzRTd4R09J?=
- =?utf-8?B?U25VeFZsczNvamJLVGtwWlIvSkszWGsxL3pEK1BhODlDODJzUW1IbGpqWElU?=
- =?utf-8?B?Y1JDeHNsalZtWDF6bGpYNWRwQUo0S3BVNFZNOU1hejdNMmxZbDdFbmRoN2dJ?=
- =?utf-8?B?Mkd0MmFIZnlpWUV5dzJQUWtnMkw5TW5xZ2NNNHJjMUR2aGJGOTdUelJ2QzlT?=
- =?utf-8?B?ZlZnajRZcStJN3BObjJvSHd6Z0loOEJ5L3dkbEZ1U3Vacjc2d2Y1Y0pUeHEz?=
- =?utf-8?B?UWxDTWpsWGREcWdxN2VUaWdBS3RJaWFIMCtzRytxWWlFWUYyQWxHL1BzUTJn?=
- =?utf-8?B?OGZqb1Zhc2d2T1o1WlU4QnBvbkUwT0hwSHJxTUtoa0lqcDRCcUYzTlN6ai9a?=
- =?utf-8?B?d1VobFdkZHFWbXozQjI3OHFxKzExTWFkSFI5Y1VMd09QK2JkM21KQnBqZmo3?=
- =?utf-8?B?cEZGeGMrZ2p3OEFzVzRMN1pLaUgyMlZOVkV2SmVYeTBrSzNTbURtNGhWUFdl?=
- =?utf-8?B?Z1Q3QktLc3lFS3YvdTc1L1IyV3BKOENEMk9TMWF2V2JoSEI4VXZ0N2Y5dDFB?=
- =?utf-8?B?djh1NUxGR1JXa1BmUzNCUlNYUmhEQlR1Yi83WHRrc1ZhTTJXYUphUzJrYjIy?=
- =?utf-8?B?aW9QZDhlcmY3QlZQUWtIL1FCYW5IL1NhNVZjb0hocjZ5bk4rbDZWajdoTEVO?=
- =?utf-8?B?d3NmcXM0cCtoM0czTXhmZnRaQVh5YjI3RHR0UmhNNVFmN29USDR0MnJ0dStR?=
- =?utf-8?B?M29KUHk1NGNPRW1VY1B4OEhUOWdKWGozLzlIQmpYV293c2QzWFlaWU1Jclpl?=
- =?utf-8?B?UldDU0N3cmNlTDltVHJsM3FLbktwY25UdGI1VnZ6b29zZ1ZFUGlrU0RuRUFt?=
- =?utf-8?B?REU0SWRJQThEZXFmTXp4czU0ZmNXVTlYdzNvZTNyNVRyc0J2OURYV3IzNkVL?=
- =?utf-8?Q?CZ4pxVA47k40C?=
+	=?utf-8?B?b3RpbzZyQ0NFNzJnekU2SGFwd2N1eW9ZdnN5eUZEdk5adUN4ZllLcTUzZHp0?=
+ =?utf-8?B?N1lCV0xia2tnc3VoU2ZlUzh2SHFRWEhEWE1ETUFJd1BKZFk5U0dvT1pjWWJ6?=
+ =?utf-8?B?dTRkL0lCS1YySnd0NkRoSXBVOGp5MW4vUXdqSGIwSTRhbUJQM3F0c0I5dUF2?=
+ =?utf-8?B?bCtFVlBnazEwS2xHcVVqZm5EZmhiemRLZkU5U1ljNzR0NkZHemJQNmJKNGp2?=
+ =?utf-8?B?Uldjbk1uNXJGNU1MNU8zZDc3SndlYktVOXNDcEZCQ1lUOThIUW1uNnAvdy9I?=
+ =?utf-8?B?TmpkN2FDNGRkYXZvUnVGVWxGd0FYQUpWNnkwQmZ6N0VZVEUzR0c0emhrVGFF?=
+ =?utf-8?B?QlRRZEtjRmErVGJuM2hka2tDMnJJeTl1S05DdE9rZmt2c1lwS1QwS1o4bGMw?=
+ =?utf-8?B?U0ViaEQ0dWFrMjkrZmNtd1lHeXdyTG9HSXFNdVVWTXR0WVdmc2R5ekhBWFRX?=
+ =?utf-8?B?K0liSkpNY0JUT013SVk3NkREZXp1VEFJS0krZkNYNlJ5N0ZSL3NwSG1sTzJ5?=
+ =?utf-8?B?MHphdVMzaFNLcXhxbmxiSCt3VmVCbjNsTnR1a0o5WksxemwzRkp4d1BQTzNT?=
+ =?utf-8?B?MlBOVElZK1VkaDJzUjZJZUJuYXp4WEN3RGcvRG9zNGl2L0hSeFR0T21rTDBt?=
+ =?utf-8?B?eEhZQzJUc0VzMjNpaVRneUtySWk5cGt0WkpVdjh2WDFjSnhmYklsRjA2NUFE?=
+ =?utf-8?B?RHBBMjdZdjhEYjQvUWJvLzM0THR1OUJTSDY1cmlaN0lhY0QwaHpMTGdLYStu?=
+ =?utf-8?B?alAxblExYk1LbmV5QnJQbklDMmFoR1phaGE4VmllR0hKaVFJZVRVamhEU1Fz?=
+ =?utf-8?B?UWltT0JLS2tlYXU0K3QyL2VMUWlrZUtkN3NLRW9wSGc1TzR0UzByLytaQlhl?=
+ =?utf-8?B?Uk1qUGxBVk9LQlJwMGpicnBBUlcrUDJBV2Z6L0d5YnQ2VEUwdW5WUllpVFRE?=
+ =?utf-8?B?OHM1SHk5T1JLVmFmakt2amVCQTh3eFcvREs5akl4aU05NjRDdzZIZmNXTXht?=
+ =?utf-8?B?bzBDdm5FbDE2eWY3SzBKZ0M0OWU3VXluRnJHMjdTLzI0SDNIMkMzbjNBTUFl?=
+ =?utf-8?B?SWUvVjdaTkoySEtsb3UyU3JaSWI3MVpNTENXd25QSnRPSk15S3RWTEJCdnlE?=
+ =?utf-8?B?WmpoMmJvaUxjMGFrTnRweGlESFBwdU10YkNsM3REODhZb2ZBd1VWcWF5U0Z0?=
+ =?utf-8?B?d3FHeXJLUStKTENLQzlMMDhQNWwvY091THFGcGN5T0FZb09FS3BsL2RKc1J0?=
+ =?utf-8?B?bUtnUy9kd3V3NGJVb1hqN0lWMWdJYmcwNkptY3drdVNxUDVjYmsycDVMTXM2?=
+ =?utf-8?B?K1UwS1lqT3FZdXFSRUJzbHFMKzdtYjdHR0VZb0Nyb0NhN0xGWkxheVozZTNp?=
+ =?utf-8?B?QVp4YXNqZHFWOWNoRzF3aEtOVDIzS1hIT2tmV1NyckNxWXpUcE9IT0VWeTFn?=
+ =?utf-8?B?WEFTNTREN1g5cFRZWGd5UDNjZGJ1L3NQUmVYNVVPa2M1VmVEbDNhcUxwcTJU?=
+ =?utf-8?B?bXBuNGFKMFdUbDhINVJxd1VVVFBubThHUUd5dWJNS1pGRlRzc3ZUYWdZT0xY?=
+ =?utf-8?B?ZVk1K05yTm9HdVZwYTlKdTE2R0lXeEFiOGdSQzA3MFVYc0QwYmgvLzE4RXJN?=
+ =?utf-8?B?Q3dhcDRYSVM0WWxwelR4NVBCRG04Z1ZnejBKN01JdWNodll2VGNFeGhoQmpQ?=
+ =?utf-8?B?Yy9rbjg2eHY1MG13RHdTY0l2eVJZdzhoZEsxMmxuZVg3UmZaUlBLUm5lbFZY?=
+ =?utf-8?B?a21XTjdZMDZLTkd0NVl1SlBEVHVWYWlZNEV4OTZaL0gvQXh4aU41OXVpZEZD?=
+ =?utf-8?B?S0ovZzVqQ1RvZ2crNVNOQVV1UWN4dTk1WnErT0xMZVViejVDNWVCcTVtSDNE?=
+ =?utf-8?Q?hdfN95kKL7FG4?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR04MB9550.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?QTJJSS8vRUd1SGlSNkg5ZCt1MmdBZFQvQnBzalZoV09RY21tVDEwcmZ0aVhj?=
- =?utf-8?B?a3psSWlTMjRHTUVhSVNQSW1ScFRLYmU4SDc3b2ZSbVQ4dUJrR0F0Z2pNL1pj?=
- =?utf-8?B?SmZrd2hTbzZjYXcvY2g2T2t6a1B6M1gzaUEwdm5hemw5TjY0WXZ1SkQ4Z1FL?=
- =?utf-8?B?NXZ6ZnY5YUMzZk1vNU5zMXgveXZmY3VwTnlDTmRnYThaRzlxbnIzdHhVQzA0?=
- =?utf-8?B?bXQ0ZmR5T2hDdElHdlkzREtjU3JaOE1OWjh6TkoydDZzYVQ5YXJTY2tzc1ZR?=
- =?utf-8?B?ZTFWdm9seEFYMzl6Y252djZxSWtRTzZiMFRSQWlXTlBmcjdiakEwbnhWeU9Y?=
- =?utf-8?B?cktTaDBzdUxpTzZJQnBxQVp6RFo1bGFIZVZBNUxJek1PRHN6ZG5rOXNZR3E4?=
- =?utf-8?B?bU1kU2FmbWdURzArUjYrQS9BZ0hKSlR2bFBuRnZ0UCtJeEZHb0FHSENTdmx1?=
- =?utf-8?B?RWRiYWtzcEE1QXA4eTQ1M3duZ0RGU0UxZThzaWdRL21yRVRYNFBDVkdha2tz?=
- =?utf-8?B?d0hxM0xUcm5seW82OGdFVjA0Sm1QTjI2SWcydlZzME5sSnYxTUU3ODgwRDRa?=
- =?utf-8?B?ZEFQUmVZUXJYRWtxUmhDOHBrUVJib3IrUmxPVDJ4ZU4vQlBQdnVuamlMTmhH?=
- =?utf-8?B?RTYzeEErYVdvUTRMVTUvcVB5bUc0NVh3WTFrTEo4MFBpNE5zMUpGdGIySkpS?=
- =?utf-8?B?cXNELzNnSlJTNjcrTk5FdElLRVlRK0hRVUdsb2FMd0xYVGtQSGF4bEVJZFZF?=
- =?utf-8?B?NkNWNG9pa2VLcHdMbkw0Q1lERTVDeFdtdzlQQ3k1SEx2RzF2dk8ySnpiQU5j?=
- =?utf-8?B?T3lYbmovZkRUcVJSdHV3UC9kTjRHZUhsV3JlNDVTblpUR29VOU1aN3A0dmN4?=
- =?utf-8?B?S1pTSytPb2ozWjRUdFNGWFVVbG9YOTNQRU9PeUprYUhHK0dmZmkvV0xRN3NS?=
- =?utf-8?B?cG01cjhac2NqOFFQYXc2Q1M3RmtGcHBxaFBaeUVwQTI4b2hxbm5pOFhpMUlj?=
- =?utf-8?B?MEVZNGN6RDMzTS91TGRSWDFmendFRmEyRk9jZWRHWHAyV3Z4emJjK0YxMHU4?=
- =?utf-8?B?ZnhaSUFHNmhWUDRvaGlzSGhCekR6M2dlRlVUYk1wRzEzVXkvNThDZmhyZU5z?=
- =?utf-8?B?OG9kNzNxY0w0RFRqS0FoMHk4OVlyZk1hSWZPQUZyNTZwZWlGekV1Z0J4VGht?=
- =?utf-8?B?dlRyMXRKOGdMVE5KUEx2SnlFK1FaM0k4K1QrNHZPR1IwMFFHRnh2RVNkd3FW?=
- =?utf-8?B?USsrN1hlSlRzNU54VE1rb1RqRm91eVphREtLUEZ2V29hd213dVlwSTRvUjdH?=
- =?utf-8?B?TEtsTUxVellMMVozTWxRMzFvTkxTVHpUb1NLdC9OV3Q2dmkrRUJOSjJPeWMr?=
- =?utf-8?B?SGN1ZndEWVFGOHJMZWxUc2RMcDl2SHR6S3pEaER4S2x3Y0xKWHcyUXBrWVRC?=
- =?utf-8?B?cWNRTUFXWHR0SVkyUWJCK3FWV2t5V3YzOVJUQkUzSUVPUkVaK0RKamZCSnFD?=
- =?utf-8?B?VXZLUDZmNmljYi9MRGVVZHk5WG03bm5keWYvQ1VHVnZjVElwSlRjZDN2Rkwx?=
- =?utf-8?B?SGFwaWtNT01yRVdHWXZTZGJrQ29IYzRsNWZXM2p3OHhsekw4RXF0cVVZaE9Q?=
- =?utf-8?B?akc3cHBtTEFJeW13ZG0rMUxzQUMyYnVUVEY1V3dOTGJQZWVQRXVydzdvbVNL?=
- =?utf-8?B?RlE5TXVlckxmaXhyY1ZoZ3FwQlFYZFVuWDhNU1hHb29OTFlScjZNc2thRlMv?=
- =?utf-8?B?Q0ZwMjZKRU85STZmVEZ3cXZxemtNdmJYWWdIK21DSzl3aHRhM1NSb3RZRDg3?=
- =?utf-8?B?VG1ZQTFNZkNMTDlURXBpY0ZBSkdIdTB0UXloR29jL0tKbXBnVFhGb0dCbHN0?=
- =?utf-8?B?SjEwU3J0RXBZR3JFa0lNMmtsK05MUFZ2S3FGeHFXcVdsMXFIUHVCaGtLc2xD?=
- =?utf-8?B?eDNXdXliMVBaNUgvaTJqVXBoaVdrRGJuSmo5c1JwajFjeXQzMDhCcjlBWmNW?=
- =?utf-8?B?SmxXUUNGV3RVclovVkVzOG93YVNWaTQ2T0tKRXhRN2lkVm9taGJhNVBBRndI?=
- =?utf-8?B?QmV1eG5CZG85VXp0Y1FZZHJ4cThMSmJldjlheTVIbHNleHVPeS96YnVYa1Y2?=
- =?utf-8?Q?/YCU2T/xGt11gatUMvNIGRlYO?=
+	=?utf-8?B?STVGNkxFckNCSExNSk5sVGIwb1JkeTR5ZGxCY2x0V3JpNG8rV3JVUmpRQVdz?=
+ =?utf-8?B?SVlqTHBVaVl3eU1Mdm5wcjlLUXNqZFJ4NEVNL3N2eHJGV3YxK21pcXVvMFdq?=
+ =?utf-8?B?QnhoOW15c282UDU2N2Jlalg0R2hiQ1ZyS082TGlRVmJjMUl5VDdvc2lhV2JP?=
+ =?utf-8?B?NUpTYzIzV3FzckFFQUg5c29VNDgvSDZQcmhIc1R5M0JVWG1TNGc3Mlg5N0NH?=
+ =?utf-8?B?VnRzNnF5eVBURk1rQlJ4NFE5bFdtcnFhYWxjbnE5bmtORVhXdkdYMHE5a0hy?=
+ =?utf-8?B?bHJxNXNWc0JrdjRqMkFJS29jTTV1UUFSRUxCVGxnbXhvSjJTNGpaWUpRRVB4?=
+ =?utf-8?B?ZFZxdkZIRE9OL0NkUkVSdVp6d01rZ0l2SVk3c0phYnNsaXJPbVBSTS9sT0tr?=
+ =?utf-8?B?Tys2UE1tZU9kNTNCbkNCa2c4eCtsOVNxak9NMHZPeEptOGZXcEJlZitiNXFY?=
+ =?utf-8?B?Q0UwNzNXUE12ZFpTZjUrenMvTjZTZUxXQXZoSWNRK0ZBQWoyS3hoeHJaVFN0?=
+ =?utf-8?B?cXY3VEFpZ3F6Uy8xSnRFNm9kb2NMcFlrL1BWWmlveTlLYzFIbHd2Um5lYitt?=
+ =?utf-8?B?VU4rZk5BNFRBLzh4ejhvRVlvVEhiejBSdlQ1MFlueTBZM1o4VjBockIwK2ZH?=
+ =?utf-8?B?THhZVlpYZ25iUFl5eDEzeFNTaU1CTHA5bTRwWHFqR2JqK2dYUUN5bVZ3VGZz?=
+ =?utf-8?B?cHlweTF5bXM1R2lOQk1YS3Bua2syRTU5YUpuSW1HQ0hGSWMwYzR6SkUvWHA1?=
+ =?utf-8?B?MHpnU2ErU0ZKSmRpeUM5elFiQ09NRHZFeXZXMzhISjdBRnovOGNtNlA4M0dX?=
+ =?utf-8?B?clhXOVIrZy9hR1ZFUXdweTBLQmdRZ3VLak94eXBJcWlHdFhHald6ZGxleUVw?=
+ =?utf-8?B?ZVYwTTRFc0dWRWpkRTAwNXM0NXR2UU5LcVpSSkNkTm0zRGI4WnIxQ3FoUEs0?=
+ =?utf-8?B?ZnQrMjRnUkVOZDcwQldIWkI3ZzFJeElvbWNnV0Y5VlZxaTdRTWVvZXk0cTQ3?=
+ =?utf-8?B?aUk0dlB0VWllZGtDQldkRHdIdXJHT2F3S3JYMWRZc3VaSnFmVVRGMTJjTnpN?=
+ =?utf-8?B?RkxMSmFBWGloZUpzNEx5KzQycWNtZFA5UUZ6UjZ1N3lBRzBRZVR5UmN1b3VI?=
+ =?utf-8?B?b1FOc1FUQUtidi9HWXlSYUNkWTRyYmZrNU9lK09rb3VqUHFxaEdLdndjTmJS?=
+ =?utf-8?B?bXIzL3Q3SXgxdUNXc1kveWQ4eTZTUjlxL3hsNDA3NVYxeEdzSCt5L28zK2ZT?=
+ =?utf-8?B?WFV3Zk14RVJhRXhWTU5Ja3RlL2VqcU1TeXVzdUhUaGpUazNQQkd2TjN6Rlo3?=
+ =?utf-8?B?SURwVWx2dUx0Z0NIdDBKMU1FSDVlY3JWbWtWL3hXamtQZ2hrSXNYYkZMbXgy?=
+ =?utf-8?B?K0t1VFFXektRMHFBSklIajkwcEVPb2xzaUdROHFoRlJpZlA5TVhxc3RBdFpl?=
+ =?utf-8?B?WEJiamJDdnZsUVhHTXN3YnBiZG5naCtITzZXTGMreFlIY1hOMzBYa0F4MVFP?=
+ =?utf-8?B?QnVvMHJ4dytRV1NhSEtTa29vVWQrN2RzRHNsU0g0Y2QyZmZ1K1JFNU9FMENU?=
+ =?utf-8?B?YVhSWHBHZWV4bDZYdGFlTXVNNTJ0RWJncERaZGt2R2V6Mm9jYldpWXM2M0dV?=
+ =?utf-8?B?aDBQUlVzbnZLaFdFS21LZ3dhbDBzZnlIbE1nTGNuTEdtblBBbC9QK3hOblhR?=
+ =?utf-8?B?aXU5QW5sWTE0SUpVRzI1T1NBS09TWGhMQVIzQ29aTTJJK29mVWJoQnhkZGhk?=
+ =?utf-8?B?LzJhYVpzMDFNU1N5R3VmWXRyZUR2V0dJSUpndi8ydllPSFg0K1NWdU55dDFV?=
+ =?utf-8?B?Z1IyNkxrYUVsS0xvNDZXa01LZisyTWNla1dXM1A1T0NSNDlmb2JySk04a21O?=
+ =?utf-8?B?N0hZeVNjV2d1K3cxZ21scG1LeHdXOG4yTzZCUUxLNmJuVFJHbzJDbkIvQ0NG?=
+ =?utf-8?B?S1pjaWxxeXhlQkJNWnp1U2drRTF4N29VSGVOVXA5YUNMcjV5SWplZ1NyMGEr?=
+ =?utf-8?B?cEJIaFRNN091RDJLWFFDWG82T1lNOE51aHFxOEVEZ0QwbWN5S3hLVHJkMldK?=
+ =?utf-8?B?ZEQvdGYvdkZQMVdoM0cwZVBmTFByYlY4OWx5WEZ4SmdHZFVXSytOb21XYmNE?=
+ =?utf-8?Q?AGM+y15h6A1i3QVwhebDZ11bN?=
 X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e3414a4d-dfb2-4583-a055-08dd1da77007
+X-MS-Exchange-CrossTenant-Network-Message-Id: 394d6c98-f0cd-48be-5d20-08dd1da771bb
 X-MS-Exchange-CrossTenant-AuthSource: AS4PR04MB9550.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Dec 2024 07:58:33.4257
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Dec 2024 07:58:36.2765
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Cm4wrEKeFBENpmXGc0jOnHVN7Yl2DaDmT+P8XvR1i9u64K7DLsBrctpHxFIwfv8IgyUF0M41/Wkw4VYUVjuYnQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: b2MnQBQUjOfbXzLZV5c3NTtocEv+PJcqUlW0q4vfiNA+V66TmGMhiGLvDtvfRgJbZlWRUO6L62ijdEdWJswP9A==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU4PR04MB10361
 
-Introduce the compatible strings 'nxp,s32g2-edma' and 'nxp,s32g3-edma' to
-enable the support for the eDMAv3 present on S32G2/S32G3 platforms.
-
-The S32G2/S32G3 eDMA architecture features 32 DMA channels. Each of the
-two eDMA instances is integrated with two DMAMUX blocks.
+S32G2/S32G3 includes two system eDMA instances based on v3 version, each of
+them integrated with two DMAMUX blocks.
 Another particularity of these SoCs is that the interrupts are shared
-between channels in the following way:
+between channels as follows:
 - DMA Channels 0-15 share the 'tx-0-15' interrupt
 - DMA Channels 16-31 share the 'tx-16-31' interrupt
 - all channels share the 'err' interrupt
 
 Signed-off-by: Larisa Grigore <larisa.grigore@oss.nxp.com>
+Co-developed-by: Ciprian Marian Costea <ciprianmarian.costea@nxp.com>
+Signed-off-by: Ciprian Marian Costea <ciprianmarian.costea@nxp.com>
 ---
- .../devicetree/bindings/dma/fsl,edma.yaml     | 34 +++++++++++++++++++
- 1 file changed, 34 insertions(+)
+ drivers/dma/fsl-edma-common.h |   3 +
+ drivers/dma/fsl-edma-main.c   | 109 +++++++++++++++++++++++++++++++++-
+ 2 files changed, 111 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/dma/fsl,edma.yaml b/Documentation/devicetree/bindings/dma/fsl,edma.yaml
-index d54140f18d34..4f925469533e 100644
---- a/Documentation/devicetree/bindings/dma/fsl,edma.yaml
-+++ b/Documentation/devicetree/bindings/dma/fsl,edma.yaml
-@@ -26,9 +26,13 @@ properties:
-           - fsl,imx93-edma3
-           - fsl,imx93-edma4
-           - fsl,imx95-edma5
-+          - nxp,s32g2-edma
-       - items:
-           - const: fsl,ls1028a-edma
-           - const: fsl,vf610-edma
-+      - items:
-+          - const: nxp,s32g3-edma
-+          - const: nxp,s32g2-edma
+diff --git a/drivers/dma/fsl-edma-common.h b/drivers/dma/fsl-edma-common.h
+index 52901623d6fc..63e908fc3575 100644
+--- a/drivers/dma/fsl-edma-common.h
++++ b/drivers/dma/fsl-edma-common.h
+@@ -68,6 +68,8 @@
+ #define EDMA_V3_CH_CSR_EEI         BIT(2)
+ #define EDMA_V3_CH_CSR_DONE        BIT(30)
+ #define EDMA_V3_CH_CSR_ACTIVE      BIT(31)
++#define EDMA_V3_CH_ES_ERR          BIT(31)
++#define EDMA_V3_MP_ES_VLD          BIT(31)
  
-   reg:
-     minItems: 1
-@@ -221,6 +225,36 @@ allOf:
-       properties:
-         power-domains: false
+ enum fsl_edma_pm_state {
+ 	RUNNING = 0,
+@@ -252,6 +254,7 @@ struct fsl_edma_engine {
+ 	const struct fsl_edma_drvdata *drvdata;
+ 	u32			n_chans;
+ 	int			txirq;
++	int			txirq_16_31;
+ 	int			errirq;
+ 	bool			big_endian;
+ 	struct edma_regs	regs;
+diff --git a/drivers/dma/fsl-edma-main.c b/drivers/dma/fsl-edma-main.c
+index cc1787698b56..27bae3649026 100644
+--- a/drivers/dma/fsl-edma-main.c
++++ b/drivers/dma/fsl-edma-main.c
+@@ -3,10 +3,11 @@
+  * drivers/dma/fsl-edma.c
+  *
+  * Copyright 2013-2014 Freescale Semiconductor, Inc.
++ * Copyright 2024 NXP
+  *
+  * Driver for the Freescale eDMA engine with flexible channel multiplexing
+  * capability for DMA request sources. The eDMA block can be found on some
+- * Vybrid and Layerscape SoCs.
++ * Vybrid, Layerscape and S32G SoCs.
+  */
  
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: nxp,s32g2-edma
-+    then:
-+      properties:
-+        clocks:
-+          minItems: 2
-+          maxItems: 2
-+        clock-names:
-+          items:
-+            - const: dmamux0
-+            - const: dmamux1
-+        interrupts:
-+          minItems: 3
-+          maxItems: 3
-+        interrupt-names:
-+          items:
-+            - const: tx-0-15
-+            - const: tx-16-31
-+            - const: err
-+        reg:
-+          minItems: 3
-+          maxItems: 3
-+        "#dma-cells":
-+          const: 2
-+        dma-channels:
-+          const: 32
+ #include <dt-bindings/dma/fsl-edma.h>
+@@ -73,6 +74,60 @@ static irqreturn_t fsl_edma2_tx_handler(int irq, void *devi_id)
+ 	return fsl_edma_tx_handler(irq, fsl_chan->edma);
+ }
+ 
++static irqreturn_t fsl_edma3_or_tx_handler(int irq, void *dev_id,
++					   u8 start, u8 end)
++{
++	struct fsl_edma_engine *fsl_edma = dev_id;
++	struct fsl_edma_chan *chan;
++	int i;
 +
- unevaluatedProperties: false
++	end = min(end, fsl_edma->n_chans);
++
++	for (i = start; i < end; i++) {
++		chan = &fsl_edma->chans[i];
++
++		fsl_edma3_tx_handler(irq, chan);
++	}
++
++	return IRQ_HANDLED;
++}
++
++static irqreturn_t fsl_edma3_tx_0_15_handler(int irq, void *dev_id)
++{
++	return fsl_edma3_or_tx_handler(irq, dev_id, 0, 16);
++}
++
++static irqreturn_t fsl_edma3_tx_16_31_handler(int irq, void *dev_id)
++{
++	return fsl_edma3_or_tx_handler(irq, dev_id, 16, 32);
++}
++
++static irqreturn_t fsl_edma3_or_err_handler(int irq, void *dev_id)
++{
++	struct fsl_edma_engine *fsl_edma = dev_id;
++	struct edma_regs *regs = &fsl_edma->regs;
++	unsigned int err, ch, ch_es;
++	struct fsl_edma_chan *chan;
++
++	err = edma_readl(fsl_edma, regs->es);
++	if (!(err & EDMA_V3_MP_ES_VLD))
++		return IRQ_NONE;
++
++	for (ch = 0; ch < fsl_edma->n_chans; ch++) {
++		chan = &fsl_edma->chans[ch];
++
++		ch_es = edma_readl_chreg(chan, ch_es);
++		if (!(ch_es & EDMA_V3_CH_ES_ERR))
++			continue;
++
++		edma_writel_chreg(chan, EDMA_V3_CH_ES_ERR, ch_es);
++		fsl_edma_disable_request(chan);
++		fsl_edma->chans[ch].status = DMA_ERROR;
++	}
++
++	return IRQ_HANDLED;
++}
++
+ static irqreturn_t fsl_edma_err_handler(int irq, void *dev_id)
+ {
+ 	struct fsl_edma_engine *fsl_edma = dev_id;
+@@ -276,6 +331,49 @@ static int fsl_edma3_irq_init(struct platform_device *pdev, struct fsl_edma_engi
+ 	return 0;
+ }
  
- examples:
++static int fsl_edma3_or_irq_init(struct platform_device *pdev,
++				 struct fsl_edma_engine *fsl_edma)
++{
++	int ret;
++
++	fsl_edma->txirq = platform_get_irq_byname(pdev, "tx-0-15");
++	if (fsl_edma->txirq < 0)
++		return fsl_edma->txirq;
++
++	fsl_edma->txirq_16_31 = platform_get_irq_byname(pdev, "tx-16-31");
++	if (fsl_edma->txirq_16_31 < 0)
++		return fsl_edma->txirq_16_31;
++
++	fsl_edma->errirq = platform_get_irq_byname(pdev, "err");
++	if (fsl_edma->errirq < 0)
++		return fsl_edma->errirq;
++
++	ret = devm_request_irq(&pdev->dev, fsl_edma->txirq,
++			       fsl_edma3_tx_0_15_handler, 0, "eDMA tx0_15",
++			       fsl_edma);
++	if (ret)
++		return dev_err_probe(&pdev->dev, ret,
++			       "Can't register eDMA tx0_15 IRQ.\n");
++
++	if (fsl_edma->n_chans > 16) {
++		ret = devm_request_irq(&pdev->dev, fsl_edma->txirq_16_31,
++				       fsl_edma3_tx_16_31_handler, 0,
++				       "eDMA tx16_31", fsl_edma);
++		if (ret)
++			return dev_err_probe(&pdev->dev, ret,
++					"Can't register eDMA tx16_31 IRQ.\n");
++	}
++
++	ret = devm_request_irq(&pdev->dev, fsl_edma->errirq,
++			       fsl_edma3_or_err_handler, 0, "eDMA err",
++			       fsl_edma);
++	if (ret)
++		return dev_err_probe(&pdev->dev, ret,
++				     "Can't register eDMA err IRQ.\n");
++
++	return 0;
++}
++
+ static int
+ fsl_edma2_irq_init(struct platform_device *pdev,
+ 		   struct fsl_edma_engine *fsl_edma)
+@@ -406,6 +504,14 @@ static struct fsl_edma_drvdata imx95_data5 = {
+ 	.setup_irq = fsl_edma3_irq_init,
+ };
+ 
++static const struct fsl_edma_drvdata s32g2_data = {
++	.dmamuxs = DMAMUX_NR,
++	.chreg_space_sz = EDMA_TCD,
++	.chreg_off = 0x4000,
++	.flags = FSL_EDMA_DRV_EDMA3 | FSL_EDMA_DRV_MUX_SWAP,
++	.setup_irq = fsl_edma3_or_irq_init,
++};
++
+ static const struct of_device_id fsl_edma_dt_ids[] = {
+ 	{ .compatible = "fsl,vf610-edma", .data = &vf610_data},
+ 	{ .compatible = "fsl,ls1028a-edma", .data = &ls1028a_data},
+@@ -415,6 +521,7 @@ static const struct of_device_id fsl_edma_dt_ids[] = {
+ 	{ .compatible = "fsl,imx93-edma3", .data = &imx93_data3},
+ 	{ .compatible = "fsl,imx93-edma4", .data = &imx93_data4},
+ 	{ .compatible = "fsl,imx95-edma5", .data = &imx95_data5},
++	{ .compatible = "nxp,s32g2-edma", .data = &s32g2_data},
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, fsl_edma_dt_ids);
 -- 
 2.47.0
 

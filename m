@@ -1,48 +1,56 @@
-Return-Path: <dmaengine+bounces-4009-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4010-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B743E9F4F6C
-	for <lists+dmaengine@lfdr.de>; Tue, 17 Dec 2024 16:27:20 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B562B9F5100
+	for <lists+dmaengine@lfdr.de>; Tue, 17 Dec 2024 17:29:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 27551188060C
-	for <lists+dmaengine@lfdr.de>; Tue, 17 Dec 2024 15:27:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7775C188A014
+	for <lists+dmaengine@lfdr.de>; Tue, 17 Dec 2024 16:29:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 894A11F708C;
-	Tue, 17 Dec 2024 15:27:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89AFF1F470F;
+	Tue, 17 Dec 2024 16:29:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P6XsmFkn"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="Sduztu2d"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D3591F6671;
-	Tue, 17 Dec 2024 15:27:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB064142E77
+	for <dmaengine@vger.kernel.org>; Tue, 17 Dec 2024 16:29:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734449234; cv=none; b=uUaErOlJ8fldhUNxZdyT4oqWj1hbCN2Ks8Ve92q2fVpzFmus/W1Wsdhzztj+12mwv6it/f5pYcMtiRXfkY+hKVRvueIWeU0KU6VR95mIV+h1aqYQ4UM9nUwDMxHwX0db5hwBQIp8gS+C6Qph37z0DQqOEn2vsWQE2tNnOu1El68=
+	t=1734452988; cv=none; b=AB6AB3kNQMJuvPMALaw5IgFKyL3DhWJdIe42jcnkBGtumZkWUwsWATh2+30jl2EGdcLz6Oijf3Uj7lXTvLRvgPx+62+W2a4f4XozYjH8FkawSYoEiR19OD6cBJSvxZoTOpth0DOOPqtYM757lsqyyljILrdqQWRwHyoxQDBA5F8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734449234; c=relaxed/simple;
-	bh=CLxzXo9oeslqLy8tR41S5aelo9QQNAr/NdVVwT0J6wA=;
+	s=arc-20240116; t=1734452988; c=relaxed/simple;
+	bh=DD3FAl2qtwgNuyy16y7MJ5DW9ahwRaPByNpYh242nJI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qHSzSMdHta4y/TQCqa4B2A2/xrtWs08UbXxFr2Qo5s1BEcWjwxjxthYQQBVxrByoEu9DIttQQHxxj6V89DOqw4wanK9QZ2i6uBjt29fm+5eoa2OusZBpbrSchM2pLfCPO2Nhq+RZsCRZMsoJt+cRf4N6jgveFD1N9ExAiD1sXFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P6XsmFkn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0ABF7C4CED3;
-	Tue, 17 Dec 2024 15:27:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734449234;
-	bh=CLxzXo9oeslqLy8tR41S5aelo9QQNAr/NdVVwT0J6wA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=P6XsmFknP+cjnMMT6kMmQFvjqvUerbKSoxDX4MSvGPbQHycpp76w11ZijZLaegq72
-	 YYShpNBT19TsAgQlPreG+dTHM5dcY/u4+FTy2D1Z7lAMn4wKeHCi1iUXmo1WWIdIsX
-	 CTPIzgv49vqZT8P/r6Zpj4I0Q9DUam1dV6bmbgShZvCArEHwAd8rStd5WWyUDyslM4
-	 LOoaasihOugC9a2A6uVMSKlATfXS0mxim+VKio5y/5lJ24pN/2tjaLLtSmrcez5PP7
-	 Mm17cJUyw2KC4WH71dyv7HmCVA0OSdxErxECt1R0qCAaEJlOnO3Iq8hemprcratGxE
-	 jmamiQY5LTliA==
-Message-ID: <2e0e1fe3-af5e-4416-8b34-3fecb923b481@kernel.org>
-Date: Tue, 17 Dec 2024 16:27:09 +0100
+	 In-Reply-To:Content-Type; b=q5MWk+V04fX7tSxFqDhmymZ2ABoOC13RJROmagwzUqUbIGbTwF1FMp87P/GKjEKlroHqJX9X7fVtqIwhUb47/cAlm037ne2OpZOuHVLrIdVeqPugtU2bJ9rk9EretNyys4IqFD9Q5VKdkT9dYFXlVbM/4vOrsn7uFeO0uciJRxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=Sduztu2d; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1734452970; x=1735057770; i=wahrenst@gmx.net;
+	bh=n9zwjCj6EBJRZwuako70jsyhbW+Mce+32hY+E/9TnlI=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=Sduztu2dzkh+F63ImWLjVCtaxFvnk8myIrUqxHjsmeNJEC6qi6VTC89A8PFby0JV
+	 D8szjnTPkyePT2HUTKfLNR0aFTZ+5gYg9BbGF8ZXvibPraZAZG6W+RLBOscZffo2z
+	 eFlRzk6L/IWGYL4fFsz/owBuCxVA9jbRckvvuIBzBs3elN5nz7eIeGwF+xmTjwZ3D
+	 T+tAueB2+eFEqbB+3lkQSKZkaEyP33nrbr91p8tFFfklt0fg3dDW5DGYLWuUi84/A
+	 qLNHXUrZrHnePF56IdA9CB1zHO09251XvC5/QE168qaag4cwXag+1xGrC1hSbxtCb
+	 G02RG6GerC75G2mGFQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.106] ([37.4.251.153]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MaJ3t-1t2Sf136pR-00UshK; Tue, 17
+ Dec 2024 17:29:30 +0100
+Message-ID: <da2113a5-301b-4421-a651-9922d4ffb0de@gmx.net>
+Date: Tue, 17 Dec 2024 17:29:29 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -50,89 +58,113 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 7/8] dmaengine: fsl-edma: wait until no hardware request
- is in progress
-To: Larisa Ileana Grigore <larisa.grigore@oss.nxp.com>, Frank.Li@nxp.com
-Cc: dmaengine@vger.kernel.org, imx@lists.linux.dev,
- linux-kernel@vger.kernel.org, s32@nxp.com,
- Christophe Lizzi <clizzi@redhat.com>, Alberto Ruiz <aruizrui@redhat.com>,
- Enric Balletbo <eballetb@redhat.com>
-References: <20241216075819.2066772-1-larisa.grigore@oss.nxp.com>
- <20241216075819.2066772-8-larisa.grigore@oss.nxp.com>
- <d4afb25d-5993-4f80-9f80-0a548b6532cd@kernel.org>
- <d5badfcf-58d7-49d4-8a5a-d31de498f015@oss.nxp.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH V7] dmaengine: bcm2835-dma: Prevent suspend if DMA channel
+ is busy
+To: Florian Fainelli <florian.fainelli@broadcom.com>,
+ Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+ Vinod Koul <vkoul@kernel.org>
+Cc: Lukas Wunner <lukas@wunner.de>, Peter Robinson <pbrobinson@gmail.com>,
+ "Ivan T . Ivanov" <iivanov@suse.de>, linux-arm-kernel@lists.infradead.org,
+ bcm-kernel-feedback-list@broadcom.com, dmaengine@vger.kernel.org
+References: <20241204165546.77941-1-wahrenst@gmx.net>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <d5badfcf-58d7-49d4-8a5a-d31de498f015@oss.nxp.com>
-Content-Type: text/plain; charset=UTF-8
+From: Stefan Wahren <wahrenst@gmx.net>
+Autocrypt: addr=wahrenst@gmx.net; keydata=
+ xjMEZ1dOJBYJKwYBBAHaRw8BAQdA7H2MMG3q8FV7kAPko5vOAeaa4UA1I0hMgga1j5iYTTvN
+ IFN0ZWZhbiBXYWhyZW4gPHdhaHJlbnN0QGdteC5uZXQ+wo8EExYIADcWIQT3FXg+ApsOhPDN
+ NNFuwvLLwiAwigUCZ1dOJAUJB4TOAAIbAwQLCQgHBRUICQoLBRYCAwEAAAoJEG7C8svCIDCK
+ JQ4BAP4Y9uuHAxbAhHSQf6UZ+hl5BDznsZVBJvH8cZe2dSZ6AQCNgoc1Lxw1tvPscuC1Jd1C
+ TZomrGfQI47OiiJ3vGktBc44BGdXTiQSCisGAQQBl1UBBQEBB0B5M0B2E2XxySUQhU6emMYx
+ f5QR/BrEK0hs3bLT6Hb9WgMBCAfCfgQYFggAJhYhBPcVeD4Cmw6E8M000W7C8svCIDCKBQJn
+ V04kBQkHhM4AAhsMAAoJEG7C8svCIDCKJxoA/i+kqD5bphZEucrJHw77ujnOQbiKY2rLb0pE
+ aHMQoiECAQDVbj827W1Yai/0XEABIr8Ci6a+/qZ8Vz6MZzL5GJosAA==
+In-Reply-To: <20241204165546.77941-1-wahrenst@gmx.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:Da3P5oCeg9aKX6VLje1ZWdJ4c+FGgHfiqv1Puf3Sy97Cv4z2cB5
+ Fl0ro4tXVQuFhUqUuaL60prR20rnCXE/nTI+XOaYHUai38ZWOL8kqK8WphB/YfacqgRemqy
+ ECxzarKJW38gTyNX4pdg0euqPrXmkwvA5cfFtY/LicFUmTHo6F3I7A9Lgy4/rWas6GpASv4
+ HMquwGzCoNKfCH+gBay9Q==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:x3XvP3T0YLE=;yI4GKni3/dyqiiUPmfbmS+zpBZJ
+ Feag4HlOU+ySnEZ8ZD+E1IcFix5V0zYqmi6lGgp/Pa9YUSdCZptOyPWGF+xgiOj3f//Zpy8CE
+ NN581qddagMEZpgK5Hn4bF0/BmPPxCApzobrQk8KPOlfiqkj8nVB6VElF36JK2nOidKCce/Vz
+ hmBeUYRRAwcy0ZQ+9Eb6UEPlTpXOTYXBZWus1d83IDfhdQjRoRrsCW4l90s+AkoC6GWDpc1ST
+ Lj9hm87pdqxZ/iqvmDMLXPYmRbH60+APp05kjF9AnD9GjT+P9NoFl9/FWpJruy2/fwSOo7m/I
+ MtBkhRh6FfdRboRiwHzYx1KFDjh0Z9PRiacDDaBijHQEW3sgvazJKIf8Xf2PSFD9p+5ea7AcU
+ 3sS+pGbA8qwAe5l7MeSuGjU48JkUHP48oync8nKTb0NJVy/mw7M5rQrA4g7TtckHpXtGbxBI/
+ A1dZKvw9J4qEp1g3TjDus4TtN9RlbSm10W0a7g+6NZpryFZlx4B5C+oNeZ/RuebyoDn/buVZ4
+ Gc69nq+FkKZ+6SUvicGqNwksFHZpf6OujN3rcRufZvT23C5NGqekusC9TggKOjAZM+juLQTxk
+ z3nLJDljC0RastSguHrVs7G88Kgu+4xTZib0J8+oJRR1KK6WLoJ6PU1trBR2JMA8zGjIlKGq8
+ 5tsG9rRk0eeFf/MvubsIERbzbIcm6tLdXyNlJ/t/s0wodwb8lQTHRAxA23YZEKBpfQEwMAoiG
+ sski7S9nKqcjsLUrO1eHG4ZFYmalRQH/rWKfOavh3k9XVx6lbbV5z9IbdlECItSuzEG3aPFfV
+ jqe8i1hhGpmqEQw/kB0dNz5fzsGphd1H6NEEO5wAfwoTdJLw8OzUqIHU9jf+laP45r7dh0Wdq
+ h8f7/g3kU6EOnKi9jR46bi9r99ewoGJEAQYEVZZ9lU3fyWy4XoAZQyODRRcxavyJRZHzIzo/z
+ KAc8wziUh/ADBH5IuT5NCbv8xmIvTjrRKobgrr023zi0csEoBt2DFxCGj2iA5ImXBalL5irfU
+ bzUVRAt2kH1IayBSvOKTAJsOjSUqHYCEJ5+FQ9zmTcdrnxwOSbUe07GPDkzo2r8obiDyoiqSK
+ ZqGlJIDFTVJCBJ3ftH3I/vWl1Mluk0
 
-On 17/12/2024 15:19, Larisa Ileana Grigore wrote:
-> On 12/17/2024 7:27 AM, Krzysztof Kozlowski wrote:
->> [You don't often get email from krzk@kernel.org. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
->>
->> On 16/12/2024 08:58, Larisa Grigore wrote:
->>> Wait DMA hardware complete cleanup work by checking HRS bit before
->>> disabling the channel to make sure trail data is already written to
->>> memory.
->>>
->>> Fixes: 72f5801a4e2b7 ("dmaengine: fsl-edma: integrate v3 support")
->>
->> Why Fixes are at the end of the patchset? They must be either separate
->> patchset or first patches.
->>
->> Best regards,
->> Krzysztof
-> 
-> Thank you for you review Krzysztof! Indeed, this commit should be moved 
-> right after "dmaengine: fsl-edma: add eDMAv3 registers to edma_regs" 
+Am 04.12.24 um 17:55 schrieb Stefan Wahren:
+> bcm2835-dma provides the service to others, so it should suspend
+> late and resume early. Suspend should be prevented in case a DMA
+> channel is still busy.
+>
+> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+gentle ping ...
+> ---
+>   drivers/dma/bcm2835-dma.c | 22 ++++++++++++++++++++++
+>   1 file changed, 22 insertions(+)
+>
+> Changes in V7:
+> - improve patch title and changelog
+> - add explaining comment and drop warning in suspend
+> - drop empty resume callback
+>
+> Changes in V6:
+> - split out of series because there is no dependency
+>
+> diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
+> index 7ba52dee40a9..20b10c15c696 100644
+> --- a/drivers/dma/bcm2835-dma.c
+> +++ b/drivers/dma/bcm2835-dma.c
+> @@ -875,6 +875,27 @@ static struct dma_chan *bcm2835_dma_xlate(struct of_phandle_args *spec,
+>   	return chan;
+>   }
+>
+> +static int bcm2835_dma_suspend_late(struct device *dev)
+> +{
+> +	struct bcm2835_dmadev *od = dev_get_drvdata(dev);
+> +	struct bcm2835_chan *c, *next;
+> +
+> +	list_for_each_entry_safe(c, next, &od->ddev.channels,
+> +				 vc.chan.device_node) {
+> +		void __iomem *chan_base = c->chan_base;
+> +
+> +		/* Check if DMA channel is busy */
+> +		if (readl(chan_base + BCM2835_DMA_ADDR))
+> +			return -EBUSY;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct dev_pm_ops bcm2835_dma_pm_ops = {
+> +	SET_LATE_SYSTEM_SLEEP_PM_OPS(bcm2835_dma_suspend_late, NULL)
+> +};
+> +
+>   static int bcm2835_dma_probe(struct platform_device *pdev)
+>   {
+>   	struct bcm2835_dmadev *od;
+> @@ -1033,6 +1054,7 @@ static struct platform_driver bcm2835_dma_driver = {
+>   	.driver = {
+>   		.name = "bcm2835-dma",
+>   		.of_match_table = of_match_ptr(bcm2835_dma_of_match),
+> +		.pm = pm_ptr(&bcm2835_dma_pm_ops),
+>   	},
+>   };
+>
+> --
+> 2.34.1
+>
 
-I don't understand this. Are you saying you introduce bug in one patch
-and fix in other? Why this cannot be separate patchset?
-
-Best regards,
-Krzysztof
 

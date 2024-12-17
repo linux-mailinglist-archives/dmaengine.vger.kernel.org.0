@@ -1,136 +1,139 @@
-Return-Path: <dmaengine+bounces-3997-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3998-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EEC899F4024
-	for <lists+dmaengine@lfdr.de>; Tue, 17 Dec 2024 02:42:23 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id AB61B9F42BF
+	for <lists+dmaengine@lfdr.de>; Tue, 17 Dec 2024 06:30:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A769E1886528
-	for <lists+dmaengine@lfdr.de>; Tue, 17 Dec 2024 01:42:24 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4BE417A64EA
+	for <lists+dmaengine@lfdr.de>; Tue, 17 Dec 2024 05:29:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17F7FF9FE;
-	Tue, 17 Dec 2024 01:42:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD93418A935;
+	Tue, 17 Dec 2024 05:26:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pf-is-s-u-tokyo-ac-jp.20230601.gappssmtp.com header.i=@pf-is-s-u-tokyo-ac-jp.20230601.gappssmtp.com header.b="K7vlNsYq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EuT2lhTz"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0ED44A3E
-	for <dmaengine@vger.kernel.org>; Tue, 17 Dec 2024 01:42:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905F218A6A8;
+	Tue, 17 Dec 2024 05:26:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734399738; cv=none; b=SH15VdmN6/kRDybRRXgSlE+SKHmO3A6qejGC2n8l7NNme+8dWh3HAdByG3NwuOtGUqsFl230acfznrSGWu+U1B9buvU7/DczKGloohwWUzlu8AEDK93QKngAGEnJYeHQm4dSebwe2VOS7fsI53P+sJAciLJXpr9mi8bxQnuUhyc=
+	t=1734413217; cv=none; b=Wy4FKd+3Iw8v7ZwS3wR75tr8MoC4yCJo/lsBEkBhlAOE4EUs5W0QRZd6ds7c4KoPNOMH4/O+B1bKY2LFvNPUkE2SEg4Aic/cTmjuo/xvUe7nPh0ZegS+kGu2rSuWE4gABnmE10BgGlXG8yA9Wn8a7IuDOmy0YVsFr8UWWuEWvzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734399738; c=relaxed/simple;
-	bh=+RMK97pkibjxeGKNxS9uInT8DNmOih72azs6TkyMQvE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=O5h5WnW5zgQtl/5UBC/PHcvIy6VlBCYzPqSKjnybkuEvOSVjCSDvb7AZa8Kpau8cSYV/ayuNmmlbwUXbhBpGmIeBvpIpQYiG6tMKMmmAt/atTdAyZG4Cw51A99PbIuIQyMuxxdTckUa8XxjLeQpvAbdt9ztA390BpMiYuMO36bY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=pf.is.s.u-tokyo.ac.jp; spf=none smtp.mailfrom=pf.is.s.u-tokyo.ac.jp; dkim=pass (2048-bit key) header.d=pf-is-s-u-tokyo-ac-jp.20230601.gappssmtp.com header.i=@pf-is-s-u-tokyo-ac-jp.20230601.gappssmtp.com header.b=K7vlNsYq; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=pf.is.s.u-tokyo.ac.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pf.is.s.u-tokyo.ac.jp
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-725dac69699so4086379b3a.0
-        for <dmaengine@vger.kernel.org>; Mon, 16 Dec 2024 17:42:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pf-is-s-u-tokyo-ac-jp.20230601.gappssmtp.com; s=20230601; t=1734399735; x=1735004535; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=cysaRI62Xvh1TCOgEg3Oh+qKNjvQ33Ew3Va4OL3l78I=;
-        b=K7vlNsYqbNQDVEQor929WMNTdtCMHDNb/2S+zD8ItewuA1VqjT39A8Mkb3YB0Dejlm
-         xoF8L+CgEhCZBBxpFyk6BUgfT9qbyM292Ua146c5bdDISYNySOG/eyniqTgusg24K3rM
-         5YN0yzeWzqCaIRcMOkYZs5nQkHOKomCiPgl2WMmqoAlZr9PBCpP5Uc1bGutZAkFpZ6WN
-         60iWROLEFkJqaFFVEib8fJZ8lF5cS6S66JxBBFiKVyH/o+1XNgI/3yvFy7XAlop5UWG4
-         HJqBZAy3Cy6v6DtNwSJ6Egjn9otb24+J9Mxfz2/uQfxGraU3ysux+p8NF/OV/Qy3ZqNN
-         pgpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734399735; x=1735004535;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cysaRI62Xvh1TCOgEg3Oh+qKNjvQ33Ew3Va4OL3l78I=;
-        b=JfjJS5WHEpm4DRR6u6fed6MARyvlUFXJhv1H6BBfSJ4hZNawOzefBPYnMgR8dxbiJb
-         RjgMOQuZoGt2Ssrh9LXa/WPCQIU8Np1o0/YtiWe8UToEOgXMU9DFTSXSXIzw6uiYKuvW
-         78fiwzmqCWmadhMvPieIg0FV3DCfps2B2mIFbLrco/YjDEFcsSZT/DgnHZfq071SA9zF
-         OVI69zPrlL4dhx2j0KrEIit9Tym5BuOS864QU+Nwogu6nlOHM1DLCWh/RWcguggbvtqz
-         2mNuV2LYWTAa+AgdffR93aw7Y/ikOVxdQmzVv7zKkDzHzPbWGuf4y4guNupdq6DeqsTw
-         kXyQ==
-X-Gm-Message-State: AOJu0YxmrZjoUfkCubTmhTFy/kAoRZ1K2kcnAMD+Uyj3lLVeq14xwTQE
-	SMkNbghS2Wal2M2/ZIGCXvm+kU5sjOaS3sjOxZ2Uqw5bxC9eCQ9I1SaNh1wEV6mWkPJ2mJSxrqK
-	/7CX3yw==
-X-Gm-Gg: ASbGncvozHH2TPziRhxeERKs/KeszM4PRrHG4FyjoQSzW/67GaAElF19uniRN2lKe9y
-	ArcFFlRoxynXuMmGiEJEZkSuk9kJsyVexnJw8LUzMdK/SH7VMiWEhB7Q2ixWhuyJc1JVGjLT3C0
-	fZDjnh8CWoEAYTgTgzqSLy+CeSzApKRHf5phU8ORnLw+Wrndo3s/t/Q+o9PKdhWTSqnlOWdL2Th
-	1Hhu65w41qqaOSzdt1vl37Kft/3bvc1YRFZGFmlpCQQnA3NljJ3o3cDVd8IXQYKZDzO+BOKsVhL
-	o7YL1goMe+aU+kQToOrANkbVrIHoFoQeklk3XEORN8I=
-X-Google-Smtp-Source: AGHT+IEjyn3zm7zW6W5f9/t7ysiV/MZb/QxXDkJIwaRv2bI2NoqHZUHpAX5PX16J8qmwhp2BrOMHtg==
-X-Received: by 2002:a05:6a00:b46:b0:725:8c0f:6fa3 with SMTP id d2e1a72fcca58-7290c2700efmr21092289b3a.22.1734399734696;
-        Mon, 16 Dec 2024 17:42:14 -0800 (PST)
-Received: from localhost.localdomain (133-32-227-190.east.xps.vectant.ne.jp. [133.32.227.190])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72918b78992sm5422032b3a.111.2024.12.16.17.42.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2024 17:42:14 -0800 (PST)
-From: Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>
-To: vkoul@kernel.org
-Cc: dmaengine@vger.kernel.org,
-	Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>
-Subject: [PATCH] dmaengine: bcm-sba-raid: fix a device reference leak
-Date: Tue, 17 Dec 2024 10:42:09 +0900
-Message-Id: <20241217014209.1664228-1-joe@pf.is.s.u-tokyo.ac.jp>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1734413217; c=relaxed/simple;
+	bh=XBncE5ATv3/JWoY3tYKZAl4Ls9STvMF8cPoWgk1fqsg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Rlon9JnSdYjGuMbVOIRaPXKmPFmtrFwYal9lk4sxQu7OJ32XRMFooWz0US4I4RufQYdARvCASbYROBj37XYachkYxP5S92GkqCImCFTDXMwTvu1Dv7knKkS3f7+96tI14GwN2eYJR9t5XcWd3r1o7FoQc8bgT9YNZf1Mf6jrTVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EuT2lhTz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78B45C4CED7;
+	Tue, 17 Dec 2024 05:26:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734413217;
+	bh=XBncE5ATv3/JWoY3tYKZAl4Ls9STvMF8cPoWgk1fqsg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=EuT2lhTzB0CJhZdHrt0jV91TlExGWIdSuIiwL+ArkyCUiqyyz2tovw1uuVxgbo5fb
+	 pgWGaF8P5ZEhK7LLvwOVpW6AV7mMDExOo+5Dn/HzHkrebrE4Eue0xc7uexFnVFebUN
+	 t5sTdho3wR22PbPmATYF5qzYWLabszXvHQhkSqFdmpEnXKeFH/HJj3ldsLzbFxZDzx
+	 AUwa9E2gNsgTKPK13Nc7oodOfiY7DNYv/zGfrKL87dltx10Nv7cnN5kLMV0AXxdpHX
+	 ZFTEWZxiw/LAuBCaCSoErdFBe65Tq5dKk9DIAueQ7qu/QWqlPKNnC8jmWVQWbVXXu8
+	 jLP9XOzRVfwFA==
+Message-ID: <0b50fbb0-f32e-4c77-a277-bd64256ca2f7@kernel.org>
+Date: Tue, 17 Dec 2024 06:26:52 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/8] dt-bindings: dma: fsl-edma: add nxp,s32g2-edma
+ compatible string
+To: Larisa Grigore <larisa.grigore@oss.nxp.com>, Frank.Li@nxp.com
+Cc: dmaengine@vger.kernel.org, imx@lists.linux.dev,
+ linux-kernel@vger.kernel.org, s32@nxp.com,
+ Christophe Lizzi <clizzi@redhat.com>, Alberto Ruiz <aruizrui@redhat.com>,
+ Enric Balletbo <eballetb@redhat.com>
+References: <20241216075819.2066772-1-larisa.grigore@oss.nxp.com>
+ <20241216075819.2066772-6-larisa.grigore@oss.nxp.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20241216075819.2066772-6-larisa.grigore@oss.nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-SBA RAID driver leaks a device reference as it does not release the
-reference obtained by of_find_device_by_node(). Add a put_device() call
-in the error path of the .probe() and in the .remove() to fix this.
+On 16/12/2024 08:58, Larisa Grigore wrote:
+> Introduce the compatible strings 'nxp,s32g2-edma' and 'nxp,s32g3-edma' to
+> enable the support for the eDMAv3 present on S32G2/S32G3 platforms.
+> 
+Not tested.
 
-This bug was detected by an experimental static analysis tool that I am
-developing.
+<form letter>
+Please use scripts/get_maintainers.pl to get a list of necessary people
+and lists to CC. It might happen, that command when run on an older
+kernel, gives you outdated entries. Therefore please be sure you base
+your patches on recent Linux kernel.
 
-Fixes: 743e1c8ffe4e ("dmaengine: Add Broadcom SBA RAID driver")
-Signed-off-by: Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>
----
- drivers/dma/bcm-sba-raid.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Tools like b4 or scripts/get_maintainer.pl provide you proper list of
+people, so fix your workflow. Tools might also fail if you work on some
+ancient tree (don't, instead use mainline) or work on fork of kernel
+(don't, instead use mainline). Just use b4 and everything should be
+fine, although remember about `b4 prep --auto-to-cc` if you added new
+patches to the patchset.
 
-diff --git a/drivers/dma/bcm-sba-raid.c b/drivers/dma/bcm-sba-raid.c
-index 7f0e76439ce5..e3b34a90df02 100644
---- a/drivers/dma/bcm-sba-raid.c
-+++ b/drivers/dma/bcm-sba-raid.c
-@@ -1699,7 +1699,7 @@ static int sba_probe(struct platform_device *pdev)
- 	/* Prealloc channel resource */
- 	ret = sba_prealloc_channel_resources(sba);
- 	if (ret)
--		goto fail_free_mchan;
-+		goto fail_put_mbox_pdev;
- 
- 	/* Check availability of debugfs */
- 	if (!debugfs_initialized())
-@@ -1729,6 +1729,8 @@ static int sba_probe(struct platform_device *pdev)
- fail_free_resources:
- 	debugfs_remove_recursive(sba->root);
- 	sba_freeup_channel_resources(sba);
-+fail_put_mbox_pdev:
-+	put_device(sba->mbox_dev);
- fail_free_mchan:
- 	mbox_free_channel(sba->mchan);
- 	return ret;
-@@ -1744,6 +1746,8 @@ static void sba_remove(struct platform_device *pdev)
- 
- 	sba_freeup_channel_resources(sba);
- 
-+	put_device(sba->mbox_dev);
-+
- 	mbox_free_channel(sba->mchan);
- }
- 
--- 
-2.34.1
+You missed at least devicetree list (maybe more), so this won't be
+tested by automated tooling. Performing review on untested code might be
+a waste of time.
 
+Please kindly resend and include all necessary To/Cc entries.
+</form letter>
+
+Best regards,
+Krzysztof
 

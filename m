@@ -1,48 +1,48 @@
-Return-Path: <dmaengine+bounces-3998-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-3999-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB61B9F42BF
-	for <lists+dmaengine@lfdr.de>; Tue, 17 Dec 2024 06:30:11 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B2559F42C2
+	for <lists+dmaengine@lfdr.de>; Tue, 17 Dec 2024 06:30:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4BE417A64EA
-	for <lists+dmaengine@lfdr.de>; Tue, 17 Dec 2024 05:29:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7A07A1890548
+	for <lists+dmaengine@lfdr.de>; Tue, 17 Dec 2024 05:30:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD93418A935;
-	Tue, 17 Dec 2024 05:26:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7A3E155A25;
+	Tue, 17 Dec 2024 05:27:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EuT2lhTz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fyLb5xLi"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905F218A6A8;
-	Tue, 17 Dec 2024 05:26:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B0CB154BE0;
+	Tue, 17 Dec 2024 05:27:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734413217; cv=none; b=Wy4FKd+3Iw8v7ZwS3wR75tr8MoC4yCJo/lsBEkBhlAOE4EUs5W0QRZd6ds7c4KoPNOMH4/O+B1bKY2LFvNPUkE2SEg4Aic/cTmjuo/xvUe7nPh0ZegS+kGu2rSuWE4gABnmE10BgGlXG8yA9Wn8a7IuDOmy0YVsFr8UWWuEWvzg=
+	t=1734413262; cv=none; b=LnF5BH/+shTWlT227sRpE32SI6d25XUYnMOX0SMm/MLZxufgCjrdnkulF4/kU5CWguNWVzQTKzWG+6bbgtWxLrRr+ddzvn3xOjUHPBpBTx7rozVr0bryTjoekJMkxklUyPAASWNnqrpGeQWnqeQjDiZJ6A6cCcEwfBJuu6+mp5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734413217; c=relaxed/simple;
-	bh=XBncE5ATv3/JWoY3tYKZAl4Ls9STvMF8cPoWgk1fqsg=;
+	s=arc-20240116; t=1734413262; c=relaxed/simple;
+	bh=/5RJEeJzLlqr1J7OdtS8uUI9PVZSwCxm3JRxVcr15/w=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Rlon9JnSdYjGuMbVOIRaPXKmPFmtrFwYal9lk4sxQu7OJ32XRMFooWz0US4I4RufQYdARvCASbYROBj37XYachkYxP5S92GkqCImCFTDXMwTvu1Dv7knKkS3f7+96tI14GwN2eYJR9t5XcWd3r1o7FoQc8bgT9YNZf1Mf6jrTVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EuT2lhTz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78B45C4CED7;
-	Tue, 17 Dec 2024 05:26:54 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=NM+DMlwMGdRZeeBYQCoLU1ui5HfnoTPz6ZWUo3YB/MuunIV9DId6bfnaiZ8XxaydS047foBWZO3VJ6/R/bMtRGLilkWgHvZ3xa68G3N2eSPUlWixqlOFKHg0Nvigv1p+Yj0ze3VehD46SnjU099TO2odP/UTODHljZOr2XPqi/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fyLb5xLi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ACF1C4CED3;
+	Tue, 17 Dec 2024 05:27:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734413217;
-	bh=XBncE5ATv3/JWoY3tYKZAl4Ls9STvMF8cPoWgk1fqsg=;
+	s=k20201202; t=1734413261;
+	bh=/5RJEeJzLlqr1J7OdtS8uUI9PVZSwCxm3JRxVcr15/w=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=EuT2lhTzB0CJhZdHrt0jV91TlExGWIdSuIiwL+ArkyCUiqyyz2tovw1uuVxgbo5fb
-	 pgWGaF8P5ZEhK7LLvwOVpW6AV7mMDExOo+5Dn/HzHkrebrE4Eue0xc7uexFnVFebUN
-	 t5sTdho3wR22PbPmATYF5qzYWLabszXvHQhkSqFdmpEnXKeFH/HJj3ldsLzbFxZDzx
-	 AUwa9E2gNsgTKPK13Nc7oodOfiY7DNYv/zGfrKL87dltx10Nv7cnN5kLMV0AXxdpHX
-	 ZFTEWZxiw/LAuBCaCSoErdFBe65Tq5dKk9DIAueQ7qu/QWqlPKNnC8jmWVQWbVXXu8
-	 jLP9XOzRVfwFA==
-Message-ID: <0b50fbb0-f32e-4c77-a277-bd64256ca2f7@kernel.org>
-Date: Tue, 17 Dec 2024 06:26:52 +0100
+	b=fyLb5xLiKef9oVb4V3OC5Uk43LdnbuHnuq7LcfXvJBSzahQFOmtJGjaO9Z6I3MsCl
+	 5rcL6AMatH3TxSiSCKzkABiibU+7KS30V3WA0AEbKd4JsUKUhVXF+pMDnPGC8PoEH3
+	 klzHqzh5KtzoATSMuC6tLN9xi3DGHTqtp5yXPEbaiHtya9tFscfHgxRN8C8fwiC6F1
+	 dxMt8XeugGX1oAYZ+n4azwxII7gUELEBoTEcrHQszBsgaFdDJn1sbT8wOY9IFLhZXm
+	 ZlrJTtcGWQtbGEKdwoXw9bMM0eVJQDIVWeGfV1pPcZZJY2QtCffgHti6KkKvASfKLW
+	 JliKc/rPOg+Iw==
+Message-ID: <d4afb25d-5993-4f80-9f80-0a548b6532cd@kernel.org>
+Date: Tue, 17 Dec 2024 06:27:36 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -50,15 +50,15 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/8] dt-bindings: dma: fsl-edma: add nxp,s32g2-edma
- compatible string
+Subject: Re: [PATCH 7/8] dmaengine: fsl-edma: wait until no hardware request
+ is in progress
 To: Larisa Grigore <larisa.grigore@oss.nxp.com>, Frank.Li@nxp.com
 Cc: dmaengine@vger.kernel.org, imx@lists.linux.dev,
  linux-kernel@vger.kernel.org, s32@nxp.com,
  Christophe Lizzi <clizzi@redhat.com>, Alberto Ruiz <aruizrui@redhat.com>,
  Enric Balletbo <eballetb@redhat.com>
 References: <20241216075819.2066772-1-larisa.grigore@oss.nxp.com>
- <20241216075819.2066772-6-larisa.grigore@oss.nxp.com>
+ <20241216075819.2066772-8-larisa.grigore@oss.nxp.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -104,35 +104,19 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20241216075819.2066772-6-larisa.grigore@oss.nxp.com>
+In-Reply-To: <20241216075819.2066772-8-larisa.grigore@oss.nxp.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 16/12/2024 08:58, Larisa Grigore wrote:
-> Introduce the compatible strings 'nxp,s32g2-edma' and 'nxp,s32g3-edma' to
-> enable the support for the eDMAv3 present on S32G2/S32G3 platforms.
+> Wait DMA hardware complete cleanup work by checking HRS bit before
+> disabling the channel to make sure trail data is already written to
+> memory.
 > 
-Not tested.
+> Fixes: 72f5801a4e2b7 ("dmaengine: fsl-edma: integrate v3 support")
 
-<form letter>
-Please use scripts/get_maintainers.pl to get a list of necessary people
-and lists to CC. It might happen, that command when run on an older
-kernel, gives you outdated entries. Therefore please be sure you base
-your patches on recent Linux kernel.
-
-Tools like b4 or scripts/get_maintainer.pl provide you proper list of
-people, so fix your workflow. Tools might also fail if you work on some
-ancient tree (don't, instead use mainline) or work on fork of kernel
-(don't, instead use mainline). Just use b4 and everything should be
-fine, although remember about `b4 prep --auto-to-cc` if you added new
-patches to the patchset.
-
-You missed at least devicetree list (maybe more), so this won't be
-tested by automated tooling. Performing review on untested code might be
-a waste of time.
-
-Please kindly resend and include all necessary To/Cc entries.
-</form letter>
+Why Fixes are at the end of the patchset? They must be either separate
+patchset or first patches.
 
 Best regards,
 Krzysztof

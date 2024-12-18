@@ -1,130 +1,176 @@
-Return-Path: <dmaengine+bounces-4017-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4018-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 120D59F6112
-	for <lists+dmaengine@lfdr.de>; Wed, 18 Dec 2024 10:12:05 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 170149F65FB
+	for <lists+dmaengine@lfdr.de>; Wed, 18 Dec 2024 13:34:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4023D1894DB9
-	for <lists+dmaengine@lfdr.de>; Wed, 18 Dec 2024 09:11:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 56F6C16CAF1
+	for <lists+dmaengine@lfdr.de>; Wed, 18 Dec 2024 12:34:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BA7116B75C;
-	Wed, 18 Dec 2024 09:09:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D888F1A238D;
+	Wed, 18 Dec 2024 12:34:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="heXA8KDi"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="mSOvVslc"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A9D198845
-	for <dmaengine@vger.kernel.org>; Wed, 18 Dec 2024 09:09:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90A8199FC5;
+	Wed, 18 Dec 2024 12:34:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734512999; cv=none; b=KEB5jTPAm25Q7vH1++rK1RL/pb8RHDXKhOu/383e3Xqu3o73fY3ZlHQ+n+n1QTa3mfjlllfFofCPoof8r/JzeGYNEfp45SnUDbldWq8wufTBPkunE4VV9ZbHekuw8qkfYNVbbpIpFCK7qrRUKdZ3NNL08rZsQGuO9cqPvghXsEo=
+	t=1734525267; cv=none; b=rkK2EStyM4Jw239EK/JGHkAtwduhts3e/8XosUwPS+clcXnu6BX8Jm9WFMZeNGpHYIDIusIYCmZcgJ9qmZq4P9e+0MRRS5Tyarotxz3Xi3doHqlMmvp7QmyCnHJLZwTSZHXn9gaYLqDbYgXIQtfySiZ44hSUkhvgAuJ5fueSTBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734512999; c=relaxed/simple;
-	bh=b1JShOcfx4OC/H4hCSqJnlWA50vVcPx8LGx5EefXNgo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WKRk+qAETPKEw+rvE8mM1BUK5ekM9hPdVSXX242mpsJVhpWFJc6wube9ju3QcTn8F6GJLaPjfzE2VwQeioGDJpE8nsGArAh7Bl15ti4qBtdTIU8au4T9w+TgGPWUOBViesbsD/+ahneFLhra8LbFoEUS8Y6p906ccv+UD5tN1i4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=heXA8KDi; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-aab925654d9so871773966b.2
-        for <dmaengine@vger.kernel.org>; Wed, 18 Dec 2024 01:09:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1734512996; x=1735117796; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SZtPf/+ebVZm8ipbL1vunx0JwI+fsXr0ZDHnyMidv2w=;
-        b=heXA8KDiRmtNlLlPKSPhJ5A1sm1VOtsnuPxXUm4VryNPt+H84tUdn36jY234wjTDp2
-         yAZ/DR5eSNu9wf8CsGkS5er+6HxP8D2l33ECHiBy/TF/9igqCur8Gv7/7uQJFeYJ6P0d
-         4HnQ+lcICDrOvsIiUoTgehrCg8I6MtKwDPI6BYBPN2MPoVSBl+bXd87NpJ8Y215Am+wt
-         RL5hNY0Ou0dVNV3ytOxo8mpJL8FJd8lpSGhOUIFyXjcPZ9wNOigmMM5c+gthQPGsD0Gc
-         5yYcsMcNWo2mr681pbSW34DLJ4+Ji4auwuyBfQ8FDzeQ0CyUNMWNRoPQYXMHHoG5dzzJ
-         jp1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734512996; x=1735117796;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SZtPf/+ebVZm8ipbL1vunx0JwI+fsXr0ZDHnyMidv2w=;
-        b=SHUXAhKBijGQfs/OJLMqHBBxBXSKUY93PsVW3TOFG/lDpqBrny2TPjjDs27c0a5PHF
-         DCyJzXLSQY822lQf33GmJuhbmXsl3BVJ510zCie52D8v18/Zh3on4Qfa3oGJK0jMkOvg
-         gcn4lMuobA5dxVFqzUsldgbq6hvU0kg8PTE1vHyXQeeyAK3sVKdB2jQXbRmbpKaV+LPP
-         UZcAlFKr57aWuN/uYveHALuGjhV/8T1+v/RQejyy6sGd8pjjgWnMW8CSNzCMD05JcFwT
-         jAEFl/8BINVNuuzrdSRdYl1K2S8VwmnFWhATE2yajq4cFjDDhYFa0RV38B81B4rkVzAw
-         6jFg==
-X-Forwarded-Encrypted: i=1; AJvYcCV2m18JilqUspqcCCE5GUsxI+RdoODR4mc9h4XAqpwrz9LGbUYT6zzHcE13WcSl3a64+XHG/j4/gZA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2LeogUOCmIj+863MRDnE8zQQ9GQHEj3LT9zoQTgrMezhjTfQd
-	GyZhPKwMhHZdzOXq0OM4B1Bj2pA8ZpiN7LxMGlPJ6+BObVrJW2dHcqcRsmIS62w=
-X-Gm-Gg: ASbGncuXZvTOAfjP03slNx+d/srx5RfuHM/GYrCIJ+BcoZRfL+HxsRDJ8gEUH1TpcG9
-	16yiWi21K7Xlxjyh/kdqoPQxMLxtdg3QU2vMHLxJTW0/JXy4sBiYCJ/+sokpk+N4KaZs3cyzXAq
-	81hMiB/yog3PKLJG21LxsXsNgC6nSLTTvC4DzQjuBjkhmQOTq8p9gN2BkJ5toygSSkVF/vS4Dvw
-	JMrAb8CJGU9l8K5GT5vIolI471l43pKxijclF2kMPvRl3dAeqd+yUpTs8oW6Q==
-X-Google-Smtp-Source: AGHT+IFVKz02gEGfzeQ4Ftu4OsejEwEWE0jlAKx2H6Un2qihMOeo85Rto7Hm842V3UrxPPgMuAxsqw==
-X-Received: by 2002:a17:906:7313:b0:aa6:2fdc:db1a with SMTP id a640c23a62f3a-aabf48d513cmr147829566b.38.1734512994513;
-        Wed, 18 Dec 2024 01:09:54 -0800 (PST)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aabcab0431dsm278251666b.196.2024.12.18.01.09.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2024 01:09:54 -0800 (PST)
-Date: Wed, 18 Dec 2024 12:09:51 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>
-Cc: peter.ujfalusi@gmail.com, vkoul@kernel.org, dmaengine@vger.kernel.org
-Subject: Re: [PATCH v2] dmaengine: ti: edma: fix OF node reference leaks in
- edma_driver
-Message-ID: <b9662dbc-1503-433c-ad85-35c2c765787a@stanley.mountain>
-References: <20241218011520.2579828-1-joe@pf.is.s.u-tokyo.ac.jp>
+	s=arc-20240116; t=1734525267; c=relaxed/simple;
+	bh=QYc4xY8AeNSgge56dJ3MvqzLhT/3x0EYFavC+ntvJs4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=SB2KYOYMmaUp/wjs0U0KlPSgQc/5kHiGnc/im3LaSLxk5jEobgEZXnSxrXPZb4j1MwlxlKsBdBl5mYeQzpNKLi4B6Gm+M0/Bx9KDht3qIBYZ3G4BfrsANDLCumzt0C+wSzaScltWZbuPOlLFaXtlqsTapgF3ipib4n7hTs8lUGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=mSOvVslc; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BI7V5iF025318;
+	Wed, 18 Dec 2024 12:34:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	0C94w/0C+OzA0oXh9i7IsC80vig3DOMsP0LguORAZO0=; b=mSOvVslcyvPQhTRD
+	gigAf8Q4B6nwZf/50MXI+c5hf/9FiRxsEekzgMpnWnktYh4e3QPSfbyY5v9O2obK
+	bjm0PuAdYsxsREvAIwlOwsC4ynrM5D12GxGlEpYeBQPoTiZQ2zPKHqxwzaJUhltF
+	ElZuC8FaEan4N+VIxXiiJGLR8Q8rw7m+XlKoSZNh/DWmDODuPnsFOB0GwTDhF1kb
+	tDsaLg5GZ1uEALRk4XlZWskr80PSt13WGPF+yQ66RDbXAfbv/4knblD/tJ5DVKLO
+	fzDVFIo/GhvSdhs6VXA8YxjR3rBpGMKNpMGBA5Vkccg8K8eAJ4LCFU/CXr/b0d4k
+	UzpZpg==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43kt2w8rm0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 18 Dec 2024 12:34:16 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4BICYEZQ011739
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 18 Dec 2024 12:34:14 GMT
+Received: from [10.216.12.179] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 18 Dec
+ 2024 04:34:08 -0800
+Message-ID: <5ef44277-6739-4e1e-af62-0f40ae081ec1@quicinc.com>
+Date: Wed, 18 Dec 2024 18:04:04 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241218011520.2579828-1-joe@pf.is.s.u-tokyo.ac.jp>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/4] dmaengine: gpi: Add Lock and Unlock TRE support to
+ access I2C exclusively
+To: Vinod Koul <vkoul@kernel.org>
+CC: <konrad.dybcio@linaro.org>, <andersson@kernel.org>,
+        <andi.shyti@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-i2c@vger.kernel.org>, <conor+dt@kernel.org>,
+        <agross@kernel.org>, <devicetree@vger.kernel.org>, <linux@treblig.org>,
+        <dan.carpenter@linaro.org>, <Frank.Li@nxp.com>,
+        <konradybcio@kernel.org>, <bryan.odonoghue@linaro.org>,
+        <krzk+dt@kernel.org>, <robh@kernel.org>, <quic_vdadhani@quicinc.com>
+References: <20241129144357.2008465-1-quic_msavaliy@quicinc.com>
+ <20241129144357.2008465-3-quic_msavaliy@quicinc.com> <Z01YBLcxDXI2UwXR@vaman>
+ <d49b16b2-95e5-42b4-9bc1-40cb0bfa15b1@quicinc.com> <Z1BJSbf+1G8ojTib@vaman>
+Content-Language: en-US
+From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+In-Reply-To: <Z1BJSbf+1G8ojTib@vaman>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: fLj0LppQqDwBIQBoNr_scSKpO1tWPoNJ
+X-Proofpoint-ORIG-GUID: fLj0LppQqDwBIQBoNr_scSKpO1tWPoNJ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
+ mlxlogscore=999 priorityscore=1501 malwarescore=0 clxscore=1015
+ suspectscore=0 adultscore=0 lowpriorityscore=0 bulkscore=0 mlxscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2412180101
 
-On Wed, Dec 18, 2024 at 10:15:20AM +0900, Joe Hattori wrote:
->  drivers/dma/ti/edma.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
+Hi Vinod, Thanks !  I just saw your comments now as somehow it was going 
+in some other folder and didn't realize.
+
+On 12/4/2024 5:51 PM, Vinod Koul wrote:
+> On 02-12-24, 16:13, Mukesh Kumar Savaliya wrote:
+>> Thanks for the review comments Vinod !
+>>
+>> On 12/2/2024 12:17 PM, Vinod Koul wrote:
+>>> On 29-11-24, 20:13, Mukesh Kumar Savaliya wrote:
+>>>> GSI DMA provides specific TREs(Transfer ring element) namely Lock and
+>>>> Unlock TRE. It provides mutually exclusive access to I2C controller from
+>>>> any of the processor(Apps,ADSP). Lock prevents other subsystems from
+>>>> concurrently performing DMA transfers and avoids disturbance to data path.
+>>>> Basically for shared I2C usecase, lock the SE(Serial Engine) for one of
+>>>> the processor, complete the transfer, unlock the SE.
+>>>>
+>>>> Apply Lock TRE for the first transfer of shared SE and Apply Unlock
+>>>> TRE for the last transfer.
+>>>>
+>>>> Also change MAX_TRE macro to 5 from 3 because of the two additional TREs.
+>>>>
+>>>
+>>> ...
+>>>
+>>>> @@ -65,6 +65,9 @@ enum i2c_op {
+>>>>     * @rx_len: receive length for buffer
+>>>>     * @op: i2c cmd
+>>>>     * @muli-msg: is part of multi i2c r-w msgs
+>>>> + * @shared_se: bus is shared between subsystems
+>>>> + * @bool first_msg: use it for tracking multimessage xfer
+>>>> + * @bool last_msg: use it for tracking multimessage xfer
+>>>>     */
+>>>>    struct gpi_i2c_config {
+>>>>    	u8 set_config;
+>>>> @@ -78,6 +81,9 @@ struct gpi_i2c_config {
+>>>>    	u32 rx_len;
+>>>>    	enum i2c_op op;
+>>>>    	bool multi_msg;
+>>>> +	bool shared_se;
+>>>
+>>> Looking at this why do you need this field? It can be internal to your
+>>> i2c driver... Why not just set an enum for lock and use the values as
+>>> lock/unlock/dont care and make the interface simpler. I see no reason to
+>>> use three variables to communicate the info which can be handled in
+>>> simpler way..?
+>>>
+>> Below was earlier reply to [PATCH V3, 2/4], please let me know if you have
+>> any additional comment and need further clarifications.
 > 
-> diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
-> index 343e986e66e7..4ece125b2ae7 100644
-> --- a/drivers/dma/ti/edma.c
-> +++ b/drivers/dma/ti/edma.c
-> @@ -208,7 +208,6 @@ struct edma_desc {
->  struct edma_cc;
->  
->  struct edma_tc {
-> -	struct device_node		*node;
->  	u16				id;
->  };
->  
-> @@ -2460,19 +2459,19 @@ static int edma_probe(struct platform_device *pdev)
->  			goto err_reg1;
->  		}
->  
-> -		for (i = 0;; i++) {
-> +		for (i = 0; i < ecc->num_tc; i++) {
->  			ret = of_parse_phandle_with_fixed_args(node, "ti,tptcs",
->  							       1, i, &tc_args);
-> -			if (ret || i == ecc->num_tc)
+> Looks like you misunderstood, the question is why do you need three
+> variables to convey this info..? Use a single variable please
+Yes, I think so. Please let me clarify.
+First variable is a feature flag and it's required to be explicitly 
+mentioned by client (i2c/spi/etc) to GSI driver.
 
-I feel bad for not saying this earlier, but probably this
-"i < ecc->num_tc" change should be done as patch 1/2?  It's sort of
-related because if we didn't do this then we'd have to do this we'd
-have to re-write it to for the i == ecc->num_tc to add another
-of_node_put(tc_args.np).  But really it needs to be reviewed
-separately.  It's such a weird thing, that I have to think that it
-was done deliberately for some reason although I can't figure out why.
+Second and third, can be optimized to boolean so either first or last 
+can be passed.
 
-The rest of the patch is nice.  So much simpler than v1.
-
-regards,
-dan carpenter
+Please correct me or add simple change where you would like to make, i 
+can add that.
+> 
+>> --
+>>> Looking at the usage in following patches, why cant this be handled
+>>> internally as part of prep call?
+>>>
+>> As per design, i2c driver iterates over each message and submits to GPI
+>> where it creates TRE. Since it's per transfer, we need to create Lock and
+>> Unlock TRE based on first or last message.
+>> --
+>>>> +	bool first_msg;
+>>>> +	bool last_msg;
+>>>
+> 
 
 

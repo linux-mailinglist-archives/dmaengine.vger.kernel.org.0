@@ -1,95 +1,145 @@
-Return-Path: <dmaengine+bounces-4014-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4015-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 065469F55FC
-	for <lists+dmaengine@lfdr.de>; Tue, 17 Dec 2024 19:22:28 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A10099F5C22
+	for <lists+dmaengine@lfdr.de>; Wed, 18 Dec 2024 02:15:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E7DDD7A042A
-	for <lists+dmaengine@lfdr.de>; Tue, 17 Dec 2024 18:22:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7B82C1891AD5
+	for <lists+dmaengine@lfdr.de>; Wed, 18 Dec 2024 01:15:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5059B1F76C4;
-	Tue, 17 Dec 2024 18:22:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C590C1E86E;
+	Wed, 18 Dec 2024 01:15:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EZ0mqIgv"
+	dkim=pass (2048-bit key) header.d=pf-is-s-u-tokyo-ac-jp.20230601.gappssmtp.com header.i=@pf-is-s-u-tokyo-ac-jp.20230601.gappssmtp.com header.b="zzPtpevI"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EE3E1EEE0;
-	Tue, 17 Dec 2024 18:22:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF4AEAD31
+	for <dmaengine@vger.kernel.org>; Wed, 18 Dec 2024 01:15:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734459739; cv=none; b=pME6tuNSUcW9LDuEv7l47VqngZ5Xy6F12Qq0DtjYVEdQQ7/RIVc1EqBT9xB3zCxfqeMNnhlR+F1HArcn38v3uq11noodxb5oJ21aV+6q0KNpJRgK5Pf2k6QjSQKwXZF3hyBCkncMR0Mf+DrAOE+INP00pgQfnGER9QAyoYNwiQ8=
+	t=1734484530; cv=none; b=jzt1bQuvbWp7pU9nWwLtrRIedBjRIZ8/UCwOQLaC+MW3Ops30hQMEOiW9hk2QDqWhfNqyatI2GfTRRIyISI+MFfOtsvShJsciP4TN54EsngDfZcdUYPpGb8TcVa+frlM0fGNkjRfQ8qhHCH4Q5u+vltPdJcz0Ca9PvhrRwYn6y4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734459739; c=relaxed/simple;
-	bh=2P9lRz+X9ysJoY3Z0POj161iz4jlESzdjLZAlJxgNb4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nj3Jqom9NC7Ai77k4tIVwtanGC3oO5MdEgEu1NS9C41ATMKEEgaKlxXgO5vM0w+t99zMHa2Bsem4zV18IDzyZ8bJea7X5sNR4mpxv6CGYXAo7VbkQzt1T9VdYpzJFfVH+IUQGJ103pNAFVhlLsYp88XVc9D9j9vTrrACBv3r7Zk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EZ0mqIgv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49989C4CED3;
-	Tue, 17 Dec 2024 18:22:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734459738;
-	bh=2P9lRz+X9ysJoY3Z0POj161iz4jlESzdjLZAlJxgNb4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EZ0mqIgv9ecvN+XF9LE5Fjt8JO7UKfGsS+id0MOMPD8gIi00iXXoBysPwj9/KqXsP
-	 qyV07dT4fl0PMpyehMfMEWXffETHSQYKhCRQVVaA+Qd+HO/c2C9IgWMlv7h6qmnyy6
-	 Lj0vwBkRNWgYib7tjiwScdlQUPJMwoRZ1oZYG9jfi+B0mbKtlSd2IBtJx0qjgOv9XH
-	 zjYrbF9S3p3KW5/hRb2IljarhfIa4U2NwFVM31vCnyCYQes2hDyWMgYQL39HGfu7K0
-	 3fu3++FPVTPqe+GJ6/ofWrI4S9BRwaUPxqlS9F7GbU7PlLvd4FkCoVsv4J31xanjmn
-	 C8MmK5BUV1yBw==
-Date: Tue, 17 Dec 2024 18:22:14 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Mohan Kumar D <mkumard@nvidia.com>
-Cc: vkoul@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-	linux-kernel@vger.kernel.org, treding@nvidia.com,
-	jonathanh@nvidia.com, spujar@nvidia.com
-Subject: Re: [PATCH v2 RESEND 1/2] dt-bindings: dma: Support channel page to
- nvidia,tegra210-adma
-Message-ID: <20241217-stamina-starting-d39f3795d85a@spud>
-References: <20241217074358.340180-1-mkumard@nvidia.com>
- <20241217074358.340180-2-mkumard@nvidia.com>
+	s=arc-20240116; t=1734484530; c=relaxed/simple;
+	bh=nL2QIS+btP/0/DdDhS4pfhsQQtaBEYd5pPYGrFwUqYU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=V4lfCiQThmYjnbXCibIvE37xeR3eFah+WS4tlsFxm4JufmEZ15f9V3PKcFYTVfGcWZSW8vbf1Zb3dwJZaY6CRkKvmF2vDAjlvOYHAxO5/UDfj530gJ0m3FKnugVWM9qHaG3xas4/q99z0bbYGOHs6hYy+lQ/mGJj0n0IldWE3yM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=pf.is.s.u-tokyo.ac.jp; spf=none smtp.mailfrom=pf.is.s.u-tokyo.ac.jp; dkim=pass (2048-bit key) header.d=pf-is-s-u-tokyo-ac-jp.20230601.gappssmtp.com header.i=@pf-is-s-u-tokyo-ac-jp.20230601.gappssmtp.com header.b=zzPtpevI; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=pf.is.s.u-tokyo.ac.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pf.is.s.u-tokyo.ac.jp
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-728f1e66418so5199548b3a.2
+        for <dmaengine@vger.kernel.org>; Tue, 17 Dec 2024 17:15:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=pf-is-s-u-tokyo-ac-jp.20230601.gappssmtp.com; s=20230601; t=1734484527; x=1735089327; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=e7W4/eD6qTNJOxDN5bkQUitjlqiqzRmxq4jQTLuIGko=;
+        b=zzPtpevIz2FTZ50ycifK4yWYD5ioHCqp8zSjrtOXJb4JaUBJXxJcN0Ln1pMa8x4kIC
+         YplS9cEBX/QpFeK0tx0SJKWawk37hWaDdLqMOFFuzwZ+duV1d2t5bYk/rYrEjLBe2ztO
+         zpExWAUq3ZE6/Gn42WbIvh0J5o+MQKG0JdgCc6HyznTYISYLKad9KRQEHabEVcLHKJFP
+         96uv8Kv2M82h/gzwhgIsvCDLW+ecgWynGg9Wkhgha2YgEBVJHo2PUfOl9NlyHyQa3F0d
+         ba0V2eVdpUElPIVnVxndYgJfRSm3cZb41KtZdO+njaLTZV1w8bVV/TvG290VTYWd7GTQ
+         PcJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734484527; x=1735089327;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=e7W4/eD6qTNJOxDN5bkQUitjlqiqzRmxq4jQTLuIGko=;
+        b=tQImcjNaRSiJml4AGLW9GnfhF/1BkAPDMb4q3b8P10+txHForgfWZvdAKf0kXjD1/t
+         g7fYWjaSSlDqVyTkqk2JM07hyqzNn11MIwwniZGBh7C/63hjLhAVQLtiGrC0wPoX3mKA
+         uKLTP1wj4SvkOVXyCMAsBUMTdvrTNEpSeAPU+a6NV0zJkm6TEkj9OoitcZ4xpJWXkBlk
+         D3IDzw9ycExArtsfanCEjYPIeUVKRTNm868jAG4ADq8vOpAf+qGbrW24Nbr7m6QqzsYp
+         A+ZZpr/UOiTM7+rYmF6xKWZUCdSE1qWBjA+t2S0AkVSGDTDMrLBp+uAxPsO4FiZm1U5b
+         j0Iw==
+X-Gm-Message-State: AOJu0Yxh6fY4alpjSOU9OG+edHH5XUNGM32GN4Tfw8USeTBF4j6jyV+4
+	PovUk8daIqNYvnH+/G/XO7SG+KImDjuhy+5OM8OQzs5J1lyqUB9abquMl9+s0Lecmqej/u0zQBh
+	ZSOjt1A==
+X-Gm-Gg: ASbGnctP4oqdge2rWTIICX5/4xJcp/Fl/raNo2jc6ARbrg5gcSLgZk7c82pMji+wSQg
+	wIHrr+J9IQBPt3AYjqSmvMt1o6Z6dbJe3F3iRno+//JzhKCazzmFQge92Gk0/Yz5BS8j5OlC6XN
+	bNYiphVW8jvyY+NLFFD4tAJlKyjJgO5k9hGxiJ/0+dO60z2D9I1fUj91i3zUw6LVNi+dm4k3jcd
+	G9vyog+5G5A61w7PlDSKyoEHFkZuRB96MreomCJJZcr0zb3UYq5kS1Vyz2JyKxLfFxi7/nzJ77K
+	YVM96kbHOhvp6sTlooXRC8z4r6fVjoMImaYoYcH1ntc=
+X-Google-Smtp-Source: AGHT+IE2sg9XNqlj87oIcuMIZW2XlwvIUMml00TEHpdr6EwXF66HBS4MYrYSkTiQdh3kPM+uio7mHg==
+X-Received: by 2002:a05:6a21:328b:b0:1e5:b082:e38f with SMTP id adf61e73a8af0-1e5b48a6f7dmr1984822637.45.1734484527162;
+        Tue, 17 Dec 2024 17:15:27 -0800 (PST)
+Received: from localhost.localdomain (133-32-227-190.east.xps.vectant.ne.jp. [133.32.227.190])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72918b78f0esm7579538b3a.121.2024.12.17.17.15.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2024 17:15:26 -0800 (PST)
+From: Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>
+To: peter.ujfalusi@gmail.com,
+	vkoul@kernel.org
+Cc: dmaengine@vger.kernel.org,
+	dan.carpenter@linaro.org,
+	Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>
+Subject: [PATCH v2] dmaengine: ti: edma: fix OF node reference leaks in edma_driver
+Date: Wed, 18 Dec 2024 10:15:20 +0900
+Message-Id: <20241218011520.2579828-1-joe@pf.is.s.u-tokyo.ac.jp>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="kBsqXjaDGNP7JibP"
-Content-Disposition: inline
-In-Reply-To: <20241217074358.340180-2-mkumard@nvidia.com>
+Content-Transfer-Encoding: 8bit
 
+The .probe() of edma_driver calls of_parse_phandle_with_fixed_args() but
+does not release the obtained OF nodes. Thus add a of_node_put() call.
 
---kBsqXjaDGNP7JibP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This bug was found by an experimental verification tool that I am
+developing.
 
-On Tue, Dec 17, 2024 at 01:13:57PM +0530, Mohan Kumar D wrote:
-> Multiple ADMA Channel page hardware support has been added from
-> TEGRA186 and onwards. Update the DT binding to use any of the
-> ADMA channel page address space region.
->=20
-> Signed-off-by: Mohan Kumar D <mkumard@nvidia.com>
+Fixes: 1be5336bc7ba ("dmaengine: edma: New device tree binding")
+Signed-off-by: Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>
+---
+Changes in v2:
+- Get rid of the .node field in struct edma_tc and put the node in
+  .probe().
+---
+ drivers/dma/ti/edma.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
+index 343e986e66e7..4ece125b2ae7 100644
+--- a/drivers/dma/ti/edma.c
++++ b/drivers/dma/ti/edma.c
+@@ -208,7 +208,6 @@ struct edma_desc {
+ struct edma_cc;
+ 
+ struct edma_tc {
+-	struct device_node		*node;
+ 	u16				id;
+ };
+ 
+@@ -2460,19 +2459,19 @@ static int edma_probe(struct platform_device *pdev)
+ 			goto err_reg1;
+ 		}
+ 
+-		for (i = 0;; i++) {
++		for (i = 0; i < ecc->num_tc; i++) {
+ 			ret = of_parse_phandle_with_fixed_args(node, "ti,tptcs",
+ 							       1, i, &tc_args);
+-			if (ret || i == ecc->num_tc)
++			if (ret)
+ 				break;
+ 
+-			ecc->tc_list[i].node = tc_args.np;
+ 			ecc->tc_list[i].id = i;
+ 			queue_priority_mapping[i][1] = tc_args.args[0];
+ 			if (queue_priority_mapping[i][1] > lowest_priority) {
+ 				lowest_priority = queue_priority_mapping[i][1];
+ 				info->default_queue = i;
+ 			}
++			of_node_put(tc_args.np);
+ 		}
+ 
+ 		/* See if we have optional dma-channel-mask array */
+-- 
+2.34.1
 
---kBsqXjaDGNP7JibP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ2HBVQAKCRB4tDGHoIJi
-0rNMAQCNyyoTOpHxpr5GguE2VK2cZLlCSzZqPVcZD9Uj84zATQEA/H98btCbnXda
-tz2JSt3Pjtpk5p2MbU73HfIHupP7ogM=
-=0vlB
------END PGP SIGNATURE-----
-
---kBsqXjaDGNP7JibP--
 

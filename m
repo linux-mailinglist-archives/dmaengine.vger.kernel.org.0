@@ -1,176 +1,243 @@
-Return-Path: <dmaengine+bounces-4018-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4019-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 170149F65FB
-	for <lists+dmaengine@lfdr.de>; Wed, 18 Dec 2024 13:34:35 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 383DE9F6741
+	for <lists+dmaengine@lfdr.de>; Wed, 18 Dec 2024 14:27:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 56F6C16CAF1
-	for <lists+dmaengine@lfdr.de>; Wed, 18 Dec 2024 12:34:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8C641188BA3E
+	for <lists+dmaengine@lfdr.de>; Wed, 18 Dec 2024 13:24:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D888F1A238D;
-	Wed, 18 Dec 2024 12:34:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F31F41ACEC1;
+	Wed, 18 Dec 2024 13:24:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="mSOvVslc"
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="WMDni723"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2065.outbound.protection.outlook.com [40.107.247.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90A8199FC5;
-	Wed, 18 Dec 2024 12:34:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734525267; cv=none; b=rkK2EStyM4Jw239EK/JGHkAtwduhts3e/8XosUwPS+clcXnu6BX8Jm9WFMZeNGpHYIDIusIYCmZcgJ9qmZq4P9e+0MRRS5Tyarotxz3Xi3doHqlMmvp7QmyCnHJLZwTSZHXn9gaYLqDbYgXIQtfySiZ44hSUkhvgAuJ5fueSTBQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734525267; c=relaxed/simple;
-	bh=QYc4xY8AeNSgge56dJ3MvqzLhT/3x0EYFavC+ntvJs4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=SB2KYOYMmaUp/wjs0U0KlPSgQc/5kHiGnc/im3LaSLxk5jEobgEZXnSxrXPZb4j1MwlxlKsBdBl5mYeQzpNKLi4B6Gm+M0/Bx9KDht3qIBYZ3G4BfrsANDLCumzt0C+wSzaScltWZbuPOlLFaXtlqsTapgF3ipib4n7hTs8lUGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=mSOvVslc; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BI7V5iF025318;
-	Wed, 18 Dec 2024 12:34:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	0C94w/0C+OzA0oXh9i7IsC80vig3DOMsP0LguORAZO0=; b=mSOvVslcyvPQhTRD
-	gigAf8Q4B6nwZf/50MXI+c5hf/9FiRxsEekzgMpnWnktYh4e3QPSfbyY5v9O2obK
-	bjm0PuAdYsxsREvAIwlOwsC4ynrM5D12GxGlEpYeBQPoTiZQ2zPKHqxwzaJUhltF
-	ElZuC8FaEan4N+VIxXiiJGLR8Q8rw7m+XlKoSZNh/DWmDODuPnsFOB0GwTDhF1kb
-	tDsaLg5GZ1uEALRk4XlZWskr80PSt13WGPF+yQ66RDbXAfbv/4knblD/tJ5DVKLO
-	fzDVFIo/GhvSdhs6VXA8YxjR3rBpGMKNpMGBA5Vkccg8K8eAJ4LCFU/CXr/b0d4k
-	UzpZpg==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43kt2w8rm0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Dec 2024 12:34:16 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4BICYEZQ011739
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Dec 2024 12:34:14 GMT
-Received: from [10.216.12.179] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 18 Dec
- 2024 04:34:08 -0800
-Message-ID: <5ef44277-6739-4e1e-af62-0f40ae081ec1@quicinc.com>
-Date: Wed, 18 Dec 2024 18:04:04 +0530
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A57671A239D;
+	Wed, 18 Dec 2024 13:24:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.65
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1734528284; cv=fail; b=MHFL26cGeOJwdsTER4cIJyK9MxKDRsmuRrGtdJKWMqrQbG7YsQkYqB7gpSooh5YfjcagmGs3SWFs4O5JAi0NfO5iCEfE9NeOChmjz/qxbd8osak9eB8o3TKZ1qRHdPcqcyoZaEpyDeqFfPixXC3uZ/qq8ZFCj2RE8gIINnUhdkc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1734528284; c=relaxed/simple;
+	bh=awJc9np/WW9i5jmjAnAFNv3N4UO057+y0ngzWGufDE0=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=aheV+W5TO/T03hkTyUMMRjkE+xeKIP6q3caSR5HnvWaAoMdGv8LGqtHPrT5C7fYJzPmnFQolkJUWquPhEkgCniQmNfEF3PF2WDFf1tqktjM6NMene2QbtWHHc+fs4px+AYAC1Hm7cV3DhB7Vtl20BmldFpsqZhTl9E+tySkv6eI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=WMDni723; arc=fail smtp.client-ip=40.107.247.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=MwF1wLRiNYa5UppTy8Z6lixUL8vwrITQgmjJh7ZSKSWH7wZENyKiGnfxjmsJI/IyQBGU3+sOBdotOSRn0/aZYvgvq9cveNEWz+GkJfi0DzPUz2/umfynjEeq2h8sGGMvx6gJahoGdzf5QKbI/1RHHvvbDS434k9bIEGhmH6b9PJZCf3nodzsktxgzVKPyIjCLcyWZSSt1nE3MlA8Vu+RSkYpofMAGxTgqgGXbvAj3rh4mrpZRmgDmi8HIUr4zyMAiiAGwAGDJT6JmNya5CEsU33HxeNerptQS0lQmtIHfwULBYzp6eSKzaw6uBeKaXBj4FNmVHxaATcWwhHJBj2PJg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hMB/Mz+Kxu3F+Nqsy9av8nanokeOX89/CR+lLWspXu8=;
+ b=oYrR92FGKxYcbzX4vL9ewO2crm9Px4QTwec+RsLNrAsMtKiDSnLWYLX9oaKWwvyLiymLUithasQUQ8OPRLLPENZW/5SO8B6oboqK2OTvyXNQg6b1SDWhHfxNp21kDTFVPljv5vZrTTQ+DUh65CZ2S3pd3YmV04/RrShHOMw9cyU0mdhHJ7ZiKM+6yCriPnCm3ek3ASar0QtKNFtXhh6KEk8q4Ji7dOyRzwYinjOV6iDzKBgCfrVfHq7l4T6wa3H9xFoUp9WAHZhbOPiPc45UREvaxukXC7PCvawvOB1jZ6MaoRzjr6aGHjVTM5GjxsunWpp5sO6QcYd044LPLFNOdw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hMB/Mz+Kxu3F+Nqsy9av8nanokeOX89/CR+lLWspXu8=;
+ b=WMDni7233t4bypPLKiLmm4UMK5qXdX8hi3X6Pr5b/aRKkyfBCOfQhnVjF8M9AYCtG6zPv1LkXVJcjPzl3cBTqvxY6JSNtDfeHf/MoMfu3ELFmwrPYpmDK9MDNVQc4JZfAwjfwz4af5F7StI/yY6SQNJi8a/hGA46ecahWgPggBVSyQQcvw93ihbOORbwRVGbcSo1LbnM0UD0/Lp6430yAeM7JBVBsA19hnWGTTnjHLerzHzvZGbY7cFYUcw2VckrUF1uzfnZKsG0n+dB45UfcAcDeoUZ0QhYM5f5nYpW0Sla2FhwaYS/zx9CJJg7XkbN/93s9h5iSEeCbU3tWalsIw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from PA4PR04MB9567.eurprd04.prod.outlook.com (2603:10a6:102:26d::9)
+ by PAXPR04MB8077.eurprd04.prod.outlook.com (2603:10a6:102:1c3::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8272.13; Wed, 18 Dec
+ 2024 13:24:38 +0000
+Received: from PA4PR04MB9567.eurprd04.prod.outlook.com
+ ([fe80::83be:fff8:5a00:a515]) by PA4PR04MB9567.eurprd04.prod.outlook.com
+ ([fe80::83be:fff8:5a00:a515%5]) with mapi id 15.20.8272.005; Wed, 18 Dec 2024
+ 13:24:38 +0000
+Message-ID: <458f8940-4451-4dbd-bd50-75a43e4248d3@oss.nxp.com>
+Date: Wed, 18 Dec 2024 15:24:34 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 7/8] dmaengine: fsl-edma: wait until no hardware request
+ is in progress
+To: Krzysztof Kozlowski <krzk@kernel.org>, Frank.Li@nxp.com
+Cc: dmaengine@vger.kernel.org, imx@lists.linux.dev,
+ linux-kernel@vger.kernel.org, s32@nxp.com,
+ Christophe Lizzi <clizzi@redhat.com>, Alberto Ruiz <aruizrui@redhat.com>,
+ Enric Balletbo <eballetb@redhat.com>
+References: <20241216075819.2066772-1-larisa.grigore@oss.nxp.com>
+ <20241216075819.2066772-8-larisa.grigore@oss.nxp.com>
+ <d4afb25d-5993-4f80-9f80-0a548b6532cd@kernel.org>
+ <d5badfcf-58d7-49d4-8a5a-d31de498f015@oss.nxp.com>
+ <2e0e1fe3-af5e-4416-8b34-3fecb923b481@kernel.org>
+Content-Language: en-US
+From: Larisa Ileana Grigore <larisa.grigore@oss.nxp.com>
+In-Reply-To: <2e0e1fe3-af5e-4416-8b34-3fecb923b481@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: AM4PR07CA0017.eurprd07.prod.outlook.com
+ (2603:10a6:205:1::30) To PA4PR04MB9567.eurprd04.prod.outlook.com
+ (2603:10a6:102:26d::9)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/4] dmaengine: gpi: Add Lock and Unlock TRE support to
- access I2C exclusively
-To: Vinod Koul <vkoul@kernel.org>
-CC: <konrad.dybcio@linaro.org>, <andersson@kernel.org>,
-        <andi.shyti@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-i2c@vger.kernel.org>, <conor+dt@kernel.org>,
-        <agross@kernel.org>, <devicetree@vger.kernel.org>, <linux@treblig.org>,
-        <dan.carpenter@linaro.org>, <Frank.Li@nxp.com>,
-        <konradybcio@kernel.org>, <bryan.odonoghue@linaro.org>,
-        <krzk+dt@kernel.org>, <robh@kernel.org>, <quic_vdadhani@quicinc.com>
-References: <20241129144357.2008465-1-quic_msavaliy@quicinc.com>
- <20241129144357.2008465-3-quic_msavaliy@quicinc.com> <Z01YBLcxDXI2UwXR@vaman>
- <d49b16b2-95e5-42b4-9bc1-40cb0bfa15b1@quicinc.com> <Z1BJSbf+1G8ojTib@vaman>
-Content-Language: en-US
-From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-In-Reply-To: <Z1BJSbf+1G8ojTib@vaman>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: fLj0LppQqDwBIQBoNr_scSKpO1tWPoNJ
-X-Proofpoint-ORIG-GUID: fLj0LppQqDwBIQBoNr_scSKpO1tWPoNJ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
- mlxlogscore=999 priorityscore=1501 malwarescore=0 clxscore=1015
- suspectscore=0 adultscore=0 lowpriorityscore=0 bulkscore=0 mlxscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2412180101
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PA4PR04MB9567:EE_|PAXPR04MB8077:EE_
+X-MS-Office365-Filtering-Correlation-Id: bf8df2a6-8e50-47a5-b47a-08dd1f675282
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SUZBeGJwR2VVSFZmUjY3NWp1anJ3YUxoRWV2UVAxUkJZVXJvQUhSbFN5T2t6?=
+ =?utf-8?B?SDVob1dMVldwemo5dVM5Nkd2MzdLeFFtbUt5NEI1VlFEcWxLZG1lVG5zdlI2?=
+ =?utf-8?B?YzRzc01rMmlyRFZUL3JYQjVZOGFmclVicEJYdHhRaXV1V3ExdG9EdUxIanJk?=
+ =?utf-8?B?T3E4ZHF4UnZYNWI5S3lrSVdjWjdSWWpYTHJPK1ZHeVdzNDNSRzlrZWtkaDNa?=
+ =?utf-8?B?Nm03MXJ3eVY2dzZQdi9SM0F3RUl1bFo1Mlo3MU50TmoyTi90V05HRi8zQ2pV?=
+ =?utf-8?B?TW55ek0yZXF3MGVrdFRDTWZ1VzM4dmZFVThLd2tEa09ETWdIVHltZFo0QUxa?=
+ =?utf-8?B?T29NOUptS2c5NGZ6ZHFteGdMMDFXUGpkU3dKcmthWXhEUHpOQVR1UUYwMXhz?=
+ =?utf-8?B?ZEhwbXlmOGhyRnhtWW1QRU84d01kNk5tQjlIT0NXZHJ2Zk95bnFkanF6c0Vl?=
+ =?utf-8?B?MFgzaWNzYzBqMUpIcGdVVS9rL0tQRkpMbGFNU3VTcVd3WkRjTFY1R2hPY1NH?=
+ =?utf-8?B?S2JCWCs2cFdPKytGLyttVDhlQ3hqVkd1TWJIYkp1NXF5d3BPTVlmbG93b2oz?=
+ =?utf-8?B?SEN5c08ya1ozRFQ1TnY2dzNwQnFYK0t6M1Z0WUVEU2V3THhONU9vR1E3OWgz?=
+ =?utf-8?B?VGhzZFJYRlcvZXo4cFo1UWJSbDlzVVZYbmJLVHJmZVJUbXl1ejE2MlNtQjZk?=
+ =?utf-8?B?UTRBSE5XQk15NHJKN25IemdYL0phSUVqcFVzcE04UUxRNWFRVUtPb0c4WHZI?=
+ =?utf-8?B?Ty9abUxwdnNYR2Fjd1JBd2NJUmJOWk14MUNXUzZVTExJWFg5YjRuMklYRXBN?=
+ =?utf-8?B?YWI1ZUdFaUVsVlVJNXdHdGFuNkVrMjNCT0U3Q3hDdEgrOVNnRTNacXdpOVFF?=
+ =?utf-8?B?T0ZJZXFSS2Z0Y1pVVnQ5ZThYY3JrckEvU1dRdG9aZFdiMURJREJSWSs3ZDVl?=
+ =?utf-8?B?d2VtSmpKWm1PejZmNmV3VExWbHBPZkw0YXlvdmNPR0lYU3ArU2JvRzJwRGQ2?=
+ =?utf-8?B?UjU1VnFSQzk3U3R2ZUtZTVFyWjA3MXcvKzFYY29OZTZhSEJqdmhhQ1FORVdS?=
+ =?utf-8?B?QzkrR1Vac0lyNHZNSHZMVzJsaHFSVzNhV1lRckpwSWR2NmRrRjNYN1NuUmg1?=
+ =?utf-8?B?YXFWRGFCV1FFUWwwZEErRTdVVVN6M2xkOCtTUUw3M2pHTnZZb2oramxSR01n?=
+ =?utf-8?B?SDNGMndRZGVkTmlYNjB2TmgvQktha1FlOHpYZzk5Nm1qRjZYSnczYisrNUNR?=
+ =?utf-8?B?UWpsdE9JUHROVVJWSWJYWUFpVEZkejJGVHVrVDJiYW1SOVA1WmRsVlRFTDdv?=
+ =?utf-8?B?a090cjlDWm94dUEzZmVoMkJEMlZZSEk4cmlyTWpJMVBsNnovNkh4MUtXVi8z?=
+ =?utf-8?B?c2p2UGpaVnV2Q0RneGc4em9HOWR0a3M0VnV0aHhjWXA2WHhiU1p1OUc0SWtO?=
+ =?utf-8?B?Q2xwTXovWHNzaG9TQkNERlJlU2VYWThyajc4SDlnUFBvbUErVHFMMFRnSFpY?=
+ =?utf-8?B?QkYrb1h3S0tTL1EzdXo5WXR3RzAvNVlhaEtQbDM1Y2RkR2ZHUGVZeDJSakg0?=
+ =?utf-8?B?TFNINWRNV0UwU0tIQ2E2R2dLZENwTzNzRTFxaXJJQXJXQ0g1YjVzZkpobldQ?=
+ =?utf-8?B?aW5oZjVoLzk3UWtYQUtLRTNhVmI3eElEa2NqUmc2bytCMEZPc1pHM2tXQ3Zh?=
+ =?utf-8?B?OVJPZTNNcUEzQitYN0hESFA0WUp3emhHVHloSUltTHZJNWNLZUZPVzZ1UkYv?=
+ =?utf-8?B?MjR1RVBnVFlPUU9MT1NNMWUxcFRyZjI3a1dPL0dpWmpwVlI3MEw3TmltTGo0?=
+ =?utf-8?B?MFNxLytybHlFZFFzRHhMQT09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9567.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?S3FVRWZHbFVPSnYzRG00c01DdlZaTktyS1BVZlJoMXZDQkRLRUhyNWhmaXBB?=
+ =?utf-8?B?N21TQ1NXaTVWeTlGVWkvem9yM1R1ZnpRWTFybzVaeXhab3BXc0QyN090SXNw?=
+ =?utf-8?B?UmtzOE41Z2FDaFhtMHc1UDVFL29wUmtXV3JiMmpUS2l3NmVqaDJQNlByUVZP?=
+ =?utf-8?B?ZDAyUVl4TmFFM3hwSXpDQkNtQnduQlgrRkN5Sk9mYTJtc01VbG16dTNadVFW?=
+ =?utf-8?B?MnB0Z0RyZjhBUkQ3ZXFHZ3UwT2M0YnFmQUJzcEZHN3N6S3U2Wm5kVXg1eVNy?=
+ =?utf-8?B?aWNDSTIwM3lRbWYrWC9rV0FGNE00Q1lSR2MvaUF0YURtcC8vTFgwVmpPQ3Iw?=
+ =?utf-8?B?ZUVCelA4Y3R1TFhtMDcvUVhzWWpLN2ZsT2swMXpJaVRQMG45a3JDNEpjd1hh?=
+ =?utf-8?B?MEVhTVgzcWI3dWFMYStYc2pSSi8xV1R3ODM3NzVPMW9WamlVWUd4eGo3NHRn?=
+ =?utf-8?B?N2tSMTlnMkRDbTlVMU5IaS9jbmhXSXRqOXY0S0VnSlJpVXNXS1l3NGp0UUFZ?=
+ =?utf-8?B?QzhJcTJ3aGMzZlY1TlA2bDM2Ukd6RjFVU2FhOHVWOTA3WG5rN1ZoYnNYbXVa?=
+ =?utf-8?B?bU9Oc3FDR2p1Z0dxbDR1eFlrdHExRHA0ZnBHWE0ySEpIY0MzYlRVY0Nid3VS?=
+ =?utf-8?B?azNDWHhVM1NFUFlZclQzV1RCa0ZRM3VYZHp2OSt1SmVnbm9GMDBxUTZEMDZv?=
+ =?utf-8?B?R3pVN0l2azN2WDlYVTQvT3A4aEpVcXR6bkxEUzE0cDR4dmdRYU11ZVhEUjRR?=
+ =?utf-8?B?T0pJaWE2S0VBbFYrZTllUUxpM29FQ3VsODVoSURDUHlsWEFBTi9nVzNYNjF4?=
+ =?utf-8?B?TFl5TDV0eWRGdjdSUFV0ckcrd0J3RHNTdFlRUnppWS82akp3VW5obTQzNEFE?=
+ =?utf-8?B?REYrdTUwTzc0V3pyWWtJdnV6ZlJpYksyWTExTVphSjNZMFpCT21NU0ppTWxu?=
+ =?utf-8?B?eWQyZ2F5VmJoemp2TFJoa2U3cGhaU2V2dFgvT1ZyTjRNdi9tTC9UVmliUE5O?=
+ =?utf-8?B?eTdGZldad0RsOGZ3bm1TU016T2ZmMVpsb1dGR0toRHlaaloydlVDc3l1UTdO?=
+ =?utf-8?B?WURFdlZBalFnM3B0b0dMUU8vSloyZGNpcXZ5bUdsVHlNeHZjd0lKNE1wNWcr?=
+ =?utf-8?B?RTROb3FMeEo3QVREL0FRZmZPZlVCSmZqZmkrOHZ5N2FDcS9ISFJZb1Z3L3Zi?=
+ =?utf-8?B?UWpYZnJudXI4ZDBTV2JSblY1UDFzN3FKZTg0US92d3U1ajNWSVgzRWZOUlBj?=
+ =?utf-8?B?Wklud3R4S003VFYvOU1XanVDbFdYdzBTZkpoTTAySXNGQlNTMDlIV1BmU1lV?=
+ =?utf-8?B?V05BS0p3TG1tSUQramJLSWVBWHpHdXJzQklmYVU0TFhaZHBLanZwenYrSkNa?=
+ =?utf-8?B?bm9neDNOcHdaK0pFQ0F2U2EycGdtQkpGeGVSNkNyS1Z5T1JoTmZXZmlvRW5q?=
+ =?utf-8?B?L2RoS2VSK2FPUzdzSVJaUElWaXVCc09ncXdJZThyMXppcHNVZlNGaTM4VEFT?=
+ =?utf-8?B?QUF6RDYwTlBVYlNRaWRORDNiRDZ0ZGRyZ25qZDZEaTRveURLaVYrOE9jT240?=
+ =?utf-8?B?N3JVampGbXRCRkgra1VzSGlQNy81a0RNa295NXM2UXZneXp6T3kyTzFNQm0x?=
+ =?utf-8?B?bHBTQUFXdDA2NlFYUXhnU1loM1crMUFZVGNnMEU3Sm9sWHJrcnhFTndleThx?=
+ =?utf-8?B?ZEh1L09zL2wrSHh4WkFaWHV3WDBhVmNScVRCNWhoeUluWHhaS0cra0hpNXZK?=
+ =?utf-8?B?YU4yR3pTV3R5bEQ5QXFKUTd4V1BHcnpFcDhSMTM3VUV3aDZabTk5dXRENC9n?=
+ =?utf-8?B?SDRrb043RllBZll2Tm9teitraUxtUGhYTGw0WXNUN1ZxQldPWUk5L0hHUkRF?=
+ =?utf-8?B?K2xMM01iNkVNUTh0RTV4Tk5JalVZQUFGNENjVXJYM21OcFFVdStxNE1lUHJJ?=
+ =?utf-8?B?MFFtbkpFQ0ZqZzhjTWY5cDBTOENad01vdlVIT2hPYXBXMTgzZ2VyUlJLWG41?=
+ =?utf-8?B?TmV2YVJzdzdsekF5T2xLbVkrSnVya05HRDRINlNRLzcwM3R1RHhEWUl5dmVv?=
+ =?utf-8?B?eEpGK1BGaC9XT1NhSHBWUU0zbVVGWjBYOEdhRVZrR0VLenhFNzVlZG5MTm05?=
+ =?utf-8?B?UzNvOHFnalM3RTF5NnQ3WW1lR0ZwR1JOdC9IWDhoVkdiRmVyU2Z0NktFOFVq?=
+ =?utf-8?B?NEE9PQ==?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bf8df2a6-8e50-47a5-b47a-08dd1f675282
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9567.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Dec 2024 13:24:38.5899
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Qs4E5iIwXZqSd0+whpr9tP9L+ngcI4xaDTEroEofAyuH6kW9xbsWq7sfRIga0STgRs8pK09mINE96Qa8l31apg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8077
 
-Hi Vinod, Thanks !  I just saw your comments now as somehow it was going 
-in some other folder and didn't realize.
-
-On 12/4/2024 5:51 PM, Vinod Koul wrote:
-> On 02-12-24, 16:13, Mukesh Kumar Savaliya wrote:
->> Thanks for the review comments Vinod !
+On 12/17/2024 5:27 PM, Krzysztof Kozlowski wrote:
+> On 17/12/2024 15:19, Larisa Ileana Grigore wrote:
+>> On 12/17/2024 7:27 AM, Krzysztof Kozlowski wrote:
+>>> [You don't often get email from krzk@kernel.org. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
+>>>
+>>> On 16/12/2024 08:58, Larisa Grigore wrote:
+>>>> Wait DMA hardware complete cleanup work by checking HRS bit before
+>>>> disabling the channel to make sure trail data is already written to
+>>>> memory.
+>>>>
+>>>> Fixes: 72f5801a4e2b7 ("dmaengine: fsl-edma: integrate v3 support")
+>>>
+>>> Why Fixes are at the end of the patchset? They must be either separate
+>>> patchset or first patches.
+>>>
+>>> Best regards,
+>>> Krzysztof
 >>
->> On 12/2/2024 12:17 PM, Vinod Koul wrote:
->>> On 29-11-24, 20:13, Mukesh Kumar Savaliya wrote:
->>>> GSI DMA provides specific TREs(Transfer ring element) namely Lock and
->>>> Unlock TRE. It provides mutually exclusive access to I2C controller from
->>>> any of the processor(Apps,ADSP). Lock prevents other subsystems from
->>>> concurrently performing DMA transfers and avoids disturbance to data path.
->>>> Basically for shared I2C usecase, lock the SE(Serial Engine) for one of
->>>> the processor, complete the transfer, unlock the SE.
->>>>
->>>> Apply Lock TRE for the first transfer of shared SE and Apply Unlock
->>>> TRE for the last transfer.
->>>>
->>>> Also change MAX_TRE macro to 5 from 3 because of the two additional TREs.
->>>>
->>>
->>> ...
->>>
->>>> @@ -65,6 +65,9 @@ enum i2c_op {
->>>>     * @rx_len: receive length for buffer
->>>>     * @op: i2c cmd
->>>>     * @muli-msg: is part of multi i2c r-w msgs
->>>> + * @shared_se: bus is shared between subsystems
->>>> + * @bool first_msg: use it for tracking multimessage xfer
->>>> + * @bool last_msg: use it for tracking multimessage xfer
->>>>     */
->>>>    struct gpi_i2c_config {
->>>>    	u8 set_config;
->>>> @@ -78,6 +81,9 @@ struct gpi_i2c_config {
->>>>    	u32 rx_len;
->>>>    	enum i2c_op op;
->>>>    	bool multi_msg;
->>>> +	bool shared_se;
->>>
->>> Looking at this why do you need this field? It can be internal to your
->>> i2c driver... Why not just set an enum for lock and use the values as
->>> lock/unlock/dont care and make the interface simpler. I see no reason to
->>> use three variables to communicate the info which can be handled in
->>> simpler way..?
->>>
->> Below was earlier reply to [PATCH V3, 2/4], please let me know if you have
->> any additional comment and need further clarifications.
+>> Thank you for you review Krzysztof! Indeed, this commit should be moved
+>> right after "dmaengine: fsl-edma: add eDMAv3 registers to edma_regs"
 > 
-> Looks like you misunderstood, the question is why do you need three
-> variables to convey this info..? Use a single variable please
-Yes, I think so. Please let me clarify.
-First variable is a feature flag and it's required to be explicitly 
-mentioned by client (i2c/spi/etc) to GSI driver.
+> I don't understand this. Are you saying you introduce bug in one patch
+> and fix in other? Why this cannot be separate patchset?
 
-Second and third, can be optimized to boolean so either first or last 
-can be passed.
+The bug was introduced by 72f5801a4e2b7 ("dmaengine: fsl-edma: integrate 
+v3 support"), commit which is already upstream.
 
-Please correct me or add simple change where you would like to make, i 
-can add that.
-> 
->> --
->>> Looking at the usage in following patches, why cant this be handled
->>> internally as part of prep call?
->>>
->> As per design, i2c driver iterates over each message and submits to GPI
->> where it creates TRE. Since it's per transfer, we need to create Lock and
->> Unlock TRE based on first or last message.
->> --
->>>> +	bool first_msg;
->>>> +	bool last_msg;
->>>
-> 
+In the proposed fix, a channel is disabled after checking the HRS 
+register which is a eDMAv3 specific register.
 
+In the upstream implementation, "struct edma_regs" is created based on 
+the eDMAv2 register layout [1] which is different compared to the eDMAv3 
+register layout.
+The "hrs" field, which is used to access the HRS register, was 
+introduced in one of the patches from this set [2].
+So, this fix depends on two other commits:
+"dmaengine: fsl-edma: add eDMAv3 registers to edma_regs"  [2]
+"dmaengine: fsl-edma: move eDMAv2 related registers to a new structure 
+’edma2_regs’" [3]
+
+"dmaengine: fsl-edma: add support for S32G based platforms" [4] depends 
+also on [2] because it reads another eDMAv3 specific register "ES". This 
+is the reason I've sent all these patches together.
+
+Please let me know your thoughts.
+
+
+[1] 
+https://elixir.bootlin.com/linux/v6.12.4/source/drivers/dma/fsl-edma-common.h#L123
+[2] 
+https://lore.kernel.org/all/20241216075819.2066772-5-larisa.grigore@oss.nxp.com/
+[3] 
+https://lore.kernel.org/all/20241216075819.2066772-4-larisa.grigore@oss.nxp.com/
+[4] 
+https://lore.kernel.org/all/20241216075819.2066772-7-larisa.grigore@oss.nxp.com/
+
+> Best regards,
+> Krzysztof
+
+Best regards,
+Larisa
 

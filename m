@@ -1,69 +1,60 @@
-Return-Path: <dmaengine+bounces-4046-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4047-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 252C19F8F37
-	for <lists+dmaengine@lfdr.de>; Fri, 20 Dec 2024 10:43:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id F104A9F92E8
+	for <lists+dmaengine@lfdr.de>; Fri, 20 Dec 2024 14:14:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 74F80169E99
-	for <lists+dmaengine@lfdr.de>; Fri, 20 Dec 2024 09:43:55 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5C747167D29
+	for <lists+dmaengine@lfdr.de>; Fri, 20 Dec 2024 13:14:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9A891A83FE;
-	Fri, 20 Dec 2024 09:43:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A22CC204567;
+	Fri, 20 Dec 2024 13:14:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Kz0jSYBa"
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="uPYi5/R6"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 103D11514F8;
-	Fri, 20 Dec 2024 09:43:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E5CB1C5F08;
+	Fri, 20 Dec 2024 13:14:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734687832; cv=none; b=BzluYCJZ3/MAyj5EbEflJ+VTFIEvUu4/x31Bdln55XysgEIqW51Vh4Y/yFxEVy/xXiu0B16PLsFgvQsu76O3GdkRYAdhPa5Q5IfGUclFOx/X670i2HThDdyGi+Pmq+RX0Ji6hNApoyv745Iu1IBCasNYsOX7BIVyC8OcwnfWAkQ=
+	t=1734700490; cv=none; b=PoQkzK0p0pOc8NYorar1esBqPPIecj9s+q4DrdYH6qp6lNf7XBMo3l57UjDMbMN934zH3jgVSqvTcjr6HOLweRiIKZoOqlI9UmfujAEjBQWVtBeO2GzKjfUpPgH4wnf+XoGxT74+8WBi9GHKIb4A9B8/9Pi1xNLHgd95zAfPN10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734687832; c=relaxed/simple;
-	bh=amthS/ZZdHAgOnI9mwtKjup7ZXYZEK7xfgEaA4/nzd8=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bc9EL5l03XGpDs5FWQJ+nZiOCIJUHq3Py6SiVpyfOLVcwxhf2oo4GDtQ84vgm1b++Q5iVpdbbiPPX2BwY8KjUB/CMJ5HD+P/9B4uSCv82kqF5ylb2dLPkSRW8y6lao8KF1Apt7tiWSU7ozsahzGwf4sX7BrBVPRotTQSdLHCejA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Kz0jSYBa; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BK5fgU5006609;
-	Fri, 20 Dec 2024 09:43:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=dcY1msBGgNuskSKzAcovGg
-	BhF0T46kWtI/mO3ufaXEo=; b=Kz0jSYBamkyZ6xPXQWd8m1g8RCQQEU8IBhV9cc
-	IOUUJA2FqujR848ZNRW9PvxI0JH48yt3d8zU8/HK3fUEVSlQ9myNpK+3fw0ZUzNq
-	GpuAD8EHQhQvmWfuioKiHF9zTh7l4ZbIsR+GUfjbzRKaQILvHuDfg4hXNeUTnqaI
-	g2YLI295K7zW+BUcw2zG/CEugB94oIN0DoEBVzdBJUoAUDpkGBYgc7cw29AQkqL+
-	XOAjE2Tua+dWpFJNf6HfZGdnSg1Yjfd+3+FR3Fm/j/Q7m2zLIc+mOhQfPz7/0q/h
-	rDmMLhte77Gdi1SG5CfTVSFulSJ3iuQ8B8XirmgfeA8ZldIA==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43n2n5rmwv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 20 Dec 2024 09:43:40 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4BK9heME014407
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 20 Dec 2024 09:43:40 GMT
-Received: from hu-mdalam-blr.qualcomm.com (10.80.80.8) by
- nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Fri, 20 Dec 2024 01:43:35 -0800
-From: Md Sadre Alam <quic_mdalam@quicinc.com>
-To: <vkoul@kernel.org>, <robin.murphy@arm.com>, <u.kleine-koenig@baylibre.com>,
-        <martin.petersen@oracle.com>, <fenghua.yu@intel.com>,
-        <av2082000@gmail.com>, <linux-arm-msm@vger.kernel.org>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <quic_mmanikan@quicinc.com>, <quic_srichara@quicinc.com>,
-        <quic_varada@quicinc.com>, <quic_mdalam@quicinc.com>
-Subject: [PATCH v4] dmaengine: qcom: bam_dma: Avoid writing unavailable register
-Date: Fri, 20 Dec 2024 15:12:03 +0530
-Message-ID: <20241220094203.3510335-1-quic_mdalam@quicinc.com>
+	s=arc-20240116; t=1734700490; c=relaxed/simple;
+	bh=J9s++7+n7Osjq4FuA9y/ZlxSsDdN1LHBgNaYzPsz0Z4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fOXjlPxnYI+jdEQ6sdczezp505BvLnPHbxx6AGp8bmzyjLmxZe0VWt1kvC1Ed2cm8ChRbld6k/BarvA9yeI2Geg6N036fkEemhVPM7eSlVeNa1Ouiu7tW1642Nas+6eGMZjKH0Xqv71W16eJrsIRduVVbQxsfKykPz65X5rRqWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=uPYi5/R6; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id A7CAEA0678;
+	Fri, 20 Dec 2024 14:14:36 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=mail; bh=ubX47GRgDZiiX4C3rh2YehKOAgk4ebD9j/yjMeGAS08=; b=
+	uPYi5/R62pcZNenlo6c/4pxKsWGnRASWf73U5ZIhRRdEnqkHk1xzB0l5n1grZXa7
+	tS+Z7rKYUolYwLcFbhvSrkgWkQc3AhYtxV5t86KWy3XkrTehBSyMZmrwoCFyyyIs
+	NaBp11ditDU8wRAKP2aAemm3JT7qGoOUppICfHfnpc9C1dbLg3B8WJXLqP1WJ4U9
+	ML6HfNKIQ61xq3BObTgGVPFNG/iyLlfqoOpt/jkH6Rx3otTYhC5kq45Y7DMtrph3
+	4uIPARPn6iBSDmQ5UbQWBhh4f/8WMksfQw48dH1+PbSy+Z+AwIB7ZVx7pErI0XoH
+	RcEN8P3YpTPGmXTWQVagD5kJ566uayYSRld9Hwh9rZ72krm43vaDzXYipO3/jnms
+	f0S6siyB5suCNMnvZudM3d8MhJvRilxqG4Ylfnx2XxaNlMcjqYs4mc68hXMPz63Q
+	MmTuiTrvSyb1PqEPABIB0U+Pk56JNU66vagBj8Scyg4vRx4/UTs55Qteb6b919Pn
+	GOKKPygyAV8WfBTa0UN3Fyn+pUnSnV7EB2r6uSTvbysOtUj1YbLPMxJ94ivtt3Sc
+	I1u9Voov7cXwf2LVuTs5c/qHxhzYdGKWnCquBq3zZQgui/bSKrYX4A6fBYgF+a4+
+	UbYmKVpx5SYxxVIaYuOBujWxS/73hF/Vak2XqrJamGU=
+From: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
+To: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>, Vinod Koul
+	<vkoul@kernel.org>
+Subject: [PATCH next] dma: Add devm_dma_request_chan()
+Date: Fri, 20 Dec 2024 14:13:49 +0100
+Message-ID: <20241220131350.544009-1-csokas.bence@prolan.hu>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -71,122 +62,64 @@ List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: MNBD3vldTeqOL4lSqBESpUbOI1EpSLXR
-X-Proofpoint-GUID: MNBD3vldTeqOL4lSqBESpUbOI1EpSLXR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
- bulkscore=0 phishscore=0 priorityscore=1501 lowpriorityscore=0
- clxscore=1011 mlxscore=0 mlxlogscore=999 adultscore=0 malwarescore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2412200080
+X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1734700476;VERSION=7982;MC=2694048673;ID=103848;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
+X-ESET-Antispam: OK
+X-EsetResult: clean, is OK
+X-EsetId: 37303A2980D948556D7261
 
-Avoid writing unavailable register in BAM-Lite mode.
-BAM_DESC_CNT_TRSHLD register is unavailable in BAM-Lite
-mode. Its only available in BAM-NDP mode. So only write
-this register for clients who is using BAM-NDP.
+Expand the arsenal of devm functions for DMA
+devices, this time for requesting channels.
 
-Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
+Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
 ---
-Change in [v4]
+ drivers/dma/dmaengine.c | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-* Added in_range() macro
-
-Change in [v3]
-
-* Removed BAM_LITE macro
-
-* Updated commit message
-
-* Adjusted if condition check
-
-* Renamed BAM-NDP macro to BAM_NDP_REVISION_START and
-   BAM_NDP_REVISION_END
-
-Change in [v2]
-
-* Replace 0xff with REVISION_MASK in the statement
-   bdev->bam_revision = val & REVISION_MASK
-
-Change in [v1]
-
-* Added initial patch
-
- drivers/dma/qcom/bam_dma.c | 24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
-index bbc3276992bb..c14557efd577 100644
---- a/drivers/dma/qcom/bam_dma.c
-+++ b/drivers/dma/qcom/bam_dma.c
-@@ -59,6 +59,9 @@ struct bam_desc_hw {
- #define DESC_FLAG_NWD BIT(12)
- #define DESC_FLAG_CMD BIT(11)
+diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+index c1357d7f3dc6..51c41664838d 100644
+--- a/drivers/dma/dmaengine.c
++++ b/drivers/dma/dmaengine.c
+@@ -926,6 +926,36 @@ void dma_release_channel(struct dma_chan *chan)
+ }
+ EXPORT_SYMBOL_GPL(dma_release_channel);
  
-+#define BAM_NDP_REVISION_START	0x20
-+#define BAM_NDP_REVISION_END	0x27
++static void dmaenginem_release_channel(void *chan)
++{
++	dma_release_channel(chan);
++}
 +
- struct bam_async_desc {
- 	struct virt_dma_desc vd;
- 
-@@ -398,6 +401,7 @@ struct bam_device {
- 
- 	/* dma start transaction tasklet */
- 	struct tasklet_struct task;
-+	u32 bam_revision;
- };
- 
++/**
++ * devm_dma_request_chan - try to allocate an exclusive slave channel
++ * @dev:	pointer to client device structure
++ * @name:	slave channel name
++ *
++ * Returns pointer to appropriate DMA channel on success or an error pointer.
++ *
++ * The operation is managed and will be undone on driver detach.
++ */
++
++struct dma_chan *devm_dma_request_chan(struct device *dev, const char *name)
++{
++	struct dma_chan *chan = dma_request_chan(dev, name);
++	int ret = 0;
++
++	if (!IS_ERR(chan))
++		ret = devm_add_action_or_reset(dev, dmaenginem_release_channel, chan);
++
++	if (ret)
++		return PTR_ERR(ret);
++
++	return chan;
++}
++EXPORT_SYMBOL_GPL(devm_dma_request_chan);
++
  /**
-@@ -441,8 +445,10 @@ static void bam_reset(struct bam_device *bdev)
- 	writel_relaxed(val, bam_addr(bdev, 0, BAM_CTRL));
- 
- 	/* set descriptor threshold, start with 4 bytes */
--	writel_relaxed(DEFAULT_CNT_THRSHLD,
--			bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
-+	if (in_range(bdev->bam_revision, BAM_NDP_REVISION_START,
-+		     BAM_NDP_REVISION_END))
-+		writel_relaxed(DEFAULT_CNT_THRSHLD,
-+			       bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
- 
- 	/* Enable default set of h/w workarounds, ie all except BAM_FULL_PIPE */
- 	writel_relaxed(BAM_CNFG_BITS_DEFAULT, bam_addr(bdev, 0, BAM_CNFG_BITS));
-@@ -1000,9 +1006,10 @@ static void bam_apply_new_config(struct bam_chan *bchan,
- 			maxburst = bchan->slave.src_maxburst;
- 		else
- 			maxburst = bchan->slave.dst_maxburst;
--
--		writel_relaxed(maxburst,
--			       bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
-+		if (in_range(bdev->bam_revision, BAM_NDP_REVISION_START,
-+			     BAM_NDP_REVISION_END))
-+			writel_relaxed(maxburst,
-+				       bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
- 	}
- 
- 	bchan->reconfigure = 0;
-@@ -1192,10 +1199,11 @@ static int bam_init(struct bam_device *bdev)
- 	u32 val;
- 
- 	/* read revision and configuration information */
--	if (!bdev->num_ees) {
--		val = readl_relaxed(bam_addr(bdev, 0, BAM_REVISION));
-+	val = readl_relaxed(bam_addr(bdev, 0, BAM_REVISION));
-+	if (!bdev->num_ees)
- 		bdev->num_ees = (val >> NUM_EES_SHIFT) & NUM_EES_MASK;
--	}
-+
-+	bdev->bam_revision = val & REVISION_MASK;
- 
- 	/* check that configured EE is within range */
- 	if (bdev->ee >= bdev->num_ees)
+  * dmaengine_get - register interest in dma_channels
+  */
 -- 
 2.34.1
+
 
 

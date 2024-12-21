@@ -1,76 +1,76 @@
-Return-Path: <dmaengine+bounces-4049-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4051-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 316D49F9FBF
-	for <lists+dmaengine@lfdr.de>; Sat, 21 Dec 2024 10:19:27 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C5899FA00B
+	for <lists+dmaengine@lfdr.de>; Sat, 21 Dec 2024 11:01:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4FAEF188935C
-	for <lists+dmaengine@lfdr.de>; Sat, 21 Dec 2024 09:19:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F286A1686C5
+	for <lists+dmaengine@lfdr.de>; Sat, 21 Dec 2024 10:01:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F6C31EC4CA;
-	Sat, 21 Dec 2024 09:19:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2C5F1F0E55;
+	Sat, 21 Dec 2024 10:01:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l3e+PkJp"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DSVpeKHs"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49C4E1DE2D7;
-	Sat, 21 Dec 2024 09:19:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0995C1EC4F7;
+	Sat, 21 Dec 2024 10:01:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734772761; cv=none; b=NU6w1WnUwfytCorjGaqwliVUs6EB+1Y/KNl9VPRqGJx894Y84f13fQZj6HR1NLXBkBpjB5SVvEAwQmuzIFv/iN56Avti7gtGnGQP0cGGG5y4ETJFmwh5ls3Qzf8m+jiEoKxj4YhE5C4mKOCT2MUPnyT+r8vL7S+xI8C3WMbGGbM=
+	t=1734775285; cv=none; b=VIwpb++bP5AhP2Sk303Rh1btxmO7xcQQxI+CPObZd5ZfBAbJ0pqg5ZWsiKvbJSda9qe/dBxEi9B22w0BOqcqvdjnqO+LWYhFh5IPhIHxuMXcD9pKl8rYaYqY75aC4HiraCcsKOfJ9E9P3yMG3hpIHTXfDp+Gz1v6JfDutA5ACHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734772761; c=relaxed/simple;
-	bh=K/gGzoIkY2j0sBPvvxT1OamLtEYly3fG3k78EOkLbxg=;
+	s=arc-20240116; t=1734775285; c=relaxed/simple;
+	bh=QfdImvP58EeCPvKEQ5eIyWLi1kmX2PnIg6c0NV/k4kc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TvCI/6FSIzdMxdLh7G8mSu06zlpbLGUixmhfXN3I/CDzFCzKpCymFWuBQTb8UOIIcgMNzBsKmrgyBcQjv6ErqdWrVadET0oUI8VMaoqA+rERwcXH9eES90NBgHKvNKpBUtTzm8e/ebN6cnLB4sCaMSAMQn4hwyYPpk1Ren+KHFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l3e+PkJp; arc=none smtp.client-ip=198.175.65.15
+	 Content-Type:Content-Disposition:In-Reply-To; b=m1RJ0i/6tw5q3rVgc3O3PuvK12Dg9irXTraWdh8rtbTg0uqKpbjGahxC3GNqoAFB7mxk8jURdbndd8ZoVhCrtJ5ivk/04gaQi9xFq79ERZBC+bBC9fHhNn5PtumLCZVDkX+DSPJiTH1bWkpcWquM0hM7y86hwpBvfT57jX2nvfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DSVpeKHs; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1734772759; x=1766308759;
+  t=1734775284; x=1766311284;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=K/gGzoIkY2j0sBPvvxT1OamLtEYly3fG3k78EOkLbxg=;
-  b=l3e+PkJpRra4UicFrXmSnBc4ByDyecAYyN9FA64OON0axm7oUbLMmgnb
-   y5FH11clv9DZrgy+jX7+jNMtf3vEcIIT/vvkwCvqqQZew4UJ8AQxxy2h3
-   xN6f/5uEJLN5S4avOZOBFoSJm9yBqZh+/Q9w38MNgeUu55vVIpasZrzlq
-   bC2OZjw+1W3EnVT/hOz79rGCI85dlwFibkSu5FbZqRparrNoaPkVseS9G
-   zuKQchm+IK4sATufsRHg8K5oPlYGzxN5kbIzERsxLWPNCFEid2L1LKbST
-   FGw9gdCTqrfNn0d7rK9FMyYi2gvVyHc9nAQIz+8gmEwX3H6+ZySVmDc7b
+  bh=QfdImvP58EeCPvKEQ5eIyWLi1kmX2PnIg6c0NV/k4kc=;
+  b=DSVpeKHsMG81kqRN9OGKZ3D7aRrHlw/Dt/4lqzdRodiGrgjQ1UJcsXzf
+   fCzGaqUIoPulcroWjcNZtFI+VA/Psd0wxg+GIwzfIX9h7XVRTTLSZdtEB
+   PRpe4pcUfS+F+bkghw+ZiGV1YRCA3Vs4coCZXOuz7kD+GVcLLsFwz1H8N
+   ES/rxDuHAQPwbvUtWpk5u0ShrYLwcHbKOYQOuL8pRuI+CcMY+zintJBR3
+   soBKV6nk8tiISgbE4Kk0QSSVuxtiD/5IbXSU4huU3lqWDGdtXVlXnvcoV
+   dhOtXkOuVHQmnvn5ddhsd0+N4mdwrlxWUGXiDEDqfhKgZgmFWi3oJYLHS
    A==;
-X-CSE-ConnectionGUID: u9ReohokRPyJMB+E8btmUw==
-X-CSE-MsgGUID: QRbETUm/RfSwGj1P0Hy0jA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11292"; a="38997320"
+X-CSE-ConnectionGUID: qKE6WVD0RmygMMurIDH98w==
+X-CSE-MsgGUID: Jn8Ut7nLRjeUnota5sTBWw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11292"; a="45808219"
 X-IronPort-AV: E=Sophos;i="6.12,253,1728975600"; 
-   d="scan'208";a="38997320"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2024 01:19:19 -0800
-X-CSE-ConnectionGUID: 7jwalMGLSc2vUaJ4bxcTfg==
-X-CSE-MsgGUID: A/b7KilcRHeyeaDNEV5z2Q==
+   d="scan'208";a="45808219"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2024 02:01:24 -0800
+X-CSE-ConnectionGUID: 2HI1Kg3BRIiDFPg7U5tMEA==
+X-CSE-MsgGUID: HrB3sxnZQZe6lo7KEDx5Uw==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="99588308"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="103810590"
 Received: from lkp-server01.sh.intel.com (HELO a46f226878e0) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 21 Dec 2024 01:19:18 -0800
+  by orviesa003.jf.intel.com with ESMTP; 21 Dec 2024 02:01:21 -0800
 Received: from kbuild by a46f226878e0 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1tOvdj-00026w-0n;
-	Sat, 21 Dec 2024 09:19:15 +0000
-Date: Sat, 21 Dec 2024 17:19:04 +0800
+	id 1tOwIQ-00027x-39;
+	Sat, 21 Dec 2024 10:01:18 +0000
+Date: Sat, 21 Dec 2024 18:01:06 +0800
 From: kernel test robot <lkp@intel.com>
 To: Bence =?iso-8859-1?B?Q3Pza+Fz?= <csokas.bence@prolan.hu>,
 	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev,
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
 	Bence =?iso-8859-1?B?Q3Pza+Fz?= <csokas.bence@prolan.hu>,
 	Vinod Koul <vkoul@kernel.org>
 Subject: Re: [PATCH next] dma: Add devm_dma_request_chan()
-Message-ID: <202412211953.UwS2Qw11-lkp@intel.com>
+Message-ID: <202412211736.wXS6zm9z-lkp@intel.com>
 References: <20241220131350.544009-1-csokas.bence@prolan.hu>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -84,50 +84,45 @@ In-Reply-To: <20241220131350.544009-1-csokas.bence@prolan.hu>
 
 Hi Bence,
 
-kernel test robot noticed the following build warnings:
+kernel test robot noticed the following build errors:
 
-[auto build test WARNING on next-20241220]
+[auto build test ERROR on next-20241220]
 
 url:    https://github.com/intel-lab-lkp/linux/commits/Bence-Cs-k-s/dma-Add-devm_dma_request_chan/20241220-211523
 base:   next-20241220
 patch link:    https://lore.kernel.org/r/20241220131350.544009-1-csokas.bence%40prolan.hu
 patch subject: [PATCH next] dma: Add devm_dma_request_chan()
-config: x86_64-buildonly-randconfig-002-20241221 (https://download.01.org/0day-ci/archive/20241221/202412211953.UwS2Qw11-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241221/202412211953.UwS2Qw11-lkp@intel.com/reproduce)
+config: i386-buildonly-randconfig-004-20241221 (https://download.01.org/0day-ci/archive/20241221/202412211736.wXS6zm9z-lkp@intel.com/config)
+compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241221/202412211736.wXS6zm9z-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202412211953.UwS2Qw11-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202412211736.wXS6zm9z-lkp@intel.com/
 
-All warnings (new ones prefixed by >>):
+All error/warnings (new ones prefixed by >>):
 
->> drivers/dma/dmaengine.c:944:18: warning: no previous prototype for 'devm_dma_request_chan' [-Wmissing-prototypes]
-     944 | struct dma_chan *devm_dma_request_chan(struct device *dev, const char *name)
-         |                  ^~~~~~~~~~~~~~~~~~~~~
-   drivers/dma/dmaengine.c: In function 'devm_dma_request_chan':
->> drivers/dma/dmaengine.c:953:32: warning: passing argument 1 of 'PTR_ERR' makes pointer from integer without a cast [-Wint-conversion]
+>> drivers/dma/dmaengine.c:953:18: error: incompatible integer to pointer conversion passing 'int' to parameter of type 'const void *' [-Wint-conversion]
      953 |                 return PTR_ERR(ret);
          |                                ^~~
-         |                                |
-         |                                int
-   In file included from arch/x86/include/asm/processor.h:36,
-                    from include/linux/sched.h:13,
-                    from include/linux/ratelimit.h:6,
-                    from include/linux/dev_printk.h:16,
-                    from include/linux/device.h:15,
-                    from include/linux/platform_device.h:13,
-                    from drivers/dma/dmaengine.c:34:
-   include/linux/err.h:52:61: note: expected 'const void *' but argument is of type 'int'
+   include/linux/err.h:52:61: note: passing argument to parameter 'ptr' here
       52 | static inline long __must_check PTR_ERR(__force const void *ptr)
-         |                                                 ~~~~~~~~~~~~^~~
->> drivers/dma/dmaengine.c:953:24: warning: returning 'long int' from a function with return type 'struct dma_chan *' makes pointer from integer without a cast [-Wint-conversion]
+         |                                                             ^
+>> drivers/dma/dmaengine.c:953:10: error: incompatible integer to pointer conversion returning 'long' from a function with result type 'struct dma_chan *' [-Wint-conversion]
      953 |                 return PTR_ERR(ret);
          |                        ^~~~~~~~~~~~
+>> drivers/dma/dmaengine.c:944:18: warning: no previous prototype for function 'devm_dma_request_chan' [-Wmissing-prototypes]
+     944 | struct dma_chan *devm_dma_request_chan(struct device *dev, const char *name)
+         |                  ^
+   drivers/dma/dmaengine.c:944:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+     944 | struct dma_chan *devm_dma_request_chan(struct device *dev, const char *name)
+         | ^
+         | static 
+   1 warning and 2 errors generated.
 
 
-vim +/devm_dma_request_chan +944 drivers/dma/dmaengine.c
+vim +953 drivers/dma/dmaengine.c
 
    933	
    934	/**

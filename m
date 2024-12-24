@@ -1,57 +1,59 @@
-Return-Path: <dmaengine+bounces-4066-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4067-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 650739FBC9B
-	for <lists+dmaengine@lfdr.de>; Tue, 24 Dec 2024 11:44:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9AE149FBC9D
+	for <lists+dmaengine@lfdr.de>; Tue, 24 Dec 2024 11:45:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 628C81881921
-	for <lists+dmaengine@lfdr.de>; Tue, 24 Dec 2024 10:43:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9E5C31882B4F
+	for <lists+dmaengine@lfdr.de>; Tue, 24 Dec 2024 10:43:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E988D1C3C10;
-	Tue, 24 Dec 2024 10:42:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F0D51B6CF6;
+	Tue, 24 Dec 2024 10:42:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lChuJG9F"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A+0Ummw4"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9FE71C3BE3;
-	Tue, 24 Dec 2024 10:42:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBDCD1C549F
+	for <dmaengine@vger.kernel.org>; Tue, 24 Dec 2024 10:42:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735036934; cv=none; b=M+GQoEw48AYNGJUdgTxguE4h74nLQgCzSXWPezb63bgvZ8rGcWJF3O3pCs6hx5TNzbEBKhs+zWwkCkcJcMES3AT7tJRY4pRsTzAtQ/WmkwGEhkjhKlsdW6WXf4cLlwwczurcYobYqgeNVE672lmKJzoXgYg+vImZw/4ldb9qZXA=
+	t=1735036938; cv=none; b=he65lby9lDppyLkJfUuVBaIfn8NMNd8b/ZfVCoBHI8X+zq32C+qoQJPnb0v9vNbmmh8f49rVq2nEXDTANK77jxktkkI1nqBSijjRyWRYnaCVAvx3N+wTiwNaCbCVCEvNnQ33YUjiG6kVKKoDJoXZ8YqysEILTJXxSl2GmyybHuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735036934; c=relaxed/simple;
-	bh=aMnS4IKN1s//xM/IVQp+b/FMuKdwpIxp7wjx4jEt384=;
+	s=arc-20240116; t=1735036938; c=relaxed/simple;
+	bh=kEjX0uMOUgoJnsumDFEjXw0rukEN7DCNLT05YMxM1hQ=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=mxUVM0r9GsjWWxUsUK9SduUil9ZojXI0pk4zuV1W/04GVW1N9ruoLq23JndT49UDgZ9O1JBRdsoUo+frb66AlfyI2afWSvi40J5J7gJjO2DijbX/VkT/OG5z1G1BCUh/cCJb9JcAeGkGCal9u1YBLx2R4CFrkz083L3+0+yAVuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lChuJG9F; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37C4FC4CED4;
-	Tue, 24 Dec 2024 10:42:10 +0000 (UTC)
+	 MIME-Version:Content-Type; b=Bt/HVa4be2XgG+Lp2uTJeVmVCiMCKnETyVBGuUPlPiGWp1Iz3AQ2BeLGULTvPG97VtTNZ9AXPgEfXI9fcCsdzV/SJ1U3lWvVwK1VHBCrt8wkiOudSMpJwxgdn+BSFXlsDy64cPPNVg9ToNU5Min1L/+FZMN0/yr67CvlTXZZYOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A+0Ummw4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC747C4CED7;
+	Tue, 24 Dec 2024 10:42:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735036934;
-	bh=aMnS4IKN1s//xM/IVQp+b/FMuKdwpIxp7wjx4jEt384=;
+	s=k20201202; t=1735036937;
+	bh=kEjX0uMOUgoJnsumDFEjXw0rukEN7DCNLT05YMxM1hQ=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=lChuJG9FIOvI4BTnpJlyqTLwTUyeyLQlKv4lQWUXoirJUTJuM7B8KBqIrA+RKrPgu
-	 1OMGEr+erSrm6MWzfqSYok/b2tvdMP2XVeXCc5m94oguttiYurK0ntpy6OdiZvvfZo
-	 3784S1ETKNvjHHv0R75z95PSVxvE18dfZC1dPv5VjSo4YPNWO9/rfGIIoVPm5voZlW
-	 YtX/EoQOf6dJIwzMz+lY1i8cXU7PZyJIXdjAvmnnSO6Oz4ACTRO/x/dB3X+pxzGSFg
-	 zOGFwcPH/lsgoYlN5nwRP0yYfxZ5BRXDF/cmyyXBYjFzH9WtztV3qFq8VjUeAvm+o9
-	 PP2G6HjivknUQ==
+	b=A+0Ummw4MZ9/BndSUcSmJai7EXJrzI/aVGd32/aJHpyGC2eOExYGvIRXZATN6MJv7
+	 jgecSBTeCeYYPaIjI1eIb3beCo0/iqdJuUL0SlbHRMG4VlWaE0PGJSewtdGe/xOrfh
+	 yOKlxnSusGIY7wsgCaWH4Awb5X3Mc45bdLTlqXEa5lWTdWvz4ff0NlaVo0q9COrkxL
+	 l4pH5CCY2W6lWnYq7g8LvQ/yWQdSaTi4B26BRGux2cf6tHYFKHBg3QWHu6CPqxrSQx
+	 KEkWTlPbihbT9GgnmQWn+NjB3I0KlTY2r1/wMA8+fd4cx8DnrTXZZR3vnx27NQxy7P
+	 frdlXRTIaTU7w==
 From: Vinod Koul <vkoul@kernel.org>
-To: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
- Mohan Kumar D <mkumard@nvidia.com>
-Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, 
- treding@nvidia.com, jonathanh@nvidia.com, spujar@nvidia.com
-In-Reply-To: <20241217074358.340180-1-mkumard@nvidia.com>
-References: <20241217074358.340180-1-mkumard@nvidia.com>
-Subject: Re: [PATCH v2 RESEND 0/2] Add Tegra ADMA channel page support
-Message-Id: <173503693084.903491.14497745388505993099.b4-ty@kernel.org>
-Date: Tue, 24 Dec 2024 16:12:10 +0530
+To: Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+ Stefan Wahren <wahrenst@gmx.net>
+Cc: Lukas Wunner <lukas@wunner.de>, Peter Robinson <pbrobinson@gmail.com>, 
+ "Ivan T . Ivanov" <iivanov@suse.de>, linux-arm-kernel@lists.infradead.org, 
+ bcm-kernel-feedback-list@broadcom.com, dmaengine@vger.kernel.org
+In-Reply-To: <20241204165546.77941-1-wahrenst@gmx.net>
+References: <20241204165546.77941-1-wahrenst@gmx.net>
+Subject: Re: [PATCH V7] dmaengine: bcm2835-dma: Prevent suspend if DMA
+ channel is busy
+Message-Id: <173503693445.903491.14468199759886552238.b4-ty@kernel.org>
+Date: Tue, 24 Dec 2024 16:12:14 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -63,22 +65,17 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
 
-On Tue, 17 Dec 2024 13:13:56 +0530, Mohan Kumar D wrote:
-> Multiple ADMA Channel page hardware support has been added from
-> TEGRA186 and onwards. Add channel page handling support in the tegra
-> adma driver
+On Wed, 04 Dec 2024 17:55:46 +0100, Stefan Wahren wrote:
+> bcm2835-dma provides the service to others, so it should suspend
+> late and resume early. Suspend should be prevented in case a DMA
+> channel is still busy.
 > 
-> Changelog
-> =========
 > 
-> [...]
 
 Applied, thanks!
 
-[1/2] dt-bindings: dma: Support channel page to nvidia,tegra210-adma
-      commit: 762b37fc6ae2af0c7ddf36556fe7427575e9c759
-[2/2] dmaengine: tegra210-adma: Support channel page
-      commit: 68811c928f88828f188656dd3c9c184eeec2ce86
+[1/1] dmaengine: bcm2835-dma: Prevent suspend if DMA channel is busy
+      commit: 9602a843cb3a16df8930eb9b046aa7aeb769521b
 
 Best regards,
 -- 

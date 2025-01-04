@@ -1,86 +1,140 @@
-Return-Path: <dmaengine+bounces-4079-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4080-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C04539FCCB0
-	for <lists+dmaengine@lfdr.de>; Thu, 26 Dec 2024 19:28:39 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id DACDDA0113A
+	for <lists+dmaengine@lfdr.de>; Sat,  4 Jan 2025 01:09:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5426C162B6B
-	for <lists+dmaengine@lfdr.de>; Thu, 26 Dec 2024 18:28:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9C9DC3A46B6
+	for <lists+dmaengine@lfdr.de>; Sat,  4 Jan 2025 00:09:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAC331D7989;
-	Thu, 26 Dec 2024 18:27:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A7D7629;
+	Sat,  4 Jan 2025 00:09:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="smsO+okr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sKarAGkp"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC4DF1D63F2;
-	Thu, 26 Dec 2024 18:27:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34B6B36B;
+	Sat,  4 Jan 2025 00:09:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735237641; cv=none; b=gwrQc9DUqns7u0hqhzfNiaV2x1FAMkyFE8AFgYCthcAQ9e1P9u1PG91sz/8g3MGtgle0SQOQCHRRuZTMJ1nYo4jjvEsakLIHQAz4vN3WVrJY9Zcwl/LJyQGLU4gTbc7J0jR7GTv/wcxCQLIcemr4gWEP9CzvZQUb9tAn3nAnw/w=
+	t=1735949371; cv=none; b=Sxu40c/8cqmmp2IeEfGdlcYPfq8+Mb2fCPYmJZSi0IP7twPC08a13c2BwybOqvgFa767eRJVcam0CWOj7nJy5E8NMfpOt1LLEaM6DyGNNlBgnDI8iJbXF+cWeod6PuJ5gyvrR/tk5RaLwzgegKLr3o6HfGbyxyJ3Oaep9PUAx8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735237641; c=relaxed/simple;
-	bh=n2m8kXLGRWwsWYRgCzhXZOLIZaOIoADs3GBZOHUZN80=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Qv5KjugRylrBl1vP+AhnSagcmPMv5xWGDdmO1iZTPoL7eG2wtx7o85IXv/73TnzCYyq+rI+QM8y6tNQjUiWCGCR66LFu0/7dSJ2resp9Fwl2Z4WIczft4mFtvpSDbY8paM5xsOPqLOXM4kGu/Oi6CrozYopaDO/ZuqdtiUwD4eg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=smsO+okr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B4EAC4CED1;
-	Thu, 26 Dec 2024 18:27:20 +0000 (UTC)
+	s=arc-20240116; t=1735949371; c=relaxed/simple;
+	bh=NL+6UMAqEckQgTyP9CfH1geXhZoa5MSlyXNrFreAQ64=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bEnZUjHHBIMjTXLI4kDe2mIE35XcoPGqc80VKtb+RhEGrysSudNuhlgQZ4RerGpF375p9WUzVnhvrfGzAePUcky/B5FLIrE/9v6gojcCi5PJaVk+siy5voyEOftxWwiTPkxY+C5DTu2iEGOyftUuldVfAcOqeWuBc32FSlBSvBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sKarAGkp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6B75C4CEDD;
+	Sat,  4 Jan 2025 00:09:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735237641;
-	bh=n2m8kXLGRWwsWYRgCzhXZOLIZaOIoADs3GBZOHUZN80=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=smsO+okrntGehEf5l5+Dq4dgusWX3LK3+WOB8tK1Sn2wMLGT5MT9+NcU3ysWBERX9
-	 6W/CAUH+depD+F1G1YRtOTLN9IZI7F4xLRZng9BtPyFuFTRkhGb81i+5yNZ/h8GhX1
-	 AurHYlip9v9az4BxK9SmTh180IJ720ydPMYJxDvo++MxKZ7T5zEoTJmt5x7cTM13V8
-	 YWXhpPx3SyrZooiI1kJZf0LUVG0teWMpTguCbCDC6gYPyXZ5Q9LmFcfGYYJgp44S1X
-	 fiobcc3cXEJ1wheXCdxBMNMNNidch1TyNVPDRfm69GurE/h9qEatEuMjC6LtiwLo3z
-	 I82At2Oq+y8yg==
-From: Bjorn Andersson <andersson@kernel.org>
-To: Vinod Koul <vkoul@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Viken Dadhaniya <quic_vdadhani@quicinc.com>,
-	Konrad Dybcio <konradybcio@kernel.org>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>,
-	linux-arm-msm@vger.kernel.org,
-	dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: (subset) [PATCH 0/2] Add SA8775P GPI DMA compatible
-Date: Thu, 26 Dec 2024 12:26:39 -0600
-Message-ID: <173523761388.1412574.6635792706072023425.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20241108-topic-sa8775_dma2-v1-0-1d3b0d08d153@oss.qualcomm.com>
-References: <20241108-topic-sa8775_dma2-v1-0-1d3b0d08d153@oss.qualcomm.com>
+	s=k20201202; t=1735949370;
+	bh=NL+6UMAqEckQgTyP9CfH1geXhZoa5MSlyXNrFreAQ64=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sKarAGkp3shhVy//F9vhDi4mvw09GclBlXaRSATpbcyL8j552aZD9Y7cQ5DF9COtd
+	 JdtaeWyIjgtXy6u934m7tcw8FtUCT4nmEkv+DVNDNNXsqcN8YZaoUXiUmVxZAWVAj7
+	 qblQ1+7OKVcVpoMHDT//fgnivbb5LpPw9LZ1OHU7ZVBbTnoKKBSLBYzN9Bp4oiFUx0
+	 sGWNpJAKUUqNgO3FGHsp1lggl5I8tVADngudzQ99v2PAdol3TSmxGPoCt0jHtO26TH
+	 Wb/Sa8sJYqufUshEHl3GYTFUlwvVcbCaS1NnpaBnYYOQ/elsPbIf7QFakZUWorC7OW
+	 A91XqQ8ANJJNg==
+Date: Sat, 4 Jan 2025 01:09:26 +0100
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>, 
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, quic_msavaliy@quicinc.com, 
+	quic_vtanuku@quicinc.com
+Subject: Re: [PATCH v4 0/2] Add Block event interrupt support for I2C protocol
+Message-ID: <pvcu35x7prqonlhptakepn5bdqm6skd4qmigvoavejyjj363ug@aemx3pd2po2v>
+References: <20241217170424.14703-1-quic_jseerapu@quicinc.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241217170424.14703-1-quic_jseerapu@quicinc.com>
 
+Hi,
 
-On Fri, 08 Nov 2024 22:41:16 +0100, Konrad Dybcio wrote:
-> Fill in the missing parts of the initial submission
+this patch has been hanging here for a while, can we please have
+someone from DMA and Qualcomm look at it?
+
+Thanks,
+Andi
+
+On Tue, Dec 17, 2024 at 10:34:22PM +0530, Jyothi Kumar Seerapu wrote:
+> The I2C driver gets an interrupt upon transfer completion.
+> When handling multiple messages in a single transfer, this
+> results in N interrupts for N messages, leading to significant
+> software interrupt latency.
+> 
+> To mitigate this latency, utilize Block Event Interrupt (BEI)
+> mechanism. Enabling BEI instructs the hardware to prevent interrupt
+> generation and BEI is disabled when an interrupt is necessary.
+> 
+> Large I2C transfer can be divided into chunks of 8 messages internally.
+> Interrupts are not expected for the first 7 message completions, only
+> the last message triggers an interrupt, indicating the completion of
+> 8 messages. This BEI mechanism enhances overall transfer efficiency.
+> 
+> This optimization reduces transfer time from 168 ms to 48 ms for a
+> series of 200 I2C write messages in a single transfer, with a
+> clock frequency support of 100 kHz.
+> 
+> BEI optimizations are currently implemented for I2C write transfers only,
+> as there is no use case for multiple I2C read messages in a single transfer
+> at this time.
+> 
+> v3 -> v4:
+>   - API's added for Block event interrupt with multi descriptor support is 
+>     moved from qcom-gpi-dma.h file to I2C geni qcom driver file.
+>   - gpi_multi_xfer_timeout_handler function is moved from GPI driver to
+>     I2C driver.
+>   - geni_i2c_gpi_multi_desc_xfer structure is added as a member of
+>     struct geni_i2c_dev.
+>   - Removed the changes of making I2C driver is dependent on GPI driver.
+> 
+> v2 -> v3:
+>   - Updated commit description
+>   - In I2C GENI driver, for i2c_gpi_cb_result moved the logic of
+>     "!is_tx_multi_xfer" to else part.
+>   - MIN_NUM_OF_MSGS_MULTI_DESC changed from 4 to 2
+>   - Changes of I2C GENI driver to depend on the GPI driver moved
+>     to patch3.
+>   - Renamed gpi_multi_desc_process to gpi_multi_xfer_timeout_handler
+>   - Added description for newly added changes in "qcom-gpi-dma.h" file.
+> 
+> v1 -> v2:
+>   - DT changes are reverted for adding dma channel size as a new arg of
+>     dma-cells property.
+>   - DT binding change reveted for dma channel size as a new arg of
+>     dma-cells property.
+>   - In GPI driver, reverted the changes to parse the channel TRE size
+>     from device tree.
+>   - Made the changes in QCOM I2C geni driver to support the BEI
+>     functionality with the existing TRE size of 64.
+>   - Made changes in QCOM I2C geni driver as per the review comments.
+>   - Fixed Kernel test robot reported compiltion issues.
 > 
 > 
-
-Applied, thanks!
-
-[2/2] arm64: dts: qcom: sa8775p: Use a SoC-specific compatible for GPI DMA
-      commit: a8d18df5a5a114f948a3526537de2de276c9fa7d
-
-Best regards,
--- 
-Bjorn Andersson <andersson@kernel.org>
+> Jyothi Kumar Seerapu (2):
+>   dmaengine: qcom: gpi: Add GPI Block event interrupt support
+>   i2c: i2c-qcom-geni: Add Block event interrupt support
+> 
+>  drivers/dma/qcom/gpi.c             |   3 +
+>  drivers/i2c/busses/i2c-qcom-geni.c | 275 ++++++++++++++++++++++++++---
+>  include/linux/dma/qcom-gpi-dma.h   |   9 +
+>  3 files changed, 262 insertions(+), 25 deletions(-)
+> 
+> -- 
+> 2.17.1
+> 
 

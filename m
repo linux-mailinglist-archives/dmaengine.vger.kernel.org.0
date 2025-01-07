@@ -1,130 +1,102 @@
-Return-Path: <dmaengine+bounces-4085-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4086-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66136A042F9
-	for <lists+dmaengine@lfdr.de>; Tue,  7 Jan 2025 15:45:58 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 03E12A04BAC
+	for <lists+dmaengine@lfdr.de>; Tue,  7 Jan 2025 22:30:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 958521883F7A
-	for <lists+dmaengine@lfdr.de>; Tue,  7 Jan 2025 14:45:18 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2F4207A1CB2
+	for <lists+dmaengine@lfdr.de>; Tue,  7 Jan 2025 21:30:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99EF81F37D4;
-	Tue,  7 Jan 2025 14:43:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 423081F8921;
+	Tue,  7 Jan 2025 21:30:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="qerTNdLK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tZ96DGpV"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D603D1F37A2
-	for <dmaengine@vger.kernel.org>; Tue,  7 Jan 2025 14:43:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0AEA1F8914;
+	Tue,  7 Jan 2025 21:30:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736261009; cv=none; b=CA/SIzRJUMLHk6Yl7SUsMKsovdk5A/3lDdAJ0EE+W4iROCWDFFeFhArCY+3vwxh1/sYdWlo8MJfd1/1Y2hQMUidmD+X43VccMRNCwvrhwehpwxZnbOV8FQmbGQPJNj0fJpZfLWjmBQv7boUtJAszbax/fgrhjEtPKlBmZ7ExcUQ=
+	t=1736285412; cv=none; b=cyvEi+udDli8G5DO/bvda8+lIbIcCTsqzISVDdRe37uLVsJ7a1lFfhhre1yXGkCev0dGD/n2vyF7ZxQp6dklo8B60PdwpVWiU81zJ/Kw2tPLGCOoWYMI4q3gQqrLH5+YpILqP9kuasCKQp0IlRAEn6i7mvCIJB06vDdaq1U3qL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736261009; c=relaxed/simple;
-	bh=qnrXhGpjWg4oiCCei7G9eYhGu0ZsqmNtZoYPw6SRkCM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TAn+rhM+xfOp8eTZVchts+RrW1fly+Io/BnI+TaP2tO2Ml5SYzNAyV1C1XHkgRvit4wOnkUCi8Fjw2MvcEciV9hEEZvHMHOK9M7TTVxC/phXN8Kr6v9SSUMXe0joRiS+MHzG0lpf57XD6LzxiyKm8yOWU2NC0iz/HNHSe+9dS6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=qerTNdLK; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1736260983; x=1736865783; i=wahrenst@gmx.net;
-	bh=xFQrLDTViZiWjjLwQVlNYwRn2uOyZ5VxY841DFPTids=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
-	 MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=qerTNdLKnJODo0IAcDcHdLdjtWBUxvJ/vL6yi3wbgYo9BM4whLcqz1Ule6IJYlrj
-	 +wl0z3aUI3Je4P51c8jek8vYfwI8DpmL+xGbFPCdXtEcmjzu5xmcH3uMzryPdvCQs
-	 hDocgY4/GvqB+vPanyu0PgSeQOdW5aDxYnM1L9qn1MOl06NQuEW3lowuxZRf1kUUf
-	 QMny1oVHuZwFa2HB+tUwhmYF1ThTCKA8rxr2TtIFKOfksKvFFg3ln9GfIRFeq+QxH
-	 MKYXQv7qVKSCOuWqO5Qo0Nj/cESyzqz/prfj78VXe6wdZgZclZx1JkrNpx+e2SzE4
-	 s/5k5oCki/7bVzhMbw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from stefanw-SCHENKER ([37.4.251.153]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MFKGZ-1tFRCY2Rir-003DtV; Tue, 07
- Jan 2025 15:43:03 +0100
-From: Stefan Wahren <wahrenst@gmx.net>
-To: Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>,
-	Scott Branden <sbranden@broadcom.com>,
-	Vinod Koul <vkoul@kernel.org>
-Cc: Lukas Wunner <lukas@wunner.de>,
-	Peter Robinson <pbrobinson@gmail.com>,
-	"Ivan T . Ivanov" <iivanov@suse.de>,
-	linux-arm-kernel@lists.infradead.org,
-	bcm-kernel-feedback-list@broadcom.com,
-	dmaengine@vger.kernel.org,
-	Stefan Wahren <wahrenst@gmx.net>,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH] dmaengine: bcm2835-dma: fix warning when CONFIG_PM=n
-Date: Tue,  7 Jan 2025 15:42:51 +0100
-Message-Id: <20250107144251.101912-1-wahrenst@gmx.net>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1736285412; c=relaxed/simple;
+	bh=ac6y/Dz/2pY1MzjvhpThvPDoZJ/PH81sANKCYDwfnFc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BeXgmRpnJv3FBZnylru/zGvIjdkwG1jRXg7ZbX4C3fUOWiQK/y09Gj5A+FR2N7Ado6Jo5Kg0+g1DLXXVA99vsWk+zBZtEALC6s4v+xOblvviPIuw+v3U38bnCYXbLpQQoUtgRll3sS+lqKvFx+RfynQTB4ZVBZibo4zH8JcnBys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tZ96DGpV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5C48C4CEE4;
+	Tue,  7 Jan 2025 21:30:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736285411;
+	bh=ac6y/Dz/2pY1MzjvhpThvPDoZJ/PH81sANKCYDwfnFc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=tZ96DGpVyYejpIudGq3GbE5JSUKls64N4vnwevP+GWRZCXZfEDDhdheH5Qq822oFv
+	 3zK6zH+Q8tJfKpnp0Rr2eJA6D/sEcwFLtD+rDO1s4NAjatJR+Zb4pRSXa7gHgXOBNe
+	 nBvMN8yGmejJ3U5KM4bgI/NpqlPbsFcGC6g/xVrEM4MKMXtUuYVZuLVljT+8OYnaM0
+	 62y1l4/iO7Mq514KHp/heaotnjhkoHzy9UrkFcs/N6I8A3VphQBAN2r9IvcO4nRuOe
+	 kB6KdeV7XeK5kBv0lA5ZZgjV+B/Hubzvxj3awQXtQ/X6moTNbdiPHvWTWJJARwvDYS
+	 cY+n2QuZKToEA==
+Message-ID: <9ef3daa8-cdb1-49f2-8d19-a72d6210ff3a@kernel.org>
+Date: Tue, 7 Jan 2025 23:30:18 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:yaUVsQbt7GfhhXIzcKOAAYXvUn+Gxqvvxu3vaUPmgoFX97FuZvz
- TRdBZlUSEFiJcAw9u/qnM2stgu2qhX1vQ8YwmksopHqHq5m5HYrCuIYwDf7XFxg37SZ09dA
- KhP3pO7t8XtHc6voxp1vIhwC2Kkbodtj6vr2NVGlcWo8Eix0LaUUJ5FMdbTRf7hTCFIiBCl
- xupWDfjQiyUyTWjf/jw/Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:1hi32d8l5AM=;ehhMs+rkxrIDCM4YSyzGXIMljnO
- efqXWFYV4O/T77I4k/H4ycCMrBvya52QOXm2TlUAKnJESpQNmlqMUrRClKu/AKOQx4y6xh/rx
- dtmy3v9j6waTFI4uj59AP1MfUcsLrK1O4X9z3/i47Gwyv1L6gQZ8hfgEyJ+WvjH/cCwqyW7np
- GdAi6Q9VMIgs3Z5GoJbwnubaesyZD0njAOjxzw5LOuueJ8CkL8SLugYBUoTXup+drG5XpKEyD
- axylYW/gRIQxz6MscUadIKB1rvBgoi72bpSd3MOboALYPZt7ER0CCSUnkoRnBCjRPsPegGbFC
- yNSWXp8G3d9NYym+QoTXow68wQvFrhlCqRIjX6P7nv+f5MR2VCvItspLjBXZZUiaaiGkONydT
- DApPlgllVpIe8h9z44yjH5fzUs5ceWrG9Np9X2EdaFpnxzim6rPE4yX+Yghxdg3Ljt1q+c5sO
- rsc8E0NR64pFK6zn7WzXQkdHTj8Lu5fdKI0uCuEML9ySZY5bIicr4L5L3zCShXbx49X09m08S
- UcuRgCTn30IR+phioDQ1kf3aRMiD29NGUdiAmzy6q9IQvTVrvjh4RUcgWthAYNTqXBUqIuNPx
- g2gEH6Eau3AeFFH+6MgJCKGkemy2YszXPbm5fcxIznnB2iH/QZWpZ5F5UITgFQlheisOV6wvs
- ghbSuCdG5WCmxobdDse3fdPdQQHgpygTHXN0M0RTaXxxYS7q9V4LgOXEaYfXpWZoynieaR/ya
- a8fyaSJ293QyABwPjWXyG9i0IJD8XRBIWZyiC3kiDAMXlWcJ8t0KbQnkUHH7QwS/CnWIc1fU8
- 9RIwdiVdwi5larsnClLFTpi7JJZ03yIMAWdxqrf40jVDDxInOLV91BN/4/jnOlllKcVrTvFH/
- D57cqQwFkbiEd0kE4bFD7OLkqVhgL6OmHidQ02TvC9t4fP0Ad2ESe3iHgeKtLJ4BlQ9wZL/Om
- pnDJbYfSGA25y5wWpsNwgYhlvODvQBr64mW57S6f8gZA0PRe4lsjCN6+IyWu6r5oTA/arKnHz
- kmGbn7RanYMMigKjAL+RsTHpFxlSLwpOtLODw0DZGRmlTgP+ugL5tcih68yhgKiaQNiXYsRqe
- Ubr72kkjhjPYD3wGOnKNVDbDUdSqkI
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] dmaengine: qcom: bam_dma: Avoid writing unavailable
+ register
+To: Md Sadre Alam <quic_mdalam@quicinc.com>, vkoul@kernel.org,
+ linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org
+Cc: quic_mmanikan@quicinc.com, quic_srichara@quicinc.com,
+ quic_varada@quicinc.com, robin.murphy@arm.com, u.kleine-koenig@baylibre.com,
+ martin.petersen@oracle.com, fenghua.yu@intel.com, av2082000@gmail.com,
+ linux-kernel@vger.kernel.org
+References: <20241220094203.3510335-1-quic_mdalam@quicinc.com>
+Content-Language: en-US
+From: Georgi Djakov <djakov@kernel.org>
+In-Reply-To: <20241220094203.3510335-1-quic_mdalam@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The old SET_LATE_SYSTEM_SLEEP_PM_OPS macro cause a build warning
-when CONFIG_PM is disabled:
+On 20.12.24 11:42, Md Sadre Alam wrote:
+> Avoid writing unavailable register in BAM-Lite mode.
+> BAM_DESC_CNT_TRSHLD register is unavailable in BAM-Lite
+> mode. Its only available in BAM-NDP mode. So only write
+> this register for clients who is using BAM-NDP.
+> 
+> Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
+> ---
 
-warning: 'bcm2835_dma_suspend_late' defined but not used [-Wunused-functio=
-n]
+My Dragonboard db845c fails to boot on recent linux-next releases and
+git bisect points to this patch. It boots again when it's reverted.
 
-Change this to the modern replacement.
+[..]
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202501071533.yrFb156H-lkp@in=
-tel.com/
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-=2D--
- drivers/dma/bcm2835-dma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>   
+>   	bchan->reconfigure = 0;
+> @@ -1192,10 +1199,11 @@ static int bam_init(struct bam_device *bdev)
+>   	u32 val;
+>   
+>   	/* read revision and configuration information */
+> -	if (!bdev->num_ees) {
+> -		val = readl_relaxed(bam_addr(bdev, 0, BAM_REVISION));
+> +	val = readl_relaxed(bam_addr(bdev, 0, BAM_REVISION));
+> +	if (!bdev->num_ees)
+>   		bdev->num_ees = (val >> NUM_EES_SHIFT) & NUM_EES_MASK;
+> -	}
+> +
+> +	bdev->bam_revision = val & REVISION_MASK;
 
-diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
-index 20b10c15c696..0117bb2e8591 100644
-=2D-- a/drivers/dma/bcm2835-dma.c
-+++ b/drivers/dma/bcm2835-dma.c
-@@ -893,7 +893,7 @@ static int bcm2835_dma_suspend_late(struct device *dev=
-)
- }
+The problem seems to occur when we try to read the revision for the
+slimbus bam instance at 0x17184000 (which has "qcom,num-ees = <2>;").
 
- static const struct dev_pm_ops bcm2835_dma_pm_ops =3D {
--	SET_LATE_SYSTEM_SLEEP_PM_OPS(bcm2835_dma_suspend_late, NULL)
-+	LATE_SYSTEM_SLEEP_PM_OPS(bcm2835_dma_suspend_late, NULL)
- };
-
- static int bcm2835_dma_probe(struct platform_device *pdev)
-=2D-
-2.34.1
-
+Thanks,
+Georgi
 

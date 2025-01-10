@@ -1,42 +1,42 @@
-Return-Path: <dmaengine+bounces-4098-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4099-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E3AA4A089E9
-	for <lists+dmaengine@lfdr.de>; Fri, 10 Jan 2025 09:23:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 24952A089EE
+	for <lists+dmaengine@lfdr.de>; Fri, 10 Jan 2025 09:24:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 137133A38F0
-	for <lists+dmaengine@lfdr.de>; Fri, 10 Jan 2025 08:23:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3FA403A37B6
+	for <lists+dmaengine@lfdr.de>; Fri, 10 Jan 2025 08:24:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5DD8209F38;
-	Fri, 10 Jan 2025 08:22:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 619B8209F3B;
+	Fri, 10 Jan 2025 08:22:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="I94tHZX6"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="WnJ8kU0n"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C8AE208965;
-	Fri, 10 Jan 2025 08:22:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10650209F42;
+	Fri, 10 Jan 2025 08:22:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736497372; cv=none; b=n7g3C/0fchbOyAKN7bdsj6C+ZJnkgNMWVC0Jos6FXIpYHEgMtTnDAZsIlLvtxaBLqDazGZe80DSJ/bP0ETqWxQHD/8HYFLudtswNZ7JhVJeJCIVChIBag/iND7i10JeHZHJVU24X3ZaXyZL4n0YQNnYcI7DjxdhZ1RPVQ7r8n4k=
+	t=1736497376; cv=none; b=kZk8XDTCAED8YLJbMETZgjyeIJ0/19CNoL1rocuguDmhTe3aCKKpfM1bC7w9KegmbX8XAf43Pe+v7anZ2fHtgKRn6gfI/qtc/W+tK1g4l4ytWVt4DMQrqu02yUt0hPlah7vANDKyQCHreR0o9HdyxWoXtifeNdB5ud2E2Gb9ZnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736497372; c=relaxed/simple;
-	bh=eZ6qGRp8Sl50vHQ6fafEjmFm4UqS3/j9h1j1tUXJIt8=;
+	s=arc-20240116; t=1736497376; c=relaxed/simple;
+	bh=jAXyNdGpLusIMcN0H/AcL5jBYzQPf6ZZaDI5zT7gpcw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SPd23S2hOpGLd3QRat9O2TmaDEuYmDENEJnzvs/kyQ1Ujoww+sRLnQR8VY99BjRxWzEoO+RBzrx3CByWn3ARRcu8GHfNB4rrevDEA5R0nBG+HnB68GQRsKUFY+sJrK6OULZ8i0hcxAe1serOFfrhWHTGrw4vbv11PELmJsb2e+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=I94tHZX6; arc=none smtp.client-ip=115.124.30.97
+	 MIME-Version; b=OjpxpBN1NBLsVj3+gnwcZHLaKZCL1jbEC4qhu+wuB2wW8dzmWHOnveDPCH/jmMWYEt/N8tr8Bmu/4mm3AfroFEb8X4cpPS1mPIWFlsyXVCpqWzoPPIlVTlItHTM37lco04x/hQPSAtLs3fEbjg26LSuePUGZT2eIrn7lZfam3w0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=WnJ8kU0n; arc=none smtp.client-ip=115.124.30.97
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
 	t=1736497362; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=Y39bmo1kfIoLJrmzBnU9g6zt0b6qm/1GfUFR/ePXUA0=;
-	b=I94tHZX6XtjEbIaQ5WaxBIr1fVv085CUNxudavYGZG8Qux4bogMDaSVc46C33Wer234qlnWTgPIuLbmMkBj0HMxuQJ8cUWFGK1qGWHHdGSYRTNfEJ1Pzed0u78+oeE6BsUfi1iAA6oHMih4mT9gb2JQQAG5P6aporyMR0uDmJFc=
-Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WNKKAyX_1736497360 cluster:ay36)
+	bh=d9edESLYCYiUNjixE+f/sSXJEX3fsz5wEeQXrpg40es=;
+	b=WnJ8kU0nkl+1GpVKWIQgi7dJLa5mZ2O9+kovgv3RFDl9/saYwW1KSAhJp3xbIy1TRz6xtgMUfT4quoQZ++ezOfMd2FCpOj5vBlHou9r1IgB/ffvhDCoHRNwrnuwoUyvtSHL/oHzjcUcOCiF8tSUyjvMFwoeidotr+nMGIBOia0Y=
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WNKKAyo_1736497361 cluster:ay36)
           by smtp.aliyun-inc.com;
           Fri, 10 Jan 2025 16:22:41 +0800
 From: Shuai Xue <xueshuai@linux.alibaba.com>
@@ -46,9 +46,9 @@ To: fenghua.yu@intel.com,
 Cc: xueshuai@linux.alibaba.com,
 	dmaengine@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 4/5] dmaengine: idxd: fix memory leak in error handling path of idxd_alloc
-Date: Fri, 10 Jan 2025 16:22:36 +0800
-Message-ID: <20250110082237.21135-5-xueshuai@linux.alibaba.com>
+Subject: [PATCH v1 5/5] dmaengine: idxd: fix memory leak in error handling path of idxd_pci_probe
+Date: Fri, 10 Jan 2025 16:22:37 +0800
+Message-ID: <20250110082237.21135-6-xueshuai@linux.alibaba.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20250110082237.21135-1-xueshuai@linux.alibaba.com>
 References: <20250110082237.21135-1-xueshuai@linux.alibaba.com>
@@ -61,62 +61,42 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 Memory allocated for idxd is not freed if an error occurs during
-idxd_alloc(). To fix it, free the allocated memory in the reverse order
-of allocation before exiting the function in case of an error.
+idxd_pci_probe(). To fix it, free the allocated memory in the reverse
+order of allocation before exiting the function in case of an error.
 
 Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
 ---
- drivers/dma/idxd/init.c | 24 +++++++++++++++---------
- 1 file changed, 15 insertions(+), 9 deletions(-)
+ drivers/dma/idxd/init.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index 04a7d7706e53..f0e3244d630d 100644
+index f0e3244d630d..9b44f5d38d3a 100644
 --- a/drivers/dma/idxd/init.c
 +++ b/drivers/dma/idxd/init.c
-@@ -565,28 +565,34 @@ static struct idxd_device *idxd_alloc(struct pci_dev *pdev, struct idxd_driver_d
- 	idxd_dev_set_type(&idxd->idxd_dev, idxd->data->type);
- 	idxd->id = ida_alloc(&idxd_ida, GFP_KERNEL);
- 	if (idxd->id < 0)
--		return NULL;
-+		goto err_ida;
- 
- 	idxd->opcap_bmap = bitmap_zalloc_node(IDXD_MAX_OPCAP_BITS, GFP_KERNEL, dev_to_node(dev));
--	if (!idxd->opcap_bmap) {
--		ida_free(&idxd_ida, idxd->id);
--		return NULL;
--	}
-+	if (!idxd->opcap_bmap)
-+		goto err_opcap;
- 
- 	device_initialize(conf_dev);
- 	conf_dev->parent = dev;
- 	conf_dev->bus = &dsa_bus_type;
- 	conf_dev->type = idxd->data->dev_type;
- 	rc = dev_set_name(conf_dev, "%s%d", idxd->data->name_prefix, idxd->id);
--	if (rc < 0) {
--		put_device(conf_dev);
--		return NULL;
--	}
-+	if (rc < 0)
-+		goto err_name;
- 
- 	spin_lock_init(&idxd->dev_lock);
- 	spin_lock_init(&idxd->cmd_lock);
- 
- 	return idxd;
-+
-+err_name:
-+	put_device(conf_dev);
-+	bitmap_free(idxd->opcap_bmap);
-+err_opcap:
-+	ida_free(&idxd_ida, idxd->id);
-+err_ida:
-+	kfree(idxd);
-+
-+	return NULL;
+@@ -548,6 +548,14 @@ static void idxd_read_caps(struct idxd_device *idxd)
+ 		idxd->hw.iaa_cap.bits = ioread64(idxd->reg_base + IDXD_IAACAP_OFFSET);
  }
  
- static int idxd_enable_system_pasid(struct idxd_device *idxd)
++static void idxd_free(struct idxd_device *idxd)
++{
++	put_device(idxd_confdev(idxd));
++	bitmap_free(idxd->opcap_bmap);
++	ida_free(&idxd_ida, idxd->id);
++	kfree(idxd);
++}
++
+ static struct idxd_device *idxd_alloc(struct pci_dev *pdev, struct idxd_driver_data *data)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -820,7 +828,7 @@ static int idxd_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+  err:
+ 	pci_iounmap(pdev, idxd->reg_base);
+  err_iomap:
+-	put_device(idxd_confdev(idxd));
++	idxd_free(idxd);
+  err_idxd_alloc:
+ 	pci_disable_device(pdev);
+ 	return rc;
 -- 
 2.39.3
 

@@ -1,162 +1,184 @@
-Return-Path: <dmaengine+bounces-4101-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4102-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B011A08E04
-	for <lists+dmaengine@lfdr.de>; Fri, 10 Jan 2025 11:29:57 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E97AA08ED3
+	for <lists+dmaengine@lfdr.de>; Fri, 10 Jan 2025 12:08:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6D77A3A63E7
-	for <lists+dmaengine@lfdr.de>; Fri, 10 Jan 2025 10:29:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0E96D188C6D9
+	for <lists+dmaengine@lfdr.de>; Fri, 10 Jan 2025 11:08:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF4CB20B1F2;
-	Fri, 10 Jan 2025 10:29:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C07E6205AA8;
+	Fri, 10 Jan 2025 11:08:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="af8bFHwU"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ACjUZS+0"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB09F20ADFE
-	for <dmaengine@vger.kernel.org>; Fri, 10 Jan 2025 10:29:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE7FB1AA1F6;
+	Fri, 10 Jan 2025 11:08:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736504982; cv=none; b=KUmrUY2pYxIDx16gUievwm1Db0Q4oV/kcv3WBEKbYT7lnQ+qAlVsAitnj2lIk1ZDJqexk2yYI/GsmPwVzkhUx6Nn2CVp74y2l3/hi+/6F5E0zVWZHpTyiSpgGZaqFMLdD2CAE23EifadLRuEBPeXkaM8yq5oLAvy1Em+mTOwlE4=
+	t=1736507317; cv=none; b=Tbu6Pzb3/VmK0mQZQDLP1dpPUZx7wArKveG7ou8TYtUoTedY0gOq4hYqBjHboCkzipP3Mmus1aB5iL3bQQD9e/7VmnVQtRR7gLe/eOCDywV5QIAa1uB5zwyNDa+d5DZ9e2yOBDd3zQnYY171Av36jJ18ZU/QaK+sClDTxBXq17o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736504982; c=relaxed/simple;
-	bh=mT7hLXo0OAyRVomNCCOY75eOUAVIlmDmdMbe5y8doQE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jwnjtErrXK7AG1cAkBAi6OSL5ES1kg7rZ73ncSYIQPMR0ylAhlnfK9mmiDe62rJNkoKAvbjj04boqK5KVyWQ29r5yQf8/NPMZWul0qZGWXSYjBjB3lHd2J9AmCFA5x4vq6Dt6n/ptBNGfev1YOQ+sJcwLtrSApok+qOc78Vifi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=af8bFHwU; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso317140566b.1
-        for <dmaengine@vger.kernel.org>; Fri, 10 Jan 2025 02:29:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1736504979; x=1737109779; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DFXbwysOSLDtoIDrz04DXm6/Zw3SDx6zPfwlh2JFNx8=;
-        b=af8bFHwUXyGfmfD+Kho3wnX3TXq2rrs58CFph7XdDrjR+t+EELx0nljulcIm+oEZx5
-         3OJjv9xD2mLvJDk5Yk/tRLdUrfCQmJijQ7Azd7wfy4SXJP5ecAZR4G7xxRsmV5adfCHV
-         tKKugtx7Q//00d2ps7HSzl+2ncM70umvKFByCUEjQfAKGEFKw91O4W7IE+4gaEgIf/wz
-         WYWB/Syn93uUey4nSno/Y6ZVUhfj6ZwnQiVtLU3bwvCTLAm9CPDiXHDg5sNPcRdm2IO7
-         KbyZpu/oOxpK0IclTk6Hye39UMhEYOxtsc5SkhIvSKTm0wXY/kiuccblBB5RGkgxJgqF
-         C8XA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736504979; x=1737109779;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DFXbwysOSLDtoIDrz04DXm6/Zw3SDx6zPfwlh2JFNx8=;
-        b=b0VbGcG11fqUOtHbYbYBpv0q28jaBg1DnsTp7+wLWaMAS7auLPSEHVS6onzeAsoj6e
-         yH1KT5LKzjbtw1j6gYJHDUYQ4bpQVfzcX4Lzq3TPejvQpGWmmpxcgpv2ZnUc4ZjViMXv
-         Ut3KUXwhBVKdyuSb+UL2FICQux7Jp0y63XJMaBpy04IgJUPJ79AldjF0ySMMLj3ubHZu
-         apB/jceNp0jJNV+IhacdrQpBGSEb6Mvq7VJkUTZxp2ybButg3uWCGrb25T9Y9fKttcSU
-         ND0PH84ta15LdfzCS6IM9e1pSwxe09Di8G5fGRTLgLHJy1jEzYrl8igCM+Sdkav85nXK
-         aC9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWvCCGaZFOXupNgEfYmcRNkYZGg9EkdiBWVxG9GAct9JnIbV8vaAU5KaX2evupikuU/WSHP9aEfaxw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YziFPWKLVAorzRN9FlrwDBpWtgT8aWFmTuuOGp4X1Avboyrwnzq
-	FOkU8RlPKu9N8EN21GZ2vzrDjan29SbCpvEZZ2UN1l879VWNBTv7NsDcoHTQJ+w=
-X-Gm-Gg: ASbGncvNSd0DhwMijtpypT2BjlnJJAZeFWxIypUMaODQhafclarmBeyXhe7TSTExj1s
-	ASKAzywH7Ox/O2m9ujtdZC63ICNyBehD3h7kpdTNmit80olOQCFvQUHYibkzX7KEWqifp7W57wK
-	TvypC9+xP+i+AYdT38w5Vt9jfj1+p1/vTOMGpYnGzI17seirnyhNX87q6bOM+XLEOMKRLHn2I5y
-	Yn2KuD0e30E02xDCv8lEoO5YxKzsPY/7Wgowz4V8JbRIEr/R+bEt6/AWvZ1YRSeo1Db
-X-Google-Smtp-Source: AGHT+IFMqpCwcqX2sHs5/lhB+pWcvO3m7YKVkr7BbL4UklMWafwFeJcgHUkq0HgfG2Fc/USROn7i9g==
-X-Received: by 2002:a17:907:72cf:b0:aa6:a33c:70a7 with SMTP id a640c23a62f3a-ab2abc8ecb1mr84005266b.49.1736504979103;
-        Fri, 10 Jan 2025 02:29:39 -0800 (PST)
-Received: from linaro.org ([2a02:2454:ff21:ef30:d2b5:f46c:e0e4:a1af])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab2c96468afsm153806366b.170.2025.01.10.02.29.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2025 02:29:38 -0800 (PST)
-Date: Fri, 10 Jan 2025 11:29:33 +0100
-From: Stephan Gerhold <stephan.gerhold@linaro.org>
-To: Md Sadre Alam <quic_mdalam@quicinc.com>
-Cc: vkoul@kernel.org, robin.murphy@arm.com, u.kleine-koenig@baylibre.com,
-	martin.petersen@oracle.com, fenghua.yu@intel.com,
-	av2082000@gmail.com, linux-arm-msm@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-	quic_mmanikan@quicinc.com, quic_srichara@quicinc.com,
-	quic_varada@quicinc.com
-Subject: Re: [PATCH v4] dmaengine: qcom: bam_dma: Avoid writing unavailable
- register
-Message-ID: <Z4D2jQNNW94qGIlv@linaro.org>
-References: <20241220094203.3510335-1-quic_mdalam@quicinc.com>
+	s=arc-20240116; t=1736507317; c=relaxed/simple;
+	bh=hNKoypBhLRndMEGmScoAdpD+WezNA+2JSUxUIoLq1Dg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=qxfD4A2HTOo4VCcy2hyQE/SiPXjTJwg6ClBc5boMzVJAGcyS8KQ8e81azgEQ/TUZoK9Y5F2QsEAff6peZWgYAKRYGazSfqHNVgjSbrijf70V0Udt+hDVHCbIoSuUmJaTIS3ZxMcfmzcGT5bT7f2QOGZPK9AsWsrX7UPBHgiPnwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ACjUZS+0; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50A9EhVc011902;
+	Fri, 10 Jan 2025 11:08:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	+0yzZDdrYg3hbTSZpwZKd9ZttAgN3bR9WgKodODYYuQ=; b=ACjUZS+0J35eP7Sb
+	9XRd9iYoy506cNaLu/YbmpWMXB+hJupbnK3Q7I4TyH9hXBCcS4uIvtFpXzorxjNT
+	JqgrtjxMgICoCU9mU5VEVfMOVoA3jMPosTkuJ9xLgtlmpKR942nWfbagdpKUErJz
+	1m6LsL4iRXOpaX91pcRaDsqx7+pBVXAulxovQqUZj0nEI9J5omzNAkVaT5jptkcp
+	Gsq1P/LVHPsc1VBk/n8heqrkmCC+C1E3ZRxWVO4+yLUxlKOR/4iCnARu/GIzC1Nm
+	BE6CI+6/y5YhgdG4Xsj+coTFV4SfHi/J145ztK/KarceCf34U8+UVHKWUIdIWi6k
+	8AtavA==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4430rfga4w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 10 Jan 2025 11:08:26 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 50AB8P1f006111
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 10 Jan 2025 11:08:25 GMT
+Received: from [10.151.36.43] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 10 Jan
+ 2025 03:08:21 -0800
+Message-ID: <1a5fc7e9-39fe-e527-efc3-1ea990bbb53b@quicinc.com>
+Date: Fri, 10 Jan 2025 16:38:18 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241220094203.3510335-1-quic_mdalam@quicinc.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH] dmaengine: qcom: bam_dma: Fix BAM_RIVISON register
+ handling
+Content-Language: en-US
+To: Stephan Gerhold <stephan.gerhold@linaro.org>
+CC: <vkoul@kernel.org>, <ulf.hansson@linaro.org>, <robin.murphy@arm.com>,
+        <kees@kernel.org>, <u.kleine-koenig@baylibre.com>,
+        <linux-arm-msm@vger.kernel.org>, <av2082000@gmail.com>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <djakov@kernel.org>, <quic_varada@quicinc.com>,
+        <quic_srichara@quicinc.com>
+References: <20250110051409.4099727-1-quic_mdalam@quicinc.com>
+ <Z4DzHs0gtbTPxq2_@linaro.org>
+From: Md Sadre Alam <quic_mdalam@quicinc.com>
+In-Reply-To: <Z4DzHs0gtbTPxq2_@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: ca4nQHDF_vm8ZX5iX4IsmUwFk4OodrLX
+X-Proofpoint-GUID: ca4nQHDF_vm8ZX5iX4IsmUwFk4OodrLX
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ impostorscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
+ clxscore=1011 mlxscore=0 mlxlogscore=999 priorityscore=1501 phishscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2501100087
 
-On Fri, Dec 20, 2024 at 03:12:03PM +0530, Md Sadre Alam wrote:
-> Avoid writing unavailable register in BAM-Lite mode.
-> BAM_DESC_CNT_TRSHLD register is unavailable in BAM-Lite
-> mode. Its only available in BAM-NDP mode. So only write
-> this register for clients who is using BAM-NDP.
-> 
-> Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
 
-What are we actually fixing here? Which platform is affected? Is there a
-crash, reset, or incorrect behavior?
 
-We have had this code for years without reported issues, with both
-BAM-NDP and BAM-Lite instances. The register documentation on APQ8016E
-documents the BAM_DESC_CNT_TRSHLD register even for the BAM-Lite
-instance. There is a comment that it doesn't apply to BAM-Lite, but I
-would expect the written value just ends up being ignored in that case.
-
-Also, there is not just BAM-NDP and BAM-Lite, but also plain "BAM". What
-about that one? Should we write to BAM_DESC_CNT_TRSHLD?
-
-> ---
-> Change in [v4]
+On 1/10/2025 3:45 PM, Stephan Gerhold wrote:
+> On Fri, Jan 10, 2025 at 10:44:09AM +0530, Md Sadre Alam wrote:
+>> This patch fixes a bug introduced in the previous commit where the
+>> BAM_DESC_CNT_TRSHLD register was conditionally written based on BAM-NDP
+>> mode. Additionally, it addresses an issue where reading the BAM_REVISION
+>> register hangs if num-ees is not zero. A check has been added to prevent
+>> this.
+>>
+>> Cc: stable@vger.kernel.org
+>> Fixes: 57a7138d0627 ("dmaengine: qcom: bam_dma: Avoid writing unavailable register")
+>> Reported-by: Georgi Djakov <djakov@kernel.org>
+>> Link: https://lore.kernel.org/lkml/9ef3daa8-cdb1-49f2-8d19-a72d6210ff3a@kernel.org/
+>> Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
+>> ---
+>>   drivers/dma/qcom/bam_dma.c | 23 ++++++++++++++++-------
+>>   1 file changed, 16 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
+>> index c14557efd577..2b88b27f2f91 100644
+>> --- a/drivers/dma/qcom/bam_dma.c
+>> +++ b/drivers/dma/qcom/bam_dma.c
+>> @@ -445,11 +445,15 @@ static void bam_reset(struct bam_device *bdev)
+>>   	writel_relaxed(val, bam_addr(bdev, 0, BAM_CTRL));
+>>   
+>>   	/* set descriptor threshold, start with 4 bytes */
+>> -	if (in_range(bdev->bam_revision, BAM_NDP_REVISION_START,
+>> -		     BAM_NDP_REVISION_END))
+>> +	if (!bdev->num_ees && in_range(bdev->bam_revision, BAM_NDP_REVISION_START,
+>> +				       BAM_NDP_REVISION_END))
+>>   		writel_relaxed(DEFAULT_CNT_THRSHLD,
+>>   			       bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
+>>   
+>> +	if (bdev->num_ees && !bdev->bam_revision)
+>> +		writel_relaxed(DEFAULT_CNT_THRSHLD, bam_addr(bdev, 0,
+>> +							     BAM_DESC_CNT_TRSHLD));
+>> +
+>>   	/* Enable default set of h/w workarounds, ie all except BAM_FULL_PIPE */
+>>   	writel_relaxed(BAM_CNFG_BITS_DEFAULT, bam_addr(bdev, 0, BAM_CNFG_BITS));
+>>   
+>> @@ -1006,10 +1010,14 @@ static void bam_apply_new_config(struct bam_chan *bchan,
+>>   			maxburst = bchan->slave.src_maxburst;
+>>   		else
+>>   			maxburst = bchan->slave.dst_maxburst;
+>> -		if (in_range(bdev->bam_revision, BAM_NDP_REVISION_START,
+>> -			     BAM_NDP_REVISION_END))
+>> +		if (!bdev->num_ees && in_range(bdev->bam_revision, BAM_NDP_REVISION_START,
+>> +					       BAM_NDP_REVISION_END))
+>>   			writel_relaxed(maxburst,
+>>   				       bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
+>> +
+>> +		if (bdev->num_ees && !bdev->bam_revision)
+>> +			writel_relaxed(DEFAULT_CNT_THRSHLD, bam_addr(bdev, 0,
+>> +								     BAM_DESC_CNT_TRSHLD));
 > 
-> * Added in_range() macro
+> I guess you meant writel_relaxed(maxburst, ...) here?
 > 
-> Change in [v3]
+> This patch is quite confusing. We shouldn't duplicate the register
+> writes here just to have different handling for if (bdev->num_ees) and
+> if (!bdev->num_ees).
 > 
-> * Removed BAM_LITE macro
+> Also, num-ees is unrelated to the question if the BAM is BAM-NDP or
+> BAM-Lite. Typically we specify qcom,num-ees in the device tree for a BAM
+> if the BAM is either:
 > 
-> * Updated commit message
+>   - Controlled remotely (= powered on and initialized outside of Linux)
+>     This is the case for the SLIMbus BAM Georgi mentioned.
 > 
-> * Adjusted if condition check
+>   - Powered remotely (= powered on outside of Linux, but must be
+>     initialized inside Linux)
 > 
-> * Renamed BAM-NDP macro to BAM_NDP_REVISION_START and
->    BAM_NDP_REVISION_END
+> Reading BAM_REVISION in these cases will hang in bam_init(), because we
+> cannot guarantee the BAM is already powered on when the bam_dma driver
+> is being loaded in Linux. We need to delay reading the register until
+> the BAM is up.
 > 
-> Change in [v2]
-> 
-> * Replace 0xff with REVISION_MASK in the statement
->    bdev->bam_revision = val & REVISION_MASK
-> 
-> Change in [v1]
-> 
-> * Added initial patch
-> 
->  drivers/dma/qcom/bam_dma.c | 24 ++++++++++++++++--------
->  1 file changed, 16 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
-> index bbc3276992bb..c14557efd577 100644
-> --- a/drivers/dma/qcom/bam_dma.c
-> +++ b/drivers/dma/qcom/bam_dma.c
-> @@ -59,6 +59,9 @@ struct bam_desc_hw {
->  #define DESC_FLAG_NWD BIT(12)
->  #define DESC_FLAG_CMD BIT(11)
->  
-> +#define BAM_NDP_REVISION_START	0x20
-> +#define BAM_NDP_REVISION_END	0x27
-> +
-
-Are you sure this covers all SoCs we support upstream? If one of the
-older or newer supported SoCs uses a value outside of this range, it
-will now be missing the register write.
+> Given that these writes happen only for the !bdev->controlled_remotely
+> case, you could fix this more cleanly by reading the BAM revision inside
+> bam_reset().
+Thank you for review and suggestion. Will clean up in next revision.
 
 Thanks,
-Stephan
+Alam.
 

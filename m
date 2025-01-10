@@ -1,44 +1,44 @@
-Return-Path: <dmaengine+bounces-4096-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4098-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 11773A089E2
-	for <lists+dmaengine@lfdr.de>; Fri, 10 Jan 2025 09:23:35 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E3AA4A089E9
+	for <lists+dmaengine@lfdr.de>; Fri, 10 Jan 2025 09:23:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1ACF016534C
-	for <lists+dmaengine@lfdr.de>; Fri, 10 Jan 2025 08:23:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 137133A38F0
+	for <lists+dmaengine@lfdr.de>; Fri, 10 Jan 2025 08:23:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80320208978;
-	Fri, 10 Jan 2025 08:22:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5DD8209F38;
+	Fri, 10 Jan 2025 08:22:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="fYSP68zh"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="I94tHZX6"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2EF52080F4;
-	Fri, 10 Jan 2025 08:22:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C8AE208965;
+	Fri, 10 Jan 2025 08:22:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736497371; cv=none; b=J76u7weLe3WH/Cw+wXDDFOp3a9Fo7QsOluYR2MuA1rzLg+Z8FvUJrRZGAguWnxd2MyZRmrcDci2jXxoYb5s+/JLSBISciRT+Km7RbZNaim58353X2E2xbKOkT81SpOdABedJDgmJx/lvFY+8skAt8JyqWmRgLQ6BjcDUK/jrUwc=
+	t=1736497372; cv=none; b=n7g3C/0fchbOyAKN7bdsj6C+ZJnkgNMWVC0Jos6FXIpYHEgMtTnDAZsIlLvtxaBLqDazGZe80DSJ/bP0ETqWxQHD/8HYFLudtswNZ7JhVJeJCIVChIBag/iND7i10JeHZHJVU24X3ZaXyZL4n0YQNnYcI7DjxdhZ1RPVQ7r8n4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736497371; c=relaxed/simple;
-	bh=H4QyKG/CIPygzjcUse2kBVn446AYwzUzYW4wUkNpEbQ=;
+	s=arc-20240116; t=1736497372; c=relaxed/simple;
+	bh=eZ6qGRp8Sl50vHQ6fafEjmFm4UqS3/j9h1j1tUXJIt8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pcm5aotbW851mmRq9dW2NvAKp69q4v4IdqQX2v1seqdgi7soZhIx5SGXPU74/9QqrqyBAj+03hCik2988oJwHPWcy7A8cESamBSMsPFTl7SnlW7kdAsPYyFXZR4fC/aYK2SOTXGo4Y8jX4EwdTr8MJzy8G+svKDs9ij9zDS/PNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=fYSP68zh; arc=none smtp.client-ip=115.124.30.97
+	 MIME-Version; b=SPd23S2hOpGLd3QRat9O2TmaDEuYmDENEJnzvs/kyQ1Ujoww+sRLnQR8VY99BjRxWzEoO+RBzrx3CByWn3ARRcu8GHfNB4rrevDEA5R0nBG+HnB68GQRsKUFY+sJrK6OULZ8i0hcxAe1serOFfrhWHTGrw4vbv11PELmJsb2e+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=I94tHZX6; arc=none smtp.client-ip=115.124.30.97
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1736497361; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=gyz7gxL8sTioSa9ZkEFHWicCkHY5IqxE613ISdg8wqY=;
-	b=fYSP68zhiOIN+SSOf614CCesrLPjpqax15QMA2JxVtukWO9eULKKGqqt96Bh5G9SmheqhpmanJe7UTG1WozlkofNzK4VhoNfOu2fmWvHr4eC6q3c97eXE1SjBxMTbpYAsQ1BBv87zBdZuve6/emoetKsoGebHPWZdVz/rSnXLU8=
-Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WNKKAyC_1736497360 cluster:ay36)
+	t=1736497362; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=Y39bmo1kfIoLJrmzBnU9g6zt0b6qm/1GfUFR/ePXUA0=;
+	b=I94tHZX6XtjEbIaQ5WaxBIr1fVv085CUNxudavYGZG8Qux4bogMDaSVc46C33Wer234qlnWTgPIuLbmMkBj0HMxuQJ8cUWFGK1qGWHHdGSYRTNfEJ1Pzed0u78+oeE6BsUfi1iAA6oHMih4mT9gb2JQQAG5P6aporyMR0uDmJFc=
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WNKKAyX_1736497360 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Fri, 10 Jan 2025 16:22:40 +0800
+          Fri, 10 Jan 2025 16:22:41 +0800
 From: Shuai Xue <xueshuai@linux.alibaba.com>
 To: fenghua.yu@intel.com,
 	dave.jiang@intel.com,
@@ -46,9 +46,9 @@ To: fenghua.yu@intel.com,
 Cc: xueshuai@linux.alibaba.com,
 	dmaengine@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 3/5] dmaengine: idxd: fix memory leak in error handling path of idxd_setup_groups
-Date: Fri, 10 Jan 2025 16:22:35 +0800
-Message-ID: <20250110082237.21135-4-xueshuai@linux.alibaba.com>
+Subject: [PATCH v1 4/5] dmaengine: idxd: fix memory leak in error handling path of idxd_alloc
+Date: Fri, 10 Jan 2025 16:22:36 +0800
+Message-ID: <20250110082237.21135-5-xueshuai@linux.alibaba.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20250110082237.21135-1-xueshuai@linux.alibaba.com>
 References: <20250110082237.21135-1-xueshuai@linux.alibaba.com>
@@ -60,38 +60,63 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Memory allocated for groups is not freed if an error occurs during
-idxd_setup_groups(). To fix it, free the allocated memory in the reverse
-order of allocation before exiting the function in case of an error.
+Memory allocated for idxd is not freed if an error occurs during
+idxd_alloc(). To fix it, free the allocated memory in the reverse order
+of allocation before exiting the function in case of an error.
 
 Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
 ---
- drivers/dma/idxd/init.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/dma/idxd/init.c | 24 +++++++++++++++---------
+ 1 file changed, 15 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index 12df895dcbe9..04a7d7706e53 100644
+index 04a7d7706e53..f0e3244d630d 100644
 --- a/drivers/dma/idxd/init.c
 +++ b/drivers/dma/idxd/init.c
-@@ -326,6 +326,7 @@ static int idxd_setup_groups(struct idxd_device *idxd)
- 		rc = dev_set_name(conf_dev, "group%d.%d", idxd->id, group->id);
- 		if (rc < 0) {
- 			put_device(conf_dev);
-+			kfree(group);
- 			goto err;
- 		}
+@@ -565,28 +565,34 @@ static struct idxd_device *idxd_alloc(struct pci_dev *pdev, struct idxd_driver_d
+ 	idxd_dev_set_type(&idxd->idxd_dev, idxd->data->type);
+ 	idxd->id = ida_alloc(&idxd_ida, GFP_KERNEL);
+ 	if (idxd->id < 0)
+-		return NULL;
++		goto err_ida;
  
-@@ -350,7 +351,10 @@ static int idxd_setup_groups(struct idxd_device *idxd)
- 	while (--i >= 0) {
- 		group = idxd->groups[i];
- 		put_device(group_confdev(group));
-+		kfree(group);
- 	}
-+	kfree(idxd->groups);
+ 	idxd->opcap_bmap = bitmap_zalloc_node(IDXD_MAX_OPCAP_BITS, GFP_KERNEL, dev_to_node(dev));
+-	if (!idxd->opcap_bmap) {
+-		ida_free(&idxd_ida, idxd->id);
+-		return NULL;
+-	}
++	if (!idxd->opcap_bmap)
++		goto err_opcap;
+ 
+ 	device_initialize(conf_dev);
+ 	conf_dev->parent = dev;
+ 	conf_dev->bus = &dsa_bus_type;
+ 	conf_dev->type = idxd->data->dev_type;
+ 	rc = dev_set_name(conf_dev, "%s%d", idxd->data->name_prefix, idxd->id);
+-	if (rc < 0) {
+-		put_device(conf_dev);
+-		return NULL;
+-	}
++	if (rc < 0)
++		goto err_name;
+ 
+ 	spin_lock_init(&idxd->dev_lock);
+ 	spin_lock_init(&idxd->cmd_lock);
+ 
+ 	return idxd;
 +
- 	return rc;
++err_name:
++	put_device(conf_dev);
++	bitmap_free(idxd->opcap_bmap);
++err_opcap:
++	ida_free(&idxd_ida, idxd->id);
++err_ida:
++	kfree(idxd);
++
++	return NULL;
  }
  
+ static int idxd_enable_system_pasid(struct idxd_device *idxd)
 -- 
 2.39.3
 

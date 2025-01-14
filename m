@@ -1,172 +1,206 @@
-Return-Path: <dmaengine+bounces-4109-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4110-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6CCC6A1039A
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Jan 2025 11:07:07 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 88291A104B7
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Jan 2025 11:55:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9D38718892A4
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Jan 2025 10:07:10 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 161EF7A2E9A
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Jan 2025 10:55:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30CA41ADC94;
-	Tue, 14 Jan 2025 10:07:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49C1A229604;
+	Tue, 14 Jan 2025 10:55:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="FoDG2reu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KhqENi0M"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0932A1ADC67;
-	Tue, 14 Jan 2025 10:07:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE8022DC25
+	for <dmaengine@vger.kernel.org>; Tue, 14 Jan 2025 10:55:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736849223; cv=none; b=G4h8HAA7qcpplMprFENfCJej+tpxzdej54vo6exXJ/iiq+2hIz0MsmJ8ZPkgUP6QtUYfKWPm6DHddVwXFSXbXNdG7rdduPUwkiw67snHWXJpSaZu223Fj3S1dSkW4ndkKGK2NxSdFA5DUgSO+OkUIzBj/RA4kMMhEeDtN3IfNRM=
+	t=1736852146; cv=none; b=KMuGyEJXDCzYbM5ZBluL2sFx3Pb3qu99qWbz58H850PtA44u2QiFlH0Zl2ZvxcpjzBQbSkM/4cYIsTi643mwhp0KglMBqqQ1UvB9Hqmm+Upq9xh5boF62NnHxkSYLkWSMU+/iiG3JDEX2Mf7As7ZhtXpkE6ALKP7XCKgn5nLojs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736849223; c=relaxed/simple;
-	bh=rut9CQJbIW6Hwwu90fhj9D15AM2r6nbMCF2jMU0iPc4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hZ6z3/MfaMI10Troa4EgZj2XkxiqmT7aO4llzDAg6iN9360PHl2tvW1ihbmzNr88eac1nDoXPIpLhJ8NzS0bk5mcyZMDoTRokwaXx71qbzlNf5noIJtN5H+HEv227lZtdmcjxdm7Ld+KIHZ4IqY4ZxYenT0fDkIIrfGUGz2cHlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=FoDG2reu; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 7245CA0D4B;
-	Tue, 14 Jan 2025 11:06:59 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:message-id:mime-version:reply-to:subject:subject:to
-	:to; s=mail; bh=Pm8MfIVlLVLaY2lTA2YqyxTx8zEL0e2MzoQv3DGG800=; b=
-	FoDG2reu47xYbArOD2zGTMdYX8zVIpG+g4CIhqVxbEtMHsBFXYx9RcQfslUlKTk8
-	5rPyU71T+bnu26Hd+4HTr6qoQ6YpmZQC8lR9qV6JEBEUu8Q39Q2Zy/K9LupAmp+b
-	VBW8ik3ic5jinLhOIPoSR35bvq2zdaxvPP5njyJhaJPLPPmllipNA7umIQ91o3Tv
-	UnC3/SigYL3AzvcIP2G/Yvlm17sHYCbiq5iAFuWI/ytAkRY0dAsHYjqAptFt10dg
-	R9tGDlafO7PkwfFy3IxX0pX0Na2slC0DSgl0LE56u0A5GWP2sUp371rtw1c6yHuG
-	dVfh12iifmjeDEGZyT9Z/h6XKZj96Ga0JMZqOluYn1l44LHGYBX6Mh6KCQgwBluU
-	ds7O6l0oZFGsHS4EUypQX1wVJOuhqAZksOVcNcCOxg5OQmtzW/Eea0H6rIkKyNoz
-	0BkvTFo4nsZ9A+H6iWF80liWGrXbPsDxKamNFv0IGMuQXRAaCIsomSW3qo/2dZ+G
-	FcdBOzCUOw6q3eFutTeWRRgBrVzpcbyAmGM/9ZuKAPZL0GtQzDsx36TVg9Si7Y2u
-	sppxjaLDpokkaWnBPThBcYLUbUx+kwpcZmeioMUg/hfKU3oubwRP13p40edNJwoM
-	5vBd7Kcyy6NO/rJcghm7x2D99OKRpsmnShq6XIQC1RM=
-From: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
-To: <dmaengine@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-sunxi@lists.linux.dev>, <linux-kernel@vger.kernel.org>
-CC: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>, "Chen-Yu
- Tsai" <wens@kernel.org>, Vinod Koul <vkoul@kernel.org>, Chen-Yu Tsai
-	<wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland
-	<samuel@sholland.org>
-Subject: [PATCH v2] dma-engine: sun4i: Use devm functions in probe()
-Date: Tue, 14 Jan 2025 11:05:05 +0100
-Message-ID: <20250114100505.799288-2-csokas.bence@prolan.hu>
-X-Mailer: git-send-email 2.48.0
+	s=arc-20240116; t=1736852146; c=relaxed/simple;
+	bh=PhAfGfQbBpz/wfvfFqXb65XCKmqiTpALKSOTqIQlbX4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HcZW7NIBbFBeTiJnLn+X+D+RlyN4fKlyLUdTFDb7b6+Ir1gLMAAfXa3kPMJ3Nja8yB/D3lJk1SnX+wMHtCK/2Rd6RlBFNl25lueOggK0sxL1tTldYuMNUVB4vN8h0R1qheufocLOsfM/o5/HfastF0CRQR2ne1rRM1Xmh39Us9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KhqENi0M; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-aa6647a7556so94758366b.2
+        for <dmaengine@vger.kernel.org>; Tue, 14 Jan 2025 02:55:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1736852143; x=1737456943; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=w20vK13nhMzbjHJZSCggje7+hpPlrM9z3S//rlxScS4=;
+        b=KhqENi0M07jzlxaKX6hYH8f+CvIz/qdzJuZ1eCuhPtDvARlkH1TRZRqbVoXjAb8BDR
+         o5/1nSE48wYpAYum4pWBcVakXPFd889kv258HcaUFBev7S2VHnV1lVRMbI3hHXW8dTiw
+         NmlqeJXor0J8Y4nHr9nAeWpps5M5xNbjbl3uAU9RznfwbXP3QtRZMvVflGLU/3Jeg1KB
+         Ou07OvB2bG28Gdz3XsJ3o6lrcE86eaCZoaxVl+jenA+cVLYaWL5gyd+nP2+bCs+4qFXR
+         MacmuqZM1SU6YysfjmcDitOcJqC9/TOW3KgfZjdo9qgPBCJSvBLc+uHn0rrmlRc/2LkF
+         xObQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736852143; x=1737456943;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=w20vK13nhMzbjHJZSCggje7+hpPlrM9z3S//rlxScS4=;
+        b=OICi00YPbGc5eKPL5IUDqc9Wg9R5gvfuZ9PCVG1pfzMMm4sDFcfvQVjb6Zl7uhSsRn
+         T2OJRtN8AeWEe7thxLqTrgEgB5A8VvUsWDWEJekFIxE+F1J3SQ/NWHvySAIuK5zeazD5
+         c5j+DhW0Z4ehSF7Q2BrQs+/bDBmTs0F7bInmqbRmWrWHcd37yiK6eij8NA29KqiknRiG
+         2JGk/Hdoa1ZivxX2jahc07c2VOVqZnvgsOWkeYjQD+m81s43/g9l0nlegiJfsk42x+Z3
+         0GmN2ctvWL4PmE4hnvWr4AQXdVJGhm+l+WwsXB02o4dcwHYON8+HDOJsiI5vdFPcS/7q
+         aFPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUlGHOvIcvmGEZrIwGdE6KlfeWVtmULLsYTtma0X7cJU9nEk6kbVuVmS3b60lu4AnjWgxDIaMKZdqM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyyjnouaVNpt4pEn1Rza3OQ/A4GyG8t9aKNDlaI3vV7Wfxza8lv
+	kYG33OpIq0hioWbtDJqfdHEh8byzmtwsD/qLvnpFQM+G1VAATwHvzd5K64H8DeQ=
+X-Gm-Gg: ASbGncsj78UfEoXKSx7jEmUC2gHJA8VlXEssYPemVsV1sxyzauf2X4bauML2G2jV6Fm
+	4duqPv/jyo5TYmWvuPJiV4cw+Mtzz+Wf2/lIb0pfyjnNWZQQzNqxqm7FZyw22n2LIV645d3ebTd
+	HcF0ZqCUZCmNUx8gxsYusLBUEbI91h2xl0VRQIcTw0kjlzb9HWcHnWfZgf2/IdVjqYAeaReSK8m
+	BHejfaCzIJ7evydzY3yuvumxpOqsvH2XlgiJQ55sDSFmrcUgkYArU/3HPlHivRC5IfW6Z0=
+X-Google-Smtp-Source: AGHT+IG+VYqAZEZjAkkDupQTvwlvu2SSq7a2Lp6yZVkX5waA19et6Qvi69lKI25WLQ+J8Hn9t77VNw==
+X-Received: by 2002:a17:906:c14b:b0:aac:619:6411 with SMTP id a640c23a62f3a-ab2abc6fd33mr825598566b.11.1736852142566;
+        Tue, 14 Jan 2025 02:55:42 -0800 (PST)
+Received: from krzk-bin.. ([178.197.223.165])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab2c95624e8sm611169266b.127.2025.01.14.02.55.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jan 2025 02:55:42 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Vinod Koul <vkoul@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Daniel Mack <daniel@zonque.org>,
+	Haojian Zhuang <haojian.zhuang@gmail.com>,
+	Robert Jarzmik <robert.jarzmik@free.fr>,
+	Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+	Michal Simek <michal.simek@amd.com>,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 1/2] dmaengine: Use str_enable_disable-like helpers
+Date: Tue, 14 Jan 2025 11:55:37 +0100
+Message-ID: <20250114105538.272963-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1736849218;VERSION=7983;MC=3794862646;ID=287078;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
-X-ESET-Antispam: OK
-X-EsetResult: clean, is OK
-X-EsetId: 37303A2980D9485264766B
 
-Clean up error handling by using devm functions
-and dev_err_probe(). This should make it easier
-to add new code, as we can eliminate the "goto
-ladder" in probe().
+Replace ternary (condition ? "enable" : "disable") syntax with helpers
+from string_choices.h because:
+1. Simple function call with one argument is easier to read.  Ternary
+   operator has three arguments and with wrapping might lead to quite
+   long code.
+2. Is slightly shorter thus also easier to read.
+3. It brings uniformity in the text - same string.
+4. Allows deduping by the linker, which results in a smaller binary
+   file.
 
-Suggested-by: Chen-Yu Tsai <wens@kernel.org>
-Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
+ drivers/dma/imx-dma.c           | 3 ++-
+ drivers/dma/pxa_dma.c           | 4 ++--
+ drivers/dma/ti/edma.c           | 3 ++-
+ drivers/dma/xilinx/xilinx_dma.c | 3 ++-
+ 4 files changed, 8 insertions(+), 5 deletions(-)
 
-Notes:
-    Changes in v2:
-    * rebase on current next
-
- drivers/dma/sun4i-dma.c | 31 ++++++-------------------------
- 1 file changed, 6 insertions(+), 25 deletions(-)
-
-diff --git a/drivers/dma/sun4i-dma.c b/drivers/dma/sun4i-dma.c
-index 24796aaaddfa..b10639720efd 100644
---- a/drivers/dma/sun4i-dma.c
-+++ b/drivers/dma/sun4i-dma.c
-@@ -1249,10 +1249,9 @@ static int sun4i_dma_probe(struct platform_device *pdev)
- 	if (priv->irq < 0)
- 		return priv->irq;
+diff --git a/drivers/dma/imx-dma.c b/drivers/dma/imx-dma.c
+index a651e0995ce8..de8d7070904e 100644
+--- a/drivers/dma/imx-dma.c
++++ b/drivers/dma/imx-dma.c
+@@ -17,6 +17,7 @@
+ #include <linux/device.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/slab.h>
++#include <linux/string_choices.h>
+ #include <linux/platform_device.h>
+ #include <linux/clk.h>
+ #include <linux/dmaengine.h>
+@@ -942,7 +943,7 @@ static struct dma_async_tx_descriptor *imxdma_prep_dma_interleaved(
+ 		"   src_sgl=%s dst_sgl=%s numf=%zu frame_size=%zu\n", __func__,
+ 		imxdmac->channel, (unsigned long long)xt->src_start,
+ 		(unsigned long long) xt->dst_start,
+-		xt->src_sgl ? "true" : "false", xt->dst_sgl ? "true" : "false",
++		str_true_false(xt->src_sgl), str_true_false(xt->dst_sgl),
+ 		xt->numf, xt->frame_size);
  
--	priv->clk = devm_clk_get(&pdev->dev, NULL);
-+	priv->clk = devm_clk_get_enabled(&pdev->dev, NULL);
- 	if (IS_ERR(priv->clk)) {
--		dev_err(&pdev->dev, "No clock specified\n");
--		return PTR_ERR(priv->clk);
-+		return dev_err_probe(&pdev->dev, PTR_ERR(priv->clk), "Couldn't start the clock");
+ 	if (list_empty(&imxdmac->ld_free) ||
+diff --git a/drivers/dma/pxa_dma.c b/drivers/dma/pxa_dma.c
+index e50cf3357e5e..249296389771 100644
+--- a/drivers/dma/pxa_dma.c
++++ b/drivers/dma/pxa_dma.c
+@@ -10,6 +10,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/slab.h>
++#include <linux/string_choices.h>
+ #include <linux/dmaengine.h>
+ #include <linux/platform_device.h>
+ #include <linux/device.h>
+@@ -277,8 +278,7 @@ static int chan_state_show(struct seq_file *s, void *p)
+ 	seq_printf(s, "\tPriority : %s\n",
+ 			  str_prio[(phy->idx & 0xf) / 4]);
+ 	seq_printf(s, "\tUnaligned transfer bit: %s\n",
+-			  _phy_readl_relaxed(phy, DALGN) & BIT(phy->idx) ?
+-			  "yes" : "no");
++			  str_yes_no(_phy_readl_relaxed(phy, DALGN) & BIT(phy->idx)));
+ 	seq_printf(s, "\tDCSR  = %08x (%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s)\n",
+ 		   dcsr, PXA_DCSR_STR(RUN), PXA_DCSR_STR(NODESC),
+ 		   PXA_DCSR_STR(STOPIRQEN), PXA_DCSR_STR(EORIRQEN),
+diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
+index 4ece125b2ae7..b1a54655e6ce 100644
+--- a/drivers/dma/ti/edma.c
++++ b/drivers/dma/ti/edma.c
+@@ -16,6 +16,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
++#include <linux/string_choices.h>
+ #include <linux/of.h>
+ #include <linux/of_dma.h>
+ #include <linux/of_irq.h>
+@@ -2047,7 +2048,7 @@ static int edma_setup_from_hw(struct device *dev, struct edma_soc_info *pdata,
+ 	dev_dbg(dev, "num_qchannels: %u\n", ecc->num_qchannels);
+ 	dev_dbg(dev, "num_slots: %u\n", ecc->num_slots);
+ 	dev_dbg(dev, "num_tc: %u\n", ecc->num_tc);
+-	dev_dbg(dev, "chmap_exist: %s\n", ecc->chmap_exist ? "yes" : "no");
++	dev_dbg(dev, "chmap_exist: %s\n", str_yes_no(ecc->chmap_exist));
+ 
+ 	/* Nothing need to be done if queue priority is provided */
+ 	if (pdata->queue_priority_mapping)
+diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
+index 108a7287f4cd..3ad44afd0e74 100644
+--- a/drivers/dma/xilinx/xilinx_dma.c
++++ b/drivers/dma/xilinx/xilinx_dma.c
+@@ -46,6 +46,7 @@
+ #include <linux/of_irq.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
++#include <linux/string_choices.h>
+ #include <linux/clk.h>
+ #include <linux/io-64-nonatomic-lo-hi.h>
+ 
+@@ -2940,7 +2941,7 @@ static int xilinx_dma_chan_probe(struct xilinx_dma_device *xdev,
+ 			    XILINX_DMA_DMASR_SG_MASK)
+ 			chan->has_sg = true;
+ 		dev_dbg(chan->dev, "ch %d: SG %s\n", chan->id,
+-			chan->has_sg ? "enabled" : "disabled");
++			str_enabled_disabled(chan->has_sg));
  	}
  
- 	if (priv->cfg->has_reset) {
-@@ -1328,12 +1327,6 @@ static int sun4i_dma_probe(struct platform_device *pdev)
- 		vchan_init(&vchan->vc, &priv->slave);
- 	}
- 
--	ret = clk_prepare_enable(priv->clk);
--	if (ret) {
--		dev_err(&pdev->dev, "Couldn't enable the clock\n");
--		return ret;
--	}
--
- 	/*
- 	 * Make sure the IRQs are all disabled and accounted for. The bootloader
- 	 * likes to leave these dirty
-@@ -1344,32 +1337,23 @@ static int sun4i_dma_probe(struct platform_device *pdev)
- 	ret = devm_request_irq(&pdev->dev, priv->irq, sun4i_dma_interrupt,
- 			       0, dev_name(&pdev->dev), priv);
- 	if (ret) {
--		dev_err(&pdev->dev, "Cannot request IRQ\n");
--		goto err_clk_disable;
-+		return dev_err_probe(&pdev->dev, ret, "Cannot request IRQ");
- 	}
- 
--	ret = dma_async_device_register(&priv->slave);
-+	ret = dmaenginem_async_device_register(&priv->slave);
- 	if (ret) {
--		dev_warn(&pdev->dev, "Failed to register DMA engine device\n");
--		goto err_clk_disable;
-+		return dev_err_probe(&pdev->dev, ret, "Failed to register DMA engine device");
- 	}
- 
- 	ret = of_dma_controller_register(pdev->dev.of_node, sun4i_dma_of_xlate,
- 					 priv);
- 	if (ret) {
--		dev_err(&pdev->dev, "of_dma_controller_register failed\n");
--		goto err_dma_unregister;
-+		return dev_err_probe(&pdev->dev, ret, "Failed to register translation function");
- 	}
- 
- 	dev_dbg(&pdev->dev, "Successfully probed SUN4I_DMA\n");
- 
- 	return 0;
--
--err_dma_unregister:
--	dma_async_device_unregister(&priv->slave);
--err_clk_disable:
--	clk_disable_unprepare(priv->clk);
--	return ret;
- }
- 
- static void sun4i_dma_remove(struct platform_device *pdev)
-@@ -1380,9 +1364,6 @@ static void sun4i_dma_remove(struct platform_device *pdev)
- 	disable_irq(priv->irq);
- 
- 	of_dma_controller_free(pdev->dev.of_node);
--	dma_async_device_unregister(&priv->slave);
--
--	clk_disable_unprepare(priv->clk);
- }
- 
- static struct sun4i_dma_config sun4i_a10_dma_cfg = {
+ 	/* Initialize the tasklet */
 -- 
-2.48.0
-
+2.43.0
 
 

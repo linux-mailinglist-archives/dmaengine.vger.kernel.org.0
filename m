@@ -1,211 +1,172 @@
-Return-Path: <dmaengine+bounces-4108-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4109-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51B83A102D9
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Jan 2025 10:18:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6CCC6A1039A
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Jan 2025 11:07:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5B8BA1887B60
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Jan 2025 09:18:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9D38718892A4
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Jan 2025 10:07:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C2591D555;
-	Tue, 14 Jan 2025 09:18:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30CA41ADC94;
+	Tue, 14 Jan 2025 10:07:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bgrxjFHy"
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="FoDG2reu"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D0D822DC49;
-	Tue, 14 Jan 2025 09:18:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0932A1ADC67;
+	Tue, 14 Jan 2025 10:07:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736846302; cv=none; b=bNcZS/cGkK3mrLpylERIgPLl/Fz9c9PytumGPry/5kRAGLBIqXnOaXiUr/iha7q+adpERMem7pHPXAqKveIe07j97+3pDs3wVhjY10NKer5QIQA80lQYfKSlSibGuWp+2E8AGfiZFVLg2r2QpKUR95zMB6qxDoPfZS1NZVN4eWA=
+	t=1736849223; cv=none; b=G4h8HAA7qcpplMprFENfCJej+tpxzdej54vo6exXJ/iiq+2hIz0MsmJ8ZPkgUP6QtUYfKWPm6DHddVwXFSXbXNdG7rdduPUwkiw67snHWXJpSaZu223Fj3S1dSkW4ndkKGK2NxSdFA5DUgSO+OkUIzBj/RA4kMMhEeDtN3IfNRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736846302; c=relaxed/simple;
-	bh=Yy0eIwnOSh6G3GWKBNkJQj10YUu8tYJe0B2qTW0mQEI=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=nTR4a+h+8gCJDFCDjAayyXRYBWD/kUKRMtfMlv3k1WRmeYiwnjvknG+Ep6PdqsBqKEIOjJiM0bWEmzHYDjmJqzqC4KJWhPNRF3T0R52EEInzRrvAl4ETXnSLhFTHCAb3mDJ3VDWW4iFJZqySFI+XzAPP7X3N9+HZ8khfK80MD3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bgrxjFHy; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50E7cZIt019694;
-	Tue, 14 Jan 2025 09:18:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Ez/MatY4ncetVheu42gjWT0fmCQoTLlhYeLYizkO/aU=; b=bgrxjFHyiiDvaC5n
-	DwQrTn/dW3/Lc2gYKjpKXVXEziH49nrEs32dBHtDkI+AdKH0HM+iOkijmy4xEBNG
-	6GOikmZeR8ARTl3nzCsE5fkvfTGtOif34XB2AWCnyRGhi3Cv23i7ftvdKAL3VR1x
-	Kn8b76Mm6X1DHxK89zIJYPgQX5Ruh9ckWY4ATMcUur1sjT9Lzf6t7VRlGKbVExXo
-	xUWf6euDFMyoejTXgcx2vep4QsdgMtcudSgWKFs8jJGQpII4phrhepwq4MZ1Nt0e
-	K4tRGGY1v0R55SG/uBuiz/DDpRJ2AMyYDxnRanSwbhbWTAuUuDPkj81cJWWn3+NE
-	Nv77bw==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 445kqc071r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 14 Jan 2025 09:18:12 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 50E9IC0X008885
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 14 Jan 2025 09:18:12 GMT
-Received: from [10.216.21.195] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 14 Jan
- 2025 01:18:04 -0800
-Message-ID: <1566eafb-7286-4f27-922d-0bbaaab8120b@quicinc.com>
-Date: Tue, 14 Jan 2025 14:48:01 +0530
+	s=arc-20240116; t=1736849223; c=relaxed/simple;
+	bh=rut9CQJbIW6Hwwu90fhj9D15AM2r6nbMCF2jMU0iPc4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hZ6z3/MfaMI10Troa4EgZj2XkxiqmT7aO4llzDAg6iN9360PHl2tvW1ihbmzNr88eac1nDoXPIpLhJ8NzS0bk5mcyZMDoTRokwaXx71qbzlNf5noIJtN5H+HEv227lZtdmcjxdm7Ld+KIHZ4IqY4ZxYenT0fDkIIrfGUGz2cHlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=FoDG2reu; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 7245CA0D4B;
+	Tue, 14 Jan 2025 11:06:59 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=mail; bh=Pm8MfIVlLVLaY2lTA2YqyxTx8zEL0e2MzoQv3DGG800=; b=
+	FoDG2reu47xYbArOD2zGTMdYX8zVIpG+g4CIhqVxbEtMHsBFXYx9RcQfslUlKTk8
+	5rPyU71T+bnu26Hd+4HTr6qoQ6YpmZQC8lR9qV6JEBEUu8Q39Q2Zy/K9LupAmp+b
+	VBW8ik3ic5jinLhOIPoSR35bvq2zdaxvPP5njyJhaJPLPPmllipNA7umIQ91o3Tv
+	UnC3/SigYL3AzvcIP2G/Yvlm17sHYCbiq5iAFuWI/ytAkRY0dAsHYjqAptFt10dg
+	R9tGDlafO7PkwfFy3IxX0pX0Na2slC0DSgl0LE56u0A5GWP2sUp371rtw1c6yHuG
+	dVfh12iifmjeDEGZyT9Z/h6XKZj96Ga0JMZqOluYn1l44LHGYBX6Mh6KCQgwBluU
+	ds7O6l0oZFGsHS4EUypQX1wVJOuhqAZksOVcNcCOxg5OQmtzW/Eea0H6rIkKyNoz
+	0BkvTFo4nsZ9A+H6iWF80liWGrXbPsDxKamNFv0IGMuQXRAaCIsomSW3qo/2dZ+G
+	FcdBOzCUOw6q3eFutTeWRRgBrVzpcbyAmGM/9ZuKAPZL0GtQzDsx36TVg9Si7Y2u
+	sppxjaLDpokkaWnBPThBcYLUbUx+kwpcZmeioMUg/hfKU3oubwRP13p40edNJwoM
+	5vBd7Kcyy6NO/rJcghm7x2D99OKRpsmnShq6XIQC1RM=
+From: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
+To: <dmaengine@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-sunxi@lists.linux.dev>, <linux-kernel@vger.kernel.org>
+CC: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>, "Chen-Yu
+ Tsai" <wens@kernel.org>, Vinod Koul <vkoul@kernel.org>, Chen-Yu Tsai
+	<wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland
+	<samuel@sholland.org>
+Subject: [PATCH v2] dma-engine: sun4i: Use devm functions in probe()
+Date: Tue, 14 Jan 2025 11:05:05 +0100
+Message-ID: <20250114100505.799288-2-csokas.bence@prolan.hu>
+X-Mailer: git-send-email 2.48.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/4] dmaengine: gpi: Add Lock and Unlock TRE support to
- access I2C exclusively
-From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-To: Vinod Koul <vkoul@kernel.org>, Md Sadre Alam <quic_mdalam@quicinc.com>
-CC: <konrad.dybcio@linaro.org>, <andersson@kernel.org>,
-        <andi.shyti@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-i2c@vger.kernel.org>, <conor+dt@kernel.org>,
-        <agross@kernel.org>, <devicetree@vger.kernel.org>, <linux@treblig.org>,
-        <dan.carpenter@linaro.org>, <Frank.Li@nxp.com>,
-        <konradybcio@kernel.org>, <bryan.odonoghue@linaro.org>,
-        <krzk+dt@kernel.org>, <robh@kernel.org>, <quic_vdadhani@quicinc.com>
-References: <20241129144357.2008465-1-quic_msavaliy@quicinc.com>
- <20241129144357.2008465-3-quic_msavaliy@quicinc.com> <Z01YBLcxDXI2UwXR@vaman>
- <d49b16b2-95e5-42b4-9bc1-40cb0bfa15b1@quicinc.com> <Z1BJSbf+1G8ojTib@vaman>
- <5ef44277-6739-4e1e-af62-0f40ae081ec1@quicinc.com> <Z2qFyQFFjiHy+FvY@vaman>
- <b34e3ac0-70b4-491c-a807-dc13fac41d06@quicinc.com>
-Content-Language: en-US
-In-Reply-To: <b34e3ac0-70b4-491c-a807-dc13fac41d06@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: H5KyG2jT57WlKMZNDFeUMgpS4lFEtgp0
-X-Proofpoint-ORIG-GUID: H5KyG2jT57WlKMZNDFeUMgpS4lFEtgp0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- suspectscore=0 lowpriorityscore=0 impostorscore=0 mlxscore=0
- priorityscore=1501 spamscore=0 clxscore=1015 bulkscore=0 adultscore=0
- phishscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2411120000 definitions=main-2501140075
+X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1736849218;VERSION=7983;MC=3794862646;ID=287078;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
+X-ESET-Antispam: OK
+X-EsetResult: clean, is OK
+X-EsetId: 37303A2980D9485264766B
 
-Hi Vinod,
+Clean up error handling by using devm functions
+and dev_err_probe(). This should make it easier
+to add new code, as we can eliminate the "goto
+ladder" in probe().
 
-On 12/26/2024 5:52 PM, Mukesh Kumar Savaliya wrote:
-> 
-> 
-> On 12/24/2024 3:28 PM, Vinod Koul wrote:
->> On 18-12-24, 18:04, Mukesh Kumar Savaliya wrote:
->>> Hi Vinod, Thanks !  I just saw your comments now as somehow it was 
->>> going in
->>> some other folder and didn't realize.
->>>
->>> On 12/4/2024 5:51 PM, Vinod Koul wrote:
->>>> On 02-12-24, 16:13, Mukesh Kumar Savaliya wrote:
->>>>> Thanks for the review comments Vinod !
->>>>>
->>>>> On 12/2/2024 12:17 PM, Vinod Koul wrote:
->>>>>> On 29-11-24, 20:13, Mukesh Kumar Savaliya wrote:
->>>>>>> GSI DMA provides specific TREs(Transfer ring element) namely Lock 
->>>>>>> and
->>>>>>> Unlock TRE. It provides mutually exclusive access to I2C 
->>>>>>> controller from
->>>>>>> any of the processor(Apps,ADSP). Lock prevents other subsystems from
->>>>>>> concurrently performing DMA transfers and avoids disturbance to 
->>>>>>> data path.
->>>>>>> Basically for shared I2C usecase, lock the SE(Serial Engine) for 
->>>>>>> one of
->>>>>>> the processor, complete the transfer, unlock the SE.
->>>>>>>
->>>>>>> Apply Lock TRE for the first transfer of shared SE and Apply Unlock
->>>>>>> TRE for the last transfer.
->>>>>>>
->>>>>>> Also change MAX_TRE macro to 5 from 3 because of the two 
->>>>>>> additional TREs.
->>>>>>>
->>>>>>
->>>>>> ...
->>>>>>
->>>>>>> @@ -65,6 +65,9 @@ enum i2c_op {
->>>>>>>      * @rx_len: receive length for buffer
->>>>>>>      * @op: i2c cmd
->>>>>>>      * @muli-msg: is part of multi i2c r-w msgs
->>>>>>> + * @shared_se: bus is shared between subsystems
->>>>>>> + * @bool first_msg: use it for tracking multimessage xfer
->>>>>>> + * @bool last_msg: use it for tracking multimessage xfer
->>>>>>>      */
->>>>>>>     struct gpi_i2c_config {
->>>>>>>         u8 set_config;
->>>>>>> @@ -78,6 +81,9 @@ struct gpi_i2c_config {
->>>>>>>         u32 rx_len;
->>>>>>>         enum i2c_op op;
->>>>>>>         bool multi_msg;
->>>>>>> +    bool shared_se;
->>>>>>
->>>>>> Looking at this why do you need this field? It can be internal to 
->>>>>> your
->>>>>> i2c driver... Why not just set an enum for lock and use the values as
->>>>>> lock/unlock/dont care and make the interface simpler. I see no 
->>>>>> reason to
->>>>>> use three variables to communicate the info which can be handled in
->>>>>> simpler way..?
->>>>>>
->>>>> Below was earlier reply to [PATCH V3, 2/4], please let me know if 
->>>>> you have
->>>>> any additional comment and need further clarifications.
->>>>
->>>> Looks like you misunderstood, the question is why do you need three
->>>> variables to convey this info..? Use a single variable please
->>> Yes, I think so. Please let me clarify.
->>> First variable is a feature flag and it's required to be explicitly
->>> mentioned by client (i2c/spi/etc) to GSI driver.
->>>
->>> Second and third, can be optimized to boolean so either first or last 
->>> can be
->>> passed.
->>>
->>> Please correct me or add simple change where you would like to make, 
->>> i can
->>> add that.
->>
->> I though we could do with a single and derive
->>
-> Sure, so as mentioned in the other crypto BAM patch probably dmaengine.h 
-> can hold flag and that can add support for lock/unlock similar to that 
-> patch.
-> I just realized it from your shared patch. let me work internally with 
-> Md sadre and review. Thanks for the comment.
->> Also, please see 20241212041639.4109039-3-quic_mdalam@quicinc.com, folks
->> from same company should talk together on same solutions, please
->> converge and come up with a single proposal which works for both drivers
->>
-I have discussed with Md Sadre and tried to understand and utilize the 
-enum of lock and unlock in my changes. Below is the summary.
+Suggested-by: Chen-Yu Tsai <wens@kernel.org>
+Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
+---
 
-I can't use those lock and unlock enums here because it's required for 
-first and last message respectively. intermediate transfers will not use 
-anything. So we need to define one more enum like dma_ctrl_none.
+Notes:
+    Changes in v2:
+    * rebase on current next
 
-if i create another internal parent structure having required 3 members, 
-then also it will need 3 child members. So i think current one looks 
-good to me.
+ drivers/dma/sun4i-dma.c | 31 ++++++-------------------------
+ 1 file changed, 6 insertions(+), 25 deletions(-)
 
-Please help review and suggest if anything can be better here.
+diff --git a/drivers/dma/sun4i-dma.c b/drivers/dma/sun4i-dma.c
+index 24796aaaddfa..b10639720efd 100644
+--- a/drivers/dma/sun4i-dma.c
++++ b/drivers/dma/sun4i-dma.c
+@@ -1249,10 +1249,9 @@ static int sun4i_dma_probe(struct platform_device *pdev)
+ 	if (priv->irq < 0)
+ 		return priv->irq;
+ 
+-	priv->clk = devm_clk_get(&pdev->dev, NULL);
++	priv->clk = devm_clk_get_enabled(&pdev->dev, NULL);
+ 	if (IS_ERR(priv->clk)) {
+-		dev_err(&pdev->dev, "No clock specified\n");
+-		return PTR_ERR(priv->clk);
++		return dev_err_probe(&pdev->dev, PTR_ERR(priv->clk), "Couldn't start the clock");
+ 	}
+ 
+ 	if (priv->cfg->has_reset) {
+@@ -1328,12 +1327,6 @@ static int sun4i_dma_probe(struct platform_device *pdev)
+ 		vchan_init(&vchan->vc, &priv->slave);
+ 	}
+ 
+-	ret = clk_prepare_enable(priv->clk);
+-	if (ret) {
+-		dev_err(&pdev->dev, "Couldn't enable the clock\n");
+-		return ret;
+-	}
+-
+ 	/*
+ 	 * Make sure the IRQs are all disabled and accounted for. The bootloader
+ 	 * likes to leave these dirty
+@@ -1344,32 +1337,23 @@ static int sun4i_dma_probe(struct platform_device *pdev)
+ 	ret = devm_request_irq(&pdev->dev, priv->irq, sun4i_dma_interrupt,
+ 			       0, dev_name(&pdev->dev), priv);
+ 	if (ret) {
+-		dev_err(&pdev->dev, "Cannot request IRQ\n");
+-		goto err_clk_disable;
++		return dev_err_probe(&pdev->dev, ret, "Cannot request IRQ");
+ 	}
+ 
+-	ret = dma_async_device_register(&priv->slave);
++	ret = dmaenginem_async_device_register(&priv->slave);
+ 	if (ret) {
+-		dev_warn(&pdev->dev, "Failed to register DMA engine device\n");
+-		goto err_clk_disable;
++		return dev_err_probe(&pdev->dev, ret, "Failed to register DMA engine device");
+ 	}
+ 
+ 	ret = of_dma_controller_register(pdev->dev.of_node, sun4i_dma_of_xlate,
+ 					 priv);
+ 	if (ret) {
+-		dev_err(&pdev->dev, "of_dma_controller_register failed\n");
+-		goto err_dma_unregister;
++		return dev_err_probe(&pdev->dev, ret, "Failed to register translation function");
+ 	}
+ 
+ 	dev_dbg(&pdev->dev, "Successfully probed SUN4I_DMA\n");
+ 
+ 	return 0;
+-
+-err_dma_unregister:
+-	dma_async_device_unregister(&priv->slave);
+-err_clk_disable:
+-	clk_disable_unprepare(priv->clk);
+-	return ret;
+ }
+ 
+ static void sun4i_dma_remove(struct platform_device *pdev)
+@@ -1380,9 +1364,6 @@ static void sun4i_dma_remove(struct platform_device *pdev)
+ 	disable_irq(priv->irq);
+ 
+ 	of_dma_controller_free(pdev->dev.of_node);
+-	dma_async_device_unregister(&priv->slave);
+-
+-	clk_disable_unprepare(priv->clk);
+ }
+ 
+ static struct sun4i_dma_config sun4i_a10_dma_cfg = {
+-- 
+2.48.0
 
-> Sure
-> 
-> 
 
 

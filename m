@@ -1,120 +1,167 @@
-Return-Path: <dmaengine+bounces-4158-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4159-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id CB80DA166A0
-	for <lists+dmaengine@lfdr.de>; Mon, 20 Jan 2025 07:25:44 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C5DBA16A16
+	for <lists+dmaengine@lfdr.de>; Mon, 20 Jan 2025 10:58:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 739351884972
-	for <lists+dmaengine@lfdr.de>; Mon, 20 Jan 2025 06:25:48 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3F0767A1904
+	for <lists+dmaengine@lfdr.de>; Mon, 20 Jan 2025 09:58:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D912717E473;
-	Mon, 20 Jan 2025 06:25:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 765C81AD403;
+	Mon, 20 Jan 2025 09:58:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="A06Ewo+l"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LN2oev/L"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19F6D383;
-	Mon, 20 Jan 2025 06:25:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D38C818801A;
+	Mon, 20 Jan 2025 09:58:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737354339; cv=none; b=XedXzPT69abTHE6v8VQ5tr84NpYOs57R90qLQmoacoqznoMOBUmREu67T29Uu0Tm+/6FGUqld/djtUkQmct/uh4T8kvmIUqhDmlTd3szEzQYyCn59vO90AF/8cik4QgqC/G2KL1MYzhTlHNTBOgEN36m+ZEbRfoSoD0vgcAyg1w=
+	t=1737367100; cv=none; b=gtxX2GV4qjDXwdDe7BhdlA8fJh+q7ESknYvLTAds+sxvljq+KUW4neB0kpe6Ed1qukheifnIhbk2JOkxplwNYm5hUtKLkAB1wYaOaFzDvNdvYfYcmGYU1xM/6yofDC8X3FDQXpmt+6Ub4KexpE36dXl2yA48YlFGMQZrUzqiprU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737354339; c=relaxed/simple;
-	bh=rJFlrfwGbb/7vwCKeF4n66b/v2uZU1UzB+GL4xwBAS8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=FJ1E5Et9FEbjeD6G+yrmtspbm6pjC7kmQlNYhnHV6ZXxJxoyR/Gi84pRxGATlQ2Eyd41IAbFhwA76jOu8kKTcmqypZ5TpQRlcwFmTz4idsTOOiLAuld8VHcwZzA3fDmRRP0PsZ6wvN9CwTK7BYYDhdvXyPFHL+Xx+Fc8Z3QppSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=A06Ewo+l; arc=none smtp.client-ip=205.220.180.131
+	s=arc-20240116; t=1737367100; c=relaxed/simple;
+	bh=5GPpJhmUBIfhYoB8yxu0DhjKWbmPWT7lDCwNC2s9RGc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WmlQZCluDcNs8Y0tbpk3ad6x25hbAHnWv7uPfVAObQfA4Igw1vZxVDTcfS/IEPdn3w0FPU8p63MCqbH57JJP7wmccVb07A0A+DBAZGiBg/qMXj1fj2hLVs75zOad9PuaCfCy/fe6WK3Mk1BMjaOf4c64U57XLM+/WiAgZof+KKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=LN2oev/L; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50K14nr0032113;
-	Mon, 20 Jan 2025 06:25:32 GMT
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50K6gxaN007185;
+	Mon, 20 Jan 2025 09:58:12 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	FSyyUwTcGgOtCTfawzw+mMK3adGrxXO0pu6inyX0abM=; b=A06Ewo+lLUhADd90
-	fJMd3PY85KfX+nVkqQbADefhfHUSlVfKiqPNJrhuDS9CfVpGJEbb/wxE9c9g6xsj
-	a3pod78Y5wG8CFe4y3ohSArm4OdcRaMp9dz1fCRCdW2HkWHnpd/V1ibN0ZvLDB8m
-	t+TBOjXwlD6Z7OTz5kwk/IRlfOeQ41/V2GzWZjYi6IcWG7CpHjiYx/1u05s+h6LA
-	T1ULtEpjw62U3lsH4JC3o6H9dVg0piaAGfPsqY2dLOjaU0w1guoiwEahw9x6Unnm
-	krTtMGMV03DJMT/GviWkTtiybkuQdHQ3aPSHQxoR/1obaPGvIdszFFob6TgyuYJT
-	IFEbQg==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 449cgr0hkt-1
+	cc:content-type:date:from:message-id:mime-version:subject:to; s=
+	qcppdkim1; bh=nLz/GzCMRPuM71qBBVKXfuXubdgaybSk3JA4GxjpB9Q=; b=LN
+	2oev/L6MJjw27yOzNo7BboQWVFigL9IxLdTVVYeNZX0g1n10/7pneGcpCjmMyYwr
+	GamGa9Bbh3oTcU4yVkE7mxwD2j93RpMArxSvT3JL4BJX1SmiX4hABYgdfw1EUFaY
+	YUpT1oJXuWXWxae0xI45/WETCJEoRCISuNPd5ex7QzIQNvmiUaKTifEkUp1eZtS6
+	VwbHACIzljJ1ryFRKnWMjrBrRh4/940jU4crzLmS3TXf8xr+2/t0DMd49juxG8Rl
+	bzlXuJ383umMKN24RzRiAwWBGm9rHCkeCGbgY0+J6zEDYPNxOWDr6SGoV5jyopk5
+	dc/eIxEmq9AHCauO9Y5w==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 449hfb0fjr-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 20 Jan 2025 06:25:32 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 50K6PVrH026799
+	Mon, 20 Jan 2025 09:58:12 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 50K9wB0O015288
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 20 Jan 2025 06:25:31 GMT
-Received: from [10.151.36.43] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 19 Jan
- 2025 22:25:28 -0800
-Message-ID: <211df2ed-0e01-ccb5-ca3d-1d021361ea5e@quicinc.com>
-Date: Mon, 20 Jan 2025 11:55:25 +0530
+	Mon, 20 Jan 2025 09:58:11 GMT
+Received: from hu-jseerapu-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Mon, 20 Jan 2025 01:58:06 -0800
+From: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
+To: Vinod Koul <vkoul@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+        "Sumit
+ Semwal" <sumit.semwal@linaro.org>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?=
+	<christian.koenig@amd.com>
+CC: <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <linaro-mm-sig@lists.linaro.org>, <quic_msavaliy@quicinc.com>,
+        <quic_vtanuku@quicinc.com>
+Subject: [PATCH v5 0/2] Add Block event interrupt support for I2C protocol
+Date: Mon, 20 Jan 2025 15:27:51 +0530
+Message-ID: <20250120095753.25539-1-quic_jseerapu@quicinc.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v2] dmaengine: qcom: bam_dma: Fix BAM_RIVISON register
- handling
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-CC: <vkoul@kernel.org>, <robin.murphy@arm.com>,
-        <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <quic_varada@quicinc.com>,
-        <quic_srichara@quicinc.com>
-References: <20250117111302.2073993-1-quic_mdalam@quicinc.com>
- <20250119054105.rhsathhdqapirszh@thinkpad>
-Content-Language: en-US
-From: Md Sadre Alam <quic_mdalam@quicinc.com>
-In-Reply-To: <20250119054105.rhsathhdqapirszh@thinkpad>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: kx4rTRJd2_D6fLluSWwzFCzvl5voKQrH
-X-Proofpoint-GUID: kx4rTRJd2_D6fLluSWwzFCzvl5voKQrH
+X-Proofpoint-GUID: Br1-mwRJmev4zFMInKLy5UsacosqXNXA
+X-Proofpoint-ORIG-GUID: Br1-mwRJmev4zFMInKLy5UsacosqXNXA
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-20_01,2025-01-16_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
- impostorscore=0 phishscore=0 spamscore=0 suspectscore=0 lowpriorityscore=0
- mlxlogscore=912 adultscore=0 mlxscore=0 clxscore=1015 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
- definitions=main-2501200051
+ definitions=2025-01-20_02,2025-01-20_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
+ lowpriorityscore=0 mlxscore=0 suspectscore=0 priorityscore=1501
+ malwarescore=0 adultscore=0 mlxlogscore=999 bulkscore=0 spamscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2501200082
+
+The I2C driver gets an interrupt upon transfer completion.
+When handling multiple messages in a single transfer, this
+results in N interrupts for N messages, leading to significant
+software interrupt latency.
+
+To mitigate this latency, utilize Block Event Interrupt (BEI)
+mechanism. Enabling BEI instructs the hardware to prevent interrupt
+generation and BEI is disabled when an interrupt is necessary.
+
+Large I2C transfer can be divided into chunks of 8 messages internally.
+Interrupts are not expected for the first 7 message completions, only
+the last message triggers an interrupt, indicating the completion of
+8 messages. This BEI mechanism enhances overall transfer efficiency.
+
+This optimization reduces transfer time from 168 ms to 48 ms for a
+series of 200 I2C write messages in a single transfer, with a
+clock frequency support of 100 kHz.
+
+BEI optimizations are currently implemented for I2C write transfers only,
+as there is no use case for multiple I2C read messages in a single transfer
+at this time.
+
+v4 -> v5:
+   -  BEI flag naming changed from flags to bei_flag.  
+   -  QCOM_GPI_BLOCK_EVENT_IRQ macro is removed from qcom-gpi-dma.h
+      file, and Block event support is checked with bei_flag.
+   -  Documentation added for "struct geni_i2c_dev".
+
+v3 -> v4:
+  - API's added for Block event interrupt with multi descriptor support is
+    moved from qcom-gpi-dma.h file to I2C geni qcom driver file.
+  - gpi_multi_xfer_timeout_handler function is moved from GPI driver to
+    I2C driver.
+  - geni_i2c_gpi_multi_desc_xfer structure is added as a member of
+    struct geni_i2c_dev.
+  - Removed the changes of making I2C driver is dependent on GPI driver.
+
+v2 -> v3:
+  - Updated commit description
+  - In I2C GENI driver, for i2c_gpi_cb_result moved the logic of
+    "!is_tx_multi_xfer" to else part.
+  - MIN_NUM_OF_MSGS_MULTI_DESC changed from 4 to 2
+  - Changes of I2C GENI driver to depend on the GPI driver moved
+    to patch3.
+  - Renamed gpi_multi_desc_process to gpi_multi_xfer_timeout_handler
+  - Added description for newly added changes in "qcom-gpi-dma.h" file.
+
+v1 -> v2:
+  - DT changes are reverted for adding dma channel size as a new arg of
+    dma-cells property.
+  - DT binding change reveted for dma channel size as a new arg of
+    dma-cells property.
+  - In GPI driver, reverted the changes to parse the channel TRE size
+    from device tree.
+  - Made the changes in QCOM I2C geni driver to support the BEI
+    functionality with the existing TRE size of 64.
+  - Made changes in QCOM I2C geni driver as per the review comments.
+  - Fixed Kernel test robot reported compiltion issues.
 
 
+Jyothi Kumar Seerapu (2):
+  dmaengine: qcom: gpi: Add GPI Block event interrupt support
+  i2c: i2c-qcom-geni: Add Block event interrupt support
 
-On 1/19/2025 11:11 AM, Manivannan Sadhasivam wrote:
-> On Fri, Jan 17, 2025 at 04:43:02PM +0530, Md Sadre Alam wrote:
->> This patch resolves a bug from the previous commit where the
->> BAM_DESC_CNT_TRSHLD register was conditionally written based on BAM-NDP
->> mode. It also fixes an issue where reading the BAM_REVISION register
-> 
-> The 'also' sounds like the patch is fixing 2 issues, but it is just fixing one.
-Will update the commit message in next revision.
-> 
->> would hang if num-ees was not zero, which occurs when the SoCs power on
->> BAM remotely. The BAM_REVISION register read has been moved to inside if
->> condition.
->>
->> Cc: stable@vger.kernel.org
-> 
-> The offending commit is just in the -next branch. So CCing stable is pointless.
-Ok, will remove in next revision.
-> 
-> - Mani
-> 
+ drivers/dma/qcom/gpi.c             |   3 +
+ drivers/i2c/busses/i2c-qcom-geni.c | 304 ++++++++++++++++++++++++++---
+ include/linux/dma/qcom-gpi-dma.h   |   2 +
+ 3 files changed, 284 insertions(+), 25 deletions(-)
+
+-- 
+base-commit: 55bcd2e0d04c1171d382badef1def1fd04ef66c5
+2.17.1
+
 

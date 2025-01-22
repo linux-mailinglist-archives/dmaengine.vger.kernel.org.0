@@ -1,104 +1,125 @@
-Return-Path: <dmaengine+bounces-4171-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4172-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 11F7DA18C56
-	for <lists+dmaengine@lfdr.de>; Wed, 22 Jan 2025 07:52:00 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E164BA194B3
+	for <lists+dmaengine@lfdr.de>; Wed, 22 Jan 2025 16:08:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E0D84188AB0B
-	for <lists+dmaengine@lfdr.de>; Wed, 22 Jan 2025 06:52:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 78F3A3A3F71
+	for <lists+dmaengine@lfdr.de>; Wed, 22 Jan 2025 15:08:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43E42199384;
-	Wed, 22 Jan 2025 06:51:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A51F8213E86;
+	Wed, 22 Jan 2025 15:08:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VaeUxPM6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WUkKL1MR"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1596F1BD9C1;
-	Wed, 22 Jan 2025 06:51:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB26B2144C0;
+	Wed, 22 Jan 2025 15:08:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737528715; cv=none; b=cLYVtHbVzC7YS+OCeqeOrG+A3nxef4kBtIPbn2N1o7wtNS9KvMwNBbL7tgow+LALbqgzFEJ+/z5GALir8u3kfNZ70T3uzicZSkXzGOgmmVEQGuzbJRdWKpquAUaN7pOpKrW641IioP3KoJMd7dddieNKmFNKvB/czMg2QL0kxkQ=
+	t=1737558494; cv=none; b=rxyeVMUnVBJOHFJhk4YeQM3w4lapb0vdXR3cyRrRWZuAbfMWH5XUi3rbMMDKSq6kd4dOi76jFI0z1//RWJqeMp72qIpGUa7H73+FPnh/dWfyKFtz0KsxBABx7E71W4kt0/xcneR71APX8LxFo/Bwv0tTjTUCjtHCSrkG+KF6DTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737528715; c=relaxed/simple;
-	bh=M5TsB2kRkMdI/QhPZr3eIwgqd5/GvYJFuMgIQPgKk0U=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CTxlnpYtFEot7tVMLbiRkUNRus8X0w/FML8vATRQlKLJgCs1SOeNOvNYtUnpVSzZze0x3ti2hROt7WuV8XWjoPH0Q4+7Sr93P1RtRKOToYXUoTZi/v9gE9qUuvrkPW+ulGq3HtUc+o8ws62mEBdDzYFs8tkAbXG4zbn4ckVQsIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VaeUxPM6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA3E2C4CED6;
-	Wed, 22 Jan 2025 06:51:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737528714;
-	bh=M5TsB2kRkMdI/QhPZr3eIwgqd5/GvYJFuMgIQPgKk0U=;
-	h=From:To:Cc:Subject:Date:From;
-	b=VaeUxPM6Gp19fVKV3SOmotzWiid0l1RmpzqLI2xK10sZJmXPTR2RN1XXO2a+9qFDY
-	 Mwr6abp8OhSWJUhDI2R9f/SsL3U644lgKCm+QWSdmX/ZBVqNNcMd7pfAFu6e/ZYtSy
-	 uaLF/MnN77Fpzlla5iKVe4/zdq9UCvd7V71rXJNyebVIdAw0+EZE6vrKhmHumqkRCC
-	 Z13FygMf644uobBu+ISK4VtupmyO67M9TFJ+6vQyOYBXFYYiFccDjH4ZzTvfimjlq0
-	 LpwWW1Voy1ba7cGNCiBySOyu87T1ABE82Qqbe+7sUouo6WS9hl+DNYbu1icQ58cakC
-	 vBx1j3luu2oPA==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Laxman Dewangan <ldewangan@nvidia.com>,
-	Jon Hunter <jonathanh@nvidia.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Mohan Kumar D <mkumard@nvidia.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	dmaengine@vger.kernel.org,
-	linux-tegra@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] dmaengine: tegra210: avoid broken division
-Date: Wed, 22 Jan 2025 07:51:36 +0100
-Message-Id: <20250122065150.1352906-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1737558494; c=relaxed/simple;
+	bh=txrdZbOO3sExJA/wrhn5QYdR2BvOlBo1Fag04N6yJBs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lnXUXiiBT49gx2zx2qZjbL0Z5/1vZSc+cFCubWdUbpjtaYdvBcH1ycbIDycSTxpwSgSQni8ZMZx/wVf4ZAAbP0yOZ4ZTIBs+LWVT7+xduVCBHTTDIbhLNKoJpulx295Bz9HnFfWJV8n1PhpiiPXH8N4gmZnoXBqvjRwLKUtBI78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WUkKL1MR; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-54026562221so7052717e87.1;
+        Wed, 22 Jan 2025 07:08:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1737558491; x=1738163291; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=umz6FsDsVFwJuh2rg9jtJSv3h52jbplrjXp7FNQjbO4=;
+        b=WUkKL1MR28lTryVBaOD6+UFi6XG5pJehI0wM0cKlYu1C/kLu+sxC7T7WVjGBNjPduy
+         zSXVp8BVk4VuPMDpwSXv3FEmg3YwSgh70Hp4brqSBDj164S7lmRWGx6xHUQZOBVwZdD1
+         90X7HLOIT5Yrgr9/m+ODVESOV0WtPhcL9b2PRQsHLinDNZHbwmz2omvsLkrCOz+Njuuv
+         xpc6K8vrhZI2YaBhn+KB454a1+J5AbbOZp8tcgbbRaPSJiCrYKQmViCItfvmUl05onOx
+         q68GfKDmSzjaDHA8DgMJc74WQh7Zl+caSR9AQV1UhAGhlSHYki1mn/ECArayAb6TdfBY
+         6I+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737558491; x=1738163291;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=umz6FsDsVFwJuh2rg9jtJSv3h52jbplrjXp7FNQjbO4=;
+        b=OIQL8PGfNkJJmWy5vchm6HSjCX6pWXddjf1BEnEovdyzQNr63gFcp5mk7c+nvpcqmP
+         3ZPpWPo2tvrR5kC2c3RipWbN6JiKDL6Y0zdamY6pA3/nYlNQZroMe7gKwy4PKNjJoAw9
+         7alATRSNJv8G8DpBMb2TbQ5fc0dddJcuxX6gWTezsRfVb0w6CXsvzVcySzpkZJSf+LH6
+         72ojqOOCTY4hhco+6FL2eEroMf6H+R52IDCA24obMmEg3LvmJlhJLwoBeJ6szFdgEk31
+         677oOsq+QL49RQ86CGQlM13C+iKQxr4lEKcipaXFnIrlAdhCDRmWJXn11a+jEKHb3inA
+         KwcA==
+X-Forwarded-Encrypted: i=1; AJvYcCU79xsD7gwYGqoj2fLQTqNzjHnxJd2krwq+h9RPYPM6f6MzBW6iYXHgvPG5aZy2xRWgBrmvkW2X@vger.kernel.org, AJvYcCV0jrTdYGfSbS632FtjsydLKtmlmgv+LUz5tSoPlWqeLBNNNO864EuVWuOrCJUSXSZoLlSlty5ShyGVWyhB@vger.kernel.org, AJvYcCXF+2Yf/zoahYKv0iv9Fj92WAqy7rplOP7xheScW17dTztbDbneF0blj7VZbEpLmSmYJC9AOiaC+rI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXpC6VP+9vtxPBunMPEp+aD+k+l62eqzx4FUSHx3bFzeMG354d
+	evbpXio/L6JxiK+pKDIUFu/yjZ4VFp8COhN4W4lf7BZKRoyOmqIC
+X-Gm-Gg: ASbGncuS5TFYrL/Lj3L/YPYIXVMoJGfeEpVtDVQdwubFT4mtbngM4B+2gLOQwXfVb5T
+	yrplHLo9Ujv8SurCHSfQi4+F7xT0iUm2QvGzCvIFLQvO2n5xZh6fy+Klzjrepb9f0YoXYEwWUYe
+	xVzfNdaN696N8h1jJ/yNM5Y9syDOa95v1OGSu5rUCnA2pveHvmqh/NdyIziEdVqhLKmxyoD6upb
+	0TxVx/JMlLuUfavvtAdoTD+l39+WAcjLqecBrYo66P3yVtXuWbZIuYhUw0Vw/mZwJ034miiwVXJ
+	fzbxc75OGitn32BUC946dFPdr6nx1xT9i38f8fuKWMZIuJP9Pio6F+hLETIopse4rlGyzV1+dWg
+	GH0t1TLMR80TLE0g=
+X-Google-Smtp-Source: AGHT+IE2a0yAIO4BOuV/oNsZg2RXIMgYsnxf4ES5Xw9/S5/1JbkObgMJtKJi8R+5obE5eRRkCTd+ow==
+X-Received: by 2002:a05:6512:e83:b0:542:2a81:a759 with SMTP id 2adb3069b0e04-5439c21f23dmr6119766e87.2.1737558490533;
+        Wed, 22 Jan 2025 07:08:10 -0800 (PST)
+Received: from ?IPV6:2001:999:584:a1be:41d4:8b85:aace:5430? (n5ykva7sx9871hnihio-1.v6.elisa-mobile.fi. [2001:999:584:a1be:41d4:8b85:aace:5430])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5439af07b5esm2263566e87.45.2025.01.22.07.08.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jan 2025 07:08:09 -0800 (PST)
+Message-ID: <decd473c-289d-44be-b882-3f2bb15c0d57@gmail.com>
+Date: Wed, 22 Jan 2025 17:10:31 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dmaengine: ti: k3-udma-glue: Drop skip_fdq argument from
+ k3_udma_glue_reset_rx_chn
+To: Roger Quadros <rogerq@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ MD Danish Anwar <danishanwar@ti.com>,
+ Siddharth Vadapalli <s-vadapalli@ti.com>,
+ Vignesh Raghavendra <vigneshr@ti.com>
+Cc: srk@ti.com, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20250116-k3-udma-glue-single-fdq-v1-1-a0de73e36390@kernel.org>
+From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
+Content-Language: en-US
+In-Reply-To: <20250116-k3-udma-glue-single-fdq-v1-1-a0de73e36390@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Arnd Bergmann <arnd@arndb.de>
 
-When build testing on 32-bit targets with 64-bit resource_size_t,
-the new probe logic causes a link failure:
 
-arm-linux-gnueabi-ld: drivers/dma/tegra210-adma.o: in function `tegra_adma_probe':
-tegra210-adma.c:(.text+0x122c): undefined reference to `__aeabi_uldivmod'
+On 16/01/2025 17:00, Roger Quadros wrote:
+> The user of k3_udma_glue_reset_rx_chn() e.g. ti_am65_cpsw_nuss can
+> run on multiple platforms having different DMA architectures.
+> On some platforms there can be one FDQ for all flows in the RX channel
+> while for others there is a separate FDQ for each flow in the RX channel.
+> 
+> So far we have been relying on the skip_fdq argument of
+> k3_udma_glue_reset_rx_chn().
+> 
+> Instead of relying on the user to provide this information, infer it
+> based on DMA architecture during k3_udma_glue_request_rx_chn() and save it
+> in an internal flag 'single_fdq'. Use that flag at
+> k3_udma_glue_reset_rx_chn() to deicide if the FDQ needs
+> to be cleared for every flow or just for flow 0.
 
-In addition, it seems that the same division can trap when running
-on tegra210, which sets .ch_base_offset=0.
+This should have been the original approach, there are things that
+clients must not care.
 
-Avoid both using the div_u64() helper and an added zero-check.
-
-Fixes: 68811c928f88 ("dmaengine: tegra210-adma: Support channel page")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/dma/tegra210-adma.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-index d80a60de0160..fd339f10151c 100644
---- a/drivers/dma/tegra210-adma.c
-+++ b/drivers/dma/tegra210-adma.c
-@@ -913,8 +913,9 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 			return PTR_ERR(tdma->ch_base_addr);
- 
- 		res_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "global");
--		if (res_base) {
--			page_no = (res_page->start - res_base->start) / cdata->ch_base_offset;
-+		if (res_base && cdata->ch_base_offset) {
-+			page_no = div_u64(res_page->start - res_base->start,
-+					  cdata->ch_base_offset);
- 			if (page_no <= 0)
- 				return -EINVAL;
- 			tdma->ch_page_no = page_no - 1;
--- 
-2.39.5
+Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
 
 

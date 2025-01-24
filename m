@@ -1,64 +1,66 @@
-Return-Path: <dmaengine+bounces-4183-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4184-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3CCCA1B202
-	for <lists+dmaengine@lfdr.de>; Fri, 24 Jan 2025 09:56:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B9F00A1B205
+	for <lists+dmaengine@lfdr.de>; Fri, 24 Jan 2025 09:57:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4FE1E188F24C
-	for <lists+dmaengine@lfdr.de>; Fri, 24 Jan 2025 08:56:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BDE14188F091
+	for <lists+dmaengine@lfdr.de>; Fri, 24 Jan 2025 08:57:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20FD3218ADD;
-	Fri, 24 Jan 2025 08:56:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48B58219A73;
+	Fri, 24 Jan 2025 08:56:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="HRJ3XRli"
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="g7rLjC7w"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 206EE1DB134;
-	Fri, 24 Jan 2025 08:56:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5292A1F7907;
+	Fri, 24 Jan 2025 08:56:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737709004; cv=none; b=gtj2OOofPFG/yEoYUWvhpajUtpjXtrRn75TeMAPnRzHQWSDum5o3r8ohpJt2dSgPgY+snQ3d/8y+nUw4IimFk30iCQt04qRiM02yqP73a2s7D/iWaJz2yMwvioqdTvUiiNN/JVDenw9XBDqdkPeGjshK3p3aJb4ydHObrg5BGrs=
+	t=1737709019; cv=none; b=uw8tsZAHn25YOpZFGtmozVjxl/mCcPmWALdqCrUWFf4pZ3S+XOm8S991VzrN74XnGAahlqC9P35i+F0l+3BwlVMGoxIAdHEP3cDm08Pq9gIBU9C3fo+ZuKrIwEqck/+FQTkrQVqqsJTvbeoIxSegPgcNiFk5xq0Uzs7cwHJeLGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737709004; c=relaxed/simple;
-	bh=x39wM5IEXku0agPTtfPWYboyk7mBbtqeLmPY+Swh07A=;
+	s=arc-20240116; t=1737709019; c=relaxed/simple;
+	bh=hMjK0JKCLQkifVL6xcp5SP3Txd+JKmmgLvrhO1+qQ0Q=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=e7xiDU7m+v3iKHTsHgi8Fkrp9z9QfCLmtVBCi3Nh58vg6n3ZV+jK9jSfHXuVn2qG+g5GZ7Te78eRdAMLyVLVJ8+kqmWcCuaQnykeqlAmTYzzEH7Jn37zva6QG3KyhklDCbuOLShjiEvB4DYAcUBXrTbcNR1BVKuRam2VOWTuk7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=HRJ3XRli; arc=none smtp.client-ip=193.68.50.107
+	 MIME-Version:Content-Type; b=FlWTyAtS78lhIBhxnKL9LSPZq5I8xlT0HZoJOBiELbzvIioYH/IZXjNFJ9lHlRjnopd6JIvEwVw5xDTSh78MDeJufJtOecrK70j+OsvkSD2joIl36OqAWxooWnrnedxX+UnkGe+eXWRjU9rT13+qpHOSjkAfHvRGPrEhChWkoKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=g7rLjC7w; arc=none smtp.client-ip=193.68.50.107
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
 Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id DCBF1A09FF;
-	Fri, 24 Jan 2025 09:56:38 +0100 (CET)
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 836E3A09FF;
+	Fri, 24 Jan 2025 09:56:55 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
 	:cc:content-transfer-encoding:content-type:content-type:date
 	:from:from:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=mail; bh=/dPRX9W95wzwQTmmvdwr
-	EPqh/JERYDW6ukU8wyxlrOs=; b=HRJ3XRli0bJqmqEkA5XizKxZ08cudSvu96Iw
-	VumzdC99vsEJnvFL4SgTXbOd837Y795TwlVsW0Dk9j4J6GL1oxG9Eb+aPUHMo77L
-	jGtLasYkWxk6enfuuSjXEiRjLNQr+efAuhn6RVLpe76HEWGbgVDYFtAZGohE8pw/
-	vPdLzKhHsnpPXqEv5jU0MXPDdGL7/Uf1tgb92HDTAgLBfXhZsOm/ro605IOmy6is
-	Pu8e/3b1ITFXd7ORkYXaWRdDO5SEdxzfqDsTQ5D3K3yMbaIag9h0Ya50RfXFVWfe
-	Gj1DF7GRZ1QOgeLYkGZfpRQLe1IYxstFPYZzc60gW1jNwmpii57++Kq7Py2w/HNp
-	Ci8HVZr9mxIPCL3bW4Ml8wW7llqrsnriL4UutQpgmmq/kF8ctA5i5XWIfqDd9OnA
-	/fkhiYKYk5ry8T0OdRBWgWzXpGRAlv0CLdFBmQBsXxjzwZnpCzSeaMpEzrv/3AhJ
-	VAG3XQIeKQBmDYGKVUlOlumZOrw6gRFvCxArevfYiV2SbbKzIteCw+a+LY2+L6lv
-	P+2FLybnzYO/0SFJdw7HqRTyqktRu5i8LOaEG/5X0twYCOd3ZhGzIPNbN849NGn1
-	mCB6pgKe8RyVjBrQ8kTHXaOIvF8vAs9OYP5qWjZt5magzJ82FiwLRMYM5aEbBiq1
-	XboyO1Y=
+	:reply-to:subject:subject:to:to; s=mail; bh=ZlOzh0yVdNtO9Xo4eTT0
+	ptUq5hK7+DDJWK0WMdAATE0=; b=g7rLjC7w1RWLE5CXrEPJAknMGKmzbtUJde/P
+	EOew21O+3aI3OSgdhlz38WMoJdJNw6DfoiAPVpLFB9ZsULv8zLLwwh8gamVjrrqD
+	gXazlAdLmKevEOFooxcn86Pvwl6Zr7dgXBvdnnUDc8oNk6tGMeeczHTZZDuXwMCA
+	oXLLdORXZkS5o+atOk7SUL0q0rJieS8zbA6UFmHu9Ehj2wM8rEzPwF2oFFPIEWBI
+	tT8lakaDiPUMdSG4oNW6p0Sclmkv10z9EnqXDDhUQYWJahYT0J9kN7NkBmefAPr6
+	xC6fCtcpLEgYs9mOYlHKmSVQhzO5JNxm2KdnRocHYNJrhqHR+zmuJECHgizGw0Kb
+	ZezsjwDdP2tgs4XQgWnRnIGCKTF+WnWzi6byuUdQgvo3+V9R1YoG4zJ443bEfrTD
+	t7UyfrZ1stEVqhK+3IJ21+/omyu1k9buRONbsLvygY0bfza6Ypdk3AHFFP3D2hUJ
+	zfafYq+wSH5agjXRBCcPDBpOd+3Rkn9fa2RiSllG00LgBABCl6K3aSaca7Q4cxkF
+	0oYHWRctUCaAU174CKNd1DnvvEMblOEzN7MvV9uS19L7ws0T3g7eO9yCa1fMhMcj
+	LaIYEamaYI8ccVYa2svsDosOaa68e66fiN2MjZgjzFxGTVneb9oDQm65hFRAQRvN
+	ajDlf74=
 From: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
-To: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+To: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>, Mark Brown
 	<broonie@kernel.org>, Vinod Koul <vkoul@kernel.org>, "Rafael J . Wysocki"
 	<rafael@kernel.org>, <linux-spi@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>
-Subject: [PATCH v2 1/4] dma: Add devm_dma_request_chan()
-Date: Fri, 24 Jan 2025 09:52:20 +0100
-Message-ID: <20250124085221.766303-8-csokas.bence@prolan.hu>
+	<linux-arm-kernel@lists.infradead.org>, <dmaengine@vger.kernel.org>, "Pavel
+ Machek" <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>
+Subject: [PATCH v2 2/4] pm: runtime: Add new devm functions
+Date: Fri, 24 Jan 2025 09:52:22 +0100
+Message-ID: <20250124085221.766303-10-csokas.bence@prolan.hu>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250124085221.766303-4-csokas.bence@prolan.hu>
 References: <20250124085221.766303-4-csokas.bence@prolan.hu>
@@ -70,86 +72,99 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1737708998;VERSION=7984;MC=241928571;ID=70499;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
+X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1737709014;VERSION=7984;MC=2223755251;ID=70500;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
 X-ESET-Antispam: OK
 X-EsetResult: clean, is OK
 X-EsetId: 37303A29ACD94852677063
 
-Expand the arsenal of devm functions for DMA
-devices, this time for requesting channels.
+Add `devm_pm_runtime_set_active()` and
+`devm_pm_runtime_get_noresume()` for
+simplifying common use cases in drivers.
 
 Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
 ---
- drivers/dma/dmaengine.c   | 30 ++++++++++++++++++++++++++++++
- include/linux/dmaengine.h |  7 +++++++
- 2 files changed, 37 insertions(+)
+ drivers/base/power/runtime.c | 36 ++++++++++++++++++++++++++++++++++++
+ include/linux/pm_runtime.h   |  4 ++++
+ 2 files changed, 40 insertions(+)
 
-diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-index c1357d7f3dc6..02c29d26ac85 100644
---- a/drivers/dma/dmaengine.c
-+++ b/drivers/dma/dmaengine.c
-@@ -926,6 +926,36 @@ void dma_release_channel(struct dma_chan *chan)
+diff --git a/drivers/base/power/runtime.c b/drivers/base/power/runtime.c
+index 2ee45841486b..f0a6c64bec19 100644
+--- a/drivers/base/power/runtime.c
++++ b/drivers/base/power/runtime.c
+@@ -1545,6 +1545,24 @@ void pm_runtime_enable(struct device *dev)
  }
- EXPORT_SYMBOL_GPL(dma_release_channel);
+ EXPORT_SYMBOL_GPL(pm_runtime_enable);
  
-+static void dmaenginem_release_channel(void *chan)
++static void pm_runtime_set_suspended_action(void *data)
 +{
-+	dma_release_channel(chan);
++	pm_runtime_set_suspended(data);
 +}
 +
 +/**
-+ * devm_dma_request_chan - try to allocate an exclusive slave channel
-+ * @dev:	pointer to client device structure
-+ * @name:	slave channel name
++ * devm_pm_runtime_set_active - devres-enabled version of pm_runtime_set_active.
 + *
-+ * Returns pointer to appropriate DMA channel on success or an error pointer.
-+ *
-+ * The operation is managed and will be undone on driver detach.
++ * @dev: Device to handle.
 + */
-+
-+struct dma_chan *devm_dma_request_chan(struct device *dev, const char *name)
++int devm_pm_runtime_set_active(struct device *dev)
 +{
-+	struct dma_chan *chan = dma_request_chan(dev, name);
-+	int ret = 0;
++	pm_runtime_set_active(dev);
 +
-+	if (!IS_ERR(chan))
-+		ret = devm_add_action_or_reset(dev, dmaenginem_release_channel, chan);
-+
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	return chan;
++	return devm_add_action_or_reset(dev, pm_runtime_set_suspended_action, dev);
 +}
-+EXPORT_SYMBOL_GPL(devm_dma_request_chan);
++EXPORT_SYMBOL_GPL(devm_pm_runtime_set_active);
++
+ static void pm_runtime_disable_action(void *data)
+ {
+ 	pm_runtime_dont_use_autosuspend(data);
+@@ -1567,6 +1585,24 @@ int devm_pm_runtime_enable(struct device *dev)
+ }
+ EXPORT_SYMBOL_GPL(devm_pm_runtime_enable);
+ 
++static void pm_runtime_put_noidle_action(void *data)
++{
++	pm_runtime_put_noidle(data);
++}
++
++/**
++ * devm_pm_runtime_get_noresume - devres-enabled version of pm_runtime_get_noresume.
++ *
++ * @dev: Device to handle.
++ */
++int devm_pm_runtime_get_noresume(struct device *dev)
++{
++	pm_runtime_get_noresume(dev);
++
++	return devm_add_action_or_reset(dev, pm_runtime_put_noidle_action, dev);
++}
++EXPORT_SYMBOL_GPL(devm_pm_runtime_get_noresume);
 +
  /**
-  * dmaengine_get - register interest in dma_channels
-  */
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index 346251bf1026..ffb54b52ef0c 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -1528,6 +1528,7 @@ struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
+  * pm_runtime_forbid - Block runtime PM of a device.
+  * @dev: Device to handle.
+diff --git a/include/linux/pm_runtime.h b/include/linux/pm_runtime.h
+index d39dc863f612..d7eca86150b8 100644
+--- a/include/linux/pm_runtime.h
++++ b/include/linux/pm_runtime.h
+@@ -93,7 +93,9 @@ extern void pm_runtime_new_link(struct device *dev);
+ extern void pm_runtime_drop_link(struct device_link *link);
+ extern void pm_runtime_release_supplier(struct device_link *link);
  
- struct dma_chan *dma_request_chan(struct device *dev, const char *name);
- struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask);
-+struct dma_chan *devm_dma_request_chan(struct device *dev, const char *name);
++int devm_pm_runtime_set_active(struct device *dev);
+ extern int devm_pm_runtime_enable(struct device *dev);
++int devm_pm_runtime_get_noresume(struct device *dev);
  
- void dma_release_channel(struct dma_chan *chan);
- int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps);
-@@ -1564,6 +1565,12 @@ static inline struct dma_chan *dma_request_chan_by_mask(
- {
- 	return ERR_PTR(-ENODEV);
- }
-+
-+static inline struct dma_chan *devm_dma_request_chan(struct device *dev, const char *name)
-+{
-+	return ERR_PTR(-ENODEV);
-+}
-+
- static inline void dma_release_channel(struct dma_chan *chan)
- {
- }
+ /**
+  * pm_suspend_ignore_children - Set runtime PM behavior regarding children.
+@@ -276,7 +278,9 @@ static inline void __pm_runtime_disable(struct device *dev, bool c) {}
+ static inline void pm_runtime_allow(struct device *dev) {}
+ static inline void pm_runtime_forbid(struct device *dev) {}
+ 
++static inline int devm_pm_runtime_set_active(struct device *dev) { return 0; }
+ static inline int devm_pm_runtime_enable(struct device *dev) { return 0; }
++static inline int devm_pm_runtime_get_noresume(struct device *dev) { return 0; }
+ 
+ static inline void pm_suspend_ignore_children(struct device *dev, bool enable) {}
+ static inline void pm_runtime_get_noresume(struct device *dev) {}
 -- 
 2.48.1
 

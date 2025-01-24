@@ -1,108 +1,142 @@
-Return-Path: <dmaengine+bounces-4188-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4189-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 536CEA1B3EB
-	for <lists+dmaengine@lfdr.de>; Fri, 24 Jan 2025 11:50:51 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A63FA1B459
+	for <lists+dmaengine@lfdr.de>; Fri, 24 Jan 2025 12:02:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4B76018825F6
-	for <lists+dmaengine@lfdr.de>; Fri, 24 Jan 2025 10:50:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6F9C2188955F
+	for <lists+dmaengine@lfdr.de>; Fri, 24 Jan 2025 11:02:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 670C61D14E2;
-	Fri, 24 Jan 2025 10:50:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34CDA1CD1F6;
+	Fri, 24 Jan 2025 11:02:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="H/wj1Sz/"
+	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="eCx0mhch"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA33D1CEEAA;
-	Fri, 24 Jan 2025 10:50:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E871770815;
+	Fri, 24 Jan 2025 11:02:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737715847; cv=none; b=i1z2BhXHiwtIwlyuIz4oQOdN2WGZ815+B/w9RTR3CNpPCJz2jxsKXeith+3x3apGtDSewYVCKgUijxy6ePKbNRK0PKKqt4h8xQM7WUfBOAIw25OQyhTtBxA/UGru3Blj1tTGVwmkAipgfZOEJujbKMzl1VRYSvjoPmJNG9C0KO0=
+	t=1737716555; cv=none; b=bn3oVfskLLumkULMptyZSlsOH72NqdF922+P0AaTnFmgFKac49cZj7W3jV8h6x5+xM7wxsSEpJ2BQ2Hw6BueSWLs6VB9k8T3KbxKjg+/GsgzyneBM6eluncn+5xb9llQvSE62a/2CfXZNbiK8dKdKqtEK7fBvZQSiQ90HpnnN3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737715847; c=relaxed/simple;
-	bh=vQ3QgVy3CkIBUmALyEBtabIgy3BO2W/ckTSgo2keC6Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=d+jc9hpy2UWwu82yNVW7uOQ/zgzipB0rF1Usm6r+r/9JXYZjTCElz3A6wR0b/e6dZUWrsGWySUfaZxOjGngO+gqHbb1vkpYhlC3Am1ACzpk66Z0eVz6AUwMxVMDafs4V5SvVjnKdrgMI62hCpclcX4+ES2JLbMXFKprOCxmGAfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=H/wj1Sz/; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 8D9AEA0578;
-	Fri, 24 Jan 2025 11:50:40 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:content-transfer-encoding:content-type:content-type:date:from
-	:from:in-reply-to:message-id:mime-version:references:reply-to
-	:subject:subject:to:to; s=mail; bh=RqaazN5MwSV5jN25f6JI+L5jWF8z9
-	mV2n9cXiYMfDyg=; b=H/wj1Sz/BGB+zfpRkapo+9C2+kyX2krx7FMfXb6t9GeCE
-	3fDHRHuKpMAcmk5n8U0nXsZm7Xa1jIsyEGE9A4X1A8+tYPV1IIkeS3erAmC01oQc
-	po8Bc24hJqJ2qUixyL9P7ilY6H3jUbLmznvoACWspEnm7GgO4b0aNwBEB8+lJiHV
-	QjUfVkB6WUWm3752qf5dpHzfvBPUA6vlGaG5ZMzdZbWiQEigvlXXo17yEmKzE0Qo
-	3hSuLpgtEYcFpPBSW64xtDAKP1bNupCefVDvpiziUzFj5v2kVYeLFpD9CDpUj0p2
-	aIgQaWV64IPhvrqv19cMjTbFotCX8tWW9beHWOXEJzsW37db9OEb1urg0ddPN9JN
-	qZlL8zFdnzfNV2c/39BhUG+ozClPw5g36fN5DK0GJUfUUun/HNRjkzUyHZO0M1M7
-	+5b4O/r3VQmbOyETpG9S6lqCQIuprUmrWZvcgE7Du9iAHbT6SCd9ECCyQlA6l5Su
-	gY4rEY0b2mcWMONpqw9gXp6kLCJzDzuO7ym0qOpdzQpt/yPCV8EPN8ivmEmQr0cu
-	qBfSWl1+/lJpEGJTNvSXtXYYT+gHzBetpx8QIt8qtf9JtY3OUxdIBf/mP7SThdTt
-	rUmD4bUMzAIInJHoD/0Ig09IXhvltr1qaAEvkcTt6rZvMcx+HXiM5anHKuz6jM=
-Message-ID: <51d368a3-fcfd-4f0f-9475-877739f19fb2@prolan.hu>
-Date: Fri, 24 Jan 2025 11:50:37 +0100
+	s=arc-20240116; t=1737716555; c=relaxed/simple;
+	bh=FEE7451RcyEhJQ/0mTfNk00bCVbQpbyoiWHqx/Ns0cU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RRanA6QeYllCSYtMBCP27Md2nFi1CNBwpc3OplLbeZP/4/d7z6FAgwkylbijqy7hQ72tY00VCLqjkwvnJ4zZy/di7pk3bjbD4WhuuUi1YBUkYX4nZVP/B+Fl/JtJEyqqmfpoIjJXwOc8b6XyTgmQ5pX3KuDdV3AJPASG1vISE1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=eCx0mhch; arc=none smtp.client-ip=83.149.199.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
+Received: from ldvnode.intra.ispras.ru (unknown [10.10.2.153])
+	by mail.ispras.ru (Postfix) with ESMTPSA id 50C3F40755EB;
+	Fri, 24 Jan 2025 11:02:23 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 50C3F40755EB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
+	s=default; t=1737716543;
+	bh=bgxcuYDowjlsEYydE8TlEeb5J1SSF1ngDNpFyOAjl9s=;
+	h=From:To:Cc:Subject:Date:From;
+	b=eCx0mhch/orcrt7weuS0cgz9iHIwTd+wFjNvaR1IaFWds1WlockM+x01+zOrMBO9z
+	 ECaOfUnSQ+V842mOsd/rjfmAbNC3ltgAeobWzHOMNvBYki89rwSoR4rHLsFnOfIROT
+	 XbWJeFn2n/yMLTvx6URoRUmRT1PM3HDqCi7dwtF4=
+From: Vitalii Mordan <mordan@ispras.ru>
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Vitalii Mordan <mordan@ispras.ru>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Masahiro Yamada <yamada.masahiro@socionext.com>,
+	dmaengine@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org,
+	Fedor Pchelkin <pchelkin@ispras.ru>,
+	Alexey Khoroshilov <khoroshilov@ispras.ru>,
+	Vadim Mutilin <mutilin@ispras.ru>
+Subject: [PATCH] dma: uniphier-mdmac: fix call balance of mdev->clk handling routines
+Date: Fri, 24 Jan 2025 14:02:13 +0300
+Message-Id: <20250124110213.1285417-1-mordan@ispras.ru>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/4] Add more devm_ functions to simplify probe path in
- drivers/spi/atmel-quadspi.c
-To: Mark Brown <broonie@kernel.org>, Vinod Koul <vkoul@kernel.org>, "Rafael J
- . Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>, Pavel Machek
-	<pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Nicolas
- Ferre" <nicolas.ferre@microchip.com>, Alexandre Belloni
-	<alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>, Varshini Rajendran
-	<varshini.rajendran@microchip.com>, <linux-spi@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <dmaengine@vger.kernel.org>,
-	<linux-pm@vger.kernel.org>
-References: <20250124085221.766303-4-csokas.bence@prolan.hu>
- <20250124-stumble-unpeeled-165f2211dcfb@thorsis.com>
-Content-Language: en-US
-From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
-In-Reply-To: <20250124-stumble-unpeeled-165f2211dcfb@thorsis.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
- ATLAS.intranet.prolan.hu (10.254.0.229)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A2980D94852677063
+Content-Transfer-Encoding: 8bit
 
-Hi,
+If the clock mdev->clk was enabled in uniphier_mdmac_probe(), it should be
+disabled in any path. If dmaengine_terminate_sync() returns an error in
+uniphier_mdmac_remove(), the clock mdev->clk will not be disabled.
 
-On 2025. 01. 24. 10:08, Alexander Dahl wrote:
-> You can pass '--base master' or '--base=auto' to `git format-patch`
-> which adds a machine readable line to your patch or cover letter like
-> this:
-> 
-> base-commit: bc8198dc7ebc492ec3e9fa1617dcdfbe98e73b17
-> 
-> This way tools can find out which commit your series was based on.
-> See for reasoning:
-> 
-> https://people.kernel.org/monsieuricon/all-patches-must-include-base-commit-info
+Use the devm_clk_get_enabled() helper function to ensure proper call
+balance for mdev->clk.
 
-Thanks for the tip!
+Found by Linux Verification Center (linuxtesting.org) with Klever.
 
-> I'll look into your patch series in February, after my holidays.
+Fixes: 32e74aabebc8 ("dmaengine: uniphier-mdmac: add UniPhier MIO DMAC driver")
+Signed-off-by: Vitalii Mordan <mordan@ispras.ru>
+---
+ drivers/dma/uniphier-mdmac.c | 15 ++++-----------
+ 1 file changed, 4 insertions(+), 11 deletions(-)
 
-Hmm, if my calculations are correct, 6.14-rc1 comes out on 2nd Feb, so 
-does that mean that this series will be pushed to -rc2? Then -rc1 will 
-have the mismatched PM calls...
-
-Bence
+diff --git a/drivers/dma/uniphier-mdmac.c b/drivers/dma/uniphier-mdmac.c
+index 7a99f86ecb5a..471dc2ef4781 100644
+--- a/drivers/dma/uniphier-mdmac.c
++++ b/drivers/dma/uniphier-mdmac.c
+@@ -401,16 +401,12 @@ static int uniphier_mdmac_probe(struct platform_device *pdev)
+ 	if (IS_ERR(mdev->reg_base))
+ 		return PTR_ERR(mdev->reg_base);
+ 
+-	mdev->clk = devm_clk_get(dev, NULL);
++	mdev->clk = devm_clk_get_enabled(dev, NULL);
+ 	if (IS_ERR(mdev->clk)) {
+-		dev_err(dev, "failed to get clock\n");
++		dev_err(dev, "failed to get and enable clock\n");
+ 		return PTR_ERR(mdev->clk);
+ 	}
+ 
+-	ret = clk_prepare_enable(mdev->clk);
+-	if (ret)
+-		return ret;
+-
+ 	ddev = &mdev->ddev;
+ 	ddev->dev = dev;
+ 	dma_cap_set(DMA_PRIVATE, ddev->cap_mask);
+@@ -429,12 +425,12 @@ static int uniphier_mdmac_probe(struct platform_device *pdev)
+ 	for (i = 0; i < nr_chans; i++) {
+ 		ret = uniphier_mdmac_chan_init(pdev, mdev, i);
+ 		if (ret)
+-			goto disable_clk;
++			return ret;
+ 	}
+ 
+ 	ret = dma_async_device_register(ddev);
+ 	if (ret)
+-		goto disable_clk;
++		return ret;
+ 
+ 	ret = of_dma_controller_register(dev->of_node, of_dma_xlate_by_chan_id,
+ 					 ddev);
+@@ -447,8 +443,6 @@ static int uniphier_mdmac_probe(struct platform_device *pdev)
+ 
+ unregister_dmac:
+ 	dma_async_device_unregister(ddev);
+-disable_clk:
+-	clk_disable_unprepare(mdev->clk);
+ 
+ 	return ret;
+ }
+@@ -482,7 +476,6 @@ static void uniphier_mdmac_remove(struct platform_device *pdev)
+ 
+ 	of_dma_controller_free(pdev->dev.of_node);
+ 	dma_async_device_unregister(&mdev->ddev);
+-	clk_disable_unprepare(mdev->clk);
+ }
+ 
+ static const struct of_device_id uniphier_mdmac_match[] = {
+-- 
+2.25.1
 
 

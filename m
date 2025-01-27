@@ -1,294 +1,275 @@
-Return-Path: <dmaengine+bounces-4212-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4213-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5569DA1D26E
-	for <lists+dmaengine@lfdr.de>; Mon, 27 Jan 2025 09:37:42 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 311AFA1D44F
+	for <lists+dmaengine@lfdr.de>; Mon, 27 Jan 2025 11:22:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 611E21886C28
-	for <lists+dmaengine@lfdr.de>; Mon, 27 Jan 2025 08:37:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 786693A77D9
+	for <lists+dmaengine@lfdr.de>; Mon, 27 Jan 2025 10:22:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98DA8156886;
-	Mon, 27 Jan 2025 08:37:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF2C61FCFE5;
+	Mon, 27 Jan 2025 10:22:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qIv8GsOT"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="i3lfpVk2"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D6818C11;
-	Mon, 27 Jan 2025 08:37:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBDFB179BF;
+	Mon, 27 Jan 2025 10:22:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737967056; cv=none; b=p3EEQB0uMpvaeeOPgCYt1TBoci4+PCyjmOQXymtELE1zBKyf945ZirGA9Aiz7Lg777GRDnNWbplG3riWMXhIVaiCWGql+t/vmKMWEWfUVAVOTlAkpiBp9fvuj8W//gJWTCimSAoJPQl6ahJO1DNiocr5/DpLdpNmCBQPOxpAsIE=
+	t=1737973368; cv=none; b=KEm9/aIFVhZeIWi85130sz4AbvbaZezVtlkOuQ/2QAPcWxUCbXbQTR/ETTfqXy59oFubGp4F9VUFxfOwP9K50YUgprRtnMDCJQgAbeft2rlou+RityFKOEYii+E7Bw+8+o/zl+r67TuLRJ4/ZtYbvhBjPvogOgG6ndcmsqt5tJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737967056; c=relaxed/simple;
-	bh=lO9NymPFr6bhwMFfAllVvVLeDbAVw1xGh+GP1heN7js=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U3qheuOiNiqQWsiejrrguJv9UV2QrBHlwbiE3pJR3jA/vDYXC8N03ZJGQ+6Wf6fwylbFBvLVSs23PP6UlhV530MLa0QLexdGWT2IVIbjIUAf0HkVprv+Y2ZnjuL2mo0rLXhcqY9/btS3+zTcOT+tkC2iR6oP1TRI8CtgXJDppgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qIv8GsOT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9B5CC4CED2;
-	Mon, 27 Jan 2025 08:37:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737967055;
-	bh=lO9NymPFr6bhwMFfAllVvVLeDbAVw1xGh+GP1heN7js=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qIv8GsOTxD0MNBdcccL2gsR2GrsPOH7kYiWCdaqYHMQJl06quxNk06u372au5ecHh
-	 2Km7poxUCviWvnWyWTOZ2XsGaIdWVQ95eEQxqPt76q/lEMFBkasYlNeYPXT0k1/s5u
-	 mw2TCXDM4aOChO8w9BDR2JG1aT6fNADge7Ss9cZJlS5a3vzIg1SFxeuKR3unpvtQKp
-	 5EUGDJ/a2/K6EDh3hGmn5JXR7YdC39zqGsMjrUUUGw34bynf+MWBTNE9KVb2eth6CY
-	 DslXsJIm1PuK3EsUVpPhPjXU33U6TD2oYXqG8X2GLTSv/NG2/ufxjvVXHEYaaJzxMw
-	 Y5cb5He53K49Q==
-Date: Mon, 27 Jan 2025 09:37:32 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	Scott Wood <oss@buserror.net>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, 
-	Lee Jones <lee@kernel.org>, Vinod Koul <vkoul@kernel.org>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	=?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, Wim Van Sebroeck <wim@linux-watchdog.org>, 
-	Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>, 
-	Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org
-Subject: Re: [PATCH RFC 9/9] dt-bindings: nand: Convert fsl,elbc bindings to
- YAML
-Message-ID: <20250127-cuddly-dalmatian-of-saturation-5f1ae2@krzk-bin>
-References: <20250126-ppcyaml-v1-0-50649f51c3dd@posteo.net>
- <20250126-ppcyaml-v1-9-50649f51c3dd@posteo.net>
+	s=arc-20240116; t=1737973368; c=relaxed/simple;
+	bh=7+Qct7BeymG7lOqPogQ8tjt4CwnzfX9+dQChIt/gR5o=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=TPp6k4XnWc9ropQWsbNEQ7INjjropoj9gP/KkTzHUHFgao3GaBPrSYVMnEIx5B6ieDouQO93xLEA+tI11uIWg7diJT27IK2LHuGBNtjSfwFduIPk/PpXfKxW3YupBo8X18mkArGuCLGL6Uz9cZfelyNW7q5dIQ90yPVRFRCpOuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=i3lfpVk2; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1737973367; x=1769509367;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:to:cc;
+  bh=7+Qct7BeymG7lOqPogQ8tjt4CwnzfX9+dQChIt/gR5o=;
+  b=i3lfpVk20l+R+Y0/ti9a1cQN2ZUjyNkdOsuZ+o5AxfSysQ92dMLU/vha
+   /KLgkrpHxucAW/Tc43NZvZ/VMvePy+ud1TRcBGXBeUUE7I4e9Zhzxx9I5
+   WPYI0OwWJValQN7FNR+yLHyKw9jBi7T+wGJyXOnMn6aP9pNw4B38JhQCx
+   9STaq07yYwD5Irc/sm/X0wZJEAyEu56oVvkd42rqJE+B0rCYyzqcMPYH/
+   dKEWvY043D/vVuhjXjDFCWCApCtmobjwisXs+ctJ30eTGPoLANL3Ig6h3
+   CaXYM177Jz9Y/EZ+md56IgKwqB/SYxwoTpyEzo2D6EZ3NXZDiPJOeSgp6
+   g==;
+X-CSE-ConnectionGUID: 6/71w3G4TJKoIyAFZm+R7w==
+X-CSE-MsgGUID: a9lbd0A9Qua1pNFSFbBmAg==
+X-IronPort-AV: E=Sophos;i="6.13,238,1732604400"; 
+   d="scan'208";a="37388198"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 27 Jan 2025 03:22:40 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 27 Jan 2025 03:22:09 -0700
+Received: from [127.0.0.1] (10.10.85.11) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
+ Transport; Mon, 27 Jan 2025 03:22:04 -0700
+From: Charan Pedumuru <charan.pedumuru@microchip.com>
+Date: Mon, 27 Jan 2025 15:51:58 +0530
+Subject: [PATCH v3] dt-bindings: dma: convert atmel-dma.txt to YAML
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250126-ppcyaml-v1-9-50649f51c3dd@posteo.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250127-test-v3-1-1b5f5b3f64fc@microchip.com>
+X-B4-Tracking: v=1; b=H4sIAEVel2cC/03MywrDIBCF4VcJs+4Urxi66nuELsSMdRbGoBIKI
+ e9e6arLD/5zTmhUmRo8phMqHdy4bAP6NkFIfnsT8joMSigrpHLYqXWcBdlg5hCdcTDSvVLkz+9
+ meQ3HWjL2VMn/jzWu2eMhUaKwJkrvHDmtn5lDLSHxfg8lw3V9AUjY1DyVAAAA
+To: Ludovic Desroches <ludovic.desroches@microchip.com>, Vinod Koul
+	<vkoul@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Nicolas Ferre
+	<nicolas.ferre@microchip.com>, Alexandre Belloni
+	<alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Andrei Simion <andrei.simion@microchip.com>
+CC: <linux-arm-kernel@lists.infradead.org>, <dmaengine@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Durai Manickam
+ KR" <durai.manickamkr@microchip.com>, Charan Pedumuru
+	<charan.pedumuru@microchip.com>
+X-Mailer: b4 0.14.1
 
-On Sun, Jan 26, 2025 at 07:59:04PM +0100, J. Neusch=C3=A4fer wrote:
-> Convert the Freescale localbus controller bindings from text form to
-> YAML. The list of compatible strings reflects current usage.
+From: Durai Manickam KR <durai.manickamkr@microchip.com>
 
-simple-bus and 20 other compatibles you used were not present in the
-original binding. Does above "list of compatible strings" mean you just
-added them?
+Add a description, required properties, appropriate compatibles and
+missing properties like clocks and clock-names which are not defined in
+the text binding for all the SoCs that are supported by microchip.
+Update the text binding name `atmel-dma.txt` to
+`atmel,at91sam9g45-dma.yaml` for the files which reference to
+`atmel-dma.txt`. Drop Tudor name from maintainers.
 
->=20
-> Changes compared to the txt version:
->  - removed the board-control (fsl,mpc8272ads-bcsr) node because it only
->    appears in this example and nowhere else
->  - added a new example with NAND flash
->=20
-> Remaining issues:
->  - The localbus is not really a simple-bus: Unit addresses are not simply
->    addresses on a memory bus. Instead, they have a format: The first cell
->    is a chip select number, the remaining one or two cells are bus
->    addresses.
->=20
-> Signed-off-by: J. Neusch=C3=A4fer <j.ne@posteo.net>
-> ---
->  .../devicetree/bindings/mtd/fsl,elbc-fcm-nand.yaml |  61 +++++++++
->  .../bindings/powerpc/fsl/fsl,elbc-gpcm-uio.yaml    |  55 ++++++++
+Signed-off-by: Durai Manickam KR <durai.manickamkr@microchip.com>
+Signed-off-by: Charan Pedumuru <charan.pedumuru@microchip.com>
+---
+Changes in v3:
+- Renamed the text binding name `atmel-dma.txt` to
+  `atmel,at91sam9g45-dma.yaml` for the files which reference to
+  `atmel-dma.txt`.
+- Removed `oneOf` and add a blank line in properties.
+- Dropped Tudor name from maintainers.
+- Link to v2: https://lore.kernel.org/r/20250123-dma-v1-1-054f1a77e733@microchip.com
 
-Please split the conversion from adding new bindings. For example above
-file and its compatible fsl,elbc-gpcm-uio was not documented in original
-TXT.
+Changes in v2:
+- Renamed the yaml file to a compatible.
+- Removed `|` and description for common properties.
+- Modified the commit message.
+- Dropped the label for the node in examples.
+- Link to v1: https://lore.kernel.org/all/20240215-dmac-v1-1-8f1c6f031c98@microchip.com
+---
+ .../bindings/dma/atmel,at91sam9g45-dma.yaml        | 66 ++++++++++++++++++++++
+ .../devicetree/bindings/dma/atmel-dma.txt          | 42 --------------
+ .../devicetree/bindings/misc/atmel-ssc.txt         |  2 +-
+ MAINTAINERS                                        |  2 +-
+ 4 files changed, 68 insertions(+), 44 deletions(-)
 
-=2E..
+diff --git a/Documentation/devicetree/bindings/dma/atmel,at91sam9g45-dma.yaml b/Documentation/devicetree/bindings/dma/atmel,at91sam9g45-dma.yaml
+new file mode 100644
+index 000000000000..d6d16869b7db
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/atmel,at91sam9g45-dma.yaml
+@@ -0,0 +1,66 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/atmel,at91sam9g45-dma.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Atmel Direct Memory Access Controller (DMA)
++
++maintainers:
++  - Ludovic Desroches <ludovic.desroches@microchip.com>
++
++description:
++  The Atmel Direct Memory Access Controller (DMAC) transfers data from a source
++  peripheral to a destination peripheral over one or more AMBA buses. One channel
++  is required for each source/destination pair. In the most basic configuration,
++  the DMAC has one master interface and one channel. The master interface reads
++  the data from a source and writes it to a destination. Two AMBA transfers are
++  required for each DMAC data transfer. This is also known as a dual-access transfer.
++  The DMAC is programmed via the APB interface.
++
++properties:
++  compatible:
++    enum:
++      - atmel,at91sam9g45-dma
++      - atmel,at91sam9rl-dma
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  "#dma-cells":
++    description:
++      Must be <2>, used to represent the number of integer cells in the dmas
++      property of client devices.
++    const: 2
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    const: dma_clk
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - "#dma-cells"
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++    dma-controller@ffffec00 {
++        compatible = "atmel,at91sam9g45-dma";
++        reg = <0xffffec00 0x200>;
++        interrupts = <21>;
++        #dma-cells = <2>;
++        clocks = <&pmc 2 20>;
++        clock-names = "dma_clk";
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/dma/atmel-dma.txt b/Documentation/devicetree/bindings/dma/atmel-dma.txt
+deleted file mode 100644
+index f69bcf5a6343..000000000000
+--- a/Documentation/devicetree/bindings/dma/atmel-dma.txt
++++ /dev/null
+@@ -1,42 +0,0 @@
+-* Atmel Direct Memory Access Controller (DMA)
+-
+-Required properties:
+-- compatible: Should be "atmel,<chip>-dma".
+-- reg: Should contain DMA registers location and length.
+-- interrupts: Should contain DMA interrupt.
+-- #dma-cells: Must be <2>, used to represent the number of integer cells in
+-the dmas property of client devices.
+-
+-Example:
+-
+-dma0: dma@ffffec00 {
+-	compatible = "atmel,at91sam9g45-dma";
+-	reg = <0xffffec00 0x200>;
+-	interrupts = <21>;
+-	#dma-cells = <2>;
+-};
+-
+-DMA clients connected to the Atmel DMA controller must use the format
+-described in the dma.txt file, using a three-cell specifier for each channel:
+-a phandle plus two integer cells.
+-The three cells in order are:
+-
+-1. A phandle pointing to the DMA controller.
+-2. The memory interface (16 most significant bits), the peripheral interface
+-(16 less significant bits).
+-3. Parameters for the at91 DMA configuration register which are device
+-dependent:
+-  - bit 7-0: peripheral identifier for the hardware handshaking interface. The
+-  identifier can be different for tx and rx.
+-  - bit 11-8: FIFO configuration. 0 for half FIFO, 1 for ALAP, 2 for ASAP.
+-
+-Example:
+-
+-i2c0@i2c@f8010000 {
+-	compatible = "atmel,at91sam9x5-i2c";
+-	reg = <0xf8010000 0x100>;
+-	interrupts = <9 4 6>;
+-	dmas = <&dma0 1 7>,
+-	       <&dma0 1 8>;
+-	dma-names = "tx", "rx";
+-};
+diff --git a/Documentation/devicetree/bindings/misc/atmel-ssc.txt b/Documentation/devicetree/bindings/misc/atmel-ssc.txt
+index f9fb412642fe..b159dc2298b6 100644
+--- a/Documentation/devicetree/bindings/misc/atmel-ssc.txt
++++ b/Documentation/devicetree/bindings/misc/atmel-ssc.txt
+@@ -14,7 +14,7 @@ Required properties:
+ Required properties for devices compatible with "atmel,at91sam9g45-ssc":
+ - dmas: DMA specifier, consisting of a phandle to DMA controller node,
+   the memory interface and SSC DMA channel ID (for tx and rx).
+-  See Documentation/devicetree/bindings/dma/atmel-dma.txt for details.
++  See Documentation/devicetree/bindings/dma/atmel,at91sam9g45-dma.yaml for details.
+ - dma-names: Must be "tx", "rx".
+ 
+ Optional properties:
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 962eab2ce359..f1f4e3956f45 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15348,7 +15348,7 @@ M:	Ludovic Desroches <ludovic.desroches@microchip.com>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ L:	dmaengine@vger.kernel.org
+ S:	Supported
+-F:	Documentation/devicetree/bindings/dma/atmel-dma.txt
++F:	Documentation/devicetree/bindings/dma/atmel,at91sam9g45-dma.yaml
+ F:	drivers/dma/at_hdmac.c
+ F:	drivers/dma/at_xdmac.c
+ F:	include/dt-bindings/dma/at91.h
 
-> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/fsl,elbc.yaml =
-b/Documentation/devicetree/bindings/powerpc/fsl/fsl,elbc.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..6bbceb82c77826499abe85879=
-e9189b18d396eea
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/powerpc/fsl/fsl,elbc.yaml
-> @@ -0,0 +1,150 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/powerpc/fsl/fsl,elbc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Freescale Enhanced Local Bus Controller
-
-What sort of bus is it? Memory bus? Then place it with others, see
-memory directory.
-
-> +
-> +maintainers:
-> +  - J. Neusch=C3=A4fer <j.ne@posteo.net>
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^localbus@[0-9a-f]+$"
-> +
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - fsl,mpc8313-elbc
-> +              - fsl,mpc8315-elbc
-> +              - fsl,mpc8377-elbc
-> +              - fsl,mpc8378-elbc
-> +              - fsl,mpc8379-elbc
-> +              - fsl,mpc8536-elbc
-> +              - fsl,mpc8569-elbc
-> +              - fsl,mpc8572-elbc
-> +              - fsl,p1020-elbc
-> +              - fsl,p1021-elbc
-> +              - fsl,p1023-elbc
-> +              - fsl,p2020-elbc
-> +              - fsl,p2041-elbc
-> +              - fsl,p3041-elbc
-> +              - fsl,p4080-elbc
-> +              - fsl,p5020-elbc
-> +              - fsl,p5040-elbc
-> +          - const: fsl,elbc
-> +          - const: simple-bus
-> +
-> +      - items:
-> +          - const: fsl,mpc8272-localbus
-> +          - const: fsl,pq2-localbus
-> +
-> +      - items:
-> +          - enum:
-> +              - fsl,mpc8247-localbus
-> +              - fsl,mpc8248-localbus
-> +              - fsl,mpc8360-localbus
-> +          - const: fsl,pq2pro-localbus
-> +          - const: simple-bus
-> +
-> +      - items:
-> +          - enum:
-> +              - fsl,mpc8540-localbus
-> +              - fsl,mpc8544-lbc
-> +              - fsl,mpc8544-localbus
-> +              - fsl,mpc8548-lbc
-> +              - fsl,mpc8548-localbus
-> +              - fsl,mpc8560-localbus
-> +              - fsl,mpc8568-localbus
-> +          - const: fsl,pq3-localbus
-> +          - const: simple-bus
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  "#address-cells":
-> +    enum: [2, 3]
-> +    description: |
-> +      The first cell is the chipselect number, and the remaining cells a=
-re the
-> +      offset into the chipselect.
-> +
-> +  "#size-cells":
-> +    enum: [1, 2]
-> +    description: |
-> +      Either one or two, depending on how large each chipselect can be.
-> +
-> +  ranges:
-> +    description: |
-> +      Each range corresponds to a single chipselect, and covers the enti=
-re
-> +      access window as configured.
-> +
-> +patternProperties:
-> +  "^.*@.*$":
-> +    type: object
-
-And probably you need=20
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    localbus@f0010100 {
-> +        compatible =3D "fsl,mpc8272-localbus",
-> +                     "fsl,pq2-localbus";
-> +        #address-cells =3D <2>;
-> +        #size-cells =3D <1>;
-> +        reg =3D <0xf0010100 0x40>;
-
-compatible, then reg - see DTS coding style.
-
-> +
-> +        ranges =3D <0x0 0x0 0xfe000000 0x02000000
-> +                  0x1 0x0 0xf4500000 0x00008000
-> +                  0x2 0x0 0xfd810000 0x00010000>;
-> +
-> +        flash@0,0 {
-> +            compatible =3D "jedec-flash";
-> +            reg =3D <0x0 0x0 0x2000000>;
-
-Well, here it is correct
-
-> +            bank-width =3D <4>;
-> +            device-width =3D <1>;
-> +        };
-> +
-> +        simple-periph@2,0 {
-> +            compatible =3D "fsl,elbc-gpcm-uio";
-> +            reg =3D <0x2 0x0 0x10000>;
-> +            elbc-gpcm-br =3D <0xfd810800>;
-> +            elbc-gpcm-or =3D <0xffff09f7>;
-> +        };
-> +    };
-> +
-> +  - |
-> +    localbus@e0005000 {
-
-compatible, reg
-
-> +        #address-cells =3D <2>;
-> +        #size-cells =3D <1>;
-> +        compatible =3D "fsl,mpc8315-elbc", "fsl,elbc", "simple-bus";
-> +        reg =3D <0xe0005000 0x1000>;
-> +        interrupts =3D <77 0x8>;
-> +        interrupt-parent =3D <&ipic>;
-> +
-> +        ranges =3D <0x0 0x0 0xfe000000 0x00800000
-> +                  0x1 0x0 0xe0600000 0x00002000
-> +                  0x2 0x0 0xf0000000 0x00020000
-> +                  0x3 0x0 0xfa000000 0x00008000>;
-> +
-> +        flash@0,0 {
-
-compatible, reg
-
-> +            #address-cells =3D <1>;
-> +            #size-cells =3D <1>;
-> +            compatible =3D "cfi-flash";
-> +            reg =3D <0x0 0x0 0x800000>;
-> +            bank-width =3D <2>;
-> +            device-width =3D <1>;
-> +        };
-> +
-> +        nand@1,0 {
-
-compatible, reg
-
-> +            #address-cells =3D <1>;
-> +            #size-cells =3D <1>;
-> +            compatible =3D "fsl,mpc8315-fcm-nand",
-> +                         "fsl,elbc-fcm-nand";
-> +            reg =3D <0x1 0x0 0x2000>;
-> +        };
+---
+base-commit: 232f121837ad8b1c21cc80f2c8842a4090c5a2a0
+change-id: 20250127-test-80e5c48cf747
 
 Best regards,
-Krzysztof
+-- 
+Charan Pedumuru <charan.pedumuru@microchip.com>
 
 

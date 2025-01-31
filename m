@@ -1,64 +1,66 @@
-Return-Path: <dmaengine+bounces-4241-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4242-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF98AA23DA7
-	for <lists+dmaengine@lfdr.de>; Fri, 31 Jan 2025 13:23:22 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 10915A23EE8
+	for <lists+dmaengine@lfdr.de>; Fri, 31 Jan 2025 15:03:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DF2927A2BE5
-	for <lists+dmaengine@lfdr.de>; Fri, 31 Jan 2025 12:22:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 01A8A3A9EA6
+	for <lists+dmaengine@lfdr.de>; Fri, 31 Jan 2025 14:03:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02C831C2304;
-	Fri, 31 Jan 2025 12:23:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B42981CB9F0;
+	Fri, 31 Jan 2025 14:03:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="ZH/QrR6C"
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="rtUqgxeJ"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C88E61C07C9
-	for <dmaengine@vger.kernel.org>; Fri, 31 Jan 2025 12:23:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60A211C5F2F
+	for <dmaengine@vger.kernel.org>; Fri, 31 Jan 2025 14:03:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738326195; cv=none; b=asq240jwmIxaSQaPDTsQvpy5KiZEDsHFnJE9qluQ4VHkVhBb4cGlt1Lzfq1jSU0/tvCgvharyMvD8zCcl7G2E4vE7vtrBhdNXIxlguTN5AGsztsLyBlW0Zsx6gztvqTkhPrG/0swUPpOC0/QNg6YyRgD6/u7YlibF2MOkM2yl3E=
+	t=1738332195; cv=none; b=D7L4xSJCBbtSTsGSFgHgF3k8lftleFoUPdru+QEmMq5suaBJ8WJefzVyPsz/VmwfQfDRyFiNnul1OiBabNxRtdZDWMptEdgFKZWjaMd/fgBSS7aM/FNGu4Rmo8P3VeZVJLi/0CRBl+l8g713Pn4hg52vMmsUcQLUyhiYjvY5UAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738326195; c=relaxed/simple;
-	bh=2qfaRTO5iG5mOYJ+RvO6+d2r0hfl5IUM+PXTysg9LQQ=;
+	s=arc-20240116; t=1738332195; c=relaxed/simple;
+	bh=k6iepJ3khtCHe4wAP+Co9RM2WKV6wPbtel3+iGpB+ZM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s7mt9ypLZ/w9ktEArCxEgQP7UrJVj0tB+OZ/l/0YweZmi/ndlnr8Jmumd+MJMA84GUXomk9by39ojih4oDYYcgU/iurBSe1sJwtE+U8kowj3rDpC0cNcB7oGv6gCIiDuJhmq0Sf8i7qRBCX2NdqHg/8uuBlp+YPvv+WCjSnSKDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=ZH/QrR6C; arc=none smtp.client-ip=185.67.36.65
+	 Content-Type:Content-Disposition:In-Reply-To; b=NEdF5nq0lmwBzFTh4t4vDZMSffliXu579sVwLtcJJD1xiSjAxuxUnl4M/1yhks78NDXgGU9HxAujSEmSCpiMN/qKhj7XmCQUCvOwsPFEiclo22ndWy8jpCCOgztRsJGiGaWaVEYb1aRxnp4Q1L8mtAwHfFbWOh8dPJNzlWmhpaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=rtUqgxeJ; arc=none smtp.client-ip=185.67.36.65
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
 Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id 1B329240029
-	for <dmaengine@vger.kernel.org>; Fri, 31 Jan 2025 13:23:11 +0100 (CET)
+	by mout01.posteo.de (Postfix) with ESMTPS id 7DB4A240029
+	for <dmaengine@vger.kernel.org>; Fri, 31 Jan 2025 15:03:11 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1738326192; bh=2qfaRTO5iG5mOYJ+RvO6+d2r0hfl5IUM+PXTysg9LQQ=;
+	t=1738332191; bh=k6iepJ3khtCHe4wAP+Co9RM2WKV6wPbtel3+iGpB+ZM=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
 	 Content-Disposition:Content-Transfer-Encoding:From;
-	b=ZH/QrR6CDzrfRyOcDdDH1yAPCkywXurHgOK68RDcFhhdhoq8xD44Fh+6uUGh+dwWw
-	 UBOzkZwnU3ddtLRTeU9gq3Ro9Pye5t/VIvS47EuiR6p52UR5Egh3g+CwT4bretriRL
-	 9P1/U02bGR2CHxLzixwpkWxHjV7Zcn5ENGNT8IMCsYNGV7EkvrLpD208SD1pV3iCbJ
-	 YJpiFVWgIAxaRW3ZJfEeJKJ2G+bPdrPU3tXn5FZ2drudvcOkXIkQH7TlekHEnIB4sg
-	 LdJzUnEBnSD/51ERodPs5mvutRoWmEeP0pN0ROgbkERvi/mrMIgITeGplhnDse7Plf
-	 4sz+RCqcxm1yg==
+	b=rtUqgxeJqyjfeci389WwyVR3ezEklT/hG71YuMEM/th4+OQ59ErBQRc/+lh1XpvEE
+	 ARpoFnYEIaLOsT8bfAf2MGITZGJJJnBqvY+i1tSSxHXmLoebinLWZIrjXBgSAUj3du
+	 UPFDJr+mS6r4SeVtaBKT7Y3I7HRaKADOT88LsZoSnGmZ9QZNYhd9ZLxg5GejJbaMj2
+	 rObowSmd9hkyrWs/4LhJj3LxbDSkWXNkeF/oty1/5J9X2CTACIl7pLuuGb1/Ql1nML
+	 eDRmowT95Q+BGvmfr9bEhksCP3PjPZk/SuM2qbQd2uouOpsET6v60CmGEvE/PVyKLh
+	 VqP7g55lON8xA==
 Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4Ykw5h1ywDz6typ;
-	Fri, 31 Jan 2025 13:23:03 +0100 (CET)
-Date: Fri, 31 Jan 2025 12:23:03 +0000
+	by submission (posteo.de) with ESMTPSA id 4YkyK53T11z6v08;
+	Fri, 31 Jan 2025 15:03:05 +0100 (CET)
+Date: Fri, 31 Jan 2025 14:03:05 +0000
 From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-To: Damien Le Moal <dlemoal@kernel.org>
-Cc: j.ne@posteo.net, devicetree@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, Scott Wood <oss@buserror.net>,
+To: Rob Herring <robh@kernel.org>
+Cc: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>,
+	devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	Scott Wood <oss@buserror.net>,
 	Madhavan Srinivasan <maddy@linux.ibm.com>,
 	Michael Ellerman <mpe@ellerman.id.au>,
 	Nicholas Piggin <npiggin@gmail.com>,
 	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>, Rob Herring <robh@kernel.org>,
+	Naveen N Rao <naveen@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
 	Niklas Cassel <cassel@kernel.org>,
 	Herbert Xu <herbert@gondor.apana.org.au>,
 	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
@@ -77,11 +79,12 @@ Cc: j.ne@posteo.net, devicetree@vger.kernel.org,
 	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
 	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
 	linux-mtd@lists.infradead.org
-Subject: Re: [PATCH 2/9] dt-bindings: ata: Convert fsl,pq-sata binding to YAML
-Message-ID: <Z5zAp3X7U0oftneH@probook>
+Subject: Re: [PATCH 5/9] dt-bindings: dma: Convert fsl,elo*-dma bindings to
+ YAML
+Message-ID: <Z5zYGdZU-IXwIuR6@probook>
 References: <20250126-ppcyaml-v1-0-50649f51c3dd@posteo.net>
- <20250126-ppcyaml-v1-2-50649f51c3dd@posteo.net>
- <a9df1ae6-8779-4dc0-8f03-eda939c0e533@kernel.org>
+ <20250126-ppcyaml-v1-5-50649f51c3dd@posteo.net>
+ <20250127044735.GD3106458-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -91,62 +94,63 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <a9df1ae6-8779-4dc0-8f03-eda939c0e533@kernel.org>
+In-Reply-To: <20250127044735.GD3106458-robh@kernel.org>
 
-On Mon, Jan 27, 2025 at 08:22:55AM +0900, Damien Le Moal wrote:
-> On 1/27/25 03:58, J. Neuschäfer via B4 Relay wrote:
-> > From: "J. Neuschäfer" <j.ne@posteo.net>
-> > 
-> > Convert the Freescale PowerQUICC SATA controller binding from text form
-> > to YAML. The list of compatible strings reflects current usage.
+On Sun, Jan 26, 2025 at 10:47:35PM -0600, Rob Herring wrote:
+> On Sun, Jan 26, 2025 at 07:59:00PM +0100, J. Neuschäfer wrote:
+> > The devicetree bindings for Freescale DMA engines have so far existed as
+> > a text file. This patch converts them to YAML, and specifies all the
+> > compatible strings currently in use in arch/powerpc/boot/dts.
 > > 
 > > Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
 > > ---
-> >  .../devicetree/bindings/ata/fsl,pq-sata.yaml       | 59 ++++++++++++++++++++++
+> >  .../devicetree/bindings/dma/fsl,elo-dma.yaml       | 129 +++++++++++++
+> >  .../devicetree/bindings/dma/fsl,elo3-dma.yaml      | 105 +++++++++++
+> >  .../devicetree/bindings/dma/fsl,eloplus-dma.yaml   | 120 ++++++++++++
+> >  .../devicetree/bindings/powerpc/fsl/dma.txt        | 204 ---------------------
+> >  4 files changed, 354 insertions(+), 204 deletions(-)
 [...]
-> > +description: |
-> > +  SATA nodes are defined to describe on-chip Serial ATA controllers.
-> > +  Each SATA port should have its own node.
+> > +patternProperties:
+> > +  "^dma-channel@.*$":
+> > +    type: object
 > 
-> Very unclear. The SATA nodes define ports or controllers ? Normally, a single
-> controller can have multiple ports, so the distinction is important.
+>        additionalProperties: false
 
-I'll change it to "Each SATA controller ...", see below.
+I'll add it.
 
+> (The tools should have highlighted this)
 
-> > +  cell-index:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    enum: [1, 2, 3, 4]
-> > +    description: |
-> > +      1 for controller @ 0x18000
-> > +      2 for controller @ 0x19000
-> > +      3 for controller @ 0x1a000
-> > +      4 for controller @ 0x1b000
+With dtschema 2024.11 installed, "make dt_binding_check
+DT_SCHEMA_FILES=fsl,elo-dma.yaml" does not highlight this.
+
+> > +
+> > +    properties:
+> > +      compatible:
+> > +        items:
+> > +          - enum:
+> > +              - fsl,mpc8315-dma-channel
+> > +              - fsl,mpc8323-dma-channel
+> > +              - fsl,mpc8347-dma-channel
+> > +              - fsl,mpc8349-dma-channel
+> > +              - fsl,mpc8360-dma-channel
+> > +              - fsl,mpc8377-dma-channel
+> > +              - fsl,mpc8378-dma-channel
+> > +              - fsl,mpc8379-dma-channel
+> > +          - const: fsl,elo-dma-channel
+> > +
+> > +      reg:
+> > +        maxItems: 1
+> > +
+> > +      cell-index:
+> > +        description: DMA channel index starts at 0.
+> > +
+> > +      interrupts: true
 > 
-> Are you sure these are different controllers ? Are they not different ports of
-> the same controller ? Given that the previous text description define this as
-> "controller index", I suspect these are the port offsets and you SATA nodes
-> define ports, and not controllers.
+> You have to define how many interrupts and what they are.
 
-They have no shared registers, and each instance has the same register
-set (at a different base address).
+Will do.
 
-The MPC8315E reference manual (for example) documents them as:
-
-	SATA 1 Controller—Block Base Address 0x1_8000
-	SATA 2 Controller—Block Base Address 0x1_9000
-
-(table A.24 Serial ATA (SATA) Controller)
-
-Section 15.2 Command Operation implies that each SATA controller
-supports a single port:
-
-	The SATA controller maintains a queue consisting of up to 16
-	commands. These commands can be distributed to a single attached
-	device or, if the system contains a port multiplier, over each
-	of the attached devices.
-
-So, in conclusion, I'm fairly sure "controller" is the right description.
+(and the same for the other two files)
 
 
 Best regards,

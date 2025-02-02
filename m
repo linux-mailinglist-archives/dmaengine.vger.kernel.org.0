@@ -1,130 +1,72 @@
-Return-Path: <dmaengine+bounces-4245-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4246-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A575A24521
-	for <lists+dmaengine@lfdr.de>; Fri, 31 Jan 2025 23:16:26 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB50BA24C63
+	for <lists+dmaengine@lfdr.de>; Sun,  2 Feb 2025 02:14:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0E9E8162628
-	for <lists+dmaengine@lfdr.de>; Fri, 31 Jan 2025 22:16:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 829201884F0D
+	for <lists+dmaengine@lfdr.de>; Sun,  2 Feb 2025 01:14:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29555192B66;
-	Fri, 31 Jan 2025 22:16:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9679B8C07;
+	Sun,  2 Feb 2025 01:14:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AtfqOBV+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KirhkOVr"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DABBC2AD20;
-	Fri, 31 Jan 2025 22:16:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FA8E4C91;
+	Sun,  2 Feb 2025 01:14:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738361781; cv=none; b=Sh1ss7fJuF2+AheaFZI7PjNex/SLWfoFM/GnziDQ/oUmGt2lt7Lb/5ir1wvyHVZpCWPHyqo3L6vW6HRvj7gMeW3zfujK6b/zqe9zqhMiUZpyzOFZ/+/5bTDrOME/b142fxp1+eM+9nGQr7Qg567MopcvAhL9A7HQKq1dtaNG+QM=
+	t=1738458883; cv=none; b=kkE1ZGFTO43FHet8TzPMlXOSG92Q6RY3XAkVfp5+yHRhwrJnX13C1fGkQJFMYIl+D/1W2sK4OYcXElhwMRlMzVzcCmoX7/xT8bIuVnM8mjedmT41qcbkBOZpAYc4ss8oP9TE1GK7LzGVjegmhBei3b21TVqWAlnpTte1QNa5lpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738361781; c=relaxed/simple;
-	bh=24W6Dps3y7DxZ6YhfkzynKPlf3swLWZxkwFai0Y3sBI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iS+eG9p6wctucV4wMH4Pgv4EU2OMHn74HYUw7653v/SQXGioF6n9I2zLAILZ0fa7R/MXhqC7NKcAKar/jVX5kNFhSOiFHi/uPKxUW9gV84rb3VLIhK/3eeQv5K3y2Dujt058Zww4mYYefcMGirid9L8kEKRA2DJcWmx5g7f5paw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AtfqOBV+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F5C8C4CEE2;
-	Fri, 31 Jan 2025 22:16:20 +0000 (UTC)
+	s=arc-20240116; t=1738458883; c=relaxed/simple;
+	bh=npX90+DiMFvMCTdtgmlUJPmHOKmJN19J0iy4bpHnpVY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GlTvc9ojD8mEfjPgBbfTfux86QdnOQGHODHA6sbeN+fsFlMhPNSdqRWhqMqnQiWh5/rFLqHg1gdh+hgzMiQBx0YFzZPI/Q1GQDHlktftY4fqy55lx9mC6kTzAv7MZ1rXyBicZrg6FxF2Es6wn6VR1w5CwygkKsWeWPcY5YpsDbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KirhkOVr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 697B2C4CED3;
+	Sun,  2 Feb 2025 01:14:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738361780;
-	bh=24W6Dps3y7DxZ6YhfkzynKPlf3swLWZxkwFai0Y3sBI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=AtfqOBV+hgn5E2OvcJZHV5aNQwRoYZB/CgESGBejHG/zkhQV1sAuR0NIwBLg9xAnH
-	 NMF7ihG8arT55ilvdLTKTWJmugXTWXqCJSDlTZeS2zxMmwQFLqm8D5VukL5YR/EcBJ
-	 mghfb/3SO3dWStF5RQqNApP46SZDdaOsLZ08uuh/lqxQcZeBdoAPNo9gglpGJJlJBa
-	 6d8A+j+Z5Ei31O2xP6t7GYTdzHI8rFqRWRC6V6NAruBJpu/X9qlSJBZZtbTiSe2K0U
-	 95VqbK3A1v+Ko/GNl3nXSzntI4YcNvUJuqPzC39Twtw/FyZPNjLEwB4c+7+1U/hjuu
-	 +Zc2srHyIOMnQ==
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5dc10fe4e62so4761781a12.1;
-        Fri, 31 Jan 2025 14:16:20 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUoDGXIql06RButv7EgOop4qS3j/BACqzomJXaalPacrnSgOXRSqCsviGh/yjmIrCmrtyu34ehI/7zv@vger.kernel.org, AJvYcCUuoJotdYp0dgt9sRrj6AY0kQeDhLbK08PEYpVY07YshMtBOH5eFRF9IHE5ipljEMXiMmS3PFzty7nq@vger.kernel.org, AJvYcCVWozPOAOyqlkmAR6uoS9B+GSsUzjDGlR+V4K3NiazlmgtKAL58hKRtuU2oUA50rKypjtJsl+jSW020TxQF@vger.kernel.org, AJvYcCWplzKe2iz25Tbjbwxv3zZYBPZzJKHBfIP/Zf0npcK9SI7DD1GKrvzH9239OlmjKhXKXtj59fb0mQU=@vger.kernel.org, AJvYcCWwa3DsmZejGwDwlId6GFU13gwR2QUXFCjql3wyKdq2PUaUoHH/zpJmyM+MALDzs9SkpFKktpTtlk9H@vger.kernel.org, AJvYcCXjYHaWnmwsVUouBC198Y04mAfKODGo58t6SP3lTquW0dMpPyjzf+wXDTuFOB5/40bDPd81fq0DkgDTC2sqX14=@vger.kernel.org, AJvYcCXl8HO6SMhwaCzPokccij3qQJLK0OMVwqbzCgHelm/+rft6uTapT7Q7khmlJoJpDqV2yUmOpfhBl13v3O0D@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHiWmgfXmuPrr9Rdt1Xjzb/gndtWkd6HeEb1tGZj/KNn0WX4bL
-	8Dud5l6rBOaTwGyWDnODYYHBPKmF+t2R8K7bm2Pub2RXetUxfFJiSxc28ISIw4VzLn0+urSIGVB
-	m+KwSnOBo6SOk08m0N1AAWT+IHw==
-X-Google-Smtp-Source: AGHT+IG+40Vie6I5qh4Xa+hjwERq+fPWo6Sglqt6y5ghUP/X8RySc2w5nt0i3mGF0G2DQOmC/TQjR33KPq7ga7buNyY=
-X-Received: by 2002:a05:6402:2390:b0:5dc:72e1:63ee with SMTP id
- 4fb4d7f45d1cf-5dc72e1647cmr7162768a12.6.1738361778979; Fri, 31 Jan 2025
- 14:16:18 -0800 (PST)
+	s=k20201202; t=1738458882;
+	bh=npX90+DiMFvMCTdtgmlUJPmHOKmJN19J0iy4bpHnpVY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=KirhkOVrNzpSq3yTbOlpSaCm9/puC/RQmJarziVj5EEgiPGqh999juWMIpBFgyUFu
+	 A4rbopY7RYybK0vP4lyHjgOtUpyR0zOTAnbR6eoP4PecG0u0uiKmVgUkmvn7ax2AOc
+	 I1RjiXDTbhgiRFXlsGEmQVMpxoIX6zEJCIYf0sIVgtIlXRniAytLf+MWdctMGTPf1w
+	 4udhRIqbdPFmneP3Mf3xh4rEN/YhA2Ktpr5azr/6CLZlntEuoN2kLzxmVo0vUk4Y2D
+	 AW6h6ByCJet9+gPhMDTezksZ6NGAzInQ7RY5Sy08+EsGzj/s4/Tuj4zqHhlhJdZNA+
+	 5A7IDtzPvMwUg==
+Date: Sat, 1 Feb 2025 17:14:41 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: <vkoul@kernel.org>
+Cc: Mohan Kumar D <mkumard@nvidia.com>, <thierry.reding@gmail.com>,
+ <jonathanh@nvidia.com>, <dmaengine@vger.kernel.org>,
+ <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <stable@vger.kernel.org>
+Subject: Re: [PATCH v3 0/2] Tegra ADMA fixes
+Message-ID: <20250201171441.407b91cb@kernel.org>
+In-Reply-To: <20250116162033.3922252-1-mkumard@nvidia.com>
+References: <20250116162033.3922252-1-mkumard@nvidia.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250126-ppcyaml-v1-0-50649f51c3dd@posteo.net>
- <20250126-ppcyaml-v1-5-50649f51c3dd@posteo.net> <20250127044735.GD3106458-robh@kernel.org>
- <Z5zYGdZU-IXwIuR6@probook>
-In-Reply-To: <Z5zYGdZU-IXwIuR6@probook>
-From: Rob Herring <robh@kernel.org>
-Date: Fri, 31 Jan 2025 16:16:07 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJAX1QbXvG16NV2g6DGece6KiG_V-uyKQQLA618Oq9miw@mail.gmail.com>
-X-Gm-Features: AWEUYZlhW5XoGn0HVU0ENeDHSySI0kteJDy_cGfJFvW15zruGH8F_vZTC5Jh93M
-Message-ID: <CAL_JsqJAX1QbXvG16NV2g6DGece6KiG_V-uyKQQLA618Oq9miw@mail.gmail.com>
-Subject: Re: [PATCH 5/9] dt-bindings: dma: Convert fsl,elo*-dma bindings to YAML
-To: =?UTF-8?B?Si4gTmV1c2Now6RmZXI=?= <j.ne@posteo.net>
-Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	Scott Wood <oss@buserror.net>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, 
-	Lee Jones <lee@kernel.org>, Vinod Koul <vkoul@kernel.org>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	=?UTF-8?B?Si4gTmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>, 
-	Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, 
-	Mark Brown <broonie@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, 
-	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org, 
-	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org, 
-	linux-mtd@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jan 31, 2025 at 8:03=E2=80=AFAM J. Neusch=C3=A4fer <j.ne@posteo.net=
-> wrote:
->
-> On Sun, Jan 26, 2025 at 10:47:35PM -0600, Rob Herring wrote:
-> > On Sun, Jan 26, 2025 at 07:59:00PM +0100, J. Neusch=C3=A4fer wrote:
-> > > The devicetree bindings for Freescale DMA engines have so far existed=
- as
-> > > a text file. This patch converts them to YAML, and specifies all the
-> > > compatible strings currently in use in arch/powerpc/boot/dts.
-> > >
-> > > Signed-off-by: J. Neusch=C3=A4fer <j.ne@posteo.net>
-> > > ---
-> > >  .../devicetree/bindings/dma/fsl,elo-dma.yaml       | 129 +++++++++++=
-++
-> > >  .../devicetree/bindings/dma/fsl,elo3-dma.yaml      | 105 +++++++++++
-> > >  .../devicetree/bindings/dma/fsl,eloplus-dma.yaml   | 120 +++++++++++=
-+
-> > >  .../devicetree/bindings/powerpc/fsl/dma.txt        | 204 -----------=
-----------
-> > >  4 files changed, 354 insertions(+), 204 deletions(-)
-> [...]
-> > > +patternProperties:
-> > > +  "^dma-channel@.*$":
-> > > +    type: object
-> >
-> >        additionalProperties: false
->
-> I'll add it.
->
-> > (The tools should have highlighted this)
->
-> With dtschema 2024.11 installed, "make dt_binding_check
-> DT_SCHEMA_FILES=3Dfsl,elo-dma.yaml" does not highlight this.
+On Thu, 16 Jan 2025 21:50:31 +0530 Mohan Kumar D wrote:
+> - Fix build error due to 64-by-32 division
+> - Additional check for adma max page
 
-Actually, it's the top-level 'addtionalProperties: true' that disables
-the check here. That should be false as well.
+Hi!
 
-Rob
+What's happening with this series? The buggy commit reached Linus's
+tree and broke 32b builds for everybody. The patches look 2 weeks old.
 

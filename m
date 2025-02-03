@@ -1,158 +1,167 @@
-Return-Path: <dmaengine+bounces-4250-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4251-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 99F32A255C5
-	for <lists+dmaengine@lfdr.de>; Mon,  3 Feb 2025 10:25:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id EFCA3A25981
+	for <lists+dmaengine@lfdr.de>; Mon,  3 Feb 2025 13:35:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 460823A5E9F
-	for <lists+dmaengine@lfdr.de>; Mon,  3 Feb 2025 09:25:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 98A903A4217
+	for <lists+dmaengine@lfdr.de>; Mon,  3 Feb 2025 12:35:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3BBF1FF1C6;
-	Mon,  3 Feb 2025 09:25:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F0A42045B7;
+	Mon,  3 Feb 2025 12:35:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="lCIEv6Bv"
+	dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b="dcFHh2th"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mail.thorsis.com (mail.thorsis.com [217.92.40.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEA2C1D5176;
-	Mon,  3 Feb 2025 09:25:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B0121FFC69;
+	Mon,  3 Feb 2025 12:35:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.92.40.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738574725; cv=none; b=ro3otlcwF9eiSio7Olwun+xdwYsAP8UmwHzAlnqWmkjqMGxlVE+yDOauY4yU4hbT+HtmOjsaiBVeWl2uVP0j5l2ugf2hgRsdeiPRpLvEYR66vtjU00z+oIpp259DZvgqoZ9DhHtVS1rATV+P6doVct5kQj3raTCcQw1HJl+N9z8=
+	t=1738586128; cv=none; b=DAxNEJRvXLAZLlgspC45RlyCOOSj2E181fqqRn7ETbriIUfoa+Cr/pPxKMIw5Z3n1WAQ6cWD1gH6vwyUfRQuS7qObPMqrS5Su/+qM1caawpQcCxLiG472L/4R/fPJ+n/1Zks1PvzZgT4olvwZO96wJ5+1gPPx2atymWF59vPnMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738574725; c=relaxed/simple;
-	bh=ruYBLYQL0qLEkSgQB6asPUY130gP0Tm1+lbl5ZxAfzc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CYNXjQq4GSi7qaZIUwVAUhg09FpIxO9rZGC4Hvk/xQcQW/6bbRh4EjYwzuYaqTGYHTXa/jlWFirLhwUAAh9N6EYEgmaRXsAs8m/FLmbmt8F+GSVl8TrWQKcYvFEi+KktOSy4mEaT0f/CBCwBUaUgiCev7ac6dvIZpS/yKZUnLHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=lCIEv6Bv; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1738574721;
-	bh=ruYBLYQL0qLEkSgQB6asPUY130gP0Tm1+lbl5ZxAfzc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=lCIEv6BvXlPzZ4jmRbWLRWJV78zQQcoqIEEcNEUbovPcXq1IfKInkIMI/TJiZGJ43
-	 /2SVU4791RDomk3Wj1kYb/6Jqndk+aKo9Joh5Xg34DvuwQgDjJwe+5Y+4LZYl4jScH
-	 inaG9zZjpieCVt8aQ1YUK0ubN7S3dc+Y642ZcnPRiiaQz+B42pI1uR9MaBmed63RGU
-	 vjvxN3GbqjOakH/kypww7VsA9jO/wIpwR8ismxoz+3LYf0gOj06ZcnKORAS1LhG2Qv
-	 r5sF7ySXoNU+3lJbgGlY7sCLU88d5Mk2c4QGjNLEYB2dmfxXh7ETNY7ipAo9wLp0XV
-	 v/CjAZg5YZJIQ==
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 8DB5617E0E37;
-	Mon,  3 Feb 2025 10:25:20 +0100 (CET)
-Date: Mon, 3 Feb 2025 10:25:13 +0100
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: Simona Vetter <simona.vetter@ffwll.ch>
-Cc: Florent Tomasin <florent.tomasin@arm.com>, Vinod Koul
- <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Steven Price
- <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Sumit Semwal
- <sumit.semwal@linaro.org>, Benjamin Gaignard
- <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>,
- John Stultz <jstultz@google.com>, "T . J . Mercier" <tjmercier@google.com>,
- Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>, Matthias Brugger
- <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
- <angelogioacchino.delregno@collabora.com>, Yong Wu <yong.wu@mediatek.com>,
- dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- nd@arm.com, Akash Goel <akash.goel@arm.com>
-Subject: Re: [RFC PATCH 0/5] drm/panthor: Protected mode support for Mali
- CSF GPUs
-Message-ID: <20250203102513.1a020577@collabora.com>
-In-Reply-To: <Z5ulnIuzapOVBQgb@phenom.ffwll.local>
-References: <cover.1738228114.git.florent.tomasin@arm.com>
-	<Z5ulnIuzapOVBQgb@phenom.ffwll.local>
-Organization: Collabora
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1738586128; c=relaxed/simple;
+	bh=CxfZW7dBnO3GBXmccZ9Y/mBeu6zRLvvGYqVPWtDM8rI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mNr5kxnDTzocd9kv4p9wttEOC2sEnAwTtqqePwqpfyon0uwSmoMDQKSq28YZQqD1pDhgjFIIYh3+U4Uta5XTFPitoPn0brGlqb51amalU+jDjwg9+YK9J6GKiBlm0XFROmRa5nhd59geUD7xkq2vY/FA9SFAE/GkYVuXuKA6WoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com; spf=pass smtp.mailfrom=thorsis.com; dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b=dcFHh2th; arc=none smtp.client-ip=217.92.40.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thorsis.com
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 7F6CF14830BD;
+	Mon,  3 Feb 2025 13:27:03 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=thorsis.com; s=dkim;
+	t=1738585624;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YKnI1H6bH4Cdf0+aRcBE2xV6xY9vSuXcbUzXoEYfRuc=;
+	b=dcFHh2thNZzdlG/h8AL7zj5T96WsL+ZwTrkv5rpW0fA/Kbb4iKWfX1iy4NXnl+IExfYHop
+	OM2xWT4w4gmASbcQBsWPh5kUdKj34Oe3rPrXk3ylNGsjiWjeVDagfe3x8y4tQpyr3i1Qs3
+	z61tW7ik4TKnPj7QLFWnn/A9T6xJ+vX/LY4j8RGwXTXs5R60oK9Oyt05jvFYV4MQ7Cgq0B
+	+T1VU0dr5xPXc/7tRVI7CYFm5tcrP7pi7DGNXeSlJdY4e6kLkddZv/ucgIso/5dGdkCWff
+	aXLMZjF3FNIwnkApjt/Q9ykr97zmzLKwRjPYP7JXmdTtTrWuE2j2K3k7BAySwQ==
+Date: Mon, 3 Feb 2025 13:27:02 +0100
+From: Alexander Dahl <ada@thorsis.com>
+To: Bence =?iso-8859-1?B?Q3Pza+Fz?= <csokas.bence@prolan.hu>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Mark Brown <broonie@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>, linux-spi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] dma: Add devm_dma_request_chan()
+Message-ID: <20250203-chalice-ninth-8235590e29d2@thorsis.com>
+Mail-Followup-To: Bence =?iso-8859-1?B?Q3Pza+Fz?= <csokas.bence@prolan.hu>,
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Mark Brown <broonie@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>, linux-spi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+References: <20250124085221.766303-4-csokas.bence@prolan.hu>
+ <20250124085221.766303-8-csokas.bence@prolan.hu>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250124085221.766303-8-csokas.bence@prolan.hu>
+User-Agent: Mutt/2.2.12 (2023-09-09)
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Thu, 30 Jan 2025 17:15:24 +0100
-Simona Vetter <simona.vetter@ffwll.ch> wrote:
+Hello,
 
-> On Thu, Jan 30, 2025 at 01:08:56PM +0000, Florent Tomasin wrote:
-> > Hi,
-> > 
-> > This is a patch series covering the support for protected mode execution in
-> > Mali Panthor CSF kernel driver.
-> > 
-> > The Mali CSF GPUs come with the support for protected mode execution at the
-> > HW level. This feature requires two main changes in the kernel driver:
-> > 
-> > 1) Configure the GPU with a protected buffer. The system must provide a DMA
-> >    heap from which the driver can allocate a protected buffer.
-> >    It can be a carved-out memory or dynamically allocated protected memory region.
-> >    Some system includes a trusted FW which is in charge of the protected memory.
-> >    Since this problem is integration specific, the Mali Panthor CSF kernel
-> >    driver must import the protected memory from a device specific exporter.
-> > 
-> > 2) Handle enter and exit of the GPU HW from normal to protected mode of execution.
-> >    FW sends a request for protected mode entry to the kernel driver.
-> >    The acknowledgment of that request is a scheduling decision. Effectively,
-> >    protected mode execution should not overrule normal mode of execution.
-> >    A fair distribution of execution time will guaranty the overall performance
-> >    of the device, including the UI (usually executing in normal mode),
-> >    will not regress when a protected mode job is submitted by an application.
-> > 
-> > 
-> > Background
-> > ----------
-> > 
-> > Current Mali Panthor CSF driver does not allow a user space application to
-> > execute protected jobs on the GPU. This use case is quite common on end-user-device.
-> > A user may want to watch a video or render content that is under a "Digital Right
-> > Management" protection, or launch an application with user private data.
-> > 
-> > 1) User-space:
-> > 
-> >    In order for an application to execute protected jobs on a Mali CSF GPU the
-> >    user space application must submit jobs to the GPU within a "protected regions"
-> >    (range of commands to execute in protected mode).
-> > 
-> >    Find here an example of a command buffer that contains protected commands:
-> > 
-> > ```
-> >           <--- Normal mode ---><--- Protected mode ---><--- Normal mode --->
-> >    +-------------------------------------------------------------------------+
-> >    | ... | CMD_0 | ... | CMD_N | PROT_REGION | CMD_N+1 | ... | CMD_N+M | ... |
-> >    +-------------------------------------------------------------------------+
-> > ```
-> > 
-> >    The PROT_REGION command acts as a barrier to notify the HW of upcoming
-> >    protected jobs. It also defines the number of commands to execute in protected
-> >    mode.
-> > 
-> >    The Mesa definition of the opcode can be found here:
-> > 
-> >      https://gitlab.freedesktop.org/mesa/mesa/-/blob/main/src/panfrost/lib/genxml/v10.xml?ref_type=heads#L763  
+Am Fri, Jan 24, 2025 at 09:52:20AM +0100 schrieb Bence Csókás:
+> Expand the arsenal of devm functions for DMA
+> devices, this time for requesting channels.
 > 
-> Is there also something around that implements egl_ext_protected_context
-> or similar in mesa?
+> Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
+> ---
+>  drivers/dma/dmaengine.c   | 30 ++++++++++++++++++++++++++++++
+>  include/linux/dmaengine.h |  7 +++++++
+>  2 files changed, 37 insertions(+)
+> 
+> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+> index c1357d7f3dc6..02c29d26ac85 100644
+> --- a/drivers/dma/dmaengine.c
+> +++ b/drivers/dma/dmaengine.c
+> @@ -926,6 +926,36 @@ void dma_release_channel(struct dma_chan *chan)
+>  }
+>  EXPORT_SYMBOL_GPL(dma_release_channel);
+>  
+> +static void dmaenginem_release_channel(void *chan)
+> +{
+> +	dma_release_channel(chan);
+> +}
+> +
+> +/**
+> + * devm_dma_request_chan - try to allocate an exclusive slave channel
+> + * @dev:	pointer to client device structure
+> + * @name:	slave channel name
+> + *
+> + * Returns pointer to appropriate DMA channel on success or an error pointer.
+> + *
+> + * The operation is managed and will be undone on driver detach.
+> + */
+> +
+> +struct dma_chan *devm_dma_request_chan(struct device *dev, const char *name)
+> +{
+> +	struct dma_chan *chan = dma_request_chan(dev, name);
+> +	int ret = 0;
+> +
+> +	if (!IS_ERR(chan))
+> +		ret = devm_add_action_or_reset(dev, dmaenginem_release_channel, chan);
 
-I'll be looking at a mesa implementation for EGL_EXT_protected_content
-in the coming weeks. I'll probably get back to reviewing the panthor
-implementation when I have something working in mesa.
+Why not using dma_release_channel() directly here?  What's the point
+of introducing dmaenginem_release_channel() further above?
 
-> I think that's the minimal bar all the protected gpu
-> workload kernel support patches cleared thus far, since usually getting
-> the actual video code stuff published seems to be impossible.
+Greets
+Alex
+
+> +
+> +	if (ret)
+> +		return ERR_PTR(ret);
+> +
+> +	return chan;
+> +}
+> +EXPORT_SYMBOL_GPL(devm_dma_request_chan);
+> +
+>  /**
+>   * dmaengine_get - register interest in dma_channels
+>   */
+> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> index 346251bf1026..ffb54b52ef0c 100644
+> --- a/include/linux/dmaengine.h
+> +++ b/include/linux/dmaengine.h
+> @@ -1528,6 +1528,7 @@ struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
+>  
+>  struct dma_chan *dma_request_chan(struct device *dev, const char *name);
+>  struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask);
+> +struct dma_chan *devm_dma_request_chan(struct device *dev, const char *name);
+>  
+>  void dma_release_channel(struct dma_chan *chan);
+>  int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps);
+> @@ -1564,6 +1565,12 @@ static inline struct dma_chan *dma_request_chan_by_mask(
+>  {
+>  	return ERR_PTR(-ENODEV);
+>  }
+> +
+> +static inline struct dma_chan *devm_dma_request_chan(struct device *dev, const char *name)
+> +{
+> +	return ERR_PTR(-ENODEV);
+> +}
+> +
+>  static inline void dma_release_channel(struct dma_chan *chan)
+>  {
+>  }
+> -- 
+> 2.48.1
+> 
+> 
+> 
 

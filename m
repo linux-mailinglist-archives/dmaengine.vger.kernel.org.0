@@ -1,245 +1,282 @@
-Return-Path: <dmaengine+bounces-4268-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4269-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 192FDA277C2
-	for <lists+dmaengine@lfdr.de>; Tue,  4 Feb 2025 18:03:47 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 26922A27827
+	for <lists+dmaengine@lfdr.de>; Tue,  4 Feb 2025 18:19:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 047D13A7F56
-	for <lists+dmaengine@lfdr.de>; Tue,  4 Feb 2025 17:03:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 89BF93A2957
+	for <lists+dmaengine@lfdr.de>; Tue,  4 Feb 2025 17:19:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD38F215F54;
-	Tue,  4 Feb 2025 17:03:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68CE42163AB;
+	Tue,  4 Feb 2025 17:18:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hxekTmU8"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="OCMUSW0I"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2065.outbound.protection.outlook.com [40.107.92.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4A03215F74;
-	Tue,  4 Feb 2025 17:03:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738688609; cv=none; b=acitZETcvqsxRahjcb4K79jX3ih+LoFF1TcQiA98ml5xc/u1m6DvmOCQtcRWtUpUJ5AR7sSSnm5/ME6qZN2MhswD/ZDjyMQkjhSg2Y71gVXQ/qOJ96DdadE6ORzUwO/uud0fShsxz8JGm3aS7CDSRphF4F5jP8l576AoqjofSRc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738688609; c=relaxed/simple;
-	bh=E8RF/l5fhDegnIKTjohFkCM7t7+gGetyChqnwBJ62gk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YbkJ7z/WnnSsVEhJSAeKsiTQNAL8Ui7HpAkgSZrjIw3SHse5pExzzccECZmGqP/uleMRmYXs8WJlLPNr3w5AN5MncGP+8Y8wnrNNiVLwH0jR1zwrJfmSB+IEFLm+Vx7xg7EZTeXkPZkc5MmdyzP46SU2yw7mkQzwQeXiWiXzeY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hxekTmU8; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4363ae65100so69257545e9.0;
-        Tue, 04 Feb 2025 09:03:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738688606; x=1739293406; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RJlXgOl2VRAjUJ8u35f0etlEcwGJNxslv3jGkMjZZIs=;
-        b=hxekTmU8f8Ydm4+S3COp8MWFbJimitty9nS42T8uVLqAdL6zAcRhXTcpzyoeSUMwLf
-         BGkyI7lnq96y1Sy243loyWRZJloUOaa7Eg7cN3eTwheB9+M7GBZsJmrBfJDStVwc7H2H
-         X1wvQXuqmJa3z8DoxGKwxJBIXT9nTMlfvUlvOuvVFMbFHv98fs4XVYkMutpD+3ZTtKMF
-         TKEVBgYFWxkAZnP3abvy6C1E3AlVA/oipV6EyDh7buLyE7q5Z50bn4W/rnczs18SHiO1
-         /KlClr6/HhmXzbKl/8wK1/Uy2UA/Lp6QURFkA2kFgbZEQC6ASIRUSvfZr0B8IppF39ZE
-         0Utw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738688606; x=1739293406;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RJlXgOl2VRAjUJ8u35f0etlEcwGJNxslv3jGkMjZZIs=;
-        b=Dw0+lFpDWCCFO2EEsshaAga6rsDsEufyhaTwo+U+etUcH5xbSjuEV6PS1o5E/vkvA3
-         941wEq4wTmzvjxiWE2eFGbVt6VFGxjjPwLks2Y/J/WyJO78/fY9SHavKpM2ezD7iY6QG
-         CgYpYeaO2s+mYi0dJ0Mh2p6JjMz5svyDwDV3WvJCXGBQsyn13DyFZkdBV8BJnro7DjQx
-         UPlKz73M9L6Dtwf2t16/kmavGoiUSHcoQg+nAM/1HwEO0WHvTBaWAbpgd8Y/p5YFA3xY
-         0sOb1vs/IByIIn/aB0QGBEuhj0o8AzQgBG1j5bEgMF5g1Z+Af9C03FfHO81ufNv4DZ+X
-         G3Dg==
-X-Forwarded-Encrypted: i=1; AJvYcCUhLgOrHa4zzVnfT5kt94lovajHEWqFJcRC0KVhw2Sbw+IvdFgswT6+P/d9iV4RSmeQ5KMirmshNxb7x70=@vger.kernel.org, AJvYcCW+EkAios3VaC6w4MZyxBfHy5fLktRNpo2UUliHBekWfIb69n64r/fLaOqkCLlamS2q/Hje+kTkLC0=@vger.kernel.org, AJvYcCWNXUksUsVkxnSizG2j1a21Xb2jkTKrlwBSepNYqQ9vfuVtFNQdm7KZlUkTvkdltkxdMAik83cYBCj0ylmj@vger.kernel.org, AJvYcCXLYFUY1yhL73+KtI1vkP1YjYLwV6xiQmqjpQpw0jQ7d+/vTyjBwZJfepYkaC7f1LPDJF6fc3l9@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGevsDRrdoXtFXDfkfytqwU8UCvkZVzuTKovBhU1Rxu3H9f4uA
-	V5lsyndhOSIAqmamnhgJMMGRhzIIWg5ieuZ3vUZRHazu/t6oiEVk
-X-Gm-Gg: ASbGncugTiNdxdeusLyC8M/up58zhHZK1OnBj7aw8wXnSV6/lGR4+4U/WsDC8r0hmPy
-	P30DKaLXlnWp2J2Qm/2cnkoy78RQSkyPFomiXwG5n7Zmjig6rouiCz3evo1POXiH1Zpc/M4LCJR
-	RsMi0fCsU+ViC+y471tlB2s7qe9UJECP1qTMhbC+4Gudt7xg6IPoBDjcUjOjOScQnEEF/JTWcWI
-	4PBEEw+PX4EBduQ2KIy/GR/C4YOLGD4x937xx/uvqUzUsFB9Yb+wWjP9Q8eZ9X0zOsrIXlYBKuo
-	eED0hL2Wqk/Qw8du5qOBOC8FnB3N2rPLOgJGC5dy/yyO/eSFR56ofU2ukqleGwK4QAqJsQOBUU7
-	lhA==
-X-Google-Smtp-Source: AGHT+IFuYLVNYZ98Q10JnMDLiyK6TyIQLXJ2SpGRGUPbmSrXDHm0ww9KWQ7sxRxXVNELVQNtb8I39w==
-X-Received: by 2002:a05:600c:4713:b0:434:a852:ba77 with SMTP id 5b1f17b1804b1-438dc3cadf9mr278808005e9.15.1738688605335;
-        Tue, 04 Feb 2025 09:03:25 -0800 (PST)
-Received: from orome (p200300e41f281900f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f28:1900:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438e23de880sm194577805e9.12.2025.02.04.09.03.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 09:03:24 -0800 (PST)
-Date: Tue, 4 Feb 2025 18:03:22 +0100
-From: Thierry Reding <thierry.reding@gmail.com>
-To: Mohan Kumar D <mkumard@nvidia.com>
-Cc: vkoul@kernel.org, jonathanh@nvidia.com, dmaengine@vger.kernel.org, 
-	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	kernel test robot <lkp@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 339CB216388;
+	Tue,  4 Feb 2025 17:18:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.65
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738689539; cv=fail; b=idWREmnsIBaU4hsJ/3FrdS8zhR97eLMRSU3cmmXl9Ac2RzLitzYX4Vz9/yby4NPvht0Xc2kSAFgjBLVhvMpMiqbWaBo3mwntHqZIrD2oFQ14mw/Vviycw3Y8isy9eVqy7hV9qluLjUWuLS2FWCBefA5SGG2MzyfPUdug1AzFXXE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738689539; c=relaxed/simple;
+	bh=BybnetRjXyty4WXBq7pstFLbmvBRvLxhBEBltnzsEHQ=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=CSdEspXpInwmS4re1VrNi+Om/y935kRHTSPSr65+KTk56dL+67ZpjiHmQLoEegEUCms2q2LbmRBOVPhIhSIHprvkGQDPMMO0RYT+836SRpp3MxEkuVYKg6qI+Kf4+pPGTg0IuuruSWn1ETOnNOWtUblzLmLDi2Fa0qKWwQjKDS0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=OCMUSW0I; arc=fail smtp.client-ip=40.107.92.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Xnbc8RZRMGUHf9VShSZTSdQWqJzfl5p5CyEi62Vp1vv8LjDT9XaNkceh+Y64cB/ucgkpPRgQyeOa11uNWwX9MHRyMu4Cw7d7kprWZ5N3FSW5sBTo6IMhtPjyYt1/qmgYObNuSUeKaj+N71DIzSZfogo8MWhQHBuPb8dU+0WyRmE/slvub8nD6UT2wprzoSpTQ9LSfI6ipx5UBJJaO0qAFozi/fFDRifrdBS/y7X5+Bt07ON62JjVlMqR4yVxY8LvtxGT5urtbCL1qxhp6hoE+c0bNW3iPnuSjChecNmdrIvAufJcYGmdYb8PwrtTj1PX13Wr4Jtgt2YhIRv/MudO2Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DlHyEBoltd+TIErq3or4VjduzaX87iqh6xHd1WHkt0w=;
+ b=i9pBOMBX7qN4+pYcQRvejkdvwkR/s1kr7K3gIIrg+PH3QZ8Y4b2D9vQF5U4muFHrRY+USi3Q62XWDzo5YcV9Cq++z6e1u0lDEPwbkEojp50KAwuTJEGF6/Z3JBq10/oSf3gfNRwta6X9YUkbeObdxZ2+ch7g35X07O8hxjACVDiSn6CSM/aCVwv9vRB+fAqPO7W4kbtxx+ovnsjlVn8fy+rvmSmRiA/lGzsJ4ecasjyN9iYls+Li1rj+f+6tx+1+oQ9ftHsE8gUKhRRE7XM/NQuSz9YMpJ5XPvWXiYqThNFwFsnJgthT0MB3CyzIAP/qe02/WSD5xJj3CvBN0LBvVQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DlHyEBoltd+TIErq3or4VjduzaX87iqh6xHd1WHkt0w=;
+ b=OCMUSW0I3zrlwKPn8XwtGG8du+paUw1dfQo8geCBYjsgqJFMf3vsbWYZ6tdwspTg07kvmtByQrnZ4VUAR+N6D3m8QIHR4UPPcHTEEKyshOSwi/c7UFUJcI1v5V0LWIM8pq0a7as8v585At8OyOHzxYeA3xhKoHy3iyjAJ2tgNp5IKbEijorjv2mwuCo/9VXqu5N+mgRitT1EC6Y/eDR0LDza9Lij7kgTXy56Y4OXd1M2FFwnuMZqEMfOy2tWk+qbCtWbZHPZbDUE2vogEhpCzjEyXS8X7+T1cemL5VkmWk9UgkRMxqbIJ/BkCNb+XUpOcjlMykOVjTQx1zyO1JwyGg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from SJ2PR12MB8784.namprd12.prod.outlook.com (2603:10b6:a03:4d0::11)
+ by SA1PR12MB6920.namprd12.prod.outlook.com (2603:10b6:806:258::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.24; Tue, 4 Feb
+ 2025 17:18:52 +0000
+Received: from SJ2PR12MB8784.namprd12.prod.outlook.com
+ ([fe80::1660:3173:eef6:6cd9]) by SJ2PR12MB8784.namprd12.prod.outlook.com
+ ([fe80::1660:3173:eef6:6cd9%4]) with mapi id 15.20.8398.021; Tue, 4 Feb 2025
+ 17:18:51 +0000
+Message-ID: <c5e7e8a3-2e8e-4d68-8e06-a7a3f7fc451e@nvidia.com>
+Date: Tue, 4 Feb 2025 17:18:46 +0000
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v3 1/2] dmaengine: tegra210-adma: Fix build error due to
  64-by-32 division
-Message-ID: <52n364alceto6tgitbnjbfgtrk2lpe5ipztxi4abnuikjwgnvk@i6irrkj6fqbb>
+To: Thierry Reding <thierry.reding@gmail.com>,
+ Mohan Kumar D <mkumard@nvidia.com>
+Cc: vkoul@kernel.org, dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+ kernel test robot <lkp@intel.com>
 References: <20250116162033.3922252-1-mkumard@nvidia.com>
  <20250116162033.3922252-2-mkumard@nvidia.com>
  <dsxaisxdpsxecyna527cifixyurmkgo3cfaiheau5jjdl5qysp@64qquncxdmof>
  <84382200-e793-4e9a-b25a-8dc43e7a8bd0@nvidia.com>
+ <52n364alceto6tgitbnjbfgtrk2lpe5ipztxi4abnuikjwgnvk@i6irrkj6fqbb>
+From: Jon Hunter <jonathanh@nvidia.com>
+Content-Language: en-US
+In-Reply-To: <52n364alceto6tgitbnjbfgtrk2lpe5ipztxi4abnuikjwgnvk@i6irrkj6fqbb>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO4P265CA0056.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:2af::23) To SJ2PR12MB8784.namprd12.prod.outlook.com
+ (2603:10b6:a03:4d0::11)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="vyjr3c2wmimjx3vo"
-Content-Disposition: inline
-In-Reply-To: <84382200-e793-4e9a-b25a-8dc43e7a8bd0@nvidia.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR12MB8784:EE_|SA1PR12MB6920:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9600cc90-ab3a-4eae-2efd-08dd453ffec1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|10070799003|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?bUprTlhkajJrTTY1TUprK2ZiTzE0dWRkNjVLVjd3NFIyTXlPSngxa09DZk9M?=
+ =?utf-8?B?UGdodDJTRkYrdXc5c05veUliK0FvbTFsWUhZOGYxTjlLZHFHZngrS0VpNTdL?=
+ =?utf-8?B?czB0KzlRekFpWTJaQXZSVTZZclBON3ZxUXBrN3VaV04wT1dpSU9FVmJndFhi?=
+ =?utf-8?B?KzFta0VZZU5JRGo3UUJodDNmZHloNGMyMm9VeXJFNDM1Z2o3THNqZmV2Nlpa?=
+ =?utf-8?B?dG5kVVArMUFrQWVERUxSSEh5V3FjdFhudUxiS2Rsd0FBMDJxOWJab0EyUzNT?=
+ =?utf-8?B?dTZEeXZzS01uSit5VEpMamtHcUtxbUo3ZVB1U2JNZENsa0hTUUlVNjJiRmw5?=
+ =?utf-8?B?TVNQc21kUkEzSlFWd2lhY3U2dStRVnp3ZWc4N0FWQ2J5V2pGcUtXUnRrNlRF?=
+ =?utf-8?B?ZlVsU3ovOEg1RzNoV3U2bWpQTUNDK0VyZUNOcmllOU9vNldtUG1uZ2U2WFZH?=
+ =?utf-8?B?K2RQV2YrTWt1N3BWRnIrajZiM3A5azBoOURpd3hWL3lQcXNOcTN1a1dZNkdh?=
+ =?utf-8?B?L0tQS3NKTGVaZkhyZElva1kwMzdRSFhIQzZFSEFCYmltckpneWdJYW5QNHNk?=
+ =?utf-8?B?eDJTZkxSTHg2UjBPcndiWVp4MmVMVTZ2OTdTY2ZjbDYxNTB0NFBuVmttYndH?=
+ =?utf-8?B?RXVXUk5BTlVSaDV1N3A4dnppNUwvRlVBV3dZUVUzRWFERTlqMDVWVDR6WVlV?=
+ =?utf-8?B?STR4V1RpK3RpNDhvMG1RYS8zeXNoaHU1d1dHK09yMXM4OGRYaC9tL2pqdUNH?=
+ =?utf-8?B?N2NmOTY5ZHR6TzlCMkhsRm9DQjd2M3gxMERZNFhpYVAvY3Y2TjNlbjVnbk0y?=
+ =?utf-8?B?NFJ5ZWNQcWNtcy9EMGNkV3FlT0xvb3VNaDBnUkdSWG9JV3E5bUI2WmhWNjh4?=
+ =?utf-8?B?SWJDaWpYUnlkbHd5NjdZTG1XbG1UWUdMeVYxNjR2S3FaOVE5R00vaWRzU2VN?=
+ =?utf-8?B?aDIzUFd3VEc2TmN0ajBWY1NCRVNLV3VDNHcwVm1wcmJNbnV3bVh1cFE4Nkxr?=
+ =?utf-8?B?OFY1SXl2ejlJN29VR0pRK1ZTZmdmOUI1dENkcm1kL2NJUlNIbjV5R0F3dmlR?=
+ =?utf-8?B?UHUvblJ2eXhpTWg3amFaM1doSDVvYWtWYVJ2NFQwbDlDSEtEYnJYSnpKSFF5?=
+ =?utf-8?B?dHo5S2lqYkhFdkVxQ3R4cldCMGc1SVpZVVE4MGNyRFdobEdhRTVKQmI1VUVz?=
+ =?utf-8?B?dlVwM09mc3Njd2NnU3NqTHRiQVlJUjFTYzlpODh0ck9XRXRhalg2eFlTcDF6?=
+ =?utf-8?B?WXRYWDk3K2h0M1J3c0lrWXdHbTNSTkZzeTdhZyt5S2JaNVdsTUVxeWRmdmor?=
+ =?utf-8?B?aXB2L1RLNlFsNWMwUEx2WERFb0J4SjJVWnpDOTVJYzJuRDVtSXBhZUZjdkUr?=
+ =?utf-8?B?dFdMRlJabzJWS1NXYW9scXdxWVdpcENYOHBDM1ZlWVhXdWVUbGpTR29qSXhl?=
+ =?utf-8?B?ZTB6RmFFZjR3TzJQbU8xWFNCaVFMOFQ3cW9lNXFacGZ0TXUvUmJpTmlRMHU4?=
+ =?utf-8?B?UUJUblczMUZ6ZEZCODlUVldDM0hVV3NoTXE0SmtPZlZnQlRSY203a1JUQ1Nr?=
+ =?utf-8?B?amJMV01VWitCSktHQm1CeWlkQWNTM2dGSzg1b1poelRDSDdmODNpZS8xL1pz?=
+ =?utf-8?B?eXd6b05ZRTFoTjVjSjZVYmJseXRxZFdTbGp5UXZvOXJoazdjdndWUmk0cCtK?=
+ =?utf-8?B?ZnZFY2ZpTGdBSDhvWEY3ZmxXQmY0amdwZmUrZERDRzJsMElmRU1MNWtZanBM?=
+ =?utf-8?B?cjFDSmRuN2E5ZWk0NC9FVDdhdnZGMjF0WmlCcFNROVR4aTZnODhFR2krL2VX?=
+ =?utf-8?B?Rzd5MHRXT1hibFlaY00vRnJ4Y2p1YUhwNHhwSlBRMkY5K2twZnMrWjhZYjFZ?=
+ =?utf-8?Q?tUdG4zyDcl/pu?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR12MB8784.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(10070799003)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Rkx4c01tU096RllZWHNvTGlwVHJaU0IxUVhJNlFEc3JtamkyR1NYSGlrT3Vj?=
+ =?utf-8?B?VERTcFQ3VWpqNlRlZHZtTVhKOW9sdW44Q00vdWdnSS9mbjg4V1FnVXJxYUQz?=
+ =?utf-8?B?dllaeTlRYmpndHNlT01xWHl2c0V1N1pNeUoxeTB4cElvWHZQRjJLZmRQckd4?=
+ =?utf-8?B?YWlFU2V5NGtoZEJ0dUlFOXkwTWozU040VnFUbVlQR2dyWVN5M3E0RUg0RGFT?=
+ =?utf-8?B?eTRqL0F5dTRwR2RkS0V4SWsrRm5RMGpyYW4rZ2lNMlcwbDBYMjQ4Qjg0UlRR?=
+ =?utf-8?B?L25sSkZ3cXdnVE1qZituM1NqZS83WnFhYjQ1QVJyS29ZQ2YwUnJjSUtvTjho?=
+ =?utf-8?B?RDhkcEJzdmJ0UmVRckZ4dmV1dEo3MzYvNEFGY1dlV3NXNWUrY0N0TDNTSWRh?=
+ =?utf-8?B?cE8yK3dwOGU0dGU3bnRMTFFvNlR2bldETE41OVdrdjlDNy9RYUc1V1AvdVNG?=
+ =?utf-8?B?d0Vvc2xBaDVnVzl6cVNHWU1TTGIrTzhBZTIvSTB2b2t6OVJ0dDdFR3dmUkRI?=
+ =?utf-8?B?OFpnRjBwdFBHNXRLL0puRWs4UWdEajhmbXRja2NRa3ZPbzFYSFVDWHM1K2xz?=
+ =?utf-8?B?UG9xbm9BcU52WlByRUxQZVFjcnBLeTliMmEyVElqWnoyTVpwZnJWN0pKbTNM?=
+ =?utf-8?B?MEEyUlM2K1Uza2kxMnBEc3prR0VsaU1wY2I3Y2llR3UyL2hrNHRJQUhZbGEz?=
+ =?utf-8?B?ZEVuUllhZklpTE1jTk05YXJkN0JpSTZIRkdXQk1wL0J1UmFWSkpJMk8zMU9E?=
+ =?utf-8?B?Y2hyWmRINTBKRDBSTStmMDQyaUVMQ2liVUpuaXc3NXhJSjFIa2NXeDRSc3Bw?=
+ =?utf-8?B?M3VjVjJCMEZ4eTVrOWpDQ3JHT1ZweXJXMEpHZDlpUHVQMXp3QkVxMnEraVor?=
+ =?utf-8?B?dTMvMUR1ckw0SnF5V2pBQ3dacGU4bnNydUYxUzlUVU5GOFFBSHFUMEhEVjZS?=
+ =?utf-8?B?TzU0OFJqcDNJWjllRXZqVXdLS1VwNk16TzlVSjVvM3FwMjYrU2dlaWh6Tkls?=
+ =?utf-8?B?UWVycEtOVEJ5bGF6VzZyUVc4QSt4a1NKTUJuMFFxUS9YUXcxNVdwSk0wUHZK?=
+ =?utf-8?B?aVZLYkJFcElVZWtrWnk4c3Nwem45ZCtQQWxhclRoaTFCcWgxNDdLRWZ6bFdB?=
+ =?utf-8?B?aitCSUkxV0NIQWJRVEdBUk15aHYwQm5JcGgrVTdoSFNqNHNHN0IwVmJ5Z3R3?=
+ =?utf-8?B?NTNnZk03Ujl1TjFaOFoxL3dSVDVDNVM1WnlGZHM2dGxESlA5dWNQM0RGVUtB?=
+ =?utf-8?B?VHJtR3VTeHNQYUc1N0FLR0NZYSs0MHliS2pMcDlSNlh4QzlxU0hBTFN2RWhs?=
+ =?utf-8?B?NE1qeTFvZjRZcHFmVFlaU013ekhzbmM4REF6Sm8wSkJlLzZiT3BLaHJXNGp4?=
+ =?utf-8?B?eVI0TFFQVHBVUkFyajZ5L0E3Tmo3amxta2k2YWtocmZIUjlhK3ZndDRObDRL?=
+ =?utf-8?B?dWVQMGk1a3JROE9RdzFDczRGeExlamVEYllGYXJjNTVKQUhkaW1yYzVySXRj?=
+ =?utf-8?B?azRxaGlSYlhBKzR2UjdkWFZFejkyKzV0VDhGSXgwSi92RUF1SWVtMlQ4MGVs?=
+ =?utf-8?B?QXpXaEQ0cS91VTlPNDlRWmtxUnkvdHc1ZzkrWFg0WTQ0d0k0aFRiaWJMa21Z?=
+ =?utf-8?B?am1VZzVOamhDUVVHcFA0M1JDNEZXUks3UWlCNWQ3MWdqTGRUaVEydGNtUHY3?=
+ =?utf-8?B?bEY2VDNlbzNnY3hRNnkxd0o0dTljZFhmNEc4NjNkanFUTkN4TTUvdVZSUFRX?=
+ =?utf-8?B?TWlDSk1TNWpOSmk2bGlQTHc4UEYvay96VWM5M0FJNUhHU2xkZGF1SEhyL05F?=
+ =?utf-8?B?TnlLTEN2bkhQQlZmUjZ6Z0dTZEhtczBMV0lvTzJLaEJtc3dMdXd5a3JsTDNN?=
+ =?utf-8?B?UXY4cFM4bGphc1diK29TRUlCNmR4MXdRMDRrdjcxWGZxRXhyUnpxaisxcXVi?=
+ =?utf-8?B?RFpVZ3gvL0RyaUszb1RjVlQvbXJIQ3BVK29UNlZoaEI0d1N6SEZXTFVsUlBp?=
+ =?utf-8?B?amVmQW5tY0hUTDhpSWorN2EvTHN1c2x0MDYrU3RPMXpBRTMwVnVUZFRzYXJI?=
+ =?utf-8?B?Z2oyWlFOK2tlY1VsMkxUSFBDKzA0MExwU1BLanhMeFp5dkJ6czhncWYxd2M3?=
+ =?utf-8?B?S1lvS1VFTk9CZ2FIcGdNVmtzNHpGUjg3UEd2YjNkSjBNSCtsdHVIbHMveC9w?=
+ =?utf-8?B?Tk1sVWZyS0p2NENFNEhKb1Q5VHJLV3RXTklOWEhxaWJYL1lFenR4WWtuRGxh?=
+ =?utf-8?B?ZmN0NElBT2orTUFERkdiVWVVLy9RPT0=?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9600cc90-ab3a-4eae-2efd-08dd453ffec1
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR12MB8784.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Feb 2025 17:18:51.8856
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: GAVh2ADt5uBU+bqExrKMZifrt8iVnOQcZe5WSCLdQ0nY+dT+GUg4+46rQ93m6nq0jvTFudOdhEmQ8Tn3z0pLrA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6920
 
 
---vyjr3c2wmimjx3vo
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 1/2] dmaengine: tegra210-adma: Fix build error due to
- 64-by-32 division
-MIME-Version: 1.0
+On 04/02/2025 17:03, Thierry Reding wrote:
+> On Tue, Feb 04, 2025 at 10:13:09PM +0530, Mohan Kumar D wrote:
+>>
+>> On 04-02-2025 21:06, Thierry Reding wrote:
+>>> On Thu, Jan 16, 2025 at 09:50:32PM +0530, Mohan Kumar D wrote:
+>>>> Kernel test robot reported the build errors on 32-bit platforms due to
+>>>> plain 64-by-32 division. Following build erros were reported.
+>>>>
+>>>>      "ERROR: modpost: "__udivdi3" [drivers/dma/tegra210-adma.ko] undefined!
+>>>>       ld: drivers/dma/tegra210-adma.o: in function `tegra_adma_probe':
+>>>>       tegra210-adma.c:(.text+0x12cf): undefined reference to `__udivdi3'"
+>>>>
+>>>> This can be fixed by using lower_32_bits() for the adma address space as
+>>>> the offset is constrained to the lower 32 bits
+>>>>
+>>>> Fixes: 68811c928f88 ("dmaengine: tegra210-adma: Support channel page")
+>>>> Cc: stable@vger.kernel.org
+>>>> Reported-by: kernel test robot <lkp@intel.com>
+>>>> Closes: https://lore.kernel.org/oe-kbuild-all/202412250204.GCQhdKe3-lkp@intel.com/
+>>>> Signed-off-by: Mohan Kumar D <mkumard@nvidia.com>
+>>>> ---
+>>>>    drivers/dma/tegra210-adma.c | 14 +++++++++++---
+>>>>    1 file changed, 11 insertions(+), 3 deletions(-)
+>>>>
+>>>> diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
+>>>> index 6896da8ac7ef..258220c9cb50 100644
+>>>> --- a/drivers/dma/tegra210-adma.c
+>>>> +++ b/drivers/dma/tegra210-adma.c
+>>>> @@ -887,7 +887,8 @@ static int tegra_adma_probe(struct platform_device *pdev)
+>>>>    	const struct tegra_adma_chip_data *cdata;
+>>>>    	struct tegra_adma *tdma;
+>>>>    	struct resource *res_page, *res_base;
+>>>> -	int ret, i, page_no;
+>>>> +	unsigned int page_no, page_offset;
+>>>> +	int ret, i;
+>>>>    	cdata = of_device_get_match_data(&pdev->dev);
+>>>>    	if (!cdata) {
+>>>> @@ -914,9 +915,16 @@ static int tegra_adma_probe(struct platform_device *pdev)
+>>>>    		res_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "global");
+>>>>    		if (res_base) {
+>>>> -			page_no = (res_page->start - res_base->start) / cdata->ch_base_offset;
+>>>> -			if (page_no <= 0)
+>>>> +			if (WARN_ON(lower_32_bits(res_page->start) <=
+>>>> +						lower_32_bits(res_base->start)))
+>>> Don't we technically also want to check that
+>>>
+>>> 	res_page->start <= res_base->start
+>>>
+>>> because otherwise people might put in something that's completely out of
+>>> range? I guess maybe you could argue that the DT is then just broken,
+>>> but since we're checking anyway, might as well check for all corner
+>>> cases.
+>>>
+>>> Thierry
+>> ADMA Address range for all Tegra chip falls within 32bit range. Do you think
+>> still we need to have this extra check which seems like redundant for now.
+> 
+> No, you're right. If this is all within the lower 32 bit range, this
+> should be plenty enough. It might be worth to make it a bit more
+> explicit and store these values in variables and add a comment as to
+> why we only need the 32 bits. That would also make the code a bit
+> easier to read by making the lines shorter.
+> 
+> 	// memory regions are guaranteed to be within the lower 4 GiB
+> 	u32 base = lower_32_bits(res_base->start);
+> 	u32 page = lower_32_bits(res_page->start);
+> 
+> 	if (WARN_ON(page <= base))
+> 		...
+> 
+> etc.
+> 
+> Hm... on the other hand. Do we know that it's always going to stay that
+> way? What if we ever get a chip that has a very different address map?
 
-On Tue, Feb 04, 2025 at 10:13:09PM +0530, Mohan Kumar D wrote:
->=20
-> On 04-02-2025 21:06, Thierry Reding wrote:
-> > On Thu, Jan 16, 2025 at 09:50:32PM +0530, Mohan Kumar D wrote:
-> > > Kernel test robot reported the build errors on 32-bit platforms due to
-> > > plain 64-by-32 division. Following build erros were reported.
-> > >=20
-> > >     "ERROR: modpost: "__udivdi3" [drivers/dma/tegra210-adma.ko] undef=
-ined!
-> > >      ld: drivers/dma/tegra210-adma.o: in function `tegra_adma_probe':
-> > >      tegra210-adma.c:(.text+0x12cf): undefined reference to `__udivdi=
-3'"
-> > >=20
-> > > This can be fixed by using lower_32_bits() for the adma address space=
- as
-> > > the offset is constrained to the lower 32 bits
-> > >=20
-> > > Fixes: 68811c928f88 ("dmaengine: tegra210-adma: Support channel page")
-> > > Cc: stable@vger.kernel.org
-> > > Reported-by: kernel test robot <lkp@intel.com>
-> > > Closes: https://lore.kernel.org/oe-kbuild-all/202412250204.GCQhdKe3-l=
-kp@intel.com/
-> > > Signed-off-by: Mohan Kumar D <mkumard@nvidia.com>
-> > > ---
-> > >   drivers/dma/tegra210-adma.c | 14 +++++++++++---
-> > >   1 file changed, 11 insertions(+), 3 deletions(-)
-> > >=20
-> > > diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-> > > index 6896da8ac7ef..258220c9cb50 100644
-> > > --- a/drivers/dma/tegra210-adma.c
-> > > +++ b/drivers/dma/tegra210-adma.c
-> > > @@ -887,7 +887,8 @@ static int tegra_adma_probe(struct platform_devic=
-e *pdev)
-> > >   	const struct tegra_adma_chip_data *cdata;
-> > >   	struct tegra_adma *tdma;
-> > >   	struct resource *res_page, *res_base;
-> > > -	int ret, i, page_no;
-> > > +	unsigned int page_no, page_offset;
-> > > +	int ret, i;
-> > >   	cdata =3D of_device_get_match_data(&pdev->dev);
-> > >   	if (!cdata) {
-> > > @@ -914,9 +915,16 @@ static int tegra_adma_probe(struct platform_devi=
-ce *pdev)
-> > >   		res_base =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "=
-global");
-> > >   		if (res_base) {
-> > > -			page_no =3D (res_page->start - res_base->start) / cdata->ch_base_=
-offset;
-> > > -			if (page_no <=3D 0)
-> > > +			if (WARN_ON(lower_32_bits(res_page->start) <=3D
-> > > +						lower_32_bits(res_base->start)))
-> > Don't we technically also want to check that
-> >=20
-> > 	res_page->start <=3D res_base->start
-> >=20
-> > because otherwise people might put in something that's completely out of
-> > range? I guess maybe you could argue that the DT is then just broken,
-> > but since we're checking anyway, might as well check for all corner
-> > cases.
-> >=20
-> > Thierry
-> ADMA Address range for all Tegra chip falls within 32bit range. Do you th=
-ink
-> still we need to have this extra check which seems like redundant for now.
+You mean a DMA register space that crosses a 4GB address boundary? I 
+would hope not but maybe I should not assume that!
 
-No, you're right. If this is all within the lower 32 bit range, this
-should be plenty enough. It might be worth to make it a bit more
-explicit and store these values in variables and add a comment as to
-why we only need the 32 bits. That would also make the code a bit
-easier to read by making the lines shorter.
+> Maybe we can do a combination of Arnd's patch and this. In conjunction
+> with your second patch here, this could become something along these
+> lines:
+> 
+> 	u64 offset, page;
+> 
+> 	if (WARN_ON(res_page->start <= res_base->start))
+> 		return -EINVAL;
+> 
+> 	offset = res_page->start - res_base->start;
+> 	page = div_u64(offset, cdata->ch_base_offset);
 
-	// memory regions are guaranteed to be within the lower 4 GiB
-	u32 base =3D lower_32_bits(res_base->start);
-	u32 page =3D lower_32_bits(res_page->start);
 
-	if (WARN_ON(page <=3D base))
-		...
+We were trying to avoid the div_u64 because at some point we want to 
+convert the result to 32-bits to avoid any further 64-bit math and we 
+really don't need 64-bits for the page number.
 
-etc.
+Jon
 
-Hm... on the other hand. Do we know that it's always going to stay that
-way? What if we ever get a chip that has a very different address map?
-
-Maybe we can do a combination of Arnd's patch and this. In conjunction
-with your second patch here, this could become something along these
-lines:
-
-	u64 offset, page;
-
-	if (WARN_ON(res_page->start <=3D res_base->start))
-		return -EINVAL;
-
-	offset =3D res_page->start - res_base->start;
-	page =3D div_u64(offset, cdata->ch_base_offset);
-
-	if (WARN_ON(page =3D=3D 0 || page > cdata->max_page))
-		return -EINVAL;
-
-Thierry
-
-> >=20
-> > > +				return -EINVAL;
-> > > +
-> > > +			page_offset =3D lower_32_bits(res_page->start) -
-> > > +						lower_32_bits(res_base->start);
-> > > +			page_no =3D page_offset / cdata->ch_base_offset;
-> > > +			if (page_no =3D=3D 0)
-> > >   				return -EINVAL;
-> > > +
-> > >   			tdma->ch_page_no =3D page_no - 1;
-> > >   			tdma->base_addr =3D devm_ioremap_resource(&pdev->dev, res_base);
-> > >   			if (IS_ERR(tdma->base_addr))
-> > > --=20
-> > > 2.25.1
-> > >=20
-
---vyjr3c2wmimjx3vo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmeiSFYACgkQ3SOs138+
-s6FXgg/+OgEAmRJyuiiCJEuxPu0JoocxmNbYfeIKN366eLTOIlbJkC52bDvBos7J
-0P6ROn5X35GRY9LGhDDBPS9W0j8ylF35pGvZh2KtmI3gY2n0K1QyFsR5e4kgP64W
-RcjAQUmC+kfvCD1vvUekxMJfvxeJISpE3hYlL+kySqprjrVnWIAWq05f8rBdSADo
-Sb0Giit5nfrdnvlhSy4FpJ60UutakcWtooeQz55cyKGer//chdexMsJ7Rc7Gph+z
-oxKMOKIreEnSfYilIOcJweKlrVWPSss6SaM8k3zDm8kPgfkOxspDRvqORDAAUJMk
-jYNX5yUKuwn1yEj2YhsHcpCW3HOamYaspoMxsGDE3auTBfDzo3ELSFrvBnCPY93N
-79MVZwEUh5NFCiYZ7l7pY0ggAYRLuqtOFoGtoTTJ+OiL0SjrbxWuyHXNKjG32Pjx
-l/r8O6/aTE90zTL4EJk6MPhk32U2XfmdBS1+ai5N81cd5uv9xsRTNzGgZfYpUWmy
-aY0x95uigpzUGUqQ8ZJn6VWOnibzcLGDHrFhleZJWoyyqdUfdQfgw6SqnM84l0ft
-BhRw97sBiRRJNFgv0qkMKEMSscSxThLRWXCVL0BUX6OaOeSfk8z0YLCP7k+tnFax
-1mc3QWw+3i6F42o4sbE7pilbSzLksEJIrsjIoU0kBeUYgA+zyZ4=
-=12cW
------END PGP SIGNATURE-----
-
---vyjr3c2wmimjx3vo--
+--
+nvpublic
 

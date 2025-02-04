@@ -1,267 +1,245 @@
-Return-Path: <dmaengine+bounces-4275-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4276-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87E46A27C6E
-	for <lists+dmaengine@lfdr.de>; Tue,  4 Feb 2025 21:05:03 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 720A4A27DBB
+	for <lists+dmaengine@lfdr.de>; Tue,  4 Feb 2025 22:47:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 030313A3191
-	for <lists+dmaengine@lfdr.de>; Tue,  4 Feb 2025 20:04:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3A0BA1887763
+	for <lists+dmaengine@lfdr.de>; Tue,  4 Feb 2025 21:47:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E89EA2163AF;
-	Tue,  4 Feb 2025 20:04:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B309021A45D;
+	Tue,  4 Feb 2025 21:47:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ATqxfuIi"
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="qQZ0j6GE"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A43FC14B094;
-	Tue,  4 Feb 2025 20:04:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6109A21A456
+	for <dmaengine@vger.kernel.org>; Tue,  4 Feb 2025 21:47:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738699499; cv=none; b=ikzxlCo5P5d2rydWolcUF+zZVUgmvmVqSfEsw+43hsiADjjFiAAjP1y6+O4HLqpgyTef9tTH9Km4poDYLK3IGmLgqZVDFLeo6H3KHkC1WgUshDKOyahH13FsfDY3xiZlesqK0zl0VUDkpR2t8JJXp+YBOgiM0yDw5aEKy1snNY0=
+	t=1738705645; cv=none; b=L4q3YZn0d2yEylywwOcAlT95ss+Th+vlc4FZ4yPGZOcZsFWt5PXrtk/bdqTtEp+Cn3Ip1VRKVAJVL7jZTHFqyH9NwrT5cjfawYPq3VYVLO7YJS6s7mnMJqwgbi8gUAQuFqzS6Ha3wAYGmxSjXffcl+mK3NHuFYsjT2D7PsxCaBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738699499; c=relaxed/simple;
-	bh=6y3E8+OpE5ZmqjX7Om9uPkD+ZQQXyu1GMUrqnd3TjQk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JHa0/pwhn3IvK/N+IniLqc3WgNTcsXkpHQ+K62FGBmNpOU2fEZscyZz7zjSeWhQNQ2LXupQMlOTifcH+xqdvSFe2J9TWiO5eOTnD6OOH0PH7a1mqpIpOA0HHsutsAqfA6KwM2/k9flKcoAbTCoU/LOpaGO8MK7PX1JcpuQGPcd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ATqxfuIi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CF3FC4CEE2;
-	Tue,  4 Feb 2025 20:04:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738699499;
-	bh=6y3E8+OpE5ZmqjX7Om9uPkD+ZQQXyu1GMUrqnd3TjQk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ATqxfuIih0h8cjA2h0bfzeW8/14cKwjo0aYg/EDyMiNfuHEuMgbIUArMXwpxbH8tQ
-	 Da4cVQL4P8+pftQUNXCfpHfx7R/c8T5y9fXpFVdrQBkPwgdoDHoEsw5o2N/iwNbzt8
-	 snOmZS5hwa+n4hlL3owOGHovG/7gC5BR91zkSxLubTB/2goLFqeTbHt28F5FnmdKY4
-	 hCflsbEgNgW4l3dpav/XeOnh8UfB9jdhSJ/P2ICbj8kqOcpTDEmCzBb1u2EZeyPCm/
-	 PCiZB/g/1ohi/zf1NFeXq1TtDI49Zm/hGspFF4kYcp0temKz7YcZ9Fx3qzuE1DJICk
-	 QRfqRdleBGwGQ==
-Date: Tue, 4 Feb 2025 20:04:46 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Michal Simek <michal.simek@amd.com>
-Cc: <linux-kernel@vger.kernel.org>, <monstr@monstr.eu>,
- <michal.simek@xilinx.com>, <git@xilinx.com>, Anand Ashok Dumbre
- <anand.ashok.dumbre@xilinx.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- Claudiu Beznea <claudiu.beznea@tuxon.dev>, "Conor Dooley"
- <conor+dt@kernel.org>, Damien Le Moal <dlemoal@kernel.org>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, Harini Katakam
- <harini.katakam@amd.com>, Jakub Kicinski <kuba@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, "Lars-Peter Clausen" <lars@metafoo.de>,
- Mark Brown <broonie@kernel.org>, Michael Tretter
- <m.tretter@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>,
- Mubin Sayyed <mubin.sayyed@amd.com>, Nicolas Ferre
- <nicolas.ferre@microchip.com>, Niklas Cassel <cassel@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, Shyam Pandey
- <radhey.shyam.pandey@amd.com>, Stephen Boyd <sboyd@kernel.org>, Vinod Koul
- <vkoul@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE
- BINDINGS" <devicetree@vger.kernel.org>, "open list:DMA GENERIC OFFLOAD
- ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, "moderated list:ARM/ZYNQ
- ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:COMMON CLK
- FRAMEWORK" <linux-clk@vger.kernel.org>, "open list:LIBATA SUBSYSTEM (Serial
- and Parallel ATA drivers)" <linux-ide@vger.kernel.org>, "open list:XILINX
- AMS DRIVER" <linux-iio@vger.kernel.org>, "open list:SPI SUBSYSTEM"
- <linux-spi@vger.kernel.org>, "open list:USB SUBSYSTEM"
- <linux-usb@vger.kernel.org>, "open list:NETWORKING DRIVERS"
- <netdev@vger.kernel.org>
-Subject: Re: [PATCH 2/2] dt-bindings: xilinx: Deprecate header with firmware
- constants
-Message-ID: <20250204200446.32bfb3f8@jic23-huawei>
-In-Reply-To: <2a6f0229522327939e6893565e540b75f854a37b.1738600745.git.michal.simek@amd.com>
-References: <cover.1738600745.git.michal.simek@amd.com>
-	<2a6f0229522327939e6893565e540b75f854a37b.1738600745.git.michal.simek@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1738705645; c=relaxed/simple;
+	bh=hqFrHw4SuAtLqJ59fD6Qavu3B1gXposiTbudKR0gwzM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e1/qyksxMRCrSV5FbWAX6AfvVHDrYRDIVcW4hK85JbfIDFepwGi+yk6ecmcvnzU2J7g5WFquUFRvYTBlDtBca7C//IsjVobwXv9tvQ4gYUTnyZMWD8jt0mY5pCPgP1Aic66qzUvmOYUbJJYNDn3hGWBI9m/CR5q99bNPwVbwtQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=qQZ0j6GE; arc=none smtp.client-ip=185.67.36.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id 9BF1C240028
+	for <dmaengine@vger.kernel.org>; Tue,  4 Feb 2025 22:47:21 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1738705641; bh=hqFrHw4SuAtLqJ59fD6Qavu3B1gXposiTbudKR0gwzM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:From;
+	b=qQZ0j6GEsv4JcDlYj8Q6u9rRWhrn5SRTH1N0uD/ZYP5qA8J/UrP92jd5g6FnOmvVD
+	 W89zfbGd7UFgCDmMzmtJzoAwY//KVPRgk2c5d6g5q0Rus8hT0pmTGBikjS5mG4mwL0
+	 OcIYINsOA5E7lC2zTHSIVEjTYwv6fNZOK3rnQa4NZiaTynWFJlS+VqebRR83oVM0eo
+	 FHgV2NC4k2HvL6b+Ae+AwtD+zxxOkAAZ2TdKt1pFzsS9/1kVUyTteX5csGKN/vTdrt
+	 ewPUNMLJi0gRHPW1twZZgZ1p8yqKZSTTXXD447GewiJw6kXbKgeWfFljHMnNuxkvqc
+	 PdVfx5l9i8phw==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4YncQq5Wc6z9rxG;
+	Tue,  4 Feb 2025 22:47:14 +0100 (CET)
+Date: Tue,  4 Feb 2025 21:47:14 +0000
+From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+To: Frank Li <Frank.li@nxp.com>
+Cc: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>,
+	devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	Scott Wood <oss@buserror.net>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	=?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
+	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-mtd@lists.infradead.org
+Subject: Re: [PATCH 5/9] dt-bindings: dma: Convert fsl,elo*-dma bindings to
+ YAML
+Message-ID: <Z6KK4vLsFVxMS9pS@probook>
+References: <20250126-ppcyaml-v1-0-50649f51c3dd@posteo.net>
+ <20250126-ppcyaml-v1-5-50649f51c3dd@posteo.net>
+ <Z5qxLxa7z22Fk+Dv@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z5qxLxa7z22Fk+Dv@lizhi-Precision-Tower-5810>
 
-On Mon, 3 Feb 2025 17:39:11 +0100
-Michal Simek <michal.simek@amd.com> wrote:
+On Wed, Jan 29, 2025 at 05:52:31PM -0500, Frank Li wrote:
+> On Sun, Jan 26, 2025 at 07:59:00PM +0100, J. Neuschäfer wrote:
+> > The devicetree bindings for Freescale DMA engines have so far existed as
+> > a text file. This patch converts them to YAML, and specifies all the
+> > compatible strings currently in use in arch/powerpc/boot/dts.
+> >
+> > Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
+> > ---
+> >  .../devicetree/bindings/dma/fsl,elo-dma.yaml       | 129 +++++++++++++
+> >  .../devicetree/bindings/dma/fsl,elo3-dma.yaml      | 105 +++++++++++
+> >  .../devicetree/bindings/dma/fsl,eloplus-dma.yaml   | 120 ++++++++++++
+> >  .../devicetree/bindings/powerpc/fsl/dma.txt        | 204 ---------------------
+> >  4 files changed, 354 insertions(+), 204 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/dma/fsl,elo-dma.yaml b/Documentation/devicetree/bindings/dma/fsl,elo-dma.yaml
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..d1f4978a672c1217c322c27f243470b2de8c99d4
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/dma/fsl,elo-dma.yaml
+> > @@ -0,0 +1,129 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/dma/fsl,elo-dma.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Freescale Elo DMA Controller
+> > +
+> > +maintainers:
+> > +  - J. Neuschäfer <j.ne@posteo.net>
+> > +
+> > +description: |
+> 
+> needn't | here
 
-> Firmware contants do not fit the purpose of bindings because they are not
-> independent IDs for abstractions. They are more or less just contants which
-> better to wire via header with DT which is using it.
-> That's why add deprecated message to dt binding header and also update
-> existing dt bindings not to use macros from the header  and replace them by
-> it's value. Actually value is not relevant because it is only example.
-> 
-> The similar changes have been done by commit 9d9292576810 ("dt-bindings:
-> pinctrl: samsung: deprecate header with register constants").
-> 
-> Signed-off-by: Michal Simek <michal.simek@amd.com>
-For IIO
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
-> 
->  Documentation/devicetree/bindings/ata/ceva,ahci-1v84.yaml  | 4 +---
->  .../bindings/dma/xilinx/xlnx,zynqmp-dma-1.0.yaml           | 3 +--
->  .../devicetree/bindings/iio/adc/xlnx,zynqmp-ams.yaml       | 3 +--
->  Documentation/devicetree/bindings/net/cdns,macb.yaml       | 7 +++----
->  Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.yaml | 3 +--
->  Documentation/devicetree/bindings/usb/dwc3-xilinx.yaml     | 3 +--
->  include/dt-bindings/clock/xlnx-zynqmp-clk.h                | 7 +++++++
->  7 files changed, 15 insertions(+), 15 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/ata/ceva,ahci-1v84.yaml b/Documentation/devicetree/bindings/ata/ceva,ahci-1v84.yaml
-> index 9952e0ef7767..6ad78429dc74 100644
-> --- a/Documentation/devicetree/bindings/ata/ceva,ahci-1v84.yaml
-> +++ b/Documentation/devicetree/bindings/ata/ceva,ahci-1v84.yaml
-> @@ -163,11 +163,9 @@ additionalProperties: false
->  
->  examples:
->    - |
-> -    #include <dt-bindings/clock/xlnx-zynqmp-clk.h>
->      #include <dt-bindings/interrupt-controller/irq.h>
->      #include <dt-bindings/power/xlnx-zynqmp-power.h>
->      #include <dt-bindings/reset/xlnx-zynqmp-resets.h>
-> -    #include <dt-bindings/clock/xlnx-zynqmp-clk.h>
->      #include <dt-bindings/phy/phy.h>
->  
->      sata: ahci@fd0c0000 {
-> @@ -175,7 +173,7 @@ examples:
->          reg = <0xfd0c0000 0x200>;
->          interrupt-parent = <&gic>;
->          interrupts = <0 133 IRQ_TYPE_LEVEL_HIGH>;
-> -        clocks = <&zynqmp_clk SATA_REF>;
-> +        clocks = <&zynqmp_clk 22>;
->          ceva,p0-cominit-params = /bits/ 8 <0x0F 0x25 0x18 0x29>;
->          ceva,p0-comwake-params = /bits/ 8 <0x04 0x0B 0x08 0x0F>;
->          ceva,p0-burst-params = /bits/ 8 <0x0A 0x08 0x4A 0x06>;
-> diff --git a/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dma-1.0.yaml b/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dma-1.0.yaml
-> index ac3198953b8e..b5399c65a731 100644
-> --- a/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dma-1.0.yaml
-> +++ b/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dma-1.0.yaml
-> @@ -75,7 +75,6 @@ additionalProperties: false
->  
->  examples:
->    - |
-> -    #include <dt-bindings/clock/xlnx-zynqmp-clk.h>
->  
->      fpd_dma_chan1: dma-controller@fd500000 {
->        compatible = "xlnx,zynqmp-dma-1.0";
-> @@ -84,7 +83,7 @@ examples:
->        interrupts = <0 117 0x4>;
->        #dma-cells = <1>;
->        clock-names = "clk_main", "clk_apb";
-> -      clocks = <&zynqmp_clk GDMA_REF>, <&zynqmp_clk LPD_LSBUS>;
-> +      clocks = <&zynqmp_clk 19>, <&zynqmp_clk 31>;
->        xlnx,bus-width = <128>;
->        dma-coherent;
->      };
-> diff --git a/Documentation/devicetree/bindings/iio/adc/xlnx,zynqmp-ams.yaml b/Documentation/devicetree/bindings/iio/adc/xlnx,zynqmp-ams.yaml
-> index 8cbad7e792b6..a403392fb263 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/xlnx,zynqmp-ams.yaml
-> +++ b/Documentation/devicetree/bindings/iio/adc/xlnx,zynqmp-ams.yaml
-> @@ -193,7 +193,6 @@ additionalProperties: false
->  
->  examples:
->    - |
-> -    #include <dt-bindings/clock/xlnx-zynqmp-clk.h>
->  
->      bus {
->          #address-cells = <2>;
-> @@ -204,7 +203,7 @@ examples:
->              interrupt-parent = <&gic>;
->              interrupts = <0 56 4>;
->              reg = <0x0 0xffa50000 0x0 0x800>;
-> -            clocks = <&zynqmp_clk AMS_REF>;
-> +            clocks = <&zynqmp_clk 70>;
->              #address-cells = <1>;
->              #size-cells = <1>;
->              #io-channel-cells = <1>;
-> diff --git a/Documentation/devicetree/bindings/net/cdns,macb.yaml b/Documentation/devicetree/bindings/net/cdns,macb.yaml
-> index 3c30dd23cd4e..8d69846b2e09 100644
-> --- a/Documentation/devicetree/bindings/net/cdns,macb.yaml
-> +++ b/Documentation/devicetree/bindings/net/cdns,macb.yaml
-> @@ -197,7 +197,6 @@ examples:
->      };
->  
->    - |
-> -    #include <dt-bindings/clock/xlnx-zynqmp-clk.h>
->      #include <dt-bindings/power/xlnx-zynqmp-power.h>
->      #include <dt-bindings/reset/xlnx-zynqmp-resets.h>
->      #include <dt-bindings/phy/phy.h>
-> @@ -210,9 +209,9 @@ examples:
->                      interrupt-parent = <&gic>;
->                      interrupts = <0 59 4>, <0 59 4>;
->                      reg = <0x0 0xff0c0000 0x0 0x1000>;
-> -                    clocks = <&zynqmp_clk LPD_LSBUS>, <&zynqmp_clk GEM1_REF>,
-> -                             <&zynqmp_clk GEM1_TX>, <&zynqmp_clk GEM1_RX>,
-> -                             <&zynqmp_clk GEM_TSU>;
-> +                    clocks = <&zynqmp_clk 31>, <&zynqmp_clk 105>,
-> +                             <&zynqmp_clk 51>, <&zynqmp_clk 50>,
-> +                             <&zynqmp_clk 44>;
->                      clock-names = "pclk", "hclk", "tx_clk", "rx_clk", "tsu_clk";
->                      #address-cells = <1>;
->                      #size-cells = <0>;
-> diff --git a/Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.yaml b/Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.yaml
-> index 04d4d3b4916d..02cf1314367b 100644
-> --- a/Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.yaml
-> +++ b/Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.yaml
-> @@ -65,14 +65,13 @@ allOf:
->  
->  examples:
->    - |
-> -    #include <dt-bindings/clock/xlnx-zynqmp-clk.h>
->      soc {
->        #address-cells = <2>;
->        #size-cells = <2>;
->  
->        qspi: spi@ff0f0000 {
->          compatible = "xlnx,zynqmp-qspi-1.0";
-> -        clocks = <&zynqmp_clk QSPI_REF>, <&zynqmp_clk LPD_LSBUS>;
-> +        clocks = <&zynqmp_clk 53>, <&zynqmp_clk 82>;
->          clock-names = "ref_clk", "pclk";
->          interrupts = <0 15 4>;
->          interrupt-parent = <&gic>;
-> diff --git a/Documentation/devicetree/bindings/usb/dwc3-xilinx.yaml b/Documentation/devicetree/bindings/usb/dwc3-xilinx.yaml
-> index 00f87a558c7d..b5843f4d17d8 100644
-> --- a/Documentation/devicetree/bindings/usb/dwc3-xilinx.yaml
-> +++ b/Documentation/devicetree/bindings/usb/dwc3-xilinx.yaml
-> @@ -101,7 +101,6 @@ examples:
->      #include <dt-bindings/dma/xlnx-zynqmp-dpdma.h>
->      #include <dt-bindings/power/xlnx-zynqmp-power.h>
->      #include <dt-bindings/reset/xlnx-zynqmp-resets.h>
-> -    #include <dt-bindings/clock/xlnx-zynqmp-clk.h>
->      #include <dt-bindings/reset/xlnx-zynqmp-resets.h>
->      #include <dt-bindings/phy/phy.h>
->      axi {
-> @@ -113,7 +112,7 @@ examples:
->              #size-cells = <0x2>;
->              compatible = "xlnx,zynqmp-dwc3";
->              reg = <0x0 0xff9d0000 0x0 0x100>;
-> -            clocks = <&zynqmp_clk USB0_BUS_REF>, <&zynqmp_clk USB3_DUAL_REF>;
-> +            clocks = <&zynqmp_clk 32>, <&zynqmp_clk 34>;
->              clock-names = "bus_clk", "ref_clk";
->              power-domains = <&zynqmp_firmware PD_USB_0>;
->              resets = <&zynqmp_reset ZYNQMP_RESET_USB1_CORERESET>,
-> diff --git a/include/dt-bindings/clock/xlnx-zynqmp-clk.h b/include/dt-bindings/clock/xlnx-zynqmp-clk.h
-> index cdc4c0b9a374..f0f7ddd3dcbd 100644
-> --- a/include/dt-bindings/clock/xlnx-zynqmp-clk.h
-> +++ b/include/dt-bindings/clock/xlnx-zynqmp-clk.h
-> @@ -9,6 +9,13 @@
->  #ifndef _DT_BINDINGS_CLK_ZYNQMP_H
->  #define _DT_BINDINGS_CLK_ZYNQMP_H
->  
-> +/*
-> + * These bindings are deprecated, because they do not match the actual
-> + * concept of bindings but rather contain pure firmware values.
-> + * Instead include the header in the DTS source directory.
-> + */
-> +#warning "These bindings are deprecated. Instead use the header in the DTS source directory."
-> +
->  #define IOPLL			0
->  #define RPLL			1
->  #define APLL			2
+Will remove.
 
+> 
+> > +  This is a little-endian 4-channel DMA controller, used in Freescale mpc83xx
+> > +  series chips such as mpc8315, mpc8349, mpc8379 etc.
+> > +
+> > +  Note on DMA channel compatible properties: The compatible property must say
+> > +  "fsl,elo-dma-channel" or "fsl,eloplus-dma-channel" to be used by the Elo DMA
+> 
+> There are not 'fsl,eloplus-dma-channel' under "^dma-channel@.*$". I suggest
+> remove this because 'compatible': items already show such information.
+
+Good point, I'll trim this text down.
+
+> > +  driver (fsldma).  Any DMA channel used by fsldma cannot be used by another
+> > +  DMA driver, such as the SSI sound drivers for the MPC8610.  Therefore, any
+> > +  DMA channel that should be used for another driver should not use
+> > +  "fsl,elo-dma-channel" or "fsl,eloplus-dma-channel".  For the SSI drivers, for
+> > +  example, the compatible property should be "fsl,ssi-dma-channel".  See
+> > +  ssi.txt for more information.
+
+I noticed fsl,ssi.txt has been converted to YAML since this text was
+originally written, so I'll make reference to that.
+
+[...]
+> > +examples:
+> > +  - |
+> > +    dma@82a8 {
+> > +        #address-cells = <1>;
+> > +        #size-cells = <1>;
+> > +        compatible = "fsl,mpc8349-dma", "fsl,elo-dma";
+> > +        reg = <0x82a8 4>;
+> 
+> compatible and reg should be first two property.
+
+Will fix.
+
+> 
+> > +        ranges = <0 0x8100 0x1a4>;
+> > +        interrupt-parent = <&ipic>;
+> > +        interrupts = <71 8>;
+> > +        cell-index = <0>;
+> 
+> need space line here.
+
+Will fix.
+
+> > +        dma-channel@0 {
+> > +            compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
+> > +            cell-index = <0>;
+> > +            reg = <0 0x80>;
+> > +            interrupt-parent = <&ipic>;
+> > +            interrupts = <71 8>;
+> > +        };
+> 
+> need space line here. check other's example dts
+
+Will fix in all files.
+
+
+[...]
+> > +patternProperties:
+> > +  "^dma-channel@.*$":
+> > +    type: object
+> > +
+> > +    properties:
+> > +      compatible:
+> > +        items:
+> > +          - enum:
+> > +              - fsl,mpc8540-dma-channel
+> > +              - fsl,mpc8541-dma-channel
+> > +              - fsl,mpc8548-dma-channel
+> > +              - fsl,mpc8555-dma-channel
+> > +              - fsl,mpc8560-dma-channel
+> > +              - fsl,mpc8572-dma-channel
+> > +          - const: fsl,eloplus-dma-channel
+> 
+> I think you can merge this fsl,mpc83xx-dma yaml file
+> 
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: fsl,elo-dma
+> +    then:
+> +      patternProperties:
+> +        "^dma-channel@.*$":
+> +          properties:
+> +            compatible:
+> +              items:
+> +                - enum:
+> 			....
+> +    else
+> +      patternProperties:
+> +        "^dma-channel@.*$":
+> +          properties:
+> +            compatible:
+> +              items:
+> +                - enum:
+>                         ....
+> +                - const: fsl,eloplus-dma-channel
+
+I suppose that works, but I'm not entirely convinced it would help with
+readability, compared to leaving the three variants separate.
+
+
+Thank you for your review!
+
+Best regards,
+J. Neuschäfer
 

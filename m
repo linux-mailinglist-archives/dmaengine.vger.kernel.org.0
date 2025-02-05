@@ -1,67 +1,67 @@
-Return-Path: <dmaengine+bounces-4284-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4285-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B859A283D5
-	for <lists+dmaengine@lfdr.de>; Wed,  5 Feb 2025 06:47:58 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 508EEA283D8
+	for <lists+dmaengine@lfdr.de>; Wed,  5 Feb 2025 06:48:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 98E8B7A3259
-	for <lists+dmaengine@lfdr.de>; Wed,  5 Feb 2025 05:47:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 750EA166DEE
+	for <lists+dmaengine@lfdr.de>; Wed,  5 Feb 2025 05:48:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 273AC221D9F;
-	Wed,  5 Feb 2025 05:47:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF01321D5BE;
+	Wed,  5 Feb 2025 05:47:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="hNMWcNQB"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="D5q2Dpuw"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68DB3221D89;
-	Wed,  5 Feb 2025 05:47:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8E7817BEBF;
+	Wed,  5 Feb 2025 05:47:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738734461; cv=none; b=Bksanf3JEAw6tkkKxt+Oalea8PlJJ+zxARPHLk54DEIjO8RVrK8LPnQxqbE3qIupFHyyb6mEBKDFOe19m2OtAnyG5XO1RhkUu+popkCSOvODtGmugqbfmDKn+T/rp44XBRxF/StAQNCcg3JlRtNzp36qsuKho6CFF3jk5030nNI=
+	t=1738734477; cv=none; b=RMsxpwxHJwnrrp0HPl2MX/0lyfhvE6fU95bx4YcWV+xWhLg63TtMYlJSLd/Dnx9liYMcl1bH1cCMbz7OAMrmwjgmeJLM6iThjl6lu2BxF5jeKBqXGS/V7KlVhM2F9oqQbqC5qDZBzwlWpgDwDnrw9vdrUMj3ck1c4+r0jhnYYqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738734461; c=relaxed/simple;
-	bh=03binLSyY8x9MAEINWCcoaRHc+hMDevy5AFcDXVUMG8=;
-	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=f1WCh41mQddokRWgvAr48JRGCRNKmBC4O3vyXW9+BC+LH/zYef0frMvO2UKOBNByc+tB3bY6TmH7Q9RPv2dTYr2yr8tOjYRhhUpmYI/rR8O0tjecW6BgwplK/Oqnnd/AP24Q31x3bZNsU0tS7H+mhkHc6HeenZ8Tt/FkfUqKQ1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=hNMWcNQB; arc=none smtp.client-ip=68.232.154.123
+	s=arc-20240116; t=1738734477; c=relaxed/simple;
+	bh=JsjoMsPukH3T9bblFYEe4cs8XB5AgUk3iFQC9hIrb0o=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=MMQtOla9I8EOV2Wcba7Jd/LCiJ7/WP1/wrq8hBbLppHS8RHsm29QHdECoWW5bAm5zG2YYmrRk7GNONNuUPhjG3ssze2Q/Mt/c+CNvfkffR6YnMeCcIG57TUCSc4WykGm9GzBeshyqhIC51oZSTZ7HPflqxIFc2soKUwtcTGfM3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=D5q2Dpuw; arc=none smtp.client-ip=68.232.153.233
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1738734459; x=1770270459;
-  h=from:subject:date:message-id:mime-version:
-   content-transfer-encoding:to:cc;
-  bh=03binLSyY8x9MAEINWCcoaRHc+hMDevy5AFcDXVUMG8=;
-  b=hNMWcNQBnBqZnFzEqxcTwnKgrpFI/h1RVIFs+ysM25teI5zbR12mifZ/
-   cTMgbiv4YfWn0k5RJ8KclbpL5wPsFsaQnkhof4bQuiSTGN0t24J5wKNQA
-   qelhQXzKysCn+DCY64/XafGtqNOtaaVrjpILLUeLMhEGRkf7/0S9VLKTd
-   MBr9yX2hOmZEiKGJsPe/xM/vnG7u5eWW9EH3LebN5mAV4692zSf1RelRb
-   acbdnYU/gv0Ap8wwK+dZQknWxCZPGV1Sdv/mI0Sp7zD7FBkbjfPnr1Giu
-   dAzQPE6ysTX9TI1KR6/joLlCptjQZ2X9dHDmsJkKM4HVvwVn4ft/HBk1b
-   w==;
-X-CSE-ConnectionGUID: SlhoVWEVQYiqxuNbYIUogA==
-X-CSE-MsgGUID: cskGm2+uQIO7CUWRde8SSA==
+  t=1738734476; x=1770270476;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:references:in-reply-to:to:cc;
+  bh=JsjoMsPukH3T9bblFYEe4cs8XB5AgUk3iFQC9hIrb0o=;
+  b=D5q2DpuwVP9lyq4pTPg0+aK6Xe9vBZIvXcSlZpjf3d5/5oh6pwfsIqZ+
+   6hbQhWmClmJo3mGNnsrkfW0jDN/yrG0pmvV7Q79WHM9PPwJsTHReE/jdO
+   8bfZVYrEgj2ESRod6y5hVC1Q7L51Lic5QPF7rM1psze4/HMQZnfsn8v1H
+   H1FzGjLBImJJRS8FSBOvE/avsA0ijvBVRKywJecZgX3nghXKjuAXIEDz+
+   /EsS1So5BlYAkVRy/AUoZagVoDq8ThXl0ouPhEIxtmCfkeP8deH04hzRt
+   LKl+VC1Tb00CLFVb+q5YSm1vjHl8Gox5RqgdvPGEntdL3RLDSBhfjpZOY
+   Q==;
+X-CSE-ConnectionGUID: a1yIP19sQpy3wWAhZXasEg==
+X-CSE-MsgGUID: w4SM+3nqQ7OA++T7fyzE7g==
 X-IronPort-AV: E=Sophos;i="6.13,260,1732604400"; 
-   d="scan'208";a="204805605"
+   d="scan'208";a="268620150"
 X-Amp-Result: SKIPPED(no attachment in message)
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 04 Feb 2025 22:47:38 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 04 Feb 2025 22:47:55 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 4 Feb 2025 22:47:11 -0700
+ 15.1.2507.35; Tue, 4 Feb 2025 22:47:17 -0700
 Received: from [127.0.0.1] (10.10.85.11) by chn-vm-ex02.mchp-main.com
  (10.10.85.144) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Tue, 4 Feb 2025 22:47:06 -0700
+ Transport; Tue, 4 Feb 2025 22:47:11 -0700
 From: Dharma Balasubiramani <dharma.b@microchip.com>
-Subject: [PATCH 0/2] dmaengine: at_xdmac: retrieve DMA channels from device
- tree
-Date: Wed, 5 Feb 2025 11:17:01 +0530
-Message-ID: <20250205-mchp-dma-v1-0-124b639d5afe@microchip.com>
+Date: Wed, 5 Feb 2025 11:17:02 +0530
+Subject: [PATCH 1/2] dmaengine: at_xdmac: get the number of DMA channels
+ from device tree
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -70,9 +70,9 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAFX7omcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDIwNT3dzkjALdlNxEXWNT02QLY4s0I7M0EyWg8oKi1LTMCrBR0bG1tQC
- 9h3W+WgAAAA==
+Message-ID: <20250205-mchp-dma-v1-1-124b639d5afe@microchip.com>
+References: <20250205-mchp-dma-v1-0-124b639d5afe@microchip.com>
+In-Reply-To: <20250205-mchp-dma-v1-0-124b639d5afe@microchip.com>
 To: Ludovic Desroches <ludovic.desroches@microchip.com>, Vinod Koul
 	<vkoul@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
 	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Nicolas Ferre
@@ -84,36 +84,77 @@ CC: <linux-arm-kernel@lists.infradead.org>, <dmaengine@vger.kernel.org>,
  Balasubiramani" <dharma.b@microchip.com>, Tony Han <tony.han@microchip.com>,
 	Cristian Birsan <cristian.birsan@microchip.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738734425; l=910;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738734425; l=1880;
  i=dharma.b@microchip.com; s=20240209; h=from:subject:message-id;
- bh=03binLSyY8x9MAEINWCcoaRHc+hMDevy5AFcDXVUMG8=;
- b=gYeZSfAOX1Ed6HExseu4wcvUQyH86wo9IXZQ5i4SsunRZ6suTFpNaHmtLG2qXkpWFTG+Vs81c
- pMTbLWCVuK4CNxrX232xzq2meh21eA3Yx/X6WL7QyCW07N/vy3NdohD
+ bh=X9SQwn97RGxJg8ugL0Ib/dqZ8wQ0Ij6oC+ZtdNgnIYg=;
+ b=3ftho3/4GdrP6BA9CFwUb30ZhtSnR4DgrScHBRl8xbqlrnW2oEimp6Hp9AZca55l2SCQPVHEu
+ wN1IVZvpjyKBlkmuMfPIAgLw/aI7RyH9FxvJUQaIJUegfXltGHOleDZ
 X-Developer-Key: i=dharma.b@microchip.com; a=ed25519;
  pk=kCq31LcpLAe9HDfIz9ZJ1U7T+osjOi7OZSbe0gqtyQ4=
 
-This patch series adds support to get the number of DMA channels available in
-XDMAC from dts. This property is required when the channel count cannot be read
-from the XDMAC_GTYPE register (which occurs when accessing from non-secure
-world on certain devices)
+From: Tony Han <tony.han@microchip.com>
 
-Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
+In case of kernel runs in non-secure mode, the number of DMA channels can be
+got from device tree since the value read from GTYPE register is "0" as it's
+always secured. As the number of channels can never be negative, update them
+to the type "unsigned".
+
+Signed-off-by: Tony Han <tony.han@microchip.com>
+Reviewed-by: Cristian Birsan <cristian.birsan@microchip.com>
 ---
-Dharma Balasubiramani (1):
-      dt-bindings: dma: at_xdmac: document dma-channels property
+ drivers/dma/at_xdmac.c | 26 +++++++++++++++++++++++---
+ 1 file changed, 23 insertions(+), 3 deletions(-)
 
-Tony Han (1):
-      dmaengine: at_xdmac: get the number of DMA channels from device tree
+diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
+index ba25c23164e7..f777b0665c63 100644
+--- a/drivers/dma/at_xdmac.c
++++ b/drivers/dma/at_xdmac.c
+@@ -2259,12 +2259,29 @@ static int __maybe_unused atmel_xdmac_runtime_resume(struct device *dev)
+ 	return clk_enable(atxdmac->clk);
+ }
+ 
++static inline int at_xdmac_get_channel_number(struct platform_device *pdev,
++					      u32 reg, u32 *pchannels)
++{
++	int ret;
++
++	if (reg) {
++		*pchannels = AT_XDMAC_NB_CH(reg);
++		return 0;
++	}
++
++	ret = of_property_read_u32(pdev->dev.of_node, "dma-channels", pchannels);
++	if (ret)
++		dev_err(&pdev->dev, "can't get number of channels\n");
++
++	return ret;
++}
++
+ static int at_xdmac_probe(struct platform_device *pdev)
+ {
+ 	struct at_xdmac	*atxdmac;
+-	int		irq, nr_channels, i, ret;
++	int		irq, ret;
+ 	void __iomem	*base;
+-	u32		reg;
++	u32		nr_channels, i, reg;
+ 
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq < 0)
+@@ -2280,7 +2297,10 @@ static int at_xdmac_probe(struct platform_device *pdev)
+ 	 * of channels to do the allocation.
+ 	 */
+ 	reg = readl_relaxed(base + AT_XDMAC_GTYPE);
+-	nr_channels = AT_XDMAC_NB_CH(reg);
++	ret = at_xdmac_get_channel_number(pdev, reg, &nr_channels);
++	if (ret)
++		return ret;
++
+ 	if (nr_channels > AT_XDMAC_MAX_CHAN) {
+ 		dev_err(&pdev->dev, "invalid number of channels (%u)\n",
+ 			nr_channels);
 
- .../devicetree/bindings/dma/atmel,sama5d4-dma.yaml | 26 ++++++++++++++--------
- drivers/dma/at_xdmac.c                             | 26 +++++++++++++++++++---
- 2 files changed, 40 insertions(+), 12 deletions(-)
----
-base-commit: 40b8e93e17bff4a4e0cc129e04f9fdf5daa5397e
-change-id: 20250205-mchp-dma-355c838f26f4
-
-Best regards,
 -- 
-Dharma Balasubiramani <dharma.b@microchip.com>
+2.43.0
 
 

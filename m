@@ -1,153 +1,189 @@
-Return-Path: <dmaengine+bounces-4300-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4301-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8FB38A28EC1
-	for <lists+dmaengine@lfdr.de>; Wed,  5 Feb 2025 15:17:02 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 988E6A28FCC
+	for <lists+dmaengine@lfdr.de>; Wed,  5 Feb 2025 15:29:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 258C2166E2C
-	for <lists+dmaengine@lfdr.de>; Wed,  5 Feb 2025 14:17:00 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B47AA7A1DE4
+	for <lists+dmaengine@lfdr.de>; Wed,  5 Feb 2025 14:28:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD41214B959;
-	Wed,  5 Feb 2025 14:16:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AADD156C5E;
+	Wed,  5 Feb 2025 14:29:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X/noekgx"
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="PACWVV/B"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ECD41519AA;
-	Wed,  5 Feb 2025 14:16:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB0B158536
+	for <dmaengine@vger.kernel.org>; Wed,  5 Feb 2025 14:29:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738765016; cv=none; b=uyag+i/9di7vCTIoiRwQike9VHcPnfI2oSkxdrIDUANw1V/xFfMEjei560iAHeIY9Qtl/gbLnjv/fX5tWPOeBTmG2GVzl/cNM2ncfeQaBNXkTWud53/ZIfwz/uJ2CXn8NXsBk/KmqR6R4pUCd1YQeirLDELDSnJQ292I5nxK8i8=
+	t=1738765765; cv=none; b=I3u4tEvz5C19LXuQ66mRBTVOpsaTHgYsQokGGacFZmx4qn6jzdgXe8jYYls65aCmWaK7DX8f5UrBlrzAl0+HGAYgYIcY1xw9xPFvKeUV0Yizd2OSHBUTU7ac0MtXeBP7QgvMAyyDwD0bpyMERosWUokYtgCAm1u1eobBtfA7gzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738765016; c=relaxed/simple;
-	bh=2EDzGvHQ4zrixDw5nuzSjFz5tDSyraGclhp64b6kaC0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GK8dO6uSfWj3IFJe05HOqMPoYYDC6C+hGfx/RfyRW0c9VklsjfIcDcem85O6/JGZvztSpg5WpceVkP3MaERbetNn3omhif4F8wKhCcPdt++hDAB1FfcXnUyRwKHaS0uBpbdmr0arI9wyI6AEFD+72J5ufG0Xn9DrSeKIrypNvpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X/noekgx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95224C4CED6;
-	Wed,  5 Feb 2025 14:16:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738765016;
-	bh=2EDzGvHQ4zrixDw5nuzSjFz5tDSyraGclhp64b6kaC0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=X/noekgxOfJedSNLpn0/KfoU8y/T6UOMN8dtfzxnQMMOo6ShM+xXS829fOW15MtB1
-	 a/EO/t0lZWPIFNrN8v0x2Q3KrQT+nKkNj+3oQTjoX+NBJ0FjHvqL6KUeJM8hAk62p7
-	 5/ji73JDvRAfhkj9qYVbaT6QfQxXP7X9HGLjCXg/EnH55bS80QBDXm4kVHO2eXnpqg
-	 UqMTwjkTJi94fcjpJxhcSvGIaFlnkWP8DE7KYk8S3smbiO27q5y+Y2cPp6VTAL3GLs
-	 cKOWFF2UOZWuybDQVY9AOSQpN6LGjvSzrT15SPqsfF8GNdbt/AUfZez0sEdVzgnHKC
-	 7mxZKDb20F0cQ==
-Message-ID: <870df4b8-fa96-47c1-b82a-5db52a5f0788@kernel.org>
-Date: Wed, 5 Feb 2025 15:16:48 +0100
+	s=arc-20240116; t=1738765765; c=relaxed/simple;
+	bh=e42SIVOUhhbdor72mrNuSIArnji9rVNQMG+KjSfReLQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nbKLb4HjIyxhxlWF3u8el9wD8USlCw9kvuxSJHtc7cFRUuvsw4915fzxlJMWnlq9O3kMLuViDd0UawSayGk+6altHjgs4TOaaVZi/as8SFAignVzC5udRRAg1F5OOuixzEGrw2+jHrcD0MqmFEiziMqmJrpWPS6e2GVnIbU0ymQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=PACWVV/B; arc=none smtp.client-ip=185.67.36.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id 2207724002B
+	for <dmaengine@vger.kernel.org>; Wed,  5 Feb 2025 15:29:21 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1738765761; bh=e42SIVOUhhbdor72mrNuSIArnji9rVNQMG+KjSfReLQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:From;
+	b=PACWVV/B2zEXa/3zM3iFyWGMCvq1ep2tJrc4lnPcQd3vMa6GfKW9yWUGJflhWkzB6
+	 mdwFgQnP74Q/JsCwaMpTD/CjCuigxBwGIzzFxwKWVOeHk4MaYvlikd7rp62zTC36An
+	 Agq7QhuBJJS77HdFXurVKxgAqrp2UMVQuGlfqmMXwEUvTE2X+Q7vjO9yeuFfneWNi4
+	 UzFkZdRD0ItU6gs7hUevNamTNwgpLFYRa/IWNqQMQfGMroi2NGU2e/DlG3TmQlVncm
+	 PLI6VUrrsbH50E1C83K8fRG84DpnJGcwKJONJ/5Rq2M0DazTqmw5sg53lAryZJ//tS
+	 +5vr8gbAqJFJA==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4Yp2fz0fXhz9rxQ;
+	Wed,  5 Feb 2025 15:29:14 +0100 (CET)
+Date: Wed,  5 Feb 2025 14:29:14 +0000
+From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+To: Rob Herring <robh@kernel.org>
+Cc: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>,
+	devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	Scott Wood <oss@buserror.net>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	=?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
+	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-mtd@lists.infradead.org
+Subject: Re: [PATCH 8/9] dt-bindings: spi: Convert Freescale SPI bindings to
+ YAML
+Message-ID: <Z6N1uqg4Dji4Pt3X@probook>
+References: <20250126-ppcyaml-v1-0-50649f51c3dd@posteo.net>
+ <20250126-ppcyaml-v1-8-50649f51c3dd@posteo.net>
+ <20250127050901.GB3127337-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] dt-bindings: dma: at_xdmac: document dma-channels
- property
-To: Dharma.B@microchip.com
-Cc: Ludovic.Desroches@microchip.com, vkoul@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, Nicolas.Ferre@microchip.com,
- alexandre.belloni@bootlin.com, claudiu.beznea@tuxon.dev,
- Charan.Pedumuru@microchip.com, linux-arm-kernel@lists.infradead.org,
- dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, Tony.Han@microchip.com,
- Cristian.Birsan@microchip.com
-References: <20250205-mchp-dma-v1-0-124b639d5afe@microchip.com>
- <20250205-mchp-dma-v1-2-124b639d5afe@microchip.com>
- <20250205-dynamic-scorpion-of-climate-9e7b7b@krzk-bin>
- <74ac11e8-2285-436b-9186-4793cb2b7239@microchip.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <74ac11e8-2285-436b-9186-4793cb2b7239@microchip.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250127050901.GB3127337-robh@kernel.org>
 
-On 05/02/2025 14:58, Dharma.B@microchip.com wrote:
-> Hi Krzysztof,
+On Sun, Jan 26, 2025 at 11:09:01PM -0600, Rob Herring wrote:
+> On Sun, Jan 26, 2025 at 07:59:03PM +0100, J. Neuschäfer wrote:
+> > fsl-spi.txt contains the bindings for the fsl,spi and fsl,espi
+> > contollers. Convert them to YAML.
+> > 
+> > Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
+> > ---
+> >  .../devicetree/bindings/spi/fsl,espi.yaml          | 56 +++++++++++++++++
+> >  Documentation/devicetree/bindings/spi/fsl,spi.yaml | 71 ++++++++++++++++++++++
+> >  Documentation/devicetree/bindings/spi/fsl-spi.txt  | 62 -------------------
+> >  3 files changed, 127 insertions(+), 62 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/spi/fsl,espi.yaml b/Documentation/devicetree/bindings/spi/fsl,espi.yaml
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..350275760210c5763af0c7b1e1522ccbfb97eec7
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/spi/fsl,espi.yaml
+> > @@ -0,0 +1,56 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/spi/fsl,espi.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Freescale eSPI (Enhanced Serial Peripheral Interface) controller
+> > +
+> > +maintainers:
+> > +  - J. Neuschäfer <j.ne@posteo.net>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: fsl,mpc8536-espi
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts: true
 > 
-> On 05/02/25 5:10 pm, Krzysztof Kozlowski wrote:
->> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
->>
->> On Wed, Feb 05, 2025 at 11:17:03AM +0530, Dharma Balasubiramani wrote:
->>> Add document for the property "dma-channels" for XDMA controller.
->>
->> I don't understand why. You are duplicating dma schema.
-
-Here-----------------------^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
->>
->> The same as with other patch - your commit msg is redundant. You say
->> what we see the diff but you never explain why you are doing these
->> changes. And in both cases this is really non-obvious.
->>
->> Apply this feedback to all future contributions - say why you are doing
->> changes instead of repeating what subject and diff are already saying.
+> How many?
 > 
-> Thanks for your feedback, do you want me to include the description of 
-> dma-channels from the diff in the commit message?
+> > +
+> > +  fsl,espi-num-chipselects:
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > +    description: The number of the chipselect signals.
 > 
-> The reason for this change is:
-> "This property is required when the channel count cannot be read from 
-> the XDMAC_GTYPE register (which occurs when accessing from the 
-> non-secure world on certain devices)."
+> Constraints?
 > 
-> Isn't this already clear from the description in the diff?
+> > +
+> > +  fsl,csbef:
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > +    description: Chip select assertion time in bits before frame starts
+> 
+> Constraints?
+> 
+> > +
+> > +  fsl,csaft:
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > +    description: Chip select negation time in bits after frame ends
+> 
+> Constraints?
+
+I'll add appropriate constraints to all of these.
 
 
-OK, so this describes why you need this. It does not solve why do you
-need this patch. Do you see any warnings?
+> > diff --git a/Documentation/devicetree/bindings/spi/fsl,spi.yaml b/Documentation/devicetree/bindings/spi/fsl,spi.yaml
+[...]
+> > +  clock-frequency:
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> 
+> Don't need a type.
+
+Will remove
+
+> 
+> > +    description: input clock frequency to non FSL_SOC cores
+> > +
+> > +  cs-gpios: true
+> > +
+> > +  fsl,spisel_boot:
+> > +    $ref: /schemas/types.yaml#/definitions/flag
+
+I do wonder, what's the difference between
+$ref: /schemas/types.yaml#/definitions/flag and type: boolean?
+
+
+
+Thanks for your review.
 
 Best regards,
-Krzysztof
+J. Neuschäfer
 

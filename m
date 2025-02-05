@@ -1,67 +1,67 @@
-Return-Path: <dmaengine+bounces-4285-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4283-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 508EEA283D8
-	for <lists+dmaengine@lfdr.de>; Wed,  5 Feb 2025 06:48:13 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 71A93A283D1
+	for <lists+dmaengine@lfdr.de>; Wed,  5 Feb 2025 06:47:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 750EA166DEE
-	for <lists+dmaengine@lfdr.de>; Wed,  5 Feb 2025 05:48:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D3E303A13A3
+	for <lists+dmaengine@lfdr.de>; Wed,  5 Feb 2025 05:47:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF01321D5BE;
-	Wed,  5 Feb 2025 05:47:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07B3C217F32;
+	Wed,  5 Feb 2025 05:47:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="D5q2Dpuw"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="ZYBAaDcL"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8E7817BEBF;
-	Wed,  5 Feb 2025 05:47:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA1B515D1;
+	Wed,  5 Feb 2025 05:47:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738734477; cv=none; b=RMsxpwxHJwnrrp0HPl2MX/0lyfhvE6fU95bx4YcWV+xWhLg63TtMYlJSLd/Dnx9liYMcl1bH1cCMbz7OAMrmwjgmeJLM6iThjl6lu2BxF5jeKBqXGS/V7KlVhM2F9oqQbqC5qDZBzwlWpgDwDnrw9vdrUMj3ck1c4+r0jhnYYqA=
+	t=1738734456; cv=none; b=QzDRNHFxal+64cHdl3w8AzTBbHoJLfCRjf/7PD9ZiZAYHR8PBuUcNAIdH2sbVodddKlus7S68xAkaAi6wgf/4eASvwhQBSc5yEEmSKgY9WSX5ZDYbjsjuHKELNDUH25GDgkT/YT704jUdL3dYFpMqofHBM4jko1V8Nou+O01bLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738734477; c=relaxed/simple;
-	bh=JsjoMsPukH3T9bblFYEe4cs8XB5AgUk3iFQC9hIrb0o=;
+	s=arc-20240116; t=1738734456; c=relaxed/simple;
+	bh=r2mmTyCNz3+P1wCHtQKeE98SelrFptg10dUNqwfPqts=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=MMQtOla9I8EOV2Wcba7Jd/LCiJ7/WP1/wrq8hBbLppHS8RHsm29QHdECoWW5bAm5zG2YYmrRk7GNONNuUPhjG3ssze2Q/Mt/c+CNvfkffR6YnMeCcIG57TUCSc4WykGm9GzBeshyqhIC51oZSTZ7HPflqxIFc2soKUwtcTGfM3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=D5q2Dpuw; arc=none smtp.client-ip=68.232.153.233
+	 In-Reply-To:To:CC; b=OavxUb6WHrj0BZyIObXv/pikPzY36mKpQSLI9ca1AQ6JsB4/8glbJanjcIp8aWX/sVL6Qveka+Jd3i8FqahkHWdCwIdp/6kTwrmNYyutsVYajWBwAsO1qBIbLcGzb/jUH35g5BIHkp67VAO5vPXXsAr7hGjus113U+JA5uv2LD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=ZYBAaDcL; arc=none smtp.client-ip=68.232.154.123
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1738734476; x=1770270476;
+  t=1738734454; x=1770270454;
   h=from:date:subject:mime-version:content-transfer-encoding:
    message-id:references:in-reply-to:to:cc;
-  bh=JsjoMsPukH3T9bblFYEe4cs8XB5AgUk3iFQC9hIrb0o=;
-  b=D5q2DpuwVP9lyq4pTPg0+aK6Xe9vBZIvXcSlZpjf3d5/5oh6pwfsIqZ+
-   6hbQhWmClmJo3mGNnsrkfW0jDN/yrG0pmvV7Q79WHM9PPwJsTHReE/jdO
-   8bfZVYrEgj2ESRod6y5hVC1Q7L51Lic5QPF7rM1psze4/HMQZnfsn8v1H
-   H1FzGjLBImJJRS8FSBOvE/avsA0ijvBVRKywJecZgX3nghXKjuAXIEDz+
-   /EsS1So5BlYAkVRy/AUoZagVoDq8ThXl0ouPhEIxtmCfkeP8deH04hzRt
-   LKl+VC1Tb00CLFVb+q5YSm1vjHl8Gox5RqgdvPGEntdL3RLDSBhfjpZOY
-   Q==;
-X-CSE-ConnectionGUID: a1yIP19sQpy3wWAhZXasEg==
-X-CSE-MsgGUID: w4SM+3nqQ7OA++T7fyzE7g==
+  bh=r2mmTyCNz3+P1wCHtQKeE98SelrFptg10dUNqwfPqts=;
+  b=ZYBAaDcL0Po6hLk9kjd5nDDTDDcbBqo2K8vlft+X24b37aV+mnh8nPju
+   5UDMiN8MWqNiWCpoYdRpVjHE4VaZA89PQNE5H4JS5Jyf+NHhIt1rLGrYZ
+   95bm4m5XsdHbWH9TLGlVP+mr8tNtEaMgf8mXNWEQy9KpJb6gbrAjFOmLl
+   dSRd2YN80lUlxaaJ4qJYvgOEGU4I1oB98LRXX5+ZMgVMvNn13S2tKatjj
+   FpBc1hL31H8NtlU4bLsAs+BXxUph+Xt9YF8vryBlPUmKoiP4eOwkCRBvV
+   NRIzByuPXN8w/j7iUJ7ygZEYaYg3bKp9cOFeuKcvOu6GzWIKx6qAUdy/S
+   A==;
+X-CSE-ConnectionGUID: Q6N8fxKkRWuAjntzGu5PRA==
+X-CSE-MsgGUID: 8sK76KAKTMK9+hz0uV0F6Q==
 X-IronPort-AV: E=Sophos;i="6.13,260,1732604400"; 
-   d="scan'208";a="268620150"
+   d="scan'208";a="36898072"
 X-Amp-Result: SKIPPED(no attachment in message)
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 04 Feb 2025 22:47:55 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 04 Feb 2025 22:47:28 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 4 Feb 2025 22:47:17 -0700
+ 15.1.2507.35; Tue, 4 Feb 2025 22:47:23 -0700
 Received: from [127.0.0.1] (10.10.85.11) by chn-vm-ex02.mchp-main.com
  (10.10.85.144) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Tue, 4 Feb 2025 22:47:11 -0700
+ Transport; Tue, 4 Feb 2025 22:47:17 -0700
 From: Dharma Balasubiramani <dharma.b@microchip.com>
-Date: Wed, 5 Feb 2025 11:17:02 +0530
-Subject: [PATCH 1/2] dmaengine: at_xdmac: get the number of DMA channels
- from device tree
+Date: Wed, 5 Feb 2025 11:17:03 +0530
+Subject: [PATCH 2/2] dt-bindings: dma: at_xdmac: document dma-channels
+ property
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -70,7 +70,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250205-mchp-dma-v1-1-124b639d5afe@microchip.com>
+Message-ID: <20250205-mchp-dma-v1-2-124b639d5afe@microchip.com>
 References: <20250205-mchp-dma-v1-0-124b639d5afe@microchip.com>
 In-Reply-To: <20250205-mchp-dma-v1-0-124b639d5afe@microchip.com>
 To: Ludovic Desroches <ludovic.desroches@microchip.com>, Vinod Koul
@@ -84,75 +84,69 @@ CC: <linux-arm-kernel@lists.infradead.org>, <dmaengine@vger.kernel.org>,
  Balasubiramani" <dharma.b@microchip.com>, Tony Han <tony.han@microchip.com>,
 	Cristian Birsan <cristian.birsan@microchip.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738734425; l=1880;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738734425; l=2248;
  i=dharma.b@microchip.com; s=20240209; h=from:subject:message-id;
- bh=X9SQwn97RGxJg8ugL0Ib/dqZ8wQ0Ij6oC+ZtdNgnIYg=;
- b=3ftho3/4GdrP6BA9CFwUb30ZhtSnR4DgrScHBRl8xbqlrnW2oEimp6Hp9AZca55l2SCQPVHEu
- wN1IVZvpjyKBlkmuMfPIAgLw/aI7RyH9FxvJUQaIJUegfXltGHOleDZ
+ bh=r2mmTyCNz3+P1wCHtQKeE98SelrFptg10dUNqwfPqts=;
+ b=/Ixn736PYcqjlWrl/ODVpBF7/1gZsuXsfAjG5GQJBTxnvnfleZU+YHVEIdYZIna7OKwzxyOI5
+ c9guVdzxrcQAfIZtJIZb15Mv8TkMp07XPE94plLq0k3MrPC93yx85rU
 X-Developer-Key: i=dharma.b@microchip.com; a=ed25519;
  pk=kCq31LcpLAe9HDfIz9ZJ1U7T+osjOi7OZSbe0gqtyQ4=
 
-From: Tony Han <tony.han@microchip.com>
+Add document for the property "dma-channels" for XDMA controller.
 
-In case of kernel runs in non-secure mode, the number of DMA channels can be
-got from device tree since the value read from GTYPE register is "0" as it's
-always secured. As the number of channels can never be negative, update them
-to the type "unsigned".
+Also reorder properties to group related items together.
 
 Signed-off-by: Tony Han <tony.han@microchip.com>
 Reviewed-by: Cristian Birsan <cristian.birsan@microchip.com>
+Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
 ---
- drivers/dma/at_xdmac.c | 26 +++++++++++++++++++++++---
- 1 file changed, 23 insertions(+), 3 deletions(-)
+ .../devicetree/bindings/dma/atmel,sama5d4-dma.yaml | 26 ++++++++++++++--------
+ 1 file changed, 17 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
-index ba25c23164e7..f777b0665c63 100644
---- a/drivers/dma/at_xdmac.c
-+++ b/drivers/dma/at_xdmac.c
-@@ -2259,12 +2259,29 @@ static int __maybe_unused atmel_xdmac_runtime_resume(struct device *dev)
- 	return clk_enable(atxdmac->clk);
- }
+diff --git a/Documentation/devicetree/bindings/dma/atmel,sama5d4-dma.yaml b/Documentation/devicetree/bindings/dma/atmel,sama5d4-dma.yaml
+index 9ca1c5d1f00f..b9fda35d2138 100644
+--- a/Documentation/devicetree/bindings/dma/atmel,sama5d4-dma.yaml
++++ b/Documentation/devicetree/bindings/dma/atmel,sama5d4-dma.yaml
+@@ -33,15 +33,6 @@ properties:
+               - microchip,sam9x7-dma
+           - const: atmel,sama5d4-dma
  
-+static inline int at_xdmac_get_channel_number(struct platform_device *pdev,
-+					      u32 reg, u32 *pchannels)
-+{
-+	int ret;
-+
-+	if (reg) {
-+		*pchannels = AT_XDMAC_NB_CH(reg);
-+		return 0;
-+	}
-+
-+	ret = of_property_read_u32(pdev->dev.of_node, "dma-channels", pchannels);
-+	if (ret)
-+		dev_err(&pdev->dev, "can't get number of channels\n");
-+
-+	return ret;
-+}
-+
- static int at_xdmac_probe(struct platform_device *pdev)
- {
- 	struct at_xdmac	*atxdmac;
--	int		irq, nr_channels, i, ret;
-+	int		irq, ret;
- 	void __iomem	*base;
--	u32		reg;
-+	u32		nr_channels, i, reg;
+-  "#dma-cells":
+-    description: |
+-      Represents the number of integer cells in the `dmas` property of client
+-      devices. The single cell specifies the channel configuration register:
+-        - bit 13: SIF (Source Interface Identifier) for memory interface.
+-        - bit 14: DIF (Destination Interface Identifier) for peripheral interface.
+-        - bit 30-24: PERID (Peripheral Identifier).
+-    const: 1
+-
+   reg:
+     maxItems: 1
  
- 	irq = platform_get_irq(pdev, 0);
- 	if (irq < 0)
-@@ -2280,7 +2297,10 @@ static int at_xdmac_probe(struct platform_device *pdev)
- 	 * of channels to do the allocation.
- 	 */
- 	reg = readl_relaxed(base + AT_XDMAC_GTYPE);
--	nr_channels = AT_XDMAC_NB_CH(reg);
-+	ret = at_xdmac_get_channel_number(pdev, reg, &nr_channels);
-+	if (ret)
-+		return ret;
+@@ -54,6 +45,23 @@ properties:
+   clock-names:
+     const: dma_clk
+ 
++  "#dma-cells":
++    description: |
++      Represents the number of integer cells in the `dmas` property of client
++      devices. The single cell specifies the channel configuration register:
++        - bit 13: SIF (Source Interface Identifier) for memory interface.
++        - bit 14: DIF (Destination Interface Identifier) for peripheral interface.
++        - bit 30-24: PERID (Peripheral Identifier).
++    const: 1
 +
- 	if (nr_channels > AT_XDMAC_MAX_CHAN) {
- 		dev_err(&pdev->dev, "invalid number of channels (%u)\n",
- 			nr_channels);
++  dma-channels:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Represents the number of DMA channels available in XDMA controller. This
++      property is required when the channel count cannot be read from the
++      XDMAC_GTYPE register (which occurs when accessing from non-secure world
++      on certain devices).
++
+ required:
+   - compatible
+   - reg
 
 -- 
 2.43.0

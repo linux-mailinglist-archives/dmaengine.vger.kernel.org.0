@@ -1,186 +1,127 @@
-Return-Path: <dmaengine+bounces-4286-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4287-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 655A8A28643
-	for <lists+dmaengine@lfdr.de>; Wed,  5 Feb 2025 10:14:09 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 34B1CA2864A
+	for <lists+dmaengine@lfdr.de>; Wed,  5 Feb 2025 10:15:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 004F1160DB5
-	for <lists+dmaengine@lfdr.de>; Wed,  5 Feb 2025 09:14:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C3E83162519
+	for <lists+dmaengine@lfdr.de>; Wed,  5 Feb 2025 09:15:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE40E22A4E2;
-	Wed,  5 Feb 2025 09:14:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F046822A4ED;
+	Wed,  5 Feb 2025 09:15:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qgTAJYj7"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="gdSdf5Uo"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0A05213240;
-	Wed,  5 Feb 2025 09:14:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B073C22A4E8
+	for <dmaengine@vger.kernel.org>; Wed,  5 Feb 2025 09:15:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738746844; cv=none; b=Rp20+fTalAJzsT9E6n6q8C/VqdyY00AYhcEdClqEwt8n0TvkMQ53M5KsUV5e+6Bw47dQ5QWYv2s8b1ggGerc3OON320Lt/l4quELfZpUgTlagSSzVi5ZjhW+NsV9P0nTED/ZJZ/SmBZr7YwqZBDKWCbHlzCJtgKTkZCgIiQLQ/g=
+	t=1738746908; cv=none; b=aDC8Iknq6DErOBJzaqiDVoms5jgbys+kSTbh876OB50LxuSszWRNxvpyNwVc/90TAyYDtrgiiaiwgHJnkVQXag73NHnwqvpQ4qlOyMEYOoXDelzEAy/eamnlCdGQRKGQNMU4cPaPWC6Dv7IZVkFbdQVPvfWoC4k39L1GhsecsDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738746844; c=relaxed/simple;
-	bh=4C2JCBvwyEf/X2nHPrRMmWtMS/VF3OfV5sTLegNX37Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kKR8vWtTv+0ylpB3d5fisghF1WCZI/stfBA+eVHzY8qseFxLU4qXqTUcF1wXOZmHufTMuzhWH6et9JdK3aOKfsDlSPKKgCEDfMv8YomVtlpx8apR1odS8zXj8+4E+cu7H6sW3Ps3xRDpDS4VyuVgCugyAKSkv4SnVcH3how4roM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qgTAJYj7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D14B7C4CED1;
-	Wed,  5 Feb 2025 09:13:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738746844;
-	bh=4C2JCBvwyEf/X2nHPrRMmWtMS/VF3OfV5sTLegNX37Y=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qgTAJYj7he3xj5vx6537c+N0Gqm8DOtAgpmH3h1hKA+KhJr6iB1oBfJrM/4FpnYK9
-	 zY5e/VJxhZPBQMwAQQgUeZ/cNHG0tTwtgErxvItRjxJOiVejHN0FirRST+0kSMMJRr
-	 ut6HN5jaAgWOFwxv64Vv/+xG8oEXJQxPIe/ymoaNkxM8LPiXkwuAK/zahlRbALG2V6
-	 WnhtEt6n3F7hqezB6lJRWKI2GEgcZNPpq9Xqoq7IIxVoaMLwm7QWSoFkspkjvCHz2U
-	 W+GDekkfQDVL82VGA+02ti+atf6xdm2gc65+nD7vW0MnGFPN8DVul8qOMJWlmT5kNm
-	 ndaQtCogl6k4A==
-Message-ID: <c0aad911-ecc4-4b04-a453-6da226f76ed2@kernel.org>
-Date: Wed, 5 Feb 2025 10:13:52 +0100
+	s=arc-20240116; t=1738746908; c=relaxed/simple;
+	bh=+HTs+0+wmjplmTlF1MsIF+Gs8Lm+3JvuR67gIzEXMyg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TOGxeAdNhRf2IVZWNnbPnm1dSWp5WKU3Hnm1eqtaqzDWW905lG7zEHOZlOd/5YT3cCFJV5Uql8YZhWbWOry2A1ZgQ81usRU6P5+5ihdzVhRDOvUqndvoG516UI6ak2jlWdqKJXTh6mMZYKvXKA18XYR2a8kg7sVY/SFK+C2UeDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=gdSdf5Uo; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1738746900; x=1739351700; i=wahrenst@gmx.net;
+	bh=2A918m5WblqdxZRwWXCpCtnsbfQzvD3ezaQRiGQ0OZk=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
+	 MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=gdSdf5UoAex+CJyqTA1htr1kIKSUec38Yru9csOJ3LEjgWqXI2Q+TgZLnNBQBScV
+	 T6XNP3rSXzWobECz0/jaBzfKRaUXm28TPhq18I6CF2IWta0B9TdhD+zaodsF7SVYx
+	 DaTh/OlhG8ngGbBNtrtLgjwLPk2w40n7HDAgcJIjRQgmMIOWzb9LM9Wl/fTclTeKa
+	 WmfaRWxbJF0eE6BxwlPVYebRbZ9c+NAEGXwpNeHA4Mz2dwpiK8Y6ac8pcrPN4uA8E
+	 ptp9DRYx+OIU3xLyI/Mn9+uf7mRQdx+EkotsF8XPIJH0ZWeJLnmh42MPCXVqKjsMA
+	 QoxNFs94/Zw1BEtlZg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from stefanw-SCHENKER ([37.4.251.153]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MG9kM-1teTRQ06bk-0043G3; Wed, 05
+ Feb 2025 10:15:00 +0100
+From: Stefan Wahren <wahrenst@gmx.net>
+To: Frank Li <Frank.Li@nxp.com>,
+	Vinod Koul <vkoul@kernel.org>
+Cc: imx@lists.linux.dev,
+	dmaengine@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Stefan Wahren <wahrenst@gmx.net>
+Subject: [PATCH] dmaengine: fsl-edma: Add missing newlines to log messages
+Date: Wed,  5 Feb 2025 10:14:55 +0100
+Message-Id: <20250205091455.4593-1-wahrenst@gmx.net>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 3/5] dt-bindings: gpu: Add protected heap name to Mali
- Valhall CSF binding
-To: Florent Tomasin <florent.tomasin@arm.com>, Vinod Koul <vkoul@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Sumit Semwal <sumit.semwal@linaro.org>,
- Benjamin Gaignard <benjamin.gaignard@collabora.com>,
- Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>,
- "T . J . Mercier" <tjmercier@google.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Yong Wu <yong.wu@mediatek.com>
-Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- nd@arm.com, Akash Goel <akash.goel@arm.com>
-References: <cover.1738228114.git.florent.tomasin@arm.com>
- <36b57dcf20860398ba83985e1c5b6f6958d08ba7.1738228114.git.florent.tomasin@arm.com>
- <7234f25c-a2aa-4834-931b-aeeb7a49dfa7@kernel.org>
- <4b9deab1-e330-4c93-8260-75276c2bc9ff@arm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <4b9deab1-e330-4c93-8260-75276c2bc9ff@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Xy0ceuF3uei+bfXg4V8RdPMeoKjKXB/vEhBig3rLeh5f5WZs7pJ
+ I3pMEPo7WKAQFPtbImKgdeTjBTcClaVakXlohXKRPaDFRML7/JgR5PNsW6u43GJRjDFAzG+
+ xwnBDyJFSG9Yu8hR9+Zm4x5nIjgegoiu73uduzGp3ULZTxsqzlSCjlJ4Q6rJyuQ8YnS2Yf1
+ UMRDCuNTSrYjwS5fs6QRA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:wk+OwyKKNM0=;MKX+Q8tjGBKVKymSD6Rdq+e+m3D
+ IPVdPN+hPILXt4m3LqGwmlmifbMB5+TkqBWq7mzqpx+bxY57f0SCXg5nWtTT0EVnZ1UAM/p3z
+ Wq3d//gU0c8Lwl/NGPqbJ3KEJAzWeRdfbxpbXLnlzqoLaqDUrkfw2YePotjHecmHnghbp7Vqv
+ P3K670/0NkCuRXL9BNHBf+ycBBLvI1PLxuUHuaa7XCOjx3rd8yV7iscqCC+nSpG/6dXrOUE4c
+ o55YhtR6mmql1rZsWHf9KGQWs+i39UvpIIEJzdNTjVuoVJGRplj0cgVcV2O7NpvT3BBPMFt6H
+ j/ZcS469YZhmTbQmG40/vTW8CsXJaN0r+wodbT/ta+TA+2Uqgho4yJ84r1vOv9d7eTINocoXG
+ iK6z3zMcgrVYfgNtfFRBkvDnN6L7NCssbcynDrLvql6buUbl6czLpyy4PZNHm4l9jyzZTPHPh
+ Euy8jfFbVcqN4qmd8zUoRq7xwGa3YW8B9p/gXr1uiPPEEHi2UCsO80tmeusc0WSuX+RlUI2Uw
+ vl0OcSLMyIi4cfZdtQSOHnxTwSEtfm9LAxZPOl0xxHMOzwZ9Yy5el2VusOr3vLzJvb99/4uwd
+ hSIGVzeqtdzOFbQdrnZcR6tWlk/JaSLPmkSp9BgEyN/SoRxUYmMVMsHorZSJ5NNxRV4AbYorT
+ yV8ifbeU/2Swku+WlCJHy/6nu1F8EYnpm4wYXVN9q6CiLwYMfKmWkPM/2fGOT/mrrTfGXBRFQ
+ /cuNu3LnyeWmEpjH6hsGPfhO+A4IhgGBbEDkWc2h3AMPrPaZtHOhiFo6KeNIaTTUM5hKnLf6q
+ acG0qLJZnNob2z+PA8vgXK5CBsyma66Oby0UtYWYgKOrhFCMZjhZcTJWmT4MR2JTo3MploIoW
+ 83eF4loKy8McdXa/14/ynbwU52eGQiNRtSU7Im+4hZwRPDshJTDcZ1dRtzS7h/Oh8xKpeZC/r
+ TwQ7D0sghAflnOHr83OeHovESUe/T0KowlA8NlQmiWVilDYpt7RgwelndT8cPvxA65VCvNS4U
+ 38+IWsz7WSKk72EN5pXp4R3BfUiCvLLHmthnNofHm/q+BSOO171hrXVANOqQ+Hsp2lbh8BYZn
+ dIo42lSypPSj2Tqk6xIHTXBORk9gisgLa9apNM3wCaPqFv61bjK1DAr/ZjUeysYSD7fN/BO9p
+ tKTechWZ/GGwevi4c/Q/nrEvSQd34j2pY62HsjUKZPYsj8kxLNGuw963neAH+NJllqWkjaIBk
+ 5WdiC1JVAazJXJrJpL6+TFG26Gw3SqOcdP2P4tKNUTKbRUtXqXoKvhfzabA/VOGiL1kCob7PY
+ kgjwx8GFQweKnmWnydS2XM1JtLvft6V+24vhgU4+6Zmvb4=
 
-On 03/02/2025 16:31, Florent Tomasin wrote:
-> Hi Krzysztof
-> 
-> On 30/01/2025 13:25, Krzysztof Kozlowski wrote:
->> On 30/01/2025 14:08, Florent Tomasin wrote:
->>> Allow mali-valhall-csf driver to retrieve a protected
->>> heap at probe time by passing the name of the heap
->>> as attribute to the device tree GPU node.
->>
->> Please wrap commit message according to Linux coding style / submission
->> process (neither too early nor over the limit):
->> https://elixir.bootlin.com/linux/v6.4-rc1/source/Documentation/process/submitting-patches.rst#L597
-> Apologies, I think I made quite few other mistakes in the style of the
-> patches I sent. I will work on improving this aspect, appreciated
-> 
->> Why this cannot be passed by phandle, just like all reserved regions?
->>
->> From where do you take these protected heaps? Firmware? This would
->> explain why no relation is here (no probe ordering, no device links,
->> nothing connecting separate devices).
-> 
-> The protected heap is generaly obtained from a firmware (TEE) and could
-> sometimes be a carved-out memory with restricted access.
+Not all log messages have a newline at the end. So fix it.
 
-Which is a reserved memory, isn't it?
+Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+=2D--
+ drivers/dma/fsl-edma-main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> 
-> The Panthor CSF kernel driver does not own or manage the protected heap
-> and is instead a consumer of it (assuming the heap is made available by
-> the system integrator).
-> 
-> I initially used a phandle, but then I realised it would introduce a new
-> API to share the heap across kernel driver. In addition I found this
-> patch series:
-> -
-> https://lore.kernel.org/lkml/20230911023038.30649-1-yong.wu@mediatek.com/#t
-> 
-> which introduces a DMA Heap API to the rest of the kernel to find a
-> heap by name:
-> - dma_heap_find()
-> 
-> I then decided to follow that approach to help isolate the heap
-> management from the GPU driver code. In the Panthor driver, if the
-> heap is not found at probe time, the driver will defer the probe until
-> the exporter made it available.
+diff --git a/drivers/dma/fsl-edma-main.c b/drivers/dma/fsl-edma-main.c
+index f989b6c9c0a9..760c9e3e374c 100644
+=2D-- a/drivers/dma/fsl-edma-main.c
++++ b/drivers/dma/fsl-edma-main.c
+@@ -164,7 +164,7 @@ static bool fsl_edma_srcid_in_use(struct fsl_edma_engi=
+ne *fsl_edma, u32 srcid)
+ 		fsl_chan =3D &fsl_edma->chans[i];
 
+ 		if (fsl_chan->srcid && srcid =3D=3D fsl_chan->srcid) {
+-			dev_err(&fsl_chan->pdev->dev, "The srcid is in use, can't use!");
++			dev_err(&fsl_chan->pdev->dev, "The srcid is in use, can't use!\n");
+ 			return true;
+ 		}
+ 	}
+@@ -822,7 +822,7 @@ static int fsl_edma_suspend_late(struct device *dev)
+ 		spin_lock_irqsave(&fsl_chan->vchan.lock, flags);
+ 		/* Make sure chan is idle or will force disable. */
+ 		if (unlikely(fsl_chan->status =3D=3D DMA_IN_PROGRESS)) {
+-			dev_warn(dev, "WARN: There is non-idle channel.");
++			dev_warn(dev, "WARN: There is non-idle channel.\n");
+ 			fsl_edma_disable_request(fsl_chan);
+ 			fsl_edma_chan_mux(fsl_chan, 0, false);
+ 		}
+=2D-
+2.34.1
 
-I don't talk here really about the driver but even above mediatek
-patchset uses reserved memory bindings.
-
-You explained some things about driver yet you did not answer the
-question. This looks like reserved memory. If it does not, bring
-arguments why this binding cannot be a reserved memory, why hardware is
-not a carve out memory.
-
-Best regards,
-Krzysztof
 

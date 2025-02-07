@@ -1,88 +1,53 @@
-Return-Path: <dmaengine+bounces-4333-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4334-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA7B0A2CDE5
-	for <lists+dmaengine@lfdr.de>; Fri,  7 Feb 2025 21:14:02 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id F39A8A2CF08
+	for <lists+dmaengine@lfdr.de>; Fri,  7 Feb 2025 22:30:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 16162169D33
-	for <lists+dmaengine@lfdr.de>; Fri,  7 Feb 2025 20:13:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ED702188DAEC
+	for <lists+dmaengine@lfdr.de>; Fri,  7 Feb 2025 21:30:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F4DB1A0B15;
-	Fri,  7 Feb 2025 20:11:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D8CE18E02A;
+	Fri,  7 Feb 2025 21:30:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="PL5mlcE0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cfve54Sx"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A3119992C
-	for <dmaengine@vger.kernel.org>; Fri,  7 Feb 2025 20:11:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C53323C8C3;
+	Fri,  7 Feb 2025 21:30:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738959112; cv=none; b=RQgwzF+c8MV9xw/hw4DFtKPRWt3E2z5o5uzZkvOjh/PGTprNnBij9grbX03efx1rBS+zGMQC5WVC75KVr3VbYCYlNzV/bfTK00oQYOVK3Wq8JE8Q+BxwMU1gkYPAOLGnBgGMXV/mOSdNF+pGgYKLSoWfQKi9/XGuxKVCdCbYvwk=
+	t=1738963835; cv=none; b=Mjr7r8lQgCIYdsV0xkLiLNItAXN9K7LU9vY+HrMpTAl0OZJZ4tnCrxBEP4mWZKHuTipLIkicY9b2+zRgvsLn5/zWvQIsgD7YBsIpZbbPhEpl7hlkVDNScTmphvBnIGaVD3huCMJ7UFNhIXfPzE/2zlCAa2mWwI0++rkiigaHZkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738959112; c=relaxed/simple;
-	bh=o0JjXXcxDBv5TFdiXfnwXkrMd28amcy8OmNIPYYWh9o=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=LhB5gcFt3i6eITRiS8URnjDaeMsDhANiLrgXZX+CgdHStO/wydQcslO8eoVrN5lDn2t549L345G3ZVMfeUde+Sx27Gj+wxsxUq43EeZwUIVUdrcHfT4q1hVOQF5TTgf9vrJMEOJDxe1w7L4rAmVxqtxxtV1UUUoOkGqUW9cmkQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=PL5mlcE0; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 517BNaEt032196
-	for <dmaengine@vger.kernel.org>; Fri, 7 Feb 2025 20:11:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=kDMiMudtV4tgXrnAq0wBH3
-	feb/UwjZ0g++lmYLeshWU=; b=PL5mlcE0EoqntLZxTAHB3tdKWGaTln3Gos4ikq
-	ivTq4o8QpTXZHwSma8QkcNSqOG9SgYe0/UtkznOE37N8h96p5H750cnBmKZ18i4k
-	AXv/4OxEtUliSdKKdVyqkjApasPpZi6uAXetQuliUU9T47m+wsKNe0Y0XWAN/6KW
-	P9D+KvHpe556cnjYTAE438sU189CdnhDAuRatemEDuQrie0V9VeTX/y59/HXLluw
-	4V/lHdEMQPpTnU2IsE/Q5B5HvREJOGvop7qWqksacGI2rLa1qVqmmjzi6eYIDmup
-	68RraPLethyUy3Oz83DbSvTscHsXhE9g9+yATRUdP0O30iVQ==
-Received: from mail-oa1-f72.google.com (mail-oa1-f72.google.com [209.85.160.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44nh8us8vf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <dmaengine@vger.kernel.org>; Fri, 07 Feb 2025 20:11:48 +0000 (GMT)
-Received: by mail-oa1-f72.google.com with SMTP id 586e51a60fabf-2b8515341c1so401649fac.1
-        for <dmaengine@vger.kernel.org>; Fri, 07 Feb 2025 12:11:48 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738959107; x=1739563907;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kDMiMudtV4tgXrnAq0wBH3feb/UwjZ0g++lmYLeshWU=;
-        b=lYuTSxGH44qRrvY+2NIw2HbeDY68unGVVlZJ0+/479xXqm007TigR72bhtST/Iu5Kr
-         o+Yx2PyCgxU/DG2boOSiLD3u+o+OvCwibdgidAQnpTx6odxYapp20O9Imq4eRIFRU2Pm
-         PzY8RmljC6o59x2zqGO5wIrjlc3BXsWpI01T6q0QGyn0uyRqBrb91vgIFMJRwGxM1flj
-         uh4PApW1DwhnhpALHvpoKUaENPLwnADIjZ2U3fZUyCwS9572guN+3UB96Fu7UVsg1x08
-         yBBr840NKaBOJPL5fG6BCeRq3Jx0tVUSN0mBHq9qYFNc68zbYUqR3i7WOxUnZ3aKktpj
-         fKvw==
-X-Forwarded-Encrypted: i=1; AJvYcCX6qwwbXV8vuOhZBaj7aolXNccwYXSn1+c0/H9jUEl6UCVt/Q4y/IRULVVSXsrCCzsRXsQ5Gr9lmx8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqELUr2ekCiefBbSGa3s8WNd/55aoighLwYo3o5HFYWhEM17X4
-	ovKwiS7+qHSevf7/vwaniY9mn3Qe1F0k/rec63ZFQaLQF3priX2AalurJdxym40zoAfguR11XHf
-	/a2+lWRzdqswbwyPZPtfLQ3Xp7zVLqdclW4rQB5Vgdqlcu7Sltjshv2St65IndOKML8U=
-X-Gm-Gg: ASbGncvlLU+v3yfhYJLkN2+a0sW+pDwPUxYk6/TFrOBJzjhXjJxxwdH9T6s5Sx6HHH0
-	h2omfWd3SybRJbGI/ZsqusGHjpi4ccUQ3obE3adFlULiXG4puHv+iJYzxIxJBtHe6vsb71FLwFC
-	cRI3rfOnPRSdD8hHwjkiII63p2yyNll1rDVsDAysR5xG8PvvxdgFPhTBnda3h9kWxptEqNZ4bhj
-	8o8ucf87rxsw5vvxTQUzNcMdydjsmNXR9xbJaStlIzxcQU0bqkGMFdYaajl7enWKKXCRhAdcgRm
-	bxwTnA46o09GL6ZqYb0IHGfmB1wxSjpdPeLu91kpGSyiN/VHkyJ+COq0ywywetGuY7EDf+UfWV5
-	jJCwA
-X-Received: by 2002:a05:6871:628b:b0:2b7:5726:c931 with SMTP id 586e51a60fabf-2b84015e5bcmr2686347fac.5.1738959107054;
-        Fri, 07 Feb 2025 12:11:47 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFYyG3xljRm3I0DrpeKbRB9vGDzRlNGHyM0fmkRS4g7aLScA8naZOYGycC46hNgw83glXa44g==
-X-Received: by 2002:a05:6871:628b:b0:2b7:5726:c931 with SMTP id 586e51a60fabf-2b84015e5bcmr2686329fac.5.1738959106644;
-        Fri, 07 Feb 2025 12:11:46 -0800 (PST)
-Received: from [192.168.86.65] (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2b825fe58a9sm1017758fac.20.2025.02.07.12.11.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 12:11:46 -0800 (PST)
-From: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-Date: Fri, 07 Feb 2025 12:17:33 -0800
-Subject: [PATCH] dmaengine: qcom: bam_dma: Avoid accessing BAM_REVISION on
- remote BAM
+	s=arc-20240116; t=1738963835; c=relaxed/simple;
+	bh=94ujvz3tk5ekjf2MZlbHHWzbwwWLaHAsa3ywPEveVtA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=YkvhxOXaAU6j8g+5jLZPey9XhwD9OXuydAfiM70GFOQqxNpc5ahGvxlLi4KPS5m5b5W1lBCoejvHpjibSPPYc+XhikEaED6ZFJ36Tv3eIvKH1i5mxgM2iSBY+7cU2SFIxZpZMB0ma+eboT+ty+z2GPzwb66Hb0CytfkJLe3jsnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cfve54Sx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0CBADC4CED1;
+	Fri,  7 Feb 2025 21:30:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738963835;
+	bh=94ujvz3tk5ekjf2MZlbHHWzbwwWLaHAsa3ywPEveVtA=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=cfve54Sxfr9QBL7efbkka4gqbqtmLqDIX7fxuTzqbSgJRFcfeed3+Xr+9fKlcgoO0
+	 7SkednyYe2a+mlwJXN/glHoULVuuNp1baglH2iIOGjL+wNZ+jRBjylOQx6u0p5+ZBl
+	 dMyKW521/HplkdQ4imXzl6l6fSsYfVhNa5B42O6un/jk4TqpNh8LMY+JP6I5TeqJtI
+	 D+hMbghbT5SMbxIjdMfsO1nwhUBYR53hrYmqyIhj7ciuV4+FQgVOboC0ytQwYr68hX
+	 G4Sie13QcWfrJYErG7fN0GLjtfB3Vq/d//lMLHG1rsxBb8gSVPyyrXdt0fxq4WzU4A
+	 L30mdjjFq+xFQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE5C6C02194;
+	Fri,  7 Feb 2025 21:30:34 +0000 (UTC)
+From: =?utf-8?q?J=2E_Neusch=C3=A4fer_via_B4_Relay?= <devnull+j.ne.posteo.net@kernel.org>
+Subject: [PATCH v2 00/12] YAML conversion of several Freescale/PowerPC DT
+ bindings
+Date: Fri, 07 Feb 2025 22:30:17 +0100
+Message-Id: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -90,113 +55,111 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250207-bam-read-fix-v1-1-027975cf1a04@oss.qualcomm.com>
-X-B4-Tracking: v=1; b=H4sIAFxqpmcC/x2MQQqAIBAAvxJ7bkFXQuor0UFzrT1koRCB9Pek4
- wzMVCichQtMXYXMtxQ5UwPdd7DuLm2MEhoDKRoUKYveHZjZBYzyIHmjabTBRKehJVfmpv/dvLz
- vB1R6MoteAAAA
-To: Vinod Koul <vkoul@kernel.org>, Md Sadre Alam <quic_mdalam@quicinc.com>
-Cc: linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Georgi Djakov <djakov@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2733;
- i=bjorn.andersson@oss.qualcomm.com; h=from:subject:message-id;
- bh=o0JjXXcxDBv5TFdiXfnwXkrMd28amcy8OmNIPYYWh9o=;
- b=owEBgwJ8/ZANAwAIAQsfOT8Nma3FAcsmYgBnpmp1RtxFcyltaPy4QkUHiZuJjtKYg4o3K8zlj
- uCRKySR3oqJAkkEAAEIADMWIQQF3gPMXzXqTwlm1SULHzk/DZmtxQUCZ6ZqdRUcYW5kZXJzc29u
- QGtlcm5lbC5vcmcACgkQCx85Pw2ZrcVD2g/6A8MHdtGf7f1BUcAhzUWaEHPcVGtQSlcHHwNHbIX
- fo4oS0rrmMpcXOinC/Hl/WlPZhg9kRewpVgGMT3rvIwNVWa7pLQbUpJHI98/MdQwxm5hKneFtuS
- wHwFdD10g6RpZka/HgEzwTv/rin2uTAHaHe2+zzqkRaE9raaU6vU95CKSG++u87l9CpCM6EPU34
- H8oAB0I9ixITUzOer489lG/ET4tF2MEdvA2/fCzJFpP+IDQ8bsq1gv+yEhNUb3jVjqsd3HuM7Qi
- nXBmnQS4GJ7K+MwZUxcGkYkDEnZovmEVmdyeCJtHy+NC2lf5NSPe9qk2UM7EFP04lrc3IjuBDD/
- IPl/5OV1o1dUp3ZTpP8RPm6w77ny787CMdgNEsIXIPvypzjrJVe3avTsCu451CjUD94tPdiTKKX
- G7A3+oqQWL3TP+fehmwPuxZSLLo7RJmdnrhmvi5Cn5FDI286SXccC0m1Qb9+cItD6E8KJyhtj2m
- bovtmyWVMuPRRKMdLJr5Hl66v5RwGzHxgfPwzsMljs6KCy23i9PqmqxRTlbloTw6aIKR+Roar1n
- HT7zL1UYc8QmvRfhY+T2NiQYMB1Z+YgQkGnIxj3gD7Lzmd+G3rc5y1iN/5RAHLKOwV/StU+eviN
- a4FYq6MWzrZu+hfukZJUHYupReI6NDun7YWL2zAsYP9w=
-X-Developer-Key: i=bjorn.andersson@oss.qualcomm.com; a=openpgp;
- fpr=05DE03CC5F35EA4F0966D5250B1F393F0D99ADC5
-X-Proofpoint-GUID: 55koSaGNu2Zx3QjMZ_jT-_9nbgjUPGH8
-X-Proofpoint-ORIG-GUID: 55koSaGNu2Zx3QjMZ_jT-_9nbgjUPGH8
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-07_09,2025-02-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
- mlxscore=0 bulkscore=0 adultscore=0 clxscore=1015 phishscore=0
- lowpriorityscore=0 malwarescore=0 mlxlogscore=999 priorityscore=1501
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502070151
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAGp7pmcC/2XMQQ7CIBCF4as0sxYDVEh11XuYLuowWBItBAixa
+ bi72K3L/+Xl2yFRdJTg1u0Qqbjk/NpCnjrAZV6fxJxpDZJLxYXULATc5veL6YEjmuHRW5TQ3iG
+ SdZ9Duk+tF5eyj9sBF/Fb/40iGGeK68vVKoG9MWPwKZM/r5RhqrV+AeTPTISfAAAA
+X-Change-ID: 20250126-ppcyaml-680ccd8b3fc2
+To: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+ Krzysztof Kozlowski <krzk@kernel.org>
+Cc: imx@lists.linux.dev, Scott Wood <oss@buserror.net>, 
+ Madhavan Srinivasan <maddy@linux.ibm.com>, 
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+ Christophe Leroy <christophe.leroy@csgroup.eu>, 
+ Naveen N Rao <naveen@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Damien Le Moal <dlemoal@kernel.org>, 
+ Niklas Cassel <cassel@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, 
+ "David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>, 
+ Vinod Koul <vkoul@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Bjorn Helgaas <bhelgaas@google.com>, 
+ =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, 
+ Wim Van Sebroeck <wim@linux-watchdog.org>, 
+ Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>, 
+ Miquel Raynal <miquel.raynal@bootlin.com>, 
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
+ linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, 
+ linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org, 
+ linux-pci@vger.kernel.org, linux-watchdog@vger.kernel.org, 
+ linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org, 
+ =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738963832; l=3147;
+ i=j.ne@posteo.net; s=20240329; h=from:subject:message-id;
+ bh=94ujvz3tk5ekjf2MZlbHHWzbwwWLaHAsa3ywPEveVtA=;
+ b=9ApSQvdR7H4b5oYJC3cFy1ErDfu4w+UKbTU0bUdy14D+XfqSBEdTRk2y9o2+fy4Ll7XwAb/Ap
+ 0ovzTOSCrwXC+++bUZmGcEPJeGRovxiY/IKS/grKdK9HL/fa7Yy7Bo+
+X-Developer-Key: i=j.ne@posteo.net; a=ed25519;
+ pk=NIe0bK42wNaX/C4bi6ezm7NJK0IQE+8MKBm7igFMIS4=
+X-Endpoint-Received: by B4 Relay for j.ne@posteo.net/20240329 with
+ auth_id=156
+X-Original-From: =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+Reply-To: j.ne@posteo.net
 
-Commit '57a7138d0627 ("dmaengine: qcom: bam_dma: Avoid writing
-unavailable register")' made this read unconditional, in order to
-identify if the instance is BAM-NDP or BAM-Lite.
-But the BAM_REVISION register is not accessible on remotely managed BAM
-instances and attempts to access it causes the system to crash.
+This is a spin-off of the series titled
+"powerpc: MPC83xx cleanup and LANCOM NWAPP2 board".
 
-Move the access back to be conditional and expand the checks that was
-introduced to restore the old behavior when no revision information is
-available.
+During the development of that series, it became clear that many
+devicetree bindings for Freescale MPC8xxx platforms are still in the old
+plain-text format, or don't exist at all, and in any case don't mention
+all valid compatible strings.
 
-Fixes: 57a7138d0627 ("dmaengine: qcom: bam_dma: Avoid writing unavailable register")
-Reported-by: Georgi Djakov <djakov@kernel.org>
-Closes: https://lore.kernel.org/lkml/9ef3daa8-cdb1-49f2-8d19-a72d6210ff3a@kernel.org/
-Signed-off-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
 ---
- drivers/dma/qcom/bam_dma.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+Changes in v2:
+- rebased on v6.14-rc1
+- various style cleanups, both in YAML and in DTS examples
+- minor improvements to the commit messages
+- Link to v1: https://lore.kernel.org/r/20250126-ppcyaml-v1-0-50649f51c3dd@posteo.net
 
-diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
-index c14557efd577..d42d913492a8 100644
---- a/drivers/dma/qcom/bam_dma.c
-+++ b/drivers/dma/qcom/bam_dma.c
-@@ -445,8 +445,8 @@ static void bam_reset(struct bam_device *bdev)
- 	writel_relaxed(val, bam_addr(bdev, 0, BAM_CTRL));
- 
- 	/* set descriptor threshold, start with 4 bytes */
--	if (in_range(bdev->bam_revision, BAM_NDP_REVISION_START,
--		     BAM_NDP_REVISION_END))
-+	if (!bdev->bam_revision ||
-+	    in_range(bdev->bam_revision, BAM_NDP_REVISION_START, BAM_NDP_REVISION_END))
- 		writel_relaxed(DEFAULT_CNT_THRSHLD,
- 			       bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
- 
-@@ -1006,8 +1006,8 @@ static void bam_apply_new_config(struct bam_chan *bchan,
- 			maxburst = bchan->slave.src_maxburst;
- 		else
- 			maxburst = bchan->slave.dst_maxburst;
--		if (in_range(bdev->bam_revision, BAM_NDP_REVISION_START,
--			     BAM_NDP_REVISION_END))
-+		if (!bdev->bam_revision ||
-+		    in_range(bdev->bam_revision, BAM_NDP_REVISION_START, BAM_NDP_REVISION_END))
- 			writel_relaxed(maxburst,
- 				       bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
- 	}
-@@ -1199,11 +1199,12 @@ static int bam_init(struct bam_device *bdev)
- 	u32 val;
- 
- 	/* read revision and configuration information */
--	val = readl_relaxed(bam_addr(bdev, 0, BAM_REVISION));
--	if (!bdev->num_ees)
-+	if (!bdev->num_ees) {
-+		val = readl_relaxed(bam_addr(bdev, 0, BAM_REVISION));
- 		bdev->num_ees = (val >> NUM_EES_SHIFT) & NUM_EES_MASK;
- 
--	bdev->bam_revision = val & REVISION_MASK;
-+		bdev->bam_revision = val & REVISION_MASK;
-+	}
- 
- 	/* check that configured EE is within range */
- 	if (bdev->ee >= bdev->num_ees)
+---
+J. Neuschäfer (12):
+      dt-bindings: powerpc: Add Freescale/NXP MPC83xx SoCs
+      dt-bindings: ata: Convert fsl,pq-sata to YAML
+      dt-bindings: crypto: Convert fsl,sec-2.0 to YAML
+      dt-bindings: mfd: Convert fsl,mcu-mpc8349emitx to YAML
+      dt-bindings: dma: Convert fsl,elo*-dma to YAML
+      dt-bindings: pci: Convert fsl,mpc83xx-pcie to YAML
+      dt-bindings: watchdog: Convert mpc8xxx-wdt to YAML
+      dt-bindings: spi: Convert Freescale SPI bindings to YAML
+      dt-bindings: memory-controllers: Convert fsl,elbc to YAML
+      dt-bindings: memory-controllers: Add fsl,elbc-gpcm-uio
+      dt-bindings: nand: Add fsl,elbc-fcm-nand
+      dt-bindings: mtd: raw-nand-chip: Relax node name pattern
 
+ .../devicetree/bindings/ata/fsl,pq-sata.yaml       |  59 ++++++
+ Documentation/devicetree/bindings/ata/fsl-sata.txt |  28 ---
+ .../devicetree/bindings/crypto/fsl,sec2.0.yaml     | 142 ++++++++++++++
+ .../devicetree/bindings/crypto/fsl-sec2.txt        |  65 -------
+ .../devicetree/bindings/dma/fsl,elo-dma.yaml       | 140 ++++++++++++++
+ .../devicetree/bindings/dma/fsl,elo3-dma.yaml      | 123 +++++++++++++
+ .../devicetree/bindings/dma/fsl,eloplus-dma.yaml   | 134 ++++++++++++++
+ .../memory-controllers/fsl,elbc-gpcm-uio.yaml      |  59 ++++++
+ .../bindings/memory-controllers/fsl,elbc.yaml      | 146 +++++++++++++++
+ .../bindings/mfd/fsl,mcu-mpc8349emitx.yaml         |  53 ++++++
+ .../devicetree/bindings/mtd/fsl,elbc-fcm-nand.yaml |  68 +++++++
+ .../devicetree/bindings/mtd/raw-nand-chip.yaml     |   2 +-
+ .../devicetree/bindings/pci/fsl,mpc8xxx-pci.yaml   | 115 ++++++++++++
+ Documentation/devicetree/bindings/pci/fsl,pci.txt  |  27 ---
+ .../devicetree/bindings/powerpc/fsl/dma.txt        | 204 ---------------------
+ .../bindings/powerpc/fsl/fsl,mpc83xx.yaml          |  67 +++++++
+ .../devicetree/bindings/powerpc/fsl/lbc.txt        |  43 -----
+ .../bindings/powerpc/fsl/mcu-mpc8349emitx.txt      |  17 --
+ .../devicetree/bindings/spi/fsl,espi.yaml          |  64 +++++++
+ Documentation/devicetree/bindings/spi/fsl,spi.yaml |  73 ++++++++
+ Documentation/devicetree/bindings/spi/fsl-spi.txt  |  62 -------
+ .../devicetree/bindings/watchdog/mpc8xxx-wdt.txt   |  25 ---
+ .../devicetree/bindings/watchdog/mpc8xxx-wdt.yaml  |  64 +++++++
+ 23 files changed, 1308 insertions(+), 472 deletions(-)
 ---
 base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-change-id: 20250207-bam-read-fix-2b31297d3fa1
+change-id: 20250126-ppcyaml-680ccd8b3fc2
 
 Best regards,
 -- 
-Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+J. Neuschäfer <j.ne@posteo.net>
+
 
 

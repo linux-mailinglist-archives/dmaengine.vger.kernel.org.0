@@ -1,52 +1,52 @@
-Return-Path: <dmaengine+bounces-4340-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4341-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E9652A2CF37
-	for <lists+dmaengine@lfdr.de>; Fri,  7 Feb 2025 22:31:19 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2957DA2CF48
+	for <lists+dmaengine@lfdr.de>; Fri,  7 Feb 2025 22:31:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2DF5116D3F9
-	for <lists+dmaengine@lfdr.de>; Fri,  7 Feb 2025 21:31:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AD8CB16D3F5
+	for <lists+dmaengine@lfdr.de>; Fri,  7 Feb 2025 21:31:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F12C1D958E;
-	Fri,  7 Feb 2025 21:30:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FA161DE2D4;
+	Fri,  7 Feb 2025 21:30:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P7kYzEbF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XSQHX1P/"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 523F31D0F5A;
-	Fri,  7 Feb 2025 21:30:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C9A51DE2B5;
+	Fri,  7 Feb 2025 21:30:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738963836; cv=none; b=ZEiRbdbOF0HrcMqmHS9BWB6nq0XE7ECdOM58pMjPX/adI3SmbrBSw7Z6iy4Z72h6gMslOGkTFr1cp/fKAU0f+6eqGSaYkfQtCOudOH3WJyq1wPAbp6JCDNZX1d24za0vgkpROT35228y4Gk9CO1VuXx+I+od60i21h186qmaHA8=
+	t=1738963837; cv=none; b=iivGuvTk89NgEw2mQX1CqFIg02FtozmMyzK8I+DCuIlbxo2t8Nt30p0sKQ58Kii42tmyak17nuoB9Mt+UulvJe4051ixFNRJY6lO5K+YvYROsVb+SG/TpBOVCXG5mM0yktjVV/EzuBSgCnr/9thErmgDWVySM6bA5Fwuq9G0KYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738963836; c=relaxed/simple;
-	bh=fqvAh3iKxOl03ArBCkYTvP/GeGQRKw1fc2EwMT7Iylc=;
+	s=arc-20240116; t=1738963837; c=relaxed/simple;
+	bh=9PfartHueaGr5g/oiEQ4N02BOdiK1bkzjtmyOp5ecwc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eL96fDy1DESYccwdc7KMbdZt/t4nfjZAtuEM1DJS5YiRa56nTcFhHV+RI1d7WKC9k1hFM8H5fzwZAnuwLRnZ+4TmMccyHp8L4vzCV3aDY8XDgh+bzXzpSujeVBJlA7k2WURpcj0PnM0/J0Cndgx9CfFUzZ+k3qOzRWd/q/adC/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P7kYzEbF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id AE809C116B1;
+	 In-Reply-To:To:Cc; b=nxde4EZtpkrE29nyWiJtRCzuxBOgKWj6hOxd69Xefm9cnEYtcZqvKMksCkuofu4F7QPYey53H2HC2BEBjMed3NbkZ5RxIpLeqjRfSt63USpacb4G+4MhA9Rp8cPXou6Cw69sgZyAjATTf43Y4KMZHDZ/UoLYn8i75pWyOj8hFMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XSQHX1P/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D0E9BC2BCAF;
 	Fri,  7 Feb 2025 21:30:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1738963835;
-	bh=fqvAh3iKxOl03ArBCkYTvP/GeGQRKw1fc2EwMT7Iylc=;
+	bh=9PfartHueaGr5g/oiEQ4N02BOdiK1bkzjtmyOp5ecwc=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=P7kYzEbFv5XvnqA9e0Aw2hN/mJRZM27jQPH1NC1dLXOY023QXk/rORY52thAt4Mdz
-	 IETcYpeRUiFbFi5nhNx5iYFzW6OsssSlEVnUg8NOz6WheSOyOrSQH4fRPJgwKwW/nJ
-	 GUnAOxEjOCkKarOkpR4/dMMD9MKp/kyyu15l201GH1QFIgYUSLUeCuylliv+tyBS76
-	 PZ3bBRkl3Jlf0aq/SQ22KHDfHe+UFncODbI+oH+5KAH+98cKh8mAVq9OAWv0I8QQuM
-	 6d0sdji7khwUHKrFpdHXbdH+OXkYla7EFI9+U0yF4/dv1NRZ7/g9q/udgu16gysYi+
-	 567gwgWihYFdQ==
+	b=XSQHX1P/S2G1qfpQ/lXzX+rfcRzNCc7YQw1t5fQx/FBgV+6eHzOT1kZEdBWqpqcly
+	 73zaH8p3WSTU8UjGDULSrGjSDdK/Rf+GGnTH4uFRAD7/j70M6M2AankYYiGMYbBSMM
+	 cgr4PIqZniKAB6xga3cp41m4GXZxSwIibQDUGj5+kfDLg2rf30/ItfSa8vcj7chlmC
+	 2StvUoQuTlhv8p7j595JyvCQvdqOAvjNkLKrSx2gm+76GA2Rv97LRFxqUXo8CCiNGE
+	 blO3mYTf427SgHgvEjwxnLwC1wLoEq/6Gfq98VlpqbWunDNMJT7FxQwud840BYV2ds
+	 1SfseSF+JAEJw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 908A2C0219D;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E86C021A0;
 	Fri,  7 Feb 2025 21:30:35 +0000 (UTC)
 From: =?utf-8?q?J=2E_Neusch=C3=A4fer_via_B4_Relay?= <devnull+j.ne.posteo.net@kernel.org>
-Date: Fri, 07 Feb 2025 22:30:23 +0100
-Subject: [PATCH v2 06/12] dt-bindings: pci: Convert fsl,mpc83xx-pcie to
+Date: Fri, 07 Feb 2025 22:30:24 +0100
+Subject: [PATCH v2 07/12] dt-bindings: watchdog: Convert mpc8xxx-wdt to
  YAML
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250207-ppcyaml-v2-6-8137b0c42526@posteo.net>
+Message-Id: <20250207-ppcyaml-v2-7-8137b0c42526@posteo.net>
 References: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
 In-Reply-To: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
 To: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
@@ -85,11 +85,11 @@ Cc: imx@lists.linux.dev, Scott Wood <oss@buserror.net>,
  linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org, 
  =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738963832; l=5802;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738963832; l=3875;
  i=j.ne@posteo.net; s=20240329; h=from:subject:message-id;
- bh=jBiH9+MQmhRrwEmLTkNNDzkIkSq8VyyQ3zetJ06KX9U=;
- b=sEBW0totelYgL1en7cVmNkknyNI5Sj/Sspm1mJTetH6lj+iSulPd72CfWDp7mXxTwMSsXTvC8
- CcPFFfl4jGrD9Ji4ICjmccGslMxPc79Ljlsx1zaFK/lzwD1MvefNj68
+ bh=IzmYTjKFSaMe8r78V7lDGgTUX3OYdgsgRQLqgb3+W5E=;
+ b=TIcbvGAq3Pd5vRP/+yayQPTA4eKxHfJJoBevDPlnNqk/TGLY/RAUlfbrPChXuI2XTMp9PTJ3j
+ xT5C+X1jArUDzNFPHWmc4Z83M+LYPrzacfBFMNuxejNmMMtEVUUSfdW
 X-Developer-Key: i=j.ne@posteo.net; a=ed25519;
  pk=NIe0bK42wNaX/C4bi6ezm7NJK0IQE+8MKBm7igFMIS4=
 X-Endpoint-Received: by B4 Relay for j.ne@posteo.net/20240329 with
@@ -99,178 +99,121 @@ Reply-To: j.ne@posteo.net
 
 From: "J. Neuschäfer" <j.ne@posteo.net>
 
-Formalise the binding for the PCI controllers in the Freescale MPC8xxx
-chip family. Information about PCI-X-specific properties was taken from
-fsl,pci.txt. The examples were taken from mpc8315erdb.dts and
-xpedite5200_xmon.dts.
+Convert mpc83xx-wdt.txt to YAML to enable automatic schema validation.
 
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
 ---
 
 V2:
-- merge fsl,pci.txt into fsl,mpc8xxx-pci.yaml
-- regroup compatible strings, list single-item values in one enum
 - trim subject line (remove "binding")
 - fix property order to comply with dts coding style
 ---
- .../devicetree/bindings/pci/fsl,mpc8xxx-pci.yaml   | 115 +++++++++++++++++++++
- Documentation/devicetree/bindings/pci/fsl,pci.txt  |  27 -----
- 2 files changed, 115 insertions(+), 27 deletions(-)
+ .../devicetree/bindings/watchdog/mpc8xxx-wdt.txt   | 25 ---------
+ .../devicetree/bindings/watchdog/mpc8xxx-wdt.yaml  | 64 ++++++++++++++++++++++
+ 2 files changed, 64 insertions(+), 25 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/fsl,mpc8xxx-pci.yaml b/Documentation/devicetree/bindings/pci/fsl,mpc8xxx-pci.yaml
+diff --git a/Documentation/devicetree/bindings/watchdog/mpc8xxx-wdt.txt b/Documentation/devicetree/bindings/watchdog/mpc8xxx-wdt.txt
+deleted file mode 100644
+index a384ff5b3ce8c62d813fc23d72f74e2158ff543e..0000000000000000000000000000000000000000
+--- a/Documentation/devicetree/bindings/watchdog/mpc8xxx-wdt.txt
++++ /dev/null
+@@ -1,25 +0,0 @@
+-* Freescale mpc8xxx watchdog driver (For 83xx, 86xx and 8xx)
+-
+-Required properties:
+-- compatible: Shall contain one of the following:
+-	"mpc83xx_wdt" for an mpc83xx
+-	"fsl,mpc8610-wdt" for an mpc86xx
+-	"fsl,mpc823-wdt" for an mpc8xx
+-- reg: base physical address and length of the area hosting the
+-       watchdog registers.
+-		On the 83xx, "Watchdog Timer Registers" area:	<0x200 0x100>
+-		On the 86xx, "Watchdog Timer Registers" area:	<0xe4000 0x100>
+-		On the 8xx, "General System Interface Unit" area: <0x0 0x10>
+-
+-Optional properties:
+-- reg: additional physical address and length (4) of location of the
+-       Reset Status Register (called RSTRSCR on the mpc86xx)
+-		On the 83xx, it is located at offset 0x910
+-		On the 86xx, it is located at offset 0xe0094
+-		On the 8xx, it is located at offset 0x288
+-
+-Example:
+-		WDT: watchdog@0 {
+-		    compatible = "fsl,mpc823-wdt";
+-		    reg = <0x0 0x10 0x288 0x4>;
+-		};
+diff --git a/Documentation/devicetree/bindings/watchdog/mpc8xxx-wdt.yaml b/Documentation/devicetree/bindings/watchdog/mpc8xxx-wdt.yaml
 new file mode 100644
-index 0000000000000000000000000000000000000000..57c5503cec47e6e90ed2b09835bfad10309db927
+index 0000000000000000000000000000000000000000..09e6dcf5bf186e4d15ee84f03ce64dd53155198d
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/fsl,mpc8xxx-pci.yaml
-@@ -0,0 +1,115 @@
++++ b/Documentation/devicetree/bindings/watchdog/mpc8xxx-wdt.yaml
+@@ -0,0 +1,64 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+
-+$id: http://devicetree.org/schemas/pci/fsl,mpc8xxx-pci.yaml#
++$id: http://devicetree.org/schemas/watchdog/mpc8xxx-wdt.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Freescale MPC83xx PCI/PCI-X/PCIe controllers
-+
-+description: |
-+  Binding for the PCI/PCI-X/PCIe host bridges on MPC8xxx SoCs.
-+  See also: Documentation/devicetree/bindings/pci/fsl,pci.txt
++title: Freescale MPC8xxx watchdog timer (For 83xx, 86xx and 8xx)
 +
 +maintainers:
-+  - J. Neuschäfer <j.neuschaefer@gmx.net>
-+
-+allOf:
-+  - $ref: /schemas/pci/pci-host-bridge.yaml#
++  - J. Neuschäfer <j.ne@posteo.net>
 +
 +properties:
 +  compatible:
-+    oneOf:
-+      - enum:
-+          - fsl,mpc8314-pcie
-+          - fsl,mpc8349-pci
-+          - fsl,mpc8540-pci
-+          - fsl,mpc8548-pcie
-+          - fsl,mpc8641-pcie
-+      - items:
-+          - enum:
-+              - fsl,mpc8308-pcie
-+              - fsl,mpc8315-pcie
-+              - fsl,mpc8377-pcie
-+              - fsl,mpc8378-pcie
-+          - const: fsl,mpc8314-pcie
-+      - items:
-+          - const: fsl,mpc8360-pci
-+          - const: fsl,mpc8349-pci
-+      - items:
-+          - const: fsl,mpc8540-pcix
-+          - const: fsl,mpc8540-pci
++    enum:
++      - mpc83xx_wdt       # for an mpc83xx
++      - fsl,mpc8610-wdt   # for an mpc86xx
++      - fsl,mpc823-wdt    # for an mpc8xx
++
++  device_type:
++    const: watchdog
 +
 +  reg:
 +    minItems: 1
 +    items:
-+      - description: internal registers
-+      - description: config space access registers
++      - description: |
++          Base physical address and length of the area hosting the watchdog
++          registers.
 +
-+  clock-frequency: true
++          On the 83xx, "Watchdog Timer Registers" area:     <0x200 0x100>
++          On the 86xx, "Watchdog Timer Registers" area:     <0xe4000 0x100>
++          On the 8xx, "General System Interface Unit" area: <0x0 0x10>
 +
-+  interrupts:
-+    items:
-+      - description: Consolidated PCI interrupt
++      - description: |
++          Additional optional physical address and length (4) of location of
++          the Reset Status Register (called RSTRSCR on the mpc86xx)
 +
-+  fsl,pci-agent-force-enum:
-+    type: boolean
-+    description:
-+      Typically any Freescale PCI-X bridge hardware strapped into Agent mode is
-+      prevented from enumerating the bus. The PrPMC form-factor requires all
-+      mezzanines to be PCI-X Agents, but one per system may still enumerate the
-+      bus.
-+
-+      This property allows a PCI-X bridge to be used for bus enumeration
-+      despite being strapped into Agent mode.
++          On the 83xx, it is located at offset 0x910
++          On the 86xx, it is located at offset 0xe0094
++          On the 8xx, it is located at offset 0x288
 +
 +required:
-+  - reg
 +  - compatible
++  - reg
 +
-+unevaluatedProperties: false
++allOf:
++  - $ref: watchdog.yaml#
++
++additionalProperties: false
 +
 +examples:
 +  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    pcie@e0009000 {
-+        compatible = "fsl,mpc8315-pcie", "fsl,mpc8314-pcie";
-+        reg = <0xe0009000 0x00001000>;
-+        ranges = <0x02000000 0 0xa0000000 0xa0000000 0 0x10000000
-+                  0x01000000 0 0x00000000 0xb1000000 0 0x00800000>;
-+        #address-cells = <3>;
-+        #size-cells = <2>;
-+        #interrupt-cells = <1>;
-+        device_type = "pci";
-+        bus-range = <0 255>;
-+        interrupt-map-mask = <0xf800 0 0 7>;
-+        interrupt-map = <0 0 0 1 &ipic 1 IRQ_TYPE_LEVEL_LOW
-+                         0 0 0 2 &ipic 1 IRQ_TYPE_LEVEL_LOW
-+                         0 0 0 3 &ipic 1 IRQ_TYPE_LEVEL_LOW
-+                         0 0 0 4 &ipic 1 IRQ_TYPE_LEVEL_LOW>;
-+        clock-frequency = <0>;
++    WDT: watchdog@0 {
++        compatible = "fsl,mpc823-wdt";
++        reg = <0x0 0x10 0x288 0x4>;
 +    };
 +
 +  - |
-+    pci@ef008000 {
-+        compatible = "fsl,mpc8540-pcix", "fsl,mpc8540-pci";
-+        reg = <0xef008000 0x1000>;
-+        ranges = <0x02000000 0 0x80000000 0x80000000 0 0x20000000
-+                  0x01000000 0 0x00000000 0xd0000000 0 0x01000000>;
-+        #interrupt-cells = <1>;
-+        #size-cells = <2>;
-+        #address-cells = <3>;
-+        device_type = "pci";
-+        clock-frequency = <33333333>;
-+        interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
-+        interrupt-map = </* IDSEL */
-+                         0xe000 0 0 1 &mpic 2 1
-+                         0xe000 0 0 2 &mpic 3 1>;
-+        interrupts-extended = <&mpic 24 2>;
-+        bus-range = <0 0>;
-+        fsl,pci-agent-force-enum;
++    wdt: watchdog@200 {
++        compatible = "mpc83xx_wdt";
++        reg = <0x200 0x100>;
++        device_type = "watchdog";
 +    };
 +
-+
 +...
-diff --git a/Documentation/devicetree/bindings/pci/fsl,pci.txt b/Documentation/devicetree/bindings/pci/fsl,pci.txt
-deleted file mode 100644
-index d8ac4a768e7e65b465f83308cc918ec471309dcf..0000000000000000000000000000000000000000
---- a/Documentation/devicetree/bindings/pci/fsl,pci.txt
-+++ /dev/null
-@@ -1,27 +0,0 @@
--* Bus Enumeration by Freescale PCI-X Agent
--
--Typically any Freescale PCI-X bridge hardware strapped into Agent mode
--is prevented from enumerating the bus. The PrPMC form-factor requires
--all mezzanines to be PCI-X Agents, but one per system may still
--enumerate the bus.
--
--The property defined below will allow a PCI-X bridge to be used for bus
--enumeration despite being strapped into Agent mode.
--
--Required properties:
--- fsl,pci-agent-force-enum : There is no value associated with this
--  property. The property itself is treated as a boolean.
--
--Example:
--
--	/* PCI-X bridge known to be PrPMC Monarch */
--	pci0: pci@ef008000 {
--		fsl,pci-agent-force-enum;
--		#interrupt-cells = <1>;
--		#size-cells = <2>;
--		#address-cells = <3>;
--		compatible = "fsl,mpc8540-pcix", "fsl,mpc8540-pci";
--		device_type = "pci";
--		...
--		...
--	};
 
 -- 
 2.48.0.rc1.219.gb6b6757d772

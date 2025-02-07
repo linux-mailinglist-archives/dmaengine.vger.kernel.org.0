@@ -1,294 +1,202 @@
-Return-Path: <dmaengine+bounces-4332-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4333-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7425EA2C91C
-	for <lists+dmaengine@lfdr.de>; Fri,  7 Feb 2025 17:42:45 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AA7B0A2CDE5
+	for <lists+dmaengine@lfdr.de>; Fri,  7 Feb 2025 21:14:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0815D1665BA
-	for <lists+dmaengine@lfdr.de>; Fri,  7 Feb 2025 16:42:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 16162169D33
+	for <lists+dmaengine@lfdr.de>; Fri,  7 Feb 2025 20:13:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38FCA18DB24;
-	Fri,  7 Feb 2025 16:42:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F4DB1A0B15;
+	Fri,  7 Feb 2025 20:11:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="JsF37aok"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="PL5mlcE0"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6D8918DB00;
-	Fri,  7 Feb 2025 16:42:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A3119992C
+	for <dmaengine@vger.kernel.org>; Fri,  7 Feb 2025 20:11:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738946554; cv=none; b=W71nm+12VTM+AMPFiR2JmyKt9+s48fq/q8oEuj0iPcxFev16pf7X8VCuTYaDohf4pfrw+5+Fd4+smi1k08tWV9DW5OtKyshQuXaxDLTXZ4SG5tRTJVH3Tzk+dbMg0VoWZ2RIDBUQEqBhXv/qiR7jAJUu7woJNj3n9MTylzlF+X0=
+	t=1738959112; cv=none; b=RQgwzF+c8MV9xw/hw4DFtKPRWt3E2z5o5uzZkvOjh/PGTprNnBij9grbX03efx1rBS+zGMQC5WVC75KVr3VbYCYlNzV/bfTK00oQYOVK3Wq8JE8Q+BxwMU1gkYPAOLGnBgGMXV/mOSdNF+pGgYKLSoWfQKi9/XGuxKVCdCbYvwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738946554; c=relaxed/simple;
-	bh=wivoohQzKrQd6Be3GRYjXHheHFpcjocBVpQVFCpY0Ec=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=r1f97BXGvOKutX6uwnLJDDu4cLAZc5HZdhD08/Vul2gXxnzwYjulgI0vWPSWqrSAQlCcZVKBKA8cG2BRFzapGMz8wnbCdFxMMcCM4iU9PptcecY6aK+v5BIrMhdg+gFKTxAIWi39yH/OAK7q5/I+zAo6HmyejZ83aXjPYdRtlsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=JsF37aok; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1738946549;
-	bh=wivoohQzKrQd6Be3GRYjXHheHFpcjocBVpQVFCpY0Ec=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=JsF37aokdx/VKD2OChBl+6YAwAPlldoBXBYUSA+zWCQUQO0TULDAbYdKuTpLievR9
-	 p8u2i6k5JBa1CVdhWrfvbUKD2SQQPB6zsS/chtMlexq5qFP9VxTZXWC3oIQ0kHEsUn
-	 vRji0Xzyws/+zfMIObwdpqszyufOsXlcDGvd9w50r0nsUxD/QsrDlR9H0UfECpuqXV
-	 86OM57DXsbGKb4j1DP1e7PvgsxDd3usY08tnC0CQyu8cb01J9EWh3qby1nKPYzkxk1
-	 MaLYTausCuz+KTyFflyFsEorb+02AxZvCBvdx39TadnHX4wWdHQemz25pW6xM/Hy/F
-	 I/U065c1qnlQw==
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 97EBD17E0858;
-	Fri,  7 Feb 2025 17:42:28 +0100 (CET)
-Date: Fri, 7 Feb 2025 17:42:21 +0100
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: Nicolas Dufresne <nicolas@ndufresne.ca>
-Cc: Maxime Ripard <mripard@kernel.org>, Florent Tomasin	
- <florent.tomasin@arm.com>, Vinod Koul <vkoul@kernel.org>, Rob Herring	
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley	
- <conor+dt@kernel.org>, Steven Price <steven.price@arm.com>, Liviu Dudau	
- <liviu.dudau@arm.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
- <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
- <simona@ffwll.ch>, Sumit Semwal <sumit.semwal@linaro.org>, Benjamin
- Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey
- <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, "T . J .
- Mercier"	 <tjmercier@google.com>, Christian =?UTF-8?B?S8O2bmln?=	
- <christian.koenig@amd.com>, Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Yong
- Wu <yong.wu@mediatek.com>, dmaengine@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
- linaro-mm-sig@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, nd@arm.com, Akash Goel
- <akash.goel@arm.com>
-Subject: Re: [RFC PATCH 0/5] drm/panthor: Protected mode support for Mali
- CSF GPUs
-Message-ID: <20250207174221.2decc154@collabora.com>
-In-Reply-To: <2cef75795cf3eb1c224f3562134d2ed887dbff60.camel@ndufresne.ca>
-References: <cover.1738228114.git.florent.tomasin@arm.com>
-	<3ykaewmjjwkp3y2f3gf5jvqketicd4p2xqyajqtfnsxci36qlm@twidtyj2kgbw>
-	<1a73c3acee34a86010ecd25d76958bca4f16d164.camel@ndufresne.ca>
-	<ppznh3xnfuqrozhrc7juyi3enxc4v3meu4wadkwwzecj7oxex7@moln2fiibbxo>
-	<9d0e381758c0e83882b57102fb09c5d3a36fbf57.camel@ndufresne.ca>
-	<1f436caa-1c27-4bbd-9b43-a94dad0d89d0@arm.com>
-	<20250205-amorphous-nano-agouti-b5baba@houat>
-	<2085fb785095dc5abdac2352adfb3e1e1c8ae549.camel@ndufresne.ca>
-	<20250207160253.42551fb1@collabora.com>
-	<2cef75795cf3eb1c224f3562134d2ed887dbff60.camel@ndufresne.ca>
-Organization: Collabora
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1738959112; c=relaxed/simple;
+	bh=o0JjXXcxDBv5TFdiXfnwXkrMd28amcy8OmNIPYYWh9o=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=LhB5gcFt3i6eITRiS8URnjDaeMsDhANiLrgXZX+CgdHStO/wydQcslO8eoVrN5lDn2t549L345G3ZVMfeUde+Sx27Gj+wxsxUq43EeZwUIVUdrcHfT4q1hVOQF5TTgf9vrJMEOJDxe1w7L4rAmVxqtxxtV1UUUoOkGqUW9cmkQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=PL5mlcE0; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 517BNaEt032196
+	for <dmaengine@vger.kernel.org>; Fri, 7 Feb 2025 20:11:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=kDMiMudtV4tgXrnAq0wBH3
+	feb/UwjZ0g++lmYLeshWU=; b=PL5mlcE0EoqntLZxTAHB3tdKWGaTln3Gos4ikq
+	ivTq4o8QpTXZHwSma8QkcNSqOG9SgYe0/UtkznOE37N8h96p5H750cnBmKZ18i4k
+	AXv/4OxEtUliSdKKdVyqkjApasPpZi6uAXetQuliUU9T47m+wsKNe0Y0XWAN/6KW
+	P9D+KvHpe556cnjYTAE438sU189CdnhDAuRatemEDuQrie0V9VeTX/y59/HXLluw
+	4V/lHdEMQPpTnU2IsE/Q5B5HvREJOGvop7qWqksacGI2rLa1qVqmmjzi6eYIDmup
+	68RraPLethyUy3Oz83DbSvTscHsXhE9g9+yATRUdP0O30iVQ==
+Received: from mail-oa1-f72.google.com (mail-oa1-f72.google.com [209.85.160.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44nh8us8vf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <dmaengine@vger.kernel.org>; Fri, 07 Feb 2025 20:11:48 +0000 (GMT)
+Received: by mail-oa1-f72.google.com with SMTP id 586e51a60fabf-2b8515341c1so401649fac.1
+        for <dmaengine@vger.kernel.org>; Fri, 07 Feb 2025 12:11:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738959107; x=1739563907;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kDMiMudtV4tgXrnAq0wBH3feb/UwjZ0g++lmYLeshWU=;
+        b=lYuTSxGH44qRrvY+2NIw2HbeDY68unGVVlZJ0+/479xXqm007TigR72bhtST/Iu5Kr
+         o+Yx2PyCgxU/DG2boOSiLD3u+o+OvCwibdgidAQnpTx6odxYapp20O9Imq4eRIFRU2Pm
+         PzY8RmljC6o59x2zqGO5wIrjlc3BXsWpI01T6q0QGyn0uyRqBrb91vgIFMJRwGxM1flj
+         uh4PApW1DwhnhpALHvpoKUaENPLwnADIjZ2U3fZUyCwS9572guN+3UB96Fu7UVsg1x08
+         yBBr840NKaBOJPL5fG6BCeRq3Jx0tVUSN0mBHq9qYFNc68zbYUqR3i7WOxUnZ3aKktpj
+         fKvw==
+X-Forwarded-Encrypted: i=1; AJvYcCX6qwwbXV8vuOhZBaj7aolXNccwYXSn1+c0/H9jUEl6UCVt/Q4y/IRULVVSXsrCCzsRXsQ5Gr9lmx8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqELUr2ekCiefBbSGa3s8WNd/55aoighLwYo3o5HFYWhEM17X4
+	ovKwiS7+qHSevf7/vwaniY9mn3Qe1F0k/rec63ZFQaLQF3priX2AalurJdxym40zoAfguR11XHf
+	/a2+lWRzdqswbwyPZPtfLQ3Xp7zVLqdclW4rQB5Vgdqlcu7Sltjshv2St65IndOKML8U=
+X-Gm-Gg: ASbGncvlLU+v3yfhYJLkN2+a0sW+pDwPUxYk6/TFrOBJzjhXjJxxwdH9T6s5Sx6HHH0
+	h2omfWd3SybRJbGI/ZsqusGHjpi4ccUQ3obE3adFlULiXG4puHv+iJYzxIxJBtHe6vsb71FLwFC
+	cRI3rfOnPRSdD8hHwjkiII63p2yyNll1rDVsDAysR5xG8PvvxdgFPhTBnda3h9kWxptEqNZ4bhj
+	8o8ucf87rxsw5vvxTQUzNcMdydjsmNXR9xbJaStlIzxcQU0bqkGMFdYaajl7enWKKXCRhAdcgRm
+	bxwTnA46o09GL6ZqYb0IHGfmB1wxSjpdPeLu91kpGSyiN/VHkyJ+COq0ywywetGuY7EDf+UfWV5
+	jJCwA
+X-Received: by 2002:a05:6871:628b:b0:2b7:5726:c931 with SMTP id 586e51a60fabf-2b84015e5bcmr2686347fac.5.1738959107054;
+        Fri, 07 Feb 2025 12:11:47 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFYyG3xljRm3I0DrpeKbRB9vGDzRlNGHyM0fmkRS4g7aLScA8naZOYGycC46hNgw83glXa44g==
+X-Received: by 2002:a05:6871:628b:b0:2b7:5726:c931 with SMTP id 586e51a60fabf-2b84015e5bcmr2686329fac.5.1738959106644;
+        Fri, 07 Feb 2025 12:11:46 -0800 (PST)
+Received: from [192.168.86.65] (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2b825fe58a9sm1017758fac.20.2025.02.07.12.11.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 12:11:46 -0800 (PST)
+From: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+Date: Fri, 07 Feb 2025 12:17:33 -0800
+Subject: [PATCH] dmaengine: qcom: bam_dma: Avoid accessing BAM_REVISION on
+ remote BAM
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250207-bam-read-fix-v1-1-027975cf1a04@oss.qualcomm.com>
+X-B4-Tracking: v=1; b=H4sIAFxqpmcC/x2MQQqAIBAAvxJ7bkFXQuor0UFzrT1koRCB9Pek4
+ wzMVCichQtMXYXMtxQ5UwPdd7DuLm2MEhoDKRoUKYveHZjZBYzyIHmjabTBRKehJVfmpv/dvLz
+ vB1R6MoteAAAA
+To: Vinod Koul <vkoul@kernel.org>, Md Sadre Alam <quic_mdalam@quicinc.com>
+Cc: linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Georgi Djakov <djakov@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2733;
+ i=bjorn.andersson@oss.qualcomm.com; h=from:subject:message-id;
+ bh=o0JjXXcxDBv5TFdiXfnwXkrMd28amcy8OmNIPYYWh9o=;
+ b=owEBgwJ8/ZANAwAIAQsfOT8Nma3FAcsmYgBnpmp1RtxFcyltaPy4QkUHiZuJjtKYg4o3K8zlj
+ uCRKySR3oqJAkkEAAEIADMWIQQF3gPMXzXqTwlm1SULHzk/DZmtxQUCZ6ZqdRUcYW5kZXJzc29u
+ QGtlcm5lbC5vcmcACgkQCx85Pw2ZrcVD2g/6A8MHdtGf7f1BUcAhzUWaEHPcVGtQSlcHHwNHbIX
+ fo4oS0rrmMpcXOinC/Hl/WlPZhg9kRewpVgGMT3rvIwNVWa7pLQbUpJHI98/MdQwxm5hKneFtuS
+ wHwFdD10g6RpZka/HgEzwTv/rin2uTAHaHe2+zzqkRaE9raaU6vU95CKSG++u87l9CpCM6EPU34
+ H8oAB0I9ixITUzOer489lG/ET4tF2MEdvA2/fCzJFpP+IDQ8bsq1gv+yEhNUb3jVjqsd3HuM7Qi
+ nXBmnQS4GJ7K+MwZUxcGkYkDEnZovmEVmdyeCJtHy+NC2lf5NSPe9qk2UM7EFP04lrc3IjuBDD/
+ IPl/5OV1o1dUp3ZTpP8RPm6w77ny787CMdgNEsIXIPvypzjrJVe3avTsCu451CjUD94tPdiTKKX
+ G7A3+oqQWL3TP+fehmwPuxZSLLo7RJmdnrhmvi5Cn5FDI286SXccC0m1Qb9+cItD6E8KJyhtj2m
+ bovtmyWVMuPRRKMdLJr5Hl66v5RwGzHxgfPwzsMljs6KCy23i9PqmqxRTlbloTw6aIKR+Roar1n
+ HT7zL1UYc8QmvRfhY+T2NiQYMB1Z+YgQkGnIxj3gD7Lzmd+G3rc5y1iN/5RAHLKOwV/StU+eviN
+ a4FYq6MWzrZu+hfukZJUHYupReI6NDun7YWL2zAsYP9w=
+X-Developer-Key: i=bjorn.andersson@oss.qualcomm.com; a=openpgp;
+ fpr=05DE03CC5F35EA4F0966D5250B1F393F0D99ADC5
+X-Proofpoint-GUID: 55koSaGNu2Zx3QjMZ_jT-_9nbgjUPGH8
+X-Proofpoint-ORIG-GUID: 55koSaGNu2Zx3QjMZ_jT-_9nbgjUPGH8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-07_09,2025-02-07_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ mlxscore=0 bulkscore=0 adultscore=0 clxscore=1015 phishscore=0
+ lowpriorityscore=0 malwarescore=0 mlxlogscore=999 priorityscore=1501
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502070151
 
-On Fri, 07 Feb 2025 11:32:18 -0500
-Nicolas Dufresne <nicolas@ndufresne.ca> wrote:
+Commit '57a7138d0627 ("dmaengine: qcom: bam_dma: Avoid writing
+unavailable register")' made this read unconditional, in order to
+identify if the instance is BAM-NDP or BAM-Lite.
+But the BAM_REVISION register is not accessible on remotely managed BAM
+instances and attempts to access it causes the system to crash.
 
-> Le vendredi 07 f=C3=A9vrier 2025 =C3=A0 16:02 +0100, Boris Brezillon a =
-=C3=A9crit=C2=A0:
-> > Sorry for joining the party late, a couple of comments to back Akash
-> > and Nicolas' concerns.
-> >=20
-> > On Wed, 05 Feb 2025 13:14:14 -0500
-> > Nicolas Dufresne <nicolas@ndufresne.ca> wrote:
-> >  =20
-> > > Le mercredi 05 f=C3=A9vrier 2025 =C3=A0 15:52 +0100, Maxime Ripard a =
-=C3=A9crit=C2=A0: =20
-> > > > On Mon, Feb 03, 2025 at 04:43:23PM +0000, Florent Tomasin wrote:   =
-=20
-> > > > > Hi Maxime, Nicolas
-> > > > >=20
-> > > > > On 30/01/2025 17:47, Nicolas Dufresne wrote:   =20
-> > > > > > Le jeudi 30 janvier 2025 =C3=A0 17:38 +0100, Maxime Ripard a =
-=C3=A9crit=C2=A0:   =20
-> > > > > > > Hi Nicolas,
-> > > > > > >=20
-> > > > > > > On Thu, Jan 30, 2025 at 10:59:56AM -0500, Nicolas Dufresne wr=
-ote:   =20
-> > > > > > > > Le jeudi 30 janvier 2025 =C3=A0 14:46 +0100, Maxime Ripard =
-a =C3=A9crit=C2=A0:   =20
-> > > > > > > > > Hi,
-> > > > > > > > >=20
-> > > > > > > > > I started to review it, but it's probably best to discuss=
- it here.
-> > > > > > > > >=20
-> > > > > > > > > On Thu, Jan 30, 2025 at 01:08:56PM +0000, Florent Tomasin=
- wrote:   =20
-> > > > > > > > > > Hi,
-> > > > > > > > > >=20
-> > > > > > > > > > This is a patch series covering the support for protect=
-ed mode execution in
-> > > > > > > > > > Mali Panthor CSF kernel driver.
-> > > > > > > > > >=20
-> > > > > > > > > > The Mali CSF GPUs come with the support for protected m=
-ode execution at the
-> > > > > > > > > > HW level. This feature requires two main changes in the=
- kernel driver:
-> > > > > > > > > >=20
-> > > > > > > > > > 1) Configure the GPU with a protected buffer. The syste=
-m must provide a DMA
-> > > > > > > > > >    heap from which the driver can allocate a protected =
-buffer.
-> > > > > > > > > >    It can be a carved-out memory or dynamically allocat=
-ed protected memory region.
-> > > > > > > > > >    Some system includes a trusted FW which is in charge=
- of the protected memory.
-> > > > > > > > > >    Since this problem is integration specific, the Mali=
- Panthor CSF kernel
-> > > > > > > > > >    driver must import the protected memory from a devic=
-e specific exporter.   =20
-> > > > > > > > >=20
-> > > > > > > > > Why do you need a heap for it in the first place? My unde=
-rstanding of
-> > > > > > > > > your series is that you have a carved out memory region s=
-omewhere, and
-> > > > > > > > > you want to allocate from that carved out memory region y=
-our buffers.
-> > > > > > > > >=20
-> > > > > > > > > How is that any different from using a reserved-memory re=
-gion, adding
-> > > > > > > > > the reserved-memory property to the GPU device and doing =
-all your
-> > > > > > > > > allocation through the usual dma_alloc_* API?   =20
-> > > > > > > >=20
-> > > > > > > > How do you then multiplex this region so it can be shared b=
-etween
-> > > > > > > > GPU/Camera/Display/Codec drivers and also userspace ?   =20
-> > > > > > >=20
-> > > > > > > You could point all the devices to the same reserved memory r=
-egion, and
-> > > > > > > they would all allocate from there, including for their users=
-pace-facing
-> > > > > > > allocations.   =20
-> > > > > >=20
-> > > > > > I get that using memory region is somewhat more of an HW descri=
-ption, and
-> > > > > > aligned with what a DT is supposed to describe. One of the chal=
-lenge is that
-> > > > > > Mediatek heap proposal endup calling into their TEE, meaning kn=
-owing the region
-> > > > > > is not that useful. You actually need the TEE APP guid and its =
-IPC protocol. If
-> > > > > > we can dell drivers to use a head instead, we can abstract that=
- SoC specific
-> > > > > > complexity. I believe each allocated addressed has to be mapped=
- to a zone, and
-> > > > > > that can only be done in the secure application. I can imagine =
-similar needs
-> > > > > > when the protection is done using some sort of a VM / hyperviso=
-r.
-> > > > > >=20
-> > > > > > Nicolas
-> > > > > >    =20
-> > > > >=20
-> > > > > The idea in this design is to abstract the heap management from t=
-he
-> > > > > Panthor kernel driver (which consumes a DMA buffer from it).
-> > > > >=20
-> > > > > In a system, an integrator would have implemented a secure heap d=
-river,
-> > > > > and could be based on TEE or a carved-out memory with restricted =
-access,
-> > > > > or else. This heap driver would be responsible of implementing the
-> > > > > logic to: allocate, free, refcount, etc.
-> > > > >=20
-> > > > > The heap would be retrieved by the Panthor kernel driver in order=
- to
-> > > > > allocate protected memory to load the FW and allow the GPU to ent=
-er/exit
-> > > > > protected mode. This memory would not belong to a user space proc=
-ess.
-> > > > > The driver allocates it at the time of loading the FW and initial=
-ization
-> > > > > of the GPU HW. This is a device globally owned protected memory. =
-  =20
-> > > >=20
-> > > > The thing is, it's really not clear why you absolutely need to have=
- the
-> > > > Panthor driver involved there. It won't be transparent to userspace,
-> > > > since you'd need an extra flag at allocation time, and the buffers
-> > > > behave differently. If userspace has to be aware of it, what's the
-> > > > advantage to your approach compared to just exposing a heap for tho=
-se
-> > > > secure buffers, and letting userspace allocate its buffers from the=
-re?   =20
-> > >=20
-> > > Unless I'm mistaken, the Panthor driver loads its own firmware. Since=
- loading
-> > > the firmware requires placing the data in a protected memory region, =
-and that
-> > > this aspect has no exposure to userspace, how can Panthor not be impl=
-icated ? =20
-> >=20
-> > Right, the very reason we need protected memory early is because some
-> > FW sections need to be allocated from the protected pool, otherwise the
-> > TEE will fault as soon at the FW enters the so-called 'protected mode'.
-> >=20
-> > Now, it's not impossible to work around this limitation. For instance,
-> > we could load the FW without this protected section by default (what we
-> > do right now), and then provide a DRM_PANTHOR_ENABLE_FW_PROT_MODE
-> > ioctl that would take a GEM object imported from a dmabuf allocated
-> > from the protected dma-heap by userspace. We can then reset the FW and
-> > allow it to operate in protected mode after that point. This approach
-> > has two downsides though:
-> >=20
-> > 1. We have no way of checking that the memory we're passed is actually
-> > suitable for FW execution in a protected context. If we're passed
-> > random memory, this will likely hang the platform as soon as we enter
-> > protected mode.
-> >=20
-> > 2. If the driver already boot the FW and exposed a DRI node, we might
-> > have GPU workloads running, and doing a FW reset might incur a slight
-> > delay in GPU jobs execution.
-> >=20
-> > I think #1 is a more general issue that applies to suspend buffers
-> > allocated for GPU contexts too. If we expose ioctls where we take
-> > protected memory buffers that can possibly lead to crashes if they are
-> > not real protected memory regions, and we have no way to ensure the
-> > memory is protected, we probably want to restrict these ioctls/modes to
-> > some high-privilege CAP_SYS_.
-> >=20
-> > For #2, that's probably something we can live with, since it's a
-> > one-shot thing. If it becomes an issue, we can even make sure we enable
-> > the FW protected-mode before the GPU starts being used for real.
-> >=20
-> > This being said, I think the problem applies outside Panthor, and it
-> > might be that the video codec can't reset the FW/HW block to switch to
-> > protected mode as easily as Panthor. =20
->=20
-> Overall the reset and reboot method is pretty ugly in my opinion.
+Move the access back to be conditional and expand the checks that was
+introduced to restore the old behavior when no revision information is
+available.
 
-Yeah, I'm not entirely sold on this approach either, but I thought it
-was good to mention it for completeness.
+Fixes: 57a7138d0627 ("dmaengine: qcom: bam_dma: Avoid writing unavailable register")
+Reported-by: Georgi Djakov <djakov@kernel.org>
+Closes: https://lore.kernel.org/lkml/9ef3daa8-cdb1-49f2-8d19-a72d6210ff3a@kernel.org/
+Signed-off-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+---
+ drivers/dma/qcom/bam_dma.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-> But to stick
-> with the pure rationale, rebooting the SCP on MTK is much harder, since i=
-ts not
-> specific to a single HW/driver.
->=20
-> Other codecs like Samsung MFC, Venus/Iris, Chips&Media, etc. that approac=
-h seams
-> plausible, but we still can't trust the buffer, which to me is not accept=
-able.
+diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
+index c14557efd577..d42d913492a8 100644
+--- a/drivers/dma/qcom/bam_dma.c
++++ b/drivers/dma/qcom/bam_dma.c
+@@ -445,8 +445,8 @@ static void bam_reset(struct bam_device *bdev)
+ 	writel_relaxed(val, bam_addr(bdev, 0, BAM_CTRL));
+ 
+ 	/* set descriptor threshold, start with 4 bytes */
+-	if (in_range(bdev->bam_revision, BAM_NDP_REVISION_START,
+-		     BAM_NDP_REVISION_END))
++	if (!bdev->bam_revision ||
++	    in_range(bdev->bam_revision, BAM_NDP_REVISION_START, BAM_NDP_REVISION_END))
+ 		writel_relaxed(DEFAULT_CNT_THRSHLD,
+ 			       bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
+ 
+@@ -1006,8 +1006,8 @@ static void bam_apply_new_config(struct bam_chan *bchan,
+ 			maxburst = bchan->slave.src_maxburst;
+ 		else
+ 			maxburst = bchan->slave.dst_maxburst;
+-		if (in_range(bdev->bam_revision, BAM_NDP_REVISION_START,
+-			     BAM_NDP_REVISION_END))
++		if (!bdev->bam_revision ||
++		    in_range(bdev->bam_revision, BAM_NDP_REVISION_START, BAM_NDP_REVISION_END))
+ 			writel_relaxed(maxburst,
+ 				       bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
+ 	}
+@@ -1199,11 +1199,12 @@ static int bam_init(struct bam_device *bdev)
+ 	u32 val;
+ 
+ 	/* read revision and configuration information */
+-	val = readl_relaxed(bam_addr(bdev, 0, BAM_REVISION));
+-	if (!bdev->num_ees)
++	if (!bdev->num_ees) {
++		val = readl_relaxed(bam_addr(bdev, 0, BAM_REVISION));
+ 		bdev->num_ees = (val >> NUM_EES_SHIFT) & NUM_EES_MASK;
+ 
+-	bdev->bam_revision = val & REVISION_MASK;
++		bdev->bam_revision = val & REVISION_MASK;
++	}
+ 
+ 	/* check that configured EE is within range */
+ 	if (bdev->ee >= bdev->num_ees)
 
-Unfortunately, there's so many ways this can go wrong, because we're
-not just talking about FW exec sections, but also data buffers that
-have to be dynamically allocated by userspace (suspend buffers for GPU
-contexts, textures/framebuffers, decode frames, ...). If there's no
-central component kernel-side we can refer to to check correctness, the
-only safe guard is privilege-based restriction...
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20250207-bam-read-fix-2b31297d3fa1
+
+Best regards,
+-- 
+Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+
 

@@ -1,132 +1,123 @@
-Return-Path: <dmaengine+bounces-4351-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4352-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9FF94A2D1B2
-	for <lists+dmaengine@lfdr.de>; Sat,  8 Feb 2025 00:45:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 57AD0A2D308
+	for <lists+dmaengine@lfdr.de>; Sat,  8 Feb 2025 03:21:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 512EA16C331
-	for <lists+dmaengine@lfdr.de>; Fri,  7 Feb 2025 23:45:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DF15216C344
+	for <lists+dmaengine@lfdr.de>; Sat,  8 Feb 2025 02:21:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C1E01DED73;
-	Fri,  7 Feb 2025 23:45:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7092A15278E;
+	Sat,  8 Feb 2025 02:20:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G8ojqiQ5"
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="RETv0pi8"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28F921DE890;
-	Fri,  7 Feb 2025 23:45:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 657A81465AB
+	for <dmaengine@vger.kernel.org>; Sat,  8 Feb 2025 02:20:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738971902; cv=none; b=qfUkFS6UFjbecIOB3jiNpF/UGr34tmFhTznypx+QYUCEqlwMpC/T5ukP3YpnNufOBlpPI5e3W5iODprO2+tUhbpbX4mF+ZTb27KWO5MdqChE4R790ZNFBAAzMTLfc/hNazLKobbc95umMwZA5z8gdnjmrbgjKl8SnbvUSn13o8Y=
+	t=1738981257; cv=none; b=g2pwlHZNU4rM4VgHQ5v8DRIs8DGRlnMLBHo7PLTSw3qx0S9xFQ7g4Fdxx+4Hp4SAG3ImMG4ZrXuefRCV1JG7g3PHYYbm3mapecjTjOSKgSf3TH46conlZ88B0DzAGzvzpgjaE8nJdoJzCRlHXWTHnLDcvLnkHBb6qtzUN06jRTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738971902; c=relaxed/simple;
-	bh=tBmrobeWDK6+aWiDeO0VVX8TfLiyt8/pAlurKL5A7RE=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=OSc+GhtG8kFnTWWO1uHtcKpOIy24Xlz8+IkroBRrPvjt8kdxDA3htfPFGBysh7RDW559BBc02UF+gyLx0h40bP5B6hnibJXz8MnPDXW9rEjIpCqqpxYQbNzFtyo041FP21TyBDH6yPmdFxusYmQt0f4mYnPhmTVFyT6ubrR6F/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G8ojqiQ5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1BB2C4CEE7;
-	Fri,  7 Feb 2025 23:45:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738971902;
-	bh=tBmrobeWDK6+aWiDeO0VVX8TfLiyt8/pAlurKL5A7RE=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=G8ojqiQ5opUcLh9s5PIYTf2xPkT83yWsGUUHMXZl5lHvU6Mn89nnfv1wXOW49TcSk
-	 35SMUuUZOOgoJLT1UHJm98Nw4GgaIdcRaplBWxiW/VtIYdY+P/3lZT6Jz1vLQF/gwj
-	 svxuttRP4HEgFQyLjnmsLgdlQ5bdZOjF91Twr0GobeyOz0U6GD0yldmMLdu7tdpkor
-	 CpqoqihaNPN8X+975ECarsF0RKSWGwgPsmlC82hEz5wGp7SdFyUWd36Ps+rMzrTvTC
-	 qmr/9q3CQmDhFTduB9v0s+gIIMBo+p73n2Liv87lB/04iL03xko1aXY72hB7noSMrT
-	 AodCA/oLktTDA==
-Date: Fri, 07 Feb 2025 17:45:00 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1738981257; c=relaxed/simple;
+	bh=X/9UQWBS5m7Ib3mDDNhFlWLQ3zPrVaQFBwT1jLZLH3k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mhcHFxfTNqScIOEsHaA/STlKUt9tO3aDUQ/aW2yK7H9r6ngYj9mHZOKIoH+Z5XxPQBc9bHvysusH98OIWAAHYRMjzy/bGpKUyKdnLrNae83DItdQt5QoB7Xf9Be6TAV5ifRnyqhbhSz1YAGJcd6KRWrxE66NaTsB9QOK4Xa4DKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=RETv0pi8; arc=none smtp.client-ip=185.67.36.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id 8E0FD240101
+	for <dmaengine@vger.kernel.org>; Sat,  8 Feb 2025 03:20:53 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1738981253; bh=X/9UQWBS5m7Ib3mDDNhFlWLQ3zPrVaQFBwT1jLZLH3k=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:From;
+	b=RETv0pi8P373DiegxSUvi4C2fJev+HyWTRyNykg7oIgWn47X65NNvVgCsCbdWDAQP
+	 DMPA93xS+LXRfM/pNswr8q1Lv7jueqqTAaY6kl3zaQ3VQ6BVmyzau/3NjwVPv4x0pa
+	 DyRmTi86qoq2bQLzc/9fvmo0N+Y1eqLuyep9+vlpbT8B2at6F1Vx/ZEQ8QKMzSjGww
+	 1jnOpdg43i8qcuBMG9zpmrhFU1fjx68aD33m56Tv1/WyL22Pca//Bc0TkaL7owECs9
+	 ymKH6bYxsVIiQqiGoOvl+CE/ynq28UQJdSo/80Iw0zp4Bue42SfjvS9yUGrJOzKE2z
+	 WiW/Swc0Ab07w==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4YqZM431Sgz9rxL;
+	Sat,  8 Feb 2025 03:20:48 +0100 (CET)
+Date: Sat,  8 Feb 2025 02:20:47 +0000
+From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+To: Mark Brown <broonie@kernel.org>
+Cc: j.ne@posteo.net, devicetree@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	Krzysztof Kozlowski <krzk@kernel.org>, imx@lists.linux.dev,
+	Scott Wood <oss@buserror.net>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
+	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-mtd@lists.infradead.org
+Subject: Re: [PATCH v2 00/12] YAML conversion of several Freescale/PowerPC DT
+ bindings
+Message-ID: <Z6a_f03Ct9aB7Bbn@probook>
+References: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
+ <611e47da-ba87-4c21-a6b7-cf051dc88158@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Nicholas Piggin <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>, 
- Vinod Koul <vkoul@kernel.org>, linux-kernel@vger.kernel.org, 
- =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, 
- Vignesh Raghavendra <vigneshr@ti.com>, Guenter Roeck <linux@roeck-us.net>, 
- Michael Ellerman <mpe@ellerman.id.au>, linux-ide@vger.kernel.org, 
- Krzysztof Kozlowski <krzk@kernel.org>, linux-watchdog@vger.kernel.org, 
- Christophe Leroy <christophe.leroy@csgroup.eu>, 
- Richard Weinberger <richard@nod.at>, Lee Jones <lee@kernel.org>, 
- Madhavan Srinivasan <maddy@linux.ibm.com>, linux-pci@vger.kernel.org, 
- Mark Brown <broonie@kernel.org>, imx@lists.linux.dev, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, linux-spi@vger.kernel.org, 
- Bjorn Helgaas <bhelgaas@google.com>, 
- Herbert Xu <herbert@gondor.apana.org.au>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Scott Wood <oss@buserror.net>, devicetree@vger.kernel.org, 
- Miquel Raynal <miquel.raynal@bootlin.com>, 
- Damien Le Moal <dlemoal@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org, 
- dmaengine@vger.kernel.org, linux-mtd@lists.infradead.org, 
- linuxppc-dev@lists.ozlabs.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Wim Van Sebroeck <wim@linux-watchdog.org>, 
- Niklas Cassel <cassel@kernel.org>
-To: =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-In-Reply-To: <20250207-ppcyaml-v2-11-8137b0c42526@posteo.net>
-References: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
- <20250207-ppcyaml-v2-11-8137b0c42526@posteo.net>
-Message-Id: <173897189774.2630698.330205726613217230.robh@kernel.org>
-Subject: Re: [PATCH v2 11/12] dt-bindings: nand: Add fsl,elbc-fcm-nand
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <611e47da-ba87-4c21-a6b7-cf051dc88158@sirena.org.uk>
 
-
-On Fri, 07 Feb 2025 22:30:28 +0100, J. Neuschäfer wrote:
-> Formalize the binding already supported by the fsl_elbc_nand.c driver
-> and used in several device trees in arch/powerpc/boot/dts/.
+On Fri, Feb 07, 2025 at 09:38:05PM +0000, Mark Brown wrote:
+> On Fri, Feb 07, 2025 at 10:30:17PM +0100, J. Neuschäfer via B4 Relay wrote:
 > 
-> Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
-> ---
+> > This is a spin-off of the series titled
+> > "powerpc: MPC83xx cleanup and LANCOM NWAPP2 board".
 > 
-> V2:
-> - split out from fsl,elbc binding patch
-> - constrain #address-cells and #size-cells
-> - add a general description
-> - use unevaluatedProperties=false instead of additionalProperties=false
-> - fix property order to comply with dts coding style
-> - include raw-nand-chip.yaml instead of nand-chip.yaml
-> ---
->  .../devicetree/bindings/mtd/fsl,elbc-fcm-nand.yaml | 68 ++++++++++++++++++++++
->  1 file changed, 68 insertions(+)
+> > During the development of that series, it became clear that many
+> > devicetree bindings for Freescale MPC8xxx platforms are still in the old
+> > plain-text format, or don't exist at all, and in any case don't mention
+> > all valid compatible strings.
 > 
+> What's the story with dependencies here - why is all this stuff in one
+> series?
 
-My bot found errors running 'make dt_binding_check' on your patch:
+The patches are independent of each other, except for the four elbc/nand
+patches. They are in the same series because they came up during the
+same project and achieve similar goals, but it isn't necessary.
 
-yamllint warnings/errors:
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mtd/fsl,elbc-fcm-nand.example.dtb: nand@1,0: $nodename:0: 'nand@1,0' does not match '^nand@[a-f0-9]$'
-	from schema $id: http://devicetree.org/schemas/mtd/fsl,elbc-fcm-nand.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/memory-controllers/fsl,elbc.example.dtb: nand@1,0: $nodename:0: 'nand@1,0' does not match '^nand@[a-f0-9]$'
-	from schema $id: http://devicetree.org/schemas/mtd/fsl,elbc-fcm-nand.yaml#
+> Normally I'd expect bindings conversions to be standalone.
 
-doc reference errors (make refcheckdocs):
+Noted.
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250207-ppcyaml-v2-11-8137b0c42526@posteo.net
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+J. Neuschäfer
 

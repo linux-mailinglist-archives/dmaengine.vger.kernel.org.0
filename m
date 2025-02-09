@@ -1,139 +1,116 @@
-Return-Path: <dmaengine+bounces-4361-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4362-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08A84A2DEC0
-	for <lists+dmaengine@lfdr.de>; Sun,  9 Feb 2025 16:20:05 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 29E37A2DF58
+	for <lists+dmaengine@lfdr.de>; Sun,  9 Feb 2025 18:28:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A7DE0164988
-	for <lists+dmaengine@lfdr.de>; Sun,  9 Feb 2025 15:20:03 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B1E787A170B
+	for <lists+dmaengine@lfdr.de>; Sun,  9 Feb 2025 17:27:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B9041CAA96;
-	Sun,  9 Feb 2025 15:20:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62BEF1E0DB5;
+	Sun,  9 Feb 2025 17:28:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b="ZkPYthcS"
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="DEFQtUiK"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from ixit.cz (ip-89-177-23-149.bb.vodafone.cz [89.177.23.149])
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80EBA1DE892;
-	Sun,  9 Feb 2025 15:19:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.177.23.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 348041DFE00
+	for <dmaengine@vger.kernel.org>; Sun,  9 Feb 2025 17:28:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739114400; cv=none; b=ZX5ZBVsZUl9uBUUD2PzqFeRydO/RhU33g7L9pAYnE0k7fKf4Zr0ct4/PrDQLiM1Lcu34Nhn3qN1T3pEn7REpvprSj1y2Cn44TMR/+CG8QIaFDA6t9ahYsrY5IO7imjWUuSLEUxKFm7L5FPmvFOG9NbUk/7Wq8wrtBA5uTi2vW4A=
+	t=1739122104; cv=none; b=uzOi5Qzxqn/dyKo1ooILUfFSy5mtbpWuebhNqMTEG61YqYVDKbLZiOvBVpZShyX4+3pX2mTjqSTJx5o2CfhKbEXGoTHWLzUKwbdjFZ0ZaHSF8qFQ7tCFI3uEqfU6gSZBoJ7t/vP0Q1uG9fRm8E4LCNdztEHsx74xpOswxSeT7mA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739114400; c=relaxed/simple;
-	bh=2Reh71zztneGACpbLISz5V4Stqed8X57QnfeKJHY+0w=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=KHJuohE7HKguTWMAqy9DJNthfAqHlV3qdA7BT+kUqGQ7/tKxWAw2rJGhwgDRmHPfBaw6e+RjeQMdSVA1zAVtBtcl1D9ZFXxdrvaAgIVWUfsLKp7XCXYoI/ID74X6JU3D0Z+9YFPx7uQSLgCtsz/cUeLaY9rsWQjg3+RDJT1WjRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ixit.cz; spf=pass smtp.mailfrom=ixit.cz; dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b=ZkPYthcS; arc=none smtp.client-ip=89.177.23.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ixit.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ixit.cz
-Received: from [10.0.0.200] (unknown [10.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ixit.cz (Postfix) with ESMTPSA id BB1E516658B;
-	Sun,  9 Feb 2025 16:19:53 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ixit.cz; s=dkim;
-	t=1739114393; h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=G/Qh3CE9Z0937GjvloaGvas1w18VkO3vU8aAYRlhLqY=;
-	b=ZkPYthcS9Gidw0pux1JgKvX3wkoBPJIngtjXW5Cc9qydvjc/V3Bji0Rf21WOxO48elGKeB
-	U2KiQmyNYQ3A+Bx2bSvscyiAI6f1wa+QHS9984/T0GxuqztMKWkkEPG0Rit0eWu7GhriDK
-	3ibQNVDA6xumnSJ3SxSOKH408vmBrY4=
-Message-ID: <5cc3639f-2689-4e4a-a89b-02ade0efe966@ixit.cz>
-Date: Sun, 9 Feb 2025 16:19:53 +0100
+	s=arc-20240116; t=1739122104; c=relaxed/simple;
+	bh=3qpw2bQ12DB6YGamFBnTxyKWuhTs/kDLk94p3S330Xg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MCIlfIYTkcc9xKQ2GOzMvt7NSp60L1XSvyQcdg+7leNapnxdrLr83AqpWDCB63LI2GdQV5NDoL2SqGvh9KmjcCmyqhlMhj214V9zUCs/Cq44rEVUQsTbPotDWeFRPU4SnTnUOWamnMDUVZoPFEV+poVsm98dJksZSJ2F3PAn80w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=DEFQtUiK; arc=none smtp.client-ip=185.67.36.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id 7EA36240103
+	for <dmaengine@vger.kernel.org>; Sun,  9 Feb 2025 18:28:20 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1739122100; bh=3qpw2bQ12DB6YGamFBnTxyKWuhTs/kDLk94p3S330Xg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:From;
+	b=DEFQtUiKJm5vlOa1GTPCXPF27DnFWHBlk7j6BJxmhPr+BHctH1I+zcCB7eBQiWVu6
+	 87lwMuWwycUq4ixaM34aO1Ucm5K4K1+ziP7f0pISDsbiRVUy0gC/xdaJOOE2o9Q0Yb
+	 X595KTyRc/yE5sIh61qT6RvDUOyUTvbUHUE3y32N5/ZW9UYjCThSgRoyzDYVVkmU78
+	 d9esqsr3mDlHVgaE0tGNS43EdnpnxkCNC3RfqI1ZG45V/S2Kvb76R7ftTK4QQWc+O6
+	 rJdICsqhEXcMaPKbt2gO0tnHVNVTAMILCcI2iozqeUxqIHG/Sp/3NKGjbwuz1vqG3I
+	 9qjpjuKymt1VQ==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4YrZRd3h87z9rxG;
+	Sun,  9 Feb 2025 18:28:13 +0100 (CET)
+Date: Sun,  9 Feb 2025 17:28:13 +0000
+From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>,
+	Mark Brown <broonie@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-ide@vger.kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	linux-crypto@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+	dmaengine@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
+	linuxppc-dev@lists.ozlabs.org, linux-spi@vger.kernel.org,
+	=?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Naveen N Rao <naveen@kernel.org>,
+	Vignesh Raghavendra <vigneshr@ti.com>, imx@lists.linux.dev,
+	Niklas Cassel <cassel@kernel.org>, Scott Wood <oss@buserror.net>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Richard Weinberger <richard@nod.at>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Lee Jones <lee@kernel.org>, linux-watchdog@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-mtd@lists.infradead.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	linux-kernel@vger.kernel.org,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 09/12] dt-bindings: memory-controllers: Convert
+ fsl,elbc to YAML
+Message-ID: <Z6jlrU7EPeATjK8s@probook>
+References: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
+ <20250207-ppcyaml-v2-9-8137b0c42526@posteo.net>
+ <173897189669.2630636.11579554304003668196.robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-To: bjorn.andersson@oss.qualcomm.com
-Cc: djakov@kernel.org, dmaengine@vger.kernel.org,
- dmitry.baryshkov@linaro.org, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org, quic_mdalam@quicinc.com, vkoul@kernel.org
-References: <20250207-bam-read-fix-v1-1-027975cf1a04@oss.qualcomm.com>
-Subject: Re: [PATCH] dmaengine: qcom: bam_dma: Avoid accessing BAM_REVISION on
- remote BAM
-Content-Language: en-US
-Reply-To: 20250207-bam-read-fix-v1-1-027975cf1a04@oss.qualcomm.com
-From: David Heidelberg <david@ixit.cz>
-Autocrypt: addr=david@ixit.cz; keydata=
- xsFNBF5v1x4BEADS3EddwsNsvVAI1XF8uQKbdYPY/GhjaSLziwVnbwv5BGwqB1tfXoHnccoA
- 9kTgKAbiXG/CiZFhD6l4WCIskQDKzyQN3JhCUIxh16Xyw0lECI7iqoW9LmMoN1dNKcUmCO9g
- lZxQaOl+1bY/7ttd7DapLh9rmBXJ2lKiMEaIpUwb/Nw0d7Enp4Jy2TpkhPywIpUn8CoJCv3/
- 61qbvI9y5utB/UhfMAUXsaAgwEJyGPAqHlC0YZjaTwOu+YQUE3AFzhCbksq95CwDz4U4gdls
- dmv9tkATfu2OmzERZQ6vJTehK0Pu4l5KmCAzYg42I9Dy4E6b17x6NncKbcByQFOXMtG0qVUk
- F1yeeOQUHwu+8t3ZDMBUhCkRL/juuoqLmyDWKMc0hKNNeZ9BNXgB8fXkRLWEUfgDXsFyEkKp
- NxUy5bDRlivf6XfExnikk5kj9l2gGlNQwqROti/46bfbmlmc/a2GM4k8ZyalHNEAdwtXYSpP
- 8JJmlbQ7hNTLkc3HQLRsIocN5th/ur7pPMz1Beyp0gbE9GcOceqmdZQB80vJ01XDyCAihf6l
- AMnzwpXZsjqIqH9r7T7tM6tVEVbPSwPt4eZYXSoJijEBC/43TBbmxDX+5+3txRaSCRQrG9dY
- k3mMGM3xJLCps2KnaqMcgUnvb1KdTgEFUZQaItw7HyRd6RppewARAQABzSBEYXZpZCBIZWlk
- ZWxiZXJnIDxkYXZpZEBpeGl0LmN6PsLBlAQTAQgAPgIbAwULCQgHAgYVCgkICwIEFgIDAQIe
- AQIXgBYhBNd6Cc/u3Cu9U6cEdGACP8TTSSByBQJl+KksBQkPDaAOAAoJEGACP8TTSSBy6IAQ
- AMqFqVi9LLxCEcUWBn82ssQGiVSDniKpFE/tp7lMXflwhjD5xoftoWOmMYkiWE86t5x5Fsp7
- afALx7SEDz599F1K1bLnaga+budu55JEAYGudD2WwpLJ0kPzRhqBwGFIx8k6F+goZJzxPDsf
- loAtXQE62UvEKa4KRRcZmF0GGoRsgA7vE7OnV8LMeocdD3eb2CuXLzauHAfdvqF50IfPH/sE
- jbzROiAZU+WgrwU946aOzrN8jVU+Cy8XAccGAZxsmPBfhTY5f2VN1IqvfaRdkKKlmWVJWGw+
- ycFpAEJKFRdfcc5PSjUJcALn5C+hxzL2hBpIZJdfdfStn+DWHXNgBeRDiZj1x6vvyaC43RAb
- VXvRzOQfG4EaMVMIOvBjBA/FtIpb1gtXA42ewhvPnd5RVCqD9YYUxsVpJ9d+XsAy7uib3BsV
- W2idAEsPtoqhVhq8bCUs/G4sC2DdyGZK8MRFDJqciJSUbqA+5z1ZCuE8UOPDpZKiW6H/OuOM
- zDcjh0lOzr4p+/1TSg1PbUh7fQ+nbMuiT044sC1lLtJK0+Zyn0GwhR82oNM4fldNsaHRW42w
- QGD35+eNo5Pvb3We5XRMlBdhFnj7Siggp4J8/PJ6MJvRyC+RIJPGtbdMB2/RxWunFLn87e5w
- UgwR9jPMHAstuTR1yR23c4SIYoQ2fzkrRzuazsFNBF5v1x4BEADnlrbta2WL87BlEOotZUh0
- zXANMrNV15WxexsirLetfqbs0AGCaTRNj+uWlTUDJRXOVIwzmF76Us3I2796+Od2ocNpLheZ
- 7EIkq8budtLVd1c06qJ+GMraz51zfgSIazVInNMPk9T6fz0lembji5yEcNPNNBA4sHiFmXfo
- IhepHFOBApjS0CiOPqowYxSTPe/DLcJ/LDwWpTi37doKPhBwlHev1BwVCbrLEIFjY0MLM0aT
- jiBBlyLJaTqvE48gblonu2SGaNmGtkC3VoQUQFcVYDXtlL9CVbNo7BAt5gwPcNqEqkUL60Jh
- FtvVSKyQh6gn7HHsyMtgltjZ3NKjv8S3yQd7zxvCn79tCKwoeNevsvoMq/bzlKxc9QiKaRPO
- aDj3FtW7R/3XoKJBY8Hckyug6uc2qYWRpnuXc0as6S0wfek6gauExUttBKrtSbPPHiuTeNHt
- NsT4+dyvaJtQKPBTbPHkXpTO8e1+YAg7kPj3aKFToE/dakIh8iqUHLNxywDAamRVn8Ha67WO
- AEAA3iklJ49QQk2ZyS1RJ2Ul28ePFDZ3QSr9LoJiOBZv9XkbhXS164iRB7rBZk6ZRVgCz3V6
- hhhjkipYvpJ/fpjXNsVL8jvel1mYNf0a46T4QQDQx4KQj0zXJbC2fFikAtu1AULktF4iEXEI
- rSjFoqhd4euZ+QARAQABwsF8BBgBCAAmAhsMFiEE13oJz+7cK71TpwR0YAI/xNNJIHIFAmX4
- qVAFCQ8NoDIACgkQYAI/xNNJIHKN4A/+Ine2Ii7JiuGITjJkcV6pgKlfwYdEs4eFD1pTRb/K
- 5dprUz3QSLP41u9OJQ23HnESMvn31UENk9ffebNoW7WxZ/8cTQY0JY/cgTTrlNXtyAlGbR3/
- 3Q/VBJptf04Er7I6TaKAmqWzdVeKTw33LljpkHp02vrbOdylb4JQG/SginLV9purGAFptYRO
- 8JNa2J4FAQtQTrfOUjulOWMxy7XRkqK3QqLcPW79/CFn7q1yxamPkpoXUJq9/fVjlhk7P+da
- NYQpe4WQQnktBY29SkFnvfIAwqIVU8ix5Oz8rghuCcAdR7lEJ7hCX9bR0EE05FOXdZy5FWL9
- GHvFa/Opkq3DPmFl/0nt4HJqq1Nwrr+WR6d0414oo1n2hPEllge/6iD3ZYwptTvOFKEw/v0A
- yqOoYSiKX9F7Ko7QO+VnYeVDsDDevKic2T/4GDpcSVd9ipiKxCQvUAzKUH7RUpqDTa+rYurm
- zRKcgRumz2Tc1ouHj6qINlzEe3a5ldctIn/dvR1l2Ko7GBTG+VGp9U5NOAEkGpxHG9yg6eeY
- fFYnMme51H/HKiyUlFiE3yd5LSmv8Dhbf+vsI4x6BOOOq4Iyop/Exavj1owGxW0hpdUGcCl1
- ovlwVPO/6l/XLAmSGwdnGqok5eGZQzSst0tj9RC9O0dXO1TZocOsf0tJ8dR2egX4kxM=
-In-Reply-To: <20250207-bam-read-fix-v1-1-027975cf1a04@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <173897189669.2630636.11579554304003668196.robh@kernel.org>
 
-On 7.02.25 22:17, Bjorn Andersson wrote:
- > Commit '57a7138d0627 ("dmaengine: qcom: bam_dma: Avoid writing
- > unavailable register")' made this read unconditional, in order to
- > identify if the instance is BAM-NDP or BAM-Lite.
- > But the BAM_REVISION register is not accessible on remotely managed BAM
- > instances and attempts to access it causes the system to crash.
- >
- > Move the access back to be conditional and expand the checks that was
- > introduced to restore the old behavior when no revision information is
- > available.
- >
- > Fixes: 57a7138d0627 ("dmaengine: qcom: bam_dma: Avoid writing 
-unavailable register")
- > Reported-by: Georgi Djakov <djakov@kernel.org>
- > Closes: 
-https://lore.kernel.org/lkml/9ef3daa8-cdb1-49f2-8d19-a72d6210ff3a@kernel.org/
- > Signed-off-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+On Fri, Feb 07, 2025 at 05:44:59PM -0600, Rob Herring (Arm) wrote:
+> On Fri, 07 Feb 2025 22:30:26 +0100, J. Neuschäfer wrote:
+[...]
+> >  .../bindings/memory-controllers/fsl,elbc.yaml      | 146 +++++++++++++++++++++
+> >  .../devicetree/bindings/powerpc/fsl/lbc.txt        |  43 ------
+> >  2 files changed, 146 insertions(+), 43 deletions(-)
+[...]
+> dtschema/dtc warnings/errors:
+> Documentation/devicetree/bindings/memory-controllers/fsl,elbc.example.dtb: /example-0/localbus@f0010100/simple-periph@2,0: failed to match any schema with compatible: ['fsl,elbc-gpcm-uio']
+> Documentation/devicetree/bindings/memory-controllers/fsl,elbc.example.dtb: /example-1/localbus@e0005000/nand@1,0: failed to match any schema with compatible: ['fsl,mpc8315-fcm-nand', 'fsl,elbc-fcm-nand']
+> Documentation/devicetree/bindings/memory-controllers/fsl,elbc.example.dtb: /example-1/localbus@e0005000/nand@1,0: failed to match any schema with compatible: ['fsl,mpc8315-fcm-nand', 'fsl,elbc-fcm-nand']
 
-Tested-by: David Heidelberg <david@ixit.cz> # OnePlus 6T
-
--- 
-David Heidelberg
-
+I think this is due to how the patches are ordered in the series.
+This patch uses fsl,elbc-gpcm-uio and fsl,elbc-fcm-nand in examples, but
+comes before the patches that define the corresponding bindings.
 

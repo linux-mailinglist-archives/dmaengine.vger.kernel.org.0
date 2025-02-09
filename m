@@ -1,166 +1,222 @@
-Return-Path: <dmaengine+bounces-4359-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4360-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C347CA2DA56
-	for <lists+dmaengine@lfdr.de>; Sun,  9 Feb 2025 03:04:01 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B075A2DD30
+	for <lists+dmaengine@lfdr.de>; Sun,  9 Feb 2025 12:56:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BE81D3A6506
-	for <lists+dmaengine@lfdr.de>; Sun,  9 Feb 2025 02:03:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 27EAC3A4FD3
+	for <lists+dmaengine@lfdr.de>; Sun,  9 Feb 2025 11:56:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D371243397;
-	Sun,  9 Feb 2025 02:03:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78E171CEAA3;
+	Sun,  9 Feb 2025 11:56:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B13a1Oxg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FDUUplSm"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9D22F30;
-	Sun,  9 Feb 2025 02:03:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FFF3243399;
+	Sun,  9 Feb 2025 11:56:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739066637; cv=none; b=ufa/7raoHALy8WdPVkXj0Sw6e5Sd5Kq3A/Y5RloGxXERpxAAdeDGQwmiJm97gEAcMlJMOu+5+FpcHmPEcCtthieUJoatDnntzQfeD9q9per4uWsBRB57rGIL1hHlSpS4DPgu+dId2ln66SSEhhVD2yuUxqQJZ3I9W6d7wcrrXAg=
+	t=1739102191; cv=none; b=h8Z6uh5MxlDJi7oMW+csYV/ltxs42xYza2TsNksirwiuhVR713DCjeavT7UUFb1NaTLW5pfYmD1zleptZYlAw2ZpUibdbOukU2MjjqMg9C+BiCmR4a8wsGyuICE7jTA/PQ/PXQz0Wb8/5bIHZWH25BOeSZoGEIDjwd0sZadXl0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739066637; c=relaxed/simple;
-	bh=FE0Jqk5YY21GWTtz+x5JwkDRGQl1loDlgHMN/kBLDJI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KPL2vwlttf1R4O9yAVepjQSlc7TUNwTVkzAol+P9/6gGiPm75CFKAVjaJ58eTG9OBqsSPL0U5rCKDDEzF1NXOEs4c4TRHin3NMknJEnrGVT+v/EiKxvS/Qy8RWNEd4kPly7kYZ7EOpSaA7CCD1zWHgj243X11KboGTR1FulRESg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B13a1Oxg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D024C4CEE0;
-	Sun,  9 Feb 2025 02:03:55 +0000 (UTC)
+	s=arc-20240116; t=1739102191; c=relaxed/simple;
+	bh=Lz2w10qZ/7qf0GBvDV0ucsndxbEDejIrSm5OdLohrlc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=D/RQc84DWNA6Eo9Q5k0p/g9cupXwNMVDzfbqijwvQ9nnZrkqiB7syLPZI6Bp5/sr5jm8sYJRFEEqaVypNTM8Av6zcBSktnI22TKq2Z5ng7O4MUmnpdUD5Wt8mp+ENF/qF/woHiChJt4h4IL3NbmtgjOzDibMwJdL0fareND0ZdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FDUUplSm; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BBB8C4CEDD;
+	Sun,  9 Feb 2025 11:56:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739066636;
-	bh=FE0Jqk5YY21GWTtz+x5JwkDRGQl1loDlgHMN/kBLDJI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=B13a1OxgvGbzDTDPaaGGQYoZvGlwNg7G4cO+tzeNx516zXv65IXbbzx/LNL2rS0jZ
-	 KkaWnbN3N5mpLXm43liJvtiGNQ4Wr+2Xy1UXi8jpZF5CVKxglyu90W4oL//nIBVC8C
-	 ydjeeP4t81fcr5cWYzZyjsGF+hhStOyLvH/dEOQrMedSRr9b5kzH1vg6XsEPfaPK25
-	 GY9w00Yu+a5T4/rHbJ9EjJ3DsRxR2ZV1nVjiyjLM5MVi8wkvc0q7Lm+htT8ZqtDCeH
-	 pyyc0D05dDPtLxPxBeNaeglayp00xUqM8CABxrwGHCD91hsIvejaQ0DKmCww4kYT2p
-	 XUmYodopFTF9Q==
-Date: Sat, 8 Feb 2025 20:03:53 -0600
-From: Bjorn Andersson <andersson@kernel.org>
-To: Caleb Connolly <caleb.connolly@linaro.org>
-Cc: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
-	Amit Vadhavana <av2082000@gmail.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Fenghua Yu <fenghua.yu@intel.com>, Kees Cook <kees@kernel.org>, 
-	Md Sadre Alam <quic_mdalam@quicinc.com>, Robin Murphy <robin.murphy@arm.com>, 
-	Vinod Koul <vkoul@kernel.org>, David Heidelberg <david@ixit.cz>, 
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, dmaengine@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH] Revert "dmaengine: qcom: bam_dma: Avoid writing
- unavailable register"
-Message-ID: <mjyavvk5jymhfdn4czffihi55nvlxea5ldgchsmkyd6lomrlbr@7224az7nsnsa>
-References: <20250208223112.142567-1-caleb.connolly@linaro.org>
+	s=k20201202; t=1739102191;
+	bh=Lz2w10qZ/7qf0GBvDV0ucsndxbEDejIrSm5OdLohrlc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=FDUUplSm71iSeiNoCP8kgKWfH/FV7hnL/Pb6Ql0ehJB7KzeA4JJiYvqfe+AbgZyRO
+	 p1NSbOUnNhOyiI81Qel+HotJUgFLt99w4fXpRJv+Fr4PO1AKn5ZdwfXVGWg5IIh/eS
+	 jVUXvVzqiQdO1T/qSpllafTpUzMny3do/xNGzlFwlBsDOthdimAXo6YI8f48wODIdL
+	 UgGufOquMx/cMto6ke6VChFxg1TQhJXUsdGPoW+iyxblOcl3HoGZkw2Cao6YYpE5/A
+	 0oppnFn6xYT4HbhZ3HVjkmb1wqK3zBtlAzcbSBrxVVb8DHKghT7nXEaBVm/5kC829x
+	 fVAfOPTKwQVgw==
+Message-ID: <922691a1-10d0-4ff1-a174-a456235e6487@kernel.org>
+Date: Sun, 9 Feb 2025 12:56:19 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250208223112.142567-1-caleb.connolly@linaro.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 3/5] dt-bindings: gpu: Add protected heap name to Mali
+ Valhall CSF binding
+To: Nicolas Dufresne <nicolas@ndufresne.ca>,
+ Florent Tomasin <florent.tomasin@arm.com>, Vinod Koul <vkoul@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Boris Brezillon <boris.brezillon@collabora.com>,
+ Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+ Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>,
+ "T . J . Mercier" <tjmercier@google.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Yong Wu <yong.wu@mediatek.com>
+Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ nd@arm.com, Akash Goel <akash.goel@arm.com>
+References: <cover.1738228114.git.florent.tomasin@arm.com>
+ <36b57dcf20860398ba83985e1c5b6f6958d08ba7.1738228114.git.florent.tomasin@arm.com>
+ <7234f25c-a2aa-4834-931b-aeeb7a49dfa7@kernel.org>
+ <4b9deab1-e330-4c93-8260-75276c2bc9ff@arm.com>
+ <c0aad911-ecc4-4b04-a453-6da226f76ed2@kernel.org>
+ <5e0e2fbb22c2ffb0c5281727cd95d70f5f5ba696.camel@ndufresne.ca>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <5e0e2fbb22c2ffb0c5281727cd95d70f5f5ba696.camel@ndufresne.ca>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sat, Feb 08, 2025 at 10:30:54PM +0000, Caleb Connolly wrote:
-> This commit causes a hard crash on sdm845 and likely other platforms.
-> Revert it until a proper fix is found.
+On 06/02/2025 22:21, Nicolas Dufresne wrote:
+> Le mercredi 05 février 2025 à 10:13 +0100, Krzysztof Kozlowski a écrit :
+>> On 03/02/2025 16:31, Florent Tomasin wrote:
+>>> Hi Krzysztof
+>>>
+>>> On 30/01/2025 13:25, Krzysztof Kozlowski wrote:
+>>>> On 30/01/2025 14:08, Florent Tomasin wrote:
+>>>>> Allow mali-valhall-csf driver to retrieve a protected
+>>>>> heap at probe time by passing the name of the heap
+>>>>> as attribute to the device tree GPU node.
+>>>>
+>>>> Please wrap commit message according to Linux coding style / submission
+>>>> process (neither too early nor over the limit):
+>>>> https://elixir.bootlin.com/linux/v6.4-rc1/source/Documentation/process/submitting-patches.rst#L597
+>>> Apologies, I think I made quite few other mistakes in the style of the
+>>> patches I sent. I will work on improving this aspect, appreciated
+>>>
+>>>> Why this cannot be passed by phandle, just like all reserved regions?
+>>>>
+>>>> From where do you take these protected heaps? Firmware? This would
+>>>> explain why no relation is here (no probe ordering, no device links,
+>>>> nothing connecting separate devices).
+>>>
+>>> The protected heap is generaly obtained from a firmware (TEE) and could
+>>> sometimes be a carved-out memory with restricted access.
+>>
+>> Which is a reserved memory, isn't it?
+>>
+>>>
+>>> The Panthor CSF kernel driver does not own or manage the protected heap
+>>> and is instead a consumer of it (assuming the heap is made available by
+>>> the system integrator).
+>>>
+>>> I initially used a phandle, but then I realised it would introduce a new
+>>> API to share the heap across kernel driver. In addition I found this
+>>> patch series:
+>>> -
+>>> https://lore.kernel.org/lkml/20230911023038.30649-1-yong.wu@mediatek.com/#t
+>>>
+>>> which introduces a DMA Heap API to the rest of the kernel to find a
+>>> heap by name:
+>>> - dma_heap_find()
+>>>
+>>> I then decided to follow that approach to help isolate the heap
+>>> management from the GPU driver code. In the Panthor driver, if the
+>>> heap is not found at probe time, the driver will defer the probe until
+>>> the exporter made it available.
+>>
+>>
+>> I don't talk here really about the driver but even above mediatek
+>> patchset uses reserved memory bindings.
+>>
+>> You explained some things about driver yet you did not answer the
+>> question. This looks like reserved memory. If it does not, bring
+>> arguments why this binding cannot be a reserved memory, why hardware is
+>> not a carve out memory.
 > 
-> This reverts commit 57a7138d0627309d469719f1845d2778c251f358.
-> 
+> I think the point is that from the Mali GPU view, the memory does not need to be
+> within the range the Linux Kernel actually see, even though current integration
 
-I posted below patch yesterday, which reverts the change for
-bdev->num_ees != 0 (i.e. SDM845), while still retaining the introduced
-NDP vs Lite logic.
 
-https://lore.kernel.org/linux-arm-msm/0892dca2-e76b-4aab-95cf-7437dabfc7a4@kernel.org/T/#t
+Do I get it right:
+Memory can be outside of kernel address range but you put it to the
+bindings as reserved memory? If yes, then I still do not understand why
+DT should keep that information. Basically, you can choose whatever
+memory is there, because it anyway won't interfere with Linux, right?
+Linux does not have any reasonable way to access it.
 
-Regards,
-Bjorn
+It might interfere with firmware or other processors, but then it's the
+job of firmware which has discoverable interfaces for this.
 
-> Signed-off-by: Caleb Connolly <caleb.connolly@linaro.org>
-> ---
->  drivers/dma/qcom/bam_dma.c | 24 ++++++++----------------
->  1 file changed, 8 insertions(+), 16 deletions(-)
+The binding says it is about protected heap name, but it explains
+nothing what is that protected heap. You pass it to some firmware as
+string? Does not look like, rather looks like Linux thingy, but this
+again is neither explained in commit msg nor actually correct: Linux
+thingies do not belong to DT.
+
+> have that. From Mali GPU driver stand point (or codec drivers and what's not),
+> the memory range is not useful to allocate protected/restricted memory. On top
+> of which, its not reserved specifically for the Mali GPU.
 > 
-> diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
-> index c14557efd577..bbc3276992bb 100644
-> --- a/drivers/dma/qcom/bam_dma.c
-> +++ b/drivers/dma/qcom/bam_dma.c
-> @@ -58,11 +58,8 @@ struct bam_desc_hw {
->  #define DESC_FLAG_EOB BIT(13)
->  #define DESC_FLAG_NWD BIT(12)
->  #define DESC_FLAG_CMD BIT(11)
->  
-> -#define BAM_NDP_REVISION_START	0x20
-> -#define BAM_NDP_REVISION_END	0x27
-> -
->  struct bam_async_desc {
->  	struct virt_dma_desc vd;
->  
->  	u32 num_desc;
-> @@ -400,9 +397,8 @@ struct bam_device {
->  	int irq;
->  
->  	/* dma start transaction tasklet */
->  	struct tasklet_struct task;
-> -	u32 bam_revision;
->  };
->  
->  /**
->   * bam_addr - returns BAM register address
-> @@ -444,12 +440,10 @@ static void bam_reset(struct bam_device *bdev)
->  	val |= BAM_EN;
->  	writel_relaxed(val, bam_addr(bdev, 0, BAM_CTRL));
->  
->  	/* set descriptor threshold, start with 4 bytes */
-> -	if (in_range(bdev->bam_revision, BAM_NDP_REVISION_START,
-> -		     BAM_NDP_REVISION_END))
-> -		writel_relaxed(DEFAULT_CNT_THRSHLD,
-> -			       bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
-> +	writel_relaxed(DEFAULT_CNT_THRSHLD,
-> +			bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
->  
->  	/* Enable default set of h/w workarounds, ie all except BAM_FULL_PIPE */
->  	writel_relaxed(BAM_CNFG_BITS_DEFAULT, bam_addr(bdev, 0, BAM_CNFG_BITS));
->  
-> @@ -1005,12 +999,11 @@ static void bam_apply_new_config(struct bam_chan *bchan,
->  		if (dir == DMA_DEV_TO_MEM)
->  			maxburst = bchan->slave.src_maxburst;
->  		else
->  			maxburst = bchan->slave.dst_maxburst;
-> -		if (in_range(bdev->bam_revision, BAM_NDP_REVISION_START,
-> -			     BAM_NDP_REVISION_END))
-> -			writel_relaxed(maxburst,
-> -				       bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
-> +
-> +		writel_relaxed(maxburst,
-> +			       bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
->  	}
->  
->  	bchan->reconfigure = 0;
->  }
-> @@ -1198,13 +1191,12 @@ static int bam_init(struct bam_device *bdev)
->  {
->  	u32 val;
->  
->  	/* read revision and configuration information */
-> -	val = readl_relaxed(bam_addr(bdev, 0, BAM_REVISION));
-> -	if (!bdev->num_ees)
-> +	if (!bdev->num_ees) {
-> +		val = readl_relaxed(bam_addr(bdev, 0, BAM_REVISION));
->  		bdev->num_ees = (val >> NUM_EES_SHIFT) & NUM_EES_MASK;
-> -
-> -	bdev->bam_revision = val & REVISION_MASK;
-> +	}
->  
->  	/* check that configured EE is within range */
->  	if (bdev->ee >= bdev->num_ees)
->  		return -EINVAL;
-> -- 
-> 2.48.1
-> 
-> 
+> What's your practical suggestion here ? Introduce dma_heap_find_by_region() ?
+
+I did not comment about driver and I do not judge how you access
+whatever you need to access. This is discussion purely about binding
+thus about hardware.
+
+
+Best regards,
+Krzysztof
 

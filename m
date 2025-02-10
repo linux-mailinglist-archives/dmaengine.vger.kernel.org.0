@@ -1,64 +1,58 @@
-Return-Path: <dmaengine+bounces-4376-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4377-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3CF5AA2E939
-	for <lists+dmaengine@lfdr.de>; Mon, 10 Feb 2025 11:25:03 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E0998A2EA80
+	for <lists+dmaengine@lfdr.de>; Mon, 10 Feb 2025 12:05:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 46E743A83E1
-	for <lists+dmaengine@lfdr.de>; Mon, 10 Feb 2025 10:24:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D843D164732
+	for <lists+dmaengine@lfdr.de>; Mon, 10 Feb 2025 11:05:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2A641DF998;
-	Mon, 10 Feb 2025 10:19:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0B711E32CD;
+	Mon, 10 Feb 2025 11:02:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZhD00Uaj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NFi9RzOL"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9C317DA9C;
-	Mon, 10 Feb 2025 10:19:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B7561DFE0A;
+	Mon, 10 Feb 2025 11:02:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739182796; cv=none; b=H6kUngWkgqGOQa7C6ypD1a88LWXLj00jFTT38Uc7Ow2hgY0vmwuaxqj1cxzmvnYr5uYf1iQQXCRvs9Y1vbWWyZDgrrOWg05LfjGmdBLi8+/m8YoyDSDuidlgqNdB/oRx7ef4CbHIkBlSnocm1FQcEOtYhesetMSpr+jGDfai4L0=
+	t=1739185341; cv=none; b=LbV7u3Zv+bg7ROKw+JsRFoIJKP4Cm5ClglK+0CT9I0CTqP2ggg1YbglcLB8YDWgqBPjKgn9J+GEQiZBcox5LHudrPouiougQxIFeJSMfDbpIq/OYGenZaed8LqVVVPhHPJyNfiit+9QhK5pDhmGx+FyAFbhymDsKdMU0auMRWsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739182796; c=relaxed/simple;
-	bh=yMGskL7MLJWn/r7OVZbGJx9q7/tbXqUhoIe+Heu7gD8=;
+	s=arc-20240116; t=1739185341; c=relaxed/simple;
+	bh=+bQSTsB4Vv/HxWV6R2rogqlCT+gRGmi76Ize4bLvKOQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZtAMs3PJXT8wVv/J65YLA4uFCO4eELnpf2RYX6crhjBTRjzhPgJDMAvILMFEYGecjfXqHgE0MQK2fV9+H1lQ+IojBCN4M8ZDUAzcXp6mNCkBmmcncUIiT65C2vFIQ2iKjj0HKRQpdjhp33QzlompxL/aqvZ+S0PX9dq7dMCz+UA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZhD00Uaj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 687BCC4CED1;
-	Mon, 10 Feb 2025 10:19:55 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=dq45tyHmK+7RstHfyoaQ7qjYvSj7hHkPb5oAa54oZWYfinkiYX7Yu2u2Ykd7eTX2KKXgqkVJ9ydy6F6A1bbxyBnZXwf1ORmKOosm6tXthritZly4FBsc+cRQPRqV6uJxsyyNOlFKQ6JmBv0sFwaeJgKU89GjKQ9oxHNH0P2nZl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NFi9RzOL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1768C4CED1;
+	Mon, 10 Feb 2025 11:02:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739182796;
-	bh=yMGskL7MLJWn/r7OVZbGJx9q7/tbXqUhoIe+Heu7gD8=;
+	s=k20201202; t=1739185340;
+	bh=+bQSTsB4Vv/HxWV6R2rogqlCT+gRGmi76Ize4bLvKOQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZhD00UajXsg427yGD5lfKeeKTKd1bX1tI71PbP9zcUKytic7kAV5b0p1NZYbr0rZZ
-	 Ei/ERaK5KYp/8TuDMF+t29XFXgyMdIzELoQCayd033tooEjwpzAm9m+FvLr60gOL6x
-	 G2Yl8TCgSIxLPfX+UUGcIr5Icg5DZhA6bzt13/Ry3SiqTIBwgcashyHuML1pS2Vzqh
-	 xx5K6Sm/4cZoHBpIy37ahaE57EiiTmsEboR3dj27MIWJuoQC5FzDsYpHPXJscBUGS3
-	 gtTVPn3qWdoLBF9QbBbyknwyIScZ8FmDLEv2I9wj3cFB3rOSky5GPvnW9w6Z29JAbA
-	 UvyCdLBg6S5TA==
-Date: Mon, 10 Feb 2025 15:49:52 +0530
+	b=NFi9RzOL1k+ov+pc74A7K5ye6mCYgMOvRO8KUzA6AkGEMjzA9wG90kVDi/DfMWNdO
+	 gQnsEv6rir1+/d9fl7HS04QqUN4coTk7t6aQMqWInRzJLB8yC6JHfXAhSanHHotMm8
+	 kDSdJd5wfz5PRBaAmWaUOXyUaQeL2sUq2ZWunma8XlYFdl2xoVVATSiHALipP8CT7Y
+	 JJ5AI7Sgk9IecQfVKi/LO4r5oArqXnj1ypTUBp2JG1SyqN6jOC3NPENe/sbK5ZBaLa
+	 yCsb4PqMvUztQFfbhBZxONxMD9GQ5AMHU5wVaIoUG1m0YmQ39MJre4+XPgpllvihTR
+	 0r2zZU+mrsXGA==
+Date: Mon, 10 Feb 2025 16:32:16 +0530
 From: Vinod Koul <vkoul@kernel.org>
-To: Bjorn Andersson <andersson@kernel.org>
-Cc: Caleb Connolly <caleb.connolly@linaro.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
-	Amit Vadhavana <av2082000@gmail.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Fenghua Yu <fenghua.yu@intel.com>, Kees Cook <kees@kernel.org>,
-	Md Sadre Alam <quic_mdalam@quicinc.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	David Heidelberg <david@ixit.cz>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	dmaengine@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH] Revert "dmaengine: qcom: bam_dma: Avoid writing
- unavailable register"
-Message-ID: <Z6nSyNz91IIzrVuv@vaman>
-References: <20250208223112.142567-1-caleb.connolly@linaro.org>
- <mjyavvk5jymhfdn4czffihi55nvlxea5ldgchsmkyd6lomrlbr@7224az7nsnsa>
+To: Mohan Kumar D <mkumard@nvidia.com>
+Cc: thierry.reding@gmail.com, jonathanh@nvidia.com,
+	dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH v4 1/2] dmaengine: tegra210-adma: Fix build error due to
+ 64-by-32 division
+Message-ID: <Z6ncuLHotCAw61b5@vaman>
+References: <20250205033131.3920801-1-mkumard@nvidia.com>
+ <20250205033131.3920801-2-mkumard@nvidia.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -67,24 +61,70 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <mjyavvk5jymhfdn4czffihi55nvlxea5ldgchsmkyd6lomrlbr@7224az7nsnsa>
+In-Reply-To: <20250205033131.3920801-2-mkumard@nvidia.com>
 
-On 08-02-25, 20:03, Bjorn Andersson wrote:
-> On Sat, Feb 08, 2025 at 10:30:54PM +0000, Caleb Connolly wrote:
-> > This commit causes a hard crash on sdm845 and likely other platforms.
-> > Revert it until a proper fix is found.
-> > 
-> > This reverts commit 57a7138d0627309d469719f1845d2778c251f358.
-> > 
+Hi Mohan,
+
+On 05-02-25, 09:01, Mohan Kumar D wrote:
+> Kernel test robot reported the build errors on 32-bit platforms due to
+> plain 64-by-32 division. Following build erros were reported.
+
+Patch should describe the change! Please revise subject to describe that
+and not fix build error... This can come in changelog and below para is
+apt
+
 > 
-> I posted below patch yesterday, which reverts the change for
-> bdev->num_ees != 0 (i.e. SDM845), while still retaining the introduced
-> NDP vs Lite logic.
-
-Bjorn,
-
-Given the issues reported by Stephan, do you this we should revert
-and then patch it up..?
+>    "ERROR: modpost: "__udivdi3" [drivers/dma/tegra210-adma.ko] undefined!
+>     ld: drivers/dma/tegra210-adma.o: in function `tegra_adma_probe':
+>     tegra210-adma.c:(.text+0x12cf): undefined reference to `__udivdi3'"
+> 
+> This can be fixed by using div_u64() for the adma address space
+> 
+> Fixes: 68811c928f88 ("dmaengine: tegra210-adma: Support channel page")
+> Cc: stable@vger.kernel.org
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202412250204.GCQhdKe3-lkp@intel.com/
+> Signed-off-by: Mohan Kumar D <mkumard@nvidia.com>
+> ---
+>  drivers/dma/tegra210-adma.c | 15 +++++++++++----
+>  1 file changed, 11 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
+> index 6896da8ac7ef..a0bd4822ed80 100644
+> --- a/drivers/dma/tegra210-adma.c
+> +++ b/drivers/dma/tegra210-adma.c
+> @@ -887,7 +887,8 @@ static int tegra_adma_probe(struct platform_device *pdev)
+>  	const struct tegra_adma_chip_data *cdata;
+>  	struct tegra_adma *tdma;
+>  	struct resource *res_page, *res_base;
+> -	int ret, i, page_no;
+> +	u64 page_no, page_offset;
+> +	int ret, i;
+>  
+>  	cdata = of_device_get_match_data(&pdev->dev);
+>  	if (!cdata) {
+> @@ -914,10 +915,16 @@ static int tegra_adma_probe(struct platform_device *pdev)
+>  
+>  		res_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "global");
+>  		if (res_base) {
+> -			page_no = (res_page->start - res_base->start) / cdata->ch_base_offset;
+> -			if (page_no <= 0)
+> +			if (WARN_ON(res_page->start <= res_base->start))
+>  				return -EINVAL;
+> -			tdma->ch_page_no = page_no - 1;
+> +
+> +			page_offset = res_page->start - res_base->start;
+> +			page_no = div_u64(page_offset, cdata->ch_base_offset);
+> +
+> +			if (WARN_ON(page_no == 0))
+> +				return -EINVAL;
+> +
+> +			tdma->ch_page_no = lower_32_bits(page_no) - 1;
+>  			tdma->base_addr = devm_ioremap_resource(&pdev->dev, res_base);
+>  			if (IS_ERR(tdma->base_addr))
+>  				return PTR_ERR(tdma->base_addr);
+> -- 
+> 2.25.1
 
 -- 
 ~Vinod

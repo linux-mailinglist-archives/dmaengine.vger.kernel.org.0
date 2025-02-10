@@ -1,139 +1,190 @@
-Return-Path: <dmaengine+bounces-4367-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4368-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63E3BA2E444
-	for <lists+dmaengine@lfdr.de>; Mon, 10 Feb 2025 07:43:23 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C310CA2E447
+	for <lists+dmaengine@lfdr.de>; Mon, 10 Feb 2025 07:43:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A49B51887967
-	for <lists+dmaengine@lfdr.de>; Mon, 10 Feb 2025 06:43:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 15AF63A4AE8
+	for <lists+dmaengine@lfdr.de>; Mon, 10 Feb 2025 06:43:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C591C1A3159;
-	Mon, 10 Feb 2025 06:43:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F5801AF0AF;
+	Mon, 10 Feb 2025 06:43:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="iPfNgLbT"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="J7jBVAqN"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D4CE1925BF
-	for <dmaengine@vger.kernel.org>; Mon, 10 Feb 2025 06:43:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 744CE1ADC6C
+	for <dmaengine@vger.kernel.org>; Mon, 10 Feb 2025 06:43:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739169795; cv=none; b=ek2LO1prYRgEDX35muUDBjM1hTUttYg72AR5VbU2sk2u2fdw3XSqUzOgBEgfO8NtssbCtDaHgnG7u6pF7jcAp5y6fcGA/+LrQpmiDuQ41G9Nhw3P7opYSAjznH7e5zOwwnrLGovQ7v6WkEMMrCJSkwuXGM7RlmTuh31l98xt8N8=
+	t=1739169800; cv=none; b=Tw1FeUZDgV8m4JU590hb0Eq2GAhDMiIxUCsnw2jpTm9BU3m7BvElgGWryuKeaJaUS+Bo0HSXFWTq9TVNxHgfNVnzsdnIdOdFPaE8dtFAFSqYY664OVg4DS3M5HFpZbIHYGaTR3xvTY4sajzuGAUi0Bb7ivSf/qNIStUZqG6e7cA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739169795; c=relaxed/simple;
-	bh=u29kw3PAt2/TVlFJvlq+qdiGnInsbi4kZ70cRUTk6cc=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:References; b=GGrp0fd8k3Oe+rBlLCityXxw2HiRDJnkRNIC2ELEf1hIQd7XpcYKXlSOjjaZ1X3I2Nib2wMUyYY0W6pPNA7QL5Hbfmrcx6D+PtodC+6shoawBNFYe6xBZ61lzaDg9gczzE3IpFfE48M1cMw39OZ+U13NKymNN0f0noGdKVLzeTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=iPfNgLbT; arc=none smtp.client-ip=203.254.224.34
+	s=arc-20240116; t=1739169800; c=relaxed/simple;
+	bh=5u7F+siDxk1smDwLaUSKmW7d8GLaEqp1WdRO58GibIs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:Content-Type:
+	 References; b=HbyWpRWHhyokyFoT04PamIMMfmBS1tgj5t+mJTAPcrLcasbrFkw0XUA9mKZC6xq818eadSB1Qe6dThriA8oD50H3KT1FYivI+3v8Dns8SSFQ5r5FThbtm+BELiosplP9YP1Kx0JcsVh+Qs8ICuiob6t0/AIRY/BlNSKwD3dFuzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=J7jBVAqN; arc=none smtp.client-ip=203.254.224.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250210064305epoutp04a5c8f4bce1b7d5bd3a35b0288d7f62c7~ixbSBpQ6s1657916579epoutp04G
-	for <dmaengine@vger.kernel.org>; Mon, 10 Feb 2025 06:43:05 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250210064305epoutp04a5c8f4bce1b7d5bd3a35b0288d7f62c7~ixbSBpQ6s1657916579epoutp04G
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250210064309epoutp03fe6024b31057aeeb34b338598528817a~ixbWIbHiR1778217782epoutp03E
+	for <dmaengine@vger.kernel.org>; Mon, 10 Feb 2025 06:43:09 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250210064309epoutp03fe6024b31057aeeb34b338598528817a~ixbWIbHiR1778217782epoutp03E
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1739169785;
-	bh=k8uc0/TsrBMb+gRemsPGa/jXjlbqOddYaCgtcQXT+Z0=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=iPfNgLbTSGThGAlIxBWjxJ7E742/xWVZCvjQoOraII24DW61UO6Y2YXxYoTs3rENs
-	 O2/569iNG9Bac/j4WddrwAgWPx37vYs77nDP3P/kGIzblQq5cJJie4faZ5la1RHW0D
-	 vaupUq8wHvzdRbdwPzRp1crcAIifbyNDe9J5SVZ8=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-	20250210064304epcas5p1d14d48b6369da50dba6e7bde5ddeeca9~ixbRgnLQZ3041530415epcas5p10;
-	Mon, 10 Feb 2025 06:43:04 +0000 (GMT)
-Received: from epsmgec5p1-new.samsung.com (unknown [182.195.38.174]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4Yrw4l0NbWz4x9Q3; Mon, 10 Feb
-	2025 06:43:03 +0000 (GMT)
+	s=mail20170921; t=1739169789;
+	bh=3T7XYBocWY+Y/TDydYiw5WG4u/h9PVvQeHolIgWGmXo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=J7jBVAqNMbbt+2U6xFiaDz5iW4jdUL3j922R/DRobncV/vFICyAUZxNzgjE2r5Tqx
+	 5BKkLRr3TiGtu92sBoS71UkGQm5Rv2R31ZN5U/VqjRgDC9N55jMPnHebuwDoBLJFkd
+	 eHUzteERAJDZyk31e/br1ba3IZs7X3e5PL3FFm9E=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+	20250210064308epcas5p2039b65679c2c8ba704d46cf0ee1f27f5~ixbVi9X7o1042710427epcas5p2g;
+	Mon, 10 Feb 2025 06:43:08 +0000 (GMT)
+Received: from epsmges5p1new.samsung.com (unknown [182.195.38.177]) by
+	epsnrtp1.localdomain (Postfix) with ESMTP id 4Yrw4q3bwxz4x9Q7; Mon, 10 Feb
+	2025 06:43:07 +0000 (GMT)
 Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-	epsmgec5p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	00.28.29212.6FF99A76; Mon, 10 Feb 2025 15:43:02 +0900 (KST)
+	epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	98.CE.20052.BFF99A76; Mon, 10 Feb 2025 15:43:07 +0900 (KST)
 Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
 	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20250210062219epcas5p4695fe63e9ba36c19a640504f95dc3f12~ixJJ_ry7J2370323703epcas5p4x;
-	Mon, 10 Feb 2025 06:22:19 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	20250210062247epcas5p4ce208ba2806454c48a68ef25d0a326cc~ixJkOPrPR1469314693epcas5p4i;
+	Mon, 10 Feb 2025 06:22:47 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
 	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250210062219epsmtrp101d4d50107ad574e20e9a0a622c7bfbd~ixJJ91UjG0978209782epsmtrp1s;
-	Mon, 10 Feb 2025 06:22:19 +0000 (GMT)
-X-AuditID: b6c32a50-801fa7000000721c-2d-67a99ff63ee1
+	20250210062247epsmtrp1d63fc403e886d68da5cfad2ac07a119a~ixJkNiStL0980809808epsmtrp1T;
+	Mon, 10 Feb 2025 06:22:47 +0000 (GMT)
+X-AuditID: b6c32a49-3fffd70000004e54-9c-67a99ffbf583
 Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	38.AC.33707.B1B99A76; Mon, 10 Feb 2025 15:22:19 +0900 (KST)
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	24.FB.18949.73B99A76; Mon, 10 Feb 2025 15:22:47 +0900 (KST)
 Received: from cheetah.samsungds.net (unknown [107.109.115.53]) by
 	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250210062218epsmtip27c7a3c48a6528a6f4a58ef0accda9c3d~ixJJDdRBM1525115251epsmtip2D;
-	Mon, 10 Feb 2025 06:22:18 +0000 (GMT)
+	20250210062246epsmtip2fd17ed49e083b0a14f8a81cefa88e69b~ixJjLDmQc1523415234epsmtip2g;
+	Mon, 10 Feb 2025 06:22:46 +0000 (GMT)
 From: Aatif Mushtaq <aatif4.m@samsung.com>
 To: vkoul@kernel.org, dmaengine@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: pankaj.dubey@samsung.com, aswani.reddy@samsung.com, Aatif Mushtaq
 	<aatif4.m@samsung.com>
-Subject: [PATCH 0/3] Add capability for 2D DMA transfer
-Date: Mon, 10 Feb 2025 11:49:12 +0530
-Message-Id: <20250210061915.26218-1-aatif4.m@samsung.com>
+Subject: [PATCH 1/3] dmaengine: Add support for 2D DMA operation
+Date: Mon, 10 Feb 2025 11:49:13 +0530
+Message-Id: <20250210061915.26218-2-aatif4.m@samsung.com>
 X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrMKsWRmVeSWpSXmKPExsWy7bCmlu73+SvTDXYKWxyb8ZHR4tDmrewW
-	q6f+ZbW4vGsOm8WirV/YLXbeOcHswOaxaVUnm0ffllWMHp83yQUwR2XbZKQmpqQWKaTmJeen
-	ZOal2yp5B8c7x5uaGRjqGlpamCsp5CXmptoqufgE6Lpl5gCtVVIoS8wpBQoFJBYXK+nb2RTl
-	l5akKmTkF5fYKqUWpOQUmBToFSfmFpfmpevlpZZYGRoYGJkCFSZkZ/z7OZGlYCdLRf+6d8wN
-	jKeZuxg5OSQETCRePNjE1sXIxSEksIdRYuP6F1DOJ0aJl1OOssI5dy59YIFpudSzFqpqJ6PE
-	uQOLmCGcL4wSd9cuZwKpYhPQkth57hwjiC0i4C/xdvJCNhCbWSBO4tLl5ewgtrCAucTHz9/B
-	prIIqEpMP/YfrJdXwFLixIVdUNvkJVZvOAB1bD+7xOzb3hC2i8Tef1PYIGxhiVfHt7BD2FIS
-	L/vboOxkiZvv90HZORITFq6Gsu0lDlyZAzSfA+geTYn1u/QhwrISU0+tY4I4k0+i9/cTJog4
-	r8SOeTC2ksSa931QayUk/h08yQhhe0g8e9AFNlJIIFZi1fuqCYyysxAWLGBkXMUolVpQnJue
-	mmxaYKibl1oOj6jk/NxNjODUpBWwg3H1hr96hxiZOBgPMUpwMCuJ8JosXJEuxJuSWFmVWpQf
-	X1Sak1p8iNEUGGQTmaVEk/OByTGvJN7QxNLAxMzMzMTS2MxQSZy3eWdLupBAemJJanZqakFq
-	EUwfEwenVAMTf6/5I4OOz+vfTOr+cbQg9/iFmce4N0lPPZuctdrMtY1/Rzy/+tLH9X/y3rTZ
-	TE+aH2J0lDXBjc1gdV5nwLH7zglbCqv223+ZkcaxMoft1QG+Z5KiB5TMvhk9mvW07OHJ/mtr
-	9pckrTdcN+Fn1tbHua2Le1bnFrXoBHuGbt81Szbo4qzQ7zoZVmZ6WzmDFp/R+LLoxxG3r6ef
-	nbmyQ2BZdF6876HtCj1HHJO1V1yZfTI5b9aWvPbZX0Mur/KI2T9BNNta/6FY5MQTKV4Pj9ye
-	/f3+xEO7NUUUb8/gYav6ecqryDpMdnWX5Ld3t6zTZlQFH4080pKvdoBFR9N96hSz3guP32u7
-	HnESeMyps+NquBJLcUaioRZzUXEiAF9gMeLWAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrDJMWRmVeSWpSXmKPExsWy7bCSvK707JXpBicPK1gcm/GR0eLQ5q3s
-	Fqun/mW1uLxrDpvFoq1f2C123jnB7MDmsWlVJ5tH35ZVjB6fN8kFMEdx2aSk5mSWpRbp2yVw
-	Zfz7OZGlYCdLRf+6d8wNjKeZuxg5OSQETCQu9axl62Lk4hAS2M4oce3jL1aIhIREc2cjE4Qt
-	LLHy33N2iKJPjBJ//xwBS7AJaEnsPHeOEcQWEQiUWN/wmQXEZhZIkNiw7SA7iC0sYC7x8fN3
-	sDiLgKrE9GP/wXp5BSwlTlzYxQKxQF5i9YYDzBMYeRYwMqxiFE0tKM5Nz00uMNQrTswtLs1L
-	10vOz93ECA4QraAdjMvW/9U7xMjEwXiIUYKDWUmE12ThinQh3pTEyqrUovz4otKc1OJDjNIc
-	LErivMo5nSlCAumJJanZqakFqUUwWSYOTqkGptUr5hk0ivxpkZeTZZy+cD+7St72ez+P6EVt
-	uOSpKqxwefPWvgdbE/fsLJphs1fa9JdgROI8vam/vEoqnWTi/z21rFMvsNt/5pXRkeK3fx0m
-	PizsFTtyc5ey9ANbORu2xIq817U7rmXdvJSwMOTXwfO1K7tT40RZkv/EW1lllvhPvemhmPoz
-	+oFvSIbBa83//islzk6I5V9cbPxCSrvklpavqXzKRK7VxbIuizMa8jJmn47k613v9yWMZUfy
-	QXnrlbsOLf37okLyAK+l86w//5gk1XcvnKqwMsPE3DCSpd8rkL32zK9jK7l/JYk6x2+S6Rfc
-	3BhxO9vqPO8Do3KhnqVTIj+L37adfPtD2/0WJZbijERDLeai4kQAsAZGPX8CAAA=
-X-CMS-MailID: 20250210062219epcas5p4695fe63e9ba36c19a640504f95dc3f12
+In-Reply-To: <20250210061915.26218-1-aatif4.m@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrIKsWRmVeSWpSXmKPExsWy7bCmlu7v+SvTDdZMkbQ4NuMjo8WhzVvZ
+	LVZP/ctqcXnXHDaLRVu/sFvsvHOC2YHNY9OqTjaPvi2rGD0+b5ILYI7KtslITUxJLVJIzUvO
+	T8nMS7dV8g6Od443NTMw1DW0tDBXUshLzE21VXLxCdB1y8wB2qukUJaYUwoUCkgsLlbSt7Mp
+	yi8tSVXIyC8usVVKLUjJKTAp0CtOzC0uzUvXy0stsTI0MDAyBSpMyM540rmdvaBPrGLe8ePM
+	DYxzhboYOTkkBEwkbjy6xtjFyMUhJLCbUWLhuiY2COcTo8Sau/PZIZxvjBJnHu9hg2np/veT
+	GSKxl1Fi6t4dTCAJIYEvjBIbl9qD2GwCWhI7z51jBLFFBPwl3k5eCNbMLBAncenycnYQW1jA
+	QeL318tgNouAqsT9N3fBangFLCWmL7oJtUxeYvWGA8wgNqeAlcSaY2/BLpIQ2MQu8WLSfSaI
+	IheJbRv2skLYwhKvjm9hh7ClJF72t0HZyRI33++DsnMkJixcDWXbSxy4Moeli5ED6DhNifW7
+	9CHCshJTT61jgriZT6L39xOoVbwSO+bB2EoSa973Qd0pIfHv4ElGCNtD4vCTv9Bg7GWUmPfj
+	LvsERrlZCCsWMDKuYpRMLSjOTU8tNi0wzEsth8dacn7uJkZw2tLy3MF498EHvUOMTByMhxgl
+	OJiVRHhNFq5IF+JNSaysSi3Kjy8qzUktPsRoCgzAicxSosn5wMSZVxJvaGJpYGJmZmZiaWxm
+	qCTO27yzJV1IID2xJDU7NbUgtQimj4mDU6qBaf6mv2YFHeyvfsZLSlfwMr94MePl1d0tF+eq
+	lmdc1YuzbY+5oH1nT/fyP20tB2u3hl6onlvJp5mVHCpw8OZU1X9iSZUq912CNorc/H98/l/j
+	cJWF8W3PK+/avsiauD5rl0flg5I8N+GPr3lt6qojpla/rrl+7LlsnG3llZ7ezd0+sl7PoosN
+	BZaznTU7uXWC8lSbPbfF/k6bslxQ8UNPUf4GG/FjFb9y5rhozPd8ovE5eXPl0isqnct3a918
+	q2ZQvbhM8auKX46FS/7/Ozvrps7hvb6qI2PH2o/7L33mmON78Yab8VadWapSNW0+uXJJ7p29
+	grOMfu6NKz7DMGvetHn9u1/oLCmJrRPaq3DrmRJLcUaioRZzUXEiAGUnFk7kAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupgluLIzCtJLcpLzFFi42LZdlhJXtd89sp0g2kLNC2OzfjIaHFo81Z2
+	i9VT/7JaXN41h81i0dYv7BY775xgdmDz2LSqk82jb8sqRo/Pm+QCmKO4bFJSczLLUov07RK4
+	Mp50bmcv6BOrmHf8OHMD41yhLkZODgkBE4nufz+Zuxi5OIQEdjNKHNv0nBUiISHR3NnIBGEL
+	S6z895wdougTo8Tqd6dZQBJsAloSO8+dYwSxRQQCJdY3fAaLMwskSGzYdpAdxBYWcJD4/fUy
+	mM0ioCpx/81dNhCbV8BSYvqim2wQC+QlVm84wAxicwpYSaw59hasXgio5vWh3ewTGPkWMDKs
+	YpRMLSjOTc8tNiwwykst1ytOzC0uzUvXS87P3cQIDiwtrR2Me1Z90DvEyMTBeIhRgoNZSYTX
+	ZOGKdCHelMTKqtSi/Pii0pzU4kOM0hwsSuK83173pggJpCeWpGanphakFsFkmTg4pRqYsu73
+	Lj1gWhu0iXNSsBiH8XGGn+ah8mx/H1RYsd1I7Wn/YN7w3PncDalFlg27r1jXTYwXTH/528np
+	w96NqvkbfvJ+uehn8adBcKveN0vBwlUV2RumJl2tvpq1i9vg4OTd8+5eYrQ+ffLqS6kPnw2C
+	+yUNluu0BkjnLV1xdj1jjtyeCfl7r61q8bnXb6DB2D3hrcPOqsgl/1UvV5pZiYln3xBur1U1
+	P2kjU8olqJKal6dzfdXZcwbrH9cvVZHj+Nz1f/nLbZYPXvDkFSV5m1fv7Jn/j6fpvmOqyZm2
+	TW5O69Yvrb7+/JJ/3AJjebF9TbYlO202HPMre3Kl+cB+g49L162/Xx7VELh6rfbbKVtdlViK
+	MxINtZiLihMBOvzkXpsCAAA=
+X-CMS-MailID: 20250210062247epcas5p4ce208ba2806454c48a68ef25d0a326cc
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: REQ_APPROVE
 CMS-TYPE: 105P
 DLP-Filter: Pass
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250210062219epcas5p4695fe63e9ba36c19a640504f95dc3f12
-References: <CGME20250210062219epcas5p4695fe63e9ba36c19a640504f95dc3f12@epcas5p4.samsung.com>
+X-CMS-RootMailID: 20250210062247epcas5p4ce208ba2806454c48a68ef25d0a326cc
+References: <20250210061915.26218-1-aatif4.m@samsung.com>
+	<CGME20250210062247epcas5p4ce208ba2806454c48a68ef25d0a326cc@epcas5p4.samsung.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 
-Add support for add halfword instruction to pl330 driver to achieve
-2D DMA operations. Add a corresponding dmaengine API to prepare the
-DMA for 2D transfer and create a hook between the dma engine and pl330
-driver function.
+Add a new dma engine API to support 2D DMA operations.
+The API will be used to get the descriptor for 2D transfer based on
+the 16-bit immediate to define the stride length between consecuitive
+source address or destination address after every DMA load and
+store instruction is processed.
 
-Aatif Mushtaq (3):
-  dmaengine: Add support for 2D DMA operation
-  dmaengine: pl330: Add DMAADDH instruction
-  dmaengine: pl330: Add DMA_2D capability
+Signed-off-by: Aatif Mushtaq <aatif4.m@samsung.com>
+---
+ include/linux/dmaengine.h | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
- drivers/dma/pl330.c       | 44 +++++++++++++++++++++++++++++++++++++++
- include/linux/dmaengine.h | 25 ++++++++++++++++++++++
- 2 files changed, 69 insertions(+)
-
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index b137fdb56093..8a73b2147983 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -833,6 +833,7 @@ struct dma_filter {
+  *	be called after period_len bytes have been transferred.
+  * @device_prep_interleaved_dma: Transfer expression in a generic way.
+  * @device_prep_dma_imm_data: DMA's 8 byte immediate data to the dst address
++ * @device_prep_2d_dma_memcpy: prepares a 2D memcpy operation
+  * @device_caps: May be used to override the generic DMA slave capabilities
+  *	with per-channel specific ones
+  * @device_config: Pushes a new configuration to a channel, return 0 or an error
+@@ -938,6 +939,9 @@ struct dma_device {
+ 	struct dma_async_tx_descriptor *(*device_prep_dma_imm_data)(
+ 		struct dma_chan *chan, dma_addr_t dst, u64 data,
+ 		unsigned long flags);
++	struct dma_async_tx_descriptor *(*device_prep_2d_dma_memcpy)(
++		struct dma_chan *chan, dma_addr_t dest, dma_addr_t src,
++		size_t len, u16 src_imm, u16 dest_imm, unsigned long flags);
+ 
+ 	void (*device_caps)(struct dma_chan *chan, struct dma_slave_caps *caps);
+ 	int (*device_config)(struct dma_chan *chan, struct dma_slave_config *config);
+@@ -1087,6 +1091,27 @@ static inline struct dma_async_tx_descriptor *dmaengine_prep_dma_memcpy(
+ 						    len, flags);
+ }
+ 
++/**
++ * device_prep_2d_dma_memcpy() - Prepare a DMA 2D memcpy descriptor.
++ * @chan: The channel to be used for this descriptor
++ * @dest: Address of the destination data for a DMA channel
++ * @src: Address of the source data for a DMA channel
++ * @len: The total size of data
++ * @src_imm: The immediate value to be added to the src address register
++ * @dest_imm: The immediate value to be added to the dst address register
++ * @flags: DMA engine flags
++ */
++static inline struct dma_async_tx_descriptor *device_prep_2d_dma_memcpy(
++		struct dma_chan *chan, dma_addr_t dest, dma_addr_t src,
++		size_t len, u16 src_imm, u16 dest_imm, unsigned long flags)
++{
++	if (!chan || !chan->device || !chan->device->device_prep_2d_dma_memcpy)
++		return NULL;
++
++	return chan->device->device_prep_2d_dma_memcpy(chan, dest, src, len,
++						       src_imm, dest_imm, flags);
++}
++
+ static inline bool dmaengine_is_metadata_mode_supported(struct dma_chan *chan,
+ 		enum dma_desc_metadata_mode mode)
+ {
 -- 
 2.17.1
 

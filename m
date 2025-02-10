@@ -1,222 +1,123 @@
-Return-Path: <dmaengine+bounces-4412-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4413-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EEF02A2FC7F
-	for <lists+dmaengine@lfdr.de>; Mon, 10 Feb 2025 22:53:31 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 077ADA2FE6D
+	for <lists+dmaengine@lfdr.de>; Tue, 11 Feb 2025 00:29:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B6FCF3A548F
-	for <lists+dmaengine@lfdr.de>; Mon, 10 Feb 2025 21:53:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A7A34165A25
+	for <lists+dmaengine@lfdr.de>; Mon, 10 Feb 2025 23:29:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86D3D24C675;
-	Mon, 10 Feb 2025 21:53:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEA3825EF9F;
+	Mon, 10 Feb 2025 23:29:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NGcZXPMM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F4fn23Go"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA7417BCE;
-	Mon, 10 Feb 2025 21:53:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91EFE25A35F;
+	Mon, 10 Feb 2025 23:29:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739224406; cv=none; b=riEQqsIRPrKyrMb3qefPJjA08rSGM+4VIpE5VnKQZiGivTSzUSu3YUF68Mn77vchD+LZov0EEs1p51aOItP0DwFlKko4OJih3H9iNq3RHtFFFj5A6I0c7ccdTBiKuEzDoEtOs2a2MW2xZOkxOXrUUWoJMHh9YlESmTnWvo3OEJI=
+	t=1739230186; cv=none; b=sC0oFh8TU8wtj4UgKLBR8GnWi1feG79sj15ah9mbvcaiz2+Qm/kQC6oBMGSTa3CF9HzgLbXUNmOq9kmTu0562/PLQ8cMLyWUxhGVIkaFiC1pYeoM/BpBnbEBvifvzLX5Sr9khxJNglvLHesH5JOzu9B2K71wnSGSJ2EHdJh7W0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739224406; c=relaxed/simple;
-	bh=1xp9i23qLHopM7Es6GWfv9JVXjG6ubbsAUbJbN9kf34=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b+0hNS3gl1kXG6kzWSP+eQQaYPyW4Kxom43XKe47uNKv37HKGjCZT+XfoC16MSHYLgPTE+1Q9l/0G3CWSiRzW/Qwgngyn+CYfnNbpPrdOfoNU1D3uHe/VOeqfqEraNeAS7neE41xc35L3te70yYkkVkITSnGAGTzjnCTUDHfX8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NGcZXPMM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68FBCC4CED1;
-	Mon, 10 Feb 2025 21:53:25 +0000 (UTC)
+	s=arc-20240116; t=1739230186; c=relaxed/simple;
+	bh=UfArX+5faIlbV37jzYrR6suEime03V/svivPcDFy+jo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=AR3zqh3q0iH6kYkTtEZwh8Z/MysHObDpQrB/Ui+FN1g+83apWVhj+7B4ZjIAmmCB+nDPkd1G1xC+IDmf+VlgpeCdaHSGT/nfIiyqbnVmLDXE8Jd0eNjfmEk+Jl+NroiKFK518BVfKRxfcU2uQ81Ra+YihsRtokiNz5FGQWp7uew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F4fn23Go; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 05EECC4CED1;
+	Mon, 10 Feb 2025 23:29:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739224405;
-	bh=1xp9i23qLHopM7Es6GWfv9JVXjG6ubbsAUbJbN9kf34=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NGcZXPMM/lK6UWM10B0N7PXv1VH61bn282fDCJTlPl1oAnx1M4a7L4gil8TfoFjsQ
-	 iVfcXcyQtxu0uYmeY1b7SYwB+M4sNZA503rNTLJu8v4CS96dewxQfEwpGoxonNE1UD
-	 oHexGvB6qDhY4uMQdSN2oSqoSJDEjKyxe/81ZFw57xUGZzbjaP+f27Ra/fasNu6OBb
-	 WM28ie1HwprSTWcdnAgLoyl2lMvOYLFB2elGFwtEXUHNIZWCqXRj1ljrMziS8e1ANG
-	 GZfkZqxF80cbxhl1M24mvpPioI6iktw7xFRqhgaZ6WZxkC8UdK2gEFDtGIp+74767j
-	 ZTsZsRWmZENHA==
-Date: Mon, 10 Feb 2025 15:53:24 -0600
-From: Rob Herring <robh@kernel.org>
-To: Crystal Wood <oss@buserror.net>
-Cc: j.ne@posteo.net, devicetree@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	Krzysztof Kozlowski <krzk@kernel.org>, imx@lists.linux.dev,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	=?iso-8859-1?Q?J=2E_Neusch=E4fer?= <j.neuschaefer@gmx.net>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
-	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-mtd@lists.infradead.org, Li Yang <leoyang.li@nxp.com>,
-	John Ogness <john.ogness@linutronix.de>
-Subject: Re: [PATCH v2 09/12] dt-bindings: memory-controllers: Convert
- fsl,elbc to YAML
-Message-ID: <20250210215324.GA1040564-robh@kernel.org>
-References: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
- <20250207-ppcyaml-v2-9-8137b0c42526@posteo.net>
- <Z6kQpuQf5m-bXTyt@buserror.net>
+	s=k20201202; t=1739230186;
+	bh=UfArX+5faIlbV37jzYrR6suEime03V/svivPcDFy+jo=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=F4fn23GoGyTE2LUhbZLGHrqejOeNg0jDDo3cM5/ReioQrnh8U19ebI39YRSOijvid
+	 Bjc6dXLoc7aOY7Ka3kkeO8FxdWr7Dvc+xqa7+KHRYcIk5Rt9aFTlqQbIzQJ9G4ktBJ
+	 4HK2DrjlQW3is+Uw7oAXDTPoa8khtqimVrNFbZlO59S0Cm7TRIYclsXTdsC+FUA9bW
+	 E2sW1gpH6gOed3kkIWtAtclDqZgiazRfih/EXRELVh3bW4K/jxWWZELt7gG+9s6bQH
+	 hY/rCkNDqXp69gDJMYUgjWBCMv6408LsLpj5SN8XtLGXmiR9wUNWAuWf9AhY74uL2q
+	 8JTQcX5ZyVOCA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8040C02198;
+	Mon, 10 Feb 2025 23:29:45 +0000 (UTC)
+From: Nathan Lynch via B4 Relay <devnull+nathan.lynch.amd.com@kernel.org>
+Date: Mon, 10 Feb 2025 17:29:11 -0600
+Subject: [PATCH] dmaengine: Remove device_prep_dma_imm_data from struct
+ dma_device
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z6kQpuQf5m-bXTyt@buserror.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250210-dmaengine-drop-imm-data-v1-1-e017766da2fa@amd.com>
+X-B4-Tracking: v=1; b=H4sIAMaLqmcC/x3MSwqEMBBF0a1IjbsgBsXPVqQHhXnRGiRKItIQ3
+ HsHh2dwb6GMpMg0N4USbs16xIr209C6S9zA6qrJGtsb2xp2QRA3jWCXjpM1BHZyCftBRgzd5Fd
+ 4qvWZ4PX3npfv8/wBAttvX2kAAAA=
+X-Change-ID: 20250210-dmaengine-drop-imm-data-f7a8e749fcef
+To: Vinod Koul <vkoul@kernel.org>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Nathan Lynch <nathan.lynch@amd.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739230184; l=1774;
+ i=nathan.lynch@amd.com; s=20241010; h=from:subject:message-id;
+ bh=sXjE4x9Dbe9KQkwP5XNR830aZAR+1CIxnoSjbiiaAbk=;
+ b=XxCcMUYHxv5qITDImcQuJbWFVgkGchmfqg8g+UnTZ+n01bHul4r3+72ROxnXuy50Y+PFTsq2g
+ xhgZBPLLoMLA2zs83eJsaGaNy9ssNCyPOEhUMpgnv7mRGiXHVP+zG/d
+X-Developer-Key: i=nathan.lynch@amd.com; a=ed25519;
+ pk=ZR637UTGg5YLDj56cxFeHdYoUjPMMFbcijfOkAmAnbc=
+X-Endpoint-Received: by B4 Relay for nathan.lynch@amd.com/20241010 with
+ auth_id=241
+X-Original-From: Nathan Lynch <nathan.lynch@amd.com>
+Reply-To: nathan.lynch@amd.com
 
-On Sun, Feb 09, 2025 at 02:31:34PM -0600, Crystal Wood wrote:
-> On Fri, Feb 07, 2025 at 10:30:26PM +0100, J. Neuschäfer via B4 Relay wrote:
-> > From: "J. Neuschäfer" <j.ne@posteo.net>
-> > 
-> > Convert the Freescale localbus controller bindings from text form to
-> > YAML. The updated list of compatible strings reflects current usage
-> > in arch/powerpc/boot/dts/, except that many existing device trees
-> > erroneously specify "simple-bus" in addition to fsl,*elbc.
-> > 
-> > Changes compared to the txt version:
-> >  - removed the board-control (fsl,mpc8272ads-bcsr) node because it only
-> >    appears in this example and nowhere else
-> >  - added a new example with NAND flash
-> >  - updated list of compatible strings
-> > 
-> > Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
-> > ---
-> > 
-> > V2:
-> > - fix order of properties in examples, according to dts coding style
-> > - move to Documentation/devicetree/bindings/memory-controllers
-> > - clarify the commit message a tiny bit
-> > - remove unnecessary multiline markers (|)
-> > - define address format in patternProperties
-> > - trim subject line (remove "binding")
-> > - remove use of "simple-bus", because it's technically incorrect
-> 
-> While I admit I haven't been following recent developments in this area,
-> as someone who was involved when "simple-bus" was created (and was on the
-> ePAPR committee that standardized it) I'm surprised to hear simple-bus
-> being called "erroneous" or "technically incorrect" here.
+From: Nathan Lynch <nathan.lynch@amd.com>
 
-Erroneous because the binding did not say "simple-bus" was used. Not 
-uncommon with the old .txt bindings.
+The device_prep_dma_imm_data() method isn't implemented or invoked by
+any code since commit 80ade22c06ca ("misc: mic: remove the MIC drivers").
 
-Generally, if a bus has control registers or resources like clocks, then 
-we tend not to call them 'simple-bus'. And '"specific-bus", 
-"simple-bus"' gives some problems around what driver if any do you 
-bind to. 
+Remove it, shrinking struct dma_device by a few bytes.
 
-If you have chip selects, then you have config registers for those. 
-Not really "simple" if you ask me. That being said, you could keep 
-'simple-bus' here. I would tend to err on making the schema match the 
-actual .dts rather than updating the .dts files on older platforms like 
-these.
+Signed-off-by: Nathan Lynch <nathan.lynch@amd.com>
+---
+ include/linux/dmaengine.h | 4 ----
+ 1 file changed, 4 deletions(-)
 
-> For non-NAND devices this bus generally meets the definition of "an
-> internal I/O bus that cannot be probed for devices" where "devices on the
-> bus can be accessed directly without additional configuration
-> required".  NAND flash is an exception, but those devices have
-> compatibles that are specific to the bus controller.
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index a360e0330436470bfea17f8df567ff785e4293ea..bb146c5ac3e4ccd7bc0afbf3b28e5b3d659ad62f 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -839,7 +839,6 @@ struct dma_filter {
+  *	The function takes a buffer of size buf_len. The callback function will
+  *	be called after period_len bytes have been transferred.
+  * @device_prep_interleaved_dma: Transfer expression in a generic way.
+- * @device_prep_dma_imm_data: DMA's 8 byte immediate data to the dst address
+  * @device_caps: May be used to override the generic DMA slave capabilities
+  *	with per-channel specific ones
+  * @device_config: Pushes a new configuration to a channel, return 0 or an error
+@@ -942,9 +941,6 @@ struct dma_device {
+ 	struct dma_async_tx_descriptor *(*device_prep_interleaved_dma)(
+ 		struct dma_chan *chan, struct dma_interleaved_template *xt,
+ 		unsigned long flags);
+-	struct dma_async_tx_descriptor *(*device_prep_dma_imm_data)(
+-		struct dma_chan *chan, dma_addr_t dst, u64 data,
+-		unsigned long flags);
+ 
+ 	void (*device_caps)(struct dma_chan *chan, struct dma_slave_caps *caps);
+ 	int (*device_config)(struct dma_chan *chan, struct dma_slave_config *config);
 
-NAND bindings have evolved quite a bit if you haven't been paying 
-attention.
+---
+base-commit: 2c17e9ea0caa5555e31e154fa1b06260b816f5cc
+change-id: 20250210-dmaengine-drop-imm-data-f7a8e749fcef
 
-> The fact that the address encoding is non-linear is irrelevant; the
-> addresses can still be translated using the standard "ranges" mechanism. 
-> This seems to be a disconnect between the schema verification and the way
-> the compatible has previously been defined and used.
-> 
-> And as a practical matter, unless I'm missing something (which I might be
-> since I haven't been in devicetree-land for nearly a decade), Linux is
-> relying on simple-bus to probe these devices.  There is a driver that
-> binds to the bus itself but that is just for error interrupts and NAND.
-> 
-> You'd probably need something like commit 3e25f800afb82bd9e5f8 ("memory:
-> fsl_ifc: populate child devices without relying on simple-bus") and the 
-> subsequent fix in dd8adc713b1656 ("memory: fsl_ifc: populate child
-> nodes of buses and mfd devices")...
-> 
-> I'm curious what the reasoning was for removing simple-bus from IFC.  It
-> seems that the schema verification also played a role in that:
-> https://www.spinics.net/lists/devicetree/msg220418.html
+Best regards,
+-- 
+Nathan Lynch <nathan.lynch@amd.com>
 
-If a kernel change is needed to support changed .dts files, then we 
-shouldn't be doing that here (being mature platforms). That would mean 
-new DTB will not work with existing kernels.
 
-> 
-> ...but there's also the comment in 985ede63a045eabf3f9d ("dt-bindings:
-> memory: fsl: convert ifc binding to yaml schema") that "this will help to
-> enforce the correct probe order between parent device and child devices",
-> but was that really not already guaranteed by the parent/child
-> relationship (and again, it should only really matter for NAND except for
-> the possibility of missing error reports during early boot)?
-> 
-> > +  compatible:
-> > +    oneOf:
-> > +      - items:
-> > +          - enum:
-> > +              - fsl,mpc8313-elbc
-> > +              - fsl,mpc8315-elbc
-> > +              - fsl,mpc8377-elbc
-> > +              - fsl,mpc8378-elbc
-> > +              - fsl,mpc8379-elbc
-> > +              - fsl,mpc8536-elbc
-> > +              - fsl,mpc8569-elbc
-> > +              - fsl,mpc8572-elbc
-> > +              - fsl,p1020-elbc
-> > +              - fsl,p1021-elbc
-> > +              - fsl,p1023-elbc
-> > +              - fsl,p2020-elbc
-> > +              - fsl,p2041-elbc
-> > +              - fsl,p3041-elbc
-> > +              - fsl,p4080-elbc
-> > +              - fsl,p5020-elbc
-> > +              - fsl,p5040-elbc
-> > +          - const: fsl,elbc
-> 
-> Is it really necessary to list every single chip?
-
-Yes. If they exist, they have to be documented.
-
-> 
-> And then it would need to be updated when new ones came out?  I know this
-> particular line of chips is not going to see any new members at this
-> point, but as far as the general approach goes...
-> 
-> Does the schema validation complain if it sees an extra compatible it
-> doesn't recognize?  If so that's obnoxious.
-
-Yes.
-
-More annoying is having to boot and debug typos:
-
-compatible = "foo,bar", "simplebus";
-
-Rob
 

@@ -1,123 +1,191 @@
-Return-Path: <dmaengine+bounces-4413-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4414-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 077ADA2FE6D
-	for <lists+dmaengine@lfdr.de>; Tue, 11 Feb 2025 00:29:51 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5CE02A2FEBE
+	for <lists+dmaengine@lfdr.de>; Tue, 11 Feb 2025 01:02:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A7A34165A25
-	for <lists+dmaengine@lfdr.de>; Mon, 10 Feb 2025 23:29:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EDF551888C78
+	for <lists+dmaengine@lfdr.de>; Tue, 11 Feb 2025 00:02:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEA3825EF9F;
-	Mon, 10 Feb 2025 23:29:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DE2A3EA83;
+	Tue, 11 Feb 2025 00:01:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F4fn23Go"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q1j87QGs"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91EFE25A35F;
-	Mon, 10 Feb 2025 23:29:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CA932CA8;
+	Tue, 11 Feb 2025 00:01:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739230186; cv=none; b=sC0oFh8TU8wtj4UgKLBR8GnWi1feG79sj15ah9mbvcaiz2+Qm/kQC6oBMGSTa3CF9HzgLbXUNmOq9kmTu0562/PLQ8cMLyWUxhGVIkaFiC1pYeoM/BpBnbEBvifvzLX5Sr9khxJNglvLHesH5JOzu9B2K71wnSGSJ2EHdJh7W0k=
+	t=1739232119; cv=none; b=orpFdI33HLmsABVyv6jrgt3/YwVn5flWOq3fJWFpL5RRJGnLl+TQ8E6gPsiGGgZ/2G8+ypw4gQPe8rwVUKKTqrykFqCkLSykJKDHnFWu5BCvufLLgaIgcwRrsF7nFE1dsvPJDKJ1mC9vJvLTKJSqdhOIznBK0ZyGyWdvgH9TR4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739230186; c=relaxed/simple;
-	bh=UfArX+5faIlbV37jzYrR6suEime03V/svivPcDFy+jo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=AR3zqh3q0iH6kYkTtEZwh8Z/MysHObDpQrB/Ui+FN1g+83apWVhj+7B4ZjIAmmCB+nDPkd1G1xC+IDmf+VlgpeCdaHSGT/nfIiyqbnVmLDXE8Jd0eNjfmEk+Jl+NroiKFK518BVfKRxfcU2uQ81Ra+YihsRtokiNz5FGQWp7uew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F4fn23Go; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 05EECC4CED1;
-	Mon, 10 Feb 2025 23:29:46 +0000 (UTC)
+	s=arc-20240116; t=1739232119; c=relaxed/simple;
+	bh=rAzkLZM09qQrVfb6++qtL1NVW6ye9kBKxmsecVL8AX0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=phFMG2lITeO1sBiL+tcqCk0YYkqm300xsFdDUTlBNXXmTtVx7kSlclcHARSB33E1tkr315T1J3OVjOWqTkv+tADy74Jl61o83S+/0SbuKzt4Xd07mom6QSY79N0nAhb/jWhrd3q/+sbcVeuEHT0xFVW+lGeczAdrU16k1YssuLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q1j87QGs; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C868C4CEDF;
+	Tue, 11 Feb 2025 00:01:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739230186;
-	bh=UfArX+5faIlbV37jzYrR6suEime03V/svivPcDFy+jo=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=F4fn23GoGyTE2LUhbZLGHrqejOeNg0jDDo3cM5/ReioQrnh8U19ebI39YRSOijvid
-	 Bjc6dXLoc7aOY7Ka3kkeO8FxdWr7Dvc+xqa7+KHRYcIk5Rt9aFTlqQbIzQJ9G4ktBJ
-	 4HK2DrjlQW3is+Uw7oAXDTPoa8khtqimVrNFbZlO59S0Cm7TRIYclsXTdsC+FUA9bW
-	 E2sW1gpH6gOed3kkIWtAtclDqZgiazRfih/EXRELVh3bW4K/jxWWZELt7gG+9s6bQH
-	 hY/rCkNDqXp69gDJMYUgjWBCMv6408LsLpj5SN8XtLGXmiR9wUNWAuWf9AhY74uL2q
-	 8JTQcX5ZyVOCA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8040C02198;
-	Mon, 10 Feb 2025 23:29:45 +0000 (UTC)
-From: Nathan Lynch via B4 Relay <devnull+nathan.lynch.amd.com@kernel.org>
-Date: Mon, 10 Feb 2025 17:29:11 -0600
-Subject: [PATCH] dmaengine: Remove device_prep_dma_imm_data from struct
- dma_device
+	s=k20201202; t=1739232118;
+	bh=rAzkLZM09qQrVfb6++qtL1NVW6ye9kBKxmsecVL8AX0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=q1j87QGsjnUkqkcVlg2v4gnZWuuz2UEGFoQfFx8S5hm6OD3/mp8QI0dCwQT4YmTEr
+	 IB2Hu3/xsA738TjmL9hvDacqP3Cn1fn1l38WTUXKf4SHgxcaaqcmtfDjrQUDk9eoqE
+	 gB6wCJ5myKFPgBwelHmsgcxfai/gZhPdUPy8zVu8z/cx9kuD9+RM3Bb/ajecRTWHax
+	 fVRq4VYORDNdvHY/BD15McfYj6CkfxzLNVClI1u8/Pfa9FJn4JqDpQ7Nyn/Fr2156J
+	 CGUj1Kbf4bjxLul7s2ASKdEhbPJl+pwIxxn70nR5a5VyWkDiXJ4SybO3o/a5i5XUEL
+	 d5paRyJt5qYuQ==
+Date: Mon, 10 Feb 2025 18:01:57 -0600
+From: Rob Herring <robh@kernel.org>
+To: =?iso-8859-1?Q?J=2E_Neusch=E4fer?= <j.ne@posteo.net>
+Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	Krzysztof Kozlowski <krzk@kernel.org>, imx@lists.linux.dev,
+	Scott Wood <oss@buserror.net>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	=?iso-8859-1?Q?J=2E_Neusch=E4fer?= <j.neuschaefer@gmx.net>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
+	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-mtd@lists.infradead.org
+Subject: Re: [PATCH v2 11/12] dt-bindings: nand: Add fsl,elbc-fcm-nand
+Message-ID: <20250211000157.GA240011-robh@kernel.org>
+References: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
+ <20250207-ppcyaml-v2-11-8137b0c42526@posteo.net>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250210-dmaengine-drop-imm-data-v1-1-e017766da2fa@amd.com>
-X-B4-Tracking: v=1; b=H4sIAMaLqmcC/x3MSwqEMBBF0a1IjbsgBsXPVqQHhXnRGiRKItIQ3
- HsHh2dwb6GMpMg0N4USbs16xIr209C6S9zA6qrJGtsb2xp2QRA3jWCXjpM1BHZyCftBRgzd5Fd
- 4qvWZ4PX3npfv8/wBAttvX2kAAAA=
-X-Change-ID: 20250210-dmaengine-drop-imm-data-f7a8e749fcef
-To: Vinod Koul <vkoul@kernel.org>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Nathan Lynch <nathan.lynch@amd.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739230184; l=1774;
- i=nathan.lynch@amd.com; s=20241010; h=from:subject:message-id;
- bh=sXjE4x9Dbe9KQkwP5XNR830aZAR+1CIxnoSjbiiaAbk=;
- b=XxCcMUYHxv5qITDImcQuJbWFVgkGchmfqg8g+UnTZ+n01bHul4r3+72ROxnXuy50Y+PFTsq2g
- xhgZBPLLoMLA2zs83eJsaGaNy9ssNCyPOEhUMpgnv7mRGiXHVP+zG/d
-X-Developer-Key: i=nathan.lynch@amd.com; a=ed25519;
- pk=ZR637UTGg5YLDj56cxFeHdYoUjPMMFbcijfOkAmAnbc=
-X-Endpoint-Received: by B4 Relay for nathan.lynch@amd.com/20241010 with
- auth_id=241
-X-Original-From: Nathan Lynch <nathan.lynch@amd.com>
-Reply-To: nathan.lynch@amd.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250207-ppcyaml-v2-11-8137b0c42526@posteo.net>
 
-From: Nathan Lynch <nathan.lynch@amd.com>
+On Fri, Feb 07, 2025 at 10:30:28PM +0100, J. Neuschäfer wrote:
+> Formalize the binding already supported by the fsl_elbc_nand.c driver
+> and used in several device trees in arch/powerpc/boot/dts/.
+> 
+> Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
+> ---
+> 
+> V2:
+> - split out from fsl,elbc binding patch
+> - constrain #address-cells and #size-cells
+> - add a general description
+> - use unevaluatedProperties=false instead of additionalProperties=false
+> - fix property order to comply with dts coding style
+> - include raw-nand-chip.yaml instead of nand-chip.yaml
 
-The device_prep_dma_imm_data() method isn't implemented or invoked by
-any code since commit 80ade22c06ca ("misc: mic: remove the MIC drivers").
+Why? Doesn't look like you use anything from it. I think the correct 
+thing to use here is just mtd.yaml to pick up partitions.
 
-Remove it, shrinking struct dma_device by a few bytes.
-
-Signed-off-by: Nathan Lynch <nathan.lynch@amd.com>
----
- include/linux/dmaengine.h | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index a360e0330436470bfea17f8df567ff785e4293ea..bb146c5ac3e4ccd7bc0afbf3b28e5b3d659ad62f 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -839,7 +839,6 @@ struct dma_filter {
-  *	The function takes a buffer of size buf_len. The callback function will
-  *	be called after period_len bytes have been transferred.
-  * @device_prep_interleaved_dma: Transfer expression in a generic way.
-- * @device_prep_dma_imm_data: DMA's 8 byte immediate data to the dst address
-  * @device_caps: May be used to override the generic DMA slave capabilities
-  *	with per-channel specific ones
-  * @device_config: Pushes a new configuration to a channel, return 0 or an error
-@@ -942,9 +941,6 @@ struct dma_device {
- 	struct dma_async_tx_descriptor *(*device_prep_interleaved_dma)(
- 		struct dma_chan *chan, struct dma_interleaved_template *xt,
- 		unsigned long flags);
--	struct dma_async_tx_descriptor *(*device_prep_dma_imm_data)(
--		struct dma_chan *chan, dma_addr_t dst, u64 data,
--		unsigned long flags);
- 
- 	void (*device_caps)(struct dma_chan *chan, struct dma_slave_caps *caps);
- 	int (*device_config)(struct dma_chan *chan, struct dma_slave_config *config);
-
----
-base-commit: 2c17e9ea0caa5555e31e154fa1b06260b816f5cc
-change-id: 20250210-dmaengine-drop-imm-data-f7a8e749fcef
-
-Best regards,
--- 
-Nathan Lynch <nathan.lynch@amd.com>
-
-
+> ---
+>  .../devicetree/bindings/mtd/fsl,elbc-fcm-nand.yaml | 68 ++++++++++++++++++++++
+>  1 file changed, 68 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/fsl,elbc-fcm-nand.yaml b/Documentation/devicetree/bindings/mtd/fsl,elbc-fcm-nand.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..1de97bb24fa4a83e2ea5d94ab822dd0e37baa102
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/fsl,elbc-fcm-nand.yaml
+> @@ -0,0 +1,68 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mtd/fsl,elbc-fcm-nand.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: NAND flash attached to Freescale eLBC
+> +
+> +description:
+> +  The Freescale Enhanced Local Bus controller (eLBC) contains logic to
+> +  interface with NAND flash, called the NAND Flash Control Machine (FCM).
+> +  This binding describes flash attached to an eLBC using the FCM.
+> +
+> +maintainers:
+> +  - J. Neuschäfer <j.ne@posteo.net>
+> +
+> +allOf:
+> +  - $ref: raw-nand-chip.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +          - enum:
+> +              - fsl,mpc8313-fcm-nand
+> +              - fsl,mpc8315-fcm-nand
+> +              - fsl,mpc8377-fcm-nand
+> +              - fsl,mpc8378-fcm-nand
+> +              - fsl,mpc8379-fcm-nand
+> +              - fsl,mpc8536-fcm-nand
+> +              - fsl,mpc8569-fcm-nand
+> +              - fsl,mpc8572-fcm-nand
+> +              - fsl,p1020-fcm-nand
+> +              - fsl,p1021-fcm-nand
+> +              - fsl,p1025-fcm-nand
+> +              - fsl,p2020-fcm-nand
+> +          - const: fsl,elbc-fcm-nand
+> +      - const: fsl,elbc-fcm-nand
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    localbus {
+> +        #address-cells = <2>;
+> +        #size-cells = <1>;
+> +
+> +        nand@1,0 {
+> +            compatible = "fsl,mpc8315-fcm-nand",
+> +                         "fsl,elbc-fcm-nand";
+> +            reg = <0x1 0x0 0x2000>;
+> +            #address-cells = <1>;
+> +            #size-cells = <1>;
+> +        };
+> +    };
+> 
+> -- 
+> 2.48.0.rc1.219.gb6b6757d772
+> 
 

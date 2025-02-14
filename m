@@ -1,105 +1,258 @@
-Return-Path: <dmaengine+bounces-4466-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4467-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72CC5A3595B
-	for <lists+dmaengine@lfdr.de>; Fri, 14 Feb 2025 09:50:51 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id ABD1BA35DB9
+	for <lists+dmaengine@lfdr.de>; Fri, 14 Feb 2025 13:36:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6385718911C5
-	for <lists+dmaengine@lfdr.de>; Fri, 14 Feb 2025 08:50:55 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1FE5E7A4956
+	for <lists+dmaengine@lfdr.de>; Fri, 14 Feb 2025 12:35:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD17422836B;
-	Fri, 14 Feb 2025 08:50:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA3DE2641D9;
+	Fri, 14 Feb 2025 12:35:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GnrSKhOp"
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="D5Xod9Nn"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65287227E81;
-	Fri, 14 Feb 2025 08:50:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8805263F4C
+	for <dmaengine@vger.kernel.org>; Fri, 14 Feb 2025 12:35:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739523036; cv=none; b=ghdE4MBrZK/ui9dQGi5p0jpGttghNGic08OwKS7biaE3NQ+ZvrpDzGChVtOvtBCv0jwkTbt8+wNGDM6ytgT6IiV62Zpl8bkjaotTbkEqdyFboq89ta13lVN5ZbqLJa6cOZw36ZOL41lVzIFn7yRX+mLwOzfoojbmgsaB0x5X2J8=
+	t=1739536557; cv=none; b=URhWYiaS8lqIRtaSF8h9VzWLvXXQyzLLRguefNg6LzfIXiULggV3Z1OGbF1LT9A18HdHGpP3HpD3gJbLidvXgOv1p8JS/kmn2rKZ8w+8AYh/ONMrkqo9+Wt8dfUYK7/odi5p3PLeQ1tzy5BDB01BGM0Cnaiif/fU3pjXedGvs4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739523036; c=relaxed/simple;
-	bh=FIiFh48SRloeLYrhX70YWBVGVz+5pKIaMXokOTKVowQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YKvWFJRdUfB9sREXAQr1WCdKaX/oiaIDtpkVhWwKxHTve8afqtSJ0L2d6ySzYcdEL49cUbA/zkvEOXGenVRawx6pMXRQ5uGwxkOgK2fu56LvmFwVdqe0keKOVMm6f20O4dHRgid0N6f/Jf0o/gh/ulRqJA3a8V3SlnotSf9EyWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GnrSKhOp; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2fa8ada664fso2888584a91.3;
-        Fri, 14 Feb 2025 00:50:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739523034; x=1740127834; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FIiFh48SRloeLYrhX70YWBVGVz+5pKIaMXokOTKVowQ=;
-        b=GnrSKhOpXRnW9oVGxdNH5K+4oCCfFuoa8ckZzl2dk3rtgPg6q0DDrVMc3PuHN8Ar9n
-         IVCtz6J8MY9xkm+lTD2d9HmbN3+c48Dnl2qGGvAj9wxjbFeeN2Vus8P4+YRt/bNCmMtN
-         2EiOGrxZlXYT5DHQOoA9h//FJUbdVtCe0F4+zje3KPNdnibSHg7Kic0LvjJe+yriyTsb
-         LVOMce3FRv1iL6gUf2rz1r3AdLj0tf0IltbeS+M0+tE8kXGT6Z09HyiG8naJ5zzlqKHT
-         sCFRkQy02DO6uqefyFo63eZct+kV/okWjo5hLSSxkASuhVSg5HvkOYbXlrop5/k247rE
-         B9QA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739523034; x=1740127834;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FIiFh48SRloeLYrhX70YWBVGVz+5pKIaMXokOTKVowQ=;
-        b=AjvBR6L0Yu1wRFAAflzbwgUoMxAmCx/54HU1UmJkQOUsc+TBqjhhtWsoB5/xuKzYWC
-         He68lkUehgYli7IwC1tiJm/zq3pHY4SZRWJ3+fWQh5rKHAtR2n68LTzT60jrUtBXC4F6
-         2N8qqoJ6pbs9i7HDEe11cAZitX4468Irrhtks1QN4kYNNP+woAb81J1jdjREwovG+jH+
-         m7XdDa1r3sT6zx1Im1ygyoC6TNgvppg7V45yJ3ozKbWDetzjtg0dMlVH5Cq9xmh4iPNE
-         J4hdDGWt0n9oaqIEYb9jJyRQLD98E1svzGniBjBIQrDt2xEzO37GrBVwnsNctph0+V84
-         ejng==
-X-Forwarded-Encrypted: i=1; AJvYcCWA3IhpFPpcQhl0UgcOET9TkSG2yhxk7nMl5EtzOuHKekCD01H8gpcLZCbX3x6tjXXcQ/CBBOR0mH8=@vger.kernel.org, AJvYcCWXoWnIBqgRxgsvxTv/zCS9gcLDKwqVsrMQ/hdzVvvyNF9OpnP+TdIUgMTtDDPSNREqyJDkfCc/QS/CRdpX@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyrwnb6U+UMQIG+0mrcHdcbNppIdTSSaHYTxTbjF6cQBCrbxBll
-	LzVtE+DyHihPF/BIlls5H0vE4fDnZ4UvfVq1kQyBtLVBqam/tyzIZA56iskLWAW/wq8je8Z8Ud5
-	rlcQJseWU1hynE0tRcKFgjQQvBoY=
-X-Gm-Gg: ASbGncseFM0hsHmSNUDvN236q7gzybvRKvhzgWs1SJxq5cgyH68KzsgqAmjYfOQEHyS
-	HySpDkhW/xo/522WwmG8lKThw1f80fWSgAN7AkswMm3wr4S4VvG/StDCc1VzCJSJi20XbPg==
-X-Google-Smtp-Source: AGHT+IHiUFULatLaYVTG50OelwewoeambCvXM1mTQ31PiJAH6oiIxTBI5F18bPDN/bN5hq3LikyhjtSIbsUPOxZ5ITU=
-X-Received: by 2002:a17:90b:518d:b0:2f4:43ce:dcea with SMTP id
- 98e67ed59e1d1-2fbf5c580c0mr16296822a91.25.1739523034540; Fri, 14 Feb 2025
- 00:50:34 -0800 (PST)
+	s=arc-20240116; t=1739536557; c=relaxed/simple;
+	bh=DhdTMX1B/VBmrfjg4gCD28dH1z0ZeJtuCVVqdYJtLzw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ni0HlsvbHutTdgVr+MlLi3WuzDC7aJ3+Ompt4VtfHeyBvXJjcB4KYZQZCAfYugoigTM+feo+pc7621FiUN1mysnxoS2VOrtQYwSvgMhhZNY63cpuOtp3X77tsIaQ7HDKn6LzeMjohKGN9BIR+XSJ3eWVrWmrg7WTv5Elmamn/+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=D5Xod9Nn; arc=none smtp.client-ip=185.67.36.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id C8F97240105
+	for <dmaengine@vger.kernel.org>; Fri, 14 Feb 2025 13:35:49 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1739536549; bh=DhdTMX1B/VBmrfjg4gCD28dH1z0ZeJtuCVVqdYJtLzw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:From;
+	b=D5Xod9Nnl1WE6g1L7y5neIscsjHlzP9MY5Mw6Agu8uZD51CniEAu5nc1a/M7uOuay
+	 FnPzKuG+5DhX1AR2By4JLt2+6SePYX9dxTPP26BbYZz5yslylfLJ5HeYXeZKigJTD8
+	 wXckP4BTVk0rpmFwPrtSM3F5JmFkYBbJwcZ9ILZoY9XREALy+R8PMLWVfRJJIqegGR
+	 ip0tDQNNZvhC+Ac7P9yckRRncsRnZpwesWfImxAkK3WxgCwLbe+EOgHyElpxRWrYjw
+	 JI/8foXkGFM8JegiqDKfVrOw0juWrGF0P67jAcRLWyShcX0FBJqPObf2fUnzLcM0WW
+	 OMX71QAVAqbKw==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4YvWjq1cxCz9rxG;
+	Fri, 14 Feb 2025 13:35:41 +0100 (CET)
+Date: Fri, 14 Feb 2025 12:35:41 +0000
+From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+To: Frank Li <Frank.li@nxp.com>
+Cc: j.ne@posteo.net, devicetree@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	Krzysztof Kozlowski <krzk@kernel.org>, imx@lists.linux.dev,
+	Scott Wood <oss@buserror.net>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	=?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
+	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-mtd@lists.infradead.org
+Subject: Re: [PATCH v2 05/12] dt-bindings: dma: Convert fsl,elo*-dma to YAML
+Message-ID: <Z684nUnDX4Sb98rQ@probook>
+References: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
+ <20250207-ppcyaml-v2-5-8137b0c42526@posteo.net>
+ <Z6pV4eauZj75+911@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241206084817.3799312-1-peng.fan@oss.nxp.com> <20250214040457.GC20275@localhost.localdomain>
-In-Reply-To: <20250214040457.GC20275@localhost.localdomain>
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Date: Fri, 14 Feb 2025 10:52:08 +0200
-X-Gm-Features: AWEUYZmgsC6Etzl4Yr65LGIQ5Av4XAoNXRv7HFJ-K1y_EhMdzGRHl7TymfpRoOo
-Message-ID: <CAEnQRZD25RrtAzAy4B9WX3+1iUuLdt1cgZ36kCTr4poawP1htA@mail.gmail.com>
-Subject: Re: [PATCH V4 1/2] dmaengine: fsl-edma: cleanup chan after dma_async_device_unregister
-To: Peng Fan <peng.fan@oss.nxp.com>
-Cc: Frank Li <Frank.Li@nxp.com>, Vinod Koul <vkoul@kernel.org>, 
-	"open list:FREESCALE eDMA DRIVER" <imx@lists.linux.dev>, 
-	"open list:FREESCALE eDMA DRIVER" <dmaengine@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	Peng Fan <peng.fan@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z6pV4eauZj75+911@lizhi-Precision-Tower-5810>
 
-On Fri, Feb 14, 2025 at 4:58=E2=80=AFAM Peng Fan <peng.fan@oss.nxp.com> wro=
-te:
->
-> Hi Vinod,
->
-> Any comments?
+On Mon, Feb 10, 2025 at 02:39:13PM -0500, Frank Li wrote:
+> On Fri, Feb 07, 2025 at 10:30:22PM +0100, J. Neuschäfer via B4 Relay wrote:
+> > From: "J. Neuschäfer" <j.ne@posteo.net>
+> >
+> > The devicetree bindings for Freescale DMA engines have so far existed as
+> > a text file. This patch converts them to YAML, and specifies all the
+> > compatible strings currently in use in arch/powerpc/boot/dts.
+> >
+> > Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
+> > ---
+> >
+> > V2:
+> > - remove unnecessary multiline markers
+> > - fix additionalProperties to always be false
+> > - add description/maxItems to interrupts
+> > - add missing #address-cells/#size-cells properties
+> > - convert "Note on DMA channel compatible properties" to YAML by listing
+> >   fsl,ssi-dma-channel as a valid compatible value
+> > - fix property ordering in examples: compatible and reg come first
+> > - add missing newlines in examples
+> > - trim subject line (remove "bindings")
+> > ---
+> >  .../devicetree/bindings/dma/fsl,elo-dma.yaml       | 140 ++++++++++++++
+> >  .../devicetree/bindings/dma/fsl,elo3-dma.yaml      | 123 +++++++++++++
+> >  .../devicetree/bindings/dma/fsl,eloplus-dma.yaml   | 134 ++++++++++++++
+> >  .../devicetree/bindings/powerpc/fsl/dma.txt        | 204 ---------------------
+> >  4 files changed, 397 insertions(+), 204 deletions(-)
+[...]
+> > +  reg:
+> > +    maxItems: 1
+> > +    description:
+> > +      DMA General Status Register, i.e. DGSR which contains status for
+> > +      all the 4 DMA channels.
+> 
+> needn't maxItems
+> items:
+>   - description: DMA ...
 
-Hi Peng,
+Good point, I'll do that.
 
-Do not send empty pings.
+> 
+> > +
+> > +  cell-index:
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > +    description: Controller index. 0 for controller @ 0x8100.
+> > +
+> > +  ranges: true
+> > +
+> > +  "#address-cells":
+> > +    const: 1
+> > +
+> > +  "#size-cells":
+> > +    const: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +    description: Controller interrupt.
+> 
+> Needn't description because no any additional informaiton.
 
-Just resend the patches marking them as [RESEND PATCH...
+True.
 
-Daniel.
+> 
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+[...]
+> > +additionalProperties: false
+> 
+> Need ref to dma-common.yaml?
+
+Sounds good, but I'm not sure what to do about the #dma-cells property,
+which is required by dma-common.yaml.
+
+There aren't many examples of DMA channels being explicitly declared in
+device trees. One example that I could find is the the xilinx_dma.txt
+binding:
+
+
+	axi_vdma_0: axivdma@40030000 {
+		compatible = "xlnx,axi-vdma-1.00.a";
+		#dma_cells = <1>;
+		reg = < 0x40030000 0x10000 >;
+		dma-ranges = <0x00000000 0x00000000 0x40000000>;
+		xlnx,num-fstores = <0x8>;
+		xlnx,flush-fsync = <0x1>;
+		xlnx,addrwidth = <0x20>;
+		clocks = <&clk 0>, <&clk 1>, <&clk 2>, <&clk 3>, <&clk 4>;
+		clock-names = "s_axi_lite_aclk", "m_axi_mm2s_aclk", "m_axi_s2mm_aclk",
+			      "m_axis_mm2s_aclk", "s_axis_s2mm_aclk";
+		dma-channel@40030000 {
+			compatible = "xlnx,axi-vdma-mm2s-channel";
+			interrupts = < 0 54 4 >;
+			xlnx,datawidth = <0x40>;
+		};
+		dma-channel@40030030 {
+			compatible = "xlnx,axi-vdma-s2mm-channel";
+			interrupts = < 0 53 4 >;
+			xlnx,datawidth = <0x40>;
+		};
+	};
+
+	...
+
+	vdmatest_0: vdmatest@0 {
+		compatible ="xlnx,axi-vdma-test-1.00.a";
+		dmas = <&axi_vdma_0 0
+			&axi_vdma_0 1>;
+		dma-names = "vdma0", "vdma1";
+	};
+
+It has #dma_cells (I'm sure #dma-cells was intended) on the controller.
+
+
+Another example is in arch/powerpc/boot/dts/fsl/p1022si-post.dtsi:
+
+	dma@c300 {
+		dma00: dma-channel@0 {
+			compatible = "fsl,ssi-dma-channel";
+		};
+		dma01: dma-channel@80 {
+			compatible = "fsl,ssi-dma-channel";
+		};
+	};
+
+	...
+
+	ssi@15000 {
+		compatible = "fsl,mpc8610-ssi";
+		cell-index = <0>;
+		reg = <0x15000 0x100>;
+		interrupts = <75 2 0 0>;
+		fsl,playback-dma = <&dma00>;
+		fsl,capture-dma = <&dma01>;
+		fsl,fifo-depth = <15>;
+	};
+
+
+There, the DMA channels are used directly and without additional
+information (i.e. #dma-cells = <0>, althought it isn't specified).
+
+
+> > +        dma-channel@0 {
+> > +            compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
+> > +            reg = <0 0x80>;
+> > +            cell-index = <0>;
+> > +            interrupt-parent = <&ipic>;
+> > +            interrupts = <71 8>;
+> 
+> '8',  use predefine MACRO for irq type.
+
+Good catch, will do
+
+> 
+> Frank
+
+Thanks for your review!
+J. Neuschäfer
 

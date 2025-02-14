@@ -1,34 +1,34 @@
-Return-Path: <dmaengine+bounces-4479-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4481-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EABB2A36571
-	for <lists+dmaengine@lfdr.de>; Fri, 14 Feb 2025 19:10:53 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 43827A36561
+	for <lists+dmaengine@lfdr.de>; Fri, 14 Feb 2025 19:10:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4A426189822B
-	for <lists+dmaengine@lfdr.de>; Fri, 14 Feb 2025 18:09:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C11A7173390
+	for <lists+dmaengine@lfdr.de>; Fri, 14 Feb 2025 18:09:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F191126989D;
-	Fri, 14 Feb 2025 18:08:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CBEA269AE9;
+	Fri, 14 Feb 2025 18:08:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="aJFJ8Nc3"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="eAZNQbAC"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34F9E2690E1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACCEA269823;
 	Fri, 14 Feb 2025 18:08:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739556528; cv=none; b=MFyMzbf3IGR1+UaxMGtEEAxYuwm9soRPXCdq+aFEZz4MN3sDWiD6HiIiT2wkwvMEfh9QYCO2EDG/mirntyAFlp+Vgo1yRDtx+PVjZMIy70sCgLN0xhMJAF+gyBbE2isOcB9ZpKIBw1jr1wQdZ88uz8c0N9DveiPLXSJVg096MNU=
+	t=1739556529; cv=none; b=L9ahoBCbsKBTkbK99XsEo7InhU3iW3dcYUkAHWw4O/NnpXkuzHlJJ94UZJcNSoSMapqQatGBcivueaFQsxbuufQxHiqWjlyFWZSmcLfWk8b6u/+9oF5R0f6Pd6n+Z+jU6SdnDRajHvxblzS5ZRFvbRJYK8cv2PA+vCOiDTYXw2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739556528; c=relaxed/simple;
-	bh=sKWqjvEpkcI2HOheld8cEwxYIv45wbwACNAWn1NaBNQ=;
+	s=arc-20240116; t=1739556529; c=relaxed/simple;
+	bh=qPQso1ZYtWTmJIC7QhndAu/PixzdR+a209Sd11Fb4Ig=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jLY91LN1no8uRAyEtEeuUDRvowzDEmAiQ/2IpdgeBhzDFTDKSkFpOjX0D2sVPQkZJYFNwyjhpytnZhiGejCOXgtyUMAzK5SjXkSVKxzECCDk8q+ZuljSo7u8u86+TO99proYBiRAFPfErbse0u0z6NIJsaEW/0/zulX6jTDD5BA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=aJFJ8Nc3; arc=none smtp.client-ip=68.232.153.233
+	 MIME-Version:Content-Type; b=k1kaepOCjm06JV1m+d9LayNO/B65UViEtwv+KGlogdkqsdGANLQNWB1ddkmOgPvlhYGDJTzbLL4rFy+oOvVJCVV5HL88A40Lt92/pR41UzeWZP2DeTYafUrfYAcKL/och6ZVYfi690rQpoE7BMTowwW0IjAcvfFlrSs08ig6sAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=eAZNQbAC; arc=none smtp.client-ip=68.232.153.233
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
@@ -36,18 +36,18 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   t=1739556528; x=1771092528;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=sKWqjvEpkcI2HOheld8cEwxYIv45wbwACNAWn1NaBNQ=;
-  b=aJFJ8Nc3wa9BjA3LRTwXCU9Wp7/deHDBARwVSBe7kczoyd8WbmyPNUQk
-   Go2OpdpZRjln1Dho5KBqbHMknQMe9og4OD7F81WdRTDdu0b8igLtL2dRk
-   fHaSmiIrYrT29XJ3ZVYPbDl5qUD7iMj49bkZiRUg1aiGk+fcLj6CTYZAb
-   yi185Zb4QTEPOlJHbNOpLqRsg7qeoTF6CSoZ7JAtlUacGjhygJ08EUgmW
-   WOdNB8avs08OnAHpAg0BhuBeqtQKvQFYfskwAky6gtus3QZoYolGWhGHj
-   UY2Ype2C/rUwdjBQmk/VhsfjYcC5gNpyxzezdCfFoq40u/2/x6NsgfGJK
-   Q==;
+  bh=qPQso1ZYtWTmJIC7QhndAu/PixzdR+a209Sd11Fb4Ig=;
+  b=eAZNQbACy9cgmUCtRy7N1QBSSUYAKl03AkIoSeGTnczkdAP/ml8ACDbE
+   T4pB3r5EVAQd4Ufcj08bJEgryGWJvAnyPDdrKD1WGZGgO7pZdOSM9LJQG
+   R/SRgMcZvwcWuMaXH7skFrCBi7NjsuGKtVWH4Q+824WFwBwcghsqJk345
+   Pj3N9446kYtBgr2HWZFz+DPNtu3aivBeGSqzEeXBZcptkXkIcMywBbPa9
+   LtaxkNa1G/tEm9Tv4xES6Uodr/GcS7BnWZNOnFGVlq5Bz2cRWNb3GVBtr
+   j1E4ZfdYIq9sFpnXNpwmxQRRBmce7FBh6pozIlSIFxpO/+Z27E9yeKbyh
+   w==;
 X-CSE-ConnectionGUID: afEECSQvQkGMMmDvtHvTFg==
-X-CSE-MsgGUID: Hc1GFQtYTc6wh5HSOspKzQ==
+X-CSE-MsgGUID: 2IsM7achQlmES/jyjdqu2w==
 X-IronPort-AV: E=Sophos;i="6.13,286,1732604400"; 
-   d="scan'208";a="37700927"
+   d="scan'208";a="37700928"
 X-Amp-Result: SKIPPED(no attachment in message)
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
   by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 14 Feb 2025 11:08:39 -0700
@@ -66,9 +66,9 @@ To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
 CC: <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
 	<linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>,
 	<linux-watchdog@vger.kernel.org>, Ryan Wanner <Ryan.Wanner@microchip.com>
-Subject: [PATCH 3/8] dt-bindings: dma: atmel: add microchip,sama7d65-dma
-Date: Fri, 14 Feb 2025 11:08:16 -0700
-Message-ID: <8b69f0c6d8955790edcdbe5d1e205b43dedb99ff.1739555984.git.Ryan.Wanner@microchip.com>
+Subject: [PATCH 4/8] ARM: at91: Add Support in SoC driver for SAMA7D65
+Date: Fri, 14 Feb 2025 11:08:17 -0700
+Message-ID: <84b4a7ec0025741bc3ab647671fd4e880b2ed1d5.1739555984.git.Ryan.Wanner@microchip.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1739555984.git.Ryan.Wanner@microchip.com>
 References: <cover.1739555984.git.Ryan.Wanner@microchip.com>
@@ -83,28 +83,65 @@ Content-Type: text/plain
 
 From: Ryan Wanner <Ryan.Wanner@microchip.com>
 
-Add microchip,sama7d65-dma compatible string to DT bindings
-documentation.
+Add support for SAMA7D65 SoC in the SoC driver.
 
 Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
 ---
- Documentation/devicetree/bindings/dma/atmel,sama5d4-dma.yaml | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/soc/atmel/soc.c | 5 +++++
+ drivers/soc/atmel/soc.h | 3 +++
+ 2 files changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/dma/atmel,sama5d4-dma.yaml b/Documentation/devicetree/bindings/dma/atmel,sama5d4-dma.yaml
-index 9ca1c5d1f00f8..73fc13b902b38 100644
---- a/Documentation/devicetree/bindings/dma/atmel,sama5d4-dma.yaml
-+++ b/Documentation/devicetree/bindings/dma/atmel,sama5d4-dma.yaml
-@@ -32,6 +32,9 @@ properties:
-               - microchip,sam9x60-dma
-               - microchip,sam9x7-dma
-           - const: atmel,sama5d4-dma
-+      - items:
-+          - const: microchip,sama7d65-dma
-+          - const: microchip,sama7g5-dma
+diff --git a/drivers/soc/atmel/soc.c b/drivers/soc/atmel/soc.c
+index 298b542dd1c06..68f20024dcebb 100644
+--- a/drivers/soc/atmel/soc.c
++++ b/drivers/soc/atmel/soc.c
+@@ -246,6 +246,9 @@ static const struct at91_soc socs[] __initconst = {
+ 		 "samv70q19", "samv7"),
+ #endif
+ #ifdef CONFIG_SOC_SAMA7
++	AT91_SOC(SAMA7D65_CIDR_MATCH, AT91_CIDR_MASK_SAMA7G5,
++		 AT91_CIDR_VERSION_MASK_SAMA7G5, SAMA7D65_EXID_MATCH,
++		 "sama7d65", "sama7d6"),
+ 	AT91_SOC(SAMA7G5_CIDR_MATCH, AT91_CIDR_MATCH_MASK,
+ 		 AT91_CIDR_VERSION_MASK_SAMA7G5, SAMA7G51_EXID_MATCH,
+ 		 "sama7g51", "sama7g5"),
+@@ -305,6 +308,7 @@ static int __init at91_get_cidr_exid_from_chipid(u32 *cidr, u32 *exid)
+ 	void __iomem *regs;
+ 	static const struct of_device_id chipids[] = {
+ 		{ .compatible = "atmel,sama5d2-chipid" },
++		{ .compatible = "microchip,sama7d65-chipid"},
+ 		{ .compatible = "microchip,sama7g5-chipid" },
+ 		{ },
+ 	};
+@@ -393,6 +397,7 @@ static const struct of_device_id at91_soc_allowed_list[] __initconst = {
+ 	{ .compatible = "atmel,at91sam9", },
+ 	{ .compatible = "atmel,sama5", },
+ 	{ .compatible = "atmel,samv7", },
++	{ .compatible = "microchip,sama7d65",},
+ 	{ .compatible = "microchip,sama7g5", },
+ 	{ }
+ };
+diff --git a/drivers/soc/atmel/soc.h b/drivers/soc/atmel/soc.h
+index 2c78e54255f7f..66a74017d9a3e 100644
+--- a/drivers/soc/atmel/soc.h
++++ b/drivers/soc/atmel/soc.h
+@@ -45,6 +45,7 @@ at91_soc_init(const struct at91_soc *socs);
+ #define AT91SAM9N12_CIDR_MATCH		0x019a07a0
+ #define SAM9X60_CIDR_MATCH		0x019b35a0
+ #define SAM9X7_CIDR_MATCH		0x09750020
++#define SAMA7D65_CIDR_MATCH		0x00262100
+ #define SAMA7G5_CIDR_MATCH		0x00162100
  
-   "#dma-cells":
-     description: |
+ #define AT91SAM9M11_EXID_MATCH		0x00000001
+@@ -75,6 +76,8 @@ at91_soc_init(const struct at91_soc *socs);
+ #define SAM9X75_D5M_EXID_MATCH		0x00000010
+ #define SAM9X75_EXID_MATCH		0x00000000
+ 
++#define SAMA7D65_EXID_MATCH		0x00000080
++
+ #define SAMA7G51_EXID_MATCH		0x3
+ #define SAMA7G52_EXID_MATCH		0x2
+ #define SAMA7G53_EXID_MATCH		0x1
 -- 
 2.43.0
 

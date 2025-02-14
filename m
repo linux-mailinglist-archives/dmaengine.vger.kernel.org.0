@@ -1,65 +1,55 @@
-Return-Path: <dmaengine+bounces-4473-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4474-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58042A363CF
-	for <lists+dmaengine@lfdr.de>; Fri, 14 Feb 2025 18:01:39 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 98689A36433
+	for <lists+dmaengine@lfdr.de>; Fri, 14 Feb 2025 18:16:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E119A3B232B
-	for <lists+dmaengine@lfdr.de>; Fri, 14 Feb 2025 17:01:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5D62E16B8D7
+	for <lists+dmaengine@lfdr.de>; Fri, 14 Feb 2025 17:15:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33A5F267391;
-	Fri, 14 Feb 2025 17:01:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBED3189F56;
+	Fri, 14 Feb 2025 17:15:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KYrBvQDW"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="jtJCRgju"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mout.web.de (mout.web.de [212.227.15.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BA42676E5;
-	Fri, 14 Feb 2025 17:01:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2F4513C9C4;
+	Fri, 14 Feb 2025 17:15:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739552478; cv=none; b=WNj3znwo/sRJhcIgtyqCvdGQIUMox267//BvBW7H0MsaeAqKRnrRFEsje4vDlM7zAhw3FG9whSyXdXFDFdixHoAfJzfpU4EviRF5B875aSEx2HSviYLfdvixEgOHbW8QG9eQMhvcUIgYbOYIxSSsCH7+gn7VzdYoEqwLeumFd3A=
+	t=1739553355; cv=none; b=IYHAilafjuTKAsJTn7nJiX0y+9wT0VljEcqHiaK1BI8gy43uIb55XtTqok9L7lqu9pwfn32Yc6od9SDzbR/Fuh6831J1Lb84YKP6lYmIXhKTrhk+Z4v6kURC7W+KPm2IvLvUPfM/NFzwRmP/Ns0g3g6ZvzzSNI0gS01U/wWCQEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739552478; c=relaxed/simple;
-	bh=8msMDKhq8tjBEoCwkw9xd2vU5VG31x8YNvm+bAjiz7U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q4urrV/chBRRLdfwMyDwE67QIDXHjxmjnqhXNgJ6tStb+qR8/k3/cOKq+x5E6UuNcfNfQJ+PBzJARYlNqFhdAyR8nr5SX/F8mZuwMz/3D4aK7xE6P+1iRGfjAWdbYWRe88E9j5C6Hcek+gqiv1myO2iJQCjW9bw6IVSFiiMOws0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KYrBvQDW; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739552477; x=1771088477;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=8msMDKhq8tjBEoCwkw9xd2vU5VG31x8YNvm+bAjiz7U=;
-  b=KYrBvQDWGh4jwTjf42E5OhQyCyBiqRe7hPvDd5mEj0p+uDXeiI3rVvkw
-   hLSgOz28kwkZhyjt4I4+zqMAmbmXqdSL7vL9YQwpx0XhW+4qDLfkC9FS8
-   jePeb6N/zG6fNsmiWYvOnL3FncknfBinAw1ztq4DJiIT1rfAEHL0PxOw5
-   lf0XNTpBJ6IFARmVPuXqmtH/Cm5MonVAmpPern2pL1GR9lqZbILngSDDG
-   /dQQhS//ux7W8BkJislwf+FYwBoETk7ZjB2B5OJEcRpLKKDGXn8FoPoIz
-   3rICrBx63/29TGbCMRE0i3UkA3xPKVTcnSYHsfq2JXsQIZAJ8CzptQXAl
-   Q==;
-X-CSE-ConnectionGUID: 7Ht153g/TEivaQyz8negXw==
-X-CSE-MsgGUID: ntofDSiWSI+rMSJl+f2wDw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11345"; a="62776187"
-X-IronPort-AV: E=Sophos;i="6.13,286,1732608000"; 
-   d="scan'208";a="62776187"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 09:01:16 -0800
-X-CSE-ConnectionGUID: VCtXwB5lRoODUJDUfaq5kQ==
-X-CSE-MsgGUID: hNe5GBT7SCWjLHLm7u9iOg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="136735658"
-Received: from lstrano-mobl6.amr.corp.intel.com (HELO [10.125.109.34]) ([10.125.109.34])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 09:01:14 -0800
-Message-ID: <5fa82b64-ac38-4d4d-9ff9-a2083a3d92a4@intel.com>
-Date: Fri, 14 Feb 2025 10:01:11 -0700
+	s=arc-20240116; t=1739553355; c=relaxed/simple;
+	bh=vccSr8pmvhKTmDUQzCWHzepzZm/wzNi0JuvKQSfKjGA=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=eYmCPQer7gjtzAJAcHWj047A98P7qNRJFP3t30gNsJ0i282PVx7GG7Tb6Fb/d435rpUJlvH/yeuYPBC52P+ZbgS3HeXl1A1iKzhyhrt8u1R8RWubUC+gi8vdtOxG/MIxtVeb3PWJ12+ToPk+t3JF4I87K3MACe2b4bXoX3EXlE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=jtJCRgju; arc=none smtp.client-ip=212.227.15.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1739553327; x=1740158127; i=markus.elfring@web.de;
+	bh=lwS2ZzFp7liniJUkc0A/L4LAOMPpNI0aac7Xwd4fyLI=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=jtJCRgjuhH41Ay7yYOapIqgQHwmmDUNJtVBzHB2PuPqn4pxh/z4YXHj0lFYVmi35
+	 qRmfHtTo+uq2a2UoL/JIcO4du35vh74H6H2hYALk0yC3orO/juQgiRErraw0/hu0O
+	 IjhEYLBxG3GHZS13MRb2tAtncnvbFSqndl+uWPiAlRx4jUYiw2O8kYodKNCNDg4QU
+	 wtO/ppyZnzwjeq5flaRp1JO3w/50acOlkjrHSwOV9mdXsFYfBqMJr1bXGDZ7K7Z87
+	 H6bU5ctOAGeLL9m3u7igpI1ezVxV6dsTyv6F9Qm1XiRwL8tRxMyLcCj3wQAfwVkSf
+	 KNQqhhFovDC5LAgSdA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.93.37]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MbCE0-1t7iel0oRs-00he6l; Fri, 14
+ Feb 2025 18:15:27 +0100
+Message-ID: <61c9c416-711c-44dc-87af-b1aefc76b87e@web.de>
+Date: Fri, 14 Feb 2025 18:15:10 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -67,81 +57,56 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 4/5] dmaengine: idxd: fix memory leak in error handling
- path of idxd_alloc
-To: Shuai Xue <xueshuai@linux.alibaba.com>, vkoul@kernel.org,
- Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Shuai Xue <xueshuai@linux.alibaba.com>, dmaengine@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>, Dave Jiang <dave.jiang@intel.com>,
+ Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+ Vinod Koul <vkoul@kernel.org>
 References: <20250110082237.21135-1-xueshuai@linux.alibaba.com>
- <20250110082237.21135-5-xueshuai@linux.alibaba.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250110082237.21135-5-xueshuai@linux.alibaba.com>
+Subject: Re: [PATCH 0/5] dmaengine: idxd: fix memory leak in error handling
+ path
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250110082237.21135-1-xueshuai@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:otowLDbOeMQNkXg/a1l+bpJ55twBGxEOex5aHmPcBJBwb9kbIKA
+ +bSKZNDQTZw9l0lU/LWTURBQ6d0YZPewEpntKObx/poLr6rHecgGHaMBjPKq34HhSYWqHUi
+ Er0fLyUwDbI4xwDEXuoETelhlJDPgRn3WXBBLDX0VRG7le6PeW+rZwM0cf7WB4RdxHmIADc
+ Typ2P48oDSZ5OWmgn91ig==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:3l71Z7hx520=;e53V9J7Vs5VS62PKg7BO5JVw2cq
+ uaFdGE2TF++9hMY35V+kAHfKAUOU59VOrWmlDPUamPdRH39UTE3PZJscCGZ7tOVe73KZA0ZUu
+ HDqNWNeaJPbqpdFVLDsJUNVDhDTp2zfMVl8vzn41JXeIw946UcB6PU48pMaSEeVIxOWhoIP2P
+ KgPYxbMzW1rl3XskB2isfvhvX7ySZM286sJe3Kc0XeXxxX9+L+C0nO7WmSFkhNfGOzZFOYVTj
+ 4gU8obc+nuiiScnDtmaX53jUOILMYbwYihlVyEhwLhzicVWpXylCT3fwZNokU+TtN8WKbzxkV
+ n3IzlOnRkRypAGvbH92cNnzTCR+07ELYdm0u8PbFqhwyWkslObIn4qwuHOpbUam6EQKJVjZly
+ hQrcg/mbhpPHjc/vCPSdrXHCNnFFopax6bOqUpHiHB9kLwCY9on7//EVOCFMgljgKe+L5ny1t
+ WdVCZxTygCHYyrhRG4/FVgdV8YrKB6GvhWQmCqjjOGeF4TtiZCKrW/xZ8GxVJmhLsY5xooikZ
+ qKUwZWNdTl1Fr30o2qTqCazQPsPVCYyMRNpLvCivfZ9lu3HGwlAfmpQQGlbtURPeEi3WbRBFi
+ voczvTJDsasONeOQafRmCreYfXJM/PZ20aaoHO73/G1ulLKp4TEEittRWePBYJ6aSRX+aglYT
+ Ks5NL1QU3KeYZcmIg8LF3ZNfhwo/VrFolVTgxTsvNcm1d7KvuvQW3Tccb6RTlJ8W6KOw/OkUE
+ vPefeSAOYRP9HsOtEDK0P1nLWtpFKBAjVslwK3VLcOn0XhrImzT1gkiNmxYBMeFierzCQah5P
+ laxByAa/ISSQ7lsn2YioDYWQ58cfuQv64g4Xvz1du0uLuxxtm36QGjQZKTnzYBnwmRvSedMVS
+ wLQ372ZwGqF0xZLwNs2zISu6vg70dyC+0eGQZGSm51pVDfWMnMdGMHgL6f8vjpYBZtoa5UC4x
+ 1Ov0b+7w38WflheS+hf8IYgRE51uWihJPs1xVln7zh5qqewb/X/XTEvISVx2bktp4Wg5UU8M7
+ h529rL9Yyj+91yxeIzz678RV9iRFmxVk/XNSad85N5NQZ2Tjg79tF0B/JC/ijxJZpf9tq3Cy+
+ sG1dC4u1lb6KvbPALXqmfkp/fD7RhOdRbZ1usDVhejOfFoJNLLM73mo8fj15D3tXA3INdSiPK
+ JlIZWCJFi9BIN62COsmkWUemBadNpcmu50t0QQt//db/756DVjinNqcq//aytni5FJqlw/6pf
+ VEO2zRel5CnzK9J4URBrfgdbVX576yB0MKXMbsEmGuOmiuuVibz7qL1h54gPUbDrYT6Sn/YLy
+ +09KpFQMTlwBNsf8btku5jKNUBJG+e9yxiBlKviUT8qX4kEHVHPT2aw/MC9jJDulUdIClKvwg
+ ZkZccG6IjGKb8Ia0KDb7AmOHgDdREOoAsj0gBz6kbWbHWg8Lp2gaTGfgxD+ulemeoS0tPa3Do
+ DQahP3CpveiQk9/I+iDZY4e9z10k=
 
+=E2=80=A6
+>  drivers/dma/idxd/init.c | 62 ++++++++++++++++++++++++++++++++---------
+=E2=80=A6
 
+How do you think about to add any tags (like =E2=80=9CFixes=E2=80=9D and =
+=E2=80=9CCc=E2=80=9D)
+for the presented patches accordingly?
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?h=3Dv6.14-rc2#n145
 
-On 1/10/25 1:22 AM, Shuai Xue wrote:
-> Memory allocated for idxd is not freed if an error occurs during
-> idxd_alloc(). To fix it, free the allocated memory in the reverse order
-> of allocation before exiting the function in case of an error.
-> 
-> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-> ---
->  drivers/dma/idxd/init.c | 24 +++++++++++++++---------
->  1 file changed, 15 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-> index 04a7d7706e53..f0e3244d630d 100644
-> --- a/drivers/dma/idxd/init.c
-> +++ b/drivers/dma/idxd/init.c
-> @@ -565,28 +565,34 @@ static struct idxd_device *idxd_alloc(struct pci_dev *pdev, struct idxd_driver_d
->  	idxd_dev_set_type(&idxd->idxd_dev, idxd->data->type);
->  	idxd->id = ida_alloc(&idxd_ida, GFP_KERNEL);
->  	if (idxd->id < 0)
-> -		return NULL;
-> +		goto err_ida;
->  
->  	idxd->opcap_bmap = bitmap_zalloc_node(IDXD_MAX_OPCAP_BITS, GFP_KERNEL, dev_to_node(dev));
-> -	if (!idxd->opcap_bmap) {
-> -		ida_free(&idxd_ida, idxd->id);
-> -		return NULL;
-> -	}
-> +	if (!idxd->opcap_bmap)
-> +		goto err_opcap;
->  
->  	device_initialize(conf_dev);
->  	conf_dev->parent = dev;
->  	conf_dev->bus = &dsa_bus_type;
->  	conf_dev->type = idxd->data->dev_type;
->  	rc = dev_set_name(conf_dev, "%s%d", idxd->data->name_prefix, idxd->id);
-> -	if (rc < 0) {
-> -		put_device(conf_dev);
-> -		return NULL;
-> -	}
-> +	if (rc < 0)
-> +		goto err_name;
->  
->  	spin_lock_init(&idxd->dev_lock);
->  	spin_lock_init(&idxd->cmd_lock);
->  
->  	return idxd;
-> +
-> +err_name:
-> +	put_device(conf_dev);
-> +	bitmap_free(idxd->opcap_bmap);
-> +err_opcap:
-> +	ida_free(&idxd_ida, idxd->id);
-> +err_ida:
-> +	kfree(idxd);
-> +
-> +	return NULL;
->  }
->  
->  static int idxd_enable_system_pasid(struct idxd_device *idxd)
-
+Regards,
+Markus
 

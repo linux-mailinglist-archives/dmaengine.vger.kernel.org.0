@@ -1,42 +1,42 @@
-Return-Path: <dmaengine+bounces-4496-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4492-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B726A36C37
-	for <lists+dmaengine@lfdr.de>; Sat, 15 Feb 2025 06:45:54 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 73CF4A36C30
+	for <lists+dmaengine@lfdr.de>; Sat, 15 Feb 2025 06:45:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A522A16AD08
-	for <lists+dmaengine@lfdr.de>; Sat, 15 Feb 2025 05:45:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 671C43AAAA9
+	for <lists+dmaengine@lfdr.de>; Sat, 15 Feb 2025 05:44:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06FAF1A2C06;
-	Sat, 15 Feb 2025 05:44:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2296E19ABD8;
+	Sat, 15 Feb 2025 05:44:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="yXBp7FAj"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="d6ELRKUe"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DED3819F419;
-	Sat, 15 Feb 2025 05:44:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C98217799F;
+	Sat, 15 Feb 2025 05:44:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739598286; cv=none; b=UMgEyJ+u+1MKNueQMWxL+BjaJkltu7cb19byzLD+MzSyEorYwib1T6bayKakGZ5lWOGxHezxEsCVGtdZC3hWAXCR+Kav5K1VYS0vgUStc+2o9talYLv58CFUo8J1cnDeBZ8PaP5ewQUdB1N4u7caUNTU4w4lvF2v27cDMZArypQ=
+	t=1739598283; cv=none; b=ZoTcBbbGh7KsKPMhNGRAmbN0oBvYtPmJEwmelIy1CIduixoqk97SE/Eri/1TNdPxtY6QSZgmhuzb+QadFXeUSZnNcV4APqqNLfjcUfXdfOs+OGMVmmQJvSxhNXmM6lip3XKukGhJhvGrdXzr44lJylo7gVo8dkpp/2ZCQ5eK6mU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739598286; c=relaxed/simple;
-	bh=kHWOKaugnCugIRfbWHpMJb0nYUXoXLMBAwcA+g+xgrs=;
+	s=arc-20240116; t=1739598283; c=relaxed/simple;
+	bh=yo7qlUaeF3xO9z4Scj60HtMY12AAzelde4yE32W+jFM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pN4OU+ZhBVSB61WpnXALeiBU1aHqjVpHfRysSOhElOlz+TJLgE9idPblQqgmJDsWUC2JSDXsNCcJNJmQI7/O/paGu+2ctPGBzzuD+W2ueB+tg/Cfpw2XRlGbP9pcHqW9PYi+sGWyjygiHIVqdRQDjlVU8J1sWu4pvgQe1ysCtS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=yXBp7FAj; arc=none smtp.client-ip=115.124.30.113
+	 MIME-Version; b=mE2JPaaABfIAlwpvlVXUL5NDkP97ZTq9uNcTm2rwBzqRxLmptM/TBCOC/MY+X82794lCOC4LxvessdNfk+HgYO07PKh1Jm9+ANbceFEHAZqjqV3qAmkPYQRvdXUW5p8D0AlYWfPmr7RKrXjO06P9e6t1FC4Dk422PzZbXHIFxpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=d6ELRKUe; arc=none smtp.client-ip=115.124.30.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1739598276; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=Ip3C2z8pFwpxrfoRX4KLEGAhWo1Y0wrskFEhejStJcE=;
-	b=yXBp7FAj2/7kSggJ95Cr2ayM2Bls5y1CATV9iYuW8kF2OVLZqZO6O7dwx8p0gwPJIdN2BNtCuEMDn1I8gWyJM/Wn05ZCdlL7hKYsgEtSfMMKlFRqYlqD3L/I7W14x+t57Y67CHQj/GIypR2x7I/5j1VpPj2FFa2VX3ei1EqLR0I=
-Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WPSysO9_1739598275 cluster:ay36)
+	t=1739598277; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=Ca7xZlMAPEYMN9D4MiMu30TtHiCMTqjknr5SucAhlr8=;
+	b=d6ELRKUecePhOPnkn/QCBeBJgispvx+uBu+JgDGxNtEnKx4cExanya43bR3DJfVjcBm9Y+p9UjYVAdf8H+4NZVkzEUnF6AKm031EQ3EFZhtv85v5XCuirxTrUgkqgiZugnpYRcNpPIP/durXAZsMRa4u+yxd+KbjekCt0jF4QGQ=
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WPSysOL_1739598276 cluster:ay36)
           by smtp.aliyun-inc.com;
           Sat, 15 Feb 2025 13:44:36 +0800
 From: Shuai Xue <xueshuai@linux.alibaba.com>
@@ -47,9 +47,9 @@ Cc: nikhil.rao@intel.com,
 	xueshuai@linux.alibaba.com,
 	dmaengine@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/7] dmaengine: idxd: fix memory leak in error handling path of idxd_pci_probe
-Date: Sat, 15 Feb 2025 13:44:29 +0800
-Message-ID: <20250215054431.55747-6-xueshuai@linux.alibaba.com>
+Subject: [PATCH v2 6/7] dmaengine: idxd: Add missing idxd cleanup to fix memory leak in remove call
+Date: Sat, 15 Feb 2025 13:44:30 +0800
+Message-ID: <20250215054431.55747-7-xueshuai@linux.alibaba.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20250215054431.55747-1-xueshuai@linux.alibaba.com>
 References: <20250215054431.55747-1-xueshuai@linux.alibaba.com>
@@ -61,45 +61,30 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Memory allocated for idxd is not freed if an error occurs during
-idxd_pci_probe(). To fix it, free the allocated memory in the reverse
-order of allocation before exiting the function in case of an error.
+The remove call stack is missing idxd cleanup to free bitmap, ida and
+the idxd_device. Call idxd_free() helper routines to make sure we exit
+gracefully.
 
 Fixes: bfe1d56091c1 ("dmaengine: idxd: Init and probe for Intel data accelerators")
+Suggested-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
 Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/dma/idxd/init.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/dma/idxd/init.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index dc34830fe7c3..ac1cdc1d82bf 100644
+index ac1cdc1d82bf..f40f1c44a302 100644
 --- a/drivers/dma/idxd/init.c
 +++ b/drivers/dma/idxd/init.c
-@@ -550,6 +550,14 @@ static void idxd_read_caps(struct idxd_device *idxd)
- 		idxd->hw.iaa_cap.bits = ioread64(idxd->reg_base + IDXD_IAACAP_OFFSET);
- }
- 
-+static void idxd_free(struct idxd_device *idxd)
-+{
-+	put_device(idxd_confdev(idxd));
-+	bitmap_free(idxd->opcap_bmap);
-+	ida_free(&idxd_ida, idxd->id);
-+	kfree(idxd);
-+}
-+
- static struct idxd_device *idxd_alloc(struct pci_dev *pdev, struct idxd_driver_data *data)
- {
- 	struct device *dev = &pdev->dev;
-@@ -1219,7 +1227,7 @@ int idxd_pci_probe_alloc(struct idxd_device *idxd, struct pci_dev *pdev,
-  err:
- 	pci_iounmap(pdev, idxd->reg_base);
-  err_iomap:
+@@ -1295,7 +1295,7 @@ static void idxd_remove(struct pci_dev *pdev)
+ 	pci_disable_device(pdev);
+ 	destroy_workqueue(idxd->wq);
+ 	perfmon_pmu_remove(idxd);
 -	put_device(idxd_confdev(idxd));
 +	idxd_free(idxd);
-  err_idxd_alloc:
- 	pci_disable_device(pdev);
- 	return rc;
+ }
+ 
+ static struct pci_driver idxd_pci_driver = {
 -- 
 2.39.3
 

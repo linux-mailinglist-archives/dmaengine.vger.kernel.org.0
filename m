@@ -1,63 +1,86 @@
-Return-Path: <dmaengine+bounces-4514-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4515-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F89DA39973
-	for <lists+dmaengine@lfdr.de>; Tue, 18 Feb 2025 11:47:04 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D547A399B0
+	for <lists+dmaengine@lfdr.de>; Tue, 18 Feb 2025 11:54:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 489D37A32B6
-	for <lists+dmaengine@lfdr.de>; Tue, 18 Feb 2025 10:45:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 41A4016A5A9
+	for <lists+dmaengine@lfdr.de>; Tue, 18 Feb 2025 10:54:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BBD923716F;
-	Tue, 18 Feb 2025 10:46:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AC4323770D;
+	Tue, 18 Feb 2025 10:54:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LN7/crkc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NGdJ0xWo"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B315235341;
-	Tue, 18 Feb 2025 10:46:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3476822D7B1;
+	Tue, 18 Feb 2025 10:54:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739875607; cv=none; b=gH89PaW2b2r4fRxGSRUlPCVOTThzKzzQxqwyTrpDeZhWBWLTEAiOc4LJK71WseA2RxX303hBjG1ksCnng5IntZKddtfqSq10+FGQIQvBxD219VJlJQ6z7Hx/qj4CBPaDlCWCq7btpyR3GvQORnwHVFjUYnWMvL41GWCMtAW7AxM=
+	t=1739876079; cv=none; b=CAPoGX0nttFuclGDQaeW7Kjqgk1TZcKkd6P0EkQpeJFQuP7KjvQldRp45xz87dSvTLyj1evOMjQUXCjArwtV0PI/unP5Rv48n5v6o86kES+juAot1UDeohDXGzkN0KtCJPd/kct3BG9+yqNCr0OBTUHs/lmEKrAX+eJLAPVocTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739875607; c=relaxed/simple;
-	bh=lFybjn1lzd3uty5K8+/fX/EZsa8vtx9u05tnjD6rAIk=;
+	s=arc-20240116; t=1739876079; c=relaxed/simple;
+	bh=RdaxUeKvZh5sL0uJ9BtFySXbqU59fk3zLkq47gAsBp0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HmNYIXldPGXYJg/I2QKFaIJJ5qXRIUZ/qgSlOEInU7J9BnzVd/ur4IorVKhGeTGveg3RblQi3a1fQtryCzJ/QW43RuTUtiQ3RKoNwwCOQ5Rexz7U0g3aaa24Cun/BtvKGAa57HQEV0A+Y+Hbubm8M9PTS32lXkuiVYuc0JDz1I8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LN7/crkc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32A6EC4CEE6;
-	Tue, 18 Feb 2025 10:46:45 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=kGNLHsEKg1XeUDBwxLbFtr8hWw/NF+mQgB4oqcu12Kg/0Jb6u9oMMSGvlPa40KmL1fUoF1hSrN4YCEtdYjjssnVgXK68NMWCXP/RvTuGzNWNmpLBKgNOECczyK4J+JKsPE71Pu5+/kgWx73N6cjnJ1vLAVoBs0HV7XrnZhqHVn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NGdJ0xWo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DED8EC4CEE2;
+	Tue, 18 Feb 2025 10:54:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739875606;
-	bh=lFybjn1lzd3uty5K8+/fX/EZsa8vtx9u05tnjD6rAIk=;
+	s=k20201202; t=1739876078;
+	bh=RdaxUeKvZh5sL0uJ9BtFySXbqU59fk3zLkq47gAsBp0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LN7/crkcTZHdkdwLpR5JGrRCG/xYcwV7jukPGpHXq4XaRTgDpWXcdWfMYMQNzCuLT
-	 rp9K9RFdMnXPh7bxX14G9dTedkkgHsGLvroa1YFHmxWysSxdXBN+v3u0OMDJOwJxp5
-	 n9i3l+MKZfktPcPbepwTA6J0VHfftOEH1fEt9BOXlGJkKtwBeaAfxPs4+r0fWUcuz5
-	 fjRrEIx+31QqVfgVhFvjtPmZtO8sPLciHzQ0wulItC7Y8mV04Kt+MoVrSSbn8RhWbU
-	 iz1AF7CwjyotSIrAM9Y4IcK2/OY56JRKQI9+ugfNzT6RAp57fZ/epqu3GHD6sQ7pHk
-	 VXTUxoHEdDUqQ==
-Date: Tue, 18 Feb 2025 16:16:43 +0530
+	b=NGdJ0xWorHM+qXxP6z1rSeaxtuPdGwDGjNbPbIrWqn2LZYrgAwf7tfZPrZJfTUp2k
+	 HAQMk4W5ei9khWJkMH+utPXmDd1oRqzwdKNh9yBkDxqo1Kwqm7JawToKHk8S3bNLF5
+	 QMihBcdYKQBetKQdUBAtsQ1mDQE0HTxkQv5d2v8ZgI2LSYNRcy31utnMKWhBXPPncG
+	 ypCuFYUO6ZlKV2AfP3Yxt9Fl9YLBOWK9PtChtQ2AxuKkBcc6dZu/LME9uclFbq9nbh
+	 a0BqbTtPB8mlohh/4vGAClo6rDyAh9d1d6UUrjKeY+V9JAqdWuFSvfb13pdTSf+qOJ
+	 NQ9zKlK53hOGw==
+Date: Tue, 18 Feb 2025 16:24:35 +0530
 From: Vinod Koul <vkoul@kernel.org>
-To: Roger Quadros <rogerq@kernel.org>
-Cc: Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+To: Michal Simek <michal.simek@amd.com>
+Cc: linux-kernel@vger.kernel.org, monstr@monstr.eu, michal.simek@xilinx.com,
+	git@xilinx.com, Anand Ashok Dumbre <anand.ashok.dumbre@xilinx.com>,
 	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
 	"David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	MD Danish Anwar <danishanwar@ti.com>,
-	Siddharth Vadapalli <s-vadapalli@ti.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>, srk@ti.com,
-	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] dmaengine: ti: k3-udma-glue: Drop skip_fdq argument from
- k3_udma_glue_reset_rx_chn
-Message-ID: <Z7RlE+QfzdQ07spk@vaman>
-References: <20250116-k3-udma-glue-single-fdq-v1-1-a0de73e36390@kernel.org>
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Harini Katakam <harini.katakam@amd.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Mark Brown <broonie@kernel.org>,
+	Michael Tretter <m.tretter@pengutronix.de>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Mubin Sayyed <mubin.sayyed@amd.com>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Niklas Cassel <cassel@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Shyam Pandey <radhey.shyam.pandey@amd.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+	"open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>,
+	"moderated list:ARM/ZYNQ ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
+	"open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
+	"open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" <linux-ide@vger.kernel.org>,
+	"open list:XILINX AMS DRIVER" <linux-iio@vger.kernel.org>,
+	"open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
+	"open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
+	"open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>
+Subject: Re: [PATCH 2/2] dt-bindings: xilinx: Deprecate header with firmware
+ constants
+Message-ID: <Z7Rm6/DYM67QbXvT@vaman>
+References: <cover.1738600745.git.michal.simek@amd.com>
+ <2a6f0229522327939e6893565e540b75f854a37b.1738600745.git.michal.simek@amd.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -66,25 +89,26 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250116-k3-udma-glue-single-fdq-v1-1-a0de73e36390@kernel.org>
+In-Reply-To: <2a6f0229522327939e6893565e540b75f854a37b.1738600745.git.michal.simek@amd.com>
 
-On 16-01-25, 17:00, Roger Quadros wrote:
-> The user of k3_udma_glue_reset_rx_chn() e.g. ti_am65_cpsw_nuss can
-> run on multiple platforms having different DMA architectures.
-> On some platforms there can be one FDQ for all flows in the RX channel
-> while for others there is a separate FDQ for each flow in the RX channel.
+On 03-02-25, 17:39, Michal Simek wrote:
+> Firmware contants do not fit the purpose of bindings because they are not
+> independent IDs for abstractions. They are more or less just contants which
+> better to wire via header with DT which is using it.
+> That's why add deprecated message to dt binding header and also update
+> existing dt bindings not to use macros from the header  and replace them by
+> it's value. Actually value is not relevant because it is only example.
 > 
-> So far we have been relying on the skip_fdq argument of
-> k3_udma_glue_reset_rx_chn().
+> The similar changes have been done by commit 9d9292576810 ("dt-bindings:
+> pinctrl: samsung: deprecate header with register constants").
 > 
-> Instead of relying on the user to provide this information, infer it
-> based on DMA architecture during k3_udma_glue_request_rx_chn() and save it
-> in an internal flag 'single_fdq'. Use that flag at
-> k3_udma_glue_reset_rx_chn() to deicide if the FDQ needs
-> to be cleared for every flow or just for flow 0.
+> Signed-off-by: Michal Simek <michal.simek@amd.com>
+> ---
+> 
+>  Documentation/devicetree/bindings/ata/ceva,ahci-1v84.yaml  | 4 +---
+>  .../bindings/dma/xilinx/xlnx,zynqmp-dma-1.0.yaml           | 3 +--
 
-This fails to apply for me on dmaengine/fixes, can you please rebase and
-resend
+Acked-by: Vinod Koul <vkoul@kernel.org>
 
 -- 
 ~Vinod

@@ -1,125 +1,91 @@
-Return-Path: <dmaengine+bounces-4513-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4514-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8CB2BA39616
-	for <lists+dmaengine@lfdr.de>; Tue, 18 Feb 2025 09:52:29 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F89DA39973
+	for <lists+dmaengine@lfdr.de>; Tue, 18 Feb 2025 11:47:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 708BC168B62
-	for <lists+dmaengine@lfdr.de>; Tue, 18 Feb 2025 08:45:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 489D37A32B6
+	for <lists+dmaengine@lfdr.de>; Tue, 18 Feb 2025 10:45:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEB4722CBC0;
-	Tue, 18 Feb 2025 08:45:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BBD923716F;
+	Tue, 18 Feb 2025 10:46:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="VAIyoo/6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LN7/crkc"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC5A22D4E5
-	for <dmaengine@vger.kernel.org>; Tue, 18 Feb 2025 08:45:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B315235341;
+	Tue, 18 Feb 2025 10:46:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739868337; cv=none; b=iIRCtyMntxvVyxV/lv3An1t3B2C2yO3bBBWCw1iAswmBcvu492oaER5M4B94P/Ml2DvVFtK7Om7XjjzYePI8XgAQbKSKtgTDmDKzKF4nABFE7EikbCTMJm1WpbGLaMNOb0peMooKNVAfsaLhcPnHjWq4/IrWagqYnke2cy4mI0w=
+	t=1739875607; cv=none; b=gH89PaW2b2r4fRxGSRUlPCVOTThzKzzQxqwyTrpDeZhWBWLTEAiOc4LJK71WseA2RxX303hBjG1ksCnng5IntZKddtfqSq10+FGQIQvBxD219VJlJQ6z7Hx/qj4CBPaDlCWCq7btpyR3GvQORnwHVFjUYnWMvL41GWCMtAW7AxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739868337; c=relaxed/simple;
-	bh=2go4NOc6idTzCbPJN8eN0yz1bedLrTJjAHzbemvUHxo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jXKXYA1UIWyNEzAby73rThejtxNp4qzxFKdOw35xhlBQKpVucZthWxDcj6UnedMVVTW2PnC/GRIb08JOSDWYAOD4/mjNGNkuWMz0Xie94BJTP93zj91oeqNTeoGfyXV2oISviTHkyUQMzEr+CnQtDuHiLSnYc+7yhzLdvlGyB14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=VAIyoo/6; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5e0452f859cso3565907a12.2
-        for <dmaengine@vger.kernel.org>; Tue, 18 Feb 2025 00:45:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1739868334; x=1740473134; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=90tc0lSyWtKHI8QpJtp+rcsL8Nux7GNqdacUEsbn9iU=;
-        b=VAIyoo/6O0M2fmCo9r4DyWv+3J02uSTrDklgEq67LFks4TiZH8wOtT2jPq2jNe+L+v
-         XCATooFxIqEc9ZlC+bLuYTS2EbLcCnjpa/HLrGnOIfNH+EDuEyrFpIeAdcKjOQpjntP/
-         Cgbx8yqD50wV7Sb4Q2eLx+zhFBT+LvZljEu0edrx6ihhlsqC1E2LHrxKrf51bChRvcYz
-         ejJTyf+SkTii+UBpJdQBErPHB1KXLpYzxFicISre2p5MsJ+jcrtz0Y7NkK6a6adX+znY
-         SlPn65LK3liWnmNA6u9wFdQBTwUaVnMk18465MKPhaXHxUw8XlDejKPxXkxtCLY8+OkQ
-         wlPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739868334; x=1740473134;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=90tc0lSyWtKHI8QpJtp+rcsL8Nux7GNqdacUEsbn9iU=;
-        b=UdzRQWlAadtDnPBZTQVSmUc4FekKQEWqdUyi3n0eWDVlB8PGuIA3SzriYomm99uznR
-         OSKaWCY9aDJrcT7oZf7s+cuBeiz1P2wwVrPRmCuWOI9r0ooKkGmQ+ADaJ0r7EJ5W1IGr
-         y80jUT2WmyC/JkPwy4Vc2or04adM0Y94LBhY08pTpjQ7MPPiPzxftejElMN989tQfIDT
-         W79vix3iBlBjPP3ZpGP50vhNp4N66R6bNpLZ3JUG6sS1Jj9nHEImLp5HAy9z0B1SjqSm
-         hEXHDSlTbuHs44LTXgGBCsK9zDz9o3fy80E5dEiU8kATHXw8dNt3NsRj9y5OR163YEus
-         4f8g==
-X-Forwarded-Encrypted: i=1; AJvYcCX8dxDhjtXZHtcWtqpG3uF14YX0wvIByfR+ilEZQLTB1i359EypxWHyBVo71FxsUx3mpyXALSoLLCg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFF5oKWRdzEpLfkflrfUhrkJ+L/bJEiJoE8Pqc7/QAmKRsQiNX
-	VJp+He5i/5YEgFV2ITJEHZ2Ws27c8NpFTi/jpdZ2GFvQROWXEID2w6nBHqxkQOI=
-X-Gm-Gg: ASbGncva4FLRtiuDext3VCLK372yNsGM5Ld/PNEbgzOp99zhfXdj0CDhMYctQKAuOSS
-	64JZojCi7+bd7HZO/E275FGGtfkIHhkKn5Y9G+bP7P4SdLi9i8xIExCz9iYktWApbSamPc7LFJ2
-	DDcFuLf9eG9/qBauGXPRSU6hZD4FrJMnb/IJ/jmPXsZ+zc3SoL5l0l/PoMjG7YfU7tLTwMIDaAf
-	KWxmS6txJtqW/EHxM1ioQzcTXbYj1l+/1tc+z1Io0seBLh5S83WS4VUQk02ll2KbKE/yyH+5pHf
-	hWHSaVl3IOBrn5YSeW12+Wk=
-X-Google-Smtp-Source: AGHT+IE6QhNP9qus60hH980Or3o9glxOLiLFh+HKOIb0j8s7OisoSony1uEEFy0/ugn7AUW+SZW5ZQ==
-X-Received: by 2002:a05:6402:348d:b0:5dc:882f:74b7 with SMTP id 4fb4d7f45d1cf-5e0361747fbmr14622769a12.30.1739868333880;
-        Tue, 18 Feb 2025 00:45:33 -0800 (PST)
-Received: from [192.168.50.4] ([82.78.167.25])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dece28808fsm8201968a12.75.2025.02.18.00.45.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Feb 2025 00:45:33 -0800 (PST)
-Message-ID: <24351fe0-c4ec-4225-9f92-b26392a858be@tuxon.dev>
-Date: Tue, 18 Feb 2025 10:45:31 +0200
+	s=arc-20240116; t=1739875607; c=relaxed/simple;
+	bh=lFybjn1lzd3uty5K8+/fX/EZsa8vtx9u05tnjD6rAIk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HmNYIXldPGXYJg/I2QKFaIJJ5qXRIUZ/qgSlOEInU7J9BnzVd/ur4IorVKhGeTGveg3RblQi3a1fQtryCzJ/QW43RuTUtiQ3RKoNwwCOQ5Rexz7U0g3aaa24Cun/BtvKGAa57HQEV0A+Y+Hbubm8M9PTS32lXkuiVYuc0JDz1I8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LN7/crkc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32A6EC4CEE6;
+	Tue, 18 Feb 2025 10:46:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739875606;
+	bh=lFybjn1lzd3uty5K8+/fX/EZsa8vtx9u05tnjD6rAIk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LN7/crkcTZHdkdwLpR5JGrRCG/xYcwV7jukPGpHXq4XaRTgDpWXcdWfMYMQNzCuLT
+	 rp9K9RFdMnXPh7bxX14G9dTedkkgHsGLvroa1YFHmxWysSxdXBN+v3u0OMDJOwJxp5
+	 n9i3l+MKZfktPcPbepwTA6J0VHfftOEH1fEt9BOXlGJkKtwBeaAfxPs4+r0fWUcuz5
+	 fjRrEIx+31QqVfgVhFvjtPmZtO8sPLciHzQ0wulItC7Y8mV04Kt+MoVrSSbn8RhWbU
+	 iz1AF7CwjyotSIrAM9Y4IcK2/OY56JRKQI9+ugfNzT6RAp57fZ/epqu3GHD6sQ7pHk
+	 VXTUxoHEdDUqQ==
+Date: Tue, 18 Feb 2025 16:16:43 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Roger Quadros <rogerq@kernel.org>
+Cc: Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	MD Danish Anwar <danishanwar@ti.com>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>, srk@ti.com,
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] dmaengine: ti: k3-udma-glue: Drop skip_fdq argument from
+ k3_udma_glue_reset_rx_chn
+Message-ID: <Z7RlE+QfzdQ07spk@vaman>
+References: <20250116-k3-udma-glue-single-fdq-v1-1-a0de73e36390@kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/8] Add System Components for Microchip SAMA7D65 SoC
-To: Ryan.Wanner@microchip.com, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, nicolas.ferre@microchip.com,
- alexandre.belloni@bootlin.com, vkoul@kernel.org, wim@linux-watchdog.org,
- linux@roeck-us.net
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
- linux-watchdog@vger.kernel.org
-References: <cover.1739555984.git.Ryan.Wanner@microchip.com>
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Content-Language: en-US
-In-Reply-To: <cover.1739555984.git.Ryan.Wanner@microchip.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250116-k3-udma-glue-single-fdq-v1-1-a0de73e36390@kernel.org>
 
-Hi, Ryan,
-
-On 14.02.2025 20:08, Ryan.Wanner@microchip.com wrote:
-> From: Ryan Wanner <Ryan.Wanner@microchip.com>
+On 16-01-25, 17:00, Roger Quadros wrote:
+> The user of k3_udma_glue_reset_rx_chn() e.g. ti_am65_cpsw_nuss can
+> run on multiple platforms having different DMA architectures.
+> On some platforms there can be one FDQ for all flows in the RX channel
+> while for others there is a separate FDQ for each flow in the RX channel.
 > 
-> This patch set adds support for the following systems in the SAMA7D65
-> SoC:
-> - DMAs
-> - Chip ID
-> - Dual watchdog timer.
+> So far we have been relying on the skip_fdq argument of
+> k3_udma_glue_reset_rx_chn().
 > 
-> Ryan Wanner (8):
->   dt-bindings: atmel-sysreg: Add SAMA7D65 Chip ID
->   dt-bindings: watchdog: sama5d4-wdt: Add sama7d65-wdt
->   dt-bindings: dma: atmel: add microchip,sama7d65-dma
->   ARM: at91: Add Support in SoC driver for SAMA7D65
->   ARM: dts: microchip: sama7d65: Add chipID for sama7d65
->   ARM: dts: microchip: sama7d65: Add watchdog for sama7d65
->   ARM: dts: microchip: sama7d65: Add DMAs to sama7d65 SoC
->   ARM: dts: microchip: sama7d65: Enable DMAs
+> Instead of relying on the user to provide this information, infer it
+> based on DMA architecture during k3_udma_glue_request_rx_chn() and save it
+> in an internal flag 'single_fdq'. Use that flag at
+> k3_udma_glue_reset_rx_chn() to deicide if the FDQ needs
+> to be cleared for every flow or just for flow 0.
 
-Series looks good to me. I'm waiting to see if there are comments on
-bindings before applying the DT part.
+This fails to apply for me on dmaengine/fixes, can you please rebase and
+resend
 
-Thank you,
-Claudiu
+-- 
+~Vinod
 

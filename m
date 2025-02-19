@@ -1,80 +1,80 @@
-Return-Path: <dmaengine+bounces-4536-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4537-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0EE6A3C32B
-	for <lists+dmaengine@lfdr.de>; Wed, 19 Feb 2025 16:10:08 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD858A3C39B
+	for <lists+dmaengine@lfdr.de>; Wed, 19 Feb 2025 16:27:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 852AE3AE936
-	for <lists+dmaengine@lfdr.de>; Wed, 19 Feb 2025 15:07:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AE5343B9E39
+	for <lists+dmaengine@lfdr.de>; Wed, 19 Feb 2025 15:24:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EE821F3D53;
-	Wed, 19 Feb 2025 15:06:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3FB01F4169;
+	Wed, 19 Feb 2025 15:24:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KdiTlEY5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gmw2avS/"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D65401F4195;
-	Wed, 19 Feb 2025 15:06:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC0AB1EFFAB;
+	Wed, 19 Feb 2025 15:24:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739977619; cv=none; b=gl8odxm9n1gJG5D0cboslJtKd7AngcfUsnNOmYmo7hKKyIpFKcXG2T2zrJZ6AaHyv2wUymW8ZjkY6jkWGgY0dtu697RM9Dc9I7pTWfF2CS5PAhA0iXy2E2bVuTHckGwVS7TgHt1ksFCX97+QTqclnsu34nQltQYiY6dav6H2Zc8=
+	t=1739978655; cv=none; b=MfqkJWW4cKhFuSHkoD2Hp8+sMakOWNB+TBdrgHCO8iZSCn30z5Hdc+J7sGtEBUY/9/eCCagl4K5oUYtQ0Z+SkVZBwTFoMLyo8qVZnHa7Y+3BXIavsw5WcSrY4WH1V20bIT4vVMw8C2ofggAVnyuzRl7r8Khli9oLEVodHGzzdmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739977619; c=relaxed/simple;
-	bh=gV8SHYBIC1MRrvAo6UD5l94mHWIUoHpvSZ2HNTzC13g=;
+	s=arc-20240116; t=1739978655; c=relaxed/simple;
+	bh=bjJrKjvDqDhaKoqZkL+p49M4QInQE7vBLemU0lNm5M4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=okm4VWdJsULfSPkueopS3zuZEq4TrKhDn7oTl3rU4dAMGS77gbk36OUNOhC08zquF/OJzksN8Ge4yQ2LuhgMHV8/tZACpRZAE0gdYQNqHcXo+7/EJ371jjm+jPzm8ezPCtzurNcltSkg/XPggbG04xKqiazkAcebujuH+i5X0vE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KdiTlEY5; arc=none smtp.client-ip=209.85.208.169
+	 In-Reply-To:Content-Type; b=rY+hwMFjbVr0og9KKem9EhZpapyMv50aYz6/syw7Wo6lVsoYCc6rBB2gJfc+ig56x3BeSyikY0qVrvcFc43hsQF6I9rjt00FcnpIURlHDIaJ3wGOFWACRYgSoM8spURcb7OLhGx1eMC5iMXD/atfbQE1zc2fuzcBlTtJJNLzmtA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gmw2avS/; arc=none smtp.client-ip=209.85.208.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-30a2f240156so35345141fa.3;
-        Wed, 19 Feb 2025 07:06:57 -0800 (PST)
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-30a29f4bd43so37249601fa.0;
+        Wed, 19 Feb 2025 07:24:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739977616; x=1740582416; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1739978652; x=1740583452; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:content-language:from
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=bgV97x/vQ/whH7vk6tSNveDGHR7Aye2btAEtKhwCZ7A=;
-        b=KdiTlEY5gMrWG2GT8HjUCocDmVd63J6+hhjqc8SVIq87I2OdydElBi6XmTigmVcM3R
-         7SdGgSy2QZNgtib7HoU099f1Oy0OxYggggOAa0qo59oyplgCiXlx26uuhceQUuMN/hyL
-         99uEDk5Psapd9zbwHjXmJQ3wGYD8A/6ZQNmsHEXlV9UwuxwJlkVHwpd2TBGcw+gmgmjZ
-         1MhiQdXzBEbMqrpC3MgMRlMSgX7KyoZpF5q93WezEN2YAqnceL3o8uxk147ev4vPRuuX
-         2f7HDZdusnAW44rrYX9EUNJIqU1w+anoXqxSL+1H6L/YSHR9o9lD0GIa+CZRtL/bYx3I
-         9GjA==
+        bh=lrnqLVDBWW+mF9ezkN3CjkgFYa7vo/xRQjq0L2epDyA=;
+        b=Gmw2avS/e0sDRA7u15LXqMmpP+u19KNSIUS295Gd4c9tUR+/VUBfJ6oHkUz3SZPFfT
+         YHDkGpoCercHycBtknpeZSnFVfvH26M6jZEtMCQg4gGkfmq2cObLjCl0PGycJGuGSU7Q
+         M5HeVWEewImSrmsIOkEQtt2FGs7T7mjyjc4Ky45bzEC+ELpZS26lU+5kPIR3Ts1RD9HM
+         QZK1hOwmX56PmJ+AOywkPluOkDe08NupbWoYH7Ao2qnMjGREBdYfYYZTz6NPGmqvr16f
+         l0hytTmR3CKfONYoalNkpiBf77BaT7tgiYKSGaXXpBMaKhoEPouVDfDjMvz9hzNqqj6L
+         12aA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739977616; x=1740582416;
+        d=1e100.net; s=20230601; t=1739978652; x=1740583452;
         h=content-transfer-encoding:in-reply-to:content-language:from
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bgV97x/vQ/whH7vk6tSNveDGHR7Aye2btAEtKhwCZ7A=;
-        b=v0WrEQOwpCUQqm2iTio6T2hWCiq8OLhkUYXPazim0qTSY24gzVbCZiJ3KLZPMsUi3N
-         F5oIHlBPCiN7CwoMoNsv8yrKi1qJXx5wc8FgzIcrvKGL3aqT/JjA/rVYGIj26fL+Lpsi
-         gos/gDoQ85N8H5IKs0O0Zntb+CVmkLpv0LzKwfGAZJw9msfwdeqlliWvUm7NM4FSTnZW
-         fw5OffZ0WiqNHd98oJNf7wK3LSkL35SABTg4LEdAy4xAeveeuVnrwOs/UU74PjDFOxGW
-         XrXXxiiOl2UwbDWmSgfabnZl4iwChCY5/S4gmvvwOIhr16maqPeB38IW2hVrwYEeC0gI
-         HAVA==
-X-Forwarded-Encrypted: i=1; AJvYcCUAv3B2vQu3KuCKOHQxt6B1sGAvi4Q3zARI3cIbhTOpze9LQfFp+hX6wdeDMehr4E5Eex9goj9bsIo20XM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAnrDPGFGoYIorMu8LGeOGvaPBf7Zfs/QOfEUQ6CRkyH4FjOfN
-	0AT6yQsDVdPtnmQ19OmO7D+pZbXUYmiT2zOvlbMqsK/JnBOVcJTdB02l4Md2
-X-Gm-Gg: ASbGncu/OTDDTWoFfOOpG2aKaqAkQBYUcrcPJlWfp/Q+cn1U06k1QS3qJt5jXxUoBeG
-	VL63CNF0br067gGxXo9A7cSeUJP1boMw0+DAAVB+BYTQcGDIxCenwhFsx3JoylYwrqk7OJ3pJ5r
-	FLP07TtvKE+jXqSTjiBmVTcJZdfo1wrzrvul7cwqAC5me4sqTgsQTPAjakJEmCc/PUKM1gIyVGc
-	VoN+yWbnZsZwHDIc7+4fs2uFmoTX0bG9hdJinao2ipPxK1pCbXIR/Yb5Xuf3K9fFbjmgsHlr2D3
-	Prd77RKFw7rhBdV9uIaqxEpDV/ExN9IRV4gS6D59FgcTkrIeBtjD4zmyHT+CqV9hE/VsT3ACJVS
-	mO1MwNIG8rPFRZ1Adi5ZXjfQnMf40gKmgO9BB
-X-Google-Smtp-Source: AGHT+IH3NEn440FuqyNHJ3LPI/XaJig8Wk5u/s4h5uGYDLuaGxcEoQGndw46vqTZzl19OWGjFt+fQA==
-X-Received: by 2002:a2e:9911:0:b0:307:2aea:5594 with SMTP id 38308e7fff4ca-30a44ed1aeamr13192091fa.18.1739977615236;
-        Wed, 19 Feb 2025 07:06:55 -0800 (PST)
+        bh=lrnqLVDBWW+mF9ezkN3CjkgFYa7vo/xRQjq0L2epDyA=;
+        b=T0f9SZu3tRrZLF7CyhSAmtM2YfaYSx8BInN8AHoauMlMYCB1YOwCiLZK0P4N70dYG8
+         kVMP2cT4C5d3orj7lU4MjhsgPBTgxQzQAm0Ia+Fl+HqCzkvO72uIG0rR+R4u7aD+NqS8
+         AbDiGibQsR/3Qh8f9+hjHP8CbcJqfC9j+8tT9Shj8T8fE06OKcVH4j1os8qys6TUSmzg
+         attmo1wRvWuO32rWPVzqDRzD987Ehc0ttPTXUvfpQAHqGthNZNPYD4Xr8pppEcoelwul
+         O+NY9mvNhVlWaBWS2ZTnU1ymZu+waBrZ0wPghVSBlZ/sIWTfkAKkjIrjcgRZT3K1q6UF
+         V6Ng==
+X-Forwarded-Encrypted: i=1; AJvYcCX7vtAMGo6+QTyprUxXGaaYuBktzFJL1r/3I3Fuhmy0A+/zX1Pcke6bRdKib4KsQ6bdj7Xk5DBRXfUEfWg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCdhLFhyfKz0GNWzuuh/cDKawFJbKVLpp0AoQvAkeBx3hOtwrp
+	vzygyXWL3GwO74PEG2scUaMgJEg9Vcmz2XXL1d/MvjCZR69sKtlY
+X-Gm-Gg: ASbGnct3x7BYILK0EJaabvgebi+Vci56pZI6hRiOkY5uQvwTDl4kZW2KP81177xKwbj
+	21qddS2nujRfD85T1isnYQ7KmMXrEIO8VEsQhIYolf1gnds6k3ydAfJahSG3LAD9phEqFB2QCrD
+	Vayb1wodDw65nGREvmilEN/MnnHIjyvNgJP1PfAKD8MdWuvJko9qhpDpbBUQ7AjMjO8srJ8eQsJ
+	tmnZ6hn4ijKTvvW/gyApiK7iylLK6VKdn4PoFZj28mXwnrNJe4mPA4JASOr6i4MobSLdnn1nrfc
+	K9/r5hLD2iWFfIm568yXalrHkawrposMAXc+HHTYWPe35mfsTRBGT77n/3kj0GDlI58tRGigZdO
+	xEPN3qopLqQFmOkp1LxJfKhdbHcF0kpLdNme0
+X-Google-Smtp-Source: AGHT+IH58UK3s7ffFDj3Gx60vr62hzm6v5h4jV30DbH78mNEHe20BtyvIiamX1TulZDRBvnCevPTXg==
+X-Received: by 2002:a2e:b6c7:0:b0:308:e9ae:b5b3 with SMTP id 38308e7fff4ca-30a44dac868mr11254411fa.1.1739978651498;
+        Wed, 19 Feb 2025 07:24:11 -0800 (PST)
 Received: from ?IPV6:2001:999:400:2a04:e774:ddfe:347f:bb68? (n4bkk9yqra8wbkrzgx4-1.v6.elisa-mobile.fi. [2001:999:400:2a04:e774:ddfe:347f:bb68])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30928c24a47sm16259691fa.93.2025.02.19.07.06.54
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3092fb236cbsm15172441fa.69.2025.02.19.07.24.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Feb 2025 07:06:54 -0800 (PST)
-Message-ID: <55d56d32-64b5-4cef-8c1c-fb29b7b93b87@gmail.com>
-Date: Wed, 19 Feb 2025 17:06:54 +0200
+        Wed, 19 Feb 2025 07:24:10 -0800 (PST)
+Message-ID: <bab71a0a-bc4c-4ec1-9db8-0d9153da505c@gmail.com>
+Date: Wed, 19 Feb 2025 17:24:10 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -82,55 +82,115 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dmaengine: ti: edma: support sw triggered chans in
- of_edma_xlate()
-To: Matthew Majewski <mattwmajewski@gmail.com>, Vinod Koul <vkoul@kernel.org>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250216214741.207538-1-mattwmajewski@gmail.com>
+Subject: Re: [PATCH] dmaengine: ti: k3-udma: Enable second resource range for
+ BCDMA and PKTDMA
+To: Siddharth Vadapalli <s-vadapalli@ti.com>, vkoul@kernel.org
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, vigneshr@ti.com, srk@ti.com
+References: <20250205121805.316792-1-s-vadapalli@ti.com>
 From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
 Content-Language: en-US
-In-Reply-To: <20250216214741.207538-1-mattwmajewski@gmail.com>
+In-Reply-To: <20250205121805.316792-1-s-vadapalli@ti.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 
 
-On 16/02/2025 23:47, Matthew Majewski wrote:
-> The .of_edma_xlate() function always sets the hw_triggered flag to
-> true. This causes sw triggered channels consumed via the device-tree
-> to not function properly, as the driver incorrectly assumes they are
-> hw triggered. Modify the xlate() function to correctly set the
-> hw_triggered flag to false for channels reserved for memcpy
-> operation (ie, sw triggered).
+On 05/02/2025 14:18, Siddharth Vadapalli wrote:
+> The SoC DMA resources for UDMA, BCDMA and PKTDMA can be described via a
+> combination of up to two resource ranges. The first resource range handles
+> the default partitioning wherein all resources belonging to that range are
+> allocated to a single entity and form a continuous range. For use-cases
+> where the resources are shared across multiple entities and require to be
+> described via discontinuous ranges, a second resource range is required.
 > 
-> Signed-off-by: Matthew Majewski <mattwmajewski@gmail.com>
+> Currently, udma_setup_resources() supports handling resources that belong
+> to the second range. Extend bcdma_setup_resources() and
+> pktdma_setup_resources() to support the same.
 
-Good catch,
 Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
 
-> ---
->  drivers/dma/ti/edma.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
-> index 4ece125b2ae7..0554a18d84ba 100644
-> --- a/drivers/dma/ti/edma.c
-> +++ b/drivers/dma/ti/edma.c
-> @@ -2258,8 +2258,12 @@ static struct dma_chan *of_edma_xlate(struct of_phandle_args *dma_spec,
->  
->  	return NULL;
->  out:
-> -	/* The channel is going to be used as HW synchronized */
-> -	echan->hw_triggered = true;
-> +	/*
-> +	 * The channel is going to be HW synchronized, unless it was
-> +	 * reserved as a memcpy channel
-> +	 */
-> +	echan->hw_triggered =
-> +		!edma_is_memcpy_channel(i, ecc->info->memcpy_channels);
->  	return dma_get_slave_channel(chan);
->  }
->  #else
+> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+> ---
+>  drivers/dma/ti/k3-udma.c | 36 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+> 
+> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+> index 7ed1956b4642..b223a7aacb0c 100644
+> --- a/drivers/dma/ti/k3-udma.c
+> +++ b/drivers/dma/ti/k3-udma.c
+> @@ -4886,6 +4886,12 @@ static int bcdma_setup_resources(struct udma_dev *ud)
+>  				irq_res.desc[i].start = rm_res->desc[i].start +
+>  							oes->bcdma_bchan_ring;
+>  				irq_res.desc[i].num = rm_res->desc[i].num;
+> +
+> +				if (rm_res->desc[i].num_sec) {
+> +					irq_res.desc[i].start_sec = rm_res->desc[i].start_sec +
+> +									oes->bcdma_bchan_ring;
+> +					irq_res.desc[i].num_sec = rm_res->desc[i].num_sec;
+> +				}
+>  			}
+>  		}
+>  	} else {
+> @@ -4909,6 +4915,15 @@ static int bcdma_setup_resources(struct udma_dev *ud)
+>  				irq_res.desc[i + 1].start = rm_res->desc[j].start +
+>  							oes->bcdma_tchan_ring;
+>  				irq_res.desc[i + 1].num = rm_res->desc[j].num;
+> +
+> +				if (rm_res->desc[j].num_sec) {
+> +					irq_res.desc[i].start_sec = rm_res->desc[j].start_sec +
+> +									oes->bcdma_tchan_data;
+> +					irq_res.desc[i].num_sec = rm_res->desc[j].num_sec;
+> +					irq_res.desc[i + 1].start_sec = rm_res->desc[j].start_sec +
+> +									oes->bcdma_tchan_ring;
+> +					irq_res.desc[i + 1].num_sec = rm_res->desc[j].num_sec;
+> +				}
+>  			}
+>  		}
+>  	}
+> @@ -4929,6 +4944,15 @@ static int bcdma_setup_resources(struct udma_dev *ud)
+>  				irq_res.desc[i + 1].start = rm_res->desc[j].start +
+>  							oes->bcdma_rchan_ring;
+>  				irq_res.desc[i + 1].num = rm_res->desc[j].num;
+> +
+> +				if (rm_res->desc[j].num_sec) {
+> +					irq_res.desc[i].start_sec = rm_res->desc[j].start_sec +
+> +									oes->bcdma_rchan_data;
+> +					irq_res.desc[i].num_sec = rm_res->desc[j].num_sec;
+> +					irq_res.desc[i + 1].start_sec = rm_res->desc[j].start_sec +
+> +									oes->bcdma_rchan_ring;
+> +					irq_res.desc[i + 1].num_sec = rm_res->desc[j].num_sec;
+> +				}
+>  			}
+>  		}
+>  	}
+> @@ -5063,6 +5087,12 @@ static int pktdma_setup_resources(struct udma_dev *ud)
+>  			irq_res.desc[i].start = rm_res->desc[i].start +
+>  						oes->pktdma_tchan_flow;
+>  			irq_res.desc[i].num = rm_res->desc[i].num;
+> +
+> +			if (rm_res->desc[i].num_sec) {
+> +				irq_res.desc[i].start_sec = rm_res->desc[i].start_sec +
+> +								oes->pktdma_tchan_flow;
+> +				irq_res.desc[i].num_sec = rm_res->desc[i].num_sec;
+> +			}
+>  		}
+>  	}
+>  	rm_res = tisci_rm->rm_ranges[RM_RANGE_RFLOW];
+> @@ -5074,6 +5104,12 @@ static int pktdma_setup_resources(struct udma_dev *ud)
+>  			irq_res.desc[i].start = rm_res->desc[j].start +
+>  						oes->pktdma_rchan_flow;
+>  			irq_res.desc[i].num = rm_res->desc[j].num;
+> +
+> +			if (rm_res->desc[j].num_sec) {
+> +				irq_res.desc[i].start_sec = rm_res->desc[j].start_sec +
+> +								oes->pktdma_rchan_flow;
+> +				irq_res.desc[i].num_sec = rm_res->desc[j].num_sec;
+> +			}
+>  		}
+>  	}
+>  	ret = ti_sci_inta_msi_domain_alloc_irqs(ud->dev, &irq_res);
 
 -- 
 Péter

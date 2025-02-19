@@ -1,126 +1,152 @@
-Return-Path: <dmaengine+bounces-4528-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4529-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8FBB5A3AD56
-	for <lists+dmaengine@lfdr.de>; Wed, 19 Feb 2025 01:45:23 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D70BDA3B7DD
+	for <lists+dmaengine@lfdr.de>; Wed, 19 Feb 2025 10:19:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0936E175E3D
-	for <lists+dmaengine@lfdr.de>; Wed, 19 Feb 2025 00:44:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 389DB1881619
+	for <lists+dmaengine@lfdr.de>; Wed, 19 Feb 2025 09:13:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3AA8C19DF6A;
-	Wed, 19 Feb 2025 00:42:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2811A1DE8B4;
+	Wed, 19 Feb 2025 09:09:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g7DXt187"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="cRtniLhk"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC3A19D882;
-	Wed, 19 Feb 2025 00:42:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9EFD1DE88A;
+	Wed, 19 Feb 2025 09:09:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739925748; cv=none; b=dDaxdQxcn1jBJKn1CyDvFE5asQOWZOMbMOIZ8eidpjnfSYvbXsk2Hqpvi6KsmxkLlJiDDhCE9712d0GkGXrJMWVf4nPIPmjGy+Mc216Q09NhlYUGjBRQNlO/9MZhdO+QZI5iRLgwEjHz2/AlTXwHh8HhY6vT7pgwg/P6OP71I+0=
+	t=1739956156; cv=none; b=FSa+HWpQU6NmXIcjQbP/HD+V5bWXkiqL5+dJgO5ERPQwijLZAdUXaRQsVeO92RxHsbdLxVqmLrAbKXjzpUSuVPJbyd5Ge9C4AYaXuVnkdQSLnAygKZzI86XugASI03IbOVHaaokJwbqND07kNxuqAPDv+SBrX5iCd3A6DSt1g3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739925748; c=relaxed/simple;
-	bh=MCUZvMnjI+St/xxB98n3RdGdbJTQ9UD808hd20KqjPs=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=RY+mGwwkPWVq8uXjZ7EysOEaCyGEGRgNQu8i7mQiL/LC216DN8bWikePvMl3qBxqshJfwKaFz/00BGniTFKYgSWLC4AzNwEwyOESJy6SaYC0eMleJoO/P6SOD0VI8eEKNywoMusJzFV7R8NvhuU57WR0Ws9T15XHdRC6/90Bvwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g7DXt187; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41AD0C4CEE2;
-	Wed, 19 Feb 2025 00:42:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739925747;
-	bh=MCUZvMnjI+St/xxB98n3RdGdbJTQ9UD808hd20KqjPs=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=g7DXt187wHzs6lpJOBkSrmxvJy6EAno2kUlthlhPsgMhUKij1NDLsEfj8cya5mDQY
-	 xfC1EOHc+knjSm5CH8o6khCn3rDz2NHfnSE1uk2Qhc0hgf/ydW3G8jOlCJqaoDh/DE
-	 bc0jKanWKe7hYDToKMjh65tWXzRmnzM8mDRiG4lFQSpbSLOYX3R3wmn9HaeIzD+mTg
-	 oyMiTZcjyshGu2hKWv44TdS1ze0xfKxFxZ9MmE1s4ru/Cbm6PDzEmVvzm0XHx3eEP2
-	 O+Ti7sW763NoQQ1FeaEFJD+QH9Cae6SX5W/BN13rUrJaVeSUbodBzH2kJ1IjtMwMj8
-	 Hni1nopfxMlfg==
-Date: Tue, 18 Feb 2025 18:42:26 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1739956156; c=relaxed/simple;
+	bh=9vk7x8p7OZ+QywMaVdmYFW4mZywPyCxbk61u3m25ECI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gRl/xvgEJ2ZW8tXLrCsPnLxy9veoEGI/1R/MynifA8wC3VP8ODZx57ZVlkmivlbc0SIEqUzWHSO3qH17WcOyuFpeTZUUEN95ApBiLOmTo1BoGu/NcVCgQbRq9Cvo+hmsfixPYuLKQWl4IsJpodyjWEhaoIkWhTl7P5hOGUcUQpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=cRtniLhk; arc=none smtp.client-ip=115.124.30.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1739956143; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=ftZU+5bMAOO43RWbn35YZbsoovI4IiODb5WpQejCd88=;
+	b=cRtniLhkv3wjY2JOwtfP02DcJvl+1vJFgEDet0Wh1fCOq0GJZP1FgNuczHLGUF54NNRJ9x9oHzRjr7sP4By5oVuY6fqbKEV1vs4g3KiYe951kQ04Vj8bATqR2M1ufAFjuQScbpfB+kmSELcXiVBmKOryMjkSMI4hTrUlV7ga0lo=
+Received: from 30.246.161.128(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WPonrx6_1739956141 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 19 Feb 2025 17:09:02 +0800
+Message-ID: <eb44baac-f212-4b25-bbbf-6f0c498f2c5c@linux.alibaba.com>
+Date: Wed, 19 Feb 2025 17:08:54 +0800
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: krzk+dt@kernel.org, dmaengine@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux@roeck-us.net, vkoul@kernel.org, 
- wim@linux-watchdog.org, linux-watchdog@vger.kernel.org, conor+dt@kernel.org, 
- linux-kernel@vger.kernel.org, nicolas.ferre@microchip.com, 
- claudiu.beznea@tuxon.dev, alexandre.belloni@bootlin.com, 
- devicetree@vger.kernel.org
-To: Ryan.Wanner@microchip.com
-In-Reply-To: <cover.1739555984.git.Ryan.Wanner@microchip.com>
-References: <cover.1739555984.git.Ryan.Wanner@microchip.com>
-Message-Id: <173992516786.2065578.832520865805552342.robh@kernel.org>
-Subject: Re: [PATCH 0/8]  Add System Components for Microchip SAMA7D65 SoC
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/7] dmaengine: idxd: fix memory leak in error handling
+ path of idxd_setup_wqs
+To: Fenghua Yu <fenghuay@nvidia.com>, vinicius.gomes@intel.com,
+ dave.jiang@intel.com, vkoul@kernel.org
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250215054431.55747-1-xueshuai@linux.alibaba.com>
+ <20250215054431.55747-2-xueshuai@linux.alibaba.com>
+ <f44a4303-d106-408c-ba59-911fe7b9a290@nvidia.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <f44a4303-d106-408c-ba59-911fe7b9a290@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
-On Fri, 14 Feb 2025 11:08:13 -0700, Ryan.Wanner@microchip.com wrote:
-> From: Ryan Wanner <Ryan.Wanner@microchip.com>
+
+在 2025/2/19 00:32, Fenghua Yu 写道:
+> Hi, Shuai,
 > 
-> This patch set adds support for the following systems in the SAMA7D65
-> SoC:
-> - DMAs
-> - Chip ID
-> - Dual watchdog timer.
+> On 2/14/25 21:44, Shuai Xue wrote:
+>> Memory allocated for wqs is not freed if an error occurs during
+>> idxd_setup_wqs(). To fix it, free the allocated memory in the reverse
+>> order of allocation before exiting the function in case of an error.
+>>
+>> Fixes: a8563a33a5e2 ("dmanegine: idxd: reformat opcap output to match bitmap_parse() input")
+>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+>> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+>> ---
+>>   drivers/dma/idxd/init.c | 20 +++++++++++++++++---
+>>   1 file changed, 17 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+>> index b946f78f85e1..b85736fd25bd 100644
+>> --- a/drivers/dma/idxd/init.c
+>> +++ b/drivers/dma/idxd/init.c
+>> @@ -169,8 +169,8 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
+>>       idxd->wq_enable_map = bitmap_zalloc_node(idxd->max_wqs, GFP_KERNEL, dev_to_node(dev));
+>>       if (!idxd->wq_enable_map) {
+>> -        kfree(idxd->wqs);
+>> -        return -ENOMEM;
+>> +        rc = -ENOMEM;
+>> +        goto err_bitmap;
+>>       }
+>>       for (i = 0; i < idxd->max_wqs; i++) {
+>> @@ -191,6 +191,7 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
+>>           rc = dev_set_name(conf_dev, "wq%d.%d", idxd->id, wq->id);
+>>           if (rc < 0) {
+>>               put_device(conf_dev);
+>> +            kfree(wq);
+>>               goto err;
+>>           }
+>> @@ -204,6 +205,7 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
+>>           wq->wqcfg = kzalloc_node(idxd->wqcfg_size, GFP_KERNEL, dev_to_node(dev));
+>>           if (!wq->wqcfg) {
+>>               put_device(conf_dev);
+>> +            kfree(wq);
+>>               rc = -ENOMEM;
+>>               goto err;
+>>           }
+>> @@ -211,7 +213,9 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
+>>           if (idxd->hw.wq_cap.op_config) {
+>>               wq->opcap_bmap = bitmap_zalloc(IDXD_MAX_OPCAP_BITS, GFP_KERNEL);
+>>               if (!wq->opcap_bmap) {
+>> +                kfree(wq->wqcfg);
+>>                   put_device(conf_dev);
+>> +                kfree(wq);
+>>                   rc = -ENOMEM;
+>>                   goto err;
+>>               }
+>> @@ -225,11 +229,21 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
+>>       return 0;
+>>    err:
+>> -    while (--i >= 0) {
+>> +    while (i-- > 0) {
 > 
-> Ryan Wanner (8):
->   dt-bindings: atmel-sysreg: Add SAMA7D65 Chip ID
->   dt-bindings: watchdog: sama5d4-wdt: Add sama7d65-wdt
->   dt-bindings: dma: atmel: add microchip,sama7d65-dma
->   ARM: at91: Add Support in SoC driver for SAMA7D65
->   ARM: dts: microchip: sama7d65: Add chipID for sama7d65
->   ARM: dts: microchip: sama7d65: Add watchdog for sama7d65
->   ARM: dts: microchip: sama7d65: Add DMAs to sama7d65 SoC
->   ARM: dts: microchip: sama7d65: Enable DMAs
-> 
->  .../devicetree/bindings/arm/atmel-sysregs.txt |  1 +
->  .../bindings/dma/atmel,sama5d4-dma.yaml       |  3 ++
->  .../bindings/watchdog/atmel,sama5d4-wdt.yaml  |  3 ++
->  .../dts/microchip/at91-sama7d65_curiosity.dts | 12 +++++
->  arch/arm/boot/dts/microchip/sama7d65.dtsi     | 44 +++++++++++++++++++
->  drivers/soc/atmel/soc.c                       |  5 +++
->  drivers/soc/atmel/soc.h                       |  3 ++
->  7 files changed, 71 insertions(+)
-> 
-> --
-> 2.43.0
-> 
-> 
-> 
+> Why changed to "i-- > 0" here? Before coming to here, the mem areas allocated for wqs[i] are freed already and there is not need to free them again here, right? 
 
+Yes.
 
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
+> And if i>1, mem areas for wqs[0] won't be freed and will leak, right?
 
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
+No, the two ways of writing are equivalent.
 
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
+#include <stdio.h>
 
-  pip3 install dtschema --upgrade
+int main()
+{
+     int i = 1;
+     while (i-- > 0)
+         printf("freeing i %d\n", i);
 
+     return 0;
+}
 
-New warnings running 'make CHECK_DTBS=y for arch/arm/boot/dts/microchip/' for cover.1739555984.git.Ryan.Wanner@microchip.com:
+// console output
+// freeing i 0
 
-arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dtb: watchdog@e001d180: Unevaluated properties are not allowed ('clocks' was unexpected)
-	from schema $id: http://devicetree.org/schemas/watchdog/atmel,sama5d4-wdt.yaml#
-arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dtb: /soc/chipid@e0020000: failed to match any schema with compatible: ['microchip,sama7d65-chipid']
+I will drop this line to avoid confusion.
 
-
-
-
+Thanks.
+Shuai
 
 

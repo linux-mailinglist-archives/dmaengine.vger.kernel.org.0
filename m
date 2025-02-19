@@ -1,46 +1,46 @@
-Return-Path: <dmaengine+bounces-4533-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4534-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 52D34A3BE0A
-	for <lists+dmaengine@lfdr.de>; Wed, 19 Feb 2025 13:30:30 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CDCF0A3BF60
+	for <lists+dmaengine@lfdr.de>; Wed, 19 Feb 2025 14:05:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1510D3B56E5
-	for <lists+dmaengine@lfdr.de>; Wed, 19 Feb 2025 12:28:25 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4F5987A2314
+	for <lists+dmaengine@lfdr.de>; Wed, 19 Feb 2025 13:04:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4141D1DFD91;
-	Wed, 19 Feb 2025 12:28:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 998AB1DF756;
+	Wed, 19 Feb 2025 13:05:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="tiz6X19K"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="QSG6P8AY"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1502E1D52B;
-	Wed, 19 Feb 2025 12:28:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65E182AD00;
+	Wed, 19 Feb 2025 13:05:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739968111; cv=none; b=N64Vnvt3wxTz3gS4IVZOyaUtUUR8X/J3jL35XFltsakyXIZpMeTR0sQIGf14u0QFPFfyNBg0QLeopUGtF7K96rlh+UYhCCz6s2BdGeCJuZUPd5JelZpeQNJ9KzxBRC+fDKp/xkppyA+qrZg4FNOZ+YANagKgWvjaWjHFWxptdmc=
+	t=1739970332; cv=none; b=jp/Lgb1SBI7zKAZcrYViGyq1wMAwXSx5PJOxr3rYwG5uKE6lB4gGkXcV3oIq41vj9pHcsY6iYNCQYqKDPjW6CIjhQy9thL7XVbe+6iHDrruy3JA5KoaonNG87mMxXWYeFtpyjK02YThYjUkIY2q2KokEQA2j1OhFeadBeIGKZBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739968111; c=relaxed/simple;
-	bh=6OYuPYLFFGSzAYcwYN9dlH4FnHdeBk6mh2HE/XQ2Xr0=;
+	s=arc-20240116; t=1739970332; c=relaxed/simple;
+	bh=s911wMcbeZp32AGNtUVATQgYnK5tlhQjxdBvXNAXKhg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IjMqHPvlLhmsV2oPRi56Jm3yw2IhJSIihys6fEFLSa/8rN3pZkqX8Rpy9oSsW1JzRyoBdirtldqYVwns+AapnVrRC0JxhPrPaSeoXTf4v1iZgufOcUzSNU5RVNeKu+gi4IULNgXWnhZQr+dFLIvb6muWV8wSggqXypOaxxHiN0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=tiz6X19K; arc=none smtp.client-ip=115.124.30.100
+	 In-Reply-To:Content-Type; b=mBy9aVclSK+rJgOWqC2nZfWKrFnvqn+uqh9T7XBdiOnzAHpsl+XAHabFmanXmnempoWK4oc/Ks7sutXGonJQRCMoOn+9zW2MP+pDlrXR/nGaUlBEZsbcs1NpZvJHQVOsPTDKTFt/ygkUGkAMyOBJZbLDZEC1jEZVT4CiHJTLKMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=QSG6P8AY; arc=none smtp.client-ip=115.124.30.111
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1739968103; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=FK40UwTND3UC7WyjcHaw02QI5U346kVynN6H6JZkPro=;
-	b=tiz6X19Kd5S9vmqSrIhVuRE9B3YEccVl0JeOaf45DVnUAMFGJ17No9/A5lqYK8BGt60zky+RnntxmOnoPdwG17IVofGlw9z48xWwBjrJ0z9kkJLluYJcnaC27K5ioFFE90y6K0qKMH5jKMMRY6GCv8VrvF9SYLI/lB6m1vFC6wk=
-Received: from 30.246.161.128(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WPpI3nf_1739968102 cluster:ay36)
+	t=1739970318; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=4wI6vYc+X3DPw8mXzQ1PLO+DDcPPxrtx9n1GzpVltlk=;
+	b=QSG6P8AYmYhHM8c8sqPhUXN3eh3AWUbZ47HXWAKLPIys+AFZUN0pfDeg7IndaBVyM0eBECzIc96Qz1+3VWAZjxcQqg71HpX0YYmi7B/YiuvVHt91PSHdt5qu4GjKFbThMcEMkuYnPoaQscRXe+s7QZsoscNZJPfbuGcNPp+MRkc=
+Received: from 30.246.161.128(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WPpRQpA_1739970317 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Wed, 19 Feb 2025 20:28:22 +0800
-Message-ID: <8880c4b6-233f-4b8a-a73f-398448169dfd@linux.alibaba.com>
-Date: Wed, 19 Feb 2025 20:28:21 +0800
+          Wed, 19 Feb 2025 21:05:18 +0800
+Message-ID: <78f7d2ab-67d8-41ab-a7b6-1313d1c1655c@linux.alibaba.com>
+Date: Wed, 19 Feb 2025 21:05:16 +0800
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -94,12 +94,15 @@ Content-Transfer-Encoding: 8bit
 >> +    kfree(idxd);
 > 
 > opcap_bmap, idxd_ida, idxd are NOT allocated during FLR re-init idxd device. In the FLR case, they should not be freed.
+> 
 
-Great catch, thanks.
+After relook the code, idxd_free() will not be called in FLR case,
+because all error lable in idxd_pci_probe_alloc() is called from
+alloc_idxd=true, not the FLR case.
 
-Will fix it in next version.
+Anyway, I will add a protection in idxd_free().
 
+Thanks.
 Shuai
-
 
 

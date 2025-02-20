@@ -1,241 +1,285 @@
-Return-Path: <dmaengine+bounces-4544-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4545-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB28EA3D62A
-	for <lists+dmaengine@lfdr.de>; Thu, 20 Feb 2025 11:10:27 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 55BABA3D87A
+	for <lists+dmaengine@lfdr.de>; Thu, 20 Feb 2025 12:26:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CF222170B19
-	for <lists+dmaengine@lfdr.de>; Thu, 20 Feb 2025 10:10:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 19B173AB64E
+	for <lists+dmaengine@lfdr.de>; Thu, 20 Feb 2025 11:25:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F41A1F0E29;
-	Thu, 20 Feb 2025 10:09:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF6211FAC29;
+	Thu, 20 Feb 2025 11:21:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TbnxBlwP"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="5Adk4Vp0"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2068.outbound.protection.outlook.com [40.107.93.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28F041F03CA
-	for <dmaengine@vger.kernel.org>; Thu, 20 Feb 2025 10:09:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740046185; cv=none; b=cruPtuB3cubbjEugk+O4p51pT/AgpmBzL7lUEQydf0wnq3ii9K8lhJ626Cu9hoZuGorGS3nqnSYELuCtdceD2bxZ1yBpqmLk6E8UgMGB7QSj2rG8Bayjw9sHN/UUVbyATTLxtOAfvOfiD6SMjJFod2FUogbS2TrQLKd/lnLP55I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740046185; c=relaxed/simple;
-	bh=Zoo9uQ8Drs94E3LT5wK9nBC48YVNSJ75dwbnTzaoVHw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RtXF3dPj/Or5VaAtk8PL2gixCn8n4n/VJR6H+nkPIoGuC1U+vgmkKhVb4ladRmDkZebUlGJ7DSt6zDU2JyUlULIpetkQbcdXImYYij0v0K8U+8ZKTAi30DZUotbnHPJpsZlg0x68UZu7JZ2077teywmJfsDLbXXzrBDc9l6358k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TbnxBlwP; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-38f488f3161so327513f8f.3
-        for <dmaengine@vger.kernel.org>; Thu, 20 Feb 2025 02:09:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740046181; x=1740650981; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VKAFazs0bK/4Q6jQNje2L8Expu/NOgNPeCn90wFFS4o=;
-        b=TbnxBlwPjjyp5w4jK7dHSTOLWZ2jty0K7BW6YS3sGDpseukWSP+NfndN8IXkZbspVn
-         y/2hRbyjkA7okR7Npwye0REGht+j8z4kKPj++qi+dFBcIwmBfBx11ZwI93N+aq7BWRY7
-         4MUHHO+fzvDRFoIqRGAsRaY4GmlMbuvHA/Yx8dxKTVQ744Y/oGu+NlhUmvY9jQOHx6GU
-         XWw5cnlAmw1B2bOx1iRckt9Zla4faaKXtB9VzVCZISstygkJR3MziNB2CaSZT8DsLrQD
-         DwYHFgSgJVm0l/J9lVq4/1wtcJS50Kie/9SNSysy8thpkUl4RigzHFMAVxMnz6xfuVx5
-         AK+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740046181; x=1740650981;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VKAFazs0bK/4Q6jQNje2L8Expu/NOgNPeCn90wFFS4o=;
-        b=XkyhX7g6hriWcl56tznyRN/EyzEGEnebbUQ0pTd2Kuu5XcEkIFdz/CTiNH78Lq02oh
-         1VGK2AzTEGQNYtvA7xMEI3iY5A8bvGdbYIGPouJGZCKYukMnAfr8i79ghffzc9G0B9au
-         ZH3XQTFXYqeGK3MJUnAtZFc8J2vXaS9ZFumtZ/+D9RH3Jj2Vx/GesM4QAvcM5oYdcumi
-         RJ82tJuNgE3zAmmCRs0rawf9HnPUWbYUE3tglWRxubj5R06eb/1JMGLKeRjebz9WpcQ7
-         BLVWwTB8tRbd+6OAaByNNdoIAXAF7xkVddT/QJf9zE+q8fQx8zv0UW++e+YRbwm9T/lX
-         Nqxw==
-X-Forwarded-Encrypted: i=1; AJvYcCWWWQz5kydxTYq5Aal7zg/Ihmd5qwnjd2I0AR6AGhv4q1LeEtLZCJOVMOqeDeAGVuryW2009S30mxk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YytpHnlOPPhNv2WZ4jhc2qG+MqNEtbok8MkvR3v76gs67oTEErK
-	LET0mVzSn5V9LU4KaFb+4//D7qM8m30OemsKCaJ912TU6eB8LcsdiI6CaGuku+Y=
-X-Gm-Gg: ASbGnct5hEhp4YXc6LWEBB1tHERYteW1iZw8hx7iEJp4xPIyEys0iCcZdOUQb7yZJUV
-	vZ2nuXi0Q1xU+rVvLvAsfGoW3VCb1c67eteeWXgZdEyk/0AECGp+fO9a1tgZADsSNuZMCegnP9K
-	U5NSozPOaJWDgMcINfoJdIyrhX28IKhKXyBLcNPgSAXQpFaYDuyrptCLps7aMLaSD8sptq1V5ze
-	V5M21eGCpGyql5mI1XCretn7loZcCdYqLFWJyvYIHIsCcrBmdijvWdlepiBvJawmc1VwusBk4iS
-	6ffXOy6ozxtbHCFJy8gmNR94hVw=
-X-Google-Smtp-Source: AGHT+IERc6hIPqaeWn2CPZBGtZZAAoxkqyWFInBWc9QDvWlSHwq2D21AKF4IMfL83X3LHVGKdeB0Yw==
-X-Received: by 2002:a5d:59a2:0:b0:38d:d9bd:18a6 with SMTP id ffacd0b85a97d-38f33f437fdmr19446268f8f.42.1740046181176;
-        Thu, 20 Feb 2025 02:09:41 -0800 (PST)
-Received: from linaro.org ([2a02:2454:ff21:ef30:b30c:3d94:4d4a:a6eb])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f258b4123sm20741585f8f.17.2025.02.20.02.09.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2025 02:09:40 -0800 (PST)
-Date: Thu, 20 Feb 2025 11:09:38 +0100
-From: Stephan Gerhold <stephan.gerhold@linaro.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Andy Gross <agross@kernel.org>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Yuvaraj Ranganathan <quic_yrangana@quicinc.com>,
-	Anusha Rao <quic_anusha@quicinc.com>,
-	Md Sadre Alam <quic_mdalam@quicinc.com>,
-	linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Luca Weiss <luca.weiss@fairphone.com>
-Subject: Re: [PATCH 7/8] dt-bindings: dma: qcom: bam-dma: Add missing
- required properties
-Message-ID: <Z7b_YgzGJUT_un5z@linaro.org>
-References: <20250212-bam-dma-fixes-v1-0-f560889e65d8@linaro.org>
- <20250212-bam-dma-fixes-v1-7-f560889e65d8@linaro.org>
- <22ce4c8d-1f3b-42c9-b588-b7d74812f7b0@oss.qualcomm.com>
- <Z6231bBqNhA2M4Ap@linaro.org>
- <d674d626-e6a3-4683-8f45-81b09200849f@oss.qualcomm.com>
- <Z64OKcj9Ns1NkUea@linaro.org>
- <20250219222739.GA3078392-robh@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 178811F55E0;
+	Thu, 20 Feb 2025 11:21:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.68
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740050498; cv=fail; b=UpZjXW7dkXWgNynMQRyTAIgVrCg8Jtf8IlKyw4tRIDbDxwDT/55Z82eg0h7PaYVT13YIzUoRtxhYkNYc9L2LbVuoeH5DgvxRaP534/BaeeahywhRPScc+6YHWjCvcH/LZopHYuQPN2VeD7jjBM1fV4qXJcA6haAQrGirrZcHcvI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740050498; c=relaxed/simple;
+	bh=NKogL3hWt93SEZn2iceD7aUkZ4kAv6wJ5foX86vvkZc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=g7LgKbA5FzhdP//5l7kFhyvkYrAAUO34/uFZsHiT+kZP9fJRtOKfPZ4mRib8mcTCvVkyEWQ8alkfVgVHOU4PFicEcNL90J7zKzIqyUQr9RJ0z8VUGZjRgaY5cHBX0dtmxd80cOyNymdEksXCkP0Mgih5NIFgNeMqNwd9CRPjZC0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=5Adk4Vp0; arc=fail smtp.client-ip=40.107.93.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=He9ZRfBMjjppP+Ar6UaqpBdTeUPEqH+OVdWZowDE5DF9ol+dlofBTWYBbrPa6q8JuICHzG5woSVU55V+423IUnqVHMLV4qcAYfxik5p1EMIYXAsyXWs10oS+8bwdul59Unm8LgiB985jt/7/6JliB1WoDcPFxcID73+BAB87o9dwXV7ZtWz2BtCmkOhid0/KpZwm/bAHuXHin38BSKRiBHFAsq2YttJnsHw5VuZ/8bj5fLL/RcmrWtz2BEXvAYP447KFrKAU0yp/539yWxEvEyMF3MMhGsgQnrGRQXNDQfFVsi6yzoIuIVyaGgl/W3MDi5f0GrUpF4omw4nWrd7+aQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0EUJPCy/QJLXScGreVlHhvceI4fMku6xHcIDtEi7my0=;
+ b=RmQf6gQtOdBa/eNZE7V+jaE5G5U0v3RpxKjmNWEI8amX9We+izBWYxXO/6G/5hqXQTwc7dcNRHDQKdJme7duaLT4EwsLl7gEmTFE5sHn221FWPdKUrCjQaPP75lE5EbUebkx09MrufPueofaRqViMm02FHa8O95nTsQxF93K2Ng+YNIgXMFOhrFWfwD0eE9pAwy4S2sDKj2Bmeq73QHoyDXbsMPQcX3z+3LBX4Bq+xQXDhTxARkTFHjQvn3SAkFn5PZ0p37LapNn1+ovxhJ8Vhqj6eze9Vjp9PYN0rf1jriC6Qf6LFVKKsF4QoKfDoikz5JGFvJ10QCa8ykR/+KtNQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0EUJPCy/QJLXScGreVlHhvceI4fMku6xHcIDtEi7my0=;
+ b=5Adk4Vp0nsNhxzVLvIZO/3iFvQ/1uxMcVH9khra+n2hQT0zfBUv7gVRlYf0hb3eowPF8pSf0VAgqSPbMMM1Ef0t1O6VWYaV+Zn+xSA/3bi6Zx+5nfw2iZ1jneaUPI8b/eigWqynONvZQwgGOttcJAi9phGgDTwTLldjl6lrV36Y=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from SJ2PR12MB8109.namprd12.prod.outlook.com (2603:10b6:a03:4f5::8)
+ by SJ2PR12MB8034.namprd12.prod.outlook.com (2603:10b6:a03:4cb::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.16; Thu, 20 Feb
+ 2025 11:21:34 +0000
+Received: from SJ2PR12MB8109.namprd12.prod.outlook.com
+ ([fe80::7f35:efe7:5e82:5e30]) by SJ2PR12MB8109.namprd12.prod.outlook.com
+ ([fe80::7f35:efe7:5e82:5e30%7]) with mapi id 15.20.8466.013; Thu, 20 Feb 2025
+ 11:21:34 +0000
+Message-ID: <8dbb5f6b-9c40-4b79-a288-679e9b1d65fb@amd.com>
+Date: Thu, 20 Feb 2025 12:21:26 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] arm64: zynqmp: Move firmware constants from binding
+ to platform
+To: linux-kernel@vger.kernel.org, monstr@monstr.eu, michal.simek@xilinx.com,
+ git@xilinx.com
+Cc: Anand Ashok Dumbre <anand.ashok.dumbre@xilinx.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, Conor Dooley
+ <conor+dt@kernel.org>, Damien Le Moal <dlemoal@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Harini Katakam <harini.katakam@amd.com>, Jakub Kicinski <kuba@kernel.org>,
+ Jonathan Cameron <jic23@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+ Mark Brown <broonie@kernel.org>, Michael Tretter <m.tretter@pengutronix.de>,
+ Michael Turquette <mturquette@baylibre.com>,
+ Mubin Sayyed <mubin.sayyed@amd.com>,
+ Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Niklas Cassel <cassel@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Rob Herring <robh@kernel.org>, Shyam Pandey <radhey.shyam.pandey@amd.com>,
+ Stephen Boyd <sboyd@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>,
+ "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM"
+ <dmaengine@vger.kernel.org>,
+ "moderated list:ARM/ZYNQ ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
+ "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
+ "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)"
+ <linux-ide@vger.kernel.org>,
+ "open list:XILINX AMS DRIVER" <linux-iio@vger.kernel.org>,
+ "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
+ "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
+ "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>
+References: <cover.1738600745.git.michal.simek@amd.com>
+Content-Language: en-US
+From: Michal Simek <michal.simek@amd.com>
+Autocrypt: addr=michal.simek@amd.com; keydata=
+ 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
+ 3i3l5DA=
+In-Reply-To: <cover.1738600745.git.michal.simek@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BY5PR04CA0022.namprd04.prod.outlook.com
+ (2603:10b6:a03:1d0::32) To SJ2PR12MB8109.namprd12.prod.outlook.com
+ (2603:10b6:a03:4f5::8)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250219222739.GA3078392-robh@kernel.org>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR12MB8109:EE_|SJ2PR12MB8034:EE_
+X-MS-Office365-Filtering-Correlation-Id: b4e183f8-fa31-422e-0440-08dd51a0bbdc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?cnJ0ODlSZGU5Nk5od2ZiOWY5TWppMi9nQlJCWEJCMkFkUVlTRlFpUis0NjMy?=
+ =?utf-8?B?T2tJVm1hZEZyNGo0Y3ByS0lGdDdjaGtCaDNRbDVVR3Nsd3FrbUVxankya0tL?=
+ =?utf-8?B?MkNFRGVPNHU4MEtpZDFVSzAwV2VYUTBwd1c4Z2JWVlhzVWZoUXArdE1xZlRi?=
+ =?utf-8?B?STFINU85VS85andjSTZPYnh0RG1SVUFtV1JENVRNRWI1TnQwSURHanc1aWVS?=
+ =?utf-8?B?U3ROZ3RQcEVwdGVvb3Y5MlAvNFJUZ3lTTk5SU1JvSFR0ZTdPdzREdW1raEhX?=
+ =?utf-8?B?ZDhnSzU1dmpPZ2t5Z29JNnJDNjEva0psQS85U2lsMUkxeUJLdGpINEFnUDRG?=
+ =?utf-8?B?bTFnYUZ4YTN6V2NrT1cxQXZ4SEZtMi83a25oZmJoOG5ObW9iMmJOS25lOWFZ?=
+ =?utf-8?B?NE1ENUdhaDdwaGFZaUZWZG5GbmhnQUxiZ3ZSMWJjamo3YWx0UUR2V25PMFdD?=
+ =?utf-8?B?a2grMXNnOHNvRWptTk5maGNrbjEwS0oxd3ZZb2FGSThCTVc1OUtPMWVPd255?=
+ =?utf-8?B?bXpEWUc1MmZ3K0dKU2tFMi9aT3U2Z1U0b0VSNm94UEtvNkhXbXIwdHp2Y25a?=
+ =?utf-8?B?aW5HVmJ2Z2J2SURIZmI4c2hUWEtsc1pkak4wNS9zUU43eTJpbGtSMU9xYytK?=
+ =?utf-8?B?OCtXc2NvV2pIYisxaGdkVXJjUWI3Zy9RUGFldjQwSHhkem9aOUt4OGcybEhY?=
+ =?utf-8?B?OWJNdGNSRGdxR2lJS1hCVWZJODdRSlFuZVBMd0dnUmIrMzAramhYWnJCODBW?=
+ =?utf-8?B?b3ZldGphQklRd0dDcEhiY3IwS1QwTzBHSzhndlBLckxYVWt2VnBaY3V6S29m?=
+ =?utf-8?B?QUU5c2tTMFpVWm5ITWpoV05ycWx2VndVK2ZhaFB5WGQzSlFnZHRWVEU1eTlv?=
+ =?utf-8?B?KzEzWStrWmJ5QSttSFprcGdUY091cVVKQnkzV09LRHBQZi82am1waHBtclR1?=
+ =?utf-8?B?V0kyR2NqOHNHRzNsVGtVVnp2K2dzS2JSRG5CQzYxZmpHbVBDTkNnQzR3TDBK?=
+ =?utf-8?B?NEY0aWdPYVJhSlBTS01lRkFiV24vcmFvWnFwaGxpd2Vsbytidm8veFYzUFQw?=
+ =?utf-8?B?VHhNK21HT0xBTCsrcnlKNTUzUHZwU3J2YTJTVm0zeGVqbWFhaVAzSndIWkJP?=
+ =?utf-8?B?TjJlWmtNN0NKellXZjFCeG5BYXJNT2hHcXpDMkVtb0w0WWdOMDRZWkwyOEc3?=
+ =?utf-8?B?SlI5Um0xazRvU2RKQjVWbFNiZDBtSHUzSFF0NHBDNno4NWlsaFF5cGZhd1kv?=
+ =?utf-8?B?NkJjeGRtQm5NVVRqUGRyQStDUitrZko3WmsyYWJjOW50UGNYaUdUKzcxeGxM?=
+ =?utf-8?B?OVhWbWJaOGtOR2VCS3FlU1Z2UFQ0Tll2MUxhUGtET0hjMXl4RGt4eFM1RXpO?=
+ =?utf-8?B?eFNWYUdCVXUvUm9xZSt0d1BDZlFjZjF0cmRRalUvdTc2Sm0rSmtlamtMakYx?=
+ =?utf-8?B?UjJ0eVNjSGtsZTBDQ2t4ZGpCencweWJwMVRYc2tLaEk3Q3VxalJQbnVrUllo?=
+ =?utf-8?B?RHM3bEh4ZG56R1RFVjBiY1NKMWFVd0hvMkVBMzNGYlRjV2ZIQVU4T3loc2NI?=
+ =?utf-8?B?SldwMEw5OWRmMkFiWW1qSUtGdFJCU0UvR0lOMWVyZDBwN3czY3NKV0x5QjB0?=
+ =?utf-8?B?cHhxSzVwWUFlbTFlTmt5ZHAzM2RsZTRuVmlqV1pGTTVHeWhDUVIyOEhRaW80?=
+ =?utf-8?B?QXJMMzFJaml0Q0t1ZVJ5NG0vSGNXTTFZdHFZTzA1UUJUOGZmcHQ0U0tQWmo3?=
+ =?utf-8?B?NTBjVFZTWkxmdzViMVNheFRuVWtIV2QrSjVBcVJtRjhaaVJ0akVENWcwWFhj?=
+ =?utf-8?B?Q2VhRG9ycDl3endtajJ2bnZrdlZrUU9MMXp3N0xjcHB3aHIycEIwZVI1UUlR?=
+ =?utf-8?Q?qLGSrb79IUwWD?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR12MB8109.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?YU1VSFJLazJxTW16b2NaYm44ai8rcWp1U1drb3MxQXdaRUVQa0l6NS9aVXhE?=
+ =?utf-8?B?SnhDajlpV1VsUmR6dW9PbmdWUG9tUjBIb3AxTWtFMFdyS2VkYW83d0cvMHBT?=
+ =?utf-8?B?bDFnMUxEaUkvdDlCS2NKSmNIdVVpUmJvVlBnOXE0U3NKMDVXL1ZoMFpDd2cr?=
+ =?utf-8?B?UGJ2aThXdEhla0c1N09PZWl3OGRkL2lvT1ZXOTNzaTZuZFZvdUdhZm9CZWg1?=
+ =?utf-8?B?NXhacC9QMzA0b1BjOHJURFcvK0JHWlN2NHpTb2VlMUVNZlZNbzBZSm4vSkRF?=
+ =?utf-8?B?V05HMmkvQmlzSFFNRmVJK0xQN3RCN2JDWHJWOU1uTFhPUDl1Q3Nob2pHR0Vu?=
+ =?utf-8?B?Wm1Fd0dKNFFrTFkxMG5ubGtQM1hUY3FWaUZ2eHFPR3hiNWpuMFVyUVoreHU2?=
+ =?utf-8?B?eWh3cFRmaXZ0YzdPakZFSlp2VWNwYkRPNjlWbDExNWJ2b2tXUkFIblgzc0s3?=
+ =?utf-8?B?dEtDWllpcjJjOW5xNExRM0VyNTRvOThVVzdVeGRpei9KeTVicEdMczFrUjhB?=
+ =?utf-8?B?eitxcmI1UGNJTW02SndPR3AxaldVbkMrLzNoblpFcVg4QVpJTHo3cWcxc0dU?=
+ =?utf-8?B?cE91ZnVWOGZVbFI5cER1ZWZzWXl0MEZHR2Y5NUQyeUZwaG94eUt0REovNkZh?=
+ =?utf-8?B?L0Z2K3R1YlRqU0tCK1EwcHNBUE9HM2ZNWVBsUTNnNXJ4elFFWEV0ZkMvUlRD?=
+ =?utf-8?B?Z1VVa2ZlZzdtYmkyNFJhZXBNTjZXdDdXK2xSejF3c1NURkRUT0pEOExTcUtR?=
+ =?utf-8?B?MnYzNEpvVjh3SVFyYmRjUzZJNnZFcHRmdXVDM2RFNXJ1Y0xUY2FXOGVzY3hM?=
+ =?utf-8?B?bEJIMzZpZ1hoNXNXVVVDbTV2b2RsR3JZL1hVbVFmZmFTNm1TaVNCQWpkWS93?=
+ =?utf-8?B?SCtld1Z0RGYrNHpHUXgrUGVsZnRTUEZqbVJJOVRpandFUGNRZWJhcmtiYzh0?=
+ =?utf-8?B?SnhNeXpjd0hEMnU3YnRiS2c4QnZaSmwxYm9YTzU5ZWlPMmJrUFYwLzV0K2JN?=
+ =?utf-8?B?M3ZmcGxySERiZGFUUW5UM2hRL20vbUtIMDVWbUc3eXhkcG41bDB1SERvNUor?=
+ =?utf-8?B?QkFVaDdtSnZvR1NncE5mcm1hc2RxMCtFbnoxd040SlNTbm41em9tOWp5N3RH?=
+ =?utf-8?B?V0FNUzFZV2VsMFo0YVA1c0NsbTgyT29BeWZHUVlRc2lhd2ZsYUE2TVNuNm1E?=
+ =?utf-8?B?YVhOU2oyMStUbXg0Q29rUm96dG5QczNldzlHMTR4T0hzcFVPTUprL1RXdis3?=
+ =?utf-8?B?YmMvV044TTFlS2dkQWVEcFpPOUZnQ1R3Q3VWL1U4VzlPcGdNUzF0aVlSNGpm?=
+ =?utf-8?B?Qm9qb1JBTHpSUWsrSjFjS042L1lRQ0tjZzFIbktCbHA4NmYrTXVZUVUza2JU?=
+ =?utf-8?B?OStpNU9acHY3TFdQeUtBeFRiMzFjMnVtK2VLK1RpUzR4SnFpOEVRVTNsQnB2?=
+ =?utf-8?B?cC92SnBkbUU5NUhEQWdFYmFqZzc2ZWdPOGJFZm5yRmNqRXpnYWlkNlMxaWNW?=
+ =?utf-8?B?V2g5K0N4TmRWYzlic1ZRTDlKM3Z1MVdFKythZllEc3piRUQyMEhqSU5KTGhi?=
+ =?utf-8?B?S3N0c2tsNlVTU3gzL0xock85Vi9FNkxyTzdBV3R5TWlzRmlHTFZqR2h6c09l?=
+ =?utf-8?B?bEsyNjRLME9MUDhPN1F1a0pJOFM3OXZ5ZU1WTzBEQVpaa0c2UjJXK1F6UldL?=
+ =?utf-8?B?a29PMEtzVHNRZWR4bitZWGxSOFJvZU9pTWIrVGEvaUQ1WWxkTHRnK2xVb0o0?=
+ =?utf-8?B?WUtuVlRQODRjcm0wWGhTNXZZVHdGVlMxaHBwdlRHc3dTOXlqR2ZMTkJxQnVx?=
+ =?utf-8?B?SlFrejlYa2VtMTgwelo0dVRIcjYxd2FFR21wRHp6MW5weE0rdW1XcVBNSHhF?=
+ =?utf-8?B?U2lNMTVMcjROZEVSQ3ZSUnl3c0VMMmNVMXlYT2lwK0w5VVFjeWdWeDVWNmRZ?=
+ =?utf-8?B?TFk0QWxEMExJYWxuN2l2MEY2dFZKMnlINFpPUURJNUdFZDRVNGZ5WUhqLy9M?=
+ =?utf-8?B?Qk02cXc2TkFPOFczVG9TNXVZZTU4L0x5dWRvU3dpMFlMenNNRHlla1RzdURY?=
+ =?utf-8?B?bW1BMDM1R1pya2dpWk5JUTVsMUhPb3BhV0RySGMrckVwbDZTaW9FeWM5dXdq?=
+ =?utf-8?Q?23np0VwtdMeULKdO82BjgebuF?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b4e183f8-fa31-422e-0440-08dd51a0bbdc
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR12MB8109.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2025 11:21:34.6216
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1DOd0q3Y59xh56rUtdVwpJpv6RSLixCqwmGpRrs1SJ3yOMrjGUgHMhAuMQ87wbO7
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8034
 
-On Wed, Feb 19, 2025 at 04:27:39PM -0600, Rob Herring wrote:
-> On Thu, Feb 13, 2025 at 04:22:17PM +0100, Stephan Gerhold wrote:
-> > On Thu, Feb 13, 2025 at 03:00:00PM +0100, Konrad Dybcio wrote:
-> > > On 13.02.2025 10:13 AM, Stephan Gerhold wrote:
-> > > > On Wed, Feb 12, 2025 at 10:01:59PM +0100, Konrad Dybcio wrote:
-> > > >> On 12.02.2025 6:03 PM, Stephan Gerhold wrote:
-> > > >>> num-channels and qcom,num-ees are required when there are no clocks
-> > > >>> specified in the device tree, because we have no reliable way to read them
-> > > >>> from the hardware registers if we cannot ensure the BAM hardware is up when
-> > > >>> the device is being probed.
-> > > >>>
-> > > >>> This has often been forgotten when adding new SoC device trees, so make
-> > > >>> this clear by describing this requirement in the schema.
-> > > >>>
-> > > >>> Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
-> > > >>> ---
-> > > >>>  Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml | 4 ++++
-> > > >>>  1 file changed, 4 insertions(+)
-> > > >>>
-> > > >>> diff --git a/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml b/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
-> > > >>> index 3ad0d9b1fbc5e4f83dd316d1ad79773c288748ba..5f7e7763615578717651014cfd52745ea2132115 100644
-> > > >>> --- a/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
-> > > >>> +++ b/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
-> > > >>> @@ -90,8 +90,12 @@ required:
-> > > >>>  anyOf:
-> > > >>>    - required:
-> > > >>>        - qcom,powered-remotely
-> > > >>> +      - num-channels
-> > > >>> +      - qcom,num-ees
-> > > >>>    - required:
-> > > >>>        - qcom,controlled-remotely
-> > > >>> +      - num-channels
-> > > >>> +      - qcom,num-ees
-> > > >>
-> > > >> I think I'd rather see these deprecated and add the clock everywhere..
-> > > >> Do we know which one we need to add on newer platforms? Or maybe it's
-> > > >> been transformed into an icc path?
-> > > > 
-> > > > This isn't feasible, there are too many different setups. Also often the
-> > > > BAM power management is tightly integrated into the consumer interface.
-> > > > To give a short excerpt (I'm sure there are even more obscure uses):
-> > > > 
-> > > >  - BLSP BAM (UART, I2C, SPI on older SoCs):
-> > > >     1. Enable GCC_BLSP_AHB_CLK
-> > > >     -> This is what the bam_dma driver supports currently.
-> > > > 
-> > > >  - Crypto BAM: Either
-> > > >     OR 1. Vote for single RPM clock
-> > > >     OR 1. Enable 3 separate clocks (CE, CE_AHB, CE_AXI)
-> > > >     OR 1. Vote dummy bandwidth for interconnect
-> > > > 
-> > > >  - BAM DMUX (WWAN on older SoCs):
-> > > >     1. Start modem firmware
-> > > >     2. Wait for BAM DMUX service to be up
-> > > >     3. Vote for power up via the BAM-DMUX-specific SMEM state
-> > > >     4. Hope the firmware agrees and brings up the BAM
-> > > > 
-> > > >  - SLIMbus BAM (audio on some SoCs):
-> > > >     1. Start ADSP firmware
-> > > >     2. Wait for QMI SLIMBUS service to be up via QRTR
-> > > >     3. Vote for power up via SLIMbus-specific QMI messages
-> > > >     4. Hope the firmware agrees and brings up the BAM
-> > > > 
-> > > > Especially for the last two, we can't implement support for those
-> > > > consumer-specific interfaces in the BAM driver. Implementing support for
-> > > > the 3 variants of the Crypto BAM would be possible, but it's honestly
-> > > > the least interesting use case of all these. It's not really clear why
-> > > > we are bothing with the crypto engine on newer SoCs at all, see e.g. [1].
-> > > > 
-> > > > [1]: https://lore.kernel.org/linux-arm-msm/20250118080604.GA721573@sol.localdomain/
-> > > > 
-> > > >> Reading back things from this piece of HW only to add it to DT to avoid
-> > > >> reading it later is a really messy solution.
-> > > > 
-> > > > In retrospect, it could have been cleaner to avoid describing the BAM as
-> > > > device node independent of the consumer. We wouldn't have this problem
-> > > > if the BAM driver would only probe when the consumer is already ready.
-> > > > 
-> > > > But I think specifying num-channels in the device tree is the cleanest
-> > > > way out of this mess. I have a second patch series ready that drops
-> > > > qcom,num-ees and validates the num-channels once it's safe reading from
-> > > > the BAM registers. That way, you just need one boot test to ensure the
-> > > > device tree description is really correct.
-> > > 
-> > > Thanks for the detailed explanation!
-> > > 
-> > > Do you think it could maybe make sense to expose a clock/power-domain
-> > > from the modem/adsp rproc and feed it to the DMUX / SLIM instances when
-> > > an appropriate ping arrives? This way we'd also defer probing the drivers
-> > > until the device is actually accessible.
-> > > 
-> > 
-> > Maybe, but that would result in a cyclic dependency between the DMA
-> > provider and consumer. E.g.
-> > 
-> > 	bam_dmux_dma: dma-controller@ {
-> > 		#dma-cells = <1>;
-> > 		power-domains = <&bam_dmux>;
-> > 	};
-> > 
-> > 	remoteproc@ {
-> > 		/* ... */
-> > 
-> > 		bam_dmux: bam-dmux {
-> > 			dmas = <&bam_dmux_dma 4>, <&bam_dmux_dma 5>;
-> > 			dma-names = "tx", "rx";
-> > 		};
-> > 	};
-> > 
-> > fw_devlink will likely get confused by that.
+
+
+On 2/3/25 17:39, Michal Simek wrote:
+> Hi,
 > 
-> Why? We have a property to break cycles: post-init-providers
+> Based on discussion done long time ago
+> https://lore.kernel.org/all/5353872c-56a3-98f9-7f22-ec1f6c2ccdc8@linaro.org/
+> it is better to deprecate firmware contants which are not used in any code
+> and it's only purpose is to use macros in dt files.
 > 
-> That doesn't work here?
+> There is no reason to be the part of dt bindings but it should be kept
+> there with adding deprecated warning.
+> 
+> I want to see if this is the right way to go. If yes, I will also do the
+> same changes in other headers which contain only constans which are not
+> used in any code.
+> 
+> Thanks,
+> Michal
+> 
+> 
+> Michal Simek (2):
+>    arm64: zynqmp: Use DT header for firmware constants
+>    dt-bindings: xilinx: Deprecate header with firmware constants
+> 
+>   .../bindings/ata/ceva,ahci-1v84.yaml          |   4 +-
+>   .../dma/xilinx/xlnx,zynqmp-dma-1.0.yaml       |   3 +-
+>   .../bindings/iio/adc/xlnx,zynqmp-ams.yaml     |   3 +-
+>   .../devicetree/bindings/net/cdns,macb.yaml    |   7 +-
+>   .../bindings/spi/spi-zynqmp-qspi.yaml         |   3 +-
+>   .../devicetree/bindings/usb/dwc3-xilinx.yaml  |   3 +-
+>   arch/arm64/boot/dts/xilinx/xlnx-zynqmp-clk.h  | 126 ++++++++++++++++++
+>   .../arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi |   2 +-
+>   include/dt-bindings/clock/xlnx-zynqmp-clk.h   |   7 +
+>   9 files changed, 142 insertions(+), 16 deletions(-)
+>   create mode 100644 arch/arm64/boot/dts/xilinx/xlnx-zynqmp-clk.h
 > 
 
-Thanks, I was not aware of that property. This looks quite useful for
-fixing up some of the other cyclic dependencies we have!
-
-Nevertheless, for this specific case, I still think we should not make
-such large breaking changes at this point. As I pointed out further
-below in my quoted email, this is a legacy hardware block that will
-likely not get any major new users in the future. We're essentially
-discussing to rework several bindings and drivers just to drop a single
-straightforward "num-channels = <N>" property. A property that we will
-need to keep support for anyway, to support users with older DTBs. This
-effort (and risk) is really better spent elsewhere.
-
-Thanks,
-Stephan
+Applied.
+M
 

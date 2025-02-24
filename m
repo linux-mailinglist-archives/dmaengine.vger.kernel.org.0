@@ -1,134 +1,175 @@
-Return-Path: <dmaengine+bounces-4565-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4566-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 60A07A4072C
-	for <lists+dmaengine@lfdr.de>; Sat, 22 Feb 2025 10:53:57 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC0B7A41DEA
+	for <lists+dmaengine@lfdr.de>; Mon, 24 Feb 2025 12:58:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2D6473A31C9
-	for <lists+dmaengine@lfdr.de>; Sat, 22 Feb 2025 09:52:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 54CE916A8A9
+	for <lists+dmaengine@lfdr.de>; Mon, 24 Feb 2025 11:52:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 878EC207A22;
-	Sat, 22 Feb 2025 09:50:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0628525EFBC;
+	Mon, 24 Feb 2025 11:36:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="V4dlGSCi"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="S2h0bWvG"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3BDF207A23
-	for <dmaengine@vger.kernel.org>; Sat, 22 Feb 2025 09:50:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3E3F23F419;
+	Mon, 24 Feb 2025 11:36:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740217849; cv=none; b=ClZsZgPMDnVidx3dPBru+EFaXv0yzM5t9QkqFx5qUDiGvvS7K333vJWau1anw8ta17myCob/0SkhCy3w/oeR+yQJswKEAo8cwlw0bpaWeUS3O7NlmoRVWit5h767TuYmBYNgEmqPH+3iP9CQk2kFckPBCwrfKttNdwvDQHJ0Kxc=
+	t=1740396997; cv=none; b=IgyNdoXk8f2ii4vqkLq4OH/2UWRhY7QZa0tCLJzbblwnHTkmkraiuUDtKbbKTO1RBRSJxHts9lEJ7eKIAOPnNIc4RAsOcZfiZBp25bZAW5r3dlUXKLILuD+uEXLopjzUh2vVgtVo1iC30rKGQqNpJsZJ+VCktPxn0XidvLYRPYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740217849; c=relaxed/simple;
-	bh=qnrXhGpjWg4oiCCei7G9eYhGu0ZsqmNtZoYPw6SRkCM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Q+vowC42RLdwtwrRlNLvkkF/Bzvt6FsTqwCEx1A2WcsPP5jNmd3U4+D7JwcVuYIDQcHuOBiInn95XG46Ifkp7RM4PT1W3x9dge3qEmKnEu1Th3LaUgQa1jY9OJ01vdhT5QuLfOZu0D5SBqUDhifW5RhEVExQfDjCJEgP4O+gfkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=V4dlGSCi; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1740217834; x=1740822634; i=wahrenst@gmx.net;
-	bh=xFQrLDTViZiWjjLwQVlNYwRn2uOyZ5VxY841DFPTids=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
-	 MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=V4dlGSCiHx6lxqM5+L+E49ZrYSKJDgUFVt8zBa/ZIj5KrPXTGEuePqZfQH5NwZxw
-	 Q1b6s5huG8ATpsFlFsTFfZsPfJv4evY0rNSv68r39uzVGX8FuF+gFU1bLebeOW/5e
-	 3BEgmKdz/1hJs6JLjoP2dEI3A87uDvTdhsMdLBG7BNMQb5EFfJxZ2cyPE2N8TfEfh
-	 iLFWKwNxEFQ+w0m68R+NYCbD9F6qi/yQYnRUY/oY6VM5Oc6VtRAWFkOd+BoRIkKJM
-	 ZHBzD10jEEzyXB9NI/4boY6svLi5iRNDfaJc5zzU7v8fTa4jT/WT7klbAQQbzZSMM
-	 D4SWEJWdjJySCGWvWA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from stefanw-SCHENKER ([37.4.251.153]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1N6siz-1tG5Xp1lYF-011EEh; Sat, 22
- Feb 2025 10:50:34 +0100
-From: Stefan Wahren <wahrenst@gmx.net>
-To: Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>,
-	Scott Branden <sbranden@broadcom.com>,
-	Vinod Koul <vkoul@kernel.org>
-Cc: Lukas Wunner <lukas@wunner.de>,
-	Peter Robinson <pbrobinson@gmail.com>,
-	"Ivan T . Ivanov" <iivanov@suse.de>,
-	linux-arm-kernel@lists.infradead.org,
-	bcm-kernel-feedback-list@broadcom.com,
-	dmaengine@vger.kernel.org,
-	Stefan Wahren <wahrenst@gmx.net>,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH RESEND] dmaengine: bcm2835-dma: fix warning when CONFIG_PM=n
-Date: Sat, 22 Feb 2025 10:50:28 +0100
-Message-Id: <20250222095028.48818-1-wahrenst@gmx.net>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1740396997; c=relaxed/simple;
+	bh=PSYe6R/xPBasga876FmS8mHT9Zoo5UeLL8SBdjJXyYU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=me+EdXZhcikssWO2ffEGlnZ9OGrP19PKcXP6N+dto+850GYIjM+EmwVU8eFskhIX0APhu5PB9ZJAqeHD2/0xfwdsFfZ8aBeGYKckVApWflQ1Tgd5ybKudHgl9tKW5Jb+/USCAn8JC+Ixw744IIlA23N2PbLix96NV+IfR44k8y8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=S2h0bWvG; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1740396992;
+	bh=PSYe6R/xPBasga876FmS8mHT9Zoo5UeLL8SBdjJXyYU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=S2h0bWvGZ/wrr74QxKpyYx3qf9WQ0JxBIUIjM4IGAT16YoVeJKx1K4amOuK76OY8o
+	 0R6eNuYkJ3ceb2AQZObzCrHaxfifC9fX9LBuHqEOQbwJxdks9F9siUe9k0qFloe+C7
+	 uF3KlDYg3LvWBCNuRgxDfHblWLHi5JCe7B095xMkFnO8xz2u7wxjYxpcyX64pCu/fI
+	 OidgFXAVvWuyE2CnaBc9j1s8nwYW1sbhRhZKwvgjmc0ZHNYa8zycnvM2rogw46y9gh
+	 nd4QIhnLaSMccsOwjs7RRqk/keKhQI4h7jiAy7QtCib6a+/Rct5zI1AvmIWlSVDaej
+	 biIXz6p58xOCw==
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bbrezillon)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id AD4FD17E019E;
+	Mon, 24 Feb 2025 12:36:31 +0100 (CET)
+Date: Mon, 24 Feb 2025 12:36:28 +0100
+From: Boris Brezillon <boris.brezillon@collabora.com>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Nicolas Dufresne <nicolas@ndufresne.ca>, Florent Tomasin
+ <florent.tomasin@arm.com>, Vinod Koul <vkoul@kernel.org>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Steven Price <steven.price@arm.com>, Liviu Dudau
+ <liviu.dudau@arm.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
+ <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
+ <simona@ffwll.ch>, Sumit Semwal <sumit.semwal@linaro.org>, Benjamin
+ Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey
+ <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, "T . J .
+ Mercier" <tjmercier@google.com>, Christian =?UTF-8?B?S8O2bmln?=
+ <christian.koenig@amd.com>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Yong
+ Wu <yong.wu@mediatek.com>, dmaengine@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+ linaro-mm-sig@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, nd@arm.com, Akash Goel
+ <akash.goel@arm.com>
+Subject: Re: [RFC PATCH 0/5] drm/panthor: Protected mode support for Mali
+ CSF GPUs
+Message-ID: <20250224123628.52d43b84@collabora.com>
+In-Reply-To: <20250220-strict-cobalt-albatross-6f742e@houat>
+References: <3ykaewmjjwkp3y2f3gf5jvqketicd4p2xqyajqtfnsxci36qlm@twidtyj2kgbw>
+	<1a73c3acee34a86010ecd25d76958bca4f16d164.camel@ndufresne.ca>
+	<ppznh3xnfuqrozhrc7juyi3enxc4v3meu4wadkwwzecj7oxex7@moln2fiibbxo>
+	<9d0e381758c0e83882b57102fb09c5d3a36fbf57.camel@ndufresne.ca>
+	<1f436caa-1c27-4bbd-9b43-a94dad0d89d0@arm.com>
+	<20250205-amorphous-nano-agouti-b5baba@houat>
+	<2085fb785095dc5abdac2352adfb3e1e1c8ae549.camel@ndufresne.ca>
+	<20250207160253.42551fb1@collabora.com>
+	<20250211-robust-lush-skink-0dcc5b@houat>
+	<20250211153223.2fef2316@collabora.com>
+	<20250220-strict-cobalt-albatross-6f742e@houat>
+Organization: Collabora
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:3nPVxWJTvQffyVtEA2wGihuKdB2cuO9l/Jgj7+4Y8R4+SEPpuQb
- NTo0rq8b5vY3W+Xn6vqu1TCwnrf5CQ7A8powy1h42s+/Fdn7ASETs50IMBWb4u3YJWJ0jDs
- iJcEcpGYssIevUlMmR3VN6psFldM77JHSodwxNOXpjDZTjwqBpqlrIc7bx8DGUKxLUQbtoK
- MXhYCbgk/b46e+NGunl5A==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:anKeN2AApoU=;w8csw9M7KFpulkVVFwH/BpcDTR3
- TL3AEqayjijLMp8s2uHrStYw471nBYcr3yyoHkWUAVIrkVMIfeiqINIiwp3DN7+MggyK+K7YW
- 6R4e3k3CwOrDn+yBZY6LDnR17nYnjYHcQxNKNtJbUibNcMbbY+Nt9pE9MyZI07HUT2Co+eXS3
- TkPLQEqgd2qPH+QW8qI7vz2Wrg+KPs18kxValuaQw+JFXvqqvCsGurstygLPiZ+P2u5o0UoZQ
- T2pIPmfRyPLWieAkbCnDNcI9gsJOPor2CEWpaM7jxGndeModOc7T/o1ByWCAKZAvJA/Zlx5/D
- MUzyZr9IfGTjvW46labcJVOYfN1xGDMldbhV6ql5bQH81OmJOMR5qpEwEPixc5WKBVuBbJugZ
- Hq/4vX7zuh2Frwc9OVzi3qHFp5+ktR8uRQy29Xd27CzPAJse3Hx55VpL/pXBpNvWeU+K086/o
- rNxmU8A/kP8jShEiSSyW/aoJ4f/IDDVEvZoV40lpTtxTDKAthmy8QEf/tbxRAZcIUSuO1vd3N
- /ECXGrjZXMocp0mT9X7jmE3aFx6+/Q1sjbr6rkG0AriVKFUZbz06s1UED5PIAgXqvN9tdMT32
- Isu51ORYhcODj6fYDZqFfoda/nhpJaxT2mWxscxu4xuYdcXkTbp+jr9dxueYZ3nSjWxg5FNf2
- HAtpLBE7FF0YQ7nONRgTEbkz+I+tsO4fhk9O6vFZuO5+u/gPCH2ml9wm/EQcBElv+JsDxG9pY
- jKP5DnGOEKnhJlO7ldIhNjSMGRAy7uixwuZf7ffBAjTczVBqKAlHqat21wJEs7hcxos22gP3K
- irnnl8H5eluvWG8sgO1I6Vh81bqVNCGs/7FYhOaDqLFMIFrIcxtGu3GVC6eqFSvH0HhPQfV+h
- RjXVMkEc6HE7DfeyT64/teMAblGk/q4yuHbCuZx9X8Sj3hV1wJCbXgIoGmsysP7XavqY1kHb6
- 9vhsG6Hw5/oEmN2JYVFt4IJih4731bEI6G5y/OlV4SU77D88By5ScYYTiMLIQWVE8bXbxlBiK
- TfLX0wGF25ZLbuciG/ahdS934uzujc6kDUDFi2DGeMxO+tePpBEntL8aCfTm3/qtMD58WN+rc
- Au5PFPUCC24hUrrfKemkRbystFfFB7LrXUk9ZMcjmHM8znowe3+8MJ33sEohsQSvDz3YSdo3w
- irhczxtq5PwYiW9Tz1X8iR5ypAaFrlbo/ZoT+pgu+HCyuhcEOarJb5Y/ISF9orQzG7m5Q6KaP
- A1vFdLnAvCR5h4vc5Pup2zc66xjR8tXI7Oy3unU4hOnb+9LPFXOclsz83YQC8CMVSt8EZ2BoN
- ZhnvyrTE51dPBOWPwNKBZ6TrqbCnQheYehxQE9ASFF4OtJplStgNb7Zzb0y8uxGxY11RQJDoF
- 3nA+45WDDnD+Vt64J/KUDwTM+ZjPnGP+RAwEelUeFMk8eAGJaueSLTR9QK
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The old SET_LATE_SYSTEM_SLEEP_PM_OPS macro cause a build warning
-when CONFIG_PM is disabled:
+Hi Maxime,
 
-warning: 'bcm2835_dma_suspend_late' defined but not used [-Wunused-functio=
-n]
+On Thu, 20 Feb 2025 14:32:14 +0100
+Maxime Ripard <mripard@kernel.org> wrote:
 
-Change this to the modern replacement.
+> > > > This approach has two downsides though:
+> > > > 
+> > > > 1. We have no way of checking that the memory we're passed is actually
+> > > > suitable for FW execution in a protected context. If we're passed
+> > > > random memory, this will likely hang the platform as soon as we enter
+> > > > protected mode.    
+> > > 
+> > > It's a current limitation of dma-buf in general, and you'd have the same
+> > > issue right now if someone imports a buffer, or misconfigure the heap
+> > > for a !protected heap.
+> > > 
+> > > I'd really like to have some way to store some metadata in dma_buf, if
+> > > only to tell that the buffer is protected.  
+> > 
+> > The dma_buf has a pointer to its ops, so it should be relatively easy
+> > to add an is_dma_buf_coming_from_this_heap() helper. Of course this
+> > implies linking the consumer driver to the heap it's supposed to take
+> > protected buffers from, which is basically the thing being discussed
+> > here :-).  
+> 
+> I'm not sure looking at the ops would be enough. Like, you can compare
+> that the buffer you allocated come from the heap you got from the DT,
+> but if that heap doesn't allocate protected buffers, you're screwed and
+> you have no way to tell.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202501071533.yrFb156H-lkp@in=
-tel.com/
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-=2D--
- drivers/dma/bcm2835-dma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+If heap names are unique, the name of the heap should somehow guarantee
+the protected/restricted nature of buffers allocated from this heap
+though. So, from a user perspective, all you have to do is check that
+the buffers you import come from this particular heap you've been
+pointed to. Where we get the heap name from (DT or module param
+passed through a whitelist of protected heap names?) is an
+implementation detail.
 
-diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
-index 20b10c15c696..0117bb2e8591 100644
-=2D-- a/drivers/dma/bcm2835-dma.c
-+++ b/drivers/dma/bcm2835-dma.c
-@@ -893,7 +893,7 @@ static int bcm2835_dma_suspend_late(struct device *dev=
-)
- }
+> 
+> It also falls apart if we have a heap driver with multiple instances,
+> which is pretty likely if we ever merge the carveout heap driver.
 
- static const struct dev_pm_ops bcm2835_dma_pm_ops =3D {
--	SET_LATE_SYSTEM_SLEEP_PM_OPS(bcm2835_dma_suspend_late, NULL)
-+	LATE_SYSTEM_SLEEP_PM_OPS(bcm2835_dma_suspend_late, NULL)
- };
+What I meant here is that checking that a buffer comes from a
+particular heap is something the heap driver itself can easily do. It
+can be a mix of ops+name check (or ops+property check) if there's
+multiple heaps instantiated by a single driver, of course.
 
- static int bcm2835_dma_probe(struct platform_device *pdev)
-=2D-
-2.34.1
+I guess the other option would be to have a protected property at the
+dma_buf level so we don't have to go all the way back to the dma_heap
+to figure it out.
 
+> 
+> > > 
+> > > I suspect you'd also need that if you do things like do protected video
+> > > playback through a codec, get a protected frame, and want to import that
+> > > into the GPU. Depending on how you allocate it, either the codec or the
+> > > GPU or both will want to make sure it's protected.  
+> > 
+> > If it's all allocated from a central "protected" heap (even if that
+> > goes through the driver calling the dma_heap_alloc_buffer()), it
+> > shouldn't be an issue.  
+> 
+> Right, assuming we have a way to identify the heap the buffer was
+> allocated from somehow. This kind of assumes that you only ever get one
+> source of protected memory, and you'd never allocate a protected buffer
+> from a different one in the codec driver for example.
+
+Yes, and that's why having the ability to check that a buffer comes
+from a particular heap is key. I mean, we don't necessarily have to
+restrict things to a single heap, it can be a whitelist of heaps we know
+provide protected buffers if we see a value in having multiple
+protected heaps coexisting on a single platform.
+
+Regards,
+
+Boris
 

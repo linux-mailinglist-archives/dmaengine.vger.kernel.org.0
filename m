@@ -1,60 +1,56 @@
-Return-Path: <dmaengine+bounces-4587-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4588-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7875BA47CE9
-	for <lists+dmaengine@lfdr.de>; Thu, 27 Feb 2025 13:08:57 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B9A3A47D0C
+	for <lists+dmaengine@lfdr.de>; Thu, 27 Feb 2025 13:11:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0B075188F373
-	for <lists+dmaengine@lfdr.de>; Thu, 27 Feb 2025 12:08:55 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9A3DE7A885C
+	for <lists+dmaengine@lfdr.de>; Thu, 27 Feb 2025 12:08:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9739022D798;
-	Thu, 27 Feb 2025 12:07:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 070C622DFA5;
+	Thu, 27 Feb 2025 12:07:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IHdCOLJC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VqycOa0p"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DA9A22D4FE;
-	Thu, 27 Feb 2025 12:07:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB47922DF9C;
+	Thu, 27 Feb 2025 12:07:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740658073; cv=none; b=Yat14AT1LqpZOSv2oJLct3EgcjiFdX+iX/4qnlzbJ6vPZgvgBfIe1J8DThC/CQGLLA/N+gqc4b/FiJO5ZaYhOyKVl9qt6z6ZMKb81jI3OmxekegqGflJp85bdxEKr87mbWMyYfrRwmTPAjt/ikzWYjIemA6N8DxGIchpJuM2X7s=
+	t=1740658076; cv=none; b=rZYzs2Jne0NmQXvQ7BIdTfbk8AF5FkyOLSlSbkiQHDUsCGCxgibmLVCv0RUFE4vtCSGMxQ3T5lByBFuR9A4fxQfgoKDsrFpiCEJQDGJYot+7Ws6+8j6LUlXjw2QWpP7X6aCnOZSo32KVxB7OyNqbPETicvNzCNYNoNJaA7A8mFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740658073; c=relaxed/simple;
-	bh=XeRhQ6iq6uKT/D+pyDPZgb7AbcoHU0EabaJrmBJdI+I=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=MCOfPOMoWE62ed3C7Zwi5+mB3JUSTJ/+X+w6MT02biPmA5hEBT3F+l5j6YEAs+fKsg8v1wX/to6V7WmR7i/i2Z6ZIiKnZZ1BwvgspW4DT66j5QRYZ/2HrOxyN3fAISP+Fd+QObc+J/uo/m+xyBeaofj76jl8jKUTT9XYhyrin2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IHdCOLJC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7D6CC4CEE8;
-	Thu, 27 Feb 2025 12:07:48 +0000 (UTC)
+	s=arc-20240116; t=1740658076; c=relaxed/simple;
+	bh=QZ7uyDt7FFYNwCiAJyDRERDGCfQwMZ43xoPoHsEClRo=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=u3tSjvlvknAfs8NeZv7I1JGa2A8LNVdBdj/0/KV4UwUzT3TYmZsUokjV2rVVl2+RNvmzomj45IG6mj924xbe3aRyqYtbfBepq0LR348qr8Jctj4NqEzLrz6e4zUHG8PhW2g9kSJOPHeP5GYgOcs3lk5s5XRKZN0iU63DOL/J9v0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VqycOa0p; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83690C4CEDD;
+	Thu, 27 Feb 2025 12:07:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740658072;
-	bh=XeRhQ6iq6uKT/D+pyDPZgb7AbcoHU0EabaJrmBJdI+I=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=IHdCOLJCXFMQcKDXTBbd5QCoOizYpE5URnyiFNAasjlOnNLT5ECIj//PcH0kWMFVe
-	 lEpYbKBGqTOUHrgtxTqXoFokwe5MfuFI2bkNpTo/WVY+0Mr/XiGC+2onpLAuxng/eH
-	 QGlI0zsWnCOHseAXuMInqtQLzcbx0ztw5ImyEWtff3hsxgIDNxTd5GlbTM/l4MyTPM
-	 AXzL/UdBkODuMCt7Jm2PguiYx3H6wxgasJtqNoR+HJuoXE28OH6y27cqdpaqGBYlBG
-	 En56VXbzMy9zqkgcn3qGrd1piftlK/xyMcLo5MDYwNubmJBVtSHt3vPLyQf/yGf212
-	 IzqzKNIskEYSQ==
+	s=k20201202; t=1740658076;
+	bh=QZ7uyDt7FFYNwCiAJyDRERDGCfQwMZ43xoPoHsEClRo=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=VqycOa0pw5e5NnBE49RDN9rqu4NFQF6bYVnANL9BMmew2PhzHXjo4lKtKHs+aImL1
+	 MulGrvCCwCTKuOvnetFS7dWbti+jD02DX4CH5dI2Ev6t8dCz5+N+AHRQcUVXgNsIHB
+	 BAtK0/gbLffIVqaCCddD3f7kFpTLdRU2ILY0YAPJmoQ25xRFY0MYJn7+I2lxwo8KjO
+	 hDeQh4/etfQlDfNM5atgJeMXELw6c8o9CFZjk82+bfF+vg18OlB1XqEixFMXvSnSGB
+	 pPOpBBUm/p1qLi/jiuv1jrnhEkVwyv1G6lmOU+rzDwaVL3A3vPTuHLA0rmcUjVhEwT
+	 s6RhPBoLqKLpA==
 From: Vinod Koul <vkoul@kernel.org>
-To: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
- nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, 
- claudiu.beznea@tuxon.dev, wim@linux-watchdog.org, linux@roeck-us.net, 
- Ryan.Wanner@microchip.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, 
- linux-watchdog@vger.kernel.org
-In-Reply-To: <cover.1739555984.git.Ryan.Wanner@microchip.com>
-References: <cover.1739555984.git.Ryan.Wanner@microchip.com>
-Subject: Re: (subset) [PATCH 0/8] Add System Components for Microchip
- SAMA7D65 SoC
-Message-Id: <174065806827.367410.5368210992879330466.b4-ty@kernel.org>
-Date: Thu, 27 Feb 2025 17:37:48 +0530
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Peng Fan <peng.fan@nxp.com>, 
+ imx@lists.linux.dev, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Frank Li <Frank.Li@nxp.com>
+In-Reply-To: <20250221222153.405285-1-Frank.Li@nxp.com>
+References: <20250221222153.405285-1-Frank.Li@nxp.com>
+Subject: Re: [PATCH 1/1] dt-bindings: dma: fsl,edma: Add i.MX94 support
+Message-Id: <174065807313.367410.5471708868415737706.b4-ty@kernel.org>
+Date: Thu, 27 Feb 2025 17:37:53 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -66,29 +62,20 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
 
-On Fri, 14 Feb 2025 11:08:13 -0700, Ryan.Wanner@microchip.com wrote:
-> This patch set adds support for the following systems in the SAMA7D65
-> SoC:
-> - DMAs
-> - Chip ID
-> - Dual watchdog timer.
+On Fri, 21 Feb 2025 17:21:53 -0500, Frank Li wrote:
+> Add support for the i.MX94 DMA controllers. The SoC includes two DMA
+> controllers: one compatible with i.MX93 eDMA3 and another compatible with
+> i.MX95 eDMA5.
 > 
-> Ryan Wanner (8):
->   dt-bindings: atmel-sysreg: Add SAMA7D65 Chip ID
->   dt-bindings: watchdog: sama5d4-wdt: Add sama7d65-wdt
->   dt-bindings: dma: atmel: add microchip,sama7d65-dma
->   ARM: at91: Add Support in SoC driver for SAMA7D65
->   ARM: dts: microchip: sama7d65: Add chipID for sama7d65
->   ARM: dts: microchip: sama7d65: Add watchdog for sama7d65
->   ARM: dts: microchip: sama7d65: Add DMAs to sama7d65 SoC
->   ARM: dts: microchip: sama7d65: Enable DMAs
+> Add compatible string "fsl,imx94-edma3" with fallback to "fsl,imx93-edma3".
+> Add compatible string "fsl,imx94-edma5" with fallback to "fsl,imx95-edma5".
 > 
 > [...]
 
 Applied, thanks!
 
-[3/8] dt-bindings: dma: atmel: add microchip,sama7d65-dma
-      commit: e19ba02eeb8e98086708ee11ca1b123d17ec1977
+[1/1] dt-bindings: dma: fsl,edma: Add i.MX94 support
+      commit: 34436106af3d00b9cf94dbf7200b8162937f9943
 
 Best regards,
 -- 

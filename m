@@ -1,127 +1,87 @@
-Return-Path: <dmaengine+bounces-4623-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4624-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B44FFA4A52B
-	for <lists+dmaengine@lfdr.de>; Fri, 28 Feb 2025 22:40:01 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99A28A4A5C7
+	for <lists+dmaengine@lfdr.de>; Fri, 28 Feb 2025 23:20:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 87BFE3A433A
-	for <lists+dmaengine@lfdr.de>; Fri, 28 Feb 2025 21:39:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5E8543B8D7F
+	for <lists+dmaengine@lfdr.de>; Fri, 28 Feb 2025 22:19:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 296A61DB361;
-	Fri, 28 Feb 2025 21:39:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C54A1DE3BC;
+	Fri, 28 Feb 2025 22:19:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BApyKuhX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B8y2kzuV"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA6E1CCEDB
-	for <dmaengine@vger.kernel.org>; Fri, 28 Feb 2025 21:39:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BAEE1C54AF;
+	Fri, 28 Feb 2025 22:19:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740778797; cv=none; b=gbYB9ZtJ8ZWSJIEZyfQ0IxDpWYXdBDLxhdfw3a6erF66TnTMyvBRUjfG/w3PvrA9aNQHSioCWZCWqSKLvT50h90yYigdWPJSVbHJj2oZpw2UmR6pAqnoQ5z2XLQa0dTNddq58ffi93qnDIKSqDSm4bEhiIo+lRIJ18UUmb4dxFc=
+	t=1740781195; cv=none; b=XuwxWTfZV/CpoZPdhbaOIlFvGAhnVoBaStnm8YJp9THGf6lnLlLH8qg7qJWS9mWVHts02IbdZaj7NcjaWrgdEVBNGrCKRVmzkUgTWp32VQVjztsol2uhXr+wDH2NBBq2NW24RoqQ+HTLHuPDSuE3M163DTAf2TdpmksjkbHX9WY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740778797; c=relaxed/simple;
-	bh=EthtB24kxQxcfzijkjY6PWpENzshrzU0taNs4bamVio=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=O6xPcsRA/6k2mc8XeEKRQxr8hizpEA0OlKP7zenVVHuM6nVUt0Oa0a9s++EWRqXSaZocpWsBLCUjGJ62s+S3ycJW9V2adgJ1BMHf0qYhoC+g4K2qlU8TNHkKFxkKMrg0neGlTK/uZDD/tq0sFKdGn/YP2SgX8LT59Rhgw6EeHMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BApyKuhX; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740778795; x=1772314795;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=EthtB24kxQxcfzijkjY6PWpENzshrzU0taNs4bamVio=;
-  b=BApyKuhXhjGYaoAy9CBGUnPl/u//hRxdYjNZxXSIw/9SZtm1uooqfopV
-   tzYd9FyINJeuVPHKMsLw1iWPzzV8dwYEUvJlOQwLKulB9tmSMvB3RaLzF
-   oeia3LlzH9ViwNTJbpckZ55sL/dJqQlaXFCWOYnD8b694dHVkNk8ZO6PO
-   fwMxHipN6JIq/tWm5IvBukoov9iLnRfBiIqZ3lExGfZFAlJUo+CxLcRl6
-   p/6g38N8EzD0KTkp1r94yQZCL+lfNa+BH9k749VtBgE+PI2oIyffgEiEp
-   8ApiDY/VJGdNWplx98Cdmbu/awuSEdUED3J7FZr9A+VRMmX8cT5lsaLhP
-   Q==;
-X-CSE-ConnectionGUID: 2scKAJhJTd65Ly2tCrMNwA==
-X-CSE-MsgGUID: JZN+K2LORn2k59n9FNIeVQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11359"; a="41848994"
-X-IronPort-AV: E=Sophos;i="6.13,323,1732608000"; 
-   d="scan'208";a="41848994"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 13:39:55 -0800
-X-CSE-ConnectionGUID: D8W4kaCIQEWAu3+N9e2eKA==
-X-CSE-MsgGUID: qTExyfCwQcWKxBrjRbQexg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,323,1732608000"; 
-   d="scan'208";a="117437599"
-Received: from ldmartin-desk2.corp.intel.com (HELO [10.125.108.153]) ([10.125.108.153])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 13:39:54 -0800
-Message-ID: <4e32d831-b4d1-4a5a-905e-05858ce0be2a@intel.com>
-Date: Fri, 28 Feb 2025 14:39:51 -0700
+	s=arc-20240116; t=1740781195; c=relaxed/simple;
+	bh=Is6EeypzsIr/GF6ox/TafGl7L+nMb7erAmt/bL5FM1w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n42+xrUIAWmArdxRDRwfBRE8Hp6d//PSZSPAoFiSyWpwPRqbHUYE+81knM7hBeyKkaFWGjbW4tJzn1fVYcG13UEFJ8GowfR4wJpDuUWknb5yGx/oxBHXr/hu3U25N6HcXSuhHLcovfGfDY/ftDT2hWlcNBpkmgpYBE76h6698Yc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B8y2kzuV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A2E6C4CED6;
+	Fri, 28 Feb 2025 22:19:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740781194;
+	bh=Is6EeypzsIr/GF6ox/TafGl7L+nMb7erAmt/bL5FM1w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=B8y2kzuV8D87XwUZ2YJvDIXbHwWYckrI5sK8ggl9au6Qxm2XDhTSaG9J8IkqkcEnI
+	 h1UycieE7vZL+YLs3Fz2sejd5HMdPjZfAojQ/NyCHI4Muow8bB6wM9kTWGZNfTReMO
+	 Ts8T66ca5cNjzs4dnZ8snorkdwPytsSSEj/7klyt9X9bO+Kd7JxSGfwPxDPzU+yHvV
+	 1qeJB178Xxub7nCmXQvz5FG/ETLZMhemUl/WI9NJwUcVRk54vTnnNuPCS5LwNY5Y5T
+	 BoKd3E/l7MgcQl7nQFiehQBHSoIhtX/W+LDcTHadE1d8TIBtM7WRbDP8D9S6basBXq
+	 JDXP8EA59ocQg==
+Date: Fri, 28 Feb 2025 16:19:51 -0600
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	Fabio Estevam <festevam@gmail.com>, linux-kernel@vger.kernel.org,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Joy Zou <joy.zou@nxp.com>,
+	imx@lists.linux.dev, Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH 1/3] dt-bindings: dma: fsl-edma: increase maxItems of
+ interrupts and interrupt-names
+Message-ID: <174078119105.3778835.11301085997308334922.robh@kernel.org>
+References: <20250228-edma_err-v1-0-d1869fe4163e@nxp.com>
+ <20250228-edma_err-v1-1-d1869fe4163e@nxp.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: dma_find_channel(DMA_MEMCPY) on ioat
-To: Carlos Sergio Bederian <carlos.bederian@unc.edu.ar>,
- dmaengine@vger.kernel.org
-References: <CAFRNPix2JH2De8Hjxwi7EiBnyUVkMvKw7KeowV+EGvd_SuxrfA@mail.gmail.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <CAFRNPix2JH2De8Hjxwi7EiBnyUVkMvKw7KeowV+EGvd_SuxrfA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250228-edma_err-v1-1-d1869fe4163e@nxp.com>
 
 
-
-On 2/28/25 2:23 PM, Carlos Sergio Bederian wrote:
-> I work at an HPC center and I've been trying to figure out why the
-> knem intra-node communication kernel module stopped being able to use
-> IOAT to offload memcpy at some point in time, presumably a long time
-> ago.
-> The knem module uses dma_find_channel(DMA_MEMCPY) to get a dma_chan so
-> I wrote a test kernel module that tries to grab a dma_chan using both
-> dma_find_channel and dma_request_channel and then submits a memcpy.
-> dma_request_channel succeeds in returning a DMA_MEMCPY channel, but
-> dma_find_channel never does, regardless of order. This is on a Debian
-> 6.12.9 kernel.
-> Is there anything I'm missing?
-
-Does dmatest work for you? Also, make sure dmatest isn't loaded when you have your module loaded. Or any other kernel module that uses dma like ntb_transport isn't claiming the channels. 
-
-DJ
+On Fri, 28 Feb 2025 12:42:03 -0500, Frank Li wrote:
+> From: Joy Zou <joy.zou@nxp.com>
 > 
-> static struct dma_chan* dma_req(void) {
->     struct dma_chan* chan = NULL;
->     dma_cap_mask_t mask;
->     dma_cap_zero(mask);
->     dma_cap_set(DMA_MEMCPY, mask);
->     chan = dma_request_channel(mask, NULL, NULL);
->     if (!chan) {
->         pr_err("dmacopy: dma_request_channel didn't return a channel");
->     } else {
->         pr_info("dmacopy: dma_request_channel succeeded");
->     }
->     return chan;
-> }
+> The edma controller support optional error interrupt, so update interrupts
+> and interrupt-names's maxItems.
 > 
-> static struct dma_chan* dma_find(void) {
->     struct dma_chan* chan = NULL;
->     dmaengine_get();
->     chan = dma_find_channel(DMA_MEMCPY);
->     if (!chan) {
->         pr_err("dmacopy: dma_find_channel didn't return a channel");
->         dmaengine_put();
->     } else {
->         pr_info("dmacopy: dma_find_channel succeeded");
->     }
->     return chan;
-> }
+> Signed-off-by: Joy Zou <joy.zou@nxp.com>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/dma/fsl,edma.yaml | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
+
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
 

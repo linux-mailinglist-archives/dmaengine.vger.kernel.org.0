@@ -1,125 +1,131 @@
-Return-Path: <dmaengine+bounces-4632-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4633-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 57984A4C173
-	for <lists+dmaengine@lfdr.de>; Mon,  3 Mar 2025 14:14:47 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD830A4C23E
+	for <lists+dmaengine@lfdr.de>; Mon,  3 Mar 2025 14:42:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D73B03A763B
-	for <lists+dmaengine@lfdr.de>; Mon,  3 Mar 2025 13:14:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D40BA3A55B3
+	for <lists+dmaengine@lfdr.de>; Mon,  3 Mar 2025 13:41:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64356212B15;
-	Mon,  3 Mar 2025 13:14:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A801820DD62;
+	Mon,  3 Mar 2025 13:42:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TGmDv4Qy"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k7aarzRr"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 395BB212B0A;
-	Mon,  3 Mar 2025 13:14:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CEED78F44;
+	Mon,  3 Mar 2025 13:42:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741007666; cv=none; b=UwHZNnuuZe6vt7V45C8137vf4uxCWM/Tcu4n3W5Vu8C3aKZ2yfjsUbGVFccoCWJYIf2HzNlkgNCrFMV6iMM6qsjA8XfvTBjPivr3IhWTgPzkSBnXkoNMLaklXYpKul13ro9xFEnLV60sUJL7u94fA7yHr7xIVNh268uMT909ku4=
+	t=1741009323; cv=none; b=FSjldq+DWA+7vRLtia+RiqhZ5FuaYoZ6gxKjFepX/o2VB9lBKWW2DoXF8zsbfLTsnaAEw7yOAWoRnMDlPwd0oYxoxR37UML+/clbkB0Lmf7zbAjP3AKPmHhknfEXtS1dL8tMTdw8t/v/ifp+gMVlz/BGgZ6JOLgZo5t0AM3EMtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741007666; c=relaxed/simple;
-	bh=FiWSvzkRIMYnufn/6j3BHnlJOVYfPeryI4S3GXt0vAc=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=KgK2w1FEydzIwL04wsvM0N4lmt2qa0Zua2a/wUiRTgcWWoRXFLwOv//BRE3GNLa/wBc54ooG+FDVT7rm0sDoExzJb6Ss7EMhZDQal4eV4Y/NYfvW7E+4H6FHcvjb6KUHWsOccbyk4CvNHudC7dBMDH7pGGscEOGRZbvpDJNSS48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TGmDv4Qy; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D98BBC4CEE9;
-	Mon,  3 Mar 2025 13:14:25 +0000 (UTC)
+	s=arc-20240116; t=1741009323; c=relaxed/simple;
+	bh=vrDxbcIJQqkSw75KhA73NGqZilboXIjAwfnFMaIawGI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KggWQiduhoGP8cj+y7ps4kPQ10ibTj3i/TRwEoQZ8Lwoqd0Ha83E/noEgBnqmergXq6aVOi+kZ6etN5wFnxCB14E+NbBrfZAOI75YyyP6Pe3+KlomNT3Ach5JF0fukH2B4FBviMisxkrFgq/NYUIFwA0eUC+VyE6xaCflx8r40w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k7aarzRr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0938C4CED6;
+	Mon,  3 Mar 2025 13:42:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741007666;
-	bh=FiWSvzkRIMYnufn/6j3BHnlJOVYfPeryI4S3GXt0vAc=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=TGmDv4Qy0cdXTql42zoM9MZxyD+mzsNU84Gh2a9Bf7K6p/0qDRxKws68ZDFYHyWON
-	 334fbrKihCSvqDRJGspPw/djb7ne82q3xjesrA1HfHtPYKLh+uHq4AUBa+U1W21glj
-	 e5TM4yUFaV3LSXJYgJLVnlCHzktDkF5R2x2eLbVIgBHr6vJ8UMs4V2N3i/ZxSByZCr
-	 +LHt2BQ6LdRwXX+N7gEsTHfI4yVgFToA8SUQwczwR7qXqArTYC98YLw1nU+ks3qvP/
-	 KzNygSvESuVw7PKUv07+kfDwmhA+N5UwLVHM3xplqdt0imjVpHsVd3t2xOkMMa5xna
-	 hBrhbq/qTUfLA==
-Date: Mon, 03 Mar 2025 07:14:24 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20201202; t=1741009322;
+	bh=vrDxbcIJQqkSw75KhA73NGqZilboXIjAwfnFMaIawGI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=k7aarzRrmLRsznWXpkijE8LUo25+hran6IjEWQuaXLrYb1b+NIPc1PFI8034OPHIe
+	 OUOmb1DUuiaYiaDQ7Lo4x1pm3b6YTqdDxrl7lOOgOVWkmCTfCmF2rYgQm/ufqMAvYZ
+	 /tdYJhy3fcNeC/ipdmAopssOdyqlYRj1OFY64lr8SazI6kYSqpIbdBQ1B8kiNuqhMc
+	 IGgRiIHXYzK3uNjCwRwqdO3yYfV1VOfSoFMfGk+iU8ZTkqgdgRdcz2dN8O/KGtsnkX
+	 +L3KCuL6YuHgke59P7VXrbYFqqHQVen5yT7a3Bzkx2rh1ayMvsy9fDETax5XZv3Zff
+	 jS/b5faWidrjA==
+Date: Mon, 3 Mar 2025 07:42:00 -0600
+From: Rob Herring <robh@kernel.org>
+To: =?iso-8859-1?Q?J=2E_Neusch=E4fer?= <j.ne@posteo.net>
+Cc: Conor Dooley <conor+dt@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	dmaengine@vger.kernel.org, Crystal Wood <oss@buserror.net>,
+	linuxppc-dev@lists.ozlabs.org, Nicholas Piggin <npiggin@gmail.com>,
+	Vinod Koul <vkoul@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Naveen N Rao <naveen@kernel.org>
+Subject: Re: [PATCH v3] dt-bindings: dma: Convert fsl,elo*-dma to YAML
+Message-ID: <20250303134200.GA1710704-robh@kernel.org>
+References: <20250226-ppcyaml-dma-v3-1-79ce3133569f@posteo.net>
+ <174059099427.2999773.4836262903761680275.robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: wim@linux-watchdog.org, krzk+dt@kernel.org, linux@roeck-us.net, 
- nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, 
- dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, claudiu.beznea@tuxon.dev, vkoul@kernel.org, 
- linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- conor+dt@kernel.org
-To: Ryan.Wanner@microchip.com
-In-Reply-To: <cover.1740675317.git.Ryan.Wanner@microchip.com>
-References: <cover.1740675317.git.Ryan.Wanner@microchip.com>
-Message-Id: <174100756391.1496568.10334189756404294750.robh@kernel.org>
-Subject: Re: [PATCH v2 0/2] Add System Components for Microchip SAMA7D65
- SoC
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <174059099427.2999773.4836262903761680275.robh@kernel.org>
 
-
-On Fri, 28 Feb 2025 08:24:09 -0700, Ryan.Wanner@microchip.com wrote:
-> From: Ryan Wanner <Ryan.Wanner@microchip.com>
+On Wed, Feb 26, 2025 at 11:29:54AM -0600, Rob Herring (Arm) wrote:
 > 
-> This patch set adds support for the following systems in the SAMA7D65
-> SoC:
-> - DMAs
-> - Chip ID
-> - Dual watchdog timer.
+> On Wed, 26 Feb 2025 16:57:17 +0100, J. Neuschäfer wrote:
+> > The devicetree bindings for Freescale DMA engines have so far existed as
+> > a text file. This patch converts them to YAML, and specifies all the
+> > compatible strings currently in use in arch/powerpc/boot/dts.
+> > 
+> > Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
+> > ---
+> > I considered referencing dma-controller.yaml, but that requires
+> > the #dma-cells property (via dma-common.yaml), and I'm now sure which
+> > value it should have, if any. Therefore I did not reference
+> > dma-controller.yaml.
+> > 
+> > V3:
+> > - split out as a single patch
+> > - restructure "description" definitions to use "items:" as much as possible
+> > - remove useless description of interrupts in fsl,elo3-dma
+> > - rename DMA controller nodes to dma-controller@...
+> > - use IRQ_TYPE_* constants in examples
+> > - define unit address format for DMA channel nodes
+> > - drop interrupts-parent properties from examples
+> > 
+> > V2:
+> > - part of series [PATCH v2 00/12] YAML conversion of several Freescale/PowerPC DT bindings
+> >   Link: https://lore.kernel.org/lkml/20250207-ppcyaml-v2-5-8137b0c42526@posteo.net/
+> > - remove unnecessary multiline markers
+> > - fix additionalProperties to always be false
+> > - add description/maxItems to interrupts
+> > - add missing #address-cells/#size-cells properties
+> > - convert "Note on DMA channel compatible properties" to YAML by listing
+> >   fsl,ssi-dma-channel as a valid compatible value
+> > - fix property ordering in examples: compatible and reg come first
+> > - add missing newlines in examples
+> > - trim subject line (remove "bindings")
+> > ---
+> >  .../devicetree/bindings/dma/fsl,elo-dma.yaml       | 137 ++++++++++++++
+> >  .../devicetree/bindings/dma/fsl,elo3-dma.yaml      | 125 +++++++++++++
+> >  .../devicetree/bindings/dma/fsl,eloplus-dma.yaml   | 132 +++++++++++++
+> >  .../devicetree/bindings/powerpc/fsl/dma.txt        | 204 ---------------------
+> >  4 files changed, 394 insertions(+), 204 deletions(-)
+> > 
 > 
-> Changes v1 -> v2:
-> - Removed pathes that have been accepted and applied from v1 [1].
-> - Corrected missing newline in dt-binding.
-> - Corrected mismatch in watchdog dt node.
+> My bot found errors running 'make dt_binding_check' on your patch:
 > 
-> 1) https://lore.kernel.org/linux-arm-kernel/09eafe54-c262-4db4-b11d-0644a1f90a14@tuxon.dev/
+> yamllint warnings/errors:
 > 
-> Ryan Wanner (2):
->   dt-bindings: watchdog: sama5d4-wdt: Add sama7d65-wdt
->   ARM: dts: microchip: sama7d65: Add watchdog for sama7d65
-> 
->  .../devicetree/bindings/watchdog/atmel,sama5d4-wdt.yaml    | 4 ++++
->  arch/arm/boot/dts/microchip/sama7d65.dtsi                  | 7 +++++++
->  2 files changed, 11 insertions(+)
-> 
-> --
-> 2.43.0
-> 
-> 
-> 
+> dtschema/dtc warnings/errors:
+> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/dma/fsl,elo-dma.example.dtb: dma-controller@82a8: '#dma-cells' is a required property
+> 	from schema $id: http://devicetree.org/schemas/dma/dma-controller.yaml#
+> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/dma/fsl,eloplus-dma.example.dtb: dma-controller@21300: '#dma-cells' is a required property
+> 	from schema $id: http://devicetree.org/schemas/dma/dma-controller.yaml#
+> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/dma/fsl,elo3-dma.example.dtb: dma-controller@100300: '#dma-cells' is a required property
+> 	from schema $id: http://devicetree.org/schemas/dma/dma-controller.yaml#
 
+Just stick with 'dma' for node name as that's what .dts files are using 
+and 'dma-controller' is reserved for users of DMA provider binding.
 
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
-
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
-
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-New warnings running 'make CHECK_DTBS=y for arch/arm/boot/dts/microchip/' for cover.1740675317.git.Ryan.Wanner@microchip.com:
-
-arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dtb: watchdog@e001d000: Unevaluated properties are not allowed ('clocks' was unexpected)
-	from schema $id: http://devicetree.org/schemas/watchdog/atmel,sama5d4-wdt.yaml#
-arch/arm/boot/dts/microchip/at91-dvk_som60.dtb: /ahb/apb/adc@f8018000: failed to match any schema with compatible: ['atmel,sama5d3-adc']
-arch/arm/boot/dts/microchip/at91sam9g25-gardena-smart-gateway.dtb: nand-controller: #address-cells: 1 was expected
-	from schema $id: http://devicetree.org/schemas/mtd/nand-controller.yaml#
-
-
-
-
-
+Rob
 

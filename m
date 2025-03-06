@@ -1,163 +1,286 @@
-Return-Path: <dmaengine+bounces-4653-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4654-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7543A549AD
-	for <lists+dmaengine@lfdr.de>; Thu,  6 Mar 2025 12:41:26 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 982E3A54C1F
+	for <lists+dmaengine@lfdr.de>; Thu,  6 Mar 2025 14:27:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 67BB61885F77
-	for <lists+dmaengine@lfdr.de>; Thu,  6 Mar 2025 11:39:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B827B16C1E6
+	for <lists+dmaengine@lfdr.de>; Thu,  6 Mar 2025 13:27:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1B0020D4E8;
-	Thu,  6 Mar 2025 11:33:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JAHtQOn6"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B72720E320;
+	Thu,  6 Mar 2025 13:27:22 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0CAB20AF8D;
-	Thu,  6 Mar 2025 11:33:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39E5A20E310;
+	Thu,  6 Mar 2025 13:27:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741260826; cv=none; b=jSW6+ynrdKVrrsnGRZ18ljbDIfKc0iLHcNCG8blhc8+xpojY8GDeL+G9ZeaSW/a2wqHK1/4LS+LwcP8kqqc+zB5qZUP68x1uWFF8kVu0etL4LVbEtkePADMpNi6VJwd+H6ylouq9Gpofl3AVdtYxjWvyIIYWgDtSxBlY+rK8ZKo=
+	t=1741267642; cv=none; b=pOKC8rjMUbI36fQSNgTBH/Z40bXbhDav+HSovcsWXz6/8fHdB3Y2JQFFu94ImOb61OumFkjcquQVoIuzSeTdiGXJxenp8vRfu/gIjWF+108V6RFjQnnPBbRChyRxscIhjI6Oh8M8/pwiLuuv0sMN6cctR2t7r4PEFaLU3iDebbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741260826; c=relaxed/simple;
-	bh=0RkHv2NVUIjDTMRzp3ZLW9jex5M/ZIevpBWyXbznxKs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aGRJ1GU4rAF4mQJmttI+Cg48bliRPkp/Wu7ZkK9/4F5UIQ3q30MF1feKPPVlYMxQRSpo5Swy7w8HD4HAA/NAW+YwSt6drqFbNDCrFJukPNIxJDFiU8UmKhjlUzFJ909Zp+za7ScEqFgG0FeILPtmaGe0Ha+7h4u1fy0NESsEn1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JAHtQOn6; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741260825; x=1772796825;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=0RkHv2NVUIjDTMRzp3ZLW9jex5M/ZIevpBWyXbznxKs=;
-  b=JAHtQOn6hDyOcaqX4dzp6SJ/JhHAsyveLdX9qhvXD4IHzL26STVhpDVF
-   QIa0jz4SO0tkocladzGvuYw/VB2A0/2iejZKcjWZXFvaiYepCN72SBc6F
-   aVGyYr2GD1KIGYxvrZhB32Ci6BkR/dGu1bPJbtYTqOHaEspeGi5AW3eL+
-   mQbKJzkvBgTENsvFO/NHaWSp6a5d9wT6bphU+Zu7oA00Ig+w0ren01B3Z
-   HXcEHysUjMbrunCyT/H62eBgLwDESg8YVIqTV1uWQHeXjhr9XAD7OgPQl
-   LSZNLOYBwkaybX6q6mUL8cSBq1RVa8B3oLXM8g9WiBPk/Iyw4KklPBnNA
-   Q==;
-X-CSE-ConnectionGUID: CyYVksOmT3WTqjuhTJFreA==
-X-CSE-MsgGUID: dwDFRNYVQbuocXGhbyzfGg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="59673239"
-X-IronPort-AV: E=Sophos;i="6.14,226,1736841600"; 
-   d="scan'208";a="59673239"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 03:33:45 -0800
-X-CSE-ConnectionGUID: iKI6AAlYRAmEUJI/bGQSYA==
-X-CSE-MsgGUID: wyJvtgh2SWSibKMKNc9NZg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,226,1736841600"; 
-   d="scan'208";a="124093820"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by fmviesa004.fm.intel.com with ESMTP; 06 Mar 2025 03:33:42 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tq9Tw-000Mz8-1P;
-	Thu, 06 Mar 2025 11:33:40 +0000
-Date: Thu, 6 Mar 2025 19:33:28 +0800
-From: kernel test robot <lkp@intel.com>
-To: Robin Murphy <robin.murphy@arm.com>, vkoul@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, devicetree@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/2] dmaengine: Add Arm DMA-350 driver
-Message-ID: <202503061910.eJW7M2H3-lkp@intel.com>
-References: <55e084dd2b5720bdddf503ffac560d111032aa96.1740762136.git.robin.murphy@arm.com>
+	s=arc-20240116; t=1741267642; c=relaxed/simple;
+	bh=XKcEeWbzH4fA5/cvRfTVPBDGny582CAz/diU/D9T8do=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ApGOFXxXY5xEoeIl/WBW66aQ7r/9ZlOn0m15WH05p+oNFV49qWgH7pOj3jTCkJsq2lhEupbkvm/KYx7bmxZOg/mZ9J6l0dste9tWfMf63AapHKw07fB7zRKg3qsdFgep6H7p202zdJ2TZwA8ws4AegxTmrPVBmHlKMQPevpS3vU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-86b6be2c480so226858241.0;
+        Thu, 06 Mar 2025 05:27:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741267638; x=1741872438;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=E1V4GXjxaHQ1MX8XrAYuwsdCJjMPQ0MFEVUQeYP147s=;
+        b=m3qxBlVPwOPZnKoVJLeJFLRQqSBq+WbqIqNIwbx7HmBOvt4sIcfh18c92G00LjtvQJ
+         w5a1MYM25R8JWyumJSeue63VPLAoiV3v2DYww+CviSXxBbO7NaHM4ch5YsC0nl/vv7AU
+         zYYO4DmPUx51yQwhH2ENUmJ6IcPM9B/IXAr327FjQhvy7pP7zHXIXcg4A9KvEdyUO6Kh
+         5WRFEU1VkbzA5KfNSfhIYRnod8YeMNf0V4gh3NPoKXQGq19EgNnMSuzy9TKHsnUrg8Ug
+         w++2t5Va1cAyEcT9yGddVj3YBTnVB5B43ScuixXLD3Gd6HNKtdECXK5hZiGZCJQ5CBqT
+         d+zw==
+X-Forwarded-Encrypted: i=1; AJvYcCU4gHPoXFd0H9ZuvkD/UCd9+3JKd5t/qtqsrI1wF7GF53Nj4fhH9+8lJcYns/dGMl9azQO5+94KVCPzduUB@vger.kernel.org, AJvYcCWYjG3/BuECLQptl9FrYWqlQLnlC/mUbTVyR9SsWpUq8gtOFZP7UtkZPdyUMsSNym+q/6lZCUNRg37e@vger.kernel.org, AJvYcCWcSesvGcWQFnXdAQ1fIEjV/mR5GqA8Q8lB9jKx0hS8mkRFhfHwtz2S51A3mI0lDOS0mdAuwTKGlB+M@vger.kernel.org, AJvYcCXhMWOUe76kpzRs5oFP4NOPSXI13pDo16svGp8GXkney8NdwodfFjEs1el9Gk/waZdpIr1kR+dBElbb8aBt5HzLy78=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxf2JQTgStjCK+DJH210+Y+KXxB5UgyoDdf1TTfcoCOcCQDzTfI
+	G4Mmn0j6Dsx+0SpowfnCCFeNIUvQPZnBgP2PVb22q3IZP23s8/yV5tX6NPdn
+X-Gm-Gg: ASbGncvRbFvGv+xl5+WXigAH2SMHGnWPGKgVo+l0ku4Bj4JdxBC6IQ/39cR59N5RbAs
+	mMmhiqg3Wa97GR/BF0BlcNcPzbothJk7KZUcPbQp5Modp6IqLH5PkLdSPvWy2cKZ960vWBWOQeK
+	6EoMZrOOE+FaI8znPMLPitcM8Q8cDBmRiSl0j6OAYRCSLIptVCu2PvDrXqbFywajUvX9jv+4ZMi
+	tV068QMFYrbfVHL5qAXTz+q8smm9MYanAymKHjYs3X8xdbB7Eomw4GCGez9SS/frQ9QkjtUDJK2
+	ZMBANtW6uwNEN1j5LEnRL2qYjSPpnAVG/eT9U+ha/TqA+i21UVZyHJiRASkU9WtedrYV/zRlYHD
+	8vFkh6+Y=
+X-Google-Smtp-Source: AGHT+IEy6Rv4wjm84q5K+TbBTG944eiJABN0mDsfYMGHJX/ZGbboYio9IbTuwHyaN29m5pVPVd1RoQ==
+X-Received: by 2002:a05:6102:dce:b0:4bb:cf25:c5a7 with SMTP id ada2fe7eead31-4c2e27a6d7dmr4441933137.7.1741267638412;
+        Thu, 06 Mar 2025 05:27:18 -0800 (PST)
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com. [209.85.222.50])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-86d33ca65a9sm219399241.27.2025.03.06.05.27.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Mar 2025 05:27:18 -0800 (PST)
+Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-86b6be2c480so226841241.0;
+        Thu, 06 Mar 2025 05:27:18 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU92WFNfySAnYVgKlWOUXgBHaW565dGpVNMpOpzEHn+/1MNShzgqaaPC2QX98aP+ZbjeaCvoblDJgIp@vger.kernel.org, AJvYcCUWpNX27F7ebNDUkBz3h1pY1ByBTTFcKVPP8Bzsun8T9ESkqvxBWkODOxesfiX35Of8+T8lXl1Z7btGQrBj@vger.kernel.org, AJvYcCXiBXrAqOoa+R2A3TM8EqkQ9+zsy+ToCENjOlElsCuMYeKbpo7oGQp6UC9Z2RNaqqYIcWMjQa+crshHZWPb1waIh8A=@vger.kernel.org, AJvYcCXvpHYzGUcDC92TMRiTc5rrAPamygUFPdZ4RTwEWWiRfSwTwea2XMSJQzeiKi+z0WkLlr1lkvHWazDY@vger.kernel.org
+X-Received: by 2002:a05:6102:e12:b0:4bd:3519:44be with SMTP id
+ ada2fe7eead31-4c2e2804512mr4388822137.15.1741267637914; Thu, 06 Mar 2025
+ 05:27:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <55e084dd2b5720bdddf503ffac560d111032aa96.1740762136.git.robin.murphy@arm.com>
+References: <20250305002112.5289-1-fabrizio.castro.jz@renesas.com> <20250305002112.5289-3-fabrizio.castro.jz@renesas.com>
+In-Reply-To: <20250305002112.5289-3-fabrizio.castro.jz@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 6 Mar 2025 14:27:06 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVeLiQKHm5BQXhqEjKTP4p7Y20b5ocsjvNCnicDQym19A@mail.gmail.com>
+X-Gm-Features: AQ5f1JroeThd9ulD1ahlmdpsXT6NLFZFZZdIi3Hy9pIsRu-zZy6kxIxGiyfRxZQ
+Message-ID: <CAMuHMdVeLiQKHm5BQXhqEjKTP4p7Y20b5ocsjvNCnicDQym19A@mail.gmail.com>
+Subject: Re: [PATCH v5 2/6] dt-bindings: dma: rz-dmac: Document RZ/V2H(P)
+ family of SoCs
+To: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, Biju Das <biju.das.jz@bp.renesas.com>, 
+	dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
+	Conor Dooley <conor.dooley@microchip.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Robin,
+Hi Fabrizio,
 
-kernel test robot noticed the following build warnings:
+On Wed, 5 Mar 2025 at 01:21, Fabrizio Castro
+<fabrizio.castro.jz@renesas.com> wrote:
+> Document the Renesas RZ/V2H(P) family of SoCs DMAC block.
+> The Renesas RZ/V2H(P) DMAC is very similar to the one found on the
+> Renesas RZ/G2L family of SoCs, but there are some differences:
+> * It only uses one register area
+> * It only uses one clock
+> * It only uses one reset
+> * Instead of using MID/IRD it uses REQ No
+> * It is connected to the Interrupt Control Unit (ICU)
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+> v4->v5:
+> * Removed ACK No from the specification of the dma cell.
+> * I have kept the tags received as this is a minor change and the
+>   structure remains the same as v4. Please let me know if this is
+>   not okay.
 
-[auto build test WARNING on vkoul-dmaengine/next]
-[also build test WARNING on linus/master v6.14-rc5 next-20250305]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Thanks for the update!
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Robin-Murphy/dt-bindings-dma-Add-Arm-DMA-350/20250301-012733
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git next
-patch link:    https://lore.kernel.org/r/55e084dd2b5720bdddf503ffac560d111032aa96.1740762136.git.robin.murphy%40arm.com
-patch subject: [PATCH 2/2] dmaengine: Add Arm DMA-350 driver
-config: nios2-randconfig-r111-20250306 (https://download.01.org/0day-ci/archive/20250306/202503061910.eJW7M2H3-lkp@intel.com/config)
-compiler: nios2-linux-gcc (GCC) 14.2.0
-reproduce: (https://download.01.org/0day-ci/archive/20250306/202503061910.eJW7M2H3-lkp@intel.com/reproduce)
+> --- a/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
+> +++ b/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
+> @@ -61,14 +66,21 @@ properties:
+>    '#dma-cells':
+>      const: 1
+>      description:
+> -      The cell specifies the encoded MID/RID values of the DMAC port
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503061910.eJW7M2H3-lkp@intel.com/
+Please just insert "or the REQ No" and be done with it?
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/dma/arm-dma350.c:485:31: sparse: sparse: dubious: !x & y
-   drivers/dma/arm-dma350.c: note: in included file (through include/linux/smp.h, include/linux/lockdep.h, include/linux/spinlock.h, ...):
-   include/linux/list.h:83:21: sparse: sparse: self-comparison always evaluates to true
-   include/linux/list.h:83:21: sparse: sparse: self-comparison always evaluates to true
-   include/linux/list.h:83:21: sparse: sparse: self-comparison always evaluates to true
-   include/linux/list.h:83:21: sparse: sparse: self-comparison always evaluates to true
+> -      connected to the DMA client and the slave channel configuration
+> -      parameters.
+> +      For the RZ/A1H, RZ/Five, RZ/G2{L,LC,UL}, RZ/V2L, and RZ/G3S SoCs, the cell
+> +      specifies the encoded MID/RID values of the DMAC port connected to the
+> +      DMA client and the slave channel configuration parameters.
+>        bits[0:9] - Specifies MID/RID value
+>        bit[10] - Specifies DMA request high enable (HIEN)
+>        bit[11] - Specifies DMA request detection type (LVL)
+>        bits[12:14] - Specifies DMAACK output mode (AM)
+>        bit[15] - Specifies Transfer Mode (TM)
+> +      For the RZ/V2H(P) SoC the cell specifies the DMAC REQ No and the slave channel
+> +      configuration parameters.
+> +      bits[0:9] - Specifies the DMAC REQ No
+> +      bit[10] - Specifies DMA request high enable (HIEN)
+> +      bit[11] - Specifies DMA request detection type (LVL)
+> +      bits[12:14] - Specifies DMAACK output mode (AM)
+> +      bit[15] - Specifies Transfer Mode (TM)
 
-vim +485 drivers/dma/arm-dma350.c
+... so the casual reader doesn't have to look for the (nonexisting)
+differences in the other bits.
 
-   462	
-   463	static irqreturn_t d350_irq(int irq, void *data)
-   464	{
-   465		struct d350_chan *dch = data;
-   466		struct device *dev = dch->vc.chan.device->dev;
-   467		struct virt_dma_desc *vd = &dch->desc->vd;
-   468		u32 ch_status;
-   469	
-   470		ch_status = readl(dch->base + CH_STATUS);
-   471		if (!ch_status)
-   472			return IRQ_NONE;
-   473	
-   474		if (ch_status & CH_STAT_INTR_ERR) {
-   475			u32 errinfo = readl_relaxed(dch->base + CH_ERRINFO);
-   476	
-   477			if (errinfo & (CH_ERRINFO_AXIRDPOISERR | CH_ERRINFO_AXIRDRESPERR))
-   478				vd->tx_result.result = DMA_TRANS_READ_FAILED;
-   479			else if (errinfo & CH_ERRINFO_AXIWRRESPERR)
-   480				vd->tx_result.result = DMA_TRANS_WRITE_FAILED;
-   481			else
-   482				vd->tx_result.result = DMA_TRANS_ABORTED;
-   483	
-   484			vd->tx_result.residue = d350_get_residue(dch);
- > 485		} else if (!ch_status & CH_STAT_INTR_DONE) {
-   486			dev_warn(dev, "Unexpected IRQ source? 0x%08x\n", ch_status);
-   487		}
-   488		writel_relaxed(ch_status, dch->base + CH_STATUS);
-   489	
-   490		spin_lock(&dch->vc.lock);
-   491		vchan_cookie_complete(vd);
-   492		if (ch_status & CH_STAT_INTR_DONE) {
-   493			dch->status = DMA_COMPLETE;
-   494			dch->residue = 0;
-   495			d350_start_next(dch);
-   496		} else {
-   497			dch->status = DMA_ERROR;
-   498			dch->residue = vd->tx_result.residue;
-   499		}
-   500		spin_unlock(&dch->vc.lock);
-   501	
-   502		return IRQ_HANDLED;
-   503	}
-   504	
+>
+>    dma-channels:
+>      const: 16
+> @@ -80,12 +92,29 @@ properties:
+>      items:
+>        - description: Reset for DMA ARESETN reset terminal
+>        - description: Reset for DMA RST_ASYNC reset terminal
+> +    minItems: 1
+>
+>    reset-names:
+>      items:
+>        - const: arst
+>        - const: rst_async
+>
+> +  renesas,icu:
+> +    description:
+> +      On the RZ/V2H(P) SoC configures the ICU to which the DMAC is connected to.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Are other SoCs with ICU planned?
+
+> +      It must contain the phandle to the ICU, and the index of the DMAC as seen
+> +      from the ICU (e.g. parameter k from register ICU_DMkSELy).
+
+This is already described more formally below
+
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    items:
+> +      - items:
+> +          - description: phandle to the ICU node.
+> +          - description: The DMAC index.
+> +              4 for DMAC0
+> +              0 for DMAC1
+> +              1 for DMAC2
+> +              2 for DMAC3
+> +              3 for DMAC4
+
+Other SoCs may have other mappings.
+So perhaps leave out the translation table, but write:
+
+    The number of the DMAC as seen from the ICU, i.e. parameter k from
+register ICU_DMkSELy.
+    This may differ from the actual DMAC instance number!
+
+> +
+>  required:
+>    - compatible
+>    - reg
+> @@ -98,13 +127,25 @@ allOf:
+>    - $ref: dma-controller.yaml#
+>
+>    - if:
+> -      not:
+> -        properties:
+> -          compatible:
+> -            contains:
+> -              enum:
+> -                - renesas,r7s72100-dmac
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - renesas,r9a07g043-dmac
+> +              - renesas,r9a07g044-dmac
+> +              - renesas,r9a07g054-dmac
+> +              - renesas,r9a08g045-dmac
+>      then:
+> +      properties:
+> +        reg:
+> +          minItems: 2
+> +        clocks:
+> +          minItems: 2
+> +        resets:
+> +          minItems: 2
+> +
+> +        renesas,icu: false
+> +
+>        required:
+>          - clocks
+>          - clock-names
+> @@ -112,13 +153,42 @@ allOf:
+>          - resets
+>          - reset-names
+>
+> -    else:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: renesas,r7s72100-dmac
+> +    then:
+>        properties:
+
+    reg:
+        minItems: 2
+
+>          clocks: false
+>          clock-names: false
+>          power-domains: false
+>          resets: false
+>          reset-names: false
+> +        renesas,icu: false
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: renesas,r9a09g057-dmac
+> +    then:
+> +      properties:
+> +        reg:
+> +          maxItems: 1
+> +        clocks:
+> +          maxItems: 1
+> +        resets:
+> +          maxItems: 1
+> +
+> +        clock-names: false
+> +        reset-names: false
+> +
+> +      required:
+> +        - clocks
+> +        - power-domains
+> +        - renesas,icu
+> +        - resets
+>
+>  additionalProperties: false
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 

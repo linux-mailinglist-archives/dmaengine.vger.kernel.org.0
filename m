@@ -1,260 +1,163 @@
-Return-Path: <dmaengine+bounces-4652-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4653-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3BE3A54463
-	for <lists+dmaengine@lfdr.de>; Thu,  6 Mar 2025 09:14:15 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7543A549AD
+	for <lists+dmaengine@lfdr.de>; Thu,  6 Mar 2025 12:41:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 000C6170FCA
-	for <lists+dmaengine@lfdr.de>; Thu,  6 Mar 2025 08:14:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 67BB61885F77
+	for <lists+dmaengine@lfdr.de>; Thu,  6 Mar 2025 11:39:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C1121FBC9F;
-	Thu,  6 Mar 2025 08:13:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1B0020D4E8;
+	Thu,  6 Mar 2025 11:33:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="VuDXOzlj"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JAHtQOn6"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD8981FCF7C
-	for <dmaengine@vger.kernel.org>; Thu,  6 Mar 2025 08:13:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0CAB20AF8D;
+	Thu,  6 Mar 2025 11:33:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741248822; cv=none; b=CdUQ5chBw9oRg6oH1HJ/KDHDPiOBJJkuAWi/ePiox1k/AKl7HnsgLomhtPyfg4J/E2pWlzBLIyqqUmZRWCQRVQX86jnzBU8svXjpKM97rZP2NUybe04h+pqzQ/J9Uj7CnvhOp6WCKqKSF20Woh00cFv/mnBKWoTHogywCyUJqdM=
+	t=1741260826; cv=none; b=jSW6+ynrdKVrrsnGRZ18ljbDIfKc0iLHcNCG8blhc8+xpojY8GDeL+G9ZeaSW/a2wqHK1/4LS+LwcP8kqqc+zB5qZUP68x1uWFF8kVu0etL4LVbEtkePADMpNi6VJwd+H6ylouq9Gpofl3AVdtYxjWvyIIYWgDtSxBlY+rK8ZKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741248822; c=relaxed/simple;
-	bh=eUWsVZlYIjL3uAIwhBG07uNNCBfBviynwix7o2rDp44=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=ripO+w8of0fkW2NOVlAqAm5J5EiKVosFTLCY2Q7l4hwu8kXcUg2sB4VN+J63M65+3kiTRpa+Jdu49rvhE0Ob+IgVvopIRHqCI30ORAHvCbDDsOlS1qedf62ATvNCEJP0x3kGQHTF00DgQuQaG0RbTaszKnlxSdZM7lr+5zPnAAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=VuDXOzlj; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250306081331epoutp02bf3c34eea61d9bbf7081828565fbca3f~qKJGYm1dM2631826318epoutp024
-	for <dmaengine@vger.kernel.org>; Thu,  6 Mar 2025 08:13:31 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250306081331epoutp02bf3c34eea61d9bbf7081828565fbca3f~qKJGYm1dM2631826318epoutp024
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1741248811;
-	bh=Knqwjqi8GM+4dP/latZEf+wvPDK1ylOIsGOJ/pjBcKs=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=VuDXOzljywT9rE+DTveaUSn7uB8cE+o57upwpdEKg8GP25T0odmG+QWbeiliYBJjM
-	 pF3AJbVKf0aFDPb+GxLY37N2gtizQoi6HAxO+AKe/T74XJXXEsv8XYZdnEqjb5wXYV
-	 9OHHbkDGF82fWw3akJNyEXexM0OLiA/IGvUPDaZM=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-	20250306081331epcas5p4262255b3e8a8503f816fb6d82a9b1c90~qKJF1jdSG2477724777epcas5p4T;
-	Thu,  6 Mar 2025 08:13:31 +0000 (GMT)
-Received: from epsmges5p2new.samsung.com (unknown [182.195.38.180]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4Z7hy139Hqz4x9Q7; Thu,  6 Mar
-	2025 08:13:29 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	AE.A6.19933.82959C76; Thu,  6 Mar 2025 17:13:28 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-	20250306063546epcas5p388084f298ae5d55eab7fbbb7cc1db2d9~qIzvhmjmb0821708217epcas5p3e;
-	Thu,  6 Mar 2025 06:35:46 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250306063546epsmtrp183610b81ac1e5a41fa084533ed2e7dc3~qIzvgx2MP2210422104epsmtrp1k;
-	Thu,  6 Mar 2025 06:35:46 +0000 (GMT)
-X-AuditID: b6c32a4a-b87c770000004ddd-41-67c959281b3b
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	3B.4A.33707.14249C76; Thu,  6 Mar 2025 15:35:45 +0900 (KST)
-Received: from FDSFTE245 (unknown [107.122.81.20]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250306063545epsmtip1d4a3d8251fe06ce0f9469ed7fbe08272~qIzun50W40927409274epsmtip1W;
-	Thu,  6 Mar 2025 06:35:44 +0000 (GMT)
-From: "Aatif Mushtaq/Aatif Mushtaq" <aatif4.m@samsung.com>
-To: "'Vinod Koul'" <vkoul@kernel.org>
-Cc: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<pankaj.dubey@samsung.com>, <aswani.reddy@samsung.com>
-In-Reply-To: 
-Subject: RE: [PATCH 1/3] dmaengine: Add support for 2D DMA operation
-Date: Thu, 6 Mar 2025 12:05:43 +0530
-Message-ID: <014701db8e61$fdd331d0$f9799570$@samsung.com>
+	s=arc-20240116; t=1741260826; c=relaxed/simple;
+	bh=0RkHv2NVUIjDTMRzp3ZLW9jex5M/ZIevpBWyXbznxKs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aGRJ1GU4rAF4mQJmttI+Cg48bliRPkp/Wu7ZkK9/4F5UIQ3q30MF1feKPPVlYMxQRSpo5Swy7w8HD4HAA/NAW+YwSt6drqFbNDCrFJukPNIxJDFiU8UmKhjlUzFJ909Zp+za7ScEqFgG0FeILPtmaGe0Ha+7h4u1fy0NESsEn1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JAHtQOn6; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741260825; x=1772796825;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0RkHv2NVUIjDTMRzp3ZLW9jex5M/ZIevpBWyXbznxKs=;
+  b=JAHtQOn6hDyOcaqX4dzp6SJ/JhHAsyveLdX9qhvXD4IHzL26STVhpDVF
+   QIa0jz4SO0tkocladzGvuYw/VB2A0/2iejZKcjWZXFvaiYepCN72SBc6F
+   aVGyYr2GD1KIGYxvrZhB32Ci6BkR/dGu1bPJbtYTqOHaEspeGi5AW3eL+
+   mQbKJzkvBgTENsvFO/NHaWSp6a5d9wT6bphU+Zu7oA00Ig+w0ren01B3Z
+   HXcEHysUjMbrunCyT/H62eBgLwDESg8YVIqTV1uWQHeXjhr9XAD7OgPQl
+   LSZNLOYBwkaybX6q6mUL8cSBq1RVa8B3oLXM8g9WiBPk/Iyw4KklPBnNA
+   Q==;
+X-CSE-ConnectionGUID: CyYVksOmT3WTqjuhTJFreA==
+X-CSE-MsgGUID: dwDFRNYVQbuocXGhbyzfGg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="59673239"
+X-IronPort-AV: E=Sophos;i="6.14,226,1736841600"; 
+   d="scan'208";a="59673239"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 03:33:45 -0800
+X-CSE-ConnectionGUID: iKI6AAlYRAmEUJI/bGQSYA==
+X-CSE-MsgGUID: wyJvtgh2SWSibKMKNc9NZg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,226,1736841600"; 
+   d="scan'208";a="124093820"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by fmviesa004.fm.intel.com with ESMTP; 06 Mar 2025 03:33:42 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tq9Tw-000Mz8-1P;
+	Thu, 06 Mar 2025 11:33:40 +0000
+Date: Thu, 6 Mar 2025 19:33:28 +0800
+From: kernel test robot <lkp@intel.com>
+To: Robin Murphy <robin.murphy@arm.com>, vkoul@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, devicetree@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/2] dmaengine: Add Arm DMA-350 driver
+Message-ID: <202503061910.eJW7M2H3-lkp@intel.com>
+References: <55e084dd2b5720bdddf503ffac560d111032aa96.1740762136.git.robin.murphy@arm.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQFsIHTrWqAe9Pu9L3iNOvGTrR8WTgG4P+QRAcvczKUCj5EGvbQKqHTggAfgiMA=
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpjk+LIzCtJLcpLzFFi42LZdlhTU1cj8mS6wZ8nYhaHNm9lt1g99S+r
-	xeVdc9gsFm39wm6x884JZgdWj02rOtk8+rasYvT4vEkugDkq2yYjNTEltUghNS85PyUzL91W
-	yTs43jne1MzAUNfQ0sJcSSEvMTfVVsnFJ0DXLTMHaKWSQlliTilQKCCxuFhJ386mKL+0JFUh
-	I7+4xFYptSAlp8CkQK84Mbe4NC9dLy+1xMrQwMDIFKgwITvjfeMtpoLHGhXzTt5lamBco9DF
-	yMkhIWAisfjtGdYuRi4OIYHdjBJtvz6xQTifGCWmbFrADOdcmLqVCaZlYsclqMRORomTs7+y
-	QDjPGSX+r+5iA6liE7CSOP9rH5gtIqAqseXJAyCbg4NZoFJiyytNEJNTgFdiwj9rkAphAReJ
-	k+f+gFWzCKhIvGk4yApi8wpYSky83MkGYQtKnJz5hAXEZhaQl9j+dg4zxD0KEj+fLmOF2OQn
-	8ezPUXaIGnGJoz97wO6UEPjKLvHl1RZ2iAYXiWXfe6CahSVeHYeJS0m87G+DspMlbr7fB2Xn
-	SExYuBrKtpc4cGUOC8QrmhLrd+lDhGUlpp5axwSxl0+i9/cTaFjxSuyYB2MrSax538cGYUtI
-	/Dt4knECo9IsJK/NQvLaLCQvzELYtoCRZRWjZGpBcW56arFpgVFeajk8vpPzczcxghOkltcO
-	xocPPugdYmTiYDzEKMHBrCTCe9HvZLoQb0piZVVqUX58UWlOavEhRlNgeE9klhJNzgem6LyS
-	eEMTSwMTMzMzE0tjM0Mlcd7mnS3pQgLpiSWp2ampBalFMH1MHJxSDUy6xm+mvLy74Zd/sMnW
-	tYkP2kpN0g8sD8x/kKnO4Wm97qn77+c9j1bNuGKwKfzGVOYpTXO5eP2O/dnX/sR60ztF81ln
-	35x5XhrfaX72r+C6XQdvfN9j/+R1T1fFi8pulYMBz6PD2z1uL5rls1lgqbSpmR7bRJvqQ0tN
-	XKpnSq5q1XmTf0Jw2XXf9qv3E37G1nUf1mUTZmoSP7zRaOKa6R770uL/5PeunfNr3q7zZywf
-	bUvrvJhkviDjx/s1As++W/U/jnmUY9n74W+NdvCUzDsOLD/PN4Tqffze11rk6iCSJ2neuuV8
-	60K2VsfpPUvkX93XrJosuuwaSzq7IfN15VPLF9WJXtj1edP0y1fTLIxrlFiKMxINtZiLihMB
-	TpaQvBkEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBLMWRmVeSWpSXmKPExsWy7bCSnK6j08l0gyMHzCwObd7KbrF66l9W
-	i8u75rBZLNr6hd1i550TzA6sHptWdbJ59G1ZxejxeZNcAHMUl01Kak5mWWqRvl0CV8b7xltM
-	BY81KuadvMvUwLhGoYuRk0NCwERiYsclZhBbSGA7o8TLwwYQcQmJ5s5GJghbWGLlv+fsXYxc
-	QDVPGSVuHP4BlmATsJI4/2sfG4gtIqAqseXJAzCbWaBW4sGia0wQDZcZJV697AFKcHBwCvBK
-	TPhnDVIjLOAicfLcH7B6FgEViTcNB1lBbF4BS4mJlzvZIGxBiZMzn7CAtDIL6Em0bWSEGC8v
-	sf3tHGaI2xQkfj5dxgpxgp/Esz9H2SFqxCWO/uxhnsAoPAvJpFkIk2YhmTQLSccCRpZVjKKp
-	BcW56bnJBYZ6xYm5xaV56XrJ+bmbGMGRoRW0g3HZ+r96hxiZOBgPMUpwMCuJ8L4+dTxdiDcl
-	sbIqtSg/vqg0J7X4EKM0B4uSOK9yTmeKkEB6YklqdmpqQWoRTJaJg1OqgWnCkRDxV2/yV0le
-	vOdyjvmZu9tD8ZpAz9AHwReqcvn6v3V9jA9cFTH1WUq/gu7O7Z7r01oc+tUcDhz+Fh+f9fCc
-	0inJaROLX+nzHj3z+lycxLRpHlGNNbkBN/uFw7aKzPO5IRx0ojX9JMeP5DVf/+62+/P8Tc4M
-	zh1nWD7nLhDPTOz/xfZ3RsqRhFPyzLN4zD9Uv/DV2jP93L/Fi2636W1RK/338EZqguw7N/Oi
-	T8bZEjd9/T+n/JGamWEa6+Ij1VFWvmBtwKWi4lubTeJTmZ07VWU+Xvu5O+uGX9O1m+WMelx1
-	USerCp/eaOMz2qYjyn/tyTNe7gkf9uSfmqL4TuHEZw72vme9bMmHqg9UVyixFGckGmoxFxUn
-	AgBhg6cq+wIAAA==
-X-CMS-MailID: 20250306063546epcas5p388084f298ae5d55eab7fbbb7cc1db2d9
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250210062247epcas5p4ce208ba2806454c48a68ef25d0a326cc
-References: <20250210061915.26218-1-aatif4.m@samsung.com>
-	<CGME20250210062247epcas5p4ce208ba2806454c48a68ef25d0a326cc@epcas5p4.samsung.com>
-	<20250210061915.26218-2-aatif4.m@samsung.com> <Z8Ab3VcAXf5z7UqE@vaman> 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <55e084dd2b5720bdddf503ffac560d111032aa96.1740762136.git.robin.murphy@arm.com>
 
+Hi Robin,
 
+kernel test robot noticed the following build warnings:
 
-> -----Original Message-----
-> From: Aatif Mushtaq/Aatif Mushtaq <aatif4.m@samsung.com>
-> Sent: 28 February 2025 15:03
-> To: 'Vinod Koul' <vkoul@kernel.org>
-> Cc: 'dmaengine@vger.kernel.org' <dmaengine@vger.kernel.org>; 'linux-
-> kernel@vger.kernel.org' <linux-kernel@vger.kernel.org>;
-> 'pankaj.dubey@samsung.com' <pankaj.dubey@samsung.com>;
-> 'aswani.reddy@samsung.com' <aswani.reddy@samsung.com>
-> Subject: RE: [PATCH 1/3] dmaengine: Add support for 2D DMA operation
-> 
-> 
-> 
-> > -----Original Message-----
-> > From: Vinod Koul <vkoul@kernel.org>
-> > Sent: 27 February 2025 13:32
-> > To: Aatif Mushtaq <aatif4.m@samsung.com>
-> > Cc: dmaengine@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > pankaj.dubey@samsung.com; aswani.reddy@samsung.com
-> > Subject: Re: [PATCH 1/3] dmaengine: Add support for 2D DMA operation
-> >
-> > On 10-02-25, 11:49, Aatif Mushtaq wrote:
-> > > Add a new dma engine API to support 2D DMA operations.
-> > > The API will be used to get the descriptor for 2D transfer based on
-> > > the 16-bit immediate to define the stride length between
-> > > consecuitive source address or destination address after every DMA
-> > > load and store instruction is processed.
-> >
-> > Why should we define a new API for this...? Why not use the sg or
-> > interleaved api for this?
-> >
-> 
-> Thanks for pointing out, interleaved API can be used for this.
-> I will make the change
-> 
+[auto build test WARNING on vkoul-dmaengine/next]
+[also build test WARNING on linus/master v6.14-rc5 next-20250305]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-While trying to make the change I realised that sg and interleaved
-APIs cannot be used for our use case.
-Interleaved API is used to transfer data from non-contiguous
-buffer to non-contiguous buffer and sg API is used to transfer 
-non-contiguous buffer to contiguous buffer but both the APIs work 
-on multiple data chunks where each chunk has its individual attributes 
-and there is a tx descriptor for each data chunk.
-But in our case we have single tx descriptor to increment the source or
-destination after every DMA LOAD and STORE operation till the desired
-length of transfer is achieved, which means we don't have multiple data
-chunks which is required in case of interleaved and sg.
-The use case is to do memory to memory copy but not in a linear way,
-such that we can define a gap between each burst.
+url:    https://github.com/intel-lab-lkp/linux/commits/Robin-Murphy/dt-bindings-dma-Add-Arm-DMA-350/20250301-012733
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git next
+patch link:    https://lore.kernel.org/r/55e084dd2b5720bdddf503ffac560d111032aa96.1740762136.git.robin.murphy%40arm.com
+patch subject: [PATCH 2/2] dmaengine: Add Arm DMA-350 driver
+config: nios2-randconfig-r111-20250306 (https://download.01.org/0day-ci/archive/20250306/202503061910.eJW7M2H3-lkp@intel.com/config)
+compiler: nios2-linux-gcc (GCC) 14.2.0
+reproduce: (https://download.01.org/0day-ci/archive/20250306/202503061910.eJW7M2H3-lkp@intel.com/reproduce)
 
-> > >
-> > > Signed-off-by: Aatif Mushtaq <aatif4.m@samsung.com>
-> > > ---
-> > >  include/linux/dmaengine.h | 25 +++++++++++++++++++++++++
-> > >  1 file changed, 25 insertions(+)
-> > >
-> > > diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-> > > index b137fdb56093..8a73b2147983 100644
-> > > --- a/include/linux/dmaengine.h
-> > > +++ b/include/linux/dmaengine.h
-> > > @@ -833,6 +833,7 @@ struct dma_filter {
-> > >   *	be called after period_len bytes have been transferred.
-> > >   * @device_prep_interleaved_dma: Transfer expression in a generic
-> way.
-> > >   * @device_prep_dma_imm_data: DMA's 8 byte immediate data to the
-> > dst
-> > > address
-> > > + * @device_prep_2d_dma_memcpy: prepares a 2D memcpy operation
-> > >   * @device_caps: May be used to override the generic DMA slave
-> > capabilities
-> > >   *	with per-channel specific ones
-> > >   * @device_config: Pushes a new configuration to a channel, return
-> > > 0 or an error @@ -938,6 +939,9 @@ struct dma_device {
-> > >  	struct dma_async_tx_descriptor *(*device_prep_dma_imm_data)(
-> > >  		struct dma_chan *chan, dma_addr_t dst, u64 data,
-> > >  		unsigned long flags);
-> > > +	struct dma_async_tx_descriptor
-> > *(*device_prep_2d_dma_memcpy)(
-> > > +		struct dma_chan *chan, dma_addr_t dest, dma_addr_t src,
-> > > +		size_t len, u16 src_imm, u16 dest_imm, unsigned long flags);
-> > >
-> > >  	void (*device_caps)(struct dma_chan *chan, struct dma_slave_caps
-> > *caps);
-> > >  	int (*device_config)(struct dma_chan *chan, struct
-> > dma_slave_config
-> > > *config); @@ -1087,6 +1091,27 @@ static inline struct
-> > dma_async_tx_descriptor *dmaengine_prep_dma_memcpy(
-> > >  						    len, flags);
-> > >  }
-> > >
-> > > +/**
-> > > + * device_prep_2d_dma_memcpy() - Prepare a DMA 2D memcpy
-> > descriptor.
-> > > + * @chan: The channel to be used for this descriptor
-> > > + * @dest: Address of the destination data for a DMA channel
-> > > + * @src: Address of the source data for a DMA channel
-> > > + * @len: The total size of data
-> > > + * @src_imm: The immediate value to be added to the src address
-> > > +register
-> > > + * @dest_imm: The immediate value to be added to the dst address
-> > > +register
-> > > + * @flags: DMA engine flags
-> > > + */
-> > > +static inline struct dma_async_tx_descriptor
-> > *device_prep_2d_dma_memcpy(
-> > > +		struct dma_chan *chan, dma_addr_t dest, dma_addr_t src,
-> > > +		size_t len, u16 src_imm, u16 dest_imm, unsigned long flags)
-{
-> > > +	if (!chan || !chan->device || !chan->device-
-> > >device_prep_2d_dma_memcpy)
-> > > +		return NULL;
-> > > +
-> > > +	return chan->device->device_prep_2d_dma_memcpy(chan, dest,
-> > src, len,
-> > > +						       src_imm, dest_imm,
-> > flags); }
-> > > +
-> > >  static inline bool dmaengine_is_metadata_mode_supported(struct
-> > dma_chan *chan,
-> > >  		enum dma_desc_metadata_mode mode)  {
-> > > --
-> > > 2.17.1
-> >
-> > --
-> > ~Vinod
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503061910.eJW7M2H3-lkp@intel.com/
 
+sparse warnings: (new ones prefixed by >>)
+>> drivers/dma/arm-dma350.c:485:31: sparse: sparse: dubious: !x & y
+   drivers/dma/arm-dma350.c: note: in included file (through include/linux/smp.h, include/linux/lockdep.h, include/linux/spinlock.h, ...):
+   include/linux/list.h:83:21: sparse: sparse: self-comparison always evaluates to true
+   include/linux/list.h:83:21: sparse: sparse: self-comparison always evaluates to true
+   include/linux/list.h:83:21: sparse: sparse: self-comparison always evaluates to true
+   include/linux/list.h:83:21: sparse: sparse: self-comparison always evaluates to true
+
+vim +485 drivers/dma/arm-dma350.c
+
+   462	
+   463	static irqreturn_t d350_irq(int irq, void *data)
+   464	{
+   465		struct d350_chan *dch = data;
+   466		struct device *dev = dch->vc.chan.device->dev;
+   467		struct virt_dma_desc *vd = &dch->desc->vd;
+   468		u32 ch_status;
+   469	
+   470		ch_status = readl(dch->base + CH_STATUS);
+   471		if (!ch_status)
+   472			return IRQ_NONE;
+   473	
+   474		if (ch_status & CH_STAT_INTR_ERR) {
+   475			u32 errinfo = readl_relaxed(dch->base + CH_ERRINFO);
+   476	
+   477			if (errinfo & (CH_ERRINFO_AXIRDPOISERR | CH_ERRINFO_AXIRDRESPERR))
+   478				vd->tx_result.result = DMA_TRANS_READ_FAILED;
+   479			else if (errinfo & CH_ERRINFO_AXIWRRESPERR)
+   480				vd->tx_result.result = DMA_TRANS_WRITE_FAILED;
+   481			else
+   482				vd->tx_result.result = DMA_TRANS_ABORTED;
+   483	
+   484			vd->tx_result.residue = d350_get_residue(dch);
+ > 485		} else if (!ch_status & CH_STAT_INTR_DONE) {
+   486			dev_warn(dev, "Unexpected IRQ source? 0x%08x\n", ch_status);
+   487		}
+   488		writel_relaxed(ch_status, dch->base + CH_STATUS);
+   489	
+   490		spin_lock(&dch->vc.lock);
+   491		vchan_cookie_complete(vd);
+   492		if (ch_status & CH_STAT_INTR_DONE) {
+   493			dch->status = DMA_COMPLETE;
+   494			dch->residue = 0;
+   495			d350_start_next(dch);
+   496		} else {
+   497			dch->status = DMA_ERROR;
+   498			dch->residue = vd->tx_result.residue;
+   499		}
+   500		spin_unlock(&dch->vc.lock);
+   501	
+   502		return IRQ_HANDLED;
+   503	}
+   504	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 

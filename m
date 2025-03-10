@@ -1,93 +1,87 @@
-Return-Path: <dmaengine+bounces-4681-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4682-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0DD2CA5A56A
-	for <lists+dmaengine@lfdr.de>; Mon, 10 Mar 2025 22:01:14 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF67DA5A59A
+	for <lists+dmaengine@lfdr.de>; Mon, 10 Mar 2025 22:06:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4CA1117417D
-	for <lists+dmaengine@lfdr.de>; Mon, 10 Mar 2025 21:01:13 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6BF3D7A7129
+	for <lists+dmaengine@lfdr.de>; Mon, 10 Mar 2025 21:05:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D98611DF996;
-	Mon, 10 Mar 2025 21:01:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9A131DF73B;
+	Mon, 10 Mar 2025 21:06:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XELG8I6W"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="guBF3SdL"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4B2612B73;
-	Mon, 10 Mar 2025 21:01:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B20BF1D5CDB;
+	Mon, 10 Mar 2025 21:06:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741640463; cv=none; b=GpfhwkIhT9HzIR1ziF38bhC9GbL3joQ5p/YtVzS9YH69BLh+KW+XvXe7z9zrB5h+cFQFLuhvBQf+RbBhfCDWOsYY3hqP8p/2kK9YKH6zhWusJigNBxfT4wVMrk4AyJ0OkcPuNg6GuV4ooG7AvFvH4Oy3qOOXXHT5817E8UuabjQ=
+	t=1741640797; cv=none; b=OrbnSpvFHaDL2JoPkgP0ZKZBShUXnku6oSeJlpJ7X5KLZ4NWUEKoM0EkoaEVejhZzVlND5fJxPxMrhmI26d3nvACb6D8xV2+PP5OJFy1qp2fTW2sqJqUlEJfNbXoAKoOZ24IXL9Zwc5EjgUxvopL94StR7UfoT36AmIaaIVxfvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741640463; c=relaxed/simple;
-	bh=aYyGi+0GlhtZZOl3eElkEgro/Og6UgEBW7ME0Eh2cEM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Uj1WkTgSopApKZtTKGLls2ma+G9zFYIvmn5sIvn8bvFJTEKyAEskUTKCGc2pm+34h+iabTmPKxqWnmdzQq9UUoT+/r+9PB+BmOO1q2G87jFef1dovRawFzPvBr1cnfd1SNgzejaO82mtpEvxoEx+cj128uiixj5Azyg+PoibC3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XELG8I6W; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CE6AC4CEE5;
-	Mon, 10 Mar 2025 21:01:02 +0000 (UTC)
+	s=arc-20240116; t=1741640797; c=relaxed/simple;
+	bh=bUcsyhE7tuvhIYvy3w+bcLNnK9zcOWwVrHqC/kyU+0I=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Se9YWgQzf0Yt8Yx0k6u/x/g3FDGmbA5IDSaufGQTjnvv6QUihuSuJdwcM6BeXxOQUzXm/7OD1TdDOrDrmxFvcesGbd0y3qSWptfoODHU4NjKcSTdGnv7Uo1Ws3TOnPKoHkEUY3WxBXEyWhQGOWuV0wcw7nNcGcIpUcfUcpp4CLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=guBF3SdL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B576AC4CEE5;
+	Mon, 10 Mar 2025 21:06:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741640463;
-	bh=aYyGi+0GlhtZZOl3eElkEgro/Og6UgEBW7ME0Eh2cEM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XELG8I6WYICbM6YDswWTIzR5vBY0ZCdCcGJ/XwRd+rPF8jWKv8h3HR7gxrqFV55Yk
-	 YC03rspukIbY7kdASAul32qn3tTTF0Mjsk4YyEhIb3u5/Qj1XV8c+Zcm0FFT2h6v/m
-	 F+zkgxIJhbNnd1atUL3+ZMTBsK1wGd1gj7eVnMIfItWqcZQxPHdLUiPB76A4Z3cCow
-	 IF6tot8i/DiR7HlFaN9aZMA18vcatU2dTOp5YxckUak3MYgFIzXJtGfVYF6T2k2P02
-	 /qA3Twqr+moDiV/Zm01s5J3HOrF4lAXYPAyy3NYPcJQWX3oaLIFX74c7Yw+/KrdG1v
-	 Dwfdi1Ujv4h8A==
-Date: Tue, 11 Mar 2025 02:30:59 +0530
+	s=k20201202; t=1741640797;
+	bh=bUcsyhE7tuvhIYvy3w+bcLNnK9zcOWwVrHqC/kyU+0I=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=guBF3SdL5g8fUUUD+VdEGB5/Gu+QziZWmvqGJEMFZAFxWr+fvivvifywfRMx82JmI
+	 uy6D9xivPLth0EvxXPF4RqtT1FYHsvUiYS2G4IfTGMZsY15ov4tX6KhpQofrrz/iQw
+	 jCD9ya0uZOye9gTTP1iJrmn4mwGiZeeSj7k4CF7vfghNZ9mtO7jsY7xZKrD1kBL19f
+	 myGrl4gcDIuGsi007C7Nxc7l9YjqAifQNUMU/31tWFnAQLIngSWwzKqx8bpwJgBwj8
+	 s6xaTUhSmFim9iQrIe7WbBWLzIM7xcNnqlNjwCgLF61m/9WziZI+QLuH0SiOFT+ZsR
+	 q4hu2e0wQXfYg==
 From: Vinod Koul <vkoul@kernel.org>
-To: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
-Cc: Andi Shyti <andi.shyti@kernel.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, quic_msavaliy@quicinc.com,
-	quic_vtanuku@quicinc.com
-Subject: Re: [PATCH v5 RESEND 1/2] dmaengine: qcom: gpi: Add GPI Block event
- interrupt support
-Message-ID: <Z89TC7fKzmmeu6tW@vaman>
-References: <20250212120536.28879-1-quic_jseerapu@quicinc.com>
- <20250212120536.28879-2-quic_jseerapu@quicinc.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, Marek Vasut <marex@denx.de>, 
+ dmaengine@vger.kernel.org, devicetree@vger.kernel.org, imx@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Frank Li <Frank.Li@nxp.com>
+Cc: imx@lists.linux.dev
+In-Reply-To: <20250307215100.3257649-1-Frank.Li@nxp.com>
+References: <20250307215100.3257649-1-Frank.Li@nxp.com>
+Subject: Re: [PATCH] dt-bindings: dma: fsl-mxs-dma: Add compatible string
+ for i.MX8 chips
+Message-Id: <174164079235.489187.5863262843040562459.b4-ty@kernel.org>
+Date: Tue, 11 Mar 2025 02:36:32 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250212120536.28879-2-quic_jseerapu@quicinc.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-On 12-02-25, 17:35, Jyothi Kumar Seerapu wrote:
-> GSI hardware generates an interrupt for each transfer completion.
-> For multiple messages within a single transfer, this results in
-> N interrupts for N messages, leading to significant software
-> interrupt latency.
-> 
-> To mitigate this latency, utilize Block Event Interrupt (BEI) mechanism.
-> Enabling BEI instructs the GSI hardware to prevent interrupt generation
-> and BEI is disabled when an interrupt is necessary.
-> 
-> When using BEI, consider splitting a single multi-message transfer into
-> chunks of 8 messages internally and so interrupts are not expected for
-> the first 7 message completions, only the last message triggers
-> an interrupt, indicating the completion of 8 messages.
-> 
-> This BEI mechanism enhances overall transfer efficiency.
 
-That sounds good but I dont like the idea that we add a custom interface
-for this. Please use DMA_PREP_INTERRUPT instead. Adding this flag should
-trigger N interrupts, absence of this should lead to Block events only
+On Fri, 07 Mar 2025 16:50:59 -0500, Frank Li wrote:
+> Add compatible string for all i.MX8 chips, which is backward compatible
+> with i.MX28. Set it to fall back to "fsl,imx28-dma-apbh".
+> 
+> 
 
+Applied, thanks!
+
+[1/1] dt-bindings: dma: fsl-mxs-dma: Add compatible string for i.MX8 chips
+      commit: 964c032d1d5d1d896746b361416b84cef078dba5
+
+Best regards,
 -- 
 ~Vinod
+
+
 

@@ -1,59 +1,56 @@
-Return-Path: <dmaengine+bounces-4685-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4686-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33268A5A5A2
-	for <lists+dmaengine@lfdr.de>; Mon, 10 Mar 2025 22:07:36 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 53438A5A5A3
+	for <lists+dmaengine@lfdr.de>; Mon, 10 Mar 2025 22:07:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 455537A7AE7
-	for <lists+dmaengine@lfdr.de>; Mon, 10 Mar 2025 21:06:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5AA303A6CE6
+	for <lists+dmaengine@lfdr.de>; Mon, 10 Mar 2025 21:07:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 539191E25EF;
-	Mon, 10 Mar 2025 21:06:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E6B01E0489;
+	Mon, 10 Mar 2025 21:06:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ngHwvGQo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tBszaPdx"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295141DF987;
-	Mon, 10 Mar 2025 21:06:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12F741DF992;
+	Mon, 10 Mar 2025 21:06:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741640808; cv=none; b=IaZyu6vthZb6cdqbyDjcz5EdpH/9gtVhaaJ4iGoVXPgk9Q6r6YVeGAz8WvQnTyu5DjEDbSL4fuBVKGJBv1D6uuSp8s2kWJptwhrvITXRNv2CYYJEIuGA7GhS35VGAIA57RPJMSLg12IT+WI2iQVTh/fgF0NIxbH/iPVQ8bEn8dU=
+	t=1741640811; cv=none; b=PZNhUvVcRbe4XmM88loeeJyE/AcshHdgABMBcTEpkSP4f4Wy8+3+2e0IXJJlfAzcw1hFRRhDzbjlvhDySPcu+nso4jNpPnNge3YFWNoDQIrfG4FP4UMafFZYEBEsdj/t95PlgkSPxHKbozZY7pgK7no9HN1OyjkP7uAZ9OiSJM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741640808; c=relaxed/simple;
-	bh=LUIaBdTMgvjB8mW49OVudEiPUFjgQuQv0DcfOzsjxKw=;
+	s=arc-20240116; t=1741640811; c=relaxed/simple;
+	bh=XNQvjOMgH5YmwlEN4TzpN/Titmr2rrk3EIejekG61d4=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=dQHklyCnJ5J1xelmZ+2aiVQVjkf+lAnRd3r2rCryUEUjI+tDT9WZHnvg9u5yXED1A7R+s5efGE5yYjRfCdonK+PEf8JcZtib3BENm0LiBRWxbaJOl0GkFya0GfzTZtJoqQoJg2/A/aj3wZZLzcqSCtECkIPBVu/nKHBp+PK2bGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ngHwvGQo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CA55C4CEEA;
-	Mon, 10 Mar 2025 21:06:44 +0000 (UTC)
+	 MIME-Version:Content-Type; b=rkSgLiXVqpjMMtiWI4RePWs8+GfDgHVTfGDR6k/FfztZB+VZXnvW8uYFTosPIp3vOCUzzqqdVNqgoLHa1OafnXVtF3kvgzvpcpOPkTbcN/V109V+LwOTy0Pm4u2XADuUkXlUN99d9lkgwOkkQ0P9gj03o887A3UJXz5Z4aIqMV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tBszaPdx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B538C4CEE5;
+	Mon, 10 Mar 2025 21:06:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741640808;
-	bh=LUIaBdTMgvjB8mW49OVudEiPUFjgQuQv0DcfOzsjxKw=;
+	s=k20201202; t=1741640810;
+	bh=XNQvjOMgH5YmwlEN4TzpN/Titmr2rrk3EIejekG61d4=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=ngHwvGQoDXr044MyVtgiG8m59kvGx4OVARGotRxpewNDcQHeCU2C0LCtik0qh6xFn
-	 GEbxJfWvVbLRvBVy8Fn3tjWbZnXBnEo1NCIz9nryAh44hkqCO5+siX0CMy/d0nPygl
-	 U0Wgg+CTJbBJSZx3rRwuSZk1oMqXK53PkAfNM8YXkPrbGyRBVCQkihUEAY7vrwbeUE
-	 nquHm7gRXGp4xc++eRJYPp8LU7YYBvkcFZzQjGUhJ6tW1xAIpJKCiHf1MaoZHQ3Wlh
-	 XjwYq/ftAsTfNAzCPogMwnc0xpGz0897Jmj53dOLARBF9XjVZBP1GyAv0HMpOURkS6
-	 UxRmz/1lv+mQg==
+	b=tBszaPdxUc1FODLBtuqXl8uTm8qlkAGbD45cS3SkQ8mm9n3hf+8ecVqqkAfmt8Mg+
+	 jQ0x/BTMk85vdZOcnzxq/x5friRuRg8L+xYWiSHTx1+u/jIwtwRg1BXYpFT0fhRAY4
+	 QUhGkT5bTfy/18tsz11+UdQ6ZKq2z/Hjx4eqspI5NTETSPCXHUxHIDVIaDqyQMjNZv
+	 gIxhKN0doRL3I8r4Hy4q8ys0REgdUS3YkahDz9wbXcqkqoC8MWWkAUgqjeyl7+Gnys
+	 AJ4eOSKEnCmrrwrl4/21nvjka7mRuofkAIBau3MQfwxNZ4qmI7sEj81TihR9fTKfh+
+	 zhDEGGt1+BGmA==
 From: Vinod Koul <vkoul@kernel.org>
-To: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Inochi Amaoto <inochiama@gmail.com>
-Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Yixun Lan <dlan@gentoo.org>, 
- Longbin Li <looong.bin@gmail.com>
-In-Reply-To: <20250303065649.937233-1-inochiama@gmail.com>
-References: <20250303065649.937233-1-inochiama@gmail.com>
-Subject: Re: [PATCH] dt-bindings: dma: snps,dw-axi-dmac: Allow devices to
- be marked as noncoherent
-Message-Id: <174164080465.489187.953643142070263441.b4-ty@kernel.org>
-Date: Tue, 11 Mar 2025 02:36:44 +0530
+To: Frank.Li@nxp.com, "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: imx@lists.linux.dev, dmaengine@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+In-Reply-To: <20250228071720.3780479-1-peng.fan@oss.nxp.com>
+References: <20250228071720.3780479-1-peng.fan@oss.nxp.com>
+Subject: Re: [PATCH V4 RESEND 1/2] dmaengine: fsl-edma: cleanup chan after
+ dma_async_device_unregister
+Message-Id: <174164080823.489187.15604235628505426081.b4-ty@kernel.org>
+Date: Tue, 11 Mar 2025 02:36:48 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -65,20 +62,23 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
 
-On Mon, 03 Mar 2025 14:56:48 +0800, Inochi Amaoto wrote:
-> A RISC-V platform can have both DMA coherent/noncoherent devices.
-> Since the RISC-V architecture is marked coherent, devices should
-> be marked as noncoherent when coherent devices exist.
-> 
-> Add dma-noncoherent property for snps,dw-axi-dmac device. It will
-> be used on SG2044, and it has other coherent devices.
+On Fri, 28 Feb 2025 15:17:19 +0800, Peng Fan (OSS) wrote:
+> There is kernel dump when do module test:
+> sysfs: cannot create duplicate filename
+> /devices/platform/soc@0/44000000.bus/44000000.dma-controller/dma/dma0chan0
+>  __dma_async_device_channel_register+0x128/0x19c
+>  dma_async_device_register+0x150/0x454
+>  fsl_edma_probe+0x6cc/0x8a0
+>  platform_probe+0x68/0xc8
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] dt-bindings: dma: snps,dw-axi-dmac: Allow devices to be marked as noncoherent
-      commit: 6ec29d4086ed8b951fa794ac6c0e7cd7ae3762d9
+[1/2] dmaengine: fsl-edma: cleanup chan after dma_async_device_unregister
+      commit: c9c59da76ce9cb3f215b66eb3708cda1134a5206
+[2/2] dmaengine: fsl-edma: free irq correctly in remove path
+      commit: fa70c4c3c580c239a0f9e83a14770ab026e8d820
 
 Best regards,
 -- 

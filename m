@@ -1,61 +1,55 @@
-Return-Path: <dmaengine+bounces-4679-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4680-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DEAE7A5A509
-	for <lists+dmaengine@lfdr.de>; Mon, 10 Mar 2025 21:36:11 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id D6739A5A544
+	for <lists+dmaengine@lfdr.de>; Mon, 10 Mar 2025 21:47:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 78C893ACE62
-	for <lists+dmaengine@lfdr.de>; Mon, 10 Mar 2025 20:35:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5D4F47A123F
+	for <lists+dmaengine@lfdr.de>; Mon, 10 Mar 2025 20:46:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32A0D1DE8A2;
-	Mon, 10 Mar 2025 20:36:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EA461DF258;
+	Mon, 10 Mar 2025 20:47:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cVqzcS0W"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nGvSE7A4"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EACC61DA0E1;
-	Mon, 10 Mar 2025 20:36:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 172511DE4C8;
+	Mon, 10 Mar 2025 20:47:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741638965; cv=none; b=IzS4sA3pT9iuFGpMykjDe2Ygz60La3/JtwG9s6RotMQ7k2QJ8/9hz9GuSmUIvL4Off063gnREulpbtm2x/5v6qIyKiOZubzYxvc7Cfxa7UYxrX0kNbpzYQ/FqW540Q8nCfc1tMd8CF83wWG1tDuprtxendK9Bq9QEVCeCCVvjVc=
+	t=1741639655; cv=none; b=J5emJCYrAZZeBbuWa1BCJsooGno2G6sa/fwUEnYLYPsPPzsmNtKuchsN/KV+2R3bL133Csvp6WcD0znEMdZH3wT5n5Q1w38EDnX1N/bNlwxUJHaSKhDoJRMNRImTvtzDHq6XXB1w3TUbR3/21ztzPCco0t2axAuHekuP1JO2G44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741638965; c=relaxed/simple;
-	bh=n/6h0Z82jvZ83HRGml+cdiqJusnQKh12WlsST6HByD4=;
+	s=arc-20240116; t=1741639655; c=relaxed/simple;
+	bh=Zf01IC7iv4wbCJ+aR/Htct+Ew44gIeHiBJl2ieaEMok=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fZHzicUZo7AaXqc9+nF6kd2HtNwNtrT08hu4GdEVyXFl4yWecyb8q9dJIURwbioxD4cKX5gtvZDIXhSyMHvwdShvax4ObxZvtwfaLmYVz3giQikfg0zT0KiFU0iePlS4k4/A9WcSk1fPuGVx60VXrb7uB3vM8H9pqMHe6Dy3qgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cVqzcS0W; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1AF6C4CEE5;
-	Mon, 10 Mar 2025 20:36:03 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=PspHw7qKclBw9nYcIe3zPpDu2xxYEUoD73kx07GLqiiE5CwvPIyjhXmaRN+mk1Exj4YfSpDBSczUg70547S0cZTHXz6NxlPB3pvOZ1w2TUe561aUNWRCzXkemJ2zmTTQQUQjkmAqNS7HPpYyeTDzvkp+OFohCY9PTBgXtgi+WEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nGvSE7A4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 669ABC4CEE5;
+	Mon, 10 Mar 2025 20:47:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741638964;
-	bh=n/6h0Z82jvZ83HRGml+cdiqJusnQKh12WlsST6HByD4=;
+	s=k20201202; t=1741639655;
+	bh=Zf01IC7iv4wbCJ+aR/Htct+Ew44gIeHiBJl2ieaEMok=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cVqzcS0WzE689ZzKxkIMjMvAzkH1RcrRhNDakHt5i30SnK2JErbbLGES+UAptU7i7
-	 /ZdNYwSQxST8A82WoQDcPWIfGO6QvGyAso6ss1XnCWioKcvJK8omSQTiFUIUM7IB+J
-	 hwIUIVkf7MVKiM04QDUUVhXtewQaQBTtJvTt2LLQuNEmJ6b4ZyACe3DNX9XM4lqxye
-	 u5umQq5F8FO+uOHXHXSPy8qZwCz3CqJPBp6iZYoMkpaEJUaUnnTGMrvGWYYBXu8hog
-	 Ne6ix9Ej3rCJaTdVuCfPIxYZtHsfXrJ73a1UXg7l3D6oC/fdPYb/A5o0baKzqlAJaa
-	 sFZ5klgwfJOKg==
-Date: Tue, 11 Mar 2025 02:06:00 +0530
+	b=nGvSE7A42EbJnZRC1hj4/bjyygUZL4fmxWqVrW82nr1a43xeLEKBkaSzymJuwhzC4
+	 q7SVWHZKkcaGlOhxtuKjYy0e9VDLfSCSL68uaid7zbT/14TQ+X7QxVCXHm26oQW0sZ
+	 73EKYeMW0V6eJGlEsQMznD4aRvzDg2lGpTJwesXHxCtCGepNxW2tHJrazIXPqxkNmH
+	 t5Cxruckx6/CCw1r6jLz+e3fFgO2Wm6e0wgA22g2RuxTROLw8i508aaTkKvpbOLTgl
+	 H4NP0zQl/geIqNhmGkYWNItfZgMfYl0UtOa3pkuNiqcfUR5jj+dwa5kW0qUMlJY/Ol
+	 QBly887wQlpdQ==
+Date: Tue, 11 Mar 2025 02:17:31 +0530
 From: Vinod Koul <vkoul@kernel.org>
-To: Md Sadre Alam <quic_mdalam@quicinc.com>
-Cc: corbet@lwn.net, thara.gopinath@gmail.com, herbert@gondor.apana.org.au,
-	davem@davemloft.net, martin.petersen@oracle.com,
-	enghua.yu@intel.com, u.kleine-koenig@baylibre.com,
-	dmaengine@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, quic_utiwari@quicinc.com,
-	quic_srichara@quicinc.com, quic_varada@quicinc.com
-Subject: Re: [PATCH v6 02/12] dmaengine: add DMA_PREP_LOCK and
- DMA_PREP_UNLOCK flag
-Message-ID: <Z89NMPF9TGmz9Js/@vaman>
-References: <20250115103004.3350561-1-quic_mdalam@quicinc.com>
- <20250115103004.3350561-3-quic_mdalam@quicinc.com>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/2] dmaengine: Add Arm DMA-350 driver
+Message-ID: <Z89P461+Y6kQDOCX@vaman>
+References: <cover.1740762136.git.robin.murphy@arm.com>
+ <55e084dd2b5720bdddf503ffac560d111032aa96.1740762136.git.robin.murphy@arm.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -64,114 +58,31 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250115103004.3350561-3-quic_mdalam@quicinc.com>
+In-Reply-To: <55e084dd2b5720bdddf503ffac560d111032aa96.1740762136.git.robin.murphy@arm.com>
 
-On 15-01-25, 15:59, Md Sadre Alam wrote:
-> Add lock and unlock flag support on command descriptor.
-> Once lock set in requester pipe, then the bam controller
-> will lock all others pipe and process the request only
-> from requester pipe. Unlocking only can be performed from
-> the same pipe.
-> 
-> If DMA_PREP_LOCK flag passed in command descriptor then requester
-> of this transaction wanted to lock the BAM controller for this
-> transaction so BAM driver should set LOCK bit for the HW descriptor.
-> 
-> If DMA_PREP_UNLOCK flag passed in command descriptor then requester
-> of this transaction wanted to unlock the BAM controller.so BAM driver
-> should set UNLOCK bit for the HW descriptor.
-> 
-> BAM IP version 1.4.0 and above only supports this LOCK/UNLOCK
-> feature.
+On 28-02-25, 17:26, Robin Murphy wrote:
 
-Have you aligned internally b/w team at Qualcomm to have this as single
-approach for LOCK implementation. I would like to see ack from
-Mukesh/Bjorn before proceeding ahead with this
+> +static u32 d350_get_residue(struct d350_chan *dch)
+> +{
+> +	u32 res, xsize, xsizehi, hi_new;
+> +
+> +	hi_new = readl_relaxed(dch->base + CH_XSIZEHI);
+> +	do {
+> +		xsizehi = hi_new;
+> +		xsize = readl_relaxed(dch->base + CH_XSIZE);
+> +		hi_new = readl_relaxed(dch->base + CH_XSIZEHI);
+> +	} while (xsizehi != hi_new);
 
-> 
-> Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
-> ---
-> 
-> Change in [v6]
-> 
-> * Change "BAM" to "DAM"
-> 
-> Change in [v5]
-> 
-> * Added DMA_PREP_LOCK and DMA_PREP_UNLOCK flag support
-> 
-> Change in [v4]
-> 
-> * This patch was not included in v4
-> 
-> Change in [v3]
-> 
-> * This patch was not included in v3
-> 
-> Change in [v2]
-> 
-> * This patch was not included in v2
->  
-> Change in [v1]
-> 
-> * This patch was not included in v1
-> 
->  Documentation/driver-api/dmaengine/provider.rst | 15 +++++++++++++++
->  include/linux/dmaengine.h                       |  6 ++++++
->  2 files changed, 21 insertions(+)
-> 
-> diff --git a/Documentation/driver-api/dmaengine/provider.rst b/Documentation/driver-api/dmaengine/provider.rst
-> index 3085f8b460fa..a032e55d0a4f 100644
-> --- a/Documentation/driver-api/dmaengine/provider.rst
-> +++ b/Documentation/driver-api/dmaengine/provider.rst
-> @@ -628,6 +628,21 @@ DMA_CTRL_REUSE
->    - This flag is only supported if the channel reports the DMA_LOAD_EOT
->      capability.
->  
-> +- DMA_PREP_LOCK
-> +
-> +  - If set, the DMA will lock all other pipes not related to the current
-> +    pipe group, and keep handling the current pipe only.
-> +
-> +  - All pipes not within this group will be locked by this pipe upon lock
-> +    event.
-> +
-> +  - only pipes which are in the same group and relate to the same Environment
-> +    Execution(EE) will not be locked by a certain pipe.
-> +
-> +- DMA_PREP_UNLOCK
-> +
-> +  - If set, DMA will release all locked pipes
-> +
->  General Design Notes
->  ====================
->  
-> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-> index 346251bf1026..8ebd43a998a7 100644
-> --- a/include/linux/dmaengine.h
-> +++ b/include/linux/dmaengine.h
-> @@ -200,6 +200,10 @@ struct dma_vec {
->   *  transaction is marked with DMA_PREP_REPEAT will cause the new transaction
->   *  to never be processed and stay in the issued queue forever. The flag is
->   *  ignored if the previous transaction is not a repeated transaction.
-> + *  @DMA_PREP_LOCK: tell the driver that there is a lock bit set on command
-> + *  descriptor.
-> + *  @DMA_PREP_UNLOCK: tell the driver that there is a un-lock bit set on command
-> + *  descriptor.
->   */
->  enum dma_ctrl_flags {
->  	DMA_PREP_INTERRUPT = (1 << 0),
-> @@ -212,6 +216,8 @@ enum dma_ctrl_flags {
->  	DMA_PREP_CMD = (1 << 7),
->  	DMA_PREP_REPEAT = (1 << 8),
->  	DMA_PREP_LOAD_EOT = (1 << 9),
-> +	DMA_PREP_LOCK = (1 << 10),
-> +	DMA_PREP_UNLOCK = (1 << 11),
->  };
->  
->  /**
-> -- 
-> 2.34.1
+This can go forever, lets have some limits to this loop please
+
+> +static int d350_alloc_chan_resources(struct dma_chan *chan)
+> +{
+> +	struct d350_chan *dch = to_d350_chan(chan);
+> +	int ret = request_irq(dch->irq, d350_irq, IRQF_SHARED,
+> +			      dev_name(&dch->vc.chan.dev->device), dch);
+
+This is interesting, any reason why the irq is allocated here? Would it
+be not better to do that in probe...
 
 -- 
 ~Vinod

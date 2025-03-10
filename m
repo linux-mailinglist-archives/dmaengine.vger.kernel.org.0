@@ -1,138 +1,125 @@
-Return-Path: <dmaengine+bounces-4677-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4678-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EAB80A59A18
-	for <lists+dmaengine@lfdr.de>; Mon, 10 Mar 2025 16:36:38 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C36BA59B9B
+	for <lists+dmaengine@lfdr.de>; Mon, 10 Mar 2025 17:53:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6F0E0188FC1E
-	for <lists+dmaengine@lfdr.de>; Mon, 10 Mar 2025 15:36:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0870B3A87CC
+	for <lists+dmaengine@lfdr.de>; Mon, 10 Mar 2025 16:52:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D28FD22D79B;
-	Mon, 10 Mar 2025 15:36:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98696238149;
+	Mon, 10 Mar 2025 16:49:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mp1NPEM4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H4+/EqRW"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 256B922D79D;
-	Mon, 10 Mar 2025 15:36:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68980230BD5;
+	Mon, 10 Mar 2025 16:49:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741620993; cv=none; b=HKzneyR8a3yW021AmjcyxQy1PiyDqfQPCHFycOsQ/owBc28sXs19dnBh8dswEHnCUNZvkIbffxzQdniYdMYlA7dP71lKfVg4IMx8CM59BYZ3XoSSBqlp1QNOnNmwtw22RQcxOvO0SrMjdPwanMS+07t7k8iU5KCwK6wW/l1Mf/o=
+	t=1741625367; cv=none; b=ihAsLN7lw0Mm19x4TkbeAOPyjwekF605Pz4DvG3ErYhm1MUUQ2lbfQTwiI5qWm1t724mlrgEx6qYmXXKkqjgygTcDJR7VLrBRkJdX9Q+i62YVE1/MjVufSp20NWC71uJ6ADpeZVrxdxoA72czL1gokM9bdCN/3O/fny4OdlMjFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741620993; c=relaxed/simple;
-	bh=64F4B4yJEEAfxN3wUIZgI4lC2XVN5r8inKVe5WmZtRY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QItSgq1xZk/DNB79G3MAC0UESQ2ylnCiuga0LXI8KTXhO+7HNalNjJ4qnLLe7U27xy41G6ZKz9IRAH1Ml6KeVpsbswc40Tws1s1LtPWQCn5jacGN239EubY3upYw98Q5BkQqvdRgXVD7z0NnGFF1mxRkG3iA9HysUgAH4u20Mv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mp1NPEM4; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741620992; x=1773156992;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=64F4B4yJEEAfxN3wUIZgI4lC2XVN5r8inKVe5WmZtRY=;
-  b=mp1NPEM40uZILz1IrbOiJ0lF3BzJvYZdlmmdnyZNjYljuaahSFNv/jto
-   NBwvNyuz1SQojnJgKuQJq4vqUMBSQrtRQ7tyRgN4Fc1gWI1Q1JP6wg+j3
-   VdN5+qRMKpErzSeumUQNW1aRopcOC7nxmsaBk5Hq9xzFSGaLiiWy0HliI
-   pSQdZb23B/6kHVzwBNum0oOLGXeS0DEemj47Oc6dS/1bcFweOqR68yq7J
-   Qio2abDxXsgNOTGUTBsKxuMGMtBjKlyUPM86wdd2et/P6X951NKeu0bsI
-   yORfWAH5XEEq/pUGmYu1hqSXMfPeVjskxZygwRKCLZ3ClWCvxljsNxrJW
-   Q==;
-X-CSE-ConnectionGUID: pja+oU0PR1mfojYMPPcj5A==
-X-CSE-MsgGUID: ppoDMT9BQgey6ZEw3SYRxg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11369"; a="41870588"
-X-IronPort-AV: E=Sophos;i="6.14,236,1736841600"; 
-   d="scan'208";a="41870588"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 08:36:30 -0700
-X-CSE-ConnectionGUID: F3VoGm4ET5KIlKSB614RWQ==
-X-CSE-MsgGUID: GZmB2o0OT2CBKOdaDJhi3w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,236,1736841600"; 
-   d="scan'208";a="150986398"
-Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.111.63]) ([10.125.111.63])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 08:36:29 -0700
-Message-ID: <49c6ce4e-52a4-43e2-b67f-9aa096694f39@intel.com>
-Date: Mon, 10 Mar 2025 08:36:28 -0700
+	s=arc-20240116; t=1741625367; c=relaxed/simple;
+	bh=XUiWyHwI4Vxt1OJNKKDv1Etb8h9Z/vi/oeIFxbkHNkU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Eav+YBqS6aI576q8bTBNW7kQy6x+EbIFtsODSkMR7SnPUo+Jxn0pujoQQZq4/JYYsem2wVVgXlBk6iAGXKwq0LILDM8sdwloe5eWasFDmTZsv3NInM6cuMfjn2jbPnzsmP7WxaR3IWfLewgVKbM39IsA5i715suAEozALtCFuRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H4+/EqRW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AEF5C4CEE5;
+	Mon, 10 Mar 2025 16:49:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741625366;
+	bh=XUiWyHwI4Vxt1OJNKKDv1Etb8h9Z/vi/oeIFxbkHNkU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=H4+/EqRWTbjykk1EFMzcNIRqB+I32bKyVBDmEQtowE1KL82pRRCezE8mg6mZ/feqi
+	 fDiHjF0GVntnfRVHVy8dR53O3+FPfaHnfilD0JNcohxr0EKiSGtkm0NvkE4Y4cVqJU
+	 FtULpUP4pLHxpLoARU4ol/cAR0bPQ2bYSP4Nw0A3VHQHEtf5QPJJzSxpDm9uoRUwTI
+	 Ek00FHbXRQtUHY3CQfa83KODtzrj6QIRgYxye0jizw7rR7wx/b4D9rP5cKot0HGDQp
+	 A0Tfu3bxkbHZVbUi0lsnARbLm5Zsn8dg7qYzLwULHrk72rmlx4HUL4S99LnMYDMY3z
+	 +uORw6VRge1sg==
+Date: Mon, 10 Mar 2025 16:49:21 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Marek Vasut <marex@denx.de>,
+	"open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+	"open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>,
+	"moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] dt-bindings: dma: fsl-mxs-dma: Add compatible string for
+ i.MX8 chips
+Message-ID: <20250310-either-ambulance-541738a32b2c@spud>
+References: <20250307215100.3257649-1-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 9/9] dmaengine: idxd: Refactor remove call with
- idxd_cleanup() helper
-To: Shuai Xue <xueshuai@linux.alibaba.com>, vinicius.gomes@intel.com,
- Markus.Elfring@web.de, fenghuay@nvidia.com, vkoul@kernel.org
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250309062058.58910-1-xueshuai@linux.alibaba.com>
- <20250309062058.58910-10-xueshuai@linux.alibaba.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250309062058.58910-10-xueshuai@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="larkxOhmSP7+JbNi"
+Content-Disposition: inline
+In-Reply-To: <20250307215100.3257649-1-Frank.Li@nxp.com>
 
 
+--larkxOhmSP7+JbNi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 3/8/25 11:20 PM, Shuai Xue wrote:
-> The idxd_cleanup() helper cleans up perfmon, interrupts, internals and
-> so on. Refactor remove call with the idxd_cleanup() helper to avoid code
-> duplication. Note, this also fixes the missing put_device() for idxd
-> groups, enginces and wqs.
-> 
-> Fixes: bfe1d56091c1 ("dmaengine: idxd: Init and probe for Intel data accelerators")
-> Cc: stable@vger.kernel.org
-> Suggested-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+On Fri, Mar 07, 2025 at 04:50:59PM -0500, Frank Li wrote:
+> Add compatible string for all i.MX8 chips, which is backward compatible
+> with i.MX28. Set it to fall back to "fsl,imx28-dma-apbh".
+>=20
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+
 > ---
->  drivers/dma/idxd/init.c | 14 ++------------
->  1 file changed, 2 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-> index ecb8d534fac4..22b411b470be 100644
-> --- a/drivers/dma/idxd/init.c
-> +++ b/drivers/dma/idxd/init.c
-> @@ -1310,7 +1310,6 @@ static void idxd_shutdown(struct pci_dev *pdev)
->  static void idxd_remove(struct pci_dev *pdev)
->  {
->  	struct idxd_device *idxd = pci_get_drvdata(pdev);
-> -	struct idxd_irq_entry *irq_entry;
->  
->  	idxd_unregister_devices(idxd);
->  	/*
-> @@ -1323,21 +1322,12 @@ static void idxd_remove(struct pci_dev *pdev)
->  	get_device(idxd_confdev(idxd));
->  	device_unregister(idxd_confdev(idxd));
->  	idxd_shutdown(pdev);
-> -	if (device_pasid_enabled(idxd))
-> -		idxd_disable_system_pasid(idxd);
->  	idxd_device_remove_debugfs(idxd);
-> -
-> -	irq_entry = idxd_get_ie(idxd, 0);
-> -	free_irq(irq_entry->vector, irq_entry);
-> -	pci_free_irq_vectors(pdev);
-> +	idxd_cleanup(idxd);
->  	pci_iounmap(pdev, idxd->reg_base);
-> -	if (device_user_pasid_enabled(idxd))
-> -		idxd_disable_sva(pdev);
-> -	pci_disable_device(pdev);
-> -	destroy_workqueue(idxd->wq);
-> -	perfmon_pmu_remove(idxd);
->  	put_device(idxd_confdev(idxd));
->  	idxd_free(idxd);
-> +	pci_disable_device(pdev);
->  }
->  
->  static struct pci_driver idxd_pci_driver = {
+>  Documentation/devicetree/bindings/dma/fsl,mxs-dma.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/dma/fsl,mxs-dma.yaml b/Doc=
+umentation/devicetree/bindings/dma/fsl,mxs-dma.yaml
+> index a17cf2360dd4a..75a7d9556699c 100644
+> --- a/Documentation/devicetree/bindings/dma/fsl,mxs-dma.yaml
+> +++ b/Documentation/devicetree/bindings/dma/fsl,mxs-dma.yaml
+> @@ -31,6 +31,12 @@ properties:
+>                - fsl,imx6q-dma-apbh
+>                - fsl,imx6sx-dma-apbh
+>                - fsl,imx7d-dma-apbh
+> +              - fsl,imx8dxl-dma-apbh
+> +              - fsl,imx8mm-dma-apbh
+> +              - fsl,imx8mn-dma-apbh
+> +              - fsl,imx8mp-dma-apbh
+> +              - fsl,imx8mq-dma-apbh
+> +              - fsl,imx8qm-dma-apbh
+>                - fsl,imx8qxp-dma-apbh
+>            - const: fsl,imx28-dma-apbh
+>        - enum:
+> --=20
+> 2.34.1
+>=20
 
+--larkxOhmSP7+JbNi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ88YEQAKCRB4tDGHoIJi
+0lKZAQDr225yfRoRFlt+qxcw8GhROf/Qi13nYKV/U8XrDdEYlwD+NChVWxFGNI/W
++sC4s9WDIuQNt0zbNBIMR+pWkiX3AA4=
+=+r4I
+-----END PGP SIGNATURE-----
+
+--larkxOhmSP7+JbNi--
 

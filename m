@@ -1,55 +1,62 @@
-Return-Path: <dmaengine+bounces-4680-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4681-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id D6739A5A544
-	for <lists+dmaengine@lfdr.de>; Mon, 10 Mar 2025 21:47:40 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0DD2CA5A56A
+	for <lists+dmaengine@lfdr.de>; Mon, 10 Mar 2025 22:01:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5D4F47A123F
-	for <lists+dmaengine@lfdr.de>; Mon, 10 Mar 2025 20:46:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4CA1117417D
+	for <lists+dmaengine@lfdr.de>; Mon, 10 Mar 2025 21:01:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EA461DF258;
-	Mon, 10 Mar 2025 20:47:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D98611DF996;
+	Mon, 10 Mar 2025 21:01:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nGvSE7A4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XELG8I6W"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 172511DE4C8;
-	Mon, 10 Mar 2025 20:47:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4B2612B73;
+	Mon, 10 Mar 2025 21:01:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741639655; cv=none; b=J5emJCYrAZZeBbuWa1BCJsooGno2G6sa/fwUEnYLYPsPPzsmNtKuchsN/KV+2R3bL133Csvp6WcD0znEMdZH3wT5n5Q1w38EDnX1N/bNlwxUJHaSKhDoJRMNRImTvtzDHq6XXB1w3TUbR3/21ztzPCco0t2axAuHekuP1JO2G44=
+	t=1741640463; cv=none; b=GpfhwkIhT9HzIR1ziF38bhC9GbL3joQ5p/YtVzS9YH69BLh+KW+XvXe7z9zrB5h+cFQFLuhvBQf+RbBhfCDWOsYY3hqP8p/2kK9YKH6zhWusJigNBxfT4wVMrk4AyJ0OkcPuNg6GuV4ooG7AvFvH4Oy3qOOXXHT5817E8UuabjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741639655; c=relaxed/simple;
-	bh=Zf01IC7iv4wbCJ+aR/Htct+Ew44gIeHiBJl2ieaEMok=;
+	s=arc-20240116; t=1741640463; c=relaxed/simple;
+	bh=aYyGi+0GlhtZZOl3eElkEgro/Og6UgEBW7ME0Eh2cEM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PspHw7qKclBw9nYcIe3zPpDu2xxYEUoD73kx07GLqiiE5CwvPIyjhXmaRN+mk1Exj4YfSpDBSczUg70547S0cZTHXz6NxlPB3pvOZ1w2TUe561aUNWRCzXkemJ2zmTTQQUQjkmAqNS7HPpYyeTDzvkp+OFohCY9PTBgXtgi+WEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nGvSE7A4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 669ABC4CEE5;
-	Mon, 10 Mar 2025 20:47:34 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=Uj1WkTgSopApKZtTKGLls2ma+G9zFYIvmn5sIvn8bvFJTEKyAEskUTKCGc2pm+34h+iabTmPKxqWnmdzQq9UUoT+/r+9PB+BmOO1q2G87jFef1dovRawFzPvBr1cnfd1SNgzejaO82mtpEvxoEx+cj128uiixj5Azyg+PoibC3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XELG8I6W; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CE6AC4CEE5;
+	Mon, 10 Mar 2025 21:01:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741639655;
-	bh=Zf01IC7iv4wbCJ+aR/Htct+Ew44gIeHiBJl2ieaEMok=;
+	s=k20201202; t=1741640463;
+	bh=aYyGi+0GlhtZZOl3eElkEgro/Og6UgEBW7ME0Eh2cEM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nGvSE7A42EbJnZRC1hj4/bjyygUZL4fmxWqVrW82nr1a43xeLEKBkaSzymJuwhzC4
-	 q7SVWHZKkcaGlOhxtuKjYy0e9VDLfSCSL68uaid7zbT/14TQ+X7QxVCXHm26oQW0sZ
-	 73EKYeMW0V6eJGlEsQMznD4aRvzDg2lGpTJwesXHxCtCGepNxW2tHJrazIXPqxkNmH
-	 t5Cxruckx6/CCw1r6jLz+e3fFgO2Wm6e0wgA22g2RuxTROLw8i508aaTkKvpbOLTgl
-	 H4NP0zQl/geIqNhmGkYWNItfZgMfYl0UtOa3pkuNiqcfUR5jj+dwa5kW0qUMlJY/Ol
-	 QBly887wQlpdQ==
-Date: Tue, 11 Mar 2025 02:17:31 +0530
+	b=XELG8I6WYICbM6YDswWTIzR5vBY0ZCdCcGJ/XwRd+rPF8jWKv8h3HR7gxrqFV55Yk
+	 YC03rspukIbY7kdASAul32qn3tTTF0Mjsk4YyEhIb3u5/Qj1XV8c+Zcm0FFT2h6v/m
+	 F+zkgxIJhbNnd1atUL3+ZMTBsK1wGd1gj7eVnMIfItWqcZQxPHdLUiPB76A4Z3cCow
+	 IF6tot8i/DiR7HlFaN9aZMA18vcatU2dTOp5YxckUak3MYgFIzXJtGfVYF6T2k2P02
+	 /qA3Twqr+moDiV/Zm01s5J3HOrF4lAXYPAyy3NYPcJQWX3oaLIFX74c7Yw+/KrdG1v
+	 Dwfdi1Ujv4h8A==
+Date: Tue, 11 Mar 2025 02:30:59 +0530
 From: Vinod Koul <vkoul@kernel.org>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/2] dmaengine: Add Arm DMA-350 driver
-Message-ID: <Z89P461+Y6kQDOCX@vaman>
-References: <cover.1740762136.git.robin.murphy@arm.com>
- <55e084dd2b5720bdddf503ffac560d111032aa96.1740762136.git.robin.murphy@arm.com>
+To: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
+Cc: Andi Shyti <andi.shyti@kernel.org>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org, quic_msavaliy@quicinc.com,
+	quic_vtanuku@quicinc.com
+Subject: Re: [PATCH v5 RESEND 1/2] dmaengine: qcom: gpi: Add GPI Block event
+ interrupt support
+Message-ID: <Z89TC7fKzmmeu6tW@vaman>
+References: <20250212120536.28879-1-quic_jseerapu@quicinc.com>
+ <20250212120536.28879-2-quic_jseerapu@quicinc.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -58,31 +65,28 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <55e084dd2b5720bdddf503ffac560d111032aa96.1740762136.git.robin.murphy@arm.com>
+In-Reply-To: <20250212120536.28879-2-quic_jseerapu@quicinc.com>
 
-On 28-02-25, 17:26, Robin Murphy wrote:
+On 12-02-25, 17:35, Jyothi Kumar Seerapu wrote:
+> GSI hardware generates an interrupt for each transfer completion.
+> For multiple messages within a single transfer, this results in
+> N interrupts for N messages, leading to significant software
+> interrupt latency.
+> 
+> To mitigate this latency, utilize Block Event Interrupt (BEI) mechanism.
+> Enabling BEI instructs the GSI hardware to prevent interrupt generation
+> and BEI is disabled when an interrupt is necessary.
+> 
+> When using BEI, consider splitting a single multi-message transfer into
+> chunks of 8 messages internally and so interrupts are not expected for
+> the first 7 message completions, only the last message triggers
+> an interrupt, indicating the completion of 8 messages.
+> 
+> This BEI mechanism enhances overall transfer efficiency.
 
-> +static u32 d350_get_residue(struct d350_chan *dch)
-> +{
-> +	u32 res, xsize, xsizehi, hi_new;
-> +
-> +	hi_new = readl_relaxed(dch->base + CH_XSIZEHI);
-> +	do {
-> +		xsizehi = hi_new;
-> +		xsize = readl_relaxed(dch->base + CH_XSIZE);
-> +		hi_new = readl_relaxed(dch->base + CH_XSIZEHI);
-> +	} while (xsizehi != hi_new);
-
-This can go forever, lets have some limits to this loop please
-
-> +static int d350_alloc_chan_resources(struct dma_chan *chan)
-> +{
-> +	struct d350_chan *dch = to_d350_chan(chan);
-> +	int ret = request_irq(dch->irq, d350_irq, IRQF_SHARED,
-> +			      dev_name(&dch->vc.chan.dev->device), dch);
-
-This is interesting, any reason why the irq is allocated here? Would it
-be not better to do that in probe...
+That sounds good but I dont like the idea that we add a custom interface
+for this. Please use DMA_PREP_INTERRUPT instead. Adding this flag should
+trigger N interrupts, absence of this should lead to Block events only
 
 -- 
 ~Vinod

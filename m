@@ -1,125 +1,178 @@
-Return-Path: <dmaengine+bounces-4678-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4679-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C36BA59B9B
-	for <lists+dmaengine@lfdr.de>; Mon, 10 Mar 2025 17:53:09 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DEAE7A5A509
+	for <lists+dmaengine@lfdr.de>; Mon, 10 Mar 2025 21:36:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0870B3A87CC
-	for <lists+dmaengine@lfdr.de>; Mon, 10 Mar 2025 16:52:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 78C893ACE62
+	for <lists+dmaengine@lfdr.de>; Mon, 10 Mar 2025 20:35:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98696238149;
-	Mon, 10 Mar 2025 16:49:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32A0D1DE8A2;
+	Mon, 10 Mar 2025 20:36:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H4+/EqRW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cVqzcS0W"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68980230BD5;
-	Mon, 10 Mar 2025 16:49:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EACC61DA0E1;
+	Mon, 10 Mar 2025 20:36:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741625367; cv=none; b=ihAsLN7lw0Mm19x4TkbeAOPyjwekF605Pz4DvG3ErYhm1MUUQ2lbfQTwiI5qWm1t724mlrgEx6qYmXXKkqjgygTcDJR7VLrBRkJdX9Q+i62YVE1/MjVufSp20NWC71uJ6ADpeZVrxdxoA72czL1gokM9bdCN/3O/fny4OdlMjFk=
+	t=1741638965; cv=none; b=IzS4sA3pT9iuFGpMykjDe2Ygz60La3/JtwG9s6RotMQ7k2QJ8/9hz9GuSmUIvL4Off063gnREulpbtm2x/5v6qIyKiOZubzYxvc7Cfxa7UYxrX0kNbpzYQ/FqW540Q8nCfc1tMd8CF83wWG1tDuprtxendK9Bq9QEVCeCCVvjVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741625367; c=relaxed/simple;
-	bh=XUiWyHwI4Vxt1OJNKKDv1Etb8h9Z/vi/oeIFxbkHNkU=;
+	s=arc-20240116; t=1741638965; c=relaxed/simple;
+	bh=n/6h0Z82jvZ83HRGml+cdiqJusnQKh12WlsST6HByD4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Eav+YBqS6aI576q8bTBNW7kQy6x+EbIFtsODSkMR7SnPUo+Jxn0pujoQQZq4/JYYsem2wVVgXlBk6iAGXKwq0LILDM8sdwloe5eWasFDmTZsv3NInM6cuMfjn2jbPnzsmP7WxaR3IWfLewgVKbM39IsA5i715suAEozALtCFuRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H4+/EqRW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AEF5C4CEE5;
-	Mon, 10 Mar 2025 16:49:23 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=fZHzicUZo7AaXqc9+nF6kd2HtNwNtrT08hu4GdEVyXFl4yWecyb8q9dJIURwbioxD4cKX5gtvZDIXhSyMHvwdShvax4ObxZvtwfaLmYVz3giQikfg0zT0KiFU0iePlS4k4/A9WcSk1fPuGVx60VXrb7uB3vM8H9pqMHe6Dy3qgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cVqzcS0W; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1AF6C4CEE5;
+	Mon, 10 Mar 2025 20:36:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741625366;
-	bh=XUiWyHwI4Vxt1OJNKKDv1Etb8h9Z/vi/oeIFxbkHNkU=;
+	s=k20201202; t=1741638964;
+	bh=n/6h0Z82jvZ83HRGml+cdiqJusnQKh12WlsST6HByD4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=H4+/EqRWTbjykk1EFMzcNIRqB+I32bKyVBDmEQtowE1KL82pRRCezE8mg6mZ/feqi
-	 fDiHjF0GVntnfRVHVy8dR53O3+FPfaHnfilD0JNcohxr0EKiSGtkm0NvkE4Y4cVqJU
-	 FtULpUP4pLHxpLoARU4ol/cAR0bPQ2bYSP4Nw0A3VHQHEtf5QPJJzSxpDm9uoRUwTI
-	 Ek00FHbXRQtUHY3CQfa83KODtzrj6QIRgYxye0jizw7rR7wx/b4D9rP5cKot0HGDQp
-	 A0Tfu3bxkbHZVbUi0lsnARbLm5Zsn8dg7qYzLwULHrk72rmlx4HUL4S99LnMYDMY3z
-	 +uORw6VRge1sg==
-Date: Mon, 10 Mar 2025 16:49:21 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Marek Vasut <marex@denx.de>,
-	"open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	"open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>,
-	"moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] dt-bindings: dma: fsl-mxs-dma: Add compatible string for
- i.MX8 chips
-Message-ID: <20250310-either-ambulance-541738a32b2c@spud>
-References: <20250307215100.3257649-1-Frank.Li@nxp.com>
+	b=cVqzcS0WzE689ZzKxkIMjMvAzkH1RcrRhNDakHt5i30SnK2JErbbLGES+UAptU7i7
+	 /ZdNYwSQxST8A82WoQDcPWIfGO6QvGyAso6ss1XnCWioKcvJK8omSQTiFUIUM7IB+J
+	 hwIUIVkf7MVKiM04QDUUVhXtewQaQBTtJvTt2LLQuNEmJ6b4ZyACe3DNX9XM4lqxye
+	 u5umQq5F8FO+uOHXHXSPy8qZwCz3CqJPBp6iZYoMkpaEJUaUnnTGMrvGWYYBXu8hog
+	 Ne6ix9Ej3rCJaTdVuCfPIxYZtHsfXrJ73a1UXg7l3D6oC/fdPYb/A5o0baKzqlAJaa
+	 sFZ5klgwfJOKg==
+Date: Tue, 11 Mar 2025 02:06:00 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Md Sadre Alam <quic_mdalam@quicinc.com>
+Cc: corbet@lwn.net, thara.gopinath@gmail.com, herbert@gondor.apana.org.au,
+	davem@davemloft.net, martin.petersen@oracle.com,
+	enghua.yu@intel.com, u.kleine-koenig@baylibre.com,
+	dmaengine@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, quic_utiwari@quicinc.com,
+	quic_srichara@quicinc.com, quic_varada@quicinc.com
+Subject: Re: [PATCH v6 02/12] dmaengine: add DMA_PREP_LOCK and
+ DMA_PREP_UNLOCK flag
+Message-ID: <Z89NMPF9TGmz9Js/@vaman>
+References: <20250115103004.3350561-1-quic_mdalam@quicinc.com>
+ <20250115103004.3350561-3-quic_mdalam@quicinc.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="larkxOhmSP7+JbNi"
-Content-Disposition: inline
-In-Reply-To: <20250307215100.3257649-1-Frank.Li@nxp.com>
-
-
---larkxOhmSP7+JbNi
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250115103004.3350561-3-quic_mdalam@quicinc.com>
 
-On Fri, Mar 07, 2025 at 04:50:59PM -0500, Frank Li wrote:
-> Add compatible string for all i.MX8 chips, which is backward compatible
-> with i.MX28. Set it to fall back to "fsl,imx28-dma-apbh".
->=20
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+On 15-01-25, 15:59, Md Sadre Alam wrote:
+> Add lock and unlock flag support on command descriptor.
+> Once lock set in requester pipe, then the bam controller
+> will lock all others pipe and process the request only
+> from requester pipe. Unlocking only can be performed from
+> the same pipe.
+> 
+> If DMA_PREP_LOCK flag passed in command descriptor then requester
+> of this transaction wanted to lock the BAM controller for this
+> transaction so BAM driver should set LOCK bit for the HW descriptor.
+> 
+> If DMA_PREP_UNLOCK flag passed in command descriptor then requester
+> of this transaction wanted to unlock the BAM controller.so BAM driver
+> should set UNLOCK bit for the HW descriptor.
+> 
+> BAM IP version 1.4.0 and above only supports this LOCK/UNLOCK
+> feature.
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Have you aligned internally b/w team at Qualcomm to have this as single
+approach for LOCK implementation. I would like to see ack from
+Mukesh/Bjorn before proceeding ahead with this
 
+> 
+> Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
 > ---
->  Documentation/devicetree/bindings/dma/fsl,mxs-dma.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/dma/fsl,mxs-dma.yaml b/Doc=
-umentation/devicetree/bindings/dma/fsl,mxs-dma.yaml
-> index a17cf2360dd4a..75a7d9556699c 100644
-> --- a/Documentation/devicetree/bindings/dma/fsl,mxs-dma.yaml
-> +++ b/Documentation/devicetree/bindings/dma/fsl,mxs-dma.yaml
-> @@ -31,6 +31,12 @@ properties:
->                - fsl,imx6q-dma-apbh
->                - fsl,imx6sx-dma-apbh
->                - fsl,imx7d-dma-apbh
-> +              - fsl,imx8dxl-dma-apbh
-> +              - fsl,imx8mm-dma-apbh
-> +              - fsl,imx8mn-dma-apbh
-> +              - fsl,imx8mp-dma-apbh
-> +              - fsl,imx8mq-dma-apbh
-> +              - fsl,imx8qm-dma-apbh
->                - fsl,imx8qxp-dma-apbh
->            - const: fsl,imx28-dma-apbh
->        - enum:
-> --=20
+> 
+> Change in [v6]
+> 
+> * Change "BAM" to "DAM"
+> 
+> Change in [v5]
+> 
+> * Added DMA_PREP_LOCK and DMA_PREP_UNLOCK flag support
+> 
+> Change in [v4]
+> 
+> * This patch was not included in v4
+> 
+> Change in [v3]
+> 
+> * This patch was not included in v3
+> 
+> Change in [v2]
+> 
+> * This patch was not included in v2
+>  
+> Change in [v1]
+> 
+> * This patch was not included in v1
+> 
+>  Documentation/driver-api/dmaengine/provider.rst | 15 +++++++++++++++
+>  include/linux/dmaengine.h                       |  6 ++++++
+>  2 files changed, 21 insertions(+)
+> 
+> diff --git a/Documentation/driver-api/dmaengine/provider.rst b/Documentation/driver-api/dmaengine/provider.rst
+> index 3085f8b460fa..a032e55d0a4f 100644
+> --- a/Documentation/driver-api/dmaengine/provider.rst
+> +++ b/Documentation/driver-api/dmaengine/provider.rst
+> @@ -628,6 +628,21 @@ DMA_CTRL_REUSE
+>    - This flag is only supported if the channel reports the DMA_LOAD_EOT
+>      capability.
+>  
+> +- DMA_PREP_LOCK
+> +
+> +  - If set, the DMA will lock all other pipes not related to the current
+> +    pipe group, and keep handling the current pipe only.
+> +
+> +  - All pipes not within this group will be locked by this pipe upon lock
+> +    event.
+> +
+> +  - only pipes which are in the same group and relate to the same Environment
+> +    Execution(EE) will not be locked by a certain pipe.
+> +
+> +- DMA_PREP_UNLOCK
+> +
+> +  - If set, DMA will release all locked pipes
+> +
+>  General Design Notes
+>  ====================
+>  
+> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> index 346251bf1026..8ebd43a998a7 100644
+> --- a/include/linux/dmaengine.h
+> +++ b/include/linux/dmaengine.h
+> @@ -200,6 +200,10 @@ struct dma_vec {
+>   *  transaction is marked with DMA_PREP_REPEAT will cause the new transaction
+>   *  to never be processed and stay in the issued queue forever. The flag is
+>   *  ignored if the previous transaction is not a repeated transaction.
+> + *  @DMA_PREP_LOCK: tell the driver that there is a lock bit set on command
+> + *  descriptor.
+> + *  @DMA_PREP_UNLOCK: tell the driver that there is a un-lock bit set on command
+> + *  descriptor.
+>   */
+>  enum dma_ctrl_flags {
+>  	DMA_PREP_INTERRUPT = (1 << 0),
+> @@ -212,6 +216,8 @@ enum dma_ctrl_flags {
+>  	DMA_PREP_CMD = (1 << 7),
+>  	DMA_PREP_REPEAT = (1 << 8),
+>  	DMA_PREP_LOAD_EOT = (1 << 9),
+> +	DMA_PREP_LOCK = (1 << 10),
+> +	DMA_PREP_UNLOCK = (1 << 11),
+>  };
+>  
+>  /**
+> -- 
 > 2.34.1
->=20
 
---larkxOhmSP7+JbNi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ88YEQAKCRB4tDGHoIJi
-0lKZAQDr225yfRoRFlt+qxcw8GhROf/Qi13nYKV/U8XrDdEYlwD+NChVWxFGNI/W
-+sC4s9WDIuQNt0zbNBIMR+pWkiX3AA4=
-=+r4I
------END PGP SIGNATURE-----
-
---larkxOhmSP7+JbNi--
+-- 
+~Vinod
 

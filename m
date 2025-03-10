@@ -1,61 +1,57 @@
-Return-Path: <dmaengine+bounces-4683-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4684-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A2F05A5A59B
-	for <lists+dmaengine@lfdr.de>; Mon, 10 Mar 2025 22:06:59 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6AB3BA5A59E
+	for <lists+dmaengine@lfdr.de>; Mon, 10 Mar 2025 22:07:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5D2911892787
-	for <lists+dmaengine@lfdr.de>; Mon, 10 Mar 2025 21:07:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 20E873ABEC6
+	for <lists+dmaengine@lfdr.de>; Mon, 10 Mar 2025 21:06:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D22A1E102E;
-	Mon, 10 Mar 2025 21:06:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E3C11E25E3;
+	Mon, 10 Mar 2025 21:06:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ttHr8cmG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qh7Z+3py"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F53E1D5CDB;
-	Mon, 10 Mar 2025 21:06:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9FAB1E25E8;
+	Mon, 10 Mar 2025 21:06:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741640802; cv=none; b=WGgCOWcDxTHp1cUnTYsFTqo3Ri/nCDP+9rHUXn4CyhwK7emNmgNj8ISHBwI9EaDVCuE19py4MxiE+hlEf/akfDBJqK8N/DsZaacrlHVrvtz0Y/xEyfNIn8zlHX9IXheGuNLD57UClm0q4vaUNCIUjftoqqc8lYgzxjttrvIKVVU=
+	t=1741640805; cv=none; b=TXCBXGdwHwalPKqRuoyr/GucRxnOugQrdaUwAkgGwPqxxkzFZ5VO7JATky96ARmzfGeMI6JkFDIfYYHQhxczH1wtWlxZzIpHkhcKBMk351pHaFTgoiYgEk6F2PwzIndn8nUqbq6mUWIZ13SxW5q7ISNbaZ4Pf4EYsO1BfKAJEDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741640802; c=relaxed/simple;
-	bh=oezQm/NlqvpkxgAhyp0aHWDGb6ijzzY4BmowWL/8DaM=;
+	s=arc-20240116; t=1741640805; c=relaxed/simple;
+	bh=GK3gE6I8YU0RfcnHt8moeIj8mJNYCFOvOsO/AmnY1UU=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=DIKV2xcyCmnP/YUMhkquy7qhtW9Qo+FpGZP/m++AnreFWIniLIQmQhPUaAbAdeYo2u7wUuZ1lHZqLUWrgfKb9OqIIos+njewywXk13N4Kj/puXwLJ7o9DpHqxlCsLc0lXiK+QnvH0HUjKsbiputxpHNCy8ZReh+fB6hzIt1KhGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ttHr8cmG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF394C4CEEA;
-	Mon, 10 Mar 2025 21:06:37 +0000 (UTC)
+	 MIME-Version:Content-Type; b=cGoIvXzW73P16vjkl013NARIhXxRF171xYObSLw2Fvuu9dDu3OVu9OPt5RrpWsir2F5VZxGts1cFHsGDxGV4roF5DqZXDwgh1deABOTYABAdQOja3ky79KzBofSC3qDwKQEXOKEqBUBLgdl4FhwlnOY/V0BZGf8rjmE2ygJw34U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qh7Z+3py; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 912A2C4CEE5;
+	Mon, 10 Mar 2025 21:06:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741640801;
-	bh=oezQm/NlqvpkxgAhyp0aHWDGb6ijzzY4BmowWL/8DaM=;
+	s=k20201202; t=1741640804;
+	bh=GK3gE6I8YU0RfcnHt8moeIj8mJNYCFOvOsO/AmnY1UU=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=ttHr8cmGF+ms+kff7kQnZn/6JCpkF13AQHNSOSeG9UYG4mK3/v0Cl78/UoD8OlcSJ
-	 qA1Xjx4yLlYtDLnraNTKL/cMYaAPPdwFxlEIS57IWGalz5MxDKmJPxq90WrTHLY/nY
-	 3VV2/RgWOnFhVaklGQCk9rOajgztlz71l0EBRd2Td98CS6MQvZdkTHHizpcwEesm1Q
-	 vOfcCnOi0n5k5BJidMr7UXB9Xnve3/dqgNwd26DCAX8AVJ/eXJah40mqIXl32CLPrO
-	 +XHvjsDDllOkkROVTMSd4d+c4UwJtzzTnpYGPreq1Ez5XB2aFhNJ9l39lfTY2lKC1+
-	 BlMjsaTTAPWyQ==
+	b=Qh7Z+3pyJ9+veSOdTPFoJoDwaMktzUJXDB6uFGC7nDjZKSeYH1WAMIcRBp3XP6gCd
+	 s3SF4NmZM/3zw3TFlRdSecA6a/sPlcAZ8IMhDybW2Oz3rAMwhDkxaToOglMlVMotXY
+	 3tflnmhgGRvVCJ8l7VZebV5pO85bD+hBziXoP+RJ59IC8IeZCsmKnYNJANdYbaOHXm
+	 xzCtiUNCc8tpAUfsb5VuqkCy/GEzeF620DMgEVGXF1XpMrkqKZjmigPKusg6aoidYa
+	 DUUv7bKRYny5rceITOGWGNjOHo9g0jZMPsyimJ03kKU6BUsxQbFioXPV/0dP0Ov7Q2
+	 s7BE2Udaz1u0A==
 From: Vinod Koul <vkoul@kernel.org>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Crystal Wood <oss@buserror.net>, 
- Madhavan Srinivasan <maddy@linux.ibm.com>, 
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
- Christophe Leroy <christophe.leroy@csgroup.eu>, 
- Naveen N Rao <naveen@kernel.org>, 
- =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-In-Reply-To: <20250308-ppcyaml-dma-v4-1-20392ea81ec6@posteo.net>
-References: <20250308-ppcyaml-dma-v4-1-20392ea81ec6@posteo.net>
-Subject: Re: [PATCH v4] dt-bindings: dma: Convert fsl,elo*-dma to YAML
-Message-Id: <174164079739.489187.17067218233592397100.b4-ty@kernel.org>
-Date: Tue, 11 Mar 2025 02:36:37 +0530
+To: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Cc: dave.jiang@intel.com, kristen.c.accardi@intel.com, 
+ kernel test robot <oliver.sang@intel.com>
+In-Reply-To: <20250305230007.590178-1-vinicius.gomes@intel.com>
+References: <20250305230007.590178-1-vinicius.gomes@intel.com>
+Subject: Re: [PATCH v1] dmaengine: dmatest: Fix dmatest waiting less when
+ interrupted
+Message-Id: <174164080219.489187.12685687661837510000.b4-ty@kernel.org>
+Date: Tue, 11 Mar 2025 02:36:42 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -63,21 +59,25 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
 
-On Sat, 08 Mar 2025 19:33:39 +0100, J. Neuschäfer wrote:
-> The devicetree bindings for Freescale DMA engines have so far existed as
-> a text file. This patch converts them to YAML, and specifies all the
-> compatible strings currently in use in arch/powerpc/boot/dts.
+On Wed, 05 Mar 2025 15:00:06 -0800, Vinicius Costa Gomes wrote:
+> Change the "wait for operation finish" logic to take interrupts into
+> account.
 > 
+> When using dmatest with idxd DMA engine, it's possible that during
+> longer tests, the interrupt notifying the finish of an operation
+> happens during wait_event_freezable_timeout(), which causes dmatest to
+> cleanup all the resources, some of which might still be in use.
 > 
+> [...]
 
 Applied, thanks!
 
-[1/1] dt-bindings: dma: Convert fsl,elo*-dma to YAML
-      commit: 1fe283e850d6659dc3ccc295c6a0b470dd461047
+[1/1] dmaengine: dmatest: Fix dmatest waiting less when interrupted
+      commit: e87ca16e99118ab4e130a41bdf12abbf6a87656c
 
 Best regards,
 -- 

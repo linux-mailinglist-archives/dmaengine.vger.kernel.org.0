@@ -1,124 +1,111 @@
-Return-Path: <dmaengine+bounces-4718-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4719-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2648A5E0F2
-	for <lists+dmaengine@lfdr.de>; Wed, 12 Mar 2025 16:48:42 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC52BA5E3BA
+	for <lists+dmaengine@lfdr.de>; Wed, 12 Mar 2025 19:36:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D6FEB3B1B94
-	for <lists+dmaengine@lfdr.de>; Wed, 12 Mar 2025 15:48:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 88774189F6BB
+	for <lists+dmaengine@lfdr.de>; Wed, 12 Mar 2025 18:36:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03BAC2571AD;
-	Wed, 12 Mar 2025 15:48:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89E4A1CD20D;
+	Wed, 12 Mar 2025 18:36:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VweW4UL2"
+	dkim=pass (2048-bit key) header.d=folker-schwesinger.de header.i=@folker-schwesinger.de header.b="IHs3ILwn"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from www522.your-server.de (www522.your-server.de [195.201.215.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC7C256C96;
-	Wed, 12 Mar 2025 15:48:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 409022528E3;
+	Wed, 12 Mar 2025 18:36:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.201.215.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741794482; cv=none; b=T/LEJYg2hFFaxzL4Sgbq4fnG6zkdsJb1sG04P/gk1Sab1FSQtvxCPLbjc4iBBog9/bvlPil1Kkiwv7ojwTHM00063Dc+Wxo3TrnEz2NVJxK0Sp8NPtnVgWAvfRT2uqVpxueMbIo2sFKAVFZ0OIDk78Eer1FsY8gK5nwwxJg8TGg=
+	t=1741804578; cv=none; b=UDrspqS6nVgwZAvLuukaAh+i3nKR6WbIz6JmbMeXtW4Jin0yovX6qoxgOloZNLfLutPO50t5mqG5WVjm6evd9B3L0QGVeC9FeXbUyRHcyHtgHD3X9BSZz54CSgjjsM1J7RhHJ7R7ECcNMo2O7AyzohhPh3DTMxHOykNiZq7jpVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741794482; c=relaxed/simple;
-	bh=hVViuP1XxrEv6EI2bLn9rnYCAsJuQvmHpI9BKOvIoGc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JnF5OzRbc3shReE4qJp+bUhQOSIUXajyHJjDPWLGIN3acNeAEytHkNEj6qMuVHzQ7Jp5WeeAG/WNCqKPtSVUjmKinLergPFxeR4Nx2PMBxg/Dwqtmxwzfxkga2P1t3sE05bVM5FDz9LIqzl0SVndOu14N6cUVpkDcYA8lH6KeK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VweW4UL2; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741794481; x=1773330481;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=hVViuP1XxrEv6EI2bLn9rnYCAsJuQvmHpI9BKOvIoGc=;
-  b=VweW4UL2rLkBJwVN6LZDqn66VRAeab0MnHGPZs6AWYEZq/iXFY4gMjL+
-   8JX9b8dYpqo2YUMXGd93A+JnKuHBIxtHLdbU7Zt342bzHvpdyItYasMmn
-   NbHg6cHdxEAaRjWlFCMd1dxidYutTCbZdBx6H+jNc7lDfT6teJhGMK7O2
-   RU/rBJJLZGupxs4ibXQn9XSnlFfKg+qCDla0Yu3akykev/XnhgwaLWqFB
-   c8tLK3KZFSFTH9kdj21ipDCAzbq387Q/b9sopjkSzqk/9eCxyKLKjFgTf
-   6CWYg8ISe9ZE/pB7lDZe2C0rY8ozybKqk9TYMAE1wRbTNhoTndjvAqNI7
-   w==;
-X-CSE-ConnectionGUID: IyRh3+26SpSx5cLfWrc6xw==
-X-CSE-MsgGUID: cLzm3tqyQqWqvndoqVt4UQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11371"; a="30465455"
-X-IronPort-AV: E=Sophos;i="6.14,242,1736841600"; 
-   d="scan'208";a="30465455"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 08:48:00 -0700
-X-CSE-ConnectionGUID: GHx4XRa7SDm6QdMP+m+Glw==
-X-CSE-MsgGUID: wTMr/13EQ1aIFSJp8dPHLg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,242,1736841600"; 
-   d="scan'208";a="121578728"
-Received: from tjmaciei-mobl5.ger.corp.intel.com (HELO [10.125.108.8]) ([10.125.108.8])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 08:48:00 -0700
-Message-ID: <cf4c118b-b035-4eaa-ade4-8f29a37d59dc@intel.com>
-Date: Wed, 12 Mar 2025 08:47:59 -0700
+	s=arc-20240116; t=1741804578; c=relaxed/simple;
+	bh=USQyrSayfOtqTw7Yn797LuXa1nzYIEzNYb2576ydQlo=;
+	h=In-Reply-To:Message-Id:Cc:To:From:Date:Subject; b=Q2E83wj/M+pdC54MthKrjEeV8svgrhkp9XMxDGKSfYqrYsW8hg+96htki9915f/U5EPEqcFD4MzuGiAaAOvVeQxgZCS2I7Nm6e+vsoAW8yji5Npe5qf4MCeRf3NvdgC8bXkA/07RKaVKqBJqqv+AOXiuEbjX0Bdxr8olDKfWHCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=folker-schwesinger.de; spf=pass smtp.mailfrom=folker-schwesinger.de; dkim=pass (2048-bit key) header.d=folker-schwesinger.de header.i=@folker-schwesinger.de header.b=IHs3ILwn; arc=none smtp.client-ip=195.201.215.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=folker-schwesinger.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=folker-schwesinger.de
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=folker-schwesinger.de; s=default2212; h=Subject:Date:From:To:Cc:Message-Id:
+	In-Reply-To:Sender:Reply-To:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References;
+	bh=PvD8g/iHmVDM+dWVh5jAN+ccAMhC2v2ZHCMkMzBxqQU=; b=IHs3ILwnUjRJjDXQPTt0DSuIJA
+	ehk51ivm59UhUeZGijZUyxHQzKNS6g/KsrrBX8lVKSg9ogW0z52d07amM8pCic4YPjfRwsYoMV03p
+	Fbha6ZgF4YEbyfusLWQOD+IjPx8aTfSawc/+mdm/HnB5gRPHRmcDqZKGt0Aw+Fj4m2FEw4VEET0aE
+	QvO3+SqYCg2sZ7QkfSXeLja/vfq3StgeVsHVCbJ0ku4JatolvVVyJ/X+z9ubPgr/0R/ONNh0WWNW/
+	3lcnoLqLD4KpDujU6pvH26sOjWYz4Omg1D3CTjyWfoGRMxMwqbGudyEgV64Sc/ZXNPDO50wp/TR8e
+	mfTqwMeA==;
+Received: from sslproxy03.your-server.de ([88.198.220.132])
+	by www522.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <dev@folker-schwesinger.de>)
+	id 1tsQw8-000IGQ-1y;
+	Wed, 12 Mar 2025 19:36:12 +0100
+Received: from [185.209.196.170] (helo=localhost)
+	by sslproxy03.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <dev@folker-schwesinger.de>)
+	id 1tsQw8-000JzK-29;
+	Wed, 12 Mar 2025 19:36:12 +0100
+In-Reply-To: <D8EI6SI5E4PE.3GOBCNHV38K03@folker-schwesinger.de>
+Message-Id: <D8EI6SI5EIUY.2JD240P96ZZSS@folker-schwesinger.de>
+Cc: "Kedareswara rao Appana" <appanad@xilinx.com>,
+ <dmaengine@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+ <linux-kernel@vger.kernel.org>
+To: "Vinod Koul" <vkoul@kernel.org>, "Michal Simek" <michal.simek@amd.com>,
+ "Jernej Skrabec" <jernej.skrabec@gmail.com>, "Manivannan Sadhasivam"
+ <manivannan.sadhasivam@linaro.org>, "Krzysztof Kozlowski"
+ <krzysztof.kozlowski@linaro.org>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
+ <u.kleine-koenig@baylibre.com>, "Marek Vasut" <marex@denx.de>
+From: "Folker Schwesinger" <dev@folker-schwesinger.de>
+Date: Wed, 12 Mar 2025 19:23:49 +0100
+Subject: [PATCH 1/1] dmaengine: xilinx_dma: Set dma_device.directions
+X-Authenticated-Sender: dev@folker-schwesinger.de
+X-Virus-Scanned: Clear (ClamAV 1.0.7/27575/Wed Mar 12 09:37:42 2025)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dmaengine: Fix dma_async_tx_descriptor->tx_submit
- documentation
-To: nathan.lynch@amd.com, Vinod Koul <vkoul@kernel.org>,
- Randy Dunlap <rdunlap@infradead.org>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250312-dma_async_tx_desc-tx_submit-doc-v1-1-16390060264c@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250312-dma_async_tx_desc-tx_submit-doc-v1-1-16390060264c@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
+When using the dma_get_slave_caps() API, it checks the directions fields of
+the dma_device structure. Currently, the Xilinx DMA driver does not set
+this, which causes dma_get_slave_caps() to return -ENXIO.
 
+Fix this issue by setting the directions field of the dma_device
+structure during DMA channel probe.
 
-On 3/12/25 8:32 AM, Nathan Lynch via B4 Relay wrote:
-> From: Nathan Lynch <nathan.lynch@amd.com>
-> 
-> Commit 790fb9956eea ("linux/dmaengine.h: fix a few kernel-doc
-> warnings") inserted new documentation for @desc_free in the middle of
-> @tx_submit's description.
-> 
-> Put @tx_submit's description back together, matching the indentation
-> style of the rest of the documentation for dma_async_tx_descriptor.
-> 
-> Fixes: 790fb9956eea ("linux/dmaengine.h: fix a few kernel-doc warnings")
-> Signed-off-by: Nathan Lynch <nathan.lynch@amd.com>
+Signed-off-by: Folker Schwesinger <dev@folker-schwesinger.de>
+---
+ drivers/dma/xilinx/xilinx_dma.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  include/linux/dmaengine.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-> index bb146c5ac3e4ccd7bc0afbf3b28e5b3d659ad62f..51e1e357892a0325646f82d580b199321d59ced4 100644
-> --- a/include/linux/dmaengine.h
-> +++ b/include/linux/dmaengine.h
-> @@ -594,9 +594,9 @@ struct dma_descriptor_metadata_ops {
->   * @phys: physical address of the descriptor
->   * @chan: target channel for this operation
->   * @tx_submit: accept the descriptor, assign ordered cookie and mark the
-> + *	descriptor pending. To be pushed on .issue_pending() call
->   * @desc_free: driver's callback function to free a resusable descriptor
->   *	after completion
-> - * descriptor pending. To be pushed on .issue_pending() call
->   * @callback: routine to call after this operation is complete
->   * @callback_result: error result from a DMA transaction
->   * @callback_param: general parameter to pass to the callback routine
-> 
-> ---
-> base-commit: 6565439894570a07b00dba0b739729fe6b56fba4
-> change-id: 20250312-dma_async_tx_desc-tx_submit-doc-58a4cfee2e8b
-> 
-> Best regards,
-
+diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
+index 3ad44afd0e74..63c308f2ae81 100644
+--- a/drivers/dma/xilinx/xilinx_dma.c
++++ b/drivers/dma/xilinx/xilinx_dma.c
+@@ -2864,6 +2864,7 @@ static int xilinx_dma_chan_probe(struct xilinx_dma_device *xdev,
+ 	    of_device_is_compatible(node, "xlnx,axi-dma-mm2s-channel") ||
+ 	    of_device_is_compatible(node, "xlnx,axi-cdma-channel")) {
+ 		chan->direction = DMA_MEM_TO_DEV;
++		xdev->common.directions |= BIT(DMA_MEM_TO_DEV);
+ 		chan->id = xdev->mm2s_chan_id++;
+ 		chan->tdest = chan->id;
+ 
+@@ -2881,6 +2882,7 @@ static int xilinx_dma_chan_probe(struct xilinx_dma_device *xdev,
+ 		   of_device_is_compatible(node,
+ 					   "xlnx,axi-dma-s2mm-channel")) {
+ 		chan->direction = DMA_DEV_TO_MEM;
++		xdev->common.directions |= BIT(DMA_DEV_TO_MEM);
+ 		chan->id = xdev->s2mm_chan_id++;
+ 		chan->tdest = chan->id - xdev->dma_config->max_channels / 2;
+ 		chan->has_vflip = of_property_read_bool(node,
+-- 
+2.48.1
 

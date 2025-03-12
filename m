@@ -1,109 +1,109 @@
-Return-Path: <dmaengine+bounces-4709-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4710-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C374A5D8AD
-	for <lists+dmaengine@lfdr.de>; Wed, 12 Mar 2025 09:53:29 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D830A5D919
+	for <lists+dmaengine@lfdr.de>; Wed, 12 Mar 2025 10:18:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D6E513B60F9
-	for <lists+dmaengine@lfdr.de>; Wed, 12 Mar 2025 08:53:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 861AB3B2489
+	for <lists+dmaengine@lfdr.de>; Wed, 12 Mar 2025 09:18:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CA6B236A8B;
-	Wed, 12 Mar 2025 08:53:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7DA8239085;
+	Wed, 12 Mar 2025 09:18:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="cA6WoRrI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M5NkTz2T"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6144236434;
-	Wed, 12 Mar 2025 08:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6C2A2F43;
+	Wed, 12 Mar 2025 09:18:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741769592; cv=none; b=I5vx9IjFaIT9nZ1Gk9Fn6XkSVWZfXIrPP+5xNRRnXrHqo1DJFHI0vBZu9bdMqk8uR/oucC8m6ncOBIxAkmk7Uq2hd3jiqhPzUwoJvCfUw+aKdd1JAOSvYsKZcL0WbdGjSZGN0Ih0djr5d070zT2AbFbupX59nYPa0gbFuguqM2c=
+	t=1741771091; cv=none; b=n90zRJqHaGwFp84dsyyKfTAwKVKc57qLX3FZOzH/AcZn0cHI3lnQ96EtVB8B9vO6D7D62vQB0eP4M8acA9oExNRfzzLeg6yL2ph6Ft3D8GfKoCcoCrrzCo6TOKnAGBxhx8K5iUmhL9NFdzaYt7m9+cu7W2pMKxpmdci976WwPpY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741769592; c=relaxed/simple;
-	bh=F5V0MKowf2JDzxxZKfhQHTUo1BEp1LSgfrCTL90txrQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=FpSH9EcHhxsYBF3h4THdU1SD43sQzJ8G1Uh00Xtp9OqXXdr/ZQU74BmgUC3GU4WUN+QnXn97z3lUGqrB3a5vroWDRMdskRI7wwpEu3Gei3tutfdm9/J0yftvcoCjQfki9vPRtV72pBq/IjhU+BRHHMNsTkeOGsYVfyyFE9QtrIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=cA6WoRrI; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 15D44A0899;
-	Wed, 12 Mar 2025 09:53:06 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=mail; bh=JiVJU8vpI1AzUUyUc/XP
-	lRSfdp4+hku0cXCtyGPLMbc=; b=cA6WoRrI5U/yz2OLyFMpnhEGEovu6aQOMXxI
-	lC941G06oI+Ls70GNgzE+ffCn8elNqqxlZR3+iUQS4tpVKCvhMfQ1ENdyVEOifEt
-	bMn5myL3EPV8r84zIqOmf9sSz7GjzTOMIF11UOP7kGdktJNpljs/bAdAqU8VIvi+
-	roFFmXrxTu9HgVqEm2GMNxOVbNwzcULdVaVwq6jbaxxZuKUJkufQhABm5R91cTxA
-	wv/fz7qla5xz0uVEpKrRgjmCXDCT6CLQIUwOYsrxuT8H8IHDxzAFcibcYbuCkqY3
-	BmXZcS+hXgMMDxM2cLzobcIkPbbttuaO5/vCeX8JW4O6iNGWa3WHOTKBr5KpxHvU
-	1IeFLBNlKJ7Nm7/B0XVaahEV+WaeLDzlLPQV+0BRgye1wiZ5LgZCR5P6jXX7Cqrj
-	GFAHOhW0QijeuVcGZd/bW0nGxL3rV6/LAQzqM2rCrTxeGSbfX+SNVYAbLoEL+Fam
-	PMDhhqFl8/JAfmKnungDQEW4CL0RH6JPUCwokGcMUBc4bWpQ3goGfNAyoD+fmlTc
-	VnkQ4stbUT5i65GtQZyAr6GEmZSYAPaALHAWlSeK0vKy0qemFv/kLS575KZM1/s7
-	vt/x0nkNsnkQdOn4SC9+WRpvg2vq77GKIvKk+pSbPBUhsPlaC/Dy/MUgopvD3Anu
-	wzbdQ2U=
-Message-ID: <81f87d39-d3f8-4b6a-91cb-b0177d34171b@prolan.hu>
-Date: Wed, 12 Mar 2025 09:53:04 +0100
+	s=arc-20240116; t=1741771091; c=relaxed/simple;
+	bh=MPhbOAlRmSQDrymRu11c022uCrA5qLlPMbyZ8sUlGQ8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hp+/gOgYXRu1i/+Fx5FD0LIFhlXkhF8Q+wyvShYaH1vxHuNlC01BP0y2dU2EDJIk4DUOTagRPGgjfbabxlRjFCOhYwQAnh1qlJy4eAcyYJerULrZyj9vAu1TfDTrVveagEisRBRuuRuidTGlRAFvSQNKKUcZmAnjknbaH4A+ugE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M5NkTz2T; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FCBBC4CEE3;
+	Wed, 12 Mar 2025 09:18:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741771091;
+	bh=MPhbOAlRmSQDrymRu11c022uCrA5qLlPMbyZ8sUlGQ8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M5NkTz2TDhcxfgtafUw6PxH30PcDT+AUdcSrithUjNh2vzRiKPw3fAKP600UNrOmU
+	 8fk3QTrgo4wd/xjqfOxC5QxpRyuhgo6g3cM984yceTTWvAS0LSfKlA5pWb+7R0BjQR
+	 pl1wGI6hMKXP4VLHeWxTEe9elcSEUH44N+bpej1Y/9VwhgIhhe4y6kV6ecjABRkhKm
+	 DDHnHK6rY/YMOXnJUJeKxQFx5fKNtCjXW0pi1W6vrfJ7wlcR1YM6Xdyt8yOygIbUmB
+	 X7gSmCNfIL+vtxLK8sqfOVloneJrhx7ha7Nsvzv9qCvh0xYO3IFZ7tacOMdIB5yn8s
+	 CKfN3x5W1o2sg==
+Date: Wed, 12 Mar 2025 10:18:06 +0100
+From: Vinod Koul <vkoul@kernel.org>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/2] dmaengine: Add Arm DMA-350 driver
+Message-ID: <Z9FRTtcfQK9m6NE7@vaman>
+References: <cover.1740762136.git.robin.murphy@arm.com>
+ <55e084dd2b5720bdddf503ffac560d111032aa96.1740762136.git.robin.murphy@arm.com>
+ <Z89P461+Y6kQDOCX@vaman>
+ <072d1d3a-2aeb-4ab0-9db1-476835a1131e@arm.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] dma-engine: sun4i: Use devm functions in probe()
-To: Markus Elfring <Markus.Elfring@web.de>, <dmaengine@vger.kernel.org>,
-	<linux-sunxi@lists.linux.dev>, <linux-arm-kernel@lists.infradead.org>,
-	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>
-CC: LKML <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@kernel.org>,
-	Samuel Holland <samuel@sholland.org>, Vinod Koul <vkoul@kernel.org>
-References: <20250311180254.149484-1-csokas.bence@prolan.hu>
- <885ceb3e-d6c6-4e7b-a3b6-585d2d110ccf@web.de>
-Content-Language: en-US, hu-HU
-From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
-In-Reply-To: <885ceb3e-d6c6-4e7b-a3b6-585d2d110ccf@web.de>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
- ATLAS.intranet.prolan.hu (10.254.0.229)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A2980D94852627362
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <072d1d3a-2aeb-4ab0-9db1-476835a1131e@arm.com>
 
-Dear Markus,
+On 11-03-25, 12:48, Robin Murphy wrote:
+> On 2025-03-10 8:47 pm, Vinod Koul wrote:
+> > On 28-02-25, 17:26, Robin Murphy wrote:
+> > 
+> > > +static u32 d350_get_residue(struct d350_chan *dch)
+> > > +{
+> > > +	u32 res, xsize, xsizehi, hi_new;
+> > > +
+> > > +	hi_new = readl_relaxed(dch->base + CH_XSIZEHI);
+> > > +	do {
+> > > +		xsizehi = hi_new;
+> > > +		xsize = readl_relaxed(dch->base + CH_XSIZE);
+> > > +		hi_new = readl_relaxed(dch->base + CH_XSIZEHI);
+> > > +	} while (xsizehi != hi_new);
+> > 
+> > This can go forever, lets have some limits to this loop please
+> 
+> Sure, in practice I doubt we're ever going to be continually preempted
+> faster than the controller can move another 64KB of data, but I concur
+> there's no harm in making the code easier to reason about at a glance
+> either.
 
-On 2025. 03. 11. 20:33, Markus Elfring wrote:
- >> Clean up error handling by using devm functions
- >> and dev_err_probe(). This should make it easier
- > …
- >
- > You may occasionally put more than 47 characters into text lines
- > of such a change description.
+Yes you are coreect but when things go bad, a bug in h/w or something, I
+would like to see a fail safe
 
-It was an old patch I hadn't yet reformatted to 75 cols. I used 50-60 
-cols before, because my mail client's preview panel is very narrow, so 
-anything more than ~65 characters will wrap. If there will be a v5, I'll 
-reformat it to 75 cols as well, as per the style guidelines.
+> > > +static int d350_alloc_chan_resources(struct dma_chan *chan)
+> > > +{
+> > > +	struct d350_chan *dch = to_d350_chan(chan);
+> > > +	int ret = request_irq(dch->irq, d350_irq, IRQF_SHARED,
+> > > +			      dev_name(&dch->vc.chan.dev->device), dch);
+> > 
+> > This is interesting, any reason why the irq is allocated here? Would it
+> > be not better to do that in probe...
+> 
+> Well, I'd say technically the IRQ is a channel resource, and quite a few
+> other drivers do the same... Here it's mostly so I can get the channel name
+> - so the IRQs are nice and identifiable in /proc/interrupts - easily without
+> making a big mess in probe, since the names don't exist until after the
+> device is registered.
 
-> How good does such a change combination fit to the patch requirement
-> according to separation of concerns?
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.14-rc6#n81
+Ok
 
-It is a general refactor patch, it shouldn't change any functionality. I 
-could split it to one part introducing `devm_clk_get_enabled()` and the 
-other `dmaenginem_async_device_register()`, but I don't feel that to be 
-necessary, nor does it bring any advantages I believe.
-
-> Regards,
-> Markus
-
-Bence
-
+-- 
+~Vinod
 

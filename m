@@ -1,125 +1,131 @@
-Return-Path: <dmaengine+bounces-4723-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4724-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3AF79A5E711
-	for <lists+dmaengine@lfdr.de>; Wed, 12 Mar 2025 23:14:09 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C0D4A5E713
+	for <lists+dmaengine@lfdr.de>; Wed, 12 Mar 2025 23:15:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AF4AE3AE6BF
-	for <lists+dmaengine@lfdr.de>; Wed, 12 Mar 2025 22:13:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 806573AB4EA
+	for <lists+dmaengine@lfdr.de>; Wed, 12 Mar 2025 22:15:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C38C1EC012;
-	Wed, 12 Mar 2025 22:14:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E93BC1D86F2;
+	Wed, 12 Mar 2025 22:15:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R2knlsPa"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VVKIWOsN"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C5FA1CD215;
-	Wed, 12 Mar 2025 22:14:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 421AB16FF37;
+	Wed, 12 Mar 2025 22:15:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741817645; cv=none; b=N5E2D2HKNff91K4YiMs8S4gx9WagZqAcBrERhvqjv/CizwGG4n4TQ2nOi5FHMqE6iHSk0s6lVK2SI2MSgX3Sufq3plnACswZfpsezS46UXgZvDnscfu3UBC8V/aR9SRjazGGHApVaU6o7JqNPaRQ9XIevAYCCzJdovDkxB9/PLA=
+	t=1741817728; cv=none; b=KeQTPjlgXceWpCOaypWZWDtGr4aw7JRaHXKrvYDpPFff0PWwmxszmgtUuajI8i+TkwYdx3YQDT3KpFPPLGyN9QngFvYFH8yBPjZbbZSaoMtlu89VpqmLnWO5RaX9qSdfm1/eA435JtYQXrZ97++RS8uRDaQZtujyn1vVrJ3PQ88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741817645; c=relaxed/simple;
-	bh=pnig5HAjgiLNm+cQzJg7it/Upu6+V7kDl39VH+48PtI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Uc64okXdY5jZMcumTWNJFnjD0HUNBJFhqQVo/8VOmGkF8yu+PWZD5Ueyw7pP6ZzOg6ZVd6Q+AAvEc91YCtzznekQtcX6g0/g1dR4A6h8nYcxjFs1eaw0UFH06XcJmfcHRNeCfkfHo9HedIr2laDqA0xxMsCwFYmaYRQhUDQXBG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R2knlsPa; arc=none smtp.client-ip=198.175.65.13
+	s=arc-20240116; t=1741817728; c=relaxed/simple;
+	bh=pTtH+5Aqyf/PqJuEzm8sFhVWE+FLVim+3sY/NLMT/3U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Nch7qavxIp45hkgML8zk8qMBloczubNweRdtoCNk5iY7/Jj1d2PpNgEJ7ClyJR35Xqdo7b1EP/rEwMYK4m8zioabQu49hSoG8WcXZPQBrnXe/fBhK7Q/hB+JF1VpP18GeTRROIVobuJZNueBG57gA+iLnyXdtagfgeNJKnAxgbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VVKIWOsN; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741817640; x=1773353640;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=pnig5HAjgiLNm+cQzJg7it/Upu6+V7kDl39VH+48PtI=;
-  b=R2knlsPatHYfoqJIx2Krc8V72h6BSjxiYxFPkkQp7OJVG51FbPVfKkI4
-   FbVI84uw8LNwxe8Eujcj5IeCk73qYonFBUgG48ePG+3zjQBCXN0HfRGEK
-   3eMVBKv/LbVwT2agGPoIdryB8bsfGH6cHEVJtyEhibLKbbDjGq1eDRynl
-   NgSQVv9jzeHeD6CdOpBhrS/+GepZoFFnkfw5jxCQG9PNeqhY4c45Px8jD
-   StgTyzmohEV/l5ERnFoUj/fYbgXwZxK9CllNqAUfFRCkENrrJUk6SEXKa
-   s5+KSPQK9ZtGTV9ZlZ4fZaW5zC1jHKSmA2QVfCjgkXmQHNyllOmGD36c8
-   w==;
-X-CSE-ConnectionGUID: bFw9gJ9rQLqqDwGqdp+QZA==
-X-CSE-MsgGUID: wabgo4+AR5SqbEsPEiuG5Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11371"; a="53911278"
+  t=1741817727; x=1773353727;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=pTtH+5Aqyf/PqJuEzm8sFhVWE+FLVim+3sY/NLMT/3U=;
+  b=VVKIWOsNeiDhrC2WPbhrndnI8+ch8tG5WdwjKVC0riRFqL22TDW1ACU2
+   ysP8n6dAyizzf6HoR9AB6mNhFrP2+pzgeWzMe0ZX0Tpqr4GLUP7MS0ZXE
+   L7sBEP4YgYIZ6WD9vLYd6AjlfMhG26NiIkCF+sF+bqAzvXNeeXyr7qV7L
+   /H4zs+0ALOBFYOpY1osW5H4LhZ4RMoTmhYPoWC1hA3vVAGSwERFzXZ73K
+   EB0KF6+1U/CzpyeayUsvMSXSR34p0ByHbXf2SOqMveIXCA9V8usxTRupm
+   D5ouIKkzCDUXYvdHHsOu00KeBS2ushRW0WaTC/hKK3RY0Y0ohx9mwYZHz
+   A==;
+X-CSE-ConnectionGUID: YXPZy8m9TEOO4WKowQxtZw==
+X-CSE-MsgGUID: NB6Crz1lQauwoWeC/PKGKg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11371"; a="42172657"
 X-IronPort-AV: E=Sophos;i="6.14,242,1736841600"; 
-   d="scan'208";a="53911278"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 15:14:00 -0700
-X-CSE-ConnectionGUID: hpIrZwrqRyKc/yUpj22FrQ==
-X-CSE-MsgGUID: FvxHMVo/Ql2OnKq1PA/f9A==
+   d="scan'208";a="42172657"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 15:15:26 -0700
+X-CSE-ConnectionGUID: M9RsRGGoToecYoJLvvh+kA==
+X-CSE-MsgGUID: 3cM+fVplTZC1Mozr4QCUlA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,242,1736841600"; 
-   d="scan'208";a="120752101"
-Received: from unknown (HELO vcostago-mobl3) ([10.241.225.86])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 15:13:59 -0700
+   d="scan'208";a="124931594"
+Received: from unknown (HELO vcostago-mobl3.jf.intel.com) ([10.241.225.86])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 15:15:26 -0700
 From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-To: Nathan Lynch <nathan.lynch@amd.com>, Vinod Koul <vkoul@kernel.org>,
- dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: dave.jiang@intel.com, kristen.c.accardi@intel.com, kernel test robot
- <oliver.sang@intel.com>
-Subject: Re: [PATCH v1] dmaengine: dmatest: Fix dmatest waiting less when
- interrupted
-In-Reply-To: <878qpa13fe.fsf@AUSNATLYNCH.amd.com>
-References: <20250305230007.590178-1-vinicius.gomes@intel.com>
- <878qpa13fe.fsf@AUSNATLYNCH.amd.com>
-Date: Wed, 12 Mar 2025 15:13:59 -0700
-Message-ID: <87senhoq1k.fsf@intel.com>
+To: Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>
+Subject: [PATCH v1] dmaengine: idxd: Narrow the restriction on BATCH to ver. 1 only
+Date: Wed, 12 Mar 2025 15:15:10 -0700
+Message-ID: <20250312221511.277954-1-vinicius.gomes@intel.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-Hi Nathan,
+Allow BATCH operations to be submitted and the capability to be
+exposed for DSA version 2 (or later) devices.
 
-Nathan Lynch <nathan.lynch@amd.com> writes:
+DSA version 2 devices allow safe submission of BATCH operations.
 
-> Hi,
->
-> Vinicius Costa Gomes <vinicius.gomes@intel.com> writes:
->> Change the "wait for operation finish" logic to take interrupts into
->> account.
->>
->> When using dmatest with idxd DMA engine, it's possible that during
->> longer tests, the interrupt notifying the finish of an operation
->> happens during wait_event_freezable_timeout(), which causes dmatest to
->> cleanup all the resources, some of which might still be in use.
->>
->> This fix ensures that the wait logic correctly handles interrupts,
->> preventing premature cleanup of resources.
->>
->> Reported-by: kernel test robot <oliver.sang@intel.com>
->> Closes: https://lore.kernel.org/oe-lkp/202502171134.8c403348-lkp@intel.com
->
-> Given the report at the URL above I'm struggling to follow the rationale
-> for this change. It looks like a use-after-free in idxd while
-> resetting/unbinding the device, and I can't see how changing whether
-> dmatest threads perform freezeable waits would change this.
->
+Signed-off-by: Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>
+Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+---
+ drivers/dma/idxd/cdev.c  | 6 ++++--
+ drivers/dma/idxd/sysfs.c | 6 ++++--
+ 2 files changed, 8 insertions(+), 4 deletions(-)
 
-I think that the short version is that the reproducition script triggers
-different problems on different platforms/configurations.
-
-The solution I proposed fixes a problem I was seeing on a SPR system, on
-a GNR system (that I was only able to get later) I see something more similar
-to this particular splat (currently working on the fix).
-
-Seeing this question, I realize that I should have added a note to the
-commit detailing this.
-
-So I am planning on proposing two (this and another) fixes for the same
-report, hoping that it's not that confusing/unusual.
-
-
-Cheers,
+diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
+index ff94ee892339..6a1dc15ee485 100644
+--- a/drivers/dma/idxd/cdev.c
++++ b/drivers/dma/idxd/cdev.c
+@@ -439,10 +439,12 @@ static int idxd_submit_user_descriptor(struct idxd_user_context *ctx,
+ 	 * DSA devices are capable of indirect ("batch") command submission.
+ 	 * On devices where direct user submissions are not safe, we cannot
+ 	 * allow this since there is no good way for us to verify these
+-	 * indirect commands.
++	 * indirect commands. Narrow the restriction of operations with the
++	 * BATCH opcode to only DSA version 1 devices.
+ 	 */
+ 	if (is_dsa_dev(idxd_dev) && descriptor.opcode == DSA_OPCODE_BATCH &&
+-		!wq->idxd->user_submission_safe)
++	    wq->idxd->hw.version == DEVICE_VERSION_1 &&
++	    !wq->idxd->user_submission_safe)
+ 		return -EINVAL;
+ 	/*
+ 	 * As per the programming specification, the completion address must be
+diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
+index 6af493f6ba77..9f0701021af0 100644
+--- a/drivers/dma/idxd/sysfs.c
++++ b/drivers/dma/idxd/sysfs.c
+@@ -1208,9 +1208,11 @@ static ssize_t op_cap_show_common(struct device *dev, char *buf, unsigned long *
+ 
+ 		/* On systems where direct user submissions are not safe, we need to clear out
+ 		 * the BATCH capability from the capability mask in sysfs since we cannot support
+-		 * that command on such systems.
++		 * that command on such systems. Narrow the restriction of operations with the
++		 * BATCH opcode to only DSA version 1 devices.
+ 		 */
+-		if (i == DSA_OPCODE_BATCH/64 && !confdev_to_idxd(dev)->user_submission_safe)
++		if (i == DSA_OPCODE_BATCH/64 && !confdev_to_idxd(dev)->user_submission_safe &&
++		    confdev_to_idxd(dev)->hw.version == DEVICE_VERSION_1)
+ 			clear_bit(DSA_OPCODE_BATCH % 64, &val);
+ 
+ 		pos += sysfs_emit_at(buf, pos, "%*pb", 64, &val);
 -- 
-Vinicius
+2.48.1
+
 

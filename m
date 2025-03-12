@@ -1,106 +1,119 @@
-Return-Path: <dmaengine+bounces-4716-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4717-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9CD0A5DCAA
-	for <lists+dmaengine@lfdr.de>; Wed, 12 Mar 2025 13:30:55 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 24136A5E065
+	for <lists+dmaengine@lfdr.de>; Wed, 12 Mar 2025 16:33:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1930F16B7E1
-	for <lists+dmaengine@lfdr.de>; Wed, 12 Mar 2025 12:30:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 654D13B5817
+	for <lists+dmaengine@lfdr.de>; Wed, 12 Mar 2025 15:32:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 919141E4A9;
-	Wed, 12 Mar 2025 12:30:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CC5A24CEFD;
+	Wed, 12 Mar 2025 15:33:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="qQ49a4EU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nfCnUMdr"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA43C1E489;
-	Wed, 12 Mar 2025 12:30:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 715CB156237;
+	Wed, 12 Mar 2025 15:33:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741782652; cv=none; b=Lughch4k5VaRbEDACMDBzcDQivUOSuDi0RWy906fmPovuHdfbNd4hCzxhUTilEASTNfYG9GScMUfHM9e+pV4BuoNyZ9oGVcLCuPghDVeDPWmraKzVrH1pWM9z5QKn1l3ZjJdCmnfWJPAgliUNcNXWbBmpca2qGdDnlvL/X968o4=
+	t=1741793580; cv=none; b=d9DijGlqraborReK3L2T1SPrEJdKCkrFLTWMvy18DcBXaC+Y3Vn8EczF3crPf941lRSTGpUQ7EJqBaAcibqjRFRt6qY67SidqLnnHGbxsf3Wx+o880rUs38aLbzL5QGQghs7aACIYqcKJigPNhB8LdYTkTqDp+xk+sc+2W8G8HA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741782652; c=relaxed/simple;
-	bh=laYQCx88mjcDu1ZnBLvTOB+6I7d/yFECJ8I8PLU/mrU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=V08j/Mph9TvcRJjv3BnlezDwHbaq961YAXC85McinfqdBIsIc7sbmry1FQWC5C4ROg6J/9HUAe+kso9NTg0983egH/lNDJP5cs+eApDC/iQnUDKDYyUTjzsqt2WPwLoS5uT5QhnuTV1azYJ8bRemzIh6dGllKe16txN+khNwC9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=qQ49a4EU; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 4F763A0433;
-	Wed, 12 Mar 2025 13:30:46 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=mail; bh=cmklfvLlFZxYw5WHt0NS
-	MePxUydM1gh/qon5awTqfRY=; b=qQ49a4EU6xjyrrZrVO8B+hvj25GZPeSjA0jb
-	7nWqtx/yE+/PuOh6axYscnpPtJZnCUmT1XiXz34qdphteXIo2TKJ5KsVsaQbrXlk
-	tUylJKdzUJ6EfDz4qFK6yVM1aVGbxPGaUdWI/bQOuiBI7c3nXLNeTFPrfx5bv68J
-	vSJsJYx3lZujSrSva+A6xE/tym5fl0MQR/34G1oev+OcThulayAyqB90QYnXB8rS
-	EsMyweSxMqzxmwvlG/62+oJXrrRx/23oPcywfMzqCIHPrTizUL5I1hKt9qJxNQ7G
-	0hp4aELeQ8tdiUjwGqvTbbbqJykqBqzZzxeWmyZZ3TReORAfhJ7HnlLmirxrBbDa
-	bzfwMJAPkNNpRba8Z2ahlXTtuP/nQbOtBnaJj4Lm561VyLg1pj6n4nQyecsminBK
-	9JZ1iaOdx6ikfJeW+2aC9/eykxPtKm0CahpIScO09ixdrP6D2WUUHpAFdQ8AnqJT
-	FIxcYKKDwenm5asoKkx7K75nJxFX8DHeGnIoMFn3kV01Le7YYX2H3POwTWR8TbRo
-	Izrs5IjAB8SonwI2Nwdi3x4a1yt6XQNPRgXRZE6UQljKWhLFhfwTskZe+LdKCar4
-	bBitkR5bthaRvlro6f2XsFW/g08V6CvdOTl7UVQOg4knyzU6/miZUM2x/aMmdqTZ
-	nOE9+MU=
-Message-ID: <505c2e3b-f1bb-4e3a-96f2-eef0d0d682e6@prolan.hu>
-Date: Wed, 12 Mar 2025 13:30:45 +0100
+	s=arc-20240116; t=1741793580; c=relaxed/simple;
+	bh=k8azDV9EbMbJx2U1RMa8e+dntG00oZwMiLEuibATBbw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=CumEQY9KrCA82UdfojJYy+tFYk/cWEoRb+QjSesGswNi5F6kPmZvXpP2WF/5vvDBoum1f/gy1kxFX3+IKTjYcxvh0uGsgD4dZke4CG59Nl0qG694MFDJH8nUnNth3klZKItREfmPm3ixjesZL6QRKEkSCYI6JA+dwsMKYhPkIec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nfCnUMdr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3CE6AC4CEDD;
+	Wed, 12 Mar 2025 15:33:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741793580;
+	bh=k8azDV9EbMbJx2U1RMa8e+dntG00oZwMiLEuibATBbw=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=nfCnUMdrWKxq7/lHng+6OW2NkFHvSXhK3oLyGFjP2V4Iv/F0JbJ2xaCZmbIy1NnuJ
+	 HEG1eTnLacVzDeNX831o3vZzV+ZBzGaeDI9ecl5ZFDeRaJGM7Z3+YFdxjkwjdDep3o
+	 XHmBHjl/HZXvdCP/U1USPzyCFCzn1GhWpwztaOOoVLo1PoKkw280oU2fR5vUfqiKZl
+	 mMzsdYwC3UG+zukH3h7EDdlOCG+fpJzcG/hO2RZku9Xx55v6z6oV0inVBLVTYS8C4E
+	 c3l7bkxHYjNc27bbKZKbc9P8895nYoyAYn7AYC05sP9U1TVhsw2Lh49ziEZM10Sl7k
+	 2FZqjSKZjH5tw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DA6C28B28;
+	Wed, 12 Mar 2025 15:33:00 +0000 (UTC)
+From: Nathan Lynch via B4 Relay <devnull+nathan.lynch.amd.com@kernel.org>
+Date: Wed, 12 Mar 2025 10:32:50 -0500
+Subject: [PATCH] dmaengine: Fix dma_async_tx_descriptor->tx_submit
+ documentation
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v4] dma-engine: sun4i: Use devm functions in probe()
-To: Markus Elfring <Markus.Elfring@web.de>, <dmaengine@vger.kernel.org>,
-	<linux-sunxi@lists.linux.dev>, <linux-arm-kernel@lists.infradead.org>,
-	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>
-CC: LKML <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@kernel.org>,
-	Samuel Holland <samuel@sholland.org>, Vinod Koul <vkoul@kernel.org>
-References: <20250311180254.149484-1-csokas.bence@prolan.hu>
- <885ceb3e-d6c6-4e7b-a3b6-585d2d110ccf@web.de>
- <81f87d39-d3f8-4b6a-91cb-b0177d34171b@prolan.hu>
- <9ef781b0-8a63-42b7-91a2-fa8a8ea3c0b4@web.de>
-Content-Language: en-US, hu-HU
-From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
-In-Reply-To: <9ef781b0-8a63-42b7-91a2-fa8a8ea3c0b4@web.de>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
- ATLAS.intranet.prolan.hu (10.254.0.229)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A2980D94852627360
+Message-Id: <20250312-dma_async_tx_desc-tx_submit-doc-v1-1-16390060264c@amd.com>
+X-B4-Tracking: v=1; b=H4sIACGp0WcC/x2NwQqDMBAFf0X23AVNK4i/UkqIm6fuwViytljEf
+ 2/wNMxl5iBDVhj11UEZXzVdU5HmVpHMIU1gjcXJ1a6t743juAQf7JfEb7uPMOFC+wyLbhxX4bY
+ LDxkBh26gUnlnjLpfh+frPP84Wem8cQAAAA==
+X-Change-ID: 20250312-dma_async_tx_desc-tx_submit-doc-58a4cfee2e8b
+To: Vinod Koul <vkoul@kernel.org>, Randy Dunlap <rdunlap@infradead.org>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Nathan Lynch <nathan.lynch@amd.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1741793579; l=1583;
+ i=nathan.lynch@amd.com; s=20241010; h=from:subject:message-id;
+ bh=jp/DMy7JLfNicBeQPv3Ol20fnz7oTC0prR6cxoePnxE=;
+ b=Mgbv/xwUHT1whJBL31TEUUUXdJfr2k6dY0JVcSLvH5yc3PnMmNCEzdW3p4i45rFohDbZJBN9w
+ +xPAaXzrtP4Dd41ZF6C8Aw++raCCJPJa/3lwGJp9wqXu1XDLMq0HvCQ
+X-Developer-Key: i=nathan.lynch@amd.com; a=ed25519;
+ pk=ZR637UTGg5YLDj56cxFeHdYoUjPMMFbcijfOkAmAnbc=
+X-Endpoint-Received: by B4 Relay for nathan.lynch@amd.com/20241010 with
+ auth_id=241
+X-Original-From: Nathan Lynch <nathan.lynch@amd.com>
+Reply-To: nathan.lynch@amd.com
 
-Hi,
+From: Nathan Lynch <nathan.lynch@amd.com>
 
-On 2025. 03. 12. 12:44, Markus Elfring wrote:
->>> How good does such a change combination fit to the patch requirement
->>> according to separation of concerns?
->>> https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.14-rc6#n81
->>
->> It is a general refactor patch, it shouldn't change any functionality. I could split it to one part introducing `devm_clk_get_enabled()` and the other `dmaenginem_async_device_register()`, but I don't feel that to be necessary, nor does it bring any advantages I believe.
-> Can it matter a bit more to separate changes for the application of devm functions
-> and the adjustment of corresponding exception handling with dev_err_probe() calls?
+Commit 790fb9956eea ("linux/dmaengine.h: fix a few kernel-doc
+warnings") inserted new documentation for @desc_free in the middle of
+@tx_submit's description.
 
-The change in error handling is just the result of switching to devm 
-functions, because it is no longer needed to separately dev_err(), store 
-the error code to `ret` and goto a cleanup phase (as the whole point of 
-using devm functions is to have auto-cleanup), you can just return with 
-the error code (which dev_err_probe() returns for us) right away. The 
-devm functions are used precisely _because_ they allow us to simplify 
-this error handling.
+Put @tx_submit's description back together, matching the indentation
+style of the rest of the documentation for dma_async_tx_descriptor.
 
-> Regards,
-> Markus
+Fixes: 790fb9956eea ("linux/dmaengine.h: fix a few kernel-doc warnings")
+Signed-off-by: Nathan Lynch <nathan.lynch@amd.com>
+---
+ include/linux/dmaengine.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Bence
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index bb146c5ac3e4ccd7bc0afbf3b28e5b3d659ad62f..51e1e357892a0325646f82d580b199321d59ced4 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -594,9 +594,9 @@ struct dma_descriptor_metadata_ops {
+  * @phys: physical address of the descriptor
+  * @chan: target channel for this operation
+  * @tx_submit: accept the descriptor, assign ordered cookie and mark the
++ *	descriptor pending. To be pushed on .issue_pending() call
+  * @desc_free: driver's callback function to free a resusable descriptor
+  *	after completion
+- * descriptor pending. To be pushed on .issue_pending() call
+  * @callback: routine to call after this operation is complete
+  * @callback_result: error result from a DMA transaction
+  * @callback_param: general parameter to pass to the callback routine
+
+---
+base-commit: 6565439894570a07b00dba0b739729fe6b56fba4
+change-id: 20250312-dma_async_tx_desc-tx_submit-doc-58a4cfee2e8b
+
+Best regards,
+-- 
+Nathan Lynch <nathan.lynch@amd.com>
+
 
 

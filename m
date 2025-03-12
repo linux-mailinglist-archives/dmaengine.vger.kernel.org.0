@@ -1,143 +1,203 @@
-Return-Path: <dmaengine+bounces-4793-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4794-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7EA6FA75AE4
-	for <lists+dmaengine@lfdr.de>; Sun, 30 Mar 2025 18:22:27 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2978A75C29
+	for <lists+dmaengine@lfdr.de>; Sun, 30 Mar 2025 22:18:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 610F2188B62B
-	for <lists+dmaengine@lfdr.de>; Sun, 30 Mar 2025 16:22:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 20CE53A6356
+	for <lists+dmaengine@lfdr.de>; Sun, 30 Mar 2025 20:18:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A6EE1D5174;
-	Sun, 30 Mar 2025 16:22:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B7551DDA17;
+	Sun, 30 Mar 2025 20:18:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Swg103uf"
+	dkim=pass (2048-bit key) header.d=folker-schwesinger.de header.i=@folker-schwesinger.de header.b="MNQ2d/x/"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from www522.your-server.de (www522.your-server.de [195.201.215.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 062061AF0B4;
-	Sun, 30 Mar 2025 16:22:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 917F22AE8E;
+	Sun, 30 Mar 2025 20:18:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.201.215.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743351742; cv=none; b=fp6r9AXRS9R07tjs/T4hiMuBauVJDR8qwHLC2a+1YXxnCwS7poNLSTCWAtGOqnRrO67G9dnFT8j0LYyXf2vbw7yEDuXK3qYOdnrXU36sAFPz6BbJQwUFPaWuY7fWky33SLz5iFK4n2sXi5Gr7lbCbyIXFBaQXUoqK7RCMa/W+0E=
+	t=1743365900; cv=none; b=KYW89ZIwh6rOxecKD0eesJ2G+sw41tk56IM5XQ6H/DsGCF4vj5KgBK9Zis85pt3plwLLuoAMUMxJ9oUhcZllRMcsLGMeHTo01iML6odDVz3ddo3skxG2YZmDewLMYfzYvAZgcXlXFJjDCjQc1sJrWO+gOIcRo99qu95yMKY5zdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743351742; c=relaxed/simple;
-	bh=qUBag9B5StRidN5HLkgVvfa2PUN1Q7Fm4vRmNvVYu78=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U+D6YDIF8y63Kk0dX10T3VMuRECXeDt7vg63goFleVA+sYb7JqV5qy/dfeZfSvx/Df9mXP3yXMO8PS6fn2eI7jrsA9HCbvK81JsNu3UL01MVINO8C2c3B9xmpsRK3RMygF88eC98Fi2ZSRzhrL1YOSx2D1vTt6Y8W3STiRAAUXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Swg103uf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC4ADC4CEDD;
-	Sun, 30 Mar 2025 16:22:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743351741;
-	bh=qUBag9B5StRidN5HLkgVvfa2PUN1Q7Fm4vRmNvVYu78=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Swg103ufzfdPCm0qK6fpdXzqL0eoAqqwc1GbXfJNE32jXajDTjHIXVQ8VxGMTmtPj
-	 yZh+pWwHkrPkhkYx7U8Njltg6QeVNN2CmuDArWrehsjMal475gix0nUsefXfOmJ3K2
-	 9Hi5YpvxsyfTTj3NikIYeGUfkDzo+dBcCmTDfIfwXwlZiCax5CdgLmDp2g5DKEjEUO
-	 UojgJELNaeucLLWM2TElgeJqjUFRuc53+swGckBzukjb+HvXpPcxuGmFflKXJXpmO/
-	 OY13+QM6sHChzTGFHa+7NjHpyR7vwJ6rRTiWARRrTl2fCKjIx3o6SEwzgeDFHF1Cn3
-	 62k73MgbQXYQg==
-Date: Sun, 30 Mar 2025 21:52:17 +0530
-From: Vinod Koul <vkoul@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Thara Gopinath <thara.gopinath@gmail.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Md Sadre Alam <quic_mdalam@quicinc.com>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	linux-crypto@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v7 3/8] dmaengine: qcom: bam_dma: add bam_pipe_lock flag
- support
-Message-ID: <Z+lvuVaV8DXQuAR3@vaman>
-References: <20250311-qce-cmd-descr-v7-0-db613f5d9c9f@linaro.org>
- <20250311-qce-cmd-descr-v7-3-db613f5d9c9f@linaro.org>
+	s=arc-20240116; t=1743365900; c=relaxed/simple;
+	bh=+bfG6qOlEQh5eLBGNJMznpv39k1A6x5V8I6QJ40ClqQ=;
+	h=Message-Id:Cc:To:From:Date:Subject; b=W83qDoqWUqO5BeUWw/2hoRE6QJK6jH3cPGZ0ULw9EM+ARiHjnrGb0Eq10nlk3pHleVGRUF+g+sVTqSpc3FwPjIo+sbmCXnqHx5cIIqjmOtAhavLgkfZD7IC4GsSJfX13fPdu5tUxjkrlXOpHuG96CmYaRGKB3vyVFMwAhA5uUa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=folker-schwesinger.de; spf=pass smtp.mailfrom=folker-schwesinger.de; dkim=pass (2048-bit key) header.d=folker-schwesinger.de header.i=@folker-schwesinger.de header.b=MNQ2d/x/; arc=none smtp.client-ip=195.201.215.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=folker-schwesinger.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=folker-schwesinger.de
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=folker-schwesinger.de; s=default2212; h=Subject:Date:From:To:Cc:Message-Id:
+	Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References;
+	bh=MFq0jSVBn19OTS0DWVYSuHMK3dPFrth1ryZM4cH58tw=; b=MNQ2d/x/j/Q65sgi7kGZIo+CWM
+	OqGKeuEKQmFZdCVaMvtemnHu/pLMImJQaLIJod7goj0oUc04Nrj3LB0Bmrg8kjvfBaoiF/2huV7Tn
+	VsD3RuqSXGd/tOyrUDeVrBFojBF653eS78zSDj8f6TBd5mmNKhaJOUiX7SbYX8Uz/sFL10igMDcOv
+	iutHQnfWr4fotJiCL6uk7A9MkPfFuXEOrrgN7LZGLwc/XW07DkkE3avYJOCKwSXcmczU0hF+nsQuL
+	sTTCx9PxemcdnNTPYwtMsae5pdKOg7XJtUoMSYCm/rp1DRaSqkOsaTyGyxHa4rORR87u2CSS54J6t
+	vLTu20aw==;
+Received: from sslproxy03.your-server.de ([88.198.220.132])
+	by www522.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <dev@folker-schwesinger.de>)
+	id 1tyyhK-000Gux-2y;
+	Sun, 30 Mar 2025 21:51:58 +0200
+Received: from [170.62.100.233] (helo=localhost)
+	by sslproxy03.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <dev@folker-schwesinger.de>)
+	id 1tyyhK-000118-1J;
+	Sun, 30 Mar 2025 21:51:58 +0200
+Message-Id: <D8TV2MP99NTE.1842MMA04VB9N@folker-schwesinger.de>
+Cc: "Vinod Koul" <vkoul@kernel.org>, "Michal Simek" <michal.simek@amd.com>,
+ "Jernej Skrabec" <jernej.skrabec@gmail.com>, "Manivannan Sadhasivam"
+ <manivannan.sadhasivam@linaro.org>, "Krzysztof Kozlowski"
+ <krzysztof.kozlowski@linaro.org>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
+ <u.kleine-koenig@baylibre.com>, "Marek Vasut" <marex@denx.de>, "Radhey
+ Shyam Pandey" <radhey.shyam.pandey@amd.com>
+To: <dmaengine@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+ <linux-kernel@vger.kernel.org>
+From: "Folker Schwesinger" <dev@folker-schwesinger.de>
+Date: Wed, 12 Mar 2025 16:59:26 +0100
+Subject: [PATCH] dmaengine: xilinx_dma: Support descriptor setup from dma_vecs
+X-Authenticated-Sender: dev@folker-schwesinger.de
+X-Virus-Scanned: Clear (ClamAV 1.0.7/27593/Sun Mar 30 10:30:26 2025)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250311-qce-cmd-descr-v7-3-db613f5d9c9f@linaro.org>
 
-On 11-03-25, 10:25, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> Extend the device match data with a flag indicating whether the IP
-> supports the BAM lock/unlock feature. Set it to true on BAM IP versions
-> 1.4.0 and above.
-> 
-> Co-developed-by: Md Sadre Alam <quic_mdalam@quicinc.com>
-> Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
->  drivers/dma/qcom/bam_dma.c | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
-> index 8861245314b1..737fce396c2e 100644
-> --- a/drivers/dma/qcom/bam_dma.c
-> +++ b/drivers/dma/qcom/bam_dma.c
-> @@ -58,6 +58,8 @@ struct bam_desc_hw {
->  #define DESC_FLAG_EOB BIT(13)
->  #define DESC_FLAG_NWD BIT(12)
->  #define DESC_FLAG_CMD BIT(11)
-> +#define DESC_FLAG_LOCK BIT(10)
-> +#define DESC_FLAG_UNLOCK BIT(9)
->  
->  struct bam_async_desc {
->  	struct virt_dma_desc vd;
-> @@ -113,6 +115,7 @@ struct reg_offset_data {
->  
->  struct bam_device_data {
->  	const struct reg_offset_data *reg_info;
-> +	bool bam_pipe_lock;
->  };
->  
->  static const struct reg_offset_data bam_v1_3_reg_info[] = {
-> @@ -179,6 +182,7 @@ static const struct reg_offset_data bam_v1_4_reg_info[] = {
->  
->  static const struct bam_device_data bam_v1_4_data = {
->  	.reg_info = bam_v1_4_reg_info,
-> +	.bam_pipe_lock = true,
->  };
->  
->  static const struct reg_offset_data bam_v1_7_reg_info[] = {
-> @@ -212,6 +216,7 @@ static const struct reg_offset_data bam_v1_7_reg_info[] = {
->  
->  static const struct bam_device_data bam_v1_7_data = {
->  	.reg_info = bam_v1_7_reg_info,
-> +	.bam_pipe_lock = true,
->  };
->  
->  /* BAM CTRL */
-> @@ -707,8 +712,15 @@ static struct dma_async_tx_descriptor *bam_prep_slave_sg(struct dma_chan *chan,
->  		unsigned int curr_offset = 0;
->  
->  		do {
-> -			if (flags & DMA_PREP_CMD)
-> +			if (flags & DMA_PREP_CMD) {
->  				desc->flags |= cpu_to_le16(DESC_FLAG_CMD);
-> +				if (bdev->dev_data->bam_pipe_lock) {
-> +					if (flags & DMA_PREP_LOCK)
-> +						desc->flags |= cpu_to_le16(DESC_FLAG_LOCK);
-> +					else if (flags & DMA_PREP_UNLOCK)
-> +						desc->flags |= cpu_to_le16(DESC_FLAG_UNLOCK);
-> +				}
+The DMAEngine provides an interface for obtaining DMA transaction
+descriptors from an array of scatter gather buffers represented by
+struct dma_vec.
+Add support for this interface in the Xilinx DMA driver by implementing
+the .device_prep_peripheral_dma_vec() callback of struct dma_device.
 
-No else case? you are ignoring the flags passed by user...? This should
-return an error...
+Signed-off-by: Folker Schwesinger <dev@folker-schwesinger.de>
+---
+ drivers/dma/xilinx/xilinx_dma.c | 94 +++++++++++++++++++++++++++++++++
+ 1 file changed, 94 insertions(+)
 
+diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
+index 3ad44afd0e74..2d4658b02d93 100644
+--- a/drivers/dma/xilinx/xilinx_dma.c
++++ b/drivers/dma/xilinx/xilinx_dma.c
+@@ -2172,6 +2172,99 @@ xilinx_cdma_prep_memcpy(struct dma_chan *dchan, dma_addr_t dma_dst,
+ 	return NULL;
+ }
+ 
++/**
++ * xilinx_dma_prep_peripheral_dma_vec - prepare descriptors for a DMA_SLAVE
++ *	transaction from DMA vectors
++ * @dchan: DMA channel
++ * @vecs: Array of DMA vectors that should be transferred
++ * @nb: number of entries in @vecs
++ * @direction: DMA direction
++ * @flags: transfer ack flags
++ *
++ * Return: Async transaction descriptor on success and NULL on failure
++ */
++static struct dma_async_tx_descriptor *xilinx_dma_prep_peripheral_dma_vec(
++	struct dma_chan *dchan, const struct dma_vec *vecs, size_t nb,
++	enum dma_transfer_direction direction, unsigned long flags)
++{
++	struct xilinx_dma_chan *chan = to_xilinx_chan(dchan);
++	struct xilinx_dma_tx_descriptor *desc;
++	struct xilinx_axidma_tx_segment *segment, *head, *prev = NULL;
++	size_t copy;
++	size_t sg_used;
++	unsigned int i;
++
++	if (!is_slave_direction(direction) || direction != chan->direction)
++		return NULL;
++
++	desc = xilinx_dma_alloc_tx_descriptor(chan);
++	if (!desc)
++		return NULL;
++
++	dma_async_tx_descriptor_init(&desc->async_tx, &chan->common);
++	desc->async_tx.tx_submit = xilinx_dma_tx_submit;
++
++	/* Build transactions using information from DMA vectors */
++	for (i = 0; i < nb; i++) {
++		sg_used = 0;
++
++		/* Loop until the entire dma_vec entry is used */
++		while (sg_used < vecs[i].len) {
++			struct xilinx_axidma_desc_hw *hw;
++
++			/* Get a free segment */
++			segment = xilinx_axidma_alloc_tx_segment(chan);
++			if (!segment)
++				goto error;
++
++			/*
++			 * Calculate the maximum number of bytes to transfer,
++			 * making sure it is less than the hw limit
++			 */
++			copy = xilinx_dma_calc_copysize(chan, vecs[i].len,
++					sg_used);
++			hw = &segment->hw;
++
++			/* Fill in the descriptor */
++			xilinx_axidma_buf(chan, hw, vecs[i].addr, sg_used, 0);
++			hw->control = copy;
++
++			if (prev)
++				prev->hw.next_desc = segment->phys;
++
++			prev = segment;
++			sg_used += copy;
++
++			/*
++			 * Insert the segment into the descriptor segments
++			 * list.
++			 */
++			list_add_tail(&segment->node, &desc->segments);
++		}
++	}
++
++	head = list_first_entry(&desc->segments, struct xilinx_axidma_tx_segment, node);
++	desc->async_tx.phys = head->phys;
++
++	/* For the last DMA_MEM_TO_DEV transfer, set EOP */
++	if (chan->direction == DMA_MEM_TO_DEV) {
++		segment->hw.control |= XILINX_DMA_BD_SOP;
++		segment = list_last_entry(&desc->segments,
++					  struct xilinx_axidma_tx_segment,
++					  node);
++		segment->hw.control |= XILINX_DMA_BD_EOP;
++	}
++
++	if (chan->xdev->has_axistream_connected)
++		desc->async_tx.metadata_ops = &xilinx_dma_metadata_ops;
++
++	return &desc->async_tx;
++
++error:
++	xilinx_dma_free_tx_descriptor(chan, desc);
++	return NULL;
++}
++
+ /**
+  * xilinx_dma_prep_slave_sg - prepare descriptors for a DMA_SLAVE transaction
+  * @dchan: DMA channel
+@@ -3176,6 +3269,7 @@ static int xilinx_dma_probe(struct platform_device *pdev)
+ 	xdev->common.device_config = xilinx_dma_device_config;
+ 	if (xdev->dma_config->dmatype == XDMA_TYPE_AXIDMA) {
+ 		dma_cap_set(DMA_CYCLIC, xdev->common.cap_mask);
++		xdev->common.device_prep_peripheral_dma_vec = xilinx_dma_prep_peripheral_dma_vec;
+ 		xdev->common.device_prep_slave_sg = xilinx_dma_prep_slave_sg;
+ 		xdev->common.device_prep_dma_cyclic =
+ 					  xilinx_dma_prep_dma_cyclic;
 
+base-commit: 6565439894570a07b00dba0b739729fe6b56fba4
 -- 
-~Vinod
+2.49.0
 

@@ -1,184 +1,106 @@
-Return-Path: <dmaengine+bounces-4715-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4716-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25332A5DC5F
-	for <lists+dmaengine@lfdr.de>; Wed, 12 Mar 2025 13:11:19 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D9CD0A5DCAA
+	for <lists+dmaengine@lfdr.de>; Wed, 12 Mar 2025 13:30:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9FF293A9444
-	for <lists+dmaengine@lfdr.de>; Wed, 12 Mar 2025 12:11:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1930F16B7E1
+	for <lists+dmaengine@lfdr.de>; Wed, 12 Mar 2025 12:30:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 481F423C367;
-	Wed, 12 Mar 2025 12:11:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 919141E4A9;
+	Wed, 12 Mar 2025 12:30:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="A2854r3O"
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="qQ49a4EU"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2065.outbound.protection.outlook.com [40.107.220.65])
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A55E323F399
-	for <dmaengine@vger.kernel.org>; Wed, 12 Mar 2025 12:11:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.65
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741781475; cv=fail; b=J6kD5r7ypsxe340iTaIPAbHAKA8nyNKPW6hUl7VKKpPukZiPhTAmxQFwxHcCW+p/jv26MZoLTxFLTL7o/b5ugCHAsSDTMthTG+v51TfTE8r5SuyUvN9dqg36K39fdRFodQ2SeSeZZJurDPsb38aujNWCFuFGwhh/v9Hk34pdjI0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741781475; c=relaxed/simple;
-	bh=l7GuHnCAAHnZni8unNZzSneVmLrXWNUegZDH4L0a1Y0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PYDQhQL+xnZep35nS6vcg5TQeis4oS6KFiuCgYQntTaPt/vBT/68xNbzdiGP8N8BJfhNgM1JpnzQJJJg0qtCh3xIzqowAkOZptHBjmzrx2IL36uyAf3Kextku6X/8Ys8nITvhRgdOYoSIQwjBnzUHRmiBIq79dgz/J1yinPg6Qk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=A2854r3O; arc=fail smtp.client-ip=40.107.220.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jW2GI+4JlEFIl61oQMHmdk45hHCtam2JY1faI1ppYvRcvel10HLCra8DUH4yMu5cwVtCrhyEoNWyXUOGeo4fdaobNc58YQiB9LkanJystRBXfh5U9vCwPkE2mGa7Y0dHXIJTfQ6c7biPOy56xx7da8G7J24m0cNc5bx+wEWbJLdWty5m0MSveCGnrnowvvY1Zf5imDs+iqLmKQgda1Ms4ErOx5V3swfZez4KRnWcg9lleyfZvDcfrwTFwnzgkGPUz/TYk5LeqdrpjpdP2jT1QgYbRv4gxBznAK7JanY5hAL7vGrPnOjZTjfIJRKJsq6kAP3xXQdH519YexUTiYxrpw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uGguv1vdQdACnRjrwK3s4ul9qaN8XCB2RTQlHjxhV08=;
- b=ZF53J+RfhJQhguyoLgjHIr9PotOgR1aJN9KRcN4ECk8GEeRa7zyRnB6mTxGWuCuTlhVO3ofUr6ptwyaHejmsU7gOQjxgIOLtlaMSsxeq39KOa8hslW0QY8Cuiqqi9tJYZR2cAvU1K8G+qx6+vdCle6sv8d1EM88SbntYhqYB5yyVtHWTh5xZCtJxmYnWr8RZsRH5HG68TU/ha/Gh8YgEBJb/IOl7Ln/odD9sLlBtuJ7mFyibO0HUVul+gDkkFvO8qciUbrLXOvkiNTwDqau2UNUW83AQuXRkK+d3LnBR0z6DSQTKUDQVT8HW3UuRwRODTR4Hk9CH7eFJyj6KVTV1jg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uGguv1vdQdACnRjrwK3s4ul9qaN8XCB2RTQlHjxhV08=;
- b=A2854r3OhD0G3PklwiunJo2F86yDKdgW/Q3yiAcxlA9Oe2Z9lQ32m/mP+StS+hkm3hEovL9GEuI9HM2k9gnKZs6wts7BV6eLF3J6zGPACDDOJgvXaAPRHJiFXsDGZJ/QkvRcORguQRQJlwquPs/+HmLbvLe+PPFAvWZP7ukH1sM=
-Received: from MN0P221CA0023.NAMP221.PROD.OUTLOOK.COM (2603:10b6:208:52a::9)
- by IA1PR12MB6458.namprd12.prod.outlook.com (2603:10b6:208:3aa::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.27; Wed, 12 Mar
- 2025 12:11:08 +0000
-Received: from BN3PEPF0000B374.namprd21.prod.outlook.com
- (2603:10b6:208:52a:cafe::e2) by MN0P221CA0023.outlook.office365.com
- (2603:10b6:208:52a::9) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8511.27 via Frontend Transport; Wed,
- 12 Mar 2025 12:11:08 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN3PEPF0000B374.mail.protection.outlook.com (10.167.243.171) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8558.0 via Frontend Transport; Wed, 12 Mar 2025 12:11:08 +0000
-Received: from airavat.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 12 Mar
- 2025 07:11:04 -0500
-From: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-To: <vkoul@kernel.org>, <dmaengine@vger.kernel.org>
-CC: Basavaraj Natikar <Basavaraj.Natikar@amd.com>, Dan Carpenter
-	<dan.carpenter@linaro.org>
-Subject: [PATCH -next] dmaengine: ptdma: Fix static checker warnings
-Date: Wed, 12 Mar 2025 17:40:44 +0530
-Message-ID: <20250312121044.3638028-1-Basavaraj.Natikar@amd.com>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA43C1E489;
+	Wed, 12 Mar 2025 12:30:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741782652; cv=none; b=Lughch4k5VaRbEDACMDBzcDQivUOSuDi0RWy906fmPovuHdfbNd4hCzxhUTilEASTNfYG9GScMUfHM9e+pV4BuoNyZ9oGVcLCuPghDVeDPWmraKzVrH1pWM9z5QKn1l3ZjJdCmnfWJPAgliUNcNXWbBmpca2qGdDnlvL/X968o4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741782652; c=relaxed/simple;
+	bh=laYQCx88mjcDu1ZnBLvTOB+6I7d/yFECJ8I8PLU/mrU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=V08j/Mph9TvcRJjv3BnlezDwHbaq961YAXC85McinfqdBIsIc7sbmry1FQWC5C4ROg6J/9HUAe+kso9NTg0983egH/lNDJP5cs+eApDC/iQnUDKDYyUTjzsqt2WPwLoS5uT5QhnuTV1azYJ8bRemzIh6dGllKe16txN+khNwC9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=qQ49a4EU; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 4F763A0433;
+	Wed, 12 Mar 2025 13:30:46 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=mail; bh=cmklfvLlFZxYw5WHt0NS
+	MePxUydM1gh/qon5awTqfRY=; b=qQ49a4EU6xjyrrZrVO8B+hvj25GZPeSjA0jb
+	7nWqtx/yE+/PuOh6axYscnpPtJZnCUmT1XiXz34qdphteXIo2TKJ5KsVsaQbrXlk
+	tUylJKdzUJ6EfDz4qFK6yVM1aVGbxPGaUdWI/bQOuiBI7c3nXLNeTFPrfx5bv68J
+	vSJsJYx3lZujSrSva+A6xE/tym5fl0MQR/34G1oev+OcThulayAyqB90QYnXB8rS
+	EsMyweSxMqzxmwvlG/62+oJXrrRx/23oPcywfMzqCIHPrTizUL5I1hKt9qJxNQ7G
+	0hp4aELeQ8tdiUjwGqvTbbbqJykqBqzZzxeWmyZZ3TReORAfhJ7HnlLmirxrBbDa
+	bzfwMJAPkNNpRba8Z2ahlXTtuP/nQbOtBnaJj4Lm561VyLg1pj6n4nQyecsminBK
+	9JZ1iaOdx6ikfJeW+2aC9/eykxPtKm0CahpIScO09ixdrP6D2WUUHpAFdQ8AnqJT
+	FIxcYKKDwenm5asoKkx7K75nJxFX8DHeGnIoMFn3kV01Le7YYX2H3POwTWR8TbRo
+	Izrs5IjAB8SonwI2Nwdi3x4a1yt6XQNPRgXRZE6UQljKWhLFhfwTskZe+LdKCar4
+	bBitkR5bthaRvlro6f2XsFW/g08V6CvdOTl7UVQOg4knyzU6/miZUM2x/aMmdqTZ
+	nOE9+MU=
+Message-ID: <505c2e3b-f1bb-4e3a-96f2-eef0d0d682e6@prolan.hu>
+Date: Wed, 12 Mar 2025 13:30:45 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN3PEPF0000B374:EE_|IA1PR12MB6458:EE_
-X-MS-Office365-Filtering-Correlation-Id: c732686b-50fb-4a48-8a0e-08dd615ef8fe
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|82310400026|36860700013|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?BABDfxMDoVifhglPIRgpKNl3JRzy2pjHrOAnaXSmAU80llWTEiZ9NUOG2xXk?=
- =?us-ascii?Q?HsH2qYd5uUnx6LpvpEgHz+DbDyH4QfQn4O5S9sBFaRxGqa59UesGpq17Bmfn?=
- =?us-ascii?Q?25HylU2XSFSZ89SEu1ShMjjq8lk21dz4dwTDvv3OExlkvqlKh5Hoif+QJZ/8?=
- =?us-ascii?Q?Pn7X0onBslpRNZCl1kyfJ7+ViqaiwpcC23NcH5CDDfFjCVnK9XryXbB0V2yK?=
- =?us-ascii?Q?Ra6ozRAOkaEOjrsq2tqsklTtUUE1ePeFP5DbkDLxF/Tsbb5x7PLj+Zj1H4wh?=
- =?us-ascii?Q?EAYNMIHsPGHy0Gazs97GGZ1sv8wNUtk8Pj8MAx3Qv8y7AxhfS/E6hnuBxGgt?=
- =?us-ascii?Q?gJq8kVlqIjru80C3u5bzJbPk8XkSli6LO9sGvM7C+hcyxRrMD+w5ByMpCUb7?=
- =?us-ascii?Q?I47i+4+yEEunv1SwauquadiqDG8TMAJvOSdye+mWlpAJOScZR/p8BMVRFG6o?=
- =?us-ascii?Q?xaY8cFeU+rH92hSOG0U3/WMGN1yLtB20YED439bCcGyQ4pZBEzyuebHf6k4A?=
- =?us-ascii?Q?Q797sp4ZiWXrvpqeZ11CwzuM7wPgCnCMQzkyB1UrKNSgr9cEZfxRgmNpN4EK?=
- =?us-ascii?Q?tgdbZ6bnLvPobMY7v75wZqXd992648i33agjXPhmS04m0WfplxiFVwwrUnoI?=
- =?us-ascii?Q?KUwmBO0G/NmMQRTQ96fo0cabkccssTcSvq2fgbXXYmeVV2pg860zLIasvfPn?=
- =?us-ascii?Q?byfHURJ8/fFM+8Pn2S8MbF2Vrp7cj3m5CPAGCWpvg4/cx46W0cuD7+b+Aqkk?=
- =?us-ascii?Q?as65XmpG6FW6HLfYwM1fWDdQplDy41tmGUWYszMG86wGiP9w/4T2zQLLPM01?=
- =?us-ascii?Q?l4cwlW3a5yht2yPm9doF5P1OO2qMnBEotInci5ika79jUoKvnqKaLBQzs1Zl?=
- =?us-ascii?Q?AwZbVJWsKN3C3YYK0GGivo/4hdI5Svhfpkz18jYr0r6zKEkhv8dRgw2kTnmU?=
- =?us-ascii?Q?d50tn6GjIj+Fw2gEISnvf3B6R9gVA9Y9o1Sqk8GvJ9PpWWJZWWuvXXfHoBza?=
- =?us-ascii?Q?iAn+MNt6GkDb4kLAbEUlCy9bqZq1So+mCqZVgk70AbMOcSlEYOJU1UXugNNt?=
- =?us-ascii?Q?2dBsmO7vnKdqh02QxECa/4ybszVjBjpBJQM7Xsp7JNJXWV9TsRmva3L5J6I/?=
- =?us-ascii?Q?DucCsCG3ma2AJ0M/pNAwIiBS7pduPrXER0GrVcC1MEWTaKy6yS6XafCh2WDL?=
- =?us-ascii?Q?KHNOj0Q77hlagTxeHP5UO7Sa65xOS0EaUpGdSYjgqkeRzNUudF5k3o7qLAEl?=
- =?us-ascii?Q?a+xiMcR7gplasslyKuGR3ukD1fPfnR/VGkxLECs2eiSwqRbQzy+bg/u12PBO?=
- =?us-ascii?Q?H/2T0wk/pKWjbKvd+xDIoaLIFqHvJNwZ/zTgy12MItY0yh6NrFOxjLx/cpvt?=
- =?us-ascii?Q?b3mgZGW2XYu+7qQiqYRKaz64t7uq2yeCXRhrEKCPZ5CZvmju9ymdVOupVW+i?=
- =?us-ascii?Q?ELEdH8ODLbEucymB9VuazAfToZtcYi7g+B5m5eA1R0ROA+a1Bv5PfIxfBm8e?=
- =?us-ascii?Q?1pct8rW5cY/ffBw=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2025 12:11:08.8260
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c732686b-50fb-4a48-8a0e-08dd615ef8fe
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN3PEPF0000B374.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6458
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v4] dma-engine: sun4i: Use devm functions in probe()
+To: Markus Elfring <Markus.Elfring@web.de>, <dmaengine@vger.kernel.org>,
+	<linux-sunxi@lists.linux.dev>, <linux-arm-kernel@lists.infradead.org>,
+	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>
+CC: LKML <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@kernel.org>,
+	Samuel Holland <samuel@sholland.org>, Vinod Koul <vkoul@kernel.org>
+References: <20250311180254.149484-1-csokas.bence@prolan.hu>
+ <885ceb3e-d6c6-4e7b-a3b6-585d2d110ccf@web.de>
+ <81f87d39-d3f8-4b6a-91cb-b0177d34171b@prolan.hu>
+ <9ef781b0-8a63-42b7-91a2-fa8a8ea3c0b4@web.de>
+Content-Language: en-US, hu-HU
+From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
+In-Reply-To: <9ef781b0-8a63-42b7-91a2-fa8a8ea3c0b4@web.de>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
+ ATLAS.intranet.prolan.hu (10.254.0.229)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A2980D94852627360
 
-An unnecessary extra check leads to the following static code checker
-warning:
+Hi,
 
-    drivers/dma/amd/ptdma/ptdma-dmaengine.c: pt_cmd_callback_work()
-    warn: variable dereferenced before check 'desc'
+On 2025. 03. 12. 12:44, Markus Elfring wrote:
+>>> How good does such a change combination fit to the patch requirement
+>>> according to separation of concerns?
+>>> https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.14-rc6#n81
+>>
+>> It is a general refactor patch, it shouldn't change any functionality. I could split it to one part introducing `devm_clk_get_enabled()` and the other `dmaenginem_async_device_register()`, but I don't feel that to be necessary, nor does it bring any advantages I believe.
+> Can it matter a bit more to separate changes for the application of devm functions
+> and the adjustment of corresponding exception handling with dev_err_probe() calls?
 
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Closes: https://lore.kernel.org/all/bfa0a979-ce9f-422d-92c3-34921155d048@stanley.mountain/
-Fixes: 656543989457 ("dmaengine: ptdma: Utilize the AE4DMA engine's multi-queue functionality")
-Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
----
- drivers/dma/amd/ptdma/ptdma-dmaengine.c | 16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+The change in error handling is just the result of switching to devm 
+functions, because it is no longer needed to separately dev_err(), store 
+the error code to `ret` and goto a cleanup phase (as the whole point of 
+using devm functions is to have auto-cleanup), you can just return with 
+the error code (which dev_err_probe() returns for us) right away. The 
+devm functions are used precisely _because_ they allow us to simplify 
+this error handling.
 
-diff --git a/drivers/dma/amd/ptdma/ptdma-dmaengine.c b/drivers/dma/amd/ptdma/ptdma-dmaengine.c
-index 715ac3ae067b..d1d38ed811c2 100644
---- a/drivers/dma/amd/ptdma/ptdma-dmaengine.c
-+++ b/drivers/dma/amd/ptdma/ptdma-dmaengine.c
-@@ -355,16 +355,14 @@ static void pt_cmd_callback_work(void *data, int err)
- 		desc->status = DMA_ERROR;
- 
- 	spin_lock_irqsave(&chan->vc.lock, flags);
--	if (desc) {
--		if (desc->status != DMA_COMPLETE) {
--			if (desc->status != DMA_ERROR)
--				desc->status = DMA_COMPLETE;
-+	if (desc->status != DMA_COMPLETE) {
-+		if (desc->status != DMA_ERROR)
-+			desc->status = DMA_COMPLETE;
- 
--			dma_cookie_complete(tx_desc);
--			dma_descriptor_unmap(tx_desc);
--		} else {
--			tx_desc = NULL;
--		}
-+		dma_cookie_complete(tx_desc);
-+		dma_descriptor_unmap(tx_desc);
-+	} else {
-+		tx_desc = NULL;
- 	}
- 	spin_unlock_irqrestore(&chan->vc.lock, flags);
- 
--- 
-2.34.1
+> Regards,
+> Markus
+
+Bence
 
 

@@ -1,48 +1,48 @@
-Return-Path: <dmaengine+bounces-4740-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4741-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46653A5F8F7
-	for <lists+dmaengine@lfdr.de>; Thu, 13 Mar 2025 15:50:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 95922A5F904
+	for <lists+dmaengine@lfdr.de>; Thu, 13 Mar 2025 15:51:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8904917292E
-	for <lists+dmaengine@lfdr.de>; Thu, 13 Mar 2025 14:50:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E7EA84203FC
+	for <lists+dmaengine@lfdr.de>; Thu, 13 Mar 2025 14:51:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6207267F55;
-	Thu, 13 Mar 2025 14:50:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3073926869C;
+	Thu, 13 Mar 2025 14:50:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bxNjGHsj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J7dRRuV8"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20811F130F;
-	Thu, 13 Mar 2025 14:50:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3489268683;
+	Thu, 13 Mar 2025 14:50:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741877417; cv=none; b=o9iKDaXIhrtkEFqBer9xJWSww7AZYgJ1nF29D/44uNNOtWN+16XtSA5nm+TiNitzI/tysnsuknBmgBGqc46vCA5oRT/cj+jiFVlDWgLBXqdOu3eP9Z+/VfE/8f9nprn7RPuVTOBkgFmu6Pv7XgpoZRN2EZOZnSTOJ84gf/XQvqs=
+	t=1741877447; cv=none; b=djjziBm0V57Ac5VNx8HQxNznyyUg7xi+b8KJUgOFt4JtUwZ+U/DAPMKeXrvXG0JrMLNMMuGj/vh8kTl2b/Ko5nb+pj5QP2j6SNYVyo+GY6r7rypILGZ7wT1PNDHfPtTOVNpeWYd6gSPrPwvTGbxTrCoP0Aij5Ay2wd3CK1S7ZtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741877417; c=relaxed/simple;
-	bh=pCgpVuH4J4ja6TgQw7FfxCzs6hWYzkVqoxLdmCK1Sgw=;
+	s=arc-20240116; t=1741877447; c=relaxed/simple;
+	bh=Qpg/XjL8t+s1Ksmau+PLv7qisAyo9hnfIWOSuA18wNc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IPSdv5n7jtLQ9GjRFCJPXpuEMcTPG043s8c7+E192y5pjpbMvHn5qYPyTFQnsRLIsCRF0D+KyqcYkK2zKB85Hvz6PrSXtxJJ/MHsMQ2pti636+7DwxyrUEOPgu7nqAL8ff1LYj1HwU+wnnuXGjQsufO1gi9hsVqnI6TbOx31F9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bxNjGHsj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A780C4CEDD;
-	Thu, 13 Mar 2025 14:50:10 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=glvwGVwd9T3ovJ4G7dFV05kWvSADQyBRVkZx4VjHPOGAihxCpI7NYT9qitYlBq0fRcIMg+jNoIYFBLeTsrripuwl5sVLydtJlyFLfVI9CH0ueuTpHuEo2bPYk0gWxWKdPVMCdVCIPbO+CT0UCjczbYbrxZ29F2og2fJq9gheam4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J7dRRuV8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24BEDC4CEE9;
+	Thu, 13 Mar 2025 14:50:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741877416;
-	bh=pCgpVuH4J4ja6TgQw7FfxCzs6hWYzkVqoxLdmCK1Sgw=;
+	s=k20201202; t=1741877446;
+	bh=Qpg/XjL8t+s1Ksmau+PLv7qisAyo9hnfIWOSuA18wNc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=bxNjGHsjFRkqkbYr2IZtX4U/RZtDxvG/OwtEhLHcbcuAQ9lV+LbqMg+sZREQx90OS
-	 KCnu0TK8ML+cyOg/JBbsokGYBqv23/0n7Dc1h7BcxkGwWRzPyFGcnOBkydfI4kMPgL
-	 tlSbc4c1kKETk9O4fgEz8nHr+27BDZwMHsVtLNgNZ/J3xSKXzLSv+gLCKo5x+O+2cE
-	 uajxiQkGtG4h1Z50/Ze/JFzaBld7htzlFkV9C56pxzDU34nxJQa9l0sZ1jjSU8qzgt
-	 dM7lSq+wL70VMN51QPiqEI8xImuhX+9Uj7P0AhwgRmCwOuA55YaU1E0KJS1inXHMsm
-	 r6LcKuvYGktlw==
-Message-ID: <572630ae-50bb-4575-8885-1d97b602ca8f@kernel.org>
-Date: Thu, 13 Mar 2025 15:50:08 +0100
+	b=J7dRRuV8CDolunVXqS68B5+F5mrn9/qxN3c8hSA3lEvTAo+JFD46RObdOXRDhBsph
+	 W56lFlgFheae5///80tVSfhSEbi6kflVlp/VfQ8y3dytTvo+f9DooyFnJBElqrIo47
+	 ZQnohdQs61xIVxXsnXAvciP0BByUIDX40bbwojD3VDX7sWSECmqDzFqG28hLb9Bo5z
+	 qG7BWO+jy5dtmS0xH9FqWnGD/dTQ6myt+fNU67huAK5nL3MIxw8Psh5sQ/9JtsQhNw
+	 +v/PrUir5abV0OqaKxBWEri4xfRWLY9mfCcrtrlRgtjl3dJeDdjblBf5s0gDwICmu/
+	 Xg5eObhJEl7MA==
+Message-ID: <171197fc-05a9-41a2-bd3b-d117a5cb8f63@kernel.org>
+Date: Thu, 13 Mar 2025 15:50:38 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -50,8 +50,7 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/6] dt-bindings: dma: qcom,bam: Document dma-coherent
- property
+Subject: Re: [PATCH 4/6] ARM: dts: qcom: sdx75: Add QPIC NAND support
 To: Kaushal Kumar <quic_kaushalk@quicinc.com>, vkoul@kernel.org,
  robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
  manivannan.sadhasivam@linaro.org, miquel.raynal@bootlin.com, richard@nod.at,
@@ -61,7 +60,7 @@ Cc: linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-mtd@lists.infradead.org
 References: <20250313130918.4238-1-quic_kaushalk@quicinc.com>
- <20250313130918.4238-3-quic_kaushalk@quicinc.com>
+ <20250313130918.4238-5-quic_kaushalk@quicinc.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -107,42 +106,21 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250313130918.4238-3-quic_kaushalk@quicinc.com>
+In-Reply-To: <20250313130918.4238-5-quic_kaushalk@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 13/03/2025 14:09, Kaushal Kumar wrote:
-> SDX75 BAM DMA controller has DMA-coherent support so define
-> it in the properties section, without which 'dtbs_check'
-> reports the following error:
-> 
->   controller@1c9c000: 'dma-coherent' does not match any of the
->   regexes: 'pinctrl-[0-9]+'
+> Add devicetree node to enable support for QPIC
+> NAND controller on Qualcomm SDX75 platform.
+> Since there is no "aon" clock in SDX75, a dummy
+> clock is provided.
 
-How can I reproduce it?
+Add the clock first.
 
-> 
-
-Fixes tag?
-
-> Signed-off-by: Kaushal Kumar <quic_kaushalk@quicinc.com>
-> ---
->  Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml b/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
-> index 3ad0d9b1fbc5..c4dd6a503964 100644
-> --- a/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
-> +++ b/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
-> @@ -39,6 +39,8 @@ properties:
->    "#dma-cells":
->      const: 1
->  
-> +  dma-coherent: true
-> +
-
-Which devices are DMA coherent?
-
+Please wrap code according to the preferred limit expressed in Kernel
+coding style (checkpatch is not a coding style description, but only a
+tool).  However don't wrap blindly (see Kernel coding style).
 
 Best regards,
 Krzysztof

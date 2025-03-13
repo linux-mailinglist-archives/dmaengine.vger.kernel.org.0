@@ -1,144 +1,120 @@
-Return-Path: <dmaengine+bounces-4726-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4727-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A30A7A5F422
-	for <lists+dmaengine@lfdr.de>; Thu, 13 Mar 2025 13:21:09 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 70FAAA5F5A8
+	for <lists+dmaengine@lfdr.de>; Thu, 13 Mar 2025 14:15:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8184D17E235
-	for <lists+dmaengine@lfdr.de>; Thu, 13 Mar 2025 12:20:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3F4E719C139C
+	for <lists+dmaengine@lfdr.de>; Thu, 13 Mar 2025 13:10:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8821266EF6;
-	Thu, 13 Mar 2025 12:20:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD8BB2676F9;
+	Thu, 13 Mar 2025 13:10:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LGp2Wrd3"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hCMZwiXi"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F021EE7A8;
-	Thu, 13 Mar 2025 12:20:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 453D824E010;
+	Thu, 13 Mar 2025 13:10:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741868433; cv=none; b=iGa+FzcLnVByZlq40RLx/WC6wnWSfRACb9zbMZOg5Xz/KO7JGKy9j35iYkyX5fzXP5JjKIMdRPxQEapOANaRTvYZ7VyjdMebmigGIqQoX3pavYb/39LpPQ84jNNmaD2U03GkdzvLp2vY6px81jjn6RN761iSpSJvfsGf+nPYWSM=
+	t=1741871419; cv=none; b=tFWXh8nHImmwi3Nuldx0JvBvk+B+VMWHOKAvmPftRjn4DaIIYmLGZc2bfOdRVq2tQhD8NnXV3PaFQiGvtmyQtBgJssGVv3P4BfzaDz3npX6KoUDRNcPijQ8Z3kQlFi9MH8V4wjZ5vgTii5r3Nwjt/hbeKO0GVSQOcOLEupEoQ5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741868433; c=relaxed/simple;
-	bh=J9gkmDvvDPgdi4lbEVPnHeSBkfUAvzFaSnLIVoFM3hg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=BNxecQhq3hGFMEjGiu6V+x2SWksK4YyEbhYsy2DkRG2Uvcu6Jgmu3YA/JO5yrhjvGtm0n55r3Y8wwYvVGf9j+8DHhW6tCmGMyXpKNKUyE8U3uxqfoPiJS+qE3KohaIj3NldAEWL4UclfmFGtwn81qlxqwY4gOKT0+wTqwqveIhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=LGp2Wrd3; arc=none smtp.client-ip=205.220.168.131
+	s=arc-20240116; t=1741871419; c=relaxed/simple;
+	bh=8NU4juysYoyJsQFa23j+XL72HurJpW8Ab/z9JtI2o5k=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cZk1KOvuiYM1mnLAuGdinBbnkzZbQzIRlYtiOiodkpD1EQyovLk+XjvHHaA41Gqmm5v5HPT3f7vb9I6Nj3H3dICcArNVZZCZx/YUBQEmBdZncR8jyvPqVz7zrCH93OtVDAO2RJ6nX63vB/J0qQPlqI+yH2+XidiD10UF9Bw03MA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hCMZwiXi; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52D9Q5HT023241;
-	Thu, 13 Mar 2025 12:20:24 GMT
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52D9A5Y0018566;
+	Thu, 13 Mar 2025 13:10:00 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	fDU8c74Q4bDPD4cXlM5fRCqP8qjtAceNigyKKmnZJuw=; b=LGp2Wrd3RM3qpfZh
-	MmtyydncBM/h6hX+2FhFnIYjoYb7DcDNQ5Vdrl5ZgrNviN8DY2b9sIUkJWaJ2cmV
-	ROWlRX9aSTlMqZN+AEhSRpLdzgctb5Yk6lVbB3zjccQpT6FJ7ZUEvjpLGN3FTack
-	lroSbDFR+/uVEby93e0jTpIlLkGsL4+hkLZ6v9xrHOLS9s/By2lrnkRS6zeKmMuG
-	TtfezUkeyxo1bv4utG/SSkrmPFDrUVrm8yki8okj0FXl/zLViEUDP+w22d4IWoKF
-	b4PLbFRf+O5CC9DBEDsiBhqsmPdgdn16TdeeWdxux1oXN+Q1EbLNLYh4iAP+edG8
-	T2ys+A==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45au2mnspq-1
+	cc:content-type:date:from:message-id:mime-version:subject:to; s=
+	qcppdkim1; bh=dHR26g87SbgpvNBDmfouMw6szuPW3LIbyRevxJX9tiQ=; b=hC
+	MZwiXit0hzNmqIyYCGpwHKQJ4/oU0lZUAtp+mIQagRDVatDkhGU2iMCO3wOTUQBg
+	UYjNDXRBTCxUuycpNo4dx7DF83PZW/AV0vhKbqUsgx/gGDAWAapt4T9dUIyCVdyc
+	RBAgjp05nFBOkRtv3pAClsoXt+B8WsTuOPe6o/qSZ5m0dB3LcU11ZhX+fd2vyv9F
+	VxDLtZVVp0wImtRuwpj7/tEn1PSSaTh6WyruiZUmzgGUBWWeRYXpzryoUZ76CVyl
+	1pe+QB6vqw/MGGHt5YSmaK08124U7Q6Jr8WIdKgVvsAgvGO/ZafEUqoCF1UwRl/X
+	WkMftIo4jk/7mtodO3/Q==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45au2nx03a-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Mar 2025 12:20:23 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52DCKNal020388
+	Thu, 13 Mar 2025 13:09:59 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52DD9wF3013047
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Mar 2025 12:20:23 GMT
-Received: from [10.218.15.14] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 13 Mar
- 2025 05:20:18 -0700
-Message-ID: <c402bdae-04b0-4745-b4c9-f12298cd7a05@quicinc.com>
-Date: Thu, 13 Mar 2025 17:50:15 +0530
+	Thu, 13 Mar 2025 13:09:58 GMT
+Received: from hu-kaushalk-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 13 Mar 2025 06:09:53 -0700
+From: Kaushal Kumar <quic_kaushalk@quicinc.com>
+To: <vkoul@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <manivannan.sadhasivam@linaro.org>,
+        <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
+        <andersson@kernel.org>, <konradybcio@kernel.org>, <agross@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mtd@lists.infradead.org>,
+        Kaushal Kumar <quic_kaushalk@quicinc.com>
+Subject: [PATCH 0/6] Enable QPIC BAM and QPIC NAND support for SDX75
+Date: Thu, 13 Mar 2025 18:39:12 +0530
+Message-ID: <20250313130918.4238-1-quic_kaushalk@quicinc.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 RESEND 1/2] dmaengine: qcom: gpi: Add GPI Block event
- interrupt support
-To: Vinod Koul <vkoul@kernel.org>
-CC: Andi Shyti <andi.shyti@kernel.org>,
-        Sumit Semwal
-	<sumit.semwal@linaro.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?=
-	<christian.koenig@amd.com>,
-        <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <linaro-mm-sig@lists.linaro.org>, <quic_msavaliy@quicinc.com>,
-        <quic_vtanuku@quicinc.com>
-References: <20250212120536.28879-1-quic_jseerapu@quicinc.com>
- <20250212120536.28879-2-quic_jseerapu@quicinc.com> <Z89TC7fKzmmeu6tW@vaman>
-Content-Language: en-US
-From: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
-In-Reply-To: <Z89TC7fKzmmeu6tW@vaman>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: pmnVupMtP4qZ34e0cWtkVzg1kvtB_MB7
-X-Authority-Analysis: v=2.4 cv=aKnwqa9m c=1 sm=1 tr=0 ts=67d2cd87 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=llsIEhTl_2UyQBK4H_sA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: pmnVupMtP4qZ34e0cWtkVzg1kvtB_MB7
+X-Proofpoint-GUID: dBTtC-SNAllfZqoCWnsaaI4RjB4BGiEL
+X-Authority-Analysis: v=2.4 cv=Q4XS452a c=1 sm=1 tr=0 ts=67d2d928 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=IoVFHHhwEPMUAHoi-2YA:9
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: dBTtC-SNAllfZqoCWnsaaI4RjB4BGiEL
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-03-13_06,2025-03-11_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1015
- adultscore=0 malwarescore=0 priorityscore=1501 phishscore=0 spamscore=0
- bulkscore=0 lowpriorityscore=0 impostorscore=0 mlxscore=0 suspectscore=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=657 adultscore=0
+ lowpriorityscore=0 mlxscore=0 clxscore=1011 phishscore=0 malwarescore=0
+ spamscore=0 impostorscore=0 bulkscore=0 suspectscore=0 priorityscore=1501
  classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503130097
+ definitions=main-2503130103
 
-Hi Vinod, Thanks for the review comments.
+Hello,
 
-On 3/11/2025 2:30 AM, Vinod Koul wrote:
-> On 12-02-25, 17:35, Jyothi Kumar Seerapu wrote:
->> GSI hardware generates an interrupt for each transfer completion.
->> For multiple messages within a single transfer, this results in
->> N interrupts for N messages, leading to significant software
->> interrupt latency.
->>
->> To mitigate this latency, utilize Block Event Interrupt (BEI) mechanism.
->> Enabling BEI instructs the GSI hardware to prevent interrupt generation
->> and BEI is disabled when an interrupt is necessary.
->>
->> When using BEI, consider splitting a single multi-message transfer into
->> chunks of 8 messages internally and so interrupts are not expected for
->> the first 7 message completions, only the last message triggers
->> an interrupt, indicating the completion of 8 messages.
->>
->> This BEI mechanism enhances overall transfer efficiency.
-> 
-> That sounds good but I dont like the idea that we add a custom interface
-> for this. Please use DMA_PREP_INTERRUPT instead. Adding this flag should
-> trigger N interrupts, absence of this should lead to Block events only
-> 
-The DMA_PREP_INTERRUPT flag in DMA operations is used to indicate that 
-an interrupt should be generated once the DMA transfer is completed.
-However, this flag itself does not block interrupt generation at the GPI 
-DMA hardware level. The GPI DMA hardware can still raise interrupts even 
-in the absence of the DMA_PREP_INTERRUPT flag.
+This series adds and enables devicetree nodes for QPIC BAM
+and QPIC NAND for Qualcomm SDX75 platform.
 
-To block interrupts at the GPI DMA hardware level, we need to use the 
-Block Event Interrupt (BEI) bit (as explained in the commit log).
-As an example : for 100 transfers, we only want to receive one interrupt 
-at the 100th transfer. This helps us significantly reduce latencies, as 
-handling back-to-back 100 interrupts can take a few milliseconds.
+This patch series depends on the below patches:
+https://lore.kernel.org/linux-spi/20250310120906.1577292-5-quic_mdalam@quicinc.com/T/
 
-Hope this explains it well. Please let me know if there are any other 
-concerns or feedback.
+Kaushal Kumar (6):
+  dt-bindings: mtd: qcom,nandc: Document the SDX75 NAND
+  dt-bindings: dma: qcom,bam: Document dma-coherent property
+  ARM: dts: qcom: sdx75: Add QPIC BAM support
+  ARM: dts: qcom: sdx75: Add QPIC NAND support
+  ARM: dts: qcom: sdx75-idp: Enable QPIC BAM support
+  ARM: dts: qcom: sdx75-idp: Enable QPIC NAND support
+
+ .../devicetree/bindings/dma/qcom,bam-dma.yaml |  2 +
+ .../devicetree/bindings/mtd/qcom,nandc.yaml   | 23 ++++++++---
+ arch/arm64/boot/dts/qcom/sdx75-idp.dts        | 18 +++++++++
+ arch/arm64/boot/dts/qcom/sdx75.dtsi           | 38 +++++++++++++++++++
+ 4 files changed, 75 insertions(+), 6 deletions(-)
+
+--
+2.17.1
 
 

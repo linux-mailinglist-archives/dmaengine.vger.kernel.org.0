@@ -1,70 +1,65 @@
-Return-Path: <dmaengine+bounces-4756-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4755-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 833DAA651E0
-	for <lists+dmaengine@lfdr.de>; Mon, 17 Mar 2025 14:54:20 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 19C7EA651E1
+	for <lists+dmaengine@lfdr.de>; Mon, 17 Mar 2025 14:54:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B58497A711A
-	for <lists+dmaengine@lfdr.de>; Mon, 17 Mar 2025 13:53:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 104483A9112
+	for <lists+dmaengine@lfdr.de>; Mon, 17 Mar 2025 13:53:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A04123FC74;
-	Mon, 17 Mar 2025 13:53:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8679223ED6F;
+	Mon, 17 Mar 2025 13:53:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="Tr2NgHJA"
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="FR70WLvu"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E172323E34E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E178523ED62;
 	Mon, 17 Mar 2025 13:53:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742219637; cv=none; b=RuPoYEpw68Q+n1Ha9POaQF9KIkUFyPyPZDGira/iFx8CyVpzBtFTtkmMv80INHiU5aYNqZFnVBSmzbAx2oXbFVD6vizulLjckyxSVAH7XUAt4zoq+QGdr1l+qG6K+dITWmNv+hvLKh0iIvprortvhKNyFbKw2Kug4XR1E1NGnN0=
+	t=1742219636; cv=none; b=hQpJB/pgDVReiFsV+QOSaFBP8GeLbGAvfKPkAKcYHgQ9XcI4XdtuVCDlnEqiWj2t3NND3US9d0MOPqT98g3rvQHCxd8Oy6EhDPP0xkMJz4oYnQRQ+97jW8A60Y/g56Cj8TF13JMwQJA82GiwO0F3oLnRWegEnYKxWvXqck6Axcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742219637; c=relaxed/simple;
-	bh=TzVF+VseBxemugrIi5lFGtBk9lTNgeveFOacPZEDCbY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PtzWeO2AJhaqqL0KTgftD9gPMten5zo/obnKHGufVVBcsAmj5D4jdOB4PqhW8fWBDNNNEwSCuGAC2xFs/7MRUnC9s1MiQb6QjxFgbkLr8UpQ0PDgcPWXEOPRXH4T+B2qufhZCFVyTGmklb9j7RD+VssQwU6h9xeb1wJpgp2gfe0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=Tr2NgHJA; arc=none smtp.client-ip=193.68.50.107
+	s=arc-20240116; t=1742219636; c=relaxed/simple;
+	bh=8o2FV10LXPS4y7YD+bAR/nC38xtiWW6pVIGBKd15Qgc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ffe1obXIkzq1YkqHzkg3UfzU34pqFB3CY0HdHUcSTTQYbiy/WC+MLpMeK6XCX9fe1qAcjqY/3v8abhYWX8tkOP0zLYt4zKW0ce78McLZVQKzskROdmNPRxU4GSYXSvpUqP1SHeYZxWyvmdpnN4eiFRyio/L1SPUQQ3H9wY/+0LE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=FR70WLvu; arc=none smtp.client-ip=193.68.50.107
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
 Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 7735FA02E3;
-	Mon, 17 Mar 2025 14:53:50 +0100 (CET)
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id BEAA7A0467;
+	Mon, 17 Mar 2025 14:53:51 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
 	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:message-id:mime-version:reply-to:subject:subject:to
-	:to; s=mail; bh=vW45Eevfr0UBpOE/gxMFRs6QWIzi9YcGFWpOxweiOQ0=; b=
-	Tr2NgHJAnGKpz9P0iyFjnrROvAJyRjVeWKR9vlIQaJKhiPEFUrelC8+I9yzOoiGI
-	3Ws2+hWl9K58e4Rg1v0W/PxXLJQ4NxVI6T7iP1ek+TTudAWc1c4pGnmt3ARadCOE
-	v9chae1nxG56/rAMnKAGsDiVjgcChUT22/q0vPkH1Pms+zucbNJdmr8pYa8hskzN
-	2ha3KNPcn4z8W5WRGrQ0Shg7hA+ZqtcsFCZNi6kEERIjwghckmKubPIe5qkzCONF
-	R+ysD4VmglioFko0tF5aRtYqtnyUUC12lq4JON/M4Rvl6fx7+YwOlUSG3A7KsHm4
-	x3x7RbXYAo7+BZ/uOB2u2CZPPwemSKGhvYmjBkrbCIOa2xqM9CmS90JcjRSl6Zab
-	aEnPdts8ERakkAqylGyHE6NYrXquACPMd8I5KydCDh5GBFA6YfAIiUFiPdmnuRze
-	aDnv1KPQFqtywWzrWbNT10/mzAfTwJemyb1+GEYLQi4avksOR/nJnoBdzfBDI3/h
-	84qbOMe6Vn0sTV/vSTQcreA2Q1wEL9LtmDN2LfpQj0UtCiih5hSdk+99UTBYju/g
-	QURzWniqfeGv3b5YfMgPbIVhymPQULQOhhvQjkkHmkdNEluZ2pLW40Dv76vcOXey
-	lkCmzigsGLKv1JEhTln3bmMHKu9cSnYmX+OsfbWSErY=
+	:from:from:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=mail; bh=0o1CqcnBoa+erxXQ17CZ
+	+o4z6tIXyZBWdDbU2LmsN1k=; b=FR70WLvufFS1XAW4FDl9sbvqGKaMAd556gTP
+	HHK3QzFWZXQJmhHdrlN7wd6SfDae3q+/TyJXn324oJy+/nEC6WRLPXpHbQgDCu8j
+	jkCsfKwSxSl5L+dA8G4UshCyxMdbjCBf2Hd5CIwI0N3yNF908QdK7sMkwdwVEBRh
+	mBg/KQrJgyJxDKliq80tPPvsF6wLHqiQx6ccVbMIrim3DiKA5sBiVG08NcuY0WLv
+	aEPPrPR5Xs+BL/M0B27hjFk5+lNtZbKe1NSfKTRthkbNzOKHzl434ot8Dk0a0O4I
+	guxQciGRCFDCCrgDQfMQ8c7H7n+SNLkHKQ79OMvp9Wn2vjkipdzqE94zxYCO12HA
+	7Ort2EGIsRtlt0Jh+x1/qF9xyqt1ksAMJ8x1dyoujWAZ3SwDr8338DoPkx9WMoH1
+	53NJbgI4H+3+TSvBWzNfkGR0uhYU2Sw7vCiGBwQnueT7c/VHZB2jdLxePGSuMfGP
+	qLog3rMy8YaEbKwu7Oq/9ScZiOu8qdno4EQQzk2Dkz1MGje9U0rHa+2YTWwbbYv8
+	DqCrfFJlhyjXztE4FV+XoaZ8EzPjPheS7fxHeq+nME+WEhfDT0FgiBjQRHlUrk4k
+	67pRzl1EhR4G09+XTfLjioaQSJ60TWQbtCIHJNkoLGHWFsgnyT6zBLh41q+ClHHb
+	rV4YvZs=
 From: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
-To:
-CC: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>, Mark Brown
-	<broonie@kernel.org>, Vinod Koul <vkoul@kernel.org>, "Rafael J . Wysocki"
-	<rafael@kernel.org>, Len Brown <len.brown@intel.com>, Pavel Machek
-	<pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Nicolas
- Ferre" <nicolas.ferre@microchip.com>, Alexandre Belloni
-	<alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>, Varshini Rajendran
-	<varshini.rajendran@microchip.com>, Alexander Dahl <ada@thorsis.com>,
-	<linux-spi@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<dmaengine@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 0/2] Add `devm_dma_request_chan()` to simplify probe path in atmel-quadspi.c
-Date: Mon, 17 Mar 2025 14:53:36 +0100
-Message-ID: <20250317135340.382532-1-csokas.bence@prolan.hu>
+To: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>, Vinod Koul
+	<vkoul@kernel.org>
+Subject: [PATCH v4 1/2] dma: Add devm_dma_request_chan()
+Date: Mon, 17 Mar 2025 14:53:37 +0100
+Message-ID: <20250317135340.382532-2-csokas.bence@prolan.hu>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250317135340.382532-1-csokas.bence@prolan.hu>
+References: <20250317135340.382532-1-csokas.bence@prolan.hu>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -73,47 +68,86 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1742219629;VERSION=7985;MC=71617524;ID=155895;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
+X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1742219631;VERSION=7985;MC=2159532761;ID=155897;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
 X-ESET-Antispam: OK
 X-EsetResult: clean, is OK
 X-EsetId: 37303A29ACD948526D7460
 
-The probe function of the atmel-quadspi driver got quite convoluted,
-especially since the addition of SAMA7G5 support, that was forward-ported
-from an older vendor kernel. To alleivate this - and similar problems in
-the future - an effort was made to migrate as many functions as possible,
-to their devm_ managed counterparts. Patch 1 adds the new
-`devm_dma_request_chan()` function. Patch 2 then uses this APIs to
-simplify the probe() function.
+Expand the arsenal of devm functions for DMA devices, this time for
+requesting channels.
 
-Change in v4:
-* split PM imbalance fix [1] and DMA cleanup [this series]
+Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
+---
+ drivers/dma/dmaengine.c   | 30 ++++++++++++++++++++++++++++++
+ include/linux/dmaengine.h |  7 +++++++
+ 2 files changed, 37 insertions(+)
 
-This series is to be applied after the PM imbalance fix [1].
-
-[1]
-https://lore.kernel.org/linux-kernel/20250317093445.361821-1-csokas.bence@prolan.hu/
-
-Links to previous versions:
-pre-series:
-https://lore.kernel.org/linux-kernel/20241222141427.819222-1-csokas.bence@prolan.hu/
-https://lore.kernel.org/linux-kernel/20250114222851.1023194-1-csokas.bence@prolan.hu/
-v1:
-https://lore.kernel.org/linux-kernel/20250115160244.1102881-1-csokas.bence@prolan.hu/
-v2:
-https://lore.kernel.org/linux-kernel/20250124085221.766303-8-csokas.bence@prolan.hu/
-v3:
-https://lore.kernel.org/linux-kernel/20250207124802.165408-1-csokas.bence@prolan.hu/
-
-Bence Csókás (2):
-  dma: Add devm_dma_request_chan()
-  spi: atmel-quadspi: Use `devm_dma_request_chan()`
-
- drivers/dma/dmaengine.c     | 30 +++++++++++++++++++++++++
- drivers/spi/atmel-quadspi.c | 44 ++++++++++---------------------------
- include/linux/dmaengine.h   |  7 ++++++
- 3 files changed, 48 insertions(+), 33 deletions(-)
-
+diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+index c1357d7f3dc6..02c29d26ac85 100644
+--- a/drivers/dma/dmaengine.c
++++ b/drivers/dma/dmaengine.c
+@@ -926,6 +926,36 @@ void dma_release_channel(struct dma_chan *chan)
+ }
+ EXPORT_SYMBOL_GPL(dma_release_channel);
+ 
++static void dmaenginem_release_channel(void *chan)
++{
++	dma_release_channel(chan);
++}
++
++/**
++ * devm_dma_request_chan - try to allocate an exclusive slave channel
++ * @dev:	pointer to client device structure
++ * @name:	slave channel name
++ *
++ * Returns pointer to appropriate DMA channel on success or an error pointer.
++ *
++ * The operation is managed and will be undone on driver detach.
++ */
++
++struct dma_chan *devm_dma_request_chan(struct device *dev, const char *name)
++{
++	struct dma_chan *chan = dma_request_chan(dev, name);
++	int ret = 0;
++
++	if (!IS_ERR(chan))
++		ret = devm_add_action_or_reset(dev, dmaenginem_release_channel, chan);
++
++	if (ret)
++		return ERR_PTR(ret);
++
++	return chan;
++}
++EXPORT_SYMBOL_GPL(devm_dma_request_chan);
++
+ /**
+  * dmaengine_get - register interest in dma_channels
+  */
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index 346251bf1026..ffb54b52ef0c 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -1528,6 +1528,7 @@ struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
+ 
+ struct dma_chan *dma_request_chan(struct device *dev, const char *name);
+ struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask);
++struct dma_chan *devm_dma_request_chan(struct device *dev, const char *name);
+ 
+ void dma_release_channel(struct dma_chan *chan);
+ int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps);
+@@ -1564,6 +1565,12 @@ static inline struct dma_chan *dma_request_chan_by_mask(
+ {
+ 	return ERR_PTR(-ENODEV);
+ }
++
++static inline struct dma_chan *devm_dma_request_chan(struct device *dev, const char *name)
++{
++	return ERR_PTR(-ENODEV);
++}
++
+ static inline void dma_release_channel(struct dma_chan *chan)
+ {
+ }
 -- 
 2.48.1
 

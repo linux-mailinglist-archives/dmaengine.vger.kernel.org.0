@@ -1,155 +1,93 @@
-Return-Path: <dmaengine+bounces-4755-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4757-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 19C7EA651E1
-	for <lists+dmaengine@lfdr.de>; Mon, 17 Mar 2025 14:54:29 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12163A69D39
+	for <lists+dmaengine@lfdr.de>; Thu, 20 Mar 2025 01:27:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 104483A9112
-	for <lists+dmaengine@lfdr.de>; Mon, 17 Mar 2025 13:53:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BBD3690046B
+	for <lists+dmaengine@lfdr.de>; Thu, 20 Mar 2025 00:26:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8679223ED6F;
-	Mon, 17 Mar 2025 13:53:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C68663594B;
+	Thu, 20 Mar 2025 00:27:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="FR70WLvu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BqqwMNDO"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E178523ED62;
-	Mon, 17 Mar 2025 13:53:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 900432F28;
+	Thu, 20 Mar 2025 00:27:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742219636; cv=none; b=hQpJB/pgDVReiFsV+QOSaFBP8GeLbGAvfKPkAKcYHgQ9XcI4XdtuVCDlnEqiWj2t3NND3US9d0MOPqT98g3rvQHCxd8Oy6EhDPP0xkMJz4oYnQRQ+97jW8A60Y/g56Cj8TF13JMwQJA82GiwO0F3oLnRWegEnYKxWvXqck6Axcs=
+	t=1742430420; cv=none; b=je0ZAS/+Hprj0CyQ/m4lZjdRtAHZXLoB4SGic3+84K856nQnsAm0BEcU7AZMSR24ZucKOGSmOhx9HuXfLW2SFCZSxXvOKHMDu7O+XV2bt7asTc6c5x9hXjvGZ+hdI4l2MUbodTFCch0VxgKKy3ttKoBBTG2bf1gE6fd2Nsd6Qis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742219636; c=relaxed/simple;
-	bh=8o2FV10LXPS4y7YD+bAR/nC38xtiWW6pVIGBKd15Qgc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ffe1obXIkzq1YkqHzkg3UfzU34pqFB3CY0HdHUcSTTQYbiy/WC+MLpMeK6XCX9fe1qAcjqY/3v8abhYWX8tkOP0zLYt4zKW0ce78McLZVQKzskROdmNPRxU4GSYXSvpUqP1SHeYZxWyvmdpnN4eiFRyio/L1SPUQQ3H9wY/+0LE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=FR70WLvu; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id BEAA7A0467;
-	Mon, 17 Mar 2025 14:53:51 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=mail; bh=0o1CqcnBoa+erxXQ17CZ
-	+o4z6tIXyZBWdDbU2LmsN1k=; b=FR70WLvufFS1XAW4FDl9sbvqGKaMAd556gTP
-	HHK3QzFWZXQJmhHdrlN7wd6SfDae3q+/TyJXn324oJy+/nEC6WRLPXpHbQgDCu8j
-	jkCsfKwSxSl5L+dA8G4UshCyxMdbjCBf2Hd5CIwI0N3yNF908QdK7sMkwdwVEBRh
-	mBg/KQrJgyJxDKliq80tPPvsF6wLHqiQx6ccVbMIrim3DiKA5sBiVG08NcuY0WLv
-	aEPPrPR5Xs+BL/M0B27hjFk5+lNtZbKe1NSfKTRthkbNzOKHzl434ot8Dk0a0O4I
-	guxQciGRCFDCCrgDQfMQ8c7H7n+SNLkHKQ79OMvp9Wn2vjkipdzqE94zxYCO12HA
-	7Ort2EGIsRtlt0Jh+x1/qF9xyqt1ksAMJ8x1dyoujWAZ3SwDr8338DoPkx9WMoH1
-	53NJbgI4H+3+TSvBWzNfkGR0uhYU2Sw7vCiGBwQnueT7c/VHZB2jdLxePGSuMfGP
-	qLog3rMy8YaEbKwu7Oq/9ScZiOu8qdno4EQQzk2Dkz1MGje9U0rHa+2YTWwbbYv8
-	DqCrfFJlhyjXztE4FV+XoaZ8EzPjPheS7fxHeq+nME+WEhfDT0FgiBjQRHlUrk4k
-	67pRzl1EhR4G09+XTfLjioaQSJ60TWQbtCIHJNkoLGHWFsgnyT6zBLh41q+ClHHb
-	rV4YvZs=
-From: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
-To: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>, Vinod Koul
-	<vkoul@kernel.org>
-Subject: [PATCH v4 1/2] dma: Add devm_dma_request_chan()
-Date: Mon, 17 Mar 2025 14:53:37 +0100
-Message-ID: <20250317135340.382532-2-csokas.bence@prolan.hu>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250317135340.382532-1-csokas.bence@prolan.hu>
-References: <20250317135340.382532-1-csokas.bence@prolan.hu>
+	s=arc-20240116; t=1742430420; c=relaxed/simple;
+	bh=IzJC/y24HF2nc/AgwvbD+AJQstykALpjbfnse7+w71M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GLM+wpC+r1vmgoUkX3KYHIrmkSfzTp71q9OIiJlXHrpUNLxI0J0FW00tr/RpphbBmjbifnStEtlabeHhphpR8dcMDS5Xg3jcbUV+yYXbgISaenUn1IEz1yYKpCFHjUrBJRDiph4trJM9arpMvb+w2S72VV2huRf6LBf0uL5/UWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BqqwMNDO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 756E0C4CEE4;
+	Thu, 20 Mar 2025 00:26:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742430420;
+	bh=IzJC/y24HF2nc/AgwvbD+AJQstykALpjbfnse7+w71M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BqqwMNDOmTR/QbEME0HxaXTn4E2RWoLaUNqJ0W+IjXF1YNNBV1+eHKbROgOH9Emew
+	 pIEwi2ZKKUad8pDyBYIp0/KWrLK9Wc8GwxAU3BI4SF6BdvkfbxUU9EDVuHxAl1jEAR
+	 bcRgDbXQo2kS3Vr0YdybuovvHeKZqo320MjI2fAuXl1TmlLj2QZwKVSir+2J2btmEb
+	 j4ZgaETZILgdPowAIWff/KhFJ3fImx7sRFnECxFvu4hmpobVhSwLTubUz7GC0upOUx
+	 0eT2TP1ieLlk1kx6k2sKWubH/yJRXB84tlyEAoy/TBdSEcTLH++yF4aL+/X0mBs36Q
+	 WnCLNqrr9Oe/g==
+Date: Thu, 20 Mar 2025 01:26:57 +0100
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>, 
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, quic_msavaliy@quicinc.com, 
+	quic_vtanuku@quicinc.com
+Subject: Re: [PATCH v5 RESEND 1/2] dmaengine: qcom: gpi: Add GPI Block event
+ interrupt support
+Message-ID: <sni4bawucwkeyy7lh45p364ngv6bjomv7wxq3qjek2mjd7ucal@tfoeom2qohj2>
+References: <20250212120536.28879-1-quic_jseerapu@quicinc.com>
+ <20250212120536.28879-2-quic_jseerapu@quicinc.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1742219631;VERSION=7985;MC=2159532761;ID=155897;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
-X-ESET-Antispam: OK
-X-EsetResult: clean, is OK
-X-EsetId: 37303A29ACD948526D7460
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250212120536.28879-2-quic_jseerapu@quicinc.com>
 
-Expand the arsenal of devm functions for DMA devices, this time for
-requesting channels.
+Hi,
 
-Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
----
- drivers/dma/dmaengine.c   | 30 ++++++++++++++++++++++++++++++
- include/linux/dmaengine.h |  7 +++++++
- 2 files changed, 37 insertions(+)
+On Wed, Feb 12, 2025 at 05:35:35PM +0530, Jyothi Kumar Seerapu wrote:
+> GSI hardware generates an interrupt for each transfer completion.
+> For multiple messages within a single transfer, this results in
+> N interrupts for N messages, leading to significant software
+> interrupt latency.
+> 
+> To mitigate this latency, utilize Block Event Interrupt (BEI) mechanism.
+> Enabling BEI instructs the GSI hardware to prevent interrupt generation
+> and BEI is disabled when an interrupt is necessary.
+> 
+> When using BEI, consider splitting a single multi-message transfer into
+> chunks of 8 messages internally and so interrupts are not expected for
+> the first 7 message completions, only the last message triggers
+> an interrupt, indicating the completion of 8 messages.
+> 
+> This BEI mechanism enhances overall transfer efficiency.
+> 
+> Signed-off-by: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
 
-diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-index c1357d7f3dc6..02c29d26ac85 100644
---- a/drivers/dma/dmaengine.c
-+++ b/drivers/dma/dmaengine.c
-@@ -926,6 +926,36 @@ void dma_release_channel(struct dma_chan *chan)
- }
- EXPORT_SYMBOL_GPL(dma_release_channel);
- 
-+static void dmaenginem_release_channel(void *chan)
-+{
-+	dma_release_channel(chan);
-+}
-+
-+/**
-+ * devm_dma_request_chan - try to allocate an exclusive slave channel
-+ * @dev:	pointer to client device structure
-+ * @name:	slave channel name
-+ *
-+ * Returns pointer to appropriate DMA channel on success or an error pointer.
-+ *
-+ * The operation is managed and will be undone on driver detach.
-+ */
-+
-+struct dma_chan *devm_dma_request_chan(struct device *dev, const char *name)
-+{
-+	struct dma_chan *chan = dma_request_chan(dev, name);
-+	int ret = 0;
-+
-+	if (!IS_ERR(chan))
-+		ret = devm_add_action_or_reset(dev, dmaenginem_release_channel, chan);
-+
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	return chan;
-+}
-+EXPORT_SYMBOL_GPL(devm_dma_request_chan);
-+
- /**
-  * dmaengine_get - register interest in dma_channels
-  */
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index 346251bf1026..ffb54b52ef0c 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -1528,6 +1528,7 @@ struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
- 
- struct dma_chan *dma_request_chan(struct device *dev, const char *name);
- struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask);
-+struct dma_chan *devm_dma_request_chan(struct device *dev, const char *name);
- 
- void dma_release_channel(struct dma_chan *chan);
- int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps);
-@@ -1564,6 +1565,12 @@ static inline struct dma_chan *dma_request_chan_by_mask(
- {
- 	return ERR_PTR(-ENODEV);
- }
-+
-+static inline struct dma_chan *devm_dma_request_chan(struct device *dev, const char *name)
-+{
-+	return ERR_PTR(-ENODEV);
-+}
-+
- static inline void dma_release_channel(struct dma_chan *chan)
- {
- }
--- 
-2.48.1
+Acked-by: Andi Shyti <andi.shyti@kernel.org>
 
+Vinod any chance you can check this patch, please?
 
+Andi
 

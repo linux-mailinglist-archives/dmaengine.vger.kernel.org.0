@@ -1,55 +1,56 @@
-Return-Path: <dmaengine+bounces-4767-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4768-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 75DB7A6CCC2
-	for <lists+dmaengine@lfdr.de>; Sat, 22 Mar 2025 22:39:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7081DA6CE54
+	for <lists+dmaengine@lfdr.de>; Sun, 23 Mar 2025 09:31:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DB713188FF31
-	for <lists+dmaengine@lfdr.de>; Sat, 22 Mar 2025 21:39:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F0F1E188EDD8
+	for <lists+dmaengine@lfdr.de>; Sun, 23 Mar 2025 08:31:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A53191EF38A;
-	Sat, 22 Mar 2025 21:39:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23B1D17BEB6;
+	Sun, 23 Mar 2025 08:31:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="jmU14P3a"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="VIMimFAi"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.smtpout.orange.fr (smtp-28.smtpout.orange.fr [80.12.242.28])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06BF8481A3;
-	Sat, 22 Mar 2025 21:39:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8685C3FD1;
+	Sun, 23 Mar 2025 08:31:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742679556; cv=none; b=keOZOMSqKVgez5eK90F96pjo9fvoxXt99e9FDGMvytiOIymH18iShwkzLorT78ynw8lmEK/tbfYbZMYrQtewhwd1upfDLccaDMEtQcBZhxQ/NDFAWZ1zm8flLKWTf49PeWDW8daJZA8wqWYoz3PYpRt21sKilHJcE17GzmLZB6A=
+	t=1742718676; cv=none; b=FcGziBtzbsWD7Dy0FzIMu5YBkmH5/fa/AzOR/M10v48LS30s4Hw4kq2ORpm6JQctXlYLngRgKDLrZzEunCrx8LxyQCSApbzF0iqyhXxoS9Tdczo7n1AaU3b3fEw42Kt8P6U8NnXB6dot3Rm44Yz23w5L2t+crEBFm9J/ho3STk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742679556; c=relaxed/simple;
-	bh=ey3g6nGUBCIH6tf4twd1/6puXRbl6nW4ZWV5q1/KhPs=;
+	s=arc-20240116; t=1742718676; c=relaxed/simple;
+	bh=DYPNU7IrXM3BAA5bDt9np5+DeRI7TeRzLYJArUf3A84=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MMT7cYr/SlQKfsNQodpZ6cgJrXWMmDOW2FBeh/SUbx2KfS9IpAiCmvs32gMAq5bPopRR3cAsK+qzuqwChFXwqjqW/Qt4v4jFPl2UqrKZgGZE+O8/MbInzOLmNTnvcXDJT0b0mwgldfz0xcWOZOoql3lUVYZaRXlbSrqUorpFvdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=jmU14P3a; arc=none smtp.client-ip=80.12.242.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
-Received: from [192.168.1.37] ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id w6XTtGGb67I4cw6XWtwDSM; Sat, 22 Mar 2025 22:38:02 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1742679482;
-	bh=1jP1iD/XB5t52+KeZ1FsE4W0vWyW8Ips9m8Lf+NGpwE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=jmU14P3aY7umyeNggwmyo3m3SSEPB7x7iI9RakbnjWSc7xkOvb1vVF4ih0Mw0PHwJ
-	 jCRI/cSo9UCOV8YFL4MGU01vkq2IA63Vo7PXpMRBlJq3uPNc94NJfhYu9vtSvQeVDS
-	 3bz0TDBvtHn+2m3Di7r/BMKo2lI30qENa+N/v2ST4GUUJ5GVjQ1X0KA2NKiDXdOcfN
-	 A2Q+AjZNvVfPqheMeUWb/Q7z2wQIdUVDPX2us8iLwNRjVfn8Y2SRPExz2Oh1+SfX03
-	 UqufGvWPz4SHYI1PCpPXfAgEPMOHGpf3TN19VQTsNmw8p2C+FqDX1DxbQCnu2ILpmd
-	 y4YU0IykOxLTw==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Sat, 22 Mar 2025 22:38:02 +0100
-X-ME-IP: 90.11.132.44
-Message-ID: <071b4cf6-df18-4232-b2ae-6b8bee48899d@wanadoo.fr>
-Date: Sat, 22 Mar 2025 22:37:55 +0100
+	 In-Reply-To:Content-Type; b=GCf5XvqtnxmgmdSj3GBjfSHFkFagX12LPPXU8UdQx2x9qweN5k7ZYwGPy9sNmJoYOsSVP7K7UmM/PK9ePNkJeqSI+slSfPelCMWc/BuEMaaIvgBlYoKUBsSHFnb1YeXVMGg+Nw39JR/15vtMqptNNNharj/aTUDZQ3IasxgfI7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=VIMimFAi; arc=none smtp.client-ip=212.227.15.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1742718653; x=1743323453; i=markus.elfring@web.de;
+	bh=DYPNU7IrXM3BAA5bDt9np5+DeRI7TeRzLYJArUf3A84=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=VIMimFAiNYiWnto0HLD9gvyhH9Teq0oGbpaxVZz2KUd3uAZJ+3dRIb8lZhbyXlSo
+	 XbVlSPYaQ46JkHNu55JWfsn9x7p54idTHIHGT3C+uQyYDSXjUDpBuGoLETTq4HSRK
+	 3Nx5U0VOAkqJAcCXZcgF2K3TcFnlBj4q8S4k0dKU5zpKnsLiLN+oDxSHQ78gKwbYe
+	 jSLDikgNjpOKSL1lH8lY/VrCFdZL4HNKFv+4fHCyzxIjVF/Q558C7Wc0qk+KivlRP
+	 66DCXJMxBBHvXJ8kXjbJdQpLjUsBJm4SRcY2jQQz7Ik6abcn8mbGSEuObXrneagh1
+	 zrti/qqb1UWxxq4Gug==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.71]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MNwjc-1tY1m12DLU-00MYlX; Sun, 23
+ Mar 2025 09:30:53 +0100
+Message-ID: <352b3fb3-0acd-44bf-8f69-cf72b5d27e67@web.de>
+Date: Sun, 23 Mar 2025 09:30:21 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -59,130 +60,58 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v5] dma-engine: sun4i: Use devm functions in probe()
 To: =?UTF-8?B?QmVuY2UgQ3PDs2vDoXM=?= <csokas.bence@prolan.hu>,
- dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
-Cc: Markus Elfring <Markus.Elfring@web.de>, Chen-Yu Tsai <wens@kernel.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>, Chen-Yu Tsai <wens@csie.org>,
- Vinod Koul <vkoul@kernel.org>, Samuel Holland <samuel@sholland.org>
+ dmaengine@vger.kernel.org, linux-sunxi@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org
+Cc: LKML <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@kernel.org>,
+ Chen-Yu Tsai <wens@csie.org>,
+ Christophe Jaillet <christophe.jaillet@wanadoo.fr>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>, Vinod Koul <vkoul@kernel.org>,
+ Samuel Holland <samuel@sholland.org>
 References: <20250322193640.246382-2-csokas.bence@prolan.hu>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
 In-Reply-To: <20250322193640.246382-2-csokas.bence@prolan.hu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Eok7N/ZFTQPH/RQ/eVBr6b5jC0i/dy6yeFBhBmj57IReVHa0aDa
+ qbRh06yLzMUPZpKRncmU9SPEssGx7qTPaLN58ZKELTkKtXRah2HhmLxfGLqRP8kASsuZjqE
+ YX6u3nQqKtsYrc3G8wAAD8/NVbBcmZxvwqbTdW848BaJ3Cd5ITThEsNw7/+fVitGEU5Pjaj
+ LMubty8hVyW9lL23kL2HQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:dAswLujEvUw=;9KVLCGNHyqed/0kFl03BZHn51pP
+ JtULO5FjGC71GnLRkuJmDwVcaad3GtJ4sWROV/cHrnK7YVqurRfU2JOMy4wa/qMTUiClKb+XM
+ i5dDhKLnihGijJ8rcUtOCqsj4L7Hwd5gV3kfI8Tn2tYl1RxH7YIXUdaw2uWR5Rh/fnzEJEXvK
+ F81r6T3K2M38M0s5r+kag2r5+y/blWAzlfaGLM2KZMQbrYIWz7GZDwld0VRqnkQEdzMUtjSJc
+ SYpb3O+zoLnvBHzS/HZWb2ly80REu8e4+YDIrGz/VwGpGNyOwEsjWAE5qRx5Dy77TWUKVoJlc
+ ULI6XFoiu2Wlj6qaLUIZw1Chh2u2m3Eh7rI+xUWqV5h75M9omCyks454bw7E1o6iqkJi9BXIL
+ K//cFsuR/OR3NodNia2/feiIq4anuYEJCgjkaHvoyUb15KcMAzADYR9giYsbVfpOF4MSHPtPr
+ /CayK9cXHUdjrE1yiCmB/EeMp8u7IAv7vmGQKi2z5w1RXAM/PndOBUJ1bjjm6c0GOGfNZnM8I
+ dlZm5SVpF+TTZPiRlHURFekB7dPJwckgUvVsyoSGMCR2+5lCU+zg5h3akxB7l0gJgYrap0qT3
+ rA078/SRxVSZ4+TKQo9JfxQKeFdGvhQlrg4L/dXG+YiSHJHuQA87/Q7BNyBKaAL7P/L/hNueB
+ YeIPyne+LcjWdgwbjyoPKnxf0R87h9zjXcXAEHxahhOvQHe6dbtqVFmGH38Yslsr7ZjyOhDnH
+ AmTvOWHy/U52vph3+/wvBHKr8IDkji5u2MF0RLMXfoy36/roocdliXxwWWKJ/3kz5X73wsQ7U
+ w/DBxqw0BeEQcARYeFvZZ3us2Kfuxf7JUd5OUu/omDgTmMnN8rCmZqhSlstBa320ibbW71OWg
+ iQJ0sdevcI8hxxwhhvXLUpP+XgpW4EjE+8olxJt4KPMmDI3pKMWh7XiqhiY/Vga/9Z4sB68zo
+ H4f1LWoKLEokg5BUrImjEa5hXR7V9kaMQOTKvBLYJQjGmFOjC9pe1QKz8QMNX+epWUGjYZg2j
+ R4LBji5Q9iu56kK7eU4znvoqYJO3gl80PC2EGY9KNbK3F0gMtg0a/V6960lHC2zizRC0YRN7d
+ NL7JRaJFD6NRpOQUfibofYIZ2U3Q9+feRQ+7Z07DZFNlKfS7y3b3g7cOmQfLfPyKDDlJ9y2MU
+ Tt1clxt3Vzf5C0ifJuZ15d+ai5xc7EKUMK6yEsPDL0wKGQQBEb20E5E3LBzSZqaEghN0tNwO6
+ T60z+pO9Dg/tzBBm09OGl4SoBDDn71XfRC/RVj8Aj0Mc9EwkkCmMy6895zcUs/HxHh6hV5uQ6
+ Y7eOwdpEsK1uEuvicb+i9S5vyUyEVHftT8+KII2Z2tOB0cKfnUqGFPufTkNCG4qR2VpxtzemQ
+ nX/ennEcACKse+LcnHz3F0gozgCj3XZS62TNtHsvZfacf88YpEwxp/bnSL/G+QLmxI4hPIORc
+ 6/5rd2dDXQkXKBU3k+zvybNZ7oFsjE8VZl57nu2g7H+SOomBx5Ye4ZOTdMH6I8aE/nD+u6Q==
 
-Le 22/03/2025 à 20:36, Bence Csókás a écrit :
-> Clean up error handling by using devm functions and dev_err_probe(). This
-> should make it easier to add new code, as we can eliminate the "goto
-> ladder" in probe().
-> 
-> Suggested-by: Chen-Yu Tsai <wens@kernel.org>
-> Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
-> Acked-by: Chen-Yu Tsai <wens@csie.org>
-> Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
-> ---
-> 
-> Notes:
->      Changes in v2:
->      * rebase on current next
->      Changes in v3:
->      * rebase on current next
->      * collect Jernej's tag
->      Changes in v4:
->      * rebase on current next
->      * collect Chen-Yu's tag
->      Changes in v5:
->      * reformat msg to 75 cols
->      * keep `\n`s in error messages
-> 
->   drivers/dma/sun4i-dma.c | 31 ++++++-------------------------
->   1 file changed, 6 insertions(+), 25 deletions(-)
-> 
-> diff --git a/drivers/dma/sun4i-dma.c b/drivers/dma/sun4i-dma.c
-> index 24796aaaddfa..59ecebfc8eed 100644
-> --- a/drivers/dma/sun4i-dma.c
-> +++ b/drivers/dma/sun4i-dma.c
-> @@ -1249,10 +1249,9 @@ static int sun4i_dma_probe(struct platform_device *pdev)
->   	if (priv->irq < 0)
->   		return priv->irq;
->   
-> -	priv->clk = devm_clk_get(&pdev->dev, NULL);
-> +	priv->clk = devm_clk_get_enabled(&pdev->dev, NULL);
->   	if (IS_ERR(priv->clk)) {
-> -		dev_err(&pdev->dev, "No clock specified\n");
-> -		return PTR_ERR(priv->clk);
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(priv->clk), "Couldn't start the clock\n");
+> Clean up =E2=80=A6 and dev_err_probe(). =E2=80=A6
+I find it more reasonable to offer such a change in a separate update step=
+.
+https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
+e/Documentation/process/submitting-patches.rst?h=3Dv6.14-rc7#n81
 
-I think that it would be better to keep the message on another line, to 
-avoid too long lines.
 
->   	}
+Will it be clearer to mention also the function name =E2=80=9Csun4i_dma_pr=
+obe=E2=80=9D
+in the summary phrases?
 
-In several places, now {} around a single statement looks unneeded.
-
-CJ
-
->   
->   	if (priv->cfg->has_reset) {
-> @@ -1328,12 +1327,6 @@ static int sun4i_dma_probe(struct platform_device *pdev)
->   		vchan_init(&vchan->vc, &priv->slave);
->   	}
->   
-> -	ret = clk_prepare_enable(priv->clk);
-> -	if (ret) {
-> -		dev_err(&pdev->dev, "Couldn't enable the clock\n");
-> -		return ret;
-> -	}
-> -
->   	/*
->   	 * Make sure the IRQs are all disabled and accounted for. The bootloader
->   	 * likes to leave these dirty
-> @@ -1344,32 +1337,23 @@ static int sun4i_dma_probe(struct platform_device *pdev)
->   	ret = devm_request_irq(&pdev->dev, priv->irq, sun4i_dma_interrupt,
->   			       0, dev_name(&pdev->dev), priv);
->   	if (ret) {
-> -		dev_err(&pdev->dev, "Cannot request IRQ\n");
-> -		goto err_clk_disable;
-> +		return dev_err_probe(&pdev->dev, ret, "Cannot request IRQ\n");
->   	}
->   
-> -	ret = dma_async_device_register(&priv->slave);
-> +	ret = dmaenginem_async_device_register(&priv->slave);
->   	if (ret) {
-> -		dev_warn(&pdev->dev, "Failed to register DMA engine device\n");
-> -		goto err_clk_disable;
-> +		return dev_err_probe(&pdev->dev, ret, "Failed to register DMA engine device\n");
->   	}
->   
->   	ret = of_dma_controller_register(pdev->dev.of_node, sun4i_dma_of_xlate,
->   					 priv);
->   	if (ret) {
-> -		dev_err(&pdev->dev, "of_dma_controller_register failed\n");
-> -		goto err_dma_unregister;
-> +		return dev_err_probe(&pdev->dev, ret, "Failed to register translation function\n");
->   	}
->   
->   	dev_dbg(&pdev->dev, "Successfully probed SUN4I_DMA\n");
->   
->   	return 0;
-> -
-> -err_dma_unregister:
-> -	dma_async_device_unregister(&priv->slave);
-> -err_clk_disable:
-> -	clk_disable_unprepare(priv->clk);
-> -	return ret;
->   }
->   
->   static void sun4i_dma_remove(struct platform_device *pdev)
-> @@ -1380,9 +1364,6 @@ static void sun4i_dma_remove(struct platform_device *pdev)
->   	disable_irq(priv->irq);
->   
->   	of_dma_controller_free(pdev->dev.of_node);
-> -	dma_async_device_unregister(&priv->slave);
-> -
-> -	clk_disable_unprepare(priv->clk);
->   }
->   
->   static struct sun4i_dma_config sun4i_a10_dma_cfg = {
-
+Regards,
+Markus
 

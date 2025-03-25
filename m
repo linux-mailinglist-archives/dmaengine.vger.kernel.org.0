@@ -1,56 +1,57 @@
-Return-Path: <dmaengine+bounces-4778-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4779-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CAD61A7012D
-	for <lists+dmaengine@lfdr.de>; Tue, 25 Mar 2025 14:20:45 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 14D02A70159
+	for <lists+dmaengine@lfdr.de>; Tue, 25 Mar 2025 14:22:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DDAB417B1D2
-	for <lists+dmaengine@lfdr.de>; Tue, 25 Mar 2025 13:12:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6976084455A
+	for <lists+dmaengine@lfdr.de>; Tue, 25 Mar 2025 13:12:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BDF526FA40;
-	Tue, 25 Mar 2025 12:39:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60C4226FA7A;
+	Tue, 25 Mar 2025 12:39:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="f256tSmp"
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="S9dATbHQ"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mout.web.de (mout.web.de [212.227.15.4])
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A1026F47B;
-	Tue, 25 Mar 2025 12:39:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 755B626FA6F;
+	Tue, 25 Mar 2025 12:39:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742906389; cv=none; b=g4PSLyYVSye8Lzeeg7w8xtoKsw339HLeWuP07yMvejVeuzw3BQVs1MKaPmjBsMI4EWKd6uVfIhvdwTdgOXoOgFDZdOAryvieWdREYJBQmAsgmNgK3M8YukYQFC7e/YxPyLhIVXBWCpyIjHRgdlhyJkeWbwsMSGP87gbKL9z6tKc=
+	t=1742906399; cv=none; b=o1KgXM8Ad8pYFXjbY9BFqYtJrhjBT/v2UBI51KKdJeObnxY57FAykGssxUXgecKeBBhlvqpEJcR87wW9KRbr4CD2vG30d9mpdVD2SFQ3mFdgyQ6ueiUP42BI++PNNUdwUg8AXGq7PzroY8XDi/+rcVfzhhMv2ZOX58mMPCdjCSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742906389; c=relaxed/simple;
-	bh=EJvaTHvV9TkEAhE0kh7p5puwgCBBIeP27IE9sliGY+w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cCdH0VXBG8feKi+XhD11Gl90TLED6db8RZRqR9SWmNeoNLi+WiAeCnCZfdz0AgAZaxkvy/v27/6DT+qrvoC2IKo8OxcJ3qDIwUPxIislxVh4i0a5k3Ea9/wwo8rlXE4uMcRUUyCRgdGUjly3q4yIweI8fkmbluxGMnog0Yigp2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=f256tSmp; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1742906347; x=1743511147; i=markus.elfring@web.de;
-	bh=EJvaTHvV9TkEAhE0kh7p5puwgCBBIeP27IE9sliGY+w=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=f256tSmpfUX0j5+Q4cozF60Gl9YvBzgvGaByJlOH3aMJ3c8Q+NhBHy45n7VipXli
-	 KARsEXc5TlDbfVE2+9DYAVMjud8Dgl+fOLcfQlIB8r+rvh1AWwARgfkLNqoJTPpxM
-	 4Fbg2zDF2uPqsAj0xtPKbPiF+h080QIbzJwiSUfnxiQHRaiqK3yLoh9ymSmv4NoWP
-	 l/tXs53QDL6NwNPV2Z34Qom71FwyrqhlLoG8zCHhCflCEO9h9bqGHlSnykFxbK4tU
-	 nAGcv2o9hwzproO96TJ0ydTeZSud1FqHU6zKWDNWQlEpfrHBjOaqWdcOGHp7fXtaC
-	 9qw94onFeFOGQBTQXw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.33]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1M8kEP-1u1kOQ3G3l-000Fue; Tue, 25
- Mar 2025 13:39:07 +0100
-Message-ID: <77fbff4c-443d-4ed4-8335-a6cbec6b2809@web.de>
-Date: Tue, 25 Mar 2025 13:38:57 +0100
+	s=arc-20240116; t=1742906399; c=relaxed/simple;
+	bh=8tP82OotsJmSeaPv/t9mJp2OiMqNRSJ6qjsDyEcX6/g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=KWFipGRFtOOtm8Vm6SZaGUPQzdHe3JAZPvahyk4rVkvF+CnLLEK4JKBczc7/3Qwt8f3QWdFtGLRoYJARSEXIJ6KLd6fTQ6AsQfaraHCylfnDd/ws0+fCjJk1NR/x0BrtmEMPP1w3i/J4kc2KL29+zkaqL3KH6tVMy75u5bKBJF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=S9dATbHQ; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id E788AA05BE;
+	Tue, 25 Mar 2025 13:39:52 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=mail; bh=RB9GJiRFJg6/bN2vnJM4
+	vC1ljE25oPT92TiI7BbGuH4=; b=S9dATbHQKVhWMebPspBcq6wTeWmup9sX72Kh
+	N6n2EOKfMxJ8hfo0eTHPW1XJagCC0ai0nBmCHIVy4CcHtuy/IXnIgexI30R+GdNl
+	duApg87u5HRR6AeTK/YocuQ6l0qO/UdIfXUct1soL8X9PKv9cQq0h1NBt2X0kI5q
+	+lEN+F2l2JIQI486Y6hh0CZEyKqP0TkDztsZGjlE3Uso/PHsCX1aGKhdGaqF1Rjl
+	+yZcvJGLae6yNEZgZGvIv3HmOOj4JjKAWu/0xAH4uJW4swwIiqcoJFiSrmskdLTm
+	7Y8ihLBis0RuF6MM+NSrVlSq4oBw/2dK9YHX3tSsi05orp7W06buvBssdGEA9Ovd
+	fZ2XqrL02cu625TnlTkTjrZBBs2DMjBk09f03HHe3wJhNAcqCHG5HmRSwsqLkJ0d
+	szXn94T4iai0+JUcFgko07Kg+uYwgI8hpnU+wrH90xaphxeVtGYJzCpqbXd6zy/A
+	5z8DotmD6V5RMOrH2eXdQhM8tJTAkLeUyWinSo3HCsKf8NIzqB8pJz95XaMWGHH+
+	1PqX1GnooCT3EhMYUffDfPUnOWlwoeOhS5ygusL8nLXtNLTMmYRquF+i7C7zWzVM
+	kwqMGcHByQCN9+ea0sgxkir8QTN4PyVDIzYVihd/v0s3gW9o51tuF2S0SEKD2pDk
+	+07bpVg=
+Message-ID: <bd7b31d8-be25-4dbc-9a81-4b0cccd64798@prolan.hu>
+Date: Tue, 25 Mar 2025 13:39:51 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -59,15 +60,14 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [v6] dma-engine: sun4i: Simplify error handling in probe()
-To: Julian Calaby <julian.calaby@gmail.com>,
- =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>,
- dmaengine@vger.kernel.org, linux-sunxi@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org
-Cc: LKML <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@kernel.org>,
- Chen-Yu Tsai <wens@csie.org>,
- Christophe Jaillet <christophe.jaillet@wanadoo.fr>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>, Vinod Koul <vkoul@kernel.org>
+To: Julian Calaby <julian.calaby@gmail.com>, Markus Elfring
+	<Markus.Elfring@web.de>
+CC: <dmaengine@vger.kernel.org>, <linux-sunxi@lists.linux.dev>,
+	<linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>,
+	Chen-Yu Tsai <wens@kernel.org>, Chen-Yu Tsai <wens@csie.org>, "Christophe
+ Jaillet" <christophe.jaillet@wanadoo.fr>, Jernej Skrabec
+	<jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, Vinod Koul
+	<vkoul@kernel.org>
 References: <20250324172026.370253-2-csokas.bence@prolan.hu>
  <92772f63-52c9-4979-9b60-37c8320ca009@web.de>
  <7064597b-caf7-42e2-b083-b3531e874200@prolan.hu>
@@ -75,65 +75,97 @@ References: <20250324172026.370253-2-csokas.bence@prolan.hu>
  <7afcbbee-6261-4b2f-be14-a3076746d53c@prolan.hu>
  <26e36378-d393-4fe1-938a-be8c3db94ede@web.de>
  <CAGRGNgU7t85oG3Bq7L3KjKUAbRyd6SHSM6F6BvmdXDVkbNegKg@mail.gmail.com>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
+Content-Language: en-US, hu-HU
+From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
 In-Reply-To: <CAGRGNgU7t85oG3Bq7L3KjKUAbRyd6SHSM6F6BvmdXDVkbNegKg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:9CyG8ypY5QKj6AhZu4bBlBd7xaoOmtjIcy4YmaBDsj3YqIyZhKk
- PUktB1EqYYQoHv12uD6eMe7ewOJNfdqf+a43VZcmuf+xW/B+cqjHZF1YIuddtDDM82Srbmm
- sKIaJ96U4yyml9L4xAgB/lVLUCUzDmOWhol9hSdfEJ7COscAtAsD5d/SRH8GkLAhoUcQhpn
- GcfVX89seWKeYyfg/CSlA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:2idS/XK9DaY=;OR4JaWiRAi3GuG73tU1MlMDztEJ
- 2omG9oC5KLryibGuBsLaDCnazAklLQZI6ijbJnjl1gTWn866z4XRMeq4Dy/Wrz5phvgVXsfZD
- pE2F4KZfhFvBkgtlZRU6SmXulu8bVNoa9AUx5vOxGPgEC6l8O7bud6oVScp75NUUDHaiLaZuk
- FMrttwhLGvUuoCNcIwO6FHbpQ9YX/ngBhBRXWycGwKjnpIQDiYKwtD76dp8niiwogeDKy+lHY
- eCzm/k8MG1RwZcn7twSGSCuny1I4dLb/ILowaX3xHHjq4VLKH4+2BC4lP+MVUsQVnH+YrR6Da
- AIo0rcerYZCGQqSU9QGkp6vOba+Cvqg0NR6ITIB0UXqHShjnYeUKPSHE4yvraouAGQI/7wM26
- b5wW49+aBrZ19Cwoi/YOV31HcWIKKpuv651hrFMR1GW3/cgrj9zDlmwReHodHfGerN5MlGCG/
- gCaj5eYlNU5vF+h/8h8d2UpN2PoOfKIzrBiNi3udY4WYruQcFnbjhz+KK943mRVTWGegorU0x
- R7C3gfH2W8jO9s9flcg545AeighTffx4a62AM/B+VW52uU6f+BECy+0LHw/s4bcGKQ3xgZMGe
- KsEpSN6+RBW7QBY1xyWVox2pA8NjlD/rgeZD/MohrjgbzGM23Zt0sKh+ubYXQ6sj7EEl0S+iz
- Ile0M+h76ViE43tPGnezxl1kO5m8C35aCdSPrRAt1Nr9pMHtB6zgICPlX5lCjUpouh9Q1kX4f
- /7Trl4ErBxvVb0N50ABdY/8ltifwMOveO6aci9Yfap2/7nAC6Lv78U78HoqfCseOYIFf0sLse
- +5ekVJ3Nki37L+8ZhOA2v3pfDrl77UdxQxRutFOS/kjRbsnPvJ89iidwziJ72NAUauDFdLYgj
- WGly08yr0Gg4DzGHXsVa/Zy9SwrRG5PrkCadBso65Bx1SN0RB5PlCHiSTLww1tm98BrEu6jSD
- 4uHZqC+XeRej0/673H4nZJfuDVxI8oy9TNKFz6eHmwm14vJDGdebaUAcy2xCfwmULk9vnppFa
- fh+10orUntjsg1yCZ0UnngAEX7ZDZPJfvGb2xFM7/o8+wM39TgBKbIqLjtCbRvCzLBu8+dcon
- ajsopM9cSZv0eMqsHId8B5Yze+SucoZ78k4Ond2Z6c4ySsxjYE0inVHiMJ6gVvLyEJprq5Mn4
- 9unOwHFZC9/Wt4inxSucuJJF5oH/aYpf/cOahaaMZxF/T01nOEGlpbsXoEx8/2/l1YpFXbbv7
- 6JYlomrvAemfNl5N1T5TFNRJIGDKp7HqCOtkGzReWaHSA/HLnGcAnucr7rApzjk82lcHbZyCy
- s3Y5sPcgXiDl7gWy2mAnJOojKmNrj/dPSrsW8atXGkCPLS7aLvpPNRhQL365+yzHWYlFSsEg3
- 4GTXstWJH7zilkrzHP+YDiLGPAGtBVsnRTKx02V20bLckLydpKZiLxPBcyCL42bjgdBGUR4CS
- fjsBM1lHbil8rlsvbI3D77qh6n4znPzR2GuSM4pHddlZZwOY9
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
+ ATLAS.intranet.prolan.hu (10.254.0.229)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A2980D948526C7562
 
+Hi Julian,
+
+On 2025. 03. 25. 13:20, Julian Calaby wrote:
+> Hi Markus,
+> 
+> I really wanted to keep out of this, but...
+> 
+> On Tue, Mar 25, 2025 at 8:14 PM Markus Elfring <Markus.Elfring@web.de> wrote:
+>>
+>>>> Implementation details are probably worth for another look.
+>>>
+>>> What don't you like in the implementation? Let's discuss that then.
+>>
+>> I dare to point concerns out also for the development process.
+> 
 > You're "concerned" about patch granularity, but this is not the sort
 > of thing that some random person would raise, this is the sort of
 > thing a maintainer asks for when patches are doing too many things or
-> are unreviewable. =E2=80=A6
+> are unreviewable. This is neither. It is a very simple cleanup of a
+> probe function as it says in the patch subject.
 
-May additional patch reviewers influence the software evolution another bi=
-t?
+Exactly. That's why I asked if it broke something on Markus' end, 
+because it is a really specific thing to nitpick about, especially in a 
+changeset this small. So far, he did not indicate the *reasons* why he 
+thinks this should be split further.
 
-
-=E2=80=A6
->>> What do you mean? =E2=80=A6
-=E2=80=A6
+> Futhermore, this already has an ack from the maintainer of this file.
+> This indicates that they're happy with it and no significant changes
+> are required. This is also version 6 of the patch, if the maintainer
+> was concerned about this, they'd have already provided some clear
+> guidance on this. If you check previous versions of this patch, no
+> such requests have been made.
+> 
+> Your only other "concern" had already been addressed as has already
+> been pointed out to you.
+> 
+>>>> Please distinguish better between information from the “changelog”
+>>>> and items in a message subject.
+>>>
+>>> What do you mean? The email body will be the commit message.
+>> See also:
+>> https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.14#n623
+> 
+> The email and patch structure are following the format outlined in the
+> document you link to _exactly_.
+> 
+> 
 > Once again your comments are just noise, and your insistence on
 > repeating them over and over and over and over and over again is
 > borderline harassment.
+> 
+> You have been told to stop this nonsense many many times, here's a
+> link to the most recent one:
+> 
+> https://lore.kernel.org/all/92d1a410788c54facedec033474046dda6a1a2cc.camel@sipsolutions.net/
+> 
+> Please stop sending these emails and go do something constructive with
+> your life.
+> 
+> * * * * *
+> 
+> Bence Csókás, (I hope I've got the order of your names correct)
 
-Some information needs to be repeated also according to known communicatio=
-n difficulties.
-Corresponding views might be evolving further.
+Either order works, Bence is the given name, and Csókás is the family 
+name (surname). Hungarian and Japanese order follows the scientific 
+"Surname, Given Name(s)" order, but commas broke many tools, including 
+Git < v2.46, and b4, so I switched to the germanic "Firstname Lastname" 
+format.
 
+> Please block or ignore Markus, at best he's a nuisance and at worst a troll.
 
-=E2=80=A6
-> Please block or ignore Markus, at best he's a nuisance and at worst a tr=
-oll.
-I hope that development discussions can become more constructive again.
+I'm still open to hear him out if, and only if, he can give *clear and 
+valid* reasoning on why he wants to achieve this. I'm a generally 
+understanding person. But if it's just hand-waving and linking to the 
+same page over and over again with no explanation on why he _thinks_ I 
+broke SubmittingPatches, then I will do exactly this.
 
-Regards,
-Markus
+Lastly, to all other adressees, sorry for the spam. So let's end this 
+meta-discussion here and keep the rest of the conversation professional, 
+reasoning about the technicals.
+
+Bence
+
 

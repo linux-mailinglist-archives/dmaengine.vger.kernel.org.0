@@ -1,44 +1,44 @@
-Return-Path: <dmaengine+bounces-4818-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4821-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A6FBA7BC25
-	for <lists+dmaengine@lfdr.de>; Fri,  4 Apr 2025 14:03:05 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 30AE0A7BC39
+	for <lists+dmaengine@lfdr.de>; Fri,  4 Apr 2025 14:05:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C3A0E188FFEA
-	for <lists+dmaengine@lfdr.de>; Fri,  4 Apr 2025 12:02:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9EA623BC01F
+	for <lists+dmaengine@lfdr.de>; Fri,  4 Apr 2025 12:02:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A13331E1E16;
-	Fri,  4 Apr 2025 12:02:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 709DC1EB9F4;
+	Fri,  4 Apr 2025 12:02:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Zs3jvSw0"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="wlxXMvXd"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 526991DDC12;
-	Fri,  4 Apr 2025 12:02:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB8A51E1DE7;
+	Fri,  4 Apr 2025 12:02:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743768148; cv=none; b=b3infqNIdTe2UYET5FdfRd1i4ttpMCsUW34vVuLf5THHcvfkryjlPsmk8P8tEhYIs/CPyfETD/K490xW0kY4rFqzQlz2PE/HLWOowmZed23i31/I56fbfdAoDge+wTWGVUc/KG85oU4NgIOWdpoXcwbcsIgqgjdyTjmwYzn63Nw=
+	t=1743768150; cv=none; b=iZ9LmD1VACpnQrC62UXHOJ5H0Jpi8nbGwM9T9lCvr4tWlI4uxgbWMsQC/WR/EBFrmXDGzlZ1hRL1mIXFK+NsV4bQR87habeywB5aFljPkwnYPpp0adZX1coXbs+i8KkTTNL0abCTTozZ1XhGsQRCIDDXcUyAMk6ofMWPZcucWdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743768148; c=relaxed/simple;
-	bh=yopQBOAQYTJhqtWMuYQAu77gkqRAiHoHaU/seYM4l8o=;
+	s=arc-20240116; t=1743768150; c=relaxed/simple;
+	bh=Dt6RyjDkbtfECZNsTctiSSADXgGcZPflEasijEWIUQA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oTEaDeWPJnP12GlrKAyi8AWZ4kTcAcIRW2Ugt/azG84XLM4ZEyYvYOPnK3GpOe/lSGszQ5Rm00MvjKtkBA3Vax57B0DeziQvDtrWAXQ9yAdSBwKXAJ2FZJt3mm7PpGE29mKcRKVgUz9PKr/lpbp26/AsS/CvTDmQDIYTQ7nAJf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Zs3jvSw0; arc=none smtp.client-ip=115.124.30.131
+	 MIME-Version; b=YIukme3thPileMCVxX603J8xZWaJVcBbl/Pug44cSg7V2VDj1RDCC4fbpo4aibSYR3BkCHDYHRY8ffXCr0/ypbqfYHSfT1H5dnZ+0Q/2nyinfmQj+3XWeQozY/SRsKrnLPzrDR9sLiDwJD7CoXMKHTOZJSfjDX2nXaooNED77kw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=wlxXMvXd; arc=none smtp.client-ip=115.124.30.97
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1743768143; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=RR4Rew323Ji6zCDvSypFNWCsteupqKtVTFUYw8jlo9M=;
-	b=Zs3jvSw0zw0evr4DCsrzGrwDOyNDvMDLrc7LFKmIPUKRVuOziNOPr0DSWwIlVDibYnC5Z30EH9Hsl4bjtqRbBUnOrUrJuD3GpKwjAH5aMpc2BqYTW0jTAy4eX9CcaVfoUTCRBsAgo93AjDh37avgucyDB+j4kK/zhi5yajDhFHY=
-Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WUyld5X_1743768142 cluster:ay36)
+	t=1743768140; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=E63D3a4UUFyXm/wG8nOV+rzvBCPd3HiIjLHhpke82hY=;
+	b=wlxXMvXd30XglQrMHA/XZn/BsP8Ok9oono9s0VNeqJsCCbSzb1BsimpmtcWu51+3rSypoOXd74feouSy7pCbnimBNXpH4Bs7gjjaRXD4tI9xaR5jyt9oruds38lt1JrPAKfPCaNw9qEfftEm9cDMelpAIxA3y8kgt4xuRbKuJkY=
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WUyld3p_1743768139 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Fri, 04 Apr 2025 20:02:22 +0800
+          Fri, 04 Apr 2025 20:02:19 +0800
 From: Shuai Xue <xueshuai@linux.alibaba.com>
 To: vinicius.gomes@intel.com,
 	dave.jiang@intel.com,
@@ -47,9 +47,9 @@ To: vinicius.gomes@intel.com,
 Cc: xueshuai@linux.alibaba.com,
 	dmaengine@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 6/9] dmaengine: idxd: fix memory leak in error handling path of idxd_alloc
-Date: Fri,  4 Apr 2025 20:02:14 +0800
-Message-ID: <20250404120217.48772-7-xueshuai@linux.alibaba.com>
+Subject: [PATCH v4 1/9] dmaengine: idxd: fix memory leak in error handling path of idxd_setup_wqs
+Date: Fri,  4 Apr 2025 20:02:09 +0800
+Message-ID: <20250404120217.48772-2-xueshuai@linux.alibaba.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20250404120217.48772-1-xueshuai@linux.alibaba.com>
 References: <20250404120217.48772-1-xueshuai@linux.alibaba.com>
@@ -61,67 +61,98 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Memory allocated for idxd is not freed if an error occurs during
-idxd_alloc(). To fix it, free the allocated memory in the reverse order
-of allocation before exiting the function in case of an error.
+Memory allocated for wqs is not freed if an error occurs during
+idxd_setup_wqs(). To fix it, free the allocated memory in the reverse
+order of allocation before exiting the function in case of an error.
 
-Fixes: a8563a33a5e2 ("dmanegine: idxd: reformat opcap output to match bitmap_parse() input")
+Fixes: 7c5dd23e57c1 ("dmaengine: idxd: fix wq conf_dev 'struct device' lifetime")
+Fixes: 700af3a0a26c ("dmaengine: idxd: add 'struct idxd_dev' as wrapper for conf_dev")
+Fixes: de5819b99489 ("dmaengine: idxd: track enabled workqueues in bitmap")
+Fixes: b0325aefd398 ("dmaengine: idxd: add WQ operation cap restriction support")
 Cc: stable@vger.kernel.org
 Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 Reviewed-by: Fenghua Yu <fenghuay@nvidia.com>
 ---
- drivers/dma/idxd/init.c | 24 +++++++++++++++---------
- 1 file changed, 15 insertions(+), 9 deletions(-)
+ drivers/dma/idxd/init.c | 30 +++++++++++++++++++++---------
+ 1 file changed, 21 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index f8129d2d53f1..302d8983ed8c 100644
+index fca1d2924999..80fb189c9624 100644
 --- a/drivers/dma/idxd/init.c
 +++ b/drivers/dma/idxd/init.c
-@@ -604,28 +604,34 @@ static struct idxd_device *idxd_alloc(struct pci_dev *pdev, struct idxd_driver_d
- 	idxd_dev_set_type(&idxd->idxd_dev, idxd->data->type);
- 	idxd->id = ida_alloc(&idxd_ida, GFP_KERNEL);
- 	if (idxd->id < 0)
--		return NULL;
-+		goto err_ida;
+@@ -169,8 +169,8 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
  
- 	idxd->opcap_bmap = bitmap_zalloc_node(IDXD_MAX_OPCAP_BITS, GFP_KERNEL, dev_to_node(dev));
--	if (!idxd->opcap_bmap) {
--		ida_free(&idxd_ida, idxd->id);
--		return NULL;
--	}
-+	if (!idxd->opcap_bmap)
-+		goto err_opcap;
+ 	idxd->wq_enable_map = bitmap_zalloc_node(idxd->max_wqs, GFP_KERNEL, dev_to_node(dev));
+ 	if (!idxd->wq_enable_map) {
+-		kfree(idxd->wqs);
+-		return -ENOMEM;
++		rc = -ENOMEM;
++		goto err_bitmap;
+ 	}
  
- 	device_initialize(conf_dev);
- 	conf_dev->parent = dev;
- 	conf_dev->bus = &dsa_bus_type;
- 	conf_dev->type = idxd->data->dev_type;
- 	rc = dev_set_name(conf_dev, "%s%d", idxd->data->name_prefix, idxd->id);
--	if (rc < 0) {
--		put_device(conf_dev);
--		return NULL;
--	}
-+	if (rc < 0)
-+		goto err_name;
+ 	for (i = 0; i < idxd->max_wqs; i++) {
+@@ -189,10 +189,8 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
+ 		conf_dev->bus = &dsa_bus_type;
+ 		conf_dev->type = &idxd_wq_device_type;
+ 		rc = dev_set_name(conf_dev, "wq%d.%d", idxd->id, wq->id);
+-		if (rc < 0) {
+-			put_device(conf_dev);
++		if (rc < 0)
+ 			goto err;
+-		}
  
- 	spin_lock_init(&idxd->dev_lock);
- 	spin_lock_init(&idxd->cmd_lock);
+ 		mutex_init(&wq->wq_lock);
+ 		init_waitqueue_head(&wq->err_queue);
+@@ -203,7 +201,6 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
+ 		wq->enqcmds_retries = IDXD_ENQCMDS_RETRIES;
+ 		wq->wqcfg = kzalloc_node(idxd->wqcfg_size, GFP_KERNEL, dev_to_node(dev));
+ 		if (!wq->wqcfg) {
+-			put_device(conf_dev);
+ 			rc = -ENOMEM;
+ 			goto err;
+ 		}
+@@ -211,9 +208,8 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
+ 		if (idxd->hw.wq_cap.op_config) {
+ 			wq->opcap_bmap = bitmap_zalloc(IDXD_MAX_OPCAP_BITS, GFP_KERNEL);
+ 			if (!wq->opcap_bmap) {
+-				put_device(conf_dev);
+ 				rc = -ENOMEM;
+-				goto err;
++				goto err_opcap_bmap;
+ 			}
+ 			bitmap_copy(wq->opcap_bmap, idxd->opcap_bmap, IDXD_MAX_OPCAP_BITS);
+ 		}
+@@ -224,12 +220,28 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
  
- 	return idxd;
+ 	return 0;
+ 
+- err:
++err_opcap_bmap:
++	kfree(wq->wqcfg);
 +
-+err_name:
++err:
 +	put_device(conf_dev);
-+	bitmap_free(idxd->opcap_bmap);
-+err_opcap:
-+	ida_free(&idxd_ida, idxd->id);
-+err_ida:
-+	kfree(idxd);
++	kfree(wq);
 +
-+	return NULL;
+ 	while (--i >= 0) {
+ 		wq = idxd->wqs[i];
++		if (idxd->hw.wq_cap.op_config)
++			bitmap_free(wq->opcap_bmap);
++		kfree(wq->wqcfg);
+ 		conf_dev = wq_confdev(wq);
+ 		put_device(conf_dev);
++		kfree(wq);
++
+ 	}
++	bitmap_free(idxd->wq_enable_map);
++
++err_bitmap:
++	kfree(idxd->wqs);
++
+ 	return rc;
  }
  
- static int idxd_enable_system_pasid(struct idxd_device *idxd)
 -- 
 2.43.5
 

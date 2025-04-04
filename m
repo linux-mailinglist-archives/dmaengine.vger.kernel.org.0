@@ -1,85 +1,89 @@
-Return-Path: <dmaengine+bounces-4828-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4827-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4BB2CA7BC95
-	for <lists+dmaengine@lfdr.de>; Fri,  4 Apr 2025 14:22:42 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 26957A7BC94
+	for <lists+dmaengine@lfdr.de>; Fri,  4 Apr 2025 14:22:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6AAF8189FACD
-	for <lists+dmaengine@lfdr.de>; Fri,  4 Apr 2025 12:22:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4EC9E189F8BF
+	for <lists+dmaengine@lfdr.de>; Fri,  4 Apr 2025 12:22:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40A841EFF90;
-	Fri,  4 Apr 2025 12:21:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FBA41EBA1C;
+	Fri,  4 Apr 2025 12:21:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W2e7IiXC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s1bbu8Gr"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89FBA1E51EC
-	for <dmaengine@vger.kernel.org>; Fri,  4 Apr 2025 12:21:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B40F91DACA1
+	for <dmaengine@vger.kernel.org>; Fri,  4 Apr 2025 12:21:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743769285; cv=none; b=e0pGY90U+NqKqYkuxPXN/kGk4F8jGZSEg8Tlj6uZp4xDv8KwjCFzpIz69a6UBCX/yFd0elK9VFzYgHZkKc8PCeyqZu7swrP1c3OSuCX1cnSo5oiGjKC5bco/qPgDgaHT8nsPH8OeOWz8weKXfv2R2gOC1Y++IM2ZMpQK7+s2MlQ=
+	t=1743769283; cv=none; b=Yqt+HK8JRFZMOsU9QPw1ZLac/fv7+lSZh+aztMKbL6xzL2/nk4fmLxF7DiEuCqnXYXSZGoZfUCCkcPnhOVaIoL2ErFrYEJ+wy55c++FXaHMq47CBPJ9zXczS5mezdJWtK/w3N9YBgYBpJ0AEVXUGeeeQzz85zM7LjdgRHLo8l2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743769285; c=relaxed/simple;
-	bh=5PptzN+O4dMipDdNH3CCDo5Nu5+4qV4mMTDC3UC7oNg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SZhivuHUkSO29q9SyvS3Uo8EsdRpHWAyCJbomltmToIbyyB1Rfvgv8BgrMtl4tu3MRx9jOqc4e4RaVxLSTvSEUzO0Rkf++XjQix8kpcz0IQwc0LaNR9zfuNRjm0gQCzdtX8v6iKVYWuwTEkLqrDkSvVyBJOu/9qGcIJKX7rGNQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=W2e7IiXC; arc=none smtp.client-ip=209.85.221.47
+	s=arc-20240116; t=1743769283; c=relaxed/simple;
+	bh=lkeUwkkv2l20qMI8/MMYwTQQP/7YT3AVpqsQN2tYwNQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=WDMyssVGAeSrWTcp4wtltgqCPPDloQqGP0DgKJeoA9fHbHH36JeCSf5ZqrMSvUtdxOTLyLCc+z7uASjQ62DW4r8/waeus6MmyQd9LQc/YraKy9MgytvqR8xCuuvrAZ6JMIxGoqYN/W7eeC+9kuo2v7K7sx1xbm+wH/0NunbTufA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=s1bbu8Gr; arc=none smtp.client-ip=209.85.221.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-391295490c8so163445f8f.3
-        for <dmaengine@vger.kernel.org>; Fri, 04 Apr 2025 05:21:19 -0700 (PDT)
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3912b75c0f2so187179f8f.0
+        for <dmaengine@vger.kernel.org>; Fri, 04 Apr 2025 05:21:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743769278; x=1744374078; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=QOKOdMC80B9ZgR2kKa4A3uKCR6IYOVE6PeV1L1gst64=;
-        b=W2e7IiXCk48RdXCPDtShLWS9Lf+jB37Qhe7ivmR7tIJIU0NqUT80iUkAy8KFS+ojId
-         f0A8csIP3zxAoQkt4oJYnxjWlN+930bY9bDapqlgPPWAWqTMPbS9cnu2A6eZlGuOJ48g
-         0hfoEEBSdZ9qjGRNsh3gIsimb/G1ycQbpFS5l+72y/bmHwjJG1A43I8FIBH82ilaQoda
-         +pFOG+fzmK8/ZjEUE3Rxl8lfVDSYz3/aq21ryQG5vPrfBSLtf3JDQzl+mDUC/5qieTQj
-         KlLLsdTbuqQJtN/lN+e+Q5IqmyIHN9aqJGk5yzwzrTrSI1euIAj7MgpraTvbuJQqzkXz
-         nTPg==
+        d=linaro.org; s=google; t=1743769279; x=1744374079; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/Tb6uHTtWsK1kFyxyPD5qpzEiabvnAv7+kW+ub5TJjs=;
+        b=s1bbu8GrTqMbP6pXVoITX0SE5usnyyZZqM2eFufdpnq07uJ4hYCTgR+90Cugr5Cx9R
+         mzGf6VfNvka39JV6KQYzGdJyvrulq3ZGPrOXS9EGkPuiA7I8v8klnMBbYI2GkjUcNyqI
+         x3wD+08/v0ccKjxyl+MSHN45SA64NJoBy8bYQaMq++pXVl3dK+4ubjeyy8BfqCr7AoID
+         zQmzIsbJmE83RbYQxEN8pWXbUpDWfcmN5KAiMxL+ZOyL5xyczhCJtzaM32ym9V/dpMt1
+         OK+Pom4Huq6eQ7jIVJNO/3LqbRpRXqH29lb5ay9/kNkpU89ftS101ciGCFF2IP8UKvdI
+         BpAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743769278; x=1744374078;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QOKOdMC80B9ZgR2kKa4A3uKCR6IYOVE6PeV1L1gst64=;
-        b=u2JlokvVPIxzccxD26RsnV+d18eCy0hUldYDgvnCwcm3YjLA1ks9VO0GpDq6KxKKb6
-         0JuRplI8NVv9r6GTyU2gcYg/16iXO/U3AMIJr7g5xTzSW3hbNjw/kW3IzH7hlWGB1oJI
-         72VAIcXGUQj1/FNxFpZQToQCOTrfPp0I6SfeqSWN9IxwxzEcw+smt5E2ayMVwTKCB6cr
-         yWx6bQAT1OCTvItlFqqVmeT+TOXF3nF9nMSc+pnHFs2Wdr9mvTNfO30UOLWYeijISy7s
-         YSjPWvuwAFFnyRgVgInJjBHucf+KpeoS08GwErUhS0OSZNDRADLfwjTOUoDoK7kRN3Mg
-         NSuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWSDhTuk+7stgl+7nEqdoyqxMwIpsHZeQpo0tiSf0IjlicxiinLIe7r3uBhNE2ZP9QTgMivugul9UQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3+3+YlYBdxdnNWK+9M55fT9jzVHDqEZwOvcoNUxhsXle2XXLp
-	prvIFbIG6Y3xZ01jITVEBF5X0DYU9v/n8WEHPGmmUX79VmRhyyp9AZDllMda43g=
-X-Gm-Gg: ASbGncviSlkpg4Aj7lcvAdUldv2GSoF9CqUTzYW22mWIsdTPE+ATmhRjeOOVj0sXdie
-	cwXAR1G8YCQpfWsHd2To3e5dSlUwAnRqAJ4xrr2XlBSm0QZ+6c81A/PxRdnbD6jmysNcvUCnWPE
-	GDyR12Lvwg6bNdpVySelhrmvJf95mdpiK2aE5Ijd89uDwsYXnFlsD9Bc+mpyDd1G4j5fKUymFkN
-	ghALUp4gVKLSnGC/C20mxt0NyvElG+tP0H8Qaxip9OppqQOLAW1D0hbgTHtszbC9SEGQebskyAg
-	72TrisYYhIgLHxVAAeiSLpNcQkI8t7q9VIKe7e8iijcxozyM7vmtpg==
-X-Google-Smtp-Source: AGHT+IFK5JnOLqYkjMnRXzO913j6er0HGEDwkEB73eYTE/X5Rh0zki0MaFEoC1XvaQYeqZ2DlmoXNQ==
-X-Received: by 2002:a05:6000:40c8:b0:39c:1efb:ee87 with SMTP id ffacd0b85a97d-39cba934e63mr852165f8f.12.1743769277821;
-        Fri, 04 Apr 2025 05:21:17 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743769279; x=1744374079;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/Tb6uHTtWsK1kFyxyPD5qpzEiabvnAv7+kW+ub5TJjs=;
+        b=pl3IoPzCOBEd+fATi5TtGjzkdVbQFKis2TH+OHpL3f8kti0XzzafqV56T2wfEAIFie
+         wg4PNz/FcsKCUPxhU2+E4/Uz8Z3g97HfqfSCC62WasBcifxokGnB25CBqaTGwPxj/0dt
+         iOvPiCnjXedh+p0cv//eVDMzGtlF1tP9ZJt1acFPHu0qlUwnRsDh3DS5FDeaDFndLMCD
+         1Cud9oUjXm6MQzvO/tpMiXOds1+7bWRZ/gEji3gGF8TfDEsAkjV44ZCuMv7ngi6u86T0
+         ebasGNNQkMBTEheAlYZ5DLu2iDlnPzCjHFLW9TCZP26E0z7+7oNi9nNR2FKs7FDUjBmT
+         az/w==
+X-Forwarded-Encrypted: i=1; AJvYcCW5nd++56ZV5fraApRhxseKGgrtChSUbEuK1RS56ESUFhfqlDly0pDlU0uR/cX/77EJLMebg7di4pY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2Je5ypZO40O0z13LTniFoWD40QcMEw/tUYZtmU5Yo53/WZlrX
+	A5XXZGO4fEJPyusLlpGXCEyOJlu/AelEK1uyMv1mgUs/yV9EMI2iJIQXtLT9wUY=
+X-Gm-Gg: ASbGncucQR91hOXeqThIDdzoZxpG9KE5bftXemfdXbFfYAP3n2L3/dIzUuQ6VySSn8M
+	7OJq/SVUO1eofDZBNBMxw+6qUFZVgtRnOE6AUKH8R9Nx/8hZ/TUH5GR7zo0/0V3KvXvew5nSMtv
+	59quK9hqtU+78GXc4WtYUShhM4W19kXDYdHHjkohi33tix4TbUuf89WTYhPDPAf+oL1NbDNiuRZ
+	inWKn0ELhGmwjLQhkcQ8Dkfnmet32y+qVBpmwA2mnL292TwiGhjuWNOsMBlg0idhU7jURIlFcOb
+	KQgL1MmEeHF9DVO8aIe5P/PuwZx54R2VQ7r2Ks8mtrGNg12XXmUAIw==
+X-Google-Smtp-Source: AGHT+IGOy3L1QjCpnMqGZsFw79UEPXtqI6aUxy7enKUtc7JINUL+ImbH8sjMP1fP+pTjtUkMn+AvpA==
+X-Received: by 2002:a5d:6da2:0:b0:39c:1258:b36 with SMTP id ffacd0b85a97d-39cba93d1c8mr1014525f8f.14.1743769278978;
+        Fri, 04 Apr 2025 05:21:18 -0700 (PDT)
 Received: from shite.. ([178.197.198.86])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301a6c89sm4183439f8f.28.2025.04.04.05.21.16
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301a6c89sm4183439f8f.28.2025.04.04.05.21.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 05:21:17 -0700 (PDT)
+        Fri, 04 Apr 2025 05:21:18 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 To: Vinod Koul <vkoul@kernel.org>,
 	Peter Ujfalusi <peter.ujfalusi@gmail.com>,
 	dmaengine@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 1/2] dmaengine: sh: Do not enable SH_DMAE_BASE by default during compile testing
-Date: Fri,  4 Apr 2025 14:21:13 +0200
-Message-ID: <20250404122114.359087-1-krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 2/2] dmaengine: ti: Do not enable by default during compile testing
+Date: Fri,  4 Apr 2025 14:21:14 +0200
+Message-ID: <20250404122114.359087-2-krzysztof.kozlowski@linaro.org>
 X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250404122114.359087-1-krzysztof.kozlowski@linaro.org>
+References: <20250404122114.359087-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -93,22 +97,31 @@ drivers.
 
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- drivers/dma/sh/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/ti/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/sh/Kconfig b/drivers/dma/sh/Kconfig
-index 6ea5a880b433..8184d475a49a 100644
---- a/drivers/dma/sh/Kconfig
-+++ b/drivers/dma/sh/Kconfig
-@@ -16,7 +16,7 @@ config SH_DMAE_BASE
- 	depends on SUPERH || COMPILE_TEST
- 	depends on !SUPERH || SH_DMA
- 	depends on !SH_DMA_API
+diff --git a/drivers/dma/ti/Kconfig b/drivers/dma/ti/Kconfig
+index 2adc2cca10e9..dbf168146d35 100644
+--- a/drivers/dma/ti/Kconfig
++++ b/drivers/dma/ti/Kconfig
+@@ -17,7 +17,7 @@ config TI_EDMA
+ 	select DMA_ENGINE
+ 	select DMA_VIRTUAL_CHANNELS
+ 	select TI_DMA_CROSSBAR if (ARCH_OMAP || COMPILE_TEST)
 -	default y
-+	default SUPERH || SH_DMA
- 	select RENESAS_DMA
++	default ARCH_DAVINCI || ARCH_OMAP || ARCH_KEYSTONE
  	help
- 	  Enable support for the Renesas SuperH DMA controllers.
+ 	  Enable support for the TI EDMA (Enhanced DMA) controller. This DMA
+ 	  engine is found on TI DaVinci, AM33xx, AM43xx, DRA7xx and Keystone 2
+@@ -29,7 +29,7 @@ config DMA_OMAP
+ 	select DMA_ENGINE
+ 	select DMA_VIRTUAL_CHANNELS
+ 	select TI_DMA_CROSSBAR if (SOC_DRA7XX || COMPILE_TEST)
+-	default y
++	default ARCH_OMAP
+ 	help
+ 	  Enable support for the TI sDMA (System DMA or DMA4) controller. This
+ 	  DMA engine is found on OMAP and DRA7xx parts.
 -- 
 2.45.2
 

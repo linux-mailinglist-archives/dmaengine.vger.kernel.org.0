@@ -1,132 +1,142 @@
-Return-Path: <dmaengine+bounces-4835-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4836-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 256A7A7C9ED
-	for <lists+dmaengine@lfdr.de>; Sat,  5 Apr 2025 17:32:22 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 02AC1A7CED7
+	for <lists+dmaengine@lfdr.de>; Sun,  6 Apr 2025 18:00:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E35EB7A8970
-	for <lists+dmaengine@lfdr.de>; Sat,  5 Apr 2025 15:31:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 03EBD3AFAA3
+	for <lists+dmaengine@lfdr.de>; Sun,  6 Apr 2025 16:00:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11F6D13B7A3;
-	Sat,  5 Apr 2025 15:32:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0F64218AD4;
+	Sun,  6 Apr 2025 16:00:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jVK6JF8R"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aFOKNqiB"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE337404E;
-	Sat,  5 Apr 2025 15:32:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BAAA14A82;
+	Sun,  6 Apr 2025 16:00:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743867135; cv=none; b=d36Pwr56D6G4cyCQN2SY8MZKD75n/dxTNYNElzkSQvD1kwmg/HBOBaM+AiGjH7jLnYOKU7ddmNDXHQCymIKOrjfBi1Lz2L4TvfhOwojMBTB8pdrg1VW/1yAoGhmpjzjXy5kpphZhwVQjjRbkXfJqTZ5eBoe8VcvPXROjeEwDtNE=
+	t=1743955242; cv=none; b=g2tIpV1aOJ2g2oO9j3QireDrlijAQtQCRMGIqfuFYb/Z/GS9UedcPYjUcuJifp7SHrxaoEANSmuz/92preqTNQkYTej0ZNGJwtaxBIsFXW6Wncm2T6g8n/wYJVvLtPc+fnLDUmeUapuHQg2gPvFOBLvmcq66ChMKlQTD8LcUcp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743867135; c=relaxed/simple;
-	bh=RdPSb3R/N8g0+oYT6+2V0LNQyAZKsrTfROQEnTne+ak=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=i9ukhjP9rSkq2+bxD6dDUDlaAbQAyCLWIvM2aKxmqIU+OP8jSQ1BmrFr17uEspx9SDJW/YNux1ZKpbG6loYeFOVGwoT8JpgOz3uFiHCrWMp9hgT4GD5twxzQ8c0P0jgI/2bRwoUh3SMH0YOkQN7edndpQ25C+GSBAFxQARJvtDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jVK6JF8R; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23B8AC4CEE4;
-	Sat,  5 Apr 2025 15:32:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743867134;
-	bh=RdPSb3R/N8g0+oYT6+2V0LNQyAZKsrTfROQEnTne+ak=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=jVK6JF8RzIa2fTbodJS2FISwWudNboXPBdoMoty0m2mNay6iJThuDSiveMToI7V8O
-	 6g42eS8E8LtVI1QtvaMdw0SCKHNRCfLy0HhQZ9huqFtTKXXYLeE0vgxLVvbbhyeWV9
-	 /2AcgLtXGwCv+ZtdoJsPxpFgNHty72ixEgcls3MiRRT57BMJNjgXWrqquPIHsgUjWo
-	 Xrc3yG2qtgjXemyHrcmVgYcq10cFR7TTNYhQzl+nTvdm+Ef7qp75wk6UO/6XQFrscS
-	 v1OjaKgVM6dR70zKrI+gtG7dOiGVaMpbieSrkNOSwc3LpO/u9ElY/UEveU82g3GLiz
-	 NgnIiJ3gmDWxw==
-Date: Sat, 5 Apr 2025 16:31:58 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, "=?UTF-8?B?TsOtY29s?=
- =?UTF-8?B?YXM=?= F. R. A. Prado" <nfraprado@collabora.com>, Andrew Morton
- <akpm@linux-foundation.org>, Vinod Koul <vkoul@kernel.org>, Eric Biggers
- <ebiggers@kernel.org>, "Theodore Y. Ts'o" <tytso@mit.edu>, Jaegeuk Kim
- <jaegeuk@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
- <horms@kernel.org>, Maxime Chevallier <maxime.chevallier@bootlin.com>,
- James Bottomley <James.Bottomley@HansenPartnership.com>, Jarkko Sakkinen
- <jarkko@kernel.org>, Mimi Zohar <zohar@linux.ibm.com>, Jaroslav Kysela
- <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, Richard Weinberger <richard@nod.at>, Anton Ivanov
- <anton.ivanov@cambridgegreys.com>, Johannes Berg
- <johannes@sipsolutions.net>, kernel@collabora.com, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- dmaengine@vger.kernel.org, linux-fscrypt@vger.kernel.org,
- linux-iio@vger.kernel.org, netdev@vger.kernel.org,
- workflows@vger.kernel.org, linux-integrity@vger.kernel.org,
- keyrings@vger.kernel.org, linux-sound@vger.kernel.org,
- linux-media@vger.kernel.org, linux-um@lists.infradead.org
-Subject: Re: [PATCH] docs: Remove literal markup from Documentation/ paths
-Message-ID: <20250405163158.55935fdf@jic23-huawei>
-In-Reply-To: <874iz3g6w1.fsf@trenco.lwn.net>
-References: <20250404-doc-paths-unliteral-v1-1-74718785444e@collabora.com>
-	<20250404182006.000038cc@huawei.com>
-	<874iz3g6w1.fsf@trenco.lwn.net>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1743955242; c=relaxed/simple;
+	bh=RO3Fva6C5rubffpqvk0iOcGbSHQiQfjf9ScrJ5YVv1A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ft7b3AHlyc8PugGqrPbIE3Ij21IB3PRGTJWQysu5Cg8UrF0VxuEvAhqf+v+6ATHqfQOzFPsASt61AsDl6t0HGu37Pl3CSxtnqrj1NPNIYs4d8qUCLJ1PUeq+5w0cI8KZcgWsh9/jFn09hyJamP3ly99yaKHcxO7qegnncZXeuck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aFOKNqiB; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30de488cf81so38340871fa.1;
+        Sun, 06 Apr 2025 09:00:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743955239; x=1744560039; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Rg1IZxVIsoxxnX9zNo6u1mHR3g+eGTUaEGGW7uVyRVc=;
+        b=aFOKNqiBBFUMVs5S8O3/uRNXeK+3fxLiKPsNW114obbAOe5BQUD8drZclPGYfFaprV
+         aJTvB+HT54Nwhn6JLxRQK9PpZvTB/AvdaSRudCWBOTcTPqr/k1QJB9zY8bQ+8KwgH2OH
+         K49e9Chls0Zie65pB1eTfL2fVQaUakYdmoohvjznoj3aU99W4Iw1btQcXGky02BWwnc/
+         5AaSr5r9lnfkoLknLl0GS0lJqucpQ48Fo5Tq/uzzyaF6MLkm0LF/7qEw8KBnv2APZ3p7
+         tCOJn6wh8dRReyrznVSMqIwjhKB1f5nnhmVUAJe4VZQqxPdUE0/oC26h5TNE675y4biN
+         m0gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743955239; x=1744560039;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Rg1IZxVIsoxxnX9zNo6u1mHR3g+eGTUaEGGW7uVyRVc=;
+        b=rk6roMxGajBM4UDpe1s3VP3gpAdpzDh3fiaO1RPpnQ6nzhisHY9lzvwasIy0yXnj03
+         LK299R4OHyaGzW5DoUZUySmynt8voSqeJy0X4Tpz0GQngKnmZWcqkrYCOHucKjWZxXJr
+         0YndCZ1twtw/uXTcyHJm+ECPlJJBOTvU40avkhJ5WerQE7kqPxVenbK5MZJo6zXfGzS0
+         NqmRlL6WMJA/cnJqDesTukxC82uO8CtBQ/tFC2QxYZzmXxg4OewYs8b5dUpaCKDoAoa2
+         5Cw/7+9lVb1Nr0jMYYmLnH3SC41BtBcr2Nyby+Vz8spHclxgw9ddzyBXuHlqIoRQ/pFi
+         w3pg==
+X-Forwarded-Encrypted: i=1; AJvYcCV9Tvag/cCqPNC48bZTY2XQbBKKu+tOfSRfTNWo88e2Q/AQHDCq95fcwARWmfI+qaXGS+vqOv2/Oh8=@vger.kernel.org, AJvYcCWCMVbmgN2UL3CafTFF0lu1v0QvQOZ8POssuRYpBfoYsln8UdtHLmnikqTJ/rk2qkMRIxCOyD4oro98BVc7@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzd0TyDyhF30FWUN7PPWO8OSYmRmAPT8TrFKY/aBYbP0IFS526O
+	nRcl/LOafqxxoDYLwsE3NYdCojGVY668LW9/mDliCcpfO+F89MtEMNTNaw==
+X-Gm-Gg: ASbGncuUtJ7lT5Q0VrIF8/WwATTDHE8jjkXDDEXKgWb9GNh4BkcH8U9+Ocz0dLPm90+
+	TID9Ht2/b8o2PL6XGF32oFb4debYheoG/ybmeyCPm/KvqHfyjlkn2SqqMuXoejKf3c+3jwUVzGN
+	6ftuKVJGfajTfZFgmJqHtSC/QYcwNOkZ82wAmT1H2mwPw9WhBWUIAvRQwD9t7/fJDaJ0+dRvcaW
+	XlK555UhZdMuirj0TDfSX7/P/IBtEKvXJhaVloFqz8+qoIJIlfluD4RhopwruSn5pjyygm6glJI
+	UPvYz18fa0QGFRqfzA/FAuCA0pKLXZ9SpqCBYsmAvAdsr0w/J9jXYANlmp5SmLyLOsEdhIa0362
+	af3vZIomyGLnvy0E=
+X-Google-Smtp-Source: AGHT+IHrgPYsO2t8vEWRf3ilswM+YWn+p5xb3JdNzhhTXrZUQ15d1Bb8vbY3ATHDqfRflmvR1P6QTg==
+X-Received: by 2002:a05:651c:1593:b0:30b:d4a9:947c with SMTP id 38308e7fff4ca-30f16527185mr12655981fa.24.1743955238864;
+        Sun, 06 Apr 2025 09:00:38 -0700 (PDT)
+Received: from [10.0.0.42] (host-185-69-73-15.kaisa-laajakaista.fi. [185.69.73.15])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f0313f3e2sm12956961fa.26.2025.04.06.09.00.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 06 Apr 2025 09:00:38 -0700 (PDT)
+Message-ID: <033fe56b-3f07-4fa7-98a1-84ad53034ace@gmail.com>
+Date: Sun, 6 Apr 2025 19:08:01 +0300
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] dmaengine: ti: Do not enable by default during
+ compile testing
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250404122114.359087-1-krzysztof.kozlowski@linaro.org>
+ <20250404122114.359087-2-krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
+In-Reply-To: <20250404122114.359087-2-krzysztof.kozlowski@linaro.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, 04 Apr 2025 11:42:54 -0600
-Jonathan Corbet <corbet@lwn.net> wrote:
 
-> Jonathan Cameron <Jonathan.Cameron@huawei.com> writes:
->=20
-> > On Fri, 04 Apr 2025 11:37:28 -0400
-> > N=C3=ADcolas F. R. A. Prado <nfraprado@collabora.com> wrote:
-> > =20
-> >> Given that the automarkup Sphinx plugin cross-references
-> >> "Documentation/*.rst" strings in the text to the corresponding
-> >> documents, surrounding those strings with the literal markup (``) not
-> >> only adds unnecessary markup in the source files, but actually prevents
-> >> the automatic cross-referencing to happen (as it doesn't happen in
-> >> literal blocks).
-> >>=20
-> >> Remove all the occurrences of the literal markup in
-> >> "Documentation/*.rst" paths, except when the actual source file is bei=
-ng
-> >> referred. Also change the surrounding text when needed so it reads well
-> >> both in the source and the web page (eg. 'see file Doc...' -> 'see
-> >> Doc...').
-> >>=20
-> >> Signed-off-by: N=C3=ADcolas F. R. A. Prado <nfraprado@collabora.com>
-> >> ---
-> >>  Documentation/admin-guide/mm/numa_memory_policy.rst       | 2 +-
-> >>  Documentation/admin-guide/serial-console.rst              | 2 +-
-> >>  Documentation/driver-api/dmaengine/client.rst             | 2 +-
-> >>  Documentation/driver-api/nvdimm/security.rst              | 2 +-
-> >>  Documentation/filesystems/fscrypt.rst                     | 4 ++--
-> >>  Documentation/iio/adis16475.rst                           | 4 ++--
-> >>  Documentation/iio/adis16480.rst                           | 4 ++--
-> >>  Documentation/iio/adis16550.rst                           | 4 ++--
-> >>  Documentation/iio/adxl380.rst                             | 4 ++-- =20
-> >
-> > Split patch up by subsystem would be a good thing here as we may
-> > get other changes to these docs during the cycle and resulting
-> > merge conflicts if this all goes in as one patch. =20
->=20
-> That seems like a way to add a significant amount of pain to a basic
-> (but indeed useful) cleanup patch like this.  If the relevant
-> maintainers insist on it then that's how it has to be done, but I bet I
-> could just take the whole thing through docs with almost no trouble.
->=20
-hmm.  I'll go with maybe. Let's cross fingers then.
 
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+On 4/4/25 3:21 PM, Krzysztof Kozlowski wrote:
+> Enabling the compile test should not cause automatic enabling of all
+> drivers.
 
-> jon
+The scope of compile test has changed?
+These drivers will likely not going to be compile tested from now on in
+practice on other that the platforms they are used?
+
+It gave a piece of mind to know that the code compiles on ppc/x86/etc
+also or it is no longer important sanity check?
+
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  drivers/dma/ti/Kconfig | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/dma/ti/Kconfig b/drivers/dma/ti/Kconfig
+> index 2adc2cca10e9..dbf168146d35 100644
+> --- a/drivers/dma/ti/Kconfig
+> +++ b/drivers/dma/ti/Kconfig
+> @@ -17,7 +17,7 @@ config TI_EDMA
+>  	select DMA_ENGINE
+>  	select DMA_VIRTUAL_CHANNELS
+>  	select TI_DMA_CROSSBAR if (ARCH_OMAP || COMPILE_TEST)
+> -	default y
+> +	default ARCH_DAVINCI || ARCH_OMAP || ARCH_KEYSTONE
+>  	help
+>  	  Enable support for the TI EDMA (Enhanced DMA) controller. This DMA
+>  	  engine is found on TI DaVinci, AM33xx, AM43xx, DRA7xx and Keystone 2
+> @@ -29,7 +29,7 @@ config DMA_OMAP
+>  	select DMA_ENGINE
+>  	select DMA_VIRTUAL_CHANNELS
+>  	select TI_DMA_CROSSBAR if (SOC_DRA7XX || COMPILE_TEST)
+> -	default y
+> +	default ARCH_OMAP
+>  	help
+>  	  Enable support for the TI sDMA (System DMA or DMA4) controller. This
+>  	  DMA engine is found on OMAP and DRA7xx parts.
+
+-- 
+Péter
 
 

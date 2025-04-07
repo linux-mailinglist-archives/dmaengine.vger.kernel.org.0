@@ -1,62 +1,58 @@
-Return-Path: <dmaengine+bounces-4846-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4847-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0CC46A7EBDB
-	for <lists+dmaengine@lfdr.de>; Mon,  7 Apr 2025 21:02:40 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 81917A7E9E4
+	for <lists+dmaengine@lfdr.de>; Mon,  7 Apr 2025 20:21:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0A0543AA1B7
-	for <lists+dmaengine@lfdr.de>; Mon,  7 Apr 2025 18:56:33 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C143A1888574
+	for <lists+dmaengine@lfdr.de>; Mon,  7 Apr 2025 18:17:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF0DC255E27;
-	Mon,  7 Apr 2025 18:11:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24E4A256C79;
+	Mon,  7 Apr 2025 18:11:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QQqHxKrx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IrYfDpxP"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C34EB255E26;
-	Mon,  7 Apr 2025 18:11:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E136B256C6B;
+	Mon,  7 Apr 2025 18:11:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744049489; cv=none; b=HrgU/G78z6L+56/jjeygHivnZNXFIb/M7kpipL+61h2CuP7nxIJXUXCwMQkoZAfvSGyU60k117toQQ2DVD58RONlsKTX4op54DP6TL+oVYrHfewqF4dBrEV6CGAKqFJCj/uOTC8eSTN6Od69R/IfsVZK3P+XrV5hPScrho1aCPo=
+	t=1744049497; cv=none; b=uWCWbIlv0W3xH6fbLZx6gyeTjZefLO+i+GLoZvL6CZmJniQET8cS5eXltE/R9WuCf6ATmy2kgqTvqUIUMcvEnM2aoZe/sehx/fUUjO4mDrUk/UiXExM6RX6t+XhN3mKO0TKeJ/ot7C0SPmZyYsa6fWNTlj9HjQ7LXvGsCbKn5hY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744049489; c=relaxed/simple;
-	bh=ubgTwErU6Nlpq6QQ7KcF793k4I1W9vkMulHQMS8rMqg=;
+	s=arc-20240116; t=1744049497; c=relaxed/simple;
+	bh=7fgsslfvBe3tzNlmDD3af8QNsw9Qtuj0fhgyeOJEPN4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TdV1EVDT4E6fXFbGXtv1ihUwshuAcl2hqDLTWjHSCFuStnx6nx9DNNLRECmWgcVGH37VSw2rq+0iPB6VIFZ1ia2o951Eky6kMX5T6btUIkyVrDT8Y8TE45aoTIYTfjU5DLDa0pXqFHGMf636CNiZS1wHD3vOt6yBNsZNXpseltA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QQqHxKrx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62CD6C4CEE7;
-	Mon,  7 Apr 2025 18:11:28 +0000 (UTC)
+	 MIME-Version; b=rZ3YGSpAbpKnwYgPdyH3g+scLVwvbgjsgOdkF8hdU0S2Lb8gUWoj3AjOYrJbfLEYzEkFNyUl6JFoycoATD3pxt5//Bs1MY+OlyURvySMF2OJ/GyzzeEVtweebjCbpPRq2BvG6jMwG2eFD0JtJLCQQ6xoG+BxGCrwD59127R3TAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IrYfDpxP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7CDCC4CEE7;
+	Mon,  7 Apr 2025 18:11:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744049489;
-	bh=ubgTwErU6Nlpq6QQ7KcF793k4I1W9vkMulHQMS8rMqg=;
+	s=k20201202; t=1744049496;
+	bh=7fgsslfvBe3tzNlmDD3af8QNsw9Qtuj0fhgyeOJEPN4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QQqHxKrxynEPRsyRKmiDop40+e3PWtu2k7BcsjCJaqyLBE7h5vrNTi5wEDfFjtHWH
-	 uMuF08PjR6snNFa/S25PFxE0JjMBcPBvwB2MlD1HSSgc+6LmgJ2lpNj9umcOkOIdUw
-	 mxe6zihCEoAMJaIxJi0LQJmMfj1g9lOnuNj6K2+dUzuyWiS2+Ob5TXF5uNot6kGGWN
-	 CCBjQ1Xnp9T8Qv+jaDnsSRmxbMHVw9WAWXuo6j10NF3+rc3NL2EeUWvyX/S+ikpiD/
-	 DpY897GZXRtUACtxxR/aAyrqawkrdlelXdwUIuR8NYH63kfVQfqpJCfMWkH7J/cIB4
-	 0MGVOsdX4h7Pg==
+	b=IrYfDpxPUI3/tUG/H+z6wOiMMjTb2IrLvZv/O7GIwnW7fGeHq+td9hextV03CVQC8
+	 oeGykHaUNrlZdHTMWLZZjYYycZF4uCzj2w6zW2E4kJgBWvz8D9211ba0L99sbjvy9r
+	 dYnC8TwLyT+MC8j1MEmYUZjy313v3iZpNCwUMNVtp0mD7I8LNqh0tGTlVbiEo6BPI2
+	 KcqY8itduD03gW7a2pYL9FMRper5c84cwETiv5yMuZ/8fAQFbEQaMYlgdHgEvs3I1e
+	 r6wB5QKzDJiiBMEN7umIo7w34Ys0uIurDVXIt21pR/zvF56swjMMnOvoCsSnxcaMmF
+	 J+RLqKyVuCszQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Stefan Wahren <wahrenst@gmx.net>,
-	kernel test robot <lkp@intel.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
+Cc: Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+	kernel test robot <oliver.sang@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
 	Vinod Koul <vkoul@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	rjui@broadcom.com,
-	sbranden@broadcom.com,
-	dmaengine@vger.kernel.org,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.14 12/31] dmaengine: bcm2835-dma: fix warning when CONFIG_PM=n
-Date: Mon,  7 Apr 2025 14:10:28 -0400
-Message-Id: <20250407181054.3177479-12-sashal@kernel.org>
+	dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.14 17/31] dmaengine: dmatest: Fix dmatest waiting less when interrupted
+Date: Mon,  7 Apr 2025 14:10:33 -0400
+Message-Id: <20250407181054.3177479-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250407181054.3177479-1-sashal@kernel.org>
 References: <20250407181054.3177479-1-sashal@kernel.org>
@@ -71,41 +67,49 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.14.1
 Content-Transfer-Encoding: 8bit
 
-From: Stefan Wahren <wahrenst@gmx.net>
+From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
 
-[ Upstream commit 95032938c7c9b2e5ebb69f0ee10ebe340fa3af53 ]
+[ Upstream commit e87ca16e99118ab4e130a41bdf12abbf6a87656c ]
 
-The old SET_LATE_SYSTEM_SLEEP_PM_OPS macro cause a build warning
-when CONFIG_PM is disabled:
+Change the "wait for operation finish" logic to take interrupts into
+account.
 
-warning: 'bcm2835_dma_suspend_late' defined but not used [-Wunused-function]
+When using dmatest with idxd DMA engine, it's possible that during
+longer tests, the interrupt notifying the finish of an operation
+happens during wait_event_freezable_timeout(), which causes dmatest to
+cleanup all the resources, some of which might still be in use.
 
-Change this to the modern replacement.
+This fix ensures that the wait logic correctly handles interrupts,
+preventing premature cleanup of resources.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202501071533.yrFb156H-lkp@intel.com/
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
-Link: https://lore.kernel.org/r/20250222095028.48818-1-wahrenst@gmx.net
+Reported-by: kernel test robot <oliver.sang@intel.com>
+Closes: https://lore.kernel.org/oe-lkp/202502171134.8c403348-lkp@intel.com
+Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Link: https://lore.kernel.org/r/20250305230007.590178-1-vinicius.gomes@intel.com
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/bcm2835-dma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/dmatest.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
-index 20b10c15c6967..0117bb2e8591b 100644
---- a/drivers/dma/bcm2835-dma.c
-+++ b/drivers/dma/bcm2835-dma.c
-@@ -893,7 +893,7 @@ static int bcm2835_dma_suspend_late(struct device *dev)
- }
+diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
+index 91b2fbc0b8647..d891dfca358e2 100644
+--- a/drivers/dma/dmatest.c
++++ b/drivers/dma/dmatest.c
+@@ -841,9 +841,9 @@ static int dmatest_func(void *data)
+ 		} else {
+ 			dma_async_issue_pending(chan);
  
- static const struct dev_pm_ops bcm2835_dma_pm_ops = {
--	SET_LATE_SYSTEM_SLEEP_PM_OPS(bcm2835_dma_suspend_late, NULL)
-+	LATE_SYSTEM_SLEEP_PM_OPS(bcm2835_dma_suspend_late, NULL)
- };
+-			wait_event_freezable_timeout(thread->done_wait,
+-					done->done,
+-					msecs_to_jiffies(params->timeout));
++			wait_event_timeout(thread->done_wait,
++					   done->done,
++					   msecs_to_jiffies(params->timeout));
  
- static int bcm2835_dma_probe(struct platform_device *pdev)
+ 			status = dma_async_is_tx_complete(chan, cookie, NULL,
+ 							  NULL);
 -- 
 2.39.5
 

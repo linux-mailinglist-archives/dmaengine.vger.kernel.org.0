@@ -1,46 +1,46 @@
-Return-Path: <dmaengine+bounces-4851-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4852-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 926B4A7EAFD
-	for <lists+dmaengine@lfdr.de>; Mon,  7 Apr 2025 20:44:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B5A45A7EB1A
+	for <lists+dmaengine@lfdr.de>; Mon,  7 Apr 2025 20:46:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 90CAC3AB766
-	for <lists+dmaengine@lfdr.de>; Mon,  7 Apr 2025 18:37:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ABDCE420FC2
+	for <lists+dmaengine@lfdr.de>; Mon,  7 Apr 2025 18:40:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D7BA222597;
-	Mon,  7 Apr 2025 18:15:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92A0B269D1A;
+	Mon,  7 Apr 2025 18:15:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g8dwK1lF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rcn9aMfe"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E74A7267F53;
-	Mon,  7 Apr 2025 18:15:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B9F269D13;
+	Mon,  7 Apr 2025 18:15:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744049702; cv=none; b=CEsG8pMc4gOsoyWH3q3PmpKFva3rHLid0TXmOFIYlhilNGj7oMF8rVcPkOud8DrfoUPsK9bEEeNXni4lDGqW7oRauYHpj8J1KKz19wVR8jRRRAm+EdiRl8qvCHsVkpL3pkvTOEWjxswNShjYQDhmkIollBaL0yhpMsBvbZPsSUE=
+	t=1744049727; cv=none; b=g4LFWQu8KzoUADkOfhrNj+quEgKEHDC9nU1N2OXruLFkBHyEfxB5uwInC36bpGo+IDM/cbWz/watriNWzGMyZXeaqS/TD/jhCWiRMluT7stLpghfItmIqp4h4QQU91MTn+u7dZAbCgkSiWWlSUuP20e0zbkaseFOdtskud/NlnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744049702; c=relaxed/simple;
-	bh=I7+BtqBSwD/aOxp3UhQs48Eo2OuppKK93/3YUDNmij4=;
+	s=arc-20240116; t=1744049727; c=relaxed/simple;
+	bh=wUD7pvsqiycf7WEiCUp5ChJ52uUqnZUapxNSi4IjGRY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dPT9f392G1ddVCTeAvkVdGRr97kry1fFZUDafZ2jEu2BF8HnVPtxqvlmM2REYlbqaWdYTjvfWLpH/16giNqbKBe9tTJCGqmopBRVIYTF9C/jiDdE039CDbeXU7tdvMTYCHzgUuyuA6IH6u9BqksunoaMW73rMGyvZUj7tPQw2ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g8dwK1lF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77348C4CEDD;
-	Mon,  7 Apr 2025 18:15:00 +0000 (UTC)
+	 MIME-Version; b=SAZOIm0TrzT+63xBUdfVKu8AvySOoIDE1tM2T7/CTwQES3ez/R9ZmN1muB1Uhw4eKrACyEa13/KIWOH+MGHMNc1VFv/0VX84Q3mfRK85xyZWajqKrykvWyzpzlkF+MOWVqRMJR43DUg3UqAORGfz2wKn40ZobIqBKS/9fGM6j1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rcn9aMfe; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5054AC4CEDD;
+	Mon,  7 Apr 2025 18:15:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744049701;
-	bh=I7+BtqBSwD/aOxp3UhQs48Eo2OuppKK93/3YUDNmij4=;
+	s=k20201202; t=1744049727;
+	bh=wUD7pvsqiycf7WEiCUp5ChJ52uUqnZUapxNSi4IjGRY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=g8dwK1lF0iNB/lG2u47e560yglKy+1BVyn2hqmrKhJ4WGEXLUnDb0RFY1ATrq7xeC
-	 810+abg8m9pOFiDgt8+PyFm2YFAt7spUHhOU4B4qDADaTjYR9cJlEdGHdd74spFWNF
-	 lkYvEVdyct9Hl0vzF8BBtpKGcsfYm7QQAdzPmoZTg0t2PUgvE8/DfaxTndC+ur4G2z
-	 fXrtykBzFOtRKJWCx7y78xSP9FAiMUE+mmDEFD1Fdw/YeJe5S3hnsAI2aRu0JRRl5i
-	 qXwJtFp7APQm/WIJRlB+FRm4XoiYpm+eRkMyaEyd9KdGhjMyV6hCbNAXQ/f3PspjkK
-	 +Mfx6KVQIcWSg==
+	b=rcn9aMfeMlYSA0rMZDtoMMUr7i91jlVLwn1nv5UHa3eZmX/qBXoOrF8h/nI2j/wv5
+	 UuxSEDf3VSNm1XcJWmtmsP5NCjI+U8v5t9FqowWv9RKRQtghJb7/Q3Vkbw+KdanIPO
+	 cAaZYXq5cxXjieewrxrlGHK1kaZkw3wDee0g2bEVNYhIfD+h9QFuuwjbnrV+UxRe+P
+	 b32l7KEnr79HxtOoBS+KA9O6GlQD4J+9D3rAsuVBm9VYp1hN70S7ikruuTKqufWX5M
+	 0TUFiLLQ7cVVOornZ8DU1XUS8YlYDRVXK4rvOl0qZ+Tn3Z5OaGvHmmM7iY4IvL4LND
+	 XP1f90ihd7eRw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -50,12 +50,12 @@ Cc: Vinicius Costa Gomes <vinicius.gomes@intel.com>,
 	Vinod Koul <vkoul@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
 	dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 06/13] dmaengine: dmatest: Fix dmatest waiting less when interrupted
-Date: Mon,  7 Apr 2025 14:14:40 -0400
-Message-Id: <20250407181449.3183687-6-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 5/8] dmaengine: dmatest: Fix dmatest waiting less when interrupted
+Date: Mon,  7 Apr 2025 14:15:11 -0400
+Message-Id: <20250407181516.3183864-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250407181449.3183687-1-sashal@kernel.org>
-References: <20250407181449.3183687-1-sashal@kernel.org>
+In-Reply-To: <20250407181516.3183864-1-sashal@kernel.org>
+References: <20250407181516.3183864-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -64,7 +64,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.133
+X-stable-base: Linux 5.15.179
 Content-Transfer-Encoding: 8bit
 
 From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
@@ -94,10 +94,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
-index ffe621695e472..78b8a97b23637 100644
+index f696246f57fdb..0d8d01673010c 100644
 --- a/drivers/dma/dmatest.c
 +++ b/drivers/dma/dmatest.c
-@@ -827,9 +827,9 @@ static int dmatest_func(void *data)
+@@ -828,9 +828,9 @@ static int dmatest_func(void *data)
  		} else {
  			dma_async_issue_pending(chan);
  

@@ -1,46 +1,46 @@
-Return-Path: <dmaengine+bounces-4847-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4848-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 81917A7E9E4
-	for <lists+dmaengine@lfdr.de>; Mon,  7 Apr 2025 20:21:34 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 03136A7EA33
+	for <lists+dmaengine@lfdr.de>; Mon,  7 Apr 2025 20:29:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C143A1888574
-	for <lists+dmaengine@lfdr.de>; Mon,  7 Apr 2025 18:17:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2C0F1441C90
+	for <lists+dmaengine@lfdr.de>; Mon,  7 Apr 2025 18:23:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24E4A256C79;
-	Mon,  7 Apr 2025 18:11:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CBB825D21D;
+	Mon,  7 Apr 2025 18:12:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IrYfDpxP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C7+SgSTr"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E136B256C6B;
-	Mon,  7 Apr 2025 18:11:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB0725D215;
+	Mon,  7 Apr 2025 18:12:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744049497; cv=none; b=uWCWbIlv0W3xH6fbLZx6gyeTjZefLO+i+GLoZvL6CZmJniQET8cS5eXltE/R9WuCf6ATmy2kgqTvqUIUMcvEnM2aoZe/sehx/fUUjO4mDrUk/UiXExM6RX6t+XhN3mKO0TKeJ/ot7C0SPmZyYsa6fWNTlj9HjQ7LXvGsCbKn5hY=
+	t=1744049572; cv=none; b=tIj4PgcAXg84iuDXZnZjTtZyAkRrJozzLWtnTZphytFXMJM6w/J5aL1x/Fj50KW9XeZfU/F3NOvU6UO0sNjeiOtVNRUS2JCmYHCzp82x28uCJKj+DkNNtKE9mavJY5Hd32l6o0LBGEhCRq1BSAQyfx81Be+/dq5OkytO/YgdTf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744049497; c=relaxed/simple;
+	s=arc-20240116; t=1744049572; c=relaxed/simple;
 	bh=7fgsslfvBe3tzNlmDD3af8QNsw9Qtuj0fhgyeOJEPN4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rZ3YGSpAbpKnwYgPdyH3g+scLVwvbgjsgOdkF8hdU0S2Lb8gUWoj3AjOYrJbfLEYzEkFNyUl6JFoycoATD3pxt5//Bs1MY+OlyURvySMF2OJ/GyzzeEVtweebjCbpPRq2BvG6jMwG2eFD0JtJLCQQ6xoG+BxGCrwD59127R3TAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IrYfDpxP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7CDCC4CEE7;
-	Mon,  7 Apr 2025 18:11:35 +0000 (UTC)
+	 MIME-Version; b=g9kvK86a/hhsHMtZW1OUBTZdvjd6m2sWntqWz1Bb1LUaa261Z4w7l9eSQU6DDID1nxPZSMhS5zTUEKnanHglCztfa3sMlF8g7bEJpsK45cGxfPRFPxDLoRSHcpGpiILGG/mWK9ZWL5EiuHYUhYK34PMTf8ik86ejuI3wtBwUKGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C7+SgSTr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2484C4CEE7;
+	Mon,  7 Apr 2025 18:12:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744049496;
+	s=k20201202; t=1744049571;
 	bh=7fgsslfvBe3tzNlmDD3af8QNsw9Qtuj0fhgyeOJEPN4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IrYfDpxPUI3/tUG/H+z6wOiMMjTb2IrLvZv/O7GIwnW7fGeHq+td9hextV03CVQC8
-	 oeGykHaUNrlZdHTMWLZZjYYycZF4uCzj2w6zW2E4kJgBWvz8D9211ba0L99sbjvy9r
-	 dYnC8TwLyT+MC8j1MEmYUZjy313v3iZpNCwUMNVtp0mD7I8LNqh0tGTlVbiEo6BPI2
-	 KcqY8itduD03gW7a2pYL9FMRper5c84cwETiv5yMuZ/8fAQFbEQaMYlgdHgEvs3I1e
-	 r6wB5QKzDJiiBMEN7umIo7w34Ys0uIurDVXIt21pR/zvF56swjMMnOvoCsSnxcaMmF
-	 J+RLqKyVuCszQ==
+	b=C7+SgSTrvXdSNQl0pos8E95niihgThoVAqPx1P5swC1Lb7amGYC1V/+eNrnoTHygI
+	 I6r+1VlmMycdGkc8VNmSTJDBiZ0B8PXKo6VxBHtGI/lIwPzDVmmYdrFco4xfLAFn1N
+	 4kGaqDhj7kY70OTvuXt0lXRfylylGL1oE5dkgDaAsVtVfhMwF9tdoQX3FhNe9oZ0r+
+	 vmW9VjNJI8Lk3HsMIRakRXC/UTpucD5iFcYtoRb3UxtPjOTvWNm9BeIWtuQHHFNPfq
+	 5A1UlLBDa4TycZQIEqBUDXOp3nZ9q0MT2B1EchEJ8UTaNQIyG30dGnox1vto8oYJED
+	 XcrA0EA7Mz84g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -50,12 +50,12 @@ Cc: Vinicius Costa Gomes <vinicius.gomes@intel.com>,
 	Vinod Koul <vkoul@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
 	dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.14 17/31] dmaengine: dmatest: Fix dmatest waiting less when interrupted
-Date: Mon,  7 Apr 2025 14:10:33 -0400
-Message-Id: <20250407181054.3177479-17-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.13 14/28] dmaengine: dmatest: Fix dmatest waiting less when interrupted
+Date: Mon,  7 Apr 2025 14:12:04 -0400
+Message-Id: <20250407181224.3180941-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250407181054.3177479-1-sashal@kernel.org>
-References: <20250407181054.3177479-1-sashal@kernel.org>
+In-Reply-To: <20250407181224.3180941-1-sashal@kernel.org>
+References: <20250407181224.3180941-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -64,7 +64,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.14.1
+X-stable-base: Linux 6.13.10
 Content-Transfer-Encoding: 8bit
 
 From: Vinicius Costa Gomes <vinicius.gomes@intel.com>

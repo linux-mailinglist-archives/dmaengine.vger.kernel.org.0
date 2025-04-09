@@ -1,116 +1,107 @@
-Return-Path: <dmaengine+bounces-4860-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4861-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9C24DA818FE
-	for <lists+dmaengine@lfdr.de>; Wed,  9 Apr 2025 00:48:50 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D677A81CF2
+	for <lists+dmaengine@lfdr.de>; Wed,  9 Apr 2025 08:19:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 750463A69C1
-	for <lists+dmaengine@lfdr.de>; Tue,  8 Apr 2025 22:47:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B6170188E643
+	for <lists+dmaengine@lfdr.de>; Wed,  9 Apr 2025 06:19:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B247D255247;
-	Tue,  8 Apr 2025 22:47:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gQIu6jXx"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A78221DC991;
+	Wed,  9 Apr 2025 06:18:55 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E02617A312;
-	Tue,  8 Apr 2025 22:47:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EB9E15A85E;
+	Wed,  9 Apr 2025 06:18:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744152477; cv=none; b=q7/Nl2RU3ZW7oD7yMpzu+5ohpSlj2At1J7H5W7AR6Gm5rDm0ui8rQbmXBTvLPcJBhyVwRjY3PhRqX0bryDD42zLOqUfJau+AQYNDBKbs+66lJerLW4BikTaN/VhaznUQdfQQXFmSJhHJVPZ2nKGBnPpPOydlebAQdyfcTIRSnGc=
+	t=1744179535; cv=none; b=bJ6yGJHZDBN9O04eJf4RuJ0YF3/qzUhqcz41C/m4lKxvRXolIz3OTwUKbJVN5BuLdfA3a2bCm0xeYB338Wn0nDjMi4Q0oR0haJP/or/SRIGjhiZb20wLVUGkysFhpfo1/FYDIKHPdfX01uBexDimB00kLYCNFtZDc+RZctnjpVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744152477; c=relaxed/simple;
-	bh=fIPtBiRc85KglBFHKIkn/4MssQypTUE6fovGzmUBKxY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=g2tOP+eyAtT3WaGLtCozqQhvD7Lm0P+bQ5f0bJiE/G0n+hq1vZIt+bkqTDTy4UXkMOSGlD6tb6IWZwbGp0M6FXYnBIptTtdOCf7kNhRxyJLQt9/rXPBO+pt01/Q1lVdkHxex7jeYAkmb1q9SHBzWP0kXVDJn42pHgPga3N86OTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gQIu6jXx; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744152476; x=1775688476;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=fIPtBiRc85KglBFHKIkn/4MssQypTUE6fovGzmUBKxY=;
-  b=gQIu6jXx6U0MJGA0qROTgL6RU08Hqxez68HC8xbsanZDXfEyiRLSQNnr
-   feNkvmwkeqSrWBaFyxu0dow5zh3VSgodhRGDjedWfCbJf8WnTGGkOtrPp
-   5zNBX5VKrOjipp/X1ipuQkiMoSjXYteJMEIVQJ4r0gEdVt88Sbuu1Lhew
-   ilss/5e1HI1gGwGwaq1WCg5qMX13lJlYICX0RRC366qcSgpL/GzPA4AkM
-   Zvfs366JD2hQHHmr83CjUeCrXmYCof2spr3YjAtHXVmf706TU9rBNTJah
-   9CET2y9V6PVMOFFbCJQU2wvW1j247xiUzuxHxKo9pD1/gN23Tm43E69oA
-   A==;
-X-CSE-ConnectionGUID: ppOAjYwSRRuC9v57qDcElA==
-X-CSE-MsgGUID: VbZEqYN7RgmmRXb9wVa3ww==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="45769860"
-X-IronPort-AV: E=Sophos;i="6.15,199,1739865600"; 
-   d="scan'208";a="45769860"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 15:47:55 -0700
-X-CSE-ConnectionGUID: gU55Fw/hSTSiCWlCrwOF9A==
-X-CSE-MsgGUID: 0/EaaJv0SnyWHXKS3yu+1A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,199,1739865600"; 
-   d="scan'208";a="132531294"
-Received: from tjmaciei-mobl5.ger.corp.intel.com (HELO [10.125.111.184]) ([10.125.111.184])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 15:47:54 -0700
-Message-ID: <a1a54ff1-8b14-4bd0-aba6-c23d8261fd9c@intel.com>
-Date: Tue, 8 Apr 2025 15:47:52 -0700
+	s=arc-20240116; t=1744179535; c=relaxed/simple;
+	bh=G1LHBNBqeyiZOMPl2PflZcM6o/1KMAKeUJr20z5gmA4=;
+	h=Subject:To:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=EA799e893SXeLZK6LaWsmo/WRIK8jaVWyBGzNO+5TBMMsXRQv4mVpAVxTxNbMtA0NS2jtDwmIb343S+gZDmZt1J9mmPpeONw2uZLK441yD2wqCxxRVH42YnLsu3OEKpB+4l1/I1U0VhVrImL5AKWOudiXiFkQ1xOQnEubgiyi6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4ZXXjj27pnz69Xk;
+	Wed,  9 Apr 2025 14:15:05 +0800 (CST)
+Received: from kwepemg500006.china.huawei.com (unknown [7.202.181.43])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5806E180467;
+	Wed,  9 Apr 2025 14:18:50 +0800 (CST)
+Received: from [10.67.121.110] (10.67.121.110) by
+ kwepemg500006.china.huawei.com (7.202.181.43) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 9 Apr 2025 14:18:49 +0800
+Subject: Re: [PATCH] MAINTAINERS: Maintainer change for hisi_dma
+To: Zhou Wang <wangzhou1@hisilicon.com>, Jie Hai <haijie1@huawei.com>,
+	<vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+References: <20250402085423.347526-1-haijie1@huawei.com>
+ <ff50caa3-c753-feb0-7518-9d0e8a79a8f6@hisilicon.com>
+From: liulongfang <liulongfang@huawei.com>
+Message-ID: <0ea7b0ba-8719-7bd1-c572-0c94d5614b83@huawei.com>
+Date: Wed, 9 Apr 2025 14:18:49 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dmaengine: idxd: Remove unused pointer and macro
-To: Eder Zulian <ezulian@redhat.com>, vinicius.gomes@intel.com,
- vkoul@kernel.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250408173829.892317-1-ezulian@redhat.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250408173829.892317-1-ezulian@redhat.com>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <ff50caa3-c753-feb0-7518-9d0e8a79a8f6@hisilicon.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemg500006.china.huawei.com (7.202.181.43)
 
-
-
-On 4/8/25 10:38 AM, Eder Zulian wrote:
-> The pointer 'extern struct kmem_cache *idxd_desc_pool' and the macro
-> '#define IDXD_ALLOCATED_BATCH_SIZE 128U' were introduced in commit
-> bfe1d56091c1 ("dmaengine: idxd: Init and probe for Intel data
-> accelerators") but they were never used.
+On 2025/4/8 17:07, Zhou Wang wrote:
+> On 2025/4/2 16:54, Jie Hai wrote:
+>> I am moving on to other things and longfang is going to
+>> take over the role of hisi_dma maintainer. Update the
+>> MAINTAINERS accordingly.
 > 
-> Signed-off-by: Eder Zulian <ezulian@redhat.com>
+> Thanks Jie Hai for maintaining hisi_dma driver! Best wishes to you.
+> Welcome Longfang to maintain this driver together!
+>
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  drivers/dma/idxd/idxd.h | 2 --
->  1 file changed, 2 deletions(-)
+Thanks to Jie Hai for maintaining the hisi_dma driver,
+and I will continue to maintain it going forward.
+
+Thanks.
+Longfang.
+
+> Acked-by: Zhou Wang <wangzhou1@hisilicon.com>
 > 
-> diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-> index 214b8039439f..74e6695881e6 100644
-> --- a/drivers/dma/idxd/idxd.h
-> +++ b/drivers/dma/idxd/idxd.h
-> @@ -19,7 +19,6 @@
->  
->  #define IDXD_DRIVER_VERSION	"1.00"
->  
-> -extern struct kmem_cache *idxd_desc_pool;
->  extern bool tc_override;
->  
->  struct idxd_wq;
-> @@ -171,7 +170,6 @@ struct idxd_cdev {
->  
->  #define DRIVER_NAME_SIZE		128
->  
-> -#define IDXD_ALLOCATED_BATCH_SIZE	128U
->  #define WQ_NAME_SIZE   1024
->  #define WQ_TYPE_SIZE   10
->  
-
+> Thanks,
+> Zhou
+> 
+>>
+>> Signed-off-by: Jie Hai <haijie1@huawei.com>
+>> ---
+>>  MAINTAINERS | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index e0045ac4327b..a9866eefda15 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -10651,7 +10651,7 @@ F:	net/dsa/tag_hellcreek.c
+>>  
+>>  HISILICON DMA DRIVER
+>>  M:	Zhou Wang <wangzhou1@hisilicon.com>
+>> -M:	Jie Hai <haijie1@huawei.com>
+>> +M:	Longfang Liu <liulongfang@huawei.com>
+>>  L:	dmaengine@vger.kernel.org
+>>  S:	Maintained
+>>  F:	drivers/dma/hisi_dma.c
+> .
+> 
 

@@ -1,65 +1,65 @@
-Return-Path: <dmaengine+bounces-4881-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4882-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B8AAA87AE4
-	for <lists+dmaengine@lfdr.de>; Mon, 14 Apr 2025 10:47:35 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B58DCA87EDA
+	for <lists+dmaengine@lfdr.de>; Mon, 14 Apr 2025 13:19:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CE0C03AD6E9
-	for <lists+dmaengine@lfdr.de>; Mon, 14 Apr 2025 08:47:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 67114171823
+	for <lists+dmaengine@lfdr.de>; Mon, 14 Apr 2025 11:19:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F91625D54A;
-	Mon, 14 Apr 2025 08:45:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21BFB293462;
+	Mon, 14 Apr 2025 11:19:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="s8+Piv/1"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="2r7UTh6G"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE79E25A626;
-	Mon, 14 Apr 2025 08:45:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08CD428EA4C;
+	Mon, 14 Apr 2025 11:19:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744620344; cv=none; b=jU2vC+20Pp3/0HLJhFJ2RczAyh3c1hDJ+sTq9WTKRWyF6SFsyq/IPGmYK5iwD492sblqShGUmvFAdHK4zcZCtw6yybxbo0c4/JAJVFED0qzsImfPC3U3JV7gNrOotWbSvwhQTrRdZR2Iw1L7nPX8xfdDBFwvDVk03tBSICcCBig=
+	t=1744629563; cv=none; b=hD6dPs7qLLpXJcgYmm1pIDxEIq0zphQI3X2TWeMMdhYbOLJYQoMLt7mxqS47II537fuTS/p+75hYbBcXdfwAnHVmkVccD1Sr8Af4lQGfjiUOsFu/rxqZGCV/B6JMjMsNaU7DM2CZyoBf5Yo8l9z7WX23tn9YzpshyGdLb1ZOU9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744620344; c=relaxed/simple;
-	bh=1DneHrOh2P4wCCvAFwmXK/TSoA3m02FScStaifEQ4nU=;
+	s=arc-20240116; t=1744629563; c=relaxed/simple;
+	bh=STzxtrjaleEEfCoMMNe4whlXBIquCUD+zNSnw5eeZog=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=qCuNlPKaYR7xK0/owZi7sR9Up6lTWT3/kVwPoRMZfPzNqfiUPYY8Ycit4271wXzMhqBAje/lbjSXB7uR1g5GC28JjxJe7OAQb7S5B6WRUI/LM91GpxKEkKKXYrHZDaNv3wvBlVqEiOBrIOOnnvCyBjO+4eNPmrpkcky9YMCtF58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=s8+Piv/1; arc=none smtp.client-ip=185.132.182.106
+	 In-Reply-To:Content-Type; b=j+thOT5FyO7uqT7hwPctD/jFIH/ebrI9RUPiDW4KUB9l9uee2yqPra8beDLrRV3SBb0imZGlDpV5w0IBcWATKkTCuidwOg3W4C88eAPE324UvTCTwihEvW9KpTPmbZotGdl1Ddhoz9HWJVJ37sUq9vlS7Pc7hA5ShwgrpEHstGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=2r7UTh6G; arc=none smtp.client-ip=91.207.212.93
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53E8Dgqr002903;
-	Mon, 14 Apr 2025 10:45:04 +0200
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53E8DgFV030537;
+	Mon, 14 Apr 2025 13:18:45 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	iMxypOAW8Oa6O6QVpYmX6cdYifOLRH3rTIKzTjQ0LoE=; b=s8+Piv/1ysUJCi+t
-	7UIfFhgwwEsmNuzbYPLELMy2rag14Nn81fUecOECARc7pji3gWZCvYKM23HALKXg
-	T8EHjYHUWpMlmmHc8k4k+AW324xnojdYfhII8eyQKqUz7gT6DeMrzhxHDh1O/dMD
-	20GKksyHX3CbcIzlu8Utbhmkz5I41Uzra7jNxmgaaIlg7Jyteoww92pcPdIAXEka
-	8cpKC0BaEI5U9GZVmQaqWJVeQN8cM+wneLJb27Hun9vPGvfrsyiSxylPsO+1HjZf
-	P7G8WcMRM/bOr6kh6bY3VvJNiED2zFfYHtCmBtA+qiJiyhos9xob46iGKsmttuWy
-	fnRGaA==
+	b64+5Fyc2XBoUKGin9x9phROn71/VpDRGxeTWMDWMDQ=; b=2r7UTh6GWBYWwiT9
+	hcaoQA3S3eaZFgcfT4Lr1bqqqeIBB6cnwspB4DKMTz3xB0JnArETHV+YciqnlAnR
+	MBQrDZxmIu7tbYJ9F359QeeerglGi4NamuvmQ1AiuLfACtSYb01nNHXVcc95qZ+c
+	y7jHdqYOdWDI8SjvBwyqr/FoKdqFpO+ho3DfZglE2PSncQj7R3f2P/mFHSVZEkkS
+	XWaTiGK8cwznlxNzII67+wUV5l/ssK7ByJKYMaYp4wbZQvV7P+pDcMQqQzQCFKtr
+	0G2VBeUkdBXQf8zsbrB8y1p2Y1S7QxlYDOeXmIm5FGRniSr/3yVi5YpVLn2nj173
+	ejk8hg==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45yfh1pveg-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45yda8ynsf-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 14 Apr 2025 10:45:04 +0200 (MEST)
+	Mon, 14 Apr 2025 13:18:44 +0200 (MEST)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 8132B400B0;
-	Mon, 14 Apr 2025 10:43:47 +0200 (CEST)
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id E762C40047;
+	Mon, 14 Apr 2025 13:17:46 +0200 (CEST)
 Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A5BF59EA15F;
-	Mon, 14 Apr 2025 10:40:18 +0200 (CEST)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A3FE295BA29;
+	Mon, 14 Apr 2025 13:17:19 +0200 (CEST)
 Received: from [10.48.86.196] (10.48.86.196) by SHFDAG1NODE3.st.com
  (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 14 Apr
- 2025 10:40:18 +0200
-Message-ID: <b8140b9d-b5d9-48dc-b652-9eebc3e1ee01@foss.st.com>
-Date: Mon, 14 Apr 2025 10:40:17 +0200
+ 2025 13:17:19 +0200
+Message-ID: <f7dcc10e-b2c6-4252-9c71-6715cebe49fd@foss.st.com>
+Date: Mon, 14 Apr 2025 13:17:18 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -85,7 +85,7 @@ X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE3.st.com
  (10.75.129.71)
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-14_02,2025-04-10_01,2024-11-22_01
+ definitions=2025-04-14_03,2025-04-10_01,2024-11-22_01
 
 
 
@@ -97,17 +97,18 @@ On 4/7/25 10:26, Thomas Weißschuh wrote:
 > Furthermore, restricted pointers ("%pK") were never meant to be used
 > through printk(). They can still unintentionally leak raw pointers or
 > acquire sleeping looks in atomic contexts.
+
+I forgot to highlight this typo:
+
+s/looks/locks
+
 > 
 > Switch to the regular pointer formatting which is safer and
 > easier to reason about.
 > There are still a few users of %pK left, but these use it through seq_file,
 > for which its usage is safe.
->
+> 
 > Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-Thank you for your patch,
-
-Reviewed-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
-
 > ---
 >   drivers/dma/stm32/stm32-dma.c  | 10 +++++-----
 >   drivers/dma/stm32/stm32-dma3.c | 10 +++++-----

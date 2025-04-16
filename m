@@ -1,173 +1,203 @@
-Return-Path: <dmaengine+bounces-4904-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4905-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7E4FA90766
-	for <lists+dmaengine@lfdr.de>; Wed, 16 Apr 2025 17:11:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D2FFA90EE2
+	for <lists+dmaengine@lfdr.de>; Thu, 17 Apr 2025 00:49:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A67A3189D03C
-	for <lists+dmaengine@lfdr.de>; Wed, 16 Apr 2025 15:11:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 77760173603
+	for <lists+dmaengine@lfdr.de>; Wed, 16 Apr 2025 22:49:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C42B203704;
-	Wed, 16 Apr 2025 15:10:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE998245025;
+	Wed, 16 Apr 2025 22:49:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="jz137fVa"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="iG9QV8HT"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2055.outbound.protection.outlook.com [40.107.93.55])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 931AB1A4F21;
-	Wed, 16 Apr 2025 15:10:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744816247; cv=fail; b=Qsv6qzz+L4NsgN8uscR5Kw/5AVLzVaZ9YgMooETs8IbdHM2TPb8zRbhxW+CptInvH6z3DgY+At+vCiyx0Pp60tIUPeMWRCCOdKPnbba968SZ14fhkCvKBIGPMrw/btXPzPQndbjd6WIRHtXTjUm4ctblPe7HzsaWQgnunUptMqU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744816247; c=relaxed/simple;
-	bh=4vfuN1PmFNSCIOmT2fFxmUdoue8sq1y9/mUlWHLLukc=;
-	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=n8cF+LkCLrqGzqpOJj+8nqRJxlDVXmEblK63jjq273S4ufHVtVjbQqHXf8FXOXpdHLHxg6w9McZ7jOu4U9hEUEi+EEXnnO1SlIIq6XxN/dO/UBIiCaoar8QvZNhvG837EbdKgmB7NkYygfSk1z66avohW3K+EKpWVzcvV0O5X18=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=jz137fVa; arc=fail smtp.client-ip=40.107.93.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=phttslX22AHuWCQ1dM0SeCSRTabhP0DqTypZdfZ4FODjc03FfNRKrTmVZ4eYtC+G3MUMAVNMoKNaOyZQMnqz6htX28op0rVIFFQxFY8ZL9IuZs3PiD0DK2Q3hJKV4WzjBfhiD6pr4axQ3N5MOR1cO1YFXlTP2X+olD8iEQYRB641blfdfN0MgYJb5yjCDcH7f8KcUnWVjwoqzUibSQPh59YZzVuvewbV9At8+q/qNDMlf9/abdP/jMYsIXNY//6aFS65T6QzBcjKhftR5IDTAnpvSEnrKe+WqVIv9AmpSpOCofcK3QPZ7cFSOZ6zf+FYN7zBXe/nkcwnCxyXK7LlPg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KwEXUIcd0Dq7dV6oAx/vf0P/X9MyrIV3q6fozcBfGk8=;
- b=CTP7/+1U5OKI6b1CkluCS4WYkgYJkBbGZIvQj63IvxTNGlyvGbye6yfuqRqBrB3Y4i/2uWZHW+aaZx9a4zw8hPicKErU+T1lvIwQS9L1FlHnJ6t/jhAoU5Gjcc7r0vUchLkMnFJvccINVELWR1M+MUmW5q1RogESw70SkJHWVbUl6lSVI9fyQuP87V7lpqfSYhhEme16WaaqP04TfJzsw4Rjh3CuEB+jdTInugRWlwDIAegdXpKCDqrrhRFwcHxEInGoLNocDKB3sAaIWGdee+Kfz2bBeLm90sVVNNCvonSxs0wwdFxNnOuHsbEQeV+xkUC0zeDnuFtG8PqK+YmIqQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KwEXUIcd0Dq7dV6oAx/vf0P/X9MyrIV3q6fozcBfGk8=;
- b=jz137fVaAwdFMvPMEVDPurs/UBQDejVWgrw2R6/AowwsBiWTDNpU5XHLnU3pjmh8g2t1dBhN6MeXZTT5HqdBDnh0Y4jmosmr/w/ctf7nZDIIO0sPhWJwDAuAX8a6oio0JfU19p9ImA9cOUSc2XD1lfEKUD2SgYO2vr4i2HlSKF4=
-Received: from BY3PR10CA0023.namprd10.prod.outlook.com (2603:10b6:a03:255::28)
- by CY3PR12MB9678.namprd12.prod.outlook.com (2603:10b6:930:101::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.32; Wed, 16 Apr
- 2025 15:10:41 +0000
-Received: from CY4PEPF0000FCC1.namprd03.prod.outlook.com
- (2603:10b6:a03:255:cafe::7f) by BY3PR10CA0023.outlook.office365.com
- (2603:10b6:a03:255::28) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.15 via Frontend Transport; Wed,
- 16 Apr 2025 15:10:41 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000FCC1.mail.protection.outlook.com (10.167.242.103) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8655.12 via Frontend Transport; Wed, 16 Apr 2025 15:10:40 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 16 Apr
- 2025 10:10:38 -0500
-From: Nathan Lynch <nathan.lynch@amd.com>
-To: Vinicius Costa Gomes <vinicius.gomes@intel.com>, Dave Jiang
-	<dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>, Arjan van de Ven
-	<arjan@linux.intel.com>, Nikhil Rao <nikhil.rao@intel.com>,
-	<dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] dmaengine: idxd: Fix allowing write() from different
- address spaces
-In-Reply-To: <20250416025201.15753-1-vinicius.gomes@intel.com>
-References: <20250416025201.15753-1-vinicius.gomes@intel.com>
-Date: Wed, 16 Apr 2025 10:10:32 -0500
-Message-ID: <87mscgkuqf.fsf@AUSNATLYNCH.amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 894AA238C25;
+	Wed, 16 Apr 2025 22:49:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744843778; cv=none; b=QVgHu99IH8HexIjtgkqf8jUpkHcWISz37ofXSSRCjNU7eSYo3LWzdc6/E1VmVjQvAVRoxsBoj8kPihTo7ujoiNbRaw46tJNXWcmhO3FQsYoH/w2Z2hspV0uoTfvC1dN+Vg5C6PsT1kbid8sbcQs+PqGUEBsLLVKtY7W90obe9Eo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744843778; c=relaxed/simple;
+	bh=zhARHuIhbLTyXHkW6CXECsYiL9+R0A5TAIw+AjmN5vs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ox7bvdfDaPbft/e05Rob5B8yAtGQkUWckDGdnKeLNnZ9uo9oYYfyIDhF9t2Sppa3kYXOq2sRr525spK2fyqVWnf4Hz+TsHCuiDMa8AbNkl1llPdqqnA6qBDi3ofUn44GPpJKWrdzkim5bfplNFqyTdU0Ylnoz0zX1hQnusPioco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=iG9QV8HT; arc=none smtp.client-ip=212.227.17.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1744843771; x=1745448571; i=wahrenst@gmx.net;
+	bh=zhARHuIhbLTyXHkW6CXECsYiL9+R0A5TAIw+AjmN5vs=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=iG9QV8HTd3rUGkA48XDBauUafE5EH4g0rcbxil7U9wnhzDzxH0TGNSBox+tp6En5
+	 LQNCsudckMAssmXMdY+GbWkau3ClsQ6frrlo/sVn1OKpPdTKHKEmg1IXTej/ZzkuB
+	 XcMHt+vAJ9hzpG4UjUTBFdpzo2BAsJQLj0BcDvpidVy4h6JhKbEdASqJY7B9KQ5cL
+	 0CRcoEk99hQYxSSIL0aW3mlRULFxp30aFWiW8NjBiiZioKoLjrT67/Co11/rwuRsn
+	 qwjw5VQIq/dSMGs1oW9XktOSI7uIMekawXPHhsHX3wkXz1IL607xVRUbJ7mTAqpmo
+	 a5znv696IHb7emeb5A==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.107] ([37.4.251.153]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mzyuc-1v2Dq13NdW-00xVLq; Thu, 17
+ Apr 2025 00:49:31 +0200
+Message-ID: <2d5c6d41-90ee-4f33-866f-a8454162e41a@gmx.net>
+Date: Thu, 17 Apr 2025 00:49:30 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000FCC1:EE_|CY3PR12MB9678:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5dae6806-5d1e-4958-0fb1-08dd7cf8da2a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|36860700013|82310400026|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?IMSyZoYt3pZx5lsgp3uFcNYGbTMtoi9lvDxCvpHjHE1Pn65nOULUauojp3X6?=
- =?us-ascii?Q?/DURE/6aOb8gSjRiDwZ8BTlDBrFtJfV2jtzEzInNCSf3KHlBLSs0oCdoUm6P?=
- =?us-ascii?Q?R26ToHnfdYEg45HJtmXPD+eT7CE3AE73J/WoKlDOsUYLPOLgriAsfVZ25/e1?=
- =?us-ascii?Q?UuhgvUvIyww6e5c7xhktOHw3UNibVcTCURwpxpIw0kKdI+uxEA3LPtRX9BSP?=
- =?us-ascii?Q?ixRj7JLCAk8v+dUPRQhJntVJDKprBwrrLPW4b+sz8+8BY5PZF/zHl/oStg2n?=
- =?us-ascii?Q?ul47JUbE89wkb1RMiQJlcJYq3rYP73efBjeoD0EnoCc2X4t/ISbkWFxgG71l?=
- =?us-ascii?Q?GjuHLIluXWKshifDS0BnDcrPkzLsq6D8hvfsAb9vATqYU9EjiDBCfSpPbhqr?=
- =?us-ascii?Q?myIuZWzizFU/6UUGd9QYECpqIQRjJiD5VcPeuWuCkrMIodqeCmkRGwMhqIrJ?=
- =?us-ascii?Q?3GKWZE16rC7IZ4Pyo0erI1So0D2abIgMmlnuIe2x9NbVlcEM/xvJPdDfmrzp?=
- =?us-ascii?Q?V86Y88tNut8zmGiNGhNilrNXzeeD5tkOxC/pqTHwrv0F8io+ubKyoEKE3EDx?=
- =?us-ascii?Q?iA2+TRyh6IU+oRkJIQyWUIWuQ2iDQhBXr9t8Afr20WhzD7viebWYZhgyljel?=
- =?us-ascii?Q?KzmdbiGFnsJf3MkTDc8lTDPMinHenI3UohwbQFBSQqF2bJkAmBn5nQ9qhfZz?=
- =?us-ascii?Q?iNs+lGE3BxLkYXy2dYVRHlQwi6G+TLDZRMBCCzXYY+dmxG4Ibz+LcRMFZ2no?=
- =?us-ascii?Q?Kgvn3riziH8zkjLPXDgVnImrTA3lEUTAk8snxnwVSuYa/UIgrTHgJ2DKy38d?=
- =?us-ascii?Q?mDUt86pIi5z6IZOJ0n//vKsuCL/P63DIyhoplRMCSYCBdMlNk99MACsPPOGT?=
- =?us-ascii?Q?z6Cp5VKDwkgbi4+qA25GytzCfOkGJnTpKcrZFOPLzdZ0iSh6Aqw/eFQ3n6yR?=
- =?us-ascii?Q?Uv2u9A4y1Uw4y77KDk+85kZBLDsJ6hy25Heij9qcUBaAxHBEEn3A7CSk8QpL?=
- =?us-ascii?Q?JlzIZyayPt7Z6fy4880akHmsIVjeRmfUCmGpe/S9Vys68ji1FrHnJVdE0ZNE?=
- =?us-ascii?Q?7xYm5ueSDjxCeKieAQ03aB+AVTMuDN3t8ikgu+S5TrviYbipt8HwhTDcQKQ2?=
- =?us-ascii?Q?l36s3kK11ZADdxhzhGeygpaihWr5tQFJVYJhpwF+TKpaomhvemMG5IK4byoe?=
- =?us-ascii?Q?rhTz6PziQpdxDBpBKRTOAELtl7fbxKJkI84avbG8GTgNCq8Y8gzMQkC6k/mi?=
- =?us-ascii?Q?4PLQe5Ig7OeOX+mXk8ZjkcVLuItrAF6YRkiOvJwfWQILXd3zwgQT1DT23whp?=
- =?us-ascii?Q?IXoX3s7+Ks6cWWdzaHXVZr2nkU+bxoGT8q3n4fq8h7snvt5AkOZuasgVC2YE?=
- =?us-ascii?Q?hngS1yIStP92i1IFPaz5S/PA4jpn3AkA5019itDLW4MuU6zjfcAe0EHkgDTr?=
- =?us-ascii?Q?Pj+JbeXs3cX0Mg9+54Z4VntP2/Osh1XoOc+sABT10NDRkHxJzikVDzZumD+j?=
- =?us-ascii?Q?Go7XHZcK97NBxqqDKZ8/l5CXMT6nG91mXFnq?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(36860700013)(82310400026)(7053199007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Apr 2025 15:10:40.8840
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5dae6806-5d1e-4958-0fb1-08dd7cf8da2a
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000FCC1.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY3PR12MB9678
+User-Agent: Mozilla Thunderbird
+Subject: Re: fsl_lpuart: imx93: Rare dataloss during DMA receive
+To: Sherry Sun <sherry.sun@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+ Frank Li <frank.li@nxp.com>, Joy Zou <joy.zou@nxp.com>
+Cc: "imx@lists.linux.dev" <imx@lists.linux.dev>,
+ linux-serial <linux-serial@vger.kernel.org>,
+ "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+ Fabio Estevam <festevam@gmail.com>, Christoph Stoidner <c.stoidner@phytec.de>
+References: <a9263ccf-2873-46e4-8aee-25e0de89a611@gmx.net>
+ <DB9PR04MB84299ACCDAFE6427B30699F592B42@DB9PR04MB8429.eurprd04.prod.outlook.com>
+Content-Language: en-US
+From: Stefan Wahren <wahrenst@gmx.net>
+Autocrypt: addr=wahrenst@gmx.net; keydata=
+ xjMEZ1dOJBYJKwYBBAHaRw8BAQdA7H2MMG3q8FV7kAPko5vOAeaa4UA1I0hMgga1j5iYTTvN
+ IFN0ZWZhbiBXYWhyZW4gPHdhaHJlbnN0QGdteC5uZXQ+wo8EExYIADcWIQT3FXg+ApsOhPDN
+ NNFuwvLLwiAwigUCZ1dOJAUJB4TOAAIbAwQLCQgHBRUICQoLBRYCAwEAAAoJEG7C8svCIDCK
+ JQ4BAP4Y9uuHAxbAhHSQf6UZ+hl5BDznsZVBJvH8cZe2dSZ6AQCNgoc1Lxw1tvPscuC1Jd1C
+ TZomrGfQI47OiiJ3vGktBc44BGdXTiQSCisGAQQBl1UBBQEBB0B5M0B2E2XxySUQhU6emMYx
+ f5QR/BrEK0hs3bLT6Hb9WgMBCAfCfgQYFggAJhYhBPcVeD4Cmw6E8M000W7C8svCIDCKBQJn
+ V04kBQkHhM4AAhsMAAoJEG7C8svCIDCKJxoA/i+kqD5bphZEucrJHw77ujnOQbiKY2rLb0pE
+ aHMQoiECAQDVbj827W1Yai/0XEABIr8Ci6a+/qZ8Vz6MZzL5GJosAA==
+In-Reply-To: <DB9PR04MB84299ACCDAFE6427B30699F592B42@DB9PR04MB8429.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:FjJumgb112Upp1kgY9X3tzPlFxJnmFPdBpwE9KWJw6Q4we6WhAy
+ 9EXcTm4YxTp1JjwHBF1sVT+y/rjNvjhShXKra5j2DJk8l8mgsJJnBsYlKq8BdZ9JBkCm0Z9
+ lF6tCxQs3gN6GqVrJkv6o4AZkOXWrNVknMohaxL/t+qAKDIDy6VqRZWfLCih8Zc3OkWgG0x
+ HcQX53RsHklDieQVkJKsA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:E7J2OZxbYp0=;1mu8zmy9oXp9FTppcd+c/+bUlxa
+ 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
 
-Vinicius Costa Gomes <vinicius.gomes@intel.com> writes:
-> Check if the process submitting the descriptor belongs to the same
-> address space as the one that opened the file, reject otherwise.
+Hi Sherry,
 
-I assume this can happen after a fork.
-
-Do idxd_cdev_mmap() and idxd_cdev_poll() need similar protection?
-
+Am 09.04.25 um 11:51 schrieb Sherry Sun:
 >
-> Fixes: 6827738dc684 ("dmaengine: idxd: add a write() method for applications to submit work")
-> Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-> ---
->  drivers/dma/idxd/cdev.c | 3 +++
->  1 file changed, 3 insertions(+)
+>> -----Original Message-----
+>> From: Stefan Wahren <wahrenst@gmx.net>
+>> Sent: Wednesday, April 9, 2025 4:19 PM
+>> To: Sherry Sun <sherry.sun@nxp.com>; Peng Fan <peng.fan@nxp.com>;
+>> Frank Li <frank.li@nxp.com>
+>> Cc: imx@lists.linux.dev; linux-serial <linux-serial@vger.kernel.org>;
+>> dmaengine@vger.kernel.org; Fabio Estevam <festevam@gmail.com>;
+>> Christoph Stoidner <c.stoidner@phytec.de>
+>> Subject: fsl_lpuart: imx93: Rare dataloss during DMA receive
+>>
+>> Hi,
+>>
+>> we have a custom i.MX93 board and on this board the i.MX93=C2=A0(A1 ste=
+pping) is
+>> connected via LPUART3 to another MCU. Both processors communicate via a
+>> small protocol (request/response are smaller than 16 bytes) at 115200 b=
+aud
+>> (no parity, no hardware flow control). The i.MX93 is the initiator and =
+the other
+>> MCU is the responder.
+>>
+>> So we noticed via logic analyzer that the i.MX93 sometimes doesn't rece=
+ive
+>> the complete response (no framing issues). In our setup it usually take=
+s 1 or 2
+>> minutes to reproduce this issue. Interestingly this issue is not reprod=
+ucible, if
+>> we disable DMA and operate via IRQ.
+>>
+>> The issue is still reproducible, if we disable all other DMA channel ex=
+cept the
+>> ones for LPUART3.
+>>
+>> We tested with Linux Mainline 6.14 and Linux NXP 6.6.23, in both cases =
+the
+>> issue was also reproducible. We debugged the relevant drivers and notic=
+ed
+>> that the UART detects (UARTSTAT has RX pin edge detected) the RX signal=
+, but
+>> there is not reaction within the DMA driver.
+>>
+>> Is anyone at NXP aware of such an issue?
+>> Do you have some suggestions to analyze this further?
+> We have not observed this issue in our internal testing, some debug sugg=
+estions from fsl-lpuart side. Perhaps Joy can give some suggestions from e=
+DMA side.
+> Please try with Linux Mainline 6.14.
+> 1. Can you please run "cat /proc/tty/driver/fsl-lpuart" and "cat /proc/i=
+nterrupt | grep serial" when issue observed? That may help to get more inf=
+o.
+> 2. Can you please check if the issue is still observed after enabling ha=
+rdware flow control?
+> 3. Can you please check if this is still observed if setting rx_watermar=
+k=3D1?
+> 4. Is there an easy way to reproduce this issue? Maybe we can give it a =
+try.
+thanks for your fast reply and the hints. Sorry for the noise, I figured=
+=20
+out that there was no dataloss. There was a bug in the test setup and a=20
+misunderstanding how thinks work :-(
+
+Regards
 >
-> diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
-> index ff94ee892339..373c622fcddc 100644
-> --- a/drivers/dma/idxd/cdev.c
-> +++ b/drivers/dma/idxd/cdev.c
-> @@ -473,6 +473,9 @@ static ssize_t idxd_cdev_write(struct file *filp, const char __user *buf, size_t
->  	ssize_t written = 0;
->  	int i;
->  
-> +	if (current->mm != ctx->mm)
-> +		return -EPERM;
-> +
->  	for (i = 0; i < len/sizeof(struct dsa_hw_desc); i++) {
->  		int rc = idxd_submit_user_descriptor(ctx, udesc + i);
->  
-> -- 
-> 2.49.0
+> Best Regards
+> Sherry
+
 

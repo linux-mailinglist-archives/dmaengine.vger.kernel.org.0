@@ -1,55 +1,58 @@
-Return-Path: <dmaengine+bounces-4917-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4918-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F55CA92140
-	for <lists+dmaengine@lfdr.de>; Thu, 17 Apr 2025 17:20:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B1552A92141
+	for <lists+dmaengine@lfdr.de>; Thu, 17 Apr 2025 17:20:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9598D8A2C01
-	for <lists+dmaengine@lfdr.de>; Thu, 17 Apr 2025 15:19:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 702858A1109
+	for <lists+dmaengine@lfdr.de>; Thu, 17 Apr 2025 15:19:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA55E253B6D;
-	Thu, 17 Apr 2025 15:18:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 489B925485C;
+	Thu, 17 Apr 2025 15:18:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jpPjCYRw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CsmvlMPf"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F50253947;
-	Thu, 17 Apr 2025 15:18:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20B9C254858;
+	Thu, 17 Apr 2025 15:18:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744903135; cv=none; b=HRRBEIiejpHn9ciXsGnMjgfuzSTlGb3Sv2RuOBvrh1czrJ7ME8kqPUZkz67QokzPk08taGvPDLfvGp39yvx0fg6nuUcsAnFTGRUiqjMzm/OeIViMBIxR3kZh1NkDrOjgkIb0hMaG6ZmY0kqrlN6QUslYFuwZ4u7C2reGltXPmtY=
+	t=1744903138; cv=none; b=XNUWdY6PaWUozSpyhwWk0vAP3lTzeQKAIif2CWn+1IdIT71BbcEeNENXweVP3ZEx0KEES0x8RlmuG1oBLwlBKZ8pPdZce3oAU+Di7tvfgUf/FdwJW77z4LzKx47j1PPfHS3fLQ5G0+kNUd3X7X491z4GqkIWFDtQZt414SmL1FM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744903135; c=relaxed/simple;
-	bh=WMM/wu4EpPKC2gJkP++OcdA6brqyyvoMdvoYCiUQdTI=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=om8PVfd59kNJ41u9Mnl+kHAPglGSCOxH51Pu7AP79S8RTBsEqPEb2e5YAYL76EPf2OTbtoGFofnhaFGndsERN3dbQ7ItEIKGnmdzra3Z+FzmrDPnQFKKskuSuh4HtRIZ9015XuSKMuVyvJY/XQNLyKGwijKGpLuhU08gKeJiuyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jpPjCYRw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6B0FC4CEEC;
-	Thu, 17 Apr 2025 15:18:53 +0000 (UTC)
+	s=arc-20240116; t=1744903138; c=relaxed/simple;
+	bh=EHyKrvw9U4B5SWdJLt0Is0EeLwfWjVJZGYvKDtb/oog=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=ZR9YFAhZ90sP0izzGKvhEKTol1k3SSXHnHGjfF7UuriSa4uFiCduYzmFWc5ZKBhFz7AdM1v5wNc1Dxqt0Pzg5geebvQwYXQm9vmvBK2Fc/WZO9Y9YP1i/4Ys73I35EtFZVZqy2vNpDjo9Aq667Fpwd2u459b5albFgrrbolnTPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CsmvlMPf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5402C4CEE4;
+	Thu, 17 Apr 2025 15:18:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744903135;
-	bh=WMM/wu4EpPKC2gJkP++OcdA6brqyyvoMdvoYCiUQdTI=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=jpPjCYRw6U3tWJrG5joqrwpMmYtMHZdqo9V8xNSR7Z3lpSPF37VWydUfRqoQIVl/A
-	 gbP/up5TDmxcv28s5Vupijx0tg+FMSBzxOgcz1L55Oy9Osqk2BClRb9q+YBGgCFR4o
-	 nuYoJoI7sTI8yIM+QQBkT3COfEVHf5abo3O2/irfTM8KXLjm0Jg3MA6UWqm66yclYy
-	 +dQ/O7AnCq37sQxWQTwkQpzaVqr0I5nWlqb0F7cY1X5YpkANc2GagfCCpZMa4Q7AoN
-	 vaGChrySP15z6+EYqzshBP1MX4jfTDlIxQJJJEpVVrp/6htVAv5Pg6yKlXYR2a+pee
-	 H9o+R5V2YcVww==
+	s=k20201202; t=1744903138;
+	bh=EHyKrvw9U4B5SWdJLt0Is0EeLwfWjVJZGYvKDtb/oog=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=CsmvlMPfL4lc9L3iDqVYx7P/NnvyOFnkgghBJ26XFmrCBvnEaUt6KYDUW0YY5DU1E
+	 6Fmo9NA5mu3d8J9QOyprKAxBGL9oGYzjr1ZBoJ+tggH7CmY1vxXpnektQWhEih9tBa
+	 evNd88HsMdYQACQerJQcfjf9EsH9hM5VzG6m/VJk3uPfobOfxPixOs7J5Km8vQK/FJ
+	 qMLQnT6vzJOs/rKVPq6WVVLg+1hChdY7tgolgpfvmnr4aeGvYQ7RTKuS5wNbewjpMz
+	 AfAhWVQ/C/JDzAkrFJA58L+MmdKFLgvMJU3IbYiOsfy48y0dOr8jLypyNi0Iz4mtvN
+	 SVoSlyGS4Yo8Q==
 From: Vinod Koul <vkoul@kernel.org>
-To: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
- wangzhou1@hisilicon.com, liulongfang@huawei.com, 
- Jie Hai <haijie1@huawei.com>
-In-Reply-To: <20250402085423.347526-1-haijie1@huawei.com>
-References: <20250402085423.347526-1-haijie1@huawei.com>
-Subject: Re: [PATCH] MAINTAINERS: Maintainer change for hisi_dma
-Message-Id: <174490313350.238725.16561551295448743454.b4-ty@kernel.org>
-Date: Thu, 17 Apr 2025 20:48:53 +0530
+To: dmaengine@vger.kernel.org, 
+ Thomas Gessler <thomas.gessler@brueckmann-gmbh.de>
+Cc: Michal Simek <michal.simek@amd.com>, Marek Vasut <marex@denx.de>, 
+ Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250314134717.703287-1-thomas.gessler@brueckmann-gmbh.de>
+References: <20250314134717.703287-1-thomas.gessler@brueckmann-gmbh.de>
+Subject: Re: [PATCH] dmaengine: xilinx_dma: Set max segment size
+Message-Id: <174490313549.238725.11612673810296671348.b4-ty@kernel.org>
+Date: Thu, 17 Apr 2025 20:48:55 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -61,17 +64,17 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
 
-On Wed, 02 Apr 2025 16:54:23 +0800, Jie Hai wrote:
-> I am moving on to other things and longfang is going to
-> take over the role of hisi_dma maintainer. Update the
-> MAINTAINERS accordingly.
+On Fri, 14 Mar 2025 14:47:15 +0100, Thomas Gessler wrote:
+> Set the maximumg DMA segment size from the actual core configuration
+> value. Without this setting, the default value of 64 KiB is reported,
+> and larger sizes cannot be used for IIO DMAEngine buffers.
 > 
 > 
 
 Applied, thanks!
 
-[1/1] MAINTAINERS: Maintainer change for hisi_dma
-      commit: 1c398492b2e8d5daf83773684699f03b06af44ce
+[1/1] dmaengine: xilinx_dma: Set max segment size
+      commit: ebf744fdc080763a243ea6b1a719b1857474a977
 
 Best regards,
 -- 

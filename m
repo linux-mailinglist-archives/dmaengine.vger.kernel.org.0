@@ -1,61 +1,61 @@
-Return-Path: <dmaengine+bounces-4921-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4922-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 050D1A92C76
-	for <lists+dmaengine@lfdr.de>; Thu, 17 Apr 2025 23:02:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F12BA92CDA
+	for <lists+dmaengine@lfdr.de>; Thu, 17 Apr 2025 23:52:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 672A14654BC
-	for <lists+dmaengine@lfdr.de>; Thu, 17 Apr 2025 21:02:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 912FD4A0F42
+	for <lists+dmaengine@lfdr.de>; Thu, 17 Apr 2025 21:52:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 953331B6D08;
-	Thu, 17 Apr 2025 21:02:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 331662063C2;
+	Thu, 17 Apr 2025 21:52:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="wkn/Ki01"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="JEUxuBQN"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2083.outbound.protection.outlook.com [40.107.102.83])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2081.outbound.protection.outlook.com [40.107.220.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC1D241C63;
-	Thu, 17 Apr 2025 21:02:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.83
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91BA218D63E;
+	Thu, 17 Apr 2025 21:52:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.81
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744923756; cv=fail; b=u5wKxM19t9q7RWrSnCzmU/UCHDsCdWTbyo9+7cfDkytENwVy2MyOP66GhuUiVx0wLXHEUTglrFduytcWzXu4k20gBoq9wzXK4bD5TrfdgiiaoU2tjZvWiv4M0z4Af1/UUcRR2d9lLBf6Fvu8KWLagSBkjJGRsRXX9cvAzqxgQF4=
+	t=1744926722; cv=fail; b=UnPiRCrq4XZC2x6ctfEz5OIOF12AiN7Xoesmv2KFp9nbGRBp2GJY6oymI40t8s9X8vFSDKZbL9zdPx+Uk2f+2J4VckYQQeD8OihamutrqMCSuXHg9ZNGge1InZWCiBkX0uQLi3Cw7aiZM6OD8sdgVfn9e+EkZlTWwH5cwjCTX24=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744923756; c=relaxed/simple;
-	bh=xRF8ZTvfrbDMDcP8Hl9jDqJ1Vku5Ctkt3ugJnXkeqoQ=;
+	s=arc-20240116; t=1744926722; c=relaxed/simple;
+	bh=ZDoA19B28phZLbCWKhqW3v5Hjb97FwbrBZMSuV7iJJE=;
 	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=kK43EVGPKoheQnq2Ibs7sW+R6TMTOl7Qi2hd+R3dI11vp0nGQFRrnvzoWbIonjAi3+goEfsrtw7O8K3opQFSIX7tZYpptMQWQL+YMhvY0HJlvCYHa9DlXUDXuwuebMlCh2nZXIVcAbPOUj79QUHPqsol0ZmOuPltXOR1VLjvBvY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=wkn/Ki01; arc=fail smtp.client-ip=40.107.102.83
+	 MIME-Version:Content-Type; b=i6mP6wobp6nb+dh8yR3kQMBpp9VLNdjBPe6CCx3V5fZ3iyBuao1aW2/LDYwhIcnyfepiF6A3Y31e9xnkky5c1y+e1tHMWhqiWH2WkU+wnGlgVuZf1IRdQzREaz/dYFruyNPc3ddslsdNkuldngUfgyxleXAqloN2t/9HOMIqyHE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=JEUxuBQN; arc=fail smtp.client-ip=40.107.220.81
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=C110KRL9wu/CsGgt1ZlvdWZqPTwbbZmbxNnKHRi0C6f1vwSpynEXy1poaOoG6rBQ/iKMkEwQtYYCxfaU/jslPIZfMVHgS2PlqDWnSoJlI23+yQct0+MvzvInqBd8n/mxVZi/jqT17Nkh+FS79FXN94yNPGScNJQ92fJMZxoQXN2fd9hii0BTYyjLvlTNFWiOq/tU3i6UQvV92Q8W9rMdNR21yTxp+KZu3MEHdbRZjTSy63E+FQrvgH+ijCRJfOLGMXcFpEgH3y2gQnuxg11VvnreXbIhBRegpCk81FTnpatwOWN5eLQMFBbjWob1+UQtBMOWL/adD4R41WQRbimsUg==
+ b=Yb831lkeLwnzWUKrYsrQdxraNgPGrsAL3NhJ84mRpboMvUdjdpkrI/4VnWvEx1+x47C+81oAfsl4QDPm+rZrNUH5kw/gjQXyPANFCRbSkfwphPkPfoQPrY6u1OlzSu52Wk8GBNk6PZy5elzbrH3lGESYEdyo4MMSmu8iRMPxW02f8MIGjPfv4In+Nd82GxYh59HZFxsJPU3qmKb/d3GA7WAzuTzP+d6eIlYHBnudUvV8xAXLZTbX1K0N+6dCzM0bOx1HYDswu9Kocpt0xmeXoDbwgn9RisGzMCYgXFRw9/sgbNuu/iptkHeWHMJ+DWIkG57z6FYVG9gLIXL+9DI8xg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OdaH9sIZsoYvT7ITArsmuIHBNm6OdMF8Py35Q48Vwdk=;
- b=G0t4Fdtli4zZpIB0WDMS+cAULGaMwxcH9VHBAtTtlsiQGtYNkYahzIY9rVawgQeSAeVCG8D77S/dfL4VRd89B5Q9N/Mor+SUY8h3e1RoOU5dX7ISwBUGlEe/0I4TXRgn9uGUH6U1pSMo1hmEuIo+Qnmjh4y0N3nHtbhWTWzYyZwy27umRBPKVo94iFfrMAkbwSlCB0RmiixzNScFj+YoNS8P8Kt1vA1r6gVBSsOrZjmP4Sh7TixU5TH5ybhyaglg/O33/POw7eHo6RI1c5OHEgOBKq81JwYXzkuz7sy54d+7JihDS0LN3Szv24ejOy9gw9rIRI4BGJD/y2SzU2hM4g==
+ bh=naNUxmbofIheLcc/hz7/cy2QGhHAewc4tPZ5YbI8esI=;
+ b=yz5Pif24Tt1gau7AIsvgNGANGiG5PKtW9+V2XevdHk9Rw8rqI5wgfeUugMgiKylstO48ECHPhaxIowtsiKhtn/SIK/VSDi9tdbgJg2F+gKvB4tAIHOS9ATygfQejQKy17HDryhL/I45E+QEpIc467+f3GiGQCfAzEmOv5e6a1h0UqMi37DWnxzudtqCSh4rvVr6H1hnp2vnbAvBH/pC8aaOeZG8SVAu21D++T+8yl2EGwMS5OE7l9kgaV61pVW50celgPh3lnx1sH3ui/vVWjoArH2YAgA6KlkFQZGdsTeuEVIs7HNvjWL+AHkSjClvRClc0zBWyzC0gWz5IPgaWaQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ 165.204.84.17) smtp.rcpttodomain=gmail.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OdaH9sIZsoYvT7ITArsmuIHBNm6OdMF8Py35Q48Vwdk=;
- b=wkn/Ki01UTgrZf1N7j0UJ7Fnza2DH1NIJdQ+46tAT6UBhcI4DEB43xlEEdkgu1I2Ux9hj0tSDhpZEmpPkrfNP1wwjOcL/VkUSC6Rp1lYBx+zRvocANLO8HtUFZVAh180cHxFfI/+IUAJfBVWLfmmhcE1egp4GN5hVAU6PNNRN/g=
-Received: from PH8P221CA0047.NAMP221.PROD.OUTLOOK.COM (2603:10b6:510:346::26)
- by MW4PR12MB6898.namprd12.prod.outlook.com (2603:10b6:303:207::6) with
+ bh=naNUxmbofIheLcc/hz7/cy2QGhHAewc4tPZ5YbI8esI=;
+ b=JEUxuBQNyaQEEx5liskjRdnHjJn+ph32q2Vh+mls2UdDqlqyZU+QQ+Kzs7+oXmcEkKIE9Qc9YmhljAtDWcxukDUr4ACkW4X9zYEUiITlGLqfkZKQ4uIa3sSe2LuEJ/AQ+6k6Z2ZUMeWg2uKC14LpgY//P6rRCFW4/mpjIe9gToo=
+Received: from MW4PR04CA0360.namprd04.prod.outlook.com (2603:10b6:303:8a::35)
+ by PH7PR12MB7455.namprd12.prod.outlook.com (2603:10b6:510:20e::8) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.32; Thu, 17 Apr
- 2025 21:02:30 +0000
-Received: from SJ1PEPF000026CA.namprd04.prod.outlook.com
- (2603:10b6:510:346:cafe::e9) by PH8P221CA0047.outlook.office365.com
- (2603:10b6:510:346::26) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.18 via Frontend Transport; Thu,
- 17 Apr 2025 21:02:30 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.35; Thu, 17 Apr
+ 2025 21:51:56 +0000
+Received: from SJ5PEPF000001D7.namprd05.prod.outlook.com
+ (2603:10b6:303:8a:cafe::1e) by MW4PR04CA0360.outlook.office365.com
+ (2603:10b6:303:8a::35) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.34 via Frontend Transport; Thu,
+ 17 Apr 2025 21:51:56 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -63,26 +63,23 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF000026CA.mail.protection.outlook.com (10.167.244.107) with Microsoft
+ SJ5PEPF000001D7.mail.protection.outlook.com (10.167.242.59) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8655.12 via Frontend Transport; Thu, 17 Apr 2025 21:02:30 +0000
+ 15.20.8655.12 via Frontend Transport; Thu, 17 Apr 2025 21:51:55 +0000
 Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 17 Apr
- 2025 16:02:29 -0500
+ 2025 16:51:54 -0500
 From: Nathan Lynch <nathan.lynch@amd.com>
-To: Eder Zulian <ezulian@redhat.com>, <Basavaraj.Natikar@amd.com>,
-	<vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <jsnitsel@redhat.com>, <ddutile@redhat.com>, Eder Zulian
-	<ezulian@redhat.com>
-Subject: Re: [PATCH RFC 1/1] dmaengine: ptdma: use SLAB_TYPESAFE_BY_RCU for
- the DMA descriptor slab
-In-Reply-To: <20250411194148.247361-2-ezulian@redhat.com>
-References: <20250411194148.247361-1-ezulian@redhat.com>
- <20250411194148.247361-2-ezulian@redhat.com>
-Date: Thu, 17 Apr 2025 16:02:23 -0500
-Message-ID: <87ikn2lcww.fsf@AUSNATLYNCH.amd.com>
+To: Henry Martin <bsdhenrymartin@gmail.com>, <peter.ujfalusi@gmail.com>,
+	<vkoul@kernel.org>
+CC: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Henry Martin
+	<bsdhenrymartin@gmail.com>
+Subject: Re: [PATCH v1] dmaengine: ti: Add NULL check in udma_probe()
+In-Reply-To: <20250402023900.43440-1-bsdhenrymartin@gmail.com>
+References: <20250402023900.43440-1-bsdhenrymartin@gmail.com>
+Date: Thu, 17 Apr 2025 16:51:53 -0500
+Message-ID: <87fri6lame.fsf@AUSNATLYNCH.amd.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -94,105 +91,89 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF000026CA:EE_|MW4PR12MB6898:EE_
-X-MS-Office365-Filtering-Correlation-Id: ad8895bd-4c25-458c-1232-08dd7df32ad3
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001D7:EE_|PH7PR12MB7455:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7932c90b-0709-4457-bfde-08dd7dfa123a
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|376014|1800799024|7053199007;
+	BCL:0;ARA:13230040|36860700013|376014|1800799024|82310400026|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?2L//a7penKciMWg426D1MDPLCaV8YQ4bIES0ZxYZwWZQGn5RMkVJXT5FjeZR?=
- =?us-ascii?Q?GtPDbddPycFZ/Ye9bcK//XGcCj5Pv4ochXzLqa8ylK0j46yJvM4yCTDUuMRq?=
- =?us-ascii?Q?QfMydRN0gpv27Ogf+sQK8xAFieaoAA+vDGbi/tP4uRRVxDzXnJo1Zw9ASNOr?=
- =?us-ascii?Q?A5WipefORYGwkvbGENISBqubzAMjHVpoPN3zWQlFl4NB7/6PLt4/W7mBOuAy?=
- =?us-ascii?Q?1oJtO/42gSEcQuCVs1vVDce4YzIt1SYYw54hOF/fn9P63ycdnMCyHsyyCrX/?=
- =?us-ascii?Q?OJPvLhKnGnhPfyPY1vm5FP/2pyLYT+S6hhubU5nts/1fr4WBjqsCr6hsxvKh?=
- =?us-ascii?Q?7EUTyG4pkZ7jjxTZMXipk0de24YvD/AQH7YB0YrGzvE2cuR/fYbZlSA5tHv0?=
- =?us-ascii?Q?bzdarnltcnkGqADNlhplSM36tuH0GmTMzkQQlageSN+qBD6ViGxNl8V0KHUG?=
- =?us-ascii?Q?wZXd9FHQbGKDCAVccJlQdbA+fLk+ENLwHpm6ccdfGm1bLFnUwoKjb5khEyDN?=
- =?us-ascii?Q?CgsXykFs8vjLOZCgSMQw7eb6Nx4s+UWyGf4uxf+odudW/jzHRRLCvFD21gtc?=
- =?us-ascii?Q?qAMG9qbTa9bZ+YvEkDjOz58/3e2nKYHqjpA6JXLNti2LMdkyzXdDJv1WZauV?=
- =?us-ascii?Q?DW5TBhQVZlXceM52fFl7hD5W0agGjWDW7aUeAH0VjOnJQeYCj7Mm14u5cTCJ?=
- =?us-ascii?Q?GfZash4Tg2rpnvpOX6Mtp7JDS80pSylSv9uGLE5naqgqz5zjwvnfrQL0XrLL?=
- =?us-ascii?Q?NFIXZA2NgRzAGitfnR6n4wLxPecolE2FzsxWQ9RFh25J8BZVsu6K8WBC1QMc?=
- =?us-ascii?Q?FhIcRp+J/bLbYJfeD02YQNrRsyXquMiPIvaQI+sWYN7+/2sD5ipoN0G9TuPW?=
- =?us-ascii?Q?KbzA0U+DF00kzohZ3b3DcUpihP6ujMRyGZ/fZFVdxcBJ024UajmSWn7T1GNd?=
- =?us-ascii?Q?eonBM4fAbxPX84bjd9VZ+WFg50W/CV07zScK1bsE8to89/oW2fxqIfvZuaR0?=
- =?us-ascii?Q?PS3IB9iTQ4/rn9VpCw4TNDbi9u5nm0yVFp+oVR5mJBioqE24Z8NpRgP8M4jE?=
- =?us-ascii?Q?USc9IZSjDRNm2o+24Ca2CrG7ntErYd/8bUu8nHp2pY091SnIK4BA82bJuFMA?=
- =?us-ascii?Q?d6dqg6S5MWiMhwpqMsFTx3CcoH+7uNKlxjt7dNCXbZBC1aLNcF5fF6QIkoVI?=
- =?us-ascii?Q?5cqoKhv1mkbgPaAkbExwkiEE/aW0Z4H5ErJht3+cEbs6zR1Lh59QQKBvYA0M?=
- =?us-ascii?Q?OXaF0TW8lcX3WmFur3K1l/uPxXUsLNnHsLI7XkaRoCkHbhzbpAJUhNFLXrey?=
- =?us-ascii?Q?Ca5Ki9TS1WJgLlQDHJmgGUbxZhhg9bSdkl45YA+MvKbcVAp3kEUo+/qag513?=
- =?us-ascii?Q?U/fGuL9B6qCRezmEjm85zX9ecy8yK3Mc6UQDk3FaQsu2xI3Rg6IAlfvNpKvz?=
- =?us-ascii?Q?NgO7WXlwKdkthITe9bQYX5MXy1RcFNF2/6lHY7mIosSqdAaUT6ST1y0ZD1a5?=
- =?us-ascii?Q?/ujC2trHObT5odkm5nppH4e1m5aD3bFfD7dJ?=
+	=?us-ascii?Q?p65ri/5MskqL/Z/e2AOQur01oX5B6YTcJU9Ebcd6l75nZUAGnCzzbe2jRiys?=
+ =?us-ascii?Q?Af+GihCRXNdKbC+ASsh5BW2KBGpVqgEixT3saLgLgcpTxq1Fr2lw1Nu+AfXM?=
+ =?us-ascii?Q?yLmCWLYox14COFHl/bzBoZRiiTeIRo4Y+uJnA4/pjMOpLvMN7sjWlBENG2s/?=
+ =?us-ascii?Q?dHuMpUnJPKQy1qBkUSGXcog8rLAEuJEXSXp7bFtzRZy9q2FmMj87o4cuu7T5?=
+ =?us-ascii?Q?IiernAzq41udjBlxg1UIFxJt8B14V6syiURt5Tc34s/G+wGX81GkSjPhcWCC?=
+ =?us-ascii?Q?a0PmZwcIdKhGpC0TVHHDmOpU87MxCIuHDUSQNHhogNVeXjA+knuYdh96uHHN?=
+ =?us-ascii?Q?h8tYkxnjY2NRnYCr4cre0kn9+sKVvdmMQxrXCnL2e8nHOFNdVrMunVUC9fSr?=
+ =?us-ascii?Q?GgqlwbXoBCIQVbJa70EKBa/X8h/H79OKZPfnNrduU69Y1dU+K2mn+n5Tt0pQ?=
+ =?us-ascii?Q?fthzXF7ANSEwDOJC65tYjiD2E7hbPK5PwfJDfcuDiFVsdrC6pHbTiGaRGSpU?=
+ =?us-ascii?Q?Z/rLsRwEKtzvMqRxunfNsugwWO+ZnF3c04inqo/oXlrIFaBdgc6RWW9ZbPsL?=
+ =?us-ascii?Q?AWF+c0gMxdgBh8MpvEXzkVjrPq8dzQElda4wp9cbarm87C7oHfWVrU3dTEMH?=
+ =?us-ascii?Q?2rcWVF2G2EkOhHb97V9MX7x8g41I5Ecl0WptFMtVOi/Jq4Xn7t2GDJU1lbTg?=
+ =?us-ascii?Q?PfttBS3JU6nJVc+hNnSuEpvUurdgmNvv699YyARV7ee2EEHr3fe5MxL9MGhl?=
+ =?us-ascii?Q?Z0VRGgScnyj3sX5UL7xW+e56rOOZW32w+DPsTdKIoUSMdo/PszJFizcRnw3k?=
+ =?us-ascii?Q?m5a5S+nYcV4v7buSRXACKZBSxkhGRY7//+570iDBdaQTvN7CE4oaaAIMjO2/?=
+ =?us-ascii?Q?qUBXIXD1U8oP1Mlf/xW9b5ee1KqdswCDIkyU+s4Mjz8G46SW9TQq5cPu3Btb?=
+ =?us-ascii?Q?uoa/HMNhgWHthr6fjpqpsTgQWXUWZREluxgkpVgdk5GMnognvr7Tw1RZGLtE?=
+ =?us-ascii?Q?evencRNkzbzfIR1IY1BMeSLXsb5H95Si8N7srGRYLjE7U+Rv7t0mpWJ4Ayr9?=
+ =?us-ascii?Q?w4UKDCA8J/PLzKOkwKNE73q+rtrp72j530/e91uJpp2kQha3LL8lYux6u490?=
+ =?us-ascii?Q?9j2Q2Gaa4fG3Xf0s9gwbYU5uzSKSQ+pyJfTvvb+hMlsBenjnxj9+SY9S0OMY?=
+ =?us-ascii?Q?GP9pNxKx8RoqhtgVjcNtri09uSquyD8r9ySofNBS+uMNxGrjvO3Pk5qdnaxo?=
+ =?us-ascii?Q?H63IKDAyyeyxt5agXHVxO05hli+wvPI4DByXBqeICy4xuyp/rohNog0MBcIB?=
+ =?us-ascii?Q?pVjDgnVrJy0flPLvXBQ3a7DffqepRVkZveApLNLJOllf2pUl59hcv4bQBLII?=
+ =?us-ascii?Q?XoI8FZR7g3oIsIuWd0tdroOaDx3YWOMlpIbl7oAIatvJs2uyGvwSyBJrcGOA?=
+ =?us-ascii?Q?d8cs57ht/FAdGDsIgLQUlVbW37chwc9zgWK335dKfFZpWD+ZE9VT33KPtgE0?=
+ =?us-ascii?Q?rP/Xvc50gUPryhJynTC5ZcUYA4RDIqnTpSoC?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(1800799024)(82310400026)(7053199007);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2025 21:02:30.4072
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2025 21:51:55.6208
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ad8895bd-4c25-458c-1232-08dd7df32ad3
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7932c90b-0709-4457-bfde-08dd7dfa123a
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF000026CA.namprd04.prod.outlook.com
+	SJ5PEPF000001D7.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB6898
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7455
 
-Eder Zulian <ezulian@redhat.com> writes:
-> The SLAB_TYPESAFE_BY_RCU flag prevents a change of type for objects
-> allocated from the slab cache (although the memory may be reallocated to
-> a completetly different object of the same type.) Moreover, when the
-> last reference to an object is dropped the finalization code must not
-> run until all __rcu pointers referencing the object have been updated,
-> and then a grace period has passed.
+Henry Martin <bsdhenrymartin@gmail.com> writes:
+> devm_kasprintf() returns NULL when memory allocation fails. Currently,
+> udma_probe() does not check for this case, which results in a NULL
+> pointer dereference.
+
+Yes, it does look like this would happen when uc->name is eventually
+passed to dma_pool_create(), at least.
+
 >
-> Signed-off-by: Eder Zulian <ezulian@redhat.com>
+> Add NULL check after devm_kasprintf() to prevent this issue.
+>
+> Fixes: 25dcb5dd7b7c ("dmaengine: ti: New driver for K3 UDMA")
+> Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
 > ---
->  drivers/dma/amd/ptdma/ptdma-dmaengine.c | 3 ++-
+>  drivers/dma/ti/k3-udma.c | 3 ++-
 >  1 file changed, 2 insertions(+), 1 deletion(-)
 >
-> diff --git a/drivers/dma/amd/ptdma/ptdma-dmaengine.c b/drivers/dma/amd/ptdma/ptdma-dmaengine.c
-> index 715ac3ae067b..b70dd1b0b9fb 100644
-> --- a/drivers/dma/amd/ptdma/ptdma-dmaengine.c
-> +++ b/drivers/dma/amd/ptdma/ptdma-dmaengine.c
-> @@ -597,7 +597,8 @@ int pt_dmaengine_register(struct pt_device *pt)
->  
->  	pt->dma_desc_cache = kmem_cache_create(desc_cache_name,
->  					       sizeof(struct pt_dma_desc), 0,
-> -					       SLAB_HWCACHE_ALIGN, NULL);
-> +					       SLAB_HWCACHE_ALIGN |
-> +					       SLAB_TYPESAFE_BY_RCU, NULL);
+> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+> index 7ed1956b4642..f1c2f8170730 100644
+> --- a/drivers/dma/ti/k3-udma.c
+> +++ b/drivers/dma/ti/k3-udma.c
+> @@ -5582,7 +5582,8 @@ static int udma_probe(struct platform_device *pdev)
+>  		uc->config.dir = DMA_MEM_TO_MEM;
+>  		uc->name = devm_kasprintf(dev, GFP_KERNEL, "%s chan%d",
+>  					  dev_name(dev), i);
+> -
+> +		if (!uc->name)
+> +			return -ENOMEM;
+>  		vchan_init(&uc->vc, &ud->ddev);
+>  		/* Use custom vchan completion handling */
+>  		tasklet_setup(&uc->vc.task, udma_vchan_complete);
 
-No, this code wasn't written to exploit SLAB_TYPESAFE_BY_RCU and this
-change can only obscure the problem. There's likely a data race in the
-driver.
+Returning -ENOMEM directly seems fine, even though this is in a loop
+200+ lines into udma_probe(). I don't see any unmanaged device resources
+that need to be released before returning, and if I missed one, all the
+error paths this code precedes would have the same problem.
 
-I suspect pt_cmd_callback_work() has a bug:
-
-        spin_lock_irqsave(&chan->vc.lock, flags);
-        if (desc) {
-                if (desc->status != DMA_COMPLETE) {
-                        if (desc->status != DMA_ERROR)
-                                desc->status = DMA_COMPLETE;
-
-                        dma_cookie_complete(tx_desc);
-                        dma_descriptor_unmap(tx_desc);
-                } else {
-                        tx_desc = NULL;
-                }
-        }
-        spin_unlock_irqrestore(&chan->vc.lock, flags);
-
-        if (tx_desc) {
-                dmaengine_desc_get_callback_invoke(tx_desc, NULL);
-                dma_run_dependencies(tx_desc);
->>>>            list_del(&desc->vd.node); <<< must be done under vc.lock
-                vchan_vdesc_fini(vd);
-        }
-
-But that's relatively new code that may not be in the kernel you're
-running.
+Reviewed-by: Nathan Lynch <nathan.lynch@amd.com>
 

@@ -1,154 +1,178 @@
-Return-Path: <dmaengine+bounces-4960-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4962-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55363A9783E
-	for <lists+dmaengine@lfdr.de>; Tue, 22 Apr 2025 23:10:57 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B9A48A97899
+	for <lists+dmaengine@lfdr.de>; Tue, 22 Apr 2025 23:33:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E2E317AB9F7
-	for <lists+dmaengine@lfdr.de>; Tue, 22 Apr 2025 21:09:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2F80A1B61062
+	for <lists+dmaengine@lfdr.de>; Tue, 22 Apr 2025 21:33:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E27625C816;
-	Tue, 22 Apr 2025 21:10:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F05281F1508;
+	Tue, 22 Apr 2025 21:32:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="Qx7BQUmk"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+Received: from send129.i.mail.ru (send129.i.mail.ru [89.221.237.224])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC3C25C80B
-	for <dmaengine@vger.kernel.org>; Tue, 22 Apr 2025 21:10:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F101D1E9915;
+	Tue, 22 Apr 2025 21:32:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.221.237.224
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745356243; cv=none; b=s67BlJDodIsB/lXR1Tjq8cx/i/1Yr/hATSfm/QN2AFDK3AC4o4DYI0qKrWpBZTrRgblMYmgLItysYz3yR06ckIphDwvGR6AJ/YmACeSBTv0FTqnNDtNPpaUUt2bx6Tli2ZwiTInF3ymzmMy4OosfpHKa/Py/SCz9oiBWx0Cc4Do=
+	t=1745357575; cv=none; b=T5le1sHac/1RExMu5AIZm9QeToaY4k5mrzIrR5GAVZdmIxsLHq7Se/FRT7RAymDJg+ieRuT+YU/6FnY8vuwcVN+oDbD9D8aSJM+kgZPqq1r1QrPEQ+oqwwDXn3INQVAiyjaPbXblg+HH+0iIPYy4CUo3zYMtOiO+GCFBLhHTaLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745356243; c=relaxed/simple;
-	bh=nHLAmBP6RNdP/EyjW2eqnHDPzOUXOLr826wf78n7bZk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Xl6miMcpelXhOddseZjSss1poPXm0omzCg+xObE5+2mRZmxepZqsvBNhmilGm+fkyKYobeZ9bbbFu8VM4cw3xfATG/Fo4ccbnGL7A/tbYclJWQP2zmCD5kZDYUE6IpwpB9uBYweWeMUsQMlcDC75QalO9g549EVXeLqLj9IvB40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=linux.dev; arc=none smtp.client-ip=95.215.58.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Date: Tue, 22 Apr 2025 17:10:32 -0400
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Ben Collins <bcollins@kernel.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: dmaengine@vger.kernel.org, Vinod Koul <vkoul@kernel.org>, 
-	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fsldma: Support 40 bit DMA addresses where capable
-Message-ID: <2025042216-hungry-hound-77ecae@boujee-and-buff>
-Mail-Followup-To: Arnd Bergmann <arnd@arndb.de>, dmaengine@vger.kernel.org, 
-	Vinod Koul <vkoul@kernel.org>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <2025042122-bizarre-ibex-b7ed42@boujee-and-buff>
- <fb0b5293-1cf3-4fcc-be9c-b5fe83f32325@app.fastmail.com>
- <2025042202-uncovered-mongrel-aee116@boujee-and-buff>
- <ace8c85d-6dec-499f-8a8a-35d4672c181d@app.fastmail.com>
- <2025042204-apricot-tarsier-b7f5a1@boujee-and-buff>
- <29bdb7e0-6db9-445e-986f-b29af8369c69@app.fastmail.com>
+	s=arc-20240116; t=1745357575; c=relaxed/simple;
+	bh=D2Z2120osV1zGidlsGtM1CxGehmG5HCvLBI4TCjw5oU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JmNHV54Sv7gdXkTwHGyVPFUlswj7nNJal65V5gwS420PR+NMX4pegmIyd2hfjUMVgnMYZlaslVr8s4z0g6mnWAFNgMA9av0S/Hq993k27dvRad6wqIYr7wFxFLLhmHGRLDxUnr9nqE/aTAThorc2mVGmK60FKhLXb6nkPC3YcHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com; spf=pass smtp.mailfrom=jiaxyga.com; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=Qx7BQUmk; arc=none smtp.client-ip=89.221.237.224
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jiaxyga.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com
+	; s=mailru; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
+	Cc:To:From:From:Sender:Reply-To:To:Cc:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive:
+	X-Cloud-Ids:Disposition-Notification-To;
+	bh=bld9yfzn86wlglnQDrTY4IrNXau4T8wzciT13/xgVdQ=; t=1745357573; x=1745447573; 
+	b=Qx7BQUmk1L7M8Yri3M+FkBG6iZ7jmPGn+sJY2ExKu+XPWNZL8k8RaEosOMaehFt1FY7jnIXtMb1
+	tq8NUcHoU4G+5U0WwV1PV4Cuc8wYfoNNd28uD+KL9hP4Rj0NatSExS3E3m34aMova/i/gWnpq5oGx
+	xRQ7+1cF24Qm6JMbhg4=;
+Received: by exim-smtp-77d8cdf77b-wlhm8 with esmtpa (envelope-from <danila@jiaxyga.com>)
+	id 1u7LE4-00000000BOp-1gV2; Wed, 23 Apr 2025 00:32:21 +0300
+From: Danila Tikhonov <danila@jiaxyga.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Rajendra Nayak <quic_rjendra@quicinc.com>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Amit Kucheria <amitk@kernel.org>,
+	Thara Gopinath <thara.gopinath@gmail.com>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Wesley Cheng <quic_wcheng@quicinc.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Souradeep Chowdhury <quic_schowdhu@quicinc.com>,
+	Lee Jones <lee@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Alex Elder <elder@kernel.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Avri Altman <avri.altman@wdc.com>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Andy Gross <agross@kernel.org>,
+	Srinivas Kandagatla <srini@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Georgi Djakov <djakov@kernel.org>,
+	Loic Poulain <loic.poulain@oss.qualcomm.com>,
+	Robert Foss <rfoss@kernel.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Taniya Das <quic_tdas@quicinc.com>,
+	Sibi Sankar <quic_sibis@quicinc.com>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	Imran Shaik <quic_imrashai@quicinc.com>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Kees Cook <kees@kernel.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G . Piccoli" <gpiccoli@igalia.com>,
+	David Wronek <david@mainlining.org>,
+	Jens Reidel <adrian@mainlining.org>
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-watchdog@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	linux-phy@lists.infradead.org,
+	linux-mmc@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
+	dmaengine@vger.kernel.org,
+	linux-crypto@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	iommu@lists.linux.dev,
+	linux-remoteproc@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-hardening@vger.kernel.org,
+	linux@mainlining.org,
+	~postmarketos/upstreaming@lists.sr.ht,
+	Danila Tikhonov <danila@jiaxyga.com>
+Subject: [PATCH 17/33] dt-bindings: nvmem: qfprom: Add the SM7150 compatible
+Date: Wed, 23 Apr 2025 00:31:21 +0300
+Message-ID: <20250422213137.80366-1-danila@jiaxyga.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ttjcfkvyttnwvorf"
-Content-Disposition: inline
-In-Reply-To: <29bdb7e0-6db9-445e-986f-b29af8369c69@app.fastmail.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+Authentication-Results: exim-smtp-77d8cdf77b-wlhm8; auth=pass smtp.auth=danila@jiaxyga.com smtp.mailfrom=danila@jiaxyga.com
+X-Mailru-Src: smtp
+X-7564579A: 646B95376F6C166E
+X-77F55803: 4F1203BC0FB41BD985535D2C87FE65BB7FDAA9A1A9DEF7953CA198E32028564300894C459B0CD1B921390C07D720BC3C33594132A326AF8BA51A7878B8140C993EEA0038D781BD3B750FC9643A608EC1
+X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE77EA152918BB9CDE0EA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F79006374F960C921106F05B8638F802B75D45FF914D58D5BE9E6BC1A93B80C6DEB9DEE97C6FB206A91F05B2C3CCA644F7CEBFFC2E070BE324C7D3C4C54A791AF0D2BFD9F6B57BC7E64490618DEB871D839B73339E8FC8737B5C224952D31B9D28593E51CC7F00164DA146DAFE8445B8C89999729449624AB7ADAF37F6B57BC7E64490611E7FA7ABCAF51C92176DF2183F8FC7C0DEC8C2C8BCD2534D8941B15DA834481F9449624AB7ADAF37BA3038C0950A5D3613377AFFFEAFD269176DF2183F8FC7C02271980798FBD5E27B076A6E789B0E97A8DF7F3B2552694AD5FFEEA1DED7F25D49FD398EE364050F0AC5B80A05675ACD0A5971FBB7557E96B3661434B16C20ACC84D3B47A649675FE827F84554CEF5019E625A9149C048EE9ECD01F8117BC8BEE2021AF6380DFAD18AA50765F790063735872C767BF85DA227C277FBC8AE2E8BDAE3FA6833AEA0C275ECD9A6C639B01B4E70A05D1297E1BBCB5012B2E24CD356
+X-C1DE0DAB: 0D63561A33F958A5B0AC79FA2AC9EC4F5002B1117B3ED6966415959F9F8A24A2E99897350C7C491E823CB91A9FED034534781492E4B8EEAD1B01FEBA22ADC20FF36E2E0160E5C55395B8A2A0B6518DF68C46860778A80D548E8926FB43031F38
+X-C8649E89: 1C3962B70DF3F0ADE00A9FD3E00BEEDF77DD89D51EBB7742D3581295AF09D3DF87807E0823442EA2ED31085941D9CD0AF7F820E7B07EA4CF650C047DAD35C9D397F033D0B969C5191B657C064F30B72D2C9532FBC67315D51EB2640544212C8968A835CA8743990B245D2C3B7FD8CF06D59B53E1D0EAB012FB852D94B68F16E0EFF8118B638B08AA02C26D483E81D6BE72B480F99247062FEE42F474E8A1C6FD34D382445848F2F3
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu53w8ahmwBjZKM/YPHZyZHvz5uv+WouB9+ObcCpyrx6l7KImUglyhkEat/+ysWwi0gdhEs0JGjl6ggRWTy1haxBpVdbIX1nthFXMZebaIdHP2ghjoIc/363UZI6Kf1ptIMVS+uSU+BUhgvOBkReg5Dq6k=
+X-Mailru-Sender: 9EB879F2C80682A0D0AE6A344B45275F39BBC4D52E44B0681356DD24693B53BCCBF40968ACDF6B91D2497E86D6F95D602C62728BC403A049225EC17F3711B6CF1A6F2E8989E84EC137BFB0221605B344978139F6FA5A77F05FEEDEB644C299C0ED14614B50AE0675
+X-Mras: Ok
 
+Document QFPROM compatible for SM7150.
 
---ttjcfkvyttnwvorf
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] fsldma: Support 40 bit DMA addresses where capable
-MIME-Version: 1.0
+Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
+---
+ Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-On Tue, Apr 22, 2025 at 11:25:40AM -0500, Arnd Bergmann wrote:
-> On Tue, Apr 22, 2025, at 10:56, Ben Collins wrote:
-> > On Tue, Apr 22, 2025 at 09:59:42AM -0500, Arnd Bergmann wrote:
-> >>=20
-> >> Right, but this could just mean that they end up using SWIOTLB
-> >> to bounce the high DMA pages or use an IOMMU rather than actually
-> >> translating the physical address to a dma address.
-> >
-> > There's a few things going on. The Local Address Window can shift
-> > anywhere in the 64-bit address space and be as wide as the physical
-> > address (40-bit on T4240, 36-bit on P4080). I think this is mainly for
-> > IO to PCIe and RapidIO, though.
->=20
-> There are usually two sets of registers, not sure which one the Local
-> Address Window refers to:
->=20
-> - Translation of MMIO addresses (PCI BAR and device registers) when
->   accessed from CPU and possibly from P2P DMA, these are represented
->   by the 'ranges' property in DT.
->=20
-> - Translation of physical memory when accessed from a DMA bus master,
->   represented by the 'dma-ranges' property.
->=20
-> The latter is what the dma-mapping API needs. This code has changed
-> a lot over the years, but in the current version the idea is that
-> the limit enforced by the driver through dma_set_mask() is independent
-> of the limit enforced by the platform bus based on the dma-ranges
-> property.=20
+diff --git a/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml b/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
+index 3f6dc6a3a9f1..35e43103d0c5 100644
+--- a/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
++++ b/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
+@@ -49,6 +49,7 @@ properties:
+           - qcom,sm6115-qfprom
+           - qcom,sm6350-qfprom
+           - qcom,sm6375-qfprom
++          - qcom,sm7150-qfprom
+           - qcom,sm8150-qfprom
+           - qcom,sm8250-qfprom
+           - qcom,sm8450-qfprom
+-- 
+2.49.0
 
-LAWs translate physical addresses to IOVA (PCIe/RapidIO/SoC resources)
-and are used for all master level translations (CPU, DMA, PCIe, DDR,
-RapidIO). This is at the interconnect level.
-
-I believe LAWs cover both of these cases.
-
-> >> > I'll check on this, but I think it's a seperate issue. The main thin=
-g is
-> >> > just to configure the dma hw correctly.
-> >>=20
-> >> I think it's still important to check this before changing the
-> >> driver: if the larger mask doesn't actually have any effect now
-> >> because the DT caps the DMA at 4GB, then it might break later
-> >> when someone adds the correct dma-ranges properties.
-> >
-> > I'm adding dma-ranges to my dt for testing.
->=20
-> Ok. The other thing you can try is to printk() the dev->bus_dma_limit
-> to see if it even tries to use >32bit addressing.
-
-Did that. Every combination of IOMMU on/off and dma-ranges in my dt always
-showed bus_dma_limit as 0x0.
-
-As an aside, if you could give this a quick check, I can send the revised
-patch. Appreciate the feedback.
-
-https://github.com/benmcollins/linux/commit/2f2946b33294ebff2fdaae6d1eadc97=
-6147470d6
-
---=20
- Ben Collins
- https://libjwt.io
- https://github.com/benmcollins
- --
- 3EC9 7598 1672 961A 1139  173A 5D5A 57C7 242B 22CF
-
---ttjcfkvyttnwvorf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEPsl1mBZylhoRORc6XVpXxyQrIs8FAmgIBcgACgkQXVpXxyQr
-Is/arg//YUK1btd32Isj+g5BizDLDVu8sjSPgzzwW/6/50sCuEOFLFR+mnfwytO4
-2ksisWOIXnb+riN+JwOqEiRmtskhQCkoHsCQzjGMcLqByME5xOr6GaEpvc7ap6tY
-TlSyTyVLbruwfOH1JufT0/PI8EQVkhyDiD0ypwuzWAxD8yy/M2LG2RfvAZa2YX1o
-TcXsmxTii3vC3ksM0VhUBjjgJ3Hm3MzmAXZmKPrJnY1+CS5bI/IsI+HPftKK44gH
-E7xLgLjSd8oAUDtL+SWyP7RjBOu194HeupXAjW7oEwlRoCLqwu3L/NIqoqvmJvJO
-rqU3bnRxt74BF46FwA1O5N1Vq6AD5MSFZsNcmt9UYB3bNTaOk2BsEnmqnNaf+QAb
-bC3OC85mWUlBwBoTs3ijE1JcNanEZXVHDrBNGda2KEUrk2LQ9Kir00Cj2Q+RCuMj
-/CBg4wCdhNUeRf2B/qeClRTUdoT8mQn26Np8eLSpD5+9EW9s5tmKKAtZsEmSHWd8
-Mww8lkO1UmdnoxOBdmX4IlOw+UaeeazdAxMG42bpzwzaCtAidDSETXEwxQir5E6U
-OpJwLFJZhrtHx1G8G4i7SXUmWnEMgkqbqCmFcGfxi+/K9ybirouKLniqqa+Xnoc6
-OhqYd25DsSaia04tpWYvmaPJ0oDz5/RoIHJlhutHdxeYXayYcuo=
-=L2gn
------END PGP SIGNATURE-----
-
---ttjcfkvyttnwvorf--
 

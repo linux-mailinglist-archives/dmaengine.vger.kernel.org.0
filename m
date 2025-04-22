@@ -1,142 +1,147 @@
-Return-Path: <dmaengine+bounces-4930-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4931-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A069A95C55
-	for <lists+dmaengine@lfdr.de>; Tue, 22 Apr 2025 04:50:00 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1762A95E49
+	for <lists+dmaengine@lfdr.de>; Tue, 22 Apr 2025 08:35:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5D5B31886C95
-	for <lists+dmaengine@lfdr.de>; Tue, 22 Apr 2025 02:50:11 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 188287A336E
+	for <lists+dmaengine@lfdr.de>; Tue, 22 Apr 2025 06:34:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B521645;
-	Tue, 22 Apr 2025 02:49:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03A1B21ABDE;
+	Tue, 22 Apr 2025 06:35:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="tm96GUz/";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="S15YVYNg"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
+Received: from fout-b8-smtp.messagingengine.com (fout-b8-smtp.messagingengine.com [202.12.124.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F60F1531E9
-	for <dmaengine@vger.kernel.org>; Tue, 22 Apr 2025 02:49:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9806221FA7;
+	Tue, 22 Apr 2025 06:35:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745290196; cv=none; b=mTmloo739kgNMcOV/SZ1Os5zVJLNKLUMagCKiKG1r7s0mdZ7Qu3U33jgNwk4QCoX8cGjrr1DXwCEhQiTmm8qttOCfJ+96BfOmUcXzd/Cl1SKipWqWW45VQB1h0KK1OxbzTtKiRfuyFvlQH9YMbIOuY4d3N6+jbR33Q1YGKNR+/s=
+	t=1745303729; cv=none; b=cIfbVEGpXjz7wwJ+MiYhP57CLTMsMLbhx1EGi5k/028h+aDQ3MCeJwU3eZdojjpRyMk3LvqqN3EGKF4nutJ1tHhr03gzS8ztlbK8N847JBmy6lSccLqjazGUChlAoanholnOy8E70eWafzWgl/Pv3OdbJEVwaAh+J/0ukXPVTyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745290196; c=relaxed/simple;
-	bh=xYYP3tYhRP+JX4hNQNmmXMiWv8XMH4tFKOYL6r+tr2I=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=qlKVyZIay0kZKHQLjSNudCoAmFT2jHu9JvaEYT9Eie5dHLYHBmS553yRph+ZrIVJyVtE8Va9Q2DjMKqnPgpDMNt1MW8CMF94M+2ZXI+Knbju92p9hsUySzJSbiHkXcCY0AnVpajbId7KwtY+XhZVxY/0cgvd99Uv0MLqKQlZ/Hk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=linux.dev; arc=none smtp.client-ip=95.215.58.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Date: Mon, 21 Apr 2025 22:49:49 -0400
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Ben Collins <bcollins@kernel.org>
-To: dmaengine@vger.kernel.org
-Cc: Zhang Wei <zw@zh-kernel.org>, Vinod Koul <vkoul@kernel.org>, 
-	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] fsldma: Support 40 bit DMA addresses where capable
-Message-ID: <2025042122-bizarre-ibex-b7ed42@boujee-and-buff>
-Mail-Followup-To: dmaengine@vger.kernel.org, Zhang Wei <zw@zh-kernel.org>, 
-	Vinod Koul <vkoul@kernel.org>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+	s=arc-20240116; t=1745303729; c=relaxed/simple;
+	bh=H9p6hvgQxAMugFl26NqAOx5UFw2lmOm7sVOIyMGXh50=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=aK/ZKkNgx1A0qJAJN+RDB4hR8lQcDVi/iALlI7TSS0TN/Au8o1tOrjscNkPDQhyJl991E7ydpt8kVpgelXvir7yri4VGAueAs8tvSv6/huDSWPgFNJLIWIpE98dttiAHWcM9het/bdEjo+j13m5I+0OkGYxip1UzmHBE4U2fKoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=tm96GUz/; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=S15YVYNg; arc=none smtp.client-ip=202.12.124.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.stl.internal (Postfix) with ESMTP id A27AA11401A2;
+	Tue, 22 Apr 2025 02:35:26 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-05.internal (MEProxy); Tue, 22 Apr 2025 02:35:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1745303726;
+	 x=1745390126; bh=CSbqA3bAQF15TSj2kU2AijUmnn5D8n+f1WrGXiMzIZc=; b=
+	tm96GUz/5laSpVdtqvT92jAn/qGy66m52ES4GFPViDC0RE+s7/JAca2z2jBmsFDQ
+	tb+28qUcHFs3qx0R+2c8CeddgRWIV/9h24rqr23EKUIVwGa4GPeuUrG0tmlgoVt+
+	ZHzn79ST+9I0goMv6y7eOFP1Aob1j4VDt2+5sE7rtuLB/Zyu8JY3KagvyAlC+uir
+	rPD9fI8V4/OHOin2f7bJbaudSREsZk0UkCOyZ72FVn9fVz6n0ZPaVfcXkbrUymZU
+	ouwPj1ZyoYsCGSohjo6H3xKXwjVezVgklx4GrPhsrNwmX/3tHp6p59fFeFvlcY+t
+	n1n6Hewxl/eZ7t4kVuIsaQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1745303726; x=
+	1745390126; bh=CSbqA3bAQF15TSj2kU2AijUmnn5D8n+f1WrGXiMzIZc=; b=S
+	15YVYNgzRi5te+XpEAxt4na3Nt+HZmh0lSNmiT6bmHdemAiHDAbCzmFlZJnif8wp
+	yCdy4UgPdeNG1xrL/evW7VosMvkF/ejT2XX2AK5cdhSQqhHYKgmh8WkQDkaCNKQZ
+	gdXIRzwckAGICeIMDcBAtBBBxNhz7r2YJrNdpVAuRj4nCv/v2kBypQlTtjeAUY+m
+	7igWf2du+M/CD9uRKd+LIw+CprBFKq/cz8wsSwh+RM+may8pIwu3Qmhotlo8S3rf
+	G3u0RpmIuZwd5iHVjAU/+4Ewik3jRMzl70nih37gjyqwEQTCHmC3NNJ+V8M0Q1Ap
+	Xr7VnNo0wpayDOl4WUcxQ==
+X-ME-Sender: <xms:rjgHaCFqDcjmUeR6G11LG7Oqyq2Y-1euR6CcOwuJwp6vhdzD9MujAA>
+    <xme:rjgHaDXycfeQgfS-QA-mrGPXCnQqVcLRH66U2WTcFBaHi9yn-auW0sN55lCa81azh
+    mrSLfZ_axPLjcHTZG0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeeftddvucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
+    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
+    iedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepsggtohhllhhinhhssehkvghrnh
+    gvlhdrohhrghdprhgtphhtthhopehvkhhouhhlsehkvghrnhgvlhdrohhrghdprhgtphht
+    thhopehlihhnuhigphhptgdquggvvheslhhishhtshdrohiilhgrsghsrdhorhhgpdhrtg
+    hpthhtohepughmrggvnhhgihhnvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphht
+    thhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtph
+    htthhopeiifiesiihhqdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:rjgHaMIWXPEbidvdIojmW-kdRwy8zzfCt9WApBEWzFCXD-yt1uAIBg>
+    <xmx:rjgHaMFoY_wlw3acJWj1FJeo6mWISxD64I-MTmyUqcd_1wqL4GE8aQ>
+    <xmx:rjgHaIXEoPJ7GIiIDnVr0Fz4oezSwmkq6GD9_mZYSAC5_MmJ0LLwsQ>
+    <xmx:rjgHaPPGhcATyxbCYLHL0jhu-KvDKMNruOYPP8Ywi-NNbun1FpncCA>
+    <xmx:rjgHaOx8Ctd0-LE-TORyy1WlNtGQ4_XQ-zli77A2XR6VeO-24Y54Dtg5>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 29A312220073; Tue, 22 Apr 2025 02:35:26 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ufg4z4oabgkqbv5p"
-Content-Disposition: inline
-X-Migadu-Flow: FLOW_OUT
+X-ThreadId: T8f64d9338f7a15a8
+Date: Tue, 22 Apr 2025 08:34:55 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Ben Collins" <bcollins@kernel.org>, dmaengine@vger.kernel.org
+Cc: "Zhang Wei" <zw@zh-kernel.org>, "Vinod Koul" <vkoul@kernel.org>,
+ linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Message-Id: <fb0b5293-1cf3-4fcc-be9c-b5fe83f32325@app.fastmail.com>
+In-Reply-To: <2025042122-bizarre-ibex-b7ed42@boujee-and-buff>
+References: <2025042122-bizarre-ibex-b7ed42@boujee-and-buff>
+Subject: Re: [PATCH] fsldma: Support 40 bit DMA addresses where capable
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
+On Tue, Apr 22, 2025, at 04:49, Ben Collins wrote:
+> On 64-bit QorIQ platforms like T4240, the CPU supports 40-bit addressing
+> and memory configurations > 64GiB. The fsldma driver is limiting itself
+> to only 64GiB in all Elo configurations.
+>
+> Setup fsldma driver to make use of the full 40-bit addressing space,
+> specifically on the e5500 and e6500 CPUs.
 
---ufg4z4oabgkqbv5p
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: [PATCH] fsldma: Support 40 bit DMA addresses where capable
-MIME-Version: 1.0
+I don't think making the mask depend on a compile-time option is
+correct, e.g. when you build a combined 32-bit kernel for e500 and
+e5500, you set a different mask compared to an e500-only kernel.
 
-On 64-bit QorIQ platforms like T4240, the CPU supports 40-bit addressing
-and memory configurations > 64GiB. The fsldma driver is limiting itself
-to only 64GiB in all Elo configurations.
+The question here is whether the mask is a limitation of the
+IP block or the bus it's connected to, of if there is any
+limitation at all:
 
-Setup fsldma driver to make use of the full 40-bit addressing space,
-specifically on the e5500 and e6500 CPUs.
+- The driver just writes the DMA address as a 64-bit register,
+  so most likely the DMA device can in fact do wider addressing,
+  and any limitation is either in the bus or the available
+  memory
 
-Signed-off-by: Ben Collins <bcollins@kernel.org>
-Cc: Zhang Wei <zw@zh-kernel.org>
-Cc: Vinod Koul <vkoul@kernel.org>
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: dmaengine@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/dma/fsldma.c | 2 +-
- drivers/dma/fsldma.h | 7 +++++++
- 2 files changed, 8 insertions(+), 1 deletion(-)
+- SoCs that don't set a dma-ranges property in the parent bus
+  are normally still capped to 32 bit DMA. I don't see those
+  properties, so unless there is a special hack on those chips,
+  you get 32 bit DMA regardless of what DMA mask the driver
+  requests
 
-diff --git a/drivers/dma/fsldma.c b/drivers/dma/fsldma.c
-index b5e7d18b97669..8c01963ad47d8 100644
---- a/drivers/dma/fsldma.c
-+++ b/drivers/dma/fsldma.c
-@@ -1254,7 +1254,7 @@ static int fsldma_of_probe(struct platform_device *op)
- 	fdev->common.directions =3D BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
- 	fdev->common.residue_granularity =3D DMA_RESIDUE_GRANULARITY_DESCRIPTOR;
-=20
--	dma_set_mask(&(op->dev), DMA_BIT_MASK(36));
-+	dma_set_mask(&(op->dev), DMA_BIT_MASK(ELO_MAX_PHYS_BITS));
-=20
- 	platform_set_drvdata(op, fdev);
-=20
-diff --git a/drivers/dma/fsldma.h b/drivers/dma/fsldma.h
-index 308bed0a560ac..1e7bd37208412 100644
---- a/drivers/dma/fsldma.h
-+++ b/drivers/dma/fsldma.h
-@@ -13,6 +13,13 @@
- #include <linux/dmapool.h>
- #include <linux/dmaengine.h>
-=20
-+/* Physical addressing capability */
-+#if defined(CONFIG_E6500_CPU) || defined(CONFIG_E5500_CPU)
-+#define ELO_MAX_PHYS_BITS	40
-+#else
-+#define ELO_MAX_PHYS_BITS	36
-+#endif
-+
- /* Define data structures needed by Freescale
-  * MPC8540 and MPC8349 DMA controller.
-  */
---=20
-2.49.0
+- If there are chips that have more than 64GB of RAM installed
+  but have a limitation in the way the DMA engine is wired
+  up to 36 bits, that should be reflected in the dma-ranges
+  property, not the device driver.
 
+- If the limitation is indeed specific to the version of the
+  IP block, this would normally need to be detected based on
+  the compatible string of the DMA engine itself, not a compile
+  time setting.
 
---=20
- Ben Collins
- https://libjwt.io
- https://github.com/benmcollins
- --
- 3EC9 7598 1672 961A 1139  173A 5D5A 57C7 242B 22CF
-
---ufg4z4oabgkqbv5p
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEPsl1mBZylhoRORc6XVpXxyQrIs8FAmgHA80ACgkQXVpXxyQr
-Is9JeQ/8Dko2O5Urq432buc/7ynFHW0W1g3CqE4IA+G6+v1Cxo9qzCL4+vprFp/m
-zXuzz+9pWxlM/rwuq/YWe0ZaAaaqas/501/G8E9hxnIuPrtnzLhu5vJlRy2pvcvI
-ArbCZR+oz8fxPu/DspUMMJ1L4yQBKWxzHBnwP/R//iHNQYnyTftf8baSk5A+u0Z+
-L/SFJUDDuMEY/4duUNciKLSUVSdCOcQJoiBemG0ZcSXAAweiJCKYTuqYDbcd3tNB
-8k/Qq8MOE5+5Y6lxmACRM4rRz80x21MomBcJSkoQYdiHF2jQcJtAr8GNSCYKXqJt
-Zu93agKXbjCyPuc+GQwtFbVVE5VPqHgPoEiCTi6OVGBejkFJ9W+IctpSNrRm7ufv
-UMWq2oXbu1h8lXp23WhV1Up03oMAaaQ9EQlu1bsMwfnS0tc8OJyXo2GcqSbAP/C8
-bM86k0NWYnUDdFUbwfhyVAtcjGmukL0uqe5RLpQULmM7U3kNpm8QQirJpIKZBlJ3
-UWYCRlxSO3ol15bQFMhIOVvHwl4Z7Zlm8WP4beTwicy8diA2j7Ij6JTTbMxP+5Qi
-wbma1y2UqUyfq/QaRhOvqpYlxXaGDiohYziTrHPph2rlWYsaM/70VdwJT9CUKXmP
-6tZu38Fj3IT5Ozhu9pnfXpjfNiBEXMu4gED/bfMoBFN2UHKdbF8=
-=KEhy
------END PGP SIGNATURE-----
-
---ufg4z4oabgkqbv5p--
+     Arnd
 

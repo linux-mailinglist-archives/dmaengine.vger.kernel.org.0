@@ -1,59 +1,62 @@
-Return-Path: <dmaengine+bounces-5006-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5007-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9132EA98D2D
-	for <lists+dmaengine@lfdr.de>; Wed, 23 Apr 2025 16:34:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9C073A98D32
+	for <lists+dmaengine@lfdr.de>; Wed, 23 Apr 2025 16:34:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 468453A9A35
-	for <lists+dmaengine@lfdr.de>; Wed, 23 Apr 2025 14:34:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C94933AE080
+	for <lists+dmaengine@lfdr.de>; Wed, 23 Apr 2025 14:34:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D67827CB35;
-	Wed, 23 Apr 2025 14:34:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 528B927F751;
+	Wed, 23 Apr 2025 14:34:41 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0071B269826;
-	Wed, 23 Apr 2025 14:34:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E674F269826;
+	Wed, 23 Apr 2025 14:34:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745418877; cv=none; b=ZDIErxvAgLx5wI8twINwkxb097JhPfzgmdmPqMYv8ct/XcUhmdOTKyn5Evrbogc440RHdq+649BY3ERcgxLdLPDzNZeyQVTSPCH9pixyBrJM2wc6rIskGyPH1aSvBHdoP0xYaa0flDlf3h5BYpg77w0DdcW9os1vHItJDA/UKL8=
+	t=1745418881; cv=none; b=blRIRdOTY8uIvGThC0JI3Ehz2pdI1//5LQY3p3MflXm/nYqtOEXR/qxOR8aLW6z79CWN2Zn21zbdA2nEoY5T+QRP62z4dFVKgC1CF+E5MNp9n6FVAHrE6RJaN751b+uc/0vsUXl3asPGfuNUogfwSOQMPpvNPBxgi4oJiNjKAwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745418877; c=relaxed/simple;
-	bh=bGrIPUbmCX2+gx305JEbAjPqVOyM3IxELOtpxlYSyp4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pwej/QDZs6+mBLuJD15wR03nlkkb5DCEiv0pIL2x2A7+JrY4YchK0zlB4qPDoirukk83JZpRSdozTH6xBB3lYJYSlypSr4QRoxPeBOdLjVbdkSv8en4D4/djvhX0Q0CKaBQ6t0+aaRoImEmnV7KGddrUPrVHUn5yRZ/yJHfCwho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.171
+	s=arc-20240116; t=1745418881; c=relaxed/simple;
+	bh=y+IMeVLrZQH+0g7f0ywamG9/3z9O00DsAXD9KvYhiQY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=A1yjx45TOrjN6740510czfKc40zzBE0Bxf9UlvWgi4In5Lzqoc5v9MOnKtBdXEiP6fRJU4PKWYPGakVXgpDmTS2tjoscb1dN35Mb8Ef+Pr5LnL4zSjkauVFRPqN/E1J2/BCM42yX+8dvIHyBVcFwTYVfmktGSvJYvuTzVuC7xMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
-X-CSE-ConnectionGUID: w9OQRbTlQxqom6VSeoLb5g==
-X-CSE-MsgGUID: lQWzTg2cTz2fz5pE9tyUGQ==
+X-CSE-ConnectionGUID: r8WTCvx0RGyjdaUo6ZGtrQ==
+X-CSE-MsgGUID: 9vvu91egTkCqtAPTuyK3Yg==
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 23 Apr 2025 23:34:32 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 23 Apr 2025 23:34:37 +0900
 Received: from mulinux.home (unknown [10.226.92.16])
-	by relmlir6.idc.renesas.com (Postfix) with ESMTP id E97FB42722E1;
-	Wed, 23 Apr 2025 23:34:27 +0900 (JST)
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 003FC42722E3;
+	Wed, 23 Apr 2025 23:34:32 +0900 (JST)
 From: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
 To: Vinod Koul <vkoul@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
 	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>
+	Magnus Damm <magnus.damm@gmail.com>
 Cc: Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
 	Biju Das <biju.das.jz@bp.renesas.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
 	dmaengine@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org
-Subject: [PATCH v7 0/6] Add DMAC support to the RZ/V2H(P)
-Date: Wed, 23 Apr 2025 15:34:16 +0100
-Message-Id: <20250423143422.3747702-1-fabrizio.castro.jz@renesas.com>
+	linux-renesas-soc@vger.kernel.org,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: [PATCH v7 1/6] dt-bindings: dma: rz-dmac: Restrict properties for RZ/A1H
+Date: Wed, 23 Apr 2025 15:34:17 +0100
+Message-Id: <20250423143422.3747702-2-fabrizio.castro.jz@renesas.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250423143422.3747702-1-fabrizio.castro.jz@renesas.com>
+References: <20250423143422.3747702-1-fabrizio.castro.jz@renesas.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -62,56 +65,52 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Dear All,
+Make sure we don't allow for the clocks, clock-names, resets,
+reset-names. and power-domains properties for the Renesas
+RZ/A1H SoC because its DMAC doesn't have clocks, resets,
+and power domains.
 
-This series adds DMAC support for the Renesas RZ/V2H(P) SoC.
-
-Cheers,
-Fab
-
+Fixes: 209efec19c4c ("dt-bindings: dma: rz-dmac: Document RZ/A1H SoC")
+Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
 v6->v7:
-* Final touches to the RZ/V2H specific dt-bindings patch as per
-  Geert's comments.
-* Collected tags.
+* No change.
 v5->v6:
-* Reworked the RZ/V2H specific dt-bindings patch as per Geert's
-  comments.
-* Collected tags throughout.
+* No change.
 v4->v5:
-* Clock patch queued up for v6.15, therefore dropped from this
-  version of the series
-* Adjusted the dmac cell specification according to Geert's
-  comments
-* Removed registration of ACK No. throughout
-* Reworked DMAC driver as per Geert's comments
+* Collected tags.
 v3->v4:
-* Fixed an issue with mid_rid/req_no/ack_no initialization
+* No change.
 v2->v3:
-* Replaced rzv2h_icu_register_dma_req_ack with
-  rzv2h_icu_register_dma_req_ack() in ICU patch changelog
-* Added dummy for rzv2h_icu_register_dma_req_ack()
-* Reworked DMAC driver as per Geert's suggestions.
+* No change.
 v1->v2:
-* Improved macros in ICU driver
-* Shared new macros between ICU driver and DMAC driver
-* Improved dt-bindings
+* No change.
+---
+ .../devicetree/bindings/dma/renesas,rz-dmac.yaml          | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Fabrizio Castro (6):
-  dt-bindings: dma: rz-dmac: Restrict properties for RZ/A1H
-  dt-bindings: dma: rz-dmac: Document RZ/V2H(P) family of SoCs
-  irqchip/renesas-rzv2h: Add rzv2h_icu_register_dma_req()
-  dmaengine: sh: rz-dmac: Allow for multiple DMACs
-  dmaengine: sh: rz-dmac: Add RZ/V2H(P) support
-  arm64: dts: renesas: r9a09g057: Add DMAC nodes
-
- .../bindings/dma/renesas,rz-dmac.yaml         | 107 ++++++++++--
- arch/arm64/boot/dts/renesas/r9a09g057.dtsi    | 165 ++++++++++++++++++
- drivers/dma/sh/rz-dmac.c                      |  84 ++++++++-
- drivers/irqchip/irq-renesas-rzv2h.c           |  35 ++++
- include/linux/irqchip/irq-renesas-rzv2h.h     |  23 +++
- 5 files changed, 388 insertions(+), 26 deletions(-)
- create mode 100644 include/linux/irqchip/irq-renesas-rzv2h.h
-
+diff --git a/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml b/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
+index b356251de5a8..82de3b927479 100644
+--- a/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
++++ b/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
+@@ -112,6 +112,14 @@ allOf:
+         - resets
+         - reset-names
+ 
++    else:
++      properties:
++        clocks: false
++        clock-names: false
++        power-domains: false
++        resets: false
++        reset-names: false
++
+ additionalProperties: false
+ 
+ examples:
 -- 
 2.34.1
 

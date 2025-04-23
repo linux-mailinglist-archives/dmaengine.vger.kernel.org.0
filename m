@@ -1,266 +1,164 @@
-Return-Path: <dmaengine+bounces-5003-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5004-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E8E08A98BC3
-	for <lists+dmaengine@lfdr.de>; Wed, 23 Apr 2025 15:47:53 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B6CFA98BD5
+	for <lists+dmaengine@lfdr.de>; Wed, 23 Apr 2025 15:49:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5809F1885B5D
-	for <lists+dmaengine@lfdr.de>; Wed, 23 Apr 2025 13:47:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 68F7A3A75C0
+	for <lists+dmaengine@lfdr.de>; Wed, 23 Apr 2025 13:49:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D788C1A316A;
-	Wed, 23 Apr 2025 13:46:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC6511991B8;
+	Wed, 23 Apr 2025 13:49:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b="pQIC/OIv"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="NDs1xlyY";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="F8O7fn8c"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from OS0P286CU011.outbound.protection.outlook.com (mail-japanwestazon11010021.outbound.protection.outlook.com [52.101.228.21])
+Received: from fhigh-a7-smtp.messagingengine.com (fhigh-a7-smtp.messagingengine.com [103.168.172.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B497315AF6;
-	Wed, 23 Apr 2025 13:46:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.228.21
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745416015; cv=fail; b=bGWrGoxn95ftGG8LUEYcKjTBA9Utla2ElPADS4k9IlGBdWOyK5Ni/gioKMMWYHMB6upYHzeMNqiTDasXM3KyQSNIem99VXnf5PHpbdhLe85V/p2WFKaMgS1JnU1GyUP6LLAq+vvc0fV/KnCjoI3U4Enix6gKjngWDQGKZKi05+M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745416015; c=relaxed/simple;
-	bh=xWo8cjZhR6nXn1gG2/Mb98xnl2sQG/XOm7VnwQWW/Vs=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=nWCHiD9MoBphuaPe9oCbfZSljJxbNBBR/UJKH0gAFEO+sWhGWHMEpxW6Ral2cVGBq4ND3sH7rwC9WMvSKxMAjgUWHDfHv/eZGjeTzcO9CyfWwlRvuAYL54S5drANZ8ulpD+0aBrOnrGxnS+p2FL1yRMVcg4Z6eiLOoKn6jR3KTA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b=pQIC/OIv; arc=fail smtp.client-ip=52.101.228.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=t3IUYIbWHvT+C4/2Njx10nMsUseML696ncgIOC1q/0TksQgC5/dOd9MXviHJDTfUhUTZDXqJ5dKSJHFfKXXjqyvpeMrP+dAxtosewYvinzzaFuVknVKHWWCxxXLKtbZaAJFNfV12qcM8IFbYRyl8c0e3cmfiq0RY17h/kwShRyer2sZrHVbF1wlBoPhAB3nhAIsPOrj6EEvOxPIu3uwGhlgoc2W/5OGZwVZ7dtlfOdHxi05hHhuHZr0PgcNThNAdPVxmmIjVFvKpt4eBEWGtDTXputTwh8BDVAJvjH1vv0tKE3yIionWLW2H/fVOWfpFMUqq6r92AEMAxwfGH8y5sg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=H3XwtGHZB61MAi9vegwJJsObRFCCF6ZEKpOkdZwqcfE=;
- b=T/+agZtKNEnXKZXhuylQJWWYQ1w8kOA81rwzD18ZbqHWNdDgFYRae+DVE0l/Vf3LMR6XKN3QoARzL5OKxCKNpqNIZmX8twtDND+bBmxg3weoKzhC3gK07Qbz7X88nFyK8hIgQyYqMUJcwVFZVwLh30tWf/T6euxBt4JsaU/XZVGKxVrm1NIzLnTdMGZvO1Ma3WxmhmBDM9wmFj1TUmmFS6ZEYt/vdGY0T3gCgLo6+NQDz00c+QnPlfYTDx+SA+zqNfB8jaZfwiuTGEIbiNxTjDysfNud97Pw9NFe5yX+hxcxrER0YBxfO7/FuyBgEOGo+qK0oGk787nh2yqXBLxRLQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=H3XwtGHZB61MAi9vegwJJsObRFCCF6ZEKpOkdZwqcfE=;
- b=pQIC/OIvCklA8x+okTWKmCMHhnBpFmT0O693NRLu8zqwiQplm1KjeTzbflRZx029/hJsVyu7fNJVjyCobfKObb5Xgk4/mjdTBFTiIs0VD2EmHi+8eiVE8ez9oLMEcxf2aZJYV2oDB2yDxVrbQtfuK54pa90bJfafOlxuDS7nGkk=
-Received: from TYCSPRMB0009.jpnprd01.prod.outlook.com (2603:1096:400:18f::5)
- by TYAPR01MB5449.jpnprd01.prod.outlook.com (2603:1096:404:8038::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.23; Wed, 23 Apr
- 2025 13:46:46 +0000
-Received: from TYCSPRMB0009.jpnprd01.prod.outlook.com
- ([fe80::8f8f:14d6:a759:4c66]) by TYCSPRMB0009.jpnprd01.prod.outlook.com
- ([fe80::8f8f:14d6:a759:4c66%6]) with mapi id 15.20.8655.033; Wed, 23 Apr 2025
- 13:46:46 +0000
-From: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-To: Vinod Koul <vkoul@kernel.org>
-CC: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm
-	<magnus.damm@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	=?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>, Biju Das
-	<biju.das.jz@bp.renesas.com>, "dmaengine@vger.kernel.org"
-	<dmaengine@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org"
-	<linux-renesas-soc@vger.kernel.org>, "tglx@linutronix.de"
-	<tglx@linutronix.de>
-Subject: RE: [PATCH v6 5/6] dmaengine: sh: rz-dmac: Add RZ/V2H(P) support
-Thread-Topic: [PATCH v6 5/6] dmaengine: sh: rz-dmac: Add RZ/V2H(P) support
-Thread-Index: AQHbs62Wf/Y/Cx7CZEqSG0MzEkw3v7OxO6CAgAADv0A=
-Date: Wed, 23 Apr 2025 13:46:46 +0000
-Message-ID:
- <TYCSPRMB000932621B754A38F0FCBF8CC2BA2@TYCSPRMB0009.jpnprd01.prod.outlook.com>
-References: <20250422173937.3722875-1-fabrizio.castro.jz@renesas.com>
- <20250422173937.3722875-6-fabrizio.castro.jz@renesas.com>
- <aAjnc+AxmAn9fxSs@vaman>
-In-Reply-To: <aAjnc+AxmAn9fxSs@vaman>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=renesas.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYCSPRMB0009:EE_|TYAPR01MB5449:EE_
-x-ms-office365-filtering-correlation-id: a761737c-52dd-4eaf-288f-08dd826d4a01
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700018;
-x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?h7KZY9pdDd0zKj6Cxfqgy2nd7HJYGS4ZIr2thWbtiqXNP/QnKMFsNuuZDI?=
- =?iso-8859-1?Q?Kzl3Zo0P7ImZOoMVqCxhOr2F7PS3JSeozD+wC/6671h+EkThB97GTD1/BI?=
- =?iso-8859-1?Q?bUSjFdzYYuGEIdCHJeGcnzDQtTfMgd0uVHNnc3z6BXIvgZxKdIErmvfp2h?=
- =?iso-8859-1?Q?z7wh9xVaXwwbSnELAuA+N9jFMPbFI4kVl3kCggNnIabEYqyuAO9M8vr3wF?=
- =?iso-8859-1?Q?Q7SL/C0R4/2f2L8e1fFQaIm8zjvED1deFfSrz/My5FZ6Sx3Smtj8HP1AHU?=
- =?iso-8859-1?Q?U23QnPhQkOkRLmUrLgY7Z1vQ1yEzweoxl1TOzL3HrtxpE09932/djTjIAx?=
- =?iso-8859-1?Q?fdI0df7PXwXnh4m/SWtk5rT8jbJlXEz77TT1DzjCRfLyJxVxB8EjfOkgpB?=
- =?iso-8859-1?Q?bskFZToIjVteDpI6+9lbxKlulISR4saa9404MvPn5Mz+8N7sagzPc0L1ac?=
- =?iso-8859-1?Q?DwIUuIG1vFJ/X0D+znmgtcFXuAsU77gdJ9cTqb6BWgJGZLgwsEYpf5HnWc?=
- =?iso-8859-1?Q?Y8Ht1MfQ0q658ral9HGoOaZqeauAjr81smO3aM1yqHUpUf/bWZkKcLrfX4?=
- =?iso-8859-1?Q?Mj0ji0rAIa8EZ/rMmveQ52CBtkYzRItpCV5YABOXv6uUMbzI0d4RKduRvk?=
- =?iso-8859-1?Q?91dacqIxlgtFtDXbo5FAs7vhJu8QtW2Rci1hTzywOQFW0OCLbFGp6BngSz?=
- =?iso-8859-1?Q?5QfOhv7azh9jfTeWQ0D/xw4THLIKMNibO7LBH080CoKUh6RgUm9zMYf24V?=
- =?iso-8859-1?Q?45B80ZIOiDit57Xpk4UzMScq4QwFAHiqUR1bIbLboZ9b0Ube0wgBPsL8v8?=
- =?iso-8859-1?Q?CtcYi2QydF6ub98dWI6lBz6mQCwqAMSLS9JAVDnd9MyF1N+KBGbQYOTe7e?=
- =?iso-8859-1?Q?OZhR92XzgFPQ9nQ3zDefj08EJP1fCSDZe8FORPLowGYzxoQD1w3dhHGr3d?=
- =?iso-8859-1?Q?byZMeOPrNaZ9PUhMi4+M79501qVBQSMsq6i7BmMLfAxichHZZcYuSxcz1U?=
- =?iso-8859-1?Q?ICveLY3VQazV56d0J7L3+5l7jcd/Ea8JUkzbPNVrDuWdollhCgQXJkf1GH?=
- =?iso-8859-1?Q?ywPHZ1Z0bgDjBVGsky7KcOk+nkZ71cJQVCMbDPCMKmljYvf86fF/VqNTvi?=
- =?iso-8859-1?Q?wn3IScd4RHUIRRbGvjxpBJ3fteBkOEtW6jzL0/2U+wgoPxkt3dkqTN02Mr?=
- =?iso-8859-1?Q?ev57kusxGs/Iz21LLvhEoll5kf0fEAEijSzzSX3l0A2wf3l/i1YXHOrh+U?=
- =?iso-8859-1?Q?wRPnTAImLsUiSnYhGGuu1rMvekiKnHbaaEJpwGzBYJZdI/pIzzvwENajyw?=
- =?iso-8859-1?Q?R9xw1FNOlOtipxPAx9h6QTKbloJdVY4MKGWKjarURFuuPPCSQ5FDKOPKKJ?=
- =?iso-8859-1?Q?m3E1gSWqJ47/And3SqIbaVk7n94bHYhBy+Ug99biLW0Eh8wi/Mj1nmVBfF?=
- =?iso-8859-1?Q?NJ/MY2/O8v59dNluZoARuq1PyWYf4lXd/i4KcUQL9+pjVlOgYECpOY6abf?=
- =?iso-8859-1?Q?DqemAC87gOLdMtL65tprEbWG33eropxuEgiiS7aHylRso+8QDjkAwh2nEA?=
- =?iso-8859-1?Q?tutEdCw=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCSPRMB0009.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?rRWk5HQxPcmY5rToJ+8HB1iCfmSikGNERMYGBWvqQoEGkHbVCULd+fhOHp?=
- =?iso-8859-1?Q?8fUlAoUfrKj7eBUk6gzFjsi+meAm9vIuJTBt9cLISGJxDdrCDPDRQ3xMtC?=
- =?iso-8859-1?Q?3OLx6/qtxBpbY9Ct1L0g8koXUs5QJnxUb1kVL+mdCT1TcyzGDFXPnJnr1m?=
- =?iso-8859-1?Q?I0DFlhzfzrLn+xb2DdNMqibIDOlPKmzWAFgD5Ad8YvLlOa0LDZccyf8tq6?=
- =?iso-8859-1?Q?5vqQJYsomQAPCmg28GZ7n3yrrOAOQDV9PuczdilLwVFmpbJL43i2hLD7fo?=
- =?iso-8859-1?Q?alSH0Kv7XhpU1Mx6B+HWH7NiFpwPhEvh1ZvYO/AArm+Z//zxhj/E8+g5ha?=
- =?iso-8859-1?Q?3+Avo3MFYVyf3E9IHk+wMJ5jAR1Ehh38XP+qrQ5IFuPf8kxC/g0LEPJ8nm?=
- =?iso-8859-1?Q?/vCUQqs4v+3D5MN0OkP+HQm0EF4VOB4mnHRTd9SFcVDFjH4LJft8IqXzL7?=
- =?iso-8859-1?Q?+SJvG0WHaPEwh4ZcIMqhCLMndhabNHraEj61DUljaRrmiqq5hT7peHaC5X?=
- =?iso-8859-1?Q?g6THLMSJTHifV/ERugL/mSMLMN+e63076iMRZ7uiIvfdIU9HwoidRjCT7L?=
- =?iso-8859-1?Q?OyiO9ltMJgrHHYQRFf1EToLtSr2V6O6JIGIq6FqucMGp59ZzerhsL546+V?=
- =?iso-8859-1?Q?cln5ftQpLFUTiaMhTqt03VdW0whcHc9pIiwpNXeTXxzTEzJUOTimg2xygG?=
- =?iso-8859-1?Q?I2/p0A5QFvwMcjhsMbmKl7YPinZmId8JGO2i0niiSPO+FsSxgHVClvGi2n?=
- =?iso-8859-1?Q?/5Ym28x6s2fgNBZW6mNz0wdJl1CWcUlp593SApgGVWXwb5Mp1LZT90hHMz?=
- =?iso-8859-1?Q?6NL8HsAm5mepNKIpCXkOSzlYCBOTBYO+8jH0zyWsBBG1R2E6D5pMOvFvOT?=
- =?iso-8859-1?Q?hw8XnbRYSVAy7629Zrbd9bLoCmmfAUZJgYWOvRIX9shZxlp+KRW9zRFt4Y?=
- =?iso-8859-1?Q?Gn/L0QRYOZg1EPTRnDESP8t5RSne7nmtA/9ryfzhNuF9yt/z8FmBZExDYK?=
- =?iso-8859-1?Q?ijHSjAT/tagKzqY3bfICxs9N5/x9O9h/NGe1tOLnortr8bFrYWiwYxTAX7?=
- =?iso-8859-1?Q?TJRBT/vEqgmfw6fNCI1RSxCA1dN3S6KPiQMKpx1xob4KvKiE1pn6y4CxBz?=
- =?iso-8859-1?Q?f1EyXZBSTHPeYxNfwcyTwjPXLPK6hipWA8x2BG762yxH1/y2RmBLDhC6ll?=
- =?iso-8859-1?Q?ZVkEnzpijMYI2+M0IocaKBywvx8LQlDH3PaTHGx1YpO02cPsW8g7DbWqi+?=
- =?iso-8859-1?Q?+IqPL4N9fl2Gqx6lXJ0rLO6vEA698vZ57XvMqtcRyEdgFbC8J9RcQqEDC7?=
- =?iso-8859-1?Q?hY+dEJlqaKfVWTIZ7318+xUFFIDhdiyiTExlvMMOl1n3t9l2iauMek8rep?=
- =?iso-8859-1?Q?A5r/C5j7eOQOrtj3q500hPh+BATBe9kiD/BJRp5ilfIjVNH1fCVZ/+cDws?=
- =?iso-8859-1?Q?4AsK4p5aYLlw5DNH/5iKGqSf9lj6sdcCID7Tdeddl2yWwE/H2z4ZzyqQl1?=
- =?iso-8859-1?Q?vMpmcHDE4jJgtcjhqzddnAEv2TV1Q8d20P6i9CZxHGABDHY2yq/Cz0YpAy?=
- =?iso-8859-1?Q?QCsPJNFSzuR2mxOb7IQJDelUFjvGSbSFYaCnM+j1Kt6HjZq25tdclGhvsK?=
- =?iso-8859-1?Q?iUvcftP0tqGX/BK1nmbGAB7JeWkN3g0+OXvqqSA9RWzS9AQv4oHo7SZw?=
- =?iso-8859-1?Q?=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4B691BC41;
+	Wed, 23 Apr 2025 13:49:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.158
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745416192; cv=none; b=EXtAnump7yrixdx4F0CuQJTKaCjtfo7ToOdSi/2JonZV/DmJ080stx21Bf5Ucqb0b4SjtvY480ng3jpR93YwIgG3WUDJyerWKbN0xKhJ4JJDni6EFmwdIJi2KoTwIZGPYhzc9gAUyhmi3Kn3mJWUokkirVBroxIFg6pWRzDS7Fk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745416192; c=relaxed/simple;
+	bh=VmfpxIAfj19acRzrst9q+xyePs15pitvD/9hq5UqNU8=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=IKzZ8iuJeh11W5Gf0kYemS1b0J9PdSfj/UJ0oOp7Rp1d4VwI7fVmZi30ECI6zAY0jrzPkID/jA9H3oMLqpcKwtAfljIyg9kD9pw8vjcrdCniyD4TAHPXf6+Rx+xZesRoz+YbwiGJLTKB+kVw/P5KVt2ciOflhmb2yDS+Ha91Kfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=NDs1xlyY; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=F8O7fn8c; arc=none smtp.client-ip=103.168.172.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 4F01011402D4;
+	Wed, 23 Apr 2025 09:49:48 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-05.internal (MEProxy); Wed, 23 Apr 2025 09:49:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1745416188;
+	 x=1745502588; bh=VChUm3sRUsCqwnuWmJt8O1m8Q+AO86xNAt/YCvK6+So=; b=
+	NDs1xlyYyRJehS3fOwCtUCC1D1+2LSVtTp1FFfFHuWVNjm2Alq9XumBzy6iODHtC
+	5QaF97O/bQEeiR6s67H2HoaqkuR6QpBsSetZ1dgY0bDrW/Aw5j+8qCh/ApE1ahA9
+	R+iowUtks2Gg5CdIQHcxOTfw6pa8qPCA2FMTknPrO+C7UKl572GpRoQqAwZ0Gjmw
+	fA2huRjLTjkhYEQjY6oxxoicQWqUVL7nch0XWUq99NqoVJyRHEJ8PM30bwFEAQdA
+	e6sPACgwR56O5xGNDmyTAx4tZ4fleoM/mnhge2kFr9U0zQP/8PwLg6yB4T7PQC/A
+	h4ON6dtBWjUzFUBib4TidA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1745416188; x=
+	1745502588; bh=VChUm3sRUsCqwnuWmJt8O1m8Q+AO86xNAt/YCvK6+So=; b=F
+	8O7fn8clYWCSO+0d+SSifxp2KQ5eLRMJMODl3GMxcETrhuKoUOmEWgOOZw+zh5Vh
+	QEL7G0KM1UBOOQAUJYRsUH/PZ/tU2lWEHhg5mBDi4b0eOaasTcBpWGlI5ihbFLRV
+	JuSOc0H+6DOjFdEnQSo3FqmPeEK524RO50G1LB9VUpo3gWFkG9nsEhpHeixtNVe+
+	NJWIZS5sI9hjn8sX2UxdJArl0MgM16UFgyRvAawU9rAc4Vw3ZCHboqPyLpOwrdHF
+	umPH1yYcwbQKFC0ILf4raC4cznVv/yjJlALoBwJNr46UvbdgVa17MlZ0vUmT5hDs
+	fyfrrzgl5wEs7Eu91qrfA==
+X-ME-Sender: <xms:--8IaKJ8uwi0oISUPlSCJH1YkeYhfm0zbx_nqMG3mcTsLdWaGj5S8g>
+    <xme:--8IaCK5G9PltrDsLnsGcnArlGIfGE8YyKpbwKI_H2EJINDVLhMZQA-2uq6PiHKw-
+    e0FhKpM6UDslClZIFM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeeijeeiucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhepgefgjedujedvieejgeelgfdthfduffeiteef
+    udeghfffkeejfeehtdejfeejteefnecuffhomhgrihhnpehgihhthhhusgdrtghomhenuc
+    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnuges
+    rghrnhgusgdruggvpdhnsggprhgtphhtthhopeeipdhmohguvgepshhmthhpohhuthdprh
+    gtphhtthhopehrohgsihhnrdhmuhhrphhhhiesrghrmhdrtghomhdprhgtphhtthhopegs
+    tgholhhlihhnsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvhhkohhulheskhgvrh
+    hnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugihpphgtqdguvghvsehlihhsthhsrdho
+    iihlrggsshdrohhrghdprhgtphhtthhopegumhgrvghnghhinhgvsehvghgvrhdrkhgvrh
+    hnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgv
+    rhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:--8IaKu32umSgzsK5FB2N-6mBhlHA0buQBz1IDRHdIUQmicKWocyrA>
+    <xmx:--8IaPZBq_MT58H9OuOzQ9XapDgXq7drt8WxZTBctKTEawhF-nEs_g>
+    <xmx:--8IaBbeOfyxuNJ9NnPOltD_db4EkqyxQZQ1GTTvVG6dAU_PNGnFkw>
+    <xmx:--8IaLDvWbNkTuGhdQhFUJmBfieS8MFKY-7tW9-axuJpfhilogo0KA>
+    <xmx:_O8IaJk8HIjtiqkGSqLBORdkagwKSQOpiccj2ax0fwtBuCni_Qf6SOuZ>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id CDC932220073; Wed, 23 Apr 2025 09:49:47 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYCSPRMB0009.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a761737c-52dd-4eaf-288f-08dd826d4a01
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2025 13:46:46.0891
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: aFKk7YGbN7f0onrdXEIgyq/bTrFN5IuZ2CRBYVBSkPc0Tmqna/RPp7nDJ4IwQN48ml1z4miKhfr3PU7QmcCdnW7JC+qrIVIpnS2KbI+mcEU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB5449
+X-ThreadId: T8f64d9338f7a15a8
+Date: Wed, 23 Apr 2025 15:49:16 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Ben Collins" <bcollins@kernel.org>
+Cc: dmaengine@vger.kernel.org, "Vinod Koul" <vkoul@kernel.org>,
+ linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+ "Robin Murphy" <robin.murphy@arm.com>
+Message-Id: <06765168-a36a-4229-b03b-6ea91157237a@app.fastmail.com>
+In-Reply-To: <2025042216-hungry-hound-77ecae@boujee-and-buff>
+References: <2025042122-bizarre-ibex-b7ed42@boujee-and-buff>
+ <fb0b5293-1cf3-4fcc-be9c-b5fe83f32325@app.fastmail.com>
+ <2025042202-uncovered-mongrel-aee116@boujee-and-buff>
+ <ace8c85d-6dec-499f-8a8a-35d4672c181d@app.fastmail.com>
+ <2025042204-apricot-tarsier-b7f5a1@boujee-and-buff>
+ <29bdb7e0-6db9-445e-986f-b29af8369c69@app.fastmail.com>
+ <2025042216-hungry-hound-77ecae@boujee-and-buff>
+Subject: Re: [PATCH] fsldma: Support 40 bit DMA addresses where capable
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Hi Vinod,
+On Tue, Apr 22, 2025, at 23:10, Ben Collins wrote:
+> On Tue, Apr 22, 2025 at 11:25:40AM -0500, Arnd Bergmann wrote:
+>> On Tue, Apr 22, 2025, at 10:56, Ben Collins wrote:
+>>
+>> >> > I'll check on this, but I think it's a seperate issue. The main thing is
+>> >> > just to configure the dma hw correctly.
+>> >> 
+>> >> I think it's still important to check this before changing the
+>> >> driver: if the larger mask doesn't actually have any effect now
+>> >> because the DT caps the DMA at 4GB, then it might break later
+>> >> when someone adds the correct dma-ranges properties.
+>> >
+>> > I'm adding dma-ranges to my dt for testing.
+>> 
+>> Ok. The other thing you can try is to printk() the dev->bus_dma_limit
+>> to see if it even tries to use >32bit addressing.
+>
+> Did that. Every combination of IOMMU on/off and dma-ranges in my dt always
+> showed bus_dma_limit as 0x0.
 
-Thanks for your feedback!
+Strange, either something changed since I last looked at this code,
+or there is something on Freescale SoCs that avoids the
+default logic.
 
-> From: Vinod Koul <vkoul@kernel.org>
-> Sent: 23 April 2025 14:13
-> Subject: Re: [PATCH v6 5/6] dmaengine: sh: rz-dmac: Add RZ/V2H(P) support
->=20
-> On 22-04-25, 18:39, Fabrizio Castro wrote:
-> > The DMAC IP found on the Renesas RZ/V2H(P) family of SoCs is
-> > similar to the version found on the Renesas RZ/G2L family of
-> > SoCs, but there are some differences:
-> > * It only uses one register area
-> > * It only uses one clock
-> > * It only uses one reset
-> > * Instead of using MID/IRD it uses REQ No
-> > * It is connected to the Interrupt Control Unit (ICU)
-> > * On the RZ/G2L there is only 1 DMAC, on the RZ/V2H(P) there are 5
-> >
-> > Add specific support for the Renesas RZ/V2H(P) family of SoC by
-> > tackling the aforementioned differences.
-> >
-> > Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> > Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> > v5->v6:
-> > * Collected tags.
-> > v4->v5:
-> > * Reused RZ/G2L cell specification (with REQ No in place of MID/RID).
-> > * Dropped ACK No.
-> > * Removed mid_rid/req_no/ack_no union and reused mid_rid for REQ No.
-> > * Other small improvements.
-> > v3->v4:
-> > * Fixed an issue with mid_rid/req_no/ack_no initialization
-> > v2->v3:
-> > * Dropped change to Kconfig.
-> > * Replaced rz_dmac_type with has_icu flag.
-> > * Put req_no and ack_no in an anonymous struct, nested under an
-> >   anonymous union with mid_rid.
-> > * Dropped data field of_rz_dmac_match[], and added logic to determine
-> >   value of has_icu flag from DT parsing.
-> > v1->v2:
-> > * Switched to new macros for minimum values.
-> > ---
-> >  drivers/dma/sh/rz-dmac.c | 81 ++++++++++++++++++++++++++++++++++++----
-> >  1 file changed, 74 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c
-> > index d7a4ce28040b..1f687b08d6b8 100644
-> > --- a/drivers/dma/sh/rz-dmac.c
-> > +++ b/drivers/dma/sh/rz-dmac.c
-> > @@ -14,6 +14,7 @@
-> >  #include <linux/dmaengine.h>
-> >  #include <linux/interrupt.h>
-> >  #include <linux/iopoll.h>
-> > +#include <linux/irqchip/irq-renesas-rzv2h.h>
->=20
-> This does not exist for me or in the patches that was sent to me. I have
-> dropped this series due to build failure after picking up dmaengine
-> patches
->=20
-> drivers/dma/sh/rz-dmac.c:17:10: fatal error: linux/irqchip/irq-renesas-rz=
-v2h.h: No such file or
-> directory
+There was originally a hack for powerpc that allowed DMA to be
+done in the absence of a dma-ranges property in the bus node, but
+limit it to 32-bit addressing for backwards compatibility, while
+all other architectures should require either an empty dma-ranges
+to allow full addressing or a specific translation if there is
+a bus specific limit and/or offset.
 
-Sorry about that.
+Looking at the current code I don't see that any more, so it's
+possible that now any DMA is allowed even if there is no
+dma-ranges property at all.
 
-This DMA to work needs access to some ICU features, which are part of this =
-series,
-however somehow I didn't send you those patches. Apologies.
+> As an aside, if you could give this a quick check, I can send the revised
+> patch. Appreciate the feedback.
+>
+> https://github.com/benmcollins/linux/commit/2f2946b33294ebff2fdaae6d1eadc976147470d6
 
-I'll send a new version of this series shortly (because there are some mino=
-r
-improvements to the dt-bindings that I would like to make, to address the l=
-ast
-comments from Geert. It should all be good to go after that as everything h=
-as
-been reviewed by the relevant maintainers already), and I'll make sure to s=
-end
-the whole series to you.
+This looks correct to me, but I would change two things:
 
-I am assuming you'll also be taking the ICU related changes as suggested by
-Thomas:
-https://lore.kernel.org/linux-renesas-soc/87a5ajk7hr.ffs@tglx/
+ - remove the debug message, which you probably left by accident
+ - instead of the explicit of_device_is_compatible(), change it
+   to use the .data field of the of_device_id table instead.
 
-Thanks!
-
-Cheers,
-Fab
-
->=20
-> --
-> ~Vinod
+       Arnd
 

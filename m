@@ -1,135 +1,160 @@
-Return-Path: <dmaengine+bounces-4987-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-4988-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9E330A9883E
-	for <lists+dmaengine@lfdr.de>; Wed, 23 Apr 2025 13:13:10 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E7B9A988AF
+	for <lists+dmaengine@lfdr.de>; Wed, 23 Apr 2025 13:37:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D45FA3A4C65
-	for <lists+dmaengine@lfdr.de>; Wed, 23 Apr 2025 11:12:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B599A17633A
+	for <lists+dmaengine@lfdr.de>; Wed, 23 Apr 2025 11:37:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3F1D26B099;
-	Wed, 23 Apr 2025 11:11:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58D08270576;
+	Wed, 23 Apr 2025 11:37:34 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83D20269B12;
-	Wed, 23 Apr 2025 11:11:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 620A5FC08;
+	Wed, 23 Apr 2025 11:37:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745406702; cv=none; b=OuzRowpMccle8RAo2iEgkOJQ4BGerHQ6cr0VpzzJYGkcUWEftz12PVJYqs/NwQXfz6KxEIHRjeIvPk5PY+2l2V7xvveQs2ADWvbP6cfRgZL9/kg0JI7y63AenkdrZMgf8m9JK9S+TIIOR9kkl5BgrLdozu2DMSSPx0Y/OFXVrMs=
+	t=1745408254; cv=none; b=FHVbqB7I2gdss7OGJeceCZc0XaC37/tabiuNvZ1OsjJyPgEQwkCKrxfc305OUbJkSSNNqHOchyxPWYM+NPzzIUFyK6ahn1ZO2eIahHYninJ/tAQQjEP8vOZsz76xlj23qIj6eAXSP68omWWtmNZDZ0naHQ2kWiUOVHl7JF2XvbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745406702; c=relaxed/simple;
-	bh=dcSj6/dYPAwWyrIQVz0Tr6uehjb1hHrkbiJpXO1OUYY=;
+	s=arc-20240116; t=1745408254; c=relaxed/simple;
+	bh=6OQ2IkiNk4wkMhSgShhUXpqGsET/HqmzKTydByHvaQY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZbXEeU1MF68YljbkgCm1TFTeGbefRPQr+yr4lbiHwQM/W6QVaWmzyAlD+yMBlZx56gBqkc1nzIeflOFB7zUuweqSqBd7VLEUR1cWbvRWbOKgrNZVv2AHx6g/Gcvv1+zyFU5jNDwNILH7TzmR15nCkCxSof9IfEnvlx3152nfR7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.48
+	 To:Cc:Content-Type; b=qxzMOnvjG4o0C+Wt+8gx+R6TXNEslMnBzyruBKwb8Mw0qCCYaK+F7+UA9YLlxZ0X9hO9DzgAimSZ+Aply4CYuxlgHIFsGROLa9KA4CqyA+rnAtH/IvB/Iv4HwL/5wpP4/mgYPzI1OdRsbw81dIFXXy2Up7Zy+hYzWlcecupJAYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-86fbc8717fcso2373344241.2;
-        Wed, 23 Apr 2025 04:11:40 -0700 (PDT)
+Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-86d3805a551so2659217241.3;
+        Wed, 23 Apr 2025 04:37:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745406699; x=1746011499;
+        d=1e100.net; s=20230601; t=1745408249; x=1746013049;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=LwFnQLNd2ElqoHSqs6HidAKq6gQZiy66/qPTuUWPN1I=;
-        b=eip+q+gqhVNtp9nzmWKbo0sXM2Qa7bX0YYsGhA2zLdHpTg02XFCU1M31+KBZXgXubv
-         FYmQfXKb95ezdCzG+el/yQu6LQmurNzADWo0jLx/CQWzGeorKgikSdLn5NphzeGIfdFb
-         A1BCqo5fF6nJtBWebkxLcnzzi74lELVp/8ustDL6go0jEKtCIS4dik3B95oCDFIlPDbT
-         Ax6P0gHaxvGEKZE+licJaIF+ZpBFLFJEr7eeBDoYtDAke044P+g9AL18xzNXM3ki9apD
-         tqhr9uByS4PWhsmDxyY0TAUlXdjOFwUXpeQxLtagiVxAiSe+VPZgcIl1lvfiCWSPERZ2
-         ELLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV4nTgt4x8BCBH7swNHhL8BGna6exII18r+3MWe6r6lmq2HIld10bAqdPHLp7AvfVLGvKL0TkB0p4BXKnbO@vger.kernel.org, AJvYcCWLqvP686d6ZmbC8FyytLAxlbrKIV+dOBMsgC4zMTwx0+eIfk7VD2KsRp+bmpyK6hOffksRVlGBe0I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEY19FB4JWv3ORS24pc8gXmPHM0CYI63gDlrt0lhpRU+IK4n9a
-	P2YxtkDyBW25DByRstSlM6YOEyBarwXSZ0aeXE93I8oRPXoEmfQgnY+mJN1Twhc=
-X-Gm-Gg: ASbGncuq288BHtnJXNEknVQT3yJUvpMevOen7utGdTToFpRaoj2USpxv3ZY02vPIWZI
-	vQUDgR+mT60sBP+L0Wz0FStblMyB7gVMJTAjpc4n6yrHYxdARRp59nIxUp9JQFntcGBb6QUumk/
-	PQ0ACxppH13Um4/X6Qu6ST60N/Hf4qoJ+T0rnavMjyf4qierrSta6RBMbudeabj2bS3okvF4NIU
-	WwSc0pOYxyLxa0yPWMnO8OY9djg56hN5lujQcRyER+j2CLDt7gWOWWQAIGki7vagf7TPwwIVO/k
-	WNyoq2OvPlU+fGFyOhsQTntrFiXBlsP7la1w9bVukdPeZm41PM5Bz77WCoERNuL96jqGhxpcTBD
-	uMCMy+Ws=
-X-Google-Smtp-Source: AGHT+IHFVFJHJ9SDuv/BVOPt7Ka59KPLvJYLCUpZudsYLLMWa5XNzDq+m2rvktzPlTFlfkRBHU28AA==
-X-Received: by 2002:a05:6102:4586:b0:4c4:e414:b4eb with SMTP id ada2fe7eead31-4cb8012ef4dmr11584098137.12.1745406699065;
-        Wed, 23 Apr 2025 04:11:39 -0700 (PDT)
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com. [209.85.221.175])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4cb7da0e87esm2619162137.0.2025.04.23.04.11.38
+        bh=aDuaTM9ibNIGOgABq8eZY4S2tIlVdKvchipAQzhVOaM=;
+        b=le6f/7Df904/SroYxS3IuE4ZGyVBwgdaJKT+WVpcUORwNV/ky8WVh8hryHLElAOt27
+         tRpWZPd7+W/W3mjHAKec/CTTkFvmRtXMiIS6M5XFUBicbWamP5baUiSiBXNaVVReoXM7
+         EqKWZ3JaA0ZVMg4ORoUirhSAT1LsZUJo0T2PQZHdYeVTnb/fkauKWp47mOBXBjib12na
+         o7aQo5oKx/o86gRwDTzIImmsGsHa35cjNxGfC50LWUsvG43ve32GiqdqqVAHJTES04l9
+         TcQqFPE6It351oWPWNACC83nxJKc/UXbXkqAabOuNB3/dXQKHsuws/lF/KT2HTszdtl3
+         7n4w==
+X-Forwarded-Encrypted: i=1; AJvYcCUDl27DJcHKDrJFbbtjrk2eI6egDJpj9QZLBf50rufUeWO4AhXgdxzN4GxNziEzQm9eFtm5nHHLNkAP6WqaHwjPZ5o=@vger.kernel.org, AJvYcCV8i+S5XPoOG9TWqFAm+RPZpLmobbdnqWv+aj6maBeh3Yf6mt6IIVZYH3YnlqvYqf3TJfvke/X2G4d6MLQk@vger.kernel.org, AJvYcCVfOAOK6JQzHfxB/nxuYypoTKLPhDaj4CV1gbDAH2LFYvn5UOuIs5EvkiheAXewBhELUCf8SMq7zggW@vger.kernel.org, AJvYcCX1KDFh5AV0QfEEVouUAHioCm43t0dIBJRX6fUbE31YwaP2kj6otPavWLI5U524dDgzFp3DPspLg/KN@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzjr9woYuq/mXKa4a5n9Uzlth9cihmNpCZcqQaxuI8abts2EBI0
+	jZtUKnhTg663+y0mZrPFufTwCvrqcE7UTFaV+cnmk6vQcpI+c0GSNidEUaUKkfE=
+X-Gm-Gg: ASbGncuHjZI1pBpM9x/URackJBoz8CFbzUvHU5LRLFy+1DE8ZBhtVGSdFPfvVSgZlDE
+	8Z9E8chYMIoEmBjVZSYJBur9H6z2IK7y5ePYfaly39hBR7Jixph4e5pUxyT4sEFj0vB3X4LDOUp
+	L1UTU3hD2/DDyyI61k/RNqLg99ImKYWTxZEHuFBLsWYCqSR52/9szLWCeX7MB7SsbD3hrDaLQdM
+	zdoZY0yqFivzM7fRCpoFSMabbyJVSpKMKiJDEMzXbWNZpA6mSmPcfbgMhmUTSgqSTI6i2VTJP4b
+	QlUbAswuqFyAIi1KUTg3qoqDg69P9EoW5ZTkndoORy8974A+zD/zMs0Kse3ZB1S6QjWvKKoppg7
+	latI=
+X-Google-Smtp-Source: AGHT+IHhfmifE9P37+rg1v5BsnaKS0MXrAvHKGQ27idYcFRc26FFY+/pKYWYsIFHaI1HBYucH6GDpA==
+X-Received: by 2002:a05:6102:2259:b0:4c3:64be:5983 with SMTP id ada2fe7eead31-4cb8023ef61mr12389892137.25.1745408249183;
+        Wed, 23 Apr 2025 04:37:29 -0700 (PDT)
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com. [209.85.222.54])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-877647776b6sm2718858241.26.2025.04.23.04.37.28
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Apr 2025 04:11:38 -0700 (PDT)
-Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-523de538206so2431093e0c.2;
-        Wed, 23 Apr 2025 04:11:38 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUJslNicjUlB456m5v1XTvvsH1M1xh6C/twnpWjewGk7DZJYRBaaGMJqAlDUnvjqvYODugqPoFAho+5HgQ9@vger.kernel.org, AJvYcCV+FQQJucXoe3Nk+S4mOMcihqSCTU4t0zHpXLrSH0hdIovxI70vYB2wElW1jVs3YMzPwnizBmmSFAA=@vger.kernel.org
-X-Received: by 2002:a05:6122:2a13:b0:520:60c2:3fd with SMTP id
- 71dfb90a1353d-529253df487mr15940732e0c.3.1745406698686; Wed, 23 Apr 2025
- 04:11:38 -0700 (PDT)
+        Wed, 23 Apr 2025 04:37:28 -0700 (PDT)
+Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-86fbc8717fcso2382967241.2;
+        Wed, 23 Apr 2025 04:37:28 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUHT+BqWU0un8QmQ1x2ICMyoJKW5dWOU6sMy6StSHicNZPd67wb4F2z1otCnS437N561BahYrmEphrP@vger.kernel.org, AJvYcCUf5/e45t9sRUROWltZ48q5pMbiXPxvzUsXC6TGJsdaJ19dqpjzToCe77/6YXK2mMTmlJAVO/jVe3J+@vger.kernel.org, AJvYcCWPM+N3qe7G169BwBzsixI3+L4e0q5DKpXjtAZc1aawsfpSgQiRTDYkCKsuQn0ex+jhDnZRpYq4q/sIyXb6@vger.kernel.org, AJvYcCX0nzmgX8h//ahmFfx1RJURlVzU2VSAJS6RUnSLq0KivDnrgJyltuW36dW0qyPqlnKpYtoFM2uS1+PB3DDyelznBpU=@vger.kernel.org
+X-Received: by 2002:a05:6102:27ca:b0:4bb:9b46:3f8a with SMTP id
+ ada2fe7eead31-4cb800c1a61mr11696598137.2.1745408248312; Wed, 23 Apr 2025
+ 04:37:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <50dbaf4ce962fa7ed0208150ca987e3083da39ec.1745345400.git.geert+renesas@glider.be>
- <b1f19b31-3535-4bb5-bcef-6f17ad2a0ee6@arm.com>
-In-Reply-To: <b1f19b31-3535-4bb5-bcef-6f17ad2a0ee6@arm.com>
+References: <20250422173937.3722875-1-fabrizio.castro.jz@renesas.com> <20250422173937.3722875-3-fabrizio.castro.jz@renesas.com>
+In-Reply-To: <20250422173937.3722875-3-fabrizio.castro.jz@renesas.com>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 23 Apr 2025 13:11:27 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVJKA8zYETKJTRAwg6=+EuTq4YqbFO32K4+py9YNsD1Gw@mail.gmail.com>
-X-Gm-Features: ATxdqUG3O_R-h3xFZ-VbZPzuOVx8S7u3rM-8ANr4EcMPwyY_6h0-oOYf4tSgGPw
-Message-ID: <CAMuHMdVJKA8zYETKJTRAwg6=+EuTq4YqbFO32K4+py9YNsD1Gw@mail.gmail.com>
-Subject: Re: [PATCH] dmaengine: ARM_DMA350 should depend on ARM/ARM64
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Date: Wed, 23 Apr 2025 13:37:15 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUKVDzLUfcr_0R_VQ0TzBtPWGVbwfX_pKbwOjzuaBLcEw@mail.gmail.com>
+X-Gm-Features: ATxdqUH9su4W4mn8i54UlLb_HgPMtRPSv1JRSwXDunzWGUFbnDSkwnpEps3CkW0
+Message-ID: <CAMuHMdUKVDzLUfcr_0R_VQ0TzBtPWGVbwfX_pKbwOjzuaBLcEw@mail.gmail.com>
+Subject: Re: [PATCH v6 2/6] dt-bindings: dma: rz-dmac: Document RZ/V2H(P)
+ family of SoCs
+To: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
+	Biju Das <biju.das.jz@bp.renesas.com>, dmaengine@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
+	Conor Dooley <conor.dooley@microchip.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Hi Robin,
+Hi Fabrizio,
 
-On Wed, 23 Apr 2025 at 12:59, Robin Murphy <robin.murphy@arm.com> wrote:
-> On 2025-04-22 7:11 pm, Geert Uytterhoeven wrote:
-> > The Arm DMA-350 controller is only present on Arm-based SoCs.
+On Tue, 22 Apr 2025 at 19:40, Fabrizio Castro
+<fabrizio.castro.jz@renesas.com> wrote:
+> Document the Renesas RZ/V2H(P) family of SoCs DMAC block.
+> The Renesas RZ/V2H(P) DMAC is very similar to the one found on the
+> Renesas RZ/G2L family of SoCs, but there are some differences:
+> * It only uses one register area
+> * It only uses one clock
+> * It only uses one reset
+> * Instead of using MID/IRD it uses REQ No
+> * It is connected to the Interrupt Control Unit (ICU)
 >
-> Do you know that for sure? I certainly don't. This is a licensable,
-> self-contained DMA controller IP with no relationship whatsoever to any
-> particular CPU ISA - our other system IP products have turned up in the
-> wild paired with non-Arm CPUs, so I don't see any reason that DMA-350
-> wouldn't either.
+> Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+> v5->v6:
+> * Reworked the description of `#dma-cells`.
+> * Reworked `renesas,icu` related descriptions.
+> * Added `reg:`->`minItems: 2` for `renesas,r7s72100-dmac`.
+> * Since the structure of the document remains the same, I have kept
+>   the tags I have received. Please let me know if that's not okay.
 
-The dependency can always be relaxed later, when the need arises.
-Note that currently there are no users at all...
+Thanks for the update!
 
-Unlike drivers for other AMBA devices, this driver is a plain platform
-driver, not an amba driver, so it does not depend on ARM_AMBA.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-> Would you propose making all the DesignWare drivers depend on ARC
-> because those happen to come from the same company too? ;)
+> --- a/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
+> +++ b/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
+> @@ -80,12 +85,26 @@ properties:
+>      items:
+>        - description: Reset for DMA ARESETN reset terminal
+>        - description: Reset for DMA RST_ASYNC reset terminal
+> +    minItems: 1
+>
+>    reset-names:
+>      items:
+>        - const: arst
+>        - const: rst_async
+>
+> +  renesas,icu:
+> +    description:
+> +      It must contain the phandle to the ICU, and the index of the DMAC as seen
+> +      from the ICU (e.g. parameter k from register ICU_DMkSELy).
 
-No, I am fully aware they may appear anywhere.
+Doesn't really hurt, but this description is identical to the formal
+description of the items below.
 
-> >  Hence add
-> > dependencies on ARM and ARM64, to prevent asking the user about this
-> > driver when configuring a kernel for a non-Arm architecture.
-> >
-> > Fixes: 5d099706449d54b4 ("dmaengine: Add Arm DMA-350 driver")
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> >   drivers/dma/Kconfig | 1 +
-> >   1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-> > index 8109f73baf10fc3b..db87dd2a07f7606e 100644
-> > --- a/drivers/dma/Kconfig
-> > +++ b/drivers/dma/Kconfig
-> > @@ -95,6 +95,7 @@ config APPLE_ADMAC
-> >
-> >   config ARM_DMA350
-> >       tristate "Arm DMA-350 support"
-> > +     depends on ARM || ARM64 || COMPILE_TEST
-> >       select DMA_ENGINE
-> >       select DMA_VIRTUAL_CHANNELS
-> >       help
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    items:
+> +      - items:
+> +          - description: phandle to the ICU node.
+
+Phandle
+
+> +          - description:
+> +              The number of the DMAC as seen from the ICU, i.e. parameter k from
+> +              register ICU_DMkSELy. This may differ from the actual DMAC instance
+> +              number.
+> +
+>  required:
+>    - compatible
+>    - reg
 
 Gr{oetje,eeting}s,
 

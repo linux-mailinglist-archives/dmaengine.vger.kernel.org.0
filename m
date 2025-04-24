@@ -1,169 +1,152 @@
-Return-Path: <dmaengine+bounces-5020-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5021-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 448EAA9AC44
-	for <lists+dmaengine@lfdr.de>; Thu, 24 Apr 2025 13:40:55 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DF0DBA9AC61
+	for <lists+dmaengine@lfdr.de>; Thu, 24 Apr 2025 13:49:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 20C2D9A0D90
-	for <lists+dmaengine@lfdr.de>; Thu, 24 Apr 2025 11:39:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D6CDA1B667BD
+	for <lists+dmaengine@lfdr.de>; Thu, 24 Apr 2025 11:49:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EA6722CBE9;
-	Thu, 24 Apr 2025 11:38:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7180422489A;
+	Thu, 24 Apr 2025 11:48:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="JR1HDn9G"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E364223DF9;
-	Thu, 24 Apr 2025 11:38:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33101225A20
+	for <dmaengine@vger.kernel.org>; Thu, 24 Apr 2025 11:48:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745494713; cv=none; b=nW6w6mbeiHVrWFuu2Z2XWgoq7757q687g5LZff1xLuiuM5aGAFkEIDwz6eDdOvSvd4GFfiRLzc/AFqoRWvFWEmzMklr2DB9/5EIYg33xOyz3zwMvlfYDiKrfHd5BeNLk94ulD0ZGnGPOczLxrcSpdODjVuGu1yOOTBsaN/prjl8=
+	t=1745495333; cv=none; b=svrAobvlxWvT758U46AsRL4LP+OWOldkgOzxZNDGT2ZLoDgZ+25YivqPK/MR6UdZ1pf0f9f2tQtLaI9egCGcM0ODimavbiJnvUgkAb0p83zNJjQt+j0+oLIc3xqAkFYZgz3Kuk97fGbJH33jJoOKMzdk9kUtG95dhspc65oodps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745494713; c=relaxed/simple;
-	bh=YnVdP5JrfoFnV+HtyKFHOIak+9oIvNBw6PGZQxnXm3E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WiUmbCM7giZeC0C2MXN2E9Ws1HNu2IpdUogQSlCgLKxWV7QSagR5/0QEDJAbB93cw7mR6qz0vpbT4sA22AxuaweSmZsz6lsKjyhepoYxj+skZ6stmirosX0gH1nrb/+XbZhxxjzuAR181Ies2BvFx7BDPZoDOmkjfkWSgiZQfSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CCED11063;
-	Thu, 24 Apr 2025 04:38:25 -0700 (PDT)
-Received: from [10.57.73.163] (unknown [10.57.73.163])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 00F4C3F59E;
-	Thu, 24 Apr 2025 04:38:29 -0700 (PDT)
-Message-ID: <7f4207ff-42ec-46ee-beb6-cb27835f955d@arm.com>
-Date: Thu, 24 Apr 2025 12:38:28 +0100
+	s=arc-20240116; t=1745495333; c=relaxed/simple;
+	bh=hLk8B885yjx7fuSvoTeaR5hpp353sG7sSlOLWVu/Oro=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ef18wzByNMh1Wj0T1vGaedcr3tpAbDENyJ7YSR1ToJk4s865SiGWjKSGP++gmjP9Ww/OTu+/L1rL3xlA2knil0M3Wj1cJVhcSfyzV6Xi3RAtMjsr3PNIdhdjYMs5wts0usBd//jEJ/IGzs+4k2SLZAwS4lVM5b8mN6AYeeDyFDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=JR1HDn9G; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1745495313; x=1746100113; i=wahrenst@gmx.net;
+	bh=hutk4RUyOyPo6YZkclFLVE+p5t8Cn/N1Q0b+EB4iz6k=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
+	 MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=JR1HDn9GJANMv27lLqa0WWP3EFrWL0T5iwIUdjgqRtJI3kNpPejwNw/CGQrGyPg2
+	 u8l1oAKfk+t7ao/8cJ8K6Yw4eHevGckDxLeHV0tYB7IK3aqe20J1L0PKIJ7GEbwhr
+	 L6E3ssLtrxIk0UlYGxrz9NWfAlz/h380dfLdm5HRGitp4LWMhe1suCppa654G2zqC
+	 KR8+AM4h1Pc+3/YymKQZNZUYlm7AabZ/ZLrYxvivrNyve9KIHwwKisujwxnKWuRDH
+	 BgXON+BP+xCua7wEJX4cal9P5udL5ApljA0+w3Y+tVXyd5Vw83Tvty8llQecMRf3v
+	 JmdkIw5+eNUz3JAqvg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from stefanw-SCHENKER ([37.4.251.153]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MxDkm-1v19HV38Fk-00wypZ; Thu, 24
+ Apr 2025 13:48:33 +0200
+From: Stefan Wahren <wahrenst@gmx.net>
+To: Frank Li <Frank.Li@nxp.com>,
+	Joy Zou <joy.zou@nxp.com>,
+	Vinod Koul <vkoul@kernel.org>
+Cc: imx@lists.linux.dev,
+	dmaengine@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Stefan Wahren <wahrenst@gmx.net>
+Subject: [PATCH RFC] dmaengine: fsl-edma: Fix return code for unhandled interrupts
+Date: Thu, 24 Apr 2025 13:48:29 +0200
+Message-Id: <20250424114829.9055-1-wahrenst@gmx.net>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dmaengine: ARM_DMA350 should depend on ARM/ARM64
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <50dbaf4ce962fa7ed0208150ca987e3083da39ec.1745345400.git.geert+renesas@glider.be>
- <b1f19b31-3535-4bb5-bcef-6f17ad2a0ee6@arm.com>
- <CAMuHMdVJKA8zYETKJTRAwg6=+EuTq4YqbFO32K4+py9YNsD1Gw@mail.gmail.com>
- <aAjTg8dgvxqLQOwQ@vaman>
- <CAMuHMdXQKG0qptWMi169MVBL1S3hPo1TsaOSxWspoHAwRd+fug@mail.gmail.com>
- <aAjaPV/2DSyPAGRB@vaman> <b7557def-d0a1-4035-9586-a2651e28ab24@arm.com>
- <CAMuHMdWoxPc71YYrEMdPwdq-HOhmP2jNiwo1+-8o6_v4YJ0NHQ@mail.gmail.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <CAMuHMdWoxPc71YYrEMdPwdq-HOhmP2jNiwo1+-8o6_v4YJ0NHQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:FAyuvXCFAvR2VD5P+D6D4tYGbj2GzXT90o/v43SSsSJzPqpdXUV
+ Waqj5QX75GJle1FN35esWPnCLWpKsAAqjRsUh8dpk0w8mSrS6JrSW0YryFHWH9FOMQEPIvh
+ yPop1Pc3ejZyQGhYAUStY0igVtfyX6F8G5c4wNukS+rWj0XLRhKgnJB8zXvDUzsH00T6Xgz
+ A/GdiYc6fLCBtroWdk9ow==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:hJDQupgkjFk=;g52Ofk9lNmoOU2BinfTRp/DdNZb
+ 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
+ poT0TlqB1J/ztfisbxlTb8=
 
-On 2025-04-23 3:34 pm, Geert Uytterhoeven wrote:
-> Hi Robin,
-> 
-> On Wed, 23 Apr 2025 at 15:29, Robin Murphy <robin.murphy@arm.com> wrote:
->> On 2025-04-23 1:17 pm, Vinod Koul wrote:
->>> On 23-04-25, 14:13, Geert Uytterhoeven wrote:
->>>> On Wed, 23 Apr 2025 at 13:48, Vinod Koul <vkoul@kernel.org> wrote:
->>>>> On 23-04-25, 13:11, Geert Uytterhoeven wrote:
->>>>>> On Wed, 23 Apr 2025 at 12:59, Robin Murphy <robin.murphy@arm.com> wrote:
->>>>>>> On 2025-04-22 7:11 pm, Geert Uytterhoeven wrote:
->>>>>>>> The Arm DMA-350 controller is only present on Arm-based SoCs.
->>>>>>>
->>>>>>> Do you know that for sure? I certainly don't. This is a licensable,
->>>>>>> self-contained DMA controller IP with no relationship whatsoever to any
->>>>>>> particular CPU ISA - our other system IP products have turned up in the
->>>>>>> wild paired with non-Arm CPUs, so I don't see any reason that DMA-350
->>>>>>> wouldn't either.
->>>>>>
->>>>>> The dependency can always be relaxed later, when the need arises.
->>>>>> Note that currently there are no users at all...
->>
->> Huh? There is now an upstream DT binding, and DTs using that binding
->> most certainly already exist - not least the one I have, but I'm not the
->> only one. We don't have a requirement that bindings must have
->> upstream-supported consumers.
-> 
-> Dependencies in Kconfig are not related to DT bindings, they only
-> control what can be built?
+For fsl,imx93-edma4 two DMA channels share the same interrupt.
+So in case fsl_edma3_tx_handler is called for the "wrong"
+channel, the return code must be IRQ_NONE. This signalize that
+the interrupt wasn't handled.
 
-I was questioning how you have decided that there are "no users at all", 
-and how you know "the need" hasn't already arisen...
+Fixes: 72f5801a4e2b ("dmaengine: fsl-edma: integrate v3 support")
+Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+=2D--
 
->>>>> True, but do we have any warnings generated as a result, if there are no
->>>>> dependency should we still limit a driver to an arch?
->>>>
->>>> I am not aware of any warnings (I built it on MIPS yesterday ;-).
->>>> It is just one more question that pops up during "make oldconfig",
->>>> and Linus may notice and complain, too...
->>
->> Well, yeah? It's a new driver for some (relatively) new hardware; every
->> release always adds loads of new drivers for things I don't personally
->> care about, so I press "n" a lot when updating my config, just like I
->> imagine most other people do, Linus included.
-> 
-> Please read [1] and ask yourself if Linux wants to see a question
-> about Arm DMA-350 when configuring a kernel for his AMD Threadripper
-> workstation...
+Hi,
+this issue was found on a custom i.MX93 board. This patch has been
+tested on the same platform.
 
-...because the whole point here is that it's *not* "completely 
-nonsensical". I am well aware of Linus' view and I share it myself. This 
-is not a driver for some deeply platform-vendor-specific firmware 
-function. PCIe FPGA prototyping cards are a thing, so yes, just like 
-with XILINX_DMA, anyone with one of those and access to the IP could 
-absolutely synthesise and drive a functional DMA-350 in their x86 PC 
-today if they wish.
+ drivers/dma/fsl-edma-main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Conversely, Linus doesn't have a DMA-350 in his Ampere box or his Mac 
-either, so in that context it's still just as meaningless to prompt him 
-for his ARM64 builds. And I doubt he has all of the dozens of new IIO 
-sensors, USB HIDs, etc. which pop up every release either. I'm not sure 
-what point you're trying to make there.
+diff --git a/drivers/dma/fsl-edma-main.c b/drivers/dma/fsl-edma-main.c
+index 756d67325db5..66bfa28d984e 100644
+=2D-- a/drivers/dma/fsl-edma-main.c
++++ b/drivers/dma/fsl-edma-main.c
+@@ -57,7 +57,7 @@ static irqreturn_t fsl_edma3_tx_handler(int irq, void *d=
+ev_id)
+=20
+ 	intr =3D edma_readl_chreg(fsl_chan, ch_int);
+ 	if (!intr)
+-		return IRQ_HANDLED;
++		return IRQ_NONE;
+=20
+ 	edma_writel_chreg(fsl_chan, 1, ch_int);
+=20
+=2D-=20
+2.34.1
 
-People are building hardware now, which by the time it comes out might 
-be able to run a standard distro kernel and use this driver, if said 
-distro has already built and shipped the module. Why is that such an 
-unacceptably terrible thing?
-
->>> True, give there are no users, lets pick this and drop if we get a non
->>> arm user
->>
->> Well by that logic surely it should just depend on COMPILE_TEST, because
->> there are no ARM or ARM64 "users" either?
-> 
-> If you want to push it that far, fine for me ;-)
-> 
->> FWIW the not-quite-upstream platform I developed on (a custom build of
->> fvp-base-revc with a DMA-350 component added) did happen to be ARM64, as
->> are some other Arm-internal designs and one available SoC that I do know
->> of containing DMA-350; I am not aware of any Linux-capable 32-bit
->> platforms to justify an ARM dependency, so I'd consider that just as
->> arbitrarily pulled out of thin air.
-> 
-> OK, then the ARM dependency can be dropped for now.
-> I had done a quick Google search to find SoCs that contain a DMA-350
-> instance, and had only found a Cortex-M0-based SoC, so I assumed it
-> would be used on ARM, too.
-> 
->> But then to pick another example at random, XILINX_DMA equally has no
->> "users", so please make that depend on something arbitrary as well for
->> consistency; it's only fair.
-> 
-> Sure, there are lots of Kconfig symbols that could benefit from
-> additional dependencies. Unfortunately my time is limited, so usually
-> I create and send patches for new Kconfig symbols only....
-
-Dare I suggest your time could be less limited if you avoided spending 
-it on nonsensical and unnecessary gatekeeping? ;)
-
-Yes, config options with a clear dependency on a particular platform 
-should clearly be restricted to configs which include support for that 
-platform. Config options which do not have any such dependency are just 
-that - *options*, for the distro/end user to decide whether they might 
-be (or become) relevant within the scope and lifetime of the kernel 
-being built.
-
-Thanks,
-Robin.
 

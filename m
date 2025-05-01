@@ -1,85 +1,150 @@
-Return-Path: <dmaengine+bounces-5043-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5044-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2333AA4853
-	for <lists+dmaengine@lfdr.de>; Wed, 30 Apr 2025 12:30:13 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 22F69AA5D3B
+	for <lists+dmaengine@lfdr.de>; Thu,  1 May 2025 12:30:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0F6999A769C
-	for <lists+dmaengine@lfdr.de>; Wed, 30 Apr 2025 10:29:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CA6149C435C
+	for <lists+dmaengine@lfdr.de>; Thu,  1 May 2025 10:29:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB67E2528E4;
-	Wed, 30 Apr 2025 10:28:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5F41216E1B;
+	Thu,  1 May 2025 10:30:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f3E+X7C8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KXrksFjF"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E9B24EAB3;
-	Wed, 30 Apr 2025 10:28:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E200421D3DD;
+	Thu,  1 May 2025 10:30:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746008918; cv=none; b=LJPcERntMk4/HYBFzan/f9OzlgXoGzioijglvw9k8ps2ASyoQhcmw0upxE52la0Y59b9HKT8Aq8O3sU42W8uvdxK3GPFmO/FIwJQwYMkLX7JdMfUTrrfPkTZs5qEMYiUnLJwo1NKyxN8IK2evLLS/qkhIQ0o43kcidJHqAGXYqQ=
+	t=1746095409; cv=none; b=lrZB4C/n1z7Pp4GhoxnrG2Cs9GIqHAoqtxiGyxzhAWjrTm3ZFNwFUh42syT/yfPV56/VjWA9LmDlqeyv4KVWJ4uqgoJQhfDouYS0eII6LmFnyr6jEV8pN6Q9Omb0YCUlq72zXfL3PQus1zB5oZj69BDZPHBMufHAuf1nSP9xKnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746008918; c=relaxed/simple;
-	bh=d3X6TbzGnM0uYj/utTjN7zqqW+wG0ygiugDmgPjIW7M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=srzOpYzFm17G5pTdz0/GuU3G5sIuxS+x1kHtpePh11gWZZlzmwy4rZxq92ttsxJaD/qqKIuxY2XYndCCtOgBHKjood0tC2ULBq55O04fO4iW6klk4RTCg6fmdEfUDwBYkzFBPQ4+HUz+APv/h/i5VPY0g4tGdboB0bOokDlq8xw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f3E+X7C8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D040C4CEEC;
-	Wed, 30 Apr 2025 10:28:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746008918;
-	bh=d3X6TbzGnM0uYj/utTjN7zqqW+wG0ygiugDmgPjIW7M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=f3E+X7C8mRqOxnq1fLHIC5AWbgma1iiUO0TA6rWhMuv5lN9DKabN90fnWQ/86gBG+
-	 Z+ldxSWRTqXBi3WWojlQ01Be3jthptR3Gu8quaEzSAT5VeMXnsOQh5+JBfaf8A6kp6
-	 it7cqvFiprtdJo2yP1wnuywYxbhaOykTeuwg75+yT/oZ42zkdW7ZNfQ8EcOaYw4Qr7
-	 M0GsrYkEksr+W4RWwx21AsT43u1YCEtibVY2mFaxDqJgmMly4UROzru9nJlCWK9JdP
-	 G8/J9Y+P3iT2fcKBYiGyfgB1/zCiJWtwJ6raEb64pqfwMhbA16scDUamgTnufSE9Dp
-	 H/2xZSpBqNSeQ==
-Date: Wed, 30 Apr 2025 12:28:35 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Sai Sree Kartheek Adivi <s-adivi@ti.com>
-Cc: peter.ujfalusi@gmail.com, vkoul@kernel.org, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, nm@ti.com, ssantosh@kernel.org, 
-	dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, praneeth@ti.com, vigneshr@ti.com, u-kumar1@ti.com, 
-	a-chavda@ti.com
-Subject: Re: [PATCH 3/8] drivers: dma: ti: Refactor TI K3 UDMA driver
-Message-ID: <20250430-vegan-pudu-of-enterprise-8f122f@kuoka>
-References: <20250428072032.946008-1-s-adivi@ti.com>
- <20250428072032.946008-4-s-adivi@ti.com>
+	s=arc-20240116; t=1746095409; c=relaxed/simple;
+	bh=rPLhVIXUKVkEtFspB+nrh99HZbnrSQo5uwoHj6X6gOQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QN62mV3/nztvBJCXZcW/pWvHLEJ2BPZVBaNbU3octcpwqHffz6g5hCkJjd0FHO86C5CUxGaa/h7PhFtSjTwT1hEA6ByetHqHSoDTJJGkcnT6vNvI7wp/6dlUNFtqgZA5XvEMqUWSrogHQdEAjvGPK7qZ9BTKNc+noADqe8iR3to=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KXrksFjF; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-54c0fa6d455so948458e87.1;
+        Thu, 01 May 2025 03:30:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746095406; x=1746700206; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=a4JpNFKBrhRnQXThSam216PXFcAPD5WEcbTWzAFVX7U=;
+        b=KXrksFjFqcUFirm+ZnqLzK0X2v+B3brRCmQ5pT7CwcwnNHRArOusr5y8oaa0oB2VyZ
+         IP4G8sLYBaAyrIUVSdYc59G5VLUsY8vbf/VCdMgxgIlxLeCabUM2b1Ruzt76TPEPLl2l
+         4es6EKlSHCBMolrnbjZxuO7ypK1+TzGGM2XkDk3/EMng61+8vxJ4QX6itUu7w+gxlsHu
+         73rQO5I19V4p8ZXuxKujS7HajwHapnu2hZ9Mq0buPtWu0MFTdIN81iG7UJ1tAC1fLYS5
+         gWu+wJCrjqOVkzFCRaDqKlO0wsrfvUM0E+2zuDvMjUY032x/hXztw8M/NbRdleh/Ffbc
+         c0/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746095406; x=1746700206;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=a4JpNFKBrhRnQXThSam216PXFcAPD5WEcbTWzAFVX7U=;
+        b=nZ1V019DbSBjtBUYb2Jzw3faSr33Otyh6+ekqWJnwKFfULfOcz/6f88gViIWSrPrhf
+         iBbyniwypdQMOIqpEinug+z/n02exb7d4GS+ZwsfuCPtyDw8kRwtgHjXStnwM4oTwQ4a
+         LF2597x7AQGU11SsLn+8Pr+WAkDoUpxo3NY+1yGeZIOnNKy1Ww44XULjkHCqty3QcpeL
+         IY0DAJtPKJQ+wKzsz+JtD/pHWMGeVv/uNa/gSjVGzL2cxuj+5iyvsMiZCLiStAXOHVZU
+         G0K5rIRDdAIACar0Rfmvw3vg/D6ZFw1kyFjzb9GMSkS25QVTmpqFnB+yI+RQu7WkiPVb
+         IJdg==
+X-Forwarded-Encrypted: i=1; AJvYcCVP4Xz5Y6+gTVl1miwnL5MFjBdUuNUF3V/XjB0pgzcGTQoPLIY+3suzWHygoAJG80DjxTTAoQOmPcgpgdk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxoRGMwppKwIQXfJ2KORJ2jP1uGUW5X27Bh2BNZH/dDE3ny3D9n
+	dpYmqiaO0maCuZ3OFSjtno3tPJfmpMnBhTpvEa8ixdUV6RPr2g3RZeTibU4y
+X-Gm-Gg: ASbGncvlkW5NIyPljnApCUZjemiIHES0z0eXAK40Pmm/v0MrCMvXVNxA4SJnj+W01qy
+	LJFU3gzhnncnQPE0chgE9V5k7TmTgfOxT4hZIsB9lfIsZBUcjYt8gsgiRhonMcE0svPPxyNnDzy
+	FLt0yoF5rwEwx8awkzTOshMKlyRLybAEW7piDeihwkguswzRi+gBFardGI6iwd/m8CE1lhftzTa
+	WamFcZpmADqsDoCoTHIiiRkfws25wXKVqx4QIoQdEpO17iK42+Ff3hgUaA4T2Y2tCNAkTfDgOkt
+	JYiGFWk5Sk1B2vpl8M3r+ch4dDx9ONCpSJWiAmgLKk61GZNURno5xWZeQY9RnRERAGzVazD6Je4
+	z478GDy6Xh24=
+X-Google-Smtp-Source: AGHT+IFklHfXe5tL5zxv0TVQJ8TGz7/A6J2l1t4Zbg92lJo9KEOzbetZGOqClTPH/L1RnmR+PgiBrw==
+X-Received: by 2002:a05:6512:114b:b0:54e:8dd6:c775 with SMTP id 2adb3069b0e04-54ea7a2b78emr554223e87.16.1746095405612;
+        Thu, 01 May 2025 03:30:05 -0700 (PDT)
+Received: from [10.0.0.42] (host-185-69-73-15.kaisa-laajakaista.fi. [185.69.73.15])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea94f6d3csm57512e87.251.2025.05.01.03.30.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 May 2025 03:30:05 -0700 (PDT)
+Message-ID: <3452e5b6-a2f0-43a1-9f9b-a9c4ac083571@gmail.com>
+Date: Thu, 1 May 2025 13:37:48 +0300
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250428072032.946008-4-s-adivi@ti.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] dmaengine: ti: Add NULL check in udma_probe()
+To: henry martin <bsdhenrymartin@gmail.com>, vkoul@kernel.org
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+ nathan.lynch@amd.com
+References: <20250402023900.43440-1-bsdhenrymartin@gmail.com>
+ <CAEnQdOrR19H84EooKsFTMCPypeEZwR3GD7FA-sj=toxQP-Xoyg@mail.gmail.com>
+Content-Language: en-US
+From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
+In-Reply-To: <CAEnQdOrR19H84EooKsFTMCPypeEZwR3GD7FA-sj=toxQP-Xoyg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 28, 2025 at 12:50:27PM GMT, Sai Sree Kartheek Adivi wrote:
-> Refactors and split the driver into common and device
-> specific parts. There are no functional changes.
+Hi,
+
+On 4/24/25 6:10 AM, henry martin wrote:
+> Hi Peter, Vinod,
 > 
-> Signed-off-by: Sai Sree Kartheek Adivi <s-adivi@ti.com>
+> I hope this email finds you well. I wanted to follow up on my previous patch
+> submission to check if there are any additional feedback or changes you'd like
+> me to address. If so, I’d be happy to incorporate them and send a v2.
 
-Keep consistent subject prefixes, not random choices.
+For some reason I don't have the original patch in my mailbox, but looks
+good, thank you.
 
-> ---
->  drivers/dma/ti/Makefile         |    2 +-
->  drivers/dma/ti/k3-udma-common.c | 2909 ++++++++++++++++++++++++
->  drivers/dma/ti/k3-udma.c        | 3751 ++-----------------------------
+> Please let me know your thoughts. Thanks for your time and review!
 
-That's way more removals than addons...  Not sure how this can be easily
-reviewed...
+Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+> Best regards,
+> Henry
+> 
+> Henry Martin <bsdhenrymartin@gmail.com> 于2025年4月2日周三 10:39写道：
+>>
+>> devm_kasprintf() returns NULL when memory allocation fails. Currently,
+>> udma_probe() does not check for this case, which results in a NULL
+>> pointer dereference.
+>>
+>> Add NULL check after devm_kasprintf() to prevent this issue.
+>>
+>> Fixes: 25dcb5dd7b7c ("dmaengine: ti: New driver for K3 UDMA")
+>> Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+>> ---
+>>  drivers/dma/ti/k3-udma.c | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+>> index 7ed1956b4642..f1c2f8170730 100644
+>> --- a/drivers/dma/ti/k3-udma.c
+>> +++ b/drivers/dma/ti/k3-udma.c
+>> @@ -5582,7 +5582,8 @@ static int udma_probe(struct platform_device *pdev)
+>>                 uc->config.dir = DMA_MEM_TO_MEM;
+>>                 uc->name = devm_kasprintf(dev, GFP_KERNEL, "%s chan%d",
+>>                                           dev_name(dev), i);
+>> -
+>> +               if (!uc->name)
+>> +                       return -ENOMEM;
+>>                 vchan_init(&uc->vc, &ud->ddev);
+>>                 /* Use custom vchan completion handling */
+>>                 tasklet_setup(&uc->vc.task, udma_vchan_complete);
+>> --
+>> 2.34.1
+>>
 
-Best regards,
-Krzysztof
+-- 
+Péter
 
 

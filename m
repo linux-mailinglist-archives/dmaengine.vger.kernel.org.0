@@ -1,151 +1,194 @@
-Return-Path: <dmaengine+bounces-5048-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5049-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 75FB7AA70B5
-	for <lists+dmaengine@lfdr.de>; Fri,  2 May 2025 13:37:16 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2375BAA7DC5
+	for <lists+dmaengine@lfdr.de>; Sat,  3 May 2025 02:41:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DC32017994A
-	for <lists+dmaengine@lfdr.de>; Fri,  2 May 2025 11:37:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ACCE65A2B1A
+	for <lists+dmaengine@lfdr.de>; Sat,  3 May 2025 00:41:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74E4123A99F;
-	Fri,  2 May 2025 11:37:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA4E817741;
+	Sat,  3 May 2025 00:41:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c9LNTIy8"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="fys8bcl8"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 429D21BEF77;
-	Fri,  2 May 2025 11:37:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03496EAF9
+	for <dmaengine@vger.kernel.org>; Sat,  3 May 2025 00:41:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746185832; cv=none; b=u/4KZ0sXcPZst9QKvT2+Mm4I7524fwmARlTzAkPSltoWcsV54dc2wmo8kiiyzHxIU9iGys4OdFjvKpwlJ4MZqAMhKPZp6MVTFjsPW9XydNUnD7KnxNtmy4AjK3rPaGBEYD6qjoWi2Wpme/IyOR43hCYRjlb4nnUEUu1avOtDZbc=
+	t=1746232910; cv=none; b=QkDUWkeXUmbI64R1Rt+QvMCiC3duyRO6Hjm5F1aPsIvSv8SYCo9hk/2vNeVfwSTSTYKnKw4U2mPACURvLOho8jCMcaIB+iz5f7CDSKHPZ1x+4BOOYpNmqHWj2Qri70dYVGW+LUbX8pgvDInhLDBFnstWZdBpqoebxfgFzcYIXPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746185832; c=relaxed/simple;
-	bh=zDHyIMpBkliiANGkCUwk/FgZr9BdMK5VPVDur9GvegY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Zhmkz6Z+s7EV9Vt3AF9pQnMsEtftBqON1SCABTWEyuhyNlKYrWBoffwXzfIdS3GP5Vibol/bzjMzeB/HADYFw8X/nvkHfcsussV3ZNWfvvpxozJZ16HfzpBqB5HrLz85c8zlwEX0zDQ7JPCeYLii816S2t6Jk3LEOsmGlxiUIxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c9LNTIy8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11F8EC4CEE4;
-	Fri,  2 May 2025 11:37:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746185831;
-	bh=zDHyIMpBkliiANGkCUwk/FgZr9BdMK5VPVDur9GvegY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=c9LNTIy8WsnWrwq4CV1KEuI+FQH/CfVm6OxRlRFyKzpfTIb19kZhCx2ePlIWy5y4V
-	 7f8yuzeE9qRtghbhKALSFgD9FjSCo7qpQMnR0ptx1I+ahC4Gl5DHJYWwiiM3ETBIa7
-	 fm962uXizMcDqsypE9zmUm7YokNZNf24R3auusmlQGGhxg5cEL/7bD0Q1zwbVCKgJM
-	 TuuPUnWYsWt7X5ao9wiTYzSAJXezUurt33ErJUpvAWrEaffxMjDxmtFp1PVyAwBLCQ
-	 NoCkvsQnw6pwmhnCiQUSuu4AhAlv6phOOhwf9JtCp5K1bjyaRyGNc7dqown+zZ+PgW
-	 9+UV7tDWnYjDg==
-Message-ID: <d4d91f3c-731f-44a8-8f08-1979f335b074@kernel.org>
-Date: Fri, 2 May 2025 13:37:06 +0200
+	s=arc-20240116; t=1746232910; c=relaxed/simple;
+	bh=cZKzoyqoY7N34pp0epge8nAGtWJ5Lp3SZJtzdzdjcvU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Ug3llAgckIqEvSU4iGbKFlt0+FSDkLfCiMUP2OSowRCLTWNQDUdaQrmhCkQnFMYPY77zkhOaQpW39pidaMicL4fGc5nZGgTv6tN8PqLg69SJRlKmUJ0XQojMiq6H82naxHdLKO/ag70IMSrqatD5BbEXooG/FeYJO9ZGN3IYtn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=fys8bcl8; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5430Mkos025794
+	for <dmaengine@vger.kernel.org>; Sat, 3 May 2025 00:41:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=zexFTSyGgt2dJ/AMnsrfN4
+	8UoyxFFEE4fgdHUg7YobU=; b=fys8bcl8fIp7KA+O32PyHq2JtGU14cxmMYZ4xN
+	YKioSBrgdxbkQS9OH7EhMFKqUbnAuVtTJb1g/bGEz2H2BAuZZrOtzEMWgWWBPvnU
+	u390xYhDuDoSSehlA2vMU99ug+BkepMxnm6uJ4jAA/O3IdE4sOqSAgaBUIa1ITKU
+	FJL6o3G9yhaiip9Jd/si+Fombe2uFeIveAttv0/UEdVzyDLVFWh0rtpQ1aCnGqfv
+	TdyUhogRaT1piuZLoFcARg04EjuJZdphOl29pb55E8KEm6iuf8NskGGg6Lnqjtaj
+	u1imG9EGGSGEF6x9/zYXm0lPhIhHYoZWv8jx1a1o6A56anbg==
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46d8gqr0q9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <dmaengine@vger.kernel.org>; Sat, 03 May 2025 00:41:47 +0000 (GMT)
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4853364ad97so32548261cf.0
+        for <dmaengine@vger.kernel.org>; Fri, 02 May 2025 17:41:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746232907; x=1746837707;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zexFTSyGgt2dJ/AMnsrfN48UoyxFFEE4fgdHUg7YobU=;
+        b=nYp1nadN2ic58WQHxcoxCLOlVeW3n+OSkC90ITvEpt/9OMPtfV9BPWTJtD8mjYMuZJ
+         fzPOpAfwGrZDY8J7Wk3YbzMOVF9M2H71x1Ce8z9wPdQibQoMkAMEXeO9OLF8s18EFk7v
+         hak8kvWQdNM7r8tbEzvO/JE3Ks6E83oDmZrG/J3luJRGCDCN8iI6xi95tad8TBjA57PY
+         XUmscBY/nL2JfPruuRAq0dRc6//5J7YDWM+HiLUnr7oQXgMZtGGGTJsu1YSyZnNrg+Cm
+         5cqHNJrF1eLJ8glPfFNFecX3Y6SP3ZyEciZXhwoBre1FioFQOgDkRIbpVAX4c4p8KsBv
+         X6NQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXxEvhfvZDcPv2cjtbhbRUmLJUmAKeMZT6w3wm0zDisAwbbGg27beXXyCWYHUOuWtYbgmbAlxBMJ7M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQMPdP1/qwukuJ3evLjRx81f4aekVa/frqJfoGDfeCZH8dEOxD
+	T9xven1DpuTJHkDmW+RfgsbaEHUKGGMvqyoccziY4bcRM6x02Q606wX0qCtC0ZtO0KK01O0l6N1
+	FsWVoKZrJ0CgbQWMwA4uxK6aOGaYlNrt6kP5H8FTRBgW7GiMB+tuxVToXGlw=
+X-Gm-Gg: ASbGncv9j3NTIdZ5eEogDyrY80XFSYOa4aaE+1tTzXdjUP7S68LmAjBaNR1hUthOHbP
+	wEJF6RceYeKakl6ACbL4/+7SbvGGeYRrxgPqXKzuA43PxrSgstraokT/2WAqTNTbgRhmyB/P7V+
+	FpKBzcxXhmz9wYAz7G2/DFxLhAoHUoeFrQq13mJY/slzYs3nuyLoHrDZQ/h/D/zbgdxRyo/QUfX
+	waZOA2qxLRtlzoYiIlrY/woL/W2m8I2WFciJi74GduDFz1NWvWSNKRGx5ZcFCP04rbH8SeDGD1P
+	bhiN5KeMoKFmdzRC61gNHsuIfp7Aoy2OnI3ase2eMwOSPdec7shF2z8QEbbz1jfDNI58tlVu5Y4
+	pRF7Dz8C0TpP+Gh9sUmYRizNG
+X-Received: by 2002:a05:622a:4d8b:b0:476:90ea:8ee4 with SMTP id d75a77b69052e-48c32bc28f6mr90866501cf.32.1746232906742;
+        Fri, 02 May 2025 17:41:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF7ecc30BJA+9Dx4O2PmVKjj7HnCIZKZlWFDy70IW+m8VjDZnT+As04kBFqepzl7sWmZNnhPg==
+X-Received: by 2002:a05:622a:4d8b:b0:476:90ea:8ee4 with SMTP id d75a77b69052e-48c32bc28f6mr90866191cf.32.1746232906399;
+        Fri, 02 May 2025 17:41:46 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea94f6b0asm551924e87.249.2025.05.02.17.41.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 May 2025 17:41:45 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Date: Sat, 03 May 2025 03:41:43 +0300
+Subject: [PATCH] dmaengine: qcom: bam_dma: keep remotely controlled units
+ on during boot
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: dma: convert text based binding to json
- schema
-To: Charan Pedumuru <charan.pedumuru@gmail.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>,
- Jonathan Hunter <jonathanh@nvidia.com>, dmaengine@vger.kernel.org,
- devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250501-nvidea-dma-v1-1-a29187f574ba@gmail.com>
- <20250502-lush-resolute-cheetah-a8ceee@kuoka>
- <a701201e-c888-40e5-a57b-45ea0416af31@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <a701201e-c888-40e5-a57b-45ea0416af31@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250503-bam-dma-reset-v1-1-266b6cecb844@oss.qualcomm.com>
+X-B4-Tracking: v=1; b=H4sIAEZmFWgC/x3MQQqAIBBA0avIrBtQQ4OuEi1Mp5qFFhoRSHdPW
+ r7F/xUKZaYCo6iQ6ebCR2pQnQC/u7QRcmgGLbWRRva4uIghOsxU6EI1WBt0UNqTh9acmVZ+/t8
+ 0v+8HG4v6oF8AAAA=
+X-Change-ID: 20250503-bam-dma-reset-1766d2d12cec
+To: Vinod Koul <vkoul@kernel.org>, Caleb Connolly <caleb.connolly@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2188;
+ i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
+ bh=cZKzoyqoY7N34pp0epge8nAGtWJ5Lp3SZJtzdzdjcvU=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoFWZHNxF/NqZ/oMAwyOsaLbJ64y6qBo00AnWJe
+ ngMwguH6VuJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaBVmRwAKCRCLPIo+Aiko
+ 1ba5CACYaPErHkCfSuXCLhGYyXn2t3IdJzsUI05QV2QihSTAiEucd3//V/nGS1yyrJXRKXFdiAk
+ Hh5ACwYoqHvwCceszI3Q/n4xM9YGlX7MLYHQ07rHJwD68Yr5t9MA75A5m2V4Y98PCqIq/E8Op4J
+ fOn27jHuCvbqd2btAgcqGbHNhxCoSNdAG6r2ufdrNGGgdH0F3iRWDjB5DTByhKtOXcS3v3lAOZl
+ 7nWgSBSaZfA3nwJf8kSnfRPATOGP0HKV+Zy8pT8oMYUmwHzJbBL7H/35cSZR0j/bNjMgTb7wDdL
+ bNnfZ7ZF9kmiTmWBr0HHZEL8Z3Wd3AmSuYehz6EbKl4E3rN0
+X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAzMDAwMSBTYWx0ZWRfX04WvAs5Z0eaY IBHStPjL+VCq1VomiJSIE/ICzu+IP3iXysUwit/KQlW+BteYa/x7mS7tKbJ7MPUIWZlCiuy7c1p dEFtZ2qC5Flis7Ud/brspToXgGhouUqs6F6DcHEyhFe6EcGLOGTYPGN9zgcrdJ/ALcDj4vHM13M
+ HyU4yKGTn/Lo7DKecSZb2S0T3Gcr9uWVnA/m1Xfzbusz5vFI0Fwt5Zv9sJXLhuy03vQjcCJtYMW zP2eaFLZPUO8kIB1BBmYGAW7TTKmlGGgvnnqxJWSw0EIpN5OYw9L7dlvDpd8DCxAzRpA6CHap5t RrJd4JpvBkEgiV5BeV3a73un31VJR1YP4BN8NnlqRs/jkGpZMd/PQyDpc0er4nucNvLgi6C8EXy
+ 1L3JU4nXztfzX9LLXOPXvKLk5PxaSk+CIF7rCn5X0hThIxSADQmdXGYBo8YvLcOV6/QvpSV/
+X-Proofpoint-GUID: babeL1ti3M20SKw6oOO7D6NLngjWK_UO
+X-Authority-Analysis: v=2.4 cv=Lf886ifi c=1 sm=1 tr=0 ts=6815664b cx=c_pps a=WeENfcodrlLV9YRTxbY/uA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=KvPR1SqjJM-xazvS2iAA:9 a=QEXdDO2ut3YA:10 a=kacYvNCVWA4VmyqE58fU:22
+X-Proofpoint-ORIG-GUID: babeL1ti3M20SKw6oOO7D6NLngjWK_UO
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-03_01,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ lowpriorityscore=0 adultscore=0 spamscore=0 mlxscore=0 phishscore=0
+ impostorscore=0 clxscore=1015 mlxlogscore=999 bulkscore=0 suspectscore=0
+ malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505030001
 
-On 02/05/2025 12:27, Charan Pedumuru wrote:
->>> +    maxItems: 1
->>> +
->>> +  reset-names:
->>> +    const: dma
->>> +
->>> +required:
->>> +  - compatible
->>> +  - reg
->> And here the order is correct...
->>
+The commit 0ac9c3dd0d6f ("dmaengine: qcom: bam_dma: fix runtime PM
+underflow") made sure the BAM DMA device gets suspended, disabling the
+bam_clk. However for remotely controlled BAM DMA devices the clock might
+be disabled prematurely (e.g. in case of the earlycon this frequently
+happens before UART driver is able to probe), which causes device reset.
 
-Fix your email program, because it re-wraps or removes line breaks in
-each quote. It is making conversation unnecessarily less readable.
+Use sync_state callback to ensure that bam_clk stays on until all users
+are probed (and are able to vote upon corresponding clocks).
 
->>> +  - interrupts
->>> +  - clocks
->> But here different. Keep the same order as in properties.
->>
->>> +  - resets
->>> +  - reset-names
->>> +  - "#dma-cells"
->>> +
->> missing allOf: to dma-controller
-> 
-> 
-> The reason, I didn't include dma-controller is the pattern under 
-> $nodename in dma-controller is not matching with the pattern present in 
-> dts files.
-> 
-> So, I excluded it.
+Fixes: 0ac9c3dd0d6f ("dmaengine: qcom: bam_dma: fix runtime PM underflow")
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+---
+ drivers/dma/qcom/bam_dma.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-Then the DTS has to be changed.
+diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
+index bbc3276992bb012a1b79937bdbd069fc01f75331..09ef450a9fb8e3efe6e664eb17caffb0bd337f84 100644
+--- a/drivers/dma/qcom/bam_dma.c
++++ b/drivers/dma/qcom/bam_dma.c
+@@ -1367,6 +1367,9 @@ static int bam_dma_probe(struct platform_device *pdev)
+ 	pm_runtime_set_active(&pdev->dev);
+ 	pm_runtime_enable(&pdev->dev);
+ 
++	if (bdev->controlled_remotely || bdev->powered_remotely)
++		pm_runtime_get_sync(&pdev->dev);
++
+ 	return 0;
+ 
+ err_unregister_dma:
+@@ -1414,6 +1417,16 @@ static void bam_dma_remove(struct platform_device *pdev)
+ 	clk_disable_unprepare(bdev->bamclk);
+ }
+ 
++static void bam_dma_sync_state(struct device *dev)
++{
++	struct bam_device *bdev = dev_get_drvdata(dev);
++
++	if (bdev->controlled_remotely || bdev->powered_remotely) {
++		pm_runtime_mark_last_busy(bdev->dev);
++		pm_runtime_put_autosuspend(bdev->dev);
++	}
++}
++
+ static int __maybe_unused bam_dma_runtime_suspend(struct device *dev)
+ {
+ 	struct bam_device *bdev = dev_get_drvdata(dev);
+@@ -1474,6 +1487,7 @@ static struct platform_driver bam_dma_driver = {
+ 		.name = "bam-dma-engine",
+ 		.pm = &bam_dma_pm_ops,
+ 		.of_match_table = bam_of_match,
++		.sync_state = bam_dma_sync_state,
+ 	},
+ };
+ 
 
+---
+base-commit: 6ac908f24cd7ddae52c496bbc888e97ee7b033ac
+change-id: 20250503-bam-dma-reset-1766d2d12cec
 
 Best regards,
-Krzysztof
+-- 
+Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+
 

@@ -1,66 +1,65 @@
-Return-Path: <dmaengine+bounces-5066-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5067-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D168FAA9BE7
-	for <lists+dmaengine@lfdr.de>; Mon,  5 May 2025 20:49:52 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 00A97AA9BEA
+	for <lists+dmaengine@lfdr.de>; Mon,  5 May 2025 20:49:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1663C3BED30
-	for <lists+dmaengine@lfdr.de>; Mon,  5 May 2025 18:49:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BB5F816F4C1
+	for <lists+dmaengine@lfdr.de>; Mon,  5 May 2025 18:49:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 965B825D53B;
-	Mon,  5 May 2025 18:49:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7187826E17D;
+	Mon,  5 May 2025 18:49:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="BObpQanz"
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="e8cXzcSy"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44D751D54EE;
-	Mon,  5 May 2025 18:49:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E66CB269B02;
+	Mon,  5 May 2025 18:49:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746470985; cv=none; b=PBSTRIP5MTrwLbxj1acPyN3vokv4LSFPk8Ewt2cC0RVHxpFrlWYaJgyXMMy3Un9tD80abtRSefBwQFlu0dOlhZ42JDCP4MbXBNKhY6YwlfTwXbRu4cNXB2MNd7ION77XI0CmiNJooKSvGJdQXC5yhDFOXv7qzyTEsTlc3aOqQto=
+	t=1746470986; cv=none; b=XgmP0euhSCZ1V/23lf6f1Iax7twsldZraC/GVvCfbxh/ajVr8MCBDsXVbTk8HADYacxFlvmAmEcOlg0gEp3IkrzYu2bemPmzTVS11uZGKtNMzn5ZD+93fiPioNaBNSrra3Xkg5tJJgX9tXu8bCM1G+29rwQ0OYOqrUHvoLhrJ0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746470985; c=relaxed/simple;
-	bh=T6Ncts6N/Z58qzqhIEes9iZ3oovStagca0bRASPa1Kk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YInFQ87yR5qMcrX7qNis1q/JGbrXC+Th5DCHx1z44PR8s0WNSCkUYG0mDB9Ida9PcMme5cCDbfC/M1NRacqYjXdEOUvrmeOyT+9DyIlorcZwRt6G/Taalwbm7oJL4R5HiMKj9gu4ILCALn3mDOUw1kYCzV96NWz6vUDUi7niO78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=BObpQanz; arc=none smtp.client-ip=193.68.50.107
+	s=arc-20240116; t=1746470986; c=relaxed/simple;
+	bh=R8M59vxHAjUlkD4wexaKntih0q/NCGKUE+K4wXaJ7YA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AMUkZcUP/bZ62JdiLUOXqK2hXqKGy32UR+O48gHhR+7G19bGuXxxOz7HzmUIv5fn74Ln+RfTGIuvFDHESK0rlyUzTd9Q9YE0ax6wYBXMk2xpNmXpHNlaCs/NFmUb8JsmDaXJXrETUXQrNGSZACrB2Lzxg0okEIOnl1MObFmLRYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=e8cXzcSy; arc=none smtp.client-ip=193.68.50.107
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
 Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 8C8FFA075A;
-	Mon,  5 May 2025 20:49:39 +0200 (CEST)
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 73B05A09FF;
+	Mon,  5 May 2025 20:49:40 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
 	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:message-id:mime-version:reply-to:subject:subject:to
-	:to; s=mail; bh=R/6cNWBETRGF/BzVYwj3W2JbTh79XOgcLvtKJ6KLVXg=; b=
-	BObpQanzbwc2zx5Bu3udvjAbucVfX4D/BXajPDzK3MyuHoeKcV1xgftTvPwlcMRB
-	MPndqU2RX12hVVuCKclMxGeYzm5kKS0c42zJ/SBUrkMGAvEwegqPeR6Q2QX5PRL/
-	Z02zXsysnmiSuTQxkBlvVpWjK2/oOUf8vRteUH9cyF2F+4hqcA+aLc1/+dnYbVRm
-	Sx2D6zaiitgFZyuGJ5uaQ65MyAXVK/NnPmS0FY9+TzB1UMqoeOPrttxAh2P6fvJB
-	anFMv3xqWp87WgS2hD98LaEOpfh7t/BrqrE1rogd4qjgsY/WMRXPhryHLA3Cy8+F
-	Qe9Wayzh1bLCqFDgaX0VTa0uUno1zZ/yhV0WJ6zrLMjqYgkyv19uI1W8v+fOPAmU
-	5o/Ev1QDu5Rilik81hRxL6bBsWrlXU7mLNqIXNTXqB0EaawFTkXOT4kWzbANZ98W
-	5TJ/jS0B4xHZKrwZG35fa+g8IExUYOuSZ7DFpKnZxbducb00D3HGUKMQ7q3FanKn
-	+rONFBMoGRBERKlOt50zFn9g5/weDnon5z+mXUkBlHHPvWytXmqzJ+se4C38uowL
-	75t9mQguYsVxtdSEgr+EGqdxjKWfEwqebXlcGpewkUiedyCQlHgLQ4C0f/YKDFjT
-	KqeuZaPCZFgHujwRxQfaO2XRP/M2pwUFOymTbTYAKiM=
+	:from:from:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=mail; bh=Ev/Q0RIsmgy1mBqoL4mI
+	cg60ZAPn1CqjIwINVPt8wj8=; b=e8cXzcSyQPxXYdsu/U42CdYPKRUSg0Z0SQ1z
+	Y3SasSSCXe5iGzcK1CoS5lrAyoqikJpJi9PjpfMRaDgnsmCME0dwDDNx+KuQ9L6F
+	7XNNhlN8znhvOADpwDfzWtBWjAEGXL2SyZ8hrKJ3DXgwPWKsb6icoFLB5GfXP0cb
+	MoBjdjue4nQ+oWPayhOWopS+05UHMhCnBnpG5oH4Hzh6suAcyNYt7Ld2x/UCyQB0
+	2VdmOiAOUf8+/VXNtmF9uuapIdO15TYg95PZTcaSiAGnDg6svQLEdW/VS6nsuYdN
+	feukDGtGCe7ghrlOefnAdsy6fC0/26+GUua34Su7IP19JtejdWik81D5XzKoSpNY
+	JJ3C7V4LCvTe9rSn4sZQlIZz7OSH1fzeKf9YtiotGTa5fvdf9CgVytJv6bjZY1Ls
+	pbm4U0nuMxNycvNkXIt/X4PHwiJDGG+VZXANtY+zEan+P5cCRHCHXv5OyuBpOnI/
+	mNtb2Oziv72ETHwECJcO/6ybG2J8JcQZ0kEB1o1Qw9tDEaLTpmt7NyGxxHKUWvQR
+	93OqPDPkIFmTMiDbHKbfXoZLO/7G95N3B3/bTVD8e7qcrKJYEyZtZ8tI3Pld8vph
+	z5qxcNOgPF/ALp5nOgCoYhqzuhnn0GL7vKh27cKgW6pmUFmfDdPp5o34P/IL/lX0
+	njMOkMI=
 From: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
-To: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-spi@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
+To: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>, Vinod Koul
-	<vkoul@kernel.org>, Mark Brown <broonie@kernel.org>, Nicolas Ferre
-	<nicolas.ferre@microchip.com>, Alexandre Belloni
-	<alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	"Rafael J . Wysocki" <rafael@kernel.org>, Tudor Ambarus
-	<tudor.ambarus@linaro.org>
-Subject: [PATCH v5 0/2] Add `devm_dma_request_chan()` to simplify probe path in atmel-quadspi.c
-Date: Mon, 5 May 2025 20:49:32 +0200
-Message-ID: <20250505184936.312274-1-csokas.bence@prolan.hu>
+	<vkoul@kernel.org>
+Subject: [PATCH v5 1/2] dma: Add devm_dma_request_chan()
+Date: Mon, 5 May 2025 20:49:33 +0200
+Message-ID: <20250505184936.312274-2-csokas.bence@prolan.hu>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250505184936.312274-1-csokas.bence@prolan.hu>
+References: <20250505184936.312274-1-csokas.bence@prolan.hu>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -69,54 +68,86 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1746470978;VERSION=7990;MC=3789806188;ID=217951;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
+X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1746470979;VERSION=7990;MC=2492889595;ID=217952;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
 X-ESET-Antispam: OK
 X-EsetResult: clean, is OK
 X-EsetId: 37303A2980D94853667166
 
-The probe function of the atmel-quadspi driver got quite convoluted,
-especially since the addition of SAMA7G5 support, that was forward-ported
-from an older vendor kernel. To alleivate this - and similar problems in
-the future - an effort was made to migrate as many functions as possible,
-to their devm_ managed counterparts. Patch 1/2 adds the new
-`devm_dma_request_chan()` function. Patch 2/2 then uses this APIs to
-simplify the probe() function.
+Expand the arsenal of devm functions for DMA devices, this time for
+requesting channels.
 
-Change in v4:
-* split PM imbalance fix [1] and DMA cleanup [this series]
+Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
+---
+ drivers/dma/dmaengine.c   | 30 ++++++++++++++++++++++++++++++
+ include/linux/dmaengine.h |  7 +++++++
+ 2 files changed, 37 insertions(+)
 
-Patch 2/2 is to be applied after the PM imbalance fix [1]. Patch 1/2 can
-(and should) be applied immediately, to a for-6.16 branch.
-
-[1]
-https://lore.kernel.org/lkml/20250327195928.680771-2-csokas.bence@prolan.hu/
-
-Links to previous versions:
-pre-series:
-https://lore.kernel.org/linux-kernel/20241222141427.819222-1-csokas.bence@prolan.hu/
-https://lore.kernel.org/linux-kernel/20250114222851.1023194-1-csokas.bence@prolan.hu/
-v1:
-https://lore.kernel.org/linux-kernel/20250115160244.1102881-1-csokas.bence@prolan.hu/
-v2:
-https://lore.kernel.org/linux-kernel/20250124085221.766303-8-csokas.bence@prolan.hu/
-v3:
-https://lore.kernel.org/linux-kernel/20250207124802.165408-1-csokas.bence@prolan.hu/
-v4:
-https://lore.kernel.org/lkml/20250317135340.382532-1-csokas.bence@prolan.hu/
-
-Bence Csókás (2):
-  dma: Add devm_dma_request_chan()
-  spi: atmel-quadspi: Use `devm_dma_request_chan()`
-
- drivers/dma/dmaengine.c     | 30 +++++++++++++++++++++++++
- drivers/spi/atmel-quadspi.c | 44 ++++++++++---------------------------
- include/linux/dmaengine.h   |  7 ++++++
- 3 files changed, 48 insertions(+), 33 deletions(-)
-
-
-base-commit: 70cb3b9a371fe9ff4f50cd7889763abd4ab621dc
-base-tree: https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
-prerequisite-patch-id: e698614397eaaf4da550babe05eea26b7ebbfe39
+diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+index 758fcd0546d8..ca13cd39330b 100644
+--- a/drivers/dma/dmaengine.c
++++ b/drivers/dma/dmaengine.c
+@@ -926,6 +926,36 @@ void dma_release_channel(struct dma_chan *chan)
+ }
+ EXPORT_SYMBOL_GPL(dma_release_channel);
+ 
++static void dmaenginem_release_channel(void *chan)
++{
++	dma_release_channel(chan);
++}
++
++/**
++ * devm_dma_request_chan - try to allocate an exclusive slave channel
++ * @dev:	pointer to client device structure
++ * @name:	slave channel name
++ *
++ * Returns pointer to appropriate DMA channel on success or an error pointer.
++ *
++ * The operation is managed and will be undone on driver detach.
++ */
++
++struct dma_chan *devm_dma_request_chan(struct device *dev, const char *name)
++{
++	struct dma_chan *chan = dma_request_chan(dev, name);
++	int ret = 0;
++
++	if (!IS_ERR(chan))
++		ret = devm_add_action_or_reset(dev, dmaenginem_release_channel, chan);
++
++	if (ret)
++		return ERR_PTR(ret);
++
++	return chan;
++}
++EXPORT_SYMBOL_GPL(devm_dma_request_chan);
++
+ /**
+  * dmaengine_get - register interest in dma_channels
+  */
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index bb146c5ac3e4..6de7c05d6bd8 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -1524,6 +1524,7 @@ struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
+ 
+ struct dma_chan *dma_request_chan(struct device *dev, const char *name);
+ struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask);
++struct dma_chan *devm_dma_request_chan(struct device *dev, const char *name);
+ 
+ void dma_release_channel(struct dma_chan *chan);
+ int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps);
+@@ -1560,6 +1561,12 @@ static inline struct dma_chan *dma_request_chan_by_mask(
+ {
+ 	return ERR_PTR(-ENODEV);
+ }
++
++static inline struct dma_chan *devm_dma_request_chan(struct device *dev, const char *name)
++{
++	return ERR_PTR(-ENODEV);
++}
++
+ static inline void dma_release_channel(struct dma_chan *chan)
+ {
+ }
 -- 
 2.49.0
 

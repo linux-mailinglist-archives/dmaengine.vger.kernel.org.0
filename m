@@ -1,239 +1,124 @@
-Return-Path: <dmaengine+bounces-5065-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5066-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 124F9AA9B8A
-	for <lists+dmaengine@lfdr.de>; Mon,  5 May 2025 20:30:18 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D168FAA9BE7
+	for <lists+dmaengine@lfdr.de>; Mon,  5 May 2025 20:49:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1714D1895CF0
-	for <lists+dmaengine@lfdr.de>; Mon,  5 May 2025 18:30:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1663C3BED30
+	for <lists+dmaengine@lfdr.de>; Mon,  5 May 2025 18:49:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 744671624EA;
-	Mon,  5 May 2025 18:30:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 965B825D53B;
+	Mon,  5 May 2025 18:49:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N8cBZH+2"
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="BObpQanz"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3834522087;
-	Mon,  5 May 2025 18:30:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44D751D54EE;
+	Mon,  5 May 2025 18:49:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746469814; cv=none; b=Uly7CJCAhSxEH1vILS4IaYwrOvKhndnXdIELOaGTq2Wu0BnXTPIa2R+iAWCZ+yUH8+bTIPGSpAQmcu0Lmw6n/Qpnv33/Kga3/smnfwL6LWrjbq2NkYpFumza5X+oCpVk0UTFXSUjaV2xJbivQsWhUBCeanigI8d7YV7LYn/AkpI=
+	t=1746470985; cv=none; b=PBSTRIP5MTrwLbxj1acPyN3vokv4LSFPk8Ewt2cC0RVHxpFrlWYaJgyXMMy3Un9tD80abtRSefBwQFlu0dOlhZ42JDCP4MbXBNKhY6YwlfTwXbRu4cNXB2MNd7ION77XI0CmiNJooKSvGJdQXC5yhDFOXv7qzyTEsTlc3aOqQto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746469814; c=relaxed/simple;
-	bh=OiLVPZCoeejwWN1jL9K41mNLLGiUljL3GcilhESEOU0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=J06nCWURo1MN6MeMvd0NbCOuXj1TYXhVjlttsCBuPT9dkmJ+jx+TtdffIQ6hy5qpdn+STi7chiwDjvsMpLdUPhcgAL050rBVdmJmxMhE1grlnFnivfPy7ClpJePswZikkwRBKSsvPnawyfvNqmUjGBTNwmZwcZ7suYpYi3ygzNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N8cBZH+2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED726C4CEE4;
-	Mon,  5 May 2025 18:30:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746469813;
-	bh=OiLVPZCoeejwWN1jL9K41mNLLGiUljL3GcilhESEOU0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=N8cBZH+27ciqDvOHNblhwoCAWao1ZtIMNm0D8rWXJkodPwlOYpF66dJztLWqctY9m
-	 HjJRoBjLOJ+GbJOruJm+JdPwapHfm/6yBhH/F3wwxa1WJ5PuA1qKZDuh5iiXkPy48u
-	 14N+ZCQywaERZvxzvGFpEOuB63MsswOWj5dt7Lf50xuoMmXRR3z6dlbi6yZmQLHLMK
-	 xEnhOj2/IBeOy/+5YIvhX3eHlHw0rpXAum0o+jEmiNN9ESgyox2GcDSAAvfT/zxMXF
-	 wsA1lGxTIlVeQ8p8hCofM2ciAGCF6oVohad9JKCLQ6nJPGYWxkwBPKEbQeVicerTut
-	 WbAaZQ33NoxIg==
-Date: Mon, 5 May 2025 19:30:01 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Nuno =?UTF-8?B?U8Oh?= via B4 Relay
- <devnull+nuno.sa.analog.com@kernel.org>
-Cc: nuno.sa@analog.com, linux-clk@vger.kernel.org,
- linux-fpga@vger.kernel.org, dmaengine@vger.kernel.org,
- linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
- linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org, Stephen Boyd
- <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Moritz
- Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>, Xu Yilun
- <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>, Vinod Koul
- <vkoul@kernel.org>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck
- <linux@roeck-us.net>, Michael Hennerich <Michael.Hennerich@analog.com>,
- Trevor Gamblin <tgamblin@baylibre.com>, Uwe =?UTF-8?B?S2xlaW5lLUvDtm5p?=
- =?UTF-8?B?Zw==?= <ukleinek@kernel.org>, David Lechner
- <dlechner@baylibre.com>, Mark Brown <broonie@kernel.org>, Mike Turquette
- <mturquette@linaro.org>, Xu Yilun <yilun.xu@linux.intel.com>
-Subject: Re: [PATCH v4 3/7] include: linux: move adi-axi-common.h out of
- fpga
-Message-ID: <20250505193001.1183e7cc@jic23-huawei>
-In-Reply-To: <20250505-dev-axi-clkgen-limits-v4-3-3ad5124e19e1@analog.com>
-References: <20250505-dev-axi-clkgen-limits-v4-0-3ad5124e19e1@analog.com>
-	<20250505-dev-axi-clkgen-limits-v4-3-3ad5124e19e1@analog.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1746470985; c=relaxed/simple;
+	bh=T6Ncts6N/Z58qzqhIEes9iZ3oovStagca0bRASPa1Kk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YInFQ87yR5qMcrX7qNis1q/JGbrXC+Th5DCHx1z44PR8s0WNSCkUYG0mDB9Ida9PcMme5cCDbfC/M1NRacqYjXdEOUvrmeOyT+9DyIlorcZwRt6G/Taalwbm7oJL4R5HiMKj9gu4ILCALn3mDOUw1kYCzV96NWz6vUDUi7niO78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=BObpQanz; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 8C8FFA075A;
+	Mon,  5 May 2025 20:49:39 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=mail; bh=R/6cNWBETRGF/BzVYwj3W2JbTh79XOgcLvtKJ6KLVXg=; b=
+	BObpQanzbwc2zx5Bu3udvjAbucVfX4D/BXajPDzK3MyuHoeKcV1xgftTvPwlcMRB
+	MPndqU2RX12hVVuCKclMxGeYzm5kKS0c42zJ/SBUrkMGAvEwegqPeR6Q2QX5PRL/
+	Z02zXsysnmiSuTQxkBlvVpWjK2/oOUf8vRteUH9cyF2F+4hqcA+aLc1/+dnYbVRm
+	Sx2D6zaiitgFZyuGJ5uaQ65MyAXVK/NnPmS0FY9+TzB1UMqoeOPrttxAh2P6fvJB
+	anFMv3xqWp87WgS2hD98LaEOpfh7t/BrqrE1rogd4qjgsY/WMRXPhryHLA3Cy8+F
+	Qe9Wayzh1bLCqFDgaX0VTa0uUno1zZ/yhV0WJ6zrLMjqYgkyv19uI1W8v+fOPAmU
+	5o/Ev1QDu5Rilik81hRxL6bBsWrlXU7mLNqIXNTXqB0EaawFTkXOT4kWzbANZ98W
+	5TJ/jS0B4xHZKrwZG35fa+g8IExUYOuSZ7DFpKnZxbducb00D3HGUKMQ7q3FanKn
+	+rONFBMoGRBERKlOt50zFn9g5/weDnon5z+mXUkBlHHPvWytXmqzJ+se4C38uowL
+	75t9mQguYsVxtdSEgr+EGqdxjKWfEwqebXlcGpewkUiedyCQlHgLQ4C0f/YKDFjT
+	KqeuZaPCZFgHujwRxQfaO2XRP/M2pwUFOymTbTYAKiM=
+From: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
+To: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-spi@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
+CC: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>, Vinod Koul
+	<vkoul@kernel.org>, Mark Brown <broonie@kernel.org>, Nicolas Ferre
+	<nicolas.ferre@microchip.com>, Alexandre Belloni
+	<alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"Rafael J . Wysocki" <rafael@kernel.org>, Tudor Ambarus
+	<tudor.ambarus@linaro.org>
+Subject: [PATCH v5 0/2] Add `devm_dma_request_chan()` to simplify probe path in atmel-quadspi.c
+Date: Mon, 5 May 2025 20:49:32 +0200
+Message-ID: <20250505184936.312274-1-csokas.bence@prolan.hu>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1746470978;VERSION=7990;MC=3789806188;ID=217951;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
+X-ESET-Antispam: OK
+X-EsetResult: clean, is OK
+X-EsetId: 37303A2980D94853667166
 
-On Mon, 05 May 2025 17:41:34 +0100
-Nuno S=C3=A1 via B4 Relay <devnull+nuno.sa.analog.com@kernel.org> wrote:
+The probe function of the atmel-quadspi driver got quite convoluted,
+especially since the addition of SAMA7G5 support, that was forward-ported
+from an older vendor kernel. To alleivate this - and similar problems in
+the future - an effort was made to migrate as many functions as possible,
+to their devm_ managed counterparts. Patch 1/2 adds the new
+`devm_dma_request_chan()` function. Patch 2/2 then uses this APIs to
+simplify the probe() function.
 
-> From: Nuno S=C3=A1 <nuno.sa@analog.com>
->=20
-> The adi-axi-common.h header has some common defines used in various ADI
-> IPs. However they are not specific for any fpga manager so it's
-> questionable for the header to live under include/linux/fpga. Hence
-> let's just move one directory up and update all users.
->=20
-> Suggested-by: Xu Yilun <yilun.xu@linux.intel.com>
-> Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+Change in v4:
+* split PM imbalance fix [1] and DMA cleanup [this series]
 
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> # for IIO
+Patch 2/2 is to be applied after the PM imbalance fix [1]. Patch 1/2 can
+(and should) be applied immediately, to a for-6.16 branch.
 
-> ---
->  drivers/clk/clk-axi-clkgen.c              | 2 ++
->  drivers/dma/dma-axi-dmac.c                | 2 +-
->  drivers/hwmon/axi-fan-control.c           | 2 +-
->  drivers/iio/adc/adi-axi-adc.c             | 3 +--
->  drivers/iio/dac/adi-axi-dac.c             | 2 +-
->  drivers/pwm/pwm-axi-pwmgen.c              | 2 +-
->  drivers/spi/spi-axi-spi-engine.c          | 2 +-
->  include/linux/{fpga =3D> }/adi-axi-common.h | 0
->  8 files changed, 8 insertions(+), 7 deletions(-)
->=20
-> diff --git a/drivers/clk/clk-axi-clkgen.c b/drivers/clk/clk-axi-clkgen.c
-> index 2a95f9b220234a1245024a821c50e1eb9c104ac9..31915f8f5565f2ef5d17c0b4a=
-0c91a648005b3e6 100644
-> --- a/drivers/clk/clk-axi-clkgen.c
-> +++ b/drivers/clk/clk-axi-clkgen.c
-> @@ -16,6 +16,8 @@
->  #include <linux/mod_devicetable.h>
->  #include <linux/err.h>
-> =20
-> +#include <linux/adi-axi-common.h>
-> +
->  #define AXI_CLKGEN_V2_REG_RESET		0x40
->  #define AXI_CLKGEN_V2_REG_CLKSEL	0x44
->  #define AXI_CLKGEN_V2_REG_DRP_CNTRL	0x70
-> diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
-> index 36943b0c6d603cbe38606b0d7bde02535f529a9a..5b06b0dc67ee12017c165bf81=
-5fb7c0e1bf5abd8 100644
-> --- a/drivers/dma/dma-axi-dmac.c
-> +++ b/drivers/dma/dma-axi-dmac.c
-> @@ -6,6 +6,7 @@
->   *  Author: Lars-Peter Clausen <lars@metafoo.de>
->   */
-> =20
-> +#include <linux/adi-axi-common.h>
->  #include <linux/bitfield.h>
->  #include <linux/clk.h>
->  #include <linux/device.h>
-> @@ -22,7 +23,6 @@
->  #include <linux/platform_device.h>
->  #include <linux/regmap.h>
->  #include <linux/slab.h>
-> -#include <linux/fpga/adi-axi-common.h>
-> =20
->  #include <dt-bindings/dma/axi-dmac.h>
-> =20
-> diff --git a/drivers/hwmon/axi-fan-control.c b/drivers/hwmon/axi-fan-cont=
-rol.c
-> index 35c862eb158b0909dac64c2e9f51f0f9f0e8bf72..b7bb325c3ad966ed2a93be4df=
-bf4e20661568509 100644
-> --- a/drivers/hwmon/axi-fan-control.c
-> +++ b/drivers/hwmon/axi-fan-control.c
-> @@ -4,9 +4,9 @@
->   *
->   * Copyright 2019 Analog Devices Inc.
->   */
-> +#include <linux/adi-axi-common.h>
->  #include <linux/bits.h>
->  #include <linux/clk.h>
-> -#include <linux/fpga/adi-axi-common.h>
->  #include <linux/hwmon.h>
->  #include <linux/hwmon-sysfs.h>
->  #include <linux/interrupt.h>
-> diff --git a/drivers/iio/adc/adi-axi-adc.c b/drivers/iio/adc/adi-axi-adc.c
-> index c7357601f0f869e57636f00bb1e26c059c3ab15c..87fa18f1ec96782556bdfad08=
-bedb5e7549fb93d 100644
-> --- a/drivers/iio/adc/adi-axi-adc.c
-> +++ b/drivers/iio/adc/adi-axi-adc.c
-> @@ -6,6 +6,7 @@
->   * Copyright 2012-2020 Analog Devices Inc.
->   */
-> =20
-> +#include <linux/adi-axi-common.h>
->  #include <linux/bitfield.h>
->  #include <linux/cleanup.h>
->  #include <linux/clk.h>
-> @@ -20,8 +21,6 @@
->  #include <linux/regmap.h>
->  #include <linux/slab.h>
-> =20
-> -#include <linux/fpga/adi-axi-common.h>
-> -
->  #include <linux/iio/backend.h>
->  #include <linux/iio/buffer-dmaengine.h>
->  #include <linux/iio/buffer.h>
-> diff --git a/drivers/iio/dac/adi-axi-dac.c b/drivers/iio/dac/adi-axi-dac.c
-> index b143f7ed6847277aeb49094627d90e5d95eed71c..581a2fe55a7fb35f1a03f96f3=
-a0e95421d1583e7 100644
-> --- a/drivers/iio/dac/adi-axi-dac.c
-> +++ b/drivers/iio/dac/adi-axi-dac.c
-> @@ -5,6 +5,7 @@
->   *
->   * Copyright 2016-2024 Analog Devices Inc.
->   */
-> +#include <linux/adi-axi-common.h>
->  #include <linux/bitfield.h>
->  #include <linux/bits.h>
->  #include <linux/cleanup.h>
-> @@ -23,7 +24,6 @@
->  #include <linux/regmap.h>
->  #include <linux/units.h>
-> =20
-> -#include <linux/fpga/adi-axi-common.h>
->  #include <linux/iio/backend.h>
->  #include <linux/iio/buffer-dmaengine.h>
->  #include <linux/iio/buffer.h>
-> diff --git a/drivers/pwm/pwm-axi-pwmgen.c b/drivers/pwm/pwm-axi-pwmgen.c
-> index 4259a0db9ff45808eecae28680473292d165d1f6..e720191e74558d15f1b04fa18=
-cf2984299f88809 100644
-> --- a/drivers/pwm/pwm-axi-pwmgen.c
-> +++ b/drivers/pwm/pwm-axi-pwmgen.c
-> @@ -18,10 +18,10 @@
->   * - Supports normal polarity. Does not support changing polarity.
->   * - On disable, the PWM output becomes low (inactive).
->   */
-> +#include <linux/adi-axi-common.h>
->  #include <linux/bits.h>
->  #include <linux/clk.h>
->  #include <linux/err.h>
-> -#include <linux/fpga/adi-axi-common.h>
->  #include <linux/io.h>
->  #include <linux/minmax.h>
->  #include <linux/module.h>
-> diff --git a/drivers/spi/spi-axi-spi-engine.c b/drivers/spi/spi-axi-spi-e=
-ngine.c
-> index 7c252126b33ea83fe6a6e80c6cb87499243069f5..d498132f1ff6adf20639bf4a2=
-1f1687903934bec 100644
-> --- a/drivers/spi/spi-axi-spi-engine.c
-> +++ b/drivers/spi/spi-axi-spi-engine.c
-> @@ -5,9 +5,9 @@
->   *  Author: Lars-Peter Clausen <lars@metafoo.de>
->   */
-> =20
-> +#include <linux/adi-axi-common.h>
->  #include <linux/clk.h>
->  #include <linux/completion.h>
-> -#include <linux/fpga/adi-axi-common.h>
->  #include <linux/interrupt.h>
->  #include <linux/io.h>
->  #include <linux/of.h>
-> diff --git a/include/linux/fpga/adi-axi-common.h b/include/linux/adi-axi-=
-common.h
-> similarity index 100%
-> rename from include/linux/fpga/adi-axi-common.h
-> rename to include/linux/adi-axi-common.h
->=20
+[1]
+https://lore.kernel.org/lkml/20250327195928.680771-2-csokas.bence@prolan.hu/
+
+Links to previous versions:
+pre-series:
+https://lore.kernel.org/linux-kernel/20241222141427.819222-1-csokas.bence@prolan.hu/
+https://lore.kernel.org/linux-kernel/20250114222851.1023194-1-csokas.bence@prolan.hu/
+v1:
+https://lore.kernel.org/linux-kernel/20250115160244.1102881-1-csokas.bence@prolan.hu/
+v2:
+https://lore.kernel.org/linux-kernel/20250124085221.766303-8-csokas.bence@prolan.hu/
+v3:
+https://lore.kernel.org/linux-kernel/20250207124802.165408-1-csokas.bence@prolan.hu/
+v4:
+https://lore.kernel.org/lkml/20250317135340.382532-1-csokas.bence@prolan.hu/
+
+Bence Csókás (2):
+  dma: Add devm_dma_request_chan()
+  spi: atmel-quadspi: Use `devm_dma_request_chan()`
+
+ drivers/dma/dmaengine.c     | 30 +++++++++++++++++++++++++
+ drivers/spi/atmel-quadspi.c | 44 ++++++++++---------------------------
+ include/linux/dmaengine.h   |  7 ++++++
+ 3 files changed, 48 insertions(+), 33 deletions(-)
+
+
+base-commit: 70cb3b9a371fe9ff4f50cd7889763abd4ab621dc
+base-tree: https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
+prerequisite-patch-id: e698614397eaaf4da550babe05eea26b7ebbfe39
+-- 
+2.49.0
+
 
 

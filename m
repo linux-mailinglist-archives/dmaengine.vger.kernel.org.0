@@ -1,80 +1,81 @@
-Return-Path: <dmaengine+bounces-5076-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5077-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D1BA5AAC1E8
-	for <lists+dmaengine@lfdr.de>; Tue,  6 May 2025 13:03:49 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 03BB1AAC1ED
+	for <lists+dmaengine@lfdr.de>; Tue,  6 May 2025 13:04:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E66AB1C2082D
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E375817D5A8
 	for <lists+dmaengine@lfdr.de>; Tue,  6 May 2025 11:04:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFEDE2777F2;
-	Tue,  6 May 2025 11:03:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01D212798E1;
+	Tue,  6 May 2025 11:03:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZXaIorai"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b6Kdq9hv"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78D1122ACD6;
-	Tue,  6 May 2025 11:03:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76AFB2797B0;
+	Tue,  6 May 2025 11:03:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746529424; cv=none; b=IuZqT1n5wj15QHJBYQkVHUBMbaAMIW/wCR9u/7HJvC8cox8WVKXMhewI8RikkFZCaEHKEolbOX6LFGqSZppTC+OsMbbUz2UUP8gRTYSj5uM8oXolhrhLyfTQMT+1135PCJaW1M3J087LsGz3UUAYl9qYrE7M531B31GD86Uh9ao=
+	t=1746529428; cv=none; b=DIuuMl541x26mnDk2xtbhQZ4+zR2WgFUImsXTm4/LtQg/ZvRRqy2OlJgM2SZZm3/iFMOxx0Zk+dFMzIiEe1JhycwLHbD3yt4V1U2sRDfxYrVhJg2/dFr/TuCEr6rmCQU9Y+uYzMufIBrFbxGO9LS6/Xw0px6pkQtTPR1l23EQKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746529424; c=relaxed/simple;
-	bh=Mxo+sKtgJ+VAHG8khhRCMm4VG2e2s/imH0lQcEoCUVM=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=hv4Qj6EN3hxKEd24wc/a1s7Zyg8+JcGxVfOmoY6aXZ99va4kZl8rQ1mDpyoOoBS3bxd75I7ySe4W7w4lO+xoUOdYpGAAWd8ll++rz0iD99YurMKKzL5uFa/aNyy5YSqacgUbB3f7dSDpeofnXaYBMt4TrlBJJGKMcCctRHZS8EM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZXaIorai; arc=none smtp.client-ip=209.85.210.174
+	s=arc-20240116; t=1746529428; c=relaxed/simple;
+	bh=7XsJOQPup8e+ZG8bqUkN0whaKI0XEfX1cgodPpJreq4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=NGq775D+ROIKEVxcepl7UCzOmax/mU6MaYEbLQdwMboaxVYLzqk/pCt702EZSa3fRuHNskUAFt7Y2NyANoEui05Gz5dy2LJ7wgrkFrwXfNBBxW9vzoMt4vlGTvsRLtBFU9Kl9uYUFlNrls6BR/oLm1LowuweM55eVRQ3nhWONGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b6Kdq9hv; arc=none smtp.client-ip=209.85.210.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-736b0c68092so4764109b3a.0;
-        Tue, 06 May 2025 04:03:43 -0700 (PDT)
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-736ad42dfd6so4436414b3a.3;
+        Tue, 06 May 2025 04:03:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746529423; x=1747134223; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ymiy8zab3UNB6IEzIJOcgrjjmb0CNxFMt5LrXEAva38=;
-        b=ZXaIorai/qX0O1qw7wD4rbL1phVIs7n3uuohjbSpsazyXgD3jxhK6on+HfkKFW3pft
-         LfywFATmSfx1Cex2n4kxZdMQyfwYGUB2kwcReMvj1+vcn6ni2WqGPHWApEFZnQJeVeJz
-         XyjglK6y/F1YWNJ4vYHMfL+yy+aOECu3g5baVe+e44Nt6fiaLJtO3k10dgBQ2f9fn0bU
-         ckSlDRsOO0bYxQoARyx3lY6sC6+cD0L2AJMG/Guv1ZPYyxf/YW6Ksttlc5lLYRiueMBv
-         Cc5vbua46/G2vU34gwa0iNGYbSXIUsU4ucpiAT7IehqXuKtldmVaV1wsTpPwIUIYRugf
-         GwuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746529423; x=1747134223;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=gmail.com; s=20230601; t=1746529427; x=1747134227; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Ymiy8zab3UNB6IEzIJOcgrjjmb0CNxFMt5LrXEAva38=;
-        b=mzi/6BWFH73fnw6chKE2ARJF2L2yrc2adOiZvi+sq7o56jJLg9UOOdWShhq337g2OJ
-         h//aWeFf2C+JGgsr00UwarPeXUOFCimmqXUn76QcNvAijb3cdyVKyOD5FhKGWWM2mRAy
-         mqDLco4oSrnCRfaPwdGDancJwVugRQDsb7IdydtSoowXj+nPFanUju7Ha2UGGYWKaCFF
-         yC3Ts8rqL5UNR5mV/h15SNcHxgOYihOQfaVg3Z1CkcPxmKeaoiQqsXZFMG6Eean1lEFy
-         YvrFaX7UTrDQGZ0/oNxfD8BtI0O9I57Ujtq7kEO1wgYs3Ldmb+USAWOr/46P1p6jc8Ag
-         SyCA==
-X-Forwarded-Encrypted: i=1; AJvYcCV/szflZD3ivSKD80FCJOflkijGgELf7jfmBXOykSbOGNFE9uuM3X/SgKPzZqqLExfllHeygzpJ5CP37QB2@vger.kernel.org, AJvYcCWAZYokLShhgbE72P/n64/U/BpkXGjs/X6oUe1srWVXo+4aSO7GRe8cunscnX4A1wucg18vGAvJXahy@vger.kernel.org, AJvYcCWcKhPYlvt1sd6LGo1P67BOjq6/Qi4QfK6M2CJ7KQ7G7gIdLffQSiDbLbeVOkRbmyPRJBPj3sRl5E6BVb4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/cOMBf4LPDJ7whX1OTQYxj9eEDSipp8l4k5R8sR816YJGPKqT
-	IIhaaUxd1NXxxFeR0XATsMxgD5DpWGvu8blgPtx7k+C/oCyUP97F
-X-Gm-Gg: ASbGncuE+P6QTFPadeRQDd7Jxf4Kkmb4d2HLop2oELr7B1/WGENGO3XJ03X+RsEi99y
-	puKVOCeAhFxTmiZ/jl/R8X2ZAQKCRJ0LKfyEqP2VpeEgoWjMACOhxVHdanyNSlMXy/yHtpJI3+6
-	HagF37eEl/8H5xVyE2AVryMXhwa+QMzoRobQ4PjgMtwOWLU/wJ1bNOSK/QTVts7DoBRcKEgIbHM
-	btwvDEFYoL52XAXclIvlDFzKf0oAyhYlWWNxDyw1MWdnAeAq1LUOVnrp93ubFYctYnioVE63n2j
-	WEACr8xBdZRqsUhno1DriF+rSfY6PWT9vmcg063V5qY6aQ/DqQ==
-X-Google-Smtp-Source: AGHT+IHRis9S8YF6fBA7WGW047ImXE54/4S7Eyd92Z7QGrUQds8DW/h28IO5dVmuRh14Ob603sftew==
-X-Received: by 2002:a05:6a00:8d8d:b0:736:51ab:7ae1 with SMTP id d2e1a72fcca58-74058ae6607mr21847565b3a.16.1746529422662;
-        Tue, 06 May 2025 04:03:42 -0700 (PDT)
+        bh=JqNrCD4w2UOFQjLaLK7IWUb2YYR/VpnmuOsefV6Wh7s=;
+        b=b6Kdq9hvzEtqAyAZeu3++0XA+qse8yUYQCKqyB7PNUKKqRBSpRfQ4Xv6tcpaPbid2V
+         7QTqMaejxXDAX9PTyMEKUowLUACE6Lt0n3jH8kraEdtT68uZOmfnOAbEYP6dY/5/h6O2
+         vlOB6aiWHzpdvYxcHAgIaL7LnOLPwh0Dp/gXxMrgBuKmjOv9798r13Gvr25iHqxmTHZf
+         /FqKLMB3P5//BJKPg2PmFVbJmyxIHEtJSOYDAE8UufLNyvKPdarjAzhZKcM/h672nZe4
+         UjV5IyQ8uVgogdIGteAGDQcqx4E2bhKnXKDt5ntdX01VT59WVZhEQo8fN+g0k6xI2OWp
+         jmXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746529427; x=1747134227;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JqNrCD4w2UOFQjLaLK7IWUb2YYR/VpnmuOsefV6Wh7s=;
+        b=P9H/ZEHy6q6r+bUWUYO1kfurmOvrrbWcYKvK3klVWZiXn95EuOJj+rZWiQ0y8FEnwN
+         joPhh/IpaAbir/0zqtHdGbSw7MnMAIB4E4LyDKNub0/63pAD5gaXUsXN47XrjduW4eIN
+         sUXr8gNTM8PqCaclAtJB5z7301+eEv26ol4RKPxvLDbwsCzxhacwFXGabCwFY95UbHKK
+         QwnokE9OR1WYVWmt1vNYXBFYGCXmrbH6+FIh6e4aZ9n0nCC88f5l3rJlGsRaZQR90Mds
+         5aqtTI3S0D8ESVS81J3oq7roCZGHeFMORLisniVd2b0D4dcDYyzOhFBqkX1ubWjHev9D
+         Y+ZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUdr1FkYiKjRi1Eyb3hR9F2jW3gF/sif6IOkUEu+7w7E6NV1GmQeEidZE43zdw1ZZQLlKjvUYtSswBqylU=@vger.kernel.org, AJvYcCV0gL5Qw27rUgxtsaNdLidkDjgfAOpr6/eA59CuBwvu8haDaFiCMH6bD7qNljHS3737bY6p+5HArm8USnm2@vger.kernel.org, AJvYcCV7o114ebByAqZ+vlEm9b0iGLwuY6+Cdn1f4YQzlZh/EDkw7BZWk0UPFEOTbqeUABuzQfZcMqFh2fio@vger.kernel.org
+X-Gm-Message-State: AOJu0YxV8an0BGO9IXaOLjmanb/ERjgQx4GkIZashDPa/vCnfcNboGn/
+	bgTtATNhtchnyEEsE2vwZ4Y0PGZCVX8Gb4aYB+9OzrXMDnMeGDhE
+X-Gm-Gg: ASbGnctANFfo8rMzbvBio1JuP6MVzLBFLPJrzdvwrxcE7a47DJ+GSpvdFz9uy7jlfbw
+	KkDUTVhK4JJFW7ru9Z0N62Y5DP6n6qoePeTEpM1ctrz1KtvsBKRKE6HtI2GfSSR9k+cWbgWBWoq
+	Lzg98xm58KTuR5rVbzmBCFm5TSrWC+JpLdtZWmTwnOFX7REJJ8zpb8GWlH9X0Dl4+d+TYp261tW
+	LRx+wfHMcbOmVZXnLcI/1+arJiG+Kep0Cy1mgyqgogBOs0LyMGvNbuxCPkrChDrLFNQICinwYeC
+	4O85Q3LiBFfaZUFLvL6qK86KhGXVRJ0o5bbGO6LzsxiWdo1XRA==
+X-Google-Smtp-Source: AGHT+IEnOzYriH6IYe5+tR+ekT2lySNBwQBMB0g+i5fIIIF6B3u5alVKUaoyOQTorELphWhRrqRpwA==
+X-Received: by 2002:a05:6a00:6314:b0:740:91e4:8107 with SMTP id d2e1a72fcca58-74091e481e1mr2498319b3a.0.1746529426578;
+        Tue, 06 May 2025 04:03:46 -0700 (PDT)
 Received: from Black-Pearl. ([122.174.61.156])
-        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-74058d7a3bdsm8613778b3a.9.2025.05.06.04.03.39
+        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-74058d7a3bdsm8613778b3a.9.2025.05.06.04.03.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 04:03:42 -0700 (PDT)
+        Tue, 06 May 2025 04:03:46 -0700 (PDT)
 From: Charan Pedumuru <charan.pedumuru@gmail.com>
-Subject: [PATCH v3 0/2] dt-bindings: dma: nvidia,tegra20-apbdma: Add json
- schema for text binding
-Date: Tue, 06 May 2025 11:02:23 +0000
-Message-Id: <20250506-nvidea-dma-v3-0-3add38d49c03@gmail.com>
+Date: Tue, 06 May 2025 11:02:24 +0000
+Subject: [PATCH v3 1/2] arm: dts: nvidia: tegra20,30: Rename the apbdma
+ nodename to match with common dma-controller binding
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -83,11 +84,9 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAD/sGWgC/1WMwQ6CMBAFf4X07Jp2aSl48j+Mh1Ja2ETAtKbRE
- P7dghc8vMO8ZGZh0QVykV2KhQWXKNI8ZShPBbODmXoH1GVmyFFxWXKYEnXOQDfm2VpLg75SXrM
- sPIPz9N5jt3vmgeJrDp+9ncT2/jKKi2MmCRBgsBG19krL1lz70dDjbOeRbZmER7X6UxE4oEQtV
- GOlle1RXdf1C9NOdZHfAAAA
-X-Change-ID: 20250430-nvidea-dma-dc874a2f65f7
+Message-Id: <20250506-nvidea-dma-v3-1-3add38d49c03@gmail.com>
+References: <20250506-nvidea-dma-v3-0-3add38d49c03@gmail.com>
+In-Reply-To: <20250506-nvidea-dma-v3-0-3add38d49c03@gmail.com>
 To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, 
@@ -99,40 +98,44 @@ Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.14.2
 
-Create a YAML binding for nvidia,tegra20-apbdma and modify the apbdma
-nodename in dts to match with the common dma-controller binding.
+Rename the apbdma nodename from "dma@" to "dma-controller@" to align with
+linux common dma-controller binding.
 
 Signed-off-by: Charan Pedumuru <charan.pedumuru@gmail.com>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
-Changes in v3:
-- Dropped arch from subject line for dts patch.
-- Removed include statement for interrupt-controller under examples.
-- Link to v2: https://lore.kernel.org/r/20250506-nvidea-dma-v2-0-2427159c4c4b@gmail.com
+ arch/arm/boot/dts/nvidia/tegra20.dtsi | 2 +-
+ arch/arm/boot/dts/nvidia/tegra30.dtsi | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Changes in v2:
-- Modified the subject to add subject prefix to the binding patch.
-- Changed the alignment of properties and required in the binding.
-- Removed description for "dma-cells" and included allOf to dma-controller.
-- Changed the include statement to use irq.h instead of arm-gic.h.
-- Created a new patch to rename apbdma node to match with common dma-controller binding.
-- Link to v1: https://lore.kernel.org/r/20250501-nvidea-dma-v1-1-a29187f574ba@gmail.com
+diff --git a/arch/arm/boot/dts/nvidia/tegra20.dtsi b/arch/arm/boot/dts/nvidia/tegra20.dtsi
+index 8da75ccc44025bf2978141082332b78bf94c38a9..882adb7f2f26392db2be386b0a936453fc839049 100644
+--- a/arch/arm/boot/dts/nvidia/tegra20.dtsi
++++ b/arch/arm/boot/dts/nvidia/tegra20.dtsi
+@@ -284,7 +284,7 @@ flow-controller@60007000 {
+ 		reg = <0x60007000 0x1000>;
+ 	};
+ 
+-	apbdma: dma@6000a000 {
++	apbdma: dma-controller@6000a000 {
+ 		compatible = "nvidia,tegra20-apbdma";
+ 		reg = <0x6000a000 0x1200>;
+ 		interrupts = <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>,
+diff --git a/arch/arm/boot/dts/nvidia/tegra30.dtsi b/arch/arm/boot/dts/nvidia/tegra30.dtsi
+index f866fa7b55a509a0f66d3e49456565df0d74a678..2a4d93db81347e3e1dd942e6c10a1ff5683402e7 100644
+--- a/arch/arm/boot/dts/nvidia/tegra30.dtsi
++++ b/arch/arm/boot/dts/nvidia/tegra30.dtsi
+@@ -431,7 +431,7 @@ flow-controller@60007000 {
+ 		reg = <0x60007000 0x1000>;
+ 	};
+ 
+-	apbdma: dma@6000a000 {
++	apbdma: dma-controller@6000a000 {
+ 		compatible = "nvidia,tegra30-apbdma", "nvidia,tegra20-apbdma";
+ 		reg = <0x6000a000 0x1400>;
+ 		interrupts = <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>,
 
----
-Charan Pedumuru (2):
-      arm: dts: nvidia: tegra20,30: Rename the apbdma nodename to match with common dma-controller binding
-      dt-bindings: dma: nvidia,tegra20-apbdma: convert text based binding to json schema
-
- .../bindings/dma/nvidia,tegra20-apbdma.txt         | 44 -----------
- .../bindings/dma/nvidia,tegra20-apbdma.yaml        | 89 ++++++++++++++++++++++
- arch/arm/boot/dts/nvidia/tegra20.dtsi              |  2 +-
- arch/arm/boot/dts/nvidia/tegra30.dtsi              |  2 +-
- 4 files changed, 91 insertions(+), 46 deletions(-)
----
-base-commit: 9d9096722447b77662d4237a09909bde7774f22e
-change-id: 20250430-nvidea-dma-dc874a2f65f7
-
-Best regards,
 -- 
-Charan Pedumuru <charan.pedumuru@gmail.com>
+2.43.0
 
 

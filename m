@@ -1,48 +1,48 @@
-Return-Path: <dmaengine+bounces-5072-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5073-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4A79AABB5C
-	for <lists+dmaengine@lfdr.de>; Tue,  6 May 2025 09:39:43 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC20CAABBFA
+	for <lists+dmaengine@lfdr.de>; Tue,  6 May 2025 09:52:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4176C1C27FBB
-	for <lists+dmaengine@lfdr.de>; Tue,  6 May 2025 07:35:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 697201C2722E
+	for <lists+dmaengine@lfdr.de>; Tue,  6 May 2025 07:47:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43DC54B1E4C;
-	Tue,  6 May 2025 07:27:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECD9F22B8B2;
+	Tue,  6 May 2025 07:30:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LfW0d/Jh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jlSaOfDD"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0800422425B;
-	Tue,  6 May 2025 07:27:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B60951FF7BC;
+	Tue,  6 May 2025 07:30:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746516478; cv=none; b=fATrUsFMMqyfndq66s26BEhxHlZjHv4475sZoPf4yXi3r9jmFWdYYH7+0UWw+wM6b4dDlkVcQo44Ncfe4yxoSrqKGD5g7A5dWMdDeV7Wkr2a7pelBZbuwd9FtgmxM8NEW2HsbxnhbMTLz2ragaNsqKumjWCUmKjalemYAbs9MSc=
+	t=1746516606; cv=none; b=sJo5FQC8K6i1wcklPDYZjBwEOFis8B2TO64dT+PnnsEshfWE2TJCadH2T+ndKOWR87EEaP0sLWsYh9TKSM9I/6T9CUc53CusYTddvJalLyA8PoSKJ+o4tbrzyZxdndwil6Oc1iWNrM7rWocvfOBUkfCOE1m8zi5Q+mwFQEYSsVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746516478; c=relaxed/simple;
-	bh=4o12yW4sJboPsOe6JWe4yHRkHNsA37x/g8VZvI68pSk=;
+	s=arc-20240116; t=1746516606; c=relaxed/simple;
+	bh=QL9Yda3IJCixa8daj2LAWtDbxmA4WSFNg0ufgRSx8F0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ji/wuoJFNk7hlCGjnPd1UQlowV4lDr4wuasvi+a3Qbr+1Lq03b8TKteinTp4V1Pt7vdMg2nck5ACMH1ErdaA9Ozf41g8uRS8/5SG7HmuuHuZPMR7FLTEot1iBFtmyTtOSazWzezj77p464OwqB/klu5dPXhdDhN9V+uysHO5Zgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LfW0d/Jh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F24B3C4CEED;
-	Tue,  6 May 2025 07:27:54 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=S0t54sRk5lnrvT8pOBQySw6vMygW9kWoVG1K+onZiM9KSEvvY2ZYf8x73kcm8E55Voo9gR9wWrIxUc3tpYRKwW6/nWRADbfHn94PCI47ZoLUsjxqspmk/JRSZ3whowzrA4qUfWVMHrWWQPgt+4qtgIreTeehgSMhOtqb8gQ4nvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jlSaOfDD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90358C4CEEB;
+	Tue,  6 May 2025 07:30:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746516477;
-	bh=4o12yW4sJboPsOe6JWe4yHRkHNsA37x/g8VZvI68pSk=;
+	s=k20201202; t=1746516606;
+	bh=QL9Yda3IJCixa8daj2LAWtDbxmA4WSFNg0ufgRSx8F0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=LfW0d/JhCp0gTgOGMZlQDMHHfzALRKLGdNoOpITiIeeLyd6Ws61/p/QKZjzwExEDk
-	 gQu4jmumogSCAU41kyAJKWtzno14M89a3qDuRqCl5HpzUBQQxsF2J833GqMuIZyKnL
-	 bg+Ufxxcpse0ezT/13a1J0DFpG3fsl6+DdnfCN0T7rnDNAJGsIAgR/dd81DeOMt/4E
-	 JGh1Ay4bPWYrZ9R48lv6m4q5LATrUuAf0XWq6yHQEuwu/lcA/ftYggPkccDS1XLzVt
-	 ito+GxdmxOUEWvWFhY2nZHRqPYgslJLbL5AznMBUFiaHyQn8J1Ldm7GHHbqk83NfrG
-	 wFZNlIigLzaiA==
-Message-ID: <a9ed7728-6600-4efe-afed-f058357eabe4@kernel.org>
-Date: Tue, 6 May 2025 09:27:52 +0200
+	b=jlSaOfDDthynbIuA4lOj9yCQrJgk2CaBTZ3Fqjh4vcK/sCrCMtlu5oUE4xb/1Utae
+	 Wb7piuINPUcsPYIZfWWLgBtzoE02h5sMcWG4lEqbMul1rl3L/SzQz3dp3SOXdX7IEO
+	 jkoHv7h+mQzuKLjQDGoyUNhByREGAOqIbVs5r22Ycm9yFOA2/dSY0VojL8gTntW9Sv
+	 GJ+wgpfBNssxdCrBGzIgiFfejEOYxcdFQyUUCzQ3Z336iHnGi8kA9cLkFxq3goBIZc
+	 L/qyHH/90F1VHuUr/lgx5izB8Leh+wKKmQAqiSMJzUDYYdziJBnVvRZAnFF9oHKNmm
+	 bxkTNKf/JLXhA==
+Message-ID: <28afd932-1d63-4bc7-8ed2-33bf838a858d@kernel.org>
+Date: Tue, 6 May 2025 09:30:02 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] arch: arm: dts: nvidia: tegra20,30: Rename the
- apbdma nodename to match with common dma-controller binding
+Subject: Re: [PATCH v2 2/2] dt-bindings: dma: nvidia,tegra20-apbdma: convert
+ text based binding to json schema
 To: Charan Pedumuru <charan.pedumuru@gmail.com>, Vinod Koul
  <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
@@ -60,7 +60,7 @@ To: Charan Pedumuru <charan.pedumuru@gmail.com>, Vinod Koul
 Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
  linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20250506-nvidea-dma-v2-0-2427159c4c4b@gmail.com>
- <20250506-nvidea-dma-v2-1-2427159c4c4b@gmail.com>
+ <20250506-nvidea-dma-v2-2-2427159c4c4b@gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -106,24 +106,55 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250506-nvidea-dma-v2-1-2427159c4c4b@gmail.com>
+In-Reply-To: <20250506-nvidea-dma-v2-2-2427159c4c4b@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 06/05/2025 09:07, Charan Pedumuru wrote:
-> Rename the apbdma nodename from "dma@" to "dma-controller@" to align with
-> linux common dma-controller binding.
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+
+Why is this a irq.h now?
+
+> +    #include <dt-bindings/reset/tegra186-reset.h>
+> +    dma-controller@6000a000 {
+> +        compatible = "nvidia,tegra30-apbdma", "nvidia,tegra20-apbdma";
+> +        reg = <0x6000a000 0x1200>;
+> +        interrupts = <0 136 0x04>,
+> +                     <0 137 0x04>,
+> +                     <0 138 0x04>,
+> +                     <0 139 0x04>,
+> +                     <0 140 0x04>,
+> +                     <0 141 0x04>,
+> +                     <0 142 0x04>,
+> +                     <0 143 0x04>,
+> +                     <0 144 0x04>,
+> +                     <0 145 0x04>,
+> +                     <0 146 0x04>,
+> +                     <0 147 0x04>,
+> +                     <0 148 0x04>,
+> +                     <0 149 0x04>,
+> +                     <0 150 0x04>,
+> +                     <0 151 0x04>;
+
+
+Again, quoting:
+
+You included this...
+... so use it.
+
+Otherwise what would be the point of including the header?
+
+> +        clocks = <&tegra_car 34>;
+> +        resets = <&tegra_car 34>;
+> +        reset-names = "dma";
+> +        #dma-cells = <1>;
+> +    };
+> +...
 > 
-> Signed-off-by: Charan Pedumuru <charan.pedumuru@gmail.com>
-if there is going to be resend, then subject: drop arch
 
-Please use subject prefixes matching the subsystem. You can get them for
-example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
-your patch is touching. For bindings, the preferred subjects are
-explained here:
-https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
-
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof

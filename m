@@ -1,262 +1,163 @@
-Return-Path: <dmaengine+bounces-5078-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5079-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0DAD2AAC1F1
-	for <lists+dmaengine@lfdr.de>; Tue,  6 May 2025 13:04:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D53BFAAC226
+	for <lists+dmaengine@lfdr.de>; Tue,  6 May 2025 13:11:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B870D1C20A54
-	for <lists+dmaengine@lfdr.de>; Tue,  6 May 2025 11:04:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3FC2F4E82EC
+	for <lists+dmaengine@lfdr.de>; Tue,  6 May 2025 11:11:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF5EC27A445;
-	Tue,  6 May 2025 11:03:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AD3627A44B;
+	Tue,  6 May 2025 11:11:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P+I2JD9a"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bC1wnt5Q"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5178127990E;
-	Tue,  6 May 2025 11:03:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D086279903;
+	Tue,  6 May 2025 11:11:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746529432; cv=none; b=Bkdq7eVLrzX594nENTYjrL9FRPNQfAYFWKS5OLnbWMcZUf59BU/pkglGpyFCVtzKy1wWGPSTjIJgjlWYGcNHJ1pdNetfTfKs0pT2EG9aUSF7BYRZyvp/L1iNObFklbFDCrPg5Jhz4OSla2Dk7MCxyOB6Whgu0e8xKjnd5kWEbQY=
+	t=1746529878; cv=none; b=FscVkAeMi3cIHh+Y/oDKhK1JuaZXRAJTtZ7vVY3W6a4WmEo4+1sy1EsVlq5ICfl2hKGfYtV95ezky7AZGD1Uqyd/I1eL3uud/drrHA2WaXvewkpMtYTWm+ip0nHbWrS2h+BWpNomeFwyPRBRY2XElgqym8MGQMJV79yEcmXN1cg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746529432; c=relaxed/simple;
-	bh=h/Uqlu4kKYQM7JmNGl2AReRXzwSIPS7FBPcFG4LB57E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=r3GVp3U9F1wa0WC3p+vJvBRSGEHLTkSm5Xau9JPsRjPN9mfg5E0s2Up+nLmxjbUPhezNQ/G7QX+GagF/dshntA2iVQ4Vm28WDHAJBHHBv4No3WVqvPtpJaHfMN0koMjbv2+OfI7aa1aw+5BbtWq05Xbn5nLOe1ZXgUfVNsMg75s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P+I2JD9a; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-739b3fe7ce8so4957307b3a.0;
-        Tue, 06 May 2025 04:03:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746529430; x=1747134230; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wM2g9uEnYrlE9sYlFYL1eToHFvmsEzdILXV4x0QZNjI=;
-        b=P+I2JD9atsBi/eb5nNeRiwkzhxIipOR33W+99Kp67bTR+aWAaO74nUxew0rb1SQYoO
-         9uqQCsQL16X46YDTOLjv4QwVANOUDQFdVq3cMPWyC4WHMTOFgFVJwjhZV6wfCsiR5DkO
-         AEtgJAjwiBYjpeZnPsn66m/tETIyqX3lWXV/BsHfdEOhkLGschkUOHcooF49Hw4zSEpD
-         IXsRlcVEm3Eoj7PfNA2jhw51dvba1B2VRvA23W39bgmeZVIKN2x8pcbA81lZKjHNpDIr
-         s9ybCPILzF00FWkp2gU7uDQY+EDHKb7Wx0554pioTK9vKpk9rXPBziY/NpoMKX6CpcOo
-         pteg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746529430; x=1747134230;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wM2g9uEnYrlE9sYlFYL1eToHFvmsEzdILXV4x0QZNjI=;
-        b=K+laPTySL2Srh6s3+w+qgMOcMSwD1+o2cvutIxHfJBdL/sLRy17fnFvYZDJQCVppvt
-         n57GA+bjc+urwrOvp531Zsach5BqkWPfNIMmK0uCnni/IQM4QhudooP4NTd7JhHdnsjV
-         QXz5WaEkiVn42Aa/LmVhjTZCJV/i6x69hMDLdt3gH5tsi+H8KDd1kbMb8nA8nwdIgCSt
-         OkrL+LLo7YuEkC2xUZoVZG6Z8s2kBWZwyqnOjegn8+CvIxMxZqk78pBIYKlEPvGZFGUu
-         /ikzpXfLOEFMT9EKb+oTMQgzwCFHa2pZuew4a5LWVa65Jl45ahN0i2xII4FNNK/phdsP
-         zYzw==
-X-Forwarded-Encrypted: i=1; AJvYcCUnov6Jd/P9tXaFZj2mp0oQgCTZQ7uJIyzpM35JaeuuepnutKETW2j7cL3uXT5Ok0RyQbvrlzQxD1LsPVc=@vger.kernel.org, AJvYcCV1DvcvnZQDoi9Z3hcFPL0JhHXTzEXmnT5olSEMJY6QwmhSHghb3A0yrUwFTcPD5ol60Ll3WoRDb52+@vger.kernel.org, AJvYcCVF3uwiah1mpI/7igcEObVKULM2bMGXy5KyKHWlVYbC/u6JoNIG6GviKIuqsgZVKeLQr0Lf48HlV1uunBBI@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYMkOO9M4FD9j6sX13OxQ57IQklocqrq/x/cwBw/szlqoZ9P2C
-	nthcCxx3nWS1TZPHBAbU6hKQQsQn12pb1DhH2Q8pqOSpv9Ro4sjAkginIpnG
-X-Gm-Gg: ASbGncvHsPtaGfotnSmbjKRbe2YBNPGmZqL5FA/SdkLDZyL6osuiqy6TA5dKtn86HI+
-	e/F7WKaMLkIm95wDolHKIfutPl4Ue7a353K2Pgglw4bAUciucZYNXCyN6DzWrgLvnmVTKhi0IQH
-	9HZF7P2pin3AXrr9xtao1gMm79H6ZduRv8/YJ3KBOgxNbJR0Gbo+KTticS9PCp+tqAZ8Sbtpgoi
-	XCtrdgQ5JJT06nRfFXE6aeyPe3k7VhFHdmbNZPDXi75k1YjCiePuERBRg/LgCUQNGCVnchkqBrw
-	vHxiR9/6lee5rgr8BqQZPae9pCP16WVMQ51K3BLLRQbwtKPz0Q==
-X-Google-Smtp-Source: AGHT+IGk1MCmqv7AicEGePYRlxlGc9w4nFkK1Ws3eZGw/OAZ97Ob5aqbdoQgetr0rDdnQ6GX0418Rg==
-X-Received: by 2002:a05:6a00:8e02:b0:736:34ff:be7 with SMTP id d2e1a72fcca58-74091adf553mr3185409b3a.15.1746529430432;
-        Tue, 06 May 2025 04:03:50 -0700 (PDT)
-Received: from Black-Pearl. ([122.174.61.156])
-        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-74058d7a3bdsm8613778b3a.9.2025.05.06.04.03.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 04:03:50 -0700 (PDT)
-From: Charan Pedumuru <charan.pedumuru@gmail.com>
-Date: Tue, 06 May 2025 11:02:25 +0000
-Subject: [PATCH v3 2/2] dt-bindings: dma: nvidia,tegra20-apbdma: convert
- text based binding to json schema
+	s=arc-20240116; t=1746529878; c=relaxed/simple;
+	bh=FtmiGAyFmhRK41qGDmr2uZkBBa+l91ql/WL6Uw4d3Ws=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WSJy0bkTL9HxVi657w8iEQ0AQVVzLkLdgbNtnJURO7XY54KkGSvM0WgZdnYtFYHU4EaeaTsMLGFuF8M2EKvZwqf0jIaZbhtK1Eo7gjI9L6ONn0BHNsUH6+8yUsJ3OI4XzQ8NuPW8A5UDoW87JzjjvRE9WH77lyWw7TLfg9JBu5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bC1wnt5Q; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D6F8C4CEE4;
+	Tue,  6 May 2025 11:11:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746529876;
+	bh=FtmiGAyFmhRK41qGDmr2uZkBBa+l91ql/WL6Uw4d3Ws=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=bC1wnt5QhoQa/Nm+CVc5xFktamfoEswqZSHrmP0D1HM+f2GKQCG4RNWgajjKGBmwc
+	 WCNFFJ5TGzuiMQ8eHOSLpoJoUzRHt68MzN30fC0KmZ82jeDpRk0jy6bJfhudzQ7WUK
+	 g6vPLthVmvBowRQ9vRr3CasjffStaDIZx8D3IzShIaPGW2+OTGPxXWkuRxJDh9V0Cz
+	 pNJBXJHB7UyQ2t76QYgGMEMazS5vkfJ66ZeN7I2ZPkSryz4CwUnLLfIFOQzV6o2eUv
+	 NqG9zSMktMwfsntdMy922pAZRjcA6Ng7xFF5rOHXTsOuzOYQeDXtRW9cy2pTG5jCJK
+	 zVc5ClXUuRgdw==
+Message-ID: <03aedee5-bab9-4f36-8d71-f31496832629@kernel.org>
+Date: Tue, 6 May 2025 13:11:12 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250506-nvidea-dma-v3-2-3add38d49c03@gmail.com>
-References: <20250506-nvidea-dma-v3-0-3add38d49c03@gmail.com>
-In-Reply-To: <20250506-nvidea-dma-v3-0-3add38d49c03@gmail.com>
-To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Thierry Reding <thierry.reding@gmail.com>, 
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] dt-bindings: dma: nvidia,tegra20-apbdma: convert
+ text based binding to json schema
+To: Charan Pedumuru <charan.pedumuru@gmail.com>, Vinod Koul
+ <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>,
  Jonathan Hunter <jonathanh@nvidia.com>
-Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Charan Pedumuru <charan.pedumuru@gmail.com>
-X-Mailer: b4 0.14.2
+Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250506-nvidea-dma-v2-0-2427159c4c4b@gmail.com>
+ <20250506-nvidea-dma-v2-2-2427159c4c4b@gmail.com>
+ <28afd932-1d63-4bc7-8ed2-33bf838a858d@kernel.org>
+ <a9729fd4-1fed-459a-b242-eabc71503954@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <a9729fd4-1fed-459a-b242-eabc71503954@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Update text binding to YAML.
-Changes during conversion:
-- Add a fallback for "nvidia,tegra30-apbdma" as it is
-  compatible with the IP core on "nvidia,tegra20-apbdma".
-- Update examples and include appropriate file directives to resolve
-  errors identified by `dt_binding_check` and `dtbs_check`.
+On 06/05/2025 12:46, Charan Pedumuru wrote:
+> 
+> 
+> On 06-05-2025 13:00, Krzysztof Kozlowski wrote:
+>> On 06/05/2025 09:07, Charan Pedumuru wrote:
+>>> +
+>>> +examples:
+>>> +  - |
+>>> +    #include <dt-bindings/interrupt-controller/irq.h>
+>>
+>> Why is this a irq.h now?
+>>
+>>> +    #include <dt-bindings/reset/tegra186-reset.h>
+>>> +    dma-controller@6000a000 {
+>>> +        compatible = "nvidia,tegra30-apbdma", "nvidia,tegra20-apbdma";
+>>> +        reg = <0x6000a000 0x1200>;
+>>> +        interrupts = <0 136 0x04>,
+>>> +                     <0 137 0x04>,
+>>> +                     <0 138 0x04>,
+>>> +                     <0 139 0x04>,
+>>> +                     <0 140 0x04>,
+>>> +                     <0 141 0x04>,
+>>> +                     <0 142 0x04>,
+>>> +                     <0 143 0x04>,
+>>> +                     <0 144 0x04>,
+>>> +                     <0 145 0x04>,
+>>> +                     <0 146 0x04>,
+>>> +                     <0 147 0x04>,
+>>> +                     <0 148 0x04>,
+>>> +                     <0 149 0x04>,
+>>> +                     <0 150 0x04>,
+>>> +                     <0 151 0x04>;
+>>
+>>
+>> Again, quoting:
+>>
+>> You included this...
+>> ... so use it.
+>>
+>> Otherwise what would be the point of including the header?
+> 
+> 
+> Yes, I understood it now, will remove the header.
 
-Signed-off-by: Charan Pedumuru <charan.pedumuru@gmail.com>
----
- .../bindings/dma/nvidia,tegra20-apbdma.txt         | 44 -----------
- .../bindings/dma/nvidia,tegra20-apbdma.yaml        | 89 ++++++++++++++++++++++
- 2 files changed, 89 insertions(+), 44 deletions(-)
+No, I asked to use the header.
 
-diff --git a/Documentation/devicetree/bindings/dma/nvidia,tegra20-apbdma.txt b/Documentation/devicetree/bindings/dma/nvidia,tegra20-apbdma.txt
-deleted file mode 100644
-index 447fb44e7abeaa7ca3010b9518533e786cce56a8..0000000000000000000000000000000000000000
---- a/Documentation/devicetree/bindings/dma/nvidia,tegra20-apbdma.txt
-+++ /dev/null
-@@ -1,44 +0,0 @@
--* NVIDIA Tegra APB DMA controller
--
--Required properties:
--- compatible: Should be "nvidia,<chip>-apbdma"
--- reg: Should contain DMA registers location and length. This should include
--  all of the per-channel registers.
--- interrupts: Should contain all of the per-channel DMA interrupts.
--- clocks: Must contain one entry, for the module clock.
--  See ../clocks/clock-bindings.txt for details.
--- resets : Must contain an entry for each entry in reset-names.
--  See ../reset/reset.txt for details.
--- reset-names : Must include the following entries:
--  - dma
--- #dma-cells : Must be <1>. This dictates the length of DMA specifiers in
--  client nodes' dmas properties. The specifier represents the DMA request
--  select value for the peripheral. For more details, consult the Tegra TRM's
--  documentation of the APB DMA channel control register REQ_SEL field.
--
--Examples:
--
--apbdma: dma@6000a000 {
--	compatible = "nvidia,tegra20-apbdma";
--	reg = <0x6000a000 0x1200>;
--	interrupts = < 0 136 0x04
--		       0 137 0x04
--		       0 138 0x04
--		       0 139 0x04
--		       0 140 0x04
--		       0 141 0x04
--		       0 142 0x04
--		       0 143 0x04
--		       0 144 0x04
--		       0 145 0x04
--		       0 146 0x04
--		       0 147 0x04
--		       0 148 0x04
--		       0 149 0x04
--		       0 150 0x04
--		       0 151 0x04 >;
--	clocks = <&tegra_car 34>;
--	resets = <&tegra_car 34>;
--	reset-names = "dma";
--	#dma-cells = <1>;
--};
-diff --git a/Documentation/devicetree/bindings/dma/nvidia,tegra20-apbdma.yaml b/Documentation/devicetree/bindings/dma/nvidia,tegra20-apbdma.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..9ff2bc279f839658e707552856ab5f559093ff33
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/nvidia,tegra20-apbdma.yaml
-@@ -0,0 +1,89 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dma/nvidia,tegra20-apbdma.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: NVIDIA Tegra APB DMA Controller
-+
-+description:
-+  The NVIDIA Tegra APB DMA controller is a hardware component that
-+  enables direct memory access (DMA) on Tegra systems. It facilitates
-+  data transfer between I/O devices and main memory without constant
-+  CPU intervention.
-+
-+maintainers:
-+  - Jonathan Hunter <jonathanh@nvidia.com>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: nvidia,tegra20-apbdma
-+      - items:
-+          - const: nvidia,tegra30-apbdma
-+          - const: nvidia,tegra20-apbdma
-+
-+  reg:
-+    maxItems: 1
-+
-+  "#dma-cells":
-+    const: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  interrupts:
-+    description:
-+      Should contain all of the per-channel DMA interrupts in
-+      ascending order with respect to the DMA channel index.
-+    minItems: 1
-+    maxItems: 32
-+
-+  resets:
-+    maxItems: 1
-+
-+  reset-names:
-+    const: dma
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#dma-cells"
-+  - clocks
-+  - interrupts
-+  - resets
-+  - reset-names
-+
-+allOf:
-+  - $ref: dma-controller.yaml#
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/reset/tegra186-reset.h>
-+    dma-controller@6000a000 {
-+        compatible = "nvidia,tegra30-apbdma", "nvidia,tegra20-apbdma";
-+        reg = <0x6000a000 0x1200>;
-+        interrupts = <0 136 0x04>,
-+                     <0 137 0x04>,
-+                     <0 138 0x04>,
-+                     <0 139 0x04>,
-+                     <0 140 0x04>,
-+                     <0 141 0x04>,
-+                     <0 142 0x04>,
-+                     <0 143 0x04>,
-+                     <0 144 0x04>,
-+                     <0 145 0x04>,
-+                     <0 146 0x04>,
-+                     <0 147 0x04>,
-+                     <0 148 0x04>,
-+                     <0 149 0x04>,
-+                     <0 150 0x04>,
-+                     <0 151 0x04>;
-+        clocks = <&tegra_car 34>;
-+        resets = <&tegra_car 34>;
-+        reset-names = "dma";
-+        #dma-cells = <1>;
-+    };
-+...
-
--- 
-2.43.0
-
+Best regards,
+Krzysztof
 

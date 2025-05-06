@@ -1,274 +1,131 @@
-Return-Path: <dmaengine+bounces-5068-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5069-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF1AAAAA48B
-	for <lists+dmaengine@lfdr.de>; Tue,  6 May 2025 01:30:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A7AAAABB53
+	for <lists+dmaengine@lfdr.de>; Tue,  6 May 2025 09:38:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BA6E41890ABF
-	for <lists+dmaengine@lfdr.de>; Mon,  5 May 2025 23:29:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 446F91C436C8
+	for <lists+dmaengine@lfdr.de>; Tue,  6 May 2025 07:33:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4ABA9300A2D;
-	Mon,  5 May 2025 22:26:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B47EF205E02;
+	Tue,  6 May 2025 07:09:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c3gx5Gr8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d/tL8ktS"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DE30300A2A;
-	Mon,  5 May 2025 22:26:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2864ABE6C;
+	Tue,  6 May 2025 07:09:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746483998; cv=none; b=AiOWNhvdAJosRbCWa10ZY851QR80rOOdhEHIcXWvmPGEPwwIx6/EGH93shH+t+SoynmFqljw9os1sMR+iRXVtTym+uXOtG8LeKkSzkbtDt/kJQSPFEC5KWwGq7CiFyFvpXDlQ0TKBTno1A5o6JEz1wdt77aR2ha+OB5sX6rIFU4=
+	t=1746515358; cv=none; b=D6WSrvwBEqSlvNsYHcdXg1LShsE3TD6jwQU/kgvbtCEuNOxNfRdSsZkKYyNcPbw9HOepR4KyucYmWlk8gK6BvILcPL5MNr0GElU66ZBCfofmWqSoOflxkkW+S8EN+G+tIBbW4bsaDzD4T3jV2Zx1u7fHlA2arOB1kYiwTD91JBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746483998; c=relaxed/simple;
-	bh=OPNCmB6m5eZ7QxOxTiJ78nkIefYbTw9N3ozKkMo1GCo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FLGCE2IZgN0tsbnFgHkOyX0li8EnZ55KoF1k5Z4hmgm8Z1T4UzbOD/5KrAYWs6i+IboquZb+8NOWcdCjm5dc3TcfpPj8EvlPZOXVfBTkTZ2A87rSf09jx1JjjA/P0B3YOpgCB4hd4PdrAHb8v6hcudbrf6B/oytd5o+wf8TpNYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c3gx5Gr8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67A2BC4CEE4;
-	Mon,  5 May 2025 22:26:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746483997;
-	bh=OPNCmB6m5eZ7QxOxTiJ78nkIefYbTw9N3ozKkMo1GCo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=c3gx5Gr8QnllRuRQupDcHbPJTfCXuFi4j+WZkaZcl6xbbAaJlEltlmEQ83NfRXV5t
-	 Uu7GR5S0fBq3emmGr9IvauKy/AjPFWv7bNGkumHlynqL4G0BbAnTWA9fhNkFQbOB0n
-	 4lUZBYEcNrwe2NNqyq0HOHv+Xkg3QZmPQ8a+MocSb4GvSdM44juEDULEbQKi988dug
-	 g/OvhwY/ctY38D2OeGZW4yBbYir1FCK5G00VhrZMUCZa5jY0wxRNEYn96MCEe0bCGG
-	 Jy0pYWlRDtU1m72zFjl5IQbMAKsYSEL3h7Y1rPw/Cm0TTT8mlw2jgh6RYw9CUE3zlo
-	 lIs6AWg7pB41g==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Roger Quadros <rogerq@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	alexander.sverdlin@gmail.com,
-	dan.carpenter@linaro.org,
-	npitre@baylibre.com,
-	danishanwar@ti.com,
-	m-malladi@ti.com,
-	r-gunasekaran@ti.com,
-	dmaengine@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.14 310/642] dmaengine: ti: k3-udma-glue: Drop skip_fdq argument from k3_udma_glue_reset_rx_chn
-Date: Mon,  5 May 2025 18:08:46 -0400
-Message-Id: <20250505221419.2672473-310-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505221419.2672473-1-sashal@kernel.org>
-References: <20250505221419.2672473-1-sashal@kernel.org>
+	s=arc-20240116; t=1746515358; c=relaxed/simple;
+	bh=h1DwMsQAu3LPMQydkl2vzI+AVDKUk9nG+DDA1A3WYqw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=fWMDLG2rczvSt9mpM28PVASK2WVqwlAwCcjNVMGiMLCmUtasUjbcKdiydP0QkakuBklQwKgQNFwuRYch0vXLZWjqS7r4gRtiny/p9OKDcKT5Jh2T/yRTYuO+km4VHKJulkMxg/vcDxPVeRB+WISDctAv77LITBuoHQ64BcFT4pY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d/tL8ktS; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-7398d65476eso4208445b3a.1;
+        Tue, 06 May 2025 00:09:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746515356; x=1747120156; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KqQLyDD1ZGmBuz+UWLMucUCSHekzj0B9M6ea4trM1iQ=;
+        b=d/tL8ktSFLUkX95g3lIultrCCYeGy1OXWm+wexEZ2OM9988sQvDgSqva59jTqNEVJJ
+         OgrZq4Tf0ai83Cv5JccrYpFBhG3yiSPMffcozjPzB7cpyy61bftS7Eg6p/4L9Q2vxi9C
+         IL7K7nhodfyVoXBdmIgk5fQvA10mu8CjpLrJGU0InXR/dF8dQNMnELNL4ptrHJ5IcBZ7
+         n8Qir/ncp4WXEj+xTmxB/mo65A0pdRLH8HottQu5yKlHJZaC5Uzzw/AMDURnLzYujveV
+         N4YYp+YT2YpVR36Eq/QVgfAEplCRdoaBcI0Fjpfd9sHmPpFatxNmPiQGEyNQP9egXnwj
+         pxkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746515356; x=1747120156;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KqQLyDD1ZGmBuz+UWLMucUCSHekzj0B9M6ea4trM1iQ=;
+        b=QoyEy5xfLqfDByEzSYeDvyk8DxUU57i64dRD3xKE4f4py9gigYJvTlPkag2huECJBm
+         En33S0WVRJgqy6vVqIUVatSsoqW3vBsUex4qlL9FeDapt7m479kOwbVnUlGfShEBXrvp
+         eJjZmorK5OiB3Ncdchvft4CPyGnxW9u7ynY/PMTr9h8R+Aoyfkpg3z0aIgZhN/6s6pka
+         H+QK5YBYZP7dMH1q/Bv5mA8PWBBuiarxMUUS6wxpsujWejQqmMUvRqTBOBLLYkXfNagQ
+         IXfUz1Y9Jw+N//JTNTv+B7950PS7sC0QBipwSvRVy8sQQuo2TDtLvpxYWPiuuIT+X5j9
+         rQOA==
+X-Forwarded-Encrypted: i=1; AJvYcCUBsgVWDKLG5/YU9PO8tN5/SrW2l94pD3SAoabAYoSOYVrhiAvEXLaDoG3HH9Xdx2aTxukzVSMA1sAz6TRF@vger.kernel.org, AJvYcCVnfhzvlHpA+/KLNUU+VW53VpoM+4IHbN+40yrKVhTarlrdT8wWVFKFULY3L1SHAHC6ClJaf/Kr/7MwYos=@vger.kernel.org, AJvYcCXYuC1GCcjYaHYaE5tFkup3zGXxZpVXVldD7Wepa1YctYOUtAZr0HK87Q/JVpbYD3QHedWdssCyHrIz@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8H5GZxlLnY8W2/76NcXSerbwJZ9TOlhzn1ZLRz4+sd9MTEj+m
+	jvgkk2mOKTAqQUaWbNsBF2v6QeJJh/eVydQPtufA7Vk2KGEDA4bI3u6GipBPc+k=
+X-Gm-Gg: ASbGncskwafezRyqEqurAGmGNZK2IWGwJ3sjEaL/8wdWrBCJbVQ/U+TdkF3sEeLyIp8
+	EyWqTxt2ubNQBpQ3f6fqmG0QPU9hU9AyrXuHGskmxNdhd/Ad+8Fxev9WwP8jMopyxKKsIu9RVeV
+	q7UNRHTwEXx5tMertBNL5zguBF3VgYnz17BqoPUCKphELVMH/VzyX42Ocm9PPvLK7j+62dE3RQ+
+	X2zpDEWyQfX7f7TukFh2RUO8k1FeBnLxOhyX48ZoGXC6xENr5M+yrrTdU2W9eB41xwRSH77Wr01
+	KDASl+fQ4xlPgn0J90Kz7WSRF1B2BO/AcQu+UFIgSMK5nFU7aQ==
+X-Google-Smtp-Source: AGHT+IH3Zyy6u6RpzY5KgHoKsJ7EHKQAisxvMvebphzk4gRHaTm5ZR6ohOlHMtmi8WWzlDM6UTas2Q==
+X-Received: by 2002:a05:6a00:ad07:b0:740:58d3:71a8 with SMTP id d2e1a72fcca58-74090e0dffbmr3425657b3a.1.1746515356229;
+        Tue, 06 May 2025 00:09:16 -0700 (PDT)
+Received: from Black-Pearl. ([122.174.61.156])
+        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-74058dc768dsm8124025b3a.72.2025.05.06.00.09.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 00:09:15 -0700 (PDT)
+From: Charan Pedumuru <charan.pedumuru@gmail.com>
+Subject: [PATCH v2 0/2] dt-bindings: dma: nvidia,tegra20-apbdma: Add json
+ schema for text binding
+Date: Tue, 06 May 2025 07:07:26 +0000
+Message-Id: <20250506-nvidea-dma-v2-0-2427159c4c4b@gmail.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.14.5
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAC61GWgC/03MTQ7CIBCG4as0sxYDCFJdeQ/TBfLTTiJgwBBNw
+ 93FunExi3eS71mhuIyuwHlYIbuKBVPswXcDmEXH2RG0vYFTLqk4UBIrWqeJDf3MqITm/ii9gj5
+ 4ZOfxtWHXqfeC5Znye7Mr+35/jKTsn6mMMKL5iY3KSyVu+jIHjfe9SQGm1toHEtFNoaQAAAA=
+X-Change-ID: 20250430-nvidea-dma-dc874a2f65f7
+To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Thierry Reding <thierry.reding@gmail.com>, 
+ Jonathan Hunter <jonathanh@nvidia.com>
+Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Charan Pedumuru <charan.pedumuru@gmail.com>
+X-Mailer: b4 0.14.2
 
-From: Roger Quadros <rogerq@kernel.org>
+Create a YAML binding for nvidia,tegra20-apbdma and modify the apbdma
+nodename in dts to match with the common dma-controller binding.
 
-[ Upstream commit 0da30874729baeb01889b0eca16cfda122687503 ]
-
-The user of k3_udma_glue_reset_rx_chn() e.g. ti_am65_cpsw_nuss can
-run on multiple platforms having different DMA architectures.
-On some platforms there can be one FDQ for all flows in the RX channel
-while for others there is a separate FDQ for each flow in the RX channel.
-
-So far we have been relying on the skip_fdq argument of
-k3_udma_glue_reset_rx_chn().
-
-Instead of relying on the user to provide this information, infer it
-based on DMA architecture during k3_udma_glue_request_rx_chn() and save it
-in an internal flag 'single_fdq'. Use that flag at
-k3_udma_glue_reset_rx_chn() to deicide if the FDQ needs
-to be cleared for every flow or just for flow 0.
-
-Fixes the below issue on ti_am65_cpsw_nuss driver on AM62-SK.
-
-> ip link set eth1 down
-> ip link set eth0 down
-> ethtool -L eth0 rx 8
-> ip link set eth0 up
-> modprobe -r ti_am65_cpsw_nuss
-
-[  103.045726] ------------[ cut here ]------------
-[  103.050505] k3_knav_desc_pool size 512000 != avail 64000
-[  103.050703] WARNING: CPU: 1 PID: 450 at drivers/net/ethernet/ti/k3-cppi-desc-pool.c:33 k3_cppi_desc_pool_destroy+0xa0/0xa8 [k3_cppi_desc_pool]
-[  103.068810] Modules linked in: ti_am65_cpsw_nuss(-) k3_cppi_desc_pool snd_soc_hdmi_codec crct10dif_ce snd_soc_simple_card snd_soc_simple_card_utils display_connector rtc_ti_k3 k3_j72xx_bandgap tidss drm_client_lib snd_soc_davinci_mcas
-p drm_dma_helper tps6598x phylink snd_soc_ti_udma rti_wdt drm_display_helper snd_soc_tlv320aic3x_i2c typec at24 phy_gmii_sel snd_soc_ti_edma snd_soc_tlv320aic3x sii902x snd_soc_ti_sdma sa2ul omap_mailbox drm_kms_helper authenc cfg80211 r
-fkill fuse drm drm_panel_orientation_quirks backlight ip_tables x_tables ipv6 [last unloaded: k3_cppi_desc_pool]
-[  103.119950] CPU: 1 UID: 0 PID: 450 Comm: modprobe Not tainted 6.13.0-rc7-00001-g9c5e3435fa66 #1011
-[  103.119968] Hardware name: Texas Instruments AM625 SK (DT)
-[  103.119974] pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[  103.119983] pc : k3_cppi_desc_pool_destroy+0xa0/0xa8 [k3_cppi_desc_pool]
-[  103.148007] lr : k3_cppi_desc_pool_destroy+0xa0/0xa8 [k3_cppi_desc_pool]
-[  103.154709] sp : ffff8000826ebbc0
-[  103.158015] x29: ffff8000826ebbc0 x28: ffff0000090b6300 x27: 0000000000000000
-[  103.165145] x26: 0000000000000000 x25: 0000000000000000 x24: ffff0000019df6b0
-[  103.172271] x23: ffff0000019df6b8 x22: ffff0000019df410 x21: ffff8000826ebc88
-[  103.179397] x20: 000000000007d000 x19: ffff00000a3b3000 x18: 0000000000000000
-[  103.186522] x17: 0000000000000000 x16: 0000000000000000 x15: 000001e8c35e1cde
-[  103.193647] x14: 0000000000000396 x13: 000000000000035c x12: 0000000000000000
-[  103.200772] x11: 000000000000003a x10: 00000000000009c0 x9 : ffff8000826eba20
-[  103.207897] x8 : ffff0000090b6d20 x7 : ffff00007728c180 x6 : ffff00007728c100
-[  103.215022] x5 : 0000000000000001 x4 : ffff000000508a50 x3 : ffff7ffff6146000
-[  103.222147] x2 : 0000000000000000 x1 : e300b4173ee6b200 x0 : 0000000000000000
-[  103.229274] Call trace:
-[  103.231714]  k3_cppi_desc_pool_destroy+0xa0/0xa8 [k3_cppi_desc_pool] (P)
-[  103.238408]  am65_cpsw_nuss_free_rx_chns+0x28/0x4c [ti_am65_cpsw_nuss]
-[  103.244942]  devm_action_release+0x14/0x20
-[  103.249040]  release_nodes+0x3c/0x68
-[  103.252610]  devres_release_all+0x8c/0xdc
-[  103.256614]  device_unbind_cleanup+0x18/0x60
-[  103.260876]  device_release_driver_internal+0xf8/0x178
-[  103.266004]  driver_detach+0x50/0x9c
-[  103.269571]  bus_remove_driver+0x6c/0xbc
-[  103.273485]  driver_unregister+0x30/0x60
-[  103.277401]  platform_driver_unregister+0x14/0x20
-[  103.282096]  am65_cpsw_nuss_driver_exit+0x18/0xff4 [ti_am65_cpsw_nuss]
-[  103.288620]  __arm64_sys_delete_module+0x17c/0x25c
-[  103.293404]  invoke_syscall+0x44/0x100
-[  103.297149]  el0_svc_common.constprop.0+0xc0/0xe0
-[  103.301845]  do_el0_svc+0x1c/0x28
-[  103.305155]  el0_svc+0x28/0x98
-[  103.308207]  el0t_64_sync_handler+0xc8/0xcc
-[  103.312384]  el0t_64_sync+0x198/0x19c
-[  103.316040] ---[ end trace 0000000000000000 ]---
-
-Signed-off-by: Roger Quadros <rogerq@kernel.org>
-Acked-by: Jakub Kicinski <kuba@kernel.org>
-Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
-Link: https://lore.kernel.org/r/20250224-k3-udma-glue-single-fdq-v2-1-cbe7621f2507@kernel.org
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Charan Pedumuru <charan.pedumuru@gmail.com>
 ---
- drivers/dma/ti/k3-udma-glue.c                | 15 +++++++++++----
- drivers/net/ethernet/ti/am65-cpsw-nuss.c     |  4 ++--
- drivers/net/ethernet/ti/icssg/icssg_common.c |  2 +-
- include/linux/dma/k3-udma-glue.h             |  3 +--
- 4 files changed, 15 insertions(+), 9 deletions(-)
+Changes in v2:
+- Modified the subject to add subject prefix to the binding patch.
+- Changed the alignment of properties and required in the binding.
+- Removed description for "dma-cells" and included allOf to dma-controller.
+- Changed the include statement to use irq.h instead of arm-gic.h.
+- Created a new patch to rename apbdma node to match with common dma-controller binding.
+- Link to v1: https://lore.kernel.org/r/20250501-nvidea-dma-v1-1-a29187f574ba@gmail.com
 
-diff --git a/drivers/dma/ti/k3-udma-glue.c b/drivers/dma/ti/k3-udma-glue.c
-index 7c224c3ab7a07..f87d244cc2d67 100644
---- a/drivers/dma/ti/k3-udma-glue.c
-+++ b/drivers/dma/ti/k3-udma-glue.c
-@@ -84,6 +84,7 @@ struct k3_udma_glue_rx_channel {
- 	struct k3_udma_glue_rx_flow *flows;
- 	u32 flow_num;
- 	u32 flows_ready;
-+	bool single_fdq;	/* one FDQ for all flows */
- };
- 
- static void k3_udma_chan_dev_release(struct device *dev)
-@@ -970,10 +971,13 @@ k3_udma_glue_request_rx_chn_priv(struct device *dev, const char *name,
- 
- 	ep_cfg = rx_chn->common.ep_config;
- 
--	if (xudma_is_pktdma(rx_chn->common.udmax))
-+	if (xudma_is_pktdma(rx_chn->common.udmax)) {
- 		rx_chn->udma_rchan_id = ep_cfg->mapped_channel_id;
--	else
-+		rx_chn->single_fdq = false;
-+	} else {
- 		rx_chn->udma_rchan_id = -1;
-+		rx_chn->single_fdq = true;
-+	}
- 
- 	/* request and cfg UDMAP RX channel */
- 	rx_chn->udma_rchanx = xudma_rchan_get(rx_chn->common.udmax,
-@@ -1103,6 +1107,9 @@ k3_udma_glue_request_remote_rx_chn_common(struct k3_udma_glue_rx_channel *rx_chn
- 		rx_chn->common.chan_dev.dma_coherent = true;
- 		dma_coerce_mask_and_coherent(&rx_chn->common.chan_dev,
- 					     DMA_BIT_MASK(48));
-+		rx_chn->single_fdq = false;
-+	} else {
-+		rx_chn->single_fdq = true;
- 	}
- 
- 	ret = k3_udma_glue_allocate_rx_flows(rx_chn, cfg);
-@@ -1453,7 +1460,7 @@ EXPORT_SYMBOL_GPL(k3_udma_glue_tdown_rx_chn);
- 
- void k3_udma_glue_reset_rx_chn(struct k3_udma_glue_rx_channel *rx_chn,
- 		u32 flow_num, void *data,
--		void (*cleanup)(void *data, dma_addr_t desc_dma), bool skip_fdq)
-+		void (*cleanup)(void *data, dma_addr_t desc_dma))
- {
- 	struct k3_udma_glue_rx_flow *flow = &rx_chn->flows[flow_num];
- 	struct device *dev = rx_chn->common.dev;
-@@ -1465,7 +1472,7 @@ void k3_udma_glue_reset_rx_chn(struct k3_udma_glue_rx_channel *rx_chn,
- 	dev_dbg(dev, "RX reset flow %u occ_rx %u\n", flow_num, occ_rx);
- 
- 	/* Skip RX FDQ in case one FDQ is used for the set of flows */
--	if (skip_fdq)
-+	if (rx_chn->single_fdq && flow_num)
- 		goto do_reset;
- 
- 	/*
-diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-index afe8127fd32be..cac67babe4559 100644
---- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-+++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-@@ -515,7 +515,7 @@ static void am65_cpsw_destroy_rxq(struct am65_cpsw_common *common, int id)
- 	napi_disable(&flow->napi_rx);
- 	hrtimer_cancel(&flow->rx_hrtimer);
- 	k3_udma_glue_reset_rx_chn(rx_chn->rx_chn, id, rx_chn,
--				  am65_cpsw_nuss_rx_cleanup, !!id);
-+				  am65_cpsw_nuss_rx_cleanup);
- 
- 	for (port = 0; port < common->port_num; port++) {
- 		if (!common->ports[port].ndev)
-@@ -3433,7 +3433,7 @@ static int am65_cpsw_nuss_register_ndevs(struct am65_cpsw_common *common)
- 	for (i = 0; i < common->rx_ch_num_flows; i++)
- 		k3_udma_glue_reset_rx_chn(rx_chan->rx_chn, i,
- 					  rx_chan,
--					  am65_cpsw_nuss_rx_cleanup, !!i);
-+					  am65_cpsw_nuss_rx_cleanup);
- 
- 	k3_udma_glue_disable_rx_chn(rx_chan->rx_chn);
- 
-diff --git a/drivers/net/ethernet/ti/icssg/icssg_common.c b/drivers/net/ethernet/ti/icssg/icssg_common.c
-index 74f0f200a89d4..62065416e8861 100644
---- a/drivers/net/ethernet/ti/icssg/icssg_common.c
-+++ b/drivers/net/ethernet/ti/icssg/icssg_common.c
-@@ -955,7 +955,7 @@ void prueth_reset_rx_chan(struct prueth_rx_chn *chn,
- 
- 	for (i = 0; i < num_flows; i++)
- 		k3_udma_glue_reset_rx_chn(chn->rx_chn, i, chn,
--					  prueth_rx_cleanup, !!i);
-+					  prueth_rx_cleanup);
- 	if (disable)
- 		k3_udma_glue_disable_rx_chn(chn->rx_chn);
- }
-diff --git a/include/linux/dma/k3-udma-glue.h b/include/linux/dma/k3-udma-glue.h
-index 2dea217629d0a..5d43881e6fb77 100644
---- a/include/linux/dma/k3-udma-glue.h
-+++ b/include/linux/dma/k3-udma-glue.h
-@@ -138,8 +138,7 @@ int k3_udma_glue_rx_get_irq(struct k3_udma_glue_rx_channel *rx_chn,
- 			    u32 flow_num);
- void k3_udma_glue_reset_rx_chn(struct k3_udma_glue_rx_channel *rx_chn,
- 		u32 flow_num, void *data,
--		void (*cleanup)(void *data, dma_addr_t desc_dma),
--		bool skip_fdq);
-+		void (*cleanup)(void *data, dma_addr_t desc_dma));
- int k3_udma_glue_rx_flow_enable(struct k3_udma_glue_rx_channel *rx_chn,
- 				u32 flow_idx);
- int k3_udma_glue_rx_flow_disable(struct k3_udma_glue_rx_channel *rx_chn,
+---
+Charan Pedumuru (2):
+      arch: arm: dts: nvidia: tegra20,30: Rename the apbdma nodename to match with common dma-controller binding
+      dt-bindings: dma: nvidia,tegra20-apbdma: convert text based binding to json schema
+
+ .../bindings/dma/nvidia,tegra20-apbdma.txt         | 44 -----------
+ .../bindings/dma/nvidia,tegra20-apbdma.yaml        | 90 ++++++++++++++++++++++
+ arch/arm/boot/dts/nvidia/tegra20.dtsi              |  2 +-
+ arch/arm/boot/dts/nvidia/tegra30.dtsi              |  2 +-
+ 4 files changed, 92 insertions(+), 46 deletions(-)
+---
+base-commit: 9d9096722447b77662d4237a09909bde7774f22e
+change-id: 20250430-nvidea-dma-dc874a2f65f7
+
+Best regards,
 -- 
-2.39.5
+Charan Pedumuru <charan.pedumuru@gmail.com>
 
 

@@ -1,161 +1,141 @@
-Return-Path: <dmaengine+bounces-5097-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5098-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6586AAD554
-	for <lists+dmaengine@lfdr.de>; Wed,  7 May 2025 07:38:12 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E9BCAAD6D7
+	for <lists+dmaengine@lfdr.de>; Wed,  7 May 2025 09:08:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 770321BA588D
-	for <lists+dmaengine@lfdr.de>; Wed,  7 May 2025 05:38:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CE4A64E77D6
+	for <lists+dmaengine@lfdr.de>; Wed,  7 May 2025 07:08:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7906B1E25E3;
-	Wed,  7 May 2025 05:38:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D8FE214A7D;
+	Wed,  7 May 2025 07:08:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dnE4mIzB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hR2EZXUC"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pg1-f194.google.com (mail-pg1-f194.google.com [209.85.215.194])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8340199237;
-	Wed,  7 May 2025 05:38:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CE8B20C02E;
+	Wed,  7 May 2025 07:08:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746596285; cv=none; b=vFQ+YgJqidFgRO4PtJ+rv3TI2EHnWFqod1dzL8ZtuYBOpNRK+MfhBzC74CBTW5askcO3s9AVRabJatKtm8aw4G0nAJR6orqauFHh0KXDsJlpSSXkskuBdli14SETIg/vIaoQMyjzrVwfixSjI5K1vpYItfs+IbLqVMErZubMdiQ=
+	t=1746601683; cv=none; b=mXYhi+O6ndoouLG5s2x1lGBs8zRoaPnhfQ42AIX2gBHmxjQeCPl3ra+uBLNP3hTSg22Ji848YLDkommzx61rfqPVPDzNFJ4GqL1HuT4TIWplyZs3merX0NU3Fm4rK1ysR2qcdaswCJ2czEKs4uPVrP74oiP9GmvRxTUJ+ToXYw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746596285; c=relaxed/simple;
-	bh=wP8clbZR3wtgF2UvmFT+vgUtvGorLi06y2emXwfbX4A=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=TYeyIL4Rx+b8qMlUEHEaWQxygRRMNLKnQ/WDxzHBoBhZfYftb/88j2sxPQ3tSpHpKvsYpPbQURlV6GdL9tUqN3FM5CnjJUuU1R248NacaUjndH7/qp6KHcydZEM3Ge41U3drAG9qJbeikGVQOwDfTf+u5YF4o+sZkq8aJA+1IpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dnE4mIzB; arc=none smtp.client-ip=209.85.215.194
+	s=arc-20240116; t=1746601683; c=relaxed/simple;
+	bh=yOFbH434Zg5rDi8e1kT9YhyjSm0ENvujCs9yLE99ktA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Uj4sOuPpsAaY8xSrd+Z6WFgP0t4iP/jIgZrhQrF13N19pgwHYHulaoFjSgn43CQFNcQC5DCgvlLcnIqJwjErWrBjwL5mqRA8NrC8MuSJ8mIFpT46RJuF3bpCqbh3bEePHydr3YwPZ28Ju1Hngq7l4r1MP0lxEiNhlDQHs7MLuMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hR2EZXUC; arc=none smtp.client-ip=209.85.128.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f194.google.com with SMTP id 41be03b00d2f7-af6a315b491so5897677a12.1;
-        Tue, 06 May 2025 22:38:03 -0700 (PDT)
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so60439425e9.2;
+        Wed, 07 May 2025 00:08:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746596283; x=1747201083; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2wnNtboDgAN3l0RxBXJ7GpvEaa0XgYy7m1/m7BgIkhc=;
-        b=dnE4mIzB5vx8I+oD10gOE3Bx8uXqi6KftC+pj9XfWQRNck2cUshLe5QCpi21/qu58B
-         bP5i44BW+n/sz76Gs+j0NjTr0UfTKBk8GHZYtsIlpHGS2AYZgcf1tqYDAk78DGlF6j0T
-         +ojwSpLe2Crr7tBsuCCdZQsmIXN0A/2nkkfQCiFV8MP4pUgkzLvWpduKHqXMasdQgSid
-         U3pTJtsYTKDmTmCo6CTPatGu0Xvubcb8TYsHJO78uwZu1Oa4ZJZ0aOXx+JTCWLz0vKBs
-         wih8LtAcNK34beYGHoyzvTIGyLmGa8u9cyqiiU/a15eKPShbk1wwQThuhepkdGI5wPFZ
-         gzBg==
+        d=gmail.com; s=20230601; t=1746601680; x=1747206480; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=yOFbH434Zg5rDi8e1kT9YhyjSm0ENvujCs9yLE99ktA=;
+        b=hR2EZXUCI2jZcG3Skqx1VLOYTBnGlwfTWXzOxsAj4BLCL8CNEu4Xm9fPVNxT19dSOL
+         9dBSeLAsKEEc2VsTU6kqAvU5i95M2kQadFDuGcW+DLWsaHGHHd9RMNpicy8x+2/Ehfp5
+         RZjCc9D80MHtO13PPY7qH0FOpz+Nj73IgLEptsyokEGphijD9Fp+Wr9jpOXPZQwK7VNM
+         YAhnmjpSGXAgEo5uxfQQsHvOn5eF8E8R1c6kb5NGWo7RpXMqGL9aXFg14EagFT8X4TiT
+         wVpRkfi5jW3ZvwGR4ZptO/NoV62Y5UD39Mf5J5DzbIgjwwA6hpHDxade+ZdU9aZm49sk
+         G/3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746596283; x=1747201083;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2wnNtboDgAN3l0RxBXJ7GpvEaa0XgYy7m1/m7BgIkhc=;
-        b=qbl9pIJFV+1Q0NFnmCrWXfCZbTTDBocCUkmfsZ94iMJEvyaLIH4lhlEnth1W2GHsB/
-         BWnpainhVRwcirmVJzuwd8eNoVkO4/VS2ry5NH073AcC2SqWQTIgTfHBsWTzokLrS43d
-         8SWiqHtDHPEA/0JmXNGhJ1GES2ln2ZwxhGB0axYoDfxeG9WNIYdK3SRckgkqgOKDJXa5
-         1u9wZ2KsdGcPJnamAgWvLN7s+vI6v5HFjt/pf9ELxo2MSrWYGyMlnr6wXJnV3spLNbCT
-         yIgsgr2PERiwGeiL0pJvQLMSi+3SO3lCKKP/ZLXdmYarfWiZgCinWrh4kZsmfdpsi58w
-         yrGw==
-X-Forwarded-Encrypted: i=1; AJvYcCVC5DK6v0a+QRro1jS2uDN6l0LGwlL4xqAwgIHSD/G2Ht8ZnfNN/X1oSW0eblVEgknGs7Ri90ol@vger.kernel.org, AJvYcCWiql+oi03mVLxJnCALIGakkECKwSQENup+vfWT3H0JWBVtQKsnDOFzZ/xSfECWNUV6ULS0ypZn/gYdsYQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYzzu88cG7RY9yXJM4ffOz7mKa9LiZQIj6q2BwywPDOEE25BWr
-	qSm0pCm/cMQBiDFu574fJq4jiLgMUCxZs8tlEFEchTGqayHUzA+v
-X-Gm-Gg: ASbGnctx4u9vnLz+dItwb8N9tHl+tdDmhFldPqJMUjlwzhMDK3lvLhbCVDAGsW+Fv6Q
-	B2AYJ8fz2UECKbDcZzV0u+AcxwlvdhH9/aJvxyhDULnUOgIBFrtW4/2WPVR615HmAvHf72nPyP8
-	rRCCnz9A40R4CpLyl8YLOWbGLO+G6WTQQ4phncueWsPqm/w4rWQKdnT4IiCKdixJ4cHSNi7h7BA
-	lAmYfivewajPen0Vqawu76NWTdqYoRbe9glLKCdNI5N2rUGqvTSu2qYn3i5DncdYdB6PPsur4D5
-	FPLEuar2rJsDhZuddkERx6wIrTziAGEBGG56Rw97ioQCModJoA54w1x57Js=
-X-Google-Smtp-Source: AGHT+IHym5Q+YAPg3jYRVQT1AbcSKrkylIIVQ0nly23ygpo9eo5af0TuH69Syh4K6QEhZQ2OLe4vKA==
-X-Received: by 2002:a05:6a21:3385:b0:1f5:9175:2596 with SMTP id adf61e73a8af0-2148b81ec6amr3152869637.13.1746596282841;
-        Tue, 06 May 2025 22:38:02 -0700 (PDT)
-Received: from tom-QiTianM540-A739.. ([124.127.236.130])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1fb3b52759sm8714315a12.19.2025.05.06.22.37.57
+        d=1e100.net; s=20230601; t=1746601680; x=1747206480;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yOFbH434Zg5rDi8e1kT9YhyjSm0ENvujCs9yLE99ktA=;
+        b=sUXuYp2s+rvis+8Pmhc9fUP7IblXYIe26DwPlTaCk9k8xehoDD/ZLaI8xrf/KBAkP7
+         RQewgwBI0D1BjRK5q5UhOVRNV077QARhEoc15vRQegk2JS52MkF4y5W45upuve72853T
+         TAsOoBcDrakR2WmjUgvHh01n6/tyjwLhMeq6HZg2j8nE0+Iu/Gvv8q7875sDmvBbaYBm
+         +SbC7PJ+Utl7p9Cm25ju66fIxBTC5ohnNctbJq3zJTpxnjK8nOh1lKn7TXZ7TIvjODk8
+         cyEp5w/SIILLsmRRsyxHggi2baAXtjklDmIvB9LPO4Nt74YNCs72OFk3BRJl7l/m2nhn
+         EQDg==
+X-Forwarded-Encrypted: i=1; AJvYcCU+VUFKpp5D32Dv9zn8DTXZRW/4SXAqJlv/Y53o5kU/zLaFPrmULhgzQpadZIt+b/7UTYP7ZFwFaF7yeHU=@vger.kernel.org, AJvYcCUDnuTD/kvxpuhE0dEhRg32Zawu1w4kaGh8KguB2lAavivye8IygdgQDUca/vwpmyanroLqfWnnQzbl@vger.kernel.org, AJvYcCVFIZNDptWVnui5QsqOsSMMpof60ZI3vVwLB8GJjTAD7qNvs5GoscIrb3RIpwzt80iQ+AOxKzjQIiF/@vger.kernel.org, AJvYcCVNiARqhBe/pjr7+yeBsZ5KMXsYp0hK+DLxlBc701ggQwfaFkaWhNqYUQs0gsnizw9KN9PBv4P90Xbv@vger.kernel.org, AJvYcCVr7qqAm78KJE/6tHDJzFPwdovuxHo7crg42DNNOD7+RNhC61vvgzQv9N+Ax62jJJm5bIh6VhNHOLzxWg==@vger.kernel.org, AJvYcCVtmBLG+0r2DWFzdK8un0svH3Ux/ksZPIq2hBaIFodRxU0Hia35uiKUvD637wE7OhVApgTJFYqMr+M=@vger.kernel.org, AJvYcCXjcDZdxTVZPfv6cgQ5z1fxMfOVagM7+siGKfxEXf2sAxA/hMmgVWmg/yyEbhfNgOE4i5qmMuaMqx/d@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxs1ytfyUYkX51S5T0sgSt4mOlzzH88cGzju6T0sB3RP6qw/C9M
+	QsxRyEwpic+pNG/X6zQXuMJ/le5l5gXgswZvDOEf4cvpdhh9/Va8
+X-Gm-Gg: ASbGncsne0uqz2oJmPzSsiyrKCy4TzBFgtgaH0aZu4u2Wi5Ruk229K0leXUtjTqkO1D
+	2SeOhmgZU4LwLX7uP8EO7UCvzRzIVhVYv+pFlSpgB2aUmJgaqOsA8li6VAD3tBvRZsgLR5eRZ2U
+	VR30s5SPLtltHyVqXBH0vE2mwvi7soPDshHmmFRry6Jiy1HmlOT3SpNmDizoQ2kZQSirCIDpGlO
+	8NRGDaTj8QEA8pcmM1yJ6lt4DXfYiItq1GOzLdFRsCO1qRnqJgjgW1JzseEfgB4oCODDorvg0fb
+	Ew6R55OVNnlG5p3JW4Kzftd7whAWqysGii79aYEG/y96TKgQXBF1o+cjPbmH/9L9OagHIIpiU/N
+	p/aExdMCIADtTCTOGfKrhWZgsfw==
+X-Google-Smtp-Source: AGHT+IEVv9agzvTVDs5bbJ+MnVYrw4KNEaYxq9uzAgvReyxVwN3XJILLyTgLOKv4Mx4+2K0lZOywtA==
+X-Received: by 2002:a05:6000:188c:b0:38b:d7d2:12f6 with SMTP id ffacd0b85a97d-3a0b499c154mr1514674f8f.2.1746601679606;
+        Wed, 07 May 2025 00:07:59 -0700 (PDT)
+Received: from ?IPv6:2001:818:ea56:d000:56e0:ceba:7da4:6673? ([2001:818:ea56:d000:56e0:ceba:7da4:6673])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae8377sm16222335f8f.59.2025.05.07.00.07.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 22:38:02 -0700 (PDT)
-From: Qiu-ji Chen <chenqiuji666@gmail.com>
-To: sean.wang@mediatek.com,
-	vkoul@kernel.org,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com
-Cc: dmaengine@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	baijiaju1990@gmail.com,
-	Qiu-ji Chen <chenqiuji666@gmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] dmaengine: mediatek: Fix a possible deadlock error in mtk_cqdma_tx_status()
-Date: Wed,  7 May 2025 13:37:36 +0800
-Message-Id: <20250507053736.47220-1-chenqiuji666@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        Wed, 07 May 2025 00:07:59 -0700 (PDT)
+Message-ID: <ea70735157f47ea096e09f8a03d8151095a04c03.camel@gmail.com>
+Subject: Re: [PATCH v4 7/7] clk: clk-axi-clkgen: fix coding style issues
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: David Lechner <dlechner@baylibre.com>, nuno.sa@analog.com, 
+ linux-clk@vger.kernel.org, linux-fpga@vger.kernel.org,
+ dmaengine@vger.kernel.org,  linux-hwmon@vger.kernel.org,
+ linux-iio@vger.kernel.org,  linux-pwm@vger.kernel.org,
+ linux-spi@vger.kernel.org
+Cc: Stephen Boyd <sboyd@kernel.org>, Michael Turquette
+ <mturquette@baylibre.com>,  Moritz Fischer <mdf@kernel.org>, Wu Hao
+ <hao.wu@intel.com>, Xu Yilun <yilun.xu@intel.com>,  Tom Rix
+ <trix@redhat.com>, Vinod Koul <vkoul@kernel.org>, Jean Delvare
+ <jdelvare@suse.com>,  Guenter Roeck <linux@roeck-us.net>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, Trevor
+ Gamblin <tgamblin@baylibre.com>, Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?=
+ <ukleinek@kernel.org>, Mark Brown <broonie@kernel.org>, Mike Turquette
+ <mturquette@linaro.org>
+Date: Wed, 07 May 2025 07:08:23 +0100
+In-Reply-To: <b5a5a8a6-bb8a-44f0-ba94-7657aba83311@baylibre.com>
+References: <20250505-dev-axi-clkgen-limits-v4-0-3ad5124e19e1@analog.com>
+	 <20250505-dev-axi-clkgen-limits-v4-7-3ad5124e19e1@analog.com>
+	 <b5a5a8a6-bb8a-44f0-ba94-7657aba83311@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-This patch fixes a potential deadlock bug. We observed that in the
-mtk-cqdma.c file, most functions like mtk_cqdma_issue_pending() and
-mtk_cqdma_free_active_desc() follow the correct locking sequence by
-acquiring the pc lock first before taking the vc lock when handling the vc
-and pc fields. However, in mtk_cqdma_tx_status(), the function incorrectly
-acquires the vc lock first before calling mtk_cqdma_find_active_desc(),
-which subsequently acquires the pc lock. This reversed lock acquisition
-order (vc → pc) violates the established sequence (pc → vc) and could
-potentially trigger deadlock scenarios.
+On Mon, 2025-05-05 at 12:21 -0500, David Lechner wrote:
+> On 5/5/25 11:41 AM, Nuno S=C3=A1 via B4 Relay wrote:
+> > From: Nuno S=C3=A1 <nuno.sa@analog.com>
+> >=20
+> > This is just cosmetics and so no functional changes intended.
+> >=20
+> > Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+> > ---
+> > =C2=A0drivers/clk/clk-axi-clkgen.c | 74 +++++++++++++++++++++++--------=
+-------------
+> > =C2=A01 file changed, 38 insertions(+), 36 deletions(-)
+> >=20
+> > diff --git a/drivers/clk/clk-axi-clkgen.c b/drivers/clk/clk-axi-clkgen.=
+c
+> > index
+> > d8634d1cb401fff2186702354ecda7b4fcda006f..63b7b7e48f8fa00842ce4cf2112ce=
+7a89fa25da
+> > e 100644
+> > --- a/drivers/clk/clk-axi-clkgen.c
+> > +++ b/drivers/clk/clk-axi-clkgen.c
+> > @@ -15,6 +15,7 @@
+> > =C2=A0#include <linux/module.h>
+> > =C2=A0#include <linux/mod_devicetable.h>
+> > =C2=A0#include <linux/err.h>
+> > +#include <linux/types.h>
+> > =C2=A0
+> Might as well sort the rest alphabetically while we are cleaning things u=
+p.
+>=20
 
-To resolve this issue, we have moved the vc lock acquisition code from
-mtk_cqdma_tx_status() into the mtk_cqdma_find_active_desc() function.
-This adjustment ensures proper lock ordering while maintaining
-functionality. Since mtk_cqdma_find_active_desc() is a static function
-with only one call site in mtk_cqdma_tx_status(), this fix effectively
-addresses the deadlock risk without introducing unintended side effects
-to other components.
+Alright, it looks like a v5 might be needed. I can do that
 
-This possible bug is found by an experimental static analysis tool
-developed by our team. This tool analyzes the locking APIs to extract
-function pairs that can be concurrently executed, and then analyzes the
-instructions in the paired functions to identify possible concurrency bugs
-including data races and atomicity violations.
-
-Fixes: b1f01e48df5a ("dmaengine: mediatek: Add MediaTek Command-Queue DMA controller for MT6765 SoC")
-Cc: stable@vger.kernel.org
-Signed-off-by: Qiu-ji Chen <chenqiuji666@gmail.com>
----
- drivers/dma/mediatek/mtk-cqdma.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/dma/mediatek/mtk-cqdma.c b/drivers/dma/mediatek/mtk-cqdma.c
-index d5ddb4e30e71..656354bccb44 100644
---- a/drivers/dma/mediatek/mtk-cqdma.c
-+++ b/drivers/dma/mediatek/mtk-cqdma.c
-@@ -423,11 +423,14 @@ static struct virt_dma_desc *mtk_cqdma_find_active_desc(struct dma_chan *c,
- 	unsigned long flags;
- 
- 	spin_lock_irqsave(&cvc->pc->lock, flags);
-+	spin_lock_irqsave(&cvc->vc.lock, flags);
- 	list_for_each_entry(vd, &cvc->pc->queue, node)
- 		if (vd->tx.cookie == cookie) {
-+			spin_unlock_irqrestore(&cvc->vc.lock, flags);
- 			spin_unlock_irqrestore(&cvc->pc->lock, flags);
- 			return vd;
- 		}
-+	spin_unlock_irqrestore(&cvc->vc.lock, flags);
- 	spin_unlock_irqrestore(&cvc->pc->lock, flags);
- 
- 	list_for_each_entry(vd, &cvc->vc.desc_issued, node)
-@@ -452,9 +455,7 @@ static enum dma_status mtk_cqdma_tx_status(struct dma_chan *c,
- 	if (ret == DMA_COMPLETE || !txstate)
- 		return ret;
- 
--	spin_lock_irqsave(&cvc->vc.lock, flags);
- 	vd = mtk_cqdma_find_active_desc(c, cookie);
--	spin_unlock_irqrestore(&cvc->vc.lock, flags);
- 
- 	if (vd) {
- 		cvd = to_cqdma_vdesc(vd);
--- 
-2.34.1
-
+- Nuno S=C3=A1
 

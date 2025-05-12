@@ -1,53 +1,53 @@
-Return-Path: <dmaengine+bounces-5134-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5137-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 62595AB3B20
-	for <lists+dmaengine@lfdr.de>; Mon, 12 May 2025 16:47:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E452CAB3B2B
+	for <lists+dmaengine@lfdr.de>; Mon, 12 May 2025 16:47:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 94CAE3BAE2A
-	for <lists+dmaengine@lfdr.de>; Mon, 12 May 2025 14:46:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 22BD33BF1B8
+	for <lists+dmaengine@lfdr.de>; Mon, 12 May 2025 14:46:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58FD319C569;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 890F022B8C2;
 	Mon, 12 May 2025 14:46:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZRX4MrHf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A7OcJzco"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C95C22A4D8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CC6622A7E5;
 	Mon, 12 May 2025 14:46:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747061207; cv=none; b=hhIT5eA6QrXK2RgyB1oH0ZnBTYDDEqS74k8kU3kBVvqOwfv4iYEnCP7BtGSypLXhGjTOBepzTwXuV6s3eVEWD7rbnwVUg/hrKeIw6bkDqo4N6TPY3MugUzgXWL8bxRNTOZKLqigG6wu4vwG73i+AcbDF2220xAnvDTpH5NUa4vs=
+	t=1747061207; cv=none; b=E/UL8BFqRdBicJja/yHN+xAdfArNsouz26vI23VdF5/OstUGoz2Ee4SS/XsWcr5ybOkK4JGVRCel1uKlLboNhl5wH+OP82x+SJMGJaEGwH9JoopKQ/mFvZfZ4wB8xd2z9Yy9uS0NulsqqZh0WsxgOmttTX7pbOkUuZfEHKL2GH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747061207; c=relaxed/simple;
-	bh=HI59+3VsZAHzDG2lW8mj78HPsyNMQFBt0V6LHST9s0s=;
+	bh=Lc+0ipnOsOyMrbnE9ygCUwscmE7Y6WD4G1olrBmxHzk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tuDrNF21vurpkh3Y4x0Ph/nycMf1jyEDkk6fdxzXdbRVGyP4gVzaLI+8mJEFpkcjq1GV/iIidZmwXCUGt/IxmrtXHR1yq7zI+ch7b8x8PQPYSBR3wScgsFe1Y7LtzLXaTo77sYuSmvkTm7ms6LRJZTkEZ9C92H4M7t5QK1RllxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZRX4MrHf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 999D4C4CEF2;
+	 In-Reply-To:To:Cc; b=ps76m8VMyHM9lrf9f9zqbhiki4VYvYq+XZ2gwWPiWtZ+Pr5o+KJWnr3L5nsROp8WPoWCLcivfbid2bZOmMM9Cc6r85p7tIsmbsKWK4BERB7hol+QXByXKQCNZP7mcz7CeEaVLuH5vW1arBM7t/Q5Pu6e4iXvfpUe2nQENoPgcfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A7OcJzco; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A75C9C4CEED;
 	Mon, 12 May 2025 14:46:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1747061206;
-	bh=HI59+3VsZAHzDG2lW8mj78HPsyNMQFBt0V6LHST9s0s=;
+	bh=Lc+0ipnOsOyMrbnE9ygCUwscmE7Y6WD4G1olrBmxHzk=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=ZRX4MrHfcdd624JDKblY4ihWOx4yVyE8kZvLksV1vteQiP5jI18efVUOx27RhG+JC
-	 pNyGc5kGEGqpfWNeWwVr3a+/XeiadPpuv7K2e7SeHYNS4Rwtk8+WcX6LxhLZQYC0Tq
-	 XwgYsPNNVjtHyyqc/CgRRyv8oL8kcOa14b/y2/RgKl9VrDtmM5r3adyInx3eSo1/Dc
-	 scHVJBFNjDTE86C6+cbC4grtlLAog3WpJYirbTB6eO+7JMWpETfWJhRT4useO1Jpw0
-	 6guKnqswpFld/pRrUJa/5wKQ1wKAmbRO8D7NGmLweiR1QOydYf8Vh2iIpUtDfRhgl0
-	 ksbQuNMmZja8g==
+	b=A7OcJzcoiXFmYQTSqFfAdYD4AcNXac/QKomacYQUvcEPdtV4WXUY41O5wS3OGklsQ
+	 GgIeNpnrKybInUQxLocsW098l1FfjW+jf1mcdDLpkpGhpgU+H+I+1xrAGxO7fa9DC9
+	 P+OzkFlTAhS2c0wXdUagpmV5aywUMyF6v4SyZHFz7aJVKXx/GzP9NeWj8foCHHchev
+	 UOb12WK78qb2vspj3PVu9Alz+U+eDkbWedpoqfMNULY6lm65bYoi/KQ6ob+bkRzq68
+	 QkdO2D49FSL6oUpJJp+x33OTjplYqXvUrILtg2j7kjO7q+jW9bmgrGCWWAvgMcKCfg
+	 EP6ngdnbGtqaA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 884E8C3ABD8;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F6AC3ABD7;
 	Mon, 12 May 2025 14:46:46 +0000 (UTC)
 From: =?utf-8?q?Nuno_S=C3=A1_via_B4_Relay?= <devnull+nuno.sa.analog.com@kernel.org>
-Date: Mon, 12 May 2025 15:46:44 +0100
-Subject: [PATCH v5 1/7] clk: clk-axi-clkgen: fix fpfd_max frequency for
- zynq
+Date: Mon, 12 May 2025 15:46:45 +0100
+Subject: [PATCH v5 2/7] clk: clk-axi-clkgen: make sure to include
+ mod_devicetable.h
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250512-dev-axi-clkgen-limits-v5-1-a86b9a368e05@analog.com>
+Message-Id: <20250512-dev-axi-clkgen-limits-v5-2-a86b9a368e05@analog.com>
 References: <20250512-dev-axi-clkgen-limits-v5-0-a86b9a368e05@analog.com>
 In-Reply-To: <20250512-dev-axi-clkgen-limits-v5-0-a86b9a368e05@analog.com>
 To: linux-clk@vger.kernel.org, linux-fpga@vger.kernel.org, 
@@ -75,11 +75,11 @@ Cc: Stephen Boyd <sboyd@kernel.org>,
  David Lechner <dlechner@baylibre.com>, Mark Brown <broonie@kernel.org>, 
  Mike Turquette <mturquette@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747061206; l=999;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747061206; l=659;
  i=nuno.sa@analog.com; s=20231116; h=from:subject:message-id;
- bh=5+y858CS+pLM6RSN4Bbzxos5w9xYK0rwoYDgzKAlxLk=;
- b=OVRuv3PQZMJbAdpkX3/v33TFz5h3pR0mpJ/HlJHAFPI6R1qT5lYXbV3V+gx2XmIM+G1uZyxD4
- eWsjHmQWwogC6U8qF8ShTYDKulU4473tL65FYVZH2zXiY57IEyaoMRi
+ bh=/HIQW7i7xy9rSNcN8n33vnPmXH+zPymhP7sV+jmjYCI=;
+ b=UkbeSD8ZNQWnYCPH/yXBgvChQpIOfNybfAOgTFpWjJvyOUqtnAR4FWPD9eIRfJA2znSmn3TSj
+ hsP6zChynleC4CmzX7FIjBpHOaNJ6emk0aFBdQ7bdtLkRX47wF3PZ1h
 X-Developer-Key: i=nuno.sa@analog.com; a=ed25519;
  pk=3NQwYA013OUYZsmDFBf8rmyyr5iQlxV/9H4/Df83o1E=
 X-Endpoint-Received: by B4 Relay for nuno.sa@analog.com/20231116 with
@@ -89,30 +89,26 @@ Reply-To: nuno.sa@analog.com
 
 From: Nuno Sá <nuno.sa@analog.com>
 
-The fpfd_max frequency should be set to 450 MHz instead of 300 MHz.
-Well, it actually depends on the platform speed grade but we are being
-conservative for ultrascale so let's be consistent. In a following
-change we will set these limits at runtime.
+The mod_devicetable header is the one to be used for struct
+of_device_id.
 
-Fixes: 0e646c52cf0e ("clk: Add axi-clkgen driver")
 Signed-off-by: Nuno Sá <nuno.sa@analog.com>
 ---
- drivers/clk/clk-axi-clkgen.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/clk-axi-clkgen.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/clk/clk-axi-clkgen.c b/drivers/clk/clk-axi-clkgen.c
-index 934e53a96dddac8ed61dd109cfc188f3a2a0539a..00bf799964c61a3efc042b0f3a9ec3bc8625c9da 100644
+index 00bf799964c61a3efc042b0f3a9ec3bc8625c9da..2a95f9b220234a1245024a821c50e1eb9c104ac9 100644
 --- a/drivers/clk/clk-axi-clkgen.c
 +++ b/drivers/clk/clk-axi-clkgen.c
-@@ -118,7 +118,7 @@ static const struct axi_clkgen_limits axi_clkgen_zynqmp_default_limits = {
+@@ -13,6 +13,7 @@
+ #include <linux/io.h>
+ #include <linux/of.h>
+ #include <linux/module.h>
++#include <linux/mod_devicetable.h>
+ #include <linux/err.h>
  
- static const struct axi_clkgen_limits axi_clkgen_zynq_default_limits = {
- 	.fpfd_min = 10000,
--	.fpfd_max = 300000,
-+	.fpfd_max = 450000,
- 	.fvco_min = 600000,
- 	.fvco_max = 1200000,
- };
+ #define AXI_CLKGEN_V2_REG_RESET		0x40
 
 -- 
 2.49.0

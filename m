@@ -1,96 +1,102 @@
-Return-Path: <dmaengine+bounces-5144-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5145-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6385AB3D4F
-	for <lists+dmaengine@lfdr.de>; Mon, 12 May 2025 18:21:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2764CAB3E34
+	for <lists+dmaengine@lfdr.de>; Mon, 12 May 2025 18:55:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B9152164133
-	for <lists+dmaengine@lfdr.de>; Mon, 12 May 2025 16:17:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3CC0F46371A
+	for <lists+dmaengine@lfdr.de>; Mon, 12 May 2025 16:55:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0A9125487B;
-	Mon, 12 May 2025 16:15:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vMumuf1f"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92CA62676DF;
+	Mon, 12 May 2025 16:54:46 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4DC2512F7;
-	Mon, 12 May 2025 16:15:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30DC225A2C7;
+	Mon, 12 May 2025 16:54:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747066532; cv=none; b=cFoLLAZx5vOcj3+6duZbaYrCN7LyeDXnkKLErB27++E0ncFl7WOuEbHJ20QiYtrM2i3Z6Mk6DyJ3gRJlASksy/gIh34rf8LW50iG1t0DyocRqE0uL7KI/fWWXShwfE626FOdZb3lRztfKflnJ8NAHFx1AgqkT7/oRBeToPgRHFE=
+	t=1747068886; cv=none; b=gNNFWj6AnUW+n8BfJtVDLe9VdQp5Pv3F2eYbi+zyEMV2bBngfs1QdD2vv01wrQ3ElRcbntLhxMUUayv+C31Ct4MKEqHK8e5BSHm98GYrFIISHYM6Dj8dqWGgXg1SktidNW097xTIAXYJ1bttu4B0Bq20ekJyuBkWfxLxbGiiX54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747066532; c=relaxed/simple;
-	bh=Q36OXvwzuW54iqDLyYNH6PqzQwvoWLmXEDu9aHSwUeI=;
+	s=arc-20240116; t=1747068886; c=relaxed/simple;
+	bh=GHfBzMz6hvOT4FNqopeQP9A6JOY7MLEh312/qsRWIQc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c+NNevA7Z0HHMzLtehMMa51O5wiuQ+CE4031RPBtfaZS3OkMsLCBH2JHggm8HJOan7o4y85AFuKTS911/x6uS68BjfrubDO/GX2QUEfs9elWVF5dbFltSApiufqPw35ujiXrLmRzYEGnqDUhlnLj4QWz7fET3VvBkXfhFGmmGC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vMumuf1f; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ED0CC4CEE7;
-	Mon, 12 May 2025 16:15:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747066531;
-	bh=Q36OXvwzuW54iqDLyYNH6PqzQwvoWLmXEDu9aHSwUeI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vMumuf1fuj/rbQ6mArroJOZXERVX2mqe6K+2BIU5aA6VpjvVzH/R+KZMDzLdmlNFu
-	 7lVZL153dMPP++MSKRNzZftZF09NRcuVMJB/EZii/aFqBslJBn50e+Bo/8d/DgLO9y
-	 6CQG4JwR3YM10yjvjxpoY2H1PVXRku2fQI4ctBY/qPnf9oYfw+MMKm85ctv7hbH4qp
-	 5yrFxZX9iIiN110PUuEg5BnGeZyc8kQSET3XCMGi7UNZC1v2sUehWDpeoutO5E4Wsz
-	 XlyLs2By4cWwC9pLS7NNDmgQ4avKnozFStop2tu1fM7KolHqMQh/LbZE2TSIevB19n
-	 wdWXe9gBHKcTw==
-Date: Mon, 12 May 2025 17:15:27 +0100
-From: Conor Dooley <conor@kernel.org>
-To: "Sheetal ." <sheetal@nvidia.com>
-Cc: vkoul@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, thierry.reding@gmail.com, jonathanh@nvidia.com,
-	ldewangan@nvidia.com, dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: Document Tegra264 ADMA support
-Message-ID: <20250512-default-ninja-01455d36e14f@spud>
-References: <20250512050010.1025259-1-sheetal@nvidia.com>
- <20250512050010.1025259-2-sheetal@nvidia.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=qaLWhraFrr2QZyd1mkAQStejcCw2GGOniGUG+Cie5HWijvECIklSw4E9wDuS9uoboGFB9N/JSCae7dhcIoiPbxh4v+5szCS8LUj4C6vkNzlyemRLh+WRepX8PiSf1OyJUrR6p/BK4kxr6Hc67mR9YQzedwPwZSaHAgFZLssBXOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F219FC4CEE7;
+	Mon, 12 May 2025 16:54:44 +0000 (UTC)
+Date: Mon, 12 May 2025 18:54:43 +0200
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Danila Tikhonov <danila@jiaxyga.com>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, 
+	Rajendra Nayak <quic_rjendra@quicinc.com>, Jassi Brar <jassisinghbrar@gmail.com>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Amit Kucheria <amitk@kernel.org>, Thara Gopinath <thara.gopinath@gmail.com>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Lukasz Luba <lukasz.luba@arm.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wesley Cheng <quic_wcheng@quicinc.com>, 
+	Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Souradeep Chowdhury <quic_schowdhu@quicinc.com>, 
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S . Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Alex Elder <elder@kernel.org>, 
+	Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>, 
+	Bart Van Assche <bvanassche@acm.org>, Andy Gross <agross@kernel.org>, 
+	Srinivas Kandagatla <srini@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	Georgi Djakov <djakov@kernel.org>, Loic Poulain <loic.poulain@oss.qualcomm.com>, 
+	Robert Foss <rfoss@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Taniya Das <quic_tdas@quicinc.com>, Sibi Sankar <quic_sibis@quicinc.com>, 
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
+	Joerg Roedel <joro@8bytes.org>, Imran Shaik <quic_imrashai@quicinc.com>, 
+	Mathieu Poirier <mathieu.poirier@linaro.org>, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
+	"Guilherme G . Piccoli" <gpiccoli@igalia.com>, David Wronek <david@mainlining.org>, 
+	Jens Reidel <adrian@mainlining.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-watchdog@vger.kernel.org, 
+	linux-usb@vger.kernel.org, linux-phy@lists.infradead.org, linux-mmc@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-scsi@vger.kernel.org, dmaengine@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, linux-i2c@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev, linux-remoteproc@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-hardening@vger.kernel.org, linux@mainlining.org, 
+	~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH 20/33] dt-bindings: i2c: qcom-cci: Add the SM7150
+ compatible
+Message-ID: <20250512-incredible-radiant-jackrabbit-d0c77b@kuoka>
+References: <20250422213137.80366-1-danila@jiaxyga.com>
+ <20250422213137.80366-4-danila@jiaxyga.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="uM1xOrZY5Fq5Lc7j"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250512050010.1025259-2-sheetal@nvidia.com>
+In-Reply-To: <20250422213137.80366-4-danila@jiaxyga.com>
 
+On Wed, Apr 23, 2025 at 12:31:24AM GMT, Danila Tikhonov wrote:
+> Add the SM7150 CCI device string compatible.
+> 
+> Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
+> ---
+>  Documentation/devicetree/bindings/i2c/qcom,i2c-cci.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 
---uM1xOrZY5Fq5Lc7j
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-On Mon, May 12, 2025 at 05:00:09AM +0000, Sheetal . wrote:
-> From: Sheetal <sheetal@nvidia.com>
->=20
-> Add Tegra264 ADMA support to the device tree bindings documentation.
-> The Tegra264 ADMA hardware supports 64 DMA channels and requires
-> specific register configurations.
->=20
-> Signed-off-by: Sheetal <sheetal@nvidia.com>
+Best regards,
+Krzysztof
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-
---uM1xOrZY5Fq5Lc7j
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaCIenwAKCRB4tDGHoIJi
-0lX2AQD9H99iiPiDs9XOd4gc6siPEsvj0OvXUzRvIAaSiCtdAwEAicOztjwIpfSs
-AzHcj3tUaw3P5EVeYTj2aWLFzyZm2ws=
-=UcFi
------END PGP SIGNATURE-----
-
---uM1xOrZY5Fq5Lc7j--
 

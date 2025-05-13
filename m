@@ -1,165 +1,183 @@
-Return-Path: <dmaengine+bounces-5154-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5152-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 917E4AB4D75
-	for <lists+dmaengine@lfdr.de>; Tue, 13 May 2025 09:59:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B0EBAAB4C6A
+	for <lists+dmaengine@lfdr.de>; Tue, 13 May 2025 09:03:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 074151888B83
-	for <lists+dmaengine@lfdr.de>; Tue, 13 May 2025 07:59:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 27B8B1B41149
+	for <lists+dmaengine@lfdr.de>; Tue, 13 May 2025 07:04:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4C871F180E;
-	Tue, 13 May 2025 07:59:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E4B31E9B32;
+	Tue, 13 May 2025 07:03:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DF35bCi+"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="rMM1aotC"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2082.outbound.protection.outlook.com [40.107.92.82])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C8F71DED6D;
-	Tue, 13 May 2025 07:59:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747123176; cv=none; b=tG48c/K5b++rlLu1dwBbp1G4qwM81rdlWZQYU3u4boTtkaV5jOXY1ZNvGPBIiXNK+0+8ZC1Xtu+3FCmujLKNgFmpcAUCATmbNdvJwn26/1seAx6mYRGtKwJA0dc9iu1EQJ6XocCpUGOF6ksVheLPWd9FSIXLH1+lqbUGtTwVZiY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747123176; c=relaxed/simple;
-	bh=zVQDiOX9CGuUmhYtJQXVsD42iRaEY3++AII5n41vnDE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=cdGImiR7/lyZOJXQbfWxHtxT01XyItypUJKYbuDare7S2XsgQGwPfjZvtDTK06aaMeU0ZOvFDbZgOk++uWOHALot95qMIkmgNKnI+3WtqcnS+ulF7dk0c0RCa2R5RnB4qMakNQzCjOyLbt0fKXrspEQqfQ5hkd4FiPE0Gd/2bPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DF35bCi+; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a1fa0d8884so2363728f8f.3;
-        Tue, 13 May 2025 00:59:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747123173; x=1747727973; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=o2Ki80ZABGEJg4AxOlmxgap7pzHGqhGsMpYaN6EjGbw=;
-        b=DF35bCi+JZI2oiQzfDJmDpLeuSJmomrbBNJDAX8bHacY+bMJcGKQZDhWbCeN4/4iKW
-         m/Dp2UkPlL8wGAzeFwAFg4/t08AQCq/mwJHi4O7N0CQl5PNy/1PQFhyhdResgi0xCVFx
-         PeHcZA1R1H3nYZDoHTP1BOVxyLBpwHQgenaD6EcwY0dEx1/f4t7kXG98QJEKV9/hPp+n
-         wvkbHzXEG+zWqvqepisl0sl/PIgg4zhSPvJcdz77oLtLNB7ScD+2Fj4WB6p+XcEzpj4m
-         x+rGGjy1T+MtoHZ4IZ8icGDRWcLeVFG5LR3ws6yITnm1EYOYsDWMk9SQV5pKoAwh8yCM
-         o2Xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747123173; x=1747727973;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=o2Ki80ZABGEJg4AxOlmxgap7pzHGqhGsMpYaN6EjGbw=;
-        b=o+7Pc7N/QkVRQRtuiOzDtuhfuq82n39TuqowGzUSFnR7IVQr+xQYNBWV4sTZnZPdNn
-         dzyXgWQRKqgUyRth+OVfficnihR5QLIo/uURHn3qjAZ6vSKiPAJS7RtRDFAYYEmGJ00G
-         NzURV/tEIZR1apL6kgOsALMJ8Oytbn5/8FCB/tB39hflOf8tgN1YZJ4GX5UZmNVxc0gB
-         /3yC4cXziHw5m+FiQ+hipzDUdeFAdSrEvWGO04Dgclg0vgBzca7F4agXvvAfEp6dr+WH
-         J8YxUA0fkmgk4Bp0707DRZnj4ZO3TFZNUvY63+Ug8ZQ7U+LkI6HK9e+DCDBXO77v6lJF
-         3uRw==
-X-Forwarded-Encrypted: i=1; AJvYcCUp0MyCJAhUBGDpYO2aq5cRXe4WbTWJLTY0hcoFOVM5Hx1WUnA6IuWbggaXsTzgIfXGcIhccltGAQb5@vger.kernel.org, AJvYcCVS/RzJ6EmrpG5eHHq8oGkTO1u0uRAExjltbqP8YTMFUoBQp6kvpQo+QH5vg12QUbJWEgBi8Z2PHJ1XMaQ=@vger.kernel.org, AJvYcCVsTBYEydLNKOBkCIvQaohm1ojajC32uJuyctIbvz1IG6bFz2jJztKpMr3FqKTwmmj1787AQ9D5JdFoJw==@vger.kernel.org, AJvYcCWIfd2fYPKKfG2rRJE95R9PVMAGME92PCjDvO6eVjzVI7i/eT/2KsTELFIi3q7t1pXqDR8YorOBr2qQ@vger.kernel.org, AJvYcCWOHFRk8W9L2YtsOUx8zszIehLGeFfyz8HwESIN+0GONJuYonW09Qk5wHiwUaKZ17d8BEByw4Fwa0Ra@vger.kernel.org, AJvYcCWqf1Ura1cAVfYokY16klMKy3SvRAIO5VLKZlGVgEQx9mGXyOCcq2dXuVTuD8AfPYBbsZq1p2GslrE=@vger.kernel.org, AJvYcCX7EyftZl8q4uGXAX0aAqVP2qqQqOAByx2UaKjWfDTGXUdPvgTUMwlGdhyHX1bX0AWmoAppNGpMu4L8@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpJKsLRpp7bHymeiKBeaf6lRCdGvYiG5ZY1W2xM37eKyy91L5h
-	dugy1yYtoXHJSFnqfMXHFJIPI7nqJNf2AYbwBLiyAIy0/Q86ZDqO
-X-Gm-Gg: ASbGncvZM6NaVi7BoQcfmQRhpBqhi12pKGEDKq2GkEjF/uLdAE/+w0qhQgWy8rbDrlU
-	hhD3p2u2fxm/MUVDbSG3vnayxoO0hKrfyFxO4dK9nDF6QG/uHhjS1pA2+xEvpJNOgAwhKUXNqpV
-	y1JKB2TBCX6ktRf7LNV/lH4rme4dw9ReZw1alyv9T/BJWq5b148LKmPF6Ds74TNDZvgDR1a3FVh
-	eZodoDrSpBl7XaKU5gM9zOQ1VBxvWir24nNJg3/vJgCKaVTygnfhBni6HJlzT2VGQtrV5Usw+GY
-	LAHelZBQQyuuIB8Pq9XJmzMKxM0q9RmAiRZyRrMG9TtkoaaDIWOMKlbrrB/q3Q2sCCbo+GkbM7N
-	MGzDfABHQMALcyufoEQLXZpOj0Q==
-X-Google-Smtp-Source: AGHT+IHVSjFApFWecKfyKzV3L2zKQlG2ldSYHxNj4NtNCLFuSKyvtc3joGoU0hu6Hbf4lfBZu9pEvg==
-X-Received: by 2002:a05:6000:4008:b0:3a0:9fe1:c298 with SMTP id ffacd0b85a97d-3a1f6438efdmr13156979f8f.18.1747123173091;
-        Tue, 13 May 2025 00:59:33 -0700 (PDT)
-Received: from ?IPv6:2001:818:ea56:d000:56e0:ceba:7da4:6673? ([2001:818:ea56:d000:56e0:ceba:7da4:6673])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd34bd84sm198145575e9.22.2025.05.13.00.59.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 00:59:32 -0700 (PDT)
-Message-ID: <874de9179208e2724769cbba515b188e82962d62.camel@gmail.com>
-Subject: Re: [PATCH v5 3/7] include: linux: move adi-axi-common.h out of fpga
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: David Lechner <dlechner@baylibre.com>, nuno.sa@analog.com, 
- linux-clk@vger.kernel.org, linux-fpga@vger.kernel.org,
- dmaengine@vger.kernel.org,  linux-hwmon@vger.kernel.org,
- linux-iio@vger.kernel.org,  linux-pwm@vger.kernel.org,
- linux-spi@vger.kernel.org
-Cc: Stephen Boyd <sboyd@kernel.org>, Michael Turquette
- <mturquette@baylibre.com>,  Moritz Fischer <mdf@kernel.org>, Wu Hao
- <hao.wu@intel.com>, Xu Yilun <yilun.xu@intel.com>,  Tom Rix
- <trix@redhat.com>, Vinod Koul <vkoul@kernel.org>, Jean Delvare
- <jdelvare@suse.com>,  Guenter Roeck <linux@roeck-us.net>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, Trevor
- Gamblin <tgamblin@baylibre.com>, Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?=
- <ukleinek@kernel.org>, Mark Brown <broonie@kernel.org>, Mike Turquette
- <mturquette@linaro.org>, Xu Yilun <yilun.xu@linux.intel.com>, Jonathan
- Cameron <Jonathan.Cameron@huawei.com>
-Date: Tue, 13 May 2025 07:59:56 +0100
-In-Reply-To: <44929bd2-4abf-4c7b-b3c0-382bd030800f@baylibre.com>
-References: <20250512-dev-axi-clkgen-limits-v5-0-a86b9a368e05@analog.com>
-	 <20250512-dev-axi-clkgen-limits-v5-3-a86b9a368e05@analog.com>
-	 <44929bd2-4abf-4c7b-b3c0-382bd030800f@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B41D1E9B06;
+	Tue, 13 May 2025 07:03:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.82
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747119811; cv=fail; b=MNdQDdnMjl46rYg5hjVuhneZVp55+inLrdan+XRjfgE7qUJsLKo776mXQ70of5q35YcqfbsjwZQ9iE9D76iMxiS/lrfZhyOPc18jXtlDbE9ndnnzHqEsN58YaErP6GvejltnwayTbhcq/1g6ipSDKoOXWLG7Mp2OJG5yIa5dRlU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747119811; c=relaxed/simple;
+	bh=sAPaGNbmcNaZ2FjSmVeLeKEeXH5DChwSRCnidHOGLMY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Ujzpjik9Yh1fT9Z90K3BHlayeyRUh6Mc7RQwuxBDluh2KjTzmgBRuIvCKlS/7RUkMlCsem/3ygmk2xwKTpAwKDNhQiwqknX0QUXJzqvrdPzVYQmorlVrb4TTbfOoU/ZNxXEtp0hWedqxgBZkZZ9BggPY6lAeNRrKh4O83djasMU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=rMM1aotC; arc=fail smtp.client-ip=40.107.92.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=VljALCcS7k1Zwx5gUhm2fFNQk/KitPf+Yk9QexrAFHJDMEghDufgaN8DOUAwnwJ494fim5fDOTMuaH4mMQm2wQJ50AD2YwR5HrCk/2PA9AKRsEL1GOyg+j6vv8Ej3zaH2wO0o9VikelR8lRKc5c7Xdl2jQBS4HEFkszbIlH/6iKaNkxaNQ9hQYYbzEpZZQnU1rLBCAEBcZhmtib7ONXvQjxs0UXiONtWFS0da9d0X5bjj5BvhR8nRSGaWfTlwOyg8vI3GcgiNs4fo7KZaHcZd8LWFvt1BFg0BGNPiQZQ7eWLdnrzcuxGklxsPJbb6BzXtn4gbF22hRBNxqsCxG9GVw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=nYKH/YcYMcy1gobqFYWWEFylyKrDse4rTF+9j0iuxYU=;
+ b=B2/4LqC8r6gJbusMOU+s21HYTenh4zQBIUC2A8cxTGcFfR8MbHsTn0puTlIi+79BxWvUzq7YKb8uYF0A6ZtqUEqj5cnBu+MlDUSPZriaeQm31g2v6ggrqAUp+iTUOcg91JH5oYwoMzFGcb9CZql8kIYKoKhjW3K4qtOB4RpCTV098Z2bmehWk4QI166OSVSGhddbWSwRJK7iMxp/hzORCFaw2Uapu+/ZR7NeHjLQRLFS2sgB8Kno7x3V9ltryNkrtMcYlg8B96nFJln8DciisiXsDlDOoDLmAuraW3kJ6IcfOYbZtQPLR7Jr+lbPlbM9Fro7s8tCsYtxYb7WpeERtg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nYKH/YcYMcy1gobqFYWWEFylyKrDse4rTF+9j0iuxYU=;
+ b=rMM1aotCRA5aILlpqTgMICzDfvCxrIQr5jJ+vfPwCJSEibNJ4G/djP74lBWnyNabPU9HpWG5xkip5uGfIxgN4jmhJv1Id36tQDjc/gXYPTyGLp6TiTX3qxMS1Z2tIcOoRTCaPC0h3wtF1Uj01xXuGtf0hl8QfKXpJNK1l52fMjo=
+Received: from SJ0PR05CA0041.namprd05.prod.outlook.com (2603:10b6:a03:33f::16)
+ by MN0PR12MB5714.namprd12.prod.outlook.com (2603:10b6:208:371::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.28; Tue, 13 May
+ 2025 07:03:25 +0000
+Received: from SJ5PEPF000001E9.namprd05.prod.outlook.com
+ (2603:10b6:a03:33f:cafe::1a) by SJ0PR05CA0041.outlook.office365.com
+ (2603:10b6:a03:33f::16) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.16 via Frontend Transport; Tue,
+ 13 May 2025 07:03:25 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ5PEPF000001E9.mail.protection.outlook.com (10.167.242.197) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8722.18 via Frontend Transport; Tue, 13 May 2025 07:03:24 +0000
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 13 May
+ 2025 02:03:23 -0500
+Received: from xhdthippesw40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Tue, 13 May 2025 02:03:21 -0500
+From: Devendra K Verma <devverma@amd.com>
+To: <devverma@amd.com>
+CC: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<manivannan.sadhasivam@linaro.org>, <michal.simek@amd.com>,
+	<vkoul@kernel.org>
+Subject: [RESEND PATCH v2] dmaengine: dw-edma: Add HDMA NATIVE map check
+Date: Tue, 13 May 2025 12:33:14 +0530
+Message-ID: <20250513070314.577823-1-devverma@amd.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+Received-SPF: None (SATLEXMB04.amd.com: devverma@amd.com does not designate
+ permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001E9:EE_|MN0PR12MB5714:EE_
+X-MS-Office365-Filtering-Correlation-Id: b7854359-826f-441b-6a05-08dd91ec412d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|376014|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?gCzrw6wTxjd87Q61jdgrkkhvMxCOlZd4Ps1AaEoCZdmDqEbjefG4AC1R+R5n?=
+ =?us-ascii?Q?liZfmCQc026XcyNx6pFshdlOz7KMueTR6YL3GJQSPQhrwwZfpLwLfA5fNRWR?=
+ =?us-ascii?Q?FjNJB17ZA13SUOmKPikS/+qrzgrxrqx2SOFpY7ptZShaqyu0B9QEeA56Mzdf?=
+ =?us-ascii?Q?1yDPv9TCB+0aac/DunKEWE9xncpNuN3iOtYQSIH0Ijw6b26LeBGLu9aFLjZ4?=
+ =?us-ascii?Q?VdPGbsob+pUM7ExeNfMSomtP8U05P0gItiZwdIlRiZRdrkK53hPQFEL0NHZd?=
+ =?us-ascii?Q?/30e8haAwAIl+Kl0HHtRSNTEvIaAHExiEZpWFQjVfUv1AZMZ50cGUJYZfsgB?=
+ =?us-ascii?Q?dCv4h/W6LdtZLGmTKZrbF99+bpHPiiIO6AQh2IxZmpLHteI9J3Dyin4HuWL5?=
+ =?us-ascii?Q?+ja9qGtTnL/OIWTs9oBvKmxGoSOXZudUsI2EDwFig/M7Z1rbpJdGoMD69Ivk?=
+ =?us-ascii?Q?UazI/+wDS2UbXF7mUJAjkWBP3YuV2yAH+p20HfsPdztQaz/yRAdR8cInMbOs?=
+ =?us-ascii?Q?i0OO7TeyVJvKncpUN3o9kT8g0DHGfEpbKT2/rsp2MeRzlZ7Ii37xuarTQHrJ?=
+ =?us-ascii?Q?DZoJgjjK0dedFkAmYWn+GusJeZ6AGV5lzM0cFrvEsQt1IY3fIqbImItYHh//?=
+ =?us-ascii?Q?/4pZsZLcayAmuh9SIRESbzPHVpRG+8zyaR6gfHBqSN1xIPkJymjGIld+tzzO?=
+ =?us-ascii?Q?rbjBxOOhZ2KqRMlNqZd8Rj3CNkue9bNBQ8PPTirCs6vr4VmkBD7Fsu7wWLs+?=
+ =?us-ascii?Q?GQ6BljWQjIHJDR/dRTNKBju2p3kIoqx+3UKl9tts2aRSv3uykLZzAOob9xYj?=
+ =?us-ascii?Q?o8RuPwSXS7N/+iMR3/v7DYirOFi+4GnJje3r15B0xVwXMpHpgDZ/uzYDPtuf?=
+ =?us-ascii?Q?udRtubmALJ4G7BzTZXEkEXHjJID/yg4MAxKsxs5jIzlEEVnqepIkraDuAfen?=
+ =?us-ascii?Q?qwA0fnAMsK8C7LkkcMlKL4tCj6tB2tVe+c/XRyD8VKPDucElriRkcKHa0kr7?=
+ =?us-ascii?Q?YdjsS+SsBmEnPPTKJBhlHoup8r4ynWl5nOunoEmG7IfYlFjh8R83B+UBNh5u?=
+ =?us-ascii?Q?GMIX61h3u7eOnO/VDGrD+VlF5g0BFYl68PbkRoLVlgLdu/ela5xdflZc5Bhz?=
+ =?us-ascii?Q?qyvecj1n9v7B0rN9uD1igFmJvrIBPMOYemd6PfQaeG/+JZTQmRZyDUnJtxBn?=
+ =?us-ascii?Q?dxX4pN1G9WQKoC6U3ZuX+7IeekUfu6tGhtDYA0if5XKMlT6gN3hdpm49TUyJ?=
+ =?us-ascii?Q?hJOn69RNsnJsz7QqmBgN4ks92fGBGcZPsY1tWra8LdEQkyIeJSfG6qqtO+xa?=
+ =?us-ascii?Q?gZzHBvwPsxlVrehzEzJJCCdDr8mGRQpRB0n0cALY1Uieur+EuNbwGQokeE4F?=
+ =?us-ascii?Q?WKLbNKTRsUby61+Juw6s31gc2zMUOdWvdObRGfpAOl/ZUKMSgt1rGbmh3cZJ?=
+ =?us-ascii?Q?m9hMIei2ttrF6Mqfj21Q3s4Dlb4a2t2UXlJbkcwN5kG0Lu0iN3OdEfm+z5Cb?=
+ =?us-ascii?Q?qX297P2kPEsg7T5862MF3A+AjSREbpFdaPEY?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2025 07:03:24.7063
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b7854359-826f-441b-6a05-08dd91ec412d
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF000001E9.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5714
 
-On Mon, 2025-05-12 at 10:15 -0500, David Lechner wrote:
-> On 5/12/25 9:46 AM, Nuno S=C3=A1 via B4 Relay wrote:
-> > From: Nuno S=C3=A1 <nuno.sa@analog.com>
-> >=20
-> > The adi-axi-common.h header has some common defines used in various ADI
-> > IPs. However they are not specific for any fpga manager so it's
-> > questionable for the header to live under include/linux/fpga. Hence
-> > let's just move one directory up and update all users.
-> >=20
-> > Suggested-by: Xu Yilun <yilun.xu@linux.intel.com>
-> > Acked-by: Xu Yilun <yilun.xu@intel.com>
-> > Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> # for IIO
-> > Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
-> > ---
-> > =C2=A0drivers/clk/clk-axi-clkgen.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 2 ++
-> > =C2=A0drivers/dma/dma-axi-dmac.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 2 +-
-> > =C2=A0drivers/hwmon/axi-fan-control.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 2 +-
-> > =C2=A0drivers/iio/adc/adi-axi-adc.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 3 +--
-> > =C2=A0drivers/iio/dac/adi-axi-dac.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 2 +-
-> > =C2=A0drivers/pwm/pwm-axi-pwmgen.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 2 +-
-> > =C2=A0drivers/spi/spi-axi-spi-engine.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 | 2 +-
-> > =C2=A0include/linux/{fpga =3D> }/adi-axi-common.h | 0
-> > =C2=A08 files changed, 8 insertions(+), 7 deletions(-)
-> >=20
-> > diff --git a/drivers/clk/clk-axi-clkgen.c b/drivers/clk/clk-axi-clkgen.=
-c
-> > index
-> > 2a95f9b220234a1245024a821c50e1eb9c104ac9..31915f8f5565f2ef5d17c0b4a0c91=
-a648005b3e
-> > 6 100644
-> > --- a/drivers/clk/clk-axi-clkgen.c
-> > +++ b/drivers/clk/clk-axi-clkgen.c
-> > @@ -16,6 +16,8 @@
-> > =C2=A0#include <linux/mod_devicetable.h>
-> > =C2=A0#include <linux/err.h>
-> > =C2=A0
-> > +#include <linux/adi-axi-common.h>
-> > +
->=20
-> This one is adding, not changing. Was it supposed to be in a later patch?
+The HDMA IP supports the HDMA_NATIVE map format as part of Vendor-Specific
+Extended Capability. Added the check for HDMA_NATIVE map format.
+The check for map format enables the IP specific function invocation
+during the DMA ops.
 
-Oh, indeed... This was "bot mode"...
+Signed-off-by: Devendra K Verma <devverma@amd.com>
+---
+Changes in v2
+Addressed the review comments and added the 'Debug info' for
+HDMA_NATIVE in dw_edma_pcie_probe().
+---
+ drivers/dma/dw-edma/dw-edma-pcie.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-- Nuno S=C3=A1
->=20
-> > =C2=A0#define AXI_CLKGEN_V2_REG_RESET		0x40
-> > =C2=A0#define AXI_CLKGEN_V2_REG_CLKSEL	0x44
-> > =C2=A0#define AXI_CLKGEN_V2_REG_DRP_CNTRL	0x70
+diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
+index 1c6043751dc9..49f09998e5c0 100644
+--- a/drivers/dma/dw-edma/dw-edma-pcie.c
++++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+@@ -136,7 +136,8 @@ static void dw_edma_pcie_get_vsec_dma_data(struct pci_dev *pdev,
+ 	map = FIELD_GET(DW_PCIE_VSEC_DMA_MAP, val);
+ 	if (map != EDMA_MF_EDMA_LEGACY &&
+ 	    map != EDMA_MF_EDMA_UNROLL &&
+-	    map != EDMA_MF_HDMA_COMPAT)
++	    map != EDMA_MF_HDMA_COMPAT &&
++	    map != EDMA_MF_HDMA_NATIVE)
+ 		return;
+ 
+ 	pdata->mf = map;
+@@ -291,6 +292,8 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+ 		pci_dbg(pdev, "Version:\teDMA Unroll (0x%x)\n", chip->mf);
+ 	else if (chip->mf == EDMA_MF_HDMA_COMPAT)
+ 		pci_dbg(pdev, "Version:\tHDMA Compatible (0x%x)\n", chip->mf);
++	else if (chip->mf == EDMA_MF_HDMA_NATIVE)
++		pci_dbg(pdev, "Version:\tHDMA Native (0x%x)\n", chip->mf);
+ 	else
+ 		pci_dbg(pdev, "Version:\tUnknown (0x%x)\n", chip->mf);
+ 
+-- 
+2.43.0
 
 

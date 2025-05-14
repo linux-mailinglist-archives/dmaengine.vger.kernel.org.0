@@ -1,54 +1,59 @@
-Return-Path: <dmaengine+bounces-5160-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5161-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1E3FAB6EB6
-	for <lists+dmaengine@lfdr.de>; Wed, 14 May 2025 17:02:51 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 30008AB6EB8
+	for <lists+dmaengine@lfdr.de>; Wed, 14 May 2025 17:03:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1A90F3B6418
-	for <lists+dmaengine@lfdr.de>; Wed, 14 May 2025 15:02:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 869323BABC3
+	for <lists+dmaengine@lfdr.de>; Wed, 14 May 2025 15:02:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1B451C6FEA;
-	Wed, 14 May 2025 15:02:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B0981AC458;
+	Wed, 14 May 2025 15:02:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FOAx9mRu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iYkEz35g"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D0E71C68A6
-	for <dmaengine@vger.kernel.org>; Wed, 14 May 2025 15:02:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D0F619341F;
+	Wed, 14 May 2025 15:02:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747234958; cv=none; b=QIGtHoOT1ty4uoxleEkn0HOcXnARUX8owWEsFb86PCSXu0KzTGki6VZo7j/UOV8BBo6q6auF8tb6ku8JOP78azlhFfBior5RHuLaLc2p3PAxxENVssTQfPEBjPi2oYofeQdaWmK1cl60YmxRE0ozbYhgijDtjckgTJ2ddtCHYNk=
+	t=1747234962; cv=none; b=e8cJCuOot4TP9MMTLPVevPpPYLG2Hb5iRB20FpciyxvRx12LGwtK99pYc+1uBAm+hx/Jf+fvKo2SkMzI2CXTy/eNuGiM368FTBOXMv/u+zSC4leFPxWfYNf4pxCsDGpoDW2Ae/hGqbI7a4xRBjD+NifFnlqIOPNg3gg1rDpiD9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747234958; c=relaxed/simple;
-	bh=XNMDVmGKoaD0CCCLKXD9UTbJt7MUB5DFdnvWT9PPXTA=;
+	s=arc-20240116; t=1747234962; c=relaxed/simple;
+	bh=D5QrjYtZqdxl9aDAD4Mt0N5C+A1l4Okat5ZD8j05CX8=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=bZsKTOBndfvesUNJkIa+iYVBWpEsciQ0vU54DqNUtAv8LzS77r6E98/VvxQoXml+J3fmrVmPQyXm8GiBQwK7qOndfYuhwWOVqfr8WycgV9i2yYmxMGU1v4h61i2BRdK4fgW5+EbqHgk+2XkQ9WZYdqwWhU8Z+vg2eZZpW5SnbVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FOAx9mRu; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7E51C4CEE9;
-	Wed, 14 May 2025 15:02:36 +0000 (UTC)
+	 MIME-Version:Content-Type; b=AR6qa3T9qHeJ5fILtafQJU7TJD/dYXefbbT9tOgVFaJ7mkfumJAQCjLgVGi6j542Lf14QQcLKFrrAd1d6Gb35DJtQkai1/WyTjpWnY2+bdKYGzho6aHK6dRDYCcY75aCs6tlc+JkVNe1Gwvua69kRktSiBKL6YLr3CE/Ex2Rufg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iYkEz35g; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A9DCC4CEE3;
+	Wed, 14 May 2025 15:02:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747234957;
-	bh=XNMDVmGKoaD0CCCLKXD9UTbJt7MUB5DFdnvWT9PPXTA=;
+	s=k20201202; t=1747234960;
+	bh=D5QrjYtZqdxl9aDAD4Mt0N5C+A1l4Okat5ZD8j05CX8=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=FOAx9mRundJ7+FBssNCqiSsGCXonlqiexhBOzRlvk7/B1yU84/uD1yPQP1+WJ86JQ
-	 wI2xqNtXDigI4ORWibeeZqExYyvwHpi1X+3wWcpnLAHf3+h+vJpsiLgK2JXhsstaf8
-	 ie9Nb0GTU++L+wrn/ga2j7dy7B/CpJFBCbe6yIrOhO/SDofF6NQMNETCPXMzom2wci
-	 Fq6e1UWr079sA9tlWGYVceu4z1M4TS/Jnr1gevM/CMlCc5TnOclPEtK8qQAdfkzqXW
-	 HY90UNZdd0IVEdhQzQCAWDKreao/y7wLwSLRWKA5YNvYkbOep2N58jei9wm13HDqDm
-	 ehbGo9UolZ2kA==
+	b=iYkEz35ghEPY/E/ZEsQiPGJVJ70ATHHNVAVhBU4YQd4KlA0o7ljoi31EUooIirf4l
+	 L5QMIjyZqYu4M7IdQcxyO0LFT8tEGScl/+NdqWCVLF5DWwm9//jGp8YgTqhD2iul0L
+	 rZ2X+hio3TR93rTlo0V5tMxEYQlqyv++E01kyLMz1EVBeMahtJHttcauIEUIjlJ7Ok
+	 hT7leKp/L1ehnLcOJjlwBwkK2bR6fglZuh4Om/zoppilPOeL5qWNS6nN1hEiKZEVv+
+	 IXLZZN7TLUfIaKswbtSJq6vVxiA+vQubPX5Fbamt9YnoYbzcwjvlZSpzzNdo5yQ+Cy
+	 1yBGTaWr73+4g==
 From: Vinod Koul <vkoul@kernel.org>
-To: dmaengine@vger.kernel.org, Dave Jiang <dave.jiang@intel.com>
-Cc: vinicius.gomes@intel.com, kernel test robot <lkp@intel.com>
-In-Reply-To: <20250508170548.2747425-1-dave.jiang@intel.com>
-References: <20250508170548.2747425-1-dave.jiang@intel.com>
-Subject: Re: [PATCH] dmaengine: idxd: Fix ->poll() return value
-Message-Id: <174723495665.115648.13734368610818117334.b4-ty@kernel.org>
-Date: Wed, 14 May 2025 16:02:36 +0100
+To: sean.wang@mediatek.com, matthias.bgg@gmail.com, 
+ angelogioacchino.delregno@collabora.com, 
+ Qiu-ji Chen <chenqiuji666@gmail.com>
+Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ baijiaju1990@gmail.com, stable@vger.kernel.org
+In-Reply-To: <20250508073634.3719-1-chenqiuji666@gmail.com>
+References: <20250508073634.3719-1-chenqiuji666@gmail.com>
+Subject: Re: [PATCH v2] dmaengine: mediatek: Fix a possible deadlock error
+ in mtk_cqdma_tx_status()
+Message-Id: <174723495814.115648.10076437402947235700.b4-ty@kernel.org>
+Date: Wed, 14 May 2025 16:02:38 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -56,22 +61,26 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Mailer: b4 0.14.2
 
 
-On Thu, 08 May 2025 10:05:48 -0700, Dave Jiang wrote:
-> The fix to block access from different address space did not return a
-> correct value for ->poll() change.  kernel test bot reported that a
-> return value of type __poll_t is expected rather than int. Fix to return
-> POLLNVAL to indicate invalid request.
+On Thu, 08 May 2025 15:36:33 +0800, Qiu-ji Chen wrote:
+> Fix a potential deadlock bug. Observe that in the mtk-cqdma.c
+> file, functions like mtk_cqdma_issue_pending() and
+> mtk_cqdma_free_active_desc() properly acquire the pc lock before the vc
+> lock when handling pc and vc fields. However, mtk_cqdma_tx_status()
+> violates this order by first acquiring the vc lock before invoking
+> mtk_cqdma_find_active_desc(), which subsequently takes the pc lock. This
+> reversed locking sequence (vc → pc) contradicts the established
+> pc → vc order and creates deadlock risks.
 > 
-> 
+> [...]
 
 Applied, thanks!
 
-[1/1] dmaengine: idxd: Fix ->poll() return value
-      commit: ae74cd15ade833adc289279b5c6f12e78f64d4d7
+[1/1] dmaengine: mediatek: Fix a possible deadlock error in mtk_cqdma_tx_status()
+      commit: 157ae5ffd76a2857ccb4b7ce40bc5a344ca00395
 
 Best regards,
 -- 

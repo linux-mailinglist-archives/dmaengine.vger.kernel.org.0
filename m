@@ -1,111 +1,127 @@
-Return-Path: <dmaengine+bounces-5180-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5181-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7199DAB8309
-	for <lists+dmaengine@lfdr.de>; Thu, 15 May 2025 11:40:10 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 218F5AB8443
+	for <lists+dmaengine@lfdr.de>; Thu, 15 May 2025 12:48:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3F8568C785B
-	for <lists+dmaengine@lfdr.de>; Thu, 15 May 2025 09:38:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0A8014A06DD
+	for <lists+dmaengine@lfdr.de>; Thu, 15 May 2025 10:48:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4C3D297A50;
-	Thu, 15 May 2025 09:36:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC02529825C;
+	Thu, 15 May 2025 10:48:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r4gfy4j4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FfTLTM9L"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A710D1B043A;
-	Thu, 15 May 2025 09:36:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D86A298255;
+	Thu, 15 May 2025 10:48:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747301765; cv=none; b=tYPMZFvmFev2RMGueqjPxakvSREEDq3Gze80Vwp2/ypK47nZqM4plrbgQxEflo45fGLm/y9fdJZGR9A9G9FUz7w4qXgGOF9O+GwPwrIc0yMd6H/kkcD5mPsW+hngZkM9uDgUl1675KMkNn1roTO3O/KnH5rOqzKlB7l+QxfDSow=
+	t=1747306102; cv=none; b=BpYN3HhRfCGoQVRJhCNYEsAqzvgsyVyQVxXtg7LSUHmqCBq2GjIkh8qjU4Xc4s61RSJ3oiNWUhIRR3Ae1V2pjN9xBnY4myzuQ/2ke8WlwjfMCg0KfgcBZM4F0KKu4NkgNhsvEe2s87glgY7Z063hpXZZdJpa4Mv1bb9ucD3063o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747301765; c=relaxed/simple;
-	bh=jMrgzyHH+4V9t/iPtHENc2OSX0TATtWm0B0KKLwDmC8=;
+	s=arc-20240116; t=1747306102; c=relaxed/simple;
+	bh=eBPgvvsvHseuwOOxm/fxnYlTjdO4X6W/Sa724t+OOxQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=elIs1Sec5C1zTHQf6LUSr8+P+HXkbCxdqMWH7PzBcQHAjnF30pWFU+dphUHQ7DCCmvd592uQHKdlcTj4LaKwPWHLvMlsIGQyo//iHAVFv9yExZnZWlJZ8fxqwxSfAFpSEREjGv96W9x1zVf7DTgfdm0zxKj2xt2cy5m9b23mQAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r4gfy4j4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E3EDC4CEED;
-	Thu, 15 May 2025 09:36:03 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=NLhYvcvlyyN/7B/6SPtjChDJ9o+6EGT8Z8Qa2r9z0N/jbk+wvIqFGWq9aRjcOtbBdW7dO/r87aXR48K2BV1AwoOzOYQMMTdP9xf4m81Hdp/Nb4nJheneWh12SIjW1jI6T1gmVPDrMNInF5DjV/Yo4ubaq49QzF+V6FftzGJ8LKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FfTLTM9L; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92D8BC4AF09;
+	Thu, 15 May 2025 10:48:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747301765;
-	bh=jMrgzyHH+4V9t/iPtHENc2OSX0TATtWm0B0KKLwDmC8=;
+	s=k20201202; t=1747306102;
+	bh=eBPgvvsvHseuwOOxm/fxnYlTjdO4X6W/Sa724t+OOxQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=r4gfy4j4xEx5H9jAzEyhxdiQ9ifxSASjtba1zdKjs1BNs98NwIFL0NIaHt3U/9+xM
-	 csrpFI4J6CbH9YwJECNPaCUZC4NKipnyDyPt8sJa3iiVMg9IllfvP9ePu6fgV+TEwr
-	 03SEi6uwBRS7M8AiK1neXCTeK0ReaVBsfU1rqZvrR41QwpcS59b1VYvRYxm6lFi+8f
-	 2uo/25Jg8fUkgKwEph20KLl1mCtM2CtzceS41jXwjug05/g3X77TJ7Basi2la/whFy
-	 fBQB0w5JQFW/uTaIUCgCqosD1N8ICNuzx/wAxCNzQebwRupXzWZd541z3MYZsIgg9r
-	 SzsCaFDsdbvkQ==
-Date: Thu, 15 May 2025 11:36:01 +0200
-From: Mark Brown <broonie@kernel.org>
-To: =?iso-8859-1?B?Q3Pza+Fz?= Bence <csokas.bence@prolan.hu>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Vinod Koul <vkoul@kernel.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>
-Subject: Re: [PATCH v6 0/2] Add `devm_dma_request_chan()` to simplify probe
- path in atmel-quadspi.c
-Message-ID: <aCW1geupMxr8Ft_k@finisterre.sirena.org.uk>
-References: <20250515083132.255410-1-csokas.bence@prolan.hu>
- <aCWpjplhAXUvr9fj@finisterre.sirena.org.uk>
- <e4e6c7a9-9b7a-4012-8bda-75804229ec95@prolan.hu>
- <aCWyXsJ2iRXRUmOi@finisterre.sirena.org.uk>
- <9d384301-3f73-4120-a82b-580eb5f1a4ed@prolan.hu>
+	b=FfTLTM9LTMC6SzJrgtYs00OrUofyFCHezGXXKViJVYeakcCCqqgEHbDdKFA4YWZ5/
+	 D4e8z6eujMyUzh9UDkfyRG6xci9BE2e5NELK0o2qkHEqyRgF4guWxYrDgMQ7mp6Jax
+	 dX9Al8qFAmCCDRt/IFsVADWDEmsPo47xycvazkQtEIHxKjD5uMkki8opEHo7rFtfeE
+	 tayB9CBSMBI+GXA/6/Uw9IYGDAFWUnxU5Q6Anl3Ol9yiWQuUWMR7pz/Mh9BUUFaghI
+	 /g6gdCG4HBB7chLiUq58JT+ctMJmwkR22aDRIqoZxUFbOev/PIQv54P1LibHnaVC4m
+	 LnaGTHKPOScFA==
+Date: Thu, 15 May 2025 11:48:19 +0100
+From: Vinod Koul <vkoul@kernel.org>
+To: Stephen Rothwell <sfr@canb.auug.org.au>,
+	dma <dmaengine@vger.kernel.org>
+Cc: Qiu-ji Chen <chenqiuji666@gmail.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the dmaengine-fixes tree
+Message-ID: <aCXGc21rVab7ZuDG@vaman>
+References: <20250515093325.4e29e8a6@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="NxtmzHfUyS5BkEzS"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9d384301-3f73-4120-a82b-580eb5f1a4ed@prolan.hu>
-X-Cookie: Well begun is half done.
+In-Reply-To: <20250515093325.4e29e8a6@canb.auug.org.au>
+
+On 15-05-25, 09:33, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the dmaengine-fixes tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
+> 
+> drivers/dma/mediatek/mtk-cqdma.c: In function 'mtk_cqdma_find_active_desc':
+> drivers/dma/mediatek/mtk-cqdma.c:423:23: error: unused variable 'flags' [-Werror=unused-variable]
+>   423 |         unsigned long flags;
+>       |                       ^~~~~
+> 
+> Caused by commit
+> 
+>   157ae5ffd76a ("dmaengine: mediatek: Fix a possible deadlock error in mtk_cqdma_tx_status()")
+> 
+> I have used the dmaengine-fixes tree from next-20250514 for today.
+
+Thanks, I have fixed it up and applied below:
+
+-- >8 --
 
 
---NxtmzHfUyS5BkEzS
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+From 811d6a923b40fc130f91abf49151f57cf9ac2a6f Mon Sep 17 00:00:00 2001
+From: Vinod Koul <vkoul@kernel.org>
+Date: Thu, 15 May 2025 11:42:13 +0100
+Subject: [PATCH] dmaengine: mediatek: drop unused variable
 
-On Thu, May 15, 2025 at 11:26:57AM +0200, Cs=F3k=E1s Bence wrote:
-> On 2025. 05. 15. 11:22, Mark Brown wrote:
+Commit 157ae5ffd76a dmaengine: mediatek: Fix a possible deadlock error
+in mtk_cqdma_tx_status() fixed locks but kept unused varibale leading to
+warning and build failure (due to warning treated as errors)
 
-> > Wouldn't it be simpler for me to just apply both
-> > patches at this point if there's no conflicts with the DMA tree?  We're
-> > at -rc6 now...
+drivers/dma/mediatek/mtk-cqdma.c: In function 'mtk_cqdma_find_active_desc':
+drivers/dma/mediatek/mtk-cqdma.c:423:23: error: unused variable 'flags' [-Werror=unused-variable]
+  423 |         unsigned long flags;
+      |                       ^~~~~
 
-> That also works for me. I should send 1/2 to you as well, correct?
+Fix by dropping this unused flag
 
-I think at this point with the merge window likely to open on Sunday
-it's probably easiest to just resend the SPI patch after the merge
-window, it'll likely take more time/effort to work out what to do than
-it will for the reset changes to land in Linus' tree.
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Fixes: 157ae5ffd76a ("dmaengine: mediatek: Fix a possible deadlock error in mtk_cqdma_tx_status()")
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+---
+ drivers/dma/mediatek/mtk-cqdma.c | 1 -
+ 1 file changed, 1 deletion(-)
 
---NxtmzHfUyS5BkEzS
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/drivers/dma/mediatek/mtk-cqdma.c b/drivers/dma/mediatek/mtk-cqdma.c
+index e35271ac1eed..47c8adfdc155 100644
+--- a/drivers/dma/mediatek/mtk-cqdma.c
++++ b/drivers/dma/mediatek/mtk-cqdma.c
+@@ -420,7 +420,6 @@ static struct virt_dma_desc *mtk_cqdma_find_active_desc(struct dma_chan *c,
+ {
+ 	struct mtk_cqdma_vchan *cvc = to_cqdma_vchan(c);
+ 	struct virt_dma_desc *vd;
+-	unsigned long flags;
+ 
+ 	list_for_each_entry(vd, &cvc->pc->queue, node)
+ 		if (vd->tx.cookie == cookie) {
+-- 
+2.34.1
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgltYAACgkQJNaLcl1U
-h9BBaQf/Y2QB39oFyw1a8a615Yo/UKKHjc5SIVYLNpWPvaUCfqwEMIDB3TIb0cz3
-3EfT+LI7v7qk0Fzz7n0f+t/zy6pPD2MjhO7Fd3KH1K+v7hmRmJMe7Nz9iaUM6OLQ
-1A6p5SIr67X/AgQM4+whaAoR6ZWuRfNYv02Qg5b9jPF57Ih0YWym6x0HfwHJHUoC
-nSpTAHjL3ZNlcNc5PprSsjXRo/i8rhbUWZ2+Lzkx5e0PsYILC5Tw2TZ/iHK0PjVz
-5k5kroQd4xBiVLcWpBloLrH7zUOz7ti1rODFes28up/FStyALrKVzZj4nr3E9DiZ
-XgFw3I8px7JESImWR9zH1H0C3rRtcA==
-=tWy1
------END PGP SIGNATURE-----
-
---NxtmzHfUyS5BkEzS--
+-- 
+~Vinod
 

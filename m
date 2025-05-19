@@ -1,52 +1,52 @@
-Return-Path: <dmaengine+bounces-5196-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5195-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E9EE8ABC2DD
-	for <lists+dmaengine@lfdr.de>; Mon, 19 May 2025 17:50:33 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF311ABC2DB
+	for <lists+dmaengine@lfdr.de>; Mon, 19 May 2025 17:50:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E3A611B60C3F
-	for <lists+dmaengine@lfdr.de>; Mon, 19 May 2025 15:50:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 55E9B3AE150
+	for <lists+dmaengine@lfdr.de>; Mon, 19 May 2025 15:50:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B863428642A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7732286424;
 	Mon, 19 May 2025 15:50:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TWuXfJyd"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SX8JyjWT"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8178B257AFE;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8171715D1;
 	Mon, 19 May 2025 15:50:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747669827; cv=none; b=a0njPlbFg5jY00W9/Z1LOVSgCwtZ3zggnOGvYBEYSAwTPTfsLaFeWQl1aH1iCqJjL2WgGY3y2ReKIizd93yEyvFE8DPhzf/r7xs0z7YrrUDQggSbG2AUVtqPDW3yM/rBxLVPpbdfy148E+sZ+OZuZVEV39bkCtn+VfDNzaDYCMo=
+	t=1747669827; cv=none; b=ReWMDU5/eW94kn4W7FdlWYVnUqJS/DWCacvRKtV3yf/e/ZBbEJqczaEVXWd9NgVmgpa86/8v66NR5oUVwIqjtvTH+7u0GS3Cz0hVOph8BZYq44z4UsAh3ze3gMMlzGoiqx/UAKn/X+L9fo2WTbNjbrclkkmCv2jRVBI7K9XAYXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747669827; c=relaxed/simple;
-	bh=IXbjRp0/6WB1BFu4fmqObyr9iAMWgyU/iRnztOSrl4g=;
+	bh=CuLVQhdgIPjvHv0rQT6Dmcn56lz0D7swUmu5t+yoFYo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rD8K7mJBcqE1a1SRen4osN270aFfrX1+M2veddm0e7cMRVR2kA7C9hU7oWMX8ctuWBhl99cvtNusXrF169pXoQCi42OP9njRpisA95m+DvSKWELLdXYVosY4fPhgHWFS2Vv3FihvdGpkJiL2uIGZrGmsGYi3/J7Ew0cnXYz6t5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TWuXfJyd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1BFF4C4CEF3;
+	 In-Reply-To:To:Cc; b=HRRVRbxJo2dGoYFtJt/Pk1rgrGrheLEohYBY/qRISP+4mT4d1CO9EuZQgIEK0Npwcx5wCEOlorT0r6pqf2W4rojRCV3qI2klXuWdq+2yLbFTc9G9t4znG9jfdeSg+gZB4Zovld/q5fOvBlfbLhzmOJ4Xp9wG+AkPT09Y613pxi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SX8JyjWT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 25960C4CEF6;
 	Mon, 19 May 2025 15:50:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1747669827;
-	bh=IXbjRp0/6WB1BFu4fmqObyr9iAMWgyU/iRnztOSrl4g=;
+	bh=CuLVQhdgIPjvHv0rQT6Dmcn56lz0D7swUmu5t+yoFYo=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=TWuXfJydEo1RdsXTJu97jfvvK/GwLlhEpBA6Y7uQgDmFXjuEZzS+rBnMoU4TO9kPN
-	 B86DFDYQyckdemrGh1JOaGpfkyA3qFeAp7fPNUqMP33ZjI2bsYT6LwW1+GijYHEvfT
-	 XSr6CAb5oNekKkHhHov5f1hN3VSkYzXwn5crXY4cUG1ZFHKIWKuOOJse9ZBFWeOYTB
-	 n2lnBFMsPxVkKMogu0Q/ZQln9xNFzMjMyCoGGf49w/JFfGGBNIRPIDDY/u18Igoj+j
-	 0MBpYrPMOtlcp2dpzMqGL9rxdMOyxwp0Qzc25N6XEhZ4Xn7MjKJPKQw3V04E1M0b93
-	 RMT3C8EqWyd6Q==
+	b=SX8JyjWT3S0h7mCaXdKxpfHrHcrb2ofxUT9B6/aRtz1ChymPQ/e3Q3jm2WTC+nWS6
+	 2rjv+vXS1z4hjEnXIeiJSJdy77dIk5cmqcQZX+g2rIyfSXqOm7hadog46igXq1QJ8f
+	 0UCtRBQWfnlraww1bVQ/7i2TCubso9MKA0Nc/5WsZijxMWB7YCfcQnrop36dsBC9RT
+	 kVScusZ3feralvtCvB6JzlW0zKnLzrrBnLU/aFco0hnnKUPyjeJ4bmW6eRVZVzHkVj
+	 lztBNuswTI+II6UyMWG8Mc0auzsBJ0JukwAWwshkInMgzqFZ7jrE+U3h5O3odhk8LQ
+	 9rmlvoaRE9qbA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C3B9C3ABDD;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B20DC54799;
 	Mon, 19 May 2025 15:50:27 +0000 (UTC)
 From: =?utf-8?q?Nuno_S=C3=A1_via_B4_Relay?= <devnull+nuno.sa.analog.com@kernel.org>
-Date: Mon, 19 May 2025 16:41:08 +0100
-Subject: [PATCH v6 3/7] include: linux: move adi-axi-common.h out of fpga
+Date: Mon, 19 May 2025 16:41:09 +0100
+Subject: [PATCH v6 4/7] include: adi-axi-common: add new helper macros
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250519-dev-axi-clkgen-limits-v6-3-bc4b3b61d1d4@analog.com>
+Message-Id: <20250519-dev-axi-clkgen-limits-v6-4-bc4b3b61d1d4@analog.com>
 References: <20250519-dev-axi-clkgen-limits-v6-0-bc4b3b61d1d4@analog.com>
 In-Reply-To: <20250519-dev-axi-clkgen-limits-v6-0-bc4b3b61d1d4@analog.com>
 To: linux-clk@vger.kernel.org, linux-fpga@vger.kernel.org, 
@@ -72,14 +72,13 @@ Cc: Stephen Boyd <sboyd@kernel.org>,
  Jonathan Cameron <jic23@kernel.org>, Trevor Gamblin <tgamblin@baylibre.com>, 
  =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
  David Lechner <dlechner@baylibre.com>, Mark Brown <broonie@kernel.org>, 
- Mike Turquette <mturquette@linaro.org>, Xu Yilun <yilun.xu@linux.intel.com>, 
- Jonathan Cameron <Jonathan.Cameron@huawei.com>
+ Mike Turquette <mturquette@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747669828; l=4776;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747669828; l=1930;
  i=nuno.sa@analog.com; s=20231116; h=from:subject:message-id;
- bh=3mknuHZvN3Y6WPrZbTnuDXmG6PM4kA/iUzppWD7grjI=;
- b=TkRSD7gA6XE4pcE9aSWJBo+QVfd1UmPfOyrCS688zjI0BQpzte51vNtgGdoxyEFn1b2qxoAZM
- ZjNfFQeUKb/CY55cCPyY53/TKDaoqPXAACb92/GR0b6HPa6ASPxYdWK
+ bh=F9rmW1Daru1sdf4SDLslhcn5FXhJbwH5zOEXykHR5J4=;
+ b=B7JGsfdbl+6++EvZGpKy68lHIc+iswr64DD1+xlRa98r3EpBWFgIhI3HlE4S+Y2jY8T8sHwjO
+ 6V9zHqs4G+cAEAD2Hxp21lNU1/8r0NFRlfiDmuCvdAo67xU5SvYa1P4
 X-Developer-Key: i=nuno.sa@analog.com; a=ed25519;
  pk=3NQwYA013OUYZsmDFBf8rmyyr5iQlxV/9H4/Df83o1E=
 X-Endpoint-Received: by B4 Relay for nuno.sa@analog.com/20231116 with
@@ -89,136 +88,63 @@ Reply-To: nuno.sa@analog.com
 
 From: Nuno Sá <nuno.sa@analog.com>
 
-The adi-axi-common.h header has some common defines used in various ADI
-IPs. However they are not specific for any fpga manager so it's
-questionable for the header to live under include/linux/fpga. Hence
-let's just move one directory up and update all users.
+Add new helper macros and enums to help identifying the platform and some
+characteristics of it at runtime.
 
-Suggested-by: Xu Yilun <yilun.xu@linux.intel.com>
-Acked-by: Xu Yilun <yilun.xu@intel.com>
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> # for IIO
 Signed-off-by: Nuno Sá <nuno.sa@analog.com>
 ---
- drivers/dma/dma-axi-dmac.c                | 2 +-
- drivers/hwmon/axi-fan-control.c           | 2 +-
- drivers/iio/adc/adi-axi-adc.c             | 3 +--
- drivers/iio/dac/adi-axi-dac.c             | 2 +-
- drivers/pwm/pwm-axi-pwmgen.c              | 2 +-
- drivers/spi/spi-axi-spi-engine.c          | 2 +-
- include/linux/{fpga => }/adi-axi-common.h | 0
- 7 files changed, 6 insertions(+), 7 deletions(-)
+ include/linux/adi-axi-common.h | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
-index 36943b0c6d603cbe38606b0d7bde02535f529a9a..5b06b0dc67ee12017c165bf815fb7c0e1bf5abd8 100644
---- a/drivers/dma/dma-axi-dmac.c
-+++ b/drivers/dma/dma-axi-dmac.c
-@@ -6,6 +6,7 @@
-  *  Author: Lars-Peter Clausen <lars@metafoo.de>
-  */
+diff --git a/include/linux/adi-axi-common.h b/include/linux/adi-axi-common.h
+index 141ac3f251e6f256526812b9d55cd440a2a46e76..f64f4ad4bedae312ec450bd5fed09ceaedd5397e 100644
+--- a/include/linux/adi-axi-common.h
++++ b/include/linux/adi-axi-common.h
+@@ -12,6 +12,7 @@
+ #define ADI_AXI_COMMON_H_
  
-+#include <linux/adi-axi-common.h>
- #include <linux/bitfield.h>
- #include <linux/clk.h>
- #include <linux/device.h>
-@@ -22,7 +23,6 @@
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
- #include <linux/slab.h>
--#include <linux/fpga/adi-axi-common.h>
+ #define ADI_AXI_REG_VERSION			0x0000
++#define ADI_AXI_REG_FPGA_INFO			0x001C
  
- #include <dt-bindings/dma/axi-dmac.h>
+ #define ADI_AXI_PCORE_VER(major, minor, patch)	\
+ 	(((major) << 16) | ((minor) << 8) | (patch))
+@@ -20,4 +21,36 @@
+ #define ADI_AXI_PCORE_VER_MINOR(version)	(((version) >> 8) & 0xff)
+ #define ADI_AXI_PCORE_VER_PATCH(version)	((version) & 0xff)
  
-diff --git a/drivers/hwmon/axi-fan-control.c b/drivers/hwmon/axi-fan-control.c
-index 35c862eb158b0909dac64c2e9f51f0f9f0e8bf72..b7bb325c3ad966ed2a93be4dfbf4e20661568509 100644
---- a/drivers/hwmon/axi-fan-control.c
-+++ b/drivers/hwmon/axi-fan-control.c
-@@ -4,9 +4,9 @@
-  *
-  * Copyright 2019 Analog Devices Inc.
-  */
-+#include <linux/adi-axi-common.h>
- #include <linux/bits.h>
- #include <linux/clk.h>
--#include <linux/fpga/adi-axi-common.h>
- #include <linux/hwmon.h>
- #include <linux/hwmon-sysfs.h>
- #include <linux/interrupt.h>
-diff --git a/drivers/iio/adc/adi-axi-adc.c b/drivers/iio/adc/adi-axi-adc.c
-index c7357601f0f869e57636f00bb1e26c059c3ab15c..87fa18f1ec96782556bdfad08bedb5e7549fb93d 100644
---- a/drivers/iio/adc/adi-axi-adc.c
-+++ b/drivers/iio/adc/adi-axi-adc.c
-@@ -6,6 +6,7 @@
-  * Copyright 2012-2020 Analog Devices Inc.
-  */
- 
-+#include <linux/adi-axi-common.h>
- #include <linux/bitfield.h>
- #include <linux/cleanup.h>
- #include <linux/clk.h>
-@@ -20,8 +21,6 @@
- #include <linux/regmap.h>
- #include <linux/slab.h>
- 
--#include <linux/fpga/adi-axi-common.h>
--
- #include <linux/iio/backend.h>
- #include <linux/iio/buffer-dmaengine.h>
- #include <linux/iio/buffer.h>
-diff --git a/drivers/iio/dac/adi-axi-dac.c b/drivers/iio/dac/adi-axi-dac.c
-index b143f7ed6847277aeb49094627d90e5d95eed71c..581a2fe55a7fb35f1a03f96f3a0e95421d1583e7 100644
---- a/drivers/iio/dac/adi-axi-dac.c
-+++ b/drivers/iio/dac/adi-axi-dac.c
-@@ -5,6 +5,7 @@
-  *
-  * Copyright 2016-2024 Analog Devices Inc.
-  */
-+#include <linux/adi-axi-common.h>
- #include <linux/bitfield.h>
- #include <linux/bits.h>
- #include <linux/cleanup.h>
-@@ -23,7 +24,6 @@
- #include <linux/regmap.h>
- #include <linux/units.h>
- 
--#include <linux/fpga/adi-axi-common.h>
- #include <linux/iio/backend.h>
- #include <linux/iio/buffer-dmaengine.h>
- #include <linux/iio/buffer.h>
-diff --git a/drivers/pwm/pwm-axi-pwmgen.c b/drivers/pwm/pwm-axi-pwmgen.c
-index 4259a0db9ff45808eecae28680473292d165d1f6..e720191e74558d15f1b04fa18cf2984299f88809 100644
---- a/drivers/pwm/pwm-axi-pwmgen.c
-+++ b/drivers/pwm/pwm-axi-pwmgen.c
-@@ -18,10 +18,10 @@
-  * - Supports normal polarity. Does not support changing polarity.
-  * - On disable, the PWM output becomes low (inactive).
-  */
-+#include <linux/adi-axi-common.h>
- #include <linux/bits.h>
- #include <linux/clk.h>
- #include <linux/err.h>
--#include <linux/fpga/adi-axi-common.h>
- #include <linux/io.h>
- #include <linux/minmax.h>
- #include <linux/module.h>
-diff --git a/drivers/spi/spi-axi-spi-engine.c b/drivers/spi/spi-axi-spi-engine.c
-index 7c252126b33ea83fe6a6e80c6cb87499243069f5..d498132f1ff6adf20639bf4a21f1687903934bec 100644
---- a/drivers/spi/spi-axi-spi-engine.c
-+++ b/drivers/spi/spi-axi-spi-engine.c
-@@ -5,9 +5,9 @@
-  *  Author: Lars-Peter Clausen <lars@metafoo.de>
-  */
- 
-+#include <linux/adi-axi-common.h>
- #include <linux/clk.h>
- #include <linux/completion.h>
--#include <linux/fpga/adi-axi-common.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/of.h>
-diff --git a/include/linux/fpga/adi-axi-common.h b/include/linux/adi-axi-common.h
-similarity index 100%
-rename from include/linux/fpga/adi-axi-common.h
-rename to include/linux/adi-axi-common.h
++#define ADI_AXI_INFO_FPGA_TECH(info)            (((info) >> 24) & 0xff)
++#define ADI_AXI_INFO_FPGA_FAMILY(info)          (((info) >> 16) & 0xff)
++#define ADI_AXI_INFO_FPGA_SPEED_GRADE(info)     (((info) >> 8) & 0xff)
++
++enum adi_axi_fpga_technology {
++	ADI_AXI_FPGA_TECH_UNKNOWN = 0,
++	ADI_AXI_FPGA_TECH_SERIES7,
++	ADI_AXI_FPGA_TECH_ULTRASCALE,
++	ADI_AXI_FPGA_TECH_ULTRASCALE_PLUS,
++};
++
++enum adi_axi_fpga_family {
++	ADI_AXI_FPGA_FAMILY_UNKNOWN = 0,
++	ADI_AXI_FPGA_FAMILY_ARTIX,
++	ADI_AXI_FPGA_FAMILY_KINTEX,
++	ADI_AXI_FPGA_FAMILY_VIRTEX,
++	ADI_AXI_FPGA_FAMILY_ZYNQ,
++};
++
++enum adi_axi_fpga_speed_grade {
++	ADI_AXI_FPGA_SPEED_UNKNOWN      = 0,
++	ADI_AXI_FPGA_SPEED_1    = 10,
++	ADI_AXI_FPGA_SPEED_1L   = 11,
++	ADI_AXI_FPGA_SPEED_1H   = 12,
++	ADI_AXI_FPGA_SPEED_1HV  = 13,
++	ADI_AXI_FPGA_SPEED_1LV  = 14,
++	ADI_AXI_FPGA_SPEED_2    = 20,
++	ADI_AXI_FPGA_SPEED_2L   = 21,
++	ADI_AXI_FPGA_SPEED_2LV  = 22,
++	ADI_AXI_FPGA_SPEED_3    = 30,
++};
++
+ #endif /* ADI_AXI_COMMON_H_ */
 
 -- 
 2.49.0

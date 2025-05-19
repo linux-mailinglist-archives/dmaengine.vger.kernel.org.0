@@ -1,116 +1,152 @@
-Return-Path: <dmaengine+bounces-5204-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5205-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7415ABC355
-	for <lists+dmaengine@lfdr.de>; Mon, 19 May 2025 17:58:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3DBA5ABC412
+	for <lists+dmaengine@lfdr.de>; Mon, 19 May 2025 18:15:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C5C59189EEC9
-	for <lists+dmaengine@lfdr.de>; Mon, 19 May 2025 15:58:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A7DE5166B61
+	for <lists+dmaengine@lfdr.de>; Mon, 19 May 2025 16:14:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0375A286882;
-	Mon, 19 May 2025 15:57:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FE362874E7;
+	Mon, 19 May 2025 16:09:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="OOA6fHnq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aDBWRwUo"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2343F1A38F9
-	for <dmaengine@vger.kernel.org>; Mon, 19 May 2025 15:57:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58AE22857F2;
+	Mon, 19 May 2025 16:09:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747670276; cv=none; b=aTG42bOHwIoGkb6hrHXYtHmxqjTRSy5NgXgfeb0GVmUXZX2rP51nR1UYla+TudT7UToL6b+z7Qyym/K/cEGaJzJdQmoXNLqfESoV8I5F0rmf62Hesp3WIa1zidfWbPpkGtJ8t1T1x74Kmt7zjpMog732MSUaffaAGjfK1UrnInQ=
+	t=1747670995; cv=none; b=hXmx8u/kWCLKfimC718dePwfGPpfFSp8nrek7LWEBNhxcB1j8kV1Y7dVNaOaCWQGw1CQkaA4C9wwo/Vhgu5bwFZlIZy9Hm54HnMmi7Rscolha9oedsBaaUdAaNnKftSIlcQB1gNYnZlwxKS11yXJRnwmWkJuMSrbpYxunb9iPrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747670276; c=relaxed/simple;
-	bh=kDzZH/2//KqHjtRhP0MAmXrUXCabtr3kxzCKj86U3ws=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uYgjlfT8PY1rDevxNgbAdL8EsKiKYj6FmnRIO8eub6A195zHaD/UjL7ftZu+gIC+vR5SQmaYBBpdFhPErB1X3VrNM5zHOpNZcWihqXZBIAxjbXvk3E1rQ1VxWI9Wm0IiYT/elAT3eKuPY1iyR/nXR7Gr8zbzhMQcYdCH3FNxxL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=OOA6fHnq; arc=none smtp.client-ip=209.85.210.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-72c40235c34so1528306a34.3
-        for <dmaengine@vger.kernel.org>; Mon, 19 May 2025 08:57:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747670274; x=1748275074; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PNI7NcwENluO3zokSTsjvdClRmMPUb+KHUbQq6ykMN4=;
-        b=OOA6fHnqrd8XpwQtTyQdHYmaSZpFJumVIbFkClc705xSbXWIGCW+QbGlkICp9cyLml
-         HVoxuLjaMzrqxhGyKk0Hjs2Dp3Nz2hH2mtD2ilAx+4oLfzCewT7oBaHGW0yhr+eESPqF
-         YT1OUyeXC18C2xq6s3wIE4dNZWqWaM9132fBM8KaqGSl1HAPabZ7gQsamyG9G8a06NF5
-         YBq3KW1tquKYGwoaNY/QfBBawFLbQUg+5ckpO5HL7m2gpJ/OKZy5tiBPyLWa+iwU4/Uz
-         t2T9JecbqPwLdAekw468cBJBEZMMtnDRM+d14VmSZPyUlxVj91uc80sicwP3xAW+WWRp
-         VvDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747670274; x=1748275074;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PNI7NcwENluO3zokSTsjvdClRmMPUb+KHUbQq6ykMN4=;
-        b=v6c+16JSUH0zTgnCKPQ9vXxapM0UFI7Bh6CJZlx+i0a3GYCc37ww8wA/CNq0I0nCA4
-         B5jxtZFNPiL/cGu8KqQiU+ktjKopMS1Ikx8YPTPPZ8dEz154mzH11yvSw8R9UAmmgjlC
-         5qdN5s+LqIQii8HNRYRGAVhw32cjn1NN1m8HyYig9KE6CetSSel88NHgRCtZvN9y9tXm
-         tTqJN5m+ZlEx+1F7IMNO6269dzy/XtA7ETAXzqYkEqb7WDuc1d9/zlXd6GTdhS5jZguI
-         1n4t9AdaGQqFAvnFa8pgBRoBu4g1rWnLL6UmRJqmkGda3yZX3Do+G1x1+9iz+YAT8DzM
-         wzTg==
-X-Forwarded-Encrypted: i=1; AJvYcCXf1tEL+WmAMRlniBhvxJDVs2c4cpH8pO8L/CIQNXhtogra/ZhW8g/ayDeLw/6toWT8k13GJqxHKv0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6jg93nUQI7D/G4VhWvx4xD0GNrbhnN14hXsLx/hVmb2KpAa88
-	5szT82MbA7s6EBQmxUjDJS++TTD0f9dxxtvu6+I5AmtZPtaq/I0HpYDboLZt01xvpcs=
-X-Gm-Gg: ASbGncuZMieOM1peG2pPyrdZ3A3h5JYvH5V7sYrXt3fyEcu23awTfpOhr8xFKyv2NUY
-	vGKUog+UN8//pDdPHTtEcL45Wo4Z4ik6HCsW83vC+xgUtGWbnKk0ixPDGCU+p9o44wCJ4Dwsh7R
-	2lChXDytJTjP5VuJokG41KmeI4vnlNWANNQkFzl1+cJ3Jpet5/MZO66ytpcyluYM2zk5rQ8QE6d
-	kEWPsA/f3jCe99HZXqk5UIq0Sj7VKP0xR/blOJc+XEHL9IPiuVrDSpzIMwU8lzr4Fxt/qXgHBlf
-	BwqNt82UPhGdCFAQQuv1MOyPudBWzd1uBrO59OyeRZ4kU69ISE8s+kCw1RV34P7pdZ2b09djyAa
-	szIhaGeXh9iqAm7NgbRyOeiuYjw==
-X-Google-Smtp-Source: AGHT+IH8T8zg0xomQN28G1hezc6Z1gZDVp2eCOEmtHqiL0f9gIeNGI+bpJuOCxDdS9NlFECubITNsg==
-X-Received: by 2002:a05:6830:61c4:b0:72b:a020:a2c0 with SMTP id 46e09a7af769-734f99582ddmr8068793a34.17.1747670274203;
-        Mon, 19 May 2025 08:57:54 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:a628:91ca:eb5:d6f5? ([2600:8803:e7e4:1d00:a628:91ca:eb5:d6f5])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-734f6b5f5e7sm1463565a34.65.2025.05.19.08.57.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 May 2025 08:57:53 -0700 (PDT)
-Message-ID: <adc2d646-06fd-4a9a-bebe-99d2a6cfd2d5@baylibre.com>
-Date: Mon, 19 May 2025 10:57:52 -0500
+	s=arc-20240116; t=1747670995; c=relaxed/simple;
+	bh=1oyMEAm8syprjDKhm1/+o2fhCi0dwq1oZtTbjGNBLDA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cAWlsjqZxe6MFs/IuRo9zelQMkTX9TxNhuy//lg8R4ZGlWRd9ARXzf0q8VU9pLmOtYs4QYFeFVWpGKSMwU0sOW4z4bSu4PaK3JSFyMaA+L3kIa906CHT8njxjLplC28QkQx55QB7H6rwgHOEn8qG3BYzUgcb1r3X3Ppo6ypmlvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aDBWRwUo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E371FC4CEE4;
+	Mon, 19 May 2025 16:09:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747670994;
+	bh=1oyMEAm8syprjDKhm1/+o2fhCi0dwq1oZtTbjGNBLDA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aDBWRwUo29k0F2K6AxfHVE9oVhEALISnJwTbyo2hjI6KwFPdPYdoe1jSzA/gp32Cz
+	 5kPB8WcVi2tkKrMoWBSu/Aenza4j0BLkdjSb3g2HCFSlfJQzlznnjlAH4Me4dPAS9g
+	 kG0z31zgyjdPYBncryoSXNReZX4DymSstAqe9mL9BJ6/dRsytsxeg/avvJd20uHFlo
+	 jpWujuA48q45mjr9XZtO1Vv10WEyhFSVZfm/kksf2eLuJycgqiXRWjOOBR7iMgMc8f
+	 QN03D9bk0Hz9RTaJQcVgvXoAZVk0itId4hbHk4DLWGyZE+QuWmr7+HuhZF4mvIabMY
+	 UMPiiwVRhwE+A==
+Date: Mon, 19 May 2025 17:09:50 +0100
+From: Conor Dooley <conor@kernel.org>
+To: adrianhoyin.ng@altera.com
+Cc: dinguyen@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, Eugeniy.Paltsev@synopsys.com, vkoul@kernel.org,
+	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+	Matthew Gerlach <matthew.gerlach@altrera.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: dma: snps,dw-axi-dmac: Add iommus
+ dma-coherent and dma bit-mask quirk
+Message-ID: <20250519-palm-clunky-d10f84e7f37d@spud>
+References: <cover.1747630638.git.adrianhoyin.ng@altera.com>
+ <c9d1ae618b43b328b3b8775334987e5acdaf2490.1747630638.git.adrianhoyin.ng@altera.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/7] clk: clk-axi-clkgen: improvements and some fixes
-To: nuno.sa@analog.com, linux-clk@vger.kernel.org,
- linux-fpga@vger.kernel.org, dmaengine@vger.kernel.org,
- linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
- linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org
-Cc: Stephen Boyd <sboyd@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Moritz Fischer
- <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>, Xu Yilun <yilun.xu@intel.com>,
- Tom Rix <trix@redhat.com>, Vinod Koul <vkoul@kernel.org>,
- Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Jonathan Cameron <jic23@kernel.org>, Trevor Gamblin <tgamblin@baylibre.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- Mark Brown <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>,
- Xu Yilun <yilun.xu@linux.intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>
-References: <20250519-dev-axi-clkgen-limits-v6-0-bc4b3b61d1d4@analog.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20250519-dev-axi-clkgen-limits-v6-0-bc4b3b61d1d4@analog.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="I/yCyKkPgBhExs6w"
+Content-Disposition: inline
+In-Reply-To: <c9d1ae618b43b328b3b8775334987e5acdaf2490.1747630638.git.adrianhoyin.ng@altera.com>
 
-On 5/19/25 10:41 AM, Nuno Sá via B4 Relay wrote:
-> This series starts with a small fix and then a bunch of small
-> improvements. The main change though is to allow detecting of
-> struct axi_clkgen_limits during probe().
-> 
+
+--I/yCyKkPgBhExs6w
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, May 19, 2025 at 01:09:38PM +0800, adrianhoyin.ng@altera.com wrote:
+> From: Adrian Ng Ho Yin <adrianhoyin.ng@altera.com>
+>=20
+> Intel Agilex5 address bus only supports up to 40 bits. Add dma-bit-mask
+> property to allow configuration of dma bit-mask size. Add iommu property
+> for SMMU support. Add dma-coherent property for cache coherent support.
+>=20
+> Signed-off-by: Adrian Ng Ho Yin <adrianhoyin.ng@altera.com>
+> Reviewed-by: Matthew Gerlach <matthew.gerlach@altrera.com>
 > ---
-Reviewed-by: David Lechner <dlechner@baylibre.com>
+>  .../devicetree/bindings/dma/snps,dw-axi-dmac.yaml   | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml =
+b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
+> index 935735a59afd..f0a54a1031e7 100644
+> --- a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
+> +++ b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
+> @@ -42,6 +42,9 @@ properties:
+>      minItems: 1
+>      maxItems: 8
+> =20
+> +  iommus:
+> +    maxItems: 1
+> +
+>    clocks:
+>      items:
+>        - description: Bus Clock
+> @@ -61,6 +64,8 @@ properties:
+> =20
+>    dma-noncoherent: true
+> =20
+> +  dma-coherent: true
+> +
+>    resets:
+>      minItems: 1
+>      maxItems: 2
+> @@ -101,6 +106,14 @@ properties:
+>      minimum: 1
+>      maximum: 256
+> =20
+> +  snps,dma-bit-mask:
 
+This property seems incorrectly named to me, from the description this
+does not seem like a bitmask cos you cannot have a 64-bit bitmask in a
+u32... Instead, this property is being fed into the DMA_BIT_MASK()
+macro, and is actually just the number of bits to use for dma (as the
+description correctly points out). Please adjust the naming accordingly.
+
+> +    description:
+> +      Defines the number of addressable bits for DMA.
+> +      If this property is missing, the default 64bit will be used.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    minimum: 32
+> +    maximum: 64
+
+Missing a default: 64, that's what you should do rather than mention in
+text form.
+
+> +
+>  required:
+>    - compatible
+>    - reg
+> --=20
+> 2.49.GIT
+>=20
+
+--I/yCyKkPgBhExs6w
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaCtXzgAKCRB4tDGHoIJi
+0tz2AQCnwB3M/8X3IrZnzee4IP9Y4MKVCzK1K8sqwgJ9Tgq6cAD/S9iTRND7dhx0
+2cdd9GZejRuC+l9gPIFgOmr2Pm39TA0=
+=FKiq
+-----END PGP SIGNATURE-----
+
+--I/yCyKkPgBhExs6w--
 

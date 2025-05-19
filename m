@@ -1,152 +1,113 @@
-Return-Path: <dmaengine+bounces-5205-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5206-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3DBA5ABC412
-	for <lists+dmaengine@lfdr.de>; Mon, 19 May 2025 18:15:11 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E39EABC47B
+	for <lists+dmaengine@lfdr.de>; Mon, 19 May 2025 18:28:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A7DE5166B61
-	for <lists+dmaengine@lfdr.de>; Mon, 19 May 2025 16:14:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4666D1711B7
+	for <lists+dmaengine@lfdr.de>; Mon, 19 May 2025 16:28:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FE362874E7;
-	Mon, 19 May 2025 16:09:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AB232874EF;
+	Mon, 19 May 2025 16:28:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aDBWRwUo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H1SINi+u"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58AE22857F2;
-	Mon, 19 May 2025 16:09:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BEA0286D79;
+	Mon, 19 May 2025 16:28:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747670995; cv=none; b=hXmx8u/kWCLKfimC718dePwfGPpfFSp8nrek7LWEBNhxcB1j8kV1Y7dVNaOaCWQGw1CQkaA4C9wwo/Vhgu5bwFZlIZy9Hm54HnMmi7Rscolha9oedsBaaUdAaNnKftSIlcQB1gNYnZlwxKS11yXJRnwmWkJuMSrbpYxunb9iPrU=
+	t=1747672132; cv=none; b=olzH3PrTp2QeVujPMITuoSIcT33FSEBuqhHSqJrilbe3hACcs7OvwYlJS5uPk9sB/4aW+JgbwBWHZgcpqOci4pByT4mWz6aluiwLnQVUqFMtI5FxqEzK6Fdqx7mS5TC9A93Kf0EdoxKYcJ9HkoU5B8pdV/8YoODX6nQU4iy7Lus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747670995; c=relaxed/simple;
-	bh=1oyMEAm8syprjDKhm1/+o2fhCi0dwq1oZtTbjGNBLDA=;
+	s=arc-20240116; t=1747672132; c=relaxed/simple;
+	bh=33cTvU1qBUdJ2kbCQM2qxSf1F+IUciULteXqEWFXPyM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cAWlsjqZxe6MFs/IuRo9zelQMkTX9TxNhuy//lg8R4ZGlWRd9ARXzf0q8VU9pLmOtYs4QYFeFVWpGKSMwU0sOW4z4bSu4PaK3JSFyMaA+L3kIa906CHT8njxjLplC28QkQx55QB7H6rwgHOEn8qG3BYzUgcb1r3X3Ppo6ypmlvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aDBWRwUo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E371FC4CEE4;
-	Mon, 19 May 2025 16:09:52 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=LfDtgnGo4SvMAmzpqhOpqpNIipDqU1mVxqDnoLzIUah7qvoRuzcpwR24ZWPBSqiXaMZuLUmNSXX6voJILd+96eLXDCsvkp+XlL0p69LG5dAWWElxP4igmAl9JJP7cziQ4+k8GVpo4gzSCU+UBPZQSQniG1TwxFus3eWqSj6iAMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H1SINi+u; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E349AC4CEE4;
+	Mon, 19 May 2025 16:28:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747670994;
-	bh=1oyMEAm8syprjDKhm1/+o2fhCi0dwq1oZtTbjGNBLDA=;
+	s=k20201202; t=1747672131;
+	bh=33cTvU1qBUdJ2kbCQM2qxSf1F+IUciULteXqEWFXPyM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aDBWRwUo29k0F2K6AxfHVE9oVhEALISnJwTbyo2hjI6KwFPdPYdoe1jSzA/gp32Cz
-	 5kPB8WcVi2tkKrMoWBSu/Aenza4j0BLkdjSb3g2HCFSlfJQzlznnjlAH4Me4dPAS9g
-	 kG0z31zgyjdPYBncryoSXNReZX4DymSstAqe9mL9BJ6/dRsytsxeg/avvJd20uHFlo
-	 jpWujuA48q45mjr9XZtO1Vv10WEyhFSVZfm/kksf2eLuJycgqiXRWjOOBR7iMgMc8f
-	 QN03D9bk0Hz9RTaJQcVgvXoAZVk0itId4hbHk4DLWGyZE+QuWmr7+HuhZF4mvIabMY
-	 UMPiiwVRhwE+A==
-Date: Mon, 19 May 2025 17:09:50 +0100
-From: Conor Dooley <conor@kernel.org>
-To: adrianhoyin.ng@altera.com
-Cc: dinguyen@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, Eugeniy.Paltsev@synopsys.com, vkoul@kernel.org,
-	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-	Matthew Gerlach <matthew.gerlach@altrera.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: dma: snps,dw-axi-dmac: Add iommus
- dma-coherent and dma bit-mask quirk
-Message-ID: <20250519-palm-clunky-d10f84e7f37d@spud>
-References: <cover.1747630638.git.adrianhoyin.ng@altera.com>
- <c9d1ae618b43b328b3b8775334987e5acdaf2490.1747630638.git.adrianhoyin.ng@altera.com>
+	b=H1SINi+ujtraVCf67Fj/+P1foxwZZ1nad1P/kJA/kyAfgXGcQiMWQ40cvyhGuG9C3
+	 kB9+98tVsy2sG2EH2OGVU+r6xuxeqfhDfB/3+rSyn9VnnaVQLDtOsaOzlABiUkwAPW
+	 0VXoq3EXPtGEnCBeO5tEiXghea7QG3+M+656FtmI0A0N6RKrFRN/0ehXEjqZLTCjtp
+	 iACApKGzUdQwr//FlFXAvSfCAANYGwDmGt8824jyGoANL/4F+e+iRB5bzbOvs6aT+C
+	 wYdk8SF6ojVeVXC2Wwgv3GhpTDTaOOqLfSicnLNcKeWq6EU/z4/rtCZzpk3vFBN7tO
+	 0jNzRdoySTnMA==
+Date: Mon, 19 May 2025 18:28:48 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: nuno.sa@analog.com
+Cc: linux-clk@vger.kernel.org, linux-fpga@vger.kernel.org, 
+	dmaengine@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org, 
+	linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>, 
+	Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>, Vinod Koul <vkoul@kernel.org>, 
+	Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
+	Trevor Gamblin <tgamblin@baylibre.com>, David Lechner <dlechner@baylibre.com>, 
+	Mark Brown <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>, 
+	Xu Yilun <yilun.xu@linux.intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v6 3/7] include: linux: move adi-axi-common.h out of fpga
+Message-ID: <gneof3jin55orfncvexyjtj2a2bdcvks6hxuaf4ovqbm6jcl42@kcohbvsi2zmc>
+References: <20250519-dev-axi-clkgen-limits-v6-0-bc4b3b61d1d4@analog.com>
+ <20250519-dev-axi-clkgen-limits-v6-3-bc4b3b61d1d4@analog.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="I/yCyKkPgBhExs6w"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="qc7wyrddxi24dmdp"
 Content-Disposition: inline
-In-Reply-To: <c9d1ae618b43b328b3b8775334987e5acdaf2490.1747630638.git.adrianhoyin.ng@altera.com>
+In-Reply-To: <20250519-dev-axi-clkgen-limits-v6-3-bc4b3b61d1d4@analog.com>
 
 
---I/yCyKkPgBhExs6w
-Content-Type: text/plain; charset=us-ascii
+--qc7wyrddxi24dmdp
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v6 3/7] include: linux: move adi-axi-common.h out of fpga
+MIME-Version: 1.0
 
-On Mon, May 19, 2025 at 01:09:38PM +0800, adrianhoyin.ng@altera.com wrote:
-> From: Adrian Ng Ho Yin <adrianhoyin.ng@altera.com>
->=20
-> Intel Agilex5 address bus only supports up to 40 bits. Add dma-bit-mask
-> property to allow configuration of dma bit-mask size. Add iommu property
-> for SMMU support. Add dma-coherent property for cache coherent support.
->=20
-> Signed-off-by: Adrian Ng Ho Yin <adrianhoyin.ng@altera.com>
-> Reviewed-by: Matthew Gerlach <matthew.gerlach@altrera.com>
-> ---
->  .../devicetree/bindings/dma/snps,dw-axi-dmac.yaml   | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml =
-b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
-> index 935735a59afd..f0a54a1031e7 100644
-> --- a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
-> +++ b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
-> @@ -42,6 +42,9 @@ properties:
->      minItems: 1
->      maxItems: 8
-> =20
-> +  iommus:
-> +    maxItems: 1
-> +
->    clocks:
->      items:
->        - description: Bus Clock
-> @@ -61,6 +64,8 @@ properties:
-> =20
->    dma-noncoherent: true
-> =20
-> +  dma-coherent: true
-> +
->    resets:
->      minItems: 1
->      maxItems: 2
-> @@ -101,6 +106,14 @@ properties:
->      minimum: 1
->      maximum: 256
-> =20
-> +  snps,dma-bit-mask:
+On Mon, May 19, 2025 at 04:41:08PM +0100, Nuno S=E1 via B4 Relay wrote:
+> ...
+>  drivers/pwm/pwm-axi-pwmgen.c              | 2 +-
 
-This property seems incorrectly named to me, from the description this
-does not seem like a bitmask cos you cannot have a 64-bit bitmask in a
-u32... Instead, this property is being fed into the DMA_BIT_MASK()
-macro, and is actually just the number of bits to use for dma (as the
-description correctly points out). Please adjust the naming accordingly.
+There is nothing scheduled on my side for that driver and the change
+looks as expected.
 
-> +    description:
-> +      Defines the number of addressable bits for DMA.
-> +      If this property is missing, the default 64bit will be used.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    minimum: 32
-> +    maximum: 64
+Take my
 
-Missing a default: 64, that's what you should do rather than mention in
-text form.
+Acked-by: Uwe Kleine-K=F6nig <ukleinek@kernel.org>
 
-> +
->  required:
->    - compatible
->    - reg
-> --=20
-> 2.49.GIT
->=20
+to get it applied to whatever tree that series will be merged through
+(clk?).
 
---I/yCyKkPgBhExs6w
+Best regards
+Uwe
+
+--qc7wyrddxi24dmdp
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaCtXzgAKCRB4tDGHoIJi
-0tz2AQCnwB3M/8X3IrZnzee4IP9Y4MKVCzK1K8sqwgJ9Tgq6cAD/S9iTRND7dhx0
-2cdd9GZejRuC+l9gPIFgOmr2Pm39TA0=
-=FKiq
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmgrXD0ACgkQj4D7WH0S
+/k5bXwf/cJD2ZIBr/eC/DLRua6Dq8h+RlZnDSQh1lehylLta85o6E8oYlHQEZ240
+2lvD0KSsJzcqbMyIKp39Kw+sXNZ6Y737QlYDTkGgKV35JNPfQeEv0GwJrfpGI7vO
+eyxcWys1iV9qbfTb9zAXVdSKU31iGb/sFW2NIOjOcQFLejMnDtFGDpQAmaeILc2B
+Knb8t+KEHMnXTD6FI9f/+YZUX4Bg4FZ6EtLhQqWS2oGu2W4naVpqHdVapeNh4ZVF
+LzTSUKF4ljtL8demEJW4eXSzaD3eYlfYSMThAwocQFUqbs8bttRb+Q1XQwpLIEH9
+l+6sHZcXJ1Q42rpKqAfhyeh0aU650g==
+=BfpI
 -----END PGP SIGNATURE-----
 
---I/yCyKkPgBhExs6w--
+--qc7wyrddxi24dmdp--
 

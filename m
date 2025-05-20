@@ -1,48 +1,48 @@
-Return-Path: <dmaengine+bounces-5227-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5225-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8B63ABE761
-	for <lists+dmaengine@lfdr.de>; Wed, 21 May 2025 00:40:05 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A234ABE756
+	for <lists+dmaengine@lfdr.de>; Wed, 21 May 2025 00:39:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CF98C4E08C1
-	for <lists+dmaengine@lfdr.de>; Tue, 20 May 2025 22:39:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 029613A5FFA
+	for <lists+dmaengine@lfdr.de>; Tue, 20 May 2025 22:39:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DACC2620CD;
-	Tue, 20 May 2025 22:39:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC819261580;
+	Tue, 20 May 2025 22:39:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B/Rq81z9"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DGgVcYaT"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3861D25E81C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3859F1A704B;
 	Tue, 20 May 2025 22:39:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747780764; cv=none; b=DRhTtJfszattZ7dc88U/ObwaBqVOrAkX5N4my7lEdYpPvxZcEaUsYFUCt+NeXHecSPi4jZhMtq4Or/9so9oarH3di5EfYRBiGynu0x6IhdIGHZfRY5/suR76d/Ob+niiK5NJXmGZIqiyuFIMZP5TNwID4f5zhgqXfLD7H52gTOA=
+	t=1747780763; cv=none; b=m4TDy65CL2Jp9YqJLCQt2yg6ReSHeJsoaLfAEND8P82Nic5GnWyciaGj/rlMgYX3AL+PO0HndtEzZzzK0PzqQdMUBZCfM3JBYy6yIse+YGmJq3gkuEnIsJmHcU947QD1sn18btCi6tH0zNrGkQmrIdergXTojqcpRQfpvBz5xn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747780764; c=relaxed/simple;
-	bh=H1fKq6KVU0acWXKFa8RwyKgXyjjOYp2ODK0LTTISDNo=;
+	s=arc-20240116; t=1747780763; c=relaxed/simple;
+	bh=bjweMhzgo2TBjFMZvc1ZB3XnfTBp25kxXiVCvZjzvFg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bo6rRcfsRcZvfpk5R4BdhMrLvxUyxI0jge9wZ9v3uVzy7D/6pPtIeFdj1yB7TOqg0tFQlzViXDHT8R1MVSyfzgRASe6x74MxY/gtPjAKnODtoBTSkKJhGkSwatfwu27UCExbgfAvRaE9bK7AspmSPA9oEZ9ccX0gPh7rqbme/+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=B/Rq81z9; arc=none smtp.client-ip=198.137.202.133
+	 MIME-Version; b=YcEmii6IndxpEQN37Ro4NiDzsXofAvD/LhZx4TyBbQCiWuvNacX4i40JtcS0Hv8selOniDiDLMCZAVx4s0O4DaKN8DACxCrwsZg6sVYqhxJ1YgXEVzcpJKe84lOgq9MLGRBsxQDLTEgTaXfQ7vSgPqpJ3fZFFpdtXHfPRD6/wF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DGgVcYaT; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=QeKO5WpcdWd/rnQmvvan6zzkNh3NOFrxEjjxYAOl7BU=; b=B/Rq81z9Xzby7o+T2uPzXSmvIy
-	mHdH8FS7ztOeujmoSZMOwnPrEgqE5ccN9QSTU4BafrcKOaH8rSdl8X9FMpmtHVgetuORaBExJ7TuR
-	LffiCeUI85dBk3NnDSDkgwg2xZueDOd1duU6C6jh0HHoq5zwIPjclv/Ne0rKGPoluL1peYwq1tE7e
-	3GSLLtwXnXoWuguzMZA5npaYWS7AHck+ImmJT5Y2wq+2zHL/OvOTP224NppJCrA0Gt2L9I7YcaquG
-	UmGPiA2/3HIAhKgwB/Pi3TZrJ5RQcJgitCbpzisNRy7pxEfPXntU4j3IpPOlLy6fuaaZ33ZXKb2i7
-	hLzUed3g==;
+	bh=SL4b1xDgxA+NkPmd/OR6nKSjVcBp8Xk4LTDY9e3464E=; b=DGgVcYaTikXHQ16WpLmURPmm9z
+	vgPOtwZ21Ze49qIw0xllbcqAqxfCDq4bRIaefXDCPnUtSqynCaZ88nTzrbRmm9+B6DI0th6NGMoGW
+	gnMVW0bNELeKAO5btU4aN8meYH/zOllPmenTy+kICatawcqVyJCGh6UsQBH2tD/EVBk5pP8x2BSoB
+	nXrhuWdsOU7TXGrzNYygMJLwN56+dG6bvSfMn3nadhYi0Z8iIiLyYMVCEdcQXOrrZx1E59f2t4r/k
+	HdyDKN1RVsTMdqnKWGdH/yhVN43nx1G6Ye4oFKA3/K8tMATXfFsXmwgwMoflHh2ZpdFGIyvoOX9vD
+	271UFjTw==;
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uHVcA-0000000EIMC-0peT;
+	id 1uHVcA-0000000EIME-0yIc;
 	Tue, 20 May 2025 22:39:14 +0000
 From: Luis Chamberlain <mcgrof@kernel.org>
 To: vkoul@kernel.org,
@@ -58,9 +58,9 @@ Cc: iommu@lists.linux.dev,
 	linux-block@vger.kernel.org,
 	gost.dev@samsung.com,
 	mcgrof@kernel.org
-Subject: [PATCH 2/6] dmatest: split dmatest_func() into helpers
-Date: Tue, 20 May 2025 15:39:09 -0700
-Message-ID: <20250520223913.3407136-3-mcgrof@kernel.org>
+Subject: [PATCH 3/6] dmatest: move printing to its own routine
+Date: Tue, 20 May 2025 15:39:10 -0700
+Message-ID: <20250520223913.3407136-4-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250520223913.3407136-1-mcgrof@kernel.org>
 References: <20250520223913.3407136-1-mcgrof@kernel.org>
@@ -73,726 +73,161 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-Split the core logic of dmatest_func() into helpers so that the routine
-dmatest_func() becomes thin, letting us later add alternative routines
-which use a different preamble setup.
+Move statistics printing to its own routine, and while at it, put
+the test counters into the struct dmatest_thread for the streaming DMA
+API to allow us to later add IOVA DMA API support and be able to
+differentiate.
 
-This introduces no functional changes.
+While at it, use a mutex to serialize output so we don't get garbled
+messages between different threads.
+
+This makes no functional changes other than serializing the output
+and prepping us for IOVA DMA API support.
 
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- drivers/dma/dmatest.c | 607 ++++++++++++++++++++++--------------------
- 1 file changed, 320 insertions(+), 287 deletions(-)
+ drivers/dma/dmatest.c | 77 ++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 58 insertions(+), 19 deletions(-)
 
 diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
-index 91b2fbc0b864..921d89b4d2ed 100644
+index 921d89b4d2ed..b4c129e688e3 100644
 --- a/drivers/dma/dmatest.c
 +++ b/drivers/dma/dmatest.c
-@@ -238,6 +238,7 @@ struct dmatest_thread {
- 	struct dmatest_done test_done;
+@@ -92,6 +92,8 @@ static bool polled;
+ module_param(polled, bool, 0644);
+ MODULE_PARM_DESC(polled, "Use polling for completion instead of interrupts");
+ 
++static DEFINE_MUTEX(stats_mutex);
++
+ /**
+  * struct dmatest_params - test parameters.
+  * @nobounce:		prevent using swiotlb buffer
+@@ -239,6 +241,12 @@ struct dmatest_thread {
  	bool			done;
  	bool			pending;
-+	u8			*pq_coefs;
+ 	u8			*pq_coefs;
++
++	/* Streaming DMA statistics */
++	unsigned int streaming_tests;
++	unsigned int streaming_failures;
++	unsigned long long streaming_total_len;
++	ktime_t streaming_runtime;
  };
  
  struct dmatest_chan {
-@@ -557,377 +558,409 @@ static int dmatest_alloc_test_data(struct dmatest_data *d,
- 	return -ENOMEM;
+@@ -898,6 +906,30 @@ static int dmatest_do_dma_test(struct dmatest_thread *thread,
+ 	return ret;
  }
  
--/*
-- * This function repeatedly tests DMA transfers of various lengths and
-- * offsets for a given operation type until it is told to exit by
-- * kthread_stop(). There may be multiple threads running this function
-- * in parallel for a single channel, and there may be multiple channels
-- * being tested in parallel.
-- *
-- * Before each test, the source and destination buffer is initialized
-- * with a known pattern. This pattern is different depending on
-- * whether it's in an area which is supposed to be copied or
-- * overwritten, and different in the source and destination buffers.
-- * So if the DMA engine doesn't copy exactly what we tell it to copy,
-- * we'll notice.
-- */
--static int dmatest_func(void *data)
-+static int dmatest_setup_test(struct dmatest_thread *thread,
-+			      unsigned int *buf_size,
-+			      u8 *align,
-+			      bool *is_memset)
- {
--	struct dmatest_thread	*thread = data;
--	struct dmatest_done	*done = &thread->test_done;
--	struct dmatest_info	*info;
--	struct dmatest_params	*params;
--	struct dma_chan		*chan;
--	struct dma_device	*dev;
--	struct device		*dma_dev;
--	unsigned int		error_count;
--	unsigned int		failed_tests = 0;
--	unsigned int		total_tests = 0;
--	dma_cookie_t		cookie;
--	enum dma_status		status;
--	enum dma_ctrl_flags	flags;
--	u8			*pq_coefs = NULL;
--	int			ret;
--	unsigned int		buf_size;
--	struct dmatest_data	*src;
--	struct dmatest_data	*dst;
--	int			i;
--	ktime_t			ktime, start, diff;
--	ktime_t			filltime = 0;
--	ktime_t			comparetime = 0;
--	s64			runtime = 0;
--	unsigned long long	total_len = 0;
--	unsigned long long	iops = 0;
--	u8			align = 0;
--	bool			is_memset = false;
--	dma_addr_t		*srcs;
--	dma_addr_t		*dma_pq;
--
--	set_freezable();
--
--	ret = -ENOMEM;
-+	struct dmatest_info *info = thread->info;
-+	struct dmatest_params *params = &info->params;
-+	struct dma_chan *chan = thread->chan;
-+	struct dma_device *dev = chan->device;
-+	struct dmatest_data *src = &thread->src;
-+	struct dmatest_data *dst = &thread->dst;
-+	int ret;
- 
--	smp_rmb();
--	thread->pending = false;
--	info = thread->info;
--	params = &info->params;
--	chan = thread->chan;
--	dev = chan->device;
--	dma_dev = dmaengine_get_dma_device(chan);
--
--	src = &thread->src;
--	dst = &thread->dst;
- 	if (thread->type == DMA_MEMCPY) {
--		align = params->alignment < 0 ? dev->copy_align :
--						params->alignment;
-+		*align = params->alignment < 0 ? dev->copy_align : params->alignment;
- 		src->cnt = dst->cnt = 1;
-+		*is_memset = false;
- 	} else if (thread->type == DMA_MEMSET) {
--		align = params->alignment < 0 ? dev->fill_align :
--						params->alignment;
-+		*align = params->alignment < 0 ? dev->fill_align : params->alignment;
- 		src->cnt = dst->cnt = 1;
--		is_memset = true;
-+		*is_memset = true;
- 	} else if (thread->type == DMA_XOR) {
--		/* force odd to ensure dst = src */
- 		src->cnt = min_odd(params->xor_sources | 1, dev->max_xor);
- 		dst->cnt = 1;
--		align = params->alignment < 0 ? dev->xor_align :
--						params->alignment;
-+		*align = params->alignment < 0 ? dev->xor_align : params->alignment;
-+		*is_memset = false;
- 	} else if (thread->type == DMA_PQ) {
--		/* force odd to ensure dst = src */
- 		src->cnt = min_odd(params->pq_sources | 1, dma_maxpq(dev, 0));
- 		dst->cnt = 2;
--		align = params->alignment < 0 ? dev->pq_align :
--						params->alignment;
-+		*align = params->alignment < 0 ? dev->pq_align : params->alignment;
-+		*is_memset = false;
- 
--		pq_coefs = kmalloc(params->pq_sources + 1, GFP_KERNEL);
--		if (!pq_coefs)
--			goto err_thread_type;
-+		thread->pq_coefs = kmalloc(params->pq_sources + 1, GFP_KERNEL);
-+		if (!thread->pq_coefs)
-+			return -ENOMEM;
- 
--		for (i = 0; i < src->cnt; i++)
--			pq_coefs[i] = 1;
-+		for (int i = 0; i < src->cnt; i++)
-+			thread->pq_coefs[i] = 1;
- 	} else
--		goto err_thread_type;
-+		return -EINVAL;
- 
--	/* Check if buffer count fits into map count variable (u8) */
-+	/* Buffer count check */
- 	if ((src->cnt + dst->cnt) >= 255) {
- 		pr_err("too many buffers (%d of 255 supported)\n",
--		       src->cnt + dst->cnt);
-+		src->cnt + dst->cnt);
-+		ret = -EINVAL;
- 		goto err_free_coefs;
- 	}
- 
--	buf_size = params->buf_size;
--	if (1 << align > buf_size) {
-+	*buf_size = params->buf_size;
-+
-+	if (1 << *align > *buf_size) {
- 		pr_err("%u-byte buffer too small for %d-byte alignment\n",
--		       buf_size, 1 << align);
-+		       *buf_size, 1 << *align);
-+		ret = -EINVAL;
- 		goto err_free_coefs;
- 	}
- 
-+	/* Set GFP flags */
- 	src->gfp_flags = GFP_KERNEL;
- 	dst->gfp_flags = GFP_KERNEL;
-+
- 	if (params->nobounce) {
- 		src->gfp_flags = GFP_DMA;
- 		dst->gfp_flags = GFP_DMA;
- 	}
- 
--	if (dmatest_alloc_test_data(src, buf_size, align) < 0)
-+	/* Allocate test data */
-+	if (dmatest_alloc_test_data(src, *buf_size, *align) < 0) {
-+		ret = -ENOMEM;
- 		goto err_free_coefs;
-+	}
- 
--	if (dmatest_alloc_test_data(dst, buf_size, align) < 0)
-+	if (dmatest_alloc_test_data(dst, *buf_size, *align) < 0) {
-+		ret = -ENOMEM;
- 		goto err_src;
-+	}
- 
--	set_user_nice(current, 10);
-+	return 0;
- 
--	srcs = kcalloc(src->cnt, sizeof(dma_addr_t), GFP_KERNEL);
--	if (!srcs)
--		goto err_dst;
-+err_src:
-+	dmatest_free_test_data(src);
-+err_free_coefs:
-+	kfree(thread->pq_coefs);
-+	return ret;
-+}
- 
--	dma_pq = kcalloc(dst->cnt, sizeof(dma_addr_t), GFP_KERNEL);
--	if (!dma_pq)
--		goto err_srcs_array;
-+static void dmatest_cleanup_test(struct dmatest_thread *thread)
++static void dmatest_print_detailed_stats(struct dmatest_thread *thread)
 +{
-+	dmatest_free_test_data(&thread->src);
-+	dmatest_free_test_data(&thread->dst);
-+	kfree(thread->pq_coefs);
-+	thread->pq_coefs = NULL;
-+}
- 
--	/*
--	 * src and dst buffers are freed by ourselves below
--	 */
--	if (params->polled)
--		flags = DMA_CTRL_ACK;
--	else
--		flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
-+static int dmatest_do_dma_test(struct dmatest_thread *thread,
-+			       unsigned int buf_size, u8 align, bool is_memset,
-+			       unsigned int *total_tests,
-+			       unsigned int *failed_tests,
-+			       unsigned long long *total_len,
-+			       ktime_t *filltime,
-+			       ktime_t *comparetime)
-+{
-+	struct dmatest_info *info = thread->info;
-+	struct dmatest_params *params = &info->params;
-+	struct dma_chan *chan = thread->chan;
-+	struct dma_device *dev = chan->device;
-+	struct device *dma_dev = dmaengine_get_dma_device(chan);
-+	struct dmatest_data *src = &thread->src;
-+	struct dmatest_data *dst = &thread->dst;
-+	struct dmatest_done *done = &thread->test_done;
-+	dma_addr_t *srcs;
-+	dma_addr_t *dma_pq;
-+	struct dma_async_tx_descriptor *tx = NULL;
-+	struct dmaengine_unmap_data *um;
-+	dma_addr_t *dsts;
-+	unsigned int len;
-+	unsigned int error_count;
-+	enum dma_ctrl_flags flags;
-+	dma_cookie_t cookie;
-+	enum dma_status status;
-+	ktime_t start, diff;
-+	int ret;
- 
--	ktime = ktime_get();
--	while (!(kthread_should_stop() ||
--	       (params->iterations && total_tests >= params->iterations))) {
--		struct dma_async_tx_descriptor *tx = NULL;
--		struct dmaengine_unmap_data *um;
--		dma_addr_t *dsts;
--		unsigned int len;
--
--		total_tests++;
--
--		if (params->transfer_size) {
--			if (params->transfer_size >= buf_size) {
--				pr_err("%u-byte transfer size must be lower than %u-buffer size\n",
--				       params->transfer_size, buf_size);
--				break;
--			}
--			len = params->transfer_size;
--		} else if (params->norandom) {
--			len = buf_size;
--		} else {
--			len = dmatest_random() % buf_size + 1;
--		}
-+	(*total_tests)++;
- 
--		/* Do not alter transfer size explicitly defined by user */
--		if (!params->transfer_size) {
--			len = (len >> align) << align;
--			if (!len)
--				len = 1 << align;
-+	/* Calculate transfer length */
-+	if (params->transfer_size) {
-+		if (params->transfer_size >= buf_size) {
-+			pr_err("%u-byte transfer size must be lower than %u-buffer size\n",
-+			       params->transfer_size, buf_size);
-+			return -EINVAL;
- 		}
--		total_len += len;
-+		len = params->transfer_size;
-+	} else if (params->norandom)
-+		len = buf_size;
-+	else
-+		len = dmatest_random() % buf_size + 1;
- 
--		if (params->norandom) {
--			src->off = 0;
--			dst->off = 0;
--		} else {
--			src->off = dmatest_random() % (buf_size - len + 1);
--			dst->off = dmatest_random() % (buf_size - len + 1);
-+	/* Align length */
-+	if (!params->transfer_size) {
-+		len = (len >> align) << align;
-+		if (!len)
-+			len = 1 << align;
-+	}
- 
--			src->off = (src->off >> align) << align;
--			dst->off = (dst->off >> align) << align;
--		}
-+	*total_len += len;
- 
--		if (!params->noverify) {
--			start = ktime_get();
--			dmatest_init_srcs(src->aligned, src->off, len,
--					  buf_size, is_memset);
--			dmatest_init_dsts(dst->aligned, dst->off, len,
--					  buf_size, is_memset);
-+	/* Calculate offsets */
-+	if (params->norandom) {
-+		src->off = 0;
-+		dst->off = 0;
-+	} else {
-+		src->off = dmatest_random() % (buf_size - len + 1);
-+		dst->off = dmatest_random() % (buf_size - len + 1);
-+		src->off = (src->off >> align) << align;
-+		dst->off = (dst->off >> align) << align;
-+	}
- 
--			diff = ktime_sub(ktime_get(), start);
--			filltime = ktime_add(filltime, diff);
--		}
-+	/* Initialize buffers */
-+	if (!params->noverify) {
-+		start = ktime_get();
-+		dmatest_init_srcs(src->aligned, src->off, len, buf_size, is_memset);
-+		dmatest_init_dsts(dst->aligned, dst->off, len, buf_size, is_memset);
-+		diff = ktime_sub(ktime_get(), start);
-+		*filltime = ktime_add(*filltime, diff);
-+	}
- 
--		um = dmaengine_get_unmap_data(dma_dev, src->cnt + dst->cnt,
--					      GFP_KERNEL);
--		if (!um) {
--			failed_tests++;
--			result("unmap data NULL", total_tests,
--			       src->off, dst->off, len, ret);
--			continue;
--		}
-+	/* Map buffers */
-+	um = dmaengine_get_unmap_data(dma_dev, src->cnt + dst->cnt, GFP_KERNEL);
-+	if (!um) {
-+		(*failed_tests)++;
-+		result("unmap data NULL", *total_tests, src->off, dst->off, len, ret);
-+		return -ENOMEM;
-+	}
- 
--		um->len = buf_size;
--		for (i = 0; i < src->cnt; i++) {
--			void *buf = src->aligned[i];
--			struct page *pg = virt_to_page(buf);
--			unsigned long pg_off = offset_in_page(buf);
-+	um->len = buf_size;
-+	srcs = kcalloc(src->cnt, sizeof(dma_addr_t), GFP_KERNEL);
-+	if (!srcs) {
-+		dmaengine_unmap_put(um);
-+		return -ENOMEM;
-+	}
- 
--			um->addr[i] = dma_map_page(dma_dev, pg, pg_off,
--						   um->len, DMA_TO_DEVICE);
--			srcs[i] = um->addr[i] + src->off;
--			ret = dma_mapping_error(dma_dev, um->addr[i]);
--			if (ret) {
--				result("src mapping error", total_tests,
--				       src->off, dst->off, len, ret);
--				goto error_unmap_continue;
--			}
--			um->to_cnt++;
--		}
--		/* map with DMA_BIDIRECTIONAL to force writeback/invalidate */
--		dsts = &um->addr[src->cnt];
--		for (i = 0; i < dst->cnt; i++) {
--			void *buf = dst->aligned[i];
--			struct page *pg = virt_to_page(buf);
--			unsigned long pg_off = offset_in_page(buf);
--
--			dsts[i] = dma_map_page(dma_dev, pg, pg_off, um->len,
--					       DMA_BIDIRECTIONAL);
--			ret = dma_mapping_error(dma_dev, dsts[i]);
--			if (ret) {
--				result("dst mapping error", total_tests,
--				       src->off, dst->off, len, ret);
--				goto error_unmap_continue;
--			}
--			um->bidi_cnt++;
-+	/* Map source buffers */
-+	for (int i = 0; i < src->cnt; i++) {
-+		void *buf = src->aligned[i];
-+		struct page *pg = virt_to_page(buf);
-+		unsigned long pg_off = offset_in_page(buf);
++	unsigned long long streaming_iops, streaming_kbs;
++	s64 streaming_runtime_us;
 +
-+		um->addr[i] = dma_map_page(dma_dev, pg, pg_off, um->len, DMA_TO_DEVICE);
-+		srcs[i] = um->addr[i] + src->off;
-+		ret = dma_mapping_error(dma_dev, um->addr[i]);
-+		if (ret) {
-+			result("src mapping error", *total_tests, src->off, dst->off, len, ret);
-+			goto error_unmap;
- 		}
-+		um->to_cnt++;
-+	}
- 
--		if (thread->type == DMA_MEMCPY)
--			tx = dev->device_prep_dma_memcpy(chan,
--							 dsts[0] + dst->off,
--							 srcs[0], len, flags);
--		else if (thread->type == DMA_MEMSET)
--			tx = dev->device_prep_dma_memset(chan,
--						dsts[0] + dst->off,
--						*(src->aligned[0] + src->off),
--						len, flags);
--		else if (thread->type == DMA_XOR)
--			tx = dev->device_prep_dma_xor(chan,
--						      dsts[0] + dst->off,
--						      srcs, src->cnt,
--						      len, flags);
--		else if (thread->type == DMA_PQ) {
--			for (i = 0; i < dst->cnt; i++)
--				dma_pq[i] = dsts[i] + dst->off;
--			tx = dev->device_prep_dma_pq(chan, dma_pq, srcs,
--						     src->cnt, pq_coefs,
--						     len, flags);
-+	/* Map destination buffers */
-+	dsts = &um->addr[src->cnt];
-+	for (int i = 0; i < dst->cnt; i++) {
-+		void *buf = dst->aligned[i];
-+		struct page *pg = virt_to_page(buf);
-+		unsigned long pg_off = offset_in_page(buf);
++	mutex_lock(&stats_mutex);
 +
-+		dsts[i] = dma_map_page(dma_dev, pg, pg_off, um->len, DMA_BIDIRECTIONAL);
-+		ret = dma_mapping_error(dma_dev, dsts[i]);
-+		if (ret) {
-+			result("dst mapping error", *total_tests, src->off, dst->off, len, ret);
-+			goto error_unmap;
- 		}
-+		um->bidi_cnt++;
-+	}
- 
--		if (!tx) {
--			result("prep error", total_tests, src->off,
--			       dst->off, len, ret);
--			msleep(100);
--			goto error_unmap_continue;
--		}
-+	/* Prepare DMA transaction */
-+	if (params->polled)
-+		flags = DMA_CTRL_ACK;
-+	else
-+		flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
- 
--		done->done = false;
--		if (!params->polled) {
--			tx->callback = dmatest_callback;
--			tx->callback_param = done;
-+	if (thread->type == DMA_MEMCPY) {
-+		tx = dev->device_prep_dma_memcpy(chan, dsts[0] + dst->off,
-+						srcs[0], len, flags);
-+	} else if (thread->type == DMA_MEMSET) {
-+		tx = dev->device_prep_dma_memset(chan, dsts[0] + dst->off,
-+						*(src->aligned[0] + src->off), len, flags);
-+	} else if (thread->type == DMA_XOR) {
-+		tx = dev->device_prep_dma_xor(chan, dsts[0] + dst->off, srcs,
-+					     src->cnt, len, flags);
-+	} else if (thread->type == DMA_PQ) {
-+		dma_pq = kcalloc(dst->cnt, sizeof(dma_addr_t), GFP_KERNEL);
-+		if (!dma_pq) {
-+			ret = -ENOMEM;
-+			goto error_unmap;
- 		}
--		cookie = tx->tx_submit(tx);
-+		for (int i = 0; i < dst->cnt; i++)
-+			dma_pq[i] = dsts[i] + dst->off;
-+		tx = dev->device_prep_dma_pq(chan, dma_pq, srcs,
-+					    src->cnt, thread->pq_coefs,
-+					    len, flags);
-+		kfree(dma_pq);
-+	}
- 
--		if (dma_submit_error(cookie)) {
--			result("submit error", total_tests, src->off,
--			       dst->off, len, ret);
--			msleep(100);
--			goto error_unmap_continue;
--		}
-+	if (!tx) {
-+		result("prep error", *total_tests, src->off, dst->off, len, ret);
-+		ret = -EIO;
-+		goto error_unmap;
-+	}
- 
--		if (params->polled) {
--			status = dma_sync_wait(chan, cookie);
--			dmaengine_terminate_sync(chan);
--			if (status == DMA_COMPLETE)
--				done->done = true;
--		} else {
--			dma_async_issue_pending(chan);
-+	/* Submit transaction */
-+	done->done = false;
-+	if (!params->polled) {
-+		tx->callback = dmatest_callback;
-+		tx->callback_param = done;
-+	}
- 
--			wait_event_freezable_timeout(thread->done_wait,
--					done->done,
--					msecs_to_jiffies(params->timeout));
-+	cookie = tx->tx_submit(tx);
- 
--			status = dma_async_is_tx_complete(chan, cookie, NULL,
--							  NULL);
--		}
-+	if (dma_submit_error(cookie)) {
-+		result("submit error", *total_tests, src->off, dst->off, len, ret);
-+		ret = -EIO;
-+		goto error_unmap;
-+	}
- 
--		if (!done->done) {
--			result("test timed out", total_tests, src->off, dst->off,
--			       len, 0);
--			goto error_unmap_continue;
--		} else if (status != DMA_COMPLETE &&
--			   !(dma_has_cap(DMA_COMPLETION_NO_ORDER,
--					 dev->cap_mask) &&
--			     status == DMA_OUT_OF_ORDER)) {
--			result(status == DMA_ERROR ?
--			       "completion error status" :
--			       "completion busy status", total_tests, src->off,
--			       dst->off, len, ret);
--			goto error_unmap_continue;
--		}
-+	/* Wait for completion */
-+	if (params->polled) {
-+		status = dma_sync_wait(chan, cookie);
-+		dmaengine_terminate_sync(chan);
-+		if (status == DMA_COMPLETE)
-+			done->done = true;
-+	} else {
-+		dma_async_issue_pending(chan);
-+		wait_event_freezable_timeout(thread->done_wait, done->done,
-+				   msecs_to_jiffies(params->timeout));
-+		status = dma_async_is_tx_complete(chan, cookie, NULL, NULL);
-+	}
- 
--		dmaengine_unmap_put(um);
-+	if (!done->done) {
-+		result("test timed out", *total_tests, src->off, dst->off, len, 0);
-+		ret = -ETIMEDOUT;
-+		goto error_unmap;
-+	} else if (status != DMA_COMPLETE &&
-+		   !(dma_has_cap(DMA_COMPLETION_NO_ORDER, dev->cap_mask) &&
-+		     status == DMA_OUT_OF_ORDER)) {
-+		result(status == DMA_ERROR ? "completion error status" :
-+		       "completion busy status",
-+		       *total_tests, src->off, dst->off, len, ret);
-+		ret = -EIO;
-+		goto error_unmap;
-+	}
- 
--		if (params->noverify) {
--			verbose_result("test passed", total_tests, src->off,
--				       dst->off, len, 0);
--			continue;
--		}
-+	dmaengine_unmap_put(um);
-+	kfree(srcs);
- 
-+	/* Verify results */
-+	if (!params->noverify) {
- 		start = ktime_get();
--		pr_debug("%s: verifying source buffer...\n", current->comm);
--		error_count = dmatest_verify(src->aligned, 0, src->off,
--				0, PATTERN_SRC, true, is_memset);
-+		error_count = dmatest_verify(src->aligned, 0, src->off, 0,
-+					    PATTERN_SRC, true, is_memset);
- 		error_count += dmatest_verify(src->aligned, src->off,
--				src->off + len, src->off,
--				PATTERN_SRC | PATTERN_COPY, true, is_memset);
-+					     src->off + len, src->off,
-+					     PATTERN_SRC | PATTERN_COPY, true, is_memset);
- 		error_count += dmatest_verify(src->aligned, src->off + len,
--				buf_size, src->off + len,
--				PATTERN_SRC, true, is_memset);
--
--		pr_debug("%s: verifying dest buffer...\n", current->comm);
--		error_count += dmatest_verify(dst->aligned, 0, dst->off,
--				0, PATTERN_DST, false, is_memset);
--
-+					     buf_size, src->off + len, PATTERN_SRC, true, is_memset);
-+		error_count += dmatest_verify(dst->aligned, 0, dst->off, 0,
-+					     PATTERN_DST, false, is_memset);
- 		error_count += dmatest_verify(dst->aligned, dst->off,
--				dst->off + len, src->off,
--				PATTERN_SRC | PATTERN_COPY, false, is_memset);
--
-+					     dst->off + len, src->off,
-+					     PATTERN_SRC | PATTERN_COPY, false, is_memset);
- 		error_count += dmatest_verify(dst->aligned, dst->off + len,
--				buf_size, dst->off + len,
--				PATTERN_DST, false, is_memset);
-+					     buf_size, dst->off + len, PATTERN_DST, false, is_memset);
- 
- 		diff = ktime_sub(ktime_get(), start);
--		comparetime = ktime_add(comparetime, diff);
-+		*comparetime = ktime_add(*comparetime, diff);
- 
- 		if (error_count) {
--			result("data error", total_tests, src->off, dst->off,
--			       len, error_count);
--			failed_tests++;
-+			result("data error", *total_tests, src->off,
-+			       dst->off, len, error_count);
-+			(*failed_tests)++;
-+			ret = -EIO;
- 		} else {
--			verbose_result("test passed", total_tests, src->off,
-+			verbose_result("test passed", *total_tests, src->off,
- 				       dst->off, len, 0);
-+			ret = 0;
- 		}
-+	} else {
-+		verbose_result("test passed", *total_tests, src->off, dst->off, len, 0);
-+		ret = 0;
-+	}
- 
--		continue;
-+	return ret;
- 
--error_unmap_continue:
--		dmaengine_unmap_put(um);
--		failed_tests++;
-+error_unmap:
-+	dmaengine_unmap_put(um);
-+	kfree(srcs);
-+	(*failed_tests)++;
-+	return ret;
++	streaming_runtime_us = ktime_to_us(thread->streaming_runtime);
++	streaming_iops = dmatest_persec(streaming_runtime_us, thread->streaming_tests);
++	streaming_kbs = dmatest_KBs(streaming_runtime_us, thread->streaming_total_len);
++
++	pr_info("=== %s: DMA Test Results ===\n", current->comm);
++
++	/* Streaming DMA statistics */
++	pr_info("%s: STREAMINMG DMA: %u tests, %u failures\n",
++		current->comm, thread->streaming_tests, thread->streaming_failures);
++	pr_info("%s: STREAMING DMA: %llu.%02llu iops, %llu KB/s, %lld us total\n",
++		current->comm, FIXPT_TO_INT(streaming_iops), FIXPT_GET_FRAC(streaming_iops),
++		streaming_kbs, streaming_runtime_us);
++
++	pr_info("=== %s: End Results ===\n", current->comm);
++	mutex_unlock(&stats_mutex);
 +}
 +
-+/*
-+ * This function repeatedly tests DMA transfers of various lengths and
-+ * offsets for a given operation type until it is told to exit by
-+ * kthread_stop(). There may be multiple threads running this function
-+ * in parallel for a single channel, and there may be multiple channels
-+ * being tested in parallel.
-+ *
-+ * Before each test, the source and destination buffer is initialized
-+ * with a known pattern. This pattern is different depending on
-+ * whether it's in an area which is supposed to be copied or
-+ * overwritten, and different in the source and destination buffers.
-+ * So if the DMA engine doesn't copy exactly what we tell it to copy,
-+ * we'll notice.
-+ */
-+static int dmatest_func(void *data)
-+{
-+	struct dmatest_thread *thread = data;
-+	struct dmatest_info *info = thread->info;
-+	struct dmatest_params *params = &info->params;
-+	struct dma_chan *chan = thread->chan;
-+	unsigned int buf_size;
-+	u8 align;
-+	bool is_memset;
-+	unsigned int failed_tests = 0;
-+	unsigned int total_tests = 0;
-+	ktime_t ktime, start;
-+	ktime_t filltime = 0;
-+	ktime_t comparetime = 0;
-+	s64 runtime = 0;
-+	unsigned long long total_len = 0;
-+	unsigned long long iops = 0;
-+	int ret;
+ /*
+  * This function repeatedly tests DMA transfers of various lengths and
+  * offsets for a given operation type until it is told to exit by
+@@ -921,20 +953,22 @@ static int dmatest_func(void *data)
+ 	unsigned int buf_size;
+ 	u8 align;
+ 	bool is_memset;
+-	unsigned int failed_tests = 0;
+-	unsigned int total_tests = 0;
+-	ktime_t ktime, start;
++	unsigned int total_iterations = 0;
++	ktime_t start_time, streaming_start;
+ 	ktime_t filltime = 0;
+ 	ktime_t comparetime = 0;
+-	s64 runtime = 0;
+-	unsigned long long total_len = 0;
+-	unsigned long long iops = 0;
+ 	int ret;
+ 
+ 	set_freezable();
+ 	smp_rmb();
+ 	thread->pending = false;
+ 
++	/* Initialize statistics */
++	thread->streaming_tests = 0;
++	thread->streaming_failures = 0;
++	thread->streaming_total_len = 0;
++	thread->streaming_runtime = 0;
 +
-+	set_freezable();
-+	smp_rmb();
-+	thread->pending = false;
+ 	/* Setup test parameters and allocate buffers */
+ 	ret = dmatest_setup_test(thread, &buf_size, &align, &is_memset);
+ 	if (ret)
+@@ -942,34 +976,39 @@ static int dmatest_func(void *data)
+ 
+ 	set_user_nice(current, 10);
+ 
+-	ktime = start = ktime_get();
++	start_time = ktime_get();
+ 	while (!(kthread_should_stop() ||
+-		(params->iterations && total_tests >= params->iterations))) {
++		(params->iterations && total_iterations >= params->iterations))) {
+ 
++		/* Test streaming DMA path */
++		streaming_start = ktime_get();
+ 		ret = dmatest_do_dma_test(thread, buf_size, align, is_memset,
+-					  &total_tests, &failed_tests, &total_len,
++					  &thread->streaming_tests, &thread->streaming_failures,
++					  &thread->streaming_total_len,
+ 					  &filltime, &comparetime);
++		thread->streaming_runtime = ktime_add(thread->streaming_runtime,
++						    ktime_sub(ktime_get(), streaming_start));
+ 		if (ret < 0)
+ 			break;
 +
-+	/* Setup test parameters and allocate buffers */
-+	ret = dmatest_setup_test(thread, &buf_size, &align, &is_memset);
-+	if (ret)
-+		goto err_thread_type;
-+
-+	set_user_nice(current, 10);
-+
-+	ktime = start = ktime_get();
-+	while (!(kthread_should_stop() ||
-+		(params->iterations && total_tests >= params->iterations))) {
-+
-+		ret = dmatest_do_dma_test(thread, buf_size, align, is_memset,
-+					  &total_tests, &failed_tests, &total_len,
-+					  &filltime, &comparetime);
-+		if (ret < 0)
-+			break;
++		total_iterations++;
  	}
-+
- 	ktime = ktime_sub(ktime_get(), ktime);
- 	ktime = ktime_sub(ktime, comparetime);
- 	ktime = ktime_sub(ktime, filltime);
- 	runtime = ktime_to_us(ktime);
+ 
+-	ktime = ktime_sub(ktime_get(), ktime);
+-	ktime = ktime_sub(ktime, comparetime);
+-	ktime = ktime_sub(ktime, filltime);
+-	runtime = ktime_to_us(ktime);
++	/* Subtract fill and compare time from both paths */
++	thread->streaming_runtime = ktime_sub(thread->streaming_runtime,
++					   ktime_divns(filltime, 2));
++	thread->streaming_runtime = ktime_sub(thread->streaming_runtime,
++					   ktime_divns(comparetime, 2));
  
  	ret = 0;
--	kfree(dma_pq);
--err_srcs_array:
--	kfree(srcs);
--err_dst:
--	dmatest_free_test_data(dst);
--err_src:
--	dmatest_free_test_data(src);
--err_free_coefs:
--	kfree(pq_coefs);
-+	dmatest_cleanup_test(thread);
-+
+ 	dmatest_cleanup_test(thread);
+ 
  err_thread_type:
- 	iops = dmatest_persec(runtime, total_tests);
- 	pr_info("%s: summary %u tests, %u failures %llu.%02llu iops %llu KB/s (%d)\n",
+-	iops = dmatest_persec(runtime, total_tests);
+-	pr_info("%s: summary %u tests, %u failures %llu.%02llu iops %llu KB/s (%d)\n",
+-		current->comm, total_tests, failed_tests,
+-		FIXPT_TO_INT(iops), FIXPT_GET_FRAC(iops),
+-		dmatest_KBs(runtime, total_len), ret);
++	/* Print detailed statistics */
++	dmatest_print_detailed_stats(thread);
+ 
+ 	/* terminate all transfers on specified channels */
+-	if (ret || failed_tests)
++	if (ret || (thread->streaming_failures))
+ 		dmaengine_terminate_sync(chan);
+ 
+ 	thread->done = true;
 -- 
 2.47.2
 

@@ -1,43 +1,43 @@
-Return-Path: <dmaengine+bounces-5219-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5220-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 587D5ABDB73
-	for <lists+dmaengine@lfdr.de>; Tue, 20 May 2025 16:10:58 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A3E70ABDC03
+	for <lists+dmaengine@lfdr.de>; Tue, 20 May 2025 16:19:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9DC1417E8FB
-	for <lists+dmaengine@lfdr.de>; Tue, 20 May 2025 14:04:50 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4A1667B7478
+	for <lists+dmaengine@lfdr.de>; Tue, 20 May 2025 14:14:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37019243367;
-	Tue, 20 May 2025 14:04:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 877BE248868;
+	Tue, 20 May 2025 14:12:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="b1Wq9lmp"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="2bWcCX7m"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0186F22DF87;
-	Tue, 20 May 2025 14:04:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D404247DEA;
+	Tue, 20 May 2025 14:12:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747749886; cv=none; b=Jn30cVJhlQ0rm+NfHc6N4dv+Fg/EdhVYIa0+8snuOg+DT2ur5x3l2m8QoBvgyHl8whTZI5OcsWQbHsE5bUdqGgRfwa88Y2ZXHtOnSx9FQjjgVbP+v1zEjTuUjJfCkk2KFozC+6lCJI2omTh36wR0f7eeC8ehgKVwCkZAiLVBGSc=
+	t=1747750331; cv=none; b=QOe0muV+jGIL8Suc639VjdzpZuQf8AnQhhYC2BqoZl1h6Azi7Zfh+brTh5GrBWcVxdNZ3BVTaFcKjS3tEAzvkxB6NSqVKPNuRWstOQgbQzolYYMl6YD0HCrxabq4m0y7P0faCTRiBcSILdxcT5tRd2iZiyuxgakxgpXtUeq1yPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747749886; c=relaxed/simple;
-	bh=0SLkKG1eEqu9XI5Q/lghF+flNTA4tjofVYEFIukv30c=;
+	s=arc-20240116; t=1747750331; c=relaxed/simple;
+	bh=m9Q8UX9UqdvcrrzUgfQq0Y0JmYWpzTblGg4mWqOV2XI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ih9WfFDifS19ScRk/px12EoEoKTYaXhvGVtgU9L7Wp0Z31Cawbo1wRGWfyKkTicRGJVU3sf4Qa3Dkv4aah+PZRLM1JOaV1Y6uTlmWKiup9uWlSoGMnBzkuPtw7MKNnj2Rk0crvLlRNLH1rCtBYk8gnjedZcZZ4Ge3sRonSzuTFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=b1Wq9lmp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D73CC4CEE9;
-	Tue, 20 May 2025 14:04:45 +0000 (UTC)
+	 MIME-Version; b=k8vAj2tHCxh5NR676vVUQFFwydhDp64N7D8XmYjFD86htNtkFDTU7vhTPJU5C8WKPEWChUP7SsEjJt5NrNiiR056cQh2wVXEd/oqpmyfxMZKJKma43ajYwSb7QC4geTTXUHnkKmenZ87HqPraKEEMXGcqNENkJgbZGAnjoluw+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=2bWcCX7m; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6D52C4CEE9;
+	Tue, 20 May 2025 14:12:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1747749885;
-	bh=0SLkKG1eEqu9XI5Q/lghF+flNTA4tjofVYEFIukv30c=;
+	s=korg; t=1747750331;
+	bh=m9Q8UX9UqdvcrrzUgfQq0Y0JmYWpzTblGg4mWqOV2XI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=b1Wq9lmp52VwbIPfqnbPsVGYUR66zjNtd/KjeJPy2LjaJejvgLrpzLt6QW0pxkq5t
-	 e7K49POGEpdWoV6jCK+UniLCoN9m9ovUwRaHK60BN74n01SN+SkOxDjTldFC9KAjvx
-	 9oCNlgS2SkAKfW753lgKLxOr0NsBPcAvy2Ie8HSU=
+	b=2bWcCX7mqW0Xiar7qTvlL2e5VCNnsHUpAY3l/VrVyUyrAuKpn+NLD9Kc/62H7OPG3
+	 clRpWXyO+WAHHbcDODhM3jtP6P4tTxDgxU3zB+Ve00Zqr39NshAHirbad0vMAO63UV
+	 XyGe6gWLQCfuIiHs+8+iGbg61oRr+hfl97JWu4/k=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: stable@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,12 +47,12 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Vinod Koul <vkoul@kernel.org>,
 	dmaengine@vger.kernel.org,
 	Ronald Wahl <ronald.wahl@legrand.com>
-Subject: [PATCH 6.6 092/117] dmaengine: ti: k3-udma: Add missing locking
-Date: Tue, 20 May 2025 15:50:57 +0200
-Message-ID: <20250520125807.640409243@linuxfoundation.org>
+Subject: [PATCH 6.12 118/143] dmaengine: ti: k3-udma: Add missing locking
+Date: Tue, 20 May 2025 15:51:13 +0200
+Message-ID: <20250520125814.670560098@linuxfoundation.org>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250520125803.981048184@linuxfoundation.org>
-References: <20250520125803.981048184@linuxfoundation.org>
+In-Reply-To: <20250520125810.036375422@linuxfoundation.org>
+References: <20250520125810.036375422@linuxfoundation.org>
 User-Agent: quilt/0.68
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -64,7 +64,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-6.6-stable review patch.  If anyone has any objections, please let me know.
+6.12-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 

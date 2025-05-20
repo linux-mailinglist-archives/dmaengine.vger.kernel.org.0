@@ -1,162 +1,127 @@
-Return-Path: <dmaengine+bounces-5221-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5223-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 057C0ABDC9E
-	for <lists+dmaengine@lfdr.de>; Tue, 20 May 2025 16:26:05 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E647AABE754
+	for <lists+dmaengine@lfdr.de>; Wed, 21 May 2025 00:39:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CD2CC1BA303D
-	for <lists+dmaengine@lfdr.de>; Tue, 20 May 2025 14:25:10 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B3B9E7AD321
+	for <lists+dmaengine@lfdr.de>; Tue, 20 May 2025 22:38:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E41A2517B5;
-	Tue, 20 May 2025 14:19:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFCFC2609F2;
+	Tue, 20 May 2025 22:39:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="dhqLAISW"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iJKwUAVL"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22E9D2517AC;
-	Tue, 20 May 2025 14:19:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56253256C95;
+	Tue, 20 May 2025 22:39:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747750799; cv=none; b=QPC9sOpsIhoAw0lJxzpw0zhLi2+EIKPsIeGPzkegMmk+iFyk1FYglBwK+HQKhH99XbIxQbYZnBCviMvtSvjjJ1qTvyagnChOqdkjw197X5psE1GCXt4kpK1/d+qvPs4Tc6s9WcdOATTXq/F55hQNUKA0w6Gwp3uHJkc7mYDZFeM=
+	t=1747780762; cv=none; b=GzwHGpV4d/sMURgAk9/ALA1B59IE9C1uLjZy1VEpf1OOcY0ycbHVdVBEF5MC4bNemlYFx7T+Z2rFLQO/oIHcSEhgDk2nD4Fob+bKKl0+7Jy4GxMoTWC3WaeTh1jTADQ5FpBK6jFUViBJxbh6pahSFrOYpGUiB2iXinb79a6j8SA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747750799; c=relaxed/simple;
-	bh=VbzGW9/v/gEC11cqHCF2STw270qXZuaO6zKwvfin6II=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CHD+wXPirzU6lSJJExbMb7P3xByegA4/NAVr5N5BNuCqMx3DN9JR9XFNFzSWJpmpGR4VVgq6AOloHFXS7/8wZmipjKI5jqMZ4UnDooIe3Ul8xZXLMJomt4Eleqm+EU/NoqWUx0JzRY/lPDFHO64vfRYJb1xVxJFjP43gslQm+lk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=dhqLAISW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 869D8C4CEE9;
-	Tue, 20 May 2025 14:19:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1747750799;
-	bh=VbzGW9/v/gEC11cqHCF2STw270qXZuaO6zKwvfin6II=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dhqLAISWg38lRud9mQPSETo0dWmKwxFbVh8Qjccezjii8ewp816IsKmxz3rPd8K/O
-	 Wzy2pwLSQCRWFrKt9Hp+Qd8NUgO2lP6KP8I0s9oLrDUcgszS7yFscNSpDOHzFiMJLZ
-	 nY5pbIddVb/SeAMXrJsplo1vIaoD0g9ToVVigxBc=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Vinod Koul <vkoul@kernel.org>,
+	s=arc-20240116; t=1747780762; c=relaxed/simple;
+	bh=KJLJl5G4ZEfIrYP7fvFanGybKGNHrPy/BUDBhJeSwyc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DI4maeE0xOGGs+bHhetadQe5RT20BZ5uOxoQmorBa9+h2TssHc/dYqOWd6hLonnUht4enXqdyh95p4IGtvCTyxOFlI4F/faHiVMBdkMzx2Kj1n3Ip220QL/1AH3AttWbKTMuwPjBDHTwD1pEk/q2JhSAYvB2kPrYU/xFMO300fI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=iJKwUAVL; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=h5biAlmqEKw4A5Scse4dJjnS3AKbz0TdTPBvhrSpi/E=; b=iJKwUAVLeSAm4yCglWJSEzEVhC
+	l30/DXblP1bcU2a9tex2L/L8OcfB0COTH7jVVrt2/EQMIXxB2NbzNShoBO4JDAwBNdgS+NP1bANm5
+	ewy0Cqs9WgW7SGTAAhmXXcTw9Ctsemu/GX+b/LKCEIoOc9MVeoXGbY/yd3Ls6/SSZV9y34pPpyQT6
+	P/HBbNXs7f5fCL+mSaS77Hf6GQHomqfG5XDIGnjoo13T2FDOuPfEZ3fSHdkWjGA5D+EKi7702C+lG
+	R+U6pxygAvhl0DVFHXe8rchZJW9x9RHLU6VEAbYpoHw0qmEzcE2hyjsUxL1olPZoFuzhV8qnRARzC
+	hKM2f7+A==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uHVcA-0000000EIM8-0So0;
+	Tue, 20 May 2025 22:39:14 +0000
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: vkoul@kernel.org,
+	chenxiang66@hisilicon.com,
+	m.szyprowski@samsung.com,
+	robin.murphy@arm.com,
+	leon@kernel.org,
+	jgg@nvidia.com,
+	alex.williamson@redhat.com,
+	joel.granados@kernel.org
+Cc: iommu@lists.linux.dev,
 	dmaengine@vger.kernel.org,
-	Ronald Wahl <ronald.wahl@legrand.com>
-Subject: [PATCH 6.14 125/145] dmaengine: ti: k3-udma: Add missing locking
-Date: Tue, 20 May 2025 15:51:35 +0200
-Message-ID: <20250520125815.443772349@linuxfoundation.org>
+	linux-block@vger.kernel.org,
+	gost.dev@samsung.com,
+	mcgrof@kernel.org
+Subject: [PATCH 0/6] dma: fake-dma and IOVA tests
+Date: Tue, 20 May 2025 15:39:07 -0700
+Message-ID: <20250520223913.3407136-1-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250520125810.535475500@linuxfoundation.org>
-References: <20250520125810.535475500@linuxfoundation.org>
-User-Agent: quilt/0.68
-X-stable: review
-X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-6.14-stable review patch.  If anyone has any objections, please let me know.
+We don't seem to have unit tests for the DMA IOVA API, so I figured
+we should add some so to ensure we don't regress moving forward, and it allows
+us to extend these later. Its best to just extend existing tests though. I've
+found two tests so I've extended them as part of this patchset:
 
-------------------
+  - drivers/dma/dmatest.c
+  - kernel/dma/map_benchmark.c
 
-From: Ronald Wahl <ronald.wahl@legrand.com>
+However running the dmatest requires some old x86 emulation or some
+non-upstream qemu patches for intel IOAT a q35 system. This make this
+easier by providing a simple in-kernel fake-dma controller to let you test
+run all dmatests on most systems. The only issue I found with that was not
+being able to get the platform device through an IOMMU for DMA. If folks have
+an idea of how to make it easy for a platform device to get an IOMMU for DMA
+it would make it easier to allow us to leverage the existing dmatest for
+IOVA as well. I only tried briefly with virtio and vfio_iommu_type1, but gave
+up fast. Not sure if its easy to later allow a platform device like this
+one to leverage it to make it easier for testing.
 
-commit fca280992af8c2fbd511bc43f65abb4a17363f2f upstream.
+The kernel/dma/map_benchmark.c test is extended as well, for that I was
+able to add follow the instructions on the first commit from that test,
+by unbinding a device and attaching it to the map benchmark.
 
-Recent kernels complain about a missing lock in k3-udma.c when the lock
-validator is enabled:
+I tried twiddle a mocked IOMMU with iommufd on a q35 guest, but alas,
+that just didn't work as I'd hope, ie, nothing, and so this is the best
+I have for now to help test IOVA DMA API on a virtualized setup.
 
-[    4.128073] WARNING: CPU: 0 PID: 746 at drivers/dma/ti/../virt-dma.h:169 udma_start.isra.0+0x34/0x238
-[    4.137352] CPU: 0 UID: 0 PID: 746 Comm: kworker/0:3 Not tainted 6.12.9-arm64 #28
-[    4.144867] Hardware name: pp-v12 (DT)
-[    4.148648] Workqueue: events udma_check_tx_completion
-[    4.153841] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[    4.160834] pc : udma_start.isra.0+0x34/0x238
-[    4.165227] lr : udma_start.isra.0+0x30/0x238
-[    4.169618] sp : ffffffc083cabcf0
-[    4.172963] x29: ffffffc083cabcf0 x28: 0000000000000000 x27: ffffff800001b005
-[    4.180167] x26: ffffffc0812f0000 x25: 0000000000000000 x24: 0000000000000000
-[    4.187370] x23: 0000000000000001 x22: 00000000e21eabe9 x21: ffffff8000fa0670
-[    4.194571] x20: ffffff8001b6bf00 x19: ffffff8000fa0430 x18: ffffffc083b95030
-[    4.201773] x17: 0000000000000000 x16: 00000000f0000000 x15: 0000000000000048
-[    4.208976] x14: 0000000000000048 x13: 0000000000000000 x12: 0000000000000001
-[    4.216179] x11: ffffffc08151a240 x10: 0000000000003ea1 x9 : ffffffc08046ab68
-[    4.223381] x8 : ffffffc083cabac0 x7 : ffffffc081df3718 x6 : 0000000000029fc8
-[    4.230583] x5 : ffffffc0817ee6d8 x4 : 0000000000000bc0 x3 : 0000000000000000
-[    4.237784] x2 : 0000000000000000 x1 : 00000000001fffff x0 : 0000000000000000
-[    4.244986] Call trace:
-[    4.247463]  udma_start.isra.0+0x34/0x238
-[    4.251509]  udma_check_tx_completion+0xd0/0xdc
-[    4.256076]  process_one_work+0x244/0x3fc
-[    4.260129]  process_scheduled_works+0x6c/0x74
-[    4.264610]  worker_thread+0x150/0x1dc
-[    4.268398]  kthread+0xd8/0xe8
-[    4.271492]  ret_from_fork+0x10/0x20
-[    4.275107] irq event stamp: 220
-[    4.278363] hardirqs last  enabled at (219): [<ffffffc080a27c7c>] _raw_spin_unlock_irq+0x38/0x50
-[    4.287183] hardirqs last disabled at (220): [<ffffffc080a1c154>] el1_dbg+0x24/0x50
-[    4.294879] softirqs last  enabled at (182): [<ffffffc080037e68>] handle_softirqs+0x1c0/0x3cc
-[    4.303437] softirqs last disabled at (177): [<ffffffc080010170>] __do_softirq+0x1c/0x28
-[    4.311559] ---[ end trace 0000000000000000 ]---
+Let me know if others have other recomendations.
 
-This commit adds the missing locking.
+The hope is to get a CI eventually going to ensure these don't regress.
 
-Fixes: 25dcb5dd7b7c ("dmaengine: ti: New driver for K3 UDMA")
-Cc: Peter Ujfalusi <peter.ujfalusi@gmail.com>
-Cc: Vignesh Raghavendra <vigneshr@ti.com>
-Cc: Vinod Koul <vkoul@kernel.org>
-Cc: dmaengine@vger.kernel.org
-Cc: stable@vger.kernel.org
-Signed-off-by: Ronald Wahl <ronald.wahl@legrand.com>
-Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
-Link: https://lore.kernel.org/r/20250414173113.80677-1-rwahl@gmx.de
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/dma/ti/k3-udma.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+Luis Chamberlain (6):
+  fake-dma: add fake dma engine driver
+  dmatest: split dmatest_func() into helpers
+  dmatest: move printing to its own routine
+  dmatest: add IOVA tests
+  dma-mapping: benchmark: move validation parameters into a helper
+  dma-mapping: benchmark: add IOVA support
 
---- a/drivers/dma/ti/k3-udma.c
-+++ b/drivers/dma/ti/k3-udma.c
-@@ -1091,8 +1091,11 @@ static void udma_check_tx_completion(str
- 	u32 residue_diff;
- 	ktime_t time_diff;
- 	unsigned long delay;
-+	unsigned long flags;
- 
- 	while (1) {
-+		spin_lock_irqsave(&uc->vc.lock, flags);
-+
- 		if (uc->desc) {
- 			/* Get previous residue and time stamp */
- 			residue_diff = uc->tx_drain.residue;
-@@ -1127,6 +1130,8 @@ static void udma_check_tx_completion(str
- 				break;
- 			}
- 
-+			spin_unlock_irqrestore(&uc->vc.lock, flags);
-+
- 			usleep_range(ktime_to_us(delay),
- 				     ktime_to_us(delay) + 10);
- 			continue;
-@@ -1143,6 +1148,8 @@ static void udma_check_tx_completion(str
- 
- 		break;
- 	}
-+
-+	spin_unlock_irqrestore(&uc->vc.lock, flags);
- }
- 
- static irqreturn_t udma_ring_irq_handler(int irq, void *data)
+ drivers/dma/Kconfig                           |  11 +
+ drivers/dma/Makefile                          |   1 +
+ drivers/dma/dmatest.c                         | 795 ++++++++++++------
+ drivers/dma/fake-dma.c                        | 718 ++++++++++++++++
+ include/linux/map_benchmark.h                 |  11 +
+ kernel/dma/Kconfig                            |   4 +-
+ kernel/dma/map_benchmark.c                    | 512 +++++++++--
+ .../testing/selftests/dma/dma_map_benchmark.c | 145 +++-
+ 8 files changed, 1864 insertions(+), 333 deletions(-)
+ create mode 100644 drivers/dma/fake-dma.c
 
+-- 
+2.47.2
 
 

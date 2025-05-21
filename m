@@ -1,221 +1,868 @@
-Return-Path: <dmaengine+bounces-5233-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5234-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 868E6ABF49A
-	for <lists+dmaengine@lfdr.de>; Wed, 21 May 2025 14:45:17 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1D198ABF79E
+	for <lists+dmaengine@lfdr.de>; Wed, 21 May 2025 16:20:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 395B416D709
-	for <lists+dmaengine@lfdr.de>; Wed, 21 May 2025 12:45:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4CA533A1FAD
+	for <lists+dmaengine@lfdr.de>; Wed, 21 May 2025 14:20:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E16C2676CE;
-	Wed, 21 May 2025 12:45:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="IdLtfyzm"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15ECF1A0BE0;
+	Wed, 21 May 2025 14:20:21 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5348A266B74
-	for <dmaengine@vger.kernel.org>; Wed, 21 May 2025 12:45:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A8611519BA;
+	Wed, 21 May 2025 14:20:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747831512; cv=none; b=GdEXnhOOJqTo97RnzxpymY5hF0sZptSa5DIEfQLbipuEuximPjm85bNIZx2Vayukw2T/94w2Oh8HhoRUi8eGGhJ78WmWEfxboWXxPs4g9qV3jweNjnXchdiS58+BsZlKfIb+oAA4eUQGaSdHmQCMd3lrAvO8o3Z55Fxe/v9DwOA=
+	t=1747837221; cv=none; b=FYam5bUD6cO/HUREiteZXVW/huhrX2KwB9UhVeJP5E6/Rxk5RLyIJqXL6+pywKUuhsX5/goaUZzppw/Fcd65WMglP8sAXbKhKMFBtyVSwWxGlYPGlhmZLQa6+I5ls3MVqaPl0qvfWcjDGYXvTWD3PElWnp7GMxbZdqC25z8K6JE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747831512; c=relaxed/simple;
-	bh=zkGUkrSlpCDvrhHcI1g4oFe3ljg20Lkj9XiFeqwuju4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B9JinmUKtouaUYRPBoE2o7HA9OnUlpKL5VGnELtAaE9dDB5NHy0+BeM4/DNiXvN9CHgxHo25GnTA4bUTqyPTt4ZzLvuD38imIxGj+mVTckyPszBCQbd4N64nwgYEmobB/5XIHwWqHkv6p0O8Jw25/Oo9FIdpbyde6/E+mNMxrAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=IdLtfyzm; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L9XJfO006603
-	for <dmaengine@vger.kernel.org>; Wed, 21 May 2025 12:45:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ks52ly5XzSYN1dVT8m4NLznvkKylPvB/qklENFGmQ+s=; b=IdLtfyzmj4AkBBcd
-	pOsyTHt2WNba+cTJwRZHEVuXYR+0O+I1Sr5W/TCKfs9o6qFw2fvhKbTBZXvKtDag
-	/hNxDYBjGD2CPh4/KDEBmc0nbU4jf/su49/+iaSwa2VOO1BeyxQOQkwpPTKE1AN5
-	9JHzIPEd3XuQAzdZtvXAU7bXtHtamGCvjkmVr3jeI80PWOKSqX7lTFR0VyYLhL/c
-	NLMSoz7DNf7BCtISBaoJqunJ1pAVv3nz52kDXW0bP+GmbeWesLNRJ/MfLkNgdsyc
-	jsNK3TJ/J7oCI7uHeuz8aa2DWbNVeIaB2DM+vc8APWxbuWx9it9S+LXWyzgP0zTl
-	06WXEw==
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf0k05g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <dmaengine@vger.kernel.org>; Wed, 21 May 2025 12:45:09 +0000 (GMT)
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6f8e1d900e5so43726256d6.2
-        for <dmaengine@vger.kernel.org>; Wed, 21 May 2025 05:45:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747831508; x=1748436308;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ks52ly5XzSYN1dVT8m4NLznvkKylPvB/qklENFGmQ+s=;
-        b=FjADcrmgzSYEpC5AxWU4gglPtmblHDRVMyYNsIEOBSZ9f7y4y7LalfBgFzA0nWg6dy
-         /5/tOL18+MigwVMCBOw+VX9/PqEcrxloAgZ1R1bp9YOVG3cFHlJ9C1sj5xBl1sB/I0zv
-         +cKlIryQua5bAPwip2GI74wIZl5mBldye+mJqlXPpdGyeAUYuHbgTxPvIjEtaLw6+ssX
-         4ZBN0U5qndZMZgMPa+xQQiJCR005BSj6AZ6hr2dHJRRuA3F51lNhW2FBfYhyQXXA+3LE
-         azOMqjV+fmX99YlOao3EAclsvO7ktj6bkPFwKORkuUeI+O0u/JpRgH1Rlce8IiSLQpUI
-         fFEg==
-X-Forwarded-Encrypted: i=1; AJvYcCUiq2dDg5i5GOXQw7CcevIhlBrmH36XHW+DLIlA/Av3L92lRtf9o2o83speqKIvzoPp5DT3cWXF7Qs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzuk5BacxkHsS/ZGYYKyJJoqlKXmHKR+HKc6iSFJopTwe2+n+nR
-	yvw5f21hLAHBEhBJ5RgL/pA5Y+Um29c5THC4A7NGbkMwBdf5TSqlk3uszEZXUd1l8YP3+hk0vVB
-	7JWZV3rP86AKcacduI4DWb9cJJY79UoshhZ1sqanx5khsfYYsbWJWl7LzX/zaaxE=
-X-Gm-Gg: ASbGncs6UrAfewYXh4RCB+g3sZ4jpadDMtRR6PqNsthUx7mRbPqzrwf0VcE9pqaIVAk
-	V0DLgKFb6cN9vBGVTHpAN2/YE/GYrXxeBOd1uqGSie+yxDealGrpAs/LtwASmDawOXcYG46jG7S
-	eyciAR6ZkB7VndhQ0324cwmfjZcMblUmRDYlWFmIwUOVFWMpgoseO+BbsM647kd0O3NvBf/lCPz
-	vX9gRZPtSU00MGjRfdMzT+GVjXs5EjrymLq4av1PlAyZ69dEty4xU7KCvU2euGdFNyoSvUf4Pkx
-	H2wWMA6aVVwUEEeJjhzpnkmCOMY4VFEb4TnuJBBYeQ50ja3wObP2rdJA6qBrPy7uY36ayYvijOM
-	=
-X-Received: by 2002:a05:6214:14ec:b0:6f8:c23c:5257 with SMTP id 6a1803df08f44-6f8c23c82b2mr198868596d6.11.1747831507824;
-        Wed, 21 May 2025 05:45:07 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEShz+g9YiDU5OL+/RiZ6SU1Z6wT5YO4aHSX5TPMnkQqGJbcSQrWsL19HoCgqDtp3hVG17QAA==
-X-Received: by 2002:a05:6214:14ec:b0:6f8:c23c:5257 with SMTP id 6a1803df08f44-6f8c23c82b2mr198868336d6.11.1747831507432;
-        Wed, 21 May 2025 05:45:07 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e7017e6esm2826955e87.136.2025.05.21.05.45.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 05:45:06 -0700 (PDT)
-Date: Wed, 21 May 2025 15:45:04 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
-Cc: Vinod Koul <vkoul@kernel.org>,
-        Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
-        Viken Dadhaniya <quic_vdadhani@quicinc.com>,
-        Andi Shyti <andi.shyti@kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, quic_vtanuku@quicinc.com
-Subject: Re: [PATCH v6 2/2] i2c: i2c-qcom-geni: Add Block event interrupt
- support
-Message-ID: <w6epbao7dwwx65crst6md4uxi3iivkcj55mhr2ko3z5olezhdl@ffam3xif6tmh>
-References: <20250506111844.1726-1-quic_jseerapu@quicinc.com>
- <20250506111844.1726-3-quic_jseerapu@quicinc.com>
- <qizkfszruwcny7f3g3i7cjst342s6ma62k5sgc6pg6yfoti7b3@fo2ssj7jvff2>
- <3aa92123-e43e-4bf5-917a-2db6f1516671@quicinc.com>
- <a98f0f1a-d814-4c6a-9235-918091399e4b@oss.qualcomm.com>
- <ba7559c8-36b6-4628-8fc4-26121f00abd5@quicinc.com>
+	s=arc-20240116; t=1747837221; c=relaxed/simple;
+	bh=enOgTFsj4qfmHpApxbYk9plf8UNjdopTlRa1o7klXu4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qxaiAEbFLnZtiWLAEYjVYPA8HS0qo/CtoJFeTa/Fl+a865lSV+Q6isleEIaJO/duAfTTALTYejHStCnoY9RBTx33EJYEWysx++xtLPj55ZG8N3vaaldAPmmMZtmvi71De37js0c1IkSjiNcmFOO9MdjFRi9gjeaaC9HQodzlnx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BF11E1515;
+	Wed, 21 May 2025 07:20:01 -0700 (PDT)
+Received: from [10.57.64.80] (unknown [10.57.64.80])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 522EC3F5A1;
+	Wed, 21 May 2025 07:20:13 -0700 (PDT)
+Message-ID: <e3b98f16-2b9f-4cc1-8a54-29c6dfee918f@arm.com>
+Date: Wed, 21 May 2025 15:20:11 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ba7559c8-36b6-4628-8fc4-26121f00abd5@quicinc.com>
-X-Proofpoint-GUID: 2bav3HRSOkbb6owE19F9_13BcYcyVd9B
-X-Authority-Analysis: v=2.4 cv=J/Sq7BnS c=1 sm=1 tr=0 ts=682dcad5 cx=c_pps
- a=UgVkIMxJMSkC9lv97toC5g==:117 a=xqWC_Br6kY4A:10 a=8nJEP1OIZ-IA:10
- a=dt9VzEwgFbYA:10 a=O67JBuyAYGrhvE3k4OkA:9 a=3ZKOabzyN94A:10
- a=wPNLvfGTeEIA:10 a=1HOtulTD9v-eNWfpl4qZ:22
-X-Proofpoint-ORIG-GUID: 2bav3HRSOkbb6owE19F9_13BcYcyVd9B
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDEyMyBTYWx0ZWRfXxWbbQ4vfXaHp
- npT+YoKQ97yxtTrPuHvnVVpffuay/qldvpWHDWhDwDWY356b6z5w3IV4i6JfGbIY8whfHhiC+Uh
- 9R6a2EcVtLt0DGflewycbg4DFG5QQjOT9FTb8j6kDf0mddakmt11jPqbq7T8/RkogWD8+sdWLXM
- v/3Y/MeFbkxFOwUNFNjukdUG0f4vDcvMIGIpN/q3KXo59G9SqYEEEWEPAINHnRk8bAYly29sRWh
- VUzvGMM+VRZzD+7VVzjYR8pId4eBS2pfv38PKRDZRltwa3b8LWUdRpK1xFsnDiiJw1Y5k2Hfc1I
- VqM0Jh4OZus7YzWvK2Jpzc9LGwet2hriAUE0H9EtGzNYpLWTTUOrRJ43G2gq/XadKGAFWY+EV8O
- 0R3lwq1QQ9aULyTmSX2ig19InVqvbRji5y3WSYAAc43PJs06gE9z7MF3oVU70jnr7N8lhPQh
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-21_04,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 clxscore=1015 mlxlogscore=999 suspectscore=0 spamscore=0
- priorityscore=1501 bulkscore=0 phishscore=0 impostorscore=0
- lowpriorityscore=0 malwarescore=0 adultscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505160000 definitions=main-2505210123
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/6] fake-dma: add fake dma engine driver
+To: Luis Chamberlain <mcgrof@kernel.org>, vkoul@kernel.org,
+ chenxiang66@hisilicon.com, m.szyprowski@samsung.com, leon@kernel.org,
+ jgg@nvidia.com, alex.williamson@redhat.com, joel.granados@kernel.org
+Cc: iommu@lists.linux.dev, dmaengine@vger.kernel.org,
+ linux-block@vger.kernel.org, gost.dev@samsung.com
+References: <20250520223913.3407136-1-mcgrof@kernel.org>
+ <20250520223913.3407136-2-mcgrof@kernel.org>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20250520223913.3407136-2-mcgrof@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 21, 2025 at 03:58:48PM +0530, Jyothi Kumar Seerapu wrote:
-> 
-> 
-> On 5/9/2025 9:31 PM, Dmitry Baryshkov wrote:
-> > On 09/05/2025 09:18, Jyothi Kumar Seerapu wrote:
-> > > Hi Dimitry, Thanks for providing the review comments.
-> > > 
-> > > On 5/6/2025 5:16 PM, Dmitry Baryshkov wrote:
-> > > > On Tue, May 06, 2025 at 04:48:44PM +0530, Jyothi Kumar Seerapu wrote:
-> > > > > The I2C driver gets an interrupt upon transfer completion.
-> > > > > When handling multiple messages in a single transfer, this
-> > > > > results in N interrupts for N messages, leading to significant
-> > > > > software interrupt latency.
-> > > > > 
-> > > > > To mitigate this latency, utilize Block Event Interrupt (BEI)
-> > > > > mechanism. Enabling BEI instructs the hardware to prevent interrupt
-> > > > > generation and BEI is disabled when an interrupt is necessary.
-> > > > > 
-> > > > > Large I2C transfer can be divided into chunks of 8 messages internally.
-> > > > > Interrupts are not expected for the first 7 message completions, only
-> > > > > the last message triggers an interrupt, indicating the completion of
-> > > > > 8 messages. This BEI mechanism enhances overall transfer efficiency.
-> > > > 
-> > > > Why do you need this complexity? Is it possible to set the
-> > > > DMA_PREP_INTERRUPT flag on the last message in the transfer?
-> > > 
-> > > If i undertsand correctly, the suggestion is to get the single
-> > > intetrrupt for last i2c message only.
-> > > 
-> > > But With this approach, we can't handle large number of i2c messages
-> > > in the transfer.
-> > > 
-> > > In GPI driver, number of max TREs support is harcoded to 64 (#define
-> > > CHAN_TRES   64) and for I2C message, we need Config TRE, GO TRE and
-> > > DMA TREs. So, the avilable TREs are not sufficient to handle all the
-> > > N messages.
-> > 
-> > It sounds like a DMA driver issue. In other words, the DMA driver can
-> > know that it must issue an interrupt before exausting 64 TREs in order
-> > to
-> > 
-> > > 
-> > > Here, the plan is to queue i2c messages (QCOM_I2C_GPI_MAX_NUM_MSGS
-> > > or 'num' incase for less messsages), process and unmap/free upon the
-> > > interrupt based on QCOM_I2C_GPI_NUM_MSGS_PER_IRQ.
-> > 
-> > Why? This is some random value which has no connection with CHAN_TREs.
-> > Also, what if one of the platforms get a 'liter' GPI which supports less
-> > TREs in a single run? Or a super-premium platform which can use 256
-> > TREs? Please don't workaround issues from one driver in another one.
-> 
-> We are trying to utilize the existing CHAN_TRES mentioned in the GPI driver.
-> With the following approach, the GPI hardware can process N number of I2C
-> messages, thereby improving throughput and transfer efficiency.
-> 
-> The main design consideration for using the block event interrupt is as
-> follows:
-> 
-> Allow the hardware to process the TREs (I2C messages), while the software
-> concurrently prepares the next set of TREs to be submitted to the hardware.
-> Once the TREs are processed, they can be freed, enabling the software to
-> queue new TREs. This approach enhances overall optimization.
-> 
-> Please let me know if you have any questions, concerns, or suggestions.
+On 2025-05-20 11:39 pm, Luis Chamberlain wrote:
+> Today on x86_64 q35 guests we can't easily test some of the DMA API
+> with the dmatest out of the box because we lack a DMA engine as the
+> current qemu intel IOT patches are out of tree. This implements a basic
+> dma engine to let us use the dmatest API to expand on it and leverage
+> it on q35 guests.
 
-The question was why do you limit that to QCOM_I2C_GPI_NUM_MSGS_PER_IRQ.
-What is the reason for that limit, etc. If you think about it, The GENI
-/ I2C doesn't impose any limit on the number of messages processed in
-one go (if I understand it correctly). Instead the limit comes from the
-GPI DMA driver. As such, please don't add extra 'handling' to the I2C
-driver. Make GPI DMA driver responsible for saying 'no more for now',
-then I2C driver can setup add an interrupt flag and proceed with
-submitting next messages, etc.
+What does doing so ultimately achieve though? It's clearly not very 
+meaningful to test the performance or functionality of this "dmaengine" 
+itself, which is the main purpose of dmatest. Nor would it be useful for 
+using dmatest as a memory stressor *alongside* a CPU workload, since 
+nobody needs a kernel driver to make another CPU thrash memory. All this 
+fake implementation can really provide is the side-effect of dmatest 
+exercising calls to the DMA mapping API the same way that 
+dma_map_benchmark already does, and, well, dma_map_benchmark is 
+dedicated to exactly that purpose so why not just use it? If there are 
+certain interesting mapping patterns that dmatest happens to do that 
+dma_map_benchmark doesn't, let's improve dma_map_benchmark; if there's a 
+real need for a fake device because some systems have no spare physical 
+devices that are practical to unbind, there's no reason 
+dma_map_benchmark couldn't trivially provide its own either...
 
-I really don't see a reason for additional complicated handling in the
-geni driver that you've implemented. Maybe I misunderstand something. In
-such a case it usually means that you have to explain the design in the
-commit message / in-code comments.
+We clearly cannot validate much actual DMA API functionality without a 
+real DMA device reading/writing data through the mapping itself. All we 
+can do in software at the kernel level is make the calls and maybe check 
+that they return expected values based on assumptions about the backend 
+- at best this could cover SWIOTLB bouncing of data as well (at least in 
+the case of a non-remapped SWIOTLB buffer such that phys_to_virt() on 
+the DMA address doesn't go horribly wrong), but that's effectively still 
+in the CPU domain anyway. Beyond that, there is obviously no value in 
+spending effort on new ways to confirm that a CPU can read data that a 
+CPU has written - we already have a comprehensive test suite for that, 
+it's called "Linux". The fact that an API call returns a DMA address 
+does not and cannot prove that cache coherency management, IOMMU 
+configuration, etc. has all been done correctly, unless it's done for a 
+real device which is then capable of actually observing all those 
+effects by accessing that DMA address itself. A CPU access fundamentally 
+cannot do that.
 
--- 
-With best wishes
-Dmitry
+Thanks,
+Robin.
+
+> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+> ---
+>   drivers/dma/Kconfig    |  11 +
+>   drivers/dma/Makefile   |   1 +
+>   drivers/dma/fake-dma.c | 718 +++++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 730 insertions(+)
+>   create mode 100644 drivers/dma/fake-dma.c
+> 
+> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+> index df2d2dc00a05..716531f2c7e2 100644
+> --- a/drivers/dma/Kconfig
+> +++ b/drivers/dma/Kconfig
+> @@ -140,6 +140,17 @@ config DMA_BCM2835
+>   	select DMA_ENGINE
+>   	select DMA_VIRTUAL_CHANNELS
+>   
+> +config DMA_FAKE
+> +	tristate "Fake DMA Engine"
+> +	select DMA_ENGINE
+> +	select DMA_VIRTUAL_CHANNELS
+> +	help
+> +	  This implements a fake DMA engine. Useful for testing the DMA API
+> +	  without any hardware requirements, on any architecture which just
+> +	  supporst the DMA engine. Enable this if you want to easily run custom
+> +	  tests on the DMA API without a real DMA engine or the requirement for
+> +	  things like qemu to virtualize it for you.
+> +
+>   config DMA_JZ4780
+>   	tristate "JZ4780 DMA support"
+>   	depends on MIPS || COMPILE_TEST
+> diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
+> index 19ba465011a6..c75e4b7ad9f2 100644
+> --- a/drivers/dma/Makefile
+> +++ b/drivers/dma/Makefile
+> @@ -22,6 +22,7 @@ obj-$(CONFIG_AT_XDMAC) += at_xdmac.o
+>   obj-$(CONFIG_AXI_DMAC) += dma-axi-dmac.o
+>   obj-$(CONFIG_BCM_SBA_RAID) += bcm-sba-raid.o
+>   obj-$(CONFIG_DMA_BCM2835) += bcm2835-dma.o
+> +obj-$(CONFIG_DMA_FAKE) += fake-dma.o
+>   obj-$(CONFIG_DMA_JZ4780) += dma-jz4780.o
+>   obj-$(CONFIG_DMA_SA11X0) += sa11x0-dma.o
+>   obj-$(CONFIG_DMA_SUN4I) += sun4i-dma.o
+> diff --git a/drivers/dma/fake-dma.c b/drivers/dma/fake-dma.c
+> new file mode 100644
+> index 000000000000..ee1d788a2b83
+> --- /dev/null
+> +++ b/drivers/dma/fake-dma.c
+> @@ -0,0 +1,718 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later OR copyleft-next-0.3.1
+> +/*
+> + * Fake DMA engine test module. This allows us to test DMA engines
+> + * without leveraging virtualization.
+> + *
+> + * Copyright (C) 2025 Luis Chamberlain <mcgrof@kernel.org>
+> + *
+> + * This driver provides an interface to trigger and test the kernel's
+> + * module loader through a series of configurations and a few triggers.
+> + * To test this driver use the following script as root:
+> + *
+> + * tools/testing/selftests/dma/fake.sh --help
+> + */
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> +
+> +#include <linux/err.h>
+> +#include <linux/delay.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/dmaengine.h>
+> +#include <linux/freezer.h>
+> +#include <linux/init.h>
+> +#include <linux/kthread.h>
+> +#include <linux/sched/task.h>
+> +#include <linux/module.h>
+> +#include <linux/moduleparam.h>
+> +#include <linux/random.h>
+> +#include <linux/slab.h>
+> +#include <linux/wait.h>
+> +#include <linux/debugfs.h>
+> +#include <linux/platform_device.h>
+> +#include "dmaengine.h"
+> +
+> +#define FAKE_MAX_DMA_CHANNELS 20
+> +
+> +static unsigned int num_channels = FAKE_MAX_DMA_CHANNELS;
+> +module_param(num_channels, uint, 0644);
+> +MODULE_PARM_DESC(num_channels, "Number of channels to support (default: 20)");
+> +
+> +struct fake_dma_desc {
+> +	struct dma_async_tx_descriptor txd;
+> +	dma_addr_t src;
+> +	dma_addr_t dst;
+> +	size_t len;
+> +	enum dma_transaction_type type;
+> +	int memset_value;
+> +	/* For XOR/PQ operations */
+> +	dma_addr_t *src_list; /* Array of source addresses */
+> +	unsigned int src_cnt; /* Number of sources */
+> +	dma_addr_t *dst_list; /* Array of destination addresses (for PQ) */
+> +	unsigned char *pq_coef; /* P+Q coefficients */
+> +	struct list_head node;
+> +};
+> +
+> +struct fake_dma_chan {
+> +	struct dma_chan chan;
+> +	struct list_head active_list;
+> +	struct list_head queue;
+> +	struct work_struct work;
+> +	spinlock_t lock;
+> +	bool running;
+> +};
+> +
+> +struct fake_dma_device {
+> +	struct platform_device *pdev;
+> +	struct dma_device dma_dev;
+> +	struct fake_dma_chan *channels;
+> +};
+> +
+> +struct fake_dma_device *single_fake_dma;
+> +
+> +static struct platform_driver fake_dma_engine_driver = {
+> +	.driver = {
+> +		.name = KBUILD_MODNAME,
+> +		.owner = THIS_MODULE,
+> +        },
+> +};
+> +
+> +static int fake_dma_create_platform_device(struct fake_dma_device *fake_dma)
+> +{
+> +	fake_dma->pdev = platform_device_register_simple("fake-dma-engine", -1, NULL, 0);
+> +	if (IS_ERR(fake_dma->pdev))
+> +		return -ENODEV;
+> +
+> +	pr_info("Fake DMA platform device created: %s\n",
+> +		dev_name(&fake_dma->pdev->dev));
+> +
+> +	return 0;
+> +}
+> +
+> +static void fake_dma_destroy_platform_device(struct fake_dma_device  *fake_dma)
+> +{
+> +	if (!fake_dma->pdev)
+> +		return;
+> +
+> +	pr_info("Destroying fake DMA platform device: %s ...\n",
+> +		dev_name(&fake_dma->pdev->dev));
+> +	platform_device_unregister(fake_dma->pdev);
+> +}
+> +
+> +static inline struct fake_dma_chan *to_fake_dma_chan(struct dma_chan *c)
+> +{
+> +	return container_of(c, struct fake_dma_chan, chan);
+> +}
+> +
+> +static inline struct fake_dma_desc *to_fake_dma_desc(struct dma_async_tx_descriptor *txd)
+> +{
+> +	return container_of(txd, struct fake_dma_desc, txd);
+> +}
+> +
+> +/* Galois Field multiplication for P+Q operations */
+> +static unsigned char gf_mul(unsigned char a, unsigned char b)
+> +{
+> +	unsigned char result = 0;
+> +	unsigned char high_bit_set;
+> +	int i;
+> +
+> +	for (i = 0; i < 8; i++) {
+> +		if (b & 1)
+> +			result ^= a;
+> +		high_bit_set = a & 0x80;
+> +		a <<= 1;
+> +		if (high_bit_set)
+> +			a ^= 0x1b; /* x^8 + x^4 + x^3 + x + 1 */
+> +		b >>= 1;
+> +	}
+> +
+> +	return result;
+> +}
+> +
+> +/* Processes pending transfers */
+> +static void fake_dma_work_func(struct work_struct *work)
+> +{
+> +	struct fake_dma_chan *vchan = container_of(work, struct fake_dma_chan, work);
+> +	struct fake_dma_desc *vdesc;
+> +	struct dmaengine_desc_callback cb;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&vchan->lock, flags);
+> +
+> +	if (list_empty(&vchan->queue)) {
+> +		vchan->running = false;
+> +		spin_unlock_irqrestore(&vchan->lock, flags);
+> +		return;
+> +	}
+> +
+> +	vdesc = list_first_entry(&vchan->queue, struct fake_dma_desc, node);
+> +	list_del(&vdesc->node);
+> +	list_add_tail(&vdesc->node, &vchan->active_list);
+> +
+> +	spin_unlock_irqrestore(&vchan->lock, flags);
+> +
+> +	/* Actually perform the DMA transfer for memcpy operations */
+> +	if (vdesc->len) {
+> +		void *src_virt, *dst_virt;
+> +		void *p_virt, *q_virt;
+> +		unsigned char *p_bytes, *q_bytes;
+> +		unsigned int i, j;
+> +		unsigned char *dst_bytes;
+> +
+> +		switch (vdesc->type) {
+> +		case DMA_MEMCPY:
+> +			/* Convert DMA addresses to virtual addresses and perform the copy */
+> +			src_virt = phys_to_virt(vdesc->src);
+> +			dst_virt = phys_to_virt(vdesc->dst);
+> +
+> +			memcpy(dst_virt, src_virt, vdesc->len);
+> +			break;
+> +		case DMA_MEMSET:
+> +			dst_virt = phys_to_virt(vdesc->dst);
+> +			memset(dst_virt, vdesc->memset_value, vdesc->len);
+> +			break;
+> +		case DMA_XOR:
+> +			dst_virt = phys_to_virt(vdesc->dst);
+> +			dst_bytes = (unsigned char *)dst_virt;
+> +
+> +			memset(dst_virt, 0, vdesc->len);
+> +
+> +			/* XOR all sources into destination */
+> +			for (i = 0; i < vdesc->src_cnt; i++) {
+> +				void *src_virt = phys_to_virt(vdesc->src_list[i]);
+> +				unsigned char *src_bytes = (unsigned char *)src_virt;
+> +
+> +				for (j = 0; j < vdesc->len; j++)
+> +					dst_bytes[j] ^= src_bytes[j];
+> +			}
+> +			break;
+> +		case DMA_PQ:
+> +			p_virt = phys_to_virt(vdesc->dst_list[0]);
+> +			q_virt = phys_to_virt(vdesc->dst_list[1]);
+> +			p_bytes = (unsigned char *)p_virt;
+> +			q_bytes = (unsigned char *)q_virt;
+> +
+> +			/* Initialize P and Q destinations to zero */
+> +			memset(p_virt, 0, vdesc->len);
+> +			memset(q_virt, 0, vdesc->len);
+> +
+> +			/* Calculate P (XOR of all sources) and Q (weighted XOR) */
+> +			for (i = 0; i < vdesc->src_cnt; i++) {
+> +				void *src_virt = phys_to_virt(vdesc->src_list[i]);
+> +				unsigned char *src_bytes = (unsigned char *)src_virt;
+> +				unsigned char coef = vdesc->pq_coef[i];
+> +
+> +				for (j = 0; j < vdesc->len; j++) {
+> +					/* P calculation: simple XOR */
+> +					p_bytes[j] ^= src_bytes[j];
+> +
+> +					/* Q calculation: multiply in GF(2^8) and XOR */
+> +					q_bytes[j] ^= gf_mul(src_bytes[j], coef);
+> +				}
+> +			}
+> +			break;
+> +		default:
+> +			pr_warn("fake-dma: Unknown DMA operation type %d\n", vdesc->type);
+> +			break;
+> +		}
+> +	}
+> +
+> +	/* Mark descriptor as complete */
+> +	dma_cookie_complete(&vdesc->txd);
+> +
+> +	/* Call completion callback if set */
+> +	dmaengine_desc_get_callback(&vdesc->txd, &cb);
+> +	if (cb.callback)
+> +		cb.callback(cb.callback_param);
+> +
+> +	/* Process next transfer if available */
+> +	spin_lock_irqsave(&vchan->lock, flags);
+> +	list_del(&vdesc->node);
+> +
+> +	/* Free allocated memory for XOR/PQ operations */
+> +	if (vdesc->type == DMA_XOR || vdesc->type == DMA_PQ) {
+> +		kfree(vdesc->src_list);
+> +		if (vdesc->type == DMA_PQ) {
+> +			kfree(vdesc->dst_list);
+> +			kfree(vdesc->pq_coef);
+> +		}
+> +	}
+> +
+> +	kfree(vdesc);
+> +
+> +	if (!list_empty(&vchan->queue)) {
+> +		spin_unlock_irqrestore(&vchan->lock, flags);
+> +		schedule_work(&vchan->work);
+> +	} else {
+> +		vchan->running = false;
+> +		spin_unlock_irqrestore(&vchan->lock, flags);
+> +	}
+> +}
+> +
+> +/* Submit descriptor to the DMA engine */
+> +static dma_cookie_t fake_dma_tx_submit(struct dma_async_tx_descriptor *txd)
+> +{
+> +	struct fake_dma_chan *vchan = to_fake_dma_chan(txd->chan);
+> +	struct fake_dma_desc *vdesc = to_fake_dma_desc(txd);
+> +	unsigned long flags;
+> +	dma_cookie_t cookie;
+> +
+> +	spin_lock_irqsave(&vchan->lock, flags);
+> +
+> +	cookie = dma_cookie_assign(txd);
+> +	list_add_tail(&vdesc->node, &vchan->queue);
+> +
+> +	/* Schedule processing if not already running */
+> +	if (!vchan->running) {
+> +		vchan->running = true;
+> +		schedule_work(&vchan->work);
+> +	}
+> +
+> +	spin_unlock_irqrestore(&vchan->lock, flags);
+> +
+> +	return cookie;
+> +}
+> +
+> +static
+> +struct dma_async_tx_descriptor *fake_dma_prep_memcpy(struct dma_chan *chan,
+> +						     dma_addr_t dest,
+> +						     dma_addr_t src,
+> +						     size_t len,
+> +						     unsigned long flags)
+> +{
+> +	struct fake_dma_chan *vchan = to_fake_dma_chan(chan);
+> +	struct fake_dma_desc *vdesc;
+> +
+> +	vdesc = kzalloc(sizeof(*vdesc), GFP_NOWAIT);
+> +	if (!vdesc)
+> +		return NULL;
+> +
+> +	if (!vchan)
+> +		return NULL;
+> +
+> +	dma_async_tx_descriptor_init(&vdesc->txd, chan);
+> +	vdesc->type = DMA_MEMCPY;
+> +	vdesc->txd.tx_submit = fake_dma_tx_submit;
+> +	vdesc->txd.flags = flags;
+> +	vdesc->src = src;
+> +	vdesc->dst = dest;
+> +	vdesc->len = len;
+> +	INIT_LIST_HEAD(&vdesc->node);
+> +
+> +	return &vdesc->txd;
+> +}
+> +
+> +static
+> +struct dma_async_tx_descriptor * fake_dma_prep_memset(struct dma_chan *chan,
+> +						      dma_addr_t dest,
+> +						      int value,
+> +						      size_t len,
+> +						      unsigned long flags)
+> +{
+> +	struct fake_dma_desc *vdesc;
+> +
+> +	vdesc = kzalloc(sizeof(*vdesc), GFP_NOWAIT);
+> +	if (!vdesc)
+> +		return NULL;
+> +
+> +	dma_async_tx_descriptor_init(&vdesc->txd, chan);
+> +	vdesc->type = DMA_MEMSET;
+> +	vdesc->txd.tx_submit = fake_dma_tx_submit;
+> +	vdesc->txd.flags = flags;
+> +	vdesc->dst = dest;
+> +	vdesc->len = len;
+> +	vdesc->memset_value = value & 0xFF; /* Ensure it's a single byte */
+> +
+> +	INIT_LIST_HEAD(&vdesc->node);
+> +
+> +	return &vdesc->txd;
+> +}
+> +
+> +static struct dma_async_tx_descriptor *
+> +fake_dma_prep_xor(struct dma_chan *chan, dma_addr_t dest, dma_addr_t *src,
+> +		  unsigned int src_cnt, size_t len, unsigned long flags)
+> +{
+> +	struct fake_dma_desc *vdesc;
+> +
+> +	vdesc = kzalloc(sizeof(*vdesc), GFP_NOWAIT);
+> +	if (!vdesc)
+> +		return NULL;
+> +
+> +	/* Allocate memory for source list */
+> +	vdesc->src_list = kmalloc(src_cnt * sizeof(dma_addr_t), GFP_NOWAIT);
+> +	if (!vdesc->src_list) {
+> +		kfree(vdesc);
+> +		return NULL;
+> +	}
+> +
+> +	dma_async_tx_descriptor_init(&vdesc->txd, chan);
+> +	vdesc->type = DMA_XOR;
+> +	vdesc->txd.tx_submit = fake_dma_tx_submit;
+> +	vdesc->txd.flags = flags;
+> +	vdesc->dst = dest;
+> +	vdesc->len = len;
+> +	vdesc->src_cnt = src_cnt;
+> +
+> +	memcpy(vdesc->src_list, src, src_cnt * sizeof(dma_addr_t));
+> +
+> +	INIT_LIST_HEAD(&vdesc->node);
+> +
+> +	return &vdesc->txd;
+> +}
+> +
+> +static struct dma_async_tx_descriptor *
+> +fake_dma_prep_pq(struct dma_chan *chan, dma_addr_t *dst, dma_addr_t *src,
+> +		 unsigned int src_cnt, const unsigned char *scf, size_t len,
+> +		 unsigned long flags)
+> +{
+> +	struct fake_dma_desc *vdesc;
+> +
+> +	vdesc = kzalloc(sizeof(*vdesc), GFP_NOWAIT);
+> +	if (!vdesc)
+> +		return NULL;
+> +
+> +	vdesc->src_list = kmalloc(src_cnt * sizeof(dma_addr_t), GFP_NOWAIT);
+> +	if (!vdesc->src_list) {
+> +		kfree(vdesc);
+> +		return NULL;
+> +	}
+> +
+> +	/* Allocate memory for destination list (P and Q) */
+> +	vdesc->dst_list = kmalloc(2 * sizeof(dma_addr_t), GFP_NOWAIT);
+> +	if (!vdesc->dst_list) {
+> +		kfree(vdesc->src_list);
+> +		kfree(vdesc);
+> +		return NULL;
+> +	}
+> +
+> +	/* Allocate memory for coefficients */
+> +	vdesc->pq_coef = kmalloc(src_cnt * sizeof(unsigned char), GFP_NOWAIT);
+> +	if (!vdesc->pq_coef) {
+> +		kfree(vdesc->dst_list);
+> +		kfree(vdesc->src_list);
+> +		kfree(vdesc);
+> +		return NULL;
+> +	}
+> +
+> +	dma_async_tx_descriptor_init(&vdesc->txd, chan);
+> +	vdesc->type = DMA_PQ;
+> +	vdesc->txd.tx_submit = fake_dma_tx_submit;
+> +	vdesc->txd.flags = flags;
+> +	vdesc->len = len;
+> +	vdesc->src_cnt = src_cnt;
+> +
+> +	/* Copy source addresses */
+> +	memcpy(vdesc->src_list, src, src_cnt * sizeof(dma_addr_t));
+> +	/* Copy destination addresses (P and Q) */
+> +	memcpy(vdesc->dst_list, dst, 2 * sizeof(dma_addr_t));
+> +	/* Copy coefficients */
+> +	memcpy(vdesc->pq_coef, scf, src_cnt * sizeof(unsigned char));
+> +
+> +	INIT_LIST_HEAD(&vdesc->node);
+> +
+> +	return &vdesc->txd;
+> +}
+> +
+> +static void fake_dma_issue_pending(struct dma_chan *chan)
+> +{
+> +	struct fake_dma_chan *vchan = to_fake_dma_chan(chan);
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&vchan->lock, flags);
+> +
+> +	/* Start processing if not already running and queue not empty */
+> +	if (!vchan->running && !list_empty(&vchan->queue)) {
+> +		vchan->running = true;
+> +		schedule_work(&vchan->work);
+> +	}
+> +
+> +	spin_unlock_irqrestore(&vchan->lock, flags);
+> +}
+> +
+> +static int fake_dma_alloc_chan_resources(struct dma_chan *chan)
+> +{
+> +	struct fake_dma_chan *vchan = to_fake_dma_chan(chan);
+> +
+> +	INIT_LIST_HEAD(&vchan->active_list);
+> +	INIT_LIST_HEAD(&vchan->queue);
+> +	vchan->running = false;
+> +
+> +	return 1; /* Number of descriptors allocated */
+> +}
+> +
+> +static void fake_dma_free_chan_resources(struct dma_chan *chan)
+> +{
+> +	struct fake_dma_chan *vchan = to_fake_dma_chan(chan);
+> +	struct fake_dma_desc *vdesc, *_vdesc;
+> +	unsigned long flags;
+> +
+> +	cancel_work_sync(&vchan->work);
+> +
+> +	spin_lock_irqsave(&vchan->lock, flags);
+> +
+> +	/* Free all descriptors in queue */
+> +	list_for_each_entry_safe(vdesc, _vdesc, &vchan->queue, node) {
+> +		list_del(&vdesc->node);
+> +
+> +		/* Free allocated memory for XOR/PQ operations */
+> +		if (vdesc->type == DMA_XOR || vdesc->type == DMA_PQ) {
+> +			kfree(vdesc->src_list);
+> +			if (vdesc->type == DMA_PQ) {
+> +				kfree(vdesc->dst_list);
+> +				kfree(vdesc->pq_coef);
+> +			}
+> +		}
+> +		kfree(vdesc);
+> +	}
+> +
+> +	/* Free all descriptors in active list */
+> +	list_for_each_entry_safe(vdesc, _vdesc, &vchan->active_list, node) {
+> +		list_del(&vdesc->node);
+> +		/* Free allocated memory for XOR/PQ operations */
+> +		if (vdesc->type == DMA_XOR || vdesc->type == DMA_PQ) {
+> +			kfree(vdesc->src_list);
+> +			if (vdesc->type == DMA_PQ) {
+> +				kfree(vdesc->dst_list);
+> +				kfree(vdesc->pq_coef);
+> +			}
+> +		}
+> +		kfree(vdesc);
+> +	}
+> +
+> +	spin_unlock_irqrestore(&vchan->lock, flags);
+> +}
+> +
+> +static void fake_dma_release(struct dma_device *dma_dev)
+> +{
+> +	unsigned int i;
+> +        struct fake_dma_device *fake_dma =
+> +                container_of(dma_dev, struct fake_dma_device, dma_dev);
+> +
+> +	pr_info("refcount for dma device %s hit 0, quiescing...",
+> +		dev_name(&fake_dma->pdev->dev));
+> +
+> +	for (i = 0; i < num_channels; i++) {
+> +		struct fake_dma_chan *vchan = &fake_dma->channels[i];
+> +		cancel_work_sync(&vchan->work);
+> +	}
+> +
+> +        put_device(dma_dev->dev);
+> +}
+> +
+> +static void fake_dma_setup_config(struct fake_dma_device *fake_dma)
+> +{
+> +	unsigned int i;
+> +	struct dma_device *dma =  &fake_dma->dma_dev;
+> +
+> +	dma->dev = get_device(&fake_dma->pdev->dev);
+> +
+> +	/* Set multiple capabilities for dmatest compatibility */
+> +	dma_cap_set(DMA_MEMCPY, dma->cap_mask);
+> +	dma_cap_set(DMA_MEMSET, dma->cap_mask);
+> +	dma_cap_set(DMA_XOR, dma->cap_mask);
+> +	dma_cap_set(DMA_PQ, dma->cap_mask);
+> +	dma_cap_set(DMA_PRIVATE, dma->cap_mask);
+> +
+> +	dma->device_alloc_chan_resources = fake_dma_alloc_chan_resources;
+> +	dma->device_free_chan_resources = fake_dma_free_chan_resources;
+> +	dma->device_prep_dma_memcpy = fake_dma_prep_memcpy;
+> +	dma->device_prep_dma_memset = fake_dma_prep_memset;
+> +	dma->device_prep_dma_xor = fake_dma_prep_xor;
+> +	dma->device_prep_dma_pq = fake_dma_prep_pq;
+> +	dma->device_issue_pending = fake_dma_issue_pending;
+> +	dma->device_tx_status = dma_cookie_status;
+> +	dma->device_release = fake_dma_release;
+> +
+> +	dma->copy_align = 4; /* 4-byte alignment for memcpy */
+> +	dma->fill_align = 4; /* 4-byte alignment for memset */
+> +	dma->xor_align = 4;  /* 4-byte alignment for xor */
+> +	dma->pq_align = 4;   /* 4-byte alignment for pq */
+> +
+> +	dma->max_xor = 16;   /* Support up to 16 XOR sources */
+> +	dma->max_pq = 16;    /* Support up to 16 P+Q sources */
+> +
+> +	dma->src_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
+> +			       BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
+> +			       BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
+> +			       BIT(DMA_SLAVE_BUSWIDTH_8_BYTES);
+> +	dma->dst_addr_widths = dma->src_addr_widths;
+> +	dma->directions = BIT(DMA_MEM_TO_MEM);
+> +	dma->residue_granularity = DMA_RESIDUE_GRANULARITY_DESCRIPTOR;
+> +
+> +	INIT_LIST_HEAD(&dma->channels);
+> +
+> +	for (i = 0; i < num_channels; i++) {
+> +		struct fake_dma_chan *vchan = &fake_dma->channels[i];
+> +
+> +		vchan->chan.device = dma;
+> +		dma_cookie_init(&vchan->chan);
+> +
+> +		spin_lock_init(&vchan->lock);
+> +		INIT_LIST_HEAD(&vchan->active_list);
+> +		INIT_LIST_HEAD(&vchan->queue);
+> +
+> +		INIT_WORK(&vchan->work, fake_dma_work_func);
+> +
+> +		list_add_tail(&vchan->chan.device_node, &dma->channels);
+> +	}
+> +}
+> +
+> +static int fake_dma_load(void)
+> +{
+> +	unsigned int i;
+> +	int ret;
+> +	struct fake_dma_device *fake_dma;
+> +	struct dma_device *dma;
+> +
+> +	if (single_fake_dma) {
+> +		pr_err("Fake DMA device already loaded, skipping...");
+> +		return -EALREADY;
+> +	}
+> +
+> +	if (num_channels > FAKE_MAX_DMA_CHANNELS)
+> +		num_channels = FAKE_MAX_DMA_CHANNELS;
+> +
+> +	ret = platform_driver_register(&fake_dma_engine_driver);
+> +	if (ret)
+> +		return ret;
+> +
+> +	fake_dma = kzalloc(sizeof(*fake_dma), GFP_KERNEL);
+> +	if (!fake_dma) {
+> +		ret = -ENOMEM;
+> +		goto out_unregister_driver;
+> +	}
+> +
+> +	fake_dma->channels = kzalloc(sizeof(struct fake_dma_chan) * num_channels,
+> +				     GFP_KERNEL);
+> +	if (!fake_dma->channels) {
+> +		ret = -ENOMEM;
+> +		goto out_free_dma;
+> +	}
+> +
+> +	ret = fake_dma_create_platform_device(fake_dma);
+> +	if (ret)
+> +		goto out_free_chans;
+> +
+> +	fake_dma->pdev->dev.driver = &fake_dma_engine_driver.driver;
+> +	ret = device_bind_driver(&fake_dma->pdev->dev);
+> +	if (ret)
+> +		goto out_unregister_device;
+> +
+> +	fake_dma_setup_config(fake_dma);
+> +	dma = &fake_dma->dma_dev;
+> +
+> +	/* Register with the DMA Engine */
+> +	ret = dma_async_device_register(dma);
+> +	if (ret) {
+> +		ret = -EINVAL;
+> +		goto out_release_driver;
+> +	}
+> +
+> +	for (i = 0; i < num_channels; i++) {
+> +		struct fake_dma_chan *vchan = &fake_dma->channels[i];
+> +		pr_info("Registered fake DMA channel %d (%s)\n",
+> +			i, dma_chan_name(&vchan->chan));
+> +	}
+> +
+> +	single_fake_dma = fake_dma;
+> +
+> +	pr_info("Fake DMA engine: %s registered with %d channels\n",
+> +		dev_name(&fake_dma->pdev->dev), num_channels);
+> +
+> +	pr_info("Fake DMA device name for dmatest: '%s'\n", dev_name(dma->dev));
+> +	pr_info("Fake DMA device path: '%s'\n", dev_name(&fake_dma->pdev->dev));
+> +
+> +	return 0;
+> +
+> +out_release_driver:
+> +	device_release_driver(&fake_dma->pdev->dev);
+> +out_unregister_device:
+> +	fake_dma_destroy_platform_device(fake_dma);
+> +out_free_chans:
+> +	kfree(fake_dma->channels);
+> +out_free_dma:
+> +	kfree(fake_dma);
+> +	fake_dma = NULL;
+> +out_unregister_driver:
+> +	platform_driver_unregister(&fake_dma_engine_driver);
+> +	return ret;
+> +}
+> +
+> +static void fake_dma_unload(void)
+> +{
+> +	struct fake_dma_device *fake_dma = single_fake_dma;
+> +
+> +	if (!fake_dma) {
+> +		pr_info("No fake DMA engines registered yet.\n");
+> +		return;
+> +	}
+> +
+> +	pr_info("Fake DMA engine: %s unregistering with %d channels ...\n",
+> +		dev_name(&fake_dma->pdev->dev), num_channels);
+> +
+> +	dma_async_device_unregister(&fake_dma->dma_dev);
+> +
+> +	/*
+> +	 * dma_async_device_unregister() will call device_release() only
+> +	 * if a channel ever gets busy, so we need to tidy up ourselves
+> +	 * here in case no channels are ever used.
+> +	 */
+> +	device_release_driver(&fake_dma->pdev->dev);
+> +	fake_dma_destroy_platform_device(fake_dma);
+> +
+> +	kfree(fake_dma->channels);
+> +	kfree(fake_dma);
+> +
+> +	platform_driver_unregister(&fake_dma_engine_driver);
+> +	single_fake_dma = NULL;
+> +}
+> +
+> +static ssize_t write_file_load(struct file *file, const char __user *user_buf,
+> +			       size_t count, loff_t *ppos)
+> +{
+> +	fake_dma_load();
+> +
+> +	return count;
+> +}
+> +
+> +static const struct file_operations fops_load = {
+> +	.write = write_file_load,
+> +	.open = simple_open,
+> +	.owner = THIS_MODULE,
+> +	.llseek = default_llseek,
+> +};
+> +
+> +static ssize_t write_file_unload(struct file *file, const char __user *user_buf,
+> +				 size_t count, loff_t *ppos)
+> +{
+> +	fake_dma_unload();
+> +
+> +	return count;
+> +}
+> +
+> +static const struct file_operations fops_unload = {
+> +	.write = write_file_unload,
+> +	.open = simple_open,
+> +	.owner = THIS_MODULE,
+> +	.llseek = default_llseek,
+> +};
+> +
+> +static int __init fake_dma_init(void)
+> +{
+> +	struct dentry *fake_dir;
+> +
+> +	fake_dir = debugfs_create_dir("fake-dma", NULL);
+> +	debugfs_create_file("load", 0600, fake_dir, NULL, &fops_load);
+> +	debugfs_create_file("unload", 0600, fake_dir, NULL, &fops_unload);
+> +
+> +	return fake_dma_load();
+> +}
+> +late_initcall(fake_dma_init);
+> +
+> +static void __exit fake_dma_exit(void)
+> +{
+> +	fake_dma_unload();
+> +}
+> +module_exit(fake_dma_exit);
+> +
+> +MODULE_DESCRIPTION("Fake DMA Engine test module");
+> +MODULE_AUTHOR("Luis Chamberlain");
+> +MODULE_LICENSE("GPL v2");
+
 

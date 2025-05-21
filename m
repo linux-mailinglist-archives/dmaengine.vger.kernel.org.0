@@ -1,296 +1,221 @@
-Return-Path: <dmaengine+bounces-5232-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5233-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8998BABF38F
-	for <lists+dmaengine@lfdr.de>; Wed, 21 May 2025 13:59:06 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 868E6ABF49A
+	for <lists+dmaengine@lfdr.de>; Wed, 21 May 2025 14:45:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 85BEB1BC36CA
-	for <lists+dmaengine@lfdr.de>; Wed, 21 May 2025 11:59:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 395B416D709
+	for <lists+dmaengine@lfdr.de>; Wed, 21 May 2025 12:45:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E645264A70;
-	Wed, 21 May 2025 11:59:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E16C2676CE;
+	Wed, 21 May 2025 12:45:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IWTjqRqC"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="IdLtfyzm"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 621F2256C9F;
-	Wed, 21 May 2025 11:58:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5348A266B74
+	for <dmaengine@vger.kernel.org>; Wed, 21 May 2025 12:45:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747828740; cv=none; b=dTCiD0HDG48Adni4wZJ1oCLIaqOToyyH8txurQCxzvhZP+zD9wRTX+9W48fCCd42qiWDj3UP4Bg/eHI9I35pRsjt25jy3g246GjeojMpr4R/swZ535i6uMlLZnUz2nEV2Ki6dzE4hDFHUWNYrSTC2KxGuM0qZXPYntsEnTYzKKs=
+	t=1747831512; cv=none; b=GdEXnhOOJqTo97RnzxpymY5hF0sZptSa5DIEfQLbipuEuximPjm85bNIZx2Vayukw2T/94w2Oh8HhoRUi8eGGhJ78WmWEfxboWXxPs4g9qV3jweNjnXchdiS58+BsZlKfIb+oAA4eUQGaSdHmQCMd3lrAvO8o3Z55Fxe/v9DwOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747828740; c=relaxed/simple;
-	bh=H1VBDSIJ2HMkJrDKIgh+iSVkesoM3W4lbNhILfvcvMY=;
+	s=arc-20240116; t=1747831512; c=relaxed/simple;
+	bh=zkGUkrSlpCDvrhHcI1g4oFe3ljg20Lkj9XiFeqwuju4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BHwFTDjtIQj7fgwPA8V2zsKh+WFI16hp0wzp36bNlNXF31DkdV0CclI3Lly1F4tCnHsTV+tKj9eoXoTRFdPXv9IxSQUl0xY8IvcjHyPMQiaTYdTN6NL6yCoU5EBtS5QZo9J0h9AIhsZ1qNj83kHm/ZtHMTiKbDcpBt4UlIWsUHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IWTjqRqC; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747828738; x=1779364738;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=H1VBDSIJ2HMkJrDKIgh+iSVkesoM3W4lbNhILfvcvMY=;
-  b=IWTjqRqChEKagejg42xjsFKkT+j5Oc6n12s01HtRUYUsUSLNN9H2VGZZ
-   vayvRpBmGYaGYTKC06Ygn3KGF42dKOyoDnA+iNr/GdvAWEvGn8IO51nSD
-   rmDfz/i+iMXKCqX1a7eBRfb6TkqDFiizLyMaz6N7JKsdn/Vwtj0DAI+XJ
-   PybdrsvqdaPrH0a7QUztY2oIAEJO4r1msFvINEvSet5kzEEGoZSHzV52m
-   rIYo0SBDCDCEj9kh8VcZGhbYp4kW/dVO4CNKXMX3ov55oxaUACkvP5FfG
-   eWwW8qpCaMX568t+UZlOXya59x5GOuQXl8vyGJ0bMIHd1qyr6w6Yu2Ykw
-   w==;
-X-CSE-ConnectionGUID: bdHIeUyjQnG5mZREP+DiNw==
-X-CSE-MsgGUID: dWIOjG87Q1aLjMgi7iBsTg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="49676845"
-X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
-   d="scan'208";a="49676845"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 04:58:57 -0700
-X-CSE-ConnectionGUID: UyTnJ1iNSvyVOiQTzKqTQw==
-X-CSE-MsgGUID: qJGJTHuZRWW2G7aWSZdiEQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
-   d="scan'208";a="140546167"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 21 May 2025 04:58:54 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uHi5z-000ODQ-29;
-	Wed, 21 May 2025 11:58:51 +0000
-Date: Wed, 21 May 2025 19:58:22 +0800
-From: kernel test robot <lkp@intel.com>
-To: Luis Chamberlain <mcgrof@kernel.org>, vkoul@kernel.org,
-	chenxiang66@hisilicon.com, m.szyprowski@samsung.com,
-	robin.murphy@arm.com, leon@kernel.org, jgg@nvidia.com,
-	alex.williamson@redhat.com, joel.granados@kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	iommu@lists.linux.dev, dmaengine@vger.kernel.org,
-	linux-block@vger.kernel.org, gost.dev@samsung.com,
-	mcgrof@kernel.org
-Subject: Re: [PATCH 6/6] dma-mapping: benchmark: add IOVA support
-Message-ID: <202505211909.CzQtqtu8-lkp@intel.com>
-References: <20250520223913.3407136-7-mcgrof@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=B9JinmUKtouaUYRPBoE2o7HA9OnUlpKL5VGnELtAaE9dDB5NHy0+BeM4/DNiXvN9CHgxHo25GnTA4bUTqyPTt4ZzLvuD38imIxGj+mVTckyPszBCQbd4N64nwgYEmobB/5XIHwWqHkv6p0O8Jw25/Oo9FIdpbyde6/E+mNMxrAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=IdLtfyzm; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L9XJfO006603
+	for <dmaengine@vger.kernel.org>; Wed, 21 May 2025 12:45:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	ks52ly5XzSYN1dVT8m4NLznvkKylPvB/qklENFGmQ+s=; b=IdLtfyzmj4AkBBcd
+	pOsyTHt2WNba+cTJwRZHEVuXYR+0O+I1Sr5W/TCKfs9o6qFw2fvhKbTBZXvKtDag
+	/hNxDYBjGD2CPh4/KDEBmc0nbU4jf/su49/+iaSwa2VOO1BeyxQOQkwpPTKE1AN5
+	9JHzIPEd3XuQAzdZtvXAU7bXtHtamGCvjkmVr3jeI80PWOKSqX7lTFR0VyYLhL/c
+	NLMSoz7DNf7BCtISBaoJqunJ1pAVv3nz52kDXW0bP+GmbeWesLNRJ/MfLkNgdsyc
+	jsNK3TJ/J7oCI7uHeuz8aa2DWbNVeIaB2DM+vc8APWxbuWx9it9S+LXWyzgP0zTl
+	06WXEw==
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf0k05g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <dmaengine@vger.kernel.org>; Wed, 21 May 2025 12:45:09 +0000 (GMT)
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6f8e1d900e5so43726256d6.2
+        for <dmaengine@vger.kernel.org>; Wed, 21 May 2025 05:45:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747831508; x=1748436308;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ks52ly5XzSYN1dVT8m4NLznvkKylPvB/qklENFGmQ+s=;
+        b=FjADcrmgzSYEpC5AxWU4gglPtmblHDRVMyYNsIEOBSZ9f7y4y7LalfBgFzA0nWg6dy
+         /5/tOL18+MigwVMCBOw+VX9/PqEcrxloAgZ1R1bp9YOVG3cFHlJ9C1sj5xBl1sB/I0zv
+         +cKlIryQua5bAPwip2GI74wIZl5mBldye+mJqlXPpdGyeAUYuHbgTxPvIjEtaLw6+ssX
+         4ZBN0U5qndZMZgMPa+xQQiJCR005BSj6AZ6hr2dHJRRuA3F51lNhW2FBfYhyQXXA+3LE
+         azOMqjV+fmX99YlOao3EAclsvO7ktj6bkPFwKORkuUeI+O0u/JpRgH1Rlce8IiSLQpUI
+         fFEg==
+X-Forwarded-Encrypted: i=1; AJvYcCUiq2dDg5i5GOXQw7CcevIhlBrmH36XHW+DLIlA/Av3L92lRtf9o2o83speqKIvzoPp5DT3cWXF7Qs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzuk5BacxkHsS/ZGYYKyJJoqlKXmHKR+HKc6iSFJopTwe2+n+nR
+	yvw5f21hLAHBEhBJ5RgL/pA5Y+Um29c5THC4A7NGbkMwBdf5TSqlk3uszEZXUd1l8YP3+hk0vVB
+	7JWZV3rP86AKcacduI4DWb9cJJY79UoshhZ1sqanx5khsfYYsbWJWl7LzX/zaaxE=
+X-Gm-Gg: ASbGncs6UrAfewYXh4RCB+g3sZ4jpadDMtRR6PqNsthUx7mRbPqzrwf0VcE9pqaIVAk
+	V0DLgKFb6cN9vBGVTHpAN2/YE/GYrXxeBOd1uqGSie+yxDealGrpAs/LtwASmDawOXcYG46jG7S
+	eyciAR6ZkB7VndhQ0324cwmfjZcMblUmRDYlWFmIwUOVFWMpgoseO+BbsM647kd0O3NvBf/lCPz
+	vX9gRZPtSU00MGjRfdMzT+GVjXs5EjrymLq4av1PlAyZ69dEty4xU7KCvU2euGdFNyoSvUf4Pkx
+	H2wWMA6aVVwUEEeJjhzpnkmCOMY4VFEb4TnuJBBYeQ50ja3wObP2rdJA6qBrPy7uY36ayYvijOM
+	=
+X-Received: by 2002:a05:6214:14ec:b0:6f8:c23c:5257 with SMTP id 6a1803df08f44-6f8c23c82b2mr198868596d6.11.1747831507824;
+        Wed, 21 May 2025 05:45:07 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEShz+g9YiDU5OL+/RiZ6SU1Z6wT5YO4aHSX5TPMnkQqGJbcSQrWsL19HoCgqDtp3hVG17QAA==
+X-Received: by 2002:a05:6214:14ec:b0:6f8:c23c:5257 with SMTP id 6a1803df08f44-6f8c23c82b2mr198868336d6.11.1747831507432;
+        Wed, 21 May 2025 05:45:07 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e7017e6esm2826955e87.136.2025.05.21.05.45.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 May 2025 05:45:06 -0700 (PDT)
+Date: Wed, 21 May 2025 15:45:04 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
+Cc: Vinod Koul <vkoul@kernel.org>,
+        Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
+        Viken Dadhaniya <quic_vdadhani@quicinc.com>,
+        Andi Shyti <andi.shyti@kernel.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, quic_vtanuku@quicinc.com
+Subject: Re: [PATCH v6 2/2] i2c: i2c-qcom-geni: Add Block event interrupt
+ support
+Message-ID: <w6epbao7dwwx65crst6md4uxi3iivkcj55mhr2ko3z5olezhdl@ffam3xif6tmh>
+References: <20250506111844.1726-1-quic_jseerapu@quicinc.com>
+ <20250506111844.1726-3-quic_jseerapu@quicinc.com>
+ <qizkfszruwcny7f3g3i7cjst342s6ma62k5sgc6pg6yfoti7b3@fo2ssj7jvff2>
+ <3aa92123-e43e-4bf5-917a-2db6f1516671@quicinc.com>
+ <a98f0f1a-d814-4c6a-9235-918091399e4b@oss.qualcomm.com>
+ <ba7559c8-36b6-4628-8fc4-26121f00abd5@quicinc.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250520223913.3407136-7-mcgrof@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ba7559c8-36b6-4628-8fc4-26121f00abd5@quicinc.com>
+X-Proofpoint-GUID: 2bav3HRSOkbb6owE19F9_13BcYcyVd9B
+X-Authority-Analysis: v=2.4 cv=J/Sq7BnS c=1 sm=1 tr=0 ts=682dcad5 cx=c_pps
+ a=UgVkIMxJMSkC9lv97toC5g==:117 a=xqWC_Br6kY4A:10 a=8nJEP1OIZ-IA:10
+ a=dt9VzEwgFbYA:10 a=O67JBuyAYGrhvE3k4OkA:9 a=3ZKOabzyN94A:10
+ a=wPNLvfGTeEIA:10 a=1HOtulTD9v-eNWfpl4qZ:22
+X-Proofpoint-ORIG-GUID: 2bav3HRSOkbb6owE19F9_13BcYcyVd9B
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDEyMyBTYWx0ZWRfXxWbbQ4vfXaHp
+ npT+YoKQ97yxtTrPuHvnVVpffuay/qldvpWHDWhDwDWY356b6z5w3IV4i6JfGbIY8whfHhiC+Uh
+ 9R6a2EcVtLt0DGflewycbg4DFG5QQjOT9FTb8j6kDf0mddakmt11jPqbq7T8/RkogWD8+sdWLXM
+ v/3Y/MeFbkxFOwUNFNjukdUG0f4vDcvMIGIpN/q3KXo59G9SqYEEEWEPAINHnRk8bAYly29sRWh
+ VUzvGMM+VRZzD+7VVzjYR8pId4eBS2pfv38PKRDZRltwa3b8LWUdRpK1xFsnDiiJw1Y5k2Hfc1I
+ VqM0Jh4OZus7YzWvK2Jpzc9LGwet2hriAUE0H9EtGzNYpLWTTUOrRJ43G2gq/XadKGAFWY+EV8O
+ 0R3lwq1QQ9aULyTmSX2ig19InVqvbRji5y3WSYAAc43PJs06gE9z7MF3oVU70jnr7N8lhPQh
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-21_04,2025-05-20_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 clxscore=1015 mlxlogscore=999 suspectscore=0 spamscore=0
+ priorityscore=1501 bulkscore=0 phishscore=0 impostorscore=0
+ lowpriorityscore=0 malwarescore=0 adultscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2505210123
 
-Hi Luis,
+On Wed, May 21, 2025 at 03:58:48PM +0530, Jyothi Kumar Seerapu wrote:
+> 
+> 
+> On 5/9/2025 9:31 PM, Dmitry Baryshkov wrote:
+> > On 09/05/2025 09:18, Jyothi Kumar Seerapu wrote:
+> > > Hi Dimitry, Thanks for providing the review comments.
+> > > 
+> > > On 5/6/2025 5:16 PM, Dmitry Baryshkov wrote:
+> > > > On Tue, May 06, 2025 at 04:48:44PM +0530, Jyothi Kumar Seerapu wrote:
+> > > > > The I2C driver gets an interrupt upon transfer completion.
+> > > > > When handling multiple messages in a single transfer, this
+> > > > > results in N interrupts for N messages, leading to significant
+> > > > > software interrupt latency.
+> > > > > 
+> > > > > To mitigate this latency, utilize Block Event Interrupt (BEI)
+> > > > > mechanism. Enabling BEI instructs the hardware to prevent interrupt
+> > > > > generation and BEI is disabled when an interrupt is necessary.
+> > > > > 
+> > > > > Large I2C transfer can be divided into chunks of 8 messages internally.
+> > > > > Interrupts are not expected for the first 7 message completions, only
+> > > > > the last message triggers an interrupt, indicating the completion of
+> > > > > 8 messages. This BEI mechanism enhances overall transfer efficiency.
+> > > > 
+> > > > Why do you need this complexity? Is it possible to set the
+> > > > DMA_PREP_INTERRUPT flag on the last message in the transfer?
+> > > 
+> > > If i undertsand correctly, the suggestion is to get the single
+> > > intetrrupt for last i2c message only.
+> > > 
+> > > But With this approach, we can't handle large number of i2c messages
+> > > in the transfer.
+> > > 
+> > > In GPI driver, number of max TREs support is harcoded to 64 (#define
+> > > CHAN_TRES   64) and for I2C message, we need Config TRE, GO TRE and
+> > > DMA TREs. So, the avilable TREs are not sufficient to handle all the
+> > > N messages.
+> > 
+> > It sounds like a DMA driver issue. In other words, the DMA driver can
+> > know that it must issue an interrupt before exausting 64 TREs in order
+> > to
+> > 
+> > > 
+> > > Here, the plan is to queue i2c messages (QCOM_I2C_GPI_MAX_NUM_MSGS
+> > > or 'num' incase for less messsages), process and unmap/free upon the
+> > > interrupt based on QCOM_I2C_GPI_NUM_MSGS_PER_IRQ.
+> > 
+> > Why? This is some random value which has no connection with CHAN_TREs.
+> > Also, what if one of the platforms get a 'liter' GPI which supports less
+> > TREs in a single run? Or a super-premium platform which can use 256
+> > TREs? Please don't workaround issues from one driver in another one.
+> 
+> We are trying to utilize the existing CHAN_TRES mentioned in the GPI driver.
+> With the following approach, the GPI hardware can process N number of I2C
+> messages, thereby improving throughput and transfer efficiency.
+> 
+> The main design consideration for using the block event interrupt is as
+> follows:
+> 
+> Allow the hardware to process the TREs (I2C messages), while the software
+> concurrently prepares the next set of TREs to be submitted to the hardware.
+> Once the TREs are processed, they can be freed, enabling the software to
+> queue new TREs. This approach enhances overall optimization.
+> 
+> Please let me know if you have any questions, concerns, or suggestions.
 
-kernel test robot noticed the following build warnings:
+The question was why do you limit that to QCOM_I2C_GPI_NUM_MSGS_PER_IRQ.
+What is the reason for that limit, etc. If you think about it, The GENI
+/ I2C doesn't impose any limit on the number of messages processed in
+one go (if I understand it correctly). Instead the limit comes from the
+GPI DMA driver. As such, please don't add extra 'handling' to the I2C
+driver. Make GPI DMA driver responsible for saying 'no more for now',
+then I2C driver can setup add an interrupt flag and proceed with
+submitting next messages, etc.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.15-rc7 next-20250516]
-[cannot apply to vkoul-dmaengine/next shuah-kselftest/next shuah-kselftest/fixes sysctl/sysctl-next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Luis-Chamberlain/fake-dma-add-fake-dma-engine-driver/20250521-064035
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250520223913.3407136-7-mcgrof%40kernel.org
-patch subject: [PATCH 6/6] dma-mapping: benchmark: add IOVA support
-config: hexagon-randconfig-002-20250521 (https://download.01.org/0day-ci/archive/20250521/202505211909.CzQtqtu8-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250521/202505211909.CzQtqtu8-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505211909.CzQtqtu8-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   kernel/dma/map_benchmark.c:60:25: error: variable has incomplete type 'struct dma_iova_state'
-      60 |                 struct dma_iova_state iova_state;
-         |                                       ^
-   kernel/dma/map_benchmark.c:60:10: note: forward declaration of 'struct dma_iova_state'
-      60 |                 struct dma_iova_state iova_state;
-         |                        ^
-   kernel/dma/map_benchmark.c:76:8: error: call to undeclared function 'dma_iova_try_alloc'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-      76 |                 if (!dma_iova_try_alloc(map->dev, &iova_state, phys, size)) {
-         |                      ^
-   kernel/dma/map_benchmark.c:88:9: error: call to undeclared function 'dma_iova_link'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-      88 |                 ret = dma_iova_link(map->dev, &iova_state, phys, 0, size, dir, 0);
-         |                       ^
-   kernel/dma/map_benchmark.c:94:4: error: call to undeclared function 'dma_iova_free'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-      94 |                         dma_iova_free(map->dev, &iova_state);
-         |                         ^
-   kernel/dma/map_benchmark.c:101:9: error: call to undeclared function 'dma_iova_sync'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     101 |                 ret = dma_iova_sync(map->dev, &iova_state, 0, size);
-         |                       ^
-   kernel/dma/map_benchmark.c:107:4: error: call to undeclared function 'dma_iova_unlink'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     107 |                         dma_iova_unlink(map->dev, &iova_state, 0, size, dir, 0);
-         |                         ^
-   kernel/dma/map_benchmark.c:108:4: error: call to undeclared function 'dma_iova_free'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     108 |                         dma_iova_free(map->dev, &iova_state);
-         |                         ^
-   kernel/dma/map_benchmark.c:118:3: error: call to undeclared function 'dma_iova_destroy'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     118 |                 dma_iova_destroy(map->dev, &iova_state, size, dir, 0);
-         |                 ^
->> kernel/dma/map_benchmark.c:340:23: warning: variable 'iova_threads' set but not used [-Wunused-but-set-variable]
-     340 |         int regular_threads, iova_threads;
-         |                              ^
-   1 warning and 8 errors generated.
-
-
-vim +/iova_threads +340 kernel/dma/map_benchmark.c
-
-   334	
-   335	static int do_streaming_iova_benchmark(struct map_benchmark_data *map)
-   336	{
-   337		struct task_struct **tsk;
-   338		int threads = map->bparam.threads;
-   339		int node = map->bparam.node;
- > 340		int regular_threads, iova_threads;
-   341		u64 loops, iova_loops;
-   342		int ret = 0;
-   343		int i;
-   344	
-   345		tsk = kmalloc_array(threads * 2, sizeof(*tsk), GFP_KERNEL);
-   346		if (!tsk)
-   347			return -ENOMEM;
-   348	
-   349		get_device(map->dev);
-   350	
-   351		/* Split threads between regular and IOVA testing */
-   352		regular_threads = threads / 2;
-   353		iova_threads = threads - regular_threads;
-   354	
-   355		/* Create streaming DMA threads */
-   356		for (i = 0; i < regular_threads; i++) {
-   357			tsk[i] = kthread_create_on_node(benchmark_thread_streaming, map,
-   358					node, "dma-streaming-benchmark/%d", i);
-   359			if (IS_ERR(tsk[i])) {
-   360				pr_err("create dma_map thread failed\n");
-   361				ret = PTR_ERR(tsk[i]);
-   362				while (--i >= 0)
-   363					kthread_stop(tsk[i]);
-   364				goto out;
-   365			}
-   366	
-   367			if (node != NUMA_NO_NODE)
-   368				kthread_bind_mask(tsk[i], cpumask_of_node(node));
-   369		}
-   370	
-   371		/* Create IOVA DMA threads */
-   372		for (i = regular_threads; i < threads; i++) {
-   373			tsk[i] = kthread_create_on_node(benchmark_thread_iova, map,
-   374					node, "dma-iova-benchmark/%d", i - regular_threads);
-   375			if (IS_ERR(tsk[i])) {
-   376				pr_err("create dma_iova thread failed\n");
-   377				ret = PTR_ERR(tsk[i]);
-   378				while (--i >= 0)
-   379					kthread_stop(tsk[i]);
-   380				goto out;
-   381			}
-   382	
-   383			if (node != NUMA_NO_NODE)
-   384				kthread_bind_mask(tsk[i], cpumask_of_node(node));
-   385		}
-   386	
-   387		/* Clear previous benchmark values */
-   388		atomic64_set(&map->sum_map_100ns, 0);
-   389		atomic64_set(&map->sum_unmap_100ns, 0);
-   390		atomic64_set(&map->sum_sq_map, 0);
-   391		atomic64_set(&map->sum_sq_unmap, 0);
-   392		atomic64_set(&map->loops, 0);
-   393	
-   394		atomic64_set(&map->sum_iova_alloc_100ns, 0);
-   395		atomic64_set(&map->sum_iova_link_100ns, 0);
-   396		atomic64_set(&map->sum_iova_sync_100ns, 0);
-   397		atomic64_set(&map->sum_iova_destroy_100ns, 0);
-   398		atomic64_set(&map->sum_sq_iova_alloc, 0);
-   399		atomic64_set(&map->sum_sq_iova_link, 0);
-   400		atomic64_set(&map->sum_sq_iova_sync, 0);
-   401		atomic64_set(&map->sum_sq_iova_destroy, 0);
-   402		atomic64_set(&map->iova_loops, 0);
-   403	
-   404		/* Start all threads */
-   405		for (i = 0; i < threads; i++) {
-   406			get_task_struct(tsk[i]);
-   407			wake_up_process(tsk[i]);
-   408		}
-   409	
-   410		msleep_interruptible(map->bparam.seconds * 1000);
-   411	
-   412		/* Stop all threads */
-   413		for (i = 0; i < threads; i++) {
-   414			int kthread_ret = kthread_stop_put(tsk[i]);
-   415			if (kthread_ret)
-   416				ret = kthread_ret;
-   417		}
-   418	
-   419		if (ret)
-   420			goto out;
-   421	
-   422		/* Calculate streaming DMA statistics */
-   423		loops = atomic64_read(&map->loops);
-   424		if (loops > 0) {
-   425			u64 map_variance, unmap_variance;
-   426			u64 sum_map = atomic64_read(&map->sum_map_100ns);
-   427			u64 sum_unmap = atomic64_read(&map->sum_unmap_100ns);
-   428			u64 sum_sq_map = atomic64_read(&map->sum_sq_map);
-   429			u64 sum_sq_unmap = atomic64_read(&map->sum_sq_unmap);
-   430	
-   431			map->bparam.avg_map_100ns = div64_u64(sum_map, loops);
-   432			map->bparam.avg_unmap_100ns = div64_u64(sum_unmap, loops);
-   433	
-   434			map_variance = div64_u64(sum_sq_map, loops) -
-   435					map->bparam.avg_map_100ns * map->bparam.avg_map_100ns;
-   436			unmap_variance = div64_u64(sum_sq_unmap, loops) -
-   437					map->bparam.avg_unmap_100ns * map->bparam.avg_unmap_100ns;
-   438			map->bparam.map_stddev = int_sqrt64(map_variance);
-   439			map->bparam.unmap_stddev = int_sqrt64(unmap_variance);
-   440		}
-   441	
-   442		/* Calculate IOVA statistics */
-   443		iova_loops = atomic64_read(&map->iova_loops);
-   444		if (iova_loops > 0) {
-   445			u64 alloc_variance, link_variance, sync_variance, destroy_variance;
-   446			u64 sum_alloc = atomic64_read(&map->sum_iova_alloc_100ns);
-   447			u64 sum_link = atomic64_read(&map->sum_iova_link_100ns);
-   448			u64 sum_sync = atomic64_read(&map->sum_iova_sync_100ns);
-   449			u64 sum_destroy = atomic64_read(&map->sum_iova_destroy_100ns);
-   450	
-   451			map->bparam.avg_iova_alloc_100ns = div64_u64(sum_alloc, iova_loops);
-   452			map->bparam.avg_iova_link_100ns = div64_u64(sum_link, iova_loops);
-   453			map->bparam.avg_iova_sync_100ns = div64_u64(sum_sync, iova_loops);
-   454			map->bparam.avg_iova_destroy_100ns = div64_u64(sum_destroy, iova_loops);
-   455	
-   456			alloc_variance = div64_u64(atomic64_read(&map->sum_sq_iova_alloc), iova_loops) -
-   457					map->bparam.avg_iova_alloc_100ns * map->bparam.avg_iova_alloc_100ns;
-   458			link_variance = div64_u64(atomic64_read(&map->sum_sq_iova_link), iova_loops) -
-   459					map->bparam.avg_iova_link_100ns * map->bparam.avg_iova_link_100ns;
-   460			sync_variance = div64_u64(atomic64_read(&map->sum_sq_iova_sync), iova_loops) -
-   461					map->bparam.avg_iova_sync_100ns * map->bparam.avg_iova_sync_100ns;
-   462			destroy_variance = div64_u64(atomic64_read(&map->sum_sq_iova_destroy), iova_loops) -
-   463					map->bparam.avg_iova_destroy_100ns * map->bparam.avg_iova_destroy_100ns;
-   464	
-   465			map->bparam.iova_alloc_stddev = int_sqrt64(alloc_variance);
-   466			map->bparam.iova_link_stddev = int_sqrt64(link_variance);
-   467			map->bparam.iova_sync_stddev = int_sqrt64(sync_variance);
-   468			map->bparam.iova_destroy_stddev = int_sqrt64(destroy_variance);
-   469		}
-   470	
-   471	out:
-   472		put_device(map->dev);
-   473		kfree(tsk);
-   474		return ret;
-   475	}
-   476	
+I really don't see a reason for additional complicated handling in the
+geni driver that you've implemented. Maybe I misunderstand something. In
+such a case it usually means that you have to explain the design in the
+commit message / in-code comments.
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+With best wishes
+Dmitry
 

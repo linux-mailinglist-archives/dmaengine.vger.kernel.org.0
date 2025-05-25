@@ -1,248 +1,164 @@
-Return-Path: <dmaengine+bounces-5257-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5258-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A2C4AAC2D97
-	for <lists+dmaengine@lfdr.de>; Sat, 24 May 2025 07:40:22 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E24FEAC33C8
+	for <lists+dmaengine@lfdr.de>; Sun, 25 May 2025 12:16:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1D33A4A34BE
-	for <lists+dmaengine@lfdr.de>; Sat, 24 May 2025 05:40:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 65DEF170D98
+	for <lists+dmaengine@lfdr.de>; Sun, 25 May 2025 10:16:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E261D1ACEB0;
-	Sat, 24 May 2025 05:40:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E52DF2B9BC;
+	Sun, 25 May 2025 10:16:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ZV2LjEXe"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="te9hgUNQ"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2057.outbound.protection.outlook.com [40.107.243.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56EA1156F5D;
-	Sat, 24 May 2025 05:40:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748065218; cv=none; b=VyMTHrL9XzbuaNs4yQOOryd1Kp6a3Gx+nw1DFoxQCt8iTzyuxJOHvASGARK/R4muAprkR2xBeVTId2ydF1S+Am0VSDjPVihA2p/3ZIvF8ebzyYwjyhSSiLmTag47hUUci7IssaWsQVDgaaDS88u5+fcJ5fhCN+eH3TY6d4PkrpA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748065218; c=relaxed/simple;
-	bh=14/2ip35FeywfWYzsVvpZkM3FiQyxMuIi4NDdHLXrTE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=drch746+v995nJblmdLit1/o1WY2LLd3v3Cmpnt9FPxuY5RpcZtGvMj+niTQZUkY3gpxVFwMJ9bBrr1zxYbxf7MS3vlW/o0rIRHDr9OeeVkeK6r05DBOyLjOEsakfonO/VUN0aYzPABCpD2p2xUgMV/YtcgcvRdbP8p7DdegOGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ZV2LjEXe; arc=none smtp.client-ip=115.124.30.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1748065210; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=Vb/+YVmUsnGKgeF1YClxfgtT9PLmvgySvb+sSDF/9tU=;
-	b=ZV2LjEXepZbaEjRV05Tv4wkieJocWk5Pk1wrNjX5WoSwhmMMCL2toNQs4gowxWRrV95aHp/XHbhKhl1n9ewO+vVqkrjX0trsTjGnmVLpOzVrY7Da/zZ/gIFI11Qmle13bGPKYlWfAXSNcwYeC78KSoQxcf0n3kBRR/Q71GDywxw=
-Received: from 30.246.160.208(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Wbd3RrH_1748065209 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Sat, 24 May 2025 13:40:10 +0800
-Message-ID: <87234fab-081e-4e2e-9ef1-0414b23601ce@linux.alibaba.com>
-Date: Sat, 24 May 2025 13:40:08 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D0A1BA42;
+	Sun, 25 May 2025 10:16:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748168192; cv=fail; b=LlC7IIOrk/42mcP9sTWioLE17L6yF7RUPAN7Vd8iPzWQraaep5Nx1V8ymeXITZ33KtOcqVm1EaoHSeshayIedk2CUfdNfP7TLtp8/gsSisyFeG2fOHRfQ6u3HdgZKT8qtSgPLtcNnSpHvmpXMG1oN857SzL1MkSmbEjjTk/r2MQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748168192; c=relaxed/simple;
+	bh=7U0ZmQRJ3Bp56Wy1CxppyIT1b38JdIczkka7Pik9mFw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LeZ/Xp8O0k5TtaRpaVHQ0SFFD7DUH8s68fEqscbT5VtVAAWp6c68UFA2FeK1S4XW8M2VYHE37XfArwdd6o2wA7wTqhz+uZbRJtug4eTUl4N2wT/uwQfLfFqmcrM6eMgJOW69w46fWeYBMt5XYUt+jFwB/LyMCG67vgjmtRoNUFQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=te9hgUNQ; arc=fail smtp.client-ip=40.107.243.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=tnMQCeFeyYP4qm6YmtqSGMvSeg2ACbBT2aPe9SmNKceHsiFwSxrDlXbZxgkY6kv41yiMS7Fc1R+6IjpHl3Uvth0ecU+UsLensAyToQHL2JZ/YBpDmxQeD3IMVcEosubF2Yr9VxUPs5x0tA0kc7InHI+S+3upQPmIYPtmDKIN9N9F6ra0JxXOl/Wkw7h/D1l2cgsJQ/7mNRF6NZPDgB2QIe9/yDiXKXzfvG1T2AV6E4Ml4nbhMDELOX+a6DxSPIMEHLpCIkI7AQThKB7j3EuNyTtlgcggmEDAguSQisyMdP0svvHymxqfS9D9j7szx3gUiyD/4ayvSq9sJZbkIIv4Lg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VRzuhiY1lSropOwTYSbUjCGNhw4wKd5tf8Yzlru3qDA=;
+ b=ZuBcyyBswRGFUixiEXaROp2TGBu9l3kuNUcSf/ig6OFrQ0ae7pyMRXmNrnv8AhaCLz0xftVXKkHAMiMYEY15GXUXvPDJz2HyoWEtSnb4/7KDxhx3m1dAV2RN/ufBjaiuRG6EQmB6pfiIBYK2zixt9+lmZ/hOMxLyOEB/InpmEJyH2Wp2o6qIMtHESHjrzCRqRGt5FuFA5HijPDVeWamCy+TJ2p/kzmwct2UeGUOFA1f1Mb1bEs9aA7JWJqjgyH6KMoG+cO51PZiO9x4A/z5luwd5qGyySR+YiZXm2hyyo1JES2+ocafEHCMmTuH1C8aNyLy3eOIolFLsZsjGecL6gQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VRzuhiY1lSropOwTYSbUjCGNhw4wKd5tf8Yzlru3qDA=;
+ b=te9hgUNQmCkVwBJ3N5buphOomHBD8gtw8291Y0gxVIhc8bkcJ+sWszedh1OU5E4OrFgFTL+9N49MOx2J7kuLTrfDphQ6hEaHCKOCSEvaLUOA70CupCJYP9YXpyMSgd2pCzzNV9P5k8uguhEWFyX9lgnPaKwqquBUjlz9ZfkKYF8=
+Received: from BY3PR10CA0006.namprd10.prod.outlook.com (2603:10b6:a03:255::11)
+ by CY5PR12MB6371.namprd12.prod.outlook.com (2603:10b6:930:f::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.30; Sun, 25 May
+ 2025 10:16:27 +0000
+Received: from SJ5PEPF00000205.namprd05.prod.outlook.com
+ (2603:10b6:a03:255:cafe::1a) by BY3PR10CA0006.outlook.office365.com
+ (2603:10b6:a03:255::11) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8746.31 via Frontend Transport; Sun,
+ 25 May 2025 10:16:27 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ5PEPF00000205.mail.protection.outlook.com (10.167.244.38) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8769.18 via Frontend Transport; Sun, 25 May 2025 10:16:27 +0000
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Sun, 25 May
+ 2025 05:16:25 -0500
+Received: from xhdsuragupt40.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Sun, 25 May 2025 05:16:22 -0500
+From: Suraj Gupta <suraj.gupta2@amd.com>
+To: <vkoul@kernel.org>, <michal.simek@amd.com>, <radhey.shyam.pandey@amd.com>,
+	<thomas.gessler@brueckmann-gmbh.de>
+CC: <dmaengine@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <harini.katakam@amd.com>
+Subject: [PATCH 0/2] Add support to configure irq coalescing count and delay for AXI DMA
+Date: Sun, 25 May 2025 15:46:15 +0530
+Message-ID: <20250525101617.1168991-1-suraj.gupta2@amd.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] dmaengine: idxd: Fix race condition between WQ
- enable and reset paths
-To: Dave Jiang <dave.jiang@intel.com>, vinicius.gomes@intel.com,
- fenghuay@nvidia.com, vkoul@kernel.org
-Cc: dmaengine@vger.kernel.org, colin.i.king@gmail.com,
- linux-kernel@vger.kernel.org
-References: <20250522063329.51156-1-xueshuai@linux.alibaba.com>
- <20250522063329.51156-2-xueshuai@linux.alibaba.com>
- <a03e4f97-2289-4af7-8bfc-ad2d38ec8677@intel.com>
- <b2153756-a57e-4054-bde2-deb8865c9e59@linux.alibaba.com>
- <4cd53b91-bd20-46a1-854c-9bf0950ea496@intel.com>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <4cd53b91-bd20-46a1-854c-9bf0950ea496@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+Received-SPF: None (SATLEXMB04.amd.com: suraj.gupta2@amd.com does not
+ designate permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF00000205:EE_|CY5PR12MB6371:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3fa1ad45-fc0c-4315-2ff1-08dd9b7535c6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|1800799024|36860700013|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?BhB05K5TGS3wxQqLBMeT2WecYsJyaiRFXnvlKrvVTANLuana0nLIiK92Y/QK?=
+ =?us-ascii?Q?bRzyjGcME7qXkczD3fQ4ofqd3iUIkBOZ6cyg87tQ2jY/c3ZBfGtPeVVkK2ft?=
+ =?us-ascii?Q?yvrLAHm0LhyFUBOF2lQAmT3Zd3evFfH9/B3Z5G8zjmCRF3V0LyaHowU045Cg?=
+ =?us-ascii?Q?U23UpeSihpAP0eySVNAzdq6hrQAgWnp3xcuTHpMmQTi2THlIQh7UIaKn+Cej?=
+ =?us-ascii?Q?V0tQwvlAgIJMKGzCVj/0b6xkCWVWJLcXG23o6p5OX/0LHpTBz80ElQUFVM+F?=
+ =?us-ascii?Q?3qlzfRjISzGjPPOCNZH18vYV1a7lgkb4/FkIAO1m1m8l7aLUU8lI8BfTmHSI?=
+ =?us-ascii?Q?wydWXeGkJLlNz2aU+f/ro15JBMwTo2X3i1MlpMkaQ0H15SlkJRpMNOdWKpfJ?=
+ =?us-ascii?Q?jvTZ90vKUF9HGU4eDOW1dpmbKukpv9lGVFH47s4DAW6lV0706rnWEjj6CNRy?=
+ =?us-ascii?Q?81IuRzFDOeeG6CweWInSAnWn5/ki0KJBKF8KfltPzJ22ayJVGvCcYf8UDgCf?=
+ =?us-ascii?Q?Xu9aSvNQPBb0uUD1EqQT21gRWnsnVu8XWfqu6gS/SoS4m0FXIQOW/ZhoZ+cc?=
+ =?us-ascii?Q?I5DrjgMFZj674cg3/PhMJA0Pbc34Xc3y49P4WNPlsXyuwBVbXt41ZwVB370W?=
+ =?us-ascii?Q?SDP/0fseWZzDdsHGXyPLlTurPm+RYwtC3klsHC5e2Kq6/Ts4Xtr6JJ/nBCYb?=
+ =?us-ascii?Q?SsXT7qssxueyCltSopVaLtjHbthD7eG0FLPjyzjLahTj1+b9GTuU0Q3Xz7HU?=
+ =?us-ascii?Q?LpmPQpt1HMNBkecvM7E8cPZ7feEePhdViJRvknoNomgw5Nntb37fKABCWceL?=
+ =?us-ascii?Q?HhR0HRSgwZEDFQYqwhpv7Q+8v+vLZJPY4hrtfPzy9irxZciewCp+mb8igKK5?=
+ =?us-ascii?Q?KFuSGrD9eOEbX5gW6qN/Uwy90BQd7igVM0iN3OiAIQtWYanhCBP3Jg9lfi1U?=
+ =?us-ascii?Q?tKgUAQY6MWIlmI2/R61RepbzZRESQtM0mvPFkEWe738mqUnKbCiSF0FzivyC?=
+ =?us-ascii?Q?rEi1N2ehaJl+xdk5Qg36TPrG/h27xYLDsutfUPTC0LnmGme1ICD+z0EgCRQw?=
+ =?us-ascii?Q?ur7VUClIlU4J0aWUx7yCn5V0gMSMJmRAUDgvMqIL4986+Ei6Mg2b4GIel4yS?=
+ =?us-ascii?Q?pTVz70xPncGuN+9AP3YZcCUYqKhgaOgu1/9A6IHMJEM4we0tzgeQ+k/OQplo?=
+ =?us-ascii?Q?rEaa9aEWJxUrzvM/Q+//7VlnaBOAKE6vavXj/howJYikvIENqtEVWa58GerA?=
+ =?us-ascii?Q?+Pusur8wCLQSboPw8EJnb5nW3zcB2Ep8Jafz9Es5UZkQeUjFOvpkJrv+hZJj?=
+ =?us-ascii?Q?/8RecOJVrq2Yiw+UcM2bkfzL+Z8gipAQxqBncTDdc066iv6z6q3fkiWpYT7Q?=
+ =?us-ascii?Q?XbHSUYqr6JD4ziHjaennfTkqZlut1jdQ+HKfopidZ7jbAXTl1QLMkEr2lKNO?=
+ =?us-ascii?Q?5VuE8VbwPRIjFgNSDBvNerdrylcPVCdWCMMiiqJ8GJYdG+IqN8CngnHm+AzU?=
+ =?us-ascii?Q?/Zd2fCAPGMxagQmPSg6i/tHoGTrCq7DFPEU/?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(36860700013)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 May 2025 10:16:27.0876
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3fa1ad45-fc0c-4315-2ff1-08dd9b7535c6
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF00000205.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6371
 
+Allow AXI DMA client to configure / report coalesce parameters. Client can
+fine-tune irq coalescing parameters based on the transfer load.
 
+AXI ethernet driver uses AXI DMA dmaengine driver. Corresponding changes
+for AXI ethernet driver to allow irq coalescing configuration / reporting
+via ethtool will be sent to net-next with following subject:
+"net: xilinx: axienet: Configure and report coalesce parameters in
+DMAengine flow"
 
-在 2025/5/23 22:54, Dave Jiang 写道:
-> 
-> 
-> On 5/22/25 10:20 PM, Shuai Xue wrote:
->>
->>
->> 在 2025/5/22 22:55, Dave Jiang 写道:
->>>
->>>
->>> On 5/21/25 11:33 PM, Shuai Xue wrote:
->>>> A device reset command disables all WQs in hardware. If issued while a WQ
->>>> is being enabled, it can cause a mismatch between the software and hardware
->>>> states.
->>>>
->>>> When a hardware error occurs, the IDXD driver calls idxd_device_reset() to
->>>> send a reset command and clear the state (wq->state) of all WQs. It then
->>>> uses wq_enable_map (a bitmask tracking enabled WQs) to re-enable them and
->>>> ensure consistency between the software and hardware states.
->>>>
->>>> However, a race condition exists between the WQ enable path and the
->>>> reset/recovery path. For example:
->>>>
->>>> A: WQ enable path                   B: Reset and recovery path
->>>> ------------------                 ------------------------
->>>> a1. issue IDXD_CMD_ENABLE_WQ
->>>>                                      b1. issue IDXD_CMD_RESET_DEVICE
->>>>                                      b2. clear wq->state
->>>>                                      b3. check wq_enable_map bit, not set
->>>> a2. set wq->state = IDXD_WQ_ENABLED
->>>> a3. set wq_enable_map
->>>>
->>>> In this case, b1 issues a reset command that disables all WQs in hardware.
->>>> Since b3 checks wq_enable_map before a2, it doesn't re-enable the WQ,
->>>> leading to an inconsistency between wq->state (software) and the actual
->>>> hardware state (IDXD_WQ_DISABLED).
->>>
->>>
->>> Would it lessen the complication to just have wq enable path grab the device lock before proceeding?
->>>
->>> DJ
->>
->> Yep, how about add a spin lock to enable wq and reset device path.
->>
->> diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
->> index 38633ec5b60e..c0dc904b2a94 100644
->> --- a/drivers/dma/idxd/device.c
->> +++ b/drivers/dma/idxd/device.c
->> @@ -203,6 +203,29 @@ int idxd_wq_enable(struct idxd_wq *wq)
->>   }
->>   EXPORT_SYMBOL_GPL(idxd_wq_enable);
->>   
->> +/*
->> + * This function enables a WQ in hareware and updates the driver maintained
->> + * wq->state to IDXD_WQ_ENABLED. It should be called with the dev_lock held
->> + * to prevent race conditions with IDXD_CMD_RESET_DEVICE, which could
->> + * otherwise disable the WQ without the driver's state being properly
->> + * updated.
->> + *
->> + * For IDXD_CMD_DISABLE_DEVICE, this function is safe because it is only
->> + * called after the WQ has been explicitly disabled, so no concurrency
->> + * issues arise.
->> + */
->> +int idxd_wq_enable_locked(struct idxd_wq *wq)
->> +{
->> +       struct idxd_device *idxd = wq->idxd;
->> +       int ret;
->> +
->> +       spin_lock(&idxd->dev_lock);
-> 
-> Let's start using the new cleanup macro going forward:
-> guard(spinlock)(&idxd->dev_lock);
-> 
-> On a side note, there's been a cleanup on my mind WRT this driver's locking. I think we can replace idxd->dev_lock with idxd_confdev(idxd) device lock. You can end up just do:
-> guard(device)(idxd_confdev(idxd));
+Suraj Gupta (2):
+  dmaengine: Add support to configure and read IRQ coalescing parameters
+  dmaengine: xilinx_dma: Add support to configure/report coalesce
+    parameters from/to client using AXI DMA
 
-Then we need to replace the lock from spinlock to mutex lock?
+ drivers/dma/xilinx/xilinx_dma.c | 62 ++++++++++++++++++++++++++++-----
+ include/linux/dmaengine.h       | 10 ++++++
+ 2 files changed, 64 insertions(+), 8 deletions(-)
 
-> 
-> And also drop the wq->wq_lock and replace with wq_confdev(wq) device lock:
-> guard(device)(wq_confdev(wq));
-> 
-> If you are up for it that is.
-
-We creates a hierarchy: pdev -> idxd device -> wq device.
-idxd_confdev(idxd) is the parent of wq_confdev(wq) because:
-
-     (wq_confdev(wq))->parent = idxd_confdev(idxd);
-
-Is it safe to grap lock of idxd_confdev(idxd) under hold
-lock of wq_confdev(wq)?
-
-We have mounts of code use spinlock of idxd->dev_lock under
-hold of wq->wq_lock.
-
-> 
-> 
->> +       ret = idxd_wq_enable_locked(wq);
->> +       spin_unlock(&idxd->dev_lock);
->> +
->> +       return ret;
->> +}
->> +
->>   int idxd_wq_disable(struct idxd_wq *wq, bool reset_config)
->>   {
->>          struct idxd_device *idxd = wq->idxd;
->> @@ -330,7 +353,7 @@ int idxd_wq_set_pasid(struct idxd_wq *wq, int pasid)
->>   
->>          __idxd_wq_set_pasid_locked(wq, pasid);
->>   
->> -       rc = idxd_wq_enable(wq);
->> +       rc = idxd_wq_enable_locked(wq);
->>          if (rc < 0)
->>                  return rc;
->>   
->> @@ -380,7 +403,7 @@ int idxd_wq_disable_pasid(struct idxd_wq *wq)
->>          iowrite32(wqcfg.bits[WQCFG_PASID_IDX], idxd->reg_base + offset);
->>          spin_unlock(&idxd->dev_lock);
->>   
->> -       rc = idxd_wq_enable(wq);
->> +       rc = idxd_wq_enable_locked(wq);
->>          if (rc < 0)
->>                  return rc;
->>   
->> @@ -644,7 +667,11 @@ int idxd_device_disable(struct idxd_device *idxd)
->>   
->>   void idxd_device_reset(struct idxd_device *idxd)
->>   {
->> +
->> +       spin_lock(&idxd->dev_lock);
->>          idxd_cmd_exec(idxd, IDXD_CMD_RESET_DEVICE, 0, NULL);
->> +       spin_unlock(&idxd->dev_lock);
->> +
->>
-> 
-> I think you just need the wq_enable locked and also in idxd_device_clear_state(), extend the lock to the whole function. Locking the reset function around just the command execute won't protect the wq enable path against the changing of the software states on the reset side.
-
-Quite agreed.
-
-> 
-> DJ
-> 
->> (The dev_lock should also apply to idxd_wq_enable(), I did not paste here)
->>
->> Also, I found a new bug that idxd_device_config() is called without
->> hold idxd->dev_lock.
->>> idxd_device_config() explictly asserts the hold of idxd->dev_lock.
->>
->> +++ b/drivers/dma/idxd/irq.c
->> @@ -33,12 +33,17 @@ static void idxd_device_reinit(struct work_struct *work)
->>   {
->>          struct idxd_device *idxd = container_of(work, struct idxd_device, work);
->>          struct device *dev = &idxd->pdev->dev;
->> -       int rc, i;
->> +       int rc = 0, i;
->>   
->>          idxd_device_reset(idxd);
->> -       rc = idxd_device_config(idxd);
->> -       if (rc < 0)
->> +       spin_lock(&idxd->dev_lock);
-> I wonder if you should also just lock the idxd_device_reset() and the idxd_device_enable() as well in this case as you don't anything to interfere with the entire reinit path.
-
-During reset, any operation to enable wq should indeed be avoided,
-but there isn't a suitable lock currently. idxd->dev_lock is a
-lightweight lock, only used when updating the device state, and
-it's used while holding wq->wq_lock. Therefore, holding idxd->dev_lock
-currently cannot form mutual exclusion with wq->wq_lock.
-
-And the sub caller of idxd_device_reset(), e.g. idxd_device_clear_state()
-also spins to hold idxd->dev_lock.
-
-A hack way it to grab wq_lock of all wqs before before reinit, but
-this is hardly elegant (:
-
-Thanks.
-Have a nice holiday!
-
-Best regards,
-Shuai
+-- 
+2.25.1
 
 

@@ -1,256 +1,160 @@
-Return-Path: <dmaengine+bounces-5269-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5270-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87E98AC3CAC
-	for <lists+dmaengine@lfdr.de>; Mon, 26 May 2025 11:26:51 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 33CE0AC423D
+	for <lists+dmaengine@lfdr.de>; Mon, 26 May 2025 17:28:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C43FD3A94A5
-	for <lists+dmaengine@lfdr.de>; Mon, 26 May 2025 09:26:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D6836188CBD1
+	for <lists+dmaengine@lfdr.de>; Mon, 26 May 2025 15:28:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 298FB1F1522;
-	Mon, 26 May 2025 09:26:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9172520E717;
+	Mon, 26 May 2025 15:28:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Nbe/WxBo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CBMR/EqD"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0493572600
-	for <dmaengine@vger.kernel.org>; Mon, 26 May 2025 09:26:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F217A29;
+	Mon, 26 May 2025 15:28:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748251594; cv=none; b=sU0e9THWEs/7zloZIB+OQFkRdpXFHRBXLcwnH4KBBbo4xhAmkBgv47zI5VCFZDUtsUn4mANzUHhTssYvNrzYxAYuBbpLPQrdHsdlwmrx440+mSJ740hP8PBR9Vw+72wakjA5fowXbzvIjq18c5A1W/cr+S+TFzJAC36u92TTb7k=
+	t=1748273293; cv=none; b=t33S2AOALnxKQaiBy6k5hIq1v2phQfCt7Mz2iExdKTvlI8K8hwura4jTl18labHCfhmAAZl7yuQIVHJJcuR8UmN3xdJOlFTF+McudJbbABtuGZYNT5GdggWXgp8NXB+JGGmYhCrwiSqC0rZ32ttHXU2zrr6Es9jirMs+Ill8M1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748251594; c=relaxed/simple;
-	bh=lVbzhPaz+7K5lfVz2nfTAwtqcnMAzfpf5XmOESZX8AA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g+kfYCo6vmqugRgIASqw1Xht5jUIhQsFvONr/wkU7wtyh1wFPQylH7hyQB3qQFdQcjY0kiG9Ee+dv9rZF0gUeqMdOgYL9pQzeo/p0jZUMC074qOeY2xVx6jdaw2Kl6rSoD3SlRkuQ8f7KiAEUYOMIguQmSrEzj3mso+fhEayQ6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Nbe/WxBo; arc=none smtp.client-ip=115.124.30.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1748251580; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=NBjoKyfbHLm98pOCN1ffAGyNCZJ/v1iV+H9uM+CNNpc=;
-	b=Nbe/WxBodevO+0+iPrNO4YtiSpcCYvMM/R9eCL5YIDlvlVgEFaCCcpMdkwSqq1JtOp9qZBgF1KPN+oGTo05l3zUi+2TCqjDVAVbyEds5rqJ5akChwj4LqB2dMvrGIg4EMhSNpB8ObzXFsD/FhRpYkdpDInTiPTOu60QkRNiRD6U=
-Received: from 30.246.160.208(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Wbnl82g_1748251579 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 26 May 2025 17:26:20 +0800
-Message-ID: <08b98863-4700-40a6-b8a9-1ed305a57d8e@linux.alibaba.com>
-Date: Mon, 26 May 2025 17:26:17 +0800
+	s=arc-20240116; t=1748273293; c=relaxed/simple;
+	bh=kx4yqtWDGweZsbDr2gCws1oaqd0WX7/rjIqEa7ApGPg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BcgL21kFLJkjUjc4W5RUVNn5I4QVFP9zyFaXaiZLvKnAojTwv4JAhkEClpWBG1sBiHnyrndtcy9FdKuvsaWI7fzzLtE+djMZrbTFlERJZpcWoNcCOYAWLKzUkhe+ICcMQ3G5pm01RH3Tv6vrjb/ul9SsYXHXZjSEV7uaC39UOSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CBMR/EqD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 056F7C4CEE7;
+	Mon, 26 May 2025 15:28:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748273292;
+	bh=kx4yqtWDGweZsbDr2gCws1oaqd0WX7/rjIqEa7ApGPg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CBMR/EqD2LP6ZMPrdhAz5GKwgLaYU5OLWEXKKEkRkERaLW6tj3NPmH/yJY93BrIkk
+	 oqhH7jAiRBVQcPG8g2HSodJ6bqNVI0hfwhyM6AECHauRn9OegoVXNa6MsBuljNAHXl
+	 Bh8gi698WLTIYN4jHrMbqEfV6Bo2r88Nojmim5EzU7ADtUTBNVPZb+vJr7HIgZIs7m
+	 pD47cXG4K0/jnaNIvsGj3unpYEYQGXpBiChV28o6VDLuOJR9qyObJB/iG8Gw8RxdRV
+	 1OPb8D1rvBE42FwZn3wJDxzPF+GreVTUVfNRFNL/03trQQiVjyhbOcNgXaunhxpMIc
+	 JJIjF0XDCr7qA==
+Date: Mon, 26 May 2025 16:28:07 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Marek Vasut <marex@denx.de>,
+	"open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+	"open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>,
+	"moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/1] dt-bindings: dma: fsl-mxs-dma: allow interrupt-names
+ for fsl,imx23-dma-apbx
+Message-ID: <20250526-plural-nifty-b43938d9f180@spud>
+References: <20250523213252.582366-1-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [bug report] dmaengine: idxd: fix memory leak in error handling
- path of idxd_setup_wqs
-To: Dan Carpenter <dan.carpenter@linaro.org>,
- Dave Jiang <dave.jiang@intel.com>,
- "Colin King (gmail)" <colin.i.king@gmail.com>
-Cc: dmaengine@vger.kernel.org
-References: <aDQt3_rZjX-VuHJW@stanley.mountain>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <aDQt3_rZjX-VuHJW@stanley.mountain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="6/eZI3GwQY5emfaK"
+Content-Disposition: inline
+In-Reply-To: <20250523213252.582366-1-Frank.Li@nxp.com>
 
 
+--6/eZI3GwQY5emfaK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-在 2025/5/26 17:01, Dan Carpenter 写道:
-> Hello Shuai Xue,
-> 
-> Commit 3fd2f4bc010c ("dmaengine: idxd: fix memory leak in error
-> handling path of idxd_setup_wqs") from Apr 4, 2025 (linux-next),
-> leads to the following Smatch static checker warning:
-> 
-> 	drivers/dma/idxd/init.c:246 idxd_setup_wqs()
-> 	error: uninitialized symbol 'conf_dev'.
-> 
-> drivers/dma/idxd/init.c
->      177 static int idxd_setup_wqs(struct idxd_device *idxd)
->      178 {
->      179         struct device *dev = &idxd->pdev->dev;
->      180         struct idxd_wq *wq;
->      181         struct device *conf_dev;
->      182         int i, rc;
->      183
->      184         idxd->wqs = kcalloc_node(idxd->max_wqs, sizeof(struct idxd_wq *),
->      185                                  GFP_KERNEL, dev_to_node(dev));
->      186         if (!idxd->wqs)
->      187                 return -ENOMEM;
->      188
->      189         idxd->wq_enable_map = bitmap_zalloc_node(idxd->max_wqs, GFP_KERNEL, dev_to_node(dev));
->      190         if (!idxd->wq_enable_map) {
->      191                 rc = -ENOMEM;
->      192                 goto err_bitmap;
->      193         }
->      194
->      195         for (i = 0; i < idxd->max_wqs; i++) {
->      196                 wq = kzalloc_node(sizeof(*wq), GFP_KERNEL, dev_to_node(dev));
->      197                 if (!wq) {
->      198                         rc = -ENOMEM;
->      199                         goto err;
-> 
-> On this error path we either free an uninitialized variable or we
-> double free conf_dev.
+On Fri, May 23, 2025 at 05:32:52PM -0400, Frank Li wrote:
+> Allow interrupt-names for fsl,imx23-dma-apbx and keep the same restriction
+> for others.
 
-Hi, Dan,
+The content of the patch seems okay, but why are you doing this? What is
+the value on this particular platform but not the others?
 
-Thanks for reporting this bug:)
+>=20
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  .../devicetree/bindings/dma/fsl,mxs-dma.yaml  | 33 +++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/dma/fsl,mxs-dma.yaml b/Doc=
+umentation/devicetree/bindings/dma/fsl,mxs-dma.yaml
+> index 75a7d9556699c..9102b615dbd61 100644
+> --- a/Documentation/devicetree/bindings/dma/fsl,mxs-dma.yaml
+> +++ b/Documentation/devicetree/bindings/dma/fsl,mxs-dma.yaml
+> @@ -23,6 +23,35 @@ allOf:
+>        properties:
+>          power-domains: false
+> =20
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: fsl,imx23-dma-apbx
+> +    then:
+> +      properties:
+> +        interrupt-names:
+> +          items:
+> +            - const: audio-adc
+> +            - const: audio-dac
+> +            - const: spdif-tx
+> +            - const: i2c
+> +            - const: saif0
+> +            - const: empty0
+> +            - const: auart0-rx
+> +            - const: auart0-tx
+> +            - const: auart1-rx
+> +            - const: auart1-tx
+> +            - const: saif1
+> +            - const: empty1
+> +            - const: empty2
+> +            - const: empty3
+> +            - const: empty4
+> +            - const: empty5
+> +    else:
+> +      properties:
+> +        interrupt-names: false
+> +
+>  properties:
+>    compatible:
+>      oneOf:
+> @@ -54,6 +83,10 @@ properties:
+>      minItems: 4
+>      maxItems: 16
+> =20
+> +  interrupt-names:
+> +    minItems: 4
+> +    maxItems: 16
+> +
+>    "#dma-cells":
+>      const: 1
+> =20
+> --=20
+> 2.34.1
+>=20
 
-It has reported by Colin but he forgot to cc mailing list.
-And I sent a patch to fix it:
-https://lore.kernel.org/lkml/19668a72-c523-42ab-87ac-990a4baac214@intel.com/
+--6/eZI3GwQY5emfaK
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 
->      200                 }
->      201
->      202                 idxd_dev_set_type(&wq->idxd_dev, IDXD_DEV_WQ);
->      203                 conf_dev = wq_confdev(wq);
->      204                 wq->id = i;
->      205                 wq->idxd = idxd;
->      206                 device_initialize(wq_confdev(wq));
->      207                 conf_dev->parent = idxd_confdev(idxd);
->      208                 conf_dev->bus = &dsa_bus_type;
->      209                 conf_dev->type = &idxd_wq_device_type;
->      210                 rc = dev_set_name(conf_dev, "wq%d.%d", idxd->id, wq->id);
->      211                 if (rc < 0)
->      212                         goto err;
-> 
-> When we're cleaning up loops what I recommend is that we clean up the
-> partial iterations before the goto.
-> 
-> 		if (rc < 0) {
-> 			put_device(conf_dev);
-> 			kfree(wq);
-> 			goto unwind_loop;
-> 		}
-> 
-> That's sort of how the code was written originally but it missed some
-> frees.
-> 
-> 
->      213
->      214                 mutex_init(&wq->wq_lock);
->      215                 init_waitqueue_head(&wq->err_queue);
->      216                 init_completion(&wq->wq_dead);
->      217                 init_completion(&wq->wq_resurrect);
->      218                 wq->max_xfer_bytes = WQ_DEFAULT_MAX_XFER;
->      219                 idxd_wq_set_max_batch_size(idxd->data->type, wq, WQ_DEFAULT_MAX_BATCH);
->      220                 wq->enqcmds_retries = IDXD_ENQCMDS_RETRIES;
->      221                 wq->wqcfg = kzalloc_node(idxd->wqcfg_size, GFP_KERNEL, dev_to_node(dev));
->      222                 if (!wq->wqcfg) {
->      223                         rc = -ENOMEM;
->      224                         goto err;
->      225                 }
-> 
-> Same:
-> 
-> 		if (!wq->wqcfg) {
-> 			put_device(conf_dev);
-> 			kfree(wq);
-> 			rc = -ENOMEM;
-> 			goto unwind_loop;
-> 		}
-> 
->      226
->      227                 if (idxd->hw.wq_cap.op_config) {
->      228                         wq->opcap_bmap = bitmap_zalloc(IDXD_MAX_OPCAP_BITS, GFP_KERNEL);
->      229                         if (!wq->opcap_bmap) {
->      230                                 rc = -ENOMEM;
->      231                                 goto err_opcap_bmap;
->      232                         }
-> 
-> 		if (!wq->wqcfg) {
-> 			kfree(wq->wqcfg);
-> 			put_device(conf_dev);
-> 			kfree(wq);
-> 			rc = -ENOMEM;
-> 			goto unwind_loop;
-> 		}
-> 
-> 
->      233                         bitmap_copy(wq->opcap_bmap, idxd->opcap_bmap, IDXD_MAX_OPCAP_BITS);
->      234                 }
->      235                 mutex_init(&wq->uc_lock);
->      236                 xa_init(&wq->upasid_xa);
->      237                 idxd->wqs[i] = wq;
->      238         }
->      239
-> 
-> Imagine if we add another two allocations here.
-> 
-> 		foo = alloc();
-> 		if (!foo)
-> 			goto err;
-> 		bar = alloc();
-> 		if (!bar)
-> 			goto free_foo;
-> 
-> 
->      240         return 0;
->      241
-> 
-> Then we have to do a little bunny hop.
-> 
-> free_foo:
-> 	free(foo);
-> 	goto err; // <-- bunny hop
-> 
-> err_opcap_bmap:
-> 	kfree(wq->wqcfg);
-> 
-> People often get confused and forget the bunny hop.
+-----BEGIN PGP SIGNATURE-----
 
-I think so, this is the way I used in the original patch I send.
-but reviewer Markus point to move common free code to additional
-jump targets.
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaDSIhwAKCRB4tDGHoIJi
+0oP3AQDZKIfwzE9jpzhzxeBf1nNcdt6Ict2IVltCQIp8aS+xsQD/d6XIOMs1ZvRC
+LNdQl78nksXIYJ53eDc742UHjVpsyQ8=
+=hMch
+-----END PGP SIGNATURE-----
 
-https://lore.kernel.org/lkml/98327a4d-7684-4908-9d67-5dfcaa229ae1@web.de/
-
-I feel free to change back to clean up the partial iterations before the goto.
-@Dave, which way do you like?
-
-(Dave is on vacation, I can send a new patch if he prefer the latter way)
-
-> 
->      242 err_opcap_bmap:
->      243         kfree(wq->wqcfg);
->      244
->      245 err:
-> --> 246         put_device(conf_dev);
->      247         kfree(wq);
->      248
->      249         while (--i >= 0) {
->      250                 wq = idxd->wqs[i];
->      251                 if (idxd->hw.wq_cap.op_config)
->      252                         bitmap_free(wq->opcap_bmap);
->      253                 kfree(wq->wqcfg);
->      254                 conf_dev = wq_confdev(wq);
->      255                 put_device(conf_dev);
->      256                 kfree(wq);
->      257
->      258         }
->      259         bitmap_free(idxd->wq_enable_map);
->      260
->      261 err_bitmap:
->      262         kfree(idxd->wqs);
->      263
->      264         return rc;
->      265 }
-> 
-> regards,
-> dan carpenter
-
-
-Thanks.
-
-Regards
-Shuai
+--6/eZI3GwQY5emfaK--
 

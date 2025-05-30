@@ -1,281 +1,193 @@
-Return-Path: <dmaengine+bounces-5288-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5289-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91024AC92B9
-	for <lists+dmaengine@lfdr.de>; Fri, 30 May 2025 17:53:31 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D4FF8AC9324
+	for <lists+dmaengine@lfdr.de>; Fri, 30 May 2025 18:12:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4779D4A4EBE
-	for <lists+dmaengine@lfdr.de>; Fri, 30 May 2025 15:53:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 717283A5911
+	for <lists+dmaengine@lfdr.de>; Fri, 30 May 2025 16:11:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3137234984;
-	Fri, 30 May 2025 15:53:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E1D5235057;
+	Fri, 30 May 2025 16:11:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="dzBgQQMJ"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="f7SBEZtj"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11010059.outbound.protection.outlook.com [52.101.84.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEDB1228CBC
-	for <dmaengine@vger.kernel.org>; Fri, 30 May 2025 15:53:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748620405; cv=none; b=Eu7rOGDoViDszHuPn2eI9X/uUJ+0p+R12DrfFVaF3jObMAko12blfOoGPczA73/iGe5l+n4VJfGBNHUX6B7me8F7A6irMbgBtoTwUkQIqWt8iXzyVQTWZjpobtFxCEKEJSaCR9fY4Bdj8leGMtuJPUU6u2vkpEpczvZUdfMuOGo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748620405; c=relaxed/simple;
-	bh=LrxK0cAiXOd6k3y7xsFLNaG3CkgMGLXiV0FageijA/k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Cci+rCdM9oT1vLqpqE89UA68d70skqPTGnKaHouJvMGSsTIe7OJN15a/87VvpZzE+4ret02DbHhHLvrUFIAopj3k+M/2jQ5M8JCF2wnFYvKrYPAzS6IK/w42rUkHLN9w2IlA2ettQkBOAZQBSUhY6sCKfmKykmuOcydFcGQ/i+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=dzBgQQMJ; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54UAgN5n011720
-	for <dmaengine@vger.kernel.org>; Fri, 30 May 2025 15:53:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ocOy+iZ89dtnyBaWmC5MMBRHZ5mWFLMjUsmdth3Z8GQ=; b=dzBgQQMJcDYDo0LK
-	6yPAzdvLQ2Nq+0MD/gsuqA9Uss3k+D3+NaFHTO1C3/ZXvC7/MXzq/otbMXCyXOxi
-	L922xEIey+YB5mukNZhJYq4dZxe2i7bbzOz5oAJoS2nGV6iwd0MYaQEZpFO/xJCl
-	1CLky+oH5RGBrOc9xUAg6TWPnn+sQ0CoYYXRBnPTIpjyo4lJvCIP+RUq/E0OAUIG
-	dELuuU1Or3wdqr6jhEr4jIUm1NXl39tsa82UibKB2uoZaK/wmDc1/6MnByMJhLyi
-	K26kcC0TzFaB5NXIw9Fxkf2hMVYOSGeseonnY0SUvujMSlB/cN/lm/+aESk28UNs
-	joql/Q==
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com [209.85.215.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u6g99pu1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <dmaengine@vger.kernel.org>; Fri, 30 May 2025 15:53:22 +0000 (GMT)
-Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-b26e0fee459so1635145a12.1
-        for <dmaengine@vger.kernel.org>; Fri, 30 May 2025 08:53:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748620401; x=1749225201;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ocOy+iZ89dtnyBaWmC5MMBRHZ5mWFLMjUsmdth3Z8GQ=;
-        b=Tcodfz3OKE863e4DiVoUIVqm7k0xNgxmTPuz/Osx/mP5wrNxdjdMpKLkaAwEleIw2V
-         hIQusfz8683NWcz8Yel9oD68V9gQwGqXLQBvW0WN6k7XN8Li2adx3nO7HksKaHW18igk
-         v83RFqKYDXREms9/X/cIFc9jtDuDLBjqZtYeCWmI5AdWQ22qaDyN+5rjKT6t426c6U6l
-         5faqQ0smw7oS+u4RLwibD3tFF3yTUGqLDM9l8KNYCt+LDUMHSoB4v1KtRCpdnTRsahXP
-         mAdu+1IoDZwHdrHvKr+ridg6hrGaDBjUY6a68B1uXY4I3ad/n7Ycz1CXeCgosN10BADr
-         BXXA==
-X-Forwarded-Encrypted: i=1; AJvYcCVN3PD8pj7dvsqR0Ds4yrvG4q56xsQfK13ncjXIVNFPeo6NHVU6op0HQIfUnRAj16PU1MwDttojtRM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/qwlQAfLa4LD7vzanUejmT9CXNfqQ6gD1VTMIBXEZMvRKRTTe
-	EqiCU/RtoScm/Snf4H0DPJqzbNhgVBuo7mTIQ0KzzEGK8nwodAk5PGogigo/dIlN3rs0JNUtPhv
-	5M2s0WpO+YJueKxiFVoehyV/DbxHvZsghH7HToHAWXQ6fqinJbu+wCpi3C4T/n3RK/njBgekNQW
-	hM72gLzjsgxTkLVXFmJisxVhgNsASsAdynJJFe4w==
-X-Gm-Gg: ASbGnctgLk7BYq0BPLZh7CCSM/CcqKdibp6PL8xNTGuO4xvYOb4ezcpFIpRbZkEPNUd
-	aRgU6XeUsRMk438KgjrgQ/UiE1flSyi/Z9JHR+R3qgnwM7L+w/abU7ooyDV6M3D1qwubnKLDhBs
-	6GIiYFRDlFSaTKy3RXNOHFB8En9g==
-X-Received: by 2002:a17:90b:2f03:b0:30a:9feb:1e15 with SMTP id 98e67ed59e1d1-31214e2efabmr13566580a91.8.1748620401284;
-        Fri, 30 May 2025 08:53:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHI8DQTJOy6Ygl/JjuDr7iVO/pS/KdYmD4s/dC0D+LEaOkPASzhJTKviMamfZXKSwSf5rgo3UuFLaa45v1W+Tk=
-X-Received: by 2002:a17:90b:2f03:b0:30a:9feb:1e15 with SMTP id
- 98e67ed59e1d1-31214e2efabmr13566509a91.8.1748620400596; Fri, 30 May 2025
- 08:53:20 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B244D21FF31;
+	Fri, 30 May 2025 16:11:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.59
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748621492; cv=fail; b=ZSu40o1bSJ59lTgvLFdEoBC6kpluU1DHEltP5zFcPR1hX47f+Ym9pBFy/oNYs1xKFMrw8RkosBOR9CpScmGGwrtozV+NY/RtA5+YBuLOzS8S9K5okGuuKqXIMNTdatPwPkoWtNjkUiRJmP34ck8vTWyOEENSoYBswwEgmWrjJsg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748621492; c=relaxed/simple;
+	bh=w5MhHppldrzGV9m4F/68Wpfv/22VTibFt5G79tY8Z8E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=RusXmvDvdK9OY/03S7yHnDsyF1AZjBG/DMXXERCC8AGYLGbQ+om7CmIrqLAxNhTAzGDfsKFdK2fQfSgQXoGiZ/DxRNqqwek3QjN1ewFoOKBD8cEcTnOkB+HIZzdhh3BCsiaRzOBCkUzIQARmXX57XnMd6Q1rcJlpO1wzjMXRqm4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=f7SBEZtj; arc=fail smtp.client-ip=52.101.84.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=aKVRwN8M0HVcdV8HxzWI7BnO21i8w9OeSJUaRvG13DZG75kr0vzlKzkvKbTJN2B9ZCVflRacu4NWOwnXRdGTAF0ArI8/+b/oCJKhLIwYzgw9cjPrDZXdZuoD3V3emNYuzKNuIU5YCJE4vqQUFWzFKBRA9xb4AYVhQnlYHLhIVhiNwa3AE0KZko4TLHLFUNdaAmvMCuIvfXFdCtDGS9/zRyowKBCIyN79+1FNUZKOPqdgWaG2G+m/Qu+buG8FYfuRzyKpwDBLKyK+DPZ3Xl+FghFGZx6pzfKad/wLRGZ+Blaz/PiOcedQ8n79tFdzUWbzcNvTwqgsvfa72N5NUvC7yg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=w5MhHppldrzGV9m4F/68Wpfv/22VTibFt5G79tY8Z8E=;
+ b=VzwTm6QI6YQMqnUBHRgy7+esjvhQKmpfQHfToc8VPw2mNXagzXk2mMxHcdhwR/RQnHLwP4C9v806U9sASJWY1SOwgzMOsFGWJ/INV9X+nsCP2pEbEBEQo85K+w4FWvW1R11c68sRSSlUYbpTiJZm0HgIK3fL+4DXHae6EVxvJEy4atTZhDuu09hUZq2rKTt76GxCIaxTxEZcQI4CgUgh24RX4mFA0X3xvK6suafaP60X1IoM3N9OeaNxCPTZsUXd4yOXxghFr6MfJK/B/THbG18v3o5RUFLx9nKn95lpeNTaQciPwS7KMIr2jK58coGjQroa6V+cl9WPld8L9ytcag==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=w5MhHppldrzGV9m4F/68Wpfv/22VTibFt5G79tY8Z8E=;
+ b=f7SBEZtjhOsVRimpQnEX544kmDZjcNGKcVCo1ZbhunrNGpecRzwAVbGdn3KzAKhJF1ZNQVe/UzllJqbJlEMAGwCI5euqWcUEO4C/ZLm8oGKXb2XviXkj0bCEUE1pBPD5faw5+YpaffoLYMjNKRsbDVSPurYjPpIhTkm50LhnxUhmfComzqUhgvgJE54VJDYZU4WtrgUbrSox770a3oUhFWCXGxswzWiDDxa8r8S4Ugj9ks0zkHhGtHee1/lV74ic5MDeb2eBbnshxjztpQKGqiCjiwhCi8G00MmihXis99Lrckj8gCkSE3H7Aw7Pl5YxARVEHgyliTXLQE8mcgJ9Lg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by PA1PR04MB10398.eurprd04.prod.outlook.com (2603:10a6:102:44d::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.32; Fri, 30 May
+ 2025 16:11:27 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%6]) with mapi id 15.20.8769.025; Fri, 30 May 2025
+ 16:11:26 +0000
+Date: Fri, 30 May 2025 12:11:17 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: Conor Dooley <conor@kernel.org>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Marek Vasut <marex@denx.de>,
+	"open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+	"open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>,
+	"moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/1] dt-bindings: dma: fsl-mxs-dma: allow interrupt-names
+ for fsl,imx23-dma-apbx
+Message-ID: <aDnYpeViGvIsGCLD@lizhi-Precision-Tower-5810>
+References: <20250523213252.582366-1-Frank.Li@nxp.com>
+ <20250526-plural-nifty-b43938d9f180@spud>
+ <aDcw0sgN1ZX0kCCZ@lizhi-Precision-Tower-5810>
+ <20250530-those-frequency-f8106275769f@spud>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250530-those-frequency-f8106275769f@spud>
+X-ClientProxiedBy: SJ0PR05CA0139.namprd05.prod.outlook.com
+ (2603:10b6:a03:33d::24) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506111844.1726-1-quic_jseerapu@quicinc.com>
- <20250506111844.1726-2-quic_jseerapu@quicinc.com> <ze5y6llgo2qx4nvilaqcmkam5ywqa76d6uetn34iblz4nefpeu@ozbgzwbyd54u>
- <4456d0e2-3451-4749-acda-3b75ae99e89b@quicinc.com> <de00809a-2775-4417-b987-5f557962ec31@quicinc.com>
-In-Reply-To: <de00809a-2775-4417-b987-5f557962ec31@quicinc.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Date: Fri, 30 May 2025 18:53:09 +0300
-X-Gm-Features: AX0GCFsEgcxsXpdIFfOsAqXa1UzndXO-yjeJj8vejz0KsNKmM_D-7yinEUW3MbU
-Message-ID: <CAO9ioeUW9-7N2Ptu_p=XKzeb02RsXx8V3CzarPOD4EWy4QrnsA@mail.gmail.com>
-Subject: Re: [PATCH v6 1/2] dmaengine: qcom: gpi: Add GPI Block event
- interrupt support
-To: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
-Cc: Vinod Koul <vkoul@kernel.org>,
-        Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
-        Viken Dadhaniya <quic_vdadhani@quicinc.com>,
-        Andi Shyti <andi.shyti@kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, quic_vtanuku@quicinc.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Authority-Analysis: v=2.4 cv=d4b1yQjE c=1 sm=1 tr=0 ts=6839d472 cx=c_pps
- a=rz3CxIlbcmazkYymdCej/Q==:117 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
- a=COk6AnOGAAAA:8 a=mdKvkispvZj9PeQf9s4A:9 a=QEXdDO2ut3YA:10
- a=bFCP_H2QrGi7Okbo017w:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: KwTvIXCQhmk3FR_TZq0Mjrvu8PlAp5T_
-X-Proofpoint-GUID: KwTvIXCQhmk3FR_TZq0Mjrvu8PlAp5T_
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTMwMDEzOSBTYWx0ZWRfXykrlzYRygyBD
- 4K50K09t/LLSqdvQtcu/RSigZCyStdFF9+MQ7ws7bQzwOnxyCsJ2NBr4cOpwL5AO4y/Av5z7ORM
- ThH3q0L85EKQ3gqEJuhYldxdAqNfjlhyozEaGiUN3r7Fs5c0a3K1d0Nyr077Tpny77UMQEnVOVk
- uFI25k8Z/BB7bDLfU8qpnC1XvMeEG9zXwxQq5EBvCrVz3+7AvteS1Sf8xZqSWGyQyXdIazOiPeW
- FNpOnNd9COCJWsCl0RwXf8fbLIcIpmMkZYic/7pba8PRLGixefdUE98JeqpCd7rhjRf//EADz5r
- azxQh/wq1KqXcsNKL4KnmhTfhyRvrDD/6utCoBzmf49ZEjtvziT/2mRDycdnlajiVwtWpiv5oJ5
- 9nv5FQqVRB9PdYv23oNZSmlgT8i7C4EBnnbtbKJf7NfAqjnxt+rz9b0Kc4P2oyp+lZCY02Ng
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-30_07,2025-05-30_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 suspectscore=0 malwarescore=0 phishscore=0 mlxlogscore=999
- lowpriorityscore=0 priorityscore=1501 bulkscore=0 spamscore=0 clxscore=1015
- impostorscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505300139
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PA1PR04MB10398:EE_
+X-MS-Office365-Filtering-Correlation-Id: 95976927-3b57-429c-22dc-08dd9f94a0f3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|52116014|7416014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?8GUZl1AM2hX1oDsJK4q+wBkCyaJYPEcmXMlkwPbR7I6jNLcqbFiVMpJ/4Fni?=
+ =?us-ascii?Q?GrQRuW11KjoH3+CBFbp8Nx8Zpe8qBw6/jm9n+CgX9Ntm2lnoT12Rh68X6bLU?=
+ =?us-ascii?Q?twkTHGZhQ/uJAH8viidwjg9q/FHKZGjYogv4i2hLPGYpeJLr1MU6ILKXY0T6?=
+ =?us-ascii?Q?EhqSmLiGdwyRSR53KWPNalLqFAuwOiqOdGvr+ZycBERkBBhkcMoOh32DmnLt?=
+ =?us-ascii?Q?ysa0doKnzAbWr9MWuIlrcApGUYRB9o2Sjd4fioYajqqfgrQNFxsZgKxKafG4?=
+ =?us-ascii?Q?FzquYCseachcwjSAJr/1hV2Swj1g52qc3wBMwgyFb8qcMW4ZBO79RlFRiGlN?=
+ =?us-ascii?Q?UrVZCLZARV+iX2LTwvEw/Vi/XUeGjkrSlpEvJTpunSsCvgu+QltrZnxOw3GA?=
+ =?us-ascii?Q?Em8EodZaDfsuytCDLQMLzsRKbW2zjhOHESLdfcMZ2tg/UPBKu1owLs2J0nzC?=
+ =?us-ascii?Q?aVMkP9JWr7qL9ejuKrb4pYF9x76WrzqE4pdpcmPn/fxZOp9NsEhIpjgFevVg?=
+ =?us-ascii?Q?MkR+utDhGIbzkgS/eVvpBMJdztFiJ0adJyNkFoy4mX3TzCMLER+CnDmLEMEm?=
+ =?us-ascii?Q?Lof793cJmC2Uk40zBRid7qq9Wh2RlvyTrGdbOrGZvq0QxfV5Ega9urIA0sMa?=
+ =?us-ascii?Q?q41RGwm8+onmWxa9zVZDuUPzSrwCBpse4NcYbUG1LdlOSkwiBjQkjgDFN/Ww?=
+ =?us-ascii?Q?wNLTN6isx1QAnrHPJUiHUzZpH33XH0QDMIj1m195iXNtI6sd4g/0BvijV9+w?=
+ =?us-ascii?Q?hSdGbJVRXfr3tFioIPHLOe4xeZmzLY6JpiEvcLh/FFnotTPMFkfA4KV8lBhQ?=
+ =?us-ascii?Q?YZEmfDkqMBQ7Q2jz1K9LE+NhxnGhAO8B6stliOmeqhrmeI1TuuF9IouxC0V8?=
+ =?us-ascii?Q?yy85NdrlnK6UOlUDJWU5/Bt7THUQCDJ/WKEQvQfxkDowXuCyH5q17xXHezX4?=
+ =?us-ascii?Q?TO63/rv0bPGJOrLD7O70Ma0gDvuoxlsNE6lJPXj/4UQ/AoSU1VHrxBwG85Te?=
+ =?us-ascii?Q?p8ZEX3rdaN8VCIdYV6ZIdQz/oUs4+5/QK/E6VWGhJqucjrPX3b9mA/9g7VCd?=
+ =?us-ascii?Q?SJGTVNCp6pF2jmWlxytFNXHTyz2jc7DjXb1RfO+TLxn8nquwYebLogB1pGAE?=
+ =?us-ascii?Q?u4yFUbOztjHuJVfJiavazgMCcpWKS/RQRZ6c9ABDw2kqiCoEtMl9i2siDJZr?=
+ =?us-ascii?Q?Vb9BNgIuXQETf4bTsSMFfkLtfXmLKzJcpfqjo1stO+3uPNAtZgHl9R8ZihRe?=
+ =?us-ascii?Q?gv5iLLzS97vC45IWT7MyCllGez4p+5RlDZ530ZZyTrJPBFcXFwFCZ+phyNhC?=
+ =?us-ascii?Q?kjPK6ajtedoVdnPmbcllFnq9qM0NpgWGMbNDx7D/jaukVtD7rjStTu9ajlAl?=
+ =?us-ascii?Q?taDXRj1cn9RHYqlIMHdZvyckL0tNYgoSVdzyyxIQr8Yv8IyCjbIrzLGr22RL?=
+ =?us-ascii?Q?dV+JOyb7fw/siAiwgb4kJN8ttrcWx/m8yi0sajDRdnAmd/W+dbvyNgn56146?=
+ =?us-ascii?Q?c3TU1b3EyplpIFU=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(52116014)(7416014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?ddUHQS1owlHL5fEIwbAHIozEhphvBCn+KL6MGqoITx9VA8uoTrGJL3zDIWlC?=
+ =?us-ascii?Q?2bL9H05jS9iMl50ecdZ3lFvCyNyPRuPo5tgvxBtPipysJJqg16UJSCPl/ViE?=
+ =?us-ascii?Q?7GDxZQj7itulYw7VKZ7sNIccCLd7C2XQQ1nURZmYjIbY77YJzQPy9sg9AWxp?=
+ =?us-ascii?Q?dJuc9bXZyW50OH23Hxj8COEYPKEQaYLWOXHFfe8MI43tZzM2gKe8l3ThMPrC?=
+ =?us-ascii?Q?rLON9faDld4Qv/EQ2NNIWu0iPRxIw098hjBOt84Ynr00pKwwGcZdyyZSQ7AM?=
+ =?us-ascii?Q?Zxm7YB6FzddAU0aDf5tpgeoxvs7eaJQbpg7i7XNDillu6K7xyoX/+is7k2kc?=
+ =?us-ascii?Q?EPYYW25BA6PUk8ACna+OKuYdxtlxccJkURLEON08c+qwVLOs0DkUYApVJ8bR?=
+ =?us-ascii?Q?VYIxdAcepeZ5DlbfEn7AlP6agT0D7ooggf5KbS6jF80XHW8kYnLa/EZaxAEb?=
+ =?us-ascii?Q?rv6nzJ+LDd88C619OnYgasUPwGap8QFIqW5wXpw+bovU0xLcS+Tt4HRf2Hsu?=
+ =?us-ascii?Q?bF1+njhKc/pBCFjnz+4V2QHP7eJg5tYxiXdHXtXekyl+8BhDuVJjjXFZxTlk?=
+ =?us-ascii?Q?fIdaSL2GbZj6a2qS4O+7AB0xjyG17YqiIAapydpU/PrrkK0c8JJ6pe2DD3UT?=
+ =?us-ascii?Q?fL5ikUfE+7HQmvkVo1XCajPatZjyGt+3Ej64ADaj6xTCtX5w37camA4M/2t/?=
+ =?us-ascii?Q?PdajfGjPVUqz0DNSjXgrVLQBLX2bxotqCo9BbGfLZuHnM86C7YgkVldcEJ1K?=
+ =?us-ascii?Q?aQ3zKAFfQJ5WIs5V5HD3br5dUFF8QjBj7bMzZ9D47idhVi+KGyk67rEf87Kt?=
+ =?us-ascii?Q?0ZKBXySbLrGDU/0QGXMlwGNPpEkKw4/XySXciCWmlFqq4iw4yQxPKuZ3mP9b?=
+ =?us-ascii?Q?BEByQowlj9eVcS4Rje8A/f5Wck5kijvZkRu31N2L+pwj2w3XMlIfAEPELLU6?=
+ =?us-ascii?Q?s+raPMlgfLTW849dNV9D5IxtmMm9MRXcELkTaGR83oVEpcQ23cD0N+dVQXe5?=
+ =?us-ascii?Q?oCJfDaTUagMcFHKlNIhBhzPVVweiEfdo9wthjVO48+JwmQqOp01S/gDX/bml?=
+ =?us-ascii?Q?E+LVWlP4SMLHR5IgQZcXJiCEaPeFKtJ51JQqDDe60liELVChu5G3/J3gqikf?=
+ =?us-ascii?Q?NX9JC3Se1iE9dr4aXe5HuIoLyIb7ECoaFNVJatBpl5tm9q+kmngLXAS4qwsP?=
+ =?us-ascii?Q?TFklQJmw4tjjIXkX/AU+a1Zsnh64SNWA+fCwB6w1c72X+3x/Fo2FB9ZwOe5P?=
+ =?us-ascii?Q?S6z3ESoHvBHB2XqXbbJQovDXDqfomRmPThS3jtA4Sy8shkPPUTxIJ332ZoCe?=
+ =?us-ascii?Q?3sDsxitThEcNfA3aSLKszAqAJJK5BCEIuPE1So+X5lKovC1PQLbvE8A0MxE4?=
+ =?us-ascii?Q?4hbuOTExQa82er34U0YeJX340/krkhWb+hiU176PXsCnzR2KyY3cHlh6ztnz?=
+ =?us-ascii?Q?/cnVFgQcoJl6q3975Uc+xLae/uKj/jeGDSympVJHb99Nnf/eq79EmjA5I+zR?=
+ =?us-ascii?Q?UgiNjS2KJ1bImIx3shnrcUcAvA6dIsiS3L6ZHe9suugTf8l62lmljXs0ztp9?=
+ =?us-ascii?Q?F6veipuK+e9y0RSVfiw=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 95976927-3b57-429c-22dc-08dd9f94a0f3
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2025 16:11:26.2154
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +ZTWHXGzZ6+n55C7+Mh4Qw9mAl1RLuNyS2jyQoQYn8ZCEFXcLjCiWMvYFg7QfwbprcfjnyhAYb892YembdSN3w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB10398
 
-On Fri, 30 May 2025 at 17:05, Jyothi Kumar Seerapu
-<quic_jseerapu@quicinc.com> wrote:
->
->
->
-> On 5/9/2025 11:48 AM, Jyothi Kumar Seerapu wrote:
+On Fri, May 30, 2025 at 04:24:51PM +0100, Conor Dooley wrote:
+> On Wed, May 28, 2025 at 11:50:42AM -0400, Frank Li wrote:
+> > On Mon, May 26, 2025 at 04:28:07PM +0100, Conor Dooley wrote:
+> > > On Fri, May 23, 2025 at 05:32:52PM -0400, Frank Li wrote:
+> > > > Allow interrupt-names for fsl,imx23-dma-apbx and keep the same restriction
+> > > > for others.
+> > >
+> > > The content of the patch seems okay, but why are you doing this? What is
+> > > the value on this particular platform but not the others?
 > >
-> >
-> > On 5/6/2025 5:02 PM, Dmitry Baryshkov wrote:
-> >> On Tue, May 06, 2025 at 04:48:43PM +0530, Jyothi Kumar Seerapu wrote:
-> >>> GSI hardware generates an interrupt for each transfer completion.
-> >>> For multiple messages within a single transfer, this results in
-> >>> N interrupts for N messages, leading to significant software
-> >>> interrupt latency.
-> >>>
-> >>> To mitigate this latency, utilize Block Event Interrupt (BEI) mechani=
-sm.
-> >>> Enabling BEI instructs the GSI hardware to prevent interrupt generati=
-on
-> >>> and BEI is disabled when an interrupt is necessary.
-> >>>
-> >>> When using BEI, consider splitting a single multi-message transfer in=
-to
-> >>> chunks of 8 messages internally and so interrupts are not expected fo=
-r
-> >>> the first 7 message completions, only the last message triggers
-> >>> an interrupt, indicating the completion of 8 messages.
-> >>>
-> >>> This BEI mechanism enhances overall transfer efficiency.
-> >>>
-> >>> Signed-off-by: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
-> >>> ---
-> >>> v5 ->v6:
-> >>>    - For updating the block event interrupt bit, instead of relying o=
-n
-> >>>      bei_flag, decision check is moved with DMA_PREP_INTERRUPT flag.
-> >>> v4 -> v5:
-> >>>    - BEI flag naming changed from flags to bei_flag.
-> >>>    - QCOM_GPI_BLOCK_EVENT_IRQ macro is removed from qcom-gpi-dma.h
-> >>>      file, and Block event interrupt support is checked with bei_flag=
-.
-> >>>
-> >>> v3 -> v4:
-> >>>    - API's added for Block event interrupt with multi descriptor
-> >>> support for
-> >>>      I2C is moved from qcom-gpi-dma.h file to I2C geni qcom driver fi=
-le.
-> >>>    - gpi_multi_xfer_timeout_handler function is moved from GPI driver=
- to
-> >>>      I2C driver.
-> >>>
-> >>> v2-> v3:
-> >>>     - Renamed gpi_multi_desc_process to gpi_multi_xfer_timeout_handle=
-r
-> >>>     - MIN_NUM_OF_MSGS_MULTI_DESC changed from 4 to 2
-> >>>     - Added documentation for newly added changes in "qcom-gpi-dma.h"
-> >>> file
-> >>>     - Updated commit description.
-> >>>
-> >>> v1 -> v2:
-> >>>     - Changed dma_addr type from array of pointers to array.
-> >>>     - To support BEI functionality with the TRE size of 64 defined in
-> >>> GPI driver,
-> >>>       updated QCOM_GPI_MAX_NUM_MSGS to 16 and NUM_MSGS_PER_IRQ to 4.
-> >>>
-> >>>   drivers/dma/qcom/gpi.c           | 3 +++
-> >>>   include/linux/dma/qcom-gpi-dma.h | 2 ++
-> >>>   2 files changed, 5 insertions(+)
-> >>>
-> >>> diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
-> >>> index b1f0001cc99c..7e511f54166a 100644
-> >>> --- a/drivers/dma/qcom/gpi.c
-> >>> +++ b/drivers/dma/qcom/gpi.c
-> >>> @@ -1695,6 +1695,9 @@ static int gpi_create_i2c_tre(struct gchan
-> >>> *chan, struct gpi_desc *desc,
-> >>>           tre->dword[3] =3D u32_encode_bits(TRE_TYPE_DMA, TRE_FLAGS_T=
-YPE);
-> >>>           tre->dword[3] |=3D u32_encode_bits(1, TRE_FLAGS_IEOT);
-> >>> +
-> >>> +        if (!(i2c->dma_flags & DMA_PREP_INTERRUPT))
-> >>> +            tre->dword[3] |=3D u32_encode_bits(1, TRE_FLAGS_BEI);
-> >>>       }
-> >>>       for (i =3D 0; i < tre_idx; i++)
-> >>> diff --git a/include/linux/dma/qcom-gpi-dma.h b/include/linux/dma/
-> >>> qcom-gpi-dma.h
-> >>> index 6680dd1a43c6..ebac0d3edff2 100644
-> >>> --- a/include/linux/dma/qcom-gpi-dma.h
-> >>> +++ b/include/linux/dma/qcom-gpi-dma.h
-> >>> @@ -65,6 +65,7 @@ enum i2c_op {
-> >>>    * @rx_len: receive length for buffer
-> >>>    * @op: i2c cmd
-> >>>    * @muli-msg: is part of multi i2c r-w msgs
-> >>> + * @dma_flags: Flags indicating DMA capabilities
-> >>>    */
-> >>>   struct gpi_i2c_config {
-> >>>       u8 set_config;
-> >>> @@ -78,6 +79,7 @@ struct gpi_i2c_config {
-> >>>       u32 rx_len;
-> >>>       enum i2c_op op;
-> >>>       bool multi_msg;
-> >>> +    unsigned int dma_flags;
-> >>
-> >> Why do you need extra field instead of using
-> >> dma_async_tx_descriptor.flags?
-> >
-> > In the original I2C QCOM GENI driver, using the local variable (unsigne=
-d
-> > in flags) and updating the "DMA_PREP_INTERRUPT" flag.
-> >
-> > Sure, i will review if "dma_async_tx_descriptor.flags" can be retrieved
-> > in GPI driver for DMA_PREP_INTERRUPT flag status.
+> > Actually it is not used in dma driver, i.MX23 is quite old chips (over 10year).
 >
-> Hi Dmitry,
->
-> In the I2C Geni driver, the dma flags are primarily used in the
-> dmaengine_prep_slave_single() function, which expects the argument type
-> to be unsigned int. Therefore, the flags should be defined either as
-> enum dma_ctrl_flags, or unsigned int.
->
-> In the GPI driver, specifically within the gpi_prep_slave_sg() function,
-> the flags are correctly received from the I2C driver. However, these
-> flags are not currently passed to the gpi_create_i2c_tre() function.
->
-> If we pass the existing flags variable to the gpi_create_i2c_tre()
-> function, we can retrieve the DMA flags information without introducing
-> any additional or external variables.
->
-> Please confirm if this approach=E2=80=94reusing the existing flags argume=
-nt in
-> the GPI driver=E2=80=94is acceptable and good to proceed with.
+> If they provide no value, why not just delete them?
 
-Could you please check how other drivers use the DMA_PREP_INTERRUPT
-flag? That will answer your question.
+The platform is too old. I have not hardware to test if it really unused.
+
+Frank
 
 >
-> >>
-> >>>   };
-> >>>   #endif /* QCOM_GPI_DMA_H */
-> >>> --
-> >>> 2.17.1
-> >>>
-> >>
-> >
-> >
+> > Just to match existed dts to reduce warnings.
 >
+> You should mention this in your commit message.
 
 
---=20
-With best wishes
-Dmitry
 

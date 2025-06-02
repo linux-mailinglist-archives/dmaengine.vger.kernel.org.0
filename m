@@ -1,136 +1,162 @@
-Return-Path: <dmaengine+bounces-5294-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5296-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id C5363ACADC8
-	for <lists+dmaengine@lfdr.de>; Mon,  2 Jun 2025 14:07:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 93687ACB4B7
+	for <lists+dmaengine@lfdr.de>; Mon,  2 Jun 2025 16:55:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2722F7AA82D
-	for <lists+dmaengine@lfdr.de>; Mon,  2 Jun 2025 12:05:42 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F3E7E7B0F91
+	for <lists+dmaengine@lfdr.de>; Mon,  2 Jun 2025 14:47:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AD661FF7D7;
-	Mon,  2 Jun 2025 12:06:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EAF1225761;
+	Mon,  2 Jun 2025 14:43:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hoverinc-aero.20230601.gappssmtp.com header.i=@hoverinc-aero.20230601.gappssmtp.com header.b="0r17womi"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ZhmTFWMM"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AE0E1C84B1
-	for <dmaengine@vger.kernel.org>; Mon,  2 Jun 2025 12:06:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31AC8224AF1;
+	Mon,  2 Jun 2025 14:43:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748866015; cv=none; b=ukSNzZXT8Y6OtCoYeiUqwrw20tLIpNz50QW8aBqysmZz1Nq0sE5UgBpqFgmJhQUlj/xfMrQmszgDg8F0c4ms+hqAgya6B3d7IOlQPlI2m16rSazz+w0b7Y80GNIprDY50kGFETIYrvvGiF2rdWlyDTJ0kzN3cU2LbDrtT9gsBuM=
+	t=1748875428; cv=none; b=OArhnaPiyBnk9hEFqap0uW/u62Jp3Dab/bYQWRGl0kQg0tZ3IKzEuKAvGf5AW+Oc6x4BQiZMQWM8mGQ6dpYD4FmLOqx6aWI4fS1Bn8BnOusE3/5GdHs6t8UICaguamIhat/zSYT5IETmkNpB4JjSPHr6+nPGiucKKrVhBXzabEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748866015; c=relaxed/simple;
-	bh=TZQnFEZUatAq88keadkzQVQ19mXfbFxCyoSuzojUJKc=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=ENanwfb0ZyW4/Smagl9qXIHI50nR5l4ekUoBvOz9WZmpiab4KipitQXxdZrw5lSB5cNMPTmgvyB3a5NwMCkGFY3DIus7hTCsLG7FjZXB9zKqxlFlHT5hfAq0eW7z/H+hHz+/JUTln5/KsunW6+lG284b76UwOuL+PgZZVnavQho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hoverinc.aero; spf=fail smtp.mailfrom=hoverinc.aero; dkim=pass (2048-bit key) header.d=hoverinc-aero.20230601.gappssmtp.com header.i=@hoverinc-aero.20230601.gappssmtp.com header.b=0r17womi; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hoverinc.aero
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=hoverinc.aero
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-adb2e9fd208so685324466b.3
-        for <dmaengine@vger.kernel.org>; Mon, 02 Jun 2025 05:06:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=hoverinc-aero.20230601.gappssmtp.com; s=20230601; t=1748866010; x=1749470810; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=CByIEmwNbreAD0XgC5ZcEii5+BDeozb6OBY1ok/uGHk=;
-        b=0r17womi/b2ibocLxXj8knLTh/5pilsEmpjxURcI4SqcAqAKbDssLtgG3dAD67oJEQ
-         +8d1IVSTZzJyt4p+ONb4cWn3QAlAQLpARwIq+95E6GArUlTA784/stiKX+G/inYpRhjI
-         JxKveLOuObHEOTS0ybjvjxp2ZPgVjpAKB0ihFtr7YqvuRccdF/3/5wUiDYABw1QcOx7G
-         O4pMhaJ+eWzK/6qNEy0Eo9+XJV8dlOX5zbIB80QfoEviIqmfLaa4IHuzsQgtfJjwHhpy
-         XYE2PhwDs7LRBGjN+GGTnoSLCt8qvUaMccRhHe0HyDfBgOG0jnHXhLcbWG6bpQ4gvJ0h
-         bixQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748866010; x=1749470810;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=CByIEmwNbreAD0XgC5ZcEii5+BDeozb6OBY1ok/uGHk=;
-        b=KBo9oy13s4k/OFj3aiyl1E7gE94rF/oZaVVCREThyRNjRaMlF/qPtI5RPLC7x3roqP
-         yW6aYANXfp7BSEgBmjQIN8RSz+OXFUgJNEnY4XOst55ys4l+Y/xycBzjsPNcETIOwjrZ
-         mUoiCHK+ni+N8KBZR+Uj/jjnS29JC40e9cTbnBgoJ2q/ndFPONTaOSOuaorhkxKCQc2h
-         telf0mBmRptO88kFrps74VZvmjvE39cOQE9/p/k0zLv/lok3CMPY5dv10lccEA4ibocG
-         s8Fdos0OrHTgNd1P38fzHlUVou1sWYNDMx/AZXgR4OhmDzVhejoHn20LE9Lz8P7XJe2R
-         YJ2w==
-X-Gm-Message-State: AOJu0YzaSGeGA7ZrFWsJd5uEyNVUgqB8QkhFgUHnLSBw4r6iJUKwgSEZ
-	kr+ew8g/IV0ION1iuSrnA0dPTjdkfSKmZe6ptnfC4Qu0eHEtIY1XnJsZu1h484gch0UEBLQM0qx
-	QYSpYg0lsSzQvRyXXFFsXTNN+7gpvLSdRtlWFj9pT/mFXJalg9DUNKZw=
-X-Gm-Gg: ASbGncuylQcY6VIoDwrAhwXVmLIxCPkbp2loXWK+d5ap5LOMt6WSXnE5iQMCXS/VIBj
-	xs2/pmZczNF4tYnNdtiN7Gh2zyWAmyIPrKoPtqWTvQIr8r/8OtekCWPcNudqjUqP81sp0xLurHX
-	NhlZd7Aa4oueojInnA2yleE3FFe9Cnzj17ww==
-X-Google-Smtp-Source: AGHT+IErGFzFDOUeX2f7MF+OdFYI9kvw9rqo+qLwQtmCzPEpsGtUVvHyaPI46yz3Tw2wugY6u4zF6IS2GMyjgc+csL0=
-X-Received: by 2002:a17:906:3ca2:b0:adb:41b1:feca with SMTP id
- a640c23a62f3a-adb41b2359emr551845966b.61.1748866010076; Mon, 02 Jun 2025
- 05:06:50 -0700 (PDT)
+	s=arc-20240116; t=1748875428; c=relaxed/simple;
+	bh=yv+nl+HMoWGplbpFYJ2V8XCl5o25UfLHaMhs6WFA70w=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=k/wNnskvAfml1fHnbggop0NL7sDpdSFQT/MxhXzCHiX4wFbbcvi5OWYERcQ7OFWn63XCGuuGmjnZV0yJFoktK72WWuVEEXPWHt0jFO7X6Pja7EkXQTf6JTmcP0q9s/kpLb8I4kFOXKlzWnNtoYCs7D2nJrUHBrE7LLCops1on5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ZhmTFWMM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A90C9C4CEEB;
+	Mon,  2 Jun 2025 14:43:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1748875428;
+	bh=yv+nl+HMoWGplbpFYJ2V8XCl5o25UfLHaMhs6WFA70w=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ZhmTFWMMMn/sCNwsUVZNUPUi5eVqFrRfh4GmZ1WqjUeRuADlTgT01YBI6+lsNF/J1
+	 VYtDUcu1SLoP4Zv4jDZZ0WBce5vRprqiSxOs1PDwddnuyfhxxLxtodslvBeSFbw3Sv
+	 qa26bPJvezjjOwQTpa+EKJP3iPLYjBOUNftZku5M=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	dmaengine@vger.kernel.org,
+	Ronald Wahl <ronald.wahl@legrand.com>
+Subject: [PATCH 5.10 102/270] dmaengine: ti: k3-udma: Add missing locking
+Date: Mon,  2 Jun 2025 15:46:27 +0200
+Message-ID: <20250602134311.339187089@linuxfoundation.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250602134307.195171844@linuxfoundation.org>
+References: <20250602134307.195171844@linuxfoundation.org>
+User-Agent: quilt/0.68
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Kai Harris <kai.harris@hoverinc.aero>
-Date: Mon, 2 Jun 2025 13:06:39 +0100
-X-Gm-Features: AX0GCFup2q8FQGMK49YGdkVPhliyC93HL2eaQkMsM7JAtntOKDeISX22uCxUyXM
-Message-ID: <CAEKq62St_j8g2bpUaC+1NZBJuiZ7+sqyRWST8KPQsDdCu=VhNQ@mail.gmail.com>
-Subject: Running testdma.c with altera-msgdma.c
-To: dmaengine@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-I am having trouble getting testdma.c to work correctly with my
-hardware design. The dma block itself is in stream-to-memory-mapped
-mode, and the driver I have hooked up it is altera-msgdma.c. via the
-following device tree element:
+5.10-stable review patch.  If anyone has any objections, please let me know.
 
-```
-msgdma_streaming_read: msgdma@22000040 {
-  compatible = "altr,socfpga-msgdma";
-  reg = <0x0 0x22000040 0x0 0x00000020>,
-<0x0 0x22000060 0x0 0x00000010>;
-  reg-names = "csr", "desc";
-  interrupts = <0 19 4>;
-  interrupt-parent = <&intc>;
-};
-```
+------------------
 
-The design is verified via u-boot, so I am sure it is an issue with my
-understanding of the linux dma flow.
+From: Ronald Wahl <ronald.wahl@legrand.com>
 
-I am using the following linux-socfpga kernel: 6.1.68-248715-g4225a1924e16-dirty
+commit fca280992af8c2fbd511bc43f65abb4a17363f2f upstream.
 
-After building and inserting the above .c kernel modules, I configure
-and run the test:
+Recent kernels complain about a missing lock in k3-udma.c when the lock
+validator is enabled:
 
-```
-echo 8 > /sys/module/dmatest/parameters/test_buf_size
-echo 3 > /sys/module/dmatest/parameters/iterations
-echo 'Y' > /sys/module/dmatest/parameters/verbose
-echo 5000 > /sys/module/dmatest/parameters/timeout
-echo 1 > /sys/module/dmatest/parameters/threads_per_chan
-echo 'Y' > /sys/module/dmatest/parameters/run
-```
-And then am seeing the following kernel messages:
+[    4.128073] WARNING: CPU: 0 PID: 746 at drivers/dma/ti/../virt-dma.h:169 udma_start.isra.0+0x34/0x238
+[    4.137352] CPU: 0 UID: 0 PID: 746 Comm: kworker/0:3 Not tainted 6.12.9-arm64 #28
+[    4.144867] Hardware name: pp-v12 (DT)
+[    4.148648] Workqueue: events udma_check_tx_completion
+[    4.153841] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[    4.160834] pc : udma_start.isra.0+0x34/0x238
+[    4.165227] lr : udma_start.isra.0+0x30/0x238
+[    4.169618] sp : ffffffc083cabcf0
+[    4.172963] x29: ffffffc083cabcf0 x28: 0000000000000000 x27: ffffff800001b005
+[    4.180167] x26: ffffffc0812f0000 x25: 0000000000000000 x24: 0000000000000000
+[    4.187370] x23: 0000000000000001 x22: 00000000e21eabe9 x21: ffffff8000fa0670
+[    4.194571] x20: ffffff8001b6bf00 x19: ffffff8000fa0430 x18: ffffffc083b95030
+[    4.201773] x17: 0000000000000000 x16: 00000000f0000000 x15: 0000000000000048
+[    4.208976] x14: 0000000000000048 x13: 0000000000000000 x12: 0000000000000001
+[    4.216179] x11: ffffffc08151a240 x10: 0000000000003ea1 x9 : ffffffc08046ab68
+[    4.223381] x8 : ffffffc083cabac0 x7 : ffffffc081df3718 x6 : 0000000000029fc8
+[    4.230583] x5 : ffffffc0817ee6d8 x4 : 0000000000000bc0 x3 : 0000000000000000
+[    4.237784] x2 : 0000000000000000 x1 : 00000000001fffff x0 : 0000000000000000
+[    4.244986] Call trace:
+[    4.247463]  udma_start.isra.0+0x34/0x238
+[    4.251509]  udma_check_tx_completion+0xd0/0xdc
+[    4.256076]  process_one_work+0x244/0x3fc
+[    4.260129]  process_scheduled_works+0x6c/0x74
+[    4.264610]  worker_thread+0x150/0x1dc
+[    4.268398]  kthread+0xd8/0xe8
+[    4.271492]  ret_from_fork+0x10/0x20
+[    4.275107] irq event stamp: 220
+[    4.278363] hardirqs last  enabled at (219): [<ffffffc080a27c7c>] _raw_spin_unlock_irq+0x38/0x50
+[    4.287183] hardirqs last disabled at (220): [<ffffffc080a1c154>] el1_dbg+0x24/0x50
+[    4.294879] softirqs last  enabled at (182): [<ffffffc080037e68>] handle_softirqs+0x1c0/0x3cc
+[    4.303437] softirqs last disabled at (177): [<ffffffc080010170>] __do_softirq+0x1c/0x28
+[    4.311559] ---[ end trace 0000000000000000 ]---
 
-```
-root@localhost:~# dmesg | tail -9
-[ 2563.232872] altera-msgdma 22000040.msgdma: optional resource resp not defined
-[ 2563.233436] altera-msgdma 22000040.msgdma: Altera mSGDMA driver probe success
-[ 2583.491836] dmatest: No channels configured, continue with any
-[ 2583.492473] dmatest: Added 1 threads using dma0chan0
-[ 2583.492479] dmatest: Started 1 threads using dma0chan0
-[ 2588.643726] dmatest: dma0chan0-copy0: result #1: 'test timed out'
-with src_off=0x0 dst_off=0x0 len=0x4 (0)
-[ 2593.763748] dmatest: dma0chan0-copy0: result #2: 'test timed out'
-with src_off=0x0 dst_off=0x4 len=0x4 (0)
-[ 2598.883724] dmatest: dma0chan0-copy0: result #3: 'test timed out'
-with src_off=0x0 dst_off=0x0 len=0x4 (0)
-[ 2598.883771] dmatest: dma0chan0-copy0: summary 3 tests, 3 failures
-0.19 iops 0 KB/s (0)
-```
+This commit adds the missing locking.
 
-Any pointers would be much appreciated!
+Fixes: 25dcb5dd7b7c ("dmaengine: ti: New driver for K3 UDMA")
+Cc: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+Cc: Vignesh Raghavendra <vigneshr@ti.com>
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: dmaengine@vger.kernel.org
+Cc: stable@vger.kernel.org
+Signed-off-by: Ronald Wahl <ronald.wahl@legrand.com>
+Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+Link: https://lore.kernel.org/r/20250414173113.80677-1-rwahl@gmx.de
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/dma/ti/k3-udma.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Kind regards,
-Kai
+--- a/drivers/dma/ti/k3-udma.c
++++ b/drivers/dma/ti/k3-udma.c
+@@ -962,8 +962,11 @@ static void udma_check_tx_completion(str
+ 	u32 residue_diff;
+ 	ktime_t time_diff;
+ 	unsigned long delay;
++	unsigned long flags;
+ 
+ 	while (1) {
++		spin_lock_irqsave(&uc->vc.lock, flags);
++
+ 		if (uc->desc) {
+ 			/* Get previous residue and time stamp */
+ 			residue_diff = uc->tx_drain.residue;
+@@ -998,6 +1001,8 @@ static void udma_check_tx_completion(str
+ 				break;
+ 			}
+ 
++			spin_unlock_irqrestore(&uc->vc.lock, flags);
++
+ 			usleep_range(ktime_to_us(delay),
+ 				     ktime_to_us(delay) + 10);
+ 			continue;
+@@ -1014,6 +1019,8 @@ static void udma_check_tx_completion(str
+ 
+ 		break;
+ 	}
++
++	spin_unlock_irqrestore(&uc->vc.lock, flags);
+ }
+ 
+ static irqreturn_t udma_ring_irq_handler(int irq, void *data)
+
+
 

@@ -1,75 +1,77 @@
-Return-Path: <dmaengine+bounces-5304-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5305-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4A84ACEB44
-	for <lists+dmaengine@lfdr.de>; Thu,  5 Jun 2025 09:55:37 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 46138ACEB47
+	for <lists+dmaengine@lfdr.de>; Thu,  5 Jun 2025 09:55:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7B54F7A6515
-	for <lists+dmaengine@lfdr.de>; Thu,  5 Jun 2025 07:54:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ABBD6189A1FA
+	for <lists+dmaengine@lfdr.de>; Thu,  5 Jun 2025 07:56:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13DDA1FFC45;
-	Thu,  5 Jun 2025 07:55:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7FEC1FCFFB;
+	Thu,  5 Jun 2025 07:55:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gvQqNmGz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FwskwrsW"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94B461FCFFB;
-	Thu,  5 Jun 2025 07:55:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34921202C40;
+	Thu,  5 Jun 2025 07:55:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749110129; cv=none; b=PYVdVCuaeCTWZdWEDODPfhtgYnvrLEQ8Hck1d6Wnk110To1H/jradU3hN8cLiXStbMd0jrKh+VZOAlh8Y6l3sr5sZXC7M6b+YXAFfaXGNjHr+wjwBx0Bt9bF2pzfgPuNYvkzf37nw1BD/exgnXOaNYDuxFRIFfdlSBdsznIy+Vk=
+	t=1749110132; cv=none; b=Xe8JxhgkhVf6K/dT800C/+tPz6sz3IDlnxvVn2tjbyWoqr5ser9GM+W1lcup9OL98DK9LRCc1rOOZK+0TvnuxtEsfQkd/2gGLb6mXAHPKD6NblXLTbINnkOa3P1EM0I6k9Z+T2AWuUM7/6x96iXjDcaVIGFhnBbLbi3MS88qBn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749110129; c=relaxed/simple;
-	bh=GpoQ+3Ee8T8lm6I9aP2enWwTg2qztQbdsDSevWYvSxA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kNVsUtPgtbiOBTbET5Wb+H261e02crYSnJ/O0NMU160pboo7Xz6IRVMzvBA3Q3LUsxK6sC2DTeXGwsrCP42ZoMeauKOtfacQfTispf1QMqg5Xf8j3MaPE66SqD6IxoC98ZhIF6qyymi+1B1fOUWDd7JX+/syQqvbYh1oaIqgmro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gvQqNmGz; arc=none smtp.client-ip=209.85.215.170
+	s=arc-20240116; t=1749110132; c=relaxed/simple;
+	bh=R6cDWrNLeIJW3a1+hrWpOXzcEBadxi2F3alk6u15b7Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=N5PgukDAngM12mFL9ccI5ZRdJg3Vx04OeQszfMkiGJVaNEtvLiyRPnsh4fGGBpyGTfcuNW5CMcfLIHMIjIN9FxJYqlnjkCY+F11rSkgeZsf09/EJmCWw81PGxh5HAetdIaqVd7u606elvj6sfYHgtA6Ol1HXzccDPwO1P61+ktE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FwskwrsW; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-b2c384b2945so512890a12.0;
-        Thu, 05 Jun 2025 00:55:27 -0700 (PDT)
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-235ef62066eso9340035ad.3;
+        Thu, 05 Jun 2025 00:55:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749110127; x=1749714927; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=MN1EThQK7jwsdU6684ZQQdUH0BeblPeQioulBRCACxM=;
-        b=gvQqNmGziK4xqVoM2fV+Gg0QUbXnHfLc/HTYKRtIg3nRUfxd7hyOYo244n5z7xLUHR
-         xhaHAtZMczyI4UCGJuk2BLKGGHTknOyB8/DovFKGFcOGPQtrd9wRCCDjb+OJbfSKdnUd
-         g3yNnI7srNHRp047aYtX05jOtfdGzCQEwNNDe3o1coqBK9k167fypI9km6lzXccw7rEu
-         MI4SFlvvIZ2BRuf0Vb4spFf6eSDExcQc2EOW3HshSVPNkczp7ey4m4O7eQhhQ/G587uw
-         ZJEJzI5KI7opLFZTtDvPUx/R3jtTRB3o1TRV4NPwT5BMw/gnwiBHhB8ECoOUfeuGkmeo
-         84zg==
+        d=gmail.com; s=20230601; t=1749110130; x=1749714930; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/OARrN9ueY6P2vrwU+QQZWWr2aQNmcjiO53DZHt44K8=;
+        b=FwskwrsWFclBWLDTUlo95Hd2DdYfLapx5rZou0M08/1JPt590PBPR7Oscx6MsYY2CE
+         +11oV3YbTme+NeNLM4p27Q4XnOu1zcvzvhAciFd7q1hcDnhZUK+42c0FrwAMY+8Zptso
+         v2fs6OaC2J81Zu/VAY43WQQtU8im33DHsdTOMEbnFr94GMI0iYrqdjRm0loL5fKQiIWd
+         xbAY5t6OtZDfwzt0T5kEboBWYW3qcIdQIylkPgxVzAVGCCDmXpfxzjI5MeLTEE6q9dtr
+         D+ZSok738JaN/tk0RPd2fTbCV5MN6UkgFvnj71+3wM4srZKef2rtqKbZmnb/4f939l3U
+         u2Aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749110127; x=1749714927;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MN1EThQK7jwsdU6684ZQQdUH0BeblPeQioulBRCACxM=;
-        b=kwNTw2k8QmMrppSAMDojeIkEiM8feyyIvuRS6DypozZab74xuEcjBFh3jhZ5byyTEI
-         AH/igCOqvhhHdiv0JmB/Q7ugNs6h1D+9iK6sYU2AcYhik8C6rP25Y/XE0+lYU1Li+Cja
-         2SM70I3rfB/Hjs5w2ic3P2LU7plyoSrXW40CCK17Lv+iD9zV6fsg+CwhNlkzfXCMbshC
-         Xe7MISV4qkXc4AQQoGiwFgWXsQW8xUCemvQoIDuDmu+TZOJQnecGGi88+G4Cx9dYzI7N
-         rj41dVfaSgh86eQ1bqxtbvlySL75NV4iuhCPsYIRIyNpa1fqc+mHvZJe6i2lVcd+bijr
-         AVug==
-X-Forwarded-Encrypted: i=1; AJvYcCUKYqhEy4YeYbH6NOgjVg6f1W2m5Qp9BHpvF2DLIQYdfjfoyI7UNM5pGb3DdPHKqcqjhA2KEwQDKuTTeN8c@vger.kernel.org, AJvYcCUm2xEUUSHH2fbfsfz6HE0kWSYCwyn7Q8+Uaw5UgVinTmPjkg4SIBOGU3OPa1N1OvPueqTqRI7UfsX0@vger.kernel.org, AJvYcCXiFEFzaGpwIl0AW2khz6MFPejexoGDutTkwGfg7fEV7BBWoPwULuOJxXl/ogDYpdFxFIRPhxtSn664@vger.kernel.org
-X-Gm-Message-State: AOJu0YzsXAJhwGPIfiBCsWumb6tPzYN/X6QmfnjOaS2rhCVPbPsB6u5Y
-	6h9WdOmXthYciViGzzVOG689yj36b4edsHRtyYMy+KW17lZvSIKJZss6/fNwtJYt
-X-Gm-Gg: ASbGnctF2/Qq0cHl7QTAqH+EubugO66NLKCqzxjVKLEz6F2Ou2sI//rWK1eZDbn/Fdi
-	JUnlo00rjX9P7Sd2pNmxH7u9LkjNXxfG8ws2Q6b42Zlj4W4zXOdZAyNSBbGtjMhUb2ZGmmyX9LW
-	mrxLQiqg5DI3WAh96pzkJFN0bzMM1Dccl+doTSjeQv+evrD3Idl6ud1JBCEQJknJczYadJvGUCI
-	4KX2UbmYhZ/QQO/yVwyKVSSaPjFWlyzYeIieAGvM8tEkO4qH+2dXnWnwSE3szfXEPot5CKfcIrm
-	TCTzkYp2LoTJcI3kJSJLJsvIL4GySObUM9hHPZi70Eml60WwSHocgvaHtPPG
-X-Google-Smtp-Source: AGHT+IHh4IlR4kSwzddiIXdouQOY+AA/MICiWnCJd0UnK8DHLokqCrXMf2Tek4xlqGOD+8rK78ijtw==
-X-Received: by 2002:a17:90b:268f:b0:311:9c9a:58ca with SMTP id 98e67ed59e1d1-3130cd12d80mr8263145a91.8.1749110126595;
-        Thu, 05 Jun 2025 00:55:26 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749110130; x=1749714930;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/OARrN9ueY6P2vrwU+QQZWWr2aQNmcjiO53DZHt44K8=;
+        b=I88j9KCcLl2LK64uT6/l7TQiOyQP9Pxyts4EXo2qEylT1VPUTNEnBn2hxTm/sU0MY5
+         DChG2pgBEI1UOm8OyS3DiYZ5lWTAXzGoCyaZEYOu74L71irqv2CRbJ++/TWnHQjlg3FX
+         GTTZ3frYULJY0MCaSiv5eTFDk7y2U7cg4+IH0Xf6KP2w1jUE/rY0ioan98Y1xH+D5sbo
+         ZdU5DpFLvJp/6bgfU7Rnzoid0bB2t3DBrOhBm5JLpugwZrtLcGUGYfgdMXMpZd9xg6qt
+         KG90dkK7SUi57lzfaBBmJwZKI63f8xdiwV5KAmMmDSmFsEcE+PqSs0gsl5J3d6XU0EbS
+         fxsw==
+X-Forwarded-Encrypted: i=1; AJvYcCUA4vSEWQrU5rnsnrTtJeXNZ5EwspKNPmEq1VLknp/tUZGzU3nZlzUveM6a861fOPFUN+UaW7P2SvOzkVYD@vger.kernel.org, AJvYcCVSHKj3yvxBl2sASXAx0BlH0AoWHvKDxmZe4CuP5Jem1T34OJNQ5qEdJK8HJHCJi2k6JJFgSXKjNGz3@vger.kernel.org, AJvYcCWnNyOZJ0sU5B3RkW2zwH6oamjxqlayPgYpBXhGUWAC4szWHRF6kWJjDqNrkCLoBdvPwrN8KiXKGD/k@vger.kernel.org
+X-Gm-Message-State: AOJu0YzG57LuCOS3g7Mp/wDxFjDfZzgvrMOPe+q+g52D0CaMLa4o3Lns
+	p6ni8//v1cLY3zONpiFZrc+pY80tb7fXpHNqjo8ab8T+zqsW9T06qQ/z
+X-Gm-Gg: ASbGncvJkvu571tVFnoxfskq1Gkz4LnWGMtDkhYX4iI/H9OJ+fPjiVcd9BF37fbIXjW
+	27Dv9OPSMZYrSvIk92zTeC9YqmNJnFXmmQEQnbgyjE2qBQRAXYDNtNpD8rBevFIIrwebrh+Xcfm
+	xP8RtijnNGMXrRq+0Gt5ISIofj9Xkh1LnGO86d+NtPSlxDmMZLEWNcIpjYgB3391om4Q4zfOxLl
+	sbWYVfBhPgUAc6YCefsvNwYBkGdDwFTvh3HhV+5yOq7S3xBdAlFMmUQLKCf/78PYCfuriVaJhyu
+	+BklpjSIZtenz8SR9cRlwAFwDPn7F6qzNcnwc43hFvshQN+LVQ==
+X-Google-Smtp-Source: AGHT+IESM+PsIHMZjhlFraZNSrVLcXeSjWVnZVNlOFs0AbkPjyTu6TKzdg08IR+ohI1U6CzkfeXnig==
+X-Received: by 2002:a17:902:ce82:b0:224:24d3:6103 with SMTP id d9443c01a7336-235e12535e8mr99006335ad.35.1749110130339;
+        Thu, 05 Jun 2025 00:55:30 -0700 (PDT)
 Received: from nuvole.. ([144.202.86.13])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506bc86cdsm115201015ad.8.2025.06.05.00.55.23
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506bc86cdsm115201015ad.8.2025.06.05.00.55.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 00:55:26 -0700 (PDT)
+        Thu, 05 Jun 2025 00:55:29 -0700 (PDT)
 From: Pengyu Luo <mitltlatltl@gmail.com>
 To: Vinod Koul <vkoul@kernel.org>,
 	Rob Herring <robh@kernel.org>,
@@ -83,10 +85,12 @@ Cc: linux-arm-msm@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Pengyu Luo <mitltlatltl@gmail.com>
-Subject: [PATCH RESEND 0/3] arm64: dts: qcom: Enable GPI DMA for sc8280xp
-Date: Thu,  5 Jun 2025 15:54:31 +0800
-Message-ID: <20250605075434.412580-1-mitltlatltl@gmail.com>
+Subject: [PATCH RESEND 1/3] dt-bindings: dma: qcom,gpi: Document the sc8280xp GPI DMA engine
+Date: Thu,  5 Jun 2025 15:54:32 +0800
+Message-ID: <20250605075434.412580-2-mitltlatltl@gmail.com>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250605075434.412580-1-mitltlatltl@gmail.com>
+References: <20250605075434.412580-1-mitltlatltl@gmail.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -95,30 +99,25 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series adds GPI DMA support for sc8280xp platform and related devices.
+Document the GPI DMA engine on the sc8280xp platform.
 
 Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
 ---
-Changes in resend:
-- document dt-bindings (Dmitry)
-- enable it for sc8280xp based devices
-- Link to v1: https://lore.kernel.org/linux-arm-msm/20250605054208.402581-1-mitltlatltl@gmail.com
+ Documentation/devicetree/bindings/dma/qcom,gpi.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
----
-Pengyu Luo (3):
-  dt-bindings: dma: qcom,gpi: Document the sc8280xp GPI DMA engine
-  arm64: dts: qcom: sc8280xp: Add GPI DMA configuration
-  arm64: dts: qcom: sc8280xp: Enable GPI DMA
-
- .../devicetree/bindings/dma/qcom,gpi.yaml     |   1 +
- arch/arm64/boot/dts/qcom/sc8280xp-crd.dts     |  12 +
- .../boot/dts/qcom/sc8280xp-huawei-gaokun3.dts |  12 +
- .../qcom/sc8280xp-lenovo-thinkpad-x13s.dts    |  12 +
- .../dts/qcom/sc8280xp-microsoft-arcata.dts    |  12 +
- .../dts/qcom/sc8280xp-microsoft-blackrock.dts |  12 +
- arch/arm64/boot/dts/qcom/sc8280xp.dtsi        | 368 ++++++++++++++++++
- 7 files changed, 429 insertions(+)
-
+diff --git a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
+index 7052468b1..19764452d 100644
+--- a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
++++ b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
+@@ -30,6 +30,7 @@ properties:
+               - qcom,sa8775p-gpi-dma
+               - qcom,sar2130p-gpi-dma
+               - qcom,sc7280-gpi-dma
++              - qcom,sc8280xp-gpi-dma
+               - qcom,sdx75-gpi-dma
+               - qcom,sm6115-gpi-dma
+               - qcom,sm6375-gpi-dma
 -- 
 2.49.0
 

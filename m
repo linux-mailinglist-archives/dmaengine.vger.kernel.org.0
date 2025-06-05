@@ -1,79 +1,79 @@
-Return-Path: <dmaengine+bounces-5309-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5310-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58BAAACEF7D
-	for <lists+dmaengine@lfdr.de>; Thu,  5 Jun 2025 14:48:28 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A9F01ACEFEB
+	for <lists+dmaengine@lfdr.de>; Thu,  5 Jun 2025 15:04:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B2EB33AD17C
-	for <lists+dmaengine@lfdr.de>; Thu,  5 Jun 2025 12:47:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6C25418821AE
+	for <lists+dmaengine@lfdr.de>; Thu,  5 Jun 2025 13:04:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DE3D221FB8;
-	Thu,  5 Jun 2025 12:48:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30B8622F38B;
+	Thu,  5 Jun 2025 13:04:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tid6uU+A"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mulHPlET"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 423B5212B3B
-	for <dmaengine@vger.kernel.org>; Thu,  5 Jun 2025 12:48:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2B522D9EB
+	for <dmaengine@vger.kernel.org>; Thu,  5 Jun 2025 13:04:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749127693; cv=none; b=nD0yx7C6W2Wrpb8afc9gf6ddOT/YeS+fP0R7wy7JYBVlbkxBUb54IhpwjxasXPs9wPGrVNFWc/CUFsVTFbOybAljaibv89Ia5cJRW1aVckAPo+q2dSXxFb9AcbbOp8QG5bxMoE21KDTaJXaNBLaeQpQ//1r1k5oP1m7LzH/tFxw=
+	t=1749128654; cv=none; b=e0Ccd5kbqIbHF2H61DLZLP8qXPuP1FEj1HpRA3KsUyiPns6+GjT1yFHjUnLnla8tS31U8DGNlt21BAJ8pGCyT6i4JniI/9BYJ82aCZmzE5+F/dcUv9YXLGmy8d2H3f12kfiZK8JtbRD+rcJtfaZxZ7lUkxk4mYYOgstWOYuqgs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749127693; c=relaxed/simple;
-	bh=wWC8vTRxd4PCSHw6ozhyBpPg3oAWX6S9agX0DtmSV7k=;
+	s=arc-20240116; t=1749128654; c=relaxed/simple;
+	bh=t4faCEII9JXsy8bQ1teoJQwe81rcZnPfPN7AzMQqsho=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VdWRmZcTDA7pEVATQwCYW1FFq/NifVQ4ZVqgRXzzvI3XTq2i/DnuqrrTBvAUOaJUqrUmp6tB+IRefd2rkbfjOaPnJ1JyWFya+niDN04Tg7tH2GRsiAxfdlg3Knn2zwWg0B8Ld8fjCqyBOLaugJWyYXfN9Bp7RvP9cmk+3InTVD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tid6uU+A; arc=none smtp.client-ip=209.85.221.43
+	 In-Reply-To:Content-Type; b=atxC1sR5qRVNL2WV3m0Zz/1IqqlerV287xivK1lg2fz9s+tpH3LKR26FaV/nQILQO3j8hTSQRNbY/kVsUa92yMrPz78Hp8nJKadZT5PGuxX+e0PJcNUJjE3PHRCz0p1T2bzxeHlDa0EiyiYUV92rk9AQVbTyUBPbhENj7X/ReXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mulHPlET; arc=none smtp.client-ip=209.85.221.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a4fea34e07so530811f8f.1
-        for <dmaengine@vger.kernel.org>; Thu, 05 Jun 2025 05:48:09 -0700 (PDT)
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a50fc7ac4dso606481f8f.0
+        for <dmaengine@vger.kernel.org>; Thu, 05 Jun 2025 06:04:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749127688; x=1749732488; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
+        d=linaro.org; s=google; t=1749128648; x=1749733448; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=DD3X3bkoKyLMyd5gKvCIGY/mSWv524B+viUEHfNcoG4=;
-        b=tid6uU+AkAHmk57IwrAFgnQ9ZjzvLpPOIF5/QkAMcrZH8jTdkF6z0KgRUv+ZsQYfvP
-         zRyvtxXBxW9D+JXadJMvphKJLF29X1veMxoRLQOfGlKjZHHmYFi+LDEcbkEHfOqn/GQo
-         O6GWiKMmyOm9lCxQNhz/JliXgpvIHYTkOrdQmxQQr0spex8l8IZ9qg+RVDcPNYXf8Yly
-         6cIcBxeKi0mh6RxgyFXILLZ4TFNRm89UN3D6x4cXbBWJOSlEetFtaWIZoPMRfL95QuhY
-         9B1ekyM62fHkz71YcAczCLxGKnzvSMA8x86gR+NLqdvIvKy28eekPLMI+DWWKleRxdcJ
-         v/ag==
+        bh=Q9thax7IB2ssxJhFBCOKiLh16kICG5rEU7Rz9YHU3JE=;
+        b=mulHPlETvc4CWLowZXAx5uUDZhvngCJrGFk/p/Cet1lOuVmoi+EAvSmzw2gNd4yvu+
+         6mhcwzKBqWNKF3r6jtQVlGUWKI+wCEFNPFQfI3BL+5DjPTHsDun50c5K99Xtni1G+/Al
+         GT+/L3vzl9BwYO9jI70XqAu22Pa+2VQR3C6oiS0d+/EvS0Bj1roCL2mjcSHOAFDdtoAK
+         SyqkpcD8wHWuRcA/HoyM12OMUKbm2PmdhZYIMB6sQrCJ3Ue0GU/RqsFMrrrZkgZxbjs6
+         CrIafZBZLKUt/+93GgV43C8p2S8A/HJKaTY39iSCtcLldaitux4nxKD4ij4hG6+SPibT
+         6YTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749127688; x=1749732488;
-        h=content-transfer-encoding:in-reply-to:content-language:from
+        d=1e100.net; s=20230601; t=1749128648; x=1749733448;
+        h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DD3X3bkoKyLMyd5gKvCIGY/mSWv524B+viUEHfNcoG4=;
-        b=rS9RUYkLwkKi6o3XRA/azxWVK3543sKJcjXExjwvfVGV0DLbM7jvMqAd3d/i6yxpGl
-         PODSAh7roYFrd2iETh1LgEDTMa7TX0IcHK+VfKz/RSeEmyu4LiGKvJ6406YqmMyM4/Th
-         NMSN5VAoUAQKx/Q0MRQG869SNXu7MGjt8AYPGSkqa9aTkn262XNa3RaOKMSkQIQMV5Gq
-         jy7BZVFKv84iRXYDVETc8Qxi1j3jqka5lM/IgLyEsu3WcgjCzD/oFBmVa57DJZxwGY0b
-         6ChhXTQyHq3fA7m1uSaBjj0b9647tyiDUrhYLfKEMGRx9Dr4nWD7DHUTn495zHYP6OkZ
-         C1UQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUvnJa0H3/ScKIEeJKuCf+mc0RP/cAO2LOffUp6R4XgGWEXKf+SOiR+Wz+ORLmYlOHmqGndWXgJ1WA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzg125Co2tHmdckfCPSHtu3nHebMwyuEIKedcvxLCl+J46tjfxz
-	63eIyDHoDnjsuz4KT2KFogizxgOihSMDPut9CFWkw0wdOADNmL28dKC27grk19jhMhc=
-X-Gm-Gg: ASbGnct6u8X9jAgEK+sDpXZaIA8X/Qsb0ettU7xdHMXrwWKGK+Yd4nia63HG5jiqVBH
-	tvcf2nxsDKGwW15UlzckPC7MQ9ioWro4sppth+ge8xw8Awx7TC46vk3o10bbXtjyYyNBwH98UjH
-	W19N1E+FlQo3WkdL/+nfscHJIwz2hvSxuagA2o0HFbgItZJMDjqAdQoBCLat+eF99kIKfhs/hlg
-	lcDQrpH3/FH1AMTIjTWiLNj+da69L2nXh39UyYRqEK754V7yI9ImhgVs5E/Ni2As7S9Rro4m6uo
-	sS2vBtumZ+pyWl5Z0NsMLctbwZGfAv3vFznsNbt7vvIuK2HLddv/13HXJBc=
-X-Google-Smtp-Source: AGHT+IEwmO65LIe9TsZFLYgqhHXDd2a/mab3lz1o4pMeJkOsxlaOnFsXZyBKpwTgYdWa5aLH5sL/BA==
-X-Received: by 2002:a05:6000:2210:b0:3a4:f7ae:77e8 with SMTP id ffacd0b85a97d-3a51dbcd100mr5959406f8f.15.1749127688507;
-        Thu, 05 Jun 2025 05:48:08 -0700 (PDT)
+        bh=Q9thax7IB2ssxJhFBCOKiLh16kICG5rEU7Rz9YHU3JE=;
+        b=b5o1hqs7ZRQOhAMjlXNEhpc9n0k3T/m4l4BYP1g228m8+pfpTuWWAqyvtDXgLUXMAu
+         qiSCdhgqU8bS48VyRKmeD3ThaHwH5ACGLQiBx1CExlTHa2X1hRadusHurDoAorgW12oU
+         h28p4u+6swgzc3ksWIQVm5ZgUhsMy4GesWrl5aP+vzZE9cjzZfVZXkyLPquv3EC/I78E
+         AkVgjhAZMOensOFw8uImEF8EMb8pM7bSiTNloDhiiwJ9c1dM+WhF3P+z5IsmVHTTAFKb
+         mSyFCqGQhmMozHgAu08Q+rGwbs5P2VUYh5FzWo9ktuTWsV2kC9hNLlx2FS9Z5NsuJHWc
+         kTew==
+X-Forwarded-Encrypted: i=1; AJvYcCWLnTy+T5yV5DvFFEG88Cf0nIAtooGEVv8me3w6oW2lrAeNNyLIWhgjFruKHlflOoilN5SYTdy5nfE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOXc+Ydsfl0tfm/7r1WITHw8B6UPyBrlVrZop5FIKUJvWVpBJX
+	Ibd0SqDZxvONMW1r6VUFsdZoxJ0oS9STGNcpaJ0PNs0CH6/kJaFMb75dr+QCRTja19k=
+X-Gm-Gg: ASbGncuXCczt8TpdSpJY5qscUkjz6gXzSViUHxMTfJGG2/fxuBUSQyjfRgGIRwLorpG
+	TsAxJA4IJodxROtbH0f+iYU2P+JbU0s7iXTJWegWI00gEtEjmLq0ZUO7ZYF0HYtj34WWTIXB6wu
+	ZBnWeWL6Dw5BYaqr7U0p2Z6uC8gMCnTcbhfzFO9zJM/fUxUMF+CzdtIgIkwEnMme8BA0zylp0NE
+	nbSlWUu6t3Gb2Al7NFMa2oJNpGrDpymoHplClEGQzoNt6CLoIbd8khKfAOfBw0erblt1Rdd5RMC
+	DY3qos4PvT0eboeGUsTKtgPWz1VIUaBqIXGo4Gjq8Yppt1xk6OlziyhTtPI=
+X-Google-Smtp-Source: AGHT+IE/BmSVdL4tbFWwRI8QdSGrFvhSPvFKD3SoCTJ/6Nr+n1FoiYUpOSD1J4F7Wnuta6OWoz81dA==
+X-Received: by 2002:a05:6000:40e0:b0:3a4:ea40:4d3f with SMTP id ffacd0b85a97d-3a51d973c93mr6275072f8f.53.1749128648387;
+        Thu, 05 Jun 2025 06:04:08 -0700 (PDT)
 Received: from [192.168.1.221] ([5.30.189.74])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4f00971e4sm24840719f8f.65.2025.06.05.05.48.05
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a525da8e66sm2814969f8f.38.2025.06.05.06.04.06
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Jun 2025 05:48:08 -0700 (PDT)
-Message-ID: <550a7ead-99a8-44ac-af49-c0e9d79c35c9@linaro.org>
-Date: Thu, 5 Jun 2025 15:48:04 +0300
+        Thu, 05 Jun 2025 06:04:07 -0700 (PDT)
+Message-ID: <3c6513fe-83b3-4117-8df6-6f8c7eb07303@linaro.org>
+Date: Thu, 5 Jun 2025 16:04:04 +0300
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -81,53 +81,58 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND 2/3] arm64: dts: qcom: sc8280xp: Add GPI DMA
- configuration
-To: Pengyu Luo <mitltlatltl@gmail.com>, Vinod Koul <vkoul@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>,
- Dmitry Baryshkov <dmitry.baryshkov@foundries.io>
-Cc: linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250605075434.412580-1-mitltlatltl@gmail.com>
- <20250605075434.412580-3-mitltlatltl@gmail.com>
-From: Eugen Hristev <eugen.hristev@linaro.org>
+Subject: Re: [PATCH 2/2] dmaengine: qcom_hidma: fix handoff FIFO memory leak
+ on driver removal
+To: Qasim Ijaz <qasdev00@gmail.com>, Sinan Kaya <okaya@kernel.org>,
+ Vinod Koul <vkoul@kernel.org>, linux-arm-kernel@lists.infradead.org,
+ linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+References: <20250601224231.24317-1-qasdev00@gmail.com>
+ <20250601224231.24317-3-qasdev00@gmail.com>
 Content-Language: en-US
-In-Reply-To: <20250605075434.412580-3-mitltlatltl@gmail.com>
+From: Eugen Hristev <eugen.hristev@linaro.org>
+In-Reply-To: <20250601224231.24317-3-qasdev00@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 6/5/25 10:54, Pengyu Luo wrote:
-> SPI on SC8280XP requires DMA (GSI) mode to function properly. Without it,
-> SPI controllers fall back to FIFO mode, which causes:
+On 6/2/25 01:42, Qasim Ijaz wrote:
+> hidma_ll_init() allocates a handoff FIFO, but the matching 
+> hidma_ll_uninit() function (which is invoked in remove()) 
+> never releases it, leaking memory.
 > 
-> [    0.901296] geni_spi 898000.spi: error -ENODEV: Failed to get tx DMA ch
-> [    0.901305] geni_spi 898000.spi: FIFO mode disabled, but couldn't get DMA, fall back to FIFO mode
-> ...
-> [   45.605974] goodix-spi-hid spi0.0: SPI transfer timed out
-> [   45.605988] geni_spi 898000.spi: Can't set CS when prev xfer running
-> [   46.621555] spi_master spi0: failed to transfer one message from queue
-> [   46.621568] spi_master spi0: noqueue transfer failed
-> [   46.621577] goodix-spi-hid spi0.0: spi transfer error: -110
-> [   46.621585] goodix-spi-hid spi0.0: probe with driver goodix-spi-hid failed with error -110
+> To fix this call kfifo_free in hidma_ll_uninit().
 > 
-> Therefore, add GPI DMA controller nodes for qup{0,1,2}, and add DMA
-> channels for SPI and I2C, UART is excluded for now, as it does not
-> yet support this mode.
+> Fixes: d1615ca2e085 ("dmaengine: qcom_hidma: implement lower level hardware interface")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
 > 
-> Note that, since there is no public schematic, this configuration
-
-Device tree should describe the hardware, not hold a configuration. If
-you are configuring hardware, DT is not the place for this. Same goes
-for the commit short message.
-
-> is derived from Windows drivers. The drivers do not expose any DMA
-> channel mask information, so all available channels are enabled.
+> ---
+>  drivers/dma/qcom/hidma_ll.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
+> diff --git a/drivers/dma/qcom/hidma_ll.c b/drivers/dma/qcom/hidma_ll.c
+> index fee448499777..0c2bae46746c 100644
+> --- a/drivers/dma/qcom/hidma_ll.c
+> +++ b/drivers/dma/qcom/hidma_ll.c
+> @@ -816,6 +816,7 @@ int hidma_ll_uninit(struct hidma_lldev *lldev)
+>  
+>  	required_bytes = sizeof(struct hidma_tre) * lldev->nr_tres;
+>  	tasklet_kill(&lldev->task);
+> +	kfifo_free(&lldev->handoff_fifo);
+>  	memset(lldev->trepool, 0, required_bytes);
+>  	lldev->trepool = NULL;
+>  	atomic_set(&lldev->pending_tre_count, 0);
 
+Is it possible that the handoff_fifo is freed, then we could observe
+reset complete interrupts before they are being cleared in
+hidma_ll_uninit later on, which would lead to the following call chain
 
+ hidma_ll_inthandler - hidma_ll_int_handler_internal -
+hidma_handle_tre_completion - hidma_post_completed -
+tasklet_schedule(&lldev->task); - hidma_ll_tre_complete - kfifo_out
+
+?
 

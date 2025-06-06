@@ -1,79 +1,82 @@
-Return-Path: <dmaengine+bounces-5319-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5320-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4568ACFFEA
-	for <lists+dmaengine@lfdr.de>; Fri,  6 Jun 2025 12:00:28 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C701CAD034A
+	for <lists+dmaengine@lfdr.de>; Fri,  6 Jun 2025 15:35:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B27A01759CF
-	for <lists+dmaengine@lfdr.de>; Fri,  6 Jun 2025 10:00:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 57881189638A
+	for <lists+dmaengine@lfdr.de>; Fri,  6 Jun 2025 13:36:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3405F2868A9;
-	Fri,  6 Jun 2025 10:00:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D76E5288531;
+	Fri,  6 Jun 2025 13:35:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o/iDplID"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GT5XxhiH"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 575882857EC
-	for <dmaengine@vger.kernel.org>; Fri,  6 Jun 2025 10:00:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F0622874F9;
+	Fri,  6 Jun 2025 13:35:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749204024; cv=none; b=RQmApePZLzTw5+uH4juZLT64NhXc3SFb2/T977ahZw2Jx7r0lnsEk49CpKEvHDsaHmY61+S38QEDgsWw2M96vy8J5DSBz2ZHtcrHvaI6oNry42pVNlPnnQFdwz5b9XhOqQeDrG7+LJaxxBraW0JD60EKPZX0XLUNH+1sRoQb8jY=
+	t=1749216947; cv=none; b=EqgSEP87M5Xb/18bUfcbmNfpU4bDG6TFSS3CXB0zky1CsJaFV2+2w4NRQAykZDFAiLF/S6LCROSLOoPvGTwMV3wV60YH4ujwney95RQFtQe2L2/xinuOR7YQRIB9BW/W/rs18dw2WEzWd80p/cciv7u8fyc+39qU0pwCZR2fqUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749204024; c=relaxed/simple;
-	bh=3a+WQLGp4elFYZvrRecz8JZgfyQKKlirEzi3m1GN03Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=taiQwoH5fvbUhJb0teC2TCHyc4mlVkK9zpxBQq8S2CF89Kn9o1ZRtpkR6zN8cPWwXDO9W996R4UPYssEXFJsxf8Onv3jwIzlVQ8ReWXdpR+4mMOZn9aTLg2KI8VxRTRFg7hobjTamG3GQDcBBwjmKPMjVT/5OJGEbb9wFdJRC78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=o/iDplID; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-452f9735424so1196605e9.3
-        for <dmaengine@vger.kernel.org>; Fri, 06 Jun 2025 03:00:21 -0700 (PDT)
+	s=arc-20240116; t=1749216947; c=relaxed/simple;
+	bh=0ml/MHinxxJm56VhkaRsfFKv/4fFXloCq1LTKaQ+fVo=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=RAx1wTinZ5tvR/bt9WhgJh6N32uVJVD4e/60KzAWmrM+b7IP0uk83WGci+lfUpG+x5+9/l15cV+YG3HcDjE0jKPKz/a2wA/xuRaG/t7dcYmLt5Ohxis9+DSDtErKsJ/eqzU1C9x5oTGHjpu1MCZkseYYjeDEqChUoTkIUrFNUks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GT5XxhiH; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-747fc7506d4so2183256b3a.0;
+        Fri, 06 Jun 2025 06:35:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749204020; x=1749808820; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=gmail.com; s=20230601; t=1749216945; x=1749821745; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from:sender
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=0Wm5Ysxp6GbjttnpPxWFZX/i14ZJHHqOtrosH3lsbGA=;
-        b=o/iDplIDx5jpp9nUY2jflHw+xk5xcd4ILsUh9OwOBhQIfOtjZsVTBUBYuJNnaNfcg2
-         06Asjz7Ndy39AphhmVt1np1DmZWrr2jXcgHeE7WTJgYuTl1bqdZAGqp4frdiG+DAP9YF
-         aKhckTHYjKjt6h+kX2xeHNIP6grjHdSj+APQMCikU7wOWHAoEWE7bWVHcD7KR+fm9Ox8
-         bSxsTXZrETAtNQGEE6gq+6YX4cmxNKMRwtG+NNsMMD9NVtclnswI+tnv2UnboQaZIplJ
-         iE3ag+NBvbrzR5vOOp0pVUJ0+ES6BigyPtNAM8dU3SrNhM28KzjyViIdT1IGYOipxVe+
-         5Eig==
+        bh=J6k/v7MmiVZncaG0gAng2Qdjjf1NhngohmIKq82nZVQ=;
+        b=GT5XxhiHCoSUsdV7qar9bw1g7K85HwCbcaDD/kTLmmbup8cvpONPW69i9ml0Bxkktc
+         Ilu9u0OEkpvNT6PwA+8fRJif8c2HM+3+4yT37aidA816CdkO6R1PUJNsDsT2OE2QqaVo
+         yZRx/Q70AvvtGTjVv+2xg3B+48L64He5k4rpP+u4Xtmgvpx9mpeS2t9149T2kf0e55Ab
+         eSoh2qumwB40okN1X+zharKzakASXA4bjNM1CXkIfcrioVcFX4wgY8knmvQ9Rz6w6XsC
+         WK5kjHsNMz4bxWhbqoNZ2AY0b79EVK3wbpGWnq1rzomppMxLGS7RsN5bmaGgg173GeNJ
+         9zMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749204020; x=1749808820;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1749216945; x=1749821745;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from:sender
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0Wm5Ysxp6GbjttnpPxWFZX/i14ZJHHqOtrosH3lsbGA=;
-        b=D8DXjZE+08f9jLjCwB11E8A52e1x7//rCw307hVTq1+K7fj8+UdBjdlCR2+Js+aDkL
-         VG7l9ojRmnyOU0izBPLl5uyyP1+EbaqA0MyKVtthQTgtTlZ4zSF44vbq6XlIw5Zxk3kj
-         HDRnfIC5Uv2HZBr3UsTjW0BHS21IUBge0YTZBkEK6QwE2rJZJXxtZHViCInaOBKWvgF7
-         hTUyTKfp8rDrVij7ay8s9wWgfi2LirYrHuwxfXi80Rn4oGf2gtAyzMitKSCiqX7zxs82
-         JL2/K7kT0fkERbqdbvVRZYtzzgzVSkcVVifliKE6x0nfhjFkFUyspzcfCAMeT8SbNsQb
-         52mA==
-X-Forwarded-Encrypted: i=1; AJvYcCVGjRLef6hP/6vQ56UMmbHbly8/uI4QOO6svt4eYomoEt6Fn6NFgzePw2kWeVu5dOS8nRvIW7OEwMo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyt0yqLBiz9pJQ1W/fHTX5/C8zvMrbYs0WPZw6Jv7BwmGOEPoDj
-	LxCfv6oEI2HzuN110tcgfoPatwjCXWKsFBBj3DOVE2lu22ItI3DS0QWprdxpZBGBFXU=
-X-Gm-Gg: ASbGncsYGZZCN8tW5avOy+3QS2D1WutkOaGOXXyKWYJSx3KmL4Shsbf09FW3+j4BsfE
-	NZaZM4fSj1Y65R8RxDx/N+Em4mYXn45wsDk0iScx0u/toa3C9UQuFte+eRJiboC4zvoQpS+IWIq
-	NGL3i26MEIi811azmNXyJG9BovL2jV32FhVo7jFQsCmAR0/KnLjak4BHW3QnuoIpqNTBpzXIOGj
-	lR40GF9Q16JWPIbOS4p/AxZg6CJqEHA068V1anMsSMaHcAU5hqW0NTWrftpBhLTfAZ5BzpgbRNv
-	GZvX8EHT6pAqpNeEY0dzfYslyyujiNqcsqwhBphpELrEo3ib68KU7YdTUxat5tclOpzZcw==
-X-Google-Smtp-Source: AGHT+IHtw37a7aLpgY1NgIlSmAhbyHbRMRvllHSnmnalrMLkUdNldLsfg2cqEgFo08aK/ax73zNvkw==
-X-Received: by 2002:a05:6000:25c5:b0:3a4:df80:7284 with SMTP id ffacd0b85a97d-3a53188a553mr2530102f8f.1.1749204020520;
-        Fri, 06 Jun 2025 03:00:20 -0700 (PDT)
-Received: from [192.168.1.221] ([5.30.189.74])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a5324621a4sm1347436f8f.88.2025.06.06.03.00.15
+        bh=J6k/v7MmiVZncaG0gAng2Qdjjf1NhngohmIKq82nZVQ=;
+        b=pZ2OSTE4TUs0CvubQTP/y/ayogEF7WnlXV4TqsHl3jVdAnNbcZjDY4tPz6pNcoIgY+
+         k8xqtoD06yoURVgWYOODIym6u2RRzm0a80yYK2X/XxBOuAs+oPQN4NFYJCDjRCF7eLub
+         OO3LqG4dpRK5zq2MuM1+AjtmE+0AgfR/57l4hxUIy2QflLOLunxGZnSBRvOtpP9rI6PS
+         ExWWwv62ipLJHWgD7cTAbJV2cytIADhWu9N0sV0Njz2pDFiu3yxCxuRAmWzQlD06be9C
+         Bbig1vu0ccjyE/zo3+8roJzND2w1ZA/VHyGk0or8Ucs8SvPhgSBDE5xWKUqfIkYFtakl
+         j+hw==
+X-Forwarded-Encrypted: i=1; AJvYcCVSfIU36+gAXxL1VPGbuZxmThF+OkRvS4bkp7non+NdohBOrYvnbHcLMihP/s30lA0RwIr1sPTpgJJuxJFrkA==@vger.kernel.org, AJvYcCW4g2YriXPn35ETz5zIl5HQV6WWZdpSQqBiACIEx6NZhJnnc4r+NgkjHhirUEO7JCEUFSflv3UEkLMvYnqz@vger.kernel.org, AJvYcCWD6NdZqHQIVkmFpPZm77mAWNJd19/xfjzl3u3eNmtPUdDFmLNsgF4PCDFnfsDe9Qqiu8HZXxDZ95U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzq6zatOG9cxxA3xXeVOmHnDMHbHK4dS4QVV0S3Gws0MKovvqkc
+	vQ5uVjsl3xdpzoVCFr72g3ECnw2SCi6DXxnoO8gDbQii/xBoqeoffq3s
+X-Gm-Gg: ASbGnctI7PKCGMQ/G5PGYrD0WKyrQeCUmwZ+Z3AjecIdAqItAseLxAlrAGp5UN3c2Vk
+	QLHA5ZPkTXdhaUqnzvRwZnz/6lsEmF4SYgweX6kC6kMCvHP3LjQTQ+PN68KmcJyc4AKxuQjO11L
+	kqkt9uKrBmcvduVT8BqOBEJ39lLrDGlHWYBh+xue2Gn1OZixdBYkA3oRxxizhIP9bUKarKhnAwe
+	vue+zenkrlGMhas5Kc5mgNPAJYAX+cLeZnB0dR1xhzwudmRF8hFPwyvWRAtd0K/Dp7YqGSk3xiP
+	fLmJqp1rc6pVkqsvk/J9xpCEIfzMkBBUIcwREokrSgZit/OZB+gCPlQ=
+X-Google-Smtp-Source: AGHT+IGVAVfaCO3WJmW8EZtwdSKaSpA2gT2x6UkvCUzMZbUmgdcLsdnbM0vABNk8ZcknIZtO7DrmhA==
+X-Received: by 2002:a05:6a00:188e:b0:742:da7c:3f28 with SMTP id d2e1a72fcca58-74827f37c17mr4990489b3a.21.1749216945558;
+        Fri, 06 Jun 2025 06:35:45 -0700 (PDT)
+Received: from [10.0.2.172] ([70.37.26.38])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482b0842d3sm1299017b3a.98.2025.06.06.06.35.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Jun 2025 03:00:18 -0700 (PDT)
-Message-ID: <ca3ce8df-aa4f-4422-8455-29db2440d8d5@linaro.org>
-Date: Fri, 6 Jun 2025 13:00:14 +0300
+        Fri, 06 Jun 2025 06:35:45 -0700 (PDT)
+Sender: Sinan Kaya <franksinankaya@gmail.com>
+From: Sinan Kaya <Okaya@kernel.org>
+X-Google-Original-From: Sinan Kaya <okaya@kernel.org>
+Message-ID: <7649f016-87f1-475d-8ff7-7608b14c5654@kernel.org>
+Date: Fri, 6 Jun 2025 09:35:44 -0400
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -81,44 +84,58 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dmaengine: mediatek: Fix a flag reuse error in
- mtk_cqdma_tx_status()
-To: Qiu-ji Chen <chenqiuji666@gmail.com>
-Cc: sean.wang@mediatek.com, vkoul@kernel.org, matthias.bgg@gmail.com,
- angelogioacchino.delregno@collabora.com, dmaengine@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-kernel@vger.kernel.org, baijiaju1990@gmail.com,
- stable@vger.kernel.org, kernel test robot <lkp@intel.com>
-References: <20250606071709.4738-1-chenqiuji666@gmail.com>
- <ff77f70e-344d-4b8a-a27f-c8287d49339c@linaro.org>
- <CANgpojXWk1zvu32bMuGgkVGVNvPw+0NWmSUC62Sbc3WcUXAd3A@mail.gmail.com>
+Subject: Re: [PATCH 2/2] dmaengine: qcom_hidma: fix handoff FIFO memory leak
+ on driver removal
+To: Eugen Hristev <eugen.hristev@linaro.org>, Qasim Ijaz
+ <qasdev00@gmail.com>, Vinod Koul <vkoul@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+ dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+References: <20250601224231.24317-1-qasdev00@gmail.com>
+ <20250601224231.24317-3-qasdev00@gmail.com>
+ <3c6513fe-83b3-4117-8df6-6f8c7eb07303@linaro.org>
 Content-Language: en-US
-From: Eugen Hristev <eugen.hristev@linaro.org>
-In-Reply-To: <CANgpojXWk1zvu32bMuGgkVGVNvPw+0NWmSUC62Sbc3WcUXAd3A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <3c6513fe-83b3-4117-8df6-6f8c7eb07303@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
+On 6/5/2025 9:04 AM, Eugen Hristev wrote:
+>> diff --git a/drivers/dma/qcom/hidma_ll.c b/drivers/dma/qcom/hidma_ll.c
+>> index fee448499777..0c2bae46746c 100644
+>> --- a/drivers/dma/qcom/hidma_ll.c
+>> +++ b/drivers/dma/qcom/hidma_ll.c
+>> @@ -816,6 +816,7 @@ int hidma_ll_uninit(struct hidma_lldev *lldev)
+>>   
+>>   	required_bytes = sizeof(struct hidma_tre) * lldev->nr_tres;
+>>   	tasklet_kill(&lldev->task);
+>> +	kfifo_free(&lldev->handoff_fifo);
+>>   	memset(lldev->trepool, 0, required_bytes);
+>>   	lldev->trepool = NULL;
+>>   	atomic_set(&lldev->pending_tre_count, 0);
+> Is it possible that the handoff_fifo is freed, then we could observe
+> reset complete interrupts before they are being cleared in
+> hidma_ll_uninit later on, which would lead to the following call chain
+>
+>   hidma_ll_inthandler - hidma_ll_int_handler_internal -
+> hidma_handle_tre_completion - hidma_post_completed -
+> tasklet_schedule(&lldev->task); - hidma_ll_tre_complete - kfifo_out
 
-On 6/6/25 12:14, Qiu-ji Chen wrote:
->> On 6/6/25 10:17, Qiu-ji Chen wrote:
->>> Fixed a flag reuse bug in the mtk_cqdma_tx_status() function.
->> If the first spin_lock_irqsave already saved the irq flags and disabled
->> them, would it be meaningful to actually use a simple spin_lock for the
->> second lock ? Or rather spin_lock_nested since there is a second nested
->> lock taken ?
->>
->> Eugen
->>
-> 
-> Hello Eugen,
-> 
-> Thanks for helpful suggestion. The modification has been submitted in
-> patch v2 as discussed.
-> 
-> Best regards,
-> Qiu-ji Chen
+According to the documentation, the way to guarantee this from not happening
 
-You are welcome, but in fact I suggested two alternatives. Any reason
-you picked this one instead of the other ?
+is to call tasklet_disable() to ensure that tasklet completes execution. 
+Only after that
+
+data structures used by the tasklet can be freed.
+
+I think proper order is:
+
+1. tasklet_disable
+
+2. tasklet_kill
+
+3. kfifo_free
+
+
+
 

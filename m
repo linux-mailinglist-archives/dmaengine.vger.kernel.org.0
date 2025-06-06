@@ -1,142 +1,151 @@
-Return-Path: <dmaengine+bounces-5315-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5316-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D298ACFD51
-	for <lists+dmaengine@lfdr.de>; Fri,  6 Jun 2025 09:17:39 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 09B8CACFDA1
+	for <lists+dmaengine@lfdr.de>; Fri,  6 Jun 2025 09:42:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C1A623A961A
-	for <lists+dmaengine@lfdr.de>; Fri,  6 Jun 2025 07:17:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 89DA71898ACF
+	for <lists+dmaengine@lfdr.de>; Fri,  6 Jun 2025 07:42:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FDDC58210;
-	Fri,  6 Jun 2025 07:17:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8233283FFB;
+	Fri,  6 Jun 2025 07:42:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k/S2ocwP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NyqdMCWH"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pl1-f195.google.com (mail-pl1-f195.google.com [209.85.214.195])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85E143596A;
-	Fri,  6 Jun 2025 07:17:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCFA017E4
+	for <dmaengine@vger.kernel.org>; Fri,  6 Jun 2025 07:42:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749194253; cv=none; b=fhuy4r1mm5VwlT8bcNSvpECXNRxkLBbGu4mKxqPhqWLilRrNrkqGUOCePqcPHESGCpJi3fEG9j5eNo6ktrbuBSiNA20HZVvVsMK7ZU1W3RuO0RtoEF2hHc/2clK6A+GxJYqRSIns4VUMP/9BWQM9Eexf+seuHG8NuUNTZRhM0Xk=
+	t=1749195740; cv=none; b=XStvSODhl/pLvesmRjdO2Xq6YEWyWFz9Vbg71ceVhLhf/0dzdYKVg5zfmtoV3mZXbg2INXGL8uFUCLC2IEg1hnATnQw4cunHRM9fM43ZaLkBcYGN03bAnseo7cvqkUSEjPRiFdmt5At8k+sy76c+5plUzL1FmRn/ET5eeqU2hQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749194253; c=relaxed/simple;
-	bh=9t12MyJG8VW40lDR99jNCtmzlyczu/kzZL9Ahq6Na1I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HpTNYtUVAoRQ5EscwSoZWaQNbnc0BZE1pGuyMywWhOZnljE0Tb5bMEg9mOf8hl9JQXNzT7zhOVIMhwZGL4EJo1P/1S4DWesBwmWldb5zu9FBfQPeaamlqsMTunIypM5XLjEmkA/Tn+utawAY5shuu1TqQPg77lAl60Q0yCS1y3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k/S2ocwP; arc=none smtp.client-ip=209.85.214.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f195.google.com with SMTP id d9443c01a7336-231e8553248so18567445ad.1;
-        Fri, 06 Jun 2025 00:17:31 -0700 (PDT)
+	s=arc-20240116; t=1749195740; c=relaxed/simple;
+	bh=JrXEu9V00IDwc0gs2Fk3u6thmp4myUk90+/KCMWMqHY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Fy34UhK7elqhbibmMHrGNoQhOEVF9x33PPWSnJpe7FS1/6PLie/pzAuQ6Q/fyXieEwfVyM+DjvDepaDJpGchzKUY9fH3/tiCesO94G27RTJuKpjktJhuqRiitByv2V7Y4inHTzKPcQFExndncoviCOAqQTGJCpxEvcqYCY+qBKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NyqdMCWH; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-451e2f0d9c2so14589625e9.1
+        for <dmaengine@vger.kernel.org>; Fri, 06 Jun 2025 00:42:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749194250; x=1749799050; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=QKV+4ax/i9KS9PUFjbXXlSMf8xi5c4xdtzVPWafiCz4=;
-        b=k/S2ocwPF55Oxo0YnegweDhyoPODzwzKVYq5auMcmVe2b8HJPfQpmCW89PRiR/MUoL
-         pYc8TgJ6P5J3JdLWBunopETwYKL6P6zN99yKPOXwan4KaWlyVgOhZR0JG3/826zVP3nP
-         +aLZju2CYnyAVVGiDU/ejFENj9Cy4jnuMWAl11+6IgQXLx3N0po/YX3TeoikF/brEwcw
-         UAdCmRTHJOjaUSivZaG7iiSPdKcw9LAxAtArMXfnOoaub3x4ZKlSiI0AwvheGWlJM78a
-         /EZ5pOs5WheVJIoe+NERVfX5KH/0q4VRbXMBjGx1EmtpjBKtyVmk8LUs0TNcYo4Nga6X
-         IgBQ==
+        d=linaro.org; s=google; t=1749195736; x=1749800536; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Px7TUkiGLJQvkjO/71jKrxllILzPLzGA5siX95GH57I=;
+        b=NyqdMCWHOoSp2C6ntTQEqAHoDzvLQxSzWsiWJAkHHcYmtu17UbnJEBc7fHWIC0FiIY
+         yIOmjDrh873M0nLI5oenX6cHZd3aZF9LqNHPiHITxZH1D9u4LZHew0+ym7sqrWHf29jJ
+         LLQ5AymDNct9M3rtrUb/FLTLlxRbp8JArLr00m1buxCJZldgV9fj89XjNmzsEtoPBlng
+         gkfGjW6E+t1xLNUFMa8eWfjtZu4t1b2ikwjyenzfrjB5wNJwC9W//VGgrsAE+BioVOHJ
+         wKRmCgpB5026ihZfvenShxWmLicm+cGPLAHYUndNNgHbVfx/aXI61EfMYJxrpxNP2uyO
+         LvFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749194250; x=1749799050;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QKV+4ax/i9KS9PUFjbXXlSMf8xi5c4xdtzVPWafiCz4=;
-        b=aAJVnZptgud5crX4YHUFaw6ibLYqGUZjdTgMgoNCCJOBumjK0AP2x6nKao1d2dhVOO
-         fMBTwaOzYUJEmKReyZOYhXzgwanHqHBtyuxfxNqS9Xd2mi1Qolnxb08SFaGnO3iVYHMq
-         swuKsqSxIbn4hsVwcCK1EejxFxRj9Gqsi5/bxWBps50MIgdngbhnCa7aloPz49Tp0pIW
-         6IpQD9XzQFhgrCrkfQACfVk8Cf9rdStdVGex/K2wvrOJgR/oJnTcgZItobggnnGOZHQp
-         0jefr/NVvszlbqZ2LH1t5K020Hw2TQLRcgofMVrXp0sPVHM6mMmvTm3DORG570fth00J
-         2tow==
-X-Forwarded-Encrypted: i=1; AJvYcCVIS4fhtTVBDH1l+AyVbAjGpectbtHSPIjQXu9pwU8nLMRucJjsJ0fUtaXUHlfP4h9XZEwqOvoA2YUKaEU=@vger.kernel.org, AJvYcCWRdSa/hN/5dljEl0aFh+6McFTxVR6WBByCArEYOkOlHW9x8/+n/03ZtWkxOOOOPbpM5wnDU7dU@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgLCk5/I5GEhLwJsM7o4TI4z+I6p8pKmoM5H966T9iLDON0NgG
-	88OTNjdGCzeuZC3ugbMLxEqMW8Y5EPP1v8lzemsLJ1B4Ri+Pkvvh3Drn
-X-Gm-Gg: ASbGnctjZz3XkCu6KRKDrrF50j5TKKsdav97kkju1h0T6Rqy25lm9EvZ96r3svgmYQc
-	6Nbfk4QMughHVTwiBZcd32k/+eg12qL4Qa5127Q/gC6/31lY3Pg44M5YvbwIBtZ8Q6Bvuw58aBu
-	6Ck6dB7USMYcKXmryDREKYsgeNeKRILhi26aJVuRUn/zILVr4X0+u4h4+yMHrOLlxf/gV/OQW00
-	89EmW3Sue2/AOqlImQ32aoqxEEb328CgK8O12OxIVhCs1DQ0R2gF1iGpIZrh2pu76JrRkQLoK+4
-	76eN3CVoL4B5pmt6wYLihkTpLeAMSm2rOrfenBPSJIyEm41/8YFhCLLopzXxGcTpwZ9aRnNcpA1
-	flY+2
-X-Google-Smtp-Source: AGHT+IGNo3qVc1h80cdtsdbqFE6SC5h8TPFPCwUyuDcI25fbiI6mtb5/kXy0fdjUUtBwCDDEu4pmyA==
-X-Received: by 2002:a17:903:230b:b0:234:ef42:5d48 with SMTP id d9443c01a7336-23601d82cf8mr34434925ad.38.1749194250516;
-        Fri, 06 Jun 2025 00:17:30 -0700 (PDT)
-Received: from tom-QiTianM540-A739.. ([124.127.236.130])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236032ff216sm6482015ad.111.2025.06.06.00.17.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 00:17:30 -0700 (PDT)
-From: Qiu-ji Chen <chenqiuji666@gmail.com>
-To: sean.wang@mediatek.com,
-	vkoul@kernel.org,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com
-Cc: dmaengine@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	baijiaju1990@gmail.com,
-	Qiu-ji Chen <chenqiuji666@gmail.com>,
-	stable@vger.kernel.org,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH] dmaengine: mediatek: Fix a flag reuse error in mtk_cqdma_tx_status()
-Date: Fri,  6 Jun 2025 15:17:09 +0800
-Message-Id: <20250606071709.4738-1-chenqiuji666@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1749195736; x=1749800536;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Px7TUkiGLJQvkjO/71jKrxllILzPLzGA5siX95GH57I=;
+        b=VnQabl6Uqo/fckRnebxaHiqF/VJS1Vq+O/PC4bSAW6bKsfq/cH1rrurJ8hdMFrVslZ
+         9MeUzeVQm3CKzTGFGsyAkzdFh0ItyutdoItbmCZrvd8qftw/wiNCRiSaSUDJKOEJLmUH
+         2eHcKdc7tpoAILb7yFx7TzlBRoAdjJt8Nj0weF2nXWvOCl2AnS5qQ8NfV+sFCqRA0/wR
+         4OcMr/jQsxo24q+npghOBW1rY1a7ubgEyo1n8CAPemxwl4NNeJxFLy/QkirNdzeXWRj6
+         0gZM8KjMAsWktYJu3eLljLdvNzRmkwmqJ26ofe/JfPgcWw84zcOO3kPCgEp9jwFkyEYh
+         kBwA==
+X-Gm-Message-State: AOJu0Yw5BDD8urPEaiBEbVdeHyd7ERhJa1M+X/+ISY9WtKeNlX5+QHKw
+	ty6m5PPFUKg7DhLYax3plGZEl9Wg66Pc2vafIM7TPMm4PWlFpxspn+E9vyYUkg2hIeU=
+X-Gm-Gg: ASbGnctlRQFl0bRnYlDzDJlF9atlAHD3hlFfLRxe4wARXTkrFsO8ymeek0HIsTI7L9S
+	wC4QoSZGrl5M4x1TUkB7AtTyRi8Hm8gyHi6MSlqq8+rkCYZvlhNOhp8bM61TczZYVOrf48wBxjt
+	vx82Qmk/FXkgkzHVAhWN6p2X/khdlqeu4Jr81a8zvWLICRjx8j78/F7sI79Y9fvarq/5xF7ArfF
+	GOR5LGgnHGfl9JbOYPXEe+wXQbfbn280lGxfR2V0uaPKYqWvI4AEiKI4nrg73UmfhQudwPk3g8B
+	uLgyW3r0swJQblQh6iyZH/F0Fr5BavTXfukizlffq1yhbOv8v5oqSIzBCKAT+f8SLc2DDxt8VhA
+	xVHiN
+X-Google-Smtp-Source: AGHT+IEDJ6Qm0Ur3ac3Ih5jAsMWLAgYjL99/0S8sUsnqlAT4/rYCzrAkgc1FBvTgHlungYhO6iFY8w==
+X-Received: by 2002:a05:600c:4f90:b0:44a:b468:87b1 with SMTP id 5b1f17b1804b1-45201506dd3mr20374865e9.4.1749195736011;
+        Fri, 06 Jun 2025 00:42:16 -0700 (PDT)
+Received: from [192.168.1.221] ([5.30.189.74])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4526e056138sm12622585e9.5.2025.06.06.00.42.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Jun 2025 00:42:15 -0700 (PDT)
+Message-ID: <ff77f70e-344d-4b8a-a27f-c8287d49339c@linaro.org>
+Date: Fri, 6 Jun 2025 10:42:11 +0300
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dmaengine: mediatek: Fix a flag reuse error in
+ mtk_cqdma_tx_status()
+To: Qiu-ji Chen <chenqiuji666@gmail.com>, sean.wang@mediatek.com,
+ vkoul@kernel.org, matthias.bgg@gmail.com,
+ angelogioacchino.delregno@collabora.com
+Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+ baijiaju1990@gmail.com, stable@vger.kernel.org,
+ kernel test robot <lkp@intel.com>
+References: <20250606071709.4738-1-chenqiuji666@gmail.com>
+Content-Language: en-US
+From: Eugen Hristev <eugen.hristev@linaro.org>
+In-Reply-To: <20250606071709.4738-1-chenqiuji666@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Fixed a flag reuse bug in the mtk_cqdma_tx_status() function.
 
-Fixes: 157ae5ffd76a ("dmaengine: mediatek: Fix a possible deadlock error in mtk_cqdma_tx_status()")
-Cc: stable@vger.kernel.org
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202505270641.MStzJUfU-lkp@intel.com/
-Signed-off-by: Qiu-ji Chen <chenqiuji666@gmail.com>
----
- drivers/dma/mediatek/mtk-cqdma.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/dma/mediatek/mtk-cqdma.c b/drivers/dma/mediatek/mtk-cqdma.c
-index 47c8adfdc155..f7b870d2ca90 100644
---- a/drivers/dma/mediatek/mtk-cqdma.c
-+++ b/drivers/dma/mediatek/mtk-cqdma.c
-@@ -441,18 +441,19 @@ static enum dma_status mtk_cqdma_tx_status(struct dma_chan *c,
- 	struct mtk_cqdma_vdesc *cvd;
- 	struct virt_dma_desc *vd;
- 	enum dma_status ret;
--	unsigned long flags;
-+	unsigned long pc_flags;
-+	unsigned long vc_flags;
- 	size_t bytes = 0;
- 
- 	ret = dma_cookie_status(c, cookie, txstate);
- 	if (ret == DMA_COMPLETE || !txstate)
- 		return ret;
- 
--	spin_lock_irqsave(&cvc->pc->lock, flags);
--	spin_lock_irqsave(&cvc->vc.lock, flags);
-+	spin_lock_irqsave(&cvc->pc->lock, pc_flags);
-+	spin_lock_irqsave(&cvc->vc.lock, vc_flags);
- 	vd = mtk_cqdma_find_active_desc(c, cookie);
--	spin_unlock_irqrestore(&cvc->vc.lock, flags);
--	spin_unlock_irqrestore(&cvc->pc->lock, flags);
-+	spin_unlock_irqrestore(&cvc->vc.lock, vc_flags);
-+	spin_unlock_irqrestore(&cvc->pc->lock, pc_flags);
- 
- 	if (vd) {
- 		cvd = to_cqdma_vdesc(vd);
--- 
-2.34.1
+On 6/6/25 10:17, Qiu-ji Chen wrote:
+> Fixed a flag reuse bug in the mtk_cqdma_tx_status() function.
+> 
+> Fixes: 157ae5ffd76a ("dmaengine: mediatek: Fix a possible deadlock error in mtk_cqdma_tx_status()")
+> Cc: stable@vger.kernel.org
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202505270641.MStzJUfU-lkp@intel.com/
+> Signed-off-by: Qiu-ji Chen <chenqiuji666@gmail.com>
+> ---
+>  drivers/dma/mediatek/mtk-cqdma.c | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/dma/mediatek/mtk-cqdma.c b/drivers/dma/mediatek/mtk-cqdma.c
+> index 47c8adfdc155..f7b870d2ca90 100644
+> --- a/drivers/dma/mediatek/mtk-cqdma.c
+> +++ b/drivers/dma/mediatek/mtk-cqdma.c
+> @@ -441,18 +441,19 @@ static enum dma_status mtk_cqdma_tx_status(struct dma_chan *c,
+>  	struct mtk_cqdma_vdesc *cvd;
+>  	struct virt_dma_desc *vd;
+>  	enum dma_status ret;
+> -	unsigned long flags;
+> +	unsigned long pc_flags;
+> +	unsigned long vc_flags;
+>  	size_t bytes = 0;
+>  
+>  	ret = dma_cookie_status(c, cookie, txstate);
+>  	if (ret == DMA_COMPLETE || !txstate)
+>  		return ret;
+>  
+> -	spin_lock_irqsave(&cvc->pc->lock, flags);
+> -	spin_lock_irqsave(&cvc->vc.lock, flags);
+> +	spin_lock_irqsave(&cvc->pc->lock, pc_flags);
+> +	spin_lock_irqsave(&cvc->vc.lock, vc_flags);
+>  	vd = mtk_cqdma_find_active_desc(c, cookie);
+> -	spin_unlock_irqrestore(&cvc->vc.lock, flags);
+> -	spin_unlock_irqrestore(&cvc->pc->lock, flags);
+> +	spin_unlock_irqrestore(&cvc->vc.lock, vc_flags);
+> +	spin_unlock_irqrestore(&cvc->pc->lock, pc_flags);
+>  
+>  	if (vd) {
+>  		cvd = to_cqdma_vdesc(vd);
+
+If the first spin_lock_irqsave already saved the irq flags and disabled
+them, would it be meaningful to actually use a simple spin_lock for the
+second lock ? Or rather spin_lock_nested since there is a second nested
+lock taken ?
+
+Eugen
 
 

@@ -1,57 +1,72 @@
-Return-Path: <dmaengine+bounces-5324-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5325-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2AE29AD0B2B
-	for <lists+dmaengine@lfdr.de>; Sat,  7 Jun 2025 05:51:11 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BDF84AD0D86
+	for <lists+dmaengine@lfdr.de>; Sat,  7 Jun 2025 15:06:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AFCF81890F99
-	for <lists+dmaengine@lfdr.de>; Sat,  7 Jun 2025 03:51:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CBAF23AD6BB
+	for <lists+dmaengine@lfdr.de>; Sat,  7 Jun 2025 13:06:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 952551B043C;
-	Sat,  7 Jun 2025 03:51:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E788020CCED;
+	Sat,  7 Jun 2025 13:06:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="RZxSqWRB"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ExUtRFb6"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94C38152E02;
-	Sat,  7 Jun 2025 03:51:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F28E1CA5A;
+	Sat,  7 Jun 2025 13:06:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749268266; cv=none; b=ujvuN0KTVT7Y+JNHBVPPdn2VMyxpzOQdnTKMjCfIWYg6+WzTtgVm5bJaiiG9CPyLGdtWKYsQKfMveY14/OnLkD9ZN3vIwuesb7ir4f2ajJScA8U3X6f37jvDvXcYQclC3xl8CYkXEec22nAnFh2WG9m9YXUyvXZmNla0Smdt7C4=
+	t=1749301586; cv=none; b=ew3rXNdTFR1wlMoNbHRrP9D3YsMCm+DvLFED7dIj+Xauc57BZVd8UgtK66mrNwdUb6nmOx+Ep6s8P/UqigQZN8MRwmak42JHvXvOh7bpDm4TalMKHp4akO/LCp5vhPV+cBbayXDwf/mF0kKJnR1IFSWEoFj9grFkL39KwFVN+rk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749268266; c=relaxed/simple;
-	bh=TO39zRfkdJpwBMKGG9fkZahw7ixJbcoLpDCi/C9QEYU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VTF/FB0xrleZx5eJION2Ag+AfUoYwi3oWVp9rNbgvUl7debyQHWUf+kAsRAc+wGh7/QUORGMxh29S/x0rAXb5Cs4iNCa4pt2ZViBi4dN7GHwq9vLAozqgAxJ6HUh59uWgMbEUgpFB/O+V0aYwum1W2xq0eraE6HBo2/FT2DcQi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=RZxSqWRB; arc=none smtp.client-ip=115.124.30.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1749268255; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=mH/4mZprVQCWqhuJFYNdxPlXR2Cnoux70JmvcnxqCBI=;
-	b=RZxSqWRBGXd/2TqBFmMoxadO75pb18f+yfqXrwtOB5aQfYV3KebqdzU6zprqXxaE87slIvnzUMVkHb80Z7c9wbxlQEhL9htzgv7QjBTbcHPPFjrlYeoHL+OBYwOPldSlIlGaTcZSYHRGKfFnIsluMRW2dXnw5SIj+xf17rU1dC4=
-Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WdE2yr2_1749267933 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Sat, 07 Jun 2025 11:45:34 +0800
-From: Shuai Xue <xueshuai@linux.alibaba.com>
+	s=arc-20240116; t=1749301586; c=relaxed/simple;
+	bh=Y57lSQnZNK8/F6EEIhYJDWEIE7sOJBCODtzIKvw+xSA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CVUj4ZWlAhK67NUnm61UJwMagtnfwRLyIWEUl3cO2yEMPFHk0SRp4dOZK2P5kSZu8Orlh8cc/PFPg8EyV87gfC3rbG0iZ2Hv8oR7IQxLjxBggdZw35xKApuTw4dWzilkwjN51KLwTw2DWU9rAzzZlPMXcT3TXoIZQdtMlm7LGSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ExUtRFb6; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749301585; x=1780837585;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Y57lSQnZNK8/F6EEIhYJDWEIE7sOJBCODtzIKvw+xSA=;
+  b=ExUtRFb63afQbX1GGfvNNP5nZJDzst+rNipRigHlY/G/a2HNfDXEXcPJ
+   vReLXuNhZ3K1C9Vgf6EbIXGVJQ2rWuMJ0oLz5QqxfE00Oa9z+BLfenigV
+   LJHUOscjZvWRhg/2d3XHVJblDGyUv8X4F/IBuhmWJTUwnUtChiSy8yTk0
+   vgq+ptvFAOe0ilVKTMiTFi3cpgqozxLIkORwa85joNQ8mcYag7ttYyPFV
+   YSr2VNEPnQJcA80zHIeq8i63cWqJNM+p3y/C3UXGjVixBPnSWhwP5dpZA
+   Joct+ax3GDY5W4J1dvxBt7K38e/WiQwip9KL2AgmCLgAItTqXgj4AioUw
+   w==;
+X-CSE-ConnectionGUID: CJCEx8zuQ8O55Zs0uL8DlA==
+X-CSE-MsgGUID: +wtAGFJWTl2VYGgRSUwJ6w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11457"; a="55242773"
+X-IronPort-AV: E=Sophos;i="6.16,218,1744095600"; 
+   d="scan'208";a="55242773"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2025 06:06:25 -0700
+X-CSE-ConnectionGUID: HtC6G8GhTSygAq5V/S/nVg==
+X-CSE-MsgGUID: 9X5CjBmUQbqXDrMwcNkt7Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,218,1744095600"; 
+   d="scan'208";a="151074654"
+Received: from ysun46-mobl (HELO YSUN46-MOBL..) ([10.239.96.51])
+  by orviesa004.jf.intel.com with ESMTP; 07 Jun 2025 06:06:23 -0700
+From: Yi Sun <yi.sun@intel.com>
 To: vinicius.gomes@intel.com,
-	dave.jiang@intel.com,
-	fenghuay@nvidia.com,
-	vkoul@kernel.org
-Cc: xueshuai@linux.alibaba.com,
 	dmaengine@vger.kernel.org,
-	colin.i.king@gmail.com,
-	linux-kernel@vger.kernel.org,
-	dan.carpenter@linaro.org
-Subject: [PATCH v2] dmaengine: idxd: fix potential NULL pointer dereference on wq setup error path
-Date: Sat,  7 Jun 2025 11:45:32 +0800
-Message-ID: <20250607034532.92512-1-xueshuai@linux.alibaba.com>
-X-Mailer: git-send-email 2.44.0
+	linux-kernel@vger.kernel.org
+Cc: yi.sun@intel.com,
+	gordon.jin@intel.com
+Subject: [PATCH v2 0/2] dmaengine: idxd: Fix refcount and cleanup issues on module unload
+Date: Sat,  7 Jun 2025 21:06:14 +0800
+Message-ID: <20250607130616.514984-1-yi.sun@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -60,54 +75,39 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-If wq allocation fails during the initial iteration of the loop,
-`conf_dev` is still NULL.  However, the existing error handling via
-`goto err` would attempt to call `put_device(conf_dev)`, leading to a
-NULL pointer dereference.
+This patch series addresses two issues related to the device reference
+counting and cleanup path in the idxd driver.
 
-This issue occurs because there's no dedicated error label for the WQ
-allocation failure case, causing it to fall through to an incorrect
-error path.
+Recent changes introduced improper put_device() calls and duplicated
+cleanup logic, leading to refcount underflow and potential use-after-free
+during module unload.
 
-Fix this by introducing a new error label `err_wq`, ensuring that we
-only invoke `put_device(conf_dev)` when `conf_dev` is valid.
+Patch 1 removes an unnecessary call to idxd_free(), which could result in a
+use-after-free when paired with asynchronous put_device().
 
-Fixes: 3fd2f4bc010c ("dmaengine: idxd: fix memory leak in error handling path of idxd_setup_wqs")
-Cc: stable@vger.kernel.org
-Reported-by: Colin King <colin.i.king@gmail.com>
-Closes: https://lore.kernel.org/dmaengine/aDQt3_rZjX-VuHJW@stanley.mountain
-Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Patch 2 refactors the cleanup path to avoid redundant put_device() calls
+introduced in commit a409e919ca3. The existing idxd_unregister_devices()
+already handles proper device reference release.
+
+Both patches have been verified on hardware platform.
+
+Both patches have been run through `checkpatch.pl`. Patch 2 gets 1 error
+and 1 warning. But these appear to be limitations in the checkpatch script
+itself, not reflect issues with the patches.
+
 ---
-changes since v1: 
-- add Reviewed-by tag from Dave Jiang
-- add Reported-by tag from Dan Carpenter and its Closes link
----
- drivers/dma/idxd/init.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Changes in v2:
+- Reworded commit messages supplementing the call traces (Vinicius)
+- Explain why the put_device are unnecessary. (Vinicius)
 
-diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index 80355d03004d..a818d4799770 100644
---- a/drivers/dma/idxd/init.c
-+++ b/drivers/dma/idxd/init.c
-@@ -196,7 +196,7 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
- 		wq = kzalloc_node(sizeof(*wq), GFP_KERNEL, dev_to_node(dev));
- 		if (!wq) {
- 			rc = -ENOMEM;
--			goto err;
-+			goto err_wq;
- 		}
- 
- 		idxd_dev_set_type(&wq->idxd_dev, IDXD_DEV_WQ);
-@@ -246,6 +246,7 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
- 	put_device(conf_dev);
- 	kfree(wq);
- 
-+err_wq:
- 	while (--i >= 0) {
- 		wq = idxd->wqs[i];
- 		if (idxd->hw.wq_cap.op_config)
+Yi Sun (2):
+  dmaengine: idxd: Remove improper idxd_free
+  dmaengine: idxd: Fix refcount underflow on module unload
+
+ drivers/dma/idxd/init.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
 -- 
-2.43.5
+2.43.0
 
 

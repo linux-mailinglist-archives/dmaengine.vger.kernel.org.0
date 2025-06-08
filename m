@@ -1,46 +1,46 @@
-Return-Path: <dmaengine+bounces-5330-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5331-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1081CAD123B
-	for <lists+dmaengine@lfdr.de>; Sun,  8 Jun 2025 14:55:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B1606AD124B
+	for <lists+dmaengine@lfdr.de>; Sun,  8 Jun 2025 14:56:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 819657A503C
-	for <lists+dmaengine@lfdr.de>; Sun,  8 Jun 2025 12:54:22 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E45CA7A5C62
+	for <lists+dmaengine@lfdr.de>; Sun,  8 Jun 2025 12:54:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45FE020F093;
-	Sun,  8 Jun 2025 12:55:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1759215767;
+	Sun,  8 Jun 2025 12:55:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D+oVuRk6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bq9VFHB9"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D2821A5BA3;
-	Sun,  8 Jun 2025 12:55:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C854C205E3E;
+	Sun,  8 Jun 2025 12:55:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749387320; cv=none; b=ZksXzdCrwCaLDRI8io+1Msq7JGcP38Tni5TNCllgPI6KgBnvN3lMX/M62vaqMe28nAA5G5T/6QmniAnQhy7eHTEEHxJSfF+/Lp4vy0DNMVEDBF+vMezwCl/nVm1ldi0R5OypoQSvovC7a+MVjrt7a79YBez2xlLbWL32pfxEGM4=
+	t=1749387336; cv=none; b=s0gKqLNyBooSG6hLZNmdiSNVp1dCjFhPQVOkxWv6a4kV/R8wgNPyqs7SDdAaTKLi0yfAHBfQaKiTehsT+REl/Nt5Ww8355Lo1ngd0/0QPbD56F544qT2gBzMNkCnyNAWtnObGaXhqg59Sa9DaTDM/NNDQOjN6bLsv5+1pWIhzgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749387320; c=relaxed/simple;
-	bh=KJqrOZg+liXR6XD2SlSrR/DKnQmam6CoKptFyWYEF0g=;
+	s=arc-20240116; t=1749387336; c=relaxed/simple;
+	bh=dYuPlDETuqNI5ZrgLE9hfarKYWqVmPp9DF8oDnLCj1o=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LFWJWmoc9KyDTZASiNWgNLfJpbM4zBYJB4TX2tgZ+WD8CqInx3ELY6/CvcLRSgznceqYjckGeSBJN5wb2eOGNVYwpx3athhOktF6h9Il/qzyOF1IU2vQns0qLDdr/WJUjm3/bzaYeZHvRxcDkPU1nN12J3G9SbEnYjimL1f0Pu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D+oVuRk6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0072C4CEEE;
-	Sun,  8 Jun 2025 12:55:17 +0000 (UTC)
+	 MIME-Version; b=ryMBYbM1elpfE2UI3eGL6wGvZkt/O97Iq8dWLRtBgqnhOMEvRehWtTpvezUFFDIuvlfmTrJ0+ZWexRcpvbGMOn+WAc3znj4FdATHJCGD9JxJarNGXUu6b4GKtchhlRjFdooASxzu7uGo1CdbiIDP8glX0ptPGMJcaAPuzm9wiE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bq9VFHB9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A96A4C4CEEE;
+	Sun,  8 Jun 2025 12:55:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749387318;
-	bh=KJqrOZg+liXR6XD2SlSrR/DKnQmam6CoKptFyWYEF0g=;
+	s=k20201202; t=1749387336;
+	bh=dYuPlDETuqNI5ZrgLE9hfarKYWqVmPp9DF8oDnLCj1o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=D+oVuRk6t2TQMSb1d6UMTaqUhXTo+sJxDybO0KWcXvqtljIOVtENSuauXiVQYIw9I
-	 q4J5KQrCn2Sx2jcd8KY44ZQqSYi6pNj/2NZxY5IeXThOa3Wqn0OtS0RB1ahSzOexYj
-	 M1n1mLAeGBdVqNZWFqOyg4pCSx/inLkZM2u1LJ8aS6qCNVMAc1A5XpjxhPy9n8j5LC
-	 49+UDbDjwcxXk4PASh2RYwt81H2XkETm294YWeYkYqb6XQTKJRw0rEu4Otv4yXgUTX
-	 T/23boZBrCfhPJyPdGRSZmpnfYIxe6SRG+xseVz/fjLr377oCLXlJZL1VHDXmM/jA2
-	 kmqR8IVkEto0g==
+	b=Bq9VFHB9DKkYKdMNfowpxRN/zTmZwb+3TcgBek6WEWhq0tXZIYyPJxIwKfpcCQpV2
+	 UUwIvkLxM+rTrhN2Za/S0NXyavI4fyA5xx6uQWi1dF2F3fwCz9JqOphk5K9TVKsobm
+	 y72XnrS1X0iUdL8S1ogkJ6adxHaz+n0W5pDtgRbupfDIKElVwBOQfCp4lsCy3KaQEy
+	 6nkvdnxFeLQ5Vn2egKT78ctuoVn4AIWAkGSW8i/DHXvilIYMtJItV9hvj3Upy8taVX
+	 jG0m6vwQfoOAEQz6F4syapSPrahAp3En+ATz2o6ysotZC3Z0V1lEMtoCjoi91FBsLG
+	 k7Klr8G0lYkeg==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
@@ -51,12 +51,12 @@ Cc: Yi Sun <yi.sun@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
 	vinicius.gomes@intel.com,
 	dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 06/10] dmaengine: idxd: Check availability of workqueue allocated by idxd wq driver before using
-Date: Sun,  8 Jun 2025 08:55:03 -0400
-Message-Id: <20250608125507.934032-6-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 5/8] dmaengine: idxd: Check availability of workqueue allocated by idxd wq driver before using
+Date: Sun,  8 Jun 2025 08:55:24 -0400
+Message-Id: <20250608125527.934264-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250608125507.934032-1-sashal@kernel.org>
-References: <20250608125507.934032-1-sashal@kernel.org>
+In-Reply-To: <20250608125527.934264-1-sashal@kernel.org>
+References: <20250608125527.934264-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -65,7 +65,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.32
+X-stable-base: Linux 6.6.93
 Content-Transfer-Encoding: 8bit
 
 From: Yi Sun <yi.sun@intel.com>
@@ -162,7 +162,7 @@ production environments.
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
-index 19a58c4ecef3f..8b27bd545685a 100644
+index 7e3a67f9f0a65..aa39fcd389a94 100644
 --- a/drivers/dma/idxd/cdev.c
 +++ b/drivers/dma/idxd/cdev.c
 @@ -354,7 +354,9 @@ static void idxd_cdev_evl_drain_pasid(struct idxd_wq *wq, u32 pasid)

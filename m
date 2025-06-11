@@ -1,31 +1,31 @@
-Return-Path: <dmaengine+bounces-5365-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5366-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 99EF4AD5785
-	for <lists+dmaengine@lfdr.de>; Wed, 11 Jun 2025 15:49:22 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CEE9BAD578C
+	for <lists+dmaengine@lfdr.de>; Wed, 11 Jun 2025 15:51:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B789517E0D2
-	for <lists+dmaengine@lfdr.de>; Wed, 11 Jun 2025 13:49:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C097D189E79C
+	for <lists+dmaengine@lfdr.de>; Wed, 11 Jun 2025 13:51:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2FE328688A;
-	Wed, 11 Jun 2025 13:49:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28DF32882A5;
+	Wed, 11 Jun 2025 13:51:28 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3D931E487;
-	Wed, 11 Jun 2025 13:49:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB2A283CB8;
+	Wed, 11 Jun 2025 13:51:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749649752; cv=none; b=S8P2CN65Hedby9Ewc+AelMU8mmMxzVkn2auD/AZl8C0yqjLR/VykDflVaxtGBomR+okAgF+u/CZNhGAOIZoeUTz5IV47fsNKusj9RS/sCM3fB75iY10V4wHQtB+Ozt9vfWZI1MMWBchVd09X063/ddHFsbA1MHVHdl3tY3ZE0lI=
+	t=1749649888; cv=none; b=pj4CpC0B+vPCmR7A9/v74uc/ASu6GQhJCTLmFw+fF3Hg6Ke5dGF23m3JwFWl8wsES6hHMPG+7eQcEXjGOHKT3Uq47zdVKCAA+xYsFpQcxO7kRQ3Wc6I3fuHw/+H48igihbVqNUyOqV/tsJ4gvtrsQKUAIES5PlGaI8Zx4DcIrI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749649752; c=relaxed/simple;
-	bh=sZq9SH69Jg41xhouqx7HpvfFGqgwcTBO4AbOt0Jf8NE=;
+	s=arc-20240116; t=1749649888; c=relaxed/simple;
+	bh=yAlRVV0IYpPAr1Khu9WPG25QKxrpg+ulUL9ZM5P9qaM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pnB/jxBlQArm1hMLPXI7kReQvVm39XntQ8xkfeZi/MrQ/5RwQGydqnDylJZPjI1gcMA9wXjoDu2csonIldz62+D3tRWMcrzKLyr/VGt2b32SDI+RIbNsuKlgVP9Cns1VgIPljRH873zPphs5vfx+1PBFC9hmRP2DHnx0T0jLyo8=
+	 Content-Type:Content-Disposition:In-Reply-To; b=lpz1ElXYCD6Nm1N3GXmwPW2NAnAAaffHG9LRYQ36onxUHP5q8PusGNFQK12UjUmhg7AiiqPH3EZbXHPc4W9Ix5XDFGf0JWvm3puL6z2sAqutAaShg/ZC1GnNfCbvphGQg7aUgYGQinLxuWnHpe2xvZUB7BJOuLrecX8nSIfdoTs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
@@ -34,9 +34,9 @@ Received: from localhost (unknown [116.232.147.71])
 	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id D4C21335D3A;
-	Wed, 11 Jun 2025 13:49:09 +0000 (UTC)
-Date: Wed, 11 Jun 2025 13:48:59 +0000
+	by smtp.gentoo.org (Postfix) with ESMTPSA id 7C8C2340D31;
+	Wed, 11 Jun 2025 13:51:24 +0000 (UTC)
+Date: Wed, 11 Jun 2025 13:51:16 +0000
 From: Yixun Lan <dlan@gentoo.org>
 To: Guodong Xu <guodong@riscstar.com>
 Cc: vkoul@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
@@ -48,11 +48,10 @@ Cc: vkoul@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
 	elder@riscstar.com, dmaengine@vger.kernel.org,
 	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
-Subject: Re: [PATCH 8/8] riscv: defconfig: Enable MMP_PDMA support for
- SpacemiT K1 SoC
-Message-ID: <20250611134859-GYA125008@gentoo>
+Subject: Re: [PATCH 7/8] dma: Kconfig: MMP_PDMA: Add support for ARCH_SPACEMIT
+Message-ID: <20250611135116-GYB125008@gentoo>
 References: <20250611125723.181711-1-guodong@riscstar.com>
- <20250611125723.181711-9-guodong@riscstar.com>
+ <20250611125723.181711-8-guodong@riscstar.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -61,53 +60,40 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250611125723.181711-9-guodong@riscstar.com>
+In-Reply-To: <20250611125723.181711-8-guodong@riscstar.com>
 
 Hi Guodong,
+  I'd suggest moving this patch after 4/8, as both of them should go
+via DMA susbystem tree, or simply squash them?
 
 On 20:57 Wed 11 Jun     , Guodong Xu wrote:
-> Enable CONFIG_MMP_PDMA in the riscv defconfig for SpacemiT K1 SoC boards
-> like the BananaPI-F3 (BPI-F3) and the Sipeed LicheePi 3A.
+> Extend the MMP_PDMA driver to support the SpacemiT architecture
+> by adding ARCH_SPACEMIT as a dependency in Kconfig.
 > 
-> According to make savedefconfig, the position of CONFIG_DWMAC_THEAD=m
-> should be in another place. It was updated in this patch.
-I don't really like those unrelated changes brought into this patch,
-either having an independent patch to fix "make savedefconfig" issue,
-then enable PDMA in follow-up patch, or just ignore it?
-
-> 
-> CONFIG_DWMAC_THEAD was initially introduced into riscv defconfig in
-> commit 0207244ea0e7 ("riscv: defconfig: enable pinctrl and dwmac support
-> for TH1520")
+> This allows the driver to be built for SpacemiT-based platforms
+> alongside existing ARCH_MMP and ARCH_PXA architectures.
 > 
 > Signed-off-by: Guodong Xu <guodong@riscstar.com>
 > ---
->  arch/riscv/configs/defconfig | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  drivers/dma/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-> index 517cc4c99efc..83d0366194ba 100644
-> --- a/arch/riscv/configs/defconfig
-> +++ b/arch/riscv/configs/defconfig
-> @@ -134,6 +134,7 @@ CONFIG_MACB=y
->  CONFIG_E1000E=y
->  CONFIG_R8169=y
->  CONFIG_STMMAC_ETH=m
-> +CONFIG_DWMAC_THEAD=m
->  CONFIG_MICREL_PHY=y
->  CONFIG_MICROSEMI_PHY=y
->  CONFIG_MOTORCOMM_PHY=y
-> @@ -240,7 +241,7 @@ CONFIG_RTC_DRV_SUN6I=y
->  CONFIG_DMADEVICES=y
->  CONFIG_DMA_SUN6I=m
->  CONFIG_DW_AXI_DMAC=y
-> -CONFIG_DWMAC_THEAD=m
-> +CONFIG_MMP_PDMA=m
->  CONFIG_VIRTIO_PCI=y
->  CONFIG_VIRTIO_BALLOON=y
->  CONFIG_VIRTIO_INPUT=y
+> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+> index db87dd2a07f7..fff70f66c773 100644
+> --- a/drivers/dma/Kconfig
+> +++ b/drivers/dma/Kconfig
+> @@ -451,7 +451,7 @@ config MILBEAUT_XDMAC
+>  
+>  config MMP_PDMA
+>  	tristate "MMP PDMA support"
+> -	depends on ARCH_MMP || ARCH_PXA || COMPILE_TEST
+> +	depends on ARCH_MMP || ARCH_PXA || ARCH_SPACEMIT || COMPILE_TEST
+>  	select DMA_ENGINE
+>  	help
+>  	  Support the MMP PDMA engine for PXA and MMP platform.
 > -- 
 > 2.43.0
+> 
 > 
 
 -- 

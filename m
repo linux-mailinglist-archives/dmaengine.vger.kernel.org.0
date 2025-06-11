@@ -1,87 +1,115 @@
-Return-Path: <dmaengine+bounces-5364-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5365-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 43501AD56C7
-	for <lists+dmaengine@lfdr.de>; Wed, 11 Jun 2025 15:19:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 99EF4AD5785
+	for <lists+dmaengine@lfdr.de>; Wed, 11 Jun 2025 15:49:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E906A1680AC
-	for <lists+dmaengine@lfdr.de>; Wed, 11 Jun 2025 13:19:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B789517E0D2
+	for <lists+dmaengine@lfdr.de>; Wed, 11 Jun 2025 13:49:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2CD428751C;
-	Wed, 11 Jun 2025 13:19:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="hgTspcjg"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2FE328688A;
+	Wed, 11 Jun 2025 13:49:12 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B4A52874EB;
-	Wed, 11 Jun 2025 13:19:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3D931E487;
+	Wed, 11 Jun 2025 13:49:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749647954; cv=none; b=YpHrdca1Jvp6Hh0Ainz/Ct4qNvtDtMepST+VhGnYqVMnVE/LeU5VHkYzE/R7JLITeOqyateRnCHcwYctL9ALq3qKW9iRei3pRxjUxDrB/TMnHlNjC0OQ1iHPy5Zvy/ulZNmG3dExhjE5EErI+ey+aF+W9XfZj+jHPMkss65m/x4=
+	t=1749649752; cv=none; b=S8P2CN65Hedby9Ewc+AelMU8mmMxzVkn2auD/AZl8C0yqjLR/VykDflVaxtGBomR+okAgF+u/CZNhGAOIZoeUTz5IV47fsNKusj9RS/sCM3fB75iY10V4wHQtB+Ozt9vfWZI1MMWBchVd09X063/ddHFsbA1MHVHdl3tY3ZE0lI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749647954; c=relaxed/simple;
-	bh=YnZHAH16ZCoZK3qgLn0+Hvc/WENmD4Pl8KAmSNL+Yb4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nGfVPqh4+qAyGW27gwAL+/a6eiqcylabUbZzFEp7/z3tPM07aceL/kzOgL++7fIToaJFIL/Ldhf623N5pUdQEI2yzmUpY+g/ixm84D1ImihVo3De3gg35ecSp1yCMevzola/x/zDHqBCMmrHYtb0FWJtrHvZJX8TmHIxZhHlmmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=hgTspcjg; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1749647950;
-	bh=YnZHAH16ZCoZK3qgLn0+Hvc/WENmD4Pl8KAmSNL+Yb4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hgTspcjgX5qjLaXGcb9UQ23SvAQx4tbGKCiiY8/fTGjJe9k1HOPJTTX9CgF7mEre5
-	 TN/wXhIC60siTNtw9EUYa7edrD966CThz8qEStNlBLsKXxFNQelpFiL+nvtcHqxbWq
-	 buacOZ8MqQkH35PC/p4BAWR8sdhJVlEU7OPGm69fMSlwbcYyqJblLqgsLP++z93uIU
-	 zWvR9ZQ1XHaxT1u2sIiPxyy+AbLoGn21ZuK4ZVXYPlfR62kcAl51hv87hTP0eb2/MV
-	 +XgbdyjEjnSAuWBL/vfbPjxWJ0q4sc6K1aIBYBfbIqZDO2gpvwLnSg54RPYGL0WlMF
-	 6w05HwFDBp43g==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	s=arc-20240116; t=1749649752; c=relaxed/simple;
+	bh=sZq9SH69Jg41xhouqx7HpvfFGqgwcTBO4AbOt0Jf8NE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pnB/jxBlQArm1hMLPXI7kReQvVm39XntQ8xkfeZi/MrQ/5RwQGydqnDylJZPjI1gcMA9wXjoDu2csonIldz62+D3tRWMcrzKLyr/VGt2b32SDI+RIbNsuKlgVP9Cns1VgIPljRH873zPphs5vfx+1PBFC9hmRP2DHnx0T0jLyo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from localhost (unknown [116.232.147.71])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 1230E17E0E3A;
-	Wed, 11 Jun 2025 15:19:10 +0200 (CEST)
-Message-ID: <313cea9f-f6c5-449a-bcf0-80eb5088b7f3@collabora.com>
-Date: Wed, 11 Jun 2025 15:19:09 +0200
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id D4C21335D3A;
+	Wed, 11 Jun 2025 13:49:09 +0000 (UTC)
+Date: Wed, 11 Jun 2025 13:48:59 +0000
+From: Yixun Lan <dlan@gentoo.org>
+To: Guodong Xu <guodong@riscstar.com>
+Cc: vkoul@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
+	aou@eecs.berkeley.edu, alex@ghiti.fr, p.zabel@pengutronix.de,
+	drew@pdp7.com, emil.renner.berthing@canonical.com,
+	inochiama@gmail.com, geert+renesas@glider.be, tglx@linutronix.de,
+	hal.feng@starfivetech.com, joel@jms.id.au, duje.mihanovic@skole.hr,
+	elder@riscstar.com, dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
+Subject: Re: [PATCH 8/8] riscv: defconfig: Enable MMP_PDMA support for
+ SpacemiT K1 SoC
+Message-ID: <20250611134859-GYA125008@gentoo>
+References: <20250611125723.181711-1-guodong@riscstar.com>
+ <20250611125723.181711-9-guodong@riscstar.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] dmaengine: mediatek: Fix a flag reuse error in
- mtk_cqdma_tx_status()
-To: Qiu-ji Chen <chenqiuji666@gmail.com>, sean.wang@mediatek.com,
- vkoul@kernel.org, matthias.bgg@gmail.com, eugen.hristev@linaro.org
-Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
- baijiaju1990@gmail.com, stable@vger.kernel.org,
- kernel test robot <lkp@intel.com>
-References: <20250606090017.5436-1-chenqiuji666@gmail.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250606090017.5436-1-chenqiuji666@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611125723.181711-9-guodong@riscstar.com>
 
-Il 06/06/25 11:00, Qiu-ji Chen ha scritto:
-> Fixed a flag reuse bug in the mtk_cqdma_tx_status() function.
+Hi Guodong,
+
+On 20:57 Wed 11 Jun     , Guodong Xu wrote:
+> Enable CONFIG_MMP_PDMA in the riscv defconfig for SpacemiT K1 SoC boards
+> like the BananaPI-F3 (BPI-F3) and the Sipeed LicheePi 3A.
 > 
-> Fixes: 157ae5ffd76a ("dmaengine: mediatek: Fix a possible deadlock error in mtk_cqdma_tx_status()")
-> Cc: stable@vger.kernel.org
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202505270641.MStzJUfU-lkp@intel.com/
-> Signed-off-by: Qiu-ji Chen <chenqiuji666@gmail.com>
+> According to make savedefconfig, the position of CONFIG_DWMAC_THEAD=m
+> should be in another place. It was updated in this patch.
+I don't really like those unrelated changes brought into this patch,
+either having an independent patch to fix "make savedefconfig" issue,
+then enable PDMA in follow-up patch, or just ignore it?
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> 
+> CONFIG_DWMAC_THEAD was initially introduced into riscv defconfig in
+> commit 0207244ea0e7 ("riscv: defconfig: enable pinctrl and dwmac support
+> for TH1520")
+> 
+> Signed-off-by: Guodong Xu <guodong@riscstar.com>
+> ---
+>  arch/riscv/configs/defconfig | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
+> index 517cc4c99efc..83d0366194ba 100644
+> --- a/arch/riscv/configs/defconfig
+> +++ b/arch/riscv/configs/defconfig
+> @@ -134,6 +134,7 @@ CONFIG_MACB=y
+>  CONFIG_E1000E=y
+>  CONFIG_R8169=y
+>  CONFIG_STMMAC_ETH=m
+> +CONFIG_DWMAC_THEAD=m
+>  CONFIG_MICREL_PHY=y
+>  CONFIG_MICROSEMI_PHY=y
+>  CONFIG_MOTORCOMM_PHY=y
+> @@ -240,7 +241,7 @@ CONFIG_RTC_DRV_SUN6I=y
+>  CONFIG_DMADEVICES=y
+>  CONFIG_DMA_SUN6I=m
+>  CONFIG_DW_AXI_DMAC=y
+> -CONFIG_DWMAC_THEAD=m
+> +CONFIG_MMP_PDMA=m
+>  CONFIG_VIRTIO_PCI=y
+>  CONFIG_VIRTIO_BALLOON=y
+>  CONFIG_VIRTIO_INPUT=y
+> -- 
+> 2.43.0
+> 
 
-
+-- 
+Yixun Lan (dlan)
 

@@ -1,77 +1,77 @@
-Return-Path: <dmaengine+bounces-5341-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5338-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 663D0AD4DAA
-	for <lists+dmaengine@lfdr.de>; Wed, 11 Jun 2025 09:57:33 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 86222AD4D89
+	for <lists+dmaengine@lfdr.de>; Wed, 11 Jun 2025 09:55:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DCA6C7A24A3
-	for <lists+dmaengine@lfdr.de>; Wed, 11 Jun 2025 07:56:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 418FA3A567C
+	for <lists+dmaengine@lfdr.de>; Wed, 11 Jun 2025 07:55:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFDFF248F7E;
-	Wed, 11 Jun 2025 07:54:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66CBA23BF80;
+	Wed, 11 Jun 2025 07:54:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZF3340iL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YiRZn59i"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55E4C248F60;
-	Wed, 11 Jun 2025 07:54:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B32D23373B;
+	Wed, 11 Jun 2025 07:54:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749628489; cv=none; b=allfd6xcH6wyTthR/sbvpyrc40OMF5XF8GMJsoiNFWadbb7oAU+MJwaQ38zR6wwaN6NlazMT/VITaSZfa2G/Z7WI3cXJ0HiwhXVVq1uPjb3LP3T4MEPQkckl+5f54r3MoUpjsgu7oWhEgKhdNLLBRL0JRYiU1n1I13EtL1tPNdU=
+	t=1749628481; cv=none; b=jodW+4HusBToZURl7dKVrJhFaLqXfJ6ngyZaG4Ipe+MIvNhaut925ewlBDMqFdJIpi8VnLgy8/R10rf+ZBoSqPmFCl0CYFshJvsT/JLVu8OOhk9BDgNG2S1X3ZUkPhS6njFxXPQm16n2ee5Io2rQR3HP0fkB/rlJhaWGa5zwkDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749628489; c=relaxed/simple;
-	bh=6W7L6mLae0Gwk7i/q8VTDrfQXggHDNqoAV/kISEHYUc=;
+	s=arc-20240116; t=1749628481; c=relaxed/simple;
+	bh=leYEMODDBviLVcx7yoQ0Zt5ZI1j1sck0Bv2d4cc1ysQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BSamdQjgqlsDKy3s44Ii2jx1aIniSAhEdv1Tv6DxfOfUpPmIsS7LVVltULMgBO016JFCYQOB+YAfa9wYd/FQomlX6kvApk5QyypBnb6/NCjRrK+UxG4aA/CK5KoaIJPVlEZPr53Y7odzoHdD078sma30SFQeMiBMOD1BnWvkq7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZF3340iL; arc=none smtp.client-ip=209.85.210.54
+	 MIME-Version; b=a9793L1FCn075R2easaO/OK2OlNTarZd6sCGQwl2yX4jDI0OYugLbN4jbnDeWBP0p/pEabyn3+LVlW+Z/iDB7iktsoKWe7x6mMVX4zk3WVv8d5PF+xmnhfCETAPyWQTsgbSQgOQOct/h19nuwC3MD/McqhXm8nmy8GuM5MrPQ6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YiRZn59i; arc=none smtp.client-ip=209.85.222.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-735a9e65471so3838761a34.1;
-        Wed, 11 Jun 2025 00:54:48 -0700 (PDT)
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7d38cfa9773so384255685a.2;
+        Wed, 11 Jun 2025 00:54:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749628487; x=1750233287; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749628478; x=1750233278; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hnz/0tuwhYz4DMu7YFaY4+MBrOn4ASwg3VdpZXlOjs0=;
-        b=ZF3340iLobIaiQQMLYfpKc5fbLjnW+1dxbS/6c0aOIfcAqi6s5gPydB5dVtbAyFGCK
-         0CYp6jONcHpqxwTzbUXBtb1ivRL3U98b+wCaOQevu5lFEaInNevBfsKcejNrscSd16+L
-         abs/IxMxvQrcHcUIJBu+dSdup8vp8mL38s5xQ+8db5nQMe+BcKiluOYCZs14Jou+op+k
-         WM0a6dFGK2IAlqJ2a5HE+kOyUFDs2+xyecdPi5DmAd4+bzf7YoX99XtfhE+fA20sNtN8
-         vi7Ta1eYbo2JnLj2SdZjlAVbWndkfFQrsluWBj6+SOSStv7yZ0UJQ5VmO13dNcpPkDuR
-         5n3w==
+        bh=TucqLG/tk3Y/USNHaS48EdntTVxxdA1FanRm1k8rL/8=;
+        b=YiRZn59iIGvdM3HzcD6U2ldQ5wwGfQyZLr8TQKnWBPDuOwkfWgrOblNVEG9hBNWo+e
+         MUMg/QTqttkyCZQpzuJ5FLDbRsqX5Bj4FJg59wOgCWItPi4fFzuZO0wwlKs0Qm+p65dl
+         SiwjyRxSvklm3EbPgJDFVtf5KBHcbYL6LcmvTqFvcKf0KvSGwRCU4nnVWfun3F6Rqz1L
+         u0bYDWMPiMRNQM3i6hOy2yfWiyk9zhs7Y6KDWmSzNTDUYLP7RX9ardwG/mVBmIE9cjhN
+         kWOUSbKKRhHzKOo8liYthc9+e/0pflsO1NbhbmiJbIqd9PBO757/0s35YjXMLd71Ir7B
+         Irpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749628487; x=1750233287;
+        d=1e100.net; s=20230601; t=1749628478; x=1750233278;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hnz/0tuwhYz4DMu7YFaY4+MBrOn4ASwg3VdpZXlOjs0=;
-        b=LqbcGVPu9tRKZDhFh9su1ZOrYv0B4HYOlaTY9zohtk4sJ84ma1O62N4/wiU/+jKuYH
-         Xw1NvTUkR+k0Td5nylLbnGuEqcXetiJBWVmlLDZgUqyr+1XEoEbPZjOo/cgPJytBMb8K
-         xEl6Cfa+QtsXqqMVjBvbj2cd+d6IpHed6Tw3q/w1ORMV2xgpwMLLTMQXI3g0fDxXFh+S
-         ARkXIWHFMh972/9egZT3uYhovKJoDAr4tAPfdkgdrZA6KKJdnarOQgStzNDcCuZ/4d7U
-         qpcBQYog60JmzoKBrsmhIxaKKSZpk1+Zv/6mGeRPN9/rgn8v2vrLts5O7fPQW+KFA7IE
-         U0wA==
-X-Forwarded-Encrypted: i=1; AJvYcCU65kTtKafD13e4Da2vdK6yHYPaYtMn6UodQTJAtSXkWACoEWMWzQB6CFrWhOrmGfNoO2kl7KznIoNO@vger.kernel.org, AJvYcCU6Sougu2tZXGvlUCwDOZuYIdZuzXu5LLw4yaHiOP/vxE+s/DyybbIyMkggnujZzHjWzHx3aLte5kZvwh9i@vger.kernel.org, AJvYcCW2gp/xkGBzE72NaSX4VxsmrSQYob2GN6aULZCpS+xdukZlmMjiFJk/wRepr+TbM8GO5DmrwxEsMN54@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+CRoZ5TuxdU0BXSLlRXlnvamcRBSTDfTRPuB1nt9S79P06tBg
-	OHKtGR75TgX4QmBJKblFswDP9h6Rd6iIamo/eeaubN8DjmWISYNikZ5OkQpvjsmp
-X-Gm-Gg: ASbGnctUMOk/lOGoeafGMXXHssXPzc2U+/zfeUsK/3ceS/PQjKZ/4+0piAmoVNxZYk0
-	NWRaKWcGB2bny4jtsWd85ICcusiohhx6FOpQC4KTjYihXSVCaGmSLXOz2QEk5zd18cHBycGNEDB
-	3OrABmNlgvQM5LTCdil1h7keIBmHX6rAuI7siS5n5h404Tn4npxn8goE1/FC16reXKMnxpa9W3m
-	uUuC4Gegdvlvrkkp3lWKelnOf8QikL/wZyJ30bBgPih8d7crIBZJmWwpmieNzBpZq3tjRfgLkso
-	0pSmbEHQEiYkNDLc4ojaZjrZ3AgXkeoWM5dBCrFZ9RHUs8kT
-X-Google-Smtp-Source: AGHT+IHeItzokrKWw9l9oyv6bnHcsz0dOO4Q14MZQ9wo4Ra1X7rEUiC3C9xPLLzARwfKUZ6RpDZSIw==
-X-Received: by 2002:a05:620a:288d:b0:7c5:af73:4f72 with SMTP id af79cd13be357-7d3a89330ebmr320142685a.42.1749628475059;
-        Wed, 11 Jun 2025 00:54:35 -0700 (PDT)
+        bh=TucqLG/tk3Y/USNHaS48EdntTVxxdA1FanRm1k8rL/8=;
+        b=RgsGgUdbH9FjxRkU7H/oU9QU7CFMILydO/GtVrwXt8+xIacLzwk9WxmLmFERa4RfFp
+         SLQZTxF537LgDvsNikU0WB+894dmfYWawvuBZ7RClZL/iys0ncTsMh1kn+Uq5cjA/Kxu
+         gDzCQd5qffoN31tjemGOt7DxETwVmjOMw69Oe/89rquEvwgJcXiMY44ALXbcgDVLEP+c
+         f8wU55+S28OcfwOdRCezQIJabDQeV7WhTpUdjQJjQWrk7zaLa79I36Ffki9Ppv0qza4Y
+         +T28CsgBbUY0BnpfgGTMq4HKnGQ4r5BvRxIOFKEr6DINZKIxziQF4WTEO6pjFnNktTso
+         lSBA==
+X-Forwarded-Encrypted: i=1; AJvYcCVacsn52fsXISi0WKQCQTZVayaC1NEDH0qpG5nz8/Eu2ZWZcACRR6J+OWP35W8s9u0d8DFGN+qrbg5I@vger.kernel.org, AJvYcCVdQ5amXC3VsJ9ZXxGlqgi+FbVQcDM9fuRmqtZWfja6H90AmSD7UMPwP+9H11WiNZhn4OAwkzmvkFh3@vger.kernel.org, AJvYcCXNCQW8I1NJM4jHO6ck3Y373lqZvqzp8tIvNlXH9grOmp8VZGcB30BwDxUJkAgMQiACFrN+UqXk5xr/j7MG@vger.kernel.org
+X-Gm-Message-State: AOJu0YzS4Ih5jbZJiwkaIJEv+74G+eiTXLLdi+xgyB3wUUGmS2MOoN+f
+	AY4o97pKYiyalm6RNfo01mnxPQGYXUK4CZeL3ky/zQ6DekUMXfb9wk2P
+X-Gm-Gg: ASbGncuPoTNAszlCp/8U4+LzSdgaA64UTuzQpa93Rt4zqzGdbH50MnhpRLWJJ+hRnDX
+	0a4uCAtTfIGKDeAcPStBKAV5DV9Mizdxitl4+NjUJAv/QwlskS9ZM1huSgY0F9BmgSkI7Yr6gUo
+	oiSDd/RipRG8Tt0mC5leWeEk8PxcfyLpof8ji1c01jT7m8QccaWOBplgiyB50LDkJeA57/HCci/
+	Co8wyYJcp2+RY6W0++nSaTmsrg09Brk7zwvS5LnoQZY0dDBpvpsbr+HKGFSSlOMfP99OQ0l7JBZ
+	qESQdd865AQYzRfioVyBwbB/ksSZtnwM9qTL6ZziQdGIAOAG
+X-Google-Smtp-Source: AGHT+IEySdwciKZhGZrTCtsR/Gxqu5FAFCLHguwmpefzLwsb16bnu8UFs0/XpS23i1fk+Kd0aatnNg==
+X-Received: by 2002:a05:620a:29ca:b0:7d0:99dc:d026 with SMTP id af79cd13be357-7d3a88057a4mr312939885a.12.1749628478269;
+        Wed, 11 Jun 2025 00:54:38 -0700 (PDT)
 Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6fb09b1d1d0sm79736646d6.77.2025.06.11.00.54.33
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6fb09ab8a3csm79057766d6.10.2025.06.11.00.54.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 00:54:34 -0700 (PDT)
+        Wed, 11 Jun 2025 00:54:37 -0700 (PDT)
 From: Inochi Amaoto <inochiama@gmail.com>
 To: Philipp Zabel <p.zabel@pengutronix.de>,
 	Rob Herring <robh@kernel.org>,
@@ -96,9 +96,9 @@ Cc: Junhui Liu <junhui.liu@pigmoral.tech>,
 	dmaengine@vger.kernel.org,
 	Yixun Lan <dlan@gentoo.org>,
 	Longbin Li <looong.bin@gmail.com>
-Subject: [PATCH v3 1/4] dt-bindings: reset: sophgo: Add CV1800B support
-Date: Wed, 11 Jun 2025 15:53:15 +0800
-Message-ID: <20250611075321.1160973-2-inochiama@gmail.com>
+Subject: [PATCH v3 2/4] reset: simple: add support for Sophgo CV1800B
+Date: Wed, 11 Jun 2025 15:53:16 +0800
+Message-ID: <20250611075321.1160973-3-inochiama@gmail.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250611075321.1160973-1-inochiama@gmail.com>
 References: <20250611075321.1160973-1-inochiama@gmail.com>
@@ -110,27 +110,27 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add bindings for the reset generator on the SOPHGO CV1800B
-RISC-V SoC.
+Reuse reset-simple driver for the Sophgo CV1800B reset generator.
 
 Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Reviewed-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
 ---
- Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/reset/reset-simple.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml b/Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml
-index 1d1b84575960..bd8dfa998939 100644
---- a/Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml
-+++ b/Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml
-@@ -17,6 +17,7 @@ properties:
-               - sophgo,sg2044-reset
-           - const: sophgo,sg2042-reset
-       - const: sophgo,sg2042-reset
-+      - const: sophgo,cv1800b-reset
- 
-   reg:
-     maxItems: 1
+diff --git a/drivers/reset/reset-simple.c b/drivers/reset/reset-simple.c
+index 276067839830..79e94ecfe4f5 100644
+--- a/drivers/reset/reset-simple.c
++++ b/drivers/reset/reset-simple.c
+@@ -151,6 +151,8 @@ static const struct of_device_id reset_simple_dt_ids[] = {
+ 	{ .compatible = "snps,dw-high-reset" },
+ 	{ .compatible = "snps,dw-low-reset",
+ 		.data = &reset_simple_active_low },
++	{ .compatible = "sophgo,cv1800b-reset",
++		.data = &reset_simple_active_low },
+ 	{ .compatible = "sophgo,sg2042-reset",
+ 		.data = &reset_simple_active_low },
+ 	{ /* sentinel */ },
 -- 
 2.49.0
 

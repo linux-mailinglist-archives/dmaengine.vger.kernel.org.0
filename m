@@ -1,107 +1,111 @@
-Return-Path: <dmaengine+bounces-5413-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5414-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23527AD6B79
-	for <lists+dmaengine@lfdr.de>; Thu, 12 Jun 2025 10:56:11 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EFB48AD6D51
+	for <lists+dmaengine@lfdr.de>; Thu, 12 Jun 2025 12:16:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DFE377A34D3
-	for <lists+dmaengine@lfdr.de>; Thu, 12 Jun 2025 08:54:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 888913AF41F
+	for <lists+dmaengine@lfdr.de>; Thu, 12 Jun 2025 10:16:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38A07221DB4;
-	Thu, 12 Jun 2025 08:55:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B9A61FBCB0;
+	Thu, 12 Jun 2025 10:16:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tKTGJlXb"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vlgNQb4s"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01EDB20B7EA;
-	Thu, 12 Jun 2025 08:55:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8731A9B32;
+	Thu, 12 Jun 2025 10:16:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749718555; cv=none; b=Tkyrg1hwLReD+R/SZkpmJTmGXQOg+oNdjokGi8h99nJ8Ny0kuN9B0B9GC6P1d+GP2jU7AfUH5NXn93nVZK/xLP8i8OKSw3z78/dC+oPzY27siWo30AA24l6ldT07aGxMF9tC9J61tT2PpPynIahrRXUUnnTrNdaTggYi1l/1r78=
+	t=1749723374; cv=none; b=jjRB1g15dgzMtyi0MDtn2256yfYlUUrc64Ub3oqqFIem1YBC0QQ4O0ARDSiDyejgN8cCOfetcIYuD1lsLJRcqm4UE5dibsJGkWB2OvGAWzp9Q8zcgMGs+1hhnbRQ6wTWxgnm9CBrEplGD0TFjqAJtUP2cE7Y/f7564XLUO567nk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749718555; c=relaxed/simple;
-	bh=RQYBtssOY7+oGdh2lG5OPgacAKGthN9dqgrlCVHiJRE=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=auX61MDr/N274qTa8QSd5H9ZAsdmVO4G12EnWONelVTQ41tJxYxFfVmKW0/Ywn0dVk6wmsbihuDy+BeMZz23HuHkguP4RerKhyOBW60i+Srn+/1rJsBy4JwItV0tAm2V6wjHMRHUa212KpqlCS9Xmc+2gB/ZEI7x8LYBQ292rE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tKTGJlXb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77A6AC4CEEE;
-	Thu, 12 Jun 2025 08:55:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749718554;
-	bh=RQYBtssOY7+oGdh2lG5OPgacAKGthN9dqgrlCVHiJRE=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=tKTGJlXb7NbO6b72bfefP6nbDKNQIB3EPfZ0fRG9zHBuxX+fFJBmM8JWl9A4wNp/v
-	 AkNRhDzu+4ySC7dtwTvZSNlgxGB+7ewfbaWK5dmxhClE0JsHuHf7sbDpq0hxqcbbt5
-	 dzHrHEa5uGzGQBn+ULgzXGLd/USBX3zERlwZUx8W7rVnapqLQmcjFlBGWuw+6N8er3
-	 mQEUsjf45FweghnyY8tFh/T7yXa9qiYDwxeZr/QYcItPdEvIM6IWKfWJPYzllmt7+c
-	 IxBj3LPrx4TF5DVcjZLSarj3g1d8bQl2avHfL44BVhst20ce2laoO6mq9aP7rjp/cj
-	 URlXZ3zyVZ2hA==
-Date: Thu, 12 Jun 2025 03:55:53 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1749723374; c=relaxed/simple;
+	bh=U8Ib+vhgknJZUGujsTIacxWsiwarvISy9tV/JoJj3mE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=In2mZ4Oy0db9/gKLpVZqHlMGPaumCHAyVA/DsHEcaabbPBX5YxNH/eg3Knnm8H8Ro8PtXK9U64od2nRuOZxcICFeYUSFSrMz+g5MlV3HW3NgFg9jWBht0EelHQQMgqxwGrZSIqQBRF44Uuy3tLTQxaGGV5rMuziE01Vxrku/knI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=vlgNQb4s; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55CAFxWp2886298;
+	Thu, 12 Jun 2025 05:15:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1749723359;
+	bh=w1BvpyF39z5hMo5/VBX/0oCDLHJPdp2C+Dbe2C2TKsM=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=vlgNQb4seNrwaouEv9+opWOU/k/iDzdQY6kL8THh/EMZ6I61r9DMp4NfWInqBpHFq
+	 Dfzbx2R4JFIEIpktNhmtGodgG4x3x7ipw9MEAGtiXlaDx/ImOhNrsmhcG85R8eFx0N
+	 0qTNfc8AqFb1qzhocK6DRFVnnFdCrpOMuPkPynkA=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55CAFxsK3562020
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Thu, 12 Jun 2025 05:15:59 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 12
+ Jun 2025 05:15:58 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Thu, 12 Jun 2025 05:15:58 -0500
+Received: from [172.24.227.40] (pratham-workstation-pc.dhcp.ti.com [172.24.227.40])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55CAFtXR1834025;
+	Thu, 12 Jun 2025 05:15:55 -0500
+Message-ID: <b27eab62-cfe0-4dfc-8429-ea464eef9e6f@ti.com>
+Date: Thu, 12 Jun 2025 15:45:54 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: u-kumar1@ti.com, linux-arm-kernel@lists.infradead.org, 
- Nishanth Menon <nm@ti.com>, Vinod Koul <vkoul@kernel.org>, 
- Peter Ujfalusi <peter.ujfalusi@gmail.com>, dmaengine@vger.kernel.org, 
- devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- a-chavda@ti.com, p-mantena@ti.com, vigneshr@ti.com, 
- Santosh Shilimkar <ssantosh@kernel.org>, praneeth@ti.com, 
- linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>
-To: Sai Sree Kartheek Adivi <s-adivi@ti.com>
-In-Reply-To: <20250612071521.3116831-14-s-adivi@ti.com>
-References: <20250612071521.3116831-1-s-adivi@ti.com>
- <20250612071521.3116831-14-s-adivi@ti.com>
-Message-Id: <174971855245.3983211.889546911604873358.robh@kernel.org>
-Subject: Re: [PATCH v2 13/17] dt-bindings: dma: ti: Add document for K3
- PKTDMA V2
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/2] crypto: ti: Add driver for DTHE V2 AES Engine
+ (ECB, CBC)
+To: Herbert Xu <herbert@gondor.apana.org.au>
+CC: "David S. Miller" <davem@davemloft.net>,
+        Kamlesh Gurudasani
+	<kamlesh@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Praneeth Bajjuri
+	<praneeth@ti.com>,
+        Manorit Chawdhry <m-chawdhry@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-crypto@vger.kernel.org>, Vinod Koul
+	<vkoul@kernel.org>,
+        <dmaengine@vger.kernel.org>
+References: <20250603124217.957116-1-t-pratham@ti.com>
+ <20250603124217.957116-3-t-pratham@ti.com>
+ <aElSKF88vBsIOJMV@gondor.apana.org.au>
+Content-Language: en-US
+From: T Pratham <t-pratham@ti.com>
+In-Reply-To: <aElSKF88vBsIOJMV@gondor.apana.org.au>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-
-On Thu, 12 Jun 2025 12:45:17 +0530, Sai Sree Kartheek Adivi wrote:
-> New binding document for
-> Texas Instruments K3 Packet DMA (PKTDMA) V2.
+On 11/06/25 15:23, Herbert Xu wrote:
+> On Tue, Jun 03, 2025 at 06:07:29PM +0530, T Pratham wrote:
+>>
+>> +	// Need to do a timeout to ensure finalise gets called if DMA callback fails for any reason
+>> +	ret = wait_for_completion_timeout(&rctx->aes_compl, msecs_to_jiffies(DTHE_DMA_TIMEOUT_MS));
 > 
-> PKTDMA V2 is introduced as part of AM62L.
+> This doesn't look safe.  What if the callback is invoked after a
+> timeout? That would be a UAF.
 > 
-> Signed-off-by: Sai Sree Kartheek Adivi <s-adivi@ti.com>
-> ---
->  .../bindings/dma/ti/k3-pktdma-v2.yaml         | 73 +++++++++++++++++++
->  1 file changed, 73 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/ti/k3-pktdma-v2.yaml
+> Does the DMA engine provide any timeout mechanism? If not, then
+> you could do it with a delayed work struct.  Just make sure that
+> you cancel the work struct in the normal path callback.  Vice versa
+> you need to terminate the DMA job in the timeout work struct.
 > 
+> Cheers,
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Calling dma_terminate_sync() here should suffice I presume? I'll update the code accordingly.
 
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-Documentation/devicetree/bindings/dma/ti/k3-pktdma-v2.example.dtb: /example-0/cbass_main/dma-controller@485c0000: failed to match any schema with compatible: ['ti,dmss-pktdma-v2']
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250612071521.3116831-14-s-adivi@ti.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+Regards
+T Pratham <t-pratham@ti.com>
 

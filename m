@@ -1,100 +1,109 @@
-Return-Path: <dmaengine+bounces-5439-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5440-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9CD0FAD8B4C
-	for <lists+dmaengine@lfdr.de>; Fri, 13 Jun 2025 13:54:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 60B39AD8BA4
+	for <lists+dmaengine@lfdr.de>; Fri, 13 Jun 2025 14:08:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EA86F1888069
-	for <lists+dmaengine@lfdr.de>; Fri, 13 Jun 2025 11:51:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2B208189488E
+	for <lists+dmaengine@lfdr.de>; Fri, 13 Jun 2025 12:08:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF3092E2F10;
-	Fri, 13 Jun 2025 11:46:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RdiGAmfm"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55EAC2D5C94;
+	Fri, 13 Jun 2025 12:08:20 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B0502D23A7;
-	Fri, 13 Jun 2025 11:46:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E7B322616C
+	for <dmaengine@vger.kernel.org>; Fri, 13 Jun 2025 12:08:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749815210; cv=none; b=ZYqdNnnSusJdDmxVecdDg7CsV2ysd21S86A4JgDPD/wsvhLi5Ky/YqRlIrqBYgwWZN7XNG6Tmmdhh7ks8J4PmCjrF8zlt7Whk6k1wDxwmXEsLPpnM+Pszj0eM/CyCuZSp3LOAi8/ijTTqNeO23V7TdU23uhQdiy6OqESmmTVVqs=
+	t=1749816500; cv=none; b=TjcIFYxSerSWhPxQfqfwYlsTVf9fYEbxEZRfiTcE8ZKnNFEPg9fXGY2MrqQ01Zk3aJCUs6JzP6lgbow3ZpvdIM/GhUyTdkZwNZg9El6JIGkDjgGAshEvTpiTjtbmoULA66Ya4r9kyu1satWlHO3KNWh2kReA3/SKL5vkaW0VDnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749815210; c=relaxed/simple;
-	bh=vv4Pqa/1FuG6Cl4k7KZAwhVvN32B2mS5wcZejBitBwk=;
+	s=arc-20240116; t=1749816500; c=relaxed/simple;
+	bh=FTI1Dd4UXGGGgfpkTT8/Tb4MSRkcYnKLspq94ruFVQ8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pIqY4KxynPoXu+vMzDMc48ztVmnDHVT5wQBkGawecXAZU/hS3X8i6b0dfbw5BqmhyvDS0KZiHsA1cR3gBY3VmHoo10LtS/A2QEGheN+UHSggtMthoUw2pFBFaazicovm6IcXRLR5fzdFIkyagjVHEjl1O8VxmKpXIXKQOycweLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RdiGAmfm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A25EC4CEE3;
-	Fri, 13 Jun 2025 11:46:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749815210;
-	bh=vv4Pqa/1FuG6Cl4k7KZAwhVvN32B2mS5wcZejBitBwk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RdiGAmfm65ZeFbeMGTwHL6UxyRQdfgTfZIYn6LqmM7ff73kMv3j2uqU1Z0yObT1y3
-	 dqbPkCK863lyBfheR394/wz+8ZFvIScrvTq9gcoP2CNHX0IvUqvTvAWLIuwaKD2H2V
-	 +LxU6tVRQFG8Yf9uR2ldtlvYSe9fP5GKbXlmYv+Ikzmq3+ClVkd0HUc4n33oVpTa3x
-	 Y2TBpSg6P/9kshW/HOO3qWhYOlT99gdWY/twzR3i4XrGIap8vpc59pXZQ6jcLznmcb
-	 rZ1ygISFoPB6Qqyxf7B5MAfCPZVjw9lcvnXwOZnEvTqK+G+N7TlkaRvnTL0Zt0shqy
-	 dAJ2r+qMjI/6g==
-Date: Fri, 13 Jun 2025 12:46:43 +0100
-From: Mark Brown <broonie@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=usdGnQqma7Yms1NG2ZweJYFkMZMK+KFz7IfWQ9jgDWb5+k1YNht3JrImz4cX/jQLudNCTUWzL623VfgAuTVEHXq2EJW1ZNg0OVchcZHGivfTcB+w+rJNBp/E9+Ny7wR1FE0GHGjcGYC7C1aNNt2y+At/Qfu7PVUyZoteismNKrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uQ3CP-0000Au-9S; Fri, 13 Jun 2025 14:07:57 +0200
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uQ3CM-003Htt-34;
+	Fri, 13 Jun 2025 14:07:54 +0200
+Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uQ3CM-00BA3y-2Q;
+	Fri, 13 Jun 2025 14:07:54 +0200
+Date: Fri, 13 Jun 2025 14:07:54 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: Robert Marko <robert.marko@sartura.hr>
 Cc: catalin.marinas@arm.com, will@kernel.org, olivia@selenic.com,
 	herbert@gondor.apana.org.au, davem@davemloft.net, vkoul@kernel.org,
-	andi.shyti@kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-spi@vger.kernel.org, kernel@pengutronix.de,
-	ore@pengutronix.de, luka.perkov@sartura.hr, arnd@arndb.de,
+	andi.shyti@kernel.org, broonie@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
+	linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+	kernel@pengutronix.de, luka.perkov@sartura.hr, arnd@arndb.de,
 	daniel.machon@microchip.com
-Subject: Re: [PATCH v7 2/6] spi: atmel: make it selectable for ARCH_LAN969X
-Message-ID: <51dba7b7-d4fb-46bf-892e-a9634cb91659@sirena.org.uk>
+Subject: Re: [PATCH v7 5/6] char: hw_random: atmel: make it selectable for
+ ARCH_LAN969X
+Message-ID: <aEwUmh9HOwrG4kPK@pengutronix.de>
 References: <20250613114148.1943267-1-robert.marko@sartura.hr>
- <20250613114148.1943267-3-robert.marko@sartura.hr>
+ <20250613114148.1943267-6-robert.marko@sartura.hr>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="liIKPqX/LlpnoGyN"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250613114148.1943267-3-robert.marko@sartura.hr>
-X-Cookie: Use extra care when cleaning on stairs.
+In-Reply-To: <20250613114148.1943267-6-robert.marko@sartura.hr>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: dmaengine@vger.kernel.org
 
-
---liIKPqX/LlpnoGyN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Jun 13, 2025 at 01:39:37PM +0200, Robert Marko wrote:
-> LAN969x uses the Atmel SPI, so make it selectable for ARCH_LAN969X.
->=20
+On Fri, Jun 13, 2025 at 01:39:40PM +0200, Robert Marko wrote:
+> LAN969x uses Atmel HWRNG driver, so make it selectable for ARCH_LAN969X.
+> 
 > Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+> ---
+>  drivers/char/hw_random/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
+> index c85827843447..8e1b4c515956 100644
+> --- a/drivers/char/hw_random/Kconfig
+> +++ b/drivers/char/hw_random/Kconfig
+> @@ -77,7 +77,7 @@ config HW_RANDOM_AIROHA
+>  
+>  config HW_RANDOM_ATMEL
+>  	tristate "Atmel Random Number Generator support"
+> -	depends on (ARCH_AT91 || COMPILE_TEST)
+> +	depends on (ARCH_AT91 || ARCH_LAN969X ||COMPILE_TEST)
+------------------------- here is missing space ^
 
-Acked-by: Mark Brown <broonie@kernel.org>
+Otherwise:
+Reviewed-by: Oleksij Rempel <o.rempel@pengutronix.de>
 
---liIKPqX/LlpnoGyN
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhMD6IACgkQJNaLcl1U
-h9A2Tgf/S6jX4OTt8qMSDrYcgp49BzBMvfKq3YWuJ3TFTWtu27WywUPhj8oa42gc
-CzCOluHc+ctjn36Z6ENUygx8Sf9f2wO3QKsekaC5m301aySloWnBNCNh1CTWoKWa
-pcfCXorRLKUmIgyjTB9QnmFTebtF76O2QJYsosZAZX4E0h3fTyP2/O6eJuNshznh
-uW1yFBG7eO96O5ZigTfvCchi4CPiV2Eq44+35WRc/FkxiSyRMCCXpK/t1U8RFgEy
-M+DhG9KsPmk8y11dExnW+9rmYy8IY/FTxQwP4DWGTeacxTjwkUhvAacfOsXB6pB+
-aocL1gPyEZX8iTv2UnOf81f1YoBl0A==
-=og7b
------END PGP SIGNATURE-----
-
---liIKPqX/LlpnoGyN--
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 

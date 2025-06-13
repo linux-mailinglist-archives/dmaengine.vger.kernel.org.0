@@ -1,223 +1,178 @@
-Return-Path: <dmaengine+bounces-5453-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5454-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1386DAD92BD
-	for <lists+dmaengine@lfdr.de>; Fri, 13 Jun 2025 18:19:44 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A7378AD92DC
+	for <lists+dmaengine@lfdr.de>; Fri, 13 Jun 2025 18:34:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A0ECA189EA90
-	for <lists+dmaengine@lfdr.de>; Fri, 13 Jun 2025 16:19:55 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6622F1E326C
+	for <lists+dmaengine@lfdr.de>; Fri, 13 Jun 2025 16:34:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE89E211476;
-	Fri, 13 Jun 2025 16:19:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 620C42E11DD;
+	Fri, 13 Jun 2025 16:34:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CstMtbds"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z1rWZEPS"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2205720F079;
-	Fri, 13 Jun 2025 16:19:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A109A2E11B5;
+	Fri, 13 Jun 2025 16:34:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749831568; cv=none; b=NXVFjWoCbLR8p/wXyJWZNE1cvgo09aq8tiZbsRDFK4KOVdyWiLnydaAxl7Wy108sIKiUoqpZ4StGArKJ/lDgWLVMLMQ1R0e84FwLaAlq6gKeaP6AQ0qDmVqSgnIh7G97vYGnowW3Q9VhJExObaEtWgqENOHrJR1EVsZ/SjbrR2A=
+	t=1749832458; cv=none; b=ggZPSIaNfcix16oOFfej5Tk/16ohnjp8qOGbk4YnzkuYWh1Y9u1Gn9eSS+sdb2Nd2sS4gKxYK5k5VjwR1XvlWG1yMOf/yI+shq2V+MVS4Le8QUQxRN6jLpvTXazZQXm1zZ8tAT5l/+nOmpX262eDCRF0nrIdb8lBCxzMdIh105Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749831568; c=relaxed/simple;
-	bh=lA01gUMjFLrT+EPuMprAzxxtzaJPHgIPj1gJ4a71blo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rJdshqgiE96cE4Ytp25j1NirSs752suwZB/fMtohuN+gQs5Dn33WWV8fT9JaAuoOQBo/c1sKh/e8opVhWC22KpYtjBJmErulQD9na+14wtZ9QnEGPNqy3/YZ41M/iXE0J/qOfmiQ3mEkXZP2aEiYKlk3cX75MxtZWCO9eM2Djyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CstMtbds; arc=none smtp.client-ip=198.175.65.16
+	s=arc-20240116; t=1749832458; c=relaxed/simple;
+	bh=XmQATzAYaYnvtUMi+XnSnSqsLk5YyHQDgNS0PcyR0VE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DvSaIwoPWa1stderyx1a5nLSjm28Iw6AZFjx4z+H5ueRzrs2fpWQGuOTnpns3A6PAoa2O0qipFwWLq3/jahZY5K07paOPXBrRN4/5MKKyXzSQkZLFrQv4x74TbcyBfHL6Pq5PXMxrLa/YBEi3hyQakgbajRZSss4WzlhH8P1WvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z1rWZEPS; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749831568; x=1781367568;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=lA01gUMjFLrT+EPuMprAzxxtzaJPHgIPj1gJ4a71blo=;
-  b=CstMtbdsG0A0dLWaoJY5nhfBGteltzVbpC0hP1t5RxX9T5LVsnpqXjYi
-   I2lpoHmBT4PFlLfSTf/XEOoe2ncK1Rd73xpOC6kBBjO+sH0BR89hSQfaS
-   o+3raXg/96Zd93YKFWnbsVnmL26NTZ7ZXg7GOeIqIFntOzSBgjqY7WzHZ
-   LpGF3dz8JR5NbYSBDpcbc9jQGlBxrw7ehRNL7J3ZcZvvpbfgFXc0vSHMX
-   7p6Aus/y5waglkoCWKSd6wxgzKL5P+31Eqbo8jmZj3J2ZY74EbHCkdClT
-   xuxmZCTPhmFLXGNrO9SBdtjjvZq+Rgj2nHuKkz2IY2ZN6Iz0spmws2xk9
-   A==;
-X-CSE-ConnectionGUID: 1ctB+sFLRs2YjMG2amNzng==
-X-CSE-MsgGUID: Xrp4FCpdR0OMoZeoWhOcwA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="52149244"
+  t=1749832456; x=1781368456;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=XmQATzAYaYnvtUMi+XnSnSqsLk5YyHQDgNS0PcyR0VE=;
+  b=Z1rWZEPSUjOXaFCHVCOE90SJp7n5KAViY9SXv4Rn6GT/CSpgFYh87fkV
+   TyWMVtpgWGrxtQ3cQkpVpGFE4d1+hl01loLoFFD73IdT4mAHu+dxp2LUw
+   6FaKJF1I5V7AWCGZnlqSPQ9cdn/GOqUOYJvkcbIeupp6DAILTiDoZ8CAO
+   UOAPXcsLpi7yzhLvRzBnffQywRUQ2ExGY9c6YY+g6C79MREs92for1D8M
+   LSYe8fwhnjklnEVhQO0onvbigw2SZlNN/AkCLZ25f5/Q8AeMopYU6cKPd
+   MqMCcTm3VuEqRvz+TgWdUq7jr2enc77pkfLFekejVm/WFqEhVCZvN2xkW
+   w==;
+X-CSE-ConnectionGUID: D0ju2UKdSnm7TG/08lmd4A==
+X-CSE-MsgGUID: S5FtnycxSd+xcp47mSMkBQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="54672617"
 X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
-   d="scan'208";a="52149244"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 09:19:28 -0700
-X-CSE-ConnectionGUID: mAVOzOJMSTyScXj0PaRaYg==
-X-CSE-MsgGUID: f0LK/4uLQiWYbgvVIfdrUA==
+   d="scan'208";a="54672617"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 09:34:15 -0700
+X-CSE-ConnectionGUID: xTT/NwgZQVyWy81RA0eR+g==
+X-CSE-MsgGUID: EOizAm/wT4OMCyvmQSPCSw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
-   d="scan'208";a="147859291"
-Received: from ysun46-mobl (HELO YSUN46-MOBL..) ([10.239.96.51])
-  by orviesa009.jf.intel.com with ESMTP; 13 Jun 2025 09:19:24 -0700
-From: Yi Sun <yi.sun@intel.com>
-To: dave.jiang@intel.com,
-	vinicius.gomes@intel.com,
-	dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: yi.sun@intel.com,
-	gordon.jin@intel.com,
-	fenghuay@nvidia.com,
-	anil.s.keshavamurthy@intel.com,
-	philip.lantz@intel.com
-Subject: [PATCH 2/2] dmaengine: idxd: Add Max SGL Size Support for DSA3.0
-Date: Sat, 14 Jun 2025 00:18:34 +0800
-Message-ID: <20250613161834.2912353-3-yi.sun@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250613161834.2912353-1-yi.sun@intel.com>
-References: <20250613161834.2912353-1-yi.sun@intel.com>
+   d="scan'208";a="153160363"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 09:34:03 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uQ7Lp-00000006IeZ-3Wol;
+	Fri, 13 Jun 2025 19:33:57 +0300
+Date: Fri, 13 Jun 2025 19:33:57 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Alexander Kochetkov <al.kochet@gmail.com>
+Cc: Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Nishad Saraf <nishads@amd.com>,
+	Lizhi Hou <lizhi.hou@amd.com>, Jacky Huang <ychuang3@nuvoton.com>,
+	Shan-Chun Hung <schung@nuvoton.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Paul Cercueil <paul@crapouillou.net>,
+	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Frank Li <Frank.Li@nxp.com>, Zhou Wang <wangzhou1@hisilicon.com>,
+	Longfang Liu <liulongfang@huawei.com>,
+	Andy Shevchenko <andy@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Keguang Zhang <keguang.zhang@gmail.com>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+	Daniel Mack <daniel@zonque.org>,
+	Haojian Zhuang <haojian.zhuang@gmail.com>,
+	Robert Jarzmik <robert.jarzmik@free.fr>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Orson Zhai <orsonzhai@gmail.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Chunyan Zhang <zhang.lyra@gmail.com>,
+	Patrice Chotard <patrice.chotard@foss.st.com>,
+	=?iso-8859-1?Q?Am=E9lie?= Delaunay <amelie.delaunay@foss.st.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Laxman Dewangan <ldewangan@nvidia.com>,
+	Jon Hunter <jonathanh@nvidia.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Amit Vadhavana <av2082000@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Md Sadre Alam <quic_mdalam@quicinc.com>,
+	Casey Connolly <casey.connolly@linaro.org>,
+	Kees Cook <kees@kernel.org>, Fenghua Yu <fenghua.yu@intel.com>,
+	Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
+Subject: Re: [PATCH 1/1] dmaengine: virt-dma: convert tasklet to BH workqueue
+ for callback invocation
+Message-ID: <aExS9WB0Ussl4Lec@smile.fi.intel.com>
+References: <20250613143605.5748-1-al.kochet@gmail.com>
+ <20250613143605.5748-2-al.kochet@gmail.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250613143605.5748-2-al.kochet@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Certain DSA 3.0 opcodes, such as Gather copy and Gather reduce requires max
-SGL configured for workqueues prior to support these opcodes.
+On Fri, Jun 13, 2025 at 02:34:44PM +0000, Alexander Kochetkov wrote:
+> Currently DMA callbacks are called from tasklet. However the tasklet is
+> marked deprecated and must be replaced by BH workqueue. Tasklet callbacks
+> are executed either in the Soft IRQ context or from ksoftirqd thread. BH
+> workqueue work items are executed in the BH context. Changing tasklet to
+> BH workqueue improved DMA callback latencies.
+> 
+> The commit changes virt-dma driver and all of its users:
+> - tasklet is replaced to work_struct, tasklet callback updated accordingly
+> - kill_tasklet() is replaced to cancel_work_sync()
+> - added include of linux/interrupt.h where necessary
+> 
+> Tested on Pine64 (Allwinner A64 ARMv8) with sun6i-dma driver. All other
+> drivers are changed similarly and tested for compilation.
 
-Configure the maximum scatter-gather list (SGL) size for workqueues during
-setup on the supported HW. Application can then properly handle the SGL
-size without explicitly setting it.
+...
 
-Signed-off-by: Yi Sun <yi.sun@intel.com>
-Co-developed-by: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-Signed-off-by: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+> --- a/drivers/dma/amd/qdma/qdma.c
+> +++ b/drivers/dma/amd/qdma/qdma.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/platform_data/amd_qdma.h>
+>  #include <linux/regmap.h>
+> +#include <linux/interrupt.h>
 
-diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-index 5cf419fe6b46..1c10b030bea7 100644
---- a/drivers/dma/idxd/device.c
-+++ b/drivers/dma/idxd/device.c
-@@ -375,6 +375,7 @@ static void idxd_wq_disable_cleanup(struct idxd_wq *wq)
- 	memset(wq->name, 0, WQ_NAME_SIZE);
- 	wq->max_xfer_bytes = WQ_DEFAULT_MAX_XFER;
- 	idxd_wq_set_max_batch_size(idxd->data->type, wq, WQ_DEFAULT_MAX_BATCH);
-+	idxd_wq_set_init_max_sgl_size(idxd, wq);
- 	if (wq->opcap_bmap)
- 		bitmap_copy(wq->opcap_bmap, idxd->opcap_bmap, IDXD_MAX_OPCAP_BITS);
- }
-@@ -974,6 +975,8 @@ static int idxd_wq_config_write(struct idxd_wq *wq)
- 	/* bytes 12-15 */
- 	wq->wqcfg->max_xfer_shift = ilog2(wq->max_xfer_bytes);
- 	idxd_wqcfg_set_max_batch_shift(idxd->data->type, wq->wqcfg, ilog2(wq->max_batch_size));
-+	if (idxd_sgl_supported(idxd))
-+		wq->wqcfg->max_sgl_shift = ilog2(wq->max_sgl_size);
- 
- 	/* bytes 32-63 */
- 	if (idxd->hw.wq_cap.op_config && wq->opcap_bmap) {
-@@ -1152,6 +1155,8 @@ static int idxd_wq_load_config(struct idxd_wq *wq)
- 
- 	wq->max_xfer_bytes = 1ULL << wq->wqcfg->max_xfer_shift;
- 	idxd_wq_set_max_batch_size(idxd->data->type, wq, 1U << wq->wqcfg->max_batch_shift);
-+	if (idxd_sgl_supported(idxd))
-+		wq->max_sgl_size = 1U << wq->wqcfg->max_sgl_shift;
- 
- 	for (i = 0; i < WQCFG_STRIDES(idxd); i++) {
- 		wqcfg_offset = WQCFG_OFFSET(idxd, wq->id, i);
-diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index cc0a3fe1c957..fe5af50b58a4 100644
---- a/drivers/dma/idxd/idxd.h
-+++ b/drivers/dma/idxd/idxd.h
-@@ -227,6 +227,7 @@ struct idxd_wq {
- 	char name[WQ_NAME_SIZE + 1];
- 	u64 max_xfer_bytes;
- 	u32 max_batch_size;
-+	u32 max_sgl_size;
- 
- 	/* Lock to protect upasid_xa access. */
- 	struct mutex uc_lock;
-@@ -348,6 +349,7 @@ struct idxd_device {
- 
- 	u64 max_xfer_bytes;
- 	u32 max_batch_size;
-+	u32 max_sgl_size;
- 	int max_groups;
- 	int max_engines;
- 	int max_rdbufs;
-@@ -692,6 +694,20 @@ static inline void idxd_wq_set_max_batch_size(int idxd_type, struct idxd_wq *wq,
- 		wq->max_batch_size = max_batch_size;
- }
- 
-+static bool idxd_sgl_supported(struct idxd_device *idxd)
-+{
-+	return idxd->hw.dsacap0.sgl_formats &&
-+	       idxd->data->type == IDXD_TYPE_DSA &&
-+	       idxd->hw.version >= DEVICE_VERSION_3;
-+}
-+
-+static inline void idxd_wq_set_init_max_sgl_size(struct idxd_device *idxd,
-+						 struct idxd_wq *wq)
-+{
-+	if (idxd_sgl_supported(idxd))
-+		wq->max_sgl_size = 1U << idxd->hw.dsacap0.max_sgl_shift;
-+}
-+
- static inline void idxd_wqcfg_set_max_batch_shift(int idxd_type, union wqcfg *wqcfg,
- 						  u32 max_batch_shift)
- {
-diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index cc8203320d40..f37a7d7b537a 100644
---- a/drivers/dma/idxd/init.c
-+++ b/drivers/dma/idxd/init.c
-@@ -217,6 +217,7 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
- 		init_completion(&wq->wq_resurrect);
- 		wq->max_xfer_bytes = WQ_DEFAULT_MAX_XFER;
- 		idxd_wq_set_max_batch_size(idxd->data->type, wq, WQ_DEFAULT_MAX_BATCH);
-+		idxd_wq_set_init_max_sgl_size(idxd, wq);
- 		wq->enqcmds_retries = IDXD_ENQCMDS_RETRIES;
- 		wq->wqcfg = kzalloc_node(idxd->wqcfg_size, GFP_KERNEL, dev_to_node(dev));
- 		if (!wq->wqcfg) {
-@@ -585,6 +586,10 @@ static void idxd_read_caps(struct idxd_device *idxd)
- 	idxd->hw.dsacap0.bits = ioread64(idxd->reg_base + IDXD_DSACAP0_OFFSET);
- 	idxd->hw.dsacap1.bits = ioread64(idxd->reg_base + IDXD_DSACAP1_OFFSET);
- 	idxd->hw.dsacap2.bits = ioread64(idxd->reg_base + IDXD_DSACAP2_OFFSET);
-+	if (idxd_sgl_supported(idxd)) {
-+		idxd->max_sgl_size = 1U << idxd->hw.dsacap0.max_sgl_shift;
-+		dev_dbg(dev, "max sgl size: %u\n", idxd->max_sgl_size);
-+	}
- 
- 	/* read iaa cap */
- 	if (idxd->data->type == IDXD_TYPE_IAX && idxd->hw.version >= DEVICE_VERSION_2)
-diff --git a/drivers/dma/idxd/registers.h b/drivers/dma/idxd/registers.h
-index 45485ecd7bb6..0401cfc95f27 100644
---- a/drivers/dma/idxd/registers.h
-+++ b/drivers/dma/idxd/registers.h
-@@ -385,7 +385,8 @@ union wqcfg {
- 		/* bytes 12-15 */
- 		u32 max_xfer_shift:5;
- 		u32 max_batch_shift:4;
--		u32 rsvd4:23;
-+		u32 max_sgl_shift:4;
-+		u32 rsvd4:19;
- 
- 		/* bytes 16-19 */
- 		u16 occupancy_inth;
-@@ -585,6 +586,15 @@ union evl_status_reg {
- 
- #define IDXD_DSACAP0_OFFSET		0x180
- union dsacap0_reg {
-+	struct {
-+		u64 max_sgl_shift:4;
-+		u64 max_gr_block_shift:4;
-+		u64 ops_inter_domain:7;
-+		u64 rsvd1:17;
-+		u64 sgl_formats:16;
-+		u64 max_sg_process:8;
-+		u64 rsvd2:8;
-+	};
- 	u64 bits;
- };
- 
+It seems it was ordered. Please, preserve the order.
+It not, try to squeeze to have longest possible ordered chain
+(it can be interleaved with something unordered, just look at
+ the big picture).
+
+(Same applies to other similar cases)
+
+...
+
+What about the driver(s) that use threaded IRQ instead?
+Do you plan to convert them as well?
+
+I am talking about current users of virt-dma that do not use tasklets.
+
 -- 
-2.43.0
+With Best Regards,
+Andy Shevchenko
+
 
 

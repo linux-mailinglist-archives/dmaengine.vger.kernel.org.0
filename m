@@ -1,134 +1,119 @@
-Return-Path: <dmaengine+bounces-5450-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5451-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 665C1AD91C3
-	for <lists+dmaengine@lfdr.de>; Fri, 13 Jun 2025 17:44:44 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 38AD9AD92B8
+	for <lists+dmaengine@lfdr.de>; Fri, 13 Jun 2025 18:19:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 36700189143E
-	for <lists+dmaengine@lfdr.de>; Fri, 13 Jun 2025 15:44:55 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BFB2F7AB0A3
+	for <lists+dmaengine@lfdr.de>; Fri, 13 Jun 2025 16:18:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C33E1F78E0;
-	Fri, 13 Jun 2025 15:44:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B016202C4E;
+	Fri, 13 Jun 2025 16:19:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G5jH3+zO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DhJeKLpz"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED3931F0E24;
-	Fri, 13 Jun 2025 15:44:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2A571A4F12;
+	Fri, 13 Jun 2025 16:19:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749829473; cv=none; b=R9p78ZYS3MjBVqkFlGv2+ShXDLx4DUlANrsgttj+pb7DYsoJTDzADHvIqNeRc/qXfGgi6B1oa+L/X1WpCcN0uBeqkOAd4KF0QG0JQkUZ60vopOoiuKKCLJvaZAWkdBPlzsSHp07FmKJhjxviXd1B9ImMtEjeZHaYu/Qr09DXmpk=
+	t=1749831555; cv=none; b=PEwLg9rFsl5DSoZ55wHp5Yh3v/5L62QUgvdCFix9if/FB34I4pVXICp/ard5iV0C5ktflsbzBHwHdbG+u8WnHumALfLIoyFtLnwNQT1FePqibkmFUxTZ5QH4FYAj5lfXjYkatJ9zU5zp4NkzbfkdrBjs+NXDQyr8s5hbpTbGYMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749829473; c=relaxed/simple;
-	bh=cNXTOY+jw0QaNec5Dnl+hrHqpRXE5eXNgvUeICWzwy8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X0mxhTpJ3adQXlin/g7RdVXSgOdobdWFgbZ8NtYONHVBCut7D6dpPscbf956MiW6YTnDbIijHB4gG9J73L0IFX4OKrxeutnyBzXMzoOJd8/Bxpcutdlt4gqxwb+RbMe7sB08apA+Gj5FWIMIAZ/daNuhME5kA8anmmkfc9UUnkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G5jH3+zO; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b271f3ae786so1780691a12.3;
-        Fri, 13 Jun 2025 08:44:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749829471; x=1750434271; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HqIM8HZnplhZGKcbWU5pZbbMLNhFw2iwzIjxpnBgMKw=;
-        b=G5jH3+zOJodCgOFcVJ17BBCjowEm6r+x2SCTgJCTaV+P4mK74Nkzbd+9pW/VvlEw2k
-         al5xrPzlzODXp+5Ycz5UAQfAycKndF0BD4WLYhnB6YmW+HNcxDOhfGFjlz0e7ZBSUXZ2
-         gO01Ra97fQwr2yydSdQbnJAkhN/X7h8RgKSCNagPFXqIv1FxgyhD9hEZJ6DJlPdA1kX0
-         tZeKTI0Jm0GhyMxQ9Zai+JRe8eZ14jrS+4omHEBVOshifk7GJncunXHYw0b8VfZg8MTl
-         VQz+68e/lwz+Be5lm1YtJ7oOiqLAMLy51wfowPKkfA053NP5n4n96YvEDfoAB3Azut6y
-         ne1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749829471; x=1750434271;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HqIM8HZnplhZGKcbWU5pZbbMLNhFw2iwzIjxpnBgMKw=;
-        b=td4RW7vGhws19VispMbuFkEYyJlfJqlVc9eiDcBtmYF4gWpO1OXnN9vTBzJtAlf+dg
-         MxuxGnjvYgbrc/iEjxkPhpRXe8Crhj6dxyoMHzCcr8ssoYokCkjmOUVPAxMYzzoIBz8t
-         YvyHA9BYlr2Tp/uoKAfk+/KUWymkiXDOJ+TQ1pHOoYiQCh+2TqWxqs9CaoOYkEyP6KE0
-         Y8kRn+ehxMuc2mATIHQxmJNF/adI8tNwU47dgbohC3fnXKrXa+QFp8sWqEgzMcWED09F
-         5jb6e6DKdWCngU92LkOo+txChfLmH9kMlIQfpoeBfOqApuQtntHNxoQHv9hsjsL9gHjT
-         BN5g==
-X-Forwarded-Encrypted: i=1; AJvYcCUgfdrW6wM63E/lz40zimSIET2ReVUkFiwthxzwP+r7YgSOPuJ5jeCF45eP7ByjIiPa4hyPA2a1191uVoGv@vger.kernel.org, AJvYcCVEBaivHBfYrmrT7/MTdsVEYpTm9gcr3T8S2orEb28bnceNBwJah3LbylIqa2Mk1glEBv3/G+W4XEIv@vger.kernel.org, AJvYcCVOd3HrEYyCq1DrC/kvNztuw5775zOKC8WCE8saSwwsw55RQ0Oo8GM+51NCqHSyfr0haavVgQ+uTwo=@vger.kernel.org, AJvYcCVYTG0tGTOjvPBZUvvHu+XEorhi86s4FcGtAVNOeBZmvzzIryA38EeexwPqi/9wKzqS9mx9Zk/vu9s=@vger.kernel.org, AJvYcCWBnkt3IDlM1A2aKjMg5tjw1Fke9ifi3WlodaE6Bd11YvJH7zoacBPn5nbgNEEMo7gPCIcLKzVpWKMzbKg=@vger.kernel.org, AJvYcCWZUuaeUP5NhX0gR6eDGaZ3OH1NlRh/EIEydJir7BYj0OwRrSM/L2HgGyGxXwGCIbrXxOOsq02AWP5koYg=@vger.kernel.org, AJvYcCWpbMTQpXNoCKXvqFBtLNFTE1FfcwS9+ybAYWeIb711zSbM1+F4XkQkbGPrL8IQkDz91hpmrjje1z87@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuyoYAJ9wpMXcuTVLDymnj8yS0Yz1UvfN20j75Izg1AfqSn7cV
-	CRjJu8WJCd4aryVgEl9+R2V8ysnXDaTSHQQly74vN04vMNV9XXM3fyF5
-X-Gm-Gg: ASbGnctiKpAKgQoPxrlhQF9zJoHuPJ4ppz5TqKJX2o6UWI4g+ECLRoVD7HGoF8ts7+z
-	czrJ+vvz201nNy281HUt6JAuxY8ftRao3tXWx6pxwpMeT8eQfzQ17oZbMDN9h5QligdHs/B/Ef+
-	RpQGNtk/auwsUiKQ3/32ZUxLl54xWgfIcivhbHCNA6zopjmpq+n7y0311/yFX2wlvEfYYUwZpr4
-	mdSZlBB7mtNs7rL1AhFfmwWU/VfeNkPhEiGupwjOWuRuFPxpJieuebmRGukzl29KoiNUwwy4gHv
-	26wtjdPl4fttkUZrpWguxFxnozETGBpjxRWBMmvOLEIZH6FJ4Dkq9aYEzszS4NMfm0D5cTg4Jd3
-	34RIcxfz0NOQL6D3JrW2M
-X-Google-Smtp-Source: AGHT+IETWJC1IioWtKneuXgORMThHBGBuRQvos+ZKLhO3L/RBVH0UX1pCYDwIQm0SyCgDHjVsMUOBA==
-X-Received: by 2002:a17:90b:350a:b0:2ee:6d08:7936 with SMTP id 98e67ed59e1d1-313f1d58ba9mr197515a91.20.1749829471051;
-        Fri, 13 Jun 2025 08:44:31 -0700 (PDT)
-Received: from [192.168.0.122] ([59.188.211.160])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365dea8fe6sm15767125ad.164.2025.06.13.08.44.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Jun 2025 08:44:30 -0700 (PDT)
-Message-ID: <b99e93dd-6cee-4c9f-83a2-faf66828f6cd@gmail.com>
-Date: Fri, 13 Jun 2025 23:44:24 +0800
+	s=arc-20240116; t=1749831555; c=relaxed/simple;
+	bh=L/XF9J7R3jz39bk9YEll2C/WvMDcbohimaoDlBJQT+g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BIDI8yY/kk3Hc56s8vfA2a6tXG02T8Jg9DOcCSiWRnGC/cHkfb2uov69yz6eUtu5Hu/+NqcUL2NA+7XE+jHvr2RTVDqmlgWZWr5iWGW0aQ9uMYBKO9qhnJEDlY5/e7d7YIfXE8Y9kJYlpT2hZnFWx7FCJ3q4qpsDLKFBzaO8/yM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DhJeKLpz; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749831555; x=1781367555;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=L/XF9J7R3jz39bk9YEll2C/WvMDcbohimaoDlBJQT+g=;
+  b=DhJeKLpzMIBiJDLycZoy5vCt8D1h4LLzF3RSQVyzbq5aTGcs9FLJLF/1
+   qY/MLl8gc5GrYVhuSzDOEsnVMIS/BrXp8h70jar6hrpTZiIBvZBrDxicn
+   prN/+weM22stjnxVXz9Z/+Zr/ViBK4N1qwFaezAHmKEaBAaYyUT73/Q7t
+   Hk8H3nS+uRgMS4YHqaMfh1327pqXn2XhAzc10bJCrbU/xAwM4H119xKSP
+   SXWEC30dxKvbXonMgTRjht79EouplBR88QeqDTU4rRCoYV/2J8n3cDBXe
+   41juIqK6k90AK/aoZGs1qh3JifLim8nPqCP3uzry1sBqXkkUDSjIJC6mU
+   w==;
+X-CSE-ConnectionGUID: jhYe7vnSS8qm5QJplENjtg==
+X-CSE-MsgGUID: zk0cnaDyQLaPJO2jUMFpSA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="52149219"
+X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
+   d="scan'208";a="52149219"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 09:19:14 -0700
+X-CSE-ConnectionGUID: bcY7EXy5SPuqueZ6bNA79Q==
+X-CSE-MsgGUID: /pTMyZd2Tdy1PYjdU52AiQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
+   d="scan'208";a="147859214"
+Received: from ysun46-mobl (HELO YSUN46-MOBL..) ([10.239.96.51])
+  by orviesa009.jf.intel.com with ESMTP; 13 Jun 2025 09:19:10 -0700
+From: Yi Sun <yi.sun@intel.com>
+To: dave.jiang@intel.com,
+	vinicius.gomes@intel.com,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: yi.sun@intel.com,
+	gordon.jin@intel.com,
+	fenghuay@nvidia.com,
+	anil.s.keshavamurthy@intel.com,
+	philip.lantz@intel.com
+Subject: [PATCH 0/2] dmaengine: idxd: Add basic DSA 3.0 capability and SGL support
+Date: Sat, 14 Jun 2025 00:18:32 +0800
+Message-ID: <20250613161834.2912353-1-yi.sun@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 11/11] arm64: defconfig: Enable Apple Silicon drivers
-To: Sven Peter <sven@kernel.org>, Janne Grunau <j@jannau.net>,
- Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>,
- Ulf Hansson <ulf.hansson@linaro.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Srinivas Kandagatla <srini@kernel.org>,
- Andi Shyti <andi.shyti@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, Vinod Koul <vkoul@kernel.org>,
- =?UTF-8?Q?Martin_Povi=C5=A1er?= <povik+lin@cutebit.org>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- Arnd Bergmann <arnd@arndb.de>
-Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, iommu@lists.linux.dev,
- linux-input@vger.kernel.org, dmaengine@vger.kernel.org,
- linux-sound@vger.kernel.org
-References: <20250612-apple-kconfig-defconfig-v1-0-0e6f9cb512c1@kernel.org>
- <20250612-apple-kconfig-defconfig-v1-11-0e6f9cb512c1@kernel.org>
-Content-Language: en-US
-From: Nick Chan <towinchenmi@gmail.com>
-In-Reply-To: <20250612-apple-kconfig-defconfig-v1-11-0e6f9cb512c1@kernel.org>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+This patch series introduces foundational support for DSA 3.0 features,
+exposing hardware capability registers to userspace in the IDXD driver.
 
-Sven Peter 於 2025/6/13 清晨5:11 寫道:
-> Enable drivers for hardware present on Apple Silicon machines.
-> The power domain and interrupt driver should be built-it since these are
-> critical for the system to boot, the rest can be build as modules.
->
-> Previously, many of these drivers were accidentally configured as y
-> such that this actually decreases the size of the kernel image:
->
-> vmlinux 163628520 -> 163330632 (-297888)
-> Image    48388608 ->  48384512 (-  4096)
->
-> Signed-off-by: Sven Peter <sven@kernel.org>
+DSA 3.0 introduces several new features that require awareness and
+configuration from both kernel and userspace. It is necessary to
+understand the hardware's capabilities for userspace tools (e.g.,
+idxd-config, libraries, and applications) to make use of the features
+properly, such as supported features, memory layouts, and opcode
+compatibility.
 
-[...]
+Patch 1/2 exposes the three new capability registers (dsacap0-2)
+introduced in the DSA 3.0 specification through a new sysfs entry.
+This allows tools and users to query hardware capabilities such as
+supported SGL formats, floating-point options, and maximum supported
+sizes.
 
-I think you missed these drivers (all of which should be m):
+Patch 2/2 enables configuration of the maximum SGL size for DSA 3.0
+devices. Some DSA 3.0 opcodes (e.g., Gather Copy, Gather Reduce) require
+that the workqueue's SGL size is explicitly configured. This patch sets
+that value based on hardware capabilities at initialization time,
+allowing these opcodes to function without additional user configuration.
 
-BACKLIGHT_APPLE_DWI DRM_PANEL_SUMMIT DRM_ADP NVMEM_APPLE_SPMI
+Yi Sun (2):
+  dmaengine: idxd: Expose DSA3.0 capabilities through sysfs
+  dmaengine: idxd: Add Max SGL Size Support for DSA3.0
 
-Nick Chan
+ .../ABI/stable/sysfs-driver-dma-idxd          | 15 ++++++++++
+ drivers/dma/idxd/device.c                     |  5 ++++
+ drivers/dma/idxd/idxd.h                       | 19 +++++++++++++
+ drivers/dma/idxd/init.c                       |  9 ++++++
+ drivers/dma/idxd/registers.h                  | 28 ++++++++++++++++++-
+ drivers/dma/idxd/sysfs.c                      | 27 ++++++++++++++++++
+ 6 files changed, 102 insertions(+), 1 deletion(-)
+
+-- 
+2.43.0
 
 

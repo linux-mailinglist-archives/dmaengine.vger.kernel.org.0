@@ -1,178 +1,119 @@
-Return-Path: <dmaengine+bounces-5454-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5455-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7378AD92DC
-	for <lists+dmaengine@lfdr.de>; Fri, 13 Jun 2025 18:34:22 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 21F22AD932C
+	for <lists+dmaengine@lfdr.de>; Fri, 13 Jun 2025 18:50:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6622F1E326C
-	for <lists+dmaengine@lfdr.de>; Fri, 13 Jun 2025 16:34:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 464EC1898CD1
+	for <lists+dmaengine@lfdr.de>; Fri, 13 Jun 2025 16:50:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 620C42E11DD;
-	Fri, 13 Jun 2025 16:34:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z1rWZEPS"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BECBE20F088;
+	Fri, 13 Jun 2025 16:50:29 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A109A2E11B5;
-	Fri, 13 Jun 2025 16:34:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE3D715A87C;
+	Fri, 13 Jun 2025 16:50:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749832458; cv=none; b=ggZPSIaNfcix16oOFfej5Tk/16ohnjp8qOGbk4YnzkuYWh1Y9u1Gn9eSS+sdb2Nd2sS4gKxYK5k5VjwR1XvlWG1yMOf/yI+shq2V+MVS4Le8QUQxRN6jLpvTXazZQXm1zZ8tAT5l/+nOmpX262eDCRF0nrIdb8lBCxzMdIh105Q=
+	t=1749833429; cv=none; b=IENNzv0tPurCN5Zt8ngXn6ZEvX3ZK2ZazGkX9eRj13U+my5lW5pYZmmo7ehLNqZUOgxiLwo1EmYU0YfxTazx/oyhbtsajBcCb5MHjPH6PBKvwpEhue+mv9Viy9SX3fD5P97Fkl3k3FwbyK9WCTwC7ACXBgw4kAso31KFueY9fM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749832458; c=relaxed/simple;
-	bh=XmQATzAYaYnvtUMi+XnSnSqsLk5YyHQDgNS0PcyR0VE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DvSaIwoPWa1stderyx1a5nLSjm28Iw6AZFjx4z+H5ueRzrs2fpWQGuOTnpns3A6PAoa2O0qipFwWLq3/jahZY5K07paOPXBrRN4/5MKKyXzSQkZLFrQv4x74TbcyBfHL6Pq5PXMxrLa/YBEi3hyQakgbajRZSss4WzlhH8P1WvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z1rWZEPS; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749832456; x=1781368456;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=XmQATzAYaYnvtUMi+XnSnSqsLk5YyHQDgNS0PcyR0VE=;
-  b=Z1rWZEPSUjOXaFCHVCOE90SJp7n5KAViY9SXv4Rn6GT/CSpgFYh87fkV
-   TyWMVtpgWGrxtQ3cQkpVpGFE4d1+hl01loLoFFD73IdT4mAHu+dxp2LUw
-   6FaKJF1I5V7AWCGZnlqSPQ9cdn/GOqUOYJvkcbIeupp6DAILTiDoZ8CAO
-   UOAPXcsLpi7yzhLvRzBnffQywRUQ2ExGY9c6YY+g6C79MREs92for1D8M
-   LSYe8fwhnjklnEVhQO0onvbigw2SZlNN/AkCLZ25f5/Q8AeMopYU6cKPd
-   MqMCcTm3VuEqRvz+TgWdUq7jr2enc77pkfLFekejVm/WFqEhVCZvN2xkW
-   w==;
-X-CSE-ConnectionGUID: D0ju2UKdSnm7TG/08lmd4A==
-X-CSE-MsgGUID: S5FtnycxSd+xcp47mSMkBQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="54672617"
-X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
-   d="scan'208";a="54672617"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 09:34:15 -0700
-X-CSE-ConnectionGUID: xTT/NwgZQVyWy81RA0eR+g==
-X-CSE-MsgGUID: EOizAm/wT4OMCyvmQSPCSw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
-   d="scan'208";a="153160363"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 09:34:03 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uQ7Lp-00000006IeZ-3Wol;
-	Fri, 13 Jun 2025 19:33:57 +0300
-Date: Fri, 13 Jun 2025 19:33:57 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Alexander Kochetkov <al.kochet@gmail.com>
-Cc: Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Nishad Saraf <nishads@amd.com>,
-	Lizhi Hou <lizhi.hou@amd.com>, Jacky Huang <ychuang3@nuvoton.com>,
-	Shan-Chun Hung <schung@nuvoton.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Paul Cercueil <paul@crapouillou.net>,
-	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Frank Li <Frank.Li@nxp.com>, Zhou Wang <wangzhou1@hisilicon.com>,
-	Longfang Liu <liulongfang@huawei.com>,
-	Andy Shevchenko <andy@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Keguang Zhang <keguang.zhang@gmail.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-	Daniel Mack <daniel@zonque.org>,
-	Haojian Zhuang <haojian.zhuang@gmail.com>,
-	Robert Jarzmik <robert.jarzmik@free.fr>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Orson Zhai <orsonzhai@gmail.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Chunyan Zhang <zhang.lyra@gmail.com>,
-	Patrice Chotard <patrice.chotard@foss.st.com>,
-	=?iso-8859-1?Q?Am=E9lie?= Delaunay <amelie.delaunay@foss.st.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Laxman Dewangan <ldewangan@nvidia.com>,
-	Jon Hunter <jonathanh@nvidia.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Amit Vadhavana <av2082000@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Md Sadre Alam <quic_mdalam@quicinc.com>,
-	Casey Connolly <casey.connolly@linaro.org>,
-	Kees Cook <kees@kernel.org>, Fenghua Yu <fenghua.yu@intel.com>,
-	Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
-Subject: Re: [PATCH 1/1] dmaengine: virt-dma: convert tasklet to BH workqueue
- for callback invocation
-Message-ID: <aExS9WB0Ussl4Lec@smile.fi.intel.com>
-References: <20250613143605.5748-1-al.kochet@gmail.com>
- <20250613143605.5748-2-al.kochet@gmail.com>
+	s=arc-20240116; t=1749833429; c=relaxed/simple;
+	bh=7bhRMmk/rqBBya6D/yZgVdiqWytle+3/P0OHnRbqkE8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=g9Km91Li3RINnrlUSYGRvoP9flskxbcRRSwuhJp3LGl+mR6dW6R1bRQCodnsBfLe6ITnEhgMTNU5hne8QrOwBdVR/03OMy3UzoPkvM+GjhtRFxoOPEyBU42bD0lUAFimVPMZDFnhBVQIQYsPrcwGaHTaS3kwrS2T++aSahi9Lpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B22231C0A;
+	Fri, 13 Jun 2025 09:50:06 -0700 (PDT)
+Received: from [10.57.28.131] (unknown [10.57.28.131])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 534A23F673;
+	Fri, 13 Jun 2025 09:50:22 -0700 (PDT)
+Message-ID: <2e022f4e-4c87-4da1-9d02-f7a3ae7c5798@arm.com>
+Date: Fri, 13 Jun 2025 17:50:20 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250613143605.5748-2-al.kochet@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 11/11] arm64: defconfig: Enable Apple Silicon drivers
+To: Sven Peter <sven@kernel.org>, Janne Grunau <j@jannau.net>,
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>,
+ Ulf Hansson <ulf.hansson@linaro.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Srinivas Kandagatla <srini@kernel.org>,
+ Andi Shyti <andi.shyti@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Vinod Koul <vkoul@kernel.org>, =?UTF-8?Q?Martin_Povi=C5=A1er?=
+ <povik+lin@cutebit.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, iommu@lists.linux.dev,
+ linux-input@vger.kernel.org, dmaengine@vger.kernel.org,
+ linux-sound@vger.kernel.org
+References: <20250612-apple-kconfig-defconfig-v1-0-0e6f9cb512c1@kernel.org>
+ <20250612-apple-kconfig-defconfig-v1-11-0e6f9cb512c1@kernel.org>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20250612-apple-kconfig-defconfig-v1-11-0e6f9cb512c1@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 13, 2025 at 02:34:44PM +0000, Alexander Kochetkov wrote:
-> Currently DMA callbacks are called from tasklet. However the tasklet is
-> marked deprecated and must be replaced by BH workqueue. Tasklet callbacks
-> are executed either in the Soft IRQ context or from ksoftirqd thread. BH
-> workqueue work items are executed in the BH context. Changing tasklet to
-> BH workqueue improved DMA callback latencies.
+On 2025-06-12 10:11 pm, Sven Peter wrote:
+> Enable drivers for hardware present on Apple Silicon machines.
+> The power domain and interrupt driver should be built-it since these are
+> critical for the system to boot, the rest can be build as modules.
+
+Nit: I'd be tempted to put this patch first, just in case anyone 
+bisecting with "make defconfig" in their process lands in the middle and 
+suddenly loses some drivers (although arguably them going from "=y" to 
+"=m" could still be a surprise, but at least a bit less so).
+
+[...]
+> @@ -1504,6 +1520,7 @@ CONFIG_ARCH_TEGRA_194_SOC=y
+>   CONFIG_ARCH_TEGRA_234_SOC=y
+>   CONFIG_TI_PRUSS=m
+>   CONFIG_OWL_PM_DOMAINS=y
+> +CONFIG_APPLE_PMGR_PWRSTATE=y
+
+If this is critical for any Apple platform to work then it would 
+probably make sense to explicitly select it from ARCH_APPLE, as is done 
+for APPLE_AIC...
+
+>   CONFIG_RASPBERRYPI_POWER=y
+>   CONFIG_IMX_SCU_PD=y
+>   CONFIG_QCOM_CPR=y
+> @@ -1567,6 +1584,7 @@ CONFIG_QCOM_PDC=y
+>   CONFIG_QCOM_MPM=y
+>   CONFIG_TI_SCI_INTR_IRQCHIP=y
+>   CONFIG_TI_SCI_INTA_IRQCHIP=y
+> +CONFIG_APPLE_AIC=y
+
+...which I think means this would already be redundant.
+
+Thanks,
+Robin.
+
+>   CONFIG_RESET_GPIO=m
+>   CONFIG_RESET_IMX7=y
+>   CONFIG_RESET_QCOM_AOSS=y
+> @@ -1640,6 +1658,7 @@ CONFIG_ARM_CORESIGHT_PMU_ARCH_SYSTEM_PMU=m
+>   CONFIG_NVIDIA_CORESIGHT_PMU_ARCH_SYSTEM_PMU=m
+>   CONFIG_MESON_DDR_PMU=m
+>   CONFIG_NVMEM_LAYOUT_SL28_VPD=m
+> +CONFIG_NVMEM_APPLE_EFUSES=m
+>   CONFIG_NVMEM_IMX_OCOTP=y
+>   CONFIG_NVMEM_IMX_OCOTP_ELE=m
+>   CONFIG_NVMEM_IMX_OCOTP_SCU=y
 > 
-> The commit changes virt-dma driver and all of its users:
-> - tasklet is replaced to work_struct, tasklet callback updated accordingly
-> - kill_tasklet() is replaced to cancel_work_sync()
-> - added include of linux/interrupt.h where necessary
-> 
-> Tested on Pine64 (Allwinner A64 ARMv8) with sun6i-dma driver. All other
-> drivers are changed similarly and tested for compilation.
-
-...
-
-> --- a/drivers/dma/amd/qdma/qdma.c
-> +++ b/drivers/dma/amd/qdma/qdma.c
-> @@ -13,6 +13,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/platform_data/amd_qdma.h>
->  #include <linux/regmap.h>
-> +#include <linux/interrupt.h>
-
-It seems it was ordered. Please, preserve the order.
-It not, try to squeeze to have longest possible ordered chain
-(it can be interleaved with something unordered, just look at
- the big picture).
-
-(Same applies to other similar cases)
-
-...
-
-What about the driver(s) that use threaded IRQ instead?
-Do you plan to convert them as well?
-
-I am talking about current users of virt-dma that do not use tasklets.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
 
 

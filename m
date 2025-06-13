@@ -1,78 +1,79 @@
-Return-Path: <dmaengine+bounces-5433-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5437-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7BE4AD8AD2
-	for <lists+dmaengine@lfdr.de>; Fri, 13 Jun 2025 13:43:05 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 904ACAD8AE4
+	for <lists+dmaengine@lfdr.de>; Fri, 13 Jun 2025 13:44:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9801F189016A
-	for <lists+dmaengine@lfdr.de>; Fri, 13 Jun 2025 11:42:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A78FC1E2EF5
+	for <lists+dmaengine@lfdr.de>; Fri, 13 Jun 2025 11:43:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC3C82E336E;
-	Fri, 13 Jun 2025 11:42:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 579AC2E6D1A;
+	Fri, 13 Jun 2025 11:42:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b="qHGBdf+Y"
+	dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b="y6ceaVp2"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 165A62E2F0E
-	for <dmaengine@vger.kernel.org>; Fri, 13 Jun 2025 11:41:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89BD92E62DD
+	for <dmaengine@vger.kernel.org>; Fri, 13 Jun 2025 11:42:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749814920; cv=none; b=Ehe/tIAIk+9G7ulP+AqVP0QwSD1ORCRZ46Nfox5D2Sdd3Pm/Zc2yff3DFvt7la6XLWkLg0UMI3db4t1kuiwYtw9qbc55gocgwdIcs7IRm3FW13DX07GDXfibpciL1TtsWCDst0kUdpuGZOfq9KLVT+VrBMgOwZCfCl+ylQxeJc8=
+	t=1749814935; cv=none; b=YOT8Ze6+IFHJzYUk2hH4Z1boogKTqUIWFDtSobUu32KXtEx4B5quksuC3w8FKEF3L40NSC+kGNFwdIjhrsf7PtukKh9uk2aseJE7iN1cYB+g09wm0d2w1iZROrVK9vrwMTbChcEzFYWoPGrB5Xh0hDJKeq3qsVyVTeqWBOIZHP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749814920; c=relaxed/simple;
-	bh=Jkh4xI1xZFk9y2KS3JrFZenLMgrJyYczEnPNCHPbPOE=;
+	s=arc-20240116; t=1749814935; c=relaxed/simple;
+	bh=Nl0M0mtMMwH3HQiDa6E6C3fv9pPm34SWpTCcbO9Pcds=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BxFNF+OSw+LRgpaaBZFVG5YWUUZZHGTgRqiviVR3zL4W6+2b0ZR4nMOviu0bF6N8ViwkwlW6FfJmWLsNjPMMRTK+rXi0DLccpK+1LWNK0nWAEZJilDotNv096GpQRnEEj7tBH/3YmlUnSa+wUjybsCNPzz+PAnQBTNAFuWGPeaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr; spf=pass smtp.mailfrom=sartura.hr; dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b=qHGBdf+Y; arc=none smtp.client-ip=209.85.219.42
+	 MIME-Version; b=a3BDeCkWBEziVtHzt1eBIFBu7S9rDyLQqR9Ysnmv4Ho2Y8OSOk4FtwBNJImRNFCDqU+JvthzNuxgcgxzOgn3Ubl5DY1flfWiXQRvslUXVenCRxv+E5vROYvHmSgrmzuYzao2avKkBLm7ycWqk/p0jRRebAIMEBBvEY081ZCX5Ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr; spf=pass smtp.mailfrom=sartura.hr; dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b=y6ceaVp2; arc=none smtp.client-ip=209.85.161.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sartura.hr
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6ecf99dd567so22396396d6.0
-        for <dmaengine@vger.kernel.org>; Fri, 13 Jun 2025 04:41:58 -0700 (PDT)
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-610dfa45fa2so1151363eaf.2
+        for <dmaengine@vger.kernel.org>; Fri, 13 Jun 2025 04:42:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura.hr; s=sartura; t=1749814918; x=1750419718; darn=vger.kernel.org;
+        d=sartura.hr; s=sartura; t=1749814932; x=1750419732; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Gog1CrvxeaBvJs1XxgKi+JJwPn/cN8uX820mkK4YWuU=;
-        b=qHGBdf+YjtcW4VY5lZTmf053Vg490Q4jam7CAqIXI8Ly4eTAIxvAiU2lz3NmHvEPBK
-         PHlo6RcyJIRFBYVBa1kYLG6z9NjqOdC/coMqD1/VgzkkNp/KFqBIJQV4wGWCu0DeBuYE
-         EzyUyepGwVe1TmA4XYFbsEcfjwxmKj8EXHyaroZ3XUIslxIX6I/QP/F276iOpl9T7gP7
-         WBRoGLkhNcOPIcZ7HuNqRRzrpWzmZVFn96Ej/uHYOXFIH39jmJt6p19YEX9xULozQQjW
-         sFkDMdXUNogsPypUwxUuTWDIt/0tTtj5thFVWSnh9awILgD/7QbnGrRy8tUNHx7KygMz
-         vAWQ==
+        bh=PE5/rsY41g/vAp/0hcg6OhOgOrChXE3RFe9mIYZZ5WM=;
+        b=y6ceaVp2CQcBou9Cp4Y5oNH0xtPtDgIeDv9QAP0Sn/WJFUywu4fOWBXjGxAIl2nvcg
+         QktQReL8/JROek6VZ1O7cDxCPThbPChtqnvE3xoJ+eF4DM5rI4NYWczLBafDWsl2UVWp
+         Ugr/oqG+VpiO6NA4GwSlMBAajYAN5g1O1/vSAGnfCMoBieaCfpCTDhWEBLJU9jsUJVpe
+         /xQfBdY3ol5KNbnfB0kgis6qGHrtePEuePTjrVKg9uNXvzQ2aMcRzFaVYYF2fMBuvtyP
+         /dZ2TCswCfssYbQ34tClHs4/tRVpE8R+7APjPZu/7RzqX9oAzPPx0my9Q9Unrv+Lp627
+         AFGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749814918; x=1750419718;
+        d=1e100.net; s=20230601; t=1749814932; x=1750419732;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Gog1CrvxeaBvJs1XxgKi+JJwPn/cN8uX820mkK4YWuU=;
-        b=Ay3xFqg2vUDxbZmi2HR27AYghvApa6KapitZRQls/4STuoNe6MgXH3V+PynPpqU9JR
-         +kKOkMD7lSkPT+PsKTK+kpCIMmXB8BdDZ7Qe41UMVVivW8/AwBogrytJIRbaidC+Dk90
-         zI+K0XqvmxK1SIzNMJBxpEHKGw7ptkQ6gvBsqyfAMeE6omgZkn522kkYfvNU0I3IrVAY
-         KihrEvLe3fHtONrL3DfxoZoBBrLkGukxyfUNZSR1Fj1B6Wis9cyE/KaCoS6DzBq0yG+7
-         9MAyhb0DhMfEFZo2Og4aUx4TEiRbRW7oG2Ln1AUHtYbVXYK5/JFJ5OrXsogL6EXgU9Ep
-         c1uw==
-X-Forwarded-Encrypted: i=1; AJvYcCW2v1vZk14lImkLH6DixCjgi4y7w1ZgZHKJJoYiAcqsYwiSBmSfNGBVUhSL1ktzox5/CQSe8lRBlvI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQiERmtiWBFx4Q/5CtzGsTCVAAiuYi75irG1ijRcod3N+0xllZ
-	zvYpiZAY9lHLNcibyt6jqGmwDMDxTcS3o4PSjpHmn9MneCbHHKczSRCszAG4L8Ei5jc=
-X-Gm-Gg: ASbGncuEjGRoI0A/by86mnIdxWTacmBFHOTbZ6epjhc6Fkp/v9RTpZo1UYhHVJhci1R
-	kEbd/zuPh8CVWu4xGc/y4c4fYKLl+YPJC6AZ763a5r7jJZbaSnwG2d4dIORpxc9BljUwsvNiPuR
-	pMmqWQakUZZrivsZCKMlLpDiDZ+UyBgOxruy2gapc0tPiIXNw9hOtp3M0Ut3W89R2t/kB0xiufx
-	JLM3fIR8OScEwxAGdxcgMdLmQtpuLVtfGKEuKpWnOhVmd2zKB6MtUJOK7EjFY7R/PCjLHko4sNf
-	LQStofCFc1+/lMrl7exqrV0fqiKY4jgXUNCvAWZWa0vtAjiUYnUf35qYR5WiroMHhZzGaKthKmY
-	4JU6RgzrPfnj/FIZwOA/VRw==
-X-Google-Smtp-Source: AGHT+IHFfRslU2JdUQwTEst4+2qv7pFwoUnipsx+0jTm3bc3ZWeEjmqIo+cvUGJbAhVMc0O3WiescQ==
-X-Received: by 2002:ad4:4eaa:0:b0:6fa:cb05:b455 with SMTP id 6a1803df08f44-6fb3e5fda72mr39185896d6.35.1749814918080;
-        Fri, 13 Jun 2025 04:41:58 -0700 (PDT)
+        bh=PE5/rsY41g/vAp/0hcg6OhOgOrChXE3RFe9mIYZZ5WM=;
+        b=mbl11YaAVU4V0WIYqUw/WLXS7g8ablqbiA0An6WritALVaOgsnZusX6UuRwHdfZBJJ
+         P7BosExSevpztq0tL7ygbaxoxdwV45z9twtbG6WwpZwQSxDk1m5HNzQh4UyxQuw2eAch
+         5rl2KdMSqoNNK6yy1Dg8css4Xf1+/Ynk15w82SB9eVzEJvMzFTQ1lPYVyqUvRmsliYfm
+         FoAG8NV6jhvdDTNz4fqMr7OzqoN978XHFfhq4IQ9+m5iR396ynEZaHwdDCmF/bnJW6zS
+         P1Q/lvT9u2gDodFIMkaDp6AA2ZtLYts23uYc9u/Yn34sSErQgpuN+uUttw7NapaIRZZ/
+         401Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXE2jFmQWoUyR5l85RA7/gJ0EQU5fCXs5F+vBobas6d75NVKJ763sDRhnSnfgzYj7kAMBFaQbioJ4w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywz5AETDoD3aB1hp5VlplH1IpgjmwTqLE15ur82QFst9qODP38+
+	uzVPyZjxMMzdWRU6R2KuuMUThY7WnCPzWszne4ixadbVcYx3th8UR7uI+upiyuGCiUugPzB6CE8
+	Rd3xJ
+X-Gm-Gg: ASbGnct2EzjMysKkWMybHo9YUhy+TnUKnzuLwvLgdpGRltzMvIjig6d+mtkkl+b9Hdi
+	AUbMVi0YJkZx3AxyySKTz9Pgg7Skq0xJXp9YY69DVxDZivKMnKQrIx1wXma7uHjEPp/NmWXCe+O
+	nZHvoYxRAQBhNjqK69GQUHZJMxpi4+GqPGOjKaMGib7+lizypbwPTXmGJ3t0b7MGAkfkL+xdosv
+	PxQhDGTueNDWkuYqQvNfrQ1L6MAN9uDZisqVA6qjs55KdbesJyYDaF/ADYmD1cfI+Nlu/ydN7lA
+	gbZ/tBwRf7+A8XIsqkVEnv3Pe9XOuKuA+wBMOCN6XYyZ7Mb1ubh1g4wdYzt9U47Po0UC8HIRQ5X
+	CDGNXKRD//n+YdSKlC95FdA==
+X-Google-Smtp-Source: AGHT+IF3wVYZI/s3wM1PNe5izmwye5C2dxIzh460VAl75DrcM6tXXLw5OFqnGApeHtjQqkaMBAsXNA==
+X-Received: by 2002:ad4:5ce1:0:b0:6fa:eaf9:89f1 with SMTP id 6a1803df08f44-6fb3e685f23mr33483696d6.44.1749814921454;
+        Fri, 13 Jun 2025 04:42:01 -0700 (PDT)
 Received: from fedora.. (cpe-109-60-82-18.zg3.cable.xnet.hr. [109.60.82.18])
-        by smtp.googlemail.com with ESMTPSA id 6a1803df08f44-6fb35b3058fsm20558206d6.37.2025.06.13.04.41.54
+        by smtp.googlemail.com with ESMTPSA id 6a1803df08f44-6fb35b3058fsm20558206d6.37.2025.06.13.04.41.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jun 2025 04:41:57 -0700 (PDT)
+        Fri, 13 Jun 2025 04:42:01 -0700 (PDT)
 From: Robert Marko <robert.marko@sartura.hr>
 To: catalin.marinas@arm.com,
 	will@kernel.org,
@@ -94,9 +95,9 @@ To: catalin.marinas@arm.com,
 	arnd@arndb.de,
 	daniel.machon@microchip.com
 Cc: Robert Marko <robert.marko@sartura.hr>
-Subject: [PATCH v7 1/6] arm64: lan969x: Add support for Microchip LAN969x SoC
-Date: Fri, 13 Jun 2025 13:39:36 +0200
-Message-ID: <20250613114148.1943267-2-robert.marko@sartura.hr>
+Subject: [PATCH v7 2/6] spi: atmel: make it selectable for ARCH_LAN969X
+Date: Fri, 13 Jun 2025 13:39:37 +0200
+Message-ID: <20250613114148.1943267-3-robert.marko@sartura.hr>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250613114148.1943267-1-robert.marko@sartura.hr>
 References: <20250613114148.1943267-1-robert.marko@sartura.hr>
@@ -108,39 +109,26 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This adds support for the Microchip LAN969x ARMv8-based SoC switch family.
+LAN969x uses the Atmel SPI, so make it selectable for ARCH_LAN969X.
 
 Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-Acked-by: Daniel Machon <daniel.machon@microchip.com>
 ---
- arch/arm64/Kconfig.platforms | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/spi/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index a541bb029aa4..834910f11864 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -133,6 +133,20 @@ config ARCH_SPARX5
- 	  security through TCAM-based frame processing using versatile
- 	  content aware processor (VCAP).
+diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
+index 60eb65c927b1..3b0ee0f6cb6a 100644
+--- a/drivers/spi/Kconfig
++++ b/drivers/spi/Kconfig
+@@ -145,7 +145,7 @@ config SPI_ASPEED_SMC
  
-+config ARCH_LAN969X
-+	bool "Microchip LAN969X SoC family"
-+	select PINCTRL
-+	select DW_APB_TIMER_OF
-+	help
-+	  This enables support for the Microchip LAN969X ARMv8-based
-+	  SoC family of TSN-capable gigabit switches.
-+
-+	  The LAN969X Ethernet switch family provides a rich set of
-+	  switching features such as advanced TCAM-based VLAN and QoS
-+	  processing enabling delivery of differentiated services, and
-+	  security through TCAM-based frame processing using versatile
-+	  content aware processor (VCAP).
-+
- config ARCH_K3
- 	bool "Texas Instruments Inc. K3 multicore SoC architecture"
- 	select PM_GENERIC_DOMAINS if PM
+ config SPI_ATMEL
+ 	tristate "Atmel SPI Controller"
+-	depends on ARCH_AT91 || COMPILE_TEST
++	depends on ARCH_AT91 || ARCH_LAN969X || COMPILE_TEST
+ 	depends on OF
+ 	help
+ 	  This selects a driver for the Atmel SPI Controller, present on
 -- 
 2.49.0
 

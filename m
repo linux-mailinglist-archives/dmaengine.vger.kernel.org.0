@@ -1,252 +1,240 @@
-Return-Path: <dmaengine+bounces-5469-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5473-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8CC5CAD9B48
-	for <lists+dmaengine@lfdr.de>; Sat, 14 Jun 2025 10:38:06 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6ED9AD9C8A
+	for <lists+dmaengine@lfdr.de>; Sat, 14 Jun 2025 13:41:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D5BF53B8E7C
-	for <lists+dmaengine@lfdr.de>; Sat, 14 Jun 2025 08:37:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BCF9B18958F7
+	for <lists+dmaengine@lfdr.de>; Sat, 14 Jun 2025 11:42:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 040B91F4CAC;
-	Sat, 14 Jun 2025 08:38:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49C6D2C08D2;
+	Sat, 14 Jun 2025 11:41:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=dram.page header.i=@dram.page header.b="SPrAeDlN"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cwbLS/iJ"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from kuriko.dram.page (kuriko.dram.page [65.108.252.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 362691F4295;
-	Sat, 14 Jun 2025 08:38:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.108.252.55
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749890282; cv=none; b=p04QUbtK4SzpgwmMN6cvM86WwwMLMtK/QUCnUrL3VEyJW4G1S01JKY3f7yoPCH6SPQcyL1+Om0rb7hoX4ed+9XzgPkuR5joFVq1gCDbBVUUpb+8E7cuV2UqeP6rvCeQA0tGlW0/sGdM94oWvdckyBytMznC76c4vbZMq4i0d5LE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749890282; c=relaxed/simple;
-	bh=QmVJFUSgwhoO26kXAq78Til/4V6ltLSDjxI6LJFEZPc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RREzOY/w75Ur/Jl8YEm8lsF7dURLYyCb8Ap/UBPUBBDTGj3P8tGaOa9aq+vMncQt8R3/CSHKAxO0JDcGMfW+HBtFR/QkQ10PUa6p+IgdFMBcbd9A15HxwHaCY2gPbINAe+l6NCPAiqLyy34/OsoLcAd0YXnGCfDNmafVhzBxUjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dram.page; spf=pass smtp.mailfrom=dram.page; dkim=pass (1024-bit key) header.d=dram.page header.i=@dram.page header.b=SPrAeDlN; arc=none smtp.client-ip=65.108.252.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dram.page
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dram.page
-Message-ID: <2496104d-8eed-4d20-bfef-84beb8c4488f@dram.page>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dram.page; s=mail;
-	t=1749890278; bh=JfoqOGf4PRFQHFFeAQ7pJGRWNKKuIJYUM00ZQiFU31Y=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=SPrAeDlNXmaoNuoai8gQ+4GYWqXi7SHVmV5JLzzmw6Yf0BsBqvXfAbxy9HnnkmagZ
-	 rs86x4Sm1BQ0wmGBWtav/H7Eo6niWBKq/FW5bkzcEjx8Dcv0kO4Li4Abqbp9Z64m5p
-	 49C4Byrwroa4C8Kz7xjtQJEBAmFSvZuqkfCxaftU=
-Date: Sat, 14 Jun 2025 16:37:45 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B46227BF80;
+	Sat, 14 Jun 2025 11:41:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.19
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749901306; cv=fail; b=C0ZSLLejxQEeybrQxBjWUK1T+Ux5XepTLCCLfdJm7XGvjAdyU/JG7NsEZakqKQ5ADMWJusWM5Tj/pAqIU7+m7W1KZHIcjp2CJV+zmzYCBaUPpQhwC94I1WC0HCkg2daVCf0xWCsGa/v2adazFknREuNpXWOIHIGzWDHt79OjNkQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749901306; c=relaxed/simple;
+	bh=x7MJ60hNWo3nG4ddeSTVH6FhNX/QnJfxyR/Mj00Wn04=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=cJiVTnXKhYF3rDNCp2FNrqDH+S01alnfWh4LdP7gCyte+8pCr7pa1oycvBgj1S3639S8k01RdXt6PQlCyucYpraBlEwG6uVAUMEAK5Z0QIbGV3S7s4qp5/znFsMTz1lwEciU1PApRbMG6VMBcPlEWoW+k3uY3nOJswy86oStcHc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cwbLS/iJ; arc=fail smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749901305; x=1781437305;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=x7MJ60hNWo3nG4ddeSTVH6FhNX/QnJfxyR/Mj00Wn04=;
+  b=cwbLS/iJsZd/TxSJ4zAB7EIavP5ILcalPT92wNIytXSuQqQ2791WcONf
+   xqkpRQPD4+AImmHA8KxspEUiTSTeJBqzkiFydUhlLblOHMMUkCENfiGVH
+   AZ84XTTV1OUf4ljOWRG2KXSbxAYdu+ZZUSW6VJxYC7+7QgdXxXnmInX9g
+   nluq/e2asjkIjDB8ol9dekEYveU2dEF2JuZbymyQaPu7EEwHRE4lmpu1t
+   VEkAxHPBbhWWoIYhm0Gt1Uy7FB5hZiLw0egi8SpsDGvvzn75w+M/znNa4
+   tiKbHikpglUOU6qqnLNd0kO7Lkeh8BAi4UoKr2miTrhKZ7QaulX90UPxh
+   g==;
+X-CSE-ConnectionGUID: dE4UWPaETcGpyCIMp+iibg==
+X-CSE-MsgGUID: Wbk7mt/ZTceBvsXdmWB0Rg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11464"; a="51982078"
+X-IronPort-AV: E=Sophos;i="6.16,236,1744095600"; 
+   d="scan'208";a="51982078"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2025 04:41:44 -0700
+X-CSE-ConnectionGUID: v2hr28xvRQitQpd05nIeHA==
+X-CSE-MsgGUID: XvgKH1nkQQuPx27H0Thq9A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,236,1744095600"; 
+   d="scan'208";a="148951610"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2025 04:41:43 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Sat, 14 Jun 2025 04:41:42 -0700
+Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Sat, 14 Jun 2025 04:41:42 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (40.107.244.88)
+ by edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Sat, 14 Jun 2025 04:41:42 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XHxVkY9HAHVj0fL/YVLqkThyxJnrl5ou4URrsKP0mCIWYG5l2m8gvb60nFoowGC/X6XigeDsb+fHAZTUsZ5Xsx03pNgEHSR7h26sKx/8Z7RHDM1WsLhyXR7iPN0UxUjLe8ea0F8frEyroumfbHFR4gLTI5gfR3OmkO+P4ug206EoXo0aQLunMhjpB78fU+IuBtRzFGVYpPBPqlwL6Y6JPDuGo/eXdJ0d6uuUDw0/5ydXrMSC6lixcmo4dftudO7MWiKQEDcXQYFY24dNb+xGT8ehDt4xRDc1LBy1mdt5afD6CpnKdW7MyVBWB5O9AkvNSPTpG72lL8JRbC2aCWxv2Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JeQ4QiEN2BNY6T/HvgrGs6zRfuz/Ro4v6OAEEsMeDSc=;
+ b=CImgfBqYqWw82E5eZ/mijr7mhwmNqCkJtmV9lRfFI0aa1ZLtl6DfXr3UWu7xov+ALh7xwoe4Knf/EB3qzMvtb6i7/BJLbyAc6WaU5oyGL3S/rGmUX9sVXQn3ey6mZcfB6wUx+UtQBWgcjTil3TBXZiZkYT4FogzYFBAhGojHGo1Gb+YV4o3BuEZ738WjORbGMw5/UDNklBSrmdY1ey4MVYWoTNiDc/39yhBWiwmhuY9DBcxqLoyCv+h4NTGo9mEP/SNr1nGa7dASKLxN0fsqNrI6PpfNlh3AujJ4j2UPYGdxgHYT2CH2BTqRNa2HQ4Dt2mjh3MOJeYOkdnj8uzIPMQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from BL3PR11MB6363.namprd11.prod.outlook.com (2603:10b6:208:3b6::5)
+ by IA1PR11MB6371.namprd11.prod.outlook.com (2603:10b6:208:3ad::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.19; Sat, 14 Jun
+ 2025 11:41:22 +0000
+Received: from BL3PR11MB6363.namprd11.prod.outlook.com
+ ([fe80::6206:bcb:fd57:6467]) by BL3PR11MB6363.namprd11.prod.outlook.com
+ ([fe80::6206:bcb:fd57:6467%6]) with mapi id 15.20.8835.019; Sat, 14 Jun 2025
+ 11:41:22 +0000
+Date: Sat, 14 Jun 2025 18:01:28 +0800
+From: Yi Sun <yi.sun@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>
+CC: <vinicius.gomes@intel.com>, <dmaengine@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <gordon.jin@intel.com>,
+	<fenghuay@nvidia.com>, <anil.s.keshavamurthy@intel.com>,
+	<philip.lantz@intel.com>
+Subject: Re: [PATCH 1/2] dmaengine: idxd: Expose DSA3.0 capabilities through
+ sysfs
+Message-ID: <aE1IeLwIovqvj4KV@ysun46-mobl.ccr.corp.intel.com>
+References: <20250613161834.2912353-1-yi.sun@intel.com>
+ <20250613161834.2912353-2-yi.sun@intel.com>
+ <50e151ed-af26-49f6-86c8-ebb7b1ad43ca@intel.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Disposition: inline
+In-Reply-To: <50e151ed-af26-49f6-86c8-ebb7b1ad43ca@intel.com>
+X-ClientProxiedBy: KU0P306CA0061.MYSP306.PROD.OUTLOOK.COM
+ (2603:1096:d10:23::14) To BL3PR11MB6363.namprd11.prod.outlook.com
+ (2603:10b6:208:3b6::5)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 5/8] riscv: dts: spacemit: Add dma bus and PDMA node for
- K1 SoC
-To: Guodong Xu <guodong@riscstar.com>
-Cc: vkoul@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, dlan@gentoo.org, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
- p.zabel@pengutronix.de, drew@pdp7.com, emil.renner.berthing@canonical.com,
- inochiama@gmail.com, geert+renesas@glider.be, tglx@linutronix.de,
- hal.feng@starfivetech.com, joel@jms.id.au, duje.mihanovic@skole.hr,
- Ze Huang <huangze@whut.edu.cn>, elder@riscstar.com,
- dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
- spacemit@lists.linux.dev
-References: <20250611125723.181711-1-guodong@riscstar.com>
- <20250611125723.181711-6-guodong@riscstar.com>
- <2b17769e-2620-4f22-9ea5-f15d4adcb27b@dram.page>
- <CAH1PCMaC+imcMZCFYtRdmH6ge=dPgnANn_GqVfsGRS=+YhyJCw@mail.gmail.com>
-Content-Language: en-US
-From: Vivian Wang <uwu@dram.page>
-In-Reply-To: <CAH1PCMaC+imcMZCFYtRdmH6ge=dPgnANn_GqVfsGRS=+YhyJCw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL3PR11MB6363:EE_|IA1PR11MB6371:EE_
+X-MS-Office365-Filtering-Correlation-Id: 73678bf5-d75e-437a-b455-08ddab3862a4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?U3JBMmNuSGIwZkFraUkwOEFZR1BYa2hXZEJhQ3RTRE1FMy9PdHpWbGdkRWVm?=
+ =?utf-8?B?Y21Cb3BFVHJQaHA3YnNLQ0dKYXRZRVJ5RkJza1l1cGVNc0N3U0h3TFBvWUwy?=
+ =?utf-8?B?OExxK1g4UjJHdllxVCtBbUFGY2kxTEVBYlBRRWE0M2NCQ2JHYXBTNjRwVUMr?=
+ =?utf-8?B?Vkl6V3VzS1pYSThmUWpFellWZ2FxYmticlJ1SVFQblBucjdiUUZJdFRQRm80?=
+ =?utf-8?B?c3g4UVVGd1VYR2xGNU16TVpLTndJenZWdkVYb0pSQUxZcjdjSG9QQjNYWlBZ?=
+ =?utf-8?B?TkNUaUVGRmNhYy9Cci9HZCsrVU5lQWlrZWs0cWNSZ0tuNTZYMjgxVWRKNkJs?=
+ =?utf-8?B?Z210dmlSTUN5cjM4Skltb0VjRXlQalZMZE5tL2Z0MWx5cWd4ZlhtcnE1RVRG?=
+ =?utf-8?B?SFNBcjNIZ1VvdHpNY0UzbnVUZXJUM09HaGFiV1ZRL1hJWGlIcWxNU05hV0hM?=
+ =?utf-8?B?OTJGcExRWGJjTzVPM2kyWllzRTh4OWNrWjI0eHlhallZT1J4S2Fkekpwa1dt?=
+ =?utf-8?B?T0pOWk1ndkNYMXRjRUlJV01IUDFXSm5CUHBTa3gvcGNnNVlMbVYwcnJCSWF4?=
+ =?utf-8?B?bzlDRmw0Z25nRlpndDRjQTJSRHdUT20rb1ZnbFdoWS9ncjhlbWN4dVl0cTQw?=
+ =?utf-8?B?N1lRck5Pb1pPcndaN3VUNEV6dGdqVWhTK2VjZmU5c0pubWJ5WGZ0RmxpeDIx?=
+ =?utf-8?B?Qmx2ano5cU9FZEVRZkFEVTdsN3p4b0V2MkN3MkIwbjhOSXFTZmtNYWVBR1Uy?=
+ =?utf-8?B?YU43THVGVlh0a1dzRTZEdkFzQnkzZFY1Uk9qWkllK29uSGVNTzJIYTR2aGRy?=
+ =?utf-8?B?a1BLbGtlaEt4UVY5Mlk1dml4M3ZCY1lLVythc2JZREZXYmhxNUdHY1l6amd4?=
+ =?utf-8?B?Q2oxRnZ4V041ektaQVRMaFBxTndsRFFGUVN2L00zT3NoNVVKT1dqSURranRK?=
+ =?utf-8?B?SENWMGpBYUdjWmI2bTczemRkcnNiSldJOHRQSnhmRmtQbDliVVp6TkVZdnpF?=
+ =?utf-8?B?dS9tVEV2K3B6NE83V1pxSVFZOG1nSWpRKzQ3SzZ6UWxQcWRoZ1NPSlA2QkVo?=
+ =?utf-8?B?czRKb2JYSldZOHRKUlFoRi9xSS9VaFVtLzVpeDQ5NThnd3NGL0R4SitFZGxI?=
+ =?utf-8?B?VGxFTjg1alA4T1Y3UlBNbm0xWi9ya3hGbkFQVHNJeTlNaW5QVmZXYkw0d2d5?=
+ =?utf-8?B?OUdxc3gwb1pBdHZmWXJNcVVJUUY2MzB1OEFMUVhGdXJlNGMyVzVKMG5xN3U4?=
+ =?utf-8?B?b2dLWXhKazlRemRQZnNFQXFmd2c3d3FZVi9aVzNSbjVYbWZWNlR2STFQZnRk?=
+ =?utf-8?B?am1CN1Q1aWQ2akUvazYzZUY4aUdQZDUraVFZaWsxSU14OXBoNVduRm1Ta0ph?=
+ =?utf-8?B?QlNuN1hzWS9HTks3TjhtcGtBNFNiOE1IZ2JmZXJrQktsQ3dYUzFvUkdWblpk?=
+ =?utf-8?B?SHJYY0JiV1Yzd2lreXVRTTVyaFFsaVYxWC9hTkZ3THdWcGhXSjdiVlZMWWVF?=
+ =?utf-8?B?S3ZHdzQ1elF5YmJ0ZFFETnJUUEIxM0JyRkgvVlZVMEpDOWxRV0NtQjJheEln?=
+ =?utf-8?B?dldVWlVUMmp4cE9vWDBQK2pRckRnd0NpdnUyeU5vQlBDWEJHd2Q2b25uZzRw?=
+ =?utf-8?B?bWtCNkpuZ3hHSzRXSlYvYUdRNTQwaU5zWVpDcW96MWVGUTNWZ0VjaWUyTGc4?=
+ =?utf-8?B?OHZkRTc4TklhMGZzZlo5UTU2MVVqOVNGVFhWbUUvUW4xVEpEbEhlNXdoTHFi?=
+ =?utf-8?B?NndhdXJiZ0lrMVo1cjN3cUpESFUvOFpFWUgwZjNKcDlHWWdoaWxaZEQ3enIv?=
+ =?utf-8?Q?fOvP4wR/FrHqKtL/RdKO+T/QiOP5LKK/HgwxE=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL3PR11MB6363.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?L0JFNXYrejRwS3hrUUZSeEEreXU4SGUzSHpybjR1Q01QanBteE5pRzhxdnlZ?=
+ =?utf-8?B?OU9KTGhhUGphTnRxWlB5Q3ZvUWI0bTBTTTNBY0NaZXIwSStuckxrcjNmQ1B0?=
+ =?utf-8?B?Zzlvb2pjbTFBZkI4OExjeHZhQ21FY3pHb00wM2JmbmJUZWROUDYvY3MrY24w?=
+ =?utf-8?B?NmFPbmZndWxib1d3VWJPRm4xd0VsNlovanhpYnlBZXh1cTJid0ozMDQvNnQ5?=
+ =?utf-8?B?SUV2Vk1sOTFQNkFjendwc21WNm96d251SUkyRkw0MzhjYmVSL1EwYlZpRlNY?=
+ =?utf-8?B?SENDNXVTMS84NW5mYVZ2VU9UZXRUeXJJWnNUU0o1SndVVjZ0azRhODJoZ0xD?=
+ =?utf-8?B?cjVlOUtiRWY2cU1janhabkRQaXVCclNuN0dxWjJqeVBvWEc4WGRLOTlKYm9O?=
+ =?utf-8?B?d3JlVHdyLzhyeUtWaDFDcEJWQ1YyeWdZdmdZVDB4QjNYTjd5MG1PSGNQazd4?=
+ =?utf-8?B?bGsydEpzUXhWWUJuTnh0SlQzQURwSlZrU2VINSthV1VUaEhxZjMySlA0V2dv?=
+ =?utf-8?B?Rk9iZ0tJNW1wbzJ2L2ZNTEJndCtjRVdPYmFzUHg3eE9yRncvTXdxSDRxNlk1?=
+ =?utf-8?B?NWRjbHY0N29zMlF0VmtReS9la2VtN0NQUnpLWjBCdFcyY0RmZVZTZWh1Y0JP?=
+ =?utf-8?B?MkVEL09Wc04yei9oKysvRURZM0NtelNLNnZ1QTdCUjN4OW9wdm5TY0F5RXA2?=
+ =?utf-8?B?TlIwbXpTL01aOExHdjB5ZCtlbnF1TXlXbkJqcmVxcTFuZjRsSEQxUEtNV3o0?=
+ =?utf-8?B?RDhQTGl4VVhTWDZlenhzZnhHeExPSWQ5alg5K0NGc3ZKZVNnN0d3bVVueUc1?=
+ =?utf-8?B?OVF6dlk3Q2FFeEI5UlN5VUNiWTRKRjJqTTNScnlzTEFxVkNYUzF4U1d6N0l5?=
+ =?utf-8?B?dVh3bDFhODQ0MEtBSkc5SEQ5VnErMnJCMFU3WnBXS1ZoTmR3SWhnMlBaUDlq?=
+ =?utf-8?B?T3RWa3dZbTNLNkJBYnNEbnltRkd6OUIzZFZ2clhlUjFvSFQ0SzF5bW0yV2Vj?=
+ =?utf-8?B?R1BRWnd3L3hHWHBZa3h1T2FFL3Jsa0Q3QUFBUjRJU2hmcXNUbFBiVERCVkcw?=
+ =?utf-8?B?L01QeTgyQWs4Z0ZYYnJwLzdqbzRxaGs5SFYyOWJURktCSlVrT1EvN3gyOHF2?=
+ =?utf-8?B?Lzcxem5ENkprekh6dlFQS2lSTUp0b3ppZDdZdGZ6bVFYV0d6ZmUzVHBCSjd0?=
+ =?utf-8?B?SjZkMTJRekVkVlB5VXBMN1ZiUk9RSHdBNGlEK3g2Z0ttQUE0UnFmOG05cFY2?=
+ =?utf-8?B?eEphZ1d1N0puOGY3QXVDZFplNFhXdE1CSElEaVZWUTBnb1IvTUJBc1ZuWkhO?=
+ =?utf-8?B?eVNJckg0U3I2cEZXc1BwRDNsRTdGR002UDBhbzc2NDVieFRXaEVBYVdJQmtK?=
+ =?utf-8?B?cFBsVFdPblBHV0J2VzJzRGVuYkF6ME80ZlAvM3VvVEo2MW0rNDEyUjdWZUJy?=
+ =?utf-8?B?ai9zVEZPMWZ0Yy9QL0JxNUlEby80UUEvWTE3SDQvMmtNeUhrcVVia1Iva3RW?=
+ =?utf-8?B?aWx5VzBScEFMNS9CdmJ1N1pFRFBXWUdrclhtOUYvRnZpQVRTR1VOK0pWWHpS?=
+ =?utf-8?B?Zkd3SHN6S3hTcitsL3VhbWNTTHZLeUY2QTU5ZDFlUW9HZmUzTGxJOE52WGFG?=
+ =?utf-8?B?RFF6bG4xMnVWSExpM1dPZjlpbEFqMTJia3Faa3RxYWhTc0t3bXoxR2t1OWdU?=
+ =?utf-8?B?ZFZxRXhld0R2QkdYUTd0NjZzK20vY1piNXpDMzEwVDdzU29UM1VycDNjZjJO?=
+ =?utf-8?B?L0VNR0tHaGl1RGxtZXVIS1hvN0NGTUVic1owTjNkYmZPUWpjNEtYK1VIK0VS?=
+ =?utf-8?B?a1pObStaNzcyQ1BKQVVtYkU2RzNUSzlrSXdQZ3U1ai9DNWd6dGdWaUQrbnlC?=
+ =?utf-8?B?aTZCNTNJVlArWmw2TmhRQnNBR0l0aVZCUnR2WGZPMG54L0g3aEFDa203QzBk?=
+ =?utf-8?B?SlpDM1pTaUh1Tnk4OWVsRFVFUUc3RUl1cXNLbXpVcUs0Y3ZrckFKZ1J0UDhq?=
+ =?utf-8?B?Lyt2b2Z6RDJlUDBKclRXQW9nSFNuWVJoTWZGOEp1S01DT0dCek9LMFJJVUxm?=
+ =?utf-8?B?WUkxZUQyUjdzR3FSMTkxeWp3Nm5WRmo2QmlMdGlKVnJLdGU5RGtkblR0cnJu?=
+ =?utf-8?Q?7AqDH7RzLmg/C6YYHqFbDDKg+?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 73678bf5-d75e-437a-b455-08ddab3862a4
+X-MS-Exchange-CrossTenant-AuthSource: BL3PR11MB6363.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jun 2025 11:41:21.9443
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4sH2Emthw7mBpzFBRaOuoGC7OSyIw0jftMuJxjJjv+5sRpe7EApnCfXqmmhZfU11ZLEA3CcnFNQ8Bz8bCDkMzQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB6371
+X-OriginatorOrg: intel.com
 
-[Resent to get rid of HTML. This is my last try.]
-
-On 6/14/25 10:53, Guodong Xu wrote:
-> On Fri, Jun 13, 2025 at 11:07 AM Vivian Wang<uwu@dram.page> wrote:
->> Hi Guodong,
->>
->> On 6/11/25 20:57, Guodong Xu wrote:
->>> <snip>
->>>
->>> -                     status = "disabled";
->>> +             dma_bus: bus@4 {
->>> +                     compatible = "simple-bus";
->>> +                     #address-cells = <2>;
->>> +                     #size-cells = <2>;
->>> +                     dma-ranges = <0x0 0x00000000 0x0 0x00000000 
->>> 0x0 0x80000000>,
->>> +                                  <0x1 0x00000000 0x1 0x80000000 
->>> 0x3 0x00000000>;
->>> +                     ranges;
->>>                };
->> Can the addition of dma_bus and movement of nodes under it be extracted
->> into a separate patch, and ideally, taken up by Yixun Lan without going
->> through dmaengine? Not specifically "dram_range4", but all of these
->> translations affects many devices on the SoC, including ethernet and
-> It was not my intention to add all the separate memory mapping buses into
-> one patch. I'd prefer to add them when there is at least one user.
-> The k1.dtsi at this moment, as I checked, has no real user beside the
-> so-called "dram_range4" in downstream vendor kernel (ie. dma_bus in this
-> patch). And that is what I did: grouping devices which share the same
-> dma address mapping as pdma0 into one single separated bus.
+On 13.06.2025 13:59, Dave Jiang wrote:
 >
-> The other buses, even if I add them, would be empty.
 >
-> What the SpacemiT team agreed upon so far, is the naming of these 
-> separated
-> buses. I listed them here for future reference purposes.
+>On 6/13/25 9:18 AM, Yi Sun wrote:
+>> Introduce sysfs interfaces for 3 new Data Streaming Accelerator (DSA)
+>> capability registers (dsacap0-2) to enable userspace awareness of hardware
+>> features in DSA version 3 and later devices.
+>>
+>> Userspace components (e.g. configure libraries, workload Apps) require this
+>> information to:
+>> 1. Select optimal data transfer strategies based on SGL capabilities
+>> 2. Enable hardware-specific optimizations for floating-point operations
+>> 3. Configure memory operations with proper numerical handling
+>> 4. Verify compute operation compatibility before submitting jobs
+>>
+>> The output consists of values from the three dsacap registers, concatenated
+>> in order and separated by commas.
+>>
+>> Example:
+>> cat /sys/bus/dsa/devices/dsa0/dsacap
+>>  0014000e000007aa,00fa01ff01ff03ff,000000000000f18d
+>>
+>> Signed-off-by: Yi Sun <yi.sun@intel.com>
+>> Co-developed-by: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+>> Signed-off-by: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
 >
-> If needed, I can send that in a RFC patchset, of course; or as a normal
-> PATCH, if Yixun is ok with that. However, please note, that would mean 
-> more
-> merging dependencies: PDMA dts, ethernet dts, usb dts, will have to 
-> depend
-> on this base 'buses' PATCH.
+>Would be good to provide a link to the 3.0 spec. Otherwise
+>Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 >
-> Again, I prefer we add our own 'bus' when there is a need.
->
-> +       soc {
-> +               storage_bus: bus@0 {
-> +                       /* USB, SDH storage controllers */
-> +                       dma-ranges = <0x0 0x00000000 0x0 0x00000000
-> 0x0 0x80000000>;
-> +               };
-> +
-> +               multimedia_bus: bus@1 {
-> +                       /* VPU, GPU, DPU */
-> +                       dma-ranges = <0x0 0x00000000 0x0 0x00000000
-> 0x0 0x80000000>,
-> +                                    <0x0 0x80000000 0x1 0x00000000
-> 0x3 0x80000000>;
-> +               };
-> +
-> +               pcie_bus: bus@2 {
-> +                       /* PCIe controllers */
-> +                       dma-ranges = <0x0 0x00000000 0x0 0x00000000
-> 0x0 0x80000000>,
-> +                                    <0x0 0xb8000000 0x1 0x38000000
-> 0x3 0x48000000>;
-> +               };
-> +
-> +               camera_bus: bus@3 {
-> +                       /* ISP, CSI, imaging devices */
-> +                       dma-ranges = <0x0 0x00000000 0x0 0x00000000
-> 0x0 0x80000000>,
-> +                                    <0x0 0x80000000 0x1 0x00000000
-> 0x1 0x80000000>;
-> +               };
-> +
-> +               dma_bus: bus@4 {
-> +                       /* DMA controller, and users */
-> +                       dma-ranges = <0x0 0x00000000 0x0 0x00000000
-> 0x0 0x80000000>,
-> +                                    <0x1 0x00000000 0x1 0x80000000
-> 0x3 0x00000000>;
-> +               };
-> +
-> +               network_bus: bus@5 {
-> +                       /* Ethernet, Crypto, JPU */
-> +                       dma-ranges = <0x0 0x00000000 0x0 0x00000000
-> 0x0 0x80000000>,
-> +                                    <0x0 0x80000000 0x1 0x00000000
-> 0x0 0x80000000>;
-> +               };
-> +
-> +       }; /* soc */
+Sure, will add this link:
+https://cdrdv2-public.intel.com/857060/341204-006-intel-data-streaming-accelerator-spec.pdf
 
-Ah, I didn't know the names were already decided.
-
-However, I still think we should at least separate the patch into two in 
-the same series, one adding the bus node and handling existing nodes, 
-and another adding the new node under it. This way, say someone starts 
-working on Crypto, they can simply depends on the first bus patch 
-without having to pull in the new node.
-
-I still prefer having a canonical buses patch though.
-
-If we're going to agree here on what the buses should look, I also have 
-two nitpicks, just so we get this sorted: Firstly, I think storage_bus 
-should be removed. Anything using storage_bus is already handled by 
-simply using 32-bit-only DMA, which is the default anyway. @Ze Huang: 
-Your USB controller falls under it, what do you think?
-
-Also, as suggested the node names must not have a made up unit address. 
-"bus@1" is inappropriate because they have no reg. The simple-bus schema 
-allows the node name to have a prefix like "foo-bus" [1] [2], so it 
-should be like:
-
-/* DMA controller, and users */
-dma_bus: dma-bus {
-     compatible = "simple-bus";
-     ranges;
-     #address-cells = <2>;
-     #size-cells = <2>;
-     dma-ranges = <0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>,
-              <0x1 0x00000000 0x1 0x80000000 0x3 0x00000000>;
-};
-
-(Pardon the formatting; I don't know if the tabs survived Thunderbird.)
-
-[1]:https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/simple-bus.yaml 
-
-[2]:https://github.com/devicetree-org/dt-schema/commit/bab67075926b8bdc4093edbb9888aaa5bd8befd5 
-
-
-Well, that is the reason I wanted the bus things to be its own patch: I 
-think the DT maintainers should review these once and for all, not six 
-separate times as the drivers come in.
-
->> USB3. See:
->>
->> https://lore.kernel.org/all/20250526-b4-k1-dwc3-v3-v4-2-63e4e525e5cb@whut.edu.cn/ 
->>
->> https://lore.kernel.org/all/20250613-net-k1-emac-v1-0-cc6f9e510667@iscas.ac.cn/ 
->>
->>
->> (I haven't put eth{0,1} under dma_bus5 because in 6.16-rc1 there is
->> none, but ideally we should fix this.)
-> So, as you are submitting the first node(s) under network_bus: bus@5, you
-> should have this added into your patchset, instead of sending out with 
-> none.
-I hope we can agree on what the bus nodes look like before we do that 
-separately.
-> The same logic goes to USB too, Ze Huang was in the same offline call, 
-> and
-> I would prefer that we move in a coordinated way.
-
-I hope so as well, but "we" here should include DT maintainers.
-
-Please consider my suggestions.
-
-Vivian "dramforever" Wang
-
->> DMA address translation does not depend on PDMA. It would be best if we
->> get all the possible dma-ranges buses handled in one place, instead of
->> everyone moving nodes around.
-> No, you should do it in your patchset, when you add the eth0 and eth1 
-> nodes,
-> they will be the first in, as I said, "network_bus". I don't expect
-> any 'moving nodes around'.
->
->> @Ze Huang: This affects your "MBUS" changes as well. Please take a look,
->> thanks.
->>
->>> gpio: gpio@d4019000 {
->>> @@ -792,3 +693,124 @@ pwm19: pwm@d4022c00 {
->>>                };
->>>        };
->>>   };
->>> +
->>> +&dma_bus {
->>>
->>> <snip>
+Thanks
+    --Sun, Yi
 

@@ -1,131 +1,98 @@
-Return-Path: <dmaengine+bounces-5482-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5483-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97735ADAD33
-	for <lists+dmaengine@lfdr.de>; Mon, 16 Jun 2025 12:21:24 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 42432ADADA5
+	for <lists+dmaengine@lfdr.de>; Mon, 16 Jun 2025 12:44:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D8F4F188AAED
-	for <lists+dmaengine@lfdr.de>; Mon, 16 Jun 2025 10:21:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E647716341A
+	for <lists+dmaengine@lfdr.de>; Mon, 16 Jun 2025 10:44:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27248279355;
-	Mon, 16 Jun 2025 10:21:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="h19Cefhf"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9802926F471;
+	Mon, 16 Jun 2025 10:44:32 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from ssh247.corpemail.net (ssh247.corpemail.net [210.51.61.247])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 603FA1E8337;
-	Mon, 16 Jun 2025 10:21:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BFB71DDC23;
+	Mon, 16 Jun 2025 10:44:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.61.247
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750069280; cv=none; b=cbqx4jqZPt1FMyIYlxHzSONmDjbnSWN9KhuRj/f4JPRur2TO1Tkkg8PSM4RFWLgnxK+WvaGYq4iEkGfbPz8v21Ebux3en8DjK/DT9uYy5XwpRj2D/IJvRBru4UPkzVQQsB996v9lB53eWZ/NmDWEcrkjrjnGtQBF87xDikOcK3Y=
+	t=1750070672; cv=none; b=o3kPOsJVtUc2GdhGQPsWozhaLliXyL2e0X9+H47hvXN02pbXCkp8rAZPbvCNCV4DWwxm+iadKOKENSFmnjbWWkiw/N+5R/of39moC4wxwDZtJ6bDAOsf4kd41uUjqmZlXzO8FsC3hfydCGqrcDPtq72zXxDiHal3dtx9IfkeNH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750069280; c=relaxed/simple;
-	bh=NbJoM5LfG3qBcRohRdPVhQO3z/elUf1FtTUs4Rnoxr0=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HNODtTGtzjkixWqbukAUHSAs9BX8GKpvh5VoKY+zdFcBW0lVvDPEspfV0RguK2tK5gmlM1vw/nBh/zXHConza2MW+QiN5yww9NUChFHd+pLqEz6vSrT5r/dPyYDym4wwKtqkqTDHNGGjuc4KUQPXzhpQCoMDGj7lhqQBl578i/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=h19Cefhf; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1750069278; x=1781605278;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=NbJoM5LfG3qBcRohRdPVhQO3z/elUf1FtTUs4Rnoxr0=;
-  b=h19CefhfdfWVr2b052T4xa0BogZfmikdaZYYRFJfuiNy+CtTIJqsrDBD
-   eRzFqO5H9rt7DMpS3bJ5daE8SUb0CteTl8nYRNa8UTCRdyPweZMMV2Woz
-   /zwfJi5hTY0ApxbfXeBKuF3pludY16Q9ROTSkoPK9c/kSw6zcj3wkTOo0
-   fo/KLHcWNj/cwdsaODJROeR12ukVZuWgeqcMYZ0aCWh/cJKu3eInremIC
-   7hBPjcEnOi72U/fQn0dSFdHd3ZkP16op7T627PkFSUxFGosF69ya3kMHI
-   e7/+MlMpayQJJpJEd9Ac4FeO157UmPKSCqD0RNzmY7CDp+u2AB52mQPEP
-   w==;
-X-CSE-ConnectionGUID: NkMxLeT9QaGXvpWNNipztw==
-X-CSE-MsgGUID: 7tHYdufdSRiWVAqsQ/5L5Q==
-X-IronPort-AV: E=Sophos;i="6.16,240,1744095600"; 
-   d="scan'208";a="42842138"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 16 Jun 2025 03:21:17 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Mon, 16 Jun 2025 03:21:07 -0700
-Received: from DEN-DL-M70577 (10.10.85.11) by chn-vm-ex02.mchp-main.com
- (10.10.85.144) with Microsoft SMTP Server id 15.1.2507.44 via Frontend
- Transport; Mon, 16 Jun 2025 03:21:04 -0700
-Date: Mon, 16 Jun 2025 10:21:03 +0000
-From: Daniel Machon <daniel.machon@microchip.com>
-To: Robert Marko <robert.marko@sartura.hr>
-CC: <catalin.marinas@arm.com>, <will@kernel.org>, <olivia@selenic.com>,
-	<herbert@gondor.apana.org.au>, <davem@davemloft.net>, <vkoul@kernel.org>,
-	<andi.shyti@kernel.org>, <broonie@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<linux-crypto@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-	<linux-i2c@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-	<kernel@pengutronix.de>, <ore@pengutronix.de>, <luka.perkov@sartura.hr>,
-	<arnd@arndb.de>
-Subject: Re: [PATCH v7 1/6] arm64: lan969x: Add support for Microchip LAN969x
- SoC
-Message-ID: <20250616102103.faoc5tqp22we67zl@DEN-DL-M70577>
-References: <20250613114148.1943267-1-robert.marko@sartura.hr>
- <20250613114148.1943267-2-robert.marko@sartura.hr>
+	s=arc-20240116; t=1750070672; c=relaxed/simple;
+	bh=LgglmT9a5i4f+e3Hdc2uHkjad54ebIatzamizH+LMFE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Ob19OYCEYimNqA2cakBBJFPFTSqYxsPakCDp75ZE6yFHxAwWryo2OJE+4KccqZOSSAZHPj35JCnx1qXm/z+ur5XecmQ3Maqz4MXZ10qFcPVEf0A9j9nJiZIF6uAWYtU8hi0tXl0tymCFgZAHakTWzybQ7+/rGj7RDU9d1jwklIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.61.247
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
+Received: from jtjnmail201609.home.langchao.com
+        by ssh247.corpemail.net ((D)) with ASMTP (SSL) id 202506161844237586;
+        Mon, 16 Jun 2025 18:44:23 +0800
+Received: from locahost.localdomain.com (10.94.7.47) by
+ jtjnmail201609.home.langchao.com (10.100.2.9) with Microsoft SMTP Server id
+ 15.1.2507.57; Mon, 16 Jun 2025 18:44:22 +0800
+From: Charles Han <hanchunchao@inspur.com>
+To: <eugen.hristev@linaro.org>, <vkoul@kernel.org>, <vz@mleia.com>,
+	<manabian@gmail.com>
+CC: <dmaengine@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, Charles Han <hanchunchao@inspur.com>
+Subject: [PATCH V2] dmaengine: Add NULL check in lpc18xx_dmamux_reserve()
+Date: Mon, 16 Jun 2025 18:44:19 +0800
+Message-ID: <20250616104420.1720-1-hanchunchao@inspur.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250613114148.1943267-2-robert.marko@sartura.hr>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+tUid: 2025616184423c1b5f9bdf3a34ef1958d2b3d4c38fecf
+X-Abuse-Reports-To: service@corp-email.com
+Abuse-Reports-To: service@corp-email.com
+X-Complaints-To: service@corp-email.com
+X-Report-Abuse-To: service@corp-email.com
 
-> This adds support for the Microchip LAN969x ARMv8-based SoC switch family.
-> 
-> Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-> Acked-by: Daniel Machon <daniel.machon@microchip.com>
-> ---
->  arch/arm64/Kconfig.platforms | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-> index a541bb029aa4..834910f11864 100644
-> --- a/arch/arm64/Kconfig.platforms
-> +++ b/arch/arm64/Kconfig.platforms
-> @@ -133,6 +133,20 @@ config ARCH_SPARX5
->           security through TCAM-based frame processing using versatile
->           content aware processor (VCAP).
-> 
-> +config ARCH_LAN969X
-> +       bool "Microchip LAN969X SoC family"
-> +       select PINCTRL
-> +       select DW_APB_TIMER_OF
+The function of_find_device_by_node() may return NULL if the device
+node is not found or CONFIG_OF not defined.
+Add  check whether the return value is NULL and set the error code
+to be returned as -ENODEV.
 
-The lan969x SoC uses the clk-lan966x driver. Would it not make sense to select
-it here?
+Fixes: e5f4ae84be74 ("dmaengine: add driver for lpc18xx dmamux")
+Signed-off-by: Charles Han <hanchunchao@inspur.com>
+---
+ drivers/dma/lpc18xx-dmamux.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-  +       select COMMON_CLK_LAN966X
+diff --git a/drivers/dma/lpc18xx-dmamux.c b/drivers/dma/lpc18xx-dmamux.c
+index 2b6436f4b193..f61183a1d0ba 100644
+--- a/drivers/dma/lpc18xx-dmamux.c
++++ b/drivers/dma/lpc18xx-dmamux.c
+@@ -53,11 +53,17 @@ static void lpc18xx_dmamux_free(struct device *dev, void *route_data)
+ static void *lpc18xx_dmamux_reserve(struct of_phandle_args *dma_spec,
+ 				    struct of_dma *ofdma)
+ {
+-	struct platform_device *pdev = of_find_device_by_node(ofdma->of_node);
+-	struct lpc18xx_dmamux_data *dmamux = platform_get_drvdata(pdev);
++	struct platform_device *pdev;
++	struct lpc18xx_dmamux_data *dmamux;
+ 	unsigned long flags;
+ 	unsigned mux;
+ 
++	pdev = of_find_device_by_node(ofdma->of_node);
++	if (!pdev)
++		return ERR_PTR(-ENODEV);
++
++	dmamux = platform_get_drvdata(pdev);
++
+ 	if (dma_spec->args_count != 3) {
+ 		dev_err(&pdev->dev, "invalid number of dma mux args\n");
+ 		return ERR_PTR(-EINVAL);
+-- 
+2.43.0
 
-> +       help
-> +         This enables support for the Microchip LAN969X ARMv8-based
-> +         SoC family of TSN-capable gigabit switches.
-> +
-> +         The LAN969X Ethernet switch family provides a rich set of
-> +         switching features such as advanced TCAM-based VLAN and QoS
-> +         processing enabling delivery of differentiated services, and
-> +         security through TCAM-based frame processing using versatile
-> +         content aware processor (VCAP).
-> +
->  config ARCH_K3
->         bool "Texas Instruments Inc. K3 multicore SoC architecture"
->         select PM_GENERIC_DOMAINS if PM
-> --
-> 2.49.0
-> 
-
-/Daniel
 

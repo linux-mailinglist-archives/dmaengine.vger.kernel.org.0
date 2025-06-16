@@ -1,367 +1,204 @@
-Return-Path: <dmaengine+bounces-5489-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5490-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C4170ADB091
-	for <lists+dmaengine@lfdr.de>; Mon, 16 Jun 2025 14:50:07 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 81D47ADB42C
+	for <lists+dmaengine@lfdr.de>; Mon, 16 Jun 2025 16:43:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5773F3A35D2
-	for <lists+dmaengine@lfdr.de>; Mon, 16 Jun 2025 12:49:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 555C6172B95
+	for <lists+dmaengine@lfdr.de>; Mon, 16 Jun 2025 14:42:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3075D292B52;
-	Mon, 16 Jun 2025 12:49:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A189A20A5F5;
+	Mon, 16 Jun 2025 14:41:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Voc6QXQj"
+	dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b="BNJZ1JWv"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11010026.outbound.protection.outlook.com [52.101.61.26])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D856292B41;
-	Mon, 16 Jun 2025 12:49:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750078193; cv=none; b=jM5V1MM2yTp8eVc++1M6aOINxL1s6mvqcnYNztTfbrWrngvHvNqrcGUNsNBauuK5aeVhPxR0sbC9r6aUDJHhd1H0fz/AEPyDvyLhHUa5f1vMrYg9Bvo+qZtH2scpfc3nlLWCTYqnDLrAhHmb5i5he1AMaqHgkD9gZCv5mePhQeQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750078193; c=relaxed/simple;
-	bh=Q8hJemdXmGHoFFuY41r1vt0g1y6BjncCn1LRH7GqPsI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BUX7NtpiWTDT3tsaG6Ao/gTc3c35uIpsVDjAJzk/cKzDbP4wIY3eCZboLhcqI32OSS6G+cTDLvWhJ2R90cfKjBwoSMb2IGJJSFE7rLcks3LtHXazFqJNFQCOMlMf0rcN/tsVQ8+j4niB+3x0VNSlGNbJrbxRc8Lw3FdLm73jWKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Voc6QXQj; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5534edc6493so4791199e87.1;
-        Mon, 16 Jun 2025 05:49:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750078189; x=1750682989; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LCul4Xvo6O7bUYuZWs6HVmgajLM6k5wbxI3sUOitJGg=;
-        b=Voc6QXQjdI1o0sXnpcrBnTpDmS1nGUhl9UrnXYlwfhEZVWwCMXSA3PfN7OGsFvA2FZ
-         3/6YfZD7t4l5fjADlGCXX8LxRj7fGUBiNa+pTRJOl8W6f4BtNunSH0RZXlw+az5b3W6n
-         lC8Vc4fuYBktFXbu1n4t2uv21AkMU2w/HeYkYkmFe/1mI8VfE2B+7zoM4UqANH//jOcq
-         Z7wzI8VEGdNFH5URdOrHUj1n4baJ1eAXYhMSiySOHQeEUorTwyDqhAnYok0JTK6zp7jT
-         lFjW/5XQA/M9BLdqVgxcRSFnDTCvPKKDGXZ96i3iQicoLk+vnht6QnIOl29RqOF94df4
-         PyEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750078189; x=1750682989;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LCul4Xvo6O7bUYuZWs6HVmgajLM6k5wbxI3sUOitJGg=;
-        b=P5t9IszYt48hNz9dAEHS977wpS2ZFnVbwgIdzio8awFK3zyDqql4ym75YZYUTaa2d9
-         WACXHA4hXuG5tmYQbo3WVMOgM0xZuLONLRQeBFhUhW/I9fi5NCRAi8v++fRfkqj67tir
-         qKEybCBa8htgLEiKaufYKiNIU0ZRPahDVlcgCJxJD308grinn2eeioeifRYX0wDjuPQU
-         Zg1Z4KQZtuvasxCn+3tGG3WwZfxf1XKlXZUeckF88groEmr9RV0JHLTcKPm16gyfqI3F
-         IvLau+Q5YQI9geGWZwalrWQKCCZhZkbkf1F+VaRNxWtWCEbKZHv/cLwjqwaNbt1aJ4gN
-         BBqA==
-X-Forwarded-Encrypted: i=1; AJvYcCUfv3InRbtyR7Eo5X9aruCAAaUOGWge/hcGznEnp2e7N7FV+O+jhse3H3OiaX+NhuVrVpn+IRYGnG+H9E50@vger.kernel.org, AJvYcCXqqS5sUc0r8RS62NvqYt2qVp1vSJLZZm71sRfbqkBaHDkGdmLmMzC5NlUUxFrENMMQdS3QY9Q1rE4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZiBL+SIBNOFDhVbATgc4kEyWE26YSiWPv2zDN/f4zw2BVhUtV
-	KHe85ayu35dNsVaS7XeXtjcWIE/xTYk+/8oH9M0dI9IYCzfPsGME5T6Y
-X-Gm-Gg: ASbGnctaZwFXpfhHKGgpgG1WKI2KQZGsDH1WrjjU4cjI3BlnWeOz2Vai9ai1uDi01ME
-	tEOmnouwQUJCUZNhfCdw+wTCy1Km093u5TM08AXQFBIre0gZVT/0aETzVASoubPTWWBV0yiQDT1
-	HCZbjvs7UzJ8ROTqb2LxYAHwWpzjPy7HdX1GIpDGvsZQfelYNHxoueZI9PA2hsLz8hr4zVzORgF
-	3fiO3J/7cPx8t1ysqogOMYe7RZHSiMoqvpRK1GTuFDaETs5kaLLPlrmRJtzDWbUCGIG6orWM6Lb
-	MREN9lg55Axhg7gNWFCfmkw2wPeryMKACbawmF99Z5/GsQJvgrsXGKNxcyxp2XAkcSp3JPIqS4o
-	6nhFsnA==
-X-Google-Smtp-Source: AGHT+IH4DNDz5p5AR7aaA4sVQfeNDUHCxA8zQzFeSZOEiDkWUaZVgUqHVdeyuU7RfgKb+hsGvc00BQ==
-X-Received: by 2002:a05:6512:3092:b0:553:a5e0:719c with SMTP id 2adb3069b0e04-553b6f5ec6bmr2592714e87.51.1750078188755;
-        Mon, 16 Jun 2025 05:49:48 -0700 (PDT)
-Received: from ubuntu-2404-1.lintech.local ([80.87.144.137])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553ac116968sm1529733e87.32.2025.06.16.05.49.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 05:49:48 -0700 (PDT)
-From: Alexander Kochetkov <al.kochet@gmail.com>
-To: Vinod Koul <vkoul@kernel.org>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E84B6205E02;
+	Mon, 16 Jun 2025 14:41:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.26
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750084903; cv=fail; b=lqBTulke1gH6Z54eEHFlX+pRNWDnOMa9/rDR+hUxDc9wfo4/vTBcOAZ3VvdZ/L/A9ZRI7zbmBuY7vGNQyU7Iy2P1CMzRLp28ZXbI1Lq9KTvw83VQwyzp8GlN0KmEHFGVChNXbsDLYKOzlEcpPbtidOrsVYnLOmNJiZ2wS4VPOVo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750084903; c=relaxed/simple;
+	bh=P5QxfpH2SQ+ePckOIQlHN7L7hlG8TNV61wy2gFvvv9U=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=bwQr89Fht25xQCutrUA3szMIBHQjojnkPvUE/zBjbCDBc0I4LgWTakF0zkbNpHAjeh75iyTp8wDRbt805JSlCV07DLAljwWcSKsSD3jKTkZ2C99dUWCtHLq0KfnzJWEVW8hPvsFOaZyfc79QuF8lFdwxM7IyIn+tggxySRVybeE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com; spf=pass smtp.mailfrom=altera.com; dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b=BNJZ1JWv; arc=fail smtp.client-ip=52.101.61.26
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altera.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Nd7yYJgJOae+huGHGR9SIpTqd916wRY3s8YQXVx86A+jJXkdTUMMBslo95OwnX/2l7sg6kkzaX+KMgD+ghQsyBu4bPaOfnMdZy9gNzM9kCKgK3dOz4DvZbQghtnRL8VotNtd+eDF8npb+VmY1vWXhkCImHM61LmJNOL7MPD5FAKt6PgpPOcHKtA5WQ+yrN58fx1dERWVrTh8noEQyvZYK4e2I5SodsybdxqjlVA0LFm+N+r3Hr+L1cTBj/+h4sYwXBB0SLVU/s2w52rW0BXqlOWLSRIrwr8+Zmc26pL3XXyJzQsp5JZO9EjCB8k31P1QXNrdH7mvRiFnqRpzeNnxEw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DhzFchYlmskrjVTiNBecvi/jdO6brkxTwOA+MCsj5+Y=;
+ b=J6F8B0FtyTzt+Q92jdxNHOE5TivA/7ntNUA4TSIzm1a8M9VdUR7hEKnxShEUBi+gAi+KX9cqkFMdcRBbgRVKUm+liAGhJkpUbMU2g6y1u7etWAb9/khGzmzRq0NaTBV795rgxyKSL6Jv46UVIveYz3t0Ys5zAWhF9UEPIblMEkrBhAvbQuRIVHIxN0e/U40i1imi1TbjSLZPOAHvXzgqQ4p8LfHmTQoiRqZ5Yya7cUJsRb8dvDf2/VOoNFOVlHY+OBOlyDplhLNh33afq+kF/uXMa46nNbDD5graO27BR3y2wBupUrzSun8uQOergQ+H0LCfqvjK+LYc1KwNlwd7sQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=altera.com; dmarc=pass action=none header.from=altera.com;
+ dkim=pass header.d=altera.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=altera.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DhzFchYlmskrjVTiNBecvi/jdO6brkxTwOA+MCsj5+Y=;
+ b=BNJZ1JWvfOIKfIe+YoiiWyylDsqxPWz6YMFzIfyhqxLB9rKUrrWPQ5Y6aGzn2YHSKdWfgX4GuMegqiLvrTdHYM36H4WsBfpw2LU8aDuYzUx1haFGflQhiMSiWIkwgEbjtKdqX/07f3WWjQGUKLdGmlY+pcOZOeSeH57reHAwoIb9nZuYwS9mTcnMPfnAm+2JBLlbrwfHFc+5d0dP05O2sTF0CfrQxI4L3VhUQhI4T1Zedun6Ciq6GomOK3Hz6HPlQmpN2gbB3Q9djqNHHq5VvN6GqNH5saAEI57LDENFl5/dDzoiYlPlA5jhClZggDUzs1u2XAUWxr+6Tucri3yJkA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=altera.com;
+Received: from DM8PR03MB6230.namprd03.prod.outlook.com (2603:10b6:8:3c::13) by
+ CH2PR03MB8027.namprd03.prod.outlook.com (2603:10b6:610:280::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8835.29; Mon, 16 Jun 2025 14:41:39 +0000
+Received: from DM8PR03MB6230.namprd03.prod.outlook.com
+ ([fe80::c297:4c45:23cb:7f71]) by DM8PR03MB6230.namprd03.prod.outlook.com
+ ([fe80::c297:4c45:23cb:7f71%7]) with mapi id 15.20.8835.027; Mon, 16 Jun 2025
+ 14:41:38 +0000
+From: adrianhoyin.ng@altera.com
+To: dinguyen@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	Eugeniy.Paltsev@synopsys.com,
+	vkoul@kernel.org,
 	dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Nishad Saraf <nishads@amd.com>,
-	Lizhi Hou <lizhi.hou@amd.com>,
-	Jacky Huang <ychuang3@nuvoton.com>,
-	Shan-Chun Hung <schung@nuvoton.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>,
-	Scott Branden <sbranden@broadcom.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Paul Cercueil <paul@crapouillou.net>,
-	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Frank Li <Frank.Li@nxp.com>,
-	Zhou Wang <wangzhou1@hisilicon.com>,
-	Longfang Liu <liulongfang@huawei.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Keguang Zhang <keguang.zhang@gmail.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	=?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-	Daniel Mack <daniel@zonque.org>,
-	Haojian Zhuang <haojian.zhuang@gmail.com>,
-	Robert Jarzmik <robert.jarzmik@free.fr>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Orson Zhai <orsonzhai@gmail.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Chunyan Zhang <zhang.lyra@gmail.com>,
-	Patrice Chotard <patrice.chotard@foss.st.com>,
-	=?UTF-8?q?Am=C3=A9lie=20Delaunay?= <amelie.delaunay@foss.st.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Laxman Dewangan <ldewangan@nvidia.com>,
-	Jon Hunter <jonathanh@nvidia.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Amit Vadhavana <av2082000@gmail.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Md Sadre Alam <quic_mdalam@quicinc.com>,
-	Alexander Kochetkov <al.kochet@gmail.com>,
-	Casey Connolly <casey.connolly@linaro.org>,
-	Kees Cook <kees@kernel.org>,
-	Fenghua Yu <fenghua.yu@intel.com>,
-	Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
-Subject: [PATCH v2 2/2] !!! TESTING ONLY !!! Allow compile virt-dma users on ARM64 platform
-Date: Mon, 16 Jun 2025 12:48:04 +0000
-Message-ID: <20250616124934.141782-3-al.kochet@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250616124934.141782-1-al.kochet@gmail.com>
-References: <20250616124934.141782-1-al.kochet@gmail.com>
+	devicetree@vger.kernel.org
+Cc: adrianhoyin.ng@altera.com
+Subject: [PATCH v3 0/4] agilex5: Update agilex5 device tree and device tree bindings
+Date: Mon, 16 Jun 2025 22:40:44 +0800
+Message-ID: <cover.1750084527.git.adrianhoyin.ng@altera.com>
+X-Mailer: git-send-email 2.49.GIT
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BYAPR21CA0022.namprd21.prod.outlook.com
+ (2603:10b6:a03:114::32) To DM8PR03MB6230.namprd03.prod.outlook.com
+ (2603:10b6:8:3c::13)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM8PR03MB6230:EE_|CH2PR03MB8027:EE_
+X-MS-Office365-Filtering-Correlation-Id: a30ebbd4-8229-4f19-f62d-08ddace3e6ca
+X-MS-Exchange-AtpMessageProperties: SA
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?NXsH2kuuMeW+Ndpw79pCnFpHX/IQlbL7ZJYLi+WBHVSZrNFvQ6T00s3UQ6K5?=
+ =?us-ascii?Q?AuEUE3VEEx3yWwmdYCdxtrnQwKVlzh2USD1nsj9oKC+8/vs8nxUL6TS3sCOl?=
+ =?us-ascii?Q?6UZtLs7sXLxGTD1vdCEA3GVKJ3CC34SGMmz2QmLXk1rzQDfDFfAnlbfbox44?=
+ =?us-ascii?Q?o66DUR5JdfAHcLdcIDB0DXf/MHXbBAr3NJS2IR9RHuZPhjhGM3cczQHqGxii?=
+ =?us-ascii?Q?KWAkspJytpNLQ71f9jMKvqAnYgGdXHD6ja00vrqygkHLDBiMtXg+MNAu9Dwr?=
+ =?us-ascii?Q?6daCXxOBAUiQU0suJFfOh4KNz9LwGZVBLBffqWgntDJxCZSaSreJo9oVPl8K?=
+ =?us-ascii?Q?8pRjv7JUHOdWPkl896X8Qx9i6T3tqS4Je+95d+NUBlQWz7+3sAa5KYjXCrm9?=
+ =?us-ascii?Q?KJ6TiieEPHGvYyzyKsvHJwKDffeGu8ag5iHudNgXgXzMwPqt/w7AXNh3PJA/?=
+ =?us-ascii?Q?sv+nyiVVOcYhN1AHIVz5QZOFFy4mISyQ5+CXrNMWRP2HwRpnm8gxsB6MkBEC?=
+ =?us-ascii?Q?8XQxBZm4jswo0/YUBWe4DSggKccQp21ByKkou8981R5e4iaoOQEQrkw5l+QY?=
+ =?us-ascii?Q?pDtlaryg12CvfOEYA6akar54cKhJ+37PrQPtJFOnPBI++clKjf25es2yq1r/?=
+ =?us-ascii?Q?2KcnrZYYT8IpsLBHArsy/g2kuTJzOcAXScgzNeierrYoXoilh2rZywOWbZSF?=
+ =?us-ascii?Q?454GiFxwhFZF6vzG0VSUqLTWvEa0CnO9Nn9rmV4Ily1u+5Ig6vROyysfF98+?=
+ =?us-ascii?Q?is1DdjzhMfgZGwKF9hrbZDH0SIedPgZtHIM6/9OxFnGRKqenuz+fQoccVDS6?=
+ =?us-ascii?Q?pym0KrQzXfuDbhjbjhbHgKMwOdWttnJrmNQYyUxSiqQS3pg7DTOWzTsXhp+I?=
+ =?us-ascii?Q?HiXTCALPaZuYKm/Jg9c5uLIL+g4c1hn7NEhbR7nemhXfYQY6K4crjP1YgAm7?=
+ =?us-ascii?Q?nlLj8VnzNTiDAGqsUIedpUMdtmo2oNP8ks5uPlrO+KTxsOmCrgqUs4t1X9t4?=
+ =?us-ascii?Q?U7HiTDCG7NrVD46WQpuH0+0aTqjo1dGbDZEz/dbbpQl86dSPOi21caUqtCxp?=
+ =?us-ascii?Q?WMvbR2yi6IhxVqzASRggGGpljL/LjRTuID37upW2hWu9C4Ebgdoqi4raZqQH?=
+ =?us-ascii?Q?+mPPhq2ckf3dMI31Li14sVqrg8reQq8EHRuMrxkYQZzYGke0RbZ7zKffGwBR?=
+ =?us-ascii?Q?qmh55KWfqOQWBgG5o+ACifPHii+UCdSMg1ERCYTTzOwriWGrv1RlrkdtVYu/?=
+ =?us-ascii?Q?BoH9Enq2pM91+7stkS+hC4hXv/IuGMWO3qi6gln3NL4bsfIuG8EwTZ3gJ9Ag?=
+ =?us-ascii?Q?2iU8eGvoE+FlvNd/ZZ1ZwSvg2cRlpfkJcYR52b7t2n6Su/lRUt5ku6uamKox?=
+ =?us-ascii?Q?rUBXSnquICaHVAJ970liT+P85W45LZlynjsOiFuIU9gxYdSECEKT30sBdakp?=
+ =?us-ascii?Q?3A/ocdaR4Es=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR03MB6230.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?PlnaAandGKIoWdJUi9vsSBSv3PhHRBYNB02IOFQBHRk/CS2ucufUyI/BeMwP?=
+ =?us-ascii?Q?JTFZuLWAH3KTtkgbalVPUuEzlLmg67RsYJKH74odsOtlVk6iwwV/Ksdz6IC1?=
+ =?us-ascii?Q?mmpTMGeXhj/WDprxEu/m5G46OoecLTuwOoJenhhwo+WpnmZh7Ux4h5FHLNpk?=
+ =?us-ascii?Q?hEhvVBK36U2eOer11l+X7/9V1pyQ91iy8ZmUBrc2bWNL8ZwFDJpbAtU7fXxs?=
+ =?us-ascii?Q?LpNuoATfh17ak4ZPT+R+4t2qa9F2as036E76naTBOsnIhxLamwLY7thCmrOj?=
+ =?us-ascii?Q?/FzGLz9hbTHtG7qaYMYHLxLcSJ9gRnqok5sn9zKbuZiSCppnkWR9pyc6ZEfk?=
+ =?us-ascii?Q?D328T+CUzYgZySODFrkBhQmUTC4hro/FKVRGJZtMn3F/iT1UZFOZLco9X4r1?=
+ =?us-ascii?Q?q9oEaloiBi8mi9dqC1yK7eNOcm1pMC51Y7in1777OL769MFkk0bpuuSvV7ZI?=
+ =?us-ascii?Q?QHuCcCkoa9B7Uv47+JwV/eS9apxRYd2xUweBhnHQy5GKpDdJzDOrCir97i7y?=
+ =?us-ascii?Q?bZX7kvmrBfJKQzXrnCqi6tMoIXb5TuHHWE5Gw1LiGVW+bq2dCKNifKhVIJOJ?=
+ =?us-ascii?Q?ZGkVU3nzcEqf98SpSm4rx/hNf/UNU970kFiYIng1F+Qmx8rOwkq42zedIWeS?=
+ =?us-ascii?Q?vjRxGZ9UD8GbYDdUOE2mAoPFze5poHC/Cql7rgE59RjofwjcuC7gZ1Bjy8Pi?=
+ =?us-ascii?Q?fM4YxkEgCKhw+l1SOsYq24zQMsZSCgjZ3ZSKMIfIrUWVzI7VZtu5p2LBu0Sq?=
+ =?us-ascii?Q?J8AwUSedrKdXdLfDZywDEXXx6EXbcmIZHCUzKBM+9vIfLzbTCS6OeAPPOZ7T?=
+ =?us-ascii?Q?xlSjthgQgXMGAXgW/QkDztMRom4+QN+eTfl2RED3sGUvC4ELAjrydejt63bk?=
+ =?us-ascii?Q?JTe8OWo/P2EPhCEe87cmmZg7H/WRc25AsXgrRq7Pkw1PVdHinsJmeB98lGP3?=
+ =?us-ascii?Q?avfhwW/rvZgT88jyGcW1dQDHHvG4qQh1WaUBgbfJdnCFby723f47FvePtDwD?=
+ =?us-ascii?Q?RdWLsbyJxL6YJZui9H78QbPdHZuOqDGWWVDkw/0pD9LNAswLMuWy5MVrtXaE?=
+ =?us-ascii?Q?YUNSkmvlS1JGwzh6ubqTGcHOWA2YnkaHW6u+a7tiQSn/Afo3kbCLhWgRtXD7?=
+ =?us-ascii?Q?qKmmSYz+BBZ0hQyTWHe0sYww1gvIT+fXs4HNIZXdWdN/r24jpZg4nn38b9Of?=
+ =?us-ascii?Q?2i5I/vVoRIV6ltq0HomfwA45+gmZ508dZ9ckiDVElcYIyAV2nj6ABFXdgli7?=
+ =?us-ascii?Q?MJo/U9NJqgUi5nmP1rdnB1rNMfRJlicpfzdvqtZ4rOXPOKA3/uiqtob3g/Qt?=
+ =?us-ascii?Q?+reI1sRrS0jPv1egAxaNcDjYrQZPhtTuNQnwPjeOX60JnXNEU9LJgSTTY/Zc?=
+ =?us-ascii?Q?V10hW2FyW9r9t78iLULik4lNHawpGuRT0JKRpmMWR41bbZkKzleJPjfzgOWW?=
+ =?us-ascii?Q?VWtzYhQN1MUOx3PmYlLsPq3nQAYOS+7iC6L+4/sDgRFI4H04mcqXV4P3X6PO?=
+ =?us-ascii?Q?bwjTxNtM2307LAXod0uyaDrR0FsErLA38MsrLEoLyYqDihQV/RIMRxUwBGlU?=
+ =?us-ascii?Q?1fej93g6BRup9W0z1KCrFwU1uns3iIrFyk6iLirC1mnvFpCnjXe16KclTS1G?=
+ =?us-ascii?Q?yQ=3D=3D?=
+X-OriginatorOrg: altera.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a30ebbd4-8229-4f19-f62d-08ddace3e6ca
+X-MS-Exchange-CrossTenant-AuthSource: DM8PR03MB6230.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2025 14:41:38.9075
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fbd72e03-d4a5-4110-adce-614d51f2077a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: WwzBoLToHod2HdgW4QmStoxOYB6yN2bbO5islElR8tk+YSZ2gVMvjcQeRfTE0SNEr4Wj0241sTS4voW2DGjjG5ShdUDQ7iXNooANLoRNUwQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR03MB8027
 
-This patch is for testing only!
+From: Adrian Ng Ho Yin <adrianhoyin.ng@altera.com>
 
-Most of DMA drivers are platform specific and their configuration
-options can be enabled only then building kernel for specific
-platform. In order to simplify compilation check of such drivers
-Kconfig files were modified.
+This patch set is to update Agilex5 device tree and the related device
+tree bindings.
+Altera Agilex5 address bus only supports up to 40 bits. This patch set
+adds support for a new property that is used to configure the
+dma-bit-mask if its present in the device tree
 
-Signed-off-by: Alexander Kochetkov <al.kochet@gmail.com>
----
- drivers/dma/Kconfig      | 22 +++++++++++-----------
- drivers/dma/amd/Kconfig  |  4 ++--
- drivers/dma/hsu/Kconfig  |  4 ++--
- drivers/dma/qcom/Kconfig |  6 +++---
- drivers/dma/ti/Kconfig   |  2 +-
- drivers/mfd/Kconfig      |  2 +-
- 6 files changed, 20 insertions(+), 20 deletions(-)
+This patch set includes the following changes:
+-Add property for dw-axi-dmac that configures the dma-bit-mask to the
+required bits.
+-Update cdns nand dt binding with iommus and dma-coherent as an optional
+property.
+-Update Agilex5 dtsi and dts.
+-Add implementation to set dma bit-mask to value configured in dma
+bit-mask quirk if present.
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index db87dd2a07f7..b1840ae86964 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -103,7 +103,7 @@ config ARM_DMA350
- 
- config AT_HDMAC
- 	tristate "Atmel AHB DMA support"
--	depends on ARCH_AT91
-+	depends on ARCH_AT91 || COMPILE_TEST
- 	select DMA_ENGINE
- 	select DMA_VIRTUAL_CHANNELS
- 	help
-@@ -144,7 +144,7 @@ config BCM_SBA_RAID
- 
- config DMA_BCM2835
- 	tristate "BCM2835 DMA engine support"
--	depends on ARCH_BCM2835
-+	depends on ARCH_BCM2835 || COMPILE_TEST
- 	select DMA_ENGINE
- 	select DMA_VIRTUAL_CHANNELS
- 
-@@ -170,7 +170,7 @@ config DMA_SA11X0
- 
- config DMA_SUN4I
- 	tristate "Allwinner A10 DMA SoCs support"
--	depends on MACH_SUN4I || MACH_SUN5I || MACH_SUN7I || MACH_SUNIV
-+	depends on MACH_SUN4I || MACH_SUN5I || MACH_SUN7I || MACH_SUNIV || COMPILE_TEST
- 	default (MACH_SUN4I || MACH_SUN5I || MACH_SUN7I || MACH_SUNIV)
- 	select DMA_ENGINE
- 	select DMA_VIRTUAL_CHANNELS
-@@ -207,7 +207,7 @@ config EP93XX_DMA
- 
- config FSL_DMA
- 	tristate "Freescale Elo series DMA support"
--	depends on FSL_SOC
-+	depends on FSL_SOC || COMPILE_TEST
- 	select DMA_ENGINE
- 	select ASYNC_TX_ENABLE_CHANNEL_SWITCH
- 	help
-@@ -219,7 +219,7 @@ config FSL_DMA
- config FSL_EDMA
- 	tristate "Freescale eDMA engine support"
- 	depends on OF
--	depends on HAS_IOMEM
-+	depends on HAS_IOMEM || COMPILE_TEST
- 	select DMA_ENGINE
- 	select DMA_VIRTUAL_CHANNELS
- 	help
-@@ -280,7 +280,7 @@ config IMX_DMA
- 
- config IMX_SDMA
- 	tristate "i.MX SDMA support"
--	depends on ARCH_MXC
-+	depends on ARCH_MXC || COMPILE_TEST
- 	select DMA_ENGINE
- 	select DMA_VIRTUAL_CHANNELS
- 	help
-@@ -289,7 +289,7 @@ config IMX_SDMA
- 
- config INTEL_IDMA64
- 	tristate "Intel integrated DMA 64-bit support"
--	depends on HAS_IOMEM
-+	depends on HAS_IOMEM || COMPILE_TEST
- 	select DMA_ENGINE
- 	select DMA_VIRTUAL_CHANNELS
- 	help
-@@ -420,7 +420,7 @@ config LPC32XX_DMAMUX
- 
- config MCF_EDMA
- 	tristate "Freescale eDMA engine support, ColdFire mcf5441x SoCs"
--	depends on M5441x || (COMPILE_TEST && FSL_EDMA=n)
-+	depends on M5441x || (COMPILE_TEST)
- 	select DMA_ENGINE
- 	select DMA_VIRTUAL_CHANNELS
- 	help
-@@ -467,7 +467,7 @@ config MMP_TDMA
- 
- config MOXART_DMA
- 	tristate "MOXART DMA support"
--	depends on ARCH_MOXART
-+	depends on ARCH_MOXART || COMPILE_TEST
- 	select DMA_ENGINE
- 	select DMA_VIRTUAL_CHANNELS
- 	help
-@@ -523,7 +523,7 @@ config NBPFAXI_DMA
- 
- config OWL_DMA
- 	tristate "Actions Semi Owl SoCs DMA support"
--	depends on ARCH_ACTIONS
-+	depends on ARCH_ACTIONS || COMPILE_TEST
- 	select DMA_ENGINE
- 	select DMA_VIRTUAL_CHANNELS
- 	help
-@@ -582,7 +582,7 @@ config STE_DMA40
- 
- config ST_FDMA
- 	tristate "ST FDMA dmaengine support"
--	depends on ARCH_STI
-+	depends on ARCH_STI || COMPILE_TEST
- 	depends on REMOTEPROC
- 	select ST_SLIM_REMOTEPROC
- 	select DMA_ENGINE
-diff --git a/drivers/dma/amd/Kconfig b/drivers/dma/amd/Kconfig
-index 00d874872a8f..8773f3c5c31c 100644
---- a/drivers/dma/amd/Kconfig
-+++ b/drivers/dma/amd/Kconfig
-@@ -2,7 +2,7 @@
- #
- 
- config AMD_AE4DMA
--	tristate  "AMD AE4DMA Engine"
-+	bool  "AMD AE4DMA Engine"
- 	depends on (X86_64 || COMPILE_TEST) && PCI
- 	depends on AMD_PTDMA
- 	select DMA_ENGINE
-@@ -17,7 +17,7 @@ config AMD_AE4DMA
- 
- config AMD_PTDMA
- 	tristate  "AMD PassThru DMA Engine"
--	depends on X86_64 && PCI
-+	depends on (X86_64 || COMPILE_TEST) && PCI
- 	select DMA_ENGINE
- 	select DMA_VIRTUAL_CHANNELS
- 	help
-diff --git a/drivers/dma/hsu/Kconfig b/drivers/dma/hsu/Kconfig
-index af102baec125..80426b74d3a2 100644
---- a/drivers/dma/hsu/Kconfig
-+++ b/drivers/dma/hsu/Kconfig
-@@ -1,10 +1,10 @@
- # SPDX-License-Identifier: GPL-2.0-only
- # DMA engine configuration for hsu
- config HSU_DMA
--	tristate
-+	bool "HSU_DMA"
- 	select DMA_ENGINE
- 	select DMA_VIRTUAL_CHANNELS
- 
- config HSU_DMA_PCI
--	tristate
-+	bool "HSU_DMA_PCI"
- 	depends on HSU_DMA && PCI
-diff --git a/drivers/dma/qcom/Kconfig b/drivers/dma/qcom/Kconfig
-index ace75d7b835a..224436d3e50a 100644
---- a/drivers/dma/qcom/Kconfig
-+++ b/drivers/dma/qcom/Kconfig
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
- config QCOM_ADM
- 	tristate "Qualcomm ADM support"
--	depends on (ARCH_QCOM || COMPILE_TEST) && !PHYS_ADDR_T_64BIT
-+	depends on (ARCH_QCOM || COMPILE_TEST)
- 	select DMA_ENGINE
- 	select DMA_VIRTUAL_CHANNELS
- 	help
-@@ -12,7 +12,7 @@ config QCOM_ADM
- 
- config QCOM_BAM_DMA
- 	tristate "QCOM BAM DMA support"
--	depends on ARCH_QCOM || (COMPILE_TEST && OF && ARM)
-+	depends on ARCH_QCOM || (COMPILE_TEST && OF && ARM) || COMPILE_TEST
- 	select DMA_ENGINE
- 	select DMA_VIRTUAL_CHANNELS
- 	help
-@@ -21,7 +21,7 @@ config QCOM_BAM_DMA
- 
- config QCOM_GPI_DMA
-         tristate "Qualcomm Technologies GPI DMA support"
--        depends on ARCH_QCOM
-+        depends on ARCH_QCOM || COMPILE_TEST
-         select DMA_ENGINE
-         select DMA_VIRTUAL_CHANNELS
-         help
-diff --git a/drivers/dma/ti/Kconfig b/drivers/dma/ti/Kconfig
-index 2adc2cca10e9..8bd0b4739326 100644
---- a/drivers/dma/ti/Kconfig
-+++ b/drivers/dma/ti/Kconfig
-@@ -36,7 +36,7 @@ config DMA_OMAP
- 
- config TI_K3_UDMA
- 	tristate "Texas Instruments UDMA support"
--	depends on ARCH_K3
-+	depends on ARCH_K3 || COMPILE_TEST
- 	depends on TI_SCI_PROTOCOL
- 	depends on TI_SCI_INTA_IRQCHIP
- 	select DMA_ENGINE
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 6fb3768e3d71..866997123a1c 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -702,7 +702,7 @@ config INTEL_SOC_PMIC_MRFLD
- 	  that is found on Intel Merrifield systems.
- 
- config MFD_INTEL_LPSS
--	tristate
-+	bool "MFD_INTEL_LPSS"
- 	select COMMON_CLK
- 	select MFD_CORE
- 
+v3:
+-update commit description.
+-update property naming to match property description.
+-removed text description for default value and add as default property.
+-update property name in dtsi.
+-update dw-axi-dmac-platform to read updated property name.
+
+v2:
+-Fixed build errors and warnings in dw-axi-dmac.
+
+Adrian Ng Ho Yin (4):
+  dt-bindings: dma: snps,dw-axi-dmac: Add iommus dma-coherent and
+    dma-addressable-bits property
+  dt-bindings: mtd: cadence: Add iommus and dma-coherent properties
+  arm64: dts: socfpga: agilex5: Update Agilex5 DTSI and DTS
+  dma: dw-axi-dmac: Add support for dma-bit-mask property
+
+ .../bindings/dma/snps,dw-axi-dmac.yaml        | 12 ++++++++++
+ .../devicetree/bindings/mtd/cdns,hp-nfc.yaml  |  5 +++++
+ .../arm64/boot/dts/intel/socfpga_agilex5.dtsi | 22 +++++++++++++++++++
+ .../boot/dts/intel/socfpga_agilex5_socdk.dts  |  4 ++++
+ .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 14 ++++++++++--
+ 5 files changed, 55 insertions(+), 2 deletions(-)
+
 -- 
-2.43.0
+2.49.GIT
 
 

@@ -1,144 +1,117 @@
-Return-Path: <dmaengine+bounces-5499-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5500-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B32D9ADB8E6
-	for <lists+dmaengine@lfdr.de>; Mon, 16 Jun 2025 20:35:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C38A6ADBC62
+	for <lists+dmaengine@lfdr.de>; Mon, 16 Jun 2025 23:59:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B8BF83B54EF
-	for <lists+dmaengine@lfdr.de>; Mon, 16 Jun 2025 18:34:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 71CA016749A
+	for <lists+dmaengine@lfdr.de>; Mon, 16 Jun 2025 21:59:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 601A528981A;
-	Mon, 16 Jun 2025 18:34:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F31A82206A6;
+	Mon, 16 Jun 2025 21:59:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="CkAQbKwL";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KEsNygaq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mx+QJq/Z"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from fhigh-b3-smtp.messagingengine.com (fhigh-b3-smtp.messagingengine.com [202.12.124.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66422289372;
-	Mon, 16 Jun 2025 18:34:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D8391448D5;
+	Mon, 16 Jun 2025 21:59:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750098899; cv=none; b=EqA8B6AQb71Ri3NDSj9ZfDuWznDA1FWdEcRe6GwgzoFTIino25YPe6k3vFTvKQFV+RmDNvi4s7Kl5nWchPG+AiFfdRU3Ntu9q0WA4vPCcFPS2eRR6wOA0+E4m5s6GcBCa+Eh5br5WwEt6xwRMx8t/SLl2YYkZ532s+f8WeA5TpA=
+	t=1750111187; cv=none; b=WhesXjmOzcD2bz22XtxD04PYFFMHDs0WF6ZfgaldugbkWddDG5Vrk/jdq91fRv3J+XXT5NFr+Nx6nMZSyZhm5INujBpEnPIRPzAS74YAbE+Y01PoZB8yC/pPIWSuM7LFSIO8IdUVmxzzWHpXlnyx7urvaq8Q92uzkIOm6Bir+mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750098899; c=relaxed/simple;
-	bh=k3U8hdUVf2mysDGF9j7sGFSXq/NHg1BAR9W4A1e7FBY=;
-	h=MIME-Version:Date:From:To:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=R0yHX9vWn8ZHzu5DVLC7auJIs5n6v+tYJqygR5XTJByStvvaDnO7FZ/y7YTCESq1bC8APlTg+SJwiKpxLXNfBdv3HEs6l8oJ3P7UG2YD+vPm2Kj9Cap8yLkSEmgryOr4kUMy+O7g3tsXeyQKHoi5m727iHxLkqKfmaJ0vsOuWO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=CkAQbKwL; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=KEsNygaq; arc=none smtp.client-ip=202.12.124.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 337F0254012F;
-	Mon, 16 Jun 2025 14:34:56 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Mon, 16 Jun 2025 14:34:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:content-transfer-encoding:content-type:content-type:date:date
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1750098896;
-	 x=1750185296; bh=qRwibQTbtTFkc/qCHLHPXCkbTuwR1ipXTlm5cdeOUc4=; b=
-	CkAQbKwLRJX2qandCly0sWKOMtf77gN4MgYUuG+OsOzmG9buhoB1zAZUt2ybs+s+
-	WmpvOgS6fN47mDAumZkluDJWBK/0X5X0MWxxxXVGYGEddsSPLnDb4tDzwRPyqEEe
-	1TET4TyLtO+8vp8XiTLBs7hxKkuda37K+lr2eXSvmWrkF5ewuuTW1iQdxwTkdmTk
-	6eXvfnz5QtT1UDMOK+LVbs1kYSHQrteUiv0qfRYwmQD+FUq/jYyvzyxu4CKBn/G7
-	yQkaK3WsuaL9pK8PdvLge8pbRkN1dCtXTgWmBXfDFQp2PJPRo8PNd1aYg+s3DHeI
-	YFB789jS8Qab+ttLYZ/O0w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-transfer-encoding:content-type
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm1; t=1750098896; x=1750185296; bh=q
-	RwibQTbtTFkc/qCHLHPXCkbTuwR1ipXTlm5cdeOUc4=; b=KEsNygaqVgj7WbCwZ
-	Lkvakt2piIfCMaBt1ZbJrSwo4TK7oIkyX4Uoa9XJkgfm1OQP+3u1brIo11UMHbL1
-	84tfEe8rsX9Q3gIlO4CAxB2hm2py3yaD8D5YdOUIVdpWbaLmFIopaUFhBbzTs/qe
-	kUTiISvnEf5hjsrwF8mFI49VrSwxA4CnQw01e/+H5PaxqtIQa3SQ3iUwbxKtmZeb
-	ZEnrDwtSNoPspZvBlo3k7hGL85lsrP4TdTtDQ+qF7Xb3o8DBwzPsKR0WobtUQwt2
-	foTLiVMGGX7ZCjuRShvV4eFXAxLJSicbiC+3IxzCRFEqsUSxJqv1SwcRh4l1Rs4u
-	q28pA==
-X-ME-Sender: <xms:zmNQaIO0hvU2mt4H2Xvk5AnX0iB1kD8BTIM0kmdEAL52qNH_X7Zt-A>
-    <xme:zmNQaO-pQtuwcQxZUMYxJEK6v4sPWP1MMPZ4mTg4DyfSTda8L3t54rfvrxWL8zo-n
-    VTn7Y50tNPm6fcmkVo>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddvjeefvdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvkfgjfhfutgfgsehtjeertdertddt
-    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
-    guvgeqnecuggftrfgrthhtvghrnhephfekledtffefhffghfetteehuefhgfetgefhtdeu
-    feduueeltefghedtjeeifffhnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
-    hmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepudel
-    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegtrghtrghlihhnrdhmrghrihhnrg
-    hssegrrhhmrdgtohhmpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgv
-    thdprhgtphhtthhopehhvghrsggvrhhtsehgohhnughorhdrrghprghnrgdrohhrghdrrg
-    hupdhrtghpthhtoheprghnughirdhshhihthhisehkvghrnhgvlhdrohhrghdprhgtphht
-    thhopegsrhhoohhnihgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehvkhhouhhlse
-    hkvghrnhgvlhdrohhrghdprhgtphhtthhopeifihhllheskhgvrhhnvghlrdhorhhgpdhr
-    tghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgrug
-    gvrggurdhorhhgpdhrtghpthhtohepuggrnhhivghlrdhmrggthhhonhesmhhitghrohgt
-    hhhiphdrtghomh
-X-ME-Proxy: <xmx:zmNQaPRswyGdepgzEcq8ZxPpnVu2Wrc6-oOZ7im99CjLcZTGH4eBjA>
-    <xmx:zmNQaAsI7EG80DBY_yZ4XKwGWgi6xUtMqBQBeetDFZIs5zE557ilxQ>
-    <xmx:zmNQaAcTIVEBWFXjvaHxr56Nf0Ub6-2ApA-P1suW0_0LL4_J5QTA6w>
-    <xmx:zmNQaE0AiF_i6R0owGd_wFWswJPr2jjUGwz6T9iv27LgZiCo4HITeQ>
-    <xmx:0GNQaAnKS3ebf6Eh4ZHo3SUihb-d9QthvKL2qiqOPzxP4wLM775-Y9gS>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 87E5E700062; Mon, 16 Jun 2025 14:34:54 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1750111187; c=relaxed/simple;
+	bh=dmVXtZDq1GpnBEuGT0uceXOef/ohgyxYRigN39A5qAg=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=rg5fzTYFdjNwDkgBcjC9Gd2khbri7yi/D0a7/dFUeWrdL5UjTaGtuRKYxCrs0ltV3w8iXtB0vS5YaW2dVrC7rq3rqEiHEpDj3zSpI7KnLKvYDRNKJDoQlyj+xWAJ5lX4O2jKbtevXNGKZzkja4q6V8LbOgAiUEVOihKyAtiO/rI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mx+QJq/Z; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-31329098ae8so4362421a91.1;
+        Mon, 16 Jun 2025 14:59:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750111186; x=1750715986; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dmVXtZDq1GpnBEuGT0uceXOef/ohgyxYRigN39A5qAg=;
+        b=mx+QJq/Zm7DH+1NBZIyhQ1smtWKecQgkvnlVbl8wY1mazmEbFRzWaQbs14E7H31pxZ
+         50cB0dYBp4VsU+YYoOk6ICTUM8nmE7imWT85znAnUL0+erM5CWad3TDUgMo2Hdn1b1tj
+         X800t1zGk1QP+q4LF4KGizzI90sy+ygiXSgN7gyfvO9Se5LmZLIcW8Uu9v90pba0Xk/Q
+         osUcXNlNI6/j10lZAWkmeo3M0Qnc49+WoIAQipTp0KtBWQ57c+Pa0kJBdR1so5XQA3Dz
+         tCrpRhzUlvs0tmXvRVzeHyTQujEsAq2ENp/c+yxFpdmojGxapIfSFLgGAyag5Dd3Pilq
+         s7yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750111186; x=1750715986;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dmVXtZDq1GpnBEuGT0uceXOef/ohgyxYRigN39A5qAg=;
+        b=i4pkGC2mW3zFb9pQOYXfb8yns/x9PBRwJwKznMHhcvG7T8Ry7C78MRb5Ec+eWQPLZI
+         ACcrfj8wbQy4t9VtmQchCA5VfiOP49IPb0B7gdwyxYu7W8IlDGrAtoKfo5iHRSR8yhBD
+         4oIvjbCIoYl2Da7LiR5NNWd5eD6I6ADTxhzjbUGpjqvy+otQJU+qU6uRgDdLWOwqie1f
+         k6jKBT+RYE+gOr9lo5LAw1yr0J8eVjt4DC2erX6J8qhOvqCpJtsR4J6HrXyCZNEpjuo8
+         dUSELKf5iQH34akhHtizqybSl2AWoDS3sxDcWvu9JG4Y8387zFJ02DxrqIzNlUDWHtPz
+         rDtQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVQl5DZa3Zv+y+7lb9Bvv7Ehd73wzMzdo3wz8RH2jlLjCxzJGgkmRonhb5NQOvXnNB36CTtoAy3FEY=@vger.kernel.org, AJvYcCWzvYnZEc97Sv+iShfgv3bdEPCwLGMsdzNxO3Qxfh2joA/DOaiOA87n+ReEzrl8hUURs2PkOAkkOh39biWg@vger.kernel.org, AJvYcCXP7LdwsH342IAgh+Jx9qbvbfRjs1cKz3a5WJ1eEuNE7jVjJqFYV8oYmClqY142hTJgAgS9qKcIRSr4/MF4eQ==@vger.kernel.org, AJvYcCXzZ6iUFc48x0TIsHJ32iR2raQ7AZn6YS6cKjA+W6/Dql91pPp7W0d1OnMC2Gl3Jzf/P/TEeRo8@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw19h5N5qmDZ9rCk2+/oBNfXl0hiJRaxdHWShgk02P02CEMQTLH
+	y+0Abk+UdR5Boogjs2mfc0PcTfZesnqzEYKIuTe86D3YioNtqjgrlqBo
+X-Gm-Gg: ASbGncvTgs95kvy3UqtrkqEtxE63bYzJYwhyzLDQUC/VZPZ/y36M14olTfIoFJ8h634
+	1+4FbrDbINcVtbiDXOo74ghbgQiPJq15gDwxLjpKMV8mCzf2wR5j8piyazyfsGdGxGWxNbSaaU1
+	u5GSydqQMVwJXHJJxW5c29JV4xFVXL9It9nCqFmzqs6GE6wEQ9pj7CTvcuhnhH4Hw2JD7gxO8XZ
+	OGRXlTAYbtXb1FRnLWyxPYHkeIIn8uyQXT9icDejyVmX+QTa6TjjqQ6kgwIF1tF7+tFojNoVWyw
+	9saVBiHmkD501y20ngNszDVHaE1DpyYmmV9LTiXuQgD5SpJavFJuOGPw4NOk0N1CVQ==
+X-Google-Smtp-Source: AGHT+IH4wh9y8+17NNr6OsXro0iWKu8R34LNjAfr7G0A8dLv1PD8LHOCsQSVBTatYUghTPAmFqKHbw==
+X-Received: by 2002:a17:90b:5603:b0:310:c8ec:4192 with SMTP id 98e67ed59e1d1-31427e9d73fmr267216a91.10.1750111185654;
+        Mon, 16 Jun 2025 14:59:45 -0700 (PDT)
+Received: from [10.0.2.172] ([70.37.26.34])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c1c5e2ebsm9155674a91.33.2025.06.16.14.59.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Jun 2025 14:59:45 -0700 (PDT)
+Sender: Sinan Kaya <franksinankaya@gmail.com>
+From: Sinan Kaya <Okaya@kernel.org>
+X-Google-Original-From: Sinan Kaya <okaya@kernel.org>
+Message-ID: <9fb982e6-7184-410e-94d0-90836c2a9129@kernel.org>
+Date: Mon, 16 Jun 2025 17:59:44 -0400
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Tad13d72cbf59a799
-Date: Mon, 16 Jun 2025 20:34:34 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Robert Marko" <robert.marko@sartura.hr>,
- "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
- "Olivia Mackall" <olivia@selenic.com>,
- "Herbert Xu" <herbert@gondor.apana.org.au>,
- "David S . Miller" <davem@davemloft.net>, "Vinod Koul" <vkoul@kernel.org>,
- "Andi Shyti" <andi.shyti@kernel.org>, "Mark Brown" <broonie@kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
- "Pengutronix Kernel Team" <kernel@pengutronix.de>, ore@pengutronix.de,
- luka.perkov@sartura.hr, "Daniel Machon" <daniel.machon@microchip.com>
-Message-Id: <3ba837f8-70bb-4b9e-a9f9-0e71b9e073c4@app.fastmail.com>
-In-Reply-To: <20250613114148.1943267-1-robert.marko@sartura.hr>
-References: <20250613114148.1943267-1-robert.marko@sartura.hr>
-Subject: Re: [PATCH v7 0/6] arm64: lan969x: Add support for Microchip LAN969x SoC
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] dmaengine: qcom_hidma: fix handoff FIFO memory leak
+ on driver removal
+To: Qasim Ijaz <qasdev00@gmail.com>
+Cc: Eugen Hristev <eugen.hristev@linaro.org>, Vinod Koul <vkoul@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+ dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20250601224231.24317-1-qasdev00@gmail.com>
+ <20250601224231.24317-3-qasdev00@gmail.com>
+ <3c6513fe-83b3-4117-8df6-6f8c7eb07303@linaro.org>
+ <7649f016-87f1-475d-8ff7-7608b14c5654@kernel.org>
+ <aE8bu2woUe96DVo-@gmail.com>
+Content-Language: en-US
+In-Reply-To: <aE8bu2woUe96DVo-@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 13, 2025, at 13:39, Robert Marko wrote:
-> This patch series adds basic support for Microchip LAN969x SoC.
+On 6/15/2025 3:15 PM, Qasim Ijaz wrote:
+> Thanks for reviewing the patch and for pointing out the correct
+> shutdown ordering.
 >
-> It introduces the SoC ARCH symbol itself and allows basic peripheral
-> drivers that are currently marked only for AT91 to be also selected for
-> LAN969x.
+> If you’re both happy with it, I’ll send a v2 that calls
+> tasklet_disable() before tasklet_kill(), then frees the handoff_fifo.
 >
-> DTS and further driver will be added in follow-up series.
->
-> Robert Marko (6):
->   arm64: lan969x: Add support for Microchip LAN969x SoC
->   spi: atmel: make it selectable for ARCH_LAN969X
->   i2c: at91: make it selectable for ARCH_LAN969X
->   dma: xdmac: make it selectable for ARCH_LAN969X
->   char: hw_random: atmel: make it selectable for ARCH_LAN969X
->   crypto: atmel-aes: make it selectable for ARCH_LAN969X
+> Just let me know and I’ll resend.
 
-If the drivers on ARCH_LAN969X are largely shared with those on
-ARCH_AT91, should they perhaps depend on a common symbol?
+Sure, please test it on a test kernel module before posting with a tasklet.
 
-That could be either the existing ARCH_AT91 as we do with LAN966,
-or perhaps ARCH_MICROCHIP, which is already used for riscv/polarfire.
+This should be straightforward to verify.
 
-    Arnd
 

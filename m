@@ -1,48 +1,48 @@
-Return-Path: <dmaengine+bounces-5503-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5504-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F82FADC219
-	for <lists+dmaengine@lfdr.de>; Tue, 17 Jun 2025 08:10:34 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C5E5ADC258
+	for <lists+dmaengine@lfdr.de>; Tue, 17 Jun 2025 08:25:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7014D3A686A
-	for <lists+dmaengine@lfdr.de>; Tue, 17 Jun 2025 06:10:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5D89F3ACCB5
+	for <lists+dmaengine@lfdr.de>; Tue, 17 Jun 2025 06:25:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8A12288C30;
-	Tue, 17 Jun 2025 06:10:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCD0D288CBE;
+	Tue, 17 Jun 2025 06:25:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PQmEQ2wY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HErOwSoE"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DB041E521D;
-	Tue, 17 Jun 2025 06:10:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B16A2C2D1;
+	Tue, 17 Jun 2025 06:25:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750140629; cv=none; b=L+hub7YO7+ixx5bPPCmOoHWwP0tQvKWWns5yhSjA5oJhJZkUIUnNc5RkyNFzJUI9S24yW2Oekv8hnhJ5n3hFhMih8v2V20om/G8tpLqhe2wxuNwqvomSnQpzaPTz4b/JYGNOzA/2KYHrxuWoogFtmsji/d0ahg4UoSLN4uUEpYM=
+	t=1750141551; cv=none; b=pi2SKHOF9z8ufz7+B+zsj63MWf2bqL4bB/1HJTBgk3sbD5m6Dz0fdu/vIBwW5//JtHBOKV58lQksax94dlule5IB8J8BV//ls1/UWjGkzhxk86vgm3/ntgwt9BE4i6e7/f/1B5W3wKTCsyvF9kE0MQ+XcXbbf3e5mZ+kAVeLUUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750140629; c=relaxed/simple;
-	bh=KnKkXsJC/7mfY8Fo8YsFlw3wExf/p36P8O8KJk0JwII=;
+	s=arc-20240116; t=1750141551; c=relaxed/simple;
+	bh=+YrbzawyL66b1Nq5R9ub9bP37cMKcOeJVrij99oDPf8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kX93rrwb7PLSb6TNIS8y8DHFGyf3OWKQja6MMof9FGr44LJ2wm8F0Nx08tyVeS/0IfF+sSvLiN6fbesIeJ5MiQvRZT6YT56LBq1lYehXXDcuee0908X372ImGvvD1lDL9YFPT7WhAULGRdtje5JDGW6YDr+78xyemQErS1Lsm2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PQmEQ2wY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D39E7C4CEE3;
-	Tue, 17 Jun 2025 06:10:26 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=eKKGtMAGcvCtpfg8QaS/TExG/X08hNlzCVu6anY//5omIowri//Lw+nnlqYfxd+bdcrrysX13mNyyTH6GlUrMBM4yEFCtiy1l+5PEzCdU8Q1FGQnn8+T/1Xx6W+3TVn2kRmeBeBuk7YGMTZH4bktKYr/yJguaRjP0eO+kcE7kDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HErOwSoE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7EB2C4CEE3;
+	Tue, 17 Jun 2025 06:25:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750140629;
-	bh=KnKkXsJC/7mfY8Fo8YsFlw3wExf/p36P8O8KJk0JwII=;
+	s=k20201202; t=1750141551;
+	bh=+YrbzawyL66b1Nq5R9ub9bP37cMKcOeJVrij99oDPf8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=PQmEQ2wYUJBMDWY/OKhR9N39TGG7nSnmXcb/iPvtWWgHitD4gZHwYI9r2MSib3MaS
-	 MKsSic7IhHt9nWeN7754wYfZf3kbPzfr0PLclLHxbCXbWgQHVqAWB2jRhCvcJoC50K
-	 4Moy6UirvCXMjrjAb56cV5GG3UM8JrNZT6qU+a5X9UY2HgAPN22ujSaje95QgEhy6Y
-	 0bEgCJCKxydtVKLpcr4ERvwStaj79jSkjATmZCdrYj4VS4krgmm6rL3q/vrTZk+ENZ
-	 9vrMguJwldW+7wAjfnG9i17a0sksWwSiC0pf7dV3x/zoPbgtEKyfA9DFxSXq1ip7l1
-	 2fyC2o53o2pDA==
-Message-ID: <471c85c8-b49d-4fc4-991e-933cedf47a93@kernel.org>
-Date: Tue, 17 Jun 2025 08:10:24 +0200
+	b=HErOwSoER0YXam83czl1xc+/iI1D8F5xyqpm1aicuS77AOqJH3FIBMzaa5jgdzVGN
+	 rJ7dp8LU7NflZy+6FBX3Hxof47yHdrd32yjtRD1SC3neyZ1jgYuhuhx6IXn3jAdGKj
+	 hZDs7WV2xEsUiX1J3hNecPrCbWK33i1uHtRBOustMLrvQiCX3xJqtpRWySyp/A+Z7E
+	 FtzP5Z+6s/qHV2BEko+O0e/O8IfaOhj/4J8ui53S0wCkRptQumSlwveUcFuI127Qtv
+	 r+ybBr42sILpAH2r6QZ7Fs/KxIyTIn3CHD6ghedzSRQdOpq/ZbGuc1c5J9rw5jj6DH
+	 x0Ns4J04bJodA==
+Message-ID: <91f2935c-b0f8-4b4a-89e7-eee8c888daeb@kernel.org>
+Date: Tue, 17 Jun 2025 08:25:47 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -50,13 +50,14 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dmaengine: dw: dmamux: Add NULL check in
- rzn1_dmamux_route_allocate()
-To: Charles Han <hanchunchao@inspur.com>, vireshk@kernel.org,
- andriy.shevchenko@linux.intel.com, vkoul@kernel.org,
- miquel.raynal@bootlin.com, ilpo.jarvinen@linux.intel.com
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250616104810.2222-1-hanchunchao@inspur.com>
+Subject: Re: [PATCH v3 1/4] dt-bindings: dma: snps,dw-axi-dmac: Add iommus
+ dma-coherent and dma-addressable-bits property
+To: adrianhoyin.ng@altera.com, dinguyen@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, Eugeniy.Paltsev@synopsys.com,
+ vkoul@kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Matthew Gerlach <matthew.gerlach@altrera.com>
+References: <cover.1750084527.git.adrianhoyin.ng@altera.com>
+ <144d2070c7b2f69f034b6f16bc938a538afa9f15.1750084527.git.adrianhoyin.ng@altera.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -102,25 +103,23 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250616104810.2222-1-hanchunchao@inspur.com>
+In-Reply-To: <144d2070c7b2f69f034b6f16bc938a538afa9f15.1750084527.git.adrianhoyin.ng@altera.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 16/06/2025 12:48, Charles Han wrote:
-> The function of_find_device_by_node() may return NULL if the device
-> node cannot be found or CONFIG_OF is not defined, dereferencing
-> it without NULL check may lead to NULL dereference.
-> Add a check to verify whether the return value is NULL.
-> 
-> Fixes: 134d9c52fca2 ("dmaengine: dw: dmamux: Introduce RZN1 DMA router support")
-> Signed-off-by: Charles Han <hanchunchao@inspur.com>
-> ---
->  drivers/dma/dw/rzn1-dmamux.c | 10 ++++++++--
+On 16/06/2025 16:40, adrianhoyin.ng@altera.com wrote:
+> +
+>    resets:
+>      minItems: 1
+>      maxItems: 2
+> @@ -101,6 +106,13 @@ properties:
+>      minimum: 1
+>      maximum: 256
+>  
+> +  snps,dma-addressable-bits:
+> +    description:
 
-
-Don't send patches for a subsystem patch by patch, but organize your
-work correctly into patchset so we can reply in one thread (instead of
-10) that you are fixing non-existing problems.
+No, that's implied by SoC compatible.
 
 Best regards,
 Krzysztof

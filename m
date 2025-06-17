@@ -1,119 +1,142 @@
-Return-Path: <dmaengine+bounces-5515-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5516-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 52B83ADC831
-	for <lists+dmaengine@lfdr.de>; Tue, 17 Jun 2025 12:28:04 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F359AADC85A
+	for <lists+dmaengine@lfdr.de>; Tue, 17 Jun 2025 12:33:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A5A9F1891E5E
-	for <lists+dmaengine@lfdr.de>; Tue, 17 Jun 2025 10:28:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E1C013B7B9A
+	for <lists+dmaengine@lfdr.de>; Tue, 17 Jun 2025 10:33:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E389291C13;
-	Tue, 17 Jun 2025 10:27:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 318FA290BD5;
+	Tue, 17 Jun 2025 10:33:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MVnLnf/j"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IDY1hF9T"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76600288CA5;
-	Tue, 17 Jun 2025 10:27:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E215296151;
+	Tue, 17 Jun 2025 10:33:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750156074; cv=none; b=Up/llgG5os7rfxnlKPuh57w05CIPsiEmdgd1mJ0BpdWha9mVBScELHpLbLppRFbLSiQ0fkICI43/2e9T2BeLBxSOzYdeX0TLGrhjb6Hn8l498GGsJffGjNlL1Al8K59pny4EO90MD6ZFQlJHVF6vxL3AaXwayRUvZFNJs/RypkA=
+	t=1750156407; cv=none; b=YRUPjpnBZmdmM6gNdvuF1nrpKENAN906CFW94h1VaFLdDeu0q2St8I6nndBBb28YKN8T9B9sOsBptfJJJ+cP5RBh9QGAgKHHtzYFUd62E5SUXcwJVwnonMMm9XwfkiYRF3eIKIS8gJf+mBTWyznKUQI76x6Arrbx/OLzaTyjTPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750156074; c=relaxed/simple;
-	bh=gqV21TcK9Cc3ulZOth7BRdJuQAZrSi3YuwCV5P2/3fY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lqmgVOWgKUr3zceXM5FwYyRLDatsv1K5qg8hRDbyz0BW1AxyAul7UoBzQA1Upsd+kDjmmDijGcudH4fOm2OV3ZZzGczOOj2fyqYkvR/sksdfN5hgv4HmKPn4r3VoQ0EBj6H36oPzQ/xQtGTQm+AbHWrTBD6g5yDaOqK9ctWPH5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MVnLnf/j; arc=none smtp.client-ip=198.175.65.18
+	s=arc-20240116; t=1750156407; c=relaxed/simple;
+	bh=WsA1pcPyl3CyLxsXc8aBLN/G/mSkAPdRu5xXeb+nmuA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Scfj3Y/bpRiDdfW4n7WV5ZSkdljcl9N6HIKg9FlcbEI0CJ1Jl4HG3I4lpgY5Uoeuhp5og1V0VZEziFgYnvLKVhKFbvuDgXsIufOYWRdV67qF1bmA6fioWZyZ0eQ4Yi5ago09ExrRNQwH8d/CuEzC9MIifCcTBwIyccJe3WtHqtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IDY1hF9T; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750156073; x=1781692073;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=gqV21TcK9Cc3ulZOth7BRdJuQAZrSi3YuwCV5P2/3fY=;
-  b=MVnLnf/j4EmQI2rTMgah4O4yMqXX5u/9oaKlU9B3FMsNKNxfiwb+KM9Y
-   MIDc1o/iMPPUH449AY7w+sRG1BEJ61parNnZwaGa5wYVqzSU9YcMtKivG
-   Z796oXkdgg371B6oDRy5U3wp9Eze6fktBE7wB+9N3pWpPbwpbolZUlw/z
-   3Mfm9Zt0tOE0THLbT3XkPiaRldumA1Ye1wWXgXViwdCUHXx8sBMs6C0Xz
-   T3kfQjQTYZwlcPC+NtKuffcWmnqrDynC5mduqBdIqVZ61q1D8aNjdsk/n
-   Q50pUSPkyIKQK2JGgEwZshYbNPTz8wyH95Cu38KS8J1Dgb4MnP+GGD7JF
-   Q==;
-X-CSE-ConnectionGUID: IBUGp3h8StSt+jwt0GWJWw==
-X-CSE-MsgGUID: ochE/QEaTFe2R6xyVIOhIg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="52462100"
+  t=1750156406; x=1781692406;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=WsA1pcPyl3CyLxsXc8aBLN/G/mSkAPdRu5xXeb+nmuA=;
+  b=IDY1hF9T7jHmCkiLU0snRg84fD0DqFT5LHe9uqCPdcPxmA+fiPuftyMe
+   U6Hg5DDBPZDsgvksnBYnDxQSojEEGapNEp3vqhq1GvNalrQH+7v3o5CKH
+   4Zv6Hc5/bYz9LZ/ZzX2LN+Og4WTHBbIEpuyGCTPJco4RPwWAaHatU3F8r
+   kiZBCqBeqk2BB8/2BxuNkBJETGqKMXMDeV3lckfxZYOQUG2e9pJF7Xov7
+   Wrpa2oCCGLtgidAuBdFZQRd3duST3Zox0BfpFfimoJAx2ZRArG6hBcnxN
+   woLsDVAwMqBGQ70Mo1fG3+BZkq/axKHOJwHvMcvyGCgBb4JGr7tfyg8aj
+   A==;
+X-CSE-ConnectionGUID: f73QTcp6SsWhYuARvKnuTA==
+X-CSE-MsgGUID: tTzBr/iqRxe7QrLoYNBZTw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="39932637"
 X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
-   d="scan'208";a="52462100"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 03:27:53 -0700
-X-CSE-ConnectionGUID: lwt4GzZNQpG3EDFu5X4pPQ==
-X-CSE-MsgGUID: UzK3sOE6T+WPbk/BM/Nabg==
+   d="scan'208";a="39932637"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 03:33:25 -0700
+X-CSE-ConnectionGUID: TRED8RPnRTCLmLfR7kSwvA==
+X-CSE-MsgGUID: Mu+pwlVtRCqC1B+PxwbUMA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
-   d="scan'208";a="154033970"
-Received: from ysun46-mobl (HELO YSUN46-MOBL..) ([10.239.96.51])
-  by orviesa005.jf.intel.com with ESMTP; 17 Jun 2025 03:27:50 -0700
-From: Yi Sun <yi.sun@intel.com>
-To: vinicius.gomes@intel.com,
-	dmaengine@vger.kernel.org,
+   d="scan'208";a="149627521"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa008.jf.intel.com with ESMTP; 17 Jun 2025 03:33:16 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uRTcw-000Ft6-08;
+	Tue, 17 Jun 2025 10:33:14 +0000
+Date: Tue, 17 Jun 2025 18:32:24 +0800
+From: kernel test robot <lkp@intel.com>
+To: Alexander Kochetkov <al.kochet@gmail.com>,
+	Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: dave.jiang@intel.com,
-	yi.sun@intel.com,
-	gordon.jin@intel.com,
-	fenghuay@nvidia.com
-Subject: [PATCH v3 2/2] dmaengine: idxd: Fix refcount underflow on module unload
-Date: Tue, 17 Jun 2025 18:27:12 +0800
-Message-ID: <20250617102712.727333-3-yi.sun@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250617102712.727333-1-yi.sun@intel.com>
-References: <20250617102712.727333-1-yi.sun@intel.com>
+Cc: Paul Gazzillo <paul@pgazz.com>,
+	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+	oe-kbuild-all@lists.linux.dev, Nishad Saraf <nishads@amd.com>,
+	Lizhi Hou <lizhi.hou@amd.com>, Jacky Huang <ychuang3@nuvoton.com>,
+	Shan-Chun Hung <schung@nuvoton.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Paul Cercueil <paul@crapouillou.net>,
+	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Frank Li <Frank.Li@nxp.com>, Zhou Wang <wangzhou1@hisilicon.com>,
+	Longfang Liu <liulongfang@huawei.com>,
+	Andy Shevchenko <andy@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Keguang Zhang <keguang.zhang@gmail.com>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+	Daniel Mack <daniel@zonque.org>,
+	Haojian Zhuang <haojian.zhuang@gmail.com>,
+	Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: Re: [PATCH v2 2/2] !!! TESTING ONLY !!! Allow compile virt-dma users
+ on ARM64 platform
+Message-ID: <202506171823.CHs69U2q-lkp@intel.com>
+References: <20250616124934.141782-3-al.kochet@gmail.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250616124934.141782-3-al.kochet@gmail.com>
 
-A recent refactor introduced a misplaced put_device() call, leading to a
-reference count underflow during module unload.
+Hi Alexander,
 
-There is no need to add additional put_device() calls for idxd groups,
-engines, or workqueues. Although commit a409e919ca3 claims:"Note, this
-also fixes the missing put_device() for idxd groups, engines, and wqs."
-It appears no such omission existed. The required cleanup is already
-handled by the call chain:
-idxd_unregister_devices() -> device_unregister() -> put_device()
+kernel test robot noticed the following build warnings:
 
-Extend idxd_cleanup() to perform the necessary cleanup, and remove
-idxd_cleanup_internals() which was not originally part of the driver
-unload path and introduced unintended reference count underflow.
+[auto build test WARNING on vkoul-dmaengine/next]
+[also build test WARNING on shawnguo/for-next sunxi/sunxi/for-next lee-mfd/for-mfd-next linus/master v6.16-rc2 next-20250617]
+[cannot apply to atorgue-stm32/stm32-next lee-mfd/for-mfd-fixes]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Fixes: a409e919ca32 ("dmaengine: idxd: Refactor remove call with idxd_cleanup() helper")
-Signed-off-by: Yi Sun <yi.sun@intel.com>
+url:    https://github.com/intel-lab-lkp/linux/commits/Alexander-Kochetkov/dmaengine-virt-dma-convert-tasklet-to-BH-workqueue-for-callback-invocation/20250616-205118
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git next
+patch link:    https://lore.kernel.org/r/20250616124934.141782-3-al.kochet%40gmail.com
+patch subject: [PATCH v2 2/2] !!! TESTING ONLY !!! Allow compile virt-dma users on ARM64 platform
+config: arm64-kismet-CONFIG_TI_K3_RINGACC-CONFIG_TI_K3_UDMA-0-0 (https://download.01.org/0day-ci/archive/20250617/202506171823.CHs69U2q-lkp@intel.com/config)
+reproduce: (https://download.01.org/0day-ci/archive/20250617/202506171823.CHs69U2q-lkp@intel.com/reproduce)
 
-diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index 40cc9c070081..40f4bf446763 100644
---- a/drivers/dma/idxd/init.c
-+++ b/drivers/dma/idxd/init.c
-@@ -1292,7 +1292,10 @@ static void idxd_remove(struct pci_dev *pdev)
- 	device_unregister(idxd_confdev(idxd));
- 	idxd_shutdown(pdev);
- 	idxd_device_remove_debugfs(idxd);
--	idxd_cleanup(idxd);
-+	perfmon_pmu_remove(idxd);
-+	idxd_cleanup_interrupts(idxd);
-+	if (device_pasid_enabled(idxd))
-+		idxd_disable_system_pasid(idxd);
- 	pci_iounmap(pdev, idxd->reg_base);
- 	put_device(idxd_confdev(idxd));
- 	pci_disable_device(pdev);
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506171823.CHs69U2q-lkp@intel.com/
+
+kismet warnings: (new ones prefixed by >>)
+>> kismet: WARNING: unmet direct dependencies detected for TI_K3_RINGACC when selected by TI_K3_UDMA
+   WARNING: unmet direct dependencies detected for TI_K3_RINGACC
+     Depends on [n]: SOC_TI [=n] && (ARCH_K3 [=n] || COMPILE_TEST [=y]) && TI_SCI_INTA_IRQCHIP [=y]
+     Selected by [y]:
+     - TI_K3_UDMA [=y] && DMADEVICES [=y] && (ARCH_K3 [=n] || COMPILE_TEST [=y]) && TI_SCI_PROTOCOL [=y] && TI_SCI_INTA_IRQCHIP [=y]
+
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 

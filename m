@@ -1,178 +1,127 @@
-Return-Path: <dmaengine+bounces-5507-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5508-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A717ADC39A
-	for <lists+dmaengine@lfdr.de>; Tue, 17 Jun 2025 09:44:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D57D4ADC58C
+	for <lists+dmaengine@lfdr.de>; Tue, 17 Jun 2025 11:01:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0784A1886074
-	for <lists+dmaengine@lfdr.de>; Tue, 17 Jun 2025 07:44:10 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 82D83167FAE
+	for <lists+dmaengine@lfdr.de>; Tue, 17 Jun 2025 09:01:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F4E028E5F3;
-	Tue, 17 Jun 2025 07:43:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B153B28A714;
+	Tue, 17 Jun 2025 09:00:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="2QTY16Pa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EiFgmcGL"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B81D28C5C9
-	for <dmaengine@vger.kernel.org>; Tue, 17 Jun 2025 07:43:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31A171E32D6;
+	Tue, 17 Jun 2025 09:00:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750146227; cv=none; b=nT9oqTkXvXmmUiFyqFp469nHgisLDNkEo/tgtvoSfWfpZU9tvDiFy5Xv6UQm3ZzH0FhMZ3iXUWms2T7eClvWQz8TZrpLFMbb+8dmW4L2KEnfWJSgdBluVMWHrePrZZfzlxgch4f8cvPEs6mpt+OQUcz0+ok89QTlIJKMPMXawAE=
+	t=1750150859; cv=none; b=JwnsxcURf6DwlGD5Oy9W6ysYS0RC86THfVxi78Dn0ZQeumpGfJkB34+GSKi5LPcnlxln1YAr4xhtbIhxRyJSRgNiHoT9nwvLZFcy2IvslQ/elgC1niLqWuyFj1pg/8XZItvrklbCMIzYFRUMkwPaHJI0/poOxBAEwEk2Dc58T4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750146227; c=relaxed/simple;
-	bh=Wanilknuq/oxgKqar3VDDdKU9mWKxoMxEl1gryaM9SA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VTt8VPaituK0GlE0pxO96rjPnwh+DsRO/5zcGhBoYbGbVOAVieq4cpjQodMMWsWpWrbUoFTIISSbNp/YtYt9bq7xP7kf7KTixpAgK7UfP9E8XtuMCuuKitkO9truEUeywDbvqUBHPI79MlwDRSOI0zzOfY735sLYbY6rNMoRB4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=2QTY16Pa; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a507e88b0aso5204212f8f.1
-        for <dmaengine@vger.kernel.org>; Tue, 17 Jun 2025 00:43:42 -0700 (PDT)
+	s=arc-20240116; t=1750150859; c=relaxed/simple;
+	bh=WqFZ4qPX6+58lvGJRiRvwH+8LiwngNF+eBXegR5pMOI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KMQOXvjcLAuTw9kY0OHT13rKNbhE4kfaobZMqp73+2gS+kjemOxpAO/5/ypVYXJ6nQ6CgsI2I9C7YedRFXwXeskaRMPhmJ4UnPoMTGOFYjPTya2FJXzNk87qd6YKUjpWKKcK01dvmXpJUf9nqHwKwwj4bMWMOvVULt5u0JhTebE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EiFgmcGL; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-23636167afeso53019195ad.3;
+        Tue, 17 Jun 2025 02:00:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1750146221; x=1750751021; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Yr/0G9QcVKTsH2nCRZsPlndI4/213HWXG/qnBI+qj0g=;
-        b=2QTY16PaPiD0pPXyYQUkBdgV+Y4+1psm6/V2qfmB4Lq68p9Lm72KQg+CPoYBs3OLGi
-         ooFfLnEetDdmDWAKCC1Vn3lS3uXachGRa/Ld74pHGnKq09F7KPxVUlJjWO2nzK+C/mHb
-         oRdkNYYvpQGegdZZsk3O6SkDA5tt37ecZD9pciazCUtNpcfSUeVLqwLKrSjwp7+84F2p
-         9p3rmpZ39PKJhiHvGIZAOpCLCEk9F/EFapU7co6qmyN5Y6kKVbIoRXH5YCEKKD/s95oT
-         I6FWP9bD1K6PfQzaeQ18JkCtuDp9KaurmXlFZKNl6MHHYv8y8zmXp/BaJWwIRFxIKjT1
-         sgPQ==
+        d=gmail.com; s=20230601; t=1750150857; x=1750755657; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tsCHQ2dp31/BppABmVZtNlJK9iJUdzdnw38kvS3lSts=;
+        b=EiFgmcGLB/BBVxXdNxtW9/A6HdEEIMBD2JyLczhinKT1oN1Y7nfoi+Wz10v0cmR9C9
+         6iNPZsNCCaRySgDKau7j/uW2PLR5h4nV9q6CqLEo9LxBMZ7QYBp5L67N2m3ECgAzzYAl
+         vOEjTKPhG9w5FQxbPCOUKEa/+aUIm9rcgta5KwJsRG0vWi69xauBh/WzZwmMwqO4HsCU
+         n+A8ikq/8L4uNAvs4lVrBlx075RWth6TgNnebb+Ga8uEcEVDm/Jr6/pSqqYjlSnLgRs/
+         7RaCm/RWCBdE2dAtO4ein8D5FtXXoo0Py0AIMBNbwqtcxHrwRFH5txwnBvb//BlC+myI
+         CeBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750146221; x=1750751021;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Yr/0G9QcVKTsH2nCRZsPlndI4/213HWXG/qnBI+qj0g=;
-        b=br4DvpBHVxTvcL6A+zOse6tTmiZ/oP+viIi6oAKPd+yd6VLoqCkmpeZtYwwU7RUH9n
-         L31T4BN4jAlR7xzsu3otNIxNiZKFn8Qs5UGXhrpTolre9yrOa6pFhNQXYZSLfgmC7vhu
-         412Z9gWjbF7lPX7IkKZw7XfBkOFWHmc2vTCj98Ww01qzHs62zxG9hvQ1otYRSMhV0kbJ
-         8tinDekOrhi3QU1bVVfdxBm0GXIpdB6MuRg2P752wJDqqzsYq2CRmVRjcUmz7o42LVAd
-         y61MYZMjePcH4VKXeHDQH4o1XKtKnFEZu6AfYuMYiMzLuKTdxrYHAp4tQlElC9PjTQfe
-         n3eg==
-X-Forwarded-Encrypted: i=1; AJvYcCV0iDDyq7bT8HNBxkLg2KLUgkGD+l6LVcIOQwpH65tpUGoM9vndib/e/8s6b+1r4tdUDvBvvmG+8XU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVQU3SXhbhBL4zSlQPwXZFKWrgyMXAddOvwdSFZAW7l1SjuKHU
-	bZlMJU/AMGS7DA5b+Ocn6uM4vIpQQ8iE7HSSvf9WP6fSwJZ1n1LsoQu1Hk0MTSsTUY4=
-X-Gm-Gg: ASbGnctD6yACCz2ZlK8Etwa8H8IharkEpZKGJyvuMvtTlBLtZFVoGylvO3K26JBwUME
-	AQLealMd5VDv/nWhUv7Q0nw9MX4cAH/jGxWzd+XEGqxWR19CoM8OiNPMeqqCmRYjSwBMB8wkcEr
-	rdEdCZd927eTfg3JHEtTACZkRX/jsTq30ZcV9pivZ/WgHx633HCyMPuzz+VIJn6ZVi+edT6xuhj
-	Qgmsj1sJIx429O/EB0kPWy3Mu6aQ+vIZrGWMQ3ESzEJAu+V40KHauaqHfW8d/8nbsi5Ee1V4DJu
-	CG4+1pq9XHO3pFf0zmKcc8cOt7F6KPaRficTjzCKINNmbuNyfRXIFcTDZd1/9SmWbeZFNIalilf
-	yl8GyVnJFdoUZjxRsc9nrnlrRnqx6
-X-Google-Smtp-Source: AGHT+IHjO2Se+CNiFhQkijyy0zThy6btDct+3FCrSMJqJK2Ek1zZ0kq2x91GfZpIV9vpmdDOKsNMTg==
-X-Received: by 2002:a05:6000:2302:b0:3a5:2cf3:d6ab with SMTP id ffacd0b85a97d-3a5723aeae3mr10062193f8f.39.1750146221186;
-        Tue, 17 Jun 2025 00:43:41 -0700 (PDT)
-Received: from localhost (p200300f65f13c80400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f13:c804::1b9])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a568b18f96sm13293332f8f.66.2025.06.17.00.43.40
+        d=1e100.net; s=20230601; t=1750150857; x=1750755657;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tsCHQ2dp31/BppABmVZtNlJK9iJUdzdnw38kvS3lSts=;
+        b=IBThgJHRUtuUMJ49qBa7okrOPRYww0naxrU05vtZ9P3DPaDWLpa5EbpTst6/jOGiWN
+         O7l5dv+68oB9mIGquyEyatWxMHkgeZqKJcOsU3poajqPGyqei0i1L7KUGTFFZiPs1heQ
+         kyzjzcO6EV2U6W7SnOsaXA8NRF+2DFvhY9MOfjGPb9NjWBW1pGMjkmK+xLmktPFcyb7P
+         1/PORhpjwdpj+5PLm8VtQBR19b9Eo+vTY+YqYZI8Drzw2QiR5/KDhZUpIinlTltiUXw3
+         ekVCtsA4W7YXsIEh97LLCiUV5P9Uop5qHMboURE2BDK4C+bF9ie5GV0WdSsdofsib6fV
+         aROw==
+X-Forwarded-Encrypted: i=1; AJvYcCULHqQrJJLm78WqRdCdgg/RROUVf1sJn039VPSubtybnn3Wge+pgMfA7NPzQynlSrB/9FIfSDphXm3X@vger.kernel.org, AJvYcCWnX/BtcAssebDbtiec0gHWmjan8bSnMmR6qhv32u1/ZHNeEXp8Hg+IcrbWg1MKKvS/xfmiQ/KB5RjX@vger.kernel.org, AJvYcCXx+fN8FYoLdKz7Ht4QDqkcv8Hu8PyayPJFmhT0UQoCwwIOgsQwNgPDvWq6C0ta6Jm+G1GLDI+YkbtRFZvy@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2xe4RyqgZfTropxPMNdZxDND+luiX+gz4mYDiEBesjvZ1Hroa
+	8zuWGxhdLeKr55b+yzs/hgDcIx1jeJBswRqtcdto9GlUsCSShZUGy2hs
+X-Gm-Gg: ASbGncuoqt1PFeN6bb3ZHtjfniwDPA5mU5K3e2Mme5Pu3vOszU5BVRU5m06eQp2LGly
+	Vyy3RBVXvtpZ5LWuVE7Bq2Mz+oZ35AtDWiOG3GkJQ0KyJCXF1nSQvgQ4KDB+PM/UQ9o1Lj3iDfM
+	eIO5KlVyRgTd7/baSDV+VdPyOEctlzZ3wWSxYGMvRSAORlOwd7dGCmJlA5fS2mcwKVtKAp8p/lw
+	ff7boLl80RSri+aHUAwDLAS57LRtqXa8TFEtfuLCdr8DPNugaAKDLREKX18apNKXh+rmOpJ71QH
+	GVXiudnhjvKTl9G0we2pMcfSrIMVgEVXqcSyRWyhSlL/c84K8rb6j3MRRNYJtKRfhPWEg2E=
+X-Google-Smtp-Source: AGHT+IFo6pwFfp0nD/MjfEOs5NJ2XQGul02qjgqtb5pXSskMOp8VnJYA4dVQiii1giXc6oFonfI29A==
+X-Received: by 2002:a17:903:2301:b0:231:c9bb:60fd with SMTP id d9443c01a7336-2366b3ad4d8mr169155625ad.33.1750150857331;
+        Tue, 17 Jun 2025 02:00:57 -0700 (PDT)
+Received: from nuvole.. ([144.202.86.13])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fe1680c5fsm8301764a12.49.2025.06.17.02.00.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 00:43:40 -0700 (PDT)
-Date: Tue, 17 Jun 2025 09:43:39 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Abin Joseph <abin.joseph@amd.com>, michal.simek@amd.com, 
-	yanzhen@vivo.com, radhey.shyam.pandey@amd.com, palmer@rivosinc.com, git@amd.com, 
-	dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: zynqmp_dma: Add shutdown operation support
-Message-ID: <rgjc7ujikyznrri27u6v3zst2m44423g46rlfnkfncr24jwx6z@mfwwvhe3upby>
-References: <20250612162144.3294953-1-abin.joseph@amd.com>
- <aFENfW0v0gmtY2Gu@vaman>
+        Tue, 17 Jun 2025 02:00:56 -0700 (PDT)
+From: Pengyu Luo <mitltlatltl@gmail.com>
+To: Vinod Koul <vkoul@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: linux-arm-msm@vger.kernel.org,
+	dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Pengyu Luo <mitltlatltl@gmail.com>
+Subject: [PATCH v3 0/2] arm64: dts: qcom: Add GPI DMA support for sc8280xp
+Date: Tue, 17 Jun 2025 17:00:30 +0800
+Message-ID: <20250617090032.1487382-1-mitltlatltl@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="pas4lfeknrusfsyc"
-Content-Disposition: inline
-In-Reply-To: <aFENfW0v0gmtY2Gu@vaman>
+Content-Transfer-Encoding: 8bit
 
+This series adds GPI DMA support for the sc8280xp platform. This option is
+required only on devices where the touch panel is connected over SPI.
 
---pas4lfeknrusfsyc
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] dmaengine: zynqmp_dma: Add shutdown operation support
-MIME-Version: 1.0
+base-commit: 176e917e010cb7dcc605f11d2bc33f304292482b
 
-Hello Vinod,
+Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
+---
+Changes in v3:
+- fix shifted dma channels
+- do not enable this on devices without connected SPI slave devices.
+- Link to v2: https://lore.kernel.org/linux-arm-msm/20250612075724.707457-1-mitltlatltl@gmail.com
 
-On Tue, Jun 17, 2025 at 12:08:53PM +0530, Vinod Koul wrote:
-> On 12-06-25, 21:51, Abin Joseph wrote:
-> > Implement shutdown hook to ensure dmaengine could be stopped inorder for
-> > kexec to restart the new kernel.
-> >=20
-> > Signed-off-by: Abin Joseph <abin.joseph@amd.com>
-> > ---
-> >  drivers/dma/xilinx/zynqmp_dma.c | 13 +++++++++++++
-> >  1 file changed, 13 insertions(+)
-> >=20
-> > diff --git a/drivers/dma/xilinx/zynqmp_dma.c b/drivers/dma/xilinx/zynqm=
-p_dma.c
-> > index d05fc5fcc77d..8f9f1ef4f0bf 100644
-> > --- a/drivers/dma/xilinx/zynqmp_dma.c
-> > +++ b/drivers/dma/xilinx/zynqmp_dma.c
-> > @@ -1178,6 +1178,18 @@ static void zynqmp_dma_remove(struct platform_de=
-vice *pdev)
-> >  		zynqmp_dma_runtime_suspend(zdev->dev);
-> >  }
-> > =20
-> > +/**
-> > + * zynqmp_dma_shutdown - Driver shutdown function
-> > + * @pdev: Pointer to the platform_device structure
-> > + */
-> > +static void zynqmp_dma_shutdown(struct platform_device *pdev)
-> > +{
-> > +	struct zynqmp_dma_device *zdev =3D platform_get_drvdata(pdev);
-> > +
-> > +	zynqmp_dma_chan_remove(zdev->chan);
-> > +	pm_runtime_disable(zdev->dev);
-> > +}
-> > +
-> >  static const struct of_device_id zynqmp_dma_of_match[] =3D {
-> >  	{ .compatible =3D "amd,versal2-dma-1.0", .data =3D &versal2_dma_confi=
-g },
-> >  	{ .compatible =3D "xlnx,zynqmp-dma-1.0", },
-> > @@ -1193,6 +1205,7 @@ static struct platform_driver zynqmp_dma_driver =
-=3D {
-> >  	},
-> >  	.probe =3D zynqmp_dma_probe,
-> >  	.remove =3D zynqmp_dma_remove,
-> > +	.shutdown =3D zynqmp_dma_shutdown,
->=20
-> Why not do all operations performed in remove..?
+Changes in v2:
+- document dt-bindings (Dmitry)
+- use describe in commit message (Eugen)
+- enable it for sc8280xp based devices
+- Link to v1: https://lore.kernel.org/linux-arm-msm/20250605054208.402581-1-mitltlatltl@gmail.com
 
-=2Eremove() isn't called on shutdown.
+Pengyu Luo (2):
+  dt-bindings: dma: qcom,gpi: Document the sc8280xp GPI DMA engine
+  arm64: dts: qcom: sc8280xp: Describe GPI DMA controller nodes
 
-Having said that, most other drivers also don't handle .shutdown(). IMHO
-this is special enough that this warrants a comment. Or is kexec a
-reason to silence *all* DMA and most drivers should have a .shutdown
-callback?
+ .../devicetree/bindings/dma/qcom,gpi.yaml     |   1 +
+ arch/arm64/boot/dts/qcom/sc8280xp.dtsi        | 368 ++++++++++++++++++
+ 2 files changed, 369 insertions(+)
 
-Best regards
-Uwe
+-- 
+2.49.0
 
---pas4lfeknrusfsyc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhRHJ4ACgkQj4D7WH0S
-/k6fcwf/ZARJglob++15lJ5FJZx+lpM9MqpTeUGMKnMzw6B014DEmMpCveShyVjN
-pyGyLhkwI9RHVm9w0L3Gw5tRsEk6gD228K8xE/8hLk+HYNPYqsXlE/B+2AM+Y50/
-Taac6eUG7W9ZGdz6nQxSvROz5tqT5r4WpYvN+TC6hyb7H4KVB963oWjZtwONnBJH
-/bsc2E3kw4J+wctryB6wce6W3ajZEkpaMyyMdzAWTcJ+DFQICD+vb5lJM8Ob8iyH
-RSdhNesjl2KzAFDd75PCPRrUuD08Ndu1Wq35d1+du85WP4vLoiBR7mrW4YSjW5iI
-cu529KsUImojosD6g6IMeCKHknJMqw==
-=Lai6
------END PGP SIGNATURE-----
-
---pas4lfeknrusfsyc--
 

@@ -1,151 +1,257 @@
-Return-Path: <dmaengine+bounces-5529-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5530-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7A0AADE016
-	for <lists+dmaengine@lfdr.de>; Wed, 18 Jun 2025 02:38:25 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id F0471ADE4B4
+	for <lists+dmaengine@lfdr.de>; Wed, 18 Jun 2025 09:43:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 82C2916BEDC
-	for <lists+dmaengine@lfdr.de>; Wed, 18 Jun 2025 00:38:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C18053BB282
+	for <lists+dmaengine@lfdr.de>; Wed, 18 Jun 2025 07:43:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D59967080D;
-	Wed, 18 Jun 2025 00:38:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81B2727EFE5;
+	Wed, 18 Jun 2025 07:43:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TnJxgWFD"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ByvjSmHr";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hBn4E7OK"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBC362F531E;
-	Wed, 18 Jun 2025 00:38:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8D0D27E7EF;
+	Wed, 18 Jun 2025 07:43:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750207101; cv=none; b=HOJ1RdENOFuqffspOe9Toa+RxxOID/8BWpDYqHQO7X2b8BMMdXBcP+cKdtFiHlfIFKFhaqovTl0/uMJY8gQyBEUtlxT1LCiVSZkCymsl/zVw4RoonM+5knPWazj6ZNpyA+ADRpq7djwkmenp85eCQRiW5RnAVB9FunNozAZ9tS8=
+	t=1750232628; cv=none; b=bGI9QvjKwLKKiJBkKinujeNElArmr41dKDNO9SB2ndCcZ2jwuNIKqlD3ofPPAHlixaBDQ3fwV/Jz1Vc6QqNUOTbThLgICmfMh6fSzRO/f9WMhrq/BNyTW6KpDKb4cI8wxWNBiC7wP0QNKhG7aRH56CmMH6aGgRoe35JxL+cIBrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750207101; c=relaxed/simple;
-	bh=kr/dpxCIiFx2PARCp0s8CBGX8HSEHg1lXZUOZePGodQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=exk4dTIyzSU0q9+pFS2/mJAK5aUaH4VKl0FG3Xplje5soLWS4eFEaCENS+u6CKFmvZcvkeOTCQsnYo/tChlFYxO6mnjB7kqyGyLjjZ7A7QzoJAvAtKs7FaWgH4p2kFVIpjRkFiz3Dz0v8IzlTKKNeQ/VcV83HLXgcojgW/C+GJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TnJxgWFD; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750207101; x=1781743101;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=kr/dpxCIiFx2PARCp0s8CBGX8HSEHg1lXZUOZePGodQ=;
-  b=TnJxgWFD9N1Zwj/YqpP3umUHBn3eOSk6R8SYZ7EQzn/ha3AtsZWSZZm6
-   dYcO2aXT6D4vcogVB/7ELoIH3UtlwuQj+daZ4XHZk8MaX+XvGv7vdCv85
-   9n37mJExMIGFsrOkPsFNeue2qExGM0KaJfE7rMdt4cWRNtIAXaW8rMfRI
-   0x8x2pACWylhkKGLZHdZ7v8Wdr2ZkKmxgt6TaEQrreWJfK7vDaC0sMo93
-   VwOa/CoDxLmuS6rghJOd6uV9ChaF82s7hGaBDXamZxsVM0YNmXDmBin2+
-   rIKew8uuYKqinn6YGGwDYjxXQTFZK8QAgRgpYQzdQg3Q0VELrsAbqeQX+
-   Q==;
-X-CSE-ConnectionGUID: fKU8qtKRTBmJ+dy/D1ezqg==
-X-CSE-MsgGUID: ALimepv9RKurW3LQJA/j2Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="52386204"
-X-IronPort-AV: E=Sophos;i="6.16,244,1744095600"; 
-   d="scan'208";a="52386204"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 17:38:20 -0700
-X-CSE-ConnectionGUID: D7hSyphjQUSQgNYrhIVGGQ==
-X-CSE-MsgGUID: JeKkNUs1RdWgXffme3kQ0w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,244,1744095600"; 
-   d="scan'208";a="172320539"
-Received: from unknown (HELO vcostago-mobl3) ([10.241.226.49])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 17:38:18 -0700
-From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-To: Fenghua Yu <fenghuay@nvidia.com>, Yi Sun <yi.sun@intel.com>,
- dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: dave.jiang@intel.com, gordon.jin@intel.com
-Subject: Re: [PATCH v3 2/2] dmaengine: idxd: Fix refcount underflow on
- module unload
-In-Reply-To: <39398407-009e-4afe-acb6-e3de931627d7@nvidia.com>
-References: <20250617102712.727333-1-yi.sun@intel.com>
- <20250617102712.727333-3-yi.sun@intel.com>
- <39398407-009e-4afe-acb6-e3de931627d7@nvidia.com>
-Date: Tue, 17 Jun 2025 17:38:17 -0700
-Message-ID: <871prh9952.fsf@intel.com>
+	s=arc-20240116; t=1750232628; c=relaxed/simple;
+	bh=+tSB1MfVCA6a4XIVYMAt8jv2Wa57wse7PxlEPUqmfsA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Uz7LtTO2hl710vMInvqBm25Ffl5Iv3wYSz+uwGtMXtXfa8z1HEuIRwI7ZUrdRXqzsf/LZ17ELDOppOIssMSdHmeVdA92dIvgXTKiuO3tx/Q3esEprXoQLbqnP5lQkdy9VBHL2m6ieYEgRRdBuZQ0uxYJZ9VEHn+9/6zb6FLDPUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ByvjSmHr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hBn4E7OK; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750232625;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=N6HHsAcHH91WesaqxftqeEGzD1inildG7/10cPoKGig=;
+	b=ByvjSmHrKk4dfqsi3VrV69fsQVRYKp3ff39Pj8B1VIEgaNGjDIomPutvBZn5V0gVRfGzqZ
+	36jtwKb0c5dMcLMIAKxjgHACt/TzJDnOT7F8s+RZMzdgKAqMKcdqeklGPQM/ccF9GTzxac
+	C9MLIeN4rqKfyJXNJ5/l8fAeU9zxUzJmtI568xFQKtRAKKEJZqxn7qKPXcGURYKN124C4s
+	4UW0a2vlMZtvn/I/NU8sfilfN7lMoPsESQgQUlrXbV16jMk4vAHbb9Ynaev2YoXLonNDGD
+	xnxBQ2Mnv5EJWUqleB5vLxUM1A/xIuly9SayUoltJT36Z6q5ntAuzMZf80E9LA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750232625;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=N6HHsAcHH91WesaqxftqeEGzD1inildG7/10cPoKGig=;
+	b=hBn4E7OKpJFa3DMnsx2hN8c1xNBYCRz1A9VA0/7Ng6oj00HFbbloEGN6hd6JpWaXbgMcEc
+	8L1SnLbyhHfEi+BA==
+Date: Wed, 18 Jun 2025 09:43:34 +0200
+Subject: [PATCH v2] dmaengine: stm32: Don't use %pK through printk
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250618-restricted-pointers-dma-v2-1-bc39dafc201d@linutronix.de>
+X-B4-Tracking: v=1; b=H4sIACVuUmgC/3WNQQ6CMBBFr2Jm7Zi2oIgr72FYFDrIJNqSaSUYw
+ t2tJC5dvpf89xeIJEwRLrsFhCaOHHwGs99BN1h/J2SXGYwyR1WqEoViEu4SORwD+0QS0T0tmrr
+ rz0VttVUt5PUo1PO8lW9N5oFjCvLejib9tb9m9bc5adTYnnTlnCJTF/b6YP9KEjzPB0fQrOv6A
+ WwgUFXCAAAA
+X-Change-ID: 20250404-restricted-pointers-dma-29cf839a1a0b
+To: =?utf-8?q?Am=C3=A9lie_Delaunay?= <amelie.delaunay@foss.st.com>, 
+ Vinod Koul <vkoul@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>
+Cc: dmaengine@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750232624; l=6716;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=+tSB1MfVCA6a4XIVYMAt8jv2Wa57wse7PxlEPUqmfsA=;
+ b=NPDQ8uznn3EHmpX3pZM6dfETaJzaZ9d7n8ZEZ9bpmZkiXdMKi+1oomrRNLsXOfBv6QMAdcA8W
+ Yvk8zhChFSjD5FAVSWc5hfgQ0L+fQXZOSrBqibhvpzqSBpkoqgGJG3F
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Fenghua Yu <fenghuay@nvidia.com> writes:
+In the past %pK was preferable to %p as it would not leak raw pointer
+values into the kernel log.
+Since commit ad67b74d2469 ("printk: hash addresses printed with %p")
+the regular %p has been improved to avoid this issue.
+Furthermore, restricted pointers ("%pK") were never meant to be used
+through printk(). They can still unintentionally leak raw pointers or
+acquire sleeping locks in atomic contexts.
 
-> Hi, Yi,
->
-> On 6/17/25 03:27, Yi Sun wrote:
->> A recent refactor introduced a misplaced put_device() call, leading to a
->> reference count underflow during module unload.
->>
->> There is no need to add additional put_device() calls for idxd groups,
->> engines, or workqueues. Although commit a409e919ca3 claims:"Note, this
->> also fixes the missing put_device() for idxd groups, engines, and wqs."
->> It appears no such omission existed. The required cleanup is already
->> handled by the call chain:
->>
->>
->> Extend idxd_cleanup() to perform the necessary cleanup, and remove
->> idxd_cleanup_internals() which was not originally part of the driver
->> unload path and introduced unintended reference count underflow.
->>
->> Fixes: a409e919ca32 ("dmaengine: idxd: Refactor remove call with idxd_cleanup() helper")
->> Signed-off-by: Yi Sun <yi.sun@intel.com>
->>
->> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
->> index 40cc9c070081..40f4bf446763 100644
->> --- a/drivers/dma/idxd/init.c
->> +++ b/drivers/dma/idxd/init.c
->> @@ -1292,7 +1292,10 @@ static void idxd_remove(struct pci_dev *pdev)
->>   	device_unregister(idxd_confdev(idxd));
->>   	idxd_shutdown(pdev);
->>   	idxd_device_remove_debugfs(idxd);
->> -	idxd_cleanup(idxd);
->> +	perfmon_pmu_remove(idxd);
->> +	idxd_cleanup_interrupts(idxd);
->> +	if (device_pasid_enabled(idxd))
->> +		idxd_disable_system_pasid(idxd);
->>
-> This will hit memory leak issue.
->
-> idxd_remove_internals() does not only put_device() but also free 
-> allocated memory for wqs, engines, groups. Without calling 
-> idxd_remove_internals(), the allocated memory is leaked.
->
-> I think a right fix is to remove the put_device() in 
-> idxd_cleanup_wqs/engines/groups() because:
->
-> 1. idxd_setup_wqs/engines/groups() does not call get_device(). Their 
-> counterpart idxd_cleanup_wqs/engines/groups() shouldn't call put_device().
->
-> 2. Fix the issue mentioned in this patch while there is no memory leak 
-> issue.
->
+Switch to the regular pointer formatting which is safer and
+easier to reason about.
 
-In my opinion, I think the problem is a bit different, it is that the
-driver is doing a lot of custom deallocation itself and not
-trusting/depending on the device lifetime tracking to do the
-deallocation of resources. That is, we should free the memory associated
-with a device when its .release() is called.
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+Reviewed-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
+---
+Changes in v2:
+- Rebase onto 6.16-rc
+- Pick up review from Amelie
+- Fix typo in commit message
+- Drop inapplicable mention of seq_file from commit message
+- Link to v1: https://lore.kernel.org/r/20250407-restricted-pointers-dma-v1-1-b617dd0e293a@linutronix.de
+---
+ drivers/dma/stm32/stm32-dma.c  | 10 +++++-----
+ drivers/dma/stm32/stm32-dma3.c | 10 +++++-----
+ drivers/dma/stm32/stm32-mdma.c |  8 ++++----
+ 3 files changed, 14 insertions(+), 14 deletions(-)
 
->>   	pci_iounmap(pdev, idxd->reg_base);
->>   	put_device(idxd_confdev(idxd));
->>   	pci_disable_device(pdev);
->
-> Thanks.
->
-> -Fenghua
->
+diff --git a/drivers/dma/stm32/stm32-dma.c b/drivers/dma/stm32/stm32-dma.c
+index 917f8e9223739af853e492d97cecac0e95e0aea3..ee9246c6888ffde2d416270f25890c04c72daff7 100644
+--- a/drivers/dma/stm32/stm32-dma.c
++++ b/drivers/dma/stm32/stm32-dma.c
+@@ -613,7 +613,7 @@ static void stm32_dma_start_transfer(struct stm32_dma_chan *chan)
+ 	reg->dma_scr |= STM32_DMA_SCR_EN;
+ 	stm32_dma_write(dmadev, STM32_DMA_SCR(chan->id), reg->dma_scr);
+ 
+-	dev_dbg(chan2dev(chan), "vchan %pK: started\n", &chan->vchan);
++	dev_dbg(chan2dev(chan), "vchan %p: started\n", &chan->vchan);
+ }
+ 
+ static void stm32_dma_configure_next_sg(struct stm32_dma_chan *chan)
+@@ -676,7 +676,7 @@ static void stm32_dma_handle_chan_paused(struct stm32_dma_chan *chan)
+ 
+ 	chan->status = DMA_PAUSED;
+ 
+-	dev_dbg(chan2dev(chan), "vchan %pK: paused\n", &chan->vchan);
++	dev_dbg(chan2dev(chan), "vchan %p: paused\n", &chan->vchan);
+ }
+ 
+ static void stm32_dma_post_resume_reconfigure(struct stm32_dma_chan *chan)
+@@ -728,7 +728,7 @@ static void stm32_dma_post_resume_reconfigure(struct stm32_dma_chan *chan)
+ 	dma_scr |= STM32_DMA_SCR_EN;
+ 	stm32_dma_write(dmadev, STM32_DMA_SCR(chan->id), dma_scr);
+ 
+-	dev_dbg(chan2dev(chan), "vchan %pK: reconfigured after pause/resume\n", &chan->vchan);
++	dev_dbg(chan2dev(chan), "vchan %p: reconfigured after pause/resume\n", &chan->vchan);
+ }
+ 
+ static void stm32_dma_handle_chan_done(struct stm32_dma_chan *chan, u32 scr)
+@@ -820,7 +820,7 @@ static void stm32_dma_issue_pending(struct dma_chan *c)
+ 
+ 	spin_lock_irqsave(&chan->vchan.lock, flags);
+ 	if (vchan_issue_pending(&chan->vchan) && !chan->desc && !chan->busy) {
+-		dev_dbg(chan2dev(chan), "vchan %pK: issued\n", &chan->vchan);
++		dev_dbg(chan2dev(chan), "vchan %p: issued\n", &chan->vchan);
+ 		stm32_dma_start_transfer(chan);
+ 
+ 	}
+@@ -922,7 +922,7 @@ static int stm32_dma_resume(struct dma_chan *c)
+ 
+ 	spin_unlock_irqrestore(&chan->vchan.lock, flags);
+ 
+-	dev_dbg(chan2dev(chan), "vchan %pK: resumed\n", &chan->vchan);
++	dev_dbg(chan2dev(chan), "vchan %p: resumed\n", &chan->vchan);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/dma/stm32/stm32-dma3.c b/drivers/dma/stm32/stm32-dma3.c
+index 0c6c4258b19561c94f1c68f26ade16b82660ebe6..50e7106c5cb73394c1de52ad5f571f6db63750e6 100644
+--- a/drivers/dma/stm32/stm32-dma3.c
++++ b/drivers/dma/stm32/stm32-dma3.c
+@@ -801,7 +801,7 @@ static void stm32_dma3_chan_start(struct stm32_dma3_chan *chan)
+ 
+ 	chan->dma_status = DMA_IN_PROGRESS;
+ 
+-	dev_dbg(chan2dev(chan), "vchan %pK: started\n", &chan->vchan);
++	dev_dbg(chan2dev(chan), "vchan %p: started\n", &chan->vchan);
+ }
+ 
+ static int stm32_dma3_chan_suspend(struct stm32_dma3_chan *chan, bool susp)
+@@ -1452,7 +1452,7 @@ static int stm32_dma3_pause(struct dma_chan *c)
+ 
+ 	chan->dma_status = DMA_PAUSED;
+ 
+-	dev_dbg(chan2dev(chan), "vchan %pK: paused\n", &chan->vchan);
++	dev_dbg(chan2dev(chan), "vchan %p: paused\n", &chan->vchan);
+ 
+ 	return 0;
+ }
+@@ -1465,7 +1465,7 @@ static int stm32_dma3_resume(struct dma_chan *c)
+ 
+ 	chan->dma_status = DMA_IN_PROGRESS;
+ 
+-	dev_dbg(chan2dev(chan), "vchan %pK: resumed\n", &chan->vchan);
++	dev_dbg(chan2dev(chan), "vchan %p: resumed\n", &chan->vchan);
+ 
+ 	return 0;
+ }
+@@ -1490,7 +1490,7 @@ static int stm32_dma3_terminate_all(struct dma_chan *c)
+ 	spin_unlock_irqrestore(&chan->vchan.lock, flags);
+ 	vchan_dma_desc_free_list(&chan->vchan, &head);
+ 
+-	dev_dbg(chan2dev(chan), "vchan %pK: terminated\n", &chan->vchan);
++	dev_dbg(chan2dev(chan), "vchan %p: terminated\n", &chan->vchan);
+ 
+ 	return 0;
+ }
+@@ -1543,7 +1543,7 @@ static void stm32_dma3_issue_pending(struct dma_chan *c)
+ 	spin_lock_irqsave(&chan->vchan.lock, flags);
+ 
+ 	if (vchan_issue_pending(&chan->vchan) && !chan->swdesc) {
+-		dev_dbg(chan2dev(chan), "vchan %pK: issued\n", &chan->vchan);
++		dev_dbg(chan2dev(chan), "vchan %p: issued\n", &chan->vchan);
+ 		stm32_dma3_chan_start(chan);
+ 	}
+ 
+diff --git a/drivers/dma/stm32/stm32-mdma.c b/drivers/dma/stm32/stm32-mdma.c
+index e6d525901de7ecf822d218b87b95aba6bbf0a3ef..080c1c725216cb627675c372591b4c0c227c3cea 100644
+--- a/drivers/dma/stm32/stm32-mdma.c
++++ b/drivers/dma/stm32/stm32-mdma.c
+@@ -1187,7 +1187,7 @@ static void stm32_mdma_start_transfer(struct stm32_mdma_chan *chan)
+ 
+ 	chan->busy = true;
+ 
+-	dev_dbg(chan2dev(chan), "vchan %pK: started\n", &chan->vchan);
++	dev_dbg(chan2dev(chan), "vchan %p: started\n", &chan->vchan);
+ }
+ 
+ static void stm32_mdma_issue_pending(struct dma_chan *c)
+@@ -1200,7 +1200,7 @@ static void stm32_mdma_issue_pending(struct dma_chan *c)
+ 	if (!vchan_issue_pending(&chan->vchan))
+ 		goto end;
+ 
+-	dev_dbg(chan2dev(chan), "vchan %pK: issued\n", &chan->vchan);
++	dev_dbg(chan2dev(chan), "vchan %p: issued\n", &chan->vchan);
+ 
+ 	if (!chan->desc && !chan->busy)
+ 		stm32_mdma_start_transfer(chan);
+@@ -1220,7 +1220,7 @@ static int stm32_mdma_pause(struct dma_chan *c)
+ 	spin_unlock_irqrestore(&chan->vchan.lock, flags);
+ 
+ 	if (!ret)
+-		dev_dbg(chan2dev(chan), "vchan %pK: pause\n", &chan->vchan);
++		dev_dbg(chan2dev(chan), "vchan %p: pause\n", &chan->vchan);
+ 
+ 	return ret;
+ }
+@@ -1261,7 +1261,7 @@ static int stm32_mdma_resume(struct dma_chan *c)
+ 
+ 	spin_unlock_irqrestore(&chan->vchan.lock, flags);
+ 
+-	dev_dbg(chan2dev(chan), "vchan %pK: resume\n", &chan->vchan);
++	dev_dbg(chan2dev(chan), "vchan %p: resume\n", &chan->vchan);
+ 
+ 	return 0;
+ }
 
-Cheers,
+---
+base-commit: 52da431bf03b5506203bca27fe14a97895c80faf
+change-id: 20250404-restricted-pointers-dma-29cf839a1a0b
+
+Best regards,
 -- 
-Vinicius
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+
 

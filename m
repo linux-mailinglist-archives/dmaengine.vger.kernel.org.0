@@ -1,117 +1,151 @@
-Return-Path: <dmaengine+bounces-5528-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5529-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 65592ADDE9F
-	for <lists+dmaengine@lfdr.de>; Wed, 18 Jun 2025 00:18:29 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D7A0AADE016
+	for <lists+dmaengine@lfdr.de>; Wed, 18 Jun 2025 02:38:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 739E7189074B
-	for <lists+dmaengine@lfdr.de>; Tue, 17 Jun 2025 22:18:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 82C2916BEDC
+	for <lists+dmaengine@lfdr.de>; Wed, 18 Jun 2025 00:38:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E887C21B9E9;
-	Tue, 17 Jun 2025 22:18:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D59967080D;
+	Wed, 18 Jun 2025 00:38:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FQW9damG"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TnJxgWFD"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FD41F4E2;
-	Tue, 17 Jun 2025 22:18:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBC362F531E;
+	Wed, 18 Jun 2025 00:38:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750198703; cv=none; b=UqYwgJYQ6pCEBHCxJpWDlk6wXOv88yMaa3Lk7cxKUKqUrNPUszDHIYYYHKiwphv3TA+XxVA97s10dySRud1ZIuBwh0I5Kdz6jJuCXRaxZcxEvZ9X/1h9zzHXKsVXJJJYQiFKYYMEr7WjG9c0rxu9Uw5ToA/6noWlon4HjqHT8gM=
+	t=1750207101; cv=none; b=HOJ1RdENOFuqffspOe9Toa+RxxOID/8BWpDYqHQO7X2b8BMMdXBcP+cKdtFiHlfIFKFhaqovTl0/uMJY8gQyBEUtlxT1LCiVSZkCymsl/zVw4RoonM+5knPWazj6ZNpyA+ADRpq7djwkmenp85eCQRiW5RnAVB9FunNozAZ9tS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750198703; c=relaxed/simple;
-	bh=JSQ8c3bRabnCayUlehYiu+uvSPqvMtoPuZgRoDGUHoI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eeZTTT2+MJwtp1FoU7VZ5vt3laE3vEKTB7Pr4BwMtv7k73dr402CeGOkaVU5Dq8TJZggXngpmKsrdaTcSxT8UkEEcDZABEzujiIzj2e5JUvnh+XI7FTFalJHSqQiuNAkNgnefaZcbmkhf8j2Pb1VX/cb8MiuGpeX2MJRMvUnMEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FQW9damG; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-23636167b30so56233715ad.1;
-        Tue, 17 Jun 2025 15:18:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750198702; x=1750803502; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9NIdWve1K1b8QzOBntihNhgvZs/2vkEK7FdH81C/3/I=;
-        b=FQW9damGnI2Vz0ySaAs+PuR3IfwI3q35jupxpPJyKuqijKE1Ew54LfSgMbTzY49gai
-         ZR1nFYebYHe/OVRPXpGKWMhD9M4cBik1WHlHGpo1+EbiGNnuMnedOZbG5eLI8OqiTxxX
-         V1hiA5s2lPqxjC5R5g38CH+AF7+nEIisBmIaLsUWM/GK238aZWzhOMUmKGzy1tO/LZg6
-         Qi7s0/w6OoeX0O6p9g5HZZqNgMI/B32GSM6KhpdgVy3EOpkVjG++jWjBwusaiq21Wr+M
-         nHE1zqHjI7EEGCqYVnICpOpdALXgf0+UkX3LYoNMhAtaa49OiW16x64rT/p4E8gREQ8E
-         LJvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750198702; x=1750803502;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9NIdWve1K1b8QzOBntihNhgvZs/2vkEK7FdH81C/3/I=;
-        b=tufzYPVmAi968F6+7PBbisNPpkGRjBNghgITlvC7O2MmIRnyX53NraV5fFz1sYTJjB
-         fF+a+w8IQeWRLkibHrSYF81Y+FChgmBiD2dDnI+TJUsDXWaLt70XEFt4Mrq1Nrxet9iq
-         8f7DQwuPaLD0Y3D/rpyILWUxJh9Mk14EGuuYtfl9ZX/iQTEx7IM9fZMCxF9sgBj++Cft
-         pmOashm/h4BpWYGWV7+tAznDjRwRNEoX43uLQntwp4+o24VWliZTNA3Tcoe6M70+i0uV
-         5gD+BrIG2bkdiEmiLnwCTJvtmYuCQGpDKKfskKlXCzsg0SgQ1r5VL1NZX30MQjSsvpZZ
-         np+w==
-X-Forwarded-Encrypted: i=1; AJvYcCUV/2tGa0ovbqneTE6fD8IdUfIbRE6FhCHCUrGzcr+lDMk4PgE3zaK1Cvckfb5f6qbNfRcejMW+gSJYPu2E@vger.kernel.org, AJvYcCVP9cV7FJVvd4Fff5GXaSzmAr5oZCJ1D3d5026HrzUO7ZPBs4udcVqEfYZabp7MZQBZiD1GGZ+Vuhg=@vger.kernel.org, AJvYcCW16Nhrg4v7pEKn1vhR1khZ+zPR7E0n+ftoxRL3cZnqYdLXfWVrBcKku9mcbJCDTJ3fzEOQjQTyBpic@vger.kernel.org, AJvYcCW9aANfYQNbk9RQTHYptWWKbDwxlBtepBwnetchERXRFzlfSbXFW4kvhQNQ3ARe7If1E2/Ji0wAsENhZKQ=@vger.kernel.org, AJvYcCWRMsGxCCWxYQ3GMtDxVovNnUd+6kRayugO/r6vyZ/fy5Zw2U/DcQLF9ehZYQHSsWQWs3MRhXkuwIY=@vger.kernel.org, AJvYcCXAw2IDBUDrek0IRZAj3nVvIvRa3a9n01ttxwoh+z71vqNgIoWk806mIliDZPLeVpKmfxBx6oY2hma9@vger.kernel.org, AJvYcCXItILcjo3MNfHsvpqFgUf6DLt3f9nV36WSar8YgHPT5MMQr1VUkTB4KepXX/rIJxl1GOkUcduZRnldpfQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmkZWW1yfMyCY04RvBbXWfJixG6LknI1GWhv9G/utp/OINRw7R
-	TtJ9qORcD1PEgFF8P57wglLhrVNH5lj5uoNt9qD/6EQq0s00IQqO8J1k
-X-Gm-Gg: ASbGncuUv/dIxGkTsZ0gSmB9uun2xlYKJX1HlyDdWUJcQHpXmbA/E4KH1VTvmu5sCFf
-	OpiFZ2Of1Gg8Q4OgCw4AFLcvHTKLfyVwjKW+xwmaYclnSKBEY9r0/mOj88ggJjXZfxaaPciNxkW
-	Fl0ibgeKSHPGZZzp0eg0h97oqsqMbje4LXN1FFMEICBFTJtReGJ+0yiByx2FqsNnQ9MIqrPJe2S
-	dGpUgNbPblyrWOFGs5u/GuyJ2TFZCAZyuCx+ZTlywuesehUpPuJB+8OOL8vdDlNzvd6B4aBhVjb
-	M0L4/BFzyIAUXGL/4SM8dPe1f+WWVnRwOE+EGza001wQiwg7rOiY0Md2RwlPYME=
-X-Google-Smtp-Source: AGHT+IF91BQZXlbd6uuMahbLtTEtN2tg3W8Od60D+rCGiIPm2Y3r9UQq92CpdM0V1gssQmyVDCfWGA==
-X-Received: by 2002:a17:902:8bc8:b0:234:a139:120d with SMTP id d9443c01a7336-2366b32e4ebmr135159835ad.7.1750198701630;
-        Tue, 17 Jun 2025 15:18:21 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:4cd9:8b8e:24cd:5a36])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365deca40fsm86178655ad.208.2025.06.17.15.18.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 15:18:20 -0700 (PDT)
-Date: Tue, 17 Jun 2025 15:18:17 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Sven Peter <sven@kernel.org>
-Cc: Janne Grunau <j@jannau.net>, Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
-	Neal Gompa <neal@gompa.dev>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Srinivas Kandagatla <srini@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
-	Robin Murphy <robin.murphy@arm.com>, Vinod Koul <vkoul@kernel.org>, 
-	Martin =?utf-8?Q?Povi=C5=A1er?= <povik+lin@cutebit.org>, Liam Girdwood <lgirdwood@gmail.com>, 
-	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Arnd Bergmann <arnd@arndb.de>, asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, iommu@lists.linux.dev, linux-input@vger.kernel.org, 
-	dmaengine@vger.kernel.org, linux-sound@vger.kernel.org
-Subject: Re: [PATCH 08/11] Input: apple_z2: Drop default ARCH_APPLE in Kconfig
-Message-ID: <oinzomct3qvhmlvulhsubckhtarrz2eedk4ymgnvfeebmiljtt@3wtkh3un7cdb>
-References: <20250612-apple-kconfig-defconfig-v1-0-0e6f9cb512c1@kernel.org>
- <20250612-apple-kconfig-defconfig-v1-8-0e6f9cb512c1@kernel.org>
+	s=arc-20240116; t=1750207101; c=relaxed/simple;
+	bh=kr/dpxCIiFx2PARCp0s8CBGX8HSEHg1lXZUOZePGodQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=exk4dTIyzSU0q9+pFS2/mJAK5aUaH4VKl0FG3Xplje5soLWS4eFEaCENS+u6CKFmvZcvkeOTCQsnYo/tChlFYxO6mnjB7kqyGyLjjZ7A7QzoJAvAtKs7FaWgH4p2kFVIpjRkFiz3Dz0v8IzlTKKNeQ/VcV83HLXgcojgW/C+GJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TnJxgWFD; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750207101; x=1781743101;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=kr/dpxCIiFx2PARCp0s8CBGX8HSEHg1lXZUOZePGodQ=;
+  b=TnJxgWFD9N1Zwj/YqpP3umUHBn3eOSk6R8SYZ7EQzn/ha3AtsZWSZZm6
+   dYcO2aXT6D4vcogVB/7ELoIH3UtlwuQj+daZ4XHZk8MaX+XvGv7vdCv85
+   9n37mJExMIGFsrOkPsFNeue2qExGM0KaJfE7rMdt4cWRNtIAXaW8rMfRI
+   0x8x2pACWylhkKGLZHdZ7v8Wdr2ZkKmxgt6TaEQrreWJfK7vDaC0sMo93
+   VwOa/CoDxLmuS6rghJOd6uV9ChaF82s7hGaBDXamZxsVM0YNmXDmBin2+
+   rIKew8uuYKqinn6YGGwDYjxXQTFZK8QAgRgpYQzdQg3Q0VELrsAbqeQX+
+   Q==;
+X-CSE-ConnectionGUID: fKU8qtKRTBmJ+dy/D1ezqg==
+X-CSE-MsgGUID: ALimepv9RKurW3LQJA/j2Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="52386204"
+X-IronPort-AV: E=Sophos;i="6.16,244,1744095600"; 
+   d="scan'208";a="52386204"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 17:38:20 -0700
+X-CSE-ConnectionGUID: D7hSyphjQUSQgNYrhIVGGQ==
+X-CSE-MsgGUID: JeKkNUs1RdWgXffme3kQ0w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,244,1744095600"; 
+   d="scan'208";a="172320539"
+Received: from unknown (HELO vcostago-mobl3) ([10.241.226.49])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 17:38:18 -0700
+From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+To: Fenghua Yu <fenghuay@nvidia.com>, Yi Sun <yi.sun@intel.com>,
+ dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: dave.jiang@intel.com, gordon.jin@intel.com
+Subject: Re: [PATCH v3 2/2] dmaengine: idxd: Fix refcount underflow on
+ module unload
+In-Reply-To: <39398407-009e-4afe-acb6-e3de931627d7@nvidia.com>
+References: <20250617102712.727333-1-yi.sun@intel.com>
+ <20250617102712.727333-3-yi.sun@intel.com>
+ <39398407-009e-4afe-acb6-e3de931627d7@nvidia.com>
+Date: Tue, 17 Jun 2025 17:38:17 -0700
+Message-ID: <871prh9952.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250612-apple-kconfig-defconfig-v1-8-0e6f9cb512c1@kernel.org>
+Content-Type: text/plain
 
-On Thu, Jun 12, 2025 at 09:11:32PM +0000, Sven Peter wrote:
-> When the first driver for Apple Silicon was upstreamed we accidentally
-> included `default ARCH_APPLE` in its Kconfig which then spread to almost
-> every subsequent driver. As soon as ARCH_APPLE is set to y this will
-> pull in many drivers as built-ins which is not what we want.
-> Thus, drop `default ARCH_APPLE` from Kconfig.
-> 
-> Signed-off-by: Sven Peter <sven@kernel.org>
+Fenghua Yu <fenghuay@nvidia.com> writes:
 
-Applied, thank you.
+> Hi, Yi,
+>
+> On 6/17/25 03:27, Yi Sun wrote:
+>> A recent refactor introduced a misplaced put_device() call, leading to a
+>> reference count underflow during module unload.
+>>
+>> There is no need to add additional put_device() calls for idxd groups,
+>> engines, or workqueues. Although commit a409e919ca3 claims:"Note, this
+>> also fixes the missing put_device() for idxd groups, engines, and wqs."
+>> It appears no such omission existed. The required cleanup is already
+>> handled by the call chain:
+>>
+>>
+>> Extend idxd_cleanup() to perform the necessary cleanup, and remove
+>> idxd_cleanup_internals() which was not originally part of the driver
+>> unload path and introduced unintended reference count underflow.
+>>
+>> Fixes: a409e919ca32 ("dmaengine: idxd: Refactor remove call with idxd_cleanup() helper")
+>> Signed-off-by: Yi Sun <yi.sun@intel.com>
+>>
+>> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+>> index 40cc9c070081..40f4bf446763 100644
+>> --- a/drivers/dma/idxd/init.c
+>> +++ b/drivers/dma/idxd/init.c
+>> @@ -1292,7 +1292,10 @@ static void idxd_remove(struct pci_dev *pdev)
+>>   	device_unregister(idxd_confdev(idxd));
+>>   	idxd_shutdown(pdev);
+>>   	idxd_device_remove_debugfs(idxd);
+>> -	idxd_cleanup(idxd);
+>> +	perfmon_pmu_remove(idxd);
+>> +	idxd_cleanup_interrupts(idxd);
+>> +	if (device_pasid_enabled(idxd))
+>> +		idxd_disable_system_pasid(idxd);
+>>
+> This will hit memory leak issue.
+>
+> idxd_remove_internals() does not only put_device() but also free 
+> allocated memory for wqs, engines, groups. Without calling 
+> idxd_remove_internals(), the allocated memory is leaked.
+>
+> I think a right fix is to remove the put_device() in 
+> idxd_cleanup_wqs/engines/groups() because:
+>
+> 1. idxd_setup_wqs/engines/groups() does not call get_device(). Their 
+> counterpart idxd_cleanup_wqs/engines/groups() shouldn't call put_device().
+>
+> 2. Fix the issue mentioned in this patch while there is no memory leak 
+> issue.
+>
 
+In my opinion, I think the problem is a bit different, it is that the
+driver is doing a lot of custom deallocation itself and not
+trusting/depending on the device lifetime tracking to do the
+deallocation of resources. That is, we should free the memory associated
+with a device when its .release() is called.
+
+>>   	pci_iounmap(pdev, idxd->reg_base);
+>>   	put_device(idxd_confdev(idxd));
+>>   	pci_disable_device(pdev);
+>
+> Thanks.
+>
+> -Fenghua
+>
+
+Cheers,
 -- 
-Dmitry
+Vinicius
 

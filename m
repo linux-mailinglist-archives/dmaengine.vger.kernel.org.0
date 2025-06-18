@@ -1,257 +1,118 @@
-Return-Path: <dmaengine+bounces-5530-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5531-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0471ADE4B4
-	for <lists+dmaengine@lfdr.de>; Wed, 18 Jun 2025 09:43:51 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC1CEADE51D
+	for <lists+dmaengine@lfdr.de>; Wed, 18 Jun 2025 10:05:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C18053BB282
-	for <lists+dmaengine@lfdr.de>; Wed, 18 Jun 2025 07:43:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D39B23BC86A
+	for <lists+dmaengine@lfdr.de>; Wed, 18 Jun 2025 08:04:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81B2727EFE5;
-	Wed, 18 Jun 2025 07:43:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F67A27F005;
+	Wed, 18 Jun 2025 08:05:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ByvjSmHr";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hBn4E7OK"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gjrxtSt7"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8D0D27E7EF;
-	Wed, 18 Jun 2025 07:43:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3404A78F36;
+	Wed, 18 Jun 2025 08:05:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750232628; cv=none; b=bGI9QvjKwLKKiJBkKinujeNElArmr41dKDNO9SB2ndCcZ2jwuNIKqlD3ofPPAHlixaBDQ3fwV/Jz1Vc6QqNUOTbThLgICmfMh6fSzRO/f9WMhrq/BNyTW6KpDKb4cI8wxWNBiC7wP0QNKhG7aRH56CmMH6aGgRoe35JxL+cIBrA=
+	t=1750233910; cv=none; b=u9au9BKJ8PTV2ddcrGrxbct9g2ahqQzWX8FdF6O96aVwNkPwarDqFCgx5Yk/cRo/NQ+2h29msjTEa6Fm9VmwkJaSInaZO+CCea18UoV8ER49WS19RrJ5ZbMETNX9R0lP8n4rTN+vKlNQZqILv5wWrC1MYKlM+BhqmLWsLRY+3Zc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750232628; c=relaxed/simple;
-	bh=+tSB1MfVCA6a4XIVYMAt8jv2Wa57wse7PxlEPUqmfsA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Uz7LtTO2hl710vMInvqBm25Ffl5Iv3wYSz+uwGtMXtXfa8z1HEuIRwI7ZUrdRXqzsf/LZ17ELDOppOIssMSdHmeVdA92dIvgXTKiuO3tx/Q3esEprXoQLbqnP5lQkdy9VBHL2m6ieYEgRRdBuZQ0uxYJZ9VEHn+9/6zb6FLDPUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ByvjSmHr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hBn4E7OK; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750232625;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=N6HHsAcHH91WesaqxftqeEGzD1inildG7/10cPoKGig=;
-	b=ByvjSmHrKk4dfqsi3VrV69fsQVRYKp3ff39Pj8B1VIEgaNGjDIomPutvBZn5V0gVRfGzqZ
-	36jtwKb0c5dMcLMIAKxjgHACt/TzJDnOT7F8s+RZMzdgKAqMKcdqeklGPQM/ccF9GTzxac
-	C9MLIeN4rqKfyJXNJ5/l8fAeU9zxUzJmtI568xFQKtRAKKEJZqxn7qKPXcGURYKN124C4s
-	4UW0a2vlMZtvn/I/NU8sfilfN7lMoPsESQgQUlrXbV16jMk4vAHbb9Ynaev2YoXLonNDGD
-	xnxBQ2Mnv5EJWUqleB5vLxUM1A/xIuly9SayUoltJT36Z6q5ntAuzMZf80E9LA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750232625;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=N6HHsAcHH91WesaqxftqeEGzD1inildG7/10cPoKGig=;
-	b=hBn4E7OKpJFa3DMnsx2hN8c1xNBYCRz1A9VA0/7Ng6oj00HFbbloEGN6hd6JpWaXbgMcEc
-	8L1SnLbyhHfEi+BA==
-Date: Wed, 18 Jun 2025 09:43:34 +0200
-Subject: [PATCH v2] dmaengine: stm32: Don't use %pK through printk
+	s=arc-20240116; t=1750233910; c=relaxed/simple;
+	bh=6/3qHFdiaMsBTrQbhD+mcQD74rIaA69OMemwtiFZ/+I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Y9Oi8XVdGtEXhZS1bzk5I/qbB+9j5Cm2CMVIZaGy5jJVQvRFpZQb1uvx9yWOi9mxG6yTkZnfbUteGLytIeJ1heUSX46bJ2JbiozUcy3ha6Om/IEC6yAQkXnaB1282smpTHBCPQUFkFZ/VqpfUA5MJ6KbDeIhenR4tpiimm3BHYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=gjrxtSt7; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55I8509d258388;
+	Wed, 18 Jun 2025 03:05:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1750233900;
+	bh=iAAvYxuuuYgZ6Udi3MqCZJcu5QStsstjQ/LkjzAIDBw=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=gjrxtSt7FvQkXkHpVC5Uo2xcKnofCv6Ehf8qWIJw5uEl06UjNterpP3Dm/Yu2K32D
+	 sQRwzyqu30rrMEdd8EJIyydxx+jNTtLYeLssmXvSUsbNRm/pYCtyaJi1mYuWRtguTz
+	 4AqqXhaC5mTbS9xBzQgTBHAMSnAurR3N6bv8RCqA=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55I850so2735878
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Wed, 18 Jun 2025 03:05:00 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Wed, 18
+ Jun 2025 03:04:59 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Wed, 18 Jun 2025 03:04:59 -0500
+Received: from [172.24.20.171] (lt2k2yfk3.dhcp.ti.com [172.24.20.171])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55I84sLG3131069;
+	Wed, 18 Jun 2025 03:04:55 -0500
+Message-ID: <fabe8565-cd27-4117-ba64-23022f1942ae@ti.com>
+Date: Wed, 18 Jun 2025 13:34:53 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250618-restricted-pointers-dma-v2-1-bc39dafc201d@linutronix.de>
-X-B4-Tracking: v=1; b=H4sIACVuUmgC/3WNQQ6CMBBFr2Jm7Zi2oIgr72FYFDrIJNqSaSUYw
- t2tJC5dvpf89xeIJEwRLrsFhCaOHHwGs99BN1h/J2SXGYwyR1WqEoViEu4SORwD+0QS0T0tmrr
- rz0VttVUt5PUo1PO8lW9N5oFjCvLejib9tb9m9bc5adTYnnTlnCJTF/b6YP9KEjzPB0fQrOv6A
- WwgUFXCAAAA
-X-Change-ID: 20250404-restricted-pointers-dma-29cf839a1a0b
-To: =?utf-8?q?Am=C3=A9lie_Delaunay?= <amelie.delaunay@foss.st.com>, 
- Vinod Koul <vkoul@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc: dmaengine@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750232624; l=6716;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=+tSB1MfVCA6a4XIVYMAt8jv2Wa57wse7PxlEPUqmfsA=;
- b=NPDQ8uznn3EHmpX3pZM6dfETaJzaZ9d7n8ZEZ9bpmZkiXdMKi+1oomrRNLsXOfBv6QMAdcA8W
- Yvk8zhChFSjD5FAVSWc5hfgQ0L+fQXZOSrBqibhvpzqSBpkoqgGJG3F
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 03/17] dmaengine: ti: k3-udma: move static inline
+ helper functions to header file
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+CC: Peter Ujfalusi <peter.ujfalusi@gmail.com>, Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Santosh
+ Shilimkar <ssantosh@kernel.org>, <dmaengine@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <praneeth@ti.com>,
+        <vigneshr@ti.com>, <u-kumar1@ti.com>, <a-chavda@ti.com>,
+        <p-mantena@ti.com>
+References: <20250612071521.3116831-1-s-adivi@ti.com>
+ <20250612071521.3116831-4-s-adivi@ti.com>
+ <acc1217d-50ce-4851-829d-38294b0a4d81@ti.com>
+Content-Language: en-US
+From: "Adivi, Sai Sree Kartheek" <s-adivi@ti.com>
+In-Reply-To: <acc1217d-50ce-4851-829d-38294b0a4d81@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-In the past %pK was preferable to %p as it would not leak raw pointer
-values into the kernel log.
-Since commit ad67b74d2469 ("printk: hash addresses printed with %p")
-the regular %p has been improved to avoid this issue.
-Furthermore, restricted pointers ("%pK") were never meant to be used
-through printk(). They can still unintentionally leak raw pointers or
-acquire sleeping locks in atomic contexts.
+Hi Siddharth,
 
-Switch to the regular pointer formatting which is safer and
-easier to reason about.
+On 6/12/2025 4:35 PM, Siddharth Vadapalli wrote:
+> On Thu, Jun 12, 2025 at 12:45:07PM +0530, Sai Sree Kartheek Adivi wrote:
+>> Move static inline helper functions in k3-udma.c to k3-udma.h header
+>> file for better separation and re-use.
+>>
+>> Signed-off-by: Sai Sree Kartheek Adivi <s-adivi@ti.com>
+>> ---
+>>   drivers/dma/ti/k3-udma.c | 108 --------------------------------------
+>>   drivers/dma/ti/k3-udma.h | 109 +++++++++++++++++++++++++++++++++++++++
+> 
+> Since this patch and the previous two patches seem to have the same
+> objective of moving contents from "k3-udma.c" to "k3-udma.h" for the
+> purpose of re-use, could they be squashed?
 
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-Reviewed-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
----
-Changes in v2:
-- Rebase onto 6.16-rc
-- Pick up review from Amelie
-- Fix typo in commit message
-- Drop inapplicable mention of seq_file from commit message
-- Link to v1: https://lore.kernel.org/r/20250407-restricted-pointers-dma-v1-1-b617dd0e293a@linutronix.de
----
- drivers/dma/stm32/stm32-dma.c  | 10 +++++-----
- drivers/dma/stm32/stm32-dma3.c | 10 +++++-----
- drivers/dma/stm32/stm32-mdma.c |  8 ++++----
- 3 files changed, 14 insertions(+), 14 deletions(-)
+I split them up to make the changes easier to review, bisect or revert 
+if needed. They're logically distinct changes even if the overall goal 
+is similar.
 
-diff --git a/drivers/dma/stm32/stm32-dma.c b/drivers/dma/stm32/stm32-dma.c
-index 917f8e9223739af853e492d97cecac0e95e0aea3..ee9246c6888ffde2d416270f25890c04c72daff7 100644
---- a/drivers/dma/stm32/stm32-dma.c
-+++ b/drivers/dma/stm32/stm32-dma.c
-@@ -613,7 +613,7 @@ static void stm32_dma_start_transfer(struct stm32_dma_chan *chan)
- 	reg->dma_scr |= STM32_DMA_SCR_EN;
- 	stm32_dma_write(dmadev, STM32_DMA_SCR(chan->id), reg->dma_scr);
- 
--	dev_dbg(chan2dev(chan), "vchan %pK: started\n", &chan->vchan);
-+	dev_dbg(chan2dev(chan), "vchan %p: started\n", &chan->vchan);
- }
- 
- static void stm32_dma_configure_next_sg(struct stm32_dma_chan *chan)
-@@ -676,7 +676,7 @@ static void stm32_dma_handle_chan_paused(struct stm32_dma_chan *chan)
- 
- 	chan->status = DMA_PAUSED;
- 
--	dev_dbg(chan2dev(chan), "vchan %pK: paused\n", &chan->vchan);
-+	dev_dbg(chan2dev(chan), "vchan %p: paused\n", &chan->vchan);
- }
- 
- static void stm32_dma_post_resume_reconfigure(struct stm32_dma_chan *chan)
-@@ -728,7 +728,7 @@ static void stm32_dma_post_resume_reconfigure(struct stm32_dma_chan *chan)
- 	dma_scr |= STM32_DMA_SCR_EN;
- 	stm32_dma_write(dmadev, STM32_DMA_SCR(chan->id), dma_scr);
- 
--	dev_dbg(chan2dev(chan), "vchan %pK: reconfigured after pause/resume\n", &chan->vchan);
-+	dev_dbg(chan2dev(chan), "vchan %p: reconfigured after pause/resume\n", &chan->vchan);
- }
- 
- static void stm32_dma_handle_chan_done(struct stm32_dma_chan *chan, u32 scr)
-@@ -820,7 +820,7 @@ static void stm32_dma_issue_pending(struct dma_chan *c)
- 
- 	spin_lock_irqsave(&chan->vchan.lock, flags);
- 	if (vchan_issue_pending(&chan->vchan) && !chan->desc && !chan->busy) {
--		dev_dbg(chan2dev(chan), "vchan %pK: issued\n", &chan->vchan);
-+		dev_dbg(chan2dev(chan), "vchan %p: issued\n", &chan->vchan);
- 		stm32_dma_start_transfer(chan);
- 
- 	}
-@@ -922,7 +922,7 @@ static int stm32_dma_resume(struct dma_chan *c)
- 
- 	spin_unlock_irqrestore(&chan->vchan.lock, flags);
- 
--	dev_dbg(chan2dev(chan), "vchan %pK: resumed\n", &chan->vchan);
-+	dev_dbg(chan2dev(chan), "vchan %p: resumed\n", &chan->vchan);
- 
- 	return 0;
- }
-diff --git a/drivers/dma/stm32/stm32-dma3.c b/drivers/dma/stm32/stm32-dma3.c
-index 0c6c4258b19561c94f1c68f26ade16b82660ebe6..50e7106c5cb73394c1de52ad5f571f6db63750e6 100644
---- a/drivers/dma/stm32/stm32-dma3.c
-+++ b/drivers/dma/stm32/stm32-dma3.c
-@@ -801,7 +801,7 @@ static void stm32_dma3_chan_start(struct stm32_dma3_chan *chan)
- 
- 	chan->dma_status = DMA_IN_PROGRESS;
- 
--	dev_dbg(chan2dev(chan), "vchan %pK: started\n", &chan->vchan);
-+	dev_dbg(chan2dev(chan), "vchan %p: started\n", &chan->vchan);
- }
- 
- static int stm32_dma3_chan_suspend(struct stm32_dma3_chan *chan, bool susp)
-@@ -1452,7 +1452,7 @@ static int stm32_dma3_pause(struct dma_chan *c)
- 
- 	chan->dma_status = DMA_PAUSED;
- 
--	dev_dbg(chan2dev(chan), "vchan %pK: paused\n", &chan->vchan);
-+	dev_dbg(chan2dev(chan), "vchan %p: paused\n", &chan->vchan);
- 
- 	return 0;
- }
-@@ -1465,7 +1465,7 @@ static int stm32_dma3_resume(struct dma_chan *c)
- 
- 	chan->dma_status = DMA_IN_PROGRESS;
- 
--	dev_dbg(chan2dev(chan), "vchan %pK: resumed\n", &chan->vchan);
-+	dev_dbg(chan2dev(chan), "vchan %p: resumed\n", &chan->vchan);
- 
- 	return 0;
- }
-@@ -1490,7 +1490,7 @@ static int stm32_dma3_terminate_all(struct dma_chan *c)
- 	spin_unlock_irqrestore(&chan->vchan.lock, flags);
- 	vchan_dma_desc_free_list(&chan->vchan, &head);
- 
--	dev_dbg(chan2dev(chan), "vchan %pK: terminated\n", &chan->vchan);
-+	dev_dbg(chan2dev(chan), "vchan %p: terminated\n", &chan->vchan);
- 
- 	return 0;
- }
-@@ -1543,7 +1543,7 @@ static void stm32_dma3_issue_pending(struct dma_chan *c)
- 	spin_lock_irqsave(&chan->vchan.lock, flags);
- 
- 	if (vchan_issue_pending(&chan->vchan) && !chan->swdesc) {
--		dev_dbg(chan2dev(chan), "vchan %pK: issued\n", &chan->vchan);
-+		dev_dbg(chan2dev(chan), "vchan %p: issued\n", &chan->vchan);
- 		stm32_dma3_chan_start(chan);
- 	}
- 
-diff --git a/drivers/dma/stm32/stm32-mdma.c b/drivers/dma/stm32/stm32-mdma.c
-index e6d525901de7ecf822d218b87b95aba6bbf0a3ef..080c1c725216cb627675c372591b4c0c227c3cea 100644
---- a/drivers/dma/stm32/stm32-mdma.c
-+++ b/drivers/dma/stm32/stm32-mdma.c
-@@ -1187,7 +1187,7 @@ static void stm32_mdma_start_transfer(struct stm32_mdma_chan *chan)
- 
- 	chan->busy = true;
- 
--	dev_dbg(chan2dev(chan), "vchan %pK: started\n", &chan->vchan);
-+	dev_dbg(chan2dev(chan), "vchan %p: started\n", &chan->vchan);
- }
- 
- static void stm32_mdma_issue_pending(struct dma_chan *c)
-@@ -1200,7 +1200,7 @@ static void stm32_mdma_issue_pending(struct dma_chan *c)
- 	if (!vchan_issue_pending(&chan->vchan))
- 		goto end;
- 
--	dev_dbg(chan2dev(chan), "vchan %pK: issued\n", &chan->vchan);
-+	dev_dbg(chan2dev(chan), "vchan %p: issued\n", &chan->vchan);
- 
- 	if (!chan->desc && !chan->busy)
- 		stm32_mdma_start_transfer(chan);
-@@ -1220,7 +1220,7 @@ static int stm32_mdma_pause(struct dma_chan *c)
- 	spin_unlock_irqrestore(&chan->vchan.lock, flags);
- 
- 	if (!ret)
--		dev_dbg(chan2dev(chan), "vchan %pK: pause\n", &chan->vchan);
-+		dev_dbg(chan2dev(chan), "vchan %p: pause\n", &chan->vchan);
- 
- 	return ret;
- }
-@@ -1261,7 +1261,7 @@ static int stm32_mdma_resume(struct dma_chan *c)
- 
- 	spin_unlock_irqrestore(&chan->vchan.lock, flags);
- 
--	dev_dbg(chan2dev(chan), "vchan %pK: resume\n", &chan->vchan);
-+	dev_dbg(chan2dev(chan), "vchan %p: resume\n", &chan->vchan);
- 
- 	return 0;
- }
+If there's a strong preference to squash them, I can do that but I'd 
+prefer keeping them separate.
 
----
-base-commit: 52da431bf03b5506203bca27fe14a97895c80faf
-change-id: 20250404-restricted-pointers-dma-29cf839a1a0b
-
-Best regards,
--- 
-Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+> 
+> Regards,
+> Siddharth.
 
 

@@ -1,119 +1,131 @@
-Return-Path: <dmaengine+bounces-5543-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5544-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B27A8AE14A6
-	for <lists+dmaengine@lfdr.de>; Fri, 20 Jun 2025 09:15:57 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 94E6CAE1BB6
+	for <lists+dmaengine@lfdr.de>; Fri, 20 Jun 2025 15:12:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 715113B8513
-	for <lists+dmaengine@lfdr.de>; Fri, 20 Jun 2025 07:15:18 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D12147AA873
+	for <lists+dmaengine@lfdr.de>; Fri, 20 Jun 2025 13:11:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95D9E220F53;
-	Fri, 20 Jun 2025 07:15:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D699128C857;
+	Fri, 20 Jun 2025 13:10:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KQxUOoag"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jG2L3H3x"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 699F81E9B0D;
-	Fri, 20 Jun 2025 07:15:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C238428D8F8;
+	Fri, 20 Jun 2025 13:10:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750403737; cv=none; b=hkmHzUF6vt2hKP8IaxEgoPj+1jZ13kc8vH9RrDqQGMbYi6LVrUoTRWeMKK9EngTLUraetVAWMwShe73ovJlzFsSaXPHNj4/mftVLZiaNfxYif/XXNTop8tq5vVss7/f+dhf3N4fsXlNM7yx3qEhwylH5wWrvV1J+c0UfiMwe3Ow=
+	t=1750425013; cv=none; b=uqD6nRaYY6AE14Zvrir65/kEp7JlAPrvew8DkyvQrnk4LNKfsiqbdy0FpCJnUXP4IOOd9axOEPm/ReOcf5M89anikYh8LDymo6wMNk6DhXNPk7q8Ns8OZ9aF7VBI+cfAmZGQcjtFFiaUo/7egj/lb0EwptjSdRG1HuP1vH6ygXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750403737; c=relaxed/simple;
-	bh=v3mtiZeGxwoM0Zn8x7gunb1hV1Q+FzEs5OHsTLW9vlk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O8qu6vfQgLXZYplBd5IZ6Fr4zbXQvyX1u91DlxTmGpL/DKHxxTvRGi4H36CpPotccrQzc5J4gLMsNL6sIDIYn+3j8dgN8jCVQs5d1j41Bm/BO2xasgODI/tAQ3pjdZ4sMWSytN4oZUxUE2gKEMDbAV1Db2zJn1xd/GuMxraR/4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KQxUOoag; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47D85C4CEE3;
-	Fri, 20 Jun 2025 07:15:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750403737;
-	bh=v3mtiZeGxwoM0Zn8x7gunb1hV1Q+FzEs5OHsTLW9vlk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KQxUOoagr+qLKJ/vTC2ET012o/PR8g0pgyrEtL5AzxiQqBM2Um5UST9LZ2C/P0bml
-	 V8sMsRAEdLH+czGVL7hPaOCN+r5vhS/qifEs7e2bjr5fVHE/WsrQP3mReaswIUiyZf
-	 OlKxUiC7luSQj1fM7V+mlyhNAkDdVEqo8PNXTKOFNLxm4thgjqyI2kW6fCtaaUhKFn
-	 ptlFWlP3VjsPLi0Tna8bh4zcgJYtoLG2Pv4PiW5N0jZEJDeHwM4AvRrojqrdpyT9AJ
-	 3rXKx+7pvVgza0T/V43jnsIl89vQWSzcz0InCr99OI2kuykXffC0ztlOHXdQJ+RyFl
-	 +XtN2vY0+amCw==
-Date: Fri, 20 Jun 2025 12:45:32 +0530
-From: Vinod Koul <vkoul@kernel.org>
-To: adrianhoyin.ng@altera.com
-Cc: dinguyen@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, Eugeniy.Paltsev@synopsys.com,
-	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-	Matthew Gerlach <matthew.gerlach@altrera.com>
-Subject: Re: [PATCH v3 4/4] dma: dw-axi-dmac: Add support for dma-bit-mask
- property
-Message-ID: <aFUKlJchclJSZgib@vaman>
-References: <cover.1750084527.git.adrianhoyin.ng@altera.com>
- <d28a649938adec18bb0a550b28ed86b4c711cfc1.1750084527.git.adrianhoyin.ng@altera.com>
+	s=arc-20240116; t=1750425013; c=relaxed/simple;
+	bh=wD9kvq63OMsE8gXCXi6rVt39wRx5i7RafSZhiuPMUsY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gmnn/iR50bOr35Ak12OnQ3dKM0DB3xuENVHVOPxu38532SaW3K3pap6lOOEii/abu/16+fSHV/4+3bDUvqbe+84jCG222tPVa/pMQEuAU9pj1UR/6/2aTMiz2vnLYodjexbFhe5KJgs7MBsmTB/LAui3qWq7sGyHPso142UI4eM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jG2L3H3x; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750425011; x=1781961011;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=wD9kvq63OMsE8gXCXi6rVt39wRx5i7RafSZhiuPMUsY=;
+  b=jG2L3H3xTPbvsAzlAkHRuyaTu9CFjHpRV0dNtE8/3H6Q+9DDqq9UxpjS
+   /Nu+oDVAU9ricuYbj9Ceipf69IDdYUmBdryR390G7QmHOx1COQaHHSHXH
+   v6GuRPg1XC/PAUbBn2cZLcQL+CmEChjBoEt07yyqH34T1btWZy5KXgf7U
+   bW7JLK0fPNQtg+JTL+Z9VSX64rVhh8+zujNRSrqpq1tGk3Womx42XAvbo
+   UgcXPbqg5U9No8XwMiuLn5yuMZWTzjTjCK8uy1QX95YolsXpW0DLOhmlH
+   qWGIi0Q2g9oUoaVVsRR5uCKQIjCpj5nQLsmZN1nW9uSvkT7jNB/ilhp1i
+   Q==;
+X-CSE-ConnectionGUID: KTu4gOQNTgufU+6goce4iw==
+X-CSE-MsgGUID: UIKwuTsXQwKxttdELUrYOQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="52388881"
+X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
+   d="scan'208";a="52388881"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 06:10:10 -0700
+X-CSE-ConnectionGUID: wPgNx4wkQ5yTzmcAsPz8uw==
+X-CSE-MsgGUID: DKYJufbMTNSmphM4gFzFZg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
+   d="scan'208";a="154928674"
+Received: from ysun46-mobl (HELO YSUN46-MOBL..) ([10.239.96.51])
+  by fmviesa003.fm.intel.com with ESMTP; 20 Jun 2025 06:10:07 -0700
+From: Yi Sun <yi.sun@intel.com>
+To: dave.jiang@intel.com,
+	vinicius.gomes@intel.com,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	fenghuay@nvidia.com,
+	philip.lantz@intel.com
+Cc: yi.sun@intel.com,
+	gordon.jin@intel.com,
+	anil.s.keshavamurthy@intel.com
+Subject: [PATCH v2 0/2] dmaengine: idxd: Add basic DSA 3.0 capability and SGL support
+Date: Fri, 20 Jun 2025 21:09:51 +0800
+Message-ID: <20250620130953.1943703-1-yi.sun@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d28a649938adec18bb0a550b28ed86b4c711cfc1.1750084527.git.adrianhoyin.ng@altera.com>
+Content-Transfer-Encoding: 8bit
 
-On 16-06-25, 22:40, adrianhoyin.ng@altera.com wrote:
-> From: Adrian Ng Ho Yin <adrianhoyin.ng@altera.com>
+This patch series introduces foundational support for DSA 3.0 features,
+exposing hardware capability registers to userspace in the IDXD driver.
 
-Please change subsystem tag to dmanegine: xxx
+DSA 3.0 introduces several new features that require awareness and
+configuration from both kernel and userspace. It is necessary to
+understand the hardware's capabilities for userspace tools (e.g.,
+idxd-config, libraries, and applications) to make use of the features
+properly, such as supported features, memory layouts, and opcode
+compatibility.
 
-> 
-> Intel Agilex5 address bus only supports up to 40 bits. Add dma-bit-mask
-> property support where configure dma-bit-mask based on dma-bit-mask
-> property or fallback to default value if property is not present.
-> 
-> Signed-off-by: Adrian Ng Ho Yin <adrianhoyin.ng@altera.com>
-> Reviewed-by: Matthew Gerlach <matthew.gerlach@altrera.com>
-> 
-> v3:
-> -update to read from updated property name.
-> 
-> v2:
-> -Fix build errors and warning
-> ---
->  drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c | 14 ++++++++++++--
->  1 file changed, 12 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-> index b23536645ff7..e56ff7aadafd 100644
-> --- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-> +++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-> @@ -265,13 +265,23 @@ static inline bool axi_chan_is_hw_enable(struct axi_dma_chan *chan)
->  static void axi_dma_hw_init(struct axi_dma_chip *chip)
->  {
->  	int ret;
-> -	u32 i;
-> +	u32 i, tmp;
->  
->  	for (i = 0; i < chip->dw->hdata->nr_channels; i++) {
->  		axi_chan_irq_disable(&chip->dw->chan[i], DWAXIDMAC_IRQ_ALL);
->  		axi_chan_disable(&chip->dw->chan[i]);
->  	}
-> -	ret = dma_set_mask_and_coherent(chip->dev, DMA_BIT_MASK(64));
-> +
-> +	ret = device_property_read_u32(chip->dev, "snps,dma-addressable-bits", &tmp);
-> +	if (ret)
-> +		ret = dma_set_mask_and_coherent(chip->dev, DMA_BIT_MASK(64));
-> +	else {
-> +		if (tmp == 0 || tmp < 32 || tmp > 64)
-> +			dev_err(chip->dev, "Invalid dma bit mask\n");
-> +
-> +		ret = dma_set_mask_and_coherent(chip->dev, DMA_BIT_MASK(tmp));
+Patch 1/2 exposes the three new capability registers (dsacap0-2)
+introduced in the DSA 3.0 specification through a new sysfs entry.
+This allows tools and users to query hardware capabilities such as
+supported SGL formats, floating-point options, and maximum supported
+sizes.
 
-why not check the mask value and set that only once irrespective of
-mask, it can tmp or 64!
+Patch 2/2 enables configuration of the maximum SGL size for DSA 3.0
+devices. Some DSA 3.0 opcodes (e.g., Gather Copy, Gather Reduce) require
+that the workqueue's SGL size is explicitly configured. This patch sets
+that value based on hardware capabilities at initialization time,
+allowing these opcodes to function without additional user configuration.
+
+---
+Changes in v2:
+- Added the link to the DSA 3.0 spec in the commit message (Dave)
+- Fixed typos in the commit messages (Fenghua)
+- Updated the sysfs ABI documentation for accuracy (Fenghua)
+- Renamed the ABI entry from 'dsacap' to 'dsacaps' (Fenghua, Philip)
+- Moved the definition of dsacap0_reg from patch #2 to patch #1 (Fenghua)
+- Fixed the output format (Fenghua, Philip)
+- Reordered the capability registers to match the DSA 3.0 spec (Fenghua)
+- Add conditon checking to avoid accessing dsacaps when DSA 3.0 is not
+  supported (Fenghua)
+
+Yi Sun (2):
+  dmaengine: idxd: Expose DSA3.0 capabilities through sysfs
+  dmaengine: idxd: Add Max SGL Size Support for DSA3.0
+
+ .../ABI/stable/sysfs-driver-dma-idxd          | 15 ++++++++++
+ drivers/dma/idxd/device.c                     |  5 ++++
+ drivers/dma/idxd/idxd.h                       | 19 +++++++++++++
+ drivers/dma/idxd/init.c                       | 11 ++++++++
+ drivers/dma/idxd/registers.h                  | 28 ++++++++++++++++++-
+ drivers/dma/idxd/sysfs.c                      | 24 ++++++++++++++++
+ 6 files changed, 101 insertions(+), 1 deletion(-)
 
 -- 
-~Vinod
+2.43.0
+
 

@@ -1,208 +1,355 @@
-Return-Path: <dmaengine+bounces-5546-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5547-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2CE6AE1BBF
-	for <lists+dmaengine@lfdr.de>; Fri, 20 Jun 2025 15:13:38 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 64861AE2606
+	for <lists+dmaengine@lfdr.de>; Sat, 21 Jun 2025 01:21:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EE8A1189E94B
-	for <lists+dmaengine@lfdr.de>; Fri, 20 Jun 2025 13:13:23 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5E76A7B0333
+	for <lists+dmaengine@lfdr.de>; Fri, 20 Jun 2025 23:19:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 699EC2BCF4C;
-	Fri, 20 Jun 2025 13:10:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD8D42417F2;
+	Fri, 20 Jun 2025 23:21:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TIVF1vtS"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YKzou3BD"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7762629CB40;
-	Fri, 20 Jun 2025 13:10:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1513324167D
+	for <dmaengine@vger.kernel.org>; Fri, 20 Jun 2025 23:21:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750425017; cv=none; b=i5WcnCeV2rPG8xjjbFIgM1vn4boNEBIleIPaUTesrMPEtFBqcvyy6MOIRv/0ww2NIoLsiLFA2Wo6l56Tq0f762cuY4jJzCht3ld4c/00bzjQkqe3tXvhJnfcPCEKIdFxtBWVF3CybDt308Fhx/e0+8HTtjrQfSPfdTT//OT9Zug=
+	t=1750461665; cv=none; b=bL9LlG2XayA1gWhGNhgcE4msf/a/DjL3nU05Ny4JPuyMxdzaPYPREpAlyTcF0lA5wddsMn3CLs0k7Ts7GyIkLsPcENdc4jNWs/w/5H6HaIngGwN2qDd/41wkKsqn/IY7Iff//PeFGEcN1uwb0LxWl2ejSJ2uYge6Q9HXStMo5W0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750425017; c=relaxed/simple;
-	bh=I5vk2rGm9Gp8qpb3w92XvEWty7AtHtw6DnFufqS61L4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XYLaNrsmP3yMWCyhzgrFajQboTCR8nuctzRXM8zDQrGl8o0aL2mXHwppIdXPkC1FhwyzszX8xEiWmvvJrTFSyiWjpgPY2I/DrznwFm02NAel+S6hGMcvcvog7WHIVIMiiWJ0tz/n8IZVSfU2Mju4QvH7ljZBE1xBhsA/SwCp8AQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TIVF1vtS; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750425015; x=1781961015;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=I5vk2rGm9Gp8qpb3w92XvEWty7AtHtw6DnFufqS61L4=;
-  b=TIVF1vtS4Or9ezyCizY/T3Nn7Q6pmVV1Uiy+ynR16GLzFk6UQWA6LuSy
-   HsKnsZBkHqGSJk1Q7hdZBnEO0NgixM+bAWXtaVOOa0y/shlapVi/YUgkH
-   G//RZX916MhgaRvQlxDKpIEqq5vWpBb0pTuqcdUFrrVeBDXtz4VlNRfhq
-   Ds79y1apSdm0wMqD7q1HhcQNZ/2qbn3B2O7Eg+EX26LHeQWc12dc5RvFg
-   24lUxb0WFG3whNNFbGVGrmsWVQeeT9rS5tCwC8NWTchrqejAxSKvYl6sV
-   xtz5h+RafGVzazoKrG6dUMNMGf6o1SaVLPtD22fJLP57gRGsKpU+8Zz+M
-   w==;
-X-CSE-ConnectionGUID: Z+Tt6J96Q/O/+4lLhKTV7Q==
-X-CSE-MsgGUID: X05uKYOAR1GT1ww8rSmgMA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="52388893"
-X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
-   d="scan'208";a="52388893"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 06:10:14 -0700
-X-CSE-ConnectionGUID: sqL897AZQWejJ8rtDWZK4A==
-X-CSE-MsgGUID: Nl3L8TU5RMetN1FVbCUJMA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
-   d="scan'208";a="154928687"
-Received: from ysun46-mobl (HELO YSUN46-MOBL..) ([10.239.96.51])
-  by fmviesa003.fm.intel.com with ESMTP; 20 Jun 2025 06:10:12 -0700
-From: Yi Sun <yi.sun@intel.com>
-To: dave.jiang@intel.com,
-	vinicius.gomes@intel.com,
-	dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	fenghuay@nvidia.com,
-	philip.lantz@intel.com
-Cc: yi.sun@intel.com,
-	gordon.jin@intel.com,
-	anil.s.keshavamurthy@intel.com
-Subject: [PATCH v2 2/2] dmaengine: idxd: Add Max SGL Size Support for DSA3.0
-Date: Fri, 20 Jun 2025 21:09:53 +0800
-Message-ID: <20250620130953.1943703-3-yi.sun@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250620130953.1943703-1-yi.sun@intel.com>
-References: <20250620130953.1943703-1-yi.sun@intel.com>
+	s=arc-20240116; t=1750461665; c=relaxed/simple;
+	bh=A2GY4f+UkC/FVA+DcPYTr05SxriVk7XglO8D4A46ueY=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Vpdi0Tzcwj6KGk/xuT/CbPA546mFKLSFtZ5TX8L3nn75QpRWFrTe7datghI05knl6GbBms2EeU3NLv77wVIKTAjzbL/jPNUW393WG/RejUlsBPNUEPD9lgS1Bc0S369gHTICj56SUKtE3XzOcmOYdj8KFvoJy8FJiL4azVqrdhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dmatlack.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YKzou3BD; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dmatlack.bounces.google.com
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-31215090074so3149822a91.0
+        for <dmaengine@vger.kernel.org>; Fri, 20 Jun 2025 16:21:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750461663; x=1751066463; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=2IwC6GjZGgGp4sPt1gqcutYb/jbF7v05EB8HNO/lb7Y=;
+        b=YKzou3BDghhA7GsRCiqJHZYZP+/2nhSccJZ6N4lT0osjUEmHBRueqXADs8T2SU+zvS
+         b7dXh6hk8glOMvRyQObLkNUjAgzVW3L/1ueB4XD02dlLKaX7OY2BlBylWwVTt0zGi4c+
+         zvI7VnKZCO7+0MY3rhOr+9qTclgudoF9Rh0fg1QpJ1S8o9bpzpv28iTaBOAkT2IEQjd1
+         ecT0SBIP8b2frManGKNj00SVxwS0+r5SK5ZEROeV+y33p871yEJw1BWsvLOpxwwhGlFJ
+         FjcGOmAji7DG2xfTQCIT8oiecr/NfXdevwRJGxKaTMV8iS2gJoTp38Jl5XghEKkgAFbU
+         3+vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750461663; x=1751066463;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2IwC6GjZGgGp4sPt1gqcutYb/jbF7v05EB8HNO/lb7Y=;
+        b=wmovsTL/aed6hgZb6mrOgRKsm5I+Fomt9xWdQTMznwBPf+P4a+xPPcsdBeIn0ZewAC
+         ZaKSBVQJvwp2GfD8cU9uFmdl4jImxZIO7X3JaZMqAzwj8Pd8meX4PJDz6DlcsMWVDM6V
+         ckXylOru+qYIhnVoKKNU9Hw092dxE1ey7X88VIQodpNN9dx2X/GRPd+KjpC0xiuF0YCz
+         bIdzUGYtbkhBHwZ/PclCfRRdOSURl12+H3jcXOXYm1IgptpgC8ni3n74JldiRkVESDRD
+         ePpr4FNdHtfAmmJTIUlEJmvxfbwg3Qine9t7BhHG+aZ8+oW8+56LeSOU5IWjqc7o4+zD
+         lAeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU2sBUrFNRxcrZIf8ewEjQ/7exvVlgi/pUfwij/6e0Np3T6dX8TnGK5QYLybf8GZHQdEsSAG4+oOkI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxW0A1j6apQwDwxMx85UZAPEOKzGrxF6wwXWye0XI25ML07evb
+	a3C7XxxLPfrD5+u4VLwSHQf1AnF8svhTZPZK0tXCFSVlR6tybgzpKSzyeN5Am0W+ZTxU2v6OJL0
+	4gOYRDuyvudVthw==
+X-Google-Smtp-Source: AGHT+IHYHGVDcroXxJms8lt0fgiklFRsAvYHVXhRXfWxllxbK+j0KU7M4K1oUbCFCdeSN0pU6Czjg6IP9L9/cQ==
+X-Received: from pjxx12.prod.google.com ([2002:a17:90b:58cc:b0:312:4b0b:a94])
+ (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:90b:2889:b0:311:e8cc:4248 with SMTP id 98e67ed59e1d1-3159d8f7f8emr8939680a91.33.1750461663320;
+ Fri, 20 Jun 2025 16:21:03 -0700 (PDT)
+Date: Fri, 20 Jun 2025 23:19:58 +0000
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.rc2.701.gf1e915cc24-goog
+Message-ID: <20250620232031.2705638-1-dmatlack@google.com>
+Subject: [PATCH 00/33] vfio: Introduce selftests for VFIO
+From: David Matlack <dmatlack@google.com>
+To: Alex Williamson <alex.williamson@redhat.com>
+Cc: Aaron Lewis <aaronlewis@google.com>, 
+	Adhemerval Zanella <adhemerval.zanella@linaro.org>, 
+	Adithya Jayachandran <ajayachandra@nvidia.com>, Andrew Jones <ajones@ventanamicro.com>, 
+	Ard Biesheuvel <ardb@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Bibo Mao <maobibo@loongson.cn>, 
+	Claudio Imbrenda <imbrenda@linux.ibm.com>, Dan Williams <dan.j.williams@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, David Matlack <dmatlack@google.com>, dmaengine@vger.kernel.org, 
+	Huacai Chen <chenhuacai@kernel.org>, James Houghton <jthoughton@google.com>, 
+	Jason Gunthorpe <jgg@nvidia.com>, Joel Granados <joel.granados@kernel.org>, 
+	Josh Hilke <jrhilke@google.com>, Kevin Tian <kevin.tian@intel.com>, kvm@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, 
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, "Pratik R. Sampat" <prsampat@amd.com>, 
+	Saeed Mahameed <saeedm@nvidia.com>, Sean Christopherson <seanjc@google.com>, Shuah Khan <shuah@kernel.org>, 
+	Vinicius Costa Gomes <vinicius.gomes@intel.com>, Vipin Sharma <vipinsh@google.com>, 
+	Wei Yang <richard.weiyang@gmail.com>, "Yury Norov [NVIDIA]" <yury.norov@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Certain DSA 3.0 opcodes, such as Gather copy and Gather reduce, require max
-SGL configured for workqueues prior to supporting these opcodes.
+This series introduces VFIO selftests, located in
+tools/testing/selftests/vfio/.
 
-Configure the maximum scatter-gather list (SGL) size for workqueues during
-setup on the supported HW. Application can then properly handle the SGL
-size without explicitly setting it.
+VFIO selftests aim to enable kernel developers to write and run tests
+that take the form of userspace programs that interact with VFIO and
+IOMMUFD uAPIs. VFIO selftests can be used to write functional tests for
+new features, regression tests for bugs, and performance tests for
+optimizations.
 
-Signed-off-by: Yi Sun <yi.sun@intel.com>
-Co-developed-by: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-Signed-off-by: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+These tests are designed to interact with real PCI devices, i.e. they do
+not rely on mocking out or faking any behavior in the kernel. This
+allows the tests to exercise not only VFIO but also IOMMUFD, the IOMMU
+driver, interrupt remapping, IRQ handling, etc.
 
-diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-index 5cf419fe6b46..1c10b030bea7 100644
---- a/drivers/dma/idxd/device.c
-+++ b/drivers/dma/idxd/device.c
-@@ -375,6 +375,7 @@ static void idxd_wq_disable_cleanup(struct idxd_wq *wq)
- 	memset(wq->name, 0, WQ_NAME_SIZE);
- 	wq->max_xfer_bytes = WQ_DEFAULT_MAX_XFER;
- 	idxd_wq_set_max_batch_size(idxd->data->type, wq, WQ_DEFAULT_MAX_BATCH);
-+	idxd_wq_set_init_max_sgl_size(idxd, wq);
- 	if (wq->opcap_bmap)
- 		bitmap_copy(wq->opcap_bmap, idxd->opcap_bmap, IDXD_MAX_OPCAP_BITS);
- }
-@@ -974,6 +975,8 @@ static int idxd_wq_config_write(struct idxd_wq *wq)
- 	/* bytes 12-15 */
- 	wq->wqcfg->max_xfer_shift = ilog2(wq->max_xfer_bytes);
- 	idxd_wqcfg_set_max_batch_shift(idxd->data->type, wq->wqcfg, ilog2(wq->max_batch_size));
-+	if (idxd_sgl_supported(idxd))
-+		wq->wqcfg->max_sgl_shift = ilog2(wq->max_sgl_size);
- 
- 	/* bytes 32-63 */
- 	if (idxd->hw.wq_cap.op_config && wq->opcap_bmap) {
-@@ -1152,6 +1155,8 @@ static int idxd_wq_load_config(struct idxd_wq *wq)
- 
- 	wq->max_xfer_bytes = 1ULL << wq->wqcfg->max_xfer_shift;
- 	idxd_wq_set_max_batch_size(idxd->data->type, wq, 1U << wq->wqcfg->max_batch_shift);
-+	if (idxd_sgl_supported(idxd))
-+		wq->max_sgl_size = 1U << wq->wqcfg->max_sgl_shift;
- 
- 	for (i = 0; i < WQCFG_STRIDES(idxd); i++) {
- 		wqcfg_offset = WQCFG_OFFSET(idxd, wq->id, i);
-diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index cc0a3fe1c957..ea8c4daed38d 100644
---- a/drivers/dma/idxd/idxd.h
-+++ b/drivers/dma/idxd/idxd.h
-@@ -227,6 +227,7 @@ struct idxd_wq {
- 	char name[WQ_NAME_SIZE + 1];
- 	u64 max_xfer_bytes;
- 	u32 max_batch_size;
-+	u32 max_sgl_size;
- 
- 	/* Lock to protect upasid_xa access. */
- 	struct mutex uc_lock;
-@@ -348,6 +349,7 @@ struct idxd_device {
- 
- 	u64 max_xfer_bytes;
- 	u32 max_batch_size;
-+	u32 max_sgl_size;
- 	int max_groups;
- 	int max_engines;
- 	int max_rdbufs;
-@@ -692,6 +694,20 @@ static inline void idxd_wq_set_max_batch_size(int idxd_type, struct idxd_wq *wq,
- 		wq->max_batch_size = max_batch_size;
- }
- 
-+static bool idxd_sgl_supported(struct idxd_device *idxd)
-+{
-+	return idxd->data->type == IDXD_TYPE_DSA &&
-+	       idxd->hw.version >= DEVICE_VERSION_3 &&
-+	       idxd->hw.dsacap0.sgl_formats;
-+}
-+
-+static inline void idxd_wq_set_init_max_sgl_size(struct idxd_device *idxd,
-+						 struct idxd_wq *wq)
-+{
-+	if (idxd_sgl_supported(idxd))
-+		wq->max_sgl_size = 1U << idxd->hw.dsacap0.max_sgl_shift;
-+}
-+
- static inline void idxd_wqcfg_set_max_batch_shift(int idxd_type, union wqcfg *wqcfg,
- 						  u32 max_batch_shift)
- {
-diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index 216461aa0cd1..4daf5995acee 100644
---- a/drivers/dma/idxd/init.c
-+++ b/drivers/dma/idxd/init.c
-@@ -217,6 +217,7 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
- 		init_completion(&wq->wq_resurrect);
- 		wq->max_xfer_bytes = WQ_DEFAULT_MAX_XFER;
- 		idxd_wq_set_max_batch_size(idxd->data->type, wq, WQ_DEFAULT_MAX_BATCH);
-+		idxd_wq_set_init_max_sgl_size(idxd, wq);
- 		wq->enqcmds_retries = IDXD_ENQCMDS_RETRIES;
- 		wq->wqcfg = kzalloc_node(idxd->wqcfg_size, GFP_KERNEL, dev_to_node(dev));
- 		if (!wq->wqcfg) {
-@@ -587,6 +588,10 @@ static void idxd_read_caps(struct idxd_device *idxd)
- 		idxd->hw.dsacap1.bits = ioread64(idxd->reg_base + IDXD_DSACAP1_OFFSET);
- 		idxd->hw.dsacap2.bits = ioread64(idxd->reg_base + IDXD_DSACAP2_OFFSET);
- 	}
-+	if (idxd_sgl_supported(idxd)) {
-+		idxd->max_sgl_size = 1U << idxd->hw.dsacap0.max_sgl_shift;
-+		dev_dbg(dev, "max sgl size: %u\n", idxd->max_sgl_size);
-+	}
- 
- 	/* read iaa cap */
- 	if (idxd->data->type == IDXD_TYPE_IAX && idxd->hw.version >= DEVICE_VERSION_2)
-diff --git a/drivers/dma/idxd/registers.h b/drivers/dma/idxd/registers.h
-index b430bddbd1e4..c665687913c6 100644
---- a/drivers/dma/idxd/registers.h
-+++ b/drivers/dma/idxd/registers.h
-@@ -385,7 +385,8 @@ union wqcfg {
- 		/* bytes 12-15 */
- 		u32 max_xfer_shift:5;
- 		u32 max_batch_shift:4;
--		u32 rsvd4:23;
-+		u32 max_sgl_shift:4;
-+		u32 rsvd4:19;
- 
- 		/* bytes 16-19 */
- 		u16 occupancy_inth;
+For more background on the motivation and design of this series, please
+see the RFC:
+
+  https://lore.kernel.org/kvm/20250523233018.1702151-1-dmatlack@google.com/
+
+This series can also be found on GitHub:
+
+  https://github.com/dmatlack/linux/tree/vfio/selftests/v1
+
+Changelog
+-----------------------------------------------------------------------
+
+RFC: https://lore.kernel.org/kvm/20250523233018.1702151-1-dmatlack@google.com/
+
+ - Add symlink to linux/pci_ids.h instead of copying (Jason)
+ - Add symlinks to drivers/dma/*/*.h instead of copying (Jason)
+ - Automatically replicate vfio_dma_mapping_test across backing
+   sources using fixture variants (Jason)
+ - Automatically replicate vfio_dma_mapping_test and
+   vfio_pci_driver_test across all iommu_modes using fixture
+   variants (Jason)
+ - Invert access() check in vfio_dma_mapping_test (me)
+ - Use driver_override instead of add/remove_id (Alex)
+ - Allow tests to get BDF from env var (Alex)
+ - Use KSFT_FAIL instead of 1 to exit with failure (Alex)
+ - Unconditionally create $(LIBVFIO_O_DIRS) to avoid target
+   conflict with ../cgroup/lib/libcgroup.mk when building
+   KVM selftests (me)
+ - Allow VFIO selftests to run automatically by switching from
+   TEST_GEN_PROGS_EXTENDED to TEST_GEN_PROGS. Automatically run
+   selftests will use $VFIO_SELFTESTS_BDF environment variable
+   to know which device to use (Alex)
+ - Replace hardcoded SZ_4K with getpagesize() in vfio_dma_mapping_test
+   to support platforms with other page sizes (me)
+ - Make all global variables static where possible (me)
+ - Pass argc and argv to test_harness_main() so that users can
+   pass flags to the kselftest harness (me)
+
+Instructions
+-----------------------------------------------------------------------
+
+Running VFIO selftests requires at a PCI device bound to vfio-pci for
+the tests to use. The address of this device is passed to the test as
+a segment:bus:device.function string, which must match the path to
+the device in /sys/bus/pci/devices/ (e.g. 0000:00:04.0).
+
+Once you have chosen a device, there is a helper script provided to
+unbind the device from its current driver, bind it to vfio-pci, export
+the environment variable $VFIO_SELFTESTS_BDF, and launch a shell:
+
+  $ tools/testing/selftests/vfio/run.sh -d 0000:00:04.0 -s
+
+The -d option tells the script which device to use and the -s option
+tells the script to launch a shell.
+
+Additionally, the VFIO selftest vfio_dma_mapping_test has test cases
+that rely on HugeTLB pages being available, otherwise they are skipped.
+To enable those tests make sure at least 1 2MB and 1 1GB HugeTLB pages
+are available.
+
+  $ echo 1 > /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages
+  $ echo 1 > /sys/kernel/mm/hugepages/hugepages-1048576kB/nr_hugepages
+
+To run all VFIO selftests using make:
+
+  $ make -C tools/testing/selftests/vfio run_tests
+
+To run individual tests:
+
+  $ tools/testing/selftests/vfio/vfio_dma_mapping_test
+  $ tools/testing/selftests/vfio/vfio_dma_mapping_test -v iommufd_anonymous_hugetlb_2mb
+  $ tools/testing/selftests/vfio/vfio_dma_mapping_test -r vfio_dma_mapping_test.iommufd_anonymous_hugetlb_2mb.dma_map_unmap
+
+The environment variable $VFIO_SELFTESTS_BDF can be overridden for a
+specific test by passing in the BDF on the command line as the last
+positional argument.
+
+  $ tools/testing/selftests/vfio/vfio_dma_mapping_test 0000:00:04.0
+  $ tools/testing/selftests/vfio/vfio_dma_mapping_test -v iommufd_anonymous_hugetlb_2mb 0000:00:04.0
+  $ tools/testing/selftests/vfio/vfio_dma_mapping_test -r vfio_dma_mapping_test.iommufd_anonymous_hugetlb_2mb.dma_map_unmap 0000:00:04.0
+
+When you are done, free the HugeTLB pages and exit the shell started by
+run.sh. Exiting the shell will cause the device to be unbound from
+vfio-pci and bound back to its original driver.
+
+  $ echo 0 > /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages
+  $ echo 0 > /sys/kernel/mm/hugepages/hugepages-1048576kB/nr_hugepages
+  $ exit
+
+It's also possible to use run.sh to run just a single test hermetically,
+rather than dropping into a shell:
+
+  $ tools/testing/selftests/vfio/run.sh -d 0000:00:04.0 -- tools/testing/selftests/vfio/vfio_dma_mapping_test -v iommufd_anonymous
+
+Tests
+-----------------------------------------------------------------------
+
+There are 5 tests in this series, mostly to demonstrate as a
+proof-of-concept:
+
+ - tools/testing/selftests/vfio/vfio_pci_device_test.c
+ - tools/testing/selftests/vfio/vfio_pci_driver_test.c
+ - tools/testing/selftests/vfio/vfio_iommufd_setup_test.c
+ - tools/testing/selftests/vfio/vfio_dma_mapping_test.c
+ - tools/testing/selftests/kvm/vfio_pci_device_irq_test.c
+
+Future Areas of Development
+-----------------------------------------------------------------------
+
+Library:
+
+ - Driver support for devices that can be used on AMD, ARM, and other
+   platforms (e.g. mlx5).
+ - Driver support for a device available in QEMU VMs (e.g.
+   pcie-ats-testdev [1])
+ - Support for tests that use multiple devices.
+ - Support for IOMMU groups with multiple devices.
+ - Support for multiple devices sharing the same container/iommufd.
+ - Sharing TEST_ASSERT() macros and other common code between KVM
+   and VFIO selftests.
+
+Tests:
+
+ - DMA mapping performance tests for BARs/HugeTLB/etc.
+ - Porting tests from
+   https://github.com/awilliam/tests/commits/for-clg/ to selftests.
+ - Live Update selftests.
+ - Porting Sean's KVM selftest for posted interrupts to use the VFIO
+   selftests library [2]
+
+Cc: Alex Williamson <alex.williamson@redhat.com>
+Cc: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Kevin Tian <kevin.tian@intel.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Sean Christopherson <seanjc@google.com>
+Cc: Vipin Sharma <vipinsh@google.com>
+Cc: Josh Hilke <jrhilke@google.com>
+Cc: Aaron Lewis <aaronlewis@google.com>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: Saeed Mahameed <saeedm@nvidia.com>
+Cc: Adithya Jayachandran <ajayachandra@nvidia.com>
+Cc: Joel Granados <joel.granados@kernel.org>
+
+[1] https://github.com/Joelgranados/qemu/blob/pcie-testdev/hw/misc/pcie-ats-testdev.c
+[2] https://lore.kernel.org/kvm/20250404193923.1413163-68-seanjc@google.com/
+
+David Matlack (28):
+  selftests: Create tools/testing/selftests/vfio
+  vfio: selftests: Add a helper library for VFIO selftests
+  vfio: selftests: Introduce vfio_pci_device_test
+  tools headers: Add stub definition for __iomem
+  tools headers: Import asm-generic MMIO helpers
+  tools headers: Import x86 MMIO helper overrides
+  tools headers: Import iosubmit_cmds512()
+  tools headers: Add symlink to linux/pci_ids.h
+  vfio: selftests: Keep track of DMA regions mapped into the device
+  vfio: selftests: Enable asserting MSI eventfds not firing
+  vfio: selftests: Add a helper for matching vendor+device IDs
+  vfio: selftests: Add driver framework
+  vfio: sefltests: Add vfio_pci_driver_test
+  dmaengine: ioat: Move system_has_dca_enabled() to dma.h
+  vfio: selftests: Add driver for Intel CBDMA
+  dmaengine: idxd: Allow registers.h to be included from tools/
+  vfio: selftests: Add driver for Intel DSA
+  vfio: selftests: Move helper to get cdev path to libvfio
+  vfio: selftests: Encapsulate IOMMU mode
+  vfio: selftests: Replicate tests across all iommu_modes
+  vfio: selftests: Add vfio_type1v2_mode
+  vfio: selftests: Add iommufd_compat_type1{,v2} modes
+  vfio: selftests: Add iommufd mode
+  vfio: selftests: Make iommufd the default iommu_mode
+  vfio: selftests: Add a script to help with running VFIO selftests
+  KVM: selftests: Build and link sefltests/vfio/lib into KVM selftests
+  KVM: selftests: Test sending a vfio-pci device IRQ to a VM
+  KVM: selftests: Add -d option to vfio_pci_device_irq_test for
+    device-sent MSIs
+
+Josh Hilke (5):
+  vfio: selftests: Test basic VFIO and IOMMUFD integration
+  vfio: selftests: Move vfio dma mapping test to their own file
+  vfio: selftests: Add test to reset vfio device.
+  vfio: selftests: Add DMA mapping tests for 2M and 1G HugeTLB
+  vfio: selftests: Validate 2M/1G HugeTLB are mapped as 2M/1G in IOMMU
+
+ MAINTAINERS                                   |   7 +
+ drivers/dma/idxd/registers.h                  |   4 +
+ drivers/dma/ioat/dma.h                        |   2 +
+ drivers/dma/ioat/hw.h                         |   3 -
+ tools/arch/x86/include/asm/io.h               | 101 +++
+ tools/arch/x86/include/asm/special_insns.h    |  27 +
+ tools/include/asm-generic/io.h                | 482 ++++++++++++++
+ tools/include/asm/io.h                        |  11 +
+ tools/include/linux/compiler.h                |   4 +
+ tools/include/linux/io.h                      |   4 +-
+ tools/include/linux/pci_ids.h                 |   1 +
+ tools/testing/selftests/Makefile              |   1 +
+ tools/testing/selftests/kvm/Makefile.kvm      |   4 +
+ .../testing/selftests/kvm/include/kvm_util.h  |   4 +
+ tools/testing/selftests/kvm/lib/kvm_util.c    |  21 +
+ .../selftests/kvm/vfio_pci_device_irq_test.c  | 172 +++++
+ tools/testing/selftests/vfio/.gitignore       |   7 +
+ tools/testing/selftests/vfio/Makefile         |  21 +
+ .../selftests/vfio/lib/drivers/dsa/dsa.c      | 416 ++++++++++++
+ .../vfio/lib/drivers/dsa/registers.h          |   1 +
+ .../selftests/vfio/lib/drivers/ioat/hw.h      |   1 +
+ .../selftests/vfio/lib/drivers/ioat/ioat.c    | 235 +++++++
+ .../vfio/lib/drivers/ioat/registers.h         |   1 +
+ .../selftests/vfio/lib/include/vfio_util.h    | 295 +++++++++
+ tools/testing/selftests/vfio/lib/libvfio.mk   |  24 +
+ .../selftests/vfio/lib/vfio_pci_device.c      | 594 ++++++++++++++++++
+ .../selftests/vfio/lib/vfio_pci_driver.c      | 126 ++++
+ tools/testing/selftests/vfio/run.sh           | 109 ++++
+ .../selftests/vfio/vfio_dma_mapping_test.c    | 199 ++++++
+ .../selftests/vfio/vfio_iommufd_setup_test.c  | 127 ++++
+ .../selftests/vfio/vfio_pci_device_test.c     | 176 ++++++
+ .../selftests/vfio/vfio_pci_driver_test.c     | 247 ++++++++
+ 32 files changed, 3423 insertions(+), 4 deletions(-)
+ create mode 100644 tools/arch/x86/include/asm/io.h
+ create mode 100644 tools/arch/x86/include/asm/special_insns.h
+ create mode 100644 tools/include/asm-generic/io.h
+ create mode 100644 tools/include/asm/io.h
+ create mode 120000 tools/include/linux/pci_ids.h
+ create mode 100644 tools/testing/selftests/kvm/vfio_pci_device_irq_test.c
+ create mode 100644 tools/testing/selftests/vfio/.gitignore
+ create mode 100644 tools/testing/selftests/vfio/Makefile
+ create mode 100644 tools/testing/selftests/vfio/lib/drivers/dsa/dsa.c
+ create mode 120000 tools/testing/selftests/vfio/lib/drivers/dsa/registers.h
+ create mode 120000 tools/testing/selftests/vfio/lib/drivers/ioat/hw.h
+ create mode 100644 tools/testing/selftests/vfio/lib/drivers/ioat/ioat.c
+ create mode 120000 tools/testing/selftests/vfio/lib/drivers/ioat/registers.h
+ create mode 100644 tools/testing/selftests/vfio/lib/include/vfio_util.h
+ create mode 100644 tools/testing/selftests/vfio/lib/libvfio.mk
+ create mode 100644 tools/testing/selftests/vfio/lib/vfio_pci_device.c
+ create mode 100644 tools/testing/selftests/vfio/lib/vfio_pci_driver.c
+ create mode 100755 tools/testing/selftests/vfio/run.sh
+ create mode 100644 tools/testing/selftests/vfio/vfio_dma_mapping_test.c
+ create mode 100644 tools/testing/selftests/vfio/vfio_iommufd_setup_test.c
+ create mode 100644 tools/testing/selftests/vfio/vfio_pci_device_test.c
+ create mode 100644 tools/testing/selftests/vfio/vfio_pci_driver_test.c
+
+
+base-commit: e271ed52b344ac02d4581286961d0c40acc54c03
+prerequisite-patch-id: c1decca4653262d3d2451e6fd4422ebff9c0b589
 -- 
-2.43.0
+2.50.0.rc2.701.gf1e915cc24-goog
 
 

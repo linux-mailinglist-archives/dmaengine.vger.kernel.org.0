@@ -1,70 +1,70 @@
-Return-Path: <dmaengine+bounces-5562-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5563-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25006AE2633
-	for <lists+dmaengine@lfdr.de>; Sat, 21 Jun 2025 01:23:02 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8782CAE2637
+	for <lists+dmaengine@lfdr.de>; Sat, 21 Jun 2025 01:23:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ADB40171962
-	for <lists+dmaengine@lfdr.de>; Fri, 20 Jun 2025 23:23:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 036AD1C217F4
+	for <lists+dmaengine@lfdr.de>; Fri, 20 Jun 2025 23:23:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FBA924EA9D;
-	Fri, 20 Jun 2025 23:21:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 045EE2512D2;
+	Fri, 20 Jun 2025 23:21:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MP/+35Zt"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xY5zO5Q+"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE22724397B
-	for <dmaengine@vger.kernel.org>; Fri, 20 Jun 2025 23:21:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93D68242D68
+	for <dmaengine@vger.kernel.org>; Fri, 20 Jun 2025 23:21:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750461687; cv=none; b=S+z6Gb3Eu17GzWd10WZ393bwqmnm7h2eqY8omt0HN8j0j3Du04oEFIfeWDjy9I6pBpP4fu79CLjZDH3dw8KVpOGjuaOjE09GMNZzGdspGUUYfMxr7tiGOciW8QKpMYvFOp7+6m+SLFsML48etscNfNEbYDXV6yWE6kGSK30byDQ=
+	t=1750461688; cv=none; b=rZfI22QeYYGuzkFMWLamu+47fSsWZrXb3EwLx7O1j0SUiRAEsXC964yH3gUkGAWTyXy4NccOs9IKbG1EQPxgm6Jbarl7wdI/+LbM0r4XaKok48VYtYnMRNe9HC1j21nuLEo2Y6AfHgYIZm2c5CyXrEGHdTKW3yBkah7zfKUi4fE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750461687; c=relaxed/simple;
-	bh=bQdZ28IjEALRU+tEqULvx9bwWA/p6t04xwS2TqTejzw=;
+	s=arc-20240116; t=1750461688; c=relaxed/simple;
+	bh=K6mcWD2WXxUj7Z4zMoKUQvLV5IvgnJyccviFbc8ux/k=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=T/uz9Suz2gVONpikm8ExFfVZJ3pdd5eBhurIvy55xmy9S9b4/PAmRVFW/40eKZUVXdE3RY57a6YuRU3zblpAI3JvouvAUMkTBL8Sx26UvviP4Eepnxp4BglHmUqHjVHdDIkNIKTSZYgLpt6d3edjrynwhqg5in8IVQ9ivnoAyWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dmatlack.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MP/+35Zt; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=FNsL4/Cs3zpLZkHS2NjMEjs5+E1R0qlxBARwS0mB+RTvEzc8oavTYpb3MIphS0DXCqegk3Hj9tOHeSJ10cbmwxFOxrYI7rCHoKVEZn5Iv8NXhSE8ohBN9yncIxfwxoeXTrVSHycPHPQXYC4VHLMwYSNAf89UL1uIzWPJUuSBU+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dmatlack.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xY5zO5Q+; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dmatlack.bounces.google.com
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3132e7266d3so2380950a91.2
-        for <dmaengine@vger.kernel.org>; Fri, 20 Jun 2025 16:21:25 -0700 (PDT)
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-311ae2b6647so1588935a91.0
+        for <dmaengine@vger.kernel.org>; Fri, 20 Jun 2025 16:21:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750461685; x=1751066485; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1750461687; x=1751066487; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZMvcpC3EvAnEMNg38C2H0qABbPYvewT8mfGeCZ8DDSg=;
-        b=MP/+35ZthcZkTy6fsCdAfKiV0cwehZMXniloqul4C0J52Cu3QyXN1pEk9QLIgMRjvf
-         TURPlSFn1XM21rjzqTSr6gv746IcF1OZE5cAA2Oh9FKe0zV2U/c40O0+LidYcPg2s8AY
-         ldGPoshOvDtEKxzn0nG+rLc92NyKTI6+VvCCbxYi/8cMyqFKnMvCiEvaxXdMnarv7lqg
-         7w65Weh8GzhTNRiOqYxLzca+InB/o46s+J902cSKi9yZ+QmBrJFpLwFf3czXogaUadyv
-         Tfuur9x5JoFaokFnZE3CoqnpqrLRcaZrucHtyohG/HmoRwPZJ7VaMgsc26nW9LEp1jNZ
-         y8mQ==
+        bh=r33gHDqmJivGfk3+XBLv5GnSUyatLK5Xap1YlmbGbh8=;
+        b=xY5zO5Q+Xi+L7Y1Z7VZ2RNwF0VYPqOYU8kLCw9ITEYBsjlotfj/F+YvhnzMUUyKJaC
+         xLBNUfYhvTloasF1QlVkihByM+kTHEG169jTE2R83iYN9OBWnOs8H4i0SZr1RtQcJsCU
+         +GywXxHUHTRTCK0wAdQAfSUwmwhiVR8d1FkSwhqFG2eFB3QcEjzTgYjXBQ3zGLLW4XKd
+         wzr5+2wC/EkE4hHfUHGmCloAu4SUZf9FQzTDhZzFTgEZOqXQZvYjdYsEh0dZWMitjzka
+         EG1WlqFaaoiFWnlmGDuGX3xEFoP66B11MKCC9TLmyQpUmE+6t6NDc2qm2Jg+/rAoNWE2
+         o5rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750461685; x=1751066485;
+        d=1e100.net; s=20230601; t=1750461687; x=1751066487;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZMvcpC3EvAnEMNg38C2H0qABbPYvewT8mfGeCZ8DDSg=;
-        b=tRzRvw6XUvsSRagHJqWzyzrDAM/w0e+RRHmsU4y28ieas/m6M0edP2ZKQkF9qlAxMd
-         CXI3hiR7lBC8CrOzIGgF4G2kVYKs2lmgo0rPwIwj+jBMGtKOxqVywK3oDsK+ssJFoysA
-         xfrCMIGrd36LVOLs0bj8lzRUUdDWCL6TIRag1FvEUycWYOeCTff8cDXbiNfu/2G2tM9d
-         b4By8SjzzD8i6gjNkmw2DEMsAUhZ6iWzsrEeTM8xN+bMLK2bAn5nwoi3LWLjgv0wVKCp
-         GC1FKrZncK3aagFtdO8qPj1n2+GMiZ+aYhyAuwyAbWpMdqtcpmUCSB67cRqcV87mGAQR
-         T55w==
-X-Forwarded-Encrypted: i=1; AJvYcCXCKJZf2HD5XJp9Y3iNt4DueK5PB9kTbqXFivkTrz+i3SWo0prkHr14WZH5LIGCfDM1d+fgZYcBAak=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYf2JhO9WRrXVxT6LYg85uri8jK8y5c+lE+9VqKbAS8KI0fD0/
-	azirDwkkl2eCRgRcIYnLOFTQ3eNGBeAl7ZZsKmSW5F/jQcmmVRFowUV8LgY48Cp+0TInF7TYd9f
-	u1rgmAYn616O57w==
-X-Google-Smtp-Source: AGHT+IHQ/fqY4NAKfIDGIIYtWiOhd4/6AqBKYQuzyt85lfMMgVtUVonQZz7vV+JVTtCgyhmyVytPOdy+jJF7xw==
-X-Received: from pjbpd13.prod.google.com ([2002:a17:90b:1dcd:b0:313:221f:6571])
+        bh=r33gHDqmJivGfk3+XBLv5GnSUyatLK5Xap1YlmbGbh8=;
+        b=G2p/uniHk0OtgjZmqTNh71cwoiIqpM9cbyMHeXmiMYBjSNDdb5Gy3EKsZAtBwOYUqH
+         WJctFRFpizNsfKWm3FY+nkoKUALnNUifK46oO6DlGB9vVKZiYSt9HmB08T6kZYELom4A
+         R9MRHZvHLMtClWNLrA26hBjSUnr8+3Xh+19wgf/Pdq2glNnH29vcRHKnx5nahvv1/Zfz
+         BrajEwiU9Xr5aZkhmlDPaKWR8/vSeHFmtu1pm6ua8TVNfuBZ0ZUzU/q0QfnuudIdnikg
+         sA5RLek+H3roz/5LPC6k0IOaGrSUmCoH8XOawkaA2NfeHiU5CSN1saQi6/COPCUjftxH
+         EkIw==
+X-Forwarded-Encrypted: i=1; AJvYcCUzapQcGEJ2Gs3nRJgMqqPIb7QjoykOXX0qRYJWEvveb2mwjLK8Oi13wBGdQkb8EF/WvHwQoSTbsD0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYFEdiXi20beGu3dKWh7LJd3C66vxWRoC1B7KPQcFa03gaBEaq
+	7dpT/++XlqYDvKL9siV2nhJOnEtFAymBazl5uXvXNiXe4p0x0ugxqjMt4ndoDBI7CCV48ZqAedj
+	+mwDdMDiWwiQ6Qw==
+X-Google-Smtp-Source: AGHT+IH3gg4VRy6e2tzRQjegCE2l3HuXUmS4+mzNtAb0PupDOI59b0hV0jk5SzKKr6VyOu4NTIFmIK8m+9Sk0g==
+X-Received: from pjbsr13.prod.google.com ([2002:a17:90b:4e8d:b0:311:8076:14f1])
  (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:3c4f:b0:313:1e9d:404b with SMTP id 98e67ed59e1d1-3159d62ac81mr7496524a91.2.1750461685328;
- Fri, 20 Jun 2025 16:21:25 -0700 (PDT)
-Date: Fri, 20 Jun 2025 23:20:13 +0000
+ 2002:a17:90b:538d:b0:313:283e:e87c with SMTP id 98e67ed59e1d1-3159d6347famr6930491a91.3.1750461686860;
+ Fri, 20 Jun 2025 16:21:26 -0700 (PDT)
+Date: Fri, 20 Jun 2025 23:20:14 +0000
 In-Reply-To: <20250620232031.2705638-1-dmatlack@google.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -74,8 +74,9 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250620232031.2705638-1-dmatlack@google.com>
 X-Mailer: git-send-email 2.50.0.rc2.701.gf1e915cc24-goog
-Message-ID: <20250620232031.2705638-16-dmatlack@google.com>
-Subject: [PATCH 15/33] vfio: selftests: Enable asserting MSI eventfds not firing
+Message-ID: <20250620232031.2705638-17-dmatlack@google.com>
+Subject: [PATCH 16/33] vfio: selftests: Add a helper for matching
+ vendor+device IDs
 From: David Matlack <dmatlack@google.com>
 To: Alex Williamson <alex.williamson@redhat.com>
 Cc: Aaron Lewis <aaronlewis@google.com>, 
@@ -95,75 +96,46 @@ Cc: Aaron Lewis <aaronlewis@google.com>,
 	Wei Yang <richard.weiyang@gmail.com>, "Yury Norov [NVIDIA]" <yury.norov@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Make it possible to assert that a given MSI eventfd did _not_ fire by
-adding a helper to mark an eventfd non-blocking. Demonstrate this in
-vfio_pci_device_test by asserting the MSI eventfd did not fire before
-vfio_pci_irq_trigger().
+Add a helper function for matching a device against a given vendor and
+device ID. This will be used in a subsequent commit to match devices
+against drivers.
 
 Signed-off-by: David Matlack <dmatlack@google.com>
 ---
- tools/testing/selftests/vfio/lib/include/vfio_util.h | 12 ++++++++++++
- tools/testing/selftests/vfio/vfio_pci_device_test.c  | 10 +++++++++-
- 2 files changed, 21 insertions(+), 1 deletion(-)
+ tools/testing/selftests/vfio/lib/include/vfio_util.h | 7 +++++++
+ tools/testing/selftests/vfio/vfio_pci_device_test.c  | 4 +---
+ 2 files changed, 8 insertions(+), 3 deletions(-)
 
 diff --git a/tools/testing/selftests/vfio/lib/include/vfio_util.h b/tools/testing/selftests/vfio/lib/include/vfio_util.h
-index db08646c2819..9c928fcc00e2 100644
+index 9c928fcc00e2..a51c971004cd 100644
 --- a/tools/testing/selftests/vfio/lib/include/vfio_util.h
 +++ b/tools/testing/selftests/vfio/lib/include/vfio_util.h
-@@ -2,6 +2,7 @@
- #ifndef SELFTESTS_VFIO_LIB_INCLUDE_VFIO_UTIL_H
- #define SELFTESTS_VFIO_LIB_INCLUDE_VFIO_UTIL_H
+@@ -167,4 +167,11 @@ static inline void vfio_pci_msix_disable(struct vfio_pci_device *device)
+ iova_t __to_iova(struct vfio_pci_device *device, void *vaddr);
+ iova_t to_iova(struct vfio_pci_device *device, void *vaddr);
  
-+#include <fcntl.h>
- #include <string.h>
- #include <linux/vfio.h>
- #include <linux/list.h>
-@@ -130,6 +131,17 @@ void vfio_pci_irq_enable(struct vfio_pci_device *device, u32 index,
- void vfio_pci_irq_disable(struct vfio_pci_device *device, u32 index);
- void vfio_pci_irq_trigger(struct vfio_pci_device *device, u32 index, u32 vector);
- 
-+static inline void fcntl_set_nonblock(int fd)
++static inline bool vfio_pci_device_match(struct vfio_pci_device *device,
++					 u16 vendor_id, u16 device_id)
 +{
-+	int r;
-+
-+	r = fcntl(fd, F_GETFL, 0);
-+	VFIO_ASSERT_NE(r, -1, "F_GETFL failed for fd %d\n", fd);
-+
-+	r = fcntl(fd, F_SETFL, r | O_NONBLOCK);
-+	VFIO_ASSERT_NE(r, -1, "F_SETFL O_NONBLOCK failed for fd %d\n", fd);
++	return (vendor_id == vfio_pci_config_readw(device, PCI_VENDOR_ID)) &&
++		(device_id == vfio_pci_config_readw(device, PCI_DEVICE_ID));
 +}
 +
- static inline void vfio_pci_msi_enable(struct vfio_pci_device *device,
- 				       u32 vector, int count)
- {
+ #endif /* SELFTESTS_VFIO_LIB_INCLUDE_VFIO_UTIL_H */
 diff --git a/tools/testing/selftests/vfio/vfio_pci_device_test.c b/tools/testing/selftests/vfio/vfio_pci_device_test.c
-index 82e3c947f45d..1b5c2ff77e3f 100644
+index 1b5c2ff77e3f..8856205d52a6 100644
 --- a/tools/testing/selftests/vfio/vfio_pci_device_test.c
 +++ b/tools/testing/selftests/vfio/vfio_pci_device_test.c
-@@ -129,6 +129,7 @@ FIXTURE_TEARDOWN(vfio_pci_irq_test)
- TEST_F(vfio_pci_irq_test, enable_trigger_disable)
- {
- 	bool msix = variant->irq_index == VFIO_PCI_MSIX_IRQ_INDEX;
-+	int msi_eventfd;
- 	u32 count;
- 	u64 value;
- 	int i;
-@@ -147,8 +148,15 @@ TEST_F(vfio_pci_irq_test, enable_trigger_disable)
- 	printf("MSI%s: enabled %d interrupts\n", msix ? "-x" : "", count);
+@@ -56,9 +56,7 @@ TEST_F(vfio_pci_device_test, config_space_read_write)
+ 	/* Check that Vendor and Device match what the kernel reports. */
+ 	vendor = read_pci_id_from_sysfs("vendor");
+ 	device = read_pci_id_from_sysfs("device");
+-
+-	ASSERT_EQ(vendor, vfio_pci_config_readw(self->device, PCI_VENDOR_ID));
+-	ASSERT_EQ(device, vfio_pci_config_readw(self->device, PCI_DEVICE_ID));
++	ASSERT_TRUE(vfio_pci_device_match(self->device, vendor, device));
  
- 	for (i = 0; i < count; i++) {
-+		msi_eventfd = self->device->msi_eventfds[i];
-+
-+		fcntl_set_nonblock(msi_eventfd);
-+		ASSERT_EQ(-1, read(msi_eventfd, &value, 8));
-+		ASSERT_EQ(EAGAIN, errno);
-+
- 		vfio_pci_irq_trigger(self->device, variant->irq_index, i);
--		ASSERT_EQ(8, read(self->device->msi_eventfds[i], &value, 8));
-+
-+		ASSERT_EQ(8, read(msi_eventfd, &value, 8));
- 		ASSERT_EQ(1, value);
- 	}
+ 	printf("Vendor: %04x, Device: %04x\n", vendor, device);
  
 -- 
 2.50.0.rc2.701.gf1e915cc24-goog

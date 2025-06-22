@@ -1,143 +1,114 @@
-Return-Path: <dmaengine+bounces-5581-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5582-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9019AE2A0F
-	for <lists+dmaengine@lfdr.de>; Sat, 21 Jun 2025 18:01:48 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B894EAE2EF8
+	for <lists+dmaengine@lfdr.de>; Sun, 22 Jun 2025 11:14:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 628451898D4C
-	for <lists+dmaengine@lfdr.de>; Sat, 21 Jun 2025 16:02:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4E25D171F0F
+	for <lists+dmaengine@lfdr.de>; Sun, 22 Jun 2025 09:14:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96B1715E5C2;
-	Sat, 21 Jun 2025 16:01:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F5421AF0B6;
+	Sun, 22 Jun 2025 09:14:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uDwXevel"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sUG2TJzd"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51193134CF;
-	Sat, 21 Jun 2025 16:01:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC7318C03F;
+	Sun, 22 Jun 2025 09:14:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750521703; cv=none; b=Km6J8Vt3A4mZ5EuXrinObRvwKiCPhPmOB9kpcO1ZrQRJDISTM6/XeTPrtNia16NcYe0ipGiMNj6nsrwnmM/qSSuVuJuesiytxJcJgvETf7WW5DF8tvN6XRLBEPYY5P8F8hkpkQJ880OlWNRGKMRZ6utt1xe8qJWibZJluI8LyTg=
+	t=1750583656; cv=none; b=Fo71aa2nSDZ7IPchaKwTYOjRNjbTAZVM0hhM2ag5uIurMq/dVDtv9guHGRW5YhKqGOzK4RTTTM0vBSLG9WMpXgEJNG1r4c5ib5t6LbGzUS4oiOCbG8uEZO/1EuoMwXScbRwF5aAUCKCMRx/uRGLiAyAKLVD8c5B8rV9eFe3MFJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750521703; c=relaxed/simple;
-	bh=7z06BI2WfCKHgocG5mZp+KFS5XZpvyaukvIGuVj/RlU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=F9FTd7ICjmVh1PnwdvbZLUw2TwCOGk/CSfVT7resyUV9W7rUOFgM5OPUaQ/beboDwo5j6orFxcCPpckjuDmvXYOq2MPu+7fLQzcIj62zuKiZuwWOJc9PaAKveVeNx3b9vIObzk+bPy4xPTXMRQ/XELjTL/CYwsqsvzzQXxcOFxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uDwXevel; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3502C4CEE7;
-	Sat, 21 Jun 2025 16:01:35 +0000 (UTC)
+	s=arc-20240116; t=1750583656; c=relaxed/simple;
+	bh=FR0kk1ZyP4ATa4YOUOaLsb7MR+jvx6ZZw5j0miDtcgM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=f0tJM1GcP2pBHJ1xrkbGkgBkQx0b1bP4ZXEeGz32HwidR34StckRV2Jw37f/4CGgpgTSNiHdXovZKrP0gKD/4bphUHhIaCsmY82lOQhxRxIdHPu8sd1rhJspa2Ruqv764dqZnWUyBHG0PVzqk20UrjM+gznK+YYkhd47ovSh7qI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sUG2TJzd; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C90C6C4CEE3;
+	Sun, 22 Jun 2025 09:14:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750521701;
-	bh=7z06BI2WfCKHgocG5mZp+KFS5XZpvyaukvIGuVj/RlU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=uDwXevel3/1jiq4Sl2EDKgEHARqYuu8Bl7nrJLZ8lUCzHpBkeoumIp6jzt/ZP4Nsl
-	 wqLBEHqbQv7BeGHwV/DPP5ckgANF6VbYI5AyU+Yd7Skc57x9V4PhZEjE744+ExYRFr
-	 AkERmpzc03BtzkqT5tG8hywtOyMFB4oMbjoTgSssty33EMxdWKqHIONBBQ3NX56YP1
-	 1s66LaJ7sUP5cIPW3qhTCIyNXnqk1AvoKqeUz+bq+RtWlN5ktVenNOvVQfcXtnbR0P
-	 yISLwmztKCaQ6JNWVfJn38zjoEhxBT4pRdcGegeMhL6zVqHpjw3aesU2v9O/kMhLww
-	 W9a4U4D46RlpQ==
-Message-ID: <d5a616f3-67a3-4504-904e-6cec503ab157@kernel.org>
-Date: Sat, 21 Jun 2025 18:01:33 +0200
+	s=k20201202; t=1750583655;
+	bh=FR0kk1ZyP4ATa4YOUOaLsb7MR+jvx6ZZw5j0miDtcgM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=sUG2TJzdERrgA1aUMcnNuFM/6Qlm/KqJZq20pmR2XvNqiOZxo41fyBzgYecB8NmGi
+	 00nX4LvGveW7uZ7cIslW//6k5zfg/Iqwj89eytcAxkf8JkbGkpDZNOrsYSv/GRSnKz
+	 kYmio20WPm2fmsA5ka972FkEPkgcxZIf2SjoqknRu76WPPc2Jkw1FJq95w/rT9OgAB
+	 paAdmX2NoloQyHEAobczyCdWtntL5ZfZKhdxDiABT59xhJ+hk23EJngelVRLIr17aw
+	 aKmaraDnxDg5UT+u03Ry0TsOBPcfitx40+1VhZ6e2pV4sIei1+qg8GYOGRNc958D6U
+	 t/hH1Crz5y+dA==
+From: Sven Peter <sven@kernel.org>
+To: Sven Peter <sven@kernel.org>
+Cc: asahi@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	iommu@lists.linux.dev,
+	linux-input@vger.kernel.org,
+	dmaengine@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	Janne Grunau <j@jannau.net>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Neal Gompa <neal@gompa.dev>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Srinivas Kandagatla <srini@kernel.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	=?UTF-8?q?Martin=20Povi=C5=A1er?= <povik+lin@cutebit.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Arnd Bergmann <arnd@arndb.de>
+Subject: Re: (subset) [PATCH 00/11] Drop default ARCH_APPLE from Kconfig and use defconfig instead
+Date: Sun, 22 Jun 2025 11:13:55 +0200
+Message-Id: <175058357351.73238.16083953894785363103.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <20250612-apple-kconfig-defconfig-v1-0-0e6f9cb512c1@kernel.org>
+References: <20250612-apple-kconfig-defconfig-v1-0-0e6f9cb512c1@kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 11/11] arm64: defconfig: Enable Apple Silicon drivers
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: asahi@lists.linux.dev, Stephen Boyd <sboyd@kernel.org>,
- Alyssa Rosenzweig <alyssa@rosenzweig.io>, Janne Grunau <j@jannau.net>,
- linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
- Srinivas Kandagatla <srini@kernel.org>, linux-kernel@vger.kernel.org,
- Viresh Kumar <viresh.kumar@linaro.org>, Neal Gompa <neal@gompa.dev>,
- linux-clk@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
- linux-i2c@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
- Liam Girdwood <lgirdwood@gmail.com>, =?UTF-8?Q?Martin_Povi=C5=A1er?=
- <povik+lin@cutebit.org>, Joerg Roedel <joro@8bytes.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Mark Brown <broonie@kernel.org>, iommu@lists.linux.dev,
- linux-input@vger.kernel.org, dmaengine@vger.kernel.org,
- linux-sound@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Ulf Hansson <ulf.hansson@linaro.org>,
- Michael Turquette <mturquette@baylibre.com>,
- Andi Shyti <andi.shyti@kernel.org>, Will Deacon <will@kernel.org>
-References: <20250612-apple-kconfig-defconfig-v1-0-0e6f9cb512c1@kernel.org>
- <20250612-apple-kconfig-defconfig-v1-11-0e6f9cb512c1@kernel.org>
- <2e022f4e-4c87-4da1-9d02-f7a3ae7c5798@arm.com>
-Content-Language: en-US
-From: Sven Peter <sven@kernel.org>
-In-Reply-To: <2e022f4e-4c87-4da1-9d02-f7a3ae7c5798@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On 13.06.25 18:50, Robin Murphy wrote:
-> On 2025-06-12 10:11 pm, Sven Peter wrote:
->> Enable drivers for hardware present on Apple Silicon machines.
->> The power domain and interrupt driver should be built-it since these are
->> critical for the system to boot, the rest can be build as modules.
-> 
-> Nit: I'd be tempted to put this patch first, just in case anyone 
-> bisecting with "make defconfig" in their process lands in the middle and 
-> suddenly loses some drivers (although arguably them going from "=y" to 
-> "=m" could still be a surprise, but at least a bit less so).
-
-Ah, that's a good point that I hadn't even thought about.
-Now that most of these have already been merged into different trees 
-that ship has sailed though.
-
+On Thu, 12 Jun 2025 21:11:24 +0000, Sven Peter wrote:
+> When support for Apple Silicon was originally upstreamed we somehow
+> started using `default ARCH_APPLE` for most drivers. arm64 defconfig
+> also contains ARCH_APPLE=y such that this will turn into `default y`
+> there by default which is neither what we want nor how this is usually
+> done.
+> Let's fix all that by dropping the default everywhere and adding the
+> drivers to defconfig as modules instead of built-ins.
+> None of these patches depend on each other so we can just take them all
+> independently through the respective subsystem trees.
 > 
 > [...]
->> @@ -1504,6 +1520,7 @@ CONFIG_ARCH_TEGRA_194_SOC=y
->>   CONFIG_ARCH_TEGRA_234_SOC=y
->>   CONFIG_TI_PRUSS=m
->>   CONFIG_OWL_PM_DOMAINS=y
->> +CONFIG_APPLE_PMGR_PWRSTATE=y
-> 
-> If this is critical for any Apple platform to work then it would 
-> probably make sense to explicitly select it from ARCH_APPLE, as is done 
-> for APPLE_AIC...
 
+Applied to git@github.com:AsahiLinux/linux.git (asahi-soc/drivers-6.17), thanks!
 
-Documentation/kbuild/kconfig-language.rst:
+[02/11] soc: apple: Drop default ARCH_APPLE in Kconfig
+        https://github.com/AsahiLinux/linux/commit/65293c3276de
 
-   select should be used with care. select will force a symbol to a value
-   without visiting the dependencies. By abusing select you are able to
-   select a symbol FOO even if FOO depends on BAR that is not set. In
-   general use select only for non-visible symbols (no prompts anywhere)
-   and for symbols with no dependencies. That will limit the usefulness
-   but on the other hand avoid the illegal configurations all over.
-
-
-That's probably fine for APPLE_AIC which only depends on ARM64 (and 
-ARCH_APPLE) which is guaranteed to be set when ARCH_APPLE is set anyway.
-APPLE_PMGR_PWRSTATE also has an additional dependency on PM so it should 
-probably remain in defconfig and not use select.
-
-
->>   CONFIG_RASPBERRYPI_POWER=y
->>   CONFIG_IMX_SCU_PD=y
->>   CONFIG_QCOM_CPR=y
->> @@ -1567,6 +1584,7 @@ CONFIG_QCOM_PDC=y
->>   CONFIG_QCOM_MPM=y
->>   CONFIG_TI_SCI_INTR_IRQCHIP=y
->>   CONFIG_TI_SCI_INTA_IRQCHIP=y
->> +CONFIG_APPLE_AIC=y
-> 
-> ...which I think means this would already be redundant.
-
-Yup, this can be dropped.
-
-
-Thanks,
-
-Sven
+Best regards,
+-- 
+Sven Peter <sven@kernel.org>
 
 

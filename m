@@ -1,61 +1,61 @@
-Return-Path: <dmaengine+bounces-5590-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5593-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72046AE34E3
-	for <lists+dmaengine@lfdr.de>; Mon, 23 Jun 2025 07:39:38 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 29E11AE34ED
+	for <lists+dmaengine@lfdr.de>; Mon, 23 Jun 2025 07:40:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F11FF165D69
-	for <lists+dmaengine@lfdr.de>; Mon, 23 Jun 2025 05:39:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9487716B18C
+	for <lists+dmaengine@lfdr.de>; Mon, 23 Jun 2025 05:40:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 983BE1E5B7A;
-	Mon, 23 Jun 2025 05:38:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02BF31F2BAE;
+	Mon, 23 Jun 2025 05:38:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="N48KpbOK"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qRTMp6vo"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29E3F1DDC07;
-	Mon, 23 Jun 2025 05:38:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C275D1F1522;
+	Mon, 23 Jun 2025 05:38:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750657105; cv=none; b=b9XqOyoE3yFcZAfIejao4TkYXpWvwoG3x7mSqiXh/AELk/Tbp+ikMM89W12PUHIpSJ6U90edC23E4rPIQXi+pL5DlEpqIwkta6Z5XDwS8YtFjVU+kkJ2n+AJSR6fCvEfOtaNLXwTBAz9i6aWzVvpSyeRXrUc1jr7QaDh9NKCPac=
+	t=1750657121; cv=none; b=n5L67owLT6/U6Mr/AwY/3kTS7XfVvAQ/RcDBUe1cPNNtM6dCYTqHgCExUc6X/wj+cCXuhOXq1L26kaGZAf8M8TdMsTrgjoAMFuHvRNYYMCruEYYi4UcNN63z1cpI9irw9ARd4Js+mG4m7jY+9J6N6TrOti7vun9kdXpDA+S5YBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750657105; c=relaxed/simple;
-	bh=VGusQyUgBDtiRmuthf7J6m1TQTI7TtSZZp3IdbiW6Yw=;
+	s=arc-20240116; t=1750657121; c=relaxed/simple;
+	bh=246owMAwanS+hTAztOCYFFl+/UFaLISw1WF/8oq/wVo=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nPCha7i0K+f5Okx5+VaeWoLE9qrLylCrxFDgx6+yl7bt5ugcRaqQasKwu8nviIsSgr+4XYeXhih35jNtaE3vuE7RJiDGLch0gnv5CGVGWapqjY+S7yGYfJE0S3mcEXcreMtj26RovzXzVMNGbJyTvAgafKsOYXuFJsvnVO0vtLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=N48KpbOK; arc=none smtp.client-ip=198.47.23.235
+	 MIME-Version:Content-Type; b=tOIuILmZwuXRw4DuQyS3iGLSobyJiPTW7G9uEIhOdd8MOh762b16DFnDDqvSNFXMckywISzmVVdLXJ8LTqs9JHGL1V+HSy7QaezKU5ZpkIvmlyHE0TwjkHfjRcesENQ/HLBNfi29tEGYjBwD2e05Kglo0OxDrSSYFKhoVobAAUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=qRTMp6vo; arc=none smtp.client-ip=198.47.23.234
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55N5cHbs1393439;
-	Mon, 23 Jun 2025 00:38:17 -0500
+Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55N5cMCQ794959;
+	Mon, 23 Jun 2025 00:38:22 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1750657097;
-	bh=3Ohxaol3WdIhtQLMzweBkiT/io3AFr3O0MFtopZkcQM=;
+	s=ti-com-17Q1; t=1750657102;
+	bh=R4f8Z5vjyvmWtuM0Yoxi1G8FPeAeFrTOrr4Y0dTOHQg=;
 	h=From:To:Subject:Date:In-Reply-To:References;
-	b=N48KpbOK55FrfPB2Fmkw2vgsrFbfLsxnAvbZjVIYnAR3tRbq10wXgmHoSIVcg6gzv
-	 WOH5kOsICvc2trlOIdwaXhN+Or9xth7v+AELNaTUHYAyBEFCK8hI2iK0Es1lddyb1J
-	 wapQ+YHY5CUjp6hqdrisPRFrX8BkvWnqjJa0dRME=
+	b=qRTMp6voel6D3UWpv5YxAm0c0Gcr0tLh9hpL3VQT3iuuxvccOBDgK6A5rsFPR8B7b
+	 36MvRLhS4J0RA/q9d4MqPYsgycEKCHDqrWLarrs5IRMYJdfw8v8KaaRIZfbZHNZXSi
+	 F3s8GInMSUCTvI78hfemJMzBunWFjQU/YS9TtEAU=
 Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55N5cHGg3168875
+	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55N5cMom2931529
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Mon, 23 Jun 2025 00:38:17 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE103.ent.ti.com
+	Mon, 23 Jun 2025 00:38:22 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE103.ent.ti.com
  (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Mon, 23
- Jun 2025 00:38:16 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ Jun 2025 00:38:21 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Mon, 23 Jun 2025 00:38:16 -0500
+ Frontend Transport; Mon, 23 Jun 2025 00:38:21 -0500
 Received: from uda0498651.dhcp.ti.com (uda0498651.dhcp.ti.com [172.24.227.7])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55N5bSqX3428603;
-	Mon, 23 Jun 2025 00:38:11 -0500
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55N5bSqY3428603;
+	Mon, 23 Jun 2025 00:38:16 -0500
 From: Sai Sree Kartheek Adivi <s-adivi@ti.com>
 To: Peter Ujfalusi <peter.ujfalusi@gmail.com>, Vinod Koul <vkoul@kernel.org>,
         Rob Herring <robh@kernel.org>,
@@ -68,9 +68,9 @@ To: Peter Ujfalusi <peter.ujfalusi@gmail.com>, Vinod Koul <vkoul@kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <praneeth@ti.com>,
         <vigneshr@ti.com>, <u-kumar1@ti.com>, <a-chavda@ti.com>,
         <p-mantena@ti.com>
-Subject: [PATCH v3 08/17] dmaengine: ti: k3-udma: move resource management functions to k3-udma-common.c
-Date: Mon, 23 Jun 2025 11:07:07 +0530
-Message-ID: <20250623053716.1493974-9-s-adivi@ti.com>
+Subject: [PATCH v3 09/17] dmaengine: ti: k3-udma: refactor resource setup functions
+Date: Mon, 23 Jun 2025 11:07:08 +0530
+Message-ID: <20250623053716.1493974-10-s-adivi@ti.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250623053716.1493974-1-s-adivi@ti.com>
 References: <20250623053716.1493974-1-s-adivi@ti.com>
@@ -84,944 +84,500 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Move functions responsible for allocation and release of udma
-resources such as channels, rings and flows from k3-udma.c
-to the common k3-udma-common.c file.
+The implementation of setup_resources, bcdma_setup_resources and
+pktdma_setup_resources is largely shared between all K3 UDMA variants
+with the only major difference being SCI resources setup. So,
+- Move the functions to k3-udma-common.c.
+- Split SCI resource setup for bcdma and pktdma into separate functions
+  in variant specific driver (k3-udma.c).
+- Add function pointers for setup_sci_resources in udma_dev and call
+  them as part of the actual resource setup implementations in
+  k3-udma-common.c to retain the existing functionality.
 
-The implementation of these functions is largely shared between K3 UDMA
-and K3 UDMA v2. This refactor improves code reuse and maintainability
-across multiple variants.
+This refactor improves code reuse and maintainability across multiple
+variants.
 
 No functional changes intended.
 
 Signed-off-by: Sai Sree Kartheek Adivi <s-adivi@ti.com>
 ---
- drivers/dma/ti/k3-udma-common.c | 423 ++++++++++++++++++++++++++++++++
- drivers/dma/ti/k3-udma.c        | 423 --------------------------------
- drivers/dma/ti/k3-udma.h        |  21 ++
- 3 files changed, 444 insertions(+), 423 deletions(-)
+ drivers/dma/ti/k3-udma-common.c | 203 ++++++++++++++++++++++++++++++++
+ drivers/dma/ti/k3-udma.c        | 181 +---------------------------
+ drivers/dma/ti/k3-udma.h        |   7 ++
+ 3 files changed, 215 insertions(+), 176 deletions(-)
 
 diff --git a/drivers/dma/ti/k3-udma-common.c b/drivers/dma/ti/k3-udma-common.c
-index 9ba4a515321ec..c1e8d47db2b2e 100644
+index c1e8d47db2b2e..05ded8479923c 100644
 --- a/drivers/dma/ti/k3-udma-common.c
 +++ b/drivers/dma/ti/k3-udma-common.c
-@@ -1861,3 +1861,426 @@ enum dmaengine_alignment udma_get_copy_align(struct udma_dev *ud)
- 		return DMAENGINE_ALIGN_64_BYTES;
- 	}
+@@ -8,7 +8,9 @@
+ #include <linux/dmaengine.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/dmapool.h>
++#include <linux/of.h>
+ #include <linux/platform_device.h>
++#include <linux/soc/ti/ti_sci_inta_msi.h>
+ #include <linux/soc/ti/k3-ringacc.h>
+ 
+ #include "k3-udma.h"
+@@ -2284,3 +2286,204 @@ void bcdma_free_bchan_resources(struct udma_chan *uc)
+ 
+ 	bcdma_put_bchan(uc);
  }
 +
-+/**
-+ * __udma_alloc_gp_rflow_range - alloc range of GP RX flows
-+ * @ud: UDMA device
-+ * @from: Start the search from this flow id number
-+ * @cnt: Number of consecutive flow ids to allocate
-+ *
-+ * Allocate range of RX flow ids for future use, those flows can be requested
-+ * only using explicit flow id number. if @from is set to -1 it will try to find
-+ * first free range. if @from is positive value it will force allocation only
-+ * of the specified range of flows.
-+ *
-+ * Returns -ENOMEM if can't find free range.
-+ * -EEXIST if requested range is busy.
-+ * -EINVAL if wrong input values passed.
-+ * Returns flow id on success.
-+ */
-+int __udma_alloc_gp_rflow_range(struct udma_dev *ud, int from, int cnt)
++int bcdma_setup_resources(struct udma_dev *ud)
 +{
-+	int start, tmp_from;
-+	DECLARE_BITMAP(tmp, K3_UDMA_MAX_RFLOWS);
++	int ret;
++	struct device *dev = ud->dev;
++	u32 cap;
 +
-+	tmp_from = from;
-+	if (tmp_from < 0)
-+		tmp_from = ud->rchan_cnt;
-+	/* default flows can't be allocated and accessible only by id */
-+	if (tmp_from < ud->rchan_cnt)
-+		return -EINVAL;
++	/* Set up the throughput level start indexes */
++	cap = udma_read(ud->mmrs[MMR_GCFG], 0x2c);
++	if (BCDMA_CAP3_UBCHAN_CNT(cap)) {
++		ud->bchan_tpl.levels = 3;
++		ud->bchan_tpl.start_idx[1] = BCDMA_CAP3_UBCHAN_CNT(cap);
++		ud->bchan_tpl.start_idx[0] = BCDMA_CAP3_HBCHAN_CNT(cap);
++	} else if (BCDMA_CAP3_HBCHAN_CNT(cap)) {
++		ud->bchan_tpl.levels = 2;
++		ud->bchan_tpl.start_idx[0] = BCDMA_CAP3_HBCHAN_CNT(cap);
++	} else {
++		ud->bchan_tpl.levels = 1;
++	}
 +
-+	if (tmp_from + cnt > ud->rflow_cnt)
-+		return -EINVAL;
++	cap = udma_read(ud->mmrs[MMR_GCFG], 0x30);
++	if (BCDMA_CAP4_URCHAN_CNT(cap)) {
++		ud->rchan_tpl.levels = 3;
++		ud->rchan_tpl.start_idx[1] = BCDMA_CAP4_URCHAN_CNT(cap);
++		ud->rchan_tpl.start_idx[0] = BCDMA_CAP4_HRCHAN_CNT(cap);
++	} else if (BCDMA_CAP4_HRCHAN_CNT(cap)) {
++		ud->rchan_tpl.levels = 2;
++		ud->rchan_tpl.start_idx[0] = BCDMA_CAP4_HRCHAN_CNT(cap);
++	} else {
++		ud->rchan_tpl.levels = 1;
++	}
 +
-+	bitmap_or(tmp, ud->rflow_gp_map, ud->rflow_gp_map_allocated,
-+		  ud->rflow_cnt);
++	if (BCDMA_CAP4_UTCHAN_CNT(cap)) {
++		ud->tchan_tpl.levels = 3;
++		ud->tchan_tpl.start_idx[1] = BCDMA_CAP4_UTCHAN_CNT(cap);
++		ud->tchan_tpl.start_idx[0] = BCDMA_CAP4_HTCHAN_CNT(cap);
++	} else if (BCDMA_CAP4_HTCHAN_CNT(cap)) {
++		ud->tchan_tpl.levels = 2;
++		ud->tchan_tpl.start_idx[0] = BCDMA_CAP4_HTCHAN_CNT(cap);
++	} else {
++		ud->tchan_tpl.levels = 1;
++	}
 +
-+	start = bitmap_find_next_zero_area(tmp,
-+					   ud->rflow_cnt,
-+					   tmp_from, cnt, 0);
-+	if (start >= ud->rflow_cnt)
++	ud->bchan_map = devm_kmalloc_array(dev, BITS_TO_LONGS(ud->bchan_cnt),
++					   sizeof(unsigned long), GFP_KERNEL);
++	ud->bchans = devm_kcalloc(dev, ud->bchan_cnt, sizeof(*ud->bchans),
++				  GFP_KERNEL);
++	ud->tchan_map = devm_kmalloc_array(dev, BITS_TO_LONGS(ud->tchan_cnt),
++					   sizeof(unsigned long), GFP_KERNEL);
++	ud->tchans = devm_kcalloc(dev, ud->tchan_cnt, sizeof(*ud->tchans),
++				  GFP_KERNEL);
++	ud->rchan_map = devm_kmalloc_array(dev, BITS_TO_LONGS(ud->rchan_cnt),
++					   sizeof(unsigned long), GFP_KERNEL);
++	ud->rchans = devm_kcalloc(dev, ud->rchan_cnt, sizeof(*ud->rchans),
++				  GFP_KERNEL);
++	/* BCDMA do not really have flows, but the driver expect it */
++	ud->rflow_in_use = devm_kcalloc(dev, BITS_TO_LONGS(ud->rchan_cnt),
++					sizeof(unsigned long),
++					GFP_KERNEL);
++	ud->rflows = devm_kcalloc(dev, ud->rchan_cnt, sizeof(*ud->rflows),
++				  GFP_KERNEL);
++
++	if (!ud->bchan_map || !ud->tchan_map || !ud->rchan_map ||
++	    !ud->rflow_in_use || !ud->bchans || !ud->tchans || !ud->rchans ||
++	    !ud->rflows)
 +		return -ENOMEM;
 +
-+	if (from >= 0 && start != from)
-+		return -EEXIST;
++	if (ud->bcdma_setup_sci_resources) {
++		ret = ud->bcdma_setup_sci_resources(ud);
++		if (ret)
++			return ret;
++	}
 +
-+	bitmap_set(ud->rflow_gp_map_allocated, start, cnt);
-+	return start;
-+}
-+
-+int __udma_free_gp_rflow_range(struct udma_dev *ud, int from, int cnt)
-+{
-+	if (from < ud->rchan_cnt)
-+		return -EINVAL;
-+	if (from + cnt > ud->rflow_cnt)
-+		return -EINVAL;
-+
-+	bitmap_clear(ud->rflow_gp_map_allocated, from, cnt);
 +	return 0;
 +}
 +
-+struct udma_rflow *__udma_get_rflow(struct udma_dev *ud, int id)
++int pktdma_setup_resources(struct udma_dev *ud)
 +{
-+	/*
-+	 * Attempt to request rflow by ID can be made for any rflow
-+	 * if not in use with assumption that caller knows what's doing.
-+	 * TI-SCI FW will perform additional permission check ant way, it's
-+	 * safe
-+	 */
-+
-+	if (id < 0 || id >= ud->rflow_cnt)
-+		return ERR_PTR(-ENOENT);
-+
-+	if (test_bit(id, ud->rflow_in_use))
-+		return ERR_PTR(-ENOENT);
-+
-+	if (ud->rflow_gp_map) {
-+		/* GP rflow has to be allocated first */
-+		if (!test_bit(id, ud->rflow_gp_map) &&
-+		    !test_bit(id, ud->rflow_gp_map_allocated))
-+			return ERR_PTR(-EINVAL);
-+	}
-+
-+	dev_dbg(ud->dev, "get rflow%d\n", id);
-+	set_bit(id, ud->rflow_in_use);
-+	return &ud->rflows[id];
-+}
-+
-+void __udma_put_rflow(struct udma_dev *ud, struct udma_rflow *rflow)
-+{
-+	if (!test_bit(rflow->id, ud->rflow_in_use)) {
-+		dev_err(ud->dev, "attempt to put unused rflow%d\n", rflow->id);
-+		return;
-+	}
-+
-+	dev_dbg(ud->dev, "put rflow%d\n", rflow->id);
-+	clear_bit(rflow->id, ud->rflow_in_use);
-+}
-+
-+#define UDMA_RESERVE_RESOURCE(res)					\
-+struct udma_##res *__udma_reserve_##res(struct udma_dev *ud,	\
-+					       enum udma_tp_level tpl,	\
-+					       int id)			\
-+{									\
-+	if (id >= 0) {							\
-+		if (test_bit(id, ud->res##_map)) {			\
-+			dev_err(ud->dev, "res##%d is in use\n", id);	\
-+			return ERR_PTR(-ENOENT);			\
-+		}							\
-+	} else {							\
-+		int start;						\
-+									\
-+		if (tpl >= ud->res##_tpl.levels)			\
-+			tpl = ud->res##_tpl.levels - 1;			\
-+									\
-+		start = ud->res##_tpl.start_idx[tpl];			\
-+									\
-+		id = find_next_zero_bit(ud->res##_map, ud->res##_cnt,	\
-+					start);				\
-+		if (id == ud->res##_cnt) {				\
-+			return ERR_PTR(-ENOENT);			\
-+		}							\
-+	}								\
-+									\
-+	set_bit(id, ud->res##_map);					\
-+	return &ud->res##s[id];						\
-+}
-+
-+UDMA_RESERVE_RESOURCE(bchan);
-+UDMA_RESERVE_RESOURCE(tchan);
-+UDMA_RESERVE_RESOURCE(rchan);
-+
-+int udma_get_tchan(struct udma_chan *uc)
-+{
-+	struct udma_dev *ud = uc->ud;
 +	int ret;
++	struct device *dev = ud->dev;
++	u32 cap3;
 +
-+	if (uc->tchan) {
-+		dev_dbg(ud->dev, "chan%d: already have tchan%d allocated\n",
-+			uc->id, uc->tchan->id);
-+		return 0;
-+	}
-+
-+	/*
-+	 * mapped_channel_id is -1 for UDMA, BCDMA and PKTDMA unmapped channels.
-+	 * For PKTDMA mapped channels it is configured to a channel which must
-+	 * be used to service the peripheral.
-+	 */
-+	uc->tchan = __udma_reserve_tchan(ud, uc->config.channel_tpl,
-+					 uc->config.mapped_channel_id);
-+	if (IS_ERR(uc->tchan)) {
-+		ret = PTR_ERR(uc->tchan);
-+		uc->tchan = NULL;
-+		return ret;
-+	}
-+
-+	if (ud->tflow_cnt) {
-+		int tflow_id;
-+
-+		/* Only PKTDMA have support for tx flows */
-+		if (uc->config.default_flow_id >= 0)
-+			tflow_id = uc->config.default_flow_id;
-+		else
-+			tflow_id = uc->tchan->id;
-+
-+		if (test_bit(tflow_id, ud->tflow_map)) {
-+			dev_err(ud->dev, "tflow%d is in use\n", tflow_id);
-+			clear_bit(uc->tchan->id, ud->tchan_map);
-+			uc->tchan = NULL;
-+			return -ENOENT;
-+		}
-+
-+		uc->tchan->tflow_id = tflow_id;
-+		set_bit(tflow_id, ud->tflow_map);
++	/* Set up the throughput level start indexes */
++	cap3 = udma_read(ud->mmrs[MMR_GCFG], 0x2c);
++	if (UDMA_CAP3_UCHAN_CNT(cap3)) {
++		ud->tchan_tpl.levels = 3;
++		ud->tchan_tpl.start_idx[1] = UDMA_CAP3_UCHAN_CNT(cap3);
++		ud->tchan_tpl.start_idx[0] = UDMA_CAP3_HCHAN_CNT(cap3);
++	} else if (UDMA_CAP3_HCHAN_CNT(cap3)) {
++		ud->tchan_tpl.levels = 2;
++		ud->tchan_tpl.start_idx[0] = UDMA_CAP3_HCHAN_CNT(cap3);
 +	} else {
-+		uc->tchan->tflow_id = -1;
++		ud->tchan_tpl.levels = 1;
++	}
++
++	ud->rchan_tpl.levels = ud->tchan_tpl.levels;
++	ud->rchan_tpl.start_idx[0] = ud->tchan_tpl.start_idx[0];
++	ud->rchan_tpl.start_idx[1] = ud->tchan_tpl.start_idx[1];
++
++	ud->tchan_map = devm_kmalloc_array(dev, BITS_TO_LONGS(ud->tchan_cnt),
++					   sizeof(unsigned long), GFP_KERNEL);
++	ud->tchans = devm_kcalloc(dev, ud->tchan_cnt, sizeof(*ud->tchans),
++				  GFP_KERNEL);
++	ud->rchan_map = devm_kmalloc_array(dev, BITS_TO_LONGS(ud->rchan_cnt),
++					   sizeof(unsigned long), GFP_KERNEL);
++	ud->rchans = devm_kcalloc(dev, ud->rchan_cnt, sizeof(*ud->rchans),
++				  GFP_KERNEL);
++	ud->rflow_in_use = devm_kcalloc(dev, BITS_TO_LONGS(ud->rflow_cnt),
++					sizeof(unsigned long),
++					GFP_KERNEL);
++	ud->rflows = devm_kcalloc(dev, ud->rflow_cnt, sizeof(*ud->rflows),
++				  GFP_KERNEL);
++	ud->tflow_map = devm_kmalloc_array(dev, BITS_TO_LONGS(ud->tflow_cnt),
++					   sizeof(unsigned long), GFP_KERNEL);
++
++	if (!ud->tchan_map || !ud->rchan_map || !ud->tflow_map || !ud->tchans ||
++	    !ud->rchans || !ud->rflows || !ud->rflow_in_use)
++		return -ENOMEM;
++
++	if (ud->pktdma_setup_sci_resources) {
++		ret = ud->pktdma_setup_sci_resources(ud);
++		if (ret)
++			return ret;
 +	}
 +
 +	return 0;
 +}
 +
-+int udma_get_rchan(struct udma_chan *uc)
++int setup_resources(struct udma_dev *ud)
 +{
-+	struct udma_dev *ud = uc->ud;
-+	int ret;
++	struct device *dev = ud->dev;
++	int ch_count, ret;
 +
-+	if (uc->rchan) {
-+		dev_dbg(ud->dev, "chan%d: already have rchan%d allocated\n",
-+			uc->id, uc->rchan->id);
-+		return 0;
-+	}
-+
-+	/*
-+	 * mapped_channel_id is -1 for UDMA, BCDMA and PKTDMA unmapped channels.
-+	 * For PKTDMA mapped channels it is configured to a channel which must
-+	 * be used to service the peripheral.
-+	 */
-+	uc->rchan = __udma_reserve_rchan(ud, uc->config.channel_tpl,
-+					 uc->config.mapped_channel_id);
-+	if (IS_ERR(uc->rchan)) {
-+		ret = PTR_ERR(uc->rchan);
-+		uc->rchan = NULL;
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+int udma_get_chan_pair(struct udma_chan *uc)
-+{
-+	struct udma_dev *ud = uc->ud;
-+	int chan_id, end;
-+
-+	if ((uc->tchan && uc->rchan) && uc->tchan->id == uc->rchan->id) {
-+		dev_info(ud->dev, "chan%d: already have %d pair allocated\n",
-+			 uc->id, uc->tchan->id);
-+		return 0;
-+	}
-+
-+	if (uc->tchan) {
-+		dev_err(ud->dev, "chan%d: already have tchan%d allocated\n",
-+			uc->id, uc->tchan->id);
-+		return -EBUSY;
-+	} else if (uc->rchan) {
-+		dev_err(ud->dev, "chan%d: already have rchan%d allocated\n",
-+			uc->id, uc->rchan->id);
-+		return -EBUSY;
-+	}
-+
-+	/* Can be optimized, but let's have it like this for now */
-+	end = min(ud->tchan_cnt, ud->rchan_cnt);
-+	/*
-+	 * Try to use the highest TPL channel pair for MEM_TO_MEM channels
-+	 * Note: in UDMAP the channel TPL is symmetric between tchan and rchan
-+	 */
-+	chan_id = ud->tchan_tpl.start_idx[ud->tchan_tpl.levels - 1];
-+	for (; chan_id < end; chan_id++) {
-+		if (!test_bit(chan_id, ud->tchan_map) &&
-+		    !test_bit(chan_id, ud->rchan_map))
-+			break;
-+	}
-+
-+	if (chan_id == end)
-+		return -ENOENT;
-+
-+	set_bit(chan_id, ud->tchan_map);
-+	set_bit(chan_id, ud->rchan_map);
-+	uc->tchan = &ud->tchans[chan_id];
-+	uc->rchan = &ud->rchans[chan_id];
-+
-+	/* UDMA does not use tx flows */
-+	uc->tchan->tflow_id = -1;
-+
-+	return 0;
-+}
-+
-+int udma_get_rflow(struct udma_chan *uc, int flow_id)
-+{
-+	struct udma_dev *ud = uc->ud;
-+	int ret;
-+
-+	if (!uc->rchan) {
-+		dev_err(ud->dev, "chan%d: does not have rchan??\n", uc->id);
++	switch (ud->match_data->type) {
++	case DMA_TYPE_UDMA:
++		ret = udma_setup_resources(ud);
++		break;
++	case DMA_TYPE_BCDMA:
++		ret = bcdma_setup_resources(ud);
++		break;
++	case DMA_TYPE_PKTDMA:
++		ret = pktdma_setup_resources(ud);
++		break;
++	default:
 +		return -EINVAL;
 +	}
 +
-+	if (uc->rflow) {
-+		dev_dbg(ud->dev, "chan%d: already have rflow%d allocated\n",
-+			uc->id, uc->rflow->id);
-+		return 0;
-+	}
-+
-+	uc->rflow = __udma_get_rflow(ud, flow_id);
-+	if (IS_ERR(uc->rflow)) {
-+		ret = PTR_ERR(uc->rflow);
-+		uc->rflow = NULL;
++	if (ret)
 +		return ret;
++
++	ch_count  = ud->bchan_cnt + ud->tchan_cnt + ud->rchan_cnt;
++	if (ud->bchan_cnt)
++		ch_count -= bitmap_weight(ud->bchan_map, ud->bchan_cnt);
++	ch_count -= bitmap_weight(ud->tchan_map, ud->tchan_cnt);
++	ch_count -= bitmap_weight(ud->rchan_map, ud->rchan_cnt);
++	if (!ch_count)
++		return -ENODEV;
++
++	ud->channels = devm_kcalloc(dev, ch_count, sizeof(*ud->channels),
++				    GFP_KERNEL);
++	if (!ud->channels)
++		return -ENOMEM;
++
++	switch (ud->match_data->type) {
++	case DMA_TYPE_UDMA:
++		dev_info(dev,
++			 "Channels: %d (tchan: %u, rchan: %u, gp-rflow: %u)\n",
++			 ch_count,
++			 ud->tchan_cnt - bitmap_weight(ud->tchan_map,
++						       ud->tchan_cnt),
++			 ud->rchan_cnt - bitmap_weight(ud->rchan_map,
++						       ud->rchan_cnt),
++			 ud->rflow_cnt - bitmap_weight(ud->rflow_gp_map,
++						       ud->rflow_cnt));
++		break;
++	case DMA_TYPE_BCDMA:
++		dev_info(dev,
++			 "Channels: %d (bchan: %u, tchan: %u, rchan: %u)\n",
++			 ch_count,
++			 ud->bchan_cnt - bitmap_weight(ud->bchan_map,
++						       ud->bchan_cnt),
++			 ud->tchan_cnt - bitmap_weight(ud->tchan_map,
++						       ud->tchan_cnt),
++			 ud->rchan_cnt - bitmap_weight(ud->rchan_map,
++						       ud->rchan_cnt));
++		break;
++	case DMA_TYPE_PKTDMA:
++		dev_info(dev,
++			 "Channels: %d (tchan: %u, rchan: %u)\n",
++			 ch_count,
++			 ud->tchan_cnt - bitmap_weight(ud->tchan_map,
++						       ud->tchan_cnt),
++			 ud->rchan_cnt - bitmap_weight(ud->rchan_map,
++						       ud->rchan_cnt));
++		break;
++	default:
++		break;
 +	}
 +
-+	return 0;
-+}
-+
-+void udma_put_rchan(struct udma_chan *uc)
-+{
-+	struct udma_dev *ud = uc->ud;
-+
-+	if (uc->rchan) {
-+		dev_dbg(ud->dev, "chan%d: put rchan%d\n", uc->id,
-+			uc->rchan->id);
-+		clear_bit(uc->rchan->id, ud->rchan_map);
-+		uc->rchan = NULL;
-+	}
-+}
-+
-+void udma_put_tchan(struct udma_chan *uc)
-+{
-+	struct udma_dev *ud = uc->ud;
-+
-+	if (uc->tchan) {
-+		dev_dbg(ud->dev, "chan%d: put tchan%d\n", uc->id,
-+			uc->tchan->id);
-+		clear_bit(uc->tchan->id, ud->tchan_map);
-+
-+		if (uc->tchan->tflow_id >= 0)
-+			clear_bit(uc->tchan->tflow_id, ud->tflow_map);
-+
-+		uc->tchan = NULL;
-+	}
-+}
-+
-+void udma_put_rflow(struct udma_chan *uc)
-+{
-+	struct udma_dev *ud = uc->ud;
-+
-+	if (uc->rflow) {
-+		dev_dbg(ud->dev, "chan%d: put rflow%d\n", uc->id,
-+			uc->rflow->id);
-+		__udma_put_rflow(ud, uc->rflow);
-+		uc->rflow = NULL;
-+	}
-+}
-+
-+void udma_free_tx_resources(struct udma_chan *uc)
-+{
-+	if (!uc->tchan)
-+		return;
-+
-+	k3_ringacc_ring_free(uc->tchan->t_ring);
-+	k3_ringacc_ring_free(uc->tchan->tc_ring);
-+	uc->tchan->t_ring = NULL;
-+	uc->tchan->tc_ring = NULL;
-+
-+	udma_put_tchan(uc);
-+}
-+
-+void udma_free_rx_resources(struct udma_chan *uc)
-+{
-+	if (!uc->rchan)
-+		return;
-+
-+	if (uc->rflow) {
-+		struct udma_rflow *rflow = uc->rflow;
-+
-+		k3_ringacc_ring_free(rflow->fd_ring);
-+		k3_ringacc_ring_free(rflow->r_ring);
-+		rflow->fd_ring = NULL;
-+		rflow->r_ring = NULL;
-+
-+		udma_put_rflow(uc);
-+	}
-+
-+	udma_put_rchan(uc);
-+}
-+
-+void udma_free_chan_resources(struct dma_chan *chan)
-+{
-+	struct udma_chan *uc = to_udma_chan(chan);
-+	struct udma_dev *ud = to_udma_dev(chan->device);
-+
-+	udma_terminate_all(chan);
-+	if (uc->terminated_desc) {
-+		ud->reset_chan(uc, false);
-+		udma_reset_rings(uc);
-+	}
-+
-+	cancel_delayed_work_sync(&uc->tx_drain.work);
-+
-+	if (uc->irq_num_ring > 0) {
-+		free_irq(uc->irq_num_ring, uc);
-+
-+		uc->irq_num_ring = 0;
-+	}
-+	if (uc->irq_num_udma > 0) {
-+		free_irq(uc->irq_num_udma, uc);
-+
-+		uc->irq_num_udma = 0;
-+	}
-+
-+	/* Release PSI-L pairing */
-+	if (uc->psil_paired) {
-+		navss_psil_unpair(ud, uc->config.src_thread,
-+				  uc->config.dst_thread);
-+		uc->psil_paired = false;
-+	}
-+
-+	vchan_free_chan_resources(&uc->vc);
-+	tasklet_kill(&uc->vc.task);
-+
-+	bcdma_free_bchan_resources(uc);
-+	udma_free_tx_resources(uc);
-+	udma_free_rx_resources(uc);
-+	udma_reset_uchan(uc);
-+
-+	if (uc->use_dma_pool) {
-+		dma_pool_destroy(uc->hdesc_pool);
-+		uc->use_dma_pool = false;
-+	}
-+}
-+
-+void bcdma_put_bchan(struct udma_chan *uc)
-+{
-+	struct udma_dev *ud = uc->ud;
-+
-+	if (uc->bchan) {
-+		dev_dbg(ud->dev, "chan%d: put bchan%d\n", uc->id,
-+			uc->bchan->id);
-+		clear_bit(uc->bchan->id, ud->bchan_map);
-+		uc->bchan = NULL;
-+		uc->tchan = NULL;
-+	}
-+}
-+
-+void bcdma_free_bchan_resources(struct udma_chan *uc)
-+{
-+	if (!uc->bchan)
-+		return;
-+
-+	k3_ringacc_ring_free(uc->bchan->tc_ring);
-+	k3_ringacc_ring_free(uc->bchan->t_ring);
-+	uc->bchan->tc_ring = NULL;
-+	uc->bchan->t_ring = NULL;
-+	k3_configure_chan_coherency(&uc->vc.chan, 0);
-+
-+	bcdma_put_bchan(uc);
++	return ch_count;
 +}
 diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-index 12fd6db14772f..3b4d33f197ed4 100644
+index 3b4d33f197ed4..32a56e61fb833 100644
 --- a/drivers/dma/ti/k3-udma.c
 +++ b/drivers/dma/ti/k3-udma.c
-@@ -423,135 +423,6 @@ static irqreturn_t udma_udma_irq_handler(int irq, void *data)
- 	return IRQ_HANDLED;
+@@ -2083,7 +2083,7 @@ static const char * const range_names[] = {
+ 	[RM_RANGE_TFLOW] = "ti,sci-rm-range-tflow",
+ };
+ 
+-static int udma_setup_resources(struct udma_dev *ud)
++int udma_setup_resources(struct udma_dev *ud)
+ {
+ 	int ret, i, j;
+ 	struct device *dev = ud->dev;
+@@ -2245,74 +2245,13 @@ static int udma_setup_resources(struct udma_dev *ud)
+ 	return 0;
  }
  
--/**
-- * __udma_alloc_gp_rflow_range - alloc range of GP RX flows
-- * @ud: UDMA device
-- * @from: Start the search from this flow id number
-- * @cnt: Number of consecutive flow ids to allocate
-- *
-- * Allocate range of RX flow ids for future use, those flows can be requested
-- * only using explicit flow id number. if @from is set to -1 it will try to find
-- * first free range. if @from is positive value it will force allocation only
-- * of the specified range of flows.
-- *
-- * Returns -ENOMEM if can't find free range.
-- * -EEXIST if requested range is busy.
-- * -EINVAL if wrong input values passed.
-- * Returns flow id on success.
-- */
--static int __udma_alloc_gp_rflow_range(struct udma_dev *ud, int from, int cnt)
+-static int bcdma_setup_resources(struct udma_dev *ud)
++static int bcdma_setup_sci_resources(struct udma_dev *ud)
+ {
+ 	int ret, i, j;
+ 	struct device *dev = ud->dev;
+ 	struct ti_sci_resource *rm_res, irq_res;
+ 	struct udma_tisci_rm *tisci_rm = &ud->tisci_rm;
+ 	const struct udma_oes_offsets *oes = &ud->soc_data->oes;
+-	u32 cap;
+-
+-	/* Set up the throughput level start indexes */
+-	cap = udma_read(ud->mmrs[MMR_GCFG], 0x2c);
+-	if (BCDMA_CAP3_UBCHAN_CNT(cap)) {
+-		ud->bchan_tpl.levels = 3;
+-		ud->bchan_tpl.start_idx[1] = BCDMA_CAP3_UBCHAN_CNT(cap);
+-		ud->bchan_tpl.start_idx[0] = BCDMA_CAP3_HBCHAN_CNT(cap);
+-	} else if (BCDMA_CAP3_HBCHAN_CNT(cap)) {
+-		ud->bchan_tpl.levels = 2;
+-		ud->bchan_tpl.start_idx[0] = BCDMA_CAP3_HBCHAN_CNT(cap);
+-	} else {
+-		ud->bchan_tpl.levels = 1;
+-	}
+-
+-	cap = udma_read(ud->mmrs[MMR_GCFG], 0x30);
+-	if (BCDMA_CAP4_URCHAN_CNT(cap)) {
+-		ud->rchan_tpl.levels = 3;
+-		ud->rchan_tpl.start_idx[1] = BCDMA_CAP4_URCHAN_CNT(cap);
+-		ud->rchan_tpl.start_idx[0] = BCDMA_CAP4_HRCHAN_CNT(cap);
+-	} else if (BCDMA_CAP4_HRCHAN_CNT(cap)) {
+-		ud->rchan_tpl.levels = 2;
+-		ud->rchan_tpl.start_idx[0] = BCDMA_CAP4_HRCHAN_CNT(cap);
+-	} else {
+-		ud->rchan_tpl.levels = 1;
+-	}
+-
+-	if (BCDMA_CAP4_UTCHAN_CNT(cap)) {
+-		ud->tchan_tpl.levels = 3;
+-		ud->tchan_tpl.start_idx[1] = BCDMA_CAP4_UTCHAN_CNT(cap);
+-		ud->tchan_tpl.start_idx[0] = BCDMA_CAP4_HTCHAN_CNT(cap);
+-	} else if (BCDMA_CAP4_HTCHAN_CNT(cap)) {
+-		ud->tchan_tpl.levels = 2;
+-		ud->tchan_tpl.start_idx[0] = BCDMA_CAP4_HTCHAN_CNT(cap);
+-	} else {
+-		ud->tchan_tpl.levels = 1;
+-	}
+-
+-	ud->bchan_map = devm_kmalloc_array(dev, BITS_TO_LONGS(ud->bchan_cnt),
+-					   sizeof(unsigned long), GFP_KERNEL);
+-	ud->bchans = devm_kcalloc(dev, ud->bchan_cnt, sizeof(*ud->bchans),
+-				  GFP_KERNEL);
+-	ud->tchan_map = devm_kmalloc_array(dev, BITS_TO_LONGS(ud->tchan_cnt),
+-					   sizeof(unsigned long), GFP_KERNEL);
+-	ud->tchans = devm_kcalloc(dev, ud->tchan_cnt, sizeof(*ud->tchans),
+-				  GFP_KERNEL);
+-	ud->rchan_map = devm_kmalloc_array(dev, BITS_TO_LONGS(ud->rchan_cnt),
+-					   sizeof(unsigned long), GFP_KERNEL);
+-	ud->rchans = devm_kcalloc(dev, ud->rchan_cnt, sizeof(*ud->rchans),
+-				  GFP_KERNEL);
+-	/* BCDMA do not really have flows, but the driver expect it */
+-	ud->rflow_in_use = devm_kcalloc(dev, BITS_TO_LONGS(ud->rchan_cnt),
+-					sizeof(unsigned long),
+-					GFP_KERNEL);
+-	ud->rflows = devm_kcalloc(dev, ud->rchan_cnt, sizeof(*ud->rflows),
+-				  GFP_KERNEL);
+-
+-	if (!ud->bchan_map || !ud->tchan_map || !ud->rchan_map ||
+-	    !ud->rflow_in_use || !ud->bchans || !ud->tchans || !ud->rchans ||
+-	    !ud->rflows)
+-		return -ENOMEM;
+ 
+ 	/* Get resource ranges from tisci */
+ 	for (i = 0; i < RM_RANGE_LAST; i++) {
+@@ -2476,51 +2415,13 @@ static int bcdma_setup_resources(struct udma_dev *ud)
+ 	return 0;
+ }
+ 
+-static int pktdma_setup_resources(struct udma_dev *ud)
++static int pktdma_setup_sci_resources(struct udma_dev *ud)
+ {
+ 	int ret, i, j;
+ 	struct device *dev = ud->dev;
+ 	struct ti_sci_resource *rm_res, irq_res;
+ 	struct udma_tisci_rm *tisci_rm = &ud->tisci_rm;
+ 	const struct udma_oes_offsets *oes = &ud->soc_data->oes;
+-	u32 cap3;
+-
+-	/* Set up the throughput level start indexes */
+-	cap3 = udma_read(ud->mmrs[MMR_GCFG], 0x2c);
+-	if (UDMA_CAP3_UCHAN_CNT(cap3)) {
+-		ud->tchan_tpl.levels = 3;
+-		ud->tchan_tpl.start_idx[1] = UDMA_CAP3_UCHAN_CNT(cap3);
+-		ud->tchan_tpl.start_idx[0] = UDMA_CAP3_HCHAN_CNT(cap3);
+-	} else if (UDMA_CAP3_HCHAN_CNT(cap3)) {
+-		ud->tchan_tpl.levels = 2;
+-		ud->tchan_tpl.start_idx[0] = UDMA_CAP3_HCHAN_CNT(cap3);
+-	} else {
+-		ud->tchan_tpl.levels = 1;
+-	}
+-
+-	ud->rchan_tpl.levels = ud->tchan_tpl.levels;
+-	ud->rchan_tpl.start_idx[0] = ud->tchan_tpl.start_idx[0];
+-	ud->rchan_tpl.start_idx[1] = ud->tchan_tpl.start_idx[1];
+-
+-	ud->tchan_map = devm_kmalloc_array(dev, BITS_TO_LONGS(ud->tchan_cnt),
+-					   sizeof(unsigned long), GFP_KERNEL);
+-	ud->tchans = devm_kcalloc(dev, ud->tchan_cnt, sizeof(*ud->tchans),
+-				  GFP_KERNEL);
+-	ud->rchan_map = devm_kmalloc_array(dev, BITS_TO_LONGS(ud->rchan_cnt),
+-					   sizeof(unsigned long), GFP_KERNEL);
+-	ud->rchans = devm_kcalloc(dev, ud->rchan_cnt, sizeof(*ud->rchans),
+-				  GFP_KERNEL);
+-	ud->rflow_in_use = devm_kcalloc(dev, BITS_TO_LONGS(ud->rflow_cnt),
+-					sizeof(unsigned long),
+-					GFP_KERNEL);
+-	ud->rflows = devm_kcalloc(dev, ud->rflow_cnt, sizeof(*ud->rflows),
+-				  GFP_KERNEL);
+-	ud->tflow_map = devm_kmalloc_array(dev, BITS_TO_LONGS(ud->tflow_cnt),
+-					   sizeof(unsigned long), GFP_KERNEL);
+-
+-	if (!ud->tchan_map || !ud->rchan_map || !ud->tflow_map || !ud->tchans ||
+-	    !ud->rchans || !ud->rflows || !ud->rflow_in_use)
+-		return -ENOMEM;
+ 
+ 	/* Get resource ranges from tisci */
+ 	for (i = 0; i < RM_RANGE_LAST; i++) {
+@@ -2631,80 +2532,6 @@ static int pktdma_setup_resources(struct udma_dev *ud)
+ 	return 0;
+ }
+ 
+-static int setup_resources(struct udma_dev *ud)
 -{
--	int start, tmp_from;
--	DECLARE_BITMAP(tmp, K3_UDMA_MAX_RFLOWS);
+-	struct device *dev = ud->dev;
+-	int ch_count, ret;
 -
--	tmp_from = from;
--	if (tmp_from < 0)
--		tmp_from = ud->rchan_cnt;
--	/* default flows can't be allocated and accessible only by id */
--	if (tmp_from < ud->rchan_cnt)
+-	switch (ud->match_data->type) {
+-	case DMA_TYPE_UDMA:
+-		ret = udma_setup_resources(ud);
+-		break;
+-	case DMA_TYPE_BCDMA:
+-		ret = bcdma_setup_resources(ud);
+-		break;
+-	case DMA_TYPE_PKTDMA:
+-		ret = pktdma_setup_resources(ud);
+-		break;
+-	default:
 -		return -EINVAL;
+-	}
 -
--	if (tmp_from + cnt > ud->rflow_cnt)
--		return -EINVAL;
+-	if (ret)
+-		return ret;
 -
--	bitmap_or(tmp, ud->rflow_gp_map, ud->rflow_gp_map_allocated,
--		  ud->rflow_cnt);
+-	ch_count  = ud->bchan_cnt + ud->tchan_cnt + ud->rchan_cnt;
+-	if (ud->bchan_cnt)
+-		ch_count -= bitmap_weight(ud->bchan_map, ud->bchan_cnt);
+-	ch_count -= bitmap_weight(ud->tchan_map, ud->tchan_cnt);
+-	ch_count -= bitmap_weight(ud->rchan_map, ud->rchan_cnt);
+-	if (!ch_count)
+-		return -ENODEV;
 -
--	start = bitmap_find_next_zero_area(tmp,
--					   ud->rflow_cnt,
--					   tmp_from, cnt, 0);
--	if (start >= ud->rflow_cnt)
+-	ud->channels = devm_kcalloc(dev, ch_count, sizeof(*ud->channels),
+-				    GFP_KERNEL);
+-	if (!ud->channels)
 -		return -ENOMEM;
 -
--	if (from >= 0 && start != from)
--		return -EEXIST;
--
--	bitmap_set(ud->rflow_gp_map_allocated, start, cnt);
--	return start;
--}
--
--static int __udma_free_gp_rflow_range(struct udma_dev *ud, int from, int cnt)
--{
--	if (from < ud->rchan_cnt)
--		return -EINVAL;
--	if (from + cnt > ud->rflow_cnt)
--		return -EINVAL;
--
--	bitmap_clear(ud->rflow_gp_map_allocated, from, cnt);
--	return 0;
--}
--
--static struct udma_rflow *__udma_get_rflow(struct udma_dev *ud, int id)
--{
--	/*
--	 * Attempt to request rflow by ID can be made for any rflow
--	 * if not in use with assumption that caller knows what's doing.
--	 * TI-SCI FW will perform additional permission check ant way, it's
--	 * safe
--	 */
--
--	if (id < 0 || id >= ud->rflow_cnt)
--		return ERR_PTR(-ENOENT);
--
--	if (test_bit(id, ud->rflow_in_use))
--		return ERR_PTR(-ENOENT);
--
--	if (ud->rflow_gp_map) {
--		/* GP rflow has to be allocated first */
--		if (!test_bit(id, ud->rflow_gp_map) &&
--		    !test_bit(id, ud->rflow_gp_map_allocated))
--			return ERR_PTR(-EINVAL);
+-	switch (ud->match_data->type) {
+-	case DMA_TYPE_UDMA:
+-		dev_info(dev,
+-			 "Channels: %d (tchan: %u, rchan: %u, gp-rflow: %u)\n",
+-			 ch_count,
+-			 ud->tchan_cnt - bitmap_weight(ud->tchan_map,
+-						       ud->tchan_cnt),
+-			 ud->rchan_cnt - bitmap_weight(ud->rchan_map,
+-						       ud->rchan_cnt),
+-			 ud->rflow_cnt - bitmap_weight(ud->rflow_gp_map,
+-						       ud->rflow_cnt));
+-		break;
+-	case DMA_TYPE_BCDMA:
+-		dev_info(dev,
+-			 "Channels: %d (bchan: %u, tchan: %u, rchan: %u)\n",
+-			 ch_count,
+-			 ud->bchan_cnt - bitmap_weight(ud->bchan_map,
+-						       ud->bchan_cnt),
+-			 ud->tchan_cnt - bitmap_weight(ud->tchan_map,
+-						       ud->tchan_cnt),
+-			 ud->rchan_cnt - bitmap_weight(ud->rchan_map,
+-						       ud->rchan_cnt));
+-		break;
+-	case DMA_TYPE_PKTDMA:
+-		dev_info(dev,
+-			 "Channels: %d (tchan: %u, rchan: %u)\n",
+-			 ch_count,
+-			 ud->tchan_cnt - bitmap_weight(ud->tchan_map,
+-						       ud->tchan_cnt),
+-			 ud->rchan_cnt - bitmap_weight(ud->rchan_map,
+-						       ud->rchan_cnt));
+-		break;
+-	default:
+-		break;
 -	}
 -
--	dev_dbg(ud->dev, "get rflow%d\n", id);
--	set_bit(id, ud->rflow_in_use);
--	return &ud->rflows[id];
+-	return ch_count;
 -}
 -
--static void __udma_put_rflow(struct udma_dev *ud, struct udma_rflow *rflow)
--{
--	if (!test_bit(rflow->id, ud->rflow_in_use)) {
--		dev_err(ud->dev, "attempt to put unused rflow%d\n", rflow->id);
--		return;
--	}
--
--	dev_dbg(ud->dev, "put rflow%d\n", rflow->id);
--	clear_bit(rflow->id, ud->rflow_in_use);
--}
--
--#define UDMA_RESERVE_RESOURCE(res)					\
--static struct udma_##res *__udma_reserve_##res(struct udma_dev *ud,	\
--					       enum udma_tp_level tpl,	\
--					       int id)			\
--{									\
--	if (id >= 0) {							\
--		if (test_bit(id, ud->res##_map)) {			\
--			dev_err(ud->dev, "res##%d is in use\n", id);	\
--			return ERR_PTR(-ENOENT);			\
--		}							\
--	} else {							\
--		int start;						\
--									\
--		if (tpl >= ud->res##_tpl.levels)			\
--			tpl = ud->res##_tpl.levels - 1;			\
--									\
--		start = ud->res##_tpl.start_idx[tpl];			\
--									\
--		id = find_next_zero_bit(ud->res##_map, ud->res##_cnt,	\
--					start);				\
--		if (id == ud->res##_cnt) {				\
--			return ERR_PTR(-ENOENT);			\
--		}							\
--	}								\
--									\
--	set_bit(id, ud->res##_map);					\
--	return &ud->res##s[id];						\
--}
--
--UDMA_RESERVE_RESOURCE(bchan);
--UDMA_RESERVE_RESOURCE(tchan);
--UDMA_RESERVE_RESOURCE(rchan);
--
- static int bcdma_get_bchan(struct udma_chan *uc)
+ static int udma_probe(struct platform_device *pdev)
  {
- 	struct udma_dev *ud = uc->ud;
-@@ -585,223 +456,6 @@ static int bcdma_get_bchan(struct udma_chan *uc)
- 	return 0;
- }
+ 	struct device_node *navss_node = pdev->dev.parent->of_node;
+@@ -2745,6 +2572,8 @@ static int udma_probe(struct platform_device *pdev)
+ 	ud->stop = udma_stop;
+ 	ud->reset_chan = udma_reset_chan;
+ 	ud->decrement_byte_counters = udma_decrement_byte_counters;
++	ud->bcdma_setup_sci_resources = bcdma_setup_sci_resources;
++	ud->pktdma_setup_sci_resources = pktdma_setup_sci_resources;
  
--static int udma_get_tchan(struct udma_chan *uc)
--{
--	struct udma_dev *ud = uc->ud;
--	int ret;
--
--	if (uc->tchan) {
--		dev_dbg(ud->dev, "chan%d: already have tchan%d allocated\n",
--			uc->id, uc->tchan->id);
--		return 0;
--	}
--
--	/*
--	 * mapped_channel_id is -1 for UDMA, BCDMA and PKTDMA unmapped channels.
--	 * For PKTDMA mapped channels it is configured to a channel which must
--	 * be used to service the peripheral.
--	 */
--	uc->tchan = __udma_reserve_tchan(ud, uc->config.channel_tpl,
--					 uc->config.mapped_channel_id);
--	if (IS_ERR(uc->tchan)) {
--		ret = PTR_ERR(uc->tchan);
--		uc->tchan = NULL;
--		return ret;
--	}
--
--	if (ud->tflow_cnt) {
--		int tflow_id;
--
--		/* Only PKTDMA have support for tx flows */
--		if (uc->config.default_flow_id >= 0)
--			tflow_id = uc->config.default_flow_id;
--		else
--			tflow_id = uc->tchan->id;
--
--		if (test_bit(tflow_id, ud->tflow_map)) {
--			dev_err(ud->dev, "tflow%d is in use\n", tflow_id);
--			clear_bit(uc->tchan->id, ud->tchan_map);
--			uc->tchan = NULL;
--			return -ENOENT;
--		}
--
--		uc->tchan->tflow_id = tflow_id;
--		set_bit(tflow_id, ud->tflow_map);
--	} else {
--		uc->tchan->tflow_id = -1;
--	}
--
--	return 0;
--}
--
--static int udma_get_rchan(struct udma_chan *uc)
--{
--	struct udma_dev *ud = uc->ud;
--	int ret;
--
--	if (uc->rchan) {
--		dev_dbg(ud->dev, "chan%d: already have rchan%d allocated\n",
--			uc->id, uc->rchan->id);
--		return 0;
--	}
--
--	/*
--	 * mapped_channel_id is -1 for UDMA, BCDMA and PKTDMA unmapped channels.
--	 * For PKTDMA mapped channels it is configured to a channel which must
--	 * be used to service the peripheral.
--	 */
--	uc->rchan = __udma_reserve_rchan(ud, uc->config.channel_tpl,
--					 uc->config.mapped_channel_id);
--	if (IS_ERR(uc->rchan)) {
--		ret = PTR_ERR(uc->rchan);
--		uc->rchan = NULL;
--		return ret;
--	}
--
--	return 0;
--}
--
--static int udma_get_chan_pair(struct udma_chan *uc)
--{
--	struct udma_dev *ud = uc->ud;
--	int chan_id, end;
--
--	if ((uc->tchan && uc->rchan) && uc->tchan->id == uc->rchan->id) {
--		dev_info(ud->dev, "chan%d: already have %d pair allocated\n",
--			 uc->id, uc->tchan->id);
--		return 0;
--	}
--
--	if (uc->tchan) {
--		dev_err(ud->dev, "chan%d: already have tchan%d allocated\n",
--			uc->id, uc->tchan->id);
--		return -EBUSY;
--	} else if (uc->rchan) {
--		dev_err(ud->dev, "chan%d: already have rchan%d allocated\n",
--			uc->id, uc->rchan->id);
--		return -EBUSY;
--	}
--
--	/* Can be optimized, but let's have it like this for now */
--	end = min(ud->tchan_cnt, ud->rchan_cnt);
--	/*
--	 * Try to use the highest TPL channel pair for MEM_TO_MEM channels
--	 * Note: in UDMAP the channel TPL is symmetric between tchan and rchan
--	 */
--	chan_id = ud->tchan_tpl.start_idx[ud->tchan_tpl.levels - 1];
--	for (; chan_id < end; chan_id++) {
--		if (!test_bit(chan_id, ud->tchan_map) &&
--		    !test_bit(chan_id, ud->rchan_map))
--			break;
--	}
--
--	if (chan_id == end)
--		return -ENOENT;
--
--	set_bit(chan_id, ud->tchan_map);
--	set_bit(chan_id, ud->rchan_map);
--	uc->tchan = &ud->tchans[chan_id];
--	uc->rchan = &ud->rchans[chan_id];
--
--	/* UDMA does not use tx flows */
--	uc->tchan->tflow_id = -1;
--
--	return 0;
--}
--
--static int udma_get_rflow(struct udma_chan *uc, int flow_id)
--{
--	struct udma_dev *ud = uc->ud;
--	int ret;
--
--	if (!uc->rchan) {
--		dev_err(ud->dev, "chan%d: does not have rchan??\n", uc->id);
--		return -EINVAL;
--	}
--
--	if (uc->rflow) {
--		dev_dbg(ud->dev, "chan%d: already have rflow%d allocated\n",
--			uc->id, uc->rflow->id);
--		return 0;
--	}
--
--	uc->rflow = __udma_get_rflow(ud, flow_id);
--	if (IS_ERR(uc->rflow)) {
--		ret = PTR_ERR(uc->rflow);
--		uc->rflow = NULL;
--		return ret;
--	}
--
--	return 0;
--}
--
--static void bcdma_put_bchan(struct udma_chan *uc)
--{
--	struct udma_dev *ud = uc->ud;
--
--	if (uc->bchan) {
--		dev_dbg(ud->dev, "chan%d: put bchan%d\n", uc->id,
--			uc->bchan->id);
--		clear_bit(uc->bchan->id, ud->bchan_map);
--		uc->bchan = NULL;
--		uc->tchan = NULL;
--	}
--}
--
--static void udma_put_rchan(struct udma_chan *uc)
--{
--	struct udma_dev *ud = uc->ud;
--
--	if (uc->rchan) {
--		dev_dbg(ud->dev, "chan%d: put rchan%d\n", uc->id,
--			uc->rchan->id);
--		clear_bit(uc->rchan->id, ud->rchan_map);
--		uc->rchan = NULL;
--	}
--}
--
--static void udma_put_tchan(struct udma_chan *uc)
--{
--	struct udma_dev *ud = uc->ud;
--
--	if (uc->tchan) {
--		dev_dbg(ud->dev, "chan%d: put tchan%d\n", uc->id,
--			uc->tchan->id);
--		clear_bit(uc->tchan->id, ud->tchan_map);
--
--		if (uc->tchan->tflow_id >= 0)
--			clear_bit(uc->tchan->tflow_id, ud->tflow_map);
--
--		uc->tchan = NULL;
--	}
--}
--
--static void udma_put_rflow(struct udma_chan *uc)
--{
--	struct udma_dev *ud = uc->ud;
--
--	if (uc->rflow) {
--		dev_dbg(ud->dev, "chan%d: put rflow%d\n", uc->id,
--			uc->rflow->id);
--		__udma_put_rflow(ud, uc->rflow);
--		uc->rflow = NULL;
--	}
--}
--
--static void bcdma_free_bchan_resources(struct udma_chan *uc)
--{
--	if (!uc->bchan)
--		return;
--
--	k3_ringacc_ring_free(uc->bchan->tc_ring);
--	k3_ringacc_ring_free(uc->bchan->t_ring);
--	uc->bchan->tc_ring = NULL;
--	uc->bchan->t_ring = NULL;
--	k3_configure_chan_coherency(&uc->vc.chan, 0);
--
--	bcdma_put_bchan(uc);
--}
--
- static int bcdma_alloc_bchan_resources(struct udma_chan *uc)
- {
- 	struct k3_ring_cfg ring_cfg;
-@@ -847,19 +501,6 @@ static int bcdma_alloc_bchan_resources(struct udma_chan *uc)
- 	return ret;
- }
- 
--static void udma_free_tx_resources(struct udma_chan *uc)
--{
--	if (!uc->tchan)
--		return;
--
--	k3_ringacc_ring_free(uc->tchan->t_ring);
--	k3_ringacc_ring_free(uc->tchan->tc_ring);
--	uc->tchan->t_ring = NULL;
--	uc->tchan->tc_ring = NULL;
--
--	udma_put_tchan(uc);
--}
--
- static int udma_alloc_tx_resources(struct udma_chan *uc)
- {
- 	struct k3_ring_cfg ring_cfg;
-@@ -917,25 +558,6 @@ static int udma_alloc_tx_resources(struct udma_chan *uc)
- 	return ret;
- }
- 
--static void udma_free_rx_resources(struct udma_chan *uc)
--{
--	if (!uc->rchan)
--		return;
--
--	if (uc->rflow) {
--		struct udma_rflow *rflow = uc->rflow;
--
--		k3_ringacc_ring_free(rflow->fd_ring);
--		k3_ringacc_ring_free(rflow->r_ring);
--		rflow->fd_ring = NULL;
--		rflow->r_ring = NULL;
--
--		udma_put_rflow(uc);
--	}
--
--	udma_put_rchan(uc);
--}
--
- static int udma_alloc_rx_resources(struct udma_chan *uc)
- {
- 	struct udma_dev *ud = uc->ud;
-@@ -2024,51 +1646,6 @@ static int udma_resume(struct dma_chan *chan)
- 	return 0;
- }
- 
--static void udma_free_chan_resources(struct dma_chan *chan)
--{
--	struct udma_chan *uc = to_udma_chan(chan);
--	struct udma_dev *ud = to_udma_dev(chan->device);
--
--	udma_terminate_all(chan);
--	if (uc->terminated_desc) {
--		ud->reset_chan(uc, false);
--		udma_reset_rings(uc);
--	}
--
--	cancel_delayed_work_sync(&uc->tx_drain.work);
--
--	if (uc->irq_num_ring > 0) {
--		free_irq(uc->irq_num_ring, uc);
--
--		uc->irq_num_ring = 0;
--	}
--	if (uc->irq_num_udma > 0) {
--		free_irq(uc->irq_num_udma, uc);
--
--		uc->irq_num_udma = 0;
--	}
--
--	/* Release PSI-L pairing */
--	if (uc->psil_paired) {
--		navss_psil_unpair(ud, uc->config.src_thread,
--				  uc->config.dst_thread);
--		uc->psil_paired = false;
--	}
--
--	vchan_free_chan_resources(&uc->vc);
--	tasklet_kill(&uc->vc.task);
--
--	bcdma_free_bchan_resources(uc);
--	udma_free_tx_resources(uc);
--	udma_free_rx_resources(uc);
--	udma_reset_uchan(uc);
--
--	if (uc->use_dma_pool) {
--		dma_pool_destroy(uc->hdesc_pool);
--		uc->use_dma_pool = false;
--	}
--}
--
- static struct platform_driver udma_driver;
- static struct platform_driver bcdma_driver;
- static struct platform_driver pktdma_driver;
+ 	ret = udma_get_mmrs(pdev, ud);
+ 	if (ret)
 diff --git a/drivers/dma/ti/k3-udma.h b/drivers/dma/ti/k3-udma.h
-index 4ebc656d30663..df17f01f06a56 100644
+index df17f01f06a56..f1983025e108f 100644
 --- a/drivers/dma/ti/k3-udma.h
 +++ b/drivers/dma/ti/k3-udma.h
-@@ -650,6 +650,27 @@ void udma_dbg_summary_show(struct seq_file *s,
- 			   struct dma_device *dma_dev);
- #endif /* CONFIG_DEBUG_FS */
+@@ -349,6 +349,8 @@ struct udma_dev {
+ 	int (*stop)(struct udma_chan *uc);
+ 	int (*reset_chan)(struct udma_chan *uc, bool hard);
+ 	void (*decrement_byte_counters)(struct udma_chan *uc, u32 val);
++	int (*bcdma_setup_sci_resources)(struct udma_dev *ud);
++	int (*pktdma_setup_sci_resources)(struct udma_dev *ud);
+ };
  
-+int __udma_alloc_gp_rflow_range(struct udma_dev *ud, int from, int cnt);
-+int __udma_free_gp_rflow_range(struct udma_dev *ud, int from, int cnt);
-+struct udma_rflow *__udma_get_rflow(struct udma_dev *ud, int id);
-+void __udma_put_rflow(struct udma_dev *ud, struct udma_rflow *rflow);
-+int udma_get_tchan(struct udma_chan *uc);
-+int udma_get_rchan(struct udma_chan *uc);
-+int udma_get_chan_pair(struct udma_chan *uc);
-+int udma_get_rflow(struct udma_chan *uc, int flow_id);
-+void udma_put_rchan(struct udma_chan *uc);
-+void udma_put_tchan(struct udma_chan *uc);
-+void udma_put_rflow(struct udma_chan *uc);
-+void udma_free_tx_resources(struct udma_chan *uc);
-+void udma_free_rx_resources(struct udma_chan *uc);
-+void udma_free_chan_resources(struct dma_chan *chan);
-+void bcdma_put_bchan(struct udma_chan *uc);
-+void bcdma_free_bchan_resources(struct udma_chan *uc);
-+
-+struct udma_bchan *__udma_reserve_bchan(struct udma_dev *ud, enum udma_tp_level tpl, int id);
-+struct udma_tchan *__udma_reserve_tchan(struct udma_dev *ud, enum udma_tp_level tpl, int id);
-+struct udma_rchan *__udma_reserve_rchan(struct udma_dev *ud, enum udma_tp_level tpl, int id);
+ struct udma_desc {
+@@ -671,6 +673,11 @@ struct udma_bchan *__udma_reserve_bchan(struct udma_dev *ud, enum udma_tp_level
+ struct udma_tchan *__udma_reserve_tchan(struct udma_dev *ud, enum udma_tp_level tpl, int id);
+ struct udma_rchan *__udma_reserve_rchan(struct udma_dev *ud, enum udma_tp_level tpl, int id);
+ 
++int udma_setup_resources(struct udma_dev *ud);
++int bcdma_setup_resources(struct udma_dev *ud);
++int pktdma_setup_resources(struct udma_dev *ud);
++int setup_resources(struct udma_dev *ud);
 +
  /* Direct access to UDMA low lever resources for the glue layer */
  int xudma_navss_psil_pair(struct udma_dev *ud, u32 src_thread, u32 dst_thread);

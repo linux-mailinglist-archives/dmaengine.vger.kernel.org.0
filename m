@@ -1,131 +1,125 @@
-Return-Path: <dmaengine+bounces-5607-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5608-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 960C1AE3DF5
-	for <lists+dmaengine@lfdr.de>; Mon, 23 Jun 2025 13:33:26 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 58D8EAE58BE
+	for <lists+dmaengine@lfdr.de>; Tue, 24 Jun 2025 02:42:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D7F6D165BBA
-	for <lists+dmaengine@lfdr.de>; Mon, 23 Jun 2025 11:33:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 71069446B9D
+	for <lists+dmaengine@lfdr.de>; Tue, 24 Jun 2025 00:41:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BC1D23C51C;
-	Mon, 23 Jun 2025 11:33:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08A4E17332C;
+	Tue, 24 Jun 2025 00:40:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NYnbFlMD"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30E151E3DCD;
-	Mon, 23 Jun 2025 11:33:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1719E176ADE;
+	Tue, 24 Jun 2025 00:40:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750678400; cv=none; b=sSHr0DKaQMSvCrvbZGX+vJK+LCTaygozefEdCKXn+A90+EI59W7Q6y/JIrzftDfoxOzB9oeP8RWP27/Y53CthpIXjnBTH4CZbFOnfz99LPi5GBEBknYWyJcCh0DbmT8cOqRWly7ocXYY1gX8LkTvq37qWzR0MspdiPzEfocuSyM=
+	t=1750725642; cv=none; b=gsmIu7p/7Unv1C4dvN4HgsrJHVCNdJIf8VKDARmAQ4XZFCdqwST/ZKVe04ISEJy5tllQbiteaqGvCIJmjoXUCL4xAwptdRq7BmRnad5Fn4H0xRbu0Kpsisf0wuK5FonXckLNeBzFjw82HAH/NlL3tiSMSTxVkj66jDdPRkADbc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750678400; c=relaxed/simple;
-	bh=4Byfl6XKyk9PR8pgbpDrhICsoDtDHYLEMWWU/ZfABpQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WFFOAX5sBw7ZitT8FFS/rxyQmfgqjM001vTetZnawD+2toYhsyJT/ek0jnS5NWN7d9NRb8uZSkeufffqT0KIypWoJXlJbtqZseeEFRRYe8ZAwccECwkVOnshmYSmLu+AMpHM4sNPlrxsMhAKR7dSrOaLMQpT3uJXGS46o4pOeGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 43268113E;
-	Mon, 23 Jun 2025 04:32:58 -0700 (PDT)
-Received: from [10.57.29.116] (unknown [10.57.29.116])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3092E3F66E;
-	Mon, 23 Jun 2025 04:33:12 -0700 (PDT)
-Message-ID: <9f80f7c4-01a3-4a03-94dc-2a19136707f8@arm.com>
-Date: Mon, 23 Jun 2025 12:33:03 +0100
+	s=arc-20240116; t=1750725642; c=relaxed/simple;
+	bh=7zG8s1HTXnImX23EOH8ogeopBUgZJRBGe/aweUfthkI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=NEuTRd8LdfOJesjr6/kHLzHfSktsTXz/O1jUci8AOkMs0YmRor7Nhgff88icgBC/ZzFahat9igz9kk4hXbwAClyLFakFH++6ddher96onQzM8gF+oE5Dd3nsc79OuYp8sHxJXmrUBHAYdq9VCMzuR5hBncJKNe5LpibDYEioDA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NYnbFlMD; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750725642; x=1782261642;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=7zG8s1HTXnImX23EOH8ogeopBUgZJRBGe/aweUfthkI=;
+  b=NYnbFlMD1No/NBUjGx0m1qJgeYedJGh2NU+faOG5ED1ZVfAGwEznGDWB
+   4etqDCZi+UClFoFTy9VkCwC69tGRhmBpO2q8ba7CePdm3ifoYIjIvTNp2
+   wMuGYBFrjQAISpDrT7h+XYlZLjV/6NXEu888kPaBJQty/2g5FgvYP7n4x
+   fnBmIdBBM6CSUuFu4wCio1gXdex5Mitk/xX/DGkiV+Ag8jWr60I+a4cRE
+   3uv6eqHeOHrWU46j63h8N9W5M1yspzB1XlkFOHXRaf8lfMEDPLNnJiim2
+   WzVgAktVU0f9ln70xQV+zbScwhD3ZU7LRmSDn3w3Tp5WzZMqTfAiPRHzB
+   w==;
+X-CSE-ConnectionGUID: 3oOcPUkARcGS8eIJg2sXFQ==
+X-CSE-MsgGUID: eVN3PHpGR6+ZHxrCE4qVaw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="75488167"
+X-IronPort-AV: E=Sophos;i="6.16,260,1744095600"; 
+   d="scan'208";a="75488167"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 17:40:41 -0700
+X-CSE-ConnectionGUID: yv/YS85sSx+eJP8zzig3Aw==
+X-CSE-MsgGUID: +udptMSWTlu9aqwQJ9E+1g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,260,1744095600"; 
+   d="scan'208";a="152449190"
+Received: from unknown (HELO vcostago-mobl3) ([10.241.226.49])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 17:40:40 -0700
+From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+To: Yi Sun <yi.sun@intel.com>, dave.jiang@intel.com,
+ dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+ fenghuay@nvidia.com, philip.lantz@intel.com
+Cc: yi.sun@intel.com, gordon.jin@intel.com, anil.s.keshavamurthy@intel.com
+Subject: Re: [PATCH v2 1/2] dmaengine: idxd: Expose DSA3.0 capabilities
+ through sysfs
+In-Reply-To: <20250620130953.1943703-2-yi.sun@intel.com>
+References: <20250620130953.1943703-1-yi.sun@intel.com>
+ <20250620130953.1943703-2-yi.sun@intel.com>
+Date: Mon, 23 Jun 2025 17:40:39 -0700
+Message-ID: <87tt466kfs.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 11/11] arm64: defconfig: Enable Apple Silicon drivers
-To: Sven Peter <sven@kernel.org>
-Cc: asahi@lists.linux.dev, Stephen Boyd <sboyd@kernel.org>,
- Alyssa Rosenzweig <alyssa@rosenzweig.io>, Janne Grunau <j@jannau.net>,
- linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
- Srinivas Kandagatla <srini@kernel.org>, linux-kernel@vger.kernel.org,
- Viresh Kumar <viresh.kumar@linaro.org>, Neal Gompa <neal@gompa.dev>,
- linux-clk@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
- linux-i2c@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
- Liam Girdwood <lgirdwood@gmail.com>, =?UTF-8?Q?Martin_Povi=C5=A1er?=
- <povik+lin@cutebit.org>, Joerg Roedel <joro@8bytes.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Mark Brown <broonie@kernel.org>, iommu@lists.linux.dev,
- linux-input@vger.kernel.org, dmaengine@vger.kernel.org,
- linux-sound@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Ulf Hansson <ulf.hansson@linaro.org>,
- Michael Turquette <mturquette@baylibre.com>,
- Andi Shyti <andi.shyti@kernel.org>, Will Deacon <will@kernel.org>
-References: <20250612-apple-kconfig-defconfig-v1-0-0e6f9cb512c1@kernel.org>
- <20250612-apple-kconfig-defconfig-v1-11-0e6f9cb512c1@kernel.org>
- <2e022f4e-4c87-4da1-9d02-f7a3ae7c5798@arm.com>
- <d5a616f3-67a3-4504-904e-6cec503ab157@kernel.org>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <d5a616f3-67a3-4504-904e-6cec503ab157@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On 2025-06-21 5:01 pm, Sven Peter wrote:
-> On 13.06.25 18:50, Robin Murphy wrote:
->> On 2025-06-12 10:11 pm, Sven Peter wrote:
->>> Enable drivers for hardware present on Apple Silicon machines.
->>> The power domain and interrupt driver should be built-it since these are
->>> critical for the system to boot, the rest can be build as modules.
->>
->> Nit: I'd be tempted to put this patch first, just in case anyone 
->> bisecting with "make defconfig" in their process lands in the middle 
->> and suddenly loses some drivers (although arguably them going from 
->> "=y" to "=m" could still be a surprise, but at least a bit less so).
-> 
-> Ah, that's a good point that I hadn't even thought about.
-> Now that most of these have already been merged into different trees 
-> that ship has sailed though.
+Yi Sun <yi.sun@intel.com> writes:
 
-Yeah, like I say it's only minor and rather contrived anyway. Not a big 
-worry.
+> Introduce sysfs interfaces for 3 new Data Streaming Accelerator (DSA)
+> capability registers (dsacap0-2) to enable userspace awareness of hardware
+> features in DSA version 3 and later devices.
+>
+> Userspace components (e.g. configure libraries, workload Apps) require this
+> information to:
+> 1. Select optimal data transfer strategies based on SGL capabilities
+> 2. Enable hardware-specific optimizations for floating-point operations
+> 3. Configure memory operations with proper numerical handling
+> 4. Verify compute operation compatibility before submitting jobs
+>
+> The output format is <dsacap2>,<dsacap1>,<dsacap0>, where each DSA
+> capability value is a 64-bit hexadecimal number, separated by commas.
+> The ordering follows the DSA 3.0 specification layout:
+>  Offset:    0x190    0x188    0x180
+>  Reg:       dsacap2  dsacap1  dsacap0
+>
+> Example:
+> cat /sys/bus/dsa/devices/dsa0/dsacaps
+>  000000000000f18d,0014000e000007aa,00fa01ff01ff03ff
+>
+> According to the DSA 3.0 specification, there are 15 fields defined for
+> the three dsacap registers. However, there's no need to define all
+> register structures unless a use case requires them. At this point,
+> support for the Scatter-Gather List (SGL) located in dsacap0 is necessary,
+> so only dsacap0 is defined accordingly.
+>
+> For reference, the DSA 3.0 specification is available at:
+> Link: https://software.intel.com/content/www/us/en/develop/articles/intel-data-streaming-accelerator-architecture-specification.html
+>
+> Signed-off-by: Yi Sun <yi.sun@intel.com>
+> Co-developed-by: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+> Signed-off-by: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+>
 
->> [...]
->>> @@ -1504,6 +1520,7 @@ CONFIG_ARCH_TEGRA_194_SOC=y
->>>   CONFIG_ARCH_TEGRA_234_SOC=y
->>>   CONFIG_TI_PRUSS=m
->>>   CONFIG_OWL_PM_DOMAINS=y
->>> +CONFIG_APPLE_PMGR_PWRSTATE=y
->>
->> If this is critical for any Apple platform to work then it would 
->> probably make sense to explicitly select it from ARCH_APPLE, as is 
->> done for APPLE_AIC...
-> 
-> 
-> Documentation/kbuild/kconfig-language.rst:
-> 
->    select should be used with care. select will force a symbol to a value
->    without visiting the dependencies. By abusing select you are able to
->    select a symbol FOO even if FOO depends on BAR that is not set. In
->    general use select only for non-visible symbols (no prompts anywhere)
->    and for symbols with no dependencies. That will limit the usefulness
->    but on the other hand avoid the illegal configurations all over.
-> 
-> 
-> That's probably fine for APPLE_AIC which only depends on ARM64 (and 
-> ARCH_APPLE) which is guaranteed to be set when ARCH_APPLE is set anyway.
-> APPLE_PMGR_PWRSTATE also has an additional dependency on PM so it should 
-> probably remain in defconfig and not use select.
+Acked-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
 
-Sorry if the implication wasn't clear, but I did mean "select it" in the 
-sense of "select it and all of its necessary dependencies in a manner 
-that works correctly". The same argument applies all the way down - if a 
-!PM config will not be able to boot on ARCH_APPLE platforms due to 
-forcibly deselecting APPLE_PMGR_PWRSTATE, then there is little point in 
-permitting that combination. Which of course the user would already have 
-to disable at least ARCH_MXC, ARCH_ROCKCHIP, ARCH_TEGRA and 
-ARCH_VEXPRESS to achieve in the first place ;)
 
-Thanks,
-Robin.
+Cheers,
+-- 
+Vinicius
 

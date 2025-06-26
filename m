@@ -1,84 +1,149 @@
-Return-Path: <dmaengine+bounces-5633-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5634-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78C63AE9D57
-	for <lists+dmaengine@lfdr.de>; Thu, 26 Jun 2025 14:19:36 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D1311AEA382
+	for <lists+dmaengine@lfdr.de>; Thu, 26 Jun 2025 18:31:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4C10F1C2621C
-	for <lists+dmaengine@lfdr.de>; Thu, 26 Jun 2025 12:19:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 97C3B5645A2
+	for <lists+dmaengine@lfdr.de>; Thu, 26 Jun 2025 16:30:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55A3054673;
-	Thu, 26 Jun 2025 12:19:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3812B287272;
+	Thu, 26 Jun 2025 16:29:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oxxS9XvU"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j+kHMsd2"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E4583595C;
-	Thu, 26 Jun 2025 12:19:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B6572ED861
+	for <dmaengine@vger.kernel.org>; Thu, 26 Jun 2025 16:29:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750940372; cv=none; b=O5N5m4/GUqsgK7s6P5I4CYd6s+6odFwXsxo+vfFm8PFv+DSlqZ+SQN5js3HsZy2e4AGwdfwmoeab4ocukIbZm2QUZkCzHrSrvEd8QafBEqTrZWTRtjpaDKmC0PxcX8DpNvUfIxOisF8FE5K1oM2jqaor5AgmkGez5Zmn9oJ6hWI=
+	t=1750955391; cv=none; b=IFEv+nlANXHIhQ3i33axzzt8ol42mkbeJ0wy/tB6AfpYpUC/LLb052s9hnAMTMTuZsY5z0jtWulub1UfCqYedeeqLdtr74HrgapFwIFj0azu61+TiOSoXty7ErvEhA5dWob7gIKQ0Q4Jws06jqhY2w7dxOFc6e3q8HPgepj8e3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750940372; c=relaxed/simple;
-	bh=mLbLjTFgE9PkBVKwP4YFWFFMW2e1uyxtG2hFyx7CYF0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SxleBSNMrxMv3oF6gUEh3CgBOjC7XH5H6BJ72sUCszaBRiWHaux4gzjCnF8vx3UA9Avvmkk/8QQt+JXAWP2yMkGZ0X1cMadoXxzv3mrASgrm7D3roiC6cBB8AVScl7MQ8Q4Nd/YeE6aW+Y2xMmp8ecbV13BPvEo0zeetGHCK9TY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oxxS9XvU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19E24C4CEEB;
-	Thu, 26 Jun 2025 12:19:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750940371;
-	bh=mLbLjTFgE9PkBVKwP4YFWFFMW2e1uyxtG2hFyx7CYF0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=oxxS9XvUGvtX92eZPuUsrgrHfDUGsOp/Dr3Ezs+d7LtQjR/n/2DsWPNKi0PoPmglq
-	 afTsQ927N6s1LyY5pUn42guebH4fykoiQ3rmV/sEZl5U305BBlCEi/bPYVyI7jrlmp
-	 xK1E8ppVYzfdVWtKrb3mgsrcQ+uyHrEYHSYYICsgxsLe+GGSHHhN5PqcqHV6Z6uWsc
-	 Q11Uv/8mzVD2kgmZjOhCI+sHyri8oIyv4RG24MHpYGd9QMNV1kVewVjY4ufyhPN1pg
-	 NhPf8b27ofykI9lTivdK7rRnIhL0YDrCFPeLwl/oY1NgU5vqdXUoyKarEe/DUz3Fsb
-	 qGyAta6mwgiRw==
-Message-ID: <e3ac4f22-e19c-407f-a448-c54b2ca34428@kernel.org>
-Date: Thu, 26 Jun 2025 07:19:28 -0500
+	s=arc-20240116; t=1750955391; c=relaxed/simple;
+	bh=AgCtIvqoexub9Qv7N/AgH5wxwMGGGs/6YulBNCxbeCY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=B9j0AbAsotVxUF9xn2707J8DPdMmJPYy6AW4arVwVF2SUr9pecdJg7BeQy8avIWhIwumuDFdKEllBPfaxm+e5AHhcvXAz/+eeWBx/nINsG7Db3s+P4BaeaiDDBpiUaaoNpH1GfxqTpQXHQP0tMb62iTY5kAJ0+7GPssUHaPNbxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=j+kHMsd2; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-32ade3723adso13155041fa.0
+        for <dmaengine@vger.kernel.org>; Thu, 26 Jun 2025 09:29:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750955388; x=1751560188; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IhgWMpVftN0BXlOXEuQTKXHJQDcbuJWCCJBvXCzzlws=;
+        b=j+kHMsd28pa2eEUT5k7m2NZt/ZYbHThGKY2Gc38l8n/zflNGyorZYxKAY08FzUTPv0
+         jS+acmTxaThxS6o1SDFjXyCJw6Bq5AesRY/hGPjzZQFvQMIu6Frw3qbO9EtbYTrWi5YD
+         CLL4kBT4xsSGpItx98cFM1E6CAy6JgrS0XY1BOUTleTSU7HUD/svSvg2FLqjK58TXad9
+         hIWcAYnsWPpgQ4FGvf8YsnLfpslaj3hqZcgbMuMz+kIbDSCJtKj4c3OIpDKjaL9n7nld
+         4i9uImBbIHzgen3TSbbjfJI404hM1o3h6ViVKDHnmAaXBwTprsgueR0806w+AxfCQNWn
+         e+Ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750955388; x=1751560188;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IhgWMpVftN0BXlOXEuQTKXHJQDcbuJWCCJBvXCzzlws=;
+        b=SYQKcFg/MsffIIeNM2c2f25P2jJBbinfmI4WLobbf3h904AfG+XQzYSezeJIFglJq+
+         Z1+aHd/TuWmL1BfpR/nZA9b+EQKwTTrQ6lD9YjqasW5fFVnmS2lp6lEMCtx2jCQgiTK7
+         AOWE1dl+5bsKv1ut1MJGuvBNFj2abd8jw//9hUTlqH9roQq7iiXGeTOqTrbj67ArhZHu
+         EPYSgS4V2REnGGRre6ndWUAEYdXTjqetlrFv9tBBV8eEUyUkaPDrWOcseP/zv4YGgo0x
+         HtWCh935C7meYuEF4JNxqfAuvqwNuWLC17q0VFao/z/ypdmX/2h7NuV9I8zYiKXhmoeK
+         5Avw==
+X-Forwarded-Encrypted: i=1; AJvYcCXNBrPyKXYJau7q3A5MKalxAD5dtE8f3NoaSdixa37zizvxVTpYFsnJxJWRZVvyVG9MTYLZA4poQJY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YynEsrQQy6Vyi0zvTn7XIShcKP3Xzgo5ZBX7IsD0Xbbry4RdMJ8
+	g7bfn8E1rQt8r0VnLYyHq19zP5HDN5IxY66wM+qhUtRFbcYyCkonKnyTYmJ1Xw/Fc3NVj01mtZ4
+	X4kG8971NJ8GyzEzw3bN5fVd6PFqwgjXqUVkbm5rC
+X-Gm-Gg: ASbGncs9PCSwnZjSaVZyvGcvNoQjKEFGrXFFGN95L15TZr63o9vyUzHCcngNzU6hEWv
+	CKbnrp3vDlh2QQHP9ijyruL7RGnD0JiQHqtGR3idz0kL6xvmJxcRxeYTncrgRx7JvyWaYTuavSO
+	bsvNiUqMTBUpKzDwLp1BUrnz8tp2X8upk1rDcp3raRk/M=
+X-Google-Smtp-Source: AGHT+IEEwFR4Q1I48a+7OABIyBDRSlZA5tbdQsFM85tiZhc32of4fKA/nSlskPFcjFXcvfWw+C300VPrlQj8CDH2vFU=
+X-Received: by 2002:a05:6512:3d0d:b0:553:2159:8718 with SMTP id
+ 2adb3069b0e04-5550b9e9f76mr68343e87.40.1750955387360; Thu, 26 Jun 2025
+ 09:29:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/4] dt-bindings: dma: snps,dw-axi-dmac: Add iommus
- dma-coherent and dma-addressable-bits property
-To: adrianhoyin.ng@altera.com, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, Eugeniy.Paltsev@synopsys.com, vkoul@kernel.org,
- dmaengine@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Matthew Gerlach <matthew.gerlach@altrera.com>
-References: <cover.1750084527.git.adrianhoyin.ng@altera.com>
- <144d2070c7b2f69f034b6f16bc938a538afa9f15.1750084527.git.adrianhoyin.ng@altera.com>
-Content-Language: en-US
-From: Dinh Nguyen <dinguyen@kernel.org>
-In-Reply-To: <144d2070c7b2f69f034b6f16bc938a538afa9f15.1750084527.git.adrianhoyin.ng@altera.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250620232031.2705638-1-dmatlack@google.com> <20250620232031.2705638-4-dmatlack@google.com>
+ <fe4b1d31-e910-40a1-ab83-d9fd936d1493@amd.com> <4aef95a0-a0de-4bd5-b4ec-5289f0bc0ab1@amd.com>
+In-Reply-To: <4aef95a0-a0de-4bd5-b4ec-5289f0bc0ab1@amd.com>
+From: David Matlack <dmatlack@google.com>
+Date: Thu, 26 Jun 2025 09:29:20 -0700
+X-Gm-Features: Ac12FXxh3iVx0ijncX4D0ghMn9yxTN7axomwuLA6jqvWOXSFOfPrvAPiEnHLUx4
+Message-ID: <CALzav=fZcLpQ+9J=XOZ-=Cr1UA8qKa5NHXB1dJpqhCp7pee7Ow@mail.gmail.com>
+Subject: Re: [PATCH 03/33] vfio: selftests: Introduce vfio_pci_device_test
+To: Sairaj Kodilkar <sarunkod@amd.com>
+Cc: Alex Williamson <alex.williamson@redhat.com>, Aaron Lewis <aaronlewis@google.com>, 
+	Adhemerval Zanella <adhemerval.zanella@linaro.org>, 
+	Adithya Jayachandran <ajayachandra@nvidia.com>, Andrew Jones <ajones@ventanamicro.com>, 
+	Ard Biesheuvel <ardb@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Bibo Mao <maobibo@loongson.cn>, 
+	Claudio Imbrenda <imbrenda@linux.ibm.com>, Dan Williams <dan.j.williams@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, dmaengine@vger.kernel.org, 
+	Huacai Chen <chenhuacai@kernel.org>, James Houghton <jthoughton@google.com>, 
+	Jason Gunthorpe <jgg@nvidia.com>, Joel Granados <joel.granados@kernel.org>, 
+	Josh Hilke <jrhilke@google.com>, Kevin Tian <kevin.tian@intel.com>, kvm@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, 
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, "Pratik R. Sampat" <prsampat@amd.com>, 
+	Saeed Mahameed <saeedm@nvidia.com>, Sean Christopherson <seanjc@google.com>, Shuah Khan <shuah@kernel.org>, 
+	Vinicius Costa Gomes <vinicius.gomes@intel.com>, Vipin Sharma <vipinsh@google.com>, 
+	Wei Yang <richard.weiyang@gmail.com>, "Yury Norov [NVIDIA]" <yury.norov@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/16/25 09:40, adrianhoyin.ng@altera.com wrote:
-> From: Adrian Ng Ho Yin <adrianhoyin.ng@altera.com>
-> 
-> Intel Agilex5 address bus only supports up to 40 bits. Add
-> dma-addressable-bits property to allow configuration of number of dma
-> addressable bits.Add iommu property for SMMU support. Add dma-coherent
-> property for cache coherent support.
-> 
-> Signed-off-by: Adrian Ng Ho Yin <adrianhoyin.ng@altera.com>
-> Reviewed-by: Matthew Gerlach <matthew.gerlach@altrera.com>
-> 
+On Thu, Jun 26, 2025 at 4:44=E2=80=AFAM Sairaj Kodilkar <sarunkod@amd.com> =
+wrote:
+> On 6/26/2025 4:57 PM, Sairaj Kodilkar wrote:
+> > On 6/21/2025 4:50 AM, David Matlack wrote:
+> >> +/*
+> >> + * Limit the number of MSIs enabled/disabled by the test regardless
+> >> of the
+> >> + * number of MSIs the device itself supports, e.g. to avoid hitting
+> >> IRTE limits.
+> >> + */
+> >> +#define MAX_TEST_MSI 16U
+> >> +
+> >
+> > Now that AMD IOMMU supports upto 2048 IRTEs per device, I wonder if we
+> > can include a test with max MSIs 2048.
 
-Add a '---' above to signify the version history..
+That sounds worth doing. I originally added this because I was hitting
+IRTE limits on an Intel host and a ~6.6 kernel.
 
-Applies to all of your patches.
+Is there some way the test can detect from userspace that the IOMMU
+supports 2048 IRTEs that we could key off to decide what value of
+MAX_TEST_MSI to use?
 
-Dinh
+> >> +
+> >> +    vfio_pci_dma_map(self->device, iova, size, mem);
+> >> +    printf("Mapped HVA %p (size 0x%lx) at IOVA 0x%lx\n", mem, size,
+> >> iova);
+> >> +    vfio_pci_dma_unmap(self->device, iova, size);
+> >
+> >
+> > I am slightly confused here. Because You are having an assert on munmap
+> > and not on any of the vfio_pci_dma_(map/unmap). This test case is not
+> > testing VFIO.
+>
+> I missed to see ioctl_assert. Please ignore this :) Sorry about that.
+
+No worries, it's not very obvious :)
+
+vfio_pci_dma_map() and vfio_pci_dma_unmap() both return void right now
+and perform internal asserts since all current users of those
+functions want to assert success.
+
+If and when we have a use-case to assert that map or unmap fails
+(which I think we'll definitely have) we can add __vfio_pci_dma_map()
+and __vfio_pci_dma_unmap() variants that return int instead of void.
 

@@ -1,211 +1,92 @@
-Return-Path: <dmaengine+bounces-5635-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5636-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10092AEA954
-	for <lists+dmaengine@lfdr.de>; Fri, 27 Jun 2025 00:07:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0DAA3AEA96D
+	for <lists+dmaengine@lfdr.de>; Fri, 27 Jun 2025 00:14:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 831EE1C42C60
-	for <lists+dmaengine@lfdr.de>; Thu, 26 Jun 2025 22:07:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DC53D1885BAE
+	for <lists+dmaengine@lfdr.de>; Thu, 26 Jun 2025 22:14:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 601F826058E;
-	Thu, 26 Jun 2025 22:07:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE00B2609CC;
+	Thu, 26 Jun 2025 22:14:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nknxJ0lE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tLYfMXdC"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3577423B634;
-	Thu, 26 Jun 2025 22:07:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB1323B634;
+	Thu, 26 Jun 2025 22:14:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750975621; cv=none; b=dUh0Of/lIDKKpN8fLvmQHBVO+ZBSBr06/pCLjXsJCYukLWO3/qnF5vFX0ALiP+8Fc/OR6k7Pr7tgG3qq4DxSyNx0BQ4qNqb6idLWlUb3eR9VQJIJxK/+55rc9dy98XzjPX9ipSoioXe9rn26zFGHDTul9sapZWzbndhpTgBA1Gs=
+	t=1750976060; cv=none; b=kdLOHwTyYlPvWO4qal3RieKCBgO0BcRjw1C99Whz73bLzS4i31kJSbDRdkMdcHy4AbWqtU+CuMsDSYWMn6pB1islcULw51/v7rjaV7R57flWIZz/jLO8AcvukYJf1TQD7TSleTajNNWGxcTJgGtVdAH9o4+82OCJVvscMIdZlNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750975621; c=relaxed/simple;
-	bh=jcDmlXlPtyzdOIJ5SLX8GV0/QYmp1r6I5Va/AUcO+BE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PoPm56mk3Z/Tm7NN0iLkZnoUFZ9mJ/bYCeoR8FAvT5m1vyq/bTIRMse8dXHbFGcHP1tQIkdPsoM3RUIagEafuA/FDaRXKcDxtY6Xc63ZQ5fEKTA5VlC9WOxC5KSVI9SR0LkwfF+0BX1H5lvQ03DRKJh+L5nA+dH6ubX6z/w55xE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nknxJ0lE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91B98C4CEEB;
-	Thu, 26 Jun 2025 22:07:00 +0000 (UTC)
+	s=arc-20240116; t=1750976060; c=relaxed/simple;
+	bh=NdFw2ADpTfpWgA0EQty53QwutKobBhj7JUQ3fk3v3jc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=ppROY71+Jwe1I1KEhxEVi7ikzwqYly2tMpdY5TAn6TSCIy8eBrUbIKEQ6z27gCVq+KK+tf6UMY5JPMqWR7yLDWNn6ABfudNUe/na2VED89M7rNKvKLa+NpNbd7J0y14U6PawtKe9Q7EZf/TTrJWdBi0uHzwqJOukw29L2letQjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tLYfMXdC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DABFEC4CEEB;
+	Thu, 26 Jun 2025 22:14:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750975620;
-	bh=jcDmlXlPtyzdOIJ5SLX8GV0/QYmp1r6I5Va/AUcO+BE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nknxJ0lE3sEgU97T8OXZUN5dotQCkRISDueEJ5SV/Qb6IjJB5ltBwRfyHvuBl9znB
-	 zLLjgrnJldnWtt37Qb09bTMFZDAZ/NB+EaUJa7hDDTxeTynZN6C8UzIoJ0cUxawG/H
-	 XBpWKGo6rTUiFU03jCR/1NQhyRL5nmVQscG/cM/Nr+6gOB5SH8ZEowXf7OONHm8e2t
-	 YXJ/wY6cDGmPE4BYg6VbqhB4XG40eDATJSjwpIzSmBif5vkq8osFKk2Sw9TKro/HJx
-	 d/JuqgzciX6bLviW5mnsB6cBCdhG1cl0bEH0i3Ei7YT5yWnCqOoHKdWDKQxcOll3Ac
-	 MgC4GMKgEICWg==
-Date: Thu, 26 Jun 2025 15:06:59 -0700
+	s=k20201202; t=1750976060;
+	bh=NdFw2ADpTfpWgA0EQty53QwutKobBhj7JUQ3fk3v3jc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=tLYfMXdCW6YGCUJHyniUaCmkNb0lqs7cdAY65UBz4bkI5WMCtUqTCK4qqcdTnXtyw
+	 kpsW0gE81tmoVoxhxuCCDDE2oUQL6IFSUUFJM1nZI+QeEQrmkkGzoSeCvinzRrme7l
+	 4dT/KhxsSUkbqz7GWorCOGv3hSjPplJDbNF1V4cE09akN8IlG3jMaKE+ijUDziSRVa
+	 iJmGaEz4jZ7/wmgH/w263OrbDqTuSGQz5+p7BaP9dTvSm2C+HtfMM6ykN7wxoVOAIU
+	 99e9KHEAvHV9baLK1Ea39f0tuZ9oeChnjjFJXnVF+OqXBzQV6EBCxmwMpWIQm6xZCQ
+	 CIIlddlDGQ/EA==
 From: Vinod Koul <vkoul@kernel.org>
-To: Devendra K Verma <devverma@amd.com>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-	mani@kernel.org
-Subject: Re: [RESEND PATCH] dmaengine: dw-edma: Add Simple Mode Support
-Message-ID: <aF3Eg_xtxZjZTEop@vaman>
-References: <20250623061733.1864392-1-devverma@amd.com>
+To: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ =?utf-8?q?Bence_Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
+Cc: Mark Brown <broonie@kernel.org>, 
+ Nicolas Ferre <nicolas.ferre@microchip.com>, 
+ Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <20250610082256.400492-1-csokas.bence@prolan.hu>
+References: <20250610082256.400492-1-csokas.bence@prolan.hu>
+Subject: Re: (subset) [PATCH v7 0/2] Add `devm_dma_request_chan()` to
+ simplify probe path in atmel-quadspi.c
+Message-Id: <175097605979.58944.6982488308454095610.b4-ty@kernel.org>
+Date: Thu, 26 Jun 2025 15:14:19 -0700
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250623061733.1864392-1-devverma@amd.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.13.0
 
-On 23-06-25, 11:47, Devendra K Verma wrote:
-> The HDMA IP supports the simple mode (non-linked list).
-> In this mode the channel registers are configured to initiate
-> a single DMA data transfer. The channel can be configured in
-> simple mode via peripheral param of dma_slave_config param.
+
+On Tue, 10 Jun 2025 10:22:52 +0200, Bence Csókás wrote:
+> The probe function of the atmel-quadspi driver got quite convoluted,
+> especially since the addition of SAMA7G5 support, that was forward-ported
+> from an older vendor kernel. To alleivate this - and similar problems in
+> the future - an effort was made to migrate as many functions as possible,
+> to their devm_ managed counterparts. Patch 1/2 adds the new
+> `devm_dma_request_chan()` function. Patch 2/2 then uses this APIs to
+> simplify the probe() function.
 > 
-> Signed-off-by: Devendra K Verma <devverma@amd.com>
-> ---
->  drivers/dma/dw-edma/dw-edma-core.c    | 10 +++++
->  drivers/dma/dw-edma/dw-edma-core.h    |  2 +
->  drivers/dma/dw-edma/dw-hdma-v0-core.c | 53 ++++++++++++++++++++++++++-
->  include/linux/dma/edma.h              |  8 ++++
->  4 files changed, 72 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-> index c2b88cc99e5d..4dafd6554277 100644
-> --- a/drivers/dma/dw-edma/dw-edma-core.c
-> +++ b/drivers/dma/dw-edma/dw-edma-core.c
-> @@ -235,9 +235,19 @@ static int dw_edma_device_config(struct dma_chan *dchan,
->  				 struct dma_slave_config *config)
->  {
->  	struct dw_edma_chan *chan = dchan2dw_edma_chan(dchan);
-> +	struct dw_edma_peripheral_config *pconfig = config->peripheral_config;
-> +	unsigned long flags;
-> +
-> +	if (WARN_ON(config->peripheral_config &&
-> +		    config->peripheral_size != sizeof(*pconfig)))
-> +		return -EINVAL;
->  
-> +	spin_lock_irqsave(&chan->vc.lock, flags);
->  	memcpy(&chan->config, config, sizeof(*config));
-> +
-> +	chan->non_ll_en = pconfig ? pconfig->non_ll_en : false;
->  	chan->configured = true;
-> +	spin_unlock_irqrestore(&chan->vc.lock, flags);
->  
->  	return 0;
->  }
-> diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
-> index 71894b9e0b15..c0266976aa22 100644
-> --- a/drivers/dma/dw-edma/dw-edma-core.h
-> +++ b/drivers/dma/dw-edma/dw-edma-core.h
-> @@ -86,6 +86,8 @@ struct dw_edma_chan {
->  	u8				configured;
->  
->  	struct dma_slave_config		config;
-> +
-> +	bool				non_ll_en;
+> [...]
 
-why do you need this? What is the decision to use non ll vs ll one?
+Applied, thanks!
 
->  };
->  
->  struct dw_edma_irq {
-> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> index e3f8db4fe909..3237c807a18e 100644
-> --- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> +++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> @@ -225,7 +225,7 @@ static void dw_hdma_v0_sync_ll_data(struct dw_edma_chunk *chunk)
->  		readl(chunk->ll_region.vaddr.io);
->  }
->  
-> -static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
-> +static void dw_hdma_v0_ll_start(struct dw_edma_chunk *chunk, bool first)
->  {
->  	struct dw_edma_chan *chan = chunk->chan;
->  	struct dw_edma *dw = chan->dw;
-> @@ -263,6 +263,57 @@ static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
->  	SET_CH_32(dw, chan->dir, chan->id, doorbell, HDMA_V0_DOORBELL_START);
->  }
->  
-> +static void dw_hdma_v0_non_ll_start(struct dw_edma_chunk *chunk)
-> +{
-> +	struct dw_edma_chan *chan = chunk->chan;
-> +	struct dw_edma *dw = chan->dw;
-> +	struct dw_edma_burst *child;
-> +	u32 val;
-> +
-> +	list_for_each_entry(child, &chunk->burst->list, list) {
-> +		SET_CH_32(dw, chan->dir, chan->id, ch_en, BIT(0));
-> +
-> +		/* Source address */
-> +		SET_CH_32(dw, chan->dir, chan->id, sar.lsb, lower_32_bits(child->sar));
-> +		SET_CH_32(dw, chan->dir, chan->id, sar.msb, upper_32_bits(child->sar));
-> +
-> +		/* Destination address */
-> +		SET_CH_32(dw, chan->dir, chan->id, dar.lsb, lower_32_bits(child->dar));
-> +		SET_CH_32(dw, chan->dir, chan->id, dar.msb, upper_32_bits(child->dar));
-> +
-> +		/* Transfer size */
-> +		SET_CH_32(dw, chan->dir, chan->id, transfer_size, child->sz);
-> +
-> +		/* Interrupt setup */
-> +		val = GET_CH_32(dw, chan->dir, chan->id, int_setup) |
-> +				HDMA_V0_STOP_INT_MASK | HDMA_V0_ABORT_INT_MASK |
-> +				HDMA_V0_LOCAL_STOP_INT_EN | HDMA_V0_LOCAL_ABORT_INT_EN;
-> +
-> +		if (!(dw->chip->flags & DW_EDMA_CHIP_LOCAL))
-> +			val |= HDMA_V0_REMOTE_STOP_INT_EN | HDMA_V0_REMOTE_ABORT_INT_EN;
-> +
-> +		SET_CH_32(dw, chan->dir, chan->id, int_setup, val);
-> +
-> +		/* Channel control setup */
-> +		val = GET_CH_32(dw, chan->dir, chan->id, control1);
-> +		val &= ~HDMA_V0_LINKLIST_EN;
-> +		SET_CH_32(dw, chan->dir, chan->id, control1, val);
-> +
-> +		/* Ring the doorbell */
-> +		SET_CH_32(dw, chan->dir, chan->id, doorbell, HDMA_V0_DOORBELL_START);
-> +	}
-> +}
-> +
-> +static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
-> +{
-> +	struct dw_edma_chan *chan = chunk->chan;
-> +
-> +	if (!chan->non_ll_en)
-> +		dw_hdma_v0_ll_start(chunk, first);
-> +	else
-> +		dw_hdma_v0_non_ll_start(chunk);
-> +}
-> +
->  static void dw_hdma_v0_core_ch_config(struct dw_edma_chan *chan)
->  {
->  	struct dw_edma *dw = chan->dw;
-> diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
-> index 3080747689f6..82d808013a66 100644
-> --- a/include/linux/dma/edma.h
-> +++ b/include/linux/dma/edma.h
-> @@ -101,6 +101,14 @@ struct dw_edma_chip {
->  	struct dw_edma		*dw;
->  };
->  
-> +/**
-> + * struct dw_edma_peripheral_config - peripheral spicific configurations
-> + * @non_ll_en:		 enable non-linked list mode of operations
-> + */
-> +struct dw_edma_peripheral_config {
-> +	bool			non_ll_en;
-> +};
-> +
->  /* Export to the platform drivers */
->  #if IS_REACHABLE(CONFIG_DW_EDMA)
->  int dw_edma_probe(struct dw_edma_chip *chip);
-> -- 
-> 2.43.0
+[1/2] dma: Add devm_dma_request_chan()
+      commit: 56137a53f8ebb400f4098ca26ef18934e9a4de45
 
+Best regards,
 -- 
 ~Vinod
+
+
 

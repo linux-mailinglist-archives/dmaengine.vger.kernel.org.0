@@ -1,61 +1,61 @@
-Return-Path: <dmaengine+bounces-5631-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5632-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1657AE9C80
-	for <lists+dmaengine@lfdr.de>; Thu, 26 Jun 2025 13:28:17 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 008EBAE9CC4
+	for <lists+dmaengine@lfdr.de>; Thu, 26 Jun 2025 13:44:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 083ED1701C2
-	for <lists+dmaengine@lfdr.de>; Thu, 26 Jun 2025 11:28:18 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 169747A3A66
+	for <lists+dmaengine@lfdr.de>; Thu, 26 Jun 2025 11:43:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B176E236457;
-	Thu, 26 Jun 2025 11:28:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9641C275841;
+	Thu, 26 Jun 2025 11:44:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="PvJL+AmA"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="r+9v6vo7"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2054.outbound.protection.outlook.com [40.107.220.54])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2057.outbound.protection.outlook.com [40.107.220.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA7231F2BAD;
-	Thu, 26 Jun 2025 11:28:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2CE717BA5;
+	Thu, 26 Jun 2025 11:44:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.57
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750937293; cv=fail; b=aNMLTvXZnXamWK6yPmH42Y4YtfqsKpU7wSKR3jFVTScyEnOwLB1KhTnCn/GDZD/rb7DPD/G0IgBcQakDRSRbitGtHKVssxpThSvTCVSD/AzBto/mAbBODgOOzU8nj8Qlplj7OgERG2KurnZhaW3qSv/FCQAPk4F608ybG647Yik=
+	t=1750938278; cv=fail; b=a7xbIos3ZJUpAxqRp6vHwuaNOPIMsrqMq9mAVky+UxO3RemuqGaSeawT5PrprwHGUcxAuckKt8jBj1mQYE5v+uvOD+grvvZoC8SrvG8bo5UE01lVf0TP5JzMXCT6eta42oOUnXms6zgiKyt/yMTclbyjorVAvTuCTBvfBcTLzYs=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750937293; c=relaxed/simple;
-	bh=HzkysDuyhFokr/UmrIuzqdtR2yFeuiKcG90Ai9uJbeo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=SWbv8/9oDqINYf8eOqRN4hzTH3VwhNEOG5Fk+bOICMWm2Er0L45b/7F36EHYO8Yc6MDu5BFlrfSHbMJc8QmXb77LUzpPXNgV7SV6b6gT7wlIEP3IFY297P1+toKJVhdmVDOepopGPa3gZtajq7101eaWUik1G36IE1fEsCG6VyQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=PvJL+AmA; arc=fail smtp.client-ip=40.107.220.54
+	s=arc-20240116; t=1750938278; c=relaxed/simple;
+	bh=lSTvzTP/3RXEkT2qQ7ywtWzTnKCBuUadHGyZJj+xKgs=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=jWN0D81q0dMwXrYM5cwSDzgibjKVOL+MUeMNN/xP2USWwpIBA6CT9UOwrlbXCihRAVo0HsVBu4okDaEctk5Q+hMifo0mtlWMEdI4OCAWXrnID4XacRXicf3TRxA5QCay6rNoyGnU7Mk9X7U4iRXxsgoVnEbF7mjfNtExJw8qgaA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=r+9v6vo7; arc=fail smtp.client-ip=40.107.220.57
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=usbQo/R3/WlrnGxMrRE04LEnaTzOOWBeyAg2vcfoT5fXPda1ocjnoftNnTMBppPm2UDgvenRwzRrLdgOq0lUI5RE/mseoNu9BkcypacV1EnIu8pS/TpUnQeSnGigOvP/XEMkpi+8wA54JzpcOmMcGtlinMQVEHsR/kXVCVAfxjH7IG78ZqzoPU5Zz53WfL6UFUV9DeG5K4lOw+mCK2d4wWJ3I5vc4cybVU35jiJZrKIheiX2cHJFKQ8vJHaQ8JGFHqCZFBK9rLm13ICr0HXLUowqqQD23+JerbcQn/XR1SJRqPbdFwMHTXwhfpVITzQq1gNSg2H2uDE/khwDryv0Tw==
+ b=CCqIslRhw8MrXHpBCUnvwba2PuZoiWlgXcTqvBTU0v8+0G7dmPSerLD7aDH+mD+lxi+lziR9S1paGW1LAbQq7OIfW8KRTKXhaiLVW1pRunWhVfwog0MGpCqB14TSV/T7KFKbNeh7HOteDVF+XJPAfo5Qe+CtbKBk5owp5TBYrSmqp8Nh7zX4NQHD/1e7FSQVBbg+LcVH6nOz+JkDwATAt1/owE/87lKLyhqprcdsKf10XPV/NXsMEWmdJ4yzdqYqvUX7DvhbF8N4WKv7QDt0U0PowQeLOgA1md1+xBAlD+VyYZBKIcKkZeH7+hXlpAZfSh9r5Pp98wnbRohCObIN8w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=digQpWVQlIi/l41C1GRzZTcQ0KIvEuMbJXI24kfq9xI=;
- b=EW7GbDc3iEtBf12wtH2+RD8XfmkgNGJ7r66GlZzY/2f1HdlZrQ3B8aXG+weVbEgWLKgJt8y8q8tCBlsA4gme7NPfkwojOl3Oazm8btNCYU/N3KhrRK2GoTgDrv54QwAo0nPklz+4N+y+1cyBhKvtUe+LOp4Q1reFizhx6xptV6VUZEE9s52iUdFrvCL+dAFViWgrAFA81qun+eMdIktEn47mxY5zk7Dkr1DisH8FTcJ4hadbzVaMPBPsCro6rNDHtusSP/EKdO6fCpAhhhc9TQL49Gl6EdO9Jz4+kEjQ11QPJ6I8celeCF+pYfp3pUe/EtVZyOpQU90xb1wB1Iti6Q==
+ bh=2TokoGOl/SdbjGMUpzu8qkGQZL8isezS3Qg79J3OuO8=;
+ b=hHYM9J9/z+nWIfoTRfogZR7I1Ob6CCvx8Sv58uFgfmJzvvPJt0md2SePW+1pL5YEga6dEcqedvaWXoiUfLUf35W9NM4KrhrOFD7bRSP0RA0qASUgm2wiEMleO9K2UhmaaBCGRWfyngBaZnckeOe5opYqIUfoDL4K6iRpRA1JpglNw61HLhkb7wmBFZ34+TZq0xP+LR0nZSy0VZ2jn8Trf1i/NJ4jPg5YeajM26mpbfpxjsgkViZiDCP5W5ffx+u8KByDx31MnmiaIEFmx9tCqM+ivL0bvMcE7prq3AhF4YOjm9TBd/aGrE8SoVr6CR/k45PhZTpUJn9o248Axiz/7A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=digQpWVQlIi/l41C1GRzZTcQ0KIvEuMbJXI24kfq9xI=;
- b=PvJL+AmAuzlzERPkCLM9wdKC0sNxguffcxUR0ik/t3VRz5vAEIbik2NaFQq75WKC+v9h5b/i3BCFA2lQS6weCib7cTjNQkzo0eIGJDBpiUykNQsQD+k+hY9X1Y0e2JZHAGoBPeov3uJDdsVEUbO3CPF0HIauYvjj3bl/cGSe4FE=
-Received: from BL0PR02CA0035.namprd02.prod.outlook.com (2603:10b6:207:3c::48)
- by PH7PR12MB5736.namprd12.prod.outlook.com (2603:10b6:510:1e3::19) with
+ bh=2TokoGOl/SdbjGMUpzu8qkGQZL8isezS3Qg79J3OuO8=;
+ b=r+9v6vo7hcqS/s8Jk89arbJEmqg3Z7+5uRIkcJtNjk0VSc2dIstySlkHDUJHAWWqI22HwDdirklFu0YjavQlZUNeS5O3eZ/4YYUzjF/ZyJq70FMGtvNLVu4smxz9P0bQUao7BKupms6HrcFiCCJRuQQOxTEK6gNSP5zLKcZVupo=
+Received: from SN6PR01CA0003.prod.exchangelabs.com (2603:10b6:805:b6::16) by
+ IA0PR12MB8325.namprd12.prod.outlook.com (2603:10b6:208:407::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.23; Thu, 26 Jun
- 2025 11:28:04 +0000
-Received: from BN1PEPF00004689.namprd05.prod.outlook.com
- (2603:10b6:207:3c:cafe::1f) by BL0PR02CA0035.outlook.office365.com
- (2603:10b6:207:3c::48) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.17 via Frontend Transport; Thu,
- 26 Jun 2025 11:28:04 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.20; Thu, 26 Jun
+ 2025 11:44:33 +0000
+Received: from SA2PEPF00003F63.namprd04.prod.outlook.com
+ (2603:10b6:805:b6:cafe::a5) by SN6PR01CA0003.outlook.office365.com
+ (2603:10b6:805:b6::16) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.21 via Frontend Transport; Thu,
+ 26 Jun 2025 11:44:28 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -63,15 +63,15 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN1PEPF00004689.mail.protection.outlook.com (10.167.243.134) with Microsoft
+ SA2PEPF00003F63.mail.protection.outlook.com (10.167.248.38) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8880.14 via Frontend Transport; Thu, 26 Jun 2025 11:28:04 +0000
+ 15.20.8880.14 via Frontend Transport; Thu, 26 Jun 2025 11:44:33 +0000
 Received: from [10.85.43.79] (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 26 Jun
- 2025 06:27:54 -0500
-Message-ID: <fe4b1d31-e910-40a1-ab83-d9fd936d1493@amd.com>
-Date: Thu, 26 Jun 2025 16:57:51 +0530
+ 2025 06:44:25 -0500
+Message-ID: <4aef95a0-a0de-4bd5-b4ec-5289f0bc0ab1@amd.com>
+Date: Thu, 26 Jun 2025 17:14:17 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -80,6 +80,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH 03/33] vfio: selftests: Introduce vfio_pci_device_test
+From: Sairaj Kodilkar <sarunkod@amd.com>
 To: David Matlack <dmatlack@google.com>, Alex Williamson
 	<alex.williamson@redhat.com>
 CC: Aaron Lewis <aaronlewis@google.com>, Adhemerval Zanella
@@ -98,176 +99,190 @@ CC: Aaron Lewis <aaronlewis@google.com>, Adhemerval Zanella
  Mahameed" <saeedm@nvidia.com>, Sean Christopherson <seanjc@google.com>,
 	"Shuah Khan" <shuah@kernel.org>, Vinicius Costa Gomes
 	<vinicius.gomes@intel.com>, Vipin Sharma <vipinsh@google.com>, Wei Yang
-	<richard.weiyang@gmail.com>, "Yury Norov [NVIDIA]" <yury.norov@gmail.com>,
-	Vasant Hegde <vasant.hegde@amd.com>, Santosh Shukla <santosh.shukla@amd.com>
+	<richard.weiyang@gmail.com>, "Yury Norov [NVIDIA]" <yury.norov@gmail.com>
 References: <20250620232031.2705638-1-dmatlack@google.com>
  <20250620232031.2705638-4-dmatlack@google.com>
+ <fe4b1d31-e910-40a1-ab83-d9fd936d1493@amd.com>
 Content-Language: en-US
-From: Sairaj Kodilkar <sarunkod@amd.com>
-In-Reply-To: <20250620232031.2705638-4-dmatlack@google.com>
+In-Reply-To: <fe4b1d31-e910-40a1-ab83-d9fd936d1493@amd.com>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN1PEPF00004689:EE_|PH7PR12MB5736:EE_
-X-MS-Office365-Filtering-Correlation-Id: 03bde1f5-5fc5-4bad-e611-08ddb4a48478
+X-MS-TrafficTypeDiagnostic: SA2PEPF00003F63:EE_|IA0PR12MB8325:EE_
+X-MS-Office365-Filtering-Correlation-Id: b309fe84-1bbb-453f-1d04-08ddb4a6d19e
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|36860700013|1800799024|82310400026|7053199007;
+	BCL:0;ARA:13230040|82310400026|376014|7416014|36860700013|1800799024|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TU01MnBhVTdSOFV4MjRzR250eUtONVl5NFFCNmdlNU9kNDk0cWtwUjRQZDJS?=
- =?utf-8?B?WTBBM1ZPYW10VHN6YzBjOThKekI4c0hhUlZjR0NzcTc5ZWNqaVR0VFJLRXJ4?=
- =?utf-8?B?b3NlL0tFSmJPUy93YnM2WnpRZWRnU3RVWEJUMHRJNTZ0TjVpMzZHM1dQbCtW?=
- =?utf-8?B?QkZNbFh6TzJZMjRINmZxZXBOVHJGcXR0RlYydXdPemppVnhLUlFpQkw4T2U4?=
- =?utf-8?B?UG94WWpsTkR6TkJRQ09reHpWMmpqR0FBeEpqWUdwQlNCRGlSNVF5d2RNczJh?=
- =?utf-8?B?dmhpYlJ1MUhCaEhzQ0ZwTjJTdE5IU09DRlhuTW5wWTN6NWtaQW9QelpnczNZ?=
- =?utf-8?B?WHNsZ3dONjhIVjlUNzRMYUQ3M0tTbFRmYmJQQUNLOVM3a0VJSUpPdWtPQU10?=
- =?utf-8?B?SktPQkRiRFA3YlhVcUhmcVBPVGNBTUFMVHRGQ09SekhWYk1tV3FBNlBrTmdN?=
- =?utf-8?B?cFFua0NjN2xtdGIvN25tK1ZYajNsU3ZPV0h1SHR2ellZMHRaZ2VRZHFoTUlp?=
- =?utf-8?B?US81NU1sRDkrNTMrMXRSaENRQ3JxRHRKVkVaSXJUQjZmZUFZNHBCdXJ1VHZB?=
- =?utf-8?B?d1R1N1d6eTl3eG1wM1dUaHhrbHYwcVNXS0tRUzd1bkNIVVB6MHZrSWN3M0lG?=
- =?utf-8?B?aGsyZHJ3V0hYZng5L0ZlZElvVG54S2Uyd0JzV0tGOUxTcVZHRjFlSG5IZmZY?=
- =?utf-8?B?eFYzZlJ5Vk5mMnl3aU91V2NPQlpNOWpsakh5ZThDWXU5eTh3Mm9kaU1keVFU?=
- =?utf-8?B?UnlRZTR2NCtSekpCWXpvQ2NYLzdaMDU5cWhCUG1saVNqdEhGcWg0SFNiZFRk?=
- =?utf-8?B?SUFYTjFvSThlaTRCL0RTdkxnVGdka1dhQmR2WXExL0d3bEc4Q0tyT0xmWGpZ?=
- =?utf-8?B?MHE1bTlydXZ4cmlqUkxKaGgxaHA1b0p3dnJBcDhXYkp5TFlHdGVNN3ZwM3g2?=
- =?utf-8?B?S1c1aE5hR0J4aEt3MGV4S1poU05yNG1IdXk1SngxYjBWZXdmcWZCU0hocTJX?=
- =?utf-8?B?QnI5RzRxRWRVTDZjUCsza28vcjhBYTVkMVFmaVl5cG05YkJRbEhnZTdpdGdx?=
- =?utf-8?B?Y2c4T1E2emNOUUJFWmtyeVJCRThvaUNsZTJRVWw5THNTYy85SlJzWDNYd3pn?=
- =?utf-8?B?bmY3MzR0OGVPUGsrU3lxUjh6c2pzR05icDYwaUR5c1RQY1BYSGRuWTVFSGJw?=
- =?utf-8?B?V09hemdIQUNWZjdFVDFmZk15emF5NnVVWFRDdWpjcUk2dXRxZ1g3ekNnMkpN?=
- =?utf-8?B?amVkYnJNbmRUTlQ2Ykx4ZnlzY0FJUWV3amNVLzZYY25PZzVqV3FYT05uTkZE?=
- =?utf-8?B?Y3RNV3RSWXpmc1pSQ0xuUTZ0TGJ3N3hVUXFhYkwxa1BQeXVXL3lKVUwzZ0M0?=
- =?utf-8?B?UkJxZ0RnbGVGd3JrWDZtRFMzcWF1VzJNQkRYYWRldW5Bckx6N2N6d2wrV3J4?=
- =?utf-8?B?VXNHN2ZQb3g5cGNVdFF2M21EZll5aTF0WlpXVS9WVllEQTZZcVpjanJPZk5h?=
- =?utf-8?B?MTExZDVrWWwvQXBSeGU4ckdBRUxsMEYvcGtmSkZRNFpaQUZrbVhMd3VBYktF?=
- =?utf-8?B?UkxFN0RLbmdJN00yZFBDeTN5TGJHU2x6S0FqWnNqTHZMWHQ3VnhJMUFKVXdC?=
- =?utf-8?B?V09WcVNaRkRXdzU5dU9HbElpN3JZdGwwbU8waTM4SWREZERQVG5GeWdSQ2ZN?=
- =?utf-8?B?RktxMDBwdzBxdkpSaFhxU3B5T1JuWUtobTl3d3F5TmpSamt5MlB3YmFhQzVE?=
- =?utf-8?B?U1Fnb1hKS05GZG5ocEdoa0EySDNzMHlsSUpveFR1V043YXM4UUZVMTh4U2o1?=
- =?utf-8?B?aVBYb1hac3N5RnJidGRmMXppTDBqUlZzekIvM0JqSExoa0xwSVRjUG9maFVq?=
- =?utf-8?B?S0RwMDVKMVdxaWJaZWtETzZIVmN0YWJkbGxOdmg1aEpXYW5qYkZJb3ZWblUw?=
- =?utf-8?B?NFhFTWkxTysvaVo3d3hxYXBQU24rYlAxWkxHRTRYOVJKRzU2R0xTYzdxWUJa?=
- =?utf-8?B?TnhwbmVjVzMwRC9jN0I3Zzh0U0tOcGJJOWhNdDQzM1VnaUxvK2x1YWkyeGNi?=
- =?utf-8?Q?cScPcy?=
+	=?utf-8?B?N1FSWE16eHdJV0k2WHdIcXBMWmY2TkxlS2o0Z3FpOHdyV2Z0a001TmppQW16?=
+ =?utf-8?B?VWp2KzREeGVqTWQ5NVRUdXdlWmJFV2xJL00wdzR6dXBOS0hKcUFhWCtkSUww?=
+ =?utf-8?B?RlR2cDU0d1IzdjNyOUU4SWFlclJJOHpxR0VBdWhTNHFLWlRkQlh5VmtJVG13?=
+ =?utf-8?B?WGlhcnpCQXExRHRRbE5KRUhGMk8zYTBqdFJaRWNvOVl5cjloajNraVhhaHVP?=
+ =?utf-8?B?SHNMWVRkSDg1WVZybkNuWmFvQlZzSEdaNEtTVEI3TFJrVnNUeCs0WW5UQ3g5?=
+ =?utf-8?B?WnpPajdrbDJtZVBXSWhVc2ZURkNNVHdBYm9sbmVOQ1pZcmlUZjZWdlBJUElk?=
+ =?utf-8?B?VkwzbzdHVVlrZlYzMHdiTDJnczlmaGVCZWxtZ01LSkpoRm5GMXZZOUVnVE5i?=
+ =?utf-8?B?aFR0VDJMTGlNS25hdDY5M3QvS1ZsMXpnKzdjcG53ZytnOVYyejczckhIRFlQ?=
+ =?utf-8?B?QWJJMFhUdzFjRS9ieVFscE9kWmJqUTVnVjlBVW9BRTBoNmxCcXpVU2JCNFpM?=
+ =?utf-8?B?V1Y2d21sQXgvU3RxL0M1cTMxcldPdW4ydWdBNE1RU21MQVhBTFpjcVRYWWpM?=
+ =?utf-8?B?R2h0NGw1VVRoUGhXQlFwZGFrVFR0ZnRudVlIRnRldzRDT0praHIwR1QzYW9z?=
+ =?utf-8?B?dEF0eEt4OWt3UWFrUzJET3NJYmNQV1dUd1FLeDYrOHhzcVRickUvVUlGWUpJ?=
+ =?utf-8?B?eFF0dHdWVVdYM3lRRE1Mcno1WnptalNXckMvL2s4Nk01ZTMvVDVrZ2Z1d0FO?=
+ =?utf-8?B?K1U5eVNxYndHZ3h6K3g1RmhPWS9DTDhKY0k3OE1wYVB4L052aEJXWE10Z1FQ?=
+ =?utf-8?B?YkhQUmJoWSt0cjQ1SG1hU1RZS3VDV3V3MGZucmpmTUNUUlNRQStpMjZZQ08y?=
+ =?utf-8?B?ZFcxVVVwcmhRVVFTUkQ5QUE1Q2F6OTF2RzhhS1VZM3ZUWjNEYWV0RjVJTTZx?=
+ =?utf-8?B?MG56YWF3Um8zOGozK1dRZjBHeGM3ZzYwZTB1M2tJeXppeWRQNHdLUWpUZVV3?=
+ =?utf-8?B?MkQ5ZktYQ0dWK3FUd2lncm9qakVvT1NjWEFPaEZJczFhUDJRSmFWamFLODFs?=
+ =?utf-8?B?MURHOS9Ldm5xQVErcXJFYVJuZEN0Wi94bUFLaGlKSzlPUHlPZXhVanFmZ3dQ?=
+ =?utf-8?B?L05US284dnVJNFRHbkFUMmtremtYMmc5Y280d1JsMnFoLzNzRVErVTErYWdp?=
+ =?utf-8?B?THNUZWY5RDUvZ2lJUUYyNUxLY1JLaHV1eXloZFZTMCtKNC9FaE1qK2tJd0g1?=
+ =?utf-8?B?VlBNdyt1dzQrRGpySWREbjdLbjVmSFM4aXg4cm12TFE4RGlVSU9Qbk1VOGZW?=
+ =?utf-8?B?bTVhb3pGc041aWwrOTB5ZmpKaXdwRzJXdEY5ck5ZSGd2Y0dFbVpRV0lDK0JT?=
+ =?utf-8?B?d2t1VFZnS0pWWStEVmZ5ZXd5UExyM2ZGcENEdy9MUWNNMDRYc0J3b1BxU1NP?=
+ =?utf-8?B?N1NtUVRnREJETzNmaEVWclRvSjU5eGVEOXFiLzBpVDdHaTZGQit4dWV1cjBQ?=
+ =?utf-8?B?Z2U0MWJIM3BmY1FWSmw3K1JNT0JXaGpOSnhZOWs2L2VUS0M1ejJHZVZLZTg1?=
+ =?utf-8?B?cVVMcHZtS3EzNkpXVExVOWJtZEFDMjV0Q0dpajhuTUs5U2pHbFdkaGFndFNi?=
+ =?utf-8?B?U3VITW00aVpHOG5zRXg1ZWg0dlNvWkZtUktjRE4wbjdtS0cwKzhJdURzdWI2?=
+ =?utf-8?B?ZHZvemVYVi8zckhmcXdsTjdQNlBUTHZ5TDlmQ2VXMHdleXpzZWZmTXV2NzJC?=
+ =?utf-8?B?Qlk5dGc5anVmc2dWUlVEWVVDWWh0UlNSczVCL2JCam12cjFhRmtpSUtLOXdS?=
+ =?utf-8?B?a214Q2QvRjhFZHZXdFoxd2RSOXhpUVdiaDJ5UjhqVmwyRFdxZDY2d000cVNQ?=
+ =?utf-8?B?dXZscU82SUFDOHYrNXp1WlFabENFU1owVlhhTXJJZ0x3TUNJZ1dsa3E0a0Za?=
+ =?utf-8?B?WjU0ajA4bnJINEJHc2VZNW1sUjU2dVc5bGRQem9YOGhKaHpwTkRySXVYdVpV?=
+ =?utf-8?B?a3dHeFpHSFhmZVljU2Y3aUZlOVBIZzZuY09WV0xYZENpUm5OcDlIZ1BMMDFW?=
+ =?utf-8?Q?FUkJB9?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(36860700013)(1800799024)(82310400026)(7053199007);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(7416014)(36860700013)(1800799024)(7053199007);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2025 11:28:04.6211
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2025 11:44:33.0088
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 03bde1f5-5fc5-4bad-e611-08ddb4a48478
+X-MS-Exchange-CrossTenant-Network-Message-Id: b309fe84-1bbb-453f-1d04-08ddb4a6d19e
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BN1PEPF00004689.namprd05.prod.outlook.com
+	SA2PEPF00003F63.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5736
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8325
 
-On 6/21/2025 4:50 AM, David Matlack wrote:
-> Introduce a basic VFIO selftest called vfio_pci_device_test to
-> demonstrate the functionality of the VFIO selftest library and provide
-> some test coverage of basic VFIO operations, including:
+
+
+On 6/26/2025 4:57 PM, Sairaj Kodilkar wrote:
+> On 6/21/2025 4:50 AM, David Matlack wrote:
+>> Introduce a basic VFIO selftest called vfio_pci_device_test to
+>> demonstrate the functionality of the VFIO selftest library and provide
+>> some test coverage of basic VFIO operations, including:
+>>
+>>   - Mapping and unmapping DMA
+>>   - Mapping and unmapping BARs
+>>   - Enabling, triggering, and disabling MSI and MSI-x
+>>   - Reading and writing to PCI config space
+>>
+>> This test should work with most PCI devices, as long as they are bound
+>> to vfio-pci.
+>>
+>> Signed-off-by: David Matlack <dmatlack@google.com>
+>> ---
+>>   tools/testing/selftests/vfio/Makefile         |   1 +
+>>   .../selftests/vfio/vfio_pci_device_test.c     | 178 ++++++++++++++++++
+>>   2 files changed, 179 insertions(+)
+>>   create mode 100644 tools/testing/selftests/vfio/vfio_pci_device_test.c
+>>
+>> diff --git a/tools/testing/selftests/vfio/Makefile b/tools/testing/ 
+>> selftests/vfio/Makefile
+>> index db3e4db1a6dd..828419537250 100644
+>> --- a/tools/testing/selftests/vfio/Makefile
+>> +++ b/tools/testing/selftests/vfio/Makefile
+>> @@ -1,4 +1,5 @@
+>>   CFLAGS = $(KHDR_INCLUDES)
+>> +TEST_GEN_PROGS += vfio_pci_device_test
+>>   include ../lib.mk
+>>   include lib/libvfio.mk
+>> diff --git a/tools/testing/selftests/vfio/vfio_pci_device_test.c b/ 
+>> tools/testing/selftests/vfio/vfio_pci_device_test.c
+>> new file mode 100644
+>> index 000000000000..6d3a33804be3
+>> --- /dev/null
+>> +++ b/tools/testing/selftests/vfio/vfio_pci_device_test.c
+>> @@ -0,0 +1,178 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +#include <fcntl.h>
+>> +#include <stdlib.h>
+>> +
+>> +#include <sys/ioctl.h>
+>> +#include <sys/mman.h>
+>> +
+>> +#include <linux/limits.h>
+>> +#include <linux/pci_regs.h>
+>> +#include <linux/sizes.h>
+>> +#include <linux/vfio.h>
+>> +
+>> +#include <vfio_util.h>
+>> +
+>> +#include "../kselftest_harness.h"
+>> +
+>> +static const char *device_bdf;
+>> +
+>> +/*
+>> + * Limit the number of MSIs enabled/disabled by the test regardless 
+>> of the
+>> + * number of MSIs the device itself supports, e.g. to avoid hitting 
+>> IRTE limits.
+>> + */
+>> +#define MAX_TEST_MSI 16U
+>> +
 > 
->   - Mapping and unmapping DMA
->   - Mapping and unmapping BARs
->   - Enabling, triggering, and disabling MSI and MSI-x
->   - Reading and writing to PCI config space
+> Now that AMD IOMMU supports upto 2048 IRTEs per device, I wonder if we
+> can include a test with max MSIs 2048.
 > 
-> This test should work with most PCI devices, as long as they are bound
-> to vfio-pci.
+>> +FIXTURE(vfio_pci_device_test) {
+>> +    struct vfio_pci_device *device;
+>> +};
+>> +
+>> +FIXTURE_SETUP(vfio_pci_device_test)
+>> +{
+>> +    self->device = vfio_pci_device_init(device_bdf, VFIO_TYPE1_IOMMU);
+>> +}
+>> +
+>> +FIXTURE_TEARDOWN(vfio_pci_device_test)
+>> +{
+>> +    vfio_pci_device_cleanup(self->device);
+>> +}
+>> +
+>> +TEST_F(vfio_pci_device_test, dma_map_unmap)
+>> +{
+>> +    const u64 size = SZ_2M;
+>> +    const u64 iova = SZ_4G;
+>> +    void *mem;
+>> +
+>> +    mem = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED | 
+>> MAP_ANONYMOUS, -1, 0);
+>> +    ASSERT_NE(mem, MAP_FAILED);
+>> +
+>> +    vfio_pci_dma_map(self->device, iova, size, mem);
+>> +    printf("Mapped HVA %p (size 0x%lx) at IOVA 0x%lx\n", mem, size, 
+>> iova);
+>> +    vfio_pci_dma_unmap(self->device, iova, size);
 > 
-> Signed-off-by: David Matlack <dmatlack@google.com>
-> ---
->   tools/testing/selftests/vfio/Makefile         |   1 +
->   .../selftests/vfio/vfio_pci_device_test.c     | 178 ++++++++++++++++++
->   2 files changed, 179 insertions(+)
->   create mode 100644 tools/testing/selftests/vfio/vfio_pci_device_test.c
 > 
-> diff --git a/tools/testing/selftests/vfio/Makefile b/tools/testing/selftests/vfio/Makefile
-> index db3e4db1a6dd..828419537250 100644
-> --- a/tools/testing/selftests/vfio/Makefile
-> +++ b/tools/testing/selftests/vfio/Makefile
-> @@ -1,4 +1,5 @@
->   CFLAGS = $(KHDR_INCLUDES)
-> +TEST_GEN_PROGS += vfio_pci_device_test
->   include ../lib.mk
->   include lib/libvfio.mk
->   
-> diff --git a/tools/testing/selftests/vfio/vfio_pci_device_test.c b/tools/testing/selftests/vfio/vfio_pci_device_test.c
-> new file mode 100644
-> index 000000000000..6d3a33804be3
-> --- /dev/null
-> +++ b/tools/testing/selftests/vfio/vfio_pci_device_test.c
-> @@ -0,0 +1,178 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +#include <fcntl.h>
-> +#include <stdlib.h>
-> +
-> +#include <sys/ioctl.h>
-> +#include <sys/mman.h>
-> +
-> +#include <linux/limits.h>
-> +#include <linux/pci_regs.h>
-> +#include <linux/sizes.h>
-> +#include <linux/vfio.h>
-> +
-> +#include <vfio_util.h>
-> +
-> +#include "../kselftest_harness.h"
-> +
-> +static const char *device_bdf;
-> +
-> +/*
-> + * Limit the number of MSIs enabled/disabled by the test regardless of the
-> + * number of MSIs the device itself supports, e.g. to avoid hitting IRTE limits.
-> + */
-> +#define MAX_TEST_MSI 16U
-> +
-
-Now that AMD IOMMU supports upto 2048 IRTEs per device, I wonder if we
-can include a test with max MSIs 2048.
-
-> +FIXTURE(vfio_pci_device_test) {
-> +	struct vfio_pci_device *device;
-> +};
-> +
-> +FIXTURE_SETUP(vfio_pci_device_test)
-> +{
-> +	self->device = vfio_pci_device_init(device_bdf, VFIO_TYPE1_IOMMU);
-> +}
-> +
-> +FIXTURE_TEARDOWN(vfio_pci_device_test)
-> +{
-> +	vfio_pci_device_cleanup(self->device);
-> +}
-> +
-> +TEST_F(vfio_pci_device_test, dma_map_unmap)
-> +{
-> +	const u64 size = SZ_2M;
-> +	const u64 iova = SZ_4G;
-> +	void *mem;
-> +
-> +	mem = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-> +	ASSERT_NE(mem, MAP_FAILED);
-> +
-> +	vfio_pci_dma_map(self->device, iova, size, mem);
-> +	printf("Mapped HVA %p (size 0x%lx) at IOVA 0x%lx\n", mem, size, iova);
-> +	vfio_pci_dma_unmap(self->device, iova, size);
+> I am slightly confused here. Because You are having an assert on munmap
+> and not on any of the vfio_pci_dma_(map/unmap). This test case is not 
+> testing VFIO.
 
 
-I am slightly confused here. Because You are having an assert on munmap
-and not on any of the vfio_pci_dma_(map/unmap). This test case is not 
-testing VFIO.
+I missed to see ioctl_assert. Please ignore this :) Sorry about that.
+
+> 
+> Thanks
+> Sairaj
+> 
+>> +
+>> +    ASSERT_TRUE(!munmap(mem, SZ_2M));
+>> +}
+>> +
 
 Thanks
 Sairaj
-
-> +
-> +	ASSERT_TRUE(!munmap(mem, SZ_2M));
-> +}
-> +
 

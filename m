@@ -1,149 +1,211 @@
-Return-Path: <dmaengine+bounces-5634-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5635-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D1311AEA382
-	for <lists+dmaengine@lfdr.de>; Thu, 26 Jun 2025 18:31:28 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 10092AEA954
+	for <lists+dmaengine@lfdr.de>; Fri, 27 Jun 2025 00:07:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 97C3B5645A2
-	for <lists+dmaengine@lfdr.de>; Thu, 26 Jun 2025 16:30:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 831EE1C42C60
+	for <lists+dmaengine@lfdr.de>; Thu, 26 Jun 2025 22:07:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3812B287272;
-	Thu, 26 Jun 2025 16:29:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 601F826058E;
+	Thu, 26 Jun 2025 22:07:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j+kHMsd2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nknxJ0lE"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B6572ED861
-	for <dmaengine@vger.kernel.org>; Thu, 26 Jun 2025 16:29:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3577423B634;
+	Thu, 26 Jun 2025 22:07:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750955391; cv=none; b=IFEv+nlANXHIhQ3i33axzzt8ol42mkbeJ0wy/tB6AfpYpUC/LLb052s9hnAMTMTuZsY5z0jtWulub1UfCqYedeeqLdtr74HrgapFwIFj0azu61+TiOSoXty7ErvEhA5dWob7gIKQ0Q4Jws06jqhY2w7dxOFc6e3q8HPgepj8e3o=
+	t=1750975621; cv=none; b=dUh0Of/lIDKKpN8fLvmQHBVO+ZBSBr06/pCLjXsJCYukLWO3/qnF5vFX0ALiP+8Fc/OR6k7Pr7tgG3qq4DxSyNx0BQ4qNqb6idLWlUb3eR9VQJIJxK/+55rc9dy98XzjPX9ipSoioXe9rn26zFGHDTul9sapZWzbndhpTgBA1Gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750955391; c=relaxed/simple;
-	bh=AgCtIvqoexub9Qv7N/AgH5wxwMGGGs/6YulBNCxbeCY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B9j0AbAsotVxUF9xn2707J8DPdMmJPYy6AW4arVwVF2SUr9pecdJg7BeQy8avIWhIwumuDFdKEllBPfaxm+e5AHhcvXAz/+eeWBx/nINsG7Db3s+P4BaeaiDDBpiUaaoNpH1GfxqTpQXHQP0tMb62iTY5kAJ0+7GPssUHaPNbxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=j+kHMsd2; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-32ade3723adso13155041fa.0
-        for <dmaengine@vger.kernel.org>; Thu, 26 Jun 2025 09:29:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750955388; x=1751560188; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IhgWMpVftN0BXlOXEuQTKXHJQDcbuJWCCJBvXCzzlws=;
-        b=j+kHMsd28pa2eEUT5k7m2NZt/ZYbHThGKY2Gc38l8n/zflNGyorZYxKAY08FzUTPv0
-         jS+acmTxaThxS6o1SDFjXyCJw6Bq5AesRY/hGPjzZQFvQMIu6Frw3qbO9EtbYTrWi5YD
-         CLL4kBT4xsSGpItx98cFM1E6CAy6JgrS0XY1BOUTleTSU7HUD/svSvg2FLqjK58TXad9
-         hIWcAYnsWPpgQ4FGvf8YsnLfpslaj3hqZcgbMuMz+kIbDSCJtKj4c3OIpDKjaL9n7nld
-         4i9uImBbIHzgen3TSbbjfJI404hM1o3h6ViVKDHnmAaXBwTprsgueR0806w+AxfCQNWn
-         e+Ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750955388; x=1751560188;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IhgWMpVftN0BXlOXEuQTKXHJQDcbuJWCCJBvXCzzlws=;
-        b=SYQKcFg/MsffIIeNM2c2f25P2jJBbinfmI4WLobbf3h904AfG+XQzYSezeJIFglJq+
-         Z1+aHd/TuWmL1BfpR/nZA9b+EQKwTTrQ6lD9YjqasW5fFVnmS2lp6lEMCtx2jCQgiTK7
-         AOWE1dl+5bsKv1ut1MJGuvBNFj2abd8jw//9hUTlqH9roQq7iiXGeTOqTrbj67ArhZHu
-         EPYSgS4V2REnGGRre6ndWUAEYdXTjqetlrFv9tBBV8eEUyUkaPDrWOcseP/zv4YGgo0x
-         HtWCh935C7meYuEF4JNxqfAuvqwNuWLC17q0VFao/z/ypdmX/2h7NuV9I8zYiKXhmoeK
-         5Avw==
-X-Forwarded-Encrypted: i=1; AJvYcCXNBrPyKXYJau7q3A5MKalxAD5dtE8f3NoaSdixa37zizvxVTpYFsnJxJWRZVvyVG9MTYLZA4poQJY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YynEsrQQy6Vyi0zvTn7XIShcKP3Xzgo5ZBX7IsD0Xbbry4RdMJ8
-	g7bfn8E1rQt8r0VnLYyHq19zP5HDN5IxY66wM+qhUtRFbcYyCkonKnyTYmJ1Xw/Fc3NVj01mtZ4
-	X4kG8971NJ8GyzEzw3bN5fVd6PFqwgjXqUVkbm5rC
-X-Gm-Gg: ASbGncs9PCSwnZjSaVZyvGcvNoQjKEFGrXFFGN95L15TZr63o9vyUzHCcngNzU6hEWv
-	CKbnrp3vDlh2QQHP9ijyruL7RGnD0JiQHqtGR3idz0kL6xvmJxcRxeYTncrgRx7JvyWaYTuavSO
-	bsvNiUqMTBUpKzDwLp1BUrnz8tp2X8upk1rDcp3raRk/M=
-X-Google-Smtp-Source: AGHT+IEEwFR4Q1I48a+7OABIyBDRSlZA5tbdQsFM85tiZhc32of4fKA/nSlskPFcjFXcvfWw+C300VPrlQj8CDH2vFU=
-X-Received: by 2002:a05:6512:3d0d:b0:553:2159:8718 with SMTP id
- 2adb3069b0e04-5550b9e9f76mr68343e87.40.1750955387360; Thu, 26 Jun 2025
- 09:29:47 -0700 (PDT)
+	s=arc-20240116; t=1750975621; c=relaxed/simple;
+	bh=jcDmlXlPtyzdOIJ5SLX8GV0/QYmp1r6I5Va/AUcO+BE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PoPm56mk3Z/Tm7NN0iLkZnoUFZ9mJ/bYCeoR8FAvT5m1vyq/bTIRMse8dXHbFGcHP1tQIkdPsoM3RUIagEafuA/FDaRXKcDxtY6Xc63ZQ5fEKTA5VlC9WOxC5KSVI9SR0LkwfF+0BX1H5lvQ03DRKJh+L5nA+dH6ubX6z/w55xE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nknxJ0lE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91B98C4CEEB;
+	Thu, 26 Jun 2025 22:07:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750975620;
+	bh=jcDmlXlPtyzdOIJ5SLX8GV0/QYmp1r6I5Va/AUcO+BE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nknxJ0lE3sEgU97T8OXZUN5dotQCkRISDueEJ5SV/Qb6IjJB5ltBwRfyHvuBl9znB
+	 zLLjgrnJldnWtt37Qb09bTMFZDAZ/NB+EaUJa7hDDTxeTynZN6C8UzIoJ0cUxawG/H
+	 XBpWKGo6rTUiFU03jCR/1NQhyRL5nmVQscG/cM/Nr+6gOB5SH8ZEowXf7OONHm8e2t
+	 YXJ/wY6cDGmPE4BYg6VbqhB4XG40eDATJSjwpIzSmBif5vkq8osFKk2Sw9TKro/HJx
+	 d/JuqgzciX6bLviW5mnsB6cBCdhG1cl0bEH0i3Ei7YT5yWnCqOoHKdWDKQxcOll3Ac
+	 MgC4GMKgEICWg==
+Date: Thu, 26 Jun 2025 15:06:59 -0700
+From: Vinod Koul <vkoul@kernel.org>
+To: Devendra K Verma <devverma@amd.com>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	mani@kernel.org
+Subject: Re: [RESEND PATCH] dmaengine: dw-edma: Add Simple Mode Support
+Message-ID: <aF3Eg_xtxZjZTEop@vaman>
+References: <20250623061733.1864392-1-devverma@amd.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620232031.2705638-1-dmatlack@google.com> <20250620232031.2705638-4-dmatlack@google.com>
- <fe4b1d31-e910-40a1-ab83-d9fd936d1493@amd.com> <4aef95a0-a0de-4bd5-b4ec-5289f0bc0ab1@amd.com>
-In-Reply-To: <4aef95a0-a0de-4bd5-b4ec-5289f0bc0ab1@amd.com>
-From: David Matlack <dmatlack@google.com>
-Date: Thu, 26 Jun 2025 09:29:20 -0700
-X-Gm-Features: Ac12FXxh3iVx0ijncX4D0ghMn9yxTN7axomwuLA6jqvWOXSFOfPrvAPiEnHLUx4
-Message-ID: <CALzav=fZcLpQ+9J=XOZ-=Cr1UA8qKa5NHXB1dJpqhCp7pee7Ow@mail.gmail.com>
-Subject: Re: [PATCH 03/33] vfio: selftests: Introduce vfio_pci_device_test
-To: Sairaj Kodilkar <sarunkod@amd.com>
-Cc: Alex Williamson <alex.williamson@redhat.com>, Aaron Lewis <aaronlewis@google.com>, 
-	Adhemerval Zanella <adhemerval.zanella@linaro.org>, 
-	Adithya Jayachandran <ajayachandra@nvidia.com>, Andrew Jones <ajones@ventanamicro.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Bibo Mao <maobibo@loongson.cn>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, Dan Williams <dan.j.williams@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, dmaengine@vger.kernel.org, 
-	Huacai Chen <chenhuacai@kernel.org>, James Houghton <jthoughton@google.com>, 
-	Jason Gunthorpe <jgg@nvidia.com>, Joel Granados <joel.granados@kernel.org>, 
-	Josh Hilke <jrhilke@google.com>, Kevin Tian <kevin.tian@intel.com>, kvm@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, 
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, "Pratik R. Sampat" <prsampat@amd.com>, 
-	Saeed Mahameed <saeedm@nvidia.com>, Sean Christopherson <seanjc@google.com>, Shuah Khan <shuah@kernel.org>, 
-	Vinicius Costa Gomes <vinicius.gomes@intel.com>, Vipin Sharma <vipinsh@google.com>, 
-	Wei Yang <richard.weiyang@gmail.com>, "Yury Norov [NVIDIA]" <yury.norov@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250623061733.1864392-1-devverma@amd.com>
 
-On Thu, Jun 26, 2025 at 4:44=E2=80=AFAM Sairaj Kodilkar <sarunkod@amd.com> =
-wrote:
-> On 6/26/2025 4:57 PM, Sairaj Kodilkar wrote:
-> > On 6/21/2025 4:50 AM, David Matlack wrote:
-> >> +/*
-> >> + * Limit the number of MSIs enabled/disabled by the test regardless
-> >> of the
-> >> + * number of MSIs the device itself supports, e.g. to avoid hitting
-> >> IRTE limits.
-> >> + */
-> >> +#define MAX_TEST_MSI 16U
-> >> +
-> >
-> > Now that AMD IOMMU supports upto 2048 IRTEs per device, I wonder if we
-> > can include a test with max MSIs 2048.
+On 23-06-25, 11:47, Devendra K Verma wrote:
+> The HDMA IP supports the simple mode (non-linked list).
+> In this mode the channel registers are configured to initiate
+> a single DMA data transfer. The channel can be configured in
+> simple mode via peripheral param of dma_slave_config param.
+> 
+> Signed-off-by: Devendra K Verma <devverma@amd.com>
+> ---
+>  drivers/dma/dw-edma/dw-edma-core.c    | 10 +++++
+>  drivers/dma/dw-edma/dw-edma-core.h    |  2 +
+>  drivers/dma/dw-edma/dw-hdma-v0-core.c | 53 ++++++++++++++++++++++++++-
+>  include/linux/dma/edma.h              |  8 ++++
+>  4 files changed, 72 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> index c2b88cc99e5d..4dafd6554277 100644
+> --- a/drivers/dma/dw-edma/dw-edma-core.c
+> +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> @@ -235,9 +235,19 @@ static int dw_edma_device_config(struct dma_chan *dchan,
+>  				 struct dma_slave_config *config)
+>  {
+>  	struct dw_edma_chan *chan = dchan2dw_edma_chan(dchan);
+> +	struct dw_edma_peripheral_config *pconfig = config->peripheral_config;
+> +	unsigned long flags;
+> +
+> +	if (WARN_ON(config->peripheral_config &&
+> +		    config->peripheral_size != sizeof(*pconfig)))
+> +		return -EINVAL;
+>  
+> +	spin_lock_irqsave(&chan->vc.lock, flags);
+>  	memcpy(&chan->config, config, sizeof(*config));
+> +
+> +	chan->non_ll_en = pconfig ? pconfig->non_ll_en : false;
+>  	chan->configured = true;
+> +	spin_unlock_irqrestore(&chan->vc.lock, flags);
+>  
+>  	return 0;
+>  }
+> diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
+> index 71894b9e0b15..c0266976aa22 100644
+> --- a/drivers/dma/dw-edma/dw-edma-core.h
+> +++ b/drivers/dma/dw-edma/dw-edma-core.h
+> @@ -86,6 +86,8 @@ struct dw_edma_chan {
+>  	u8				configured;
+>  
+>  	struct dma_slave_config		config;
+> +
+> +	bool				non_ll_en;
 
-That sounds worth doing. I originally added this because I was hitting
-IRTE limits on an Intel host and a ~6.6 kernel.
+why do you need this? What is the decision to use non ll vs ll one?
 
-Is there some way the test can detect from userspace that the IOMMU
-supports 2048 IRTEs that we could key off to decide what value of
-MAX_TEST_MSI to use?
+>  };
+>  
+>  struct dw_edma_irq {
+> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> index e3f8db4fe909..3237c807a18e 100644
+> --- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> +++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> @@ -225,7 +225,7 @@ static void dw_hdma_v0_sync_ll_data(struct dw_edma_chunk *chunk)
+>  		readl(chunk->ll_region.vaddr.io);
+>  }
+>  
+> -static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
+> +static void dw_hdma_v0_ll_start(struct dw_edma_chunk *chunk, bool first)
+>  {
+>  	struct dw_edma_chan *chan = chunk->chan;
+>  	struct dw_edma *dw = chan->dw;
+> @@ -263,6 +263,57 @@ static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
+>  	SET_CH_32(dw, chan->dir, chan->id, doorbell, HDMA_V0_DOORBELL_START);
+>  }
+>  
+> +static void dw_hdma_v0_non_ll_start(struct dw_edma_chunk *chunk)
+> +{
+> +	struct dw_edma_chan *chan = chunk->chan;
+> +	struct dw_edma *dw = chan->dw;
+> +	struct dw_edma_burst *child;
+> +	u32 val;
+> +
+> +	list_for_each_entry(child, &chunk->burst->list, list) {
+> +		SET_CH_32(dw, chan->dir, chan->id, ch_en, BIT(0));
+> +
+> +		/* Source address */
+> +		SET_CH_32(dw, chan->dir, chan->id, sar.lsb, lower_32_bits(child->sar));
+> +		SET_CH_32(dw, chan->dir, chan->id, sar.msb, upper_32_bits(child->sar));
+> +
+> +		/* Destination address */
+> +		SET_CH_32(dw, chan->dir, chan->id, dar.lsb, lower_32_bits(child->dar));
+> +		SET_CH_32(dw, chan->dir, chan->id, dar.msb, upper_32_bits(child->dar));
+> +
+> +		/* Transfer size */
+> +		SET_CH_32(dw, chan->dir, chan->id, transfer_size, child->sz);
+> +
+> +		/* Interrupt setup */
+> +		val = GET_CH_32(dw, chan->dir, chan->id, int_setup) |
+> +				HDMA_V0_STOP_INT_MASK | HDMA_V0_ABORT_INT_MASK |
+> +				HDMA_V0_LOCAL_STOP_INT_EN | HDMA_V0_LOCAL_ABORT_INT_EN;
+> +
+> +		if (!(dw->chip->flags & DW_EDMA_CHIP_LOCAL))
+> +			val |= HDMA_V0_REMOTE_STOP_INT_EN | HDMA_V0_REMOTE_ABORT_INT_EN;
+> +
+> +		SET_CH_32(dw, chan->dir, chan->id, int_setup, val);
+> +
+> +		/* Channel control setup */
+> +		val = GET_CH_32(dw, chan->dir, chan->id, control1);
+> +		val &= ~HDMA_V0_LINKLIST_EN;
+> +		SET_CH_32(dw, chan->dir, chan->id, control1, val);
+> +
+> +		/* Ring the doorbell */
+> +		SET_CH_32(dw, chan->dir, chan->id, doorbell, HDMA_V0_DOORBELL_START);
+> +	}
+> +}
+> +
+> +static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
+> +{
+> +	struct dw_edma_chan *chan = chunk->chan;
+> +
+> +	if (!chan->non_ll_en)
+> +		dw_hdma_v0_ll_start(chunk, first);
+> +	else
+> +		dw_hdma_v0_non_ll_start(chunk);
+> +}
+> +
+>  static void dw_hdma_v0_core_ch_config(struct dw_edma_chan *chan)
+>  {
+>  	struct dw_edma *dw = chan->dw;
+> diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
+> index 3080747689f6..82d808013a66 100644
+> --- a/include/linux/dma/edma.h
+> +++ b/include/linux/dma/edma.h
+> @@ -101,6 +101,14 @@ struct dw_edma_chip {
+>  	struct dw_edma		*dw;
+>  };
+>  
+> +/**
+> + * struct dw_edma_peripheral_config - peripheral spicific configurations
+> + * @non_ll_en:		 enable non-linked list mode of operations
+> + */
+> +struct dw_edma_peripheral_config {
+> +	bool			non_ll_en;
+> +};
+> +
+>  /* Export to the platform drivers */
+>  #if IS_REACHABLE(CONFIG_DW_EDMA)
+>  int dw_edma_probe(struct dw_edma_chip *chip);
+> -- 
+> 2.43.0
 
-> >> +
-> >> +    vfio_pci_dma_map(self->device, iova, size, mem);
-> >> +    printf("Mapped HVA %p (size 0x%lx) at IOVA 0x%lx\n", mem, size,
-> >> iova);
-> >> +    vfio_pci_dma_unmap(self->device, iova, size);
-> >
-> >
-> > I am slightly confused here. Because You are having an assert on munmap
-> > and not on any of the vfio_pci_dma_(map/unmap). This test case is not
-> > testing VFIO.
->
-> I missed to see ioctl_assert. Please ignore this :) Sorry about that.
-
-No worries, it's not very obvious :)
-
-vfio_pci_dma_map() and vfio_pci_dma_unmap() both return void right now
-and perform internal asserts since all current users of those
-functions want to assert success.
-
-If and when we have a use-case to assert that map or unmap fails
-(which I think we'll definitely have) we can add __vfio_pci_dma_map()
-and __vfio_pci_dma_unmap() variants that return int instead of void.
+-- 
+~Vinod
 

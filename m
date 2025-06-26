@@ -1,296 +1,273 @@
-Return-Path: <dmaengine+bounces-5630-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5631-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E78AAE8F74
-	for <lists+dmaengine@lfdr.de>; Wed, 25 Jun 2025 22:26:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id F1657AE9C80
+	for <lists+dmaengine@lfdr.de>; Thu, 26 Jun 2025 13:28:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ABA564A8146
-	for <lists+dmaengine@lfdr.de>; Wed, 25 Jun 2025 20:26:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 083ED1701C2
+	for <lists+dmaengine@lfdr.de>; Thu, 26 Jun 2025 11:28:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23A1A2E0B4C;
-	Wed, 25 Jun 2025 20:25:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B176E236457;
+	Thu, 26 Jun 2025 11:28:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FjxBPgte"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="PvJL+AmA"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2054.outbound.protection.outlook.com [40.107.220.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D384B2E06F0;
-	Wed, 25 Jun 2025 20:25:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750883122; cv=none; b=dvZBGSt46ktuF9JEEUlg/qQw+2rYeUdZnCqqkOH1+l/sA6GH/cOmNTcid5Rq6m4en7hBNrKS49+sscUOWRSB1UlLzkBiDUcE+60ZO1litdwSVhsNk/el1igQ5yjDEd1t4C3py6gXr6QbfPnrdPX6SC6OjY8n3tvsL4z01i9ghRQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750883122; c=relaxed/simple;
-	bh=+8MjsYjLQk7iYhneiOxY/4HQxLTzxHHxYvlkRd4VxMk=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=pGq7cezB2ngIFgXPl3Zb7OxJvl9br99ZyD7DCNCSoxiBsz9mX8tpsZwz9VWfDhBg/pVATQ8voX/VN+Y6WUqbUH7rzWQqC45eJOI1PaozI2CXnWVMVlRbHk8SZYZnVjTren8xuAvVyG4Es4hk+RedV6gfgweu+gTaKWrEmNEQFos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FjxBPgte; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 727C8C4CEEE;
-	Wed, 25 Jun 2025 20:25:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750883121;
-	bh=+8MjsYjLQk7iYhneiOxY/4HQxLTzxHHxYvlkRd4VxMk=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=FjxBPgte/hnwBLDmdydTbzz14Df12s+TFdfoEWn3IbNwWD723PsvN/Ff274kI+Qpj
-	 07e3gS1h7nctSPrsRXmwjLFRx/N9SIg4pBrDmQ0ApAa8cQpKG5D29nkH8/kjN3UZl5
-	 /eGjbcOBS/qnXPABEdfxZwZ3B3eRc3bdfW2TomvA7fUE9fiXAHU1ILG+JJO3CCQGwk
-	 FGFhN6FIKYW9tZlcgX56IC/UOd2PxKXVXKf61yCMCFnB78pLwlbpTQZ+cBmGmMXaic
-	 fhBBox0NxFCyYcG0JO13aY9eDDh5F4IY9wndgL6PbKmo+rdsS3qSJEnsWAJYi6xiDl
-	 GwG7E5TlGLZtg==
-Date: Wed, 25 Jun 2025 15:25:20 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA7231F2BAD;
+	Thu, 26 Jun 2025 11:28:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750937293; cv=fail; b=aNMLTvXZnXamWK6yPmH42Y4YtfqsKpU7wSKR3jFVTScyEnOwLB1KhTnCn/GDZD/rb7DPD/G0IgBcQakDRSRbitGtHKVssxpThSvTCVSD/AzBto/mAbBODgOOzU8nj8Qlplj7OgERG2KurnZhaW3qSv/FCQAPk4F608ybG647Yik=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750937293; c=relaxed/simple;
+	bh=HzkysDuyhFokr/UmrIuzqdtR2yFeuiKcG90Ai9uJbeo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=SWbv8/9oDqINYf8eOqRN4hzTH3VwhNEOG5Fk+bOICMWm2Er0L45b/7F36EHYO8Yc6MDu5BFlrfSHbMJc8QmXb77LUzpPXNgV7SV6b6gT7wlIEP3IFY297P1+toKJVhdmVDOepopGPa3gZtajq7101eaWUik1G36IE1fEsCG6VyQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=PvJL+AmA; arc=fail smtp.client-ip=40.107.220.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=usbQo/R3/WlrnGxMrRE04LEnaTzOOWBeyAg2vcfoT5fXPda1ocjnoftNnTMBppPm2UDgvenRwzRrLdgOq0lUI5RE/mseoNu9BkcypacV1EnIu8pS/TpUnQeSnGigOvP/XEMkpi+8wA54JzpcOmMcGtlinMQVEHsR/kXVCVAfxjH7IG78ZqzoPU5Zz53WfL6UFUV9DeG5K4lOw+mCK2d4wWJ3I5vc4cybVU35jiJZrKIheiX2cHJFKQ8vJHaQ8JGFHqCZFBK9rLm13ICr0HXLUowqqQD23+JerbcQn/XR1SJRqPbdFwMHTXwhfpVITzQq1gNSg2H2uDE/khwDryv0Tw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=digQpWVQlIi/l41C1GRzZTcQ0KIvEuMbJXI24kfq9xI=;
+ b=EW7GbDc3iEtBf12wtH2+RD8XfmkgNGJ7r66GlZzY/2f1HdlZrQ3B8aXG+weVbEgWLKgJt8y8q8tCBlsA4gme7NPfkwojOl3Oazm8btNCYU/N3KhrRK2GoTgDrv54QwAo0nPklz+4N+y+1cyBhKvtUe+LOp4Q1reFizhx6xptV6VUZEE9s52iUdFrvCL+dAFViWgrAFA81qun+eMdIktEn47mxY5zk7Dkr1DisH8FTcJ4hadbzVaMPBPsCro6rNDHtusSP/EKdO6fCpAhhhc9TQL49Gl6EdO9Jz4+kEjQ11QPJ6I8celeCF+pYfp3pUe/EtVZyOpQU90xb1wB1Iti6Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=digQpWVQlIi/l41C1GRzZTcQ0KIvEuMbJXI24kfq9xI=;
+ b=PvJL+AmAuzlzERPkCLM9wdKC0sNxguffcxUR0ik/t3VRz5vAEIbik2NaFQq75WKC+v9h5b/i3BCFA2lQS6weCib7cTjNQkzo0eIGJDBpiUykNQsQD+k+hY9X1Y0e2JZHAGoBPeov3uJDdsVEUbO3CPF0HIauYvjj3bl/cGSe4FE=
+Received: from BL0PR02CA0035.namprd02.prod.outlook.com (2603:10b6:207:3c::48)
+ by PH7PR12MB5736.namprd12.prod.outlook.com (2603:10b6:510:1e3::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.23; Thu, 26 Jun
+ 2025 11:28:04 +0000
+Received: from BN1PEPF00004689.namprd05.prod.outlook.com
+ (2603:10b6:207:3c:cafe::1f) by BL0PR02CA0035.outlook.office365.com
+ (2603:10b6:207:3c::48) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.17 via Frontend Transport; Thu,
+ 26 Jun 2025 11:28:04 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN1PEPF00004689.mail.protection.outlook.com (10.167.243.134) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8880.14 via Frontend Transport; Thu, 26 Jun 2025 11:28:04 +0000
+Received: from [10.85.43.79] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 26 Jun
+ 2025 06:27:54 -0500
+Message-ID: <fe4b1d31-e910-40a1-ab83-d9fd936d1493@amd.com>
+Date: Thu, 26 Jun 2025 16:57:51 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Vinod Koul <vkoul@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
- Will Deacon <will@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
- Robin Murphy <robin.murphy@arm.com>, Konrad Dybcio <konradybcio@kernel.org>, 
- Daniel Lezcano <daniel.lezcano@linaro.org>, 
- Thomas Gleixner <tglx@linutronix.de>, 
- "David S. Miller" <davem@davemloft.net>, 
- Thara Gopinath <thara.gopinath@gmail.com>, 
- Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
- linux-mmc@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>, 
- linux-crypto@vger.kernel.org, Manivannan Sadhasivam <mani@kernel.org>, 
- Robert Marko <robimarko@gmail.com>, Lukasz Luba <lukasz.luba@arm.com>, 
- Zhang Rui <rui.zhang@intel.com>, ~postmarketos/upstreaming@lists.sr.ht, 
- dmaengine@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, 
- Herbert Xu <herbert@gondor.apana.org.au>, 
- linux-arm-kernel@lists.infradead.org, Joerg Roedel <joro@8bytes.org>, 
- phone-devel@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Amit Kucheria <amitk@kernel.org>, iommu@lists.linux.dev, 
- Viresh Kumar <viresh.kumar@linaro.org>, 
- Jassi Brar <jassisinghbrar@gmail.com>, 
- Das Srinagesh <quic_gurus@quicinc.com>
-To: Luca Weiss <luca.weiss@fairphone.com>
-In-Reply-To: <20250625-sm7635-fp6-initial-v1-0-d9cd322eac1b@fairphone.com>
-References: <20250625-sm7635-fp6-initial-v1-0-d9cd322eac1b@fairphone.com>
-Message-Id: <175088289588.2146782.8259458340560356523.robh@kernel.org>
-Subject: Re: [PATCH 00/14] Various dt-bindings for SM7635 and The Fairphone
- (Gen. 6) addition
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 03/33] vfio: selftests: Introduce vfio_pci_device_test
+To: David Matlack <dmatlack@google.com>, Alex Williamson
+	<alex.williamson@redhat.com>
+CC: Aaron Lewis <aaronlewis@google.com>, Adhemerval Zanella
+	<adhemerval.zanella@linaro.org>, Adithya Jayachandran
+	<ajayachandra@nvidia.com>, Andrew Jones <ajones@ventanamicro.com>, "Ard
+ Biesheuvel" <ardb@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Bibo Mao <maobibo@loongson.cn>, Claudio Imbrenda <imbrenda@linux.ibm.com>,
+	Dan Williams <dan.j.williams@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+	<dmaengine@vger.kernel.org>, Huacai Chen <chenhuacai@kernel.org>, "James
+ Houghton" <jthoughton@google.com>, Jason Gunthorpe <jgg@nvidia.com>, "Joel
+ Granados" <joel.granados@kernel.org>, Josh Hilke <jrhilke@google.com>, "Kevin
+ Tian" <kevin.tian@intel.com>, <kvm@vger.kernel.org>,
+	<linux-kselftest@vger.kernel.org>, "Mike Rapoport (Microsoft)"
+	<rppt@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, Pasha Tatashin
+	<pasha.tatashin@soleen.com>, "Pratik R. Sampat" <prsampat@amd.com>, "Saeed
+ Mahameed" <saeedm@nvidia.com>, Sean Christopherson <seanjc@google.com>,
+	"Shuah Khan" <shuah@kernel.org>, Vinicius Costa Gomes
+	<vinicius.gomes@intel.com>, Vipin Sharma <vipinsh@google.com>, Wei Yang
+	<richard.weiyang@gmail.com>, "Yury Norov [NVIDIA]" <yury.norov@gmail.com>,
+	Vasant Hegde <vasant.hegde@amd.com>, Santosh Shukla <santosh.shukla@amd.com>
+References: <20250620232031.2705638-1-dmatlack@google.com>
+ <20250620232031.2705638-4-dmatlack@google.com>
+Content-Language: en-US
+From: Sairaj Kodilkar <sarunkod@amd.com>
+In-Reply-To: <20250620232031.2705638-4-dmatlack@google.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN1PEPF00004689:EE_|PH7PR12MB5736:EE_
+X-MS-Office365-Filtering-Correlation-Id: 03bde1f5-5fc5-4bad-e611-08ddb4a48478
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|36860700013|1800799024|82310400026|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?TU01MnBhVTdSOFV4MjRzR250eUtONVl5NFFCNmdlNU9kNDk0cWtwUjRQZDJS?=
+ =?utf-8?B?WTBBM1ZPYW10VHN6YzBjOThKekI4c0hhUlZjR0NzcTc5ZWNqaVR0VFJLRXJ4?=
+ =?utf-8?B?b3NlL0tFSmJPUy93YnM2WnpRZWRnU3RVWEJUMHRJNTZ0TjVpMzZHM1dQbCtW?=
+ =?utf-8?B?QkZNbFh6TzJZMjRINmZxZXBOVHJGcXR0RlYydXdPemppVnhLUlFpQkw4T2U4?=
+ =?utf-8?B?UG94WWpsTkR6TkJRQ09reHpWMmpqR0FBeEpqWUdwQlNCRGlSNVF5d2RNczJh?=
+ =?utf-8?B?dmhpYlJ1MUhCaEhzQ0ZwTjJTdE5IU09DRlhuTW5wWTN6NWtaQW9QelpnczNZ?=
+ =?utf-8?B?WHNsZ3dONjhIVjlUNzRMYUQ3M0tTbFRmYmJQQUNLOVM3a0VJSUpPdWtPQU10?=
+ =?utf-8?B?SktPQkRiRFA3YlhVcUhmcVBPVGNBTUFMVHRGQ09SekhWYk1tV3FBNlBrTmdN?=
+ =?utf-8?B?cFFua0NjN2xtdGIvN25tK1ZYajNsU3ZPV0h1SHR2ellZMHRaZ2VRZHFoTUlp?=
+ =?utf-8?B?US81NU1sRDkrNTMrMXRSaENRQ3JxRHRKVkVaSXJUQjZmZUFZNHBCdXJ1VHZB?=
+ =?utf-8?B?d1R1N1d6eTl3eG1wM1dUaHhrbHYwcVNXS0tRUzd1bkNIVVB6MHZrSWN3M0lG?=
+ =?utf-8?B?aGsyZHJ3V0hYZng5L0ZlZElvVG54S2Uyd0JzV0tGOUxTcVZHRjFlSG5IZmZY?=
+ =?utf-8?B?eFYzZlJ5Vk5mMnl3aU91V2NPQlpNOWpsakh5ZThDWXU5eTh3Mm9kaU1keVFU?=
+ =?utf-8?B?UnlRZTR2NCtSekpCWXpvQ2NYLzdaMDU5cWhCUG1saVNqdEhGcWg0SFNiZFRk?=
+ =?utf-8?B?SUFYTjFvSThlaTRCL0RTdkxnVGdka1dhQmR2WXExL0d3bEc4Q0tyT0xmWGpZ?=
+ =?utf-8?B?MHE1bTlydXZ4cmlqUkxKaGgxaHA1b0p3dnJBcDhXYkp5TFlHdGVNN3ZwM3g2?=
+ =?utf-8?B?S1c1aE5hR0J4aEt3MGV4S1poU05yNG1IdXk1SngxYjBWZXdmcWZCU0hocTJX?=
+ =?utf-8?B?QnI5RzRxRWRVTDZjUCsza28vcjhBYTVkMVFmaVl5cG05YkJRbEhnZTdpdGdx?=
+ =?utf-8?B?Y2c4T1E2emNOUUJFWmtyeVJCRThvaUNsZTJRVWw5THNTYy85SlJzWDNYd3pn?=
+ =?utf-8?B?bmY3MzR0OGVPUGsrU3lxUjh6c2pzR05icDYwaUR5c1RQY1BYSGRuWTVFSGJw?=
+ =?utf-8?B?V09hemdIQUNWZjdFVDFmZk15emF5NnVVWFRDdWpjcUk2dXRxZ1g3ekNnMkpN?=
+ =?utf-8?B?amVkYnJNbmRUTlQ2Ykx4ZnlzY0FJUWV3amNVLzZYY25PZzVqV3FYT05uTkZE?=
+ =?utf-8?B?Y3RNV3RSWXpmc1pSQ0xuUTZ0TGJ3N3hVUXFhYkwxa1BQeXVXL3lKVUwzZ0M0?=
+ =?utf-8?B?UkJxZ0RnbGVGd3JrWDZtRFMzcWF1VzJNQkRYYWRldW5Bckx6N2N6d2wrV3J4?=
+ =?utf-8?B?VXNHN2ZQb3g5cGNVdFF2M21EZll5aTF0WlpXVS9WVllEQTZZcVpjanJPZk5h?=
+ =?utf-8?B?MTExZDVrWWwvQXBSeGU4ckdBRUxsMEYvcGtmSkZRNFpaQUZrbVhMd3VBYktF?=
+ =?utf-8?B?UkxFN0RLbmdJN00yZFBDeTN5TGJHU2x6S0FqWnNqTHZMWHQ3VnhJMUFKVXdC?=
+ =?utf-8?B?V09WcVNaRkRXdzU5dU9HbElpN3JZdGwwbU8waTM4SWREZERQVG5GeWdSQ2ZN?=
+ =?utf-8?B?RktxMDBwdzBxdkpSaFhxU3B5T1JuWUtobTl3d3F5TmpSamt5MlB3YmFhQzVE?=
+ =?utf-8?B?U1Fnb1hKS05GZG5ocEdoa0EySDNzMHlsSUpveFR1V043YXM4UUZVMTh4U2o1?=
+ =?utf-8?B?aVBYb1hac3N5RnJidGRmMXppTDBqUlZzekIvM0JqSExoa0xwSVRjUG9maFVq?=
+ =?utf-8?B?S0RwMDVKMVdxaWJaZWtETzZIVmN0YWJkbGxOdmg1aEpXYW5qYkZJb3ZWblUw?=
+ =?utf-8?B?NFhFTWkxTysvaVo3d3hxYXBQU24rYlAxWkxHRTRYOVJKRzU2R0xTYzdxWUJa?=
+ =?utf-8?B?TnhwbmVjVzMwRC9jN0I3Zzh0U0tOcGJJOWhNdDQzM1VnaUxvK2x1YWkyeGNi?=
+ =?utf-8?Q?cScPcy?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(36860700013)(1800799024)(82310400026)(7053199007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2025 11:28:04.6211
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 03bde1f5-5fc5-4bad-e611-08ddb4a48478
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN1PEPF00004689.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5736
 
-
-On Wed, 25 Jun 2025 11:22:55 +0200, Luca Weiss wrote:
-> Document various bits of the SM7635 SoC in the dt-bindings, which don't
-> really need any other changes.
+On 6/21/2025 4:50 AM, David Matlack wrote:
+> Introduce a basic VFIO selftest called vfio_pci_device_test to
+> demonstrate the functionality of the VFIO selftest library and provide
+> some test coverage of basic VFIO operations, including:
 > 
-> Then we can add the dtsi for the SM7635 SoC and finally add a dts for
-> the newly announced The Fairphone (Gen. 6) smartphone.
+>   - Mapping and unmapping DMA
+>   - Mapping and unmapping BARs
+>   - Enabling, triggering, and disabling MSI and MSI-x
+>   - Reading and writing to PCI config space
 > 
-> Dependencies:
-> * The dt-bindings should not have any dependencies on any other patches.
-> * The qcom dts bits depend on most other SM7635 patchsets I have sent in
->   conjuction with this one. The exact ones are specified in the b4 deps.
+> This test should work with most PCI devices, as long as they are bound
+> to vfio-pci.
 > 
-> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> Signed-off-by: David Matlack <dmatlack@google.com>
 > ---
-> Luca Weiss (14):
->       dt-bindings: arm-smmu: document the support on SM7635
->       dt-bindings: cpufreq: qcom-hw: document SM7635 CPUFREQ Hardware
->       dt-bindings: crypto: qcom,prng: document SM7635
->       dt-bindings: firmware: qcom,scm: document SM7635 SCM Firmware Interface
->       dt-bindings: qcom,pdc: document the SM7635 Power Domain Controller
->       dt-bindings: mailbox: qcom-ipcc: document the SM7635 Inter-Processor Communication Controller
->       dt-bindings: soc: qcom,aoss-qmp: document the SM7635 Always-On Subsystem side channel
->       dt-bindings: thermal: qcom-tsens: document the SM7635 Temperature Sensor
->       dt-bindings: dma: qcom,gpi: document the SM7635 GPI DMA Engine
->       dt-bindings: mmc: sdhci-msm: document the SM7635 SDHCI Controller
->       dt-bindings: soc: qcom: qcom,pmic-glink: document SM7635 compatible
->       dt-bindings: arm: qcom: Add SM7635 and The Fairphone (Gen. 6)
->       arm64: dts: qcom: Add initial SM7635 dtsi
->       arm64: dts: qcom: Add The Fairphone (Gen. 6)
+>   tools/testing/selftests/vfio/Makefile         |   1 +
+>   .../selftests/vfio/vfio_pci_device_test.c     | 178 ++++++++++++++++++
+>   2 files changed, 179 insertions(+)
+>   create mode 100644 tools/testing/selftests/vfio/vfio_pci_device_test.c
 > 
->  Documentation/devicetree/bindings/arm/qcom.yaml    |    6 +
->  .../bindings/cpufreq/cpufreq-qcom-hw.yaml          |    2 +
->  .../devicetree/bindings/crypto/qcom,prng.yaml      |    1 +
->  .../devicetree/bindings/dma/qcom,gpi.yaml          |    1 +
->  .../devicetree/bindings/firmware/qcom,scm.yaml     |    2 +
->  .../bindings/interrupt-controller/qcom,pdc.yaml    |    1 +
->  .../devicetree/bindings/iommu/arm,smmu.yaml        |    3 +
->  .../devicetree/bindings/mailbox/qcom-ipcc.yaml     |    1 +
->  .../devicetree/bindings/mmc/sdhci-msm.yaml         |    1 +
->  .../bindings/soc/qcom/qcom,aoss-qmp.yaml           |    1 +
->  .../bindings/soc/qcom/qcom,pmic-glink.yaml         |    1 +
->  .../devicetree/bindings/thermal/qcom-tsens.yaml    |    1 +
->  arch/arm64/boot/dts/qcom/Makefile                  |    1 +
->  arch/arm64/boot/dts/qcom/sm7635-fairphone-fp6.dts  |  837 ++++++
->  arch/arm64/boot/dts/qcom/sm7635.dtsi               | 2806 ++++++++++++++++++++
->  15 files changed, 3665 insertions(+)
-> ---
-> base-commit: d9946fe286439c2aeaa7953b8c316efe5b83d515
-> change-id: 20250623-sm7635-fp6-initial-15e40fef53cd
-> prerequisite-change-id: 20250616-eusb2-repeater-tuning-f56331c6b1fa:v2
-> prerequisite-patch-id: 5c504d171a4d1acd9ec376e01e0dd0fddbad92b8
-> prerequisite-patch-id: 0c97dcf5472fbed8ef4cffbd482f3169fe1e972d
-> prerequisite-change-id: 20250617-simple-drm-fb-icc-89461c559913:v2
-> prerequisite-patch-id: 1ce32150adbe39ad43d9a702623b55937d92a17c
-> prerequisite-patch-id: 3562d9a85381bee745402619a7acba9b951f145c
-> prerequisite-patch-id: f8447266657b779a546ecbbbc2e38bd61c422f08
-> prerequisite-patch-id: cb9d07c82e73ab3691e0ace9604bfa69cdd6bb64
-> prerequisite-patch-id: 18ab6ca6a024e5b8ea8138111064db593d72da35
-> prerequisite-change-id: 20250620-sm7635-socinfo-8c6ee8d82c9d:v1 # optional
-> prerequisite-patch-id: f1b2e11df96c271c9e3d010084809f361ee4249c
-> prerequisite-patch-id: 1471abf17230db340c67a84b5a9009f1f2ea6e0e
-> prerequisite-patch-id: 57bff00c4fedce1b78615375f12517b955dd1d16
-> prerequisite-change-id: 20250620-sm7635-pinctrl-9fe3d869346b:v1
-> prerequisite-patch-id: 43b88c44c6fc5b72a490cd3acc5d2585206e81f2
-> prerequisite-patch-id: b3b6ebd4a288bd4abf227c939a1a92eafb2cf2c8
-> prerequisite-change-id: 20250620-sm7635-clocks-7699d338dc37:v1
-> prerequisite-patch-id: 48485e0e7e8a992695af1690f8cd2c09c227a4bf
-> prerequisite-patch-id: 4685ceba3f900ad6d1d2ae35116d37f64a171d5d
-> prerequisite-patch-id: 80f71dad0c0a77da98e5e66b592f38db6d81b4b1
-> prerequisite-patch-id: 49a2fa1a14931d9143da232969e7487061466930
-> prerequisite-patch-id: f5d1794f61488235644f78ffc28e3dacdab215d1
-> prerequisite-patch-id: ab257573067ff09c94270e1fa6ad4de1480c06b9
-> prerequisite-patch-id: 6608bd3f2e198a0780736aebcea3b47ee03df9ef
-> prerequisite-patch-id: c463d0d2d84c8786ed9a09016f43b4657cbc231e
-> prerequisite-patch-id: e113e76af37f01befaf4059ee3063cb45b27fd6b
-> prerequisite-patch-id: 40f8b8acd07a9ff7da8683b1be6a58872250e849
-> prerequisite-change-id: 20250620-sm7635-clocks-misc-0f359ad830ea:v1
-> prerequisite-patch-id: 127f332296fced39a2fd2f9a1f446ba30ec28ceb
-> prerequisite-patch-id: d21a0c8ceb06523c9f3f4ce569d28714878b3f84
-> prerequisite-patch-id: 87029a8844ef174ab3e0f953a1d16957fe6c13cc
-> prerequisite-patch-id: 095c767d7b7aa67d47026589c926636e57349ca6
-> prerequisite-change-id: 20250620-sm7635-rpmhpd-dcb5dc066ce2:v1
-> prerequisite-patch-id: d71fe15334032610c05cb55aeb28bfaa44e3530c
-> prerequisite-patch-id: 729544e856b8046f7a311b719d9495f8b33c1e1f
-> prerequisite-change-id: 20250620-sm7635-icc-e495e0e66109:v1
-> prerequisite-patch-id: b387217215d6f83cbd50c380171b159a2f1406d8
-> prerequisite-patch-id: bffd82274c35f6d520f524aa2a9c1c4bef7e047e
-> prerequisite-change-id: 20250620-sm7635-eusb-phy-d3bab648cdf1:v1
-> prerequisite-patch-id: c242c9b099d738214def29d2e464b64be5f14e62
-> prerequisite-patch-id: 8c1eb426c08bc1ec9462e77139b3b64d5e1453e9
-> prerequisite-patch-id: cdbc469ab33002c6bf697c033755b598dd1a621e
-> prerequisite-patch-id: 6bb2900bb530880091622ef47d141fe1f5756a52
-> prerequisite-change-id: 20250620-sm7635-eusb-repeater-0d78f557290f:v1
-> prerequisite-patch-id: 5c504d171a4d1acd9ec376e01e0dd0fddbad92b8
-> prerequisite-patch-id: 0c97dcf5472fbed8ef4cffbd482f3169fe1e972d
-> prerequisite-patch-id: a618abb349c3de5b49f79b4b0f86d9ab502ad500
-> prerequisite-patch-id: 09f91ff3a25c16a0375bdfec80604a64eab0b4fb
-> prerequisite-patch-id: 8fca8b09d70409c5c78f9f1b77d0a4c75bce38cf
-> prerequisite-patch-id: f5c2c24d2baefcd7ff91718529ab2f2c264ab99f
-> prerequisite-change-id: 20250620-sm7635-remoteprocs-149da64084b8:v1
-> prerequisite-patch-id: 3c95a20dd456dfee100f2833de4e9931a2073c7d
-> prerequisite-patch-id: 5292d77663ea9c44346b8da86bda36e0cce3fe56
-> prerequisite-patch-id: 015edcb2a69b5e837dc7edfbc7adc22145ba611b
-> prerequisite-change-id: 20250620-sm7635-pmiv0104-34a679937d9d:v1
-> prerequisite-patch-id: 8fca8b09d70409c5c78f9f1b77d0a4c75bce38cf
-> prerequisite-patch-id: f5c2c24d2baefcd7ff91718529ab2f2c264ab99f
-> prerequisite-patch-id: d7a06ece910e7844c60b910fe8eed30ad2458f34
-> prerequisite-patch-id: e91b741c9cfc80aa149bfd8e43cae90ca58e17f2
-> prerequisite-patch-id: 5ba4a49c3792cb208ee064a6ba13545e40cb70ac
-> prerequisite-patch-id: 5bdfcbdd226f7223c04a65c1a3cdcc3ecad38858
-> prerequisite-change-id: 20250620-sm7635-pmxr2230-ee55a86a8c2b:v1
-> prerequisite-patch-id: f0bd6e083324f954b988647bb42d4e2be179fbda
-> prerequisite-patch-id: 8fe1c0fc544e8bcb35522c5eba0b36e83bfd0c19
-> prerequisite-patch-id: 525c9eb0087025024bb0aaec1ed1d7d2c0bc8f03
-> prerequisite-change-id: 20250623-pm7550-pmr735b-rpmh-regs-06087e5b3a99:v1
-> prerequisite-patch-id: 7360606a06f8fba3ea9a8f84b4ecfb8209e91ab0
-> prerequisite-patch-id: 7a06a346abdb7f7386912b92f2b84af87e7439a9
-> prerequisite-patch-id: 1e1a6eb9c5421812c07421f9fa7e3f16b26a42da
-> prerequisite-patch-id: 224df3e4068bee3a17bde32e16cd9366c55b5faf
-> 
-> Best regards,
-> --
-> Luca Weiss <luca.weiss@fairphone.com>
-> 
-> 
-> 
+> diff --git a/tools/testing/selftests/vfio/Makefile b/tools/testing/selftests/vfio/Makefile
+> index db3e4db1a6dd..828419537250 100644
+> --- a/tools/testing/selftests/vfio/Makefile
+> +++ b/tools/testing/selftests/vfio/Makefile
+> @@ -1,4 +1,5 @@
+>   CFLAGS = $(KHDR_INCLUDES)
+> +TEST_GEN_PROGS += vfio_pci_device_test
+>   include ../lib.mk
+>   include lib/libvfio.mk
+>   
+> diff --git a/tools/testing/selftests/vfio/vfio_pci_device_test.c b/tools/testing/selftests/vfio/vfio_pci_device_test.c
+> new file mode 100644
+> index 000000000000..6d3a33804be3
+> --- /dev/null
+> +++ b/tools/testing/selftests/vfio/vfio_pci_device_test.c
+> @@ -0,0 +1,178 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +#include <fcntl.h>
+> +#include <stdlib.h>
+> +
+> +#include <sys/ioctl.h>
+> +#include <sys/mman.h>
+> +
+> +#include <linux/limits.h>
+> +#include <linux/pci_regs.h>
+> +#include <linux/sizes.h>
+> +#include <linux/vfio.h>
+> +
+> +#include <vfio_util.h>
+> +
+> +#include "../kselftest_harness.h"
+> +
+> +static const char *device_bdf;
+> +
+> +/*
+> + * Limit the number of MSIs enabled/disabled by the test regardless of the
+> + * number of MSIs the device itself supports, e.g. to avoid hitting IRTE limits.
+> + */
+> +#define MAX_TEST_MSI 16U
+> +
+
+Now that AMD IOMMU supports upto 2048 IRTEs per device, I wonder if we
+can include a test with max MSIs 2048.
+
+> +FIXTURE(vfio_pci_device_test) {
+> +	struct vfio_pci_device *device;
+> +};
+> +
+> +FIXTURE_SETUP(vfio_pci_device_test)
+> +{
+> +	self->device = vfio_pci_device_init(device_bdf, VFIO_TYPE1_IOMMU);
+> +}
+> +
+> +FIXTURE_TEARDOWN(vfio_pci_device_test)
+> +{
+> +	vfio_pci_device_cleanup(self->device);
+> +}
+> +
+> +TEST_F(vfio_pci_device_test, dma_map_unmap)
+> +{
+> +	const u64 size = SZ_2M;
+> +	const u64 iova = SZ_4G;
+> +	void *mem;
+> +
+> +	mem = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+> +	ASSERT_NE(mem, MAP_FAILED);
+> +
+> +	vfio_pci_dma_map(self->device, iova, size, mem);
+> +	printf("Mapped HVA %p (size 0x%lx) at IOVA 0x%lx\n", mem, size, iova);
+> +	vfio_pci_dma_unmap(self->device, iova, size);
 
 
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
+I am slightly confused here. Because You are having an assert on munmap
+and not on any of the vfio_pci_dma_(map/unmap). This test case is not 
+testing VFIO.
 
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
+Thanks
+Sairaj
 
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-This patch series was applied (using b4) to base:
- Base: using specified base-commit d9946fe286439c2aeaa7953b8c316efe5b83d515
- Deps: looking for dependencies matching 56 patch-ids
- Deps: Applying prerequisite patch: [PATCH v2 1/2] dt-bindings: phy: qcom,snps-eusb2-repeater: Remove default tuning values
- Deps: Applying prerequisite patch: [PATCH v2 2/2] phy: qualcomm: phy-qcom-eusb2-repeater: Don't zero-out registers
- Deps: Applying prerequisite patch: [PATCH v2 1/5] dt-bindings: display: simple-framebuffer: Add interconnects property
- Deps: Applying prerequisite patch: [PATCH v2 2/5] drm/sysfb: simpledrm: Sort headers correctly
- Deps: Applying prerequisite patch: [PATCH v2 3/5] drm/sysfb: simpledrm: Add support for interconnect paths
- Deps: Applying prerequisite patch: [PATCH v2 4/5] fbdev/simplefb: Sort headers correctly
- Deps: Applying prerequisite patch: [PATCH v2 5/5] fbdev/simplefb: Add support for interconnect paths
- Deps: Applying prerequisite patch: [PATCH 1/3] dt-bindings: arm: qcom,ids: Add SoC IDs for SM7635 family
- Deps: Applying prerequisite patch: [PATCH 2/3] soc: qcom: socinfo: Add SoC IDs for SM7635 family
- Deps: Applying prerequisite patch: [PATCH 3/3] soc: qcom: socinfo: Add PM7550 & PMIV0108 PMICs
- Deps: Applying prerequisite patch: [PATCH 1/2] dt-bindings: pinctrl: document the SM7635 Top Level Mode Multiplexer
- Deps: Applying prerequisite patch: [PATCH 2/2] pinctrl: qcom: Add SM7635 pinctrl driver
- Deps: Applying prerequisite patch: [PATCH 01/10] dt-bindings: clock: qcom: document the SM7635 Global Clock Controller
- Deps: Applying prerequisite patch: [PATCH 02/10] clk: qcom: Add Global Clock controller (GCC) driver for SM7635
- Deps: Applying prerequisite patch: [PATCH 03/10] dt-bindings: clock: qcom: document the SM7635 Camera Clock Controller
- Deps: Applying prerequisite patch: [PATCH 04/10] clk: qcom: Add Camera Clock controller (CAMCC) driver for SM7635
- Deps: Applying prerequisite patch: [PATCH 05/10] dt-bindings: clock: qcom: document the SM7635 Display Clock Controller
- Deps: Applying prerequisite patch: [PATCH 06/10] clk: qcom: Add Display Clock controller (DISPCC) driver for SM7635
- Deps: Applying prerequisite patch: [PATCH 07/10] dt-bindings: clock: qcom: document the SM7635 GPU Clock Controller
- Deps: Applying prerequisite patch: [PATCH 08/10] clk: qcom: Add Graphics Clock controller (GPUCC) driver for SM7635
- Deps: Applying prerequisite patch: [PATCH 09/10] dt-bindings: clock: qcom: document the SM7635 Video Clock Controller
- Deps: Applying prerequisite patch: [PATCH 10/10] clk: qcom: Add Video Clock controller (VIDEOCC) driver for SM7635
- Deps: Applying prerequisite patch: [PATCH 1/4] dt-bindings: clock: qcom: Document the SM7635 RPMH Clock Controller
- Deps: Applying prerequisite patch: [PATCH 2/4] clk: qcom: rpmh: Add support for RPMH clocks on SM7635
- Deps: Applying prerequisite patch: [PATCH 3/4] dt-bindings: clock: qcom: document the SM7635 TCSR Clock Controller
- Deps: Applying prerequisite patch: [PATCH 4/4] clk: qcom: tcsrcc-sm8650: Add support for SM7635 SoC
- Deps: Applying prerequisite patch: [PATCH 1/2] dt-bindings: power: qcom,rpmpd: document the SM7635 RPMh Power Domains
- Deps: Applying prerequisite patch: [PATCH 2/2] pmdomain: qcom: rpmhpd: Add SM7635 power domains
- Deps: Applying prerequisite patch: [PATCH 1/2] dt-bindings: interconnect: document the RPMh Network-On-Chip Interconnect in Qualcomm SM7635 SoC
- Deps: Applying prerequisite patch: [PATCH 2/2] interconnect: qcom: Add SM7635 interconnect provider driver
- Deps: Applying prerequisite patch: [PATCH 1/4] dt-bindings: usb: qcom,snps-dwc3: Add SM7635 compatible
- Deps: Applying prerequisite patch: [PATCH 2/4] dt-bindings: phy: qcom,snps-eusb2: document the SM7635 Synopsys eUSB2 PHY
- Deps: Applying prerequisite patch: [PATCH 3/4] phy: qcom: phy-qcom-snps-eusb2: Add missing write from init sequence
- Deps: Applying prerequisite patch: [PATCH 4/4] phy: qcom: phy-qcom-snps-eusb2: Add extra register write for SM7635
- Deps: Applying prerequisite patch: [PATCH v2 1/2] dt-bindings: phy: qcom,snps-eusb2-repeater: Remove default tuning values
- Deps: Applying prerequisite patch: [PATCH v2 2/2] phy: qualcomm: phy-qcom-eusb2-repeater: Don't zero-out registers
- Deps: Applying prerequisite patch: [PATCH 1/4] dt-bindings: phy: qcom,snps-eusb2-repeater: Document qcom,tune-res-fsdif
- Deps: Applying prerequisite patch: [PATCH 2/4] phy: qualcomm: phy-qcom-eusb2-repeater: Support tune-res-fsdif prop
- Deps: Applying prerequisite patch: [PATCH 3/4] dt-bindings: phy: qcom,snps-eusb2-repeater: Add compatible for PMIV0104
- Deps: Applying prerequisite patch: [PATCH 4/4] phy: qualcomm: phy-qcom-eusb2-repeater: Add support for PMIV0104
- Deps: Applying prerequisite patch: [PATCH 1/3] dt-bindings: remoteproc: qcom,sm8350-pas: document SM7635 MPSS & WPSS
- Deps: Applying prerequisite patch: [PATCH 2/3] dt-bindings: remoteproc: qcom,sm8550-pas: document SM7635 ADSP & CDSP
- Deps: Applying prerequisite patch: [PATCH 3/3] remoteproc: qcom: pas: Add SM7635 remoteproc support
- Deps: Applying prerequisite patch: [PATCH 3/4] dt-bindings: phy: qcom,snps-eusb2-repeater: Add compatible for PMIV0104
- Deps: Applying prerequisite patch: [PATCH 4/4] phy: qualcomm: phy-qcom-eusb2-repeater: Add support for PMIV0104
- Deps: Applying prerequisite patch: [PATCH 1/4] dt-bindings: mfd: qcom,spmi-pmic: Document PMIV0104
- Deps: Applying prerequisite patch: [PATCH 2/4] dt-bindings: pinctrl: qcom,pmic-gpio: Add PMIV0104 support
- Deps: Applying prerequisite patch: [PATCH 3/4] pinctrl: qcom: spmi: Add PMIV0104
- Deps: Applying prerequisite patch: [PATCH 4/4] arm64: dts: qcom: Add PMIV0104 PMIC
- Deps: Applying prerequisite patch: [PATCH 1/3] dt-bindings: leds: qcom,spmi-flash-led: Add PMXR2230
- Deps: Applying prerequisite patch: [PATCH 2/3] dt-bindings: mfd: qcom-spmi-pmic: Document PMXR2230 PMIC
- Deps: Applying prerequisite patch: [PATCH 3/3] arm64: dts: qcom: Add PMXR2230 PMIC
- Deps: Applying prerequisite patch: [PATCH 1/4] regulator: dt-bindings: qcom,rpmh: Add PM7550 compatible
- Deps: Applying prerequisite patch: [PATCH 2/4] regulator: dt-bindings: qcom,rpmh: Add PMR735B compatible
- Deps: Applying prerequisite patch: [PATCH 3/4] regulator: qcom-rpmh: add support for pmr735b regulators
- Deps: Applying prerequisite patch: [PATCH 4/4] regulator: qcom-rpmh: add support for pm7550 regulators
-
-If this is not the correct base, please add 'base-commit' tag
-(or use b4 which does this automatically)
-
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250625-sm7635-fp6-initial-v1-0-d9cd322eac1b@fairphone.com:
-
-arch/arm64/boot/dts/qcom/sm7635-fairphone-fp6.dtb: /panel: failed to match any schema with compatible: ['boe,bj631jhm-t71-d900']
-
-
-
-
-
+> +
+> +	ASSERT_TRUE(!munmap(mem, SZ_2M));
+> +}
+> +
 

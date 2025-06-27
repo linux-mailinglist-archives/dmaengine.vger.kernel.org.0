@@ -1,83 +1,83 @@
-Return-Path: <dmaengine+bounces-5646-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5648-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B7FBAEAA07
-	for <lists+dmaengine@lfdr.de>; Fri, 27 Jun 2025 00:49:48 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A0A6AEADB2
+	for <lists+dmaengine@lfdr.de>; Fri, 27 Jun 2025 06:05:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 22DDD3BB778
-	for <lists+dmaengine@lfdr.de>; Thu, 26 Jun 2025 22:49:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7ED3A1BC7F36
+	for <lists+dmaengine@lfdr.de>; Fri, 27 Jun 2025 04:05:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E846623BCE2;
-	Thu, 26 Jun 2025 22:48:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vENZzbPY"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21DFF433CB;
+	Fri, 27 Jun 2025 04:05:15 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B87112356BE;
-	Thu, 26 Jun 2025 22:48:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57C5719F420
+	for <dmaengine@vger.kernel.org>; Fri, 27 Jun 2025 04:05:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750978091; cv=none; b=PgwoVURBlDswAFWeJvsRT3IgK5GDiT7KAY23S0BQR1/5MmuQxdigu0DHCNTUqBo/IL9i/4Twlt6oKsNUSE0b9po/aoQxXnsPD1axKMLj3gSNbSI6+pt5Mt0eXvl6pY+Aih+yAgNfEpV6g2KOGTeOLZxlcABlt3e8oTqv5yNAIbY=
+	t=1750997115; cv=none; b=hgHucziW0JCtl+px+EiI9moPnWxVX0bDBDlsZGzhdyWayc63g7AZiRr9jJMMllTq6sA+mAa0Ltpxjfe1Aj4+BLM31wTc2U0SDhRAQwV5o0yL/VOphA0gTxUbIh8q4gJ8u6SRtogec6Zd7tE/eVMeV5g1R1oOgsw7OjJBUW7RnoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750978091; c=relaxed/simple;
-	bh=3fBhKy1+utiVAQDLVFIyeUDSkV8JwRYwEjiojfvti6Q=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=WQ6ew6v6zYnIu5fSgrb39J2CNngTTvRXTPxRbxGVLuApgsdNwttxEP0gOrAzn6n4f1hbocqNZHQI4L635yG4j0XTSuOUMpTMuQbUaMEvoE+MtW2aoenrAzEv9fcJHXfDVUSt9UcS9GVSSUnfO1j9btUqDbUQiteqcZJQV96fdrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vENZzbPY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B905C4CEF0;
-	Thu, 26 Jun 2025 22:48:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750978091;
-	bh=3fBhKy1+utiVAQDLVFIyeUDSkV8JwRYwEjiojfvti6Q=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=vENZzbPYOzKpFGAiu3tEUky6wFCydYGu6rV4Cj+c6LEQUH73/Bbuu4osbwtk+8g22
-	 6tBE+hgRV4R093Qdxf1gvfvRr8SHb4Wg2RzAivQiNnEwUdMW3tOEfa0JGf6SR0Yl7q
-	 RzpZcsZ5qW6N4aTLipM/5wbsLCC/G78CywvsuW17ZQCmnRXDAxTFl79yXprOxzPPqI
-	 Hi/DX5TcQuXm8YsqF1pPV0SKP/uuaYj3/xsUKdCYdHFnhfh9k8VAFQVDEOTb3jnA6X
-	 i/gA1xiYqEj3iJXNjG4/oPjSHwuPbIa9o1LZ1RWT65o77ie5ZYts3LuTFol0VdJJ+s
-	 oja1NoeidNCQA==
-From: Vinod Koul <vkoul@kernel.org>
-To: Peter Ujfalusi <peter.ujfalusi@gmail.com>, dmaengine@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20250404122114.359087-1-krzysztof.kozlowski@linaro.org>
-References: <20250404122114.359087-1-krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH 1/2] dmaengine: sh: Do not enable SH_DMAE_BASE by
- default during compile testing
-Message-Id: <175097809125.79884.17167867217631386949.b4-ty@kernel.org>
-Date: Thu, 26 Jun 2025 15:48:11 -0700
+	s=arc-20240116; t=1750997115; c=relaxed/simple;
+	bh=sXh5HbUv0Wx8zw1uzqs5pIySnVyMYm/ft9ALz9exwWw=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rVnk7TPb/LnJrzXlI/Zw8Fj3XQ3nkavKiRbHclvTjHdvuktLbG9U3f7lvZaP8N4N1hxvGp4jR2QFGUVql+Pz+FJFUR9mr22XAkDAZoedSkHVgr8WveBaYLZbC48TdfA0gCqHJn+Y4x1tOKHosKF/zpBCAcbEDZahbcyi9D07B4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-26-232.elisa-laajakaista.fi [88.113.26.232])
+	by fgw20.mail.saunalahti.fi (Halon) with ESMTP
+	id e9f85e0a-530b-11f0-a015-005056bd6ce9;
+	Fri, 27 Jun 2025 07:05:08 +0300 (EEST)
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 27 Jun 2025 07:05:08 +0300
+To: Vinod Koul <vkoul@kernel.org>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Yi Sun <yi.sun@intel.com>, gordon.jin@intel.com,
+	yi.sun@linux.intel.com,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, Fenghua Yu <fenghuay@nvidia.com>
+Subject: Re: [PATCH v2] dmaengine: idxd: Remove __packed from structures
+Message-ID: <aF4YdFZnAWcZlpbW@surfacebook.localdomain>
+References: <20250404053614.3096769-1-yi.sun@intel.com>
+ <175097809157.79884.15067500318866840512.b4-ty@kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <175097809157.79884.15067500318866840512.b4-ty@kernel.org>
 
-
-On Fri, 04 Apr 2025 14:21:13 +0200, Krzysztof Kozlowski wrote:
-> Enabling the compile test should not cause automatic enabling of all
-> drivers.
+Thu, Jun 26, 2025 at 03:48:11PM -0700, Vinod Koul kirjoitti:
 > 
-> 
+> On Fri, 04 Apr 2025 13:36:14 +0800, Yi Sun wrote:
+> > The __packed attribute introduces potential unaligned memory accesses
+> > and endianness portability issues. Instead of relying on compiler-specific
+> > packing, it's much better to explicitly fill structure gaps using padding
+> > fields, ensuring natural alignment.
+> > 
+> > Since all previously __packed structures already enforce proper alignment
+> > through manual padding, the __packed qualifiers are unnecessary and can be
+> > safely removed.
 
-Applied, thanks!
+[...]
 
-[1/2] dmaengine: sh: Do not enable SH_DMAE_BASE by default during compile testing
-      commit: 587dd30449fb10121fc8a319bb825dc6152b8dd5
-[2/2] dmaengine: ti: Do not enable by default during compile testing
-      commit: ddf16e16346a36ec6616e5282f675f2e3cdc826f
+> Applied, thanks!
 
-Best regards,
+Please, don't or fix it ASAP. This patch is broken in the formal things,
+i.e. changelog entry must not disrupt SoB chain. I'm not sure if Stephen's
+scripts will catch this up on Linux Next integration, though.
+
 -- 
-~Vinod
+With Best Regards,
+Andy Shevchenko
 
 
 

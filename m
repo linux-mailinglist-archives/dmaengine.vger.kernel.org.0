@@ -1,109 +1,165 @@
-Return-Path: <dmaengine+bounces-5680-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5681-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 189B6AEDB60
-	for <lists+dmaengine@lfdr.de>; Mon, 30 Jun 2025 13:41:59 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD50BAEDECF
+	for <lists+dmaengine@lfdr.de>; Mon, 30 Jun 2025 15:21:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 61C823AA0C2
-	for <lists+dmaengine@lfdr.de>; Mon, 30 Jun 2025 11:41:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BC9A7188CEF9
+	for <lists+dmaengine@lfdr.de>; Mon, 30 Jun 2025 13:19:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B8AB2609C4;
-	Mon, 30 Jun 2025 11:40:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FFAD28A73C;
+	Mon, 30 Jun 2025 13:18:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bgLez+HX"
+	dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b="pRx/iQt2"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3DE6260585;
-	Mon, 30 Jun 2025 11:40:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3ED8CA4E
+	for <dmaengine@vger.kernel.org>; Mon, 30 Jun 2025 13:18:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751283651; cv=none; b=SGtssXPA5ThwRGabpnCMmNQhHCXQMzEHjblLalYJG0GmRCYVk5KRVK0+eyWuqZlBKsSCbIx4SgfQqey3Q/RVFzAuXh2Kr6fdaL+GdyhIy6dDOZjQrq/+BuPT2dfWYm5U1+5VBod0bVbfAqiNbjecA7dz+V7zQ9Oq7G2k9VsO9sQ=
+	t=1751289509; cv=none; b=uvK7OL+C92nIPo6tTSNdxw6KU+k+fylsvAejlNnB/stCQT8geeQMg0TFRNHm2xaeVugrROZMYnCguziBi72Nir7goqomLdGqn4LaCJdCgR1tZWoBkRXTpr1ewh2CBpzznhaydrAoAEcLT9odMrXL19l1yme92z0RnmswbzDcdsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751283651; c=relaxed/simple;
-	bh=ftNktXx3viZwDTtRvJBBYVylno1HnW9Egn+Kkhk6AGc=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=klSrQwrtmqgA9iFVFigHXCzATlfnuPotAzDd8gtUtnzIzz0Rk4N89aeyLvS6Qu3exL9+kn+T7hhwsZv1mvU2+2GFipOoyLvPLL7+EuU87pgC0kd8/OU5OSay0SuiDfblhCKMcPAUKKWxDUgkpNBsJi+HQhJ0iHatCeLdkQgtnso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bgLez+HX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74121C4CEE3;
-	Mon, 30 Jun 2025 11:40:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751283650;
-	bh=ftNktXx3viZwDTtRvJBBYVylno1HnW9Egn+Kkhk6AGc=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=bgLez+HXlFANtNBrQDtXBKnd3LtN7bLY5hLHEsx+pDJtWlg9HvhK5sazMio5sQijC
-	 MUtdekGSSf3sPBFjhb0RtVom5b2C9pra/P0PDIrTvncDBzScCO2IRLkKd5NGwaCvhz
-	 +1zBi+Bf6q5R0N4i56Tw64XQlFGPO7b1AcDpd7JIvFsD+Nhlm4xE+PS7RoAAFE/5gp
-	 +p9AM7W46qckbniToFXS8bCzcPHF0fBAdUEBgaDyrgGm62jwPraqo28n1nXR1hkePV
-	 wP/aho+87KhbJf4iRb/alT+xt+K2x2ZIiD5tSbXPP2HllyuHJ4JCApclvNnRYPv6B6
-	 V3yO5ytFHpAnQ==
-From: Mark Brown <broonie@kernel.org>
-To: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- =?utf-8?q?Bence_Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
-Cc: Vinod Koul <vkoul@kernel.org>, 
- Nicolas Ferre <nicolas.ferre@microchip.com>, 
- Alexandre Belloni <alexandre.belloni@bootlin.com>, 
- Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
- "Rafael J . Wysocki" <rafael@kernel.org>, 
- Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <20250505184936.312274-1-csokas.bence@prolan.hu>
-References: <20250505184936.312274-1-csokas.bence@prolan.hu>
-Subject: Re: (subset) [PATCH v5 0/2] Add `devm_dma_request_chan()` to
- simplify probe path in atmel-quadspi.c
-Message-Id: <175128364820.28911.16876247019790951320.b4-ty@kernel.org>
-Date: Mon, 30 Jun 2025 12:40:48 +0100
+	s=arc-20240116; t=1751289509; c=relaxed/simple;
+	bh=lTodMpiU5uuVCAXQ/xJnIx+Vmi4vwQ6HLDXj4qTx9vQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WU63ZbZ7Y/7+Sp6mhIMhHpAfGb+pVMyK6busC5+FP1l/dE88RTcrZZGbXK5pFdgAoE6ul20K4fYnLXh4MDDMQ72RgJxS8r08RUxO9ujMpZjh2FAq4FgLqPZMblh5vFhRZf4oNLh8X/aiZeboTBNKBmEvUpuCoyH38J9FbIGzCQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr; spf=pass smtp.mailfrom=sartura.hr; dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b=pRx/iQt2; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sartura.hr
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ae0c4945c76so303224066b.3
+        for <dmaengine@vger.kernel.org>; Mon, 30 Jun 2025 06:18:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sartura.hr; s=sartura; t=1751289505; x=1751894305; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x9zeJ4WnqwFH5BMqvuX+OeeKVaWRigfICDw1jtDlC48=;
+        b=pRx/iQt2r9Pvyaa2L1OuB1hChLu7PshuT+14UlIp68vk5Y49Ad/UPWyyphWic5nit5
+         WLlnh9uTrgCLh6e3KLYHKpAvjIKzleg6DlI0nXbxCHiXjgbzs+8dDevv9wSnpfy+IwAA
+         //FF7oQK4EH89QibGMWK/3onxFx9XswMdCSp2MBoG4Nou3HrBgqvtPw5ZPQMWyOSZjs2
+         M4836LLojD8qCTqeEDXpPAD3gjgiNQqhbUkpxwWfBhlMS9idNOZOfdGlvJulxTdrOnE6
+         alnsshOQzru5++3lEOPFYiNd9rYd+evD3jXbSls//rZn1WttZnBlEObW2KbWYFVFttfb
+         rthQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751289505; x=1751894305;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=x9zeJ4WnqwFH5BMqvuX+OeeKVaWRigfICDw1jtDlC48=;
+        b=r7RKIPqMHx6D2EjeXJqZ363MuchiW3NFbNYbN5fvtTqwuNmug1wrulSAfsjej5qsz1
+         Q1spyYLY4SFVJ0Ag8WIR8zOsIdIO1ZacAYkcxmVw1W01m2Rvc+/91/0bmvPmih9FsG2k
+         yqxvtrX/mCd/Zs9QM+jh31Eo336WpgomGEu9jgnkPLXehG61IYKucRohVcLxm8fnJEx9
+         xWax7mqJCzI+eiObY9WneBfR5FmRu/y6H9+J0guaJKAI+5/tNXMEXKjXO8JWU76z7l+n
+         X3a711pJ76EO0LWE3n0evQomSlMgV3JxRrfMhDuJdcmf+G7Wo1VOLv932MLobM/VWbKS
+         pGQg==
+X-Forwarded-Encrypted: i=1; AJvYcCU5L4bifzo/0fz0kOpGHOpn6nsw9pyKvQ7+C3iwNi1rHT4Ct0/P4Gi9n1JhTDjH9ygCrrY7sLvtTc0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRwjQNDtCXpSLqltlUQPSV/9nG/Iq0Bc0oQK+xW91oAej8Semt
+	Ms4JGmkH+BkOJgRQUHjSPxEDt9BCsK9kzPnR6CdJNUFkH6NlSx7NYKb6+Iz/VhogfMcmyJHWjcM
+	0piBbTA0uL5HYhXrTgI5nkxLPNiCCuAFAQqNHOS0JQw==
+X-Gm-Gg: ASbGncvCkSIG1fGDqSLFI7WZmF25PJ1YSTf6l79jFj+TSHCWqOSNJ+dgi+BDyMXQPyO
+	IB+SZWcqSQ5O3nSwldIudoI7+ue42G7SPy0Gv3ub+RF+oECVPCAdXfmxd/fXZnjZSv8dz+1fGom
+	F+fA12hUgTh9e4YYBmTTOx0WwUAPkS5mLp5z/RoNlW0A==
+X-Google-Smtp-Source: AGHT+IEawzH6slgwqh8lMlGexpCFs5UFNCtQJR4Lc0uD06pbIw6jclmGMPNliNKtJ0yxh9f1sHZF7joTilZ8ACzkvCc=
+X-Received: by 2002:a17:907:75c8:b0:ade:36e4:ceba with SMTP id
+ a640c23a62f3a-ae35018e67cmr951593466b.52.1751289505046; Mon, 30 Jun 2025
+ 06:18:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.15-dev-cff91
+References: <20250613114148.1943267-1-robert.marko@sartura.hr>
+ <20250613114148.1943267-2-robert.marko@sartura.hr> <20250616102103.faoc5tqp22we67zl@DEN-DL-M70577>
+In-Reply-To: <20250616102103.faoc5tqp22we67zl@DEN-DL-M70577>
+From: Robert Marko <robert.marko@sartura.hr>
+Date: Mon, 30 Jun 2025 15:18:14 +0200
+X-Gm-Features: Ac12FXweyWpZVaFd_k9KiyWdnFDxPWGB4lbqdU7LoxWxkr8ipI5ijfQoLUWnGLg
+Message-ID: <CA+HBbNGWSA8QNzcN1HRosSd7qibM8G0u05cxiia6grGJJ0meoQ@mail.gmail.com>
+Subject: Re: [PATCH v7 1/6] arm64: lan969x: Add support for Microchip LAN969x SoC
+To: Daniel Machon <daniel.machon@microchip.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, olivia@selenic.com, 
+	herbert@gondor.apana.org.au, davem@davemloft.net, vkoul@kernel.org, 
+	andi.shyti@kernel.org, broonie@kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org, kernel@pengutronix.de, 
+	ore@pengutronix.de, luka.perkov@sartura.hr, arnd@arndb.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 05 May 2025 20:49:32 +0200, Bence Csókás wrote:
-> The probe function of the atmel-quadspi driver got quite convoluted,
-> especially since the addition of SAMA7G5 support, that was forward-ported
-> from an older vendor kernel. To alleivate this - and similar problems in
-> the future - an effort was made to migrate as many functions as possible,
-> to their devm_ managed counterparts. Patch 1/2 adds the new
-> `devm_dma_request_chan()` function. Patch 2/2 then uses this APIs to
-> simplify the probe() function.
-> 
-> [...]
+On Mon, Jun 16, 2025 at 12:21=E2=80=AFPM Daniel Machon
+<daniel.machon@microchip.com> wrote:
+>
+> > This adds support for the Microchip LAN969x ARMv8-based SoC switch fami=
+ly.
+> >
+> > Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+> > Acked-by: Daniel Machon <daniel.machon@microchip.com>
+> > ---
+> >  arch/arm64/Kconfig.platforms | 14 ++++++++++++++
+> >  1 file changed, 14 insertions(+)
+> >
+> > diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platform=
+s
+> > index a541bb029aa4..834910f11864 100644
+> > --- a/arch/arm64/Kconfig.platforms
+> > +++ b/arch/arm64/Kconfig.platforms
+> > @@ -133,6 +133,20 @@ config ARCH_SPARX5
+> >           security through TCAM-based frame processing using versatile
+> >           content aware processor (VCAP).
+> >
+> > +config ARCH_LAN969X
+> > +       bool "Microchip LAN969X SoC family"
+> > +       select PINCTRL
+> > +       select DW_APB_TIMER_OF
+>
+> The lan969x SoC uses the clk-lan966x driver. Would it not make sense to s=
+elect
+> it here?
 
-Applied to
+HI Daniel,
+To me it made more sense to select individual drivers directly in the
+config, cause we need pinctrl
+etc as well and I dont think it scales selecting it directly via ARCH.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+Regards,
+Robert
+>
+>   +       select COMMON_CLK_LAN966X
+>
+> > +       help
+> > +         This enables support for the Microchip LAN969X ARMv8-based
+> > +         SoC family of TSN-capable gigabit switches.
+> > +
+> > +         The LAN969X Ethernet switch family provides a rich set of
+> > +         switching features such as advanced TCAM-based VLAN and QoS
+> > +         processing enabling delivery of differentiated services, and
+> > +         security through TCAM-based frame processing using versatile
+> > +         content aware processor (VCAP).
+> > +
+> >  config ARCH_K3
+> >         bool "Texas Instruments Inc. K3 multicore SoC architecture"
+> >         select PM_GENERIC_DOMAINS if PM
+> > --
+> > 2.49.0
+> >
+>
+> /Daniel
 
-Thanks!
 
-[2/2] spi: atmel-quadspi: Use `devm_dma_request_chan()`
-      commit: 2555691165a0285a4617230fed859f20dcc51608
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+--=20
+Robert Marko
+Staff Embedded Linux Engineer
+Sartura d.d.
+Lendavska ulica 16a
+10000 Zagreb, Croatia
+Email: robert.marko@sartura.hr
+Web: www.sartura.hr
 

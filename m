@@ -1,181 +1,109 @@
-Return-Path: <dmaengine+bounces-5679-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5680-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6644FAEDA7D
-	for <lists+dmaengine@lfdr.de>; Mon, 30 Jun 2025 13:08:58 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 189B6AEDB60
+	for <lists+dmaengine@lfdr.de>; Mon, 30 Jun 2025 13:41:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 61CAB3A3F43
-	for <lists+dmaengine@lfdr.de>; Mon, 30 Jun 2025 11:08:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 61C823AA0C2
+	for <lists+dmaengine@lfdr.de>; Mon, 30 Jun 2025 11:41:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D9C1245000;
-	Mon, 30 Jun 2025 11:08:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B8AB2609C4;
+	Mon, 30 Jun 2025 11:40:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="uWj5q0qT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bgLez+HX"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 700A41A3154;
-	Mon, 30 Jun 2025 11:08:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3DE6260585;
+	Mon, 30 Jun 2025 11:40:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751281728; cv=none; b=rLwyjjQiCRwUnVL98TiE6eds0M1rEknR51N2Mt4xlO3FIK6K24u0dF2IbN1w3UY7wnkrXCnefhmCB/M+Ty6h9HOPImsFNSYWM7fT337xdem4Ex1jUc1roDpbzsAcQTX0xM9XGTpEcuLgpVm+ZgE5pV796+6HJskPH88IjHkwtw4=
+	t=1751283651; cv=none; b=SGtssXPA5ThwRGabpnCMmNQhHCXQMzEHjblLalYJG0GmRCYVk5KRVK0+eyWuqZlBKsSCbIx4SgfQqey3Q/RVFzAuXh2Kr6fdaL+GdyhIy6dDOZjQrq/+BuPT2dfWYm5U1+5VBod0bVbfAqiNbjecA7dz+V7zQ9Oq7G2k9VsO9sQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751281728; c=relaxed/simple;
-	bh=xeNpkjWQch2NbOHRUvdma+xIq5icCiLRNG/kXkIEEUI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=T1/T4+ftiJgGAUSSBckqOKtJRGoJAb11O5dOQU+s9g4SBowSXHS2SN0Urv3d22SxIkYgJO7aZsiOgGFIYrmxaUxM/LLn7yvRpqUgmB/sAwxZdjNgfG86c6iCCUFQP/6O9kgxb6P9HooKbS/6DQvfgA8C0xnQ888fAqg6TlbAKP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=uWj5q0qT; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55U8e10N013074;
-	Mon, 30 Jun 2025 13:08:42 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	hCK+JNiz/bYO7J2DWpXBYxNDtczevbXi8wneI/4lIHw=; b=uWj5q0qTavpWUevx
-	Vi+UdKWHC/3Qjeeq//y7qsv+iUrhsyGPhUrvKDhotvJQpmgoQsyj+uChnXxg53rz
-	ZhBIDSZGqASugloP88kwCxjv+Lve6TwDMz4vAK6awZOxHke/NXm8H/Do+KHH2JXp
-	13FxpfZfv5tLEelusizShyeg5mI3gv/m1aWPNJEqAqHdhAZs8+0Qa2Rd1vvsO5iQ
-	J26ATSfJuxfl78ji9BPXMqkXshp6GL28tz6R1gMlC0hM01bTA/jQW+ejNI2JGWoM
-	enkOd1nP4EWF+7Q6YLH3QXZ9ScvfaGxxKPNF3diZMzAT4UuJ1vBEldj65eNXlL6i
-	dMkAPg==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47jsy4mtta-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 30 Jun 2025 13:08:41 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 132544006A;
-	Mon, 30 Jun 2025 13:07:57 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 70B94B17B06;
-	Mon, 30 Jun 2025 13:07:13 +0200 (CEST)
-Received: from [10.48.87.237] (10.48.87.237) by SHFDAG1NODE3.st.com
- (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 30 Jun
- 2025 13:07:11 +0200
-Message-ID: <13cb5cad-7ad4-40fd-a423-10187b327b8c@foss.st.com>
-Date: Mon, 30 Jun 2025 13:07:10 +0200
+	s=arc-20240116; t=1751283651; c=relaxed/simple;
+	bh=ftNktXx3viZwDTtRvJBBYVylno1HnW9Egn+Kkhk6AGc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=klSrQwrtmqgA9iFVFigHXCzATlfnuPotAzDd8gtUtnzIzz0Rk4N89aeyLvS6Qu3exL9+kn+T7hhwsZv1mvU2+2GFipOoyLvPLL7+EuU87pgC0kd8/OU5OSay0SuiDfblhCKMcPAUKKWxDUgkpNBsJi+HQhJ0iHatCeLdkQgtnso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bgLez+HX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74121C4CEE3;
+	Mon, 30 Jun 2025 11:40:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751283650;
+	bh=ftNktXx3viZwDTtRvJBBYVylno1HnW9Egn+Kkhk6AGc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=bgLez+HXlFANtNBrQDtXBKnd3LtN7bLY5hLHEsx+pDJtWlg9HvhK5sazMio5sQijC
+	 MUtdekGSSf3sPBFjhb0RtVom5b2C9pra/P0PDIrTvncDBzScCO2IRLkKd5NGwaCvhz
+	 +1zBi+Bf6q5R0N4i56Tw64XQlFGPO7b1AcDpd7JIvFsD+Nhlm4xE+PS7RoAAFE/5gp
+	 +p9AM7W46qckbniToFXS8bCzcPHF0fBAdUEBgaDyrgGm62jwPraqo28n1nXR1hkePV
+	 wP/aho+87KhbJf4iRb/alT+xt+K2x2ZIiD5tSbXPP2HllyuHJ4JCApclvNnRYPv6B6
+	 V3yO5ytFHpAnQ==
+From: Mark Brown <broonie@kernel.org>
+To: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ =?utf-8?q?Bence_Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
+Cc: Vinod Koul <vkoul@kernel.org>, 
+ Nicolas Ferre <nicolas.ferre@microchip.com>, 
+ Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+ "Rafael J . Wysocki" <rafael@kernel.org>, 
+ Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <20250505184936.312274-1-csokas.bence@prolan.hu>
+References: <20250505184936.312274-1-csokas.bence@prolan.hu>
+Subject: Re: (subset) [PATCH v5 0/2] Add `devm_dma_request_chan()` to
+ simplify probe path in atmel-quadspi.c
+Message-Id: <175128364820.28911.16876247019790951320.b4-ty@kernel.org>
+Date: Mon, 30 Jun 2025 12:40:48 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dmaengine: virt-dma: convert tasklet to BH
- workqueue for callback invocation
-To: Alexander Kochetkov <al.kochet@gmail.com>, Vinod Koul <vkoul@kernel.org>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: Nishad Saraf <nishads@amd.com>, Lizhi Hou <lizhi.hou@amd.com>,
-        Jacky Huang
-	<ychuang3@nuvoton.com>,
-        Shan-Chun Hung <schung@nuvoton.com>,
-        Florian Fainelli
-	<florian.fainelli@broadcom.com>,
-        Ray Jui <rjui@broadcom.com>, Scott Branden
-	<sbranden@broadcom.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Paul Cercueil
-	<paul@crapouillou.net>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Manivannan Sadhasivam <mani@kernel.org>, Frank Li <Frank.Li@nxp.com>,
-        Zhou
- Wang <wangzhou1@hisilicon.com>,
-        Longfang Liu <liulongfang@huawei.com>,
-        Andy
- Shevchenko <andy@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer
-	<s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Keguang Zhang <keguang.zhang@gmail.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Matthias Brugger
-	<matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>,
-        =?UTF-8?Q?Andreas_F=C3=A4rber?=
-	<afaerber@suse.de>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang
-	<haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Paul
- Walmsley <paul.walmsley@sifive.com>,
-        Samuel Holland
-	<samuel.holland@sifive.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang
-	<baolin.wang@linux.alibaba.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Patrice Chotard <patrice.chotard@foss.st.com>,
-        Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Peter Ujfalusi
-	<peter.ujfalusi@gmail.com>,
-        Kunihiko Hayashi
-	<hayashi.kunihiko@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Amit Vadhavana <av2082000@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-        Ulf Hansson
-	<ulf.hansson@linaro.org>,
-        Md Sadre Alam <quic_mdalam@quicinc.com>,
-        Casey
- Connolly <casey.connolly@linaro.org>,
-        Kees Cook <kees@kernel.org>, Fenghua Yu
-	<fenghua.yu@intel.com>,
-        Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
-References: <20250616124934.141782-1-al.kochet@gmail.com>
- <20250616124934.141782-2-al.kochet@gmail.com>
-Content-Language: en-US
-From: Amelie Delaunay <amelie.delaunay@foss.st.com>
-In-Reply-To: <20250616124934.141782-2-al.kochet@gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-30_03,2025-06-27_01,2025-03-28_01
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.15-dev-cff91
 
-
-
-On 6/16/25 14:48, Alexander Kochetkov wrote:
-> Currently DMA callbacks are called from tasklet. However the tasklet is
-> marked deprecated and must be replaced by BH workqueue. Tasklet callbacks
-> are executed either in the Soft IRQ context or from ksoftirqd thread. BH
-> workqueue work items are executed in the BH context. Changing tasklet to
-> BH workqueue improved DMA callback latencies.
+On Mon, 05 May 2025 20:49:32 +0200, Bence Csókás wrote:
+> The probe function of the atmel-quadspi driver got quite convoluted,
+> especially since the addition of SAMA7G5 support, that was forward-ported
+> from an older vendor kernel. To alleivate this - and similar problems in
+> the future - an effort was made to migrate as many functions as possible,
+> to their devm_ managed counterparts. Patch 1/2 adds the new
+> `devm_dma_request_chan()` function. Patch 2/2 then uses this APIs to
+> simplify the probe() function.
 > 
-> The commit changes virt-dma driver and all of its users:
-> - tasklet is replaced to work_struct, tasklet callback updated accordingly
-> - kill_tasklet() is replaced to cancel_work_sync()
-> - added include of linux/interrupt.h where necessary
-> 
-> Tested on Pine64 (Allwinner A64 ARMv8) with sun6i-dma driver. All other
-> drivers are changed similarly and tested for compilation.
-> 
-> Signed-off-by: Alexander Kochetkov <al.kochet@gmail.com>
-> ---
-...
->   drivers/dma/stm32/stm32-dma.c                  |  1 +
->   drivers/dma/stm32/stm32-dma3.c                 |  1 +
->   drivers/dma/stm32/stm32-mdma.c                 |  1 +
+> [...]
 
-For STM32:
-Acked-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
-Tested-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
+Applied to
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+
+Thanks!
+
+[2/2] spi: atmel-quadspi: Use `devm_dma_request_chan()`
+      commit: 2555691165a0285a4617230fed859f20dcc51608
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
 

@@ -1,212 +1,181 @@
-Return-Path: <dmaengine+bounces-5678-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5679-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B366AAED9B4
-	for <lists+dmaengine@lfdr.de>; Mon, 30 Jun 2025 12:21:53 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6644FAEDA7D
+	for <lists+dmaengine@lfdr.de>; Mon, 30 Jun 2025 13:08:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C28A97AB1D8
-	for <lists+dmaengine@lfdr.de>; Mon, 30 Jun 2025 10:20:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 61CAB3A3F43
+	for <lists+dmaengine@lfdr.de>; Mon, 30 Jun 2025 11:08:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 859CB258CCB;
-	Mon, 30 Jun 2025 10:21:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D9C1245000;
+	Mon, 30 Jun 2025 11:08:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="IrZueZJ4"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="uWj5q0qT"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 336F9257458
-	for <dmaengine@vger.kernel.org>; Mon, 30 Jun 2025 10:21:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 700A41A3154;
+	Mon, 30 Jun 2025 11:08:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751278902; cv=none; b=cZMMS0LRvFdvgPpvjxi0cCJx9ndKRZ+IWzrKQ4AYD4xQgKqYsRqTClIN6Z4mBQvxSznMH5FNZIEPTDwCl5KxEZ8CTvJWgkIpQLUgSeD241lR75UpJBgZsXTw0MoCcdNBUzrlIj+QZOuEOZcVkg72H7v6bSgn0IhrrofD32p3K4s=
+	t=1751281728; cv=none; b=rLwyjjQiCRwUnVL98TiE6eds0M1rEknR51N2Mt4xlO3FIK6K24u0dF2IbN1w3UY7wnkrXCnefhmCB/M+Ty6h9HOPImsFNSYWM7fT337xdem4Ex1jUc1roDpbzsAcQTX0xM9XGTpEcuLgpVm+ZgE5pV796+6HJskPH88IjHkwtw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751278902; c=relaxed/simple;
-	bh=6BYE8AWJQLw8WAxO3Q5aBUTeX661u26mmGmL2fLnCZI=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=ZMWte7gXrGUqnavwgketK7hnIDbExh7q2oki11a66LE2f4YHBKu7r6zsvOtsSr7qa+q8pwN9/G47kSDHNun7FRn/BLvFh4O9OMkUM4vTKnj6oqc9WoJAu6fhK348Zy/savK5e+cz1NnnMcAB0RIFBNeAVlnbXegcAUBW7TruN40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=IrZueZJ4; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ae35f36da9dso404555566b.0
-        for <dmaengine@vger.kernel.org>; Mon, 30 Jun 2025 03:21:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1751278898; x=1751883698; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=91/ZncbDlmcGCt22EAMRhuZKL6uaG/hY8UyZ2Q+pYCo=;
-        b=IrZueZJ4qgDMos5cOw6vsmAKPNI7cL5oHlBxR9UC1YhL+Gik/jTsoOe6XDscbMCl/D
-         m0b1kr5wj7n3L0V7y6Gu2taGzuNze2Trz/4F1hoehV3UkaCRyOYZv4FTAZrixGoXDCAL
-         Ra1lqJVB3V41Bag3if4dM7UPHCeXCsx+seRMCn4xlr5ZNTzn5tZzCD1+ZJgfiE58pMj4
-         k6y6iBv4TNPQowcdRpGeLnYeAWQjQ2JzHgL8eT1PYbAbBm4rGdx1FUt/OygzgsenUAeb
-         75KzQYafl73kX3Oa9A+8PbNa0dpos0iA2Aa65Cxrg2FkYdFlf78aMhT5bCYVDMC6TetI
-         mL7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751278898; x=1751883698;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=91/ZncbDlmcGCt22EAMRhuZKL6uaG/hY8UyZ2Q+pYCo=;
-        b=R3xc2/R+oyFpX+VWud2i3hfEvu66GA9VKdAmyy7MsblPn6XQSkXb3udbEsRlUndZmc
-         r5xo6keeN/emqaSAW3M+vefQxPppPciktCytDEx7HzZff2676EYtKWJ5idIPjiHScztp
-         vkCpiTgAAYwbda5aOr//1LM95hINVJHvAJzuk1oBV0L8Jz4G4E9SeU9+HA+TQ1utPB3G
-         emQ6bIm8w9iQ2h529IbU3PwpOpIokahbGCTfFqbNAebGtUDOhgOMT9PNR1ktO1+mBGw6
-         NPqsgD+IrCuulLU9TLpV2piswZHKxAXS+CYqLXYItJFebHAhzgu3GbI9DqDhNCWc0Av3
-         buAw==
-X-Forwarded-Encrypted: i=1; AJvYcCUdIDsVM5cQI5O4YBI47hhnuEHX/f3Uww3WUvX47+GwDXMRs2m8muREyoDT9nuxhKt/eNmAwUn5Mx4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpYIzXLS6X7zyZ7WbgQnB+1iuLB1QuR/a2eQY7tKoaa7VU81Uk
-	jKBu0p0HcmYa4AP1N3MJJz5+Vd0K81t2f9iKg367gMBxOEOfV6U3cJi7nhIiwodoisY=
-X-Gm-Gg: ASbGncuEDQWgr4z6YELBjIGL+1a+1kgyY4eT5mqf6qeZyuxUYObFhcN2yHGNxilm+AQ
-	iKnnPXmJsxXF2OninaRhyM2T2m3Pt3Y9Cdz731kZ4AFdsnMFPb5Eec1cmlG4niCSqsSrR/pkHh2
-	6+IlGMIWtnT0KlvNZYY4p+Y+aTtNHDf9mUKuis9CnPWceTqoPmhKzAorxTMjp/fNWGfi6APeMvI
-	DexMSd3Ua9MMFaXhk3dDj3EafHmPQ8ehKQ0gA4w5NjIQ6KlD9v7e0H9H14gzGwBNvYs9Al5IUMP
-	K53u09enDVdM+9v1H9nzHKjALArxl5tmpV8/AgG+Xtg34XbqEsZuf2fJmQ3thKLiS1LipHQqNi9
-	kdN8ERl7m9YxfeHzRm8ou5Z1dOmG4ewS3mzyzttHqoEZMmzG/JBKbFu7ma9e+SdbVe0gP7kw=
-X-Google-Smtp-Source: AGHT+IG0udIx5/vSjab4jTXQgQOixHxgW8J50sJp+ilVqsU6WQ7uEmPrf6nFFV5tvDzy3dhkra701g==
-X-Received: by 2002:a17:907:9691:b0:ae0:c6fb:2140 with SMTP id a640c23a62f3a-ae3500f374emr1085087666b.32.1751278898278;
-        Mon, 30 Jun 2025 03:21:38 -0700 (PDT)
-Received: from localhost (2001-1c00-3b8a-ea00-c4de-d39d-05f4-c77a.cable.dynamic.v6.ziggo.nl. [2001:1c00:3b8a:ea00:c4de:d39d:5f4:c77a])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae35365a95esm649858666b.59.2025.06.30.03.21.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Jun 2025 03:21:37 -0700 (PDT)
+	s=arc-20240116; t=1751281728; c=relaxed/simple;
+	bh=xeNpkjWQch2NbOHRUvdma+xIq5icCiLRNG/kXkIEEUI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=T1/T4+ftiJgGAUSSBckqOKtJRGoJAb11O5dOQU+s9g4SBowSXHS2SN0Urv3d22SxIkYgJO7aZsiOgGFIYrmxaUxM/LLn7yvRpqUgmB/sAwxZdjNgfG86c6iCCUFQP/6O9kgxb6P9HooKbS/6DQvfgA8C0xnQ888fAqg6TlbAKP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=uWj5q0qT; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55U8e10N013074;
+	Mon, 30 Jun 2025 13:08:42 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	hCK+JNiz/bYO7J2DWpXBYxNDtczevbXi8wneI/4lIHw=; b=uWj5q0qTavpWUevx
+	Vi+UdKWHC/3Qjeeq//y7qsv+iUrhsyGPhUrvKDhotvJQpmgoQsyj+uChnXxg53rz
+	ZhBIDSZGqASugloP88kwCxjv+Lve6TwDMz4vAK6awZOxHke/NXm8H/Do+KHH2JXp
+	13FxpfZfv5tLEelusizShyeg5mI3gv/m1aWPNJEqAqHdhAZs8+0Qa2Rd1vvsO5iQ
+	J26ATSfJuxfl78ji9BPXMqkXshp6GL28tz6R1gMlC0hM01bTA/jQW+ejNI2JGWoM
+	enkOd1nP4EWF+7Q6YLH3QXZ9ScvfaGxxKPNF3diZMzAT4UuJ1vBEldj65eNXlL6i
+	dMkAPg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47jsy4mtta-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 30 Jun 2025 13:08:41 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 132544006A;
+	Mon, 30 Jun 2025 13:07:57 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 70B94B17B06;
+	Mon, 30 Jun 2025 13:07:13 +0200 (CEST)
+Received: from [10.48.87.237] (10.48.87.237) by SHFDAG1NODE3.st.com
+ (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 30 Jun
+ 2025 13:07:11 +0200
+Message-ID: <13cb5cad-7ad4-40fd-a423-10187b327b8c@foss.st.com>
+Date: Mon, 30 Jun 2025 13:07:10 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 30 Jun 2025 12:21:36 +0200
-Message-Id: <DAZSK2NT6TAT.1N6A4I8ETH92W@fairphone.com>
-Cc: <~postmarketos/upstreaming@lists.sr.ht>, <phone-devel@vger.kernel.org>,
- <linux-arm-kernel@lists.infradead.org>, <iommu@lists.linux.dev>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-pm@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
- <linux-crypto@vger.kernel.org>, <dmaengine@vger.kernel.org>,
- <linux-mmc@vger.kernel.org>
-Subject: Re: [PATCH 14/14] arm64: dts: qcom: Add The Fairphone (Gen. 6)
-From: "Luca Weiss" <luca.weiss@fairphone.com>
-To: "Konrad Dybcio" <konrad.dybcio@oss.qualcomm.com>, "Will Deacon"
- <will@kernel.org>, "Robin Murphy" <robin.murphy@arm.com>, "Joerg Roedel"
- <joro@8bytes.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Rafael J.
- Wysocki" <rafael@kernel.org>, "Viresh Kumar" <viresh.kumar@linaro.org>,
- "Manivannan Sadhasivam" <mani@kernel.org>, "Herbert Xu"
- <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>,
- "Vinod Koul" <vkoul@kernel.org>, "Bjorn Andersson" <andersson@kernel.org>,
- "Konrad Dybcio" <konradybcio@kernel.org>, "Robert Marko"
- <robimarko@gmail.com>, "Das Srinagesh" <quic_gurus@quicinc.com>, "Thomas
- Gleixner" <tglx@linutronix.de>, "Jassi Brar" <jassisinghbrar@gmail.com>,
- "Amit Kucheria" <amitk@kernel.org>, "Thara Gopinath"
- <thara.gopinath@gmail.com>, "Daniel Lezcano" <daniel.lezcano@linaro.org>,
- "Zhang Rui" <rui.zhang@intel.com>, "Lukasz Luba" <lukasz.luba@arm.com>,
- "Ulf Hansson" <ulf.hansson@linaro.org>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
-References: <20250625-sm7635-fp6-initial-v1-0-d9cd322eac1b@fairphone.com>
- <20250625-sm7635-fp6-initial-v1-14-d9cd322eac1b@fairphone.com>
- <4200b3b8-5669-4d5a-a509-d23f921b0449@oss.qualcomm.com>
- <DAXA7TKVM4GI.J6C7M3D1J1XF@fairphone.com>
- <6d4e77b3-0f92-44dd-b9b0-3129a5f3785b@oss.qualcomm.com>
- <DAXEA131KUXZ.WTO7PST1F3X6@fairphone.com>
- <3fbae47b-d20d-426b-a967-b584e32b8c6e@oss.qualcomm.com>
-In-Reply-To: <3fbae47b-d20d-426b-a967-b584e32b8c6e@oss.qualcomm.com>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] dmaengine: virt-dma: convert tasklet to BH
+ workqueue for callback invocation
+To: Alexander Kochetkov <al.kochet@gmail.com>, Vinod Koul <vkoul@kernel.org>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: Nishad Saraf <nishads@amd.com>, Lizhi Hou <lizhi.hou@amd.com>,
+        Jacky Huang
+	<ychuang3@nuvoton.com>,
+        Shan-Chun Hung <schung@nuvoton.com>,
+        Florian Fainelli
+	<florian.fainelli@broadcom.com>,
+        Ray Jui <rjui@broadcom.com>, Scott Branden
+	<sbranden@broadcom.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Paul Cercueil
+	<paul@crapouillou.net>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Manivannan Sadhasivam <mani@kernel.org>, Frank Li <Frank.Li@nxp.com>,
+        Zhou
+ Wang <wangzhou1@hisilicon.com>,
+        Longfang Liu <liulongfang@huawei.com>,
+        Andy
+ Shevchenko <andy@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer
+	<s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Keguang Zhang <keguang.zhang@gmail.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Matthias Brugger
+	<matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>,
+        =?UTF-8?Q?Andreas_F=C3=A4rber?=
+	<afaerber@suse.de>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang
+	<haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Paul
+ Walmsley <paul.walmsley@sifive.com>,
+        Samuel Holland
+	<samuel.holland@sifive.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang
+	<baolin.wang@linux.alibaba.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Patrice Chotard <patrice.chotard@foss.st.com>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Peter Ujfalusi
+	<peter.ujfalusi@gmail.com>,
+        Kunihiko Hayashi
+	<hayashi.kunihiko@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Amit Vadhavana <av2082000@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+        Ulf Hansson
+	<ulf.hansson@linaro.org>,
+        Md Sadre Alam <quic_mdalam@quicinc.com>,
+        Casey
+ Connolly <casey.connolly@linaro.org>,
+        Kees Cook <kees@kernel.org>, Fenghua Yu
+	<fenghua.yu@intel.com>,
+        Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
+References: <20250616124934.141782-1-al.kochet@gmail.com>
+ <20250616124934.141782-2-al.kochet@gmail.com>
+Content-Language: en-US
+From: Amelie Delaunay <amelie.delaunay@foss.st.com>
+In-Reply-To: <20250616124934.141782-2-al.kochet@gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-30_03,2025-06-27_01,2025-03-28_01
 
-On Fri Jun 27, 2025 at 5:34 PM CEST, Konrad Dybcio wrote:
-> On 6/27/25 4:44 PM, Luca Weiss wrote:
->> On Fri Jun 27, 2025 at 4:34 PM CEST, Konrad Dybcio wrote:
->>> On 6/27/25 1:33 PM, Luca Weiss wrote:
->>>> On Wed Jun 25, 2025 at 4:38 PM CEST, Konrad Dybcio wrote:
->>>>> On 6/25/25 11:23 AM, Luca Weiss wrote:
->>>>>> Add a devicetree for The Fairphone (Gen. 6) smartphone, which is bas=
-ed
->>>>>> on the SM7635 SoC.
->>>>>
->>>>> [...]
->>>>>
->>>>>> +&pm8550vs_d {
->>>>>> +	status =3D "disabled";
->>>>>> +};
->>>>>> +
->>>>>> +&pm8550vs_e {
->>>>>> +	status =3D "disabled";
->>>>>> +};
->>>>>> +
->>>>>> +&pm8550vs_g {
->>>>>> +	status =3D "disabled";
->>>>>> +};
->>>>>
->>>>> Hm... perhaps we should disable these by deafult
->>>>
->>>> Do you want me to do this in this patchset, or we clean this up later =
-at
->>>> some point? I'd prefer not adding even more dependencies to my patch
->>>> collection right now.
->>>
->>> I can totally hear that..
->>>
->>> Let's include it in this patchset, right before SoC addition
->>> I don't think there's any pm8550vs users trying to get merged in
->>> parallel so it should be OK
->>=20
->> Okay, can do. Disable all of them (_c, _d, _e, _g), and re-enable them
->> in current users? I assume there might also be boards that only have
->> e.g. _d and no _c.
->
-> I suppose it's only fair to do so, in line with
->
-> d37e2646c8a5 ("arm64: dts: qcom: x1e80100-pmics: Enable all SMB2360 separ=
-ately")
 
-Sounds good, I've prepared this change for v2.
 
->
->
->>>>>> +&usb_1 {
->>>>>> +	dr_mode =3D "otg";
->>>>>> +
->>>>>> +	/* USB 2.0 only */
->>>>>
->>>>> Because there's no usb3phy description yet, or due to hw design?
->>>>
->>>> HW design. Funnily enough with clk_ignore_unused this property is not
->>>> needed, and USB(2.0) works fine then. Just when (I assume) the USB3
->>>> clock is turned off which the bootloader has enabled, USB stops workin=
-g.
->>>
->>> The USB controller has two possible clock sources: the PIPE_CLK that
->>> the QMPPHY outputs, or the UTMI clock (qcom,select-utmi-as-pipe-clk).
->>=20
->> So okay like this for you, for a USB2.0-only HW?
->
-> Yeah, maybe change the comment to something like:
->
-> /* USB 2.0 only (RX/TX lanes physically not routed) */
->
-> to avoid getting this question asked again
+On 6/16/25 14:48, Alexander Kochetkov wrote:
+> Currently DMA callbacks are called from tasklet. However the tasklet is
+> marked deprecated and must be replaced by BH workqueue. Tasklet callbacks
+> are executed either in the Soft IRQ context or from ksoftirqd thread. BH
+> workqueue work items are executed in the BH context. Changing tasklet to
+> BH workqueue improved DMA callback latencies.
+> 
+> The commit changes virt-dma driver and all of its users:
+> - tasklet is replaced to work_struct, tasklet callback updated accordingly
+> - kill_tasklet() is replaced to cancel_work_sync()
+> - added include of linux/interrupt.h where necessary
+> 
+> Tested on Pine64 (Allwinner A64 ARMv8) with sun6i-dma driver. All other
+> drivers are changed similarly and tested for compilation.
+> 
+> Signed-off-by: Alexander Kochetkov <al.kochet@gmail.com>
+> ---
+...
+>   drivers/dma/stm32/stm32-dma.c                  |  1 +
+>   drivers/dma/stm32/stm32-dma3.c                 |  1 +
+>   drivers/dma/stm32/stm32-mdma.c                 |  1 +
 
-Ack
-
-/* USB 2.0 only, HW does not support USB 3.x */
-
-Regards
-Luca
-
->
->>> Because you said there's no USB3, I'm assuming DP-over-Type-C won't
->>> be a thing either? :(
->>=20
->> Yep. I'd have preferred USB3+DP as well since it's actually quite cool
->> to have with proper Linux. On Android, at least on older versions it's
->> barely usable imo. Can't even properly watch videos on the big screen
->> with that SW stack.
->
-> Bummer! Not something we can change though :(
->
-> Konrad
-
+For STM32:
+Acked-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
+Tested-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
 

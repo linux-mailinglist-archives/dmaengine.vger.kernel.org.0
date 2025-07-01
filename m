@@ -1,73 +1,73 @@
-Return-Path: <dmaengine+bounces-5704-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5705-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB9D6AEF0CC
-	for <lists+dmaengine@lfdr.de>; Tue,  1 Jul 2025 10:20:19 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F3EBAEF1B4
+	for <lists+dmaengine@lfdr.de>; Tue,  1 Jul 2025 10:48:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A2E724A075A
-	for <lists+dmaengine@lfdr.de>; Tue,  1 Jul 2025 08:20:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6FD85189EA1E
+	for <lists+dmaengine@lfdr.de>; Tue,  1 Jul 2025 08:49:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E14F826A0DF;
-	Tue,  1 Jul 2025 08:20:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C18AD22CBE9;
+	Tue,  1 Jul 2025 08:48:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="USISS8KM"
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="EvZITTKY"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B5A26A09F
-	for <dmaengine@vger.kernel.org>; Tue,  1 Jul 2025 08:20:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09C761FDE19
+	for <dmaengine@vger.kernel.org>; Tue,  1 Jul 2025 08:48:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751358006; cv=none; b=KY5eK2imxMjG6uO1gSgFV+U1luqDzViy/YJaNdV15PaOSYjd9jIa7jzSpnwxTeHZ/e88N2IujOvjSNpkMrrupZtvX1Q6OVDGlmyTM/zF6auR+J5PH6EZoopA1LTpql523qiYjMjtxylhGZWSSuTgXVR30q+vJY+89utcyZD+UMg=
+	t=1751359734; cv=none; b=LyVXdr9VIDA7vXtuWGobUoSMslrLoYZal5hDD7D6MhGkH5bhOB6NV1ZpSNSddQs2PTiexVj23KKZ3XceUnBdap5ElbQfauJyaoqgPpuBZ8pjk5H5G1hju68Bwm2wj/I4pG2FG8JZp5Sdn5dMHdR2HmqyPmTZHpxn8Kcfl9mZpU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751358006; c=relaxed/simple;
-	bh=TUPLhW/JmtwEUv3AE6ZmIEitSNuWEsD/cufR7kVF8ys=;
+	s=arc-20240116; t=1751359734; c=relaxed/simple;
+	bh=DGBHFGIQFj3DI57v/KergKc6+HMEaz+DP4HpyZ/MxtE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WNKdUC+k62/ZrSQZ+BXIFFmh1uMrSEVQqTTBjCw/hEEQC+UVmhU/X6xDWBrzyoCBcQeG2Bsu3S0Zl/bhton1Ch/2macF+qi/rg6ddKuOu70AWkM+P9ToaqZGG9aEZNBjUTcS1uLfpXG0N/KjH/ETXFRYy1AFz4fGdgrLFAUsys8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=USISS8KM; arc=none smtp.client-ip=209.85.219.181
+	 To:Cc:Content-Type; b=CW5+AqVb5dfqsh8cejjAJSHZzxWd6YYGjWcokO3U7TUaRTvJrwq5wQUNR3P+H+KGdJqFddfDbiPVM9Qa7O2X5O9RQEjimDHU1hyrfH+JKsBjcZ3F9fscX2AnlHa5Jbt+SeVyANC6GnPwa2b5QiqHOL2fApikvJscySObZZPlOqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=EvZITTKY; arc=none smtp.client-ip=209.85.219.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e812c817de0so2357238276.0
-        for <dmaengine@vger.kernel.org>; Tue, 01 Jul 2025 01:20:04 -0700 (PDT)
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e7b4ba530feso2511335276.1
+        for <dmaengine@vger.kernel.org>; Tue, 01 Jul 2025 01:48:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1751358004; x=1751962804; darn=vger.kernel.org;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1751359732; x=1751964532; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FbuOsRMFTiJD9Z73+tptA9tOlUhWfVFv9XwbRhZntqs=;
-        b=USISS8KMIHu+LcH6L5QWZwUHZ0RsTQPJ0ZfRFV5lyJRO+fsnjW3Vb5Uh6N1UxTyMwJ
-         YWwKN+u/4pSW7Y6DLgdgtyLcMErJ8TCbHNU9cOW0jA9PwWNVlUMmpkZNYPrxyvEtlKgS
-         DI9VTs65Uc2wWY8cbW3/0uCT7F6jc25a7d4fR9MOEbknsUDPAT7upnGeHp8nZlKCxWfs
-         s7bli1ibTKUmLDRJgQdxDQ3XX7VKjCeDsgw+UL/JUlkVFbLYJUw/jrbdwymsj7yN/w1Q
-         pbgezSjsNcp9lbMM5UepXQDoRwPX3IEGv5yNWgpKfuqGAoiUmOebU9eXP5+M+SF4QP83
-         IHJg==
+        bh=Ham4MleQtpYSqIWPo8fq/MuoFtt+t8Ya59SZXOm39+s=;
+        b=EvZITTKYDl5uL1ve1wLJnipv0bkLmS0L6fx3chyv8BvSs70JiIxRsLqL1cVwFUWFZm
+         ebyxm0YSMkZtuTns9B0jtC757l7bd1gJM8CIOVMI3gO2+pg9X4Z5yAKrn4g9UXc+9IyC
+         CT4t/PFh87odls6yrrlbaGp6E3rr73GVlhSdbbWtkSIGnrpi2DsQ8BIGzfJmialYSVNd
+         1gYU4eKxe7vPsnBZ894SqyXviLAZH8SvsByGStG4vued3wd6wH8DiNcWWKWf1RMt02rv
+         rKZa3L/9r6Ikb76GXd4f6tnKn5/YlGWXqCVEAbmm8bYvPzF3A4ewfOtj5O/MXM2QMhAC
+         mAXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751358004; x=1751962804;
+        d=1e100.net; s=20230601; t=1751359732; x=1751964532;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FbuOsRMFTiJD9Z73+tptA9tOlUhWfVFv9XwbRhZntqs=;
-        b=A9X1yoFwqMJOu8fOBmkQlZ1KTughDH8yYH6qsZFS/UDKmBlZ9H+l38rhS9kP/2SVa7
-         N8wekJ+bajz7p4NDMy64jRfDMJ57NitCC2qokRtJBU26Unz0g2Ds+As+G+smf/lm1+8i
-         zvPUxh0m38PeT3UAYlAWvNT9Wc9xAnAF/SZuztdor5ffIBNNmJOHispzXdnm4MfjpHod
-         f0bxOTVm6f6ubqPEDIZJ6vmW1MauphahFscR0Xk07IDSfVE1qGWug1urvpQ7o+rC0J1Q
-         CepvaQ4Y3Fa6zV04g4w/Xh3O9g+jCi+iUmkNGv2Pu9IsanuJdBKME9Dpy4kvRGr2GHtt
-         U4og==
-X-Forwarded-Encrypted: i=1; AJvYcCVmaX2T5XLTk8mDS5WwYzjeExGg1aycyZEMHN2GMvnqBOETv2MBYsSrdGC+iBfMpWOm0lMr9FBQiXo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yysx1ibadOkwYAuWaWBDkgydatO8mpds2bwJ26a2v2I2nga4nCi
-	t8PLRi6yBVHx2hoz+ocqCT1uhOczZIOY/d8w/sCnR+zQm2YllFM2qtjumGmxWHrRO5vy+BhMaqH
-	hJuJgRk9ntnyJYqCUsqsQp9KR/tJRFwva9UI+XwBFrw==
-X-Gm-Gg: ASbGncupn6Q+K7kVcLQIziRdILbhwq2WePQYamrzF++nckJfs3aP5aj3rYj36BEIcfy
-	AcwMjZzP5d4I2lVJa7/sABlnMqeTZh4GjLqx+YVoG7Y+PZzz1ggQe4yLb52UxiaS/IAVwuH36pr
-	mTL3epXwRP9MR5BUcthJdlG0/drj5cEryrbt/+PfCZmOyL0dWJ
-X-Google-Smtp-Source: AGHT+IFre+CwhTt7pE+B50luWB9F2Nl0i0HpZdG4/qK3UkvJ4Pwbg0TDxDpw39sn7GQMRaKyZ8jEL4jGCSy8+Dou2x8=
-X-Received: by 2002:a05:690c:30d:b0:70f:84c8:312e with SMTP id
- 00721157ae682-7151713d346mr246421247b3.1.1751358003665; Tue, 01 Jul 2025
- 01:20:03 -0700 (PDT)
+        bh=Ham4MleQtpYSqIWPo8fq/MuoFtt+t8Ya59SZXOm39+s=;
+        b=aRxZqwwvNqq//RK+D5Rx9tjRlSKU48miZOUcneKAgNqed0q/WBPk5SQ6EgC9DPXZEi
+         0jZtjEHhsGuD0nTq7o6epLdaWBUy56X6PCDiiu1UK5XyFBDgdP/jzSuAl0QTvnkEb8DX
+         t868gMUMddCI3h6QPmYJRiFm4UDTmn3Ht0GKm06MSEftGm334Dqlpy8VKzGxH4XLFpBM
+         g3Ji31reonbOkVu34kOi4efnMNnwSSI9sGCtjPFK5eG2q7ZkGlMDTyih3bbtXHubiL2+
+         9jX9+xxCK6jrEVmx8awfjy77rgoqa4ad0cBiJIO9r9oQQ/HOR3la5Eph42FlxYybQQNz
+         DwVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXVNC3z15VIg1wF4X/LrtoLCz3MaOPtw260eDmEI9jjGlCXrQM3a+E1WTGEh4AYAoU1KdOTezy6VIo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDUe+FLmu8bqVTUNE3zXlgecJS0/aa0mkvY6XhqgvIeoRKnrS4
+	OlSZa1tXS1xAhhfc2dr/RH5PF0G8TXJSKP5sNSIg7sjC8FQ/yFro74SHEREvwQKB+F9BZ5JfGjY
+	5XvOz2PrjUbdPaTFe82HZnrwaONO1M2eo5MFig6TpUg==
+X-Gm-Gg: ASbGncv9voEpHNn6FJcECZDDIpFamowb2+tF62E76FEXmOl7k8X5mUu+XaL+7KfTNqZ
+	pFM3lZM1/W6l9F70I/MINxgmEsJBANLj6vQ+aagT02+q5NVluHkAnnOzyoX9jJEQjlQn/sMyCG0
+	ipgvxheao7oqfyI9kfOtSFG3NVriKwAvJu30LqqQdPov8rwLIX
+X-Google-Smtp-Source: AGHT+IExwbxuXz67r7i2U0Hj9e39nnEuFRzklLDURAXbWXk0DV903xSBiVjsaBHg1u3FdNeBklfefUYYXWQaY3P289M=
+X-Received: by 2002:a05:690c:45ca:b0:70e:29af:844a with SMTP id
+ 00721157ae682-71517196047mr247551697b3.18.1751359731954; Tue, 01 Jul 2025
+ 01:48:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -75,13 +75,14 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20250701-working_dma_0701_v2-v2-0-ab6ee9171d26@riscstar.com>
- <20250701-working_dma_0701_v2-v2-6-ab6ee9171d26@riscstar.com> <a329e8a9-d581-4af1-ac0f-9f104a810bc9@kernel.org>
-In-Reply-To: <a329e8a9-d581-4af1-ac0f-9f104a810bc9@kernel.org>
+ <20250701-working_dma_0701_v2-v2-7-ab6ee9171d26@riscstar.com> <ebc16dbe-2405-4956-91a0-bcce9f199326@kernel.org>
+In-Reply-To: <ebc16dbe-2405-4956-91a0-bcce9f199326@kernel.org>
 From: Guodong Xu <guodong@riscstar.com>
-Date: Tue, 1 Jul 2025 16:19:52 +0800
-X-Gm-Features: Ac12FXz5TtaMdqHj-qXiGBKlygWCWhHUUNjiyvuAFFCHITTv4zQR9b39KeOkZO4
-Message-ID: <CAH1PCMb8OKiqT1R0mHSU1RFxcJvd6VyFyWJWhhKpWc5nKvTi3Q@mail.gmail.com>
-Subject: Re: [PATCH v2 6/8] riscv: dts: spacemit: Add PDMA0 node for K1 SoC
+Date: Tue, 1 Jul 2025 16:48:41 +0800
+X-Gm-Features: Ac12FXzG_24euqC2ksqQUMdli-9vCkce_uhDVNzQHQHTjfNnkSCnW6ua-Xfs0vo
+Message-ID: <CAH1PCMa2dB1fefzGgo-kKfgAdou_KaDSvTDsvYPjsGKODHETCA@mail.gmail.com>
+Subject: Re: [PATCH v2 7/8] riscv: dts: spacemit: Enable PDMA0 on Banana Pi F3
+ and Milkv Jupiter
 To: Krzysztof Kozlowski <krzk@kernel.org>
 Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
 	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>, 
@@ -95,50 +96,59 @@ Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 1, 2025 at 3:37=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.org=
+On Tue, Jul 1, 2025 at 3:36=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.org=
 > wrote:
 >
 > On 01/07/2025 07:37, Guodong Xu wrote:
-> > Add PDMA0 dma-controller node under dma_bus for SpacemiT K1 SoC.
-> >
-> > The PDMA0 node is marked as disabled by default, allowing board-specifi=
-c
-> > device trees to enable it as needed.
+> > Enable the PDMA0 on the SpacemiT K1-based Banana Pi F3 and Milkv Jupite=
+r
+> > boards by setting its status to "okay".
 > >
 > > Signed-off-by: Guodong Xu <guodong@riscstar.com>
 > > ---
-> > v2:
-> > - Updated the compatible string.
-> > - Rebased. Part of the changes in v1 is now in this patchset:
-> >    - "riscv: dts: spacemit: Add DMA translation buses for K1"
-> >    - Link: https://lore.kernel.org/all/20250623-k1-dma-buses-rfc-wip-v1=
--0-c0144082061f@iscas.ac.cn/
+> > v2: added pdma0 enablement on Milkv Jupiter
 > > ---
-> >  arch/riscv/boot/dts/spacemit/k1.dtsi | 11 +++++++++++
-> >  1 file changed, 11 insertions(+)
+> >  arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts   | 4 ++++
+> >  arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts | 4 ++++
+> >  2 files changed, 8 insertions(+)
 > >
-> > diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts=
-/spacemit/k1.dtsi
-> > index 8f44c1458123be9e74a80878517b2b785d743bef..69e0b1edf3276df26c07c15=
-d81607f83de0e5d57 100644
-> > --- a/arch/riscv/boot/dts/spacemit/k1.dtsi
-> > +++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
-> > @@ -591,6 +591,17 @@ uart9: serial@d4017800 {
-> >                               status =3D "disabled";
-> >                       };
-> >
-> > +                     pdma0: dma-controller@d4000000 {
+> > diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/ris=
+cv/boot/dts/spacemit/k1-bananapi-f3.dts
+> > index fe22c747c5012fe56d42ac8a7efdbbdb694f31b6..39133450e07f2cb9cb2247d=
+c0284851f8c55031b 100644
+> > --- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
+> > +++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
+> > @@ -45,3 +45,7 @@ &uart0 {
+> >       pinctrl-0 =3D <&uart0_2_cfg>;
+> >       status =3D "okay";
+> >  };
+> > +
+> > +&pdma0 {
 >
 >
-> Oddly placed. Is spacemit not following standard DTS coding style orderin=
-g?
+> Does not look like placed according to DTS coding style. What sort of
+> ordering Spacemit follows?
 >
 
-Oh, I see the issue. I will fix this by ordering by "unit address in
-ascending order". Thanks for pointing this out.
+Agreed. We should establish a consistent ordering rule for SpacemiT board
+DTS files. According to the coding style documentation, there are two
+acceptable approaches for ordering node references in board DTS files:
 
--Guodong
+"When extending nodes in the board DTS via &label, the entries shall be
+ordered either alpha-numerically or by keeping the order from DTSI, where
+the choice depends on the subarchitecture."
 
+Refer to Documentation/devicetree/bindings/dts-coding-style.rst
+
+My preference would be alphabetical ordering for easy maintainability. Howe=
+ver,
+I'd like to hear Yixun's perspective on this before we standardize the
+approach across both board DTS files, BPI-F3 and MilkV Juptier.
+
+Thanks.
+Guodong
+
+>
 >
 > Best regards,
 > Krzysztof

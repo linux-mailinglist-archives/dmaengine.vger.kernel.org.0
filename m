@@ -1,48 +1,48 @@
-Return-Path: <dmaengine+bounces-5701-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5702-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id BFF4BAEEFCF
-	for <lists+dmaengine@lfdr.de>; Tue,  1 Jul 2025 09:35:37 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A272AEEFD1
+	for <lists+dmaengine@lfdr.de>; Tue,  1 Jul 2025 09:36:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B09AF3B6CA8
-	for <lists+dmaengine@lfdr.de>; Tue,  1 Jul 2025 07:35:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B694717F5AD
+	for <lists+dmaengine@lfdr.de>; Tue,  1 Jul 2025 07:36:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BA0D21019E;
-	Tue,  1 Jul 2025 07:35:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28EEB242928;
+	Tue,  1 Jul 2025 07:36:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gLAhX1pG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LpmZoNVN"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E5D72601;
-	Tue,  1 Jul 2025 07:35:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF6341C5D6A;
+	Tue,  1 Jul 2025 07:36:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751355332; cv=none; b=iwjvVoGv9zSqptXfDLrcAhqQDE/a5XXhQM07jL37qD9mJ9KYFD3CmBzGwLLb1ZQaTKqJh1/n9jzninNw/uoYFbzioSEKBIIAcnRJZGk+Xc+2NzDoMW+97o/6s7a05NLvGzHj8k3+MmrpD9OHNNZJqdWCh2RNVfGAcc2qM4cOYeI=
+	t=1751355397; cv=none; b=MWEIrtYsdmRH5vdemimqZk9LFALt500eFhxxYHT7BFWCYyWliWWCMuDZng/3l8dM80k0YS86FWSv8r0ySmDpw138VWss+MixpzPD9N52pKp/WAvHn5SQdOe1Vb2qUh3CP3JK9os5HJjqPoVcrYU85q/BZhDCLXJ2E74WCANYTQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751355332; c=relaxed/simple;
-	bh=e2EpXBFjaYIIp6kEDbtynlAx+t4UZrjkqzi6BdYvlKs=;
+	s=arc-20240116; t=1751355397; c=relaxed/simple;
+	bh=U4HlzlTwJnuSpQ/QUilXEEDtFzjAtAklmSTsH1co8xI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Zj0CKmhASBkos9j0uT6V6Prx+r0dffy7m2HWWiv0MwxVhbnI/PJiRuDjfR93DkxPCJKnFZEVHclfECVT+y0Rsl6Df3gQUj74azPLr79DQHAK8QdEibXRGX/FM+00a+y4MJ9zv8xQa/rFXNqgzI/zpmX4afm2ca/bA+47HxH6KzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gLAhX1pG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1D15C4CEEB;
-	Tue,  1 Jul 2025 07:35:26 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=eR2zTAys6E2QlMUrXqsYEUIYLU57XnFfEZ+oa3mrvVzaFS3VoxjB97BbYVxR9XC9HpZFfb2l4FicHtMCKiuDjc2Cy27RUH3mNAO8cgVedoig4TfBNmR8PIe06VkhCR/Y3ClB1KSTaUU3iQ26d8SEvCjS0bWCUjhAA5jaRHmlxhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LpmZoNVN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28478C4CEEB;
+	Tue,  1 Jul 2025 07:36:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751355331;
-	bh=e2EpXBFjaYIIp6kEDbtynlAx+t4UZrjkqzi6BdYvlKs=;
+	s=k20201202; t=1751355396;
+	bh=U4HlzlTwJnuSpQ/QUilXEEDtFzjAtAklmSTsH1co8xI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gLAhX1pGfGHjJorK/JnsksT/+iVcm91wV04/z6EM/WS7ODCB8SYcSuurvEnlXu7P6
-	 fQS0rEvYSjb1PNiJl7hGzna84hApy+ap84u7HFvCNxtoVTH+R1xlYKFViF/2/Kwa+1
-	 5sNmLmToXJYi9sjqYM5CfWkYjFOb3KG2aRx4MDRxUaa83a56haZD0gsvW6WxnLD7rI
-	 x0ybO0USKdiZp9rs7Kt8M8w18gg8BP2e3WOQlXHaJSjYEyH688HlZuIf3VeYkDhb6a
-	 qRI7iFNnxoWIG4erxx7xkX+Omq1wv5AXWAzdWTNe8GQUPF2hMkyXhM4dyrd8t43wyn
-	 OwWT+qKdRWjSw==
-Message-ID: <de965773-bab1-4c50-b111-19896465e53e@kernel.org>
-Date: Tue, 1 Jul 2025 09:35:24 +0200
+	b=LpmZoNVNHwWfEP/iNXnnLXsrOMelPo1NHORCi67ko4AP5nqFNKHCNQXeId2V+ocXO
+	 8OJXcZm3+5aZWYsH2FsMke4W5esVkI7E25bVSbCxNBMRfkcQKY+NsZNNSXiMtPSRwF
+	 pcMIs+0KSOT5Nse6XR8eNSxW+McqMP7jLqoxfTA9ziS61EJYcE7VAgPPwsyHmxMGLy
+	 jjtT0IeGLyVg9DaNOOBKojOkTmSlQMQ1wdFvzJ+FTZ2OiFgoXZKFcNlupnS5KLxr/M
+	 HPrtkvQCfpnGhDwdmvyg9nEEbEB+enN5hl+q42dBdYZ9SPrflhk1vuR8JgXhcef56t
+	 s1DtZ/MzbGAeg==
+Message-ID: <ebc16dbe-2405-4956-91a0-bcce9f199326@kernel.org>
+Date: Tue, 1 Jul 2025 09:36:30 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/8] dt-bindings: dma: marvell,mmp-dma: Add SpacemiT K1
- PDMA support
+Subject: Re: [PATCH v2 7/8] riscv: dts: spacemit: Enable PDMA0 on Banana Pi F3
+ and Milkv Jupiter
 To: Guodong Xu <guodong@riscstar.com>, Vinod Koul <vkoul@kernel.org>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>,
@@ -65,7 +65,7 @@ Cc: Alex Elder <elder@riscstar.com>, Vivian Wang <wangruikang@iscas.ac.cn>,
  linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
  spacemit@lists.linux.dev
 References: <20250701-working_dma_0701_v2-v2-0-ab6ee9171d26@riscstar.com>
- <20250701-working_dma_0701_v2-v2-1-ab6ee9171d26@riscstar.com>
+ <20250701-working_dma_0701_v2-v2-7-ab6ee9171d26@riscstar.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -111,133 +111,37 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250701-working_dma_0701_v2-v2-1-ab6ee9171d26@riscstar.com>
+In-Reply-To: <20250701-working_dma_0701_v2-v2-7-ab6ee9171d26@riscstar.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 01/07/2025 07:36, Guodong Xu wrote:
-> Add "spacemit,k1-pdma" compatible string to support SpacemiT K1 PDMA
-> controller. This variant requires:
-
-Why is this marvell? This should be explained here, it's really unexpected.
-
-> - clocks: Clock controller for the DMA
-> - resets: Reset controller for the DMA
-> 
-> Also add explicit #dma-cells property definition with proper constraints:
-> - 2 cells for marvell,pdma-1.0 and spacemit,k1-pdma
->     - (request number + unused)
-> - 1 cell for other variants
->     - (request number only)
-> 
-> This fixes "make dtbs_check W=3" warnings about unevaluated properties.
-
-How can I reproduce these warnings? Looks like this is not relevant
-here. Each patch is applied one after another and commit msg must be
-correct at this point.
-
-
+On 01/07/2025 07:37, Guodong Xu wrote:
+> Enable the PDMA0 on the SpacemiT K1-based Banana Pi F3 and Milkv Jupiter
+> boards by setting its status to "okay".
 > 
 > Signed-off-by: Guodong Xu <guodong@riscstar.com>
 > ---
-> v2:
-> - Used more specific compatible string "spacemit,k1-pdma"
-> - Enhanced DT bindings with conditional constraints:
->   - clocks/resets properties only required for SpacemiT K1
->   - #dma-cells set to 2 for marvell,pdma-1.0 and spacemit,k1-pdma
->   - #dma-cells set to 1 for other variants, ie.
->       marvell,adma-1.0 and  marvell,pxa910-squ
+> v2: added pdma0 enablement on Milkv Jupiter
 > ---
->  .../devicetree/bindings/dma/marvell,mmp-dma.yaml   | 49 ++++++++++++++++++++++
->  1 file changed, 49 insertions(+)
+>  arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts   | 4 ++++
+>  arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts | 4 ++++
+>  2 files changed, 8 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/dma/marvell,mmp-dma.yaml b/Documentation/devicetree/bindings/dma/marvell,mmp-dma.yaml
-> index d447d5207be0436bc7fb648dffe31f8b780b491d..7b5f7ccfc9dbb69bfef250146cba5434548f3702 100644
-> --- a/Documentation/devicetree/bindings/dma/marvell,mmp-dma.yaml
-> +++ b/Documentation/devicetree/bindings/dma/marvell,mmp-dma.yaml
-> @@ -18,6 +18,7 @@ properties:
->        - marvell,pdma-1.0
->        - marvell,adma-1.0
->        - marvell,pxa910-squ
-> +      - spacemit,k1-pdma
->  
->    reg:
->      maxItems: 1
-> @@ -32,6 +33,19 @@ properties:
->        A phandle to the SRAM pool
->      $ref: /schemas/types.yaml#/definitions/phandle
->  
-> +  clocks:
-> +    description: Clock for the controller
-> +    maxItems: 1
+> diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
+> index fe22c747c5012fe56d42ac8a7efdbbdb694f31b6..39133450e07f2cb9cb2247dc0284851f8c55031b 100644
+> --- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
+> +++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
+> @@ -45,3 +45,7 @@ &uart0 {
+>  	pinctrl-0 = <&uart0_2_cfg>;
+>  	status = "okay";
+>  };
 > +
-> +  resets:
-> +    description: Reset controller for the DMA controller
-> +    maxItems: 1
-> +
-> +  '#dma-cells':
-> +    description:
-> +      DMA specifier, consisting of a phandle to DMA controller plus the
-> +      following integer cells
-
-Why do you need it here? Isn't this coming from dma common schemas?
-> +
->    '#dma-channels':
->      deprecated: true
->  
-> @@ -52,12 +66,47 @@ allOf:
->            contains:
->              enum:
->                - marvell,pdma-1.0
-> +              - spacemit,k1-pdma
->      then:
->        properties:
->          asram: false
->      else:
->        required:
->          - asram
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: spacemit,k1-pdma
-> +    then:
-> +      required:
-> +        - clocks
-> +        - resets
-> +    else:
-> +      properties:
-> +        clocks: false
-> +        resets: false
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - marvell,pdma-1.0
-> +              - spacemit,k1-pdma
-> +    then:
-> +      properties:
-> +        '#dma-cells':
-> +          const: 2
-> +          description:
-> +            The first cell contains the DMA request number for the peripheral
-> +            device. The second cell is currently unused but must be present for
-> +            backward compatibility.
-> +    else:
-> +      properties:
-> +        '#dma-cells':
-> +          const: 1
-> +          description:
-> +            The cell contains the DMA request number for the peripheral device.
+> +&pdma0 {
 
 
-It's getting complicated. I suggest to make your own schema. Then you
-would also switch to preferred 'sram' property instead of that legacy
-'asram'.
+Does not look like placed according to DTS coding style. What sort of
+ordering Spacemit follows?
 
-Really, ancient schemas should not be grown for new, completely
-different platforms.
 
 
 Best regards,

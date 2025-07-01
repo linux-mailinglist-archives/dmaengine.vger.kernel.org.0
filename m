@@ -1,48 +1,48 @@
-Return-Path: <dmaengine+bounces-5702-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5703-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A272AEEFD1
-	for <lists+dmaengine@lfdr.de>; Tue,  1 Jul 2025 09:36:42 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 71E19AEEFD9
+	for <lists+dmaengine@lfdr.de>; Tue,  1 Jul 2025 09:37:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B694717F5AD
-	for <lists+dmaengine@lfdr.de>; Tue,  1 Jul 2025 07:36:42 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4887F7A95DE
+	for <lists+dmaengine@lfdr.de>; Tue,  1 Jul 2025 07:36:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28EEB242928;
-	Tue,  1 Jul 2025 07:36:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 963C325CC70;
+	Tue,  1 Jul 2025 07:37:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LpmZoNVN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t30PodeJ"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF6341C5D6A;
-	Tue,  1 Jul 2025 07:36:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6232D51022;
+	Tue,  1 Jul 2025 07:37:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751355397; cv=none; b=MWEIrtYsdmRH5vdemimqZk9LFALt500eFhxxYHT7BFWCYyWliWWCMuDZng/3l8dM80k0YS86FWSv8r0ySmDpw138VWss+MixpzPD9N52pKp/WAvHn5SQdOe1Vb2qUh3CP3JK9os5HJjqPoVcrYU85q/BZhDCLXJ2E74WCANYTQA=
+	t=1751355446; cv=none; b=aoBuJb7S2oJ8mt1TWNOqEh786S2GYzWTTwftkbjcCUOrY1rR/1uPxKFRo5ul5WBi+3Z/hZGt4Sw5PFhaLhVbBXAy55chp5sARwjtWQp+nku2eYmvShXufIS8F9sFWyN6wEt0I5I/lz0xkZN+OsznYUBuTWWj5WaTidhF4toxwEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751355397; c=relaxed/simple;
-	bh=U4HlzlTwJnuSpQ/QUilXEEDtFzjAtAklmSTsH1co8xI=;
+	s=arc-20240116; t=1751355446; c=relaxed/simple;
+	bh=tz9T+HYGlllDN1MZ/abac2KVF7+1D3682xOF+HsLY5c=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eR2zTAys6E2QlMUrXqsYEUIYLU57XnFfEZ+oa3mrvVzaFS3VoxjB97BbYVxR9XC9HpZFfb2l4FicHtMCKiuDjc2Cy27RUH3mNAO8cgVedoig4TfBNmR8PIe06VkhCR/Y3ClB1KSTaUU3iQ26d8SEvCjS0bWCUjhAA5jaRHmlxhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LpmZoNVN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28478C4CEEB;
-	Tue,  1 Jul 2025 07:36:31 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=M72xHMxU8sh7hoc8MBXz4mlJgJABif0XT2BQflfMdsfSp3WC2wdwPbvt48nGTGAzQXjvzJda+QGUxbU45NBdXeUr1e2AZlGkjOg0GuE/N9Xnp+PEmtXP+PXTfpsTCbLtyLCdM3OPeTXOn03T5ASfi1UDhV5jTxlT3JWst5Ediqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t30PodeJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A23E6C4CEEB;
+	Tue,  1 Jul 2025 07:37:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751355396;
-	bh=U4HlzlTwJnuSpQ/QUilXEEDtFzjAtAklmSTsH1co8xI=;
+	s=k20201202; t=1751355445;
+	bh=tz9T+HYGlllDN1MZ/abac2KVF7+1D3682xOF+HsLY5c=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=LpmZoNVNHwWfEP/iNXnnLXsrOMelPo1NHORCi67ko4AP5nqFNKHCNQXeId2V+ocXO
-	 8OJXcZm3+5aZWYsH2FsMke4W5esVkI7E25bVSbCxNBMRfkcQKY+NsZNNSXiMtPSRwF
-	 pcMIs+0KSOT5Nse6XR8eNSxW+McqMP7jLqoxfTA9ziS61EJYcE7VAgPPwsyHmxMGLy
-	 jjtT0IeGLyVg9DaNOOBKojOkTmSlQMQ1wdFvzJ+FTZ2OiFgoXZKFcNlupnS5KLxr/M
-	 HPrtkvQCfpnGhDwdmvyg9nEEbEB+enN5hl+q42dBdYZ9SPrflhk1vuR8JgXhcef56t
-	 s1DtZ/MzbGAeg==
-Message-ID: <ebc16dbe-2405-4956-91a0-bcce9f199326@kernel.org>
-Date: Tue, 1 Jul 2025 09:36:30 +0200
+	b=t30PodeJ3I6msIWp7IWV431di3gpRjTmkfmEMSwWjQGMdqwdd7ipv46rKvf4ptqee
+	 ZLeWbSjMlzbDZcTXIImM0ErJpTjelcfi6T0KwYSLidLqLyXrye4nbbF6OKID6cGDku
+	 qHKkEzNluWuUmKhL95mNI46oj7S/z6HconCiy/AwUySzRLbiIuigky+ZXSiajqsh7k
+	 sJ+I+CmNRGPBXrWrKt1SuOSQKjWrMyEGCLnBBX5fBWCEW6x/swF0WYGw2vA5TmZenp
+	 pyKEVN3w8Zh6jcrfW2tH6lQKKa4srM7NSRDkFA0rZanVf6yuDpmiEmfF6pFZErElEj
+	 zx2HsR+Kw3nOQ==
+Message-ID: <a329e8a9-d581-4af1-ac0f-9f104a810bc9@kernel.org>
+Date: Tue, 1 Jul 2025 09:37:19 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -50,8 +50,7 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 7/8] riscv: dts: spacemit: Enable PDMA0 on Banana Pi F3
- and Milkv Jupiter
+Subject: Re: [PATCH v2 6/8] riscv: dts: spacemit: Add PDMA0 node for K1 SoC
 To: Guodong Xu <guodong@riscstar.com>, Vinod Koul <vkoul@kernel.org>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>,
@@ -65,7 +64,7 @@ Cc: Alex Elder <elder@riscstar.com>, Vivian Wang <wangruikang@iscas.ac.cn>,
  linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
  spacemit@lists.linux.dev
 References: <20250701-working_dma_0701_v2-v2-0-ab6ee9171d26@riscstar.com>
- <20250701-working_dma_0701_v2-v2-7-ab6ee9171d26@riscstar.com>
+ <20250701-working_dma_0701_v2-v2-6-ab6ee9171d26@riscstar.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -111,37 +110,39 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250701-working_dma_0701_v2-v2-7-ab6ee9171d26@riscstar.com>
+In-Reply-To: <20250701-working_dma_0701_v2-v2-6-ab6ee9171d26@riscstar.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 01/07/2025 07:37, Guodong Xu wrote:
-> Enable the PDMA0 on the SpacemiT K1-based Banana Pi F3 and Milkv Jupiter
-> boards by setting its status to "okay".
+> Add PDMA0 dma-controller node under dma_bus for SpacemiT K1 SoC.
+> 
+> The PDMA0 node is marked as disabled by default, allowing board-specific
+> device trees to enable it as needed.
 > 
 > Signed-off-by: Guodong Xu <guodong@riscstar.com>
 > ---
-> v2: added pdma0 enablement on Milkv Jupiter
+> v2:
+> - Updated the compatible string.
+> - Rebased. Part of the changes in v1 is now in this patchset:
+>    - "riscv: dts: spacemit: Add DMA translation buses for K1"
+>    - Link: https://lore.kernel.org/all/20250623-k1-dma-buses-rfc-wip-v1-0-c0144082061f@iscas.ac.cn/
 > ---
->  arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts   | 4 ++++
->  arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts | 4 ++++
->  2 files changed, 8 insertions(+)
+>  arch/riscv/boot/dts/spacemit/k1.dtsi | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 > 
-> diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-> index fe22c747c5012fe56d42ac8a7efdbbdb694f31b6..39133450e07f2cb9cb2247dc0284851f8c55031b 100644
-> --- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-> +++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-> @@ -45,3 +45,7 @@ &uart0 {
->  	pinctrl-0 = <&uart0_2_cfg>;
->  	status = "okay";
->  };
-> +
-> +&pdma0 {
+> diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
+> index 8f44c1458123be9e74a80878517b2b785d743bef..69e0b1edf3276df26c07c15d81607f83de0e5d57 100644
+> --- a/arch/riscv/boot/dts/spacemit/k1.dtsi
+> +++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
+> @@ -591,6 +591,17 @@ uart9: serial@d4017800 {
+>  				status = "disabled";
+>  			};
+>  
+> +			pdma0: dma-controller@d4000000 {
 
 
-Does not look like placed according to DTS coding style. What sort of
-ordering Spacemit follows?
-
+Oddly placed. Is spacemit not following standard DTS coding style ordering?
 
 
 Best regards,

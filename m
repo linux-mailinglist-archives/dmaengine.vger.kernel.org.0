@@ -1,48 +1,81 @@
-Return-Path: <dmaengine+bounces-5726-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5727-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4DBF5AF6368
-	for <lists+dmaengine@lfdr.de>; Wed,  2 Jul 2025 22:38:13 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C769DAF6468
+	for <lists+dmaengine@lfdr.de>; Wed,  2 Jul 2025 23:54:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E357548749E
-	for <lists+dmaengine@lfdr.de>; Wed,  2 Jul 2025 20:37:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 05351168C7C
+	for <lists+dmaengine@lfdr.de>; Wed,  2 Jul 2025 21:54:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA7E02D63E2;
-	Wed,  2 Jul 2025 20:38:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 840A0238C0D;
+	Wed,  2 Jul 2025 21:53:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vPRpVWdn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d7fEB+PD"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79B35225A47;
-	Wed,  2 Jul 2025 20:38:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C359B19D8A7;
+	Wed,  2 Jul 2025 21:53:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751488687; cv=none; b=NFVX2mMPz7HrSJmB0abMG5fbE+7FTLPDeLJVjugSxSYFWSV1ZbeK9cm2EumyeB3xMMdkoHiQDvdrCUkXnW654to19WCX20PjyCLSlLdtLej2lCyEeGodipq39gUZS5ZQdXPBFQ3hIq0rwjwitGUI3ovLbmm3NY1k++1va+yz1ug=
+	t=1751493235; cv=none; b=E3mh+3mWHI/Yor8Xzb3GZz5BgA+NrpqKq9pTgvxZf1gSi3P5Rsw95T8f9t9HvC13lp4SQ4L2cqrmmvaf2LgZ2+oSXyD0/KH5mDukJ6R/isbwSw7/YVOs6+c0Jirz8jzo2w/YGk6mjmTDHAdUSVIiXD9xyHLAbTkI8PTb44+H6Bc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751488687; c=relaxed/simple;
-	bh=dDCS6QVJ7nXRWlnC2SiSC9vvqcF5+4EB5/e+hxz2kYg=;
+	s=arc-20240116; t=1751493235; c=relaxed/simple;
+	bh=rxvHHcdLxay5pgV2pri9chnKzLlI/6ZTM1bPqLXpXno=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UI8685KqAWZu7vct0Pzs+IgSVyJfyFeMVkaebg3XJ4xmXdAy0XFriTHzWimyf2ATLcfYaJr785djJ4bJFMOYYFaWKjGXgUq2xyYjig6hgzD4mHtXJnGR6O7Zka8OaG4hcBXzObJSAeQcrAvW3sg5MKZ+Nu3p1fNKHN9uTTrstmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vPRpVWdn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF21EC4CEE7;
-	Wed,  2 Jul 2025 20:38:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751488687;
-	bh=dDCS6QVJ7nXRWlnC2SiSC9vvqcF5+4EB5/e+hxz2kYg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=vPRpVWdnh+OJAAA7arYY7PnTcK2jpNELhtnvDh4laCUI4hYVphhNSPs460L2IVWTr
-	 1jpr5XgjEgv88LJM91FV1cNYfzB7YLuH9t4SdJC4DNuy9RqwgcjL+99vF3iuJ1SctZ
-	 ARHOTjY1hY8ZUrKMa/jH/4mi5bmpe0EB6KOC/Y7QKXXjfTaQTMI7TcjZlR4uOWwzpO
-	 npAM2tFfXbRoGuWi1e2mt8hxCh3uiDlhHKU8fHBgR5DetbenJmcGQl54fPFsVTQ3Oh
-	 ieCiVM47209l1++MMj/p6W+sbLAwaZixwCFKlfFnwbk9kM15X/w6gTj592919C4Z9u
-	 PBAsrRUs6476w==
-Message-ID: <43f19fbc-838b-431e-9d02-ecacf5f43731@kernel.org>
-Date: Wed, 2 Jul 2025 22:38:00 +0200
+	 In-Reply-To:Content-Type; b=HDMEUXvx0Xo6zsUYz2IEJTRqohtk59TS0jpNb8dM4kD4t+NbOerww0yln3xKrjWyN8zh4EHyZljLdn3cirzukvT4fpYfy2XBm+nU6l+Bf6vuAn7P63Vpf6J446gyrjQNBtxiHWx5FMJkVcUmUFKdsYmk8F2ClTqo4v4NlX81g7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d7fEB+PD; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ae0dad3a179so1167679666b.1;
+        Wed, 02 Jul 2025 14:53:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751493231; x=1752098031; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tjhU4lWDkYhIAdbwGlMIPjSef1uErDPPW0mevCjlBN0=;
+        b=d7fEB+PDCFvMQskrNPBnHBB/lC7F28TmDs/aXRrXBOmwPPa7m5GRRq2xCbsx0W1pMa
+         iMdvjvWm/UJBzsIY1DyU+lhBEYf+d7aFfQi1+PKhQuh9johwHla0XsAp2t/4wncHrjkW
+         waCU3tN7NjRJL6X2YeA1T1kQ+1UWFGnGyCnbS7hieXCLm+q/CkOHFqB1kdGexKb4XE8d
+         Ggg/FXXDxYo9QK1hHuYs1coJbG/8UIq3vbIFUiBizCsdT0Lwiw2sFg2oVg3cJYEq5Jh8
+         cMwkYW6AAAYOkyJ4f2SIpvocM1UBUd8zMsBqnmT8CnmaDryskPsOh9cYy5GevISQStW0
+         QlKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751493231; x=1752098031;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tjhU4lWDkYhIAdbwGlMIPjSef1uErDPPW0mevCjlBN0=;
+        b=g06Q5ctRUaRdXLL9RH+TXdx0o2lsYHqLph8iOkmIvpUBlfRHObGdSYAxcJ2DQ2Bdbp
+         b5QjJoP9SrcZus8rW6hx/FsTk1GP813e6rKHpgCICWJIPPH7j0UVNM0Mq6m1xXkRBMG9
+         IbyYOIRcIoY9FEIuoo0DGSd+oQxZ0ubeZx98OGmEPtyuKQDaPfxKCt9T7Ve2P0xOo72+
+         e6/v94XVnIkVZu8HXsoe1mlrG60fFxcq2lHWfw6Ez1Sbq3wsXdNRT9U4cJr/s0iKPkbU
+         jiZ3Ehkk6YjK3G5btJaaOH/BA6/kaNwNCcGVHgsncEgq6CzMB7vFIeIYTW1WKKQ3FC6A
+         4Jxg==
+X-Forwarded-Encrypted: i=1; AJvYcCUX9YYv/tjWJkBDl0LLGyeiCnY6+c1NKm2b+xsAG6tqo1BghU9FatdhnF39uKeAYcKyBqtF4qct/+c=@vger.kernel.org, AJvYcCVjEuWViTr/dwuJnRaU3gGF9uhe6OMcO/7+do5YesemBtj4Avdpx+Ji4x4te1eWn8oLCpvpOz69EgMvrrsh@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGAFhFrgoboykjoQaRXdZzk+iB00mpv3rvN7LohBXxbYQhNy5l
+	BmLF+2dBEceGo8FwOCHLCTjYPvhZsHPxYoVrbT78uvvzHoWmxP1FNdQX
+X-Gm-Gg: ASbGncvR4/zFUseZp8vi4yw8+IPurAMX0SOpcHvSay7lXPqjVMaFB9ka10ef0HUJer/
+	MxzYVfMOK5vBedovDwHl5ZlJdj6zsHcVC/bduUzxnx9KM5wVbNOQumlGPGLlAfNJQqW9dXHfSMq
+	quTn433SxdRgLaDgNWVXjC0Qv8pVis8TAMqOn/u8bSEj81dl+hXnzn0sWqXu2zPC+p/SO0m6r84
+	0xCoAgqShyZd1u6XUs5zpLYuAGyyusCpYBXSFGJWAgG4VlAeUctX9TCDFeIFCojtVsslJJ2BfVU
+	h53M6ZMNZF3C0e7vWUQZK1AQ8PAiUhrENLpw52z1ML/gOfeO436Sd20n6GX0Ti+3fi/rConS+PF
+	ZJM1ntOUSxhA0DcHxNNe2BVkNRf/Kjgvj34/fwSn/5/MjfRn/8lyvvU3BH2NK6hVdLboAE+s+Lt
+	ebHHY1FSM=
+X-Google-Smtp-Source: AGHT+IH5fqSYi27hWsKvh5k/kAGyjsZCZElfUzRK3f2yygjGkAJ4EGIUiFN5Zdt0UXCyCqiowOwOQQ==
+X-Received: by 2002:a17:907:60d3:b0:ae3:5e2a:493 with SMTP id a640c23a62f3a-ae3c2c4703amr463260966b.49.1751493230681;
+        Wed, 02 Jul 2025 14:53:50 -0700 (PDT)
+Received: from ?IPV6:2a02:a466:68ed:1:c65a:f772:14df:7b2d? (2a02-a466-68ed-1-c65a-f772-14df-7b2d.fixed6.kpn.net. [2a02:a466:68ed:1:c65a:f772:14df:7b2d])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae353ca0fdasm1147252666b.147.2025.07.02.14.53.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Jul 2025 14:53:50 -0700 (PDT)
+Message-ID: <dd2b009a-cc8b-4f21-b248-64e909830bc0@gmail.com>
+Date: Wed, 2 Jul 2025 23:53:48 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -50,151 +83,82 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/8] dt-bindings: dma: marvell,mmp-dma: Add SpacemiT K1
- PDMA support
-To: Guodong Xu <guodong@riscstar.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>,
- =?UTF-8?Q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, Alex Elder <elder@riscstar.com>,
- Vivian Wang <wangruikang@iscas.ac.cn>, dmaengine@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
-References: <20250701-working_dma_0701_v2-v2-0-ab6ee9171d26@riscstar.com>
- <20250701-working_dma_0701_v2-v2-1-ab6ee9171d26@riscstar.com>
- <de965773-bab1-4c50-b111-19896465e53e@kernel.org>
- <CAH1PCMbKGeXL9Te6M28ZdX8VBvaToKcK7f+JmN6JsCfttG_Mtg@mail.gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 1/2] dmaengine: virt-dma: convert tasklet to BH
+ workqueue for callback invocation
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Alexander Kochetkov <al.kochet@gmail.com>
+Cc: Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Nishad Saraf <nishads@amd.com>,
+ Lizhi Hou <lizhi.hou@amd.com>, Jacky Huang <ychuang3@nuvoton.com>,
+ Shan-Chun Hung <schung@nuvoton.com>,
+ Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui
+ <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+ Lars-Peter Clausen <lars@metafoo.de>, Paul Cercueil <paul@crapouillou.net>,
+ Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+ Manivannan Sadhasivam <mani@kernel.org>, Frank Li <Frank.Li@nxp.com>,
+ Zhou Wang <wangzhou1@hisilicon.com>, Longfang Liu <liulongfang@huawei.com>,
+ Andy Shevchenko <andy@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Keguang Zhang <keguang.zhang@gmail.com>,
+ Sean Wang <sean.wang@mediatek.com>, Matthias Brugger
+ <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+ Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>,
+ Robert Jarzmik <robert.jarzmik@free.fr>,
+ Paul Walmsley <paul.walmsley@sifive.com>,
+ Samuel Holland <samuel.holland@sifive.com>, Orson Zhai
+ <orsonzhai@gmail.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Chunyan Zhang <zhang.lyra@gmail.com>,
+ Patrice Chotard <patrice.chotard@foss.st.com>,
+ =?UTF-8?Q?Am=C3=A9lie_Delaunay?= <amelie.delaunay@foss.st.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, Chen-Yu Tsai
+ <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Laxman Dewangan <ldewangan@nvidia.com>, Jon Hunter <jonathanh@nvidia.com>,
+ Thierry Reding <thierry.reding@gmail.com>,
+ Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+ Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Dave Jiang <dave.jiang@intel.com>,
+ Amit Vadhavana <av2082000@gmail.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+ Ulf Hansson <ulf.hansson@linaro.org>, Md Sadre Alam
+ <quic_mdalam@quicinc.com>, Casey Connolly <casey.connolly@linaro.org>,
+ Kees Cook <kees@kernel.org>, Fenghua Yu <fenghua.yu@intel.com>,
+ Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
+References: <20250616124934.141782-1-al.kochet@gmail.com>
+ <20250616124934.141782-2-al.kochet@gmail.com>
+ <aFku5QPf38JKlcPt@smile.fi.intel.com>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <CAH1PCMbKGeXL9Te6M28ZdX8VBvaToKcK7f+JmN6JsCfttG_Mtg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: Ferry Toth <fntoth@gmail.com>
+In-Reply-To: <aFku5QPf38JKlcPt@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 01/07/2025 11:52, Guodong Xu wrote:
-> Hi, Krzysztof
+Op 23-06-2025 om 12:39 schreef Andy Shevchenko:
+> On Mon, Jun 16, 2025 at 12:48:03PM +0000, Alexander Kochetkov wrote:
+>> Currently DMA callbacks are called from tasklet. However the tasklet is
+>> marked deprecated and must be replaced by BH workqueue. Tasklet callbacks
+>> are executed either in the Soft IRQ context or from ksoftirqd thread. BH
+>> workqueue work items are executed in the BH context. Changing tasklet to
+>> BH workqueue improved DMA callback latencies.
+>>
+>> The commit changes virt-dma driver and all of its users:
+>> - tasklet is replaced to work_struct, tasklet callback updated accordingly
+>> - kill_tasklet() is replaced to cancel_work_sync()
+>> - added include of linux/interrupt.h where necessary
 > 
-> On Tue, Jul 1, 2025 at 3:35 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>
->> On 01/07/2025 07:36, Guodong Xu wrote:
->>> Add "spacemit,k1-pdma" compatible string to support SpacemiT K1 PDMA
->>> controller. This variant requires:
->>
->> Why is this marvell? This should be explained here, it's really unexpected.
->>
+> ...
 > 
-> SpacemiT K1 SoC uses the same DMA controller as Marvell MMP. They share most
-> of the registers (and address offsets) and only enhanced in addressing space
-> capability (from 32bit to 64bit).
-
-I hope you got the last comment...
-
+>>   drivers/dma/hsu/hsu.c                          |  2 +-
+>>   drivers/dma/idma64.c                           |  3 ++-
 > 
-> Also, spacemit,k1-pdma and marvell,pdma-1.0 use the same driver (mmp_pdma.c),
-> that's the reason why I chose keeping them in the same binding file.
+> Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> for the above two.
 
-That's moderate reason. I explained here further - don't grow old
-bindings with completely new devices, because you keep growing old,
-poorer patterns. You have a new device, you can make it right.
+With and without PREEMPT_RT (on Intel Edison) same 2 drivers.
 
+Tested-by: Ferry Toth <fntoth@gmail.com> # for Merrifield
 
-...
-
->>> +      properties:
->>> +        compatible:
->>> +          contains:
->>> +            const: spacemit,k1-pdma
->>> +    then:
->>> +      required:
->>> +        - clocks
->>> +        - resets
->>> +    else:
->>> +      properties:
->>> +        clocks: false
->>> +        resets: false
->>> +  - if:
->>> +      properties:
->>> +        compatible:
->>> +          contains:
->>> +            enum:
->>> +              - marvell,pdma-1.0
->>> +              - spacemit,k1-pdma
->>> +    then:
->>> +      properties:
->>> +        '#dma-cells':
->>> +          const: 2
->>> +          description:
->>> +            The first cell contains the DMA request number for the peripheral
->>> +            device. The second cell is currently unused but must be present for
->>> +            backward compatibility.
->>> +    else:
->>> +      properties:
->>> +        '#dma-cells':
->>> +          const: 1
->>> +          description:
->>> +            The cell contains the DMA request number for the peripheral device.
->>
->>
->> It's getting complicated. I suggest to make your own schema. Then you
->> would also switch to preferred 'sram' property instead of that legacy
->> 'asram'.
->>
->> Really, ancient schemas should not be grown for new, completely
-> 
-> The reason that they share the same device driver may not be strong enough
-> compared to what you said here.
-
-If DMA maintainer(s) reject complexity in driver, then it is fine. But
-till that happens, you should rather come with a clean new binding and
-don't grow legacy.
-
-
-Best regards,
-Krzysztof
 

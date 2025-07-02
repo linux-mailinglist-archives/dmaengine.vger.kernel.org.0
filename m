@@ -1,133 +1,171 @@
-Return-Path: <dmaengine+bounces-5712-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5713-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6066AAF1191
-	for <lists+dmaengine@lfdr.de>; Wed,  2 Jul 2025 12:19:55 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 087CCAF134F
+	for <lists+dmaengine@lfdr.de>; Wed,  2 Jul 2025 13:09:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9C2ED1C25A1A
-	for <lists+dmaengine@lfdr.de>; Wed,  2 Jul 2025 10:20:10 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 53FFB1667A0
+	for <lists+dmaengine@lfdr.de>; Wed,  2 Jul 2025 11:08:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29D8A253F15;
-	Wed,  2 Jul 2025 10:19:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C31A2571D8;
+	Wed,  2 Jul 2025 11:07:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b="TE/+6YQJ"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF8224BCF5;
-	Wed,  2 Jul 2025 10:19:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8514D1DF27E
+	for <dmaengine@vger.kernel.org>; Wed,  2 Jul 2025 11:07:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751451553; cv=none; b=CYCbWGEyrUUJxglso74PYdiggwaOPYZdisJA8xPSi1thkkVDDIUezhQAU1ER5GX0G176569wN8vEVs3VLd9a9u/DXkJ1MoVq062ERQx9IjUvMn4wM3O5nn7xFq2a0IYmwsDtOy+fdkJqHT6dc5SnwILDgzc+BHEyxlXrcrBnCQo=
+	t=1751454458; cv=none; b=MpbUnhh6hfhsZkGTGg++rLVnbmdBrNg1NYFS2vpX3gUgbLb5aS9COYGQpP9XlPzSVzPGAwi3jzC2c0ubpTtGUUr3qhARkv1/gTI64W6BwZntskPTF0lgJfrt9WluAUotPzsiUq9Cue/2fmAPQezpYQUHvtG/mnL0fJBa/fGzDF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751451553; c=relaxed/simple;
-	bh=GmPP3P7NMkynjb1/dYzzh/uEXHkmc1XZUkN/yrIBi/E=;
+	s=arc-20240116; t=1751454458; c=relaxed/simple;
+	bh=FcDWilOaDWcVuzP7mVz9zoKRX0Rnc7UAViC1O23BGxo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qKckFBt/NqfdjVol2Woc4MbzberMIN1g53IaORYVIAEX1/spIcr/A5GO81qCkxKAbFCXRn022piDSXjbk7yCVsFdZIZtL8dx7URFlE0o1xUaSXqA7cy0axg83LqowJ1iXoTkRr+PxWoorJYUTKTAE3xAbZbOfc+yMDHk3QsmEeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-5313ea766d8so2176605e0c.0;
-        Wed, 02 Jul 2025 03:19:10 -0700 (PDT)
+	 To:Cc:Content-Type; b=AsFcLT0UgsGMSLW6zGEn3WnciMNNuyKwtI1F2gyhXuR03mltB6qiPAe8DkSGTVdXQNy1Gua4xNQxwS058nbif5fqulfL8ti7nmATP5MMzx+Vq1wnhRV1OGqX59IIU9pUvjDYvvZM/dealhgWJ3srUEeNMljpfCTBAFGmGTV9eGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr; spf=pass smtp.mailfrom=sartura.hr; dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b=TE/+6YQJ; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sartura.hr
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-606b58241c9so6841383a12.3
+        for <dmaengine@vger.kernel.org>; Wed, 02 Jul 2025 04:07:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sartura.hr; s=sartura; t=1751454455; x=1752059255; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rPV93Zxqd5A5yWh1+OQ3kXQBktcCdNYnO7HGfnoF97w=;
+        b=TE/+6YQJkkVhWbLqOJTGUEwxumYYTd2YCaBEDnC0z1GqaUKBjKQrUCEDYQWHj2fdqd
+         JkWVg60p3kgxDoVk2X9bpJSf0TU92JPjT3n+oUuisHxEt7x5dm7DuR5uyDR+3/mjXwH0
+         yP07bjEIZ7IN/9HlMbcsXJf3WaLOSAIg06Zx1wgEieqVVvtrZ3T6s0tMs2Jn3NjuyZMk
+         b6t0PS9kP69uY8Ff2vaTkHoNOBrU+GhwKXbrdH0L3Qt06R274X5rdg43GMoaXr4oG0Ni
+         mTWJ2OtRu7oAhWLxwWvB9CQ0TekDyXYrKiXMUyVHy1EJUWlnY/j51lyxN6Vxk6ZhKMiW
+         NqOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751451549; x=1752056349;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tifjm69XZzbuybkFrvZ+2y7FSvfdb3h+AfJkHZkPX/g=;
-        b=NCP7GZbo+M70CSSWhMBDQHdsdgLutIF2MTftMS0R5yVfJf7wHZvPerbG8H3OgohzNa
-         aqnrt2htVBVYEWq5SzR2ZF/gUrEE4xGK/fR1L2d4w8eYlUZZKPXpk42D6LYf4yeXG1/W
-         WmY9jgfU1DVhPzCi4yyHMekOCLhKRsgfNZOXjWo5KQtJbLhshh7E7s6zb5ChKTUNKeuA
-         5NTd0TaicfwQ1/2AzJTd9dHDABi3rdMGWD7mk8U7FMDbM56qDZ+Z1gxCZKC3hea6Q7Vf
-         S3OaZOdfE80KpuWCb8Z3A9zy/0bCk3cKacgpBs3cVgAexML+NgXVd9QIndFoUeNOVC0D
-         BdmA==
-X-Forwarded-Encrypted: i=1; AJvYcCVMGCK/y/L/G+3B+LFLy+yhvelnI31ZsGHvpqy4VIUr4JX19f1ZxP8nVoTN+VLuVKqS7ZFv4T5FN1B4YATAn26K6h8=@vger.kernel.org, AJvYcCVnk5c4tvPGVmlTrH15Vh1A7jIw3WwJmvnPCsOvul+EPPLy1yjYE1ZA3jgB3UirnTqtWOEJpyiTj9EVZ6J8@vger.kernel.org, AJvYcCW+BJOQlwK11AzUbYmLouYkRqTEZGiTk8c12mXtAEe7mDb5wwW/vQmsu2HrpwryByJdqbKBfFeb7nw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhtBC+aC24kBV+LH42fNbt1QUTcBFAr5MQyW1bBM3XmWdJjSMV
-	rLik7nGzuDx3EayHB7DNy3rmU8SpVkgq8mkDMwY442NqoN5biVOUUPfDqpxBeHmb
-X-Gm-Gg: ASbGncv5KLq3q03bwqr3KIn4pk8QnXQu11/qoDT7ijROFwzLDALkhIKCxS4zXPUKHCJ
-	qaL20GHWhjhoIXrgUWB/QBJqVGgU7l7KO2z5kHSEB4vWmqDI40m8CPZZLOnpprO92NkP0xxxrEP
-	uepYJ+zx68X8nclMVnjnROcpFuQqC+5Y2nuNw3yXmCdnon3CjfQfKeNgjjlj12ONUdb5zVjdzNY
-	FOO38hI1EaJqAck7o88wTYMlIrSJWO6UoauH/gOobEdjsOX2ihlKU7p89kGqk9H0nf6nrof3sDg
-	nckbLUy4Nd6jEdH4PfQhfUiMo2xdAGRWmRbqxJ/lletGK+T4jCdvQrd8N9VoKtF/ES3u7ef0q/f
-	6ZtJpY4R2dsCWNgA06zvUrlDB
-X-Google-Smtp-Source: AGHT+IH6yKH2sZzfh2mezbyy0OC9i9G2+2qhTirxVg6dIG6UOYC/H0xt+/HbEpYrml5YdyZCkUllmA==
-X-Received: by 2002:a05:6122:1784:b0:530:720b:abe9 with SMTP id 71dfb90a1353d-5345837dacdmr1486473e0c.7.1751451548940;
-        Wed, 02 Jul 2025 03:19:08 -0700 (PDT)
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com. [209.85.217.54])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-884ee766fe7sm1540892241.29.2025.07.02.03.19.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Jul 2025 03:19:08 -0700 (PDT)
-Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-4e9b26a5e45so2647538137.1;
-        Wed, 02 Jul 2025 03:19:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVXNJ+Ah/ps9YRxVrTj/RcSsNczxX9iHs4pt42g6LlB2F6Gp0mijtkR3bLUljkMVL5T/cdws2JxaTS51YFU@vger.kernel.org, AJvYcCWplPlPEChMxRc3SeZdly8w85cTfdB8DJFX5zJhB4bMUPfZ3oN4iWqDEu+1IhyjN5T009A+tCcvcjQ=@vger.kernel.org, AJvYcCX8aMXw1U1ex7IqqpvezpKiNazQGxNIcPa5G4qxxdABiIQ93iP1nh/D/GwZRFpdBqkwNVrBFZENLtd+pe1Gj9X8x7o=@vger.kernel.org
-X-Received: by 2002:a05:6102:41ab:b0:4e5:ac0f:582c with SMTP id
- ada2fe7eead31-4f160f69075mr818743137.13.1751451548210; Wed, 02 Jul 2025
- 03:19:08 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751454455; x=1752059255;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rPV93Zxqd5A5yWh1+OQ3kXQBktcCdNYnO7HGfnoF97w=;
+        b=vGNKXlHhAqGvuiUy1Ao8KSaSh78e69O6PLfCh7B4xKWsqj4tiJuvIj6rgQEO2cuSjz
+         3h7GSjmfLiy2vYbnbmF5sIuuVsx/UEkrS5MbROoPl7FO4K6M1a+sr/O8uSkvp5GzA98n
+         bxWj6QCc28aJHRS9DPqKcnOo9Jbo70i8JViSH1XZhJFWOx9AufefykTWyQlSeWCnsfBK
+         P84h6F5ENC3ZAWVimsJ7Zmn6a+iJ1Ue25UwcK+HJXP9WyczNSOlbcco7Z0YuJb5m2jIx
+         fLsRaIHiKooImV4rUzw+LNcP1984ZqKG7HymQQtMSWO2JXIyqmZmqTYhiZ1EnF9cWy7N
+         egzg==
+X-Forwarded-Encrypted: i=1; AJvYcCU4EQxo4igNtpXBsHPj6pU4l5GC1uzK1Bz80r36NDKwUi2XJH9GW/NaBaim4kXnMCY/LtzzbHreTHw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDsCQtOlp2Qbe5CX1f2Dmjly4a9gWnfZSEURVznvszuvtdWssk
+	gYoNkKON7wr3fBm2iiKmR9Is4zYLwbrZbXGfIuvYPnZIHzY7qyNUh6QELOnXxJvkThiiJxXS+Yx
+	v/TGdGCpN5KShgP+JavzKQ3tfbKzuhtoBMlcGr5JTQg==
+X-Gm-Gg: ASbGncuWjVgZX2h6JsGiDpr6DQONFSAsGTZwrUzIRfimBgJCIPPegHd5spIn+Xv9tVM
+	YJfvOTeBABsxYcB6kgEgFfQyb4T0igW2kY5pWDGdKZ8qq8lnlWCYH+QyUYxyhNfIVFDXsqUh2vn
+	Ydzzm8lO3qmzFpiCvClu9sj7I4iiKOKfa/HY0p9UAza1Og
+X-Google-Smtp-Source: AGHT+IHeGpjjGYCSscOTPbZ6xb8rb5MXGznl/2SBz7yoEFM7auQsCbFTVHuUlPyoGrfnlhoMTudLPILywpv+/3CBf3c=
+X-Received: by 2002:a17:906:c358:b0:ade:470b:d5ac with SMTP id
+ a640c23a62f3a-ae3c2c7d588mr194441366b.56.1751454454694; Wed, 02 Jul 2025
+ 04:07:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <tencent_71CC9630D88A8792C2396A8844DCCD5C6D06@qq.com>
-In-Reply-To: <tencent_71CC9630D88A8792C2396A8844DCCD5C6D06@qq.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 2 Jul 2025 12:18:55 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUhZqLCkLWtFTaCq67=Nb0O0_XLSWeyweMiNp25XArfKA@mail.gmail.com>
-X-Gm-Features: Ac12FXxgqZ3A4cNQ8wmJ2xcMFp9VGDuQB0YEgiZ8HQzvthHYRBjWbnlsj94X_K8
-Message-ID: <CAMuHMdUhZqLCkLWtFTaCq67=Nb0O0_XLSWeyweMiNp25XArfKA@mail.gmail.com>
-Subject: Re: [PATCH] dmaengine: rcar-dmac: Fix PM usage counter imbalance
-To: Zhang Shurong <zhang_shurong@foxmail.com>
-Cc: vkoul@kernel.org, magnus.damm@gmail.com, robin.murphy@arm.com, 
-	ulf.hansson@linaro.org, kuninori.morimoto.gx@renesas.com, 
-	u.kleine-koenig@baylibre.com, dmaengine@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+References: <20250613114148.1943267-1-robert.marko@sartura.hr>
+ <3ba837f8-70bb-4b9e-a9f9-0e71b9e073c4@app.fastmail.com> <CA+HBbNFd5hCKqUZY25Sws-o-0QALLue-JROyze_9biyuZZv4mg@mail.gmail.com>
+ <3e522dcc-3b68-4137-bd3a-dcc2c889dbd3@app.fastmail.com>
+In-Reply-To: <3e522dcc-3b68-4137-bd3a-dcc2c889dbd3@app.fastmail.com>
+From: Robert Marko <robert.marko@sartura.hr>
+Date: Wed, 2 Jul 2025 13:07:23 +0200
+X-Gm-Features: Ac12FXxa3OU2rP7QnwGpqKyk1qKa-0zp1Qh_CY94xN7qIB9S3-V2AaGGog_Qezo
+Message-ID: <CA+HBbNF6zfy=D=+34HXBPdzsfHo6aDbhcJa7Tf7YitYedK1a6A@mail.gmail.com>
+Subject: Re: [PATCH v7 0/6] arm64: lan969x: Add support for Microchip LAN969x SoC
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Olivia Mackall <olivia@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	"David S . Miller" <davem@davemloft.net>, Vinod Koul <vkoul@kernel.org>, 
+	Andi Shyti <andi.shyti@kernel.org>, Mark Brown <broonie@kernel.org>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, ore@pengutronix.de, luka.perkov@sartura.hr, 
+	Daniel Machon <daniel.machon@microchip.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Zhang,
-
-On Sun, 29 Jun 2025 at 17:57, Zhang Shurong <zhang_shurong@foxmail.com> wrote:
-> pm_runtime_get_sync will increment pm usage counter
-> even it failed. Forgetting to putting operation will
-> result in reference leak here. We fix it by replacing
-> it with pm_runtime_resume_and_get to keep usage counter
-> balanced.
+On Mon, Jun 30, 2025 at 3:54=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> wrote=
+:
 >
-> Fixes: 87244fe5abdf ("dmaengine: rcar-dmac: Add Renesas R-Car Gen2 DMA Controller (DMAC) driver")
-> Signed-off-by: Zhang Shurong <zhang_shurong@foxmail.com>
-
-Thanks for your patch!
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-> --- a/drivers/dma/sh/rcar-dmac.c
-> +++ b/drivers/dma/sh/rcar-dmac.c
-> @@ -1068,7 +1068,7 @@ static int rcar_dmac_alloc_chan_resources(struct dma_chan *chan)
->         if (ret < 0)
->                 return -ENOMEM;
+> On Mon, Jun 30, 2025, at 15:21, Robert Marko wrote:
+> > On Mon, Jun 16, 2025 at 8:34=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> w=
+rote:
+> >> On Fri, Jun 13, 2025, at 13:39, Robert Marko wrote:
+> >>
+> >> If the drivers on ARCH_LAN969X are largely shared with those on
+> >> ARCH_AT91, should they perhaps depend on a common symbol?
+> >>
+> >> That could be either the existing ARCH_AT91 as we do with LAN966,
+> >> or perhaps ARCH_MICROCHIP, which is already used for riscv/polarfire.
+> >
+> > Hi Arnd, I thought about this, but I am not sure whether its worth it
+> > since we need LAN969x arch anyway for other drivers that currently
+> > depend on LAN966x or SparX-5 but will be extended for LAN969x (I have
+> > this already queued locally but need this to land first).
 >
-> -       return pm_runtime_get_sync(chan->device->dev);
-> +       return pm_runtime_resume_and_get(chan->device->dev);
-
-Note that there are other issues with this function: in case of failure,
-none of the memory allocated before is freed.  Probably the original
-author assumed none of this can really fail.
-
->  }
+> I think in that case we would want one symbol for all of the above.
+> We have a couple of cases where there multiple SoC product families
+> get handled by a shared config symbol to make life easier for the
+> kernel:
 >
->  static void rcar_dmac_free_chan_resources(struct dma_chan *chan)
+> - ARCH_IMX contains multiple chip families that are now owned
+>   by NXP but that have a complex history with acquisitions and
+>   product families that mix-and-match IP blocks, similar to
+>   Microchip
+>
+> - ARCH_EXYNOS contains chips from Samsung, Google, Tesla and Axis
+>   that all share a lot of components because they are all based on
+>   Samsung designs
+>
+> - ARCH_BCM contains several chip families that all started out
+>   in Broadcom but actually share very few common components.
+>
+> On the other hand, we have TI with its davinci, omap, omap2
+> keystone2 and k3 platforms, or Marvell with orion, mvebu,
+> pxa, mmp, octeon, octeontx, thunderx and thunderx2 platforms
+> that overlap to varying degrees but use separate Kconfig symbols.
+>
+> Since you already have an ARCH_MICROCHIP used by one of the
+> microchip platforms, the simplest approach seems to me to
+> include at91, lan969x, lan966x and sparx-5 under that as well.
+> You could just select that symbol from each of the four
+> and then change any driver that is used by more than one of
+> these families to use 'depends on ARCH_MICROCHIP' instead of
+> listing them individually.
 
-Gr{oetje,eeting}s,
+Ok, I get the idea, I will rework the series to pivot to ARCH_MICROCHIP.
 
-                        Geert
+Regards,
+Robert
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> I assume the mips based PIC32 and VCOREIII (ocelot/jaguar)
+> are distant enough that they wouldn't share any drivers with
+> the other families any more, but they could be put into that
+> as well if that helps.
+>
+>      Arnd
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
+
+--=20
+Robert Marko
+Staff Embedded Linux Engineer
+Sartura d.d.
+Lendavska ulica 16a
+10000 Zagreb, Croatia
+Email: robert.marko@sartura.hr
+Web: www.sartura.hr
 

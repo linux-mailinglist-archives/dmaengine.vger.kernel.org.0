@@ -1,147 +1,163 @@
-Return-Path: <dmaengine+bounces-5724-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5725-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 541D9AF61B1
-	for <lists+dmaengine@lfdr.de>; Wed,  2 Jul 2025 20:42:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 623C8AF62E6
+	for <lists+dmaengine@lfdr.de>; Wed,  2 Jul 2025 21:57:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 214607AE1E3
-	for <lists+dmaengine@lfdr.de>; Wed,  2 Jul 2025 18:41:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B54547B1BFE
+	for <lists+dmaengine@lfdr.de>; Wed,  2 Jul 2025 19:56:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18C3F2F7CF3;
-	Wed,  2 Jul 2025 18:40:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFEEA2DCF49;
+	Wed,  2 Jul 2025 19:57:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b="bpKlO2zr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iphs3Fr4"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D06942F7CE5
-	for <dmaengine@vger.kernel.org>; Wed,  2 Jul 2025 18:40:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8726A2D780E;
+	Wed,  2 Jul 2025 19:57:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751481623; cv=none; b=bYhjwUHf+J0RcTO8GV4badkKjZ/pdNnInP9EwlmLkUg2j63ozqXv0CpQJhGcRsGtlmdDWDfInw4k/DAmu+XJG+EAqw53BsuYzG4rad2JccsXg+i+xqu0abXtABfXqpyi2Hr2hhYnREQI/KUaZMQ/60wcWdLWhbPERLSDcHV4aT4=
+	t=1751486262; cv=none; b=f9sejaQejhaqyolV8ErsgxRppKx10TsThTj34okgyhxxXA6NkeF3qs/qF2GVI89rTrN6+Pns264Lnm4loXI09g1i2yRlrPW4geRnEen8mKXDNtvVl+Pp9Bm+pVSq9nqluKQ+QkqkA5pXL7klH9ZinTA3Lp4eXWE5GPSU0E5nU3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751481623; c=relaxed/simple;
-	bh=uR10k/MNsD2KTqxwxNLmNVi+dmMLfNBNQQvEqJsmDa0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cZccIBIugJ78L+Eew0XU81GKpj6AMcbFP/YRYeIwsspO/B0BTe/kPUop8VYTv343W6NOLMvmD1uJKtIWlnWhMKKpcQCZys1a65uKFsD3DVYImP9qBfXAgpnOEoSgPMVPWUGuRQld680HQjXznarvfZkKUx4vqoHXrLNsb/yJAFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr; spf=pass smtp.mailfrom=sartura.hr; dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b=bpKlO2zr; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sartura.hr
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-74b54cead6cso665779b3a.1
-        for <dmaengine@vger.kernel.org>; Wed, 02 Jul 2025 11:40:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura.hr; s=sartura; t=1751481620; x=1752086420; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DbnTNMFdG2kGnp4zBFs5MgPMup5zL0Zfe8VUfuWUBv8=;
-        b=bpKlO2zreZ4Dw49+XpbddUTu/s8vYAQrprCuWs4FMzPVmKsaPdOuGCsWR7P1CqUmbg
-         aQXF8g30FFZD5HNZyapB4pHSUbOyYpShNABIOSJeF7xGeUWbj4AX/3ZV1HDR54SHW6Rb
-         Z3I2jzQ9kzZ7gNPHpWswVYvPn+vp4X6sGWtxGhoDSfhtEvRs+TdGQdFYGEl399uTOuM9
-         q4F0gD+M1bd1ywcOJgEP3AkYT573RvKvzsJjjUXed9oHnxqOHG3qpQ6WfelMU9UwhLBc
-         5m0gvn/DJ+suKGPTJMvaf7teqS/TEBabuLP2Y/uTeE7cMjkuNPOo6sGA8HYDgDcceTdF
-         kQBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751481620; x=1752086420;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DbnTNMFdG2kGnp4zBFs5MgPMup5zL0Zfe8VUfuWUBv8=;
-        b=AKDW4zinGdZfCHSAwUZGqpMB/3R+7cyBWMTt84O+RnQ611yHrVo+FltUT+y7tfh7oT
-         wke/azf9nMDRfC39/geB8fi2uDwHs4vYX46dCVeq6Qx1Q8gvVNOXYGk0NzVdKqrZ1u/p
-         yR+ILcHi3NulZiBsECXN+V0aDBkXJwyZzlq/lR1tuSczexOgB3MrD/0HZatdvCcxXz6j
-         BpcU8I6bshnTtbFI/ns4hkKd90/iAKYh5TxlvyaZP2iAJsf2mhKJblYR8kj0ewoM94cU
-         +Zpng2Rzbp8VPZQ0K/X0J4vamz7JLQrntQqmoo33GpLYRRtF7vCEqu5g/iSpgCMQp6JI
-         +E3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU92g6Vjv1sp8W85FXRGlTLICSTGkwTQWz7ioeJ8eojCOa1vEgdAyvGihvpV9mbNGNePrYIohD1uUQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYQAmGbk5wl08kB1I7zEm0qmoyIbdxVbyARa0JDhWb2WLSSf7N
-	xMp4FTHf5KhJScC7ENCqx1kqHtLz+yISMqdMATmZFFHF6RfwmiVl2sRRZz51nPGwYB4=
-X-Gm-Gg: ASbGncs7dvqfhOH8M8455GgbS0vtoFQ9XfgiDavN0aFZ8rqW4tLybHDpTAlyr89ULT3
-	IUYWeZnsrfynaW5UoKPM0S/KuCsEkOH6idv20Qe049Zd20yMOIbi2rS59xiHdlR29ZnhayVsjdr
-	KKiupweWiMJidSS7hM25+MlSaZIViNlUCJ1KjCD5K296AnqGLX5Z9yhMMfl/6ujmKhxmwaobsVQ
-	5tOTJmXptVTnXv6FRnAvMSYFvL0ogFkbwfJB18Ax9yLxTvSkeM7+lmJ40eJbtIcpH+H7L1iLlfv
-	MJ9/Gp5/KZXCMvJgKIZXjISxfU2dnouCWGbkyqBdkgvgcnYtb6ewRWD3eS1OdEW3bYASxWiMumw
-	65QiIbKC2P/5eag/JM9GwA0w=
-X-Google-Smtp-Source: AGHT+IG4Ha6X6nXWuDRiiAtD/IybzMavhr6X2melJ3MACMJlG77wfbwOcD6VvpmvkGPoSxTpUxzwhg==
-X-Received: by 2002:a17:902:e751:b0:235:2403:77c7 with SMTP id d9443c01a7336-23c797b92e4mr4443315ad.37.1751481620268;
-        Wed, 02 Jul 2025 11:40:20 -0700 (PDT)
-Received: from fedora (cpe-94-253-164-144.zg.cable.xnet.hr. [94.253.164.144])
-        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-23acb2f39bdsm143034195ad.80.2025.07.02.11.40.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 11:40:19 -0700 (PDT)
-From: Robert Marko <robert.marko@sartura.hr>
-To: linux@armlinux.org.uk,
-	nicolas.ferre@microchip.com,
-	alexandre.belloni@bootlin.com,
-	claudiu.beznea@tuxon.dev,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	olivia@selenic.com,
-	herbert@gondor.apana.org.au,
-	davem@davemloft.net,
-	vkoul@kernel.org,
-	andi.shyti@kernel.org,
-	lee@kernel.org,
-	broonie@kernel.org,
-	gregkh@linuxfoundation.org,
-	jirislaby@kernel.org,
-	arnd@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-crypto@vger.kernel.org,
-	dmaengine@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	linux-spi@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	o.rempel@pengutronix.de,
-	daniel.machon@microchip.com
-Cc: luka.perkov@sartura.hr,
-	Robert Marko <robert.marko@sartura.hr>
-Subject: [PATCH v8 10/10] crypto: atmel-aes: make it selectable for ARCH_MICROCHIP
-Date: Wed,  2 Jul 2025 20:36:08 +0200
-Message-ID: <20250702183856.1727275-11-robert.marko@sartura.hr>
-X-Mailer: git-send-email 2.50.0
-In-Reply-To: <20250702183856.1727275-1-robert.marko@sartura.hr>
-References: <20250702183856.1727275-1-robert.marko@sartura.hr>
+	s=arc-20240116; t=1751486262; c=relaxed/simple;
+	bh=CaQXOmGi1Q4hapePQLyAziFqod4bCIqfR+jrX6VTL94=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=g0Bncl1gTzQ7NNLPJsa+7pin3Bi3Bbt6ud91+VCtv+TS5ZcrRN6XKjoeS74w/ZdTypY8UfpY726nSonbDfrO4gcYEoDblB9ZnaiDMRvQYA/j6HRf/Chi/NO4nq1TrpTFSytFHwbalZG+Aj2P4Ny6bVsU2UQCPc2fucBsH2nCsrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iphs3Fr4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C284C4CEEE;
+	Wed,  2 Jul 2025 19:57:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751486262;
+	bh=CaQXOmGi1Q4hapePQLyAziFqod4bCIqfR+jrX6VTL94=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=iphs3Fr47nWhPR0TagxlvNifwvoipDSOQbi9gEDaqxer7o5R3rwhexpiw+MxfZQ1u
+	 1T/wgYkjS39E64y2k/kFWowyaORm+eOxHZbPVpm/RyaEX967hz53DKJy8jHVQ74gDD
+	 uxYv/eEKpEdwFhX2SQ0ePE7O73BUjPbA0mPN2ZtvRln7myS8SyAQamergJDu+lNqSy
+	 6MDhVy6t+8DutVkRvYGv0SCDbq+YBdE2cl+3c2VpXE1f2LB1EobYutBkLpw61ULGFm
+	 v0RvrEDiMNc50AMBjt4JOc03BHlzcScYmYQ0Brw7tT7aM967kBApfeLFLMLkEbEN6Q
+	 FCTpcbdusJgyQ==
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 6F059F40068;
+	Wed,  2 Jul 2025 15:57:40 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Wed, 02 Jul 2025 15:57:40 -0400
+X-ME-Sender: <xms:NI9laCs28QYlhPXfNvAXECAXg4qbxhG3NuDCBMXg9YZfRFjAY3ul-w>
+    <xme:NI9laHfO-CyLcRVqKE-_Ol55xS5aXihGQeRdR8XIEc0iMEY1hznDUBHvDOksQBBDG
+    S9-EIZPOlTvXWVMPyI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddukedvlecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcu
+    uegvrhhgmhgrnhhnfdcuoegrrhhnugeskhgvrhhnvghlrdhorhhgqeenucggtffrrghtth
+    gvrhhnpeejjeffteetfeetkeeijedugeeuvdfgfeefiedtudeikeeggeefkefhudfhlefh
+    veenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
+    hnugdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidquddvkeehudejtddvgedq
+    vdekjedttddvieegqdgrrhhnugeppehkvghrnhgvlhdrohhrghesrghrnhgusgdruggvpd
+    hnsggprhgtphhtthhopedviedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheptggr
+    thgrlhhinhdrmhgrrhhinhgrshesrghrmhdrtghomhdprhgtphhtthhopehlihhnuhigse
+    grrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtoheprghlvgigrghnughrvgdrsggv
+    lhhlohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegurghvvghmsegurghvvg
+    hmlhhofhhtrdhnvghtpdhrtghpthhtohephhgvrhgsvghrthesghhonhguohhrrdgrphgr
+    nhgrrdhorhhgrdgruhdprhgtphhtthhopegrnhguihdrshhhhihtiheskhgvrhhnvghlrd
+    horhhgpdhrtghpthhtohepsghrohhonhhivgeskhgvrhhnvghlrdhorhhgpdhrtghpthht
+    ohepjhhirhhishhlrggshieskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhgvvgeskh
+    gvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:NI9laNwqgy5fmKbVuN6ufKbwO6ci8zaZO8U14JNHCAEgzh5P4AhQcw>
+    <xmx:NI9laNNTDjb8W7aNnQQcl_IMMDlm4R1XJ0V42VSvlKV20oZtIMh-Vg>
+    <xmx:NI9laC8HMWDKpPVud9dKnhSew2dXQKf_9r40M52mqN30aq_C-E9CWA>
+    <xmx:NI9laFXljuNhqBIZQBYp2UflD1FESwb5MFox1kvgplWN5ZIFPu17ig>
+    <xmx:NI9laLeU29iC9nuQZTXb33cj2kzAeIBV2fTVHCIrvSYT0kEtjwVZsWbA>
+Feedback-ID: i36794607:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 4464B700068; Wed,  2 Jul 2025 15:57:40 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-ThreadId: Tf4af6f8839cae169
+Date: Wed, 02 Jul 2025 21:57:10 +0200
+From: "Arnd Bergmann" <arnd@kernel.org>
+To: "Robert Marko" <robert.marko@sartura.hr>,
+ "Russell King" <linux@armlinux.org.uk>,
+ "Nicolas Ferre" <nicolas.ferre@microchip.com>,
+ "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
+ "Claudiu Beznea" <claudiu.beznea@tuxon.dev>,
+ "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
+ "Olivia Mackall" <olivia@selenic.com>,
+ "Herbert Xu" <herbert@gondor.apana.org.au>,
+ "David S . Miller" <davem@davemloft.net>, "Vinod Koul" <vkoul@kernel.org>,
+ "Andi Shyti" <andi.shyti@kernel.org>, "Lee Jones" <lee@kernel.org>,
+ "Mark Brown" <broonie@kernel.org>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Jiri Slaby" <jirislaby@kernel.org>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+ dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
+ linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
+ "Oleksij Rempel" <o.rempel@pengutronix.de>,
+ "Daniel Machon" <daniel.machon@microchip.com>
+Cc: luka.perkov@sartura.hr
+Message-Id: <ea353170-6e03-4231-afc2-3dc45253931d@app.fastmail.com>
+In-Reply-To: <20250702183856.1727275-2-robert.marko@sartura.hr>
+References: <20250702183856.1727275-1-robert.marko@sartura.hr>
+ <20250702183856.1727275-2-robert.marko@sartura.hr>
+Subject: Re: [PATCH v8 01/10] arm64: Add config for Microchip SoC platforms
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-LAN969x uses the Atmel crypto, so make it selectable for ARCH_MICROCHIP to
-avoid needing to update depends in future if other Microchip SoC-s use it
-as well.
+On Wed, Jul 2, 2025, at 20:35, Robert Marko wrote:
+> Currently, Microchip SparX-5 SoC is supported and it has its own symbol.
+>
+> However, this means that new Microchip platforms that share drivers need
+> to constantly keep updating depends on various drivers.
+>
+> So, to try and reduce this lets add ARCH_MICROCHIP symbol that drivers
+> could instead depend on.
 
-Signed-off-by: Robert Marko <robert.marko@sartura.hr>
----
-Changes in v8:
-* Use ARCH_MICROCHIP for depends as its now selected by both ARM and ARM64
-Microchip SoC-s
+Thanks for updating the series to my suggestion!
 
- drivers/crypto/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> @@ -174,6 +160,27 @@ config ARCH_MESON
+>  	  This enables support for the arm64 based Amlogic SoCs
+>  	  such as the s905, S905X/D, S912, A113X/D or S905X/D2
+> 
+> +menuconfig ARCH_MICROCHIP
+> +	bool "Microchip SoC support"
+> +
+> +if ARCH_MICROCHIP
+> +
+> +config ARCH_SPARX5
+> +	bool "Microchip Sparx5 SoC family"
 
-diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
-index 04b4c43b6bae..7c1717c35b76 100644
---- a/drivers/crypto/Kconfig
-+++ b/drivers/crypto/Kconfig
-@@ -439,7 +439,7 @@ config CRYPTO_DEV_ATMEL_AUTHENC
- 
- config CRYPTO_DEV_ATMEL_AES
- 	tristate "Support for Atmel AES hw accelerator"
--	depends on ARCH_AT91 || COMPILE_TEST
-+	depends on ARCH_MICROCHIP || COMPILE_TEST
- 	select CRYPTO_AES
- 	select CRYPTO_AEAD
- 	select CRYPTO_SKCIPHER
--- 
-2.50.0
+This part is the one bit I'm not sure about: The user-visible
+arm64 CONFIG_ARCH_* symbols are usually a little higher-level,
+so I don't think we want both ARCH_MICROCHIP /and/ ARCH_SPARX5
+here, or more generally speaking any of the nested ARCH_*
+symbols.
 
+This version of your patch is going to be slightly annoying
+to existing sparx5 users because updating an old .config
+breaks when ARCH_MICROCHIP is not enabled.
+
+The two options that I would prefer here are 
+
+a) make ARCH_SPARX5 a hidden symbol in order to keep the
+   series bisectable, remove it entirely once all references
+   are moved over to ARCH_MICROCHIP
+
+b) Make ARCH_MICROCHIP a hidden symbol that is selected by
+   ARCH_SPARX5 but keep the menu unchanged.
+
+Let's see what the sparx5 and at91 maintainers think about
+these options.
+
+The other patches all look fine to me.
+
+     Arnd
 

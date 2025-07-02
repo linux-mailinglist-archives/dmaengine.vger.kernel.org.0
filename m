@@ -1,163 +1,200 @@
-Return-Path: <dmaengine+bounces-5725-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5726-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 623C8AF62E6
-	for <lists+dmaengine@lfdr.de>; Wed,  2 Jul 2025 21:57:51 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4DBF5AF6368
+	for <lists+dmaengine@lfdr.de>; Wed,  2 Jul 2025 22:38:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B54547B1BFE
-	for <lists+dmaengine@lfdr.de>; Wed,  2 Jul 2025 19:56:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E357548749E
+	for <lists+dmaengine@lfdr.de>; Wed,  2 Jul 2025 20:37:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFEEA2DCF49;
-	Wed,  2 Jul 2025 19:57:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA7E02D63E2;
+	Wed,  2 Jul 2025 20:38:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iphs3Fr4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vPRpVWdn"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8726A2D780E;
-	Wed,  2 Jul 2025 19:57:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79B35225A47;
+	Wed,  2 Jul 2025 20:38:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751486262; cv=none; b=f9sejaQejhaqyolV8ErsgxRppKx10TsThTj34okgyhxxXA6NkeF3qs/qF2GVI89rTrN6+Pns264Lnm4loXI09g1i2yRlrPW4geRnEen8mKXDNtvVl+Pp9Bm+pVSq9nqluKQ+QkqkA5pXL7klH9ZinTA3Lp4eXWE5GPSU0E5nU3c=
+	t=1751488687; cv=none; b=NFVX2mMPz7HrSJmB0abMG5fbE+7FTLPDeLJVjugSxSYFWSV1ZbeK9cm2EumyeB3xMMdkoHiQDvdrCUkXnW654to19WCX20PjyCLSlLdtLej2lCyEeGodipq39gUZS5ZQdXPBFQ3hIq0rwjwitGUI3ovLbmm3NY1k++1va+yz1ug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751486262; c=relaxed/simple;
-	bh=CaQXOmGi1Q4hapePQLyAziFqod4bCIqfR+jrX6VTL94=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=g0Bncl1gTzQ7NNLPJsa+7pin3Bi3Bbt6ud91+VCtv+TS5ZcrRN6XKjoeS74w/ZdTypY8UfpY726nSonbDfrO4gcYEoDblB9ZnaiDMRvQYA/j6HRf/Chi/NO4nq1TrpTFSytFHwbalZG+Aj2P4Ny6bVsU2UQCPc2fucBsH2nCsrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iphs3Fr4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C284C4CEEE;
-	Wed,  2 Jul 2025 19:57:41 +0000 (UTC)
+	s=arc-20240116; t=1751488687; c=relaxed/simple;
+	bh=dDCS6QVJ7nXRWlnC2SiSC9vvqcF5+4EB5/e+hxz2kYg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UI8685KqAWZu7vct0Pzs+IgSVyJfyFeMVkaebg3XJ4xmXdAy0XFriTHzWimyf2ATLcfYaJr785djJ4bJFMOYYFaWKjGXgUq2xyYjig6hgzD4mHtXJnGR6O7Zka8OaG4hcBXzObJSAeQcrAvW3sg5MKZ+Nu3p1fNKHN9uTTrstmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vPRpVWdn; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF21EC4CEE7;
+	Wed,  2 Jul 2025 20:38:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751486262;
-	bh=CaQXOmGi1Q4hapePQLyAziFqod4bCIqfR+jrX6VTL94=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=iphs3Fr47nWhPR0TagxlvNifwvoipDSOQbi9gEDaqxer7o5R3rwhexpiw+MxfZQ1u
-	 1T/wgYkjS39E64y2k/kFWowyaORm+eOxHZbPVpm/RyaEX967hz53DKJy8jHVQ74gDD
-	 uxYv/eEKpEdwFhX2SQ0ePE7O73BUjPbA0mPN2ZtvRln7myS8SyAQamergJDu+lNqSy
-	 6MDhVy6t+8DutVkRvYGv0SCDbq+YBdE2cl+3c2VpXE1f2LB1EobYutBkLpw61ULGFm
-	 v0RvrEDiMNc50AMBjt4JOc03BHlzcScYmYQ0Brw7tT7aM967kBApfeLFLMLkEbEN6Q
-	 FCTpcbdusJgyQ==
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 6F059F40068;
-	Wed,  2 Jul 2025 15:57:40 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Wed, 02 Jul 2025 15:57:40 -0400
-X-ME-Sender: <xms:NI9laCs28QYlhPXfNvAXECAXg4qbxhG3NuDCBMXg9YZfRFjAY3ul-w>
-    <xme:NI9laHfO-CyLcRVqKE-_Ol55xS5aXihGQeRdR8XIEc0iMEY1hznDUBHvDOksQBBDG
-    S9-EIZPOlTvXWVMPyI>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddukedvlecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcu
-    uegvrhhgmhgrnhhnfdcuoegrrhhnugeskhgvrhhnvghlrdhorhhgqeenucggtffrrghtth
-    gvrhhnpeejjeffteetfeetkeeijedugeeuvdfgfeefiedtudeikeeggeefkefhudfhlefh
-    veenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
-    hnugdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidquddvkeehudejtddvgedq
-    vdekjedttddvieegqdgrrhhnugeppehkvghrnhgvlhdrohhrghesrghrnhgusgdruggvpd
-    hnsggprhgtphhtthhopedviedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheptggr
-    thgrlhhinhdrmhgrrhhinhgrshesrghrmhdrtghomhdprhgtphhtthhopehlihhnuhigse
-    grrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtoheprghlvgigrghnughrvgdrsggv
-    lhhlohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegurghvvghmsegurghvvg
-    hmlhhofhhtrdhnvghtpdhrtghpthhtohephhgvrhgsvghrthesghhonhguohhrrdgrphgr
-    nhgrrdhorhhgrdgruhdprhgtphhtthhopegrnhguihdrshhhhihtiheskhgvrhhnvghlrd
-    horhhgpdhrtghpthhtohepsghrohhonhhivgeskhgvrhhnvghlrdhorhhgpdhrtghpthht
-    ohepjhhirhhishhlrggshieskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhgvvgeskh
-    gvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:NI9laNwqgy5fmKbVuN6ufKbwO6ci8zaZO8U14JNHCAEgzh5P4AhQcw>
-    <xmx:NI9laNNTDjb8W7aNnQQcl_IMMDlm4R1XJ0V42VSvlKV20oZtIMh-Vg>
-    <xmx:NI9laC8HMWDKpPVud9dKnhSew2dXQKf_9r40M52mqN30aq_C-E9CWA>
-    <xmx:NI9laFXljuNhqBIZQBYp2UflD1FESwb5MFox1kvgplWN5ZIFPu17ig>
-    <xmx:NI9laLeU29iC9nuQZTXb33cj2kzAeIBV2fTVHCIrvSYT0kEtjwVZsWbA>
-Feedback-ID: i36794607:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 4464B700068; Wed,  2 Jul 2025 15:57:40 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=k20201202; t=1751488687;
+	bh=dDCS6QVJ7nXRWlnC2SiSC9vvqcF5+4EB5/e+hxz2kYg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=vPRpVWdnh+OJAAA7arYY7PnTcK2jpNELhtnvDh4laCUI4hYVphhNSPs460L2IVWTr
+	 1jpr5XgjEgv88LJM91FV1cNYfzB7YLuH9t4SdJC4DNuy9RqwgcjL+99vF3iuJ1SctZ
+	 ARHOTjY1hY8ZUrKMa/jH/4mi5bmpe0EB6KOC/Y7QKXXjfTaQTMI7TcjZlR4uOWwzpO
+	 npAM2tFfXbRoGuWi1e2mt8hxCh3uiDlhHKU8fHBgR5DetbenJmcGQl54fPFsVTQ3Oh
+	 ieCiVM47209l1++MMj/p6W+sbLAwaZixwCFKlfFnwbk9kM15X/w6gTj592919C4Z9u
+	 PBAsrRUs6476w==
+Message-ID: <43f19fbc-838b-431e-9d02-ecacf5f43731@kernel.org>
+Date: Wed, 2 Jul 2025 22:38:00 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Tf4af6f8839cae169
-Date: Wed, 02 Jul 2025 21:57:10 +0200
-From: "Arnd Bergmann" <arnd@kernel.org>
-To: "Robert Marko" <robert.marko@sartura.hr>,
- "Russell King" <linux@armlinux.org.uk>,
- "Nicolas Ferre" <nicolas.ferre@microchip.com>,
- "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
- "Claudiu Beznea" <claudiu.beznea@tuxon.dev>,
- "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
- "Olivia Mackall" <olivia@selenic.com>,
- "Herbert Xu" <herbert@gondor.apana.org.au>,
- "David S . Miller" <davem@davemloft.net>, "Vinod Koul" <vkoul@kernel.org>,
- "Andi Shyti" <andi.shyti@kernel.org>, "Lee Jones" <lee@kernel.org>,
- "Mark Brown" <broonie@kernel.org>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Jiri Slaby" <jirislaby@kernel.org>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
- dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
- linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
- "Oleksij Rempel" <o.rempel@pengutronix.de>,
- "Daniel Machon" <daniel.machon@microchip.com>
-Cc: luka.perkov@sartura.hr
-Message-Id: <ea353170-6e03-4231-afc2-3dc45253931d@app.fastmail.com>
-In-Reply-To: <20250702183856.1727275-2-robert.marko@sartura.hr>
-References: <20250702183856.1727275-1-robert.marko@sartura.hr>
- <20250702183856.1727275-2-robert.marko@sartura.hr>
-Subject: Re: [PATCH v8 01/10] arm64: Add config for Microchip SoC platforms
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/8] dt-bindings: dma: marvell,mmp-dma: Add SpacemiT K1
+ PDMA support
+To: Guodong Xu <guodong@riscstar.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>,
+ =?UTF-8?Q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Alex Elder <elder@riscstar.com>,
+ Vivian Wang <wangruikang@iscas.ac.cn>, dmaengine@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
+References: <20250701-working_dma_0701_v2-v2-0-ab6ee9171d26@riscstar.com>
+ <20250701-working_dma_0701_v2-v2-1-ab6ee9171d26@riscstar.com>
+ <de965773-bab1-4c50-b111-19896465e53e@kernel.org>
+ <CAH1PCMbKGeXL9Te6M28ZdX8VBvaToKcK7f+JmN6JsCfttG_Mtg@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <CAH1PCMbKGeXL9Te6M28ZdX8VBvaToKcK7f+JmN6JsCfttG_Mtg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jul 2, 2025, at 20:35, Robert Marko wrote:
-> Currently, Microchip SparX-5 SoC is supported and it has its own symbol.
->
-> However, this means that new Microchip platforms that share drivers need
-> to constantly keep updating depends on various drivers.
->
-> So, to try and reduce this lets add ARCH_MICROCHIP symbol that drivers
-> could instead depend on.
-
-Thanks for updating the series to my suggestion!
-
-> @@ -174,6 +160,27 @@ config ARCH_MESON
->  	  This enables support for the arm64 based Amlogic SoCs
->  	  such as the s905, S905X/D, S912, A113X/D or S905X/D2
+On 01/07/2025 11:52, Guodong Xu wrote:
+> Hi, Krzysztof
 > 
-> +menuconfig ARCH_MICROCHIP
-> +	bool "Microchip SoC support"
-> +
-> +if ARCH_MICROCHIP
-> +
-> +config ARCH_SPARX5
-> +	bool "Microchip Sparx5 SoC family"
+> On Tue, Jul 1, 2025 at 3:35 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>
+>> On 01/07/2025 07:36, Guodong Xu wrote:
+>>> Add "spacemit,k1-pdma" compatible string to support SpacemiT K1 PDMA
+>>> controller. This variant requires:
+>>
+>> Why is this marvell? This should be explained here, it's really unexpected.
+>>
+> 
+> SpacemiT K1 SoC uses the same DMA controller as Marvell MMP. They share most
+> of the registers (and address offsets) and only enhanced in addressing space
+> capability (from 32bit to 64bit).
 
-This part is the one bit I'm not sure about: The user-visible
-arm64 CONFIG_ARCH_* symbols are usually a little higher-level,
-so I don't think we want both ARCH_MICROCHIP /and/ ARCH_SPARX5
-here, or more generally speaking any of the nested ARCH_*
-symbols.
+I hope you got the last comment...
 
-This version of your patch is going to be slightly annoying
-to existing sparx5 users because updating an old .config
-breaks when ARCH_MICROCHIP is not enabled.
+> 
+> Also, spacemit,k1-pdma and marvell,pdma-1.0 use the same driver (mmp_pdma.c),
+> that's the reason why I chose keeping them in the same binding file.
 
-The two options that I would prefer here are 
+That's moderate reason. I explained here further - don't grow old
+bindings with completely new devices, because you keep growing old,
+poorer patterns. You have a new device, you can make it right.
 
-a) make ARCH_SPARX5 a hidden symbol in order to keep the
-   series bisectable, remove it entirely once all references
-   are moved over to ARCH_MICROCHIP
 
-b) Make ARCH_MICROCHIP a hidden symbol that is selected by
-   ARCH_SPARX5 but keep the menu unchanged.
+...
 
-Let's see what the sparx5 and at91 maintainers think about
-these options.
+>>> +      properties:
+>>> +        compatible:
+>>> +          contains:
+>>> +            const: spacemit,k1-pdma
+>>> +    then:
+>>> +      required:
+>>> +        - clocks
+>>> +        - resets
+>>> +    else:
+>>> +      properties:
+>>> +        clocks: false
+>>> +        resets: false
+>>> +  - if:
+>>> +      properties:
+>>> +        compatible:
+>>> +          contains:
+>>> +            enum:
+>>> +              - marvell,pdma-1.0
+>>> +              - spacemit,k1-pdma
+>>> +    then:
+>>> +      properties:
+>>> +        '#dma-cells':
+>>> +          const: 2
+>>> +          description:
+>>> +            The first cell contains the DMA request number for the peripheral
+>>> +            device. The second cell is currently unused but must be present for
+>>> +            backward compatibility.
+>>> +    else:
+>>> +      properties:
+>>> +        '#dma-cells':
+>>> +          const: 1
+>>> +          description:
+>>> +            The cell contains the DMA request number for the peripheral device.
+>>
+>>
+>> It's getting complicated. I suggest to make your own schema. Then you
+>> would also switch to preferred 'sram' property instead of that legacy
+>> 'asram'.
+>>
+>> Really, ancient schemas should not be grown for new, completely
+> 
+> The reason that they share the same device driver may not be strong enough
+> compared to what you said here.
 
-The other patches all look fine to me.
+If DMA maintainer(s) reject complexity in driver, then it is fine. But
+till that happens, you should rather come with a clean new binding and
+don't grow legacy.
 
-     Arnd
+
+Best regards,
+Krzysztof
 

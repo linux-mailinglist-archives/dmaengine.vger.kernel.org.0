@@ -1,155 +1,217 @@
-Return-Path: <dmaengine+bounces-5732-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5733-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8D61AF773B
-	for <lists+dmaengine@lfdr.de>; Thu,  3 Jul 2025 16:23:49 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DAEDAF7D0B
+	for <lists+dmaengine@lfdr.de>; Thu,  3 Jul 2025 18:00:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B59EE1BC3F19
-	for <lists+dmaengine@lfdr.de>; Thu,  3 Jul 2025 14:22:05 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 167517B13F2
+	for <lists+dmaengine@lfdr.de>; Thu,  3 Jul 2025 15:58:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9CB82E92A6;
-	Thu,  3 Jul 2025 14:21:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51BF42EF652;
+	Thu,  3 Jul 2025 15:59:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gOnfj6Jd"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VFaNZWdK"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9641E19CC02;
-	Thu,  3 Jul 2025 14:21:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 278642D6605;
+	Thu,  3 Jul 2025 15:59:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751552504; cv=none; b=acxbHUsiaMzDrk3sT2kN+Pajz4PBzmukPrRfLoq2GUh9+l67jnWox+LAZJ421dI0fFblFox5f++m7PkNxTppkw4BPRNME/5bOEgPlZ8p6xYzB+5vUmFSkZHihJFhxe9QPG3/LI+zaJcZT1VGaMsMdfSB3QQYJF5zFRDZR1Hsw9s=
+	t=1751558359; cv=none; b=g87OeH0hJcYYx3ZuKgkA203LGnsWjMW2jV2w27RrLPMYenB7I+IPc0ikWsYVc72Csvn34HKzosnvazuRvQg2uFT6v2bwrwqPqMWRGCDfQpBiI1cSJDqBFrCmGapPUWsofgEAKz2rTo7tjvbBkvcdmys7eb5zF5fnkoPLjdWCLDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751552504; c=relaxed/simple;
-	bh=8q/IVKrUxZauGxiUn174NgZfIXYmxkzaKI174acXcJY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RailLG86oRa+c4S+xVxb/k+9+7xNHKUYP6OTno7DTtdbwj7MN+ZgQ6MHyueT6RDY1cCU4RqMfLGg00bTDBS84eX6U/dSuIuv1XcV4UWiYAvwxhM7mnH8eQDKjnQ3ZNvmuuE4j+JEsRDDexcis0sVwrUcswGTxH5qDAQRCNAZ5ac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gOnfj6Jd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FE4AC4CEE3;
-	Thu,  3 Jul 2025 14:21:39 +0000 (UTC)
+	s=arc-20240116; t=1751558359; c=relaxed/simple;
+	bh=XUErQvoSfPDh30QxPj+fBHxE2HU7XxKIMeJBfTcPjU8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dVkbopL+TeGNyFm2bhAEVAJmOl2BI9VICkmXFtaj5qLQ3IfOSBDEJ7kXx/gYxIFlktGcaOtjz91FsO29sR18cvHe4HevWzIkS0JWmvwvRjrQom0z6Zx/7G+j0blOMtMFoDiPgGtObgkBLpyzWEtx+Uv6sXYCuXiqZ2lIwBXYVa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VFaNZWdK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8416CC4CEE3;
+	Thu,  3 Jul 2025 15:59:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751552504;
-	bh=8q/IVKrUxZauGxiUn174NgZfIXYmxkzaKI174acXcJY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gOnfj6JddvGC2tczpxc5Nhlp+9Z0UiFGRRU3sr4q71VnRB/GwYAQRCLZmuHr4sxxA
-	 vEZU7xqhdgzNxuNCO3jBWjnpljc8VTGcskBdQEC556pU9PhKZcOTRVcBCzaMmQR+bJ
-	 s9+uOMF6FGLhRLlVxnWJqQgXF4lPrSwE7sfN3zlKS0x9xMxXxyfq5b0b/Ys53xJ79N
-	 3/rhDg3aIR2ZYVy29OK+y6hX9gwwhCcLOcDN1+TDIDhuxGHglj5hs8laI0aqAr8uf2
-	 2UxfmVUtfg2N/objv3RDgkIZOnSwMCKi9DT6cACPvZ4UCg5vDGQ6jOT5EC7Tjapg5B
-	 Nu+V/A49DF7fQ==
-Date: Thu, 3 Jul 2025 15:21:36 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Robert Marko <robert.marko@sartura.hr>,
-	Russell King <linux@armlinux.org.uk>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Olivia Mackall <olivia@selenic.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S . Miller" <davem@davemloft.net>,
-	Vinod Koul <vkoul@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
-	Lee Jones <lee@kernel.org>, Mark Brown <broonie@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
-	linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	Daniel Machon <daniel.machon@microchip.com>, luka.perkov@sartura.hr
-Subject: Re: [PATCH v8 01/10] arm64: Add config for Microchip SoC platforms
-Message-ID: <20250703-lapped-itunes-1cd711479f75@spud>
-References: <20250702183856.1727275-1-robert.marko@sartura.hr>
- <20250702183856.1727275-2-robert.marko@sartura.hr>
- <ea353170-6e03-4231-afc2-3dc45253931d@app.fastmail.com>
+	s=k20201202; t=1751558357;
+	bh=XUErQvoSfPDh30QxPj+fBHxE2HU7XxKIMeJBfTcPjU8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=VFaNZWdKvokc6PGOHwz7Ja9eDg7QYo6ZOOMnsPIRI7ko0mGcbqS2W/fA9A44VVu7B
+	 AIBgMUqWCYrFZpn4hojotsquOzvDmDgxnHhKkKYgKmCGr5Rtl0zctKllzIvVYnjYTk
+	 xl7uMC+FxNj0oWdt+jfI/Hgjk/V/gx1ftQOp28/M7e7YN4nmzGYQE/VzsDBkUei+s0
+	 S+mgxqc1CfNSZu08+CTQgk7X35SiPR5+wMHacQ7hxNVs/Z4kQl1erk+KT0LclF6bl/
+	 E/DT+VbQYCq6fGvQ9jbaPq1JMaVBXNuiaYD0eK3cM+XhrkRM6sFUZ77iVUSUQxz/gj
+	 yKv1KCl1qW9sw==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Vinod Koul <vkoul@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Gregory Clement <gregory.clement@bootlin.com>
+Cc: dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: dma: Convert marvell,orion-xor to DT schema
+Date: Thu,  3 Jul 2025 10:59:10 -0500
+Message-ID: <20250703155912.1713518-1-robh@kernel.org>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="MYqRzWYWScpig/dd"
-Content-Disposition: inline
-In-Reply-To: <ea353170-6e03-4231-afc2-3dc45253931d@app.fastmail.com>
+Content-Transfer-Encoding: 8bit
 
+Convert the Marvell Orion XOR engine binding to schema.
 
---MYqRzWYWScpig/dd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The "clocks" property is optional for some platforms (though not
+distinguished by compatble). The child node names used are 'channel' or
+'xor'.
 
-On Wed, Jul 02, 2025 at 09:57:10PM +0200, Arnd Bergmann wrote:
-> On Wed, Jul 2, 2025, at 20:35, Robert Marko wrote:
-> > Currently, Microchip SparX-5 SoC is supported and it has its own symbol.
-> >
-> > However, this means that new Microchip platforms that share drivers need
-> > to constantly keep updating depends on various drivers.
-> >
-> > So, to try and reduce this lets add ARCH_MICROCHIP symbol that drivers
-> > could instead depend on.
->=20
-> Thanks for updating the series to my suggestion!
->=20
-> > @@ -174,6 +160,27 @@ config ARCH_MESON
-> >  	  This enables support for the arm64 based Amlogic SoCs
-> >  	  such as the s905, S905X/D, S912, A113X/D or S905X/D2
-> >=20
-> > +menuconfig ARCH_MICROCHIP
-> > +	bool "Microchip SoC support"
-> > +
-> > +if ARCH_MICROCHIP
-> > +
-> > +config ARCH_SPARX5
-> > +	bool "Microchip Sparx5 SoC family"
->=20
-> This part is the one bit I'm not sure about: The user-visible
-> arm64 CONFIG_ARCH_* symbols are usually a little higher-level,
-> so I don't think we want both ARCH_MICROCHIP /and/ ARCH_SPARX5
-> here, or more generally speaking any of the nested ARCH_*
-> symbols.
->=20
-> This version of your patch is going to be slightly annoying
-> to existing sparx5 users because updating an old .config
-> breaks when ARCH_MICROCHIP is not enabled.
->=20
-> The two options that I would prefer here are=20
->=20
-> a) make ARCH_SPARX5 a hidden symbol in order to keep the
->    series bisectable, remove it entirely once all references
->    are moved over to ARCH_MICROCHIP
->=20
-> b) Make ARCH_MICROCHIP a hidden symbol that is selected by
->    ARCH_SPARX5 but keep the menu unchanged.
->=20
-> Let's see what the sparx5 and at91 maintainers think about
-> these options.
->=20
-> The other patches all look fine to me.
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+---
+ .../bindings/dma/marvell,orion-xor.yaml       | 84 +++++++++++++++++++
+ .../devicetree/bindings/dma/mv-xor.txt        | 40 ---------
+ 2 files changed, 84 insertions(+), 40 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/marvell,orion-xor.yaml
+ delete mode 100644 Documentation/devicetree/bindings/dma/mv-xor.txt
 
-One more fun thing to consider is that we ended up defining
-ARCH_MICROCHIP on riscv because people didn't want to have an
-ARCH_MICROCHIP_POLARFIRE symbol enabling the pic64gx SoC. Therefore,
-anything that relies on CONFIG_AT91 to be only selectable by users on
-arm/arm64 when moved to CONFIG_ARCH_MICROCHIP (as this patch does) will
-become selectable on riscv as a result.
+diff --git a/Documentation/devicetree/bindings/dma/marvell,orion-xor.yaml b/Documentation/devicetree/bindings/dma/marvell,orion-xor.yaml
+new file mode 100644
+index 000000000000..add08257ec59
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/marvell,orion-xor.yaml
+@@ -0,0 +1,84 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/marvell,orion-xor.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Marvell XOR engine
++
++maintainers:
++  - Andrew Lunn <andrew@lunn.ch>
++  - Gregory Clement <gregory.clement@bootlin.com>
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - const: marvell,armada-380-xor
++          - const: marvell,orion-xor
++      - enum:
++          - marvell,armada-3700-xor
++          - marvell,orion-xor
++
++  reg:
++    items:
++      - description: Low registers for the XOR engine
++      - description: High registers for the XOR engine
++
++  clocks:
++    maxItems: 1
++
++patternProperties:
++  "^(channel|xor)[0-9]+$":
++    description: XOR channel sub-node
++    type: object
++    additionalProperties: false
++
++    properties:
++      interrupts:
++        description: Interrupt specifier for the XOR channel
++        items:
++          - description: Interrupt for this channel
++
++      dmacap,memcpy:
++        type: boolean
++        deprecated: true
++        description:
++          Indicates that the XOR channel is capable of memcpy operations
++
++      dmacap,memset:
++        type: boolean
++        deprecated: true
++        description:
++          Indicates that the XOR channel is capable of memset operations
++
++      dmacap,xor:
++        type: boolean
++        deprecated: true
++        description:
++          Indicates that the XOR channel is capable of xor operations
++
++    required:
++      - interrupts
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    xor@d0060900 {
++        compatible = "marvell,orion-xor";
++        reg = <0xd0060900 0x100>,
++              <0xd0060b00 0x100>;
++        clocks = <&coreclk 0>;
++
++        xor00 {
++            interrupts = <51>;
++        };
++        xor01 {
++            interrupts = <52>;
++        };
++    };
+diff --git a/Documentation/devicetree/bindings/dma/mv-xor.txt b/Documentation/devicetree/bindings/dma/mv-xor.txt
+deleted file mode 100644
+index 0ffb4d8766a8..000000000000
+--- a/Documentation/devicetree/bindings/dma/mv-xor.txt
++++ /dev/null
+@@ -1,40 +0,0 @@
+-* Marvell XOR engines
+-
+-Required properties:
+-- compatible: Should be one of the following:
+-  - "marvell,orion-xor"
+-  - "marvell,armada-380-xor"
+-  - "marvell,armada-3700-xor".
+-- reg: Should contain registers location and length (two sets)
+-    the first set is the low registers, the second set the high
+-    registers for the XOR engine.
+-- clocks: pointer to the reference clock
+-
+-The DT node must also contains sub-nodes for each XOR channel that the
+-XOR engine has. Those sub-nodes have the following required
+-properties:
+-- interrupts: interrupt of the XOR channel
+-
+-The sub-nodes used to contain one or several of the following
+-properties, but they are now deprecated:
+-- dmacap,memcpy to indicate that the XOR channel is capable of memcpy operations
+-- dmacap,memset to indicate that the XOR channel is capable of memset operations
+-- dmacap,xor to indicate that the XOR channel is capable of xor operations
+-- dmacap,interrupt to indicate that the XOR channel is capable of
+-  generating interrupts
+-
+-Example:
+-
+-xor@d0060900 {
+-	compatible = "marvell,orion-xor";
+-	reg = <0xd0060900 0x100
+-	       0xd0060b00 0x100>;
+-	clocks = <&coreclk 0>;
+-
+-	xor00 {
+-	      interrupts = <51>;
+-	};
+-	xor01 {
+-	      interrupts = <52>;
+-	};
+-};
+-- 
+2.47.2
 
---MYqRzWYWScpig/dd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaGaRywAKCRB4tDGHoIJi
-0kalAP9rQkzuJjuFkyPd9IlOQj3R+Ld5bQNONlz6IG3u/RaW3wEA1mcw+qjQrIc8
-tzY+P2Bw7n2cprxDhZQKO1xk0ihwGws=
-=qB70
------END PGP SIGNATURE-----
-
---MYqRzWYWScpig/dd--
 

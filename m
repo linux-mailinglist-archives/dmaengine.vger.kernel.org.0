@@ -1,133 +1,105 @@
-Return-Path: <dmaengine+bounces-5740-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5741-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E64E7AF8A5E
-	for <lists+dmaengine@lfdr.de>; Fri,  4 Jul 2025 09:58:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9C110AF8C7B
+	for <lists+dmaengine@lfdr.de>; Fri,  4 Jul 2025 10:47:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 810BE6E4642
-	for <lists+dmaengine@lfdr.de>; Fri,  4 Jul 2025 07:57:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C6B913A52FC
+	for <lists+dmaengine@lfdr.de>; Fri,  4 Jul 2025 08:45:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDDEE29B77A;
-	Fri,  4 Jul 2025 07:54:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 171042874E5;
+	Fri,  4 Jul 2025 08:41:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NG9StyAI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iW9lnZtw"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 055D4299ABF;
-	Fri,  4 Jul 2025 07:54:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28D3C28A3FA
+	for <dmaengine@vger.kernel.org>; Fri,  4 Jul 2025 08:41:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751615655; cv=none; b=heDr3mcAybZIXsVSk2v+EQ9D0f4TEemKez4gUnJGhcP/9k7SPn4v4UN9iHuzjByTZemYVz8NEh8UEetuEDktG2jXggC4D/zNza7/BWuHQtgtl8UOvz0LA0GBj18gMuARSzCwvHhKFF0nJfaSPNyo8z5JUyIQ7NQ27Y6p2HfZOs0=
+	t=1751618481; cv=none; b=DxgnCXWVJHdPTOmx/qFuLgm5w/ZqZrV1agiELIEZi248qxYxUCdU35QXsnvGKgV2Am24Q58ISAdoOOT/tmUWjEs+pptrpbtxWOTDzHxCepkgQ6z9kHfeX/pQLCQ7VM4TDaV9rNcYwcYwT48N7co32XFX4CzPNq/P+dyByPw7i/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751615655; c=relaxed/simple;
-	bh=yOZfd0doZbXNg800IlwSq25+2rcm+my/SjHfpGQtN7o=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BJzFkO+q/ry4snv5dGDxuFfeg5TzUQ2UcKz45Mw6naNrR7XjZVrL5bNyPTiV3ueYP4E6ZnT5dc49VpSvpujTFQmNXLRAYEHLNA2G26W+J86/AlWLOI6uTh1Sfk6GeTl+y0OY+3IN1zoGmAswOr/h/XbOMQaOd+7ccOUl5sJcmjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NG9StyAI; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751615654; x=1783151654;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=yOZfd0doZbXNg800IlwSq25+2rcm+my/SjHfpGQtN7o=;
-  b=NG9StyAILx59gox1SdfFPAFZFG+ahk4LKN0iebV01PkanOJMMk0gwSK4
-   PUa/Mvmu6R7s5KU+Cnml0UpGAOMvYSDWEcwG7JDJSCFUsEB9BLDxJmYjd
-   kd0plzW2N9n39XeDbsn+Nj++MaWO16UG/C4x6gfwJrBJp4TX3pit0xKJd
-   EIe8lqttqVmjvQo7Fe5ScK9AI2XVBHXwTN6F0W7oRvAYqZP/UtafEB78s
-   scRWK3dXxjWhmSAvz0htju5dSQnPxezwMXH6jZSo/rv4iu084Z5paATnX
-   4oKzN3mIhHGbm6wQu0Gxw3yW0ZjcbnMshXYqefy7stf8QgyjT82HwIfvF
-   w==;
-X-CSE-ConnectionGUID: ng8U1VzqRXy4PcBm3z5M9Q==
-X-CSE-MsgGUID: VnaoP7PGTImDf+HngUaTEw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="76494535"
-X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="76494535"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:12 -0700
-X-CSE-ConnectionGUID: 7LRH1JZBRZa36akWsFoezQ==
-X-CSE-MsgGUID: Zfiru8UkStqJOwODVPppxg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="158924195"
-Received: from jkrzyszt-mobl2.ger.corp.intel.com (HELO svinhufvud.fi.intel.com) ([10.245.244.244])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:09 -0700
-Received: from svinhufvud.lan (localhost [IPv6:::1])
-	by svinhufvud.fi.intel.com (Postfix) with ESMTP id B5F5044394;
-	Fri,  4 Jul 2025 10:54:07 +0300 (EEST)
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Vinod Koul <vkoul@kernel.org>,
-	Michal Simek <michal.simek@amd.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Yan Zhen <yanzhen@vivo.com>,
-	Palmer Dabbelt <palmer@rivosinc.com>,
-	Abin Joseph <abin.joseph@amd.com>
-Cc: dmaengine@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 14/80] dmaengine: zynqmp_dma: Remove redundant pm_runtime_mark_last_busy() calls
-Date: Fri,  4 Jul 2025 10:54:07 +0300
-Message-Id: <20250704075407.3217630-1-sakari.ailus@linux.intel.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
-References: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
+	s=arc-20240116; t=1751618481; c=relaxed/simple;
+	bh=XWPuLH+r945MMXMKIDI54FYqxlY/reitRUTj8Ejgnuo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eyB6Nl5jpAm7KsikGwsiWn4SWB3AvwTd6w+fkULJPh8WNREPM81z/jKvvTiEu5R1U/PgXGDPMJ+/b97Ggcw9X8c044asK3j2r2bHAvB2fdJ9huwFANlOfPpv0Y+R7YCwOug5lA2zlcfoec4a6ILgqo53giiQYAG6qwLkNPsYEjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iW9lnZtw; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-32b435ef653so6528021fa.2
+        for <dmaengine@vger.kernel.org>; Fri, 04 Jul 2025 01:41:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751618477; x=1752223277; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XWPuLH+r945MMXMKIDI54FYqxlY/reitRUTj8Ejgnuo=;
+        b=iW9lnZtwbzGhGmL6SK9Hwys4mO0RiShoGm7jSVjmc8/RygwBrfE7D+/cQ0ZUJqyo6W
+         zLy25VY3nMnMT0hRksNaIEVv1I9SDshz+aIER2GUdHUHUBGmFxSbmSHnf+awm/ubCVz0
+         60JNz/5srraSEaZ+AZNf/9CJ14z7oEAX1eJhg2RgEqhVCjsAkg8hL1EzXi0ioTjLwXQ8
+         buTNc+3OqibXfPx5A5Q/ltfDnWypL6n+4DMHkPhLlWfegtPPcQvnw/1+v3rFv8nlCsEU
+         lkR+dg/XYOm8S0N3XtH+ouSmoxB3IV5UC9M80Ru9B0NioJnv9lAWAN9Ui8yKdh99jXLS
+         xQMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751618477; x=1752223277;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XWPuLH+r945MMXMKIDI54FYqxlY/reitRUTj8Ejgnuo=;
+        b=d7UezvOEPwKu15Sz2UGuKE4Bh4pcj4uhMm6m6DnU1dJNgsF1LbI4sSHT3CdEahUSDI
+         iaH3PTxPZh6cjx92cIhfOoeZLEj1jG1Q1JH4v1sNw48eyzQ7gM0KRulZwaexh/IqsdwK
+         UjznGMc7pMjH7CuS+GMWwwnUUagbnLxISGxCn7DrThI3GWfSgs18I9F0bXe58t5zog1u
+         Ua2OrmuFawTTFDDRuzaJorPcMPNcGsiY5D6f6McVelbugS9xe0rWX6m4eU30irhMwmGH
+         jJk0EFl+bx8ZpAt9O6j+NalLqbldfmxwoFpg1AKUCfdTERlwqBH7X9sMQYF59HvLvC36
+         MA/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXTPyNh6dN1ry1Y22UW6BHudwVsVlcW8bNiAj32BvMHBO/76VniJbWtycYxy61Gk97Vl3kDcE5I8tw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAJO4gIeCBEKAEPw2SPHJLb3H1Z+dUiDdL9jPA2N0ksUJyeFWE
+	0DvWQAz7O4cRh3jg0u5uRg9eMY2fQOzmgOXlteGrOXQ3bMwgpQwhL789Gluzhq9hrZEwPOjLW8x
+	GY+wRCa0YHyo9Xn9f4TUcwROao4BylySvTP7xM9QbOQ==
+X-Gm-Gg: ASbGncuJIUhPlubJ4ZYBhhVUTc6pEPGHFrzF+HINaUecEFk3aHetu4AoYTQwHbEvrZO
+	HFTF03UdB2YK31JVVw7KloeQvkqlBVUA6RzgZ78R8/HXLkvsKxrbXmJUBymfOqctLRaokQOMF7b
+	YoiDPUdnGY+sE7Ijkflytb7o+BYcFH+ddE5n1FkRONpXY=
+X-Google-Smtp-Source: AGHT+IEjkMzfSLOYZgYGu/gC0rhugH3gtKCbGLeh9K4QRq1fR9qFAffWdxMFTkqp/Cs4KgSwpWDdcpA+BKTigHt31n0=
+X-Received: by 2002:a05:651c:410e:b0:30b:d656:1485 with SMTP id
+ 38308e7fff4ca-32e5f61b6d5mr3915861fa.32.1751618477177; Fri, 04 Jul 2025
+ 01:41:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250704075225.3212486-1-sakari.ailus@linux.intel.com> <20250704075405.3217535-1-sakari.ailus@linux.intel.com>
+In-Reply-To: <20250704075405.3217535-1-sakari.ailus@linux.intel.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 4 Jul 2025 10:41:06 +0200
+X-Gm-Features: Ac12FXwSUe6_z6ImTsHNK6iIJFxrmJR6h51CXwInuWFdU4SXV4TvNlJsJxqlUJg
+Message-ID: <CACRpkdZQGFEXU8iYreW1XHC6jbPB0v4JrqKAe5JDrOmD63hjgw@mail.gmail.com>
+Subject: Re: [PATCH 12/80] dmaengine: ste_dma40: Remove redundant
+ pm_runtime_mark_last_busy() calls
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Vinod Koul <vkoul@kernel.org>, linux-arm-kernel@lists.infradead.org, 
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-pm_runtime_put_autosuspend(), pm_runtime_put_sync_autosuspend(),
-pm_runtime_autosuspend() and pm_request_autosuspend() now include a call
-to pm_runtime_mark_last_busy(). Remove the now-reduntant explicit call to
-pm_runtime_mark_last_busy().
+On Fri, Jul 4, 2025 at 9:54=E2=80=AFAM Sakari Ailus
+<sakari.ailus@linux.intel.com> wrote:
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
----
-The cover letter of the set can be found here
-<URL:https://lore.kernel.org/linux-pm/20250704075225.3212486-1-sakari.ailus@linux.intel.com>.
+> pm_runtime_put_autosuspend(), pm_runtime_put_sync_autosuspend(),
+> pm_runtime_autosuspend() and pm_request_autosuspend() now include a call
+> to pm_runtime_mark_last_busy(). Remove the now-reduntant explicit call to
+> pm_runtime_mark_last_busy().
+>
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-In brief, this patch depends on PM runtime patches adding marking the last
-busy timestamp in autosuspend related functions. The patches are here, on
-rc2:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-        git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
-                pm-runtime-6.17-rc1
-
- drivers/dma/xilinx/zynqmp_dma.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/dma/xilinx/zynqmp_dma.c b/drivers/dma/xilinx/zynqmp_dma.c
-index d05fc5fcc77d..1e2b9f37fd40 100644
---- a/drivers/dma/xilinx/zynqmp_dma.c
-+++ b/drivers/dma/xilinx/zynqmp_dma.c
-@@ -695,7 +695,6 @@ static void zynqmp_dma_free_chan_resources(struct dma_chan *dchan)
- 		(2 * ZYNQMP_DMA_DESC_SIZE(chan) * ZYNQMP_DMA_NUM_DESCS),
- 		chan->desc_pool_v, chan->desc_pool_p);
- 	kfree(chan->sw_desc_pool);
--	pm_runtime_mark_last_busy(chan->dev);
- 	pm_runtime_put_autosuspend(chan->dev);
- }
- 
-@@ -1145,7 +1144,6 @@ static int zynqmp_dma_probe(struct platform_device *pdev)
- 		goto free_chan_resources;
- 	}
- 
--	pm_runtime_mark_last_busy(zdev->dev);
- 	pm_runtime_put_sync_autosuspend(zdev->dev);
- 
- 	return 0;
--- 
-2.39.5
-
+Yours,
+Linus Walleij
 

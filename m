@@ -1,215 +1,273 @@
-Return-Path: <dmaengine+bounces-5742-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5743-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 103C6AF99CB
-	for <lists+dmaengine@lfdr.de>; Fri,  4 Jul 2025 19:37:50 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E48FAFA0CF
+	for <lists+dmaengine@lfdr.de>; Sat,  5 Jul 2025 18:01:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 095A07B7762
-	for <lists+dmaengine@lfdr.de>; Fri,  4 Jul 2025 17:36:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 99C041BC6351
+	for <lists+dmaengine@lfdr.de>; Sat,  5 Jul 2025 16:01:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21CFC307AE4;
-	Fri,  4 Jul 2025 17:36:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3804B1CEEBE;
+	Sat,  5 Jul 2025 16:01:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b="JG/aj/Wp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZsKz44Xh"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0A2A2D8366
-	for <dmaengine@vger.kernel.org>; Fri,  4 Jul 2025 17:36:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87486156C40;
+	Sat,  5 Jul 2025 16:01:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751650582; cv=none; b=dunuZHg+Oksfj+ZCAdvS1FaCL6zJNrZ0J7AKLgnOlJKniL2iB7EA6kPvnnCTn5RtGy9j0DdJio6f7sKRlOh+g+2LjHcToa49KKobA4jDSLHzATMIQk66ofBEi2j8twQBX+3k/l+CAtkaWUsRgvIrkryZvUbNwE1QGgpvfga0cc4=
+	t=1751731270; cv=none; b=SHP5Ztk2YWLdnMKOhPCbRdTky9F+7MtB2LLphsq9VmbCY/DQNDH8lPcDEAlRKd7RzoQPIX0kh9a4TDX/oxQr3KLCMBG8ZkU15xxZeWzgeoUqTRo8SmWIo0D29dYIDm55UIL6AQJZ0s1i1rfeb+8MYPBJ0JfXxSOsIrRBnfA3oLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751650582; c=relaxed/simple;
-	bh=GmYJZP6Xc+LYEezxq1PksUUUJoTuFJ2anrOieQhfEiU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F2iPIcR64iCUsi3loeekP943+cYkQKsJUS1Q18PJ+cHLvvS2UVfgJXKd/1rzfwgNLTlkLeErFkBdCgMIMhsSm+/g90Lll89kc8QfEm0dwgsqSHJc/wRxzzWztDK4KZUJIydWdA3eY52iTkq+j8OM6C2Iyb3N7fgidlFg5B+R/BY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr; spf=pass smtp.mailfrom=sartura.hr; dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b=JG/aj/Wp; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sartura.hr
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ae0c4945c76so164858966b.3
-        for <dmaengine@vger.kernel.org>; Fri, 04 Jul 2025 10:36:19 -0700 (PDT)
+	s=arc-20240116; t=1751731270; c=relaxed/simple;
+	bh=ZwlYSDrR6cRq1lX8xrIs6L01c2NSiRskHUJTkqM+BLM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Fhcv9iJueRuuUmxJgKblAOqMKQdIFAx5wi8RQyqI8ZQT+kAam7/cu8cUrEWQucK1dem234cEEOHeqICLFL/0OJGswCVs7itlRKuB752qIP1RCnLWTCNlUrvr4tYxJAHo5YgwnH3EOSwsI+dJa1lLuTn8r4BOF8vfVoIjN92jmgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZsKz44Xh; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-23c703c471dso24146055ad.0;
+        Sat, 05 Jul 2025 09:01:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura.hr; s=sartura; t=1751650578; x=1752255378; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/gMVsSx3VDJCjM0/V6JS1Ju4gdqnvsZW/tG6WKrnPP0=;
-        b=JG/aj/Wp8joH3ZjJdiHbBsx1j8PFAMMtHCadbJigMjkx7zR8Gk6iBuEJjyoDpD/qwy
-         GdMb+BI7R9vUZXFs6BaMVceR0cAfe6h2GL6N/iZMivqTlIOLe6yzyRJXrqynFJT4m+z4
-         ETmICqjLPUqVpxx++E2nSKvTvWmBQRbZTJSA50yHeLjU2DQEp8f1CHn9Bp00r+bewLYA
-         UHyW6tYJ5d/6R4hexxDqpuSBPf1b5jENlbdTrWDimoChpYoAlx0SLiW1Qse+GqeEdazM
-         Hh6VK25RWbcHYbor7cJmJ+hk1HNxjrps8qn3wwvAKAoFB0jFb3ZxfLPGu2uiChBhvlKh
-         ee4g==
+        d=gmail.com; s=20230601; t=1751731268; x=1752336068; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PczZ2yQWpsqzC7ti5geiTXw4UnZuMfFlqf02EPlXpYI=;
+        b=ZsKz44XhgzWmEfiLozuqwzn3ArTLkGdiJdwMwMAE0rSLiAy+hv2q21Fe6rKr/oAw1+
+         1fT8Krj+/s7BWB3Zh2BfE1IgIb3b7Bm1vVLlS+juvUxEoeEhLZWNUDexzrjeg9pUV4As
+         4j3NdkHW44fYoSiawQBRUeKNZq5VPUv9ZhlW1RYU9OSrg6Nu+Z0KMsoTF+P9fjRBaUK2
+         6MKdIRi0Xetz4nFy6JjSbU08xY3OCNiAyl5NgbM+UiTNICu2PTlPzTP7tYQ0/rRBDCO9
+         hXg0ApGs9SbN9VmLEy9mh8cBxdH0ngIMaJQFqHk/Qfv58Jp1s91qUSjdcUdaCB5zFjMq
+         +XyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751650578; x=1752255378;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/gMVsSx3VDJCjM0/V6JS1Ju4gdqnvsZW/tG6WKrnPP0=;
-        b=BSxEUXdpTDOZbVEweOMyLW4bT96E1/49zsZFoS8HrIFyoDwbG7JrlqpKe/z9K4Caqj
-         tOgKEq0Y6/XJYS+yX6k2ll6Q+/x65GobccLiYR//zfYcWJgdl50j4Q4P3HexOmYqSzX/
-         wE0JbIteVAuwF40Hr50IO5/EHKlBWjBb+K2jv6QIciMbHjfDpakz7uZ6r7JC53RTZGwu
-         N9yCCyB8fr25qCAr08KYl/393Qk6re3L4VKYcJwiqHbBkuo6jzRFlgIXtf6MPU5j+NJV
-         b4cIe/C7zo/8WecwlKxO/iLxHJnAHc/PhT1QImzCV7IXTMN9EJVmDlhgSN1JfaOJqySL
-         2UEw==
-X-Forwarded-Encrypted: i=1; AJvYcCXh+9aAifVnZzpOKtxtYLEa1Zfpwq7ovoUcNl7UruVNN8QLWwmqMZXDqQoIgS/GJC7jri3OB0N1Cas=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyge7aY2e9Nj0ZW/qiNLxyzF0hosn99FYXHmoZDa8sUUJTrJ+Ch
-	7qeZN4uaVsGTh7YT6dh9DUwZFo1RAJhlLr9x5/ygEinncS6rdN2By3x3QjsxB4PTgqjxpB2nG5P
-	UgL2m0jtsWKJNaWPkEMUaeJdRjwNEnfyaC9IXGVLoIQ==
-X-Gm-Gg: ASbGnctF2h3eMAAFJTOd4aXeRAEWFvP1vvcimXKXJHam12tEKxis6f5u+o40eCf41kq
-	+qE0Yp6fE+0QbOq/IxGqepIGtfrPsDkYO+4BxxYde6i3zh+sKzTy+DGGIWko9Htp4Q83w1Oo8Wy
-	uGRhAc6qEQOLnU+vlCwJvKKk1XgR8kAdL8zzPpw/alucNt
-X-Google-Smtp-Source: AGHT+IHeJ1Z6kLI9F18nPlTXJDs+kXmK3fscjH5F6AOkcbqCoHLdbo6tfPeiaHhkgOp4rTxkpu1/up/L9rb3ERUcPTE=
-X-Received: by 2002:a17:907:9629:b0:ae0:628a:5093 with SMTP id
- a640c23a62f3a-ae3fe4581b0mr339627066b.3.1751650577806; Fri, 04 Jul 2025
- 10:36:17 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751731268; x=1752336068;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PczZ2yQWpsqzC7ti5geiTXw4UnZuMfFlqf02EPlXpYI=;
+        b=LZsFj1IEvW++BpSwxLijrak2cQG8dapngooE0NyIJV6LiusEphiF0lBjzYgSxQijM0
+         yWNlKMswYZkTu/PC/kg865o6/Bxqn+RDkT6jJ/I9kdLP2ejgqFqXUNEHmGaUS9uTTAbb
+         RIUxt9wdTmedkswmjpFguNgamaTQgyuRwSddH/tjGADP5dT9uwa/6H2PLK6QBj7kMWjQ
+         jv5wjJsjrx7uTOGJhhFzCtchK/wlhMufKj4k2v3ZRMdZsBQPxTlfQX6YpDViE0gFpq+S
+         0eT79n+j7X7U4v2lXC0lGyUsNuqA6Ye32vmO8CMiMbQYQFNoOXjcAuNMVogPfNisRKT7
+         ZX2w==
+X-Forwarded-Encrypted: i=1; AJvYcCUO4MqlTZiINY1KDU5Z/epInyUnjcRfcT7IAvt2hh5s/ZuZb7k7kA+Umqc17C1OZcRZ3C8AuYf86Lhqd/g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmSQD0Q8Lt4NI7ZL49U+N34Z1Xqt7CTz/zX8LBuOCG4s782/66
+	71XIgU2bqOoNVtLKwArAqU9aOrUNiQU3dVoahjmy2T3OsKGFzszT0JggDlRaDe0D
+X-Gm-Gg: ASbGncsYhYac0PVrD2AeYz+hXWoZtNU4xSPvpWe4K2r14wvCk7BGJfdtl7vKA2fbO3P
+	4I0DgmLYE2bXx720VedZxsU6NofFzkoUgCY7SP0B2RKtlCmYnkveNx6BFWes06lTb0VdbjqN2/x
+	VafvEixl07LAU78RHt7ak5MwBidDmqXXW626UQ6UDbD5XT4lX4VhH70LdTL6LOkIgldEvfxLald
+	Aexs/iinb5nmbeHBoWTi7crAEv88TPtkd6dOzppC6kKcpJ2okptl8v2JIevim516DIgoUoAuPJL
+	Ha5bDFVEH4QvJd+o1C3NTEACs2RJ+dKmV/NrljC/f6q+NkNbnnq7e3M0liXrQW/jr6GcjdBLVSv
+	wMtufW6Z++qdxIY4=
+X-Google-Smtp-Source: AGHT+IFxKBixgyWEyAxhwG1ktTeSupr+ZtlzFnIhOBHnU1mn2wsmpVsDPUBoZi5gGf/hGYRV2MxM5w==
+X-Received: by 2002:a17:903:3212:b0:231:fd73:f8e5 with SMTP id d9443c01a7336-23c8a505280mr50159465ad.24.1751731267590;
+        Sat, 05 Jul 2025 09:01:07 -0700 (PDT)
+Received: from localhost.localdomain ([2401:4900:882f:293:70ba:30fe:2559:8217])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23c845c5c73sm44811275ad.259.2025.07.05.09.01.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Jul 2025 09:01:07 -0700 (PDT)
+From: Abinash Singh <abinashlalotra@gmail.com>
+X-Google-Original-From: Abinash Singh <abinashsinghlalotra@gmail.com>
+To: mani@kernel.org,
+	vkoul@kernel.org
+Cc: dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Abinash Singh <abinashsinghlalotra@gmail.com>
+Subject: [PATCH RFC] dma: dw-edma: Fix build warning in dw_edma_pcie_probe()
+Date: Sat,  5 Jul 2025 21:30:55 +0530
+Message-ID: <20250705160055.808165-1-abinashsinghlalotra@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250702183856.1727275-1-robert.marko@sartura.hr>
- <20250702183856.1727275-2-robert.marko@sartura.hr> <ea353170-6e03-4231-afc2-3dc45253931d@app.fastmail.com>
- <CA+HBbNHxiU5+xVJTyPQFuCJLyEs5_MpybSBEgxi25bzaGfiVHA@mail.gmail.com> <421d61db-27eb-4ad2-bd98-eb187fd14b1e@microchip.com>
-In-Reply-To: <421d61db-27eb-4ad2-bd98-eb187fd14b1e@microchip.com>
-From: Robert Marko <robert.marko@sartura.hr>
-Date: Fri, 4 Jul 2025 19:36:06 +0200
-X-Gm-Features: Ac12FXwPCk_M7U49drkBOHMtvL2YaDYQKpMa88sHXtdMqEAGjR9SQcLiyG85r7Q
-Message-ID: <CA+HBbNEiKWS71jtF_jqV9bdX9HVroaZSGMaeD-xFM8sm0kLtCw@mail.gmail.com>
-Subject: Re: [PATCH v8 01/10] arm64: Add config for Microchip SoC platforms
-To: Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: Arnd Bergmann <arnd@kernel.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
-	Russell King <linux@armlinux.org.uk>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Olivia Mackall <olivia@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
-	"David S . Miller" <davem@davemloft.net>, Vinod Koul <vkoul@kernel.org>, 
-	Andi Shyti <andi.shyti@kernel.org>, Lee Jones <lee@kernel.org>, Mark Brown <broonie@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org, 
-	linux-serial@vger.kernel.org, Oleksij Rempel <o.rempel@pengutronix.de>, 
-	Daniel Machon <daniel.machon@microchip.com>, luka.perkov@sartura.hr, 
-	Conor Dooley <Conor.Dooley@microchip.com>, 
-	Lars Povlsen - M31675 <Lars.Povlsen@microchip.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 3, 2025 at 3:56=E2=80=AFPM Nicolas Ferre
-<nicolas.ferre@microchip.com> wrote:
->
-> Robert, Arnd,
->
-> On 03/07/2025 at 14:25, Robert Marko wrote:
-> > On Wed, Jul 2, 2025 at 9:57=E2=80=AFPM Arnd Bergmann <arnd@kernel.org> =
-wrote:
-> >>
-> >> On Wed, Jul 2, 2025, at 20:35, Robert Marko wrote:
-> >>> Currently, Microchip SparX-5 SoC is supported and it has its own symb=
-ol.
-> >>>
-> >>> However, this means that new Microchip platforms that share drivers n=
-eed
-> >>> to constantly keep updating depends on various drivers.
-> >>>
-> >>> So, to try and reduce this lets add ARCH_MICROCHIP symbol that driver=
-s
-> >>> could instead depend on.
-> >>
-> >> Thanks for updating the series to my suggestion!
-> >>
-> >>> @@ -174,6 +160,27 @@ config ARCH_MESON
-> >>>          This enables support for the arm64 based Amlogic SoCs
-> >>>          such as the s905, S905X/D, S912, A113X/D or S905X/D2
-> >>>
-> >>> +menuconfig ARCH_MICROCHIP
-> >>> +     bool "Microchip SoC support"
-> >>> +
-> >>> +if ARCH_MICROCHIP
-> >>> +
-> >>> +config ARCH_SPARX5
-> >>> +     bool "Microchip Sparx5 SoC family"
-> >>
-> >> This part is the one bit I'm not sure about: The user-visible
-> >> arm64 CONFIG_ARCH_* symbols are usually a little higher-level,
-> >> so I don't think we want both ARCH_MICROCHIP /and/ ARCH_SPARX5
-> >> here, or more generally speaking any of the nested ARCH_*
-> >> symbols.
->
-> Well, having a look at arch/arm64/Kconfig.platforms, I like how NXP is
-> organized.
->
-> SPARX5, LAN969x or other MPU platforms, even if they share some common
-> IPs, are fairly different in terms of internal architecture or feature se=
-t.
-> So, to me, different ARCH_SPARX5, ARCH_LAN969X (as Robert proposed) or
-> future ones make a lot sense.
-> It will help in selecting not only different device drivers but
-> different PM architectures, cores or TrustZone implementation...
->
-> >> This version of your patch is going to be slightly annoying
-> >> to existing sparx5 users because updating an old .config
-> >> breaks when ARCH_MICROCHIP is not enabled.
->
-> Oh, yeah, indeed. Even if I find Robert's proposal ideal.
->
-> Alexandre, Lars, can you evaluate this level of annoyance?
->
-> >> The two options that I would prefer here are
-> >>
-> >> a) make ARCH_SPARX5 a hidden symbol in order to keep the
-> >>     series bisectable, remove it entirely once all references
-> >>     are moved over to ARCH_MICROCHIP
-> >>
-> >> b) Make ARCH_MICROCHIP a hidden symbol that is selected by
-> >>     ARCH_SPARX5 but keep the menu unchanged.
-> >
-> > Hi Arnd,
-> > Ok, I see the issue, and I would prefer to go with option b and do
-> > what I did for
-> > AT91 with the hidden ARCH_MICROCHIP symbol to avoid breaking current co=
-nfigs.
->
-> Yep, but at the cost of multiple entries for Microchip arm64 SoCs at the
-> "Platform selection" menu level. Nuvoton or Cavium have this already, so
-> it's probably fine.
+The function dw_edma_pcie_probe() in dw-edma-pcie.c triggered a
+frame size warning:
+ld.lld:warning:
+  drivers/dma/dw-edma/dw-edma-pcie.c:162:0: stack frame size (1040) exceeds limit (1024) in function 'dw_edma_pcie_probe'
 
-Yes, this is why I went with a menu instead, to me it is much cleaner.
+This patch reduces the stack usage by dynamically allocating the
+`vsec_data` structure using kmalloc(), rather than placing it on
+the stack. This eliminates the overflow warning and improves kernel
+robustness.
 
-So, how would you guys want me to proceed?
+Signed-off-by: Abinash Singh <abinashsinghlalotra@gmail.com>
+---
+The stack usage was further confirmed by using -fstack-usage flag.
+it was usiing 928 bytes:
+..............................
+drivers/dma/dw-edma/dw-edma-pcie.c:377:cleanup_module   8       static
+drivers/dma/dw-edma/dw-edma-pcie.c:160:dw_edma_pcie_probe       928     static
+......................................
+After applying the patch it becomes :
+.........
+drivers/dma/dw-edma/dw-edma-pcie.c:381:cleanup_module   8       static
+drivers/dma/dw-edma/dw-edma-pcie.c:160:dw_edma_pcie_probe       120     static
+.......
 
-a) Keep the menu-based config symbol
-or
-b) Like for AT91, add a hidden symbol and keep the individual SoC-s in
-the top level
-platform menu?
+This function is used for probing . So dynamic allocation will not create
+any issues.
 
-Regards,
-Robert
+Thank You
+---
+ drivers/dma/dw-edma/dw-edma-pcie.c | 60 ++++++++++++++++--------------
+ 1 file changed, 32 insertions(+), 28 deletions(-)
 
->
-> >> Let's see what the sparx5 and at91 maintainers think about
-> >> these options.
-> >
-> > Sounds good, let's give them some time before I respin this series.
->
-> Thanks to both of you. Best regards,
->    Nicolas
+diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
+index 49f09998e5c0..1536395eacd2 100644
+--- a/drivers/dma/dw-edma/dw-edma-pcie.c
++++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+@@ -161,12 +161,16 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+ 			      const struct pci_device_id *pid)
+ {
+ 	struct dw_edma_pcie_data *pdata = (void *)pid->driver_data;
+-	struct dw_edma_pcie_data vsec_data;
++	struct dw_edma_pcie_data *vsec_data __free(kfree) = NULL;
+ 	struct device *dev = &pdev->dev;
+ 	struct dw_edma_chip *chip;
+ 	int err, nr_irqs;
+ 	int i, mask;
+ 
++	vsec_data = kmalloc(sizeof(*vsec_data), GFP_KERNEL);
++	if (!vsec_data)
++		return -ENOMEM;
++
+ 	/* Enable PCI device */
+ 	err = pcim_enable_device(pdev);
+ 	if (err) {
+@@ -174,23 +178,23 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+ 		return err;
+ 	}
+ 
+-	memcpy(&vsec_data, pdata, sizeof(struct dw_edma_pcie_data));
++	memcpy(vsec_data, pdata, sizeof(struct dw_edma_pcie_data));
+ 
+ 	/*
+ 	 * Tries to find if exists a PCIe Vendor-Specific Extended Capability
+ 	 * for the DMA, if one exists, then reconfigures it.
+ 	 */
+-	dw_edma_pcie_get_vsec_dma_data(pdev, &vsec_data);
++	dw_edma_pcie_get_vsec_dma_data(pdev, vsec_data);
+ 
+ 	/* Mapping PCI BAR regions */
+-	mask = BIT(vsec_data.rg.bar);
+-	for (i = 0; i < vsec_data.wr_ch_cnt; i++) {
+-		mask |= BIT(vsec_data.ll_wr[i].bar);
+-		mask |= BIT(vsec_data.dt_wr[i].bar);
++	mask = BIT(vsec_data->rg.bar);
++	for (i = 0; i < vsec_data->wr_ch_cnt; i++) {
++		mask |= BIT(vsec_data->ll_wr[i].bar);
++		mask |= BIT(vsec_data->dt_wr[i].bar);
+ 	}
+-	for (i = 0; i < vsec_data.rd_ch_cnt; i++) {
+-		mask |= BIT(vsec_data.ll_rd[i].bar);
+-		mask |= BIT(vsec_data.dt_rd[i].bar);
++	for (i = 0; i < vsec_data->rd_ch_cnt; i++) {
++		mask |= BIT(vsec_data->ll_rd[i].bar);
++		mask |= BIT(vsec_data->dt_rd[i].bar);
+ 	}
+ 	err = pcim_iomap_regions(pdev, mask, pci_name(pdev));
+ 	if (err) {
+@@ -213,7 +217,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+ 		return -ENOMEM;
+ 
+ 	/* IRQs allocation */
+-	nr_irqs = pci_alloc_irq_vectors(pdev, 1, vsec_data.irqs,
++	nr_irqs = pci_alloc_irq_vectors(pdev, 1, vsec_data->irqs,
+ 					PCI_IRQ_MSI | PCI_IRQ_MSIX);
+ 	if (nr_irqs < 1) {
+ 		pci_err(pdev, "fail to alloc IRQ vector (number of IRQs=%u)\n",
+@@ -224,22 +228,22 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+ 	/* Data structure initialization */
+ 	chip->dev = dev;
+ 
+-	chip->mf = vsec_data.mf;
++	chip->mf = vsec_data->mf;
+ 	chip->nr_irqs = nr_irqs;
+ 	chip->ops = &dw_edma_pcie_plat_ops;
+ 
+-	chip->ll_wr_cnt = vsec_data.wr_ch_cnt;
+-	chip->ll_rd_cnt = vsec_data.rd_ch_cnt;
++	chip->ll_wr_cnt = vsec_data->wr_ch_cnt;
++	chip->ll_rd_cnt = vsec_data->rd_ch_cnt;
+ 
+-	chip->reg_base = pcim_iomap_table(pdev)[vsec_data.rg.bar];
++	chip->reg_base = pcim_iomap_table(pdev)[vsec_data->rg.bar];
+ 	if (!chip->reg_base)
+ 		return -ENOMEM;
+ 
+ 	for (i = 0; i < chip->ll_wr_cnt; i++) {
+ 		struct dw_edma_region *ll_region = &chip->ll_region_wr[i];
+ 		struct dw_edma_region *dt_region = &chip->dt_region_wr[i];
+-		struct dw_edma_block *ll_block = &vsec_data.ll_wr[i];
+-		struct dw_edma_block *dt_block = &vsec_data.dt_wr[i];
++		struct dw_edma_block *ll_block = &vsec_data->ll_wr[i];
++		struct dw_edma_block *dt_block = &vsec_data->dt_wr[i];
+ 
+ 		ll_region->vaddr.io = pcim_iomap_table(pdev)[ll_block->bar];
+ 		if (!ll_region->vaddr.io)
+@@ -263,8 +267,8 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+ 	for (i = 0; i < chip->ll_rd_cnt; i++) {
+ 		struct dw_edma_region *ll_region = &chip->ll_region_rd[i];
+ 		struct dw_edma_region *dt_region = &chip->dt_region_rd[i];
+-		struct dw_edma_block *ll_block = &vsec_data.ll_rd[i];
+-		struct dw_edma_block *dt_block = &vsec_data.dt_rd[i];
++		struct dw_edma_block *ll_block = &vsec_data->ll_rd[i];
++		struct dw_edma_block *dt_block = &vsec_data->dt_rd[i];
+ 
+ 		ll_region->vaddr.io = pcim_iomap_table(pdev)[ll_block->bar];
+ 		if (!ll_region->vaddr.io)
+@@ -298,31 +302,31 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+ 		pci_dbg(pdev, "Version:\tUnknown (0x%x)\n", chip->mf);
+ 
+ 	pci_dbg(pdev, "Registers:\tBAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p)\n",
+-		vsec_data.rg.bar, vsec_data.rg.off, vsec_data.rg.sz,
++		vsec_data->rg.bar, vsec_data->rg.off, vsec_data->rg.sz,
+ 		chip->reg_base);
+ 
+ 
+ 	for (i = 0; i < chip->ll_wr_cnt; i++) {
+ 		pci_dbg(pdev, "L. List:\tWRITE CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
+-			i, vsec_data.ll_wr[i].bar,
+-			vsec_data.ll_wr[i].off, chip->ll_region_wr[i].sz,
++			i, vsec_data->ll_wr[i].bar,
++			vsec_data->ll_wr[i].off, chip->ll_region_wr[i].sz,
+ 			chip->ll_region_wr[i].vaddr.io, &chip->ll_region_wr[i].paddr);
+ 
+ 		pci_dbg(pdev, "Data:\tWRITE CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
+-			i, vsec_data.dt_wr[i].bar,
+-			vsec_data.dt_wr[i].off, chip->dt_region_wr[i].sz,
++			i, vsec_data->dt_wr[i].bar,
++			vsec_data->dt_wr[i].off, chip->dt_region_wr[i].sz,
+ 			chip->dt_region_wr[i].vaddr.io, &chip->dt_region_wr[i].paddr);
+ 	}
+ 
+ 	for (i = 0; i < chip->ll_rd_cnt; i++) {
+ 		pci_dbg(pdev, "L. List:\tREAD CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
+-			i, vsec_data.ll_rd[i].bar,
+-			vsec_data.ll_rd[i].off, chip->ll_region_rd[i].sz,
++			i, vsec_data->ll_rd[i].bar,
++			vsec_data->ll_rd[i].off, chip->ll_region_rd[i].sz,
+ 			chip->ll_region_rd[i].vaddr.io, &chip->ll_region_rd[i].paddr);
+ 
+ 		pci_dbg(pdev, "Data:\tREAD CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
+-			i, vsec_data.dt_rd[i].bar,
+-			vsec_data.dt_rd[i].off, chip->dt_region_rd[i].sz,
++			i, vsec_data->dt_rd[i].bar,
++			vsec_data->dt_rd[i].off, chip->dt_region_rd[i].sz,
+ 			chip->dt_region_rd[i].vaddr.io, &chip->dt_region_rd[i].paddr);
+ 	}
+ 
+-- 
+2.43.0
 
-
-
---=20
-Robert Marko
-Staff Embedded Linux Engineer
-Sartura d.d.
-Lendavska ulica 16a
-10000 Zagreb, Croatia
-Email: robert.marko@sartura.hr
-Web: www.sartura.hr
 

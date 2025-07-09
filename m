@@ -1,151 +1,253 @@
-Return-Path: <dmaengine+bounces-5751-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5752-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D17D9AFCC41
-	for <lists+dmaengine@lfdr.de>; Tue,  8 Jul 2025 15:36:56 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F01C2AFE77F
+	for <lists+dmaengine@lfdr.de>; Wed,  9 Jul 2025 13:20:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 675094203CE
-	for <lists+dmaengine@lfdr.de>; Tue,  8 Jul 2025 13:32:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DB6FE6E0A78
+	for <lists+dmaengine@lfdr.de>; Wed,  9 Jul 2025 11:18:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA7342DECB7;
-	Tue,  8 Jul 2025 13:32:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 302E22D6631;
+	Wed,  9 Jul 2025 11:17:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WLnY2YD4"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F089EEA8;
-	Tue,  8 Jul 2025 13:31:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 064F62D6629;
+	Wed,  9 Jul 2025 11:17:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751981520; cv=none; b=NMYDi44Fpqy9x9fXRGnSRzuGGxNXQelrsnQXtpjrGLCeuNU4ICfnXCaTICVv917LrL2sbrlSktrobqlZfiAIYR26vSrJeAxDc5Ww0UXyfmN+A+ycW0u3bKsO3SDQ+xihSaxaeTyj67sRT3l+7P8QqQ+tin89M3OKVAlBKqZmotw=
+	t=1752059868; cv=none; b=A/ViBIn1fx2JGG4aM6/1mUU8eE2fNtEoV+nhM0EBn7Eg3PNo1/i+laGod5hnhsoJXQl6EH9/3WN/pnacuGVgPEv+DKKuiNzIbSRExW6avhHeD/lnnA9OvigtKW47aRhyUxsCKTLxc5b9zodJ0eKZqyjM3F3aMhumyglTlyMryNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751981520; c=relaxed/simple;
-	bh=g9yFXkB8Qe9fQYPOMXlv3LTCqj74YDJQiyagwz2sdJM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=W1pjMpLjAEuK7d8dBV4TZKN3p0XV81jpb9CKqseOKw28vab3V2LnV7Bu0zVjaHwmKz9Vc8FWZ9M4AvxTsQ4W8UO05YLVStpgicCQpeg2NLGJYZUsMmOog1v2sCpj9jYsyZ8nbOjxyfc7rtI18O+HIkNJ9v/KcFsBGJlcMGXFjvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso5094491b3a.2;
-        Tue, 08 Jul 2025 06:31:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751981517; x=1752586317;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xxhuRDHiukzLToUdkGAkho9cpYP0RcWZ4Jmct4r6kbk=;
-        b=Vz/2Orz4LHAxCTMMeyGmJp2vW1BQUS0taksW+HR8XsJiCHYPD4KlBO/WyBzSGqLktT
-         PPv98bq1RR9DxQQymLU5w7w4sPccKyrDLm9l1hWfFAWde3lOoBH44Wum1dFkM26i3t2E
-         zmmjVvD6zXfl2aF1NEVZARYlZwI/W5oKX/v7+S9RFKKPeqnOpwcmg09lwKpSotudULzs
-         ZFS5OYTAwg6K/DLtxgkljYb+Tl+TVchahNZ0Lx62POckRyzpkIsEwAFHoT/qDnUNMcvE
-         ldx6Gi6AcnY2zMrNJW8DOv2uLL4OTT7CobKP5QE9VatoQz/sDnghwgWDMywP3LrgQMQV
-         F1Hw==
-X-Forwarded-Encrypted: i=1; AJvYcCUEpfEYXbFe4EJWYOWx6t8/Nbkl4TCOrsrDPDbZ0qjYQ36Agu4wD9QWMwEYKup8bgBX9AURSwvndNY=@vger.kernel.org, AJvYcCV5z8NFpnFhAYCgA/KIl7QyQ07Kpq80D94iSc8R4cGONF94w7CFyh8iGqefJcRy6tV41HiTA8Swa9lif4mO@vger.kernel.org, AJvYcCXPj7QjhFgjbnlbuRN1Lnaqhd8EK1xvwmc41rTrG30Z7M66MR77TB9WKB7EcbvHqe8aZs1Gh4gpcnY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzKZzxLK4pi6v2Di3nV/+xlc38KP5BTy3EHVuyDCeC8HbT+tpr
-	QnIbOne7RBJnkcSRZJN743o61xVlw6WGRTtJe1aQEMlB/f8jd2mDo4177xXX3/z9
-X-Gm-Gg: ASbGncv22xriW/4m009WcJmst7lWqJ9HCekKJ3pznsIyQh7J9nFBJkcxcIa1HubJ4I1
-	lYjC0MOLWvc3bHpdCt1D/n9UMEWTYdSS3nnOeLW5jxGbHvDFrAsJ337ytfu2XHg1/D2ODFrYHaF
-	1VkSZuU8uieWjCSdSTj9SUVkBWymKZyrtxhYnD/aLO/wegKJzzQsLgStGgKU5IVq0NNzB2wffiP
-	FFDryeRY8AGanvsea1TgQblnjvp2tbUjgQluVn+c6A2TmLsSK6cJc5nOBwdjG1+y2gmqoDM7ysH
-	7bnVlhxIVevHNpD/Hp0Vamkf8LyNzuKdXMbBYCiE65t9eFO/4pJfJg+aREIxr56vpVKAccQWlEJ
-	yzln02xS3jFRGrdV3E+HrnS2lUm0CzSpRpmzz7I8=
-X-Google-Smtp-Source: AGHT+IEysCHVUtKRTrt64N2f6FKBX5ZwE4vgbFd7q8GPNtkqQJMq1aESpxzZOiFktQKqFN0eWhutZQ==
-X-Received: by 2002:a05:6a00:14c9:b0:748:eb38:8830 with SMTP id d2e1a72fcca58-74ce6669b0emr20723005b3a.13.1751981516595;
-        Tue, 08 Jul 2025 06:31:56 -0700 (PDT)
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com. [209.85.214.172])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74ce42cefadsm11835787b3a.151.2025.07.08.06.31.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Jul 2025 06:31:56 -0700 (PDT)
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-23508d30142so52390835ad.0;
-        Tue, 08 Jul 2025 06:31:56 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU/r049bN+/o8nqDNsDeEDTIfy1C8UL8Dw5FSU29GU/dFX7TJQ2MBgGIK1I5Uye5fMxOcem5G9q5g0=@vger.kernel.org, AJvYcCUPvJXJuJliwV5UorTVfxL45gRag05AzBWChgMMgTLTdYLcULtyszTvpqxh1c5ZHiNOTkFf3l1yX4z3o9Au@vger.kernel.org, AJvYcCWbSvrc5H10d+KZHjwIeie02aIW5TjJSBnsHczgmrKI7l6D8mm4Pn2OjoHdxpiZDWaNyNghLYo8dB8=@vger.kernel.org
-X-Received: by 2002:a17:902:f686:b0:235:a9b:21e0 with SMTP id
- d9443c01a7336-23c85cb3bd8mr241105105ad.0.1751981515563; Tue, 08 Jul 2025
- 06:31:55 -0700 (PDT)
+	s=arc-20240116; t=1752059868; c=relaxed/simple;
+	bh=qiFpo4aWjkNV01oyl4o4tAaO61XVSJG4q2F1qca3ljU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q0RMpM+d2aqYFAeH/Oq1EURdr4T/V3kg66vkDJpLZrN2lig4fV+6+a4De218wxJXiZ0i9OOVPcyMog53woS5l4rwoKWONDI/hNhkaFHMavCYGbgqEiY4yWAtVSTVN1LM5ehbrxnyf+C3g5ppHmAsGBaPki4jl76m+VLS7ibCfz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WLnY2YD4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D262C4CEF7;
+	Wed,  9 Jul 2025 11:17:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752059867;
+	bh=qiFpo4aWjkNV01oyl4o4tAaO61XVSJG4q2F1qca3ljU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WLnY2YD4tRgwgHE5E7cV6sZ9pBFWaYEtwqlESV7ogZ5vDf7h++jwBrzQgIqgZooPn
+	 8OuLXGbrtkNS6ANiNcmpUR2dMLXCKxSH0B6JsFalqD/wOnRhTd5N0KsOKgiFGdi3iL
+	 Vm6KSsowCOhAPViGsgthmAigZsGT+Qaapryvkp8c3rCK2rE+9bHCtJtoXDABDoeIV1
+	 JRFoeciAVREzM65239liUnVABedwFu1O9HJRQPp3gjQ71k0wxpwoEzTyyVOSR6lsGu
+	 7D10Cza5mkJXhzHumPAcumFdIOqhj/Uzz7rLWirmvk8QLyVCkwxiSdNHMbTjehoCWe
+	 zLnoYoqyG1TDw==
+Date: Wed, 9 Jul 2025 16:47:40 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Abinash Singh <abinashlalotra@gmail.com>
+Cc: vkoul@kernel.org, dmaengine@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Abinash Singh <abinashsinghlalotra@gmail.com>
+Subject: Re: [PATCH RFC] dma: dw-edma: Fix build warning in
+ dw_edma_pcie_probe()
+Message-ID: <qxsh3sqy7wxra4saidnfofx5md2nkachytn7b4tz4e2p7y42ht@ektcwnnaurfo>
+References: <20250705160055.808165-1-abinashsinghlalotra@gmail.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250404122114.359087-1-krzysztof.kozlowski@linaro.org>
- <CAMuHMdUn=qOoKp+tNNCepb1eBXpnikJxg8w6aRR50QK562tE1w@mail.gmail.com> <99ca93ef-ab26-4d6b-bc7b-fd2f98aecabe@linaro.org>
-In-Reply-To: <99ca93ef-ab26-4d6b-bc7b-fd2f98aecabe@linaro.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 8 Jul 2025 15:31:41 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUSudUvm-ZhTBMtYn814+My2On3_nag60AHNOfX9eGEcw@mail.gmail.com>
-X-Gm-Features: Ac12FXxs-6JOzLBYbGJZr_Ju2YGiG9r7OtCO8RqDkOV1Do5ThXuxslQiGqbF7wU
-Message-ID: <CAMuHMdUSudUvm-ZhTBMtYn814+My2On3_nag60AHNOfX9eGEcw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dmaengine: sh: Do not enable SH_DMAE_BASE by default
- during compile testing
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Vinod Koul <vkoul@kernel.org>, Peter Ujfalusi <peter.ujfalusi@gmail.com>, 
-	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Linux-sh list <linux-sh@vger.kernel.org>, 
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250705160055.808165-1-abinashsinghlalotra@gmail.com>
 
-Hi Krzysztof,
+On Sat, Jul 05, 2025 at 09:30:55PM GMT, Abinash Singh wrote:
+> The function dw_edma_pcie_probe() in dw-edma-pcie.c triggered a
+> frame size warning:
+> ld.lld:warning:
+>   drivers/dma/dw-edma/dw-edma-pcie.c:162:0: stack frame size (1040) exceeds limit (1024) in function 'dw_edma_pcie_probe'
+> 
+> This patch reduces the stack usage by dynamically allocating the
+> `vsec_data` structure using kmalloc(), rather than placing it on
+> the stack. This eliminates the overflow warning and improves kernel
+> robustness.
+> 
+> Signed-off-by: Abinash Singh <abinashsinghlalotra@gmail.com>
 
-On Tue, 8 Jul 2025 at 15:21, Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
-> On 08/07/2025 15:07, Geert Uytterhoeven wrote:
-> > On Fri, 4 Apr 2025 at 14:22, Krzysztof Kozlowski
-> > <krzysztof.kozlowski@linaro.org> wrote:
-> >> Enabling the compile test should not cause automatic enabling of all
-> >> drivers.
-> >>
-> >> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> >
-> > Thanks for your patch, which is now commit 587dd30449fb1012
-> > ("dmaengine: sh: Do not enable SH_DMAE_BASE by default during
-> > compile testing") in dmaengine/next.
-> >
-> >> --- a/drivers/dma/sh/Kconfig
-> >> +++ b/drivers/dma/sh/Kconfig
-> >> @@ -16,7 +16,7 @@ config SH_DMAE_BASE
-> >>         depends on SUPERH || COMPILE_TEST
-> >>         depends on !SUPERH || SH_DMA
-> >>         depends on !SH_DMA_API
-> >> -       default y
-> >> +       default SUPERH || SH_DMA
-> >
-> > I think the check for SUPERH is superfluous, due to the dependency on
-> > "!SUPERH || SH_DMA" above.
->
-> Indeed it might be, but I must admit I don't understand the dependencies
-> here at all. I think commit 9f2c2bb31258 ("dmaengine: sh: Rework Kconfig
-> and Makefile") from Laurent made it confusing and this later just grew
-> to even more confusing.
->
-> What is the intention for "depends on"? This should be enabled when
-> SUPERH AND SH_DMA are enabled?
->
-> SH_DMA cannot be enabled without SUPERH (no compile test), right? But
-> this "depends on !SUPERH || SH_DMA" suggests it could be. This should be
-> read for humans as "if not SUPERH, then require at least SH_DMA".
-> Otherwise what is the meaning for humans? This driver will work fine
-> without SUERPH?
->
-> My change for default could be rewritten but I don't understand the goal
-> behind current depends, so not sure how should I rewrite it.
+Acked-by: Manivannan Sadhasivam <mani@kernel.org>
 
-I think the original plan was to use the SH DMA drivers on ARM SH-Mobile
-SoCs, too.  But enabling SH_DMA on ARM SH-Mobile was never integrated
-upstream, and the focus shifted to ARM R-Car SoCs, for which the shiny new
-R-Car DMA driver was written...
+- Mani
 
-Gr{oetje,eeting}s,
-
-                        Geert
+> ---
+> The stack usage was further confirmed by using -fstack-usage flag.
+> it was usiing 928 bytes:
+> ..............................
+> drivers/dma/dw-edma/dw-edma-pcie.c:377:cleanup_module   8       static
+> drivers/dma/dw-edma/dw-edma-pcie.c:160:dw_edma_pcie_probe       928     static
+> ......................................
+> After applying the patch it becomes :
+> .........
+> drivers/dma/dw-edma/dw-edma-pcie.c:381:cleanup_module   8       static
+> drivers/dma/dw-edma/dw-edma-pcie.c:160:dw_edma_pcie_probe       120     static
+> .......
+> 
+> This function is used for probing . So dynamic allocation will not create
+> any issues.
+> 
+> Thank You
+> ---
+>  drivers/dma/dw-edma/dw-edma-pcie.c | 60 ++++++++++++++++--------------
+>  1 file changed, 32 insertions(+), 28 deletions(-)
+> 
+> diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
+> index 49f09998e5c0..1536395eacd2 100644
+> --- a/drivers/dma/dw-edma/dw-edma-pcie.c
+> +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+> @@ -161,12 +161,16 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+>  			      const struct pci_device_id *pid)
+>  {
+>  	struct dw_edma_pcie_data *pdata = (void *)pid->driver_data;
+> -	struct dw_edma_pcie_data vsec_data;
+> +	struct dw_edma_pcie_data *vsec_data __free(kfree) = NULL;
+>  	struct device *dev = &pdev->dev;
+>  	struct dw_edma_chip *chip;
+>  	int err, nr_irqs;
+>  	int i, mask;
+>  
+> +	vsec_data = kmalloc(sizeof(*vsec_data), GFP_KERNEL);
+> +	if (!vsec_data)
+> +		return -ENOMEM;
+> +
+>  	/* Enable PCI device */
+>  	err = pcim_enable_device(pdev);
+>  	if (err) {
+> @@ -174,23 +178,23 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+>  		return err;
+>  	}
+>  
+> -	memcpy(&vsec_data, pdata, sizeof(struct dw_edma_pcie_data));
+> +	memcpy(vsec_data, pdata, sizeof(struct dw_edma_pcie_data));
+>  
+>  	/*
+>  	 * Tries to find if exists a PCIe Vendor-Specific Extended Capability
+>  	 * for the DMA, if one exists, then reconfigures it.
+>  	 */
+> -	dw_edma_pcie_get_vsec_dma_data(pdev, &vsec_data);
+> +	dw_edma_pcie_get_vsec_dma_data(pdev, vsec_data);
+>  
+>  	/* Mapping PCI BAR regions */
+> -	mask = BIT(vsec_data.rg.bar);
+> -	for (i = 0; i < vsec_data.wr_ch_cnt; i++) {
+> -		mask |= BIT(vsec_data.ll_wr[i].bar);
+> -		mask |= BIT(vsec_data.dt_wr[i].bar);
+> +	mask = BIT(vsec_data->rg.bar);
+> +	for (i = 0; i < vsec_data->wr_ch_cnt; i++) {
+> +		mask |= BIT(vsec_data->ll_wr[i].bar);
+> +		mask |= BIT(vsec_data->dt_wr[i].bar);
+>  	}
+> -	for (i = 0; i < vsec_data.rd_ch_cnt; i++) {
+> -		mask |= BIT(vsec_data.ll_rd[i].bar);
+> -		mask |= BIT(vsec_data.dt_rd[i].bar);
+> +	for (i = 0; i < vsec_data->rd_ch_cnt; i++) {
+> +		mask |= BIT(vsec_data->ll_rd[i].bar);
+> +		mask |= BIT(vsec_data->dt_rd[i].bar);
+>  	}
+>  	err = pcim_iomap_regions(pdev, mask, pci_name(pdev));
+>  	if (err) {
+> @@ -213,7 +217,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+>  		return -ENOMEM;
+>  
+>  	/* IRQs allocation */
+> -	nr_irqs = pci_alloc_irq_vectors(pdev, 1, vsec_data.irqs,
+> +	nr_irqs = pci_alloc_irq_vectors(pdev, 1, vsec_data->irqs,
+>  					PCI_IRQ_MSI | PCI_IRQ_MSIX);
+>  	if (nr_irqs < 1) {
+>  		pci_err(pdev, "fail to alloc IRQ vector (number of IRQs=%u)\n",
+> @@ -224,22 +228,22 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+>  	/* Data structure initialization */
+>  	chip->dev = dev;
+>  
+> -	chip->mf = vsec_data.mf;
+> +	chip->mf = vsec_data->mf;
+>  	chip->nr_irqs = nr_irqs;
+>  	chip->ops = &dw_edma_pcie_plat_ops;
+>  
+> -	chip->ll_wr_cnt = vsec_data.wr_ch_cnt;
+> -	chip->ll_rd_cnt = vsec_data.rd_ch_cnt;
+> +	chip->ll_wr_cnt = vsec_data->wr_ch_cnt;
+> +	chip->ll_rd_cnt = vsec_data->rd_ch_cnt;
+>  
+> -	chip->reg_base = pcim_iomap_table(pdev)[vsec_data.rg.bar];
+> +	chip->reg_base = pcim_iomap_table(pdev)[vsec_data->rg.bar];
+>  	if (!chip->reg_base)
+>  		return -ENOMEM;
+>  
+>  	for (i = 0; i < chip->ll_wr_cnt; i++) {
+>  		struct dw_edma_region *ll_region = &chip->ll_region_wr[i];
+>  		struct dw_edma_region *dt_region = &chip->dt_region_wr[i];
+> -		struct dw_edma_block *ll_block = &vsec_data.ll_wr[i];
+> -		struct dw_edma_block *dt_block = &vsec_data.dt_wr[i];
+> +		struct dw_edma_block *ll_block = &vsec_data->ll_wr[i];
+> +		struct dw_edma_block *dt_block = &vsec_data->dt_wr[i];
+>  
+>  		ll_region->vaddr.io = pcim_iomap_table(pdev)[ll_block->bar];
+>  		if (!ll_region->vaddr.io)
+> @@ -263,8 +267,8 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+>  	for (i = 0; i < chip->ll_rd_cnt; i++) {
+>  		struct dw_edma_region *ll_region = &chip->ll_region_rd[i];
+>  		struct dw_edma_region *dt_region = &chip->dt_region_rd[i];
+> -		struct dw_edma_block *ll_block = &vsec_data.ll_rd[i];
+> -		struct dw_edma_block *dt_block = &vsec_data.dt_rd[i];
+> +		struct dw_edma_block *ll_block = &vsec_data->ll_rd[i];
+> +		struct dw_edma_block *dt_block = &vsec_data->dt_rd[i];
+>  
+>  		ll_region->vaddr.io = pcim_iomap_table(pdev)[ll_block->bar];
+>  		if (!ll_region->vaddr.io)
+> @@ -298,31 +302,31 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+>  		pci_dbg(pdev, "Version:\tUnknown (0x%x)\n", chip->mf);
+>  
+>  	pci_dbg(pdev, "Registers:\tBAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p)\n",
+> -		vsec_data.rg.bar, vsec_data.rg.off, vsec_data.rg.sz,
+> +		vsec_data->rg.bar, vsec_data->rg.off, vsec_data->rg.sz,
+>  		chip->reg_base);
+>  
+>  
+>  	for (i = 0; i < chip->ll_wr_cnt; i++) {
+>  		pci_dbg(pdev, "L. List:\tWRITE CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
+> -			i, vsec_data.ll_wr[i].bar,
+> -			vsec_data.ll_wr[i].off, chip->ll_region_wr[i].sz,
+> +			i, vsec_data->ll_wr[i].bar,
+> +			vsec_data->ll_wr[i].off, chip->ll_region_wr[i].sz,
+>  			chip->ll_region_wr[i].vaddr.io, &chip->ll_region_wr[i].paddr);
+>  
+>  		pci_dbg(pdev, "Data:\tWRITE CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
+> -			i, vsec_data.dt_wr[i].bar,
+> -			vsec_data.dt_wr[i].off, chip->dt_region_wr[i].sz,
+> +			i, vsec_data->dt_wr[i].bar,
+> +			vsec_data->dt_wr[i].off, chip->dt_region_wr[i].sz,
+>  			chip->dt_region_wr[i].vaddr.io, &chip->dt_region_wr[i].paddr);
+>  	}
+>  
+>  	for (i = 0; i < chip->ll_rd_cnt; i++) {
+>  		pci_dbg(pdev, "L. List:\tREAD CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
+> -			i, vsec_data.ll_rd[i].bar,
+> -			vsec_data.ll_rd[i].off, chip->ll_region_rd[i].sz,
+> +			i, vsec_data->ll_rd[i].bar,
+> +			vsec_data->ll_rd[i].off, chip->ll_region_rd[i].sz,
+>  			chip->ll_region_rd[i].vaddr.io, &chip->ll_region_rd[i].paddr);
+>  
+>  		pci_dbg(pdev, "Data:\tREAD CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
+> -			i, vsec_data.dt_rd[i].bar,
+> -			vsec_data.dt_rd[i].off, chip->dt_region_rd[i].sz,
+> +			i, vsec_data->dt_rd[i].bar,
+> +			vsec_data->dt_rd[i].off, chip->dt_region_rd[i].sz,
+>  			chip->dt_region_rd[i].vaddr.io, &chip->dt_region_rd[i].paddr);
+>  	}
+>  
+> -- 
+> 2.43.0
+> 
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+மணிவண்ணன் சதாசிவம்
 

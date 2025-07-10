@@ -1,253 +1,183 @@
-Return-Path: <dmaengine+bounces-5752-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5753-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F01C2AFE77F
-	for <lists+dmaengine@lfdr.de>; Wed,  9 Jul 2025 13:20:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D2DFAFFED0
+	for <lists+dmaengine@lfdr.de>; Thu, 10 Jul 2025 12:12:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DB6FE6E0A78
-	for <lists+dmaengine@lfdr.de>; Wed,  9 Jul 2025 11:18:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1BB96644DE4
+	for <lists+dmaengine@lfdr.de>; Thu, 10 Jul 2025 10:12:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 302E22D6631;
-	Wed,  9 Jul 2025 11:17:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEA4C2D6618;
+	Thu, 10 Jul 2025 10:12:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WLnY2YD4"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="p0Mb+ztO"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2087.outbound.protection.outlook.com [40.107.244.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 064F62D6629;
-	Wed,  9 Jul 2025 11:17:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752059868; cv=none; b=A/ViBIn1fx2JGG4aM6/1mUU8eE2fNtEoV+nhM0EBn7Eg3PNo1/i+laGod5hnhsoJXQl6EH9/3WN/pnacuGVgPEv+DKKuiNzIbSRExW6avhHeD/lnnA9OvigtKW47aRhyUxsCKTLxc5b9zodJ0eKZqyjM3F3aMhumyglTlyMryNM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752059868; c=relaxed/simple;
-	bh=qiFpo4aWjkNV01oyl4o4tAaO61XVSJG4q2F1qca3ljU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q0RMpM+d2aqYFAeH/Oq1EURdr4T/V3kg66vkDJpLZrN2lig4fV+6+a4De218wxJXiZ0i9OOVPcyMog53woS5l4rwoKWONDI/hNhkaFHMavCYGbgqEiY4yWAtVSTVN1LM5ehbrxnyf+C3g5ppHmAsGBaPki4jl76m+VLS7ibCfz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WLnY2YD4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D262C4CEF7;
-	Wed,  9 Jul 2025 11:17:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752059867;
-	bh=qiFpo4aWjkNV01oyl4o4tAaO61XVSJG4q2F1qca3ljU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WLnY2YD4tRgwgHE5E7cV6sZ9pBFWaYEtwqlESV7ogZ5vDf7h++jwBrzQgIqgZooPn
-	 8OuLXGbrtkNS6ANiNcmpUR2dMLXCKxSH0B6JsFalqD/wOnRhTd5N0KsOKgiFGdi3iL
-	 Vm6KSsowCOhAPViGsgthmAigZsGT+Qaapryvkp8c3rCK2rE+9bHCtJtoXDABDoeIV1
-	 JRFoeciAVREzM65239liUnVABedwFu1O9HJRQPp3gjQ71k0wxpwoEzTyyVOSR6lsGu
-	 7D10Cza5mkJXhzHumPAcumFdIOqhj/Uzz7rLWirmvk8QLyVCkwxiSdNHMbTjehoCWe
-	 zLnoYoqyG1TDw==
-Date: Wed, 9 Jul 2025 16:47:40 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Abinash Singh <abinashlalotra@gmail.com>
-Cc: vkoul@kernel.org, dmaengine@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Abinash Singh <abinashsinghlalotra@gmail.com>
-Subject: Re: [PATCH RFC] dma: dw-edma: Fix build warning in
- dw_edma_pcie_probe()
-Message-ID: <qxsh3sqy7wxra4saidnfofx5md2nkachytn7b4tz4e2p7y42ht@ektcwnnaurfo>
-References: <20250705160055.808165-1-abinashsinghlalotra@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E33B2D6612;
+	Thu, 10 Jul 2025 10:12:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.87
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1752142357; cv=fail; b=RdxoGvqtNLfJhgGTzA554naib7Y7dwN9ypAmpY5ZZnkZAqLd7qKkYEKOUwdSoYYEbUb6pbosw5jeyuwfJ1tfgxL50Y3Q7jTaAdUW55X/1qj3Gpf3BH3dDK3CcCW7aOWX7iowuT4wcLWMNDLExFty4Ly98pTfblq0gCLd93oBG/w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1752142357; c=relaxed/simple;
+	bh=3as8W6Q9hKM+N6yoRG57dJsF7lU0G7sjSwPYZSIN+ZE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=eajGTUGZ7qgSKyEvNZcYcscHXIGod66VLTd0y7i0/UQhAaD/CLAgSZvQHcHYrf5/J6E83v8MqCauV6oQARarNSjfzBil8EIsfxdTR2GoZsnwmGRfIeMquqhNldrQdDDAJtyfbDcZgGMEgM/4cqDh8KGF4z5wZ+dnXxpZkaqT4wM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=p0Mb+ztO; arc=fail smtp.client-ip=40.107.244.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=q48ZQrZ4BCVXtEpCoZO8O2e1yZ013gAjKcL+0ZfZZP2lDeYIDhXUM1JunM4DjLfztHVT9dYV2IahqCw0RwuuJwIC+KUXKYEWIZDh4mGBAfwsAB5ZpmiwuogJrKO+CGmEUjluEihRA1PQXjHr4P/wsoiHtH4SA1PlxsBoo9zgrdh1qSV6EwqtsUcioUSvYBonE+f+XmkAsFmCt8Rw9Zw/4a0LKxLUEQuSth+mjYlkmT31MziF0EPIlHm5aO1lE3VBD1v3VKcr+Pyrzxo2mwLz+grQUauw9OJAnukbxIeHWAmxLX6ZWgV6b3ahc/jjimQpPRsZBIeYZqOMqL5uMcEfNw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dkSAFx3ZvLpceW0cZFgVx3mLSASxC60pjiNxF8y1y/c=;
+ b=Msx16EmThzoMESqVSysLj+61u7J37iWnpTwA65Q4CcTWaS4dn5SnbnDtR51YKKm3SrxRePETeOFrhs3QgosacmXNvA5pCc1xG4NQnDNjsUFKhfykMXPD6PyRhbZAAvDSayQ/LJdVlO4nA/Zl4z+5s6TgGIJfx0cw9yr5ls6jFfyhZV7DGuahNR98DhgF7YtNlnaDBUulqqAzA/n11r4ufQrbA6Jb640SvT2qJTr0pIXdPIDVFfqCYd5+PNGNO3RsagMwiGNL7gho6701rnGSEeU/wQub5GYypR0quFv23+CIZjoVyzasQdp1eX/CkXZlxvEg0r1u7CKxMDKdJVWf5w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=lunn.ch smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dkSAFx3ZvLpceW0cZFgVx3mLSASxC60pjiNxF8y1y/c=;
+ b=p0Mb+ztOzSB2wrtkjAkcAfDwGs5R+etY+RPpLwKAQW77JxOsUdogtvopbOBXW19G+/3ExiKu4FoE2tJzdI7ljWvjsndRLzQGfOD/ds82VxQaaoEd/DZuLzCfc0ROdXeoixMbc5E1Fb5iOcQ6v4lBLsTWfj7vsyp9V1KgxSGVsEE=
+Received: from DS7PR03CA0338.namprd03.prod.outlook.com (2603:10b6:8:55::31) by
+ DM4PR12MB5889.namprd12.prod.outlook.com (2603:10b6:8:65::18) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8835.19; Thu, 10 Jul 2025 10:12:34 +0000
+Received: from DS3PEPF000099D8.namprd04.prod.outlook.com
+ (2603:10b6:8:55:cafe::1c) by DS7PR03CA0338.outlook.office365.com
+ (2603:10b6:8:55::31) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8901.27 via Frontend Transport; Thu,
+ 10 Jul 2025 10:12:34 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS3PEPF000099D8.mail.protection.outlook.com (10.167.17.9) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8922.22 via Frontend Transport; Thu, 10 Jul 2025 10:12:33 +0000
+Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 10 Jul
+ 2025 05:12:33 -0500
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB05.amd.com
+ (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 10 Jul
+ 2025 05:12:32 -0500
+Received: from xhdsuragupt40.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Thu, 10 Jul 2025 05:12:30 -0500
+From: Suraj Gupta <suraj.gupta2@amd.com>
+To: <andrew+netdev@lunn.ch>, <davem@davemloft.net>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <michal.simek@amd.com>, <vkoul@kernel.org>,
+	<radhey.shyam.pandey@amd.com>
+CC: <netdev@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+	<harini.katakam@amd.com>
+Subject: [PATCH V2 0/4] Add ethtool support to configure irq coalescing count and delay
+Date: Thu, 10 Jul 2025 15:42:25 +0530
+Message-ID: <20250710101229.804183-1-suraj.gupta2@amd.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250705160055.808165-1-abinashsinghlalotra@gmail.com>
+Content-Type: text/plain
+Received-SPF: None (SATLEXMB05.amd.com: suraj.gupta2@amd.com does not
+ designate permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS3PEPF000099D8:EE_|DM4PR12MB5889:EE_
+X-MS-Office365-Filtering-Correlation-Id: 60a6a05c-7ea0-4bce-9950-08ddbf9a4997
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|36860700013|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?03G77YZ2YxmcsM16Auzt0uvlf7dtKAPETATsSFrYclDDQL1QEyqbQp6OubEj?=
+ =?us-ascii?Q?bRmOfjwQPYqyr4MPXgjfL5efBUdYXpk6FtcmiX4FwmkfToQzwRXHikXDnu82?=
+ =?us-ascii?Q?P875gQAPjqEhLCwGdYfOpd+vFo9AUAjcWjQe03J4N1IWnlHrzBp6vA5y4I32?=
+ =?us-ascii?Q?/aW59Y8hRF6bpn9rU5+kSGuc/BFnymofCMnX+0CauWDTA2APZRpTbiDPWEkS?=
+ =?us-ascii?Q?OMWbVmGh2C5+2r3mJFjUCMriBMO5qpQ2P0HC5EQt2quMjFg4QeVQbLifsRDo?=
+ =?us-ascii?Q?QKsOCB/QAmX0iVQRHsWZhL30h5A16ki8oLbReq1GZCH7jev8VZCpqe3aVPLn?=
+ =?us-ascii?Q?E2/Nz1oi2ujZC8/ZSIhYwFTsb9WlEkX2rfeT/zaMU0pNohFfAnUslVGdoAmh?=
+ =?us-ascii?Q?8TnU5hWiqXsUd6z84wbn20Q77bEG9Oo57TPHhg7rMfusIJZtEIkfGJeublyV?=
+ =?us-ascii?Q?fdb/yJ9rdtNI7XQjEkguI5Pp++1yIviVOW7uYdXO3iBY2TtFFxFBLgDUFxwW?=
+ =?us-ascii?Q?domuyBiq+pDFtsUq4xsWUPn/VsCc63pyhkxSwXyPMyyX9DLGVBrdePE0J+Xf?=
+ =?us-ascii?Q?Nq29wr4+evNQwcNS/o7z6piUOuBbGCap+Aid7h+Y9cK1FRg4Sog3b7ZNVCbu?=
+ =?us-ascii?Q?Uh0qXdrsMwXmzj0Ik73AlZlkLaQKl5+UcW2XjzMGTExi9vlpY18pCQ9pwKnT?=
+ =?us-ascii?Q?xVS/28ECS0cvOdBHM6eMfVR8O9sm5EHAY1fruCiicIiGDFczZVJpLiiQU7uA?=
+ =?us-ascii?Q?Zzvbcq0yaIqH9qMZUh5WHyLiCy49jAFX87MU/NoJUmcyEU2bdep7xWW3AxSw?=
+ =?us-ascii?Q?Mh9Ii29Jmmkj346VK0GbrDaMNEL8rK9/T/nZC0XfNz2MYadSvIq7xkl4euDu?=
+ =?us-ascii?Q?1PZA+KTW9BnOvDm2lwYKYfzH5tjYhLTzFSDGhZLzhdtvNlCIW077fX59SwuC?=
+ =?us-ascii?Q?woleYcsT6K3tl9J4MO1WAxmUMxLEW9qUSwG9THorczB5PfbygQb5qBASrONZ?=
+ =?us-ascii?Q?svAtDMOU1p42NY5/SB1wR6KPTAFPPKTAvzg0T1MKLQP7Oi/m6+A8M9UCIoSp?=
+ =?us-ascii?Q?z3Sx/mH6XUSZWEYqEpVOg66HFRnAFlxTeVyTaNzcY6uJCEfFHR4aZpOFPU46?=
+ =?us-ascii?Q?HOF3Qe/S+pGcMVnPhmDQ/XAKKnmOAQtFRntKBuwFBvn8G1WXih/fvVFPOzoF?=
+ =?us-ascii?Q?4ECTsLK1W1F3TG2Q5b9uqZ/7d4uPM7w6Uz76wJr9PlxXecM6z7ZPZ04tpctv?=
+ =?us-ascii?Q?LIGtTeVNU8XWBy8q91Ke+2NJSQe8gIml/esxB1Olpatr+NXk5HqzQsAq37yS?=
+ =?us-ascii?Q?rAuLdJJjrdyzqcvAyPrmywWipklXyns3+hXxqm792G41CPbnlxUpG7qBRr3F?=
+ =?us-ascii?Q?lElpWjnIaCR+GdBzLLpleoSImM3+Xo3TcoFSo6DpLS+YjxRN2NzxXzTQF7H2?=
+ =?us-ascii?Q?jtfJBmcUzQ3IZNt9Nm7cQXq4dgqOPaE3lb3C72/rokVMvTtqghS0dG55iwYt?=
+ =?us-ascii?Q?55COzGNLrxHEJZRF9BiDADoYO3uNivG75MIn4PAIS/g042RXMhsegBLmpA?=
+ =?us-ascii?Q?=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(36860700013)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2025 10:12:33.6274
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 60a6a05c-7ea0-4bce-9950-08ddbf9a4997
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS3PEPF000099D8.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5889
 
-On Sat, Jul 05, 2025 at 09:30:55PM GMT, Abinash Singh wrote:
-> The function dw_edma_pcie_probe() in dw-edma-pcie.c triggered a
-> frame size warning:
-> ld.lld:warning:
->   drivers/dma/dw-edma/dw-edma-pcie.c:162:0: stack frame size (1040) exceeds limit (1024) in function 'dw_edma_pcie_probe'
-> 
-> This patch reduces the stack usage by dynamically allocating the
-> `vsec_data` structure using kmalloc(), rather than placing it on
-> the stack. This eliminates the overflow warning and improves kernel
-> robustness.
-> 
-> Signed-off-by: Abinash Singh <abinashsinghlalotra@gmail.com>
+AXI ethernet driver uses AXI DMA dmaengine driver. Add support to
+configure / report coalesce parameters dynamically during runtime
+via ethtool. Add support in DMAengine driver to communicate coalesce
+parameters between client and DMA driver. Add support for Tx and Rx
+adaptive irq coalescing with DIM in AXI ethernet driver.
 
-Acked-by: Manivannan Sadhasivam <mani@kernel.org>
+Changes in V2:
+- Add DIM in AXI ethernet driver.
+- Fix following LKP warning in V1:
+ https://lore.kernel.org/all/202505252153.Nm1BzFUq-lkp@intel.com/
+- Consolidate separate Dmaengine and netdev series in V1.
 
-- Mani
+V1 axienet and dmaengine series:
+https://lore.kernel.org/all/20250525101617.1168991-1-suraj.gupta2@amd.com/
+https://lore.kernel.org/all/20250525102217.1181104-1-suraj.gupta2@amd.com/
 
-> ---
-> The stack usage was further confirmed by using -fstack-usage flag.
-> it was usiing 928 bytes:
-> ..............................
-> drivers/dma/dw-edma/dw-edma-pcie.c:377:cleanup_module   8       static
-> drivers/dma/dw-edma/dw-edma-pcie.c:160:dw_edma_pcie_probe       928     static
-> ......................................
-> After applying the patch it becomes :
-> .........
-> drivers/dma/dw-edma/dw-edma-pcie.c:381:cleanup_module   8       static
-> drivers/dma/dw-edma/dw-edma-pcie.c:160:dw_edma_pcie_probe       120     static
-> .......
-> 
-> This function is used for probing . So dynamic allocation will not create
-> any issues.
-> 
-> Thank You
-> ---
->  drivers/dma/dw-edma/dw-edma-pcie.c | 60 ++++++++++++++++--------------
->  1 file changed, 32 insertions(+), 28 deletions(-)
-> 
-> diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-> index 49f09998e5c0..1536395eacd2 100644
-> --- a/drivers/dma/dw-edma/dw-edma-pcie.c
-> +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-> @@ -161,12 +161,16 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
->  			      const struct pci_device_id *pid)
->  {
->  	struct dw_edma_pcie_data *pdata = (void *)pid->driver_data;
-> -	struct dw_edma_pcie_data vsec_data;
-> +	struct dw_edma_pcie_data *vsec_data __free(kfree) = NULL;
->  	struct device *dev = &pdev->dev;
->  	struct dw_edma_chip *chip;
->  	int err, nr_irqs;
->  	int i, mask;
->  
-> +	vsec_data = kmalloc(sizeof(*vsec_data), GFP_KERNEL);
-> +	if (!vsec_data)
-> +		return -ENOMEM;
-> +
->  	/* Enable PCI device */
->  	err = pcim_enable_device(pdev);
->  	if (err) {
-> @@ -174,23 +178,23 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
->  		return err;
->  	}
->  
-> -	memcpy(&vsec_data, pdata, sizeof(struct dw_edma_pcie_data));
-> +	memcpy(vsec_data, pdata, sizeof(struct dw_edma_pcie_data));
->  
->  	/*
->  	 * Tries to find if exists a PCIe Vendor-Specific Extended Capability
->  	 * for the DMA, if one exists, then reconfigures it.
->  	 */
-> -	dw_edma_pcie_get_vsec_dma_data(pdev, &vsec_data);
-> +	dw_edma_pcie_get_vsec_dma_data(pdev, vsec_data);
->  
->  	/* Mapping PCI BAR regions */
-> -	mask = BIT(vsec_data.rg.bar);
-> -	for (i = 0; i < vsec_data.wr_ch_cnt; i++) {
-> -		mask |= BIT(vsec_data.ll_wr[i].bar);
-> -		mask |= BIT(vsec_data.dt_wr[i].bar);
-> +	mask = BIT(vsec_data->rg.bar);
-> +	for (i = 0; i < vsec_data->wr_ch_cnt; i++) {
-> +		mask |= BIT(vsec_data->ll_wr[i].bar);
-> +		mask |= BIT(vsec_data->dt_wr[i].bar);
->  	}
-> -	for (i = 0; i < vsec_data.rd_ch_cnt; i++) {
-> -		mask |= BIT(vsec_data.ll_rd[i].bar);
-> -		mask |= BIT(vsec_data.dt_rd[i].bar);
-> +	for (i = 0; i < vsec_data->rd_ch_cnt; i++) {
-> +		mask |= BIT(vsec_data->ll_rd[i].bar);
-> +		mask |= BIT(vsec_data->dt_rd[i].bar);
->  	}
->  	err = pcim_iomap_regions(pdev, mask, pci_name(pdev));
->  	if (err) {
-> @@ -213,7 +217,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
->  		return -ENOMEM;
->  
->  	/* IRQs allocation */
-> -	nr_irqs = pci_alloc_irq_vectors(pdev, 1, vsec_data.irqs,
-> +	nr_irqs = pci_alloc_irq_vectors(pdev, 1, vsec_data->irqs,
->  					PCI_IRQ_MSI | PCI_IRQ_MSIX);
->  	if (nr_irqs < 1) {
->  		pci_err(pdev, "fail to alloc IRQ vector (number of IRQs=%u)\n",
-> @@ -224,22 +228,22 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
->  	/* Data structure initialization */
->  	chip->dev = dev;
->  
-> -	chip->mf = vsec_data.mf;
-> +	chip->mf = vsec_data->mf;
->  	chip->nr_irqs = nr_irqs;
->  	chip->ops = &dw_edma_pcie_plat_ops;
->  
-> -	chip->ll_wr_cnt = vsec_data.wr_ch_cnt;
-> -	chip->ll_rd_cnt = vsec_data.rd_ch_cnt;
-> +	chip->ll_wr_cnt = vsec_data->wr_ch_cnt;
-> +	chip->ll_rd_cnt = vsec_data->rd_ch_cnt;
->  
-> -	chip->reg_base = pcim_iomap_table(pdev)[vsec_data.rg.bar];
-> +	chip->reg_base = pcim_iomap_table(pdev)[vsec_data->rg.bar];
->  	if (!chip->reg_base)
->  		return -ENOMEM;
->  
->  	for (i = 0; i < chip->ll_wr_cnt; i++) {
->  		struct dw_edma_region *ll_region = &chip->ll_region_wr[i];
->  		struct dw_edma_region *dt_region = &chip->dt_region_wr[i];
-> -		struct dw_edma_block *ll_block = &vsec_data.ll_wr[i];
-> -		struct dw_edma_block *dt_block = &vsec_data.dt_wr[i];
-> +		struct dw_edma_block *ll_block = &vsec_data->ll_wr[i];
-> +		struct dw_edma_block *dt_block = &vsec_data->dt_wr[i];
->  
->  		ll_region->vaddr.io = pcim_iomap_table(pdev)[ll_block->bar];
->  		if (!ll_region->vaddr.io)
-> @@ -263,8 +267,8 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
->  	for (i = 0; i < chip->ll_rd_cnt; i++) {
->  		struct dw_edma_region *ll_region = &chip->ll_region_rd[i];
->  		struct dw_edma_region *dt_region = &chip->dt_region_rd[i];
-> -		struct dw_edma_block *ll_block = &vsec_data.ll_rd[i];
-> -		struct dw_edma_block *dt_block = &vsec_data.dt_rd[i];
-> +		struct dw_edma_block *ll_block = &vsec_data->ll_rd[i];
-> +		struct dw_edma_block *dt_block = &vsec_data->dt_rd[i];
->  
->  		ll_region->vaddr.io = pcim_iomap_table(pdev)[ll_block->bar];
->  		if (!ll_region->vaddr.io)
-> @@ -298,31 +302,31 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
->  		pci_dbg(pdev, "Version:\tUnknown (0x%x)\n", chip->mf);
->  
->  	pci_dbg(pdev, "Registers:\tBAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p)\n",
-> -		vsec_data.rg.bar, vsec_data.rg.off, vsec_data.rg.sz,
-> +		vsec_data->rg.bar, vsec_data->rg.off, vsec_data->rg.sz,
->  		chip->reg_base);
->  
->  
->  	for (i = 0; i < chip->ll_wr_cnt; i++) {
->  		pci_dbg(pdev, "L. List:\tWRITE CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
-> -			i, vsec_data.ll_wr[i].bar,
-> -			vsec_data.ll_wr[i].off, chip->ll_region_wr[i].sz,
-> +			i, vsec_data->ll_wr[i].bar,
-> +			vsec_data->ll_wr[i].off, chip->ll_region_wr[i].sz,
->  			chip->ll_region_wr[i].vaddr.io, &chip->ll_region_wr[i].paddr);
->  
->  		pci_dbg(pdev, "Data:\tWRITE CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
-> -			i, vsec_data.dt_wr[i].bar,
-> -			vsec_data.dt_wr[i].off, chip->dt_region_wr[i].sz,
-> +			i, vsec_data->dt_wr[i].bar,
-> +			vsec_data->dt_wr[i].off, chip->dt_region_wr[i].sz,
->  			chip->dt_region_wr[i].vaddr.io, &chip->dt_region_wr[i].paddr);
->  	}
->  
->  	for (i = 0; i < chip->ll_rd_cnt; i++) {
->  		pci_dbg(pdev, "L. List:\tREAD CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
-> -			i, vsec_data.ll_rd[i].bar,
-> -			vsec_data.ll_rd[i].off, chip->ll_region_rd[i].sz,
-> +			i, vsec_data->ll_rd[i].bar,
-> +			vsec_data->ll_rd[i].off, chip->ll_region_rd[i].sz,
->  			chip->ll_region_rd[i].vaddr.io, &chip->ll_region_rd[i].paddr);
->  
->  		pci_dbg(pdev, "Data:\tREAD CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
-> -			i, vsec_data.dt_rd[i].bar,
-> -			vsec_data.dt_rd[i].off, chip->dt_region_rd[i].sz,
-> +			i, vsec_data->dt_rd[i].bar,
-> +			vsec_data->dt_rd[i].off, chip->dt_region_rd[i].sz,
->  			chip->dt_region_rd[i].vaddr.io, &chip->dt_region_rd[i].paddr);
->  	}
->  
-> -- 
-> 2.43.0
-> 
+Suraj Gupta (4):
+  dmaengine: Add support to configure and read IRQ coalescing parameters
+  dmaengine: xilinx_dma: Fix irq handler and start transfer path for AXI
+    DMA
+  dmaengine: xilinx_dma: Add support to configure/report coalesce
+    parameters from/to client using AXI DMA
+  net: xilinx: axienet: Add ethtool support to configure/report irq
+    coalescing parameters in DMAengine flow
+
+ drivers/dma/xilinx/xilinx_dma.c               |  93 +++++++--
+ drivers/net/ethernet/xilinx/xilinx_axienet.h  |  13 +-
+ .../net/ethernet/xilinx/xilinx_axienet_main.c | 190 +++++++++++++++++-
+ include/linux/dmaengine.h                     |  10 +
+ 4 files changed, 276 insertions(+), 30 deletions(-)
 
 -- 
-மணிவண்ணன் சதாசிவம்
+2.25.1
+
 

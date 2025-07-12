@@ -1,233 +1,201 @@
-Return-Path: <dmaengine+bounces-5764-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5765-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9DC6BB0297A
-	for <lists+dmaengine@lfdr.de>; Sat, 12 Jul 2025 07:36:46 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5BBE6B02BA8
+	for <lists+dmaengine@lfdr.de>; Sat, 12 Jul 2025 17:18:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 54EE54A7B89
-	for <lists+dmaengine@lfdr.de>; Sat, 12 Jul 2025 05:36:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D7A051AA0A9E
+	for <lists+dmaengine@lfdr.de>; Sat, 12 Jul 2025 15:18:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AC351EFF8D;
-	Sat, 12 Jul 2025 05:36:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 123F7287245;
+	Sat, 12 Jul 2025 15:18:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="K2pP79Kn"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Yq032jIY"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0a-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2075.outbound.protection.outlook.com [40.107.244.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C5D123BE;
-	Sat, 12 Jul 2025 05:36:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752298601; cv=none; b=bq03O3iuWGFdI1XRd9pTFGVMKDHAQ2cgOnQ2a1crmA5Zu2VR+xe7ktBTcJtJAaqtrOLAtRZ7KFEXfLPVUOFrOdLrgKlG/H3Ztb/TOAVS3EU2Xrb2oC0gp0aOUaCbTheuqF7ttR0CzRrdENFjSEiFyigOxEdP9JPlsIZ3Y6hz40Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752298601; c=relaxed/simple;
-	bh=g91zeobSlfEhybMtWBiNg7pwEzyEkIKObP3K0tWGE74=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qXvTvtpXEKOiaWhdOAFJhTLRgNx3QdGA/CATK+mFEQQBk+9ZzNAX17hXnOdORKtlEG5wvvuLv6+W8sEfxvzyBmS4UHqBBSRmK9o1ztxuaZAQ4UEGojSNNIhmwhkN+mypfxQcn439UNVcMfLf1+HzpgJWlr2+FU7rZH/zO+GzWz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=K2pP79Kn; arc=none smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
-Received: from pps.filterd (m0431384.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56C5X7Vb003295;
-	Fri, 11 Jul 2025 22:36:21 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pfpt0220; bh=LtV+jlRpZYjgCbtV3ulUUj1Z2
-	BVtybyCOqqE+XDUxf4=; b=K2pP79KnUcv4g5YmReNPYd+WCYa/qgfIypUzMDh1O
-	lfHQ54LAEpcqYDko6CF45HFgQQEOlV5Glxd/1ifAdExZHzeYZe2L/INJinF/GTAO
-	IkMAeaT/5qSPvm251uonz5/rED9odEaynl9yZdNilqvG7VM1A4QuNyL0iYCTgA7c
-	RUhBqb3CZFAlR7thpPYwijkChHQcaJ7YODPc4I0nl9p+Rok7ZZjkPnk8YWrqQ6pt
-	o0a8Cv1w7dutlkxJLREn3p8nDl4s8zW3izVnZO5oF6MQehgKKzHoe+i9ULG9lBni
-	agtwoJhVH1N/cM9LJ/fapea3Si0aH42jgrmhQy07ZO3pQ==
-Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 47ug75r396-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 11 Jul 2025 22:36:21 -0700 (PDT)
-Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
- DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Fri, 11 Jul 2025 22:36:18 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Fri, 11 Jul 2025 22:36:18 -0700
-Received: from 94363b911d3e (unknown [10.193.79.61])
-	by maili.marvell.com (Postfix) with SMTP id 90CD03F708D;
-	Fri, 11 Jul 2025 22:36:16 -0700 (PDT)
-Date: Sat, 12 Jul 2025 05:36:12 +0000
-From: Subbaraya Sundeep <sbhatta@marvell.com>
-To: "Gupta, Suraj" <Suraj.Gupta2@amd.com>
-CC: "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
-        "davem@davemloft.net"
-	<davem@davemloft.net>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "Simek, Michal"
-	<michal.simek@amd.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "Pandey,
- Radhey Shyam" <radhey.shyam.pandey@amd.com>,
-        "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org"
-	<dmaengine@vger.kernel.org>,
-        "Katakam, Harini" <harini.katakam@amd.com>
-Subject: Re: [PATCH V2 2/4] dmaengine: xilinx_dma: Fix irq handler and start
- transfer path for AXI DMA
-Message-ID: <aHH0TPFQmhGYZm21@94363b911d3e>
-References: <20250710101229.804183-1-suraj.gupta2@amd.com>
- <20250710101229.804183-3-suraj.gupta2@amd.com>
- <aHE7II-tL6zAzNYB@ff87d1e86a04>
- <BL3PR12MB657159BD5F7C2161D6B9A5AAC94BA@BL3PR12MB6571.namprd12.prod.outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 829C81607A4;
+	Sat, 12 Jul 2025 15:18:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.75
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1752333486; cv=fail; b=hLZUH6sfN++xvnGy7jqfgvqxvi1C0j7/SdtTVk9Hq2OR9YAhfTHoJeGjmHWhz++URu7p06OJVe6YSKTuwps5vf8jMalR7e0X2VNwwApFPvKqFyf72VuAhitPR0JMXcVIB7c9pNBJyy7FRyVpCs/I5JgEBjOPklhlv1IcOht18P4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1752333486; c=relaxed/simple;
+	bh=Jdc3TA8ZF5X0xot7Tq76EBeJ/6Nkwab+59DqslSpDuA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TNrcK02iAnnKwgW/AIbm3pQ9mJsxnITNBxzdYrHcB5gTx68PFUPwxD1GKY25Pm0mq/wI9Ik3w1fAwMpgmH75mq4k4EitJ3E2EUF+tqMzMv2WnxmpZ80+B9YwVc34x2wlMToMP3qGxzPVoUg/NVdS8/fjE2pe1f5/WqRQMrDE+/0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Yq032jIY; arc=fail smtp.client-ip=40.107.244.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qjQw45royZ2eoy+mxMqTe2KBxPy7mlnrXBBY3GmAmLJOCJhcoPwD7NA1csJjlkxgIhLczAnCO3NFUi2gZfWQx/u648LfZAmQ+pem89OQ0gQnG+lSPnE/Js9+Fymo+/gE6udCQWtrWgHjQ+Lp2jvc5Y9Yk/mau/6bwRd/rvTI1rrn6meWp0YUtg0UuQ7hBJcd44rjj5JuCogkNq0AssHpLxizA2sSMVweZw6Z6DLuRTg2npzppl6JQK6A+Xk2XyWZc9eKdml6y6mp5wvUYghURWJ2nZtkfmImWn+REjKAO3rYrlapwew2xNsCRQXE8bQzWlxVD4hmuUlpSlBjKSb2+Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UWLPaAZn+QUg125pnEiSG25P1z7RqC+IDOnIWBSp88c=;
+ b=miOdA8J4zQuuAO81DUDwcXn2w7PM5bmkAqGzEtGm+AbCyaBH2laAA8Ef8LEMnV17NloHwiLJGeYzBnDMv2ppBS5VJfjRaodsy8II9tLIH0EaQpdxjFsEAJKFWZFnSlijHR/FMlA8j1+jrUwdT+4fXxHiUSmJ2uB/1/haaz2w1DpfXjoHn0gvxkXn/y11Xm50PqwGBKJC7xxLpz5+Mn7lvwriKyLDCQUlTwvPy87DHaZYGrRTLy80tL5mttu1Fkwy4cELScVnN3QwlJGBTlU0xf7YERyKDISPmEEagc+oonxgWupQm65ppTg6K67Pmr+jmiOfCcli0SwqewYHlUXsKg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UWLPaAZn+QUg125pnEiSG25P1z7RqC+IDOnIWBSp88c=;
+ b=Yq032jIYSlPwSRyD3q2ZgWSJNVgbMJeaKHelewnjbYJyyETLtw2NbdKhvu3yVa/HJ7MWKiolylL+4+CuBYCWXGaM8jThVN+1kjAF1++cbDCJIoF38daE4SoRzoA6b1dtjrUWO0KzuGaI+eN03GL3NoZAZhRMk7N46EbZHC/fJc8=
+Received: from DS7PR05CA0030.namprd05.prod.outlook.com (2603:10b6:5:3b9::35)
+ by LV3PR12MB9166.namprd12.prod.outlook.com (2603:10b6:408:19c::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.29; Sat, 12 Jul
+ 2025 15:17:58 +0000
+Received: from DS1PEPF00017095.namprd03.prod.outlook.com
+ (2603:10b6:5:3b9:cafe::c4) by DS7PR05CA0030.outlook.office365.com
+ (2603:10b6:5:3b9::35) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8943.11 via Frontend Transport; Sat,
+ 12 Jul 2025 15:17:58 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ DS1PEPF00017095.mail.protection.outlook.com (10.167.17.138) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8922.22 via Frontend Transport; Sat, 12 Jul 2025 15:17:57 +0000
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Sat, 12 Jul
+ 2025 10:17:55 -0500
+Received: from xhdradheys41.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Sat, 12 Jul 2025 10:17:52 -0500
+From: Abin Joseph <abin.joseph@amd.com>
+To: <vkoul@kernel.org>, <michal.simek@amd.com>, <yanzhen@vivo.com>,
+	<radhey.shyam.pandey@amd.com>, <palmer@rivosinc.com>,
+	<u.kleine-koenig@baylibre.com>
+CC: <git@amd.com>, <abin.joseph@amd.com>, <dmaengine@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] dmaengine: zynqmp_dma: Add shutdown operation support
+Date: Sat, 12 Jul 2025 20:47:52 +0530
+Message-ID: <20250712151752.3669944-1-abin.joseph@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <BL3PR12MB657159BD5F7C2161D6B9A5AAC94BA@BL3PR12MB6571.namprd12.prod.outlook.com>
-X-Proofpoint-GUID: y48TYXdzl2S-WoqMLgHdJMNuGcrULm4G
-X-Proofpoint-ORIG-GUID: y48TYXdzl2S-WoqMLgHdJMNuGcrULm4G
-X-Authority-Analysis: v=2.4 cv=Mdxsu4/f c=1 sm=1 tr=0 ts=6871f455 cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=kj9zAlcOel0A:10 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=zd2uoN0lAAAA:8 a=M5GUcnROAAAA:8 a=J1Y8HTJGAAAA:8 a=20KFwNOVAAAA:8
- a=JfrnYn6hAAAA:8 a=BPLeHpbfgctcYvNycb8A:9 a=CjuIK1q_8ugA:10 a=OBjm3rFKGHvpk9ecZwUJ:22 a=y1Q9-5lHfBjTkpIzbSAN:22 a=1CNFftbPRP8L7MoqJWF3:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzEyMDA0MiBTYWx0ZWRfXwcIFlUaWBe8j QmmTGCb1r8MnLvxEyOa9+G6VPIwgGOMzhBT/faODkkPuk4Eijsx6iRfPKTW4d5ViKdWTSMo69PN Wa2bTJDXtNMbUlQtGbQZnqnC2c4aMqob8wBz2tM9OS9Gqw9/UHCsE8LiLVc3yQ2wmxYNZEmOsP5
- lz6K6X9KT2EluWTKWoHWvy+8I8jWTJiNAwGyJFCYUUIz1Lc19Rdj126obzP+hKy38iKDlezM1P/ WY0vY46ty2eso/XRW0SD/64PTqZDYnBslVhbGwuWCSVKQDwaV21ZGjmUu+TydIQsI5Mkp9YFFFp t9qAn7zQ2GbwFxL6oroF9scSuuBK2/LHtOZXxcW58FdiTrgTdUkhHqGfFBG8/o3yRT+BrRx1Oqr
- puCXInbGYwlqyp2D1c6UPST40c5ctZLEHcYDwrDjRFDVWJhT5/c5IKfRAeIcHIPs+Yn1c1vO
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-12_01,2025-07-09_01,2025-03-28_01
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+Received-SPF: None (SATLEXMB03.amd.com: abin.joseph@amd.com does not designate
+ permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS1PEPF00017095:EE_|LV3PR12MB9166:EE_
+X-MS-Office365-Filtering-Correlation-Id: 32a132ff-2ebf-4c1e-fbbf-08ddc1574888
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|36860700013|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?QP1kiTFxe4EfXuhsFtqSUUDWIMmGF+aWuJ8ldRv32q7ULrfUPSHwDFpY9Lqr?=
+ =?us-ascii?Q?L9ymC4g3pYMZyytNf6TZm13wxTEkIyyxNFKdgN44MmxjFHAZnMxgDLRBHsPt?=
+ =?us-ascii?Q?prTwO443fcXt4LLGythebn55qkFGMYmDgTKTWJN/Lv/KDBzli3WlsI4YuyIV?=
+ =?us-ascii?Q?/Bub3gIcXE9dlQEbGhat+dBw1wkIJx96RqYFsA44xdsq9NPbqD2gkTQopL0C?=
+ =?us-ascii?Q?UK988WHtTRRjl/yuMP8BGeaisnNmvGdxtzc3tiXiFC2zHFCLfqNKbweDF0Jp?=
+ =?us-ascii?Q?aCBjV9voI1O8Xusi+HvktZI6CXzIAKkDuIa8oabbsf6yLSn3mV9ZXuGFza06?=
+ =?us-ascii?Q?0ejkdNasEfYUrRBs6z04/z8SoSEaAuDjEtg/W7gBe4vJZfI/XLMeSLvbrHnk?=
+ =?us-ascii?Q?efVEtylRk3cqKVPykAjyb2+9WOqyekAeajD1kw5IIEBIzLgdyVnIcwXH/5dS?=
+ =?us-ascii?Q?yprkKdWXy7beGV4mN+rEULGVB/rvmahx1ZmTMS9qRCA3FU6fV3kd1UqTEcMB?=
+ =?us-ascii?Q?1P+6NSekZTEZPTFquv8mny0KM5s1Vllpb3p8SGSKHTviflpUih7OutICb7dM?=
+ =?us-ascii?Q?RvNSjpl5tangLpJrYFpOj7b/KCi1WA0beye8JS+Apd/h8YIeB6+XlZ4KXRH4?=
+ =?us-ascii?Q?eP/7ZRJZDo9d8ASlysfbxQ9fzMj3ve8z1LgRzux+7YSF0B91QUl0uMVWxNLf?=
+ =?us-ascii?Q?nC0y84Qf8rR8dbNCM12awpI2XbWvRs2ctmD7EI4iPh0wwl/yvK//xiSmDHAG?=
+ =?us-ascii?Q?Y4FcdjgAkDBxI8MykUsR9kCMlboz/UxNV8+aQsJli/VYLltWC7rB23jmOGYU?=
+ =?us-ascii?Q?8MF0c68+p4ukxDLitjw20AfpPUN3zJ8FJL7/6uc8cs6fQs2oHNA8B/AaFvZU?=
+ =?us-ascii?Q?S+aHIwuTNoin55YBdWrNKxBlLU3PS/NsYQ2iZjSeILQEpe8isRBqxbCUtiFF?=
+ =?us-ascii?Q?DiVCVG5H06VFEiH9NGDKIVxDeaL4ahMUxaAsE/rXVggmPjoXLkAy/R9vmcoZ?=
+ =?us-ascii?Q?UbsGO5IZ2+25YQ4QwTzTW7UG9ab+9NbEHjtnQWHdXdeur1WtzScY8zkkPzKS?=
+ =?us-ascii?Q?cQ/vbcdFJgnvcjMXeffKhn+l5pNSYYFNsLS0+lwWX9vSGVpqyYPGutWkVhNw?=
+ =?us-ascii?Q?t5wtSUBCEcnV3CH9KQA18OCNF2Y4ahSIevcGKLx+tlAHdFeol78ICcLGgxJn?=
+ =?us-ascii?Q?QsUri+QUxdq8v/1bRXjkm/0dmCBkR8YRQvDLB5wTYsRPKd5E0gTrISCBOivf?=
+ =?us-ascii?Q?RcUTKpzT9au55DaL7lEwn67BLRmrqZTnNw76FbcMk6nECPU8m/fiy1SyNymY?=
+ =?us-ascii?Q?B7BqVNTWrUnl+UIs0Kpk7dZ/Ezklvb2CLj/SatUx8jkaubWyO8J+ByHG0oFF?=
+ =?us-ascii?Q?X087jWDVOuHJTJTz/3ciqiVr4r5ZOhn3dsC4UjfDPJ8VQ0GnNLd9dOgowvnz?=
+ =?us-ascii?Q?98wnk+GYN52ZCgjKlJ41cqBHPsqEMiDbgSl9IABCL2AkoK6FHgheUWxv0qhb?=
+ =?us-ascii?Q?9/cqDBie2f/BLUcj3p5o8EIX1eSGqXlIxEru?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(36860700013)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jul 2025 15:17:57.8984
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 32a132ff-2ebf-4c1e-fbbf-08ddc1574888
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS1PEPF00017095.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR12MB9166
 
-On 2025-07-11 at 20:13:40, Gupta, Suraj (Suraj.Gupta2@amd.com) wrote:
-> [Public]
-> 
-> > -----Original Message-----
-> > From: Subbaraya Sundeep <sbhatta@marvell.com>
-> > Sent: Friday, July 11, 2025 9:56 PM
-> > To: Gupta, Suraj <Suraj.Gupta2@amd.com>
-> > Cc: andrew+netdev@lunn.ch; davem@davemloft.net; kuba@kernel.org;
-> > pabeni@redhat.com; Simek, Michal <michal.simek@amd.com>; vkoul@kernel.org;
-> > Pandey, Radhey Shyam <radhey.shyam.pandey@amd.com>;
-> > netdev@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
-> > kernel@vger.kernel.org; dmaengine@vger.kernel.org; Katakam, Harini
-> > <harini.katakam@amd.com>
-> > Subject: Re: [PATCH V2 2/4] dmaengine: xilinx_dma: Fix irq handler and start transfer
-> > path for AXI DMA
-> >
-> > Caution: This message originated from an External Source. Use proper caution when
-> > opening attachments, clicking links, or responding.
-> >
-> >
-> > On 2025-07-10 at 10:12:27, Suraj Gupta (suraj.gupta2@amd.com) wrote:
-> > > AXI DMA driver incorrectly assumes complete transfer completion upon
-> > > IRQ reception, particularly problematic when IRQ coalescing is active.
-> > > Updating the tail pointer dynamically fixes it.
-> > > Remove existing idle state validation in the beginning of
-> > > xilinx_dma_start_transfer() as it blocks valid transfer initiation on
-> > > busy channels with queued descriptors.
-> > > Additionally, refactor xilinx_dma_start_transfer() to consolidate
-> > > coalesce and delay configurations while conditionally starting
-> > > channels only when idle.
-> > >
-> > > Signed-off-by: Suraj Gupta <suraj.gupta2@amd.com>
-> > > Fixes: Fixes: c0bba3a99f07 ("dmaengine: vdma: Add Support for Xilinx
-> > > AXI Direct Memory Access Engine")
-> >
-> > You series looks like net-next material and this one is fixing some existing bug. Send
-> > this one patch seperately to net.
-> > Also include net or net-next in subject.
-> >
-> > Thanks,
-> > Sundeep
-> 
-> This series is more of DMAengine as we're enabling coalesce parameters configuration via DMAengine framework. AXI ethernet is just an example client using AXI DMA.
-> 
-> I sent V1 as separate patches for net-next and dmaengine mailing list and got suggestion[1] to send them as single series for better review, so I didn't used net specific subject prefix.
-> [1]: https://lore.kernel.org/all/d5be7218-8ec1-4208-ac24-94d4831bfdb6@linux.dev/
+Add shutdown callback to ensure that DMA operations are properly stopped
+and resources are released during system shutdown or kexec.
+Fix incorrect PM state handling in the remove function that was causing
+clock disabled warning during the shutdown operation since the device
+may already be suspended with clock disabled, causing the clock
+framework to warn about the double-disable attempt. The current check
+ensures runtime_suspend is only called when the device is in active
+power state, preventing clock warnings during shutdown while maintaining
+proper clean up during normal remove operations.
 
-My bad I forgot AXI ethernet and DMA are different IPs.
+Signed-off-by: Abin Joseph <abin.joseph@amd.com>
+---
 
-Thanks,
-Sundeep
-> 
-> Regards,
-> Suraj
-> 
-> > > ---
-> > >  drivers/dma/xilinx/xilinx_dma.c | 20 ++++++++++----------
-> > >  1 file changed, 10 insertions(+), 10 deletions(-)
-> > >
-> > > diff --git a/drivers/dma/xilinx/xilinx_dma.c
-> > > b/drivers/dma/xilinx/xilinx_dma.c index a34d8f0ceed8..187749b7b8a6
-> > > 100644
-> > > --- a/drivers/dma/xilinx/xilinx_dma.c
-> > > +++ b/drivers/dma/xilinx/xilinx_dma.c
-> > > @@ -1548,9 +1548,6 @@ static void xilinx_dma_start_transfer(struct
-> > xilinx_dma_chan *chan)
-> > >       if (list_empty(&chan->pending_list))
-> > >               return;
-> > >
-> > > -     if (!chan->idle)
-> > > -             return;
-> > > -
-> > >       head_desc = list_first_entry(&chan->pending_list,
-> > >                                    struct xilinx_dma_tx_descriptor, node);
-> > >       tail_desc = list_last_entry(&chan->pending_list,
-> > > @@ -1558,23 +1555,24 @@ static void xilinx_dma_start_transfer(struct
-> > xilinx_dma_chan *chan)
-> > >       tail_segment = list_last_entry(&tail_desc->segments,
-> > >                                      struct xilinx_axidma_tx_segment,
-> > > node);
-> > >
-> > > +     if (chan->has_sg && list_empty(&chan->active_list))
-> > > +             xilinx_write(chan, XILINX_DMA_REG_CURDESC,
-> > > +                          head_desc->async_tx.phys);
-> > > +
-> > >       reg = dma_ctrl_read(chan, XILINX_DMA_REG_DMACR);
-> > >
-> > >       if (chan->desc_pendingcount <= XILINX_DMA_COALESCE_MAX) {
-> > >               reg &= ~XILINX_DMA_CR_COALESCE_MAX;
-> > >               reg |= chan->desc_pendingcount <<
-> > >                                 XILINX_DMA_CR_COALESCE_SHIFT;
-> > > -             dma_ctrl_write(chan, XILINX_DMA_REG_DMACR, reg);
-> > >       }
-> > >
-> > > -     if (chan->has_sg)
-> > > -             xilinx_write(chan, XILINX_DMA_REG_CURDESC,
-> > > -                          head_desc->async_tx.phys);
-> > >       reg  &= ~XILINX_DMA_CR_DELAY_MAX;
-> > >       reg  |= chan->irq_delay << XILINX_DMA_CR_DELAY_SHIFT;
-> > >       dma_ctrl_write(chan, XILINX_DMA_REG_DMACR, reg);
-> > >
-> > > -     xilinx_dma_start(chan);
-> > > +     if (chan->idle)
-> > > +             xilinx_dma_start(chan);
-> > >
-> > >       if (chan->err)
-> > >               return;
-> > > @@ -1914,8 +1912,10 @@ static irqreturn_t xilinx_dma_irq_handler(int irq, void
-> > *data)
-> > >                     XILINX_DMA_DMASR_DLY_CNT_IRQ)) {
-> > >               spin_lock(&chan->lock);
-> > >               xilinx_dma_complete_descriptor(chan);
-> > > -             chan->idle = true;
-> > > -             chan->start_transfer(chan);
-> > > +             if (list_empty(&chan->active_list)) {
-> > > +                     chan->idle = true;
-> > > +                     chan->start_transfer(chan);
-> > > +             }
-> > >               spin_unlock(&chan->lock);
-> > >       }
-> > >
-> > > --
-> > > 2.25.1
-> > >
+Changes in v2:
+Update the shutdown to perform same operations 
+as remove.
+
+---
+ drivers/dma/xilinx/zynqmp_dma.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/dma/xilinx/zynqmp_dma.c b/drivers/dma/xilinx/zynqmp_dma.c
+index d05fc5fcc77d..0b03c2092c28 100644
+--- a/drivers/dma/xilinx/zynqmp_dma.c
++++ b/drivers/dma/xilinx/zynqmp_dma.c
+@@ -1173,9 +1173,18 @@ static void zynqmp_dma_remove(struct platform_device *pdev)
+ 	dma_async_device_unregister(&zdev->common);
+ 
+ 	zynqmp_dma_chan_remove(zdev->chan);
+-	pm_runtime_disable(zdev->dev);
+-	if (!pm_runtime_enabled(zdev->dev))
++	if (pm_runtime_active(zdev->dev))
+ 		zynqmp_dma_runtime_suspend(zdev->dev);
++	pm_runtime_disable(zdev->dev);
++}
++
++/**
++ * zynqmp_dma_shutdown - Driver shutdown function
++ * @pdev: Pointer to the platform_device structure
++ */
++static void zynqmp_dma_shutdown(struct platform_device *pdev)
++{
++	zynqmp_dma_remove(pdev);
+ }
+ 
+ static const struct of_device_id zynqmp_dma_of_match[] = {
+@@ -1193,6 +1202,7 @@ static struct platform_driver zynqmp_dma_driver = {
+ 	},
+ 	.probe = zynqmp_dma_probe,
+ 	.remove = zynqmp_dma_remove,
++	.shutdown = zynqmp_dma_shutdown,
+ };
+ 
+ module_platform_driver(zynqmp_dma_driver);
+-- 
+2.34.1
+
 

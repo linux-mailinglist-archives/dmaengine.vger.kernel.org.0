@@ -1,64 +1,65 @@
-Return-Path: <dmaengine+bounces-5767-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5766-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E9B8B02BF0
-	for <lists+dmaengine@lfdr.de>; Sat, 12 Jul 2025 18:35:50 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E0ABB02BE6
+	for <lists+dmaengine@lfdr.de>; Sat, 12 Jul 2025 18:28:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2EBC21C24848
-	for <lists+dmaengine@lfdr.de>; Sat, 12 Jul 2025 16:36:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3EE24163799
+	for <lists+dmaengine@lfdr.de>; Sat, 12 Jul 2025 16:28:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11275275B12;
-	Sat, 12 Jul 2025 16:35:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 531D02857F9;
+	Sat, 12 Jul 2025 16:28:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="VbuuhThp"
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="LGHKUZYf"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from out203-205-221-191.mail.qq.com (out203-205-221-191.mail.qq.com [203.205.221.191])
+Received: from out162-62-57-64.mail.qq.com (out162-62-57-64.mail.qq.com [162.62.57.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 564AA1990D8;
-	Sat, 12 Jul 2025 16:35:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D5FA278768;
+	Sat, 12 Jul 2025 16:28:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752338145; cv=none; b=A0Zmen1wrUQvn9zazKWlZiLwGDIRMrQFQGzXawXIikx14VjRcUfjbBVrUV7TyG5SHQR6lBzOSRlRBYnE0stI95+bUNgLoXkzAXsf9Wi9t5SvDjv7azunEp+jOZKRVsWJcPVC1uOXCPbGPm64QCW22P4eAjRyAQFWLnWS+rGm+uc=
+	t=1752337688; cv=none; b=gzd0CzT9t02qySCLGDd94VDOuAYCPOXIrgzyoEkYHSLEDqjCfz/nMHFiuGvT2mSufREjNjKIsQFaGKVcYgiPJViAMdQsjGkI2bC/1cW5wV6MRBrjl2NbjSadjQqkNh6GBOon/0WSYeEiIfynOV1cmBFF+KivPuIhw1nRa+c2L2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752338145; c=relaxed/simple;
+	s=arc-20240116; t=1752337688; c=relaxed/simple;
 	bh=zShYQvLlzDshUKKlZg1x1TOtfC/ez1gpBFtv+Tsd8e8=;
 	h=Message-ID:Content-Type:Mime-Version:Subject:From:In-Reply-To:
-	 Date:Cc:References:To; b=t7zQu+6X4f5ByAPO0aWFD8SLFA6XsJDQobwHNUKzHeg6CnJP6S9UygL2HUSKIdm2IkH9aHzau9gnd4Zuf4ONVqOAl4i+QMVjj3vrZ3luImKsGNtOadjJnmcr9GzbwT+RWzUIlCFrICvU+J0nXMWiZc/8Od+eH7ayPjNtyX6b1pM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=VbuuhThp; arc=none smtp.client-ip=203.205.221.191
+	 Date:Cc:References:To; b=dZEfrvK2jL2VsYmlbsEm1ULPp+lG1xlarG0Xw3G7c8KbxALRPXWXJBm6XjqWhmiMJUdVVn2sNIPMNifMt8ZyV3zvyR4LvXOvM2acZWHzzgNVB8MB23D+ShUZKTsWUHx8Gnex54Ewo0kTiFHN+TwAIPyQVs8ZMG0IU0FXDXqNWEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=LGHKUZYf; arc=none smtp.client-ip=162.62.57.64
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1752338134;
+	s=s201512; t=1752337674;
 	bh=nr1V0epckhRFNIAskc+SB3bvY8ZpoSKvj9saTw6BZ8g=;
 	h=Subject:From:In-Reply-To:Date:Cc:References:To;
-	b=VbuuhThpEqaKfaB/Y0rgHlNn+7Q8uuuSMj0YFYV6DFmARpZPoWHqKH5jSJxFiqMcX
-	 Ko1rjkmgJayCB4ps/yuJ+/Ta/BULd3hVJeDMwpK3c/MTS5R+qLvHAUkxRX9/JfiKAZ
-	 QTAqCMuYXu+HcQ/jEhiVbfrJNYgfDgqYc+RiVlFs=
+	b=LGHKUZYfQD43gvXhxwpSfTEwjJkYQc2J1oPMS8Xosu6ev1BwUfsHQHnS5PQ1tvvOS
+	 nKPBGlh3q+4ZTfbpFcbtO47d5vJLVyAEMyw3YTTLovmPhR9+PYiiX659m9fAdCrstj
+	 nn9qoJzvg0CZgGoaGylBvbjlz0te/DOdLks3hTdY=
 Received: from smtpclient.apple ([36.110.163.70])
-	by newxmesmtplogicsvrsza29-0.qq.com (NewEsmtp) with SMTP
-	id 6CBA1414; Sun, 13 Jul 2025 00:27:11 +0800
-X-QQ-mid: xmsmtpt1752337631t25gi2nz6
-Message-ID: <tencent_46CEE34541085543C2F266B716704B068C05@qq.com>
-X-QQ-XMAILINFO: N7yy7KMU5LaP6OLJ+d0WF7yjZUW9OFJDM5HxSH22N8d4ODGPatjOe+l6morWxM
-	 A8K1fNpnsa1iOQRaNkdXi2l53UjHyS+3CRzptN9i80fuU640stP/k/Qcb2rgqKBDQC2A8dxWLEaZ
-	 1P06O0lGvui51fEppNKcyIFKm6xlTXl+14W2vnbca25dVjkQPqXqHdd96UVoAtNFB/lr0YbueiCq
-	 VqP0PiiSq0hTaSMaMlVN03vy4yfhGMr1OGmqp3QN7i0TROs7fy6sRQUq0+y3pJLZ+Uphq7BxMtjf
-	 J3PdpTF2WPlKeAQUXoN3ressS4NJmBG7RCt9dMuqUoy7eT1TdvMio6zL0qKcGQy8zhRw9lfk5wL3
-	 EYfyuF77B94LTTNSIR7WqtynbaEmFXF/VQVf8wKPFRPdtGsy7Irgw0EiuoLBhxL2jQQH2r5LzWOj
-	 6yeKffvPUdrRIChB1RzyraESV+Ae4UDxcLOw2+ublKkkKMvAPRFXB1F/Bj/ezsf50xib9J9T75tL
-	 fiFOQBFss+P2hNtqE22SPuPgEgqR05k+VCQ5Fba6b6m3liwT5wGdn3vGFX2FMItlXrnnru/WifaL
-	 egZTQWYTZwoZnkTKCuUzCru6DOLrZgjaT/7TlL82jRIgKPGpRUkzUE2S9uWAuSxg40sS4crBhs93
-	 lsh53Au96M+oeWxrqKxANbQxhZM4PJecQQh2VhnYsQsSMwGdR7xqP7+dT97KzsNqCZbnh/eTdCC9
-	 x7OtamkPz2rj8RaCRgamzU6rUToOLUqm6gz92d5PkGZXuDixmFSyEj1iOYMmN4ZRnX6jncMIRAy7
-	 R3uUvniuQPWOLJg/jFE9+Xd43ZlR0f31chtDOct6mOPZ6XYBdLUxmWSyQ+1L/sVZjFK++3XYaO+S
-	 KDE9QxE51paCys/b5/v4K+rrKcA13nGmKJ6T7FJnQfyKVTHy7ugxTObjxbl6UJ3wuRiAMKYvFUnf
-	 WX1frKYUIu9F9MRDAOPxmxzaNibVXOfyTyAwKaG+hDlUqLuaeCuFspMsbtYYmVfkQxHFHMxZMgIQ
-	 IIQkYmew==
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+	by newxmesmtplogicsvrsza36-0.qq.com (NewEsmtp) with SMTP
+	id 6F2020E8; Sun, 13 Jul 2025 00:27:50 +0800
+X-QQ-mid: xmsmtpt1752337670tj4zzscnw
+Message-ID: <tencent_F796C219AAAF44C38D59EDDB560958888706@qq.com>
+X-QQ-XMAILINFO: NEGqkzgyFYqO0FYFVu/yc6yh9bWxl9ihuMmJtegKHU/BW9ZmNLaPdVeAToGmOK
+	 dqJXy6Nj7d5li+9HIyqpCEtrgixybNtXEx5p/FiNWPUcD9aGduLYZRnbD0oMs396dt4a6Ve9p3C1
+	 JeFxHpM9jcooNiXsWAI7PDELthYU2ujfGz84gMkL479PfJfw/wJveibHhyGZwPKVjh6hAwYW/23W
+	 7W+Nnbyaj2ZYpQiXy0Mrrmt7bTH1PeGNe96N8eTC5TH2Zc1B3iSlnEeTowamKFkaxqqXeGefI8Fx
+	 28dmMrn+gSbaaV9HBtC2ukFTRazCrFvJchCXEzMBlagBYOPBWGsLPHAEEA6a0E6NyiwskLlU1KGU
+	 5P6+sT7GkfPlF0spB081Sdf+2AY5E68AXayfPyY+86A42Hal70GbkkPpn3/x5nsL8SHVkvo+E8vp
+	 6BbGQSi6EQfwKaoKFc0YJ4qKbaby2i5eYkCFT6pdHkMbhj8+Xw0Yc+8aTJKjAPBRIqkbkHoIc8iG
+	 K1YHNikEHKGkwMA3AYj7lSvZOzyW5ghApxVitA6EXlEJwtlElciAlUd4tmCQfhPQz834uYMu1l1J
+	 C6KT7ZdbW32IZPjYn81KjMyhkkMnZgZBrAGTBYhl0oTe971tcw8T8Gp6ImiZMPsGiMcIVCmXZt6j
+	 1EOh9tLivWU0P1bahLeEszKghy4XRpKPxM3PEKGHLKbUr6h7typAPMdXRyUdkDuf9gM7/iaEwz0x
+	 IS7kuJROyIM/ZfMtFBlbVGSotrzLRxbQRzsuYwMNecXvPjeu+cwGZoWThCPjCiAFfca5gkYUeQhZ
+	 kZ+rJ9mz6l/W9GxcUq8Sh+CAW/yNsYbqxTgDlrNoEL5ct+xM7qQuRFR6n9NaDjwUbZYyVXXXo2r7
+	 W+gs3rN9iV13ZFYxIlmurKbdKj/u3w9s5LIfgQdgvNQIGQkgU2yXnjFOSnehQND9Spqb3ouSXVBa
+	 tz8t1QR+C6Nksz/H0NIEswzUMgGWYAwC9ovz9k2wlQnnJu1MdhBwGElsgPxJzq3wCJR3dgcZ6EJt
+	 YHAJPxa2beF18t163w3oQlrvVxc4UMdBp7vZqFPVAQQvFi0JHIXltlKum4fXDMXOUYfReQI89hmC
+	 bAgnRF
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
 Content-Type: text/plain;
 	charset=us-ascii
 Precedence: bulk
@@ -70,7 +71,7 @@ Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
 Subject: Re: [PATCH] dmaengine: rcar-dmac: Fix PM usage counter imbalance
 From: Zhang Shurong <zhang_shurong@foxmail.com>
 In-Reply-To: <CAMuHMdUhZqLCkLWtFTaCq67=Nb0O0_XLSWeyweMiNp25XArfKA@mail.gmail.com>
-Date: Sun, 13 Jul 2025 00:27:01 +0800
+Date: Sun, 13 Jul 2025 00:27:39 +0800
 Cc: vkoul@kernel.org,
  magnus.damm@gmail.com,
  robin.murphy@arm.com,
@@ -82,7 +83,7 @@ Cc: vkoul@kernel.org,
  linux-kernel@vger.kernel.org,
  Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 Content-Transfer-Encoding: quoted-printable
-X-OQ-MSGID: <8D37010A-D3D2-42C6-868B-35AAAB5885F6@foxmail.com>
+X-OQ-MSGID: <2F2D2C10-F245-472B-A764-AFDA86F1AA66@foxmail.com>
 References: <tencent_71CC9630D88A8792C2396A8844DCCD5C6D06@qq.com>
  <CAMuHMdUhZqLCkLWtFTaCq67=Nb0O0_XLSWeyweMiNp25XArfKA@mail.gmail.com>
 To: Geert Uytterhoeven <geert@linux-m68k.org>

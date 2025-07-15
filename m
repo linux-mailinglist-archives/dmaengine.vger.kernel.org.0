@@ -1,112 +1,89 @@
-Return-Path: <dmaengine+bounces-5826-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5827-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4EF15B06291
-	for <lists+dmaengine@lfdr.de>; Tue, 15 Jul 2025 17:15:15 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D0F45B062D1
+	for <lists+dmaengine@lfdr.de>; Tue, 15 Jul 2025 17:25:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8920B18975DB
-	for <lists+dmaengine@lfdr.de>; Tue, 15 Jul 2025 15:11:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 53E6D1AA2692
+	for <lists+dmaengine@lfdr.de>; Tue, 15 Jul 2025 15:22:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D39F21421E;
-	Tue, 15 Jul 2025 15:11:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E1DF245006;
+	Tue, 15 Jul 2025 15:22:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cMFR2ESa"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HsjUeGT2"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 433CA212B0A;
-	Tue, 15 Jul 2025 15:11:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71361233148;
+	Tue, 15 Jul 2025 15:22:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752592275; cv=none; b=Bq5O/jNDgeXIIaSI+oIUmsRXUljsOdJCLvSUg4aQGrz2Y/0/2k0oVj57MkKwufWS66T5o+Yjjga8DvtbtlwC+JgQXq3RCA87jO6bcO8vKKG8SB/XzPZxWHeqE6iUnUoMvsoy2qo2e1YP1CkqEqFT32FXx0Bq67SWDS2H96AFVbY=
+	t=1752592926; cv=none; b=aYzd606nsw6ohhUR2e9E0VCmyQIMmSbF6NxdTIOUq600wFuVAIPFwaz1J0UkL0rccEkDofjQ6BjXv7GBSK99pySrC3kEnOZMlQlDb4KXh6YYmc16KpqX15/gkpAhQaRUWQ8F5Ju51o5AXvm+LHYoynNY2ZYCZtp4xMb6dijM7s4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752592275; c=relaxed/simple;
-	bh=xZ7HUEdlujqe8L2cH/lceRSD0/mLPz28HfkvjHjeJNs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=joqDMG20qrYh8C09FNYoDWSfaOBpCv4IW4m8hl3fXDAkGYnPUsOgdxXMgDejvheuEx63pj2Qjj13yI46pv8cC09abYFucrQKqVcFZkcNQdGa+56MN3RXkamhG4BiROa/S5moWg0NyapNT1H9QxsgxshmOIcXGglmT063n345/qU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cMFR2ESa; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5055C4CEE3;
-	Tue, 15 Jul 2025 15:11:14 +0000 (UTC)
+	s=arc-20240116; t=1752592926; c=relaxed/simple;
+	bh=6fs8/NfuMxahoFjmKXHZsImMOsOUhDYSnfFLmEvRh+s=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=hXdy10G+0RdtqCqr3EA1RcSnFruuBelNa9CWe35eR5Az0D8ozmXjtsprZ8OfV4PWF0CsaOdQuqlpSzNl60rzcOVoag89UCdcDyZh5DXIBBiz2CC/1S9ESKyUtiasSHN5oD/IYe2sCdVLyUKLW52/+LUj3c1rc7e/OLjuPFZ3HCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HsjUeGT2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 902D4C4CEF7;
+	Tue, 15 Jul 2025 15:22:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752592275;
-	bh=xZ7HUEdlujqe8L2cH/lceRSD0/mLPz28HfkvjHjeJNs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cMFR2ESaT0s7UI+tXZbGBwXjdsJZOiTEo1nXXz0sBlDOh4MDzw+JdZMFGHu8i4NHo
-	 /SnT4cCVR5gagJjmfo4DurWGx6Yrq4Dywif5x5qI+DSFlO4GJBtCL6u4NBORs5U4Pl
-	 SV0oZv3Dm1SHDHWg/RQz8R7RW72ByyXb4WDRt8qzw/152cPgG04S7rKu2I5misbkfc
-	 es4PaDfL3IfPcvZmBz7B1gguPbhg0twpvhWcKTo9maN2NAdrW4XOG7MzOagoXjj5K3
-	 gfJwSlCAcBoLcU5+y3AuAgBx4QHEDPT9JEwGZFITgRhYFo6KropW6I0mgVCWdKz2oL
-	 cYtsqLLc7yh6g==
-Date: Tue, 15 Jul 2025 20:41:11 +0530
+	s=k20201202; t=1752592926;
+	bh=6fs8/NfuMxahoFjmKXHZsImMOsOUhDYSnfFLmEvRh+s=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=HsjUeGT2YlZAlO1zIKd/qMl99dZbbW2JyTeAfNvDVEeH6DuOp8yW1zbd5nzZpQc5O
+	 I4B2f6u6FdLXjKL1KWfQYyVoeDV/Etby1/umlnh0g/9rWAM/JMMfly92IepbHlU8fr
+	 mgNRGQDyLvhICn1C6D6TB7n7Q1nhMD8bpGEyccXBu4wIBYRlYyVyMJmYLaEhmsPmaw
+	 qqheYTEk4E3EhVbRcvP56xHLb5rnnKvPEabjCohNIpu1vy/QSzk909JB9axahlI9YR
+	 RBAGwLJNFWv875lrwE2HrfqyL4E2tH0hlvaZf46hawCuW6fnAr38Fr4gjLs0MImglr
+	 3idRs7yMdH4GQ==
 From: Vinod Koul <vkoul@kernel.org>
-To: Thomas Fourier <fourier.thomas@gmail.com>
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>,
-	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: nbpfaxi: Fix possible array access out of
- bounds of nbpf->chan
-Message-ID: <aHZvjxx6Mn7_roLt@vaman>
-References: <20250707082353.40402-2-fourier.thomas@gmail.com>
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, 
+ Dan Carpenter <dan.carpenter@linaro.org>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ kernel-janitors@vger.kernel.org
+In-Reply-To: <b13c5225-7eff-448c-badc-a2c98e9bcaca@sabinyo.mountain>
+References: <b13c5225-7eff-448c-badc-a2c98e9bcaca@sabinyo.mountain>
+Subject: Re: [PATCH] dmaengine: nbpfaxi: Fix memory corruption in probe()
+Message-Id: <175259292421.543905.3175578919645729434.b4-ty@kernel.org>
+Date: Tue, 15 Jul 2025 20:52:04 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250707082353.40402-2-fourier.thomas@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On 07-07-25, 10:23, Thomas Fourier wrote:
-> The nbpf is alloc'd at line 1324 with a size of num_channels so it seems
-> like the maximum index of nbpf->chan should be num_channels - 1.
 
-I have already applied a patch from Dan sent earlier for this
-
+On Tue, 01 Jul 2025 17:31:40 -0500, Dan Carpenter wrote:
+> The nbpf->chan[] array is allocated earlier in the nbpf_probe() function
+> and it has "num_channels" elements.  These three loops iterate one
+> element farther than they should and corrupt memory.
 > 
-> Fixes: b45b262cefd5 ("dmaengine: add a driver for AMBA AXI NBPF DMAC IP cores")
-> Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
-> ---
->  drivers/dma/nbpfaxi.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> The changes to the second loop are more involved.  In this case, we're
+> copying data from the irqbuf[] array into the nbpf->chan[] array.  If
+> the data in irqbuf[i] is the error IRQ then we skip it, so the iterators
+> are not in sync.  I added a check to ensure that we don't go beyond the
+> end of the irqbuf[] array.  I'm pretty sure this can't happen, but it
+> seemed harmless to add a check.
 > 
-> diff --git a/drivers/dma/nbpfaxi.c b/drivers/dma/nbpfaxi.c
-> index 0b75bb122898..dd1b5e2a603c 100644
-> --- a/drivers/dma/nbpfaxi.c
-> +++ b/drivers/dma/nbpfaxi.c
-> @@ -1364,7 +1364,7 @@ static int nbpf_probe(struct platform_device *pdev)
->  	if (irqs == 1) {
->  		eirq = irqbuf[0];
->  
-> -		for (i = 0; i <= num_channels; i++)
-> +		for (i = 0; i < num_channels; i++)
->  			nbpf->chan[i].irq = irqbuf[0];
->  	} else {
->  		eirq = platform_get_irq_byname(pdev, "error");
-> @@ -1374,7 +1374,7 @@ static int nbpf_probe(struct platform_device *pdev)
->  		if (irqs == num_channels + 1) {
->  			struct nbpf_channel *chan;
->  
-> -			for (i = 0, chan = nbpf->chan; i <= num_channels;
-> +			for (i = 0, chan = nbpf->chan; i < num_channels;
->  			     i++, chan++) {
->  				/* Skip the error IRQ */
->  				if (irqbuf[i] == eirq)
-> @@ -1391,7 +1391,7 @@ static int nbpf_probe(struct platform_device *pdev)
->  			else
->  				irq = irqbuf[0];
->  
-> -			for (i = 0; i <= num_channels; i++)
-> +			for (i = 0; i < num_channels; i++)
->  				nbpf->chan[i].irq = irq;
->  		}
->  	}
-> -- 
-> 2.43.0
+> [...]
 
+Applied, thanks!
+
+[1/1] dmaengine: nbpfaxi: Fix memory corruption in probe()
+      commit: 188c6ba1dd925849c5d94885c8bbdeb0b3dcf510
+
+Best regards,
 -- 
 ~Vinod
+
+
 

@@ -1,56 +1,56 @@
-Return-Path: <dmaengine+bounces-5827-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5828-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0F45B062D1
-	for <lists+dmaengine@lfdr.de>; Tue, 15 Jul 2025 17:25:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 099FCB062D4
+	for <lists+dmaengine@lfdr.de>; Tue, 15 Jul 2025 17:25:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 53E6D1AA2692
-	for <lists+dmaengine@lfdr.de>; Tue, 15 Jul 2025 15:22:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7D9451AA2950
+	for <lists+dmaengine@lfdr.de>; Tue, 15 Jul 2025 15:22:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E1DF245006;
-	Tue, 15 Jul 2025 15:22:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80F7724A069;
+	Tue, 15 Jul 2025 15:22:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HsjUeGT2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DsK6yEdR"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71361233148;
-	Tue, 15 Jul 2025 15:22:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A03D248F60;
+	Tue, 15 Jul 2025 15:22:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752592926; cv=none; b=aYzd606nsw6ohhUR2e9E0VCmyQIMmSbF6NxdTIOUq600wFuVAIPFwaz1J0UkL0rccEkDofjQ6BjXv7GBSK99pySrC3kEnOZMlQlDb4KXh6YYmc16KpqX15/gkpAhQaRUWQ8F5Ju51o5AXvm+LHYoynNY2ZYCZtp4xMb6dijM7s4=
+	t=1752592928; cv=none; b=UzrI793YsITJafExI0uAaOgdqrun6v0GY9cJ16gm4HfSalc94Z1ssFORVt8fZ1cAnz9tCmDgdLucoDmwQk8/UUwTdxHCmEPnj+gvYCNip4LRTu8z8hFAMjW8I1ih9CVvrcYAMCCcpoO3KmThpl0T+P5acyTPwGUmqtTT0Cx8fwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752592926; c=relaxed/simple;
-	bh=6fs8/NfuMxahoFjmKXHZsImMOsOUhDYSnfFLmEvRh+s=;
+	s=arc-20240116; t=1752592928; c=relaxed/simple;
+	bh=s8z2gEmAsy45+Fv9f8lyhExZXqM5JzSnUHVuX1ptM/w=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=hXdy10G+0RdtqCqr3EA1RcSnFruuBelNa9CWe35eR5Az0D8ozmXjtsprZ8OfV4PWF0CsaOdQuqlpSzNl60rzcOVoag89UCdcDyZh5DXIBBiz2CC/1S9ESKyUtiasSHN5oD/IYe2sCdVLyUKLW52/+LUj3c1rc7e/OLjuPFZ3HCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HsjUeGT2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 902D4C4CEF7;
-	Tue, 15 Jul 2025 15:22:04 +0000 (UTC)
+	 MIME-Version:Content-Type; b=IsshwUzBKgO+iz+YgcxqIr9NETzDLiqZfaoENJKvbQvB8Q/f78gDZNr/mTRdGNd/D7RlawTarKWxzVxacPOD4MQO3nZRHlTvBqHw4J0P3/lOqB5sE6J1sFp395ATDRZxY3hcOIZe6t4iOjTtzc38sc3XnMy+gcUP7WoV2UVOY3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DsK6yEdR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C923C4CEE3;
+	Tue, 15 Jul 2025 15:22:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752592926;
-	bh=6fs8/NfuMxahoFjmKXHZsImMOsOUhDYSnfFLmEvRh+s=;
+	s=k20201202; t=1752592928;
+	bh=s8z2gEmAsy45+Fv9f8lyhExZXqM5JzSnUHVuX1ptM/w=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=HsjUeGT2YlZAlO1zIKd/qMl99dZbbW2JyTeAfNvDVEeH6DuOp8yW1zbd5nzZpQc5O
-	 I4B2f6u6FdLXjKL1KWfQYyVoeDV/Etby1/umlnh0g/9rWAM/JMMfly92IepbHlU8fr
-	 mgNRGQDyLvhICn1C6D6TB7n7Q1nhMD8bpGEyccXBu4wIBYRlYyVyMJmYLaEhmsPmaw
-	 qqheYTEk4E3EhVbRcvP56xHLb5rnnKvPEabjCohNIpu1vy/QSzk909JB9axahlI9YR
-	 RBAGwLJNFWv875lrwE2HrfqyL4E2tH0hlvaZf46hawCuW6fnAr38Fr4gjLs0MImglr
-	 3idRs7yMdH4GQ==
+	b=DsK6yEdRRCYUtJpZtbuXBVKOQQ5nfSjviSXhRa7JmLQBhv/Lc48H/7r4XjowmRawI
+	 zJKayHN0pK58+Fqitx3L61bYddkqDWTgPp1+17LMqB3sgGlklktN+bVN2NLy4EjqAo
+	 WwayrWRf7/z8ztCbBKW/5+CuVouIIwcMAZ6OPU9RQFJ1I1jQf3X4c2Y5g4o28sZmiK
+	 ynRQsQ1mAw/8u+U3SsmCuBLkAF7sZd7Jrm80cunxzQSbzDvTXh/Bk9RCE6HI1wu+Zj
+	 nK3D/6shjhrLcq/0vi4n+La4EZ/pIFJdAdx0H3CpndmmqPlhO7UD7koNdfYtsn6Hhr
+	 spI/GgHEUR6Kg==
 From: Vinod Koul <vkoul@kernel.org>
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, 
- Dan Carpenter <dan.carpenter@linaro.org>
+To: mani@kernel.org, Abinash Singh <abinashlalotra@gmail.com>
 Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
- kernel-janitors@vger.kernel.org
-In-Reply-To: <b13c5225-7eff-448c-badc-a2c98e9bcaca@sabinyo.mountain>
-References: <b13c5225-7eff-448c-badc-a2c98e9bcaca@sabinyo.mountain>
-Subject: Re: [PATCH] dmaengine: nbpfaxi: Fix memory corruption in probe()
-Message-Id: <175259292421.543905.3175578919645729434.b4-ty@kernel.org>
-Date: Tue, 15 Jul 2025 20:52:04 +0530
+ Abinash Singh <abinashsinghlalotra@gmail.com>
+In-Reply-To: <20250705160055.808165-1-abinashsinghlalotra@gmail.com>
+References: <20250705160055.808165-1-abinashsinghlalotra@gmail.com>
+Subject: Re: [PATCH RFC] dma: dw-edma: Fix build warning in
+ dw_edma_pcie_probe()
+Message-Id: <175259292621.543905.5838200154800264729.b4-ty@kernel.org>
+Date: Tue, 15 Jul 2025 20:52:06 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -62,24 +62,23 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
 
-On Tue, 01 Jul 2025 17:31:40 -0500, Dan Carpenter wrote:
-> The nbpf->chan[] array is allocated earlier in the nbpf_probe() function
-> and it has "num_channels" elements.  These three loops iterate one
-> element farther than they should and corrupt memory.
+On Sat, 05 Jul 2025 21:30:55 +0530, Abinash Singh wrote:
+> The function dw_edma_pcie_probe() in dw-edma-pcie.c triggered a
+> frame size warning:
+> ld.lld:warning:
+>   drivers/dma/dw-edma/dw-edma-pcie.c:162:0: stack frame size (1040) exceeds limit (1024) in function 'dw_edma_pcie_probe'
 > 
-> The changes to the second loop are more involved.  In this case, we're
-> copying data from the irqbuf[] array into the nbpf->chan[] array.  If
-> the data in irqbuf[i] is the error IRQ then we skip it, so the iterators
-> are not in sync.  I added a check to ensure that we don't go beyond the
-> end of the irqbuf[] array.  I'm pretty sure this can't happen, but it
-> seemed harmless to add a check.
+> This patch reduces the stack usage by dynamically allocating the
+> `vsec_data` structure using kmalloc(), rather than placing it on
+> the stack. This eliminates the overflow warning and improves kernel
+> robustness.
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] dmaengine: nbpfaxi: Fix memory corruption in probe()
-      commit: 188c6ba1dd925849c5d94885c8bbdeb0b3dcf510
+[1/1] dma: dw-edma: Fix build warning in dw_edma_pcie_probe()
+      commit: 3df63fa8f2afd051848e37ef1b8299dee28d4f87
 
 Best regards,
 -- 

@@ -1,56 +1,88 @@
-Return-Path: <dmaengine+bounces-5828-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5829-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 099FCB062D4
-	for <lists+dmaengine@lfdr.de>; Tue, 15 Jul 2025 17:25:35 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id F3A6DB083F5
+	for <lists+dmaengine@lfdr.de>; Thu, 17 Jul 2025 06:34:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7D9451AA2950
-	for <lists+dmaengine@lfdr.de>; Tue, 15 Jul 2025 15:22:56 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 30FD17A03D3
+	for <lists+dmaengine@lfdr.de>; Thu, 17 Jul 2025 04:32:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80F7724A069;
-	Tue, 15 Jul 2025 15:22:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39B3A21D00A;
+	Thu, 17 Jul 2025 04:31:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DsK6yEdR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ExYE3jCE"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A03D248F60;
-	Tue, 15 Jul 2025 15:22:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2BC221CC64;
+	Thu, 17 Jul 2025 04:31:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752592928; cv=none; b=UzrI793YsITJafExI0uAaOgdqrun6v0GY9cJ16gm4HfSalc94Z1ssFORVt8fZ1cAnz9tCmDgdLucoDmwQk8/UUwTdxHCmEPnj+gvYCNip4LRTu8z8hFAMjW8I1ih9CVvrcYAMCCcpoO3KmThpl0T+P5acyTPwGUmqtTT0Cx8fwI=
+	t=1752726692; cv=none; b=m1lKgrfFHKM21eNQ5IfHQwbJwb0ZoWPwSZFVUQGvctIY3s5FuipCHhNb4uz7nrgFYDF2cz/SYI3FuyyVnmiBoVt6hGsP92OIDFScj3iJYbS31w+QGjUImE4qshVlhCPPhDwuX9MiUnceKYZG2XoE1X0m94v5apH6Xcj8ckJZ8w0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752592928; c=relaxed/simple;
-	bh=s8z2gEmAsy45+Fv9f8lyhExZXqM5JzSnUHVuX1ptM/w=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=IsshwUzBKgO+iz+YgcxqIr9NETzDLiqZfaoENJKvbQvB8Q/f78gDZNr/mTRdGNd/D7RlawTarKWxzVxacPOD4MQO3nZRHlTvBqHw4J0P3/lOqB5sE6J1sFp395ATDRZxY3hcOIZe6t4iOjTtzc38sc3XnMy+gcUP7WoV2UVOY3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DsK6yEdR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C923C4CEE3;
-	Tue, 15 Jul 2025 15:22:06 +0000 (UTC)
+	s=arc-20240116; t=1752726692; c=relaxed/simple;
+	bh=FUphvS0A9PwEICMfXvjYOafxfusNQmr5yCGzqlIMojE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=d0f1bz3SqOpykGx7EBGZ5/7EIHxwOUj8AwQe/hk0CI4W76xoRdFdJ4SskMrq0VMALX4p+KD1dJpXdEx5Vix0oFaR+LgtKkhKJ8iWLJuQCZzNb4t4EwjnJ6Vzb2pk3LKjMcn10my3A1BYEw+L6IlTkBm0pUCPFRjQ1UeQg9xyXNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ExYE3jCE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3503CC4CEF6;
+	Thu, 17 Jul 2025 04:31:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752592928;
-	bh=s8z2gEmAsy45+Fv9f8lyhExZXqM5JzSnUHVuX1ptM/w=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=DsK6yEdRRCYUtJpZtbuXBVKOQQ5nfSjviSXhRa7JmLQBhv/Lc48H/7r4XjowmRawI
-	 zJKayHN0pK58+Fqitx3L61bYddkqDWTgPp1+17LMqB3sgGlklktN+bVN2NLy4EjqAo
-	 WwayrWRf7/z8ztCbBKW/5+CuVouIIwcMAZ6OPU9RQFJ1I1jQf3X4c2Y5g4o28sZmiK
-	 ynRQsQ1mAw/8u+U3SsmCuBLkAF7sZd7Jrm80cunxzQSbzDvTXh/Bk9RCE6HI1wu+Zj
-	 nK3D/6shjhrLcq/0vi4n+La4EZ/pIFJdAdx0H3CpndmmqPlhO7UD7koNdfYtsn6Hhr
-	 spI/GgHEUR6Kg==
-From: Vinod Koul <vkoul@kernel.org>
-To: mani@kernel.org, Abinash Singh <abinashlalotra@gmail.com>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Abinash Singh <abinashsinghlalotra@gmail.com>
-In-Reply-To: <20250705160055.808165-1-abinashsinghlalotra@gmail.com>
-References: <20250705160055.808165-1-abinashsinghlalotra@gmail.com>
-Subject: Re: [PATCH RFC] dma: dw-edma: Fix build warning in
- dw_edma_pcie_probe()
-Message-Id: <175259292621.543905.5838200154800264729.b4-ty@kernel.org>
-Date: Tue, 15 Jul 2025 20:52:06 +0530
+	s=k20201202; t=1752726691;
+	bh=FUphvS0A9PwEICMfXvjYOafxfusNQmr5yCGzqlIMojE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ExYE3jCEJ3wVAeaTVmKiM8j0TWjaFKo6Pp45jITxs6/g907yx6TC8C/Av02lS8SeN
+	 xcANIhoJOvpIpzp7Dc3Fu0M7k4r6Ta/zvVm4Q7pKOXXn/PtNHqPBEYNtgXsRzvUJYF
+	 7vK1KSPEa2RKUnBVsvid7HmjfTf8aTLbH9Rn+wFqf5tAOvgj0ZXgB7TRznJLhwLdSN
+	 DJwUmySslz+68gszrxuBJh4LLi42iFprCGenbtYkOZshtWZoKxpklCXkutk6EzJd5n
+	 W755o2u6KtIqQWuv1eQMMHfnHQD8NNhTFDcan11MonCbQgWsezhDdfUyVlstolhC3J
+	 kSPbAJB6fGwrg==
+From: Bjorn Andersson <andersson@kernel.org>
+To: Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Vinod Koul <vkoul@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Robert Marko <robimarko@gmail.com>,
+	Das Srinagesh <quic_gurus@quicinc.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Amit Kucheria <amitk@kernel.org>,
+	Thara Gopinath <thara.gopinath@gmail.com>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Luca Weiss <luca.weiss@fairphone.com>
+Cc: ~postmarketos/upstreaming@lists.sr.ht,
+	phone-devel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	iommu@lists.linux.dev,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-crypto@vger.kernel.org,
+	dmaengine@vger.kernel.org,
+	linux-mmc@vger.kernel.org
+Subject: Re: (subset) [PATCH v2 00/15] Various dt-bindings for Milos and The Fairphone (Gen. 6) addition
+Date: Wed, 16 Jul 2025 23:31:04 -0500
+Message-ID: <175272667138.130869.10008592038680168443.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250713-sm7635-fp6-initial-v2-0-e8f9a789505b@fairphone.com>
+References: <20250713-sm7635-fp6-initial-v2-0-e8f9a789505b@fairphone.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -58,31 +90,33 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Transfer-Encoding: 8bit
 
 
-On Sat, 05 Jul 2025 21:30:55 +0530, Abinash Singh wrote:
-> The function dw_edma_pcie_probe() in dw-edma-pcie.c triggered a
-> frame size warning:
-> ld.lld:warning:
->   drivers/dma/dw-edma/dw-edma-pcie.c:162:0: stack frame size (1040) exceeds limit (1024) in function 'dw_edma_pcie_probe'
+On Sun, 13 Jul 2025 10:05:22 +0200, Luca Weiss wrote:
+> Document various bits of the Milos SoC in the dt-bindings, which don't
+> really need any other changes.
 > 
-> This patch reduces the stack usage by dynamically allocating the
-> `vsec_data` structure using kmalloc(), rather than placing it on
-> the stack. This eliminates the overflow warning and improves kernel
-> robustness.
+> Then we can add the dtsi for the Milos SoC and finally add a dts for
+> the newly announced The Fairphone (Gen. 6) smartphone.
+> 
+> Dependencies:
+> * The dt-bindings should not have any dependencies on any other patches.
+> * The qcom dts bits depend on most other Milos patchsets I have sent in
+>   conjuction with this one. The exact ones are specified in the b4 deps.
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] dma: dw-edma: Fix build warning in dw_edma_pcie_probe()
-      commit: 3df63fa8f2afd051848e37ef1b8299dee28d4f87
+[04/15] dt-bindings: firmware: qcom,scm: document Milos SCM Firmware Interface
+        commit: 4405f3f7b44767c037270d8c40fe2fb3dc3454d0
+[07/15] dt-bindings: soc: qcom,aoss-qmp: document the Milos Always-On Subsystem side channel
+        commit: 6cd06adc39ac92ebca04d5c0df5acb7f0ec5ff2d
+[11/15] dt-bindings: soc: qcom: qcom,pmic-glink: document Milos compatible
+        commit: 4587d3910f805ac74348e6c320071a9b65be035e
 
 Best regards,
 -- 
-~Vinod
-
-
+Bjorn Andersson <andersson@kernel.org>
 

@@ -1,281 +1,483 @@
-Return-Path: <dmaengine+bounces-5834-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5835-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3CF32B08CDB
-	for <lists+dmaengine@lfdr.de>; Thu, 17 Jul 2025 14:27:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0080EB0AF38
+	for <lists+dmaengine@lfdr.de>; Sat, 19 Jul 2025 11:57:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 105317AF8B4
-	for <lists+dmaengine@lfdr.de>; Thu, 17 Jul 2025 12:25:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 055D558149E
+	for <lists+dmaengine@lfdr.de>; Sat, 19 Jul 2025 09:57:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 110F52BE039;
-	Thu, 17 Jul 2025 12:27:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D8B0238C25;
+	Sat, 19 Jul 2025 09:57:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="TE25JG2V"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="NF20g5WE"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A3152BDC28
-	for <dmaengine@vger.kernel.org>; Thu, 17 Jul 2025 12:26:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CDB7236424
+	for <dmaengine@vger.kernel.org>; Sat, 19 Jul 2025 09:57:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752755223; cv=none; b=UWqKcEG+CJXUJ8V4P9tAl9oBSpTsD1ATA1CaNOLYp4GuOiAJlLn8rcMKWgHqiN0lfy7fLvkrpLhf5lVS/lZp78CvVfAZBW1m3yk4w+limXP4zxPjUdpNx+UcTPVSNvRMqi1HRLa1uWEnJDLiBg/cIOga5w0HToV9wc7nHWu99OY=
+	t=1752919031; cv=none; b=J8kIEP9ULJHlsyc10VNMaTyb7/HnMo1Y1fFsbkuzWE4KIiaXH0oZcLBaTsj8yTjNlB5THL8zbVXS4OFrSe2iva4ve8j5qJzaLkY6+jDf96fzQFUZCZj1Wl3X/aZTKd6wiuvTLJygJ0NQwOylaJ5svTTtdApVRo16jZicI5UVKyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752755223; c=relaxed/simple;
-	bh=k1AU9RHb0Kl7CzIBQsz15cpKEvQJw6GvReja3qw8EDQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JWeroR+wY6+3PV1BfZqJsToWu7DDW4YN2tgsqvfLvV5MMYp7QUXVoRwMdTHY5YJd1Vgb7+/8U3NEjqzNgNpeWoOUebtCYxfeIVo1AJdai/52eq8vIiKNGxPbMugwCSt5EQtxmELiJvxY0VFONY4v4iLTPRtjP6nvcJQa1aNH0Xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=TE25JG2V; arc=none smtp.client-ip=205.220.168.131
+	s=arc-20240116; t=1752919031; c=relaxed/simple;
+	bh=pDwwg1I4yPDdKw4UaBB5//5QiSiC09GG7UaOjVyY5kI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i+6Q8lwUXersI0mVE6kfHnVaP62q9tatq9vSgh3RSnT7IIB4mfff1Aq3APFMf+biBFFWmXZUV0T/gxryHav4jqkt/YMBlOUNjGU11lsCofCkq0nQ28Mb9/EUHguXPvQPV0aEwPFRvyDiKywKSPPMb8BKbR61cyjFYU0spojvpbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=NF20g5WE; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56H46bFo028066
-	for <dmaengine@vger.kernel.org>; Thu, 17 Jul 2025 12:26:59 GMT
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56J6e3lh013482
+	for <dmaengine@vger.kernel.org>; Sat, 19 Jul 2025 09:57:09 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	IbmcROfOzVtWLlLwTUK701q3d6gz5yN28T/mfJ33MIw=; b=TE25JG2VN6qQdbFI
-	+EPMUOzIJpT9ZbN4ZIkZATeVvy4GwUPV5dCscItU/HZvCgO6zt8HQRfg2IkbcAT+
-	/bRkQgCwvhtEQkpUQScqWrWuB+LunPUpfuPEa9/YyBRJ5RWfX3dru0yV6Ck8UISD
-	QAoil+qyBsfyp0uBtBYRio7QFWo2/NrN7YMfHYntO4dGtjiBDS77+iZmAJKB8y6e
-	YY5aSsLonYn4nSw5GocPrVGB5jgSgad6gzeOGzIhTJX9yDqeuCq7Bma8SyfEsfks
-	Qfhx/IiDic3dsw1TEgmCJWQ8dpS53t20P6vudUZXZ9KFyP8FslENwvzt4Q2JV/IZ
-	SmDm4g==
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47wnh5yud9-1
+	5Qpm5LUOYW0NbIz9x0SUrjDatoCsm9pFh9pKabVgSEI=; b=NF20g5WEdy/g7XZF
+	2T4fIVuUgSxx9Na/p6U4BZC3cg7Ztmztc4AF90rtU6UjLiyoEGJphS2WhXHu1eRf
+	DbgmugngRoTuCGtEgkzkhO9SGQVA34qPgJ0lRznK+K77rO6DGD20+Z1U//BlhLyv
+	8F5Ap+459zYbYbX/Qb61U7oxYLBVT6gpdjRclPwQ/d0+TdrEv+/3d8ferxCH+MWq
+	Pso0CMHxQM0kS+DCbNVs5OnJabg2Q/hOpZD2Y5Ue4p4pA/CPPDioysri0kT42hQd
+	pkv9COF0ySQFPyckOZ8AYCu+pmkw1GqzX5IHnaYaHHiWggsKeXLrKhtzyHzEfaCe
+	GUVKkg==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 48048rrey4-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <dmaengine@vger.kernel.org>; Thu, 17 Jul 2025 12:26:59 +0000 (GMT)
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6fd5e07066eso3095396d6.0
-        for <dmaengine@vger.kernel.org>; Thu, 17 Jul 2025 05:26:59 -0700 (PDT)
+	for <dmaengine@vger.kernel.org>; Sat, 19 Jul 2025 09:57:08 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c955be751aso405714285a.2
+        for <dmaengine@vger.kernel.org>; Sat, 19 Jul 2025 02:57:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752755218; x=1753360018;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1752919028; x=1753523828;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IbmcROfOzVtWLlLwTUK701q3d6gz5yN28T/mfJ33MIw=;
-        b=w1cBN6DnJhEhyx5i72pZ+oIvbCtpxl5bJSdQIycxqJwfal2Cuj0hApLnuLkYkPhz1y
-         P8W1HCmDtA6QFuL0P5Oa/3jAutHGkWOeLIAFtjvXIy/hVoTF1qYclZOuV2JI5/cRV61X
-         zQUzPJi2jEtDZLYdcc2iItuIOVtl4AIQVN4Z6O9r/qvlcwGQkpVXPVMsqcLMWyO7BN/B
-         NmktIcm9A7b3shbfIVHuKGYDIKMtjcOiKD4AmDbywlTgGG6xfG7rkNOoeaFYnOb7XOVj
-         6P4CY9Ce1b9WN/mIHixu6FBGCahFVYyT/jR3Myxp13B+6hxM+Mp6x+1qaCuWjHhJavCJ
-         G4ng==
-X-Forwarded-Encrypted: i=1; AJvYcCWOSDv7ec0N5FrtjlhmJQagoXTnXSP0hTRrM8z2X7tOqC9PBflSdcKl10jUqd66tg4YH+N4+vs9ZM4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHp2I7TFVctD7rDw8ByLQ8HXqFMOhDjjhveO4RWrMMxV8OWlez
-	WhF1wZJBbDXWDGc1e0W3SLfGMlYrJmsvxiM+E++43auWLMZSlGOx72GvS2DFaOWQp25Vmwn8nuA
-	lPPCRy4w5W0sYsZ9eAuw1bdMDnUeKFwtqql/Gan5jKNqutJ/xzycUJKzOIit2XvM=
-X-Gm-Gg: ASbGncuDY0dW9M7Gtafi/vzYfwtepAVtMMJWUfPzT6lm9EMvebGwbjCgTB/KLpeDmVS
-	lSidN5dFMWjmLJhS8jxZhxbZulcKrWuP/ukwRrMjXRJyYRhk141VzCofjVZ39Qhwa9gXQN4WfqH
-	aUKmt79UGAs2XRiRKpfSOohgipfX0JwBJbpafdjdjl3rI6216R4VfTtpr6cvExDEEGBYJxhQa4m
-	tuh/zYqLmLmw12wgsrBBxo7KjHiuUMn8hNumSoDtoDbTw1UeDEvdp5O74+ObDEVCFQ2I9+DlrMy
-	4RhFspwpC/Q9+/0dfxlVoOdY8noglpqEe64h+t2YGfagl7FlqzCeFIiGc+fqkyp+QMELvytkutZ
-	IhmeOLjDZuRRyRHzmKnVX
-X-Received: by 2002:a05:620a:4093:b0:7e3:302a:3e9d with SMTP id af79cd13be357-7e342ad54e7mr401314985a.7.1752755217802;
-        Thu, 17 Jul 2025 05:26:57 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEWMwBx+PyOHxTxgnaS5xzRvQae4iwC7dd8Cj0Sms6zoxQGp+IkrMAc/iJ+gLrK8J7XJbyIqA==
-X-Received: by 2002:a05:620a:4093:b0:7e3:302a:3e9d with SMTP id af79cd13be357-7e342ad54e7mr401311985a.7.1752755217290;
-        Thu, 17 Jul 2025 05:26:57 -0700 (PDT)
-Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae6e7ee8d9fsm1336084466b.46.2025.07.17.05.26.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Jul 2025 05:26:56 -0700 (PDT)
-Message-ID: <d25c3f81-38c3-4559-a1e6-7b586c817d57@oss.qualcomm.com>
-Date: Thu, 17 Jul 2025 14:26:52 +0200
+        bh=5Qpm5LUOYW0NbIz9x0SUrjDatoCsm9pFh9pKabVgSEI=;
+        b=QM+/vC+PdcAVOgvZD6YjqBMBhtDe+VwHfYNcF/p9g7aDEgYQA7ppZA44vbi8b4loGn
+         9bp9uruJnqFo2mVKm1qmoux/HrIDv29Vmcvf+PMy9OOVHOjjufbayesnB19DBWKvqU5m
+         kDxaSksSfqBhAH1a8zbeaM9pk3HvGHD0Iu+UOh5bYv/srGV+HupZFNVFwCCRcY6va3FE
+         mpXIqn4LeN1eEVRusyjNAWqil9DrAyxmcfLbi2iEIuncMxusapXfluO6+DoxkMjsNjYm
+         AnrgdnBGzYP8bhZ4hqTKH0cAMamTiauPsQWIeNx8aBNWf/xAcH710GU6sEOqHPfrwjD0
+         1bXw==
+X-Forwarded-Encrypted: i=1; AJvYcCX1FkaEy7vQgrvs0zpCj/4al5K2joL+ga/LNbe7nYGl4S0uffRLUuEXuZL+y4CfXnnntz7yZ5uglMY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxONtXLQzQ138K/5oM0Jnr3GILC0T+Ebj7AUjabpL6oYUQG0PZM
+	SbNOHuB/LqpAKiTPoABYLySvK5hHQi9+PEav1gUg5PITOY5TRjTZHAbbIffX3dNIC6ehLx20P51
+	uUXWRfBUppkWxle9wDRr178jX9JAsCBjlDNlPRJNXLfTuvKOQX3YI3c14ui8z6RI=
+X-Gm-Gg: ASbGncualKR+7S+h2mkqd6GL8TTpMPT4FcYbEz5/mfdHSK1wg3wyxK+6M4zEA2iLkPX
+	rduyf9PqMbc0T7/9zPcAA7UXABsSnFiWIAcmZtGFR0acLuoN2I0TQkxZNPGvJXzMYYCL5amshN/
+	2My9oJ2ljGlo0Yw3YsDZa+40dckwtRdYgrLynG+LuTNi7eiv2ywvPtHHgCRMB2o2mLwXhKdCQzI
+	dS+qkT6F4lDntgcjPIpAwBYPEhLY60cCVgo0Wx1ppU10jQ7iE1Hysg3t81SapIauloPhjU/WI7L
+	iZvAutT2JUI247N9kvEq5cyW4jfkdMUDCcW+wFxtSy6w0no+qECNObVULUTv6imKCJc0bWN6+mt
+	iPgyc96iVeGbAkNDtR6mFJdQRrBcjtpnqE5TtZZSfZ7ibUA8cYJwI
+X-Received: by 2002:a05:620a:192a:b0:7d5:e432:2d91 with SMTP id af79cd13be357-7e342b8a269mr1885030285a.49.1752919027490;
+        Sat, 19 Jul 2025 02:57:07 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHHnT+6uN4gH9tH0aBvRXhyWR+Hb3dJrYiOSss4O6n0KOcwbt7BeYE7VBVIlbXQg40IuxeUxw==
+X-Received: by 2002:a05:620a:192a:b0:7d5:e432:2d91 with SMTP id af79cd13be357-7e342b8a269mr1885026985a.49.1752919026865;
+        Sat, 19 Jul 2025 02:57:06 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-55a31a9b1dfsm653211e87.43.2025.07.19.02.57.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 19 Jul 2025 02:57:05 -0700 (PDT)
+Date: Sat, 19 Jul 2025 12:57:03 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
+Cc: Vinod Koul <vkoul@kernel.org>,
+        Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
+        Viken Dadhaniya <quic_vdadhani@quicinc.com>,
+        Andi Shyti <andi.shyti@kernel.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, quic_vtanuku@quicinc.com
+Subject: Re: [PATCH v6 2/2] i2c: i2c-qcom-geni: Add Block event interrupt
+ support
+Message-ID: <4q3vlydi5xgltd3pcez54alxgrehhfn4pppg47ngwp6y5k7n33@d4d4htntj64k>
+References: <ba7559c8-36b6-4628-8fc4-26121f00abd5@quicinc.com>
+ <w6epbao7dwwx65crst6md4uxi3iivkcj55mhr2ko3z5olezhdl@ffam3xif6tmh>
+ <5ed77f6d-14d7-4b62-9505-ab988fa43bf2@quicinc.com>
+ <644oygj43z2um42tmmldp3feemgzrdoirzfw7pu27k4zi76bwg@wfxbtgqqgh4p>
+ <dc7358a1-ddc5-402e-9024-283f8e46e3b6@quicinc.com>
+ <CAO9ioeVuAO6mYpBSpiTW0jhFRPtkubZ5eEskd1yLBHVdR8_YMA@mail.gmail.com>
+ <1b55d9d4-f3ff-4cd9-8906-5f370da55732@quicinc.com>
+ <28d26c70-178f-413b-b7f8-410c508cfdd7@quicinc.com>
+ <CAO9ioeXBwFYL8q7x7_fHvx5YO+qyAXk4wpnfPrku4iY9yBsk0Q@mail.gmail.com>
+ <cac5e84b-fbdb-47a9-860d-16a7fa4dc773@quicinc.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 14/15] arm64: dts: qcom: Add initial Milos dtsi
-To: Luca Weiss <luca.weiss@fairphone.com>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>, Vinod Koul <vkoul@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Robert Marko <robimarko@gmail.com>,
-        Das Srinagesh <quic_gurus@quicinc.com>,
-        Thomas Gleixner
- <tglx@linutronix.de>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Amit Kucheria <amitk@kernel.org>,
-        Thara Gopinath <thara.gopinath@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-mmc@vger.kernel.org
-References: <20250713-sm7635-fp6-initial-v2-0-e8f9a789505b@fairphone.com>
- <20250713-sm7635-fp6-initial-v2-14-e8f9a789505b@fairphone.com>
- <3e0299ad-766a-4876-912e-438fe2cc856d@oss.qualcomm.com>
- <DBE6TK1KDOTP.IIT72I1LUN5M@fairphone.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <DBE6TK1KDOTP.IIT72I1LUN5M@fairphone.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=dKimmPZb c=1 sm=1 tr=0 ts=6878ec13 cx=c_pps
- a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=7CQSdrXTAAAA:8 a=6H0WHjuAAAAA:8
- a=iHGpd6SFZaqAm2lpoLIA:9 a=QEXdDO2ut3YA:10 a=pJ04lnu7RYOZP9TFuWaZ:22
- a=a-qgeE7W1pNrGK8U0ZQC:22 a=Soq9LBFxuPC4vsCAQt-j:22
-X-Proofpoint-GUID: pe5hXmeGBf4lBgH7j0Toy7UOdsR1G4mT
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzE3MDEwOSBTYWx0ZWRfX2NIFktoL7YSj
- tX+eW6jxF9fyxuElA01eoppZjnHpCxse2lFYapZOw8OPI4FT/02fS3CV1wIuvGcKGxgV8O3H0Ys
- M9s6WCr5/pEmtWoC9Mqqp5N9A3339+OTKqG51lBGBT4YKVibweW+zzv3GhM37+ay9aLlUtIRoQd
- 4Lo1xWqW/xJ9WJ3YWrUgvvHJRrKnfKyk7QroAJg2v3dXfo1/xSTmR3cEqiW424WOrHvIu3e+nvo
- 7ETuWaLPdUcW7QRwDiYbebJx+9e4Bgs7XkZFwBmGSr2nBT40lW//fHIsIEf9nhMdgvPYm/Dw0So
- aR1vd/FRclbFrVUoi/nv4bIpyq/3TuKzBarmhT3/VYEVazjn4EOXKEnKiAq/H/6GYr3EqMs6+Kp
- YF3ngAVWV/P7D9WgM+CGZdJUwGDMji1K/ZwcsvUV1sj/oixS8eMVH9MmlUsaXLPpPrembO/H
-X-Proofpoint-ORIG-GUID: pe5hXmeGBf4lBgH7j0Toy7UOdsR1G4mT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cac5e84b-fbdb-47a9-860d-16a7fa4dc773@quicinc.com>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzE5MDA5OCBTYWx0ZWRfX98f9lzx9ntPF
+ Pz7hivC672hXHa5PTo6kKfmspCRsDO6TuEb/jvb7KS1PiLwEs5FeJ9EnO85A+8P/oZrGwP3ilzA
+ NuC19W5zG4c2SC7iZHgI5td7SsYLLb0zpUqP+GtDfx6GbMSwavYmCH9Om9Jz/HjQgZtJr2kvEVN
+ oC98qvNMg3hQNK7Iok7Mb3dmUkS6uX/Phk8mgYX57tIcKjc5m1WPrE5k8eg3dkjoHHDWNHCp+pD
+ Dg+4e4OFSHdZ7EbIv/7L7BkUxiqhGxSYqJaVGkUV87K07bYB8VJDElfKDC2U8UGlu1kg+SueeVz
+ V5GtOU6i3A860h0P9/GDtOQWW2Wgc3xR3p1UuHIkIVeSbu+asKGXahbUg8uXB54fL/rUDWygnyq
+ mXata7wgEoV0vnlkox/LgHEJlIOTaiTTad9W8V0rhCua40/5dHFtFerbe2yuwlpI14YpecgZ
+X-Proofpoint-ORIG-GUID: MrWKpgjGXCxki6R6XAWO7ROPEdT8D6Lt
+X-Proofpoint-GUID: MrWKpgjGXCxki6R6XAWO7ROPEdT8D6Lt
+X-Authority-Analysis: v=2.4 cv=OPUn3TaB c=1 sm=1 tr=0 ts=687b6bf4 cx=c_pps
+ a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8 a=QKgs9u4qdCnUtHDJ4GcA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=IoWCM6iH3mJn3m4BftBB:22 a=TjNXssC_j7lpFel5tvFf:22
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-07-17_01,2025-07-17_01,2025-03-28_01
+ definitions=2025-07-19_01,2025-07-17_02,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 clxscore=1015 mlxlogscore=999 mlxscore=0 spamscore=0
- adultscore=0 impostorscore=0 priorityscore=1501 suspectscore=0 bulkscore=0
- phishscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2507170109
+ adultscore=0 clxscore=1015 mlxlogscore=999 lowpriorityscore=0 suspectscore=0
+ spamscore=0 mlxscore=0 bulkscore=0 priorityscore=1501 phishscore=0
+ malwarescore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507190098
 
-On 7/17/25 10:29 AM, Luca Weiss wrote:
-> On Mon Jul 14, 2025 at 1:06 PM CEST, Konrad Dybcio wrote:
->> On 7/13/25 10:05 AM, Luca Weiss wrote:
->>> Add a devicetree description for the Milos SoC, which is for example
->>> Snapdragon 7s Gen 3 (SM7635).
->>>
->>> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
->>> ---
-
-[...]
-
->>
->> [...]
->>
->>> +		cpu-map {
->>> +			cluster0 {
->>> +				core0 {
->>> +					cpu = <&cpu0>;
->>> +				};
->>> +
->>> +				core1 {
->>> +					cpu = <&cpu1>;
->>> +				};
->>> +
->>> +				core2 {
->>> +					cpu = <&cpu2>;
->>> +				};
->>> +
->>> +				core3 {
->>> +					cpu = <&cpu3>;
->>> +				};
->>> +			};
->>> +
->>> +			cluster1 {
->>> +				core0 {
->>> +					cpu = <&cpu4>;
->>> +				};
->>> +
->>> +				core1 {
->>> +					cpu = <&cpu5>;
->>> +				};
->>> +
->>> +				core2 {
->>> +					cpu = <&cpu6>;
->>> +				};
->>> +			};
->>> +
->>> +			cluster2 {
->>> +				core0 {
->>> +					cpu = <&cpu7>;
->>> +				};
->>> +			};
->>> +		};
->>
->> I'm getting mixed information about the core topology.. 
->>
->> What does dmesg say wrt this line?
->>
->> CPU%u: Booted secondary processor 0x%010lx [0x%08x]\n
+On Mon, Jul 07, 2025 at 09:58:30PM +0530, Jyothi Kumar Seerapu wrote:
 > 
-> [    0.003570] CPU1: Booted secondary processor 0x0000000100 [0x410fd801]
-> [    0.004738] CPU2: Booted secondary processor 0x0000000200 [0x410fd801]
-> [    0.005783] CPU3: Booted secondary processor 0x0000000300 [0x410fd801]
-> [    0.007206] CPU4: Booted secondary processor 0x0000000400 [0x410fd811]
-> [    0.008206] CPU5: Booted secondary processor 0x0000000500 [0x410fd811]
-> [    0.009073] CPU6: Booted secondary processor 0x0000000600 [0x410fd811]
-> [    0.010406] CPU7: Booted secondary processor 0x0000000700 [0x410fd811]
-
-Okay, so the cache topology that I can make out of docs matches your dt..
-
-As for the CPU map, we tended to simply throw all cores that are in
-the same "DSU cluster" [1] together, represented as a single CPU cluster.
-This is not what other vendors do though, it seems. And downstream has
-the same silver/gold/prime split as you did above.
-
-Looking at some docs, it seems like the prime core shares the cache
-bridge with the gold cluster so I'm not sure how separate it really is.
-
-There was a time when the MIDR_EL1 register would be more helpful, but
-according to [2], it would mean that each core is in its own cluster..
-For reference exynos2200.dtsi seems to have the very same MPIDRs (though
-with cores that are a little older). One would expect the small cores
-that share the L2 to be within the same cluster [3].
-
-All in all, I don't know what to tell you for sure..
-
-[1] https://developer.arm.com/documentation/100453/0401/Technical-overview/Components?lang=en
-[2] https://developer.arm.com/documentation/102517/0004/AArch64-registers/AArch64-Identification-registers-summary/MPIDR-EL1--Multiprocessor-Affinity-Register?lang=en
-[3] https://developer.arm.com/documentation/102517/0004/The-Cortex-A520--core/Cortex-A520--core-configuration-options?lang=en
-
-[...]
-
->> Does access control disallow accessing these on your prod-fused
->> device?
 > 
-> Hm, taking another look, this property should probably be moved to
-> device dts.
+> On 7/4/2025 1:11 AM, Dmitry Baryshkov wrote:
+> > On Thu, 3 Jul 2025 at 15:51, Jyothi Kumar Seerapu
+> > <quic_jseerapu@quicinc.com> wrote:
+> > > 
+> > > 
+> > > 
+> > > On 6/19/2025 9:46 PM, Jyothi Kumar Seerapu wrote:
+> > > > 
+> > > > 
+> > > > On 6/18/2025 1:02 AM, Dmitry Baryshkov wrote:
+> > > > > On Tue, 17 Jun 2025 at 17:11, Jyothi Kumar Seerapu
+> > > > > <quic_jseerapu@quicinc.com> wrote:
+> > > > > > 
+> > > > > > 
+> > > > > > 
+> > > > > > On 5/30/2025 10:12 PM, Dmitry Baryshkov wrote:
+> > > > > > > On Fri, May 30, 2025 at 07:36:05PM +0530, Jyothi Kumar Seerapu wrote:
+> > > > > > > > 
+> > > > > > > > 
+> > > > > > > > On 5/21/2025 6:15 PM, Dmitry Baryshkov wrote:
+> > > > > > > > > On Wed, May 21, 2025 at 03:58:48PM +0530, Jyothi Kumar Seerapu wrote:
+> > > > > > > > > > 
+> > > > > > > > > > 
+> > > > > > > > > > On 5/9/2025 9:31 PM, Dmitry Baryshkov wrote:
+> > > > > > > > > > > On 09/05/2025 09:18, Jyothi Kumar Seerapu wrote:
+> > > > > > > > > > > > Hi Dimitry, Thanks for providing the review comments.
+> > > > > > > > > > > > 
+> > > > > > > > > > > > On 5/6/2025 5:16 PM, Dmitry Baryshkov wrote:
+> > > > > > > > > > > > > On Tue, May 06, 2025 at 04:48:44PM +0530, Jyothi Kumar Seerapu
+> > > > > > > > > > > > > wrote:
+> > > > > > > > > > > > > > The I2C driver gets an interrupt upon transfer completion.
+> > > > > > > > > > > > > > When handling multiple messages in a single transfer, this
+> > > > > > > > > > > > > > results in N interrupts for N messages, leading to significant
+> > > > > > > > > > > > > > software interrupt latency.
+> > > > > > > > > > > > > > 
+> > > > > > > > > > > > > > To mitigate this latency, utilize Block Event Interrupt (BEI)
+> > > > > > > > > > > > > > mechanism. Enabling BEI instructs the hardware to prevent
+> > > > > > > > > > > > > > interrupt
+> > > > > > > > > > > > > > generation and BEI is disabled when an interrupt is necessary.
+> > > > > > > > > > > > > > 
+> > > > > > > > > > > > > > Large I2C transfer can be divided into chunks of 8 messages
+> > > > > > > > > > > > > > internally.
+> > > > > > > > > > > > > > Interrupts are not expected for the first 7 message
+> > > > > > > > > > > > > > completions, only
+> > > > > > > > > > > > > > the last message triggers an interrupt, indicating the
+> > > > > > > > > > > > > > completion of
+> > > > > > > > > > > > > > 8 messages. This BEI mechanism enhances overall transfer
+> > > > > > > > > > > > > > efficiency.
+> > > > > > > > > > > > > 
+> > > > > > > > > > > > > Why do you need this complexity? Is it possible to set the
+> > > > > > > > > > > > > DMA_PREP_INTERRUPT flag on the last message in the transfer?
+> > > > > > > > > > > > 
+> > > > > > > > > > > > If i undertsand correctly, the suggestion is to get the single
+> > > > > > > > > > > > intetrrupt for last i2c message only.
+> > > > > > > > > > > > 
+> > > > > > > > > > > > But With this approach, we can't handle large number of i2c
+> > > > > > > > > > > > messages
+> > > > > > > > > > > > in the transfer.
+> > > > > > > > > > > > 
+> > > > > > > > > > > > In GPI driver, number of max TREs support is harcoded to 64
+> > > > > > > > > > > > (#define
+> > > > > > > > > > > > CHAN_TRES   64) and for I2C message, we need Config TRE, GO TRE
+> > > > > > > > > > > > and
+> > > > > > > > > > > > DMA TREs. So, the avilable TREs are not sufficient to handle
+> > > > > > > > > > > > all the
+> > > > > > > > > > > > N messages.
+> > > > > > > > > > > 
+> > > > > > > > > > > It sounds like a DMA driver issue. In other words, the DMA
+> > > > > > > > > > > driver can
+> > > > > > > > > > > know that it must issue an interrupt before exausting 64 TREs in
+> > > > > > > > > > > order
+> > > > > > > > > > > to
+> > > > > > > > > > > 
+> > > > > > > > > > > > 
+> > > > > > > > > > > > Here, the plan is to queue i2c messages (QCOM_I2C_GPI_MAX_NUM_MSGS
+> > > > > > > > > > > > or 'num' incase for less messsages), process and unmap/free
+> > > > > > > > > > > > upon the
+> > > > > > > > > > > > interrupt based on QCOM_I2C_GPI_NUM_MSGS_PER_IRQ.
+> > > > > > > > > > > 
+> > > > > > > > > > > Why? This is some random value which has no connection with
+> > > > > > > > > > > CHAN_TREs.
+> > > > > > > > > > > Also, what if one of the platforms get a 'liter' GPI which
+> > > > > > > > > > > supports less
+> > > > > > > > > > > TREs in a single run? Or a super-premium platform which can use 256
+> > > > > > > > > > > TREs? Please don't workaround issues from one driver in another
+> > > > > > > > > > > one.
+> > > > > > > > > > 
+> > > > > > > > > > We are trying to utilize the existing CHAN_TRES mentioned in the
+> > > > > > > > > > GPI driver.
+> > > > > > > > > > With the following approach, the GPI hardware can process N
+> > > > > > > > > > number of I2C
+> > > > > > > > > > messages, thereby improving throughput and transfer efficiency.
+> > > > > > > > > > 
+> > > > > > > > > > The main design consideration for using the block event interrupt
+> > > > > > > > > > is as
+> > > > > > > > > > follows:
+> > > > > > > > > > 
+> > > > > > > > > > Allow the hardware to process the TREs (I2C messages), while the
+> > > > > > > > > > software
+> > > > > > > > > > concurrently prepares the next set of TREs to be submitted to the
+> > > > > > > > > > hardware.
+> > > > > > > > > > Once the TREs are processed, they can be freed, enabling the
+> > > > > > > > > > software to
+> > > > > > > > > > queue new TREs. This approach enhances overall optimization.
+> > > > > > > > > > 
+> > > > > > > > > > Please let me know if you have any questions, concerns, or
+> > > > > > > > > > suggestions.
+> > > > > > > > > 
+> > > > > > > > > The question was why do you limit that to
+> > > > > > > > > QCOM_I2C_GPI_NUM_MSGS_PER_IRQ.
+> > > > > > > > > What is the reason for that limit, etc. If you think about it, The
+> > > > > > > > > GENI
+> > > > > > > > > / I2C doesn't impose any limit on the number of messages processed in
+> > > > > > > > > one go (if I understand it correctly). Instead the limit comes
+> > > > > > > > > from the
+> > > > > > > > > GPI DMA driver. As such, please don't add extra 'handling' to the I2C
+> > > > > > > > > driver. Make GPI DMA driver responsible for saying 'no more for now',
+> > > > > > > > > then I2C driver can setup add an interrupt flag and proceed with
+> > > > > > > > > submitting next messages, etc.
+> > > > > > > > > 
+> > > > > > > > 
+> > > > > > > > For I2C messages, we need to prepare TREs for Config, Go and DMAs.
+> > > > > > > > However,
+> > > > > > > > if a large number of I2C messages are submitted then may may run
+> > > > > > > > out of
+> > > > > > > > memory for serving the TREs. The GPI channel supports a maximum of
+> > > > > > > > 64 TREs,
+> > > > > > > > which is insufficient to serve 32 or even 16 I2C messages
+> > > > > > > > concurrently,
+> > > > > > > > given the multiple TREs required per message.
+> > > > > > > > 
+> > > > > > > > To address this limitation, a strategy has been implemented to
+> > > > > > > > manage how
+> > > > > > > > many messages can be queued and how memory is recycled. The constant
+> > > > > > > > QCOM_I2C_GPI_MAX_NUM_MSGS is set to 16, defining the upper limit of
+> > > > > > > > messages that can be queued at once. Additionally,
+> > > > > > > > QCOM_I2C_GPI_NUM_MSGS_PER_IRQ is set to 8, meaning that
+> > > > > > > > half of the queued messages are expected to be freed or deallocated
+> > > > > > > > per
+> > > > > > > > interrupt.
+> > > > > > > > This approach ensures that the driver can efficiently manage TRE
+> > > > > > > > resources
+> > > > > > > > and continue queuing new I2C messages without exhausting memory.
+> > > > > > > > > I really don't see a reason for additional complicated handling in
+> > > > > > > > > the
+> > > > > > > > > geni driver that you've implemented. Maybe I misunderstand
+> > > > > > > > > something. In
+> > > > > > > > > such a case it usually means that you have to explain the design
+> > > > > > > > > in the
+> > > > > > > > > commit message / in-code comments.
+> > > > > > > > > 
+> > > > > > > > 
+> > > > > > > > 
+> > > > > > > > The I2C Geni driver is designed to prepare and submit descriptors
+> > > > > > > > to the GPI
+> > > > > > > > driver one message at a time.
+> > > > > > > > As a result, the GPI driver does not have visibility into the current
+> > > > > > > > message index or the total number of I2C messages in a transfer.
+> > > > > > > > This lack
+> > > > > > > > of context makes it challenging to determine when to set the block
+> > > > > > > > event
+> > > > > > > > interrupt, which is typically used to signal the completion of a
+> > > > > > > > batch of
+> > > > > > > > messages.
+> > > > > > > > 
+> > > > > > > > So, the responsibility for deciding when to set the BEI should lie
+> > > > > > > > with the
+> > > > > > > > I2C driver.
+> > > > > > > > 
+> > > > > > > > If this approach is acceptable, I will proceed with updating the
+> > > > > > > > relevant
+> > > > > > > > details in the commit message.
+> > > > > > > > 
+> > > > > > > > Please let me know if you have any concerns or suggestions.
+> > > > > > > 
+> > > > > > Hi Dmitry, Sorry for the delayed response, and thank you for the
+> > > > > > suggestions.
+> > > > > > 
+> > > > > > > - Make gpi_prep_slave_sg() return NULL if flags don't have
+> > > > > > >      DMA_PREP_INTERRUPT flag and there are no 3 empty TREs for the
+> > > > > > >      interrupt-enabled transfer.
+> > > > > > "there are no 3 empty TREs for the interrupt-enabled transfer."
+> > > > > > Could you please help me understand this a bit better?
+> > > > > 
+> > > > > In the GPI driver you know how many TREs are available. In
+> > > > > gpi_prep_slave_sg() you can check that and return an error if there
+> > > > > are not enough TREs available.
+> > > > > 
+> > > > > > > 
+> > > > > > > - If I2C driver gets NULL from dmaengine_prep_slave_single(), retry
+> > > > > > >      again, adding DMA_PREP_INTERRUPT. Make sure that the last one
+> > > > > > > always
+> > > > > > >      gets DMA_PREP_INTERRUPT.
+> > > > > > Does this mean we need to proceed to the next I2C message and ensure
+> > > > > > that the DMA_PREP_INTERRUPT flag is set for the last I2C message in each
+> > > > > > chunk? And then, should we submit the chunk of messages to the GSI
+> > > > > > hardware for processing?
+> > > > > 
+> > > > > No. You don't have to peek at the next I2C message. This all concerns
+> > > > > the current I2C message. The only point where you have to worry is to
+> > > > > explicitly set the flag for the last message.
+> > > > > 
+> > > > > > 
+> > > > > > > 
+> > > > > > > - In geni_i2c_gpi_xfer() split the loop to submit messages until you
+> > > > > > >      can, then call wait_for_completion_timeout() and then
+> > > > > > >      geni_i2c_gpi_unmap() for submitted messages, then continue with
+> > > > > > > a new
+> > > > > > >      portion of messages.
+> > > > > > Since the GPI channel supports a maximum of 64 TREs, should we consider
+> > > > > > submitting a smaller number of predefined messages — perhaps fewer than
+> > > > > > 32, such as 16?
+> > > > > 
+> > > > > Why? Just submit messages until they fit, then flush the DMA async
+> > > > > channel.
+> > > > > 
+> > > > > > This is because handling 32 messages would require one TRE for config
+> > > > > > and 64 TREs for the Go and DMA preparation steps, which exceeds the
+> > > > > > channel's TRE capacity of 64.
+> > > > > > 
+> > > > > > We designed the approach to submit a portion of the messages — for
+> > > > > > example, 16 at a time. Once 8 messages are processed and freed, the
+> > > > > > hardware can continue processing the TREs, while the software
+> > > > > > simultaneously prepares the next set of TREs. This parallelism helps in
+> > > > > > efficiently utilizing the hardware and enhances overall system
+> > > > > > optimization.
+> > > > > 
+> > > > > 
+> > > > > And this overcomplicates the driver and introduces artificial
+> > > > > limitations which need explanation. Please fix it in a simple way
+> > > > > first. Then you can e.g. implement the watermark at the half of the
+> > > > > GPI channel depth and request DMA_PREP_INTERRUPT to be set in the
+> > > > > middle of the full sequence, allowing it to be used asynchronously in
+> > > > > the background.
+> > > > > 
+> > > > 
+> > > > Okay, will review it. Thanks.
+> > > > 
+> > > > 
+> > > 
+> > > Hi Dmitry,
+> > > 
+> > > Can you please check and confirm the approach to follow is something
+> > > like the pseudo code mentioned below:
+> > 
+> > Yes, this is what I've had in mind.
 > 
-> Downstream has this in volcano.dtsi but volcano6i.dtsi (QCM6690?) and
-> volcano6ip.dtsi (QCS6690?) have a /delete-property/ for this, because
-> they have PCIe available.
+> So, Apart from the changes related to "submitting I2C messages until they
+> fit" and "unmapping all processed I2C messages together", the rest of the
+> code looks remains the same as in the v6 patch ?
+> Also, in the GPI driver, we need to add logic to retrieve the number of
+> available TREs.
 > 
-> I don't think this has anything to do with secure boot fuses, but I
-> don't think I have tried enabling these clocks on my SB-off prototype.
+> I have a concern regarding throughput and achieving parallelism between
+> software and hardware processing with this new approach. Since we need to
+> unmap all processed messages together, the software cannot queue the next
+> set of TREs while the hardware is still processing the current ones.
 
-I wouldn't be so sure about sb-off being necessarily a difference, but
-I wouldn't object to a smoke test either ;)
+Does that warrant the over-complexity of the driver or close-coupling of
+I2C and GPE drivers?
 
-[...]
+The I2C is a slow bus and it is not expected to be used for
+high-throughput data.
 
->>> +			interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>,
->>
->> pdc 26
 > 
-> You mean replace <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH> with
-> <&pdc 26 IRQ_TYPE_LEVEL_HIGH> (plus interrupts-extended)?
+> As I mentioned earlier, the previous approach allowed partial unmapping
+> where half of the messages processed by the hardware could be
+> freed/unmapped. This enabled the hardware to continue processing the
+> remaining TREs while the software simultaneously prepared the next batch.
+> This parallelism helped in better hardware utilization and improved overall
+> system performance.
 
-Yes
+Measurements / values / impact?
 
-> I assume you got this from internal docs, but just to mention,
-> volcano-thermal.dtsi contains GIC_SPI 506 (+ 507 for tsens1).
+> 
+> Could you please confirm if can go with the similar approach of unmap the
+> processed TREs based on a fixed threshold or constant value, instead of
+> unmapping them all at once?
 
-Right, I found it in the docs (but we most likely want the device to
-wake up from sleep and try to power off if it's too hot/cold)
+I'd still say, that's a bad idea. Please stay within the boundaries of
+the DMA API.
 
-Konrad
+> > 
+> > > 
+> > > GPI driver:
+> > > In gpi_prep_slave_sg() function,
+> > > 
+> > > if (!(flags & DMA_PREP_INTERRUPT) && !gpi_available_tres(chan))
+> > >          return NULL;
+> > > 
+> > > 
+> > > I2C GENI driver:
+> > > 
+> > > for (i = 0; i < num; i++)
+> > > {
+> > >      /* Always set interrupt for the last message */
+> > >      if (i == num_msgs - 1)
+> > >          flags |= DMA_PREP_INTERRUPT;
+> > > 
+> > > 
+> > >      desc = dmaengine_prep_slave_single(chan, dma_addr, len, dir, flags);
+> > >      if (!desc && !(flags & DMA_PREP_INTERRUPT)) {
+> > >            /* Retry with interrupt if not enough TREs */
+> > >            flags |= DMA_PREP_INTERRUPT;
+> > >            desc = dmaengine_prep_slave_single(chan, dma_addr, len, dir,   flags);
+> > >      }
+> > > 
+> > > 
+> > >      if (!desc)
+> > >          break;
+> > > 
+> > > 
+> > >       dmaengine_submit(desc);
+> > >       msg_idx++;
+> > > }
+> > > 
+> > > dma_async_issue_pending(chan));
+> > > 
+> > > time_left = wait_for_completion_timeout(&gi2c->done, XFER_TIMEOUT);
+> > > if (!time_left)
+> > >          return -ETIMEDOUT;
+> > > 
+> > > Now Invoke "geni_i2c_gpi_unmap" for unmapping all submitted I2C messages.
+> > > 
+> > > 
+> > > Thanks,
+> > > JyothiKumar
+> > > 
+> > > 
+> > > 
+> > 
+> > 
+> 
+
+-- 
+With best wishes
+Dmitry
 

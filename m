@@ -1,88 +1,105 @@
-Return-Path: <dmaengine+bounces-5844-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5845-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 164C7B0ED6D
-	for <lists+dmaengine@lfdr.de>; Wed, 23 Jul 2025 10:39:32 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F728B0F17E
+	for <lists+dmaengine@lfdr.de>; Wed, 23 Jul 2025 13:41:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EA2B0188C244
-	for <lists+dmaengine@lfdr.de>; Wed, 23 Jul 2025 08:39:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EE6BB18958E2
+	for <lists+dmaengine@lfdr.de>; Wed, 23 Jul 2025 11:41:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23F08280324;
-	Wed, 23 Jul 2025 08:39:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFE8E230268;
+	Wed, 23 Jul 2025 11:41:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jx7G0ZLc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pEHQvoW/"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4A8727FB1F;
-	Wed, 23 Jul 2025 08:39:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D08D2E4257
+	for <dmaengine@vger.kernel.org>; Wed, 23 Jul 2025 11:41:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753259965; cv=none; b=u7LGnjBm+nEu7xlIWeUW5oG3VdMoYY0D0ba40wG0j03+JNFcmfmET4OaRnp5byt7ztqI2vh7AyAuireegXiM267ro4IOkYPR/3xXoaepUC5n4YSXF5rsE9isGiNYMuj4D3dr/gbNszmAOJ3ZTgh7hRs6T0XM16yxkGKHLOUjtGU=
+	t=1753270897; cv=none; b=BmnMW3ufkwlZBv93Y1/oweS6V/9iSXvs6dCx4aOXJ9FAojgf4OOryjEauxgGfU6reMAJVVGcRQytSwKJaqBx701/bfNAd7zD6gCfwtMTJNaa+AGSatcBHOmL4U8hESv2vG6qXxq1hxp+xJPceJ5E9gz3F6CbVnqbq2fu3YV3kKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753259965; c=relaxed/simple;
-	bh=40/39jNWpR02zi+1YCzS0Yt7kRfWfNcrgO/p13pf4oQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=aRNx+De7s5/eh1B1yBqxApoecZF05hOYIZDQGqmHnDDYshelNVQfqVi3a558Cfn9AONn5umwjVu7iPBk9d9Z2jwp8b/VY4hK0KB494OjjI4Ji8EYYkeQcz/lkNo7pEQk5GQnsSEBgBNzmoGAWk4fbjHm7cPKD0arXqbD4tGwt/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jx7G0ZLc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA0EDC4CEE7;
-	Wed, 23 Jul 2025 08:39:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753259964;
-	bh=40/39jNWpR02zi+1YCzS0Yt7kRfWfNcrgO/p13pf4oQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=jx7G0ZLcQgFNF3ID5+WoRfdJ0/VnqdgixU/vOpXWSzkDr38afhwveEi50Wk/V7rzB
-	 G0zYV/kzhZvALf2nCNkagjKmk7uCJKcGBP/SvFQYFtelQORT/JqBz8wkBzp6TOdtDX
-	 0eJ9QFaouvAU7gIQxPxaZAo0QwaFD0WhaG4doWSMnnWHBFov1JtWHCopKZUI9XVvTh
-	 lCzqAoYty74Q8N8StWcgqy/geXz/uyUQSxcJ75Wj7Iw0Z01dcITZnEjotZ+h1hGMlx
-	 QUS+C+3ojwVVeAWIkVnkyYlNwKqkE68pfnIC1EExylfsEqVOaQvAznfgb3f1LDQFXe
-	 Zk3ca9zWN9eBw==
-From: Lee Jones <lee@kernel.org>
-To: linux@armlinux.org.uk, nicolas.ferre@microchip.com, 
- alexandre.belloni@bootlin.com, claudiu.beznea@tuxon.dev, 
- catalin.marinas@arm.com, will@kernel.org, olivia@selenic.com, 
- herbert@gondor.apana.org.au, davem@davemloft.net, vkoul@kernel.org, 
- andi.shyti@kernel.org, lee@kernel.org, broonie@kernel.org, 
- gregkh@linuxfoundation.org, jirislaby@kernel.org, arnd@kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org, 
- linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org, 
- linux-serial@vger.kernel.org, o.rempel@pengutronix.de, 
- daniel.machon@microchip.com, Robert Marko <robert.marko@sartura.hr>
-Cc: luka.perkov@sartura.hr
-In-Reply-To: <20250702183856.1727275-5-robert.marko@sartura.hr>
-References: <20250702183856.1727275-5-robert.marko@sartura.hr>
-Subject: Re: (subset) [PATCH v8 04/10] mfd: at91-usart: Make it selectable
- for ARCH_MICROCHIP
-Message-Id: <175325995961.1695705.8338983998485530536.b4-ty@kernel.org>
-Date: Wed, 23 Jul 2025 09:39:19 +0100
+	s=arc-20240116; t=1753270897; c=relaxed/simple;
+	bh=Nw9fysjUFNBnPqpBPahG5IhvqPdfXTNqHeGEK7bkjVI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kq26rMM2wTxPs2BIyLzkEC2FnfnbZL2WMrIDngH/msDp2JuRrpGKE8n4q72yoCGlWmqVE7xEhjcYS+u93gZiwvtFpv1sonWo2jfwlepAKH3o3NiEQD+O8aFv9bjPDsBvmYFzTeTFNZwp90k1tIHgfnYDVFVtNBfJSht0PExPY7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pEHQvoW/; arc=none smtp.client-ip=209.85.128.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-7183fd8c4c7so71651047b3.3
+        for <dmaengine@vger.kernel.org>; Wed, 23 Jul 2025 04:41:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1753270895; x=1753875695; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Nw9fysjUFNBnPqpBPahG5IhvqPdfXTNqHeGEK7bkjVI=;
+        b=pEHQvoW/Jq3qdgWeXp4QgxCT6CcBzKrDrEu6RtHSxdNNzc29NiuQhDW1WVk38c8idu
+         bx87q0BNnbJyfbni5t0mEg1mmAl1e8PNISVLtUIyYk3nYXajUsYFfnuOKhAJaV5myQ7a
+         ieGzYAhuZo94Jqv48UTxG2XJNuf0lm868NsApneYVbPo2J44lANdUEtDD3gRrEWJbdUU
+         f3107g46aaCseLHU4Mwp/TaNHFPp6GpaozNG23G2cqqDXGD3tS5LLPUSxoB8hrKfvypv
+         rEwLnLF6pm0DnJdXyGCR0Stgm3hHzNLszAr0cr2xJ+IOIj7Y6t0DnK19cnzPeAnIBdN1
+         4h4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753270895; x=1753875695;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Nw9fysjUFNBnPqpBPahG5IhvqPdfXTNqHeGEK7bkjVI=;
+        b=O1CeETvMwjRUhJRFcmXe7yLand0JuHWBNKsOx+sVflEBi3PnasznVQQFoq+hnRjF18
+         IFRxpvQwgHjTQg3l3Q2zP431aAEdgz23MB7HKuUoHMyaZv0CbSdYD2/LVPhPl1DKjEGd
+         XzYPX6RIxD1hxWqpu87ddXg6GdPFVBTNVW/W6oIs/9R4+pEvi7ZB4uq2JHvIY0P8rbbw
+         gYUeQ/FeqDBKfNzzZfZHhFX9DauYqWeJ96yqdDoskyS2L+IMIhJrjLuLKaSUvKJAEIYH
+         00LhpqHMwrCDEhJhE5SH7jTbmuPbh4tNIJOI4R3skCEWbmubzsvkSkh6/4xPMeUATTme
+         fsWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWZpLvn+w/M1gOlARIH8nFczu/tjUaJdGxqLcLJAM7VnN/LS1adR33H+bpO8rHu9VRlz8k7Vcs1kwE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYEdxo0PesmJMrrE2t4xCOw4RK+mS89lSQjPYaU3pdInqiGWo+
+	C/16N+aZ+WGIAeDlsVcxf60Zlb6sglj4G8MZKL6ADS+wsfPmDVQWm2WKZ+oX7FMf8zbMD5gvKrI
+	F4HyzVUqLcAw4JHEvBk4HZyc7VnT58bYXhpdzhXzDgg==
+X-Gm-Gg: ASbGncuXtdE5TL9bjnOlCsnPtr4hXhANXyY6kjLpPfCgSYkJWi+76dx7UBTpvxZa92+
+	ojShdw+W9A+avok79L91J3tUah9DRg+Vn1L0ZnAuyBcs/QZxrHAdSy43iGQRHZFXsVijgNyK1wx
+	CKqusBcT8Sw1OEPuzatd6/1gheGkQ7JAiE4Uzy5VfXQDlJ6NzK9KZjmXsftx2qPjVZnfdNu+0zC
+	2gb7w4=
+X-Google-Smtp-Source: AGHT+IGWcKhCVXkg1msIEVmGS/ymhKW5BdJC9jUDzoeyLepuP7cjRQ71PwnfgzcSt8CZwmzRfOwOfwnqwnX6XBuUIMo=
+X-Received: by 2002:a05:690c:3347:b0:70e:1874:b914 with SMTP id
+ 00721157ae682-719b4133d40mr34871357b3.9.1753270895185; Wed, 23 Jul 2025
+ 04:41:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.15-dev-c81fc
+References: <20250720022129.437094-1-yury.norov@gmail.com>
+In-Reply-To: <20250720022129.437094-1-yury.norov@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 23 Jul 2025 13:41:21 +0200
+X-Gm-Features: Ac12FXy4Emm7GHQ8mjHs2JHTJya8z2HMRXPPehvvRCGdC2DlowB6xUhZ-7S2d3A
+Message-ID: <CACRpkdYuXuTx_JG_7Zd666v_5Axv2jWV9OYJO15DQEZ8AkftQg@mail.gmail.com>
+Subject: Re: [PATCH] ste_dma40: simplify d40_handle_interrupt()
+To: Yury Norov <yury.norov@gmail.com>
+Cc: Vinod Koul <vkoul@kernel.org>, linux-arm-kernel@lists.infradead.org, 
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 02 Jul 2025 20:36:02 +0200, Robert Marko wrote:
-> LAN969x uses the Atmel USART, so make it selectable for ARCH_MICROCHIP to
-> avoid needing to update depends in future if other Microchip SoC-s use it
-> as well.
-> 
-> 
+On Sun, Jul 20, 2025 at 4:21=E2=80=AFAM Yury Norov <yury.norov@gmail.com> w=
+rote:
 
-Applied, thanks!
+> From: Yury Norov (NVIDIA) <yury.norov@gmail.com>
+>
+> Use for_each_set_bit() iterator and drop housekeeping code.
+>
+> Signed-off-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
 
-[04/10] mfd: at91-usart: Make it selectable for ARCH_MICROCHIP
-        commit: ef37a1e2485724f5287db1584d8aba48e8ba3f41
+Neat, looks correct!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
---
-Lee Jones [李琼斯]
-
+Yours,
+Linus Walleij
 

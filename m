@@ -1,118 +1,130 @@
-Return-Path: <dmaengine+bounces-5841-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5842-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EE070B0EB8D
-	for <lists+dmaengine@lfdr.de>; Wed, 23 Jul 2025 09:15:34 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 06CAFB0EBD4
+	for <lists+dmaengine@lfdr.de>; Wed, 23 Jul 2025 09:24:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CEA511887893
-	for <lists+dmaengine@lfdr.de>; Wed, 23 Jul 2025 07:15:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A50F73A6C3E
+	for <lists+dmaengine@lfdr.de>; Wed, 23 Jul 2025 07:21:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DFFC272E42;
-	Wed, 23 Jul 2025 07:15:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1E0027145E;
+	Wed, 23 Jul 2025 07:20:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ryz3mPKK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eURqjYdv"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3926E25C833;
-	Wed, 23 Jul 2025 07:15:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA35E2701D1;
+	Wed, 23 Jul 2025 07:20:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753254930; cv=none; b=mVosIi6q0vdqEy75zIuFQIKjFyKkV205OxalL2sYVsj+8pOufjfTTWhGP5QbVOOQqNVNS1UaplMvAb735IkTRAv+X+yp0Lh5+k7NvDOcMLR6c7LRih/2y9L+TKhZ7TRt6s3mvqHIjV9io864KfYzZxES6rr+JyUVhkTBl6v/MO4=
+	t=1753255238; cv=none; b=u5+Cb6fTczY6v2kzvfViDOwdSe0km9hgOlO01o3mDUaWmQ5y9g03FGjcAxWlT5LuY3PdzOWq7kRblfizrbf+wzqd7B3a0Mrvgph2S5wD/t4xrME83lpPiPnMwMdodhAYzmD2xl3GiHlx0JMYlc4zImsiakPpfPmioRvKJqgnN2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753254930; c=relaxed/simple;
-	bh=aoQqriX7CooIPgMf9W7uo25rnfymCO1WAzndg4imAxs=;
+	s=arc-20240116; t=1753255238; c=relaxed/simple;
+	bh=Vxz6oiIqIgOHJzowDL4yIofRLk/aDZkZ6xpVY+bDf4M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F1L7qOpc3qCa3/ll8FLToB+t2etZMtHvpNsstK3C6IG0KyRqbox5AfNsdea6n3DGAMkKtkxZ/5bCeIQR+g8FsAG4S0Ub9tWFumdhL6pLbi0c9w2lY+HpNSLj1UdGJpkFEtHxoqA/YPb6dw0gi55oa8TRRxyxHydIma9CTJAuRqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ryz3mPKK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FEA7C4CEE7;
-	Wed, 23 Jul 2025 07:15:28 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=aHprPHiBwi4slUYU+x6jjxfBptTnKkRVPt4+B/DC8hZvCliYYif6GKuctzo3BeT51tRmGCROw/XZbwDwU/E3wrR8OIlDtK2i1UKuerTt0S2bs4s60tPQWopaA3Hhy7PlDKGbLiPJr+ueySiQkX9I/GwnfyiTO0z8A7b3MSCSDLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eURqjYdv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF5FAC4CEF7;
+	Wed, 23 Jul 2025 07:20:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753254929;
-	bh=aoQqriX7CooIPgMf9W7uo25rnfymCO1WAzndg4imAxs=;
+	s=k20201202; t=1753255238;
+	bh=Vxz6oiIqIgOHJzowDL4yIofRLk/aDZkZ6xpVY+bDf4M=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ryz3mPKKqpMYfFdxtdLwsLUNADzvjjWOQj9xApvRL/oZjV4pGyNB2CcAVql1LM8gG
-	 1OF9dXIptw4qYkMUmgtx+r9Vp/wvKnGmqsj/PV77SOobPPfX7QQQ3jHGzTw3TdaEqp
-	 k9Z9zcaC1+9uZRm3Llky+X0MyyzfgEK2GILXMURVCyZV6vZAUrBZSrsyoTi2S0Supq
-	 1n0X1Y8POOkozkFMTU5KAB9sxAqzQQZRkqNSJpjrGJIA8ME/leaiOBYrfGni7yGH4K
-	 jcZ0K4UK0HtJs8RpnVR3qiQEqUeIoTK9cVtc9oXU7KT5bDUpV4tGlAvAI5jKFzuvm2
-	 crjsI7K7CdRXQ==
-Date: Wed, 23 Jul 2025 12:45:25 +0530
+	b=eURqjYdvLvvTzLu+pTAML/z+NRsJAn0RGdSfgKc8Af05VWhEfCpct55SwQtYBYtNw
+	 Yh9m8aI1LopqogjprRVmcRiXfPtqN49fAGVqOsZ5f0WsM4G+2w0qrUcapEhG0bPUuc
+	 +uh58UcKyd5EPzAr6G6yG20kw8we7zqpwRVajXN++53raEtduqV7HY21nVyCOMri/2
+	 0EHMbBc2vd6P4DMm+9G7lmT7VgAoMb6pcPHIX6KOccxqTocDddlDiyOcKXm0BXSAko
+	 vX/WsMdwmqLdL6COZleQ8xcK61F92S4FG072I+7bC49h3Uit39VWURZttiSw3rC2uV
+	 HAA4gPDoa5SXQ==
+Date: Wed, 23 Jul 2025 12:50:34 +0530
 From: Vinod Koul <vkoul@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>,
-	Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
-	Viken Dadhaniya <quic_vdadhani@quicinc.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, quic_vtanuku@quicinc.com
-Subject: Re: [PATCH v6 2/2] i2c: i2c-qcom-geni: Add Block event interrupt
- support
-Message-ID: <aICMDROkyjzBZFHo@vaman>
-References: <644oygj43z2um42tmmldp3feemgzrdoirzfw7pu27k4zi76bwg@wfxbtgqqgh4p>
- <dc7358a1-ddc5-402e-9024-283f8e46e3b6@quicinc.com>
- <CAO9ioeVuAO6mYpBSpiTW0jhFRPtkubZ5eEskd1yLBHVdR8_YMA@mail.gmail.com>
- <1b55d9d4-f3ff-4cd9-8906-5f370da55732@quicinc.com>
- <28d26c70-178f-413b-b7f8-410c508cfdd7@quicinc.com>
- <CAO9ioeXBwFYL8q7x7_fHvx5YO+qyAXk4wpnfPrku4iY9yBsk0Q@mail.gmail.com>
- <cac5e84b-fbdb-47a9-860d-16a7fa4dc773@quicinc.com>
- <4q3vlydi5xgltd3pcez54alxgrehhfn4pppg47ngwp6y5k7n33@d4d4htntj64k>
- <53dd18ec-9a65-4bf7-8490-ca3eb56ce2a5@quicinc.com>
- <iang2jpe4s6wmbypmtq5uswcm6n6xntqdulyhekcz5k6zxddu3@re3rrr4dso5p>
+To: "Verma, Devendra" <Devendra.Verma@amd.com>
+Cc: "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"mani@kernel.org" <mani@kernel.org>
+Subject: Re: [RESEND PATCH] dmaengine: dw-edma: Add Simple Mode Support
+Message-ID: <aICNQuhw3SrZJrYS@vaman>
+References: <20250623061733.1864392-1-devverma@amd.com>
+ <aF3Eg_xtxZjZTEop@vaman>
+ <SA1PR12MB81208BAD2A5D264482333FF79540A@SA1PR12MB8120.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <iang2jpe4s6wmbypmtq5uswcm6n6xntqdulyhekcz5k6zxddu3@re3rrr4dso5p>
+In-Reply-To: <SA1PR12MB81208BAD2A5D264482333FF79540A@SA1PR12MB8120.namprd12.prod.outlook.com>
 
-On 22-07-25, 15:46, Dmitry Baryshkov wrote:
-> On Tue, Jul 22, 2025 at 05:50:08PM +0530, Jyothi Kumar Seerapu wrote:
-> > On 7/19/2025 3:27 PM, Dmitry Baryshkov wrote:
-> > > On Mon, Jul 07, 2025 at 09:58:30PM +0530, Jyothi Kumar Seerapu wrote:
-> > > > On 7/4/2025 1:11 AM, Dmitry Baryshkov wrote:
-> > > > > On Thu, 3 Jul 2025 at 15:51, Jyothi Kumar Seerapu
-
-[Folks, would be nice to trim replies]
-
-> > > > Could you please confirm if can go with the similar approach of unmap the
-> > > > processed TREs based on a fixed threshold or constant value, instead of
-> > > > unmapping them all at once?
-> > > 
-> > > I'd still say, that's a bad idea. Please stay within the boundaries of
-> > > the DMA API.
+On 02-07-25, 09:38, Verma, Devendra wrote:
+> > On 23-06-25, 11:47, Devendra K Verma wrote:
+> > > The HDMA IP supports the simple mode (non-linked list).
+> > > In this mode the channel registers are configured to initiate a single
+> > > DMA data transfer. The channel can be configured in simple mode via
+> > > peripheral param of dma_slave_config param.
 > > >
-> > I agree with the approach you suggested—it's the GPI's responsibility to
-> > manage the available TREs.
-> > 
-> > However, I'm curious whether can we set a dynamic watermark value perhaps
-> > half the available TREs) to trigger unmapping of processed TREs ? This would
-> > allow the software to prepare the next set of TREs while the hardware
-> > continues processing the remaining ones, enabling better parallelism and
-> > throughput.
+> > > Signed-off-by: Devendra K Verma <devverma@amd.com>
+> > > ---
+> > >  drivers/dma/dw-edma/dw-edma-core.c    | 10 +++++
+> > >  drivers/dma/dw-edma/dw-edma-core.h    |  2 +
+> > >  drivers/dma/dw-edma/dw-hdma-v0-core.c | 53
+> > ++++++++++++++++++++++++++-
+> > >  include/linux/dma/edma.h              |  8 ++++
+> > >  4 files changed, 72 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/dma/dw-edma/dw-edma-core.c
+> > > b/drivers/dma/dw-edma/dw-edma-core.c
+> > > index c2b88cc99e5d..4dafd6554277 100644
+> > > --- a/drivers/dma/dw-edma/dw-edma-core.c
+> > > +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> > > @@ -235,9 +235,19 @@ static int dw_edma_device_config(struct dma_chan
+> > *dchan,
+> > >                                struct dma_slave_config *config)  {
+> > >       struct dw_edma_chan *chan = dchan2dw_edma_chan(dchan);
+> > > +     struct dw_edma_peripheral_config *pconfig = config->peripheral_config;
+> > > +     unsigned long flags;
+> > > +
+> > > +     if (WARN_ON(config->peripheral_config &&
+> > > +                 config->peripheral_size != sizeof(*pconfig)))
+> > > +             return -EINVAL;
+> > >
+> > > +     spin_lock_irqsave(&chan->vc.lock, flags);
+> > >       memcpy(&chan->config, config, sizeof(*config));
+> > > +
+> > > +     chan->non_ll_en = pconfig ? pconfig->non_ll_en : false;
+> > >       chan->configured = true;
+> > > +     spin_unlock_irqrestore(&chan->vc.lock, flags);
+> > >
+> > >       return 0;
+> > >  }
+> > > diff --git a/drivers/dma/dw-edma/dw-edma-core.h
+> > > b/drivers/dma/dw-edma/dw-edma-core.h
+> > > index 71894b9e0b15..c0266976aa22 100644
+> > > --- a/drivers/dma/dw-edma/dw-edma-core.h
+> > > +++ b/drivers/dma/dw-edma/dw-edma-core.h
+> > > @@ -86,6 +86,8 @@ struct dw_edma_chan {
+> > >       u8                              configured;
+> > >
+> > >       struct dma_slave_config         config;
+> > > +
+> > > +     bool                            non_ll_en;
+> >
+> > why do you need this? What is the decision to use non ll vs ll one?
 > 
-> Let's land the simple implementation first, which can then be improved.
-> However I don't see any way to return 'above the watermark' from the DMA
-> controller. You might need to enhance the API.
+> The IP supports both the modes, LL mode and non-LL mode.
+> In the current driver code, the support for non-LL mode is not
+> present. This patch enables the non-LL aka simple mode support
+> by means of the peripheral_config option in the dmaengine_slave_config.
 
-Traditionally, we set the dma transfers for watermark level and we get a
-interrupt. So you might want to set the callback for watermark level
-and then do mapping/unmapping etc in the callback. This is typical model
-for dmaengines, we should follow that well
+That does not answer my question, what decides which mode should be
+used?
 
-BR
 -- 
 ~Vinod
 

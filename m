@@ -1,216 +1,172 @@
-Return-Path: <dmaengine+bounces-5857-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5858-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9730CB0F4AA
-	for <lists+dmaengine@lfdr.de>; Wed, 23 Jul 2025 15:57:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D41FB0F72B
+	for <lists+dmaengine@lfdr.de>; Wed, 23 Jul 2025 17:37:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E1DD91C82CB6
-	for <lists+dmaengine@lfdr.de>; Wed, 23 Jul 2025 13:57:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E47325823EA
+	for <lists+dmaengine@lfdr.de>; Wed, 23 Jul 2025 15:37:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 250D32EF673;
-	Wed, 23 Jul 2025 13:56:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D4901FFC5E;
+	Wed, 23 Jul 2025 15:36:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TD72/VPN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lei4AiVg"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC78A2EF2A6;
-	Wed, 23 Jul 2025 13:56:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8BF91F4612
+	for <dmaengine@vger.kernel.org>; Wed, 23 Jul 2025 15:36:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753279003; cv=none; b=Dj6SDcvMUHDFCE6nAeTLrXzXhORgRXgTq5qv0YEM/zbM5p8XIIh1Ww01nosX0RZLsrg/8RFeL6uvOnwz3dAE6aICnOEuVCP6L8OeqGDWYb5cGP26prPlc4yDRXwsNaNhB6QBDn05ceF2KemujgA5anVk8vmWaQdJW7CPFtEtv40=
+	t=1753284980; cv=none; b=LI1Qxi9p06+IgX0fP7Lzcmak6+UEqbKJMJldhTvrLWGsPbWJzQeOc7Zj37S3UJVxTeATS9wKXwPLihMmauKDmFhhwY32uaL4a9X+JSh1p06bGUZBvvBib+mFmeMDfR1GajY3KVuGpl7XintclwHNxgJMyUUPNBUus+FhusJ6+bY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753279003; c=relaxed/simple;
-	bh=5HDITE1NDcFmygkehiv2HaR3n8bW2VfPiUT74Rn+2PU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Kf9pwOci5nZg9Mp2cHhkBhi8+feWsTF1b5fcdHgrNYSRLDN3PsVqdKIAFbnqYFCczvL5NKfMwcW0SIKs7lJn7chw/oZDpT78dKcO+JOJ77lNOnW2jIVwhAw1Ca0tXcQ1ynpAldVMQ5YW/sK4Eqh5DLnFXM6obJltVuvOq54enAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TD72/VPN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91848C4CEEF;
-	Wed, 23 Jul 2025 13:56:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753279001;
-	bh=5HDITE1NDcFmygkehiv2HaR3n8bW2VfPiUT74Rn+2PU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TD72/VPN7qYwaYt+9ZFyaHlXfvT2gVVHk+Vvp2AY/fzPpw8R4/AV2VDzdVIy/4vbg
-	 WXwH3HtxZsf6Dji7AQlu4szV74zi4srEwgMgHWDTQtEo+adcqQPqnI51aEdO+7USUd
-	 WmFrr8QuBPcgUvcg4kzF9CyTpbhOY4h/MEQKonr1CpZcQUV+Who7haC/sThMGm0J7h
-	 xEn7/gt0m/zNt0vVcJ+0vsZ4yUPxuD5s5arYf1QdRR+CNRqhRrqnAkzT1HCk9+vJie
-	 fmYgFY8fPdDMkXCfnfWJ7JPO0T22r6IFgVbiXO5bzav4wxn8ER461vOA3SJzSSje02
-	 hnEAe64qPx7ug==
-Date: Wed, 23 Jul 2025 19:26:29 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Devendra K Verma <devverma@amd.com>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	vkoul@kernel.org
-Subject: Re: [RESEND PATCH] dmaengine: dw-edma: Add Simple Mode Support
-Message-ID: <d6rtkyelnfhqya6txe7wr6rup7y6riifwzw6tbajopqa5wty6j@3o32khdidnas>
-References: <20250623061733.1864392-1-devverma@amd.com>
+	s=arc-20240116; t=1753284980; c=relaxed/simple;
+	bh=VA9c0QPMO5+Bov+cQomqLQw1whJoVSRf3QyImu7EoAg=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=fpcXO5pSo2X+Sp/Rdrmp7hgDyMJ0W/FiDR0eRNblFZZnzy20lfR8o/Hw6JMmD/oVmoQ5bTpGdzKpWJG0vQRdGclvQKN+pa95VaWjCykDoPm7X/KX2XTgm6ISUif0+EqcNglcqyhoUtPmZAjW7olYnvaTLB8SoSy88yKlVYRjdJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lei4AiVg; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-45619d70c72so9999515e9.0
+        for <dmaengine@vger.kernel.org>; Wed, 23 Jul 2025 08:36:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1753284976; x=1753889776; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yopYTcaLHy/YngxUjGRVUYbmllYbCh12wVB+pNQbzC0=;
+        b=lei4AiVgu1fISmd3tdJ1VZHkuQt/FJy6bpGQ+7cBfbD9IbsPjwsLT66kDkDpx71a+V
+         tPYouNvAfeMQa3PwzDOisS1but6Zw9CxcNZVHsW5zQ060WTPj9zhmdVk2gXho80iUrtL
+         MzPAOnv25PQposp+76XLEF5IgQ2K5derB5yfOHR/f5IX+NDG2l+TH4jSuO8Rau4RB3Tc
+         W0ZWkhSRz4pHbPeajmO3V3KuUQpWdqRmohdQ/LN6xtiQKN4WyKy1nHxJvvi7qeRGMt65
+         P6FMO29heFkE5R4aTZMKVvMoP7UQBPiJQTZHWhEd5ihxn8ZA/SFkIyUwYw2oH3I6BAdb
+         0KEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753284976; x=1753889776;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=yopYTcaLHy/YngxUjGRVUYbmllYbCh12wVB+pNQbzC0=;
+        b=cJcpGGZIeMHA9wWtWToW/TEgKzrsERXdADRYEez5ZEyRBeW2Ntb1lX4sMEPfxXUlq7
+         Ba2Hti57xytHUT4o/mFKV19j0FrqvWGJizgX1+2M1zLhZZYm43jS3JG/UPvgAGZxFPSl
+         Rc3IL19rnpWp1C0u5obKfaVfES9JFpcOAXB9LBp8/bRYRyS3tImUmKuqlJ87kZMsAIIZ
+         tBT/zGUDb9UpFEP7f2lQPjGPjKBQnDshjq1KX4qeXBO/Xzq8SjwhF/AFmPeNLN3ENRSV
+         G2RJxNgETJRPs38Gbf9os1ChuO7K00n9wsQQKmdaLOex7gfJLUJJ5j4ZZrD+Fn2EBKI+
+         NukQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUmnqGNw7+mFcOz8y7GcwQGf4O/Otbccx9MHEUQpQFb1HUS+08JaY3wx6AMl+VkzWhWEnCOxSMn86k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLnOBFM/uG6feFQ2XFsP4Bvmcz3yxm4UfeYq3/dc+ukMOrB9xG
+	sRiJLDjLFgNUZr9whRQzJmEKE9M9eGQBBHDwbGI+471mSNISdXpIR4kzAKgLqMFJf+s=
+X-Gm-Gg: ASbGnctAnxjWcI0pTkGKOUp97PV97mgVP1V2zo6kn7ZHpA2h/HZTvEFKmO/Uw8LlRHS
+	FlJIbYKVEKlx2WvDN0L+zjxp8tiP8d2KgnE3trAlXpXOgf1+Bay36r37GOrwPJzi9kD4INZA1XV
+	RMY77LStZPMzxtetlDNfiGwc6VY+DM7Q0hRwztaweRg/AC3FDcS0gdysRiGvw3o5bgehkzdfH8E
+	5jqce0SC2Dkc8KO2ZZFl3TFaCQnbQewE4oMgLIiMY/iUBAx12GdK7x3KSn353AAPaqZKFjn7UMP
+	UyYqaaDDtOehHga++Ou9foyZaJdxlOOmOMu684RT2bSUBtQEIbbGLfAV1KxtPLvwYdNppD+F6zZ
+	/9A+LstjKJGK5PyQ7TgTACbR6/b+WZXRfrJCSGArEER3dxiY8Pv43rknt8puMvTfKRy3O4YUjqB
+	UYby8cQnFmUU41
+X-Google-Smtp-Source: AGHT+IE36FCAwkzfiHLT8YUTKB5dl8mhn5lwwrUiNUjYfXCamvnt7XB94dMS1C8m5vdXXhKPLuuwTA==
+X-Received: by 2002:a05:600c:4fc9:b0:456:1157:59ac with SMTP id 5b1f17b1804b1-45868b23d24mr31817135e9.7.1753284975917;
+        Wed, 23 Jul 2025 08:36:15 -0700 (PDT)
+Received: from ?IPV6:2a01:cb14:150f:cf00:b6af:e6a0:6569:3a1? ([2a01:cb14:150f:cf00:b6af:e6a0:6569:3a1])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4586918094csm26728745e9.2.2025.07.23.08.36.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Jul 2025 08:36:15 -0700 (PDT)
+Message-ID: <268811ba-03c5-4957-b073-1dfbad77747b@linaro.org>
+Date: Wed, 23 Jul 2025 17:36:14 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250623061733.1864392-1-devverma@amd.com>
+User-Agent: Mozilla Thunderbird
+From: neil.armstrong@linaro.org
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH v2 14/15] arm64: dts: qcom: Add initial Milos dtsi
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ Luca Weiss <luca.weiss@fairphone.com>, Will Deacon <will@kernel.org>,
+ Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>,
+ Manivannan Sadhasivam <mani@kernel.org>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ "David S. Miller" <davem@davemloft.net>, Vinod Koul <vkoul@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Robert Marko <robimarko@gmail.com>,
+ Das Srinagesh <quic_gurus@quicinc.com>, Thomas Gleixner
+ <tglx@linutronix.de>, Jassi Brar <jassisinghbrar@gmail.com>,
+ Amit Kucheria <amitk@kernel.org>, Thara Gopinath <thara.gopinath@gmail.com>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
+ linux-mmc@vger.kernel.org
+References: <20250713-sm7635-fp6-initial-v2-0-e8f9a789505b@fairphone.com>
+ <20250713-sm7635-fp6-initial-v2-14-e8f9a789505b@fairphone.com>
+ <3e0299ad-766a-4876-912e-438fe2cc856d@oss.qualcomm.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <3e0299ad-766a-4876-912e-438fe2cc856d@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 23, 2025 at 11:47:33AM GMT, Devendra K Verma wrote:
-> The HDMA IP supports the simple mode (non-linked list).
-> In this mode the channel registers are configured to initiate
-> a single DMA data transfer. The channel can be configured in
-> simple mode via peripheral param of dma_slave_config param.
+Hi,
+
+<snip>
 > 
-> Signed-off-by: Devendra K Verma <devverma@amd.com>
-> ---
->  drivers/dma/dw-edma/dw-edma-core.c    | 10 +++++
->  drivers/dma/dw-edma/dw-edma-core.h    |  2 +
->  drivers/dma/dw-edma/dw-hdma-v0-core.c | 53 ++++++++++++++++++++++++++-
->  include/linux/dma/edma.h              |  8 ++++
->  4 files changed, 72 insertions(+), 1 deletion(-)
+>> +	pmu-a520 {
+>> +		compatible = "arm,cortex-a520-pmu";
+>> +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
+>> +	};
+>> +
+>> +	pmu-a720 {
+>> +		compatible = "arm,cortex-a720-pmu";
+>> +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
+>> +	};
 > 
-> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-> index c2b88cc99e5d..4dafd6554277 100644
-> --- a/drivers/dma/dw-edma/dw-edma-core.c
-> +++ b/drivers/dma/dw-edma/dw-edma-core.c
-> @@ -235,9 +235,19 @@ static int dw_edma_device_config(struct dma_chan *dchan,
->  				 struct dma_slave_config *config)
->  {
->  	struct dw_edma_chan *chan = dchan2dw_edma_chan(dchan);
-> +	struct dw_edma_peripheral_config *pconfig = config->peripheral_config;
-> +	unsigned long flags;
-> +
-> +	if (WARN_ON(config->peripheral_config &&
-> +		    config->peripheral_size != sizeof(*pconfig)))
-> +		return -EINVAL;
->  
-> +	spin_lock_irqsave(&chan->vc.lock, flags);
->  	memcpy(&chan->config, config, sizeof(*config));
-> +
-> +	chan->non_ll_en = pconfig ? pconfig->non_ll_en : false;
-
-Who is allocating 'dw_edma_peripheral_config' and setting 'non_ll_en' flag? We
-cannot introduce a flag without anyone using it in upstream.
-
-- Mani
-
->  	chan->configured = true;
-> +	spin_unlock_irqrestore(&chan->vc.lock, flags);
->  
->  	return 0;
->  }
-> diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
-> index 71894b9e0b15..c0266976aa22 100644
-> --- a/drivers/dma/dw-edma/dw-edma-core.h
-> +++ b/drivers/dma/dw-edma/dw-edma-core.h
-> @@ -86,6 +86,8 @@ struct dw_edma_chan {
->  	u8				configured;
->  
->  	struct dma_slave_config		config;
-> +
-> +	bool				non_ll_en;
->  };
->  
->  struct dw_edma_irq {
-> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> index e3f8db4fe909..3237c807a18e 100644
-> --- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> +++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> @@ -225,7 +225,7 @@ static void dw_hdma_v0_sync_ll_data(struct dw_edma_chunk *chunk)
->  		readl(chunk->ll_region.vaddr.io);
->  }
->  
-> -static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
-> +static void dw_hdma_v0_ll_start(struct dw_edma_chunk *chunk, bool first)
->  {
->  	struct dw_edma_chan *chan = chunk->chan;
->  	struct dw_edma *dw = chan->dw;
-> @@ -263,6 +263,57 @@ static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
->  	SET_CH_32(dw, chan->dir, chan->id, doorbell, HDMA_V0_DOORBELL_START);
->  }
->  
-> +static void dw_hdma_v0_non_ll_start(struct dw_edma_chunk *chunk)
-> +{
-> +	struct dw_edma_chan *chan = chunk->chan;
-> +	struct dw_edma *dw = chan->dw;
-> +	struct dw_edma_burst *child;
-> +	u32 val;
-> +
-> +	list_for_each_entry(child, &chunk->burst->list, list) {
-> +		SET_CH_32(dw, chan->dir, chan->id, ch_en, BIT(0));
-> +
-> +		/* Source address */
-> +		SET_CH_32(dw, chan->dir, chan->id, sar.lsb, lower_32_bits(child->sar));
-> +		SET_CH_32(dw, chan->dir, chan->id, sar.msb, upper_32_bits(child->sar));
-> +
-> +		/* Destination address */
-> +		SET_CH_32(dw, chan->dir, chan->id, dar.lsb, lower_32_bits(child->dar));
-> +		SET_CH_32(dw, chan->dir, chan->id, dar.msb, upper_32_bits(child->dar));
-> +
-> +		/* Transfer size */
-> +		SET_CH_32(dw, chan->dir, chan->id, transfer_size, child->sz);
-> +
-> +		/* Interrupt setup */
-> +		val = GET_CH_32(dw, chan->dir, chan->id, int_setup) |
-> +				HDMA_V0_STOP_INT_MASK | HDMA_V0_ABORT_INT_MASK |
-> +				HDMA_V0_LOCAL_STOP_INT_EN | HDMA_V0_LOCAL_ABORT_INT_EN;
-> +
-> +		if (!(dw->chip->flags & DW_EDMA_CHIP_LOCAL))
-> +			val |= HDMA_V0_REMOTE_STOP_INT_EN | HDMA_V0_REMOTE_ABORT_INT_EN;
-> +
-> +		SET_CH_32(dw, chan->dir, chan->id, int_setup, val);
-> +
-> +		/* Channel control setup */
-> +		val = GET_CH_32(dw, chan->dir, chan->id, control1);
-> +		val &= ~HDMA_V0_LINKLIST_EN;
-> +		SET_CH_32(dw, chan->dir, chan->id, control1, val);
-> +
-> +		/* Ring the doorbell */
-> +		SET_CH_32(dw, chan->dir, chan->id, doorbell, HDMA_V0_DOORBELL_START);
-> +	}
-> +}
-> +
-> +static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
-> +{
-> +	struct dw_edma_chan *chan = chunk->chan;
-> +
-> +	if (!chan->non_ll_en)
-> +		dw_hdma_v0_ll_start(chunk, first);
-> +	else
-> +		dw_hdma_v0_non_ll_start(chunk);
-> +}
-> +
->  static void dw_hdma_v0_core_ch_config(struct dw_edma_chan *chan)
->  {
->  	struct dw_edma *dw = chan->dw;
-> diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
-> index 3080747689f6..82d808013a66 100644
-> --- a/include/linux/dma/edma.h
-> +++ b/include/linux/dma/edma.h
-> @@ -101,6 +101,14 @@ struct dw_edma_chip {
->  	struct dw_edma		*dw;
->  };
->  
-> +/**
-> + * struct dw_edma_peripheral_config - peripheral spicific configurations
-> + * @non_ll_en:		 enable non-linked list mode of operations
-> + */
-> +struct dw_edma_peripheral_config {
-> +	bool			non_ll_en;
-> +};
-> +
->  /* Export to the platform drivers */
->  #if IS_REACHABLE(CONFIG_DW_EDMA)
->  int dw_edma_probe(struct dw_edma_chip *chip);
-> -- 
-> 2.43.0
+> See:
+> 
+> 9ce52e908bd5 ("arm64: dts: qcom: sm8650: switch to interrupt-cells 4 to add PPI partitions")
+> 2c06e0797c32 ("arm64: dts: qcom: sm8650: add PPI interrupt partitions for the ARM PMUs")
 > 
 
--- 
-மணிவண்ணன் சதாசிவம்
+Yeah switch to 4 cells now, so you can properly route the PMU PPI interrupt to the right core.
+
+New SoCs DTs should have 4 interrupts-cells from now, I'll migrate sm8550 shortly.
+
+Neil
+
 

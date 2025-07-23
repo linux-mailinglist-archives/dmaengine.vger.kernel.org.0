@@ -1,55 +1,65 @@
-Return-Path: <dmaengine+bounces-5854-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5855-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8C0D3B0F246
-	for <lists+dmaengine@lfdr.de>; Wed, 23 Jul 2025 14:30:30 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5E278B0F24A
+	for <lists+dmaengine@lfdr.de>; Wed, 23 Jul 2025 14:30:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C1C47583BBA
-	for <lists+dmaengine@lfdr.de>; Wed, 23 Jul 2025 12:30:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9AEED583C61
+	for <lists+dmaengine@lfdr.de>; Wed, 23 Jul 2025 12:30:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21A162E7633;
-	Wed, 23 Jul 2025 12:29:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D5262E62AB;
+	Wed, 23 Jul 2025 12:29:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a3orR7SP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BDKXNKuS"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBE462E762A;
-	Wed, 23 Jul 2025 12:29:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15D082E6126;
+	Wed, 23 Jul 2025 12:29:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753273779; cv=none; b=HhGfanjsXTQMwSE1pfglnOUzB/UfIfufYkouQmZIVrLGNr7AKta6AXxugIAjT1350ZJr94JRYl/mF3jtgXcLCIzVgntd7E/WyI5VIMLFttJIl4LlbvxFI7YlY+17m9e5QngZHKgRONFaO0msyyXTv0A/eg5gyrgLng5XPPIdV9I=
+	t=1753273786; cv=none; b=Osw5x5p+4APDDu4D3U2r+/CPosy5Yx+tahfGqkt5eRuoGPgyieZFIFKJjwAZGfzHJIeFsBaogR5hdM3XP0sIP7i3wIwU2wj2tAp5X8OzhirfBugZGRl//WUvqWhzSdIcz7I1p1elJtM4AXzce5YS60tn+PO3pp2TdB2vFoXxL34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753273779; c=relaxed/simple;
-	bh=Eks1ShTcI5ZOfiYTakJ06LR1ihFE+efz+MdWoH3u8Jw=;
+	s=arc-20240116; t=1753273786; c=relaxed/simple;
+	bh=a4fvJoudeLBpuYC8iOBx3Lt7u9y0axaehN+8SLluXMA=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=pfG2/2m5upLKEAIdI+BL/zPdiFUqO/I8Pqnf4R41ypSyNJXHc+0kPhTtV2/ZQmZSXi/S8UGla9DciFqDaVDCLpGLl+uSY6ydUF/FX3symvqW3fpBPJoGNZcDCwSfX0KanbwtqKBGPyxbaBaok+UT1KhfGxK83Ez5NM9A58kW7Mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a3orR7SP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58515C4CEF6;
-	Wed, 23 Jul 2025 12:29:37 +0000 (UTC)
+	 MIME-Version:Content-Type; b=QXShBuD/t6pFaaLW7VJH4/hmQqqtjlFqRQT+nw03u0xX7flcZ4qwWwtiv6qjYTa02GtflrMGZOh8MnwnYTDbHWbcG9lYTHp39VXfZEohg2RE+zcqYcsllN5qKnvW8z/+5ZpKdBV0yESU/fF4rhouYJx1ymyRnFvymyGxLsvliog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BDKXNKuS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38281C4CEF5;
+	Wed, 23 Jul 2025 12:29:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753273778;
-	bh=Eks1ShTcI5ZOfiYTakJ06LR1ihFE+efz+MdWoH3u8Jw=;
+	s=k20201202; t=1753273785;
+	bh=a4fvJoudeLBpuYC8iOBx3Lt7u9y0axaehN+8SLluXMA=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=a3orR7SPRH/sXm2lc1SXv676z7bsnBLflvYzr+FPBL0l9BaGPD+GjrvZt77brFiF6
-	 0152WLJ0f4xHMdAPWUQghVnTBdPBQaSQM30s4EV7YFkhdoT48BGaZ+mlOeaTIvDNR7
-	 y/SuyTtU5YUCHw7aqXEYzj33AxCkFfdoN8muNN9YM8UInRUBChgzQX/1tqyZQOgPpH
-	 L/F8xrwaTylQY0SoGdhVqYBNoFpSZ/u82SZ2Q7EtrqHfHHH4YaAoelUi7uWjzekafC
-	 J/in/56DXDPlnbvbyPEfw0ET9PzzrPO3W4gRPAgW9JQDufq2Pu7fvpaQ0yEx2HOk5L
-	 ij4YpuF6HycKw==
+	b=BDKXNKuSudGsrwbCFls9lMNbGe3HBVy+R7d3MLycJRWLcWzEYfLnDvyNU4MU3RsPF
+	 u+7zPxhRMfOwKd3kfj0WAxcE/L83lYJdVGnlC0Wjd8Xo36b4655zobf8MnN2FVrGRU
+	 y+QPZkGGY4QhCmFw+kXE8EdlZiejwd9llsKKPYujKHcc2IF1v8+2TFMtjgLDvAXCIX
+	 ydcw72rxfEv/KkLLbGN3Usc8tvgaCOikFKvx+2UZgHJ1MNlAg1QdLDqyDezPrJDsKy
+	 hj/Lzvj7apcBLQiy3IxV9yvl+IQMHp0QwDyOWbuPYNPgDC8CVglq+jim+tneF415cw
+	 oSWGV//JX1m+A==
 From: Vinod Koul <vkoul@kernel.org>
-To: Thomas Fourier <fourier.thomas@gmail.com>
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, 
- dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250707075752.28674-2-fourier.thomas@gmail.com>
-References: <20250707075752.28674-2-fourier.thomas@gmail.com>
-Subject: Re: [PATCH] dmaengine: nbpfaxi: Add missing check after DMA map
-Message-Id: <175327377697.189941.4354617841916329738.b4-ty@kernel.org>
-Date: Wed, 23 Jul 2025 17:59:36 +0530
+To: linux@armlinux.org.uk, nicolas.ferre@microchip.com, 
+ alexandre.belloni@bootlin.com, claudiu.beznea@tuxon.dev, 
+ catalin.marinas@arm.com, will@kernel.org, olivia@selenic.com, 
+ herbert@gondor.apana.org.au, davem@davemloft.net, andi.shyti@kernel.org, 
+ lee@kernel.org, broonie@kernel.org, gregkh@linuxfoundation.org, 
+ jirislaby@kernel.org, arnd@kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, 
+ dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org, 
+ linux-spi@vger.kernel.org, linux-serial@vger.kernel.org, 
+ o.rempel@pengutronix.de, daniel.machon@microchip.com, 
+ Robert Marko <robert.marko@sartura.hr>
+Cc: luka.perkov@sartura.hr
+In-Reply-To: <20250702183856.1727275-1-robert.marko@sartura.hr>
+References: <20250702183856.1727275-1-robert.marko@sartura.hr>
+Subject: Re: (subset) [PATCH v8 00/10] arm64: lan969x: Add support for
+ Microchip LAN969x SoC
+Message-Id: <175327377884.189941.15214972441246653208.b4-ty@kernel.org>
+Date: Wed, 23 Jul 2025 17:59:38 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -61,16 +71,21 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
 
-On Mon, 07 Jul 2025 09:57:16 +0200, Thomas Fourier wrote:
-> The DMA map functions can fail and should be tested for errors.
-> If the mapping fails, unmap and return an error.
+On Wed, 02 Jul 2025 20:35:58 +0200, Robert Marko wrote:
+> This patch series adds basic support for Microchip LAN969x SoC.
 > 
+> It introduces the SoC ARCH symbol itself under the ARCH_MICROCHIP symbol
+> which allows to avoid the need to change dependencies of the drivers that
+> are shared for Microchip SoC-s in the future.
 > 
+> DTS and further driver will be added in follow-up series.
+> 
+> [...]
 
 Applied, thanks!
 
-[1/1] dmaengine: nbpfaxi: Add missing check after DMA map
-      commit: c6ee78fc8f3e653bec427cfd06fec7877ee782bd
+[08/10] dma: xdmac: make it selectable for ARCH_MICROCHIP
+        commit: e56982021f5303b2523ac247e3c79b063459d012
 
 Best regards,
 -- 

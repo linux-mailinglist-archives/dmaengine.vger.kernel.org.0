@@ -1,107 +1,136 @@
-Return-Path: <dmaengine+bounces-5865-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5866-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 145F2B12100
-	for <lists+dmaengine@lfdr.de>; Fri, 25 Jul 2025 17:35:44 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 71B12B12248
+	for <lists+dmaengine@lfdr.de>; Fri, 25 Jul 2025 18:48:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 23DA81CC407B
-	for <lists+dmaengine@lfdr.de>; Fri, 25 Jul 2025 15:36:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 35E763BDF9A
+	for <lists+dmaengine@lfdr.de>; Fri, 25 Jul 2025 16:47:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0B2723C505;
-	Fri, 25 Jul 2025 15:35:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3D662EE614;
+	Fri, 25 Jul 2025 16:48:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QB0dbHCn"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="noJl4hdw"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C74262BE;
-	Fri, 25 Jul 2025 15:35:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 280441FC8
+	for <dmaengine@vger.kernel.org>; Fri, 25 Jul 2025 16:48:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753457738; cv=none; b=MIyFSvIhjOcTDmAyRcYCURPdUQ13HvIe7KjHfG5rEBi2EZeVZx4AK7zYWh7WyL3iSKa82qHZqf+3x660jf9RHrNDUlyClQM9vV9Fpk613rtGBvIvKMKjPSpDDmOrsLtdK4I6Nbzk4BFzeMjyNdozpqAxvkLAzARIFytaDDIoZfI=
+	t=1753462099; cv=none; b=aBBvrCFgeNzDTJpVMo+RxXmCY8sSOlT8olvbgakB8m5rrrFBL8Q8lk7B/jAHSPESW8ISWFrxATUUX7CJpO03ThSfRIhcSjC+Rg5WmNyOYEYnCXdnKOPcCE9+wkMRm49nRZ3Qt6czy5Gp4ABG5vgO763L7tsuOITD4wydlYDvEMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753457738; c=relaxed/simple;
-	bh=/OS1bgYV5IKAPQNdEiTK75hIgWlqClQ/txdikGtyv/A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e2tBLK0hv4SDsSOo5NeFmfzrDfDBCXXDMI+jTU3RhNmEwHsnV1iB8ymSKZq6pX/XSd8jiuYfsZL0EZmBy35uBxP0MHN3DuGoagWQpQxcc9cJ0a5GBp3vG0WBDCqH51T4nTRUOsUh02vOdKYTxGCgdeaAgOl8/lIDTaL5/XphhcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QB0dbHCn; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-3141b84bf65so2213948a91.1;
-        Fri, 25 Jul 2025 08:35:37 -0700 (PDT)
+	s=arc-20240116; t=1753462099; c=relaxed/simple;
+	bh=ppQd582oZginp+3pcQAfvhafTXmi3sug/cDu6IWhOMw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ppRuMdpJrCCMhcvbZzXdtYK1u+3k4RXmLN/DBDH4JZi/wcYG+wGXEnk+YlSBA56qB4KaTNjSlqYUaWmOWbnrQneIgCQBw+wLq3q77RY7eDbGE+ffU+0Iul9Onvh2nd2LjuFjQFbA73ILWQ/EURRJdaNMMEVFdpUC8Z4FGojYPDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=noJl4hdw; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-55628eaec6cso2175081e87.0
+        for <dmaengine@vger.kernel.org>; Fri, 25 Jul 2025 09:48:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753457737; x=1754062537; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Nk/4Kezo0VhjUc+1VwBBR6iAeqx6TFxLUBENU2vrQBA=;
-        b=QB0dbHCnrA9YuTAYWvBXlAZ4hUFSVq6lyB08vzLvLGyie/OQiDoIIpy6gIQH/S5qf2
-         mBmO11DAari+dORa3JoE3R8OpBNT8d92iYZAYPbJkEE6lxmGBM1zjp8rq8FaatXX0TYS
-         ThYnzh+/ToFl1+wGQ5kJB74aATMxacK84VP9xBYCWeKHaUykPUWnroali722F4DV3ISR
-         ehhl15XYfrGc6vXpvjKCH///yz4LcGQubUojm7zXhNEYU/e2G77UiGM3uJFntI+GVmpK
-         C6a1XOgoEHOhAgw1iYuGqHbxYYNyKxbg3JTYUgzfrPKBqDf0/El1HptiD8EkdLWs/Lms
-         Tn6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753457737; x=1754062537;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1753462096; x=1754066896; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Nk/4Kezo0VhjUc+1VwBBR6iAeqx6TFxLUBENU2vrQBA=;
-        b=agZgIQR2HDkenjpgrRMfrnNv056wIYq80n5Rfj0bKaxuRqYM+tNlvVi116c/pSUVO2
-         NK6sfJhK7KLYhPHTY0C6HJcyFQbCs8ZkwU51ZEmDCmDJgdb3Rbvhu8v6Uo/tbLYjOrYt
-         Y47Nb5EKiwzAVaZc3wSnlwV9GfLBh88KgPb2cRgcd35wVD1XlqwzHXokBub85viDAoJ3
-         SfRyQA4Ne76a/SenLDkGBgI8/fBb0J2pwp0xVSsGhEtQNdmzgDLvJG503oe2P3ghOdii
-         KeufsTWlKDUviEJVxcqWw6LUqfKLpIcsmMTAi5Hx5L4k9zn/GEWZWvPNNQBQ7zerL1Ny
-         V+dQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUFj+A1RFsFvZaXffK8O+4kpjWHJtnG0TvRIriyJIhCqsMbQSi4/BcsZHfV9WwppiGEPeyySyLltqFkFDXk@vger.kernel.org, AJvYcCXbs6aCg478NvtAq9OdjKqMzRQi/jlVrT1osmw0iaCGlt6keruqrr7sX9eiUPJcYZJB4U3Y8uIkGIw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yya+5FMDGVGqAx7oBYK2FKIoBthubjv09IGJg1QrmQ9LvOSVL+b
-	c6I97dwvFpOkc2nrqDrlzLSKdsUD33fBchhDXrDAYShMhcR8MCktLWNn
-X-Gm-Gg: ASbGncvvic+DDIkzgd6URiLGLIkuL1/x0pACDWIBZSCtSrR6fIMtxGUUWg8WTTuigf8
-	XvlnE5NMceLP8QRwo6wvHV4Ld0ltcYp3hPlvWxdD1pfYfCLl+np5YYSQNVSuRLpmhvfQLjrxTSA
-	bXTaEDPcsxQXMcLD++Qw/njYW2QdsOyv6nV6rlBRHObmQzUXAnYpNV7X8IG4OYJlFLRXJYDVill
-	azkHMpfkXuaEFx3mkHox7fiv5S/m/1m7ijKZ4XlGKaWTEqNToYaGMPigF/h79vcG/t7SIEMgKUv
-	2ysbyme/5HN4ruqo6qjGbRkMgm4q4OF8D03vQ5vH+0hYUMK9EE4/J4HuBw0j1Vj7MkagMls4XUI
-	3PXe3B7Hjp2q9VkB+CzrriQ==
-X-Google-Smtp-Source: AGHT+IGA0cG23R/PV0mw3LDx6GRbWc3e50pWW1kDUupFgJn9GdN+u8pGDk/hv6p6XEa1GLMUY2uYUg==
-X-Received: by 2002:a17:90b:3d4e:b0:311:ff18:b83e with SMTP id 98e67ed59e1d1-31e77857876mr3896921a91.9.1753457736696;
-        Fri, 25 Jul 2025 08:35:36 -0700 (PDT)
-Received: from localhost ([216.228.127.131])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31e6e3b7e0dsm2400980a91.12.2025.07.25.08.35.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Jul 2025 08:35:35 -0700 (PDT)
-Date: Fri, 25 Jul 2025 11:35:32 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ste_dma40: simplify d40_handle_interrupt()
-Message-ID: <aIOkRHs2bCVk28V0@yury>
-References: <20250720022129.437094-1-yury.norov@gmail.com>
- <aIDRpSN0z3Ri1Fkh@vaman>
+        bh=ppQd582oZginp+3pcQAfvhafTXmi3sug/cDu6IWhOMw=;
+        b=noJl4hdwx2RCEnbOzgDSRQFrGxhSfQkotnKKfRVP8Qiodk2eN+UWq2+lNgX9915l66
+         RZEBtjt+IpEVCCFDzon++/VNPf68Sg7vF3NlQ1b6W1ULYE3UBTylCZAdc7w2PvZNRrj1
+         p2VK6pB2rCdj8PAvE1BiIaRkdpaEnWqD5k6C6J5R8JtJ37ayISSM5HceuswfsoaZNVew
+         5dw6dYKKIHbmxYG55rqpFuuhCpL5lO1GAbYKRBJTuY+PIi8B5XTofkkSfzeVu9f/8h3e
+         59ACh+6uOpTU603NCQvxKu7hwBz/LBSM21MdLDDys4QmYFBRLCdxlylmeH2bTIn7hnx+
+         r3Hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753462096; x=1754066896;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ppQd582oZginp+3pcQAfvhafTXmi3sug/cDu6IWhOMw=;
+        b=kpRdAFhDsgbpL54YwETBO44k7phtlyUBK6HXRa4jAHi0zfMtwNgwp3JkBQmH/jkJ3j
+         csZhvSX69q5g1vFG6PgfLQc0jBv/XmsG2wEwAO43X5oEFq7lsIIgLjkJPA78jCBsORR6
+         /zm3IYyep3p/NgcLdRCFREwrrNOOi0I8ZthQpib/RiRldE0DTzXL/GPwihQt0ylT4U47
+         FOmr3O0OAf+iXst8aStVamRdm63c4DJBd0x/GdXFc0xQRrb9LeMTNTnyPhnbIKMv4/iW
+         /6xXWJLW9E9XVMRLDR+ulcIY6PnAH4OYgdhxbbwDDfMLJFwGPUcZavygwLQQMCjpSh2c
+         AW0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUtCtdKy5YE+rlCWfp+dRyVKG+t1piNBrqj5BAPAZbeHPHpnrBRU8LmrOuVJ3FcBRAX4QKiSqCloIo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxyw7p8zjjZIJGe/oZ6RqhT4/iq77+UFrAgOGBERueLabiFINpZ
+	/LGdttcQeal44hYkHFcYwiuWHA9oh3cU17upYzH+O7Pqt6MqxaC8QTaQC0RjUndOXKy+4LlCbzK
+	FJM9lcv+AEdTLlvkXCFs27gZhHCmGWnKX60zTv9iV
+X-Gm-Gg: ASbGncvXr206d7jY6qPtOHGfjoz1u4YBsRAjHwRe4I17Z9Cxb0aOFUF6mNG1S9SR4BS
+	OhgzUC7cphPqlbZG6K+VXF7WLxcnYzK9O0cHZmhx9YB776w7ZZg0ZBGLI+ec5kyfD+eqtyUb52h
+	nd+IRp7idgzOVpGOlgjfzWpLvvNAR+8+xylnJrtPbLphKAylRTtKpywyguPKwt8bQfdC3W8P3y3
+	tSr9Jo=
+X-Google-Smtp-Source: AGHT+IHRFHPeqj4nIOtWh6Ys6eD3VO7gQX4V7dsVKR085JKaRqkPB/v1BUD9NdFQ0WfSjcyFuM7LsqS6dpAfH6dAKiQ=
+X-Received: by 2002:a05:6512:3050:b0:553:a632:c7df with SMTP id
+ 2adb3069b0e04-55b5f3cf5cfmr661229e87.11.1753462095911; Fri, 25 Jul 2025
+ 09:48:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aIDRpSN0z3Ri1Fkh@vaman>
+References: <20250620232031.2705638-1-dmatlack@google.com>
+In-Reply-To: <20250620232031.2705638-1-dmatlack@google.com>
+From: David Matlack <dmatlack@google.com>
+Date: Fri, 25 Jul 2025 09:47:48 -0700
+X-Gm-Features: Ac12FXxyagwElMOCi051dyM63Ch611iKG5b_MU_nG8G_LbqFaLPO58JmZEy3jU8
+Message-ID: <CALzav=dVYqS8oQNbygVjgA69EQMBBP4CyzydyUoAjnN2mb_yUQ@mail.gmail.com>
+Subject: Re: [PATCH 00/33] vfio: Introduce selftests for VFIO
+To: Alex Williamson <alex.williamson@redhat.com>
+Cc: Aaron Lewis <aaronlewis@google.com>, 
+	Adhemerval Zanella <adhemerval.zanella@linaro.org>, 
+	Adithya Jayachandran <ajayachandra@nvidia.com>, Andrew Jones <ajones@ventanamicro.com>, 
+	Ard Biesheuvel <ardb@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Bibo Mao <maobibo@loongson.cn>, 
+	Claudio Imbrenda <imbrenda@linux.ibm.com>, Dan Williams <dan.j.williams@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, dmaengine@vger.kernel.org, 
+	Huacai Chen <chenhuacai@kernel.org>, James Houghton <jthoughton@google.com>, 
+	Jason Gunthorpe <jgg@nvidia.com>, Joel Granados <joel.granados@kernel.org>, 
+	Josh Hilke <jrhilke@google.com>, Kevin Tian <kevin.tian@intel.com>, kvm@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, 
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, "Pratik R. Sampat" <prsampat@amd.com>, 
+	Saeed Mahameed <saeedm@nvidia.com>, Sean Christopherson <seanjc@google.com>, Shuah Khan <shuah@kernel.org>, 
+	Vinicius Costa Gomes <vinicius.gomes@intel.com>, Vipin Sharma <vipinsh@google.com>, 
+	Wei Yang <richard.weiyang@gmail.com>, "Yury Norov [NVIDIA]" <yury.norov@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 23, 2025 at 05:42:21PM +0530, Vinod Koul wrote:
-> On 19-07-25, 22:21, Yury Norov wrote:
-> > From: Yury Norov (NVIDIA) <yury.norov@gmail.com>
-> 
-> What is the meaning of NVIDIA in your name?
+On Fri, Jun 20, 2025 at 4:21=E2=80=AFPM David Matlack <dmatlack@google.com>=
+ wrote:
+>
+> This series introduces VFIO selftests, located in
+> tools/testing/selftests/vfio/.
 
-My employer.
- 
-> Pls add the subsystem name to the patch as well (this and others you
-> sent)
+Hi Alex,
 
-OK
+I wanted to discuss how you would like to proceed with this series.
+
+The series is quite large, so one thing I was wondering is if you
+think it should be split up into separate series to make it easier to
+review and merge. Something like this:
+
+ - Patches 01-08 + 30 (VFIO selftests library, some basic tests, and run sc=
+ript)
+ - Patches 09-22 (driver framework)
+ - Patches 23-28 (iommufd support)
+ - Patches 31-33 (integration with KVM selftests)
+
+I also was curious about your thoughts on maintenance of VFIO
+selftests, since I don't think we discussed that in the RFC. I am
+happy to help maintain VFIO selftests in whatever way makes the most
+sense. For now I added tools/testing/selftests/vfio under the
+top-level VFIO section in MAINTAINERS (so you would be the maintainer)
+and then also added a separate section for VFIO selftests with myself
+as a Reviewer (see PATCH 01). Reviewer felt like a better choice than
+Maintainer for myself since I am new to VFIO upstream (I've primarily
+worked on KVM in the past).
+
+Thanks.
+--David
 

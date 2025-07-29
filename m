@@ -1,173 +1,337 @@
-Return-Path: <dmaengine+bounces-5877-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5878-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8864BB14044
-	for <lists+dmaengine@lfdr.de>; Mon, 28 Jul 2025 18:27:55 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9DC36B1467B
+	for <lists+dmaengine@lfdr.de>; Tue, 29 Jul 2025 04:47:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CF4D23B2003
-	for <lists+dmaengine@lfdr.de>; Mon, 28 Jul 2025 16:27:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B337E162623
+	for <lists+dmaengine@lfdr.de>; Tue, 29 Jul 2025 02:47:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02C1D1A254E;
-	Mon, 28 Jul 2025 16:27:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B22EE2AF1C;
+	Tue, 29 Jul 2025 02:47:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d46dmfnh"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="fcEWcfCH"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F52A25E44D
-	for <dmaengine@vger.kernel.org>; Mon, 28 Jul 2025 16:27:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F3EDD515;
+	Tue, 29 Jul 2025 02:47:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753720066; cv=none; b=hmYZEcTopRCqS8ze61EegcGv+9V0FDqhPEZpV49ioteJxT6xoJ1fKeLiHDmZhdyts5fABiClGUWUs+McngaMUyxGFyKvXK77rTp8CZIfzHDqPL46A2Xb2vnWyW3UwzalYGeb979d4rG20tL/XrCDvM7YQ3/F3ZDKOiF7/1jC6XA=
+	t=1753757227; cv=none; b=JE1usKCDvlV8PSpaiKwew34pCxnHdo5VCcFOk2nS6vqb6NgDcbje6EFnWzcPsY0Hk0TgexvHcawTs+TtIJZbyMPzXgAQV4q5mViokvwtKRQyPVj7A31mwbANFlIEZyzewdVWpBLPKgseKSHREEdx/8i+v+PGzDiWTrw9jX7E0ks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753720066; c=relaxed/simple;
-	bh=Ya45jQPXHk2oP2X0G+LpFes59f3rujaPubzq7KF+/kc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WLbIRdA9OvKOvt+NE8DgBDzOKwSRZ0uKGsrtUezaiut6fZpXSZby+Tcx2gNYargH4/uRJ5Shp7boY4NIlefHFsd2yB5NxSTKBwrljCyyOHROw61cXnLSp+M8ySefK1KcWJ7A6tRk3RbCroskXIhVc7M1wOrGRzate2Vp0UwBmkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d46dmfnh; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1753720064;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xArcZSjUcc0JM++Nvf69XtSLwcuglbrEMCVCa+W7/Rs=;
-	b=d46dmfnhEguArYNbxDa1KzQffGKugeKnZl/NrbQZfqxAh0tVUiWzUZgggYypmOoxrrNKAk
-	zkk1VphMe5Tx8StNDNHAC+DYpwOHQukLanGTDS8vpTM0WZ7sdFfWQaczbboa+RXF69NYnT
-	JbeNhZ02M1NiWDyKuXGa6VhAlbWtxMs=
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com
- [209.85.166.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-222-Y_iivpYcPZuiER2w_jDzgw-1; Mon, 28 Jul 2025 12:27:41 -0400
-X-MC-Unique: Y_iivpYcPZuiER2w_jDzgw-1
-X-Mimecast-MFC-AGG-ID: Y_iivpYcPZuiER2w_jDzgw_1753720061
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-88118bfccf4so23361439f.2
-        for <dmaengine@vger.kernel.org>; Mon, 28 Jul 2025 09:27:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753720060; x=1754324860;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xArcZSjUcc0JM++Nvf69XtSLwcuglbrEMCVCa+W7/Rs=;
-        b=kcKKAlJ3T6OtX5gP83eotYzRcjDIRBbOHTmtEDyAszEthDjea32uOJ8tL15trALnXs
-         9xRRTSBvjTp61fjAT5JjgJSBxbZ6XQ1DHRisSqi29Q2YpwqUOuVVyJvXsKJVJ1Lqteu4
-         zLl+UstHGDSSLWJ823AOvuUsZORJcXK0ugQCLMkXY2+ygXkks1QO9/AFlG+sY0f9aiYu
-         cYCvm83nw/L6BLJiv86ZxR0PI8rNDrycKbvFJt9c9IvFaQBD5yTTHNzQASsZ0RIR8+6D
-         MiPPJGk3DInibcOBJlqVKupFJObF8nz71CBPR9kpJ8dHcTeQQmdqZlQ7jitVsCUwYD6y
-         CYjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWtMEDPjUbkUZZVMqTCPH0XVylaoBVuRLlW9by5TqGmic3oj+xy9jDC/wUIubp9NmK0rZmwPSGv5PQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwE01LxfYDRi4TL95845yl+XImbkpqWTWrTxmnNpDvsYb0GI9D
-	oL2N7SpwzsELEsxP3ut48d/Qf99dOzgNrdIVlyds3Ihby4RsN/E1QRVv1L+ysAD06Ot6uNk9hhP
-	lA0gK6VuQEQL+vnL7U02MNZI4WqhdZ5c61LXnOq7mJzTNImxWx46cHmdkIseZBA==
-X-Gm-Gg: ASbGncueGskBMIUe46FF1UZhz3PlGh9GH37VDX8kga+UB+XD8n/zsEWuj8mpQgacr45
-	xqwr2+65lgxhkOf30lzpjCDfKWyd3h9pRZq94K7BfV6cpNaV3SIoYNVfzCF2qI3zVfp0meS8V7g
-	iHOw09gNbPvstzlcmBy3pL9WmhZsf+YWdWndL5ydu0R9cwd1qEqxtqIYLBR3B1a3lDH/MGLJPyM
-	WffLVoIVucfQdmkDSG0iXA6msUFcu8dta8K4gzwMha9CzHKs0hFInpJnAPgx2LYNnOZwuKd+elA
-	LdK1ubojkB4n2jJT8kBZpUKvx+kz3B1Ngwnny+bBVgc=
-X-Received: by 2002:a05:6e02:1809:b0:3e2:c6a3:aa75 with SMTP id e9e14a558f8ab-3e3c5378324mr58629245ab.6.1753720060566;
-        Mon, 28 Jul 2025 09:27:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHpe+ugGAmXF2USuwRkLE9+KI7pOiQNBqc2vtbrZJCicQ1Wplt9KVvxUosu4y3uaaNZ0wXR2Q==
-X-Received: by 2002:a05:6e02:1809:b0:3e2:c6a3:aa75 with SMTP id e9e14a558f8ab-3e3c5378324mr58628985ab.6.1753720060073;
-        Mon, 28 Jul 2025 09:27:40 -0700 (PDT)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-508c9223199sm1944955173.51.2025.07.28.09.27.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Jul 2025 09:27:39 -0700 (PDT)
-Date: Mon, 28 Jul 2025 10:27:37 -0600
-From: Alex Williamson <alex.williamson@redhat.com>
-To: David Matlack <dmatlack@google.com>
-Cc: Aaron Lewis <aaronlewis@google.com>, Adhemerval Zanella
- <adhemerval.zanella@linaro.org>, Adithya Jayachandran
- <ajayachandra@nvidia.com>, Andrew Jones <ajones@ventanamicro.com>, Ard
- Biesheuvel <ardb@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>,
- Bibo Mao <maobibo@loongson.cn>, Claudio Imbrenda <imbrenda@linux.ibm.com>,
- Dan Williams <dan.j.williams@intel.com>, Dave Jiang <dave.jiang@intel.com>,
- dmaengine@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>, James
- Houghton <jthoughton@google.com>, Jason Gunthorpe <jgg@nvidia.com>, Joel
- Granados <joel.granados@kernel.org>, Josh Hilke <jrhilke@google.com>, Kevin
- Tian <kevin.tian@intel.com>, kvm@vger.kernel.org,
- linux-kselftest@vger.kernel.org, "Mike Rapoport (Microsoft)"
- <rppt@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, Pasha Tatashin
- <pasha.tatashin@soleen.com>, "Pratik R. Sampat" <prsampat@amd.com>, Saeed
- Mahameed <saeedm@nvidia.com>, Sean Christopherson <seanjc@google.com>,
- Shuah Khan <shuah@kernel.org>, Vinicius Costa Gomes
- <vinicius.gomes@intel.com>, Vipin Sharma <vipinsh@google.com>, Wei Yang
- <richard.weiyang@gmail.com>, "Yury Norov [NVIDIA]" <yury.norov@gmail.com>
-Subject: Re: [PATCH 00/33] vfio: Introduce selftests for VFIO
-Message-ID: <20250728102737.5b51e9da.alex.williamson@redhat.com>
-In-Reply-To: <CALzav=dVYqS8oQNbygVjgA69EQMBBP4CyzydyUoAjnN2mb_yUQ@mail.gmail.com>
-References: <20250620232031.2705638-1-dmatlack@google.com>
-	<CALzav=dVYqS8oQNbygVjgA69EQMBBP4CyzydyUoAjnN2mb_yUQ@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1753757227; c=relaxed/simple;
+	bh=D+FPW+QkNajT2Hthv8hkM6Z2omoy+iWP2Sa1NNuV25k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=t/qdgA44yBwx/CxKdCGiYyuIipngYgHL13VeblT78OyV3jTK2wsw32ZDvKa1etK9XfDEle87AnuLWigrG/RCj+GKxQAtK/ZcBVyKII5klPehojsG+BjK9fQpCCGHofwReIMv6NLbQw7qcSPYPSQp0cdx48kuHhUkLFVNg2TkHTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=fcEWcfCH; arc=none smtp.client-ip=115.124.30.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1753757221; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=rA02awKbGjsGq3aeI30pzRYAQiz1OmWefwu2Wzw9Xts=;
+	b=fcEWcfCHuPATyHcJLc29d2QcI4MOXe+IYEW0eWAWcTupSfHdtmFX7lRLBti9B4fkS0oDrO5WX1QAF7DNNP8tFZEaXGpcRfR8PznKj2m5g9ss0J58+K52mN0kEv7uIEFXKituH5tbA3IpnIkMwd6gA5rAmxVGxuxdzDFuFZ7FJP0=
+Received: from 30.246.181.19(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WkOG0kL_1753757219 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 29 Jul 2025 10:47:00 +0800
+Message-ID: <2ee448d2-76b2-446c-9368-8b90ec087419@linux.alibaba.com>
+Date: Tue, 29 Jul 2025 10:46:59 +0800
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] dmaengine: idxd: Fix refcount underflow on module
+ unload
+To: Yi Sun <yi.sun@intel.com>
+Cc: Fenghua Yu <fenghuay@nvidia.com>, vinicius.gomes@intel.com,
+ dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+ dave.jiang@intel.com, gordon.jin@intel.com
+References: <20250617102712.727333-1-yi.sun@intel.com>
+ <20250617102712.727333-3-yi.sun@intel.com>
+ <39398407-009e-4afe-acb6-e3de931627d7@nvidia.com>
+ <aIXuYVtGSV0OHHps@ysun46-mobl.ccr.corp.intel.com>
+ <316cd6b2-3519-4353-8c53-06997096b216@linux.alibaba.com>
+ <aIdiTlIU03stIdqe@ysun46-mobl.ccr.corp.intel.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <aIdiTlIU03stIdqe@ysun46-mobl.ccr.corp.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, 25 Jul 2025 09:47:48 -0700
-David Matlack <dmatlack@google.com> wrote:
 
-> On Fri, Jun 20, 2025 at 4:21=E2=80=AFPM David Matlack <dmatlack@google.co=
-m> wrote:
-> >
-> > This series introduces VFIO selftests, located in
-> > tools/testing/selftests/vfio/. =20
->=20
-> Hi Alex,
->=20
-> I wanted to discuss how you would like to proceed with this series.
->=20
-> The series is quite large, so one thing I was wondering is if you
-> think it should be split up into separate series to make it easier to
-> review and merge. Something like this:
->=20
->  - Patches 01-08 + 30 (VFIO selftests library, some basic tests, and run =
-script)
->  - Patches 09-22 (driver framework)
->  - Patches 23-28 (iommufd support)
->  - Patches 31-33 (integration with KVM selftests)
->=20
-> I also was curious about your thoughts on maintenance of VFIO
-> selftests, since I don't think we discussed that in the RFC. I am
-> happy to help maintain VFIO selftests in whatever way makes the most
-> sense. For now I added tools/testing/selftests/vfio under the
-> top-level VFIO section in MAINTAINERS (so you would be the maintainer)
-> and then also added a separate section for VFIO selftests with myself
-> as a Reviewer (see PATCH 01). Reviewer felt like a better choice than
-> Maintainer for myself since I am new to VFIO upstream (I've primarily
-> worked on KVM in the past).
 
-Hi David,
+在 2025/7/28 19:43, Yi Sun 写道:
+> On 28.07.2025 16:40, Shuai Xue wrote:
+>> Hi, Yi Sun, Fenghua Yu,
+>>
+>> 在 2025/7/27 17:16, Yi Sun 写道:
+>>> On 17.06.2025 14:58, Fenghua Yu wrote:
+>>>> Hi, Yi,
+>>>>
+>>>> On 6/17/25 03:27, Yi Sun wrote:
+>>>>> A recent refactor introduced a misplaced put_device() call, leading to a
+>>>>> reference count underflow during module unload.
+>>>>>
+>>>>> There is no need to add additional put_device() calls for idxd groups,
+>>>>> engines, or workqueues. Although commit a409e919ca3 claims:"Note, this
+>>>>> also fixes the missing put_device() for idxd groups, engines, and wqs."
+>>>>> It appears no such omission existed. The required cleanup is already
+>>>>> handled by the call chain:
+>>>>>
+>>>>>
+>>>>> Extend idxd_cleanup() to perform the necessary cleanup, and remove
+>>>>> idxd_cleanup_internals() which was not originally part of the driver
+>>>>> unload path and introduced unintended reference count underflow.
+>>>>>
+>>>>> Fixes: a409e919ca32 ("dmaengine: idxd: Refactor remove call with idxd_cleanup() helper")
+>>>>> Signed-off-by: Yi Sun <yi.sun@intel.com>
+>>>>>
+>>>>> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+>>>>> index 40cc9c070081..40f4bf446763 100644
+>>>>> --- a/drivers/dma/idxd/init.c
+>>>>> +++ b/drivers/dma/idxd/init.c
+>>>>> @@ -1292,7 +1292,10 @@ static void idxd_remove(struct pci_dev *pdev)
+>>>>>     device_unregister(idxd_confdev(idxd));
+>>>>>     idxd_shutdown(pdev);
+>>>>>     idxd_device_remove_debugfs(idxd);
+>>>>> -    idxd_cleanup(idxd);
+>>>>> +    perfmon_pmu_remove(idxd);
+>>>>> +    idxd_cleanup_interrupts(idxd);
+>>>>> +    if (device_pasid_enabled(idxd))
+>>>>> +        idxd_disable_system_pasid(idxd);
+>>>>>
+>>>> This will hit memory leak issue.
+>>>>
+>>>> idxd_remove_internals() does not only put_device() but also free allocated memory for wqs, engines, groups. Without calling idxd_remove_internals(), the allocated memory is leaked.
+>>>>
+>>>> I think a right fix is to remove the put_device() in idxd_cleanup_wqs/engines/groups() because:
+>>>>
+>>>> 1. idxd_setup_wqs/engines/groups() does not call get_device(). Their counterpart idxd_cleanup_wqs/engines/groups() shouldn't call put_device().
+>>>>
+>>>> 2. Fix the issue mentioned in this patch while there is no memory leak issue.
+>>>>
+>>>>>     pci_iounmap(pdev, idxd->reg_base);
+>>>>>     put_device(idxd_confdev(idxd));
+>>>>>     pci_disable_device(pdev);
+>>>>
+>>>> Thanks.
+>>>>
+>>>> -Fenghua
+>>>>
+>>>
+>>> Hi Fenghua,
+>>>
+>>> As with the comments on the previous patch, the function
+>>> idxd_conf_device_release already covers part of what is done in
+>>> idxd_remove_internals, including:
+>>>     kfree(idxd->groups);
+>>>     kfree(idxd->wqs);
+>>>     kfree(idxd->engines);
+>>>     kfree(idxd);
+>>>
+>>> We need to redesign idxd_remove_internals to clearly identify what
+>>> truely result in memory leaks and should be handled there.
+>>> Then, we'll need another patch to fix the idxd_remove_internals and call
+>>> it here.
+>>>
+>>> Let's prioritize addressing the two critical issues we've encountered here,
+>>> and then revisit the memory leak discussion afterward.
+>>>
+>>> Thanks
+>>>   --Sun, Yi
+>>
+>> The root cause is simliar to Patch 1, the idxd_conf_device_release()
+>> function already handles part of the cleanup that
+>> idxd_cleanup_internals() attempts to do, e.g.
+>>
+>>    idxd->wqs
+>>    idxd->einges
+>>    idxd->groups
+>>
+>> As a result, it causes user-after-free issue.
+>>
+>>    ------------[ cut here ]------------
+>>    WARNING: CPU: 190 PID: 13854 at lib/refcount.c:28 refcount_warn_saturate+0xbe/0x110
+>>    refcount_t: underflow; use-after-free.
+>>    drm_client_lib(E) i2c_algo_bit(E) drm_shmem_helper(E) drm_kms_helper(E) nvme(E) mlx5_core(E) mlxfw(E) nvme_core(E) pci_hyperv_intf(E) psample(E) drm(E) wmi(E) pinctrl_emmitsburg(E) sd_mod(E) sg(E) ahci(E) libahci(E) libata(E) fuse(E)
+>>    Modules linked in: binfmt_misc(E) bonding(E) tls(E) intel_rapl_msr(E) intel_rapl_common(E) intel_uncore_frequency(E) intel_uncore_frequency_common(E) i10nm_edac(E) skx_edac_common(E) nfit(E) x86_pkg_temp_thermal(E) intel_powerclamp(E) coretemp(E) kvm_intel(E) snd_hda_intel(E) kvm(E) snd_intel_dspcfg(E) snd_hda_codec(E) mlx5_ib(E) irqbypass(E) qat_4xxx(E) snd_hda_core(E) dax_hmem(E) ghash_clmulni_intel(E) intel_qat(E) cxl_acpi(E) snd_hwdep(E) rapl(E) snd_pcm(E) cxl_port(E) iTCO_wdt(E) intel_cstate(E) iTCO_vendor_support(E) snd_timer(E) ib_uverbs(E) pmt_telemetry(E) cxl_core(E) rfkill(E) tun(E) dh_generic(E) pmt_class(E) intel_uncore(E) einj(E) pcspkr(E) isst_if_mbox_pci(E) joydev(E) isst_if_mmio(E) idxd(E-) crc8(E) ib_core(E) isst_if_common(E) authenc(E) intel_vsec(E) idxd_bus(E) snd(E) i2c_i801(E) mei_me(E) soundcore(E) i2c_smbus(E) i2c_ismt(E) mei(E) nf_tables(E) nfnetlink(E) ipmi_ssif(E) acpi_power_meter(E) ipmi_si(E) acpi_ipmi(E) ipmi_devintf(E) ipmi_msghandle
+>>    CPU: 190 UID: 0 PID: 13854 Comm: rmmod Kdump: loaded Tainted: G S          E       6.16.0-rc6+ #116 PREEMPT(none)
+>>    Tainted: [S]=CPU_OUT_OF_SPEC, [E]=UNSIGNED_MODULE
+>>    Hardware name: Inspur AliServer-Xuanwu2.0-02-1UCG42PF/AS2111TG5, BIOS 3.0.ES.AL.P.090.01 02/22/2024
+>>    RIP: 0010:refcount_warn_saturate+0xbe/0x110
+>>    RSP: 0018:ff7078d2df957db8 EFLAGS: 00010282
+>>    RAX: 0000000000000000 RBX: 0000000000000001 RCX: 0000000000000000
+>>    RBP: ff2b10355b055000 R08: 0000000000000000 R09: ff7078d2df957c68
+>>    RDX: ff2b10b33fdaa3c0 RSI: 0000000000000001 RDI: ff2b10b33fd9c440
+>>    R10: ff7078d2df957c60 R11: ffffffffbe761d68 R12: ff2b1035a00db400
+>>    R13: ff2b10355670b148 R14: ff2b103555097c80 R15: ffffffffc0a88938
+>>    FS:  00007fb5f8f3b740(0000) GS:ff2b10b380bb9000(0000) knlGS:0000000000000000
+>>    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>    CR2: 00005560a898c2d8 CR3: 00000080f9def005 CR4: 0000000000f73ef0
+>>    PKRU: 55555554
+>>    Code: 01 01 e8 35 9b 9a ff 0f 0b c3 cc cc cc cc 80 3d 05 4c f5 01 00 75 85 48 c7 c7 30 21 75 bd c6 05 f5 4b f5 01 01 e8 12 9b 9a ff <0f> 0b c3 cc cc cc cc 80 3d e0 4b f5 01 00 0f 85 5e ff ff ff 48 c7
+>>    Call Trace:
+>>    idxd_cleanup+0x6b/0x100 [idxd]
+>>    <TASK>
+>>    idxd_remove+0x46/0x70 [idxd]
+>>    pci_device_remove+0x3f/0xb0
+>>    driver_detach+0x48/0x90
+>>    device_release_driver_internal+0x197/0x200
+>>    bus_remove_driver+0x6d/0xf0
+>>    idxd_exit_module+0x34/0x6c0 [idxd]
+>>    __do_sys_delete_module.constprop.0+0x174/0x310
+>>    do_syscall_64+0x5f/0x2d0
+>>    pci_unregister_driver+0x2e/0xb0
+>>    entry_SYSCALL_64_after_hwframe+0x76/0x7e
+>>    RIP: 0033:0x7fb5f8a620cb
+>>    Code: 73 01 c3 48 8b 0d a5 6d 19 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa b8 b0 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 75 6d 19 00 f7 d8 64 89 01 48
+>>    RSP: 002b:00007ffeed6101c8 EFLAGS: 00000206 ORIG_RAX: 00000000000000b0
+>>    RAX: ffffffffffffffda RBX: 00005560a8981790 RCX: 00007fb5f8a620cb
+>>    RDX: 000000000000000a RSI: 0000000000000800 RDI: 00005560a89817f8
+>>    R13: 00007ffeed612352 R14: 00005560a89812a0 R15: 00005560a8981790
+>>    R10: 00007fb5f8baaac0 R11: 0000000000000206 R12: 00007ffeed6103f0
+>>    </TASK>
+>>    ---[ end trace 0000000000000000 ]---
+>>
+>> With this patch applied, the user-after-free issue is fixed.
+>>
+>> But, there is still memory leaks in
+>>
+>>    idxd->wqs[i]
+>>    idxd->einges[i]
+>>    idxd->groups[i]
+>>
+>> I agree with Vinicius that we should cleanup in idxd_conf_device_release().
+>>
+>> Thanks.
+>> Shuai
+> 
+> Appreciate Shuai's clarification. Yes, it would be better if fixing the memory
+> leak issue in idxd_conf_device_release() in a separate patch.
+> 
+> @Shuai, please feel free to proceed if you'd like to cook a patch for it.
+> 
+> Thanks
+>     --Sun, Yi
 
-There's a lot of potential here and I'd like to see it proceed.  I've
-got various unit tests that we could incorporate over time and
-obviously picking up Aaron's latency would be useful as well.
+Hi, Sun, Yi,
 
-Something that we should continue to try to improve is the automation.
-These tests are often targeting a specific feature, so matching a
-device to a unit test becomes a barrier to automated runs.  I wonder if
-we might be able to reach a point where the test runner can select
-appropriate devices from a pool of devices specified via environment
-variables.
+I need to correct my previous analysis. After further investigation, I
+believe there is no memory leak in the current code. The device
+reference counting and memory management are properly handled through
+the Linux device model. Each component is freed at the conf_dev
+destruction time:
 
-An incremental approach like you're suggesting is usually the best
-course.  Implement the framework and something basic, then build on it.
-30+ patches is a bit much to chew on initially.
 
-Your recommendation for MAINTAINERS sounds good to me.  I'm not too
-familiar with the selftests, so I'll clearly be looking for your input
-once we've established the initial code.  Thanks,
+     idxd->wqs[i] is freed by idxd_conf_wq_release()
+     idxd->einges[i] is freed by idxd_conf_engine_release()
+     idxd->groups[i] is freed by idxd_conf_group_release()
 
-Alex
 
+Adding additional cleanup in idxd_conf_device_release() would actually
+cause double-free issues. I can reproduce this with KASAN:
+
+[kernel][err]BUG: KASAN: slab-use-after-free in idxd_clean_groups+0x137/0x250 [idxd]
+[kernel][err]==================================================================
+[kernel][err]Read of size 4 at addr ff1100822ff89038 by task rmmod/13956
+[kernel][err]
+[kernel][err]CPU: 185 UID: 0 PID: 13956 Comm: rmmod Kdump: loaded Tainted: G S          E       6.16.0-rc6+ #117 PREEMPT(none)
+[kernel][err]Tainted: [S]=CPU_OUT_OF_SPEC, [E]=UNSIGNED_MODULE
+[kernel][err]Hardware name: Inspur AliServer-Xuanwu2.0-02-1UCG42PF/AS2111TG5, BIOS 3.0.ES.AL.P.090.01 02/22/2024
+[kernel][err]Call Trace:
+[kernel][err]<TASK>
+[kernel][err]dump_stack_lvl+0x55/0x70
+[kernel][err]print_address_description.constprop.0+0x27/0x2e0
+[kernel][err]? idxd_clean_groups+0x137/0x250 [idxd]
+[kernel][err]print_report+0x3e/0x70
+[kernel][err]kasan_report+0xb8/0xf0
+[kernel][err]? idxd_clean_groups+0x137/0x250 [idxd]
+[kernel][err]kasan_check_range+0x39/0x1b0
+[kernel][err]idxd_clean_groups+0x137/0x250 [idxd]
+[kernel][err]idxd_cleanup_internals+0x1f/0x1b0 [idxd]
+[kernel][err]idxd_conf_device_release+0xe2/0x2b0 [idxd]
+[kernel][err]device_release+0x9c/0x210
+[kernel][err]kobject_cleanup+0x101/0x360
+[kernel][err]pci_device_remove+0xab/0x1e0
+[kernel][err]idxd_remove+0x93/0xb0 [idxd]
+[kernel][err]device_release_driver_internal+0x369/0x530
+[kernel][err]driver_detach+0xbf/0x180
+[kernel][err]bus_remove_driver+0x11b/0x2a0
+[kernel][err]pci_unregister_driver+0x2a/0x250
+[kernel][err]? kobject_put+0x55/0xe0
+[kernel][err]idxd_exit_module+0x34/0x40 [idxd]
+[kernel][err]__do_sys_delete_module.constprop.0+0x2ee/0x580
+[kernel][err]? fput_close_sync+0xdd/0x190
+[kernel][err]? __pfx___do_sys_delete_module.constprop.0+0x10/0x10
+[kernel][err]do_syscall_64+0x5d/0x2d0
+[kernel][err]? __pfx_fput_close_sync+0x10/0x10
+[kernel][err]entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[kernel][err]RIP: 0033:0x7f2ac20620cb
+[kernel][err]Code: 73 01 c3 48 8b 0d a5 6d 19 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa b8 b0 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 75 6d 19 00 f7 d8 64 89 01 48
+[kernel][err]RSP: 002b:00007ffdfec0a598 EFLAGS: 00000206 ORIG_RAX: 00000000000000b0
+[kernel][err]RDX: 000000000000000a RSI: 0000000000000800 RDI: 0000560bd6bd77f8
+[kernel][err]RAX: ffffffffffffffda RBX: 0000560bd6bd7790 RCX: 00007f2ac20620cb
+[kernel][err]R10: 00007f2ac21aaac0 R11: 0000000000000206 R12: 00007ffdfec0a7c0
+[kernel][err]RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+[kernel][err]</TASK>
+[kernel][err]R13: 00007ffdfec0b352 R14: 0000560bd6bd72a0 R15: 0000560bd6bd7790
+[kernel][err]Allocated by task 1445:
+[kernel][err]
+[kernel][warning]kasan_save_stack+0x24/0x50
+[kernel][warning]kasan_save_track+0x14/0x30
+[kernel][warning]__kasan_kmalloc+0xaa/0xb0
+[kernel][warning]idxd_setup_groups+0x2b5/0x7a0 [idxd]
+[kernel][warning]idxd_setup_internals+0xd1/0x6e0 [idxd]
+[kernel][warning]idxd_probe+0x93/0x310 [idxd]
+[kernel][warning]idxd_pci_probe_alloc+0x3f3/0x6e0 [idxd]
+[kernel][warning]local_pci_probe+0xe5/0x1a0
+[kernel][warning]work_for_cpu_fn+0x52/0xa0
+[kernel][warning]process_one_work+0x652/0x1080
+[kernel][warning]worker_thread+0x652/0xc70
+[kernel][warning]ret_from_fork+0x253/0x2e0
+[kernel][warning]kthread+0x34a/0x450
+[kernel][warning]ret_from_fork_asm+0x1a/0x30
+[kernel][err]
+[kernel][err]Freed by task 13956:
+[kernel][warning]kasan_save_stack+0x24/0x50
+[kernel][warning]kasan_save_track+0x14/0x30
+[kernel][warning]kasan_save_free_info+0x3a/0x60
+[kernel][warning]__kasan_slab_free+0x54/0x70
+[kernel][warning]kfree+0x12e/0x430
+[kernel][warning]device_release+0x9c/0x210
+[kernel][warning]kobject_cleanup+0x101/0x360
+[kernel][warning]idxd_unregister_devices+0x22d/0x320 [idxd]
+[kernel][warning]pci_device_remove+0xab/0x1e0
+[kernel][warning]idxd_remove+0x3c/0xb0 [idxd]
+[kernel][warning]driver_detach+0xbf/0x180
+[kernel][warning]device_release_driver_internal+0x369/0x530
+[kernel][warning]bus_remove_driver+0x11b/0x2a0
+[kernel][warning]pci_unregister_driver+0x2a/0x250
+[kernel][warning]idxd_exit_module+0x34/0x40 [idxd]
+[kernel][warning]do_syscall_64+0x5d/0x2d0
+[kernel][warning]__do_sys_delete_module.constprop.0+0x2ee/0x580
+[kernel][err]
+[kernel][err]The buggy address belongs to the object at ff1100822ff89000
+
+The issue shows memory being freed during device_release(), then
+accessed again in idxd_conf_device_release().
+
+Your original approach is correct - the kernel's device model handles
+the memory management properly, and we should not interfere with it.
+
+Feel free to add:
+
+Tested-by: Shuai Xue <xueshuai@linux.alibaba.com>
+
+Sorry for the confusion in my earlier analysis.
+
+Best Regards,
+Shuai
 

@@ -1,63 +1,63 @@
-Return-Path: <dmaengine+bounces-5884-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5885-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6B8EB14FEB
-	for <lists+dmaengine@lfdr.de>; Tue, 29 Jul 2025 17:04:14 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D5A6DB14FED
+	for <lists+dmaengine@lfdr.de>; Tue, 29 Jul 2025 17:04:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4DAF77A40FD
-	for <lists+dmaengine@lfdr.de>; Tue, 29 Jul 2025 15:02:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 46948188C033
+	for <lists+dmaengine@lfdr.de>; Tue, 29 Jul 2025 15:04:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EBCD1EF397;
-	Tue, 29 Jul 2025 15:03:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C85F62853EA;
+	Tue, 29 Jul 2025 15:04:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UWGR4HPV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d6odanAi"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E533D1D63F2;
-	Tue, 29 Jul 2025 15:03:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D195288C32;
+	Tue, 29 Jul 2025 15:04:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753801438; cv=none; b=DKGRFlzsPAOZvGKTkz14mUmD9WXLWpniJ03i/u6LlfcY/EKOf5iO6F6ZPrekJrB0fWEzDDzSXoocgOJgUeM4RyiiK/yx0Z0rcKJVkKR+RsniwCco5u7lPbnrj37tAxyFkWT2qANp5hDygwm++1dUfuSV8jMefDUYx63M6O61FWM=
+	t=1753801442; cv=none; b=HiNR/3fnKax9Rbg1nvxrIXlOeANOojjBops7JwubhVgg4aID2iAnWz163rEObShHBVhtPsww9hIXA+6Xc6RzI84oetrf9xQ/2sTXMCnWVaGTgq1tt8RO8UxKKbaphvF58D22ihj9mzZ0aR9BvQhnFUrq0iVz3TSBTLzEgx079v8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753801438; c=relaxed/simple;
-	bh=By4rNMkkWQ13R8Lapcpa6Ff0HaJjIHQmS9wNJ6zpWfg=;
+	s=arc-20240116; t=1753801442; c=relaxed/simple;
+	bh=NDo2MtnREb/2JAL1a20dh5qK/0kehybsC86pu0c1U6U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=k7mOn48qKHUedMm6zk9yXRzITrSNlUXm70nkkLCqP39ZGBNuiixnS1fX9L6CH1LfcFSWtE+lGCmO8i8LcGXUdQZGe3eHaO42Dse+2pXsGcmjyfdUpPtGQ4MEFpgp6i0b5W9ossb0T6gS9MQ02shNGnK2L8PzRtHuQQ9q4PyDqos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UWGR4HPV; arc=none smtp.client-ip=192.198.163.11
+	 MIME-Version; b=NOXJd4x9dH0O9omdkmRLMt/8uYWkjSGozbA3dI7lms4Zp5fvu344q3yCCyIvM688qVgtB/om5y7M6gW8MG4CW3f8TgFt2gulBCnNGlwv2FO0tkzHxbH+uUIBzP4bEX2cOadqjo7qB2jujsYMITXppmY99GOLc0HMjIp51UUh26c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d6odanAi; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1753801437; x=1785337437;
+  t=1753801441; x=1785337441;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=By4rNMkkWQ13R8Lapcpa6Ff0HaJjIHQmS9wNJ6zpWfg=;
-  b=UWGR4HPVOqxHhPYOOETEHzzI/09WhiJMnl8KWqzISIV2sskmyYQ4nnn6
-   ZwLSx+Kbc4s1/s2lSe3QBraqOOfoRSuRIEmOPWHbhCzkuGRDV8vcL6FIZ
-   p0W6R7gAsC2g7N/WnMjJ8yO/sL6lY1+qmsPLSxaXo5cM298NxZW0dEq1s
-   388GUFwtaYc/Y/jORqxCIYi4kNH81x/TE2L5EQfqFIMD87ihea4B864Vf
-   jCrsjAbTehixmwf2epmPFZwxo+2ewcCAb7EDabtwPoTP3/RQsRcN+kgvW
-   nHTm68d7/oDZHVCGi9ryP5wCDsZwfl4vSEpDot6AoBAWO13J1EcH4R3F0
+  bh=NDo2MtnREb/2JAL1a20dh5qK/0kehybsC86pu0c1U6U=;
+  b=d6odanAiuw/YN9SblYWzLCys2SEzaTdhMehVH7DTk8TEj6nEgmWFkdW+
+   oX2WjoM3ViESpsVYjEc/u9FXdatvyfHhaR5fNm1ASRONirBqhM+8xrIOh
+   NOASkiz64hax0Iwi2kAD/AUHT6941lG2u9PlxJIXbnH0AgbT5pqRHv9vF
+   POn0WBhfca7+n6sOcaoXoonkt+VQvbr7HUf9t+K0zUP/4lSX4XoMnLOSf
+   6JvtAHYWgKqrGHZWmPODGeaaj2Bkgsl3yYjzJPk/PY+tcH9pI9+/+QFxC
+   tZxJAy85JbfyMXWDTVqiB/LIHNQxcxXu9DDdtG9pwrO4b8WA44Du/FNwn
    w==;
-X-CSE-ConnectionGUID: 3ckQ2po/QQCNTCgFRde/FA==
-X-CSE-MsgGUID: vLLz7PfkQhKggIogKQyB5g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11506"; a="66643474"
+X-CSE-ConnectionGUID: Q/ilcqZsTamSQzI57n4L7Q==
+X-CSE-MsgGUID: FA+Z06WCROShhKy3QuXvKg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11506"; a="66643485"
 X-IronPort-AV: E=Sophos;i="6.16,349,1744095600"; 
-   d="scan'208";a="66643474"
+   d="scan'208";a="66643485"
 Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2025 08:03:56 -0700
-X-CSE-ConnectionGUID: 6o7Fu/s6SymJG4yVuSVyFw==
-X-CSE-MsgGUID: 5coi9X4YRN2uO2j1fKGQoA==
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2025 08:04:01 -0700
+X-CSE-ConnectionGUID: A/XWs6NUTVK/11eKlqr0xw==
+X-CSE-MsgGUID: v1b4b8mjQu2qVqiY7Hnycg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,349,1744095600"; 
-   d="scan'208";a="163069751"
+   d="scan'208";a="163069781"
 Received: from ysun46-mobl (HELO YSUN46-MOBL..) ([10.239.96.51])
-  by fmviesa009.fm.intel.com with ESMTP; 29 Jul 2025 08:03:54 -0700
+  by fmviesa009.fm.intel.com with ESMTP; 29 Jul 2025 08:03:59 -0700
 From: Yi Sun <yi.sun@intel.com>
 To: vinicius.gomes@intel.com,
 	vkoul@kernel.org,
@@ -68,9 +68,9 @@ Cc: dmaengine@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	yi.sun@intel.com,
 	gordon.jin@intel.com
-Subject: [PATCH v3 RESEND 1/2] dmaengine: idxd: Remove improper idxd_free
-Date: Tue, 29 Jul 2025 23:03:12 +0800
-Message-ID: <20250729150313.1934101-2-yi.sun@intel.com>
+Subject: [PATCH RESEND v3 2/2] dmaengine: idxd: Fix refcount underflow on module unload
+Date: Tue, 29 Jul 2025 23:03:13 +0800
+Message-ID: <20250729150313.1934101-3-yi.sun@intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250729150313.1934101-1-yi.sun@intel.com>
 References: <20250729150313.1934101-1-yi.sun@intel.com>
@@ -82,52 +82,42 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The call to idxd_free() introduces a duplicate put_device() leading to a
-reference count underflow:
-refcount_t: underflow; use-after-free.
-WARNING: CPU: 15 PID: 4428 at lib/refcount.c:28 refcount_warn_saturate+0xbe/0x110
-...
-Call Trace:
- <TASK>
-  idxd_remove+0xe4/0x120 [idxd]
-  pci_device_remove+0x3f/0xb0
-  device_release_driver_internal+0x197/0x200
-  driver_detach+0x48/0x90
-  bus_remove_driver+0x74/0xf0
-  pci_unregister_driver+0x2e/0xb0
-  idxd_exit_module+0x34/0x7a0 [idxd]
-  __do_sys_delete_module.constprop.0+0x183/0x280
-  do_syscall_64+0x54/0xd70
-  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+A recent refactor introduced a misplaced put_device() call, resulting in a
+reference count underflow during module unload.
 
-The idxd_unregister_devices() which is invoked at the very beginning of
-idxd_remove(), already takes care of the necessary put_device() through the
-following call path:
+There is no need to add additional put_device() calls for idxd groups,
+engines, or workqueues. Although the commit claims: "Note, this also
+fixes the missing put_device() for idxd groups, engines, and wqs."
+
+It appears no such omission actually existed. The required cleanup is
+already handled by the call chain:
 idxd_unregister_devices() -> device_unregister() -> put_device()
 
-In addition, when CONFIG_DEBUG_KOBJECT_RELEASE is enabled, put_device() may
-trigger asynchronous cleanup via schedule_delayed_work(). If idxd_free() is
-called immediately after, it can result in a use-after-free.
+Extend idxd_cleanup() to handle the remaining necessary cleanup and
+remove idxd_cleanup_internals(), which duplicates deallocation logic
+for idxd, engines, groups, and workqueues. Memory management is also
+properly handled through the Linux device model.
 
-Remove the improper idxd_free() to avoid both the refcount underflow and
-potential memory corruption during module unload.
-
-Fixes: d5449ff1b04d ("dmaengine: idxd: Add missing idxd cleanup to fix memory leak in remove call")
+Fixes: a409e919ca32 ("dmaengine: idxd: Refactor remove call with idxd_cleanup() helper")
 Signed-off-by: Yi Sun <yi.sun@intel.com>
 Tested-by: Shuai Xue <xueshuai@linux.alibaba.com>
 
 diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index 80355d03004d..40cc9c070081 100644
+index 40cc9c070081..40f4bf446763 100644
 --- a/drivers/dma/idxd/init.c
 +++ b/drivers/dma/idxd/init.c
-@@ -1295,7 +1295,6 @@ static void idxd_remove(struct pci_dev *pdev)
- 	idxd_cleanup(idxd);
+@@ -1292,7 +1292,10 @@ static void idxd_remove(struct pci_dev *pdev)
+ 	device_unregister(idxd_confdev(idxd));
+ 	idxd_shutdown(pdev);
+ 	idxd_device_remove_debugfs(idxd);
+-	idxd_cleanup(idxd);
++	perfmon_pmu_remove(idxd);
++	idxd_cleanup_interrupts(idxd);
++	if (device_pasid_enabled(idxd))
++		idxd_disable_system_pasid(idxd);
  	pci_iounmap(pdev, idxd->reg_base);
  	put_device(idxd_confdev(idxd));
--	idxd_free(idxd);
  	pci_disable_device(pdev);
- }
- 
 -- 
 2.43.0
 

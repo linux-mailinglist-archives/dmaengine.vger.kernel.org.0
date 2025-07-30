@@ -1,48 +1,48 @@
-Return-Path: <dmaengine+bounces-5894-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5895-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A04E7B158E2
-	for <lists+dmaengine@lfdr.de>; Wed, 30 Jul 2025 08:20:50 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 83A29B158E4
+	for <lists+dmaengine@lfdr.de>; Wed, 30 Jul 2025 08:21:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E8E767A942F
-	for <lists+dmaengine@lfdr.de>; Wed, 30 Jul 2025 06:19:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DBA2F18A3CEB
+	for <lists+dmaengine@lfdr.de>; Wed, 30 Jul 2025 06:21:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5EC91F237E;
-	Wed, 30 Jul 2025 06:20:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 899731E1A05;
+	Wed, 30 Jul 2025 06:21:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B7uHLZtZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n95A/PgZ"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1BFD1F1505
-	for <dmaengine@vger.kernel.org>; Wed, 30 Jul 2025 06:20:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6510D1DED53
+	for <dmaengine@vger.kernel.org>; Wed, 30 Jul 2025 06:21:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753856437; cv=none; b=WyIm5KkzenKO8iRiqOnbmk6qgfwsDJHJuBxBFOVGWWCrRZOGqbZKtjGywOM1tP+7G5TF5W1JwLLj9kyFEIBotm17FLczvPoRJcsGWKWfAfqHjXhzDs6qqKto5tHSWcr+JwZ/JcM9YyczkQHueSRI0pVNHiF3InDDg6P3tXw6dMo=
+	t=1753856478; cv=none; b=mOJkDSDyYQG+yK5IA91vCv0OFiTApLrgsueg8c3C+7tevkLocpAxHXbnFG6k+JI61eJKe68XQvQliCU6C/4OBdUC7VOH9Ak9xqQmAq5mjeqNi+kA/Nq49TkGJS3FN14Z3b/PUv9bjZkuebQkchVNKxKQyXkXoLxqrbjTnAiLAxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753856437; c=relaxed/simple;
-	bh=FWmBq0NvPFFQxwfC2fiFUeF3y3HXilhtDyIYBQ/2lO0=;
+	s=arc-20240116; t=1753856478; c=relaxed/simple;
+	bh=gEPas/9v3419KhzWeByeQH7ddHhIG6bTwPhQXr0LO3A=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aVR+8W5NfwB3nFO3UzA7WspCsvMxDCNupKRzmExLkYDAvmkMr+xf9FJln7EtI3/SkPxLo5Ko3IFhuggMp2+rpL/cIlS8h/M9lxkbbj0O/dBn18io3iDDicX8VEotPpKrnT7C9rAAl1vimcaUANFBEaEWjrPe2MQGftQh4dmcomQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B7uHLZtZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8D23C4CEF7;
-	Wed, 30 Jul 2025 06:20:35 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=UcMxX4X8Cfd5j6dVJLrWQSk/v8YEC4MLI15Q/LDGf63IY3Desn/9BiYo2GzPBBJ9A3d1tML0cJROvehg4I7m1+Y9JOVXu2H0NFNj//kqV7FCKkyA8QV+kr9LFOTMVUwsOjCUWY1qm6duWV4VHhNtMe3HXNPI76IDmD9rgHgVDBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n95A/PgZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85BC2C4CEE7;
+	Wed, 30 Jul 2025 06:21:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753856437;
-	bh=FWmBq0NvPFFQxwfC2fiFUeF3y3HXilhtDyIYBQ/2lO0=;
+	s=k20201202; t=1753856477;
+	bh=gEPas/9v3419KhzWeByeQH7ddHhIG6bTwPhQXr0LO3A=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=B7uHLZtZWK8J/W/yzlEaNLkcfvWXqqk7oAnsp+B78uTRR7lhHGMYsWlYImlQ0i8iD
-	 8NpuI5nHlebdd5NDmleBBu0mOhY0kPIJ7xX1T32cidfVJfUnObEn2NLHD+LyVpfyrv
-	 kLg2Rd9eOOfeh5WOuBjql4UfijTFute8Uls5ZVLHZ6bFQZFcZAuJX0Uw/3/I7srZu+
-	 X+8xQO2WFQruGLqRz3mK2GPsACUuZLAb6f8N+lmbyDkKqxARdLQRQ+sbRjEdAqjyTW
-	 0Ve+97p+aUL0fIQ+KA1+as0svGk8I7hgOGVXuKjEGNvs59R81j1qwZ2RagKn1as0Mr
-	 uixNImXifPd5A==
-Message-ID: <e3462ab4-73fe-4960-af4c-a7360288e3e3@kernel.org>
-Date: Wed, 30 Jul 2025 08:20:33 +0200
+	b=n95A/PgZeG+t1J2Z2oQ0HBOuIv3BkeiSwfii6FNjQRjhZXXTGLOu6/pHlRwQllKwr
+	 CXbHfTFREWF3bEQstsuBTVWJsPwFDNuTFBPP386bcInJYgBP2fo4XEeGPdB4AvoHjA
+	 YYytLCyHaWTRS1UdkpEgR/f38Q0SHQk0jQqMf/vJnED6YaYXOXCYTENXfRnJ6Ut/fB
+	 dmLNd9RsjB//DeM+RhYBJL4CXzPdQl4PU3g6KveHD6K3f/OD0TPHqx9721tg9yrqQT
+	 mUtbwahJM4z8eXLNZ+j58LhcV96QQoQH9cWFAwESLB4kV7bEw47cXlLlZOI/eveM4w
+	 o6j60eeVTsR5A==
+Message-ID: <576472a3-663d-41c0-9c6d-1b25e0707dcd@kernel.org>
+Date: Wed, 30 Jul 2025 08:21:14 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -50,13 +50,13 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/5] dmaengine: lgm-dma: split legacy DMA and HDMA
- functions
+Subject: Re: [PATCH 4/5] dmaengine: lgm-dma: Added HDMA software mode TX
+ function.
 To: Zhu Yixin <yzhu@maxlinear.com>, dmaengine@vger.kernel.org,
  vkoul@kernel.org
 Cc: jchng@maxlinear.com, sureshnagaraj@maxlinear.com
 References: <20250730024547.3160871-1-yzhu@maxlinear.com>
- <20250730024547.3160871-3-yzhu@maxlinear.com>
+ <20250730024547.3160871-4-yzhu@maxlinear.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -102,41 +102,36 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250730024547.3160871-3-yzhu@maxlinear.com>
+In-Reply-To: <20250730024547.3160871-4-yzhu@maxlinear.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 30/07/2025 04:45, Zhu Yixin wrote:
-> Move legacy DMA functions into lgm-cdma.c.
-> Move HDMA functions into lgm-hdma.c
-> Keep the driver flow and general functions in lgm-dma.c
+> Added HDMA software mode to handle DMA TX functions.
 > 
 > Signed-off-by: Zhu Yixin <yzhu@maxlinear.com>
 > ---
->  .../devicetree/bindings/dma/intel,ldma.yaml   |   7 +-
->  drivers/dma/lgm/Makefile                      |   2 +-
->  drivers/dma/lgm/lgm-cdma.c                    | 492 ++++++++++
->  drivers/dma/lgm/lgm-dma.c                     | 839 ++----------------
->  drivers/dma/lgm/lgm-dma.h                     | 278 ++++++
->  drivers/dma/lgm/lgm-hdma.c                    | 130 +++
->  6 files changed, 961 insertions(+), 787 deletions(-)
->  create mode 100644 drivers/dma/lgm/lgm-cdma.c
->  create mode 100644 drivers/dma/lgm/lgm-dma.h
->  create mode 100644 drivers/dma/lgm/lgm-hdma.c
+>  .../devicetree/bindings/dma/intel,ldma.yaml   |   6 +
+>  drivers/dma/lgm/lgm-cdma.c                    |  42 +-
+>  drivers/dma/lgm/lgm-dma.c                     | 189 +++++---
+>  drivers/dma/lgm/lgm-dma.h                     |  31 +-
+>  drivers/dma/lgm/lgm-hdma.c                    | 453 +++++++++++++++++-
+>  5 files changed, 608 insertions(+), 113 deletions(-)
 > 
 > diff --git a/Documentation/devicetree/bindings/dma/intel,ldma.yaml b/Documentation/devicetree/bindings/dma/intel,ldma.yaml
-> index 59f928297613..f91d849edc4c 100644
+> index f91d849edc4c..e58f1d13aee3 100644
 > --- a/Documentation/devicetree/bindings/dma/intel,ldma.yaml
 > +++ b/Documentation/devicetree/bindings/dma/intel,ldma.yaml
-> @@ -15,7 +15,8 @@ allOf:
->  properties:
->    compatible:
->      enum:
-> -      - intel,lgm-ldma
-> +      - intel,lgm-cdma
-> +      - intel,lgm-hdma
-
-NAK, stop random changes to compatibles.
+> @@ -118,6 +118,11 @@ properties:
+>      description:
+>        Name of the DMA.
+>  
+> +  intel,dma-hw-desc:
+> +    type: boolean
+> +    description:
+> +      DMA descriptor manupulated by Hardware.
+Your commit msg explains nothing, so basically: no. Write proper commit
+msgs documenting hardware, not software.
 
 Please run scripts/checkpatch.pl on the patches and fix reported
 warnings. After that, run also 'scripts/checkpatch.pl --strict' on the
@@ -163,7 +158,6 @@ a waste of time.
 
 Please kindly resend and include all necessary To/Cc entries.
 </form letter>
-
 
 Best regards,
 Krzysztof

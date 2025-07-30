@@ -1,257 +1,675 @@
-Return-Path: <dmaengine+bounces-5887-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5888-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6007CB15540
-	for <lists+dmaengine@lfdr.de>; Wed, 30 Jul 2025 00:26:45 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 29F12B157A2
+	for <lists+dmaengine@lfdr.de>; Wed, 30 Jul 2025 04:56:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 758CF3AE70E
-	for <lists+dmaengine@lfdr.de>; Tue, 29 Jul 2025 22:26:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 218D75470B4
+	for <lists+dmaengine@lfdr.de>; Wed, 30 Jul 2025 02:56:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2FE8283FE9;
-	Tue, 29 Jul 2025 22:26:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CD6F1ADC83;
+	Wed, 30 Jul 2025 02:56:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="CH6SMMxA"
+	dkim=pass (2048-bit key) header.d=maxlinear.com header.i=@maxlinear.com header.b="3S7fjpc4"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2049.outbound.protection.outlook.com [40.107.220.49])
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2073.outbound.protection.outlook.com [40.107.102.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53907192D6B;
-	Tue, 29 Jul 2025 22:26:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB21C2260C
+	for <dmaengine@vger.kernel.org>; Wed, 30 Jul 2025 02:56:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.73
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753828001; cv=fail; b=CHUATvQF8SsevDrSzyDiXaurlkHpIpMCrGGpOrskP5xOj4CX7+3Z4LJ/zfN/eEQxzgmzoSlxoZtKMHMxdjk6akG+9yhfKpr6ab36qn8NCc4xUW8Kl0bKe+MMcQgm6zBZisWEqj3ofvLw4BEkG8dv3dC3BqmVHCaAb7vNcmXuxT8=
+	t=1753844184; cv=fail; b=U1z0Q2mYtO97kOu4iOV8+FHIbG0mKUH3sxVH8rhWN/u33WpOsah6KxMgGmEzfXFIcmlAPvjY9+kbGIGyEvallI/OLnJCdIxXMrAmqtjytMLFiCWCcdTKTHV+3yN9lU/MeyH8TRCGL1VMMzHFhvhcNxPsjbHS14ax+OHUkc6auKw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753828001; c=relaxed/simple;
-	bh=wh7BjJ8aFs2VfSUAYjYRhrb3APWSOnCdmR+08+6B/es=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=bppu1vxdh/MClrfWRTsLJuQkxidcNS8Ckq+Wa+M2ggaj4yRkPk00+Dg7ZexcnPpIx1NAStIOu/+DZtfjAPJ076eFAyH6YhCE5h71B3UXKEE9iWB/vypj2ot6G/CV9KFht142FDLUgYs4FZmafWJmzhGwG5tgPaLxsEzVIZf458I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=CH6SMMxA; arc=fail smtp.client-ip=40.107.220.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1753844184; c=relaxed/simple;
+	bh=TzybDSFCgHUPJMVvZwiNIUKaG5OWx9b3F4xMGwGPl9I=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EV6AGu74tuP4+t6nZfSQWasdyFMVxTyjbyzqFhlvaknbEZ7hQMU3nZzz4fJhT46ZZu8EfCj6B68+yhIZLlvc8YTjr887NKDeh1y6ybtdDsEiEnJVdIhTG752ORv4wXVWaMK6CBwhJNHbhG8D0W6zRZMR4nUybCq2AAlysrPMZ8w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=maxlinear.com; spf=pass smtp.mailfrom=maxlinear.com; dkim=pass (2048-bit key) header.d=maxlinear.com header.i=@maxlinear.com header.b=3S7fjpc4; arc=fail smtp.client-ip=40.107.102.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=maxlinear.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maxlinear.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WR3CpZkFvteQY3Uh9HJEBUZcPfJW4na13aSYS7n9GapN1fofWBM9df8a+9gXdoO6SsBl4lYi4dky5m3NzF8ukqQASNAXQgwoWE9ZntQ0h076yYhPgpx97+pIlXtkHsMHaG2rEzn5sQ5bYCB7Dw0M1uFn96+uIOhqwuuIhbG1tqxZZqeoPXkkky0V2xmvzSG4L+DlcjFyeiPczTSOlm4cjIpse20KxSQ9ax0TU6Qa0PAYBW1RLdBwIB8mMLWWGV7ZCtr3yCqrkfP8s20+OjNcuaTJKauKvdScTyBtIVqZxUoGq6wP+VjB9BAiipQhm+nwQgdDluwdIeFAoAIZtz3OIQ==
+ b=JYB4IXtxAugjWiKZy3Xf59T+Qpx3yT2xhNqeKoaxNWJkvzUUx/FEbDe52w64qEkAgflIakNfyLwO0OgVs4mCKjAKPUtVLAbWaxgoypokEcFb2mX3onW8N7HDYbIWpRzQh/yT1Abk/D+IQs5gaICUjF9rng1E4ORZtp+VNB6giuG9X8jBS4F+CdtNi0Po1oXoNgPmLFYZZjZgKnYVZ++plfjOUDvhsRFLUT0UTbBxyEQV1Tf1+Ywk9Pr9aaNVBdhvXXE9kPR0s4sbp+pKTURJMze+Vt6CnGk3ALGainsUyoSeaEYk1JP4AyysV6R+4X2pwyPrv14kwHAIo/6RpP5tCQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fU9/ZTe7aigLvtHH4lR4aD2xka76wNZuzppitQ0T+XU=;
- b=ivMV1Ozki3Y43pFeeg4LehW2Ye/isLgvcClHB4Y9B5wIfpfqgRvDFinJJlR8t3uo574wv/dVNgL6t70q+1phRW8+fXiLpBrX1l8umeaChnspcaSf1zBLsXyx77P+NDrbNCkBco59SP+r7LjwRK+abfMZ0tov/9qmP4QLqxwU4PE+RvsPz5RNg9G4Skyr+G7sJYJmlcTcSeIClgq0x6odMPxEMsyfjw5kYo8EGGA6rRzlv3JeUNBynh48721XiNH8RDH8DbjHYaREqtZziZMFRHWd1Yp16qvoDeMfEFDQ9SdqwcrZd4vkt/Zc0AeUXFs5SeHPp72/Q9HO5BB+GEmLeQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ bh=WgZuQRcGWIQPbrAa55iX+vEvvDwHyv7n5dwDpc53x+w=;
+ b=eqLjOTGVeEevQ9CvSlN8Uc9IE0Kp862pc34zB2syIxycxQomqDPG7J91cG6pNTFSdDH1FrEo2S+urRXhXLJYncrHDppBqQZZi0dEI6OgK4FZj2z4Y+mitF/y3LqXhIN7GAcHNCzgy2NYY3IeoKzUcJjFwk2EhKqMxM52mmgdDhRzYL45iTLZFrlGe5Xy/Yirz70TQuxo4uo/MgC+N+3U5FNnP9MYOjSKITNTR/A5+jQCLqKdZSJtvR8cBQXpTv+S3pgIsb24VpwyzC0sX/uoGyvlwdPIYEh8M29TUulp6HNRHYI1ZtzbtK6RDPahk8pPYJe5UL2bIfblpJgBsUezug==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 174.47.1.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=maxlinear.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none
+ header.from=maxlinear.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maxlinear.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fU9/ZTe7aigLvtHH4lR4aD2xka76wNZuzppitQ0T+XU=;
- b=CH6SMMxAV6FgYIN6YjPwNqwnDzjCBdJrlweu46lDAVmPpFdFtwXsncsZTqsmy/MIzqQlGsdxQp5aB6DA3Ho4iJMkfS39/TPe8EVOhr0J+A6VupBB7i4LPDXwa48b8Rl6IUqcOromuwJTXnmBIql9cVXV3NI62fZzV2/8TVNclSWTCu++ixibpv786APzFXSIiJ3lFy+VZ6ImRJ8xp3CIztVXuKBiRI8cax3wh/n151TCdY+bC2gVFGEybntKUJ3xLEmegaYaszgFtveJ9g0XN8TfqgqAa3oJ/V0DkM7jfqIfNB8WU7vlUOoJWcbVVH2HHlQVk78tDJI9vPYTb+o8fg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by MN0PR12MB5810.namprd12.prod.outlook.com (2603:10b6:208:376::6) with
+ bh=WgZuQRcGWIQPbrAa55iX+vEvvDwHyv7n5dwDpc53x+w=;
+ b=3S7fjpc4bM3tbaUsCBxBghiwJNxHyVez5bTW3d+fFboe59L4YwdST+7rA9XEKN1jIX3yZuwCjp8ZZyx9R+697I1+QRQ12KAYkaITzfbgqb52oYlWurU6h1RCjHGL6iM86Io01FnZ2TGgvKuK9XmFdiLV/uRxm2iFXiB+HtZVMLI9e4czRWdBfLTOmsS3qlSqFLuRp5pAmhC+iyEQnpeqAjeYMf1fkgHxUMiBJA/9WCRalVgbO87fERdNEbl7yWObjGuToIUz1LRFqCv6E0OuEugJ6ieFlM2ZDfMon70YAcx2Scr/V+YJOVVbeytrWANLGHaDt2dKzLoOUtaBl0yL8w==
+Received: from CY5P221CA0074.NAMP221.PROD.OUTLOOK.COM (2603:10b6:930:9::11) by
+ PH8PR19MB7024.namprd19.prod.outlook.com (2603:10b6:510:224::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8964.26; Tue, 29 Jul
- 2025 22:26:36 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%7]) with mapi id 15.20.8964.024; Tue, 29 Jul 2025
- 22:26:36 +0000
-Date: Tue, 29 Jul 2025 19:26:35 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Alex Williamson <alex.williamson@redhat.com>
-Cc: David Matlack <dmatlack@google.com>,
-	Aaron Lewis <aaronlewis@google.com>,
-	Adhemerval Zanella <adhemerval.zanella@linaro.org>,
-	Adithya Jayachandran <ajayachandra@nvidia.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Bibo Mao <maobibo@loongson.cn>,
-	Claudio Imbrenda <imbrenda@linux.ibm.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>, dmaengine@vger.kernel.org,
-	Huacai Chen <chenhuacai@kernel.org>,
-	James Houghton <jthoughton@google.com>,
-	Joel Granados <joel.granados@kernel.org>,
-	Josh Hilke <jrhilke@google.com>, Kevin Tian <kevin.tian@intel.com>,
-	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	"Pratik R. Sampat" <prsampat@amd.com>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-	Vipin Sharma <vipinsh@google.com>,
-	Wei Yang <richard.weiyang@gmail.com>,
-	"Yury Norov [NVIDIA]" <yury.norov@gmail.com>
-Subject: Re: [PATCH 00/33] vfio: Introduce selftests for VFIO
-Message-ID: <20250729222635.GU36037@nvidia.com>
-References: <20250620232031.2705638-1-dmatlack@google.com>
- <CALzav=dVYqS8oQNbygVjgA69EQMBBP4CyzydyUoAjnN2mb_yUQ@mail.gmail.com>
- <20250728102737.5b51e9da.alex.williamson@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250728102737.5b51e9da.alex.williamson@redhat.com>
-X-ClientProxiedBy: YT4PR01CA0177.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:110::28) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8964.22; Wed, 30 Jul
+ 2025 02:56:14 +0000
+Received: from CY4PEPF0000FCC5.namprd03.prod.outlook.com
+ (2603:10b6:930:9:cafe::56) by CY5P221CA0074.outlook.office365.com
+ (2603:10b6:930:9::11) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8943.33 via Frontend Transport; Wed,
+ 30 Jul 2025 02:56:14 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 174.47.1.83)
+ smtp.mailfrom=maxlinear.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=maxlinear.com;
+Received-SPF: Pass (protection.outlook.com: domain of maxlinear.com designates
+ 174.47.1.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=174.47.1.83; helo=usmxlcas.maxlinear.com; pr=C
+Received: from usmxlcas.maxlinear.com (174.47.1.83) by
+ CY4PEPF0000FCC5.mail.protection.outlook.com (10.167.242.107) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.8989.10 via Frontend Transport; Wed, 30 Jul 2025 02:56:14 +0000
+Received: from sgb015.sgsw.maxlinear.com (10.23.238.15) by mail.maxlinear.com
+ (10.23.38.120) with Microsoft SMTP Server id 15.1.2507.39; Tue, 29 Jul 2025
+ 19:56:12 -0700
+From: Zhu Yixin <yzhu@maxlinear.com>
+To: <dmaengine@vger.kernel.org>, <vkoul@kernel.org>
+CC: <jchng@maxlinear.com>, <sureshnagaraj@maxlinear.com>, Zhu Yixin
+	<yzhu@maxlinear.com>
+Subject: [PATCH 1/5] dmaengine: lgm-dma: Move platfrom data to device tree
+Date: Wed, 30 Jul 2025 10:45:43 +0800
+Message-ID: <20250730024547.3160871-1-yzhu@maxlinear.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|MN0PR12MB5810:EE_
-X-MS-Office365-Filtering-Correlation-Id: f8f99f13-421f-46c6-3f1d-08ddceeefaec
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000FCC5:EE_|PH8PR19MB7024:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9c42aefe-27a3-45d1-7e14-08ddcf14a5d6
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014|13003099007;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?MVJybG51L2FGZGVaOTV5MTdtMnUvZnVmbTFxU3B3cS85bjhNRVpYS2N2aGRJ?=
- =?utf-8?B?ZTA4V2toWVF1V3kzL3ByYVo2Nm1xeWNNYzRpOStMelVBa0ZLY3JPSlBWQ2Jt?=
- =?utf-8?B?NW9rckV3b1FqVW5xZm1sakZHb1Z3SHZ5RjV3TFV3L1htMW1yQXVrZnVnVktZ?=
- =?utf-8?B?VFF3SGd3U0VvSkEwTkk0b0U3MGJIMGJuZHpNZ2piaU95VUcvMEF3ZVpuMUN3?=
- =?utf-8?B?Ti9IQlhiQkdJZ0hibUQyMkdqS0R6YlljbE84OC9sNEhUeVVUV0hYNDJWRzcx?=
- =?utf-8?B?SGZocVNjSW04THRNNk5RdEVTZnQvYlNDZ1VrYVBwOGxrYzY0T2gwdmRmU2gw?=
- =?utf-8?B?SHlQVnFDVS9heGRhYUtVSVpQVFJBTHpuVHBGTFFodkxQa2lRRy95Ym00V0d3?=
- =?utf-8?B?OWNEd3JKZXJpWG5renNxVExoTW1sbEVhQWRCMzMreHdJZHQvM0hzeVFBa1Q0?=
- =?utf-8?B?VzZHWC9qcFdyRDdPUzdqa3h2aFU1S21mTTNiSDZVS3NwSzh6cGVldHd1WTAz?=
- =?utf-8?B?TkVGWklqaXZiMkdhdnlwN1dPVFhvZExsMVFUdTRNeTF5R3plOXh1T1I3d2x2?=
- =?utf-8?B?T2xsZEQxZ3M4TUFFaEVlSnhlV241dFVRZWVSS3cycWdKcndubGp2WTlOLytj?=
- =?utf-8?B?R2tYR0ZwNlgzWHVUeHYyZ2JKWTdwaFI0WWU1amNCY1pUazlKVWV0VFovcmZk?=
- =?utf-8?B?aTBaTUxzdkpVL3Y2OXgyN1pxVk5Cd1NxNzdkd2NWajVoeno5SWVzT25MWUYv?=
- =?utf-8?B?M2ZkR2txb0d4QmRrZmVyVWFmdDh3SXgybzFiMndMZjlsL0xUdWhyN1VkQnBt?=
- =?utf-8?B?KytrYjYySTMxQWdVdjlVOEtxaVkyOWRoZjNiUE5jZVNPdUpVT1pKM3dtOUV0?=
- =?utf-8?B?WlY3cmVrcURhNXFiME9UN05KZUdoZWovUXFXekhjcVJEZmpSWmFrOFJURC9l?=
- =?utf-8?B?cTgwSVlxb01GVmJwbEQ0R3lveVJ3OXRDc0hEajdLNW8rdGZHVFZienIwa0pn?=
- =?utf-8?B?Mkg0Q0VRSWh1cjFaSE0wSkxFNC9VK3JJRXlsM05xMDUzMHhLZzU1UXdrWlU5?=
- =?utf-8?B?N09OdXg5UnI5eU05RGFMZWNvZmZlYlZNRTM2UlY3c3BnT1F0WUVnSTlQQTJ5?=
- =?utf-8?B?bkpVR2Y5Nk1kVHhKdW1wSGFRcDVYUkMxbnhvanNqbW03WXlFOTNUYWJhOXRm?=
- =?utf-8?B?RmxVSUZWSjV6eGd3dHFaUE1Vc1liUVJnL1Q3WlhRb0dpYlE2VmR3a3pETFI1?=
- =?utf-8?B?akFMZkdid0I0WWVFOEk4TisvV2ZmRHJ3NUYzS3ZLSjdZU2dOczRuNHBhMzRN?=
- =?utf-8?B?cVdnQ2pRTEc1c2dUVEloLzB3Zkc4aFFTOHVGK2p6WGF6KzM1WFplT1FOZy9F?=
- =?utf-8?B?V0x1aDNXSTNDYmFVTU9BOVd4ZWpyTGM5KzdSUEwxYnVCREhHd1o2c1lSd29K?=
- =?utf-8?B?TVo2OUNXVk0zZk8ybFV4REkxUWZUR2FaR29OZTRtcFR3SS91ZFkwa0NIVTVL?=
- =?utf-8?B?eDBnTU1UcUxQWWpxbENvcUZKU2M5NThady9CN1RTS2YxY0xQRXBrK24vN2tp?=
- =?utf-8?B?NW1pQkhMRWdUKzU4eCtmeXFSZU0ybkdsY1EwNWkwZ1FncFhvdHkyRXE0RGRZ?=
- =?utf-8?B?Mytlc0s1Y0RZc0dicHh3R3YzT1VTeXd4ZHM2K1R5Sjlqc0NmVytoSnd2MnQx?=
- =?utf-8?B?a1FvTUlxVVRDdHhWY21xb0xjRTZKdGZzbWc4TmZyUkFkZ2tuZUZWOUVHRlZ1?=
- =?utf-8?B?RzZBNSs1Rjl3WFpScG5XYmVnYlZnbExKRXJ3SVF5MjJhbDJaS2hOajFVakRy?=
- =?utf-8?B?UTE5MmtQaVlZU3pHZDBHSVJXWjJEUjdBL0tGK2lNdWc4S25QdFVOVldGd0tj?=
- =?utf-8?B?WlpKbDhpY3FyZmtvalFIVmdka3BQRHlkcUlDMzJIekpkc2VUR0VDeTI4dmtq?=
- =?utf-8?Q?OmTDqMT/nGw=3D?=
+	=?us-ascii?Q?Cep/4RV9nBwYNCY9V9Seu9lXDzOwWwE08apgwcug/iFp4DpaLM0nI6LG3ks5?=
+ =?us-ascii?Q?Tc/cw5K6049293g9d/y9YA9HZC/1xzZEgyxfQbSNr6/V3XcRCMP/eKLSzPbc?=
+ =?us-ascii?Q?slslHjd/dxU/USQkUpkqnRhXdbxvaWb5LGi/5zmh5vpqLAbcqqveEhAfTORE?=
+ =?us-ascii?Q?ATze/b6boVNF9zdLqpjfOCeTRH3D8sbK/yn4KeS517DnE8NKpPCsx1CAsg4n?=
+ =?us-ascii?Q?4L6mo2oBqRNbuzRaL2HURfQzz6NO78OQ7QcIR+nIKFqHbUTnLVWiEpbo8Zzn?=
+ =?us-ascii?Q?N03PhDuAoSJvHCYhHlSicz17rFkb+JHpnPfpyYw2YZPnkBzKejhBZc9pkihk?=
+ =?us-ascii?Q?p3s1QNl1ycCvCvgVCgWdBux6RPtuPobZJCH5E/qYStOp3yA9kQGjj5DBZTHb?=
+ =?us-ascii?Q?tGn+U+C61gNHaIHefxHnO7EcaYjhd92tllPyYJe4uUE4L8aVAECabwSup2nN?=
+ =?us-ascii?Q?Yl3qiGUwOtwp3Kbci/Xr+adAnnwflkjTaKUBRygNqzlp7GjGuYvZe+tWx0vb?=
+ =?us-ascii?Q?O2CA5yPvSn1jmZkx4LaI49E/B8ONSZ/b+SKrPKSGfccbdTjUJONyVccICgli?=
+ =?us-ascii?Q?MonpxqNjkcsIBuZXkKsqRT1O/ZiJvMXeNPdqoJH1aq1bn8HEgZJY6LWdmDaS?=
+ =?us-ascii?Q?2a60YoyNv5xbGuvcI4tAAP9iN04exOVrFANvcCSLiEPGW4JjhV9MxW9pykwM?=
+ =?us-ascii?Q?VCf6ZWdPPACwE08x4GeXCI9/VYGQKxzeNLYRDtayWZdC9fR7tzCq/N2clkYp?=
+ =?us-ascii?Q?zU6qr6XA4Ou50/zWb+hhBDbfsyRu8H3b8cPHzdB+9QXFZmVWNDfFAOenZyby?=
+ =?us-ascii?Q?KT+sWXyS4KkJx2OO2ubyfp5NwLqddkc83cs511nF+sCHiq1kl9MpMIfB7PTT?=
+ =?us-ascii?Q?B54S0mHW6AKDa8Ekmn04HdNiXz5NylQYjejArnjrzTcJlvh96brUuIp5IFFZ?=
+ =?us-ascii?Q?gwX8ujNtCGOnND+u7j/Ag0Xwf6CdM2c722f+48Kd15+cauEe96rfqep8+2a1?=
+ =?us-ascii?Q?7BCCEJw7s4DC/mIQUaNmmO5diGMb+fOoKZT4IjAhev7RcLR0YmhE7RNwbjO4?=
+ =?us-ascii?Q?WPWt4eSa9V+ktzo5mNrG4cir2+GNBVw+dpkZz+63sI2eC/SsgVelZXOq/TwV?=
+ =?us-ascii?Q?Ch8MCB5+qxVPTSuZQvnlqgPRvH16FtTv1ZdvX/pWWXdOkKW8MIT45tUOQoyW?=
+ =?us-ascii?Q?CNB8cTNqW2Q+4WVI7euh6KC97VRINT6HYrhY9Y9rspPRaYY4lV1HPHYOVroF?=
+ =?us-ascii?Q?r5+9BX5qWpcd0WgbcdHhkDvSEWQcGhad49yQNPlb6gRm0T2PAxwMj/Ge/aCy?=
+ =?us-ascii?Q?KRR1ZmbFfHhkxiCwz1Gk5EmgLpCgF2R/FV+1jNLMOeIXFswvBHSgF2okh0m3?=
+ =?us-ascii?Q?RPQ3bnIh+dIrJoYWtZjAnLh8aZlladl48b0TTztzcxLalZAtMxmOkTGFsF6C?=
+ =?us-ascii?Q?+Lf9SRN49VxnfCPQNtBuE7ZgAoPWv+UP6QfFk3E10sklDpsQM+0K0Q=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bjdZZ2EyZGJJbEVkellHeGFoUnFqamJZQmtZVVJUd0hYVWF5WEpqTy9KMFpD?=
- =?utf-8?B?T2lOOGM1elhxUXF1V1hYMFdNVkY2WlJqTnB5YWRKZjNyOEhBRUlMUlA0bmVy?=
- =?utf-8?B?c0Npbjd6S0RqZGZsam9OUDJUSXhGeWY3eDFwUEYvRkRiMXNxbk5WOS9OSFFx?=
- =?utf-8?B?S0JYT2FJU0JyWDFUZkVPbk1WRzFGQ2N6VDZ3QXR2bCtTODhKT1NEdGNCZlF4?=
- =?utf-8?B?K0V2Z055OG03MC9XNWpwbmJHTDBoaUN5RHRydFpsVHRNK1RBbElPRmVWVms1?=
- =?utf-8?B?QlI5cTVKK2ZMeUpTMFhTenhOdGsyUlFlUm10eWVvT2ZnMjZTY0Rrdm1zOVFF?=
- =?utf-8?B?RmtCck9mSVBWUVR1MTdXQ3VlSW1aQ1JTVnNRN3d6WkVqcFdPMytpQnJ5ZTFO?=
- =?utf-8?B?aVc2MHNiVEdZa24xOTZ5UEh4YmVxSExxb05hTEpSdDZiSUpUSGQxeXN4Unlu?=
- =?utf-8?B?eUNYR01td1JjRDEzeG14VnZIVGIrNDFJUzlQZ3ZEa2FyRndkTmRNZC90ZUZI?=
- =?utf-8?B?UTJnSUVuQlJEODhQUXluRWp1aUwzWU1WQVczMk5FVkkyVEhRQmE4Nm05OTly?=
- =?utf-8?B?eHU5MVhxZXJxOXRjT1d2MytZaHI2UkFaZEU5aVQrV3B3SUZqMzNlbTI2a09M?=
- =?utf-8?B?TEkzbTgvZDBPMDB1YVV4NWFNSy90QTlDOTJvcXJ6aVZsN0xEMHZCWmNPUi9z?=
- =?utf-8?B?Y2VYYy83bVFiTzhNQU9mY2pFaTFqejVEN0J1T3JDRktYam1xcC9ZZzN2b1U3?=
- =?utf-8?B?R2JwMS9UUW5NSC9XU0g0b09wZUo5M3BrUUgxOEhISWcrQnA1bXhtRk9SZ09U?=
- =?utf-8?B?MEJFTFE2cUJjMGV2MlQ3UGZ1Z0d3djhlNjZtZkcyaW1DVWVOdWtiRHVIL0JS?=
- =?utf-8?B?VkxUT1AxSEczQys2Zm5Eb3VtSGVWN0Ixc2FQRHJQU1ptRU9ZK29GZG12U1B1?=
- =?utf-8?B?V0JJanZWSWp0ZHUzbWhEZ1pzdEliV1hmMXlyeXVhbVNEY0JJb2oxZHVGb0Rm?=
- =?utf-8?B?cURybTdoUW1Rd0xidlRnWWt0ZjFBcE1qR0x2bGl0MXRMS2o4YXlJdUdaU2tu?=
- =?utf-8?B?c1A3NzVYMlBsSGwyWTUzRFl5bG91cjVCWmZLbSt1bG1LZW84WHEza2c0emQv?=
- =?utf-8?B?MnlHdnc2dS9tM2YzSkQwbmFHUVNlVmc1QXhCSkE3SEpTbENLTStpU3ZoRW5P?=
- =?utf-8?B?eEdSZTdmMjcvTmVJamQvZm52dnBNZWE1cUwwbFdwYzdUTHpIb2RYNDZYNjNB?=
- =?utf-8?B?a0NXRTMxZXVSblRnakVsbXQyUkZ1MGgvVzd6VUJqOHllS3JlK095WTZVMlRR?=
- =?utf-8?B?M002bWxoMXRjd3JoVUk4UjM5UWxWa2g1dUZLOXgzbERodzJPNndsY1I4aGlW?=
- =?utf-8?B?cTRvRnRSOW03QjdnNTh4anA0ZGRLRnJEOUJvSVlrVlBGRHI1TURDNWJNVzky?=
- =?utf-8?B?SnI4d044Z0QzdVVmNEdJRVY4M2ZpOTViQW9MQTR5bERNUmMvelp0RU1iNk5H?=
- =?utf-8?B?WnFDeUw3eXVpeE8vWDBlWE1oaTZvVW9mVjVicHNRMDdvclFFSHcwYzFuWGFs?=
- =?utf-8?B?b3g4WjVYZzQvcENiUGNqR2c3WGFqNGhlV2NZd05xVzdTajgzUlRSK21jOHJo?=
- =?utf-8?B?dGRoeC9lQVFTTXRSa0FMSmI1RTFRWmZkajVDUnVaNjVNaCszSGp3KzhyNkJ3?=
- =?utf-8?B?RjRZNjQ4K3dsZDBmMmEwOVFoSitYMHhZWVJta1EzSVBjdFR1RkUrUmZ1R0d6?=
- =?utf-8?B?MFd6bm5JZXV6ek9lb0dCYmI0azJGanluV05BY0NQdC92bm9NdUd6SDFZcWQ2?=
- =?utf-8?B?K0VURGxOZjAzd05zYzQ2aW5FYzFLaTNzZ0dWYkQxcU4zemZvNHpnL3ZYcEI5?=
- =?utf-8?B?eDJRZlBaR0NWdWVDSXJZK3g5MEQ0Z1djOU9ybTN0YjRNNDlCYytPY1Zucit4?=
- =?utf-8?B?clNrTm44UXg4UTNReWVyRFVVaXVhUjJ5UzhJZXhEQXpEeFlFbFhkQ2kyT0xI?=
- =?utf-8?B?QkdzV3JKbEVIYVdmT1dCVjNaQVFodUtQVmtITXVickxwREltVDZ6ZncxT3Jn?=
- =?utf-8?B?NTcyYzZZYjNENzNCQXU0VWZ2dlI0RWliRUdCK2pGbzlneERUNmdXNG1MNGNh?=
- =?utf-8?Q?8NhQ=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f8f99f13-421f-46c6-3f1d-08ddceeefaec
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2025 22:26:36.5321
+	CIP:174.47.1.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:usmxlcas.maxlinear.com;PTR:174-47-1-83.static.ctl.one;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: maxlinear.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2025 02:56:14.4231
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OWY+WaHq8VEBFywj+IsW88bIb4Rjp/VRLl5tF+kny08bjp0wOTNyehgeXsHibyYt
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5810
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9c42aefe-27a3-45d1-7e14-08ddcf14a5d6
+X-MS-Exchange-CrossTenant-Id: dac28005-13e0-41b8-8280-7663835f2b1d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=dac28005-13e0-41b8-8280-7663835f2b1d;Ip=[174.47.1.83];Helo=[usmxlcas.maxlinear.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000FCC5.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR19MB7024
 
-On Mon, Jul 28, 2025 at 10:27:37AM -0600, Alex Williamson wrote:
-> On Fri, 25 Jul 2025 09:47:48 -0700
-> David Matlack <dmatlack@google.com> wrote:
-> 
-> > On Fri, Jun 20, 2025 at 4:21 PM David Matlack <dmatlack@google.com> wrote:
-> > >
-> > > This series introduces VFIO selftests, located in
-> > > tools/testing/selftests/vfio/.  
-> > 
-> > Hi Alex,
-> > 
-> > I wanted to discuss how you would like to proceed with this series.
-> > 
-> > The series is quite large, so one thing I was wondering is if you
-> > think it should be split up into separate series to make it easier to
-> > review and merge. Something like this:
-> > 
-> >  - Patches 01-08 + 30 (VFIO selftests library, some basic tests, and run script)
-> >  - Patches 09-22 (driver framework)
-> >  - Patches 23-28 (iommufd support)
-> >  - Patches 31-33 (integration with KVM selftests)
-> > 
-> > I also was curious about your thoughts on maintenance of VFIO
-> > selftests, since I don't think we discussed that in the RFC. I am
-> > happy to help maintain VFIO selftests in whatever way makes the most
-> > sense. For now I added tools/testing/selftests/vfio under the
-> > top-level VFIO section in MAINTAINERS (so you would be the maintainer)
-> > and then also added a separate section for VFIO selftests with myself
-> > as a Reviewer (see PATCH 01). Reviewer felt like a better choice than
-> > Maintainer for myself since I am new to VFIO upstream (I've primarily
-> > worked on KVM in the past).
-> 
-> Hi David,
-> 
-> There's a lot of potential here and I'd like to see it proceed.  
+Remove platform data and unified the setting from device tree.
 
-+1 too, I really lack time at the moment to do much with this but I'm
-half inclined to suggest Alex should say it should be merged in 6
-weeks (to motivate any reviewing) and we can continue to work on it
-in-tree.
+Signed-off-by: Zhu Yixin <yzhu@maxlinear.com>
+---
+ .../devicetree/bindings/dma/intel,ldma.yaml   |  67 ++++-
+ drivers/dma/lgm/lgm-dma.c                     | 242 +++++++-----------
+ 2 files changed, 144 insertions(+), 165 deletions(-)
 
-As they are self tests I think there is alot more value in having the
-tests than having perfect tests.
+diff --git a/Documentation/devicetree/bindings/dma/intel,ldma.yaml b/Documentation/devicetree/bindings/dma/intel,ldma.yaml
+index d6bb553a2c6f..59f928297613 100644
+--- a/Documentation/devicetree/bindings/dma/intel,ldma.yaml
++++ b/Documentation/devicetree/bindings/dma/intel,ldma.yaml
+@@ -7,8 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ title: Lightning Mountain centralized DMA controllers.
+ 
+ maintainers:
+-  - chuanhua.lei@intel.com
+-  - mallikarjunax.reddy@intel.com
++  - yzhu@maxlinear.com
+ 
+ allOf:
+   - $ref: dma-controller.yaml#
+@@ -16,14 +15,7 @@ allOf:
+ properties:
+   compatible:
+     enum:
+-      - intel,lgm-cdma
+-      - intel,lgm-dma2tx
+-      - intel,lgm-dma1rx
+-      - intel,lgm-dma1tx
+-      - intel,lgm-dma0tx
+-      - intel,lgm-dma3
+-      - intel,lgm-toe-dma30
+-      - intel,lgm-toe-dma31
++      - intel,lgm-ldma
+ 
+   reg:
+     maxItems: 1
+@@ -80,16 +72,62 @@ properties:
+       if it is disabled, the DMA RX will still support programmable fixed burst size of 2,4,8,16.
+       It only applies to RX DMA and memcopy DMA.
+ 
++  intel,dma-flowctrl:
++    type: boolean
++    description:
++      DMA per-channel flow control.
++
++  intel,dma-fod:
++    type: boolean
++    description:
++      DMA fetch-on-demand.
++      It should only be enabled when DMA connected to a component that can
++      provide fetch-on-demand signal to DMA.
++
++  intel,dma-desc-in-sram:
++    type: boolean
++    description:
++      DMA descriptor in sram.
++      It only affects legacy DMA(V22)
++      DMA version V31 onwards, it is always enabled and setting ignored by
++      DMA HW.
++
++  intel,dma-desc-fack:
++    type: boolean
++    description:
++      DMA descriptor fetch acknowledgement.
++      This feature only takes effects if DMA fetch-on-demand is enabled.
++
++  intel,dma-orrc:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      DMA outstanding descriptor read.
++      The maximum orrc count is 16.
++
++  intel,dma-type:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      DMA type. Only valid for DMAV31 onwards.
++      DMA type TX is 0.
++      DMA type RX is 1.
++      DMA type MCPY is 2.
++
++  intel,dma-name:
++    $ref: /schemas/types.yaml#/definitions/string
++    description:
++      Name of the DMA.
++
+ required:
+   - compatible
+   - reg
++  - intel,dma-name
+ 
+ additionalProperties: false
+ 
+ examples:
+   - |
+     dma0: dma-controller@e0e00000 {
+-      compatible = "intel,lgm-cdma";
++      compatible = "intel,lgm-ldma";
+       reg = <0xe0e00000 0x1000>;
+       #dma-cells = <3>;
+       dma-channels = <16>;
+@@ -102,10 +140,11 @@ examples:
+       intel,dma-poll-cnt = <4>;
+       intel,dma-byte-en;
+       intel,dma-drb;
++      intel,dma-name = "dma0";
+     };
+   - |
+     dma3: dma-controller@ec800000 {
+-      compatible = "intel,lgm-dma3";
++      compatible = "intel,lgm-ldma";
+       reg = <0xec800000 0x1000>;
+       clocks = <&cgu0 71>;
+       resets = <&rcu0 0x10 9>;
+@@ -113,4 +152,8 @@ examples:
+       intel,dma-poll-cnt = <16>;
+       intel,dma-byte-en;
+       intel,dma-dburst-wr;
++      intel,dma-type = <2>;
++      intel,dma-desc-in-sram;
++      intel,dma-name = "dma3";
++      intel,dma-orrc = <16>;
+     };
+diff --git a/drivers/dma/lgm/lgm-dma.c b/drivers/dma/lgm/lgm-dma.c
+index 8173c3f1075a..93438cc9f020 100644
+--- a/drivers/dma/lgm/lgm-dma.c
++++ b/drivers/dma/lgm/lgm-dma.c
+@@ -3,6 +3,7 @@
+  * Lightning Mountain centralized DMA controller driver
+  *
+  * Copyright (c) 2016 - 2020 Intel Corporation.
++ * Copyright (c) 2020 - 2025 Maxlinear Inc.
+  */
+ 
+ #include <linux/bitfield.h>
+@@ -139,6 +140,7 @@
+ #define DMA_VALID_DESC_FETCH_ACK	BIT(7)
+ #define DMA_DFT_DRB			BIT(8)
+ 
++#define DMA_DFT_ORRC_CNT		16
+ #define DMA_ORRC_MAX_CNT		(SZ_32 - 1)
+ #define DMA_DFT_POLL_CNT		SZ_4
+ #define DMA_DFT_BURST_V22		SZ_2
+@@ -183,11 +185,17 @@ enum ldma_chan_on_off {
+ };
+ 
+ enum {
++	DMA_TYPE_INVD = -1, /* Legacy DMA does not have type */
+ 	DMA_TYPE_TX = 0,
+ 	DMA_TYPE_RX,
+ 	DMA_TYPE_MCPY,
+ };
+ 
++enum {
++	DMA_IN_HW_MODE,
++	DMA_IN_SW_MODE,
++};
++
+ struct ldma_dev;
+ struct ldma_port;
+ 
+@@ -218,6 +226,7 @@ struct ldma_chan {
+ 	struct dw2_desc_sw	*ds;
+ 	struct work_struct	work;
+ 	struct dma_slave_config config;
++	int			mode;
+ };
+ 
+ struct ldma_port {
+@@ -230,17 +239,6 @@ struct ldma_port {
+ 	u32			pkt_drop;
+ };
+ 
+-/* Instance specific data */
+-struct ldma_inst_data {
+-	bool			desc_in_sram;
+-	bool			chan_fc;
+-	bool			desc_fod; /* Fetch On Demand */
+-	bool			valid_desc_fetch_ack;
+-	u32			orrc; /* Outstanding read count */
+-	const char		*name;
+-	u32			type;
+-};
+-
+ struct ldma_dev {
+ 	struct device		*dev;
+ 	void __iomem		*base;
+@@ -257,7 +255,9 @@ struct ldma_dev {
+ 	u32			channels_mask;
+ 	u32			flags;
+ 	u32			pollcnt;
+-	const struct ldma_inst_data *inst;
++	u32			orrc; /* Outstanding read count */
++	int			type;
++	const char		*name;
+ 	struct workqueue_struct	*wq;
+ };
+ 
+@@ -349,7 +349,7 @@ static void ldma_dev_chan_flow_ctl_cfg(struct ldma_dev *d, bool enable)
+ 	unsigned long flags;
+ 	u32 mask, val;
+ 
+-	if (d->inst->type != DMA_TYPE_TX)
++	if (d->type != DMA_TYPE_TX)
+ 		return;
+ 
+ 	mask = DMA_CTRL_CH_FL;
+@@ -378,7 +378,7 @@ static void ldma_dev_desc_fetch_on_demand_cfg(struct ldma_dev *d, bool enable)
+ 	unsigned long flags;
+ 	u32 mask, val;
+ 
+-	if (d->inst->type == DMA_TYPE_MCPY)
++	if (d->type == DMA_TYPE_MCPY)
+ 		return;
+ 
+ 	mask = DMA_CTRL_DS_FOD;
+@@ -406,12 +406,12 @@ static void ldma_dev_orrc_cfg(struct ldma_dev *d)
+ 	u32 val = 0;
+ 	u32 mask;
+ 
+-	if (d->inst->type == DMA_TYPE_RX)
++	if (d->type == DMA_TYPE_RX)
+ 		return;
+ 
+ 	mask = DMA_ORRC_EN | DMA_ORRC_ORRCNT;
+-	if (d->inst->orrc > 0 && d->inst->orrc <= DMA_ORRC_MAX_CNT)
+-		val = DMA_ORRC_EN | FIELD_PREP(DMA_ORRC_ORRCNT, d->inst->orrc);
++	if (d->orrc > 0 && d->orrc <= DMA_ORRC_MAX_CNT)
++		val = DMA_ORRC_EN | FIELD_PREP(DMA_ORRC_ORRCNT, d->orrc);
+ 
+ 	spin_lock_irqsave(&d->dev_lock, flags);
+ 	ldma_update_bits(d, mask, val, DMA_ORRC);
+@@ -439,7 +439,7 @@ static void ldma_dev_dburst_wr_cfg(struct ldma_dev *d, bool enable)
+ 	unsigned long flags;
+ 	u32 mask, val;
+ 
+-	if (d->inst->type != DMA_TYPE_RX && d->inst->type != DMA_TYPE_MCPY)
++	if (d->type != DMA_TYPE_RX && d->type != DMA_TYPE_MCPY)
+ 		return;
+ 
+ 	mask = DMA_CTRL_DBURST_WR;
+@@ -455,7 +455,7 @@ static void ldma_dev_vld_fetch_ack_cfg(struct ldma_dev *d, bool enable)
+ 	unsigned long flags;
+ 	u32 mask, val;
+ 
+-	if (d->inst->type != DMA_TYPE_TX)
++	if (d->type != DMA_TYPE_TX)
+ 		return;
+ 
+ 	mask = DMA_CTRL_VLD_DF_ACK;
+@@ -511,7 +511,7 @@ static int ldma_dev_cfg(struct ldma_dev *d)
+ 	}
+ 
+ 	dev_dbg(d->dev, "%s Controller 0x%08x configuration done\n",
+-		d->inst->name, readl(d->base + DMA_CTRL));
++		d->name, readl(d->base + DMA_CTRL));
+ 
+ 	return 0;
+ }
+@@ -578,7 +578,7 @@ static void ldma_chan_set_class(struct ldma_chan *c, u32 val)
+ 	struct ldma_dev *d = to_ldma_dev(c->vchan.chan.device);
+ 	u32 class_val;
+ 
+-	if (d->inst->type == DMA_TYPE_MCPY || val > DMA_MAX_CLASS)
++	if (d->type == DMA_TYPE_MCPY || val > DMA_MAX_CLASS)
+ 		return;
+ 
+ 	/* 3 bits low */
+@@ -929,26 +929,41 @@ static int ldma_parse_dt(struct ldma_dev *d)
+ 	if (fwnode_property_read_bool(fwnode, "intel,dma-drb"))
+ 		d->flags |= DMA_DFT_DRB;
+ 
+-	if (fwnode_property_read_u32(fwnode, "intel,dma-poll-cnt",
+-				     &d->pollcnt))
+-		d->pollcnt = DMA_DFT_POLL_CNT;
+-
+-	if (d->inst->chan_fc)
++	if (fwnode_property_read_bool(fwnode, "intel,dma-flowctrl"))
+ 		d->flags |= DMA_CHAN_FLOW_CTL;
+ 
+-	if (d->inst->desc_fod)
++	if (fwnode_property_read_bool(fwnode, "intel,dma-fod"))
+ 		d->flags |= DMA_DESC_FOD;
+ 
+-	if (d->inst->desc_in_sram)
++	if (fwnode_property_read_bool(fwnode, "intel,dma-desc-in-sram"))
+ 		d->flags |= DMA_DESC_IN_SRAM;
+ 
+-	if (d->inst->valid_desc_fetch_ack)
++	if (fwnode_property_read_bool(fwnode, "intel,dma-desc-fack"))
+ 		d->flags |= DMA_VALID_DESC_FETCH_ACK;
+ 
+-	if (d->ver > DMA_VER22) {
+-		if (!d->port_nrs)
+-			return -EINVAL;
++	if (fwnode_property_read_u32(fwnode, "intel,dma-poll-cnt",
++				     &d->pollcnt))
++		d->pollcnt = DMA_DFT_POLL_CNT;
++
++	if (fwnode_property_read_u32(fwnode, "intel,dma-orrc",
++				     &d->orrc))
++		d->orrc = DMA_DFT_ORRC_CNT;
++
++	if (fwnode_property_read_u32(fwnode, "intel,dma-type",
++				     &d->type))
++		d->type = DMA_TYPE_INVD;
+ 
++	if (fwnode_property_read_u32(fwnode, "dma-channel-mask",
++				     &d->channels_mask))
++		d->channels_mask = GENMASK(d->chan_nrs - 1, 0);
++
++	if (fwnode_property_read_string(fwnode, "intel,dma-name",
++					&d->name)) {
++		dev_err(d->dev, "DMA name not available!\n");
++		return -EINVAL;
++	}
++
++	if (d->ver > DMA_VER22) {
+ 		for (i = 0; i < d->port_nrs; i++) {
+ 			p = &d->ports[i];
+ 			p->rxendi = DMA_DFT_ENDIAN;
+@@ -1471,93 +1486,48 @@ static void ldma_clk_disable(void *data)
+ 	reset_control_assert(d->rst);
+ }
+ 
+-static const struct ldma_inst_data dma0 = {
+-	.name = "dma0",
+-	.chan_fc = false,
+-	.desc_fod = false,
+-	.desc_in_sram = false,
+-	.valid_desc_fetch_ack = false,
+-};
+-
+-static const struct ldma_inst_data dma2tx = {
+-	.name = "dma2tx",
+-	.type = DMA_TYPE_TX,
+-	.orrc = 16,
+-	.chan_fc = true,
+-	.desc_fod = true,
+-	.desc_in_sram = true,
+-	.valid_desc_fetch_ack = true,
+-};
++static int intel_ldma_port_channel_init(struct ldma_dev *d)
++{
++	struct ldma_chan *c;
++	struct ldma_port *p;
++	unsigned long ch_mask;
++	int i,j;
+ 
+-static const struct ldma_inst_data dma1rx = {
+-	.name = "dma1rx",
+-	.type = DMA_TYPE_RX,
+-	.orrc = 16,
+-	.chan_fc = false,
+-	.desc_fod = true,
+-	.desc_in_sram = true,
+-	.valid_desc_fetch_ack = false,
+-};
++	/* Port Initializations */
++	d->ports = devm_kcalloc(d->dev, d->port_nrs, sizeof(*p), GFP_KERNEL);
++	if (!d->ports)
++		return -ENOMEM;
+ 
+-static const struct ldma_inst_data dma1tx = {
+-	.name = "dma1tx",
+-	.type = DMA_TYPE_TX,
+-	.orrc = 16,
+-	.chan_fc = true,
+-	.desc_fod = true,
+-	.desc_in_sram = true,
+-	.valid_desc_fetch_ack = true,
+-};
++	/* Channels Initializations */
++	d->chans = devm_kcalloc(d->dev, d->chan_nrs, sizeof(*c), GFP_KERNEL);
++	if (!d->chans)
++		return -ENOMEM;
+ 
+-static const struct ldma_inst_data dma0tx = {
+-	.name = "dma0tx",
+-	.type = DMA_TYPE_TX,
+-	.orrc = 16,
+-	.chan_fc = true,
+-	.desc_fod = true,
+-	.desc_in_sram = true,
+-	.valid_desc_fetch_ack = true,
+-};
++	for (i = 0; i < d->port_nrs; i++) {
++		p = &d->ports[i];
++		p->portid = i;
++		p->ldev = d;
+ 
+-static const struct ldma_inst_data dma3 = {
+-	.name = "dma3",
+-	.type = DMA_TYPE_MCPY,
+-	.orrc = 16,
+-	.chan_fc = false,
+-	.desc_fod = false,
+-	.desc_in_sram = true,
+-	.valid_desc_fetch_ack = false,
+-};
++		p->rxendi = DMA_DFT_ENDIAN;
++		p->txendi = DMA_DFT_ENDIAN;
++		p->rxbl = DMA_DFT_BURST;
++		p->txbl = DMA_DFT_BURST;
++		p->pkt_drop = DMA_PKT_DROP_DIS;
++	}
+ 
+-static const struct ldma_inst_data toe_dma30 = {
+-	.name = "toe_dma30",
+-	.type = DMA_TYPE_MCPY,
+-	.orrc = 16,
+-	.chan_fc = false,
+-	.desc_fod = false,
+-	.desc_in_sram = true,
+-	.valid_desc_fetch_ack = true,
+-};
++	ch_mask = (unsigned long)d->channels_mask;
++	for_each_set_bit(j, &ch_mask, d->chan_nrs) {
++		if (d->ver == DMA_VER22)
++			ldma_dma_init_v22(j, d);
++		else
++			ldma_dma_init_v3X(j, d);
++	}
+ 
+-static const struct ldma_inst_data toe_dma31 = {
+-	.name = "toe_dma31",
+-	.type = DMA_TYPE_MCPY,
+-	.orrc = 16,
+-	.chan_fc = false,
+-	.desc_fod = false,
+-	.desc_in_sram = true,
+-	.valid_desc_fetch_ack = true,
+-};
++	return 0;
++}
+ 
+ static const struct of_device_id intel_ldma_match[] = {
+-	{ .compatible = "intel,lgm-cdma", .data = &dma0},
+-	{ .compatible = "intel,lgm-dma2tx", .data = &dma2tx},
+-	{ .compatible = "intel,lgm-dma1rx", .data = &dma1rx},
+-	{ .compatible = "intel,lgm-dma1tx", .data = &dma1tx},
+-	{ .compatible = "intel,lgm-dma0tx", .data = &dma0tx},
+-	{ .compatible = "intel,lgm-dma3", .data = &dma3},
+-	{ .compatible = "intel,lgm-toe-dma30", .data = &toe_dma30},
+-	{ .compatible = "intel,lgm-toe-dma31", .data = &toe_dma31},
++	{ .compatible = "intel,lgm-ldma" },
+ 	{}
+ };
+ 
+@@ -1565,12 +1535,9 @@ static int intel_ldma_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct dma_device *dma_dev;
+-	unsigned long ch_mask;
+-	struct ldma_chan *c;
+-	struct ldma_port *p;
+ 	struct ldma_dev *d;
+-	u32 id, bitn = 32, j;
+-	int i, ret;
++	u32 id, bitn = 32;
++	int ret;
+ 
+ 	d = devm_kzalloc(dev, sizeof(*d), GFP_KERNEL);
+ 	if (!d)
+@@ -1579,12 +1546,6 @@ static int intel_ldma_probe(struct platform_device *pdev)
+ 	/* Link controller to platform device */
+ 	d->dev = &pdev->dev;
+ 
+-	d->inst = device_get_match_data(dev);
+-	if (!d->inst) {
+-		dev_err(dev, "No device match found\n");
+-		return -ENODEV;
+-	}
+-
+ 	d->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(d->base))
+ 		return PTR_ERR(d->base);
+@@ -1627,17 +1588,18 @@ static int intel_ldma_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	ret = ldma_parse_dt(d);
++	if (ret)
++		return ret;
++
+ 	if (d->ver == DMA_VER22) {
+ 		ret = ldma_init_v22(d, pdev);
+ 		if (ret)
+ 			return ret;
+ 	}
+ 
+-	ret = device_property_read_u32(dev, "dma-channel-mask", &d->channels_mask);
+-	if (ret < 0)
+-		d->channels_mask = GENMASK(d->chan_nrs - 1, 0);
+-
+ 	dma_dev = &d->dma_dev;
++	dma_dev->dev = &pdev->dev;
+ 
+ 	dma_cap_zero(dma_dev->cap_mask);
+ 	dma_cap_set(DMA_SLAVE, dma_dev->cap_mask);
+@@ -1645,33 +1607,7 @@ static int intel_ldma_probe(struct platform_device *pdev)
+ 	/* Channel initializations */
+ 	INIT_LIST_HEAD(&dma_dev->channels);
+ 
+-	/* Port Initializations */
+-	d->ports = devm_kcalloc(dev, d->port_nrs, sizeof(*p), GFP_KERNEL);
+-	if (!d->ports)
+-		return -ENOMEM;
+-
+-	/* Channels Initializations */
+-	d->chans = devm_kcalloc(d->dev, d->chan_nrs, sizeof(*c), GFP_KERNEL);
+-	if (!d->chans)
+-		return -ENOMEM;
+-
+-	for (i = 0; i < d->port_nrs; i++) {
+-		p = &d->ports[i];
+-		p->portid = i;
+-		p->ldev = d;
+-	}
+-
+-	dma_dev->dev = &pdev->dev;
+-
+-	ch_mask = (unsigned long)d->channels_mask;
+-	for_each_set_bit(j, &ch_mask, d->chan_nrs) {
+-		if (d->ver == DMA_VER22)
+-			ldma_dma_init_v22(j, d);
+-		else
+-			ldma_dma_init_v3X(j, d);
+-	}
+-
+-	ret = ldma_parse_dt(d);
++	ret = intel_ldma_port_channel_init(d);
+ 	if (ret)
+ 		return ret;
+ 
+-- 
+2.43.5
 
-> Something that we should continue to try to improve is the automation.
-> These tests are often targeting a specific feature, so matching a
-> device to a unit test becomes a barrier to automated runs.  I wonder if
-> we might be able to reach a point where the test runner can select
-> appropriate devices from a pool of devices specified via environment
-> variables.
-
-Makes a lot of sense to me!
-
-I'd just put Dave as the VFIO selftest co-maintainer though - a
-pennance for doing so much work :)
-
-Jason
 

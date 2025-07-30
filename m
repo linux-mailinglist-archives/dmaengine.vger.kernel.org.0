@@ -1,188 +1,287 @@
-Return-Path: <dmaengine+bounces-5909-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5910-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 529F3B15F8C
-	for <lists+dmaengine@lfdr.de>; Wed, 30 Jul 2025 13:33:30 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D749CB16479
+	for <lists+dmaengine@lfdr.de>; Wed, 30 Jul 2025 18:18:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C2FE77AEC04
-	for <lists+dmaengine@lfdr.de>; Wed, 30 Jul 2025 11:31:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AC4743A2DFC
+	for <lists+dmaengine@lfdr.de>; Wed, 30 Jul 2025 16:17:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72DE6293B73;
-	Wed, 30 Jul 2025 11:33:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D19822DD61E;
+	Wed, 30 Jul 2025 16:17:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ij4zr65N"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F0C215383A;
-	Wed, 30 Jul 2025 11:33:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12FCD51022
+	for <dmaengine@vger.kernel.org>; Wed, 30 Jul 2025 16:17:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753875194; cv=none; b=pgs9d6jL7LM44ZEea0AhtBRY2MpYDtxhzMP2czEF39IUhzVGu5ez+4atEJzQaI/htC1XotRK+NMrKv4yIN2IVHnCuCrES5C0hVq1rZnyipGfteYR8RK4Zme8Ry8+qhlvEJHeiovT3YyyK48vf2WuorZzpqmIlmnMyVzX3nlaAsw=
+	t=1753892268; cv=none; b=pjkTgRWBQOuP7Yh3/4i5h6y83fVgrRjdIucShWHbNeI0SbsqN/ay5GArNdTh9D54TsTKp0Mc4tjIhF19iwB/Yxlw1FvIBhKDpflwnbpQZWfx+6t2Z6+OOG9lQp/P1doq+nLtJwMUaZvB4y7u1pV2fTy5m/KCU8HgDNhQqwdkrPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753875194; c=relaxed/simple;
-	bh=Q+yabLyIW7uC1xqhnObba1fTmUcHSjCC07MPdQrhtrI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fnmOABIXZ4+c6RJ85H2DlbDZGbd7Z5Sm/tpxI6IdsZ4ADJ7NEp3zaFldZpv8Qs04AVq6g94cq10BMD9O5GR4mhvBDwjkmgPwwWiv1EurDfVTpbJlxeyxfQc+ZzODzTP4UqQFoXGj/bWzmvxRzKtwGVeXtm/QCbiR/+vE/AJFzuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-53921f6e23bso492014e0c.1;
-        Wed, 30 Jul 2025 04:33:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753875190; x=1754479990;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nW9Fed3oaCcY5j8zAXTzmhRy4s/lDYERKz+lZhw5SjM=;
-        b=K/0owtIh/tIIFPQbNdacxQia4XVpwwgLLMM35Ni1MvwqpkPwWvQjpwt6orFpcJiJ5+
-         SJxcbaNMVWw+kYJiBYs57z0ONm4qxLCuDo50zOHkzPek/XH8sHmg8GK/e48EJSk0VBvm
-         JIWLSn/HohO9kKq4F+CEpbKDH+psajE9NgDQ8bpli5joXS1Hn2F6pwgT2ZaghPi+ICQ+
-         NKVgl25xahkCuhfVMeSabT7cprkjxmiUrG2f5auCdzoGmTuloH85PWblqjXj0dccsBU1
-         kzZ70Of6u6yR2bzzq7ugLTFMGI5DwIYmBYd3E9ROtUnHjTDY/7obOHsMh6PZxb0LmR7a
-         f3yQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUH3xON6OwpRHlC8gKg/DQ3HD+Rqs4FV7/cRGlKraH7JI/MsL252uou/xg4a2uQekWMM8TubUZcsFxG@vger.kernel.org, AJvYcCUIP143pLnxp0nAtBZWQsiEfRMRceeKcu01dapyan9FlQ/bPgrlFOakRLK7itFqq2oy4LGJTcnqgrvr@vger.kernel.org, AJvYcCUQYNDjXvLqz9+Jg6oxvW/oMq3DO/ALVMkd3aG6RgTljevxQneY7H5se+8S2JjuFiHHnmysbT7H7IsC@vger.kernel.org, AJvYcCV9vomE9AuorAR8nEhM2En3SUZ1K/HDaEG3aQtjB0Da4DceSnsOljOpxh/5Txaj1uHat8Vq2DDN6is6SGkSBT0zsGc=@vger.kernel.org, AJvYcCVEK3b/vnoSgtejJOpJkrJc/xaQBVyPWkwTOJAmm3z/uh4+KnrX7tWo8RXhkwlQUhJkhTlUmuQrvy7dwQo=@vger.kernel.org, AJvYcCWLVuBuA4p1/YHftgx5d3Rc/pMDWydaZHbCSHtDvpnvq5TFI6gb3ASNGnU/yOockfyhmEE7pk0bakhvZ9k=@vger.kernel.org, AJvYcCWb3+g92ilOrr3ReO6BDjAgmrXYDmzR91kFci+EmSuAKXJQOp+m7WRnyQwjtHrbUrJ9rPrgqRV+Rb/60NjA@vger.kernel.org, AJvYcCXIkN5cqle7X1KnYXHYZ6VJbLxZgUL6GvfZU9hZFzcefvbouJRaV/w/fmq6VATaTGGVqtt6yfqBiFxP@vger.kernel.org, AJvYcCXZZJDKFrBqHSfNqmhGePiyzVUI2YLYw/Qr+F9ippCsAgZ4OvHKKGjRThowm4lHdp9KocHyxqVxxX/TOux+hw==@vger.kernel.org, AJvYcCXt2xO4ZYECSjyc
- Ut5ulQ2no1qc26xBdJFxnZYnQNov+v/MDlaKij4ckhzex8qy/s8qYAvwiSIp9nbw3A==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yznc0m5Xb6XYiU6iwBILMXg8L7XiskBEnWSdwEkthXdnzE903Bx
-	GP6Rn/oT/Qt+dSi9gb6ik35993MEmAgOWK3yzXRIcIdquItnPAFDOwvjntJ8wx7T
-X-Gm-Gg: ASbGncvNNAMovev1UZFsi46OJNulmelrnDGMTZ9iOubspLW79t8h9y5CDVnj6CAvrN/
-	IksxLGYEqGF58uU0DSxlXc4QieHpOfRx67Fe9T80s3IGr2+KEw6sV84kZW++RaI0r1fdCNAS3+D
-	oWqNemV94mB5WN9vFsx5hQdEfR3Dm0rw8qJw+0KmT1zGdhnLT2nzPI1YyvHt4esjsC6t4Yy31Iy
-	LY3X/070GM4ihsPfUblM97uCnKZhJE3KiMm+m08ROi/tpyqN3WR6WJ9VQVOUhbtKryht/1COcX7
-	e/swur0FeLyigM8kNdSWB0+kJYijHJT9Z0DqGeQy31dNjGye15e/bZuAm+AvfmvP4gIlOSoNbaT
-	R493YtyoBrgjPbSBhrIwYL6Ai1CJzJlSrlfDzKcR+AT3cU/qxSnya7HrdTS8b
-X-Google-Smtp-Source: AGHT+IFPkosKlGkERIVmuMGG9+aqdcP45f0bxTejQih+tGzAuRStQsiDvSrEOrcSq4KNPVVkGtHTpw==
-X-Received: by 2002:a05:6122:30ab:b0:531:2f9f:8021 with SMTP id 71dfb90a1353d-5391cf1fc33mr1910232e0c.5.1753875190063;
-        Wed, 30 Jul 2025 04:33:10 -0700 (PDT)
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com. [209.85.217.50])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-53903a4f34csm1548134e0c.10.2025.07.30.04.33.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Jul 2025 04:33:09 -0700 (PDT)
-Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-4fbf1326dfeso491625137.3;
-        Wed, 30 Jul 2025 04:33:09 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUQOlbuSDP1Avs8vlLJ3uFM8F1h+U1+fl/9+d2Fzcpb4w/FN2DsAicwZoDKHb37zCGWIVHUpZpT5ry8BK4=@vger.kernel.org,
- AJvYcCVt1+TppUSdPmqHTu0K4JwN/NSbrNMiSlHPHzhh7ozBSQnj6SNIm10cRBzy2gvuXdtJ5WZsODpPrYjA@vger.kernel.org,
- AJvYcCVujVg0HIrSMRBeLbn4SxQsq4GoAm4dd2MuuTXlkN0avCuowzw1HKxNAHtkRNM6QwogAtG8rmwli1HXVehl@vger.kernel.org,
- AJvYcCW+cua7KQRFj3oRMLRYWz6aQjrXYVxbDkyvPHCRtdw8Hxi3NW+u8vdVmL/PZbx6/SAWN44hNrD7KaTB@vger.kernel.org,
- AJvYcCW6hM/U0cKgj7H9mqdiogNz3a+RS0hBPQUYMXY0e7CVRV5/xz+heWCcXsAbZZVW4WKFHgbgo7kk0DvIVvXyR9X2Iyw=@vger.kernel.org,
- AJvYcCWSGRbSjmqhSgqwTJY4Sen2MvHTAw+wQbPH2HZ3OTC0nNkc+97q3AoiRBt3I0yqzyfV/PgoFZ6SvmYaXA==@vger.kernel.org,
- AJvYcCWzUDLay05of/rJGJspHWBAbGElY25UYxTcT3epxoQ+kk43DLPcClhM7EXdVDf7/jZkLXhV306PIWLm@vger.kernel.org,
- AJvYcCX1zgXMKEctS2VjboJH4HiR8C70Mm/GFWfBr6ZmLFBRu/tU2u/yUbIAQwXeZOEZ+LLYr2s0R2K3YtKa+BA=@vger.kernel.org,
- AJvYcCXnvKcIW2wxcob6w+IFdXVTp8pmFZwvK4L0X+8amcUBhgVJ2syCrF04HY7QlRTVqmuRbaecD4ziC9W1YEoSxQ==@vger.kernel.org,
- AJvYcCXshMB49VcZHPzp+/FGdrLqodugkAJllsKMGVtCLaPIIOVhQUN7/G/f+oiNWSsWAYDJBoZcj6LsbWAc@vger.kernel.org
-X-Received: by 2002:a05:6102:418b:b0:4c5:4591:ffda with SMTP id
- ada2fe7eead31-4fbe87b425emr1711001137.21.1753875189085; Wed, 30 Jul 2025
- 04:33:09 -0700 (PDT)
+	s=arc-20240116; t=1753892268; c=relaxed/simple;
+	bh=+h6EzbbOHcJKfZOy57XdSPF1XXqiZxLUfRoHNrtoYmk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g3dYJl4138LuR833WUNXnlYtSdX04Rm0qj1sYB8OgDADw6ddUkR8SOlsQ4YA/e8TVd7SQPU3LlZMzvDZxv0rZ9XdUU4IV6wFONyYwblFXnFq/hQZAQQUW+DZ7UgxsTQxBWsyIEznnMje7OojVE+6ihxwTW0JmExzmxKLrX/hgDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ij4zr65N; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1753892267; x=1785428267;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+h6EzbbOHcJKfZOy57XdSPF1XXqiZxLUfRoHNrtoYmk=;
+  b=Ij4zr65NeTDiVV8MlFz3W5/SHupZvbRf4S9kireCJCTo9nuWd+fPbgm3
+   Quyo/xBAhJq0IXyt2Zs1rrmwSV3a2ChtLYSDkM/syw3+XYXiAWlBfSY//
+   XQdJehxJXwU/D6NHNwaj5Nyh9wj23xT3RpGIUAr3BNjH1pWt6H/luEqjW
+   bNeIUACkm4DMNMHiDfU3vyerspZyxLoZFB74J2imqq40r6fKI/n6Rm/L3
+   g0dZVVu3NGtS/7jC4gHB3fflUXeSaIkawPnkiXpp9b8k2He31ScCvm6/l
+   sZyxrY+8+piSiI03hEmmdHK6oEcJO3hOWGw6n6Uj8F5hDUkO/1lWvv4lO
+   Q==;
+X-CSE-ConnectionGUID: Xcegl57rRGq6IQl+3tSAzw==
+X-CSE-MsgGUID: JFrvJKi1SpmGqrVAhCygYA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11507"; a="66473262"
+X-IronPort-AV: E=Sophos;i="6.16,350,1744095600"; 
+   d="scan'208";a="66473262"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2025 09:17:46 -0700
+X-CSE-ConnectionGUID: vAVuUZC2RgCWnHNdyUsIxw==
+X-CSE-MsgGUID: F4iWn4YfSDSyrx9ecp/ntg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,350,1744095600"; 
+   d="scan'208";a="162308253"
+Received: from lkp-server01.sh.intel.com (HELO 160750d4a34c) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 30 Jul 2025 09:17:45 -0700
+Received: from kbuild by 160750d4a34c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uh9Us-0002vM-29;
+	Wed, 30 Jul 2025 16:17:42 +0000
+Date: Thu, 31 Jul 2025 00:17:20 +0800
+From: kernel test robot <lkp@intel.com>
+To: Zhu Yixin <yzhu@maxlinear.com>, dmaengine@vger.kernel.org,
+	vkoul@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, jchng@maxlinear.com,
+	sureshnagaraj@maxlinear.com, Zhu Yixin <yzhu@maxlinear.com>
+Subject: Re: [PATCH 4/5] dmaengine: lgm-dma: Added HDMA software mode TX
+ function.
+Message-ID: <202507302344.XEgGylg3-lkp@intel.com>
+References: <20250730024547.3160871-4-yzhu@maxlinear.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250730-topic-dma_genise_cookie-v1-0-b505c1238f9f@oss.qualcomm.com>
- <20250730-topic-dma_genise_cookie-v1-3-b505c1238f9f@oss.qualcomm.com>
-In-Reply-To: <20250730-topic-dma_genise_cookie-v1-3-b505c1238f9f@oss.qualcomm.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 30 Jul 2025 13:32:58 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdV0JO=qtregrrHsBZ-6tpNdPUj3G1_LWRfRsj0vBb+qyw@mail.gmail.com>
-X-Gm-Features: Ac12FXwFObS4veqAcz-kMArtfpOLnucchkvqP_CejUTAp0AxApTTYboaikMMzJA
-Message-ID: <CAMuHMdV0JO=qtregrrHsBZ-6tpNdPUj3G1_LWRfRsj0vBb+qyw@mail.gmail.com>
-Subject: Re: [PATCH RFC 3/6] dmaengine: qcom: gpi: Accept protocol ID hints
-To: Konrad Dybcio <konradybcio@kernel.org>
-Cc: Vinod Koul <vkoul@kernel.org>, Sven Peter <sven@kernel.org>, Janne Grunau <j@jannau.net>, 
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>, 
-	Ludovic Desroches <ludovic.desroches@microchip.com>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Ray Jui <rjui@broadcom.com>, 
-	Scott Branden <sbranden@broadcom.com>, Paul Cercueil <paul@crapouillou.net>, 
-	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, Viresh Kumar <vireshk@kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Frank Li <Frank.Li@nxp.com>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	Taichi Sugaya <sugaya.taichi@socionext.com>, Takao Orito <orito.takao@socionext.com>, 
-	=?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Daniel Mack <daniel@zonque.org>, 
-	Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
-	Patrice Chotard <patrice.chotard@foss.st.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	=?UTF-8?Q?Am=C3=A9lie_Delaunay?= <amelie.delaunay@foss.st.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Samuel Holland <samuel@sholland.org>, Laxman Dewangan <ldewangan@nvidia.com>, 
-	Jon Hunter <jonathanh@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, 
-	Peter Ujfalusi <peter.ujfalusi@gmail.com>, 
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Michal Simek <michal.simek@amd.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, 
-	=?UTF-8?Q?Martin_Povi=C5=A1er?= <povik+lin@cutebit.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
-	Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>, Viken Dadhaniya <quic_vdadhani@quicinc.com>, 
-	Andi Shyti <andi.shyti@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, dmaengine@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, asahi@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, 
-	linux-mips@vger.kernel.org, imx@lists.linux.dev, 
-	linux-actions@lists.infradead.org, linux-arm-msm@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-sound@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org, 
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250730024547.3160871-4-yzhu@maxlinear.com>
 
-Hi Konrad,
+Hi Zhu,
 
-On Wed, 30 Jul 2025 at 11:35, Konrad Dybcio <konradybcio@kernel.org> wrote:
-> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
->
-> Client drivers may now pass hints to dmaengine drivers. GPI DMA's only
-> consumers (GENI SEs) need to pass a protocol (I2C, I3C, SPI, etc.) ID
-> to the DMA engine driver, for it to take different actions.
->
-> Currently, that's done through passing that ID through device tree,
-> with each Serial Engine expressed NUM_PROTOCOL times, resulting in
-> terrible dt-bindings that are full of useless copypasta.
->
-> To help get rid of that, accept the driver cookie instead, while
-> keeping backwards compatibility.
->
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+kernel test robot noticed the following build warnings:
 
-Thanks for your patch!
+[auto build test WARNING on vkoul-dmaengine/next]
+[also build test WARNING on linus/master v6.16 next-20250730]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> --- a/drivers/dma/qcom/gpi.c
-> +++ b/drivers/dma/qcom/gpi.c
-> @@ -2145,7 +2151,8 @@ static struct dma_chan *gpi_of_dma_xlate(struct of_phandle_args *args,
->         }
->
->         gchan->seid = seid;
-> -       gchan->protocol = args->args[2];
-> +       /* The protocol ID is in the teens range, simply ignore the higher bits */
-> +       gchan->protocol = (u32)((u64)proto);
+url:    https://github.com/intel-lab-lkp/linux/commits/Zhu-Yixin/dmaengine-lgm-dma-Correct-ORRC-MAX-counter-value/20250730-105748
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git next
+patch link:    https://lore.kernel.org/r/20250730024547.3160871-4-yzhu%40maxlinear.com
+patch subject: [PATCH 4/5] dmaengine: lgm-dma: Added HDMA software mode TX function.
+config: i386-buildonly-randconfig-003-20250730 (https://download.01.org/0day-ci/archive/20250730/202507302344.XEgGylg3-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14+deb12u1) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250730/202507302344.XEgGylg3-lkp@intel.com/reproduce)
 
-A single cast "(uintptr_t)" should be sufficient.
-Casing the pointer to u64 on 32-bit may trigger:
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507302344.XEgGylg3-lkp@intel.com/
 
-    warning: cast from pointer to integer of different size
-[-Wpointer-to-int-cast]
+All warnings (new ones prefixed by >>):
 
->
->         return dma_get_slave_channel(&gchan->vc.chan);
->  }
+   drivers/dma/lgm/lgm-hdma.c: In function 'hdma_irq_stat':
+>> drivers/dma/lgm/lgm-hdma.c:253:27: warning: left shift count >= width of type [-Wshift-count-overflow]
+     253 |         return high ? ret << 32 : ret;
+         |                           ^~
+   In file included from include/linux/device.h:15,
+                    from include/linux/dma-mapping.h:5,
+                    from drivers/dma/lgm/lgm-hdma.c:10:
+   drivers/dma/lgm/lgm-hdma.c: In function 'hdma_alloc_chan_resources':
+>> drivers/dma/lgm/lgm-hdma.c:339:22: warning: format '%llx' expects argument of type 'long long unsigned int', but argument 5 has type 'dma_addr_t' {aka 'unsigned int'} [-Wformat=]
+     339 |         dev_dbg(dev, "DMA CH: %u, phy addr: 0x%llx, desc cnt: %u\n",
+         |                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/dev_printk.h:139:49: note: in definition of macro 'dev_no_printk'
+     139 |                         _dev_printk(level, dev, fmt, ##__VA_ARGS__);    \
+         |                                                 ^~~
+   include/linux/dev_printk.h:171:40: note: in expansion of macro 'dev_fmt'
+     171 |         dev_no_printk(KERN_DEBUG, dev, dev_fmt(fmt), ##__VA_ARGS__)
+         |                                        ^~~~~~~
+   drivers/dma/lgm/lgm-hdma.c:339:9: note: in expansion of macro 'dev_dbg'
+     339 |         dev_dbg(dev, "DMA CH: %u, phy addr: 0x%llx, desc cnt: %u\n",
+         |         ^~~~~~~
+   drivers/dma/lgm/lgm-hdma.c:339:50: note: format string is defined here
+     339 |         dev_dbg(dev, "DMA CH: %u, phy addr: 0x%llx, desc cnt: %u\n",
+         |                                               ~~~^
+         |                                                  |
+         |                                                  long long unsigned int
+         |                                               %x
+   drivers/dma/lgm/lgm-hdma.c: In function 'hdma_prep_slave_sg':
+>> drivers/dma/lgm/lgm-hdma.c:508:29: warning: variable 'desc_hw' set but not used [-Wunused-but-set-variable]
+     508 |         struct dw4_desc_hw *desc_hw;
+         |                             ^~~~~~~
 
-Gr{oetje,eeting}s,
 
-                        Geert
+vim +253 drivers/dma/lgm/lgm-hdma.c
+
+   213	
+   214	static unsigned long hdma_irq_stat(struct ldma_dev *d, int high)
+   215	{
+   216		u32 irnen, irncr, en_off, cr_off, cid;
+   217		unsigned long flags;
+   218		unsigned long ret;
+   219	
+   220		spin_lock_irqsave(&d->dev_lock, flags);
+   221	
+   222		hdma_get_irq_off(high, &en_off, &cr_off);
+   223	
+   224		irncr = readl(d->base + cr_off);
+   225		irnen = readl(d->base + en_off);
+   226	
+   227		if (!irncr || !irnen || !(irncr & irnen)) {
+   228			writel(irncr, d->base + cr_off);
+   229			spin_unlock_irqrestore(&d->dev_lock, flags);
+   230			return 0;
+   231		}
+   232	
+   233		/* disable EOP interrupt for the channel */
+   234		for_each_set_bit(cid, (const unsigned long *)&irncr, d->chan_nrs) {
+   235			/* select DMA channel */
+   236			ldma_update_bits(d, DMA_CS_MASK, cid, DMA_CS);
+   237			/* Clear EOP interrupt status */
+   238			writel(readl(d->base + DMA_CIS), d->base + DMA_CIS);
+   239			/* Disable EOP interrupt */
+   240			writel(0, d->base + DMA_CIE);
+   241		}
+   242	
+   243		/* ACK interrupt */
+   244		writel(irncr, d->base + cr_off);
+   245		irnen &= ~irncr;
+   246		/* Disable interrupt */
+   247		writel(irnen, d->base + en_off);
+   248	
+   249		spin_unlock_irqrestore(&d->dev_lock, flags);
+   250	
+   251		ret = irncr;
+   252	
+ > 253		return high ? ret << 32 : ret;
+   254	}
+   255	
+   256	static irqreturn_t hdma_interrupt(int irq, void *dev_id)
+   257	{
+   258		struct ldma_dev *d = dev_id;
+   259		struct hdma_chan *chan;
+   260		u32 cid;
+   261		unsigned long stat;
+   262	
+   263		stat = hdma_irq_stat(d, 0) | hdma_irq_stat(d, 1);
+   264		if (!stat)
+   265			return IRQ_HANDLED;
+   266	
+   267		for_each_set_bit(cid, (const unsigned long *)&stat, d->chan_nrs) {
+   268			chan = (struct hdma_chan *)d->chans[cid].priv;
+   269			tasklet_schedule(&chan->task);
+   270		}
+   271	
+   272		return IRQ_HANDLED;
+   273	}
+   274	
+   275	static int hdma_irq_init(struct ldma_dev *d, struct platform_device *pdev)
+   276	{
+   277		if (d->flags & DMA_CHAN_HW_DESC)
+   278			return 0;
+   279	
+   280		d->irq = platform_get_irq(pdev, 0);
+   281		if (d->irq < 0)
+   282			return d->irq;
+   283	
+   284		return devm_request_irq(d->dev, d->irq, hdma_interrupt, 0,
+   285					DRIVER_NAME, d);
+   286	}
+   287	
+   288	/**
+   289	 * Allocate DMA descriptor list
+   290	 */
+   291	static int hdma_alloc_chan_resources(struct dma_chan *dma_chan)
+   292	{
+   293		struct ldma_chan *c = to_ldma_chan(dma_chan);
+   294		struct hdma_chan *chan = (struct hdma_chan *)c->priv;
+   295		struct device *dev = c->vchan.chan.device->dev;
+   296		struct dw4_desc_sw *desc_sw;
+   297		struct dw4_desc_hw *desc_hw;
+   298		size_t desc_sz;
+   299		int i;
+   300	
+   301		/* HW allocate DMA descriptors */
+   302		if (ldma_chan_is_hw_desc(c)) {
+   303			c->flags |= CHAN_IN_USE;
+   304			dev_dbg(dev, "desc in hw\n");
+   305			return 0;
+   306		}
+   307	
+   308		if (!c->desc_cnt) {
+   309			dev_err(dev, "descriptor count is not set\n");
+   310			return -EINVAL;
+   311		}
+   312	
+   313		desc_sz = c->desc_cnt * sizeof(*desc_hw);
+   314	
+   315		c->desc_base = kzalloc(desc_sz, GFP_KERNEL);
+   316		if (!c->desc_base)
+   317			return -ENOMEM;
+   318	
+   319		c->desc_phys = dma_map_single(dev, c->desc_base,
+   320					      desc_sz, DMA_TO_DEVICE);
+   321		if (dma_mapping_error(dev, c->desc_phys)) {
+   322			dev_err(dev, "dma mapping error for dma desc list\n");
+   323			goto desc_err;
+   324		}
+   325	
+   326		desc_sz = c->desc_cnt * sizeof(*desc_sw);
+   327		chan->ds = kzalloc(desc_sz, GFP_KERNEL);
+   328	
+   329		if (!chan->ds)
+   330			goto desc_err;
+   331	
+   332		desc_hw = (struct dw4_desc_hw *)c->desc_base;
+   333		for (i = 0; i < c->desc_cnt; i++) {
+   334			desc_sw = chan->ds + i;
+   335			desc_sw->chan = c;
+   336			desc_sw->desc_hw = desc_hw + i;
+   337		}
+   338	
+ > 339		dev_dbg(dev, "DMA CH: %u, phy addr: 0x%llx, desc cnt: %u\n",
+   340			c->nr, c->desc_phys, c->desc_cnt);
+   341	
+   342		ldma_chan_desc_hw_cfg(c, c->desc_phys, c->desc_cnt);
+   343		ldma_chan_on(c);
+   344	
+   345		return c->desc_cnt;
+   346	
+   347	desc_err:
+   348		kfree(c->desc_base);
+   349		return -EINVAL;
+   350	}
+   351	
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 

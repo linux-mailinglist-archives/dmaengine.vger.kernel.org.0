@@ -1,48 +1,48 @@
-Return-Path: <dmaengine+bounces-5893-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5894-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0818B158DE
-	for <lists+dmaengine@lfdr.de>; Wed, 30 Jul 2025 08:20:05 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A04E7B158E2
+	for <lists+dmaengine@lfdr.de>; Wed, 30 Jul 2025 08:20:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 06049164638
-	for <lists+dmaengine@lfdr.de>; Wed, 30 Jul 2025 06:20:06 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E8E767A942F
+	for <lists+dmaengine@lfdr.de>; Wed, 30 Jul 2025 06:19:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E45131482F2;
-	Wed, 30 Jul 2025 06:20:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5EC91F237E;
+	Wed, 30 Jul 2025 06:20:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V5wt7a1x"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B7uHLZtZ"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE6CC199BC
-	for <dmaengine@vger.kernel.org>; Wed, 30 Jul 2025 06:20:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1BFD1F1505
+	for <dmaengine@vger.kernel.org>; Wed, 30 Jul 2025 06:20:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753856401; cv=none; b=HU7O+mhBYO7Y1w94KypGbHmsiwR9/WelCWGfzLALLZzQkdzXf5PmPscGEO9jYPaiSPGJVcfetTVMt5HU1Yzx7zPUBc2og/E6qTcMD/Yvh8+9MKBvRKU9SdUsZ+JGX5zke0CkZ19Y/ZLvLz430KIhe4ac4OYpgJhymAKzvJwneFk=
+	t=1753856437; cv=none; b=WyIm5KkzenKO8iRiqOnbmk6qgfwsDJHJuBxBFOVGWWCrRZOGqbZKtjGywOM1tP+7G5TF5W1JwLLj9kyFEIBotm17FLczvPoRJcsGWKWfAfqHjXhzDs6qqKto5tHSWcr+JwZ/JcM9YyczkQHueSRI0pVNHiF3InDDg6P3tXw6dMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753856401; c=relaxed/simple;
-	bh=xE0iPaQWpS5KkYAJFGN7Q3zoukRkSbgJ+Q0Srs05tn0=;
+	s=arc-20240116; t=1753856437; c=relaxed/simple;
+	bh=FWmBq0NvPFFQxwfC2fiFUeF3y3HXilhtDyIYBQ/2lO0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Nayfbh1DWjnRau+66FZt4/PJFNwgCWaLNTEGd0ZeoOYYGZgDrlvP0DlhaheBL6RWJe3RKSb0Onb/TnY79WNkUyzgSCA005QtDx86Sv4eiszArLhY9QvXTRa8wioiiufFT9wo9FuvD8LesEqG7gJk97l2bHSfCxMFX21eUsb+pzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V5wt7a1x; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1662C4CEE7;
-	Wed, 30 Jul 2025 06:19:59 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=aVR+8W5NfwB3nFO3UzA7WspCsvMxDCNupKRzmExLkYDAvmkMr+xf9FJln7EtI3/SkPxLo5Ko3IFhuggMp2+rpL/cIlS8h/M9lxkbbj0O/dBn18io3iDDicX8VEotPpKrnT7C9rAAl1vimcaUANFBEaEWjrPe2MQGftQh4dmcomQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B7uHLZtZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8D23C4CEF7;
+	Wed, 30 Jul 2025 06:20:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753856401;
-	bh=xE0iPaQWpS5KkYAJFGN7Q3zoukRkSbgJ+Q0Srs05tn0=;
+	s=k20201202; t=1753856437;
+	bh=FWmBq0NvPFFQxwfC2fiFUeF3y3HXilhtDyIYBQ/2lO0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=V5wt7a1xnlW4ZFqMOqYV+0lU8bG8eefh/GCGFd2hfX1p+qsfAkBOiouRBo2jH9fjV
-	 6bq8YAu9EcaXBZprvH2bz7+SoUMormlx0283kX4S5TUXFUgBc55JPBiGqnijKgFZ7Z
-	 9ufxZ+5Ag0unKjFuMkID/jHu58kkcYbN9X/NRsK/nIyILt5dq0Widi/SUttp8tOCRg
-	 hZ67EYlWKvjTalfsS39SC5+yViXyD0EQ6JZzYsxCS7daAZ9jF85vjBS7pH9WY+h8g6
-	 WFCb82nlrWsvbpeB75m59TwyRRahfbrCZyUxPgq1Rfeo25Z9rxnD+DP3LfCHQZWUyP
-	 Duf9uPSUPKXPg==
-Message-ID: <62599303-fab0-4068-9d5e-55cebd093f90@kernel.org>
-Date: Wed, 30 Jul 2025 08:19:58 +0200
+	b=B7uHLZtZWK8J/W/yzlEaNLkcfvWXqqk7oAnsp+B78uTRR7lhHGMYsWlYImlQ0i8iD
+	 8NpuI5nHlebdd5NDmleBBu0mOhY0kPIJ7xX1T32cidfVJfUnObEn2NLHD+LyVpfyrv
+	 kLg2Rd9eOOfeh5WOuBjql4UfijTFute8Uls5ZVLHZ6bFQZFcZAuJX0Uw/3/I7srZu+
+	 X+8xQO2WFQruGLqRz3mK2GPsACUuZLAb6f8N+lmbyDkKqxARdLQRQ+sbRjEdAqjyTW
+	 0Ve+97p+aUL0fIQ+KA1+as0svGk8I7hgOGVXuKjEGNvs59R81j1qwZ2RagKn1as0Mr
+	 uixNImXifPd5A==
+Message-ID: <e3462ab4-73fe-4960-af4c-a7360288e3e3@kernel.org>
+Date: Wed, 30 Jul 2025 08:20:33 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -50,11 +50,13 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/5] dmaengine: lgm-dma: Move platfrom data to device tree
+Subject: Re: [PATCH 3/5] dmaengine: lgm-dma: split legacy DMA and HDMA
+ functions
 To: Zhu Yixin <yzhu@maxlinear.com>, dmaengine@vger.kernel.org,
  vkoul@kernel.org
 Cc: jchng@maxlinear.com, sureshnagaraj@maxlinear.com
 References: <20250730024547.3160871-1-yzhu@maxlinear.com>
+ <20250730024547.3160871-3-yzhu@maxlinear.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -100,56 +102,47 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250730024547.3160871-1-yzhu@maxlinear.com>
+In-Reply-To: <20250730024547.3160871-3-yzhu@maxlinear.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 30/07/2025 04:45, Zhu Yixin wrote:
-> Remove platform data and unified the setting from device tree.
+> Move legacy DMA functions into lgm-cdma.c.
+> Move HDMA functions into lgm-hdma.c
+> Keep the driver flow and general functions in lgm-dma.c
 > 
 > Signed-off-by: Zhu Yixin <yzhu@maxlinear.com>
 > ---
->  .../devicetree/bindings/dma/intel,ldma.yaml   |  67 ++++-
->  drivers/dma/lgm/lgm-dma.c                     | 242 +++++++-----------
+>  .../devicetree/bindings/dma/intel,ldma.yaml   |   7 +-
+>  drivers/dma/lgm/Makefile                      |   2 +-
+>  drivers/dma/lgm/lgm-cdma.c                    | 492 ++++++++++
+>  drivers/dma/lgm/lgm-dma.c                     | 839 ++----------------
+>  drivers/dma/lgm/lgm-dma.h                     | 278 ++++++
+>  drivers/dma/lgm/lgm-hdma.c                    | 130 +++
+>  6 files changed, 961 insertions(+), 787 deletions(-)
+>  create mode 100644 drivers/dma/lgm/lgm-cdma.c
+>  create mode 100644 drivers/dma/lgm/lgm-dma.h
+>  create mode 100644 drivers/dma/lgm/lgm-hdma.c
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/intel,ldma.yaml b/Documentation/devicetree/bindings/dma/intel,ldma.yaml
+> index 59f928297613..f91d849edc4c 100644
+> --- a/Documentation/devicetree/bindings/dma/intel,ldma.yaml
+> +++ b/Documentation/devicetree/bindings/dma/intel,ldma.yaml
+> @@ -15,7 +15,8 @@ allOf:
+>  properties:
+>    compatible:
+>      enum:
+> -      - intel,lgm-ldma
+> +      - intel,lgm-cdma
+> +      - intel,lgm-hdma
+
+NAK, stop random changes to compatibles.
 
 Please run scripts/checkpatch.pl on the patches and fix reported
 warnings. After that, run also 'scripts/checkpatch.pl --strict' on the
 patches and (probably) fix more warnings. Some warnings can be ignored,
 especially from --strict run, but the code here looks like it needs a
 fix. Feel free to get in touch if the warning is not clear.
-
-
->  2 files changed, 144 insertions(+), 165 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/intel,ldma.yaml b/Documentation/devicetree/bindings/dma/intel,ldma.yaml
-> index d6bb553a2c6f..59f928297613 100644
-> --- a/Documentation/devicetree/bindings/dma/intel,ldma.yaml
-> +++ b/Documentation/devicetree/bindings/dma/intel,ldma.yaml
-> @@ -7,8 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
->  title: Lightning Mountain centralized DMA controllers.
->  
->  maintainers:
-> -  - chuanhua.lei@intel.com
-> -  - mallikarjunax.reddy@intel.com
-> +  - yzhu@maxlinear.com
->  
->  allOf:
->    - $ref: dma-controller.yaml#
-> @@ -16,14 +15,7 @@ allOf:
->  properties:
->    compatible:
->      enum:
-> -      - intel,lgm-cdma
-> -      - intel,lgm-dma2tx
-> -      - intel,lgm-dma1rx
-> -      - intel,lgm-dma1tx
-> -      - intel,lgm-dma0tx
-> -      - intel,lgm-dma3
-> -      - intel,lgm-toe-dma30
-> -      - intel,lgm-toe-dma31
-> +      - intel,lgm-ldma
-
-Nothing explains why you break the ABI.
 
 <form letter>
 Please use scripts/get_maintainers.pl to get a list of necessary people
@@ -170,7 +163,6 @@ a waste of time.
 
 Please kindly resend and include all necessary To/Cc entries.
 </form letter>
-
 
 
 Best regards,

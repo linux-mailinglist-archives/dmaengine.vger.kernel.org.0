@@ -1,201 +1,185 @@
-Return-Path: <dmaengine+bounces-5926-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5927-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2DC71B1751F
-	for <lists+dmaengine@lfdr.de>; Thu, 31 Jul 2025 18:42:23 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A557B17778
+	for <lists+dmaengine@lfdr.de>; Thu, 31 Jul 2025 22:56:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E5BAA1C25B2B
-	for <lists+dmaengine@lfdr.de>; Thu, 31 Jul 2025 16:42:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3DB0B3BF9C9
+	for <lists+dmaengine@lfdr.de>; Thu, 31 Jul 2025 20:56:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 010EF27A913;
-	Thu, 31 Jul 2025 16:41:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EF25239E91;
+	Thu, 31 Jul 2025 20:56:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="dtcWBCy1"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zrGRmvsn"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from relay15.mail.gandi.net (relay15.mail.gandi.net [217.70.178.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D890223D29B;
-	Thu, 31 Jul 2025 16:41:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9B812135AC
+	for <dmaengine@vger.kernel.org>; Thu, 31 Jul 2025 20:56:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753980117; cv=none; b=tlVsgglS6trz04PdM/3XJ/w+N/EhrPSCXGKeQ+YfwSXQeKe8k1bXACxdgXqoqIGKGXRcEtBZt3Rz4J17fjJdn6I9sozfuQDiFYwvYs6TX0YwdfgX2BDNJbNJlFsQZek3x8fAZN7SPLvN1L+DmMbg1dGNdUf7uE/ULBbgdAHfEq0=
+	t=1753995389; cv=none; b=ih3hnaf3vNBu2HYid5uKQRBvjDAlg7/Q8F9EXYs9tAIMi6YT1Y7a1oSI9muWU3lZ/XBLJ7fCHlLyNdAncjQxHJxNyKSxqK8l/72yw0s8ztT2/OtxExgHEIJkKkjC0AasUebVT/rboyoRr9hBzQjX4tJ5fzmKcv7wQWeQk0HJ9mE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753980117; c=relaxed/simple;
-	bh=J7RNG/7xvpoBqH05h6aB+j8xGF21xMDc3MAc75QY2lE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Ct1jvXvEKmH0SSjuikJl6UgtU63Wtzy6RBFI0oQ0bnOVOrZZkbUA3cFpDGuM9HjxS3yIUiILQJyb57ORyBvzQAnUODKcG6TfOiCswHcA7YuIzYenphx6ne433aeZTiKBNpL41sFFYHhsWQ2ZTYt+bI30r2JFjvdRSKnkEqlfwyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=dtcWBCy1; arc=none smtp.client-ip=217.70.178.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E270F442A7;
-	Thu, 31 Jul 2025 16:41:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1753980114;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ju676odYa3fzthpZBub6TEXhiCg5nHSgO4/BZxB4t/c=;
-	b=dtcWBCy1JonFpo/ZMWfC0X9ELTP8QJ1OFRCbY8nhzd0+hwcTHcK4NCzmcQnH5OCoR9VPRN
-	uNGi+VyDFifLwJMUREKuLWZns2f2W73DQHvtTx8DO11HHlAPTmLd+0VmQSXn7bFiEWiBse
-	qDy17syGZN8SoMH7q+ZRTfF7FweVgGs4Q4kLHqqdtfWGm3IlrMTCqKAGKRh6NNGDX4re7T
-	x5fjcTjMJtOZh5YeACgTI+TeXYDdTAgk/2KY+rIoKPpw/FQ7/QFuYj2vV/6SmFxa63jrB3
-	yBIuNQjqKhhgumpfmnW6BkFUEdS2Ow5QvmlXJ/BJLLdNiRklfN4RYfxGGIRbcg==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Date: Thu, 31 Jul 2025 18:41:31 +0200
-Subject: [PATCH 3/3] dmaengine: ti: k3-udma: Simplify the completion worker
+	s=arc-20240116; t=1753995389; c=relaxed/simple;
+	bh=nFeKFStsvXn3Aqtmlpsg37D6CgVeR2E7Vx8uku6RlmI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HtlV8/36ac7VHrvU9Ve2+v42FJjTEBXcyVZgikqRaNnDxIZXUdr7FG1Vq3ZEJXoxwd27K9Dliw4E5590MS2Ffg6oBjrX2TLU4BrfoMef4pc4yiXZqQba4PSC63SPwmq5amAzqaN5s/9PemWc7YsXugfQQtjbKycA78TMVeDM+y4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zrGRmvsn; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-55b8b8e00caso906635e87.3
+        for <dmaengine@vger.kernel.org>; Thu, 31 Jul 2025 13:56:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1753995385; x=1754600185; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZCtuQkDVjUEa/FtZ6Tb1pgyFSFVXDIid7hFEgrtgAWc=;
+        b=zrGRmvsnaE/nYvXtI6aqQDpELOdpekJQnFTR3UK0l6t61sSmooSebewd1f53FNIwrA
+         AQOeAFE6nedMM5bifDivabwj4kCJTneKV00WTWEinGQ+3XXxHpY3tUrjaETcp5BxdTKE
+         zORVLfaew3niRQo6lW/NM9oSHf842+yKvQOKtpfb7uHi18ri7hr1oYEl8EUPd5PTo6lO
+         bVrUg49rMNfRWguPngV/SQealldkER/UnamSK8+yL9uNj7Rty7SU0wIlLTcSV2IbeX4S
+         FXTZIoIQdudEKUejD7/Cdpogn0j+ZxPzits8oBp98hymU0RiZhs4FA+B5P0QNHNtXF2m
+         /VhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753995385; x=1754600185;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZCtuQkDVjUEa/FtZ6Tb1pgyFSFVXDIid7hFEgrtgAWc=;
+        b=X1jsQSxyfKlMBMP5UYmmb8sx4LKnzOGv/OAFdKRNnRZciJqbMugLlm5d7fwNY7GLqg
+         4scO1QCqttPtkpDMT2pkBOKWRh0TupxGalWDswyWu98RBzklDumk0jtMzDN6GDQ9+APi
+         PBbH89K1jZJS2QCHLBHRYb+peVqGlfaT0SBi8jKIC+YBXFnkss4qqDlP4tx91awHsfGf
+         Z3v6vvGGbbh0ECXAk9NXq3OXHZ951SZ5S6DHbkxo9auVAI4yZ7FB/KeV+rV0a5AcVqsk
+         WEjt5cxuT6og1BT0TEL2kWTmqZVl1bWzoBudV9JlIrEFlgHLCHRME21G+D6KZOUJA0Xc
+         uNMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVHIDov9mXt4JEEMds8m5yBsnxSKCKIHVWtxmlLphQSmrnXx7U7Zl0gCgOZFCkcX1opDaVK14Je2to=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyALf3ddG2pBMN1eCiYu7rlbKRuVtIHkemmhzVpEDzCVSf1y75S
+	lM8Qgt9eo0FAE3FUr0Ffg+/LblK44/LCXMTaW8bmxZ59LaW/r3Mrp8fRo4/4CUNql3cnSL2v886
+	hzg1g7ABgoFa7J9TvEt2a2stthzTyLLp0WLNHgLWj
+X-Gm-Gg: ASbGncvN3n5zP07l1TxSgLjrSNoJWTxSGBfJor2/klIU560jGGyLNjIkdvEUuLf8RuN
+	Siw1e1uv391xZbQWVocNYqBOaV8yvH7k+9AI8zM0NQByHCqucSAOG7eI89w4HWn1KxO5so46i5q
+	P4CRuTgpK2CXV2azh5fvwThPQ9tAKYg4lFG+c2HELbCVQYbRZLO1n8bPotZVg7R6onpVf57egrM
+	sD7wLXaHqnj5QlQEg==
+X-Google-Smtp-Source: AGHT+IG5n8X+GoZig+npW6fkHFuu9QaxrrCfyPOAyObS6oOX5VI8mw3mOyMwnie+EdiPKNibMSfQ7N6Jylcw+Bgvsg4=
+X-Received: by 2002:a05:6512:6d1:b0:553:2450:58a6 with SMTP id
+ 2adb3069b0e04-55b7c00bb74mr2485809e87.1.1753995385134; Thu, 31 Jul 2025
+ 13:56:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250731-ti-dma-timeout-v1-3-33321d2b7406@bootlin.com>
-References: <20250731-ti-dma-timeout-v1-0-33321d2b7406@bootlin.com>
-In-Reply-To: <20250731-ti-dma-timeout-v1-0-33321d2b7406@bootlin.com>
-To: Peter Ujfalusi <peter.ujfalusi@gmail.com>, 
- Vinod Koul <vkoul@kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Peter Ujfalusi <peter.ujfalusi@ti.com>, dmaengine@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>
-X-Mailer: b4 0.14.2
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddutddufedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeelgfehvdduieefieeikeffgffggfdttdeugeffieetheeuleelfeehffdtffetveenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduledvrdduieekrdegvddrgeeingdpmhgrihhlfhhrohhmpehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeekpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepughmrggvnhhgihhnvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehgrhihghhorhhiihdrshhtrhgrshhhkhhosehtihdrtghomhdprhgtphhtthhopehvkhhouhhlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgri
- iiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopehpvghtvghrrdhujhhfrghluhhsihesthhirdgtohhmpdhrtghpthhtohepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdprhgtphhtthhopehpvghtvghrrdhujhhfrghluhhsihesghhmrghilhdrtghomh
+References: <20250620232031.2705638-1-dmatlack@google.com> <CALzav=dVYqS8oQNbygVjgA69EQMBBP4CyzydyUoAjnN2mb_yUQ@mail.gmail.com>
+ <20250728102737.5b51e9da.alex.williamson@redhat.com> <20250729222635.GU36037@nvidia.com>
+In-Reply-To: <20250729222635.GU36037@nvidia.com>
+From: David Matlack <dmatlack@google.com>
+Date: Thu, 31 Jul 2025 13:55:57 -0700
+X-Gm-Features: Ac12FXxPsO99W-i-2FIZsnLyILWDPQlQQ0kWEDj72No2ZsrYL7nf_a3cvIf3gtU
+Message-ID: <CALzav=d0vPMw26f-vzCJnjRFL+Uc6sObihqJ0jnJRpi-SxtSSw@mail.gmail.com>
+Subject: Re: [PATCH 00/33] vfio: Introduce selftests for VFIO
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Alex Williamson <alex.williamson@redhat.com>, Aaron Lewis <aaronlewis@google.com>, 
+	Adhemerval Zanella <adhemerval.zanella@linaro.org>, 
+	Adithya Jayachandran <ajayachandra@nvidia.com>, Andrew Jones <ajones@ventanamicro.com>, 
+	Ard Biesheuvel <ardb@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Bibo Mao <maobibo@loongson.cn>, 
+	Claudio Imbrenda <imbrenda@linux.ibm.com>, Dan Williams <dan.j.williams@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, dmaengine@vger.kernel.org, 
+	Huacai Chen <chenhuacai@kernel.org>, James Houghton <jthoughton@google.com>, 
+	Joel Granados <joel.granados@kernel.org>, Josh Hilke <jrhilke@google.com>, 
+	Kevin Tian <kevin.tian@intel.com>, kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, "Pratik R. Sampat" <prsampat@amd.com>, 
+	Saeed Mahameed <saeedm@nvidia.com>, Sean Christopherson <seanjc@google.com>, Shuah Khan <shuah@kernel.org>, 
+	Vinicius Costa Gomes <vinicius.gomes@intel.com>, Vipin Sharma <vipinsh@google.com>, 
+	Wei Yang <richard.weiyang@gmail.com>, "Yury Norov [NVIDIA]" <yury.norov@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The function does nothing in the !uc->desc condition.
+On Tue, Jul 29, 2025 at 3:26=E2=80=AFPM Jason Gunthorpe <jgg@nvidia.com> wr=
+ote:
+>
+> On Mon, Jul 28, 2025 at 10:27:37AM -0600, Alex Williamson wrote:
+> > On Fri, 25 Jul 2025 09:47:48 -0700
+> > David Matlack <dmatlack@google.com> wrote:
+> > > I also was curious about your thoughts on maintenance of VFIO
+> > > selftests, since I don't think we discussed that in the RFC. I am
+> > > happy to help maintain VFIO selftests in whatever way makes the most
+> > > sense. For now I added tools/testing/selftests/vfio under the
+> > > top-level VFIO section in MAINTAINERS (so you would be the maintainer=
+)
+> > > and then also added a separate section for VFIO selftests with myself
+> > > as a Reviewer (see PATCH 01). Reviewer felt like a better choice than
+> > > Maintainer for myself since I am new to VFIO upstream (I've primarily
+> > > worked on KVM in the past).
+> >
+> > Hi David,
+> >
+> > There's a lot of potential here and I'd like to see it proceed.
+>
+> +1 too, I really lack time at the moment to do much with this but I'm
+> half inclined to suggest Alex should say it should be merged in 6
+> weeks (to motivate any reviewing) and we can continue to work on it
+> in-tree.
+>
+> As they are self tests I think there is alot more value in having the
+> tests than having perfect tests.
 
-No need to go through the entire delay guessing logic if the descriptor
-is already done when we first check.
+They have been quite useful already within Google. Internally we have
+something almost identical to the RFC and have been using that for
+testing our 6.6-based kernel continuously since March. Already they
+have caught one (self-inflicted) regression where 1GiB HugeTLB pages
+started getting mapped with 2MiB mappings in the IOMMU, and have been
+very helpful with new development (e.g. Aaron's work, and Live Update
+support).
 
-Invert the "no descriptor" and "descriptor done" conditions. This
-greatly simplifies the function by dropping two indentation levels and
-improves the readability.
+So I agree, it's probably net positive to merge early and then iterate
+in-tree. Especially since these are only tests and not e.g.
+load-bearing kernel code (although I still want to hold a high bar for
+the selftests code).
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- drivers/dma/ti/k3-udma.c | 86 ++++++++++++++++++++----------------------------
- 1 file changed, 36 insertions(+), 50 deletions(-)
+The only patches to hold off merging would be 31-33, since those
+should probably go through the KVM tree? And of course we need Acks
+for the drivers/dma/{ioat,idxd} changes, but the changes there are
+pretty minor.
 
-diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-index 11232b306475edd5e1ed75d938bbf49ed9c2aabd..fb323df15a1b6693d917750f18f907e63bb38c53 100644
---- a/drivers/dma/ti/k3-udma.c
-+++ b/drivers/dma/ti/k3-udma.c
-@@ -1087,69 +1087,55 @@ static void udma_check_tx_completion(struct work_struct *work)
- {
- 	struct udma_chan *uc = container_of(work, typeof(*uc),
- 					    tx_drain.work.work);
--	bool desc_done = true;
-+	struct udma_desc *d = uc->desc;
-+	bool desc_done;
- 	u32 residue_diff;
- 	ktime_t time_diff;
- 	unsigned long delay;
- 	unsigned long flags;
- 
-+	if (!d)
-+		return;
-+
- 	while (1) {
- 		spin_lock_irqsave(&uc->vc.lock, flags);
- 
--		if (uc->desc) {
--			/* Get previous residue and time stamp */
--			residue_diff = uc->tx_drain.residue;
--			time_diff = uc->tx_drain.tstamp;
--			/*
--			 * Get current residue and time stamp or see if
--			 * transfer is complete
--			 */
--			desc_done = udma_is_desc_really_done(uc, uc->desc);
--		}
--
--		if (!desc_done) {
--			/*
--			 * Find the time delta and residue delta w.r.t
--			 * previous poll
--			 */
--			time_diff = ktime_sub(uc->tx_drain.tstamp,
--					      time_diff) + 1;
--			residue_diff -= uc->tx_drain.residue;
--			/*
--			 * Try to guess when we should check next time by
--			 * calculating rate at which data is being drained at
--			 * the peer device. Slow devices might have not yet
--			 * started, showing no progress. Use an arbitrary delay
--			 * in this case.
--			 */
--			if (residue_diff) {
--				delay = (time_diff / residue_diff) *
--					uc->tx_drain.residue;
--				if (delay < 1000)
--					delay = 1000;
--			} else {
--				delay = 100000;
--			}
--
--			spin_unlock_irqrestore(&uc->vc.lock, flags);
--
--			usleep_range(ktime_to_us(delay),
--				     ktime_to_us(delay) + 10);
--			continue;
--		}
--
--		if (uc->desc) {
--			struct udma_desc *d = uc->desc;
--
--			udma_decrement_byte_counters(uc, d->residue);
--			udma_start(uc);
--			vchan_cookie_complete(&d->vd);
-+		/* Get previous residue and time stamp */
-+		residue_diff = uc->tx_drain.residue;
-+		time_diff = uc->tx_drain.tstamp;
-+		/* Get current residue and time stamp or see if transfer is complete */
-+		desc_done = udma_is_desc_really_done(uc, uc->desc);
-+		if (desc_done)
- 			break;
-+
-+		/* Find the time delta and residue delta w.r.t previous poll */
-+		time_diff = ktime_sub(uc->tx_drain.tstamp, time_diff) + 1;
-+		residue_diff -= uc->tx_drain.residue;
-+		/*
-+		 * Try to guess when we should check next time by
-+		 * calculating rate at which data is being drained at
-+		 * the peer device. Slow devices might have not yet
-+		 * started, showing no progress. Use an arbitrary delay
-+		 * in this case.
-+		 */
-+		if (residue_diff) {
-+			delay = (time_diff / residue_diff) * uc->tx_drain.residue;
-+			if (delay < 1000)
-+				delay = 1000;
-+		} else {
-+			delay = 100000;
- 		}
- 
--		break;
-+		spin_unlock_irqrestore(&uc->vc.lock, flags);
-+
-+		usleep_range(ktime_to_us(delay),
-+			     ktime_to_us(delay) + 10);
- 	}
- 
-+	udma_decrement_byte_counters(uc, d->residue);
-+	udma_start(uc);
-+	vchan_cookie_complete(&d->vd);
-+
- 	spin_unlock_irqrestore(&uc->vc.lock, flags);
- }
- 
+> > Something that we should continue to try to improve is the automation.
+> > These tests are often targeting a specific feature, so matching a
+> > device to a unit test becomes a barrier to automated runs.  I wonder if
+> > we might be able to reach a point where the test runner can select
+> > appropriate devices from a pool of devices specified via environment
+> > variables.
 
--- 
-2.50.1
+Yes, I'd like to improve on this as well. Within Google we've recently
+split up run.sh into separate setup.sh and cleanup.sh scripts, and now
+store metadata about what devices are set up for VFIO selftests in
+files. Storing metadata in files has been especially useful for
+testing Live Updates, since we need the automation to remember what
+devices are in use across a kexec.
 
+For now we still pass in the BDFs to tests via command line, but we
+could have tests themselves look and see what devices are available
+for use and then pick one or multiple as needed. The location of the
+metadata files can have some reasonable default path and with an
+option to override with a custom path via environment variable.
+
+There's lots of directions we could go in, and it really depends on
+how folks want to use/run VFIO selftests, so I would like to learn
+more about that as well.
+
+>
+> Makes a lot of sense to me!
+>
+> I'd just put Dave as the VFIO selftest co-maintainer though - a
+> pennance for doing so much work :)
+
+Hah! I will accept my penance if necessary. :)
+
+>
+> Jason
 

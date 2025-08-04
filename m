@@ -1,115 +1,256 @@
-Return-Path: <dmaengine+bounces-5940-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5941-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8761BB1A1DF
-	for <lists+dmaengine@lfdr.de>; Mon,  4 Aug 2025 14:45:18 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7ADB2B1AB92
+	for <lists+dmaengine@lfdr.de>; Tue,  5 Aug 2025 01:52:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E014A3BFD71
-	for <lists+dmaengine@lfdr.de>; Mon,  4 Aug 2025 12:45:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 820473AF6A7
+	for <lists+dmaengine@lfdr.de>; Mon,  4 Aug 2025 23:52:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7A0D26A1AD;
-	Mon,  4 Aug 2025 12:43:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44E07291C1C;
+	Mon,  4 Aug 2025 23:52:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="jKLfG1lq"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3A6F2673B0;
-	Mon,  4 Aug 2025 12:43:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3279291C01;
+	Mon,  4 Aug 2025 23:51:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754311411; cv=none; b=XBXIVslJyMislR7nYZoVgMOmBRNh0dX7p9QIg7DxRqlLQdnd6fye9Xo3G9D10aUNfrOhiFz4L+ydPYpwbEmFooNf9VXbPupzyhLRMPr94u2pXi4SiacxtBRTAtW2SO2x0SmE7Ev3pFhFDNsdAUZ2PNrqH7dCN99AgCO6won19Mg=
+	t=1754351522; cv=none; b=OnJXwmtOqTd+dJ0dqDtlPebSAeMkY6VYBo0fsQqysokb/anL8/eWlDz9aM7p9LNYpW+gGQ72XlMs9q/p8GsbAxVpLPPPub4ezkGsT5oWBHdU1NUlsyI2/Txvkh7weZdGcRPupZA4kf6ceGqZ2MGvgEHzuYCbe4phr7HI7hQ11g4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754311411; c=relaxed/simple;
-	bh=AwIB8d/q3k4NIHWqWxhwujek8W+jlfHNccY7uEjmU7A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cJDagDkZZoHuJEa5+V6fyqvVYiyyrCh8e4AMGmkNUsiGqadZ8y/t9HKUhJjXhULAi/ysFKmUYS4JEmTv7ivrRxEVC1RguQqYWqaer077u8RmMkUINM4Lw7PG1IiSvLGxwVC/tdaZ92Tt/Zt1nveUoRgS0ExvAKUfxAnfbwRPAS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-4fc042790f1so2154870137.1;
-        Mon, 04 Aug 2025 05:43:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754311408; x=1754916208;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=q+ksWIFzKcuowT/35PUUtmV4Ltd0ZzS0T02cXh+GQLo=;
-        b=DIDUELFWNsaVhqwTdyshBp6adSMvAATYCF60nfBZPM0Zc8Po1l1b36nSUdVWaM00QT
-         Epb7JIMMIkOTC7ZWwZoqKzOqT9QrMZlEZqT/sJ8Zx9Gh0OVg3PCqI955G8UIFl3WXTZV
-         JH+aU68yFa6pDR7Vcb7LICiztrbmt4x+YPqRgGNtSE0fp10eLtO9Si1rXmSVErHQ3enx
-         ahvg3blq5GfrYuq8ihjTyBNH0fMcAGkycPfZD0CyFwJ5qQttTIa9fJ7BzmTP0/5DJq+a
-         GMvQpRxT/P9QQXmgAqGUzT71Ug5O9t7eILbb655hUCDzmngBRYrId58WiGG/TBZziXiX
-         RV7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVkU8A7JpOj/2z1Iy4vpQE2qoFHiuiZcx86XMylKX9kDRyeUhZdOe3sOXSXxoDK96LTwvXbRop+erKE8XVBn/a7q04=@vger.kernel.org, AJvYcCVljvQ7r1D3LeFUZ0bo0st8fPdZjslSOeLp0J3/qoRgY0OvzadIFGMqsMBCoqmnqYKHg74rOUl8zJtv@vger.kernel.org, AJvYcCWMB5OoICEFwctVVj8FdQFPHMN6nsVNzgfGQvBsXpFvKVNi/AWFi1BW8Qqfc4+Zk9DthZuEaL7K1FWf@vger.kernel.org, AJvYcCWyQW6EGVLD+mL/TGAVaPJT13ukzfU0D9uT7RIutY6Wd3OBvd4h1DuTj1dTw41+xtcnVygt7VHy1+w2@vger.kernel.org, AJvYcCXzmUGCyEgus5k9JxN4O+NmufDFYr/Oec5toOvGudg6Mr81sTeo+r/olLrVEzEz9v+pEiDtiGjUhi/iEKnh@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywux3B4ZjpAcQT5a9bgLm7hIQ2/y6B7y3eYSusveBt5V4bvQdyY
-	VDpZ6USy3b8Rr9gCl4bxMVbnI2zTMrMh3XYXEWSixfAN3MX25/zSDoq/4nT4M+iN
-X-Gm-Gg: ASbGncuOgqtQOe/EOPYrr5WFocKP7FYRuRFPUyGQZ1KPE7nxMaplOtn2M2dIjBNBoxS
-	TmiWUSmGnCQfJDbpDEoEoYsowUuLulK50puo8tBb/pSZfRMxx3d85WHsb4joifuWpQm2uvIX0SD
-	QlkwEj0N2L2pXXtS195C2VvuTJsCRUpTDBu4Cemu49c11LICQzMVweXq/eg0DYjDaM4n6It7C72
-	jc0OMry7dQGRePCtHD0k0GfG5pqnrLiOUAsmGq5igSCy4tBtQX+LHqNOhqQOxFGXZRIZ8btC6TM
-	gmLVJyZLsR8uaSE29+IhkS8cyc17yPgz8oarQsnTvJSRTjSJobZYTuuWl7Yg+H2aRFzzI8B/vR3
-	Jlh/gLUn97v3DBP50bsLZDFpKw7dqAfJf4w+odiL2Gqj2ZceY+eH+eYN4zV2l
-X-Google-Smtp-Source: AGHT+IGTgxWsBjpTpbgCKbt0cM8L7Gwal/1XJCom1WhuwcIKr8hxJtHYSss+lZ8MbqSqJlVUZFZKbA==
-X-Received: by 2002:a05:6102:54a1:b0:4e5:ade7:eb7c with SMTP id ada2fe7eead31-4fdc2957724mr3200743137.12.1754311408155;
-        Mon, 04 Aug 2025 05:43:28 -0700 (PDT)
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com. [209.85.217.52])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-88d8f3263d6sm2209773241.5.2025.08.04.05.43.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Aug 2025 05:43:27 -0700 (PDT)
-Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-4fc10abc179so1958281137.3;
-        Mon, 04 Aug 2025 05:43:27 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUgJpfT3qTASCAUSdTNo5b1BsU95MckWRTqMZ0kNg2+zM/E2Hjn3VDgzxbtSGmNMKeUH/GMARXNTDAk@vger.kernel.org, AJvYcCV6CHctLjJ0g9PQw7GdwB615pAc1liny4npjS4f/4HXjXUB17+awAjfhiiXE6LjeszxkkhYEQfuMcSz@vger.kernel.org, AJvYcCVJ2mBBfPZv2Z3NUwyPIV6DhiGaDBVcJAoyupYEguGLD4btG2DkAi6T9rhFzt/ywd0/9uENQPjU0bB5q+UyrmtkyK8=@vger.kernel.org, AJvYcCVtfq9AdnDHdocCTjXxD2wVutr3Bll/OINC9BoQPlknW+OFgJ03oTMBLD43XumeDGtAD0So3vzDygLYFBRy@vger.kernel.org, AJvYcCXjimYLQP+0NvQkw81Y4Zfyw8Y0PB00Tl0vWVvJlSf7qonRqbVxRPuR8BvLnbhpgaMAFICj40qk3h+I@vger.kernel.org
-X-Received: by 2002:a05:6102:dcb:b0:4e4:5df7:a10a with SMTP id
- ada2fe7eead31-4fdc3e179d8mr3547288137.16.1754311407222; Mon, 04 Aug 2025
- 05:43:27 -0700 (PDT)
+	s=arc-20240116; t=1754351522; c=relaxed/simple;
+	bh=zrpGKuWeQK0S9TRd2/Kg7CrpjpN0Af6Bc1LVC3rkfJw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XFrh+IN3JghX9kPYFrP1+LkoPyPKrhNvnjmVl235OWbW+fp0KIThv3YrgWpHueGO6oGUIDVP8WhqmbVzjIXAZytl5+QuLK4hon5+1oPmg93bMBaotI2lWOwpE+7uh1SPuLf6nCNVsGg9CqIIiGRRwjFu8NiMhpmpfy3QCM5oPnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=jKLfG1lq; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id 2B72432FD;
+	Tue,  5 Aug 2025 01:51:07 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1754351467;
+	bh=zrpGKuWeQK0S9TRd2/Kg7CrpjpN0Af6Bc1LVC3rkfJw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jKLfG1lqK2PPXLjLJhZ/Wty2yVy9+P3BkRh+DykETDA4LCFTUf911rSaO6qT+QKO7
+	 wRdg/H2eRsEY6wy4MGWg5U57U5+Jrerp7zplL0nB707kdVUDUTwWAHa4Hphoow2+vz
+	 YoO9D6fRkIKHNccFuia9pEsNbAUn8jx2Kons6sjM=
+Date: Tue, 5 Aug 2025 02:51:40 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Frank Li <Frank.li@nxp.com>, Konrad Dybcio <konradybcio@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>, Sven Peter <sven@kernel.org>,
+	Janne Grunau <j@jannau.net>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Neal Gompa <neal@gompa.dev>,
+	Ludovic Desroches <ludovic.desroches@microchip.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Paul Cercueil <paul@crapouillou.net>,
+	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+	Viresh Kumar <vireshk@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Taichi Sugaya <sugaya.taichi@socionext.com>,
+	Takao Orito <orito.takao@socionext.com>,
+	Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Daniel Mack <daniel@zonque.org>,
+	Haojian Zhuang <haojian.zhuang@gmail.com>,
+	Robert Jarzmik <robert.jarzmik@free.fr>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Patrice Chotard <patrice.chotard@foss.st.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	=?utf-8?Q?Am=C3=A9lie?= Delaunay <amelie.delaunay@foss.st.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Laxman Dewangan <ldewangan@nvidia.com>,
+	Jon Hunter <jonathanh@nvidia.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Michal Simek <michal.simek@amd.com>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Martin =?utf-8?Q?Povi=C5=A1er?= <povik+lin@cutebit.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+	Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
+	Viken Dadhaniya <quic_vdadhani@quicinc.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-rpi-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	imx@lists.linux.dev, linux-actions@lists.infradead.org,
+	linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-sound@vger.kernel.org,
+	linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org
+Subject: Re: [PATCH RFC 2/6] dmaengine: Make of_dma_request_slave_channel
+ pass a cookie to of_xlate
+Message-ID: <20250804235140.GB12087@pendragon.ideasonboard.com>
+References: <20250730-topic-dma_genise_cookie-v1-0-b505c1238f9f@oss.qualcomm.com>
+ <20250730-topic-dma_genise_cookie-v1-2-b505c1238f9f@oss.qualcomm.com>
+ <aIpKz495WI1SJTeB@lizhi-Precision-Tower-5810>
+ <20250730180417.GC21430@pendragon.ideasonboard.com>
+ <aIpmgpXME1BmThxU@lizhi-Precision-Tower-5810>
+ <20250801120007.GB4906@pendragon.ideasonboard.com>
+ <0c2cc631-21fd-41fd-9293-fd86dd09a2d2@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250801084825.471011-1-tommaso.merciai.xr@bp.renesas.com> <20250801084825.471011-3-tommaso.merciai.xr@bp.renesas.com>
-In-Reply-To: <20250801084825.471011-3-tommaso.merciai.xr@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 4 Aug 2025 14:43:15 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUoqSJEzEZsNkOtpDwCytQHGWxS4WBfTiJNOdC3v3ACEw@mail.gmail.com>
-X-Gm-Features: Ac12FXxmuJu7VAAwl5EVX-3cOsTXnZkIIiE3nPUF6WDs0EYHBcEOAFk9RR_CHsc
-Message-ID: <CAMuHMdUoqSJEzEZsNkOtpDwCytQHGWxS4WBfTiJNOdC3v3ACEw@mail.gmail.com>
-Subject: Re: [PATCH 2/3] dt-bindings: dma: rz-dmac: Document RZ/G3E family of SoCs
-To: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
-Cc: tomm.merciai@gmail.com, linux-renesas-soc@vger.kernel.org, 
-	biju.das.jz@bp.renesas.com, prabhakar.mahadev-lad.rj@bp.renesas.com, 
-	Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, dmaengine@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-clk@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <0c2cc631-21fd-41fd-9293-fd86dd09a2d2@oss.qualcomm.com>
 
-On Fri, 1 Aug 2025 at 10:49, Tommaso Merciai
-<tommaso.merciai.xr@bp.renesas.com> wrote:
-> The DMAC block on the RZ/G3E SoC is identical to the one found on the
-> RZ/V2H(P) SoC.
->
-> No driver changes are required, as `renesas,r9a09g057-dmac` will be used
-> as a fallback compatible string on the RZ/G3E SoC.
->
-> Signed-off-by: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
+On Sat, Aug 02, 2025 at 02:37:54PM +0200, Konrad Dybcio wrote:
+> On 8/1/25 2:00 PM, Laurent Pinchart wrote:
+> > On Wed, Jul 30, 2025 at 02:37:54PM -0400, Frank Li wrote:
+> >> On Wed, Jul 30, 2025 at 09:04:17PM +0300, Laurent Pinchart wrote:
+> >>> On Wed, Jul 30, 2025 at 12:39:43PM -0400, Frank Li wrote:
+> >>>> On Wed, Jul 30, 2025 at 11:33:29AM +0200, Konrad Dybcio wrote:
+> >>>>> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> >>>>>
+> >>>>> The DMA subsystem attempts to make it theoretically possible to pair
+> >>>>> any DMA block with any user. While that's convenient from a
+> >>>>> codebase sanity perspective, some blocks are more intertwined.
+> >>>>>
+> >>>>> One such case is the Qualcomm GENI, where each wrapper contains a
+> >>>>> number of Serial Engine instances, each one of which can be programmed
+> >>>>> to support a different protocol (such as I2C, I3C, SPI, UART, etc.).
+> >>>>>
+> >>>>> The GPI DMA it's designed together with, needs to receive the ID of the
+> >>>>> protocol that's in use, to adjust its behavior accordingly. Currently,
+> >>>>> that's done through passing that ID through device tree, with each
+> >>>>> Serial Engine expressed NUM_PROTOCOL times, resulting in terrible
+> >>>>> dt-bindings that are full of useless copypasta.
+> >>>>>
+> >>>>> In a step to cut down on that, let the DMA user give the engine driver
+> >>>>> a hint at request time.
+> >>>>>
+> >>>>> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> >>>>> ---
+> 
+> [...]
+> 
+> >>>>> diff --git a/include/linux/of_dma.h b/include/linux/of_dma.h
+> >>>>> index fd706cdf255c61c82ce30ef9a2c44930bef34bc8..9f9bc4207b85d48d73c25aad4b362e7c84c01756 100644
+> >>>>> --- a/include/linux/of_dma.h
+> >>>>> +++ b/include/linux/of_dma.h
+> >>>>> @@ -19,7 +19,7 @@ struct of_dma {
+> >>>>>  	struct list_head	of_dma_controllers;
+> >>>>>  	struct device_node	*of_node;
+> >>>>>  	struct dma_chan		*(*of_dma_xlate)
+> >>>>> -				(struct of_phandle_args *, struct of_dma *);
+> >>>>> +				(struct of_phandle_args *, struct of_dma *, void *);
+> >>>>
+> >>>> I suggest pass down more informaiton, like client's dev point. So we can
+> >>>> auto create device link between client's dev and dma chan's device.
+> >>>
+> >>> Is .of_dma_xlate() really the right place to do that ? If you want to
+> >>> create a device link for PM reasons, isn't it better created when the
+> >>> channel is requested ? It should also be removed when the channel is
+> >>> freed.
+> >>
+> >> I remember just need record client device pointer here.
+> >>
+> >>>>
+> >>>> DMA Engineer device
+> >>>>    DMA chan device
+> >>>>        consumer clients' device.
+> >>>>
+> >>>> If consumer device runtime pm suspend can auto trigger DMA chan's device's
+> >>>> runtime pm function.
+> >>>>
+> >>>> It will simplifly DMA engine's run time pm manage. Currently many DMA run
+> >>>> time pm implement as, runtime_pm_get() when alloc and runtime_pm_put() at
+> >>>> free channel.  But many devices request dma channel at probe, which make
+> >>>> dma engine work at always 'on' state.
+> >>>>
+> >>>> But ideally, dma chan should be resume only when it is used to transfer.
+> >>>
+> >>> This is exactly what I was going to mention after reading the last
+> >>> paragraph. Is there anything that prevents a DMA engine driver to
+> >>> perform a rutime PM get() when a transfer is submitted
+> >>
+> >> DMA description is a queue, It is hard to track each descriptor submit and
+> >> finished. espcially cycle buffer case.
+> >>
+> >> And according to dma engine API defination, submit a descriptor not
+> >> neccessary to turn on clock, maybe just pure software operation, such as
+> >> enqueue it to a software list.
+> >>
+> >> Many driver call dmaengine_submit() in irq context,  submit new descriptor
+> >> when previous descriptor finished. runtime_pm_get() can NOT be called in
+> >> atomic context.
+> >>
+> >> And some driver submit many descripor advance. Only issue_transfer() is
+> >> actually trigger hardware to start transfer.
+> >>
+> >> Some client use cycle descripor, such audio devices.  Some audio devices
+> >> have not free descriptor at their run time suspend function, just disable
+> >> audio devices's clocks.  Audio devices run time suspend, which means no
+> >> one use this dma channel, dma channel can auto suspend if built device link
+> >> between audio device and dma chan devices.
+> >>
+> >> Some DMA client have not devices, such as memory to memory. for this kind
+> >> case, it need keep chan always on.
+> >>
+> >> issue_transfer() can be call in atomic context. but trigger hardware transfer
+> >> need clock and runtime_pm_get() can't be called in atomic context.
+> >>
+> >> Most case issue_transfer() is call in irq handle, which means device should
+> >> already be in runtime resume statue.  DMA engine can safely access their
+> >> register if using device link.
+> > 
+> > You have good points there, in particular the fact the issue_transfer()
+> > can be called in interrupt context.
+> > 
+> > For me this calls for new DMA engine operations to "start/stop" the DMA
+> > engine (better names are likely needed) from a client perspective.
+> > 
+> >>> and a put() when
+> >>> it completes ? (Logically speaking, the actual implementation would
+> >>> likely be a bit different in drivers, but the result would be similar.)
+> 
+> So.. do you folks want me to alter the patch in any way?
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+I think the runtime PM issue is orthogonal to the problem this series
+addresses. It can be addressed separately.
 
-Gr{oetje,eeting}s,
-
-                        Geert
+That being said, I'm not a big fan of passing a void pointer to
+.of_xlate() to carry device-specific information, in a device-specific
+format. This seems prone to mismatch between clients and DMA engines.
+.of_xlate() also seems the wrong place to do this. It would be cleaner
+if we could use another operation, such as dmaengine_slave_config() for
+instance.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Regards,
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Laurent Pinchart
 

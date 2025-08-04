@@ -1,96 +1,115 @@
-Return-Path: <dmaengine+bounces-5939-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5940-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C5EE4B1952C
-	for <lists+dmaengine@lfdr.de>; Sun,  3 Aug 2025 22:40:15 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8761BB1A1DF
+	for <lists+dmaengine@lfdr.de>; Mon,  4 Aug 2025 14:45:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 57D211892BC6
-	for <lists+dmaengine@lfdr.de>; Sun,  3 Aug 2025 20:40:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E014A3BFD71
+	for <lists+dmaengine@lfdr.de>; Mon,  4 Aug 2025 12:45:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A08C720102B;
-	Sun,  3 Aug 2025 20:40:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="KKRVs//S"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7A0D26A1AD;
+	Mon,  4 Aug 2025 12:43:31 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9D471FDE09
-	for <dmaengine@vger.kernel.org>; Sun,  3 Aug 2025 20:40:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3A6F2673B0;
+	Mon,  4 Aug 2025 12:43:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754253609; cv=none; b=LjoETSkm45oJKq/wycOt7FxEoksjHL0QUP+IvPlcDeNVIVUgFwH+3lGK5hQedc6XmrqwhvCJG0DK5ayvZPleIvXTut87Kl51y5fz5SdmR6GR6LQwz3gNXgEiCGd2r1MiID1QHoxQ4toiw9EJ5n1PCtspW/wQ8Tt9aBSlAeGynHg=
+	t=1754311411; cv=none; b=XBXIVslJyMislR7nYZoVgMOmBRNh0dX7p9QIg7DxRqlLQdnd6fye9Xo3G9D10aUNfrOhiFz4L+ydPYpwbEmFooNf9VXbPupzyhLRMPr94u2pXi4SiacxtBRTAtW2SO2x0SmE7Ev3pFhFDNsdAUZ2PNrqH7dCN99AgCO6won19Mg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754253609; c=relaxed/simple;
-	bh=tzLH/YUExqTegN4sI56xlZ8maB8KzJUjpOhBuVYG1JA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=doVWx8iDHsNZANK2gl8wZQgrYtepHEiOz4VOO62mon2shjM4elVF159V/lOnncve6K6CiQjWmI0g+hOaUS6OLkHVtPKQiF03ALEWDyzhXrcjBnq86QzLo15czdFEGO6VlB0++UxTm1J344u5jIVGmaA7Hli5UDyRSUf3Hh9pvoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=KKRVs//S; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=5vm0
-	SxJu7Lne/9TVu7ssZXea18OLLC2K5dYsygJBt9M=; b=KKRVs//S+sQ92DcZ4KMq
-	u8nsdEZ9MfJ8tF9+2mIEnMKa16OXkFhageH6Q3dusOQHzpClzDFxFhQ6DqxKIqyK
-	Uf3NBHVB0NKgalwxkup9TG+R7v+ahB5EFSvjt8WEnHBdbEx3SmTO6JltOg3rUBQV
-	kx30VnagDoDnl085prpZDQkQPhnx3BeetweZr9+itITcepP1ErvhOlEutMUVlCMu
-	oG5ZgggbyNfeSyrs5j7AHZYstpvrNGAfHGIR7jUIcMYCfycsPBiiImpXM45eWsM9
-	un0A3l69l+xmhVFCkT05XjGxeQNA+OXeTC4vAwJOBCeZl7ifxDL/zHPzY62FsRnj
-	qA==
-Received: (qmail 1644961 invoked from network); 3 Aug 2025 22:40:01 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 3 Aug 2025 22:40:01 +0200
-X-UD-Smtp-Session: l3s3148p1@0xPE/ns7QIoujntd
-Date: Sun, 3 Aug 2025 22:40:01 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Sven Peter <sven@kernel.org>
-Cc: Janne Grunau <j@jannau.net>, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Neal Gompa <neal@gompa.dev>, Ulf Hansson <ulf.hansson@linaro.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Srinivas Kandagatla <srini@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Martin =?utf-8?Q?Povi=C5=A1er?= <povik+lin@cutebit.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>, Arnd Bergmann <arnd@arndb.de>,
-	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
-	iommu@lists.linux.dev, linux-input@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-sound@vger.kernel.org
-Subject: Re: [PATCH 05/11] i2c: apple: Drop default ARCH_APPLE in Kconfig
-Message-ID: <aI_JIZhHGg9GcD-D@shikoro>
-References: <20250612-apple-kconfig-defconfig-v1-0-0e6f9cb512c1@kernel.org>
- <20250612-apple-kconfig-defconfig-v1-5-0e6f9cb512c1@kernel.org>
+	s=arc-20240116; t=1754311411; c=relaxed/simple;
+	bh=AwIB8d/q3k4NIHWqWxhwujek8W+jlfHNccY7uEjmU7A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cJDagDkZZoHuJEa5+V6fyqvVYiyyrCh8e4AMGmkNUsiGqadZ8y/t9HKUhJjXhULAi/ysFKmUYS4JEmTv7ivrRxEVC1RguQqYWqaer077u8RmMkUINM4Lw7PG1IiSvLGxwVC/tdaZ92Tt/Zt1nveUoRgS0ExvAKUfxAnfbwRPAS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-4fc042790f1so2154870137.1;
+        Mon, 04 Aug 2025 05:43:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754311408; x=1754916208;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=q+ksWIFzKcuowT/35PUUtmV4Ltd0ZzS0T02cXh+GQLo=;
+        b=DIDUELFWNsaVhqwTdyshBp6adSMvAATYCF60nfBZPM0Zc8Po1l1b36nSUdVWaM00QT
+         Epb7JIMMIkOTC7ZWwZoqKzOqT9QrMZlEZqT/sJ8Zx9Gh0OVg3PCqI955G8UIFl3WXTZV
+         JH+aU68yFa6pDR7Vcb7LICiztrbmt4x+YPqRgGNtSE0fp10eLtO9Si1rXmSVErHQ3enx
+         ahvg3blq5GfrYuq8ihjTyBNH0fMcAGkycPfZD0CyFwJ5qQttTIa9fJ7BzmTP0/5DJq+a
+         GMvQpRxT/P9QQXmgAqGUzT71Ug5O9t7eILbb655hUCDzmngBRYrId58WiGG/TBZziXiX
+         RV7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVkU8A7JpOj/2z1Iy4vpQE2qoFHiuiZcx86XMylKX9kDRyeUhZdOe3sOXSXxoDK96LTwvXbRop+erKE8XVBn/a7q04=@vger.kernel.org, AJvYcCVljvQ7r1D3LeFUZ0bo0st8fPdZjslSOeLp0J3/qoRgY0OvzadIFGMqsMBCoqmnqYKHg74rOUl8zJtv@vger.kernel.org, AJvYcCWMB5OoICEFwctVVj8FdQFPHMN6nsVNzgfGQvBsXpFvKVNi/AWFi1BW8Qqfc4+Zk9DthZuEaL7K1FWf@vger.kernel.org, AJvYcCWyQW6EGVLD+mL/TGAVaPJT13ukzfU0D9uT7RIutY6Wd3OBvd4h1DuTj1dTw41+xtcnVygt7VHy1+w2@vger.kernel.org, AJvYcCXzmUGCyEgus5k9JxN4O+NmufDFYr/Oec5toOvGudg6Mr81sTeo+r/olLrVEzEz9v+pEiDtiGjUhi/iEKnh@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywux3B4ZjpAcQT5a9bgLm7hIQ2/y6B7y3eYSusveBt5V4bvQdyY
+	VDpZ6USy3b8Rr9gCl4bxMVbnI2zTMrMh3XYXEWSixfAN3MX25/zSDoq/4nT4M+iN
+X-Gm-Gg: ASbGncuOgqtQOe/EOPYrr5WFocKP7FYRuRFPUyGQZ1KPE7nxMaplOtn2M2dIjBNBoxS
+	TmiWUSmGnCQfJDbpDEoEoYsowUuLulK50puo8tBb/pSZfRMxx3d85WHsb4joifuWpQm2uvIX0SD
+	QlkwEj0N2L2pXXtS195C2VvuTJsCRUpTDBu4Cemu49c11LICQzMVweXq/eg0DYjDaM4n6It7C72
+	jc0OMry7dQGRePCtHD0k0GfG5pqnrLiOUAsmGq5igSCy4tBtQX+LHqNOhqQOxFGXZRIZ8btC6TM
+	gmLVJyZLsR8uaSE29+IhkS8cyc17yPgz8oarQsnTvJSRTjSJobZYTuuWl7Yg+H2aRFzzI8B/vR3
+	Jlh/gLUn97v3DBP50bsLZDFpKw7dqAfJf4w+odiL2Gqj2ZceY+eH+eYN4zV2l
+X-Google-Smtp-Source: AGHT+IGTgxWsBjpTpbgCKbt0cM8L7Gwal/1XJCom1WhuwcIKr8hxJtHYSss+lZ8MbqSqJlVUZFZKbA==
+X-Received: by 2002:a05:6102:54a1:b0:4e5:ade7:eb7c with SMTP id ada2fe7eead31-4fdc2957724mr3200743137.12.1754311408155;
+        Mon, 04 Aug 2025 05:43:28 -0700 (PDT)
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com. [209.85.217.52])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-88d8f3263d6sm2209773241.5.2025.08.04.05.43.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 Aug 2025 05:43:27 -0700 (PDT)
+Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-4fc10abc179so1958281137.3;
+        Mon, 04 Aug 2025 05:43:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUgJpfT3qTASCAUSdTNo5b1BsU95MckWRTqMZ0kNg2+zM/E2Hjn3VDgzxbtSGmNMKeUH/GMARXNTDAk@vger.kernel.org, AJvYcCV6CHctLjJ0g9PQw7GdwB615pAc1liny4npjS4f/4HXjXUB17+awAjfhiiXE6LjeszxkkhYEQfuMcSz@vger.kernel.org, AJvYcCVJ2mBBfPZv2Z3NUwyPIV6DhiGaDBVcJAoyupYEguGLD4btG2DkAi6T9rhFzt/ywd0/9uENQPjU0bB5q+UyrmtkyK8=@vger.kernel.org, AJvYcCVtfq9AdnDHdocCTjXxD2wVutr3Bll/OINC9BoQPlknW+OFgJ03oTMBLD43XumeDGtAD0So3vzDygLYFBRy@vger.kernel.org, AJvYcCXjimYLQP+0NvQkw81Y4Zfyw8Y0PB00Tl0vWVvJlSf7qonRqbVxRPuR8BvLnbhpgaMAFICj40qk3h+I@vger.kernel.org
+X-Received: by 2002:a05:6102:dcb:b0:4e4:5df7:a10a with SMTP id
+ ada2fe7eead31-4fdc3e179d8mr3547288137.16.1754311407222; Mon, 04 Aug 2025
+ 05:43:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250612-apple-kconfig-defconfig-v1-5-0e6f9cb512c1@kernel.org>
+References: <20250801084825.471011-1-tommaso.merciai.xr@bp.renesas.com> <20250801084825.471011-3-tommaso.merciai.xr@bp.renesas.com>
+In-Reply-To: <20250801084825.471011-3-tommaso.merciai.xr@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 4 Aug 2025 14:43:15 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUoqSJEzEZsNkOtpDwCytQHGWxS4WBfTiJNOdC3v3ACEw@mail.gmail.com>
+X-Gm-Features: Ac12FXxmuJu7VAAwl5EVX-3cOsTXnZkIIiE3nPUF6WDs0EYHBcEOAFk9RR_CHsc
+Message-ID: <CAMuHMdUoqSJEzEZsNkOtpDwCytQHGWxS4WBfTiJNOdC3v3ACEw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] dt-bindings: dma: rz-dmac: Document RZ/G3E family of SoCs
+To: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
+Cc: tomm.merciai@gmail.com, linux-renesas-soc@vger.kernel.org, 
+	biju.das.jz@bp.renesas.com, prabhakar.mahadev-lad.rj@bp.renesas.com, 
+	Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, dmaengine@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Jun 12, 2025 at 09:11:29PM +0000, Sven Peter wrote:
-> When the first driver for Apple Silicon was upstreamed we accidentally
-> included `default ARCH_APPLE` in its Kconfig which then spread to almost
-> every subsequent driver. As soon as ARCH_APPLE is set to y this will
-> pull in many drivers as built-ins which is not what we want.
-> Thus, drop `default ARCH_APPLE` from Kconfig.
-> 
-> Signed-off-by: Sven Peter <sven@kernel.org>
+On Fri, 1 Aug 2025 at 10:49, Tommaso Merciai
+<tommaso.merciai.xr@bp.renesas.com> wrote:
+> The DMAC block on the RZ/G3E SoC is identical to the one found on the
+> RZ/V2H(P) SoC.
+>
+> No driver changes are required, as `renesas,r9a09g057-dmac` will be used
+> as a fallback compatible string on the RZ/G3E SoC.
+>
+> Signed-off-by: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
 
-Applied to for-next (for 6.17 mergewindow), thanks!
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 

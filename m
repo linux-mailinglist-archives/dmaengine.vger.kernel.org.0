@@ -1,66 +1,65 @@
-Return-Path: <dmaengine+bounces-5951-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5952-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B533B1AC12
-	for <lists+dmaengine@lfdr.de>; Tue,  5 Aug 2025 03:29:41 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C920B1AD5D
+	for <lists+dmaengine@lfdr.de>; Tue,  5 Aug 2025 06:58:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3A3F017E677
-	for <lists+dmaengine@lfdr.de>; Tue,  5 Aug 2025 01:29:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EE796621949
+	for <lists+dmaengine@lfdr.de>; Tue,  5 Aug 2025 04:58:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72CD3204583;
-	Tue,  5 Aug 2025 01:28:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4A2B218E91;
+	Tue,  5 Aug 2025 04:58:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hjp1eqz4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N3O1Xs24"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE7421EA7D2;
-	Tue,  5 Aug 2025 01:28:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9179B288DB;
+	Tue,  5 Aug 2025 04:58:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754357300; cv=none; b=q9+OJEKgcub9kRpwXxi0Z0kCWi7TrF+ZBrRmLZMG3DOpKTxUX6/jaqj9HGO1EBy8NRAOEiMicVSUdawn9LFRPsM4llMdseGuJb3SJBT5c2axq5Gy2BxMeZsHGoez024QTImxCOFfmjv+Ut3v+g76OrH/LqLRiTQJ0C+Sf/nw18c=
+	t=1754369919; cv=none; b=FLVncG0MuOtTE8+fBzs7b2SnI8sS+YjDnTaWfr8eA3zrix3bEmq9Y0C7RbJam73AOXj7xQjnD5buRvJ44Czx1HWrmBh7ZzCvn6YEZerufhQN0yBMvcd6Qj+3cJoW7jH4WF1xlIjtJCa9hKT20tzTRU4DNNSOAMiaOrngTwl3IPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754357300; c=relaxed/simple;
-	bh=EztGGHn6kT28gd4q118MU0nBKXitkO/GDUTSrKqzUGM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eQcPu1zaEFP50NP07FjzPyKHJ6f63GQ3BWnUBASK0Q7dd7yRiul3Yk0mKu4tdXsrmzlRfQp9YagdgjH1gLrF3c8+8EdNL1MeK+8Pu9c4vzvYDZzMhFt2y3UbEWdJOM3ZuU/gNXhoOPMSzifcQrH3Tb/Ly1cJ9M3c3w4nt3XdRKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hjp1eqz4; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1754357299; x=1785893299;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:references:in-reply-to:to:cc;
-  bh=EztGGHn6kT28gd4q118MU0nBKXitkO/GDUTSrKqzUGM=;
-  b=hjp1eqz4D6jZhrd7LLYP0q6rJ0u1TK9WOJoTP1BG+Q2CS6Dy6AP6A/Eq
-   J8qe7Vx/+B2qIRt7TjrCkOrjGD0cHNGhg5gVu54vINnLr/4AFPNNBE7xT
-   BRTQP8eNdqI6aOUQb9OybShek2yZzd9wO8HWVgN18LE+AHcioLnlUOcVe
-   203SnsQSUGzkTi4tf1G3phPcwDYseAXFyOltl2c648QJjGhaZs/0Am+XJ
-   1IUmXIJmWvVwYv30Svrv8SRqSUIJAxDvkzfeeQoELuoLPgh/ha9nGdVpu
-   RWRCqEGLI01jtG2U6Tc7Nt6b48Ev4oIYE6YkNJCULv4I+wTF+KZSWU/xC
-   Q==;
-X-CSE-ConnectionGUID: tZyopQqbSqG4P7W1xZs+FA==
-X-CSE-MsgGUID: qRABYXi/RKOmOLL6XiQKIA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11512"; a="68085368"
-X-IronPort-AV: E=Sophos;i="6.17,265,1747724400"; 
-   d="scan'208";a="68085368"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2025 18:28:12 -0700
-X-CSE-ConnectionGUID: OtOLKMmMSEGFC4BpEGY/xQ==
-X-CSE-MsgGUID: lE47SnROS1uibV8Alf60ug==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,265,1747724400"; 
-   d="scan'208";a="169699571"
-Received: from vcostago-mobl3.jf.intel.com (HELO [10.98.32.147]) ([10.98.32.147])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2025 18:28:12 -0700
-From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Date: Mon, 04 Aug 2025 18:28:00 -0700
-Subject: [PATCH 9/9] dmaengine: idxd: Fix leaking event log memory
+	s=arc-20240116; t=1754369919; c=relaxed/simple;
+	bh=p3Ctln5ArnuqEriQVMrjSsSycEXSlWingWpH88cmVVY=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=W1YiCk1fFqqaj0aubGqZ0J+YE8JDkOVJ32kQwSTLD+DWsVpFSskdFak31Q4Ihq3FROq/TQMYQOhmA8Q/6WQk8BN+DPR5Q/8+MdXwKijI0qfmpiXEM+1v9nq6BTkJdLMMGQt4PmsN5qDllv2lDsi9W+AAIinDOmaY7w23BoFIijQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N3O1Xs24; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21656C4CEF4;
+	Tue,  5 Aug 2025 04:58:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754369918;
+	bh=p3Ctln5ArnuqEriQVMrjSsSycEXSlWingWpH88cmVVY=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=N3O1Xs243//hGVgduP9ucmQLc1mAU0+00JxEYL8S/mHxpbCYQj9YGa3ns+J0f+wbY
+	 XvH1iHOKTKJttx+GFQiutBfSbVUixllJOWlSwpQmhdJK5Qtb/0LnKeJBdghiHojBuO
+	 c1M5fhSZV8ex0HXNQYodcoubSS7yGINLqkaiXDjge2mBMnWefEE61tRyZK1UGo0sj3
+	 M8tPxg5kUSxKUKr77ExSfJsg7eFUKrECodT5HIy6M5ai1LZ8JFh53r20tCF2YpO3pw
+	 9irhgqipyxlolSqDyVR2cGCZmANlFRx9dfoJwEfgdC7Sgn+/IUi9pmf/bxqoLsRE3j
+	 MUe8qchs9beJQ==
+From: Vinod Koul <vkoul@kernel.org>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, 
+ Stephan Gerhold <stephan.gerhold@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Andy Gross <agross@kernel.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Yuvaraj Ranganathan <quic_yrangana@quicinc.com>, 
+ Anusha Rao <quic_anusha@quicinc.com>, 
+ Md Sadre Alam <quic_mdalam@quicinc.com>, linux-arm-msm@vger.kernel.org, 
+ dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Luca Weiss <luca.weiss@fairphone.com>, 
+ Srinivas Kandagatla <srini@kernel.org>
+In-Reply-To: <20250212-bam-dma-fixes-v1-0-f560889e65d8@linaro.org>
+References: <20250212-bam-dma-fixes-v1-0-f560889e65d8@linaro.org>
+Subject: Re: (subset) [PATCH 0/8] dmaengine: qcom: bam_dma: Fix DT error
+ handling for num-channels/ees
+Message-Id: <175436991267.243171.3381840472442505364.b4-ty@kernel.org>
+Date: Tue, 05 Aug 2025 10:28:32 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -69,54 +68,32 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250804-idxd-fix-flr-on-kernel-queues-v3-v1-9-4e020fbf52c1@intel.com>
-References: <20250804-idxd-fix-flr-on-kernel-queues-v3-v1-0-4e020fbf52c1@intel.com>
-In-Reply-To: <20250804-idxd-fix-flr-on-kernel-queues-v3-v1-0-4e020fbf52c1@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>, 
- Fenghua Yu <fenghua.yu@intel.com>, Dan Williams <dan.j.williams@intel.com>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Vinicius Costa Gomes <vinicius.gomes@intel.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1754357291; l=1201;
- i=vinicius.gomes@intel.com; s=20230921; h=from:subject:message-id;
- bh=EztGGHn6kT28gd4q118MU0nBKXitkO/GDUTSrKqzUGM=;
- b=iG7GJUBKmwdXiEUkx0jslAdStb1MvaTNGNuMpwnG7XGNmqZ6TFCqYFWq6hHdcXvUKgKXZnyeK
- KaqHZ7GAT6fBZ1qiGBxu9EZ4OxLnieo2KWeyqYlH6ejlY+pxhiXwBrm
-X-Developer-Key: i=vinicius.gomes@intel.com; a=ed25519;
- pk=aJkrtgqgT6TZ8iIHSG8/rTPsmlYnjMrUjCsMYvCzntk=
+X-Mailer: b4 0.13.0
 
-During the device remove process, the device is reset, causing the
-configuration registers to go back to their default state, which is
-zero. As the driver is checking if the event log support was enabled
-before deallocating, it will fail if a reset happened before.
 
-Do not check if the support was enabled, the check for 'idxd->evl'
-being valid (only allocated if the HW capability is available) is
-enough.
+On Wed, 12 Feb 2025 18:03:46 +0100, Stephan Gerhold wrote:
+> num-channels and qcom,num-ees are required for BAM nodes without clock,
+> because the driver cannot ensure the hardware is powered on when trying to
+> obtain the information from the hardware registers. Specifying the node
+> without these properties is unsafe and has caused early boot crashes for
+> other SoCs before [1, 2].
+> 
+> The bam_dma driver has always printed an error to the kernel log in these
+> situations, but that was not enough to prevent people from upstreaming
+> patches without the required properties.
+> 
+> [...]
 
-Fixes: 244da66cda35 ("dmaengine: idxd: setup event log configuration")
-Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
----
- drivers/dma/idxd/device.c | 4 ----
- 1 file changed, 4 deletions(-)
+Applied, thanks!
 
-diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-index 8f6afcba840ed7128259ad6b58b2fd967b0c151c..288cfd85f3a91f40ce2f8d8150830ad0628eacbe 100644
---- a/drivers/dma/idxd/device.c
-+++ b/drivers/dma/idxd/device.c
-@@ -818,10 +818,6 @@ static void idxd_device_evl_free(struct idxd_device *idxd)
- 	if (!evl)
- 		return;
- 
--	gencfg.bits = ioread32(idxd->reg_base + IDXD_GENCFG_OFFSET);
--	if (!gencfg.evl_en)
--		return;
--
- 	mutex_lock(&evl->lock);
- 	gencfg.evl_en = 0;
- 	iowrite32(gencfg.bits, idxd->reg_base + IDXD_GENCFG_OFFSET);
+[7/8] dt-bindings: dma: qcom: bam-dma: Add missing required properties
+      commit: e0e2cea86f75c8255b7da13ec92a34bb35a9c4fb
+[8/8] dmaengine: qcom: bam_dma: Fix DT error handling for num-channels/ees
+      commit: 2f8a2cfd0994adf5f71737bb0946a76800479220
 
+Best regards,
 -- 
-2.50.1
+~Vinod
+
 
 

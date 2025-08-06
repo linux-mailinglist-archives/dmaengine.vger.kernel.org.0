@@ -1,65 +1,65 @@
-Return-Path: <dmaengine+bounces-5962-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5963-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C133AB1CA8B
-	for <lists+dmaengine@lfdr.de>; Wed,  6 Aug 2025 19:18:42 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1CA3B1CAA7
+	for <lists+dmaengine@lfdr.de>; Wed,  6 Aug 2025 19:25:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E87ED1682CE
-	for <lists+dmaengine@lfdr.de>; Wed,  6 Aug 2025 17:18:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 20ADA623DFB
+	for <lists+dmaengine@lfdr.de>; Wed,  6 Aug 2025 17:25:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 439FC1EE7B9;
-	Wed,  6 Aug 2025 17:17:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DD1B29E118;
+	Wed,  6 Aug 2025 17:25:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DZbHJGML"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eHIUHEEz"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 775991E0083;
-	Wed,  6 Aug 2025 17:17:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DEAC29AB1D;
+	Wed,  6 Aug 2025 17:24:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754500633; cv=none; b=P03inSmStWXa3ky32BVyLpHkDMroEoZANoUkC92QCcO03F+XebFCOVqbYrvEOA11qHtdDWQ0H+JrThu8qFplFn1Ue3wjJCm2la+PNMUfik4cpW4/B2h9w7Jk1hDcl+5TxMgU/hDXyi9q/lnx4uwATMr9PJ/fTyuUg67egs4QDDo=
+	t=1754501100; cv=none; b=kDbRh7ZXGaDEV0famL3ffvz69VdL+/32nHZ/1Jn970Dhiu8UOrKowvj0u77qb0rtlKV2PdG6VcynHI68TqPNo8p6yHdtDIVRkKTgA3u266nTp9KApgWLrlaWnQKE2ks1YYyyelLmCyYXs+Our/DcCjnF8+f8fYGhozOTvPTnvhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754500633; c=relaxed/simple;
-	bh=45DWFsBRadUm05dMAooPXmnKscrZwCQvvaxvHpq52GA=;
+	s=arc-20240116; t=1754501100; c=relaxed/simple;
+	bh=COI2LJctOZLLHvLHYvhF5RUTz87myCz+2OWpBbTQbmI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BEKHv2MdxTLF/U4nuZuVO+VL95qUs+7aDzp80Si62MLNXae6UA+xYwe1luIQlRXPYO/PIjUCFjikIZcYQ/oy6b3cug3ygF889NoRGz/6LV34ivzAAOULljaEKcC7seIjbtUdXtxcffILm3Hqm3zPVOwaZU1Km0q7pjd5bRWdk2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DZbHJGML; arc=none smtp.client-ip=192.198.163.17
+	 In-Reply-To:Content-Type; b=XuRMZmSw6DmMtqn4sbqWJ/ou61q8D3eNL2a5GMvs962OzWDbAdHd8qVMe4G3JcMOqm09+YNWPRNPvNPWFSN7gmsB0DW2soU8XQnnDIH+EAbdvZFbHE8QOh9zQvCZk74jzuleHKxCzOip/8wt0qcspUH3T4Wsbbt+ZptT7vgsWbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eHIUHEEz; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1754500631; x=1786036631;
+  t=1754501097; x=1786037097;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=45DWFsBRadUm05dMAooPXmnKscrZwCQvvaxvHpq52GA=;
-  b=DZbHJGMLsNtC+hTPpbhoDnv9r5K5grRmtZfZufT3JZTVVnvpys4Yphua
-   Oz7U9nEVXWBJGAridZ2m6UZt0z1iGRypTREiw36XgM+BnMhIYT5o1H4s7
-   7ut4FMXkL0xp6HHDd8TTq5/45nkYB+b+kDf3anOUohKP+rZihT+VjYoGH
-   vYjm/T03SH+Z2kmUdkYCxWJ3+E3sqTGuoc4QCBJQfiqsXBCMQdnlEplJj
-   kW9VQBAa9lky5Sg/6xYZNXBPki9Gp5mdsnsfNFkYEUKQfIMVCzhUV1F/t
-   byky5f3D5tLPvGjY6SIousNCdL58l4meshgRTpj4t1on3jk5EaFfVgZOB
-   Q==;
-X-CSE-ConnectionGUID: BHBWzOklQqiC2NorPIedmw==
-X-CSE-MsgGUID: UodEBMLdTTuelo4ktge8Bg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11514"; a="56744189"
+  bh=COI2LJctOZLLHvLHYvhF5RUTz87myCz+2OWpBbTQbmI=;
+  b=eHIUHEEz/U4u1H6E+9jrkfBf+uCUGRLt8ShuwRH8E5jxIAO3ou3FVkBq
+   WSBcNmCQiEkwCBc2TRrID6eZ20O/1w93lzXFSxKc5nXa9MMlWoxdoG4oA
+   G/MrICwMExFyNA0kHAK2kXC3ZP+TuJdM0wuVV3QvMEyOvZ9kpqe2OQH94
+   RXxnIlu/wBa5cRX8vycwKfiNtIquEqbFYrIVJ1NqK+0GVgN5dvThOLTAc
+   1aM75DXV4Px+G0MX5mk6qk3L67sl1ypaMOii415RE4qHO7WPfbqetEq5/
+   Wy8BxzOr5wZido/xFW07DFHs2AXhHduYaWreK7a9caii3fbDeg/xeFkfu
+   g==;
+X-CSE-ConnectionGUID: G/+Bw6t2SQ26nNvwSFBjfQ==
+X-CSE-MsgGUID: 2GRZxtm0QjycQfq4mr6EyQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11514"; a="44419856"
 X-IronPort-AV: E=Sophos;i="6.17,268,1747724400"; 
-   d="scan'208";a="56744189"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2025 10:17:11 -0700
-X-CSE-ConnectionGUID: PVfecHeJQSq/HtMcYjRMLA==
-X-CSE-MsgGUID: 36b6tu75ToOR7cglTewgSA==
+   d="scan'208";a="44419856"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2025 10:24:57 -0700
+X-CSE-ConnectionGUID: V6e8U2sRRfS9SZ2oH99MBQ==
+X-CSE-MsgGUID: ZCEHe7hsRFi39X1/NvqWUg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.17,268,1747724400"; 
-   d="scan'208";a="164738714"
+   d="scan'208";a="170099130"
 Received: from anmitta2-mobl4.gar.corp.intel.com (HELO [10.247.119.97]) ([10.247.119.97])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2025 10:17:07 -0700
-Message-ID: <006d3386-36ef-4c14-9373-7f6594a800f1@intel.com>
-Date: Wed, 6 Aug 2025 10:17:02 -0700
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2025 10:24:53 -0700
+Message-ID: <7f9d3dc5-4800-4032-ad0d-1ec8f88209f0@intel.com>
+Date: Wed, 6 Aug 2025 10:24:48 -0700
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -67,64 +67,46 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/9] dmaengine: idxd: Allow DMA clients to empty the
- pending queue
+Subject: Re: [PATCH 6/9] dmaengine: idxd: Fix not releasing workqueue on
+ .release()
 To: Vinicius Costa Gomes <vinicius.gomes@intel.com>,
  Vinod Koul <vkoul@kernel.org>, Dan Williams <dan.j.williams@intel.com>,
  Fenghua Yu <fenghuay@nvidia.com>
 Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20250804-idxd-fix-flr-on-kernel-queues-v3-v1-0-4e020fbf52c1@intel.com>
- <20250804-idxd-fix-flr-on-kernel-queues-v3-v1-5-4e020fbf52c1@intel.com>
+ <20250804-idxd-fix-flr-on-kernel-queues-v3-v1-6-4e020fbf52c1@intel.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250804-idxd-fix-flr-on-kernel-queues-v3-v1-5-4e020fbf52c1@intel.com>
+In-Reply-To: <20250804-idxd-fix-flr-on-kernel-queues-v3-v1-6-4e020fbf52c1@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
 On 8/4/25 6:27 PM, Vinicius Costa Gomes wrote:
-> Send a request to drain all pending commands from the hardware queue
-> when the DMA clients request.
+> The workqueue associated with an DSA/IAA device is not released when
+> the object is freed.
 > 
+> Fixes: 47c16ac27d4c ("dmaengine: idxd: fix idxd conf_dev 'struct device' lifetime")
 > Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 > ---
->  drivers/dma/idxd/dma.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+>  drivers/dma/idxd/sysfs.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/dma/idxd/dma.c b/drivers/dma/idxd/dma.c
-> index dbecd699237e3ac5a73b49ed2097a897abc9a043..10356a00cbdfc2ddfeea629aa749c40e7eec0a56 100644
-> --- a/drivers/dma/idxd/dma.c
-> +++ b/drivers/dma/idxd/dma.c
-> @@ -194,6 +194,15 @@ static void idxd_dma_release(struct dma_device *device)
->  	kfree(idxd_dma);
->  }
->  
-> +static int idxd_dma_terminate_all(struct dma_chan *c)
-> +{
-> +	struct idxd_wq *wq = to_idxd_wq(c);
-> +
-> +	idxd_wq_drain(wq);
-
-Definition in include/linux/dmaengine.h is "Aborts all transfers on a channel." So instead of drain, I think we need to abort and clean up all the pending descriptors on the irq list as well. Perhaps drain may be only for ->device_synchronize()?
-
-DJ
-
-> +
-> +	return 0;
-> +}
-> +
->  int idxd_register_dma_device(struct idxd_device *idxd)
+> diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
+> index 9f0701021af0e6fbe3c3c04a0e336ee9cd094641..cdd7a59140d90c80f5837473962017114cd00b13 100644
+> --- a/drivers/dma/idxd/sysfs.c
+> +++ b/drivers/dma/idxd/sysfs.c
+> @@ -1812,6 +1812,7 @@ static void idxd_conf_device_release(struct device *dev)
 >  {
->  	struct idxd_dma_dev *idxd_dma;
-> @@ -224,6 +233,7 @@ int idxd_register_dma_device(struct idxd_device *idxd)
->  	dma->device_issue_pending = idxd_dma_issue_pending;
->  	dma->device_alloc_chan_resources = idxd_dma_alloc_chan_resources;
->  	dma->device_free_chan_resources = idxd_dma_free_chan_resources;
-> +	dma->device_terminate_all = idxd_dma_terminate_all;
+>  	struct idxd_device *idxd = confdev_to_idxd(dev);
 >  
->  	rc = dma_async_device_register(dma);
->  	if (rc < 0) {
+> +	destroy_workqueue(idxd->wq);
+>  	kfree(idxd->groups);
+>  	bitmap_free(idxd->wq_enable_map);
+>  	kfree(idxd->wqs);
 > 
 
 

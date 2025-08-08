@@ -1,48 +1,48 @@
-Return-Path: <dmaengine+bounces-5972-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5973-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 62159B1E1F2
-	for <lists+dmaengine@lfdr.de>; Fri,  8 Aug 2025 08:09:49 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 893D1B1E1F9
+	for <lists+dmaengine@lfdr.de>; Fri,  8 Aug 2025 08:11:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F2B373AC6E6
-	for <lists+dmaengine@lfdr.de>; Fri,  8 Aug 2025 06:09:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AF38217499B
+	for <lists+dmaengine@lfdr.de>; Fri,  8 Aug 2025 06:11:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0944521CC48;
-	Fri,  8 Aug 2025 06:09:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2ECF22154B;
+	Fri,  8 Aug 2025 06:11:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L3EUbFT4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WrMxAviO"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D17367;
-	Fri,  8 Aug 2025 06:09:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 869AF22126D;
+	Fri,  8 Aug 2025 06:11:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754633383; cv=none; b=pQNtR5dFyxr3bS3Z9tHWtiQJqiEPh5uNGK0/hbaackWyI+4juwjKN3UsBRAqqKD0IMErI44opMTRt8GJyqk3ZLxJv2NS/RB/AEFTUXgI0PqMAZNejKcfoswiC5F1TozQVhnklf51jTMy24sE+JNPuJImNo7yjA9sAyxP7F+lvWE=
+	t=1754633491; cv=none; b=imzTuQamhA+mZvZtY8mE1JRCVzIYN/xXX+iOqCh+p0a/1+rpX8Uz7alx9C1UQhbRV+LxR55bAQemVjnjjO08hsKPKvFs0QL8Sq7ubZfijQ0QDsSIJJWTPWBNy96zX3TQpQqBshlCcviFNMa/+c0CxH9mrNXFALk+SrOGd6MOLHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754633383; c=relaxed/simple;
-	bh=tdOL6xo3genBuQKLG4SZmC3BiK3r1j+NBmxJ2jcxiZI=;
+	s=arc-20240116; t=1754633491; c=relaxed/simple;
+	bh=aqYxcnkh6l/YJOT84xB0o7oh1kG3jXmJGIEjT8yJZWQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=tBmPC2NMNqZGCYF5Cvg4bTBaLZ1wm/gTsVoKZ2Tcay8ZTsc2xJOB95VPjWueGFqODkwFbULuPFYuBh+eAtFXC+iMWaq5hxzUXM3bCh5I+xsEVlkpEkKvFzz94s56zyKPwoiV9tcYIYU96gcUN/uSTIbT7d6m8Khb8XJ8hYwbmKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L3EUbFT4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3177C4CEED;
-	Fri,  8 Aug 2025 06:09:40 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=n6ZXKx+1BRcORvyo+Xg1agHyMrH4GwzVGKnW3XPxzNezgOn/BFLB16vfVwNZmOTFuXKHus7i2kTNN7MEQUn47nyv3QdP+q4eveMQPv6/Q3m0BUhp/km/707lZ5GAfcrP21DgRKlm4Ns3aWqG2FQY5p7NyqEff5VXmBOvEJnNuCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WrMxAviO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D194AC4CEED;
+	Fri,  8 Aug 2025 06:11:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754633383;
-	bh=tdOL6xo3genBuQKLG4SZmC3BiK3r1j+NBmxJ2jcxiZI=;
+	s=k20201202; t=1754633490;
+	bh=aqYxcnkh6l/YJOT84xB0o7oh1kG3jXmJGIEjT8yJZWQ=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=L3EUbFT43PjXl+Kx0gh9A9MtbyORjEGdTaCdWCkIZZfSVBk8TEr1xnIbHBWek9zcH
-	 0+JCWyxokaa8HzJI3fObyL0K1m1NXzCL+zs5Bx6pHDUSZGBwxBLXUXBPCT8prf6kdz
-	 9fxEdGeM0Wq/nRCHRlWyy/SX5cSCr0ZDRpmtATnIlGV01Fv7uy8JpryO891DTpzjmK
-	 Eb1OqTO/bIl0iNwRx8Va6k5HfYddv8SqMqJmc3Qwx43xjUzULoYHvqQrOQGoY50P3+
-	 +fYUFn8ljhjBnSrjIMVjgb9W4Yg9TDizgNAl4lIbc7N9vhpzGKxvcaRmS2He6DcvgZ
-	 2PqC+n+xRx+DA==
-Message-ID: <32a2ec88-b9b8-4c4d-9836-838702e4e136@kernel.org>
-Date: Fri, 8 Aug 2025 08:09:37 +0200
+	b=WrMxAviO7CBA37FJ78govV/ktWC9kB3sJ5oAxKxX4FX/mQ5gbvucGP6/lEW3EjBE5
+	 3bRX0QUv4YNUBGKEEBl1jbRrmjKnARlGPFAlI4azv4JDiRR8xsV991VtjTRZ+6Ks5B
+	 BeGoLwQ9RUdaUGqPbCufqNjLy+NGvkV0tpYxfXB4iCqgDXYd56GDI1uYZ+YWeqBfYs
+	 PLbIygbxDdgxf97cfDyBSh7zVJTA4jxFram/HrnaIynkoziwuk7XjmTgQFwJ7P5mIg
+	 HVkDYSc9l04fOw5GfREEE0hsgLk1TlrACb4ZH3lBk+54lysxJM7vzSSI/xJzbqhc3d
+	 rf3y2DkGhwB0Q==
+Message-ID: <3f1a35fc-7fda-4179-948e-1a2acafd0f8a@kernel.org>
+Date: Fri, 8 Aug 2025 08:11:25 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -50,14 +50,15 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] dt-bindings: lgm-dma: Added intel,dma-sw-desc
- property.
+Subject: Re: [PATCH v2 3/3] dmaengine: lgm-dma: Added Software management
+ functions on HDMA.
 To: Zhu Yixin <yzhu@maxlinear.com>, vkoul@kernel.org, robh@kernel.org,
  krzk+dt@kernel.org, conor+dt@kernel.org, p.zabel@pengutronix.de,
  kees@kernel.org, dave.jiang@intel.com, av2082000@gmail.com,
  dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org
 References: <20250808032243.3796335-1-yzhu@maxlinear.com>
+ <20250808032243.3796335-3-yzhu@maxlinear.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -103,48 +104,30 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250808032243.3796335-1-yzhu@maxlinear.com>
+In-Reply-To: <20250808032243.3796335-3-yzhu@maxlinear.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 08/08/2025 05:22, Zhu Yixin wrote:
-> If the intel,dma-sw-desc property is present, it indicates that
-> the DMA driver is responsible for managing the DMA engine, including
-> handing the DMA descriptors.
-> If this property is present, the system defaults to a mode where
-> another hardware component takes control of the DMA engine.
-> In this case, the hardware can generate and manage descriptors
-> independently, without driver involvement.
-> 
-> This property only takes effect on HDMA(DMAV3x).
-> 
-> Signed-off-by: Zhu Yixin <yzhu@maxlinear.com>
+> +
+> +struct dw4_desc_sw {
+> +	struct virt_dma_desc	vd;
+> +	struct ldma_chan	*chan;
+> +	struct dw4_desc_hw	*desc_hw;
+> +};
+> +
+> +/**
+> + * hdma TX need some sideband info to switch in dw0 and dw1
 
-Where is the changelog?
+That's not a kerneldoc.
 
-> ---
->  Documentation/devicetree/bindings/dma/intel,ldma.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/intel,ldma.yaml b/Documentation/devicetree/bindings/dma/intel,ldma.yaml
-> index d6bb553a2c6f..426168b8709e 100644
-> --- a/Documentation/devicetree/bindings/dma/intel,ldma.yaml
-> +++ b/Documentation/devicetree/bindings/dma/intel,ldma.yaml
-> @@ -80,6 +80,12 @@ properties:
->        if it is disabled, the DMA RX will still support programmable fixed burst size of 2,4,8,16.
->        It only applies to RX DMA and memcopy DMA.
->  
-> +  intel,dma-sw-desc:
-> +    type: boolean
-> +    description:
-> +      Indicates that the DMA driver should operate in software-managed mode.
-> +      If this property is not present, it implies that DMA descriptors are managed and generated by another hardware component that controls the DMA engine.
+Please run standard kernel tools for static analysis, like coccinelle,
+smatch and sparse, and fix reported warnings. Also please check for
+warnings when building with W=1. Most of these commands (checks or W=1
+build) can build specific targets, like some directory, to narrow the
+scope to only your code. The code here looks like it needs a fix. Feel
+free to get in touch if the warning is not clear.
 
-Nothing improved:
-1. Still wrongly wrapped.
-2. Still SW property.
-
-I don't think you read the feedback. You need to describe hardware, not SW.
 
 Best regards,
 Krzysztof

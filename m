@@ -1,134 +1,218 @@
-Return-Path: <dmaengine+bounces-5993-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5994-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7A73B2137D
-	for <lists+dmaengine@lfdr.de>; Mon, 11 Aug 2025 19:40:49 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AB785B215D7
+	for <lists+dmaengine@lfdr.de>; Mon, 11 Aug 2025 21:46:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D712E1A20DBF
-	for <lists+dmaengine@lfdr.de>; Mon, 11 Aug 2025 17:41:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 60346624B37
+	for <lists+dmaengine@lfdr.de>; Mon, 11 Aug 2025 19:46:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CA182D47EF;
-	Mon, 11 Aug 2025 17:40:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E26AD1F875A;
+	Mon, 11 Aug 2025 19:46:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UstHmftV"
+	dkim=pass (2048-bit key) header.d=folker-schwesinger.de header.i=@folker-schwesinger.de header.b="D2WzmqmK"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from www522.your-server.de (www522.your-server.de [195.201.215.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07B4D21771B;
-	Mon, 11 Aug 2025 17:40:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D62918C322;
+	Mon, 11 Aug 2025 19:46:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.201.215.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754934041; cv=none; b=Z/kEvRY2FLBMXdFSKOQb9pwLqmg73sw0p/xatF6UymyirhWB+DMylRvl5yyfOfgdoykYJJ7b1xvzeGfnax26bgJ7/G/n40+GQHbSVdLrFfYuVIFS7x1JNtIQAuXUYmRsYlPBLMG4viv7LaUmgcIm9fvKBqVZdLmzBodifoh24fs=
+	t=1754941578; cv=none; b=BmyKpLY6M+fDpgjKFiDHNya4oq6GZ2A4M4Uyu/X5uWfY3TbkysUv1x51X9G8EZA6YeDDF5jiYpQa4dauPd8zcbrkb4D0GgJkLFerARTY1CD32uZnmpmgPc+9txwD6b2Lc7QZnrcTQ/xbyQf8Uc2Kr9+7fAIn2LOI3RtEx2I8NCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754934041; c=relaxed/simple;
-	bh=vNeEGZtQOxuFBJ03hCHxJ0zqee0UqgJZnTvwQUQSHrQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HzgBvwaPU8AY9k1VOWqt7pOEsq9FYH26Za9bEV5h7PqxsTSIjMqRZlpqdxQoa3QkWhd+V9MNcWRu82upWgUr7Y878K1VB4bRK9eTShMQy755+8IMe11a5aD52fwG0rsezqN/Ka/kwl0onDJ9rYC67NuYOQYVUg9gJFz5ZJvb/y4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UstHmftV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 853A5C4CEED;
-	Mon, 11 Aug 2025 17:40:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754934040;
-	bh=vNeEGZtQOxuFBJ03hCHxJ0zqee0UqgJZnTvwQUQSHrQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UstHmftVxCQTMDVIZqfzPXOXwi8NsvUVZuh7gnMbMAJO75iNtUapyN9pt3lojXddG
-	 2JFtVrEKDxONVM+YH8C2IvIIA7hW9k5x3y+nGBYfkkHsZivSgcckFrYyrVvKG794QY
-	 d0LyZfmVRfv+7aJfjat6kooL3o32XbPKKfYad6koOc1zZFJ2NmE/n9yhm6hJx68cX6
-	 svvQSl1PR4JA1TF76TO0BNZLm7vS2M/gL0QirKfeX5ZQ5DFqSd15GwcwnI9ZX51jTQ
-	 +gGpSQCL4epXTgu32ZuurDjucscXI+fHhDm4gWOzEAkYGWOdBkaU6vkk42hgZU0bAO
-	 ome+ZBHH2RKAA==
-Date: Mon, 11 Aug 2025 23:10:35 +0530
-From: Vinod Koul <vkoul@kernel.org>
-To: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
-	Viken Dadhaniya <quic_vdadhani@quicinc.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, quic_vtanuku@quicinc.com
-Subject: Re: [PATCH v6 2/2] i2c: i2c-qcom-geni: Add Block event interrupt
- support
-Message-ID: <aJorE6bL2d8se6E4@vaman>
-References: <CAO9ioeVuAO6mYpBSpiTW0jhFRPtkubZ5eEskd1yLBHVdR8_YMA@mail.gmail.com>
- <1b55d9d4-f3ff-4cd9-8906-5f370da55732@quicinc.com>
- <28d26c70-178f-413b-b7f8-410c508cfdd7@quicinc.com>
- <CAO9ioeXBwFYL8q7x7_fHvx5YO+qyAXk4wpnfPrku4iY9yBsk0Q@mail.gmail.com>
- <cac5e84b-fbdb-47a9-860d-16a7fa4dc773@quicinc.com>
- <4q3vlydi5xgltd3pcez54alxgrehhfn4pppg47ngwp6y5k7n33@d4d4htntj64k>
- <53dd18ec-9a65-4bf7-8490-ca3eb56ce2a5@quicinc.com>
- <iang2jpe4s6wmbypmtq5uswcm6n6xntqdulyhekcz5k6zxddu3@re3rrr4dso5p>
- <aICMDROkyjzBZFHo@vaman>
- <8a149580-5044-4744-b432-9f0eef0a0d31@quicinc.com>
+	s=arc-20240116; t=1754941578; c=relaxed/simple;
+	bh=N6GHB/ahgUbmi+yED3AjLdK6t8K0zonzpYaVdq1u1H4=;
+	h=Message-Id:Cc:To:From:Date:Subject; b=g74sBUOC4lUy5+KD389ZoUSMMjKaKy3gWybjd822qDnUBEojWFy3ac66jb+slEAjmgyr8QVV5TJ9eEK0CuEKGBFdYGoyp2v0vK5pAH5HzNSWBVwUBfBR/dbiy5QNYMHtFDnCEnDB6/lFNkLrylqBCbaNwTP+F8kP7cH9ITARgs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=folker-schwesinger.de; spf=pass smtp.mailfrom=folker-schwesinger.de; dkim=pass (2048-bit key) header.d=folker-schwesinger.de header.i=@folker-schwesinger.de header.b=D2WzmqmK; arc=none smtp.client-ip=195.201.215.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=folker-schwesinger.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=folker-schwesinger.de
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=folker-schwesinger.de; s=default2212; h=Subject:Date:From:To:Cc:Message-Id:
+	Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References;
+	bh=ThKptu1Z4PVKyQbUsbmM9Z1W7xxTizz6/uivJLE43rQ=; b=D2WzmqmKTI59POEc8bYlFQos60
+	0Y1SZvAOvo3oDkaKyewhotd4fD5ZW4ODfce0MkSOJFb190cvACk1DV0KWychKrhyBboVbV/cwthPc
+	ISAgRCtzwcgXUJL8AOTdiE256ENnuyqhh30sFRlB1vckf4aOzWCwazLnXNGrGXZnRok2dtMtwVPSD
+	3mER2cUpWdKAELjrCs/JGCJbjxKpwwS8vFmvFiokwLYfvqM9AHZ8IHYIgTjPd9KGfR/svSeF3fwB+
+	iX/7bv6hfMuSi/GcnGoMVF+AjvLpb1+ZqvTiQs9/3wXsHdtxnpYzTNiSkETiwAlD9lSLcm72Qk3VV
+	owPCpY3w==;
+Received: from sslproxy08.your-server.de ([78.47.166.52])
+	by www522.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <dev@folker-schwesinger.de>)
+	id 1ulYDV-0004c3-2R;
+	Mon, 11 Aug 2025 21:29:57 +0200
+Received: from localhost ([127.0.0.1])
+	by sslproxy08.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <dev@folker-schwesinger.de>)
+	id 1ulYDV-0003zH-2q;
+	Mon, 11 Aug 2025 21:29:57 +0200
+Message-Id: <DBZUIRI5Q4A3.1OIBMF9Z5EQ0X@folker-schwesinger.de>
+Cc: "Vinod Koul" <vkoul@kernel.org>, "Michal Simek" <michal.simek@amd.com>,
+ "Jernej Skrabec" <jernej.skrabec@gmail.com>, "Krzysztof Kozlowski"
+ <krzysztof.kozlowski@linaro.org>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
+ <u.kleine-koenig@baylibre.com>, "Marek Vasut" <marex@denx.de>, "Radhey
+ Shyam Pandey" <radhey.shyam.pandey@amd.com>
+To: <dmaengine@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+ <linux-kernel@vger.kernel.org>
+From: "Folker Schwesinger" <dev@folker-schwesinger.de>
+Date: Mon, 11 Aug 2025 21:22:59 +0200
+Subject: [PATCH v3] dmaengine: xilinx_dma: Support descriptor setup from
+ dma_vecs
+X-Virus-Scanned: Clear (ClamAV 1.0.7/27729/Mon Aug 11 10:33:11 2025)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8a149580-5044-4744-b432-9f0eef0a0d31@quicinc.com>
 
-On 25-07-25, 16:20, Jyothi Kumar Seerapu wrote:
-> 
-> 
-> On 7/23/2025 12:45 PM, Vinod Koul wrote:
-> > On 22-07-25, 15:46, Dmitry Baryshkov wrote:
-> > > On Tue, Jul 22, 2025 at 05:50:08PM +0530, Jyothi Kumar Seerapu wrote:
-> > > > On 7/19/2025 3:27 PM, Dmitry Baryshkov wrote:
-> > > > > On Mon, Jul 07, 2025 at 09:58:30PM +0530, Jyothi Kumar Seerapu wrote:
-> > > > > > On 7/4/2025 1:11 AM, Dmitry Baryshkov wrote:
-> > > > > > > On Thu, 3 Jul 2025 at 15:51, Jyothi Kumar Seerapu
-> > 
-> > [Folks, would be nice to trim replies]
-> > 
-> > > > > > Could you please confirm if can go with the similar approach of unmap the
-> > > > > > processed TREs based on a fixed threshold or constant value, instead of
-> > > > > > unmapping them all at once?
-> > > > > 
-> > > > > I'd still say, that's a bad idea. Please stay within the boundaries of
-> > > > > the DMA API.
-> > > > > 
-> > > > I agree with the approach you suggested—it's the GPI's responsibility to
-> > > > manage the available TREs.
-> > > > 
-> > > > However, I'm curious whether can we set a dynamic watermark value perhaps
-> > > > half the available TREs) to trigger unmapping of processed TREs ? This would
-> > > > allow the software to prepare the next set of TREs while the hardware
-> > > > continues processing the remaining ones, enabling better parallelism and
-> > > > throughput.
-> > > 
-> > > Let's land the simple implementation first, which can then be improved.
-> > > However I don't see any way to return 'above the watermark' from the DMA
-> > > controller. You might need to enhance the API.
-> > 
-> > Traditionally, we set the dma transfers for watermark level and we get a
-> > interrupt. So you might want to set the callback for watermark level
-> > and then do mapping/unmapping etc in the callback. This is typical model
-> > for dmaengines, we should follow that well
-> > 
-> > BR
-> 
-> Thanks Dmitry and Vinod, I will work on V7 patch for submitting the I2C
-> messages until they fit and and unmap all processed messages together for
-> now.
-> 
-> Regarding the watermark mechanism, looks GENI SE DMA supports watermark
-> interrupts but it appears that GPI DMA doesn't have such provision of
-> watermark.
+The DMAEngine provides an interface for obtaining DMA transaction
+descriptors from an array of scatter gather buffers represented by
+struct dma_vec. This interface is used in the DMABUF API of the IIO
+framework [1].
+To enable DMABUF support through the IIO framework for the Xilinx DMA,
+implement callback .device_prep_peripheral_dma_vec() of struct
+dma_device in the driver.
 
-What is the mechanism to get interrupts from the GPI? If you submit 10
-txn, can you ask it to interrupt when half of them are done?
+[1]: https://elixir.bootlin.com/linux/v6.16-rc1/source/drivers/iio/buffer/industrialio-buffer-dmaengine.c#L104
 
+Signed-off-by: Folker Schwesinger <dev@folker-schwesinger.de>
+Reviewed-by: Suraj Gupta <suraj.gupta2@amd.com>
+
+---
+Changes in v3:
+- Collect R-b tags from v2.
+- Rebase onto v6.17-rc1.
+- Link to v2: https://lore.kernel.org/dmaengine/DAQB7EU7UXR3.Z07Q6JQ1V67Y@folker-schwesinger.de/
+
+Changes in v2:
+- Improve commit message to include reasoning behind the change.
+- Rebase onto v6.16-rc1.
+- Link to v1: https://lore.kernel.org/dmaengine/D8TV2MP99NTE.1842MMA04VB9N@folker-schwesinger.de/
+---
+ drivers/dma/xilinx/xilinx_dma.c | 94 +++++++++++++++++++++++++++++++++
+ 1 file changed, 94 insertions(+)
+
+diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
+index a34d8f0ceed8..fabff602065f 100644
+--- a/drivers/dma/xilinx/xilinx_dma.c
++++ b/drivers/dma/xilinx/xilinx_dma.c
+@@ -2172,6 +2172,99 @@ xilinx_cdma_prep_memcpy(struct dma_chan *dchan, dma_addr_t dma_dst,
+ 	return NULL;
+ }
+ 
++/**
++ * xilinx_dma_prep_peripheral_dma_vec - prepare descriptors for a DMA_SLAVE
++ *	transaction from DMA vectors
++ * @dchan: DMA channel
++ * @vecs: Array of DMA vectors that should be transferred
++ * @nb: number of entries in @vecs
++ * @direction: DMA direction
++ * @flags: transfer ack flags
++ *
++ * Return: Async transaction descriptor on success and NULL on failure
++ */
++static struct dma_async_tx_descriptor *xilinx_dma_prep_peripheral_dma_vec(
++	struct dma_chan *dchan, const struct dma_vec *vecs, size_t nb,
++	enum dma_transfer_direction direction, unsigned long flags)
++{
++	struct xilinx_dma_chan *chan = to_xilinx_chan(dchan);
++	struct xilinx_dma_tx_descriptor *desc;
++	struct xilinx_axidma_tx_segment *segment, *head, *prev = NULL;
++	size_t copy;
++	size_t sg_used;
++	unsigned int i;
++
++	if (!is_slave_direction(direction) || direction != chan->direction)
++		return NULL;
++
++	desc = xilinx_dma_alloc_tx_descriptor(chan);
++	if (!desc)
++		return NULL;
++
++	dma_async_tx_descriptor_init(&desc->async_tx, &chan->common);
++	desc->async_tx.tx_submit = xilinx_dma_tx_submit;
++
++	/* Build transactions using information from DMA vectors */
++	for (i = 0; i < nb; i++) {
++		sg_used = 0;
++
++		/* Loop until the entire dma_vec entry is used */
++		while (sg_used < vecs[i].len) {
++			struct xilinx_axidma_desc_hw *hw;
++
++			/* Get a free segment */
++			segment = xilinx_axidma_alloc_tx_segment(chan);
++			if (!segment)
++				goto error;
++
++			/*
++			 * Calculate the maximum number of bytes to transfer,
++			 * making sure it is less than the hw limit
++			 */
++			copy = xilinx_dma_calc_copysize(chan, vecs[i].len,
++					sg_used);
++			hw = &segment->hw;
++
++			/* Fill in the descriptor */
++			xilinx_axidma_buf(chan, hw, vecs[i].addr, sg_used, 0);
++			hw->control = copy;
++
++			if (prev)
++				prev->hw.next_desc = segment->phys;
++
++			prev = segment;
++			sg_used += copy;
++
++			/*
++			 * Insert the segment into the descriptor segments
++			 * list.
++			 */
++			list_add_tail(&segment->node, &desc->segments);
++		}
++	}
++
++	head = list_first_entry(&desc->segments, struct xilinx_axidma_tx_segment, node);
++	desc->async_tx.phys = head->phys;
++
++	/* For the last DMA_MEM_TO_DEV transfer, set EOP */
++	if (chan->direction == DMA_MEM_TO_DEV) {
++		segment->hw.control |= XILINX_DMA_BD_SOP;
++		segment = list_last_entry(&desc->segments,
++					  struct xilinx_axidma_tx_segment,
++					  node);
++		segment->hw.control |= XILINX_DMA_BD_EOP;
++	}
++
++	if (chan->xdev->has_axistream_connected)
++		desc->async_tx.metadata_ops = &xilinx_dma_metadata_ops;
++
++	return &desc->async_tx;
++
++error:
++	xilinx_dma_free_tx_descriptor(chan, desc);
++	return NULL;
++}
++
+ /**
+  * xilinx_dma_prep_slave_sg - prepare descriptors for a DMA_SLAVE transaction
+  * @dchan: DMA channel
+@@ -3180,6 +3273,7 @@ static int xilinx_dma_probe(struct platform_device *pdev)
+ 	xdev->common.device_config = xilinx_dma_device_config;
+ 	if (xdev->dma_config->dmatype == XDMA_TYPE_AXIDMA) {
+ 		dma_cap_set(DMA_CYCLIC, xdev->common.cap_mask);
++		xdev->common.device_prep_peripheral_dma_vec = xilinx_dma_prep_peripheral_dma_vec;
+ 		xdev->common.device_prep_slave_sg = xilinx_dma_prep_slave_sg;
+ 		xdev->common.device_prep_dma_cyclic =
+ 					  xilinx_dma_prep_dma_cyclic;
+
+base-commit: 8f5ae30d69d7543eee0d70083daf4de8fe15d585
 -- 
-~Vinod
+2.50.1
 

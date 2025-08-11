@@ -1,206 +1,119 @@
-Return-Path: <dmaengine+bounces-5982-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5983-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35842B208A5
-	for <lists+dmaengine@lfdr.de>; Mon, 11 Aug 2025 14:21:43 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 30792B210AB
+	for <lists+dmaengine@lfdr.de>; Mon, 11 Aug 2025 18:01:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 358BD18A1E24
-	for <lists+dmaengine@lfdr.de>; Mon, 11 Aug 2025 12:22:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1025118A00F0
+	for <lists+dmaengine@lfdr.de>; Mon, 11 Aug 2025 15:55:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3EA623F40A;
-	Mon, 11 Aug 2025 12:21:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3480E2D23A4;
+	Mon, 11 Aug 2025 15:37:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Gpl0cloj"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QvkTC3SJ"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1EB120297C;
-	Mon, 11 Aug 2025 12:21:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A97A12E7BB2;
+	Mon, 11 Aug 2025 15:37:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754914899; cv=none; b=N7yIdtto8H7RttXuXZZG91RZQaPIHvmReq+0B5ywaIb1yw2c1vIEn45aSwWzQyeai2UXUQsxxGyJj16pPR5C+LEAmoikS25D5bIZCqNcjErSRx82Ei3G45NcoVNAYktPqMgjuVdHFQ9ys2JFqUx6cwl6bllG6KQ08mKTrEX4/Jk=
+	t=1754926633; cv=none; b=mvBjyKTW3upq+5Rt57NzMB4xVNZP6BDR/9myTtT0ndvoz5Lf56ppjRibGtwK3+7BRj4A3NtBaFb6VRBeJdu/4LCgU5VUPdtPwQk6ee2wdwncTD/Xb+37aLb31r0g9ZMd7zpXZxG2sn/G39uv6/rEBX4FJHT0BVPuU6He8BalepY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754914899; c=relaxed/simple;
-	bh=Ql1JCgnCHCe7QLdED93B26Cg21+RnnwnTV77huzWi0s=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qs5yb3LZ9T9r1boC0kmChmGGQgCnOnAYtFC4/872CQZE4MAiL3vP3sNNWHqVosQzV6q5oXKWultRfdNEUgN7ZmidAmoFvz0LQcOyhw8gkRDkdDaiCYKukmP06UCTnEq5bvtXODAzHrLAdWZxiDy44bmwhhGNNYXipg67V3XSw9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=Gpl0cloj; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1754926633; c=relaxed/simple;
+	bh=4WkKbRe0cR206bqP9RP/XzewXYEBHdON0kv7LwS/YQM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Gnk6NvsTDJeR8vjT8yl5D1UJlmCrrjHuQUDb0m556c/hVjH7RYuuL8ltm4hgH2T+HQaAZ9HBypKvtWUeIAjBS2zLy07SxA8OPxcpW/A3OLAzOu2uN57ejeyZmGKzoCjnQ8aoDjNBMorQxpPzTe7xN9ajexKc8Mi8lnbXcR1jn+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QvkTC3SJ; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1754914898; x=1786450898;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=Ql1JCgnCHCe7QLdED93B26Cg21+RnnwnTV77huzWi0s=;
-  b=Gpl0clojgNadKcllAmuS5qeyr7U61wJHDZdoNrUpvQXfyYR/YcdiLIZZ
-   T/jJBrCdcFKKzgbl3tGf/K1pgZlnW+Wc2VVlRfjOgsTxTC0nXKo4JeT24
-   w6mnq55pqVRBeHTtrE7glPy239HLTPGbZokXHQdr1TeRPb5L4wjt9cgTH
-   BItjbrQ7jbkciy1t/uzQKgEoxZuQhBrpLN2wBn/Wz+MJZCOtQh+n47bpU
-   ELZLDE0f7x2RiAzlNQpwJj/qDLJv2+YdqJX7tCm/sRGy3Sbr1qWmGjXa7
-   kvztThpDlB8CDVKa6CkdGzraZDppxs/7+5hxV7+cCLmBt84aUAVnNWAhV
-   w==;
-X-CSE-ConnectionGUID: wyxru+5XTMK+lbiHaXZ4+w==
-X-CSE-MsgGUID: 5Wwrm8/ITrONPZG1z6ylXA==
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1754926632; x=1786462632;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=4WkKbRe0cR206bqP9RP/XzewXYEBHdON0kv7LwS/YQM=;
+  b=QvkTC3SJIo9NdKYRHKWAiGIvCiV5D5oyB6IhhMRFjv0cqY/wyCJreouN
+   Bvt8X1xXJXzv2QvL/Kivrx2rntB8ZBzT3qfbCxns9sadQ+oB2iAiVgMuV
+   6PcCyOK9bJp828baq8DZSPlluJt0DfWsUMI+dUDgHNYUbYNmh/ZxjtoUg
+   4Nvberf9ppekVhHjbU1HuY//cfAnBeZLBhJxwZKQWe0zUlqHofNA9qHfK
+   4lEfxX5Xl25d++1r+82TAqYpSpOeRwjlGLncTQEMi3uG/UEiO2TzTIsfR
+   mZAt7LZ/PaZl2GZerviuI9c61dei1debZdEdQQ5R8QMujmbbJowGBO909
+   Q==;
+X-CSE-ConnectionGUID: r1zKfyGWRMiACbXWTntGpQ==
+X-CSE-MsgGUID: T25hL+0HRSi0Hbt0aDupbg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11518"; a="57087381"
 X-IronPort-AV: E=Sophos;i="6.17,278,1747724400"; 
-   d="scan'208";a="45644208"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 11 Aug 2025 05:21:28 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Mon, 11 Aug 2025 05:20:58 -0700
-Received: from DEN-DL-M70577 (10.10.85.11) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.2507.44 via Frontend
- Transport; Mon, 11 Aug 2025 05:20:53 -0700
-Date: Mon, 11 Aug 2025 12:20:53 +0000
-From: Daniel Machon <daniel.machon@microchip.com>
-To: Robert Marko <robert.marko@sartura.hr>
-CC: Nicolas Ferre <nicolas.ferre@microchip.com>, Arnd Bergmann
-	<arnd@kernel.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	"Russell King" <linux@armlinux.org.uk>, Claudiu Beznea
-	<claudiu.beznea@tuxon.dev>, Catalin Marinas <catalin.marinas@arm.com>, Will
- Deacon <will@kernel.org>, Olivia Mackall <olivia@selenic.com>, Herbert Xu
-	<herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>,
-	Vinod Koul <vkoul@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, Lee Jones
-	<lee@kernel.org>, Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<linux-crypto@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-	<linux-i2c@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-	<linux-serial@vger.kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>,
-	<luka.perkov@sartura.hr>, Conor Dooley <Conor.Dooley@microchip.com>, "Lars
- Povlsen - M31675" <Lars.Povlsen@microchip.com>
-Subject: Re: [PATCH v8 01/10] arm64: Add config for Microchip SoC platforms
-Message-ID: <20250811122053.4bfyoefln7wpz2a4@DEN-DL-M70577>
-References: <20250702183856.1727275-1-robert.marko@sartura.hr>
- <20250702183856.1727275-2-robert.marko@sartura.hr>
- <ea353170-6e03-4231-afc2-3dc45253931d@app.fastmail.com>
- <CA+HBbNHxiU5+xVJTyPQFuCJLyEs5_MpybSBEgxi25bzaGfiVHA@mail.gmail.com>
- <421d61db-27eb-4ad2-bd98-eb187fd14b1e@microchip.com>
- <CA+HBbNEiKWS71jtF_jqV9bdX9HVroaZSGMaeD-xFM8sm0kLtCw@mail.gmail.com>
+   d="scan'208";a="57087381"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2025 08:37:11 -0700
+X-CSE-ConnectionGUID: 50Wxz5jlTRCn6OTyKBLOEg==
+X-CSE-MsgGUID: bw6dKchyRW6CYwZwn0aG3g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,278,1747724400"; 
+   d="scan'208";a="165192435"
+Received: from bvivekan-mobl2.gar.corp.intel.com (HELO [10.247.119.140]) ([10.247.119.140])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2025 08:37:08 -0700
+Message-ID: <5ecf9433-5de7-4e52-b246-bf17d0cea776@intel.com>
+Date: Mon, 11 Aug 2025 08:37:02 -0700
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+HBbNEiKWS71jtF_jqV9bdX9HVroaZSGMaeD-xFM8sm0kLtCw@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dmaengine: idxd: Replace memset(0) + strscpy() with
+ strscpy_pad()
+To: Thorsten Blum <thorsten.blum@linux.dev>,
+ Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+ Vinod Koul <vkoul@kernel.org>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250810225858.2953-2-thorsten.blum@linux.dev>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250810225858.2953-2-thorsten.blum@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jul 04, 2025 at 07:36:06PM +0200, Robert Marko wrote:
+
+
+On 8/10/25 3:58 PM, Thorsten Blum wrote:
+> Replace memset(0) followed by strscpy() with strscpy_pad() to improve
+> idxd_load_iaa_device_defaults(). This avoids zeroing the memory before
+> copying the strings and ensures the destination buffers are only written
+> to once, simplifying the code and improving efficiency.
 > 
-> On Thu, Jul 3, 2025 at 3:56 PM Nicolas Ferre
-> <nicolas.ferre@microchip.com> wrote:
-> >
-> > Robert, Arnd,
-> >
-> > On 03/07/2025 at 14:25, Robert Marko wrote:
-> > > On Wed, Jul 2, 2025 at 9:57 PM Arnd Bergmann <arnd@kernel.org> wrote:
-> > >>
-> > >> On Wed, Jul 2, 2025, at 20:35, Robert Marko wrote:
-> > >>> Currently, Microchip SparX-5 SoC is supported and it has its own symbol.
-> > >>>
-> > >>> However, this means that new Microchip platforms that share drivers need
-> > >>> to constantly keep updating depends on various drivers.
-> > >>>
-> > >>> So, to try and reduce this lets add ARCH_MICROCHIP symbol that drivers
-> > >>> could instead depend on.
-> > >>
-> > >> Thanks for updating the series to my suggestion!
-> > >>
-> > >>> @@ -174,6 +160,27 @@ config ARCH_MESON
-> > >>>          This enables support for the arm64 based Amlogic SoCs
-> > >>>          such as the s905, S905X/D, S912, A113X/D or S905X/D2
-> > >>>
-> > >>> +menuconfig ARCH_MICROCHIP
-> > >>> +     bool "Microchip SoC support"
-> > >>> +
-> > >>> +if ARCH_MICROCHIP
-> > >>> +
-> > >>> +config ARCH_SPARX5
-> > >>> +     bool "Microchip Sparx5 SoC family"
-> > >>
-> > >> This part is the one bit I'm not sure about: The user-visible
-> > >> arm64 CONFIG_ARCH_* symbols are usually a little higher-level,
-> > >> so I don't think we want both ARCH_MICROCHIP /and/ ARCH_SPARX5
-> > >> here, or more generally speaking any of the nested ARCH_*
-> > >> symbols.
-> >
-> > Well, having a look at arch/arm64/Kconfig.platforms, I like how NXP is
-> > organized.
-> >
-> > SPARX5, LAN969x or other MPU platforms, even if they share some common
-> > IPs, are fairly different in terms of internal architecture or feature set.
-> > So, to me, different ARCH_SPARX5, ARCH_LAN969X (as Robert proposed) or
-> > future ones make a lot sense.
-> > It will help in selecting not only different device drivers but
-> > different PM architectures, cores or TrustZone implementation...
-> >
-> > >> This version of your patch is going to be slightly annoying
-> > >> to existing sparx5 users because updating an old .config
-> > >> breaks when ARCH_MICROCHIP is not enabled.
-> >
-> > Oh, yeah, indeed. Even if I find Robert's proposal ideal.
-> >
-> > Alexandre, Lars, can you evaluate this level of annoyance?
-> >
-> > >> The two options that I would prefer here are
-> > >>
-> > >> a) make ARCH_SPARX5 a hidden symbol in order to keep the
-> > >>     series bisectable, remove it entirely once all references
-> > >>     are moved over to ARCH_MICROCHIP
-> > >>
-> > >> b) Make ARCH_MICROCHIP a hidden symbol that is selected by
-> > >>     ARCH_SPARX5 but keep the menu unchanged.
-> > >
-> > > Hi Arnd,
-> > > Ok, I see the issue, and I would prefer to go with option b and do
-> > > what I did for
-> > > AT91 with the hidden ARCH_MICROCHIP symbol to avoid breaking current configs.
-> >
-> > Yep, but at the cost of multiple entries for Microchip arm64 SoCs at the
-> > "Platform selection" menu level. Nuvoton or Cavium have this already, so
-> > it's probably fine.
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> ---
+>  drivers/dma/idxd/defaults.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
 > 
-> Yes, this is why I went with a menu instead, to me it is much cleaner.
-> 
-> So, how would you guys want me to proceed?
-> 
-> a) Keep the menu-based config symbol
-> or
-> b) Like for AT91, add a hidden symbol and keep the individual SoC-s in
-> the top level
-> platform menu?
-> 
-> Regards,
-> Robert
+> diff --git a/drivers/dma/idxd/defaults.c b/drivers/dma/idxd/defaults.c
+> index c607ae8dd12c..2bbbcd02a0da 100644
+> --- a/drivers/dma/idxd/defaults.c
+> +++ b/drivers/dma/idxd/defaults.c
+> @@ -36,12 +36,10 @@ int idxd_load_iaa_device_defaults(struct idxd_device *idxd)
+>  	group->num_wqs++;
+>  
+>  	/* set name to "iaa_crypto" */
+> -	memset(wq->name, 0, WQ_NAME_SIZE + 1);
+> -	strscpy(wq->name, "iaa_crypto", WQ_NAME_SIZE + 1);
+> +	strscpy_pad(wq->name, "iaa_crypto");
 
-Hi Robert,
+Should also supply the max length?
 
-Sorry for the late reply.
-
-I appreciate the effort to make the addition of future symbols easier by using
-a common ARCH_MICROCHIP symbol — that makes sense to me.
-
-Regarding the actual symbols, I’m certainly no expert, but I agree with
-Nicolas, that having more granular control with separate ARCH_SPARX5 and
-ARCH_LAN969X could make sense, as opposed to only having ARCH_MICROCHIP, as
-Arnd mentioned.
-
-As for the goal of using a common symbol for drivers to depend on,  while not
-breaking existing configs (are there any unwritten rules or practices about
-breaking existing configs?), I think option B will work fine. I dont mind the
-symbols being top-level.
-
-/Daniel
-
+>  
+>  	/* set driver_name to "crypto" */
+> -	memset(wq->driver_name, 0, DRIVER_NAME_SIZE + 1);
+> -	strscpy(wq->driver_name, "crypto", DRIVER_NAME_SIZE + 1);
+> +	strscpy_pad(wq->driver_name, "crypto");
+>  
+>  	engine = idxd->engines[0];
+>  
 
 

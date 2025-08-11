@@ -1,125 +1,121 @@
-Return-Path: <dmaengine+bounces-5977-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-5978-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25259B204CC
-	for <lists+dmaengine@lfdr.de>; Mon, 11 Aug 2025 12:01:53 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C544DB20505
+	for <lists+dmaengine@lfdr.de>; Mon, 11 Aug 2025 12:16:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B5962166069
-	for <lists+dmaengine@lfdr.de>; Mon, 11 Aug 2025 09:59:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1BBB84211FD
+	for <lists+dmaengine@lfdr.de>; Mon, 11 Aug 2025 10:16:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B44C2144B4;
-	Mon, 11 Aug 2025 09:59:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEC5C226CF4;
+	Mon, 11 Aug 2025 10:16:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PwGNs/wC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D5dC8xkT"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94D8D19D082;
-	Mon, 11 Aug 2025 09:59:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 503D91F4180
+	for <dmaengine@vger.kernel.org>; Mon, 11 Aug 2025 10:16:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754906360; cv=none; b=EpSW3helblY5mSw22i4PHk0robUKD6L0LMpUpVcvDLI+3Iid0E/WS0EMk6nodSq0bx/QCBNZXNI/pKz4vtZciiHYufEwv4JB1lcJXLcUq9o41L7VryAlKOP7bhAyq7z/e3Nq0hUwf7miHit46MtRcMK+ArVk4ESPOL8BZui7QZE=
+	t=1754907385; cv=none; b=Vr2KmpkK1rH4zM6PsJu+7V99uO0lU8/mrF7VFhkAhiz3I1is0RgnmG7uELzHnCcArcwLuphhRsM7xnzzeQunm2zjwC4wcqeZZc6YeAMJt7iUVnvGHEbO4fZqpD1gAxZcmtV0j+hjdBPOetGbNRjKEuZEbCDnkyz1jaSgASx0cO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754906360; c=relaxed/simple;
-	bh=Le+t3nZmUIhxp9p5vM1H1jmbQTclhIhQMZD2svUIPuw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=blgENHlx1cRjKgRT0a7qWMnyjEawb0/m849ZJpQgUhbHExGFIH4ZrKF8sAC9xYZfllplllKpaTW0aZ4qe2+v9E+Xf6TUZ6D8ZwkeaZ4q1v0AlThEudT8SdGdSBRbDoUP5a0K3g/1SyzHs4PDESuvraw2PzTXQGt15qWPPPoXAUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PwGNs/wC; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3b78d729bb8so2438848f8f.0;
-        Mon, 11 Aug 2025 02:59:17 -0700 (PDT)
+	s=arc-20240116; t=1754907385; c=relaxed/simple;
+	bh=lhpccEjV4JvXC3iJXVnLG/g4BG5pKPBfPXPY7b7oLTs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CrkPFsWJzu4wpUqSV5DHMwqFaP+/pHSL9m8wSQ1q6dyvQ+gxWnu0MJupo0shJ/kFvr4eU5x30Arrf0KPgj+s306p5uUSJ1RQtNTObKsypyZcsHCYja8Z31w5s6AIYKcfoWqvLFnve+riAmaAx1pcABUehh6unltqAHQLzChjDMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=D5dC8xkT; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3b7886bee77so3153802f8f.0
+        for <dmaengine@vger.kernel.org>; Mon, 11 Aug 2025 03:16:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754906356; x=1755511156; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CHrrEYPB1b5QIK6lDkT+p47QiIDVum4Z/muZUQOm1MQ=;
-        b=PwGNs/wCqfZvpqnNG6mMlkChMkOU9eOt94bkZ2rN5Wtlj0LiznXF+zwlNGfoNICePe
-         54yAAoQl3hYYFObB14sVCTg11Bdr0Nbb66bakSQfOylX1mmsu3gBxyzEU9NBG7b1kpjG
-         QgtCrW6dioDY+5DIL8PvFPYo6XHeIKMSt89aPDu9YildHcF7G0nG4TJH9zJqfYpKkXl9
-         f6AU4z2vxQfZDpYT044OPLKBmxLxI+YSN8E5x9dwDkzJZBC4s7V6Q0bEGTX3h9bM9+HN
-         faijiz600FMq6gsphmJBrirZXmngdRp+bp/PVdqscrMkj3mkQbunLGD4FkivJQFaCK4R
-         ya4w==
+        d=linaro.org; s=google; t=1754907382; x=1755512182; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YSpiiISpNVr4gQnCfkPUN2zjFrHk7VxPQMyKo4/lvmI=;
+        b=D5dC8xkTcp3nFS538JH/hhv3krHlFCGwSBKAPtiByLb0kp+h8+Ll+BSqGkQbb0kEhu
+         N9DpzYFtK94ABxbbbVGGw+jYDO2zgDpZhyA38ocwDE9mqk6PNoC6DOZ8SLnIu8U3MVfq
+         kDb/qP7Y1SiPm581VJypfLvf07WKiqVafH5qjDTh50jZAqo0JGsidTpWi72V58sPlIjv
+         dWUkjqUnQI8dGD2nFNYinpn28TfrvR/QRwlEq2ZQ2dt0ywi/eax/Pe6W1HyyIKYIGGy3
+         crHLykKA6MfN7NCckrcv/M+B/HjsIGOP8nFtDGXqtS37k2o8mhyz2MSjp1C7qoq6tOig
+         d4Wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754906356; x=1755511156;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CHrrEYPB1b5QIK6lDkT+p47QiIDVum4Z/muZUQOm1MQ=;
-        b=DvLHvtc/PYtO8hutlX8ks821T3tBZWpofzugARhlTzhcgx6RFutx/xBPvEItx7rtBZ
-         H3hMSBVTaDSIKZ2aumKaHaDA+6dk8nmdjJcgtcDTd6LcgVDzKKQ0DYZ+r23H+vU5k1yf
-         gJFiJpKaDtHvNmJcvsqVd4fsKEsETdGLYdl6b1/BVYBTbQrZ7ritaINb+1J/UcnaWRaC
-         4yfnCfg93zY5YuR0UvAL7G+6fMnW/y4g6R/6B9M9ERSPFMPYjC2n5uNRQRe1Z3XVMPuy
-         lYguLdclP/D2tUsiXReH2/AIqbKsSByrzfcqc3bfYA5f3m8aIToC7u0JoijWdSCet/gI
-         uPTg==
-X-Forwarded-Encrypted: i=1; AJvYcCUcwPGbG6BI482o8SFAQbwdqBMgkhjD48TYpWNsiXgp5X/dPRLO8WIOoxASEnbWjrTnh48nQOyPvLE=@vger.kernel.org, AJvYcCUxwfqqmTEQUFPUiDYFIf8n0Ca9r0kyywvQ6CTdlzTWojRPCTkgNGJiE4ya2qkuU+oqqQf7YfYAo/0F1bWp@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXbnRW9MZEAFlscGNsPBqrEEBIgHTnT6gcw7m9SAEggjakSBND
-	aoUqyRQ0yh6yTj8UtYBT8nkgQNAQ3Fq2Jxcah4gxBFch2hHA0a/2f7Rs
-X-Gm-Gg: ASbGncuv03H4ecTfkQrkdtipOugRctt9LzaX4eXGDwYoeYWayCN19SGVT5gJ7FXWE+i
-	53Kusv71WiKgxCHKwokaPETN+UdqrF9HB3vpw0At+fau3GNWmC6kIZGn+QcvxDs4TRllDZdimiX
-	CcLGTcgH3zTdPeIraleSAh6jP7PKQsqyGGa33eE2iZI//axxc9tL9lH8wVcWmPGAHEiqGFdoom9
-	St6N9fK5E9zLmB9XJ/tkxHPsCCjscx6mBawluUzdKFJowsCDUPcCf5d0m3KmOIKP3RqGPwi/sQa
-	iA34/1iJAQNd9eG2YRRU09RSeF+imvQCcaLhfY1fGVh7sPatvt1w6IM+F0/G5IHYaudTDBcrxyH
-	x37B8BrO3Y6l3x9ggrZpV
-X-Google-Smtp-Source: AGHT+IFJtik1XnVm2H2h8zurmExW28TdLGAWPI8wIWs21Eih4/9SIQP0+l2lERHs84nC/K0BOIEOpQ==
-X-Received: by 2002:a05:6000:2510:b0:3b4:9721:2b19 with SMTP id ffacd0b85a97d-3b900b4724dmr9036674f8f.11.1754906355537;
-        Mon, 11 Aug 2025 02:59:15 -0700 (PDT)
-Received: from localhost ([87.254.0.133])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3b79c4a2187sm41377170f8f.70.2025.08.11.02.59.14
+        d=1e100.net; s=20230601; t=1754907382; x=1755512182;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YSpiiISpNVr4gQnCfkPUN2zjFrHk7VxPQMyKo4/lvmI=;
+        b=b3h1+Bxgxh4dmgT6yvSHekXroRHkR7WP5cZf8eIHZy0dV8rq8NXkj3uH2eikm9Oqdr
+         /Jnz1Ie0IssWqgs6/bscEVkQrMxvfoue4YMjpjhdN+pelSn7/wcTgRurmgzOsL4ZCYNB
+         Dx25t+Qd41Un2uXfrzIortayQGQe0Gz/uqmcDZwfGdqrHgXw43/m4maa+JwsuoJ4Jq5O
+         cDsUqiloWGRq7SscF4Zc19T3G4BjLCelU7yxAJiITcPj/IWA6+NSL1UjqHCb5LsioTpN
+         GikajWIOW6Y0Vn58KwvzkMgDUWOaCaRr9vnIy5Ah+HtEUkgtW1bD49wCACv8FLtQBSHW
+         FhFg==
+X-Forwarded-Encrypted: i=1; AJvYcCVok1yF0Qe35OfnaQioC04wj/lHOIqolRLH+82XeN6jtiVpiYsGGvkuQCxNpG2GoKY1rGii/lB1Sag=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwA60vKQjRDrbjLMDBIEvQQl106WOzwf9VzMOWZ0tEP7X5EJsom
+	5tY5yxFpJsK+DD9H0oLemvBNHIoBsbmmRLLEz2Wc/f3i8nppIogBZ18LCEC6eeVXeXo=
+X-Gm-Gg: ASbGnctGoswlDp9jSSTKd4pXXnTE96KUtmU0+kgwRHmC947x4wzBQh235ZKdC2JsFRl
+	bkRFdrISiDnzj+chixyyf+o2nJDk/55uftNYuoRSF+a219oIW5L8BjkC43NB3hAz6Gc+20g17O2
+	HA2B5Q5iqMKlau9vcGOF2jZ48EJ31+UWNlin3u36/SLmm0IQbGjQ5TqO/2/yDTSCIMUkiCVYVCR
+	VAJQuir+rFdjPxi490UeZEZbKRasFB6EiSzQaSjqre1FqMexBIRCtu0AJa9k1V+MLbEcLoBxTYr
+	IV6qOXSVfwjbsYCAK5nlxpiq7CPZIlHBJ2R1JmF4O6Y+BGzAS+7SILVSoGBv0J3nl5PiYnhlVrG
+	ZVFhigTHqNi7Kbcc8QNKoPDRMgO8WBnDq
+X-Google-Smtp-Source: AGHT+IG9ux2smHHV5RyT3jUtDRzIFajNvscvOmDcbzXkqY+4Xp89HRJqljXFsBnzKFxpMyuKABzgxQ==
+X-Received: by 2002:a05:6000:18a9:b0:3b7:e3c3:fbb6 with SMTP id ffacd0b85a97d-3b900b7b012mr9878088f8f.31.1754907381530;
+        Mon, 11 Aug 2025 03:16:21 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-458b8aab8c0sm382668595e9.19.2025.08.11.03.16.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Aug 2025 02:59:15 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Vinod Koul <vkoul@kernel.org>,
+        Mon, 11 Aug 2025 03:16:21 -0700 (PDT)
+Date: Mon, 11 Aug 2025 13:16:16 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Colin Ian King <colin.i.king@gmail.com>,
+	Shuai Xue <xueshuai@linux.alibaba.com>
+Cc: Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>,
 	Fenghua Yu <fenghuay@nvidia.com>,
-	Shuai Xue <xueshuai@linux.alibaba.com>,
-	dmaengine@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] dmaengine: idxd: Fix dereference on uninitialized pointer conf_dev
-Date: Mon, 11 Aug 2025 10:58:36 +0100
-Message-ID: <20250811095836.1642093-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.50.1
+	Shuai Xue <xueshuai@linux.alibaba.com>, dmaengine@vger.kernel.org,
+	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: idxd: Fix dereference on uninitialized
+ pointer conf_dev
+Message-ID: <aJnC8CLkQLnY-ZPr@stanley.mountain>
+References: <20250811095836.1642093-1-colin.i.king@gmail.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250811095836.1642093-1-colin.i.king@gmail.com>
 
-Currently if the allocation for wq fails on the initial iteration in
-the setup loop the error exit path to err will call put_device on
-an uninitialized pointer conf_dev. Fix this by initializing conf_dev
-to NULL, note that put_device will ignore a NULL device pointer so no
-null pointer dereference issues occur on this call.
+On Mon, Aug 11, 2025 at 10:58:36AM +0100, Colin Ian King wrote:
+> Currently if the allocation for wq fails on the initial iteration in
+> the setup loop the error exit path to err will call put_device on
+> an uninitialized pointer conf_dev. Fix this by initializing conf_dev
+> to NULL, note that put_device will ignore a NULL device pointer so no
+> null pointer dereference issues occur on this call.
+> 
+> Fixes: 3fd2f4bc010c ("dmaengine: idxd: fix memory leak in error handling path of idxd_setup_wqs")
+> 
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+> ---
 
-Fixes: 3fd2f4bc010c ("dmaengine: idxd: fix memory leak in error handling path of idxd_setup_wqs")
+No.  This isn't the right fix.  I basically wrote out the correct fix
+in my bug report:
+https://lore.kernel.org/all/aDQt3_rZjX-VuHJW@stanley.mountain/
+Shuai Xue sent a fix as well but that patch wasn't right either but I
+didn't review it until now.
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- drivers/dma/idxd/init.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+It's easiest if I send the fix and give you Reported-by credit.
 
-diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index 35bdefd3728b..2b61f26af1f6 100644
---- a/drivers/dma/idxd/init.c
-+++ b/drivers/dma/idxd/init.c
-@@ -178,7 +178,7 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
- {
- 	struct device *dev = &idxd->pdev->dev;
- 	struct idxd_wq *wq;
--	struct device *conf_dev;
-+	struct device *conf_dev = NULL;
- 	int i, rc;
- 
- 	idxd->wqs = kcalloc_node(idxd->max_wqs, sizeof(struct idxd_wq *),
--- 
-2.50.1
+regards,
+dan carpenter
 
 

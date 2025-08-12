@@ -1,139 +1,125 @@
-Return-Path: <dmaengine+bounces-5999-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6000-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 412C0B22316
-	for <lists+dmaengine@lfdr.de>; Tue, 12 Aug 2025 11:27:39 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2845B228F8
+	for <lists+dmaengine@lfdr.de>; Tue, 12 Aug 2025 15:45:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B4BA91885C01
-	for <lists+dmaengine@lfdr.de>; Tue, 12 Aug 2025 09:23:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C20C4587229
+	for <lists+dmaengine@lfdr.de>; Tue, 12 Aug 2025 13:36:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55AA92E8DE7;
-	Tue, 12 Aug 2025 09:23:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="2G46ypI2"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46E6C288C81;
+	Tue, 12 Aug 2025 13:33:05 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EE432E88B0
-	for <dmaengine@vger.kernel.org>; Tue, 12 Aug 2025 09:23:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38554283FDB;
+	Tue, 12 Aug 2025 13:33:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754990598; cv=none; b=H72YcalmJTUqgZWcmQbcrvwVBUurTOFdNHfkwVNDDmcfrtzGnvG/Pt90JBPQ6qHlf5zPiBHEh/zIiBlfgVFJUMitugk3GsCyD4nh8x0+V7ywP0mT0lGbmegKvRNQvPC3aj53lLA6jbYaMrqibg16j02aiOnfZ+SMmp7qtVjx8Jo=
+	t=1755005585; cv=none; b=HbeWuz3HSJPGrTIsaTNAYrobfRWrsDX54r+hm3fg85USWT5ILBn/huwK4M+5AtlyrnPCe+YelbT0mAfVZc20/NZdNkKwaJtCSVpinBDUXcLuc388FPnaAnloFNVTq0PfQbNKX9e7fXHoYJ30goGwuoXzjUjNmpS1GEdJuqkyAdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754990598; c=relaxed/simple;
-	bh=1t64m70/Ydj3TYOPyqgd4kW/vb05YEGXJfg6UGYXmh4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jZg1gBSuJD2KzRZPj/zfFhpkmnXvO3lmCwaL+j0EkdM+1Ew4pvYSTXcSxF3rTwzIeHEqXOdcGfKCPSKXw+FRGGvj/enSkvxFQ1Z/YU7dDadXVgo7UKdqkqx6u5pHieDehoej7o5Z6okv0+rywr9/seUkvNmRJ2YaajZ18f9cQxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=2G46ypI2; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-718409593b9so54087177b3.3
-        for <dmaengine@vger.kernel.org>; Tue, 12 Aug 2025 02:23:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1754990594; x=1755595394; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3oXbJx6E3ijqdJvhjzvA4M+RPwmHgHT1829C53wx0lE=;
-        b=2G46ypI2o5927P/xAkij0LpBuTFJGF0IxP6wwd1anAJlR5VHYNsVyuEMKcHMYPb3uZ
-         BQsysbT0HJ0rMYVCOWbYY9p5Sn5MKwcUJEMouQa9Vi/XQAprD1rK0afWAcgCsjy1hx7y
-         aZjG5Sx8KC7aBOa69R0E5K9yBgWzUJp9JcHRcFg+4bBjazDKX1gDmIRJLAZvUiNExfFO
-         dusY5USbSj6oii0+Hz5ijX72cICrfRsJNM+LIuXoiJE4jpFNF3KYbHVyV4tuTZtsCfwA
-         41Sr+6tVZG4KUhhcnKIBnwxTEa96SpJ4EbL0h5GAFKefmOm1EZj/oXbGl4zNfi7DfWur
-         nCyA==
+	s=arc-20240116; t=1755005585; c=relaxed/simple;
+	bh=azJu+fhlrpxcVL8tkf5V9HgKElWVE7T5uf5qkKB30WE=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=uz8Omgd7aecSbXZEGDY8EtxQf4nN0jywtGwU3PFkJFEM1qYEV66a96xYfrxR/zoSfzknL8ZVs3vfAw5ujV+xiILTk89fcZGcU4LQPenwaI6eheKNWk2RSwSK7tY6KvtMQge3/vr2iYeIi5nI3wZKFFr6+C40tnplhHt8yOPeadc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-4febcc4c93dso4290172137.0;
+        Tue, 12 Aug 2025 06:33:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754990594; x=1755595394;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3oXbJx6E3ijqdJvhjzvA4M+RPwmHgHT1829C53wx0lE=;
-        b=VSich1PGZVBRpA7NfUxysAf3SREpz5MtSQwPyK9Cz+wvmnjTCPF88VlFPFhph7NjPF
-         hRhO3JyVlxW6Pc2hmRr/jc8KcJrWAClydYrMBhq2b9XFEPbkL/8qszlRaoEoISFwM2IU
-         mLdLepskI5LUDrCFEPDKGA6jzkYZUeBQG+nqAddABHy8iCjX/cZpEuLBoYeZpvKAc6VS
-         6QyeYjsfwFQsRlLoobhN4fUBIj34KfSLYez/v6VGG8rnnw2S1LeoY7Mu3ozyWjAgzJTM
-         hIUulXhaxjaYZ9ddJCCyAHzNEGafDvyDA7wvB+Ml1RygxfHYNcGjgkTXjZ5hMAhmmhrN
-         wyMw==
-X-Forwarded-Encrypted: i=1; AJvYcCVGo1IAaD3DmxH74u44fxgPjY63gpzMRPYxJ+HxuuIBGw8+CvK+IZRo4JjJAsSmpuKECNtAY0fjNWQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIHCL+AjWq54agh1ydljANbEDBUN5C3GSLKWIfw+gDg63Z3h78
-	bhNN6reQF5zsV1RorIYAoWd8qLpnqHCrJ4nMcO6BHhlblI1VwF6Jmy5oLkPmmKwNzNnPQYjuF45
-	9XkC+K2Sblka7Evq5ldk6ykSoKTsunSqJrQlBIcswbixyOzBfmBAVaR4aPOHD
-X-Gm-Gg: ASbGncvQajBZWl9kiNXLoWsI4Pa4lZ8DrChsL2yu62bgb9ze0FY6ikac+pe6sm+u5Q2
-	8o7xHafZrLfZsnvsSv0AYlkVVbKpEY1ivKa+6srfdWjkqRELr5AiFjNoba5iu2NepUuxyDi7+2Q
-	dyuvlTj1dgyVgXOiUCCnSwHN02FN/2kYnwHT9pE7U0d/kYHzotR1hqui7Jgwtr7/JDfnWh+d0Hc
-	D9uMw==
-X-Google-Smtp-Source: AGHT+IH77Kjt8YC9sfRPn8ADNNC7hjxOUoD/Dna6Dolf20ZY+41dtteIkmZw9xyyoKWcmYqmqjNzYuop1VYhnZfQUKU=
-X-Received: by 2002:a05:690c:46c9:b0:71c:1a46:48d6 with SMTP id
- 00721157ae682-71c42964fc4mr37731957b3.1.1754990594494; Tue, 12 Aug 2025
- 02:23:14 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1755005582; x=1755610382;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KxUnhAYsbqE1oebUrR3dSoY83+mPkLhSSJqVf05cClM=;
+        b=VwvQYtnjACJfH+KG1Q2yriULKM1rdi9jm7eO/FSeFG4Ofdux9C+qIN6Dc8ziCB91et
+         kCOHN4jpXCUiItJTyN5HLg8EIB/vW1r6SCGByJhRnjNApGADVkld/kjhZDLrabAh4DNa
+         Zy/TXUavOy0ooAjnRAwqsyIB1MdYEP+w88Um00oN7tmpXN66PiqpXCJPnEQeRiMMRBoz
+         2/28y7A4GhWdiNLsUv/wENkSKHUO7GDDUiG2e3NiSPI4dN5qDFoyjV+SIRIqp2VO5yCc
+         en4PL9KEelhC2/QlCd0WTNOCQ/hGt+sVqdlk61zjXIeytR5wTO4FlPiENBazLmhTmCLL
+         qV4w==
+X-Forwarded-Encrypted: i=1; AJvYcCV1plLCEOWUlLAghApKCZyMyvG8mao8j4nw748I53mlEGDn1pjriCoVZR+uW0Fj88WtQbWLc+Hm2RjXet0=@vger.kernel.org, AJvYcCV3Cao4opeRFguCnbGIX1u5t51cmg0fnjwazt+pDW1Y6IELXkR97redDnahdO596vAh37hXMI68nuExFw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvoFItrfJPnFwys8woEUgN7HOueicz6RSHgOwIOxjqVJiKelCL
+	3wPmZzRWkZJEN07q3B0cAXLZJZlWs3AGMXnyMDXSBfdIZS5ZbX9B7+NU65rRRb7W
+X-Gm-Gg: ASbGnctS3k//r909/kenuT07ExnS5E1K7S6CjPCa3bq2mBgARIRZzptdZz3co7/Hc2q
+	EGHL5/+EVToOgYFDCJ/3xZACmTiatRpbt1sOEPMTuEhj+2UJK4Ti1fpjWoMRxCyZxiOkxuvP+af
+	WmaRvPMrUtmCgVhof1sL1rgwfboMozuareYMVfp/eayL7mIHpaos9CKZMeQEb7QFVb/ox5vkzSq
+	bDkBgMoYRVNtLSTTl/gqSAOjLlumb0DrbIiUWGnZ1YKrt25aCrrmSTWb0e+3ldFvG/+uIiNpdAu
+	GjBRZoLCR4FdQO2F9mH/QBpAlQKe97aPUd9pDIM6EZxB1uFBNajvx/r6HR5Dy1ELUMnb7ktZLZZ
+	NFjNF246iVKm/Dssm2eJywXeEy3UtMm6cEZ37ngOZYP6pve/o4vi9kFRbNUt0
+X-Google-Smtp-Source: AGHT+IHpFaQBzKhpwKRUtPFSRqRnBV+bspWFoZtjFWHXiNOTw6TGKVXq3GyLo6y8YtkSg1r7GFBeNQ==
+X-Received: by 2002:a05:6102:834f:20b0:4e2:e5ec:fa09 with SMTP id ada2fe7eead31-50cc53677bdmr953888137.6.1755005581104;
+        Tue, 12 Aug 2025 06:33:01 -0700 (PDT)
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com. [209.85.222.50])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-5062b6519fdsm2266776137.10.2025.08.12.06.33.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Aug 2025 06:33:00 -0700 (PDT)
+Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-88e4fb65341so470969241.0;
+        Tue, 12 Aug 2025 06:33:00 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW+06xI2nPzHK2Bq0iVzHaYJDpxpyZRkI3XRO/SaJ1/hRLSHblg9QaBD4/S+zJpTL4V3ArX55Qq/CjE9w==@vger.kernel.org, AJvYcCW/qm0BBItak5M901nuRrmKXHE9oSnAMDMiG2hy+epX265zVgIJQT9Cr2pgmAtI3KG9EmY4zJMZd+GaNGM=@vger.kernel.org
+X-Received: by 2002:a05:6102:621b:20b0:4fa:3f49:a3b4 with SMTP id
+ ada2fe7eead31-50cc46c0294mr978170137.3.1755005579826; Tue, 12 Aug 2025
+ 06:32:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250714-working_dma_0701_v2-v3-0-8b0f5cd71595@riscstar.com> <20250714-working_dma_0701_v2-v3-4-8b0f5cd71595@riscstar.com>
-In-Reply-To: <20250714-working_dma_0701_v2-v3-4-8b0f5cd71595@riscstar.com>
-From: Guodong Xu <guodong@riscstar.com>
-Date: Tue, 12 Aug 2025 17:23:02 +0800
-X-Gm-Features: Ac12FXzwCXGXSKiwmxKY93OBxvFdFv-jw-xOzVu8Q_eshKd5oaEN163nC5iHGgE
-Message-ID: <CAH1PCMYtYfJYAt_Ah4WW_ps3tPuYLMvanKExhk9t_VRHkRwnng@mail.gmail.com>
-Subject: Re: [PATCH v3 4/8] dmaengine: mmp_pdma: Add operations structure for
- controller abstraction
-To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>, 
-	=?UTF-8?Q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>
-Cc: Alex Elder <elder@riscstar.com>, Vivian Wang <wangruikang@iscas.ac.cn>, 
-	dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	spacemit@lists.linux.dev
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 12 Aug 2025 15:32:46 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXSSVMK_ohHrna8DWy7KU697mnsVHhBrzNMzs1d07J=qQ@mail.gmail.com>
+X-Gm-Features: Ac12FXy6WiMOmxcdzGmOeIuAczA6ZfHPkX867HQKbYVDkybGYZR6lDiSm0lMM0Y
+Message-ID: <CAMuHMdXSSVMK_ohHrna8DWy7KU697mnsVHhBrzNMzs1d07J=qQ@mail.gmail.com>
+Subject: Duplicate TI EDMA debugfs registration
+To: Peter Ujfalusi <peter.ujfalusi@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, 
+	Andreas Kemnade <andreas@kemnade.info>, Kevin Hilman <khilman@baylibre.com>, 
+	Roger Quadros <rogerq@kernel.org>, Tony Lindgren <tony@atomide.com>, Vinod Koul <vkoul@kernel.org>, 
+	Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: dmaengine <dmaengine@vger.kernel.org>, 
+	"open list:TI ETHERNET SWITCH DRIVER (CPSW)" <linux-omap@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi, Vinod
+Hi,
 
-Just a gentle reminder on this patch series. I've incorporated your
-feedback from v1 by splitting the work into two independent patches:
- - this patch: [PATCH v3 4/8] dmaengine: mmp_pdma: Add operations structure
-                              for controller abstraction
- - next patch: [PATCH v3 5/8] dmaengine: mmp_pdma: Add SpacemiT K1 PDMA
-                              support with 64-bit addressing
+The TI EDMA driver registers two DMA engines:
+https://elixir.bootlin.com/linux/v6.16/source/drivers/dma/ti/edma.c#L2525
 
-Could you please take another look when you have a moment?
+This was fine when support for the second engine was introduced[1],
+as it predated debugfs support for DMA engines[2].
+However, both instances contain a pointer to the same physical device,
+hence when the debugfs directory is created for the second engine at
+https://elixir.bootlin.com/linux/v6.16/source/drivers/dma/dmaengine.c#L71,
+it fails.
 
-Thank you very much.
+E.g. on BeagleBone Black:
 
-BR,
-Guodong Xu
+    debugfs: '49000000.dma' already exists in 'dmaengine'
 
-On Mon, Jul 14, 2025 at 5:40=E2=80=AFPM Guodong Xu <guodong@riscstar.com> w=
-rote:
->
-> Introduce mmp_pdma_ops structure to abstract 32-bit addressing operations
-> and enable support for different controller variants. This prepares for
-> adding 64-bit addressing support.
->
-> The ops structure includes:
-> - Hardware register operations (read/write DDADR, DSADR, DTADR)
-> - Descriptor memory operations (manipulate descriptor structs)
-> - Controller configuration (run bits, DMA mask)
->
-> Convert existing 32-bit operations to use the new abstraction layer
-> while maintaining backward compatibility.
->
-> Signed-off-by: Guodong Xu <guodong@riscstar.com>
-> ---
-> v3: No change.
-> v2: New patch, introduce mmp_pdma_ops for 32-bit addressing operations.
-> ---
->  drivers/dma/mmp_pdma.c | 187 +++++++++++++++++++++++++++++++++++++++++--=
-------
->  1 file changed, 156 insertions(+), 31 deletions(-)
->
+Note that this is not really a new problem, but it was brought to my
+attention because the printed error message was changed in v6.17-rc1[3].
+Before, it printed:
+
+    debugfs: Directory '49000000.dma' with parent 'dmaengine' already present!
+
+Thanks!
+
+[1] 1be5336bc7ba050e ("dmaengine: edma: New device tree binding")
+[2] 26cf132de6f79c06 ("dmaengine: Create debug directories for DMA devices")
+[3] 59200f4526748158 ("new helper: simple_start_creating()")
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 

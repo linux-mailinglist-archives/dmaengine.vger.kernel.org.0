@@ -1,38 +1,38 @@
-Return-Path: <dmaengine+bounces-6012-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6013-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 790D8B250C7
-	for <lists+dmaengine@lfdr.de>; Wed, 13 Aug 2025 19:03:22 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2EC9EB251F1
+	for <lists+dmaengine@lfdr.de>; Wed, 13 Aug 2025 19:19:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5F7CD7BAA2A
-	for <lists+dmaengine@lfdr.de>; Wed, 13 Aug 2025 17:01:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BC06F3A27C1
+	for <lists+dmaengine@lfdr.de>; Wed, 13 Aug 2025 17:13:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D65472BCF7F;
-	Wed, 13 Aug 2025 17:01:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BA062BE636;
+	Wed, 13 Aug 2025 17:01:54 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2564F242927;
-	Wed, 13 Aug 2025 17:01:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D73DF295D91;
+	Wed, 13 Aug 2025 17:01:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755104509; cv=none; b=RVxnQU+/F5C/YW1N3ob7Sxsa/deicsL4/3/iQI8sS9yVXK7zbt0U/1AgZMmShvxllun8KS0lHThaPgDs09lKoRDRyRJruPMCvMydHfSakC//NePXBpNZlQF+nx4gESNkkGPhvI3AXQcTp4UOkXACeocdRRvGzG9aEuAwLxJyKqs=
+	t=1755104514; cv=none; b=oqtaZsRJrpFZCYxQJeux/7yKywP7rUlschiUxPZ7lxh66rvAJk6J+BUd8rHnhv8v8XtXLY3ZegTlrjdjcu9eSucWyzvixoNM7CK8OHZw4/jrEbW/3DzhTFXSojwI7HEBL5DWFRt7u0RLNreMdzJ5fqqS/TpewxI+FhEh45L91Fc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755104509; c=relaxed/simple;
-	bh=xhd+T4zZccQK+ZVtI7yALpBdwFrYaFDIIq0aIZk/RoQ=;
+	s=arc-20240116; t=1755104514; c=relaxed/simple;
+	bh=uo848j2DZMuYEFuAQ16GeCSN3LjjQmRdst0t3ttkAVc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UrY0o2ej5+9ZD5AxTGyIFYF+kRlC/kDwCs2GJqm8uTp6j2r/GcHekWv33kEb7jH3gTmU6/9oMGrSxSWgvIdh9v8L4CQAkha2dTbnqr7QUXmMPvRui9EcZp7jZC4IAovenCllzXkMKgpyYIB+AZFQB/icWSsUH2++xAyiEl5w6+w=
+	 MIME-Version; b=EoaoIYB7gml2jBFWpafRFD3vvIf7wh+9lQ5ZzgHx//2F4udwdFVB9GxH6EHwN8Th5gCY3l/+Gd2oOiJem1m4eIQPFI6fnnilBTrPs+TMAvFFHHNctiYmJ04urn0P/b/PL0xHz4TNtl5Gv45p2qNbm2I9Y5wvEKpcLyV+yM9wg74=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 93BEC1C00;
-	Wed, 13 Aug 2025 10:01:39 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 29D641C01;
+	Wed, 13 Aug 2025 10:01:44 -0700 (PDT)
 Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.1.196.50])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7CB223F738;
-	Wed, 13 Aug 2025 10:01:43 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 074E03F738;
+	Wed, 13 Aug 2025 10:01:47 -0700 (PDT)
 From: Robin Murphy <robin.murphy@arm.com>
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -72,9 +72,9 @@ Cc: linux-perf-users@vger.kernel.org,
 	linux-cxl@vger.kernel.org,
 	linux-arm-msm@vger.kernel.org,
 	linux-riscv@lists.infradead.org
-Subject: [PATCH 05/19] iommu/vt-d: Fix perfmon group validation
-Date: Wed, 13 Aug 2025 18:00:57 +0100
-Message-Id: <fcc4a9091ff02606df9495fd16b00094216a933e.1755096883.git.robin.murphy@arm.com>
+Subject: [PATCH 06/19] ARM: l2x0: Fix group validation
+Date: Wed, 13 Aug 2025 18:00:58 +0100
+Message-Id: <925c34a4b7f0defc3582a9fcccb6af1c21279a86.1755096883.git.robin.murphy@arm.com>
 X-Mailer: git-send-email 2.39.2.101.g768bb238c484.dirty
 In-Reply-To: <cover.1755096883.git.robin.murphy@arm.com>
 References: <cover.1755096883.git.robin.murphy@arm.com>
@@ -86,54 +86,43 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The group validation here has a few issues to fix: firstly, failing to
-count the group leader or the event being opened itself. Secondly it
-appears wrong not to count disabled sibling events given that they could
-be enabled later. Finally there's the subtlety that we should avoid racy
-access to the sibling list when the event is its own group leader.
+The group validation here is almost right, but fails to count the new
+event itself. While we fix that, also adopt the standard pattern to
+avoid racy access the sibling list and drop checks that are redundant
+with core code.
 
 Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 ---
- drivers/iommu/intel/perfmon.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+ arch/arm/mm/cache-l2x0-pmu.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/iommu/intel/perfmon.c b/drivers/iommu/intel/perfmon.c
-index 75f493bcb353..c3a1ac14cb2b 100644
---- a/drivers/iommu/intel/perfmon.c
-+++ b/drivers/iommu/intel/perfmon.c
-@@ -258,21 +258,25 @@ static int iommu_pmu_validate_group(struct perf_event *event)
- {
- 	struct iommu_pmu *iommu_pmu = iommu_event_to_pmu(event);
+diff --git a/arch/arm/mm/cache-l2x0-pmu.c b/arch/arm/mm/cache-l2x0-pmu.c
+index 93ef0502b7ff..6fc1171031a8 100644
+--- a/arch/arm/mm/cache-l2x0-pmu.c
++++ b/arch/arm/mm/cache-l2x0-pmu.c
+@@ -274,18 +274,17 @@ static bool l2x0_pmu_group_is_valid(struct perf_event *event)
+ 	struct pmu *pmu = event->pmu;
+ 	struct perf_event *leader = event->group_leader;
  	struct perf_event *sibling;
--	int nr = 0;
-+	int nr = 1;
+-	int num_hw = 0;
++	int num_hw = 1;
++
++	if (leader == event)
++		return true;
  
-+	if (event == event->group_leader)
-+		return 0;
- 	/*
- 	 * All events in a group must be scheduled simultaneously.
- 	 * Check whether there is enough counters for all the events.
- 	 */
--	for_each_sibling_event(sibling, event->group_leader) {
--		if (!is_iommu_pmu_event(iommu_pmu, sibling) ||
--		    sibling->state <= PERF_EVENT_STATE_OFF)
--			continue;
-+	if (is_iommu_pmu_event(iommu_pmu, event->group_leader))
-+		++nr;
+ 	if (leader->pmu == pmu)
+ 		num_hw++;
+-	else if (!is_software_event(leader))
+-		return false;
  
--		if (++nr > iommu_pmu->num_cntr)
--			return -EINVAL;
-+	for_each_sibling_event(sibling, event->group_leader) {
-+		if (is_iommu_pmu_event(iommu_pmu, sibling))
-+			++nr;
+ 	for_each_sibling_event(sibling, leader) {
+ 		if (sibling->pmu == pmu)
+ 			num_hw++;
+-		else if (!is_software_event(sibling))
+-			return false;
  	}
  
-+	if (nr > iommu_pmu->num_cntr)
-+		return -EINVAL;
-+
- 	return 0;
- }
- 
+ 	return num_hw <= PMU_NR_COUNTERS;
 -- 
 2.39.2.101.g768bb238c484.dirty
 

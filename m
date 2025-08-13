@@ -1,38 +1,38 @@
-Return-Path: <dmaengine+bounces-6014-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6015-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13E45B25100
-	for <lists+dmaengine@lfdr.de>; Wed, 13 Aug 2025 19:05:54 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D138B25158
+	for <lists+dmaengine@lfdr.de>; Wed, 13 Aug 2025 19:10:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CC19E1C2654F
-	for <lists+dmaengine@lfdr.de>; Wed, 13 Aug 2025 17:04:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 20A0F887403
+	for <lists+dmaengine@lfdr.de>; Wed, 13 Aug 2025 17:04:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E5302D7392;
-	Wed, 13 Aug 2025 17:01:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6488D2EAB90;
+	Wed, 13 Aug 2025 17:02:03 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8347C296BDC;
-	Wed, 13 Aug 2025 17:01:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE9B4298CAF;
+	Wed, 13 Aug 2025 17:02:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755104518; cv=none; b=abhdjVRjYDyKVlhE5gPvOl1T3MYbeJIb21DyYy5/vHzPTtcrcTb6uH7m9xNTIt9hjgSilo7ygk48Eg2A1GDCNifbkh3nl0fXMOKhRTQiZ8LErYsZ1pP33G6Pr7KAdH4PJRslgxc8fRtTT63vammgQFalT2SsVf85i/gcK1awYQc=
+	t=1755104523; cv=none; b=NcjIncdnIjYs1Ihy/p6PB/kAWao1PhkFYJI/ZVgJDwXVzTd/FHgVEeou66/YPrlpgN+l5qmndd4w27USNGZYsDPdoKArC9CBHmQhGq6E/GQBzHZtjp5CoH4q2WA3D33m/VdXQwwWyfbF2U1hE/tGzbZjLhxWUdR2OB7i4vxmHMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755104518; c=relaxed/simple;
-	bh=V4SASwxGPhUSUPyQKSxrF1qMcQpxHm88dZMwSEogb5s=;
+	s=arc-20240116; t=1755104523; c=relaxed/simple;
+	bh=tGc5odpAlI9Jc9rNn+CWgNgQ2EYb4lXXkwp3jGw2aKE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rTgqDxPtV5W62YogA4ht1JjM2ChHEXMMKdp1cUmMrLZOM0SC73/5geMpBlQRmTMLx+31n3YhgixT2+ahk7Hc4dvSRxTYeaPpmCJZOL5CivVFzZaRC7UrtbJ/qMPgsu6UueZKTgAcm2x0PxlWj+Dv18HfZoFA0pZk2eTIQg0tHEs=
+	 MIME-Version; b=R99qLJlja2rS49wxR2+fYzPDXo1CyBLjd4iwbsnL1/arvdzKkDEXGD0mXz/5nXMaAnVR+SMd9NRqpZlQiRxtdYQ38WbgufBheyisap0LKRac0U1nFNZUgy2bhY3L76I47ghkJIE80AFajyXn/yVFuHnhsK15De4bhDbt/6MFZpw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A7DB41C14;
-	Wed, 13 Aug 2025 10:01:48 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 35A361CDD;
+	Wed, 13 Aug 2025 10:01:53 -0700 (PDT)
 Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.1.196.50])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8F4993F738;
-	Wed, 13 Aug 2025 10:01:52 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 181F03F738;
+	Wed, 13 Aug 2025 10:01:56 -0700 (PDT)
 From: Robin Murphy <robin.murphy@arm.com>
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -72,9 +72,9 @@ Cc: linux-perf-users@vger.kernel.org,
 	linux-cxl@vger.kernel.org,
 	linux-arm-msm@vger.kernel.org,
 	linux-riscv@lists.infradead.org
-Subject: [PATCH 07/19] ARM: imx: Fix MMDC PMU group validation
-Date: Wed, 13 Aug 2025 18:00:59 +0100
-Message-Id: <12766b2e16939ed97df8c410a994c730bede8298.1755096883.git.robin.murphy@arm.com>
+Subject: [PATCH 08/19] perf/arm_smmu_v3: Improve group validation
+Date: Wed, 13 Aug 2025 18:01:00 +0100
+Message-Id: <c0e5e426b571a438a88adc8a9e16d2f066171cc2.1755096883.git.robin.murphy@arm.com>
 X-Mailer: git-send-email 2.39.2.101.g768bb238c484.dirty
 In-Reply-To: <cover.1755096883.git.robin.murphy@arm.com>
 References: <cover.1755096883.git.robin.murphy@arm.com>
@@ -86,52 +86,64 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The group validation here gets the event and its group leader mixed up,
-such that if the group leader belongs to a different PMU, the set_bit()
-may go wildly out of bounds. While we fix that, also adopt the standard
-pattern to avoid racy access the sibling list and drop checks that are
-redundant with core code.
+The group validation here is OK, except for the benign issue that it
+will double-count an event that is its own group leader. Even though
+it's highly unlikely we'd ever have PMCG hardware with only one counter,
+let's sort that out, cleaning up some reudundant checks in the process.
 
 Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 ---
- arch/arm/mach-imx/mmdc.c | 15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
+ drivers/perf/arm_smmuv3_pmu.c | 22 +++++++++-------------
+ 1 file changed, 9 insertions(+), 13 deletions(-)
 
-diff --git a/arch/arm/mach-imx/mmdc.c b/arch/arm/mach-imx/mmdc.c
-index 94e4f4a2f73f..f9d432b385a2 100644
---- a/arch/arm/mach-imx/mmdc.c
-+++ b/arch/arm/mach-imx/mmdc.c
-@@ -238,11 +238,8 @@ static bool mmdc_pmu_group_event_is_valid(struct perf_event *event,
+diff --git a/drivers/perf/arm_smmuv3_pmu.c b/drivers/perf/arm_smmuv3_pmu.c
+index 621f02a7f43b..7cac380a3528 100644
+--- a/drivers/perf/arm_smmuv3_pmu.c
++++ b/drivers/perf/arm_smmuv3_pmu.c
+@@ -377,9 +377,6 @@ static int smmu_pmu_get_event_idx(struct smmu_pmu *smmu_pmu,
+ static bool smmu_pmu_events_compatible(struct perf_event *curr,
+ 				       struct perf_event *new)
  {
- 	int cfg = event->attr.config;
- 
--	if (is_software_event(event))
--		return true;
--
- 	if (event->pmu != pmu)
+-	if (new->pmu != curr->pmu)
 -		return false;
-+		return true;
+-
+ 	if (to_smmu_pmu(new->pmu)->global_filter &&
+ 	    !smmu_pmu_check_global_filter(curr, new))
+ 		return false;
+@@ -422,15 +419,6 @@ static int smmu_pmu_event_init(struct perf_event *event)
+ 		return -EINVAL;
+ 	}
  
- 	return !test_and_set_bit(cfg, used_counters);
- }
-@@ -260,12 +257,12 @@ static bool mmdc_pmu_group_is_valid(struct perf_event *event)
- 	struct perf_event *sibling;
- 	unsigned long counter_mask = 0;
- 
--	set_bit(leader->attr.config, &counter_mask);
-+	if (event == leader)
-+		return true;
- 
--	if (event != leader) {
--		if (!mmdc_pmu_group_event_is_valid(event, pmu, &counter_mask))
--			return false;
+-	/* Don't allow groups with mixed PMUs, except for s/w events */
+-	if (!is_software_event(event->group_leader)) {
+-		if (!smmu_pmu_events_compatible(event->group_leader, event))
+-			return -EINVAL;
+-
+-		if (++group_num_events > smmu_pmu->num_counters)
+-			return -EINVAL;
 -	}
-+	set_bit(event->attr.config, &counter_mask);
-+	if (!mmdc_pmu_group_event_is_valid(leader, pmu, &counter_mask))
-+		return false;
+-
+ 	/*
+ 	 * Ensure all events are on the same cpu so all events are in the
+ 	 * same cpu context, to avoid races on pmu_enable etc.
+@@ -442,8 +430,16 @@ static int smmu_pmu_event_init(struct perf_event *event)
+ 	if (event->group_leader == event)
+ 		return 0;
  
- 	for_each_sibling_event(sibling, leader) {
- 		if (!mmdc_pmu_group_event_is_valid(sibling, pmu, &counter_mask))
++	if (event->group_leader->pmu == event->pmu) {
++		if (!smmu_pmu_events_compatible(event->group_leader, event))
++			return -EINVAL;
++
++		if (++group_num_events > smmu_pmu->num_counters)
++			return -EINVAL;
++	}
++
+ 	for_each_sibling_event(sibling, event->group_leader) {
+-		if (is_software_event(sibling))
++		if (sibling->pmu != event->pmu)
+ 			continue;
+ 
+ 		if (!smmu_pmu_events_compatible(sibling, event))
 -- 
 2.39.2.101.g768bb238c484.dirty
 

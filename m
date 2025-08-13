@@ -1,38 +1,38 @@
-Return-Path: <dmaengine+bounces-6016-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6017-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B88CEB2510D
-	for <lists+dmaengine@lfdr.de>; Wed, 13 Aug 2025 19:06:40 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A4796B25180
+	for <lists+dmaengine@lfdr.de>; Wed, 13 Aug 2025 19:12:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1FCFD1C80C5C
-	for <lists+dmaengine@lfdr.de>; Wed, 13 Aug 2025 17:04:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ACCC75679A4
+	for <lists+dmaengine@lfdr.de>; Wed, 13 Aug 2025 17:04:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFEDA2F8BE8;
-	Wed, 13 Aug 2025 17:02:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 530602FE598;
+	Wed, 13 Aug 2025 17:02:12 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FB0528D827;
-	Wed, 13 Aug 2025 17:02:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C02B32FABF7;
+	Wed, 13 Aug 2025 17:02:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755104528; cv=none; b=ZORPN5nTMEDwZFnhwsDjz6p00t+GYfHp0tibOWARsm66tTf5PqsU5eOlzpBpOw1DYOHvIQW5P9P7tgNS0tgnY3bZuijCg73NLA3JlA5VvKi1o5NBzR6XrIqqkLithisfn0XXDZ1Vkb6oo4Bwfff0150bU+bEwwBL+UjYMl2wmVc=
+	t=1755104532; cv=none; b=ZctufohpgGmdgOmFOw6cr03a4t5kqKYULMZEW48a/DoWYn134S+FcdD3xbtyJNH3obFRdj/w/25UGoqR2ozf1Knp3ete5ueH26VlVxQ7b9xG7PbrSjS5grEaamJbQOOQXehJGCvuJUIk4gDg4XjLNMJBB6GMVcHEgolmI/8dStc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755104528; c=relaxed/simple;
-	bh=ZAecApf52qpQJeP4Pzp6NugpP/AqSmzwuz+kSWqmmv4=;
+	s=arc-20240116; t=1755104532; c=relaxed/simple;
+	bh=huc7xx2cptepufGISTb1WP6T4AFQnMHkwmjpn1eNuSg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oWW4irfTIuq08aRROc+5DNJ3BvHls3KntTeI0CQ8aQdVQOa5Rw/fxk5Dlk/A/dPoehEfl2W6/58taG/8hS+71J0yP5fiYDswjlUaNLywvkUC7Y9D2IrUzbe1b79LYysouC/9pQ7Efmvgdfvqx1rjjzwE9YYRC/GYzHFUlLmU114=
+	 MIME-Version; b=MJFC80T/kXvOnN4HJ/S6SVR+9aBllxwcbW5KglhrJTR4+T4l/zdUMgicTFCsJ2yj80BkTlJKhc+UwRX8HatdNUArnWSW0Vg69WmzSr7d23sqtjRFhmLDcq0gSa9WsY3pg/OOS+cnx2Fcz1w1V36EJ9sEs17aERLGDZPLwrTj2/s=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AEBB71CE0;
-	Wed, 13 Aug 2025 10:01:57 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3AAD71CE2;
+	Wed, 13 Aug 2025 10:02:02 -0700 (PDT)
 Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.1.196.50])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 95E5A3F738;
-	Wed, 13 Aug 2025 10:02:01 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1F4713F738;
+	Wed, 13 Aug 2025 10:02:06 -0700 (PDT)
 From: Robin Murphy <robin.murphy@arm.com>
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -72,9 +72,9 @@ Cc: linux-perf-users@vger.kernel.org,
 	linux-cxl@vger.kernel.org,
 	linux-arm-msm@vger.kernel.org,
 	linux-riscv@lists.infradead.org
-Subject: [PATCH 09/19] perf/qcom: Improve group validation
-Date: Wed, 13 Aug 2025 18:01:01 +0100
-Message-Id: <ae74987481902e3937a8aa7ceaee4adcc681d7b4.1755096883.git.robin.murphy@arm.com>
+Subject: [PATCH 10/19] perf/arm-ni: Improve event validation
+Date: Wed, 13 Aug 2025 18:01:02 +0100
+Message-Id: <b1cf78c0f67dda1069f5132db9093fe0dec4c66e.1755096883.git.robin.murphy@arm.com>
 X-Mailer: git-send-email 2.39.2.101.g768bb238c484.dirty
 In-Reply-To: <cover.1755096883.git.robin.murphy@arm.com>
 References: <cover.1755096883.git.robin.murphy@arm.com>
@@ -86,158 +86,76 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The L3 driver's group validation is almost right, except for erroneously
-counting a software group leader - which is benign other than
-artificially limiting the maximum size of such a group to one less than
-it could be. Correct that with the now-established pattern of simply
-ignoring all events which do not belong to our PMU.
-
-The L2 driver gets a cleanup of some slightly suspicious logic, and both
-can have the same overall simplification to not duplicate things that perf
-core will already do, and avoid racy access to the sibling list of group
-leader events.
+Although it is entirely benign for arm_ni_val_count_event() to count
+any old hardware leader/sibling as an NI event (perf core will still
+ultimately reject the cross-PMU group), it would still be nicer if it
+didn't. Stop trying to special-case software events and simply skip any
+event which doesn't belong to our PMU. Similarly drop the early return
+paths since they can almost never actually return early.
 
 Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 ---
- drivers/perf/qcom_l2_pmu.c | 81 +++++++++++++++-----------------------
- drivers/perf/qcom_l3_pmu.c | 14 +++----
- 2 files changed, 37 insertions(+), 58 deletions(-)
+ drivers/perf/arm-ni.c | 29 +++++++++++++----------------
+ 1 file changed, 13 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/perf/qcom_l2_pmu.c b/drivers/perf/qcom_l2_pmu.c
-index ea8c85729937..9c4e1d89718d 100644
---- a/drivers/perf/qcom_l2_pmu.c
-+++ b/drivers/perf/qcom_l2_pmu.c
-@@ -468,23 +468,6 @@ static int l2_cache_event_init(struct perf_event *event)
- 		return -EINVAL;
+diff --git a/drivers/perf/arm-ni.c b/drivers/perf/arm-ni.c
+index 1615a0564031..d6b683a0264e 100644
+--- a/drivers/perf/arm-ni.c
++++ b/drivers/perf/arm-ni.c
+@@ -271,40 +271,37 @@ static void arm_ni_pmu_disable(struct pmu *pmu)
+ }
+ 
+ struct arm_ni_val {
++	const struct pmu *pmu;
+ 	unsigned int evcnt;
+ 	unsigned int ccnt;
+ };
+ 
+-static bool arm_ni_val_count_event(struct perf_event *evt, struct arm_ni_val *val)
++static void arm_ni_val_count_event(struct perf_event *evt, struct arm_ni_val *val)
+ {
+-	if (is_software_event(evt))
+-		return true;
+-
+-	if (NI_EVENT_TYPE(evt) == NI_PMU) {
+-		val->ccnt++;
+-		return val->ccnt <= 1;
++	if (evt->pmu == val->pmu) {
++		if (NI_EVENT_TYPE(evt) == NI_PMU)
++			val->ccnt++;
++		else
++			val->evcnt++;
  	}
+-
+-	val->evcnt++;
+-	return val->evcnt <= NI_NUM_COUNTERS;
+ }
  
--	/* Don't allow groups with mixed PMUs, except for s/w events */
--	if (event->group_leader->pmu != event->pmu &&
--	    !is_software_event(event->group_leader)) {
--		dev_dbg_ratelimited(&l2cache_pmu->pdev->dev,
--			 "Can't create mixed PMU group\n");
--		return -EINVAL;
--	}
--
--	for_each_sibling_event(sibling, event->group_leader) {
--		if (sibling->pmu != event->pmu &&
--		    !is_software_event(sibling)) {
--			dev_dbg_ratelimited(&l2cache_pmu->pdev->dev,
--				 "Can't create mixed PMU group\n");
--			return -EINVAL;
--		}
--	}
--
- 	cluster = get_cluster_pmu(l2cache_pmu, event->cpu);
- 	if (!cluster) {
- 		/* CPU has not been initialised */
-@@ -493,39 +476,6 @@ static int l2_cache_event_init(struct perf_event *event)
+ static int arm_ni_validate_group(struct perf_event *event)
+ {
+ 	struct perf_event *sibling, *leader = event->group_leader;
+-	struct arm_ni_val val = { 0 };
++	struct arm_ni_val val = { .pmu = event->pmu };
+ 
+ 	if (leader == event)
+ 		return 0;
+ 
+ 	arm_ni_val_count_event(event, &val);
+-	if (!arm_ni_val_count_event(leader, &val))
++	arm_ni_val_count_event(leader, &val);
++	for_each_sibling_event(sibling, leader)
++		arm_ni_val_count_event(sibling, &val);
++
++	if (val.evcnt > NI_NUM_COUNTERS || val.ccnt > 1)
  		return -EINVAL;
- 	}
  
--	/* Ensure all events in a group are on the same cpu */
--	if ((event->group_leader != event) &&
--	    (cluster->on_cpu != event->group_leader->cpu)) {
--		dev_dbg_ratelimited(&l2cache_pmu->pdev->dev,
--			 "Can't create group on CPUs %d and %d",
--			 event->cpu, event->group_leader->cpu);
--		return -EINVAL;
--	}
--
--	if ((event != event->group_leader) &&
--	    !is_software_event(event->group_leader) &&
--	    (L2_EVT_GROUP(event->group_leader->attr.config) ==
--	     L2_EVT_GROUP(event->attr.config))) {
--		dev_dbg_ratelimited(&l2cache_pmu->pdev->dev,
--			 "Column exclusion: conflicting events %llx %llx\n",
--		       event->group_leader->attr.config,
--		       event->attr.config);
--		return -EINVAL;
--	}
--
--	for_each_sibling_event(sibling, event->group_leader) {
--		if ((sibling != event) &&
--		    !is_software_event(sibling) &&
--		    (L2_EVT_GROUP(sibling->attr.config) ==
--		     L2_EVT_GROUP(event->attr.config))) {
--			dev_dbg_ratelimited(&l2cache_pmu->pdev->dev,
--			     "Column exclusion: conflicting events %llx %llx\n",
--					    sibling->attr.config,
--					    event->attr.config);
+-	for_each_sibling_event(sibling, leader) {
+-		if (!arm_ni_val_count_event(sibling, &val))
 -			return -EINVAL;
--		}
 -	}
--
- 	hwc->idx = -1;
- 	hwc->config_base = event->attr.config;
- 
-@@ -534,6 +484,37 @@ static int l2_cache_event_init(struct perf_event *event)
- 	 * same cpu context, to avoid races on pmu_enable etc.
- 	 */
- 	event->cpu = cluster->on_cpu;
-+	if (event->cpu != event->group_leader->cpu) {
-+		dev_dbg_ratelimited(&l2cache_pmu->pdev->dev,
-+			 "Can't create group on CPUs %d and %d",
-+			 event->cpu, event->group_leader->cpu);
-+		return -EINVAL;
-+	}
-+
-+	if (event == event->group_leader)
-+		return 0;
-+
-+	if ((event->group_leader->pmu == event->pmu) &&
-+	    (L2_EVT_GROUP(event->group_leader->attr.config) ==
-+	     L2_EVT_GROUP(event->attr.config))) {
-+		dev_dbg_ratelimited(&l2cache_pmu->pdev->dev,
-+			 "Column exclusion: conflicting events %llx %llx\n",
-+		       event->group_leader->attr.config,
-+		       event->attr.config);
-+		return -EINVAL;
-+	}
-+
-+	for_each_sibling_event(sibling, event->group_leader) {
-+		if ((sibling->pmu == event->pmu) &&
-+		    (L2_EVT_GROUP(sibling->attr.config) ==
-+		     L2_EVT_GROUP(event->attr.config))) {
-+			dev_dbg_ratelimited(&l2cache_pmu->pdev->dev,
-+			     "Column exclusion: conflicting events %llx %llx\n",
-+					    sibling->attr.config,
-+					    event->attr.config);
-+			return -EINVAL;
-+		}
-+	}
- 
  	return 0;
  }
-diff --git a/drivers/perf/qcom_l3_pmu.c b/drivers/perf/qcom_l3_pmu.c
-index 66e6cabd6fff..f0cf6c33418d 100644
---- a/drivers/perf/qcom_l3_pmu.c
-+++ b/drivers/perf/qcom_l3_pmu.c
-@@ -454,18 +454,16 @@ static bool qcom_l3_cache__validate_event_group(struct perf_event *event)
- 	struct perf_event *sibling;
- 	int counters = 0;
  
--	if (leader->pmu != event->pmu && !is_software_event(leader))
--		return false;
-+	if (leader == event)
-+		return true;
- 
- 	counters = event_num_counters(event);
--	counters += event_num_counters(leader);
-+	if (leader->pmu == event->pmu)
-+		counters += event_num_counters(leader);
- 
- 	for_each_sibling_event(sibling, leader) {
--		if (is_software_event(sibling))
--			continue;
--		if (sibling->pmu != event->pmu)
--			return false;
--		counters += event_num_counters(sibling);
-+		if (sibling->pmu == event->pmu)
-+			counters += event_num_counters(sibling);
- 	}
- 
- 	/*
 -- 
 2.39.2.101.g768bb238c484.dirty
 

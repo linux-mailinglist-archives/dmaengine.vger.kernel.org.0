@@ -1,38 +1,38 @@
-Return-Path: <dmaengine+bounces-6017-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6018-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4796B25180
-	for <lists+dmaengine@lfdr.de>; Wed, 13 Aug 2025 19:12:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B6493B2518C
+	for <lists+dmaengine@lfdr.de>; Wed, 13 Aug 2025 19:12:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ACCC75679A4
-	for <lists+dmaengine@lfdr.de>; Wed, 13 Aug 2025 17:04:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2A9425C1AE9
+	for <lists+dmaengine@lfdr.de>; Wed, 13 Aug 2025 17:05:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 530602FE598;
-	Wed, 13 Aug 2025 17:02:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26D682FFDCE;
+	Wed, 13 Aug 2025 17:02:17 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C02B32FABF7;
-	Wed, 13 Aug 2025 17:02:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7175C2FF176;
+	Wed, 13 Aug 2025 17:02:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755104532; cv=none; b=ZctufohpgGmdgOmFOw6cr03a4t5kqKYULMZEW48a/DoWYn134S+FcdD3xbtyJNH3obFRdj/w/25UGoqR2ozf1Knp3ete5ueH26VlVxQ7b9xG7PbrSjS5grEaamJbQOOQXehJGCvuJUIk4gDg4XjLNMJBB6GMVcHEgolmI/8dStc=
+	t=1755104537; cv=none; b=H78f8xyPtEBbhVnpBC7RaRKs9pYP65lZFT3jjHSS1lL3/1RyOw094LyoN2g4lBUWkInwWarpJqZtPliXp6DL5V8srWGimVNwqhK4g7KDL0asKvYwJi2MQHaewTbojmdVLWfgUnHllX57cVqyZohYPzSGV4sOqD2y11xDa64paoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755104532; c=relaxed/simple;
-	bh=huc7xx2cptepufGISTb1WP6T4AFQnMHkwmjpn1eNuSg=;
+	s=arc-20240116; t=1755104537; c=relaxed/simple;
+	bh=U8DjL/vkHJuSW1qLVxKk7d3713WCmhYOHhUU5GUAdCs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MJFC80T/kXvOnN4HJ/S6SVR+9aBllxwcbW5KglhrJTR4+T4l/zdUMgicTFCsJ2yj80BkTlJKhc+UwRX8HatdNUArnWSW0Vg69WmzSr7d23sqtjRFhmLDcq0gSa9WsY3pg/OOS+cnx2Fcz1w1V36EJ9sEs17aERLGDZPLwrTj2/s=
+	 MIME-Version; b=KOdxncNVhZNZpwFdeX3P72/EVbqZD0J+Nlq+Y051bYN4R1Z/T/TcYIw1pOv0Le4QZIERKFgWaopJUX5HJZegymVjz0LDAv+ZTHHNnN20WBp5Xc7WoxIaQ6IGfVLbhmmXCzQS9j3Vs5sIy8sVd7fJDVw4zK5Y24q8oUn0TldEp1k=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3AAD71CE2;
-	Wed, 13 Aug 2025 10:02:02 -0700 (PDT)
-Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.1.196.50])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1F4713F738;
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B4F331D14;
 	Wed, 13 Aug 2025 10:02:06 -0700 (PDT)
+Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.1.196.50])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9DB4C3F738;
+	Wed, 13 Aug 2025 10:02:10 -0700 (PDT)
 From: Robin Murphy <robin.murphy@arm.com>
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -72,9 +72,9 @@ Cc: linux-perf-users@vger.kernel.org,
 	linux-cxl@vger.kernel.org,
 	linux-arm-msm@vger.kernel.org,
 	linux-riscv@lists.infradead.org
-Subject: [PATCH 10/19] perf/arm-ni: Improve event validation
-Date: Wed, 13 Aug 2025 18:01:02 +0100
-Message-Id: <b1cf78c0f67dda1069f5132db9093fe0dec4c66e.1755096883.git.robin.murphy@arm.com>
+Subject: [PATCH 11/19] perf/arm-cci: Tidy up event validation
+Date: Wed, 13 Aug 2025 18:01:03 +0100
+Message-Id: <b433bdccbf83a71878b67a9c159c3e9414bef2d0.1755096883.git.robin.murphy@arm.com>
 X-Mailer: git-send-email 2.39.2.101.g768bb238c484.dirty
 In-Reply-To: <cover.1755096883.git.robin.murphy@arm.com>
 References: <cover.1755096883.git.robin.murphy@arm.com>
@@ -86,76 +86,158 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Although it is entirely benign for arm_ni_val_count_event() to count
-any old hardware leader/sibling as an NI event (perf core will still
-ultimately reject the cross-PMU group), it would still be nicer if it
-didn't. Stop trying to special-case software events and simply skip any
-event which doesn't belong to our PMU. Similarly drop the early return
-paths since they can almost never actually return early.
+The CCI driver only accepts events of its own type, so it is pointless
+to re-check the event type again further into validation. Conversely, if
+an event *is* for CCI but has a nonsense config, we should not return
+-ENOENT to potentially offer it to other PMUs. Finally it seems wrong
+not to count disabled events which may be enabled later.
+
+These are all artefacts left over from the original attempt to fit CCI
+into the arm_pmu framework; clean them up, along with the now-redundant
+checks for cross-PMU groups which core code will already handle (albeit
+not quite as the out-of-date comment says).
 
 Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 ---
- drivers/perf/arm-ni.c | 29 +++++++++++++----------------
- 1 file changed, 13 insertions(+), 16 deletions(-)
+ drivers/perf/arm-cci.c | 47 +++++++++++-------------------------------
+ 1 file changed, 12 insertions(+), 35 deletions(-)
 
-diff --git a/drivers/perf/arm-ni.c b/drivers/perf/arm-ni.c
-index 1615a0564031..d6b683a0264e 100644
---- a/drivers/perf/arm-ni.c
-+++ b/drivers/perf/arm-ni.c
-@@ -271,40 +271,37 @@ static void arm_ni_pmu_disable(struct pmu *pmu)
- }
+diff --git a/drivers/perf/arm-cci.c b/drivers/perf/arm-cci.c
+index 1cc3214d6b6d..086d4363fcc8 100644
+--- a/drivers/perf/arm-cci.c
++++ b/drivers/perf/arm-cci.c
+@@ -333,7 +333,7 @@ static int cci400_validate_hw_event(struct cci_pmu *cci_pmu, unsigned long hw_ev
+ 	int if_type;
  
- struct arm_ni_val {
-+	const struct pmu *pmu;
- 	unsigned int evcnt;
- 	unsigned int ccnt;
- };
+ 	if (hw_event & ~CCI400_PMU_EVENT_MASK)
+-		return -ENOENT;
++		return -EINVAL;
  
--static bool arm_ni_val_count_event(struct perf_event *evt, struct arm_ni_val *val)
-+static void arm_ni_val_count_event(struct perf_event *evt, struct arm_ni_val *val)
- {
--	if (is_software_event(evt))
--		return true;
--
--	if (NI_EVENT_TYPE(evt) == NI_PMU) {
--		val->ccnt++;
--		return val->ccnt <= 1;
-+	if (evt->pmu == val->pmu) {
-+		if (NI_EVENT_TYPE(evt) == NI_PMU)
-+			val->ccnt++;
-+		else
-+			val->evcnt++;
+ 	if (hw_event == CCI400_PMU_CYCLES)
+ 		return hw_event;
+@@ -354,14 +354,14 @@ static int cci400_validate_hw_event(struct cci_pmu *cci_pmu, unsigned long hw_ev
+ 		if_type = CCI_IF_MASTER;
+ 		break;
+ 	default:
+-		return -ENOENT;
++		return -EINVAL;
  	}
+ 
+ 	if (ev_code >= cci_pmu->model->event_ranges[if_type].min &&
+ 		ev_code <= cci_pmu->model->event_ranges[if_type].max)
+ 		return hw_event;
+ 
+-	return -ENOENT;
++	return -EINVAL;
+ }
+ 
+ static int probe_cci400_revision(struct cci_pmu *cci_pmu)
+@@ -541,7 +541,7 @@ static int cci500_validate_hw_event(struct cci_pmu *cci_pmu,
+ 	int if_type;
+ 
+ 	if (hw_event & ~CCI5xx_PMU_EVENT_MASK)
+-		return -ENOENT;
++		return -EINVAL;
+ 
+ 	switch (ev_source) {
+ 	case CCI5xx_PORT_S0:
+@@ -565,14 +565,14 @@ static int cci500_validate_hw_event(struct cci_pmu *cci_pmu,
+ 		if_type = CCI_IF_GLOBAL;
+ 		break;
+ 	default:
+-		return -ENOENT;
++		return -EINVAL;
+ 	}
+ 
+ 	if (ev_code >= cci_pmu->model->event_ranges[if_type].min &&
+ 		ev_code <= cci_pmu->model->event_ranges[if_type].max)
+ 		return hw_event;
+ 
+-	return -ENOENT;
++	return -EINVAL;
+ }
+ 
+ /*
+@@ -592,7 +592,7 @@ static int cci550_validate_hw_event(struct cci_pmu *cci_pmu,
+ 	int if_type;
+ 
+ 	if (hw_event & ~CCI5xx_PMU_EVENT_MASK)
+-		return -ENOENT;
++		return -EINVAL;
+ 
+ 	switch (ev_source) {
+ 	case CCI5xx_PORT_S0:
+@@ -617,14 +617,14 @@ static int cci550_validate_hw_event(struct cci_pmu *cci_pmu,
+ 		if_type = CCI_IF_GLOBAL;
+ 		break;
+ 	default:
+-		return -ENOENT;
++		return -EINVAL;
+ 	}
+ 
+ 	if (ev_code >= cci_pmu->model->event_ranges[if_type].min &&
+ 		ev_code <= cci_pmu->model->event_ranges[if_type].max)
+ 		return hw_event;
+ 
+-	return -ENOENT;
++	return -EINVAL;
+ }
+ 
+ #endif	/* CONFIG_ARM_CCI5xx_PMU */
+@@ -801,17 +801,6 @@ static int pmu_get_event_idx(struct cci_pmu_hw_events *hw, struct perf_event *ev
+ 	return -EAGAIN;
+ }
+ 
+-static int pmu_map_event(struct perf_event *event)
+-{
+-	struct cci_pmu *cci_pmu = to_cci_pmu(event->pmu);
 -
--	val->evcnt++;
--	return val->evcnt <= NI_NUM_COUNTERS;
- }
- 
- static int arm_ni_validate_group(struct perf_event *event)
+-	if (event->attr.type < PERF_TYPE_MAX ||
+-			!cci_pmu->model->validate_hw_event)
+-		return -ENOENT;
+-
+-	return	cci_pmu->model->validate_hw_event(cci_pmu, event->attr.config);
+-}
+-
+ static int pmu_request_irq(struct cci_pmu *cci_pmu, irq_handler_t handler)
  {
- 	struct perf_event *sibling, *leader = event->group_leader;
--	struct arm_ni_val val = { 0 };
-+	struct arm_ni_val val = { .pmu = event->pmu };
+ 	int i;
+@@ -1216,21 +1205,8 @@ static int validate_event(struct pmu *cci_pmu,
+ 			  struct cci_pmu_hw_events *hw_events,
+ 			  struct perf_event *event)
+ {
+-	if (is_software_event(event))
+-		return 1;
+-
+-	/*
+-	 * Reject groups spanning multiple HW PMUs (e.g. CPU + CCI). The
+-	 * core perf code won't check that the pmu->ctx == leader->ctx
+-	 * until after pmu->event_init(event).
+-	 */
++	/* Ignore grouped events that aren't ours */
+ 	if (event->pmu != cci_pmu)
+-		return 0;
+-
+-	if (event->state < PERF_EVENT_STATE_OFF)
+-		return 1;
+-
+-	if (event->state == PERF_EVENT_STATE_OFF && !event->attr.enable_on_exec)
+ 		return 1;
  
- 	if (leader == event)
- 		return 0;
+ 	return pmu_get_event_idx(hw_events, event) >= 0;
+@@ -1266,10 +1242,11 @@ static int validate_group(struct perf_event *event)
  
- 	arm_ni_val_count_event(event, &val);
--	if (!arm_ni_val_count_event(leader, &val))
-+	arm_ni_val_count_event(leader, &val);
-+	for_each_sibling_event(sibling, leader)
-+		arm_ni_val_count_event(sibling, &val);
-+
-+	if (val.evcnt > NI_NUM_COUNTERS || val.ccnt > 1)
- 		return -EINVAL;
+ static int __hw_perf_event_init(struct perf_event *event)
+ {
++	struct cci_pmu *cci_pmu = to_cci_pmu(event->pmu);
+ 	struct hw_perf_event *hwc = &event->hw;
+ 	int mapping;
  
--	for_each_sibling_event(sibling, leader) {
--		if (!arm_ni_val_count_event(sibling, &val))
--			return -EINVAL;
--	}
- 	return 0;
- }
+-	mapping = pmu_map_event(event);
++	mapping = cci_pmu->model->validate_hw_event(cci_pmu, event->attr.config);
  
+ 	if (mapping < 0) {
+ 		pr_debug("event %x:%llx not supported\n", event->attr.type,
 -- 
 2.39.2.101.g768bb238c484.dirty
 

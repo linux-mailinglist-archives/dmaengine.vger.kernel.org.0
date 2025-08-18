@@ -1,107 +1,160 @@
-Return-Path: <dmaengine+bounces-6054-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6055-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1472BB2A197
-	for <lists+dmaengine@lfdr.de>; Mon, 18 Aug 2025 14:31:52 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E8532B2B11E
+	for <lists+dmaengine@lfdr.de>; Mon, 18 Aug 2025 21:06:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id F21114E2CF9
-	for <lists+dmaengine@lfdr.de>; Mon, 18 Aug 2025 12:31:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 87BA717A1EA
+	for <lists+dmaengine@lfdr.de>; Mon, 18 Aug 2025 19:03:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EABF43218A3;
-	Mon, 18 Aug 2025 12:28:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A781271465;
+	Mon, 18 Aug 2025 19:00:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="apkXGnNX"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q5YbiUJ8"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2089831CA61
-	for <dmaengine@vger.kernel.org>; Mon, 18 Aug 2025 12:28:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29DF273D7B
+	for <dmaengine@vger.kernel.org>; Mon, 18 Aug 2025 19:00:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755520138; cv=none; b=tmu+QgV7hVBoBBexYYZivwRWOGUDoksxgfCnoWwCgaDcwnSjmXs8Z2HMpvsPLrG+9J4aRMccZDLdNEL00oxjjzCdfrAN//7FOZgdPlGP0pqSTe1i6T7qtNDmfWFjsz89V/gasfCu8Qq8h9fSVm3gkEIuhvQjw9HooYwViboW8tQ=
+	t=1755543615; cv=none; b=fF04oi1DlP57VyXzpvbgBYL0sk0e4PpNvUnsbYtEH6pCKFRkviWceBic5HBurQZ6qMB8XmzBJpRcy6TdFidB384CXZZRSV+/wwj8dT1UQsBIw0lv/Sx7IzRhnIAo7GxH7W9F0uoPtJTUQaBdWqAoZoK8sC5LZHi2PgNzltV4cAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755520138; c=relaxed/simple;
-	bh=NQlTT8wrBf6/5TXR7NEJIm2qofkpWCiqbqPMT/ijYsM=;
+	s=arc-20240116; t=1755543615; c=relaxed/simple;
+	bh=vQomRZshu2lk8+zD/OL/vg9fFnYpAUrpAgtNsWCVKZc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=M7CvOWiuGHenH7JGs/rSazyZ4CUgnr0DQspRhUaxL2OzKAROiIk6WVBHTTGrksJvGGfd5oFzwohbxdiTSnyGf9GZwmZMj1HJw9UI/nY0L+EXQxfv/joguO/QjW7Kr+3pxhE+hw2Om2hdFPn3SQCWRBvhS5keFv8i6mnHGNWvUXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=apkXGnNX; arc=none smtp.client-ip=209.85.219.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e933de3880bso1602199276.3
-        for <dmaengine@vger.kernel.org>; Mon, 18 Aug 2025 05:28:56 -0700 (PDT)
+	 To:Cc:Content-Type; b=X4s1Jr0zPqYu1CFqJlWWKUlKfMPBOdZ4eIy57z9vMoiAKw0PSXNnYS39g8WInbGKQaYA1PIFRpr4NomBh3nuYfhKGL1z8QLWg9GnkY1mjY1dGQ65qLCC4LiqTDkKSj4r3e7s24E90ATNlWSLOsk4WfWCaG1FPxw7WfER7ZhGQMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q5YbiUJ8; arc=none smtp.client-ip=209.85.222.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-890190f424dso990591241.3
+        for <dmaengine@vger.kernel.org>; Mon, 18 Aug 2025 12:00:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1755520136; x=1756124936; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1755543612; x=1756148412; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NQlTT8wrBf6/5TXR7NEJIm2qofkpWCiqbqPMT/ijYsM=;
-        b=apkXGnNXgGl7aZxSKibTdp0qeTPDTjWudLdbIDXHjAoMM9924TTUZQFW9AuxSMVXtt
-         rl9Amti5ULwkeK4fcGv5CTV/3fIpDQzZZyCIHX6B7kZ9s681OyGUkigJIHkDj0RkBB1J
-         nj3+vaku01NR1/y8Q5j/ZFTJT6QLouWVAYJp5Kc0xo2PDbwbV72r4EKhQI9XUaTYa1/C
-         6vSEloZOCMUFA5C7yfXG1EzwMgPeD6dZ0pO8bx6FfVHPF45Xj5PCQkVEGjTgcPYjAU7c
-         PSrNrqMWG+KjN8fZneGUn4hZMKjtw6TT+CsyCYg6HVYuCuvMtqXLahRPOTkzHdP420bf
-         s+Vg==
+        bh=vQomRZshu2lk8+zD/OL/vg9fFnYpAUrpAgtNsWCVKZc=;
+        b=q5YbiUJ8zHnKB6hxl6k/k/Z5zCdyipunm8J/NdI9g3wbjnVfcK9B7wkXjROEb6UFON
+         XQ/0B+DJdVE3hK3VMPbdF1P5GxD49TIAv/dq9pNbIBbHI4lho+a9Jv+GdslJMtR4R9wm
+         dsG5qP2O6KYpJNCYNLmr/zX+a0EY07PFpalPAHd6ahXzUJ1ApLQjPVgsNoTmD83/klaq
+         +Crc/QtCp+NfP/IQEXFnqi+uJDmnD0CLQVv1RG3F+oy+N61LBuzi7FPT4pOBgPIx1A4p
+         lNYUzHILM/3F1bwzcHd/9xB3qhoBzoeOvYJnRsua1bID7D4p8+qurLtXA5Ke+ggb+HcG
+         KGkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755520136; x=1756124936;
+        d=1e100.net; s=20230601; t=1755543612; x=1756148412;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NQlTT8wrBf6/5TXR7NEJIm2qofkpWCiqbqPMT/ijYsM=;
-        b=YIDNQPH7TQ+DJcUKa4d/X+tqPDkHAbzAaDiDy26TmwU70cpSjLqeNZDT+bA+0L0V9S
-         bkA3mVWY2LQwzkRtJ4U0PBp03/fagKEGYQB9WwQV5L8eDbqbrteLa46lCvVyWJdh1YE4
-         ct1lzNqSdUDP6nZhW4SL90awhxXuV5K+b+X9u14YiT7g4NoVwbZki/AC7IuFDobEOTNf
-         Bh3j5paYnyOxreZc9yMYaOjW3a8IG54Hhtf+Hm5jXsAK40NbsChcB/H5bTLKnRqYSqVJ
-         3BO7bxHCwdGSt+YzEPekkBuH5KTC/fayibxrC3Gx6fBb1Q6ZGO5L3lPWSKCTSMtDIgTW
-         Iq7A==
-X-Forwarded-Encrypted: i=1; AJvYcCWV/Hql1O2UPPgOenJd8EkHdz7Cl8zUfDWD+Vm4WQ6gJryZecSLSJPvk0SlE/tJ9XKfUAgxWm5pDcg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1KHp6CLZaSxySNq8xDNFf/U1nSMFYFl0LKW+l17gSdR1NEoPM
-	liocDvmKQ/0qjP14bPkj1A29tvrUGx+RYIB2cyVf6h68NDD2OIr/O9/FMwCFMj1ovD17Mqt/r11
-	ZO7f8Hq/3NbhdmHI8EiFVfCx+HBDZ+34hXBICn5QvyA==
-X-Gm-Gg: ASbGnct3z0kNk116CDnsmoa29gqKCZlEK1Xvws60kFtcst5sWWNuP8aSopsAYmMQXuh
-	y5758APKwGiR7t1hKhU3D0uFHAwDUOHkmDQxD8COG0zFmSDZpY88WhYPSaCYZA3UnHuIvFlJQd2
-	lAI70rhdKjRBL85Vd0BxykIMBTyXOIxa+d9xn2h10+UyVwLGXtWziGGy+vXKI+WpeBiCe3QibIz
-	efbcQ==
-X-Google-Smtp-Source: AGHT+IFx20xElPVqlagxACjExJ+Sc5Ef/knSr80J9ZkH6gy2bssr57qeuBMFLMu09POyk3VR+IV54ktaJ+qDsdY+z6Q=
-X-Received: by 2002:a05:6902:72c:b0:e93:4496:a2b9 with SMTP id
- 3f1490d57ef6-e934496a74bmr9054970276.13.1755520135996; Mon, 18 Aug 2025
- 05:28:55 -0700 (PDT)
+        bh=vQomRZshu2lk8+zD/OL/vg9fFnYpAUrpAgtNsWCVKZc=;
+        b=n/5cTCW5LkME+AlCiYZ61qT5CIdV49mrkE3mtT4bSM60+N/vILhuVU7yd3af/jqqC8
+         MBG9aTfdsufMFKpaK/xI8HV1sxSvplxgqiALi6aqT1SBVWJh6yKYdDqHNHmMmCxZx+MA
+         jUxDNloSWD2mO3Pko4D8+rpoPn5lnKpTAI0yj+Of/b1JxwC6z5+qQPQ5GyR+h6Ubn50C
+         tADOWhYEk+W1icn7oDtGqd20N5KEelZlXDEuG/gLq3cviFBZtq9mUgUkSGKcIgAUSKXh
+         MzZqLCgOubUVZ1GgdA7eTNfkFeJ5V1TSsYytcTWR06pKy5W0CEuHEm6fzebS/jF7e882
+         3hHw==
+X-Forwarded-Encrypted: i=1; AJvYcCVV9Kto1qbK4CReFveaLHQ1U5GIHQ+TdszY62KKwUD/M8qXYdmeiE5uZmWPBXUmm04hp05DzN1VRTE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwruwbTbw88GsiNMoEATCrc0xF++I83rBAUOzZ5SYOjealzLOhm
+	vSaHEvnCZKqSSX39lF+kk5NMpxBd+rhlnRrJ9Nqbg159YhY+z5LMYW7uE+IOmhLj2edDyXdv5TY
+	lSAIyQijMIoPFc1lwREWqkGv3gHZAoJR4/7sJMju4
+X-Gm-Gg: ASbGnctY21dydgZZVuX97oFlOoieDZFPpWIwIZpcsAeT5pqmM0/oD0Vt2+Z3lj7jQLX
+	B1sIhQgwZsZYMpLyK0FqRPrUNCbK2PFEzqx3hAT/OglQPIJYcSLhDI82Cnq4mgxXI3a/lTyrf5+
+	re/7oecVPQC6zLodhNKTWWNAVVoAG9hexOG0mcoJtmrrKjAJ7z/PalqiEZTdMJAMnyzI/39sRwY
+	hQv5d1f76L35l+sip6Te7Vo
+X-Google-Smtp-Source: AGHT+IHKuVR6yCJ91jJq7ugyNm/ro83W16ukMXy6TNeyjS+8s1HiMV5A8fVG7olzaJbCAnCu8c3YSbxdEle29VD3uGs=
+X-Received: by 2002:a67:f1cc:0:b0:4fb:f836:5a8b with SMTP id
+ ada2fe7eead31-5126b10c782mr3995547137.12.1755543611478; Mon, 18 Aug 2025
+ 12:00:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250815-working_dma_0701_v2-v4-0-62145ab6ea30@riscstar.com>
- <20250815-working_dma_0701_v2-v4-6-62145ab6ea30@riscstar.com> <34485B93B03EAD10+aJ7NVbe8aqjWBFd-@LT-Guozexi>
-In-Reply-To: <34485B93B03EAD10+aJ7NVbe8aqjWBFd-@LT-Guozexi>
-From: Guodong Xu <guodong@riscstar.com>
-Date: Mon, 18 Aug 2025 20:28:45 +0800
-X-Gm-Features: Ac12FXzcLxiREAyDvYqUpnp8Sh2Su74nBhalceLEh9KttzUfLjprws3CtQrXJOY
-Message-ID: <CAH1PCMahKsCsgmZixartnu6Tq8Oo28bMVNfoAWjnFA2McOOU3Q@mail.gmail.com>
-Subject: Re: [PATCH v4 6/8] riscv: dts: spacemit: Add PDMA node for K1 SoC
-To: Troy Mitchell <troy.mitchell@linux.spacemit.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, duje@dujemihanovic.xyz, Alex Elder <elder@riscstar.com>, 
-	Vivian Wang <wangruikang@iscas.ac.cn>, dmaengine@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
+References: <20250620232031.2705638-1-dmatlack@google.com> <CALzav=dVYqS8oQNbygVjgA69EQMBBP4CyzydyUoAjnN2mb_yUQ@mail.gmail.com>
+ <20250728102737.5b51e9da.alex.williamson@redhat.com> <20250729222635.GU36037@nvidia.com>
+ <CALzav=d0vPMw26f-vzCJnjRFL+Uc6sObihqJ0jnJRpi-SxtSSw@mail.gmail.com>
+In-Reply-To: <CALzav=d0vPMw26f-vzCJnjRFL+Uc6sObihqJ0jnJRpi-SxtSSw@mail.gmail.com>
+From: David Matlack <dmatlack@google.com>
+Date: Mon, 18 Aug 2025 11:59:39 -0700
+X-Gm-Features: Ac12FXzjq18NMEcti3WnxAnstzv3oZ53HMDVa30Ie_aUdIryOd1wCtUV8wzYufY
+Message-ID: <CALzav=fdT+NJDO+jWyty+tKqxqum4RVkHZmUocz4MDQkPgG4Bg@mail.gmail.com>
+Subject: Re: [PATCH 00/33] vfio: Introduce selftests for VFIO
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Alex Williamson <alex.williamson@redhat.com>, Aaron Lewis <aaronlewis@google.com>, 
+	Adhemerval Zanella <adhemerval.zanella@linaro.org>, 
+	Adithya Jayachandran <ajayachandra@nvidia.com>, Andrew Jones <ajones@ventanamicro.com>, 
+	Ard Biesheuvel <ardb@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Bibo Mao <maobibo@loongson.cn>, 
+	Claudio Imbrenda <imbrenda@linux.ibm.com>, Dan Williams <dan.j.williams@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, dmaengine@vger.kernel.org, 
+	Huacai Chen <chenhuacai@kernel.org>, James Houghton <jthoughton@google.com>, 
+	Joel Granados <joel.granados@kernel.org>, Josh Hilke <jrhilke@google.com>, 
+	Kevin Tian <kevin.tian@intel.com>, kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, "Pratik R. Sampat" <prsampat@amd.com>, 
+	Saeed Mahameed <saeedm@nvidia.com>, Sean Christopherson <seanjc@google.com>, Shuah Khan <shuah@kernel.org>, 
+	Vinicius Costa Gomes <vinicius.gomes@intel.com>, Vipin Sharma <vipinsh@google.com>, 
+	Wei Yang <richard.weiyang@gmail.com>, "Yury Norov [NVIDIA]" <yury.norov@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 15, 2025 at 2:04=E2=80=AFPM Troy Mitchell
-<troy.mitchell@linux.spacemit.com> wrote:
+On Thu, Jul 31, 2025 at 1:55=E2=80=AFPM David Matlack <dmatlack@google.com>=
+ wrote:
 >
-> Thanks.
+> On Tue, Jul 29, 2025 at 3:26=E2=80=AFPM Jason Gunthorpe <jgg@nvidia.com> =
+wrote:
+> >
+> > On Mon, Jul 28, 2025 at 10:27:37AM -0600, Alex Williamson wrote:
+> > > On Fri, 25 Jul 2025 09:47:48 -0700
+> > > David Matlack <dmatlack@google.com> wrote:
+> > > > I also was curious about your thoughts on maintenance of VFIO
+> > > > selftests, since I don't think we discussed that in the RFC. I am
+> > > > happy to help maintain VFIO selftests in whatever way makes the mos=
+t
+> > > > sense. For now I added tools/testing/selftests/vfio under the
+> > > > top-level VFIO section in MAINTAINERS (so you would be the maintain=
+er)
+> > > > and then also added a separate section for VFIO selftests with myse=
+lf
+> > > > as a Reviewer (see PATCH 01). Reviewer felt like a better choice th=
+an
+> > > > Maintainer for myself since I am new to VFIO upstream (I've primari=
+ly
+> > > > worked on KVM in the past).
+> > >
+> > > Hi David,
+> > >
+> > > There's a lot of potential here and I'd like to see it proceed.
+> >
+> > +1 too, I really lack time at the moment to do much with this but I'm
+> > half inclined to suggest Alex should say it should be merged in 6
+> > weeks (to motivate any reviewing) and we can continue to work on it
+> > in-tree.
+> >
+> > As they are self tests I think there is alot more value in having the
+> > tests than having perfect tests.
 >
-> Reviewed-by: Troy Mitchell <troy.mitchell@linux.spacemit.com>
+> They have been quite useful already within Google. Internally we have
+> something almost identical to the RFC and have been using that for
+> testing our 6.6-based kernel continuously since March. Already they
+> have caught one (self-inflicted) regression where 1GiB HugeTLB pages
+> started getting mapped with 2MiB mappings in the IOMMU, and have been
+> very helpful with new development (e.g. Aaron's work, and Live Update
+> support).
 >
+> So I agree, it's probably net positive to merge early and then iterate
+> in-tree. Especially since these are only tests and not e.g.
+> load-bearing kernel code (although I still want to hold a high bar for
+> the selftests code).
+>
+> The only patches to hold off merging would be 31-33, since those
+> should probably go through the KVM tree? And of course we need Acks
+> for the drivers/dma/{ioat,idxd} changes, but the changes there are
+> pretty minor.
 
-Thanks Troy.
+Alex, how would you like to proceed?
 

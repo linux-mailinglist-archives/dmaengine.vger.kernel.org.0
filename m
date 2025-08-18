@@ -1,193 +1,201 @@
-Return-Path: <dmaengine+bounces-6057-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6058-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38CB6B2B27F
-	for <lists+dmaengine@lfdr.de>; Mon, 18 Aug 2025 22:36:34 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9DB9FB2B499
+	for <lists+dmaengine@lfdr.de>; Tue, 19 Aug 2025 01:25:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 689445E083B
-	for <lists+dmaengine@lfdr.de>; Mon, 18 Aug 2025 20:34:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 59AC64E5118
+	for <lists+dmaengine@lfdr.de>; Mon, 18 Aug 2025 23:25:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1222421D599;
-	Mon, 18 Aug 2025 20:34:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B417421CC49;
+	Mon, 18 Aug 2025 23:25:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FrS1K8f+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BQbzzPG4"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F777190692
-	for <dmaengine@vger.kernel.org>; Mon, 18 Aug 2025 20:34:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C71C121883E;
+	Mon, 18 Aug 2025 23:25:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755549265; cv=none; b=phMlL04kFiYDFt0GL1/QW5S/Ds4dQiPdPyvbSLt2f3s16lKMzYa4XCvSj04TGbdeKN46dhzZc/O7Un8RV973uH4h2xCAaWd0nqwaY1obr8x9DWdKreSQiDNOXSIDxem0t9t4sBDrXodnYfGPqL9uj4lF8UT5ck4pLtP9BjA1taI=
+	t=1755559536; cv=none; b=tHdBQWXZpBa8I7RYtp+CeNy4i9gCM75MbrPRnMxoWh5OgH+3+aa+2smcfRFx5Y1DAAPnPhR4YGsAgzg9XnTRrtSSKRB0k8ph5GKC8RqQ4SZta/MhCxSxpUE2O4sypE3+JHns4d2hkdw83P2AEmS55ilbabEigXkoZ8t5soDz7HY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755549265; c=relaxed/simple;
-	bh=vEU1DhK/0zgNT8JWZLGDWnWbNMj0+ZSO11M2ZhDRAFg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bMbIHTHlcd1wYIabZcgh7cHjwhhRmuoMZ4nLkzmuWg//Xpec8litkeEpLzReM0I4+JJX6a3ME/OEk546wISJYXnOql4hy2cv6IVpDo3B4jCMW4E5ROBWvBHL9WyME3sXJYAb81ODLVR+Ro4ohBK7FLu39d3SUycZ1nhppHmL+HM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FrS1K8f+; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-55ce510f4f6so4862820e87.1
-        for <dmaengine@vger.kernel.org>; Mon, 18 Aug 2025 13:34:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1755549261; x=1756154061; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pUZu6/RFeyBiHuWjtq2Q11oy5SbsMtdXFQAhlB7E6FM=;
-        b=FrS1K8f+0yw+Bjz5v+Sxs8Tcb1nTC//pEgPY1zWE6yyQRakfWFXc2LpNaExRxQlXJN
-         MIKqoVaQrYyG8xq40HiLFtTg02cLnjm166+5OWq7DDQ6eOFdmwuVfIzTdRk1F42cxji+
-         KgC2aTtZBkIbwsZ1D7ojjN2N7TuC7jPGYPRkdSxYhkSxQA0lJVjjHlSoGgx0Q9QZyAHW
-         nYpqZfntpxYY4oZXTmiBwV9bIeDQ3ZaTdXJAB5w3s8xGwgUsGMJQuiQFQOQMshZObje8
-         FUN/wyEJePcwGoTZaN4/B3DoJPfA4I6X27brmLj0+sLln3Lmu4ssQwuaYsEqUFMWMjLV
-         Urdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755549261; x=1756154061;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pUZu6/RFeyBiHuWjtq2Q11oy5SbsMtdXFQAhlB7E6FM=;
-        b=bD/L3ALZQelDlYLDFQfutlR4gPzwU/7pElBKSL3lOnlHie0l/Pl3lU/s4sa654dLhL
-         bwYZZgsXu5vMWB4DWIqEknytAAezOz7o1615a83ekFoMq9WP0ChQFuwiAL0u7+5KXx1a
-         zJ1b0fr064ig2ox7W7gW3M+WqBuQPsHeBE6+KMZ3JiIG16i5zr6ig8TXbb5rrYBgqJKp
-         c8jzg5mQNJ9mx8/MSl/rrS6FHPpBRNhwZZvQfKp+m0rWcMYt1xEJR3GEpOmqNtWhBtHy
-         v4iria+oDgP1u0uOu9ZwgaNFeen6tM9hE9TBnaL56silVwnTVrnrLwFLZA+m16PeWQxn
-         MfKg==
-X-Forwarded-Encrypted: i=1; AJvYcCV5SLJWIbtMCEhmHPu5TE1cTthdj+m/3LWjPuh2NDfpOZSEq5lWhotgXNd+z8YIvWJRn/uGeOlzAZw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yze04bCBCxXgwDIwTXweuA0DohBlU17tNPTGgq/3GAbjqW524Me
-	M8sy6LIqtgSUSp5COSnljslErm6szl7qub4+NwLnbvCfw94acTExJzvUgNctwwVl7JYsuhoj3Jv
-	wfxSo7XTT5LdpGswOS2DTyJIoUUFxkjalrcp4GJxa
-X-Gm-Gg: ASbGncuMpQ4ukfm8yxSjhLDdeX/0ow5aXs8JDjUhinbL2W1Yv6FaIiOqpsaBNaonuOD
-	LVSOeH8gR/BrIQi4+oAsMo8w/hB7nO/BbPiAttjWKNHh9Fd/oFd4JjI91maG76+7MQhIYoR8PrG
-	gQtUVSFVSml6Is9sB6u716oy2bpICOs38siQcTK4AMgWI7lO5abTjRW/6b4tbIjKd2tggMyEXHH
-	sVTvQLv2DZ9IGLkc9u71gyJ
-X-Google-Smtp-Source: AGHT+IG/okCLiEMnTbEAuvgIc+GfOEaMV4Ktqhv/RQf6BYRPRMuCIwvQNW5SPCUa5fwVMmY/BHmCrdmWZrmWrMGMPKA=
-X-Received: by 2002:a05:6512:1597:b0:55c:c937:111d with SMTP id
- 2adb3069b0e04-55e0076824fmr61707e87.13.1755549261092; Mon, 18 Aug 2025
- 13:34:21 -0700 (PDT)
+	s=arc-20240116; t=1755559536; c=relaxed/simple;
+	bh=Z/fOjp/Ym9YooMKQnrRWOQT8w9dEmQrzw4wTszp9L3s=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=mCas9gWs2UOAk7jth9AuVob0I6/d3zQ17RM3tG3EeR9ueCU6y27s7eRvL76sByr4XwTpZQnYStRacAuDITk4S1gO9S6i7+2tLgPoToF9VPAvN5j32Gbv6uTNeKFodLTgJCFGiCYyGjsQkrUUqEAOOhluMJQcMW7u+NmZ7vZOFWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BQbzzPG4; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1755559535; x=1787095535;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=Z/fOjp/Ym9YooMKQnrRWOQT8w9dEmQrzw4wTszp9L3s=;
+  b=BQbzzPG4bMOuM3m6kmit59ABfisYIpFwGfZQ7MMHcXxA6IwxJz3hpGkR
+   oKW39q/H6GFLfzU1e064YypsGFS06VKVeerCGqsZ8/zJrvxZbEN2ZwaOf
+   794KbU4IpsYXtDhuWn/4wXNw4oadmI6+Jcg3YYK5HHFHkxPEs43nZuqBt
+   QozEZrVMEiQu6qTlkWjj6b5COx13nHp72V1hOu3JlGMXTR/MUUwHWMwFS
+   FYbfans7CNhT34s4oYZjoCq2QEvSGKue8PDNBsZxlI8iO1mhu/3cJ+Peg
+   JG06k1UdSv4Pt/ngzTLL8DdnExyr+NY2Ta9pnzkpWr5NCUhmtpJWdPdFp
+   Q==;
+X-CSE-ConnectionGUID: 8YI0Ui88RVOJWK2uA1AOgQ==
+X-CSE-MsgGUID: EMd1im/JTHiieR0QZApCUA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11526"; a="61627992"
+X-IronPort-AV: E=Sophos;i="6.17,300,1747724400"; 
+   d="scan'208";a="61627992"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2025 16:25:35 -0700
+X-CSE-ConnectionGUID: F5tq7uFnToWNTQu7SXkcSg==
+X-CSE-MsgGUID: waurPwuXTVGwkqVYXmfW5g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,300,1747724400"; 
+   d="scan'208";a="166936014"
+Received: from vcostago-mobl3.jf.intel.com (HELO vcostago-mobl3) ([10.98.24.140])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2025 16:25:34 -0700
+From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+To: David Matlack <dmatlack@google.com>, Alex Williamson
+ <alex.williamson@redhat.com>
+Cc: Aaron Lewis <aaronlewis@google.com>, Adhemerval Zanella
+ <adhemerval.zanella@linaro.org>, Adithya Jayachandran
+ <ajayachandra@nvidia.com>, Andrew Jones <ajones@ventanamicro.com>, Ard
+ Biesheuvel <ardb@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>,
+ Bibo Mao <maobibo@loongson.cn>, Claudio Imbrenda <imbrenda@linux.ibm.com>,
+ Dan Williams <dan.j.williams@intel.com>, Dave Jiang
+ <dave.jiang@intel.com>, David Matlack <dmatlack@google.com>,
+ dmaengine@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>, James
+ Houghton <jthoughton@google.com>, Jason Gunthorpe <jgg@nvidia.com>, Joel
+ Granados <joel.granados@kernel.org>, Josh Hilke <jrhilke@google.com>,
+ Kevin Tian <kevin.tian@intel.com>, kvm@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, "Mike Rapoport (Microsoft)"
+ <rppt@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, Pasha Tatashin
+ <pasha.tatashin@soleen.com>, "Pratik R. Sampat" <prsampat@amd.com>, Saeed
+ Mahameed <saeedm@nvidia.com>, Sean Christopherson <seanjc@google.com>,
+ Shuah Khan <shuah@kernel.org>, Vipin Sharma <vipinsh@google.com>, Wei Yang
+ <richard.weiyang@gmail.com>, "Yury Norov [NVIDIA]" <yury.norov@gmail.com>
+Subject: Re: [PATCH 12/33] tools headers: Import iosubmit_cmds512()
+In-Reply-To: <20250620232031.2705638-13-dmatlack@google.com>
+References: <20250620232031.2705638-1-dmatlack@google.com>
+ <20250620232031.2705638-13-dmatlack@google.com>
+Date: Mon, 18 Aug 2025 16:25:33 -0700
+Message-ID: <87jz302owi.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620232031.2705638-1-dmatlack@google.com> <CALzav=dVYqS8oQNbygVjgA69EQMBBP4CyzydyUoAjnN2mb_yUQ@mail.gmail.com>
- <20250728102737.5b51e9da.alex.williamson@redhat.com> <20250729222635.GU36037@nvidia.com>
- <CALzav=d0vPMw26f-vzCJnjRFL+Uc6sObihqJ0jnJRpi-SxtSSw@mail.gmail.com>
- <CALzav=fdT+NJDO+jWyty+tKqxqum4RVkHZmUocz4MDQkPgG4Bg@mail.gmail.com> <20250818133721.32b660e3.alex.williamson@redhat.com>
-In-Reply-To: <20250818133721.32b660e3.alex.williamson@redhat.com>
-From: David Matlack <dmatlack@google.com>
-Date: Mon, 18 Aug 2025 13:33:52 -0700
-X-Gm-Features: Ac12FXzA9RSmzacYT5nDWeSXLLoZk1b9VAVMv04nR2qdBzwPjNGQjuMMNBDam8Q
-Message-ID: <CALzav=eOz+Gf8XawvaSSBHj=8gQg3O9T9dJcN6q4eqh7_MEPDw@mail.gmail.com>
-Subject: Re: [PATCH 00/33] vfio: Introduce selftests for VFIO
-To: Alex Williamson <alex.williamson@redhat.com>
-Cc: Jason Gunthorpe <jgg@nvidia.com>, Aaron Lewis <aaronlewis@google.com>, 
-	Adhemerval Zanella <adhemerval.zanella@linaro.org>, 
-	Adithya Jayachandran <ajayachandra@nvidia.com>, Andrew Jones <ajones@ventanamicro.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Bibo Mao <maobibo@loongson.cn>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, Dan Williams <dan.j.williams@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, dmaengine@vger.kernel.org, 
-	Huacai Chen <chenhuacai@kernel.org>, James Houghton <jthoughton@google.com>, 
-	Joel Granados <joel.granados@kernel.org>, Josh Hilke <jrhilke@google.com>, 
-	Kevin Tian <kevin.tian@intel.com>, kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, "Pratik R. Sampat" <prsampat@amd.com>, 
-	Saeed Mahameed <saeedm@nvidia.com>, Sean Christopherson <seanjc@google.com>, Shuah Khan <shuah@kernel.org>, 
-	Vinicius Costa Gomes <vinicius.gomes@intel.com>, Vipin Sharma <vipinsh@google.com>, 
-	Wei Yang <richard.weiyang@gmail.com>, "Yury Norov [NVIDIA]" <yury.norov@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Mon, Aug 18, 2025 at 12:37=E2=80=AFPM Alex Williamson
-<alex.williamson@redhat.com> wrote:
+David Matlack <dmatlack@google.com> writes:
+
+> Import iosubmit_cmds512() from arch/x86/include/asm/io.h into tools/ so
+> it can be used by VFIO selftests to interact with Intel DSA devices.
 >
-> On Mon, 18 Aug 2025 11:59:39 -0700
-> David Matlack <dmatlack@google.com> wrote:
+
+minor: perhaps move this patch to be near the one that adds the DSA
+driver? (in case there's a next revision)
+
+Anyway,
+
+Acked-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+
+> Also pull in movdir64b() from arch/x86/include/asm/special_insns.h into
+> tools/, which is the underlying instruction used by iosubmit_cmds512().
 >
-> > On Thu, Jul 31, 2025 at 1:55=E2=80=AFPM David Matlack <dmatlack@google.=
-com> wrote:
-> > >
-> > > On Tue, Jul 29, 2025 at 3:26=E2=80=AFPM Jason Gunthorpe <jgg@nvidia.c=
-om> wrote:
-> > > >
-> > > > On Mon, Jul 28, 2025 at 10:27:37AM -0600, Alex Williamson wrote:
-> > > > > On Fri, 25 Jul 2025 09:47:48 -0700
-> > > > > David Matlack <dmatlack@google.com> wrote:
-> > > > > > I also was curious about your thoughts on maintenance of VFIO
-> > > > > > selftests, since I don't think we discussed that in the RFC. I =
-am
-> > > > > > happy to help maintain VFIO selftests in whatever way makes the=
- most
-> > > > > > sense. For now I added tools/testing/selftests/vfio under the
-> > > > > > top-level VFIO section in MAINTAINERS (so you would be the main=
-tainer)
-> > > > > > and then also added a separate section for VFIO selftests with =
-myself
-> > > > > > as a Reviewer (see PATCH 01). Reviewer felt like a better choic=
-e than
-> > > > > > Maintainer for myself since I am new to VFIO upstream (I've pri=
-marily
-> > > > > > worked on KVM in the past).
-> > > > >
-> > > > > Hi David,
-> > > > >
-> > > > > There's a lot of potential here and I'd like to see it proceed.
-> > > >
-> > > > +1 too, I really lack time at the moment to do much with this but I=
-'m
-> > > > half inclined to suggest Alex should say it should be merged in 6
-> > > > weeks (to motivate any reviewing) and we can continue to work on it
-> > > > in-tree.
-> > > >
-> > > > As they are self tests I think there is alot more value in having t=
-he
-> > > > tests than having perfect tests.
-> > >
-> > > They have been quite useful already within Google. Internally we have
-> > > something almost identical to the RFC and have been using that for
-> > > testing our 6.6-based kernel continuously since March. Already they
-> > > have caught one (self-inflicted) regression where 1GiB HugeTLB pages
-> > > started getting mapped with 2MiB mappings in the IOMMU, and have been
-> > > very helpful with new development (e.g. Aaron's work, and Live Update
-> > > support).
-> > >
-> > > So I agree, it's probably net positive to merge early and then iterat=
-e
-> > > in-tree. Especially since these are only tests and not e.g.
-> > > load-bearing kernel code (although I still want to hold a high bar fo=
-r
-> > > the selftests code).
-> > >
-> > > The only patches to hold off merging would be 31-33, since those
-> > > should probably go through the KVM tree? And of course we need Acks
-> > > for the drivers/dma/{ioat,idxd} changes, but the changes there are
-> > > pretty minor.
-> >
-> > Alex, how would you like to proceed?
+> Changes made when importing: None
 >
-> I think we need an ack from Shuah for the overall inclusion in
-> tools/testing/selftests/
+> Signed-off-by: David Matlack <dmatlack@google.com>
+> ---
+>  tools/arch/x86/include/asm/io.h            | 26 +++++++++++++++++++++
+>  tools/arch/x86/include/asm/special_insns.h | 27 ++++++++++++++++++++++
+>  2 files changed, 53 insertions(+)
+>  create mode 100644 tools/arch/x86/include/asm/special_insns.h
 >
-> AFAICT the tools include files don't seem to have any central
-> authority, so maybe we just need to chase those ioat/idxd acks, along
-> with Shuah's and we can get this rolling and follow-up with the latter
-> KVM patches once the base is merged.  Thanks,
+> diff --git a/tools/arch/x86/include/asm/io.h b/tools/arch/x86/include/asm/io.h
+> index 4c787a2363de..ecad61a3ea52 100644
+> --- a/tools/arch/x86/include/asm/io.h
+> +++ b/tools/arch/x86/include/asm/io.h
+> @@ -4,6 +4,7 @@
+>  
+>  #include <linux/compiler.h>
+>  #include <linux/types.h>
+> +#include "special_insns.h"
+>  
+>  #define build_mmio_read(name, size, type, reg, barrier) \
+>  static inline type name(const volatile void __iomem *addr) \
+> @@ -72,4 +73,29 @@ build_mmio_write(__writeq, "q", u64, "r", )
+>  
+>  #include <asm-generic/io.h>
+>  
+> +/**
+> + * iosubmit_cmds512 - copy data to single MMIO location, in 512-bit units
+> + * @dst: destination, in MMIO space (must be 512-bit aligned)
+> + * @src: source
+> + * @count: number of 512 bits quantities to submit
+> + *
+> + * Submit data from kernel space to MMIO space, in units of 512 bits at a
+> + * time.  Order of access is not guaranteed, nor is a memory barrier
+> + * performed afterwards.
+> + *
+> + * Warning: Do not use this helper unless your driver has checked that the CPU
+> + * instruction is supported on the platform.
+> + */
+> +static inline void iosubmit_cmds512(void __iomem *dst, const void *src,
+> +				    size_t count)
+> +{
+> +	const u8 *from = src;
+> +	const u8 *end = from + count * 64;
+> +
+> +	while (from < end) {
+> +		movdir64b(dst, from);
+> +		from += 64;
+> +	}
+> +}
+> +
+>  #endif /* _TOOLS_ASM_X86_IO_H */
+> diff --git a/tools/arch/x86/include/asm/special_insns.h b/tools/arch/x86/include/asm/special_insns.h
+> new file mode 100644
+> index 000000000000..04af42a99c38
+> --- /dev/null
+> +++ b/tools/arch/x86/include/asm/special_insns.h
+> @@ -0,0 +1,27 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _TOOLS_ASM_X86_SPECIAL_INSNS_H
+> +#define _TOOLS_ASM_X86_SPECIAL_INSNS_H
+> +
+> +/* The dst parameter must be 64-bytes aligned */
+> +static inline void movdir64b(void *dst, const void *src)
+> +{
+> +	const struct { char _[64]; } *__src = src;
+> +	struct { char _[64]; } *__dst = dst;
+> +
+> +	/*
+> +	 * MOVDIR64B %(rdx), rax.
+> +	 *
+> +	 * Both __src and __dst must be memory constraints in order to tell the
+> +	 * compiler that no other memory accesses should be reordered around
+> +	 * this one.
+> +	 *
+> +	 * Also, both must be supplied as lvalues because this tells
+> +	 * the compiler what the object is (its size) the instruction accesses.
+> +	 * I.e., not the pointers but what they point to, thus the deref'ing '*'.
+> +	 */
+> +	asm volatile(".byte 0x66, 0x0f, 0x38, 0xf8, 0x02"
+> +		     : "+m" (*__dst)
+> +		     :  "m" (*__src), "a" (__dst), "d" (__src));
+> +}
+> +
+> +#endif /* _TOOLS_ASM_X86_SPECIAL_INSNS_H */
+> -- 
+> 2.50.0.rc2.701.gf1e915cc24-goog
+>
 
-Sounds good.
-
-And yeah, I also don't see any maintainers listed for tools/include/
-or tools/arch/x86/include/. Jason left some comments on the RFC that
-reduced the delta in v1, but that's the only feedback I've gotten so
-far there.
-
-I will try emailing Shuah and the ioat/idxd maintainers directly as a
-next step, since it has been about 2 months since I posted this series
-and we haven't heard anything yet.
-
-Thanks for the help.
+-- 
+Vinicius
 

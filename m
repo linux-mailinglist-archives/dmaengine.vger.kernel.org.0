@@ -1,118 +1,152 @@
-Return-Path: <dmaengine+bounces-6072-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6071-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8EC5CB2CB77
-	for <lists+dmaengine@lfdr.de>; Tue, 19 Aug 2025 19:52:30 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3607CB2CB73
+	for <lists+dmaengine@lfdr.de>; Tue, 19 Aug 2025 19:51:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5E1C6624047
-	for <lists+dmaengine@lfdr.de>; Tue, 19 Aug 2025 17:49:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 99A653B9F9B
+	for <lists+dmaengine@lfdr.de>; Tue, 19 Aug 2025 17:49:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC51530DD0F;
-	Tue, 19 Aug 2025 17:49:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fQpLuwh5"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD55D30DD1C;
+	Tue, 19 Aug 2025 17:49:17 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B27A30C36E
-	for <dmaengine@vger.kernel.org>; Tue, 19 Aug 2025 17:49:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.52
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 737C02206B8;
+	Tue, 19 Aug 2025 17:49:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755625772; cv=none; b=OHlEC201xSW8atcL7vvnLvUT7/DNCrawj9ngQ8W3Oq1WUEKIZwXoim3Atk/fofJxcG3JSz9SJ/83hRe2iC3Nw7Y6L7/vCx8LGENkUZ4rchs9ve28d+rfdNvMK6x1c2iC6qN2UgB719VXlZBFBN8o4g3TpPBH1Hhh1yDlj+JKkMw=
+	t=1755625757; cv=none; b=TWHBLcq0Gx3x8clSJkLLPfNmgS5SG1v/cwwScY4/JJeAS5u9WreIdTfcAXkgKa5NuDubaY65bbq2f4zjD+IyfKLqLeQb2U2wnmfcwTYg8arXHQ4lAXfzFiIQQv1lws1ktlc0TaUHdHon1b94GVnm0R7KRDw3jvN5zavjoDPwFWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755625772; c=relaxed/simple;
-	bh=YWkp7me/aGAqDor+8g4ul51C+lYC9lu/O53kvPxYg4o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gwFmOiTL4dh/nq3qoQx2j+zuF4G04iwhuy1WCGESaHDxU6X6xt5353Ts19wlPdahzd9grYrhPUMszYiWntnqnFB9eS2CIT/w7ktgqItzOA0t92kjSw8lhRRpaWCftoLLRkwi9HoSIRvg8AVQV+cR6vbK/ewI1Tps0Dui487f8Ps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fQpLuwh5; arc=none smtp.client-ip=209.85.217.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-50f8b94c6adso1370633137.3
-        for <dmaengine@vger.kernel.org>; Tue, 19 Aug 2025 10:49:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1755625770; x=1756230570; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YWkp7me/aGAqDor+8g4ul51C+lYC9lu/O53kvPxYg4o=;
-        b=fQpLuwh5yNqxvx9BovYEUoVO+U8lWGFmgEesys7A/OYKL61yjBESefcISBOmwUZeGH
-         3yB8ZFvi9hdElBnMaPONv1t/vtiFRQ02WNr3Dh/DfRWhKfEF9CBioPzfgyxsgJjzceUe
-         a9wix2Va8aRJe4II7SvrGrqjrYSUvRT7k1/3v7UE1Ejkyuhy5LrzrDlJDP3SYBts1jS8
-         vyVp3ZGH9bHftyzCazeD7IpKJYxMZvyzt4F+53YG9kr/vFo0qSyWTajVVAd0WWuUf94h
-         GjbjCKVb9hYhhweO9vQE7b318m9OT5IvzoNM0WfV8p+cU6W9cqYMxqoMubxtYa5biAIn
-         cgGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755625770; x=1756230570;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YWkp7me/aGAqDor+8g4ul51C+lYC9lu/O53kvPxYg4o=;
-        b=vlPXqzNVkWlILE2b/y7oi/Sr81SSumjNadiOz44+xzXc2waL8AgGQO5cu8C2Rr3yyI
-         SIOb+4dCrzGpDiT6jJt/Ua+Zikb95QJO8Ly4OS0wHnZl7/eMMQ1R3Ng9v8s0IFYDTwHa
-         dlZPMygiK4xu1Jx2V+6Div557xTDR0HWHBtuZRQ2u8VDACz7UAlBvcvPmNeyaCLI1qjM
-         34gH5asUajUzxnnXNpoemFC0FYnFtzzLbAv5rvBekthPWegoRMhcNezaFgb3otrY892/
-         QcKuIsMzQT8xXyYqTYtFICl+Rvt5e3E1JXpuPOkE/tuHmDCol7rc1fuom/xWOqwL6fQU
-         Wo5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVmrN5cDY4PbcbfRYWswRpSN7yeSoqrT4A86SSRQGR9nhOBzjkzCuU8Y25VX5d0W7MvMWUtnpR85YE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPKsWl10qr++IoYB/0LqvSiVFzUZLzbJdOik4WlHLkD1vtNVHq
-	wRLCVsdUP7XbaAnE6lGmq2gxNwD6tgUsFo8qiG5UAGQ23FHxnaZTgVnqb60gdfhEiSEpFGWOoqs
-	O1iOURZlC1ck7fnlp6Rabhm41zBYs9LsVp2IQNDJ1
-X-Gm-Gg: ASbGncuIprW519EgSQGI9e0u4nynoSqbboMKhVqP+LKxwLdaRAntfnuXV4OlieWpLr2
-	CO1sNy0bVD28Ug9SDXzhLpQxoD5QQ4Z8YzG8KIp7bw1Aszd90fJ/S6DxVZSdUgOUrU+T+qwgHaK
-	m18CI5Sgwyy3u7uOi2+pCglUnT2Vc9Z3HXLhJllmJU9yLmmuKa4Ylkr1YTX7d7OVt6MiTJ0jfmS
-	4XS1uSZ1VOvDw==
-X-Google-Smtp-Source: AGHT+IFhwGbrpihJuRhLUkMJwZwhp7F48vbVUtNc9cDlNYXnwMfD57uFUB1fnDEYXaM+LrUY65InbhFraP2uGeXjfLE=
-X-Received: by 2002:a05:6102:290e:b0:518:9c6a:2c03 with SMTP id
- ada2fe7eead31-51a52a18e04mr12948137.30.1755625769614; Tue, 19 Aug 2025
- 10:49:29 -0700 (PDT)
+	s=arc-20240116; t=1755625757; c=relaxed/simple;
+	bh=yfhPbDJoc+6CdAo/HUDbAHjm5EOHsprDS0bgOVBPTUo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=u1ggeva+JSjhmo79XKXV92uGsDx2Tdb8tuc4mz+mpH+ImeqLDAPjyuBirabjGLv44dFqqLANceqyhF4DxjP72whhJ+U9T2aEbizeuZrAWMJAbT6xkzIpg4oyVAazkCowyJKO8xToNxIFDhibYKPFUXzL/oWUVdYGz1k3gngk5Lw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E877152B;
+	Tue, 19 Aug 2025 10:49:06 -0700 (PDT)
+Received: from [10.1.196.50] (e121345-lin.cambridge.arm.com [10.1.196.50])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 475103F738;
+	Tue, 19 Aug 2025 10:49:10 -0700 (PDT)
+Message-ID: <cdb7b1e7-6e51-4c0e-bffb-b0d4b654a623@arm.com>
+Date: Tue, 19 Aug 2025 18:49:08 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620232031.2705638-1-dmatlack@google.com> <77qzhwwieggkmyguxm6v7dhpro2ez3nch6qelc2dd5lbdgp6hz@dnbfliagwpnv>
- <aJtYDWm3kT_Nz6Fd@google.com>
-In-Reply-To: <aJtYDWm3kT_Nz6Fd@google.com>
-From: David Matlack <dmatlack@google.com>
-Date: Tue, 19 Aug 2025 10:48:57 -0700
-X-Gm-Features: Ac12FXyvmYoSYuILjgZtuLq3eWcuEq7lOvEZt6VwwKRTWGTNC68lrUWFoa_zNzo
-Message-ID: <CALzav=caCWiZ1oS05ZpPNcE1cVVmn8jk9xmbXsEF_Sqexq03JA@mail.gmail.com>
-Subject: Re: [PATCH 00/33] vfio: Introduce selftests for VFIO
-To: Joel Granados <joel.granados@kernel.org>
-Cc: Alex Williamson <alex.williamson@redhat.com>, Aaron Lewis <aaronlewis@google.com>, 
-	Adhemerval Zanella <adhemerval.zanella@linaro.org>, 
-	Adithya Jayachandran <ajayachandra@nvidia.com>, Andrew Jones <ajones@ventanamicro.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Bibo Mao <maobibo@loongson.cn>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, Dan Williams <dan.j.williams@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, dmaengine@vger.kernel.org, 
-	Huacai Chen <chenhuacai@kernel.org>, James Houghton <jthoughton@google.com>, 
-	Jason Gunthorpe <jgg@nvidia.com>, Josh Hilke <jrhilke@google.com>, Kevin Tian <kevin.tian@intel.com>, 
-	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, "Pratik R. Sampat" <prsampat@amd.com>, 
-	Saeed Mahameed <saeedm@nvidia.com>, Sean Christopherson <seanjc@google.com>, Shuah Khan <shuah@kernel.org>, 
-	Vinicius Costa Gomes <vinicius.gomes@intel.com>, Vipin Sharma <vipinsh@google.com>, 
-	Wei Yang <richard.weiyang@gmail.com>, "Yury Norov [NVIDIA]" <yury.norov@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 19/19] perf: Garbage-collect event_init checks
+To: kernel test robot <oliver.sang@intel.com>
+Cc: oe-lkp@lists.linux.dev, lkp@intel.com,
+ linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+ linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+ dmaengine@vger.kernel.org, linux-fpga@vger.kernel.org,
+ amd-gfx@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+ intel-xe@lists.freedesktop.org, coresight@lists.linaro.org,
+ iommu@lists.linux.dev, linux-amlogic@lists.infradead.org,
+ linux-cxl@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-pm@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
+ will@kernel.org, mark.rutland@arm.com, acme@kernel.org, namhyung@kernel.org,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com,
+ linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ imx@lists.linux.dev, linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, linux-sh@vger.kernel.org,
+ sparclinux@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-riscv@lists.infradead.org
+References: <202508190403.33c83ece-lkp@intel.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <202508190403.33c83ece-lkp@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Aug 12, 2025 at 8:04=E2=80=AFAM David Matlack <dmatlack@google.com>=
- wrote:
->
-> On 2025-08-05 05:08 PM, Joel Granados wrote:
-> > On Fri, Jun 20, 2025 at 11:19:58PM +0000, David Matlack wrote:
-> > > This series introduces VFIO selftests, located in
-> > > tools/testing/selftests/vfio/.
-> > Sorry for coming late to the party. Only recently got some cycles to go
-> > through this. This seems very similar to what we are trying to do with
-> > iommutests [3].
+On 19/08/2025 3:44 am, kernel test robot wrote:
+> 
+> 
+> Hello,
+> 
+> kernel test robot noticed "BUG:unable_to_handle_page_fault_for_address" on:
+> 
+> commit: 1ba20479196e5af3ebbedf9321de6b26f2a0cdd3 ("[PATCH 19/19] perf: Garbage-collect event_init checks")
+> url: https://github.com/intel-lab-lkp/linux/commits/Robin-Murphy/perf-arm-cmn-Fix-event-validation/20250814-010626
+> base: https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git 91325f31afc1026de28665cf1a7b6e157fa4d39d
+> patch link: https://lore.kernel.org/all/ace3532a8a438a96338bf349a27636d8294c7111.1755096883.git.robin.murphy@arm.com/
+> patch subject: [PATCH 19/19] perf: Garbage-collect event_init checks
 
-Joel and I synced offline. We decided the best path forward for now is
-to proceed with VFIO selftests and iommutests in parallel, then look
-for opportunities to share code once both have matured a bit.
+OK, after looking a bit more deeply at x86 and PowerPC, I think it
+probably is nicest to solve this commonly too. Below is what I've cooked
+up for a v2 (I'll save reposting the whole series this soon...)
+
+Thanks,
+Robin.
+
+----->8-----
+Subject: [PATCH 18.5/19] perf: Add common uncore-CPU check
+
+Many uncore drivers depend on event->cpu being valid in order to look
+up various data in their event_init call. Since we've now factored out
+common PMU identification, we can factor out this check in the correct
+order too. While it might technically be possible to hoist the general
+task/cgroup check up here now, that would be horribly messy, so for
+clarity let's keep these as distinct (albeit related) concerns.
+
+Reported-by: kernel test robot <oliver.sang@intel.com>
+Closes: https://lore.kernel.org/oe-lkp/202508190403.33c83ece-lkp@intel.com
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+---
+  kernel/events/core.c | 12 +++++++++++-
+  1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 5f7eb526d87c..ddf045ad4d83 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -12562,6 +12562,11 @@ static bool is_raw_pmu(const struct pmu *pmu)
+  	       pmu->capabilities & PERF_PMU_CAP_RAW_EVENTS;
+  }
+  
++static bool is_uncore_pmu(const struct pmu *pmu)
++{
++	return pmu->task_ctx_nr == perf_invalid_context;
++}
++
+  static int perf_try_init_event(struct pmu *pmu, struct perf_event *event)
+  {
+  	struct perf_event_context *ctx = NULL;
+@@ -12571,11 +12576,16 @@ static int perf_try_init_event(struct pmu *pmu, struct perf_event *event)
+  	 * Before touching anything, we can safely skip:
+  	 * - any event for a specific PMU which is not this one
+  	 * - any common event if this PMU doesn't support them
++	 * - non-CPU-bound uncore events (so drivers can assume event->cpu is
++	 *   valid; we'll check the actual task/cgroup attach state later)
+  	 */
+  	if (event->attr.type != pmu->type &&
+  	    (event->attr.type >= PERF_TYPE_MAX || !is_raw_pmu(pmu)))
+  		return -ENOENT;
+  
++	if (is_uncore_pmu(pmu) && event->cpu < 0)
++		return -EINVAL;
++
+  	if (!try_module_get(pmu->module))
+  		return -ENODEV;
+  
+@@ -12990,7 +13000,7 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+  	 * events (they don't make sense as the cgroup will be different
+  	 * on other CPUs in the uncore mask).
+  	 */
+-	if (pmu->task_ctx_nr == perf_invalid_context && (task || cgroup_fd != -1))
++	if (is_uncore_pmu(pmu) && (task || cgroup_fd != -1))
+  		return ERR_PTR(-EINVAL);
+  
+  	if (event->attr.aux_output &&
+-- 
 

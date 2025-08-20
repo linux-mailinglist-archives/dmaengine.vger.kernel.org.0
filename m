@@ -1,57 +1,54 @@
-Return-Path: <dmaengine+bounces-6088-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6089-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 741A7B2E437
-	for <lists+dmaengine@lfdr.de>; Wed, 20 Aug 2025 19:43:30 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B0D0B2E438
+	for <lists+dmaengine@lfdr.de>; Wed, 20 Aug 2025 19:43:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 67B747BAFB6
-	for <lists+dmaengine@lfdr.de>; Wed, 20 Aug 2025 17:41:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 281435A28A9
+	for <lists+dmaengine@lfdr.de>; Wed, 20 Aug 2025 17:43:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFA782765E6;
-	Wed, 20 Aug 2025 17:42:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E319279359;
+	Wed, 20 Aug 2025 17:42:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mn8O+ziN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sv+JIZlh"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 983512765E3;
-	Wed, 20 Aug 2025 17:42:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42DC4278E7C;
+	Wed, 20 Aug 2025 17:42:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755711754; cv=none; b=EzIPAn0TYDi1UhPsrG08r3hcMwcLnAj1J8WQGaebI4Zf9u3bx1jphSoNizD9o9tMxdeuFxfHiQiMqxdrRBUcQm4DDEArMYIt0numswr0ROTGaWuvNIh+ufg0kF0NHr2KQivsjv6os0iO23buuEVQ15MvRdJauCPoMR69d9KX4hk=
+	t=1755711757; cv=none; b=EzNdIKTJ/o19H9XV1Se4MO42G1FGRIFBC/3Vjw9l5qtafDgu9ZAlidNg7/b6IinaR1c++YUBEWCf7v+0bmgfwfGK702dqZBk3K2b3C1SqZknNQIBT6KkSqT+ycRClFMusE0oe3WGOAE+ey3MUv56tceWFPCLNYYC83XQFcf8vzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755711754; c=relaxed/simple;
-	bh=Xy0bu3vQAEGmTyNEoI30KC+Xj+Gjlxb6czl2aL3y4WQ=;
+	s=arc-20240116; t=1755711757; c=relaxed/simple;
+	bh=f5b/XZjopr8Cuv8VprlPMa8Ukxq9ScSdZbNIDsH+L6o=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=rjxlTq+GXw8raEzYoeOuTCQ1nPzjgnbZ87vBKs7A3Ub9DrNW0QtUgvWJ/tVRFP2sw0hPctRDBpOH9yyw7pIa70Sos657VZ2yuGPewyOjz/3Cl3xIfNbah4jY6opekNdOVA+Qb7cmxT7/0gzpktpQtisJ20XqrbNTlgc3ddMJrw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mn8O+ziN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A344AC116B1;
-	Wed, 20 Aug 2025 17:42:32 +0000 (UTC)
+	 MIME-Version:Content-Type; b=aweJ04lQxlazo9M8yKMN2anUL26Ifvo4CXgpgZuz04fhvIrQ+PIccmVIxyiX2YgoUUfCS3YoIQPtQyG4YEqECxBirw3CQkMImoKV0gyqFwtBAse5ZhIHdSYj9il0BLA2guBdgbPcJT6+uXWPW+akwInOoH7FDx5ayxnOwLEbqvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sv+JIZlh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3804CC113D0;
+	Wed, 20 Aug 2025 17:42:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755711754;
-	bh=Xy0bu3vQAEGmTyNEoI30KC+Xj+Gjlxb6czl2aL3y4WQ=;
+	s=k20201202; t=1755711756;
+	bh=f5b/XZjopr8Cuv8VprlPMa8Ukxq9ScSdZbNIDsH+L6o=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=mn8O+ziNQTrcb0dkGA1Ju1lIaGKs1IfFjbXWmjmlPs1KuWho2LuamxajVQPUzc7cr
-	 V44i9ZWtK/WYfPY15tnfIlEedV11BjOC0Nx9D7O3/9LOQACUWePB9UwZ8tVYSLE44J
-	 BlXkYM1gioXW5uUtFiTZ7Jk6u8q+98jqYdDyLiRIGitqkgYeWTrDxnzH7xsP94TMzQ
-	 sekRoNFW632XvpNGRSv/ia9GbQm2+JuubyLG0xoHn7NhFvl6bVf/D0v3Rn5PLes28u
-	 uaaUo+p9hRoB5rJI47zGT7Kl1wSmVwuXxzds4SCn1+k7MfNkwWd3HONChIThsXp7ds
-	 S8hFP5gs1j89w==
+	b=sv+JIZlhwxm2bzqHaIT0dneeU60FkdTIN/60NpfBHVCytLiCHAtYgsZ0gEBNATsgl
+	 eeoMa7f2g3Elyr6Si+n6ft6bQPwBzUnd2RCZXo6/tar6V+8JR8CIZ8PfL7PumZUoJT
+	 kgRF2SESj6VD0kGpR6DFJLCZ+e5l7gfWkgGsUS16Z4PRjK9AzFmXte1RZ6t6R/j+Xj
+	 3DBnFXSZgfk+K843yterdk5wWUVEsavkrbo+5x8XUL2xMKpW5ruLPSb8LWWtEtE2v7
+	 ARLaJ53I0Zc2nGh6faRELNA3Jxiqec9n1e6cQuk7Ji5nAOM/iultrADMEp3nyfJHgi
+	 miHUy9/Ew6GgA==
 From: Vinod Koul <vkoul@kernel.org>
-To: dmaengine@vger.kernel.org, 
- Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>, 
- Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org
-In-Reply-To: <20250801215936.188555-1-vinicius.gomes@intel.com>
-References: <20250801215936.188555-1-vinicius.gomes@intel.com>
-Subject: Re: [PATCH] dmaengine: idxd: Add a new IAA device ID for Wildcat
- Lake family platforms
-Message-Id: <175571175221.87738.9485571234240893975.b4-ty@kernel.org>
-Date: Wed, 20 Aug 2025 23:12:32 +0530
+To: dmaengine@vger.kernel.org, Colin Ian King <colin.i.king@gmail.com>
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250730162712.2086439-1-colin.i.king@gmail.com>
+References: <20250730162712.2086439-1-colin.i.king@gmail.com>
+Subject: Re: [PATCH][next] dmaengine: ppc4xx: Remove space before newline
+Message-Id: <175571175477.87738.3069092823141018312.b4-ty@kernel.org>
+Date: Wed, 20 Aug 2025 23:12:34 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -63,16 +60,16 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
 
-On Fri, 01 Aug 2025 14:59:35 -0700, Vinicius Costa Gomes wrote:
-> A new IAA device ID, 0xfd2d, is introduced across all Wildcat Lake
-> family platforms. Add the device ID to the IDXD driver.
+On Wed, 30 Jul 2025 17:27:12 +0100, Colin Ian King wrote:
+> There is a extraneous space before a newline in pr_err and dev_dbg
+> messages. Remove the spaces.
 > 
 > 
 
 Applied, thanks!
 
-[1/1] dmaengine: idxd: Add a new IAA device ID for Wildcat Lake family platforms
-      commit: c937969a503ebf45e0bebafee4122db22b0091bd
+[1/1] dmaengine: ppc4xx: Remove space before newline
+      commit: 1daede86fef9e9890c5781541ad4934c776858c5
 
 Best regards,
 -- 

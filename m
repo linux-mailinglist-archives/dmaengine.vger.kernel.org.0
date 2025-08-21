@@ -1,126 +1,135 @@
-Return-Path: <dmaengine+bounces-6096-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6097-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A2C37B2EFC7
-	for <lists+dmaengine@lfdr.de>; Thu, 21 Aug 2025 09:35:07 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A7516B2F2E6
+	for <lists+dmaengine@lfdr.de>; Thu, 21 Aug 2025 10:53:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5E05A1CC3EC0
-	for <lists+dmaengine@lfdr.de>; Thu, 21 Aug 2025 07:33:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 897F717F793
+	for <lists+dmaengine@lfdr.de>; Thu, 21 Aug 2025 08:51:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B8C02E92D6;
-	Thu, 21 Aug 2025 07:32:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2D7A2EB863;
+	Thu, 21 Aug 2025 08:51:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UA1x/1g3"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FE482E92DA;
-	Thu, 21 Aug 2025 07:32:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21ACD2E88A6;
+	Thu, 21 Aug 2025 08:51:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755761576; cv=none; b=tAXWIIQ3EbI6awy64KFmJQDO4vSZLclBKFAyb+3BWONfDRlkQrGcgeYEVPWzo1aEZwdETJOAWtL1Gs82+JG6OxRBVEP+pJ0Ir8nrxFCBceX8tTqAo/+tgksMhE0WXdfdGu8h3U9RwdaDgFtGsJcmuDJZSpHV2gCucs0bs4csBxQ=
+	t=1755766289; cv=none; b=WiKAqOYkKiKQJEyIIAy1YcIjx9QVfmk/pzA9xJ8V/jdbJXj/23Fp/A3L9haIGsKdeJ0LhKh1+JM/SFgH7EWTQjpLsaLBMvD1sA0EBoHZ26LtPEpCqjxLk2pEVLnJ9CkEsZzSEJ4G+8yFTb7SnFfPkB0nk09MX9GO8rg9wFFzNQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755761576; c=relaxed/simple;
-	bh=iR7W9OBIg/YoAAEk8o+v4Qww1X9xHOdg9QT6r7jtb8c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bH1aduXjMi6nSRI1OxQVVjZ/TPekA5SlFAZzcntvkpXN8tQJ75cvgvYIQiKCZmrRMfGig2yWiexmv9Oqj4r11jffHV9+0T5uKrGGGJkp+a3DMzkUJKx+zjShDuUeYZ53Kkgbujs8CTs5FCBnKeuslri88/T7Tw6GG9iMq1ebJbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-53b17534eeeso266060e0c.3;
-        Thu, 21 Aug 2025 00:32:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755761573; x=1756366373;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5G76ZiP1l04eRnUL+woGlRNtcvSbJmIHOuwOKU1fo5k=;
-        b=W2M+vthg7R5KQMSTVFl3oLmKAKn/fuKJHZpSD+ROejCkEop3pnePpyjzpwmEUtFxct
-         cqQMDZ8K2JwWiUn9mP0KOnjTATA85zfwaOb18eKJgnbRrTr4wjT0b6bA2YdDCkg7Ujgh
-         HaBk5iWQYV9D13BrWfnvWEOy3aeXoObda1eiX/WEAkgwoLKLs+DIDasTNsQM7GLEIQLi
-         Nuj5+JNn0fJRyeTd+CSaF+gSfmcgBEatnD6/OPc9ag2TyxSFSe2ZszftI6TDF5+H29DO
-         x38/Q6FRH3dqy6+AvMYQ/yNle5z/tC4o7g6W8Yzzp8iF6vxgwdNrxCWxGYy32So9cM3/
-         2TRg==
-X-Forwarded-Encrypted: i=1; AJvYcCUtYAdXFXggMDgt++Ut4uQYCZ+XTdbhPcMr224V0rM85pUZC/Y+LZwc06vrtkKl2MnKIe8BNUZL2Bhx@vger.kernel.org, AJvYcCVYlRKHqQns4m57nTccw4ckVTktO62QJCtubr9ZTswEgGkJURew1N0jNp03iLCAkQ7UJ4svDxcaoUoZwKRAv/QO+38=@vger.kernel.org, AJvYcCVa9NlV7hcK5FSPOyPc1Gcl9esc8Pprf/Oc0BTlbb2HLV+l57GPt7FsJqAArhmZvRQUz/j9Ar5/fg+I@vger.kernel.org, AJvYcCVh6oGiuTHxA6slMG02LlEinoo9EChj+U/EK4EJqFjGPjVYlG72VVXnruRb0IslXeI5g8HKEXPw+8o2@vger.kernel.org, AJvYcCWzwNOXuSbfKfkr388loriLI8C7E+uaLwtQ8J/Pg4nwiel7vKYew7aJoo3wHCYgXDdC5Ya1xJXP/SmbzgEi@vger.kernel.org
-X-Gm-Message-State: AOJu0YwM5830RzXEjFOHQC3p3IfoaE8qhTOR4UKh+O1O5+O4A/xzb+4N
-	rH7pvphK6G1CRKVQ7cktQ4pnS9Wnrb0jzW5Eatk6S2qcZNVD4Al8Ie3akORruhd3
-X-Gm-Gg: ASbGnctufC5J498dPThQf7O/U4vdoqyys/5p/eppwaY5a5BguaM1PVRqp0HMOJNvJrW
-	69IAMj6bXVDHLHAsurJxFc5B2h16eHYJe36Z2kiVdv91T0hfJ/yMuMmsWEZBm7uFKgwvm79AV/z
-	eJ4BOt4IRRLPp668R7iZAWRcxd3sAoOeAEu4eae0SzON0m583PbB5EEX0Q/9TpqR1OYvRJ6Dfn2
-	OY1eXKrAmWcwFvTsIQKVjeNCXxBWqq9fBF1YYGcvvCcAhFFU3eu4mYLJ+L4hw1nIvF+ZOOtxDrj
-	M6aGE9W8mR2DAUrg8D3y2iglNBYTGUWYetEZ/qjugHjLW2Oi3uDDwPmEwTxRYG2+iQiNwTRVvP6
-	umKegE6XULva8hiTaAZMY348Eab0pC1Rw+r3UTIbir6Pex5kQ0PwPw4idMf8V
-X-Google-Smtp-Source: AGHT+IEvPadvvCjlqTkLcsVvoOxXWxY6JCaIK9t63EjMOycQ80Ax647sJDgibdZedCRW1cb95Z9VSQ==
-X-Received: by 2002:a05:6122:3d0b:b0:531:188b:c19e with SMTP id 71dfb90a1353d-53c7d83aac7mr297981e0c.2.1755761572460;
-        Thu, 21 Aug 2025 00:32:52 -0700 (PDT)
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com. [209.85.222.41])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-53b2bed8eb8sm3623728e0c.21.2025.08.21.00.32.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Aug 2025 00:32:52 -0700 (PDT)
-Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-8921eb4befaso44655241.2;
-        Thu, 21 Aug 2025 00:32:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVbS0hbWotO+4kXM8mHWKp2BoXZTZzO1s9qWJJkW0rr81km4QIrkScBV5sI2zIlFehtoLYpHrFPbKA4@vger.kernel.org, AJvYcCVvkXtNfttsJdleJ+tLAjLj+UJLkpYIuu7DbNyo3+oMZXUDEoD8y/XsYRXCE7ZSn9vHw5cn8Xp8NvSZ8wE2@vger.kernel.org, AJvYcCX2Ttsyf/Vr8QtRU0SaFHBlxjLoIXJDk6jqVPKwvgD6nFZ3hq+qzOcPzVu6axqsbN4uzxMd74SZhBInVwmwrhE5ezk=@vger.kernel.org, AJvYcCX9NsqebSswSAJBIMIs/cNTcGKT1WVNX39y2xArnC9oEpNAc5gfl5NWoJmEWxlzwukZC0RoeejTyOyk@vger.kernel.org, AJvYcCXxfvUoXynw5afkjv5G22uyV+3tsCgFaeDQZ9IOQrGzBYyg5k1avP7kj7iGKZvpZUvAfem10/kfv6F2@vger.kernel.org
-X-Received: by 2002:a67:e7c5:0:b0:4e7:5f31:7443 with SMTP id
- ada2fe7eead31-51bdf241ebemr427508137.9.1755761571596; Thu, 21 Aug 2025
- 00:32:51 -0700 (PDT)
+	s=arc-20240116; t=1755766289; c=relaxed/simple;
+	bh=wKuZrvViRuHAjY1cX/Yoa6yyrpLol8N0P8fA7/XKi9Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=r4Q+5vngMRK19cPPjuR4umdaXnKQPEwbb5+biJcE+XFgk/zcKtNHVxg9LDrCaQBiDg+5Un3q4PtieCzG0zmXeJkr3F/QhOZCGyk1QDqyQEhtXnTmyGbnwzz7zbbtHkFmkfYXQERGiSbKfs3V5kH42xv0UivmoDt+ifEIVY8GylQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UA1x/1g3; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1755766288; x=1787302288;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=wKuZrvViRuHAjY1cX/Yoa6yyrpLol8N0P8fA7/XKi9Y=;
+  b=UA1x/1g3kWAHxE8u6MaKQ0h4hpG7Ho46HoNrqcNTQSQIUgZXUqoMKH0y
+   RveGYz2i1H62Cjt9MkDm8xJbxGUHdNHW0keVYyL6fzd2DbjKdBlW4ea4r
+   gLzv7X3gInAjaJKJPdA2lh5xi7B6D6q0j6N1yBMw4/8XUbEen5GPtC+Fh
+   VxcL95Uuv36dh100IdLXpdAt100DyVyJ4KmdtbdVLXyTtku401k/DHY5v
+   fW0XXEbq06vUiitbZ62nLFy2hBRZ3cixB1nPI/aLBT0TCIyERqvM5lseu
+   7zzYLqX5AAovfFtugA7w/cYeP+EGfR6I7+imV+szXC+AThXHKdhTgRB64
+   w==;
+X-CSE-ConnectionGUID: gm58rEvPRWyX2mlPgwGAUA==
+X-CSE-MsgGUID: otczJ8++Tuync/FcrOFQiA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11527"; a="61877050"
+X-IronPort-AV: E=Sophos;i="6.17,306,1747724400"; 
+   d="scan'208";a="61877050"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2025 01:51:27 -0700
+X-CSE-ConnectionGUID: qzJlAJP/TUmKajU1GYelWw==
+X-CSE-MsgGUID: O7/9XB2eRlyoeUwFI2Jabw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,306,1747724400"; 
+   d="scan'208";a="173624780"
+Received: from ysun46-mobl (HELO YSUN46-MOBL..) ([10.239.96.51])
+  by fmviesa004.fm.intel.com with ESMTP; 21 Aug 2025 01:51:25 -0700
+From: Yi Sun <yi.sun@intel.com>
+To: vkoul@kernel.org
+Cc: vinicius.gomes@intel.com,
+	dave.jiang@intel.com,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	yi.sun@intel.com,
+	gordon.jin@intel.com,
+	fenghuay@nvidia.com,
+	yi1.lai@intel.com
+Subject: [PATCH v3 0/2] dmaengine: idxd: Add basic DSA 3.0 capability and SGL support
+Date: Thu, 21 Aug 2025 16:51:09 +0800
+Message-ID: <20250821085111.1430076-1-yi.sun@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250801084825.471011-1-tommaso.merciai.xr@bp.renesas.com>
- <20250801084825.471011-3-tommaso.merciai.xr@bp.renesas.com> <aKYG-ph43pjgiHF_@vaman>
-In-Reply-To: <aKYG-ph43pjgiHF_@vaman>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 21 Aug 2025 09:32:40 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUWEspGvAvrm1T_hSjHmEhqAO4+OPfRWRZP+PTP-EO=5Q@mail.gmail.com>
-X-Gm-Features: Ac12FXzPw4V06_RhWFxxZjKCzjwq7JCDGr5NyUZSqRo7upsFc1Tlulg44uQr3Mg
-Message-ID: <CAMuHMdUWEspGvAvrm1T_hSjHmEhqAO4+OPfRWRZP+PTP-EO=5Q@mail.gmail.com>
-Subject: Re: [PATCH 2/3] dt-bindings: dma: rz-dmac: Document RZ/G3E family of SoCs
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>, tomm.merciai@gmail.com, 
-	linux-renesas-soc@vger.kernel.org, biju.das.jz@bp.renesas.com, 
-	prabhakar.mahadev-lad.rj@bp.renesas.com, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, dmaengine@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-clk@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Vinod,
+This patch series introduces foundational support for DSA 3.0 features,
+exposing hardware capability registers to userspace in the IDXD driver.
 
-On Wed, 20 Aug 2025 at 19:33, Vinod Koul <vkoul@kernel.org> wrote:
-> On 01-08-25, 10:48, Tommaso Merciai wrote:
-> > The DMAC block on the RZ/G3E SoC is identical to the one found on the
-> > RZ/V2H(P) SoC.
-> >
-> > No driver changes are required, as `renesas,r9a09g057-dmac` will be used
-> > as a fallback compatible string on the RZ/G3E SoC.
->
-> I seem to have only 2/3 w.o cover, nothing in pw too...?
+DSA 3.0 introduces several new features that require awareness and
+configuration from both kernel and userspace. It is necessary to
+understand the hardware's capabilities for userspace tools (e.g.,
+idxd-config, libraries, and applications) to make use of the features
+properly, such as supported features, memory layouts, and opcode
+compatibility.
 
-Lore has the full series:
-https://lore.kernel.org/all/20250801084825.471011-1-tommaso.merciai.xr@bp.renesas.com/
+Patch 1/2 exposes the three new capability registers (dsacap0-2)
+introduced in the DSA 3.0 specification through a new sysfs entry.
+This allows tools and users to query hardware capabilities such as
+supported SGL formats, floating-point options, and maximum supported
+sizes.
 
-Only patch 2/3 was meant for you.
-Patches 1/3 and 3/3 are clk and DTS patches, which I have already
-applied to my renesas-clk and renesas-devel trees, as the new DT
-binding is straightforward.
+Patch 2/2 enables configuration of the maximum SGL size for DSA 3.0
+devices. Some DSA 3.0 opcodes (e.g., Gather Copy, Gather Reduce) require
+that the workqueue's SGL size is explicitly configured. This patch sets
+that value based on hardware capabilities at initialization time,
+allowing these opcodes to function without additional user configuration.
 
-Thanks!
+---
+Changes in v3:
+- Rebased the patch series onto v6.17-rc2 (Vinod)
+- Added Tested-by and Acked-by tags
 
-Gr{oetje,eeting}s,
+Changes in v2:
+- Added the link to the DSA 3.0 spec in the commit message (Dave)
+- Fixed typos in the commit messages (Fenghua)
+- Updated the sysfs ABI documentation for accuracy (Fenghua)
+- Renamed the ABI entry from 'dsacap' to 'dsacaps' (Fenghua, Philip)
+- Moved the definition of dsacap0_reg from patch #2 to patch #1 (Fenghua)
+- Fixed the output format (Fenghua, Philip)
+- Reordered the capability registers to match the DSA 3.0 spec (Fenghua)
+- Add conditon checking to avoid accessing dsacaps when DSA 3.0 is not
+  supported (Fenghua)
 
-                        Geert
+Yi Sun (2):
+  dmaengine: idxd: Expose DSA3.0 capabilities through sysfs
+  dmaengine: idxd: Add Max SGL Size Support for DSA3.0
+
+ .../ABI/stable/sysfs-driver-dma-idxd          | 15 ++++++++++
+ drivers/dma/idxd/device.c                     |  5 ++++
+ drivers/dma/idxd/idxd.h                       | 19 +++++++++++++
+ drivers/dma/idxd/init.c                       | 11 ++++++++
+ drivers/dma/idxd/registers.h                  | 28 ++++++++++++++++++-
+ drivers/dma/idxd/sysfs.c                      | 24 ++++++++++++++++
+ 6 files changed, 101 insertions(+), 1 deletion(-)
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.43.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
 

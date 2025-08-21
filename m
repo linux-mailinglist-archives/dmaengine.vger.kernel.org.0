@@ -1,129 +1,122 @@
-Return-Path: <dmaengine+bounces-6103-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6104-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 178E2B307ED
-	for <lists+dmaengine@lfdr.de>; Thu, 21 Aug 2025 23:07:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3BF1BB308EF
+	for <lists+dmaengine@lfdr.de>; Fri, 22 Aug 2025 00:09:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 375DDB639BC
-	for <lists+dmaengine@lfdr.de>; Thu, 21 Aug 2025 21:05:42 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DA7F47A401C
+	for <lists+dmaengine@lfdr.de>; Thu, 21 Aug 2025 22:08:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47BAF137750;
-	Thu, 21 Aug 2025 21:04:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7AB22EA72B;
+	Thu, 21 Aug 2025 22:09:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QoxKzoxX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kX3T/mcE"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E5362773E9
-	for <dmaengine@vger.kernel.org>; Thu, 21 Aug 2025 21:04:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7548C28466C;
+	Thu, 21 Aug 2025 22:09:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755810251; cv=none; b=OPeM2wkQMN/uSm4QIs47K/SOJiX0KosNm41qBYURnDg6Wk8PaLFyBekdEMtB4eoQ6Lr2tJxcK3wzlnVAylHbcuVAgV4vkL5++OYZez6zfDr6a9XasiNiNWITgqTMAZRshhjkg1EDIoQtVGX7uAYsWMdJ25Ql9VvqbzV05eQEhWk=
+	t=1755814186; cv=none; b=ocEDgkys5HvDN/+wTYKfb+3j2TIAmFrHz5j/eZvYy5pB0H29A2st2wWV1XQafrWRj4oqF/SveJRhmKjDpbxKMLCQKqfhJ1P4ns5uIPk7ftB2a1m25JyucUGIPh83k2MfVicYIzENuIXdllhJeSsaRjOGQBIOXp9nEbMnhsPH6TE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755810251; c=relaxed/simple;
-	bh=Ax/5M9fNgiaUpM60gNgoLr7S2/wLwZqWm5F2SXmLfG0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CVlRugupiDlqcCRqUtgX7rCMOY+cV5fFkxAiYz4U5n6NQncQoNvHFeNqEqvo6ZpgVC3D5DhGVhZzwPlOXqE92Rlb7DaygXH0HYtS52CLvoIeIv2LzI0CaTTfrnaXgv3MU9FSWxv0zmF3uabWb/t7ToU16M4RjlBRgKeIZk1Wcd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QoxKzoxX; arc=none smtp.client-ip=209.85.222.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-8921eb4be94so650996241.2
-        for <dmaengine@vger.kernel.org>; Thu, 21 Aug 2025 14:04:09 -0700 (PDT)
+	s=arc-20240116; t=1755814186; c=relaxed/simple;
+	bh=HbrzIow6ro5F8biuzHHI59aFAdttm39yiOQJ9djR9aA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iIjHIVzN6475XYk/IRxRumj5Ovhv2a15LCHWWevprzfeeS0oel5x4fpyjSkNaUxyQ25Ncdb6alvFqeZ/yQUTtY0aWBTjTyjWTp6QpbgvClfczoup42f5kkJNG0o6hhpgCUvgP0WR+QwNrMI8+vW/VXNVR7Z8hG9CROZSV6D26tI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kX3T/mcE; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b476c67c5easo1042648a12.0;
+        Thu, 21 Aug 2025 15:09:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1755810248; x=1756415048; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DiHzVX3qqPLSsGwTYsNg14BwO9f8YSWJkk7KXDdCW6Q=;
-        b=QoxKzoxXs4JFDqpMIofYQsgGMSLkQxghekIWh1b/d8RwUYmcoBOL1wlZ3bKCSikNC7
-         5rDMSQJDTsbUZjTxs62THojZGcKY1j4zn8u8cJLCtDOltClY9zKaEBPBWdVT/F+O1qNs
-         wo8C0LNTG0gKmd8471cSCATxj9AX7LHCRZP7qTKaJgEv0jI3izQeVncFuwMj39U1EC5l
-         AvZMUty0OEk/a7Cu3/8a0MlsjeVJz0eJ/6pFQlVbUCNOQvlmCxsF40tOMtdR9k6FZwHC
-         HT4CWf1WdeKJh7r8+4bDJroO1bH/Td8TPMnAlugfMj/xko4iU0NETDN0cJtlMALWTH3U
-         1X2Q==
+        d=gmail.com; s=20230601; t=1755814185; x=1756418985; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=++SJ5jRH+WreHKVhkZdUv3bQcfYuCui1mzziW/uI5PI=;
+        b=kX3T/mcEGAtVrxGHPHnE78N5qdG9GWPF3Eh4ueDjGergcBiQRg781u4Ixs7kSwHgOc
+         NkCmeKgZPms9+vCdbeQKh4MlUjLeb5BewFwMGw3l8pnzEF5JPlqmss3Kn4OutBEiA5q6
+         RLnmbukpIMeGjJkdMDesbyk+hh+G5lZraYc3NTO4aWeSyj7wPYZHURy9sMw6T96UZNKN
+         ui+hW4NW54hS1q9NKWEWtT552gckuqrO/CR+kewyLKU5aIJdngv6pp6pTqRr5jRUOJZe
+         Wxm+FxmBk2LSzmP6NDR0S69993LgZIBLjH7okNKdR9p8XaOiWCg2g26UM35TXdH2Ehgf
+         A4QQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755810248; x=1756415048;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DiHzVX3qqPLSsGwTYsNg14BwO9f8YSWJkk7KXDdCW6Q=;
-        b=c4Zc2ofYIKh9hzu5orqgMZqf/MyHCAFa6bRJlva0v5dfHlEw4B7djffqcE6mnhOOqn
-         boj4mi5hGXI6C//BWkBHOMACgVGp7O7ak4csih0eGe4kCYH4f+xO7v6fhoDqYkZZX3i0
-         hypEU8X8JIvrS2Ikj1dBGRGfnbEylqdavhN0EMTvEGbQWjMhtPkOI1fzVgER5FLHkfQx
-         jsfA5S0DW7m2vI4lWI3IKNqoBivcTreMYBSnqoX3JRrNxAvri78QiTDHR1AYkbL/eQGi
-         9+Lus+hPJnvINFdBgD+3Xfx5AHyr0yKHogtv4BtyP0E/FmFVM+VLHHmLfTn3/+v7yZKd
-         LpCg==
-X-Forwarded-Encrypted: i=1; AJvYcCV5b8mtYil5xjrU6RdDcous3FxFjA5TpqCpuqla+H0FhyK3TMFJJDjAvQ++vzPWUbK6njYBuiu5F+A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzX/XNpYIltfp5Y7EcO4TZ70qhKFm4fiG3Znc0SIz3K4gNuaK9q
-	31dqfWhFaLyzXEv2TqEMEUh4YgLRGYrb1+k4vcqO/ZFQyt1M0ssea4/hWjbRz0XLobhQk4nXRKr
-	15z7G3fQXo/f+DJ8dsrh6ZymNR+jEeomauyeTnmaN
-X-Gm-Gg: ASbGncu9YHQiVvxFWLxkbBRoaUARGkbRxboGkDoCD5yep8TQxAqFA+9esiouAybb4WZ
-	HjvTRPki9yEBSlA1KxtedSVgRutEvRcUEmWqMmYb7Stt+OmR3pW2OKgjHhaWTXCJ0lVWIbvE/bL
-	kwEn0aRcW56mdpTRSqH6qJgUmKhQI7EOQLHiw6iBb2fGJpwP5ngHAmjkiuu7i2pPWmLCcMaahWo
-	8ZyRXmrw+p8Wk1GOhNx2RiVOXYjzWSjVxlIa0AicklbdkOPAOpadnRs
-X-Google-Smtp-Source: AGHT+IH8BmhwAV5TMq5jtuv5CcD52sEM4hDAtFzPHkyrC5f4RE9vRJicCBjwB0j/euUZjYyXAYbjQQDm0mf50m9A4Hw=
-X-Received: by 2002:a05:6102:3714:b0:4fa:d2c:4ff with SMTP id
- ada2fe7eead31-51d0f2ea55dmr219355137.27.1755810248226; Thu, 21 Aug 2025
- 14:04:08 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1755814185; x=1756418985;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=++SJ5jRH+WreHKVhkZdUv3bQcfYuCui1mzziW/uI5PI=;
+        b=srndMQjUfU3zJUSff3VdHI3Paa/HTVKAehoYzFg16E7vhoJhI/niewkL5ZFT1qq8k1
+         85VAotnDZZXoxHQ4KE/bfjJsQu3MhByMQ8dMm0ydS+1w/Hzk7gpJRXoznOQ2TbORpTzI
+         5VC4POwoATL+EZdZUSV3lDC7HBJQeAaV55RphD+mcKDL6+x/iAAnVDadg+jIAsSPwOwD
+         b75HgX49c/Oj8YCpYMUhXylNpMFvCr89rMAV4EwhtuXxLL9vERxMTgCpmMDOLZ669SEs
+         hux2vZ2c1aQe1FSl87yVnDSzPuuj9GoTePQ7oF/a8WRfwoAroIUyPw5DWFNczurOm2mA
+         LQgw==
+X-Forwarded-Encrypted: i=1; AJvYcCW9JkkaBqRQYmM99RitRTy7DH2IF+hSgFSO1JPOF6l30RDmSskKD7eFMz0YYCsvPr6VPW0WBI3MffNKNJo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9kyWGxZxTOAfg1x7lGXgxwoMeqi+9E0VjznHn3q3Ef8aihshK
+	otBqSGlJWrYz5ekO3rceScOQpbjqOwNxZpkHGOataT2qNmfMKE1/C6Pn2JCTlQ==
+X-Gm-Gg: ASbGncv2Ppl5MxLPNeP9MWOZ1tYtsrafOnGAOhFDjkJKLMyz30J5R9hKBOm1yK2k4o0
+	pWP0sy8KCJZIDZax0Sx977kIGPQnuGLImEsZliqCw2773Tdf1GUxzV71u9MmKYuVih4VPZmwcmu
+	cK0Rj1aZo24ik2X6tVYJpkd0jil0QN645o/JziRTiOyUXC4bYGujEg2WTwTSjoTvJWfHJWR3kth
+	FbnVjJOvE+GQn9Dd0KfHEJ5f6kpy0Ff4UMmqiGWaP4gnu9LeLke1PXeVl1TCQaJ2ZBSNVHQhCTe
+	MjJ91O926/ZlpW0aisy3ux8y2PHfgOyB5eXuEp6xadiPkhqV4M2uUhw13UvChO+QzauuLsGFAMP
+	JQDMuOCwPbRBU+rq4p6heUTTj3F3w3YMwe5SHI7kYPPBtwQionXK5wFQYW8TqFkIeVQ==
+X-Google-Smtp-Source: AGHT+IFR3qzaOnGO7yrX3uuFPVS/s11ir63odsICB5K60MZo855LaBFjjGXcwnxMQGBeb+hKpixCfQ==
+X-Received: by 2002:a17:903:32c8:b0:240:72d8:96fa with SMTP id d9443c01a7336-24602484973mr47892845ad.20.1755814184474;
+        Thu, 21 Aug 2025 15:09:44 -0700 (PDT)
+Received: from archlinux.lan ([2601:644:8200:acc7::1f6])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2462e6ba0d8sm5939655ad.125.2025.08.21.15.09.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Aug 2025 15:09:44 -0700 (PDT)
+From: Rosen Penev <rosenp@gmail.com>
+To: dmaengine@vger.kernel.org
+Cc: Vinod Koul <vkoul@kernel.org>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] dmaengine: mv_xor: match alloc_wc and free_wc
+Date: Thu, 21 Aug 2025 15:09:42 -0700
+Message-ID: <20250821220942.10578-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620232031.2705638-1-dmatlack@google.com> <CALzav=dVYqS8oQNbygVjgA69EQMBBP4CyzydyUoAjnN2mb_yUQ@mail.gmail.com>
- <20250728102737.5b51e9da.alex.williamson@redhat.com> <20250729222635.GU36037@nvidia.com>
- <CALzav=d0vPMw26f-vzCJnjRFL+Uc6sObihqJ0jnJRpi-SxtSSw@mail.gmail.com>
- <CALzav=fdT+NJDO+jWyty+tKqxqum4RVkHZmUocz4MDQkPgG4Bg@mail.gmail.com>
- <20250818133721.32b660e3.alex.williamson@redhat.com> <CALzav=eOz+Gf8XawvaSSBHj=8gQg3O9T9dJcN6q4eqh7_MEPDw@mail.gmail.com>
- <20250821141048.6e16e546.alex.williamson@redhat.com>
-In-Reply-To: <20250821141048.6e16e546.alex.williamson@redhat.com>
-From: David Matlack <dmatlack@google.com>
-Date: Thu, 21 Aug 2025 14:03:39 -0700
-X-Gm-Features: Ac12FXx-07ysjjhbXcW1d6QGdWIOYK7REtcOvofZDmLrqHjrbC9iI7jgWdySeG8
-Message-ID: <CALzav=f=tg_oz1pEOKFiswBKnTCbrPOJR-DgAK_--jmSkxbCWw@mail.gmail.com>
-Subject: Re: [PATCH 00/33] vfio: Introduce selftests for VFIO
-To: Alex Williamson <alex.williamson@redhat.com>
-Cc: Jason Gunthorpe <jgg@nvidia.com>, Aaron Lewis <aaronlewis@google.com>, 
-	Adhemerval Zanella <adhemerval.zanella@linaro.org>, 
-	Adithya Jayachandran <ajayachandra@nvidia.com>, Andrew Jones <ajones@ventanamicro.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Bibo Mao <maobibo@loongson.cn>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, Dan Williams <dan.j.williams@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, dmaengine@vger.kernel.org, 
-	Huacai Chen <chenhuacai@kernel.org>, James Houghton <jthoughton@google.com>, 
-	Joel Granados <joel.granados@kernel.org>, Josh Hilke <jrhilke@google.com>, 
-	Kevin Tian <kevin.tian@intel.com>, kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, "Pratik R. Sampat" <prsampat@amd.com>, 
-	Saeed Mahameed <saeedm@nvidia.com>, Sean Christopherson <seanjc@google.com>, Shuah Khan <shuah@kernel.org>, 
-	Vinicius Costa Gomes <vinicius.gomes@intel.com>, Vipin Sharma <vipinsh@google.com>, 
-	Wei Yang <richard.weiyang@gmail.com>, "Yury Norov [NVIDIA]" <yury.norov@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Aug 21, 2025 at 1:10=E2=80=AFPM Alex Williamson
-<alex.williamson@redhat.com> wrote:
->
-> I think we have all the required acks now and reviews just suggest some
-> minor patch shuffling, right?.  You were also going to switch from
-> reviewer to maintainer of the selftests in MAINTAINERS ;)
->
-> Are you planning to collect those acks, add the minor changes, drop the
-> trailing KVM changes to come in through the existing kvm selftests and
-> repost?
->
-> With KVM Forum coming up, I'd like to try to get this squared away and
-> into the vfio next branch by next week.  Thanks,
+dma_alloc_wc is used but not dma_free_wc.
 
-Heh, I was just going to send a similar email to you :)
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+---
+ drivers/dma/mv_xor.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-That plan sounds good to me. I will prep a new series with those
-changes and send it out at the beginning of next week (fingers
-crossed).
+diff --git a/drivers/dma/mv_xor.c b/drivers/dma/mv_xor.c
+index 18ddbff38abc..7ef1d2b20609 100644
+--- a/drivers/dma/mv_xor.c
++++ b/drivers/dma/mv_xor.c
+@@ -1013,7 +1013,7 @@ static int mv_xor_channel_remove(struct mv_xor_chan *mv_chan)
+ 
+ 	dma_async_device_unregister(&mv_chan->dmadev);
+ 
+-	dma_free_coherent(dev, MV_XOR_POOL_SIZE,
++	dma_free_wc(dev, MV_XOR_POOL_SIZE,
+ 			  mv_chan->dma_desc_pool_virt, mv_chan->dma_desc_pool);
+ 	dma_unmap_single(dev, mv_chan->dummy_src_addr,
+ 			 MV_XOR_MIN_BYTE_COUNT, DMA_FROM_DEVICE);
+@@ -1160,7 +1160,7 @@ mv_xor_channel_add(struct mv_xor_device *xordev,
+ 	return mv_chan;
+ 
+ err_free_dma:
+-	dma_free_coherent(&pdev->dev, MV_XOR_POOL_SIZE,
++	dma_free_wc(&pdev->dev, MV_XOR_POOL_SIZE,
+ 			  mv_chan->dma_desc_pool_virt, mv_chan->dma_desc_pool);
+ err_unmap_dst:
+ 	dma_unmap_single(dma_dev->dev, mv_chan->dummy_dst_addr,
+-- 
+2.50.1
 
-Thanks.
 

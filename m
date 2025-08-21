@@ -1,67 +1,66 @@
-Return-Path: <dmaengine+bounces-6109-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6110-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4F56B309BC
-	for <lists+dmaengine@lfdr.de>; Fri, 22 Aug 2025 01:00:56 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90323B309C4
+	for <lists+dmaengine@lfdr.de>; Fri, 22 Aug 2025 01:01:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 66BDAB64ED8
-	for <lists+dmaengine@lfdr.de>; Thu, 21 Aug 2025 22:59:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A30A31CC8529
+	for <lists+dmaengine@lfdr.de>; Thu, 21 Aug 2025 23:01:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 187E82EBB80;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8459A2EBBA8;
 	Thu, 21 Aug 2025 23:00:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YflNOWUP"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bNhcEYvP"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52DC32EAB84;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADCC62C0299;
 	Thu, 21 Aug 2025 23:00:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755817215; cv=none; b=Reink5AYM8jKtGk0pufTxolwwGieJT9Y3DK4enpKTmrSM0K0iLfAIa5wCJB/YzKOdei3y3vKIfFcJtSIyOkWaTtfC3HvguD+QkXcL/ogIktW7eYBJH1dp2qaJq1Z63TXVe9TfMu+LiExeh4No15rr+m+XvYmHw6LG/U+u/VoZyg=
+	t=1755817215; cv=none; b=H0tLL0n9iFjc14GcN4RkoZt0xE0iM/fpyVc7PsuQEc6O2FD2UVp5xBTTT9UwVr3AL1+ZsT9VI09RKGCV2z1P3+gaydfVpCBRfZk4Llq1j1esF0RfFtRmxZjYru2rtfmfGtDxGPt3zpYDU6AYJtCkIT67bUURKiMehQJw/Jw+Eu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1755817215; c=relaxed/simple;
-	bh=1rsBcE9VpQ7SBF4zvv4WFKkDlb1Z7pK2vW4cbeyBbSo=;
+	bh=UiRVDRNElmnuQn1IkTxW0cyZ8FQfjc/JQob2A2ENmEA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=X9iy0iYaBfFgtQ/xWxr8TjLS5rveeVN6PdCdrFjex/tvzQKFSX2b4IpJE4xqxnAZogIvKA8dqlxZFp3SBYVhFM6wCVRmQvKRsNLpul+piSHRQ0Re0HFHMZaAiLqOZvTU+BnzjsjNB+b3a2sMvShWVWsENnSQBs7uDYOyKl4hick=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YflNOWUP; arc=none smtp.client-ip=192.198.163.13
+	 In-Reply-To:To:Cc; b=c4FaWVAGJqHeB+O1DBZXs0RlrvCLh7kwv18ZShdXHn0RRwGm4C6MmEu/smsEapCy4r6pfEaq4/92JJ1WgwNqUNocDo3Iy121MljeUCAn85L3arVHqhBgCwV6Vz9CCHL+uwFxiSucTjzNEvHw1P8zTeu66LP96dusQGtvsj18Fq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bNhcEYvP; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755817213; x=1787353213;
+  t=1755817214; x=1787353214;
   h=from:date:subject:mime-version:content-transfer-encoding:
    message-id:references:in-reply-to:to:cc;
-  bh=1rsBcE9VpQ7SBF4zvv4WFKkDlb1Z7pK2vW4cbeyBbSo=;
-  b=YflNOWUPIJCTq4FxNDCl5NC84w1OHSeDHqaOHxWYaTyPFCbc1SckRKEY
-   +TYgBWEfU/8A5D2xi1GRMPS9UR0qLHcaYBikRxSDwVtRiTu50fwY38gKn
-   eJ4GghY2yAcvWcoJFgHxK1nAyUr/1Wvd936kuhuPszn4rY+3euWR/yT35
-   4J4taBysS5gNHkcHk14JdhLFfrO8jLyuz4u5tvFtZDKM7+u+rUqduc5q2
-   WFngC4NDZFAnZE3c0AbYqRTehzmubW/Fb6koDzC8+SFQ18t2squ0wE/ji
-   XwS9PezXZ4XKcQmVH5lLUbdmUurfupxc+6H548bbL9v6ox3CN8MjMDd7c
+  bh=UiRVDRNElmnuQn1IkTxW0cyZ8FQfjc/JQob2A2ENmEA=;
+  b=bNhcEYvPMdrn+cg1uIiW0+mvJcYhba8RL7zdtNnD7wVsv609Q8l5YkGi
+   zv/aarJQPhSBMx/TA9zZnl0YQxXSpTL8FNWoeHt14QheGmPi23XtX6axd
+   Dw4P+rZgRTr2Sslfk0d2Ms3Yt5lOLcOBKW9xnbDvEc+crBV+r+UMYGtu0
+   tKBSz1YP50Ccp8himzrEYk3HvFcfUP9i7UFCdh6NLmeRDv4G1I5I0yl6L
+   jcrHPekzsOI9yGN2AvuuT7kqitn2HdsnhpPXfC/gAi5cRLr1PhtuojhC5
+   IyrF0eDMqkMeaH8757d52CUSsrI17tlLyZRYD3CA7t8buRIYJKUmpTbsI
    w==;
-X-CSE-ConnectionGUID: 9BBRUgjJQwyukPtxG6zbgA==
-X-CSE-MsgGUID: uAaVa6ScTvq2vNALCGGOKA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11529"; a="60748490"
+X-CSE-ConnectionGUID: 7JlRy67+QduGup+rwqXF5w==
+X-CSE-MsgGUID: Ly0dsp6tTPGLYaQ+vHGJ+g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11529"; a="60748492"
 X-IronPort-AV: E=Sophos;i="6.17,309,1747724400"; 
-   d="scan'208";a="60748490"
+   d="scan'208";a="60748492"
 Received: from orviesa007.jf.intel.com ([10.64.159.147])
   by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2025 16:00:10 -0700
-X-CSE-ConnectionGUID: NwuQRM3lRwWgawzKTrdlfg==
-X-CSE-MsgGUID: QSQtNPCkT9eburAQIj3FGg==
+X-CSE-ConnectionGUID: W8GVwglcQHq1unJAm91HKw==
+X-CSE-MsgGUID: fz+B0CjmSxaLfrEvS6FP5g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.17,309,1747724400"; 
-   d="scan'208";a="168444354"
+   d="scan'208";a="168444357"
 Received: from vcostago-mobl3.jf.intel.com (HELO [10.98.24.157]) ([10.98.24.157])
   by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2025 16:00:10 -0700
 From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Date: Thu, 21 Aug 2025 15:59:38 -0700
-Subject: [PATCH v2 04/10] dmaengine: idxd: Flush kernel workqueues on
- Function Level Reset
+Date: Thu, 21 Aug 2025 15:59:39 -0700
+Subject: [PATCH v2 05/10] dmaengine: idxd: Flush all pending descriptors
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -70,7 +69,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250821-idxd-fix-flr-on-kernel-queues-v3-v2-4-595d48fa065c@intel.com>
+Message-Id: <20250821-idxd-fix-flr-on-kernel-queues-v3-v2-5-595d48fa065c@intel.com>
 References: <20250821-idxd-fix-flr-on-kernel-queues-v3-v2-0-595d48fa065c@intel.com>
 In-Reply-To: <20250821-idxd-fix-flr-on-kernel-queues-v3-v2-0-595d48fa065c@intel.com>
 To: Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>, 
@@ -78,113 +77,54 @@ To: Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>,
 Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Vinicius Costa Gomes <vinicius.gomes@intel.com>
 X-Mailer: b4 0.15-dev-2e5ae
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1755817209; l=3438;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1755817209; l=1354;
  i=vinicius.gomes@intel.com; s=20230921; h=from:subject:message-id;
- bh=1rsBcE9VpQ7SBF4zvv4WFKkDlb1Z7pK2vW4cbeyBbSo=;
- b=YyIl5d254g1vwD9QdQQ4ozm+UxA721DiFOMtzj14xvo/D1DmGSaFLf/jWoGoMpSk6RHOMlYGy
- NRulHKT6bAXB7+dXxlkJi1nTI1aHNLEraGIIpdo1lp2FuRqqVqvT0MC
+ bh=UiRVDRNElmnuQn1IkTxW0cyZ8FQfjc/JQob2A2ENmEA=;
+ b=kr9R2HdXi7gDAmARzLB0AJNwLAJeh/+SGIFQEkWYTcAHeYClWCiODuwBRBz3B7/sio44POSH+
+ M38AJAmXjI9BtdC0pYYSdDSsFcS68IzgBQqPE87ilCrsG2WiGZPL091
 X-Developer-Key: i=vinicius.gomes@intel.com; a=ed25519;
  pk=aJkrtgqgT6TZ8iIHSG8/rTPsmlYnjMrUjCsMYvCzntk=
 
-When a Function Level Reset (FLR) happens, terminate the pending
-descriptors that were issued by in-kernel users and disable the
-interrupts associated with those. They will be re-enabled after FLR
-finishes.
+When used as a dmaengine, the DMA "core" might ask the driver to
+terminate all pending requests, when that happens, flush all pending
+descriptors.
 
-idxd_wq_flush_desc() is declared on idxd.h because it's going to be
-used in by the DMA backend in a future patch.
+In this context, flush means removing the requests from the pending
+lists, so even if they are completed after, the user is not notified.
 
 Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
 ---
- drivers/dma/idxd/device.c | 20 ++++++++++++++++++++
- drivers/dma/idxd/idxd.h   |  1 +
- drivers/dma/idxd/irq.c    | 16 ++++++++++++++++
- 3 files changed, 37 insertions(+)
+ drivers/dma/idxd/dma.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-index 02bda8868e24..c62808e30417 100644
---- a/drivers/dma/idxd/device.c
-+++ b/drivers/dma/idxd/device.c
-@@ -1319,6 +1319,11 @@ void idxd_wq_free_irq(struct idxd_wq *wq)
- 
- 	free_irq(ie->vector, ie);
- 	idxd_flush_pending_descs(ie);
-+
-+	/* The interrupt might have been already released by FLR */
-+	if (ie->int_handle == INVALID_INT_HANDLE)
-+		return;
-+
- 	if (idxd->request_int_handles)
- 		idxd_device_release_int_handle(idxd, ie->int_handle, IDXD_IRQ_MSIX);
- 	idxd_device_clear_perm_entry(idxd, ie);
-@@ -1327,6 +1332,21 @@ void idxd_wq_free_irq(struct idxd_wq *wq)
- 	ie->pasid = IOMMU_PASID_INVALID;
+diff --git a/drivers/dma/idxd/dma.c b/drivers/dma/idxd/dma.c
+index dbecd699237e..e4f9788aa635 100644
+--- a/drivers/dma/idxd/dma.c
++++ b/drivers/dma/idxd/dma.c
+@@ -194,6 +194,15 @@ static void idxd_dma_release(struct dma_device *device)
+ 	kfree(idxd_dma);
  }
  
-+void idxd_wq_flush_descs(struct idxd_wq *wq)
++static int idxd_dma_terminate_all(struct dma_chan *c)
 +{
-+	struct idxd_irq_entry *ie = &wq->ie;
-+	struct idxd_device *idxd = wq->idxd;
++	struct idxd_wq *wq = to_idxd_wq(c);
 +
-+	if (wq->state != IDXD_WQ_ENABLED || wq->type != IDXD_WQT_KERNEL)
-+		return;
++	idxd_wq_flush_descs(wq);
 +
-+	idxd_flush_pending_descs(ie);
-+	if (idxd->request_int_handles)
-+		idxd_device_release_int_handle(idxd, ie->int_handle, IDXD_IRQ_MSIX);
-+	idxd_device_clear_perm_entry(idxd, ie);
-+	ie->int_handle = INVALID_INT_HANDLE;
++	return 0;
 +}
 +
- int idxd_wq_request_irq(struct idxd_wq *wq)
+ int idxd_register_dma_device(struct idxd_device *idxd)
  {
- 	struct idxd_device *idxd = wq->idxd;
-diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index 74e6695881e6..fb7f570e002b 100644
---- a/drivers/dma/idxd/idxd.h
-+++ b/drivers/dma/idxd/idxd.h
-@@ -784,6 +784,7 @@ void idxd_wq_quiesce(struct idxd_wq *wq);
- int idxd_wq_init_percpu_ref(struct idxd_wq *wq);
- void idxd_wq_free_irq(struct idxd_wq *wq);
- int idxd_wq_request_irq(struct idxd_wq *wq);
-+void idxd_wq_flush_descs(struct idxd_wq *wq);
+ 	struct idxd_dma_dev *idxd_dma;
+@@ -224,6 +233,7 @@ int idxd_register_dma_device(struct idxd_device *idxd)
+ 	dma->device_issue_pending = idxd_dma_issue_pending;
+ 	dma->device_alloc_chan_resources = idxd_dma_alloc_chan_resources;
+ 	dma->device_free_chan_resources = idxd_dma_free_chan_resources;
++	dma->device_terminate_all = idxd_dma_terminate_all;
  
- /* submission */
- int idxd_submit_desc(struct idxd_wq *wq, struct idxd_desc *desc);
-diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
-index 1107db3ce0a3..8d0eaf5029fa 100644
---- a/drivers/dma/idxd/irq.c
-+++ b/drivers/dma/idxd/irq.c
-@@ -397,6 +397,17 @@ static void idxd_device_flr(struct work_struct *work)
- 		dev_err(&idxd->pdev->dev, "FLR failed\n");
- }
- 
-+static void idxd_wqs_flush_descs(struct idxd_device *idxd)
-+{
-+	int i;
-+
-+	for (i = 0; i < idxd->max_wqs; i++) {
-+		struct idxd_wq *wq = idxd->wqs[i];
-+
-+		idxd_wq_flush_descs(wq);
-+	}
-+}
-+
- static irqreturn_t idxd_halt(struct idxd_device *idxd)
- {
- 	union gensts_reg gensts;
-@@ -415,6 +426,11 @@ static irqreturn_t idxd_halt(struct idxd_device *idxd)
- 		} else if (gensts.reset_type == IDXD_DEVICE_RESET_FLR) {
- 			idxd->state = IDXD_DEV_HALTED;
- 			idxd_mask_error_interrupts(idxd);
-+			/* Flush all pending descriptors, and disable
-+			 * interrupts, they will be re-enabled when FLR
-+			 * concludes.
-+			 */
-+			idxd_wqs_flush_descs(idxd);
- 			dev_dbg(&idxd->pdev->dev,
- 				"idxd halted, doing FLR. After FLR, configs are restored\n");
- 			INIT_WORK(&idxd->work, idxd_device_flr);
+ 	rc = dma_async_device_register(dma);
+ 	if (rc < 0) {
 
 -- 
 2.50.1

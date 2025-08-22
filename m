@@ -1,301 +1,353 @@
-Return-Path: <dmaengine+bounces-6129-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6130-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 93DE7B32332
-	for <lists+dmaengine@lfdr.de>; Fri, 22 Aug 2025 21:50:31 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 51851B32430
+	for <lists+dmaengine@lfdr.de>; Fri, 22 Aug 2025 23:27:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 50169A03AA2
-	for <lists+dmaengine@lfdr.de>; Fri, 22 Aug 2025 19:50:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5A8E7173AAE
+	for <lists+dmaengine@lfdr.de>; Fri, 22 Aug 2025 21:26:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 352312D5C8B;
-	Fri, 22 Aug 2025 19:50:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE2E33375C2;
+	Fri, 22 Aug 2025 21:26:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bt4OqasN"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v67D3q0u"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 078FC1DE89B;
-	Fri, 22 Aug 2025 19:50:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD0283375B0
+	for <dmaengine@vger.kernel.org>; Fri, 22 Aug 2025 21:26:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755892226; cv=none; b=JOC+8l3WwEpMR4MWqP18Lo6VBCGVgX+zwvSstWdihIk/2oGWDwsWWEzIFd3KRirslf8a2XzBYL2qHL6mh3lemaiJ5figTMSLsf3v7s8emyQoYJ3HWFWRBtZjW5tPxJnN6jAc24x5obFbtlbFF/LUDCWM2jg/KWlXL2eBO2KiQSM=
+	t=1755897970; cv=none; b=SE1f+hoX3LMFnd8jaBPPRObux/S8dihg3RzRi8u7jm4WIvkWVgvV68NiZi4jvsNVj7K/BvcQd5WoBYtJAblPdgFvDTKBVaUcX6AnSPl8z0eQaRaoVq2Q/x6U9FKNVW+1tpr3YJWQIFDeIYKk0l2Zp3MjEX6wjhtgLX9+8Z0ggtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755892226; c=relaxed/simple;
-	bh=P8XO6uxUJvu5PgaebbjGtObYHIiSkwF0nj+13YqWxF8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VMl9iHLPHoDNSfQY7eJUPr0bd0jj33LZOAA8AuTTkh8UB138MHx1V2+BEa/Ym5jsacX8LrrHsIaoQBK7Wd98ZZzUjvdzVcY3PA3G86wo3kkptLuHSS5PpOTYL8RCGzkMhBrWM3MVi9A8XAmXzwXuQNoJFU/633tIgw3M9G4J3D8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bt4OqasN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56E7EC4CEED;
-	Fri, 22 Aug 2025 19:50:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755892225;
-	bh=P8XO6uxUJvu5PgaebbjGtObYHIiSkwF0nj+13YqWxF8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bt4OqasNzVwIc2KD2Jlv+CxvCVOUJhbHjR9JSrl96qyqoNIDmu4iwD+qDKBBaHeeS
-	 lmHLWPAO+t0Pzl3Ig4/QX58p+EcdDxqFBv+sicoQVrKX9rsMKoqIoFGM5UKp1/yl5C
-	 HfUoISxfHenfbLPgr7jjlw5DeiHqXd8fi6ZsMN6C4AzOlj/R6bAroE1GufNY23/3Ki
-	 Auc4N+88uFGIsm60jnj4KycWzfsQdew4cm2VP0FxN6Jnuuqc6MLXZZaQkqSJF84VBc
-	 oWwilu7i8MANirmKsEmno33b8ZJMaWaxINnGcPqt/nO1eG/GuJzkrEK/g7cZulHm2d
-	 XFGj66aXHiNfw==
-Date: Fri, 22 Aug 2025 14:50:24 -0500
-From: Rob Herring <robh@kernel.org>
-To: Nino Zhang <ninozhang001@gmail.com>
-Cc: vkoul@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: dma: img-mdc-dma: convert to DT schema
-Message-ID: <20250822195024.GA194990-robh@kernel.org>
-References: <20250821150255.236884-1-ninozhang001@gmail.com>
+	s=arc-20240116; t=1755897970; c=relaxed/simple;
+	bh=NIr+mNcpCMIuu7uvOSGlQY9AMG2uG9ZgQZxqd7Lnwpc=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=irHYFiMK+7XqZTypmUDuEWF6L3nwOhNKgq/uk7NKZIG8b4ErovDTpWD5U1D9emC/1+vUCrh0VPeExS7R/klABlEfYQiwcCEyL5/YhGJhVWIuT9O4gWJ7LtmMLnaEzj2rzlq0MeW0xx2pAAID6dYVQnlf36A0Gag/EJuhRIOKCg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dmatlack.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=v67D3q0u; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dmatlack.bounces.google.com
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-32505dbe21cso1536050a91.1
+        for <dmaengine@vger.kernel.org>; Fri, 22 Aug 2025 14:26:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1755897968; x=1756502768; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=w55t2f8OkCToOOWvDm3MMK2IaaLMEXkOJjxkIlVpt4M=;
+        b=v67D3q0uXo8BwW4ebrQMfbcI3ERoTqudqQ8/4VGWRJ4zIArIxU69RIpLifLCqkf/5v
+         ANNXmVPjbWK52o002XY81GAT6ZAys0skb/GJxRrWDRzgC16AkkvuN6gBNgCCC0CeIph7
+         lOfZLjaNfj9xGUI39E2OBm+RPeLuyG5kD7Ef/OmaCMrTt1vGUX5lik60yp/yDvRTbgt3
+         OmYBFjnXD0+Qm/PL0zPEaKY1bX62aS3yFpLWnL8tsolh0NZVyItAgQhMiEeQDUQztu+V
+         4DesqxNdruqRiZEIy4eNHKUSy7fQ8kyHoJVH/TF096MKROiTHAOJ8vHGDC9F7Mmho0fc
+         4zRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755897968; x=1756502768;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=w55t2f8OkCToOOWvDm3MMK2IaaLMEXkOJjxkIlVpt4M=;
+        b=mrHfT3+/6ky35KZ+J8Rmg7kkc33lkJJ2uzS79l/DDHN5pLYHedHCLSE0uNMTu40cf6
+         Aj3Ndwp/+gh2ydwjHIgxwijc7iLfWWqhCz6z9A9ocQwLN/47uvdnZpndP6mYxyy0j3+S
+         hdtX991Wci6f26x6bBOocuZB0QjndvbrgIo4k1CzOGaQh0CxtR21ShqK7wpkY9beGSyq
+         YdIK2RSLmlDihXFL3QR0tK8QhfPRAd5/YGcD8mL/cZGuqnM36ToTpLUcjcbq8oXcXPue
+         6ur+BHRh9ALgw6eqhhPPxLjo/H8kc5LfZuHjaZvgMdlc64VghHUoOZi9+bwK3X9XDWc+
+         7UZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVT52L3nOMW9e6FxUh0i00EGI5XoxR0o6dw0DNRlDATYLYKd4G9MNKioaR5kb7MAcJAoDm9yjhqZPI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzrZWn2B67HQRKId39aBiNxpsw6t6gWc1iRPrQ4Q23fLPDXShaF
+	x8VEiRc0f1uGUOfb7Ep0Z1PF0OL5WUzITB5o00UEch95DS4cHpBNlyb33+Oi0LXXCKqGK1SS+fM
+	kh6utJKmDhHUk+Q==
+X-Google-Smtp-Source: AGHT+IESiVJ4F27qaG1qx4KG05uGQ22GW+J7GyyaFrYLKyPol1no1GNnvdAOSplBE3j4tZFMp3BN606+S6tWsA==
+X-Received: from pjbqo15.prod.google.com ([2002:a17:90b:3dcf:b0:321:76a2:947c])
+ (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:90b:390f:b0:325:326b:c5b1 with SMTP id 98e67ed59e1d1-325326bc6bcmr4643851a91.17.1755897968144;
+ Fri, 22 Aug 2025 14:26:08 -0700 (PDT)
+Date: Fri, 22 Aug 2025 21:24:47 +0000
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250821150255.236884-1-ninozhang001@gmail.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.51.0.rc2.233.g662b1ed5c5-goog
+Message-ID: <20250822212518.4156428-1-dmatlack@google.com>
+Subject: [PATCH v2 00/30] vfio: Introduce selftests for VFIO
+From: David Matlack <dmatlack@google.com>
+To: Alex Williamson <alex.williamson@redhat.com>
+Cc: Aaron Lewis <aaronlewis@google.com>, 
+	Adhemerval Zanella <adhemerval.zanella@linaro.org>, 
+	Adithya Jayachandran <ajayachandra@nvidia.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, 
+	Dan Williams <dan.j.williams@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+	David Matlack <dmatlack@google.com>, dmaengine@vger.kernel.org, 
+	Jason Gunthorpe <jgg@nvidia.com>, Joel Granados <joel.granados@kernel.org>, 
+	Josh Hilke <jrhilke@google.com>, Kevin Tian <kevin.tian@intel.com>, kvm@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Saeed Mahameed <saeedm@nvidia.com>, 
+	Sean Christopherson <seanjc@google.com>, Shuah Khan <shuah@kernel.org>, 
+	Vinicius Costa Gomes <vinicius.gomes@intel.com>, Vipin Sharma <vipinsh@google.com>, 
+	"Yury Norov [NVIDIA]" <yury.norov@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Aug 21, 2025 at 11:02:55PM +0800, Nino Zhang wrote:
-> Convert the img-mdc-dma binding from txt to YAML schema.
-> No functional changes except dropping the consumer node
-> (spi@18100f00) from the example, which belongs to the
-> consumer binding instead.
-> 
-> Tested with 'make dt_binding_check'.
+This series introduces VFIO selftests, located in
+tools/testing/selftests/vfio/.
 
-No need to say that in the commit msg. It is assumed you did this.
+VFIO selftests aim to enable kernel developers to write and run tests
+that take the form of userspace programs that interact with VFIO and
+IOMMUFD uAPIs. VFIO selftests can be used to write functional tests for
+new features, regression tests for bugs, and performance tests for
+optimizations.
 
-> 
-> Signed-off-by: Nino Zhang <ninozhang001@gmail.com>
-> ---
->  .../devicetree/bindings/dma/img-mdc-dma.txt   | 57 -----------
->  .../devicetree/bindings/dma/img-mdc-dma.yaml  | 98 +++++++++++++++++++
->  2 files changed, 98 insertions(+), 57 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/dma/img-mdc-dma.txt
->  create mode 100644 Documentation/devicetree/bindings/dma/img-mdc-dma.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/img-mdc-dma.txt b/Documentation/devicetree/bindings/dma/img-mdc-dma.txt
-> deleted file mode 100644
-> index 28c1341db346..000000000000
-> --- a/Documentation/devicetree/bindings/dma/img-mdc-dma.txt
-> +++ /dev/null
-> @@ -1,57 +0,0 @@
-> -* IMG Multi-threaded DMA Controller (MDC)
-> -
-> -Required properties:
-> -- compatible: Must be "img,pistachio-mdc-dma".
-> -- reg: Must contain the base address and length of the MDC registers.
-> -- interrupts: Must contain all the per-channel DMA interrupts.
-> -- clocks: Must contain an entry for each entry in clock-names.
-> -  See ../clock/clock-bindings.txt for details.
-> -- clock-names: Must include the following entries:
-> -  - sys: MDC system interface clock.
-> -- img,cr-periph: Must contain a phandle to the peripheral control syscon
-> -  node which contains the DMA request to channel mapping registers.
-> -- img,max-burst-multiplier: Must be the maximum supported burst size multiplier.
-> -  The maximum burst size is this value multiplied by the hardware-reported bus
-> -  width.
-> -- #dma-cells: Must be 3:
-> -  - The first cell is the peripheral's DMA request line.
-> -  - The second cell is a bitmap specifying to which channels the DMA request
-> -    line may be mapped (i.e. bit N set indicates channel N is usable).
-> -  - The third cell is the thread ID to be used by the channel.
-> -
-> -Optional properties:
-> -- dma-channels: Number of supported DMA channels, up to 32.  If not specified
-> -  the number reported by the hardware is used.
-> -
-> -Example:
-> -
-> -mdc: dma-controller@18143000 {
-> -	compatible = "img,pistachio-mdc-dma";
-> -	reg = <0x18143000 0x1000>;
-> -	interrupts = <GIC_SHARED 27 IRQ_TYPE_LEVEL_HIGH>,
-> -		     <GIC_SHARED 28 IRQ_TYPE_LEVEL_HIGH>,
-> -		     <GIC_SHARED 29 IRQ_TYPE_LEVEL_HIGH>,
-> -		     <GIC_SHARED 30 IRQ_TYPE_LEVEL_HIGH>,
-> -		     <GIC_SHARED 31 IRQ_TYPE_LEVEL_HIGH>,
-> -		     <GIC_SHARED 32 IRQ_TYPE_LEVEL_HIGH>,
-> -		     <GIC_SHARED 33 IRQ_TYPE_LEVEL_HIGH>,
-> -		     <GIC_SHARED 34 IRQ_TYPE_LEVEL_HIGH>,
-> -		     <GIC_SHARED 35 IRQ_TYPE_LEVEL_HIGH>,
-> -		     <GIC_SHARED 36 IRQ_TYPE_LEVEL_HIGH>,
-> -		     <GIC_SHARED 37 IRQ_TYPE_LEVEL_HIGH>,
-> -		     <GIC_SHARED 38 IRQ_TYPE_LEVEL_HIGH>;
-> -	clocks = <&system_clk>;
-> -	clock-names = "sys";
-> -
-> -	img,max-burst-multiplier = <16>;
-> -	img,cr-periph = <&cr_periph>;
-> -
-> -	#dma-cells = <3>;
-> -};
-> -
-> -spi@18100f00 {
-> -	...
-> -	dmas = <&mdc 9 0xffffffff 0>, <&mdc 10 0xffffffff 0>;
-> -	dma-names = "tx", "rx";
-> -	...
-> -};
-> diff --git a/Documentation/devicetree/bindings/dma/img-mdc-dma.yaml b/Documentation/devicetree/bindings/dma/img-mdc-dma.yaml
-> new file mode 100644
-> index 000000000000..b635125d7ae3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/img-mdc-dma.yaml
+These tests are designed to interact with real PCI devices, i.e. they do
+not rely on mocking out or faking any behavior in the kernel. This
+allows the tests to exercise not only VFIO but also IOMMUFD, the IOMMU
+driver, interrupt remapping, IRQ handling, etc.
 
-Use the compatible string for the filename.
+For more background on the motivation and design of this series, please
+see the RFC:
 
-> @@ -0,0 +1,98 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/img-mdc-dma.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: IMG Multi-threaded DMA Controller (MDC)
-> +
-> +maintainers:
-> +  - Vinod Koul <vkoul@kernel.org>
+  https://lore.kernel.org/kvm/20250523233018.1702151-1-dmatlack@google.com/
 
-No, must be someone with this h/w and cares about this h/w.
+This series can also be found on GitHub:
 
-> +
-> +allOf:
-> +  - $ref: /schemas/dma/dma-controller.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    description: Must be "img,pistachio-mdc-dma".
+  https://github.com/dmatlack/linux/tree/vfio/selftests/v2
 
-Drop. The schema says that. Same goes for all the other descriptions, so 
-I won't repeat it everywhere.
+Changelog
+-----------------------------------------------------------------------
 
-> +    const: img,pistachio-mdc-dma
-> +
-> +  reg:
-> +    description:
-> +      Must contain the base address and length of the MDC registers.
+v1: https://lore.kernel.org/kvm/20250620232031.2705638-1-dmatlack@google.com/
 
-Drop.
+ - Collect various Acks
+ - Switch myself from Reviewer to Maintainer of VFIO selftests
+ - Re-order the new MAINTAINERS entry to be alphabetical
+ - Drop the KVM selftests patches from the series
+ - Reorder the tools header commits to be closer to the commits that
+   use them (Vinicius)
+ - Use host virtual addresses instead of magic numbers for IOVAs in
+   vfio_pci_driver_test and vfio_dma_mapping_test
 
-> +    minItems: 1
+RFC: https://lore.kernel.org/kvm/20250523233018.1702151-1-dmatlack@google.com/
 
-maxItems instead.
+ - Add symlink to linux/pci_ids.h instead of copying (Jason)
+ - Add symlinks to drivers/dma/*/*.h instead of copying (Jason)
+ - Automatically replicate vfio_dma_mapping_test across backing
+   sources using fixture variants (Jason)
+ - Automatically replicate vfio_dma_mapping_test and
+   vfio_pci_driver_test across all iommu_modes using fixture
+   variants (Jason)
+ - Invert access() check in vfio_dma_mapping_test (me)
+ - Use driver_override instead of add/remove_id (Alex)
+ - Allow tests to get BDF from env var (Alex)
+ - Use KSFT_FAIL instead of 1 to exit with failure (Alex)
+ - Unconditionally create $(LIBVFIO_O_DIRS) to avoid target
+   conflict with ../cgroup/lib/libcgroup.mk when building
+   KVM selftests (me)
+ - Allow VFIO selftests to run automatically by switching from
+   TEST_GEN_PROGS_EXTENDED to TEST_GEN_PROGS. Automatically run
+   selftests will use $VFIO_SELFTESTS_BDF environment variable
+   to know which device to use (Alex)
+ - Replace hardcoded SZ_4K with getpagesize() in vfio_dma_mapping_test
+   to support platforms with other page sizes (me)
+ - Make all global variables static where possible (me)
+ - Pass argc and argv to test_harness_main() so that users can
+   pass flags to the kselftest harness (me)
 
-> +
-> +  interrupts:
-> +    description:
-> +      Must contain all the per-channel DMA interrupts.
+Instructions
+-----------------------------------------------------------------------
 
-Must define how many.
+Running VFIO selftests requires at a PCI device bound to vfio-pci for
+the tests to use. The address of this device is passed to the test as
+a segment:bus:device.function string, which must match the path to
+the device in /sys/bus/pci/devices/ (e.g. 0000:00:04.0).
 
-> +
-> +  clocks:
-> +    description: |
-> +      Must contain an entry for each entry in clock-names.
-> +      See clock/clock.yaml for details.
+Once you have chosen a device, there is a helper script provided to
+unbind the device from its current driver, bind it to vfio-pci, export
+the environment variable $VFIO_SELFTESTS_BDF, and launch a shell:
 
-Drop.
+  $ tools/testing/selftests/vfio/run.sh -d 0000:00:04.0 -s
 
-Must define how many clocks and what they are.
+The -d option tells the script which device to use and the -s option
+tells the script to launch a shell.
 
-> +
-> +  clock-names:
-> +    description: |
-> +      Must include the following entries:
-> +        - sys: MDC system interface clock.
+Additionally, the VFIO selftest vfio_dma_mapping_test has test cases
+that rely on HugeTLB pages being available, otherwise they are skipped.
+To enable those tests make sure at least 1 2MB and 1 1GB HugeTLB pages
+are available.
 
-Drop. The schema says that.
+  $ echo 1 > /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages
+  $ echo 1 > /sys/kernel/mm/hugepages/hugepages-1048576kB/nr_hugepages
 
-> +    minItems: 1
-> +    contains: { const: sys }
+To run all VFIO selftests using make:
 
-Must be exact list of values, not 'sys' plus anything else you want.
+  $ make -C tools/testing/selftests/vfio run_tests
 
-> +
-> +  img,cr-periph:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: |
+To run individual tests:
 
-Drop '|'. Not needed if no formatting to maintain.
+  $ tools/testing/selftests/vfio/vfio_dma_mapping_test
+  $ tools/testing/selftests/vfio/vfio_dma_mapping_test -v iommufd_anonymous_hugetlb_2mb
+  $ tools/testing/selftests/vfio/vfio_dma_mapping_test -r vfio_dma_mapping_test.iommufd_anonymous_hugetlb_2mb.dma_map_unmap
+
+The environment variable $VFIO_SELFTESTS_BDF can be overridden for a
+specific test by passing in the BDF on the command line as the last
+positional argument.
+
+  $ tools/testing/selftests/vfio/vfio_dma_mapping_test 0000:00:04.0
+  $ tools/testing/selftests/vfio/vfio_dma_mapping_test -v iommufd_anonymous_hugetlb_2mb 0000:00:04.0
+  $ tools/testing/selftests/vfio/vfio_dma_mapping_test -r vfio_dma_mapping_test.iommufd_anonymous_hugetlb_2mb.dma_map_unmap 0000:00:04.0
+
+When you are done, free the HugeTLB pages and exit the shell started by
+run.sh. Exiting the shell will cause the device to be unbound from
+vfio-pci and bound back to its original driver.
+
+  $ echo 0 > /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages
+  $ echo 0 > /sys/kernel/mm/hugepages/hugepages-1048576kB/nr_hugepages
+  $ exit
+
+It's also possible to use run.sh to run just a single test hermetically,
+rather than dropping into a shell:
+
+  $ tools/testing/selftests/vfio/run.sh -d 0000:00:04.0 -- tools/testing/selftests/vfio/vfio_dma_mapping_test -v iommufd_anonymous
+
+Tests
+-----------------------------------------------------------------------
+
+There are 4 tests in this series, mostly to demonstrate as a
+proof-of-concept:
+
+ - tools/testing/selftests/vfio/vfio_pci_device_test.c
+ - tools/testing/selftests/vfio/vfio_pci_driver_test.c
+ - tools/testing/selftests/vfio/vfio_iommufd_setup_test.c
+ - tools/testing/selftests/vfio/vfio_dma_mapping_test.c
+
+Future Areas of Development
+-----------------------------------------------------------------------
+
+Library:
+
+ - Driver support for devices that can be used on AMD, ARM, and other
+   platforms (e.g. mlx5).
+ - Driver support for a device available in QEMU VMs (e.g.
+   pcie-ats-testdev [1])
+ - Support for tests that use multiple devices.
+ - Support for IOMMU groups with multiple devices.
+ - Support for multiple devices sharing the same container/iommufd.
+ - Sharing TEST_ASSERT() macros and other common code between KVM
+   and VFIO selftests.
+
+Tests:
+
+ - DMA mapping performance tests for BARs/HugeTLB/etc.
+ - Porting tests from
+   https://github.com/awilliam/tests/commits/for-clg/ to selftests.
+ - Live Update selftests.
+ - Resend Sean's KVM selftest for posted interrupts using the VFIO
+   selftests library [2][3]
+
+Cc: Alex Williamson <alex.williamson@redhat.com>
+Cc: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Kevin Tian <kevin.tian@intel.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Sean Christopherson <seanjc@google.com>
+Cc: Vipin Sharma <vipinsh@google.com>
+Cc: Josh Hilke <jrhilke@google.com>
+Cc: Aaron Lewis <aaronlewis@google.com>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: Saeed Mahameed <saeedm@nvidia.com>
+Cc: Adithya Jayachandran <ajayachandra@nvidia.com>
+Cc: Joel Granados <joel.granados@kernel.org>
+
+[1] https://github.com/Joelgranados/qemu/blob/pcie-testdev/hw/misc/pcie-ats-testdev.c
+[2] https://lore.kernel.org/kvm/20250404193923.1413163-68-seanjc@google.com/
+[3] https://lore.kernel.org/kvm/20250620232031.2705638-32-dmatlack@google.com/
+
+David Matlack (25):
+  selftests: Create tools/testing/selftests/vfio
+  vfio: selftests: Add a helper library for VFIO selftests
+  vfio: selftests: Introduce vfio_pci_device_test
+  vfio: selftests: Keep track of DMA regions mapped into the device
+  vfio: selftests: Enable asserting MSI eventfds not firing
+  vfio: selftests: Add a helper for matching vendor+device IDs
+  vfio: selftests: Add driver framework
+  vfio: sefltests: Add vfio_pci_driver_test
+  tools headers: Add stub definition for __iomem
+  tools headers: Import asm-generic MMIO helpers
+  tools headers: Import x86 MMIO helper overrides
+  tools headers: Add symlink to linux/pci_ids.h
+  dmaengine: ioat: Move system_has_dca_enabled() to dma.h
+  vfio: selftests: Add driver for Intel CBDMA
+  tools headers: Import iosubmit_cmds512()
+  dmaengine: idxd: Allow registers.h to be included from tools/
+  vfio: selftests: Add driver for Intel DSA
+  vfio: selftests: Move helper to get cdev path to libvfio
+  vfio: selftests: Encapsulate IOMMU mode
+  vfio: selftests: Replicate tests across all iommu_modes
+  vfio: selftests: Add vfio_type1v2_mode
+  vfio: selftests: Add iommufd_compat_type1{,v2} modes
+  vfio: selftests: Add iommufd mode
+  vfio: selftests: Make iommufd the default iommu_mode
+  vfio: selftests: Add a script to help with running VFIO selftests
+
+Josh Hilke (5):
+  vfio: selftests: Test basic VFIO and IOMMUFD integration
+  vfio: selftests: Move vfio dma mapping test to their own file
+  vfio: selftests: Add test to reset vfio device.
+  vfio: selftests: Add DMA mapping tests for 2M and 1G HugeTLB
+  vfio: selftests: Validate 2M/1G HugeTLB are mapped as 2M/1G in IOMMU
+
+ MAINTAINERS                                   |   7 +
+ drivers/dma/idxd/registers.h                  |   4 +
+ drivers/dma/ioat/dma.h                        |   2 +
+ drivers/dma/ioat/hw.h                         |   3 -
+ tools/arch/x86/include/asm/io.h               | 101 +++
+ tools/arch/x86/include/asm/special_insns.h    |  27 +
+ tools/include/asm-generic/io.h                | 482 ++++++++++++++
+ tools/include/asm/io.h                        |  11 +
+ tools/include/linux/compiler.h                |   4 +
+ tools/include/linux/io.h                      |   4 +-
+ tools/include/linux/pci_ids.h                 |   1 +
+ tools/testing/selftests/Makefile              |   1 +
+ tools/testing/selftests/vfio/.gitignore       |   7 +
+ tools/testing/selftests/vfio/Makefile         |  21 +
+ .../selftests/vfio/lib/drivers/dsa/dsa.c      | 416 ++++++++++++
+ .../vfio/lib/drivers/dsa/registers.h          |   1 +
+ .../selftests/vfio/lib/drivers/ioat/hw.h      |   1 +
+ .../selftests/vfio/lib/drivers/ioat/ioat.c    | 235 +++++++
+ .../vfio/lib/drivers/ioat/registers.h         |   1 +
+ .../selftests/vfio/lib/include/vfio_util.h    | 295 +++++++++
+ tools/testing/selftests/vfio/lib/libvfio.mk   |  24 +
+ .../selftests/vfio/lib/vfio_pci_device.c      | 594 ++++++++++++++++++
+ .../selftests/vfio/lib/vfio_pci_driver.c      | 126 ++++
+ tools/testing/selftests/vfio/run.sh           | 109 ++++
+ .../selftests/vfio/vfio_dma_mapping_test.c    | 199 ++++++
+ .../selftests/vfio/vfio_iommufd_setup_test.c  | 127 ++++
+ .../selftests/vfio/vfio_pci_device_test.c     | 176 ++++++
+ .../selftests/vfio/vfio_pci_driver_test.c     | 244 +++++++
+ 28 files changed, 3219 insertions(+), 4 deletions(-)
+ create mode 100644 tools/arch/x86/include/asm/io.h
+ create mode 100644 tools/arch/x86/include/asm/special_insns.h
+ create mode 100644 tools/include/asm-generic/io.h
+ create mode 100644 tools/include/asm/io.h
+ create mode 120000 tools/include/linux/pci_ids.h
+ create mode 100644 tools/testing/selftests/vfio/.gitignore
+ create mode 100644 tools/testing/selftests/vfio/Makefile
+ create mode 100644 tools/testing/selftests/vfio/lib/drivers/dsa/dsa.c
+ create mode 120000 tools/testing/selftests/vfio/lib/drivers/dsa/registers.h
+ create mode 120000 tools/testing/selftests/vfio/lib/drivers/ioat/hw.h
+ create mode 100644 tools/testing/selftests/vfio/lib/drivers/ioat/ioat.c
+ create mode 120000 tools/testing/selftests/vfio/lib/drivers/ioat/registers.h
+ create mode 100644 tools/testing/selftests/vfio/lib/include/vfio_util.h
+ create mode 100644 tools/testing/selftests/vfio/lib/libvfio.mk
+ create mode 100644 tools/testing/selftests/vfio/lib/vfio_pci_device.c
+ create mode 100644 tools/testing/selftests/vfio/lib/vfio_pci_driver.c
+ create mode 100755 tools/testing/selftests/vfio/run.sh
+ create mode 100644 tools/testing/selftests/vfio/vfio_dma_mapping_test.c
+ create mode 100644 tools/testing/selftests/vfio/vfio_iommufd_setup_test.c
+ create mode 100644 tools/testing/selftests/vfio/vfio_pci_device_test.c
+ create mode 100644 tools/testing/selftests/vfio/vfio_pci_driver_test.c
 
 
-> +      Must contain a phandle to the peripheral control syscon node
-> +      which contains the DMA request to channel mapping registers.
-> +
-> +  img,max-burst-multiplier:
-> +    description: |
-> +      Must be the maximum supported burst size multiplier.
-> +      The maximum burst size is this value multiplied by the
-> +      hardware-reported bus width.
+base-commit: c17b750b3ad9f45f2b6f7e6f7f4679844244f0b9
+-- 
+2.51.0.rc2.233.g662b1ed5c5-goog
 
-Wrap lines at 80 and drop '|'.
-
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-
-constraints?
-
-> +
-> +  "#dma-cells":
-> +    description: |
-> +      Must be 3:
-> +        - The first cell is the peripheral's DMA request line.
-> +        - The second cell is a bitmap specifying to which channels the DMA request
-> +          line may be mapped (i.e. bit N set indicates channel N is usable).
-> +        - The third cell is the thread ID to be used by the channel.
-> +    const: 3
-> +
-> +  dma-channels:
-> +    description: |
-> +      Number of supported DMA channels, up to 32. If not specified
-> +      the number reported by the hardware is used.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-
-Drop. Already has a type defined.
-
-> +    maximum: 32
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +  - "img,cr-periph"
-> +  - "img,max-burst-multiplier"
-
-Don't need quotes.
-
-> +  - "#dma-cells"
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/mips-gic.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    mdc: dma-controller@18143000 {
-
-Drop 'mdc'
-
-> +      compatible = "img,pistachio-mdc-dma";
-> +      reg = <0x18143000 0x1000>;
-> +      interrupts = <GIC_SHARED 27 IRQ_TYPE_LEVEL_HIGH>,
-> +            <GIC_SHARED 28 IRQ_TYPE_LEVEL_HIGH>;
-> +      clocks = <&system_clk>;
-> +      clock-names = "sys";
-> +
-> +      img,max-burst-multiplier = <16>;
-> +      img,cr-periph = <&cr_periph>;
-> +
-> +      #dma-cells = <3>;
-> +    };
-> -- 
-> 2.43.0
-> 
 

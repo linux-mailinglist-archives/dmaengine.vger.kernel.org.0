@@ -1,48 +1,48 @@
-Return-Path: <dmaengine+bounces-6177-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6178-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C4B2CB32AB5
-	for <lists+dmaengine@lfdr.de>; Sat, 23 Aug 2025 18:19:11 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B94FCB32ABE
+	for <lists+dmaengine@lfdr.de>; Sat, 23 Aug 2025 18:20:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E10875C070A
-	for <lists+dmaengine@lfdr.de>; Sat, 23 Aug 2025 16:13:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B1AA31BC433D
+	for <lists+dmaengine@lfdr.de>; Sat, 23 Aug 2025 16:16:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D2142F0692;
-	Sat, 23 Aug 2025 16:10:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A088A2F5313;
+	Sat, 23 Aug 2025 16:11:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X9wGBaTD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ePTvIIIF"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B2572EBBBF;
-	Sat, 23 Aug 2025 16:10:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7623C2F5306;
+	Sat, 23 Aug 2025 16:11:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755965448; cv=none; b=LZBKbooy8/Ni0Ed4O2k/Esgr91EWPwiC9STIWXrXSJvbV2SO5dvdnT0F+et/Y/k//6QFPB7JTs0wrISnlNqkiWtv1haZnYX9NNCyZGzRmenj5WMLBrs4CDbq/I4josb+vn0YNzGvNw5Vkuc2e0/b4fpQImsgwWZdxaTjP1327Qw=
+	t=1755965500; cv=none; b=gu4x3sfO1U1qrGD548HHfIIukpSshoBpxZjlkL2hNMDdnsrgiSG8523qkRhKaJMz105FeE0hCAVUndFNB2Snz71Ur9bD7Eloyil1h9kKI7pjMNxKvNt94dpTRkJD8J0oelwBAfF3+hT0luE47GNZ8tIDg1T+y19zIIss9i0gN1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755965448; c=relaxed/simple;
-	bh=9Jv92wrdZOhhlaaG+0qHkMquo69j3U4Xh2efygRRse0=;
+	s=arc-20240116; t=1755965500; c=relaxed/simple;
+	bh=ZF5SDUwpsdIucy0NM8w7JIE2oZvTAmxlaR1Ek6Mouj4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fosE2kVxuE9lZl+Lnm2B1NbTnaAsShILzn7FSeHdnjZ3tsah8Pgy18WFbJ3cG5DREZvNpYNG5gzcbRMebXTi+wYtGm1oT0wCcd6gVMfZuh4nLblARM7aDJh+m9kEdDKNwR1gXX3nQblYDIDJZp0iNO989DQ/T/tGZditGtraFjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X9wGBaTD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33F10C4CEF4;
-	Sat, 23 Aug 2025 16:10:45 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=UOVAhW3HJh/SUtpJdSiyGUx+I2qCWrPEf2fgC///eTu/5hDNR8XnrqlWd2hhISAK4/wsWYTOJecRHkkXf3zX7LbnQeBEmOg4B7hD302wYmUkax5avvKgf9uQK4SpnvZHlDKkp1gjBz0PCi9koMdjgaHnW2rycLpjUA83CsNVSlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ePTvIIIF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A91E5C4CEE7;
+	Sat, 23 Aug 2025 16:11:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755965447;
-	bh=9Jv92wrdZOhhlaaG+0qHkMquo69j3U4Xh2efygRRse0=;
+	s=k20201202; t=1755965500;
+	bh=ZF5SDUwpsdIucy0NM8w7JIE2oZvTAmxlaR1Ek6Mouj4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=X9wGBaTDnOKsKUpDjtc6cgW7mxFqC7LQMqyDVLkOvS7TIhDTGMM+SrLr+YiVNmpY8
-	 qfsbYI1IEjSBS+u4pIQYWTQ05di4xTZ3F85eV6DB4sFy04EhgmxGX/fxmjZ38iWImm
-	 uUDeRP9kOuVfEbXWVM8+kkmzCxMCT1zHlOYvGzcoJRZZ1pdWYjCTVWW2WbVEm6hwjh
-	 HHe1yMwbSf0XACxGyrV5JZ6sI+8zVxV4nJ1BBhenuxggjOTQr8X7yxn+n/kNsz9Qzu
-	 sI3YRD1LPVQZ8fTQXY8eLg+7ml6l3X82dpGDl5AoCwNMLus5D72zYGS0s0jrR8B+lN
-	 U9Y8ah7OgQpEw==
-Message-ID: <40f46471-850c-4700-8076-914ebeb68b40@kernel.org>
-Date: Sat, 23 Aug 2025 18:10:43 +0200
+	b=ePTvIIIFS8XVLbuYdbf/VK1wh1q983TwzscfudZViQuchy4LJkjO8LawDusTlC6QO
+	 oZrgxZnJ4AVwb8RUADK7/xS2TJKOZ8WlEBoYU1HOO5XITJRH85CgTfFDtt3d54nAKi
+	 Bpnudih1J0VJP9QtP5qP+mANAawXTAIMxppq+i+Fb+xzIacvjRxeVYo17L4YJszls9
+	 P+ZgwjonO7UnudJ4H+aQ233soDhUi27fmuoISs3npTQfr0FDH+OYw7JExrJVNFypta
+	 U8nKju/86Nkgis/OXqa5cvSIJwD88nxqk4x1ArwcOuaCLKcHCsfC5Oct8MuiGxMKLW
+	 FgW0n/O4EWXHQ==
+Message-ID: <0aea52e1-4bfa-43ca-a527-f3ae198118dc@kernel.org>
+Date: Sat, 23 Aug 2025 18:11:35 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -50,14 +50,14 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 09/14] dmaengine: dma350: Support dma-channel-mask
+Subject: Re: [PATCH 13/14] dt-bindings: dma: dma350: Support ARM DMA-250
 To: Jisheng Zhang <jszhang@kernel.org>, Vinod Koul <vkoul@kernel.org>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>, Robin Murphy <robin.murphy@arm.com>
 Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 References: <20250823154009.25992-1-jszhang@kernel.org>
- <20250823154009.25992-10-jszhang@kernel.org>
+ <20250823154009.25992-14-jszhang@kernel.org>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -103,76 +103,33 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250823154009.25992-10-jszhang@kernel.org>
+In-Reply-To: <20250823154009.25992-14-jszhang@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 23/08/2025 17:40, Jisheng Zhang wrote:
-> Not all channels are available to kernel, we need to support
-> dma-channel-mask.
+> Compared with ARM DMA-350, DMA-250 is a simplified version, they share
+> many common parts, but they do have difference. The difference will be
+> handled in next driver patch, while let's add DMA-250 compatible string
+> to dt-binding now.
 > 
 > Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
 > ---
->  drivers/dma/arm-dma350.c | 20 ++++++++++++++++++--
->  1 file changed, 18 insertions(+), 2 deletions(-)
+>  Documentation/devicetree/bindings/dma/arm,dma-350.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/dma/arm-dma350.c b/drivers/dma/arm-dma350.c
-> index 6a6d1c2a3ee6..72067518799e 100644
-> --- a/drivers/dma/arm-dma350.c
-> +++ b/drivers/dma/arm-dma350.c
-> @@ -534,7 +534,7 @@ static int d350_probe(struct platform_device *pdev)
->  	struct device *dev = &pdev->dev;
->  	struct d350 *dmac;
->  	void __iomem *base;
-> -	u32 reg;
-> +	u32 reg, dma_chan_mask;
->  	int ret, nchan, dw, aw, r, p;
->  	bool coherent, memset;
->  
-> @@ -563,6 +563,15 @@ static int d350_probe(struct platform_device *pdev)
->  
->  	dmac->nchan = nchan;
->  
-> +	/* Enable all channels by default */
-> +	dma_chan_mask = nchan - 1;
-> +
-> +	ret = of_property_read_u32(dev->of_node, "dma-channel-mask", &dma_chan_mask);
-> +	if (ret < 0 && (ret != -EINVAL)) {
-> +		dev_err(&pdev->dev, "dma-channel-mask is not complete.\n");
-> +		return ret;
-> +	}
-> +
->  	reg = readl_relaxed(base + DMAINFO + DMA_BUILDCFG1);
->  	dmac->nreq = FIELD_GET(DMA_CFG_NUM_TRIGGER_IN, reg);
->  
-> @@ -592,6 +601,11 @@ static int d350_probe(struct platform_device *pdev)
->  	memset = true;
->  	for (int i = 0; i < nchan; i++) {
->  		struct d350_chan *dch = &dmac->channels[i];
-> +		char ch_irqname[8];
-> +
-> +		/* skip for reserved channels */
-> +		if (!test_bit(i, (unsigned long *)&dma_chan_mask))
-> +			continue;
->  
->  		dch->coherent = coherent;
->  		dch->base = base + DMACH(i);
-> @@ -602,7 +616,9 @@ static int d350_probe(struct platform_device *pdev)
->  			dev_warn(dev, "No command link support on channel %d\n", i);
->  			continue;
->  		}
-> -		dch->irq = platform_get_irq(pdev, i);
-> +
-> +		snprintf(ch_irqname, sizeof(ch_irqname), "ch%d", i);
-> +		dch->irq = platform_get_irq_byname(pdev, ch_irqname);
+> diff --git a/Documentation/devicetree/bindings/dma/arm,dma-350.yaml b/Documentation/devicetree/bindings/dma/arm,dma-350.yaml
+> index 94752516e51a..d49736b7de5e 100644
+> --- a/Documentation/devicetree/bindings/dma/arm,dma-350.yaml
+> +++ b/Documentation/devicetree/bindings/dma/arm,dma-350.yaml
+> @@ -15,6 +15,7 @@ allOf:
+>  properties:
+>    compatible:
+>      const: arm,dma-350
+> +    const: arm,dma-250
 
-Actual ABI break.
-
-That's a no-go, sorry. You cannot decide to break all users just because
-"Not all channels are available to the kernel". That's really, really
-incomplete ABI breakage reasoning.
-
-See also writing bindings doc.
+This obviously cannot work and was NEVER tested. Please test your code
+before you send it to mailing lists.
 
 Best regards,
 Krzysztof

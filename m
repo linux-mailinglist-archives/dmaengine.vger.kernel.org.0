@@ -1,46 +1,46 @@
-Return-Path: <dmaengine+bounces-6163-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6164-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 451B7B329FD
-	for <lists+dmaengine@lfdr.de>; Sat, 23 Aug 2025 17:58:07 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF7FEB32A01
+	for <lists+dmaengine@lfdr.de>; Sat, 23 Aug 2025 17:58:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7F51F1BC3036
-	for <lists+dmaengine@lfdr.de>; Sat, 23 Aug 2025 15:58:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8D5AA582DDC
+	for <lists+dmaengine@lfdr.de>; Sat, 23 Aug 2025 15:58:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE01C2E975A;
-	Sat, 23 Aug 2025 15:57:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 194B32EA140;
+	Sat, 23 Aug 2025 15:57:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lM3k5ucP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uM67uI7C"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B09F92E9746;
-	Sat, 23 Aug 2025 15:57:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E20DD2E9746;
+	Sat, 23 Aug 2025 15:57:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755964657; cv=none; b=ersHHJl6FDwumu1wem9t4/3BJuTQ8/gZwFosat3mMF/jn6qgXbAnLWzuW9qlMwTXFRdoLuQK5bhEgUI5yWHkJ3prbkY5slkzOM6pwg8OKN1imp1xIWcoakm/vwSv3wPGK/NHbDox6bZbRhIEP0nUwYXu8tF92xukZxuR4XITbcM=
+	t=1755964661; cv=none; b=JKbOsi5UhbVEl9Lp+JOTtb4XaMFiSxFCnEyw9tSeEl8vrXFH5hTCh92lUcyXBvUGK/JiBmpEdYXzkLUQhNODlZZfduV/zaD0HRY1BEI0MLdpzSQ+ORE9Bb9VjsDZI11ik2mTg20YZPj7NQOu5xq5Lrki4Z1tmAUlxBKnll5I38M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755964657; c=relaxed/simple;
-	bh=Zfl9ZZXjm6An0uUR0To5lSMsxmxg8ZEzVzG4zWVYhDw=;
+	s=arc-20240116; t=1755964661; c=relaxed/simple;
+	bh=mPhmqWPTnMNFn5FnYjezuTC9hDdu0Dic6CcLiRxG/2E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SzQu0J+JxKWSQH7V17AACcd7NaHBKQBAHYfEmDwMZimZOjLvEA/3Vzd/hgrlmaT4hxf/aI5GJNyrRTPJtRja6pgn0zkFoCSP6zz08X2q51xBlS5//ArKVM2FzBPw8kQ28L3VUzKl8BZ2Ycm1ZToOfLdJdGDIC+BLbZjy/8ZH5Uw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lM3k5ucP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ECF9C4CEE7;
-	Sat, 23 Aug 2025 15:57:33 +0000 (UTC)
+	 MIME-Version; b=OTVL87oUKrrdi86h3fz/MqObqqPxSqnta8Lsec0v5jXXdmaWr4m40f+6vNSoqjLOO+oshNcT/y3aFe2bbf1VwCHO8TUl5peBpt5H5ITwLE/bYiSVQhIEJilaDEdSrFC0oBFbb1QXlYLwVwJwk/TXjLItRPwep8u3rwpZY/padHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uM67uI7C; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED3F4C4CEE7;
+	Sat, 23 Aug 2025 15:57:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755964657;
-	bh=Zfl9ZZXjm6An0uUR0To5lSMsxmxg8ZEzVzG4zWVYhDw=;
+	s=k20201202; t=1755964660;
+	bh=mPhmqWPTnMNFn5FnYjezuTC9hDdu0Dic6CcLiRxG/2E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lM3k5ucPnOzynMqVL3YGtLdH/EtayFQWggN/8VKlg7jvTAQjjDDRraeV8LOy3ow2z
-	 xJglU4cN2L2IcIghFU0HELbyhflNHTLBwCGZ/gkeAq/QB2k9awwyPXD3DIsy8pCytK
-	 nKlqJohWqQogPlzegr1N2WFlwtocnGe7PXs/rQdT+JvBKbdWiGTsW9fdRzPHKSRVYI
-	 6+GdsIX2C6iTaaudAcJJCzscYaIGdtHLI3xhsn9uSyEzcobHs0Z01UuSfYzW8CjYUT
-	 SCRk80MzKIB7bGJr4/ZO5ljfZdg7YZzqp6XryYX31YTpGSIZYT4/OPZ8X97r2cvWDx
-	 wH8hDxX5Yuv6A==
+	b=uM67uI7CWhJwXbQZuvDsd7Pqr81tTyu7iVzUKwEZICsl8wP4HK5TmAVnm7uV0CroP
+	 iAMEVvK7AyoGJn6vCCtyhjoVyXTm9nfRTP8hdR1zYhLKXSgXGSrSpPMQ6s1nUiCgFo
+	 P6KHQx3/oaqFCaSjTnBq/MFZUG+MF+fWQcKZ9uNbuyLfQbOt9Oo457b0JN2peKe/IB
+	 3vZAivVjQDRsQR3Kjc+YGcarG316pP99Q9lP7nI5gdtuik1o+yqCi6Z+NPbyuO/qJD
+	 RX325lh7j7TfSkj0WLrBA//SZW9T0n0bDr2ZfoW69D9Q1GgIx0IodlvDAUt4XS4JE6
+	 5P7uV1E10pQIg==
 From: Jisheng Zhang <jszhang@kernel.org>
 To: Vinod Koul <vkoul@kernel.org>,
 	Rob Herring <robh@kernel.org>,
@@ -51,9 +51,9 @@ Cc: dmaengine@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 02/14] dmaengine: dma350: Add missing dch->coherent setting
-Date: Sat, 23 Aug 2025 23:39:57 +0800
-Message-ID: <20250823154009.25992-3-jszhang@kernel.org>
+Subject: [PATCH 03/14] dmaengine: dma350: Check vchan_next_desc() return value
+Date: Sat, 23 Aug 2025 23:39:58 +0800
+Message-ID: <20250823154009.25992-4-jszhang@kernel.org>
 X-Mailer: git-send-email 2.50.0
 In-Reply-To: <20250823154009.25992-1-jszhang@kernel.org>
 References: <20250823154009.25992-1-jszhang@kernel.org>
@@ -65,25 +65,34 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The dch->coherent setting is missing.
+vchan_next_desc() may return NULL, check its return value.
 
 Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
 ---
- drivers/dma/arm-dma350.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/dma/arm-dma350.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/dma/arm-dma350.c b/drivers/dma/arm-dma350.c
-index bf3962f00650..24cbadc5f076 100644
+index 24cbadc5f076..96350d15ed85 100644
 --- a/drivers/dma/arm-dma350.c
 +++ b/drivers/dma/arm-dma350.c
-@@ -587,6 +587,7 @@ static int d350_probe(struct platform_device *pdev)
- 	for (int i = 0; i < nchan; i++) {
- 		struct d350_chan *dch = &dmac->channels[i];
+@@ -399,11 +399,14 @@ static enum dma_status d350_tx_status(struct dma_chan *chan, dma_cookie_t cookie
+ static void d350_start_next(struct d350_chan *dch)
+ {
+ 	u32 hdr, *reg;
++	struct virt_dma_desc *vd;
  
-+		dch->coherent = coherent;
- 		dch->base = base + DMACH(i);
- 		writel_relaxed(CH_CMD_CLEAR, dch->base + CH_CMD);
+-	dch->desc = to_d350_desc(vchan_next_desc(&dch->vc));
+-	if (!dch->desc)
++	vd = vchan_next_desc(&dch->vc);
++	if (!vd)
+ 		return;
  
++	dch->desc = to_d350_desc(vd);
++
+ 	list_del(&dch->desc->vd.node);
+ 	dch->status = DMA_IN_PROGRESS;
+ 	dch->cookie = dch->desc->vd.tx.cookie;
 -- 
 2.50.0
 

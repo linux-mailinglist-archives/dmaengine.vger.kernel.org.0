@@ -1,509 +1,249 @@
-Return-Path: <dmaengine+bounces-6189-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6190-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 96311B33224
-	for <lists+dmaengine@lfdr.de>; Sun, 24 Aug 2025 20:56:05 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2EDD1B33264
+	for <lists+dmaengine@lfdr.de>; Sun, 24 Aug 2025 21:39:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2F2E5189C8AE
-	for <lists+dmaengine@lfdr.de>; Sun, 24 Aug 2025 18:56:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 02D431B232EE
+	for <lists+dmaengine@lfdr.de>; Sun, 24 Aug 2025 19:39:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6DDA2264B1;
-	Sun, 24 Aug 2025 18:55:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69471220F37;
+	Sun, 24 Aug 2025 19:39:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lQmXM6r1"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ldv31Tmn"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1289521348;
-	Sun, 24 Aug 2025 18:55:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6831372613;
+	Sun, 24 Aug 2025 19:39:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756061752; cv=none; b=ty5aZeeLdpWkDpYdZ8u9S4RTyqc289FFrn5YVKEz0f5Apo8bTTnoxk9mLSNWmfxrt45ABD13vh3PZNl+qSeVPwNs3OtTFPiYVg5r4nUVcMLwXNz6qFIxKCGdES9w7kd+BT3a2ObkiSco9wR3IEll3QU1T4Y8QlCAHNvxARze+H4=
+	t=1756064343; cv=none; b=c3FR98moUNXJA8C9jQL1WOskY/xyWwUidZtP7gPAnSdU91N4+j4hYvnlIjtXrEH/N5xd/YMFoeAeF1DE8dAVGqZBmI4Vp/D3+IR6uVCJJC/wA7aPGCKzbkmthqd1IpKBshpe09HoDZyWZoDwRyrJkKRTUcAa4TkD4diUWmdPUdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756061752; c=relaxed/simple;
-	bh=4HjsNwikn//1Eie5/vp3A/jazIOCs3yKbqZNtKgz4Os=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uUaBwKQT+63Un4SCJOJK6C3D/KPMAZ9gB02xzoiWxkVvw/j2WBqNGs8QWVlngj8j455UYlknrDWOqixuERDnTmisWYMBUNHMvstZH7G3ppOoYzmWgeiTlzw25gjYk0dyY4Y8HEHxCgxCO8C0IxO2z1g5YBL0oLrSW4gM7CnYk7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lQmXM6r1; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-3258cdb7253so591512a91.3;
-        Sun, 24 Aug 2025 11:55:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756061750; x=1756666550; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jWs0v2otzFcbzvrVOGXWRjThPGmVpPPk0clc6P2+rw4=;
-        b=lQmXM6r16l2DcHtNuMJLSv75JvtWGSAuRrfUtFRNU7Z1DdFbN2EMgwtByElYZKg1d6
-         j0O3n/uWSxUW3l8ec7j4xBoYzTCoT1gqtiBMBBoBp+JK4KOW3TRcannPEJ/fPWALCppC
-         tCNZT0M7ajYhKuQZyr4dcUtxJKfgqVwNKxkrCqs2Bs0To6XbbmFBFn919znkD8ifaMV5
-         uBQ3su/C1kpYfrFMmOe0/CZLFeTjDRRQyHRJTPRkJPE+HqwpyID0RvEnmWm0F6kqh5n/
-         ny3ov02D34czbGxxoY44qpviPGpaKIG2VM5WI/MsKUJUgxTXl9mZVlOnU+H1ldYfXQcs
-         BQ8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756061750; x=1756666550;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jWs0v2otzFcbzvrVOGXWRjThPGmVpPPk0clc6P2+rw4=;
-        b=o74dM6C8cqqqdAKr7fJAvnN03pCpBiN5URREez1PtkjO+VetO6V4xP9sav2CvcDZiD
-         X1hukYmD6N96QRJT2N4ZfhRIzglQbZv4Ya54ir+BShyTu1AtRIG3LegyHdbI2svUW5aG
-         3BHqWae09BtwXhCsM0xFFPVb7gBeexmhr5fHFFrt74vWPB8B/D1nFQG3Q3/En/pFHZee
-         6FVM6rgA0YENmqLcrFqO0x6B/dcJlOu8O1DinOuxOmJK8pQfBmZ7hEHxf3w+pcWn5/3K
-         YHyZs8L1H/UCp6UK4P6NPzGWpZVUcBuG9iGPCOXcRSff1d+e8X1XKnxU6OG6yHYwQyby
-         FPMw==
-X-Forwarded-Encrypted: i=1; AJvYcCUSw03ZhsB7SCSPxjdsrO8qS9BRnsksYfdUUM6pwKcr2djvEAq6KmSC1BVLgHY+14SRBJXk360K7BH5qCbk@vger.kernel.org, AJvYcCVKXGI+XJus9qcjL294CjvCM1ZvVPHDMgMHvxFzyxiYEJfg4PRfTwSDxuSrCG+odCc2PTUip2dyunRjfw==@vger.kernel.org, AJvYcCVVBoBF/v/CIFl7uoPnjyP9UGZrZTRatRVyb+rrNXb3HJAfkiKo9UiFVAPatDzdA6FjKIXL/Ft0KQ6v@vger.kernel.org, AJvYcCWqbaZktnt5oFvsBMoGMicym3Mv38ecskEEE7u6l6zmjYw2f7dUDHkU6IjyrzyKWB9RhzY3ORPbwG6S@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJPXzNFwnJMmxbcIkHAcvHQ7FP9MF47tLyrrGCgZW7VvWRz/do
-	MSIQWzYlEzzq0d7lwqTSwP6kMQQ8N7jyujr8HLBTrpfddcy9KynxcIQQiKzp6zs7
-X-Gm-Gg: ASbGnctFOP6HfNKqDXsvGA92JpgCt5urNbaqJOr59mXAmWHUS/2jZtFGWib75hJpj91
-	GPcxfWFpTrlCJMZB980rLsSLm86p4wrp+jWVQ7VMZQdu2YJyso+GcZsw4o45CHt0kQMrD4oXuMM
-	SSflVKDWDh2JC6HaZJeE91om+Mv5lzcE5IPNrP3Ngz9D7xLCSbPHOT0KIgdoSWVJRW9v/rpWdr6
-	cWFBNCVNq0VElYWQoV8d+calWf4/rkOlnBz9kd19ZR4u99j9+c17Km9hXKJmX9bBaRlSgbb1t/g
-	jBoEh3/7a4M7MqhazAMXjwzzf6Byvuai+61A6aLLG2vfh1s20qPP/EhTpEUi/FIeetGO0e7HFNc
-	e6wwIjMX2LuHIHCVRlrVFSGV83sTIYXZHoo08XukmykQsYx8tFCWDKw==
-X-Google-Smtp-Source: AGHT+IF9WHofD+oJxZR80LSsb7nKzQISul/qFgnftipP5rSxU7VTb+9bsOmFNZ/kfwXRoDPFZPrVJg==
-X-Received: by 2002:a17:903:1a08:b0:246:cfc5:1b61 with SMTP id d9443c01a7336-246cfc51d45mr12560475ad.55.1756061750154;
-        Sun, 24 Aug 2025 11:55:50 -0700 (PDT)
-Received: from 100ask.localdomain ([116.234.74.152])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3254aa650b2sm5098509a91.24.2025.08.24.11.55.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Aug 2025 11:55:49 -0700 (PDT)
-From: Nino Zhang <ninozhang001@gmail.com>
-To: robh@kernel.org,
-	krzk+dt@kernel.org
-Cc: conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	vkoul@kernel.org,
-	rahulbedarkar89@gmail.com,
-	linux-mips@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: dma: img-mdc-dma: convert to DT schema
-Date: Mon, 25 Aug 2025 02:55:43 +0800
-Message-ID: <20250824185543.475785-1-ninozhang001@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250822195024.GA194990-robh@kernel.org>
-References: <20250822195024.GA194990-robh@kernel.org>
+	s=arc-20240116; t=1756064343; c=relaxed/simple;
+	bh=8DlnE/rWJ6b3Mfl7JEc3Sc72YTacrmk6cJufKubDOs4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CpiTZjxz2SIproBGO6IQtma6Istf8q+P7q7PPx2lKT06N7dJHCitVBb1Vilc0oICGIRxnYqfAHWck8BYYZYiTqXmVHuUf86n3t48QHooSNwagE7Rjs/wpxffk7Bqz5dvJkmZ5lRBo6Qet6TWP/aPQ7aOKyxQa/a07xIwaNpuPuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ldv31Tmn; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1756064341; x=1787600341;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8DlnE/rWJ6b3Mfl7JEc3Sc72YTacrmk6cJufKubDOs4=;
+  b=Ldv31TmnDZcQGYdCOuS0SZcbvRA+IGb1ej0d3Tj+jZmjyHxE9GSpea+Z
+   OIWuLJUgsuM/TrjumN4mCfZdHLRhT2jPUwogg5EskvCqSgemRb8GKUK9F
+   iSSQ7s8zidIH1fLFYcU3O301d3atzD0zXdpMvN0nvCZIcVXrTA2vZ9RxM
+   YHrFafhyyyrA6jsd0gh8Zq/0a/Xn8P57buDdju58XXdWYx4goxzqbo/BF
+   DOcv5eKjgE9hOc69nhyeDPj33pRsVyfSxiQeWT9/qn0FlI5EWz9JlvcVc
+   bEaxAMFd4xuGtn4GoULSOIjm9pGOqb1JRw6kpcM2cBCIDn5J3OodMi917
+   A==;
+X-CSE-ConnectionGUID: bOtJvWX1QWaM0iTRh1J5qw==
+X-CSE-MsgGUID: 6a31BhUtQo+EtyoQ17HR7w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11532"; a="69386969"
+X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
+   d="scan'208";a="69386969"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2025 12:39:00 -0700
+X-CSE-ConnectionGUID: MSw73TzIQPKqeRD6Q/wQQw==
+X-CSE-MsgGUID: E77TZh/xTvu73DwINgJcmQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
+   d="scan'208";a="192793643"
+Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
+  by fmviesa002.fm.intel.com with ESMTP; 24 Aug 2025 12:38:58 -0700
+Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uqGYJ-000NBP-1Q;
+	Sun, 24 Aug 2025 19:38:55 +0000
+Date: Mon, 25 Aug 2025 03:38:06 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jisheng Zhang <jszhang@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 14/14] dmaengine: dma350: Support ARM DMA-250
+Message-ID: <202508250351.vxyvTsJa-lkp@intel.com>
+References: <20250823154009.25992-15-jszhang@kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250823154009.25992-15-jszhang@kernel.org>
 
-On Fri, 22 Aug 2025 14:50:24 -0500 Rob Herring wrote:
-> > Convert the img-mdc-dma binding from txt to YAML schema.
-> > No functional changes except dropping the consumer node
-> > (spi@18100f00) from the example, which belongs to the
-> > consumer binding instead.
-> > 
-> > Tested with 'make dt_binding_check'.
-> 
-> No need to say that in the commit msg. It is assumed you did this.
-> 
-> > 
-> > Signed-off-by: Nino Zhang <ninozhang001@gmail.com>
-> > ---
-> >  .../devicetree/bindings/dma/img-mdc-dma.txt   | 57 -----------
-> >  .../devicetree/bindings/dma/img-mdc-dma.yaml  | 98 +++++++++++++++++++
-> >  2 files changed, 98 insertions(+), 57 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/dma/img-mdc-dma.txt
-> >  create mode 100644 Documentation/devicetree/bindings/dma/img-mdc-dma.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/dma/img-mdc-dma.txt b/Documentation/devicetree/bindings/dma/img-mdc-dma.txt
-> > deleted file mode 100644
-> > index 28c1341db346..000000000000
-> > --- a/Documentation/devicetree/bindings/dma/img-mdc-dma.txt
-> > +++ /dev/null
-> > @@ -1,57 +0,0 @@
-> > -* IMG Multi-threaded DMA Controller (MDC)
-> > -
-> > -Required properties:
-> > -- compatible: Must be "img,pistachio-mdc-dma".
-> > -- reg: Must contain the base address and length of the MDC registers.
-> > -- interrupts: Must contain all the per-channel DMA interrupts.
-> > -- clocks: Must contain an entry for each entry in clock-names.
-> > -  See ../clock/clock-bindings.txt for details.
-> > -- clock-names: Must include the following entries:
-> > -  - sys: MDC system interface clock.
-> > -- img,cr-periph: Must contain a phandle to the peripheral control syscon
-> > -  node which contains the DMA request to channel mapping registers.
-> > -- img,max-burst-multiplier: Must be the maximum supported burst size multiplier.
-> > -  The maximum burst size is this value multiplied by the hardware-reported bus
-> > -  width.
-> > -- #dma-cells: Must be 3:
-> > -  - The first cell is the peripheral's DMA request line.
-> > -  - The second cell is a bitmap specifying to which channels the DMA request
-> > -    line may be mapped (i.e. bit N set indicates channel N is usable).
-> > -  - The third cell is the thread ID to be used by the channel.
-> > -
-> > -Optional properties:
-> > -- dma-channels: Number of supported DMA channels, up to 32.  If not specified
-> > -  the number reported by the hardware is used.
-> > -
-> > -Example:
-> > -
-> > -mdc: dma-controller@18143000 {
-> > -	compatible = "img,pistachio-mdc-dma";
-> > -	reg = <0x18143000 0x1000>;
-> > -	interrupts = <GIC_SHARED 27 IRQ_TYPE_LEVEL_HIGH>,
-> > -		     <GIC_SHARED 28 IRQ_TYPE_LEVEL_HIGH>,
-> > -		     <GIC_SHARED 29 IRQ_TYPE_LEVEL_HIGH>,
-> > -		     <GIC_SHARED 30 IRQ_TYPE_LEVEL_HIGH>,
-> > -		     <GIC_SHARED 31 IRQ_TYPE_LEVEL_HIGH>,
-> > -		     <GIC_SHARED 32 IRQ_TYPE_LEVEL_HIGH>,
-> > -		     <GIC_SHARED 33 IRQ_TYPE_LEVEL_HIGH>,
-> > -		     <GIC_SHARED 34 IRQ_TYPE_LEVEL_HIGH>,
-> > -		     <GIC_SHARED 35 IRQ_TYPE_LEVEL_HIGH>,
-> > -		     <GIC_SHARED 36 IRQ_TYPE_LEVEL_HIGH>,
-> > -		     <GIC_SHARED 37 IRQ_TYPE_LEVEL_HIGH>,
-> > -		     <GIC_SHARED 38 IRQ_TYPE_LEVEL_HIGH>;
-> > -	clocks = <&system_clk>;
-> > -	clock-names = "sys";
-> > -
-> > -	img,max-burst-multiplier = <16>;
-> > -	img,cr-periph = <&cr_periph>;
-> > -
-> > -	#dma-cells = <3>;
-> > -};
-> > -
-> > -spi@18100f00 {
-> > -	...
-> > -	dmas = <&mdc 9 0xffffffff 0>, <&mdc 10 0xffffffff 0>;
-> > -	dma-names = "tx", "rx";
-> > -	...
-> > -};
-> > diff --git a/Documentation/devicetree/bindings/dma/img-mdc-dma.yaml b/Documentation/devicetree/bindings/dma/img-mdc-dma.yaml
-> > new file mode 100644
-> > index 000000000000..b635125d7ae3
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/dma/img-mdc-dma.yaml
-> 
-> Use the compatible string for the filename.
-> 
-> > @@ -0,0 +1,98 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/dma/img-mdc-dma.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: IMG Multi-threaded DMA Controller (MDC)
-> > +
-> > +maintainers:
-> > +  - Vinod Koul <vkoul@kernel.org>
-> 
-> No, must be someone with this h/w and cares about this h/w.
-> 
-> > +
-> > +allOf:
-> > +  - $ref: /schemas/dma/dma-controller.yaml#
-> > +
-> > +properties:
-> > +  compatible:
-> > +    description: Must be "img,pistachio-mdc-dma".
-> 
-> Drop. The schema says that. Same goes for all the other descriptions, so 
-> I won't repeat it everywhere.
-> 
-> > +    const: img,pistachio-mdc-dma
-> > +
-> > +  reg:
-> > +    description:
-> > +      Must contain the base address and length of the MDC registers.
-> 
-> Drop.
-> 
-> > +    minItems: 1
-> 
-> maxItems instead.
-> 
-> > +
-> > +  interrupts:
-> > +    description:
-> > +      Must contain all the per-channel DMA interrupts.
-> 
-> Must define how many.
-> 
-> > +
-> > +  clocks:
-> > +    description: |
-> > +      Must contain an entry for each entry in clock-names.
-> > +      See clock/clock.yaml for details.
-> 
-> Drop.
-> 
-> Must define how many clocks and what they are.
-> 
-> > +
-> > +  clock-names:
-> > +    description: |
-> > +      Must include the following entries:
-> > +        - sys: MDC system interface clock.
-> 
-> Drop. The schema says that.
-> 
-> > +    minItems: 1
-> > +    contains: { const: sys }
-> 
-> Must be exact list of values, not 'sys' plus anything else you want.
-> 
-> > +
-> > +  img,cr-periph:
-> > +    $ref: /schemas/types.yaml#/definitions/phandle
-> > +    description: |
-> 
-> Drop '|'. Not needed if no formatting to maintain.
-> 
-> 
-> > +      Must contain a phandle to the peripheral control syscon node
-> > +      which contains the DMA request to channel mapping registers.
-> > +
-> > +  img,max-burst-multiplier:
-> > +    description: |
-> > +      Must be the maximum supported burst size multiplier.
-> > +      The maximum burst size is this value multiplied by the
-> > +      hardware-reported bus width.
-> 
-> Wrap lines at 80 and drop '|'.
-> 
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> 
-> constraints?
-> 
-> > +
-> > +  "#dma-cells":
-> > +    description: |
-> > +      Must be 3:
-> > +        - The first cell is the peripheral's DMA request line.
-> > +        - The second cell is a bitmap specifying to which channels the DMA request
-> > +          line may be mapped (i.e. bit N set indicates channel N is usable).
-> > +        - The third cell is the thread ID to be used by the channel.
-> > +    const: 3
-> > +
-> > +  dma-channels:
-> > +    description: |
-> > +      Number of supported DMA channels, up to 32. If not specified
-> > +      the number reported by the hardware is used.
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> 
-> Drop. Already has a type defined.
-> 
-> > +    maximum: 32
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +  - clocks
-> > +  - clock-names
-> > +  - "img,cr-periph"
-> > +  - "img,max-burst-multiplier"
-> 
-> Don't need quotes.
-> 
-> > +  - "#dma-cells"
-> > +
-> > +unevaluatedProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/interrupt-controller/mips-gic.h>
-> > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > +    mdc: dma-controller@18143000 {
-> 
-> Drop 'mdc'
-> 
-> > +      compatible = "img,pistachio-mdc-dma";
-> > +      reg = <0x18143000 0x1000>;
-> > +      interrupts = <GIC_SHARED 27 IRQ_TYPE_LEVEL_HIGH>,
-> > +            <GIC_SHARED 28 IRQ_TYPE_LEVEL_HIGH>;
-> > +      clocks = <&system_clk>;
-> > +      clock-names = "sys";
-> > +
-> > +      img,max-burst-multiplier = <16>;
-> > +      img,cr-periph = <&cr_periph>;
-> > +
-> > +      #dma-cells = <3>;
-> > +    };
-> > -- 
-> > 2.43.0
-> > 
+Hi Jisheng,
 
-Hi Rob, Krzysztof,
+kernel test robot noticed the following build warnings:
 
-Thanks for your detailed reviews and guidance. As requested, I went back to the previous posting and responded to each comment below. This summarizes what was fixed in v2 and what I will address in v3.
+[auto build test WARNING on vkoul-dmaengine/next]
+[also build test WARNING on robh/for-next krzk-dt/for-next linus/master v6.17-rc2 next-20250822]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
----
+url:    https://github.com/intel-lab-lkp/linux/commits/Jisheng-Zhang/dmaengine-dma350-Fix-CH_CTRL_USESRCTRIGIN-definition/20250824-000425
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git next
+patch link:    https://lore.kernel.org/r/20250823154009.25992-15-jszhang%40kernel.org
+patch subject: [PATCH 14/14] dmaengine: dma350: Support ARM DMA-250
+config: x86_64-buildonly-randconfig-002-20250824 (https://download.01.org/0day-ci/archive/20250825/202508250351.vxyvTsJa-lkp@intel.com/config)
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250825/202508250351.vxyvTsJa-lkp@intel.com/reproduce)
 
-> > Tested with 'make dt_binding_check'.
-> 
-> No need to say that in the commit msg. It is assumed you did this.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202508250351.vxyvTsJa-lkp@intel.com/
 
-Fixed in v2. Dropped from commit message.
+All warnings (new ones prefixed by >>):
 
----
+>> drivers/dma/arm-dma350.c:849:34: warning: variable 'sg' is uninitialized when used here [-Wuninitialized]
+     849 |         sglen = DIV_ROUND_UP(sg_dma_len(sg), step_max) * periods;
+         |                                         ^~
+   include/linux/scatterlist.h:34:27: note: expanded from macro 'sg_dma_len'
+      34 | #define sg_dma_len(sg)          ((sg)->dma_length)
+         |                                   ^~
+   include/uapi/linux/const.h:51:40: note: expanded from macro '__KERNEL_DIV_ROUND_UP'
+      51 | #define __KERNEL_DIV_ROUND_UP(n, d) (((n) + (d) - 1) / (d))
+         |                                        ^
+   drivers/dma/arm-dma350.c:835:24: note: initialize the variable 'sg' to silence this warning
+     835 |         struct scatterlist *sg;
+         |                               ^
+         |                                = NULL
+   1 warning generated.
 
-> > +++ b/Documentation/devicetree/bindings/dma/img-mdc-dma.yaml
-> 
-> Use the compatible string for the filename.
-Fixed in v2.
 
----
+vim +/sg +849 drivers/dma/arm-dma350.c
 
-> > +maintainers:
-> > +  - Vinod Koul <vkoul@kernel.org>
->
-> No, must be someone with this h/w and cares about this h/w.
+   824	
+   825	static struct dma_async_tx_descriptor *
+   826	d250_prep_cyclic(struct dma_chan *chan, dma_addr_t buf_addr,
+   827			 size_t buf_len, size_t period_len, enum dma_transfer_direction dir,
+   828			 unsigned long flags)
+   829	{
+   830		struct d350_chan *dch = to_d350_chan(chan);
+   831		u32 len, periods, trig, *cmd, tsz;
+   832		dma_addr_t src, dst, phys, mem_addr;
+   833		size_t xfer_len, step_max;
+   834		struct d350_desc *desc;
+   835		struct scatterlist *sg;
+   836		struct d350_sg *dsg;
+   837		int sglen, i;
+   838	
+   839		if (unlikely(!is_slave_direction(dir) || !buf_len || !period_len))
+   840			return NULL;
+   841	
+   842		if (dir == DMA_MEM_TO_DEV)
+   843			tsz = __ffs(dch->config.dst_addr_width | (1 << dch->tsz));
+   844		else
+   845			tsz = __ffs(dch->config.src_addr_width | (1 << dch->tsz));
+   846		step_max = ((1UL << 16) - 1) << tsz;
+   847	
+   848		periods = buf_len / period_len;
+ > 849		sglen = DIV_ROUND_UP(sg_dma_len(sg), step_max) * periods;
+   850	
+   851		desc = kzalloc(struct_size(desc, sg, sglen), GFP_NOWAIT);
+   852		if (!desc)
+   853			return NULL;
+   854	
+   855		dch->cyclic = true;
+   856		dch->periods = periods;
+   857		desc->sglen = sglen;
+   858	
+   859		sglen = 0;
+   860		for (i = 0; i < periods; i++) {
+   861			len = period_len;
+   862			mem_addr = buf_addr + i * period_len;
+   863			do {
+   864				desc->sg[sglen].command = dma_pool_zalloc(dch->cmd_pool, GFP_NOWAIT, &phys);
+   865				if (unlikely(!desc->sg[sglen].command))
+   866					goto err_cmd_alloc;
+   867	
+   868				xfer_len = (len > step_max) ? step_max : len;
+   869				desc->sg[sglen].phys = phys;
+   870				dsg = &desc->sg[sglen];
+   871	
+   872				if (dir == DMA_MEM_TO_DEV) {
+   873					src = mem_addr;
+   874					dst = dch->config.dst_addr;
+   875					trig = CH_CTRL_USEDESTRIGIN;
+   876				} else {
+   877					src = dch->config.src_addr;
+   878					dst = mem_addr;
+   879					trig = CH_CTRL_USESRCTRIGIN;
+   880				}
+   881				dsg->tsz = tsz;
+   882				dsg->xsize = lower_16_bits(xfer_len >> dsg->tsz);
+   883	
+   884				cmd = dsg->command;
+   885				cmd[0] = LINK_CTRL | LINK_SRCADDR | LINK_DESADDR |
+   886					 LINK_XSIZE | LINK_SRCTRANSCFG |
+   887					 LINK_DESTRANSCFG | LINK_XADDRINC | LINK_LINKADDR;
+   888	
+   889				cmd[1] = FIELD_PREP(CH_CTRL_TRANSIZE, dsg->tsz) |
+   890					 FIELD_PREP(CH_CTRL_XTYPE, CH_CTRL_XTYPE_CONTINUE) |
+   891					 FIELD_PREP(CH_CTRL_DONETYPE, CH_CTRL_DONETYPE_CMD) | trig;
+   892	
+   893				cmd[2] = lower_32_bits(src);
+   894				cmd[3] = lower_32_bits(dst);
+   895				cmd[4] = FIELD_PREP(CH_XY_SRC, dsg->xsize) |
+   896					 FIELD_PREP(CH_XY_DES, dsg->xsize);
+   897				if (dir == DMA_MEM_TO_DEV) {
+   898					cmd[0] |= LINK_DESTRIGINCFG;
+   899					cmd[5] = dch->coherent ? TRANSCFG_WB : TRANSCFG_NC;
+   900					cmd[6] = TRANSCFG_DEVICE;
+   901					cmd[7] = FIELD_PREP(CH_XY_SRC, 1);
+   902					cmd[8] = FIELD_PREP(CH_DESTRIGINMODE, CH_DESTRIG_DMA_FC) |
+   903						  FIELD_PREP(CH_DESTRIGINTYPE, CH_DESTRIG_HW_REQ);
+   904				} else {
+   905					cmd[0] |= LINK_SRCTRIGINCFG;
+   906					cmd[5] = TRANSCFG_DEVICE;
+   907					cmd[6] = dch->coherent ? TRANSCFG_WB : TRANSCFG_NC;
+   908					cmd[7] = FIELD_PREP(CH_XY_DES, 1);
+   909					cmd[8] = FIELD_PREP(CH_SRCTRIGINMODE, CH_SRCTRIG_DMA_FC) |
+   910						  FIELD_PREP(CH_SRCTRIGINTYPE, CH_SRCTRIG_HW_REQ);
+   911				}
+   912	
+   913				if (sglen)
+   914					desc->sg[sglen - 1].command[9] = phys | CH_LINKADDR_EN;
+   915	
+   916				len -= xfer_len;
+   917				mem_addr += xfer_len;
+   918				sglen++;
+   919			} while (len);
+   920			desc->sg[sglen - 1].command[1] |= FIELD_PREP(CH_CTRL_DONETYPE,
+   921								     CH_CTRL_DONETYPE_CMD);
+   922		}
+   923	
+   924		/* cyclic list */
+   925		desc->sg[sglen - 1].command[9] = desc->sg[0].phys | CH_LINKADDR_EN;
+   926	
+   927		mb();
+   928	
+   929		return vchan_tx_prep(&dch->vc, &desc->vd, flags);
+   930	
+   931	err_cmd_alloc:
+   932		for (i = 0; i < sglen; i++)
+   933			dma_pool_free(dch->cmd_pool, desc->sg[i].command, desc->sg[i].phys);
+   934		kfree(desc);
+   935		return NULL;
+   936	}
+   937	
 
-Fixed in v2. Changed to Rahul Bedarkar (Pistachio DT maintainer) + linux-mips list.
-Andrew Bresticker (original author) seems inactive. I updated to Rahul Bedarkar, who maintains the Pistachio/CI40 DT (which uses this controller), and added linux-mips list so the platform community is notified.
-
----
-
-> > +  compatible:
-> > +    description: Must be "img,pistachio-mdc-dma".
->
-> Drop. The schema says that. Same goes for all the other descriptions, so
-> I won't repeat it everywhere.
-
-Fixed in v2. Dropped redundant descriptions.
-
----
-
-> > +  reg:
-> > +    description:
-> > +      Must contain the base address and length of the MDC registers.
->
-> Drop.
-
-Fixed in v2. Dropped redundant description.
-
----
-
-> > +    minItems: 1
-> >
-> maxItems instead.
-
-Fixed in v2. Changed to `maxItems: 1`.
-
----
-
-> > +  interrupts:
-> > +    description:
-> > +      Must contain all the per-channel DMA interrupts.
-> >
-> Must define how many.
-
-Fixed in v2. Defined `minItems: 1`, `maxItems: 32`.
-This matches the hardware max channels (DMA supports up to 32).
-The original txt said "all per-channel interrupts", so schema now enforces that.
-
----
-
-> > +  clocks:
-> > +    description: |
-> > +      Must contain an entry for each entry in clock-names.
-> > +      See clock/clock.yaml for details.
->
-> Drop.
->
-> Must define how many clocks and what they are.
-
-Fixed in v2. Set `clocks: maxItems: 1`.
-
----
-
-> > +  clock-names:
-> > +    description: |
-> > +      Must include the following entries:
-> > +        - sys: MDC system interface clock.
->
-> Drop. The schema says that.
-
-Fixed in v2. Dropped description.
-
----
-
-> > +    minItems: 1
-> > +    contains: { const: sys }
->
-> Must be exact list of values, not 'sys' plus anything else you want.
-
-Fixed in v2. Restricted to `sys`.
-
----
-
-> > +  img,cr-periph:
-> > +    $ref: /schemas/types.yaml#/definitions/phandle
-> > +    description: |
->
-> Drop '|'. Not needed if no formatting to maintain.
-
-Ack. I mistakenly switched to `>` in v2. Will drop the indicator in v3.
-
----
-
-> > +  img,max-burst-multiplier:
-> > +    description: |
-> > +      Must be the maximum supported burst size multiplier.
-> > +      The maximum burst size is this value multiplied by the
-> > +      hardware-reported bus width.
->
-> Wrap lines at 80 and drop '|'.
-
-Ack. Will fix in v3.
-
----
-
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
->
-> constraints?
-
-Fixed in v2. Kept as uint32 with `minimum: 1` to exclude invalid 0. Actual maximum not confirmed in available docs.  
-Example uses 16; I will add `maximum` once platform maintainers confirm.
-
----
-
-> > +  dma-channels:
-> > +    description: |
-> > +      Number of supported DMA channels, up to 32. If not specified
-> > +      the number reported by the hardware is used.
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
->
-> Drop. Already has a type defined.
-
-Ack. Will fix in v3.
-
----
-
-> > +required:
-> > +  - "img,cr-periph"
-> > +  - "img,max-burst-multiplier"
->
-> Don't need quotes.
-
-Fixed in v2. Removed quotes.
-
----
-
-> > +examples:
-> > +    mdc: dma-controller@18143000 {
->
-> Drop 'mdc'
-
-Fixed in v2. Dropped node label.
-
----
-
-Please let me know if there are any further concerns. Otherwise, I will send [PATCH v3] shortly as a new thread with the remaining fixes.
-
-Thanks,
-Nino
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 

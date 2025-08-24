@@ -1,48 +1,48 @@
-Return-Path: <dmaengine+bounces-6185-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6186-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA0A4B32EFD
-	for <lists+dmaengine@lfdr.de>; Sun, 24 Aug 2025 12:28:07 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA4D0B32F04
+	for <lists+dmaengine@lfdr.de>; Sun, 24 Aug 2025 12:31:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DC84A171EBA
-	for <lists+dmaengine@lfdr.de>; Sun, 24 Aug 2025 10:27:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 311641B61EB1
+	for <lists+dmaengine@lfdr.de>; Sun, 24 Aug 2025 10:31:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D949A22172D;
-	Sun, 24 Aug 2025 10:27:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D443C21ABAE;
+	Sun, 24 Aug 2025 10:30:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TysKFbNG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LwSLN3OL"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB0A63FF1;
-	Sun, 24 Aug 2025 10:27:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A660D4317D;
+	Sun, 24 Aug 2025 10:30:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756031221; cv=none; b=nlDm9YrmVTfZcLZ4e61ZvlI/yCzOt8d34ke4LdUV+kJ9pWjw70jhjFgCDSadkGPN+Rtq9Ffjy7Vqoro83MQTriAmdCf3i+OkTd/x5pwDkJC3q4ZQ8qwxZyaRGUB2rcnnT4/hwkCdO3/tsddMi6mANHlLDlk/dT0gdX+tvKK4fbc=
+	t=1756031445; cv=none; b=DTK6AeeTDx/E/2tpQ+Xsl/A/QamVTKgpIcILTHybW6hrgMg8TEiTawxmlAwqryE8kBkEW8z2KJsowfNYLb/FWapQaDGt/zwGwH7cMyx/S5lVm1XgViD+pqE+AWV7zH1hZL8yNWrxMCuvgyL0d5eAzsy1a4qVDFC5dj2LPnUFR/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756031221; c=relaxed/simple;
-	bh=2fFxf047dZ/bxH4koaGiZYykN/ur/aYx1D1ION5XVOc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=jx5UbCfE97dXL1qO/Nw8NvuRisqDX3NkYns+no/TAMtGwWDPl3UtDDzpORBW2bn5PwR2uFuzOOxdJ/isjIAc3m4G5w/jEhoqMBmai0XHSgt3gDmH/Ske0d7kaVIAMrOOdbLm9MzE6kkuElUgVycdEydTiK19GRYGT7XTu0DEkts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TysKFbNG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6141EC4CEEB;
-	Sun, 24 Aug 2025 10:26:58 +0000 (UTC)
+	s=arc-20240116; t=1756031445; c=relaxed/simple;
+	bh=9oE5tb2390AHhqVifgcMfJ4rl+xy0eQcN8W0J8YXps8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=F2BPKauOTzInXGyKeHuYSnpZj44KuiXSulsXn3DkTGHmwg7in5ztZImAk50dA2nokFTrfpu3CzlNYTtKWKMvSYCRlxurHtv1xZAHBvIJakqRVgIGE8s9X+uhgARHPRH471IM/FZ8ItY0e4B5WQ+K9XYyudVjwiWORC7KBp6rVeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LwSLN3OL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC9C8C4CEEB;
+	Sun, 24 Aug 2025 10:30:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756031221;
-	bh=2fFxf047dZ/bxH4koaGiZYykN/ur/aYx1D1ION5XVOc=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=TysKFbNG5j5fN/aVTQlhPJ6ATcYT5e4wK+s+ZeK7bcz3tKBbw9HOzhwF1EWPCa++V
-	 GfnaR7363aaewlMy9OfNfMIMwP5rXjssBaVcgeNBdylNCdh4DpH2npt9ltIpRpK1LP
-	 jaRxfL1b/2ywPRAg8nLAFRkq1J8FEl2AhbV0tneaZ8F9N9QEWOLf1Hq7gkfPK13g2Y
-	 c1/+FJYV/4txaspZmsunP5nif/Lqin0m25nNFSzzzKdFJ/r4TNmpyBEOtBQwPxkTUf
-	 fbyz879zFzGaVHwTz5UZVRFW6XvWDIsTXvG2zdVGDbH9YEdMMxukKGVL1IFi1pbfJq
-	 7YJ8MWzSG9YAw==
-Message-ID: <5c7f78ae-01d8-40e3-a370-76953921ade9@kernel.org>
-Date: Sun, 24 Aug 2025 12:26:56 +0200
+	s=k20201202; t=1756031445;
+	bh=9oE5tb2390AHhqVifgcMfJ4rl+xy0eQcN8W0J8YXps8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=LwSLN3OLapslV151YMZZEFd20qU2jxZX9ywbmWrIibU8XGlbD+JThPNBekNQDXLHw
+	 hSVwVS1HeLtVNXI50c5TI4SusZC8rT0samdJH1/cJQMpwRBVoX8ozNxBIhEcO8gtnE
+	 XTBgjeTf91QIwhgvsIJNWPEeLQ5poLtXxwhSEYYgQP4dUOZVzn5yZJd/5eEFFdotE3
+	 uDx/Om6bS1ia+F26NDOKNzqs9pm1J6FtV0lPqQtH/+v4h8HXaZ7ukdHUXhji+qRLRc
+	 13vQeUvuQDZhDI+rIH1/8J9v40dLvZRrwBLpA08UTwzKCfo4dC5fW0NKEa0p0O72Az
+	 +pToygNe2MYgg==
+Message-ID: <f28fd898-83f2-46af-9f5d-b98be4518520@kernel.org>
+Date: Sun, 24 Aug 2025 12:30:40 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -50,25 +50,16 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] dt-bindings: lgm-dma: Added intel,dma-sw-desc
- property.
-To: Yi xin Zhu <yzhu@maxlinear.com>, "vkoul@kernel.org" <vkoul@kernel.org>,
- "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
- <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
- "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
- "kees@kernel.org" <kees@kernel.org>,
- "dave.jiang@intel.com" <dave.jiang@intel.com>,
- "av2082000@gmail.com" <av2082000@gmail.com>,
- "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20250808032243.3796335-1-yzhu@maxlinear.com>
- <32a2ec88-b9b8-4c4d-9836-838702e4e136@kernel.org>
- <SA1PR19MB490961745C428F56D7E114F7C234A@SA1PR19MB4909.namprd19.prod.outlook.com>
- <a0a1bc99-0322-4f63-a903-12983facddc9@kernel.org>
- <SA1PR19MB4909BA87E8CE98B5A6389349C234A@SA1PR19MB4909.namprd19.prod.outlook.com>
- <1826bd7a-621d-49d0-b6ff-7ff723ec9f2c@kernel.org>
- <SA1PR19MB490914561C8ADF3012814D69C231A@SA1PR19MB4909.namprd19.prod.outlook.com>
+Subject: Re: [PATCH 08/14] dt-bindings: dma: dma350: Document interrupt-names
+To: Jisheng Zhang <jszhang@kernel.org>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250823154009.25992-1-jszhang@kernel.org>
+ <20250823154009.25992-9-jszhang@kernel.org>
+ <eda79403-375b-4d49-9fec-12bc98bf9e47@kernel.org> <aKrgDVaynJxnmR9r@xhacker>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -114,67 +105,73 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <SA1PR19MB490914561C8ADF3012814D69C231A@SA1PR19MB4909.namprd19.prod.outlook.com>
+In-Reply-To: <aKrgDVaynJxnmR9r@xhacker>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 18/08/2025 10:41, Yi xin Zhu wrote:
-> Hi Krzysztof,
-> 
-> On 15/08/2025 18:40, Krzysztof wrote:
+On 24/08/2025 11:49, Jisheng Zhang wrote:
+> On Sat, Aug 23, 2025 at 06:09:22PM +0200, Krzysztof Kozlowski wrote:
+>> On 23/08/2025 17:40, Jisheng Zhang wrote:
+>>> Currently, the dma350 driver assumes all channels are available to
+>>> linux, this may not be true on some platforms, so it's possible no
+>>> irq(s) for the unavailable channel(s). What's more, the available
+>>> channels may not be continuous. To handle this case, we'd better
+>>> get the irq of each channel by name.
 >>
+>> You did not solve the actual problem - binding still lists the
+>> interrupts in specific order.
 >>
->> What is a "SoC level configuration"?
->>
->> From your explanation 1+2 it feels like consumer chooses it. Where is a full DTS
->> showing all this?
->>
->>
->>> of the DMA instances work in hardware descriptor mode while other DMA
->>> instances work in software descriptor mode or all in HW/SW mode.
 >>>
+>>> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+>>> ---
+>>>  Documentation/devicetree/bindings/dma/arm,dma-350.yaml | 5 +++++
+>>>  1 file changed, 5 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/dma/arm,dma-350.yaml b/Documentation/devicetree/bindings/dma/arm,dma-350.yaml
+>>> index 429f682f15d8..94752516e51a 100644
+>>> --- a/Documentation/devicetree/bindings/dma/arm,dma-350.yaml
+>>> +++ b/Documentation/devicetree/bindings/dma/arm,dma-350.yaml
+>>> @@ -32,6 +32,10 @@ properties:
+>>>        - description: Channel 6 interrupt
+>>>        - description: Channel 7 interrupt
+>>>  
+>>> +  interrupt-names:
+>>> +    minItems: 1
+>>> +    maxItems: 8
 >>
->> Best regards,
->> Krzysztof
+>> You need to list the items.
 > 
-> In the LGM SoC,  The DMA instances are default connected to CBM(central buffer manager) to automate the DMA descriptors.  
-> It can also be detached from CBM to use it in different use cases individually.
-> 
-> In the HW descriptor case,  the device tree would be like:
-> 
-> dma1tx: dma-controller@e7300000 {
->       compatible = "intel,lgm-dma1tx";
->       reg = <0xe7300000 0x1000>;
->       ...
->       #dma-cells = <3>;
->       intel,dma-poll-cnt = <16>;
-> };
-> 
-> cbm: cbm@e1000000 {
->    dmas = <&dma1tx 0 0 64>, <&dma1tx 1 0 64> ... <&dma1tx 15 0 64>;
->    
-> };
-> 
-> DMA HW feature, desc_fod(descriptor fetch on demand) and desc_in_sram are turned on in the DMA controller in this case.
-> These HW features are defined in platform data in the existing DMA driver as default enabled.
-> static const struct ldma_inst_data dma1tx = {
-> 	...
-> 	.desc_fod = true;
-> 	.desc_in_sram = true;
-> };
-> 
-> In the SW descriptor management case,  the device tree would be like:
-> 
-> dma1tx: dma-controller@e7300000 {
->       compatible = "intel,lgm-dma1tx";
->       reg = <0xe7300000 0x1000>;
->       ...
->       #dma-cells = <3>;
->       intel,dma-poll-cnt = <16>;
->       intel,dma-sw-desc;
+> I found in current dt-bindings, not all doc list the items. So is it
+> changed now?
 
-That's then implied by compatible, no? If you disagree, please post
-complete upstream DTS.
+Close to impossible... :) But even if you found 1% of bindings with
+mistake, please kindly take 99% of bindings as the example. Not 1%.
+
+Which bindings were these with undefined names?
+
+> 
+>>
+>>
+>>> +
+>>>    "#dma-cells":
+>>>      const: 1
+>>>      description: The cell is the trigger input number
+>>> @@ -40,5 +44,6 @@ required:
+>>>    - compatible
+>>>    - reg
+>>>    - interrupts
+>>> +  - interrupt-names
+>>
+>> That's ABI break, so no.
+> 
+> If there's no users of arm-dma350 in upstream so far, is ABI break
+> allowed? The reason is simple: to simplify the driver to parse
+> the irq.
+
+You can try to make your case - see writing bindings. But what about all
+out of tree users? All other open source projects? All other kernels? I
+really do not ask about anything new here - that's a policy since long time.
+
 
 Best regards,
 Krzysztof

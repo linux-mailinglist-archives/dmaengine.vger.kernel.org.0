@@ -1,190 +1,338 @@
-Return-Path: <dmaengine+bounces-6194-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6195-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40374B34052
-	for <lists+dmaengine@lfdr.de>; Mon, 25 Aug 2025 15:04:37 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 29EA3B34660
+	for <lists+dmaengine@lfdr.de>; Mon, 25 Aug 2025 17:54:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EB512485E12
-	for <lists+dmaengine@lfdr.de>; Mon, 25 Aug 2025 13:04:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F10EA2A44A0
+	for <lists+dmaengine@lfdr.de>; Mon, 25 Aug 2025 15:54:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 452581FC0F0;
-	Mon, 25 Aug 2025 13:04:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CD112FDC22;
+	Mon, 25 Aug 2025 15:54:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="f+lXA6AR"
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="o0SLw+wP"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2058.outbound.protection.outlook.com [40.107.220.58])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 582E51FAC37;
-	Mon, 25 Aug 2025 13:04:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.58
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756127074; cv=fail; b=ar8Z9vgvoIwbsHGzRlMAcHGYCMzP05D7U61Hh7EPMeHkcP8OgciIMM6qznlw2IaL2DBIwDmGS9jrl1f/SY+PFaN4aUWx4V59mJkyOV6yevaLVpEGfqaQzU+3pniEd/+YTHqAWU6JfFiRbpIqieI9gWHedRleoJ8iNOhQauC0QC8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756127074; c=relaxed/simple;
-	bh=iUn2AgE9+QXWGodEQYUkhD/Mqs7vdZs0znT7E+VuvX0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=f7Y7m7yQ3TL/5KPCJUT2rP4/4706n6ouJjelJLiSHt1AQutrJPurXVk3GlxuIUdNHoZQPz/aGR+sUT3JKNx0l6FGKaSfqIdM9dW4pfdi3EHmCxo/FL40vQmpydik8tBnfW0SduotYg3Gde/TOu6gpO8PiTNYibQ6cUJbKOUMIxA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=f+lXA6AR; arc=fail smtp.client-ip=40.107.220.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=sQl8GgYVPbuAfWF54+L0A/A2JwgdstTmDZcAhq1YDTYmgOCfbjkL3ASThiQT7L7jg+3sROomNGt4/R7gS43HK836beQuewT/QfbNV5ZVNI8dV5Phqq0HHaA1WMBnGCd6N5lsz7c2NuQKDATfXp1kD9U7tKk8ii+n8SLAAMXNhJdnEi2+qVa6CaTz0BpfV0nTZrJAUTd3ieFfLrRAEiTkSuGfZ3yQTXhoyaTAXrK+OvqvbVnGjuWhvPILAsVeUHsV1TFiu2iTl4xjdbcwowtSsbpPdbz+lh96gVAvlJcEWi0p61sdYq+ZYC2eWTtChH3/fJ4QOOc6Aq4p52za0x1rPQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YwhmL64Q6lPp+P31bt9nWjyMbbrED/MStefl+PmbAP4=;
- b=XnJe6bdG+b7ffhJZFmZHVHzin9SPsgPHXBy/uNsAwoO3SS5GCUBBZzchiZHMAZXkdqq9CT7MIBX1MHpvsGVv0QaRxZw0SrvAIxSpjDSQ5kGtXiYLzd4SJ4zjGiXSRU54VM0sKTuGIkh/9t5E43BfADM1PxEzsP1OEbPHMBEI9miEaWglwM2D/nXUmBQDOrzNSetbKyIJck4wGnOm4hkTNSG7g1TVj0wmFBINMNGStVbp6kwIf+prCGnqqg4ZJbGgiSQaz1j/bNXeTNWGe8WqZBCQpvhEExpSltBXs9ZlEj+31579WZqPnXn2bgyEUs800FYXt+e96kNmvUBkKwC7lw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YwhmL64Q6lPp+P31bt9nWjyMbbrED/MStefl+PmbAP4=;
- b=f+lXA6ARDZczD2f4w/Ulq1OCIOAiND3vUqYDIi0YDOJ1eZzpqjNFtPqa2RFyJNkfz0VnvEwehtPp+kXcfnARZnmwWlYX6BpZmHX09RXQEyyvE318ynqErEgwUfa7wHa6w+wkrcw56SXnlRnd1oPYARlu8u54XcXUk7UEVTNNGhM=
-Received: from SN7P222CA0006.NAMP222.PROD.OUTLOOK.COM (2603:10b6:806:124::19)
- by LV8PR12MB9714.namprd12.prod.outlook.com (2603:10b6:408:2a0::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9052.20; Mon, 25 Aug
- 2025 13:04:30 +0000
-Received: from SN1PEPF00026369.namprd02.prod.outlook.com
- (2603:10b6:806:124:cafe::aa) by SN7P222CA0006.outlook.office365.com
- (2603:10b6:806:124::19) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9052.20 via Frontend Transport; Mon,
- 25 Aug 2025 13:04:29 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- SN1PEPF00026369.mail.protection.outlook.com (10.167.241.134) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.9052.8 via Frontend Transport; Mon, 25 Aug 2025 13:04:29 +0000
-Received: from Satlexmb09.amd.com (10.181.42.218) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 25 Aug
- 2025 08:04:28 -0500
-Received: from SATLEXMB04.amd.com (10.181.40.145) by satlexmb09.amd.com
- (10.181.42.218) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.1748.10; Mon, 25 Aug
- 2025 06:04:27 -0700
-Received: from xhdharinik40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Mon, 25 Aug 2025 08:04:24 -0500
-From: Abin Joseph <abin.joseph@amd.com>
-To: <vkoul@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>, <michal.simek@amd.com>, <radhey.shyam.pandey@amd.com>
-CC: <git@amd.com>, <abin.joseph@amd.com>, <dmaengine@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH RESEND] dt-bindings: dmaengine: xilinx_dma: Remove DMA client properties
-Date: Mon, 25 Aug 2025 18:34:23 +0530
-Message-ID: <20250825130423.5739-1-abin.joseph@amd.com>
-X-Mailer: git-send-email 2.17.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A959F2FF143
+	for <dmaengine@vger.kernel.org>; Mon, 25 Aug 2025 15:53:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1756137240; cv=none; b=TVbGFZj4jjibygKBTCqGBHhZegun8eKS25v+XzQZFLhi5X48yANrEqe0m1jh3oqXUUUxUgkBdwjCHWCH+s7s3ooRNZElQQMFIx0bOAxMiVGlCDV+Wm33InIonA8plIBsUv1/k5apF32Fjrx/9FUA1kmH3NPMMVVNcBq0j8ypqb4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1756137240; c=relaxed/simple;
+	bh=iDIMFaPmP6Ptap4BSySC5MxVV+P3d+K2pyIekorzzbo=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=KAEUrnVlTBKq2a98GgpR7G8EPapBevwVqMUBmTsJEDuBiJw99rtnUi+ryV560/0yEMB2/qZpDFP5jibl+oAO13ejwB2bgb2tunOzsEJY6j4tfZtkCAQ4mkWxM9YL9unzG4PxhzJb1mf3sLAFFBv9Gmgzn9v+BepK9Wn20AlkaD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=o0SLw+wP; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-afcb78e70c5so716993566b.1
+        for <dmaengine@vger.kernel.org>; Mon, 25 Aug 2025 08:53:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fairphone.com; s=fair; t=1756137235; x=1756742035; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3HqowhwKhilGiIPsPTFLVOfvfqilXqLVrLNuX0vYRl8=;
+        b=o0SLw+wPAtkVA9cVDuec/zje+HDAOCIO1NrveoFG195mCQpM9erUKFUZ81uhSvlFpc
+         Laf8qKGtVqBxXsfR3AVXuDf+XXB2xusNPIG5W26KP/xcmtRxpMZ1ic6TshUJTdFiKa/A
+         UwHIIATPuxcsf/hFud1Z4Z/TzB711ipM1B3Z+1wQGu3Y9/Pa9rL1uscKEzAw0vzqLrkF
+         cc3N82hq+7MmmdWhoYaWm9MK/Q3qt/vbvSdtpoddAaBuaWwye3ai6EDx7mJaMZ3ghHgG
+         EzKPBQTTfMgsLWkmONelIVDpKX5rLH5OFUHvw8Cm1S9TycB/EtLvevHkjEyD/ST1iMw+
+         DHLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756137235; x=1756742035;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=3HqowhwKhilGiIPsPTFLVOfvfqilXqLVrLNuX0vYRl8=;
+        b=tQdA/++I4IvEPLeJSaW7Pm/mHLwZ/QzeXLOOGq2PiHYp6+0Fp2W4zwnFu9KBWjZzM7
+         tHVLvjPup6owVvs+OWa3TSOtQYHJF2wvSMyNKMSMOZE1FK+sCbaSk9xs59k2lLLIAuY3
+         HC/fRa0Q1kpyWb4G60muK0a64uKK6RFDiDV7OdzqiZxlb2qNrO/4DwsirQ/bVboEuojC
+         zd7V0HaB1OKYzd1fVD5od0wVBkaUb52wxKQsFdmSQj2vV4KmNduszlzK1ppT8nTfCvKp
+         vhyja9xOHAA7WmW1swBPVzLV5ZRy9Q6oOhu5GQeJbnOwNhjC1ND8cZxdH2Y6BDWCXtVd
+         2Tbw==
+X-Forwarded-Encrypted: i=1; AJvYcCWQ8wkpntpIhX0ys0xBBYZPmIOmACr4cYuZR/UCPwAxvPr+jRzghqfXeG1+XrEd+pGfOg4tKdbkIfg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxvT3q0QuY5mRtwqhN0ulWgak7U3eabLZ3ppMHecEb5HPl9XQB/
+	0lzjE9bvdI8HORyVhTJIbqRPGdco47AYCEWrp1a0Ddt46effSbQgGBjTWodkhX+GQoY=
+X-Gm-Gg: ASbGncsXa3tJ1lSTjqKKw+FU/1VRVmHQZrT9T9WPytudr7PF1AzNPCZ6zBdfKgRoBY1
+	eA/mHlg30Ij/FtKhDVmtjspfJCS7Whc1+UWqZRRLfeFQl20/crYz7BWtmHL1SjUIQ8dbLFgzpWQ
+	GbwDQ+dxUj24Jfw4TeZK7o1F7PAZEHXz/tpD5NkGBfVjmoTrYfEKI3neXWUkUs2OZq+/wCDaJE3
+	MTQ219BCyD3zMCB107LLQ94AwBX6mIRaORMpUwRnyKmQFHaWqhl7EH3DMnOJDFIHobr4uAwma/h
+	5Elvrmq2xGu04pGmgh93RjLlFRViKDep1l6PizX8+0tZo6yhcUCw1uqZ7rmZBFS9IGWIr6BnYIQ
+	jZpyEIdwjH4R1EN6a3MDAtHZ3R4ynLfClzjkka73IFsy9n27gVz6vUrUdOjXbRZtiBObTV5KApC
+	GyMTs=
+X-Google-Smtp-Source: AGHT+IEDOv6gprEj6Ksbmo7p57Z4tZTNEHhZ9DTRLeOqT0HCwoH6lmCXLeF8Wklr2ttI5zxfbuX7Eg==
+X-Received: by 2002:a17:906:7943:b0:ae3:b2b7:7f2f with SMTP id a640c23a62f3a-afe296e74c2mr1283531066b.40.1756137234813;
+        Mon, 25 Aug 2025 08:53:54 -0700 (PDT)
+Received: from localhost (83-97-14-181.biz.kpn.net. [83.97.14.181])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-afe8b5fbc8dsm139360466b.1.2025.08.25.08.53.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Aug 2025 08:53:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF00026369:EE_|LV8PR12MB9714:EE_
-X-MS-Office365-Filtering-Correlation-Id: e790a286-8051-4c7e-b006-08dde3d7ed35
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?xyTZG2ZiL/Zc6xsP74aL6yyj9WK0jB4m15tQ3l+/c2ld3ZMBmBnuqvxoFZVy?=
- =?us-ascii?Q?kkTwp8V5QUtCzxDW0+cnH2aPWUvIc7lO7ML5cOhPadwblv6wq/4dvjGOfUlm?=
- =?us-ascii?Q?8L9MoklQUKM+rqslwMwcIwLb9l32d0B9ZdNLONY0MJyHy/t0KGDOvDzmIcp4?=
- =?us-ascii?Q?FM4iwjHN+yYMR1c08oJAiHypjRAsf+0PEIw8unwhEes4s5fmj4GkpHxBMGcZ?=
- =?us-ascii?Q?0QZqgDeuH/WfUZVqGeWQ0kUhlOuP80BvVVnEynU8pkZ15K5ff5Q/FtKmmDxE?=
- =?us-ascii?Q?mmBYEVF08r9TF51/MwmLP1r0x08DDnioRLp2vSgKcAo+ZXAXJu+/nyoY0N9Y?=
- =?us-ascii?Q?KxBHzDZ7jSYc97Nrfe8zMihkprPFEC4SDKTUF2Y+Gbj3IlwnZ7ZaeCHUQB5i?=
- =?us-ascii?Q?IOINkKCHAvtgkj6rw/wLF6VGUoMrTdENUZdDxh4Hp8C/IJfYuxiv0ASqh9fp?=
- =?us-ascii?Q?kTSMCyx3XVdGgO8TSjuIhWMJtW9oS7lblkcmMVAbQsy7JZj25XBK6KacDsNZ?=
- =?us-ascii?Q?aP2jMjwxvqRrOa1GawtBWQi+IBBw6P8vXyAQjrp2FqKUEPaBTIOgXuSQ/Gdw?=
- =?us-ascii?Q?XP5x0EFM7vdcWKo6Dgu7FWMa5Ytwzcg0MjWFGQJ2YwoA9KM80imCivgVE06Q?=
- =?us-ascii?Q?qwZJohVIsxrwOuWwaMx3Fe87QQxxsG4JIn4hB9O0cjmwgx7V+pbGharHkq62?=
- =?us-ascii?Q?/KFkZO1qAV4stcaISQxUx56dgoW1R9YcezMhs2OtiBX3oG5LpisKLWvYlhRK?=
- =?us-ascii?Q?zd1dLNHxrar73UMBmb6rlsTq0hkRuuzCsdf3sRFvrfVPLyOdDTTmweeI4Heo?=
- =?us-ascii?Q?ZQl97T6H9XXT7AD/IsNtGPMFns7lbGi3qliZynumHPS0o0cUeYKt68m6wN3K?=
- =?us-ascii?Q?crOUmO0w9+Jap/JOZhOQ0o7lHu+P/yp6r7MRzT0ayiqQe+fSnUxTyCUF98Eb?=
- =?us-ascii?Q?dHbD/xwt6D1TzXNCRJjtUw7nb3ctKvxrAkwujx0lI+JvKToyDN8VtdNoicZR?=
- =?us-ascii?Q?h5EycgqV7PXBnyfuPaHYjUK8uTPgJTGgMdpTVltTnt/P/BUIonsPSeKYiEdS?=
- =?us-ascii?Q?HqMIh/5bmdyAWFDTw7r8uxDiBiGDjt4eozDLrlLAVREdpNEbAzBVPU1pCPx8?=
- =?us-ascii?Q?pnNoDOveXDJO4yRwmbj/wOJvKE8nh2vc5SIwclBOuh3OHY1EWkelZC7v3il1?=
- =?us-ascii?Q?SwOtDGUJrSp/gTxnWVG/T/55sooMFqAgGl1uT+aP4wew7eyFfv5SqwLJNwjs?=
- =?us-ascii?Q?iBW8eeBLbu9IobauqpNiGh/1TaEdXDn8/NXAKs+1Xd9s8f5Ld5/mZQjqVdC5?=
- =?us-ascii?Q?XFWo2lFm9IUfu69Tix4ahAgg1glNYaVboFsfa50rXsMseYvIBbMGe8FLrRxV?=
- =?us-ascii?Q?PPIrM8tvrOmCjVOqeB9e85pfWHgmH0YkFE+alXjDEAK1PYzP/wZoqJ2+JQ2f?=
- =?us-ascii?Q?fO2FCfp9sQoQm91os59gpoaFDmz3exGHLPwIpVw73JH9zGyVMmiOsqeJQRgC?=
- =?us-ascii?Q?wtWM84dKNQAa6xFiLBNrPZ6hVO8WDW3BRe9c?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Aug 2025 13:04:29.2949
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e790a286-8051-4c7e-b006-08dde3d7ed35
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF00026369.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9714
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 25 Aug 2025 17:53:53 +0200
+Message-Id: <DCBMOZQ7BFI9.2B3A3PEZ0DTYD@fairphone.com>
+Cc: "Konrad Dybcio" <konrad.dybcio@oss.qualcomm.com>, "Will Deacon"
+ <will@kernel.org>, "Robin Murphy" <robin.murphy@arm.com>, "Joerg Roedel"
+ <joro@8bytes.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
+ <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Rafael J.
+ Wysocki" <rafael@kernel.org>, "Viresh Kumar" <viresh.kumar@linaro.org>,
+ "Manivannan Sadhasivam" <mani@kernel.org>, "Herbert Xu"
+ <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>,
+ "Vinod Koul" <vkoul@kernel.org>, "Bjorn Andersson" <andersson@kernel.org>,
+ "Konrad Dybcio" <konradybcio@kernel.org>, "Robert Marko"
+ <robimarko@gmail.com>, "Das Srinagesh" <quic_gurus@quicinc.com>, "Thomas
+ Gleixner" <tglx@linutronix.de>, "Jassi Brar" <jassisinghbrar@gmail.com>,
+ "Amit Kucheria" <amitk@kernel.org>, "Thara Gopinath"
+ <thara.gopinath@gmail.com>, "Daniel Lezcano" <daniel.lezcano@linaro.org>,
+ "Zhang Rui" <rui.zhang@intel.com>, "Lukasz Luba" <lukasz.luba@arm.com>,
+ "Ulf Hansson" <ulf.hansson@linaro.org>,
+ <~postmarketos/upstreaming@lists.sr.ht>, <phone-devel@vger.kernel.org>,
+ <linux-arm-kernel@lists.infradead.org>, <iommu@lists.linux.dev>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-pm@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+ <linux-crypto@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+ <linux-mmc@vger.kernel.org>
+Subject: Re: [PATCH v2 14/15] arm64: dts: qcom: Add initial Milos dtsi
+From: "Luca Weiss" <luca.weiss@fairphone.com>
+To: "Dmitry Baryshkov" <dmitry.baryshkov@oss.qualcomm.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
+References: <20250713-sm7635-fp6-initial-v2-0-e8f9a789505b@fairphone.com>
+ <20250713-sm7635-fp6-initial-v2-14-e8f9a789505b@fairphone.com>
+ <3e0299ad-766a-4876-912e-438fe2cc856d@oss.qualcomm.com>
+ <DBE6TK1KDOTP.IIT72I1LUN5M@fairphone.com>
+ <DBE8G88CIQ53.2N51CABIBJOOO@fairphone.com>
+ <DBOC7QBND54K.1SI5V9C2Z76BY@fairphone.com>
+ <55420d89-fcd4-4cb5-a918-d8bbe2a03d19@oss.qualcomm.com>
+ <DC74DPI8WS81.17VCYVY34C2F9@fairphone.com>
+ <2hv4yuc7rgtglihc2um2lr5ix4dfqxd4abb2bqb445zkhpjpsi@rozikfwrdtlk>
+In-Reply-To: <2hv4yuc7rgtglihc2um2lr5ix4dfqxd4abb2bqb445zkhpjpsi@rozikfwrdtlk>
 
-Remove DMA client section mentioned in the dt-bindings as it is
-not required to document client bindings in dmaengine bindings.
+Hi Dmitry,
 
-Signed-off-by: Abin Joseph <abin.joseph@amd.com>
-Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Abin Joseph <abin.joseph@amd.com>
----
- .../bindings/dma/xilinx/xilinx_dma.txt        | 23 -------------------
- 1 file changed, 23 deletions(-)
+On Wed Aug 20, 2025 at 1:52 PM CEST, Dmitry Baryshkov wrote:
+> On Wed, Aug 20, 2025 at 10:42:09AM +0200, Luca Weiss wrote:
+>> Hi Konrad,
+>>=20
+>> On Sat Aug 2, 2025 at 2:04 PM CEST, Konrad Dybcio wrote:
+>> > On 7/29/25 8:49 AM, Luca Weiss wrote:
+>> >> Hi Konrad,
+>> >>=20
+>> >> On Thu Jul 17, 2025 at 11:46 AM CEST, Luca Weiss wrote:
+>> >>> Hi Konrad,
+>> >>>
+>> >>> On Thu Jul 17, 2025 at 10:29 AM CEST, Luca Weiss wrote:
+>> >>>> On Mon Jul 14, 2025 at 1:06 PM CEST, Konrad Dybcio wrote:
+>> >>>>> On 7/13/25 10:05 AM, Luca Weiss wrote:
+>> >>>>>> Add a devicetree description for the Milos SoC, which is for exam=
+ple
+>> >>>>>> Snapdragon 7s Gen 3 (SM7635).
+>> >>>>>>
+>> >>>>>> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+>> >>>>>> ---
+>> >>>>>
+>> >>>>> [...]
+>> >>>>>> +
+>> >>>>>> +		spmi_bus: spmi@c400000 {
+>> >>>>>> +			compatible =3D "qcom,spmi-pmic-arb";
+>> >>>>>
+>> >>>>> There's two bus instances on this platform, check out the x1e bind=
+ing
+>> >>>>
+>> >>>> Will do
+>> >>>
+>> >>> One problem: If we make the labels spmi_bus0 and spmi_bus1 then we c=
+an't
+>> >>> reuse the existing PMIC dtsi files since they all reference &spmi_bu=
+s.
+>> >>>
+>> >>> On FP6 everything's connected to PMIC_SPMI0_*, and PMIC_SPMI1_* is n=
+ot
+>> >>> connected to anything so just adding the label spmi_bus on spmi_bus0
+>> >>> would be fine.
+>> >>>
+>> >>> Can I add this to the device dts? Not going to be pretty though...
+>> >>>
+>> >>> diff --git a/arch/arm64/boot/dts/qcom/milos-fairphone-fp6.dts b/arch=
+/arm64/boot/dts/qcom/milos-fairphone-fp6.dts
+>> >>> index d12eaa585b31..69605c9ed344 100644
+>> >>> --- a/arch/arm64/boot/dts/qcom/milos-fairphone-fp6.dts
+>> >>> +++ b/arch/arm64/boot/dts/qcom/milos-fairphone-fp6.dts
+>> >>> @@ -11,6 +11,9 @@
+>> >>>  #include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
+>> >>>  #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+>> >>>  #include "milos.dtsi"
+>> >>> +
+>> >>> +spmi_bus: &spmi_bus0 {};
+>> >>> +
+>> >>>  #include "pm7550.dtsi"
+>> >>>  #include "pm8550vs.dtsi"
+>> >>>  #include "pmiv0104.dtsi" /* PMIV0108 */
+>> >>>
+>> >>> Or I can add a second label for the spmi_bus0 as 'spmi_bus'. Not sur=
+e
+>> >>> other designs than SM7635 recommend using spmi_bus1 for some stuff.
+>> >>>
+>> >>> But I guess longer term we'd need to figure out a solution to this, =
+how
+>> >>> to place a PMIC on a given SPMI bus, if reference designs start to
+>> >>> recommend putting different PMIC on the separate busses.
+>> >>=20
+>> >> Any feedback on this regarding the spmi_bus label?
+>> >
+>> > I had an offline chat with Bjorn and we only came up with janky
+>> > solutions :)
+>> >
+>> > What you propose works well if the PMICs are all on bus0, which is
+>> > not the case for the newest platforms. If some instances are on bus0
+>> > and others are on bus1, things get ugly really quick and we're going
+>> > to drown in #ifdefs.
+>> >
+>> >
+>> > An alternative that I've seen downstream is to define PMIC nodes in
+>> > the root of a dtsi file (not in the root of DT, i.e. NOT under / { })
+>> > and do the following:
+>> >
+>> > &spmi_busN {
+>> > 	#include "pmABCDX.dtsi"
+>> > };
+>> >
+>> > Which is "okay", but has the visible downside of having to define the
+>> > temp alarm thermal zone in each board's DT separately (and doing
+>> > mid-file includes which is.. fine I guess, but also something we avoid=
+ed
+>> > upstream for the longest time)
+>> >
+>> >
+>> > Both are less than ideal when it comes to altering the SID under
+>> > "interrupts", fixing that would help immensely. We were hoping to
+>> > leverage something like Johan's work on drivers/mfd/qcom-pm8008.c,
+>> > but that seems like a longer term project.
+>> >
+>> > Please voice your opinions
+>>=20
+>> Since nobody else jumped in, how can we continue?
+>>=20
+>> One janky solution in my mind is somewhat similar to the PMxxxx_SID
+>> defines, doing something like "#define PM7550_SPMI spmi_bus0" and then
+>> using "&PM7550_SPMI {}" in the dtsi. I didn't try it so not sure that
+>> actually works but something like this should I imagine.
+>>=20
+>> But fortunately my Milos device doesn't have the problem that it
+>> actually uses both SPMI busses for different PMICs, so similar to other
+>> SoCs that already have two SPMI busses, I could somewhat ignore the
+>> problem and let someone else figure out how to actually place PMICs on
+>> spmi_bus0 and spmi_bus1 if they have such a hardware.
+>
+> I'd say, ignore it for now.
 
-diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
-index 590d1948f202..b567107270cb 100644
---- a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
-+++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
-@@ -109,26 +109,3 @@ axi_vdma_0: axivdma@40030000 {
- 		xlnx,datawidth = <0x40>;
- 	} ;
- } ;
--
--
--* DMA client
--
--Required properties:
--- dmas: a list of <[Video DMA device phandle] [Channel ID]> pairs,
--	where Channel ID is '0' for write/tx and '1' for read/rx
--	channel. For MCMDA, MM2S channel(write/tx) ID start from
--	'0' and is in [0-15] range. S2MM channel(read/rx) ID start
--	from '16' and is in [16-31] range. These channels ID are
--	fixed irrespective of IP configuration.
--
--- dma-names: a list of DMA channel names, one per "dmas" entry
--
--Example:
--++++++++
--
--vdmatest_0: vdmatest@0 {
--	compatible ="xlnx,axi-vdma-test-1.00.a";
--	dmas = <&axi_vdma_0 0
--		&axi_vdma_0 1>;
--	dma-names = "vdma0", "vdma1";
--} ;
--- 
-2.17.1
+You mean ignoring that there's a second SPMI bus on this SoC, and just
+modelling one with the label "spmi_bus"? Or something else?
 
+
+I have also actually tried out the C define solution that I was writing
+about in my previous email and this is actually working, see diff below.
+In my opinion it just expands on what we have with the SID defines, so
+shouldn't be tooo unacceptable :)
+
+diff --git a/arch/arm64/boot/dts/qcom/milos-fairphone-fp6.dts b/arch/arm64/=
+boot/dts/qcom/milos-fairphone-fp6.dts
+index 9fb174592e2d..96e1b5df4f65 100644
+--- a/arch/arm64/boot/dts/qcom/milos-fairphone-fp6.dts
++++ b/arch/arm64/boot/dts/qcom/milos-fairphone-fp6.dts
+@@ -7,6 +7,12 @@
+=20
+ #define PMIV0104_SID 7
+=20
++#define PM7550_SPMI spmi_bus0
++#define PM8550VS_SPMI spmi_bus0
++#define PMIV0104_SPMI spmi_bus0
++#define PMK8550_SPMI spmi_bus0
++#define PMR735B_SPMI spmi_bus0
++
+ #include <dt-bindings/leds/common.h>
+ #include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
+ #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+diff --git a/arch/arm64/boot/dts/qcom/pm7550.dtsi b/arch/arm64/boot/dts/qco=
+m/pm7550.dtsi
+index b886c2397fe7..08d7969128c2 100644
+--- a/arch/arm64/boot/dts/qcom/pm7550.dtsi
++++ b/arch/arm64/boot/dts/qcom/pm7550.dtsi
+@@ -34,7 +34,7 @@ trip1 {
+ 	};
+ };
+=20
+-&spmi_bus {
++&PM7550_SPMI {
+ 	pm7550: pmic@1 {
+ 		compatible =3D "qcom,pm7550", "qcom,spmi-pmic";
+ 		reg =3D <0x1 SPMI_USID>;
+diff --git a/arch/arm64/boot/dts/qcom/pm8550vs.dtsi b/arch/arm64/boot/dts/q=
+com/pm8550vs.dtsi
+index 7b5898c263ad..3c8c5f3724a2 100644
+--- a/arch/arm64/boot/dts/qcom/pm8550vs.dtsi
++++ b/arch/arm64/boot/dts/qcom/pm8550vs.dtsi
+@@ -91,7 +91,7 @@ trip1 {
+ };
+=20
+=20
+-&spmi_bus {
++&PM8550VS_SPMI {
+ 	pm8550vs_c: pmic@2 {
+ 		compatible =3D "qcom,pm8550", "qcom,spmi-pmic";
+ 		reg =3D <0x2 SPMI_USID>;
+diff --git a/arch/arm64/boot/dts/qcom/pmiv0104.dtsi b/arch/arm64/boot/dts/q=
+com/pmiv0104.dtsi
+index 85ee8911d93e..bf0c02974e74 100644
+--- a/arch/arm64/boot/dts/qcom/pmiv0104.dtsi
++++ b/arch/arm64/boot/dts/qcom/pmiv0104.dtsi
+@@ -40,7 +40,7 @@ trip2 {
+ 	};
+ };
+=20
+-&spmi_bus {
++&PMIV0104_SPMI {
+ 	pmic@PMIV0104_SID {
+ 		compatible =3D "qcom,pmiv0104", "qcom,spmi-pmic";
+ 		reg =3D <PMIV0104_SID SPMI_USID>;
+diff --git a/arch/arm64/boot/dts/qcom/pmk8550.dtsi b/arch/arm64/boot/dts/qc=
+om/pmk8550.dtsi
+index 583f61fc16ad..f1c34f0a2522 100644
+--- a/arch/arm64/boot/dts/qcom/pmk8550.dtsi
++++ b/arch/arm64/boot/dts/qcom/pmk8550.dtsi
+@@ -18,7 +18,7 @@ reboot-mode {
+ 	};
+ };
+=20
+-&spmi_bus {
++&PMK8550_SPMI {
+ 	pmk8550: pmic@0 {
+ 		compatible =3D "qcom,pm8550", "qcom,spmi-pmic";
+ 		reg =3D <0x0 SPMI_USID>;
+diff --git a/arch/arm64/boot/dts/qcom/pmr735b.dtsi b/arch/arm64/boot/dts/qc=
+om/pmr735b.dtsi
+index 09affc05b397..91b53348a4ae 100644
+--- a/arch/arm64/boot/dts/qcom/pmr735b.dtsi
++++ b/arch/arm64/boot/dts/qcom/pmr735b.dtsi
+@@ -30,7 +30,7 @@ pmr735b_crit: pmr735a-crit {
+ 	};
+ };
+=20
+-&spmi_bus {
++&PMR735B_SPMI {
+ 	pmr735b: pmic@5 {
+ 		compatible =3D "qcom,pmr735b", "qcom,spmi-pmic";
+ 		reg =3D <0x5 SPMI_USID>;
 

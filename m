@@ -1,202 +1,149 @@
-Return-Path: <dmaengine+bounces-6202-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6203-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A8ACB35A1B
-	for <lists+dmaengine@lfdr.de>; Tue, 26 Aug 2025 12:30:34 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E9C93B35A65
+	for <lists+dmaengine@lfdr.de>; Tue, 26 Aug 2025 12:47:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9BB963B2CDE
-	for <lists+dmaengine@lfdr.de>; Tue, 26 Aug 2025 10:30:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 310662A4DE9
+	for <lists+dmaengine@lfdr.de>; Tue, 26 Aug 2025 10:46:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30EB9303C91;
-	Tue, 26 Aug 2025 10:30:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qe8s7COg"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89C7F312803;
+	Tue, 26 Aug 2025 10:46:26 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6307C29C321;
-	Tue, 26 Aug 2025 10:30:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6E1C327790;
+	Tue, 26 Aug 2025 10:46:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756204225; cv=none; b=elA0l8FTJx+O76OiZ19EGCfd1UfivRbFWa2GodSnBYO8D/AfxxrZm/UFa3iXVE8o9ipoAelYM/PMhsgR0aeTpZyANUek02Mnpt9A9Qvt2sqhlP/FSOtsDkuFqzG9vR28j/V4qE0T64fLX8FmeuEGacL1mdcvTOsM855IzN/AIjA=
+	t=1756205186; cv=none; b=r/NIMxaaXHdfaS6cJe8mD0qcxsnylRiSA/CnCAloga8Y6Tui2xtkTBc3y3sGUu8aXo4eCML1HsZ6/MZkRw/ps0JQpXDOSqwAbYdk/Ds1jqMuBx74lxDvheSSLmpj8F2V8A2zkt93rd6J3GVKsDULDwLYDchNP81Rfq3cttJR1u8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756204225; c=relaxed/simple;
-	bh=J5D0c6C1ve2M499aj8JP84xqqBG9d8GhM26AKpp8RW0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ow2+qvUbl93hxeX1WmbzrawX79dk0BZ+rfIJrwBrxlslmMahAUFR981kj3+7pNLAOXBI944vOHbrdOaxwwbJouySLVTjQdYF6ZKQtpdYlnMlPgseFnwYhJCr5K1TgpyTYHeMaY7KevdjLs5fMBreRJuUTzTYXshLtjqGBK+RBF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qe8s7COg; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-afe9f6caf9eso134831866b.3;
-        Tue, 26 Aug 2025 03:30:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756204221; x=1756809021; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uYtuItXnoGP8pupzVnCcRSCCoPPLDL2Fbyp8Wx0/Cqg=;
-        b=Qe8s7COgn4J4DgmXT/zKKtjawgmsjDI48aIdxZcAbUA8I+Zv5QjFWKfo3751ngJnnB
-         atqo8JuSNpf/IfMNIr613+taUwhIfjkAN4WXn3LTzBmhDsA99gl2PvkGAMV7ZtFH0w9T
-         f61mpZOOF0CHFWDKYQdWtiA2NE6z643hzfExZuQuNEjuYL2tCzYtZ54B7hZV9JesN2jg
-         zmZ1sHFi2eZGxAC4hzEbSzjRQGALEH6DgdYCw7yP6wCK3pnh/u+Q6PTYDNjTO2y1WeHI
-         pU0XEM/UfuMiSxAqRVh+dwgLe/EbPcfXCwWAuf39rr5tr2y40eKZQOeEtE0DfJYRlchI
-         SZIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756204221; x=1756809021;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uYtuItXnoGP8pupzVnCcRSCCoPPLDL2Fbyp8Wx0/Cqg=;
-        b=UisBfu9t814qMKywi2y6zWMMUJvGmS+PQzPcle995oS9xkEo/Tf4OOuLRc+LHH3olG
-         XHyY4qOv9oOi2sB5KbU4r7DZa1hoZB8pNAhurgGlmHNYdAUQEBLGoNH1l5cPDeoxcnup
-         J/M4aG2aqYFbxnNgjLRe4VVic4wr+bvTIzLLJPm47u9/2B15unBVFXrb63gwveLjoAUl
-         M1pvW2P8r4P8lcxl3EQJEyalfX3bcr3VHIPSYyEsrbc52INvH8MIflsexeH4qd0CTzdz
-         Rhz8ViBHxPlKDUQFPZFsMD8F2mqynYn67xkNoCEmMDaldHed7vHuCuN4Jh3lwDiwbhxM
-         L5GA==
-X-Forwarded-Encrypted: i=1; AJvYcCUDOH3V1mYapdgpT7vPRh4szDnXuxhZ3H6CXGZZwBgwF1jim8gUtHCCmJhpQfDx4tKGCOz3oscElt7GJ1s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbJPRQUVqqR/p34CYx3BLx7PNu3nGt8imYRxtQXxY8jcwWaOio
-	208KwAl5ybRG/NmFfT9RkFF8f0btetMAkvvGp8nIJLBV+oQhLYYmqGTk3UwhEw==
-X-Gm-Gg: ASbGncte7Pi8St3AYOU77M5YKKhWlsc6gw5KlNHwFwZNQ9FP96TpM2brRIfNh2yVV/5
-	FbumdHezqDkFCeYKYmETc37FxfU9I/DPXg/FHbnknPqTXSdJdna/ZoApLgRPNbjGA9FNxfw4t0H
-	AfrVeMha2FaoslXevMtbCiacuEYkzOOHZkf/m2Am9OYhve/OZNCyKJGkRohTM4h/PqHRUS6Ceg5
-	UxelUBNBU2sbrDjOlpROgukbcQ4Kaf8cLZUPePW98ST7sRE/+tJo+1Yuu2rGm24VdVlcfCgLSwS
-	MnZeNs2WIb89QRSAb57YhOHw8T/4s0YZdHkj32mMBcJSRELBqRTUMNDULlQtGfgz+NqoQCIhU/h
-	JmzuOtmFRO5WyDNA=
-X-Google-Smtp-Source: AGHT+IFi1fUGWXXrzQXgdvKlPV4b/k4v9f0nExJgxLzlllLxkCrL9Lm8RLhyS5/kurH3sZNgiawCcA==
-X-Received: by 2002:a17:907:980e:b0:afc:cbf4:ca7d with SMTP id a640c23a62f3a-afe296e4c0amr1560727166b.54.1756204221350;
-        Tue, 26 Aug 2025 03:30:21 -0700 (PDT)
-Received: from NB-6746.. ([88.201.206.17])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-afe4936a335sm766732666b.114.2025.08.26.03.30.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Aug 2025 03:30:21 -0700 (PDT)
-From: Artem Shimko <artyom.shimko@gmail.com>
-X-Google-Original-From: Artem Shimko <a.shimko@yadro.com>
-To: dmaengine@vger.kernel.org
-Cc: Artem Shimko <artyom.shimko@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	vkoul@kernel.org,
-	eugeniy.paltsev@synopsys.com
-Subject: [PATCH 1/1] drivers: dma: change pm registration for dw-axi-dmac-platform's suspend
-Date: Tue, 26 Aug 2025 13:30:15 +0300
-Message-ID: <20250826103017.1891990-2-a.shimko@yadro.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250826103017.1891990-1-a.shimko@yadro.com>
-References: <y>
- <20250826103017.1891990-1-a.shimko@yadro.com>
+	s=arc-20240116; t=1756205186; c=relaxed/simple;
+	bh=H3tVdYrDOxdRlNSFXF/jMCHZ3FgH+2UV7laTh6NYYEI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nFJYUOq5A6E9j+0qXg+Ldef6aZCGnKbnc0SsGAghEhfr2vzghjTVd9eRrciyq0/tY21xWTWZv5zWZQhY5nDMAvhPBHf4DlFMdkMxP4hsf9bNMfq18S3KUnlKfIgGej+7CwrG9+6vbewCThidWYRN4MqkSfKiHcAqqkLUqdPwbAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A06821A25;
+	Tue, 26 Aug 2025 03:46:15 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8000D3F694;
+	Tue, 26 Aug 2025 03:46:14 -0700 (PDT)
+Date: Tue, 26 Aug 2025 11:46:10 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: peterz@infradead.org, mingo@redhat.com, will@kernel.org,
+	acme@kernel.org, namhyung@kernel.org,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+	linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-rockchip@lists.infradead.org, dmaengine@vger.kernel.org,
+	linux-fpga@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org, coresight@lists.linaro.org,
+	iommu@lists.linux.dev, linux-amlogic@lists.infradead.org,
+	linux-cxl@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 01/19] perf/arm-cmn: Fix event validation
+Message-ID: <aK2QclH4jlHJ28EJ@J2N7QTR9R3>
+References: <cover.1755096883.git.robin.murphy@arm.com>
+ <0716da3e77065f005ef6ea0d10ddf67fc53e76cb.1755096883.git.robin.murphy@arm.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0716da3e77065f005ef6ea0d10ddf67fc53e76cb.1755096883.git.robin.murphy@arm.com>
 
-From: Artem Shimko <artyom.shimko@gmail.com>
+Hi Robin,
 
-Replaced the deprecated SET_RUNTIME_PM_OPS macro with the
-DEFINE_RUNTIME_DEV_PM_OPS macro for defining device power
-management operations.
+On Wed, Aug 13, 2025 at 06:00:53PM +0100, Robin Murphy wrote:
+> In the hypothetical case where a CMN event is opened with a software
+> group leader that already has some other hardware sibling, currently
+> arm_cmn_val_add_event() could try to interpret the other event's data
+> as an arm_cmn_hw_event, which is not great since we dereference a
+> pointer from there... Thankfully the way to be more robust is to be
+> less clever - stop trying to special-case software events and simply
+> skip any event that isn't for our PMU.
 
-The DEFINE_RUNTIME_DEV_PM_OPS macro provides the same functionality
-to support system suspend mode.
+I think this is missing some important context w.r.t. how the core perf
+code behaves (and hence why this change doesn't cause other problems).
+I'd suggest that we give the first few patches a common preamble:
 
-Signed-off-by: Artem Shimko <artyom.shimko@gmail.com>
----
- .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 31 ++++++-------------
- 1 file changed, 9 insertions(+), 22 deletions(-)
+| When opening a new perf event, the core perf code calls
+| pmu::event_init() before checking whether the new event would cause an
+| event group to span multiple hardware PMUs. Considering this:
+| 
+| (1) Any pmu::event_init() callback needs to be robust to cases where
+|     a non-software group_leader or sibling event targets a distinct
+|     PMU.
+| 
+| (2) Any pmu::event_init() callback doesn't need to explicitly reject
+|     groups that span multiple hardware PMUs, as the core code will
+|     reject this later.
 
-diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-index c8eaa9c14c03..eeba28a1d2c8 100644
---- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-+++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-@@ -1400,8 +1400,10 @@ static int dma_chan_resume(struct dma_chan *dchan)
- 	return 0;
- }
- 
--static int axi_dma_suspend(struct axi_dma_chip *chip)
-+static int __maybe_unused axi_dma_suspend(struct device *dev)
- {
-+	struct axi_dma_chip *chip = dev_get_drvdata(dev);
-+
- 	axi_dma_irq_disable(chip);
- 	axi_dma_disable(chip);
- 
-@@ -1411,9 +1413,10 @@ static int axi_dma_suspend(struct axi_dma_chip *chip)
- 	return 0;
- }
- 
--static int axi_dma_resume(struct axi_dma_chip *chip)
-+static int __maybe_unused axi_dma_resume(struct device *dev)
- {
- 	int ret;
-+	struct axi_dma_chip *chip = dev_get_drvdata(dev);
- 
- 	ret = clk_prepare_enable(chip->cfgr_clk);
- 	if (ret < 0)
-@@ -1429,20 +1432,6 @@ static int axi_dma_resume(struct axi_dma_chip *chip)
- 	return 0;
- }
- 
--static int __maybe_unused axi_dma_runtime_suspend(struct device *dev)
--{
--	struct axi_dma_chip *chip = dev_get_drvdata(dev);
--
--	return axi_dma_suspend(chip);
--}
--
--static int __maybe_unused axi_dma_runtime_resume(struct device *dev)
--{
--	struct axi_dma_chip *chip = dev_get_drvdata(dev);
--
--	return axi_dma_resume(chip);
--}
--
- static struct dma_chan *dw_axi_dma_of_xlate(struct of_phandle_args *dma_spec,
- 					    struct of_dma *ofdma)
- {
-@@ -1676,7 +1665,7 @@ static int dw_probe(struct platform_device *pdev)
- 	 * driver to work also without Runtime PM.
- 	 */
- 	pm_runtime_get_noresume(chip->dev);
--	ret = axi_dma_resume(chip);
-+	ret = axi_dma_resume(chip->dev);
- 	if (ret < 0)
- 		goto err_pm_disable;
- 
-@@ -1724,7 +1713,7 @@ static void dw_remove(struct platform_device *pdev)
- 	axi_dma_disable(chip);
- 
- 	pm_runtime_disable(chip->dev);
--	axi_dma_suspend(chip);
-+	axi_dma_suspend(chip->dev);
- 
- 	for (i = 0; i < DMAC_MAX_CHANNELS; i++)
- 		if (chip->irq[i] > 0)
-@@ -1739,9 +1728,7 @@ static void dw_remove(struct platform_device *pdev)
- 	}
- }
- 
--static const struct dev_pm_ops dw_axi_dma_pm_ops = {
--	SET_RUNTIME_PM_OPS(axi_dma_runtime_suspend, axi_dma_runtime_resume, NULL)
--};
-+static DEFINE_RUNTIME_DEV_PM_OPS(dw_axi_dma_pm_ops, axi_dma_suspend, axi_dma_resume, NULL);
- 
- static const struct of_device_id dw_dma_of_id_table[] = {
- 	{
-@@ -1766,7 +1753,7 @@ static struct platform_driver dw_driver = {
- 	.driver = {
- 		.name	= KBUILD_MODNAME,
- 		.of_match_table = dw_dma_of_id_table,
--		.pm = &dw_axi_dma_pm_ops,
-+		.pm = pm_ptr(&dw_axi_dma_pm_ops),
- 	},
- };
- module_platform_driver(dw_driver);
--- 
-2.43.0
+... and then spell out the specific issues in the driver, e.g.
 
+| The logic in arm_cmn_validate_group() doesn't account for cases where
+| a non-software sibling event targets a distinct PMU. In such cases,
+| arm_cmn_val_add_event() will erroneously interpret the sibling's
+| event::hw as as struct arm_cmn_hw_event, including dereferencing
+| pointers from potentially user-controlled fields.
+|
+| Fix this by skipping any events for distinct PMUs, and leaving it to
+| the core code to reject event groups that span multiple hardware PMUs.
+
+With that context, the patch itself looks good to me.
+
+This will need a Cc stable. I'm not sure what Fixes tag is necessary;
+has this been broken since its introduction?
+
+Mark.
+
+> 
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> ---
+>  drivers/perf/arm-cmn.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+> 
+> diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
+> index 11fb2234b10f..f8c9be9fa6c0 100644
+> --- a/drivers/perf/arm-cmn.c
+> +++ b/drivers/perf/arm-cmn.c
+> @@ -1652,7 +1652,7 @@ static void arm_cmn_val_add_event(struct arm_cmn *cmn, struct arm_cmn_val *val,
+>  	enum cmn_node_type type;
+>  	int i;
+>  
+> -	if (is_software_event(event))
+> +	if (event->pmu != &cmn->pmu)
+>  		return;
+>  
+>  	type = CMN_EVENT_TYPE(event);
+> @@ -1693,9 +1693,6 @@ static int arm_cmn_validate_group(struct arm_cmn *cmn, struct perf_event *event)
+>  	if (leader == event)
+>  		return 0;
+>  
+> -	if (event->pmu != leader->pmu && !is_software_event(leader))
+> -		return -EINVAL;
+> -
+>  	val = kzalloc(sizeof(*val), GFP_KERNEL);
+>  	if (!val)
+>  		return -ENOMEM;
+> -- 
+> 2.39.2.101.g768bb238c484.dirty
+> 
 

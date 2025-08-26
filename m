@@ -1,42 +1,42 @@
-Return-Path: <dmaengine+bounces-6209-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6210-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A02FBB362FE
-	for <lists+dmaengine@lfdr.de>; Tue, 26 Aug 2025 15:25:02 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3BDCEB3643B
+	for <lists+dmaengine@lfdr.de>; Tue, 26 Aug 2025 15:36:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 025CE188C839
-	for <lists+dmaengine@lfdr.de>; Tue, 26 Aug 2025 13:20:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 51E1C8E2259
+	for <lists+dmaengine@lfdr.de>; Tue, 26 Aug 2025 13:29:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7528733471E;
-	Tue, 26 Aug 2025 13:18:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1986C3376BD;
+	Tue, 26 Aug 2025 13:28:54 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3834244667;
-	Tue, 26 Aug 2025 13:18:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E7D027EFE7;
+	Tue, 26 Aug 2025 13:28:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756214311; cv=none; b=f40S7/PlAXseEhVZ+fnvjqINMehJxZkZo6PdT4evswX/q8s9wvK3B7/nyOORNr+B/m1f9z7ssksar0K/YFrzu/15UmK7LOyCtREjS+cAxjdoy+Ycy87UJ2ElgI+8JEpPlcAnVpTgpYQ2er2iTFVlgvk2Mvmky0RerQv+/klFAv8=
+	t=1756214934; cv=none; b=Eq05NagswARJ/6sLzLNceOxuzMY6pCVlYwIkOGnmkl8qCS8N4oNsewtsLWuG5Tbj4NrIxPwv2cRJSEwb1N7XBL6Y3i112y+X5whfH0I9C/vDWiqaUkkfRJnDt9ksmCu/DuN4rAgJcTCqTuYaNifC3OLAIQQXs0S/0KtFyvzDU/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756214311; c=relaxed/simple;
-	bh=BhQw8k5n2wkINEBiBgIRgXJovOh1V3NCnPs6OwLcw6o=;
+	s=arc-20240116; t=1756214934; c=relaxed/simple;
+	bh=pGd2Z5xxI8xMWlXX7wv1c9fIzDDiogCatnymFQsEKDM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TWcH4ucQRlZwOeBOH+JYpfiIClyf+gbmJDsrBBaiHuhZU51CK4P/aqTlopCXCiGRQysM/RSIRJiGuBfW8p8gSxTZYeedTApNGcM5h4siNxXk5Lf3DHrKy3WJ/cSVAeB30QkfBWNTsq6GGc9rjI61iIq3Q2yurE9H4SK2eDgCTUw=
+	 Content-Type:Content-Disposition:In-Reply-To; b=niqLBgUqo29AHg8mTqOAyhMMOAJ5lXtq0zqTJUiybUt3XF8SBLj/2wpqGNmhAl+iWQ3dAxEGPi4TPyYxBoWHbAskKgqpOc4Iis+jlLb9KGjGVCsJDKf4CehfsId7ggoo9MB3xDJTwdjDKQ1p028Sw1mrytnLnn8iCggrdwMcY0Q=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B0DEB1A25;
-	Tue, 26 Aug 2025 06:18:20 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 742EB1A25;
+	Tue, 26 Aug 2025 06:28:43 -0700 (PDT)
 Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E10B23F63F;
-	Tue, 26 Aug 2025 06:18:22 -0700 (PDT)
-Date: Tue, 26 Aug 2025 14:18:16 +0100
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A56233F63F;
+	Tue, 26 Aug 2025 06:28:45 -0700 (PDT)
+Date: Tue, 26 Aug 2025 14:28:43 +0100
 From: Mark Rutland <mark.rutland@arm.com>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: peterz@infradead.org, mingo@redhat.com, will@kernel.org,
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Robin Murphy <robin.murphy@arm.com>, mingo@redhat.com, will@kernel.org,
 	acme@kernel.org, namhyung@kernel.org,
 	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
 	irogers@google.com, adrian.hunter@intel.com,
@@ -55,11 +55,11 @@ Cc: peterz@infradead.org, mingo@redhat.com, will@kernel.org,
 	iommu@lists.linux.dev, linux-amlogic@lists.infradead.org,
 	linux-cxl@vger.kernel.org, linux-arm-msm@vger.kernel.org,
 	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 02/19] perf/hisilicon: Fix group validation
-Message-ID: <aK20GP5g1iu9DGrQ@J2N7QTR9R3>
+Subject: Re: [PATCH 16/19] perf: Introduce positive capability for sampling
+Message-ID: <aK22izKE4r6wI_D9@J2N7QTR9R3>
 References: <cover.1755096883.git.robin.murphy@arm.com>
- <c7b877e66ba0d34d8558c5af8bbb620e8c0e47d9.1755096883.git.robin.murphy@arm.com>
- <aK2XS_GhLw1EQ2ml@J2N7QTR9R3>
+ <ae81cb65b38555c628e395cce67ac6c7eaafdd23.1755096883.git.robin.murphy@arm.com>
+ <20250826130806.GY4067720@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -68,62 +68,49 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aK2XS_GhLw1EQ2ml@J2N7QTR9R3>
+In-Reply-To: <20250826130806.GY4067720@noisy.programming.kicks-ass.net>
 
-On Tue, Aug 26, 2025 at 12:15:23PM +0100, Mark Rutland wrote:
-> On Wed, Aug 13, 2025 at 06:00:54PM +0100, Robin Murphy wrote:
-> > The group validation logic shared by the HiSilicon HNS3/PCIe drivers is
-> > a bit off, in that given a software group leader, it will consider that
-> > event *in place of* the actual new event being opened. At worst this
-> > could theoretically allow an unschedulable group if the software event
-> > config happens to look like one of the hardware siblings.
-> > 
-> > The uncore framework avoids that particular issue,
+On Tue, Aug 26, 2025 at 03:08:06PM +0200, Peter Zijlstra wrote:
+> On Wed, Aug 13, 2025 at 06:01:08PM +0100, Robin Murphy wrote:
+> > Sampling is inherently a feature for CPU PMUs, given that the thing
+> > to be sampled is a CPU context. These days, we have many more
+> > uncore/system PMUs than CPU PMUs, so it no longer makes much sense to
+> > assume sampling support by default and force the ever-growing majority
+> > of drivers to opt out of it (or erroneously fail to). Instead, let's
+> > introduce a positive opt-in capability that's more obvious and easier to
+> > maintain.
 > 
-> What is "the uncore framework"? I'm not sure exactly what you're
-> referring to, nor how that composes with the problem described above.
+> > diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> > index 4d439c24c901..bf2cfbeabba2 100644
+> > --- a/include/linux/perf_event.h
+> > +++ b/include/linux/perf_event.h
+> > @@ -294,7 +294,7 @@ struct perf_event_pmu_context;
+> >  /**
+> >   * pmu::capabilities flags
+> >   */
+> > -#define PERF_PMU_CAP_NO_INTERRUPT	0x0001
+> > +#define PERF_PMU_CAP_SAMPLING		0x0001
+> >  #define PERF_PMU_CAP_NO_NMI		0x0002
+> >  #define PERF_PMU_CAP_AUX_NO_SG		0x0004
+> >  #define PERF_PMU_CAP_EXTENDED_REGS	0x0008
+> > @@ -305,6 +305,7 @@ struct perf_event_pmu_context;
+> >  #define PERF_PMU_CAP_EXTENDED_HW_TYPE	0x0100
+> >  #define PERF_PMU_CAP_AUX_PAUSE		0x0200
+> >  #define PERF_PMU_CAP_AUX_PREFER_LARGE	0x0400
+> > +#define PERF_PMU_CAP_NO_INTERRUPT	0x0800
 > 
-> > but all 3 also share the common issue of not preventing racy access to
-> > the sibling list,
+> So NO_INTERRUPT was supposed to be the negative of your new SAMPLING
+> (and I agree with your reasoning).
 > 
-> Can you please elaborate on this racy access to the silbing list? I'm
-> not sure exactly what you're referring to.
+> What I'm confused/curious about is why we retain NO_INTERRUPT?
 
-Ah, I think you're referring to the issue in:
+I see from your other reply that you spotted the next patch does that.
 
-  https://lore.kernel.org/linux-arm-kernel/Zg0l642PgQ7T3a8Z@FVFF77S0Q05N/
+For the sake of other reviewers or anyone digging through the git
+history it's probably worth adding a line to this commit message to say:
 
-... where when creatign a new event which is its own group leader,
-lockdep_assert_event_ctx(event) fires in for_each_sibling_event(),
-because the new event's context isn't locked...
-
-> > diff --git a/drivers/perf/hisilicon/hisi_uncore_pmu.c b/drivers/perf/hisilicon/hisi_uncore_pmu.c
-> > index a449651f79c9..3c531b36cf25 100644
-> > --- a/drivers/perf/hisilicon/hisi_uncore_pmu.c
-> > +++ b/drivers/perf/hisilicon/hisi_uncore_pmu.c
-> > @@ -101,26 +101,17 @@ static bool hisi_validate_event_group(struct perf_event *event)
-> >  	/* Include count for the event */
-> >  	int counters = 1;
-> >  
-> > -	if (!is_software_event(leader)) {
-> > -		/*
-> > -		 * We must NOT create groups containing mixed PMUs, although
-> > -		 * software events are acceptable
-> > -		 */
-> > -		if (leader->pmu != event->pmu)
-> > -			return false;
-> > +	if (leader == event)
-> > +		return true;
-
-... and hence bailing out here avoids that?
-
-It's not strictly "racy access to the sibling list", becuase there's
-nothing else accessing the list; it's just that this is the simplest way
-to appease lockdep while avoiding false negatives.
-
-It'd probably be better to say something like "the common issue of
-calling for_each_sibling_event() when initialising a new group leader",
-and maybe to spell that out a bit.
+| A subsequent patch will remove PERF_PMU_CAP_NO_INTERRUPT as this
+| requires some additional cleanup.
 
 Mark.
 

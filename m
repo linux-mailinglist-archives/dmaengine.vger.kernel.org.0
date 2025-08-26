@@ -1,174 +1,295 @@
-Return-Path: <dmaengine+bounces-6219-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6221-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F3F3B3728A
-	for <lists+dmaengine@lfdr.de>; Tue, 26 Aug 2025 20:49:09 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F9C8B374FB
+	for <lists+dmaengine@lfdr.de>; Wed, 27 Aug 2025 00:46:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id EC1C04E260B
-	for <lists+dmaengine@lfdr.de>; Tue, 26 Aug 2025 18:49:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 842351BA07E4
+	for <lists+dmaengine@lfdr.de>; Tue, 26 Aug 2025 22:46:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23105371EBD;
-	Tue, 26 Aug 2025 18:49:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AgVXpgcj"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC66C2853E9;
+	Tue, 26 Aug 2025 22:46:15 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89F1B371E9E
-	for <dmaengine@vger.kernel.org>; Tue, 26 Aug 2025 18:49:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0120D199FAB;
+	Tue, 26 Aug 2025 22:46:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756234144; cv=none; b=qsDZyFANbnrQ9su9DPuFV72M1CqTNx1g9/Y3R650QTHJg4EeX3+fHmo0oqLSUvRJAJdckDlC51xJeWsSah7xlFW4aIcX5ZED+GTxanzEV8L1mXOwYzUQdA6JsOG/3kIVqfQIPapiBE1ohmaijX0XRZMgYBnToVjPOklZNP/fC30=
+	t=1756248375; cv=none; b=prhp4Sdu4N7wBUU0Mle276DSevtTFk5N2F5py9guSSxfO0WW6AsQ7CxMqW5xexsBtXCAXiJ+4saVz5MAagmw4JEAUL27D6CB9SZ8JCqMMvZKUvrYToUI7KU1O9DiFL8VMkLk7511l0B1mFbTTQz4RMiq7jpZvN9GJbXpII1l1Tk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756234144; c=relaxed/simple;
-	bh=E/Ye7/SL7tqTx9oBx/tviBmGnvw5YMp+2zk7nWejWf0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XpFvyq2HCTNn9KhCS7EI94lrXV6vdODYruHiIqrLwI2yivyKcKHvXTCJNe83wi2FRk3FoUJMGdR6ltQx4U4C5PguGr9kBX1MhfQ+0SFYPVBuBREIJISlX9iWIIZAJBfwkb0g3VMoeMShOw3dITZUp0v4IQUXRxhd1LZCdTawlaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AgVXpgcj; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-24611734e50so26245ad.1
-        for <dmaengine@vger.kernel.org>; Tue, 26 Aug 2025 11:49:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1756234141; x=1756838941; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=E/Ye7/SL7tqTx9oBx/tviBmGnvw5YMp+2zk7nWejWf0=;
-        b=AgVXpgcjDr9q0cS0bj8JMWInMebRYXt+OlXrwg9uWZtxCDEGAAIHZ3Q2+foOHm7EtJ
-         M1a1/P/1ZdmsTqvgB91Fw1oLEKJfkEpPxtdXyO1h+ZsMNoRasLukg83hO8hxEBl/vzgb
-         blej+3tX1kv8vjoxm0eeYveDe1fVratZcb+0nZ3k+zAKqfH7DstQSzftAdjrLUY3b9lP
-         VFLjfXViSByXPGHLsW5+jWUlRlaRzYxqpZOBet0a0sHAv33muLCeUj/m1cERrLdDvs2X
-         qVaW2rEgwm+AmTJUnEPaJUqi+6dDEd0JieCGzRPCDS5B94usjZMauleUCipOGgMEJZTo
-         LxLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756234141; x=1756838941;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=E/Ye7/SL7tqTx9oBx/tviBmGnvw5YMp+2zk7nWejWf0=;
-        b=S+meimd3D5POIx+stvAUuCHVXmKxtyi4ryRw9J1dIcunMrTC6inDKHCfyljlgIwZmR
-         h+ZjqZw3V7gqSCJj6k9pK2IP/Dn/3ya5QiUxY7GkiYXDesb276p7X8KUSzHntC7r2Pr7
-         TY5XKewzU6sLrkrdoUUzkECOxxWbKwaiYfun2gaq5LgZZ5syq292jPmfZKQ9bwEzNXWY
-         AQdwsjAnEy3SDDWD+4Kk9UPS8eBBgODkBHmIsnM7nfcVWDSdAC/2Gr0sUIIAa7FGVYGi
-         AGHRWpqqF4fHjxiOvUqW0At1ODWLyUcXuAC5Pk60J/p3hIup1UNUh/2AlLzGTotDdAwF
-         zuRA==
-X-Forwarded-Encrypted: i=1; AJvYcCV4s+unbavs0IZDAbu6qT4LWsnssCwUCTGlKeSfYbvTf21oMNS5J47kqYV8eUlmYJjjZJqcNWPeIJ4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPzo1/wyj4Ar26JXrET/s3gMfiU+Z3VWlBY9ZM0lcXz0BcRpRm
-	LZ8UimC5hXoHU/qNaP6/ZNqd9870oJnPoYdiPyV82uZ8P1jNum8ubn8nfm0rnTA0k4h4D1CL/5A
-	NlaBhxZR1hP7u3mE+PDRKu2WkzaTfsRSKkXxzwDf2
-X-Gm-Gg: ASbGncvZ6Yk74pEwxzp3ec3SOZgp0+2nZRFdwWkCpqcp9OAZ2KOaXVysxbzNjB8f6xJ
-	s+CDbsH7qVewTySE+SxtL2/nfSx9fr/5aE2bslBt5vmd8chh0wvlENwn41k9g5ls4k47GtpUk7c
-	TytRt33kEc9laWmtsZogCoKSBGTyaxvFKT0HakagAvA23gXkTXMWuBaQ4LDJwIFW42AdIB2tCSW
-	l6730/twAeewO3v+CT9MDnB9oV2oQzwyK1wRlpfcWV4l7CVLr4gTKsqXV8I2lnn
-X-Google-Smtp-Source: AGHT+IG+ollMBmiaOYcyGD4fK0EXbH34IwD2F+IqBBnZbD5S5EK8GUe1Cco16tj20beWZxJ5YP1hQInru/5q0vhDcUY=
-X-Received: by 2002:a17:903:228c:b0:243:afef:cd88 with SMTP id
- d9443c01a7336-2486395f193mr4627105ad.11.1756234140425; Tue, 26 Aug 2025
- 11:49:00 -0700 (PDT)
+	s=arc-20240116; t=1756248375; c=relaxed/simple;
+	bh=QPfOdRE+UdI8R6QWzL+BY+m7E4ercnZLAi/SgCwDk70=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G9MroSod3z5C8DtweWsrOpt4ueYM3U3P4iZr1WPLG0T6K875rajx5S6sge1upVLs7K0INcPWNxqEfDiiSOj28XzWcDZYjy9qJlVw4RnjtIFIB92MeKI9FWQrKP5GA49NZFEvXj8w7E8Zfe69dZ7NPjQHyK2C6rLd7J+LziBOQUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D91401A25;
+	Tue, 26 Aug 2025 15:46:03 -0700 (PDT)
+Received: from [10.57.4.86] (unknown [10.57.4.86])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DCF5D3F738;
+	Tue, 26 Aug 2025 15:46:05 -0700 (PDT)
+Message-ID: <015974a4-f129-4ae5-adf9-c94b29f0576a@arm.com>
+Date: Tue, 26 Aug 2025 23:46:02 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1755096883.git.robin.murphy@arm.com> <d6cda4e2999aba5794c8178f043c91068fa8080c.1755096883.git.robin.murphy@arm.com>
- <20250826130329.GX4067720@noisy.programming.kicks-ass.net> <6080e45d-032e-48c2-8efc-3d7e5734d705@arm.com>
-In-Reply-To: <6080e45d-032e-48c2-8efc-3d7e5734d705@arm.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 26 Aug 2025 11:48:48 -0700
-X-Gm-Features: Ac12FXxL0fQGFTk6-3SCJz15Qd8Ums9V_bcQA6gIxaEwQacWk3scYfeQZZ7cYZQ
-Message-ID: <CAP-5=fXF2x3hW4Sk+A362T-50cBbw6HVd7KY+QEUjFwT+JL37Q@mail.gmail.com>
-Subject: Re: [PATCH 12/19] perf: Ignore event state for group validation
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com, will@kernel.org, 
-	mark.rutland@arm.com, acme@kernel.org, namhyung@kernel.org, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	imx@lists.linux.dev, linux-csky@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-rockchip@lists.infradead.org, dmaengine@vger.kernel.org, 
-	linux-fpga@vger.kernel.org, amd-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, 
-	intel-xe@lists.freedesktop.org, coresight@lists.linaro.org, 
-	iommu@lists.linux.dev, linux-amlogic@lists.infradead.org, 
-	linux-cxl@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 18/19] perf: Introduce positive capability for raw events
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: peterz@infradead.org, mingo@redhat.com, will@kernel.org, acme@kernel.org,
+ namhyung@kernel.org, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+ linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-rockchip@lists.infradead.org, dmaengine@vger.kernel.org,
+ linux-fpga@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+ intel-xe@lists.freedesktop.org, coresight@lists.linaro.org,
+ iommu@lists.linux.dev, linux-amlogic@lists.infradead.org,
+ linux-cxl@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-riscv@lists.infradead.org
+References: <cover.1755096883.git.robin.murphy@arm.com>
+ <542787fd188ea15ef41c53d557989c962ed44771.1755096883.git.robin.murphy@arm.com>
+ <aK259PrpyxguQzdN@J2N7QTR9R3>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <aK259PrpyxguQzdN@J2N7QTR9R3>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Aug 26, 2025 at 8:32=E2=80=AFAM Robin Murphy <robin.murphy@arm.com>=
- wrote:
->
-> On 2025-08-26 2:03 pm, Peter Zijlstra wrote:
-> > On Wed, Aug 13, 2025 at 06:01:04PM +0100, Robin Murphy wrote:
-> >> It may have been different long ago, but today it seems wrong for thes=
-e
-> >> drivers to skip counting disabled sibling events in group validation,
-> >> given that perf_event_enable() could make them schedulable again, and
-> >> thus increase the effective size of the group later. Conversely, if a
-> >> sibling event is truly dead then it stands to reason that the whole
-> >> group is dead, so it's not worth going to any special effort to try to
-> >> squeeze in a new event that's never going to run anyway. Thus, we can
-> >> simply remove all these checks.
-> >
-> > So currently you can do sort of a manual event rotation inside an
-> > over-sized group and have it work.
-> >
-> > I'm not sure if anybody actually does this, but its possible.
-> >
-> > Eg. on a PMU that supports only 4 counters, create a group of 5 and
-> > periodically cycle which of the 5 events is off.
+On 2025-08-26 2:43 pm, Mark Rutland wrote:
+> On Wed, Aug 13, 2025 at 06:01:10PM +0100, Robin Murphy wrote:
+>> Only a handful of CPU PMUs accept PERF_TYPE_{RAW,HARDWARE,HW_CACHE}
+>> events without registering themselves as PERF_TYPE_RAW in the first
+>> place. Add an explicit opt-in for these special cases, so that we can
+>> make life easier for every other driver (and probably also speed up the
+>> slow-path search) by having perf_try_init_event() do the basic type
+>> checking to cover the majority of cases.
+>>
+>> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> 
+> 
+> To bikeshed a little here, I'm not keen on the PERF_PMU_CAP_RAW_EVENTS
+> name, because it's not clear what "RAW" really means, and people will
+> definitely read that to mean something else.
+> 
+> Could we go with something like PERF_PMU_CAP_COMMON_CPU_EVENTS, to make
+> it clear that this is about opting into CPU-PMU specific event types (of
+> which PERF_TYPE_RAW is one of)?
 
-I'm not sure this is true, I thought this would fail in the
-perf_event_open when adding the 5th event and there being insufficient
-counters for the group. Not all PMUs validate a group will fit on the
-counters, but I thought at least Intel's core PMU would validate and
-not allow this. Fwiw, the metric code is reliant on this behavior as
-by default all events are placed into a weak group:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/util/metricgroup.c?h=3Dperf-tools-next#n631
-Weak groups are really just groups that when the perf_event_open fails
-retry with the grouping removed. PMUs that don't fail the
-perf_event_open are problematic as the reads just report "not counted"
-and the metric doesn't work. Sometimes the PMU can't help it due to
-errata. There are a bunch of workarounds for those cases carried in
-the perf tool, but in general weak groups working is relied upon:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/pmu-events/pmu-events.h?h=3Dperf-tools-next#n16
+Indeed I started with that very intention after our previous discussion, 
+but soon realised that in fact nowhere in the code is there any 
+definition or even established notion of what "common" means in this 
+context, so it's hardly immune to misinterpretation either. Furthermore 
+the semantics of the cap as it ended up are specifically that the PMU 
+wants the same behaviour as if it had registered as PERF_TYPE_RAW, so 
+having "raw" in the name started to look like the more intuitive option 
+after all (plus being nice and short helps.)
+
+If anything, it's "events" that carries the implication that's proving 
+hard to capture precisely and concisely here, so maybe the answer to 
+avoid ambiguity is to lean further away from a "what it represents" to a 
+"what it actually does" naming - PERF_PMU_CAP_TYPE_RAW, anyone?
+
+> Likewise, s/is_raw_pmu()/pmu_supports_common_cpu_events()/.
+
+Case in point: is it any more logical and expected that supporting 
+common CPU events implies a PMU should be offered software or breakpoint 
+events as well? Because that's what such a mere rename would currently 
+mean :/
+
+>> ---
+>>
+>> A further possibility is to automatically add the cap to PERF_TYPE_RAW
+>> PMUs in perf_pmu_register() to have a single point-of-use condition; I'm
+>> undecided...
+> 
+> I reckon we don't need to automagically do that, but I reckon that
+> is_raw_pmu()/pmu_supports_common_cpu_events() should only check the cap,
+> and we don't read anything special into any of
+> PERF_TYPE_{RAW,HARDWARE,HW_CACHE}.
+
+OK, but that would then necessitate having to explicitly add the cap to 
+all 15-odd other drivers which register as PERF_TYPE_RAW as well, at 
+which point it starts to look like a more general "I am a CPU PMU in 
+terms of most typical assumptions you might want to make about that" flag...
+
+To clarify (and perhaps something for a v2 commit message), we currently 
+have 3 categories of PMU driver:
+
+1: (Older/simpler CPUs) Registers as PERF_TYPE_RAW, wants 
+PERF_TYPE_RAW/HARDWARE/HW_CACHE events
+2: (Heterogeneous CPUs) Registers as dynamic type, wants 
+PERF_TYPE_RAW/HARDWARE/HW_CACHE events plus events of its own type
+3: (Mostly uncore) Registers as dynamic type, only wants events of its 
+own type
+
+My vested interest is in making category 3 the default behaviour, given 
+that the growing majority of new drivers are uncore (and I keep having 
+to write them...) However unclear the type overlaps in category 1 might 
+be, it's been like that for 15 years, so I didn't feel compelled to 
+churn fossils like Alpha more than reasonably necessary. Category 2 is 
+only these 5 drivers, so a relatively small tweak to distinguish them 
+from category 3 and let them retain the effective category 1 behaviour 
+(which remains the current one of potentially still being offered 
+software etc. events too) seemed like the neatest way to make progress.
+
+I'm not saying I'm necessarily against a general overhaul of CPU PMUs 
+being attempted too, just that it seems more like a whole other 
+side-quest, and I'd really like to slay the uncore-boilerplate dragon first.
+
+>> ---
+>>   arch/s390/kernel/perf_cpum_cf.c    |  1 +
+>>   arch/s390/kernel/perf_pai_crypto.c |  2 +-
+>>   arch/s390/kernel/perf_pai_ext.c    |  2 +-
+>>   arch/x86/events/core.c             |  2 +-
+>>   drivers/perf/arm_pmu.c             |  1 +
+>>   include/linux/perf_event.h         |  1 +
+>>   kernel/events/core.c               | 15 +++++++++++++++
+>>   7 files changed, 21 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/arch/s390/kernel/perf_cpum_cf.c b/arch/s390/kernel/perf_cpum_cf.c
+>> index 1a94e0944bc5..782ab755ddd4 100644
+>> --- a/arch/s390/kernel/perf_cpum_cf.c
+>> +++ b/arch/s390/kernel/perf_cpum_cf.c
+>> @@ -1054,6 +1054,7 @@ static void cpumf_pmu_del(struct perf_event *event, int flags)
+>>   /* Performance monitoring unit for s390x */
+>>   static struct pmu cpumf_pmu = {
+>>   	.task_ctx_nr  = perf_sw_context,
+>> +	.capabilities = PERF_PMU_CAP_RAW_EVENTS,
+>>   	.pmu_enable   = cpumf_pmu_enable,
+>>   	.pmu_disable  = cpumf_pmu_disable,
+>>   	.event_init   = cpumf_pmu_event_init,
+> 
+> Tangential, but use of perf_sw_context here looks bogus.
+
+Indeed, according to the history it was intentional, but perhaps that no 
+longer applies since the big context redesign? FWIW there seem to be a 
+fair few instances of this, including Arm SPE.
 
 Thanks,
-Ian
+Robin.
 
-> > So I'm not against changing this, but changing stuff like this always
-> > makes me a little fearful -- it wouldn't be the first time that when it
-> > finally trickles down to some 'enterprise' user in 5 years someone come=
-s
-> > and finally says, oh hey, you broke my shit :-(
->
-> Eww, I see what you mean... and I guess that's probably lower-overhead
-> than actually deleting and recreating the sibling event(s) each time,
-> and potentially less bother then wrangling multiple groups for different
-> combinations of subsets when one simply must still approximate a complex
-> metric that requires more counters than the hardware offers.
->
-> I'm also not keen to break anything that wasn't already somewhat broken,
-> especially since this patch is only intended as cleanup, so either we
-> could just drop it altogether, or perhaps I can wrap the existing
-> behaviour in a helper that can at least document this assumption and
-> discourage new drivers from copying it. Am I right that only
-> PERF_EVENT_STATE_{OFF,ERROR} would matter for this, though, and my
-> reasoning for state <=3D PERF_EVENT_STATE_EXIT should still stand? As for
-> the fiddly discrepancy with enable_on_exec between arm_pmu and others
-> I'm not really sure what to think...
->
-> Thanks,
-> Robin.
+>> diff --git a/arch/s390/kernel/perf_pai_crypto.c b/arch/s390/kernel/perf_pai_crypto.c
+>> index a64b6b056a21..b5b6d8b5d943 100644
+>> --- a/arch/s390/kernel/perf_pai_crypto.c
+>> +++ b/arch/s390/kernel/perf_pai_crypto.c
+>> @@ -569,7 +569,7 @@ static const struct attribute_group *paicrypt_attr_groups[] = {
+>>   /* Performance monitoring unit for mapped counters */
+>>   static struct pmu paicrypt = {
+>>   	.task_ctx_nr  = perf_hw_context,
+>> -	.capabilities = PERF_PMU_CAP_SAMPLING,
+>> +	.capabilities = PERF_PMU_CAP_SAMPLING | PERF_PMU_CAP_RAW_EVENTS,
+>>   	.event_init   = paicrypt_event_init,
+>>   	.add	      = paicrypt_add,
+>>   	.del	      = paicrypt_del,
+>> diff --git a/arch/s390/kernel/perf_pai_ext.c b/arch/s390/kernel/perf_pai_ext.c
+>> index 1261f80c6d52..bcd28c38da70 100644
+>> --- a/arch/s390/kernel/perf_pai_ext.c
+>> +++ b/arch/s390/kernel/perf_pai_ext.c
+>> @@ -595,7 +595,7 @@ static const struct attribute_group *paiext_attr_groups[] = {
+>>   /* Performance monitoring unit for mapped counters */
+>>   static struct pmu paiext = {
+>>   	.task_ctx_nr  = perf_hw_context,
+>> -	.capabilities = PERF_PMU_CAP_SAMPLING,
+>> +	.capabilities = PERF_PMU_CAP_SAMPLING | PERF_PMU_CAP_RAW_EVENTS,
+>>   	.event_init   = paiext_event_init,
+>>   	.add	      = paiext_add,
+>>   	.del	      = paiext_del,
+>> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+>> index 789dfca2fa67..764728bb80ae 100644
+>> --- a/arch/x86/events/core.c
+>> +++ b/arch/x86/events/core.c
+>> @@ -2697,7 +2697,7 @@ static bool x86_pmu_filter(struct pmu *pmu, int cpu)
+>>   }
+>>   
+>>   static struct pmu pmu = {
+>> -	.capabilities		= PERF_PMU_CAP_SAMPLING,
+>> +	.capabilities		= PERF_PMU_CAP_SAMPLING | PERF_PMU_CAP_RAW_EVENTS,
+>>   
+>>   	.pmu_enable		= x86_pmu_enable,
+>>   	.pmu_disable		= x86_pmu_disable,
+>> diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
+>> index 72d8f38d0aa5..bc772a3bf411 100644
+>> --- a/drivers/perf/arm_pmu.c
+>> +++ b/drivers/perf/arm_pmu.c
+>> @@ -877,6 +877,7 @@ struct arm_pmu *armpmu_alloc(void)
+>>   		 * specific PMU.
+>>   		 */
+>>   		.capabilities	= PERF_PMU_CAP_SAMPLING |
+>> +				  PERF_PMU_CAP_RAW_EVENTS |
+>>   				  PERF_PMU_CAP_EXTENDED_REGS |
+>>   				  PERF_PMU_CAP_EXTENDED_HW_TYPE,
+>>   	};
+>> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+>> index 183b7c48b329..c6ad036c0037 100644
+>> --- a/include/linux/perf_event.h
+>> +++ b/include/linux/perf_event.h
+>> @@ -305,6 +305,7 @@ struct perf_event_pmu_context;
+>>   #define PERF_PMU_CAP_EXTENDED_HW_TYPE	0x0100
+>>   #define PERF_PMU_CAP_AUX_PAUSE		0x0200
+>>   #define PERF_PMU_CAP_AUX_PREFER_LARGE	0x0400
+>> +#define PERF_PMU_CAP_RAW_EVENTS		0x0800
+>>   
+>>   /**
+>>    * pmu::scope
+>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>> index 71b2a6730705..2ecee76d2ae2 100644
+>> --- a/kernel/events/core.c
+>> +++ b/kernel/events/core.c
+>> @@ -12556,11 +12556,26 @@ static inline bool has_extended_regs(struct perf_event *event)
+>>   	       (event->attr.sample_regs_intr & PERF_REG_EXTENDED_MASK);
+>>   }
+>>   
+>> +static bool is_raw_pmu(const struct pmu *pmu)
+>> +{
+>> +	return pmu->type == PERF_TYPE_RAW ||
+>> +	       pmu->capabilities & PERF_PMU_CAP_RAW_EVENTS;
+>> +}
+> 
+> As above, I reckon we should make this:
+> 
+> static bool pmu_supports_common_cpu_events(const struct pmu *pmu)
+> {
+> 	return pmu->capabilities & PERF_PMU_CAP_RAW_EVENTS;
+> }
+> 
+> Other than the above, this looks good to me.
+> 
+> Mark.
+> 
+>> +
+>>   static int perf_try_init_event(struct pmu *pmu, struct perf_event *event)
+>>   {
+>>   	struct perf_event_context *ctx = NULL;
+>>   	int ret;
+>>   
+>> +	/*
+>> +	 * Before touching anything, we can safely skip:
+>> +	 * - any event for a specific PMU which is not this one
+>> +	 * - any common event if this PMU doesn't support them
+>> +	 */
+>> +	if (event->attr.type != pmu->type &&
+>> +	    (event->attr.type >= PERF_TYPE_MAX || is_raw_pmu(pmu)))
+>> +		return -ENOENT;
+>> +
+>>   	if (!try_module_get(pmu->module))
+>>   		return -ENODEV;
+>>   
+>> -- 
+>> 2.39.2.101.g768bb238c484.dirty
+>>
 

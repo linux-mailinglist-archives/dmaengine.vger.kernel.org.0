@@ -1,225 +1,201 @@
-Return-Path: <dmaengine+bounces-6227-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6228-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4D73B3863D
-	for <lists+dmaengine@lfdr.de>; Wed, 27 Aug 2025 17:18:59 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25ABBB38680
+	for <lists+dmaengine@lfdr.de>; Wed, 27 Aug 2025 17:25:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 634C8367295
-	for <lists+dmaengine@lfdr.de>; Wed, 27 Aug 2025 15:18:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E2A62166A2A
+	for <lists+dmaengine@lfdr.de>; Wed, 27 Aug 2025 15:25:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A150D3019AD;
-	Wed, 27 Aug 2025 15:15:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26F4F2248B0;
+	Wed, 27 Aug 2025 15:25:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SSFbhUaY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j4kIK+y/"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A7F32773D5
-	for <dmaengine@vger.kernel.org>; Wed, 27 Aug 2025 15:15:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6054C1E0E08;
+	Wed, 27 Aug 2025 15:24:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756307747; cv=none; b=naJ/3fn0eSuHSGDuJ2t6OFJSb0PZsOX7/ohlph6nLxqlKaUxSMB9vfgsjzI6gO0cxzibpaXwzGMunask/MX3C7VuDcLR/ORmPQPR1JROBI2lcdM/MBrSnYcBw0DMJsqio2Uuo+2mSJlEvVWPIjZF6GlBGjH4acIg9XKT3TCYq6E=
+	t=1756308300; cv=none; b=c0+t15gAtDWcONOj/Q6AK4D5o1cKzNLlr6G43pOQoUIjdqHSOY1p5QZgpLD4IaGd8iHCa3XmcgyUZCvTo3CdKqTA7OXIbgCFu/Cn+gt5UFV8zjEG31JyUPA4EV5S0XhWHA3OcS3Xs6HwfQmNGtfL9X1yTfaZizp5pEkoW2bcyFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756307747; c=relaxed/simple;
-	bh=PgEPxKHnOwEJrisDshuEuJU9SWQbfG1NSTYMYsAtWZE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qKeruX+Lv4TGirzv7RXxsCHI92rmn7Dz79kLDXhsJsinCV3c6V3w+Hc2Lcgl0b9W4JCX8dI1Sr3wDone9Oy7K/6PXu6cI+2DTRSd3rFK2qXTdX+IOlxlCoZjDlZ+9dWinwOufF/p0BgTthPz1/1uDfPQZ985oicVYOaE0QAodAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SSFbhUaY; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-248681b5892so229235ad.0
-        for <dmaengine@vger.kernel.org>; Wed, 27 Aug 2025 08:15:44 -0700 (PDT)
+	s=arc-20240116; t=1756308300; c=relaxed/simple;
+	bh=vCjR9l/2ifl81kRjbUqgUc73Cc/Bb0CwIdVVHnUqmxs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UnCTYZkv/dWwIZhs9MoXSfjJYnWM+UA3NawbUTOoYkgZzE43RdwHXu4fpWD5rOyrMVpgT1w0pA0qzIpudnQ0TuWt25MmOBQN/hXraVg1V45cO+cr50Ggj7kEtcJeRyn4ge8yCSnDK0424v4qzmBa8FUE6be4hcXVc86wmWn/XkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j4kIK+y/; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-45a1b0d231eso42808105e9.3;
+        Wed, 27 Aug 2025 08:24:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1756307744; x=1756912544; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aGPhYDWt388RttmicU0o24RVsxY/twdNMb4O/vzImCs=;
-        b=SSFbhUaYSdGFBbG5CfGErl8PBJrdJ0XQ6Ofi8i4VHffvxMFqpxvd+tBC70A4/nMPRf
-         ybU1ppZn3tbfrOKYfvpliGhWaHEjfd5gmSxVQ/LbuKHpjRkSVK/4QDjzT58X9EiCYNwA
-         VD20oxfdWFrKFhsWdsiCSaeb4dGSHE6WYM7wX1tKv/9tXSTFRPgl7S0bV6soxF8q1uLR
-         qxqz6E2uiRoLyV2iMsgCO9EDPozzvbWTmTIFD9Mqi0RfocbBhhawnxcyQPOk098SvjNw
-         4KYeQe65GchDlKYvnMaty9HoninLLGNTawIlgfvoFCkk4VwTfWXkTNirqjX14LEt8qKn
-         OHIg==
+        d=gmail.com; s=20230601; t=1756308297; x=1756913097; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wXx82M30xW2kCpWwnPxMPInFyBrFrSqnkyvpgRTA3A8=;
+        b=j4kIK+y/V2pZjkHjsXH/sWFUKaKykJPIM8R3Nk9JlKqxAj7LhrK8vvUHrLmU6XJlHv
+         SFwaVOtBGcCHWsgzlkaTHEPDFfLyrZ1NPYJ1Ih62dqRpCJ78rYxFwCqtMAnnW6fKDRnN
+         pL+MkmHueJZTE19N4+0lLyxnfmM5CqBB+BTLLAu7owDNfh6BasFZoyXTMDwwAo96yp5+
+         GX7CjNXCpLH+fNRUVfxOlEG0gIQ7zi9rcwGaL0uoqQH9LLcqwFQTDYimkVPB5/dJj/SC
+         cjINz4qPu8fL3Q9oEPp/rgOf4SWKNUpHVwpSeceVmljQl1gIgsUiGVoVI9SOVDZh7LsZ
+         2StQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756307744; x=1756912544;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aGPhYDWt388RttmicU0o24RVsxY/twdNMb4O/vzImCs=;
-        b=GnkTuInitKdEmRAB3ZTQAYoYh4UZYkyLaVR25gtefgsNqOoGY2UV/bCYbM1vl/+vZU
-         nT0xkA9TZa+Jdw1M/efzwp1HsW939P3XH/Lp5rbK9BT1VK0pt2X+4/mK+Ntb/ML5td5+
-         WXo9duPwsRNwp/lWrFdgNUWo3oeIAC0IMgHxS7yKLciQCwDJKH9uzNCz9wcmF5tfPk1F
-         P8MnUHmBO8soDJuRUIrrPxzWEQs1nrNEJfjsDZHdwxApsQL+5iotckvht7PulmgVe7XT
-         4a52AmgYIWpF8mHZczooGaSDZ+4EYKNHoN/T1Tz05rIPWSn7H10AHoEUjdC2nX6B1wGF
-         NspQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXQLesF2ZEXqNW389nbrPm8O68wdBDVGXGSDyXOPA7wKmZZwVOg51YrQ7wklyUWYfDyM6wkWBh2TEc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzC2THxIh7ID+FtGdh2I2lbenThS/+wRUvy0AO4qnJ57crd5lmV
-	Q/U056+iZQaSRzivEtdNwOVYuQSFmBcO+mmBx6nlWBTA0ceJD3ol+yPc8qkaIeFT03h85SZ4R4N
-	obdU9LCDrkp+IGBJi756QvUEFUpWCFGA9ynhPRITl
-X-Gm-Gg: ASbGncutO0oDGVlvSv/Vzxb5CHbu5ZWzc5BL7t6rfoH3ZqwWe1TXoFRTUoYa1TLwF8l
-	sHmGZ25ngrYWzhK3BrYkyPBuLBDPugYogTH8Rnm3CnJzPyUP7v/BMx4ToiAT7yb/esuYmrZyrSW
-	jT2794TAWf7B+1ao1kTOlDyJvQxNT6QBM8j6v4ltRqV4jV3P7REx22WFXatvVhw0guZvBo1yqX2
-	et4O/xZBq/TY5HpQ5cow171sLW/N618UbmYrKbTSGI=
-X-Google-Smtp-Source: AGHT+IExi0QgPJP/5AblrVahQdACSVklatzIIhzDoM8PROF9H/mRXxhxpv9GhjknP28Wz6ljzGsei6gbP7f3oTXJLVM=
-X-Received: by 2002:a17:902:ec87:b0:246:a8ac:1a36 with SMTP id
- d9443c01a7336-2485ba5311amr9397575ad.2.1756307741849; Wed, 27 Aug 2025
- 08:15:41 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1756308297; x=1756913097;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wXx82M30xW2kCpWwnPxMPInFyBrFrSqnkyvpgRTA3A8=;
+        b=Sdz8ypk4VpgM5ZVn9NwC5eh+N3qM4Ki4c3rnnazqDBFQcJfCLby6xOv+4wRZLbjTQg
+         0HJKDiA3Tf4wg1npvGX+LE0yYQ2WUY1pC0dk2Vah5YfXmlhRffRvLhI0n0y9Fmpm+vrA
+         zK3e1gpEt+0bZZZKEmiKYpCU2PD51W/ZyZNvIqMleaUke4xFoe2UC1liMRoRK0BnQ6C1
+         zGpFVum6lLCHMTYsYruo6uz4rCBiXzWYtmlREXVoo1Pq0ZF5BiPz63/Vp5iyaOI2KAVI
+         rz363a73jAJIlVXDHh7YNecmbGt/tWipl43yqIvdfBjbLK3VwtzRL3iqNW9gaNvVKKAf
+         xJeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUKZqupmlMEqLeIUpLLXO3db9GlirjJz48ugj3rGTypcqp9AOlrbBYarXZPZZtp/Pemsxy9ps/XEqg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxI3Pad8qJPWKiz5Bythii+4dts0KRa9Ve6ccGU4SHaLDswqBUx
+	ORdx5EUDASh3gizdOCc/X8q2DFjcBo6czpLCvWpAFAE42VWXXaa/nyuH
+X-Gm-Gg: ASbGnct2AXkLBUKcZVsd4rfzBr8DtXw+TSb/S69S2LnmR/zPcENrsIwp0Y8O4m6ZcCg
+	hj7t1lXuwiVM0/FVjUUiLsY5e6vVX+s4UCwJW+fIniEZvJuI4zbbzomANmcCvW0tmV5JJR9OVMW
+	16x8xjv2RS3Y97PPJkiMzHQW1aLt+SGy/XOrU43HG2KOvjToZScw29Aq3X1nRUx7ZrCVkUTACdS
+	kQX0ifFs6au6fO/O8PkNnImOFTJj1M++PQNR5DDcED+knDUCh72DnGd2AQoUdNoxxD/ymENAw+W
+	6V7lZ944P4U4/lL4E6z1SeEEfqJhunyDzEacQP+jCqLbprSFsivbTq6JwS0zOgkt+Gm1R591MEv
+	c6FmcAHYjo1uA5vs77R+TL0c8r5HpJDJTJNENyx5r0M8JktDTgWGl6UBbmx1zqXzFo3Hp7AVUW3
+	1KBI9VgxFbyfc=
+X-Google-Smtp-Source: AGHT+IFXWUPgHGrP+uNLPGa3/2CQapMwXzCmzoM4UyvpiUxIHyeEW55l8dCb+VdFT5SjVG5ypuvzJQ==
+X-Received: by 2002:a05:6000:2802:b0:3cc:929c:6595 with SMTP id ffacd0b85a97d-3cc929c6b17mr1653393f8f.15.1756308296365;
+        Wed, 27 Aug 2025 08:24:56 -0700 (PDT)
+Received: from localhost.localdomain (mob-109-118-41-117.net.vodafone.it. [109.118.41.117])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3cc37183670sm4907199f8f.58.2025.08.27.08.24.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Aug 2025 08:24:55 -0700 (PDT)
+From: Thomas Andreatta <thomasandreatta2000@gmail.com>
+X-Google-Original-From: Thomas Andreatta <thomas.andreatta2000@gmail.com>
+To: vkoul@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	dmaengine@vger.kernel.org,
+	Thomas Andreatta <thomas.andreatta2000@gmail.com>
+Subject: [PATCH] drivers: dma: sh: setup_xref error handling
+Date: Wed, 27 Aug 2025 17:24:43 +0200
+Message-Id: <20250827152442.90962-1-thomas.andreatta2000@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1755096883.git.robin.murphy@arm.com> <d6cda4e2999aba5794c8178f043c91068fa8080c.1755096883.git.robin.murphy@arm.com>
- <20250826130329.GX4067720@noisy.programming.kicks-ass.net>
- <6080e45d-032e-48c2-8efc-3d7e5734d705@arm.com> <CAP-5=fXF2x3hW4Sk+A362T-50cBbw6HVd7KY+QEUjFwT+JL37Q@mail.gmail.com>
- <aK6_XrA_OaLnoFkr@J2N7QTR9R3>
-In-Reply-To: <aK6_XrA_OaLnoFkr@J2N7QTR9R3>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 27 Aug 2025 08:15:29 -0700
-X-Gm-Features: Ac12FXwUZ4TrRSXyzgr8XTQRkesJ87wwMtoKHvx086ZRlV4GbvgOq2WSyedNfZ4
-Message-ID: <CAP-5=fU0-QDMP-VG3O1qBvJ8uzHHYCQ8j1Vrzy9a0YUk=UMvHw@mail.gmail.com>
-Subject: Re: [PATCH 12/19] perf: Ignore event state for group validation
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Robin Murphy <robin.murphy@arm.com>, Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com, 
-	will@kernel.org, acme@kernel.org, namhyung@kernel.org, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	imx@lists.linux.dev, linux-csky@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-rockchip@lists.infradead.org, dmaengine@vger.kernel.org, 
-	linux-fpga@vger.kernel.org, amd-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, 
-	intel-xe@lists.freedesktop.org, coresight@lists.linaro.org, 
-	iommu@lists.linux.dev, linux-amlogic@lists.infradead.org, 
-	linux-cxl@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Aug 27, 2025 at 1:18=E2=80=AFAM Mark Rutland <mark.rutland@arm.com>=
- wrote:
->
-> On Tue, Aug 26, 2025 at 11:48:48AM -0700, Ian Rogers wrote:
-> > On Tue, Aug 26, 2025 at 8:32=E2=80=AFAM Robin Murphy <robin.murphy@arm.=
-com> wrote:
-> > >
-> > > On 2025-08-26 2:03 pm, Peter Zijlstra wrote:
-> > > > On Wed, Aug 13, 2025 at 06:01:04PM +0100, Robin Murphy wrote:
-> > > >> It may have been different long ago, but today it seems wrong for =
-these
-> > > >> drivers to skip counting disabled sibling events in group validati=
-on,
-> > > >> given that perf_event_enable() could make them schedulable again, =
-and
-> > > >> thus increase the effective size of the group later. Conversely, i=
-f a
-> > > >> sibling event is truly dead then it stands to reason that the whol=
-e
-> > > >> group is dead, so it's not worth going to any special effort to tr=
-y to
-> > > >> squeeze in a new event that's never going to run anyway. Thus, we =
-can
-> > > >> simply remove all these checks.
-> > > >
-> > > > So currently you can do sort of a manual event rotation inside an
-> > > > over-sized group and have it work.
-> > > >
-> > > > I'm not sure if anybody actually does this, but its possible.
-> > > >
-> > > > Eg. on a PMU that supports only 4 counters, create a group of 5 and
-> > > > periodically cycle which of the 5 events is off.
-> >
-> > I'm not sure this is true, I thought this would fail in the
-> > perf_event_open when adding the 5th event and there being insufficient
-> > counters for the group.
->
-> We're talking specifically about cases where the logic in a pmu's
-> pmu::event_init() callback doesn't count events in specific states, and
-> hence the 5th even doesn't get rejected when it is initialised.
->
-> For example, in arch/x86/events/core.c, validate_group() uses
-> collect_events(), which has:
->
->         for_each_sibling_event(event, leader) {
->                 if (!is_x86_event(event) || event->state <=3D PERF_EVENT_=
-STATE_OFF)
->                         continue;
->
->                 if (collect_event(cpuc, event, max_count, n))
->                         return -EINVAL;
->
->                 n++;
->         }
->
-> ... and so where an event's state is <=3D PERF_EVENT_STATE_OFF at init
-> time, that event is not counted to see if it fits into HW counters.
+This patch modifies the type of setup_xref from void to int and handles
+errors since the function can fail.
 
-Hmm.. Thinking out loud. So it looked like perf with weak groups could
-be broken then:
-```
-$ sudo perf stat -vv -e '{instructions,cycles}:W' true
-...
-perf_event_attr:
- type                             0 (PERF_TYPE_HARDWARE)
- size                             136
- config                           0x400000001
-(cpu_core/PERF_COUNT_HW_INSTRUCTIONS/)
- sample_type                      IDENTIFIER
- read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING|ID|=
-GROUP
- disabled                         1
- inherit                          1
- enable_on_exec                   1
-------------------------------------------------------------
-sys_perf_event_open: pid 3337764  cpu -1  group_fd -1  flags 0x8 =3D 5
-------------------------------------------------------------
-perf_event_attr:
- type                             0 (PERF_TYPE_HARDWARE)
- size                             136
- config                           0x400000000
-(cpu_core/PERF_COUNT_HW_CPU_CYCLES/)
- sample_type                      IDENTIFIER
- read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING|ID|=
-GROUP
- inherit                          1
-------------------------------------------------------------
-sys_perf_event_open: pid 3337764  cpu -1  group_fd 5  flags 0x8 =3D 7
-...
-```
-Note, the group leader (instructions) is disabled because of:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/util/stat.c?h=3Dperf-tools-next#n761
-```
-/*
-* Disabling all counters initially, they will be enabled
-* either manually by us or by kernel via enable_on_exec
-* set later.
-*/
-if (evsel__is_group_leader(evsel)) {
-        attr->disabled =3D 1;
-```
-but the checking of being disabled (PERF_EVENT_STATE_OFF) is only done
-on siblings in the code you show above. So yes, you can disable the
-group events to allow the perf_event_open to succeed but not on the
-leader which is always checked (no PERF_EVENT_STATE_OFF check):
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/arch/x86/events/core.c?h=3Dperf-tools-next#n1204
-```
-if (is_x86_event(leader)) {
-        if (collect_event(cpuc, leader, max_count, n))
-                return -EINVAL;
-```
+`setup_xref` now returns the (eventual) error from
+`dmae_set_dmars`|`dmae_set_chcr`, while `shdma_tx_submit` handles the
+result, removing the chunks from the queue and marking PM as idle in
+case of an error.
 
-Thanks,
-Ian
+First time hittin DMA, if something's off every feedback is welcome.
+
+Signed-off-by: Thomas Andreatta <thomas.andreatta2000@gmail.com>
+---
+ drivers/dma/sh/shdma-base.c | 25 +++++++++++++++++++------
+ drivers/dma/sh/shdmac.c     | 17 +++++++++++++----
+ include/linux/shdma-base.h  |  2 +-
+ 3 files changed, 33 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/dma/sh/shdma-base.c b/drivers/dma/sh/shdma-base.c
+index 6b4fce453c85..834741adadaa 100644
+--- a/drivers/dma/sh/shdma-base.c
++++ b/drivers/dma/sh/shdma-base.c
+@@ -129,12 +129,25 @@ static dma_cookie_t shdma_tx_submit(struct dma_async_tx_descriptor *tx)
+ 			const struct shdma_ops *ops = sdev->ops;
+ 			dev_dbg(schan->dev, "Bring up channel %d\n",
+ 				schan->id);
+-			/*
+-			 * TODO: .xfer_setup() might fail on some platforms.
+-			 * Make it int then, on error remove chunks from the
+-			 * queue again
+-			 */
+-			ops->setup_xfer(schan, schan->slave_id);
++
++			ret = ops->setup_xfer(schan, schan->slave_id);
++			if (ret < 0) {
++				dev_err(schan->dev, "setup_xfer failed: %d\n", ret);
++
++				/* Remove chunks from the queue and mark them as idle */
++				list_for_each_entry_safe(chunk, c, &schan->ld_queue, node) {
++					if (chunk->cookie == cookie) {
++						chunk->mark = DESC_IDLE;
++						list_move(&chunk->node, &schan->ld_free);
++					}
++				}
++
++				schan->pm_state = SHDMA_PM_ESTABLISHED;
++				ret = pm_runtime_put(schan->dev);
++
++				spin_unlock_irq(&schan->chan_lock);
++				return ret;
++			}
+ 
+ 			if (schan->pm_state == SHDMA_PM_PENDING)
+ 				shdma_chan_xfer_ld_queue(schan);
+diff --git a/drivers/dma/sh/shdmac.c b/drivers/dma/sh/shdmac.c
+index 093e449e19ee..603e15102e45 100644
+--- a/drivers/dma/sh/shdmac.c
++++ b/drivers/dma/sh/shdmac.c
+@@ -300,21 +300,30 @@ static bool sh_dmae_channel_busy(struct shdma_chan *schan)
+ 	return dmae_is_busy(sh_chan);
+ }
+ 
+-static void sh_dmae_setup_xfer(struct shdma_chan *schan,
+-			       int slave_id)
++static int sh_dmae_setup_xfer(struct shdma_chan *schan, int slave_id)
+ {
+ 	struct sh_dmae_chan *sh_chan = container_of(schan, struct sh_dmae_chan,
+ 						    shdma_chan);
+ 
++	int ret = 0;
+ 	if (slave_id >= 0) {
+ 		const struct sh_dmae_slave_config *cfg =
+ 			sh_chan->config;
+ 
+-		dmae_set_dmars(sh_chan, cfg->mid_rid);
+-		dmae_set_chcr(sh_chan, cfg->chcr);
++		ret = dmae_set_dmars(sh_chan, cfg->mid_rid);
++		if (ret < 0)
++			goto END;
++
++		ret = dmae_set_chcr(sh_chan, cfg->chcr);
++		if (ret < 0)
++			goto END;
++
+ 	} else {
+ 		dmae_init(sh_chan);
+ 	}
++
++END:
++	return ret;
+ }
+ 
+ /*
+diff --git a/include/linux/shdma-base.h b/include/linux/shdma-base.h
+index 6dfd05ef5c2d..03ba4dab2ef7 100644
+--- a/include/linux/shdma-base.h
++++ b/include/linux/shdma-base.h
+@@ -96,7 +96,7 @@ struct shdma_ops {
+ 	int (*desc_setup)(struct shdma_chan *, struct shdma_desc *,
+ 			  dma_addr_t, dma_addr_t, size_t *);
+ 	int (*set_slave)(struct shdma_chan *, int, dma_addr_t, bool);
+-	void (*setup_xfer)(struct shdma_chan *, int);
++	int (*setup_xfer)(struct shdma_chan *, int);
+ 	void (*start_xfer)(struct shdma_chan *, struct shdma_desc *);
+ 	struct shdma_desc *(*embedded_desc)(void *, int);
+ 	bool (*chan_irq)(struct shdma_chan *, int);
+-- 
+2.34.1
+
 

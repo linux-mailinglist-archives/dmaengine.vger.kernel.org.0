@@ -1,43 +1,43 @@
-Return-Path: <dmaengine+bounces-6224-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6223-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5759DB37D34
-	for <lists+dmaengine@lfdr.de>; Wed, 27 Aug 2025 10:11:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CE9FEB37CE8
+	for <lists+dmaengine@lfdr.de>; Wed, 27 Aug 2025 10:06:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2BCE57A307C
-	for <lists+dmaengine@lfdr.de>; Wed, 27 Aug 2025 08:10:10 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D52EF7AC315
+	for <lists+dmaengine@lfdr.de>; Wed, 27 Aug 2025 08:05:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53F73322DA2;
-	Wed, 27 Aug 2025 08:11:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EADA032A3FF;
+	Wed, 27 Aug 2025 08:06:35 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 539DB322768;
-	Wed, 27 Aug 2025 08:11:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40B9732276F;
+	Wed, 27 Aug 2025 08:06:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756282298; cv=none; b=TTPeA3eSrZMZoUgVJ0Hm4iyQp/LxWPdfrZKjArsjM9vuDnVCDI8cgKj2GKXjfdL536x1AaphojUzZomW6B7ze2y2XoaV6Q+7OwERL6Q8flieXOdwzU0CQli2lEuXlTSVCraUttSqjxxjy7GDmcwX6RqakiS/NCmbdrx1Rx4r92E=
+	t=1756281995; cv=none; b=b9OPfqL6d4HtEvtbvELGOVN2CINzaRbMh9kioG4BM96BhKBmEfgSoShAEl/karsaIAKBsMkw1GhqoMDRvQESsKuM124rz9YUU9d+tF0+gsyTrJNTwBfetZG4RALGyYe7H1CUI70uszn42Ia8ohKS2rDevgBWl27TOTBfmeLXjuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756282298; c=relaxed/simple;
-	bh=/qXxxLaNG/fJKAgG5N1611Recp7NdyiAzN47tqQDfTE=;
+	s=arc-20240116; t=1756281995; c=relaxed/simple;
+	bh=mnqpdBh8LH7F6O6rDf98eADOJtLStOn4BOPmUubZFMA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aHWB/Z+Gp6aqz7cnFkCAZxRqR6hyAB/uDf6OPNGd2tM6QVH0/vX+Mtvq0OEZIo1nzBwnlJP96dFjMuaZi9VLwfPu/JhDfrT7qrxkHGH6X2ycGl9rp6h13M6lL7dRmZ3pDWy9cCyiVrGg/pqobtLdz14bdpqe/y2O0WrlYTF3TsM=
+	 Content-Type:Content-Disposition:In-Reply-To; b=djfqTvZbL9u0OlMsDQqACLVzFfkIFG0qLd1pmm6HW3ql7qlDiCw7sNvvCbZudKe9oY16XOLd8ovtb04jNpCh9KqseUzcVf839bMV+hsxB1PK8rFFDFMpnBtvAkJVI+HhzkRuLPZ9ndOVqWvGQL6dis9pzLSerUJ3jTFLi1UdEj0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3E3641691;
-	Wed, 27 Aug 2025 01:05:09 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D650B3F694;
-	Wed, 27 Aug 2025 01:05:07 -0700 (PDT)
-Date: Wed, 27 Aug 2025 09:04:46 +0100
-From: Mark Rutland <mark.rutland@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 35FE122FC;
+	Wed, 27 Aug 2025 01:06:24 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1B8693F694;
+	Wed, 27 Aug 2025 01:06:32 -0700 (PDT)
+Date: Wed, 27 Aug 2025 09:06:30 +0100
+From: Leo Yan <leo.yan@arm.com>
 To: Robin Murphy <robin.murphy@arm.com>
 Cc: peterz@infradead.org, mingo@redhat.com, will@kernel.org,
-	acme@kernel.org, namhyung@kernel.org,
+	mark.rutland@arm.com, acme@kernel.org, namhyung@kernel.org,
 	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
 	irogers@google.com, adrian.hunter@intel.com,
 	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
@@ -55,12 +55,12 @@ Cc: peterz@infradead.org, mingo@redhat.com, will@kernel.org,
 	iommu@lists.linux.dev, linux-amlogic@lists.infradead.org,
 	linux-cxl@vger.kernel.org, linux-arm-msm@vger.kernel.org,
 	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 18/19] perf: Introduce positive capability for raw events
-Message-ID: <aK68Ht03vZ0G3Xpt@J2N7QTR9R3>
+Subject: Re: [PATCH 16/19] perf: Introduce positive capability for sampling
+Message-ID: <20250827080630.GC745921@e132581.arm.com>
 References: <cover.1755096883.git.robin.murphy@arm.com>
- <542787fd188ea15ef41c53d557989c962ed44771.1755096883.git.robin.murphy@arm.com>
- <aK259PrpyxguQzdN@J2N7QTR9R3>
- <015974a4-f129-4ae5-adf9-c94b29f0576a@arm.com>
+ <ae81cb65b38555c628e395cce67ac6c7eaafdd23.1755096883.git.robin.murphy@arm.com>
+ <20250826131124.GB745921@e132581.arm.com>
+ <983df32a-ba74-421d-bc20-06e778b4d2c9@arm.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -69,125 +69,41 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <015974a4-f129-4ae5-adf9-c94b29f0576a@arm.com>
+In-Reply-To: <983df32a-ba74-421d-bc20-06e778b4d2c9@arm.com>
 
-On Tue, Aug 26, 2025 at 11:46:02PM +0100, Robin Murphy wrote:
-> On 2025-08-26 2:43 pm, Mark Rutland wrote:
-> > On Wed, Aug 13, 2025 at 06:01:10PM +0100, Robin Murphy wrote:
-> > To bikeshed a little here, I'm not keen on the PERF_PMU_CAP_RAW_EVENTS
-> > name, because it's not clear what "RAW" really means, and people will
-> > definitely read that to mean something else.
-> > 
-> > Could we go with something like PERF_PMU_CAP_COMMON_CPU_EVENTS, to make
-> > it clear that this is about opting into CPU-PMU specific event types (of
-> > which PERF_TYPE_RAW is one of)?
+On Tue, Aug 26, 2025 at 04:53:51PM +0100, Robin Murphy wrote:
+
+[...]
+
+> > Genearlly, AUX events generate interrupts based on AUX ring buffer
+> > watermark but not the period. Seems to me, it is correct to set the
+> > PERF_PMU_CAP_SAMPLING flag for them.
 > 
-> Indeed I started with that very intention after our previous discussion, but
-> soon realised that in fact nowhere in the code is there any definition or
-> even established notion of what "common" means in this context, so it's
-> hardly immune to misinterpretation either.
+> This cap is given to drivers which handle event->attr.sample_period and call
+> perf_event_overflow() - or in a few rare cases, perf_output_sample()
+> directly - to do something meaningful with it, since the intent is to convey
+> "I properly handle events for which is_sampling_event() is true". My
+> understanding is that aux events are something else entirely, but I'm happy
+> to be corrected.
 
-We can document that; it's everything less than PERF_TYPE_MAX:
+If the discussion is based only on this patch, my understanding is
+that the PERF_PMU_CAP_SAMPLING flag replaces the
+PERF_PMU_CAP_NO_INTERRUPT flag for checking whether a PMU event needs
+to be re-enabled in perf_adjust_freq_unthr_context().
 
-	enum perf_type_id {
-		PERF_TYPE_HARDWARE                      = 0, 
-		PERF_TYPE_SOFTWARE                      = 1, 
-		PERF_TYPE_TRACEPOINT                    = 2, 
-		PERF_TYPE_HW_CACHE                      = 3, 
-		PERF_TYPE_RAW                           = 4, 
-		PERF_TYPE_BREAKPOINT                    = 5, 
+AUX events can trigger a large number of interrupts under certain
+conditions (e.g., if we set a very small watermark). This is why I
+conclude that we need to set the PERF_PMU_CAP_SAMPLING flag to ensure
+that AUX events are re-enabled properly after throttling (see
+perf_adjust_freq_unthr_events()).
 
-		PERF_TYPE_MAX,                          /* non-ABI */
-	};
+> Otherwise, perhaps this suggests it deserves to be named a little more
+> specifically for clarity, maybe PERF_CAP_SAMPLING_EVENTS?
 
-... and maybe you could use "PERF_PMU_CAP_ABI_TYPES" to align with that
-comment?
+Seems to me, the naming is not critical. If without setting the
+PERF_PMU_CAP_SAMPLING flag, AUX events might lose chance to be
+re-enabled after throttling.
 
-> Furthermore the semantics of the cap as it ended up are specifically
-> that the PMU wants the same behaviour as if it had registered as
-> PERF_TYPE_RAW, so having "raw" in the name started to look like the
-> more intuitive option after all (plus being nice and short helps.)
-
-I appreciate the shortness, but I think it's misleading to tie this to
-"RAW" specifically, when really this is a capabiltiy to say "please let
-me try to init any events for non-dynamic types, in addition to whatever
-specific type I am registered with".
-
-> If anything, it's "events" that carries the implication that's proving hard
-> to capture precisely and concisely here, so maybe the answer to avoid
-> ambiguity is to lean further away from a "what it represents" to a "what it
-> actually does" naming - PERF_PMU_CAP_TYPE_RAW, anyone?
-
-I'm happy with TYPE in the name; it's just RAW specifically that I'm
-objecting to.
-
-> > Likewise, s/is_raw_pmu()/pmu_supports_common_cpu_events()/.
-> 
-> Case in point: is it any more logical and expected that supporting common
-> CPU events implies a PMU should be offered software or breakpoint events as
-> well? Because that's what such a mere rename would currently mean :/
-
-Yes, I think it is.
-
-> > > ---
-> > > 
-> > > A further possibility is to automatically add the cap to PERF_TYPE_RAW
-> > > PMUs in perf_pmu_register() to have a single point-of-use condition; I'm
-> > > undecided...
-> > 
-> > I reckon we don't need to automagically do that, but I reckon that
-> > is_raw_pmu()/pmu_supports_common_cpu_events() should only check the cap,
-> > and we don't read anything special into any of
-> > PERF_TYPE_{RAW,HARDWARE,HW_CACHE}.
-> 
-> OK, but that would then necessitate having to explicitly add the cap to all
-> 15-odd other drivers which register as PERF_TYPE_RAW as well, at which point
-> it starts to look like a more general "I am a CPU PMU in terms of most
-> typical assumptions you might want to make about that" flag...
-> 
-> To clarify (and perhaps something for a v2 commit message), we currently
-> have 3 categories of PMU driver:
-> 
-> 1: (Older/simpler CPUs) Registers as PERF_TYPE_RAW, wants
-> PERF_TYPE_RAW/HARDWARE/HW_CACHE events
-> 2: (Heterogeneous CPUs) Registers as dynamic type, wants
-> PERF_TYPE_RAW/HARDWARE/HW_CACHE events plus events of its own type
-> 3: (Mostly uncore) Registers as dynamic type, only wants events of its own
-> type
-
-Sure, but I think that separating 1 and 2 is an artificial distinction,
-and what we really have is:
-
-(a) Wants to handle (some of) the non-dynamic/common/ABI types (in
-    addition to whatever specific type it was registered with). Needs to
-    have a switch statement somewhere in pmu::event_init().
-
-(b) Only wants to handle the specific type the PMU was registered with.
-
-> My vested interest is in making category 3 the default behaviour, given that
-> the growing majority of new drivers are uncore (and I keep having to write
-> them...) 
-
-Yes, we're aligned on that.
-
-> However unclear the type overlaps in category 1 might be, it's been
-> like that for 15 years, so I didn't feel compelled to churn fossils like
-> Alpha more than reasonably necessary. Category 2 is only these 5 drivers, so
-> a relatively small tweak to distinguish them from category 3 and let them
-> retain the effective category 1 behaviour (which remains the current one of
-> potentially still being offered software etc. events too) seemed like the
-> neatest way to make progress.
-
-I just think we should combine 1 and 2 (into categroy a as above), since
-that removes the need to treat RAW specially going forwards.
-
-> I'm not saying I'm necessarily against a general overhaul of CPU PMUs being
-> attempted too, just that it seems more like a whole other side-quest, and
-> I'd really like to slay the uncore-boilerplate dragon first.
-
-I think that adding the cap to those 15 PMUs would take less time than
-it has taken me to write this email, so I do not understand the
-objection.
-
-Mark.
+Thanks,
+Leo
 

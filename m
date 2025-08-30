@@ -1,230 +1,156 @@
-Return-Path: <dmaengine+bounces-6299-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6300-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 14718B3C8A3
-	for <lists+dmaengine@lfdr.de>; Sat, 30 Aug 2025 09:16:36 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 34B74B3C9E7
+	for <lists+dmaengine@lfdr.de>; Sat, 30 Aug 2025 11:48:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 482F21C24E25
-	for <lists+dmaengine@lfdr.de>; Sat, 30 Aug 2025 07:16:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 853FA1C23AFB
+	for <lists+dmaengine@lfdr.de>; Sat, 30 Aug 2025 09:49:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 829D426C385;
-	Sat, 30 Aug 2025 07:16:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03B2622A4F8;
+	Sat, 30 Aug 2025 09:48:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b="bGPRiKj+";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="A28P82GL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J/W8q4Rr"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from flow-a8-smtp.messagingengine.com (flow-a8-smtp.messagingengine.com [103.168.172.143])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 403365BAF0;
-	Sat, 30 Aug 2025 07:16:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.143
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 007D6231826
+	for <dmaengine@vger.kernel.org>; Sat, 30 Aug 2025 09:48:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756538189; cv=none; b=BnZXf3FyY14Q14ztdY7cKgzPh+uUy8+6jbStQ6iIUOGo/WoJtjvw6qjODgYl2iy1kJQDqmoCSipMwQU4N4YqS6TW6X77mSC6dcBitk6khk6Ee0eU9UktyHv1v23z+M2ktP8MkkStNpxJrQRhRaSCVsdvacobpeWnRyWUdXev0Fw=
+	t=1756547316; cv=none; b=IgGeKXBt58G8CI0IrZoCxo1okAIslhYeboFI9kqFjyvTHzAIQFoeNK1jkZLzv9ZwsV61ThQpa242fQL0sxFYQrZV4+L7zLUdJHnmYxG5zPW1g3z4cLKH0RG1gsey+GC/udc4nytHSDmJGJcfXzRv9Tk3DKMd62Ur5jLjVGj49eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756538189; c=relaxed/simple;
-	bh=Xgq//bPMcuLhTUcoKQVvIGaVUwN6Y8zHe3tfndbRoBE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=APLNP1pWpFXMSnM07ztj/na3FmyYYxNzNXea5BBUTac2XBmSxO7Vu/CDXiE4g9yjwqEMZCIcEEc/NmoDbdy3yWmTPnGr6ljnrTZlpve87ZHYFEYVvFd0NLDftigScHSQICZIujS5w2outiM1ZJezKY2WDJmMuTrn75UX5QF7OFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net; spf=pass smtp.mailfrom=jannau.net; dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b=bGPRiKj+; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=A28P82GL; arc=none smtp.client-ip=103.168.172.143
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jannau.net
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailflow.phl.internal (Postfix) with ESMTP id 50B9C13803E1;
-	Sat, 30 Aug 2025 03:16:26 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-05.internal (MEProxy); Sat, 30 Aug 2025 03:16:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jannau.net; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1756538186; x=1756545386; bh=rH5wSPSqP8
-	tNxz48V8nyDtHP/PfH/+QarsY2hPsLNiY=; b=bGPRiKj+zJAsCUQyrJp0/StHT3
-	Z0CEFhLQjV5xm7Yvbyg5RazYCfPbyTHWSm2ZpCegTbXOy6qhuD/CjdcFxuViszyu
-	G3+fcGeOv7HdCyn7AzxAqSFmzLO2erX/Vdp5eEeZaLTZRFRspFMiQ+busfvUv9xK
-	P1Qxg+vqomILq0dDixCVgYHw5VQEBClB9I6+/uTShTR//VYQFOWuKhVaLsvC6l/b
-	E1N/tfeehqrMQEp4i3wWoOJxGypUi7brZoL9qGPmQKmmMa93tVd1AY5Gro+BAjS3
-	WpUTogmTRpIeiSKPcsYZ3mE0og2OG5NvvD5b/WVFxeoMPFsjnwskajCq3uyw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1756538186; x=1756545386; bh=rH5wSPSqP8tNxz48V8nyDtHP/PfH/+QarsY
-	2hPsLNiY=; b=A28P82GLhQ+gU+qNvkSXEMIHHGhWHgGPB6W2BqfuM8nVdICuM2A
-	NcqEdXjnRC5GOtPhl8vytw2JOVW6a632Lth7tFVqpN0jcVrs5FIWi0nJ5dbfpPbz
-	93UWghe/7/x4NXeA4FN4wHq2l0R/6xrVdl4M6x+X4EqZcsuk7fUrrkX7z2aqNGXe
-	GRh9v13JNwBHa0GWMNd0IJAZ/VLuVZRHMzmIP6KgEOrMibcUtTOr/XOmSC3N9SR2
-	+4h7cZHX5hYQElJlZ9AcSZWpik6DY6Yif1Q+6msGHxqUXYJZ/hDnKBXbWh3Xvalq
-	Rf1Hz1zKH3Te14Zyu+F/tIsbTPiaescl/sQ==
-X-ME-Sender: <xms:R6WyaEoVPmMMjSTFVHUliXOdv-32qkUK5pBFUekwj0BEfXYXKXHMdg>
-    <xme:R6WyaOxfi2Sr_p908cLZZq0WtOWmPygKs_jKndyVj8rKDpXX8ikKi1OeywN_Gtza-
-    FiH-hDxXuUZTl36M64>
-X-ME-Received: <xmr:R6WyaEyfRmAxZWCNsVqvVaXCqEN1juICIShBdAflOgf0gNEE_E5nocVl8uCdcH2Ux_v_VJ8rmIGy5LrSoEu2QIiMu_-QOznOlpk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddukeehjeejucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepfffhvfevuffkfhggtggujgesthdtredttddtjeenucfhrhhomheplfgrnhhnvgcu
-    ifhruhhnrghuuceojhesjhgrnhhnrghurdhnvghtqeenucggtffrrghtthgvrhhnpefgvd
-    ffveelgedujeeffeehheekheelheefgfejffeftedugeethfeuudefheefteenucevlhhu
-    shhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjsehjrghnnhgruh
-    drnhgvthdpnhgspghrtghpthhtohepieefpdhmohguvgepshhmthhpohhuthdprhgtphht
-    thhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhvvghnsehkvghrnh
-    gvlhdrohhrghdprhgtphhtthhopegrlhihshhsrgesrhhoshgvnhiifigvihhgrdhiohdp
-    rhgtphhtthhopehnvggrlhesghhomhhprgdruggvvhdprhgtphhtthhopehkrhiikhdoug
-    htsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghl
-    rdhorhhgpdhrtghpthhtohepmhgrrhgtrghnsehmrghrtggrnhdrshhtpdhrtghpthhtoh
-    eprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehvihhrvghshhdrkhhu
-    mhgrrheslhhinhgrrhhordhorhhg
-X-ME-Proxy: <xmx:R6WyaOKeRrX_rKVtlS-_HS0UcyN9w8mWfjCwNfiQ70_pAa29FRblZA>
-    <xmx:R6WyaBhJsS4AgbvUvcN_o6uHp3h_R8NH2iRFaJDZJdGCW4iQPaQfCw>
-    <xmx:R6WyaMkzXbMbopG8scAkzx_CFhYUQNKGJXW5k3t17XIk3bIEeUpTWQ>
-    <xmx:R6WyaOgrns0dbGzbmla7f4E8nyVhRwKAcFG-qkHg9ORUTbTcZhmzrg>
-    <xmx:SqWyaJIOEg53pkAeV7MbeJTeynbZUjxSAdTQb-JDXFYqQHxsi0m95a1W>
-Feedback-ID: i47b949f6:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 30 Aug 2025 03:16:22 -0400 (EDT)
-Date: Sat, 30 Aug 2025 09:16:20 +0200
-From: Janne Grunau <j@jannau.net>
-To: Rob Herring <robh@kernel.org>
-Cc: Sven Peter <sven@kernel.org>, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Neal Gompa <neal@gompa.dev>,	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,	Hector Martin <marcan@marcan.st>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,	Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>,	Robin Murphy <robin.murphy@arm.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Mark Kettenis <kettenis@openbsd.org>,	Andi Shyti <andi.shyti@kernel.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Sasha Finkelstein <fnkl.kernel@gmail.com>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	van Spriel <arend@broadcom.com>, Lee Jones <lee@kernel.org>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Martin =?utf-8?Q?Povi=C5=A1er?= <povik+lin@cutebit.org>,
-	Vinod Koul <vkoul@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,	Keith Busch <kbusch@kernel.org>,
- Jens Axboe <axboe@kernel.dk>,	Christoph Hellwig <hch@lst.de>,
- Sagi Grimberg <sagi@grimberg.me>,	Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>,	asahi@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org,	devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org,	linux-pm@vger.kernel.org,
- iommu@lists.linux.dev,	linux-gpio@vger.kernel.org,
- linux-i2c@vger.kernel.org,	dri-devel@lists.freedesktop.org,
- linux-bluetooth@vger.kernel.org,	linux-wireless@vger.kernel.org,
- linux-pwm@vger.kernel.org,	linux-watchdog@vger.kernel.org,
- linux-clk@vger.kernel.org,	dmaengine@vger.kernel.org,
- linux-sound@vger.kernel.org,	linux-spi@vger.kernel.org,
- linux-nvme@lists.infradead.org
-Subject: Re: [PATCH 00/37] arm64: Add initial device trees for Apple M2
- Pro/Max/Ultra devices
-Message-ID: <20250830071620.GD204299@robin.jannau.net>
-References: <20250828-dt-apple-t6020-v1-0-507ba4c4b98e@jannau.net>
- <20250829195119.GA1206685-robh@kernel.org>
+	s=arc-20240116; t=1756547316; c=relaxed/simple;
+	bh=k8rdPyp5NnXLNmLAM5692d7carYniAWw+sO8SLajSu4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qLcbxoWZvG+QEV32GLIm1cX6xuNEoyFrs7vIfkIfcynSsfGckRxwCip3GuHQH5QMFmX8u0as56y/hMRr6VGU2TJOueXBF4jzUeABpyFdFy35Y5whZQLdX8YbOD9GvOpCpzHCl/ZVc7TkOoMjErzBoJzI4yjnPfRYsbkeEitOzrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=J/W8q4Rr; arc=none smtp.client-ip=209.85.219.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-70df87f7beeso2009316d6.1
+        for <dmaengine@vger.kernel.org>; Sat, 30 Aug 2025 02:48:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1756547314; x=1757152114; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O53sSv19BO8/CcZChzTjPzbh29PlzUTaZHAX/6sSM9k=;
+        b=J/W8q4Rr5C8UkZpWwr0ZFGNhVXyp6LGrYIg2z1c0BWRLZH/NYCQWilPUFS3NtLxVmR
+         d3XM51SlGycN65Uubmu0ICOUjuoNf7drkMHc+8JqFrqv6s5QvhNc0DobbB+ziJZG7pI8
+         Erwg3NoHN+TnfxN/hxJfnr0AmnK2xXCBv8VeuxtvB/9fYp/oKwkD+w39/PM7gN4r876/
+         f4IWQYqdkkl8gev4bM6KHaHtJ9iXNzkt6mWZ/72zM56zJSJAipjCv7zdzFQx+uYq13wh
+         8Xm+dbE2MNIehYJMuRa10DAQbgrj5ry+OO5Q2Qmu74oeI0WIz59bLnZZgpbC7Uy3pAue
+         hjfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756547314; x=1757152114;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=O53sSv19BO8/CcZChzTjPzbh29PlzUTaZHAX/6sSM9k=;
+        b=dDDDvnZK6lvDI/jyiraxSId4+S7Gs4JiWq/8CbbMgbf4V9EnfH/P3Hvw3IP5KaSenC
+         /wpI28IFaLPWgDUmc/pXhzLGCBcam3y091m1Z+dhThklmHE0J0q8Sq+fF67mkG0JKVoM
+         5osHcfHwhtjkgn9QcLbTP+y6+Zy3LU7NgBwgc64VHFlTGP9MQB+sm5DE1b6sSsCXXECw
+         1YyEGsR+9v1otVi36QkBWOMFLT3GspDfTriDXggXJKOXNkMKwvr468RMTPZfbjwbjSBC
+         sSVWoUi/PuVBJxB+lQqqWTFEHgJr2H5OQbOhicTdKdSbbPKCVC/XxqdBE2qrD9gK4Vrn
+         xQLA==
+X-Forwarded-Encrypted: i=1; AJvYcCWkHdAfHictnAS+HRem9qNEs1YzUn4rdfVvDypVUXufab/6lFmIdIDyOLDnWFsqdJSYu/Mv608KlCk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbxeOFi128zbS3+N6a2EhY9EyCpDqk+Cx/tkABVX8UJD9cUbNe
+	438euJJN6XvhdqS3yeREOtogg/VntQUxuTfD2MJhly0dzlal5Z7+yeqmqZowGfbCbOiW4F2ZgxQ
+	F4ORjQmfVOgPT+ThypjjGUxSEZPDzXr0BpLG0ABZUsw==
+X-Gm-Gg: ASbGncvy34v3OcLEGyHxA+J+Wr/bjFey0Ut6cdvxFYKPvB8+hC4p9SkLdY/2UBU/1qj
+	trJh0U0yyrLjKK4GE2pTBA5XT5DnhgyPQvuSPXz1xPJdcJQLXa4me3T4yzD/PVB6LZE7SPCqCeq
+	43WzaFSSM/2z7/hYc9S7GzfUBqjkTe3jO/dUAoWYauyR1L18kLDBbNUvH+/2wg2VHcuFvKAo/QS
+	hZmBb9xXF+lNc0d
+X-Google-Smtp-Source: AGHT+IGE0Py88CGitXRrUiODaco5VRpXPPZYcuL5qgF4c2qTNFu2t6a/n3uB1c8tKAquQX4FMnnHmvhUsQyxAUhJNQs=
+X-Received: by 2002:a05:6214:d8f:b0:70d:ee9b:9cf3 with SMTP id
+ 6a1803df08f44-70fa1b8793emr30990516d6.0.1756547313850; Sat, 30 Aug 2025
+ 02:48:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250829195119.GA1206685-robh@kernel.org>
+References: <20250829131346.3697633-1-anders.roxell@linaro.org> <20250829232132.GA1983886@ax162>
+In-Reply-To: <20250829232132.GA1983886@ax162>
+From: Anders Roxell <anders.roxell@linaro.org>
+Date: Sat, 30 Aug 2025 11:48:22 +0200
+X-Gm-Features: Ac12FXyHu3hHuGLZl4KhxlWVoLXmzpAgyCiaFhzljq-f-0aBvo2YQhrSZWoV0xY
+Message-ID: <CADYN=9JgDeXByZy7PhUyaY091775G0Md+QvoFMb7AZa9vcKQqw@mail.gmail.com>
+Subject: Re: [PATCH] dmaengine: ti: edma: Fix memory allocation size for queue_priority_map
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: peter.ujfalusi@gmail.com, vkoul@kernel.org, dmaengine@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, dan.carpenter@linaro.org, 
+	arnd@arndb.de, benjamin.copeland@linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 29, 2025 at 02:51:19PM -0500, Rob Herring wrote:
-> On Thu, Aug 28, 2025 at 04:01:19PM +0200, Janne Grunau wrote:
-> > This series adds device trees for Apple's M2 Pro, Max and Ultra based
-> > devices. The M2 Pro (t6020), M2 Max (t6021) and M2 Ultra (t6022) SoCs
-> > follow design of the t600x family so copy the structure of SoC *.dtsi
-> > files.
-> > 
-> > t6020 is a cut-down version of t6021, so the former just includes the
-> > latter and disables the missing bits.
-> > 
-> > t6022 is two connected t6021 dies. The implementation seems to use
-> > t6021 and disables blocks based on whether it is useful to carry
-> > multiple instances. The disabled blocks are mostly on the second die.
-> > MMIO addresses on the second die have a constant offset. The interrupt
-> > controller is multi-die aware. This setup can be represented in the
-> > device tree with two top level "soc" nodes. The MMIO offset is applied
-> > via "ranges" and devices are included with preprocessor macros to make
-> > the node labels unique and to specify the die number for the interrupt
-> > definition.
-> > 
-> > The devices itself are very similar to their M1 Pro, M1 Max and M1 Ultra
-> > counterparts. The existing device templates are SoC agnostic so the new
-> > devices can reuse them and include their t602{0,1,2}.dtsi file. The
-> > minor differences in pinctrl and gpio numbers can be easily adjusted.
-> > 
-> > With the t602x SoC family Apple introduced two new devices:
-> > 
-> > The M2 Pro Mac mini is similar to the larger M1 and M2 Max Mac Studio. The
-> > missing SDHCI card reader and two front USB3.1 type-c ports and their
-> > internal USB hub can be easily deleted.
-> > 
-> > The M2 Ultra Mac Pro (tower and rack-mount cases) differs from all other
-> > devices but may share some bits with the M2 Ultra Mac Studio. The PCIe
-> > implementation on the M2 Ultra in the Mac Pro differs slightly. Apple
-> > calls the PCIe controller "apcie-ge" in their device tree. The
-> > implementation seems to be mostly compatible with the base t6020 PCIe
-> > controller. The main difference is that there is only a single port with
-> > with 8 or 16 PCIe Gen4 lanes. These ports connect to a Microchip
-> > Switchtec PCIe switch with 100 lanes to which all internal PCIe devices
-> > and PCIe slots connect too.
-> > 
-> > This series does not include PCIe support for the Mac Pro for two
-> > reasons:
-> > - the linux switchtec driver fails to probe and the downstream PCIe
-> >   connections come up as PCIe Gen1
-> > - some of the internal devices require PERST# and power control to come
-> >   up. Since the device are connected via the PCIe switch the PCIe
-> >   controller can not do this. The PCI slot pwrctrl can be utilized for
-> >   power control but misses integration with PERST# as proposed in [1].
-> > 
-> > This series depends on "[PATCH v2 0/5] Apple device tree sync from
-> > downstream kernel" [2] due to the reuse of the t600x device templates
-> > (patch dependencies and DT compilation) and 4 page table level support
-> > in apple-dart and io-pgtable-dart [3] since the dart instances report
-> > 42-bit IAS (IOMMU device attach fails without the series).
-> > 
-> > After discussion with the devicetree maintainers we agreed to not extend
-> > lists with the generic compatibles anymore [1]. Instead either the first
-> > compatible SoC or t8103 is used as fallback compatible supported by the
-> > drivers. t8103 is used as default since most drivers and bindings were
-> > initially written for M1 based devices.
-> 
-> An issue here is any OS without the compatibles added to the drivers 
-> won't work. Does that matter here? Soon as you need any new drivers or 
-> significant driver changes it won't. The compatible additions could be 
-> backported to stable. They aren't really any different than new PCI IDs 
-> which get backported.
+On Sat, 30 Aug 2025 at 01:21, Nathan Chancellor <nathan@kernel.org> wrote:
+>
+> Hi Anders,
+>
+> On Fri, Aug 29, 2025 at 03:13:46PM +0200, Anders Roxell wrote:
+> > Fix a critical memory allocation bug in edma_setup_from_hw() where
+> > queue_priority_map was allocated with insufficient memory. The code
+> > declared queue_priority_map as s8 (*)[2] (pointer to array of 2 s8), bu=
+t
+> > allocated memory using sizeof(s8) instead of sizeof(s8[2]).
+> >
+> > This caused out-of-bounds memory writes when accessing:
+> >   queue_priority_map[i][0] =3D i;
+> >   queue_priority_map[i][1] =3D i;
+> >
+> > The bug manifested as kernel crashes with "Oops - undefined instruction=
+"
+> > on ARM platforms (BeagleBoard-X15) during EDMA driver probe, as the
+> > memory corruption triggered kernel hardening features on Clang.
+> >
+> > Change the allocation from:
+> >   devm_kcalloc(dev, ecc->num_tc + 1, sizeof(s8), GFP_KERNEL)
+> > to this:
+> >   devm_kcalloc(dev, ecc->num_tc + 1, sizeof(s8[2]), GFP_KERNEL)
+> >
+> > This ensures proper allocation of (ecc->num_tc + 1) * 2 bytes to match
+> > the expected 2D array structure.
+> >
+> > Fixes: 2b6b3b742019 ("ARM/dmaengine: edma: Merge the two drivers under =
+drivers/dma/")
+> > Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+> > ---
+> >  drivers/dma/ti/edma.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
+> > index 3ed406f08c44..8f9b65e4bc87 100644
+> > --- a/drivers/dma/ti/edma.c
+> > +++ b/drivers/dma/ti/edma.c
+> > @@ -2064,7 +2064,7 @@ static int edma_setup_from_hw(struct device *dev,=
+ struct edma_soc_info *pdata,
+> >        * priority. So Q0 is the highest priority queue and the last que=
+ue has
+> >        * the lowest priority.
+> >        */
+> > -     queue_priority_map =3D devm_kcalloc(dev, ecc->num_tc + 1, sizeof(=
+s8),
+> > +     queue_priority_map =3D devm_kcalloc(dev, ecc->num_tc + 1, sizeof(=
+s8[2]),
+>
+> Would
+>
+>   sizeof(*queue_priority_map)
+>
+> work instead? That tends to be preferred within the kernel so that the
+> type information is not open coded twice and it helps avoid bugs exactly
+> like this one. See other uses of devm_kcalloc() and "14) Allocating
+> memory" in Documentation/process/coding-style.rst.
 
-I don't think backporting the driver compatible additions to stable
-linux is very useful. It is only relevant for t602x devices and the only
-way to interact with them is the serial console. The T602x PCIe support
-added in v6.16 requires dart changes (the posted 4th level io page table
-support) to be useful. After that PCIe ethernet works so there is a
-practical way to interact with t602x systems. So there are probably zero
-user of upstream linux on those devices 
-I'm more concerned about other projects already supporting t602x
-devices. At least u-boot and OpenBSD will be affected by this. As short
-term solution m1n1 will add the generic compatibles [1] temporarily.
-I think keeping this roughly for a year should allow to add the
-compatibles and wait for "fixed" releases of those projects.
-I'll send fixes for u-boot once the binding changes are reviewed.
+Thank you Nathan for the review, that makes sense. I=E2=80=99ll send a v2 s=
+hortly.
 
-Janne
+Cheers,
+Anders
 

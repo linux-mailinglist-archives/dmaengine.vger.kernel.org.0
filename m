@@ -1,157 +1,167 @@
-Return-Path: <dmaengine+bounces-6303-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6304-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D492B3D0FB
-	for <lists+dmaengine@lfdr.de>; Sun, 31 Aug 2025 07:33:41 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A00AFB3E01C
+	for <lists+dmaengine@lfdr.de>; Mon,  1 Sep 2025 12:27:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 28B1E443BC5
-	for <lists+dmaengine@lfdr.de>; Sun, 31 Aug 2025 05:33:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0FA2718907C5
+	for <lists+dmaengine@lfdr.de>; Mon,  1 Sep 2025 10:27:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B16F1FECD4;
-	Sun, 31 Aug 2025 05:33:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D23530F549;
+	Mon,  1 Sep 2025 10:27:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jnx62I9K"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y2CXlHCp"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9665A3C2F;
-	Sun, 31 Aug 2025 05:33:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26DFF30F541
+	for <dmaengine@vger.kernel.org>; Mon,  1 Sep 2025 10:27:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756618414; cv=none; b=VjQfcT/buC+s7VyjExJCxsKb40RfJB1a8qsKNfrMYJLI/AK0OZ+QnixrkvyFII7yxUz+VhCf9dsmyqXI574omHCCviU95QA9qelZ8inXukhjsBUNW44RWLJD19BmMyHq1oj/l7lBMNkZg2kyAyzPSOdll9sJT8yc/2lTTCil97s=
+	t=1756722429; cv=none; b=cwY9+Xg/X4l/d0E5cfWWRQiemu6Xl9b/HWQtfWI4FC/gWctmiIFRBQOWNOZBIji8YwA/ObFAQtRGUvN0rx6dmIZ8fnhl4Z97NuZFqCE4n5ggGNVF+jhrdfBSOX4nYrJQbhw3WPeFh4X4IbBI6LQweuNYivQprq0NGDVJ5SGvyVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756618414; c=relaxed/simple;
-	bh=I5QCPFnZgUlcJBqlH4Ls5kRCFJ9A5g4BHkgT80gZBHw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UykbR8rl6vrmaowP0UQBbVpj/4FUOBj2C8FXjmdswsYad6eQb9B5zQUUqNAzL3gmucSXy9m4qmlVGveEhy+z7zP3N1G0Dewh1QBbVzetyNvrTF+lrdzNyTnmvsct9SU+zdh76SO7Yii6QoEzXyk3Spuh2lGvA1dtpkhJphovPEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jnx62I9K; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b4d1e7d5036so1226826a12.1;
-        Sat, 30 Aug 2025 22:33:32 -0700 (PDT)
+	s=arc-20240116; t=1756722429; c=relaxed/simple;
+	bh=6h/YI/Py/XlG4xBbZJ7thzV4uG9Z0BsZDM3FqQjDBdE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=BGXQ1jUOkqrJyC12C3u4f1zJohYOU8X/ym2oTOP/mZRzeytNgVy75DCqsR49m/XR3cNVaxcz0nldCuRmnaURHv6bJx3MjHBmV/ZqAGHETJ2/V30lisCdkisgbtiaGom+NNPD12DkZVRav5uJksGKCdEfe2BxLHMD8zpbx7SeUzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=y2CXlHCp; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3d1bf79d6eeso1227638f8f.2
+        for <dmaengine@vger.kernel.org>; Mon, 01 Sep 2025 03:27:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756618412; x=1757223212; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=F0taoVMBdf5kClGdef1PkaMGGUx00UcRBFrWmgadO68=;
-        b=Jnx62I9K/+qjR7mFwMDhCWrltI7jY5dV5WLzRskY0kA4It33R9h0zINndmPGyBPHl9
-         Bx/Nr8onTh5l+PUWfw36VeBLhUbQmvwnYzWw3n/7ilodLQg2eqQq8XrIIbSB+JDHzUnW
-         /ZJ3k/jcZrVvnznI9Qt6Q8QNYuLu0lUrJuaC2IdXjGSGklHm9xyoCOLhXj35v5BX71LC
-         oMOM9qLlNp5ma6K0wIR0HtGitvnQ3c3LGJc4EkXvmVXSdKmTlwqQGPTtRWuOcQmfigGk
-         0ni2Uth1VjUwBB6aZOA4PAkx6HJFZpeKxcrHFrk3ArJkXhHgqDORknw7I6iM+XV6Eb9r
-         j4eg==
+        d=linaro.org; s=google; t=1756722425; x=1757327225; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=U3wMAXUg6TcQMtXg5Lgxugiws7d3wfWBJLDrvyAva+k=;
+        b=y2CXlHCpkTmxqjhja4moihSjlo/kiMrxjrx/pE0Dzwsj6FFmywwrJt+Sg3cVBNbzWs
+         XfJawbLzXNwadZJbYP07CvrzT8Sk1QhMr6CZlZhNB7IZ32wlTWvsz4eIiDBWNjvRUDCc
+         Vdprl29gC9JFnJWjruuNGZjZzPHWlBjQxxxU2Rqw9D/5QJGORo+vTbs/B433aCKHzxl+
+         r9NlZ3eIp1xhf3dlw9KiJ+WXlgW6ftPO+oyR85tY0kIszj11MuDHgi9a28L5tA71qMW8
+         3f59sLUhxUbNtn/s5CXGk8cKbDocNWZnnB0rCLLJmD15pDDkJnTr79gfTnjAdCXQ5q9f
+         aPLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756618412; x=1757223212;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=F0taoVMBdf5kClGdef1PkaMGGUx00UcRBFrWmgadO68=;
-        b=nQXCFZVYjis0y/+vzC7zVeKNKo88iU4EOMI1U2GFG1az8Bdg2fEOlFZFQbhkEVdA4+
-         ZgQq28ftIYsZO7pjRQfnevXeZb9eLaaxrjYVG/gYueQV+k6HQy+REGWUkq/klsXlwCxo
-         O4SnXCgPheBP28gIKoYs584IN5KI1v6ZdDGuYeHh/YEE6iHrDkaNJB/9/LDyY+YznlLm
-         GSfosl2cI6oQ4HUhdew1QSbK/mzOjE8/BZqoKCnIICwGWidAzTB/9drXP/hvKBMyfIGC
-         19vBaGp61DZM3dxfqcgbSMCPcGXNqShsjB6r0F+VCqwwAhwYbqemlT6xfoUdal0H/sPC
-         RiaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUNvHloZ877tJIRmSnyNTO3zjWSMa4mXoH2GNWJ7FZJZTWAcX7lj1iIWvG5CvOZIVmH+Md4SpF2JrrSpcM3@vger.kernel.org, AJvYcCUWZKuwAUTPwqrpoZEBANy8hUKKrpak/6C5r0fdaBvDSlObdmjDyJ19J7sbY+3TAasb4ZHBPojbz9VM@vger.kernel.org, AJvYcCVKfAHqmXvbdFcopXeskHZysjzc2aUDd5N95qmbiIbg8pn37uPNqK0HWcgdqpWW2/1bxN/sLZzmBRVn5w==@vger.kernel.org, AJvYcCWt3lAd/vdHLYQaU5v6+0txUJL8rzbGb5kmp+TaJvM7736SUBf2kT9SyT/TttrDC+06yJ0ldFHRSL/Q@vger.kernel.org
-X-Gm-Message-State: AOJu0YwG9TRxmrQ16R2BoujWLLbRZiojvURJrw9+oFU9usto92G1f7jp
-	7zwSN+x12+cwIi3oQhFDtmShrRVdWQ++P/UZzSsdj8Mql16I5/IJG3mKHhObJnkm
-X-Gm-Gg: ASbGncsGOWr541WJN9NzR0+yaX9XMHVCPO3h8ANjT8qChq8umWRnfMrLYlqHFXU9bx5
-	FC+bul6W81B2PbCmmle7NUsmWLizmQEfeMcmnxdomMxD+YhdynO3oikhRjWU3FiU3E/+AJJkoi2
-	3PDkcB0/XopOThJ3o6GAaOg5uIR+ENd8O5SwUXeL/ctcao9hgHtr37tbIW4cyPG0xxYVIHLJ5fX
-	vvs+d9jL2E8uuaOwPcjOxe4sycxFGPavW4KdOyiBU6biwCZkurwYsZP7PGqK+hNZsCJNPCeuWGa
-	JbTua9HMOLLQbAPosnwNygjx6gVz5k6sUkSV1JWhxNJIp65TH4Zp5BzSIwaKLFcrj6OetoUoCI7
-	cJlkRBOOb0kBlXcg85ujMxwveCuo9wC/nHJxClnPsLeU8dMVyNCZKcA==
-X-Google-Smtp-Source: AGHT+IG2ZymWYEfm15+DVFkPLbXhn38VRWp1Ga8GlwAP+Uci6jMte5Dit8DEyxgd1rzI4YiM7BPB6Q==
-X-Received: by 2002:a05:6a20:1611:b0:243:25b0:2309 with SMTP id adf61e73a8af0-243d6f7efecmr6039768637.59.1756618411709;
-        Sat, 30 Aug 2025 22:33:31 -0700 (PDT)
-Received: from 100ask.localdomain ([116.234.74.152])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-327daeec552sm7428987a91.27.2025.08.30.22.33.28
+        d=1e100.net; s=20230601; t=1756722425; x=1757327225;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=U3wMAXUg6TcQMtXg5Lgxugiws7d3wfWBJLDrvyAva+k=;
+        b=TNIbGuuFAYo5mgJuRm8jkSIq9u9Aa/L3uY3DbQRFxTg6XO3jDz/O7+i0OoMaf9ajf1
+         1BO7x4pykE5tWa7WBRPoYBXkXcxvt/L6YXhUwr3Nh4zZmDPIRcJhRLK0HIQtA1toQAQ3
+         7m5FVL6TttiphZcNZye26x42ctjyZcO/F5ztFdi8M6ajmp5KoQFf1fMBRN+SLdrN1iiw
+         4TrTi77nqAzjlqQErTpHY1lV5NVYJC1D+ziv5DkemmYse7jEk1Gq9MvwWf7lOs73HU7F
+         ZODGARrBNZnDJQbqt/PkMj3uXX6Pb2LX0cESk+5YX6F+9mRcCKKZX39wgTzlT3dcmy2W
+         BTCA==
+X-Forwarded-Encrypted: i=1; AJvYcCXuNq9jk0SI98bzCy4fwiWTpHg2yMvHCKkGWkXRdYBEt5m834qjgTjiPN9lTmfN1VTtwzKgt7/B11c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YygiNRTsgq0CfDFGMk0qOcDBiJ+ZCVBQeF78nGNTynf6CMY2DPC
+	cVFOaTfhKd/9xVp+7EoeOEKpd0PLp8cDlE0hOwTJpQ1IK9dFiLsuJz+d8YxvcMQxODA=
+X-Gm-Gg: ASbGncuaau1sM7PcoGGVrCfzPMCHSUHDi/lhZql67kuSWevrQniSftK/nCtsORVzWf4
+	P5LMXjORHVDH2Jl5OfV8jykOWNZKfoFYQQe/iunWOwV0WofHq0GpEJ8uMSJ34Kx8dzIbFXkb+3k
+	6sbVW16LraUxNzyiy4byEMtf7aRRkZVmSxnOE4rBbQx8LSrYMNsXVPDbF6/GImi/OFQx7ReaI5o
+	WSewfa9fOy4JTcYt02y8yGZemSRxKhvHyxgcUPFE/21ens5/H7SnV/70e6f9/EjHsn/1bR4J9Sm
+	B+0RgXpNoaCjK9z6w9WpMP15Dy0wTApc+gWZU1R9GrAA+PshWXeKh2O3nDQASkfl/P8KJCKJeSf
+	ltNcEucraCYyvxKkgLTTg16mSZmJQ2PzpzISFcA==
+X-Google-Smtp-Source: AGHT+IE2RqWOouUNKF0LuMwYDv8VNEg+V4AVmzf6zsck7npghoz21h/jWKBn3nN0q+raGVTCFFwHxQ==
+X-Received: by 2002:a05:6000:2510:b0:3d7:7def:8435 with SMTP id ffacd0b85a97d-3d77def8d9dmr1055874f8f.18.1756722425227;
+        Mon, 01 Sep 2025 03:27:05 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3cf34493b8csm14441165f8f.59.2025.09.01.03.27.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 30 Aug 2025 22:33:31 -0700 (PDT)
-From: Nino Zhang <ninozhang001@gmail.com>
-To: krzk@kernel.org
-Cc: conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	dmaengine@vger.kernel.org,
-	krzk+dt@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mips@vger.kernel.org,
-	ninozhang001@gmail.com,
-	rahulbedarkar89@gmail.com,
-	robh@kernel.org,
-	vkoul@kernel.org
-Subject: Re: [PATCH v3] dt-bindings: dma: img-mdc-dma: convert to DT schema
-Date: Sun, 31 Aug 2025 13:33:22 +0800
-Message-ID: <20250831053324.293327-1-ninozhang001@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250829-peculiar-pug-of-argument-1bfec0@kuoka>
-References: <20250829-peculiar-pug-of-argument-1bfec0@kuoka>
+        Mon, 01 Sep 2025 03:27:04 -0700 (PDT)
+Date: Mon, 1 Sep 2025 13:27:01 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: oe-kbuild@lists.linux.dev, Jisheng Zhang <jszhang@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>
+Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev, dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 10/14] dmaengine: dma350: Alloc command[] from dma pool
+Message-ID: <202508291556.kjNumYgR-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250823154009.25992-11-jszhang@kernel.org>
 
-On Fri, 29 Aug 2025 09:53:43 +0200 Krzysztof Kozlowski wrote:
-> > Convert the img-mdc-dma binding from txt to YAML schema.
-> > No functional changes except dropping the consumer node
-> > (spi@18100f00) from the example, which belongs to the
-> > consumer binding instead.
-> > 
-> > Signed-off-by: Nino Zhang <ninozhang001@gmail.com>
-> > ---
-> > v2 -> v3:
-> > - Fix remaining issues based on Rob's and Krzysztof's comments.
-> 
-> That's vague. What exactly did you change?
-> 
-> Especially that this is not true. You never responded to comments, never
-> implemented them.
+Hi Jisheng,
 
-Hi, Krzysztof,
+kernel test robot noticed the following build warnings:
 
-You're right — my v3 changelog was too vague, and I should have replied
-in this thread. Sorry about that.
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-For the record, my earlier, detailed replies were in the previous
-threads:
-Link: https://lore.kernel.org/all/20250824185543.475785-1-ninozhang001@gmail.com/
+url:    https://github.com/intel-lab-lkp/linux/commits/Jisheng-Zhang/dmaengine-dma350-Fix-CH_CTRL_USESRCTRIGIN-definition/20250824-000425
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git next
+patch link:    https://lore.kernel.org/r/20250823154009.25992-11-jszhang%40kernel.org
+patch subject: [PATCH 10/14] dmaengine: dma350: Alloc command[] from dma pool
+config: arm-randconfig-r073-20250829 (https://download.01.org/0day-ci/archive/20250829/202508291556.kjNumYgR-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 13.4.0
 
-To summarise the concrete changes:
-v2->v3:
-- Ensured patches are not attached to unrelated/older threads.
-- Dropped redundant '|' or '>' indicators in "description" fields.
-- Dropped explicit "type" definition for "dma-channels" property.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+| Closes: https://lore.kernel.org/r/202508291556.kjNumYgR-lkp@intel.com/
 
-v1->v2:
-- Removed "Tested with 'make dt_binding_check'" from commit message.
-- Renamed file to use the compatible string.
-- Updated maintainers to Rahul Bedarkar and linux-mips@vger.kernel.org.
-- Cleaned up redundant descriptions.
-- Changed "minItems: 1" to "maxItems: 1" for "reg".
-- Added "minItems: 1" and "maxItems: 32" for "interrupts".
-- Added "maxItems: 1" for "clocks".
-- Specified exact "clock-names" list with "items: - const: sys".
-- Dropped redundant '|' indicators in descriptions.
-- Added "minimum: 1" for "img,max-burst-multiplier".
-- Removed unnecessary quotes in "required" section.
-- Renamed example node "mdc: dma-controller@18143000" to "dma-controller@18143000".
+smatch warnings:
+drivers/dma/arm-dma350.c:387 d350_get_residue() error: uninitialized symbol 'sgcur'.
 
-If I still missed anything from your/Rob's comments, I'll fix it and
-send a v4 shortly with:
-- an explicit "Changes in v4" section in the commit message,
-- inline replies in this thread to each point.
+vim +/sgcur +387 drivers/dma/arm-dma350.c
 
-Thanks for pointing this out.
+5d099706449d54 Robin Murphy  2025-03-12  360  static u32 d350_get_residue(struct d350_chan *dch)
+5d099706449d54 Robin Murphy  2025-03-12  361  {
+eae79fde2ff50c Jisheng Zhang 2025-08-23  362  	u32 res, xsize, xsizehi, linkaddr, linkaddrhi, hi_new;
+eae79fde2ff50c Jisheng Zhang 2025-08-23  363  	int i, sgcur, retries = 3; /* 1st time unlucky, 2nd improbable, 3rd just broken */
+eae79fde2ff50c Jisheng Zhang 2025-08-23  364  	struct d350_desc *desc = dch->desc;
+5d099706449d54 Robin Murphy  2025-03-12  365  
+5d099706449d54 Robin Murphy  2025-03-12  366  	hi_new = readl_relaxed(dch->base + CH_XSIZEHI);
+5d099706449d54 Robin Murphy  2025-03-12  367  	do {
+5d099706449d54 Robin Murphy  2025-03-12  368  		xsizehi = hi_new;
+5d099706449d54 Robin Murphy  2025-03-12  369  		xsize = readl_relaxed(dch->base + CH_XSIZE);
+5d099706449d54 Robin Murphy  2025-03-12  370  		hi_new = readl_relaxed(dch->base + CH_XSIZEHI);
+5d099706449d54 Robin Murphy  2025-03-12  371  	} while (xsizehi != hi_new && --retries);
+5d099706449d54 Robin Murphy  2025-03-12  372  
+eae79fde2ff50c Jisheng Zhang 2025-08-23  373  	hi_new = readl_relaxed(dch->base + CH_LINKADDRHI);
+eae79fde2ff50c Jisheng Zhang 2025-08-23  374  	do {
+eae79fde2ff50c Jisheng Zhang 2025-08-23  375  		linkaddrhi = hi_new;
+eae79fde2ff50c Jisheng Zhang 2025-08-23  376  		linkaddr = readl_relaxed(dch->base + CH_LINKADDR);
+eae79fde2ff50c Jisheng Zhang 2025-08-23  377  		hi_new = readl_relaxed(dch->base + CH_LINKADDRHI);
+eae79fde2ff50c Jisheng Zhang 2025-08-23  378  	} while (linkaddrhi != hi_new && --retries);
+eae79fde2ff50c Jisheng Zhang 2025-08-23  379  
+eae79fde2ff50c Jisheng Zhang 2025-08-23  380  	for (i = 0; i < desc->sglen; i++) {
+eae79fde2ff50c Jisheng Zhang 2025-08-23  381  		if (desc->sg[i].phys == (((u64)linkaddrhi << 32) | (linkaddr & ~CH_LINKADDR_EN)))
+eae79fde2ff50c Jisheng Zhang 2025-08-23  382  			sgcur = i;
 
-Best regards,
-Nino
+I'm suprised there isn't a break statement after this assignment.
+What if we exit the loop with i == desc->sglen?
+
+eae79fde2ff50c Jisheng Zhang 2025-08-23  383  	}
+eae79fde2ff50c Jisheng Zhang 2025-08-23  384  
+5d099706449d54 Robin Murphy  2025-03-12  385  	res = FIELD_GET(CH_XY_DES, xsize);
+5d099706449d54 Robin Murphy  2025-03-12  386  	res |= FIELD_GET(CH_XY_DES, xsizehi) << 16;
+eae79fde2ff50c Jisheng Zhang 2025-08-23 @387  	res <<= desc->sg[sgcur].tsz;
+                                                                 ^^^^^
+Uninitialized.
+
+eae79fde2ff50c Jisheng Zhang 2025-08-23  388  
+eae79fde2ff50c Jisheng Zhang 2025-08-23  389  	for (i = sgcur + 1; i < desc->sglen; i++)
+eae79fde2ff50c Jisheng Zhang 2025-08-23  390  		res += (((u32)desc->sg[i].xsizehi << 16 | desc->sg[i].xsize) << desc->sg[i].tsz);
+5d099706449d54 Robin Murphy  2025-03-12  391  
+eae79fde2ff50c Jisheng Zhang 2025-08-23  392  	return res;
+5d099706449d54 Robin Murphy  2025-03-12  393  }
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
+
 

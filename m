@@ -1,58 +1,65 @@
-Return-Path: <dmaengine+bounces-6324-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6325-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F18EB3FB2F
-	for <lists+dmaengine@lfdr.de>; Tue,  2 Sep 2025 11:51:46 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E90F6B3FB34
+	for <lists+dmaengine@lfdr.de>; Tue,  2 Sep 2025 11:52:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BB5803BD665
-	for <lists+dmaengine@lfdr.de>; Tue,  2 Sep 2025 09:51:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D8CC21B237AB
+	for <lists+dmaengine@lfdr.de>; Tue,  2 Sep 2025 09:52:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4A602F362A;
-	Tue,  2 Sep 2025 09:50:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51AED2ED865;
+	Tue,  2 Sep 2025 09:50:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DItEqcQP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k8ruingw"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAC602ECE8C;
-	Tue,  2 Sep 2025 09:50:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24EBB2EAB81;
+	Tue,  2 Sep 2025 09:50:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756806600; cv=none; b=CnFwHby0xsntxuo9yBVg0bP6audHYKeCorJ3d09xOuA6G3RDmy7v7giFM6UvW6c4Y6qeOltlJBpHxP7y79/fSQ4Pokh2saezfibyZfDnVA2t/NU/SNheTmz9Y0sJIu+dNcdNUVztKjVqrrhqcSkTPVHkIWObsFuH8cF6un0Reeo=
+	t=1756806608; cv=none; b=pbrbj+OJaUUymDC4nf6dSUcub9xK8s6f240p7Why5sUkkxKh+XvCTVN0QMtBx3YnVEkudSCLSKpxxMjmuNT8qD8zR1y6cxDLIVO09ipVBsufqreeY2iuVEpbvct6fhe6/X/IAfTcWKZ6+Ob7M1UWVRF5xV8FiAIjEPXZwk8WaD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756806600; c=relaxed/simple;
-	bh=8DvXbPFnI4+n7hHxbxXgOGqvAp5g/qxDSdMttlnJd5U=;
+	s=arc-20240116; t=1756806608; c=relaxed/simple;
+	bh=qbKcoCnyI7prTmn2e4S8kHQTAUMV3OUtBdKQxOT3nYs=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=jsS4yoRg9eHiUbvcQ5Lll4VNDb9oI99lf3cIU1re0HMUAHWdgvdNfv4gmzWR103YsTcpf9FthJWQJJG6f3+KeAPO6GoAV82HTicLiqxZd4lcFQqZGO1bmhN64K1ipGk9bnu8aiOOT0iDp8zuLFKt2FUBGJ2MNzfrcrx1fFKi2y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DItEqcQP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7957DC4CEFC;
-	Tue,  2 Sep 2025 09:49:56 +0000 (UTC)
+	 MIME-Version:Content-Type; b=i1vflsYQQ1IQHJCRTkOVBATlbfCmmgnhiE/u/VoJ69dYhKh4w5wL56SJurCy+ozKiBYts/ber62cMYJ2yW7VYnBtyHZ/eFMnBRtkC3fwAnqo8PzdCWvSRBd0w5kXPIN1Wx1/u0fjZT7Wygn1nmA7JFxeXPvXQO/2zh+wThrhUO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k8ruingw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15BF3C4CEED;
+	Tue,  2 Sep 2025 09:50:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756806600;
-	bh=8DvXbPFnI4+n7hHxbxXgOGqvAp5g/qxDSdMttlnJd5U=;
+	s=k20201202; t=1756806607;
+	bh=qbKcoCnyI7prTmn2e4S8kHQTAUMV3OUtBdKQxOT3nYs=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=DItEqcQPAEKKBmNhaurvDktBCHmT4CxXYPQrpqnvvYXk2r0RBKOm83KnoAEDAwv3f
-	 M+prW8UAbGCbx0WoabkpX+LsWr8thXEGRllDEA03z8xd+6qJUTowAq3bBw4HylU5+k
-	 rJtnUhVHR93a0PTH5cD61Bj6EunKByj7bbyA262xogNu+FrHa/P6nYPAMO0uoNeN9O
-	 wtrCD8yU/JSKvMMo+DZs4uq4VzUqMFalJj8DuwYCk4WIYPpEt+ogQE6wioQoUGasjh
-	 0OXbh1cKAFPZ1a99p8faURKF94Zrsk4jDWZpjMiiMQ75nI5YCh6rqUKLgV7kh14VK7
-	 fQvGPlTVVl1xw==
+	b=k8ruingwTTYBUbt3by1J5OOjSTZhVyaU4tHBF1Gae/gFogtsNgm7byLyGgEC0Cf3+
+	 YFEk2g1u5b1Dq8k9IDTnIqxFfK5CCIjI/VrzYo1fecM1TBbIzymPyFhXA0SEU89zLm
+	 /8GUNmG4+Nb49r54jESMtZOVpEd51ohtY7QOymGGw8lCV1cg7gvV9msFEWIewr5v1A
+	 B6tuadsViNb8LilGhWGieHQZxpGQbmXCeBwsCoZCu0xrI6GuQdNPMABZwguJ9FpJlT
+	 J5Gq+NoaS0ySwrx7Gz7VIyBrwhPtbY1pjEhGl8TsAXw3zKRHcBgKKVNCiJ4stXYU9L
+	 Itdw4kkU2+hIA==
 From: Vinod Koul <vkoul@kernel.org>
-To: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
- michal.simek@amd.com, radhey.shyam.pandey@amd.com, 
- Abin Joseph <abin.joseph@amd.com>
-Cc: git@amd.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250825130423.5739-1-abin.joseph@amd.com>
-References: <20250825130423.5739-1-abin.joseph@amd.com>
-Subject: Re: [PATCH RESEND] dt-bindings: dmaengine: xilinx_dma: Remove DMA
- client properties
-Message-Id: <175680659600.246694.18044016578906182085.b4-ty@kernel.org>
-Date: Tue, 02 Sep 2025 15:19:56 +0530
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Alexandre Ghiti <alex@ghiti.fr>, duje@dujemihanovic.xyz, 
+ Guodong Xu <guodong@riscstar.com>
+Cc: Alex Elder <elder@riscstar.com>, Vivian Wang <wangruikang@iscas.ac.cn>, 
+ dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+ spacemit@lists.linux.dev, Troy Mitchell <troy.mitchell@linux.spacemit.com>, 
+ Dan Carpenter <dan.carpenter@linaro.org>
+In-Reply-To: <20250822-working_dma_0701_v2-v5-0-f5c0eda734cc@riscstar.com>
+References: <20250822-working_dma_0701_v2-v5-0-f5c0eda734cc@riscstar.com>
+Subject: Re: (subset) [PATCH v5 0/8] dmaengine: mmp_pdma: Add SpacemiT K1
+ SoC support with 64-bit addressing
+Message-Id: <175680660058.246694.5045747556533020350.b4-ty@kernel.org>
+Date: Tue, 02 Sep 2025 15:20:00 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -64,16 +71,30 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
 
-On Mon, 25 Aug 2025 18:34:23 +0530, Abin Joseph wrote:
-> Remove DMA client section mentioned in the dt-bindings as it is
-> not required to document client bindings in dmaengine bindings.
+On Fri, 22 Aug 2025 11:06:26 +0800, Guodong Xu wrote:
+> This patchset adds support for SpacemiT K1 PDMA controller to the existing
+> mmp_pdma driver. The K1 PDMA controller is compatible with Marvell MMP PDMA
+> but extends it with 64-bit addressing capabilities through LPAE (Long
+> Physical Address Extension) bit and higher 32-bit address registers (DDADRH,
+> DSADRH and DTADRH).
 > 
+> In v5, two smatch warnings reported by kernel test bot and Dan Carpenter were
+> fixed.
 > 
+> [...]
 
 Applied, thanks!
 
-[1/1] dt-bindings: dmaengine: xilinx_dma: Remove DMA client properties
-      commit: d5df661c9c76cb36d90527349ac6197a4baf2aba
+[1/8] dt-bindings: dma: Add SpacemiT K1 PDMA controller
+      commit: 39ce725e621b256188550492b4b53fb02bfc872e
+[2/8] dmaengine: mmp_pdma: Add clock support
+      commit: e73a9a13c99c5a55abfdb8c273651509be1eb5bb
+[3/8] dmaengine: mmp_pdma: Add reset controller support
+      commit: fc72462bc6107b8babda05cad5bf8f7daf8bec20
+[4/8] dmaengine: mmp_pdma: Add operations structure for controller abstraction
+      commit: 35e40bf761fcb24b1355d6a8d48b5b10683fe1a3
+[5/8] dmaengine: mmp_pdma: Add SpacemiT K1 PDMA support with 64-bit addressing
+      commit: 5cfe585d8624f7482505183dd0e4c534b061e822
 
 Best regards,
 -- 

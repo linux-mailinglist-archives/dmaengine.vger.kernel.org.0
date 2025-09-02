@@ -1,173 +1,201 @@
-Return-Path: <dmaengine+bounces-6335-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6336-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3F6BB40BD6
-	for <lists+dmaengine@lfdr.de>; Tue,  2 Sep 2025 19:19:33 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E8FEB40E28
+	for <lists+dmaengine@lfdr.de>; Tue,  2 Sep 2025 21:54:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6FE643AFF00
-	for <lists+dmaengine@lfdr.de>; Tue,  2 Sep 2025 17:19:32 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F351B7A385D
+	for <lists+dmaengine@lfdr.de>; Tue,  2 Sep 2025 19:53:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EB4933CEB9;
-	Tue,  2 Sep 2025 17:19:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5190E34F491;
+	Tue,  2 Sep 2025 19:54:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K+lsjhki"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZrJeisJC"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1687E2D239A;
-	Tue,  2 Sep 2025 17:19:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF0E326C3A5;
+	Tue,  2 Sep 2025 19:54:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756833569; cv=none; b=uSfsEqS8nABs9I1VNlOIfNsxFHUF0D/4ZAezrQqDXhdWe4cbay7adLn6FsOYe5gDDcgr8N2diVsXnBxQpKvjbU8eil7WaZB/K2RL8DjtH+MRU2AY+N3ejCCWas37HOP1psmoyco3Nc3jTxBlPQVbShvBKY5XP3XlnfvlDkAt4Zg=
+	t=1756842876; cv=none; b=sxRAoAAyEtZFev17KptWrqIyb3VrWDDAQbtK8iU9j7bSroojv9MyRUn/3J5RbjZBCkIAYNBDmAE1yYKK5Sbl2dK54YM2FVurwbYDzVjF49M3FHYbzgHi52CaHQ9e5uqCfk5vhV6CKe8t931QZgpauCB97yTeCkSY8Myt3wCoO4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756833569; c=relaxed/simple;
-	bh=HpkXJYlU3KxliNdCAuU+x9yMGw6xejBlZCkOpmaJSX8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=BUn02SrQyzQAp34x4j0XHU8kIy+Vq3Bh7+E7kw5DpSGfV30MlPZway3BGrBgJeiBJKSpJJGCUlFZo7mDwVJ9ZIH1gGmMTRkorYOSqsyX62oExKLazbrBw4VHFRDr6UTV2qXiievXrIHVf7/89YaQxLCPPwCdw5WRWlZa9on1Xug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K+lsjhki; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 953F3C4CEED;
-	Tue,  2 Sep 2025 17:19:28 +0000 (UTC)
+	s=arc-20240116; t=1756842876; c=relaxed/simple;
+	bh=oJOLNYG2Y3DXMCSgbwODVJA8SAuDYi5Dbvsh+hG6M4Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pTeAwe3H0ZfTbDJRRZWdM2xfd7eeEpnNtL9F+QPxdolsSSKSGVg2KssdqxuJvRFGlI5KGDCu5vrRtsKYB7eKris3kTBG9bP51RP8Q3AaoEHEOpuKMIM8oWx/tcTVmXEbAotzkNR8T4NOFEuVAdNms1mXBJiFmjXY3v5zT96bZJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZrJeisJC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D07CC4CEED;
+	Tue,  2 Sep 2025 19:54:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756833568;
-	bh=HpkXJYlU3KxliNdCAuU+x9yMGw6xejBlZCkOpmaJSX8=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=K+lsjhkiuVCel0yGpRoQlPkb5BKVV1HrSoE9pNqKNGX/0yQqZCcjJRK6YIS+gg0bD
-	 yhrSEDC9jMg4CkRdmehR2CZpXGpqkL2dgwjMVvD9JNlFPSl0Viu0Ma2dwFd0tJ9xJI
-	 hV27pX7L95NSy+T67QGTBvtNH2HI2r8yOArjN9d1Y4hh4UNIe4l5LcRomOySbz+jwq
-	 Kb9VD2irbbJQ3nuO8hiFwDl77I8ctH4myexOee9rKD6yuFjvcnslzdIFie8JRt3VUC
-	 yGv+CXQn5vRA4jARjMcc5xtOhc81W6HoJNlX0O5l8SZqWautWzYx0u5UL2u7uoDG1Y
-	 GAbvI3YZ2qCmQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8295ACA1007;
-	Tue,  2 Sep 2025 17:19:28 +0000 (UTC)
-From: Anthony Brandon via B4 Relay <devnull+anthony.amarulasolutions.com@kernel.org>
-Date: Tue, 02 Sep 2025 19:19:08 +0200
-Subject: [PATCH v3] dmaengine: xilinx: xdma: Fix regmap max_register
+	s=k20201202; t=1756842875;
+	bh=oJOLNYG2Y3DXMCSgbwODVJA8SAuDYi5Dbvsh+hG6M4Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZrJeisJCeZBLdRd9piYISWxH6ectOKfLkCBAI45oB9yskyvBJx+HrHbj0QupA23QY
+	 HMwYW+4SpxkS1Px4DFX1y0PnsLKuIvMupIqIiKRi5+/yisqqzHEEZpEI+OC+GPQMt+
+	 Ih9UPZZxLrikazCJPDm6WovmTyFRm0ulZKF/oPzplGj21mx5CKCfRPvb9oo4xKL1nz
+	 Qojwko0xFxCfGWgdvCBAYT8/hAuaZcNeMu33YO6xDjk/8M8E6xVx4H6De8eZjysot9
+	 apZ9PSugbHYcTWyIOnwbJIoCz8GthLjCfl1K6nrT8bke0E+1MO5eocgkH5TUTef2/d
+	 X7vBDpLUcS7MA==
+Date: Tue, 2 Sep 2025 14:54:34 -0500
+From: Rob Herring <robh@kernel.org>
+To: Janne Grunau <j@jannau.net>
+Cc: Sven Peter <sven@kernel.org>, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Neal Gompa <neal@gompa.dev>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Hector Martin <marcan@marcan.st>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Mark Kettenis <kettenis@openbsd.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Sasha Finkelstein <fnkl.kernel@gmail.com>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	van Spriel <arend@broadcom.com>, Lee Jones <lee@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Martin =?utf-8?Q?Povi=C5=A1er?= <povik+lin@cutebit.org>,
+	Vinod Koul <vkoul@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org, iommu@lists.linux.dev,
+	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linux-bluetooth@vger.kernel.org,
+	linux-wireless@vger.kernel.org, linux-pwm@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-clk@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-sound@vger.kernel.org,
+	linux-spi@vger.kernel.org, linux-nvme@lists.infradead.org
+Subject: Re: [PATCH 00/37] arm64: Add initial device trees for Apple M2
+ Pro/Max/Ultra devices
+Message-ID: <20250902194528.GA1014943-robh@kernel.org>
+References: <20250828-dt-apple-t6020-v1-0-507ba4c4b98e@jannau.net>
+ <20250829195119.GA1206685-robh@kernel.org>
+ <20250830071620.GD204299@robin.jannau.net>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250902-xdma-max-reg-v3-1-5fa37b8d2b15@amarulasolutions.com>
-X-B4-Tracking: v=1; b=H4sIAAsnt2gC/33OTQ6DIBCG4asY1qXhR1C76j2aLkZAJRFpQImN8
- e5F93b5fsk8mQ1FE6yJ6FFsKJhko/VTDn4rkBpg6g22OjdihAnSEIpX7QA7WHEwPaaybJQsRcN
- FjfLJJ5jOrif3eucebJx9+J56osd6ASWKKW4lkFJIanRLn+AgLCNEPy5z/inelXfoMBP757Dsd
- MArxqGitdIXzr7vP5y9ZwP7AAAA
-X-Change-ID: 20250901-xdma-max-reg-1649c6459358
-To: Lizhi Hou <lizhi.hou@amd.com>, Brian Xu <brian.xu@amd.com>, 
- Raj Kumar Rampelli <raj.kumar.rampelli@amd.com>, 
- Vinod Koul <vkoul@kernel.org>, Michal Simek <michal.simek@amd.com>
-Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, 
- Anthony Brandon <anthony@amarulasolutions.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2916;
- i=anthony@amarulasolutions.com; h=from:subject:message-id;
- bh=RXW5CKC0f3s39M0SO5bLPVh0482yL+nz0tdpgoq7TKU=;
- b=owGbwMvMwCUWIi5b4HjluATjabUkhozt6vJT3T+IRyk+FS/t+zKd0+9zxrw96yOMjUTfNtiLx
- 7ntUJLrKGVhEONikBVTZCnXkef1UK4rV5r5xBhmDisTyBAGLk4BmMgbb0aGPydEFERjPZZpfez2
- a1cXOvrz1Z/+j1Zqp16f/8h96GywCMP/ahtnt8clNz3rnVqZ9DaUxkuf9V/37NmZd45JjtI7q1I
- ZAQ==
-X-Developer-Key: i=anthony@amarulasolutions.com; a=openpgp;
- fpr=772C1F0D48237E772299E43354171D7041D4C718
-X-Endpoint-Received: by B4 Relay for anthony@amarulasolutions.com/default
- with auth_id=505
-X-Original-From: Anthony Brandon <anthony@amarulasolutions.com>
-Reply-To: anthony@amarulasolutions.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250830071620.GD204299@robin.jannau.net>
 
-From: Anthony Brandon <anthony@amarulasolutions.com>
+On Sat, Aug 30, 2025 at 09:16:20AM +0200, Janne Grunau wrote:
+> On Fri, Aug 29, 2025 at 02:51:19PM -0500, Rob Herring wrote:
+> > On Thu, Aug 28, 2025 at 04:01:19PM +0200, Janne Grunau wrote:
+> > > This series adds device trees for Apple's M2 Pro, Max and Ultra based
+> > > devices. The M2 Pro (t6020), M2 Max (t6021) and M2 Ultra (t6022) SoCs
+> > > follow design of the t600x family so copy the structure of SoC *.dtsi
+> > > files.
+> > > 
+> > > t6020 is a cut-down version of t6021, so the former just includes the
+> > > latter and disables the missing bits.
+> > > 
+> > > t6022 is two connected t6021 dies. The implementation seems to use
+> > > t6021 and disables blocks based on whether it is useful to carry
+> > > multiple instances. The disabled blocks are mostly on the second die.
+> > > MMIO addresses on the second die have a constant offset. The interrupt
+> > > controller is multi-die aware. This setup can be represented in the
+> > > device tree with two top level "soc" nodes. The MMIO offset is applied
+> > > via "ranges" and devices are included with preprocessor macros to make
+> > > the node labels unique and to specify the die number for the interrupt
+> > > definition.
+> > > 
+> > > The devices itself are very similar to their M1 Pro, M1 Max and M1 Ultra
+> > > counterparts. The existing device templates are SoC agnostic so the new
+> > > devices can reuse them and include their t602{0,1,2}.dtsi file. The
+> > > minor differences in pinctrl and gpio numbers can be easily adjusted.
+> > > 
+> > > With the t602x SoC family Apple introduced two new devices:
+> > > 
+> > > The M2 Pro Mac mini is similar to the larger M1 and M2 Max Mac Studio. The
+> > > missing SDHCI card reader and two front USB3.1 type-c ports and their
+> > > internal USB hub can be easily deleted.
+> > > 
+> > > The M2 Ultra Mac Pro (tower and rack-mount cases) differs from all other
+> > > devices but may share some bits with the M2 Ultra Mac Studio. The PCIe
+> > > implementation on the M2 Ultra in the Mac Pro differs slightly. Apple
+> > > calls the PCIe controller "apcie-ge" in their device tree. The
+> > > implementation seems to be mostly compatible with the base t6020 PCIe
+> > > controller. The main difference is that there is only a single port with
+> > > with 8 or 16 PCIe Gen4 lanes. These ports connect to a Microchip
+> > > Switchtec PCIe switch with 100 lanes to which all internal PCIe devices
+> > > and PCIe slots connect too.
+> > > 
+> > > This series does not include PCIe support for the Mac Pro for two
+> > > reasons:
+> > > - the linux switchtec driver fails to probe and the downstream PCIe
+> > >   connections come up as PCIe Gen1
+> > > - some of the internal devices require PERST# and power control to come
+> > >   up. Since the device are connected via the PCIe switch the PCIe
+> > >   controller can not do this. The PCI slot pwrctrl can be utilized for
+> > >   power control but misses integration with PERST# as proposed in [1].
+> > > 
+> > > This series depends on "[PATCH v2 0/5] Apple device tree sync from
+> > > downstream kernel" [2] due to the reuse of the t600x device templates
+> > > (patch dependencies and DT compilation) and 4 page table level support
+> > > in apple-dart and io-pgtable-dart [3] since the dart instances report
+> > > 42-bit IAS (IOMMU device attach fails without the series).
+> > > 
+> > > After discussion with the devicetree maintainers we agreed to not extend
+> > > lists with the generic compatibles anymore [1]. Instead either the first
+> > > compatible SoC or t8103 is used as fallback compatible supported by the
+> > > drivers. t8103 is used as default since most drivers and bindings were
+> > > initially written for M1 based devices.
+> > 
+> > An issue here is any OS without the compatibles added to the drivers 
+> > won't work. Does that matter here? Soon as you need any new drivers or 
+> > significant driver changes it won't. The compatible additions could be 
+> > backported to stable. They aren't really any different than new PCI IDs 
+> > which get backported.
+> 
+> I don't think backporting the driver compatible additions to stable
+> linux is very useful. It is only relevant for t602x devices and the only
+> way to interact with them is the serial console. The T602x PCIe support
+> added in v6.16 requires dart changes (the posted 4th level io page table
+> support) to be useful. After that PCIe ethernet works so there is a
+> practical way to interact with t602x systems. So there are probably zero
+> user of upstream linux on those devices 
+> I'm more concerned about other projects already supporting t602x
+> devices. At least u-boot and OpenBSD will be affected by this. As short
+> term solution m1n1 will add the generic compatibles [1] temporarily.
+> I think keeping this roughly for a year should allow to add the
+> compatibles and wait for "fixed" releases of those projects.
+> I'll send fixes for u-boot once the binding changes are reviewed.
 
-The max_register field is assigned the size of the register memory
-region instead of the offset of the last register.
-The result is that reading from the regmap via debugfs can cause
-a segmentation fault:
+Honestly, at least in the cases where the generic compatible works for 
+every chip so far, I'd just stick with it. The issue with generic 
+compatibles is more that you don't really know if things are going to be 
+the same or not. And most of the time, the h/w ends up changing.
 
-tail /sys/kernel/debug/regmap/xdma.1.auto/registers
-Unable to handle kernel paging request at virtual address ffff800082f70000
-Mem abort info:
-  ESR = 0x0000000096000007
-  EC = 0x25: DABT (current EL), IL = 32 bits
-  SET = 0, FnV = 0
-  EA = 0, S1PTW = 0
-  FSC = 0x07: level 3 translation fault
-[...]
-Call trace:
- regmap_mmio_read32le+0x10/0x30
- _regmap_bus_reg_read+0x74/0xc0
- _regmap_read+0x68/0x198
- regmap_read+0x54/0x88
- regmap_read_debugfs+0x140/0x380
- regmap_map_read_file+0x30/0x48
- full_proxy_read+0x68/0xc8
- vfs_read+0xcc/0x310
- ksys_read+0x7c/0x120
- __arm64_sys_read+0x24/0x40
- invoke_syscall.constprop.0+0x64/0x108
- do_el0_svc+0xb0/0xd8
- el0_svc+0x38/0x130
- el0t_64_sync_handler+0x120/0x138
- el0t_64_sync+0x194/0x198
-Code: aa1e03e9 d503201f f9400000 8b214000 (b9400000)
----[ end trace 0000000000000000 ]---
-note: tail[1217] exited with irqs disabled
-note: tail[1217] exited with preempt_count 1
-Segmentation fault
+If you want to keep it like this since you've already done it, then for 
+all the binding patches:
 
-Fixes: 17ce252266c7 ("dmaengine: xilinx: xdma: Add xilinx xdma driver")
-Reviewed-by: Lizhi Hou <lizhi.hou@amd.com>
-Signed-off-by: Anthony Brandon <anthony@amarulasolutions.com>
----
-Changes in v3:
-- Add Fixes tag
-- Link to v2: https://lore.kernel.org/r/20250901-xdma-max-reg-v2-1-fa3723a718cd@amarulasolutions.com
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
-Changes in v2:
-- Define new constant XDMA_MAX_REG_OFFSET and use that.
-- Link to v1: https://lore.kernel.org/r/20250901-xdma-max-reg-v1-1-b6a04561edb1@amarulasolutions.com
----
- drivers/dma/xilinx/xdma-regs.h | 1 +
- drivers/dma/xilinx/xdma.c      | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/dma/xilinx/xdma-regs.h b/drivers/dma/xilinx/xdma-regs.h
-index 6ad08878e93862b770febb71b8bc85e66813428e..70bca92621aa41b0367d1e236b3e276344a26320 100644
---- a/drivers/dma/xilinx/xdma-regs.h
-+++ b/drivers/dma/xilinx/xdma-regs.h
-@@ -9,6 +9,7 @@
- 
- /* The length of register space exposed to host */
- #define XDMA_REG_SPACE_LEN	65536
-+#define XDMA_MAX_REG_OFFSET	(XDMA_REG_SPACE_LEN - 4)
- 
- /*
-  * maximum number of DMA channels for each direction:
-diff --git a/drivers/dma/xilinx/xdma.c b/drivers/dma/xilinx/xdma.c
-index 0d88b1a670e142dac90d09c515809faa2476a816..5ecf8223c112e468c79ce635398ba393a535b9e0 100644
---- a/drivers/dma/xilinx/xdma.c
-+++ b/drivers/dma/xilinx/xdma.c
-@@ -38,7 +38,7 @@ static const struct regmap_config xdma_regmap_config = {
- 	.reg_bits = 32,
- 	.val_bits = 32,
- 	.reg_stride = 4,
--	.max_register = XDMA_REG_SPACE_LEN,
-+	.max_register = XDMA_MAX_REG_OFFSET,
- };
- 
- /**
-
----
-base-commit: b320789d6883cc00ac78ce83bccbfe7ed58afcf0
-change-id: 20250901-xdma-max-reg-1649c6459358
-
-Best regards,
--- 
-Anthony Brandon <anthony@amarulasolutions.com>
-
-
+Rob
 

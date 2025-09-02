@@ -1,57 +1,58 @@
-Return-Path: <dmaengine+bounces-6323-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6324-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9749AB3FB23
-	for <lists+dmaengine@lfdr.de>; Tue,  2 Sep 2025 11:50:22 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F18EB3FB2F
+	for <lists+dmaengine@lfdr.de>; Tue,  2 Sep 2025 11:51:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 80C4E1899B4A
-	for <lists+dmaengine@lfdr.de>; Tue,  2 Sep 2025 09:50:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BB5803BD665
+	for <lists+dmaengine@lfdr.de>; Tue,  2 Sep 2025 09:51:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 503C22EDD67;
-	Tue,  2 Sep 2025 09:49:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4A602F362A;
+	Tue,  2 Sep 2025 09:50:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aO7XuKQV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DItEqcQP"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2290D2ECD33;
-	Tue,  2 Sep 2025 09:49:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAC602ECE8C;
+	Tue,  2 Sep 2025 09:50:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756806596; cv=none; b=nBQDl3eWEMbWgqefV4R0j1UoJ3o73ZzYqMZCqhoYkwngJB4i1490xtrhrzHYfadHy8VUzcoAP5zylprNdgPuGDnNMiSxsKUloDM6p29fkrWVJzEs3oxCVWdIxmo1ZjP0FqcJAL96mmTga7czR/vDa99j0rBX5/m/5r6azZ4nJ6o=
+	t=1756806600; cv=none; b=CnFwHby0xsntxuo9yBVg0bP6audHYKeCorJ3d09xOuA6G3RDmy7v7giFM6UvW6c4Y6qeOltlJBpHxP7y79/fSQ4Pokh2saezfibyZfDnVA2t/NU/SNheTmz9Y0sJIu+dNcdNUVztKjVqrrhqcSkTPVHkIWObsFuH8cF6un0Reeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756806596; c=relaxed/simple;
-	bh=P72mig+lJzjyUzyIhJV0uWLLGHp1Vu+HmmPcTwazzOg=;
+	s=arc-20240116; t=1756806600; c=relaxed/simple;
+	bh=8DvXbPFnI4+n7hHxbxXgOGqvAp5g/qxDSdMttlnJd5U=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=fk1FQiksgZR4Eo72w5Dp4ArTdWpOcppJtNWjW3aJAYw4P9gJRGUL30X26K+fWtVc5wIobIlcnt9KGDcwww/a/MuOT6Mwhh3gwUpMW2EEU1v7TdTcCkFN6E7hN+Ss96nAYor6L5f1D5IpAAbGZXgz4xNmLblqz+IVZQO7Nl1DY8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aO7XuKQV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5733C4CEF9;
-	Tue,  2 Sep 2025 09:49:53 +0000 (UTC)
+	 MIME-Version:Content-Type; b=jsS4yoRg9eHiUbvcQ5Lll4VNDb9oI99lf3cIU1re0HMUAHWdgvdNfv4gmzWR103YsTcpf9FthJWQJJG6f3+KeAPO6GoAV82HTicLiqxZd4lcFQqZGO1bmhN64K1ipGk9bnu8aiOOT0iDp8zuLFKt2FUBGJ2MNzfrcrx1fFKi2y8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DItEqcQP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7957DC4CEFC;
+	Tue,  2 Sep 2025 09:49:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756806595;
-	bh=P72mig+lJzjyUzyIhJV0uWLLGHp1Vu+HmmPcTwazzOg=;
+	s=k20201202; t=1756806600;
+	bh=8DvXbPFnI4+n7hHxbxXgOGqvAp5g/qxDSdMttlnJd5U=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=aO7XuKQV0KPATkqs4cmGD6f+lBgxjKDLXHc6JHu+rYp4uuq6QuKPdkuKZGRgEi1+f
-	 2SGEAnMcZ80+1SbRBk2y2Tp2zc8pOfE/UiklQ8WXcpBU5yliosPxvDHyyKfmoMOgYu
-	 v+95B9h+SOZmt3r4U5dWNILAB7Wx33iUbg2+A0whknX/CiySvzL8oc8WUlUuMkunHN
-	 4y3Tfsp95hqegh4UMLq3bLsWrN3gm2yOlWAPlLOCExFkppPzgXprY/9lTbS42pLVdT
-	 vEmjlEV9/bx/nyUDVkEiDJLCHvoYSQq0MWRygFIdoxaBNVZ2ep862Y2XSp4fvD0tA4
-	 jbaeVlp8YQ1dA==
+	b=DItEqcQPAEKKBmNhaurvDktBCHmT4CxXYPQrpqnvvYXk2r0RBKOm83KnoAEDAwv3f
+	 M+prW8UAbGCbx0WoabkpX+LsWr8thXEGRllDEA03z8xd+6qJUTowAq3bBw4HylU5+k
+	 rJtnUhVHR93a0PTH5cD61Bj6EunKByj7bbyA262xogNu+FrHa/P6nYPAMO0uoNeN9O
+	 wtrCD8yU/JSKvMMo+DZs4uq4VzUqMFalJj8DuwYCk4WIYPpEt+ogQE6wioQoUGasjh
+	 0OXbh1cKAFPZ1a99p8faURKF94Zrsk4jDWZpjMiiMQ75nI5YCh6rqUKLgV7kh14VK7
+	 fQvGPlTVVl1xw==
 From: Vinod Koul <vkoul@kernel.org>
-To: Randy Dunlap <rdunlap@infradead.org>, 
- Nathan Lynch <nathan.lynch@amd.com>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250826-dma_async_tx_desc-tx_submit-doc-fix-v1-1-18a4b51697db@amd.com>
-References: <20250826-dma_async_tx_desc-tx_submit-doc-fix-v1-1-18a4b51697db@amd.com>
-Subject: Re: [PATCH RESEND] dmaengine: Fix
- dma_async_tx_descriptor->tx_submit documentation
-Message-Id: <175680659338.246694.12770116993030357573.b4-ty@kernel.org>
-Date: Tue, 02 Sep 2025 15:19:53 +0530
+To: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+ michal.simek@amd.com, radhey.shyam.pandey@amd.com, 
+ Abin Joseph <abin.joseph@amd.com>
+Cc: git@amd.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250825130423.5739-1-abin.joseph@amd.com>
+References: <20250825130423.5739-1-abin.joseph@amd.com>
+Subject: Re: [PATCH RESEND] dt-bindings: dmaengine: xilinx_dma: Remove DMA
+ client properties
+Message-Id: <175680659600.246694.18044016578906182085.b4-ty@kernel.org>
+Date: Tue, 02 Sep 2025 15:19:56 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -63,20 +64,16 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
 
-On Tue, 26 Aug 2025 11:07:38 -0500, Nathan Lynch wrote:
-> Commit 790fb9956eea ("linux/dmaengine.h: fix a few kernel-doc
-> warnings") inserted new documentation for @desc_free in the middle of
-> @tx_submit's description.
+On Mon, 25 Aug 2025 18:34:23 +0530, Abin Joseph wrote:
+> Remove DMA client section mentioned in the dt-bindings as it is
+> not required to document client bindings in dmaengine bindings.
 > 
-> Put @tx_submit's description back together, matching the indentation
-> style of the rest of the documentation for dma_async_tx_descriptor.
 > 
-> [...]
 
 Applied, thanks!
 
-[1/1] dmaengine: Fix dma_async_tx_descriptor->tx_submit documentation
-      commit: 7ea95d55e63176899eb96f7aaa34a5646f501b2c
+[1/1] dt-bindings: dmaengine: xilinx_dma: Remove DMA client properties
+      commit: d5df661c9c76cb36d90527349ac6197a4baf2aba
 
 Best regards,
 -- 

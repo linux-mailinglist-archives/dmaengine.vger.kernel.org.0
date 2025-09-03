@@ -1,216 +1,127 @@
-Return-Path: <dmaengine+bounces-6359-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6361-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F10C0B42076
-	for <lists+dmaengine@lfdr.de>; Wed,  3 Sep 2025 15:08:33 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2092B42131
+	for <lists+dmaengine@lfdr.de>; Wed,  3 Sep 2025 15:22:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4F9576852A1
-	for <lists+dmaengine@lfdr.de>; Wed,  3 Sep 2025 13:08:01 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AE8537B7B51
+	for <lists+dmaengine@lfdr.de>; Wed,  3 Sep 2025 13:15:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFB3D3019A9;
-	Wed,  3 Sep 2025 13:06:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C85892DCF78;
+	Wed,  3 Sep 2025 13:16:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b="Mi40bUy3"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mail.thorsis.com (mail.thorsis.com [217.92.40.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D980D3043DC
-	for <dmaengine@vger.kernel.org>; Wed,  3 Sep 2025 13:06:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF6FF2E4257;
+	Wed,  3 Sep 2025 13:16:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.92.40.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756904785; cv=none; b=TFremObOJAiU5c5vhCGkUJtU37ZILNEUWXuhAmRhBWH1rwFdfhh23SICBq24wxwOfPpEQfQcyYmu5tfSFlArVxfb8jMP7xeiYMqNR4G6Ejqm5ABtUyl+HQbohH5Te/Jnkn+jmdFa9w/C7qlRN0GwgMDeXuwooqVNhnUVZ61u+vU=
+	t=1756905398; cv=none; b=tTGXlf4/fgkDEDKn144ePxoxrjo4WAQjcRHw87aFliG9/ngrvwOI3W2BThmI6yLonxabVTiuDATMgu5mKvyBZ8SDcMlePAAXhmZSj9UxtpRfCrylA/LAiXk/YXAN9uYPMXRqY7IOGKGw8LYXqBJsN1Gk3MTgUdgK7u2y3DJP+wE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756904785; c=relaxed/simple;
-	bh=l+p0YSax35ZqpVK6u/Uh/pohy4HYLDe2vbH2/NkXimo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=aUKGFuui9l1UV7u24afdSPFn8d8sQh6q9zTCEmMHKI0ppTbaYtbbkh3RRLOUwhinfXd9miF70eTZOqVcoW6lytFCdAYAkEUNHTBVQ6vSm8o7NDGbcRlWVNERlj21NTM81W1yHFK1x2P0A1XVR2x6q9H2Bpx/iyUmAb+IBJvfOOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from dude02.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::28])
-	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
-	(envelope-from <m.felsch@pengutronix.de>)
-	id 1utnBm-00006Z-2s; Wed, 03 Sep 2025 15:06:14 +0200
-From: Marco Felsch <m.felsch@pengutronix.de>
-Date: Wed, 03 Sep 2025 15:06:19 +0200
-Subject: [PATCH 11/11] dmaengine: imx-sdma: fix spba-bus handling for
- i.MX8M
+	s=arc-20240116; t=1756905398; c=relaxed/simple;
+	bh=nh/Jvj+3PfiFDjRFpwIMNEZfJ4VoTazjot8RleOlFQg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KbjbBLawTWlEFjEt1hvXjnszJibpQKISg+76OkGxyFv8GLX477kyTwWXFFx+CgMgvd3SPSNmF3s8a3mtjWbZrEDUZw++2hKtdsNfx+xf0bA1aXlf/+WfYvQba+smGnlCceipagfZva5sgbHOm1dOdAtwVQJO3s1zNq9968z/OT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com; spf=pass smtp.mailfrom=thorsis.com; dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b=Mi40bUy3; arc=none smtp.client-ip=217.92.40.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thorsis.com
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id C4D4D1487E25;
+	Wed,  3 Sep 2025 15:16:16 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=thorsis.com; s=dkim;
+	t=1756905386; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 in-reply-to:references; bh=aHqRa8jsx4scxQoHsogOHYRV2hwQ6tQgcKa606SaBXY=;
+	b=Mi40bUy3Qk6XWegkRfPM2jnv4dDk/bMr2lj8J/pF4Gri48WBAkFX2c8VfueH8QqgCf2Ng8
+	j5AcfYSFfVjl6qZmg4jeiz3c6SMpf4oy8SG4v5oJmU7JXVKjlUK0bGcYIOJWNDqUGyZcms
+	Sff7vKAfUKeT6nvfJzbKbjFGimAEMj1wL7WqwQ3CZM5jPi07ldAlfZilQmSE3wtlrNL8Gv
+	OYP7T1CFZSdYRfuoHH7n6uRcTI+N6s7ysLFA6qazlJP/eibZT1JQi7uKBLnEPtQqfcfvvh
+	qz6NHVk6ppVZmLyBYDYcwkHh/+haGNIMfW6/g/QOTfw6wH67NV3Kug8C4llwIQ==
+Date: Wed, 3 Sep 2025 15:16:10 +0200
+From: Alexander Dahl <ada@thorsis.com>
+To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Cc: Vinod Koul <vkoul@kernel.org>, linux@armlinux.org.uk,
+	nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+	catalin.marinas@arm.com, will@kernel.org, olivia@selenic.com,
+	herbert@gondor.apana.org.au, davem@davemloft.net,
+	andi.shyti@kernel.org, lee@kernel.org, broonie@kernel.org,
+	gregkh@linuxfoundation.org, jirislaby@kernel.org, arnd@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
+	linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-serial@vger.kernel.org, o.rempel@pengutronix.de,
+	daniel.machon@microchip.com, Robert Marko <robert.marko@sartura.hr>,
+	luka.perkov@sartura.hr
+Subject: Re: (subset) [PATCH v8 00/10] arm64: lan969x: Add support for
+ Microchip LAN969x SoC
+Message-ID: <20250903-gratify-sustained-9acc011bc3c9@thorsis.com>
+Mail-Followup-To: Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Vinod Koul <vkoul@kernel.org>, linux@armlinux.org.uk,
+	nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+	catalin.marinas@arm.com, will@kernel.org, olivia@selenic.com,
+	herbert@gondor.apana.org.au, davem@davemloft.net,
+	andi.shyti@kernel.org, lee@kernel.org, broonie@kernel.org,
+	gregkh@linuxfoundation.org, jirislaby@kernel.org, arnd@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
+	linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-serial@vger.kernel.org, o.rempel@pengutronix.de,
+	daniel.machon@microchip.com, Robert Marko <robert.marko@sartura.hr>,
+	luka.perkov@sartura.hr
+References: <20250702183856.1727275-1-robert.marko@sartura.hr>
+ <175327377884.189941.15214972441246653208.b4-ty@kernel.org>
+ <bac5390f-725a-43db-a2b6-17a68d0d733c@tuxon.dev>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250903-v6-16-topic-sdma-v1-11-ac7bab629e8b@pengutronix.de>
-References: <20250903-v6-16-topic-sdma-v1-0-ac7bab629e8b@pengutronix.de>
-In-Reply-To: <20250903-v6-16-topic-sdma-v1-0-ac7bab629e8b@pengutronix.de>
-To: Vinod Koul <vkoul@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, Jiada Wang <jiada_wang@mentor.com>
-Cc: dmaengine@vger.kernel.org, imx@lists.linux.dev, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Marco Felsch <m.felsch@pengutronix.de>
-X-Mailer: b4 0.14.2
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:1101:1d::28
-X-SA-Exim-Mail-From: m.felsch@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: dmaengine@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bac5390f-725a-43db-a2b6-17a68d0d733c@tuxon.dev>
+User-Agent: Mutt/2.2.12 (2023-09-09)
+X-Last-TLS-Session-Version: TLSv1.3
 
-Starting with i.MX8M* devices there are multiple spba-busses so we can't
-just search the whole DT for the first spba-bus match and take it.
-Instead we need to check for each device to which bus it belongs and
-setup the spba_{start,end}_addr accordingly per sdma_channel.
+Hello,
 
-While on it, don't ignore errors from of_address_to_resource() if they
-are valid.
+Am Thu, Jul 31, 2025 at 11:05:07AM +0300 schrieb Claudiu Beznea:
+> Hi, Vinod,
+> 
+> On 23.07.2025 15:29, Vinod Koul wrote:
+> > 
+> > On Wed, 02 Jul 2025 20:35:58 +0200, Robert Marko wrote:
+> >> This patch series adds basic support for Microchip LAN969x SoC.
+> >>
+> >> It introduces the SoC ARCH symbol itself under the ARCH_MICROCHIP symbol
+> >> which allows to avoid the need to change dependencies of the drivers that
+> >> are shared for Microchip SoC-s in the future.
+> >>
+> >> DTS and further driver will be added in follow-up series.
+> >>
+> >> [...]
+> > 
+> > Applied, thanks!
+> > 
+> > [08/10] dma: xdmac: make it selectable for ARCH_MICROCHIP
+> >         commit: e56982021f5303b2523ac247e3c79b063459d012
+> 
+> As this one depends, as well, on the first 3 patches in the series (Robert,
+> please correct me if I'm wrong), and there are still discussions ongoing,
+> can you please drop it until all is clear on the first 3 patches?
+> 
+> Otherwise, applying only this patch will lead to AT91 XDMAC driver not
+> being built for SAMA5{D2, D3, D4}, SAMA7{G5, D65} SoCs. Linux is not
+> booting on SAMA7G5 SoC only with this patch applied.
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
- drivers/dma/imx-sdma.c | 56 ++++++++++++++++++++++++++++++++++----------------
- 1 file changed, 38 insertions(+), 18 deletions(-)
+Second that.  Just tested v6.17-rc4 on sam9x60 and DMA is not working
+at all because this driver can not be selected anymore.  This must be
+fixed before v6.17 release please!
 
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index c31785977351163d6fddf4d8b2f90dfebb508400..3ef415aa578a96e35a969ac2488d08bcab9fadc3 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -461,6 +461,8 @@ struct sdma_channel {
- 	dma_addr_t			per_address, per_address2;
- 	unsigned long			event_mask[2];
- 	unsigned long			watermark_level;
-+	u32				spba_start_addr;
-+	u32				spba_end_addr;
- 	u32				shp_addr, per_addr;
- 	enum dma_status			status;
- 	struct imx_dma_data		data;
-@@ -534,8 +536,6 @@ struct sdma_engine {
- 	u32				script_number;
- 	struct sdma_script_start_addrs	*script_addrs;
- 	const struct sdma_driver_data	*drvdata;
--	u32				spba_start_addr;
--	u32				spba_end_addr;
- 	unsigned int			irq;
- 	dma_addr_t			bd0_phys;
- 	struct sdma_buffer_descriptor	*bd0;
-@@ -1236,8 +1236,6 @@ static void sdma_channel_synchronize(struct dma_chan *chan)
- 
- static void sdma_set_watermarklevel_for_p2p(struct sdma_channel *sdmac)
- {
--	struct sdma_engine *sdma = sdmac->sdma;
--
- 	int lwml = sdmac->watermark_level & SDMA_WATERMARK_LEVEL_LWML;
- 	int hwml = (sdmac->watermark_level & SDMA_WATERMARK_LEVEL_HWML) >> 16;
- 
-@@ -1263,12 +1261,12 @@ static void sdma_set_watermarklevel_for_p2p(struct sdma_channel *sdmac)
- 		swap(sdmac->event_mask[0], sdmac->event_mask[1]);
- 	}
- 
--	if (sdmac->per_address2 >= sdma->spba_start_addr &&
--			sdmac->per_address2 <= sdma->spba_end_addr)
-+	if (sdmac->per_address2 >= sdmac->spba_start_addr &&
-+			sdmac->per_address2 <= sdmac->spba_end_addr)
- 		sdmac->watermark_level |= SDMA_WATERMARK_LEVEL_SP;
- 
--	if (sdmac->per_address >= sdma->spba_start_addr &&
--			sdmac->per_address <= sdma->spba_end_addr)
-+	if (sdmac->per_address >= sdmac->spba_start_addr &&
-+			sdmac->per_address <= sdmac->spba_end_addr)
- 		sdmac->watermark_level |= SDMA_WATERMARK_LEVEL_DP;
- 
- 	sdmac->watermark_level |= SDMA_WATERMARK_LEVEL_CONT;
-@@ -1447,6 +1445,31 @@ static void sdma_desc_free(struct virt_dma_desc *vd)
- 	kfree(desc);
- }
- 
-+static int sdma_config_spba_slave(struct dma_chan *chan)
-+{
-+	struct sdma_channel *sdmac = to_sdma_chan(chan);
-+	struct device_node *spba_bus;
-+	struct resource spba_res;
-+	int ret;
-+
-+	spba_bus = of_get_parent(chan->slave->of_node);
-+	/* Device doesn't belong to the spba-bus */
-+	if (!of_device_is_compatible(spba_bus, "fsl,spba-bus"))
-+		return 0;
-+
-+	ret = of_address_to_resource(spba_bus, 0, &spba_res);
-+	of_node_put(spba_bus);
-+	if (ret) {
-+		dev_err(sdmac->sdma->dev, "Failed to get spba-bus resources\n");
-+		return -EINVAL;
-+	}
-+
-+	sdmac->spba_start_addr = spba_res.start;
-+	sdmac->spba_end_addr = spba_res.end;
-+
-+	return 0;
-+}
-+
- static int sdma_alloc_chan_resources(struct dma_chan *chan)
- {
- 	struct sdma_channel *sdmac = to_sdma_chan(chan);
-@@ -1527,6 +1550,8 @@ static void sdma_free_chan_resources(struct dma_chan *chan)
- 
- 	sdmac->event_id0 = 0;
- 	sdmac->event_id1 = 0;
-+	sdmac->spba_start_addr = 0;
-+	sdmac->spba_end_addr = 0;
- 
- 	sdma_set_channel_priority(sdmac, 0);
- 
-@@ -1837,6 +1862,7 @@ static int sdma_config(struct dma_chan *chan,
- {
- 	struct sdma_channel *sdmac = to_sdma_chan(chan);
- 	struct sdma_engine *sdma = sdmac->sdma;
-+	int ret;
- 
- 	memcpy(&sdmac->slave_config, dmaengine_cfg, sizeof(*dmaengine_cfg));
- 
-@@ -1867,6 +1893,10 @@ static int sdma_config(struct dma_chan *chan,
- 		sdma_event_enable(sdmac, sdmac->event_id1);
- 	}
- 
-+	ret = sdma_config_spba_slave(chan);
-+	if (ret)
-+		return ret;
-+
- 	return 0;
- }
- 
-@@ -2251,11 +2281,9 @@ static int sdma_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct device_node *np = dev->of_node;
--	struct device_node *spba_bus;
- 	const char *fw_name;
- 	int ret;
- 	int irq;
--	struct resource spba_res;
- 	int i;
- 	struct sdma_engine *sdma;
- 	s32 *saddr_arr;
-@@ -2379,14 +2407,6 @@ static int sdma_probe(struct platform_device *pdev)
- 
- 	devm_add_action_or_reset(dev, sdma_dma_of_dma_controller_unregister_action, sdma);
- 
--	spba_bus = of_find_compatible_node(NULL, NULL, "fsl,spba-bus");
--	ret = of_address_to_resource(spba_bus, 0, &spba_res);
--	if (!ret) {
--		sdma->spba_start_addr = spba_res.start;
--		sdma->spba_end_addr = spba_res.end;
--	}
--	of_node_put(spba_bus);
--
- 	/*
- 	 * Because that device tree does not encode ROM script address,
- 	 * the RAM script in firmware is mandatory for device tree
-
--- 
-2.47.2
-
+Greets
+Alex
 

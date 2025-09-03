@@ -1,256 +1,196 @@
-Return-Path: <dmaengine+bounces-6337-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6338-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32374B41457
-	for <lists+dmaengine@lfdr.de>; Wed,  3 Sep 2025 07:27:55 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 96449B4169C
+	for <lists+dmaengine@lfdr.de>; Wed,  3 Sep 2025 09:32:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BF18D3B8A5D
-	for <lists+dmaengine@lfdr.de>; Wed,  3 Sep 2025 05:27:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 96C363A28D7
+	for <lists+dmaengine@lfdr.de>; Wed,  3 Sep 2025 07:32:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 089AA2D5956;
-	Wed,  3 Sep 2025 05:27:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E23E2DECB7;
+	Wed,  3 Sep 2025 07:31:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="CZXcfF3s"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RUxiARVC"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2086.outbound.protection.outlook.com [40.107.237.86])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C8F2D3EDA;
-	Wed,  3 Sep 2025 05:27:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.86
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756877270; cv=fail; b=AhLycTYDTH07juf3YGr7jC1xX0F8AMInqLMFXQHtQfVyyNhKXf5rBh4qufBc98oNSxbtXvN2Uxq7jPanVYS1x9bW0c6cF0HGjrzOE9GKg7hxl75l/4gO5XKOdN9ce7R8iwE5WeO9wg0hTaBzSLVSHLracb6G3xiBgiow6G87gaM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756877270; c=relaxed/simple;
-	bh=lqUoT3I/IhwFeEYaf7zpw3GFXCfxxC+fUZ8JLwbnWLc=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=kEJXjvzb6RbC0PbxBqqV3Dd6k0Pe8FocAM1HkVu2n5OB/kQ2S1+RF3obOR7v9rr78nddQhj2JtKnRDioRcFjVLrIquwtVhi9udZ6Z9zl3u16jkA9VWF8xna22QEW9znlcLoJ4AYnc+soZ8stiaf95UapXSN4p2XXpjVuyHjyNks=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=CZXcfF3s; arc=fail smtp.client-ip=40.107.237.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mtgTF0zk1lb5QSmsbdD+qYy4rOYqiAKPrQrIzTKxa5cA7DdR/3RTpv0iYYyCWuXcLGk9ZF4H76BpT4IePWtCaaf8Ev9EjlaTAgHd9DoSkUb0n0oZ4pIh5PRoiNFGZsR7J8MMl9JT752ZfinBn0+jdhve9dRl+CXiNtjT91O5+DF1LsuJWTO6zg/1OC3TsDSO05qoaMDLXfqansP/5Rqu3S4bwjQREGkCxwU31cjmPRrmsnfJ4iepOguLx6Vxc01+ZAy49temM1oeTCesI6EpOaLfB7OJoijr0kr4ed3Cie+5KTQxUs0BHg28uDwx0dGFFBiVoTwgPJ9R5Q8vzp8i3A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lqUoT3I/IhwFeEYaf7zpw3GFXCfxxC+fUZ8JLwbnWLc=;
- b=dfkVOztPKfPhp/2UdCCe2Gf57t8dDlQWXIll6iDJkQEil/vXJvrWNrCito5rUfAmJK9wDR5BSVgxHVddyvg5GIiHkAPcd53lVdEaJg67DmxeJA4sTD+pru11gSAWoWbp+Jha57j9qhSfjLqb9R2ctjQzMkFHEeNonkfSFDhYLK32dTAqPtfqnkM0GyR/zFmLjCDdsV52KEHpF3uB3XBqLibqjcT+DEsykDkWDAjHoUYZCSLr5WHA5dyPFtsNM3c6FTyv9qIUcCFvK08Wp4IiM9ezY50a7QNFAitpF/y+6c8JpRPHJHDSmNPwdThrpmgreqiGv+EgGsySKlmQyPrI4w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lqUoT3I/IhwFeEYaf7zpw3GFXCfxxC+fUZ8JLwbnWLc=;
- b=CZXcfF3s7Yu5A+DTA71dW4Krofx5410SOV4W3bjTN55cEEgrx+fK62MeAwXvbPquz5PwmG/FSsrN6bIIuFydd1vTrp6p0JGYFS2EbvKA9C99uWmWNt5r2SaB6vzp1GpH5oC5AjHL5illPlM3PaGix1mTzmyYbVg7vS8ENDYR0EY=
-Received: from MN0PR12MB5953.namprd12.prod.outlook.com (2603:10b6:208:37c::15)
- by CY5PR12MB6381.namprd12.prod.outlook.com (2603:10b6:930:3f::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9073.27; Wed, 3 Sep
- 2025 05:27:44 +0000
-Received: from MN0PR12MB5953.namprd12.prod.outlook.com
- ([fe80::6798:13c6:d7ba:e01c]) by MN0PR12MB5953.namprd12.prod.outlook.com
- ([fe80::6798:13c6:d7ba:e01c%6]) with mapi id 15.20.9073.026; Wed, 3 Sep 2025
- 05:27:44 +0000
-From: "Pandey, Radhey Shyam" <radhey.shyam.pandey@amd.com>
-To: "anthony@amarulasolutions.com" <anthony@amarulasolutions.com>, "Hou,
- Lizhi" <lizhi.hou@amd.com>, "Xu, Brian" <brian.xu@amd.com>, "Rampelli, Raj
- Kumar" <raj.kumar.rampelli@amd.com>, Vinod Koul <vkoul@kernel.org>, "Simek,
- Michal" <michal.simek@amd.com>
-CC: "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3] dmaengine: xilinx: xdma: Fix regmap max_register
-Thread-Topic: [PATCH v3] dmaengine: xilinx: xdma: Fix regmap max_register
-Thread-Index: AQHcHC3Cf5JBml4If0ijlKN22AN307SA6uVQ
-Date: Wed, 3 Sep 2025 05:27:44 +0000
-Message-ID:
- <MN0PR12MB5953DC881686CAFABCD13349B701A@MN0PR12MB5953.namprd12.prod.outlook.com>
-References: <20250902-xdma-max-reg-v3-1-5fa37b8d2b15@amarulasolutions.com>
-In-Reply-To: <20250902-xdma-max-reg-v3-1-5fa37b8d2b15@amarulasolutions.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Enabled=True;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SetDate=2025-09-03T05:14:29.0000000Z;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Name=AMD
- Internal Distribution
- Only;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ContentBits=3;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Method=Standard
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MN0PR12MB5953:EE_|CY5PR12MB6381:EE_
-x-ms-office365-filtering-correlation-id: 10fb5715-f607-4e72-382f-08ddeaaa9c32
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|1800799024|366016|38070700018|921020;
-x-microsoft-antispam-message-info:
- =?utf-8?B?Vld4eDRDcEJYZFk0MzV6VDBjVVErSzdFakQzZzBtNnNjWmpGZmVnN3Z1WXMx?=
- =?utf-8?B?aWt6ckt4TEtjWGdocDU1emVzZk5tMzNXSHliT1IvRXdDejFYQzU2aG11dW5Z?=
- =?utf-8?B?RmQvU2xrTnFlNDM3eE96WXZmY2ZTby9jdHo1Q0Z4aEZGL2lqQ0RqdVFPdXh2?=
- =?utf-8?B?cVc5WU9sSWVqdGdUaHBmaUlaOExRSEJIaHpXNG9xR2pZbEN4S1J4dzRnZVZK?=
- =?utf-8?B?emV5RWxaVXZrWkRsM0JxeXp2dXpKbVJKSnA3aVc0elNrWk5ROUJLcVd2VjNx?=
- =?utf-8?B?SmlWMllNd2NWRnZYa1BhZnFRZURleFJKYVdxTmx1aFIwM3NBUDQ5YzJHdUxX?=
- =?utf-8?B?ZG9SMTV5SEZmSU11cThtMXZTZzdBUnpSNENLM2pkS0R1RGJ0dERiWlhremc5?=
- =?utf-8?B?UnNyTjQrSk94MC8wUEdiUkFOSmU2MHhhamI5bXcvZVFSbW9BWnpLS2wvWVVT?=
- =?utf-8?B?bDdEa3RoWWRLWTNsRytwbk96MU9rNmluTG5MQ3ZrVmlNSWsvN1RoOEI5MWs3?=
- =?utf-8?B?RzkrZjN6Z00yRDNPcGJXTFUzVVo2TFhoSHRtVElQOVBFR3c4RHJUVHZnNHcz?=
- =?utf-8?B?UFNCSVFHTjJrZFdkb2dKOWZlZ09aQmZwWjhiRVBOMnlTL3lNNTRZemd6dUp2?=
- =?utf-8?B?Uy8wbmpFSUJFS0s1c3RHbURSMjM4UDdHVUMxZ2JJU21wVFFmYVd6NWVkdU1o?=
- =?utf-8?B?M1FkdHZWbjE1c0RFSXYrUDZmendqN1ROM2cyNzVKMjd6cXNPMmlIbkY5MXRR?=
- =?utf-8?B?cld0bkpWaDVaTzdKdm9DMkdJa2VzeWw1bmxOS2Q0TU5Lak5PMVlleFU2M2J6?=
- =?utf-8?B?Yyt6czRLVElGTmxYeHJYbHMzeitWcTIyVVF0a2Yvazdzbmc3ZkJabnZQRG5R?=
- =?utf-8?B?NG1JU3hrS0lZY2dtaFpkRW90ay83MVhkcFNoL3d3YkE4QXJjem5TMk5WY3Rt?=
- =?utf-8?B?ZS9ubjZ2aWtiVUhmdzRiWklaR1N5a2doclh4RFh2VGVhWmc4S3lUb1kzQitm?=
- =?utf-8?B?dWltWGwwVXprQWdmbVlyT2c1NEQvaDFyZFlDaUFqdFUvcnBsc3dOTTR1RTg2?=
- =?utf-8?B?OWZ6aDZMY0MwcStheGdkTXRkQXpvUU9BMGhES01wQjR2NDBnT1Q5MlpWSzlV?=
- =?utf-8?B?M2RqUDR1V3IwdGVQUHdLcE9kY2MwODNzNnBmUFk2allmak5uUHAwbWo2c3ps?=
- =?utf-8?B?U2xmdWpmK2VGdUVuMHBYU3A4bUdjZTVKT0x0eWJZM1RyREZiK2FEZEY3Qnp6?=
- =?utf-8?B?RlZ0ZjRqS3lvL01hdUgzLzlBQVpxUG9LZVVtWjAweWNpR2ozdktlZGlKOHJO?=
- =?utf-8?B?dWU5UmNUV1NrL0FlS1QxeVpIUjdDUEU3d2ZFVDhYN2l5eXk0dTcyMUE3MUJH?=
- =?utf-8?B?U2QyQ0N2bzJ3ZityNnRXbU5DSlFUYTJuL3k5VHk5Lzh1RmlHUEJ0ZjRtNWlE?=
- =?utf-8?B?VXF2ZFNiVWZubUFiOHNiTnVuRkUwTnpKWGhmMEhlR2R0ZWZ5YkdYK05LZWFu?=
- =?utf-8?B?MmJocU5RVFI4YzZaaVVmKzhwWG9wYWE0OXFSM2RnQ3RmL0JkK1R2VkhXd3VJ?=
- =?utf-8?B?b2lJRnA5V3lZZENkSmJHN0VFOU83SElGNGVremFSOTF3YXAwdHhNSzVKUkZr?=
- =?utf-8?B?YzdsdERwcXA5cVZYMGhjZUxMVUhUemw0dnEzVG5zbERXdk45OVhxdDYxYzZq?=
- =?utf-8?B?MTUyWEZReVVDWmwweld4alJGOHdPYW90QXZHT3drUFp0WnVyc0xlQkJMTkZF?=
- =?utf-8?B?SllYczFhc05wWWF1Z1FjK2FYNjVJTnZPS3VzRGF4MDlzRnd0Slc4Tlc2MWJ4?=
- =?utf-8?B?NVRrOXpGd2xxc1crYXdNaEhqeG9TRnRSSTdXQThsRWFiMzdPQkhDdVJneE1a?=
- =?utf-8?B?VzNzQXBlWXQwTnhrbURpWXdBUWl0cXAzVVA4bjEvRkVyRm1vL2NrUEEvb1dr?=
- =?utf-8?B?Z0tiUEhHSUk1cDhhdklKdWF2VUxQVFdIbVNtdS9XSENxVmNzMnArUE5FMmh0?=
- =?utf-8?B?aE5QQ0tQRVFnPT0=?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB5953.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(38070700018)(921020);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?Uk1ISkdwMllHeGt2L1BKVzRObjFDVGVydHNldzRiTWRyeEsrZVhoU1pTMmxr?=
- =?utf-8?B?QUowVXZYTU5Pc3F5WTFNeDg5cmdJemVpR2dEWDNNamtKUS80cUU4VjVQWitQ?=
- =?utf-8?B?aXkzSGVNc1ZpcXhpMFBUa1NKd0dHb0RYUWJ5Q3JEelFyR25GVzdsZ0tGNTIy?=
- =?utf-8?B?U1lkMlcyeHVweUhETFZaUjJSNzhEN3B0R2o1ejdRb1RFa1R6bnBmbzZHYzQw?=
- =?utf-8?B?UktMWml2YTJaY0FlQWdRc3ZuRm1EcS9GQnlUckNTT292VjRaK2JYU3psSC9W?=
- =?utf-8?B?RStTcFhYTnYxQjFWMlp4MnNramhQaXhGTWhKUDJlcys0VmZXQWs0YkM1NVZ4?=
- =?utf-8?B?WWQ3K2R1VkhaL0RwZFA4clRVbWxqQ3hmSzdacFdxTVBlLy8vNm5Ea3Q1aFpQ?=
- =?utf-8?B?eTZvb21weXZWQnpXN2R2aGtKMXlsdVZZWUxZTlJwWXNiRUNSTGZNTzc0MGR2?=
- =?utf-8?B?NWY3SEJyY0RBci8wZFMxNnNPRDdzMlZjdDB1RjQrUTZkQm9MckliSllza3BH?=
- =?utf-8?B?eThEanZwRDJyS3RDbzkzUzlaZ1BySGo5RTNRWmtlTnpTRFc5eFRQekYvdlpr?=
- =?utf-8?B?aXkvNm5sa05NQUs0U04zVmhYY2RwZ3h4dzg5Q0N3NmZSZmpjbldtZktSWE15?=
- =?utf-8?B?T0F0L1ZKQnVHd24yT3ZkTVVmQmVBalNEZFUrakxqRTY3QldvT3NuSFlLdkl5?=
- =?utf-8?B?NFp1QnZndnNvS0I0am9zUjN2c3RwNGtvbUFVOENacTJ1MGcxTjhXRU5iQUJC?=
- =?utf-8?B?aTRjMmdGYzI1OHZNdGVVN3hKcVlhemZVRVhYcXJXYkV5NkI0WGtFcldHZFB5?=
- =?utf-8?B?NHdFOGhoVlBkODYzbjh5bzdjTDYzTUlaYjhRRmtITDljc0p4TDBjRjlxU2Vv?=
- =?utf-8?B?b0FIOHRkTzZiLzlPeDJ4ajJFbWk2WkNDV1kwWUozOHlCQUJIS2xPeEFUSm1U?=
- =?utf-8?B?bVFCQ1g2TmVqaEZmNlJYQ0FCZXBJZVI2c25xQ1c3c2J5QTkzejBxMzN2cDVK?=
- =?utf-8?B?K3MrbEdIYi8zbWJOaXhVcTE3eTFrbHM0NlIyUWNNS1ZaK2t5bjFETEd2UXB5?=
- =?utf-8?B?ZWxDVDFTMkZkSlFNeFg1SVFNaUNrWDRydnkrMlB5TUJMYVhzQXF6Z0JERjd2?=
- =?utf-8?B?WlY2d01jOVZNOTZjU2tGdGJiRDFqcTBycWszSjNXakErTGRXZGZ4WTFHMDkr?=
- =?utf-8?B?Rm5xeWhnR3VyTGQrUkNKWWI2N3ZuOEx2a2xtQWlGVTVHRHIrdEFDSUl5K3Ey?=
- =?utf-8?B?NXhFU1lnTUJyYWFzb0pCcDAvUUpGMHVNTTRxMjRFdktKVmFzVytrTFNJRnc2?=
- =?utf-8?B?aGF6Y09GK2lPS2EzNVNnRitIMWxXdmc1ems2a1NNWnRydzZ0L1FueW1TRHRL?=
- =?utf-8?B?TENueVJJVzIxaTlFZnZLaGxETDh6N2dEZEFURUZ5aVk0OWZlQjhjbERpbzJX?=
- =?utf-8?B?b0h5NUQ3NjVhdFpOSWhxc09HWFRvc1k3TmN0M2IxendxZU5GMU1VNDEwUFlH?=
- =?utf-8?B?cmF3M2tKdjhnamNkbzB5NEkzbUJlR0g2ZFp0SldXNjlhTHkyWk5DK2xvZzh6?=
- =?utf-8?B?Rm8wTWpXTTNiZzU0Mm8vall4S2gzQzM0L2Y1WGxNV0RndWlFY0d5MVFwbkFB?=
- =?utf-8?B?dVBYcmVIbHBVVjFkTDNwaHNtcENNREZHMW01UVpBUWx4cFRLeXcwWDl6ZDBo?=
- =?utf-8?B?N1RlV3hZSXQ3QVQrRFlrOWJJRmMrcTloTUhwKzIzY2gxRmlYU1F5VGtKYmx1?=
- =?utf-8?B?bFNMK21VYXJJTWcvZFlocXo1ZzU2dWZza1g3L1Y0RXlDeE9yMHcweExDK3ZM?=
- =?utf-8?B?TDI0UEZpTXRNYUlvNSs2U1ZZbWhzVTlBR2tPQjloRjJGZGxnenZrSkpIRldp?=
- =?utf-8?B?UEI3OGVLWGgvV1ZXYnN1bTNUUHljOHBRNGs0dElQbVJuN2pLdW5taHhPWWpV?=
- =?utf-8?B?WmhodzFXVGZwNzZSZVR0N083V1IxSmV2YUdPMWZsc1JuWjdUc2FzKzVuYmk1?=
- =?utf-8?B?R1dUSmxOTXdHMzltc2hLMzJMelVtZE1nUlVBemlPZDRncW9uYWFLSnVMdjRr?=
- =?utf-8?B?OVpYSlB6eExIZnVyRmVaS2pIRThuRXlpQ1dqUTErdVhVT0doVmJzVG5tNU5J?=
- =?utf-8?Q?ng6E=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A3EC2DCBF4;
+	Wed,  3 Sep 2025 07:31:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1756884695; cv=none; b=j2fyDvRbFSaXt2HxhgQtZKcxoRvhB8f6xyYZx5lYapVtg5sCvEWTnU5lD8Q7QQsdQjiwHswUB3tZQ+SZ+1NZo7VkB2QnB4j2Fxc02nV75np4Kn6oXyjGgO3ZBhua3UF24hgOzuqMTM1E+0xchBI8YrvCQO3F+JLsXGhGZNBTX4s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1756884695; c=relaxed/simple;
+	bh=uWMPeK8zwk8rd6sRriCCE7i5AVEoHUlD9FKBs7QD4Ew=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IkSAavzR1hk/mn6oN3Rla9xFhalNJwUmCcvsDvEXB6XnSfmLyqO1+n5IOMQkD8cTsK1aY1SLnJIt1PnsAfZ6+CxQaYemHNRmku+UQHWObwpKHu1BZycstNmE22dr8ZO9y2K1fdbwi+bZ4/2enEycD0GJwLpt6eOD/SbA38tvaf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RUxiARVC; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5832g9p6023418;
+	Wed, 3 Sep 2025 07:31:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=E5HtE4RMpmsfEp1lcb08LT
+	JTeUITZxnKersIljv5Md8=; b=RUxiARVCFS9H72RT5P4rBhxJDsETU1bL5C5Cy5
+	DjkSy7xod/PtGxEzc4wpYYquOAyAtIPO3NPNrhMMP1VAadLVwLAjXIJ0fablenAR
+	kIhV+ppd74xeFnHyOnEFaQ+YM0lAS8EU3us4lWi1+dA3c5kbWwvhZ88eXvvqHIn5
+	nQ1lA0aASBwL2+SVnhV06P8IorGWpkZxTkQ83ogJaHAramAB1Oc4cyqCWanCs7zR
+	7zOHh9Oupv/3XdXJMhcjmgLFZFHg4Jh9iKy3pQ27Ey57rUoMd7F6zUVRQfDE2k7I
+	cc8roXHoTinaH+ZBNacutJNC02h55xY+JXIXZQqKZR384aVw==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 48upnpat0x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 03 Sep 2025 07:31:23 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5837VMdI023493
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 3 Sep 2025 07:31:22 GMT
+Received: from hu-jseerapu-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.24; Wed, 3 Sep 2025 00:31:17 -0700
+From: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
+To: Vinod Koul <vkoul@kernel.org>,
+        Mukesh Kumar Savaliya
+	<quic_msavaliy@quicinc.com>,
+        Viken Dadhaniya <quic_vdadhani@quicinc.com>,
+        Andi Shyti <andi.shyti@kernel.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
+CC: <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <linaro-mm-sig@lists.linaro.org>, <quic_vtanuku@quicinc.com>
+Subject: [PATCH v7 0/2] i2c: i2c-qcom-geni: Add Block event interrupt support
+Date: Wed, 3 Sep 2025 13:00:57 +0530
+Message-ID: <20250903073059.2151837-1-quic_jseerapu@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB5953.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 10fb5715-f607-4e72-382f-08ddeaaa9c32
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Sep 2025 05:27:44.2103
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: McQ8XWJL+WsHFrnbqh/sN3T6lqpEid9Tc0uCZYN+yEDZtbwl+vFTsNzhsKP6l6cB
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6381
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: bzG9k4Pz0w-s1-FvpdplLWr1H566arna
+X-Authority-Analysis: v=2.4 cv=Jt/xrN4C c=1 sm=1 tr=0 ts=68b7eecb cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=yJojWOMRYYMA:10 a=Bp52wIM_v22GRZO56cAA:9
+X-Proofpoint-ORIG-GUID: bzG9k4Pz0w-s1-FvpdplLWr1H566arna
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODMwMDAwMSBTYWx0ZWRfX0c/mucaRpwQo
+ MvbJPQYGZJtdWTEu2V8kp4WG/hKDYYvpveylaV0Wz6ip8UPxPrGi07L4N57TL2i2Kk1SjJHdzVD
+ 1ouEo/mo1QiXUmFe2FFIlDrprJVJIixq4kGGyN0pFfLb3BCcVlqasovwmnNuwYk0P3eYqzfLPEo
+ fnQs4SOluxNdfso9r9WYQuI4yQZnlYpjX/VBrN+/9RBSgLvpD6OIkl0egON1EeJntP/XsfoLbdt
+ +JoVe0bFXOBu+TkD4m6fldz5hjO7MQVoKRqqNMe4l2pfYxvUN1bGzmKeTZ0r0lmUACxlyCCySZJ
+ 0H1J3+9iT+P5+5pndEaBMWjpmGHFEFnUSyleYHTOnD1aH5NeCGEmNPmXpEWdtxVz2Psx5T4OQAy
+ BGmnJ5Qn
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-09-03_04,2025-08-28_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 priorityscore=1501 clxscore=1015 bulkscore=0 impostorscore=0
+ spamscore=0 phishscore=0 suspectscore=0 malwarescore=0 classifier=typeunknown
+ authscore=0 authtc= authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2507300000 definitions=main-2508300001
 
-W0FNRCBPZmZpY2lhbCBVc2UgT25seSAtIEFNRCBJbnRlcm5hbCBEaXN0cmlidXRpb24gT25seV0N
-Cg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbnRob255IEJyYW5kb24g
-dmlhIEI0IFJlbGF5DQo+IDxkZXZudWxsK2FudGhvbnkuYW1hcnVsYXNvbHV0aW9ucy5jb21Aa2Vy
-bmVsLm9yZz4NCj4gU2VudDogVHVlc2RheSwgU2VwdGVtYmVyIDIsIDIwMjUgMTA6NDkgUE0NCj4g
-VG86IEhvdSwgTGl6aGkgPGxpemhpLmhvdUBhbWQuY29tPjsgWHUsIEJyaWFuIDxicmlhbi54dUBh
-bWQuY29tPjsgUmFtcGVsbGksDQo+IFJhaiBLdW1hciA8cmFqLmt1bWFyLnJhbXBlbGxpQGFtZC5j
-b20+OyBWaW5vZCBLb3VsIDx2a291bEBrZXJuZWwub3JnPjsgU2ltZWssDQo+IE1pY2hhbCA8bWlj
-aGFsLnNpbWVrQGFtZC5jb20+DQo+IENjOiBkbWFlbmdpbmVAdmdlci5rZXJuZWwub3JnOyBsaW51
-eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5r
-ZXJuZWwub3JnOyBBbnRob255IEJyYW5kb24gPGFudGhvbnlAYW1hcnVsYXNvbHV0aW9ucy5jb20+
-DQo+IFN1YmplY3Q6IFtQQVRDSCB2M10gZG1hZW5naW5lOiB4aWxpbng6IHhkbWE6IEZpeCByZWdt
-YXAgbWF4X3JlZ2lzdGVyDQo+DQo+IEZyb206IEFudGhvbnkgQnJhbmRvbiA8YW50aG9ueUBhbWFy
-dWxhc29sdXRpb25zLmNvbT4NCj4NCj4gVGhlIG1heF9yZWdpc3RlciBmaWVsZCBpcyBhc3NpZ25l
-ZCB0aGUgc2l6ZSBvZiB0aGUgcmVnaXN0ZXIgbWVtb3J5IHJlZ2lvbiBpbnN0ZWFkIG9mDQo+IHRo
-ZSBvZmZzZXQgb2YgdGhlIGxhc3QgcmVnaXN0ZXIuDQo+IFRoZSByZXN1bHQgaXMgdGhhdCByZWFk
-aW5nIGZyb20gdGhlIHJlZ21hcCB2aWEgZGVidWdmcyBjYW4gY2F1c2UgYSBzZWdtZW50YXRpb24N
-Cj4gZmF1bHQ6DQo+DQo+IHRhaWwgL3N5cy9rZXJuZWwvZGVidWcvcmVnbWFwL3hkbWEuMS5hdXRv
-L3JlZ2lzdGVycw0KPiBVbmFibGUgdG8gaGFuZGxlIGtlcm5lbCBwYWdpbmcgcmVxdWVzdCBhdCB2
-aXJ0dWFsIGFkZHJlc3MgZmZmZjgwMDA4MmY3MDAwMCBNZW0NCj4gYWJvcnQgaW5mbzoNCj4gICBF
-U1IgPSAweDAwMDAwMDAwOTYwMDAwMDcNCj4gICBFQyA9IDB4MjU6IERBQlQgKGN1cnJlbnQgRUwp
-LCBJTCA9IDMyIGJpdHMNCj4gICBTRVQgPSAwLCBGblYgPSAwDQo+ICAgRUEgPSAwLCBTMVBUVyA9
-IDANCj4gICBGU0MgPSAweDA3OiBsZXZlbCAzIHRyYW5zbGF0aW9uIGZhdWx0DQo+IFsuLi5dDQo+
-IENhbGwgdHJhY2U6DQo+ICByZWdtYXBfbW1pb19yZWFkMzJsZSsweDEwLzB4MzANCj4gIF9yZWdt
-YXBfYnVzX3JlZ19yZWFkKzB4NzQvMHhjMA0KPiAgX3JlZ21hcF9yZWFkKzB4NjgvMHgxOTgNCj4g
-IHJlZ21hcF9yZWFkKzB4NTQvMHg4OA0KPiAgcmVnbWFwX3JlYWRfZGVidWdmcysweDE0MC8weDM4
-MA0KPiAgcmVnbWFwX21hcF9yZWFkX2ZpbGUrMHgzMC8weDQ4DQo+ICBmdWxsX3Byb3h5X3JlYWQr
-MHg2OC8weGM4DQo+ICB2ZnNfcmVhZCsweGNjLzB4MzEwDQo+ICBrc3lzX3JlYWQrMHg3Yy8weDEy
-MA0KPiAgX19hcm02NF9zeXNfcmVhZCsweDI0LzB4NDANCj4gIGludm9rZV9zeXNjYWxsLmNvbnN0
-cHJvcC4wKzB4NjQvMHgxMDgNCj4gIGRvX2VsMF9zdmMrMHhiMC8weGQ4DQo+ICBlbDBfc3ZjKzB4
-MzgvMHgxMzANCj4gIGVsMHRfNjRfc3luY19oYW5kbGVyKzB4MTIwLzB4MTM4DQo+ICBlbDB0XzY0
-X3N5bmMrMHgxOTQvMHgxOTgNCj4gQ29kZTogYWExZTAzZTkgZDUwMzIwMWYgZjk0MDAwMDAgOGIy
-MTQwMDAgKGI5NDAwMDAwKSAtLS1bIGVuZCB0cmFjZQ0KPiAwMDAwMDAwMDAwMDAwMDAwIF0tLS0N
-Cj4gbm90ZTogdGFpbFsxMjE3XSBleGl0ZWQgd2l0aCBpcnFzIGRpc2FibGVkDQo+IG5vdGU6IHRh
-aWxbMTIxN10gZXhpdGVkIHdpdGggcHJlZW1wdF9jb3VudCAxIFNlZ21lbnRhdGlvbiBmYXVsdA0K
-Pg0KPiBGaXhlczogMTdjZTI1MjI2NmM3ICgiZG1hZW5naW5lOiB4aWxpbng6IHhkbWE6IEFkZCB4
-aWxpbnggeGRtYSBkcml2ZXIiKQ0KPiBSZXZpZXdlZC1ieTogTGl6aGkgSG91IDxsaXpoaS5ob3VA
-YW1kLmNvbT4NCg0KTml0IC0gUHV0ICByZXZpZXdlZC1ieSBhZnRlciBTb0IuDQoNCj4gU2lnbmVk
-LW9mZi1ieTogQW50aG9ueSBCcmFuZG9uIDxhbnRob255QGFtYXJ1bGFzb2x1dGlvbnMuY29tPg0K
-DQpSZXZpZXdlZC1ieTogUmFkaGV5IFNoeWFtIFBhbmRleSA8cmFkaGV5LnNoeWFtLnBhbmRleUBh
-bWQuY29tPg0KVGhhbmtzIQ0KDQo+IC0tLQ0KPiBDaGFuZ2VzIGluIHYzOg0KPiAtIEFkZCBGaXhl
-cyB0YWcNCj4gLSBMaW5rIHRvIHYyOiBodHRwczovL2xvcmUua2VybmVsLm9yZy9yLzIwMjUwOTAx
-LXhkbWEtbWF4LXJlZy12Mi0xLQ0KPiBmYTM3MjNhNzE4Y2RAYW1hcnVsYXNvbHV0aW9ucy5jb20N
-Cj4NCj4gQ2hhbmdlcyBpbiB2MjoNCj4gLSBEZWZpbmUgbmV3IGNvbnN0YW50IFhETUFfTUFYX1JF
-R19PRkZTRVQgYW5kIHVzZSB0aGF0Lg0KPiAtIExpbmsgdG8gdjE6IGh0dHBzOi8vbG9yZS5rZXJu
-ZWwub3JnL3IvMjAyNTA5MDEteGRtYS1tYXgtcmVnLXYxLTEtDQo+IGI2YTA0NTYxZWRiMUBhbWFy
-dWxhc29sdXRpb25zLmNvbQ0KPiAtLS0NCj4gIGRyaXZlcnMvZG1hL3hpbGlueC94ZG1hLXJlZ3Mu
-aCB8IDEgKw0KPiAgZHJpdmVycy9kbWEveGlsaW54L3hkbWEuYyAgICAgIHwgMiArLQ0KPiAgMiBm
-aWxlcyBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4NCj4gZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvZG1hL3hpbGlueC94ZG1hLXJlZ3MuaCBiL2RyaXZlcnMvZG1hL3hpbGlu
-eC94ZG1hLXJlZ3MuaCBpbmRleA0KPiA2YWQwODg3OGU5Mzg2MmI3NzBmZWJiNzFiOGJjODVlNjY4
-MTM0MjhlLi43MGJjYTkyNjIxYWE0MWIwMzY3ZDFlMjM2YjMNCj4gZTI3NjM0NGEyNjMyMCAxMDA2
-NDQNCj4gLS0tIGEvZHJpdmVycy9kbWEveGlsaW54L3hkbWEtcmVncy5oDQo+ICsrKyBiL2RyaXZl
-cnMvZG1hL3hpbGlueC94ZG1hLXJlZ3MuaA0KPiBAQCAtOSw2ICs5LDcgQEANCj4NCj4gIC8qIFRo
-ZSBsZW5ndGggb2YgcmVnaXN0ZXIgc3BhY2UgZXhwb3NlZCB0byBob3N0ICovDQo+ICAjZGVmaW5l
-IFhETUFfUkVHX1NQQUNFX0xFTiAgIDY1NTM2DQo+ICsjZGVmaW5lIFhETUFfTUFYX1JFR19PRkZT
-RVQgIChYRE1BX1JFR19TUEFDRV9MRU4gLSA0KQ0KPg0KPiAgLyoNCj4gICAqIG1heGltdW0gbnVt
-YmVyIG9mIERNQSBjaGFubmVscyBmb3IgZWFjaCBkaXJlY3Rpb246DQo+IGRpZmYgLS1naXQgYS9k
-cml2ZXJzL2RtYS94aWxpbngveGRtYS5jIGIvZHJpdmVycy9kbWEveGlsaW54L3hkbWEuYyBpbmRl
-eA0KPiAwZDg4YjFhNjcwZTE0MmRhYzkwZDA5YzUxNTgwOWZhYTI0NzZhODE2Li41ZWNmODIyM2Mx
-MTJlNDY4Yzc5Y2U2MzUzOThiDQo+IGEzOTNhNTM1YjllMCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVy
-cy9kbWEveGlsaW54L3hkbWEuYw0KPiArKysgYi9kcml2ZXJzL2RtYS94aWxpbngveGRtYS5jDQo+
-IEBAIC0zOCw3ICszOCw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcmVnbWFwX2NvbmZpZyB4ZG1h
-X3JlZ21hcF9jb25maWcgPSB7DQo+ICAgICAgIC5yZWdfYml0cyA9IDMyLA0KPiAgICAgICAudmFs
-X2JpdHMgPSAzMiwNCj4gICAgICAgLnJlZ19zdHJpZGUgPSA0LA0KPiAtICAgICAubWF4X3JlZ2lz
-dGVyID0gWERNQV9SRUdfU1BBQ0VfTEVOLA0KPiArICAgICAubWF4X3JlZ2lzdGVyID0gWERNQV9N
-QVhfUkVHX09GRlNFVCwNCj4gIH07DQo+DQo+ICAvKioNCj4NCj4gLS0tDQo+IGJhc2UtY29tbWl0
-OiBiMzIwNzg5ZDY4ODNjYzAwYWM3OGNlODNiY2NiZmU3ZWQ1OGFmY2YwDQo+IGNoYW5nZS1pZDog
-MjAyNTA5MDEteGRtYS1tYXgtcmVnLTE2NDljNjQ1OTM1OA0KPg0KPiBCZXN0IHJlZ2FyZHMsDQo+
-IC0tDQo+IEFudGhvbnkgQnJhbmRvbiA8YW50aG9ueUBhbWFydWxhc29sdXRpb25zLmNvbT4NCj4N
-Cj4NCg0K
+The I2C driver gets an interrupt upon transfer completion.
+When handling multiple messages in a single transfer, this
+results in N interrupts for N messages, leading to significant
+software interrupt latency.
+
+To mitigate this latency, utilize Block Event Interrupt (BEI)
+mechanism. Enabling BEI instructs the hardware to prevent interrupt
+generation and BEI is disabled when an interrupt is necessary.
+
+Large I2C transfer can be divided into chunks of messages internally.
+Interrupts are not expected for the messages for which BEI bit set,
+only the last message triggers an interrupt, indicating the completion of
+N messages. This BEI mechanism enhances overall transfer efficiency.
+
+BEI optimizations are currently implemented for I2C write transfers only,
+as there is no use case for multiple I2C read messages in a single transfer
+at this time.
+
+
+v6 -> v7:
+   - The design has been modified to configure BEI for interrupt
+     generation either:
+     After the last I2C message, if sufficient TREs are available, or
+     After a specific I2C message, when no further TREs are available.
+   - dma_buf and dma_addr for multi descriptor support is changed from
+     static allocation to dynmic allocation.
+   - In i2c_gpi_cb_result function, for multi descriptor case, instead of invoking
+     complete for everry 8 messages completions, changed the logic to Invoke 'complete'
+     for every I2C callback (for submitted I2C messages).
+   - For I2C multi descriptor case, updated 'gi2c_gpi_xfer->dma_buf' and
+     'gi2c_gpi_xfer->dma_addr' for unmappping in geni_i2c_gpi_multi_desc_unmap.
+   - In the GPI driver, passed the flags argumnetr to the gpi_create_i2c_tre function and
+     so avoided using external variables for DMA_PREP_INTERRUPT status.
+   - Updated documentation removed for "struct geni_i2c_dev" as per the review comments.
+
+v5 -> v6:
+   - Instead of using bei_flag, moved the logic to use with DMA
+     supported flags like DMA_PREP_INTERRUPT.
+   - Additional parameter comments removed from geni_i2c_gpi_multi_desc_unmap
+     function documentation.
+
+v4 -> v5:
+   -  BEI flag naming changed from flags to bei_flag.
+   -  QCOM_GPI_BLOCK_EVENT_IRQ macro is removed from qcom-gpi-dma.h
+      file, and Block event support is checked with bei_flag.
+   -  Documentation added for "struct geni_i2c_dev".
+
+v3 -> v4:
+  - API's added for Block event interrupt with multi descriptor support is
+    moved from qcom-gpi-dma.h file to I2C geni qcom driver file.
+  - gpi_multi_xfer_timeout_handler function is moved from GPI driver to
+    I2C driver.
+  - geni_i2c_gpi_multi_desc_xfer structure is added as a member of
+    struct geni_i2c_dev.
+  - Removed the changes of making I2C driver is dependent on GPI driver.
+
+v2 -> v3:
+  - Updated commit description
+  - In I2C GENI driver, for i2c_gpi_cb_result moved the logic of
+    "!is_tx_multi_xfer" to else part.
+  - MIN_NUM_OF_MSGS_MULTI_DESC changed from 4 to 2
+  - Changes of I2C GENI driver to depend on the GPI driver moved
+    to patch3.
+  - Renamed gpi_multi_desc_process to gpi_multi_xfer_timeout_handler
+  - Added description for newly added changes in "qcom-gpi-dma.h" file.
+
+v1 -> v2:
+  - DT changes are reverted for adding dma channel size as a new arg of
+    dma-cells property.
+  - DT binding change reveted for dma channel size as a new arg of
+    dma-cells property.
+  - In GPI driver, reverted the changes to parse the channel TRE size
+    from device tree.
+  - Made the changes in QCOM I2C geni driver to support the BEI
+    functionality with the existing TRE size of 64.
+  - Made changes in QCOM I2C geni driver as per the review comments.
+  - Fixed Kernel test robot reported compiltion issues.
+
+
+Jyothi Kumar Seerapu (2):
+  dmaengine: qcom: gpi: Add GPI Block event interrupt support
+  i2c: i2c-qcom-geni: Add Block event interrupt support
+
+ drivers/dma/qcom/gpi.c             |  11 +-
+ drivers/i2c/busses/i2c-qcom-geni.c | 248 ++++++++++++++++++++++++++---
+ 2 files changed, 233 insertions(+), 26 deletions(-)
+
+-- 
+2.34.1
+
 

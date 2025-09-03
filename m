@@ -1,179 +1,245 @@
-Return-Path: <dmaengine+bounces-6342-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6343-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id EBF47B41960
-	for <lists+dmaengine@lfdr.de>; Wed,  3 Sep 2025 10:57:46 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id ACA87B419D7
+	for <lists+dmaengine@lfdr.de>; Wed,  3 Sep 2025 11:25:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EE768566A94
-	for <lists+dmaengine@lfdr.de>; Wed,  3 Sep 2025 08:57:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 323C118896B7
+	for <lists+dmaengine@lfdr.de>; Wed,  3 Sep 2025 09:26:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CF5F2F0697;
-	Wed,  3 Sep 2025 08:56:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2E092ECD2E;
+	Wed,  3 Sep 2025 09:25:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NIpTPaTz"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="jqWMLX4t"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 365892E229E;
-	Wed,  3 Sep 2025 08:56:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 430672877F6
+	for <dmaengine@vger.kernel.org>; Wed,  3 Sep 2025 09:25:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756889775; cv=none; b=Na+wLEajqgGv79WQ+YTnwaRPbzc6pqKa793/2jcpq6HA7480Vu8NoQzoJ6f/8lWorRpe3FaxhORh5FCOPcUzI3/2wpa/KU5woQ5XlbAy0Am1WHYnpaH9GV6MACuMbHtEKfodHxNc+BSnec6I117fK8+D9rnWbbDd+lX1pF5/+6E=
+	t=1756891544; cv=none; b=l48A3rOrPx4Uzen5nFSrClohKQp0qBNpJMnCFYmmX5m3Wal7a7vZ5uzj1hD12JaLPEm6pnB4Cnl+1CmM8xkpFIDtnIhvv5woCwO69ZuyO81pQv23woSX8C4/yr2CFZw17LzmFV2VINXIOZX03zGDjAPCQwPWkYuRxXpGaG/kclM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756889775; c=relaxed/simple;
-	bh=q0tHz+BMppn+t5zOxfWZIctQRwVYHLuE0UcrNZZKdo4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=JVYMzxlpITKu8ZlvEvOhBszwFZhdRgXXK1zPtjBmtS465hXJsMQTyVwd3Z5d+MRaL98j8POYU8nmY2nnTvsmHxK+3BKawnXuWVIdLLlw1WgH5SAZz5LCMGmq/1lSeBh5ZYxHOMwBx/V/EsB/OZQz5l70jPpdFTzDQMFjy47h+EM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NIpTPaTz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 10859C4CEF0;
-	Wed,  3 Sep 2025 08:56:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756889775;
-	bh=q0tHz+BMppn+t5zOxfWZIctQRwVYHLuE0UcrNZZKdo4=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=NIpTPaTzzHX7kB1f8K503erRMyypAXp1ExsDMwEhyLo+dF1be4OFKtlwDQVfIIahP
-	 ESEMMz41sEaWtoKNZ03tJ9d9IJ0MiI6QaSzTeo8avGezs+TtC5yI5a30t4d4BB6v/6
-	 O70WUoRIcXFhUmhrDmBDs88a/69IwmCC65sslg6afBp+/xZyXD8e2qAuXVJyWEsxrx
-	 CXYDyRL8LpCA4/AYREoiSV59XCl7Br2dG/n1P6aqY+OtupCCehxq1SbsjnPAu0OFKq
-	 jVjETpWA9H//y/7Wx7qZHhKDGss7GCsWGMKJCFiO0ekZAQdNIo4sEMed3DvDWI/WB4
-	 mycw0vDRbpR5A==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F03F0CA1009;
-	Wed,  3 Sep 2025 08:56:14 +0000 (UTC)
-From: Anthony Brandon via B4 Relay <devnull+anthony.amarulasolutions.com@kernel.org>
-Date: Wed, 03 Sep 2025 10:56:13 +0200
-Subject: [PATCH v4] dmaengine: xilinx: xdma: Fix regmap max_register
+	s=arc-20240116; t=1756891544; c=relaxed/simple;
+	bh=G3KruQfuGQZbnwyFFVg7lnm/oURLCwtkXpoaHPhMKhA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=boWOS+P4ChtS2cP47HpwHXlflNI+Fw7rJ82UR6qOBz2dvUUZlsIeFo2p9jrUxC4mn+GSGMyYLDHU1okXc+CD0bjPlNncOaVv9Og5ihA6Gg/MY4eMAmREZG+HYAItvUMINIjVlT/PZhqZJjsCayVZ6wDJeaADgZgzD+AOpy8RRLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=jqWMLX4t; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5832x6NC010139
+	for <dmaengine@vger.kernel.org>; Wed, 3 Sep 2025 09:25:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=qiSfzdg4mC017dQavh2saF3D
+	nvq/ylNZxxXLO3pOk3Y=; b=jqWMLX4t8mAWThwfHqlfOQL+5UkXlSPfUK0Ti7YJ
+	tJunk2I2Xg/w5+Yt0BgvCAwhKQjj06lSKt3AbovqMDZO1m5oLvhz92QXlUo3H7ij
+	0+kNYH/Kb6FMq5eC7zb2vwuzi8hmt4pcDYZJYZmE7dXBncAIzmeKDfEM0IG8TB8A
+	E8zm9Cu5t7QBGI3nkXenmXc7jXQrCobgopq7Zha5M18tJBtQLbzgtBBEzIs/koyo
+	4QHBicW8kV0eXtsvi9pNlrJ9AK8c73cW63kA9GfqVExDCgmegkq8BTQmHnuC2jtv
+	ZqYQovft3xMcTrVZpK+CPabjifkiu/Z8fmsZn8XyB7WxOw==
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 48uq0ek5a6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <dmaengine@vger.kernel.org>; Wed, 03 Sep 2025 09:25:42 +0000 (GMT)
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-72631c2c2f7so3774226d6.0
+        for <dmaengine@vger.kernel.org>; Wed, 03 Sep 2025 02:25:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756891541; x=1757496341;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qiSfzdg4mC017dQavh2saF3Dnvq/ylNZxxXLO3pOk3Y=;
+        b=wcpkIWkxtBma0DQ04ZrwoYp+R/flE9m7ayODaxItlvOSladPyx58UAMqrbGdvqvElZ
+         sdBM/VyE3dQ40X8I0IdrZQSrvqSf62vyDoTte9pcOeCXdDHu99X+Am9klpzLuMTMgiBc
+         fNMXAS473k9WDNHPnTuMhD9cucvl0z/TVZWhhriewXm8x37KRaqJbEH0RojFG1cnnVih
+         llqrLGR6QQ+xkkyzmO11UDnuzZLi/uShIxicw1aYEAO4O2KIUcfqM1h9WDW8Lea1s5Tk
+         e/zBV3gDL+okRTUQaBVfxyNqGiVEMBvptsqK0+YXhI8gaIMPNTP9pKZPFqDpnzD/6xP6
+         g51Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWq1PWTjSBOpIVLmOsKPbNMZcaiHgz0IQM/jKGY0rwZ9r07vpB+d7RY7CPe48iKfzTCmniSBeinW4U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yza0w20c6KVgL4d2/nMPhf4e7zdWIeZjtGr+Sr0xVyzgb2Usp2A
+	0xcf/IvDfscHzxXdRJ2urlluFKfWhmD55qkkqPZKlzRcSyui0VplTcfBwizYP6yW+n6H8CsqlTt
+	X3e4+FTSXxVb5fDMnxZa6yA8Cd1Xa2/IRCYju4T+ca3RCrk1+1DtTjdrBZzzVryU=
+X-Gm-Gg: ASbGncuzJyuNJp2PupXKlkHO7gfG94PSYvwAzelmR39ZMa6CsFpECWNjn2s28kv9UiH
+	+RYn5A08X+sgnqo+8gw7kyzMnPoeS177/KEyKWQoHUHUiXJM0hS9yeI/SS/WyC6dHeOUCRdTWTn
+	ufaX3n7t0u7+s8Xp8Z3A8bUAfyNZ3hWvrZ+dPwrXAzhZGlMv/gSB3moPOTOdvHi8E28oh9c5xYq
+	AxhgmaASIwcx90MZPT4ht8Q1F+cH7elgwliJyFCTqmU0j2oDVKR3xaqItbC+8WPqTicczBEeZ/1
+	7d6Tj9Uh4rjDHKXDtjAmA82INJG97n25fAkOwdENHhW5l4a+wUBRsALZpSB6fKYaro3yxo4WAU0
+	mS0x1Vp3FGIOtPwWGEzCbEg+6x+GBXtwLeqtaJOV3qZmMoifk3O5M
+X-Received: by 2002:a05:6214:29cd:b0:71c:53c0:564f with SMTP id 6a1803df08f44-71c53c05df2mr85543086d6.6.1756891541042;
+        Wed, 03 Sep 2025 02:25:41 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFEffBRG/vxF0pIEnmq/bDAD2fvhoCl8Yhqv0aQxeuHDILYhYTHgkBcj5YQbmS8/TtFPfMC5A==
+X-Received: by 2002:a05:6214:29cd:b0:71c:53c0:564f with SMTP id 6a1803df08f44-71c53c05df2mr85542856d6.6.1756891540533;
+        Wed, 03 Sep 2025 02:25:40 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5608ace9c7esm390417e87.65.2025.09.03.02.25.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Sep 2025 02:25:39 -0700 (PDT)
+Date: Wed, 3 Sep 2025 12:25:37 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
+Cc: Vinod Koul <vkoul@kernel.org>,
+        Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
+        Viken Dadhaniya <quic_vdadhani@quicinc.com>,
+        Andi Shyti <andi.shyti@kernel.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, quic_vtanuku@quicinc.com
+Subject: Re: [PATCH v7 1/2] dmaengine: qcom: gpi: Add GPI Block event
+ interrupt support
+Message-ID: <xy2jgnearfsoln7tmjbb7l6zuwm7sq74wohsxj77eeval5wig5@kisng4ufgbuo>
+References: <20250903073059.2151837-1-quic_jseerapu@quicinc.com>
+ <20250903073059.2151837-2-quic_jseerapu@quicinc.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250903-xdma-max-reg-v4-1-894721175025@amarulasolutions.com>
-X-B4-Tracking: v=1; b=H4sIAKwCuGgC/33OywqDMBCF4VeRrJuSycVLV32P0sVooga0KYmKR
- Xz3RleloMv/wHzMQoLx1gRySxbizWSDda8Y8pKQqsVXY6jVsQlnXLGCAZ11j7THmXrTUEhlUaV
- SFULlJJ68vantvHOPZ+zWhsH5z65PsK0H0AQUaJkikyoFo0u4Y49+7DC4bhziT+FauZ5s5sTPH
- B6dGkXGBWaQV/rEEb8O/3NEdNQGlbnmJagDZ13XL3+nWz9DAQAA
-X-Change-ID: 20250901-xdma-max-reg-1649c6459358
-To: Lizhi Hou <lizhi.hou@amd.com>, Brian Xu <brian.xu@amd.com>, 
- Raj Kumar Rampelli <raj.kumar.rampelli@amd.com>, 
- Vinod Koul <vkoul@kernel.org>, Michal Simek <michal.simek@amd.com>
-Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, 
- Anthony Brandon <anthony@amarulasolutions.com>, 
- Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3123;
- i=anthony@amarulasolutions.com; h=from:subject:message-id;
- bh=L9Jh4ojlLzKIglwK2lLLxgJIk6sX82XB7wh+bXhzPgA=;
- b=owGbwMvMwCUWIi5b4HjluATjabUkhowdTGuXbz2h8O6vR9h7l8sJXDd2xeuveNJvuSdM7f7co
- LlBt/jiO0pZGMS4GGTFFFnKdeR5PZTrypVmPjGGmcPKBDKEgYtTACayiJHhn8qiHF9TpoxqOeMV
- 03eG+W0RdGx0+/VCIXcmz4H1iZdzmxgZnspOWb3hmObTayGdPPNCuJXqK/8y2R1pOFGZv0JJr9i
- bEwA=
-X-Developer-Key: i=anthony@amarulasolutions.com; a=openpgp;
- fpr=772C1F0D48237E772299E43354171D7041D4C718
-X-Endpoint-Received: by B4 Relay for anthony@amarulasolutions.com/default
- with auth_id=505
-X-Original-From: Anthony Brandon <anthony@amarulasolutions.com>
-Reply-To: anthony@amarulasolutions.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250903073059.2151837-2-quic_jseerapu@quicinc.com>
+X-Proofpoint-GUID: eA_aXp1ptTsAqHw-DeYeUO4DqWXIwCmw
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODMwMDAwNCBTYWx0ZWRfXz9ijy2wAcCfK
+ qbFl1dl+6HUus1jHUwOLdbElOp30CawwUZug5D2gKJLvAjybJLIduXLfQdCdTPQV93OdSVG57sU
+ esWEQAqiCMRSHhNVmGf3TK0zvDHgQPsX6fC7+thsnXDV0ZadkmWO9oO9f4S86IckDPwpqjA7rva
+ 1p3N4r9OkMgJY7xY9yJvSaawKSPoeSEkdWVUBlzDW1dxodRNgNyLHYf6NeN1fUERzyoZfHcx/z8
+ pfpe/UDhJZFPA1YZM/rDBZybzqdWhdK9o42Dn63yWQuoaVmBd2ebwOZCFztQGCMG0cJr3qd3tiu
+ I8xeIWWQDCsfbLvW66ZQ6wHFl3MeoWLTDD0XmAZwU0AUeJTtxsyX7hS2PHAqKqA1Uje6TNx50j9
+ rJMPcgtu
+X-Proofpoint-ORIG-GUID: eA_aXp1ptTsAqHw-DeYeUO4DqWXIwCmw
+X-Authority-Analysis: v=2.4 cv=ea09f6EH c=1 sm=1 tr=0 ts=68b80996 cx=c_pps
+ a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=yJojWOMRYYMA:10 a=COk6AnOGAAAA:8 a=JXAtfvraFxK_IdIfcZsA:9 a=CjuIK1q_8ugA:10
+ a=pJ04lnu7RYOZP9TFuWaZ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-09-03_05,2025-08-28_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 suspectscore=0 clxscore=1015 malwarescore=0 phishscore=0
+ bulkscore=0 spamscore=0 priorityscore=1501 adultscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2508300004
 
-From: Anthony Brandon <anthony@amarulasolutions.com>
+On Wed, Sep 03, 2025 at 01:00:58PM +0530, Jyothi Kumar Seerapu wrote:
+> GSI hardware generates an interrupt for each transfer completion.
+> For multiple messages within a single transfer, this results in
+> N interrupts for N messages, leading to significant software
+> interrupt latency.
+> 
+> To mitigate this latency, utilize Block Event Interrupt (BEI) mechanism.
+> Enabling BEI instructs the GSI hardware to prevent interrupt generation
+> and BEI is disabled when an interrupt is necessary.
+> 
+> Large I2C transfer can be divided into chunks of messages internally.
+> Interrupts are not expected for the messages for which BEI bit set,
+> only the last message triggers an interrupt, indicating the completion of
+> N messages. This BEI mechanism enhances overall transfer efficiency.
+> 
+> This BEI mechanism enhances overall transfer efficiency.
 
-The max_register field is assigned the size of the register memory
-region instead of the offset of the last register.
-The result is that reading from the regmap via debugfs can cause
-a segmentation fault:
+Duplicate phrase.
 
-tail /sys/kernel/debug/regmap/xdma.1.auto/registers
-Unable to handle kernel paging request at virtual address ffff800082f70000
-Mem abort info:
-  ESR = 0x0000000096000007
-  EC = 0x25: DABT (current EL), IL = 32 bits
-  SET = 0, FnV = 0
-  EA = 0, S1PTW = 0
-  FSC = 0x07: level 3 translation fault
-[...]
-Call trace:
- regmap_mmio_read32le+0x10/0x30
- _regmap_bus_reg_read+0x74/0xc0
- _regmap_read+0x68/0x198
- regmap_read+0x54/0x88
- regmap_read_debugfs+0x140/0x380
- regmap_map_read_file+0x30/0x48
- full_proxy_read+0x68/0xc8
- vfs_read+0xcc/0x310
- ksys_read+0x7c/0x120
- __arm64_sys_read+0x24/0x40
- invoke_syscall.constprop.0+0x64/0x108
- do_el0_svc+0xb0/0xd8
- el0_svc+0x38/0x130
- el0t_64_sync_handler+0x120/0x138
- el0t_64_sync+0x194/0x198
-Code: aa1e03e9 d503201f f9400000 8b214000 (b9400000)
----[ end trace 0000000000000000 ]---
-note: tail[1217] exited with irqs disabled
-note: tail[1217] exited with preempt_count 1
-Segmentation fault
+> 
+> Signed-off-by: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
+> ---
+> 
+> v6 -> v7:
+>    - The design has been modified to configure BEI for interrupt
+>      generation either:
+>      After the last I2C message, if sufficient TREs are available, or
+>      After a specific I2C message, when no further TREs are available.
+>    - In the GPI driver, passed the flags argumnetr to the gpi_create_i2c_tre function
+>      and so avoided using external variables for DMA_PREP_INTERRUPT status.
+> 
+> v5 ->v6:
+>   - For updating the block event interrupt bit, instead of relying on
+>     bei_flag, decision check is moved with DMA_PREP_INTERRUPT flag.
+> 
+> v4 -> v5:
+>   - BEI flag naming changed from flags to bei_flag.
+>   - QCOM_GPI_BLOCK_EVENT_IRQ macro is removed from qcom-gpi-dma.h
+>     file, and Block event interrupt support is checked with bei_flag.
+> 
+> v3 -> v4:
+>   - API's added for Block event interrupt with multi descriptor support for
+>     I2C is moved from qcom-gpi-dma.h file to I2C geni qcom driver file.
+>   - gpi_multi_xfer_timeout_handler function is moved from GPI driver to
+>     I2C driver.
+> 
+> v2-> v3:
+>    - Renamed gpi_multi_desc_process to gpi_multi_xfer_timeout_handler
+>    - MIN_NUM_OF_MSGS_MULTI_DESC changed from 4 to 2
+>    - Added documentation for newly added changes in "qcom-gpi-dma.h" file
+>    - Updated commit description.
+> 
+> v1 -> v2:
+>    - Changed dma_addr type from array of pointers to array.
+>    - To support BEI functionality with the TRE size of 64 defined in GPI driver,
+>      updated QCOM_GPI_MAX_NUM_MSGS to 16 and NUM_MSGS_PER_IRQ to 4.
+> 
+>  drivers/dma/qcom/gpi.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
+> index 8e87738086b2..66bfea1f156d 100644
+> --- a/drivers/dma/qcom/gpi.c
+> +++ b/drivers/dma/qcom/gpi.c
+> @@ -1619,7 +1619,8 @@ gpi_peripheral_config(struct dma_chan *chan, struct dma_slave_config *config)
+>  }
+>  
+>  static int gpi_create_i2c_tre(struct gchan *chan, struct gpi_desc *desc,
+> -			      struct scatterlist *sgl, enum dma_transfer_direction direction)
+> +			      struct scatterlist *sgl, enum dma_transfer_direction direction,
+> +			      unsigned long flags)
+>  {
+>  	struct gpi_i2c_config *i2c = chan->config;
+>  	struct device *dev = chan->gpii->gpi_dev->dev;
+> @@ -1684,6 +1685,9 @@ static int gpi_create_i2c_tre(struct gchan *chan, struct gpi_desc *desc,
+>  
+>  		tre->dword[3] = u32_encode_bits(TRE_TYPE_DMA, TRE_FLAGS_TYPE);
+>  		tre->dword[3] |= u32_encode_bits(1, TRE_FLAGS_IEOT);
+> +
+> +		if (!(flags & DMA_PREP_INTERRUPT))
+> +			tre->dword[3] |= u32_encode_bits(1, TRE_FLAGS_BEI);
+>  	}
+>  
+>  	for (i = 0; i < tre_idx; i++)
+> @@ -1827,6 +1831,9 @@ gpi_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
+>  		return NULL;
+>  	}
+>  
+> +	if (!(flags & DMA_PREP_INTERRUPT) && (nr - nr_tre < 2))
+> +		return NULL;
 
-Fixes: 17ce252266c7 ("dmaengine: xilinx: xdma: Add xilinx xdma driver")
-Signed-off-by: Anthony Brandon <anthony@amarulasolutions.com>
-Reviewed-by: Lizhi Hou <lizhi.hou@amd.com>
-Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
----
-Changes in v4:
-- Reorder Reviewed-by
-- Link to v3: https://lore.kernel.org/r/20250902-xdma-max-reg-v3-1-5fa37b8d2b15@amarulasolutions.com
+Comment in the source file.
 
-Changes in v3:
-- Add Fixes tag
-- Link to v2: https://lore.kernel.org/r/20250901-xdma-max-reg-v2-1-fa3723a718cd@amarulasolutions.com
+> +
+>  	gpi_desc = kzalloc(sizeof(*gpi_desc), GFP_NOWAIT);
+>  	if (!gpi_desc)
+>  		return NULL;
+> @@ -1835,7 +1842,7 @@ gpi_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
+>  	if (gchan->protocol == QCOM_GPI_SPI) {
+>  		i = gpi_create_spi_tre(gchan, gpi_desc, sgl, direction);
+>  	} else if (gchan->protocol == QCOM_GPI_I2C) {
+> -		i = gpi_create_i2c_tre(gchan, gpi_desc, sgl, direction);
+> +		i = gpi_create_i2c_tre(gchan, gpi_desc, sgl, direction, flags);
+>  	} else {
+>  		dev_err(dev, "invalid peripheral: %d\n", gchan->protocol);
+>  		kfree(gpi_desc);
+> -- 
+> 2.34.1
+> 
 
-Changes in v2:
-- Define new constant XDMA_MAX_REG_OFFSET and use that.
-- Link to v1: https://lore.kernel.org/r/20250901-xdma-max-reg-v1-1-b6a04561edb1@amarulasolutions.com
----
- drivers/dma/xilinx/xdma-regs.h | 1 +
- drivers/dma/xilinx/xdma.c      | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/dma/xilinx/xdma-regs.h b/drivers/dma/xilinx/xdma-regs.h
-index 6ad08878e93862b770febb71b8bc85e66813428e..70bca92621aa41b0367d1e236b3e276344a26320 100644
---- a/drivers/dma/xilinx/xdma-regs.h
-+++ b/drivers/dma/xilinx/xdma-regs.h
-@@ -9,6 +9,7 @@
- 
- /* The length of register space exposed to host */
- #define XDMA_REG_SPACE_LEN	65536
-+#define XDMA_MAX_REG_OFFSET	(XDMA_REG_SPACE_LEN - 4)
- 
- /*
-  * maximum number of DMA channels for each direction:
-diff --git a/drivers/dma/xilinx/xdma.c b/drivers/dma/xilinx/xdma.c
-index 0d88b1a670e142dac90d09c515809faa2476a816..5ecf8223c112e468c79ce635398ba393a535b9e0 100644
---- a/drivers/dma/xilinx/xdma.c
-+++ b/drivers/dma/xilinx/xdma.c
-@@ -38,7 +38,7 @@ static const struct regmap_config xdma_regmap_config = {
- 	.reg_bits = 32,
- 	.val_bits = 32,
- 	.reg_stride = 4,
--	.max_register = XDMA_REG_SPACE_LEN,
-+	.max_register = XDMA_MAX_REG_OFFSET,
- };
- 
- /**
-
----
-base-commit: b320789d6883cc00ac78ce83bccbfe7ed58afcf0
-change-id: 20250901-xdma-max-reg-1649c6459358
-
-Best regards,
 -- 
-Anthony Brandon <anthony@amarulasolutions.com>
-
-
+With best wishes
+Dmitry
 

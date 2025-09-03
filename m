@@ -1,234 +1,147 @@
-Return-Path: <dmaengine+bounces-6344-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6345-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 535DDB41A48
-	for <lists+dmaengine@lfdr.de>; Wed,  3 Sep 2025 11:43:20 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8DC39B41B2B
+	for <lists+dmaengine@lfdr.de>; Wed,  3 Sep 2025 12:08:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C46B77B51DA
-	for <lists+dmaengine@lfdr.de>; Wed,  3 Sep 2025 09:41:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3A6EC3ABC15
+	for <lists+dmaengine@lfdr.de>; Wed,  3 Sep 2025 10:08:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 321BD2EC550;
-	Wed,  3 Sep 2025 09:43:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B88A52E7BBC;
+	Wed,  3 Sep 2025 10:08:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="kHRzDjt8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G1d4eipZ"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B88D2DBF4B;
-	Wed,  3 Sep 2025 09:43:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 186FD284662
+	for <dmaengine@vger.kernel.org>; Wed,  3 Sep 2025 10:08:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756892593; cv=none; b=faIFvV6GaxsFG3WEPB0HnXrv9a26jIxp3/mWGeqxo4nmRoAlDLBZuRSA7hJ5GNwst6RAUDQdX4PUS7QWWW9R97kUI5n5D35YvTOiwwDbKa5ovsZ+3R7v4GB/H2jkLywJf6g6CS9+IdryLHk69OqK+ncJzmWfyQX24cqpmaKb9yA=
+	t=1756894104; cv=none; b=T2otpvFqavauSbNcpZ9vjIrFwOI7XeMqIUGjTjpLt6RTBBNNerRmVFqjHzYJGvnCYmBK4JMQu570pxCIMIKFJ70z8OM301teYfsTY0VCu/axGnNG0bNgFeQnPHV2800rLJHaPGd5cxNGdEPXKVus+AqbQOkM3fSO2DnIs0gFlQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756892593; c=relaxed/simple;
-	bh=bfgyIsZ47VIamS1ntkZ4mgB9kGJOYlZoocfdYMTCOVQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=r42ugq8prxYkh3qnDzYo2OOBWofy87+wl0eOYgxg+/gAhu8du0sUuJiRNa+F1qWJ+tRgAn+BcFROcEAzTzHeksspaTuKbTCEHv4sY4/L0QCWurddNKYEnjhrztkI/EnolrjGj8H9FBplJc/OSIuGiFpPQwo3LelH3Y4pj5wQQR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=kHRzDjt8; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58324FZT012188;
-	Wed, 3 Sep 2025 09:43:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	6lu15kYphEF4zj/NAL+Q6XVrkdncw0iE1vxKGIr075w=; b=kHRzDjt8BxBEBB6G
-	RrBFwON6ywWeRu7wvj1iBLSq9PQaoBbdhm2YqaYjK3PuuXTifYJZKCjy3uZwVQ+6
-	nCY5l2rlaNx2HwTkZ/KU67jVZps8L0bDiBYkCniQcWvtFw0m69s/QwpQU3/lHra5
-	EbumeYhe1Kl+cVU0qZXNtAskTSLoNNMG8ri+BOaF9wW1AShgbaAu4HJqREIeizzi
-	uM1m0neo9LDF1yGqnYBs039Ey8nmhICEG8RxZ5w1LVbHCCUYLxdr55nfP90HZYl4
-	yc6cbiAQSyEd9cIlovPRYCXvOFbWi1c/akC5BXrN7fbnKfG23qdcaRHkiBbfzWQU
-	iX3sQQ==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 48ut2fjysh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Sep 2025 09:43:06 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5839h541019544
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 3 Sep 2025 09:43:05 GMT
-Received: from [10.217.218.181] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.24; Wed, 3 Sep
- 2025 02:43:01 -0700
-Message-ID: <d4b297f8-82d7-465f-b691-f723087675d4@quicinc.com>
-Date: Wed, 3 Sep 2025 15:12:58 +0530
+	s=arc-20240116; t=1756894104; c=relaxed/simple;
+	bh=N60bxwoBK42jCkCkhaiyJ2RpMvLMJ+7cNdqT2d4o0Pw=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=fVT5nHcvk9up4xaH+6dpRy/DIuxAz5fdv7YpSSE8fJNjs+K2J/oNd5u9Hu20A7U8k+qd+erTbASWkLskBEq4ilgr0HvEpyKES6lGDn25MYJovd/XrZIG5L1BHBjNFYIcTEziZG58BMqr+AJ24vuy5prUFnOusPZauaYGsfq6kyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=G1d4eipZ; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-3280264a6e8so3352198a91.3
+        for <dmaengine@vger.kernel.org>; Wed, 03 Sep 2025 03:08:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1756894102; x=1757498902; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=m8UwOAQLFxlapL4wJjDPziLZroOio1WKHWOdBe615V4=;
+        b=G1d4eipZmRAJMGwYANGG4YXgARox1s2XRDXBe0IhBdHj52CJ1hDV3FtPUfYXwsUHbp
+         9JQL2iZ92RNL41yNq8f9TOdpLtWCGoS8zkJD+M2XeTktoPTsx98YD61Y378aSB94QuAk
+         QLV5/F//T5vRz+9LW4xN8pxA0CaRvcvZuTxPoquzNdT6vkLfUTcx0NjN+234x9dirtRc
+         b3O2SN15nno6jgQoprBXztLcv1NsMYlaj8m/+30Om8eCGtFgmdlLI8DyIt5BsFuZKYC8
+         RKJ4HsQO3fNbsluZCcIUl0/b3vSfwOA9xTyWCJTfQt/tzGu121TucPN0pYN0A//3n7MS
+         ibDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756894102; x=1757498902;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=m8UwOAQLFxlapL4wJjDPziLZroOio1WKHWOdBe615V4=;
+        b=ZqGgUmSUf7Fclp225sLx0YHp4pFtDTnx9q+intQ9wnkplu737M44AApz1T+B4Z3BnF
+         6f5oADa0MtIo8bhjlf2wQ+xdJ8o/1Fvt4YldIlLjnH06GC3XHZE1wiaTrpKi0nU0vmQ1
+         T/osLcffy87r7oNFIYoKLAPPCpLXoX22iomD6MBZMHnuRrweLmua2Tun9nD1b8y9ZA+t
+         VwgShU0K9LFRFpdxdGjgvi1JewxZ39MHLo6A+98PyU3qVZNfUKVUhEjM8ScH8iZ07vYQ
+         Up1H52ewwk0XnvtBjA/DjapVlvdRUH7hUQGYKyhqwPdlqxr5e4J49jHP6fJR+lHfXXCx
+         KIIg==
+X-Forwarded-Encrypted: i=1; AJvYcCXPdWRLBCoDxStSWoWi+P6nKGlrD9XtyE78HFAGai/JyBANxwmmwE+FxuIbzntdODRp6PCSZyIk5L8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdtFcP7KpXSRRX2gyEsRd6Hkx8C1mE9Vu96jPTS3enwbP/K8Rf
+	7QopXzlGpgVrI4tQgoI4QNebJUuOr+wwnHy/sjFHDijlVCkwo4tzWVqBUR3pQIiRb8IWDZxv9Vr
+	077avybfh9iL2Vt8Nit66Vd5PE94zfb0kr0Hheuj1Tg==
+X-Gm-Gg: ASbGncuIDBop0N3LwJw3x/mY3w2hJJHXHAxQR/5YNcwSIU6Voz9BDQZkhSWnUoGasGJ
+	blM4gKZ6AelxdT/9O5iaT7JFw5NjwSE8XBD3vtiXHj1fNIVwnhVwDNZrq8sTJd3H9QZI2ZH9ymC
+	XT0vyIuqeyGX5davr1gi+5775nd/sIqG9NJ+0tSCZnrRgWXXG5q+EQ+dRQmO3+9ykTc2Pu2RxFo
+	Hq0tNelfb6duJMSV/uj5gFOFf96usgFZ5wB94JD
+X-Google-Smtp-Source: AGHT+IFXPS/WTlketDT7Ry+T0jvnXkJWiEWLHz4L2qR0cIclYFFQxTiDX5NTPXgKjBbk7T07stAxT1Awro5pXflUEHw=
+X-Received: by 2002:a17:90b:54c5:b0:329:8160:437a with SMTP id
+ 98e67ed59e1d1-3298160446amr17933963a91.24.1756894102326; Wed, 03 Sep 2025
+ 03:08:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 1/2] dmaengine: qcom: gpi: Add GPI Block event
- interrupt support
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-CC: Vinod Koul <vkoul@kernel.org>,
-        Mukesh Kumar Savaliya
-	<quic_msavaliy@quicinc.com>,
-        Viken Dadhaniya <quic_vdadhani@quicinc.com>,
-        Andi Shyti <andi.shyti@kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <linaro-mm-sig@lists.linaro.org>, <quic_vtanuku@quicinc.com>
-References: <20250903073059.2151837-1-quic_jseerapu@quicinc.com>
- <20250903073059.2151837-2-quic_jseerapu@quicinc.com>
- <xy2jgnearfsoln7tmjbb7l6zuwm7sq74wohsxj77eeval5wig5@kisng4ufgbuo>
-Content-Language: en-US
-From: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
-In-Reply-To: <xy2jgnearfsoln7tmjbb7l6zuwm7sq74wohsxj77eeval5wig5@kisng4ufgbuo>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODMwMDAzOCBTYWx0ZWRfX5OOqX+rFnXYQ
- IDylBA2Nf78rHsfMLv8PyLIQfzn/q/Hx1sjWZvXbJddDjJ60cLn8qe/lq0hbBGfSuf9JMXJtgQN
- UKZyhEA5cq4K9fslV9tzj6Ky7h8QCQWBWMTwWsyc9oSuGQSQaOvvusO2hRIFiX2W/QCGLiyEdta
- GQWmcCjPs0rVemTwEJEhDGDXy51xv+Bq3Ukz2O/D0WoUyoaDb0KxQP5mQpK24f/bURYdDy/kUC7
- CdTOHEjyqTwwSoGwUqGaHA13gAY7Z88QUkzwsTQu+NL6LJLzCeiD9BcxQn/toOqmpPhdUvV9t2p
- BOYlGzt9e6IKdipvM4YfyqnigFezuODJdiTcK6j4YDkCZoQKRfSkfS3m7UjoFNprfTwYths8sf6
- ywMbtNxj
-X-Proofpoint-ORIG-GUID: 7CDOPaNJPI3XjP1hrXx2fqv0rIlyGsh0
-X-Proofpoint-GUID: 7CDOPaNJPI3XjP1hrXx2fqv0rIlyGsh0
-X-Authority-Analysis: v=2.4 cv=U7iSDfru c=1 sm=1 tr=0 ts=68b80daa cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=COk6AnOGAAAA:8
- a=LAjslmrBFw-AA7XcVLMA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-09-03_05,2025-08-28_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 phishscore=0 clxscore=1011 impostorscore=0 suspectscore=0
- malwarescore=0 priorityscore=1501 adultscore=0 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2508300038
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 3 Sep 2025 15:38:11 +0530
+X-Gm-Features: Ac12FXxzMFZM2zT7oOOLzDits6M_03K1dnyTRhCYTrY8QuqW8ke90eorpMyKwq0
+Message-ID: <CA+G9fYsPcMfW-e_0_TRqu4cnwqOqYF3aJOeKUYk6Z4qRStdFvg@mail.gmail.com>
+Subject: next-20250903 x86_64 clang-20 allyesconfig mmp_pdma.c:1188:14: error:
+ shift count >= width of type [-Werror,-Wshift-count-overflow]
+To: clang-built-linux <llvm@lists.linux.dev>, open list <linux-kernel@vger.kernel.org>, 
+	dmaengine@vger.kernel.org, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: Vinod Koul <vkoul@kernel.org>, Guodong Xu <guodong@riscstar.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Anders Roxell <anders.roxell@linaro.org>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Ben Copeland <benjamin.copeland@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+
+The following build warnings / errors were noticed on x86_64 allyesconfig
+with clang-20 toolchain running on Linux next-20250903 tag.
+
+But the gcc-13 builds passed.
+
+Regression Analysis:
+- New regression? yes
+- Reproducibility? yes
+
+First seen on next-20250903
+Bad: next-20250903
+Good: next-20250902
+
+Build regression: next-20250903 x86_64 clang-20 allyesconfig
+mmp_pdma.c:1188:14: error: shift count >= width of type
+[-Werror,-Wshift-count-overflow]
+
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+x86_64:
+  build:
+    * clang-20-allyesconfig
+
+Build error:
+drivers/dma/mmp_pdma.c:1188:14: error: shift count >= width of type
+[-Werror,-Wshift-count-overflow]
+ 1188 |         .dma_mask = DMA_BIT_MASK(64),   /* force 64-bit DMA
+addr capability */
+      |                     ^~~~~~~~~~~~~~~~
+include/linux/dma-mapping.h:73:54: note: expanded from macro 'DMA_BIT_MASK'
+   73 | #define DMA_BIT_MASK(n) (((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
+      |                                                      ^ ~~~
+1 error generated.
+make[5]: *** [scripts/Makefile.build:287: drivers/dma/mmp_pdma.o] Error 1
 
 
+## Source
+* Kernel version: 6.17.0-rc4
+* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
+* Git describe: next-20250903
+* Git commit: 5d50cf9f7cf20a17ac469c20a2e07c29c1f6aab7
+* Architectures: x86_64
+* Toolchains: clang-20
+* Kconfigs: allyesconfig
 
-On 9/3/2025 2:55 PM, Dmitry Baryshkov wrote:
-> On Wed, Sep 03, 2025 at 01:00:58PM +0530, Jyothi Kumar Seerapu wrote:
->> GSI hardware generates an interrupt for each transfer completion.
->> For multiple messages within a single transfer, this results in
->> N interrupts for N messages, leading to significant software
->> interrupt latency.
->>
->> To mitigate this latency, utilize Block Event Interrupt (BEI) mechanism.
->> Enabling BEI instructs the GSI hardware to prevent interrupt generation
->> and BEI is disabled when an interrupt is necessary.
->>
->> Large I2C transfer can be divided into chunks of messages internally.
->> Interrupts are not expected for the messages for which BEI bit set,
->> only the last message triggers an interrupt, indicating the completion of
->> N messages. This BEI mechanism enhances overall transfer efficiency.
->>
->> This BEI mechanism enhances overall transfer efficiency.
-> 
-> Duplicate phrase.
-Thanks, I will remove the duplicate phrase 'This BEI mechanism enhances 
-overall transfer efficiency.' in the later patchset.
+## Build
+* Build log: https://qa-reports.linaro.org/api/testruns/29752023/log_file/
+* Build details:
+https://regressions.linaro.org/lkft/linux-next-master/next-20250903/build/clang-20-allyesconfig/
+* Build plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/builds/32B39xPuITjxcbak13h2MrLZJP4
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/32B39xPuITjxcbak13h2MrLZJP4/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/32B39xPuITjxcbak13h2MrLZJP4/config
 
-> 
->>
->> Signed-off-by: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
->> ---
->>
->> v6 -> v7:
->>     - The design has been modified to configure BEI for interrupt
->>       generation either:
->>       After the last I2C message, if sufficient TREs are available, or
->>       After a specific I2C message, when no further TREs are available.
->>     - In the GPI driver, passed the flags argumnetr to the gpi_create_i2c_tre function
->>       and so avoided using external variables for DMA_PREP_INTERRUPT status.
->>
->> v5 ->v6:
->>    - For updating the block event interrupt bit, instead of relying on
->>      bei_flag, decision check is moved with DMA_PREP_INTERRUPT flag.
->>
->> v4 -> v5:
->>    - BEI flag naming changed from flags to bei_flag.
->>    - QCOM_GPI_BLOCK_EVENT_IRQ macro is removed from qcom-gpi-dma.h
->>      file, and Block event interrupt support is checked with bei_flag.
->>
->> v3 -> v4:
->>    - API's added for Block event interrupt with multi descriptor support for
->>      I2C is moved from qcom-gpi-dma.h file to I2C geni qcom driver file.
->>    - gpi_multi_xfer_timeout_handler function is moved from GPI driver to
->>      I2C driver.
->>
->> v2-> v3:
->>     - Renamed gpi_multi_desc_process to gpi_multi_xfer_timeout_handler
->>     - MIN_NUM_OF_MSGS_MULTI_DESC changed from 4 to 2
->>     - Added documentation for newly added changes in "qcom-gpi-dma.h" file
->>     - Updated commit description.
->>
->> v1 -> v2:
->>     - Changed dma_addr type from array of pointers to array.
->>     - To support BEI functionality with the TRE size of 64 defined in GPI driver,
->>       updated QCOM_GPI_MAX_NUM_MSGS to 16 and NUM_MSGS_PER_IRQ to 4.
->>
->>   drivers/dma/qcom/gpi.c | 11 +++++++++--
->>   1 file changed, 9 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
->> index 8e87738086b2..66bfea1f156d 100644
->> --- a/drivers/dma/qcom/gpi.c
->> +++ b/drivers/dma/qcom/gpi.c
->> @@ -1619,7 +1619,8 @@ gpi_peripheral_config(struct dma_chan *chan, struct dma_slave_config *config)
->>   }
->>   
->>   static int gpi_create_i2c_tre(struct gchan *chan, struct gpi_desc *desc,
->> -			      struct scatterlist *sgl, enum dma_transfer_direction direction)
->> +			      struct scatterlist *sgl, enum dma_transfer_direction direction,
->> +			      unsigned long flags)
->>   {
->>   	struct gpi_i2c_config *i2c = chan->config;
->>   	struct device *dev = chan->gpii->gpi_dev->dev;
->> @@ -1684,6 +1685,9 @@ static int gpi_create_i2c_tre(struct gchan *chan, struct gpi_desc *desc,
->>   
->>   		tre->dword[3] = u32_encode_bits(TRE_TYPE_DMA, TRE_FLAGS_TYPE);
->>   		tre->dword[3] |= u32_encode_bits(1, TRE_FLAGS_IEOT);
->> +
->> +		if (!(flags & DMA_PREP_INTERRUPT))
->> +			tre->dword[3] |= u32_encode_bits(1, TRE_FLAGS_BEI);
->>   	}
->>   
->>   	for (i = 0; i < tre_idx; i++)
->> @@ -1827,6 +1831,9 @@ gpi_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
->>   		return NULL;
->>   	}
->>   
->> +	if (!(flags & DMA_PREP_INTERRUPT) && (nr - nr_tre < 2))
->> +		return NULL;
-> 
-> Comment in the source file.
-> 
->> +
->>   	gpi_desc = kzalloc(sizeof(*gpi_desc), GFP_NOWAIT);
->>   	if (!gpi_desc)
->>   		return NULL;
->> @@ -1835,7 +1842,7 @@ gpi_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
->>   	if (gchan->protocol == QCOM_GPI_SPI) {
->>   		i = gpi_create_spi_tre(gchan, gpi_desc, sgl, direction);
->>   	} else if (gchan->protocol == QCOM_GPI_I2C) {
->> -		i = gpi_create_i2c_tre(gchan, gpi_desc, sgl, direction);
->> +		i = gpi_create_i2c_tre(gchan, gpi_desc, sgl, direction, flags);
->>   	} else {
->>   		dev_err(dev, "invalid peripheral: %d\n", gchan->protocol);
->>   		kfree(gpi_desc);
->> -- 
->> 2.34.1
->>
-> 
-
-
+--
+Linaro LKFT
+https://lkft.linaro.org
 

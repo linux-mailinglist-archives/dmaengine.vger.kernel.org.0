@@ -1,100 +1,118 @@
-Return-Path: <dmaengine+bounces-6375-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6376-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CDC3AB42E67
-	for <lists+dmaengine@lfdr.de>; Thu,  4 Sep 2025 02:49:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A4B00B4312F
+	for <lists+dmaengine@lfdr.de>; Thu,  4 Sep 2025 06:34:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 082DA5E860E
-	for <lists+dmaengine@lfdr.de>; Thu,  4 Sep 2025 00:49:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 69C767C14DD
+	for <lists+dmaengine@lfdr.de>; Thu,  4 Sep 2025 04:34:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C12E454739;
-	Thu,  4 Sep 2025 00:49:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7641226E717;
+	Thu,  4 Sep 2025 04:32:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mqcJTkuX"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30EBA29D0E;
-	Thu,  4 Sep 2025 00:49:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E2BB26D4DE;
+	Thu,  4 Sep 2025 04:32:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756946949; cv=none; b=j7AlEnLsaPfH3cIvNQrCWh0Ry0TX/3iq+utr6nuIO3fUnl/YDjlByj4zOwqn42AWGAggkgZ40IUPE9822/XB85G0KOtCefbFzKTI9npFKO213MI50eQFHHafwlvb41WHMzMmmd5BfILLGGMfFktJAgK7PJNPlx4txiC3nxi6YhQ=
+	t=1756960358; cv=none; b=mvanAcDC8YXwbnqEpnZHr76FQK7V11CQXsWZxIi+Ty2bQ6FcKsIt/2RiPC+o2TNMG7rSirhy3Zx8UFGeZEpQOHyEBiddMBXuXFuv89lTeRdzKB1K91r/89kfGvuEAf0HTqhHJ7+tvA1tG2b+hyNDvJiq7GD1OHMPvwEtnGIvRF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756946949; c=relaxed/simple;
-	bh=28y1zIQyJiGZzQIxWbG5Hf7wSqA8bRW9Snz8MewVNoA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VAIYoC3qcS9brMUbvayl8N0E1mu9T/ty5WDqvLLDPDvlgYv1eNKrvkmpgANA/3j4TkH1dklL7nzx4aI/Uj+Bp55zPDW0+qjhm3hEjmzVgNe7c3a/PWW4OWazab7HYwHcdkZcIV0UXT74cIK485o6gd6pFYaQPro59X7ys0YnP/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from ofsar (unknown [116.232.18.168])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id 62C68340D9E;
-	Thu, 04 Sep 2025 00:49:01 +0000 (UTC)
-From: Yixun Lan <dlan@gentoo.org>
-To: Vinod Koul <vkoul@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	duje@dujemihanovic.xyz,
-	Guodong Xu <guodong@riscstar.com>
-Cc: Yixun Lan <dlan@gentoo.org>,
-	Alex Elder <elder@riscstar.com>,
-	Vivian Wang <wangruikang@iscas.ac.cn>,
-	dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org,
+	s=arc-20240116; t=1756960358; c=relaxed/simple;
+	bh=M5TwpNr55usP9Sz8MApwPf1Fs9RyfM3185mpZDbrJyc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J6jvo0iU1FgjCFua+y2bxdEmviKq2WHN8fxmGc5Su6shKS4mKacgpT9O7m3gb+OyrT+hAb1yyOcDOdzSHjqYkHUqnWv9WeF8YcZozErXyb6/hQRJgCqvWbfNC3cxoYPxopl+gJQZNEoDQ2j0tOERGS+xCQapriq+wwfPsGEhHyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mqcJTkuX; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1756960357; x=1788496357;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=M5TwpNr55usP9Sz8MApwPf1Fs9RyfM3185mpZDbrJyc=;
+  b=mqcJTkuXkG6TAKpsUZQp7ZNebQXjjMWqXHRebLew2nFfPyQJiXKFoAAz
+   4peVl4egnB+/mVrfgM+y8jSR4lsc3fPwlt0n2dCPoHXJ8BNOEZ8ID2e7V
+   5z6ohE3luqmE3jAIpc+0yDcWmL4bAyyKJDn9ygmkuo17MZSuX2YuSvD8v
+   8ztz4/eHE+DxIf8JZY8A9WIHzMqOSS46O5UiEHLa5ak4XV5Df34L7RdXA
+   63Facm6hs+wSsADhDN/YZBwD5b+ygCeIHPifZi4jKMp+6OrBdknBI+I1B
+   2nI0tQJDlAuLllFFr82Az24m3R7fzlw9dK2R4eOPiRbBs1DnGs1amnNlk
+   A==;
+X-CSE-ConnectionGUID: EM46VKQlQ9aI52wa5vYnbw==
+X-CSE-MsgGUID: uonlUqdnTB6UMnIFMx+cCQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="59204240"
+X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
+   d="scan'208";a="59204240"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2025 21:32:36 -0700
+X-CSE-ConnectionGUID: AbAUldJwTX65zWZ58P+kng==
+X-CSE-MsgGUID: asiFdFQmTLGNLDtAmDZW5Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,237,1751266800"; 
+   d="scan'208";a="202625452"
+Received: from lkp-server02.sh.intel.com (HELO 06ba48ef64e9) ([10.239.97.151])
+  by orviesa002.jf.intel.com with ESMTP; 03 Sep 2025 21:32:34 -0700
+Received: from kbuild by 06ba48ef64e9 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uu1eA-0004kZ-2S;
+	Thu, 04 Sep 2025 04:32:30 +0000
+Date: Thu, 4 Sep 2025 12:31:55 +0800
+From: kernel test robot <lkp@intel.com>
+To: Marco Felsch <m.felsch@pengutronix.de>, Vinod Koul <vkoul@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Jiada Wang <jiada_wang@mentor.com>
+Cc: oe-kbuild-all@lists.linux.dev, dmaengine@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	spacemit@lists.linux.dev,
-	Troy Mitchell <troy.mitchell@linux.spacemit.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>
-Subject: Re: (subset) [PATCH v5 0/8] dmaengine: mmp_pdma: Add SpacemiT K1 SoC support with 64-bit addressing
-Date: Thu,  4 Sep 2025 08:48:45 +0800
-Message-ID: <175681694608.479569.7465779228756094615.b4-ty@gentoo.org>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20250822-working_dma_0701_v2-v5-0-f5c0eda734cc@riscstar.com>
-References: <20250822-working_dma_0701_v2-v5-0-f5c0eda734cc@riscstar.com>
+	Marco Felsch <m.felsch@pengutronix.de>
+Subject: Re: [PATCH 11/11] dmaengine: imx-sdma: fix spba-bus handling for
+ i.MX8M
+Message-ID: <202509041238.qCKW7MeD-lkp@intel.com>
+References: <20250903-v6-16-topic-sdma-v1-11-ac7bab629e8b@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250903-v6-16-topic-sdma-v1-11-ac7bab629e8b@pengutronix.de>
 
+Hi Marco,
 
-On Fri, 22 Aug 2025 11:06:26 +0800, Guodong Xu wrote:
-> This patchset adds support for SpacemiT K1 PDMA controller to the existing
-> mmp_pdma driver. The K1 PDMA controller is compatible with Marvell MMP PDMA
-> but extends it with 64-bit addressing capabilities through LPAE (Long
-> Physical Address Extension) bit and higher 32-bit address registers (DDADRH,
-> DSADRH and DTADRH).
-> 
-> In v5, two smatch warnings reported by kernel test bot and Dan Carpenter were
-> fixed.
-> 
-> [...]
+kernel test robot noticed the following build warnings:
 
-Applied, thanks!
+[auto build test WARNING on 038d61fd642278bab63ee8ef722c50d10ab01e8f]
 
-[6/8] riscv: dts: spacemit: Add PDMA node for K1 SoC
-      https://github.com/spacemit-com/linux/commit/81d79ad0ddcaeaf6136abe870b2386bde31b7ed4
-[7/8] riscv: dts: spacemit: Enable PDMA on Banana Pi F3 and Milkv Jupiter
-      https://github.com/spacemit-com/linux/commit/0e28eab0ca51282e3d14f3e2dba9fc92e3fddbe6
+url:    https://github.com/intel-lab-lkp/linux/commits/Marco-Felsch/dmaengine-imx-sdma-drop-legacy-device_node-np-check/20250903-212133
+base:   038d61fd642278bab63ee8ef722c50d10ab01e8f
+patch link:    https://lore.kernel.org/r/20250903-v6-16-topic-sdma-v1-11-ac7bab629e8b%40pengutronix.de
+patch subject: [PATCH 11/11] dmaengine: imx-sdma: fix spba-bus handling for i.MX8M
+config: arm-randconfig-002-20250904 (https://download.01.org/0day-ci/archive/20250904/202509041238.qCKW7MeD-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 13.4.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250904/202509041238.qCKW7MeD-lkp@intel.com/reproduce)
 
-Best regards,
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202509041238.qCKW7MeD-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> Warning: drivers/dma/imx-sdma.c:477 struct member 'spba_start_addr' not described in 'sdma_channel'
+>> Warning: drivers/dma/imx-sdma.c:477 struct member 'spba_end_addr' not described in 'sdma_channel'
+
 -- 
-Yixun Lan
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 

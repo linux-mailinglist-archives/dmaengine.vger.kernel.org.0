@@ -1,52 +1,52 @@
-Return-Path: <dmaengine+bounces-6416-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6419-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 75076B462AA
-	for <lists+dmaengine@lfdr.de>; Fri,  5 Sep 2025 20:49:35 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B5D79B462AB
+	for <lists+dmaengine@lfdr.de>; Fri,  5 Sep 2025 20:49:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2B49FA61B77
-	for <lists+dmaengine@lfdr.de>; Fri,  5 Sep 2025 18:49:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 68B695E0EAC
+	for <lists+dmaengine@lfdr.de>; Fri,  5 Sep 2025 18:49:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7500428136C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 848D1283FF7;
 	Fri,  5 Sep 2025 18:48:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vQk52Nn0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hE1WC3xm"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49DDE27F182;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52EA727FD59;
 	Fri,  5 Sep 2025 18:48:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757098131; cv=none; b=EAbN62+1L79o858KKlb2Tzbve1P5llzZ6lNPLZIwR9jExddHWmlBIOlmJFKuh538jNmup9GwXsbpz/qEbh9LLmNh5RB1C1jm8nn3Ra15C0CIzYmLV034pxfXG99VpM25kZxMuGXhV91JTMHh7nQPmdik0J8iMFnzDmwOsjwYLws=
+	t=1757098131; cv=none; b=eDnbLwNYq2SQ84Vg6VFokSH/P9MFoAiWYNJe9ZhmnJj/Ww+urRp5Oecd3GTfVlc+vxkTlLvXz/iRN/C9rLsu1AWAzx/8tUQrAsiChlTeimtf/mp4gLI3bS/MY0//vbNrnkcDtM2qpSmLdtaGj76xA8Ud9FTyfQ8HvQ6BTcNaOaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1757098131; c=relaxed/simple;
-	bh=VuqyHd/j7amx7qZTFAuuOIay+gRe3rBdR2mbbyet7+M=;
+	bh=lxQ0PBEDBMqbgoT/wr1UNF+vxzeTB+WN2igvu5+vg6g=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HRIQR9KgTG/DhE4G1zQpdTZVxyCWv59NMhkc04Ti2hwqEDKTJUjMq2YjE7yOPD7AqKajUma4KQMp46AZk8dOZ+sZk+gnKVi9vCc1lTbcUFDq/uVY7XvCAk/xOErFZp0RYUNoQ6nm/E5G3fV575jH+zDxZXo5yMC0c2S9impSZZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vQk52Nn0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DD72AC4CEFF;
+	 In-Reply-To:To:Cc; b=XzcFcJQPqbWVgX68bRAuhnviRHgmGUT2R71LT4nK2QsXxdnArg+ZfroraBUxo1W8xJK6n9XSRNOTVue7T8ytCiO8pyXmr88sNO1FjhB8y5XcwGMmT3Oli3hwl6M+YOgdGBvnUELpo0Q5ANgM0R14ufCTlK6YmqlmNVjCfyO6TFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hE1WC3xm; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id EBC21C116C6;
 	Fri,  5 Sep 2025 18:48:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757098130;
-	bh=VuqyHd/j7amx7qZTFAuuOIay+gRe3rBdR2mbbyet7+M=;
+	s=k20201202; t=1757098131;
+	bh=lxQ0PBEDBMqbgoT/wr1UNF+vxzeTB+WN2igvu5+vg6g=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=vQk52Nn0DaUm3t4oc5jh0zcN9gJIjgHVkIHx6SqJriA2fVIkD0ClOrj1EP2W25uIB
-	 9bMrMfkVhJTJeriHCkD/ptuYY7WWUhwPcvifwLJVxpe3XYg2qvOxL+e0Ugp7hrRYxN
-	 jsyNxnhQg+w3ef91Y5jZDjX4h8YKys70+v5Gktm5m+OxhgsbVfmhz26AH9G+d3wol3
-	 944DfqBdz61DRIRiaYF+XFawBK1Yq11qu3DI3xWEo7aCgarycBB/PbxPcvcHLVjwb+
-	 9ZxAEoTcQjznO7dsozi6KWppwHvnY3iZ9EZ27I4aMpIUvFC2rSDmjifd2+dm8hJzC5
-	 WbYwpP6wf9zJw==
+	b=hE1WC3xmZOriWPx1nFi9okT2uGF1/1Q+RqVPaui5po+4SGVDcHAEwZAqStQ9GwVdq
+	 /pxGhj4812kVjnoZA6v2COMq5EDi1AcoxuN03j+etgEo8DA32i0c35o9u2drz3IOLX
+	 luK3nR23OcraTEWwZRCJcNy8hyx3TmbXm+wfh4Y9RTf6ZoljYiPt3NGxjpB+QsZQg8
+	 bQ2gsPa2Cq3EEGcSMf8n3px5q8bFSg2OVLxYx6DQWLBIctOuW5QsolmSDBPM1z3250
+	 iELolA5fIqtCs2Hp1g7KyLBuIAZj8ATAv/KouLP1QjCoSW4H3oLw6BKiLywRfksnDe
+	 PFch8us+j/WNw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6DA9CAC580;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A72CA101F;
 	Fri,  5 Sep 2025 18:48:50 +0000 (UTC)
 From: Nathan Lynch via B4 Relay <devnull+nathan.lynch.amd.com@kernel.org>
-Date: Fri, 05 Sep 2025 13:48:33 -0500
-Subject: [PATCH RFC 10/13] dmaengine: sdxi: Add PCI driver support
+Date: Fri, 05 Sep 2025 13:48:34 -0500
+Subject: [PATCH RFC 11/13] dmaengine: sdxi: Add DMA engine provider
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250905-sdxi-base-v1-10-d0341a1292ba@amd.com>
+Message-Id: <20250905-sdxi-base-v1-11-d0341a1292ba@amd.com>
 References: <20250905-sdxi-base-v1-0-d0341a1292ba@amd.com>
 In-Reply-To: <20250905-sdxi-base-v1-0-d0341a1292ba@amd.com>
 To: Vinod Koul <vkoul@kernel.org>
@@ -64,11 +64,11 @@ Cc: Wei Huang <wei.huang2@amd.com>,
  Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
  linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1757098128; l=5608;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1757098129; l=12485;
  i=nathan.lynch@amd.com; s=20241010; h=from:subject:message-id;
- bh=m3XoOo9ffzkPrZw4+4jLMw0l82s7JUrIjtnNqA36HbE=;
- b=b+YDt/h2Pw7KLvvDg6sXddSGdT5SqziimKeIAWWCz82Uv+SYamNChMpSav8KAeB4FK8f2DKQK
- XU+8ajrDePhDt5ubwyQbiOmkDvA6NDKTflP4KbsWHewEgo3gvX2eM5L
+ bh=oicl0mAaS0xJnaRPITeh2PX2Yd+o4ZUX9+VqlDQ+2I4=;
+ b=f4JgqMzOx0UfzHT/2tsJX1m9aMQnsbM3C/SEsrWL3bisPI70rFtEUkflIwWzjP81qRMg3/eng
+ c3EzrtwAx24A2JEqJZ9kUp98FqdzqzzDg3ssgmcxTEy18QSEczJgu7x
 X-Developer-Key: i=nathan.lynch@amd.com; a=ed25519;
  pk=ZR637UTGg5YLDj56cxFeHdYoUjPMMFbcijfOkAmAnbc=
 X-Endpoint-Received: by B4 Relay for nathan.lynch@amd.com/20241010 with
@@ -78,239 +78,480 @@ Reply-To: nathan.lynch@amd.com
 
 From: Nathan Lynch <nathan.lynch@amd.com>
 
-Add support for binding to PCIe-hosted SDXI devices. SDXI requires
-MSI(-X) for PCI implementations, so this code will be gated by
-CONFIG_PCI_MSI in the Makefile.
+Add support for memcpy and interrupt capabilities. Register one
+channel per SDXI function discovered for now.
 
 Co-developed-by: Wei Huang <wei.huang2@amd.com>
 Signed-off-by: Wei Huang <wei.huang2@amd.com>
 Signed-off-by: Nathan Lynch <nathan.lynch@amd.com>
 ---
- drivers/dma/sdxi/pci.c | 216 +++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 216 insertions(+)
+ drivers/dma/sdxi/device.c |   4 +
+ drivers/dma/sdxi/dma.c    | 409 ++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/dma/sdxi/dma.h    |  12 ++
+ 3 files changed, 425 insertions(+)
 
-diff --git a/drivers/dma/sdxi/pci.c b/drivers/dma/sdxi/pci.c
+diff --git a/drivers/dma/sdxi/device.c b/drivers/dma/sdxi/device.c
+index 61123bc1d47b6547538b6e783ad96a9c2851494e..e5e1593189993717cae311906885ae268385b28d 100644
+--- a/drivers/dma/sdxi/device.c
++++ b/drivers/dma/sdxi/device.c
+@@ -18,6 +18,7 @@
+ 
+ #include "context.h"
+ #include "descriptor.h"
++#include "dma.h"
+ #include "hw.h"
+ #include "error.h"
+ #include "sdxi.h"
+@@ -354,6 +355,8 @@ int sdxi_device_init(struct sdxi_dev *sdxi, const struct sdxi_dev_ops *ops)
+ 	if (err)
+ 		goto fn_stop;
+ 
++	sdxi_dma_register(sdxi->dma_cxt);
++
+ 	return 0;
+ fn_stop:
+ 	sdxi_stop(sdxi);
+@@ -362,6 +365,7 @@ int sdxi_device_init(struct sdxi_dev *sdxi, const struct sdxi_dev_ops *ops)
+ 
+ void sdxi_device_exit(struct sdxi_dev *sdxi)
+ {
++	sdxi_dma_unregister(sdxi->dma_cxt);
+ 	sdxi_working_cxt_exit(sdxi->dma_cxt);
+ 
+ 	/* Walk sdxi->cxt_array freeing any allocated rows. */
+diff --git a/drivers/dma/sdxi/dma.c b/drivers/dma/sdxi/dma.c
 new file mode 100644
-index 0000000000000000000000000000000000000000..b7f74555395c605c4affffb198ee359accac8521
+index 0000000000000000000000000000000000000000..ad8515deba53898b2b4ea0d38c40042b566abe1f
 --- /dev/null
-+++ b/drivers/dma/sdxi/pci.c
-@@ -0,0 +1,216 @@
++++ b/drivers/dma/sdxi/dma.c
+@@ -0,0 +1,409 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * SDXI PCI device code
++ * SDXI DMA engine implementation
++ *   Derived from ptdma code
 + *
 + * Copyright (C) 2025 Advanced Micro Devices, Inc.
 + */
 +
-+#include <linux/bitfield.h>
-+#include <linux/bits.h>
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/dev_printk.h>
-+#include <linux/dma-direction.h>
 +#include <linux/dma-mapping.h>
-+#include <linux/errno.h>
-+#include <linux/io.h>
-+#include <linux/iomap.h>
-+#include <linux/math64.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/pci-ats.h>
-+#include <linux/pci.h>
++#include <linux/dmaengine.h>
 +
-+#include "mmio.h"
++#include "../dmaengine.h"
++#include "context.h"
++#include "descriptor.h"
++#include "dma.h"
 +#include "sdxi.h"
 +
-+/*
-+ * SDXI devices signal message 0 on error conditions, see "Error
-+ * Logging Control and Status Registers".
-+ */
-+#define ERROR_IRQ_MSG 0
-+
-+/* MMIO BARs */
-+#define MMIO_CTL_REGS_BAR		0x0
-+#define MMIO_DOORBELL_BAR		0x2
-+
-+static struct pci_dev *sdxi_to_pci_dev(const struct sdxi_dev *sdxi)
-+{
-+	return to_pci_dev(sdxi_to_dev(sdxi));
-+}
-+
-+static int sdxi_pci_irq_init(struct sdxi_dev *sdxi)
-+{
-+	struct pci_dev *pdev = sdxi_to_pci_dev(sdxi);
-+	int msi_count;
-+	int ret;
-+
-+	/* 1st irq for error + 1 for each context */
-+	msi_count = sdxi->max_cxts + 1;
-+
-+	ret = pci_alloc_irq_vectors(pdev, 1, msi_count,
-+				    PCI_IRQ_MSI | PCI_IRQ_MSIX);
-+	if (ret < 0) {
-+		sdxi_err(sdxi, "alloc MSI/MSI-X vectors failed\n");
-+		return ret;
-+	}
-+
-+	sdxi->error_irq = pci_irq_vector(pdev, ERROR_IRQ_MSG);
-+
-+	sdxi_dbg(sdxi, "allocated %d irq vectors", ret);
-+
-+	return 0;
-+}
-+
-+static void sdxi_pci_irq_exit(struct sdxi_dev *sdxi)
-+{
-+	pci_free_irq_vectors(sdxi_to_pci_dev(sdxi));
-+}
-+
-+static int sdxi_pci_map(struct sdxi_dev *sdxi)
-+{
-+	struct pci_dev *pdev = sdxi_to_pci_dev(sdxi);
-+	int bars, ret;
-+
-+	bars = 1 << MMIO_CTL_REGS_BAR | 1 << MMIO_DOORBELL_BAR;
-+	ret = pcim_iomap_regions(pdev, bars, SDXI_DRV_NAME);
-+	if (ret) {
-+		sdxi_err(sdxi, "pcim_iomap_regions failed (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	sdxi->dbs_bar = pci_resource_start(pdev, MMIO_DOORBELL_BAR);
-+
-+	/* FIXME: pcim_iomap_table may return NULL, and it's deprecated. */
-+	sdxi->ctrl_regs = pcim_iomap_table(pdev)[MMIO_CTL_REGS_BAR];
-+	sdxi->dbs = pcim_iomap_table(pdev)[MMIO_DOORBELL_BAR];
-+	if (!sdxi->ctrl_regs || !sdxi->dbs) {
-+		sdxi_err(sdxi, "pcim_iomap_table failed\n");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static void sdxi_pci_unmap(struct sdxi_dev *sdxi)
-+{
-+	struct pci_dev *pdev = sdxi_to_pci_dev(sdxi);
-+
-+	pcim_iounmap(pdev, sdxi->ctrl_regs);
-+	pcim_iounmap(pdev, sdxi->dbs);
-+}
-+
-+static int sdxi_pci_init(struct sdxi_dev *sdxi)
-+{
-+	struct pci_dev *pdev = sdxi_to_pci_dev(sdxi);
-+	struct device *dev = &pdev->dev;
-+	int dma_bits = 64;
-+	int ret;
-+
-+	ret = pcim_enable_device(pdev);
-+	if (ret) {
-+		sdxi_err(sdxi, "pcim_enbale_device failed\n");
-+		return ret;
-+	}
-+
-+	pci_set_master(pdev);
-+	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(dma_bits));
-+	if (ret) {
-+		sdxi_err(sdxi, "failed to set DMA mask & coherent bits\n");
-+		return ret;
-+	}
-+
-+	ret = sdxi_pci_map(sdxi);
-+	if (ret) {
-+		sdxi_err(sdxi, "failed to map device IO resources\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static void sdxi_pci_exit(struct sdxi_dev *sdxi)
-+{
-+	sdxi_pci_unmap(sdxi);
-+}
-+
-+static struct sdxi_dev *sdxi_device_alloc(struct device *dev)
-+{
-+	struct sdxi_dev *sdxi;
-+
-+	sdxi = kzalloc(sizeof(*sdxi), GFP_KERNEL);
-+	if (!sdxi)
-+		return NULL;
-+
-+	sdxi->dev = dev;
-+
-+	mutex_init(&sdxi->cxt_lock);
-+
-+	return sdxi;
-+}
-+
-+static void sdxi_device_free(struct sdxi_dev *sdxi)
-+{
-+	kfree(sdxi);
-+}
-+
-+static const struct sdxi_dev_ops sdxi_pci_dev_ops = {
-+	.irq_init = sdxi_pci_irq_init,
-+	.irq_exit = sdxi_pci_irq_exit,
++struct sdxi_dma_desc {
++	struct virt_dma_desc vd;
++	struct sdxi_cxt *cxt;
++	enum dma_status status;
++	bool issued_to_hw;
++	struct sdxi_cmd sdxi_cmd;
 +};
 +
-+static int sdxi_pci_probe(struct pci_dev *pdev,
-+			  const struct pci_device_id *id)
++static inline struct sdxi_dma_chan *to_sdxi_dma_chan(struct dma_chan *dma_chan)
 +{
-+	struct device *dev = &pdev->dev;
++	return container_of(dma_chan, struct sdxi_dma_chan, vc.chan);
++}
++
++static inline struct sdxi_dma_desc *to_sdxi_dma_desc(struct virt_dma_desc *vd)
++{
++	return container_of(vd, struct sdxi_dma_desc, vd);
++}
++
++static void sdxi_dma_free_chan_resources(struct dma_chan *dma_chan)
++{
++	struct sdxi_dma_chan *chan = to_sdxi_dma_chan(dma_chan);
++
++	vchan_free_chan_resources(&chan->vc);
++	/* NB: more configure with sdxi_cxt? */
++}
++
++static void sdxi_dma_synchronize(struct dma_chan *c)
++{
++	struct sdxi_dma_chan *chan = to_sdxi_dma_chan(c);
++
++	vchan_synchronize(&chan->vc);
++}
++
++static void sdxi_do_cleanup(struct virt_dma_desc *vd)
++{
++	struct sdxi_dma_desc *dma_desc = to_sdxi_dma_desc(vd);
++	struct sdxi_cmd *cmd = &dma_desc->sdxi_cmd;
++	struct device *dev = sdxi_to_dev(dma_desc->cxt->sdxi);
++
++	dma_free_coherent(dev, sizeof(*cmd->cst_blk),
++			  cmd->cst_blk, cmd->cst_blk_dma);
++	kfree(dma_desc);
++}
++
++static int sdxi_dma_start_desc(struct sdxi_dma_desc *dma_desc)
++{
 +	struct sdxi_dev *sdxi;
++	struct sdxi_cmd *sdxi_cmd;
++	struct sdxi_cxt *cxt;
++	struct sdxi_desc desc;
++	struct sdxi_copy copy;
++	struct sdxi_cst_blk *cst_blk;
++	dma_addr_t cst_blk_dma;
 +	int err;
 +
-+	sdxi = sdxi_device_alloc(dev);
-+	if (!sdxi)
++	sdxi_cmd = &dma_desc->sdxi_cmd;
++	sdxi = sdxi_cmd->cxt->sdxi;
++
++	cxt = dma_desc->cxt;
++
++	if (sdxi_cmd->len > MAX_DMA_COPY_BYTES)
++		return -EINVAL;
++
++	copy = (typeof(copy)) {
++		.src = sdxi_cmd->src_addr,
++		.dst = sdxi_cmd->dst_addr,
++		.src_akey = 0,
++		.dst_akey = 0,
++		.len = sdxi_cmd->len,
++	};
++
++	err = sdxi_encode_copy(&desc, &copy);
++	if (err)
++		return err;
++
++	err = sdxi_encode_copy(&desc, &copy);
++	if (err)
++		return err;
++
++	/* FIXME convert to pool */
++	cst_blk = dma_alloc_coherent(sdxi_to_dev(sdxi), sizeof(*cst_blk),
++				     &cst_blk_dma, GFP_NOWAIT);
++	if (!cst_blk)
 +		return -ENOMEM;
 +
-+	pci_set_drvdata(pdev, sdxi);
++	cst_blk->signal = cpu_to_le64(0xff);
 +
-+	err = sdxi_pci_init(sdxi);
++	sdxi_cmd->cst_blk = cst_blk;
++	sdxi_cmd->cst_blk_dma = cst_blk_dma;
++	sdxi_cmd->ret = 0; /* TODO: get desc submit status & update ret value */
++
++	sdxi_desc_set_csb(&desc, cst_blk_dma);
++	err = sdxi_submit_desc(cxt, &desc);
 +	if (err)
-+		goto free_sdxi;
++		goto free_cst_blk;
 +
-+	err = sdxi_device_init(sdxi, &sdxi_pci_dev_ops);
-+	if (err)
-+		goto pci_exit;
-+
++	sdxi->tdata.cmd = sdxi_cmd; /* FIXME: this is not compatible w/multiple clients */
++	dma_desc->issued_to_hw = 1;
 +	return 0;
-+
-+pci_exit:
-+	sdxi_pci_exit(sdxi);
-+free_sdxi:
-+	sdxi_device_free(sdxi);
-+
++free_cst_blk:
++	dma_free_coherent(sdxi_to_dev(sdxi), sizeof(*cst_blk),
++			  cst_blk, cst_blk_dma);
 +	return err;
 +}
 +
-+static void sdxi_pci_remove(struct pci_dev *pdev)
++static struct sdxi_dma_desc *sdxi_next_dma_desc(struct sdxi_dma_chan *chan)
 +{
-+	struct sdxi_dev *sdxi = pci_get_drvdata(pdev);
++	/* Get the next DMA descriptor on the active list */
++	struct virt_dma_desc *vd = vchan_next_desc(&chan->vc);
 +
-+	sdxi_device_exit(sdxi);
-+	sdxi_pci_exit(sdxi);
-+	sdxi_device_free(sdxi);
++	return vd ? to_sdxi_dma_desc(vd) : NULL;
 +}
 +
-+static const struct pci_device_id sdxi_id_table[] = {
-+	{ PCI_DEVICE_CLASS(PCI_CLASS_ACCELERATOR_SDXI, 0xffffff) },
-+	{0, }
-+};
-+MODULE_DEVICE_TABLE(pci, sdxi_id_table);
++static struct sdxi_dma_desc *sdxi_handle_active_desc(struct sdxi_dma_chan *chan,
++						     struct sdxi_dma_desc *desc)
++{
++	struct dma_async_tx_descriptor *tx_desc;
++	struct virt_dma_desc *vd;
++	unsigned long flags;
 +
-+static struct pci_driver sdxi_driver = {
-+	.name = "sdxi",
-+	.id_table = sdxi_id_table,
-+	.probe = sdxi_pci_probe,
-+	.remove = sdxi_pci_remove,
-+	.sriov_configure = pci_sriov_configure_simple,
-+};
++	/* Loop over descriptors until one is found with commands */
++	do {
++		if (desc) {
++			if (!desc->issued_to_hw) {
++				/* No errors, keep going */
++				if (desc->status != DMA_ERROR)
++					return desc;
++			}
 +
-+module_pci_driver(sdxi_driver);
++			tx_desc = &desc->vd.tx;
++			vd = &desc->vd;
++		} else {
++			tx_desc = NULL;
++		}
++
++		spin_lock_irqsave(&chan->vc.lock, flags);
++
++		if (desc) {
++
++			if (desc->status != DMA_COMPLETE) {
++				if (desc->status != DMA_ERROR)
++					desc->status = DMA_COMPLETE;
++
++				dma_cookie_complete(tx_desc);
++				dma_descriptor_unmap(tx_desc);
++				list_del(&desc->vd.node);
++			} else {
++				/* Don't handle it twice */
++				tx_desc = NULL;
++			}
++		}
++
++		desc = sdxi_next_dma_desc(chan);
++
++		spin_unlock_irqrestore(&chan->vc.lock, flags);
++
++		if (tx_desc) {
++			dmaengine_desc_get_callback_invoke(tx_desc, NULL);
++			dma_run_dependencies(tx_desc);
++			vchan_vdesc_fini(vd);
++		}
++	} while (desc);
++
++	return NULL;
++}
++
++static void sdxi_cmd_callback(void *data, int err)
++{
++	struct sdxi_dma_desc *desc = data;
++	struct dma_chan *dma_chan;
++	struct sdxi_dma_chan *chan;
++	int ret;
++
++	if (err == -EINPROGRESS)
++		return;
++
++	dma_chan = desc->vd.tx.chan;
++	chan = to_sdxi_dma_chan(dma_chan);
++
++	if (err)
++		desc->status = DMA_ERROR;
++
++	while (true) {
++		/* Check for DMA descriptor completion */
++		desc = sdxi_handle_active_desc(chan, desc);
++
++		/* Don't submit cmd if no descriptor or DMA is paused */
++		if (!desc)
++			break;
++
++		ret = sdxi_dma_start_desc(desc);
++		if (!ret)
++			break;
++
++		desc->status = DMA_ERROR;
++	}
++}
++
++static struct sdxi_dma_desc *sdxi_dma_alloc_dma_desc(struct sdxi_dma_chan *chan,
++						     unsigned long flags)
++{
++	struct sdxi_dma_desc *desc;
++
++	desc = kzalloc(sizeof(*desc), GFP_NOWAIT);
++	if (!desc)
++		return NULL;
++
++	desc->cxt = chan->cxt;
++
++	vchan_tx_prep(&chan->vc, &desc->vd, flags);
++
++	desc->cxt->sdxi = chan->cxt->sdxi;
++	desc->issued_to_hw = 0;
++	desc->status = DMA_IN_PROGRESS;
++
++	return desc;
++}
++
++static struct sdxi_dma_desc *sdxi_dma_create_desc(struct dma_chan *dma_chan,
++						  dma_addr_t dst,
++						  dma_addr_t src,
++						  unsigned int len,
++						  unsigned long flags)
++{
++	struct sdxi_dma_chan *chan = to_sdxi_dma_chan(dma_chan);
++	struct sdxi_dma_desc *desc;
++	struct sdxi_cmd *sdxi_cmd;
++
++	desc = sdxi_dma_alloc_dma_desc(chan, flags);
++	if (!desc)
++		return NULL;
++
++	sdxi_cmd = &desc->sdxi_cmd;
++	sdxi_cmd->cxt = chan->cxt;
++	sdxi_cmd->cxt->sdxi = chan->cxt->sdxi;
++	sdxi_cmd->src_addr = src;
++	sdxi_cmd->dst_addr = dst;
++	sdxi_cmd->len = len;
++	sdxi_cmd->sdxi_cmd_callback = sdxi_cmd_callback;
++	sdxi_cmd->data = desc;
++
++	return desc;
++}
++
++static struct dma_async_tx_descriptor *
++sdxi_dma_prep_memcpy(struct dma_chan *dma_chan, dma_addr_t dst,
++		     dma_addr_t src, size_t len, unsigned long flags)
++{
++	struct sdxi_dma_desc *desc;
++
++	desc = sdxi_dma_create_desc(dma_chan, dst, src, len, flags);
++	if (!desc)
++		return NULL;
++
++	return &desc->vd.tx;
++}
++
++static struct dma_async_tx_descriptor *
++sdxi_prep_dma_interrupt(struct dma_chan *dma_chan, unsigned long flags)
++{
++	struct sdxi_dma_chan *chan = to_sdxi_dma_chan(dma_chan);
++	struct sdxi_dma_desc *desc;
++
++	desc = sdxi_dma_alloc_dma_desc(chan, flags);
++	if (!desc)
++		return NULL;
++
++	return &desc->vd.tx;
++}
++
++static void sdxi_dma_issue_pending(struct dma_chan *dma_chan)
++{
++	struct sdxi_dma_chan *chan = to_sdxi_dma_chan(dma_chan);
++	struct sdxi_dma_desc *desc;
++	unsigned long flags;
++	bool engine_is_idle = true;
++
++	spin_lock_irqsave(&chan->vc.lock, flags);
++
++	desc = sdxi_next_dma_desc(chan);
++	if (desc)
++		engine_is_idle = false;
++
++	vchan_issue_pending(&chan->vc);
++
++	desc = sdxi_next_dma_desc(chan);
++
++	spin_unlock_irqrestore(&chan->vc.lock, flags);
++
++	/* If there was nothing active, start processing */
++	if (engine_is_idle)
++		sdxi_cmd_callback(desc, 0);
++}
++
++static void sdxi_check_trans_status(struct sdxi_dma_chan *chan)
++{
++	struct sdxi_cxt *cxt = chan->cxt;
++	struct sdxi_cmd *cmd;
++
++	if (!cxt)
++		return;
++
++	cmd = cxt->sdxi->tdata.cmd;
++
++	if (le64_to_cpu(cmd->cst_blk->signal) == 0xfe)
++		sdxi_cmd_callback(cmd->data, cmd->ret);
++}
++
++static enum dma_status sdxi_tx_status(struct dma_chan *dma_chan, dma_cookie_t cookie,
++				      struct dma_tx_state *tx_state)
++{
++	struct sdxi_dma_chan *chan = to_sdxi_dma_chan(dma_chan);
++
++	sdxi_check_trans_status(chan);
++
++	return dma_cookie_status(dma_chan, cookie, tx_state);
++}
++
++static int sdxi_dma_terminate_all(struct dma_chan *dma_chan)
++{
++	struct sdxi_dma_chan *chan = to_sdxi_dma_chan(dma_chan);
++	unsigned long flags;
++	LIST_HEAD(head);
++
++	spin_lock_irqsave(&chan->vc.lock, flags);
++	vchan_get_all_descriptors(&chan->vc, &head);
++	spin_unlock_irqrestore(&chan->vc.lock, flags);
++
++	vchan_dma_desc_free_list(&chan->vc, &head);
++	vchan_free_chan_resources(&chan->vc);
++
++	return 0;
++}
++
++int sdxi_dma_register(struct sdxi_cxt *dma_cxt)
++{
++	struct sdxi_dma_chan *chan;
++	struct sdxi_dev *sdxi = dma_cxt->sdxi;
++	struct device *dev = sdxi_to_dev(sdxi);
++	struct dma_device *dma_dev = &sdxi->dma_dev;
++	int ret = 0;
++
++	sdxi->sdxi_dma_chan = devm_kzalloc(dev, sizeof(*sdxi->sdxi_dma_chan),
++					   GFP_KERNEL);
++	if (!sdxi->sdxi_dma_chan)
++		return -ENOMEM;
++
++	sdxi->sdxi_dma_chan->cxt = dma_cxt;
++
++	dma_dev->dev = dev;
++	dma_dev->src_addr_widths = DMA_SLAVE_BUSWIDTH_64_BYTES;
++	dma_dev->dst_addr_widths = DMA_SLAVE_BUSWIDTH_64_BYTES;
++	dma_dev->directions = BIT(DMA_MEM_TO_MEM);
++	dma_dev->residue_granularity = DMA_RESIDUE_GRANULARITY_DESCRIPTOR;
++	dma_cap_set(DMA_MEMCPY, dma_dev->cap_mask);
++	dma_cap_set(DMA_INTERRUPT, dma_dev->cap_mask);
++
++	dma_cap_set(DMA_PRIVATE, dma_dev->cap_mask);
++
++	INIT_LIST_HEAD(&dma_dev->channels);
++
++	chan = sdxi->sdxi_dma_chan;
++	chan->cxt->sdxi = sdxi;
++
++	/* Set base and prep routines */
++	dma_dev->device_free_chan_resources = sdxi_dma_free_chan_resources;
++	dma_dev->device_prep_dma_memcpy = sdxi_dma_prep_memcpy;
++	dma_dev->device_prep_dma_interrupt = sdxi_prep_dma_interrupt;
++	dma_dev->device_issue_pending = sdxi_dma_issue_pending;
++	dma_dev->device_tx_status = sdxi_tx_status;
++	dma_dev->device_terminate_all = sdxi_dma_terminate_all;
++	dma_dev->device_synchronize = sdxi_dma_synchronize;
++
++	chan->vc.desc_free = sdxi_do_cleanup;
++	vchan_init(&chan->vc, dma_dev);
++
++	dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
++
++	ret = dma_async_device_register(dma_dev);
++	if (ret)
++		goto err_reg;
++
++	return 0;
++
++err_reg:
++	return ret;
++}
++
++void sdxi_dma_unregister(struct sdxi_cxt *dma_cxt)
++{
++	dma_async_device_unregister(&dma_cxt->sdxi->dma_dev);
++}
+diff --git a/drivers/dma/sdxi/dma.h b/drivers/dma/sdxi/dma.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..cdea77cd274043a76b658fa93716f6cea2867216
+--- /dev/null
++++ b/drivers/dma/sdxi/dma.h
+@@ -0,0 +1,12 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/* Copyright (C) 2025 Advanced Micro Devices, Inc. */
++
++#ifndef DMA_SDXI_DMA_H
++#define DMA_SDXI_DMA_H
++
++struct sdxi_cxt;
++
++int sdxi_dma_register(struct sdxi_cxt *dma_cxt);
++void sdxi_dma_unregister(struct sdxi_cxt *dma_cxt);
++
++#endif /* DMA_SDXI_DMA_H */
 
 -- 
 2.39.5

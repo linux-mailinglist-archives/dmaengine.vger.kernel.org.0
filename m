@@ -1,118 +1,127 @@
-Return-Path: <dmaengine+bounces-6420-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6421-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DAA51B462AD
-	for <lists+dmaengine@lfdr.de>; Fri,  5 Sep 2025 20:49:40 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D9A2B46323
+	for <lists+dmaengine@lfdr.de>; Fri,  5 Sep 2025 21:06:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B339C1CC1B73
-	for <lists+dmaengine@lfdr.de>; Fri,  5 Sep 2025 18:50:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8996B7C740D
+	for <lists+dmaengine@lfdr.de>; Fri,  5 Sep 2025 19:06:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94F8B284886;
-	Fri,  5 Sep 2025 18:48:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58F3F315D52;
+	Fri,  5 Sep 2025 19:06:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d8OBGPdV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rpaJIlUN"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E0727FD52;
-	Fri,  5 Sep 2025 18:48:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28BA5315D22;
+	Fri,  5 Sep 2025 19:06:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757098131; cv=none; b=Dm+lvrHI/wCsGhO+87xpRKkVlSyFpigWQuw4ryJY4Y808INlOKqFPhr3bQ0w99pO7CPolsx0e8uNcFjdahP8zklYlfr3CXosMcnMQhWEuQznWOJ4nihYAMPNzAqJZW/oXBcLJRy7CmJIeKjm+aeDn8ksnu1oCQZCOyKBEllSn78=
+	t=1757099183; cv=none; b=omXfxwQtH6Wi8gitf2Wh0mTS2HACygx4GDowD2Uro+K1IxNGeWe47C94w2Td/Qztjb+OG4USmnJf+pJ/ZmAWp+pNheM4fceHY6IGXaSZ8UJYYYYOJ/W3BxXoY5oHEnhJpmC2gFJC1WPiZS/bnArUCRPo46qMefvjRmfkRk6S+qw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757098131; c=relaxed/simple;
-	bh=tqV2mVMBTfLNMFvpkSBPSeNnVNAfe/oi/nk13MKepyo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rreRbCP5FtPZUYQ7j8GgeLrLWoXO5AJ9ZOLsLOgSAfC9zhyZTMrJ2FMt6zVYtRahmHUdS7jbTtHJs6QfwARtnig72EmeKWlQIUD2sJM35iCHGXscx0PXcSaW2VwdHdamp3pz6dCuHSpgaJf6ESk4dJziZzinv8hSGmiJ77QZUS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d8OBGPdV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 145C7C4CEF7;
-	Fri,  5 Sep 2025 18:48:51 +0000 (UTC)
+	s=arc-20240116; t=1757099183; c=relaxed/simple;
+	bh=dWbtCTPv7/HyKpTriCzGQwV15g/46tnLdeWiSBuQqmE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=fVq2jwYfUba9DXvMH9c62lJz+pNAp3JCEu+h3VbF16GA4zTBXXo5ZG19we4LM7nNUEFcvCnAdae1/ygwy9QLR/TJyV4UBCIsa3f8NU7iuyJmKvyjYoAFss7TQdNAoHr0iJJ9EMqeLDat7GssFPpcX4d7sN0A4EGCtrizXLFDfNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rpaJIlUN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80EA1C4CEF1;
+	Fri,  5 Sep 2025 19:06:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757098131;
-	bh=tqV2mVMBTfLNMFvpkSBPSeNnVNAfe/oi/nk13MKepyo=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=d8OBGPdVAiAG+m0Sxb0rkR8Yl/L4Xn7TaLOS5Ke/pUdxOfHTV2O57JSthSDxFkoi8
-	 C0Uc421bf68efQXuhiTTv3qZr3T3VF0oORVszt+Lm/6Zo+SEHVHDWNos14Xb5mqDR9
-	 n7uexv0i3Aikzllqg767vCfMVHyJOZLOD/P9hy0Fsw/YjaPI/8Ppup7VqAEsUaQ8Kt
-	 H/FYrXIdNmqtH+LVIUTYv0dleMJgcC6sojErdKz4v2HaS8tUEfxpXCRt1UhT+9ehyM
-	 yCEFRDf74IYAN0bo7x4NvCNZko6CPGAqXTebthH38cO7NqJvkTEBE3E6KTRaWwtKxE
-	 7ZG32K9cist+w==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D0A9CA0FED;
-	Fri,  5 Sep 2025 18:48:51 +0000 (UTC)
-From: Nathan Lynch via B4 Relay <devnull+nathan.lynch.amd.com@kernel.org>
-Date: Fri, 05 Sep 2025 13:48:36 -0500
-Subject: [PATCH RFC 13/13] MAINTAINERS: Add entry for SDXI driver
+	s=k20201202; t=1757099182;
+	bh=dWbtCTPv7/HyKpTriCzGQwV15g/46tnLdeWiSBuQqmE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=rpaJIlUNlgXmx63FhVxMTcxEC5aBPzMRmGNXexM6772Z5oIfb6zjQTyaD5+jrmecd
+	 xBveoTr4plZF9+uYP/FWkNJg7tQo1uIgJqYkUY/+y11Wqh+1c14Ncrsn8bvkySQod/
+	 NVo0pvIIYGDqV5zjSEy6KeKnckQ1EtJfN7OsR6+IPsSgH+5f13PbUx4nGhoTVhFjgg
+	 WPrby0+mjKxFc8EA/2O0BWqL3IAi1an8jg0k0RNzZMC4cCpFlxG6CqOniAc2o0PNxm
+	 DbleahZMfUkj8cx3g9XOzQz0MgTGAP0QWZIFMz8bBle0ErLgWoB+DKakQh/Qgd0eLM
+	 rioQEcZGCOEww==
+Date: Fri, 5 Sep 2025 14:06:21 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Devendra K Verma <devendra.verma@amd.com>
+Cc: bhelgaas@google.com, mani@kernel.org, vkoul@kernel.org,
+	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, michal.simek@amd.com
+Subject: Re: [PATCH 2/2] dmaengine: dw-edma: Add non-LL mode
+Message-ID: <20250905190621.GA1306997@bhelgaas>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250905-sdxi-base-v1-13-d0341a1292ba@amd.com>
-References: <20250905-sdxi-base-v1-0-d0341a1292ba@amd.com>
-In-Reply-To: <20250905-sdxi-base-v1-0-d0341a1292ba@amd.com>
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Wei Huang <wei.huang2@amd.com>, 
- Mario Limonciello <mario.limonciello@amd.com>, 
- Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
- linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1757098129; l=1013;
- i=nathan.lynch@amd.com; s=20241010; h=from:subject:message-id;
- bh=diiwvZ2HCcciUzDvmvbMM69P2dAF5ySeGY7sk+v6Rfw=;
- b=g9pjE89RBK+G+94dsfImJO3xLonKWVpKq/ow7JavJ4WfGw+Z+81XFuOanuP8PQeYHoz+RzLuN
- PDECOO8Y88YDR2o8fDQjDpiQ/OQtnuSyg/MUMU4+QC+s9ppZpxdUGoU
-X-Developer-Key: i=nathan.lynch@amd.com; a=ed25519;
- pk=ZR637UTGg5YLDj56cxFeHdYoUjPMMFbcijfOkAmAnbc=
-X-Endpoint-Received: by B4 Relay for nathan.lynch@amd.com/20241010 with
- auth_id=241
-X-Original-From: Nathan Lynch <nathan.lynch@amd.com>
-Reply-To: nathan.lynch@amd.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250905101659.95700-3-devendra.verma@amd.com>
 
-From: Nathan Lynch <nathan.lynch@amd.com>
+On Fri, Sep 05, 2025 at 03:46:59PM +0530, Devendra K Verma wrote:
+> AMD MDB IP supports Linked List (LL) mode as well as non-LL mode.
+> The current code does not have the mechanisms to enable the
+> DMA transactions using the non-LL mode. The following two cases
+> are added with this patch:
+> - When a valid physical base address is not configured via the
+>   Xilinx VSEC capability then the IP can still be used in non-LL
+>   mode. The default mode for all the DMA transactions and for all
+>   the DMA channels then is non-LL mode.
+> - When a valid physical base address is configured but the client
+>   wants to use the non-LL mode for DMA transactions then also the
+>   flexibility is provided via the peripheral_config struct member of
+>   dma_slave_config. In this case the channels can be individually
+>   configured in non-LL mode. This use case is desirable for single
+>   DMA transfer of a chunk, this saves the effort of preparing the
+>   Link List.
 
-Add an entry for the SDXI driver to MAINTAINERS. Wei and I will
-maintain the driver.
+> +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> @@ -223,8 +223,28 @@ static int dw_edma_device_config(struct dma_chan *dchan,
+>  				 struct dma_slave_config *config)
+>  {
+>  	struct dw_edma_chan *chan = dchan2dw_edma_chan(dchan);
+> +	int nollp = 0;
+> +
+> +	if (WARN_ON(config->peripheral_config &&
+> +		    config->peripheral_size != sizeof(int)))
+> +		return -EINVAL;
+>  
+>  	memcpy(&chan->config, config, sizeof(*config));
+> +
+> +	/*
+> +	 * When there is no valid LLP base address available
+> +	 * then the default DMA ops will use the non-LL mode.
+> +	 * Cases where LL mode is enabled and client wants
+> +	 * to use the non-LL mode then also client can do
+> +	 * so via the providing the peripheral_config param.
 
-The SDXI specification and other materials may be found at:
+s/via the/via/
 
-  https://www.snia.org/sdxi
+> +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+> @@ -224,6 +224,15 @@ static void dw_edma_pcie_get_vsec_dma_data(struct pci_dev *pdev,
+>  	pdata->phys_addr = off;
+>  }
+>  
+> +static u64 dw_edma_get_phys_addr(struct pci_dev *pdev,
+> +				 struct dw_edma_pcie_data *pdata,
+> +				 enum pci_barno bar)
+> +{
+> +	if (pdev->vendor == PCI_VENDOR_ID_XILINX)
+> +		return pdata->phys_addr;
+> +	return pci_bus_address(pdev, bar);
 
-Co-developed-by: Wei Huang <wei.huang2@amd.com>
-Signed-off-by: Wei Huang <wei.huang2@amd.com>
-Signed-off-by: Nathan Lynch <nathan.lynch@amd.com>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+This doesn't seem right.  pci_bus_address() returns pci_bus_addr_t, so
+pdata->phys_addr should also be a pci_bus_addr_t, and the function
+should return pci_bus_addr_t.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index daf520a13bdf6a991c0160a96620f40308c29ee0..eb636ed1aa77aff30a871057efef81de8ff56cd7 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -22676,6 +22676,13 @@ L:	sdricohcs-devel@lists.sourceforge.net (subscribers-only)
- S:	Maintained
- F:	drivers/mmc/host/sdricoh_cs.c
- 
-+SDXI (Smart Data Accelerator Interface) DRIVER
-+M:	Nathan Lynch <nathan.lynch@amd.com>
-+M:	Wei Huang <wei.huang2@amd.com>
-+L:	dmaengine@vger.kernel.org
-+S:	Supported
-+F:	drivers/dma/sdxi/
-+
- SECO BOARDS CEC DRIVER
- M:	Ettore Chimenti <ek5.chimenti@gmail.com>
- S:	Maintained
+A pci_bus_addr_t is not a "phys_addr"; it is an address that is valid
+on the PCI side of a PCI host bridge, which may be different than the
+CPU physical address on the CPU side of the bridge because of things
+like IOMMUs.
 
--- 
-2.39.5
+Seems like the struct dw_edma_region.paddr should be renamed to
+something like "bus_addr" and made into a pci_bus_addr_t.
 
-
+Bjorn
 

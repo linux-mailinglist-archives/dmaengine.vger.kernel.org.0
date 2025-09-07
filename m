@@ -1,161 +1,114 @@
-Return-Path: <dmaengine+bounces-6424-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6425-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97345B46D08
-	for <lists+dmaengine@lfdr.de>; Sat,  6 Sep 2025 14:49:51 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A3520B47B03
+	for <lists+dmaengine@lfdr.de>; Sun,  7 Sep 2025 13:34:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B29F21881857
-	for <lists+dmaengine@lfdr.de>; Sat,  6 Sep 2025 12:50:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 63B68200E8D
+	for <lists+dmaengine@lfdr.de>; Sun,  7 Sep 2025 11:34:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 230862EC561;
-	Sat,  6 Sep 2025 12:49:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4D07262FE7;
+	Sun,  7 Sep 2025 11:34:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OS41MSDs"
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="gpX0Kz92"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from out162-62-58-211.mail.qq.com (out162-62-58-211.mail.qq.com [162.62.58.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 318C02EBB84;
-	Sat,  6 Sep 2025 12:49:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE411DF26A;
+	Sun,  7 Sep 2025 11:34:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757162986; cv=none; b=DZnRAhxyBWNO3VEtWa5GPmQlMc9poz8FtlBgWM3F0HMCJuGC/mmVAvE7KBKfyymG3GiH1gxE02wV6vqMD1HAnvFm3JUbA2WZmX2uifr2wYOFTt72yujhB0GZLXq72wFCYNgoaWy1FrDI04jc5JDBxzl0TdJgl0RqxjK4eAQWLYw=
+	t=1757244891; cv=none; b=Qd5euHDySbpBWXEjFqF6I3ZTVgre1vQ0uGh/8aqAIlFzz3uB40AMOGj1xTY9v8+LvWSvCeJw2p47Rt4UYF/HDb1pMVyqLcJvRxMhQMx7EFj/jgJvAmlxnDOhDO0zW+CrACoLnD2Bcb90qp4LZssU1YarN6e8O3J3m4W/LC5SfrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757162986; c=relaxed/simple;
-	bh=FGhroKiv+4xuX6AwZtAlp9mlzfwdRYEJPq+jCneMv/A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c70LVnaTZeygScI6CleTW9jbTgcCaNZuwFMM+tXYkCF1cmf/pDQRDBBu9/hnYcGUnP4jVgll1MCuAoZWhUvxXXAIcXeXBO0DnYiCXDQoCf0imVVPZadcDnEViDUQ4MZsFCd6go+h1NrTgaS8G+1ysMnweEEUjhaL9mLe20Oleko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OS41MSDs; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1757162984; x=1788698984;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=FGhroKiv+4xuX6AwZtAlp9mlzfwdRYEJPq+jCneMv/A=;
-  b=OS41MSDsH5ON3ScEjbdBsuYnK3oOuBMfg7wVmhx1decpWoujYtxBd8qF
-   k3daR5jx/m4r2aQ4oEHkKdf+tteuAvoM+ryQyTxmUlS3I9kbl2NFx+AHT
-   gsQDWtjlvOivFpw8xhDB4/0BCIcMnr3k03bdXt8R6VF1lb4uAtva/q+Gi
-   Liac/pqoiSFFOpzqhqM9q0BfCKs1RKLkG9SQII9C78es2D0gsA1LJejVn
-   gSTIrZNNFYbROhrGwFsYpoaHkoRzqnUsYv6vWBMe7h4J5la3pklNM0aBE
-   EE9GZcwBh5pOHPZ0zjXgixgPu0RpABRTN4tPKvdRTuAeCi/xC9cC98Zc1
-   Q==;
-X-CSE-ConnectionGUID: o4AaAuMCTne9pvH2YyNFkg==
-X-CSE-MsgGUID: XsJC/ZmaTTCY0E7B3FFHjA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11544"; a="59563139"
-X-IronPort-AV: E=Sophos;i="6.18,244,1751266800"; 
-   d="scan'208";a="59563139"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2025 05:49:43 -0700
-X-CSE-ConnectionGUID: bYM0iKV3TQW7Ok4R3aOEnw==
-X-CSE-MsgGUID: GySrpnKUQ3a8jrCQrRq2WA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,244,1751266800"; 
-   d="scan'208";a="171652643"
-Received: from lkp-server01.sh.intel.com (HELO 114d98da2b6c) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 06 Sep 2025 05:49:39 -0700
-Received: from kbuild by 114d98da2b6c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uusMK-0001SJ-1J;
-	Sat, 06 Sep 2025 12:49:36 +0000
-Date: Sat, 6 Sep 2025 20:49:26 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
-	Viken Dadhaniya <quic_vdadhani@quicinc.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-arm-msm@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-i2c@vger.kernel.org, linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-	quic_vtanuku@quicinc.com
-Subject: Re: [PATCH v7 2/2] i2c: i2c-qcom-geni: Add Block event interrupt
- support
-Message-ID: <202509062008.lSOdhd4U-lkp@intel.com>
-References: <20250903073059.2151837-3-quic_jseerapu@quicinc.com>
+	s=arc-20240116; t=1757244891; c=relaxed/simple;
+	bh=gnR1bN4f585sAR+aIfz3xySKJKZ+0Tyw9oY35sth0I4=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=LLbGk1DXijNKOGILSpOWynm0sJZxRper7OKeXMSrOEkG4RtmesHWt2Lq/F4AnWGEOh9Mu+1eWGalS3UT74EBukD3ZosilRxavijYv5hChZVgC3sa1eEmPG/T5Pd2nuIZ00/pAdhrLX7mm8QJW9Os0cB6SdKdFxgbChZx/LL4a6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=gpX0Kz92; arc=none smtp.client-ip=162.62.58.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1757244576;
+	bh=vzMRSNquciMXGu8CwgqTnQ8mVrWWx/y+NRlacn/1wyk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=gpX0Kz92uA1Mx0JBMdS/8NHzjh58U/0VC8ty7W8TWk4kS12/2lYDWTo3sZBRPoFik
+	 hhP8x9cwOeJsQMb8jRHv2NBB1E0R0QVZpcFTobId3sZNqKPXHx4Ghr66IjOok6+Dgm
+	 yA02bdcJic00SOz/NzqOfN03nG+ugQj5zP0s2XHY=
+Received: from localhost.localdomain ([112.94.75.165])
+	by newxmesmtplogicsvrszc43-0.qq.com (NewEsmtp) with SMTP
+	id 7600DAF8; Sun, 07 Sep 2025 19:29:32 +0800
+X-QQ-mid: xmsmtpt1757244572tiwo0mr9c
+Message-ID: <tencent_D434891410B0717BB0BDCB1434969E6EB50A@qq.com>
+X-QQ-XMAILINFO: M/NR0wiIuy70eRbmROUPgRD86B27m0zZS/8QeMF6JS3ThHIw8thwK6p/sqceBs
+	 av9KAoRa2Ct7uRJVzAWFPI90ILgEDmvNQFENGJSZJ6U8cH7JcdjG8Tw+em2tMVimWrrY1cUiDfh/
+	 qGRaWja5RRxYOSiMJccrTZDceLExojZpKNksm+flljSZmLdtu3fvXunwQ8Y82XB6RlFQu9b/gifS
+	 CbRpRg1woMJ7n0JL2WUVhKGwRVn5VOm9FOIV9ZsDXqc0srbqMl5o51d8hQheGkzRkXF5JxrO9uIN
+	 1gN6JgYWPZjkSMqlrt4DqTbb5SFjBtoM0XghRwwaLnhR/0desDuqqVDsLFaYm61RVL9m2FOx4N24
+	 7hZ4lRSn5yGCAMSgG290RHmRzO9L5a4oEYSP4zuFvZjLgwh0c6Ot+0LoW5mSavxlgs9iUln3akex
+	 /aTTX1Sl6buy9HIbE3HVD9rqSF83ZI1fb/DhbT21BgQXUxnuDOUKyJoDYqgFakh/HTG3ZLiSOVab
+	 tj1n6f8uAAe1f5QAaTdi+DgpETiXDmdW5vZxTXGB5d2tkjhWaD1qkXA7e1caer76+h3iIgOzbpBp
+	 JCT8Z7VG3a3gtgj7MWDmi6Dt90DpqQj0y5421NLDVhh5hsDNDfnLp/qPXZx8+c5SO7/T8OP/OW0O
+	 Q7FUZtYfZ1UUZpm9R/Xo7aIT5JqOE5toCa7v6OVTHK2VL3ZnseppQSbtIvpYgtWiP+33diVqEF5C
+	 PIVKrr307Fo5UBP1CxBUSy/Qcbma3JzutaC1mpcpq1ovWZxR4FL2XvR3Pl8q5o0u2gwG5c3Co8Su
+	 9x7tcDvss9sdBeHQucrrzCYCGOJ1uOeMm16sJVJe3dIbXsQ6jVcfiRrJ4z4c73xDlt7JgekAlVBr
+	 PtJZ1jZW+8PY9nCbbfvteiqnXD7Gf+SN3qzh0jBMCTd4ebm+t8CG6SvKTU1UhIWMQJBpxLgOOZVs
+	 nvTL8+tvm/wRBk73kdGH4TKBzp9NzgfqUA7dXSF1HJVWK4E0opxgUk8GErQxRpXR6s/Z/DLwCNxm
+	 g/JnTJuxupUW4ISqu6
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+From: Conley Lee <conleylee@foxmail.com>
+To: kuba@kernel.org,
+	davem@davemloft.net,
+	wens@csie.org,
+	mripard@kernel.org,
+	vkoul@kernel.org
+Cc: netdev@vger.kernel.org,
+	dmaengine@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Conley Lee <conleylee@foxmail.com>
+Subject: [PATCH] net: ethernet: sun4i-emac: free dma descriptor
+Date: Sun,  7 Sep 2025 19:29:30 +0800
+X-OQ-MSGID: <20250907112930.712212-1-conleylee@foxmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250904072446.5563130d@kernel.org>
+References: <20250904072446.5563130d@kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250903073059.2151837-3-quic_jseerapu@quicinc.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Jyothi,
+In the current implementation of the sun4i-emac driver, when using DMA to
+receive data packets, the descriptor for the current DMA request is not
+released in the rx_done_callback.
 
-kernel test robot noticed the following build warnings:
+Fix this by properly releasing the descriptor.
 
-[auto build test WARNING on vkoul-dmaengine/next]
-[also build test WARNING on andi-shyti/i2c/i2c-host linus/master v6.17-rc4 next-20250905]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Fixes: 47869e82c8b8 ("sun4i-emac.c: add dma support")
+Signed-off-by: Conley Lee <conleylee@foxmail.com>
+---
+ drivers/net/ethernet/allwinner/sun4i-emac.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Jyothi-Kumar-Seerapu/dmaengine-qcom-gpi-Add-GPI-Block-event-interrupt-support/20250903-153745
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git next
-patch link:    https://lore.kernel.org/r/20250903073059.2151837-3-quic_jseerapu%40quicinc.com
-patch subject: [PATCH v7 2/2] i2c: i2c-qcom-geni: Add Block event interrupt support
-config: i386-allmodconfig (https://download.01.org/0day-ci/archive/20250906/202509062008.lSOdhd4U-lkp@intel.com/config)
-compiler: gcc-13 (Debian 13.3.0-16) 13.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250906/202509062008.lSOdhd4U-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202509062008.lSOdhd4U-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/i2c/busses/i2c-qcom-geni.c: In function 'geni_i2c_gpi_multi_desc_unmap':
->> drivers/i2c/busses/i2c-qcom-geni.c:576:42: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-     576 |                                    NULL, (dma_addr_t)NULL);
-         |                                          ^
-
-
-vim +576 drivers/i2c/busses/i2c-qcom-geni.c
-
-   555	
-   556	/**
-   557	 * geni_i2c_gpi_multi_desc_unmap() - Unmaps DMA buffers post multi message TX transfers
-   558	 * @gi2c: I2C dev handle
-   559	 * @msgs: Array of I2C  messages
-   560	 * @peripheral: Pointer to gpi_i2c_config
-   561	 */
-   562	static void geni_i2c_gpi_multi_desc_unmap(struct geni_i2c_dev *gi2c, struct i2c_msg msgs[],
-   563						  struct gpi_i2c_config *peripheral)
-   564	{
-   565		u32 msg_xfer_cnt, wr_idx = 0;
-   566		struct geni_i2c_gpi_multi_desc_xfer *tx_multi_xfer = &gi2c->i2c_multi_desc_config;
-   567	
-   568		msg_xfer_cnt = gi2c->err ? tx_multi_xfer->msg_idx_cnt : tx_multi_xfer->irq_cnt;
-   569	
-   570		/* Unmap the processed DMA buffers based on the received interrupt count */
-   571		for (; tx_multi_xfer->unmap_msg_cnt < msg_xfer_cnt; tx_multi_xfer->unmap_msg_cnt++) {
-   572			wr_idx = tx_multi_xfer->unmap_msg_cnt;
-   573			geni_i2c_gpi_unmap(gi2c, &msgs[wr_idx],
-   574					   tx_multi_xfer->dma_buf[wr_idx],
-   575					   tx_multi_xfer->dma_addr[wr_idx],
- > 576					   NULL, (dma_addr_t)NULL);
-   577	
-   578			if (tx_multi_xfer->unmap_msg_cnt == gi2c->num_msgs - 1) {
-   579				kfree(tx_multi_xfer->dma_buf);
-   580				kfree(tx_multi_xfer->dma_addr);
-   581				break;
-   582			}
-   583		}
-   584	}
-   585	
-
+diff --git a/drivers/net/ethernet/allwinner/sun4i-emac.c b/drivers/net/ethernet/allwinner/sun4i-emac.c
+index 2f516b950..2f990d0a5 100644
+--- a/drivers/net/ethernet/allwinner/sun4i-emac.c
++++ b/drivers/net/ethernet/allwinner/sun4i-emac.c
+@@ -237,6 +237,7 @@ emac_alloc_dma_req(struct emac_board_info *db,
+ 
+ static void emac_free_dma_req(struct emac_dma_req *req)
+ {
++	dmaengine_desc_free(req->desc);
+ 	kfree(req);
+ }
+ 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.25.1
+
 

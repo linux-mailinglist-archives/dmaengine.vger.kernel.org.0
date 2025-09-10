@@ -1,116 +1,180 @@
-Return-Path: <dmaengine+bounces-6436-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6437-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 16298B51459
-	for <lists+dmaengine@lfdr.de>; Wed, 10 Sep 2025 12:48:29 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 36DBEB51682
+	for <lists+dmaengine@lfdr.de>; Wed, 10 Sep 2025 14:06:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C6A4A172DDB
-	for <lists+dmaengine@lfdr.de>; Wed, 10 Sep 2025 10:48:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 643C8189D548
+	for <lists+dmaengine@lfdr.de>; Wed, 10 Sep 2025 12:06:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A827B3126DA;
-	Wed, 10 Sep 2025 10:47:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="UKcOtrWe"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8FCD27A454;
+	Wed, 10 Sep 2025 12:06:10 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from out203-205-221-191.mail.qq.com (out203-205-221-191.mail.qq.com [203.205.221.191])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C2925782A;
-	Wed, 10 Sep 2025 10:47:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B3E2279908
+	for <dmaengine@vger.kernel.org>; Wed, 10 Sep 2025 12:06:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757501252; cv=none; b=PVLnzzEmOWvjvX5DvxfyaDNk172iglCXGExODEKZ4yW6FNprUXzP5QXSgHClXEkZZVvs/maJ8sysHR+PiM3Qh9XlM3dkaalyOo7lUcWQWFFQ0Rp5H9EL/JGDQ8rr1J/gCtcnUK5Rk9zbZgtbsVUZHVQV1wqeDQZ3WBFc9xBoo08=
+	t=1757505970; cv=none; b=S/lBTme3EeaF1cPdxgtMmnGta6KYjXOK1m9BfpQjEeGB4HHzmMxzP+ZGqT+GBwRgKIpmdGOfziwFcT0pbNFbxRXiLw7kFYbqWoBGtlcIUgXEdLZv9yhYwqahieIxHbLREXUIPeNPpSJt/bET6teEKiBYx0zKFOu7GlmTJc2HWCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757501252; c=relaxed/simple;
-	bh=vuDuae618+G9GIUKKhfT2gpIoatwCsXfX9KM+fgvIWg=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ov4ZXYDN/PhDtUArlh2We80Foi4xxEOArdeQj6yRywKJxI7tguffcw3GRYTadfnvOeTpS0hC9AmNATzBnRxVNa7V7rlfJegIUJY39igiIvSEunkUojgZKtRccD1Hoh3kF9xGyM0p59DgHeJIQcbQ9hfniZjwqxwtfndApQiq97g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=UKcOtrWe; arc=none smtp.client-ip=203.205.221.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1757500940;
-	bh=2g9SqMhLUUY5OWEkbJI62B9o1oK6Cw9puvU0A/SCA4o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=UKcOtrWeRpFVvSeF5GCNO133+5B6ZvqaXNXzV45vA3lJvkzVtzFWbiWnBOx/AezUZ
-	 kMIyisSIVdUV0F9VZd6S67kmAx80S1MS+KqDzlYF4m9ffw9tfsvqdJiJN4J6aJUgqU
-	 L2qBiOjvH1drJje0rA5tTn5QaYJ6SETm0WwqSVw0=
-Received: from localhost ([112.94.75.165])
-	by newxmesmtplogicsvrsza56-0.qq.com (NewEsmtp) with SMTP
-	id A929FED7; Wed, 10 Sep 2025 18:42:18 +0800
-X-QQ-mid: xmsmtpt1757500938tef4mg7kx
-Message-ID: <tencent_7731B6630F8BF7EC0292D2F3ADAEA6F70207@qq.com>
-X-QQ-XMAILINFO: OGZxhFXqN7PJ0OGUSKzaot3PkSIPfgVcLkJCNRpHiuJ/wDe1agEPYkkDgLl2Hi
-	 VOLH3oLeXitQpuBvQSjVDLTenk7gOXKMWl5lIUdIurYWrfPcJfqoxIlMbwDa0NCVvD/fpfwctQ4W
-	 dlK9X4VxXrG7MZypC2CsplwMvnT0QSoTIRbDK/PMKORm4o/XfhIUQzRmmgh1p6zV9KMUBUDDlxxe
-	 7QiAGhORxfs6JdFSuF1CK/yMvtm3LKEeWHFAOkrOtx+/pQlaQ1KvAkMrnnQ0kofZ+7DM+METOhsF
-	 J0A1iiFDrnSTAK6HqAfofrs00ucqqsMDGFwHyxDy58hE0EC4s2DjhkNvLFOWC+i7EVgr5krq/Xsw
-	 jkbCVMlOSlPDeoU/ld01iXgQz+A8thbNZNMkJUeN4HQpFsLa2AMOet7cnlAmmr+EIFlGZseu13OX
-	 p3EX36p5+2qlaV2ZSSqSjj5lxzQRmefkqiQTjai6y80FGFidMEQsOnwil/dqtAoA5lg9Btk/mgSr
-	 IzLe9cdt2rPWbMaB36jw75vSDnopXHJTlmmyAHKei+sQgpdV/E/ZCvWG+stiNU5e0h+6EmsXn23S
-	 xl6rZr63f7g/xOceAsyUYfcnG/qW7YR3qcT0dqdHS+BK5ZWJGOmKG+wa+RTDypNQrsjutbM3DC0v
-	 CIZi00R9lMW3QWiloZRV1r5MM3JkInK9GunpWu+qwMnHMsb/tBCqS+3U9IfWSMMROzRHWEJPdYLX
-	 gsj0D3vQ4jaYVaAUGpvKNwl9rW8zP3F30rm6CoHC06oNSDol+pZKrCf7gAu+8LCzZ03K+GrXoHk5
-	 uFcVtNUdpTenn9iFEjhgpP9nvOTWOHyNxxeqjTDhgqaR0V+sMwduna4mUAeKmLzyfwCX1SLkZ98Y
-	 jwyV3LptUlbJY901E7btNys4ibMQqCqYb0x42NGAwncT97apaNR8dB5BltdiakC2+Ks5Em5Siobs
-	 Fr7wWd2LPZgHgdvQMwvFosqJk5CsFqEnf+SEGw9lEVTd8xbCkqnC5GHvpJ+CgYdSTNCuzSJsRerA
-	 cL9uGeROqA7nvG09ZHTetWJgw1ONKke/Z2AYJAxw==
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
-Date: Wed, 10 Sep 2025 18:42:18 +0800
-From: Conley Lee <conleylee@foxmail.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: vkoul@kernel.org, davem@davemloft.net, wens@csie.org,
-	mripard@kernel.org, netdev@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	s=arc-20240116; t=1757505970; c=relaxed/simple;
+	bh=AFHbZYClzSKP06VMKofMs1J5LpMpkRyBzfS3qp8YiDo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DnsaTgaSlNXUa1GJMTSke96JOq0wIjdE2T8A9canlIOylLwLRxpy2KKLtUusPkBP/yIeaWU2OJqkq4OdBxvBrRbgdKFTvaRJcLHG4ikmPR+kf89LAEdzEyJCcLTVOYwHE3qZWK4CD7ob/50TpkB8kwyPz0WF2Nh5iWVK9UJ/oHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1uwJaK-000834-8u; Wed, 10 Sep 2025 14:06:00 +0200
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1uwJaJ-000aLn-22;
+	Wed, 10 Sep 2025 14:05:59 +0200
+Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1uwJaJ-00GFO5-1Z;
+	Wed, 10 Sep 2025 14:05:59 +0200
+Date: Wed, 10 Sep 2025 14:05:59 +0200
+From: Marco Felsch <m.felsch@pengutronix.de>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Jiada Wang <jiada_wang@mentor.com>, dmaengine@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: ethernet: sun4i-emac: free dma descriptor
-X-OQ-MSGID: <20250910104218.GA1760035@ubuntu-server>
-References: <20250904072446.5563130d@kernel.org>
- <tencent_D434891410B0717BB0BDCB1434969E6EB50A@qq.com>
- <20250908132615.6a2507ed@kernel.org>
- <tencent_0DDFF70B944AC1B7CE9AC20A22D8DA3C4609@qq.com>
- <20250909181547.0782840f@kernel.org>
+Subject: Re: [PATCH 07/11] dmaengine: imx-sdma: make use of dev_err_probe()
+Message-ID: <20250910120559.u4gmegcrrpe6qvrf@pengutronix.de>
+References: <20250903-v6-16-topic-sdma-v1-0-ac7bab629e8b@pengutronix.de>
+ <20250903-v6-16-topic-sdma-v1-7-ac7bab629e8b@pengutronix.de>
+ <aLhZFv27bFh64MrD@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250909181547.0782840f@kernel.org>
+In-Reply-To: <aLhZFv27bFh64MrD@lizhi-Precision-Tower-5810>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: dmaengine@vger.kernel.org
 
-On 09/09/25 at 06:15下午, Jakub Kicinski wrote:
-> Date: Tue, 9 Sep 2025 18:15:47 -0700
-> From: Jakub Kicinski <kuba@kernel.org>
-> To: 李克斯 <conleylee@foxmail.com>
-> Cc: vkoul@kernel.org, davem@davemloft.net, wens@csie.org,
->  mripard@kernel.org, netdev@vger.kernel.org, dmaengine@vger.kernel.org,
->  linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH] net: ethernet: sun4i-emac: free dma descriptor
+On 25-09-03, Frank Li wrote:
+> On Wed, Sep 03, 2025 at 03:06:15PM +0200, Marco Felsch wrote:
+> > Convert the probe function to dev_err_probe() which helps users to
+> > identify issues better.
 > 
-> On Tue, 9 Sep 2025 14:36:42 +0800 李克斯 wrote:
-> > Thank you for the suggestion. I've reviewed the documentation, and
-> > setting the reuse flag while reusing descriptors might be a good
-> > optimization. I'll make the changes and run some tests. If everything
-> > works well, I'll submit a new patch.
+> I think it is not "convert"
 > 
-> To be clear if you're saying the driver is buggy and can crash right
-> now we need to fix it first and then optimize it later, as separate
-> commits. So that LTS kernels can backport the fix.
+> Add dev_err_probe() at return path of probe to help user to ...
+
+Done, thanks.
+
+
+> Reviewed-by: Frank Li <Frank.Li@nxp.com>
+> >
+> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> > ---
+> >  drivers/dma/imx-sdma.c | 28 ++++++++++++----------------
+> >  1 file changed, 12 insertions(+), 16 deletions(-)
+> >
+> > diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+> > index f6bb2f88a62781c0431336c365fa30c46f1401ad..e30dd46cf6522ee2aa4d3aca9868a01afbd29615 100644
+> > --- a/drivers/dma/imx-sdma.c
+> > +++ b/drivers/dma/imx-sdma.c
+> > @@ -2255,7 +2255,7 @@ static int sdma_probe(struct platform_device *pdev)
+> >
+> >  	ret = dma_coerce_mask_and_coherent(dev, DMA_BIT_MASK(32));
+> >  	if (ret)
+> > -		return ret;
+> > +		return dev_err_probe(dev, ret, "Failed to set DMA mask\n");
+> >
+> >  	sdma = devm_kzalloc(dev, sizeof(*sdma), GFP_KERNEL);
+> >  	if (!sdma)
+> > @@ -2272,24 +2272,24 @@ static int sdma_probe(struct platform_device *pdev)
+> >
+> >  	irq = platform_get_irq(pdev, 0);
+> >  	if (irq < 0)
+> > -		return irq;
+> > +		return dev_err_probe(dev, irq, "Failed to get IRQ\n");
+> >
+> >  	sdma->regs = devm_platform_ioremap_resource(pdev, 0);
+> >  	if (IS_ERR(sdma->regs))
+> > -		return PTR_ERR(sdma->regs);
+> > +		return dev_err_probe(dev, PTR_ERR(sdma->regs), "ioremap failed\n");
+> >
+> >  	sdma->clk_ipg = devm_clk_get_prepared(dev, "ipg");
+> >  	if (IS_ERR(sdma->clk_ipg))
+> > -		return PTR_ERR(sdma->clk_ipg);
+> > +		return dev_err_probe(dev, PTR_ERR(sdma->clk_ipg), "IPG clk_get_prepared failed\n");
+> >
+> >  	sdma->clk_ahb = devm_clk_get_prepared(dev, "ahb");
+> >  	if (IS_ERR(sdma->clk_ahb))
+> > -		return PTR_ERR(sdma->clk_ahb);
+> > +		return dev_err_probe(dev, PTR_ERR(sdma->clk_ahb), "AHB clk_get_prepared failed\n");
+> >
+> >  	ret = devm_request_irq(dev, irq, sdma_int_handler, 0,
+> >  			       dev_name(dev), sdma);
+> >  	if (ret)
+> > -		return ret;
+> > +		return dev_err_probe(dev, ret, "Failed to request IRQ\n");
+> >
+> >  	sdma->irq = irq;
+> >
+> > @@ -2330,11 +2330,11 @@ static int sdma_probe(struct platform_device *pdev)
+> >
+> >  	ret = sdma_init(sdma);
+> >  	if (ret)
+> > -		return ret;
+> > +		return dev_err_probe(dev, ret, "sdma_init failed\n");
+> >
+> >  	ret = sdma_event_remap(sdma);
+> >  	if (ret)
+> > -		return ret;
+> > +		return dev_err_probe(dev, ret, "sdma_event_remap failed\n");
+> >
+> >  	if (sdma->drvdata->script_addrs)
+> >  		sdma_add_scripts(sdma, sdma->drvdata->script_addrs);
+> > @@ -2361,18 +2361,14 @@ static int sdma_probe(struct platform_device *pdev)
+> >  	platform_set_drvdata(pdev, sdma);
+> >
+> >  	ret = dma_async_device_register(&sdma->dma_device);
+> > -	if (ret) {
+> > -		dev_err(dev, "unable to register\n");
+> > -		return ret;
+> > -	}
+> > +	if (ret)
+> > +		return dev_err_probe(dev, ret, "unable to register\n");
+> >
+> >  	devm_add_action_or_reset(dev, sdma_dma_device_unregister_action, sdma);
+> >
+> >  	ret = of_dma_controller_register(np, sdma_xlate, sdma);
+> > -	if (ret) {
+> > -		dev_err(dev, "failed to register controller\n");
+> > -		return ret;
+> > -	}
+> > +	if (ret)
+> > +		return dev_err_probe(dev, ret, "failed to register controller\n");
+> >
+> >  	spba_bus = of_find_compatible_node(NULL, NULL, "fsl,spba-bus");
+> >  	ret = of_address_to_resource(spba_bus, 0, &spba_res);
+> >
+> > --
+> > 2.47.2
+> >
 > 
-> The questions I'm asking are because I don't understand whether the
-> upstream kernel is buggy and how exactly..
-
-After carefully reviewing the documentation and how other drivers use
-dmaengine, I think that if the reuse flag is not set for the descriptor,
-manual release is unnecessary. Therefore, the current driver implementation
-does not contain a bug. This fix patch was a mistake.
-
-Thank you for your thorough review.
-
 

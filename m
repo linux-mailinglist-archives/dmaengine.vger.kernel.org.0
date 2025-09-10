@@ -1,47 +1,47 @@
-Return-Path: <dmaengine+bounces-6443-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6444-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AEFF6B51E38
-	for <lists+dmaengine@lfdr.de>; Wed, 10 Sep 2025 18:49:29 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A0D7AB51F88
+	for <lists+dmaengine@lfdr.de>; Wed, 10 Sep 2025 19:56:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EA05F583856
-	for <lists+dmaengine@lfdr.de>; Wed, 10 Sep 2025 16:49:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 625C85E7591
+	for <lists+dmaengine@lfdr.de>; Wed, 10 Sep 2025 17:56:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFBFB2798F8;
-	Wed, 10 Sep 2025 16:49:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88BF9320A36;
+	Wed, 10 Sep 2025 17:56:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gke1Yb9w"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jRe4zWcM"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 940862797A9;
-	Wed, 10 Sep 2025 16:49:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C456258EC9;
+	Wed, 10 Sep 2025 17:56:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757522954; cv=none; b=r4PLAZAg74hl4OhwsXxtLK2wQkt4nZ8JPr/N1aCIkycCG5h+uO0pFOwyof28tGqTp+O23MSDVmzbzXQxuibJKNeH/Os85kus66tavtkz8wbdRhJdTc5DnTeqVltZM4L1oh49RS8O6dVvXuAuoumyAdQvzlVQk4h2IpbSNvz3Xs8=
+	t=1757526999; cv=none; b=t/bkzjOCGHSCVD81og+QKGiEDXJ5wbeW5Oqr3goZvyVhRl9Jf2HB7khOzX/8fzYJUW58OA9VRnmLx09hfGO9cgyf9kPz8Wo+KWXzOqmPp3VvjAeP0cf1WcYZf2nMmc/lV0JOHoJBr38BfLVvU564BxUOKfyFs++3UiT0eUSJLWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757522954; c=relaxed/simple;
-	bh=WP/WCzco2EhFkx9bRYe7aQR1RWSdm1plG74aSwV7vZQ=;
+	s=arc-20240116; t=1757526999; c=relaxed/simple;
+	bh=dfx1QaAI0kMvhYWbrVkmXlfwZKY2ldtz8H0dhNG7WB0=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=NxLgDRVPujCmP7nkhR0xLP/quMNysQ1hndyCPcRbvOMjl4zPo1MoowV/ZMkarR7nppcWxnArtUrwO9vecf1+uAETwtRlc5nxsQxCmzTxQZ0m4yXZPqVtYu086JMujUyZ+IqaDRmwjKrAbc/yjq7BJLy2FAssMeLqnAcVRFdlr68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gke1Yb9w; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7F90C4CEEB;
-	Wed, 10 Sep 2025 16:49:13 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=fMSWoF37duoKf2ztpto+hkhqB9EpuBY8zdShtawCqlAZsX3x48oZucDzPUloe8HEwl9qrVfDl/oYNWvmQbQ+3DzzuwQ+OQO9t9rJX2Hm58nD4Cy60VE6nIwiEFqm+gHDsGoAK8to4DM0RcsVqpUE0ak6XGbxPkNr/e36ivsWArI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jRe4zWcM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3AD3C4CEEB;
+	Wed, 10 Sep 2025 17:56:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757522954;
-	bh=WP/WCzco2EhFkx9bRYe7aQR1RWSdm1plG74aSwV7vZQ=;
+	s=k20201202; t=1757526998;
+	bh=dfx1QaAI0kMvhYWbrVkmXlfwZKY2ldtz8H0dhNG7WB0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=gke1Yb9wWDd8SOWgyCyZmWYQcdKIT4HvDV+yxhKIKem5CdHFSA0pdS+/99VKZtVG8
-	 qCDrZVI/75x78JOQMwNRT4eXKJnvUm4+BxO+2lqHsEXSvTtTGRfDqKh80qRUgDRcWX
-	 1Vuq321x9Z0Zc5QFuidzAooL0TMPe61jz4oFAO5Wpn4wb460XuIl+y073D9RGTrX9C
-	 4rS+zTwyvtvZugCfZkgGRYXSlTWreQCD6EMYSGB6QiQ+plYz97uTgsJ1vX0U82UUor
-	 TEtzrqDjc70KIVu6IdyeWZLtX28iPtQx1S7BgAfo2UGGm3kDCiizk7YNVazDfsEKsi
-	 lsUtE6ifyK4FQ==
-Date: Wed, 10 Sep 2025 11:49:12 -0500
+	b=jRe4zWcMZHGYVN74V/1AJ/RR2YxEknyGXojZPMJPAXKzCcUsWiYO7XK3pRkSWg/9H
+	 +2fDQbPHhT/8ZjKfE5OWvhwZ1xfBaj68k5xQiSjAOvdX84b1dgC1EC7/20wvrPNHcA
+	 jCKo676PQIRA938vU+osLyFjB3p6WfF6mWtMHbnLMPe+61M0sFF0OsSOkZP3AIQO0k
+	 DRc6vwwAL8fUMqiz4Cw20Y4AxKihAd848QAKNyOhzt03TUZEKHkC8k1EIk6B+h2dhp
+	 wi7XUzEXqldcZ+0qEddD6SbaF91V9KHJ1ymZAKeTZfUlS+9B8KKyQENONIHBsVt925
+	 xPMz0GqWHu7Nw==
+Date: Wed, 10 Sep 2025 12:56:37 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: "Verma, Devendra" <Devendra.Verma@amd.com>
 Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
@@ -51,8 +51,8 @@ Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
 	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
 	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
 	"Simek, Michal" <michal.simek@amd.com>
-Subject: Re: [PATCH 1/2] dmaengine: dw-edma: Add AMD MDB Endpoint Support
-Message-ID: <20250910164912.GA1540975@bhelgaas>
+Subject: Re: [PATCH 2/2] dmaengine: dw-edma: Add non-LL mode
+Message-ID: <20250910175637.GA1541229@bhelgaas>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -61,71 +61,67 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <SA1PR12MB8120B9D69376F56AD2540E15950EA@SA1PR12MB8120.namprd12.prod.outlook.com>
+In-Reply-To: <SA1PR12MB81200F594C9B842C563F3DFE950EA@SA1PR12MB8120.namprd12.prod.outlook.com>
 
-On Wed, Sep 10, 2025 at 12:28:40PM +0000, Verma, Devendra wrote:
+On Wed, Sep 10, 2025 at 12:30:39PM +0000, Verma, Devendra wrote:
 > > From: Bjorn Helgaas <helgaas@kernel.org>
 
-[redundant quoted headers removed]
+[redundant headers removed]
 
-> > On Fri, Sep 05, 2025 at 03:46:58PM +0530, Devendra K Verma wrote:
-> > > AMD MDB PCIe endpoint support. For AMD specific support added the
-> > > following
-> > >   - AMD supported PCIe Device IDs and Vendor ID (Xilinx).
-> > >   - AMD MDB specific driver data
-> > >   - AMD MDB specific VSEC capability to retrieve the device DDR
-> > >     base address.
+> > On Fri, Sep 05, 2025 at 03:46:59PM +0530, Devendra K Verma wrote:
+> > > AMD MDB IP supports Linked List (LL) mode as well as non-LL mode.
+> > > The current code does not have the mechanisms to enable the DMA
+> > > transactions using the non-LL mode. The following two cases are added
+> > > with this patch:
 
-> > > static void dw_edma_pcie_get_vsec_dma_data(struct pci_dev *pdev,
-> > >       u32 val, map;
-> > >       u16 vsec;
-> > >       u64 off;
-> > > +     u16 vendor;
-> > >
-> > > -     vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_SYNOPSYS,
-> > > -                                     DW_PCIE_VSEC_DMA_ID);
-> > > +     vendor = pdev->vendor;
-> > > +     if (vendor != PCI_VENDOR_ID_SYNOPSYS &&
-> > > +         vendor != PCI_VENDOR_ID_XILINX)
-> > > +             return;
-> > > +
-> > > +     vsec = pci_find_vsec_capability(pdev, vendor,
-> > > + DW_PCIE_VSEC_DMA_ID);
+> > > +static u64 dw_edma_get_phys_addr(struct pci_dev *pdev,
+> > > +                              struct dw_edma_pcie_data *pdata,
+> > > +                              enum pci_barno bar) {
+> > > +     if (pdev->vendor == PCI_VENDOR_ID_XILINX)
+> > > +             return pdata->phys_addr;
+> > > +     return pci_bus_address(pdev, bar);
 > >
-> > The vendor of a device assigns VSEC IDs and determines what each
-> > ID means, so the semantics of a VSEC Capability are determined by
-> > the tuple of (device Vendor ID, VSEC ID), where the Vendor ID is
-> > the value at 0x00 in config space.
+> > This doesn't seem right.  pci_bus_address() returns
+> > pci_bus_addr_t, so pdata->phys_addr should also be a
+> > pci_bus_addr_t, and the function should return pci_bus_addr_t.
+> >
+> > A pci_bus_addr_t is not a "phys_addr"; it is an address that is
+> > valid on the PCI side of a PCI host bridge, which may be different
+> > than the CPU physical address on the CPU side of the bridge
+> > because of things like IOMMUs.
+> >
+> > Seems like the struct dw_edma_region.paddr should be renamed to
+> > something like "bus_addr" and made into a pci_bus_addr_t.
 > 
-> As AMD is a vendor for this device, it is determined as VSEC
-> capability to support some of the functionality not supported by the
-> other vendor Synopsys.
+> In case of AMD, it is not an address that is accessible from host
+> via PCI, it is the device side DDR offset of physical address which
+> is not known to host,that is why the VSEC capability is used to let
+> know host of the DDR offset to correctly programming the LLP of DMA
+> controller.  Without programming the LLP controller will not know
+> from where to start reading the LL for DMA processing. DMA
+> controller requires the physical address of LL present on its side
+> of DDR.
 
-Based on your code, the vendor of this device (the value at 0x00 in
-config space) is either PCI_VENDOR_ID_SYNOPSYS or
-PCI_VENDOR_ID_XILINX.  Whoever controls those Vendor IDs also
-controls the VSEC ID allocations for those Vendor IDs.
+I guess "device side DDR offset" means this Xilinx device has some DDR
+internal to the PCI device, and the CPU cannot access it via a BAR?
 
-> > The DVSEC Capability is a more generic solution to this problem.
-> > The VSEC ID namespace is determined by the Vendor ID of the
-> > *device*.
-> >
-> > By contrast, the DVSEC ID namespace is determined by a Vendor ID
-> > in the DVSEC Capability itself, not by the Vendor ID of the
-> > device.
-> >
-> > So AMD could define a DVSEC ID, e.g., 6, and define the semantics
-> > of that DVSEC.  Then devices from *any* vendor could include a
-> > DVSEC Capability with (PCI_VENDOR_ID_AMD, 6), and generic code
-> > could look for that DVSEC independent of what is at 0x00 in config
-> > space.
-> 
-> As AMD itself becomes the vendor for this device, VSEC capability is
-> chosen to support the functionality missing in the code.
+But you need addresses inside that device DDR even though the CPU
+can't access it, and the VSEC gives you the base address of the DDR?
 
-For VSEC, it doesn't matter who *sells* the device or who supplies IP
-contained in the device.  What matters is the Vendor ID at 0x00 in
-config space.
+This makes me wonder about how dw_edma_region is used elsewhere
+because some of those places seem like they assume the CPU *can*
+access this area.
+
+dw_pcie_edma_ll_alloc() uses dmam_alloc_coherent(), which allocates
+RAM and gives you a CPU virtual address (ll->vaddr.mem) and a DMA
+address (ll->paddr).  dw_edma_pcie_probe() will later overwrite the
+ll->paddr with the DDR offset based on VSEC.
+
+But it sounds like ll->vaddr.mem is useless for Xilinx devices since
+the CPU can't access the DDR?
+
+If the CPU can't use ll->vaddr.mem, what happens in places like
+dw_hdma_v0_write_ll_data() where we access it?
 
 Bjorn
 

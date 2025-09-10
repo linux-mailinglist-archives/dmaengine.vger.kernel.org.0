@@ -1,58 +1,66 @@
-Return-Path: <dmaengine+bounces-6444-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6445-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0D7AB51F88
-	for <lists+dmaengine@lfdr.de>; Wed, 10 Sep 2025 19:56:44 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1FDC3B52130
+	for <lists+dmaengine@lfdr.de>; Wed, 10 Sep 2025 21:36:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 625C85E7591
-	for <lists+dmaengine@lfdr.de>; Wed, 10 Sep 2025 17:56:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C257E585718
+	for <lists+dmaengine@lfdr.de>; Wed, 10 Sep 2025 19:36:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88BF9320A36;
-	Wed, 10 Sep 2025 17:56:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jRe4zWcM"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 329CE2D94A9;
+	Wed, 10 Sep 2025 19:36:02 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C456258EC9;
-	Wed, 10 Sep 2025 17:56:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E2D22D8780
+	for <dmaengine@vger.kernel.org>; Wed, 10 Sep 2025 19:35:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757526999; cv=none; b=t/bkzjOCGHSCVD81og+QKGiEDXJ5wbeW5Oqr3goZvyVhRl9Jf2HB7khOzX/8fzYJUW58OA9VRnmLx09hfGO9cgyf9kPz8Wo+KWXzOqmPp3VvjAeP0cf1WcYZf2nMmc/lV0JOHoJBr38BfLVvU564BxUOKfyFs++3UiT0eUSJLWk=
+	t=1757532962; cv=none; b=soskovdCCc93zKGkH7vdQloYmIE0Fexrezr0JfzOJJqZohtVCFxsAlkE55x2Obzjn3jVG/ThqQwHV8ItwbR4uy6Lchfs8krLcwiXtqj7M26y0tj6tQnJTydtfSjP2ftSLslKB+Eh1j4nBCddMW7eyA6CX3EQg6YTaPzYk5hhDRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757526999; c=relaxed/simple;
-	bh=dfx1QaAI0kMvhYWbrVkmXlfwZKY2ldtz8H0dhNG7WB0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=fMSWoF37duoKf2ztpto+hkhqB9EpuBY8zdShtawCqlAZsX3x48oZucDzPUloe8HEwl9qrVfDl/oYNWvmQbQ+3DzzuwQ+OQO9t9rJX2Hm58nD4Cy60VE6nIwiEFqm+gHDsGoAK8to4DM0RcsVqpUE0ak6XGbxPkNr/e36ivsWArI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jRe4zWcM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3AD3C4CEEB;
-	Wed, 10 Sep 2025 17:56:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757526998;
-	bh=dfx1QaAI0kMvhYWbrVkmXlfwZKY2ldtz8H0dhNG7WB0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=jRe4zWcMZHGYVN74V/1AJ/RR2YxEknyGXojZPMJPAXKzCcUsWiYO7XK3pRkSWg/9H
-	 +2fDQbPHhT/8ZjKfE5OWvhwZ1xfBaj68k5xQiSjAOvdX84b1dgC1EC7/20wvrPNHcA
-	 jCKo676PQIRA938vU+osLyFjB3p6WfF6mWtMHbnLMPe+61M0sFF0OsSOkZP3AIQO0k
-	 DRc6vwwAL8fUMqiz4Cw20Y4AxKihAd848QAKNyOhzt03TUZEKHkC8k1EIk6B+h2dhp
-	 wi7XUzEXqldcZ+0qEddD6SbaF91V9KHJ1ymZAKeTZfUlS+9B8KKyQENONIHBsVt925
-	 xPMz0GqWHu7Nw==
-Date: Wed, 10 Sep 2025 12:56:37 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: "Verma, Devendra" <Devendra.Verma@amd.com>
-Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
-	"mani@kernel.org" <mani@kernel.org>,
-	"vkoul@kernel.org" <vkoul@kernel.org>,
-	"dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"Simek, Michal" <michal.simek@amd.com>
-Subject: Re: [PATCH 2/2] dmaengine: dw-edma: Add non-LL mode
-Message-ID: <20250910175637.GA1541229@bhelgaas>
+	s=arc-20240116; t=1757532962; c=relaxed/simple;
+	bh=97TTwFnkZILp+AwKU5rkAQ1/KcOF8CugkOR3mmbqLGM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mMa8hIribPUGJqhlEA+ihaElF1ycYLmgCTmu2bokTvh0Aqs1I1trPX34n5+U2oY1Kxw0NfoCOtL6q/X9YXtBv6w9aFMou09RSGKLNs19esAq1XtSe+qf/UKcCY14X7GBOKf3nvSV3bNXjs96G/jtUW0UKLRitRZRRJrzU7sYDMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1uwQba-00044l-E0; Wed, 10 Sep 2025 21:35:46 +0200
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1uwQba-000dsZ-09;
+	Wed, 10 Sep 2025 21:35:46 +0200
+Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1uwQbZ-00GLdL-2s;
+	Wed, 10 Sep 2025 21:35:45 +0200
+Date: Wed, 10 Sep 2025 21:35:45 +0200
+From: Marco Felsch <m.felsch@pengutronix.de>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Jiada Wang <jiada_wang@mentor.com>, dmaengine@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 09/11] dmaengine: add support for device_link
+Message-ID: <20250910193545.gx3qoyjamoxlncqd@pengutronix.de>
+References: <20250903-v6-16-topic-sdma-v1-0-ac7bab629e8b@pengutronix.de>
+ <20250903-v6-16-topic-sdma-v1-9-ac7bab629e8b@pengutronix.de>
+ <aLhUv+mtr1uZTCth@lizhi-Precision-Tower-5810>
+ <20250909120309.5zgez5exbvxn5z3y@pengutronix.de>
+ <aMA88W/rDxFesEx+@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -61,67 +69,135 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <SA1PR12MB81200F594C9B842C563F3DFE950EA@SA1PR12MB8120.namprd12.prod.outlook.com>
+In-Reply-To: <aMA88W/rDxFesEx+@lizhi-Precision-Tower-5810>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: dmaengine@vger.kernel.org
 
-On Wed, Sep 10, 2025 at 12:30:39PM +0000, Verma, Devendra wrote:
-> > From: Bjorn Helgaas <helgaas@kernel.org>
+On 25-09-09, Frank Li wrote:
 
-[redundant headers removed]
+...
 
-> > On Fri, Sep 05, 2025 at 03:46:59PM +0530, Devendra K Verma wrote:
-> > > AMD MDB IP supports Linked List (LL) mode as well as non-LL mode.
-> > > The current code does not have the mechanisms to enable the DMA
-> > > transactions using the non-LL mode. The following two cases are added
-> > > with this patch:
-
-> > > +static u64 dw_edma_get_phys_addr(struct pci_dev *pdev,
-> > > +                              struct dw_edma_pcie_data *pdata,
-> > > +                              enum pci_barno bar) {
-> > > +     if (pdev->vendor == PCI_VENDOR_ID_XILINX)
-> > > +             return pdata->phys_addr;
-> > > +     return pci_bus_address(pdev, bar);
+> > > > diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+> > > > index 758fcd0546d8bde8e8dddc6039848feeb1e24475..a50652bc70b8ce9d4edabfaa781b3432ee47d31e 100644
+> > > > --- a/drivers/dma/dmaengine.c
+> > > > +++ b/drivers/dma/dmaengine.c
+> > > > @@ -817,6 +817,7 @@ struct dma_chan *dma_request_chan(struct device *dev, const char *name)
+> > > >  	struct fwnode_handle *fwnode = dev_fwnode(dev);
+> > > >  	struct dma_device *d, *_d;
+> > > >  	struct dma_chan *chan = NULL;
+> > > > +	struct device_link *dl;
+> > > >
+> > > >  	if (is_of_node(fwnode))
+> > > >  		chan = of_dma_request_slave_channel(to_of_node(fwnode), name);
+> > > > @@ -858,6 +859,13 @@ struct dma_chan *dma_request_chan(struct device *dev, const char *name)
+> > > >  	/* No functional issue if it fails, users are supposed to test before use */
+> > > >  #endif
+> > > >
+> > > > +	dl = device_link_add(dev, chan->device->dev, DL_FLAG_AUTOREMOVE_CONSUMER);
+> > >
+> > > chan->device->dev is dmaengine devices. But some dmaengine's each channel
+> > > have device, consumer should link to chan's device, not dmaengine device
+> > > because some dmaengine support per channel clock\power management.
 > >
-> > This doesn't seem right.  pci_bus_address() returns
-> > pci_bus_addr_t, so pdata->phys_addr should also be a
-> > pci_bus_addr_t, and the function should return pci_bus_addr_t.
-> >
-> > A pci_bus_addr_t is not a "phys_addr"; it is an address that is
-> > valid on the PCI side of a PCI host bridge, which may be different
-> > than the CPU physical address on the CPU side of the bridge
-> > because of things like IOMMUs.
-> >
-> > Seems like the struct dw_edma_region.paddr should be renamed to
-> > something like "bus_addr" and made into a pci_bus_addr_t.
+> > I get your point. Can you give me some pointers please? To me it seems
+> > like the dma_chan_dev is only used for sysfs purpose according the
+> > dmaengine.h.
 > 
-> In case of AMD, it is not an address that is accessible from host
-> via PCI, it is the device side DDR offset of physical address which
-> is not known to host,that is why the VSEC capability is used to let
-> know host of the DDR offset to correctly programming the LLP of DMA
-> controller.  Without programming the LLP controller will not know
-> from where to start reading the LL for DMA processing. DMA
-> controller requires the physical address of LL present on its side
-> of DDR.
+> Not really, there are other dma engineer already reuse it for other purpose.
+> So It needs update kernel doc for dma_chan_dev.
 
-I guess "device side DDR offset" means this Xilinx device has some DDR
-internal to the PCI device, and the CPU cannot access it via a BAR?
+Can you please provide me some pointers? I checked the kernel code base
+for the struct::dma_chan_dev. I didn't found any references within the
+dmaengine drivers. The only usage I found was for the sysfs purpose.
 
-But you need addresses inside that device DDR even though the CPU
-can't access it, and the VSEC gives you the base address of the DDR?
+> > > chan's device's parent devices is dmaengine devices. it should also work
+> > > for sdma case
+> >
+> > I see, this must be tested of course.
+> > > >         if (chan->device->create_devlink) {
+> > >                 u32 flags = DL_FLAG_STATELESS | DL_FLAG_PM_RUNTIME | DL_FLAG_AUTOREMOVE_CONSUMER;
+> >
+> > According device_link.rst: using DL_FLAG_STATELESS and
+> > DL_FLAG_AUTOREMOVE_CONSUMER is invalid.
+> >
+> > >                 if (pm_runtime_active(dev))
+> > >                         flags |= DL_FLAG_RPM_ACTIVE;
+> >
+> > This is of course interessting, thanks for the hint.
+> >
+> > > When create device link (apply channel), consume may active.
+> >
+> > I have read it as: "resue the supplier and ensure that the supplier
+> > follows the consumer runtime state".
+> >
+> > >                 dl = device_link_add(chan->slave, &chan->dev->device, flags);
+> >
+> > Huh.. you used the dmaengine device too?
+> 
+> /**
+>  * struct dma_chan_dev - relate sysfs device node to backing channel device
+>  * @chan: driver channel device
+>  * @device: sysfs device
+>  * @dev_id: parent dma_device dev_id
+>  * @chan_dma_dev: The channel is using custom/different dma-mapping
+>  * compared to the parent dma_device
+>  */
+> struct dma_chan_dev {
+> 	struct dma_chan *chan;
+> 	struct device device;
+> 	int dev_id;
+> 	bool chan_dma_dev;
+> };
+> 
+> struct dma_chan {
+> 	struct dma_device *device; /// this one should be dmaengine
+> 	struct dma_chan_dev *dev; /// this one is pre-chan device.
+> }
 
-This makes me wonder about how dw_edma_region is used elsewhere
-because some of those places seem like they assume the CPU *can*
-access this area.
+I've tested your approach but it turns out that teh dma_chan_dev has no
+driver. Of course we could use the DL_FLAG_STATELESS flag but this is
+described as:
 
-dw_pcie_edma_ll_alloc() uses dmam_alloc_coherent(), which allocates
-RAM and gives you a CPU virtual address (ll->vaddr.mem) and a DMA
-address (ll->paddr).  dw_edma_pcie_probe() will later overwrite the
-ll->paddr with the DDR offset based on VSEC.
+| When driver presence on the supplier is irrelevant and only correct
+| suspend/resume and shutdown ordering is needed, the device link may
+| simply be set up with the ``DL_FLAG_STATELESS`` flag.  In other words,
+| enforcing driver presence on the supplier is optional.
 
-But it sounds like ll->vaddr.mem is useless for Xilinx devices since
-the CPU can't access the DDR?
+I want to enforce the driver presence, therefore I used the manged flags
+which excludes the DL_FLAG_STATELESS, if I get it right.
 
-If the CPU can't use ll->vaddr.mem, what happens in places like
-dw_hdma_v0_write_ll_data() where we access it?
+Please see the below the debug output:
 
-Bjorn
+** use the dmaengine device as supplier **
+
+device_link_init_status: supplier.dev:30bd0000.dma-controller supplier.drv:imx-sdma supplier.status:0x2 consumer:dev:30840000.spi consumer.drv:spi_imx consumer.status:0x1
+device_link_init_status: supplier.dev:30e10000.dma-controller supplier.drv:imx-sdma supplier.status:0x2 consumer:dev:30c20000.sai consumer.drv:fsl-sai consumer.status:0x1
+
+
+** use the dma channel device as supplier **
+
+device_link_init_status: supplier.dev:dma0chan0 supplier.drv:no-driver supplier.status:0x0 consumer:dev:30840000.spi consumer.drv:spi_imx consumer.status:0x1
+device_link_init_status: supplier.dev:dma0chan1 supplier.drv:no-driver supplier.status:0x0 consumer:dev:30840000.spi consumer.drv:spi_imx consumer.status:0x1
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 51 at /drivers/base/core.c:1387 device_links_driver_bound+0x170/0x3a0
+...
+---[ end trace 0000000000000000 ]---
+------------[ cut here ]------------
+
+As said, I get your point regarding the usage of the dma-channel device
+but I didn't found any reference to a driver which used the dma-channel
+device. Also since I want to have the supply driver to enforced by the
+devlink I don't want to use the DL_FLAG_STATELESS flag.
+
+Regarding your point, that some DMA controllers may have seperate clocks
+for each channel: I think this can be handled by the dmaengine driver,
+e.g. via the device_alloc_chan_resources() hook.
+
+@all
+I'm pleased about any input :)
+
+Regards,
+  Marco
 

@@ -1,42 +1,41 @@
-Return-Path: <dmaengine+bounces-6465-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6459-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40519B53E48
-	for <lists+dmaengine@lfdr.de>; Thu, 11 Sep 2025 23:59:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id EA712B53E45
+	for <lists+dmaengine@lfdr.de>; Thu, 11 Sep 2025 23:59:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 77E7F5A7FA0
-	for <lists+dmaengine@lfdr.de>; Thu, 11 Sep 2025 21:58:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 328D95C0840
+	for <lists+dmaengine@lfdr.de>; Thu, 11 Sep 2025 21:58:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 859012DF14C;
-	Thu, 11 Sep 2025 21:57:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 404442E0B68;
+	Thu, 11 Sep 2025 21:57:04 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 034C92E6CBB
-	for <dmaengine@vger.kernel.org>; Thu, 11 Sep 2025 21:57:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C3312DF12D
+	for <dmaengine@vger.kernel.org>; Thu, 11 Sep 2025 21:57:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757627828; cv=none; b=HTy47O5JUTbXrpZQPYyfZq7gf7c19d1kybiiM78B0QXOnC9hdkKpMMsAxGWqVube1JFMzujlcnFWikgf1fRocSQCNvKhIP9EaBTVjLfZ1oBezS3tRecXOt4IZ1YJjczPOLucOCJzw7IAGqM9z2bOzmX0UO4BY5M9CEteb+N04CY=
+	t=1757627824; cv=none; b=T5B0H+nfjt3lNB/i8jHoer7LyTdIrt+6sBiiN8aTSzUPkR93op3fYMr6TzfZPNwqj3HnJ8J5zDWcXkBMulYIXKVB4WA5MMvo0VZAYhKumB2nw/79PdxyTeCqBuYHpJdSh2dbc3Ua9q0GFySQdRQK+/0fTx9YMg3/cnWTF00i7vQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757627828; c=relaxed/simple;
-	bh=CsgSMovVoDnzJjuEAN8azFQLgpLqXfWaErM5h/J1l1Q=;
+	s=arc-20240116; t=1757627824; c=relaxed/simple;
+	bh=9JBExctI+l2MIs5a270p1JQ4VYHxvk44V9VY5IfRnR0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kT90fxvK6uwPnyIvT1Iw0FYaK8/5JIgkOZtz3tLSHDx0p9Or03u0FN2nTiWDSU9ME7GYo17v9aCBIhVB4imB1J7uAgSCwWWpYt9ADGgLkbba+5DAUbPCDxqw0pylYYQStO0K/iieox9DjPPM+LpoM3+NJ3+fEQzTKMdaj8Y0ldk=
+	 In-Reply-To:To:Cc; b=nyHfli0t1K+4X3L6hOZeEb6s8ynpZNaDDF0kGafPj325PV+6hNG/RzZ3HXjmkwE8vHjYtGUKIys7Mbh//uzR+zDXAfCsGN4LfuB8XsrMnszuVxg/KbIWJNy+kU5cIrBJmg/67UGauxyBfMzjCkufD6389S63h1UDPwFlhx9LHOk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
 Received: from dude02.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::28])
 	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
 	(envelope-from <m.felsch@pengutronix.de>)
-	id 1uwpHe-0004g5-3h; Thu, 11 Sep 2025 23:56:50 +0200
+	id 1uwpHe-0004g5-5B; Thu, 11 Sep 2025 23:56:50 +0200
 From: Marco Felsch <m.felsch@pengutronix.de>
-Date: Thu, 11 Sep 2025 23:56:44 +0200
-Subject: [PATCH v2 03/10] dmaengine: imx-sdma: drop legacy device_node np
- check
+Date: Thu, 11 Sep 2025 23:56:45 +0200
+Subject: [PATCH v2 04/10] dmaengine: imx-sdma: sdma_remove minor cleanups
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -45,7 +44,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250911-v6-16-topic-sdma-v2-3-d315f56343b5@pengutronix.de>
+Message-Id: <20250911-v6-16-topic-sdma-v2-4-d315f56343b5@pengutronix.de>
 References: <20250911-v6-16-topic-sdma-v2-0-d315f56343b5@pengutronix.de>
 In-Reply-To: <20250911-v6-16-topic-sdma-v2-0-d315f56343b5@pengutronix.de>
 To: Vinod Koul <vkoul@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
@@ -61,53 +60,34 @@ X-SA-Exim-Mail-From: m.felsch@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: dmaengine@vger.kernel.org
 
-The legacy 'if (np)' was required in past where we had pdata and dt.
-Nowadays the driver binds only to dt platforms. So using a new kernel
-but still use pdata is not possible, therefore we can drop the legacy
-'if' code path.
+We don't need to set the pdev driver data to NULL since the device will
+be freed anyways.
+
+Also drop the tasklet_kill() since this is done by the virt-dma driver
+during the vchan_synchronize().
 
 Reviewed-by: Frank Li <Frank.Li@nxp.com>
 Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
- drivers/dma/imx-sdma.c | 18 +++++++-----------
- 1 file changed, 7 insertions(+), 11 deletions(-)
+ drivers/dma/imx-sdma.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
 diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 56daaeb7df03986850c9c74273d0816700581dc0..dab3589e1c8d9efe06e16925c53554f8e22ce679 100644
+index dab3589e1c8d9efe06e16925c53554f8e22ce679..44411c15029c9b09f307c4b9e3f7b1ab77fa5093 100644
 --- a/drivers/dma/imx-sdma.c
 +++ b/drivers/dma/imx-sdma.c
-@@ -2355,11 +2355,9 @@ static int sdma_probe(struct platform_device *pdev)
- 			vchan_init(&sdmac->vc, &sdma->dma_device);
+@@ -2446,11 +2446,8 @@ static void sdma_remove(struct platform_device *pdev)
+ 	for (i = 0; i < MAX_DMA_CHANNELS; i++) {
+ 		struct sdma_channel *sdmac = &sdma->channel[i];
+ 
+-		tasklet_kill(&sdmac->vc.task);
+ 		sdma_free_chan_resources(&sdmac->vc.chan);
  	}
+-
+-	platform_set_drvdata(pdev, NULL);
+ }
  
--	if (np) {
--		sdma->iram_pool = of_gen_pool_get(np, "iram", 0);
--		if (sdma->iram_pool)
--			dev_info(&pdev->dev, "alloc bd from iram.\n");
--	}
-+	sdma->iram_pool = of_gen_pool_get(np, "iram", 0);
-+	if (sdma->iram_pool)
-+		dev_info(&pdev->dev, "alloc bd from iram.\n");
- 
- 	ret = sdma_init(sdma);
- 	if (ret)
-@@ -2399,12 +2397,10 @@ static int sdma_probe(struct platform_device *pdev)
- 		goto err_init;
- 	}
- 
--	if (np) {
--		ret = of_dma_controller_register(np, sdma_xlate, sdma);
--		if (ret) {
--			dev_err(&pdev->dev, "failed to register controller\n");
--			goto err_register;
--		}
-+	ret = of_dma_controller_register(np, sdma_xlate, sdma);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to register controller\n");
-+		goto err_register;
- 	}
- 
- 	/*
+ static struct platform_driver sdma_driver = {
 
 -- 
 2.47.3

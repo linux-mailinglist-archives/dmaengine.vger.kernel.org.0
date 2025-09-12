@@ -1,258 +1,171 @@
-Return-Path: <dmaengine+bounces-6482-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6483-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CE6CAB547E6
-	for <lists+dmaengine@lfdr.de>; Fri, 12 Sep 2025 11:37:03 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 50125B547BD
+	for <lists+dmaengine@lfdr.de>; Fri, 12 Sep 2025 11:34:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 524D9A04AA9
-	for <lists+dmaengine@lfdr.de>; Fri, 12 Sep 2025 09:33:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D731F587636
+	for <lists+dmaengine@lfdr.de>; Fri, 12 Sep 2025 09:34:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A5C027F006;
-	Fri, 12 Sep 2025 09:31:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3241E28541A;
+	Fri, 12 Sep 2025 09:31:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="3eg1vy7g"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oDl2A0LO"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2087.outbound.protection.outlook.com [40.107.220.87])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F98280A2F;
-	Fri, 12 Sep 2025 09:31:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.87
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757669476; cv=fail; b=FvoMScrSjkbxN/HkfD8nKWcu5Ikgrf34qcCsllDcpE/p0Taj3q6Tu38oSGwoyXdQIdLPblgDxvwJDUjxVeUn+ZlNtZkfwHwobMdJswTEyLSY5ep+TWgio00jSH7Q9X8scpV5XyWbi/sXQsSOFJCXUmVe20U0bli3/JJZorOM9wc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757669476; c=relaxed/simple;
-	bh=0FpPAc4nlNYLsJCyoTfIC0vvvBZCK162Q6e+h+0V6/A=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=o/iblxTRNBj2ERPrwIGK6/3ahf41zvsTV1P5SC/Z7mnWHciBrPDh5Sl6jEaO8MfXRN+zitmvStdwQieVMISRojIBuFvsVkItCkJa7LxqOVbsVZqjH7X1yFXEySwWuv73gCqdg6QnCBSVQ2c2CFwwz7xBcZMfTXjGsVG791JaCdE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=3eg1vy7g; arc=fail smtp.client-ip=40.107.220.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IsZsqDvpJNkzXrwqdcd5PNk5LRi9bPNK7S4ZXSGBh7zh8NayfTNSptup1HGiLyAYNaY0QVqBSnk80mBn1YnBc9iNu2KRC/uBGZqP87eypcByrS5n+mTWsUx2P5fU8g2b+YD6Igqkqm4RAfZNzsc7j9eUv2LJkTbc7Z5PLMRlU99Htz7HeoOSgn4vXclZ2p7tXmcJHoPWyuDKGRWJZ7bblxMHdx+8hZQBTQEnBysYXnkLcXwSzBbh5EkHtzBSx6WcrEmxta4uJmiK8rE5vGNuIAPresznJ8HHKGhyUxNYue/qqAr68pIVrXA0k4jFLPeDCwz10ZACF7uFhyQPBlC9Cg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lBTCxCwEm+mJ0u3HwuZ3tuxjH6x+GBopy2Go8MCBCXc=;
- b=p3dUKzzlFBN7MpmwQvojQC3P3o4y2OlRqIWMdfNL3wB1+r7KTnVD2mXGP52NWSpNXc9hgjTh3wKEhRTMeUzzN3r61PIZCKLCElmw7t7CudcPCaOEW0tD5AJCTF1rX44USi++JwatjXZH0IeWO/9hJGX1IPzIdTR/gzKy7Af5nrwpr42W/g6+vWvr51c9FWjdh8FTQoT2GL1uDQ2lwH4vC1/d6l7MJMSXE8N34E25sU4nspVFoMlCWONLmGZ/ryLidKOGvyQQI9qdJiVQSGf8HyUKJy9stS75rXcalrAXdFpYRmfuVcgHBJjcK5K/LQJjjQZOg+6R+PszivjoDr1nOw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lBTCxCwEm+mJ0u3HwuZ3tuxjH6x+GBopy2Go8MCBCXc=;
- b=3eg1vy7g73uouvRQS39hGHVt1oxmAAWMft7DRlb+ogsA/576hyHWaRPtOLHn8Zt2UvlC25pOwoBn64eWP1vBJwBBQOvSLdyzA5bwSJZX/I/iDEReMbnCkXExSMdoWR6iMjn35mqkh3gPP4sKK4dsQUsQxfAkTIgTTMZys15Ctbc=
-Received: from SA1PR12MB8120.namprd12.prod.outlook.com (2603:10b6:806:331::16)
- by IA0PPF80FB91A80.namprd12.prod.outlook.com (2603:10b6:20f:fc04::bd5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9115.18; Fri, 12 Sep
- 2025 09:31:10 +0000
-Received: from SA1PR12MB8120.namprd12.prod.outlook.com
- ([fe80::a160:b30e:1d9c:eaea]) by SA1PR12MB8120.namprd12.prod.outlook.com
- ([fe80::a160:b30e:1d9c:eaea%7]) with mapi id 15.20.9094.021; Fri, 12 Sep 2025
- 09:31:10 +0000
-From: "Verma, Devendra" <Devendra.Verma@amd.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: "bhelgaas@google.com" <bhelgaas@google.com>, "mani@kernel.org"
-	<mani@kernel.org>, "vkoul@kernel.org" <vkoul@kernel.org>,
-	"dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Simek,
- Michal" <michal.simek@amd.com>
-Subject: RE: [PATCH 2/2] dmaengine: dw-edma: Add non-LL mode
-Thread-Topic: [PATCH 2/2] dmaengine: dw-edma: Add non-LL mode
-Thread-Index: AQHcHpgus9635/jJ7UqyWh/j4Mmvg7SMBtGwgAC0f4CAANbYYIAA6ioAgADQFNA=
-Date: Fri, 12 Sep 2025 09:31:10 +0000
-Message-ID:
- <SA1PR12MB81204E8706B7EB7AB662573C9508A@SA1PR12MB8120.namprd12.prod.outlook.com>
-References:
- <SA1PR12MB812027AB20BEE7C28F30A5FE9509A@SA1PR12MB8120.namprd12.prod.outlook.com>
- <20250911204340.GA1584422@bhelgaas>
-In-Reply-To: <20250911204340.GA1584422@bhelgaas>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Enabled=True;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SetDate=2025-09-12T09:08:24.0000000Z;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Name=AMD
- Internal Distribution
- Only;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ContentBits=3;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Method=Standard
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA1PR12MB8120:EE_|IA0PPF80FB91A80:EE_
-x-ms-office365-filtering-correlation-id: f8d8a476-1151-4344-a597-08ddf1df1bed
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|376014|1800799024|38070700021;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?DODf3mpwnboKTZRuXGM2vY4hvBKTYZ29MG61doTItHapKHM6pzT3VrWvbS2W?=
- =?us-ascii?Q?yoROWZkatnYUbIRYaAQktIHLuG2EIXvhYsn3TPYbrDdW/jGve7F0xQG9BY/h?=
- =?us-ascii?Q?Q0rzKRfhT//mhisymfiWz0PFWy9CVOTTgvIdx58mmtKlSQ4scoQqE9crFkJU?=
- =?us-ascii?Q?bD1QoOojcdbVUaLZbTjJYj7W4gfdJxBwl3+F7dc1NVwJx7fKWJ367JGQRsqI?=
- =?us-ascii?Q?djtitvzzeizuuDrE/qDCgMvgAVQ40tcCdOXLaX19WZQ0GVjK22oTUxZ2VoTe?=
- =?us-ascii?Q?lqLo+UuB3HxZMJXxD7A1r9USkCy8qBviQBeM1NHbvTp2ep4/DmymRKqOe174?=
- =?us-ascii?Q?URY2g2rG/UAmZu5FBh9lEWIV7JNrGoi+93hzrgkPA3vC83aIumbedHk60tmj?=
- =?us-ascii?Q?gXxU0MePLrhDRlmRQycaFD/4zBkupD4Cxgu1bmacEhcWj3r2EQW2NHuzgZCT?=
- =?us-ascii?Q?O0tg9jreYRiaMqtnshcoV6DxsMILkfo8qeqWf676uiRYqIyKsIiajGZxmp14?=
- =?us-ascii?Q?sQ/ge9iHJS8rlF7TuNcDdcwbhdZKqwGkutZnfEd/8ipuZ8VvjIXBDIObExDi?=
- =?us-ascii?Q?1em81ppAaASfnmFSSc9nBylmYFt9numsQ0EfdEflaEEwE0AfzZyUmjxNJVOH?=
- =?us-ascii?Q?sagLtkAm39YFT5nQp891ECfWZEN/FacttGlMrQtJFrLT8PjdSafAhHNt+QAf?=
- =?us-ascii?Q?I0ofi8PcZNuS0TAKaBmntSTWI/o21T8pEJoQ0AfDfwPP13PNYdMupH/AyjHc?=
- =?us-ascii?Q?30JMjSQYGhgOo79XsqQCDUjh7PaqvBV3V4Rr2aQe2ylmt8PachkZgkgK3O+T?=
- =?us-ascii?Q?gq7b9/ucFcm3SVtUenY4azwBcjnA1VNfuEV6nuaIQuxsFuAUVpfjGOrJiUkk?=
- =?us-ascii?Q?87pdjHfM9Sq5aEIwNHebOCsD4ditfEwx0fhvF/wsl1YOKGNefTQgsKHp8s8a?=
- =?us-ascii?Q?GJnh6cwF6yy9zM+zxbo+YhDqD7/P1h14//L/+WtRdCBnrdD6Co8PZl389yej?=
- =?us-ascii?Q?UWJzq+j+naOf0EgM/U+X5JGx0ij4J0m3w5ZOl5giFWravQuVM/OhaUFB45lw?=
- =?us-ascii?Q?3qP95V+CN1BpCC7skMXKf36kMVkNpjJl3zrNJSDaCNWAxZHE/tJrcJGdZkuJ?=
- =?us-ascii?Q?o22eU+QAUC3iB0iwzbj5YKupNGhUgbCVuFJZEHMAFLScM6SkMWM9N1RpPlsz?=
- =?us-ascii?Q?G0Ofd29TS4zvBRvsjtVTbDloEC9LTTuQ00bWdaIK7VfFvyJt869PtrVgAkvk?=
- =?us-ascii?Q?I7zXrdnDY/5OQo8xmvoug/KNZPuxkCj0se3rE8639dsPISyre0ElRxlokhh1?=
- =?us-ascii?Q?SWrhwgfkswOzFSHnSChb80jdgYMGiFhBHWn470lJCV2XAV+Hfw+xGtI32i0B?=
- =?us-ascii?Q?21AhCV6hg7WMgcPBVbUzPlR9pB0wVI6IfDHxai8YgsChxvEZMJc15Ve+qfCT?=
- =?us-ascii?Q?2Z81HSsQ775nkT0C2m43lZEnrPot7fja5p4XyJssW6AzzCplP1K9bw=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR12MB8120.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(38070700021);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?LJnII6JPDMEO9gczlNaJbgEyaEBbgWJ+9oHRuS6S8dzLelLLtCRWd0KNXh1t?=
- =?us-ascii?Q?PmKT6Zm5f373Ul47gxgmMqWFXHu3ZYqvo6Yn+E4k4TwXRnHKgl7IF9CICBGA?=
- =?us-ascii?Q?O8zg7KUI1E7ShTrfqxJ0mwXfi0zNwNONdG3b3xWA5Gur6fIXnxRxabULOwf5?=
- =?us-ascii?Q?2XjtyA931NxhXyCZcBuQxP+OP4ErZYg8wEgxiGaJwf3nIqGBPMXF2tfPcRs5?=
- =?us-ascii?Q?w0ZBljf6QE74OK2Rz5dXkTcEanuiNZoIVQVQkse3oMA3jTXf8P/Sk2Ls0ukY?=
- =?us-ascii?Q?JkFQYX/m9gLGpOh9sXevC58IdiGK23fldxpiDX0w6E19hOTRJQOUW+mlIyG5?=
- =?us-ascii?Q?fw2u6zeWx3G0exhudqwdL29E9jOdwfQqH1UqtpGoP0yG/2lNPuXWFGQwL8kg?=
- =?us-ascii?Q?GWHQishFdMvhWxAMFY7hYqr5wQizoo7XLVfaoJklyWofNyIEk4uR9S+KxkZW?=
- =?us-ascii?Q?USuaeolcpdWBBXKUHOgkL/bVRBJH8wPQxJTSm4Izrbz9TeaI4EAC2F4bg9GG?=
- =?us-ascii?Q?XrpyyeX8nzDvmxSHa5AKp0Q3EPSea2fGwt+pwVGSMdiLRkKdCCQhBe440d+2?=
- =?us-ascii?Q?MRrsCZZglC6KIx3Ujfv8gWhodqlYC24nfY8yvBwSpI/zy/hVRv+tsZWeu8BN?=
- =?us-ascii?Q?cRyapgB9U4sKW1wky9N9h4SlD73j3inOttLqpneL+EWKAH1D22SAxF65Jx05?=
- =?us-ascii?Q?AVXC+2436m+jKycL4CTGPIDfL0hLZPq6jChF+TR3lBNjJZRKFHPQi7SfsJ70?=
- =?us-ascii?Q?s6qv+kjQT6mS1FpT6E8rsnlv0ZLhNkNuK8nwNNql71Z0ja3Jq7nwzVvEyHO1?=
- =?us-ascii?Q?P0MeQBYqjIFx/ckbBOkLz4tzgSIvN/cR0wbuPvi5FJ5UJRo5AMa77UXLJdmh?=
- =?us-ascii?Q?bWVKLpG6FatJb3AFYUF1cZA8NGplW4Y8PDBZzyqfzkESY0pEJghfO/e2EvYP?=
- =?us-ascii?Q?1ujcPTKw3bdDn6hkeBg/SD3Vug64vxPDJQXQW8JXvFPafiyMMQAv5dpyC7rX?=
- =?us-ascii?Q?BC6RcXBDPSDskclVgU6eNUi5PvNanq41d+A1EDovGyw/8sUM/W9qcOo92P5p?=
- =?us-ascii?Q?3akgSuizikXn8WQhSvIVBKPw4240eJ2tXTGLQNXjpyH53WzzUKLa+z7IlARE?=
- =?us-ascii?Q?m9zVhYvEFfhbhUBxttz2/uDchn13vvo3M6D8bMNPbwfwLVF0DMjpNeZq5Z8O?=
- =?us-ascii?Q?qWOFvesHOfrMSJ0l7FEF1xRNuW7whBGjaDzjpljbCkqO6aP6yZ/A1MTSgnt3?=
- =?us-ascii?Q?zIRWrEWKk+M7THReW1f2ZUvmMNPd+Nv23tF0RTVNnfWoBkz6Wg2g96abffmv?=
- =?us-ascii?Q?9YFWOUopUQHrQkITCOOfcSuoCGgW5G6TJxCrO4EQmjN7e2ASErpYz2zi4iWP?=
- =?us-ascii?Q?rFjvx4Qnnt/eR2PFFPiH/25YvVB5Z7yJz0p6dWGk2Q39ZSzlwYcgrgN83pcP?=
- =?us-ascii?Q?kumtO89APQB51O+8sZFyTrYq9qA0GLN5EkTYnURjpYdYmigmvI+U5iMz0y/O?=
- =?us-ascii?Q?uJ9q5PsGy7uX6/TyccbnW3ZAusYrNGmSF0ynmLvtLr4fh7j6+ZWaMoF58gTf?=
- =?us-ascii?Q?2FLr6eUTyEzcoV01C50=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1F9E2848B4;
+	Fri, 12 Sep 2025 09:31:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757669507; cv=none; b=UKZIA24I3cgOiR5xHITFq3td6ODh/lt5xPLFJQ++49ANkIiaOES2EGOgDtfIJxTJriAkU6LLZwARKPefdt67vDKXDrhTqxPpY3ugHqeflgWfPnZKe7FmJvt82CstGHTy22fUV5daefjy7tqFoncbF+Tl8qDLxo7JYYFNN1KR/fc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757669507; c=relaxed/simple;
+	bh=cZZSj/PLAmvPikniIesMdJfhqh3VOpUH71TpGrecZ8M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tIUScZ6Gzx9bxdDLH7qle5FByA8HOy260Awo0S7Oxp4PHfo+Ao6tQmigQBbIokDw0n6b0hp6GeL5M5lk5HzJ2BvuStC1kygrHoCX5vof//FsXAzmY+OrKjvhDBl4NyqVaa0zCR/EMPEbydokKZyLJO15Mdm+U2v+NSDoqSEsKsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oDl2A0LO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB683C4CEF1;
+	Fri, 12 Sep 2025 09:31:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757669506;
+	bh=cZZSj/PLAmvPikniIesMdJfhqh3VOpUH71TpGrecZ8M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oDl2A0LOXO/1X2zNKv7aRnP0NHdkbAsbDDgwtZzvwmo12fpeFM2E3/tK2+Vtp6jDf
+	 LtHjqH3FhqX9XCd49ZEoi9d2wFua1A1xl2NpXDXII2TJgNe2FaEGcY3H9R3K+d/kSk
+	 i5GbpzjLt0Me2HD69Wbc5uGIc3TwgDS6JZFlUf4XXoZCI/2uPJn9w8cEPAn3NjkatI
+	 mrNqigkcd6DbPU1UEsK3MA+M2bqLjMfjb8ArXgRSIyAq3CjGnxkE8s7LGICh/mIf7j
+	 5pUu4Qe144CAGGymifmDXQ3yvwNpleByOIrvrEZ2XoQVUNyLe8+LbR96tJeBNXKw/y
+	 Se8H2lBXfymbQ==
+Date: Fri, 12 Sep 2025 11:31:43 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Janne Grunau <j@jannau.net>
+Cc: Sven Peter <sven@kernel.org>, Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
+	Neal Gompa <neal@gompa.dev>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Hector Martin <marcan@marcan.st>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
+	Robin Murphy <robin.murphy@arm.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Mark Kettenis <kettenis@openbsd.org>, Andi Shyti <andi.shyti@kernel.org>, 
+	Jassi Brar <jassisinghbrar@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Sasha Finkelstein <fnkl.kernel@gmail.com>, Marcel Holtmann <marcel@holtmann.org>, 
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Johannes Berg <johannes@sipsolutions.net>, 
+	van Spriel <arend@broadcom.com>, Lee Jones <lee@kernel.org>, Stephen Boyd <sboyd@kernel.org>, 
+	Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, 
+	Michael Turquette <mturquette@baylibre.com>, Martin =?utf-8?Q?Povi=C5=A1er?= <povik+lin@cutebit.org>, 
+	Vinod Koul <vkoul@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Mark Brown <broonie@kernel.org>, Marc Zyngier <maz@kernel.org>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
+	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, asahi@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, iommu@lists.linux.dev, linux-gpio@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-bluetooth@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org, 
+	linux-clk@vger.kernel.org, dmaengine@vger.kernel.org, linux-sound@vger.kernel.org, 
+	linux-spi@vger.kernel.org, linux-nvme@lists.infradead.org
+Subject: Re: [PATCH 20/37] dt-bindings: pwm: apple,s5l-fpwm: Add t6020-fpwm
+ compatible
+Message-ID: <ahxdf3l6zvmjp2nlgklg3go7biaimuz7qh5upnhohrrbrg62e6@gmi3pmbccwwe>
+References: <20250828-dt-apple-t6020-v1-0-507ba4c4b98e@jannau.net>
+ <20250828-dt-apple-t6020-v1-20-507ba4c4b98e@jannau.net>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR12MB8120.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f8d8a476-1151-4344-a597-08ddf1df1bed
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Sep 2025 09:31:10.4863
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: IsmPkSIWhPzVH+xH6B5rG7+qm7tCypr0IZmca0/8f4nV66+VU0GAfeUJbYaogQ8mhxcYWN1L+jxIyLiBUGWimw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PPF80FB91A80
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="hd4ybrkt7tr5jevb"
+Content-Disposition: inline
+In-Reply-To: <20250828-dt-apple-t6020-v1-20-507ba4c4b98e@jannau.net>
 
-[AMD Official Use Only - AMD Internal Distribution Only]
 
-Hi Bjorn
+--hd4ybrkt7tr5jevb
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 20/37] dt-bindings: pwm: apple,s5l-fpwm: Add t6020-fpwm
+ compatible
+MIME-Version: 1.0
 
-Please check my response inline.
-Regards,
-Devendra
+Hello,
 
-> -----Original Message-----
-> From: Bjorn Helgaas <helgaas@kernel.org>
-> Sent: Friday, September 12, 2025 02:14
-> To: Verma, Devendra <Devendra.Verma@amd.com>
-> Cc: bhelgaas@google.com; mani@kernel.org; vkoul@kernel.org;
-> dmaengine@vger.kernel.org; linux-pci@vger.kernel.org; linux-
-> kernel@vger.kernel.org; Simek, Michal <michal.simek@amd.com>
-> Subject: Re: [PATCH 2/2] dmaengine: dw-edma: Add non-LL mode
->
-> Caution: This message originated from an External Source. Use proper caut=
-ion
-> when opening attachments, clicking links, or responding.
->
->
-> On Thu, Sep 11, 2025 at 11:42:31AM +0000, Verma, Devendra wrote:
-> > > -----Original Message-----
-> > > From: Bjorn Helgaas <helgaas@kernel.org>
->
-> > > On Wed, Sep 10, 2025 at 12:30:39PM +0000, Verma, Devendra wrote:
-> > > > > From: Bjorn Helgaas <helgaas@kernel.org>
-> > >
-> > > [redundant headers removed]
-> > >
-> > > > > On Fri, Sep 05, 2025 at 03:46:59PM +0530, Devendra K Verma wrote:
-> > > > > > AMD MDB IP supports Linked List (LL) mode as well as non-LL mod=
-e.
-> > > > > > The current code does not have the mechanisms to enable the
-> > > > > > DMA transactions using the non-LL mode. The following two
-> > > > > > cases are added with this patch:
-> > >
-> > > > > > +static u64 dw_edma_get_phys_addr(struct pci_dev *pdev,
-> > > > > > +                              struct dw_edma_pcie_data *pdata,
-> > > > > > +                              enum pci_barno bar) {
-> > > > > > +     if (pdev->vendor =3D=3D PCI_VENDOR_ID_XILINX)
-> > > > > > +             return pdata->phys_addr;
-> > > > > > +     return pci_bus_address(pdev, bar);
-> > > > >
-> > > > > This doesn't seem right.  pci_bus_address() returns
-> > > > > pci_bus_addr_t, so pdata->phys_addr should also be a
-> > > > > pci_bus_addr_t, and the function should return pci_bus_addr_t.
-> > > > >
-> > > > > A pci_bus_addr_t is not a "phys_addr"; it is an address that is
-> > > > > valid on the PCI side of a PCI host bridge, which may be
-> > > > > different than the CPU physical address on the CPU side of the
-> > > > > bridge because of things like IOMMUs.
-> > > > >
-> > > > > Seems like the struct dw_edma_region.paddr should be renamed to
-> > > > > something like "bus_addr" and made into a pci_bus_addr_t.
-> > > >
-> > > > In case of AMD, it is not an address that is accessible from host
-> > > > via PCI, it is the device side DDR offset of physical address
-> > > > which is not known to host,that is why the VSEC capability is used
-> > > > to let know host of the DDR offset to correctly programming the LLP=
- of DMA
-> controller.
-> > > > Without programming the LLP controller will not know from where to
-> > > > start reading the LL for DMA processing. DMA controller requires
-> > > > the physical address of LL present on its side of DDR.
-> > >
-> > > I guess "device side DDR offset" means this Xilinx device has some
-> > > DDR internal to the PCI device, and the CPU cannot access it via a
-> > > BAR?
-> >
-> > The host can access the DDR internal to the PCI device via BAR, but it
-> > involves an iATU translation. The host can use the virtual / physical
-> > address to access that DDR.  The issue is not with the host rather DMA
-> > controller which does not understand the physical address provided by
-> > the host, eg, the address returned by pci_bus_addr(pdev, barno).
->
-> Does this mean dw_edma_get_phys_addr() depends on iATU programming done b=
-y
-> the PCI controller driver?  Is it possible for that driver to change the =
-iATU
-> programming after dw_edma_get_phys_addr() in a way that breaks this?
->
+On Thu, Aug 28, 2025 at 04:01:39PM +0200, Janne Grunau wrote:
+> The PWM controller on Apple's M2 Pro/Max SoCs behaves in the same way as
+> on previous M1 and M2 SoCs. Add its per SoC compatible.
+>=20
+> At the same time fix the order of existing entries. The sort order logic
+> is having SoC numeric code families in release order, and SoCs within
+> each family in release order:
+>=20
+> - t8xxx (Apple HxxP/G series, "phone"/"tablet" chips)
+>   - t8103 (Apple H13G/M1)
+>   - t8112 (Apple H14G/M2)
+> - t6xxx (Apple HxxJ series, "desktop" chips)
+>   - t6000/t6001/t6002 (Apple H13J(S/C/D) / M1 Pro/Max/Ultra)
+>   - t6020/t6021/t6022 (Apple H14J(S/C/D) / M2 Pro/Max/Ultra)
+>=20
+> Note that SoCs of the t600[0-2] / t602[0-2] family share the
+> t6000 / t6020 compatible where the hardware is 100% compatible, which is
+> usually the case in this highly related set of SoCs.
+>=20
+> Signed-off-by: Janne Grunau <j@jannau.net>
+> ---
+>  Documentation/devicetree/bindings/pwm/apple,s5l-fpwm.yaml | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/pwm/apple,s5l-fpwm.yaml b/=
+Documentation/devicetree/bindings/pwm/apple,s5l-fpwm.yaml
+> index 142157bff0cd851c85fbf0132d734d470c5a0761..04519b0c581d0e9fb1ae6aa21=
+9a4e850027de6a2 100644
+> --- a/Documentation/devicetree/bindings/pwm/apple,s5l-fpwm.yaml
+> +++ b/Documentation/devicetree/bindings/pwm/apple,s5l-fpwm.yaml
+> @@ -17,8 +17,9 @@ properties:
+>      items:
+>        - enum:
+>            - apple,t8103-fpwm
+> -          - apple,t6000-fpwm
+>            - apple,t8112-fpwm
+> +          - apple,t6000-fpwm
+> +          - apple,t6020-fpwm
+>        - const: apple,s5l-fpwm
+> =20
+>    reg:
 
-No, driver can neither program nor modify the iATU. Once device is configur=
-ed using
-AMD Programmable Device Image (PDI) which contains these configurations.
-Once programmed the configuration can not be changed by the driver.
+The patch is fine for me. There was no merge plan sketched out in the
+cover letter and I don't spot any dependencies this patch is a part of.
+So I applied this patch to
 
-> Bjorn
+	https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for=
+-next
+
+as 6.18-rc1 material.
+
+Best regards
+Uwe
+
+--hd4ybrkt7tr5jevb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmjD6HwACgkQj4D7WH0S
+/k5dDwf/ZhdoZ04wcFscsQjfQPV9sY5Kzs8OxPgL+m4AV85SDwzSuZybeACCfsL2
+U+r2uMlK/Q21DJwXbTJjmnyAe19XWYtcvtUfKd50OAsoPnpijd6XN/VzkpPwSI1v
+MM1rZmYLCNhucLOPo87uqSwtHmOGOiHGefUgolr3pa9kl2VjNfe2U9byQTQegxaK
+CxeDN6bZEPo8n7PoU1mmnwFDouEZD1xzQt3FdvPpL2XORk2Ye5r89n1q02uTLbkj
+EsQ7IOSbpp2UDyIkxF0ESV6nWtpLn7AIB0rNABUH7JZA9FQ29vzAc9a3FRiLJsUa
+2cvxXsdWOdhpncFiR4L1mRq39BoLAQ==
+=7x/6
+-----END PGP SIGNATURE-----
+
+--hd4ybrkt7tr5jevb--
 

@@ -1,65 +1,58 @@
-Return-Path: <dmaengine+bounces-6493-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6494-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 19B1DB5538B
-	for <lists+dmaengine@lfdr.de>; Fri, 12 Sep 2025 17:29:47 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD020B553BB
+	for <lists+dmaengine@lfdr.de>; Fri, 12 Sep 2025 17:34:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8DA931D68235
-	for <lists+dmaengine@lfdr.de>; Fri, 12 Sep 2025 15:29:26 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B22A1B64FE0
+	for <lists+dmaengine@lfdr.de>; Fri, 12 Sep 2025 15:32:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DA49223DF0;
-	Fri, 12 Sep 2025 15:28:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE96B31690A;
+	Fri, 12 Sep 2025 15:34:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mfk5xoK0"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7C4F22154F
-	for <dmaengine@vger.kernel.org>; Fri, 12 Sep 2025 15:28:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0AD03128C8;
+	Fri, 12 Sep 2025 15:34:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757690900; cv=none; b=E7z7YkNbNawvsJNUFTU0K1sBKZFoYJ9WLSBsGHzIkKQ7vsrMw/N88LnetJNTogh2vMsEJiJHFl+9BS/oVkEnewA9at+12WzZtO+6dmT7v255zjIwG1pHtWFXuhdYkPftFhySxEQbQ/EDcVskpaWXVkfjmOhVEporI2oSYe90a/g=
+	t=1757691240; cv=none; b=DrD0zdDZiv0HxCgAE3RFZBSlE4kygdrA+XDr1WYjUOkV4/xE1Z4L3YIk8EFSvwpi1NA2T9cr5Qcng4rnDQVeoH1x43E4ccvKzdl0uph3Z0bw0wz5a4FbI9vfG8Nte+9Wz7xK6dYLfdVlNGC1XHbo3QuNqH3KtzBzhXetYoM1lPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757690900; c=relaxed/simple;
-	bh=1J+ny7LKPXsnDwoQUpd/se26HOP6NxiKEsHAFbX8lzY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oqL5RNFxTlikElpNNRGB99C5iOem8FoMihT33b7SVMYS7G+Ykll2ylgSYLIa5vupOQB4d/7PBMzzQtk482XlsXaUzaBGBN832r5Yfv7Cjuq0eH086aNfQ9gizS1Bz2E1gTCKr2GHrM2vV5sn+UmJcNglCEJYRKKCeg/jjMCzHBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1ux5h3-0005sz-Dg; Fri, 12 Sep 2025 17:28:09 +0200
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1ux5h3-000xIq-0a;
-	Fri, 12 Sep 2025 17:28:09 +0200
-Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1ux5h3-0032oV-0E;
-	Fri, 12 Sep 2025 17:28:09 +0200
-Date: Fri, 12 Sep 2025 17:28:09 +0200
-From: Marco Felsch <m.felsch@pengutronix.de>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Jiada Wang <jiada_wang@mentor.com>, dmaengine@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 09/10] dmaengine: imx-sdma: make use of
- devm_add_action_or_reset to unregiser the dma-controller
-Message-ID: <20250912152809.nj3yk5wmrb7ojjoo@pengutronix.de>
-References: <20250911-v6-16-topic-sdma-v2-0-d315f56343b5@pengutronix.de>
- <20250911-v6-16-topic-sdma-v2-9-d315f56343b5@pengutronix.de>
- <aMQzNDE8QuUZwGkt@lizhi-Precision-Tower-5810>
+	s=arc-20240116; t=1757691240; c=relaxed/simple;
+	bh=UjNP+gz35xIYAwtkGxP8yyGBEgjqvxljaBoIFuNHqJs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=XN7fh3izCHSkOXEg1EhNdvhc/khfSot+OnnuOPuTQQdc02I5hfCHlRj0cUNv2HjIJkNa4O98f67xqEGx6y7qT/FXL+w89gPo7OEHpQ7fDijA/e2RZpUAgKBlvq300kpDGva/nEt1Ez6j/Z8Y7p5ZCTF5uGY24qk3hAH7QKSSiuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mfk5xoK0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D391C4CEFC;
+	Fri, 12 Sep 2025 15:33:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757691240;
+	bh=UjNP+gz35xIYAwtkGxP8yyGBEgjqvxljaBoIFuNHqJs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=mfk5xoK0Q7thxy9nZCGyDFaXIs6vUYL5i/fJc0a+UaFFsFfeigmY3ICTcjeMaOSmn
+	 7x/y1w/VrmjX3DJXakng0q/dFkBaEoGwWvBrh2RgwLHPZFcW3cfySZJuerhH1sidvx
+	 E5oQD1pCsST04zzWjf89Wm8qtrAXqxLsO5wSIG4uANn42LHVyyuGv8lpwNyLroHGCV
+	 ULBk6RvG9K66vCXskir7fzLh0Yw4KEIsf9ve8/AIrZIDUOyMQyvvSaXn41zVVSv89Y
+	 SQoonBl1DLH/fzSxSGYDsDzhIJ1+mDECjBEeMBwvmrBIpw3Ny/xUi/xspw07kY5ngs
+	 nSYTX9TGzESzw==
+Date: Fri, 12 Sep 2025 10:33:58 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: "Verma, Devendra" <Devendra.Verma@amd.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
+	"mani@kernel.org" <mani@kernel.org>,
+	"vkoul@kernel.org" <vkoul@kernel.org>,
+	"dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"Simek, Michal" <michal.simek@amd.com>
+Subject: Re: [PATCH v1 2/2] dmaengine: dw-edma: Add non-LL mode
+Message-ID: <20250912153358.GA1625522@bhelgaas>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -68,73 +61,48 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aMQzNDE8QuUZwGkt@lizhi-Precision-Tower-5810>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: dmaengine@vger.kernel.org
+In-Reply-To: <SA1PR12MB8120288197801A3F6C41993A9508A@SA1PR12MB8120.namprd12.prod.outlook.com>
 
-On 25-09-12, Frank Li wrote:
-> On Thu, Sep 11, 2025 at 11:56:50PM +0200, Marco Felsch wrote:
-> > Use the devres capabilities to cleanup the driver remove() callback.
+On Fri, Sep 12, 2025 at 09:35:56AM +0000, Verma, Devendra wrote:
+> > -----Original Message-----
+> > From: Bjorn Helgaas <helgaas@kernel.org>
+
+[redundant headers removed]
+
+> > On Thu, Sep 11, 2025 at 05:14:51PM +0530, Devendra K Verma wrote:
+> > > AMD MDB IP supports Linked List (LL) mode as well as non-LL mode.
+> > > The current code does not have the mechanisms to enable the DMA
+> > > transactions using the non-LL mode. The following two cases are added
+> > > with this patch:
+> > > - When a valid physical base address is not configured via the
+> > >   Xilinx VSEC capability then the IP can still be used in non-LL
+> > >   mode. The default mode for all the DMA transactions and for all
+> > >   the DMA channels then is non-LL mode.
+> > > - When a valid physical base address is configured but the client
+> > >   wants to use the non-LL mode for DMA transactions then also the
+> > >   flexibility is provided via the peripheral_config struct member of
+> > >   dma_slave_config. In this case the channels can be individually
+> > >   configured in non-LL mode. This use case is desirable for single
+> > >   DMA transfer of a chunk, this saves the effort of preparing the
+> > >   Link List.
 > >
-> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > ---
-> >  drivers/dma/imx-sdma.c | 14 +++++++++++++-
-> >  1 file changed, 13 insertions(+), 1 deletion(-)
+> > > +static pci_bus_addr_t dw_edma_get_phys_addr(struct pci_dev *pdev,
+> > > +                                         struct dw_edma_pcie_data *pdata,
+> > > +                                         enum pci_barno bar) {
+> > > +     if (pdev->vendor == PCI_VENDOR_ID_XILINX)
+> > > +             return pdata->devmem_phys_off;
+> > > +     return pci_bus_address(pdev, bar);
 > >
-> > diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-> > index d6d0d4300f540268a3ab4a6b14af685f7b93275a..a7e6554ca223e2e980caf2e2dea832db9ad60ed6 100644
-> > --- a/drivers/dma/imx-sdma.c
-> > +++ b/drivers/dma/imx-sdma.c
-> > @@ -2264,6 +2264,13 @@ static struct dma_chan *sdma_xlate(struct of_phandle_args *dma_spec,
-> >  				     ofdma->of_node);
-> >  }
-> >
-> > +static void sdma_dma_of_dma_controller_unregister_action(void *data)
-> > +{
-> > +	struct sdma_engine *sdma = data;
-> > +
-> > +	of_dma_controller_free(sdma->dev->of_node);
-> > +}
-> > +
-> >  static void sdma_dma_device_unregister_action(void *data)
-> >  {
-> >  	struct sdma_engine *sdma = data;
-> > @@ -2408,6 +2415,12 @@ static int sdma_probe(struct platform_device *pdev)
-> >  		return ret;
-> >  	}
-> >
-> > +	ret = devm_add_action_or_reset(dev, sdma_dma_of_dma_controller_unregister_action, sdma);
-> > +	if (ret) {
-> > +		dev_err(dev, "failed to register of-dma-controller unregister hook\n");
-> > +		return ret;
-> > +	}
-> > +
+> > Does this imply that non-Xilinx devices don't have the iATU that
+> > translates a PCI bus address to an internal device address?
 > 
-> return dev_err_probe()
+> Non-Xilinx devices can have iATU enabled or bypassed as well. In
+> bypass mode no translation is done and the TLPs are simply forwarded
+> untranslated.
 
-Please check my last patch.
+What happens on a non-Xilinx device with iATU enabled?  Does
+pci_bus_address() return the correct address in that case?
 
-Regards,
-  Marco
-
-> 
-> Frank
-> >  	/*
-> >  	 * Because that device tree does not encode ROM script address,
-> >  	 * the RAM script in firmware is mandatory for device tree
-> > @@ -2431,7 +2444,6 @@ static void sdma_remove(struct platform_device *pdev)
-> >  	struct sdma_engine *sdma = platform_get_drvdata(pdev);
-> >  	int i;
-> >
-> > -	of_dma_controller_free(sdma->dev->of_node);
-> >  	/* Kill the tasklet */
-> >  	for (i = 0; i < MAX_DMA_CHANNELS; i++) {
-> >  		struct sdma_channel *sdmac = &sdma->channel[i];
-> >
-> > --
-> > 2.47.3
-> >
-> 
+I can't figure out what's different about Xilinx that requires this
+special handling.
 

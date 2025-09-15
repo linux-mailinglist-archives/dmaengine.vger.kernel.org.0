@@ -1,374 +1,143 @@
-Return-Path: <dmaengine+bounces-6517-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6518-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1B1FB58035
-	for <lists+dmaengine@lfdr.de>; Mon, 15 Sep 2025 17:17:09 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1975FB5811E
+	for <lists+dmaengine@lfdr.de>; Mon, 15 Sep 2025 17:45:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 94B6B3B6C7F
-	for <lists+dmaengine@lfdr.de>; Mon, 15 Sep 2025 15:17:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AEBFF188B96E
+	for <lists+dmaengine@lfdr.de>; Mon, 15 Sep 2025 15:41:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 068FB3375CD;
-	Mon, 15 Sep 2025 15:16:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A64322068B;
+	Mon, 15 Sep 2025 15:40:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EoeRc0gh"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C10B232F764;
-	Mon, 15 Sep 2025 15:16:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79A9C38DD8
+	for <dmaengine@vger.kernel.org>; Mon, 15 Sep 2025 15:40:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757949407; cv=none; b=maoH1boLXXACd5oN217hi3hcC1gXidYvvop8lXGxJfifIllrUVjY2nrA21Ap3YaUMkuakj6AD3yZKLmoxxML1KDTDW+9o8i2RZuUEExaN6Eufj4kfYPUk7lGgFpl/e9MFg+h3YEpZoSUE0pl8GkmegYtXmRwAlHq3/M7rvhW4xE=
+	t=1757950827; cv=none; b=eeC8ZkpddsnN1MJF/8tyDoP0iTkUk33sIJNraE+a3thhKIUIGquRDK/hD7S86VMbT/pgRkzcXBv4OGaKiv3KZDM3qmiul+oL42COkz4h3ATkj/m9q2lu3ehprN5sO+uFFIWkkxmbkD073nDtkpk4NBhseBAO4Btzi7Vx3TApiAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757949407; c=relaxed/simple;
-	bh=WwkW0cyMSQJ1lBzx5s1Kc6O0ElVVRXfH01+70O8ofc0=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BcLguv4ih0QBkU8lby8E9UVBtLaWFy0JeWM7iFgFi7g1fDyKg2jyCY/sjjCTbsYzY0wkEUlLdppEujoxTpnTgjiS5AoSuYNp4dBHaA0CDjFh8PK3UT8Dcn5UthKVo4oe8gqqi6WfvqD4lQVXrivklUd+CWbGgsJn3HiOtPph+Jk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cQT846ZDWz6M5B3;
-	Mon, 15 Sep 2025 23:13:56 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id A450D1402EA;
-	Mon, 15 Sep 2025 23:16:42 +0800 (CST)
-Received: from localhost (10.203.177.15) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 15 Sep
- 2025 17:16:42 +0200
-Date: Mon, 15 Sep 2025 16:16:40 +0100
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Nathan Lynch via B4 Relay <devnull+nathan.lynch.amd.com@kernel.org>
-CC: <nathan.lynch@amd.com>, Vinod Koul <vkoul@kernel.org>, Wei Huang
-	<wei.huang2@amd.com>, Mario Limonciello <mario.limonciello@amd.com>, "Bjorn
- Helgaas" <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>
-Subject: Re: [PATCH RFC 11/13] dmaengine: sdxi: Add DMA engine provider
-Message-ID: <20250915161640.00004630@huawei.com>
-In-Reply-To: <20250905-sdxi-base-v1-11-d0341a1292ba@amd.com>
-References: <20250905-sdxi-base-v1-0-d0341a1292ba@amd.com>
-	<20250905-sdxi-base-v1-11-d0341a1292ba@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1757950827; c=relaxed/simple;
+	bh=82L0x2oMofUwCXJw/yoY61w/+jPiOevKC7hOK80hFRc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l+YwGx2SWVoLUx+x0lGuqvSx3IgRQ5sYaVICcNgZinZZ53ZyByWuqFoaa47/05GzsjW7EOBA/bAn2L17p34qZejsajAe74upCjF68FS9j/qhWjgTvkaDC+aZopJPibNvaPMVJxhe5L9QLcPvXtbw5E6rS4A/1yqTuRGizM8le1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EoeRc0gh; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-62ef469bb2cso5268383a12.2
+        for <dmaengine@vger.kernel.org>; Mon, 15 Sep 2025 08:40:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1757950823; x=1758555623; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CbGW74Hx6FChjlot3Wj0dX/C4wldujvmwSh9HaBF/Dk=;
+        b=EoeRc0ghNxrVvQGRoZ3nWN7eqYIX5Oa6KFej7hYaNXQm76ZcJz1QQ6SpLN/UylK1lv
+         cQBhtLOe4LHPZkg6eBLA4jIZXsUxSvm/QruNxmHDdGg+WS2sDRnlgD3wGmekm9JnmRB/
+         uKqosEePqZ9PoBtmn5YcSInWj169g8IlCVJbouzVjTU8wbSG2seP9w6KqDfUV4oRvtV5
+         b362cEj4K0AQUx074KBCoujWXIsPUKFuS/xcN2FjCCtKktQoxACJO4kYowaswYdQhE5Z
+         avfZwX7casjmBbLe/ygyNDoqDxGLpXhPhphWkrx3VTrnUAyDMI5PH/YmBYIHKfPXUmER
+         IHFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757950823; x=1758555623;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CbGW74Hx6FChjlot3Wj0dX/C4wldujvmwSh9HaBF/Dk=;
+        b=W5m3yA+F22kC82pR+em7SKtHAIVXM35yBC8zcLgoTSDt1iAbdSHRCQ16cuGVHggo8d
+         V5liIJu0wEj3E8eKfqNlL/iJZElps4se3YlOsf4hXPPmzL5GZ6jQXZDytzSpRvJJuCY2
+         Rit8qNQrnQMHennmOG3s8glzhcTHfB+vV7QLIT4Eb/c4pbwH21YwOzV1pyKhuBwuzY6P
+         rMpyRPIr8yZjuUuxVkSF1DTYfxvjIuD6RbpiL8P5L93sgScdcRzozsuWvTM2G1zsADMz
+         U3ywGKWxTpeD91GyYNqZGFa4nwFSsq3xQ7II3zWmh4OH4XfKGIHXu8i/SMsbQQF4/a5p
+         o/Ig==
+X-Forwarded-Encrypted: i=1; AJvYcCVfL8d0BNqaWRekxcF9399iwtkbHxmKwNq8WeBXQcZUVXTGBbD+IK90NDdjmFJ8fzoEhSRNfuRwVv0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8xUIn5Yhhp9ioETcVd0idrQdNXgIszV0yBgueneqLg91VHKH0
+	qvYs1sEajJUdJOxro5a97xSVfcR/Pi6iFWEIzzyt1qcHXVKYz+Mj3C1S7F9WYw7d7TA=
+X-Gm-Gg: ASbGncuIVw20pn9+QncMMELB7/EYq8yGpxIc/ItvpPXEM9QI846gHkijIezA9gXRq6v
+	ryU61EJuSxNiK1jOpGMaM5x7fUSqVQz6Cr2R2pblASm+yKkPnhsDCDNjp2v8meB1vDTWrvCRm5b
+	+CpH66KWp6Pm8QhKd6FbN4SEBXAwkzaP5MLydq10VY36UKVcFTtVhrM7MGFTnfYuLJkMmqf6sG3
+	SPun5OSpqvUVV1Gkuh7gegDG3T6PA5XnM6Fq4bsFITc23enhVyfPu2m1qO0rSJg3mlxl2n/4DcW
+	CpliNxOZHrAmrSyRxAMOwLFppPi87HAQe1nNKJo9Sq88TSTe/7qiAx0wnaUuo32dYu+CQTWENrE
+	oELKLWPHaoIfoHT4dFeg+KdZJAp2zaVAN
+X-Google-Smtp-Source: AGHT+IFaP0APFcnnHzepInFuNe9QRhF2cHCwrhbwHtmb3MUXGYc0B2MoogMChIbOb59TPPzqTW7arg==
+X-Received: by 2002:a17:907:9444:b0:b11:4d6f:d7 with SMTP id a640c23a62f3a-b114d6f01efmr309182766b.16.1757950823214;
+        Mon, 15 Sep 2025 08:40:23 -0700 (PDT)
+Received: from [172.20.10.3] ([109.166.130.161])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b07e1aed5ffsm568146666b.81.2025.09.15.08.40.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Sep 2025 08:40:22 -0700 (PDT)
+Message-ID: <aadda4c7-a5b0-458c-bea7-59f1e983c1fd@linaro.org>
+Date: Mon, 15 Sep 2025 18:40:20 +0300
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] dmaegnine: fsl-edma: add runtime suspend/resume
+ support
+To: Joy Zou <joy.zou@nxp.com>, Frank Li <Frank.Li@nxp.com>,
+ Vinod Koul <vkoul@kernel.org>
+Cc: imx@lists.linux.dev, dmaengine@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250912-b4-edma-runtime-v3-1-be22f7161745@nxp.com>
+From: Eugen Hristev <eugen.hristev@linaro.org>
+Content-Language: en-US
+In-Reply-To: <20250912-b4-edma-runtime-v3-1-be22f7161745@nxp.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- frapeml500008.china.huawei.com (7.182.85.71)
 
-On Fri, 05 Sep 2025 13:48:34 -0500
-Nathan Lynch via B4 Relay <devnull+nathan.lynch.amd.com@kernel.org> wrote:
 
-> From: Nathan Lynch <nathan.lynch@amd.com>
+
+On 9/12/25 13:55, Joy Zou wrote:
+> Introduce runtime suspend and resume support for FSL eDMA. Enable
+> per-channel power domain management to facilitate runtime suspend and
+> resume operations.
 > 
-> Add support for memcpy and interrupt capabilities. Register one
-> channel per SDXI function discovered for now.
+> Implement runtime suspend and resume functions for the eDMA engine and
+> individual channels.
 > 
-> Co-developed-by: Wei Huang <wei.huang2@amd.com>
-> Signed-off-by: Wei Huang <wei.huang2@amd.com>
-> Signed-off-by: Nathan Lynch <nathan.lynch@amd.com>
-A few superficial comments inline.
-
-Good to see support for this standard device btw.
-
-Thanks,
-
-Jonathan
-
+> Link per-channel power domain device to eDMA per-channel device instead of
+> eDMA engine device. So Power Manage framework manage power state of linked
+> domain device when per-channel device request runtime resume/suspend.
+> 
+> Trigger the eDMA engine's runtime suspend when all channels are suspended,
+> disabling all common clocks through the runtime PM framework.
+> 
+> Signed-off-by: Joy Zou <joy.zou@nxp.com>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> Reviewed-by: Frank Li <Frank.Li@nxp.com>
 > ---
->  drivers/dma/sdxi/device.c |   4 +
->  drivers/dma/sdxi/dma.c    | 409 ++++++++++++++++++++++++++++++++++++++++++++++
->  drivers/dma/sdxi/dma.h    |  12 ++
->  3 files changed, 425 insertions(+)
+> Changes for V3:
+> - rebased onto commit 8f21d9da4670 ("Add linux-next specific files for 20250911")
+>   to align with latest changes.
+> - Remove pm_runtime_dont_use_autosuspend() from fsl_edma3_detach_pd().
+>   because the autosuspend is not used.
+> - Move some edma channel registers initialization after the chan_dev
+>   pm_runtime_enable().
+> - Add clk_prepare_enable() return check in fsl_edma_runtime_resume.
+> - Add flag FSL_EDMA_DRV_HAS_DMACLK check in fsl_edma_runtime_resume/suspend().
+> - Link to v2: https://lore.kernel.org/imx/20241226052643.1951886-1-joy.zou@nxp.com/
+> 
+> Changes for V2:
+> - drop ret from fsl_edma_chan_runtime_suspend().
+> - drop ret from fsl_edma_chan_runtime_resume() and return clk_prepare_enable().
+> - add review tag
+> - Link to v1: https://lore.kernel.org/imx/20241220021109.2102294-1-joy.zou@nxp.com/
+> ---
+> Changes in v4:
+> - EDITME: describe what is new in this series revision.
+> - EDITME: use bulletpoints and terse descriptions.
+> - Link to v3: https://lore.kernel.org/r/20250912-b4-edma-runtime-v3-1-2d4a4f83603f@nxp.com
+> ---
 
-> diff --git a/drivers/dma/sdxi/dma.c b/drivers/dma/sdxi/dma.c
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..ad8515deba53898b2b4ea0d38c40042b566abe1f
-> --- /dev/null
-> +++ b/drivers/dma/sdxi/dma.c
-
-> +static int sdxi_dma_start_desc(struct sdxi_dma_desc *dma_desc)
-> +{
-> +	struct sdxi_dev *sdxi;
-> +	struct sdxi_cmd *sdxi_cmd;
-> +	struct sdxi_cxt *cxt;
-> +	struct sdxi_desc desc;
-> +	struct sdxi_copy copy;
-> +	struct sdxi_cst_blk *cst_blk;
-> +	dma_addr_t cst_blk_dma;
-> +	int err;
-> +
-> +	sdxi_cmd = &dma_desc->sdxi_cmd;
-> +	sdxi = sdxi_cmd->cxt->sdxi;
-> +
-> +	cxt = dma_desc->cxt;
-Probably makes sense to combine with the declarations above.
-
-> +
-> +	if (sdxi_cmd->len > MAX_DMA_COPY_BYTES)
-> +		return -EINVAL;
-> +
-> +	copy = (typeof(copy)) {
-> +		.src = sdxi_cmd->src_addr,
-> +		.dst = sdxi_cmd->dst_addr,
-> +		.src_akey = 0,
-> +		.dst_akey = 0,
-> +		.len = sdxi_cmd->len,
-> +	};
-> +
-> +	err = sdxi_encode_copy(&desc, &copy);
-> +	if (err)
-> +		return err;
-> +
-> +	err = sdxi_encode_copy(&desc, &copy);
-> +	if (err)
-> +		return err;
-> +
-> +	/* FIXME convert to pool */
-> +	cst_blk = dma_alloc_coherent(sdxi_to_dev(sdxi), sizeof(*cst_blk),
-> +				     &cst_blk_dma, GFP_NOWAIT);
-> +	if (!cst_blk)
-> +		return -ENOMEM;
-> +
-> +	cst_blk->signal = cpu_to_le64(0xff);
-> +
-> +	sdxi_cmd->cst_blk = cst_blk;
-> +	sdxi_cmd->cst_blk_dma = cst_blk_dma;
-> +	sdxi_cmd->ret = 0; /* TODO: get desc submit status & update ret value */
-> +
-> +	sdxi_desc_set_csb(&desc, cst_blk_dma);
-> +	err = sdxi_submit_desc(cxt, &desc);
-> +	if (err)
-> +		goto free_cst_blk;
-> +
-> +	sdxi->tdata.cmd = sdxi_cmd; /* FIXME: this is not compatible w/multiple clients */
-> +	dma_desc->issued_to_hw = 1;
-> +	return 0;
-> +free_cst_blk:
-> +	dma_free_coherent(sdxi_to_dev(sdxi), sizeof(*cst_blk),
-> +			  cst_blk, cst_blk_dma);
-> +	return err;
-> +}
-
-> +static struct sdxi_dma_desc *sdxi_handle_active_desc(struct sdxi_dma_chan *chan,
-> +						     struct sdxi_dma_desc *desc)
-> +{
-> +	struct dma_async_tx_descriptor *tx_desc;
-> +	struct virt_dma_desc *vd;
-> +	unsigned long flags;
-> +
-> +	/* Loop over descriptors until one is found with commands */
-> +	do {
-> +		if (desc) {
-> +			if (!desc->issued_to_hw) {
-> +				/* No errors, keep going */
-> +				if (desc->status != DMA_ERROR)
-> +					return desc;
-> +			}
-> +
-> +			tx_desc = &desc->vd.tx;
-> +			vd = &desc->vd;
-> +		} else {
-> +			tx_desc = NULL;
-> +		}
-> +
-> +		spin_lock_irqsave(&chan->vc.lock, flags);
-> +
-> +		if (desc) {
-> +
-
-No blank line here.
-
-> +			if (desc->status != DMA_COMPLETE) {
-> +				if (desc->status != DMA_ERROR)
-> +					desc->status = DMA_COMPLETE;
-> +
-> +				dma_cookie_complete(tx_desc);
-> +				dma_descriptor_unmap(tx_desc);
-> +				list_del(&desc->vd.node);
-> +			} else {
-> +				/* Don't handle it twice */
-> +				tx_desc = NULL;
-> +			}
-> +		}
-> +
-> +		desc = sdxi_next_dma_desc(chan);
-> +
-> +		spin_unlock_irqrestore(&chan->vc.lock, flags);
-> +
-> +		if (tx_desc) {
-> +			dmaengine_desc_get_callback_invoke(tx_desc, NULL);
-> +			dma_run_dependencies(tx_desc);
-> +			vchan_vdesc_fini(vd);
-> +		}
-> +	} while (desc);
-> +
-> +	return NULL;
-> +}
-> +
-> +static void sdxi_cmd_callback(void *data, int err)
-> +{
-> +	struct sdxi_dma_desc *desc = data;
-> +	struct dma_chan *dma_chan;
-> +	struct sdxi_dma_chan *chan;
-> +	int ret;
-> +
-> +	if (err == -EINPROGRESS)
-> +		return;
-> +
-> +	dma_chan = desc->vd.tx.chan;
-> +	chan = to_sdxi_dma_chan(dma_chan);
-> +
-> +	if (err)
-> +		desc->status = DMA_ERROR;
-> +
-> +	while (true) {
-> +		/* Check for DMA descriptor completion */
-> +		desc = sdxi_handle_active_desc(chan, desc);
-> +
-> +		/* Don't submit cmd if no descriptor or DMA is paused */
-> +		if (!desc)
-perhaps return?
-> +			break;
-> +
-> +		ret = sdxi_dma_start_desc(desc);
-> +		if (!ret)
-> +			break;
-Perhaps return to make it clear that there is nothing else to do.
-> +
-> +		desc->status = DMA_ERROR;
-> +	}
-> +}
-> +
-
-> +
-> +static struct sdxi_dma_desc *sdxi_dma_create_desc(struct dma_chan *dma_chan,
-> +						  dma_addr_t dst,
-> +						  dma_addr_t src,
-> +						  unsigned int len,
-> +						  unsigned long flags)
-> +{
-> +	struct sdxi_dma_chan *chan = to_sdxi_dma_chan(dma_chan);
-> +	struct sdxi_dma_desc *desc;
-> +	struct sdxi_cmd *sdxi_cmd;
-> +
-> +	desc = sdxi_dma_alloc_dma_desc(chan, flags);
-> +	if (!desc)
-> +		return NULL;
-> +
-> +	sdxi_cmd = &desc->sdxi_cmd;
-Maybe
-	*sdxi_cmd = (struct sdxi_cmd) {
-		.ctx = chan->ctx,
-etc
-
-	};
-> +	sdxi_cmd->cxt = chan->cxt;
-> +	sdxi_cmd->cxt->sdxi = chan->cxt->sdxi;
-> +	sdxi_cmd->src_addr = src;
-> +	sdxi_cmd->dst_addr = dst;
-> +	sdxi_cmd->len = len;
-> +	sdxi_cmd->sdxi_cmd_callback = sdxi_cmd_callback;
-> +	sdxi_cmd->data = desc;
-> +
-> +	return desc;
-> +}
-
-> +
-> +static void sdxi_check_trans_status(struct sdxi_dma_chan *chan)
-> +{
-> +	struct sdxi_cxt *cxt = chan->cxt;
-> +	struct sdxi_cmd *cmd;
-> +
-> +	if (!cxt)
-> +		return;
-> +
-> +	cmd = cxt->sdxi->tdata.cmd;
-> +
-> +	if (le64_to_cpu(cmd->cst_blk->signal) == 0xfe)
-
-Given that's a magic looking value, I think this 0xfe needs a define.
-
-> +		sdxi_cmd_callback(cmd->data, cmd->ret);
-> +}
-
-> +
-> +int sdxi_dma_register(struct sdxi_cxt *dma_cxt)
-> +{
-> +	struct sdxi_dma_chan *chan;
-> +	struct sdxi_dev *sdxi = dma_cxt->sdxi;
-> +	struct device *dev = sdxi_to_dev(sdxi);
-> +	struct dma_device *dma_dev = &sdxi->dma_dev;
-> +	int ret = 0;
-> +
-> +	sdxi->sdxi_dma_chan = devm_kzalloc(dev, sizeof(*sdxi->sdxi_dma_chan),
-> +					   GFP_KERNEL);
-This results in a mix of manual cleanup and devm.  That's generally something
-we want to avoid because it makes code hard to review for race conditions etc.
-I'd consider using custom actions and devm_add_action_or_reset() to ensure
-that everything up to the first thing you want to not manage is done with
-devm and ensure everything after that is done by hand.
-
-Or use devm for everything.
-
-> +	if (!sdxi->sdxi_dma_chan)
-> +		return -ENOMEM;
-> +
-> +	sdxi->sdxi_dma_chan->cxt = dma_cxt;
-> +
-> +	dma_dev->dev = dev;
-> +	dma_dev->src_addr_widths = DMA_SLAVE_BUSWIDTH_64_BYTES;
-> +	dma_dev->dst_addr_widths = DMA_SLAVE_BUSWIDTH_64_BYTES;
-> +	dma_dev->directions = BIT(DMA_MEM_TO_MEM);
-> +	dma_dev->residue_granularity = DMA_RESIDUE_GRANULARITY_DESCRIPTOR;
-> +	dma_cap_set(DMA_MEMCPY, dma_dev->cap_mask);
-> +	dma_cap_set(DMA_INTERRUPT, dma_dev->cap_mask);
-> +
-> +	dma_cap_set(DMA_PRIVATE, dma_dev->cap_mask);
-> +
-> +	INIT_LIST_HEAD(&dma_dev->channels);
-> +
-> +	chan = sdxi->sdxi_dma_chan;
-> +	chan->cxt->sdxi = sdxi;
-> +
-> +	/* Set base and prep routines */
-> +	dma_dev->device_free_chan_resources = sdxi_dma_free_chan_resources;
-> +	dma_dev->device_prep_dma_memcpy = sdxi_dma_prep_memcpy;
-> +	dma_dev->device_prep_dma_interrupt = sdxi_prep_dma_interrupt;
-> +	dma_dev->device_issue_pending = sdxi_dma_issue_pending;
-> +	dma_dev->device_tx_status = sdxi_tx_status;
-> +	dma_dev->device_terminate_all = sdxi_dma_terminate_all;
-> +	dma_dev->device_synchronize = sdxi_dma_synchronize;
-> +
-> +	chan->vc.desc_free = sdxi_do_cleanup;
-> +	vchan_init(&chan->vc, dma_dev);
-> +
-> +	dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
-> +
-> +	ret = dma_async_device_register(dma_dev);
-> +	if (ret)
-> +		goto err_reg;
-> +
-> +	return 0;
-> +
-> +err_reg:
-
-Just return early unless there is something to do.
-
-> +	return ret;
-> +}
-> +
-> +void sdxi_dma_unregister(struct sdxi_cxt *dma_cxt)
-> +{
-> +	dma_async_device_unregister(&dma_cxt->sdxi->dma_dev);
-> +}
-
-
+You have a typo in the subject, dmaegnine/dmaengine
 

@@ -1,56 +1,57 @@
-Return-Path: <dmaengine+bounces-6511-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6512-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7DFBB57A14
-	for <lists+dmaengine@lfdr.de>; Mon, 15 Sep 2025 14:12:14 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B9BD0B57A3F
+	for <lists+dmaengine@lfdr.de>; Mon, 15 Sep 2025 14:18:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4785D17A064
-	for <lists+dmaengine@lfdr.de>; Mon, 15 Sep 2025 12:12:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6D64E162226
+	for <lists+dmaengine@lfdr.de>; Mon, 15 Sep 2025 12:18:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2639305958;
-	Mon, 15 Sep 2025 12:11:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B74224A044;
+	Mon, 15 Sep 2025 12:18:13 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50B472F0661;
-	Mon, 15 Sep 2025 12:11:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E8482AD11;
+	Mon, 15 Sep 2025 12:18:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757938319; cv=none; b=Q4CKX/03buU4EVD89ImOzdrr/cwJPynI4MaUc0couliNYYF85pG2cxc8MGPyd7n00U0KwNFEGfM1HiLaQ3Lo1ktyz4LSMkhSC9M9xFOfwOAEj61K89tr+/VrE3k1//KoQSgi6KPl6kI4awZH0rnkDUHFYsLlcpKmd3FPpPv1ZC4=
+	t=1757938693; cv=none; b=Ca7jmi/T4G3t4L+Ea9f14gJJqqUV6SuGtEFKsjafsYms3H+WxfzG47GSZR73if3xCRVtU410rv6aIXiVP+YO3Q2Ecd9mkEw1Omc46N3SSj/g6j9e4Ui/wkx2rhkrraZfijH0Y3A2vFXibvVsFhEVMvRkKOn55jjEuYArc6NWvJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757938319; c=relaxed/simple;
-	bh=v76aSgIomYEhuZfch6qrk9HyPL93jBWVa3EGkekZCwQ=;
+	s=arc-20240116; t=1757938693; c=relaxed/simple;
+	bh=ybjcuwbdPeSSf58GfNrZLbTx361DsTpYMPNclLBtM/o=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dQ1YDXoZdq//1P6g8bUFqJkXwmWQN7OVr8wtCdjSGLUARHEOu9y0nGCEductlwSwlu1BmDSjvVYWjInTz6N6iFKQzPvTYK5OR+Ibgg1x/ARe2DTR+EnmdhaDX7Lb9NkgHc5HuUHNmoR/S2t+IUsbrhXEOg0tYHMGZNwEwsMT64o=
+	 MIME-Version:Content-Type; b=PWfxGAoBpqLy/Cj3XEXymw9LudgSimwy42rBuqSUHHPdP88U9+r2TLnbgUXUMSKg3JOsoCwN/mAYOkZiVMQ4DrsXp8+FRvtVO0jbMsU0xoIAF5xYPWjKQy9UIdKexHyy3ctAOyXd8kdsMfmmmT8YSItT7blkbw/+k1JHOULaBVc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cQP2q2H7Qz6M57M;
-	Mon, 15 Sep 2025 20:09:07 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cQPB252rRz6M5B2;
+	Mon, 15 Sep 2025 20:15:22 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id D84A21402EA;
-	Mon, 15 Sep 2025 20:11:52 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 3A8961400DC;
+	Mon, 15 Sep 2025 20:18:08 +0800 (CST)
 Received: from localhost (10.203.177.15) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 15 Sep
- 2025 14:11:52 +0200
-Date: Mon, 15 Sep 2025 13:11:51 +0100
+ 2025 14:18:07 +0200
+Date: Mon, 15 Sep 2025 13:18:06 +0100
 From: Jonathan Cameron <jonathan.cameron@huawei.com>
 To: Nathan Lynch via B4 Relay <devnull+nathan.lynch.amd.com@kernel.org>
 CC: <nathan.lynch@amd.com>, Vinod Koul <vkoul@kernel.org>, Wei Huang
 	<wei.huang2@amd.com>, Mario Limonciello <mario.limonciello@amd.com>, "Bjorn
  Helgaas" <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>
-Subject: Re: [PATCH RFC 06/13] dmaengine: sdxi: Add error reporting support
-Message-ID: <20250915131151.00005f26@huawei.com>
-In-Reply-To: <20250905-sdxi-base-v1-6-d0341a1292ba@amd.com>
+Subject: Re: [PATCH RFC 07/13] dmaengine: sdxi: Import descriptor enqueue
+ code from spec
+Message-ID: <20250915131806.00006e3b@huawei.com>
+In-Reply-To: <20250905-sdxi-base-v1-7-d0341a1292ba@amd.com>
 References: <20250905-sdxi-base-v1-0-d0341a1292ba@amd.com>
-	<20250905-sdxi-base-v1-6-d0341a1292ba@amd.com>
+	<20250905-sdxi-base-v1-7-d0341a1292ba@amd.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -63,205 +64,211 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Fri, 05 Sep 2025 13:48:29 -0500
+On Fri, 05 Sep 2025 13:48:30 -0500
 Nathan Lynch via B4 Relay <devnull+nathan.lynch.amd.com@kernel.org> wrote:
 
 > From: Nathan Lynch <nathan.lynch@amd.com>
 > 
-> SDXI implementations provide software with detailed information about
-> error conditions using a per-device ring buffer in system memory. When
-> an error condition is signaled via interrupt, the driver retrieves any
-> pending error log entries and reports them to the kernel log.
+> Import the example code from the "SDXI Descriptor Ring Operation"
+> chapter of the SDXI 1.0 spec[1], which demonstrates lockless
+> descriptor submission to the ring. Lightly alter the code
+> to (somewhat) comply with Linux coding style, and use byte order-aware
+> types as well as kernel atomic and barrier APIs.
 > 
-> Co-developed-by: Wei Huang <wei.huang2@amd.com>
-> Signed-off-by: Wei Huang <wei.huang2@amd.com>
+> Ultimately we may not really need a lockless submission path, and it
+> would be better for it to more closely integrate with the rest of the
+> driver.
+> 
+> [1] https://www.snia.org/sites/default/files/technical-work/sdxi/release/SNIA-SDXI-Specification-v1.0a.pdf
+> 
 > Signed-off-by: Nathan Lynch <nathan.lynch@amd.com>
-Hi,
-A few more comments inline. Kind of similar stuff around
-having both register definitions for unpacking and the structure
-definitions in patch 2.
+Hi Nathan,
 
-Thanks,
+I suspect you have a good idea of what needs to happen to get this ready for a merge
+but I'll comment briefly anyway!
 
-Jonathan
 > ---
->  drivers/dma/sdxi/error.c | 340 +++++++++++++++++++++++++++++++++++++++++++++++
->  drivers/dma/sdxi/error.h |  16 +++
->  2 files changed, 356 insertions(+)
+>  drivers/dma/sdxi/enqueue.c | 136 +++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/dma/sdxi/enqueue.h |  16 ++++++
+>  2 files changed, 152 insertions(+)
 > 
-> diff --git a/drivers/dma/sdxi/error.c b/drivers/dma/sdxi/error.c
+> diff --git a/drivers/dma/sdxi/enqueue.c b/drivers/dma/sdxi/enqueue.c
 > new file mode 100644
-> index 0000000000000000000000000000000000000000..c5e33f5989250352f6b081a3049b3b1f972c85a6
+> index 0000000000000000000000000000000000000000..822d9b890fa3538dcc09e99ef562a6d8419290f0
 > --- /dev/null
-> +++ b/drivers/dma/sdxi/error.c
-
-> +/* The "unpacked" counterpart to ERRLOG_HD_ENT. */
-> +struct errlog_entry {
-> +	u64 dsc_index;
-> +	u16 cxt_num;
-> +	u16 err_class;
-> +	u16 type;
-> +	u8 step;
-> +	u8 buf;
-> +	u8 sub_step;
-> +	u8 re;
-> +	bool vl;
-> +	bool cv;
-> +	bool div;
-> +	bool bv;
-> +};
+> +++ b/drivers/dma/sdxi/enqueue.c
+> @@ -0,0 +1,136 @@
+> +// SPDX-License-Identifier: BSD-3-Clause
+> +/*
+> + *
+> + * Copyright (c) 2024, The Storage Networking Industry Association.
+> + *
+> + * Redistribution and use in source and binary forms, with or without
+> + * modification, are permitted provided that the following conditions
+> + * are met:
+> + *
+> + * * Redistributions of source code must retain the above copyright
+> + * notice, this list of conditions and the following disclaimer.
+> + *
+> + * * Redistributions in binary form must reproduce the above copyright
+> + * notice, this list of conditions and the following disclaimer in the
+> + * documentation and/or other materials provided with the
+> + * distribution.
+> + *
+> + * * Neither the name of The Storage Networking Industry Association
+> + * (SNIA) nor the names of its contributors may be used to endorse or
+> + * promote products derived from this software without specific prior
+> + * written permission.
+> + *
+> + * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+> + * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+> + * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+> + * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+> + * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+> + * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+> + * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+> + * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+> + * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+> + * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+> + * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+> + * OF THE POSSIBILITY OF SUCH DAMAGE.
+> + */
 > +
-> +#define ERRLOG_ENTRY_FIELD(hi_, lo_, name_)				\
-> +	PACKED_FIELD(hi_, lo_, struct errlog_entry, name_)
-> +#define ERRLOG_ENTRY_FLAG(nr_, name_) \
-> +	ERRLOG_ENTRY_FIELD(nr_, nr_, name_)
+> +#include <asm/barrier.h>
+> +#include <asm/byteorder.h>
+> +#include <asm/rwonce.h>
+> +#include <linux/atomic.h>
+> +#include <linux/errno.h>
+> +#include <linux/io-64-nonatomic-lo-hi.h>
+> +#include <linux/processor.h>
+> +#include <linux/types.h>
 > +
-> +/* Refer to "Error Log Header Entry (ERRLOG_HD_ENT)" */
-> +static const struct packed_field_u16 errlog_hd_ent_fields[] = {
-> +	ERRLOG_ENTRY_FLAG(0, vl),
-> +	ERRLOG_ENTRY_FIELD(13, 8, step),
-> +	ERRLOG_ENTRY_FIELD(26, 16, type),
-> +	ERRLOG_ENTRY_FLAG(32, cv),
-> +	ERRLOG_ENTRY_FLAG(33, div),
-> +	ERRLOG_ENTRY_FLAG(34, bv),
-> +	ERRLOG_ENTRY_FIELD(38, 36, buf),
-> +	ERRLOG_ENTRY_FIELD(43, 40, sub_step),
-> +	ERRLOG_ENTRY_FIELD(46, 44, re),
-> +	ERRLOG_ENTRY_FIELD(63, 48, cxt_num),
-> +	ERRLOG_ENTRY_FIELD(127, 64, dsc_index),
-> +	ERRLOG_ENTRY_FIELD(367, 352, err_class),
+> +#include "enqueue.h"
+> +
+> +/*
+> + * Code adapted from the "SDXI Descriptor Ring Operation" chapter of
+> + * the SDXI spec, specifically the example code in "Enqueuing one or
+> + * more Descriptors."
+> + */
+> +
+> +#define SDXI_DESCR_SIZE 64
+I think that's already effectively encoded in the asserts in the header.
+Hence don't repeat it here. Use sizeof() whatever makes sense.
 
-The association between the fields here and struct sdxi_err_log_hd_ent
-to me should be via some defines in patch 2 for the various fields
-embedded in misc0 etc.
+> +#define SDXI_DS_NUM_QW (SDXI_DESCR_SIZE / sizeof(__le64))
 
-> +};
+> +#define SDXI_MULTI_PRODUCER 1  /* Define to 0 if single-producer. */
 
-> +static void sdxi_print_err(struct sdxi_dev *sdxi, u64 err_rd)
+Get rid of other path and drop this.
+
+> +
+> +static int update_ring(const __le64 *enq_entries,   /* Ptr to entries to enqueue */
+> +		       u64 enq_num,                 /* Number of entries to enqueue */
+> +		       __le64 *ring_base,           /* Ptr to ring location */
+> +		       u64 ring_size,               /* (Ring Size in bytes)/64 */
+> +		       u64 index)                   /* Starting ring index to update */
+
+Whilst I get the minimal changes bit, make this kernel-doc.
+
 > +{
-> +	struct errlog_entry ent;
-> +	size_t index;
+> +	for (u64 i = 0; i < enq_num; i++) {
+> +		__le64 *ringp = ring_base + ((index + i) % ring_size) * SDXI_DS_NUM_QW;
+> +		const __le64 *entryp = enq_entries + (i * SDXI_DS_NUM_QW);
 > +
-> +	index = err_rd % ERROR_LOG_ENTRIES;
-> +
-> +	unpack_fields(&sdxi->err_log[index], sizeof(sdxi->err_log[0]),
-> +		      &ent, errlog_hd_ent_fields, SDXI_PACKING_QUIRKS);
-> +
-> +	if (!ent.vl) {
-> +		dev_err_ratelimited(sdxi_to_dev(sdxi),
-> +				    "Ignoring error log entry with vl=0\n");
-> +		return;
+> +		for (u64 j = 1; j < SDXI_DS_NUM_QW; j++)
+> +			*(ringp + j) = *(entryp + j);
+
+memcpy?
+
 > +	}
 > +
-> +	if (ent.type != OP_TYPE_ERRLOG) {
-> +		dev_err_ratelimited(sdxi_to_dev(sdxi),
-> +				    "Ignoring error log entry with type=%#x\n",
-> +				    ent.type);
-> +		return;
+> +	/* Now write the first QW of the new entries to the ring. */
+> +	dma_wmb();
+> +	for (u64 i = 0; i < enq_num; i++) {
+> +		__le64 *ringp = ring_base + ((index + i) % ring_size) * SDXI_DS_NUM_QW;
+> +		const __le64 *entryp = enq_entries + (i * SDXI_DS_NUM_QW);
+> +
+> +		*ringp = *entryp;
 > +	}
-> +
-> +	sdxi_err(sdxi, "error log entry[%zu], MMIO_ERR_RD=%#llx:\n",
-> +		 index, err_rd);
-> +	sdxi_err(sdxi, "  re: %#x (%s)\n", ent.re, reaction_str(ent.re));
-> +	sdxi_err(sdxi, "  step: %#x (%s)\n", ent.step, step_str(ent.step));
-> +	sdxi_err(sdxi, "  sub_step: %#x (%s)\n",
-> +		 ent.sub_step, sub_step_str(ent.sub_step));
-> +	sdxi_err(sdxi, "  cv: %u div: %u bv: %u\n", ent.cv, ent.div, ent.bv);
-> +	if (ent.bv)
-> +		sdxi_err(sdxi, "  buf: %u\n", ent.buf);
-> +	if (ent.cv)
-> +		sdxi_err(sdxi, "  cxt_num: %#x\n", ent.cxt_num);
-> +	if (ent.div)
-> +		sdxi_err(sdxi, "  dsc_index: %#llx\n", ent.dsc_index);
-> +	sdxi_err(sdxi, "  err_class: %#x\n", ent.err_class);
-Consider using tracepoints for error logging rather than large splats in the
-log. Maybe you add those in later patches!
-
-I'd then just fill the tracepoint in directly rather than have an unpacking
-step.
-
-> +}
-
-> +/* Refer to "Error Log Initialization" */
-> +int sdxi_error_init(struct sdxi_dev *sdxi)
-> +{
-> +	u64 reg;
-> +	int err;
-> +
-> +	/* 1. Clear MMIO_ERR_CFG. Error interrupts are inhibited until step 6. */
-> +	sdxi_write64(sdxi, SDXI_MMIO_ERR_CFG, 0);
-> +
-> +	/* 2. Clear MMIO_ERR_STS. The flags in this register are RW1C. */
-> +	reg = FIELD_PREP(SDXI_MMIO_ERR_STS_STS_BIT, 1) |
-> +	      FIELD_PREP(SDXI_MMIO_ERR_STS_OVF_BIT, 1) |
-> +	      FIELD_PREP(SDXI_MMIO_ERR_STS_ERR_BIT, 1);
-> +	sdxi_write64(sdxi, SDXI_MMIO_ERR_STS, reg);
-> +
-> +	/* 3. Allocate memory for the error log ring buffer, initialize to zero. */
-> +	sdxi->err_log = dma_alloc_coherent(sdxi_to_dev(sdxi), ERROR_LOG_SZ,
-> +					   &sdxi->err_log_dma, GFP_KERNEL);
-> +	if (!sdxi->err_log)
-> +		return -ENOMEM;
-> +
-> +	/*
-> +	 * 4. Set MMIO_ERR_CTL.intr_en to 1 if interrupts on
-> +	 * context-level errors are desired.
-> +	 */
-> +	reg = sdxi_read64(sdxi, SDXI_MMIO_ERR_CTL);
-> +	FIELD_MODIFY(SDXI_MMIO_ERR_CTL_EN, &reg, 1);
-> +	sdxi_write64(sdxi, SDXI_MMIO_ERR_CTL, reg);
-> +
-> +	/*
-> +	 * The spec is not explicit about when to do this, but this
-> +	 * seems like the right time: enable interrupt on
-> +	 * function-level transition to error state.
-> +	 */
-> +	reg = sdxi_read64(sdxi, SDXI_MMIO_CTL0);
-> +	FIELD_MODIFY(SDXI_MMIO_CTL0_FN_ERR_INTR_EN, &reg, 1);
-> +	sdxi_write64(sdxi, SDXI_MMIO_CTL0, reg);
-> +
-> +	/* 5. Clear MMIO_ERR_WRT and MMIO_ERR_RD. */
-> +	sdxi_write64(sdxi, SDXI_MMIO_ERR_WRT, 0);
-> +	sdxi_write64(sdxi, SDXI_MMIO_ERR_RD, 0);
-> +
-> +	/*
-> +	 * Error interrupts can be generated once MMIO_ERR_CFG.en is
-> +	 * set in step 6, so set up the handler now.
-> +	 */
-> +	err = request_threaded_irq(sdxi->error_irq, NULL, sdxi_irq_thread,
-> +				   IRQF_TRIGGER_NONE, "SDXI error", sdxi);
-> +	if (err)
-> +		goto free_errlog;
-> +
-> +	/* 6. Program MMIO_ERR_CFG. */
-
-I'm guessing these are numbers steps in some bit of the spec?
-If not some of these comments like this one provide no value.  We can
-see what is being written from the code!  Perhaps add a very specific
-spec reference if you want to show why the numbering is here.
-
-
-> +	reg = FIELD_PREP(SDXI_MMIO_ERR_CFG_PTR, sdxi->err_log_dma >> 12) |
-> +	      FIELD_PREP(SDXI_MMIO_ERR_CFG_SZ, ERROR_LOG_ENTRIES >> 6) |
-> +	      FIELD_PREP(SDXI_MMIO_ERR_CFG_EN, 1);
-> +	sdxi_write64(sdxi, SDXI_MMIO_ERR_CFG, reg);
 > +
 > +	return 0;
-> +
-> +free_errlog:
-> +	dma_free_coherent(sdxi_to_dev(sdxi), ERROR_LOG_SZ,
-> +			  sdxi->err_log, sdxi->err_log_dma);
-> +	return err;
 > +}
 > +
-> +void sdxi_error_exit(struct sdxi_dev *sdxi)
+> +int sdxi_enqueue(const __le64 *enq_entries,                 /* Ptr to entries to enqueue */
+> +		 u64 enq_num,                               /* Number of entries to enqueue */
+> +		 __le64 *ring_base,                         /* Ptr to ring location */
+> +		 u64 ring_size,                             /* (Ring Size in bytes)/64 */
+> +		 __le64 const volatile * const Read_Index,  /* Ptr to Read_Index location */
+> +		 __le64 volatile * const Write_Index,       /* Ptr to Write_Index location */
+> +		 __le64 __iomem *Door_Bell)                 /* Ptr to Ring Doorbell location */
 > +{
-> +	sdxi_write64(sdxi, SDXI_MMIO_ERR_CFG, 0);
-> +	free_irq(sdxi->error_irq, sdxi);
-> +	dma_free_coherent(sdxi_to_dev(sdxi), ERROR_LOG_SZ,
-> +			  sdxi->err_log, sdxi->err_log_dma);
+> +	u64 old_write_idx;
+> +	u64 new_idx;
+> +
+> +	while (true) {
+> +		u64 read_idx;
+> +
+> +		read_idx = le64_to_cpu(READ_ONCE(*Read_Index));
+> +		dma_rmb();  /* Get Read_Index before Write_Index to always get consistent values */
+> +		old_write_idx = le64_to_cpu(READ_ONCE(*Write_Index));
+> +
+> +		if (read_idx > old_write_idx) {
+> +			/* Only happens if Write_Index wraps or ring has bad setup */
+> +			return -EIO;
+> +		}
+> +
+> +		new_idx = old_write_idx + enq_num;
+> +		if (new_idx - read_idx > ring_size) {
+> +			cpu_relax();
+> +			continue;  /* Not enough free entries, try again */
+> +		}
+> +
+> +		if (SDXI_MULTI_PRODUCER) {
+> +			/* Try to atomically update Write_Index. */
+> +			bool success = cmpxchg(Write_Index,
+> +					       cpu_to_le64(old_write_idx),
+> +					       cpu_to_le64(new_idx)) == cpu_to_le64(old_write_idx);
+> +			if (success)
+> +				break;  /* Updated Write_Index, no need to try again. */
+> +		} else {
+> +			/* Single-Producer case */
+> +			WRITE_ONCE(*Write_Index, cpu_to_le64(new_idx));
+> +			dma_wmb();  /* Make the Write_Index update visible before the Door_Bell update. */
+> +			break;  /* Always successful for single-producer */
+> +		}
+> +		/* Couldn"t update Write_Index, try again. */
+> +	}
+> +
+> +	/* Write_Index is now advanced. Let's write out entries to the ring. */
+> +	update_ring(enq_entries, enq_num, ring_base, ring_size, old_write_idx);
+> +
+> +	/* Door_Bell write required; only needs ordering wrt update of Write_Index. */
+> +	iowrite64(new_idx, Door_Bell);
+> +
+> +	return 0;
 > +}
-
+> diff --git a/drivers/dma/sdxi/enqueue.h b/drivers/dma/sdxi/enqueue.h
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..28c1493779db1119ff0d682fa6623b016998042a
+> --- /dev/null
+> +++ b/drivers/dma/sdxi/enqueue.h
+> @@ -0,0 +1,16 @@
+> +/* SPDX-License-Identifier: BSD-3-Clause */
+> +/* Copyright (c) 2024, The Storage Networking Industry Association. */
+> +#ifndef DMA_SDXI_ENQUEUE_H
+> +#define DMA_SDXI_ENQUEUE_H
+> +
+> +#include <linux/types.h>
+> +
+> +int sdxi_enqueue(const __le64 *enq_entries,  /* Ptr to entries to enqueue */
+> +		 u64 enq_num,  /* Number of entries to enqueue */
+> +		 __le64 *ring_base,  /* Ptr to ring location */
+> +		 u64 ring_size,  /* (Ring Size in bytes)/64 */
+> +		 __le64 const volatile * const Read_Index,  /* Ptr to Read_Index location */
+> +		 __le64 volatile * const Write_Index,  /* Ptr to Write_Index location */
+> +		 __le64 __iomem *Door_Bell);  /* Ptr to Ring Doorbell location */
+> +
+> +#endif /* DMA_SDXI_ENQUEUE_H */
 > 
 
 

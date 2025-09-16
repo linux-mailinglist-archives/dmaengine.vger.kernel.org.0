@@ -1,61 +1,61 @@
-Return-Path: <dmaengine+bounces-6545-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6546-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9AD5B5A0EF
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Sep 2025 21:06:24 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id BAA2DB5A0F2
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Sep 2025 21:07:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 315381C019BA
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Sep 2025 19:06:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7A155164E13
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Sep 2025 19:07:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 731592D73B9;
-	Tue, 16 Sep 2025 19:06:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8E9F2D7398;
+	Tue, 16 Sep 2025 19:07:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Ha2EurB7"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Nhgwj2Ww"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011028.outbound.protection.outlook.com [52.101.52.28])
+Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012009.outbound.protection.outlook.com [40.107.200.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93D5B2D6E67;
-	Tue, 16 Sep 2025 19:06:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34D5632D5D4;
+	Tue, 16 Sep 2025 19:07:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.9
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758049579; cv=fail; b=aoVmDuAQIOKA3EQhw7BAXB73kuT4MXHB7ch6anm7uZBJGrH+tH7m2CFweRmiGop04cdxue5ARzwZMYFVTMeU2QhOE4OqAFCaPcU+4Vgz4Tc46oqc9OvJUQwb9gceEcIie/cYnXxxHan9y6TvzO79z0KBYUt5uO5qtBwW548IEDc=
+	t=1758049656; cv=fail; b=Eb6JHmz6dizmsFA623CoYXtNW9akAIl+62XUs2jpHDcJ4h5rp8w0bwWqstCsi7XBHlNy1XYiwYYZAXVAdpv9KBQXEgw9cVGeKOOnOPm+jMseI5LmIDykKQpRVeQtBEgrFKot5fv7x4YIlcPhI7Ek/hdaSs2XJklUrzpssiQ93i4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758049579; c=relaxed/simple;
-	bh=yB2ObhiqQP0tDoANRN6oZBCJFCyhJhOIkNluxKkVxtE=;
+	s=arc-20240116; t=1758049656; c=relaxed/simple;
+	bh=v4BJucQxp+lHLinVP4jLuuPWvLnLdcLHwLX1Xzv5lJk=;
 	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=k2MtHfty87/B6EPf1vPd/zW4bPzvvUMhLc416hFebzLig0L9t9OMEMXBa/dxrkBjhDo/t7fwUZ3knFVkrHuvpj9QIUgkoc7sNwpPKDEcE03vlRWdvt3Rlp5hX+Mapk1VXSz2TLP5c4A6YuBNo6N8AMafDqIMCdQRmOdpY9utrUc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Ha2EurB7; arc=fail smtp.client-ip=52.101.52.28
+	 MIME-Version:Content-Type; b=GkhfcHcS2RzEIno29D01q+7NG8uI7+ClhYwoosfzNzL4rZFNaPD9n8VPCj+2cIAjKVJLxBz6UjBAe9a70ErWIqoiHDeT3q2QfzsOffZvst5JztwBRK+7jFNhuzlQD3m4XXz1kIjQzO0nUOlI0Ju9gQ980FO3YMLu4o1Qagul5s0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Nhgwj2Ww; arc=fail smtp.client-ip=40.107.200.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RplW6b6Uej3N1oaO4wWCPU011JViNzBOBxxwVAVUKEIwyN72LEuK3/d+qtryuN4HA+EMAVSWIYZNPfcDiwK585L7emSqy7JCQMj315GuB2YVWJJl2UPJvkYp7MJ2irCTO7AVnajltaTurdYXhsNgMux53fzCLJKpd9zYYfY1/9JUwdL5oj4irFHd5Cd/C3C35Gq8zqPmwWLWe4qpwnwwosQIhbZBJMATeW0X32e9fL1/werClRefHMkKfihiCS1aUMox6ZDFZDtzVwTOP7khgWnK/5zEejksCE7Fqr3gZbYIq8qxmj4MqEEqYaB1f4aKgyKhCHGhKVF9m7vpdHn4IQ==
+ b=SqDNVPGyf14pn6FdG48zbmBbYh1RpgIyiBwccY3+pTz1+GC9lIIyvL3IVhC6MxFT3NlkiZnt8zoXilmrGl+cx2hY+DtMoJ27KofqIuIjdjjPi3wcND9Bpa25g30zdr6nytCNPb+1xo5if5+XQOj/kBrkStpNB3ZdFu7y6VNYTxDpDs6699oi3Q+HgtZkdYXl+jTBW4N+WwF8ocqbIVhRe+BFQdyMYxi7NTButL3qu0luCL/lGFzWt3z1jxjaOn/87gBZvmNBdMGSEr71Xo1QXdpJAtpw9roCl8ebcK7H3e1E4Dql1g7oAHk5YYrHjPvsltweHG3WGN92MMemtJQ9gA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lYkKNBMfPpeHtwnpCXc9jthy75wODUY2MubXFFqfskU=;
- b=TSqCpVR5gSw/FWaR9cjlcHVIaU+VOxZ3VgR3zRFgdTt6yDf0YJoHqEQaXcivfg6sAMOaAJNhMgSB4oiUlK41RkIYRcNeYHQUrYFJymtIqI4Z0XDn74/0m5MNRrUOurDmRtugaGR7Iatt5bmAEmMHNt0kf4VgraG8S1FWWPRF6VeT4ZiS680nNCZCCb/dptDP+3uj/GtnLF/Jo30RRckJz+YiabK8teZgfAjEezJQNsl1dHO/f4kgYS8Ha1rSxVRT3nkmoDSTEuSOsP5iJQx+K2mfSJcwkBVuVtbhWItCkwxESg9bnV1jeTwfuVXXuFuoWFaQ09Quc3KAYatjKominw==
+ bh=D3HAOR41UdkqhaTXrQuSIltx58M9zx0NRGc0jI+Pvo0=;
+ b=Av0X/QsUd90ZedRH0c+f5oKXCSKO3+aCGzpINxnV66asSAfVVFUlpjh+V0bF4iAEmQaZ31XAP7EnWjUzPD5kEvbGryMGamulCSvrBe0I6j3/97/hDgBZBLP55QR747R8flW66g79cTNH3JYd/A/Dkl3+++7yXBfT5Zzf7hg/IMrLmF4HH6ZBvcwE5B2ajhADkXJVlx94OjuPrN9rbHOb8/utdlAQOrDvuaRhqhqtbAC1D0wvFntQOuscKaa0PGz5rfMHQfCpf5y0eYSYWlEUhtd2APw4dOKXW0i8ckmgiOxofpOXSN7NZm4sImeOrlqLmtJzfAH9gDBZtbKp3iOJng==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=huawei.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lYkKNBMfPpeHtwnpCXc9jthy75wODUY2MubXFFqfskU=;
- b=Ha2EurB7iy8qo85jzi4MZijo/QvMe8yterp1sfVdR1YdHOdkTHHYqSP6DOt6nW0avcsw501IABhz3igMD1WW5u6ZlM/unE3s8jPXEDj/3B5LICkpahUQkQ7oKdKmV6IG2wPf1EYftcJcOrb3DFWI/S3WNHbC7kHyPi6fH/EbKYI=
-Received: from SJ0PR05CA0164.namprd05.prod.outlook.com (2603:10b6:a03:339::19)
- by MN2PR12MB4144.namprd12.prod.outlook.com (2603:10b6:208:15f::16) with
+ bh=D3HAOR41UdkqhaTXrQuSIltx58M9zx0NRGc0jI+Pvo0=;
+ b=Nhgwj2WwdmsxZlvyO2FLH+u8MaYEL7XY7mhgflKqDdvBDhVVQrML2/pwwSpahyAJIKe8N5oMwIBGHh/9ZaFAybtLI2hKESIZsdkCLuiVN1mTFeuxlrssQFgp5i0yvRjia0di7IfWqE5KIRc85Y6EvFpTsXBtb8qjhGosE7gFcuQ=
+Received: from CH0PR04CA0094.namprd04.prod.outlook.com (2603:10b6:610:75::9)
+ by CH1PR12MB9671.namprd12.prod.outlook.com (2603:10b6:610:2b0::8) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9115.23; Tue, 16 Sep
- 2025 19:06:12 +0000
-Received: from SJ5PEPF000001CF.namprd05.prod.outlook.com
- (2603:10b6:a03:339:cafe::d9) by SJ0PR05CA0164.outlook.office365.com
- (2603:10b6:a03:339::19) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9137.11 via Frontend Transport; Tue,
- 16 Sep 2025 19:06:07 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9115.22; Tue, 16 Sep
+ 2025 19:07:31 +0000
+Received: from CH1PEPF0000AD79.namprd04.prod.outlook.com
+ (2603:10b6:610:75:cafe::b4) by CH0PR04CA0094.outlook.office365.com
+ (2603:10b6:610:75::9) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9137.13 via Frontend Transport; Tue,
+ 16 Sep 2025 19:07:31 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -63,29 +63,27 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
 Received: from satlexmb07.amd.com (165.204.84.17) by
- SJ5PEPF000001CF.mail.protection.outlook.com (10.167.242.43) with Microsoft
+ CH1PEPF0000AD79.mail.protection.outlook.com (10.167.244.57) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9137.12 via Frontend Transport; Tue, 16 Sep 2025 19:06:12 +0000
+ 15.20.9137.12 via Frontend Transport; Tue, 16 Sep 2025 19:07:30 +0000
 Received: from localhost (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Tue, 16 Sep
- 2025 12:06:07 -0700
+ 2025 12:07:30 -0700
 From: Nathan Lynch <nathan.lynch@amd.com>
-To: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: Jonathan Cameron <jonathan.cameron@huawei.com>, "Nathan Lynch via B4
+ Relay" <devnull+nathan.lynch.amd.com@kernel.org>
 CC: Vinod Koul <vkoul@kernel.org>, Wei Huang <wei.huang2@amd.com>, "Mario
  Limonciello" <mario.limonciello@amd.com>, Bjorn Helgaas
 	<bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>, Kees Cook
-	<kees@kernel.org>
-Subject: Re: [PATCH RFC 03/13] dmaengine: sdxi: Add descriptor encoding and
- unit tests
-In-Reply-To: <20250916152057.00005f7a@huawei.com>
+	<linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>
+Subject: Re: [PATCH RFC 05/13] dmaengine: sdxi: Add software data structures
+In-Reply-To: <20250915125937.000072ab@huawei.com>
 References: <20250905-sdxi-base-v1-0-d0341a1292ba@amd.com>
- <20250905-sdxi-base-v1-3-d0341a1292ba@amd.com>
- <20250915125226.000043c1@huawei.com> <87ms6va4z4.fsf@AUSNATLYNCH.amd.com>
- <20250916152057.00005f7a@huawei.com>
-Date: Tue, 16 Sep 2025 14:06:06 -0500
-Message-ID: <87frcmxlnl.fsf@AUSNATLYNCH.amd.com>
+ <20250905-sdxi-base-v1-5-d0341a1292ba@amd.com>
+ <20250915125937.000072ab@huawei.com>
+Date: Tue, 16 Sep 2025 14:07:24 -0500
+Message-ID: <87cy7qxllf.fsf@AUSNATLYNCH.amd.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -97,198 +95,119 @@ X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001CF:EE_|MN2PR12MB4144:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3f26c7ac-5970-458d-da1c-08ddf5541a55
+X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD79:EE_|CH1PR12MB9671:EE_
+X-MS-Office365-Filtering-Correlation-Id: f1c85530-a9ec-4069-39e2-08ddf5544921
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|376014|7053199007;
+	BCL:0;ARA:13230040|376014|36860700013|1800799024|82310400026|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Q9ahvECdflB/tDeS9JLp+PdWFgvLzunIRNj4dtacoOiAijhnLh1TEli/r1mg?=
- =?us-ascii?Q?iAhaIkOo2u9G12d+TIyqSUqY3IIEJLMmsDKwfzruozREE+WR/L2ZOJJ9Kvq/?=
- =?us-ascii?Q?sLOOlVmob3GstnjLrFa8onu4rZ5CbF9+s+thiLq7bZjgiyzv6m6KEYIgN7Zh?=
- =?us-ascii?Q?dV2gQEKookQm9HaBFkfVSCRwzW04PLDmFXbf+Zj3E37j3zHyhm8GL8oalz5N?=
- =?us-ascii?Q?MXu1EpmnsE55dRwvPrDg5pwvbp8mKJVb6zHFHaTSZ8g39ryWQ84SPPGeB+uR?=
- =?us-ascii?Q?cGQAIxHJw4+uTYtFG7rpJoXponddgJqUVs4RETz62HINX3vWPWRqSmjHDYYP?=
- =?us-ascii?Q?2h/khqCBpWxoQ4QHo7bqbVrcNFmMKeBWnJh2rS2NqGqObKvzYUbox+o3Hv7p?=
- =?us-ascii?Q?z6Vk75Z4tpOjldplMZ8WQ0DYoVqWA8R4tKt9/Y4/A8CqFNRV9r4ceV1Lk7O1?=
- =?us-ascii?Q?Lwb8xZUF7Q4yzz0OrGuiK+TuyNr/DNPta5BIE8PRZUqr+ZJjO2/q7AM7ddRU?=
- =?us-ascii?Q?eQfxTECPPnbaZOVEzJk+c1pU1Tm098HsxfynLLxCoPoJ6ZZrgmNHb3wYfGA2?=
- =?us-ascii?Q?vbKw+thGsF/XX0oBM65N0RDo+eg/lHfzujB+lu2wvtS7U3+q1JHQCUE9+y8z?=
- =?us-ascii?Q?r8hV7JQXRFHN1jVdPmyn1rXw6iF1KMfoJn09jao5HJva6E6Fv4ClRw0rrpfS?=
- =?us-ascii?Q?FUZvRJcyMjMiAJ581abEVf34ZowYPpwsDJQMT2sdldTuKKDyeJKA8Z9hAd9b?=
- =?us-ascii?Q?Fi6UAGrdB14lO6oO/ZuJasMks2Fb3csbZa60OD32bqAY6xqpM6X3xDTOrWqT?=
- =?us-ascii?Q?LgASxMiApR1hivAsQNKRS63FR3AADafYyhzD9bTnvpyeFZGub5zj1IKDSuEE?=
- =?us-ascii?Q?RBfdVDhVJwavNCkY5+4Apm96Y0iQwqy6TZ5/34NMrzvv8YOfJ3aQRoY//dLP?=
- =?us-ascii?Q?3cPFaHFKZHs9Sy4TV/gfaPzpteTIQt0f+FF4+3/Z5q9m9o4SpRZ1T68M5AFq?=
- =?us-ascii?Q?hqsKok5XtWk+h3XwFV3oy6QR7kJyPyAM5VqcsIGNE1l3BpZmtI9ksEchOKig?=
- =?us-ascii?Q?dFCqm+F17LJw6B+GrIQi7lDV1jTVlLXDBXkPIII78nZ+2JZ0wTlE5WL3uENs?=
- =?us-ascii?Q?DTJkBdAZZIWHvn0Fr5UJP496bkORK968dRBo1mnXASQY9iGXyjjNY1dbx4Yh?=
- =?us-ascii?Q?fq0FtsWKtkZ8fLgjZHZR2U7WyD0V4izhlLuxTO2egPDel6dShREmwxee5zgD?=
- =?us-ascii?Q?JUDpKoXaoAEVj4VPaovO/le1Xo+6VGhaMhT+W1BnOtaKvn2I/u9b6IXtslJl?=
- =?us-ascii?Q?A38gEpdqeWJaotqGjyR+KvMTryqIJ2qQFntjEALmQVKYe6KyFlG4T3H3PFIg?=
- =?us-ascii?Q?BhHT5KRcc5MY6vppIhvgegN12Ooemv8WcrT+9bInvEQ7WwSVMvwagLpGlwPw?=
- =?us-ascii?Q?d/rbcuaCcRXBtM0BrDPpUryfWovjkPjEdkfDb67bz45DuBeluXKj6g=3D=3D?=
+	=?us-ascii?Q?vtcN07ms4GGDtb3n8OvIUkPdsBsffWU94gjhzvDrDHqqF0xeT6a7cCAqd0O0?=
+ =?us-ascii?Q?k9oYe9/oNHi0qkgIJxr3WHvR/lj6iaS4fFHoq1NboGAqIz3byTS+g1quVyAW?=
+ =?us-ascii?Q?QB9OZWZ9O0MwbPYBw/NYOGDf/TLqq2QRaMaVxOBOXxpiVc1Py5FT/eAzV/VA?=
+ =?us-ascii?Q?NWg4SrvlMF8QXbk4ENelqcPEdkKsFEacd2AW0SID3281wkDkJV2tmluNT/Vw?=
+ =?us-ascii?Q?VeB6wRFUvhfZf2/kuC7JYbUQCa7hlnWlNEq03UGuUfraIekvRSIvje5Z4kst?=
+ =?us-ascii?Q?X+060sCrhcEtdx9Ptt+Hpz47pl87FY+fj2TRg/u1TutPUoUdhenXVo/FG1Vh?=
+ =?us-ascii?Q?s9NAcGGkVUhx0XOTyFyyb927WVaIHqMN70Bd79dqYviG02o0jnIzkrhvwkxw?=
+ =?us-ascii?Q?/lCkQiejeI7slUmeu1YdkD4breCEX4y9j0zeJgUJO9X7289GfGajxW4vDN2S?=
+ =?us-ascii?Q?fdl26ETWBe0G0V4zVV1a5bls8mz29+Q2iJ0oZgWEjXGQcygheU+bFwG4ZKZE?=
+ =?us-ascii?Q?MG7cauhH927vWVXQxXM0xWgsHQ+v2lzJXoNP7UZK7U2y6kV8+Mz0XGQ+aeDU?=
+ =?us-ascii?Q?BPXvGkBPRQjNQlkE8ZsYKMLsIOkvpyKY/MEuxg4qvxf9SJBoa11Aw6nqvUDY?=
+ =?us-ascii?Q?DJbrsZfZxWZYdkNb6DdAjWZH1k6RHchrTBBZqgA7UqwNGqfh+TdOVtvbrYGc?=
+ =?us-ascii?Q?zKi9EO68ziM+MwJPufJyu3xpDdJTD05E8eyzdyVoWq1ExR3FQhQZQ22J6xjI?=
+ =?us-ascii?Q?KYaM6eR+bLK5ziUwCdquAKbuVUjrEOnw2gjniyVHDKd2Uyh8bsOFTqZKvu+3?=
+ =?us-ascii?Q?8b+JqDGiTAKdRfljYrTNo477RUPaaXA9EcVY+rtc+lBrECC8lwilo4VKianr?=
+ =?us-ascii?Q?OpOrIsFnblVLVG5boi8SVmRXjVifuj1n8ItCvzR+FvA7VkT2v1xufns8eYLq?=
+ =?us-ascii?Q?tngBiXAvyk8ySiwTtHY1E7RVFUFBdrVCDWGVeP5KG4krdT+uPgFzPyZivO3h?=
+ =?us-ascii?Q?6vxpD08S+cV8YIkUVwY0u5QZYWhO5bbQQawsmheQ30XNaJzXloSEIZeYKNPk?=
+ =?us-ascii?Q?/LTqhaEjdqRGt+BDEnn/HkFimyxeg0hERzKTqMSIC2UvurWhwtZtrNKXcUKN?=
+ =?us-ascii?Q?1jJQGibeH9XADfMvmI49WnMFVIekQnmzNgIqCrapyVYotIgJMzZrfcCX8H7c?=
+ =?us-ascii?Q?Wfiz3w5NCn8YtfLv6nbKN0svxbqAxgJcKE13JktNdHj4WRklnN8B8HlWJM03?=
+ =?us-ascii?Q?Y4AvPtw/cBPlbNReFHkTXR56SZZqgn3Ihq94NaQzIRLAnL7LMtsQ/lqDW9Sr?=
+ =?us-ascii?Q?O8JBoK5Y5web2A3wnOK7YGKG8pDSu0cJxXhnlhg8UvAUTcV2Et9FaUTDmUFZ?=
+ =?us-ascii?Q?VQM7YeLcZXyBa9NX9gNgFO0654g5Km6rXeiSxyv3UMrLRXUS+g2OMX1ihQeK?=
+ =?us-ascii?Q?vD41hQCmlA7SJiSULwS1/NtFZeMfCDmXYzup65e4UROEUItUSU8yMcezV047?=
+ =?us-ascii?Q?f1Y/SEM7oSCsSr1a4lnWYDjYxyojPN4ctS7k?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(376014)(7053199007);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700013)(1800799024)(82310400026)(7053199007);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Sep 2025 19:06:12.3027
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Sep 2025 19:07:30.8910
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3f26c7ac-5970-458d-da1c-08ddf5541a55
+X-MS-Exchange-CrossTenant-Network-Message-Id: f1c85530-a9ec-4069-39e2-08ddf5544921
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001CF.namprd05.prod.outlook.com
+	CH1PEPF0000AD79.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4144
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH1PR12MB9671
 
 Jonathan Cameron <jonathan.cameron@huawei.com> writes:
-> On Mon, 15 Sep 2025 14:30:23 -0500
-> Nathan Lynch <nathan.lynch@amd.com> wrote:
+> On Fri, 05 Sep 2025 13:48:28 -0500
+> Nathan Lynch via B4 Relay <devnull+nathan.lynch.amd.com@kernel.org> wrote:
 >
-> +CC Kees given I refer to a prior discussion Kees helped out with
-> and this is a different related case.
->
->> Jonathan Cameron <jonathan.cameron@huawei.com> writes:
->> > On Fri, 05 Sep 2025 13:48:26 -0500
->> > Nathan Lynch via B4 Relay <devnull+nathan.lynch.amd.com@kernel.org> wrote:  
->> >> +++ b/drivers/dma/sdxi/descriptor.c  
->> >  
->> >> +enum {
->> >> +	SDXI_PACKING_QUIRKS = QUIRK_LITTLE_ENDIAN | QUIRK_LSW32_IS_FIRST,
->> >> +};
->> >> +
->> >> +#define sdxi_desc_field(_high, _low, _member) \
->> >> +	PACKED_FIELD(_high, _low, struct sdxi_desc_unpacked, _member)
->> >> +#define sdxi_desc_flag(_bit, _member) \
->> >> +	sdxi_desc_field(_bit, _bit, _member)
->> >> +
->> >> +static const struct packed_field_u16 common_descriptor_fields[] = {
->> >> +	sdxi_desc_flag(0, vl),
->> >> +	sdxi_desc_flag(1, se),
->> >> +	sdxi_desc_flag(2, fe),
->> >> +	sdxi_desc_flag(3, ch),
->> >> +	sdxi_desc_flag(4, csr),
->> >> +	sdxi_desc_flag(5, rb),
->> >> +	sdxi_desc_field(15, 8, subtype),
->> >> +	sdxi_desc_field(26, 16, type),
->> >> +	sdxi_desc_flag(448, np),
->> >> +	sdxi_desc_field(511, 453, csb_ptr),  
->> >
->> > I'm not immediately seeing the advantage of dealing with unpacking in here
->> > when patch 2 introduced a bunch of field defines that can be used directly
->> > in the tests.  
+>> From: Nathan Lynch <nathan.lynch@amd.com>
 >> 
->> My idea is to use the bitfield macros (GENMASK etc) for the real code
->> that encodes descriptors while using the packing API in the tests for
->> those functions.
+>> Add the driver's central header sdxi.h, which brings in the major
+>> software abstractions used throughout the driver -- mainly the SDXI
+>> device or function (sdxi_dev) and context (sdxi_cxt).
 >> 
->> By limiting what's shared between the real code and the tests I get more
->> confidence in both. If both the driver code and the tests rely on the
->> bitfield macros, and then upon adding a new descriptor field I
->> mistranslate the bit numbering from the spec, that error is more likely
->> to propagate to the tests undetected than if the test code relies on a
->> separate mechanism for decoding descriptors.
+>> Co-developed-by: Wei Huang <wei.huang2@amd.com>
+>> Signed-off-by: Wei Huang <wei.huang2@amd.com>
+>> Signed-off-by: Nathan Lynch <nathan.lynch@amd.com>
 >
-> That's a fair reason.  Perhaps add a comment just above the first
-> instance of this or top of file to express that?
-
-OK. Looks like sdxi_desc_unpack() and the related field description
-structure could be moved to the test code too.
-
-
->> I find the packing API quite convenient to use for the SDXI descriptor
->> tests since the spec defines the fields in terms of bit offsets that can
->> be directly copied to a packed_field_ array.
+> I'm not personally a fan of 'header' patches.  It's find of reasonable if it's
+> just stuff of the datasheet, but once we get function definitions, we should
+> have the function implementations in the same patch.
+>
+>> ---
+>>  drivers/dma/sdxi/sdxi.h | 206 ++++++++++++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 206 insertions(+)
 >> 
->> 
->> >> +};
+>> diff --git a/drivers/dma/sdxi/sdxi.h b/drivers/dma/sdxi/sdxi.h
+>> new file mode 100644
+>> index 0000000000000000000000000000000000000000..13e02f0541e0d60412c99b0b75bd37155a531e1d
+>> --- /dev/null
+>> +++ b/drivers/dma/sdxi/sdxi.h
+>> @@ -0,0 +1,206 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>> +/*
+>> + * SDXI device driver header
+>> + *
+>> + * Copyright (C) 2025 Advanced Micro Devices, Inc.
+>> + */
+>> +
+>> +#ifndef __SDXI_H
+>> +#define __SDXI_H
+>> +
+>> +#include <linux/dev_printk.h>
+>> +#include <linux/device.h>
+>> +#include <linux/dma-mapping.h>
+>> +#include <linux/dmapool.h>
 >
->> >> +	u64 csb_ptr;
->> >> +	u32 opcode;
->> >> +
->> >> +	opcode = (FIELD_PREP(SDXI_DSC_VL, 1) |
->> >> +		  FIELD_PREP(SDXI_DSC_FE, 1) |
->> >> +		  FIELD_PREP(SDXI_DSC_SUBTYPE, SDXI_DSC_OP_SUBTYPE_CXT_STOP) |
->> >> +		  FIELD_PREP(SDXI_DSC_TYPE, SDXI_DSC_OP_TYPE_ADMIN));
->> >> +
->> >> +	cxt_start = params->range.cxt_start;
->> >> +	cxt_end = params->range.cxt_end;
->> >> +
->> >> +	csb_ptr = FIELD_PREP(SDXI_DSC_NP, 1);
->> >> +
->> >> +	desc_clear(desc);  
->> >
->> > Not particularly important, but I'd be tempted to combine these with
->> >
->> > 	*desc = (struct sdxi_desc) {
->> > 		.ctx_stop = {
->> > 			.opcode = cpu_to_le32(opcode),
->> > 			.cxt_start = cpu_to_le16(cxt_start),
->> > 			.cxt_end = cpu_to_le16(cxt_end),
->> > 			.csb_ptr = cpu_to_le64(csb_ptr),
->> > 		},
->> > 	};
->> >
->> > To me that more clearly shows what is set and that the
->> > rest is zeroed.  
->> 
->> Maybe I prefer your version too. Just mentioning in case it's not clear:
->> cxt_stop is a union member with the same size as the enclosing struct
->> sdxi_desc. Each member of struct sdxi_desc's interior anonymous union is
->> intended to completely overlay the entire object.
->> 
->> The reason for the preceding desc_clear() is that the designated
->> initializer construct does not necessarily zero padding bytes in the
->> object. Now, there *shouldn't* be any padding bytes in SDXI descriptors
->> as I've defined them, so I'm hoping the redundant stores are discarded
->> in the generated code. But I haven't checked this.
+> Some of these could I think be removed in favor of one or two forwards
+> definitions.  In general good to keep to minimal includes following principles of
+> include what you use din each file.
 >
-> So, this one is 'fun' (and I can hopefully find the references)
-> The C spec has had some updates that might cover this though
-> I'm not sure and too lazy to figure it out today.  Anyhow,
-> that doesn't help anyway as we care about older compilers.
+>> +#include <linux/dmaengine.h>
+>> +#include <linux/io-64-nonatomic-lo-hi.h>
+>> +#include <linux/module.h>
+>> +#include <linux/mutex.h>
+>> +#include <linux/types.h>
 >
-> So we cheat and just check the compiler does fill them ;)
 >
-> Via a reply Kees sent on a discussion of the somewhat related {}
-> https://lore.kernel.org/linux-iio/202505090942.48EBF01B@keescook/
 >
-> https://elixir.bootlin.com/linux/v6.17-rc6/source/lib/tests/stackinit_kunit.c
+>> +/* Device Control */
 >
-> I think the relevant one is __dynamic_all which is used with various hole sizes
-> and with both bare structures and unions.
+> Superficially these don't seem have anything to do with controlling
+> the device. So this comment is confusing to me rather than helpful.
 >
-> +CC Kees who might have time to shout if I have this particular case
-> wrong ;)
+>> +int sdxi_device_init(struct sdxi_dev *sdxi, const struct sdxi_dev_ops *ops);
+>> +void sdxi_device_exit(struct sdxi_dev *sdxi);
+>
+> Bring these in with the code, not in an earlier patch.
+> Ideally set things up so the code is build able after each patch.
 
-Thanks for the references, when making this decision I consulted:
-
-https://gustedt.wordpress.com/2012/10/24/c11-defects-initialization-of-padding/
-
-and
-
-https://interrupt.memfault.com/blog/c-struct-padding-initialization
-
-But we seem to agree that it's a moot point for this code if I make the
-changes discussed below.
-
-
->> And it looks like I neglected to mark all the descriptor structs __packed,
->> oops.
->> 
->> I think I can add the __packed to struct sdxi_desc et al, use your
->> suggested initializer, and discard desc_clear().
->
-> That would indeed work.
->
->> 
->> 
->> >> +	desc->cxt_stop = (struct sdxi_dsc_cxt_stop) {
->> >> +		.opcode = cpu_to_le32(opcode),
->> >> +		.cxt_start = cpu_to_le16(cxt_start),
->> >> +		.cxt_end = cpu_to_le16(cxt_end),
->> >> +		.csb_ptr = cpu_to_le64(csb_ptr),
->> >> +	};
+Agreed on all points here and I'll modify the series accordingly,
+thanks.
 

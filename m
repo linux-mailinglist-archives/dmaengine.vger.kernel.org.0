@@ -1,52 +1,52 @@
-Return-Path: <dmaengine+bounces-6562-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6561-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B58FB5A279
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Sep 2025 22:26:08 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 34FD6B5A26B
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Sep 2025 22:25:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F40EE327BC7
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Sep 2025 20:26:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3A0351C026AA
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Sep 2025 20:26:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EDCE3294E8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B5A1323F78;
 	Tue, 16 Sep 2025 20:25:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WF/U+ils"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X40rBasv"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF41305E26;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB683304BD0;
 	Tue, 16 Sep 2025 20:25:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758054325; cv=none; b=kTG14+IviuuETdivTQSatk5tJyQjA42zJACgZSPr8qxnbniWSPY8deta9OFtchjIEvOHIEQd1M3RTUWcvTg+4B/Wfl64SWkBkfGa4vg7XmupYNLTRpkpYIJ3mzX7ahuPjP4deLx5YV5xKKw7mzYDPc2nCed8aL8RMYqTCuL67Rw=
+	t=1758054325; cv=none; b=lhSHZdf9j4BhR5arTuYBKpIFnGVpeIvCuPKGKOnH1VXzyceFpEynB/iZ6EtA5JD3QZEiqj0bS5b0R/dwsLULNzWFCs1euWWge5+c+4V2Fo5a48seyxbcpB56+zPoBh1uc3C9VTkiWGQOQQ/z33N8cYczbZOpEifVLDri38lll+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1758054325; c=relaxed/simple;
-	bh=PGC9RLyvUYb11AvcYKFthsR2RXxFjvbJW7ULzcMM1n4=;
+	bh=p/pUs0MZFo/+qdpENMcLyBKM/numNqXrgeAhrFls3Eo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=pxxy1qXt3BWtQ/Xx6KR8hZo1En4AQoyoRA1aox8HrEusnN/f91f1XpSU07o7fM0yXtX49379XsZDaN9SO887JUC6ofqKf63mRtU5/uGrriHegwdgR7HQU8/40PpUbTPggkyR2nfCeCI9YAH4gIXjt4vDYwtjhvFOekhbEHNqibc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WF/U+ils; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 31796C19422;
+	 In-Reply-To:To:Cc; b=BxQITD8cIPZAR11hGkfJRekGjJPtVknKw4ubexL2BMQNIzh4QTKcVk3kv1PTGVzYKICP4H13RKgPq9VE43kIp+lKCwgQiBRljgztiaihj51XvnZkQsIj7WlyYCbCYJvsADOyImhtaDOXJKyNtsVFdNPnyNulaJTUj6nP/Lj7/04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X40rBasv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3B570C2BC9E;
 	Tue, 16 Sep 2025 20:25:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1758054325;
-	bh=PGC9RLyvUYb11AvcYKFthsR2RXxFjvbJW7ULzcMM1n4=;
+	bh=p/pUs0MZFo/+qdpENMcLyBKM/numNqXrgeAhrFls3Eo=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=WF/U+ilsuMpWThSrx1H0QFkgdZaMVWBGJlBSSTATkfxZT6q0ZKb4HEFTUEJ8bf3nk
-	 /k4vNhDzDpvL5piUH2exVhGXwpg+s+v9RNTKpicxPJd0y9eU3E78Bg3z2zRLns9qc+
-	 9WSeaaXRF3arHwwhkyaEtB+r9wVDxgtL/iQYNJtCx2Ryhcy4NG3OKtbaFjbA/qW56I
-	 so2OsPiqAPCn8xTAVqSBmuYU8dBFkHegK9FLvgeyX3VFjxSB78VL4MI7oZHBpfiyKR
-	 3kuLWgcwvQJyZbL0BTXDZSjIghucFTYPeSVBE+dIsOVQriJdJ7oqnKUmV9S4bY87Jf
-	 xREiIfqhBD1fQ==
+	b=X40rBasvR7PF9fN2qZQCQCcMCvK+/79psNEO7of+ZdYpkF69MAr0mnbIigzoHre2b
+	 jx9HjMjRyRSaCrimkK/eqqMxWdoW8v3CHPEww8hrQLkp3csUFfFeLLyCdqCcSvu6zI
+	 HWOA3QD+Ku2kR8Dj7zScHUzKEsTBPK+YbDobYP8GQmOebRUlZlvYmXKEXp/q0TX3Tl
+	 /QvOaZLAcZoPr92AEA3siTedj5AV3iHptxfTowEYaB1heIfj7/B49bp/Nkns7ifsEF
+	 x8qKh8xWD46Mbc8VfSb1g+8SGej7y5tanDSXVqUIxhCpLNSAFSz34bFs1DQJYUV3a/
+	 qEDMtb68I2Azw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 216E8CAC5A0;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30ECFCAC598;
 	Tue, 16 Sep 2025 20:25:25 +0000 (UTC)
 From: Dang Huynh via B4 Relay <devnull+dang.huynh.mainlining.org@kernel.org>
-Date: Wed, 17 Sep 2025 03:25:01 +0700
-Subject: [PATCH 04/25] rtc: Add timestamp for the end of 2127
+Date: Wed, 17 Sep 2025 03:25:02 +0700
+Subject: [PATCH 05/25] dt-bindings: rtc: Add RDA Micro RDA8810PL RTC
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250917-rda8810pl-drivers-v1-4-9ca9184ca977@mainlining.org>
+Message-Id: <20250917-rda8810pl-drivers-v1-5-9ca9184ca977@mainlining.org>
 References: <20250917-rda8810pl-drivers-v1-0-9ca9184ca977@mainlining.org>
 In-Reply-To: <20250917-rda8810pl-drivers-v1-0-9ca9184ca977@mainlining.org>
 To: Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -76,11 +76,11 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-unisoc@lists.infradead.org,
  dmaengine@vger.kernel.org, linux-hardening@vger.kernel.org, 
  linux-mmc@vger.kernel.org, Dang Huynh <dang.huynh@mainlining.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1758054322; l=913;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1758054322; l=1198;
  i=dang.huynh@mainlining.org; s=20250917; h=from:subject:message-id;
- bh=DzZHdJKZCRZsyIe84ay5pJ/2Z/eJ/DpBDRNQR5GG0kc=;
- b=TXUPCWPqfcmGpwTVgoZ/csRKglLlNBEzrYFxRh7ZQ//BPu6xMzaihEwxcAVhhtA00DbneF6R7
- Kv5Wv87ejuhBJCzOJ67wnp3h9v8C3HAnCIfUnZpMcrApewJyPWho9WA
+ bh=WXHBrmFovBDD+aODYzMgHF0ddvJv66eaBAA1wb46O10=;
+ b=1AWpjOVHeC7A/fG05V5076Du73/ixlPO3tOlVdOzwByzDZgvNmGQVQIvJBjfRQdO6qHjcr8dk
+ nUyBOunSsouDcKxdzeqOCwhm+B7f/3Zy6jwd0Awas0NtAUvq1ASF3OD
 X-Developer-Key: i=dang.huynh@mainlining.org; a=ed25519;
  pk=RyzH4CL4YU/ItXYUurA51EVBidfx4lIy8/E4EKRJCUk=
 X-Endpoint-Received: by B4 Relay for dang.huynh@mainlining.org/20250917
@@ -90,26 +90,49 @@ Reply-To: dang.huynh@mainlining.org
 
 From: Dang Huynh <dang.huynh@mainlining.org>
 
-Some RTC (like MT2712 and RDA Micro) can handle until the end of
-the year 2127.
+Add documentation describing the RTC found in RDA8810PL SoC.
 
 Signed-off-by: Dang Huynh <dang.huynh@mainlining.org>
 ---
- include/linux/rtc.h | 1 +
- 1 file changed, 1 insertion(+)
+ .../devicetree/bindings/rtc/rda,8810pl-rtc.yaml    | 30 ++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/include/linux/rtc.h b/include/linux/rtc.h
-index 95da051fb155dab4c8ec72ccae7b8e12a117a7f1..ec5828ccc7449388da2ab8bc757030e6795ace30 100644
---- a/include/linux/rtc.h
-+++ b/include/linux/rtc.h
-@@ -175,6 +175,7 @@ struct rtc_device {
- #define RTC_TIMESTAMP_END_2063		2966371199LL /* 2063-12-31 23:59:59 */
- #define RTC_TIMESTAMP_END_2079		3471292799LL /* 2079-12-31 23:59:59 */
- #define RTC_TIMESTAMP_END_2099		4102444799LL /* 2099-12-31 23:59:59 */
-+#define RTC_TIMESTAMP_END_2127		4985971199LL /* 2127-12-31 23:59:59 */
- #define RTC_TIMESTAMP_END_2199		7258118399LL /* 2199-12-31 23:59:59 */
- #define RTC_TIMESTAMP_END_9999		253402300799LL /* 9999-12-31 23:59:59 */
- 
+diff --git a/Documentation/devicetree/bindings/rtc/rda,8810pl-rtc.yaml b/Documentation/devicetree/bindings/rtc/rda,8810pl-rtc.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..3ceae294921cc3211cd775d9b3890393196faf82
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/rda,8810pl-rtc.yaml
+@@ -0,0 +1,30 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/rtc/rda,8810pl-rtc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: RDA Micro RDA8810PL Real Time Clock
++
++maintainers:
++  - Dang Huynh <dang.huynh@mainlining.org>
++
++properties:
++  compatible:
++    const: rda,8810pl-rtc
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    rtc@1a06000 {
++      compatible = "rda,8810pl-rtc";
++      reg = <0x1a06000 0x1000>;
++    };
 
 -- 
 2.51.0

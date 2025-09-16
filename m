@@ -1,51 +1,51 @@
-Return-Path: <dmaengine+bounces-6553-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6550-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD7A0B5A224
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Sep 2025 22:14:02 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2EE5DB5A206
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Sep 2025 22:11:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CA98D3274B7
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Sep 2025 20:13:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 507123A5097
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Sep 2025 20:11:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A99902F2609;
-	Tue, 16 Sep 2025 20:13:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 819B32E8DF5;
+	Tue, 16 Sep 2025 20:10:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="VJhHzR1H";
-	dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="lrjMieh9"
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="YXBLMRGN";
+	dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="RJA/1KAE"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E92827AC48;
-	Tue, 16 Sep 2025 20:13:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24B002DE1E3;
+	Tue, 16 Sep 2025 20:10:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758053631; cv=none; b=VWeujzj2XlB6tBPQJTMaIpLgj2aIkyF0OSo84jMo+HTG6XylJ6fFmLtKXacBIQ/wm9/dfT7IFYOGnWzipUT5xy1Zn5xq4SycPw2XGUPrSrSNVVBsTc8aeEQoRlQZLQ2TFIk8JfeJdGLEM/XWhPVCeESLbGA/SfGvRsR3aHdXLsA=
+	t=1758053437; cv=none; b=H02JVIcivc7S3Rp4bdm2GncOG5MQDnVTiCheNFgDzfTUkoakGbzpmsloqS7Gk6SiuMc+z2tCshoYKKyNoF4tfx77qzujwBpd2lyaK2iF9M01eShDI7iCiAN6l4IrDiJOgiDrUAF1M93HQYS7aNRN83itlQy3lm1LyDlE8ikfixU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758053631; c=relaxed/simple;
-	bh=Fax4H41w25n5u6GELyum7Uq2SVrab6rxKUOtQRQV09k=;
+	s=arc-20240116; t=1758053437; c=relaxed/simple;
+	bh=Ifgj24X3WuB4jA0+A119cFjcjAjN444atKSTzNtV5QI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=AlgDG+7BSCxasS8sDHCY7LNXxC06aWMvEAIgzUCySkFc8winWH4lNc9obP7wnHcar4TX7Q/8JMKgsPkdmj2jNHWRk3s1tpnpDxStRoM7ogFOVhnOIw9U0HRtugWr19dzMKgRcyF7Jfow7db9Q8Utw8ouW/6duDOGIar6t+atiFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=VJhHzR1H; dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=lrjMieh9; arc=none smtp.client-ip=5.75.144.95
+	 In-Reply-To:To:Cc; b=npYtXa/JqcnG9Dhm3dYmzub5Ul8u/BttodlWKAZbFrR3OjrCHhWvX+XfJpDXIinJ5BKgd8OFc/DxKcz+l2TWbkhE8lsa15kO1576NJ7w5j4XGOrfvFqxMiugIknlGeFrnsjGsS+m+8jJJcAj5qhgHo7qeiabxXR3GL0/g6WNp7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=YXBLMRGN; dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=RJA/1KAE; arc=none smtp.client-ip=5.75.144.95
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
 DKIM-Signature: v=1; a=rsa-sha256; s=202507r; d=mainlining.org; c=relaxed/relaxed;
-	h=To:Message-Id:Subject:Date:From; t=1758053288; bh=/MfrKbQAcxo1P+UMUl3T75e
-	+IPr/PFabDA6Xht/wT2k=; b=VJhHzR1HV/j+Qma4wsjArLbf21+pHVb08dOcDiqw8LpAPh3DW7
-	Aob2lXQ04vwOeHD9V5oMflVdOkNpaV1THNjwFADz0LSc79WBQwqQsmFN5hyd27ms9lHDL/2TtF7
-	uOkGOXvYvSezBsX15BsztxtlYbXSwGju2lk2LE1/07mpsIN6FVry7UYGPtPZf7oPZDCBhJ9FdIg
-	c4HBuFNwkfNSZlSJZ/0BGGIbinJV2HXNvEKKgQCi+8824Lxc0RLiaa/Ajw59+MzzlLQAWFlL4jT
-	B/nIQ2+i3gMyag9SMjMw10NW/5FNfZ0xzMbOxte4/9NnER1yZS7471JRO3R4izUDu5A==;
+	h=To:Message-Id:Subject:Date:From; t=1758053295; bh=ummlr2UUKGVQ6te62E5zsly
+	Cu0MUOMC+Asdn9tweZ+k=; b=YXBLMRGNXzq8m1lN4v8HGQLSnmIkn+lEy7gdvhEKyJOZadGSZB
+	gQIE6lW1Itml2bHzizGcBAq4Q8IeNtyAEV5qJQHZz2rMPKTYgXeEZFg4HC8f1JghFJ6S+rDBhvq
+	f3g3IwSGnsMQn+K0GywIyhpf6ZUvM9c1bRPptUwbfjJBYjZQT/FU8dDEnPQDFy7rymEhgJh5khL
+	5g3NvAe7iXKoT+q1MeBJkdTYXvvS7DyNoQkZZsF2xM5nKbJp1McHUgUvrzCJE+3J9xTKnX9EJOv
+	ZRpRnGuJsEfcXbuMDMYCGix6OLsOPnLgwrlwtdYhhoQvYB3g6yqJ3gTaO/VtQaTLCLQ==;
 DKIM-Signature: v=1; a=ed25519-sha256; s=202507e; d=mainlining.org; c=relaxed/relaxed;
-	h=To:Message-Id:Subject:Date:From; t=1758053288; bh=/MfrKbQAcxo1P+UMUl3T75e
-	+IPr/PFabDA6Xht/wT2k=; b=lrjMieh9dKOkoNobhZqp7S+144r6DdCdWyAK9MOlkepG/rYvIZ
-	q8YOhzqs8AP/NmjvkxP7ydLOAuIGOChsDdAA==;
+	h=To:Message-Id:Subject:Date:From; t=1758053295; bh=ummlr2UUKGVQ6te62E5zsly
+	Cu0MUOMC+Asdn9tweZ+k=; b=RJA/1KAEP/DRcdOPk6HdFI+JYu1sfHCUQLf7vIxa9BMY1c1NM1
+	y40AEWm0WHX3or5NKR6Y88I0hVAoqK/mVnCg==;
 From: Dang Huynh <dang.huynh@mainlining.org>
-Date: Wed, 17 Sep 2025 03:07:19 +0700
-Subject: [PATCH 02/25] drivers: gpio: rda: Make IRQ optional
+Date: Wed, 17 Sep 2025 03:07:20 +0700
+Subject: [PATCH 03/25] dt-bindings: gpio: rda: Make interrupts optional
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -54,7 +54,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250917-rda8810pl-drivers-v1-2-74866def1fe3@mainlining.org>
+Message-Id: <20250917-rda8810pl-drivers-v1-3-74866def1fe3@mainlining.org>
 References: <20250917-rda8810pl-drivers-v1-0-74866def1fe3@mainlining.org>
 In-Reply-To: <20250917-rda8810pl-drivers-v1-0-74866def1fe3@mainlining.org>
 To: Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -76,31 +76,27 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-unisoc@lists.infradead.org,
  linux-mmc@vger.kernel.org, Dang Huynh <dang.huynh@mainlining.org>
 X-Mailer: b4 0.14.2
 
-Not all GPIO have IRQ. When we use this driver with
-GPIOC (handled by modem) we get:
-
-rda-gpio 11a08000.gpioc: error -ENXIO: IRQ index 0 not found
-
-Let's mark IRQ as optional so this error doesn't show up.
+The GPIO controller from the modem does not have an interrupt.
 
 Signed-off-by: Dang Huynh <dang.huynh@mainlining.org>
 ---
- drivers/gpio/gpio-rda.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/gpio/gpio-rda.yaml | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/gpio/gpio-rda.c b/drivers/gpio/gpio-rda.c
-index bcd85a2237a532b875df9470d972ac88b95a91cc..b4db8553a2371ae407fdb7e681d0f82c4d9f74b7 100644
---- a/drivers/gpio/gpio-rda.c
-+++ b/drivers/gpio/gpio-rda.c
-@@ -229,7 +229,7 @@ static int rda_gpio_probe(struct platform_device *pdev)
- 	 * RDA8810PL, GPIOC doesn't support interrupt. So we must handle
- 	 * those also.
- 	 */
--	rda_gpio->irq = platform_get_irq(pdev, 0);
-+	rda_gpio->irq = platform_get_irq_optional(pdev, 0);
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-rda.yaml b/Documentation/devicetree/bindings/gpio/gpio-rda.yaml
+index 6ece555f074f84b396537917d7149d4061724dcc..dbb73b4d33ed39aa65024376b1af0c4e2fb896db 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-rda.yaml
++++ b/Documentation/devicetree/bindings/gpio/gpio-rda.yaml
+@@ -41,9 +41,6 @@ required:
+   - gpio-controller
+   - "#gpio-cells"
+   - ngpios
+-  - interrupt-controller
+-  - "#interrupt-cells"
+-  - interrupts
  
- 	rda_gpio->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(rda_gpio->base))
+ additionalProperties: false
+ 
 
 -- 
 2.51.0
